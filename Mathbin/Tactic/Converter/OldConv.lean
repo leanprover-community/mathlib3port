@@ -4,13 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 Converter monad for building simplifiers.
-
-! This file was ported from Lean 3 source module tactic.converter.old_conv
-! leanprover-community/mathlib commit 8f6fd1b69096c6a587f745d354306c0d46396915
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Control.Basic
+
+#align_import tactic.converter.old_conv from "leanprover-community/mathlib"@"8f6fd1b69096c6a587f745d354306c0d46396915"
 
 open Tactic
 

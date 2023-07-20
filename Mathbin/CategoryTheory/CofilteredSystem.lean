@@ -2,15 +2,12 @@
 Copyright (c) 2022 Kyle Miller, Adam Topaz, Rémi Bottinelli, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Adam Topaz, Rémi Bottinelli, Junyan Xu
-
-! This file was ported from Lean 3 source module category_theory.cofiltered_system
-! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Filtered
 import Mathbin.Data.Set.Finite
 import Mathbin.Topology.Category.Top.Limits.Konig
+
+#align_import category_theory.cofiltered_system from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
 /-!
 # Cofiltered systems

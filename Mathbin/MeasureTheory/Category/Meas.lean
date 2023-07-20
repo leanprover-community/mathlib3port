@@ -2,16 +2,13 @@
 Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module measure_theory.category.Meas
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.GiryMonad
 import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
 import Mathbin.CategoryTheory.Monad.Algebra
 import Mathbin.Topology.Category.Top.Basic
+
+#align_import measure_theory.category.Meas from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # The category of measurable spaces

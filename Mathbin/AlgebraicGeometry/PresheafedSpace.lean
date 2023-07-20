@@ -2,14 +2,11 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
+
+#align_import algebraic_geometry.presheafed_space from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Presheafed spaces

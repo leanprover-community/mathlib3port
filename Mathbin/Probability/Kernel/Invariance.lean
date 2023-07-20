@@ -2,13 +2,10 @@
 Copyright (c) 2023 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
-
-! This file was ported from Lean 3 source module probability.kernel.invariance
-! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Kernel.Composition
+
+#align_import probability.kernel.invariance from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
 /-!
 # Invariance of measures along a kernel

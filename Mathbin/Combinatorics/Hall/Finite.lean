@@ -2,14 +2,11 @@
 Copyright (c) 2021 Alena Gusakov, Bhavik Mehta, Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
-
-! This file was ported from Lean 3 source module combinatorics.hall.finite
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Set.Finite
+
+#align_import combinatorics.hall.finite from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 
 /-!
 # Hall's Marriage Theorem for finite index types

@@ -2,15 +2,12 @@
 Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.polynomial
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.LinearAlgebra.Matrix.Determinant
+
+#align_import linear_algebra.matrix.polynomial from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 # Matrices of polynomials and polynomials of matrices

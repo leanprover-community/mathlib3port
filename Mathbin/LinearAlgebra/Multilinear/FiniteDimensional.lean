@@ -2,14 +2,11 @@
 Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module linear_algebra.multilinear.finite_dimensional
-! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Multilinear.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
+
+#align_import linear_algebra.multilinear.finite_dimensional from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 
 /-! # Multilinear maps over finite dimensional spaces
 

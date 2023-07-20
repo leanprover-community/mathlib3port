@@ -2,11 +2,6 @@
 Copyright (c) 2022 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
-
-! This file was ported from Lean 3 source module analysis.fourier.riemann_lebesgue_lemma
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Fourier.FourierTransform
 import Mathbin.Analysis.InnerProductSpace.Dual
@@ -16,6 +11,8 @@ import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
 import Mathbin.Topology.MetricSpace.EmetricParacompact
+
+#align_import analysis.fourier.riemann_lebesgue_lemma from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # The Riemann-Lebesgue Lemma

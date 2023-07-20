@@ -2,17 +2,14 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Gamma.Basic
 import Mathbin.Analysis.SpecialFunctions.PolarCoord
 import Mathbin.Analysis.Convex.Complex
 import Mathbin.Analysis.Complex.CauchyIntegral
 import Mathbin.Analysis.Fourier.PoissonSummation
+
+#align_import analysis.special_functions.gaussian from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
 /-!
 # Gaussian integral

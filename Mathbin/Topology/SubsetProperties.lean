@@ -2,11 +2,6 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit 3efd324a3a31eaa40c9d5bfc669c4fafee5f9423
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.Pi
 import Mathbin.Topology.Bases
@@ -16,6 +11,8 @@ import Mathbin.Data.Set.BoolIndicator
 import Mathbin.Topology.Bornology.Basic
 import Mathbin.Topology.LocallyFinite
 import Mathbin.Order.Minimal
+
+#align_import topology.subset_properties from "leanprover-community/mathlib"@"3efd324a3a31eaa40c9d5bfc669c4fafee5f9423"
 
 /-!
 # Properties of subsets of topological spaces
@@ -378,7 +375,7 @@ theorem IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed (Z : ℕ �
 #align is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -1796,7 +1793,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
 #align locally_finite.encodable LocallyFinite.encodable
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print countable_cover_nhdsWithin_of_sigma_compact /-
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
@@ -2273,7 +2270,7 @@ def irreducibleComponents (α : Type _) [TopologicalSpace α] : Set (Set α) :=
 #align irreducible_components irreducibleComponents
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
 #print isClosed_of_mem_irreducibleComponents /-
 theorem isClosed_of_mem_irreducibleComponents (s) (_ : s ∈ irreducibleComponents α) : IsClosed s :=
   by

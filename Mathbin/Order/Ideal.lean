@@ -2,15 +2,12 @@
 Copyright (c) 2020 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
-
-! This file was ported from Lean 3 source module order.ideal
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Encodable.Basic
 import Mathbin.Order.Atoms
 import Mathbin.Order.UpperLower.Basic
+
+#align_import order.ideal from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
 /-!
 # Order ideals, cofinal sets, and the Rasiowa–Sikorski lemma
@@ -452,8 +449,8 @@ instance : Sup (Ideal P) :=
           le_sup_left, le_sup_right⟩
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∈ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ∈ » J) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∈ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with
     sup := (· ⊔ ·)

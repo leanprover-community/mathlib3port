@@ -2,17 +2,14 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Fderiv.Add
 import Mathbin.Analysis.Calculus.Fderiv.Mul
 import Mathbin.Analysis.Calculus.Fderiv.Equiv
 import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
+
+#align_import analysis.calculus.cont_diff_def from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # Higher differentiability

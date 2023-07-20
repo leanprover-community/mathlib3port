@@ -2,11 +2,6 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module topology.continuous_function.ideals
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Algebra
 import Mathbin.Topology.ContinuousFunction.Compact
@@ -14,6 +9,8 @@ import Mathbin.Topology.UrysohnsLemma
 import Mathbin.Data.IsROrC.Basic
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Topology.Algebra.Module.CharacterSpace
+
+#align_import topology.continuous_function.ideals from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # Ideals of continuous functions

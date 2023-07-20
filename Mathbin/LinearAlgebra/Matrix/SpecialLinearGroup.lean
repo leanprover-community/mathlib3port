@@ -2,15 +2,12 @@
 Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.special_linear_group
-! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.LinearAlgebra.Matrix.Adjugate
 import Mathbin.LinearAlgebra.Matrix.ToLin
+
+#align_import linear_algebra.matrix.special_linear_group from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
 /-!
 # The Special Linear group $SL(n, R)$

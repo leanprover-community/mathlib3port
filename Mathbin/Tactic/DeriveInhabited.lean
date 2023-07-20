@@ -2,14 +2,11 @@
 Copyright (c) 2020 Gabriel Ebner. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
-
-! This file was ported from Lean 3 source module tactic.derive_inhabited
-! leanprover-community/mathlib commit d13b3a4a392ea7273dfa4727dbd1892e26cfd518
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Basic
 import Mathbin.Data.Rbmap.Basic
+
+#align_import tactic.derive_inhabited from "leanprover-community/mathlib"@"d13b3a4a392ea7273dfa4727dbd1892e26cfd518"
 
 /-!
 # Derive handler for `inhabited` instances

@@ -2,11 +2,6 @@
 Copyright (c) 2021 Benjamin Davidson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
-
-! This file was ported from Lean 3 source module algebra.periodic
-! leanprover-community/mathlib commit 30413fc89f202a090a54d78e540963ed3de0056e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Field.Opposite
@@ -16,6 +11,8 @@ import Mathbin.Data.Int.Parity
 import Mathbin.GroupTheory.Coset
 import Mathbin.GroupTheory.Subgroup.Zpowers
 import Mathbin.GroupTheory.Submonoid.Membership
+
+#align_import algebra.periodic from "leanprover-community/mathlib"@"30413fc89f202a090a54d78e540963ed3de0056e"
 
 /-!
 # Periodicity

@@ -2,15 +2,12 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Ring.colimits
-! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+
+#align_import algebra.category.Ring.colimits from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
 /-!
 # The category of commutative rings has all colimits.

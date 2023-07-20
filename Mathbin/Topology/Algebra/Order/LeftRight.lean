@@ -2,13 +2,10 @@
 Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
-
-! This file was ported from Lean 3 source module topology.algebra.order.left_right
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.ContinuousOn
+
+#align_import topology.algebra.order.left_right from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 
 /-!
 # Left and right continuity

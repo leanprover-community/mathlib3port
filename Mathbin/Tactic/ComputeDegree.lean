@@ -2,13 +2,10 @@
 Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module tactic.compute_degree
-! leanprover-community/mathlib commit 2d915e4ef8f55de94a850f0e5363ba8b25dc4c29
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.Degree.Lemmas
+
+#align_import tactic.compute_degree from "leanprover-community/mathlib"@"2d915e4ef8f55de94a850f0e5363ba8b25dc4c29"
 
 /-! # `compute_degree_le` a tactic for computing degrees of polynomials
 

@@ -2,14 +2,11 @@
 Copyright (c) 2023 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module measure_theory.integral.peak_function
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.MeasureTheory.Function.LocallyIntegrable
+
+#align_import measure_theory.integral.peak_function from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Integrals against peak functions

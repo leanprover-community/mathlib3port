@@ -2,14 +2,11 @@
 Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module algebra.category.Group.subobject
-! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Group.ZModuleEquivalence
 import Mathbin.Algebra.Category.Module.Subobject
+
+#align_import algebra.category.Group.subobject from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
 /-!
 # The category of abelian groups is well-powered

@@ -40,3 +40,5 @@ import Mathbin.Tactic.TruncCases
 import Mathbin.Tactic.UnifyEquations
 import Mathbin.Tactic.Where
 
+#align_import tactic.basic from "leanprover-community/mathlib"@"3536f47529aaf55f56b1fd9c177dee648d26b0a1"
+

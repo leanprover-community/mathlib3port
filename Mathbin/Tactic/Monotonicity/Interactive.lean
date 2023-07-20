@@ -2,16 +2,13 @@
 Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.monotonicity.interactive
-! leanprover-community/mathlib commit 69be6fe368f5617a607ebb6b356a7a71419cede3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Control.Traversable.Derive
 import Mathbin.Control.Traversable.Lemmas
 import Leanbin.Data.Dlist
 import Mathbin.Tactic.Monotonicity.Basic
+
+#align_import tactic.monotonicity.interactive from "leanprover-community/mathlib"@"69be6fe368f5617a607ebb6b356a7a71419cede3"
 
 variable {a b c p : Prop}
 

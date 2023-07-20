@@ -2,14 +2,11 @@
 Copyright (c) 2023 Peter Nelson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Peter Nelson
-
-! This file was ported from Lean 3 source module data.set.ncard
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finite.Card
 import Mathbin.Algebra.BigOperators.Finprod
+
+#align_import data.set.ncard from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 # Noncomputable Set Cardinality
@@ -1025,7 +1022,7 @@ theorem ncard_eq_one : s.ncard = 1 ↔ ∃ a, s = {a} :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Set.exists_eq_insert_iff_ncard /-
 theorem exists_eq_insert_iff_ncard
     (hs : s.Finite := by

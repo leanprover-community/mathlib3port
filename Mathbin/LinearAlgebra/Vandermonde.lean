@@ -2,16 +2,13 @@
 Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.vandermonde
-! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Algebra.GeomSum
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.Nondegenerate
+
+#align_import linear_algebra.vandermonde from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 
 /-!
 # Vandermonde matrix

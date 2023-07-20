@@ -2,11 +2,6 @@
 Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module data.nat.multiplicity
-! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Algebra.GeomSum
@@ -15,6 +10,8 @@ import Mathbin.Data.Nat.Log
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Nat.Prime
 import Mathbin.RingTheory.Multiplicity
+
+#align_import data.nat.multiplicity from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 
 /-!
 # Natural number multiplicity

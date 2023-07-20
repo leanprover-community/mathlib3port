@@ -2,14 +2,11 @@
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Module.products
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Pi
 import Mathbin.Algebra.Category.Module.Basic
+
+#align_import algebra.category.Module.products from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 # The concrete products in the category of modules are products in the categorical sense.

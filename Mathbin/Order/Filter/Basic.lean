@@ -2,16 +2,13 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
-
-! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit d4f691b9e5f94cfc64639973f3544c95f8d5d494
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Control.Traversable.Instances
 import Mathbin.Data.Set.Finite
 import Mathbin.Order.Copy
 import Mathbin.Tactic.Monotonicity.Default
+
+#align_import order.filter.basic from "leanprover-community/mathlib"@"d4f691b9e5f94cfc64639973f3544c95f8d5d494"
 
 /-!
 # Theory of filters on sets
@@ -432,7 +429,7 @@ theorem le_generate_iff {s : Set (Set α)} {f : Filter α} : f ≤ Filter.genera
 #align filter.sets_iff_generate Filter.le_generate_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.mem_generate_iff /-
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
     U ∈ generate s ↔ ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ ⋂₀ t ⊆ U :=
@@ -795,7 +792,7 @@ theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
 #align filter.mem_infi Filter.mem_iInf
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 #print Filter.mem_iInf' /-
 theorem mem_iInf' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔

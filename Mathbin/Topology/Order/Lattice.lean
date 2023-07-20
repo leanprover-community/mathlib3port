@@ -2,14 +2,11 @@
 Copyright (c) 2021 Christopher Hoskin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
-
-! This file was ported from Lean 3 source module topology.order.lattice
-! leanprover-community/mathlib commit 3e32bc908f617039c74c06ea9a897e30c30803c2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.Constructions
+
+#align_import topology.order.lattice from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
 /-!
 # Topological lattices

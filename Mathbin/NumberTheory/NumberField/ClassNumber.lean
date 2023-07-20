@@ -2,15 +2,12 @@
 Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module number_theory.number_field.class_number
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.ClassNumber.AdmissibleAbs
 import Mathbin.NumberTheory.ClassNumber.Finite
 import Mathbin.NumberTheory.NumberField.Basic
+
+#align_import number_theory.number_field.class_number from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # Class numbers of number fields

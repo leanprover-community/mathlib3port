@@ -2,15 +2,12 @@
 Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.subobject.comma
-! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Subobject.WellPowered
 import Mathbin.CategoryTheory.Limits.Preserves.Finite
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
+
+#align_import category_theory.subobject.comma from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 
 /-!
 # Subobjects in the category of structured arrows

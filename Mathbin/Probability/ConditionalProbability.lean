@@ -2,13 +2,10 @@
 Copyright (c) 2022 Rishikesh Vaishnav. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rishikesh Vaishnav
-
-! This file was ported from Lean 3 source module probability.conditional_probability
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
+
+#align_import probability.conditional_probability from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 
 /-!
 # Conditional Probability

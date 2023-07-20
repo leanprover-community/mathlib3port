@@ -2,15 +2,12 @@
 Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
-
-! This file was ported from Lean 3 source module algebra.ring.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Ring.Defs
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Opposites
+
+#align_import algebra.ring.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Semirings and rings

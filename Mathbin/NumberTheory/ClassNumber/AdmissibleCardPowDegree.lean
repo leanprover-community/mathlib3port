@@ -2,16 +2,13 @@
 Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module number_theory.class_number.admissible_card_pow_degree
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
 import Mathbin.Analysis.SpecialFunctions.Pow.Real
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.Data.Polynomial.Degree.CardPowDegree
+
+#align_import number_theory.class_number.admissible_card_pow_degree from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Admissible absolute values on polynomials

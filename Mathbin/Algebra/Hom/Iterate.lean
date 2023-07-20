@@ -2,14 +2,11 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module algebra.hom.iterate
-! leanprover-community/mathlib commit 730513c79ef70a35c2fe70d2f64855d23b52352f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.GroupTheory.GroupAction.Opposite
+
+#align_import algebra.hom.iterate from "leanprover-community/mathlib"@"730513c79ef70a35c2fe70d2f64855d23b52352f"
 
 /-!
 # Iterates of monoid and ring homomorphisms

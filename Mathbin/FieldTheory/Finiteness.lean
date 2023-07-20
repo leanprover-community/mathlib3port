@@ -2,14 +2,11 @@
 Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module field_theory.finiteness
-! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Finiteness
 import Mathbin.LinearAlgebra.Dimension
+
+#align_import field_theory.finiteness from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
 /-!
 # A module over a division ring is noetherian if and only if it is finite.

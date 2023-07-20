@@ -2,11 +2,6 @@
 Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module number_theory.arithmetic_function
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.Module.BigOperators
@@ -15,6 +10,8 @@ import Mathbin.Data.Nat.Squarefree
 import Mathbin.Data.Nat.Gcd.BigOperators
 import Mathbin.Algebra.Invertible
 import Mathbin.Data.Nat.Factorization.Basic
+
+#align_import number_theory.arithmetic_function from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # Arithmetic Functions and Dirichlet Convolution

@@ -2,15 +2,12 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module topology.sheaves.limits
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Sheaves.Sheaf
 import Mathbin.CategoryTheory.Sites.Limits
 import Mathbin.CategoryTheory.Limits.FunctorCategory
+
+#align_import topology.sheaves.limits from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # Presheaves in `C` have limits and colimits when `C` does.

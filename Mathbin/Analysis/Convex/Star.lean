@@ -2,13 +2,10 @@
 Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module analysis.convex.star
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Segment
+
+#align_import analysis.convex.star from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 # Star-convex sets

@@ -2,14 +2,11 @@
 Copyright (c) 2021 Vladimir Goryachev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
-
-! This file was ported from Lean 3 source module data.nat.count
-! leanprover-community/mathlib commit 1ead22342e1a078bd44744ace999f85756555d35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.SetTheory.Cardinal.Basic
 import Mathbin.Tactic.Ring
+
+#align_import data.nat.count from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 
 /-!
 # Counting on ℕ

@@ -2,15 +2,12 @@
 Copyright (c) 2022 Sam van Gool and Jake Levinson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sam van Gool, Jake Levinson
-
-! This file was ported from Lean 3 source module topology.sheaves.locally_surjective
-! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.Topology.Sheaves.Stalks
 import Mathbin.CategoryTheory.Sites.Surjective
+
+#align_import topology.sheaves.locally_surjective from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 
 /-!
 

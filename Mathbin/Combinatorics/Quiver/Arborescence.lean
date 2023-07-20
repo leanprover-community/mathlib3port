@@ -2,16 +2,13 @@
 Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
-
-! This file was ported from Lean 3 source module combinatorics.quiver.arborescence
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.WellFounded
 import Mathbin.Data.Nat.Basic
 import Mathbin.Combinatorics.Quiver.Subquiver
 import Mathbin.Combinatorics.Quiver.Path
+
+#align_import combinatorics.quiver.arborescence from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Arborescences

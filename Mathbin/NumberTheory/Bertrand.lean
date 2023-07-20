@@ -2,17 +2,14 @@
 Copyright (c) 2020 Patrick Stevens. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
-
-! This file was ported from Lean 3 source module number_theory.bertrand
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Choose.Factorization
 import Mathbin.Data.Nat.PrimeNormNum
 import Mathbin.NumberTheory.Primorial
 import Mathbin.Analysis.Convex.SpecificFunctions.Basic
 import Mathbin.Analysis.Convex.SpecificFunctions.Deriv
+
+#align_import number_theory.bertrand from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
 /-!
 # Bertrand's Postulate

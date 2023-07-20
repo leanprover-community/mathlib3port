@@ -2,11 +2,6 @@
 Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.limits.over
-! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Over
 import Mathbin.CategoryTheory.Adjunction.Opposites
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Comma
+
+#align_import category_theory.limits.over from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 
 /-!
 # Limits and colimits in the over and under categories

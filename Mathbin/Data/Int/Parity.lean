@@ -2,13 +2,10 @@
 Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
-
-! This file was ported from Lean 3 source module data.int.parity
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Parity
+
+#align_import data.int.parity from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 
 /-!
 # Parity of integers

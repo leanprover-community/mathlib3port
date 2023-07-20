@@ -2,15 +2,12 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.opposites
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Equiv.Defs
 import Mathbin.Logic.Nontrivial
+
+#align_import algebra.opposites from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Multiplicative opposite and algebraic operations on it

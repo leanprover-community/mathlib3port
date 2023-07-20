@@ -2,11 +2,6 @@
 Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
-
-! This file was ported from Lean 3 source module field_theory.cardinality
-! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Field.Ulift
 import Mathbin.Data.MvPolynomial.Cardinal
@@ -16,6 +11,8 @@ import Mathbin.FieldTheory.Finite.GaloisField
 import Mathbin.Logic.Equiv.TransferInstance
 import Mathbin.RingTheory.Localization.Cardinality
 import Mathbin.SetTheory.Cardinal.Divisibility
+
+#align_import field_theory.cardinality from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
 /-!
 # Cardinality of Fields

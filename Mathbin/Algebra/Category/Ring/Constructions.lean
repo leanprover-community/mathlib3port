@@ -2,11 +2,6 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebra.category.Ring.constructions
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.RingTheory.TensorProduct
@@ -14,6 +9,8 @@ import Mathbin.Algebra.Category.Ring.Limits
 import Mathbin.Algebra.Category.Ring.Instances
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.RingTheory.Subring.Basic
+
+#align_import algebra.category.Ring.constructions from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Constructions of (co)limits in CommRing

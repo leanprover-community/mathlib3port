@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.calculus.parametric_interval_integral
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ParametricIntegral
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
+
+#align_import analysis.calculus.parametric_interval_integral from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Derivatives of interval integrals depending on parameters

@@ -2,14 +2,11 @@
 Copyright (c) 2019 Tim Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
-
-! This file was ported from Lean 3 source module tactic.ring_exp
-! leanprover-community/mathlib commit 72e87ce0bf26144ceb122d280a43aa10f1d20abb
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.NormNum
 import Mathbin.Control.Traversable.Basic
+
+#align_import tactic.ring_exp from "leanprover-community/mathlib"@"72e87ce0bf26144ceb122d280a43aa10f1d20abb"
 
 /-!
 # `ring_exp` tactic

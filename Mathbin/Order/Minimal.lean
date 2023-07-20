@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.minimal
-! leanprover-community/mathlib commit f16e7a22e11fc09c71f25446ac1db23a24e8a0bd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Antichain
 import Mathbin.Order.UpperLower.Basic
+
+#align_import order.minimal from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 
 /-!
 # Minimal/maximal elements of a set

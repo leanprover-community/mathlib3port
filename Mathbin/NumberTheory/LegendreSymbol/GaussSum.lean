@@ -2,15 +2,12 @@
 Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
-
-! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_sum
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.LegendreSymbol.AddCharacter
 import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
 import Mathbin.Algebra.CharP.CharAndCard
+
+#align_import number_theory.legendre_symbol.gauss_sum from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
 /-!
 # Gauss sums

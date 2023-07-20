@@ -2,15 +2,12 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.find_unused
-! leanprover-community/mathlib commit e68fcf8dede813727dd0a47c873938ade3f90ef1
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Core
+
+#align_import tactic.find_unused from "leanprover-community/mathlib"@"e68fcf8dede813727dd0a47c873938ade3f90ef1"
 
 /-!
 # list_unused_decls

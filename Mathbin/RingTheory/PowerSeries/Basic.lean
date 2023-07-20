@@ -2,11 +2,6 @@
 Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.power_series.basic
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.Interval
 import Mathbin.Data.MvPolynomial.Basic
@@ -16,6 +11,8 @@ import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Multiplicity
 import Mathbin.Tactic.Linarith.Default
+
+#align_import ring_theory.power_series.basic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
 /-!
 # Formal power series

@@ -2,17 +2,14 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
-
-! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.InnerProductSpace.Adjoint
 import Mathbin.Analysis.Calculus.LagrangeMultipliers
 import Mathbin.LinearAlgebra.Eigenspace.Basic
+
+#align_import analysis.inner_product_space.rayleigh from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 
 /-!
 # The Rayleigh quotient

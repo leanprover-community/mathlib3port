@@ -2,14 +2,11 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
-
-! This file was ported from Lean 3 source module measure_theory.constructions.borel_space.metrizable
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathbin.Topology.MetricSpace.Metrizable
+
+#align_import measure_theory.constructions.borel_space.metrizable from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
 /-!
 # Measurable functions in (pseudo-)metrizable Borel spaces

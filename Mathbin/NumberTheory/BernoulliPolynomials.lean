@@ -2,16 +2,13 @@
 Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, David Loeffler
-
-! This file was ported from Lean 3 source module number_theory.bernoulli_polynomials
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.NumberTheory.Bernoulli
+
+#align_import number_theory.bernoulli_polynomials from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Bernoulli polynomials

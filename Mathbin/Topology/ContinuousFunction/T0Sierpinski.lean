@@ -2,15 +2,12 @@
 Copyright (c) 2022 Ivan Sadofschi Costa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
-
-! This file was ported from Lean 3 source module topology.continuous_function.t0_sierpinski
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Order
 import Mathbin.Topology.Sets.Opens
 import Mathbin.Topology.ContinuousFunction.Basic
+
+#align_import topology.continuous_function.t0_sierpinski from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Any T0 space embeds in a product of copies of the Sierpinski space.

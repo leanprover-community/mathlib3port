@@ -2,16 +2,13 @@
 Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module measure_theory.tactic
-! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
 import Mathbin.Tactic.AutoCases
 import Mathbin.Tactic.Tidy
 import Mathbin.Tactic.WithLocalReducibility
+
+#align_import measure_theory.tactic from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 
 /-!
 # Tactics for measure theory

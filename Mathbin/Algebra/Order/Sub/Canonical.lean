@@ -2,14 +2,11 @@
 Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
-
-! This file was ported from Lean 3 source module algebra.order.sub.canonical
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 import Mathbin.Algebra.Order.Sub.Defs
+
+#align_import algebra.order.sub.canonical from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Lemmas about subtraction in canonically ordered monoids

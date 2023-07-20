@@ -2,16 +2,13 @@
 Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.ring.boolean_ring
-! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.PunitInstances
 import Mathbin.Tactic.Abel
 import Mathbin.Tactic.Ring
 import Mathbin.Order.Hom.Lattice
+
+#align_import algebra.ring.boolean_ring from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 
 /-!
 # Boolean rings

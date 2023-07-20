@@ -2,15 +2,12 @@
 Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.rewrite_search.frontend
-! leanprover-community/mathlib commit e1eba9fa9c909cb3e3d30f89e7d1a9c0acde6d80
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.RewriteSearch.Explain
 import Mathbin.Tactic.RewriteSearch.Discovery
 import Mathbin.Tactic.RewriteSearch.Search
+
+#align_import tactic.rewrite_search.frontend from "leanprover-community/mathlib"@"e1eba9fa9c909cb3e3d30f89e7d1a9c0acde6d80"
 
 /-!
 # `rewrite_search`: solving goals by searching for a series of rewrites.

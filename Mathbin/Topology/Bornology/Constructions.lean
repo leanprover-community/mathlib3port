@@ -2,13 +2,10 @@
 Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module topology.bornology.constructions
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Bornology.Basic
+
+#align_import topology.bornology.constructions from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 
 /-!
 # Bornology structure on products and subtypes

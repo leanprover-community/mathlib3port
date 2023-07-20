@@ -2,16 +2,13 @@
 Copyright (c) 2019 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
-
-! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.List.Basic
 import Mathbin.Logic.Relation
 import Mathbin.Order.GameAdd
+
+#align_import set_theory.game.pgame from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # Combinatorial (pre-)games.

@@ -2,14 +2,11 @@
 Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
-
-! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.fix
-! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Pfunctor.Multivariate.W
 import Mathbin.Data.Qpf.Multivariate.Basic
+
+#align_import data.qpf.multivariate.constructions.fix from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 
 /-!
 # The initial algebra of a multivariate qpf is again a qpf.

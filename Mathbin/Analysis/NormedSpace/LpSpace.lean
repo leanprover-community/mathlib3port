@@ -2,16 +2,13 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
-
-! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
 import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 import Mathbin.Topology.Algebra.Order.LiminfLimsup
+
+#align_import analysis.normed_space.lp_space from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # ℓp space
@@ -210,7 +207,7 @@ theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
 #align mem_ℓp.neg_iff Memℓp.neg_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
 #print Memℓp.of_exponent_ge /-
 theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p :=
   by
@@ -1246,7 +1243,7 @@ protected theorem single_smul (p) (i : α) (a : E i) (c : 𝕜) :
 #align lp.single_smul lp.single_smul
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print lp.norm_sum_single /-
 protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ‖∑ i in s, lp.single p i (f i)‖ ^ p.toReal = ∑ i in s, ‖f i‖ ^ p.toReal :=
@@ -1274,7 +1271,7 @@ protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) :
 #align lp.norm_single lp.norm_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print lp.norm_sub_norm_compl_sub_single /-
 protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ‖f‖ ^ p.toReal - ‖f - ∑ i in s, lp.single p i (f i)‖ ^ p.toReal = ∑ i in s, ‖f i‖ ^ p.toReal :=

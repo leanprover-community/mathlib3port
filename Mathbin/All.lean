@@ -3212,3 +3212,5 @@ import Mathbin.Topology.VectorBundle.Basic
 import Mathbin.Topology.VectorBundle.Constructions
 import Mathbin.Topology.VectorBundle.Hom
 
+#align_import all from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
+

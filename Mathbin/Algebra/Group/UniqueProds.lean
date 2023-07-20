@@ -2,13 +2,10 @@
 Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module algebra.group.unique_prods
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Preimage
+
+#align_import algebra.group.unique_prods from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 
 /-!
 #  Unique products and related notions
@@ -87,7 +84,7 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
 #align unique_add.set_subsingleton UniqueAdd.set_subsingleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print UniqueMul.iff_existsUnique /-
 @[to_additive]
@@ -103,7 +100,7 @@ theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
 #align unique_add.iff_exists_unique UniqueAdd.iff_existsUnique
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print UniqueMul.exists_iff_exists_existsUnique /-
 @[to_additive]

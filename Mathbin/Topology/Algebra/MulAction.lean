@@ -2,16 +2,13 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit ac34df03f74e6f797efd6991df2e3b7f7d8d33e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.AddTorsor
 import Mathbin.Topology.Algebra.Constructions
 import Mathbin.GroupTheory.GroupAction.Prod
 import Mathbin.Topology.Algebra.ConstMulAction
+
+#align_import topology.algebra.mul_action from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 
 /-!
 # Continuous monoid action

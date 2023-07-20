@@ -3,13 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébastien Gouëzel,
   Rémy Degenne, David Loeffler
-
-! This file was ported from Lean 3 source module analysis.special_functions.pow.real
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Pow.Complex
+
+#align_import analysis.special_functions.pow.real from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-! # Power function on `ℝ`
 

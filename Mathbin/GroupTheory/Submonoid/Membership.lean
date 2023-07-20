@@ -3,16 +3,13 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
-
-! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit e655e4ea5c6d02854696f97494997ba4c31be802
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.FreeMonoid.Basic
 import Mathbin.Data.Finset.NoncommProd
+
+#align_import group_theory.submonoid.membership from "leanprover-community/mathlib"@"e655e4ea5c6d02854696f97494997ba4c31be802"
 
 /-!
 # Submonoids: membership criteria
@@ -616,7 +613,7 @@ theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (
 #align submonoid.map_powers Submonoid.map_powers
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Submonoid.closureCommMonoidOfComm /-
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive

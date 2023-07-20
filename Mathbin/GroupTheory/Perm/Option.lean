@@ -2,15 +2,12 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module group_theory.perm.option
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Perm
 import Mathbin.GroupTheory.Perm.Sign
 import Mathbin.Logic.Equiv.Option
+
+#align_import group_theory.perm.option from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
 /-!
 # Permutations of `option α`

@@ -2,15 +2,12 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
-
-! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit 8ea5598db6caeddde6cb734aa179cc2408dbd345
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Equiv.Set
 import Mathbin.Order.RelIso.Set
 import Mathbin.Order.WellFounded
+
+#align_import order.initial_seg from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
 
 /-!
 # Initial and principal segments
@@ -507,6 +504,7 @@ theorem ofElement_top {α : Type _} (r : α → α → Prop) (a : α) : (ofEleme
 #align principal_seg.of_element_top PrincipalSeg.ofElement_top
 -/
 
+#print PrincipalSeg.subrelIso /-
 /-- For any principal segment `r ≺i s`, there is a `subrel` of `s` order isomorphic to `r`. -/
 @[simps symm_apply]
 noncomputable def subrelIso (f : r ≺i s) : Subrel s {b | s b f.top} ≃r r :=
@@ -516,16 +514,21 @@ noncomputable def subrelIso (f : r ≺i s) : Subrel s {b | s b f.top} ≃r r :=
           (Equiv.setCongr (funext fun x => propext f.down.symm))
       map_rel_iff' := fun a₁ a₂ => f.map_rel_iff }
 #align principal_seg.subrel_iso PrincipalSeg.subrelIso
+-/
 
+#print PrincipalSeg.apply_subrelIso /-
 @[simp]
 theorem apply_subrelIso (f : r ≺i s) (b : {b | s b f.top}) : f (f.subrelIso b) = b :=
   Equiv.apply_ofInjective_symm f.Injective _
 #align principal_seg.apply_subrel_iso PrincipalSeg.apply_subrelIso
+-/
 
+#print PrincipalSeg.subrelIso_apply /-
 @[simp]
 theorem subrelIso_apply (f : r ≺i s) (a : α) : f.subrelIso ⟨f a, f.down.mpr ⟨a, rfl⟩⟩ = a :=
   Equiv.ofInjective_symm_apply f.Injective _
 #align principal_seg.subrel_iso_apply PrincipalSeg.subrelIso_apply
+-/
 
 #print PrincipalSeg.codRestrict /-
 /-- Restrict the codomain of a principal segment -/

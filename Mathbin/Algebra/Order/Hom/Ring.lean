@@ -2,11 +2,6 @@
 Copyright (c) 2022 Alex J. Best, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.order.hom.ring
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Order.Hom.Monoid
@@ -14,6 +9,8 @@ import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Tactic.ByContra
 import Mathbin.Tactic.Wlog
+
+#align_import algebra.order.hom.ring from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
 /-!
 # Ordered ring homomorphisms

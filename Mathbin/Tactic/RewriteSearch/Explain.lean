@@ -2,14 +2,11 @@
 Copyright (c) 2020 Kevin Lacker, Keeley Hoek, Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.rewrite_search.explain
-! leanprover-community/mathlib commit 3b185739887154f8f8dfb52d14f5c798d3b23549
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.RewriteSearch.Types
 import Mathbin.Tactic.Converter.Interactive
+
+#align_import tactic.rewrite_search.explain from "leanprover-community/mathlib"@"3b185739887154f8f8dfb52d14f5c798d3b23549"
 
 /-!
 # Tools to extract valid Lean code from a path found by rewrite search.

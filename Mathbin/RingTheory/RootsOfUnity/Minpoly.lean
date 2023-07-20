@@ -2,14 +2,11 @@
 Copyright (c) 2020 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
-
-! This file was ported from Lean 3 source module ring_theory.roots_of_unity.minpoly
-! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.RootsOfUnity.Basic
 import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
+
+#align_import ring_theory.roots_of_unity.minpoly from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
 /-!
 # Minimal polynomial of roots of unity

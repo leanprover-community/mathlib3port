@@ -2,16 +2,13 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
-
-! This file was ported from Lean 3 source module measure_theory.function.continuous_map_dense
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
 import Mathbin.Topology.UrysohnsLemma
 import Mathbin.MeasureTheory.Integral.Bochner
+
+#align_import measure_theory.function.continuous_map_dense from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Approximation in Lᵖ by continuous functions
@@ -149,7 +146,7 @@ theorem exists_continuous_snorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠ �
 #align measure_theory.exists_continuous_snorm_sub_le_of_closed MeasureTheory.exists_continuous_snorm_sub_le_of_closed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 #print MeasureTheory.Memℒp.exists_hasCompactSupport_snorm_sub_le /-
 /-- In a locally compact space, any function in `ℒp` can be approximated by compactly supported
 continuous functions when `p < ∞`, version in terms of `snorm`. -/
@@ -258,7 +255,7 @@ theorem Integrable.exists_hasCompactSupport_integral_sub_le [LocallyCompactSpace
 #align measure_theory.integrable.exists_has_compact_support_integral_sub_le MeasureTheory.Integrable.exists_hasCompactSupport_integral_sub_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 #print MeasureTheory.Memℒp.exists_boundedContinuous_snorm_sub_le /-
 /-- Any function in `ℒp` can be approximated by bounded continuous functions when `p < ∞`,
 version in terms of `snorm`. -/

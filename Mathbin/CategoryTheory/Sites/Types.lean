@@ -2,13 +2,10 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module category_theory.sites.types
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Sites.Canonical
+
+#align_import category_theory.sites.types from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Grothendieck Topology and Sheaves on the Category of Types

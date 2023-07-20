@@ -2,14 +2,11 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module control.equiv_functor.instances
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Control.EquivFunctor
+
+#align_import control.equiv_functor.instances from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
 /-!
 # `equiv_functor` instances

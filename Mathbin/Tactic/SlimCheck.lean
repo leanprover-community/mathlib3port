@@ -2,14 +2,11 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.slim_check
-! leanprover-community/mathlib commit c0a51cf2de54089d69301befc4c73bbc2f5c7342
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Testing.SlimCheck.Testable
 import Mathbin.Data.List.Sort
+
+#align_import tactic.slim_check from "leanprover-community/mathlib"@"c0a51cf2de54089d69301befc4c73bbc2f5c7342"
 
 /-!
 ## Finding counterexamples automatically using `slim_check`

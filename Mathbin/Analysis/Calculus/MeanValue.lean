@@ -2,11 +2,6 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.calculus.mean_value
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Slope
 import Mathbin.Analysis.Calculus.LocalExtr
@@ -14,6 +9,8 @@ import Mathbin.Analysis.Convex.Slope
 import Mathbin.Analysis.Convex.Normed
 import Mathbin.Data.IsROrC.Basic
 import Mathbin.Topology.Instances.RealVectorSpace
+
+#align_import analysis.calculus.mean_value from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # The mean value inequality and equalities
@@ -927,7 +924,7 @@ theorem exists_deriv_eq_slope : ∃ c ∈ Ioo a b, deriv f c = (f b - f a) / (b 
 
 end Interval
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.mul_sub_lt_image_sub_of_lt_deriv /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C < f'`, then
@@ -959,7 +956,7 @@ theorem mul_sub_lt_image_sub_of_lt_deriv {f : ℝ → ℝ} (hf : Differentiable 
 #align mul_sub_lt_image_sub_of_lt_deriv mul_sub_lt_image_sub_of_lt_deriv
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.mul_sub_le_image_sub_of_le_deriv /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C ≤ f'`, then
@@ -992,7 +989,7 @@ theorem mul_sub_le_image_sub_of_le_deriv {f : ℝ → ℝ} (hf : Differentiable 
 #align mul_sub_le_image_sub_of_le_deriv mul_sub_le_image_sub_of_le_deriv
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.image_sub_lt_mul_sub_of_deriv_lt /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' < C`, then
@@ -1024,7 +1021,7 @@ theorem image_sub_lt_mul_sub_of_deriv_lt {f : ℝ → ℝ} (hf : Differentiable 
 #align image_sub_lt_mul_sub_of_deriv_lt image_sub_lt_mul_sub_of_deriv_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.image_sub_le_mul_sub_of_deriv_le /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' ≤ C`, then

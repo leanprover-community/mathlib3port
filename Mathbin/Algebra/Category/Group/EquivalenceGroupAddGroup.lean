@@ -2,14 +2,11 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
-
-! This file was ported from Lean 3 source module algebra.category.Group.equivalence_Group_AddGroup
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.Algebra.Hom.Equiv.TypeTags
+
+#align_import algebra.category.Group.equivalence_Group_AddGroup from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 
 /-!
 # Equivalence between `Group` and `AddGroup`

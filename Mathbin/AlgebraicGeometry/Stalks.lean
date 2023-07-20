@@ -2,15 +2,12 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebraic_geometry.stalks
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.PresheafedSpace
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Topology.Sheaves.Stalks
+
+#align_import algebraic_geometry.stalks from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # Stalks for presheaved spaces

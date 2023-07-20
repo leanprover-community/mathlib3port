@@ -2,14 +2,11 @@
 Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.local_extr
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.Extr
 import Mathbin.Topology.ContinuousOn
+
+#align_import topology.local_extr from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 
 /-!
 # Local extrema of functions on topological spaces

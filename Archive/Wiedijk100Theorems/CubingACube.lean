@@ -2,15 +2,12 @@
 Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
-
-! This file was ported from Lean 3 source module wiedijk_100_theorems.cubing_a_cube
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Basic
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Set.Intervals.Disjoint
+
+#align_import wiedijk_100_theorems.cubing_a_cube from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.

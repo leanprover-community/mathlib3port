@@ -2,11 +2,6 @@
 Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Alexey Soloyev, Junyan Xu
-
-! This file was ported from Lean 3 source module data.real.golden_ratio
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Irrational
 import Mathbin.Data.Nat.Fib
@@ -14,6 +9,8 @@ import Mathbin.Data.Nat.PrimeNormNum
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Tactic.RingExp
 import Mathbin.Algebra.LinearRecurrence
+
+#align_import data.real.golden_ratio from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # The golden ratio and its conjugate

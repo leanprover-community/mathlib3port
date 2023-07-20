@@ -2,15 +2,12 @@
 Copyright (c) 2015 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
-
-! This file was ported from Lean 3 source module algebra.group_power.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.Group.TypeTags
+
+#align_import algebra.group_power.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Power operations on monoids and groups

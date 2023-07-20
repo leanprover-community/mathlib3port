@@ -2,14 +2,11 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.multiset.lattice
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Multiset.FinsetOps
 import Mathbin.Data.Multiset.Fold
+
+#align_import data.multiset.lattice from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 
 /-!
 # Lattice operations on multisets

@@ -2,13 +2,10 @@
 Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
-
-! This file was ported from Lean 3 source module probability.process.stopping
-! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Process.Adapted
+
+#align_import probability.process.stopping from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 
 /-!
 # Stopping times, stopped processes and stopped values

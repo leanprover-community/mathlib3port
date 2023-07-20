@@ -2,13 +2,10 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module examples.mersenne_primes
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.LucasLehmer
+
+#align_import examples.mersenne_primes from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Explicit Mersenne primes

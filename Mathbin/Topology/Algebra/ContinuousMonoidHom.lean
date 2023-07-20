@@ -2,14 +2,11 @@
 Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
-
-! This file was ported from Lean 3 source module topology.algebra.continuous_monoid_hom
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.Circle
 import Mathbin.Topology.ContinuousFunction.Algebra
+
+#align_import topology.algebra.continuous_monoid_hom from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 

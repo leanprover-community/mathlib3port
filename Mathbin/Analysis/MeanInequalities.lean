@@ -2,16 +2,13 @@
 Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
-
-! This file was ported from Lean 3 source module analysis.mean_inequalities
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Jensen
 import Mathbin.Analysis.Convex.SpecificFunctions.Basic
 import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
 import Mathbin.Data.Real.ConjugateExponents
+
+#align_import analysis.mean_inequalities from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Mean value inequalities

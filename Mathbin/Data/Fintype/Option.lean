@@ -2,14 +2,11 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.fintype.option
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Finset.Option
+
+#align_import data.fintype.option from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-!
 # fintype instances for option

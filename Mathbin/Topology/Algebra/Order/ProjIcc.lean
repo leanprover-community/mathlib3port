@@ -2,14 +2,11 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Patrick Massot
-
-! This file was ported from Lean 3 source module topology.algebra.order.proj_Icc
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.ProjIcc
 import Mathbin.Topology.Order.Basic
+
+#align_import topology.algebra.order.proj_Icc from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 
 /-!
 # Projection onto a closed interval

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Eric Weiser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.algebra.subalgebra.pointwise
-! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.RingTheory.Subring.Pointwise
 import Mathbin.RingTheory.Adjoin.Basic
+
+#align_import algebra.algebra.subalgebra.pointwise from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 
 /-!
 # Pointwise actions on subalgebras.

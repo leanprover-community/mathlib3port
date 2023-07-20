@@ -2,17 +2,14 @@
 Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
-
-! This file was ported from Lean 3 source module linear_algebra.free_module.basic
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.DirectSum.Finsupp
 import Mathbin.Logic.Small.Basic
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 import Mathbin.LinearAlgebra.TensorProductBasis
+
+#align_import linear_algebra.free_module.basic from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
 /-!
 

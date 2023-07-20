@@ -2,13 +2,10 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module group_theory.subsemigroup.membership
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Subsemigroup.Basic
+
+#align_import group_theory.subsemigroup.membership from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 
 /-!
 # Subsemigroups: membership criteria

@@ -2,15 +2,12 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module linear_algebra.adic_completion
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GeomSum
 import Mathbin.LinearAlgebra.Smodeq
 import Mathbin.RingTheory.JacobsonIdeal
+
+#align_import linear_algebra.adic_completion from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Completion of a module with respect to an ideal.

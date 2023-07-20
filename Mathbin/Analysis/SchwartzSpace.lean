@@ -2,11 +2,6 @@
 Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
-
-! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Analysis.Calculus.IteratedDeriv
@@ -15,6 +10,8 @@ import Mathbin.Topology.Algebra.UniformFilterBasis
 import Mathbin.Topology.ContinuousFunction.Bounded
 import Mathbin.Tactic.Positivity
 import Mathbin.Analysis.SpecialFunctions.Pow.Real
+
+#align_import analysis.schwartz_space from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Schwartz space

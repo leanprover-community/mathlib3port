@@ -2,14 +2,11 @@
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.assert_exists
-! leanprover-community/mathlib commit 90367774bb3afc7bdc1e9acbc770970042378306
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
 import Mathbin.Tactic.Lint.Basic
+
+#align_import tactic.assert_exists from "leanprover-community/mathlib"@"90367774bb3afc7bdc1e9acbc770970042378306"
 
 /-!
 # User commands for assert the (non-)existence of declaration or instances.

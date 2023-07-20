@@ -2,15 +2,12 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.box_integral.box.basic
-! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Topology.Algebra.Order.MonotoneConvergence
 import Mathbin.Topology.MetricSpace.Basic
+
+#align_import analysis.box_integral.box.basic from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 
 /-!
 # Rectangular boxes in `ℝⁿ`

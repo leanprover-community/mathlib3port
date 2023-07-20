@@ -2,15 +2,12 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module computability.partrec
-! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Computability.Primrec
 import Mathbin.Data.Nat.Psub
 import Mathbin.Data.Pfun
+
+#align_import computability.partrec from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 
 /-!
 # The partial recursive functions

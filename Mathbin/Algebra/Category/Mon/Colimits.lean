@@ -2,15 +2,12 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Mon.colimits
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+
+#align_import algebra.category.Mon.colimits from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
 /-!
 # The category of monoids has all colimits.

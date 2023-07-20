@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module data.nat.succ_pred
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Order.SuccPred.Basic
+
+#align_import data.nat.succ_pred from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 
 /-!
 # Successors and predecessors of naturals

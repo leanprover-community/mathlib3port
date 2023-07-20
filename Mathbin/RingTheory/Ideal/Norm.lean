@@ -2,11 +2,6 @@
 Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
-
-! This file was ported from Lean 3 source module ring_theory.ideal.norm
-! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Quotient
 import Mathbin.Data.Finsupp.Fintype
@@ -17,6 +12,8 @@ import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
 import Mathbin.RingTheory.DedekindDomain.Pid
 import Mathbin.RingTheory.LocalProperties
 import Mathbin.RingTheory.Localization.Norm
+
+#align_import ring_theory.ideal.norm from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
 /-!
 

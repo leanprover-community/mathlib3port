@@ -2,15 +2,12 @@
 Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
-
-! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 554bb38de8ded0dafe93b7f18f0bfee6ef77dc5d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Compare
 import Mathbin.Order.Max
 import Mathbin.Order.RelClasses
+
+#align_import order.monotone.basic from "leanprover-community/mathlib"@"554bb38de8ded0dafe93b7f18f0bfee6ef77dc5d"
 
 /-!
 # Monotonicity
@@ -146,12 +143,12 @@ instance [i : Decidable (∀ a b, a ≤ b → f a ≤ f b)] : Decidable (Monoton
 instance [i : Decidable (∀ a b, a ≤ b → f b ≤ f a)] : Decidable (Antitone f) :=
   i
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 instance [i : Decidable (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ≤ b → f a ≤ f b)] :
     Decidable (MonotoneOn f s) :=
   i
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 instance [i : Decidable (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ≤ b → f b ≤ f a)] :
     Decidable (AntitoneOn f s) :=
   i
@@ -162,12 +159,12 @@ instance [i : Decidable (∀ a b, a < b → f a < f b)] : Decidable (StrictMono 
 instance [i : Decidable (∀ a b, a < b → f b < f a)] : Decidable (StrictAnti f) :=
   i
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 instance [i : Decidable (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a < b → f a < f b)] :
     Decidable (StrictMonoOn f s) :=
   i
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 instance [i : Decidable (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a < b → f b < f a)] :
     Decidable (StrictAntiOn f s) :=
   i

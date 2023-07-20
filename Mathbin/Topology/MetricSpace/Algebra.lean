@@ -2,14 +2,11 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
-
-! This file was ported from Lean 3 source module topology.metric_space.algebra
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.MetricSpace.Lipschitz
+
+#align_import topology.metric_space.algebra from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Compatibility of algebraic operations with metric space structures

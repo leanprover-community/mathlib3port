@@ -2,14 +2,11 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
-
-! This file was ported from Lean 3 source module tactic.lint.frontend
-! leanprover-community/mathlib commit 60c77d494eb7bc756604eff6c1721800069c39ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
+
+#align_import tactic.lint.frontend from "leanprover-community/mathlib"@"60c77d494eb7bc756604eff6c1721800069c39ce"
 
 /-!
 # Linter frontend and commands

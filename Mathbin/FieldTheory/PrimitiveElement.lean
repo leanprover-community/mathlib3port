@@ -2,16 +2,13 @@
 Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
-
-! This file was ported from Lean 3 source module field_theory.primitive_element
-! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.SplittingField.Construction
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.FieldTheory.Separable
 import Mathbin.RingTheory.IntegralDomain
+
+#align_import field_theory.primitive_element from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
 /-!
 # Primitive Element Theorem

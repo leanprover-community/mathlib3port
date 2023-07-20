@@ -2,14 +2,11 @@
 Copyright (c) 2021 Martin Zinkevich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich, Vincent Beffara
-
-! This file was ported from Lean 3 source module probability.integration
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.Probability.Independence.Basic
+
+#align_import probability.integration from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Integration in Probability Theory

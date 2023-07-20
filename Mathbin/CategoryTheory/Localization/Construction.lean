@@ -2,14 +2,11 @@
 Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
-
-! This file was ported from Lean 3 source module category_theory.localization.construction
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.MorphismProperty
 import Mathbin.CategoryTheory.Category.Quiv
+
+#align_import category_theory.localization.construction from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 

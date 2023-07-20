@@ -2,16 +2,13 @@
 Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module analysis.calculus.fderiv.star
-! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Fderiv.Linear
 import Mathbin.Analysis.Calculus.Fderiv.Comp
 import Mathbin.Analysis.Calculus.Fderiv.Equiv
 import Mathbin.Analysis.NormedSpace.Star.Basic
+
+#align_import analysis.calculus.fderiv.star from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
 /-!
 # Star operations on derivatives

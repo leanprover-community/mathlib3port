@@ -2,15 +2,12 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieser, Jujian Zhang
-
-! This file was ported from Lean 3 source module homogeneous_prime_not_prime
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.GradedAlgebra.HomogeneousIdeal
 import Mathbin.Data.Zmod.Basic
 import Mathbin.Tactic.DeriveFintype
+
+#align_import homogeneous_prime_not_prime from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # A homogeneous prime that is homogeneously prime but not prime

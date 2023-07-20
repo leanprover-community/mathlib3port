@@ -2,11 +2,6 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module group_theory.free_abelian_group_finsupp
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Equiv.TypeTags
 import Mathbin.Algebra.Module.Equiv
@@ -14,6 +9,8 @@ import Mathbin.Data.Finsupp.Defs
 import Mathbin.GroupTheory.FreeAbelianGroup
 import Mathbin.GroupTheory.IsFreeGroup
 import Mathbin.LinearAlgebra.Dimension
+
+#align_import group_theory.free_abelian_group_finsupp from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 # Isomorphism between `free_abelian_group X` and `X →₀ ℤ`

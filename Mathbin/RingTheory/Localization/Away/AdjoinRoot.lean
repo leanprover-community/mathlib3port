@@ -2,14 +2,11 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
-
-! This file was ported from Lean 3 source module ring_theory.localization.away.adjoin_root
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.AdjoinRoot
 import Mathbin.RingTheory.Localization.Away.Basic
+
+#align_import ring_theory.localization.away.adjoin_root from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.

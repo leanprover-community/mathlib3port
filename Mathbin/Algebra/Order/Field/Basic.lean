@@ -2,16 +2,13 @@
 Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
-
-! This file was ported from Lean 3 source module algebra.order.field.basic
-! leanprover-community/mathlib commit 84771a9f5f0bd5e5d6218811556508ddf476dcbd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Bounds.OrderIso
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Order.Field.Defs
 import Mathbin.Algebra.GroupPower.Order
+
+#align_import algebra.order.field.basic from "leanprover-community/mathlib"@"84771a9f5f0bd5e5d6218811556508ddf476dcbd"
 
 /-!
 # Lemmas about linear ordered (semi)fields

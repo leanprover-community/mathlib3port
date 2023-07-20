@@ -2,11 +2,6 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit c14c8fcde993801fca8946b0d80131a1a81d1520
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Prod.Tprod
 import Mathbin.GroupTheory.Coset
@@ -15,6 +10,8 @@ import Mathbin.MeasureTheory.MeasurableSpaceDef
 import Mathbin.Order.Filter.SmallSets
 import Mathbin.Order.LiminfLimsup
 import Mathbin.MeasureTheory.Tactic
+
+#align_import measure_theory.measurable_space from "leanprover-community/mathlib"@"c14c8fcde993801fca8946b0d80131a1a81d1520"
 
 /-!
 # Measurable spaces and measurable functions

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
-
-! This file was ported from Lean 3 source module algebra.tropical.basic
-! leanprover-community/mathlib commit 00f4ab49e7d5139216e0b3daad15fffa504897ab
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Order
 import Mathbin.Algebra.Order.Monoid.WithTop
 import Mathbin.Algebra.SmulWithZero
 import Mathbin.Algebra.Order.Monoid.MinMax
+
+#align_import algebra.tropical.basic from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 
 /-!
 

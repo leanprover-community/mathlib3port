@@ -2,13 +2,10 @@
 Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
-
-! This file was ported from Lean 3 source module category_theory.functor.inv_isos
-! leanprover-community/mathlib commit ac34df03f74e6f797efd6991df2e3b7f7d8d33e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.EqToHom
+
+#align_import category_theory.functor.inv_isos from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 
 /-!
 # Natural isomorphisms with composition with inverses

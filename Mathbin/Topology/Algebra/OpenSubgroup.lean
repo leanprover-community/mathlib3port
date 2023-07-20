@@ -2,15 +2,12 @@
 Copyright (c) 2019 Johan Commelin All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module topology.algebra.open_subgroup
-! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.Topology.Algebra.Ring.Basic
 import Mathbin.Topology.Sets.Opens
+
+#align_import topology.algebra.open_subgroup from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 
 /-!
 # Open subgroups of a topological groups

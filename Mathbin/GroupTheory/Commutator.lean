@@ -2,15 +2,12 @@
 Copyright (c) 2021 Jordan Brown, Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
-
-! This file was ported from Lean 3 source module group_theory.commutator
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Bracket
 import Mathbin.GroupTheory.Subgroup.Finite
 import Mathbin.Tactic.Group
+
+#align_import group_theory.commutator from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Commutators of Subgroups

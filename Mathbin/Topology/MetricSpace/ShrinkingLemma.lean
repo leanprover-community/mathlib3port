@@ -2,15 +2,12 @@
 Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module topology.metric_space.shrinking_lemma
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.MetricSpace.EmetricParacompact
 import Mathbin.Topology.ShrinkingLemma
+
+#align_import topology.metric_space.shrinking_lemma from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Shrinking lemma in a proper metric space

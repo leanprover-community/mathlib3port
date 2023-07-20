@@ -2,16 +2,13 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
-
-! This file was ported from Lean 3 source module ring_theory.free_comm_ring
-! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Logic.Equiv.Functor
 import Mathbin.RingTheory.FreeRing
+
+#align_import ring_theory.free_comm_ring from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 
 /-!
 # Free commutative rings

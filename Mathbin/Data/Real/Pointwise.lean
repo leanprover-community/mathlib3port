@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Wieser
-
-! This file was ported from Lean 3 source module data.real.pointwise
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Module
 import Mathbin.Data.Real.Basic
+
+#align_import data.real.pointwise from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Pointwise operations on sets of reals

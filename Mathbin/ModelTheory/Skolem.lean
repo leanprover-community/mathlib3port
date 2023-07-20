@@ -2,13 +2,10 @@
 Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module model_theory.skolem
-! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.ModelTheory.ElementaryMaps
+
+#align_import model_theory.skolem from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 
 /-!
 # Skolem Functions and Downward Löwenheim–Skolem

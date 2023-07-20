@@ -2,14 +2,11 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
-
-! This file was ported from Lean 3 source module linear_algebra.dfinsupp
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.LinearAlgebra.Basis
+
+#align_import linear_algebra.dfinsupp from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Properties of the module `Π₀ i, M i`

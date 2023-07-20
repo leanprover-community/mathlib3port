@@ -2,16 +2,13 @@
 Copyright (c) 2019 Neil Strickland. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
-
-! This file was ported from Lean 3 source module data.pnat.factors
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Multiset.Basic
 import Mathbin.Data.Pnat.Prime
 import Mathbin.Data.Nat.Factors
 import Mathbin.Data.Multiset.Sort
+
+#align_import data.pnat.factors from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 
 /-!
 # Prime factors of nonzero naturals

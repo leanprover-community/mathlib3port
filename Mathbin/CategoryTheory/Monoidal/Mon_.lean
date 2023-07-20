@@ -2,17 +2,14 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.monoidal.Mon_
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Monoidal.Discrete
 import Mathbin.CategoryTheory.Monoidal.CoherenceLemmas
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.Algebra.PunitInstances
+
+#align_import category_theory.monoidal.Mon_ from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # The category of monoids in a monoidal category.

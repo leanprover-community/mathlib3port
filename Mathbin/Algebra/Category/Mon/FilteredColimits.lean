@@ -2,16 +2,13 @@
 Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
-
-! This file was ported from Lean 3 source module algebra.category.Mon.filtered_colimits
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 import Mathbin.CategoryTheory.Limits.Types
+
+#align_import algebra.category.Mon.filtered_colimits from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # The forgetful functor from (commutative) (additive) monoids preserves filtered colimits.

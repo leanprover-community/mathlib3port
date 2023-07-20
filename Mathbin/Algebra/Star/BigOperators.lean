@@ -2,14 +2,11 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.star.big_operators
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Star.Basic
+
+#align_import algebra.star.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-! # Big-operators lemmas about `star` algebraic operations
 

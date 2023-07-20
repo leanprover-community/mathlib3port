@@ -2,14 +2,11 @@
 Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.limits.filtered
-! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Filtered
 import Mathbin.CategoryTheory.Limits.HasLimits
+
+#align_import category_theory.limits.filtered from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 
 /-!
 # Possession of filtered colimits

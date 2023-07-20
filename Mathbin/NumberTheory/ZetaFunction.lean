@@ -2,15 +2,12 @@
 Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
-
-! This file was ported from Lean 3 source module number_theory.zeta_function
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Gamma.Beta
 import Mathbin.NumberTheory.ModularForms.JacobiTheta.Basic
 import Mathbin.NumberTheory.ZetaValues
+
+#align_import number_theory.zeta_function from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # Definition of the Riemann zeta function

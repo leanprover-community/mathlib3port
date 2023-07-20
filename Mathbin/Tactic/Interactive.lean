@@ -2,15 +2,12 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Sébastien Gouëzel, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.interactive
-! leanprover-community/mathlib commit f89fa08bb6455c96c58e860902fadc8eb2c854ed
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Nonempty
 import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.Dependencies
+
+#align_import tactic.interactive from "leanprover-community/mathlib"@"f89fa08bb6455c96c58e860902fadc8eb2c854ed"
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 namespace Tactic

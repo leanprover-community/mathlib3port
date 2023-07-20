@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.hom.freiman
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Multiset.Basic
 import Mathbin.Data.FunLike.Basic
+
+#align_import algebra.hom.freiman from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # Freiman homomorphisms

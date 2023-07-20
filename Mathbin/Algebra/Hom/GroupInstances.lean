@@ -3,14 +3,11 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
   Johannes Hölzl, Yury Kudryashov
-
-! This file was ported from Lean 3 source module algebra.hom.group_instances
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.Ring.Basic
+
+#align_import algebra.hom.group_instances from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Instances on spaces of monoid and group morphisms

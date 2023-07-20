@@ -2,11 +2,6 @@
 Copyright (c) 2018 Ellen Arlt. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
-
-! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit eba5bb3155cab51d80af00e8d7d69fa271b1302b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Pi
 import Mathbin.Algebra.BigOperators.Pi
@@ -18,6 +13,8 @@ import Mathbin.Algebra.Star.BigOperators
 import Mathbin.Algebra.Star.Module
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Data.Fintype.BigOperators
+
+#align_import data.matrix.basic from "leanprover-community/mathlib"@"eba5bb3155cab51d80af00e8d7d69fa271b1302b"
 
 /-!
 # Matrices
@@ -904,7 +901,7 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print Matrix.diagonal_dotProduct /-
 @[simp]
 theorem diagonal_dotProduct (i : m) : diagonal v i ⬝ᵥ w = v i * w i :=
@@ -915,7 +912,7 @@ theorem diagonal_dotProduct (i : m) : diagonal v i ⬝ᵥ w = v i * w i :=
 #align matrix.diagonal_dot_product Matrix.diagonal_dotProduct
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print Matrix.dotProduct_diagonal /-
 @[simp]
 theorem dotProduct_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i :=
@@ -926,7 +923,7 @@ theorem dotProduct_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i :=
 #align matrix.dot_product_diagonal Matrix.dotProduct_diagonal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print Matrix.dotProduct_diagonal' /-
 @[simp]
 theorem dotProduct_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i * w i :=
@@ -937,7 +934,7 @@ theorem dotProduct_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i 
 #align matrix.dot_product_diagonal' Matrix.dotProduct_diagonal'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print Matrix.single_dotProduct /-
 @[simp]
 theorem single_dotProduct (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i :=
@@ -948,7 +945,7 @@ theorem single_dotProduct (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i :=
 #align matrix.single_dot_product Matrix.single_dotProduct
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print Matrix.dotProduct_single /-
 @[simp]
 theorem dotProduct_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x :=

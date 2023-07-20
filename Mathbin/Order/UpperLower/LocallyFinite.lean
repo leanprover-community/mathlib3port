@@ -2,14 +2,11 @@
 Copyright (c) 2023 Yaël Dillies, Sara Rousta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.upper_lower.locally_finite
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.LocallyFinite
 import Mathbin.Order.UpperLower.Basic
+
+#align_import order.upper_lower.locally_finite from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Upper and lower sets in a locally finite order

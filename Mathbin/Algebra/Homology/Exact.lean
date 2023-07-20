@@ -2,13 +2,10 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module algebra.homology.exact
-! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Homology.ImageToKernel
+
+#align_import algebra.homology.exact from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 
 /-!
 # Exact sequences

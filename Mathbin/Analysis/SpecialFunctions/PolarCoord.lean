@@ -2,14 +2,11 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.special_functions.polar_coord
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathbin.MeasureTheory.Function.Jacobian
+
+#align_import analysis.special_functions.polar_coord from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Polar coordinates

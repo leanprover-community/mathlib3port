@@ -2,14 +2,11 @@
 Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
-
-! This file was ported from Lean 3 source module category_theory.idempotents.simplicial_object
-! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicTopology.SimplicialObject
 import Mathbin.CategoryTheory.Idempotents.FunctorCategories
+
+#align_import category_theory.idempotents.simplicial_object from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 
 /-!
 

@@ -2,13 +2,10 @@
 Copyright (c) 2017 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Jesse Michael Han
-
-! This file was ported from Lean 3 source module tactic.finish
-! leanprover-community/mathlib commit 3c11bd771ef17197a9e9fcd4a3fabfa2804d950c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Hint
+
+#align_import tactic.finish from "leanprover-community/mathlib"@"3c11bd771ef17197a9e9fcd4a3fabfa2804d950c"
 
 /-!
 # The `finish` family of tactics

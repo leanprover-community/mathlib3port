@@ -2,15 +2,12 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.gluing
-! leanprover-community/mathlib commit fdc286cc6967a012f41b87f76dcd2797b53152af
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Gluing
 import Mathbin.AlgebraicGeometry.OpenImmersion.Basic
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
+
+#align_import algebraic_geometry.presheafed_space.gluing from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 
 /-!
 # Gluing Structured spaces

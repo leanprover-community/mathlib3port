@@ -2,15 +2,12 @@
 Copyright (c) 2021 Luke Kershaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
-
-! This file was ported from Lean 3 source module category_theory.triangulated.pretriangulated
-! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Shift.Basic
 import Mathbin.CategoryTheory.Triangulated.Rotate
+
+#align_import category_theory.triangulated.pretriangulated from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
 /-!
 # Pretriangulated Categories
@@ -55,7 +52,7 @@ variable (D : Type u₂) [Category.{v₂} D] [HasZeroObject D] [HasShift D ℤ] 
 
 #print CategoryTheory.Pretriangulated /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
 * Any triangle that is isomorphic to a distinguished triangle is also distinguished.
@@ -100,7 +97,7 @@ variable [hC : Pretriangulated C]
 
 notation:20 "dist_triang " C => distinguishedTriangles C
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 #print CategoryTheory.Pretriangulated.rot_of_dist_triangle /-
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.
 -/
@@ -109,7 +106,7 @@ theorem rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dis
 #align category_theory.pretriangulated.rot_of_dist_triangle CategoryTheory.Pretriangulated.rot_of_dist_triangle
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 #print CategoryTheory.Pretriangulated.inv_rot_of_dist_triangle /-
 /-- Given any distinguished triangle `T`, then we know `T.inv_rotate` is also distinguished.
 -/
@@ -119,7 +116,7 @@ theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate �
 #align category_theory.pretriangulated.inv_rot_of_dist_triangle CategoryTheory.Pretriangulated.inv_rot_of_dist_triangle
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 #print CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₁₂ /-
 /-- Given any distinguished triangle
 ```
@@ -138,7 +135,7 @@ theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mo
 #align category_theory.pretriangulated.comp_dist_triangle_mor_zero₁₂ CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₁₂
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 #print CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₂₃ /-
 /-- Given any distinguished triangle
 ```
@@ -153,7 +150,7 @@ theorem comp_dist_triangle_mor_zero₂₃ (T) (_ : T ∈ (dist_triang C)) : T.mo
 #align category_theory.pretriangulated.comp_dist_triangle_mor_zero₂₃ CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₂₃
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 #print CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₃₁ /-
 /-- Given any distinguished triangle
 ```

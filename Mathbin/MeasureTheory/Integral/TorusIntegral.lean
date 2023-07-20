@@ -2,14 +2,11 @@
 Copyright (c) 2022 Cuma Kökmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Constructions.Prod.Integral
 import Mathbin.MeasureTheory.Integral.CircleIntegral
+
+#align_import measure_theory.integral.torus_integral from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 
 /-!
 # Integral over a torus in `ℂⁿ`

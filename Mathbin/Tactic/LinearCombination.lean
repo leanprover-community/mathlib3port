@@ -2,13 +2,10 @@
 Copyright (c) 2022 Abby J. Goldberg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abby J. Goldberg
-
-! This file was ported from Lean 3 source module tactic.linear_combination
-! leanprover-community/mathlib commit 540b766a64a8cc1e4b013f43a31e3b0b09787937
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Ring
+
+#align_import tactic.linear_combination from "leanprover-community/mathlib"@"540b766a64a8cc1e4b013f43a31e3b0b09787937"
 
 /-!
 

@@ -2,13 +2,10 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module group_theory.subgroup.saturated
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Subgroup.Basic
+
+#align_import group_theory.subgroup.saturated from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
 /-!
 # Saturated subgroups

@@ -2,14 +2,11 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.open_immersion.basic
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Category.Top.Limits.Pullbacks
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
+
+#align_import algebraic_geometry.open_immersion.basic from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Open immersions of structured spaces

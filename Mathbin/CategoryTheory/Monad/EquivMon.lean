@@ -2,15 +2,12 @@
 Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module category_theory.monad.equiv_mon
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monoidal.End
 import Mathbin.CategoryTheory.Monoidal.Mon_
+
+#align_import category_theory.monad.equiv_mon from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 

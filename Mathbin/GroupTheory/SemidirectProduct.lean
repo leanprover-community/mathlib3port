@@ -2,15 +2,12 @@
 Copyright (c) 2020 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module group_theory.semidirect_product
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.Logic.Function.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
+
+#align_import group_theory.semidirect_product from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # Semidirect product

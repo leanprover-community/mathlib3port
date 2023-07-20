@@ -2,14 +2,11 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module group_theory.submonoid.center
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Subsemigroup.Center
+
+#align_import group_theory.submonoid.center from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 
 /-!
 # Centers of monoids

@@ -2,13 +2,10 @@
 Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.monotone.monovary
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Image
+
+#align_import order.monotone.monovary from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 
 /-!
 # Monovariance of functions

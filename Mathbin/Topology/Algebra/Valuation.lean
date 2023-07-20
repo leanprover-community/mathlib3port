@@ -2,15 +2,12 @@
 Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
-
-! This file was ported from Lean 3 source module topology.algebra.valuation
-! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.Algebra.UniformFilterBasis
 import Mathbin.RingTheory.Valuation.Basic
+
+#align_import topology.algebra.valuation from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 
 /-!
 # The topology on a valued ring
@@ -179,7 +176,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : {y : R | v y = v x} ∈ �
 instance (priority := 100) : TopologicalRing R :=
   (toUniformSpace_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.isTopologicalRing
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 #print Valued.cauchy_iff /-
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔

@@ -2,16 +2,13 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
-
-! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.RingTheory.JacobsonIdeal
 import Mathbin.Logic.Equiv.TransferInstance
+
+#align_import ring_theory.ideal.local_ring from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 

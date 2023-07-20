@@ -2,14 +2,11 @@
 Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module data.W.cardinal
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.W.Basic
 import Mathbin.SetTheory.Cardinal.Ordinal
+
+#align_import data.W.cardinal from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
 /-!
 # Cardinality of W-types

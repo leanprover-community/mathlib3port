@@ -2,14 +2,11 @@
 Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
-
-! This file was ported from Lean 3 source module probability.martingale.optional_stopping
-! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Process.HittingTime
 import Mathbin.Probability.Martingale.Basic
+
+#align_import probability.martingale.optional_stopping from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
 /-! # Optional stopping theorem (fair game theorem)
 

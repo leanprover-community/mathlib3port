@@ -2,13 +2,10 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.abelian.diagram_lemmas.four
-! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Abelian.Pseudoelements
+
+#align_import category_theory.abelian.diagram_lemmas.four from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 
 /-!
 # The four and five lemmas

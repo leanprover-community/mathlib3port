@@ -2,11 +2,6 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
-
-! This file was ported from Lean 3 source module algebra.algebra.basic
-! leanprover-community/mathlib commit 36b8aa61ea7c05727161f96a0532897bd72aedab
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.Ulift
@@ -18,6 +13,8 @@ import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.Tactic.Abel
+
+#align_import algebra.algebra.basic from "leanprover-community/mathlib"@"36b8aa61ea7c05727161f96a0532897bd72aedab"
 
 /-!
 # Algebras over commutative semirings

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module order.hom.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Equiv.Option
 import Mathbin.Order.RelIso.Basic
 import Mathbin.Tactic.Monotonicity.Basic
 import Mathbin.Tactic.AssertExists
 import Mathbin.Order.Disjoint
+
+#align_import order.hom.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Order homomorphisms

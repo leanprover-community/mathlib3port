@@ -2,11 +2,6 @@
 Copyright (c) 2020 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Polynomial.BigOperators
@@ -18,6 +13,8 @@ import Mathbin.FieldTheory.Ratfunc
 import Mathbin.FieldTheory.Separable
 import Mathbin.NumberTheory.ArithmeticFunction
 import Mathbin.RingTheory.RootsOfUnity.Basic
+
+#align_import ring_theory.polynomial.cyclotomic.basic from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Cyclotomic polynomials.

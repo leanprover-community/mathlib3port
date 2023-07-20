@@ -2,14 +2,11 @@
 Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
-
-! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.maximal
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 import Mathbin.RingTheory.Localization.AsSubring
+
+#align_import algebraic_geometry.prime_spectrum.maximal from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Maximal spectrum of a commutative ring

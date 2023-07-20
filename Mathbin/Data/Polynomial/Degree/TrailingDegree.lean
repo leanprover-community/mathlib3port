@@ -2,14 +2,11 @@
 Copyright (c) 2020 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module data.polynomial.degree.trailing_degree
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Enat.Basic
 import Mathbin.Data.Polynomial.Degree.Definitions
+
+#align_import data.polynomial.degree.trailing_degree from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Trailing degree of univariate polynomials

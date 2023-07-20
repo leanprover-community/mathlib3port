@@ -2,15 +2,12 @@
 Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
-
-! This file was ported from Lean 3 source module data.is_R_or_C.lemmas
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.FieldTheory.Tower
 import Mathbin.Data.IsROrC.Basic
+
+#align_import data.is_R_or_C.lemmas from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-! # Further lemmas about `is_R_or_C` 
 

@@ -2,13 +2,10 @@
 Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
-
-! This file was ported from Lean 3 source module tactic.omega.nat.sub_elim
-! leanprover-community/mathlib commit 312db88b2d1e9f9cfc44004370be5d5f3f780cff
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Omega.Nat.Form
+
+#align_import tactic.omega.nat.sub_elim from "leanprover-community/mathlib"@"312db88b2d1e9f9cfc44004370be5d5f3f780cff"
 
 /-
 Subtraction elimination for linear natural number arithmetic.

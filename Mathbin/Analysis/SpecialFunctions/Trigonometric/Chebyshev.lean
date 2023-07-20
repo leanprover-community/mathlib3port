@@ -2,16 +2,13 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.chebyshev
-! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Complex.Exponential
 import Mathbin.Data.Complex.Module
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.RingTheory.Polynomial.Chebyshev
+
+#align_import analysis.special_functions.trigonometric.chebyshev from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 
 /-!
 # Multiple angle formulas in terms of Chebyshev polynomials

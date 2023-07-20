@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.algebra.order.filter
-! leanprover-community/mathlib commit ad0089aca372256fe53dde13ca0dfea569bf5ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.Filter
+
+#align_import topology.algebra.order.filter from "leanprover-community/mathlib"@"ad0089aca372256fe53dde13ca0dfea569bf5ac7"
 
 /-!
 # Topology on filters of a space with order topology

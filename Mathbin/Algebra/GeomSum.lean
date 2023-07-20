@@ -2,17 +2,14 @@
 Copyright (c) 2019 Neil Strickland. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
-
-! This file was ported from Lean 3 source module algebra.geom_sum
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Tactic.Abel
 import Mathbin.Data.Nat.Parity
+
+#align_import algebra.geom_sum from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # Partial sums of geometric series

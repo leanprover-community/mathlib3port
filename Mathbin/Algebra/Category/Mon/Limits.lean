@@ -2,17 +2,14 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Mon.limits
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.Algebra.Group.Pi
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.GroupTheory.Submonoid.Operations
+
+#align_import algebra.category.Mon.limits from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # The category of (commutative) (additive) monoids has all limits

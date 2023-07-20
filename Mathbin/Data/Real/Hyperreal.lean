@@ -2,14 +2,11 @@
 Copyright (c) 2019 Abhimanyu Pallavi Sudhir. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
-
-! This file was ported from Lean 3 source module data.real.hyperreal
-! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.FilterProduct
 import Mathbin.Analysis.SpecificLimits.Basic
+
+#align_import data.real.hyperreal from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 
 /-!
 # Construction of the hyperreal numbers as an ultraproduct of real sequences.

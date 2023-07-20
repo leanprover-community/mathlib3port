@@ -16,11 +16,6 @@ As (non-exhaustive) examples, these includes things like:
 * data.set.lattice
 * data.equiv.encodable.basic
 * order.complete_lattice
-
-! This file was ported from Lean 3 source module tactic.default
-! leanprover-community/mathlib commit f9153b8a79eb28d07341706ddb18c02593eeb72a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Basic
 import Mathbin.Tactic.Abel
@@ -44,6 +39,8 @@ import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.LinearCombination
 import Mathbin.Tactic.Polyrith
 import Mathbin.Tactic.ExpandExists
+
+#align_import tactic.default from "leanprover-community/mathlib"@"f9153b8a79eb28d07341706ddb18c02593eeb72a"
 
 -- ensure basic tactics are available
 -- ensure basic tactics are available

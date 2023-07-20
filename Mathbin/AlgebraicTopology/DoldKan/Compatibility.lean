@@ -2,13 +2,10 @@
 Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
-
-! This file was ported from Lean 3 source module algebraic_topology.dold_kan.compatibility
-! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Equivalence
+
+#align_import algebraic_topology.dold_kan.compatibility from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.

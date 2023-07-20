@@ -2,16 +2,13 @@
 Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
-
-! This file was ported from Lean 3 source module tactic.omega.nat.main
-! leanprover-community/mathlib commit dc34b216eb1a1548161e35d328ea1ab798017033
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Omega.ProveUnsats
 import Mathbin.Tactic.Omega.Nat.Dnf
 import Mathbin.Tactic.Omega.Nat.NegElim
 import Mathbin.Tactic.Omega.Nat.SubElim
+
+#align_import tactic.omega.nat.main from "leanprover-community/mathlib"@"dc34b216eb1a1548161e35d328ea1ab798017033"
 
 /-
 Main procedure for linear natural number arithmetic.

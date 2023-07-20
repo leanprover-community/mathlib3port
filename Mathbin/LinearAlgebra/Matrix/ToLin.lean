@@ -2,11 +2,6 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Block
 import Mathbin.Data.Matrix.Notation
@@ -14,6 +9,8 @@ import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.RingTheory.AlgebraTower
 import Mathbin.Algebra.Module.Algebra
 import Mathbin.Algebra.Algebra.Subalgebra.Tower
+
+#align_import linear_algebra.matrix.to_lin from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 
 /-!
 # Linear maps and matrices

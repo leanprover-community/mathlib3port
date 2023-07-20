@@ -2,14 +2,11 @@
 Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module measure_theory.function.ess_sup
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathbin.Order.Filter.Ennreal
+
+#align_import measure_theory.function.ess_sup from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Essential supremum and infimum

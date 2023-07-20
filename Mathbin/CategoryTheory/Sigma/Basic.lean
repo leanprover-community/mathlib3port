@@ -2,15 +2,12 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.sigma.basic
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Whiskering
 import Mathbin.CategoryTheory.Functor.FullyFaithful
 import Mathbin.CategoryTheory.NaturalIsomorphism
+
+#align_import category_theory.sigma.basic from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
 /-!
 # Disjoint union of categories

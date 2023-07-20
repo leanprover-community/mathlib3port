@@ -2,14 +2,11 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.monoidal.CommMon_
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Monoidal.Mon_
+
+#align_import category_theory.monoidal.CommMon_ from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # The category of commutative monoids in a braided monoidal category.

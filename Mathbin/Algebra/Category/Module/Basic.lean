@@ -2,11 +2,6 @@
 Copyright (c) 2019 Robert A. Spencer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert A. Spencer, Markus Himmel
-
-! This file was ported from Lean 3 source module algebra.category.Module.basic
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Group.Preadditive
 import Mathbin.CategoryTheory.Linear.Basic
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Elementwise
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.CategoryTheory.Conj
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+
+#align_import algebra.category.Module.basic from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
 /-!
 # The category of `R`-modules

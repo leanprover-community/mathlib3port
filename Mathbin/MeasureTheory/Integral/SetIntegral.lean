@@ -2,11 +2,6 @@
 Copyright (c) 2020 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.IntegrableOn
 import Mathbin.MeasureTheory.Integral.Bochner
@@ -14,6 +9,8 @@ import Mathbin.MeasureTheory.Function.LocallyIntegrable
 import Mathbin.Order.Filter.IndicatorFunction
 import Mathbin.Topology.MetricSpace.ThickenedIndicator
 import Mathbin.Topology.ContinuousFunction.Compact
+
+#align_import measure_theory.integral.set_integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 # Set integral

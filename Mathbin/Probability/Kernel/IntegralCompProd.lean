@@ -2,14 +2,11 @@
 Copyright (c) 2023 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module probability.kernel.integral_comp_prod
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Kernel.Composition
 import Mathbin.MeasureTheory.Integral.SetIntegral
+
+#align_import probability.kernel.integral_comp_prod from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Bochner integral of a function against the composition-product of two kernels

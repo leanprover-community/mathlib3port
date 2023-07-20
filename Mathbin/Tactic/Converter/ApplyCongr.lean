@@ -2,14 +2,11 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lucas Allen, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.converter.apply_congr
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Interactive
 import Mathbin.Tactic.Converter.Interactive
+
+#align_import tactic.converter.apply_congr from "leanprover-community/mathlib"@"3d7987cda72abc473c7cdbbb075170e9ac620042"
 
 /-!
 ## Introduce the `apply_congr` conv mode tactic.

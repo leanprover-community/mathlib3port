@@ -2,14 +2,11 @@
 Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module algebra.big_operators.multiset.basic
-! leanprover-community/mathlib commit 6c5f73fd6f6cc83122788a80a27cdd54663609f4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.BigOperators.Basic
 import Mathbin.Data.Multiset.Basic
+
+#align_import algebra.big_operators.multiset.basic from "leanprover-community/mathlib"@"6c5f73fd6f6cc83122788a80a27cdd54663609f4"
 
 /-!
 # Sums and products over multisets
@@ -162,7 +159,7 @@ theorem prod_replicate (n : ℕ) (a : α) : (replicate n a).Prod = a ^ n := by
 #align multiset.sum_replicate Multiset.sum_replicate
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i' «expr ≠ » i) -/
 #print Multiset.prod_map_eq_pow_single /-
 @[to_additive]
 theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
@@ -174,7 +171,7 @@ theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
 #align multiset.sum_map_eq_nsmul_single Multiset.sum_map_eq_nsmul_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 #print Multiset.prod_eq_pow_single /-
 @[to_additive]
 theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ s → a' = 1) :

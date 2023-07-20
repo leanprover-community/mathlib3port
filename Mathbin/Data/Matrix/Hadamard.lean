@@ -2,13 +2,10 @@
 Copyright (c) 2021 Lu-Ming Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
-
-! This file was ported from Lean 3 source module data.matrix.hadamard
-! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Matrix.Trace
+
+#align_import data.matrix.hadamard from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 
 /-!
 # Hadamard product of matrices

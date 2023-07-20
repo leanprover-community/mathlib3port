@@ -2,13 +2,10 @@
 Copyright (c) 2021 Matt Kempster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Kempster
-
-! This file was ported from Lean 3 source module wiedijk_100_theorems.herons_formula
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Euclidean.Triangle
+
+#align_import wiedijk_100_theorems.herons_formula from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Freek № 57: Heron's Formula

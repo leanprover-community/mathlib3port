@@ -2,17 +2,14 @@
 Copyright (c) 2020 Bhavik Mehta, E. W. Ayers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
-
-! This file was ported from Lean 3 source module category_theory.sites.grothendieck
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Sites.Sieves
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Multiequalizer
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.Order.Copy
+
+#align_import category_theory.sites.grothendieck from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 # Grothendieck topologies

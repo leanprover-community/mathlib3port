@@ -2,14 +2,11 @@
 Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.pi_tensor_product
-! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Congruence
 import Mathbin.LinearAlgebra.Multilinear.TensorProduct
+
+#align_import linear_algebra.pi_tensor_product from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 
 /-!
 # Tensor product of an indexed family of modules over commutative semirings

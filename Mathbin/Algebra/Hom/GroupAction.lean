@@ -2,14 +2,11 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.hom.group_action
-! leanprover-community/mathlib commit e04043d6bf7264a3c84bc69711dc354958ca4516
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupRingAction.Basic
 import Mathbin.Algebra.Module.Basic
+
+#align_import algebra.hom.group_action from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
 
 /-!
 # Equivariant homomorphisms

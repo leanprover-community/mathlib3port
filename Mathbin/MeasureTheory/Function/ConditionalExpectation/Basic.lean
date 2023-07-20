@@ -2,13 +2,10 @@
 Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.CondexpL1
+
+#align_import measure_theory.function.conditional_expectation.basic from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 
 /-! # Conditional expectation
 

@@ -2,13 +2,10 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module topology.bornology.basic
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.Cofinite
+
+#align_import topology.bornology.basic from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 
 /-!
 # Basic theory of bornology
@@ -62,7 +59,7 @@ class Bornology (α : Type _) where
 #align bornology Bornology
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 #print Bornology.ofBounded /-
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
@@ -86,7 +83,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
 #align bornology.of_bounded Bornology.ofBounded
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 #print Bornology.ofBounded' /-
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/

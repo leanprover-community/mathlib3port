@@ -2,11 +2,6 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
-
-! This file was ported from Lean 3 source module category_theory.limits.lattice
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.CompleteLattice
 import Mathbin.Data.Fintype.Lattice
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
+
+#align_import category_theory.limits.lattice from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Limits in lattice categories are given by infimums and supremums.

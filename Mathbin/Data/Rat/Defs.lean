@@ -2,11 +2,6 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Rat.Init
 import Mathbin.Data.Int.Cast.Defs
@@ -14,6 +9,8 @@ import Mathbin.Data.Int.Dvd.Basic
 import Mathbin.Algebra.Ring.Regular
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Pnat.Defs
+
+#align_import data.rat.defs from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Basics for the Rational Numbers

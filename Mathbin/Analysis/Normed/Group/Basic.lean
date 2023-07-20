@@ -2,11 +2,6 @@
 Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
-
-! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 41bef4ae1254365bc190aee63b947674d2977f01
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Group.Seminorm
 import Mathbin.Order.LiminfLimsup
@@ -15,6 +10,8 @@ import Mathbin.Topology.Instances.Rat
 import Mathbin.Topology.MetricSpace.Algebra
 import Mathbin.Topology.MetricSpace.IsometricSmul
 import Mathbin.Topology.Sequences
+
+#align_import analysis.normed.group.basic from "leanprover-community/mathlib"@"41bef4ae1254365bc190aee63b947674d2977f01"
 
 /-!
 # Normed (semi)groups

@@ -2,13 +2,10 @@
 Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
-
-! This file was ported from Lean 3 source module geometry.manifold.algebra.monoid
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.ContMdiffMap
+
+#align_import geometry.manifold.algebra.monoid from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # Smooth monoid

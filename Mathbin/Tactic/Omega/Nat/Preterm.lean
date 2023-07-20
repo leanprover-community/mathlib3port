@@ -2,13 +2,10 @@
 Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
-
-! This file was ported from Lean 3 source module tactic.omega.nat.preterm
-! leanprover-community/mathlib commit a0735864ba72769da4b378673d3dbe2453924fde
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Omega.Term
+
+#align_import tactic.omega.nat.preterm from "leanprover-community/mathlib"@"a0735864ba72769da4b378673d3dbe2453924fde"
 
 /-
 Linear natural number arithmetic terms in pre-normalized form.

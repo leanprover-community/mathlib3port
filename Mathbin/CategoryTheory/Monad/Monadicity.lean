@@ -2,16 +2,13 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.monad.monadicity
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Reflexive
 import Mathbin.CategoryTheory.Monad.Coequalizer
 import Mathbin.CategoryTheory.Monad.Limits
+
+#align_import category_theory.monad.monadicity from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 # Monadicity theorems

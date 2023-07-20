@@ -2,17 +2,14 @@
 Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
-
-! This file was ported from Lean 3 source module group_theory.commuting_probability
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.ConjFinite
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.Index
+
+#align_import group_theory.commuting_probability from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
 /-!
 # Commuting Probability

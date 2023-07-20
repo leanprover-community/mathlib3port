@@ -2,13 +2,10 @@
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
-
-! This file was ported from Lean 3 source module number_theory.legendre_symbol.basic
-! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+
+#align_import number_theory.legendre_symbol.basic from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 
 /-!
 # Legendre symbol

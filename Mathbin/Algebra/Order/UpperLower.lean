@@ -2,15 +2,12 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.order.upper_lower
-! leanprover-community/mathlib commit ad0089aca372256fe53dde13ca0dfea569bf5ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Order.UpperLower.Basic
+
+#align_import algebra.order.upper_lower from "leanprover-community/mathlib"@"ad0089aca372256fe53dde13ca0dfea569bf5ac7"
 
 /-!
 # Algebraic operations on upper/lower sets

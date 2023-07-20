@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module algebra.order.invertible
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Invertible
+
+#align_import algebra.order.invertible from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Lemmas about `inv_of` in ordered (semi)rings.

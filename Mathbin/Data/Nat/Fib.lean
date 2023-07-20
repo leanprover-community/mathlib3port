@@ -2,11 +2,6 @@
 Copyright (c) 2019 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann, Kyle Miller, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.nat.fib
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Logic.Function.Iterate
@@ -15,6 +10,8 @@ import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.Zify
 import Mathbin.Tactic.Wlog
+
+#align_import data.nat.fib from "leanprover-community/mathlib"@"92ca63f0fb391a9ca5f22d2409a6080e786d99f7"
 
 /-!
 # The Fibonacci Sequence

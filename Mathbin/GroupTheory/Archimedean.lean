@@ -2,14 +2,11 @@
 Copyright (c) 2020 Heather Macbeth, Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Patrick Massot
-
-! This file was ported from Lean 3 source module group_theory.archimedean
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.GroupTheory.Subgroup.Basic
+
+#align_import group_theory.archimedean from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 
 /-!
 # Archimedean groups

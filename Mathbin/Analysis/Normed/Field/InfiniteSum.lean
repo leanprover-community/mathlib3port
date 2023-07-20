@@ -2,14 +2,11 @@
 Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
-
-! This file was ported from Lean 3 source module analysis.normed.field.infinite_sum
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.Analysis.Normed.Group.InfiniteSum
+
+#align_import analysis.normed.field.infinite_sum from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-! # Multiplying two infinite sums in a normed ring
 

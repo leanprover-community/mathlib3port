@@ -2,14 +2,11 @@
 Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
-
-! This file was ported from Lean 3 source module data.pnat.prime
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Pnat.Basic
+
+#align_import data.pnat.prime from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 
 /-!
 # Primality and GCD on pnat

@@ -2,14 +2,11 @@
 Copyright (c) 2021 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
-
-! This file was ported from Lean 3 source module linear_algebra.orientation
-! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Ray
 import Mathbin.LinearAlgebra.Determinant
+
+#align_import linear_algebra.orientation from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 
 /-!
 # Orientations of modules

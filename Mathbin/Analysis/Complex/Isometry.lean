@@ -2,15 +2,12 @@
 Copyright (c) 2021 François Sunatori. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: François Sunatori
-
-! This file was ported from Lean 3 source module analysis.complex.isometry
-! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.Circle
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
+
+#align_import analysis.complex.isometry from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
 /-!
 # Isometries of the Complex Plane

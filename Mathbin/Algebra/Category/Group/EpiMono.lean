@@ -2,14 +2,11 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
-
-! This file was ported from Lean 3 source module algebra.category.Group.epi_mono
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Group.EquivalenceGroupAddGroup
 import Mathbin.GroupTheory.QuotientGroup
+
+#align_import algebra.category.Group.epi_mono from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 
 /-!
 # Monomorphisms and epimorphisms in `Group`

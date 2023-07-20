@@ -2,16 +2,13 @@
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.abelian.functor_category
-! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Abelian.Basic
 import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 import Mathbin.CategoryTheory.Limits.Shapes.FunctorCategory
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
+
+#align_import category_theory.abelian.functor_category from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
 /-!
 # If `D` is abelian, then the functor category `C ⥤ D` is also abelian.

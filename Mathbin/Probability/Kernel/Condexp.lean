@@ -2,13 +2,10 @@
 Copyright (c) 2023 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module probability.kernel.condexp
-! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Kernel.CondDistrib
+
+#align_import probability.kernel.condexp from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
 /-!
 # Kernel associated with a conditional expectation

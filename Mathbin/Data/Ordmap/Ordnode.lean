@@ -2,15 +2,12 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.ordmap.ordnode
-! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Compare
 import Mathbin.Data.List.Defs
 import Mathbin.Data.Nat.Psub
+
+#align_import data.ordmap.ordnode from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 
 /-!
 # Ordered sets

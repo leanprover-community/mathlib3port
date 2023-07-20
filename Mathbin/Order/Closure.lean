@@ -2,16 +2,13 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
-
-! This file was ported from Lean 3 source module order.closure
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Lattice
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Order.GaloisConnection
 import Mathbin.Order.Hom.Basic
+
+#align_import order.closure from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Closure operators between preorders

@@ -2,15 +2,12 @@
 Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
-
-! This file was ported from Lean 3 source module topology.homotopy.path
-! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Homotopy.Basic
 import Mathbin.Topology.PathConnected
 import Mathbin.Analysis.Convex.Basic
+
+#align_import topology.homotopy.path from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 
 /-!
 # Homotopy between paths

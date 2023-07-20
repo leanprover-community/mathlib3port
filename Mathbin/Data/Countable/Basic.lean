@@ -2,15 +2,12 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module data.countable.basic
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Equiv.Nat
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.Data.Countable.Defs
+
+#align_import data.countable.basic from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 
 /-!
 # Countable types

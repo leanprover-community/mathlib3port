@@ -2,13 +2,10 @@
 Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.list.count
-! leanprover-community/mathlib commit 47adfab39a11a072db552f47594bf8ed2cf8a722
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.BigOperators.Basic
+
+#align_import data.list.count from "leanprover-community/mathlib"@"47adfab39a11a072db552f47594bf8ed2cf8a722"
 
 /-!
 # Counting in lists
@@ -424,7 +421,7 @@ theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.e
 #align list.count_erase_of_ne List.count_erase_of_ne
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 #print List.prod_map_eq_pow_single /-
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
@@ -441,7 +438,7 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
 #align list.sum_map_eq_nsmul_single List.sum_map_eq_nsmul_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 #print List.prod_eq_pow_single /-
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α)

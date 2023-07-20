@@ -2,14 +2,11 @@
 Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.analytic.inverse
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Analytic.Composition
 import Mathbin.Tactic.Congrm
+
+#align_import analysis.analytic.inverse from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 

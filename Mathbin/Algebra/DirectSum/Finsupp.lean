@@ -2,14 +2,11 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module algebra.direct_sum.finsupp
-! leanprover-community/mathlib commit aa3a420527e0fbfd0f6615b95b761254a9166e12
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Data.Finsupp.ToDfinsupp
+
+#align_import algebra.direct_sum.finsupp from "leanprover-community/mathlib"@"aa3a420527e0fbfd0f6615b95b761254a9166e12"
 
 /-!
 # Results on direct sums and finitely supported functions.

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
-
-! This file was ported from Lean 3 source module category_theory.preadditive.basic
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Module.Basic
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+
+#align_import category_theory.preadditive.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Preadditive categories

@@ -2,11 +2,6 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module measure_theory.integral.fund_thm_calculus
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.FderivMeasurable
 import Mathbin.Analysis.Calculus.Deriv.Comp
@@ -16,6 +11,8 @@ import Mathbin.Analysis.Calculus.Deriv.Mul
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.MeasureTheory.Integral.VitaliCaratheodory
+
+#align_import measure_theory.integral.fund_thm_calculus from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Fundamental Theorem of Calculus

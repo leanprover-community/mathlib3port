@@ -2,13 +2,10 @@
 Copyright (c) 2022 Ian Wood. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ian Wood
-
-! This file was ported from Lean 3 source module tactic.expand_exists
-! leanprover-community/mathlib commit f9153b8a79eb28d07341706ddb18c02593eeb72a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Meta.Expr
+
+#align_import tactic.expand_exists from "leanprover-community/mathlib"@"f9153b8a79eb28d07341706ddb18c02593eeb72a"
 
 /-!
 # `expand_exists`

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Yury Kudryashov
-
-! This file was ported from Lean 3 source module combinatorics.pigeonhole
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Set.Finite
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.BigOperators
+
+#align_import combinatorics.pigeonhole from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 
 /-!
 # Pigeonhole principles
@@ -139,7 +136,7 @@ theorem exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul (hf : ∀ a ∈ s, f a �
 #align finset.exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul Finset.exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » t) -/
 #print Finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum /-
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is greater than `n • b`, they are sorted into some
@@ -157,7 +154,7 @@ theorem exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum
 #align finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum Finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » t) -/
 #print Finset.exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul /-
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is less than `n • b`, they are sorted into some
@@ -198,7 +195,7 @@ theorem exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul (hf : ∀ a ∈ s, f a �
 #align finset.exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul Finset.exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » t) -/
 #print Finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum /-
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is greater than or equal to `n • b`, they
@@ -216,7 +213,7 @@ theorem exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
 #align finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum Finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » t) -/
 #print Finset.exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul /-
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is less than or equal to `n • b`, they are

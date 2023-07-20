@@ -2,15 +2,12 @@
 Copyright (c) 2019 Lucas Allen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lucas Allen, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.suggest
-! leanprover-community/mathlib commit 1463f592a0a5aa3b73972c9ed333ee7a9ddb8e6b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Data.Mllist
 import Mathbin.Tactic.SolveByElim
+
+#align_import tactic.suggest from "leanprover-community/mathlib"@"1463f592a0a5aa3b73972c9ed333ee7a9ddb8e6b"
 
 /-!
 # `suggest` and `library_search`

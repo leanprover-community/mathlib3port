@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module data.real.enat_ennreal
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Enat.Basic
 import Mathbin.Data.Real.Ennreal
+
+#align_import data.real.enat_ennreal from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
 /-!
 # Coercion from `ℕ∞` to `ℝ≥0∞`

@@ -2,15 +2,12 @@
 Copyright (c) 2016 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module logic.function.basic
-! leanprover-community/mathlib commit 29cb56a7b35f72758b05a30490e1f10bd62c35c1
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Option.Defs
 import Mathbin.Logic.Nonempty
 import Mathbin.Tactic.Cache
+
+#align_import logic.function.basic from "leanprover-community/mathlib"@"29cb56a7b35f72758b05a30490e1f10bd62c35c1"
 
 /-!
 # Miscellaneous function constructions and lemmas
@@ -790,7 +787,7 @@ theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : 
 #align function.update_noteq Function.update_noteq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.forall_update_iff /-
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) := by
@@ -798,7 +795,7 @@ theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a
 #align function.forall_update_iff Function.forall_update_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.exists_update_iff /-
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _) (_ : x ≠ a), p x (f x) := by
@@ -806,7 +803,7 @@ theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a
 #align function.exists_update_iff Function.exists_update_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.update_eq_iff /-
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} :
     update f a b = g ↔ b = g a ∧ ∀ (x) (_ : x ≠ a), f x = g x :=
@@ -814,7 +811,7 @@ theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} :
 #align function.update_eq_iff Function.update_eq_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.eq_update_iff /-
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} :
     g = update f a b ↔ g a = b ∧ ∀ (x) (_ : x ≠ a), g x = f x :=

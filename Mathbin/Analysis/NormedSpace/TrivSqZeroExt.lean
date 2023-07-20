@@ -2,15 +2,12 @@
 Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module analysis.normed_space.triv_sq_zero_ext
-! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.NormedSpace.Exponential
 import Mathbin.Topology.Instances.TrivSqZeroExt
+
+#align_import analysis.normed_space.triv_sq_zero_ext from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 
 /-!
 # Results on `triv_sq_zero_ext R M` related to the norm

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module algebra.category.Module.subobject
-! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Module.EpiMono
 import Mathbin.Algebra.Category.Module.Kernels
 import Mathbin.CategoryTheory.Subobject.WellPowered
 import Mathbin.CategoryTheory.Subobject.Limits
+
+#align_import algebra.category.Module.subobject from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 
 /-!
 # Subobjects in the category of `R`-modules

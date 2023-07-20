@@ -2,13 +2,10 @@
 Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.slice
-! leanprover-community/mathlib commit 3c11bd771ef17197a9e9fcd4a3fabfa2804d950c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Category.Basic
+
+#align_import tactic.slice from "leanprover-community/mathlib"@"3c11bd771ef17197a9e9fcd4a3fabfa2804d950c"
 
 open CategoryTheory
 

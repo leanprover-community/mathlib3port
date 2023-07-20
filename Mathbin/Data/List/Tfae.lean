@@ -2,13 +2,10 @@
 Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon
-
-! This file was ported from Lean 3 source module data.list.tfae
-! leanprover-community/mathlib commit 00f4ab49e7d5139216e0b3daad15fffa504897ab
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Basic
+
+#align_import data.list.tfae from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 
 /-!
 # The Following Are Equivalent

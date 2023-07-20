@@ -2,13 +2,10 @@
 Copyright (c) 2020 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
-
-! This file was ported from Lean 3 source module data.buffer.parser.numeral
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Buffer.Parser.Basic
+
+#align_import data.buffer.parser.numeral from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 # Numeral parsers

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kevin Buzzard
-
-! This file was ported from Lean 3 source module number_theory.bernoulli
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Algebra.GeomSum
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.RingTheory.PowerSeries.WellKnown
 import Mathbin.Tactic.FieldSimp
+
+#align_import number_theory.bernoulli from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Bernoulli numbers

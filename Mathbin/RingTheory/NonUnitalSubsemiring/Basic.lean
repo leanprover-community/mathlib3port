@@ -2,11 +2,6 @@
 Copyright (c) 2022 Jireh Loreaux All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module ring_theory.non_unital_subsemiring.basic
-! leanprover-community/mathlib commit b915e9392ecb2a861e1e766f0e1df6ac481188ca
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Algebra.Ring.Prod
@@ -14,6 +9,8 @@ import Mathbin.Data.Set.Finite
 import Mathbin.GroupTheory.Submonoid.Membership
 import Mathbin.GroupTheory.Subsemigroup.Membership
 import Mathbin.GroupTheory.Subsemigroup.Centralizer
+
+#align_import ring_theory.non_unital_subsemiring.basic from "leanprover-community/mathlib"@"b915e9392ecb2a861e1e766f0e1df6ac481188ca"
 
 /-!
 # Bundled non-unital subsemirings

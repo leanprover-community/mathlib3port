@@ -2,11 +2,6 @@
 Copyright (c) 2020 Bhavik Mehta, Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Aaron Anderson
-
-! This file was ported from Lean 3 source module wiedijk_100_theorems.partition
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.PowerSeries.Basic
 import Mathbin.Combinatorics.Partition
@@ -16,6 +11,8 @@ import Mathbin.Data.Fin.Tuple.NatAntidiagonal
 import Mathbin.Tactic.IntervalCases
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Tactic.Congrm
+
+#align_import wiedijk_100_theorems.partition from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Euler's Partition Theorem
@@ -111,7 +108,7 @@ def cut {ι : Type _} (s : Finset ι) (n : ℕ) : Finset (ι → ℕ) :=
         simpa [dif_pos hi] using congr_fun h i⟩)
 #align theorems_100.cut Theorems100.cut
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem mem_cut {ι : Type _} (s : Finset ι) (n : ℕ) (f : ι → ℕ) :
     f ∈ cut s n ↔ s.Sum f = n ∧ ∀ (i) (_ : i ∉ s), f i = 0 :=
   by
@@ -326,7 +323,7 @@ def mkOdd : ℕ ↪ ℕ :=
   ⟨fun i => 2 * i + 1, fun x y h => by linarith⟩
 #align theorems_100.mk_odd Theorems100.mkOdd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 -- The main workhorse of the partition theorem proof.
 theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset ℕ) (hs : ∀ i ∈ s, 0 < i)
     (c : ℕ → Set ℕ) (hc : ∀ (i) (_ : i ∉ s), 0 ∈ c i) :

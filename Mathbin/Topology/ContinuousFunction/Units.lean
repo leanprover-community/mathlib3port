@@ -2,15 +2,12 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module topology.continuous_function.units
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Topology.ContinuousFunction.Algebra
+
+#align_import topology.continuous_function.units from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Units of continuous functions

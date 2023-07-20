@@ -2,15 +2,12 @@
 Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module category_theory.isomorphism_classes
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.Types
+
+#align_import category_theory.isomorphism_classes from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 
 /-!
 # Objects of a category up to an isomorphism

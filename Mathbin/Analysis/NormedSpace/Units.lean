@@ -2,14 +2,11 @@
 Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
-
-! This file was ported from Lean 3 source module analysis.normed_space.units
-! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Ring.Ideal
 import Mathbin.Analysis.SpecificLimits.Normed
+
+#align_import analysis.normed_space.units from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 
 /-!
 # The group of units of a complete normed ring

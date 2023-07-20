@@ -2,15 +2,12 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module ring_theory.power_series.well_known
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.PowerSeries.Basic
 import Mathbin.Data.Nat.Parity
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
+
+#align_import ring_theory.power_series.well_known from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
 /-!
 # Definition of well-known power series

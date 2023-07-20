@@ -2,14 +2,11 @@
 Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
-
-! This file was ported from Lean 3 source module algebra.order.group.type_tags
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Group.Instances
 import Mathbin.Algebra.Order.Monoid.TypeTags
+
+#align_import algebra.order.group.type_tags from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-! # Ordered group structures on `multiplicative α` and `additive α`.
 

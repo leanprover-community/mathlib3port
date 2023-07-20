@@ -2,11 +2,6 @@
 Copyright (c) 2021 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit d608fc5d4e69d4cc21885913fb573a88b0deb521
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.IsAlgClosed.Spectrum
 import Mathbin.Analysis.Complex.Liouville
@@ -14,6 +9,8 @@ import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.Analysis.Analytic.RadiusLiminf
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 import Mathbin.Analysis.NormedSpace.Exponential
+
+#align_import analysis.normed_space.spectrum from "leanprover-community/mathlib"@"d608fc5d4e69d4cc21885913fb573a88b0deb521"
 
 /-!
 # The spectrum of elements in a complete normed algebra

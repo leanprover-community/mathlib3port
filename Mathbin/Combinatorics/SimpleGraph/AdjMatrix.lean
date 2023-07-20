@@ -2,16 +2,13 @@
 Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Lu-Ming Zhang
-
-! This file was ported from Lean 3 source module combinatorics.simple_graph.adj_matrix
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Combinatorics.SimpleGraph.Connectivity
 import Mathbin.LinearAlgebra.Matrix.Trace
 import Mathbin.LinearAlgebra.Matrix.Symmetric
+
+#align_import combinatorics.simple_graph.adj_matrix from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
 /-!
 # Adjacency Matrices

@@ -2,16 +2,13 @@
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
-
-! This file was ported from Lean 3 source module data.polynomial.div
-! leanprover-community/mathlib commit e1e7190efdcefc925cb36f257a8362ef22944204
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Inductions
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.RingTheory.Multiplicity
+
+#align_import data.polynomial.div from "leanprover-community/mathlib"@"e1e7190efdcefc925cb36f257a8362ef22944204"
 
 /-!
 # Division of univariate polynomials

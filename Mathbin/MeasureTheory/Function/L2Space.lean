@@ -2,15 +2,12 @@
 Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.IsROrC.Lemmas
 import Mathbin.MeasureTheory.Function.StronglyMeasurable.Inner
 import Mathbin.MeasureTheory.Integral.SetIntegral
+
+#align_import measure_theory.function.l2_space from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-! # `L^2` space
 

@@ -2,14 +2,11 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.fintype.sigma
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Finset.Sigma
+
+#align_import data.fintype.sigma from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
 /-!
 # fintype instances for sigma types

@@ -2,11 +2,6 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.constructions.borel_space.basic
-! leanprover-community/mathlib commit 9f55d0d4363ae59948c33864cbc52e0b12e0e8ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Group.Basic
 import Mathbin.MeasureTheory.Function.AeMeasurableSequence
@@ -20,6 +15,8 @@ import Mathbin.Topology.MetricSpace.HausdorffDistance
 import Mathbin.Topology.GDelta
 import Mathbin.Topology.Order.Lattice
 import Mathbin.Topology.Semicontinuous
+
+#align_import measure_theory.constructions.borel_space.basic from "leanprover-community/mathlib"@"9f55d0d4363ae59948c33864cbc52e0b12e0e8ce"
 
 /-!
 # Borel (measurable) space

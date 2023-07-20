@@ -2,16 +2,13 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Ring.limits
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Algebra.Category.Group.Limits
 import Mathbin.RingTheory.Subring.Basic
+
+#align_import algebra.category.Ring.limits from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # The category of (commutative) rings has all limits

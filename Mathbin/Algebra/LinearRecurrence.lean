@@ -2,14 +2,11 @@
 Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
-
-! This file was ported from Lean 3 source module algebra.linear_recurrence
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.Eval
 import Mathbin.LinearAlgebra.Dimension
+
+#align_import algebra.linear_recurrence from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
 /-!
 # Linear recurrence

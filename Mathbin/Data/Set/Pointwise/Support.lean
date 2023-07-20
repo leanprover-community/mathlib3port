@@ -2,14 +2,11 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module data.set.pointwise.support
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Algebra.Support
+
+#align_import data.set.pointwise.support from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # Support of a function composed with a scalar action

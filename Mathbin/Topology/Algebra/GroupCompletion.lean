@@ -2,15 +2,12 @@
 Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
-
-! This file was ported from Lean 3 source module topology.algebra.group_completion
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.UniformMulAction
 import Mathbin.Topology.UniformSpace.Completion
+
+#align_import topology.algebra.group_completion from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Completion of topological groups:

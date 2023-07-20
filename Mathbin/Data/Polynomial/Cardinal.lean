@@ -2,14 +2,11 @@
 Copyright (c) 2021 Chris Hughes, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
-
-! This file was ported from Lean 3 source module data.polynomial.cardinal
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.Basic
 import Mathbin.SetTheory.Cardinal.Ordinal
+
+#align_import data.polynomial.cardinal from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Cardinality of Polynomial Ring

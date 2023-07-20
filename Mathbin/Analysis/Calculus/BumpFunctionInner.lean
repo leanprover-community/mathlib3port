@@ -2,11 +2,6 @@
 Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
-
-! This file was ported from Lean 3 source module analysis.calculus.bump_function_inner
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Inv
 import Mathbin.Analysis.Calculus.ExtendDeriv
@@ -14,6 +9,8 @@ import Mathbin.Analysis.Calculus.IteratedDeriv
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 import Mathbin.MeasureTheory.Integral.SetIntegral
+
+#align_import analysis.calculus.bump_function_inner from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Infinitely smooth bump function

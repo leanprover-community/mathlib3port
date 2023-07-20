@@ -2,15 +2,12 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.metric_space.closeds
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Topology.MetricSpace.HausdorffDistance
 import Mathbin.Topology.Sets.Compacts
+
+#align_import topology.metric_space.closeds from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 # Closed subsets
@@ -211,7 +208,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
 #align emetric.closeds.complete_space EMetric.Closeds.completeSpace
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ⊆ » s) -/
 #print EMetric.Closeds.compactSpace /-
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=

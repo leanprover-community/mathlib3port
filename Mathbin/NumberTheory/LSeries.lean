@@ -2,16 +2,13 @@
 Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module number_theory.l_series
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.PSeries
 import Mathbin.NumberTheory.ArithmeticFunction
 import Mathbin.Topology.Algebra.InfiniteSum.Basic
+
+#align_import number_theory.l_series from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # L-series

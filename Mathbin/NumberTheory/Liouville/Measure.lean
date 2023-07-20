@@ -2,16 +2,13 @@
 Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module number_theory.liouville.measure
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
 import Mathbin.NumberTheory.Liouville.Residual
 import Mathbin.NumberTheory.Liouville.LiouvilleWith
 import Mathbin.Analysis.PSeries
+
+#align_import number_theory.liouville.measure from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Volume of the set of Liouville numbers

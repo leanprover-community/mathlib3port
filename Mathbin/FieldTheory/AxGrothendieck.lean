@@ -2,15 +2,12 @@
 Copyright (c) 2023 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module field_theory.ax_grothendieck
-! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.MvPolynomial.Basic
 import Mathbin.RingTheory.Algebraic
 import Mathbin.Data.Fintype.Card
+
+#align_import field_theory.ax_grothendieck from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
 /-!
 # Ax-Grothendieck for algebraic extensions of `zmod p`

@@ -2,14 +2,11 @@
 Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
-
-! This file was ported from Lean 3 source module analysis.special_functions.japanese_bracket
-! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
 import Mathbin.MeasureTheory.Integral.Layercake
+
+#align_import analysis.special_functions.japanese_bracket from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
 /-!
 # Japanese Bracket

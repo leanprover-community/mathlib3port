@@ -2,13 +2,10 @@
 Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
-
-! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Basic
+
+#align_import data.set.image from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
 /-!
 # Images and preimages of sets
@@ -1030,7 +1027,7 @@ theorem exists_subset_range_and_iff {f : α → β} {p : Set β → Prop} :
 #align set.exists_subset_range_and_iff Set.exists_subset_range_and_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
 #print Set.exists_subset_range_iff /-
 theorem exists_subset_range_iff {f : α → β} {p : Set β → Prop} :
     (∃ (s : _) (_ : s ⊆ range f), p s) ↔ ∃ s, p (f '' s) := by

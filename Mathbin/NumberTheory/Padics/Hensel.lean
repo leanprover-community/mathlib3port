@@ -2,17 +2,14 @@
 Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module number_theory.padics.hensel
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Data.Polynomial.Identities
 import Mathbin.NumberTheory.Padics.PadicIntegers
 import Mathbin.Topology.Algebra.Polynomial
 import Mathbin.Topology.MetricSpace.CauSeqFilter
+
+#align_import number_theory.padics.hensel from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Hensel's lemma on ℤ_p

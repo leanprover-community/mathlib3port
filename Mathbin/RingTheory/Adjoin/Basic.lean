@@ -2,16 +2,13 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.adjoin.basic
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Algebra.Subalgebra.Tower
 import Mathbin.LinearAlgebra.Prod
 import Mathbin.LinearAlgebra.Finsupp
+
+#align_import ring_theory.adjoin.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Adjoining elements to form subalgebras

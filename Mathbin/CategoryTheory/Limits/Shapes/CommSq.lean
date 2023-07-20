@@ -2,11 +2,6 @@
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
-
-! This file was ported from Lean 3 source module category_theory.limits.shapes.comm_sq
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.CommSq
 import Mathbin.CategoryTheory.Limits.Opposites
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Constructions.ZeroObjects
+
+#align_import category_theory.limits.shapes.comm_sq from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-!
 # Pullback and pushout squares, and bicartesian squares

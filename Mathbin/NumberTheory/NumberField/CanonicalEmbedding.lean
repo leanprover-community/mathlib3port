@@ -2,13 +2,10 @@
 Copyright (c) 2022 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
-
-! This file was ported from Lean 3 source module number_theory.number_field.canonical_embedding
-! leanprover-community/mathlib commit fdc286cc6967a012f41b87f76dcd2797b53152af
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.NumberField.Embeddings
+
+#align_import number_theory.number_field.canonical_embedding from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 
 /-!
 # Canonical embedding of a number field

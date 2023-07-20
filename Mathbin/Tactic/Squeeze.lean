@@ -2,14 +2,11 @@
 Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.squeeze
-! leanprover-community/mathlib commit dff8393cf1d1fc152d148e13fe57452fc37d4852
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Control.Traversable.Basic
 import Mathbin.Tactic.Simpa
+
+#align_import tactic.squeeze from "leanprover-community/mathlib"@"dff8393cf1d1fc152d148e13fe57452fc37d4852"
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def loc.to_string_aux : Option Name → String

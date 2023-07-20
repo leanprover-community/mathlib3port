@@ -2,14 +2,11 @@
 Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module measure_theory.measure.doubling
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Log.Base
 import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
+
+#align_import measure_theory.measure.doubling from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Uniformly locally doubling measures

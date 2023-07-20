@@ -2,14 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module data.prod.basic
-! leanprover-community/mathlib commit d07245fd37786daa997af4f1a73a49fa3b748408
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Basic
 import Mathbin.Logic.Function.Basic
+
+#align_import data.prod.basic from "leanprover-community/mathlib"@"d07245fd37786daa997af4f1a73a49fa3b748408"
 
 /-!
 # Extra facts about `prod`

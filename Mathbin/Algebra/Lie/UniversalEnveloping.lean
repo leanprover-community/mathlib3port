@@ -2,15 +2,12 @@
 Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module algebra.lie.universal_enveloping
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.Algebra.RingQuot
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
+
+#align_import algebra.lie.universal_enveloping from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Universal enveloping algebra

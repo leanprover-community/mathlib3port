@@ -2,11 +2,6 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.basic
-! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.PunitInstances
 import Mathbin.LinearAlgebra.Finsupp
@@ -16,6 +11,8 @@ import Mathbin.RingTheory.Localization.Away.Basic
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Topology.Sets.Closeds
 import Mathbin.Topology.Sober
+
+#align_import algebraic_geometry.prime_spectrum.basic from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
 /-!
 # Prime spectrum of a commutative ring

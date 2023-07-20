@@ -2,13 +2,10 @@
 Copyright (c) 2020 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module tactic.protected
-! leanprover-community/mathlib commit f36c98e877dd86af12606abbba5275513baa8a26
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.protected from "leanprover-community/mathlib"@"f36c98e877dd86af12606abbba5275513baa8a26"
 
 /-!
 ## `protected` and `protect_proj` user attributes

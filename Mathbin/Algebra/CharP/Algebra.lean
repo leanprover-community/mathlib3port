@@ -2,15 +2,12 @@
 Copyright (c) 2021 Jon Eugster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster, Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.char_p.algebra
-! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.Algebra.FreeAlgebra
+
+#align_import algebra.char_p.algebra from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
 /-!
 # Characteristics of algebras

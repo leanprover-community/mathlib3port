@@ -2,14 +2,11 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module data.countable.small
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Small.Basic
 import Mathbin.Data.Countable.Defs
+
+#align_import data.countable.small from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # All countable types are small.

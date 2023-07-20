@@ -2,14 +2,11 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
-
-! This file was ported from Lean 3 source module data.pfun
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Part
 import Mathbin.Data.Rel
+
+#align_import data.pfun from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
 /-!
 # Partial functions

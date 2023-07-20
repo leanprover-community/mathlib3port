@@ -2,14 +2,11 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module topology.continuous_function.weierstrass
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Bernstein
 import Mathbin.Topology.Algebra.Algebra
+
+#align_import topology.continuous_function.weierstrass from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # The Weierstrass approximation theorem for continuous functions on `[a,b]`

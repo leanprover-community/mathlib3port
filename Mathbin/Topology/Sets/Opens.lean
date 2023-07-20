@@ -2,11 +2,6 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
-
-! This file was ported from Lean 3 source module topology.sets.opens
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Hom.CompleteLattice
 import Mathbin.Topology.Bases
@@ -14,6 +9,8 @@ import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Order.CompactlyGenerated
 import Mathbin.Tactic.AutoCases
+
+#align_import topology.sets.opens from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Open sets
@@ -349,7 +346,7 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.isBasis_iff_nbhd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 #print TopologicalSpace.Opens.isBasis_iff_cover /-
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _) (_ : Us ⊆ B), U = sSup Us :=

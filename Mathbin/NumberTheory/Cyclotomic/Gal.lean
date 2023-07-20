@@ -2,14 +2,11 @@
 Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
-
-! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
 import Mathbin.FieldTheory.PolynomialGaloisGroup
+
+#align_import number_theory.cyclotomic.gal from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # Galois group of cyclotomic extensions

@@ -2,15 +2,12 @@
 Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module logic.equiv.transfer_instance
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Equiv
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Logic.Equiv.Defs
+
+#align_import logic.equiv.transfer_instance from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 # Transfer algebraic structures across `equiv`s

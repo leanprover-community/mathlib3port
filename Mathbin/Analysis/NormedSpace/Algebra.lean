@@ -2,15 +2,12 @@
 Copyright (c) 2022 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
-
-! This file was ported from Lean 3 source module analysis.normed_space.algebra
-! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 import Mathbin.Analysis.NormedSpace.WeakDual
 import Mathbin.Analysis.NormedSpace.Spectrum
+
+#align_import analysis.normed_space.algebra from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
 /-!
 # Normed algebras

@@ -2,14 +2,11 @@
 Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module category_theory.adjunction.whiskering
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Whiskering
 import Mathbin.CategoryTheory.Adjunction.Basic
+
+#align_import category_theory.adjunction.whiskering from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.

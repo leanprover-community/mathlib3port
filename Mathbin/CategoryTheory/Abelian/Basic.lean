@@ -2,17 +2,14 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Johan Commelin, Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.abelian.basic
-! leanprover-community/mathlib commit a5ff45a1c92c278b03b52459a620cfd9c49ebc80
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 import Mathbin.CategoryTheory.Abelian.NonPreadditive
+
+#align_import category_theory.abelian.basic from "leanprover-community/mathlib"@"a5ff45a1c92c278b03b52459a620cfd9c49ebc80"
 
 /-!
 # Abelian categories

@@ -2,11 +2,6 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.graded_monoid
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Data.List.BigOperators.Basic
@@ -15,6 +10,8 @@ import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.Sigma.Basic
+
+#align_import algebra.graded_monoid from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
 /-!
 # Additively-graded multiplicative structures

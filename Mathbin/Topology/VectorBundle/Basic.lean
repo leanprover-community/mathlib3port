@@ -2,14 +2,11 @@
 Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Patrick Massot, Floris van Doorn
-
-! This file was ported from Lean 3 source module topology.vector_bundle.basic
-! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
 import Mathbin.Topology.FiberBundle.Basic
+
+#align_import topology.vector_bundle.basic from "leanprover-community/mathlib"@"e473c3198bb41f68560cab68a0529c854b618833"
 
 /-!
 # Vector bundles
@@ -1046,7 +1043,7 @@ open TopologicalSpace
 open VectorBundle
 
 #print VectorPrebundle /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
 The total space is hence given a topology in such a way that there is a fiber bundle structure for

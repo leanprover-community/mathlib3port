@@ -2,15 +2,12 @@
 Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
-
-! This file was ported from Lean 3 source module topology.algebra.ring.basic
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.Topology.Algebra.Group.Basic
+
+#align_import topology.algebra.ring.basic from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 

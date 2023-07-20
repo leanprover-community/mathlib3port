@@ -2,13 +2,10 @@
 Copyright (c) 2019 Rob Lewis All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rob Lewis
-
-! This file was ported from Lean 3 source module tactic.mk_simp_attribute
-! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.DocCommands
+
+#align_import tactic.mk_simp_attribute from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
 /-!
 # User command to register `simp` attributes

@@ -2,15 +2,12 @@
 Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module algebra.field.power
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Algebra.Parity
+
+#align_import algebra.field.power from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Results about powers in fields or division rings.

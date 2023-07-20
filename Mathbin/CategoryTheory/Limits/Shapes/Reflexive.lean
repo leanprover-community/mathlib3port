@@ -2,14 +2,11 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.limits.shapes.reflexive
-! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
+
+#align_import category_theory.limits.shapes.reflexive from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
 /-!
 # Reflexive coequalizers

@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module data.enat.lattice
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Enat.Basic
+
+#align_import data.enat.lattice from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
 /-!
 # Extended natural numbers form a complete linear order

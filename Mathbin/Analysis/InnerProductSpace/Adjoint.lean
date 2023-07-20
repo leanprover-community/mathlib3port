@@ -2,14 +2,11 @@
 Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
-
-! This file was ported from Lean 3 source module analysis.inner_product_space.adjoint
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.InnerProductSpace.PiL2
+
+#align_import analysis.inner_product_space.adjoint from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # Adjoint of operators on Hilbert spaces

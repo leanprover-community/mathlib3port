@@ -2,17 +2,14 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
-
-! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Data.Zmod.Algebra
 import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.FieldTheory.Galois
 import Mathbin.FieldTheory.SplittingField.IsSplittingField
+
+#align_import field_theory.finite.galois_field from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
 /-!
 # Galois fields

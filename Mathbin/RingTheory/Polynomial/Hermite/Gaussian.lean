@@ -2,17 +2,14 @@
 Copyright (c) 2023 Luke Mantle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle, Jake Levinson
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.hermite.gaussian
-! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Polynomial.Hermite.Basic
 import Mathbin.Analysis.Calculus.Deriv.Pow
 import Mathbin.Analysis.Calculus.Deriv.Add
 import Mathbin.Analysis.SpecialFunctions.Exp
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
+
+#align_import ring_theory.polynomial.hermite.gaussian from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
 /-!
 # Hermite polynomials and Gaussians

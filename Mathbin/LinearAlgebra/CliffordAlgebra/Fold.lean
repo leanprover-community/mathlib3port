@@ -2,13 +2,10 @@
 Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.fold
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
+
+#align_import linear_algebra.clifford_algebra.fold from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # Recursive computation rules for the Clifford algebra

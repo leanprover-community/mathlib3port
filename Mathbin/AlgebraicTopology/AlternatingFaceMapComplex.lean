@@ -2,11 +2,6 @@
 Copyright (c) 2021 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou, Adam Topaz, Johan Commelin
-
-! This file was ported from Lean 3 source module algebraic_topology.alternating_face_map_complex
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Homology.Additive
 import Mathbin.AlgebraicTopology.MooreComplex
@@ -14,6 +9,8 @@ import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.CategoryTheory.Preadditive.Opposite
 import Mathbin.CategoryTheory.Idempotents.FunctorCategories
 import Mathbin.Tactic.EquivRw
+
+#align_import algebraic_topology.alternating_face_map_complex from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 

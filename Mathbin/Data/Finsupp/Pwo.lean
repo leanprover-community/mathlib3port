@@ -2,14 +2,11 @@
 Copyright (c) 2022 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
-
-! This file was ported from Lean 3 source module data.finsupp.pwo
-! leanprover-community/mathlib commit f16e7a22e11fc09c71f25446ac1db23a24e8a0bd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.Order
 import Mathbin.Order.WellFoundedSet
+
+#align_import data.finsupp.pwo from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 
 /-!
 # Partial well ordering on finsupps

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module algebraic_topology.cech_nerve
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicTopology.SimplicialObject
 import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Arrow
+
+#align_import algebraic_topology.cech_nerve from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 

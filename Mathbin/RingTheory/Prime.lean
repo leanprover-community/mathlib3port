@@ -2,14 +2,11 @@
 Copyright (c) 2020 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module ring_theory.prime
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.BigOperators.Basic
+
+#align_import ring_theory.prime from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-!
 # Prime elements in rings

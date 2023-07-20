@@ -2,13 +2,10 @@
 Copyright (c) 2022 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johanes Hölzl, Patrick Massot, Yury Kudryashov, Kevin Wilson, Heather Macbeth
-
-! This file was ported from Lean 3 source module order.filter.prod
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.Basic
+
+#align_import order.filter.prod from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 
 /-!
 # Product and coproduct filters

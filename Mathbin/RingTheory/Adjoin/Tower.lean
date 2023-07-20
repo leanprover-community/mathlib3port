@@ -2,13 +2,10 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.adjoin.tower
-! leanprover-community/mathlib commit 94eaaaa6064d32e98cf838789144cf5318c37cf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Adjoin.Fg
+
+#align_import ring_theory.adjoin.tower from "leanprover-community/mathlib"@"94eaaaa6064d32e98cf838789144cf5318c37cf0"
 
 /-!
 # Adjoining elements and being finitely generated in an algebra tower

@@ -2,13 +2,10 @@
 Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
-
-! This file was ported from Lean 3 source module topology.support
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Separation
+
+#align_import topology.support from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
 /-!
 # The topological support of a function
@@ -180,7 +177,7 @@ theorem hasCompactMulSupport_def : HasCompactMulSupport f ↔ IsCompact (closure
 #align has_compact_support_def hasCompactSupport_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » K) -/
 #print exists_compact_iff_hasCompactMulSupport /-
 @[to_additive]
 theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
@@ -191,7 +188,7 @@ theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
 #align exists_compact_iff_has_compact_support exists_compact_iff_hasCompactSupport
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » K) -/
 #print HasCompactMulSupport.intro /-
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)

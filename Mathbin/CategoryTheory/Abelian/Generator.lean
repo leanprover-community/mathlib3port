@@ -2,17 +2,14 @@
 Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.abelian.generator
-! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Abelian.Subobject
 import Mathbin.CategoryTheory.Limits.EssentiallySmall
 import Mathbin.CategoryTheory.Preadditive.Injective
 import Mathbin.CategoryTheory.Preadditive.Generator
 import Mathbin.CategoryTheory.Abelian.Opposite
+
+#align_import category_theory.abelian.generator from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 
 /-!
 # A complete abelian category with enough injectives and a separator has an injective coseparator

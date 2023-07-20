@@ -2,17 +2,14 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.properties
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.AffineScheme
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.Algebra.Category.Ring.Constructions
 import Mathbin.RingTheory.LocalProperties
+
+#align_import algebraic_geometry.properties from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # Basic properties of schemes

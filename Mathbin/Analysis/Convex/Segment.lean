@@ -2,17 +2,14 @@
 Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov, Yaël Dillies
-
-! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.Smul
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
 import Mathbin.LinearAlgebra.Ray
 import Mathbin.Tactic.Positivity
+
+#align_import analysis.convex.segment from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 # Segments in vector spaces

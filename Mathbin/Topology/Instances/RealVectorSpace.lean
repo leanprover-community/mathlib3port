@@ -2,14 +2,11 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.instances.real_vector_space
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Instances.Rat
+
+#align_import topology.instances.real_vector_space from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
 /-!
 # Continuous additive maps are `ℝ`-linear

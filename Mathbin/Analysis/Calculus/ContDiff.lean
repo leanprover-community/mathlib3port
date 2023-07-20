@@ -2,17 +2,14 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
-
-! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 575b4ea3738b017e30fb205cb9b4a8742e5e82b6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ContDiffDef
 import Mathbin.Analysis.Calculus.Deriv.Inverse
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Data.Nat.Choose.Cast
+
+#align_import analysis.calculus.cont_diff from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 
 /-!
 # Higher differentiability of usual operations

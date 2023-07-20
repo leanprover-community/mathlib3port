@@ -2,15 +2,12 @@
 Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.functor.epi_mono
-! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.EpiMono
 import Mathbin.CategoryTheory.Limits.Shapes.StrongEpi
 import Mathbin.CategoryTheory.LiftingProperties.Adjunction
+
+#align_import category_theory.functor.epi_mono from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 
 /-!
 # Preservation and reflection of monomorphisms and epimorphisms

@@ -2,13 +2,10 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module ring_theory.ring_hom.surjective
-! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.LocalProperties
+
+#align_import ring_theory.ring_hom.surjective from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 
 /-!
 

@@ -2,14 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.finset.preimage
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Finite
 import Mathbin.Algebra.BigOperators.Basic
+
+#align_import data.finset.preimage from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-!
 # Preimage of a `finset` under an injective map.
@@ -142,7 +139,7 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
 #align finset.preimage_subset Finset.preimage_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 #print Finset.subset_map_iff /-
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
     s ⊆ t.map f ↔ ∃ (u : _) (_ : u ⊆ t), s = u.map f := by

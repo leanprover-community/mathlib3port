@@ -2,16 +2,13 @@
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
-
-! This file was ported from Lean 3 source module analysis.special_functions.log.deriv
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Pow
 import Mathbin.Analysis.Calculus.Deriv.Inv
 import Mathbin.Analysis.SpecialFunctions.Log.Basic
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
+
+#align_import analysis.special_functions.log.deriv from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Derivative and series expansion of real logarithm

@@ -2,15 +2,12 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Arthur Paulino
-
-! This file was ported from Lean 3 source module tactic.lint.misc
-! leanprover-community/mathlib commit 58d83ed5268d96bd37757ac03062a4d69e5aa435
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
+
+#align_import tactic.lint.misc from "leanprover-community/mathlib"@"58d83ed5268d96bd37757ac03062a4d69e5aa435"
 
 /-!
 # Various linters

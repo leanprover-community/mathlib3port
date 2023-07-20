@@ -2,14 +2,11 @@
 Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
-
-! This file was ported from Lean 3 source module set_theory.game.impartial
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.SetTheory.Game.Basic
 import Mathbin.Tactic.NthRewrite.Default
+
+#align_import set_theory.game.impartial from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # Basic definitions about impartial (pre-)games

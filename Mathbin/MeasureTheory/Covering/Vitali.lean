@@ -2,15 +2,12 @@
 Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module measure_theory.covering.vitali
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathbin.MeasureTheory.Covering.VitaliFamily
+
+#align_import measure_theory.covering.vitali from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
 /-!
 # Vitali covering theorems
@@ -50,7 +47,7 @@ open scoped NNReal Classical ENNReal Topology
 
 namespace Vitali
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 #print Vitali.exists_disjoint_subfamily_covering_enlargment /-
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
@@ -170,7 +167,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
 #align vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 #print Vitali.exists_disjoint_subfamily_covering_enlargment_closedBall /-
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
@@ -212,8 +209,8 @@ theorem exists_disjoint_subfamily_covering_enlargment_closedBall [MetricSpace α
 #align vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closedBall
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t') -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » t') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 #print Vitali.exists_disjoint_covering_ae /-
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite

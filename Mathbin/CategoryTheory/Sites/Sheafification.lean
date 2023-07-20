@@ -2,16 +2,13 @@
 Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module category_theory.sites.sheafification
-! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 import Mathbin.CategoryTheory.Sites.Plus
 import Mathbin.CategoryTheory.Limits.ConcreteCategory
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+
+#align_import category_theory.sites.sheafification from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 
 /-!
 

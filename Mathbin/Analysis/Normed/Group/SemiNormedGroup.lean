@@ -2,16 +2,13 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
-
-! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup
-! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.CategoryTheory.Elementwise
+
+#align_import analysis.normed.group.SemiNormedGroup from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 
 /-!
 # The category of seminormed groups

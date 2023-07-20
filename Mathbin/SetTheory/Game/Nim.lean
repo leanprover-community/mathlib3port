@@ -2,15 +2,12 @@
 Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
-
-! This file was ported from Lean 3 source module set_theory.game.nim
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Bitwise
 import Mathbin.SetTheory.Game.Birthday
 import Mathbin.SetTheory.Game.Impartial
+
+#align_import set_theory.game.nim from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # Nim and the Sprague-Grundy theorem

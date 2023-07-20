@@ -2,15 +2,12 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Violeta Hernández Palacios
-
-! This file was ported from Lean 3 source module measure_theory.card_measurable_space
-! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.MeasurableSpaceDef
 import Mathbin.SetTheory.Cardinal.Cofinality
 import Mathbin.SetTheory.Cardinal.Continuum
+
+#align_import measure_theory.card_measurable_space from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 
 /-!
 # Cardinal of sigma-algebras

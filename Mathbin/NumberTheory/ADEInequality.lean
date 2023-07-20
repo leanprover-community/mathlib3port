@@ -2,11 +2,6 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module number_theory.ADE_inequality
-! leanprover-community/mathlib commit 1ead22342e1a078bd44744ace999f85756555d35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Multiset.Sort
 import Mathbin.Data.Pnat.Interval
@@ -15,6 +10,8 @@ import Mathbin.Data.Pnat.Basic
 import Mathbin.Tactic.NormNum
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.IntervalCases
+
+#align_import number_theory.ADE_inequality from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 
 /-!
 # The inequality `p⁻¹ + q⁻¹ + r⁻¹ > 1`

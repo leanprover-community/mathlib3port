@@ -2,11 +2,6 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
-
-! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 import Mathbin.Algebra.Category.Ring.Colimits
@@ -14,6 +9,8 @@ import Mathbin.Algebra.Category.Ring.Limits
 import Mathbin.Topology.Sheaves.LocalPredicate
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.Subring.Basic
+
+#align_import algebraic_geometry.structure_sheaf from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"
 
 /-!
 # The structure sheaf on `prime_spectrum R`.
@@ -838,7 +835,7 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 #print AlgebraicGeometry.StructureSheaf.normalize_finite_fraction_representation /-
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.

@@ -2,17 +2,14 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieer
-
-! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Matrix.DotProduct
 import Mathbin.Data.Complex.Module
+
+#align_import data.matrix.rank from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 
 /-!
 # Rank of matrices

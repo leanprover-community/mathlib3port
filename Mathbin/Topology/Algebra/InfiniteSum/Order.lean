@@ -2,16 +2,13 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module topology.algebra.infinite_sum.order
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Topology.Algebra.InfiniteSum.Basic
 import Mathbin.Topology.Algebra.Order.Field
 import Mathbin.Topology.Algebra.Order.MonotoneConvergence
+
+#align_import topology.algebra.infinite_sum.order from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Infinite sum in an order
@@ -74,7 +71,7 @@ theorem le_hasSum_of_le_sum (hf : HasSum f a) (h : ∀ s, a₂ ≤ ∑ i in s, f
 #align le_has_sum_of_le_sum le_hasSum_of_le_sum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
 #print hasSum_le_inj /-
 theorem hasSum_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
     (hs : ∀ (c) (_ : c ∉ Set.range e), 0 ≤ g c) (h : ∀ i, f i ≤ g (e i)) (hf : HasSum f a₁)
@@ -101,7 +98,7 @@ theorem hasSum_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
 #align has_sum_le_inj hasSum_le_inj
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
 #print tsum_le_tsum_of_inj /-
 theorem tsum_le_tsum_of_inj {g : κ → α} (e : ι → κ) (he : Injective e)
     (hs : ∀ (c) (_ : c ∉ Set.range e), 0 ≤ g c) (h : ∀ i, f i ≤ g (e i)) (hf : Summable f)
@@ -110,7 +107,7 @@ theorem tsum_le_tsum_of_inj {g : κ → α} (e : ι → κ) (he : Injective e)
 #align tsum_le_tsum_of_inj tsum_le_tsum_of_inj
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print sum_le_hasSum /-
 theorem sum_le_hasSum (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s), 0 ≤ f i) (hf : HasSum f a) :
     ∑ i in s, f i ≤ a :=
@@ -127,7 +124,7 @@ theorem isLUB_hasSum (h : ∀ i, 0 ≤ f i) (hf : HasSum f a) :
 #align is_lub_has_sum isLUB_hasSum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ≠ » i) -/
 #print le_hasSum /-
 theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ f b') : f i ≤ a :=
   calc
@@ -136,7 +133,7 @@ theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 �
 #align le_has_sum le_hasSum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print sum_le_tsum /-
 theorem sum_le_tsum {f : ι → α} (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s), 0 ≤ f i) (hf : Summable f) :
     ∑ i in s, f i ≤ ∑' i, f i :=
@@ -144,7 +141,7 @@ theorem sum_le_tsum {f : ι → α} (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s),
 #align sum_le_tsum sum_le_tsum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ≠ » i) -/
 #print le_tsum /-
 theorem le_tsum (hf : Summable f) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ f b') : f i ≤ ∑' i, f i :=
   le_hasSum (Summable.hasSum hf) i hb

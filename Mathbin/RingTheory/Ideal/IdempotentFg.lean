@@ -2,14 +2,11 @@
 Copyright (c) 2018 Mario Carneiro, Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
-
-! This file was ported from Lean 3 source module ring_theory.ideal.idempotent_fg
-! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Ring.Idempotents
 import Mathbin.RingTheory.Finiteness
+
+#align_import ring_theory.ideal.idempotent_fg from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 
 /-!
 ## Lemmas on idempotent finitely generated ideals

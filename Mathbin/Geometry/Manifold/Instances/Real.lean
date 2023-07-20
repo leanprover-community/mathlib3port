@@ -2,14 +2,11 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module geometry.manifold.instances.real
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Analysis.InnerProductSpace.PiL2
+
+#align_import geometry.manifold.instances.real from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Constructing examples of manifolds over ℝ
@@ -102,7 +99,7 @@ theorem range_quadrant (n : ℕ) :
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
 #print modelWithCornersEuclideanHalfSpace /-
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as

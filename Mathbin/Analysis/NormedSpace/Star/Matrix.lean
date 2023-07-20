@@ -2,16 +2,13 @@
 Copyright (c) 2022 Hans Parshall. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hans Parshall
-
-! This file was ported from Lean 3 source module analysis.normed_space.star.matrix
-! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Matrix
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.IsROrC.Basic
 import Mathbin.LinearAlgebra.UnitaryGroup
+
+#align_import analysis.normed_space.star.matrix from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
 /-!
 # Unitary matrices

@@ -2,15 +2,12 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module order.partial_sups
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.ConditionallyCompleteLattice.Finset
+
+#align_import order.partial_sups from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 
 /-!
 # The monotone sequence of partial supremums of a sequence

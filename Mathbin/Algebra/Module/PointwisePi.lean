@@ -2,14 +2,11 @@
 Copyright (c) 2021 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
-
-! This file was ported from Lean 3 source module algebra.module.pointwise_pi
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.GroupTheory.GroupAction.Pi
+
+#align_import algebra.module.pointwise_pi from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 
 /-!
 # Pointwise actions on sets in Pi types

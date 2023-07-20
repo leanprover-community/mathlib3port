@@ -2,16 +2,13 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
-
-! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit cb42593171ba005beaaf4549fcfe0dece9ada4c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Bounds
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Data.Real.CauSeqCompletion
+
+#align_import data.real.basic from "leanprover-community/mathlib"@"cb42593171ba005beaaf4549fcfe0dece9ada4c9"
 
 /-!
 # Real numbers from Cauchy sequences
@@ -766,7 +763,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
 #align real.exists_floor Real.exists_floor
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
 #print Real.exists_isLUB /-
 theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLUB S x :=
   by

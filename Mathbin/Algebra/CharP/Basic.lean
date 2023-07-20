@@ -2,16 +2,13 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
-
-! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit 47a1a73351de8dd6c8d3d32b569c8e434b03ca47
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Nat.Multiplicity
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.RingTheory.Nilpotent
+
+#align_import algebra.char_p.basic from "leanprover-community/mathlib"@"47a1a73351de8dd6c8d3d32b569c8e434b03ca47"
 
 /-!
 # Characteristic of semirings
@@ -652,7 +649,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (d «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (d «expr ∣ » p) -/
 #print CharP.char_is_prime_of_two_le /-
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩

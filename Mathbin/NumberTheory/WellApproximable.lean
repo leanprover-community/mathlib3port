@@ -2,14 +2,11 @@
 Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module number_theory.well_approximable
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Dynamics.Ergodic.AddCircle
 import Mathbin.MeasureTheory.Covering.LiminfLimsup
+
+#align_import number_theory.well_approximable from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Well-approximable numbers and Gallagher's ergodic theorem

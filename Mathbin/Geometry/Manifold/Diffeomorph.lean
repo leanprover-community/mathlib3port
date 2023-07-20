@@ -2,14 +2,11 @@
 Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Yury Kudryashov
-
-! This file was ported from Lean 3 source module geometry.manifold.diffeomorph
-! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.ContMdiffMap
 import Mathbin.Geometry.Manifold.ContMdiffMfderiv
+
+#align_import geometry.manifold.diffeomorph from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
 /-!
 # Diffeomorphisms

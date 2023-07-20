@@ -2,14 +2,11 @@
 Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.inner
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
 import Mathbin.Analysis.InnerProductSpace.Basic
+
+#align_import measure_theory.function.strongly_measurable.inner from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Inner products of strongly measurable functions are strongly measurable.

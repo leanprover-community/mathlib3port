@@ -2,15 +2,12 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.limits.constructions.pullbacks
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
+
+#align_import category_theory.limits.constructions.pullbacks from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Constructing pullbacks from binary products and equalizers

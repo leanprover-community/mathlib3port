@@ -2,11 +2,6 @@
 Copyright (c) 2021 Mantas Bakšys. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
-
-! This file was ported from Lean 3 source module imo.imo2021_q1
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Sqrt
 import Mathbin.Tactic.IntervalCases
@@ -14,6 +9,8 @@ import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.NormCast
 import Mathbin.Tactic.NormNum
 import Mathbin.Tactic.RingExp
+
+#align_import imo.imo2021_q1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # IMO 2021 Q1
@@ -137,7 +134,7 @@ theorem exists_triplet_summing_to_squares (n : ℕ) (hn : 100 ≤ n) :
     all_goals norm_num
 #align imo2021_q1.exists_triplet_summing_to_squares Imo2021Q1.exists_triplet_summing_to_squares
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » B) -/
 -- Since it will be more convenient to work with sets later on, we will translate the above claim
 -- to state that there always exists a set B ⊆ [n, 2n] of cardinality at least 3, such that each
 -- pair of pairwise unequal elements of B sums to a perfect square.
@@ -172,9 +169,9 @@ end imo2021_q1
 
 open imo2021_q1
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (A «expr ⊆ » finset.Icc[finset.Icc] n «expr * »(2, n)) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » A) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » «expr \ »(finset.Icc[finset.Icc] n «expr * »(2, n), A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (A «expr ⊆ » finset.Icc[finset.Icc] n «expr * »(2, n)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » «expr \ »(finset.Icc[finset.Icc] n «expr * »(2, n), A)) -/
 theorem imo2021_q1 :
     ∀ n : ℕ,
       100 ≤ n →

@@ -2,11 +2,6 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Add
 import Mathbin.Analysis.Calculus.Fderiv.Equiv
@@ -15,6 +10,8 @@ import Mathbin.Analysis.Calculus.Monotone
 import Mathbin.Data.Set.Function
 import Mathbin.Algebra.Group.Basic
 import Mathbin.Tactic.Wlog
+
+#align_import analysis.bounded_variation from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
 /-!
 # Functions of bounded variation
@@ -239,7 +236,7 @@ theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y �
 #align evariation_on.edist_le eVariationOn.edist_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print eVariationOn.eq_zero_iff /-
 theorem eq_zero_iff (f : α → E) {s : Set α} :
     eVariationOn f s = 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=

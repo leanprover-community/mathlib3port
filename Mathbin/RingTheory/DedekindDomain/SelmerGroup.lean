@@ -2,16 +2,13 @@
 Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
-
-! This file was ported from Lean 3 source module ring_theory.dedekind_domain.selmer_group
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Equiv.TypeTags
 import Mathbin.Data.Zmod.Quotient
 import Mathbin.RingTheory.DedekindDomain.AdicValuation
 import Mathbin.RingTheory.Norm
+
+#align_import ring_theory.dedekind_domain.selmer_group from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
 /-!
 # Selmer groups of fraction fields of Dedekind domains
@@ -182,7 +179,7 @@ end HeightOneSpectrum
 
 variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ∉ » S) -/
 #print IsDedekindDomain.selmerGroup /-
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmerGroup : Subgroup <| K/n

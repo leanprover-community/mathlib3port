@@ -2,13 +2,10 @@
 Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module field_theory.chevalley_warning
-! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.Finite.Basic
+
+#align_import field_theory.chevalley_warning from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 
 /-!
 # The Chevalley–Warning theorem

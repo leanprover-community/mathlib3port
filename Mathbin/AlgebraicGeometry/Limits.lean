@@ -2,14 +2,11 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.limits
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.Pullbacks
 import Mathbin.AlgebraicGeometry.AffineScheme
+
+#align_import algebraic_geometry.limits from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # (Co)Limits of Schemes

@@ -2,16 +2,13 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module ring_theory.polynomial_algebra
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.MatrixAlgebra
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Matrix.Basis
 import Mathbin.Data.Matrix.Dmatrix
+
+#align_import ring_theory.polynomial_algebra from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Algebra isomorphism between matrices of polynomials and polynomials of matrices

@@ -2,15 +2,12 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module data.polynomial.taylor
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.HasseDeriv
 import Mathbin.Data.Polynomial.Degree.Lemmas
+
+#align_import data.polynomial.taylor from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-!
 # Taylor expansions of polynomials

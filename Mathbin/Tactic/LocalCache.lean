@@ -2,13 +2,10 @@
 Copyright (c) 2019 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
-
-! This file was ported from Lean 3 source module tactic.local_cache
-! leanprover-community/mathlib commit 2558b3b31d33969bb3ef330982ff131533eebfdd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.NormNum
+
+#align_import tactic.local_cache from "leanprover-community/mathlib"@"2558b3b31d33969bb3ef330982ff131533eebfdd"
 
 namespace Tactic
 

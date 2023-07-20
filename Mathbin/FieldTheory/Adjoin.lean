@@ -2,16 +2,13 @@
 Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
-
-! This file was ported from Lean 3 source module field_theory.adjoin
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.IntermediateField
 import Mathbin.FieldTheory.Separable
 import Mathbin.FieldTheory.SplittingField.IsSplittingField
 import Mathbin.RingTheory.TensorProduct
+
+#align_import field_theory.adjoin from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Adjoining Elements to Fields

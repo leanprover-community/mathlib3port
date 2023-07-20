@@ -2,13 +2,10 @@
 Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module data.finsupp.ne_locus
-! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.Defs
+
+#align_import data.finsupp.ne_locus from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 
 /-!
 # Locus of unequal values of finitely supported functions

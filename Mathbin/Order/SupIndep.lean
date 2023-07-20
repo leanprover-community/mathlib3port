@@ -2,16 +2,13 @@
 Copyright (c) 2021 Aaron Anderson, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Kevin Buzzard, Yaël Dillies, Eric Wieser
-
-! This file was ported from Lean 3 source module order.sup_indep
-! leanprover-community/mathlib commit c4c2ed622f43768eff32608d4a0f8a6cec1c047d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Sigma
 import Mathbin.Data.Finset.Pairwise
 import Mathbin.Data.Finset.Powerset
 import Mathbin.Data.Fintype.Basic
+
+#align_import order.sup_indep from "leanprover-community/mathlib"@"c4c2ed622f43768eff32608d4a0f8a6cec1c047d"
 
 /-!
 # Supremum independence
@@ -384,7 +381,7 @@ theorem SetIndependent.disjoint_sSup {x : α} {y : Set α} (hx : x ∈ s) (hy : 
 #align complete_lattice.set_independent.disjoint_Sup CompleteLattice.SetIndependent.disjoint_sSup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CompleteLattice.Independent /-
 /-- An independent indexed family of elements in a complete lattice is one in which every element
   is disjoint from the `supr` of the rest.
@@ -414,7 +411,7 @@ theorem setIndependent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 
 variable {t : ι → α} (ht : Independent t)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CompleteLattice.independent_def /-
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
@@ -427,7 +424,7 @@ theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' {
 #align complete_lattice.independent_def' CompleteLattice.independent_def'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CompleteLattice.independent_def'' /-
 theorem independent_def'' :
     Independent t ↔ ∀ i, Disjoint (t i) (sSup {a | ∃ (j : _) (_ : j ≠ i), t j = a}) := by

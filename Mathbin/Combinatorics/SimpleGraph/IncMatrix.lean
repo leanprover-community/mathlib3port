@@ -2,14 +2,11 @@
 Copyright (c) 2021 Gabriel Moise. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Moise, Yaël Dillies, Kyle Miller
-
-! This file was ported from Lean 3 source module combinatorics.simple_graph.inc_matrix
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Data.Matrix.Basic
+
+#align_import combinatorics.simple_graph.inc_matrix from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
 /-!
 # Incidence matrix of a simple graph

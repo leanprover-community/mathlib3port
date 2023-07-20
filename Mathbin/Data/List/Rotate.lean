@@ -2,14 +2,11 @@
 Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yakov Pechersky
-
-! This file was ported from Lean 3 source module data.list.rotate
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Perm
 import Mathbin.Data.List.Range
+
+#align_import data.list.rotate from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 
 /-!
 # List rotation

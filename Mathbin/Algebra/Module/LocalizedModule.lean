@@ -2,15 +2,12 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
-
-! This file was ported from Lean 3 source module algebra.module.localized_module
-! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Localization.Basic
 import Mathbin.Algebra.Algebra.RestrictScalars
+
+#align_import algebra.module.localized_module from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
 /-!
 # Localized Module

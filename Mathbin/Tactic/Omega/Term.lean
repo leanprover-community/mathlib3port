@@ -2,13 +2,10 @@
 Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
-
-! This file was ported from Lean 3 source module tactic.omega.term
-! leanprover-community/mathlib commit 2558b3b31d33969bb3ef330982ff131533eebfdd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Omega.Coeffs
+
+#align_import tactic.omega.term from "leanprover-community/mathlib"@"2558b3b31d33969bb3ef330982ff131533eebfdd"
 
 /-
 Normalized linear integer arithmetic terms.

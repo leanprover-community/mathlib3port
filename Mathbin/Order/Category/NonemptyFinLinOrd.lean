@@ -2,11 +2,6 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module order.category.NonemptyFinLinOrd
-! leanprover-community/mathlib commit fa4a805d16a9cd9c96e0f8edeb57dc5a07af1a19
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Data.Set.Finite
@@ -14,6 +9,8 @@ import Mathbin.Order.Category.FinPartOrd
 import Mathbin.Order.Category.LinOrd
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
+
+#align_import order.category.NonemptyFinLinOrd from "leanprover-community/mathlib"@"fa4a805d16a9cd9c96e0f8edeb57dc5a07af1a19"
 
 /-!
 # Nonempty finite linear orders

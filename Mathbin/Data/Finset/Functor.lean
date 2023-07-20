@@ -2,15 +2,12 @@
 Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Scott Morrison
-
-! This file was ported from Lean 3 source module data.finset.functor
-! leanprover-community/mathlib commit f16e7a22e11fc09c71f25446ac1db23a24e8a0bd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Multiset.Functor
+
+#align_import data.finset.functor from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 
 /-!
 # Functoriality of `finset`

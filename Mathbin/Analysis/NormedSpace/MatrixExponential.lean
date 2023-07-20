@@ -2,11 +2,6 @@
 Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module analysis.normed_space.matrix_exponential
-! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Exponential
 import Mathbin.Analysis.Matrix
@@ -14,6 +9,8 @@ import Mathbin.LinearAlgebra.Matrix.Zpow
 import Mathbin.LinearAlgebra.Matrix.Hermitian
 import Mathbin.LinearAlgebra.Matrix.Symmetric
 import Mathbin.Topology.UniformSpace.Matrix
+
+#align_import analysis.normed_space.matrix_exponential from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
 /-!
 # Lemmas about the matrix exponential

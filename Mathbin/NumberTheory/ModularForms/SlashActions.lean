@@ -2,15 +2,12 @@
 Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
-
-! This file was ported from Lean 3 source module number_theory.modular_forms.slash_actions
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
 import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
 import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
+
+#align_import number_theory.modular_forms.slash_actions from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # Slash actions

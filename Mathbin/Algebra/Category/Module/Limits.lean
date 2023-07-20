@@ -2,15 +2,12 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Module.limits
-! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Module.Basic
 import Mathbin.Algebra.Category.Group.Limits
 import Mathbin.Algebra.DirectLimit
+
+#align_import algebra.category.Module.limits from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
 /-!
 # The category of R-modules has all limits

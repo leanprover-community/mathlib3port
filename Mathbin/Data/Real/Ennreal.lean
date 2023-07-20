@@ -2,14 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
-
-! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit c14c8fcde993801fca8946b0d80131a1a81d1520
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Nnreal
 import Mathbin.Algebra.Order.Sub.WithTop
+
+#align_import data.real.ennreal from "leanprover-community/mathlib"@"c14c8fcde993801fca8946b0d80131a1a81d1520"
 
 /-!
 # Extended non-negative reals
@@ -331,14 +328,14 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
 #align ennreal.forall_ennreal ENNReal.forall_ennreal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 #print ENNReal.forall_ne_top /-
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0, p r :=
   Option.ball_ne_none
 #align ennreal.forall_ne_top ENNReal.forall_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 #print ENNReal.exists_ne_top' /-
 theorem exists_ne_top' {p : ℝ≥0∞ → Prop} : (∃ (a : _) (_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
@@ -657,7 +654,7 @@ theorem cinfi_ne_top [InfSet α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠
 #align ennreal.cinfi_ne_top ENNReal.cinfi_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 #print ENNReal.iInf_ne_top /-
 theorem iInf_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0, f x := by rw [iInf_subtype', cinfi_ne_top]
@@ -670,7 +667,7 @@ theorem csupr_ne_top [SupSet α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠
 #align ennreal.csupr_ne_top ENNReal.csupr_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 #print ENNReal.iSup_ne_top /-
 theorem iSup_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0, f x :=

@@ -2,15 +2,12 @@
 Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.selmer
-! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.UnitTrinomial
 import Mathbin.RingTheory.Polynomial.GaussLemma
 import Mathbin.Tactic.LinearCombination
+
+#align_import ring_theory.polynomial.selmer from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
 /-!
 # Irreducibility of Selmer Polynomials

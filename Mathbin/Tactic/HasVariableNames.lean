@@ -2,13 +2,10 @@
 Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
-
-! This file was ported from Lean 3 source module tactic.has_variable_names
-! leanprover-community/mathlib commit 0c024a6270e43657c28aaf9664565a85593b3865
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.has_variable_names from "leanprover-community/mathlib"@"0c024a6270e43657c28aaf9664565a85593b3865"
 
 /-!
 # A tactic for type-based naming of variables

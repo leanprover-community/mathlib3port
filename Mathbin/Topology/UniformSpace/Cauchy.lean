@@ -2,15 +2,12 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module topology.uniform_space.cauchy
-! leanprover-community/mathlib commit 22131150f88a2d125713ffa0f4693e3355b1eb49
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Bases
 import Mathbin.Topology.UniformSpace.Basic
+
+#align_import topology.uniform_space.cauchy from "leanprover-community/mathlib"@"22131150f88a2d125713ffa0f4693e3355b1eb49"
 
 /-!
 # Theory of Cauchy filters in uniform spaces. Complete uniform spaces. Totally bounded subsets.
@@ -46,7 +43,7 @@ def IsComplete (s : Set α) :=
 #align is_complete IsComplete
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print Filter.HasBasis.cauchy_iff /-
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
     {f : Filter α} :
@@ -57,7 +54,7 @@ theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α ×
 #align filter.has_basis.cauchy_iff Filter.HasBasis.cauchy_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print cauchy_iff' /-
 theorem cauchy_iff' {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), (x, y) ∈ s :=
@@ -381,7 +378,7 @@ theorem tendsto_nhds_of_cauchySeq_of_subseq [SemilatticeSup β] {u : β → α} 
 #align tendsto_nhds_of_cauchy_seq_of_subseq tendsto_nhds_of_cauchySeq_of_subseq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Filter.HasBasis.cauchySeq_iff /-
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
@@ -462,7 +459,7 @@ protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsCo
 #align is_complete.union IsComplete.union
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » S) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print isComplete_iUnion_separated /-
 theorem isComplete_iUnion_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i))
@@ -616,7 +613,7 @@ def TotallyBounded (s : Set α) : Prop :=
 #align totally_bounded TotallyBounded
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print TotallyBounded.exists_subset /-
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)}
     (hU : U ∈ 𝓤 α) : ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, {x | (x, y) ∈ U} :=
@@ -637,7 +634,7 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
 #align totally_bounded.exists_subset TotallyBounded.exists_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print totallyBounded_iff_subset /-
 theorem totallyBounded_iff_subset {s : Set α} :
     TotallyBounded s ↔

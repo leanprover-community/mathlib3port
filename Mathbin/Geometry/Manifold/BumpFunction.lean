@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module geometry.manifold.bump_function
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.BumpFunctionFindim
 import Mathbin.Geometry.Manifold.ContMdiff
+
+#align_import geometry.manifold.bump_function from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # Smooth bump functions on a smooth manifold

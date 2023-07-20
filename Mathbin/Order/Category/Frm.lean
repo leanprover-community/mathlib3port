@@ -2,16 +2,13 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.category.Frm
-! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Category.Lat
 import Mathbin.Order.Hom.CompleteLattice
 import Mathbin.Topology.Category.CompHaus.Basic
 import Mathbin.Topology.Sets.Opens
+
+#align_import order.category.Frm from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
 /-!
 # The category of frames

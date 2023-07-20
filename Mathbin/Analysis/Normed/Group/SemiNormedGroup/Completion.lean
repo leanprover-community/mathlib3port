@@ -2,15 +2,12 @@
 Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
-
-! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.completion
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Group.SemiNormedGroup
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.Analysis.Normed.Group.HomCompletion
+
+#align_import analysis.normed.group.SemiNormedGroup.completion from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 # Completions of normed groups

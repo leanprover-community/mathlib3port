@@ -2,16 +2,13 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module analysis.normed_space.add_torsor_bases
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.Calculus.AffineMap
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
+
+#align_import analysis.normed_space.add_torsor_bases from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Bases in normed affine spaces.
@@ -100,7 +97,7 @@ variable {V P : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace 
 
 open AffineMap
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » s) -/
 #print IsOpen.exists_between_affineIndependent_span_eq_top /-
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
@@ -134,7 +131,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
 #align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affineIndependent_span_eq_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » u) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 #print IsOpen.exists_subset_affineIndependent_span_eq_top /-
 theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) :

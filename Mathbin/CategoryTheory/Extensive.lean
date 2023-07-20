@@ -2,17 +2,14 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module category_theory.extensive
-! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.CategoryTheory.Limits.Shapes.Types
 import Mathbin.Topology.Category.Top.Limits.Pullbacks
 import Mathbin.CategoryTheory.Limits.FunctorCategory
+
+#align_import category_theory.extensive from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
 /-!
 

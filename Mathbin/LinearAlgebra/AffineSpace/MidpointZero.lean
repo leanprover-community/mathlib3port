@@ -2,14 +2,11 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module linear_algebra.affine_space.midpoint_zero
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
+
+#align_import linear_algebra.affine_space.midpoint_zero from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Midpoint of a segment for characteristic zero

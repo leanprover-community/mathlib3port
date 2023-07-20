@@ -2,16 +2,13 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.free_algebra
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Basis
 import Mathbin.Algebra.FreeAlgebra
 import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
+
+#align_import linear_algebra.free_algebra from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
 /-!
 # Linear algebra properties of `free_algebra R X`

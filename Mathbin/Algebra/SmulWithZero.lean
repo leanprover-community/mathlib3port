@@ -2,16 +2,13 @@
 Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module algebra.smul_with_zero
-! leanprover-community/mathlib commit dc17b6ac53b111affde68d96e5e7a0726816e2cf
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.Ring.Opposite
 import Mathbin.GroupTheory.GroupAction.Opposite
 import Mathbin.GroupTheory.GroupAction.Prod
+
+#align_import algebra.smul_with_zero from "leanprover-community/mathlib"@"dc17b6ac53b111affde68d96e5e7a0726816e2cf"
 
 /-!
 # Introduce `smul_with_zero`

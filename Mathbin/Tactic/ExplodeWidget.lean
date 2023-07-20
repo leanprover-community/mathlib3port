@@ -2,14 +2,11 @@
 Copyright (c) 2020 Minchao Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu
-
-! This file was ported from Lean 3 source module tactic.explode_widget
-! leanprover-community/mathlib commit d13b3a4a392ea7273dfa4727dbd1892e26cfd518
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Explode
 import Mathbin.Tactic.InteractiveExpr
+
+#align_import tactic.explode_widget from "leanprover-community/mathlib"@"d13b3a4a392ea7273dfa4727dbd1892e26cfd518"
 
 /-!
 # `#explode_widget` command

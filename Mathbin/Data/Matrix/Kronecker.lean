@@ -2,11 +2,6 @@
 Copyright (c) 2021 Filippo A. E. Nuccio. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
-
-! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Data.Matrix.Block
@@ -14,6 +9,8 @@ import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.RingTheory.TensorProduct
+
+#align_import data.matrix.kronecker from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # Kronecker product of matrices

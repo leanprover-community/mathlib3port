@@ -2,15 +2,12 @@
 Copyright (c) 2020. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
-
-! This file was ported from Lean 3 source module tactic.group
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.DocCommands
 import Mathbin.Algebra.Group.Commutator
+
+#align_import tactic.group from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 # `group`

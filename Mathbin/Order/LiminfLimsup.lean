@@ -2,14 +2,11 @@
 Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
-
-! This file was ported from Lean 3 source module order.liminf_limsup
-! leanprover-community/mathlib commit 3e32bc908f617039c74c06ea9a897e30c30803c2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.Cofinite
 import Mathbin.Order.Hom.CompleteLattice
+
+#align_import order.liminf_limsup from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
 /-!
 # liminfs and limsups of functions and filters

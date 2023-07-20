@@ -2,17 +2,14 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.rat.lemmas
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Rat.Defs
 import Mathbin.Data.Int.Cast.Lemmas
 import Mathbin.Data.Int.Div
 import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 import Mathbin.Tactic.NthRewrite.Default
+
+#align_import data.rat.lemmas from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Further lemmas for the Rational Numbers

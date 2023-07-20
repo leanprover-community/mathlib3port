@@ -2,11 +2,6 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
-
-! This file was ported from Lean 3 source module algebra.category.Group.injective
-! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Group.EpiMono
 import Mathbin.Algebra.Category.Module.EpiMono
@@ -14,6 +9,8 @@ import Mathbin.Algebra.Module.Injective
 import Mathbin.CategoryTheory.Preadditive.Injective
 import Mathbin.GroupTheory.Divisible
 import Mathbin.RingTheory.PrincipalIdealDomain
+
+#align_import algebra.category.Group.injective from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 
 /-!
 # Injective objects in the category of abelian groups

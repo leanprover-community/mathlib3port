@@ -2,15 +2,12 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.analytic.uniqueness
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Analytic.Linear
 import Mathbin.Analysis.Analytic.Composition
 import Mathbin.Analysis.NormedSpace.Completion
+
+#align_import analysis.analytic.uniqueness from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # Uniqueness principle for analytic functions

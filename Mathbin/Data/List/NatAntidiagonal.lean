@@ -2,14 +2,11 @@
 Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module data.list.nat_antidiagonal
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Nodup
 import Mathbin.Data.List.Range
+
+#align_import data.list.nat_antidiagonal from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 
 /-!
 # Antidiagonals in ℕ × ℕ as lists

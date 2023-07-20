@@ -2,14 +2,11 @@
 Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module data.set.pointwise.list_of_fn
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.List.OfFn
+
+#align_import data.set.pointwise.list_of_fn from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-!
 # Pointwise operations with lists of sets

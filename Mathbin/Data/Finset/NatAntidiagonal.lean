@@ -2,14 +2,11 @@
 Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module data.finset.nat_antidiagonal
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Card
 import Mathbin.Data.Multiset.NatAntidiagonal
+
+#align_import data.finset.nat_antidiagonal from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
 /-!
 # Antidiagonals in ℕ × ℕ as finsets

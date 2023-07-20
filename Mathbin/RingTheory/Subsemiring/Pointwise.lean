@@ -2,16 +2,13 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module ring_theory.subsemiring.pointwise
-! leanprover-community/mathlib commit f16e7a22e11fc09c71f25446ac1db23a24e8a0bd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupRingAction.Basic
 import Mathbin.RingTheory.Subsemiring.Basic
 import Mathbin.GroupTheory.Submonoid.Pointwise
 import Mathbin.Data.Set.Pointwise.Basic
+
+#align_import ring_theory.subsemiring.pointwise from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 
 /-! # Pointwise instances on `subsemiring`s
 

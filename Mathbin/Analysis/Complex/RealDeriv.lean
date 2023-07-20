@@ -2,16 +2,13 @@
 Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yourong Zang
-
-! This file was ported from Lean 3 source module analysis.complex.real_deriv
-! leanprover-community/mathlib commit 575b4ea3738b017e30fb205cb9b4a8742e5e82b6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Analysis.Calculus.Deriv.Linear
 import Mathbin.Analysis.Complex.Conformal
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
+
+#align_import analysis.complex.real_deriv from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 
 /-! # Real differentiability of complex-differentiable functions
 

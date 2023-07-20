@@ -2,15 +2,12 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
-
-! This file was ported from Lean 3 source module set_theory.ordinal.basic
-! leanprover-community/mathlib commit 8ea5598db6caeddde6cb734aa179cc2408dbd345
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Sum.Order
 import Mathbin.Order.InitialSeg
 import Mathbin.SetTheory.Cardinal.Basic
+
+#align_import set_theory.ordinal.basic from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
 
 /-!
 # Ordinals

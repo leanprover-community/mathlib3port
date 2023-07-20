@@ -2,13 +2,10 @@
 Copyright (c) 2018 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Keeley Hoek, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.nth_rewrite.basic
-! leanprover-community/mathlib commit 1182e9100ce808c6f46e6679dd7341b46599aa9e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Meta.ExprLens
+
+#align_import tactic.nth_rewrite.basic from "leanprover-community/mathlib"@"1182e9100ce808c6f46e6679dd7341b46599aa9e"
 
 namespace Tactic
 

@@ -2,14 +2,11 @@
 Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
-
-! This file was ported from Lean 3 source module algebra.free_algebra
-! leanprover-community/mathlib commit aa3a420527e0fbfd0f6615b95b761254a9166e12
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Basic
+
+#align_import algebra.free_algebra from "leanprover-community/mathlib"@"aa3a420527e0fbfd0f6615b95b761254a9166e12"
 
 /-!
 # Free Algebras

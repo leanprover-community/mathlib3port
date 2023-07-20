@@ -2,14 +2,11 @@
 Copyright (c) 2023 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module ring_theory.localization.norm
-! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Localization.Module
 import Mathbin.RingTheory.Norm
+
+#align_import ring_theory.localization.norm from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
 /-!
 

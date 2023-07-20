@@ -2,15 +2,12 @@
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.preadditive.hom_orthogonal
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Linear.Basic
 import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.LinearAlgebra.Matrix.InvariantBasisNumber
+
+#align_import category_theory.preadditive.hom_orthogonal from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 
 /-!
 # Hom orthogonal families.

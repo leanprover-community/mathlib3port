@@ -2,11 +2,6 @@
 Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module ring_theory.valuation.valuation_ring
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Valuation.Integers
 import Mathbin.RingTheory.Ideal.LocalRing
@@ -15,6 +10,8 @@ import Mathbin.RingTheory.Localization.Integer
 import Mathbin.RingTheory.DiscreteValuationRing.Basic
 import Mathbin.RingTheory.Bezout
 import Mathbin.Tactic.FieldSimp
+
+#align_import ring_theory.valuation.valuation_ring from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 # Valuation Rings

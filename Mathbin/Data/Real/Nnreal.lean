@@ -2,11 +2,6 @@
 Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit de29c328903507bb7aff506af9135f4bdaf1849c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Order.Field.Canonical.Basic
@@ -15,6 +10,8 @@ import Mathbin.Algebra.Order.Nonneg.Floor
 import Mathbin.Data.Real.Pointwise
 import Mathbin.Order.ConditionallyCompleteLattice.Group
 import Mathbin.Tactic.Positivity
+
+#align_import data.real.nnreal from "leanprover-community/mathlib"@"de29c328903507bb7aff506af9135f4bdaf1849c"
 
 /-!
 # Nonnegative real numbers

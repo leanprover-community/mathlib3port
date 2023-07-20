@@ -2,14 +2,11 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module analysis.normed_space.star.continuous_functional_calculus
-! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
 import Mathbin.Topology.Algebra.StarSubalgebra
+
+#align_import analysis.normed_space.star.continuous_functional_calculus from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 
 /-! # Continuous functional calculus
 

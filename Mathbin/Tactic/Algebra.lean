@@ -2,13 +2,10 @@
 Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.algebra
-! leanprover-community/mathlib commit 045fc4438e2f3b0c35283d3e937eb465d5b31ec3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.algebra from "leanprover-community/mathlib"@"045fc4438e2f3b0c35283d3e937eb465d5b31ec3"
 
 /-!
 # Recording typeclass ancestors

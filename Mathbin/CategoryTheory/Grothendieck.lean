@@ -2,14 +2,11 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.grothendieck
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.CategoryTheory.Elements
+
+#align_import category_theory.grothendieck from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
 /-!
 # The Grothendieck construction

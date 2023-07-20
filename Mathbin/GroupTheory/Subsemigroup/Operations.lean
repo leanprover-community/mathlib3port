@@ -3,15 +3,12 @@ Copyright (c) 2022 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
-
-! This file was ported from Lean 3 source module group_theory.subsemigroup.operations
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Subsemigroup.Basic
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Group.TypeTags
+
+#align_import group_theory.subsemigroup.operations from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Operations on `subsemigroup`s

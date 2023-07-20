@@ -2,16 +2,13 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
-
-! This file was ported from Lean 3 source module algebra.module.graded_module
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.GradedAlgebra.Basic
 import Mathbin.Algebra.GradedMulAction
 import Mathbin.Algebra.DirectSum.Decomposition
 import Mathbin.Algebra.Module.BigOperators
+
+#align_import algebra.module.graded_module from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Graded Module

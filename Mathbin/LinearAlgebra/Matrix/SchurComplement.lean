@@ -2,15 +2,12 @@
 Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Eric Wieser, Jeremy Avigad, Johan Commelin
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.schur_complement
-! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Invertible
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.Matrix.PosDef
+
+#align_import linear_algebra.matrix.schur_complement from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
 /-! # 2×2 block matrices and the Schur complement
 

@@ -2,15 +2,12 @@
 Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module data.finsupp.lex
-! leanprover-community/mathlib commit 1ead22342e1a078bd44744ace999f85756555d35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.Order
 import Mathbin.Data.Dfinsupp.Lex
 import Mathbin.Data.Finsupp.ToDfinsupp
+
+#align_import data.finsupp.lex from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 
 /-!
 # Lexicographic order on finitely supported functions

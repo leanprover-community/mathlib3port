@@ -2,16 +2,13 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
-
-! This file was ported from Lean 3 source module tactic.to_additive
-! leanprover-community/mathlib commit bfe9e712c5178b227be330f7c10c2e91ab48eaf8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.TransformDecl
 import Mathbin.Tactic.Algebra
 import Mathbin.Tactic.Lint.Basic
 import Mathbin.Tactic.Alias
+
+#align_import tactic.to_additive from "leanprover-community/mathlib"@"bfe9e712c5178b227be330f7c10c2e91ab48eaf8"
 
 /-!
 # Transport multiplicative to additive

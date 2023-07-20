@@ -2,16 +2,13 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.pullbacks
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.Gluing
 import Mathbin.CategoryTheory.Limits.Opposites
 import Mathbin.AlgebraicGeometry.AffineScheme
 import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
+
+#align_import algebraic_geometry.pullbacks from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # Fibred products of schemes

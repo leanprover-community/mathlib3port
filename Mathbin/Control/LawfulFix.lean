@@ -2,16 +2,13 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module control.lawful_fix
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Stream.Init
 import Mathbin.Tactic.Apply
 import Mathbin.Control.Fix
 import Mathbin.Order.OmegaCompletePartialOrder
+
+#align_import control.lawful_fix from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Lawful fixed point operators

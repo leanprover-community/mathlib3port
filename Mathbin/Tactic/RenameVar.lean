@@ -2,13 +2,10 @@
 Copyright (c) 2019 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
-
-! This file was ported from Lean 3 source module tactic.rename_var
-! leanprover-community/mathlib commit 591a0a006de5e8fe75b1c55258123d91dd416b2d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Interactive
+
+#align_import tactic.rename_var from "leanprover-community/mathlib"@"591a0a006de5e8fe75b1c55258123d91dd416b2d"
 
 /-!
 # Rename bound variable tactic

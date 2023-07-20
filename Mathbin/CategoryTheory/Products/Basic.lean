@@ -2,15 +2,12 @@
 Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.products.basic
-! leanprover-community/mathlib commit 1ead22342e1a078bd44744ace999f85756555d35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.EqToHom
 import Mathbin.CategoryTheory.Functor.Const
 import Mathbin.Data.Prod.Basic
+
+#align_import category_theory.products.basic from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 
 /-!
 # Cartesian products of categories

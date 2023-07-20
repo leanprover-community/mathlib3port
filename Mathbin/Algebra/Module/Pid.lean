@@ -2,16 +2,13 @@
 Copyright (c) 2022 Pierre-Alexandre Bazin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
-
-! This file was ported from Lean 3 source module algebra.module.pid
-! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.DedekindDomain
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.Algebra.Module.Projective
 import Mathbin.Algebra.Category.Module.Biproducts
+
+#align_import algebra.module.pid from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
 /-!
 # Structure of finitely generated modules over a PID

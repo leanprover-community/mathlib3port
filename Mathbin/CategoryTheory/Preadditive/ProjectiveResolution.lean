@@ -2,15 +2,12 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.preadditive.projective_resolution
-! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Preadditive.Projective
 import Mathbin.Algebra.Homology.Single
 import Mathbin.Algebra.Homology.HomotopyCategory
+
+#align_import category_theory.preadditive.projective_resolution from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 
 /-!
 # Projective resolutions

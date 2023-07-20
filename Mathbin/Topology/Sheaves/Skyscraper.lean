@@ -2,15 +2,12 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Junyan Xu
-
-! This file was ported from Lean 3 source module topology.sheaves.skyscraper
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Sheaves.Punit
 import Mathbin.Topology.Sheaves.Stalks
 import Mathbin.Topology.Sheaves.Functors
+
+#align_import topology.sheaves.skyscraper from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # Skyscraper (pre)sheaves

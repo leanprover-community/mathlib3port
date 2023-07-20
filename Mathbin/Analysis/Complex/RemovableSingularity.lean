@@ -2,15 +2,12 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.complex.removable_singularity
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.FderivAnalytic
 import Mathbin.Analysis.Asymptotics.SpecificAsymptotics
 import Mathbin.Analysis.Complex.CauchyIntegral
+
+#align_import analysis.complex.removable_singularity from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Removable singularity theorem

@@ -2,15 +2,12 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin, Scott Morrison
-
-! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.kernels
-! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Group.SemiNormedGroup
 import Mathbin.Analysis.Normed.Group.Quotient
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+
+#align_import analysis.normed.group.SemiNormedGroup.kernels from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
 /-!
 # Kernels and cokernels in SemiNormedGroup₁ and SemiNormedGroup

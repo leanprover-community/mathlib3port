@@ -2,14 +2,11 @@
 Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
-
-! This file was ported from Lean 3 source module combinatorics.set_family.shadow
-! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Slice
 import Mathbin.Logic.Function.Iterate
+
+#align_import combinatorics.set_family.shadow from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 
 /-!
 # Shadows
@@ -108,7 +105,7 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
 #align finset.erase_mem_shadow Finset.erase_mem_shadow
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.mem_shadow_iff_insert_mem /-
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
@@ -230,7 +227,7 @@ theorem upShadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (
 #align finset.up_shadow_monotone Finset.upShadow_monotone
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » t) -/
 #print Finset.mem_upShadow_iff /-
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/

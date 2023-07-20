@@ -2,11 +2,6 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.equivs
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DualNumber
 import Mathbin.Algebra.QuaternionBasis
@@ -14,6 +9,8 @@ import Mathbin.Data.Complex.Module
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathbin.LinearAlgebra.CliffordAlgebra.Star
 import Mathbin.LinearAlgebra.QuadraticForm.Prod
+
+#align_import linear_algebra.clifford_algebra.equivs from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # Other constructions isomorphic to Clifford Algebras

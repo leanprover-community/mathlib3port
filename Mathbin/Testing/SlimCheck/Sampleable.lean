@@ -2,11 +2,6 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module testing.slim_check.sampleable
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.LazyList.Basic
 import Mathbin.Data.Tree
@@ -15,6 +10,8 @@ import Mathbin.Control.Bifunctor
 import Mathbin.Control.Ulift
 import Mathbin.Testing.SlimCheck.Gen
 import Mathbin.Tactic.Linarith.Default
+
+#align_import testing.slim_check.sampleable from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # `sampleable` Class

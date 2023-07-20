@@ -2,17 +2,14 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
-
-! This file was ported from Lean 3 source module data.set.intervals.monoid
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Function
 import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 import Mathbin.Algebra.Group.Basic
+
+#align_import data.set.intervals.monoid from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Images of intervals under `(+ d)`

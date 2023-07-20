@@ -2,17 +2,14 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.polynomial.group_ring_action
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupRingAction.Basic
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.GroupTheory.GroupAction.Quotient
+
+#align_import algebra.polynomial.group_ring_action from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-!
 # Group action on rings applied to polynomials

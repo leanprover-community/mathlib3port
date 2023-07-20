@@ -2,17 +2,14 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Group.limits
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Mon.Limits
 import Mathbin.Algebra.Category.Group.Preadditive
 import Mathbin.CategoryTheory.Over
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+
+#align_import algebra.category.Group.limits from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # The category of (commutative) (additive) groups has all limits

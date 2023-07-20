@@ -2,14 +2,11 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.Prod
+
+#align_import algebra.triv_sq_zero_ext from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 
 /-!
 # Trivial Square-Zero Extension

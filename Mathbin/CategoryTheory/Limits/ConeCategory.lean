@@ -2,16 +2,13 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module category_theory.limits.cone_category
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Adjunction.Comma
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Limits.Shapes.Equivalence
+
+#align_import category_theory.limits.cone_category from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Limits and the category of (co)cones

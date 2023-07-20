@@ -2,14 +2,11 @@
 Copyright (c) 2015 Joe Hendrix. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joe Hendrix, Sebastian Ullrich
-
-! This file was ported from Lean 3 source module data.bitvec.core
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Vector.Basic
 import Mathbin.Data.Nat.Pow
+
+#align_import data.bitvec.core from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 
 /-!
 # Basic operations on bitvectors

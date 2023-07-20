@@ -2,13 +2,10 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn, Heather Macbeth
-
-! This file was ported from Lean 3 source module topology.fiber_bundle.basic
-! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.FiberBundle.Trivialization
+
+#align_import topology.fiber_bundle.basic from "leanprover-community/mathlib"@"e473c3198bb41f68560cab68a0529c854b618833"
 
 /-!
 # Fiber bundles
@@ -916,7 +913,7 @@ variable (F) (E : B → Type _) [TopologicalSpace B] [TopologicalSpace F]
   [∀ x, TopologicalSpace (E x)]
 
 #print FiberPrebundle /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
 topology in such a way that there is a fiber bundle structure for which the local equivalences

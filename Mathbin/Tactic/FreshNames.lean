@@ -2,14 +2,11 @@
 Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
-
-! This file was ported from Lean 3 source module tactic.fresh_names
-! leanprover-community/mathlib commit dc1525fb3ef6eb4348fb1749c302d8abc303d34a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Sum.Basic
 import Mathbin.Tactic.Dependencies
+
+#align_import tactic.fresh_names from "leanprover-community/mathlib"@"dc1525fb3ef6eb4348fb1749c302d8abc303d34a"
 
 /-!
 # Tactics for giving hypotheses fresh names

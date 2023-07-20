@@ -2,16 +2,13 @@
 Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
-
-! This file was ported from Lean 3 source module combinatorics.hales_jewett
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Option
 import Mathbin.Data.Fintype.Pi
 import Mathbin.Data.Fintype.Sum
 import Mathbin.Algebra.BigOperators.Basic
+
+#align_import combinatorics.hales_jewett from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
 /-!
 # The Hales-Jewett theorem

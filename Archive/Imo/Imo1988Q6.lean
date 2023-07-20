@@ -2,17 +2,14 @@
 Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module imo.imo1988_q6
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Rat.Defs
 import Mathbin.Order.WellFounded
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.Wlog
+
+#align_import imo.imo1988_q6 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # IMO 1988 Q6 and constant descent Vieta jumping

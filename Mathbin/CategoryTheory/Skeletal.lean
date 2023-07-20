@@ -2,16 +2,13 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.skeletal
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.IsomorphismClasses
 import Mathbin.CategoryTheory.Thin
+
+#align_import category_theory.skeletal from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 
 /-!
 # Skeleton of a category

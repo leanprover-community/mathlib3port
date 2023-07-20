@@ -2,16 +2,13 @@
 Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module analysis.complex.abs_max
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.CauchyIntegral
 import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.Extr
 import Mathbin.Topology.Algebra.Order.ExtrClosure
+
+#align_import analysis.complex.abs_max from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Maximum modulus principle

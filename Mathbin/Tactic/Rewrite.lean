@@ -2,14 +2,11 @@
 Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.rewrite
-! leanprover-community/mathlib commit a0735864ba72769da4b378673d3dbe2453924fde
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Leanbin.Data.Dlist
 import Mathbin.Tactic.Core
+
+#align_import tactic.rewrite from "leanprover-community/mathlib"@"a0735864ba72769da4b378673d3dbe2453924fde"
 
 namespace Tactic
 

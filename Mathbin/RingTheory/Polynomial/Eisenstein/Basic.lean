@@ -2,14 +2,11 @@
 Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.eisenstein.basic
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.EisensteinCriterion
 import Mathbin.RingTheory.Polynomial.ScaleRoots
+
+#align_import ring_theory.polynomial.eisenstein.basic from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
 /-!
 # Eisenstein polynomials

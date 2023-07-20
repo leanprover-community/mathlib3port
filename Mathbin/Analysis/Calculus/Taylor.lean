@@ -2,15 +2,12 @@
 Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
-
-! This file was ported from Lean 3 source module analysis.calculus.taylor
-! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.IteratedDeriv
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Data.Polynomial.Module
+
+#align_import analysis.calculus.taylor from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
 /-!
 # Taylor's theorem

@@ -3,11 +3,6 @@ Copyright (c) 2019 Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert 
 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert Y. Lewis, Patrick Massot
-
-! This file was ported from Lean 3 source module sensitivity
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.FinCases
 import Mathbin.Tactic.ApplyFun
@@ -15,6 +10,8 @@ import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Dual
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Real.Sqrt
+
+#align_import sensitivity from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Huang's sensitivity theorem

@@ -2,15 +2,12 @@
 Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.even_equiv
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathbin.LinearAlgebra.CliffordAlgebra.Even
 import Mathbin.LinearAlgebra.QuadraticForm.Prod
+
+#align_import linear_algebra.clifford_algebra.even_equiv from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 # Isomorphisms with the even subalgebra of a Clifford algebra

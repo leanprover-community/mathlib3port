@@ -2,17 +2,14 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit fdc286cc6967a012f41b87f76dcd2797b53152af
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Series
 import Mathbin.Analysis.Convolution
 import Mathbin.Analysis.InnerProductSpace.EuclideanDist
 import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
 import Mathbin.Data.Set.Pointwise.Support
+
+#align_import analysis.calculus.bump_function_findim from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 
 /-!
 # Bump functions in finite-dimensional vector spaces

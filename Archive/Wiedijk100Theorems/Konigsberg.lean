@@ -2,14 +2,11 @@
 Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
-
-! This file was ported from Lean 3 source module wiedijk_100_theorems.konigsberg
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.SimpleGraph.Trails
 import Mathbin.Tactic.DeriveFintype
+
+#align_import wiedijk_100_theorems.konigsberg from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # The Königsberg bridges problem

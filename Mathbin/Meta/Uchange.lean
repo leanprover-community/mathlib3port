@@ -2,12 +2,9 @@
 Copyright (c) 2020 Gabriel Ebner. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
-
-! This file was ported from Lean 3 source module meta.uchange
-! leanprover-community/mathlib commit 3710744b411550474ecf27d3c50d92156b5ffc95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
+
+#align_import meta.uchange from "leanprover-community/mathlib"@"3710744b411550474ecf27d3c50d92156b5ffc95"
 
 /-!
 # Changing universes of types in meta-code

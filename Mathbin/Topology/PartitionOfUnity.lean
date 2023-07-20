@@ -2,11 +2,6 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.partition_of_unity
-! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.SetTheory.Ordinal.Basic
@@ -14,6 +9,8 @@ import Mathbin.Topology.ContinuousFunction.Algebra
 import Mathbin.Topology.Paracompact
 import Mathbin.Topology.ShrinkingLemma
 import Mathbin.Topology.UrysohnsLemma
+
+#align_import topology.partition_of_unity from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 
 /-!
 # Continuous partition of unity

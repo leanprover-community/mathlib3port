@@ -2,15 +2,12 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module tactic.rcases
-! leanprover-community/mathlib commit 356447fe00e75e54777321045cdff7c9ea212e60
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Leanbin.Data.Dlist
 import Mathbin.Tactic.Core
 import Mathbin.Tactic.Clear
+
+#align_import tactic.rcases from "leanprover-community/mathlib"@"356447fe00e75e54777321045cdff7c9ea212e60"
 
 /-!
 

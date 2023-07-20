@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies, Ella Yu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Ella Yu
-
-! This file was ported from Lean 3 source module combinatorics.additive.energy
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Fintype.Prod
+
+#align_import combinatorics.additive.energy from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-!
 # Additive energy

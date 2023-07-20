@@ -2,16 +2,13 @@
 Copyright (c) 2019 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
-
-! This file was ported from Lean 3 source module group_theory.congruence
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Data.Setoid.Basic
 import Mathbin.GroupTheory.Submonoid.Operations
+
+#align_import group_theory.congruence from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
 /-!
 # Congruence relations

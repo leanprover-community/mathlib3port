@@ -4,14 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 Automation to construct `traversable` instances
-
-! This file was ported from Lean 3 source module control.traversable.derive
-! leanprover-community/mathlib commit b01d6eb9d0a308807af54319b264d0994b91774b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Basic
 import Mathbin.Control.Traversable.Lemmas
+
+#align_import control.traversable.derive from "leanprover-community/mathlib"@"b01d6eb9d0a308807af54319b264d0994b91774b"
 
 namespace Tactic.Interactive
 

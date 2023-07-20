@@ -2,14 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
-
-! This file was ported from Lean 3 source module algebra.module.submodule.lattice
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.Submodule.Basic
 import Mathbin.Algebra.PunitInstances
+
+#align_import algebra.module.submodule.lattice from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # The lattice structure on `submodule`s

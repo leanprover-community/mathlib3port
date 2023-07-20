@@ -2,14 +2,11 @@
 Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
-
-! This file was ported from Lean 3 source module category_theory.closed.functor_category
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Closed.Monoidal
 import Mathbin.CategoryTheory.Monoidal.FunctorCategory
+
+#align_import category_theory.closed.functor_category from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 # Functors from a groupoid into a monoidal closed category form a monoidal closed category.

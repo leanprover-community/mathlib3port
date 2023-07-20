@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.hom.bounded
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.BoundedOrder
+
+#align_import order.hom.bounded from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
 /-!
 # Bounded order homomorphisms

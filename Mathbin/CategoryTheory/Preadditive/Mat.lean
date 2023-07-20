@@ -2,11 +2,6 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.preadditive.Mat
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.BigOperators.Pi
@@ -18,6 +13,8 @@ import Mathbin.Data.Matrix.Basic
 import Mathbin.CategoryTheory.Fintype
 import Mathbin.CategoryTheory.Preadditive.SingleObj
 import Mathbin.Algebra.Opposites
+
+#align_import category_theory.preadditive.Mat from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Matrices over a category.

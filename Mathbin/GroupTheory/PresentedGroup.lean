@@ -2,14 +2,11 @@
 Copyright (c) 2019 Michael Howes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Howes
-
-! This file was ported from Lean 3 source module group_theory.presented_group
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.FreeGroup
 import Mathbin.GroupTheory.QuotientGroup
+
+#align_import group_theory.presented_group from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
 /-!
 # Defining a group given by generators and relations

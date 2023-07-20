@@ -2,13 +2,10 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module tactic.abel
-! leanprover-community/mathlib commit ec322deb9ba5aad978f862669053069b7957c31d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.NormNum
+
+#align_import tactic.abel from "leanprover-community/mathlib"@"ec322deb9ba5aad978f862669053069b7957c31d"
 
 /-!
 # The `abel` tactic

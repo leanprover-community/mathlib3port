@@ -2,17 +2,14 @@
 Copyright (c) 2021 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
-
-! This file was ported from Lean 3 source module algebra.category.fgModule.basic
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
 import Mathbin.CategoryTheory.Monoidal.Subcategory
 import Mathbin.LinearAlgebra.Coevaluation
 import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 import Mathbin.Algebra.Category.Module.Monoidal.Closed
+
+#align_import algebra.category.fgModule.basic from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
 /-!
 # The category of finitely generated modules over a ring

@@ -2,15 +2,12 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.finset.fold
-! leanprover-community/mathlib commit e04043d6bf7264a3c84bc69711dc354958ca4516
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Monoid.WithTop
 import Mathbin.Data.Finset.Image
 import Mathbin.Data.Multiset.Fold
+
+#align_import data.finset.fold from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
 
 /-!
 # The fold operation for a commutative associative operation over a finset.

@@ -2,16 +2,13 @@
 Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Adam Topaz
-
-! This file was ported from Lean 3 source module category_theory.abelian.left_derived
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Abelian.Homology
 import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Abelian.Projective
 import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
+
+#align_import category_theory.abelian.left_derived from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # Zeroth left derived functors

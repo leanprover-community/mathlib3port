@@ -2,17 +2,14 @@
 Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.dickson
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Data.Zmod.Basic
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Polynomial.Chebyshev
 import Mathbin.RingTheory.Ideal.LocalRing
+
+#align_import ring_theory.polynomial.dickson from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Dickson polynomials

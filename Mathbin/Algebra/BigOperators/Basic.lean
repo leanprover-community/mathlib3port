@@ -2,11 +2,6 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit fa2309577c7009ea243cffdf990cd6c84f0ad497
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Multiset.Lemmas
 import Mathbin.Algebra.Group.Pi
@@ -18,6 +13,8 @@ import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Finset.Sigma
 import Mathbin.Data.Multiset.Powerset
 import Mathbin.Data.Set.Pairwise.Basic
+
+#align_import algebra.big_operators.basic from "leanprover-community/mathlib"@"fa2309577c7009ea243cffdf990cd6c84f0ad497"
 
 /-!
 # Big operators
@@ -2434,8 +2431,8 @@ theorem add_eq_union_right_of_le {x y z : Multiset α} (h : z ≤ y) :
 #align multiset.add_eq_union_right_of_le Multiset.add_eq_union_right_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∈ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » i) -/
 #print Multiset.finset_sum_eq_sup_iff_disjoint /-
 theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β → Multiset α} :
     i.Sum f = i.sup f ↔ ∀ (x) (_ : x ∈ i) (y) (_ : y ∈ i), x ≠ y → Multiset.Disjoint (f x) (f y) :=

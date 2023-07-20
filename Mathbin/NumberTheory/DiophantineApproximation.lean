@@ -2,11 +2,6 @@
 Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
-
-! This file was ported from Lean 3 source module number_theory.diophantine_approximation
-! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.ContinuedFractions.Computation.ApproximationCorollaries
 import Mathbin.Algebra.ContinuedFractions.Computation.Translations
@@ -15,6 +10,8 @@ import Mathbin.Data.Int.Units
 import Mathbin.Data.Real.Irrational
 import Mathbin.RingTheory.Coprime.Lemmas
 import Mathbin.Tactic.Basic
+
+#align_import number_theory.diophantine_approximation from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
 /-!
 # Diophantine Approximation

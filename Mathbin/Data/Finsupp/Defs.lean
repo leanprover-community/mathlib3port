@@ -2,14 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
-
-! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit 842328d9df7e96fd90fc424e115679c15fb23a71
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.GroupTheory.Submonoid.Basic
+
+#align_import data.finsupp.defs from "leanprover-community/mathlib"@"842328d9df7e96fd90fc424e115679c15fb23a71"
 
 /-!
 # Type of functions with finite support
@@ -270,7 +267,7 @@ theorem finite_support (f : α →₀ M) : Set.Finite (Function.support f) :=
 #align finsupp.finite_support Finsupp.finite_support
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finsupp.support_subset_iff /-
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 :=
   by
@@ -573,7 +570,7 @@ theorem support_eq_singleton {f : α →₀ M} {a : α} :
 #align finsupp.support_eq_singleton Finsupp.support_eq_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 #print Finsupp.support_eq_singleton' /-
 theorem support_eq_singleton' {f : α →₀ M} {a : α} :
     f.support = {a} ↔ ∃ (b : _) (_ : b ≠ 0), f = single a b :=
@@ -590,7 +587,7 @@ theorem card_support_eq_one {f : α →₀ M} : card f.support = 1 ↔ ∃ a, f 
 #align finsupp.card_support_eq_one Finsupp.card_support_eq_one
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 #print Finsupp.card_support_eq_one' /-
 theorem card_support_eq_one' {f : α →₀ M} :
     card f.support = 1 ↔ ∃ (a : _) (b : _) (_ : b ≠ 0), f = single a b := by

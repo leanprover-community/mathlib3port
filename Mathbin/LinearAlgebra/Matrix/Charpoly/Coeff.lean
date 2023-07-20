@@ -2,14 +2,11 @@
 Copyright (c) 2020 Aaron Anderson, Jalex Stark. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.coeff
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.Expand
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Basic
+
+#align_import linear_algebra.matrix.charpoly.coeff from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Characteristic polynomials

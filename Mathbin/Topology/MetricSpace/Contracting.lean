@@ -2,15 +2,12 @@
 Copyright (c) 2019 Rohan Mitta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.metric_space.contracting
-! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Data.Setoid.Basic
 import Mathbin.Dynamics.FixedPoints.Topology
+
+#align_import topology.metric_space.contracting from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
 /-!
 # Contracting maps

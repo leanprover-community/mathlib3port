@@ -2,14 +2,11 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module tactic.field_simp
-! leanprover-community/mathlib commit 24a09b317861fb5aa3850cfd1254acf729b0a398
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Interactive
 import Mathbin.Tactic.NormNum
+
+#align_import tactic.field_simp from "leanprover-community/mathlib"@"24a09b317861fb5aa3850cfd1254acf729b0a398"
 
 /-!
 # `field_simp` tactic

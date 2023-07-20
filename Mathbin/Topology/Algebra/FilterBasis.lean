@@ -2,14 +2,11 @@
 Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
-
-! This file was ported from Lean 3 source module topology.algebra.filter_basis
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Filter.Bases
 import Mathbin.Topology.Algebra.Module.Basic
+
+#align_import topology.algebra.filter_basis from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
 /-!
 # Group and ring filter bases

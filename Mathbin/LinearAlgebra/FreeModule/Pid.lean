@@ -2,16 +2,13 @@
 Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit d87199d51218d36a0a42c66c82d147b5a7ff87b3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.FreeModule.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.RingTheory.Finiteness
+
+#align_import linear_algebra.free_module.pid from "leanprover-community/mathlib"@"d87199d51218d36a0a42c66c82d147b5a7ff87b3"
 
 /-! # Free modules over PID
 
@@ -379,7 +376,7 @@ noncomputable def Submodule.basisOfPidOfLESpan {ι : Type _} [Finite ι] {b : ι
 
 variable {M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 #print Module.basisOfFiniteTypeTorsionFree /-
 /-- A finite type torsion free module over a PID admits a basis. -/
 noncomputable def Module.basisOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}

@@ -2,14 +2,11 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module measure_theory.measure.haar.normed_space
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
 import Mathbin.MeasureTheory.Integral.Bochner
+
+#align_import measure_theory.measure.haar.normed_space from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Basic properties of Haar measures on real vector spaces

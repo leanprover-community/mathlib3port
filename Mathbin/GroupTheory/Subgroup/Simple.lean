@@ -2,13 +2,10 @@
 Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module group_theory.subgroup.simple
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Subgroup.Actions
+
+#align_import group_theory.subgroup.simple from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
 /-!
 # Simple groups

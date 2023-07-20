@@ -2,15 +2,12 @@
 Copyright (c) 2021 Bhavik Mehta, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
-
-! This file was ported from Lean 3 source module data.finset.slice
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Interval
 import Mathbin.Order.Antichain
+
+#align_import data.finset.slice from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # `r`-sets and slice

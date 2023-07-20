@@ -2,15 +2,12 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Kexing Ying
-
-! This file was ported from Lean 3 source module probability.variance
-! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Notation
 import Mathbin.Probability.Integration
 import Mathbin.MeasureTheory.Function.L2Space
+
+#align_import probability.variance from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
 /-!
 # Variance of random variables

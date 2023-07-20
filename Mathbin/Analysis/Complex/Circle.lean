@@ -2,15 +2,12 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
-
-! This file was ported from Lean 3 source module analysis.complex.circle
-! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Exp
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Analysis.Normed.Field.UnitBall
+
+#align_import analysis.complex.circle from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 
 /-!
 # The circle

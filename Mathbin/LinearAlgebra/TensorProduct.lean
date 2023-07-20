@@ -2,14 +2,11 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
-
-! This file was ported from Lean 3 source module linear_algebra.tensor_product
-! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Congruence
 import Mathbin.Algebra.Module.Submodule.Bilinear
+
+#align_import linear_algebra.tensor_product from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 
 /-!
 # Tensor product of modules over commutative semirings.

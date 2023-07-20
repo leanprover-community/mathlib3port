@@ -2,14 +2,11 @@
 Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
-
-! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.TwoDim
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic
+
+#align_import geometry.euclidean.angle.oriented.basic from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
 /-!
 # Oriented angles.

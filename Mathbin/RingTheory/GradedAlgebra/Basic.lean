@@ -2,16 +2,13 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
-
-! This file was ported from Lean 3 source module ring_theory.graded_algebra.basic
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectSum.Algebra
 import Mathbin.Algebra.DirectSum.Decomposition
 import Mathbin.Algebra.DirectSum.Internal
 import Mathbin.Algebra.DirectSum.Ring
+
+#align_import ring_theory.graded_algebra.basic from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Internally-graded rings and algebras

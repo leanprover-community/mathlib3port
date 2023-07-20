@@ -2,13 +2,10 @@
 Copyright (c) 2023 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module probability.kernel.measurable_integral
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Kernel.Basic
+
+#align_import probability.kernel.measurable_integral from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # Measurability of the integral against a kernel

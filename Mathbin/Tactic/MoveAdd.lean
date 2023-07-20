@@ -2,14 +2,11 @@
 Copyright (c) 2022 Arthur Paulino, Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Damiano Testa
-
-! This file was ported from Lean 3 source module tactic.move_add
-! leanprover-community/mathlib commit 205a628e1fdc9220cb86832d66a50d1381abc103
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
 import Mathbin.Algebra.Group.Basic
+
+#align_import tactic.move_add from "leanprover-community/mathlib"@"205a628e1fdc9220cb86832d66a50d1381abc103"
 
 /-!
 # `move_add`: a tactic for moving summands

@@ -2,14 +2,11 @@
 Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.calculus.deriv.zpow
-! leanprover-community/mathlib commit 599fffe78f0e11eb6a034e834ec51882167b9688
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Pow
 import Mathbin.Analysis.Calculus.Deriv.Inv
+
+#align_import analysis.calculus.deriv.zpow from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 
 /-!
 # Derivatives of `x ^ m`, `m : ℤ`

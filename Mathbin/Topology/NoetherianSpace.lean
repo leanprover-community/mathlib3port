@@ -2,14 +2,11 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module topology.noetherian_space
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.CompactlyGenerated
 import Mathbin.Topology.Sets.Closeds
+
+#align_import topology.noetherian_space from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Noetherian space
@@ -158,7 +155,7 @@ theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continu
 #align topological_space.noetherian_space.range TopologicalSpace.NoetherianSpace.range
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print TopologicalSpace.noetherianSpace_set_iff /-
 theorem noetherianSpace_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
   by

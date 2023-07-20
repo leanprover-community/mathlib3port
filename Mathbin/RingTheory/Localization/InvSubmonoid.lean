@@ -2,16 +2,13 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
-
-! This file was ported from Lean 3 source module ring_theory.localization.inv_submonoid
-! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Submonoid.Inverses
 import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Localization.Basic
 import Mathbin.Tactic.RingExp
+
+#align_import ring_theory.localization.inv_submonoid from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 
 /-!
 # Submonoid of inverses

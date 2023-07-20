@@ -2,15 +2,12 @@
 Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
-
-! This file was ported from Lean 3 source module algebra.continued_fractions.computation.terminates_iff_rat
-! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
 import Mathbin.Data.Rat.Floor
+
+#align_import algebra.continued_fractions.computation.terminates_iff_rat from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 
 /-!
 # Termination of Continued Fraction Computations (`gcf.of`)

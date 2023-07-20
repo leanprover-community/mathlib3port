@@ -2,14 +2,11 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Yury Kudryashov
-
-! This file was ported from Lean 3 source module data.list.chain
-! leanprover-community/mathlib commit be24ec5de6701447e5df5ca75400ffee19d65659
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Pairwise
 import Mathbin.Logic.Relation
+
+#align_import data.list.chain from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
 /-!
 # Relation chain

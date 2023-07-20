@@ -2,11 +2,6 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.order.interval
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.Group.Prod
@@ -14,6 +9,8 @@ import Mathbin.Data.Option.NAry
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Order.Interval
 import Mathbin.Tactic.Positivity
+
+#align_import algebra.order.interval from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Interval arithmetic

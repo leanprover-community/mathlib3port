@@ -2,16 +2,13 @@
 Copyright (c) 2022 Siddhartha Prasad, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Prasad, Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.order.kleene
-! leanprover-community/mathlib commit ac34df03f74e6f797efd6991df2e3b7f7d8d33e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Ring.Canonical
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.Order.Hom.CompleteLattice
+
+#align_import algebra.order.kleene from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 
 /-!
 # Kleene Algebras

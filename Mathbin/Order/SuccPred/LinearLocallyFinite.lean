@@ -2,17 +2,14 @@
 Copyright (c) 2022 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
-
-! This file was ported from Lean 3 source module order.succ_pred.linear_locally_finite
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.LocallyFinite
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.Order.Hom.Basic
 import Mathbin.Data.Countable.Basic
 import Mathbin.Logic.Encodable.Basic
+
+#align_import order.succ_pred.linear_locally_finite from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"
 
 /-!
 # Linear locally finite orders

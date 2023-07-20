@@ -2,11 +2,6 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module ring_theory.roots_of_unity.basic
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Two
 import Mathbin.Algebra.NeZero
@@ -18,6 +13,8 @@ import Mathbin.GroupTheory.SpecificGroups.Cyclic
 import Mathbin.NumberTheory.Divisors
 import Mathbin.RingTheory.IntegralDomain
 import Mathbin.Tactic.Zify
+
+#align_import ring_theory.roots_of_unity.basic from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Roots of unity and primitive roots of unity

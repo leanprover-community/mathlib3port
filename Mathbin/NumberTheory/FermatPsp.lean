@@ -2,15 +2,12 @@
 Copyright (c) 2022 Niels Voss. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Niels Voss
-
-! This file was ported from Lean 3 source module number_theory.fermat_psp
-! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Prime
 import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.Order.Filter.Cofinite
+
+#align_import number_theory.fermat_psp from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 
 /-!
 # Fermat Pseudoprimes

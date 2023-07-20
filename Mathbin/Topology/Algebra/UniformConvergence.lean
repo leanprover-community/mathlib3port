@@ -2,15 +2,12 @@
 Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
-
-! This file was ported from Lean 3 source module topology.algebra.uniform_convergence
-! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.UniformSpace.UniformConvergenceTopology
 import Mathbin.Analysis.LocallyConvex.Bounded
 import Mathbin.Topology.Algebra.FilterBasis
+
+#align_import topology.algebra.uniform_convergence from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 
 /-!
 # Algebraic facts about the topology of uniform convergence

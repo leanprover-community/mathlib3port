@@ -2,15 +2,12 @@
 Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.LinearAlgebra.AffineSpace.Ordered
 import Mathbin.Topology.ContinuousFunction.Basic
+
+#align_import topology.urysohns_lemma from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 
 /-!
 # Urysohn's lemma

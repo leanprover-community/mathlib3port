@@ -2,11 +2,6 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.measure.hausdorff
-! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Between
 import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
@@ -14,6 +9,8 @@ import Mathbin.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
 import Mathbin.Topology.MetricSpace.Holder
 import Mathbin.Topology.MetricSpace.MetricSeparated
+
+#align_import measure_theory.measure.hausdorff from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
 /-!
 # Hausdorff measure and metric (outer) measures

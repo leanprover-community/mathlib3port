@@ -2,15 +2,12 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module combinatorics.partition
-! leanprover-community/mathlib commit 1ead22342e1a078bd44744ace999f85756555d35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.Composition
 import Mathbin.Data.Nat.Parity
 import Mathbin.Tactic.ApplyFun
+
+#align_import combinatorics.partition from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 
 /-!
 # Partitions

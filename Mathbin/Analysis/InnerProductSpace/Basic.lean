@@ -2,11 +2,6 @@
 Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
-
-! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Analysis.Complex.Basic
@@ -14,6 +9,8 @@ import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
 import Mathbin.LinearAlgebra.BilinearForm
+
+#align_import analysis.inner_product_space.basic from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Inner product space
@@ -1166,8 +1163,8 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
 #align orthonormal_sUnion_of_directed orthonormal_sUnion_of_directed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (w «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊇ » w) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » w) -/
 #print exists_maximal_orthonormal /-
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/

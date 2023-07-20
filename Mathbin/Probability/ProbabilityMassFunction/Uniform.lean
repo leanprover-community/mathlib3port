@@ -2,13 +2,10 @@
 Copyright (c) 2022 Devon Tuma. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
-
-! This file was ported from Lean 3 source module probability.probability_mass_function.uniform
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.ProbabilityMassFunction.Constructions
+
+#align_import probability.probability_mass_function.uniform from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # Uniform Probability Mass Functions

@@ -2,11 +2,6 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
-
-! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 3ff3f2d6a3118b8711063de7111a0d77a53219a8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Finsupp.Defs
@@ -17,6 +12,8 @@ import Mathbin.Order.ConditionallyCompleteLattice.Basic
 import Mathbin.Order.SuccPred.Limit
 import Mathbin.SetTheory.Cardinal.SchroederBernstein
 import Mathbin.Tactic.Positivity
+
+#align_import set_theory.cardinal.basic from "leanprover-community/mathlib"@"3ff3f2d6a3118b8711063de7111a0d77a53219a8"
 
 /-!
 # Cardinal Numbers

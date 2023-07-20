@@ -2,11 +2,6 @@
 Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module algebra.lie.classical
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Invertible
 import Mathbin.Data.Matrix.Basis
@@ -15,6 +10,8 @@ import Mathbin.Algebra.Lie.Abelian
 import Mathbin.LinearAlgebra.Matrix.Trace
 import Mathbin.Algebra.Lie.SkewAdjoint
 import Mathbin.LinearAlgebra.SymplecticGroup
+
+#align_import algebra.lie.classical from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Classical Lie algebras

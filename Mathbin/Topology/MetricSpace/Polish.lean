@@ -2,16 +2,13 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.metric_space.polish
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.MetricSpace.PiNat
 import Mathbin.Topology.MetricSpace.Isometry
 import Mathbin.Topology.MetricSpace.Gluing
 import Mathbin.Analysis.Normed.Field.Basic
+
+#align_import topology.metric_space.polish from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 # Polish spaces

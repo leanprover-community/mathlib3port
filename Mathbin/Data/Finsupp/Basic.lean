@@ -2,17 +2,14 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
-
-! This file was ported from Lean 3 source module data.finsupp.basic
-! leanprover-community/mathlib commit f69db8cecc668e2d5894d7e9bfc491da60db3b9f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Regular.Smul
 import Mathbin.Data.Finset.Preimage
 import Mathbin.Data.Rat.BigOperators
+
+#align_import data.finsupp.basic from "leanprover-community/mathlib"@"f69db8cecc668e2d5894d7e9bfc491da60db3b9f"
 
 /-!
 # Miscellaneous definitions, lemmas, and constructions using finsupp

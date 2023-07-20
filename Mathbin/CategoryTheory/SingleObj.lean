@@ -2,16 +2,13 @@
 Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module category_theory.single_obj
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.Combinatorics.Quiver.SingleObj
+
+#align_import category_theory.single_obj from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 
 /-!
 # Single-object category

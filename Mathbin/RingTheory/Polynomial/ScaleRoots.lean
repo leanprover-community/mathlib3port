@@ -2,14 +2,11 @@
 Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Devon Tuma
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.scale_roots
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.NonZeroDivisors
 import Mathbin.Data.Polynomial.AlgebraMap
+
+#align_import ring_theory.polynomial.scale_roots from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-!
 # Scaling the roots of a polynomial

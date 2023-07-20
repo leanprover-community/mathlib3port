@@ -2,11 +2,6 @@
 Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
-
-! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Order.Lattice
 import Mathbin.Analysis.NormedSpace.OperatorNorm
@@ -14,6 +9,8 @@ import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Data.Real.Sqrt
 import Mathbin.Topology.ContinuousFunction.Algebra
 import Mathbin.Topology.MetricSpace.Equicontinuity
+
+#align_import topology.continuous_function.bounded from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Bounded continuous functions
@@ -655,7 +652,7 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 #print BoundedContinuousFunction.arzela_ascoli₁ /-
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact

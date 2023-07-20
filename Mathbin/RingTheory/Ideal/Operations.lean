@@ -2,11 +2,6 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Ring.Equiv
@@ -15,6 +10,8 @@ import Mathbin.LinearAlgebra.Basis.Bilinear
 import Mathbin.RingTheory.Coprime.Lemmas
 import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.RingTheory.NonZeroDivisors
+
+#align_import ring_theory.ideal.operations from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # More operations on modules and ideals
@@ -1218,7 +1215,7 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » m) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » m) -/
 #print Ideal.radical_eq_sInf /-
 theorem radical_eq_sInf (I : Ideal R) : radical I = sInf {J : Ideal R | I ≤ J ∧ IsPrime J} :=
   le_antisymm (le_sInf fun J hJ => hJ.2.radical_le_iff.2 hJ.1) fun r hr =>

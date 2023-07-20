@@ -4,13 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
 
 Tactic to split if-then-else-expressions.
-
-! This file was ported from Lean 3 source module tactic.split_ifs
-! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Hint
+
+#align_import tactic.split_ifs from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
 open Expr Tactic
 

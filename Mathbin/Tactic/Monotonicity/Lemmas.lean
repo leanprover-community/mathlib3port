@@ -2,17 +2,14 @@
 Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.monotonicity.lemmas
-! leanprover-community/mathlib commit 47b51515e69f59bca5cf34ef456e6000fe205a69
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Group.Abs
 import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Order.Sub.Canonical
 import Mathbin.Data.Set.Lattice
 import Mathbin.Tactic.Monotonicity.Basic
+
+#align_import tactic.monotonicity.lemmas from "leanprover-community/mathlib"@"47b51515e69f59bca5cf34ef456e6000fe205a69"
 
 variable {α : Type _}
 

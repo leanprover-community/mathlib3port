@@ -2,15 +2,12 @@
 Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module number_theory.class_number.admissible_absolute_value
-! leanprover-community/mathlib commit ad0089aca372256fe53dde13ca0dfea569bf5ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Basic
 import Mathbin.Combinatorics.Pigeonhole
 import Mathbin.Algebra.Order.EuclideanAbsoluteValue
+
+#align_import number_theory.class_number.admissible_absolute_value from "leanprover-community/mathlib"@"ad0089aca372256fe53dde13ca0dfea569bf5ac7"
 
 /-!
 # Admissible absolute values

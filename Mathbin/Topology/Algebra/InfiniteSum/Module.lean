@@ -2,14 +2,11 @@
 Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov, Frédéric Dupuis
-
-! This file was ported from Lean 3 source module topology.algebra.infinite_sum.module
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.InfiniteSum.Basic
 import Mathbin.Topology.Algebra.Module.Basic
+
+#align_import topology.algebra.infinite_sum.module from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
 /-! # Infinite sums in topological vector spaces 
 

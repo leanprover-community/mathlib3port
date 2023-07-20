@@ -2,13 +2,10 @@
 Copyright (c) 2014 Floris van Doorn (c) 2016 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.nat.pow
-! leanprover-community/mathlib commit 55d224c38461be1e8e4363247dd110137c24a4ff
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Order
+
+#align_import data.nat.pow from "leanprover-community/mathlib"@"55d224c38461be1e8e4363247dd110137c24a4ff"
 
 /-! # `nat.pow`
 

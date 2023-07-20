@@ -2,11 +2,6 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen, Antoine Labelle
-
-! This file was ported from Lean 3 source module linear_algebra.trace
-! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.LinearAlgebra.Matrix.Trace
@@ -15,6 +10,8 @@ import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.Projection
+
+#align_import linear_algebra.trace from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
 /-!
 # Trace of a linear map

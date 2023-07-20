@@ -2,15 +2,12 @@
 Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module category_theory.limits.shapes.multiequalizer
-! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.ConeCategory
+
+#align_import category_theory.limits.shapes.multiequalizer from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
 /-!
 

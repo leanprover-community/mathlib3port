@@ -2,13 +2,10 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module topology.order
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Tactic
+
+#align_import topology.order from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 
 /-!
 # Ordering on topologies and (co)induced topologies
@@ -839,7 +836,7 @@ theorem isOpen_singleton_nhdsAdjoint {α : Type _} {a b : α} (f : Filter α) (h
 #align is_open_singleton_nhds_adjoint isOpen_singleton_nhdsAdjoint
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print le_nhdsAdjoint_iff' /-
 theorem le_nhdsAdjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b :=

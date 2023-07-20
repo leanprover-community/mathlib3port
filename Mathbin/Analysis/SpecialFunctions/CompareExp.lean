@@ -2,15 +2,12 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.special_functions.compare_exp
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathbin.Analysis.Asymptotics.SpecificAsymptotics
+
+#align_import analysis.special_functions.compare_exp from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Growth estimates on `x ^ y` for complex `x`, `y`

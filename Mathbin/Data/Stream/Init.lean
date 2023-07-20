@@ -2,15 +2,12 @@
 Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
-
-! This file was ported from Lean 3 source module data.stream.init
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Stream.Defs
 import Mathbin.Tactic.Ext
 import Mathbin.Logic.Function.Basic
+
+#align_import data.stream.init from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
 /-!
 # Streams a.k.a. infinite lists a.k.a. infinite sequences

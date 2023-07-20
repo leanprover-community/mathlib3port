@@ -2,15 +2,12 @@
 Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
-
-! This file was ported from Lean 3 source module category_theory.idempotents.karoubi
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Idempotents.Basic
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Equivalence
+
+#align_import category_theory.idempotents.karoubi from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
 /-!
 # The Karoubi envelope of a category

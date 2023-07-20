@@ -2,14 +2,11 @@
 Copyright (c) 2019 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
-
-! This file was ported from Lean 3 source module algebra.continued_fractions.basic
-! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Seq.Seq
 import Mathbin.Algebra.Field.Defs
+
+#align_import algebra.continued_fractions.basic from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 
 /-!
 # Basic Definitions/Theorems for Continued Fractions

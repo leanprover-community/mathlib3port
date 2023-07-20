@@ -2,11 +2,6 @@
 Copyright (c) 2023 Emily Witt. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Emily Witt, Scott Morrison, Jake Levinson, Sam van Gool
-
-! This file was ported from Lean 3 source module algebra.homology.local_cohomology
-! leanprover-community/mathlib commit 893964fc28cefbcffc7cb784ed00a2895b4e65cf
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.Algebra.Category.Module.Colimits
@@ -14,6 +9,8 @@ import Mathbin.Algebra.Category.Module.Projective
 import Mathbin.CategoryTheory.Abelian.Ext
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.RingTheory.Noetherian
+
+#align_import algebra.homology.local_cohomology from "leanprover-community/mathlib"@"893964fc28cefbcffc7cb784ed00a2895b4e65cf"
 
 /-!
 # Local cohomology.

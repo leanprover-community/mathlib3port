@@ -2,15 +2,12 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.block
-! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.Tactic.FinCases
+
+#align_import linear_algebra.matrix.block from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 
 /-!
 # Block matrices and their determinant

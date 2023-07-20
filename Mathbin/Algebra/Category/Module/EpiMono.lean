@@ -2,14 +2,11 @@
 Copyright (c) 2021 Scott Morrison All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Module.epi_mono
-! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Quotient
 import Mathbin.Algebra.Category.Module.Basic
+
+#align_import algebra.category.Module.epi_mono from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 
 /-!
 # Monomorphisms in `Module R`

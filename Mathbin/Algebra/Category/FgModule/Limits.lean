@@ -2,11 +2,6 @@
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.fgModule.limits
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.FgModule.Basic
 import Mathbin.Algebra.Category.Module.Limits
@@ -15,6 +10,8 @@ import Mathbin.Algebra.Category.Module.EpiMono
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+
+#align_import algebra.category.fgModule.limits from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # `forget₂ (fgModule K) (Module K)` creates all finite limits.

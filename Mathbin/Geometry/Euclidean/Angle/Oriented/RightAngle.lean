@@ -2,14 +2,11 @@
 Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
-
-! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.right_angle
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Euclidean.Angle.Oriented.Affine
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.RightAngle
+
+#align_import geometry.euclidean.angle.oriented.right_angle from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # Oriented angles in right-angled triangles.

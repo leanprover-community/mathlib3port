@@ -2,17 +2,14 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module category_theory.glue_data
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Elementwise
 import Mathbin.CategoryTheory.Limits.Shapes.Multiequalizer
 import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 import Mathbin.CategoryTheory.Limits.Preserves.Limits
 import Mathbin.CategoryTheory.Limits.Shapes.Types
+
+#align_import category_theory.glue_data from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Gluing data

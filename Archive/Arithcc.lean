@@ -2,14 +2,11 @@
 Copyright (c) 2020 Xi Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xi Wang
-
-! This file was ported from Lean 3 source module arithcc
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Basic
 import Mathbin.Tactic.Basic
+
+#align_import arithcc from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # A compiler for arithmetic expressions

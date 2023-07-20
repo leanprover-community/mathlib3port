@@ -2,14 +2,11 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.direct_sum.basic
-! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Dfinsupp.Basic
 import Mathbin.GroupTheory.Submonoid.Operations
+
+#align_import algebra.direct_sum.basic from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 
 /-!
 # Direct sum

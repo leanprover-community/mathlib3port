@@ -2,11 +2,6 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.free
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Hom.Equiv.Basic
@@ -14,6 +9,8 @@ import Mathbin.Control.Applicative
 import Mathbin.Control.Traversable.Basic
 import Mathbin.Logic.Equiv.Defs
 import Mathbin.Data.List.Basic
+
+#align_import algebra.free from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 
 /-!
 # Free constructions

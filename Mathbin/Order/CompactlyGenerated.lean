@@ -2,11 +2,6 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module order.compactly_generated
-! leanprover-community/mathlib commit c813ed7de0f5115f956239124e9b30f3a621966f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Atoms
 import Mathbin.Order.OrderIsoNat
@@ -17,6 +12,8 @@ import Mathbin.Data.Finset.Order
 import Mathbin.Data.Set.Intervals.OrderIso
 import Mathbin.Data.Finite.Set
 import Mathbin.Tactic.Tfae
+
+#align_import order.compactly_generated from "leanprover-community/mathlib"@"c813ed7de0f5115f956239124e9b30f3a621966f"
 
 /-!
 # Compactness properties for complete lattices
@@ -70,7 +67,7 @@ namespace CompleteLattice
 
 variable (α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print CompleteLattice.IsSupClosedCompact /-
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/

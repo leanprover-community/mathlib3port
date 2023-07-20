@@ -3,11 +3,6 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Frédéric Dupuis,
   Heather Macbeth
-
-! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 9d684a893c52e1d6692a504a118bfccbae04feeb
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.Module.Hom
@@ -15,6 +10,8 @@ import Mathbin.Algebra.Module.Prod
 import Mathbin.Algebra.Module.Submodule.Lattice
 import Mathbin.Data.Dfinsupp.Basic
 import Mathbin.Data.Finsupp.Basic
+
+#align_import linear_algebra.basic from "leanprover-community/mathlib"@"9d684a893c52e1d6692a504a118bfccbae04feeb"
 
 /-!
 # Linear algebra
@@ -1869,7 +1866,7 @@ theorem sub_mem_ker_iff {x y} : x - y ∈ ker f ↔ f x = f y := by rw [mem_ker,
 #align linear_map.sub_mem_ker_iff LinearMap.sub_mem_ker_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » p) -/
 #print LinearMap.disjoint_ker' /-
 theorem disjoint_ker' {p : Submodule R M} :
     Disjoint p (ker f) ↔ ∀ (x) (_ : x ∈ p) (y) (_ : y ∈ p), f x = f y → x = y :=

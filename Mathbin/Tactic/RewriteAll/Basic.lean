@@ -2,13 +2,10 @@
 Copyright (c) 2018 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.rewrite_all.basic
-! leanprover-community/mathlib commit d6814c584384ddf2825ff038e868451a7c956f31
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.rewrite_all.basic from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 
 open Tactic
 

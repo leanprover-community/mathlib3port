@@ -2,11 +2,6 @@
 Copyright (c) 2021 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Ines Wright, Joachim Breitner
-
-! This file was ported from Lean 3 source module group_theory.nilpotent
-! leanprover-community/mathlib commit 599fffe78f0e11eb6a034e834ec51882167b9688
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Solvable
@@ -14,6 +9,8 @@ import Mathbin.GroupTheory.PGroup
 import Mathbin.GroupTheory.Sylow
 import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Tactic.Tfae
+
+#align_import group_theory.nilpotent from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 
 /-!
 

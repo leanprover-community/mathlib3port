@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies, Sara Rousta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.upper_lower.hom
-! leanprover-community/mathlib commit b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.UpperLower.Basic
 import Mathbin.Order.Hom.CompleteLattice
+
+#align_import order.upper_lower.hom from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 
 /-!
 # `upper_set.Ici` etc as `sup`/`Sup`/`inf`/`Inf`-homomorphisms

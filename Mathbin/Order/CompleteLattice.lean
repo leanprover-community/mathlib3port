@@ -2,17 +2,14 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module order.complete_lattice
-! leanprover-community/mathlib commit 5709b0d8725255e76f47debca6400c07b5c2d8e6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Bool.Set
 import Mathbin.Data.Nat.Set
 import Mathbin.Data.Ulift
 import Mathbin.Order.Bounds.Basic
 import Mathbin.Order.Hom.Basic
+
+#align_import order.complete_lattice from "leanprover-community/mathlib"@"5709b0d8725255e76f47debca6400c07b5c2d8e6"
 
 /-!
 # Theory of complete lattices

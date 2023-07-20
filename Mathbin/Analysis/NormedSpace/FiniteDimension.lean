@@ -2,11 +2,6 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathbin.Analysis.NormedSpace.AddTorsor
@@ -16,6 +11,8 @@ import Mathbin.Analysis.NormedSpace.RieszLemma
 import Mathbin.Topology.Algebra.Module.FiniteDimension
 import Mathbin.Topology.Algebra.InfiniteSum.Module
 import Mathbin.Topology.Instances.Matrix
+
+#align_import analysis.normed_space.finite_dimension from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Finite dimensional normed spaces over complete fields

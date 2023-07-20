@@ -2,14 +2,11 @@
 Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
-
-! This file was ported from Lean 3 source module geometry.euclidean.sphere.basic
-! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.StrictConvexBetween
 import Mathbin.Geometry.Euclidean.Basic
+
+#align_import geometry.euclidean.sphere.basic from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 
 /-!
 # Spheres

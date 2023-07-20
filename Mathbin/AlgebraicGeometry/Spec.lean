@@ -2,11 +2,6 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
-
-! This file was ported from Lean 3 source module algebraic_geometry.Spec
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.StructureSheaf
@@ -14,6 +9,8 @@ import Mathbin.RingTheory.Localization.LocalizationLocalization
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.Topology.Sheaves.Functors
 import Mathbin.Algebra.Module.LocalizedModule
+
+#align_import algebraic_geometry.Spec from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # $Spec$ as a functor to locally ringed spaces.

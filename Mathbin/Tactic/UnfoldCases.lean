@@ -2,13 +2,10 @@
 Copyright (c) 2020 Dany Fabian. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dany Fabian
-
-! This file was ported from Lean 3 source module tactic.unfold_cases
-! leanprover-community/mathlib commit 0035e2dd30b71232b3bf7d0827eeaa0c002c1825
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.SplitIfs
+
+#align_import tactic.unfold_cases from "leanprover-community/mathlib"@"0035e2dd30b71232b3bf7d0827eeaa0c002c1825"
 
 /-!
   # Unfold cases tactic

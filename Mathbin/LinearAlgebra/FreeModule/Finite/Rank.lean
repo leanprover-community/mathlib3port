@@ -2,15 +2,12 @@
 Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
-
-! This file was ported from Lean 3 source module linear_algebra.free_module.finite.rank
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Finrank
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
+
+#align_import linear_algebra.free_module.finite.rank from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 

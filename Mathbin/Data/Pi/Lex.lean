@@ -2,15 +2,12 @@
 Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module data.pi.lex
-! leanprover-community/mathlib commit 6623e6af705e97002a9054c1c05a980180276fc1
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.WellFounded
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Order.Group.Defs
+
+#align_import data.pi.lex from "leanprover-community/mathlib"@"6623e6af705e97002a9054c1c05a980180276fc1"
 
 /-!
 # Lexicographic order on Pi types

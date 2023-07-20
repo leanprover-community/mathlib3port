@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module data.sigma.interval
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Sigma.Order
 import Mathbin.Order.LocallyFinite
+
+#align_import data.sigma.interval from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 
 /-!
 # Finite intervals in a sigma type

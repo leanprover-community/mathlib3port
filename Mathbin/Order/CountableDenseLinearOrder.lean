@@ -2,14 +2,11 @@
 Copyright (c) 2020 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
-
-! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Ideal
 import Mathbin.Data.Finset.Lattice
+
+#align_import order.countable_dense_linear_order from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"
 
 /-!
 # The back and forth method and countable dense linear orders
@@ -76,7 +73,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α
 
 variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (p q «expr ∈ » f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p q «expr ∈ » f) -/
 #print Order.PartialIso /-
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting

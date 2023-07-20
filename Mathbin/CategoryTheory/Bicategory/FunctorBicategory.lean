@@ -2,13 +2,10 @@
 Copyright (c) 2022 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
-
-! This file was ported from Lean 3 source module category_theory.bicategory.functor_bicategory
-! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Bicategory.NaturalTransformation
+
+#align_import category_theory.bicategory.functor_bicategory from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 
 /-!
 # The bicategory of oplax functors between two bicategories

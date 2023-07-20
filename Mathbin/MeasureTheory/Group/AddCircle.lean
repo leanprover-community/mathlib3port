@@ -2,14 +2,11 @@
 Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module measure_theory.group.add_circle
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.Periodic
 import Mathbin.Data.Zmod.Quotient
+
+#align_import measure_theory.group.add_circle from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Measure-theoretic results about the additive circle

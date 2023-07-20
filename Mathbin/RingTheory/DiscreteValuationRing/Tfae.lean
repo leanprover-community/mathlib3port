@@ -2,16 +2,13 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring.tfae
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.Valuation.ValuationRing
 import Mathbin.RingTheory.Nakayama
+
+#align_import ring_theory.discrete_valuation_ring.tfae from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 
@@ -167,7 +164,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
 #align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdeal_isPrincipal_of_isDedekindDomain
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 #print DiscreteValuationRing.TFAE /-
 theorem DiscreteValuationRing.TFAE [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) :

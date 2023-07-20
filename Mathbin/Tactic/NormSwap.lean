@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yakov Pechersky All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
-
-! This file was ported from Lean 3 source module tactic.norm_swap
-! leanprover-community/mathlib commit 9407b03373c8cd201df99d6bc5514fc2db44054f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Equiv.Defs
 import Mathbin.Tactic.NormFin
+
+#align_import tactic.norm_swap from "leanprover-community/mathlib"@"9407b03373c8cd201df99d6bc5514fc2db44054f"
 
 /-!
 # `norm_swap`

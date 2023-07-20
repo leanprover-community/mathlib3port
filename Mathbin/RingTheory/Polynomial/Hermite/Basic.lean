@@ -2,15 +2,12 @@
 Copyright (c) 2023 Luke Mantle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.hermite.basic
-! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Nat.Factorial.DoubleFactorial
+
+#align_import ring_theory.polynomial.hermite.basic from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
 /-!
 # Hermite polynomials

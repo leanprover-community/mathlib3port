@@ -2,15 +2,12 @@
 Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module category_theory.monoidal.free.coherence
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Free.Basic
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.DiscreteCategory
+
+#align_import category_theory.monoidal.free.coherence from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # The monoidal coherence theorem

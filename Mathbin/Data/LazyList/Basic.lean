@@ -2,15 +2,12 @@
 Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module data.lazy_list.basic
-! leanprover-community/mathlib commit 4d392a6c9c4539cbeca399b3ee0afea398fbd2eb
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Control.Traversable.Equiv
 import Mathbin.Control.Traversable.Instances
 import Mathbin.Data.LazyList
+
+#align_import data.lazy_list.basic from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 
 /-!
 ## Definitions on lazy lists

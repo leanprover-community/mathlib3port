@@ -2,15 +2,12 @@
 Copyright (c) 2018 Michael Jendrusch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.monoidal.functor
-! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Category
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Products.Basic
+
+#align_import category_theory.monoidal.functor from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 
 /-!
 # (Lax) monoidal functors

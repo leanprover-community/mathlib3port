@@ -2,13 +2,10 @@
 Copyright (c) 2019 Rob Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rob Lewis
-
-! This file was ported from Lean 3 source module tactic.delta_instance
-! leanprover-community/mathlib commit 1f10390872a75359a9a42cd6d7644cc5e45660c2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.SimpResult
+
+#align_import tactic.delta_instance from "leanprover-community/mathlib"@"1f10390872a75359a9a42cd6d7644cc5e45660c2"
 
 namespace Tactic
 

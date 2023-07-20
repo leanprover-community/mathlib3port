@@ -2,17 +2,14 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Logic.Denumerable
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Order.Hom.Basic
 import Mathbin.Tactic.Congrm
+
+#align_import order.order_iso_nat from "leanprover-community/mathlib"@"210657c4ea4a4a7b234392f70a3a2a83346dfa90"
 
 /-!
 # Relation embeddings from the naturals

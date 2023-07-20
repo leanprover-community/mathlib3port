@@ -2,15 +2,12 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module analysis.normed_space.lp_equiv
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.LpSpace
 import Mathbin.Analysis.NormedSpace.PiLp
 import Mathbin.Topology.ContinuousFunction.Bounded
+
+#align_import analysis.normed_space.lp_equiv from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 # Equivalences among $L^p$ spaces

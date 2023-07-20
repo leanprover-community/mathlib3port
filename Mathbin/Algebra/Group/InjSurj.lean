@@ -2,15 +2,12 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module algebra.group.inj_surj
-! leanprover-community/mathlib commit d23418e009d2bc37f9e1047ecaa229790b7356be
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Function.Basic
 import Mathbin.Data.Int.Cast.Basic
+
+#align_import algebra.group.inj_surj from "leanprover-community/mathlib"@"d23418e009d2bc37f9e1047ecaa229790b7356be"
 
 /-!
 # Lifting algebraic data classes along injective/surjective maps

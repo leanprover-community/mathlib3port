@@ -4,13 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 Binder elimination
-
-! This file was ported from Lean 3 source module tactic.converter.binders
-! leanprover-community/mathlib commit d6814c584384ddf2825ff038e868451a7c956f31
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.CompleteLattice
+
+#align_import tactic.converter.binders from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 
 namespace OldConv
 

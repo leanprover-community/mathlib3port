@@ -2,14 +2,11 @@
 Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
-
-! This file was ported from Lean 3 source module data.zmod.coprime
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Zmod.Basic
 import Mathbin.RingTheory.Int.Basic
+
+#align_import data.zmod.coprime from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 
 /-!
 # Coprimality and vanishing

@@ -2,15 +2,12 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.normed_space.banach
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.MetricSpace.Baire
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.AffineIsometry
+
+#align_import analysis.normed_space.banach from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Banach open mapping theorem

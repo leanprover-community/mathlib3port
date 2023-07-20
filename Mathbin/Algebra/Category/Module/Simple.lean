@@ -2,17 +2,14 @@
 Copyright (c) 2022 Pierre-Alexandre Bazin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin, Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Module.simple
-! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Simple
 import Mathbin.Algebra.Category.Module.Subobject
 import Mathbin.Algebra.Category.Module.Algebra
 import Mathbin.RingTheory.SimpleModule
 import Mathbin.LinearAlgebra.FiniteDimensional
+
+#align_import algebra.category.Module.simple from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 
 /-!
 # Simple objects in the category of `R`-modules

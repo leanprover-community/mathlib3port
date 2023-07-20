@@ -2,15 +2,12 @@
 Copyright (c) 2023 Rémi Bottinelli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
-
-! This file was ported from Lean 3 source module analysis.constant_speed
-! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Function
 import Mathbin.Analysis.BoundedVariation
 import Mathbin.Tactic.SwapVar
+
+#align_import analysis.constant_speed from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
 /-!
 # Constant speed
@@ -183,7 +180,7 @@ theorem HasConstantSpeedOnWith.Icc_Icc {x y z : ℝ} (hfs : HasConstantSpeedOnWi
 #align has_constant_speed_on_with.Icc_Icc HasConstantSpeedOnWith.Icc_Icc
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print hasConstantSpeedOnWith_zero_iff /-
 theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=

@@ -2,15 +2,12 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
-
-! This file was ported from Lean 3 source module tactic.lint.type_classes
-! leanprover-community/mathlib commit 8f66240cab125b938b327d3850169d490cfbcdd8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
+
+#align_import tactic.lint.type_classes from "leanprover-community/mathlib"@"8f66240cab125b938b327d3850169d490cfbcdd8"
 
 /-!
 # Linters about type classes

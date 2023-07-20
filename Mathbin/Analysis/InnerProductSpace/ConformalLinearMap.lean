@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yourong Zang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
-
-! This file was ported from Lean 3 source module analysis.inner_product_space.conformal_linear_map
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.ConformalLinearMap
 import Mathbin.Analysis.InnerProductSpace.Basic
+
+#align_import analysis.inner_product_space.conformal_linear_map from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Conformal maps between inner product spaces

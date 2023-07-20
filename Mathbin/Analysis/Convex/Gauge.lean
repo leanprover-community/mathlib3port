@@ -2,17 +2,14 @@
 Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
-
-! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 373b03b5b9d0486534edbe94747f23cb3712f93d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.Seminorm
 import Mathbin.Data.IsROrC.Basic
 import Mathbin.Tactic.Congrm
+
+#align_import analysis.convex.gauge from "leanprover-community/mathlib"@"373b03b5b9d0486534edbe94747f23cb3712f93d"
 
 /-!
 # The Minkowksi functional

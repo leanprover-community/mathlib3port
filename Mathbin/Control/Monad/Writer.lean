@@ -4,14 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 The writer monad transformer for passing immutable state.
-
-! This file was ported from Lean 3 source module control.monad.writer
-! leanprover-community/mathlib commit 9407b03373c8cd201df99d6bc5514fc2db44054f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Equiv.Defs
+
+#align_import control.monad.writer from "leanprover-community/mathlib"@"9407b03373c8cd201df99d6bc5514fc2db44054f"
 
 universe u v w u₀ u₁ v₀ v₁
 

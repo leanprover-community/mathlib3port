@@ -2,11 +2,6 @@
 Copyright (c) 2020 Kenji Nakagawa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
-
-! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Subalgebra.Pointwise
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Maximal
@@ -16,6 +11,8 @@ import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.FractionalIdeal
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.RingTheory.ChainOfDivisors
+
+#align_import ring_theory.dedekind_domain.ideal from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Dedekind domains and ideals
@@ -298,7 +295,7 @@ noncomputable instance : InvOneClass (FractionalIdeal R₁⁰ K) :=
 
 end FractionalIdeal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
 #print IsDedekindDomainInv /-
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
@@ -316,7 +313,7 @@ open FractionalIdeal
 
 variable {R A K}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
 #print isDedekindDomainInv_iff /-
 theorem isDedekindDomainInv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), I * I⁻¹ = 1 :=
@@ -1531,7 +1528,7 @@ theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {
 #align ideal.prod_le_prime Ideal.prod_le_prime
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.inf_prime_pow_eq_prod /-
 /-- The intersection of distinct prime powers in a Dedekind domain is the product of these
 prime powers. -/
@@ -1631,7 +1628,7 @@ noncomputable def Ideal.quotientMulEquivQuotientProd (I J : Ideal R) (coprime : 
 #align ideal.quotient_mul_equiv_quotient_prod Ideal.quotientMulEquivQuotientProd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.quotientEquivPiOfFinsetProdEq /-
 /-- **Chinese remainder theorem** for a Dedekind domain: if the ideal `I` factors as
 `∏ i in s, P i ^ e i`, then `R ⧸ I` factors as `Π (i : s), R ⧸ (P i ^ e i)`.
@@ -1649,7 +1646,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfFinsetProdEq {ι : Type _} {
 #align is_dedekind_domain.quotient_equiv_pi_of_finset_prod_eq IsDedekindDomain.quotientEquivPiOfFinsetProdEq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.exists_representative_mod_finset /-
 /-- Corollary of the Chinese remainder theorem: given elements `x i : R / P i ^ e i`,
 we can choose a representative `y : R` such that `y ≡ x i (mod P i ^ e i)`.-/
@@ -1665,7 +1662,7 @@ theorem IsDedekindDomain.exists_representative_mod_finset {ι : Type _} {s : Fin
 #align is_dedekind_domain.exists_representative_mod_finset IsDedekindDomain.exists_representative_mod_finset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.exists_forall_sub_mem_ideal /-
 /-- Corollary of the Chinese remainder theorem: given elements `x i : R`,
 we can choose a representative `y : R` such that `y - x i ∈ P i ^ e i`.-/

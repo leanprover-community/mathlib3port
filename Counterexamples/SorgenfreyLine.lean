@@ -2,11 +2,6 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module sorgenfrey_line
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Instances.Irrational
 import Mathbin.Topology.Algebra.Order.Archimedean
@@ -14,6 +9,8 @@ import Mathbin.Topology.Paracompact
 import Mathbin.Topology.MetricSpace.Metrizable
 import Mathbin.Topology.MetricSpace.EmetricParacompact
 import Mathbin.Data.Set.Intervals.Monotone
+
+#align_import sorgenfrey_line from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Sorgenfrey line
@@ -130,7 +127,7 @@ theorem isOpen_iff {s : Set ℝₗ} : IsOpen s ↔ ∀ x ∈ s, ∃ y > x, Ico x
   isOpen_iff_mem_nhds.trans <| forall₂_congr fun x hx => (nhds_basis_Ico x).mem_iff
 #align counterexample.sorgenfrey_line.is_open_iff Counterexample.SorgenfreyLine.isOpen_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem isClosed_iff {s : Set ℝₗ} : IsClosed s ↔ ∀ (x) (_ : x ∉ s), ∃ y > x, Disjoint (Ico x y) s :=
   by simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, subset_compl_iff_disjoint_right]
 #align counterexample.sorgenfrey_line.is_closed_iff Counterexample.SorgenfreyLine.isClosed_iff

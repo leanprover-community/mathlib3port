@@ -2,16 +2,13 @@
 Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module model_theory.direct_limit
-! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Algebra.DirectLimit
 import Mathbin.ModelTheory.Quotients
 import Mathbin.ModelTheory.FinitelyGenerated
+
+#align_import model_theory.direct_limit from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
 /-!
 # Direct Limits of First-Order Structures

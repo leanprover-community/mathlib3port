@@ -2,17 +2,14 @@
 Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.free_module.ideal_quotient
-! leanprover-community/mathlib commit 90b0d53ee6ffa910e5c2a977ce7e2fc704647974
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Zmod.Quotient
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
 import Mathbin.LinearAlgebra.QuotientPi
+
+#align_import linear_algebra.free_module.ideal_quotient from "leanprover-community/mathlib"@"90b0d53ee6ffa910e5c2a977ce7e2fc704647974"
 
 /-! # Ideals in free modules over PIDs
 

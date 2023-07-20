@@ -2,15 +2,12 @@
 Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.adjunction.over
-! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Monad.Products
 import Mathbin.CategoryTheory.Over
+
+#align_import category_theory.adjunction.over from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 
 /-!
 # Adjunctions related to the over category

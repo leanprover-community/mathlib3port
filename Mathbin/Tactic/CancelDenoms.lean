@@ -2,16 +2,13 @@
 Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module tactic.cancel_denoms
-! leanprover-community/mathlib commit eaa771fc4f5f356afeacac4ab92e0cbf10b0b1df
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Rat.MetaDefs
 import Mathbin.Tactic.NormNum
 import Mathbin.Data.Tree
 import Mathbin.Meta.Expr
+
+#align_import tactic.cancel_denoms from "leanprover-community/mathlib"@"eaa771fc4f5f356afeacac4ab92e0cbf10b0b1df"
 
 /-!
 # A tactic for canceling numeric denominators

@@ -2,14 +2,11 @@
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.algebra.order.left_right_lim
-! leanprover-community/mathlib commit ac34df03f74e6f797efd6991df2e3b7f7d8d33e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.Algebra.Order.LeftRight
+
+#align_import topology.algebra.order.left_right_lim from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 
 /-!
 # Left and right limits

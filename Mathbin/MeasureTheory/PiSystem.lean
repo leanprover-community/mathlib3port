@@ -2,14 +2,11 @@
 Copyright (c) 2021 Martin Zinkevich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Martin Zinkevich, Rémy Degenne
-
-! This file was ported from Lean 3 source module measure_theory.pi_system
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Encodable.Lattice
 import Mathbin.MeasureTheory.MeasurableSpaceDef
+
+#align_import measure_theory.pi_system from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Induction principles for measurable sets, related to π-systems and λ-systems.
@@ -66,7 +63,7 @@ open MeasurableSpace Set
 
 open scoped Classical MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s t «expr ∈ » C) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s t «expr ∈ » C) -/
 #print IsPiSystem /-
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do

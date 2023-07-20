@@ -2,17 +2,14 @@
 Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
-
-! This file was ported from Lean 3 source module order.jordan_holder
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Lattice
 import Mathbin.Data.List.Sort
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.Logic.Equiv.Functor
 import Mathbin.Data.Fintype.Card
+
+#align_import order.jordan_holder from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Jordan-Hölder Theorem

@@ -2,13 +2,10 @@
 Copyright (c) 2017 Sebastian Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Ullrich
-
-! This file was ported from Lean 3 source module tactic.find
-! leanprover-community/mathlib commit 42b92aaaa6369e6c778d5e279524ab14f493ca87
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.find from "leanprover-community/mathlib"@"42b92aaaa6369e6c778d5e279524ab14f493ca87"
 
 open Expr
 

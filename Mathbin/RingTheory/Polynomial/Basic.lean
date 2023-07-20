@@ -2,11 +2,6 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.basic
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.GeomSum
@@ -14,6 +9,8 @@ import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.RingTheory.Polynomial.Content
 import Mathbin.RingTheory.UniqueFactorizationDomain
+
+#align_import ring_theory.polynomial.basic from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Ring-theoretic supplement of data.polynomial.

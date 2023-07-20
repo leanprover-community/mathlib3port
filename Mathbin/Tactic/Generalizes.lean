@@ -2,13 +2,10 @@
 Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
-
-! This file was ported from Lean 3 source module tactic.generalizes
-! leanprover-community/mathlib commit 8f6fd1b69096c6a587f745d354306c0d46396915
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.generalizes from "leanprover-community/mathlib"@"8f6fd1b69096c6a587f745d354306c0d46396915"
 
 /-!
 # The `generalizes` tactic

@@ -2,11 +2,6 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Sigma
 import Mathbin.Data.Int.Range
@@ -15,6 +10,8 @@ import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.Tactic.PrettyCases
 import Mathbin.Testing.SlimCheck.Sampleable
 import Mathbin.Testing.SlimCheck.Testable
+
+#align_import testing.slim_check.functions from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
 /-!
 ## `slim_check`: generators for functions

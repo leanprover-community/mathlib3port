@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yakov Pechersky All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Mario Carneiro
-
-! This file was ported from Lean 3 source module tactic.norm_fin
-! leanprover-community/mathlib commit 0bd2ea37bcba5769e14866170f251c9bc64e35d7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Tactic.NormNum
+
+#align_import tactic.norm_fin from "leanprover-community/mathlib"@"0bd2ea37bcba5769e14866170f251c9bc64e35d7"
 
 /-!
 # `norm_fin`

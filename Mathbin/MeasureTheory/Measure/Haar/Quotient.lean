@@ -2,15 +2,12 @@
 Copyright (c) 2022 Alex Kontorovich and Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
-
-! This file was ported from Lean 3 source module measure_theory.measure.haar.quotient
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Haar.Basic
 import Mathbin.MeasureTheory.Group.FundamentalDomain
 import Mathbin.Algebra.Group.Opposite
+
+#align_import measure_theory.measure.haar.quotient from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Haar quotient measure

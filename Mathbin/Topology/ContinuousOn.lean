@@ -2,13 +2,10 @@
 Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit d4f691b9e5f94cfc64639973f3544c95f8d5d494
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Constructions
+
+#align_import topology.continuous_on from "leanprover-community/mathlib"@"d4f691b9e5f94cfc64639973f3544c95f8d5d494"
 
 /-!
 # Neighborhoods and continuity relative to a subset
@@ -446,7 +443,7 @@ theorem nhdsWithin_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topological
 #align nhds_within_pi_eq' nhdsWithin_pi_eq'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 #print nhdsWithin_pi_eq /-
 theorem nhdsWithin_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
     (hI : I.Finite) (s : ∀ i, Set (α i)) (x : ∀ i, α i) :

@@ -2,16 +2,13 @@
 Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
-
-! This file was ported from Lean 3 source module analysis.convex.extrema
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Topology.Algebra.Affine
 import Mathbin.Topology.LocalExtr
 import Mathbin.Topology.MetricSpace.Basic
+
+#align_import analysis.convex.extrema from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
 /-!
 # Minima and maxima of convex functions

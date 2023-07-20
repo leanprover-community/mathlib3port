@@ -2,16 +2,13 @@
 Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
-
-! This file was ported from Lean 3 source module algebra.continued_fractions.convergents_equiv
-! leanprover-community/mathlib commit b5ad141426bb005414324f89719c77c0aa3ec612
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.ContinuedFractions.ContinuantsRecurrence
 import Mathbin.Algebra.ContinuedFractions.TerminatedStable
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.Ring
+
+#align_import algebra.continued_fractions.convergents_equiv from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 
 /-!
 # Equivalence of Recursive and Direct Computations of `gcf` Convergents

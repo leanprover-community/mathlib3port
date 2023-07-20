@@ -2,14 +2,11 @@
 Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
-
-! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 00d163e35035c3577c1c79fa53b68de17781ffc1
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Basic
 import Mathbin.Order.Monotone.Basic
+
+#align_import data.int.basic from "leanprover-community/mathlib"@"00d163e35035c3577c1c79fa53b68de17781ffc1"
 
 /-!
 # Basic instances on the integers

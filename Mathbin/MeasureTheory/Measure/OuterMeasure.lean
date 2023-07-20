@@ -2,16 +2,13 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit 343e80208d29d2d15f8050b929aa50fe4ce71b55
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.MeasureTheory.PiSystem
 import Mathbin.Data.Countable.Basic
 import Mathbin.Data.Fin.VecNotation
+
+#align_import measure_theory.measure.outer_measure from "leanprover-community/mathlib"@"343e80208d29d2d15f8050b929aa50fe4ce71b55"
 
 /-!
 # Outer Measures
@@ -176,7 +173,7 @@ protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪
 #align measure_theory.outer_measure.union MeasureTheory.OuterMeasure.union
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.OuterMeasure.null_of_locally_null /-
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
@@ -865,7 +862,7 @@ theorem ofFunction_eq_sSup : OuterMeasure.ofFunction m m_empty = sSup {μ | ∀ 
 #align measure_theory.outer_measure.of_function_eq_Sup MeasureTheory.OuterMeasure.ofFunction_eq_sSup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
 #print MeasureTheory.OuterMeasure.ofFunction_union_of_top_of_nonempty_inter /-
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.

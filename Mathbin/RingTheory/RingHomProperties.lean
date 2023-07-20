@@ -2,17 +2,14 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module ring_theory.ring_hom_properties
-! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Ring.Constructions
 import Mathbin.Algebra.Category.Ring.Colimits
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.RingTheory.Localization.Away.Basic
 import Mathbin.RingTheory.IsTensorProduct
+
+#align_import ring_theory.ring_hom_properties from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
 /-!
 # Properties of ring homomorphisms

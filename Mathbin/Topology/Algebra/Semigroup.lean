@@ -2,13 +2,10 @@
 Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
-
-! This file was ported from Lean 3 source module topology.algebra.semigroup
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Separation
+
+#align_import topology.algebra.semigroup from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Idempotents in topological semigroups
@@ -24,7 +21,7 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (m m' «expr ∈ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m m' «expr ∈ » N) -/
 #print exists_idempotent_of_compact_t2_of_continuous_mul_left /-
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
@@ -82,7 +79,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
 #align exists_idempotent_of_compact_t2_of_continuous_add_left exists_idempotent_of_compact_t2_of_continuous_add_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print exists_idempotent_in_compact_subsemigroup /-
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/

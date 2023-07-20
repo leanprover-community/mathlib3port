@@ -2,11 +2,6 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.perfection
-! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Pi
 import Mathbin.Algebra.CharP.Quotient
@@ -17,6 +12,8 @@ import Mathbin.FieldTheory.PerfectClosure
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.RingTheory.Valuation.Integers
+
+#align_import ring_theory.perfection from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
 /-!
 # Ring Perfection and Tilt

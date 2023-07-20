@@ -2,16 +2,13 @@
 Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module model_theory.encoding
-! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Computability.Encoding
 import Mathbin.Logic.Small.List
 import Mathbin.ModelTheory.Syntax
 import Mathbin.SetTheory.Cardinal.Ordinal
+
+#align_import model_theory.encoding from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 
 /-! # Encodings and Cardinality of First-Order Syntax
 

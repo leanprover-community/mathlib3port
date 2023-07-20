@@ -2,15 +2,12 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.open_immersion.Scheme
-! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.OpenImmersion.Basic
 import Mathbin.AlgebraicGeometry.Scheme
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
+
+#align_import algebraic_geometry.open_immersion.Scheme from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
 /-!
 # Open immersions of schemes

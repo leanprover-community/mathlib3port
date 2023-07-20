@@ -4,16 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Patrick Massot
 
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
-
-! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Congruence
 import Mathbin.GroupTheory.Coset
 import Mathbin.GroupTheory.Subgroup.Finite
 import Mathbin.GroupTheory.Subgroup.Pointwise
+
+#align_import group_theory.quotient_group from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
 /-!
 # Quotients of groups by normal subgroups

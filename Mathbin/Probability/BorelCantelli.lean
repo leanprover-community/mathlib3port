@@ -2,15 +2,12 @@
 Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
-
-! This file was ported from Lean 3 source module probability.borel_cantelli
-! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Martingale.BorelCantelli
 import Mathbin.Probability.ConditionalExpectation
 import Mathbin.Probability.Independence.Basic
+
+#align_import probability.borel_cantelli from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
 /-!
 

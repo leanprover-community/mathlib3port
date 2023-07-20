@@ -2,15 +2,12 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module data.set.pairwise.basic
-! leanprover-community/mathlib commit c4c2ed622f43768eff32608d4a0f8a6cec1c047d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Function
 import Mathbin.Logic.Relation
 import Mathbin.Logic.Pairwise
+
+#align_import data.set.pairwise.basic from "leanprover-community/mathlib"@"c4c2ed622f43768eff32608d4a0f8a6cec1c047d"
 
 /-!
 # Relations holding pairwise

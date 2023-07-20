@@ -2,11 +2,6 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
-
-! This file was ported from Lean 3 source module tactic.core
-! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Control.Basic
 import Mathbin.Data.Dlist.Basic
@@ -16,6 +11,8 @@ import Mathbin.Tactic.BinderMatching
 import Mathbin.Tactic.InteractiveExpr
 import Mathbin.Tactic.LeanCoreDocs
 import Mathbin.Tactic.ProjectDir
+
+#align_import tactic.core from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
 universe u
 

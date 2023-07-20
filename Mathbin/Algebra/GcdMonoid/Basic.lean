@@ -2,15 +2,12 @@
 Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
-
-! This file was ported from Lean 3 source module algebra.gcd_monoid.basic
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Ring.Regular
+
+#align_import algebra.gcd_monoid.basic from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 
 /-!
 # Monoids with normalization functions, `gcd`, and `lcm`

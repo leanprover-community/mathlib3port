@@ -2,14 +2,11 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.group_ring_action.invariant
-! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.RingTheory.Subring.Pointwise
+
+#align_import algebra.group_ring_action.invariant from "leanprover-community/mathlib"@"1dac236edca9b4b6f5f00b1ad831e35f89472837"
 
 /-! # Subrings invariant under an action 
 

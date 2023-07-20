@@ -2,14 +2,11 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
-
-! This file was ported from Lean 3 source module data.finset.mul_antidiagonal
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Set.MulAntidiagonal
+
+#align_import data.finset.mul_antidiagonal from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-! # Multiplication antidiagonal as a `finset`.
 

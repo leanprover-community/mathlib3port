@@ -2,16 +2,13 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Group.biproducts
-! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Category.Group.Preadditive
 import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.Algebra.Category.Group.Limits
+
+#align_import algebra.category.Group.biproducts from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 
 /-!
 # The category of abelian groups has finite biproducts

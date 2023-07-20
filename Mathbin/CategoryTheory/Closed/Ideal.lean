@@ -2,11 +2,6 @@
 Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.closed.ideal
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
@@ -15,6 +10,8 @@ import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.CategoryTheory.Closed.Cartesian
 import Mathbin.CategoryTheory.Subterminal
+
+#align_import category_theory.closed.ideal from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # Exponential ideals

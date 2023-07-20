@@ -2,17 +2,14 @@
 Copyright (c) 2021 Mark Lavrentyev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mark Lavrentyev
-
-! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.fundamental_group
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.PathConnected
 import Mathbin.Topology.Homotopy.Path
 import Mathbin.AlgebraicTopology.FundamentalGroupoid.Basic
+
+#align_import algebraic_topology.fundamental_groupoid.fundamental_group from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # Fundamental group of a space

@@ -2,14 +2,11 @@
 Copyright (c) 2022 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.nat.sqrt_norm_num
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.NormNum
 import Mathbin.Data.Nat.Sqrt
+
+#align_import data.nat.sqrt_norm_num from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-! ### `norm_num` plugin for `sqrt`
 

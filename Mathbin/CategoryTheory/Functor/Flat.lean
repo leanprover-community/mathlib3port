@@ -2,11 +2,6 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module category_theory.functor.flat
-! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
 import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Limits.Bicones
 import Mathbin.CategoryTheory.Limits.Comma
 import Mathbin.CategoryTheory.Limits.Preserves.Finite
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
+
+#align_import category_theory.functor.flat from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 
 /-!
 # Representably flat functors

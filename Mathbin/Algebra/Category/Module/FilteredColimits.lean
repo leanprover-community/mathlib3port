@@ -2,14 +2,11 @@
 Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
-
-! This file was ported from Lean 3 source module algebra.category.Module.filtered_colimits
-! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Group.FilteredColimits
 import Mathbin.Algebra.Category.Module.Basic
+
+#align_import algebra.category.Module.filtered_colimits from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
 /-!
 # The forgetful functor from `R`-modules preserves filtered colimits.

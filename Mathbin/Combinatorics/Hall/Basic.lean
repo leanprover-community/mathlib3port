@@ -2,15 +2,12 @@
 Copyright (c) 2021 Alena Gusakov, Bhavik Mehta, Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
-
-! This file was ported from Lean 3 source module combinatorics.hall.basic
-! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.Hall.Finite
 import Mathbin.CategoryTheory.CofilteredSystem
 import Mathbin.Data.Rel
+
+#align_import combinatorics.hall.basic from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
 /-!
 # Hall's Marriage Theorem

@@ -2,13 +2,10 @@
 Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Eric Wieser, Joachim Breitner
-
-! This file was ported from Lean 3 source module group_theory.is_free_group
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.FreeGroup
+
+#align_import group_theory.is_free_group from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
 /-!
 # Free groups structures on arbitrary types

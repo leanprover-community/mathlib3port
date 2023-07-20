@@ -2,15 +2,12 @@
 Copyright (c) 2019 Jean Lo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
-
-! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.Convex.Hull
 import Mathbin.Analysis.NormedSpace.Basic
+
+#align_import analysis.locally_convex.basic from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 
 /-!
 # Local convexity

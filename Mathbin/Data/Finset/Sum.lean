@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module data.finset.sum
-! leanprover-community/mathlib commit e04043d6bf7264a3c84bc69711dc354958ca4516
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Multiset.Sum
 import Mathbin.Data.Finset.Card
+
+#align_import data.finset.sum from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
 
 /-!
 # Disjoint sum of finsets

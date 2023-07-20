@@ -2,14 +2,11 @@
 Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
-
-! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.MkSimpAttribute
 import Mathbin.Tactic.ReservedNotation
+
+#align_import logic.basic from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
 /-!
 # Basic logic properties
@@ -1669,7 +1666,7 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
 #align ball_cond_comm ball_cond_comm
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print ball_mem_comm /-
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
     (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
@@ -2215,7 +2212,7 @@ theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by simp [@eq_
 #align forall_eq' forall_eq'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print Decidable.and_forall_ne /-
 theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
     (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
@@ -2223,7 +2220,7 @@ theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
 #align decidable.and_forall_ne Decidable.and_forall_ne
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print and_forall_ne /-
 theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b :=
   Decidable.and_forall_ne a

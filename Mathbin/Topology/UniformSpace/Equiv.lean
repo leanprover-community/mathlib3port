@@ -3,15 +3,12 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton,
 Anatole Dedecker
-
-! This file was ported from Lean 3 source module topology.uniform_space.equiv
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Topology.UniformSpace.Pi
+
+#align_import topology.uniform_space.equiv from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Uniform isomorphisms

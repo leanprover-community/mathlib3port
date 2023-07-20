@@ -2,16 +2,13 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module field_theory.is_alg_closed.algebraic_closure
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectLimit
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.FieldTheory.SplittingField.Construction
+
+#align_import field_theory.is_alg_closed.algebraic_closure from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Algebraic Closure

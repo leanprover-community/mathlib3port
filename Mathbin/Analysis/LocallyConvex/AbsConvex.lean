@@ -2,15 +2,12 @@
 Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
-
-! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
 import Mathbin.Analysis.LocallyConvex.WithSeminorms
 import Mathbin.Analysis.Convex.Gauge
+
+#align_import analysis.locally_convex.abs_convex from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Absolutely convex sets

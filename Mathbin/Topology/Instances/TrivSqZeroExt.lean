@@ -2,15 +2,12 @@
 Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module topology.instances.triv_sq_zero_ext
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.TrivSqZeroExt
 import Mathbin.Topology.Algebra.InfiniteSum.Basic
 import Mathbin.Topology.Algebra.Module.Basic
+
+#align_import topology.instances.triv_sq_zero_ext from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
 /-!
 # Topology on `triv_sq_zero_ext R M`

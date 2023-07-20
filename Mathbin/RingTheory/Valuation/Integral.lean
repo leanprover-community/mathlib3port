@@ -2,14 +2,11 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module ring_theory.valuation.integral
-! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.IntegrallyClosed
 import Mathbin.RingTheory.Valuation.Integers
+
+#align_import ring_theory.valuation.integral from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
 /-!
 # Integral elements over the ring of integers of a valution

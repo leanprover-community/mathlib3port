@@ -2,16 +2,13 @@
 Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module data.finset.sym
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Fintype.Prod
 import Mathbin.Data.Fintype.Vector
 import Mathbin.Data.Sym.Sym2
+
+#align_import data.finset.sym from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 # Symmetric powers of a finset

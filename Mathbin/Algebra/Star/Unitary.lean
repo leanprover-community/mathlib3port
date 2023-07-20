@@ -2,14 +2,11 @@
 Copyright (c) 2022 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
-
-! This file was ported from Lean 3 source module algebra.star.unitary
-! leanprover-community/mathlib commit be24ec5de6701447e5df5ca75400ffee19d65659
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Star.Basic
 import Mathbin.GroupTheory.Submonoid.Operations
+
+#align_import algebra.star.unitary from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
 /-!
 # Unitary elements of a star monoid

@@ -2,11 +2,6 @@
 Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
-
-! This file was ported from Lean 3 source module linear_algebra.affine_space.independent
-! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Sort
 import Mathbin.Data.Fin.VecNotation
@@ -14,6 +9,8 @@ import Mathbin.Data.Sign
 import Mathbin.LinearAlgebra.AffineSpace.Combination
 import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
 import Mathbin.LinearAlgebra.Basis
+
+#align_import linear_algebra.affine_space.independent from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 
 /-!
 # Affine independence
@@ -651,7 +648,7 @@ theorem exists_subset_affineIndependent_affineSpan_eq_top {s : Set P}
 
 variable (k V)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print exists_affineIndependent /-
 theorem exists_affineIndependent (s : Set P) :
     ∃ (t : _) (_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) :=

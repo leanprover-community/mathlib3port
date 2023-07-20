@@ -2,13 +2,10 @@
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module tactic.observe
-! leanprover-community/mathlib commit b9fbef82195b93bc07cc4572e6360ac4a8af01b4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Suggest
+
+#align_import tactic.observe from "leanprover-community/mathlib"@"b9fbef82195b93bc07cc4572e6360ac4a8af01b4"
 
 /-!
 # observe

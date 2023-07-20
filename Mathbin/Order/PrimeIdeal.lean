@@ -2,14 +2,11 @@
 Copyright (c) 2021 Noam Atar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Noam Atar
-
-! This file was ported from Lean 3 source module order.prime_ideal
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Ideal
 import Mathbin.Order.Pfilter
+
+#align_import order.prime_ideal from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
 /-!
 # Prime ideals

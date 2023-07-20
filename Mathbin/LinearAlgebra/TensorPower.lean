@@ -2,15 +2,12 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.tensor_power
-! leanprover-community/mathlib commit 575b4ea3738b017e30fb205cb9b4a8742e5e82b6
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.PiTensorProduct
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.Algebra.DirectSum.Algebra
+
+#align_import linear_algebra.tensor_power from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 
 /-!
 # Tensor power of a semimodule over a commutative semirings

@@ -2,15 +2,12 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
-
-! This file was ported from Lean 3 source module group_theory.abelianization
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finite.Card
 import Mathbin.GroupTheory.Commutator
 import Mathbin.GroupTheory.Finiteness
+
+#align_import group_theory.abelianization from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # The abelianization of a group

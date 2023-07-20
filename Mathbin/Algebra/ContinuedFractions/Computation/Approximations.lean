@@ -2,15 +2,12 @@
 Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
-
-! This file was ported from Lean 3 source module algebra.continued_fractions.computation.approximations
-! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
 import Mathbin.Data.Nat.Fib
 import Mathbin.Tactic.SolveByElim
+
+#align_import algebra.continued_fractions.computation.approximations from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 
 /-!
 # Approximations for Continued Fraction Computations (`generalized_continued_fraction.of`)

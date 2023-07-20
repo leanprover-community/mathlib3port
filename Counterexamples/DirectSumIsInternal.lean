@@ -2,15 +2,12 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard
-
-! This file was ported from Lean 3 source module direct_sum_is_internal
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Algebra.Group.ConjFinite
 import Mathbin.Tactic.FinCases
+
+#align_import direct_sum_is_internal from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Not all complementary decompositions of a module over a semiring make up a direct sum

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module order.category.omega_complete_partial_order
-! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.OmegaCompletePartialOrder
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
+
+#align_import order.category.omega_complete_partial_order from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 
 /-!
 # Category of types with a omega complete partial order

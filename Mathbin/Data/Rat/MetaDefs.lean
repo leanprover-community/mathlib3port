@@ -2,14 +2,11 @@
 Copyright (c) 2019 Robert Y. Lewis . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module data.rat.meta_defs
-! leanprover-community/mathlib commit c18a48e9f71115845326e03443913f0c3694c153
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Rat.Defs
 import Mathbin.Tactic.Core
+
+#align_import data.rat.meta_defs from "leanprover-community/mathlib"@"c18a48e9f71115845326e03443913f0c3694c153"
 
 /-!
 # Meta operations on ℚ

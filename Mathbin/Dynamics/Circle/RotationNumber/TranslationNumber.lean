@@ -2,17 +2,14 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module dynamics.circle.rotation_number.translation_number
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Order.Iterate
 import Mathbin.Order.SemiconjSup
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
+
+#align_import dynamics.circle.rotation_number.translation_number from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 # Translation number of a monotone real map that commutes with `x ↦ x + 1`

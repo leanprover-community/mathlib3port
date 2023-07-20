@@ -2,17 +2,14 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.subobject.basic
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Subobject.MonoOver
 import Mathbin.CategoryTheory.Skeletal
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Tactic.Elementwise
+
+#align_import category_theory.subobject.basic from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 # Subobjects

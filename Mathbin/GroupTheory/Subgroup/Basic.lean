@@ -2,11 +2,6 @@
 Copyright (c) 2020 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
-
-! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit d30d31261cdb4d2f5e612eabc3c4bf45556350d5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Conj
 import Mathbin.Algebra.Module.Basic
@@ -16,6 +11,8 @@ import Mathbin.GroupTheory.Submonoid.Centralizer
 import Mathbin.Logic.Encodable.Basic
 import Mathbin.Order.Atoms
 import Mathbin.Tactic.ApplyFun
+
+#align_import group_theory.subgroup.basic from "leanprover-community/mathlib"@"d30d31261cdb4d2f5e612eabc3c4bf45556350d5"
 
 /-!
 # Subgroups
@@ -730,7 +727,7 @@ protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
 #align add_subgroup.zsmul_mem AddSubgroup.zsmul_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Subgroup.ofDiv /-
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]

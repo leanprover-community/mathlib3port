@@ -2,15 +2,12 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module analysis.normed_space.continuous_affine_map
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.ContinuousAffineMap
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
+
+#align_import analysis.normed_space.continuous_affine_map from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Continuous affine maps between normed spaces.

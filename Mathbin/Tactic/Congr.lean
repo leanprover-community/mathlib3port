@@ -2,14 +2,11 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
-
-! This file was ported from Lean 3 source module tactic.congr
-! leanprover-community/mathlib commit 28b66e1a5de3072ff425b43cf9ebb9a03312b435
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.Ext
+
+#align_import tactic.congr from "leanprover-community/mathlib"@"28b66e1a5de3072ff425b43cf9ebb9a03312b435"
 
 /-!
 # Congruence and related tactics

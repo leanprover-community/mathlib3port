@@ -2,13 +2,10 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.measure.null_measurable
-! leanprover-community/mathlib commit b5ad141426bb005414324f89719c77c0aa3ec612
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.AeDisjoint
+
+#align_import measure_theory.measure.null_measurable from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 
 /-!
 # Null measurable sets and complete measures
@@ -271,7 +268,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)]
 #align measure_theory.null_measurable_set.insert MeasureTheory.NullMeasurableSet.insert
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 #print MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq /-
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _) (_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
@@ -298,7 +295,7 @@ theorem compl_toMeasurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurab
 #align measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_toMeasurable_compl_ae_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq /-
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _) (_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=

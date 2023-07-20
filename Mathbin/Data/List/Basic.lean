@@ -2,13 +2,10 @@
 Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.list.basic
-! leanprover-community/mathlib commit 9da1b3534b65d9661eb8f42443598a92bbb49211
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Order.Basic
+
+#align_import data.list.basic from "leanprover-community/mathlib"@"9da1b3534b65d9661eb8f42443598a92bbb49211"
 
 /-!
 # Basic properties of lists

@@ -2,13 +2,10 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module algebra.order.hom.basic
-! leanprover-community/mathlib commit 7ea604785a41a0681eac70c5a82372493dbefc68
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Order
+
+#align_import algebra.order.hom.basic from "leanprover-community/mathlib"@"7ea604785a41a0681eac70c5a82372493dbefc68"
 
 /-!
 # Algebraic order homomorphism classes

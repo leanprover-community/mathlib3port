@@ -2,13 +2,10 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module algebra.dual_number
-! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.TrivSqZeroExt
+
+#align_import algebra.dual_number from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 
 /-!
 # Dual numbers

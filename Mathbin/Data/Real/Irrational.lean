@@ -2,17 +2,14 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Yury Kudryashov
-
-! This file was ported from Lean 3 source module data.real.irrational
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Sqrt
 import Mathbin.Tactic.IntervalCases
 import Mathbin.RingTheory.Algebraic
 import Mathbin.Data.Rat.Sqrt
 import Mathbin.RingTheory.Int.Basic
+
+#align_import data.real.irrational from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
 /-!
 # Irrational real numbers

@@ -2,14 +2,11 @@
 Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
-
-! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.manifold
-! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
 import Mathbin.Geometry.Manifold.ContMdiffMfderiv
+
+#align_import analysis.complex.upper_half_plane.manifold from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 
 /-!
 # Manifold structure on the upper half plane.

@@ -2,17 +2,14 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
-
-! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 3b1890e71632be9e3b2086ab512c3259a7e9a3ef
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.Topology.Algebra.Monoid
 import Mathbin.Topology.Algebra.Constructions
+
+#align_import topology.algebra.group.basic from "leanprover-community/mathlib"@"3b1890e71632be9e3b2086ab512c3259a7e9a3ef"
 
 /-!
 # Topological groups

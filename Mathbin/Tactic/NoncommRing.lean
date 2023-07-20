@@ -2,13 +2,10 @@
 Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Oliver Nash
-
-! This file was ported from Lean 3 source module tactic.noncomm_ring
-! leanprover-community/mathlib commit abaabc8c03c8bdc430975669014d3e6c19de58e4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Abel
+
+#align_import tactic.noncomm_ring from "leanprover-community/mathlib"@"abaabc8c03c8bdc430975669014d3e6c19de58e4"
 
 namespace Tactic
 

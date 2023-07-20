@@ -2,11 +2,6 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
-
-! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 5c4b3d41a84bd2a1d79c7d9265e58a891e71be89
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Data.Polynomial.FieldDivision
@@ -17,6 +12,8 @@ import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.PowerBasis
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.RingTheory.QuotientNoetherian
+
+#align_import ring_theory.adjoin_root from "leanprover-community/mathlib"@"5c4b3d41a84bd2a1d79c7d9265e58a891e71be89"
 
 /-!
 # Adjoining roots of polynomials

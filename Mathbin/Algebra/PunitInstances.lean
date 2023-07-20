@@ -2,17 +2,14 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.punit_instances
-! leanprover-community/mathlib commit be24ec5de6701447e5df5ca75400ffee19d65659
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.Algebra.GroupRingAction.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.Order.CompleteBooleanAlgebra
+
+#align_import algebra.punit_instances from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
 /-!
 # Instances on punit

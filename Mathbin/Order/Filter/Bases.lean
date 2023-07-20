@@ -2,15 +2,12 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
-
-! This file was ported from Lean 3 source module order.filter.bases
-! leanprover-community/mathlib commit f974ae84dfc9fea6a036a8f30f09414254e3bc40
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Prod.Pprod
 import Mathbin.Data.Set.Countable
 import Mathbin.Order.Filter.Prod
+
+#align_import order.filter.bases from "leanprover-community/mathlib"@"f974ae84dfc9fea6a036a8f30f09414254e3bc40"
 
 /-!
 # Filter bases
@@ -478,7 +475,7 @@ theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s
 #align filter.has_basis.eq_bot_iff Filter.HasBasis.eq_bot_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.generate_neBot_iff /-
 theorem generate_neBot_iff {s : Set (Set α)} :
     NeBot (generate s) ↔ ∀ (t) (_ : t ⊆ s), t.Finite → (⋂₀ t).Nonempty :=

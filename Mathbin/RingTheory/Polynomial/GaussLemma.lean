@@ -2,16 +2,13 @@
 Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module ring_theory.polynomial.gauss_lemma
-! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.SplittingField.Construction
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.RingTheory.Localization.Integral
 import Mathbin.RingTheory.IntegrallyClosed
+
+#align_import ring_theory.polynomial.gauss_lemma from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
 /-!
 # Gauss's Lemma

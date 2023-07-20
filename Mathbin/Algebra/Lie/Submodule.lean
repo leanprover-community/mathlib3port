@@ -2,14 +2,11 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module algebra.lie.submodule
-! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Lie.Subalgebra
 import Mathbin.RingTheory.Noetherian
+
+#align_import algebra.lie.submodule from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
 /-!
 # Lie submodules of a Lie algebra

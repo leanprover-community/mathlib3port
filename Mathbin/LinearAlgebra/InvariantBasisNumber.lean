@@ -2,14 +2,11 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
-
-! This file was ported from Lean 3 source module linear_algebra.invariant_basis_number
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.PrincipalIdealDomain
+
+#align_import linear_algebra.invariant_basis_number from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 
 /-!
 # Invariant basis number property

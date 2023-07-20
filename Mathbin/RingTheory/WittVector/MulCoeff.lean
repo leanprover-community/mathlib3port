@@ -2,14 +2,11 @@
 Copyright (c) 2022 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
-
-! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_coeff
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.WittVector.Truncated
 import Mathbin.Data.MvPolynomial.Supported
+
+#align_import ring_theory.witt_vector.mul_coeff from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # Leading terms of Witt vector multiplication

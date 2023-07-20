@@ -2,13 +2,10 @@
 Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.monotonicity.basic
-! leanprover-community/mathlib commit 97be0de92337e2393d9a78b357f345d00c482eb5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.WithBot
+
+#align_import tactic.monotonicity.basic from "leanprover-community/mathlib"@"97be0de92337e2393d9a78b357f345d00c482eb5"
 
 namespace Tactic.Interactive
 

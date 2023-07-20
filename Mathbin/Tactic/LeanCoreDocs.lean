@@ -2,13 +2,10 @@
 Copyright (c) 2020 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bryan Gin-ge Chen, Robert Y. Lewis, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.lean_core_docs
-! leanprover-community/mathlib commit 7e3fa4c114f6f12380cf3b181fd4bd03a2f05b79
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.DocCommands
+
+#align_import tactic.lean_core_docs from "leanprover-community/mathlib"@"7e3fa4c114f6f12380cf3b181fd4bd03a2f05b79"
 
 /-!
 

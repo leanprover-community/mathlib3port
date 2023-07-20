@@ -2,14 +2,11 @@
 Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
-
-! This file was ported from Lean 3 source module data.mv_polynomial.invertible
-! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.MvPolynomial.Basic
 import Mathbin.RingTheory.AlgebraTower
+
+#align_import data.mv_polynomial.invertible from "leanprover-community/mathlib"@"1dac236edca9b4b6f5f00b1ad831e35f89472837"
 
 /-!
 # Invertible polynomials

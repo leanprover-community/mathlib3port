@@ -13,3 +13,5 @@ import Counterexamples.SeminormLatticeNotDistrib
 import Counterexamples.SorgenfreyLine
 import Counterexamples.ZeroDivisorsInAddMonoidAlgebras
 
+#align_import all from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
+

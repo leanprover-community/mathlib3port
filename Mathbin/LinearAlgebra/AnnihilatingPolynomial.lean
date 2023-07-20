@@ -2,14 +2,11 @@
 Copyright (c) 2022 Justin Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justin Thomas
-
-! This file was ported from Lean 3 source module linear_algebra.annihilating_polynomial
-! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.Minpoly.Field
 import Mathbin.RingTheory.PrincipalIdealDomain
+
+#align_import linear_algebra.annihilating_polynomial from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
 /-!
 # Annihilating Ideal

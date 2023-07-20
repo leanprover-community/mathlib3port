@@ -2,11 +2,6 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin, Patrick Massot
-
-! This file was ported from Lean 3 source module algebra.order.with_zero
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Equiv.Units.GroupWithZero
 import Mathbin.Algebra.GroupWithZero.InjSurj
@@ -15,6 +10,8 @@ import Mathbin.Algebra.Order.Monoid.Basic
 import Mathbin.Algebra.Order.Monoid.WithZero.Defs
 import Mathbin.Algebra.Order.Group.Instances
 import Mathbin.Algebra.Order.Monoid.TypeTags
+
+#align_import algebra.order.with_zero from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Linearly ordered commutative groups and monoids with a zero element adjoined

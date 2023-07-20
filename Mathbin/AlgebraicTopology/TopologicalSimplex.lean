@@ -2,15 +2,12 @@
 Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Adam Topaz
-
-! This file was ported from Lean 3 source module algebraic_topology.topological_simplex
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicTopology.SimplexCategory
 import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.Instances.Nnreal
+
+#align_import algebraic_topology.topological_simplex from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 # Topological simplices

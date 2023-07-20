@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Yaël Dillies
-
-! This file was ported from Lean 3 source module analysis.normed_space.ray
-! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Ray
 import Mathbin.Analysis.NormedSpace.Basic
+
+#align_import analysis.normed_space.ray from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 
 /-!
 # Rays in a real normed vector space

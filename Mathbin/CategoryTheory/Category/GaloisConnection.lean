@@ -2,15 +2,12 @@
 Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
-
-! This file was ported from Lean 3 source module category_theory.category.galois_connection
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.Order.GaloisConnection
+
+#align_import category_theory.category.galois_connection from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 
 /-!
 

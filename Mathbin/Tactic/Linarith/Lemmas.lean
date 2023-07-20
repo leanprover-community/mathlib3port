@@ -2,13 +2,10 @@
 Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module tactic.linarith.lemmas
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Ring.Defs
+
+#align_import tactic.linarith.lemmas from "leanprover-community/mathlib"@"9b2660e1b25419042c8da10bf411aa3c67f14383"
 
 /-!
 # Lemmas for `linarith`

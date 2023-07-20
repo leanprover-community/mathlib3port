@@ -2,14 +2,11 @@
 Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Joseph Myers
-
-! This file was ported from Lean 3 source module data.complex.exponential_bounds
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Complex.Exponential
 import Mathbin.Analysis.SpecialFunctions.Log.Deriv
+
+#align_import data.complex.exponential_bounds from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Bounds on specific values of the exponential

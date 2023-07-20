@@ -2,15 +2,12 @@
 Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module data.matrix.reflection
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Notation
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Data.Fin.Tuple.Reflection
+
+#align_import data.matrix.reflection from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 # Lemmas for concrete matrices `matrix (fin m) (fin n) α`

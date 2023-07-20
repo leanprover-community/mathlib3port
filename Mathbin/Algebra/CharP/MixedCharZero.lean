@@ -2,16 +2,13 @@
 Copyright (c) 2022 Jon Eugster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
-
-! This file was ported from Lean 3 source module algebra.char_p.mixed_char_zero
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Algebra.CharP.LocalRing
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.Tactic.FieldSimp
+
+#align_import algebra.char_p.mixed_char_zero from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Equal and mixed characteristic

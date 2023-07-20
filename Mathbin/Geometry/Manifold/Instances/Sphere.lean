@@ -2,11 +2,6 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
-
-! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Inv
 import Mathbin.Analysis.NormedSpace.BallAction
@@ -16,6 +11,8 @@ import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Geometry.Manifold.Algebra.LieGroup
 import Mathbin.Geometry.Manifold.Instances.Real
 import Mathbin.Geometry.Manifold.ContMdiffMfderiv
+
+#align_import geometry.manifold.instances.sphere from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Manifold structure on the sphere

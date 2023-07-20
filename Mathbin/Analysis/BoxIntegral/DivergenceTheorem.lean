@@ -2,11 +2,6 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.box_integral.divergence_theorem
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.BoxIntegral.Basic
 import Mathbin.Analysis.BoxIntegral.Partition.Additive
@@ -14,6 +9,8 @@ import Mathbin.Analysis.Calculus.Fderiv.Add
 import Mathbin.Analysis.Calculus.Fderiv.Mul
 import Mathbin.Analysis.Calculus.Fderiv.Equiv
 import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
+
+#align_import analysis.box_integral.divergence_theorem from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 # Divergence integral for Henstock-Kurzweil integral
@@ -156,7 +153,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
 #align box_integral.norm_volume_sub_integral_face_upper_sub_lower_smul_le BoxIntegral.norm_volume_sub_integral_face_upper_sub_lower_smul_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
 #print BoxIntegral.hasIntegral_GP_pderiv /-
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral

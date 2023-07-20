@@ -2,16 +2,13 @@
 Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space.has_colimits
-! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.Algebra.Category.Ring.Constructions
 import Mathbin.AlgebraicGeometry.OpenImmersion.Basic
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+
+#align_import algebraic_geometry.locally_ringed_space.has_colimits from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
 /-!
 # Colimits of LocallyRingedSpace

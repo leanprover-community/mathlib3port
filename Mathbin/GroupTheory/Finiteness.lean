@@ -2,11 +2,6 @@
 Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
-
-! This file was ported from Lean 3 source module group_theory.finiteness
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Pointwise.Finite
 import Mathbin.GroupTheory.QuotientGroup
@@ -14,6 +9,8 @@ import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.SetTheory.Cardinal.Finite
 import Mathbin.Data.Finset.Preimage
+
+#align_import group_theory.finiteness from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # Finitely generated monoids and groups

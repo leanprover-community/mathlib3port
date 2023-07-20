@@ -2,15 +2,12 @@
 Copyright (c) 2020 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
-
-! This file was ported from Lean 3 source module linear_algebra.eigenspace.basic
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.LinearAlgebra.FiniteDimensional
+
+#align_import linear_algebra.eigenspace.basic from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 # Eigenvectors and eigenvalues

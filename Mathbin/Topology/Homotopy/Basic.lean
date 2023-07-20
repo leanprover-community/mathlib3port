@@ -2,16 +2,13 @@
 Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
-
-! This file was ported from Lean 3 source module topology.homotopy.basic
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Order.ProjIcc
 import Mathbin.Topology.ContinuousFunction.Ordered
 import Mathbin.Topology.CompactOpen
 import Mathbin.Topology.UnitInterval
+
+#align_import topology.homotopy.basic from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-!
 # Homotopy between functions

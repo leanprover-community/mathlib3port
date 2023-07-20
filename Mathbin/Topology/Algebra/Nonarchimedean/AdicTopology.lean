@@ -2,16 +2,13 @@
 Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
-
-! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.adic_topology
-! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.UniformSpace.Completion
 import Mathbin.Topology.Algebra.UniformRing
+
+#align_import topology.algebra.nonarchimedean.adic_topology from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 
 /-!
 # Adic topology

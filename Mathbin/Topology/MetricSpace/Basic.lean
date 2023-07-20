@@ -2,16 +2,13 @@
 Copyright (c) 2015, 2017 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 8000bbbe2e9d39b84edb993d88781f536a8a3fa8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Positivity
 import Mathbin.Topology.Algebra.Order.Compact
 import Mathbin.Topology.MetricSpace.EmetricSpace
 import Mathbin.Topology.Bornology.Constructions
+
+#align_import topology.metric_space.basic from "leanprover-community/mathlib"@"8000bbbe2e9d39b84edb993d88781f536a8a3fa8"
 
 /-!
 # Metric spaces
@@ -1108,7 +1105,7 @@ theorem uniformContinuous_iff [PseudoMetricSpace β] {f : α → β} :
 #align metric.uniform_continuous_iff Metric.uniformContinuous_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff /-
 theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1117,7 +1114,7 @@ theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set 
 #align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff_le /-
 theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1184,7 +1181,7 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
 #align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretization
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Metric.finite_approx_of_totallyBounded /-
 theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
@@ -1253,7 +1250,7 @@ theorem tendstoUniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α
 #align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print Metric.cauchy_iff /-
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
@@ -1985,7 +1982,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Metric.cauchySeq_iff /-
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
@@ -2833,7 +2830,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print finite_cover_balls_of_compact /-
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
@@ -2945,7 +2942,7 @@ instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyC
 #align locally_compact_of_proper locally_compact_of_proper
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print complete_of_proper /-
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
@@ -3075,7 +3072,7 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.Bounded /-
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/

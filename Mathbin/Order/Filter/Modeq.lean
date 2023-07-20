@@ -2,14 +2,11 @@
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
-
-! This file was ported from Lean 3 source module order.filter.modeq
-! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Parity
 import Mathbin.Order.Filter.AtTopBot
+
+#align_import order.filter.modeq from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 
 /-!
 # Numbers are frequently modeq to fixed numbers

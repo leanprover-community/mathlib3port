@@ -2,13 +2,10 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
-
-! This file was ported from Lean 3 source module data.list.forall2
-! leanprover-community/mathlib commit 10708587e81b68c763fcdb7505f279d52e569768
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Infix
+
+#align_import data.list.forall2 from "leanprover-community/mathlib"@"10708587e81b68c763fcdb7505f279d52e569768"
 
 /-!
 # Double universal quantification on a list

@@ -2,13 +2,10 @@
 Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro
-
-! This file was ported from Lean 3 source module tactic.chain
-! leanprover-community/mathlib commit a8629a591ccfe7aa27241e843ca13ed7ed7fd152
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Ext
+
+#align_import tactic.chain from "leanprover-community/mathlib"@"a8629a591ccfe7aa27241e843ca13ed7ed7fd152"
 
 open Interactive
 

@@ -2,14 +2,11 @@
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
-
-! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_localization
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.GradedAlgebra.Basic
+
+#align_import ring_theory.graded_algebra.homogeneous_localization from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # Homogeneous Localization

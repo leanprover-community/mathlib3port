@@ -2,14 +2,11 @@
 Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
-
-! This file was ported from Lean 3 source module topology.category.Top.limits.pullbacks
-! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Category.Top.Limits.Products
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+
+#align_import topology.category.Top.limits.pullbacks from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 
 /-!
 # Pullbacks in the category of topological spaces.

@@ -2,13 +2,10 @@
 Copyright (c) 2022 Dagur Tómas Ásgeirsson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dagur Tómas Ásgeirsson, Leonardo de Moura
-
-! This file was ported from Lean 3 source module data.set.bool_indicator
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Image
+
+#align_import data.set.bool_indicator from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Indicator function valued in bool

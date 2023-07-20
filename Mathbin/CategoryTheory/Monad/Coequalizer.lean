@@ -2,15 +2,12 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.monad.coequalizer
-! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Reflexive
 import Mathbin.CategoryTheory.Limits.Shapes.SplitCoequalizer
 import Mathbin.CategoryTheory.Monad.Algebra
+
+#align_import category_theory.monad.coequalizer from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 
 /-!
 # Special coequalizers associated to a monad

@@ -2,14 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
-
-! This file was ported from Lean 3 source module topology.algebra.order.extend_from
-! leanprover-community/mathlib commit 3e32bc908f617039c74c06ea9a897e30c30803c2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.ExtendFrom
+
+#align_import topology.algebra.order.extend_from from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
 /-!
 # Lemmas about `extend_from` in an order topology.

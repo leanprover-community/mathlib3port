@@ -2,15 +2,12 @@
 Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module model_theory.fraisse
-! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.ModelTheory.FinitelyGenerated
 import Mathbin.ModelTheory.DirectLimit
 import Mathbin.ModelTheory.Bundled
+
+#align_import model_theory.fraisse from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
 /-!
 # Fraïssé Classes and Fraïssé Limits

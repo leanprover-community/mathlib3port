@@ -2,11 +2,6 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
-
-! This file was ported from Lean 3 source module data.dfinsupp.basic
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.BigOperators.Basic
@@ -14,6 +9,8 @@ import Mathbin.Data.Set.Finite
 import Mathbin.GroupTheory.Submonoid.Membership
 import Mathbin.GroupTheory.GroupAction.BigOperators
 import Mathbin.Data.Finset.Preimage
+
+#align_import data.dfinsupp.basic from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
 /-!
 # Dependent functions with finite support
@@ -1391,7 +1388,7 @@ instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
 #align dfinsupp.decidable_zero DFinsupp.decidableZero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print DFinsupp.support_subset_iff /-
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} :
     ↑f.support ⊆ s ↔ ∀ (i) (_ : i ∉ s), f i = 0 := by

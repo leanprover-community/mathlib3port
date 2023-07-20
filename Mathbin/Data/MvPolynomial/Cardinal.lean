@@ -2,15 +2,12 @@
 Copyright (c) 2021 Chris Hughes, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
-
-! This file was ported from Lean 3 source module data.mv_polynomial.cardinal
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.Fintype
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.SetTheory.Cardinal.Ordinal
+
+#align_import data.mv_polynomial.cardinal from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Cardinality of Multivariate Polynomial Ring

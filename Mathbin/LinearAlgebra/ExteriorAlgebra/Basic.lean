@@ -2,14 +2,11 @@
 Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.basic
-! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.CliffordAlgebra.Basic
 import Mathbin.LinearAlgebra.Alternating
+
+#align_import linear_algebra.exterior_algebra.basic from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
 /-!
 # Exterior Algebras

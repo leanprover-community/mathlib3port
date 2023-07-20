@@ -2,15 +2,12 @@
 Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module model_theory.ultraproducts
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.ModelTheory.Quotients
 import Mathbin.Order.Filter.Germ
 import Mathbin.Order.Filter.Ultrafilter
+
+#align_import model_theory.ultraproducts from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-! # Ultraproducts and Łoś's Theorem
 

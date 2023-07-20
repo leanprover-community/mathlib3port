@@ -2,14 +2,11 @@
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
-
-! This file was ported from Lean 3 source module algebra.category.Module.kernels
-! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Module.EpiMono
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+
+#align_import algebra.category.Module.kernels from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
 /-!
 # The concrete (co)kernels in the category of modules are (co)kernels in the categorical sense.

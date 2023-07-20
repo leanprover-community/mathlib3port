@@ -2,14 +2,11 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yaël Dillies
-
-! This file was ported from Lean 3 source module data.nat.log
-! leanprover-community/mathlib commit 55d224c38461be1e8e4363247dd110137c24a4ff
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Pow
 import Mathbin.Tactic.ByContra
+
+#align_import data.nat.log from "leanprover-community/mathlib"@"55d224c38461be1e8e4363247dd110137c24a4ff"
 
 /-!
 # Natural number logarithms

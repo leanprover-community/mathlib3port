@@ -2,14 +2,11 @@
 Copyright (c) 2020 Kenji Nakagawa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
-
-! This file was ported from Lean 3 source module ring_theory.dedekind_domain.basic
-! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.Polynomial.RationalRoot
+
+#align_import ring_theory.dedekind_domain.basic from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 
 /-!
 # Dedekind domains
@@ -50,7 +47,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
 open scoped nonZeroDivisors Polynomial
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
 #print Ring.DimensionLEOne /-
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ring.DimensionLEOne : Prop :=

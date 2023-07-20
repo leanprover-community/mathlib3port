@@ -2,15 +2,12 @@
 Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module category_theory.sites.adjunction
-! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Adjunction.Whiskering
 import Mathbin.CategoryTheory.Sites.Sheafification
 import Mathbin.CategoryTheory.Sites.Whiskering
+
+#align_import category_theory.sites.adjunction from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.

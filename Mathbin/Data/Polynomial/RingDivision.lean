@@ -2,11 +2,6 @@
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
-
-! This file was ported from Lean 3 source module data.polynomial.ring_division
-! leanprover-community/mathlib commit 8efcf8022aac8e01df8d302dcebdbc25d6a886c8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharZero.Infinite
 import Mathbin.Data.Polynomial.AlgebraMap
@@ -14,6 +9,8 @@ import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Div
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.Algebra.Polynomial.BigOperators
+
+#align_import data.polynomial.ring_division from "leanprover-community/mathlib"@"8efcf8022aac8e01df8d302dcebdbc25d6a886c8"
 
 /-!
 # Theory of univariate polynomials

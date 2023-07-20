@@ -2,16 +2,13 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module analysis.convex.integral
-! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Analysis.Convex.StrictConvexSpace
 import Mathbin.MeasureTheory.Function.AeEqOfIntegral
 import Mathbin.MeasureTheory.Integral.Average
+
+#align_import analysis.convex.integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
 /-!
 # Jensen's inequality for integrals

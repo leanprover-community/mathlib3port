@@ -2,16 +2,13 @@
 Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
-
-! This file was ported from Lean 3 source module algebra.hom.equiv.basic
-! leanprover-community/mathlib commit 1ac8d4304efba9d03fa720d06516fac845aa5353
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Data.FunLike.Equiv
 import Mathbin.Logic.Equiv.Basic
 import Mathbin.Data.Pi.Algebra
+
+#align_import algebra.hom.equiv.basic from "leanprover-community/mathlib"@"1ac8d4304efba9d03fa720d06516fac845aa5353"
 
 /-!
 # Multiplicative and additive equivs

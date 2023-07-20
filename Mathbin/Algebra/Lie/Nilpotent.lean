@@ -2,17 +2,14 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module algebra.lie.nilpotent
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Lie.Solvable
 import Mathbin.Algebra.Lie.Quotient
 import Mathbin.Algebra.Lie.Normalizer
 import Mathbin.LinearAlgebra.Eigenspace.Basic
 import Mathbin.RingTheory.Nilpotent
+
+#align_import algebra.lie.nilpotent from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Nilpotent Lie algebras

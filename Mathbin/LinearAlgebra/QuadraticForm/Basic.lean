@@ -2,16 +2,13 @@
 Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.quadratic_form.basic
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Invertible
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.BilinearForm
 import Mathbin.LinearAlgebra.Matrix.Symmetric
+
+#align_import linear_algebra.quadratic_form.basic from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
 /-!
 # Quadratic forms
@@ -1080,7 +1077,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
 #align quadratic_form.anisotropic QuadraticForm.Anisotropic
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print QuadraticForm.not_anisotropic_iff_exists /-
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) :
     ¬Anisotropic Q ↔ ∃ (x : _) (_ : x ≠ 0), Q x = 0 := by
@@ -1123,7 +1120,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoid M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print QuadraticForm.PosDef /-
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=

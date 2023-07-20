@@ -2,13 +2,10 @@
 Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.pretty_cases
-! leanprover-community/mathlib commit 60e279ba2bfe69f937b5f69b110a440538b8f6a5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.pretty_cases from "leanprover-community/mathlib"@"60e279ba2bfe69f937b5f69b110a440538b8f6a5"
 
 /-!
 # `pretty_cases` tactic

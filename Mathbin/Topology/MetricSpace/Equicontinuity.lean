@@ -2,14 +2,11 @@
 Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
-
-! This file was ported from Lean 3 source module topology.metric_space.equicontinuity
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.UniformSpace.Equicontinuity
+
+#align_import topology.metric_space.equicontinuity from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Equicontinuity in metric spaces
@@ -65,7 +62,7 @@ theorem equicontinuousAt_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → β
 #align metric.equicontinuous_at_iff Metric.equicontinuousAt_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
 #print Metric.equicontinuousAt_iff_pair /-
 /-- Reformulation of `equicontinuous_at_iff_pair` for families of functions taking values in a
 (pseudo) metric space. -/

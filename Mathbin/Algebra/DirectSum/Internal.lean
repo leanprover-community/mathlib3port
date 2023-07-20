@@ -2,15 +2,12 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
-
-! This file was ported from Lean 3 source module algebra.direct_sum.internal
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.DirectSum.Algebra
+
+#align_import algebra.direct_sum.internal from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # Internally graded rings and algebras

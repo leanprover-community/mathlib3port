@@ -2,17 +2,14 @@
 Copyright (c) 2014 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.num.lemmas
-! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Num.Bitwise
 import Mathbin.Data.Int.CharZero
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.Psub
 import Mathbin.Data.Nat.Size
+
+#align_import data.num.lemmas from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
 /-!
 # Properties of the binary representation of integers

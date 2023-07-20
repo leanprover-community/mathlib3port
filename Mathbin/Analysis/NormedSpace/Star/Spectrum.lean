@@ -2,16 +2,13 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module analysis.normed_space.star.spectrum
-! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Analysis.NormedSpace.Spectrum
 import Mathbin.Analysis.SpecialFunctions.Exponential
 import Mathbin.Algebra.Star.StarAlgHom
+
+#align_import analysis.normed_space.star.spectrum from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
 /-! # Spectral properties in C⋆-algebras
 

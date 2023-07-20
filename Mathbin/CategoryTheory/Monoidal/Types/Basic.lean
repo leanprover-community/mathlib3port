@@ -2,16 +2,13 @@
 Copyright (c) 2018 Michael Jendrusch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.monoidal.types.basic
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Functor
 import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts.Basic
 import Mathbin.CategoryTheory.Limits.Shapes.Types
 import Mathbin.Logic.Equiv.Fin
+
+#align_import category_theory.monoidal.types.basic from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-!
 # The category of types is a monoidal category

@@ -2,17 +2,14 @@
 Copyright (c) 2018 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
-
-! This file was ported from Lean 3 source module topology.compact_open
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Tidy
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.Maps
+
+#align_import topology.compact_open from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 
 /-!
 # The compact-open topology

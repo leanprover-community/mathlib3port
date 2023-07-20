@@ -2,15 +2,12 @@
 Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.category.Mon.basic
-! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.Algebra.PunitInstances
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+
+#align_import algebra.category.Mon.basic from "leanprover-community/mathlib"@"0caf3701139ef2e69c215717665361cda205a90b"
 
 /-!
 # Category instances for monoid, add_monoid, comm_monoid, and add_comm_monoid.

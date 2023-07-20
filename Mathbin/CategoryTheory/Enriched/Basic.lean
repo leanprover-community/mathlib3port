@@ -2,16 +2,13 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.enriched.basic
-! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
 import Mathbin.CategoryTheory.Monoidal.Types.Coyoneda
 import Mathbin.CategoryTheory.Monoidal.Center
 import Mathbin.Tactic.ApplyFun
+
+#align_import category_theory.enriched.basic from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 
 /-!
 # Enriched categories

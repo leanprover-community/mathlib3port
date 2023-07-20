@@ -2,17 +2,14 @@
 Copyright (c) 2018 Mitchell Rowett. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mitchell Rowett, Scott Morrison
-
-! This file was ported from Lean 3 source module group_theory.coset
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Quotient
 import Mathbin.Data.Fintype.Prod
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Subgroup.MulOpposite
 import Mathbin.Tactic.Group
+
+#align_import group_theory.coset from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 
 /-!
 # Cosets

@@ -2,14 +2,11 @@
 Copyright (c) 2021 Patrick Stevens. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Thomas Browning
-
-! This file was ported from Lean 3 source module data.nat.choose.central
-! leanprover-community/mathlib commit 3e32bc908f617039c74c06ea9a897e30c30803c2
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Choose.Basic
 import Mathbin.Tactic.Linarith.Default
+
+#align_import data.nat.choose.central from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
 /-!
 # Central binomial coefficients

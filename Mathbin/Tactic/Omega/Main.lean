@@ -2,14 +2,11 @@
 Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
-
-! This file was ported from Lean 3 source module tactic.omega.main
-! leanprover-community/mathlib commit 58581d0fe523063f5651df0619be2bf65012a94a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Omega.Int.Main
 import Mathbin.Tactic.Omega.Nat.Main
+
+#align_import tactic.omega.main from "leanprover-community/mathlib"@"58581d0fe523063f5651df0619be2bf65012a94a"
 
 /-
 A tactic for discharging linear integer & natural

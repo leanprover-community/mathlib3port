@@ -2,16 +2,13 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.closed.zero
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Closed.Cartesian
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Conj
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroObjects
+
+#align_import category_theory.closed.zero from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # A cartesian closed category with zero object is trivial

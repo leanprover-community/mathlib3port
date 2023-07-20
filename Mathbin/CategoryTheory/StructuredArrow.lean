@@ -2,16 +2,13 @@
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.structured_arrow
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Comma
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.EssentiallySmall
+
+#align_import category_theory.structured_arrow from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # The category of "structured arrows"

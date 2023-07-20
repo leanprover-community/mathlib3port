@@ -2,15 +2,12 @@
 Copyright (c) 2020 Paul van Wamelen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
-
-! This file was ported from Lean 3 source module number_theory.fermat4
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.PythagoreanTriples
 import Mathbin.RingTheory.Coprime.Lemmas
 import Mathbin.Tactic.LinearCombination
+
+#align_import number_theory.fermat4 from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 # Fermat's Last Theorem for the case n = 4

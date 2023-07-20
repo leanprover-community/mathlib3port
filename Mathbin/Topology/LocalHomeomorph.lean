@@ -2,14 +2,11 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.local_homeomorph
-! leanprover-community/mathlib commit 431589bce478b2229eba14b14a283250428217db
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Equiv.LocalEquiv
 import Mathbin.Topology.Sets.Opens
+
+#align_import topology.local_homeomorph from "leanprover-community/mathlib"@"431589bce478b2229eba14b14a283250428217db"
 
 /-!
 # Local homeomorphisms
@@ -1223,10 +1220,11 @@ def transHomeomorph (e' : β ≃ₜ γ) : LocalHomeomorph α γ
 #align local_homeomorph.trans_homeomorph LocalHomeomorph.transHomeomorph
 -/
 
-#print LocalHomeomorph.trans_equiv_eq_trans /-
-theorem trans_equiv_eq_trans (e' : β ≃ₜ γ) : e.transHomeomorph e' = e.trans e'.toLocalHomeomorph :=
+#print LocalHomeomorph.transHomeomorph_eq_trans /-
+theorem transHomeomorph_eq_trans (e' : β ≃ₜ γ) :
+    e.transHomeomorph e' = e.trans e'.toLocalHomeomorph :=
   toLocalEquiv_injective <| LocalEquiv.transEquiv_eq_trans _ _
-#align local_homeomorph.trans_equiv_eq_trans LocalHomeomorph.trans_equiv_eq_trans
+#align local_homeomorph.trans_equiv_eq_trans LocalHomeomorph.transHomeomorph_eq_trans
 -/
 
 #print Homeomorph.transLocalHomeomorph /-

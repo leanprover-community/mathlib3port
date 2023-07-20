@@ -2,17 +2,14 @@
 Copyright (c) 2018 Andreas Swerdlow. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
-
-! This file was ported from Lean 3 source module linear_algebra.sesquilinear_form
-! leanprover-community/mathlib commit 8ef6f08ff8c781c5c07a8b12843710e1a0d8a688
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.LinearAlgebra.Basis.Bilinear
 import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.Algebra.EuclideanDomain.Instances
 import Mathbin.RingTheory.NonZeroDivisors
+
+#align_import linear_algebra.sesquilinear_form from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"
 
 /-!
 # Sesquilinear form

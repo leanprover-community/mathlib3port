@@ -2,17 +2,14 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit 949dc57e616a621462062668c9f39e4e17b64b69
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Equiv
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.Hom.NonUnitalAlg
 import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.Finsupp
+
+#align_import algebra.monoid_algebra.basic from "leanprover-community/mathlib"@"949dc57e616a621462062668c9f39e4e17b64b69"
 
 /-!
 # Monoid algebras

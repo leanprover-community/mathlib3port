@@ -2,15 +2,12 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
-
-! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 7fdd4f3746cb059edfdb5d52cba98f66fce418c0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Set.Functor
 import Mathbin.Data.Finite.Basic
+
+#align_import data.set.finite from "leanprover-community/mathlib"@"7fdd4f3746cb059edfdb5d52cba98f66fce418c0"
 
 /-!
 # Finite sets
@@ -1015,7 +1012,7 @@ theorem Finite.sInter {α : Type _} {s : Set (Set α)} {t : Set α} (ht : t ∈ 
 #align set.finite.sInter Set.Finite.sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » t) -/
 #print Set.Finite.iUnion /-
 /-- If sets `s i` are finite for all `i` from a finite set `t` and are empty for `i ∉ t`, then the
 union `⋃ i, s i` is a finite set. -/
@@ -2143,7 +2140,7 @@ theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z �
 #align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
 #print Set.finite_of_forall_not_lt_lt /-
 /-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
 theorem Set.finite_of_forall_not_lt_lt {s : Set α}

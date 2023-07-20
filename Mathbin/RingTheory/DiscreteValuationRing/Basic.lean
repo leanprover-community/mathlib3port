@@ -2,17 +2,14 @@
 Copyright (c) 2020 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
-
-! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring.basic
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Multiplicity
 import Mathbin.RingTheory.Valuation.Basic
 import Mathbin.LinearAlgebra.AdicCompletion
+
+#align_import ring_theory.discrete_valuation_ring.basic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
 /-!
 # Discrete valuation rings

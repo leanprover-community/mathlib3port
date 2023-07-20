@@ -2,14 +2,11 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module algebra.ring_quot
-! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Hom
 import Mathbin.RingTheory.Ideal.Quotient
+
+#align_import algebra.ring_quot from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 
 /-!
 # Quotients of non-commutative rings

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
-
-! This file was ported from Lean 3 source module group_theory.specific_groups.alternating
-! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.ConjFinite
 import Mathbin.GroupTheory.Perm.Fin
 import Mathbin.GroupTheory.Subgroup.Simple
 import Mathbin.Tactic.IntervalCases
+
+#align_import group_theory.specific_groups.alternating from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 
 /-!
 # Alternating Groups

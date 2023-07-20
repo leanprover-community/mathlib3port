@@ -2,14 +2,11 @@
 Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit 599fffe78f0e11eb6a034e834ec51882167b9688
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Function.L1Space
 import Mathbin.Analysis.NormedSpace.IndicatorFunction
+
+#align_import measure_theory.integral.integrable_on from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 
 /-! # Functions integrable on a set and at a filter
 
@@ -450,7 +447,7 @@ theorem IntegrableOn.integrable_of_ae_not_mem_eq_zero (hf : IntegrableOn f s μ)
 #align measure_theory.integrable_on.integrable_of_ae_not_mem_eq_zero MeasureTheory.IntegrableOn.integrable_of_ae_not_mem_eq_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print MeasureTheory.IntegrableOn.integrable_of_forall_not_mem_eq_zero /-
 /-- If a function is integrable on a set `s` and vanishes everywhere on its complement,
 then it is integrable. -/

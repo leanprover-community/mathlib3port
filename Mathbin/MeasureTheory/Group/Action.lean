@@ -2,16 +2,13 @@
 Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.Dynamics.Minimal
+
+#align_import measure_theory.group.action from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # Measures invariant under group actions

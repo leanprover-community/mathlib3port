@@ -2,13 +2,10 @@
 Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module set_theory.game.domineering
-! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.SetTheory.Game.State
+
+#align_import set_theory.game.domineering from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 
 /-!
 # Domineering as a combinatorial game.

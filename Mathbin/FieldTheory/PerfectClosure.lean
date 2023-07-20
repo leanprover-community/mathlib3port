@@ -2,15 +2,12 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
-
-! This file was ported from Lean 3 source module field_theory.perfect_closure
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Algebra.Ring.Equiv
+
+#align_import field_theory.perfect_closure from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 
 /-!
 # The perfect closure of a field

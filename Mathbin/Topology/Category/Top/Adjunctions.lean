@@ -2,14 +2,11 @@
 Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Mario Carneiro
-
-! This file was ported from Lean 3 source module topology.category.Top.adjunctions
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Category.Top.Basic
 import Mathbin.CategoryTheory.Adjunction.Basic
+
+#align_import topology.category.Top.adjunctions from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
 /-!
 # Adjunctions regarding the category of topological spaces

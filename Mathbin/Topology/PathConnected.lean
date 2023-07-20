@@ -2,16 +2,13 @@
 Copyright (c) 2020 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
-
-! This file was ported from Lean 3 source module topology.path_connected
-! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Order.ProjIcc
 import Mathbin.Topology.CompactOpen
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.UnitInterval
+
+#align_import topology.path_connected from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
 /-!
 # Path connectedness
@@ -1167,7 +1164,7 @@ theorem isPathConnected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathComponen
 #align is_path_connected_iff_eq isPathConnected_iff_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 #print IsPathConnected.joinedIn /-
 theorem IsPathConnected.joinedIn (h : IsPathConnected F) :
     ∀ (x) (_ : x ∈ F) (y) (_ : y ∈ F), JoinedIn F x y := fun x x_in x y_in =>
@@ -1176,7 +1173,7 @@ theorem IsPathConnected.joinedIn (h : IsPathConnected F) :
 #align is_path_connected.joined_in IsPathConnected.joinedIn
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 #print isPathConnected_iff /-
 theorem isPathConnected_iff :
     IsPathConnected F ↔ F.Nonempty ∧ ∀ (x) (_ : x ∈ F) (y) (_ : y ∈ F), JoinedIn F x y :=

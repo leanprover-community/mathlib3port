@@ -2,13 +2,10 @@
 Copyright (c) 2022 Michael Blyth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
-
-! This file was ported from Lean 3 source module linear_algebra.projective_space.independence
-! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.ProjectiveSpace.Basic
+
+#align_import linear_algebra.projective_space.independence from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 
 /-!
 # Independence in Projective Space

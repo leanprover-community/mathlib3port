@@ -2,14 +2,11 @@
 Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Mario Carneiro
-
-! This file was ported from Lean 3 source module tactic.choose
-! leanprover-community/mathlib commit fd47bdf09e90f553519c712378e651975fe8c829
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Core
+
+#align_import tactic.choose from "leanprover-community/mathlib"@"fd47bdf09e90f553519c712378e651975fe8c829"
 
 /-!
 # `choose` tactic

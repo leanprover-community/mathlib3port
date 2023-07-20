@@ -2,14 +2,11 @@
 Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.obviously
-! leanprover-community/mathlib commit 06823d6dd94d25bce25ae8793ae9012c508df898
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Tidy
 import Mathbin.Tactic.Replacer
+
+#align_import tactic.obviously from "leanprover-community/mathlib"@"06823d6dd94d25bce25ae8793ae9012c508df898"
 
 /-!
 # The `obviously` tactic

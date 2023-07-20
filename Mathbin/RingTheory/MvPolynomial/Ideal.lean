@@ -2,14 +2,11 @@
 Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module ring_theory.mv_polynomial.ideal
-! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.MonoidAlgebra.Ideal
 import Mathbin.Data.MvPolynomial.Division
+
+#align_import ring_theory.mv_polynomial.ideal from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 
 /-!
 # Lemmas about ideals of `mv_polynomial`

@@ -2,14 +2,11 @@
 Copyright (c) 2020 Filippo A. E. Nuccio. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Andrew Yang
-
-! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.noetherian
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 import Mathbin.Topology.NoetherianSpace
+
+#align_import algebraic_geometry.prime_spectrum.noetherian from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
@@ -29,7 +26,7 @@ variable (R : Type u) [CommRing R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (z «expr ∉ » M) -/
 #print PrimeSpectrum.exists_primeSpectrum_prod_le /-
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
@@ -64,7 +61,7 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
 #align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_primeSpectrum_prod_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (z «expr ∉ » M) -/
 #print PrimeSpectrum.exists_primeSpectrum_prod_le_and_ne_bot_of_domain /-
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as

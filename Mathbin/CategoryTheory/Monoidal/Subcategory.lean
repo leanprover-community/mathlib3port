@@ -2,17 +2,14 @@
 Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
-
-! This file was ported from Lean 3 source module category_theory.monoidal.subcategory
-! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Monoidal.Linear
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Linear.LinearFunctor
 import Mathbin.CategoryTheory.Closed.Monoidal
+
+#align_import category_theory.monoidal.subcategory from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
 /-!
 # Full monoidal subcategories

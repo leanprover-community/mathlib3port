@@ -3,15 +3,12 @@ Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro,
 Scott Morrison
-
-! This file was ported from Lean 3 source module data.list.lattice
-! leanprover-community/mathlib commit be24ec5de6701447e5df5ca75400ffee19d65659
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Infix
 import Mathbin.Algebra.Order.Monoid.MinMax
+
+#align_import data.list.lattice from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
 /-!
 # Lattice structure of lists

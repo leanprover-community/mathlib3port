@@ -2,15 +2,12 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_equiv
-! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
 import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.Algebra.Invertible
+
+#align_import linear_algebra.affine_space.affine_equiv from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
 /-!
 # Affine equivalences

@@ -2,14 +2,11 @@
 Copyright (c) 2020 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Keeley Hoek, Scott Morrison
-
-! This file was ported from Lean 3 source module meta.expr_lens
-! leanprover-community/mathlib commit d6814c584384ddf2825ff038e868451a7c956f31
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Defs
 import Mathbin.Tactic.DeriveInhabited
+
+#align_import meta.expr_lens from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 
 /-!
 # A lens for zooming into nested `expr` applications

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
-
-! This file was ported from Lean 3 source module category_theory.sites.sieves
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.CompleteLattice
 import Mathbin.CategoryTheory.Over
 import Mathbin.CategoryTheory.Yoneda
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.Data.Set.Lattice
+
+#align_import category_theory.sites.sieves from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Theory of sieves

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Alex Kontorovich and Heather Macbeth and Marc Masdeu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
-
-! This file was ported from Lean 3 source module number_theory.modular
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
+
+#align_import number_theory.modular from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # The action of the modular group SL(2, ℤ) on the upper half-plane

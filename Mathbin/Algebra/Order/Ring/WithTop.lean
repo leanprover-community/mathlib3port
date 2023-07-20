@@ -2,15 +2,12 @@
 Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
-
-! This file was ported from Lean 3 source module algebra.order.ring.with_top
-! leanprover-community/mathlib commit 0111834459f5d7400215223ea95ae38a1265a907
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Ring
 import Mathbin.Algebra.Order.Monoid.WithTop
 import Mathbin.Algebra.Order.Ring.Canonical
+
+#align_import algebra.order.ring.with_top from "leanprover-community/mathlib"@"0111834459f5d7400215223ea95ae38a1265a907"
 
 /-! # Structures involving `*` and `0` on `with_top` and `with_bot`
 

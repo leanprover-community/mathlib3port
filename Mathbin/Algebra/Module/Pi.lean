@@ -2,16 +2,13 @@
 Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
-
-! This file was ported from Lean 3 source module algebra.module.pi
-! leanprover-community/mathlib commit be24ec5de6701447e5df5ca75400ffee19d65659
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Regular.Smul
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.GroupTheory.GroupAction.Pi
+
+#align_import algebra.module.pi from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
 /-!
 # Pi instances for modules

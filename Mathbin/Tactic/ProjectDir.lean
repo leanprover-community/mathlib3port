@@ -2,12 +2,9 @@
 Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
-
-! This file was ported from Lean 3 source module tactic.project_dir
-! leanprover-community/mathlib commit 29079ba8bc53a8465448a577eb2fc41932b02301
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
+
+#align_import tactic.project_dir from "leanprover-community/mathlib"@"29079ba8bc53a8465448a577eb2fc41932b02301"
 
 /-!
 

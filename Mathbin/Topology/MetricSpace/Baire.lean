@@ -2,15 +2,12 @@
 Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.metric_space.baire
-! leanprover-community/mathlib commit b9e46fe101fc897fb2e7edaf0bf1f09ea49eb81a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Topology.GDelta
 import Mathbin.Topology.Sets.Compacts
+
+#align_import topology.metric_space.baire from "leanprover-community/mathlib"@"b9e46fe101fc897fb2e7edaf0bf1f09ea49eb81a"
 
 /-!
 # Baire theorem
@@ -251,7 +248,7 @@ theorem dense_iInter_of_open [Encodable β] {f : β → Set α} (ho : ∀ s, IsO
 #align dense_Inter_of_open dense_iInter_of_open
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print mem_residual /-
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _) (_ : t ⊆ s), IsGδ t ∧ Dense t :=

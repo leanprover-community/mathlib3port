@@ -2,14 +2,11 @@
 Copyright (c) 2018 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
-
-! This file was ported from Lean 3 source module category_theory.functor.hom
-! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Types
+
+#align_import category_theory.functor.hom from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.

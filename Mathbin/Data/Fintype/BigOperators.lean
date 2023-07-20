@@ -2,11 +2,6 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-! This file was ported from Lean 3 source module data.fintype.big_operators
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Option
 import Mathbin.Data.Fintype.Powerset
@@ -15,6 +10,8 @@ import Mathbin.Data.Fintype.Sum
 import Mathbin.Data.Fintype.Vector
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.Option
+
+#align_import data.fintype.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
 /-!
 Results about "big operations" over a `fintype`, and consequent
@@ -91,7 +88,7 @@ theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : ∏ a, f a = ∏ a,
 #align fintype.sum_congr Fintype.sum_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Fintype.prod_eq_single /-
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : ∏ x, f x = f a :=

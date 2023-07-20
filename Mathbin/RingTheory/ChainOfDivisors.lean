@@ -2,16 +2,13 @@
 Copyright (c) 2021 Paul Lezeau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
-
-! This file was ported from Lean 3 source module ring_theory.chain_of_divisors
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.IsPrimePow
 import Mathbin.Algebra.Squarefree
 import Mathbin.Order.Hom.Bounded
 import Mathbin.Algebra.GcdMonoid.Basic
+
+#align_import ring_theory.chain_of_divisors from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 

@@ -2,13 +2,10 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module tactic.dec_trivial
-! leanprover-community/mathlib commit 13881d7a4086e038e49e116066b379a043d13d34
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Interactive
+
+#align_import tactic.dec_trivial from "leanprover-community/mathlib"@"13881d7a4086e038e49e116066b379a043d13d34"
 
 /-!
 # `dec_trivial` tactic

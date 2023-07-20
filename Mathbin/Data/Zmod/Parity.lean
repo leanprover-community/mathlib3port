@@ -2,14 +2,11 @@
 Copyright (c) 2020 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
-
-! This file was ported from Lean 3 source module data.zmod.parity
-! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Zmod.Basic
+
+#align_import data.zmod.parity from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 
 /-!
 # Relating parity to natural numbers mod 2

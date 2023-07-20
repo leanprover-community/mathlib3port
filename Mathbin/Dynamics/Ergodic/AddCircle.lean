@@ -2,16 +2,13 @@
 Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module dynamics.ergodic.add_circle
-! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Group.AddCircle
 import Mathbin.Dynamics.Ergodic.Ergodic
 import Mathbin.MeasureTheory.Covering.DensityTheorem
 import Mathbin.Data.Set.Pointwise.Iterate
+
+#align_import dynamics.ergodic.add_circle from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 
 /-!
 # Ergodic maps of the additive circle

@@ -2,13 +2,10 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module order.heyting.hom
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Order.Hom.Lattice
+
+#align_import order.heyting.hom from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 
 /-!
 # Heyting algebra morphisms

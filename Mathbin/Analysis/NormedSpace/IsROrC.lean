@@ -2,15 +2,12 @@
 Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
-
-! This file was ported from Lean 3 source module analysis.normed_space.is_R_or_C
-! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.IsROrC.Basic
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.Pointwise
+
+#align_import analysis.normed_space.is_R_or_C from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 
 /-!
 # Normed spaces over R or C

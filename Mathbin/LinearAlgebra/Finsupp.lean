@@ -2,15 +2,12 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
-
-! This file was ported from Lean 3 source module linear_algebra.finsupp
-! leanprover-community/mathlib commit 9d684a893c52e1d6692a504a118bfccbae04feeb
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finsupp.Defs
 import Mathbin.LinearAlgebra.Pi
 import Mathbin.LinearAlgebra.Span
+
+#align_import linear_algebra.finsupp from "leanprover-community/mathlib"@"9d684a893c52e1d6692a504a118bfccbae04feeb"
 
 /-!
 # Properties of the module `α →₀ M`
@@ -247,7 +244,7 @@ theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔
 #align finsupp.mem_supported Finsupp.mem_supported
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print Finsupp.mem_supported' /-
 theorem mem_supported' {s : Set α} (p : α →₀ M) :
     p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
@@ -601,7 +598,7 @@ theorem lmapDomain_supported [Nonempty α] (f : α → α') (s : Set α) :
 #align finsupp.lmap_domain_supported Finsupp.lmapDomain_supported
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Finsupp.lmapDomain_disjoint_ker /-
 theorem lmapDomain_disjoint_ker (f : α → α') {s : Set α}
     (H : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), f a = f b → a = b) :

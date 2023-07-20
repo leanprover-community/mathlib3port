@@ -2,14 +2,11 @@
 Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
-
-! This file was ported from Lean 3 source module combinatorics.set_family.compression.uv
-! leanprover-community/mathlib commit 6f8ab7de1c4b78a68ab8cf7dd83d549eb78a68a1
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.SetFamily.Shadow
 import Mathbin.Data.Finset.Sort
+
+#align_import combinatorics.set_family.compression.uv from "leanprover-community/mathlib"@"6f8ab7de1c4b78a68ab8cf7dd83d549eb78a68a1"
 
 /-!
 # UV-compressions
@@ -376,7 +373,7 @@ private theorem aux (huv : ∀ x ∈ u, ∃ y ∈ v, IsCompressed (u.eraseₓ x)
     v = ∅ → u = ∅ := by rintro rfl; refine' eq_empty_of_forall_not_mem fun a ha => _;
   obtain ⟨_, ⟨⟩, -⟩ := huv a ha
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » s) -/
 #print UV.shadow_compression_subset_compression_shadow /-
 /-- UV-compression reduces the size of the shadow of `𝒜` if, for all `x ∈ u` there is `y ∈ v` such
 that `𝒜` is `(u.erase x, v.erase y)`-compressed. This is the key fact about compression for

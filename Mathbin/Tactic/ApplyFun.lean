@@ -2,13 +2,10 @@
 Copyright (c) 2019 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Patrick Massot
-
-! This file was ported from Lean 3 source module tactic.apply_fun
-! leanprover-community/mathlib commit f3cd150bf23503db6a693f369c236da9590066aa
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Monotonicity.Default
+
+#align_import tactic.apply_fun from "leanprover-community/mathlib"@"f3cd150bf23503db6a693f369c236da9590066aa"
 
 namespace Tactic
 

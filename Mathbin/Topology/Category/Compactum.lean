@@ -2,11 +2,6 @@
 Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
-
-! This file was ported from Lean 3 source module topology.category.Compactum
-! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monad.Types
 import Mathbin.CategoryTheory.Monad.Limits
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Equivalence
 import Mathbin.Topology.Category.CompHaus.Basic
 import Mathbin.Topology.Category.Profinite.Basic
 import Mathbin.Data.Set.Constructions
+
+#align_import topology.category.Compactum from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
 /-!
 
@@ -239,7 +236,7 @@ private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = ba
 private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ cl A := fun a ha =>
   ⟨X.incl a, ha, by simp⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   by
   rintro _ ⟨F, hF, rfl⟩
@@ -315,7 +312,7 @@ theorem isClosed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
 #align Compactum.is_closed_cl Compactum.isClosed_cl
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 #print Compactum.str_eq_of_le_nhds /-
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
   by

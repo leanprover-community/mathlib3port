@@ -2,15 +2,12 @@
 Copyright (c) 2020 Thomas Browning and Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
-
-! This file was ported from Lean 3 source module field_theory.abel_ruffini
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Solvable
 import Mathbin.FieldTheory.PolynomialGaloisGroup
 import Mathbin.RingTheory.RootsOfUnity.Basic
+
+#align_import field_theory.abel_ruffini from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
 /-!
 # The Abel-Ruffini Theorem

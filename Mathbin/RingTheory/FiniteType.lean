@@ -2,16 +2,13 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module ring_theory.finite_type
-! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Finiteness
 import Mathbin.RingTheory.Adjoin.Tower
 import Mathbin.RingTheory.Finiteness
 import Mathbin.RingTheory.Noetherian
+
+#align_import ring_theory.finite_type from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 
 /-!
 # Finiteness conditions in commutative algebra

@@ -2,16 +2,13 @@
 Copyright (c) 2021 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak, Kyle Miller, Eric Wieser
-
-! This file was ported from Lean 3 source module linear_algebra.cross_product
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Notation
 import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.Algebra.Lie.Basic
+
+#align_import linear_algebra.cross_product from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Cross products

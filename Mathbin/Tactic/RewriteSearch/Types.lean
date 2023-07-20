@@ -2,13 +2,10 @@
 Copyright (c) 2020 Kevin Lacker, Keeley Hoek, Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.rewrite_search.types
-! leanprover-community/mathlib commit 137a6e0f6e30fc1e6d940326d313c07fe95a3188
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.NthRewrite.Default
+
+#align_import tactic.rewrite_search.types from "leanprover-community/mathlib"@"137a6e0f6e30fc1e6d940326d313c07fe95a3188"
 
 /-!
 # Types used in rewrite search.

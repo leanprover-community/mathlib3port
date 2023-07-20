@@ -2,15 +2,12 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieser
-
-! This file was ported from Lean 3 source module ring_theory.mv_polynomial.homogeneous
-! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectSum.Internal
 import Mathbin.Algebra.GradedMonoid
 import Mathbin.Data.MvPolynomial.Variables
+
+#align_import ring_theory.mv_polynomial.homogeneous from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
 /-!
 # Homogeneous polynomials

@@ -2,13 +2,10 @@
 Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module topology.metric_space.cau_seq_filter
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Field.Basic
+
+#align_import topology.metric_space.cau_seq_filter from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
 /-!
 # Completeness in terms of `cauchy` filters vs `is_cau_seq` sequences

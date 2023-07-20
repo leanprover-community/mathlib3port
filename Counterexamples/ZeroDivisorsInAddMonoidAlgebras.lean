@@ -2,17 +2,14 @@
 Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
-
-! This file was ported from Lean 3 source module zero_divisors_in_add_monoid_algebras
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GeomSum
 import Mathbin.Algebra.Group.UniqueProds
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Data.Finsupp.Lex
 import Mathbin.Data.Zmod.Basic
+
+#align_import zero_divisors_in_add_monoid_algebras from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Examples of zero-divisors in `add_monoid_algebra`s

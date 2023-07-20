@@ -2,15 +2,12 @@
 Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Kalle Kytölä
-
-! This file was ported from Lean 3 source module analysis.locally_convex.polar
-! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.LinearAlgebra.SesquilinearForm
 import Mathbin.Topology.Algebra.Module.WeakDual
+
+#align_import analysis.locally_convex.polar from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
 /-!
 # Polar set

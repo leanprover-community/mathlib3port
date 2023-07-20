@@ -2,17 +2,14 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
-
-! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GeomSum
 import Mathbin.Order.Filter.Archimedean
 import Mathbin.Order.Iterate
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Topology.Algebra.Algebra
+
+#align_import analysis.specific_limits.basic from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
 /-!
 # A collection of specific limit computations

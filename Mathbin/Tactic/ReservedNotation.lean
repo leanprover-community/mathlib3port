@@ -2,12 +2,9 @@
 Copyright (c) 2020 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen
-
-! This file was ported from Lean 3 source module tactic.reserved_notation
-! leanprover-community/mathlib commit a0735864ba72769da4b378673d3dbe2453924fde
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
+
+#align_import tactic.reserved_notation from "leanprover-community/mathlib"@"a0735864ba72769da4b378673d3dbe2453924fde"
 
 /-!
 # Reserved notation

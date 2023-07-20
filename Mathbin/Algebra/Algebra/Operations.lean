@@ -2,11 +2,6 @@
 Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
-
-! This file was ported from Lean 3 source module algebra.algebra.operations
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Bilinear
 import Mathbin.Algebra.Algebra.Equiv
@@ -18,6 +13,8 @@ import Mathbin.Data.Finset.Pointwise
 import Mathbin.Data.Set.Semiring
 import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.GroupTheory.GroupAction.SubMulAction.Pointwise
+
+#align_import algebra.algebra.operations from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Multiplication and division of submodules of an algebra.

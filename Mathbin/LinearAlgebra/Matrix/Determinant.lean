@@ -2,11 +2,6 @@
 Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Tim Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.matrix.determinant
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Pequiv
 import Mathbin.Data.Matrix.Block
@@ -18,6 +13,8 @@ import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Tactic.Ring
 import Mathbin.LinearAlgebra.Alternating
 import Mathbin.LinearAlgebra.Pi
+
+#align_import linear_algebra.matrix.determinant from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
 /-!
 # Determinant of a matrix

@@ -2,14 +2,11 @@
 Copyright (c) 2020. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jalex Stark, Yury Kudryashov
-
-! This file was ported from Lean 3 source module wiedijk_100_theorems.inverse_triangle_sum
-! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Real.Basic
+
+#align_import wiedijk_100_theorems.inverse_triangle_sum from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
 /-!
 # Sum of the Reciprocals of the Triangular Numbers

@@ -2,16 +2,13 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
-
-! This file was ported from Lean 3 source module data.set.intervals.group
-! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Pairwise.Basic
 import Mathbin.Algebra.Order.Group.Abs
 import Mathbin.Algebra.GroupPower.Lemmas
+
+#align_import data.set.intervals.group from "leanprover-community/mathlib"@"c227d107bbada5d0d9d20287e3282c0a7f1651a0"
 
 /-! ### Lemmas about arithmetic operations and intervals.
 

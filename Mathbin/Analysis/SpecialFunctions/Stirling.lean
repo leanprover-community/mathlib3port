@@ -2,14 +2,11 @@
 Copyright (c) 2022. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Firsching, Fabian Kruse, Nikolas Kuhn
-
-! This file was ported from Lean 3 source module analysis.special_functions.stirling
-! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.PSeries
 import Mathbin.Data.Real.Pi.Wallis
+
+#align_import analysis.special_functions.stirling from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
 /-!
 # Stirling's formula

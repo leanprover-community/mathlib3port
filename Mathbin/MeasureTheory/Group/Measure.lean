@@ -2,11 +2,6 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
-
-! This file was ported from Lean 3 source module measure_theory.group.measure
-! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.MeasureTheory.Measure.Regular
@@ -15,6 +10,8 @@ import Mathbin.MeasureTheory.Measure.OpenPos
 import Mathbin.MeasureTheory.Group.Action
 import Mathbin.MeasureTheory.Constructions.Prod.Basic
 import Mathbin.Topology.ContinuousFunction.CocompactMap
+
+#align_import measure_theory.group.measure from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
 /-!
 # Measures on Groups

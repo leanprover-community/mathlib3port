@@ -2,16 +2,13 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.monad.types
-! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monad.Kleisli
 import Mathbin.CategoryTheory.Category.Kleisli
 import Mathbin.CategoryTheory.Types
+
+#align_import category_theory.monad.types from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 
 /-!
 

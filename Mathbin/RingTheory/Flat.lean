@@ -2,13 +2,10 @@
 Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
-
-! This file was ported from Lean 3 source module ring_theory.flat
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Noetherian
+
+#align_import ring_theory.flat from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 
 /-!
 # Flat modules

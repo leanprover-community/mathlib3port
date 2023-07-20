@@ -2,14 +2,11 @@
 Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Simon Hudon
-
-! This file was ported from Lean 3 source module tactic.tfae
-! leanprover-community/mathlib commit 3c11bd771ef17197a9e9fcd4a3fabfa2804d950c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Tfae
 import Mathbin.Tactic.Scc
+
+#align_import tactic.tfae from "leanprover-community/mathlib"@"3c11bd771ef17197a9e9fcd4a3fabfa2804d950c"
 
 /-!
 # The Following Are Equivalent (TFAE)

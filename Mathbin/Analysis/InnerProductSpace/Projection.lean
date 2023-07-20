@@ -2,11 +2,6 @@
 Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
-
-! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.DirectSum.Decomposition
 import Mathbin.Analysis.Convex.Basic
@@ -14,6 +9,8 @@ import Mathbin.Analysis.InnerProductSpace.Orthogonal
 import Mathbin.Analysis.InnerProductSpace.Symmetric
 import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Data.IsROrC.Lemmas
+
+#align_import analysis.inner_product_space.projection from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # The orthogonal projection
@@ -1535,7 +1532,7 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 #print maximal_orthonormal_iff_orthogonalComplement_eq_bot /-
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
@@ -1606,7 +1603,7 @@ theorem maximal_orthonormal_iff_orthogonalComplement_eq_bot (hv : Orthonormal �
 
 variable [FiniteDimensional 𝕜 E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 #print maximal_orthonormal_iff_basis_of_finiteDimensional /-
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/

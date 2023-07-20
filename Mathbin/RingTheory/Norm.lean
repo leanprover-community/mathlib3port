@@ -2,11 +2,6 @@
 Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.LinearAlgebra.Determinant
@@ -15,6 +10,8 @@ import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
 import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathbin.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathbin.FieldTheory.Galois
+
+#align_import ring_theory.norm from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
 /-!
 # Norm for (finite) ring extensions

@@ -2,16 +2,13 @@
 Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
-
-! This file was ported from Lean 3 source module linear_algebra.linear_independent
-! leanprover-community/mathlib commit 9d684a893c52e1d6692a504a118bfccbae04feeb
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.LinearAlgebra.Prod
 import Mathbin.SetTheory.Cardinal.Basic
+
+#align_import linear_algebra.linear_independent from "leanprover-community/mathlib"@"9d684a893c52e1d6692a504a118bfccbae04feeb"
 
 /-!
 
@@ -144,7 +141,7 @@ theorem linearIndependent_iff' :
 #align linear_independent_iff' linearIndependent_iff'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print linearIndependent_iff'' /-
 theorem linearIndependent_iff'' :
     LinearIndependent R v ↔
@@ -510,7 +507,7 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
 #align linear_independent.mono LinearIndependent.mono
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print linearIndependent_of_finite /-
 theorem linearIndependent_of_finite (s : Set M)
     (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
@@ -1064,7 +1061,7 @@ theorem exists_maximal_independent' (s : ι → M) :
 #align exists_maximal_independent' exists_maximal_independent'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 #print exists_maximal_independent /-
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι,
@@ -1496,7 +1493,7 @@ theorem linearIndependent_fin2 {f : Fin 2 → V} :
 #align linear_independent_fin2 linearIndependent_fin2
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 #print exists_linearIndependent_extension /-
 theorem exists_linearIndependent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _) (_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) :=
@@ -1517,7 +1514,7 @@ theorem exists_linearIndependent_extension (hs : LinearIndependent K (coe : s �
 
 variable (K t)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 #print exists_linearIndependent /-
 theorem exists_linearIndependent :
     ∃ (b : _) (_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) :=

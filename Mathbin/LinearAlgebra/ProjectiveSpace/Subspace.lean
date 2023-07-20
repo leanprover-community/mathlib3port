@@ -2,13 +2,10 @@
 Copyright (c) 2022 Michael Blyth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
-
-! This file was ported from Lean 3 source module linear_algebra.projective_space.subspace
-! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.ProjectiveSpace.Basic
+
+#align_import linear_algebra.projective_space.subspace from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 
 /-!
 # Subspaces of Projective Space

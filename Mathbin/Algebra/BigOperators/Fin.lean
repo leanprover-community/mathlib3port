@@ -2,16 +2,13 @@
 Copyright (c) 2020 Yury Kudryashov, Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Anne Baanen
-
-! This file was ported from Lean 3 source module algebra.big_operators.fin
-! leanprover-community/mathlib commit cc5dd6244981976cc9da7afc4eee5682b037a013
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Fintype.Fin
 import Mathbin.Data.List.FinRange
 import Mathbin.Logic.Equiv.Fin
+
+#align_import algebra.big_operators.fin from "leanprover-community/mathlib"@"cc5dd6244981976cc9da7afc4eee5682b037a013"
 
 /-!
 # Big operators and `fin`

@@ -2,17 +2,14 @@
 Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
-
-! This file was ported from Lean 3 source module category_theory.limits.comma
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Arrow
 import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Unit
 import Mathbin.CategoryTheory.StructuredArrow
+
+#align_import category_theory.limits.comma from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
 /-!
 # Limits and colimits in comma categories

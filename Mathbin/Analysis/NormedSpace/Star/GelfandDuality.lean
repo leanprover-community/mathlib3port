@@ -2,11 +2,6 @@
 Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
-
-! This file was ported from Lean 3 source module analysis.normed_space.star.gelfand_duality
-! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Star.Spectrum
 import Mathbin.Analysis.Normed.Group.Quotient
@@ -15,6 +10,8 @@ import Mathbin.Topology.ContinuousFunction.Units
 import Mathbin.Topology.ContinuousFunction.Compact
 import Mathbin.Topology.Algebra.Algebra
 import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
+
+#align_import analysis.normed_space.star.gelfand_duality from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
 /-!
 # Gelfand Duality

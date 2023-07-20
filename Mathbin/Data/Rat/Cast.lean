@@ -2,11 +2,6 @@
 Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
-
-! This file was ported from Lean 3 source module data.rat.cast
-! leanprover-community/mathlib commit acebd8d49928f6ed8920e502a6c90674e75bd441
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Rat.Order
 import Mathbin.Data.Rat.Lemmas
@@ -14,6 +9,8 @@ import Mathbin.Data.Int.CharZero
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.Order.Field.Basic
+
+#align_import data.rat.cast from "leanprover-community/mathlib"@"acebd8d49928f6ed8920e502a6c90674e75bd441"
 
 /-!
 # Casts for Rational Numbers

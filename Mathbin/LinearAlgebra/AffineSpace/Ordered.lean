@@ -2,17 +2,14 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
-
-! This file was ported from Lean 3 source module linear_algebra.affine_space.ordered
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.Module
 import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 import Mathbin.LinearAlgebra.AffineSpace.Slope
 import Mathbin.Tactic.FieldSimp
+
+#align_import linear_algebra.affine_space.ordered from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Ordered modules as affine spaces

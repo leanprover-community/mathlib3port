@@ -2,16 +2,13 @@
 Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
-
-! This file was ported from Lean 3 source module data.zmod.quotient
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Zmod.Basic
 import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.RingTheory.Ideal.QuotientOperations
+
+#align_import data.zmod.quotient from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # `zmod n` and quotient groups / rings

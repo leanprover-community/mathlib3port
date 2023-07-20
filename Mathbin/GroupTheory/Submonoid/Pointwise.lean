@@ -2,15 +2,12 @@
 Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
-
-! This file was ported from Lean 3 source module group_theory.submonoid.pointwise
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.GroupTheory.Submonoid.Membership
 import Mathbin.Order.WellFoundedSet
+
+#align_import group_theory.submonoid.pointwise from "leanprover-community/mathlib"@"2bbc7e3884ba234309d2a43b19144105a753292e"
 
 /-! # Pointwise instances on `submonoid`s and `add_submonoid`s
 

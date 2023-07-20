@@ -2,13 +2,10 @@
 Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module tactic.linarith.elimination
-! leanprover-community/mathlib commit 693ae04fbc9cfe7fe0be4b0eb83ab3ee3b4268da
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Linarith.Datatypes
+
+#align_import tactic.linarith.elimination from "leanprover-community/mathlib"@"693ae04fbc9cfe7fe0be4b0eb83ab3ee3b4268da"
 
 /-!
 # The Fourier-Motzkin elimination procedure

@@ -2,15 +2,12 @@
 Copyright (c) 2021 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
-
-! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CubicDiscriminant
 import Mathbin.RingTheory.Norm
 import Mathbin.Tactic.LinearCombination
+
+#align_import algebraic_geometry.elliptic_curve.weierstrass from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
 /-!
 # Weierstrass equations of elliptic curves

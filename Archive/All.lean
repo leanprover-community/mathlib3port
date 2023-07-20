@@ -53,3 +53,5 @@ import Archive.Wiedijk100Theorems.PerfectNumbers
 import Archive.Wiedijk100Theorems.SolutionOfCubic
 import Archive.Wiedijk100Theorems.SumOfPrimeReciprocalsDiverges
 
+#align_import all from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
+

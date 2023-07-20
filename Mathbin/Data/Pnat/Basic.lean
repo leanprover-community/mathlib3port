@@ -2,11 +2,6 @@
 Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
-
-! This file was ported from Lean 3 source module data.pnat.basic
-! leanprover-community/mathlib commit 172bf2812857f5e56938cc148b7a539f52f84ca9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Pnat.Defs
 import Mathbin.Data.Nat.Bits
@@ -14,6 +9,8 @@ import Mathbin.Data.Nat.Order.Basic
 import Mathbin.Data.Set.Basic
 import Mathbin.Algebra.GroupWithZero.Divisibility
 import Mathbin.Algebra.Order.Positive.Ring
+
+#align_import data.pnat.basic from "leanprover-community/mathlib"@"172bf2812857f5e56938cc148b7a539f52f84ca9"
 
 /-!
 # The positive natural numbers

@@ -2,17 +2,14 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
-
-! This file was ported from Lean 3 source module algebraic_topology.simplex_category
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.CategoryTheory.Skeletal
 import Mathbin.Data.Fintype.Sort
 import Mathbin.Order.Category.NonemptyFinLinOrd
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+
+#align_import algebraic_topology.simplex_category from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
 /-! # The simplex category
 

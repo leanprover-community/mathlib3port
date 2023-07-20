@@ -2,13 +2,10 @@
 Copyright (c) 2020 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
-
-! This file was ported from Lean 3 source module tactic.with_local_reducibility
-! leanprover-community/mathlib commit 07cdafe9b0a377e8704f26597a3a57cb5e8b624a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Core
+
+#align_import tactic.with_local_reducibility from "leanprover-community/mathlib"@"07cdafe9b0a377e8704f26597a3a57cb5e8b624a"
 
 /-!
 # `with_local_reducibility`

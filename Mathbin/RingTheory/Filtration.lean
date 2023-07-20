@@ -2,11 +2,6 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module ring_theory.filtration
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Noetherian
@@ -14,6 +9,8 @@ import Mathbin.RingTheory.ReesAlgebra
 import Mathbin.RingTheory.Finiteness
 import Mathbin.Data.Polynomial.Module
 import Mathbin.Order.Hom.Lattice
+
+#align_import ring_theory.filtration from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
 /-!
 

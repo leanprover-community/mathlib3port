@@ -2,14 +2,11 @@
 Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
-
-! This file was ported from Lean 3 source module tactic.binder_matching
-! leanprover-community/mathlib commit d36af184d154f2e99f60fec5cd71bb3e53899d5c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Option.Defs
 import Mathbin.Meta.Expr
+
+#align_import tactic.binder_matching from "leanprover-community/mathlib"@"d36af184d154f2e99f60fec5cd71bb3e53899d5c"
 
 /-!
 # Matching expressions with leading binders

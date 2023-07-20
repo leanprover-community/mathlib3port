@@ -2,13 +2,10 @@
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Scott Morrison, Johan Commelin
-
-! This file was ported from Lean 3 source module data.finset.fin
-! leanprover-community/mathlib commit e04043d6bf7264a3c84bc69711dc354958ca4516
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Card
+
+#align_import data.finset.fin from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
 
 /-!
 # Finsets in `fin n`

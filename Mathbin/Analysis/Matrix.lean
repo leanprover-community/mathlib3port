@@ -2,15 +2,12 @@
 Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Eric Wieser
-
-! This file was ported from Lean 3 source module analysis.matrix
-! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.NormedSpace.PiLp
 import Mathbin.Analysis.InnerProductSpace.PiL2
+
+#align_import analysis.matrix from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
 /-!
 # Matrices as a normed space

@@ -2,11 +2,6 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
-
-! This file was ported from Lean 3 source module algebra.lie.weights
-! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Lie.Nilpotent
 import Mathbin.Algebra.Lie.TensorProduct
@@ -15,6 +10,8 @@ import Mathbin.Algebra.Lie.Engel
 import Mathbin.Algebra.Lie.CartanSubalgebra
 import Mathbin.LinearAlgebra.Eigenspace.Basic
 import Mathbin.RingTheory.TensorProduct
+
+#align_import algebra.lie.weights from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
 /-!
 # Weights and roots of Lie modules and Lie algebras

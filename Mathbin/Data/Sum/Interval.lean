@@ -2,14 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
-
-! This file was ported from Lean 3 source module data.sum.interval
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Sum.Order
 import Mathbin.Order.LocallyFinite
+
+#align_import data.sum.interval from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 
 /-!
 # Finite intervals in a disjoint union

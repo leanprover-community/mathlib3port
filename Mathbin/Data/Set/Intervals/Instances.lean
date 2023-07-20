@@ -2,14 +2,11 @@
 Copyright (c) 2022 Stuart Presnell. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell, Eric Wieser, Yaël Dillies, Patrick Massot, Scott Morrison
-
-! This file was ported from Lean 3 source module data.set.intervals.instances
-! leanprover-community/mathlib commit 4d392a6c9c4539cbeca399b3ee0afea398fbd2eb
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Order
 import Mathbin.Algebra.Ring.Regular
+
+#align_import data.set.intervals.instances from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 
 /-!
 # Algebraic instances for unit intervals

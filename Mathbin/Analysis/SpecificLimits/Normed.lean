@@ -2,15 +2,12 @@
 Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Sébastien Gouëzel, Yury G. Kudryashov, Dylan MacKenzie, Patrick Massot
-
-! This file was ported from Lean 3 source module analysis.specific_limits.normed
-! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Field.Basic
 import Mathbin.Analysis.Asymptotics.Asymptotics
 import Mathbin.Analysis.SpecificLimits.Basic
+
+#align_import analysis.specific_limits.normed from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 
 /-!
 # A collection of specific limit computations

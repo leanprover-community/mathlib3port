@@ -2,15 +2,12 @@
 Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module tactic.zify
-! leanprover-community/mathlib commit ad7038e538b2112a0c88b985b925e64b3b022947
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Int.Cast.Lemmas
 import Mathbin.Data.Int.CharZero
 import Mathbin.Tactic.NormCast
+
+#align_import tactic.zify from "leanprover-community/mathlib"@"ad7038e538b2112a0c88b985b925e64b3b022947"
 
 /-!
 # A tactic to shift `ℕ` goals to `ℤ`

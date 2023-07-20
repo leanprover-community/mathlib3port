@@ -2,11 +2,6 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
-
-! This file was ported from Lean 3 source module number_theory.lucas_lehmer
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Pnat.Interval
@@ -15,6 +10,8 @@ import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.RingTheory.Fintype
 import Mathbin.Tactic.IntervalCases
 import Mathbin.Tactic.RingExp
+
+#align_import number_theory.lucas_lehmer from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
 /-!
 # The Lucas-Lehmer test for Mersenne primes.

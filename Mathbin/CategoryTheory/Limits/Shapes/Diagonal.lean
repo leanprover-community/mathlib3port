@@ -2,15 +2,12 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
-
-! This file was ported from Lean 3 source module category_theory.limits.shapes.diagonal
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
+
+#align_import category_theory.limits.shapes.diagonal from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
 /-!
 # The diagonal object of a morphism.

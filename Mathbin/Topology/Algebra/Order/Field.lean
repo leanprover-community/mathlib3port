@@ -2,16 +2,13 @@
 Copyright (c) 2022 Benjamin Davidson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson, Devon Tuma, Eric Rodriguez, Oliver Nash
-
-! This file was ported from Lean 3 source module topology.algebra.order.field
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Positivity
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Topology.Algebra.Order.Group
 import Mathbin.Topology.Algebra.Field
+
+#align_import topology.algebra.order.field from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
 /-!
 # Topologies on linear ordered fields

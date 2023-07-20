@@ -2,11 +2,6 @@
 Copyright (c) 2019 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Jireh Loreaux
-
-! This file was ported from Lean 3 source module algebra.hom.ring
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupWithZero.InjSurj
 import Mathbin.Algebra.Ring.Basic
@@ -14,6 +9,8 @@ import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Data.Pi.Algebra
 import Mathbin.Algebra.Hom.Units
 import Mathbin.Data.Set.Image
+
+#align_import algebra.hom.ring from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Homomorphisms of semirings and rings

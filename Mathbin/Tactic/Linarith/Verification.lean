@@ -2,14 +2,11 @@
 Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
-
-! This file was ported from Lean 3 source module tactic.linarith.verification
-! leanprover-community/mathlib commit 016138c2e83fa76d338d5df7d32d0acb6c587792
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Linarith.Elimination
 import Mathbin.Tactic.Linarith.Parsing
+
+#align_import tactic.linarith.verification from "leanprover-community/mathlib"@"016138c2e83fa76d338d5df7d32d0acb6c587792"
 
 /-!
 # Deriving a proof of false

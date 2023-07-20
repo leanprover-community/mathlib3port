@@ -2,14 +2,11 @@
 Copyright (c) 2022 Pierre-Alexandre Bazin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
-
-! This file was ported from Lean 3 source module ring_theory.coprime.ideal
-! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Dfinsupp
 import Mathbin.RingTheory.Ideal.Operations
+
+#align_import ring_theory.coprime.ideal from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 
 /-!
 # An additional lemma about coprime ideals

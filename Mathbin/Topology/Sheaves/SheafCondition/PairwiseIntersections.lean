@@ -2,11 +2,6 @@
 Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.pairwise_intersections
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Sheaves.SheafCondition.OpensLeCover
 import Mathbin.CategoryTheory.Limits.Final
@@ -14,6 +9,8 @@ import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Category.Pairwise
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
 import Mathbin.Algebra.Category.Ring.Constructions
+
+#align_import topology.sheaves.sheaf_condition.pairwise_intersections from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
 /-!
 # Equivalent formulations of the sheaf condition

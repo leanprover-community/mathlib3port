@@ -2,16 +2,13 @@
 Copyright (c) 2022 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno, Junyan Xu
-
-! This file was ported from Lean 3 source module category_theory.bicategory.coherence
-! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.PathCategory
 import Mathbin.CategoryTheory.Functor.FullyFaithful
 import Mathbin.CategoryTheory.Bicategory.Free
 import Mathbin.CategoryTheory.Bicategory.LocallyDiscrete
+
+#align_import category_theory.bicategory.coherence from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 
 /-!
 # The coherence theorem for bicategories

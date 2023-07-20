@@ -3,14 +3,11 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, Yury Kudryashov,
 Neil Strickland, Aaron Anderson
-
-! This file was ported from Lean 3 source module algebra.divisibility.units
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Algebra.Group.Units
+
+#align_import algebra.divisibility.units from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
 /-!
 # Lemmas about divisibility and units
@@ -151,7 +148,7 @@ theorem isUnit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x 
 #align is_unit_of_dvd_unit isUnit_of_dvd_unit
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∣ » 1) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∣ » 1) -/
 #print isUnit_of_dvd_one /-
 theorem isUnit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩

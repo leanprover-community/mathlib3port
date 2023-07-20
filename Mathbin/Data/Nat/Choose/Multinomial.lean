@@ -2,11 +2,6 @@
 Copyright (c) 2022 Pim Otte. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
-
-! This file was ported from Lean 3 source module data.nat.choose.multinomial
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Data.Nat.Choose.Sum
@@ -14,6 +9,8 @@ import Mathbin.Data.Nat.Factorial.BigOperators
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Data.Finset.Sym
 import Mathbin.Data.Finsupp.Multiset
+
+#align_import data.nat.choose.multinomial from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
 /-!
 # Multinomial

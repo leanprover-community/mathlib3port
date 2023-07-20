@@ -2,14 +2,11 @@
 Copyright (c) 2020 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
-
-! This file was ported from Lean 3 source module linear_algebra.eigenspace.is_alg_closed
-! leanprover-community/mathlib commit 660b3a2db3522fa0db036e569dc995a615c4c848
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Eigenspace.Basic
 import Mathbin.FieldTheory.IsAlgClosed.Spectrum
+
+#align_import linear_algebra.eigenspace.is_alg_closed from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 
 /-!
 # Eigenvectors and eigenvalues over algebraically closed fields.

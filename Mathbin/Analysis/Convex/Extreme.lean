@@ -2,13 +2,10 @@
 Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
-
-! This file was ported from Lean 3 source module analysis.convex.extreme
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Hull
+
+#align_import analysis.convex.extreme from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
 /-!
 # Extreme sets
@@ -161,7 +158,7 @@ theorem isExtreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F,
 #align is_extreme_sInter isExtreme_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 #print mem_extremePoints /-
 theorem mem_extremePoints :
     x ∈ A.extremePoints 𝕜 ↔
@@ -304,7 +301,7 @@ variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSMulDivisors 𝕜 E] {A B : Set E} {x : E}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 #print mem_extremePoints_iff_forall_segment /-
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/

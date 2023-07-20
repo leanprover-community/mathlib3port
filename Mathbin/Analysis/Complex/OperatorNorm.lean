@@ -2,15 +2,12 @@
 Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
-
-! This file was ported from Lean 3 source module analysis.complex.operator_norm
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Data.Complex.Determinant
+
+#align_import analysis.complex.operator_norm from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
 /-! # The basic continuous linear maps associated to `ℂ`
 

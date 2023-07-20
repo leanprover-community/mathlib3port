@@ -2,14 +2,11 @@
 Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
-
-! This file was ported from Lean 3 source module tactic.fin_cases
-! leanprover-community/mathlib commit 82a53736b96112a948cb35faa4ab72aa705d56f8
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Tactic.NormNum
+
+#align_import tactic.fin_cases from "leanprover-community/mathlib"@"82a53736b96112a948cb35faa4ab72aa705d56f8"
 
 /-!
 # Case bash

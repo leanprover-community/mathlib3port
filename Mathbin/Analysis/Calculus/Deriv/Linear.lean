@@ -2,14 +2,11 @@
 Copyright (c) 2019 Gabriel Ebner. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Yury Kudryashov
-
-! This file was ported from Lean 3 source module analysis.calculus.deriv.linear
-! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv.Basic
 import Mathbin.Analysis.Calculus.Fderiv.Linear
+
+#align_import analysis.calculus.deriv.linear from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 
 /-!
 # Derivatives of continuous linear maps from the base field
