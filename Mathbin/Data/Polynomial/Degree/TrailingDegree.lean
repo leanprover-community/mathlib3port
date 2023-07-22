@@ -210,7 +210,7 @@ theorem trailingDegree_le_trailingDegree (h : coeff q (natTrailingDegree p) ≠ 
 #print Polynomial.trailingDegree_ne_of_natTrailingDegree_ne /-
 theorem trailingDegree_ne_of_natTrailingDegree_ne {n : ℕ} :
     p.natTrailingDegree ≠ n → trailingDegree p ≠ n :=
-  mt fun h => by rw [nat_trailing_degree, h, Option.getD_coe]
+  mt fun h => by rw [nat_trailing_degree, h, Option.getD_some]
 #align polynomial.trailing_degree_ne_of_nat_trailing_degree_ne Polynomial.trailingDegree_ne_of_natTrailingDegree_ne
 -/
 

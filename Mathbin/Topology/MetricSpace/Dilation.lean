@@ -353,8 +353,8 @@ theorem coe_id : ⇑(Dilation.id α) = id :=
 #align dilation.coe_id Dilation.coe_id
 -/
 
-#print Dilation.id_ratio /-
-theorem id_ratio : ratio (Dilation.id α) = 1 :=
+#print Dilation.ratio_id /-
+theorem ratio_id : ratio (Dilation.id α) = 1 :=
   by
   by_cases h : ∀ x y : α, edist x y = 0 ∨ edist x y = ∞
   · rw [ratio, if_pos h]
@@ -362,7 +362,7 @@ theorem id_ratio : ratio (Dilation.id α) = 1 :=
     rcases h with ⟨x, y, hne⟩
     refine' (ratio_unique hne.1 hne.2 _).symm
     simp
-#align dilation.id_ratio Dilation.id_ratio
+#align dilation.id_ratio Dilation.ratio_id
 -/
 
 #print Dilation.comp /-
@@ -396,12 +396,12 @@ theorem comp_apply (g : Dilation β γ) (f : Dilation α β) (x : α) : (g.comp 
 #align dilation.comp_apply Dilation.comp_apply
 -/
 
-#print Dilation.comp_ratio /-
+#print Dilation.ratio_comp' /-
 /-- Ratio of the composition `g.comp f` of two dilations is the product of their ratios. We assume
 that the domain `α` of `f` is nontrivial, otherwise `ratio f = ratio (g.comp f) = 1` but `ratio g`
 may have any value. -/
 @[simp]
-theorem comp_ratio {g : Dilation β γ} {f : Dilation α β}
+theorem ratio_comp' {g : Dilation β γ} {f : Dilation α β}
     (hne : ∃ x y : α, edist x y ≠ 0 ∧ edist x y ≠ ⊤) : ratio (g.comp f) = ratio g * ratio f :=
   by
   rcases hne with ⟨x, y, hα⟩
@@ -409,7 +409,7 @@ theorem comp_ratio {g : Dilation β γ} {f : Dilation α β}
   simp only [dist_eq, coe_comp, ← mul_assoc, mul_eq_mul_right_iff] at hgf 
   rw [edist_eq, edist_eq, ← mul_assoc, ENNReal.mul_eq_mul_right hα.1 hα.2] at hgf 
   rwa [← ENNReal.coe_eq_coe, ENNReal.coe_mul]
-#align dilation.comp_ratio Dilation.comp_ratio
+#align dilation.comp_ratio Dilation.ratio_comp'
 -/
 
 #print Dilation.comp_id /-

@@ -107,6 +107,8 @@ theorem get_some (x : α) (h : isSome (some x)) : Option.get h = x :=
 #align option.get_some Option.get_some
 -/
 
+/- warning: option.get_or_else_some clashes with option.get_or_else_coe -> Option.getD_some
+Case conversion may be inaccurate. Consider using '#align option.get_or_else_some Option.getD_someₓ'. -/
 #print Option.getD_some /-
 @[simp]
 theorem getD_some (x y : α) : Option.getD (some x) y = x :=
@@ -121,11 +123,11 @@ theorem getD_none (x : α) : Option.getD none x = x :=
 #align option.get_or_else_none Option.getD_none
 -/
 
-#print Option.getD_coe /-
+#print Option.getD_some /-
 @[simp]
-theorem getD_coe (x y : α) : Option.getD (↑x) y = x :=
+theorem getD_some (x y : α) : Option.getD (↑x) y = x :=
   rfl
-#align option.get_or_else_coe Option.getD_coe
+#align option.get_or_else_coe Option.getD_some
 -/
 
 #print Option.getD_of_ne_none /-
@@ -451,16 +453,22 @@ theorem mem_map_of_mem {a : α} {x : Option α} (g : α → β) (h : a ∈ x) : 
 #align option.mem_map_of_mem Option.mem_map_of_mem
 -/
 
+#print Option.mem_map /-
 theorem mem_map {f : α → β} {y : β} {o : Option α} : y ∈ o.map f ↔ ∃ x ∈ o, f x = y := by simp
 #align option.mem_map Option.mem_map
+-/
 
+#print Option.forall_mem_map /-
 theorem forall_mem_map {f : α → β} {o : Option α} {p : β → Prop} :
     (∀ y ∈ o.map f, p y) ↔ ∀ x ∈ o, p (f x) := by simp
 #align option.forall_mem_map Option.forall_mem_map
+-/
 
+#print Option.exists_mem_map /-
 theorem exists_mem_map {f : α → β} {o : Option α} {p : β → Prop} :
     (∃ y ∈ o.map f, p y) ↔ ∃ x ∈ o, p (f x) := by simp
 #align option.exists_mem_map Option.exists_mem_map
+-/
 
 #print Option.bind_map_comm /-
 theorem bind_map_comm {α β} {x : Option (Option α)} {f : α → β} :
