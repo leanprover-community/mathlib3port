@@ -6,10 +6,13 @@ Authors: Yaël Dillies
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Fintype.Card
 
-#align_import order.irreducible from "leanprover-community/mathlib"@"bf2428c9486c407ca38b5b3fb10b87dad0bc99fa"
+#align_import order.irreducible from "leanprover-community/mathlib"@"573eea921b01c49712ac02471911df0719297349"
 
 /-!
 # Irreducible and prime elements in an order
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines irreducible and prime elements in an order and shows that in a well-founded
 lattice every element decomposes as a supremum of irreducible elements.
