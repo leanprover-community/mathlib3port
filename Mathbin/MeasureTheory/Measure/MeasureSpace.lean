@@ -4017,16 +4017,14 @@ theorem prob_le_one [IsProbabilityMeasure μ] : μ s ≤ 1 :=
 #align measure_theory.prob_le_one MeasureTheory.prob_le_one
 -/
 
-#print MeasureTheory.isProbabilityMeasureSmul /-
-theorem isProbabilityMeasureSmul [IsFiniteMeasure μ] (h : μ ≠ 0) :
+theorem isProbabilityMeasureSMul [IsFiniteMeasure μ] (h : μ ≠ 0) :
     IsProbabilityMeasure ((μ univ)⁻¹ • μ) :=
   by
   constructor
   rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel]
   · rwa [Ne, measure_univ_eq_zero]
   · exact measure_ne_top _ _
-#align measure_theory.is_probability_measure_smul MeasureTheory.isProbabilityMeasureSmul
--/
+#align measure_theory.is_probability_measure_smul MeasureTheory.isProbabilityMeasureSMulₓ
 
 #print MeasureTheory.isProbabilityMeasure_map /-
 theorem isProbabilityMeasure_map [IsProbabilityMeasure μ] {f : α → β} (hf : AEMeasurable f μ) :
