@@ -667,14 +667,18 @@ theorem ne_of_mem_sphere (h : y ∈ sphere x ε) (hε : ε ≠ 0) : y ≠ x := b
 #align metric.ne_of_mem_sphere Metric.ne_of_mem_sphere
 -/
 
+#print Metric.nonneg_of_mem_sphere /-
 theorem nonneg_of_mem_sphere (hy : y ∈ sphere x ε) : 0 ≤ ε :=
   dist_nonneg.trans_eq hy
 #align metric.nonneg_of_mem_sphere Metric.nonneg_of_mem_sphere
+-/
 
+#print Metric.sphere_eq_empty_of_neg /-
 @[simp]
 theorem sphere_eq_empty_of_neg (hε : ε < 0) : sphere x ε = ∅ :=
   Set.eq_empty_iff_forall_not_mem.mpr fun y hy => (nonneg_of_mem_sphere hy).not_lt hε
 #align metric.sphere_eq_empty_of_neg Metric.sphere_eq_empty_of_neg
+-/
 
 #print Metric.sphere_eq_empty_of_subsingleton /-
 theorem sphere_eq_empty_of_subsingleton [Subsingleton α] (hε : ε ≠ 0) : sphere x ε = ∅ :=
@@ -708,10 +712,12 @@ theorem closedBall_eq_empty : closedBall x ε = ∅ ↔ ε < 0 := by
 #align metric.closed_ball_eq_empty Metric.closedBall_eq_empty
 -/
 
+#print Metric.closedBall_eq_sphere_of_nonpos /-
 /-- Closed balls and spheres coincide when the radius is non-positive -/
 theorem closedBall_eq_sphere_of_nonpos (hε : ε ≤ 0) : closedBall x ε = sphere x ε :=
   Set.ext fun _ => (hε.trans dist_nonneg).le_iff_eq
 #align metric.closed_ball_eq_sphere_of_nonpos Metric.closedBall_eq_sphere_of_nonpos
+-/
 
 #print Metric.ball_subset_closedBall /-
 theorem ball_subset_closedBall : ball x ε ⊆ closedBall x ε := fun y (hy : _ < _) => le_of_lt hy
@@ -2367,6 +2373,7 @@ theorem closedBall_prod_same (x : α) (y : β) (r : ℝ) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print sphere_prod /-
 theorem sphere_prod (x : α × β) (r : ℝ) :
     sphere x r = sphere x.1 r ×ˢ closedBall x.2 r ∪ closedBall x.1 r ×ˢ sphere x.2 r :=
   by
@@ -2380,6 +2387,7 @@ theorem sphere_prod (x : α × β) (r : ℝ) :
     refine' or_congr (and_congr_right _) ((and_comm' _ _).trans (and_congr_left _))
     all_goals rintro rfl; rfl
 #align sphere_prod sphere_prod
+-/
 
 end Prod
 
@@ -2722,11 +2730,14 @@ theorem nndist_pi_le_iff {f g : ∀ b, π b} {r : ℝ≥0} :
 #align nndist_pi_le_iff nndist_pi_le_iff
 -/
 
+#print nndist_pi_lt_iff /-
 theorem nndist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
     nndist f g < r ↔ ∀ b, nndist (f b) (g b) < r := by
   simp [nndist_pi_def, Finset.sup_lt_iff (show ⊥ < r from hr)]
 #align nndist_pi_lt_iff nndist_pi_lt_iff
+-/
 
+#print nndist_pi_eq_iff /-
 theorem nndist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
     nndist f g = r ↔ (∃ i, nndist (f i) (g i) = r) ∧ ∀ b, nndist (f b) (g b) ≤ r :=
   by
@@ -2736,6 +2747,7 @@ theorem nndist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
   refine' exists_congr fun b => _
   apply (and_iff_right <| h _).symm
 #align nndist_pi_eq_iff nndist_pi_eq_iff
+-/
 
 #print dist_pi_lt_iff /-
 theorem dist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) :
@@ -2755,12 +2767,14 @@ theorem dist_pi_le_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 ≤ r) :
 #align dist_pi_le_iff dist_pi_le_iff
 -/
 
+#print dist_pi_eq_iff /-
 theorem dist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) :
     dist f g = r ↔ (∃ i, dist (f i) (g i) = r) ∧ ∀ b, dist (f b) (g b) ≤ r :=
   by
   lift r to ℝ≥0 using hr.le
   simp_rw [← coe_nndist, NNReal.coe_eq, nndist_pi_eq_iff hr, NNReal.coe_le_coe]
 #align dist_pi_eq_iff dist_pi_eq_iff
+-/
 
 #print dist_pi_le_iff' /-
 theorem dist_pi_le_iff' [Nonempty β] {f g : ∀ b, π b} {r : ℝ} :
@@ -2848,6 +2862,7 @@ theorem closedBall_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
 #align closed_ball_pi' closedBall_pi'
 -/
 
+#print sphere_pi /-
 /-- A sphere in a product space is a union of spheres on each component restricted to the closed
 ball. -/
 theorem sphere_pi (x : ∀ b, π b) {r : ℝ} (h : 0 < r ∨ Nonempty β) :
@@ -2866,6 +2881,7 @@ theorem sphere_pi (x : ∀ b, π b) {r : ℝ} (h : 0 < r ∨ Nonempty β) :
   · ext
     simp [dist_pi_eq_iff hr, dist_pi_le_iff hr.le]
 #align sphere_pi sphere_pi
+-/
 
 #print Fin.nndist_insertNth_insertNth /-
 @[simp]
