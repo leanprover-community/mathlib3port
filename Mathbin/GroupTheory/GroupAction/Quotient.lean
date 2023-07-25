@@ -10,7 +10,7 @@ import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.Commutator
 import Mathbin.GroupTheory.Coset
 
-#align_import group_theory.group_action.quotient from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
+#align_import group_theory.group_action.quotient from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # Properties of group actions involving quotient groups
@@ -421,7 +421,7 @@ open QuotientGroup
 #print Subgroup.quotientCentralizerEmbedding /-
 /-- Cosets of the centralizer of an element embed into the set of commutators. -/
 noncomputable def quotientCentralizerEmbedding (g : G) :
-    G ⧸ centralizer (zpowers (g : G)) ↪ commutatorSet G :=
+    G ⧸ centralizer (zpowers (g : G) : Set G) ↪ commutatorSet G :=
   ((MulAction.orbitEquivQuotientStabilizer (ConjAct G) g).trans
             (quotientEquivOfEq (ConjAct.stabilizer_eq_centralizer g))).symm.toEmbedding.trans
     ⟨fun x =>

@@ -6,8 +6,9 @@ Authors: Yaël Dillies, Sara Rousta
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.Set.Intervals.OrdConnected
 import Mathbin.Data.Set.Intervals.OrderIso
+import Mathbin.Tactic.ByContra
 
-#align_import order.upper_lower.basic from "leanprover-community/mathlib"@"e9ce88cd0d54891c714c604076084f763dd480ed"
+#align_import order.upper_lower.basic from "leanprover-community/mathlib"@"c0c52abb75074ed8b73a948341f50521fbf43b4c"
 
 /-!
 # Up-sets and down-sets
@@ -250,17 +251,17 @@ theorem isUpperSet_preimage_toDual_iff {s : Set αᵒᵈ} : IsUpperSet (toDual �
 #align is_upper_set_preimage_to_dual_iff isUpperSet_preimage_toDual_iff
 -/
 
-alias isLowerSet_preimage_ofDual_iff ↔ _ IsUpperSet.ofDual
-#align is_upper_set.of_dual IsUpperSet.ofDual
-
-alias isUpperSet_preimage_ofDual_iff ↔ _ IsLowerSet.ofDual
-#align is_lower_set.of_dual IsLowerSet.ofDual
-
-alias isLowerSet_preimage_toDual_iff ↔ _ IsUpperSet.toDual
+alias isLowerSet_preimage_ofDual_iff ↔ _ IsUpperSet.toDual
 #align is_upper_set.to_dual IsUpperSet.toDual
 
-alias isUpperSet_preimage_toDual_iff ↔ _ IsLowerSet.toDual
+alias isUpperSet_preimage_ofDual_iff ↔ _ IsLowerSet.toDual
 #align is_lower_set.to_dual IsLowerSet.toDual
+
+alias isLowerSet_preimage_toDual_iff ↔ _ IsUpperSet.ofDual
+#align is_upper_set.of_dual IsUpperSet.ofDual
+
+alias isUpperSet_preimage_toDual_iff ↔ _ IsLowerSet.ofDual
+#align is_lower_set.of_dual IsLowerSet.ofDual
 
 end LE
 
@@ -513,6 +514,26 @@ alias isLowerSet_iff_Iio_subset ↔ IsLowerSet.Iio_subset _
 #align is_lower_set.Iio_subset IsLowerSet.Iio_subset
 
 end PartialOrder
+
+section LinearOrder
+
+variable [LinearOrder α] {s t : Set α}
+
+theorem IsUpperSet.total (hs : IsUpperSet s) (ht : IsUpperSet t) : s ⊆ t ∨ t ⊆ s :=
+  by
+  by_contra' h
+  simp_rw [Set.not_subset] at h 
+  obtain ⟨⟨a, has, hat⟩, b, hbt, hbs⟩ := h
+  obtain hab | hba := le_total a b
+  · exact hbs (hs hab has)
+  · exact hat (ht hba hbt)
+#align is_upper_set.total IsUpperSet.total
+
+theorem IsLowerSet.total (hs : IsLowerSet s) (ht : IsLowerSet t) : s ⊆ t ∨ t ⊆ s :=
+  hs.toDual.Total ht.toDual
+#align is_lower_set.total IsLowerSet.total
+
+end LinearOrder
 
 /-! ### Bundled upper/lower sets -/
 
@@ -1253,6 +1274,38 @@ def upperSetIsoLowerSet : UpperSet α ≃o LowerSet α
 -/
 
 end LE
+
+section LinearOrder
+
+variable [LinearOrder α]
+
+instance UpperSet.isTotal_le : IsTotal (UpperSet α) (· ≤ ·) :=
+  ⟨fun s t => t.upper.Total s.upper⟩
+#align upper_set.is_total_le UpperSet.isTotal_le
+
+instance LowerSet.isTotal_le : IsTotal (LowerSet α) (· ≤ ·) :=
+  ⟨fun s t => s.lower.Total t.lower⟩
+#align lower_set.is_total_le LowerSet.isTotal_le
+
+noncomputable instance : CompleteLinearOrder (UpperSet α) :=
+  { UpperSet.completeDistribLattice with
+    le_total := IsTotal.total
+    decidableLe := Classical.decRel _
+    DecidableEq := Classical.decRel _
+    decidableLt := Classical.decRel _
+    max_def := by classical exact sup_eq_maxDefault
+    min_def := by classical exact inf_eq_minDefault }
+
+noncomputable instance : CompleteLinearOrder (LowerSet α) :=
+  { LowerSet.completeDistribLattice with
+    le_total := IsTotal.total
+    decidableLe := Classical.decRel _
+    DecidableEq := Classical.decRel _
+    decidableLt := Classical.decRel _
+    max_def := by classical exact sup_eq_maxDefault
+    min_def := by classical exact inf_eq_minDefault }
+
+end LinearOrder
 
 /-! #### Map -/
 

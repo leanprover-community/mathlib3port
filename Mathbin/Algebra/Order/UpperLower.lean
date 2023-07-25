@@ -7,7 +7,7 @@ import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Order.UpperLower.Basic
 
-#align_import algebra.order.upper_lower from "leanprover-community/mathlib"@"ad0089aca372256fe53dde13ca0dfea569bf5ac7"
+#align_import algebra.order.upper_lower from "leanprover-community/mathlib"@"c0c52abb75074ed8b73a948341f50521fbf43b4c"
 
 /-!
 # Algebraic operations on upper/lower sets
@@ -52,9 +52,7 @@ variable {α : Type _} [OrderedCommGroup α] {s t : Set α} {a : α}
 #print IsUpperSet.smul /-
 @[to_additive]
 theorem IsUpperSet.smul (hs : IsUpperSet s) : IsUpperSet (a • s) :=
-  by
-  rintro _ y hxy ⟨x, hx, rfl⟩
-  exact mem_smul_set_iff_inv_smul_mem.2 (hs (le_inv_mul_iff_mul_le.2 hxy) hx)
+  hs.image <| OrderIso.mulLeft _
 #align is_upper_set.smul IsUpperSet.smul
 #align is_upper_set.vadd IsUpperSet.vadd
 -/
@@ -62,7 +60,7 @@ theorem IsUpperSet.smul (hs : IsUpperSet s) : IsUpperSet (a • s) :=
 #print IsLowerSet.smul /-
 @[to_additive]
 theorem IsLowerSet.smul (hs : IsLowerSet s) : IsLowerSet (a • s) :=
-  hs.ofDual.smul
+  hs.image <| OrderIso.mulLeft _
 #align is_lower_set.smul IsLowerSet.smul
 #align is_lower_set.vadd IsLowerSet.vadd
 -/
@@ -96,7 +94,7 @@ theorem IsUpperSet.mul_right (hs : IsUpperSet s) : IsUpperSet (s * t) := by rw [
 #print IsLowerSet.mul_left /-
 @[to_additive]
 theorem IsLowerSet.mul_left (ht : IsLowerSet t) : IsLowerSet (s * t) :=
-  ht.ofDual.mul_left
+  ht.toDual.mul_left
 #align is_lower_set.mul_left IsLowerSet.mul_left
 #align is_lower_set.add_left IsLowerSet.add_left
 -/
@@ -104,7 +102,7 @@ theorem IsLowerSet.mul_left (ht : IsLowerSet t) : IsLowerSet (s * t) :=
 #print IsLowerSet.mul_right /-
 @[to_additive]
 theorem IsLowerSet.mul_right (hs : IsLowerSet s) : IsLowerSet (s * t) :=
-  hs.ofDual.mul_right
+  hs.toDual.mul_right
 #align is_lower_set.mul_right IsLowerSet.mul_right
 #align is_lower_set.add_right IsLowerSet.add_right
 -/
@@ -142,7 +140,7 @@ theorem IsUpperSet.div_right (hs : IsUpperSet s) : IsUpperSet (s / t) := by rw [
 #print IsLowerSet.div_left /-
 @[to_additive]
 theorem IsLowerSet.div_left (ht : IsLowerSet t) : IsUpperSet (s / t) :=
-  ht.ofDual.div_left
+  ht.toDual.div_left
 #align is_lower_set.div_left IsLowerSet.div_left
 #align is_lower_set.sub_left IsLowerSet.sub_left
 -/
@@ -150,7 +148,7 @@ theorem IsLowerSet.div_left (ht : IsLowerSet t) : IsUpperSet (s / t) :=
 #print IsLowerSet.div_right /-
 @[to_additive]
 theorem IsLowerSet.div_right (hs : IsLowerSet s) : IsLowerSet (s / t) :=
-  hs.ofDual.div_right
+  hs.toDual.div_right
 #align is_lower_set.div_right IsLowerSet.div_right
 #align is_lower_set.sub_right IsLowerSet.sub_right
 -/

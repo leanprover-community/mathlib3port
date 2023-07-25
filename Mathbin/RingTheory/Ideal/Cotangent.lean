@@ -9,7 +9,7 @@ import Mathbin.Algebra.Ring.Idempotents
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.Ideal.LocalRing
 
-#align_import ring_theory.ideal.cotangent from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
+#align_import ring_theory.ideal.cotangent from "leanprover-community/mathlib"@"4b92a463033b5587bb011657e25e4710bfca7364"
 
 /-!
 # The module `I ⧸ I ^ 2`
@@ -52,15 +52,10 @@ instance Cotangent.moduleOfTower : Module S I.Cotangent :=
 -/
 
 instance : IsScalarTower S S' I.Cotangent :=
-  by
-  delta cotangent
-  constructor
-  intro s s' x
-  rw [← @IsScalarTower.algebraMap_smul S' R, ← @IsScalarTower.algebraMap_smul S' R, ← smul_assoc, ←
-    IsScalarTower.toAlgHom_apply S S' R, map_smul]
-  rfl
+  Submodule.Quotient.isScalarTower _ _
 
-instance [IsNoetherian R I] : IsNoetherian R I.Cotangent := by delta cotangent; infer_instance
+instance [IsNoetherian R I] : IsNoetherian R I.Cotangent :=
+  Submodule.Quotient.isNoetherian _
 
 #print Ideal.toCotangent /-
 /-- The quotient map from `I` to `I ⧸ I ^ 2`. -/

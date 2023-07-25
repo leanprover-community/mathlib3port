@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 import Mathbin.Topology.Separation
 import Mathbin.Topology.Bases
 
-#align_import topology.dense_embedding from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
+#align_import topology.dense_embedding from "leanprover-community/mathlib"@"148aefbd371a25f1cff33c85f20c661ce3155def"
 
 /-!
 # Dense embeddings
@@ -17,8 +17,8 @@ import Mathbin.Topology.Bases
 This file defines three properties of functions:
 
 * `dense_range f`      means `f` has dense image;
-* `dense_inducing i`   means `i` is also `inducing`;
-* `dense_embedding e`  means `e` is also an `embedding`.
+* `dense_inducing i`   means `i` is also `inducing`, namely it induces the topology on its codomain;
+* `dense_embedding e`  means `e` is further an `embedding`, namely it is injective and `inducing`.
 
 The main theorem `continuous_extend` gives a criterion for a function
 `f : X → Z` to a T₃ space Z to extend along a dense embedding

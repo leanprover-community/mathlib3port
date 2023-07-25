@@ -7,7 +7,7 @@ import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Subgroup.Zpowers
 import Mathbin.Algebra.GroupRingAction.Basic
 
-#align_import group_theory.group_action.conj_act from "leanprover-community/mathlib"@"d30d31261cdb4d2f5e612eabc3c4bf45556350d5"
+#align_import group_theory.group_action.conj_act from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # Conjugation action of a group on itself
@@ -361,7 +361,8 @@ theorem orbitRel_conjAct : (orbitRel (ConjAct G) G).Rel = IsConj :=
 -/
 
 #print ConjAct.stabilizer_eq_centralizer /-
-theorem stabilizer_eq_centralizer (g : G) : stabilizer (ConjAct G) g = (zpowers g).centralizer :=
+theorem stabilizer_eq_centralizer (g : G) :
+    stabilizer (ConjAct G) g = centralizer (zpowers (toConjAct g) : Set (ConjAct G)) :=
   le_antisymm (le_centralizer_iff.mp (zpowers_le.mpr fun x => mul_inv_eq_iff_eq_mul.mp)) fun x h =>
     mul_inv_eq_of_eq_mul (h g (mem_zpowers g)).symm
 #align conj_act.stabilizer_eq_centralizer ConjAct.stabilizer_eq_centralizer

@@ -12,7 +12,7 @@ import Mathbin.Logic.Encodable.Basic
 import Mathbin.Order.Atoms
 import Mathbin.Tactic.ApplyFun
 
-#align_import group_theory.subgroup.basic from "leanprover-community/mathlib"@"d30d31261cdb4d2f5e612eabc3c4bf45556350d5"
+#align_import group_theory.subgroup.basic from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # Subgroups
@@ -2712,23 +2712,23 @@ end Normalizer
 
 section Centralizer
 
+variable {H}
+
 #print Subgroup.centralizer /-
 /-- The `centralizer` of `H` is the subgroup of `g : G` commuting with every `h : H`. -/
 @[to_additive
       "The `centralizer` of `H` is the additive subgroup of `g : G` commuting with\nevery `h : H`."]
-def centralizer : Subgroup G :=
-  { Submonoid.centralizer ↑H with
-    carrier := Set.centralizer H
+def centralizer (s : Set G) : Subgroup G :=
+  { Submonoid.centralizer s with
+    carrier := Set.centralizer s
     inv_mem' := fun g => Set.inv_mem_centralizer }
 #align subgroup.centralizer Subgroup.centralizer
 #align add_subgroup.centralizer AddSubgroup.centralizer
 -/
 
-variable {H}
-
 #print Subgroup.mem_centralizer_iff /-
 @[to_additive]
-theorem mem_centralizer_iff {g : G} : g ∈ H.centralizer ↔ ∀ h ∈ H, h * g = g * h :=
+theorem mem_centralizer_iff {g : G} {s : Set G} : g ∈ centralizer s ↔ ∀ h ∈ s, h * g = g * h :=
   Iff.rfl
 #align subgroup.mem_centralizer_iff Subgroup.mem_centralizer_iff
 #align add_subgroup.mem_centralizer_iff AddSubgroup.mem_centralizer_iff
@@ -2736,24 +2736,22 @@ theorem mem_centralizer_iff {g : G} : g ∈ H.centralizer ↔ ∀ h ∈ H, h * g
 
 #print Subgroup.mem_centralizer_iff_commutator_eq_one /-
 @[to_additive]
-theorem mem_centralizer_iff_commutator_eq_one {g : G} :
-    g ∈ H.centralizer ↔ ∀ h ∈ H, h * g * h⁻¹ * g⁻¹ = 1 := by
+theorem mem_centralizer_iff_commutator_eq_one {g : G} {s : Set G} :
+    g ∈ centralizer s ↔ ∀ h ∈ s, h * g * h⁻¹ * g⁻¹ = 1 := by
   simp only [mem_centralizer_iff, mul_inv_eq_iff_eq_mul, one_mul]
 #align subgroup.mem_centralizer_iff_commutator_eq_one Subgroup.mem_centralizer_iff_commutator_eq_one
 #align add_subgroup.mem_centralizer_iff_commutator_eq_zero AddSubgroup.mem_centralizer_iff_commutator_eq_zero
 -/
 
-#print Subgroup.centralizer_top /-
 @[to_additive]
-theorem centralizer_top : centralizer ⊤ = center G :=
+theorem centralizer_univ : centralizer Set.univ = center G :=
   SetLike.ext' (Set.centralizer_univ G)
-#align subgroup.centralizer_top Subgroup.centralizer_top
-#align add_subgroup.centralizer_top AddSubgroup.centralizer_top
--/
+#align subgroup.centralizer_univ Subgroup.centralizer_univ
+#align add_subgroup.centralizer_univ AddSubgroup.centralizer_univ
 
 #print Subgroup.le_centralizer_iff /-
 @[to_additive]
-theorem le_centralizer_iff : H ≤ K.centralizer ↔ K ≤ H.centralizer :=
+theorem le_centralizer_iff : H ≤ centralizer K ↔ K ≤ centralizer H :=
   ⟨fun h x hx y hy => (h hy x hx).symm, fun h x hx y hy => (h hy x hx).symm⟩
 #align subgroup.le_centralizer_iff Subgroup.le_centralizer_iff
 #align add_subgroup.le_centralizer_iff AddSubgroup.le_centralizer_iff
@@ -2769,7 +2767,7 @@ theorem center_le_centralizer (s) : center G ≤ centralizer s :=
 
 #print Subgroup.centralizer_le /-
 @[to_additive]
-theorem centralizer_le (h : H ≤ K) : centralizer K ≤ centralizer H :=
+theorem centralizer_le {s t : Set G} (h : s ⊆ t) : centralizer t ≤ centralizer s :=
   Submonoid.centralizer_le h
 #align subgroup.centralizer_le Subgroup.centralizer_le
 #align add_subgroup.centralizer_le AddSubgroup.centralizer_le
@@ -2777,7 +2775,7 @@ theorem centralizer_le (h : H ≤ K) : centralizer K ≤ centralizer H :=
 
 #print Subgroup.centralizer_eq_top_iff_subset /-
 @[simp, to_additive]
-theorem centralizer_eq_top_iff_subset {s} : centralizer s = ⊤ ↔ s ≤ center G :=
+theorem centralizer_eq_top_iff_subset {s : Set G} : centralizer s = ⊤ ↔ s ⊆ center G :=
   SetLike.ext'_iff.trans Set.centralizer_eq_top_iff_subset
 #align subgroup.centralizer_eq_top_iff_subset Subgroup.centralizer_eq_top_iff_subset
 #align add_subgroup.centralizer_eq_top_iff_subset AddSubgroup.centralizer_eq_top_iff_subset
@@ -2786,7 +2784,7 @@ theorem centralizer_eq_top_iff_subset {s} : centralizer s = ⊤ ↔ s ≤ center
 #print Subgroup.Centralizer.characteristic /-
 @[to_additive]
 instance Subgroup.Centralizer.characteristic [hH : H.Characteristic] :
-    H.centralizer.Characteristic :=
+    (centralizer (H : Set G)).Characteristic :=
   by
   refine' subgroup.characteristic_iff_comap_le.mpr fun ϕ g hg h hh => ϕ.Injective _
   rw [map_mul, map_mul]
@@ -2867,7 +2865,7 @@ instance subgroupOf_isCommutative [H.IsCommutative] : (H.subgroupOf K).IsCommuta
 
 #print Subgroup.le_centralizer_iff_isCommutative /-
 @[to_additive]
-theorem le_centralizer_iff_isCommutative : K ≤ K.centralizer ↔ K.IsCommutative :=
+theorem le_centralizer_iff_isCommutative : K ≤ centralizer K ↔ K.IsCommutative :=
   ⟨fun h => ⟨⟨fun x y => Subtype.ext (h y.2 x x.2)⟩⟩, fun h x hx y hy =>
     congr_arg coe (h.1.1 ⟨y, hy⟩ ⟨x, hx⟩)⟩
 #align subgroup.le_centralizer_iff_is_commutative Subgroup.le_centralizer_iff_isCommutative
@@ -2876,7 +2874,7 @@ theorem le_centralizer_iff_isCommutative : K ≤ K.centralizer ↔ K.IsCommutati
 
 #print Subgroup.le_centralizer /-
 @[to_additive]
-theorem le_centralizer [h : H.IsCommutative] : H ≤ H.centralizer :=
+theorem le_centralizer [h : H.IsCommutative] : H ≤ centralizer H :=
   le_centralizer_iff_isCommutative.mpr h
 #align subgroup.le_centralizer Subgroup.le_centralizer
 #align add_subgroup.le_centralizer AddSubgroup.le_centralizer

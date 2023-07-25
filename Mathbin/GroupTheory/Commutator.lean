@@ -7,7 +7,7 @@ import Mathbin.Data.Bracket
 import Mathbin.GroupTheory.Subgroup.Finite
 import Mathbin.Tactic.Group
 
-#align_import group_theory.commutator from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
+#align_import group_theory.commutator from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # Commutators of Subgroups
@@ -126,7 +126,7 @@ theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,
 -/
 
 #print Subgroup.commutator_eq_bot_iff_le_centralizer /-
-theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.centralizer :=
+theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ centralizer H₂ :=
   by
   rw [eq_bot_iff, commutator_le]
   refine'

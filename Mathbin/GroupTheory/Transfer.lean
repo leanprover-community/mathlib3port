@@ -6,7 +6,7 @@ Authors: Thomas Browning
 import Mathbin.GroupTheory.Complement
 import Mathbin.GroupTheory.Sylow
 
-#align_import group_theory.transfer from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
+#align_import group_theory.transfer from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # The Transfer Homomorphism
@@ -235,7 +235,7 @@ theorem transferCenterPow_apply [FiniteIndex (center G)] (g : G) :
 
 section BurnsideTransfer
 
-variable {p : ℕ} (P : Sylow p G) (hP : (P : Subgroup G).normalizer ≤ (P : Subgroup G).centralizer)
+variable {p : ℕ} (P : Sylow p G) (hP : (P : Subgroup G).normalizer ≤ centralizer (P : Set G))
 
 #print MonoidHom.transferSylow /-
 /-- The homomorphism `G →* P` in Burnside's transfer theorem. -/

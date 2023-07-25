@@ -7,7 +7,7 @@ import Mathbin.Data.Finite.Card
 import Mathbin.GroupTheory.Commutator
 import Mathbin.GroupTheory.Finiteness
 
-#align_import group_theory.abelianization from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
+#align_import group_theory.abelianization from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # The abelianization of a group
@@ -34,6 +34,8 @@ universe u v w
 
 -- Let G be a group.
 variable (G : Type u) [Group G]
+
+open Subgroup (centralizer)
 
 #print commutator /-
 /-- The commutator subgroup of a group G is the normal subgroup
@@ -84,13 +86,14 @@ theorem rank_commutator_le_card [Finite (commutatorSet G)] :
 
 #print commutator_centralizer_commutator_le_center /-
 theorem commutator_centralizer_commutator_le_center :
-    ⁅(commutator G).centralizer, (commutator G).centralizer⁆ ≤ Subgroup.center G :=
+    ⁅centralizer (commutator G : Set G), centralizer (commutator G : Set G)⁆ ≤ Subgroup.center G :=
   by
-  rw [← Subgroup.centralizer_top, ← Subgroup.commutator_eq_bot_iff_le_centralizer]
-  suffices ⁅⁅⊤, (commutator G).centralizer⁆, (commutator G).centralizer⁆ = ⊥
+  rw [← Subgroup.centralizer_univ, ← Subgroup.coe_top, ←
+    Subgroup.commutator_eq_bot_iff_le_centralizer]
+  suffices ⁅⁅⊤, centralizer (commutator G : Set G)⁆, centralizer (commutator G : Set G)⁆ = ⊥
     by
     refine' Subgroup.commutator_commutator_eq_bot_of_rotate _ this
-    rwa [Subgroup.commutator_comm (commutator G).centralizer]
+    rwa [Subgroup.commutator_comm (centralizer (commutator G : Set G))]
   rw [Subgroup.commutator_comm, Subgroup.commutator_eq_bot_iff_le_centralizer]
   exact Set.centralizer_subset (Subgroup.commutator_mono le_top le_top)
 #align commutator_centralizer_commutator_le_center commutator_centralizer_commutator_le_center

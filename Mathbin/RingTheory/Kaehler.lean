@@ -7,7 +7,7 @@ import Mathbin.RingTheory.Derivation.ToSquareZero
 import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.IsTensorProduct
 
-#align_import ring_theory.kaehler from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
+#align_import ring_theory.kaehler from "leanprover-community/mathlib"@"4b92a463033b5587bb011657e25e4710bfca7364"
 
 /-!
 # The module of kaehler differentials
@@ -174,9 +174,9 @@ instance : Nonempty (Ω[S⁄R]) :=
   ⟨0⟩
 
 #print KaehlerDifferential.module' /-
-instance KaehlerDifferential.module' {R' : Type _} [CommRing R'] [Algebra R' S] :
-    Module R' (Ω[S⁄R]) :=
-  (Module.compHom (KaehlerDifferential.ideal R S).Cotangent (algebraMap R' S) : _)
+instance KaehlerDifferential.module' {R' : Type _} [CommRing R'] [Algebra R' S]
+    [SMulCommClass R R' S] : Module R' (Ω[S⁄R]) :=
+  Submodule.Quotient.module' _
 #align kaehler_differential.module' KaehlerDifferential.module'
 -/
 
@@ -185,23 +185,15 @@ instance : IsScalarTower S (S ⊗[R] S) (Ω[S⁄R]) :=
 
 #print KaehlerDifferential.isScalarTower_of_tower /-
 instance KaehlerDifferential.isScalarTower_of_tower {R₁ R₂ : Type _} [CommRing R₁] [CommRing R₂]
-    [Algebra R₁ S] [Algebra R₂ S] [Algebra R₁ R₂] [IsScalarTower R₁ R₂ S] :
-    IsScalarTower R₁ R₂ (Ω[S⁄R]) :=
-  by
-  convert RestrictScalars.isScalarTower R₁ R₂ (Ω[S⁄R]) using 1
-  ext x m
-  show algebraMap R₁ S x • m = algebraMap R₂ S (algebraMap R₁ R₂ x) • m
-  rw [← IsScalarTower.algebraMap_apply]
+    [Algebra R₁ S] [Algebra R₂ S] [SMul R₁ R₂] [SMulCommClass R R₁ S] [SMulCommClass R R₂ S]
+    [IsScalarTower R₁ R₂ S] : IsScalarTower R₁ R₂ (Ω[S⁄R]) :=
+  Submodule.Quotient.isScalarTower _ _
 #align kaehler_differential.is_scalar_tower_of_tower KaehlerDifferential.isScalarTower_of_tower
 -/
 
 #print KaehlerDifferential.isScalarTower' /-
 instance KaehlerDifferential.isScalarTower' : IsScalarTower R (S ⊗[R] S) (Ω[S⁄R]) :=
-  by
-  convert RestrictScalars.isScalarTower R (S ⊗[R] S) (Ω[S⁄R]) using 1
-  ext x m
-  show algebraMap R S x • m = algebraMap R (S ⊗[R] S) x • m
-  simp_rw [IsScalarTower.algebraMap_apply R S (S ⊗[R] S), IsScalarTower.algebraMap_smul]
+  Submodule.Quotient.isScalarTower _ _
 #align kaehler_differential.is_scalar_tower' KaehlerDifferential.isScalarTower'
 -/
 
@@ -235,26 +227,26 @@ theorem KaehlerDifferential.DLinearMap_apply (s : S) :
 
 #print KaehlerDifferential.D /-
 /-- The universal derivation into `Ω[S⁄R]`. -/
-def KaehlerDifferential.D : Derivation R S (Ω[S⁄R]) :=
-  {
-    KaehlerDifferential.DLinearMap R
-      S with
-    map_one_eq_zero' := by
-      dsimp [KaehlerDifferential.DLinearMap_apply]
-      rw [Ideal.toCotangent_eq_zero, Subtype.coe_mk, sub_self]
-      exact zero_mem _
-    leibniz' := fun a b => by
-      dsimp [KaehlerDifferential.DLinearMap_apply]
-      rw [← LinearMap.map_smul_of_tower, ← LinearMap.map_smul_of_tower, ← map_add,
-        Ideal.toCotangent_eq, pow_two]
-      convert
-        Submodule.mul_mem_mul (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R a : _)
-          (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R b : _) using
-        1
-      simp only [AddSubgroupClass.coe_sub, Submodule.coe_add, Submodule.coe_mk,
-        tensor_product.tmul_mul_tmul, mul_sub, sub_mul, mul_comm b, Submodule.coe_smul_of_tower,
-        smul_sub, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
-      ring_nf }
+def KaehlerDifferential.D : Derivation R S (Ω[S⁄R])
+    where
+  map_one_eq_zero' := by
+    dsimp only [KaehlerDifferential.DLinearMap_apply]
+    rw [Ideal.toCotangent_eq_zero, Subtype.coe_mk, sub_self]
+    exact zero_mem _
+  leibniz' a b := by
+    dsimp only [KaehlerDifferential.DLinearMap_apply]
+    rw [← LinearMap.map_smul_of_tower (KaehlerDifferential.ideal R S).toCotangent a, ←
+      LinearMap.map_smul_of_tower (KaehlerDifferential.ideal R S).toCotangent b, ← map_add,
+      Ideal.toCotangent_eq, pow_two]
+    convert
+      Submodule.mul_mem_mul (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R a : _)
+        (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R b : _) using
+      1
+    simp only [AddSubgroupClass.coe_sub, Submodule.coe_add, Submodule.coe_mk,
+      tensor_product.tmul_mul_tmul, mul_sub, sub_mul, mul_comm b, Submodule.coe_smul_of_tower,
+      smul_sub, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
+    ring_nf
+  toLinearMap := KaehlerDifferential.DLinearMap R S
 #align kaehler_differential.D KaehlerDifferential.D
 -/
 
@@ -473,9 +465,9 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
 -- But lean times-out if this is given explicitly.
 /-- Derivations into `Ω[S⁄R]` is equivalent to derivations
 into `(kaehler_differential.ideal R S).cotangent_ideal` -/
-noncomputable def KaehlerDifferential.endEquivDerivation' :=
-  @LinearEquiv.compDer R _ _ _ _ (Ω[S⁄R]) _ _ _ _ _ _ _ _ _
-    ((KaehlerDifferential.ideal R S).cotangentEquivIdeal.restrictScalars S)
+noncomputable def KaehlerDifferential.endEquivDerivation' :
+    Derivation R S (Ω[S⁄R]) ≃ₗ[R] Derivation R S _ :=
+  LinearEquiv.compDer ((KaehlerDifferential.ideal R S).cotangentEquivIdeal.restrictScalars S)
 #align kaehler_differential.End_equiv_derivation' KaehlerDifferential.endEquivDerivation'
 -/
 
@@ -673,7 +665,7 @@ variable [Algebra A B] [IsScalarTower R S B] [IsScalarTower R A B]
 
 -- The map `(A →₀ A) →ₗ[A] (B →₀ B)`
 local notation "finsupp_map" =>
-  (Finsupp.mapRange.linearMap (Algebra.ofId A B).toLinearMap).comp
+  (Finsupp.mapRange.linearMap (Algebra.linearMap A B)).comp
     (Finsupp.lmapDomain A A (algebraMap A B))
 
 #print KaehlerDifferential.kerTotal_map /-
@@ -688,7 +680,7 @@ theorem KaehlerDifferential.kerTotal_map (h : Function.Surjective (algebraMap A 
     map_sub, map_add]
   simp only [LinearMap.comp_apply, Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_single,
     Finsupp.lmapDomain_apply, Finsupp.mapDomain_single, AlgHom.toLinearMap_apply,
-    Algebra.ofId_apply, ← IsScalarTower.algebraMap_apply, map_one, map_add, map_mul]
+    Algebra.linearMap_apply, ← IsScalarTower.algebraMap_apply, map_one, map_add, map_mul]
   simp_rw [sup_assoc, ← (h.prod_map h).range_comp]
   congr 3
   rw [sup_eq_right]
@@ -725,7 +717,7 @@ def Derivation.compAlgebraMap [Module A M] [Module B M] [IsScalarTower A B M]
 #align derivation.comp_algebra_map Derivation.compAlgebraMap
 -/
 
-variable (R B)
+variable (R B) [SMulCommClass S A B]
 
 #print KaehlerDifferential.map /-
 /-- The map `Ω[A⁄R] →ₗ[A] Ω[B⁄R]` given a square

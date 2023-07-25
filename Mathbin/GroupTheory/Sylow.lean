@@ -10,7 +10,7 @@ import Mathbin.GroupTheory.PGroup
 import Mathbin.GroupTheory.NoncommPiCoprod
 import Mathbin.Order.Atoms.Finite
 
-#align_import group_theory.sylow from "leanprover-community/mathlib"@"bd365b1a4901dbd878e86cb146c2bd86533df468"
+#align_import group_theory.sylow from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
 /-!
 # Sylow theorems
@@ -447,19 +447,20 @@ theorem Sylow.stabilizer_eq_normalizer (P : Sylow p G) :
 
 #print Sylow.conj_eq_normalizer_conj_of_mem_centralizer /-
 theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite (Sylow p G)]
-    (P : Sylow p G) (x g : G) (hx : x ∈ (P : Subgroup G).centralizer)
-    (hy : g⁻¹ * x * g ∈ (P : Subgroup G).centralizer) :
+    (P : Sylow p G) (x g : G) (hx : x ∈ centralizer (P : Set G))
+    (hy : g⁻¹ * x * g ∈ centralizer (P : Set G)) :
     ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n :=
   by
-  have h1 : ↑P ≤ (zpowers x).centralizer := by rwa [le_centralizer_iff, zpowers_le]
-  have h2 : ↑(g • P) ≤ (zpowers x).centralizer :=
+  have h1 : ↑P ≤ centralizer (zpowers x : Set G) := by rwa [le_centralizer_iff, zpowers_le]
+  have h2 : ↑(g • P) ≤ centralizer (zpowers x : Set G) :=
     by
     rw [le_centralizer_iff, zpowers_le]
     rintro - ⟨z, hz, rfl⟩
     specialize hy z hz
     rwa [← mul_assoc, ← eq_mul_inv_iff_mul_eq, mul_assoc, mul_assoc, mul_assoc, ← mul_assoc,
       eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_assoc] at hy 
-  obtain ⟨h, hh⟩ := exists_smul_eq (zpowers x).centralizer ((g • P).Subtype h2) (P.subtype h1)
+  obtain ⟨h, hh⟩ :=
+    exists_smul_eq (centralizer (zpowers x : Set G)) ((g • P).Subtype h2) (P.subtype h1)
   simp_rw [Sylow.smul_subtype, smul_def, smul_smul] at hh 
   refine' ⟨h * g, sylow.smul_eq_iff_mem_normalizer.mp (Sylow.subtype_injective hh), _⟩
   rw [← mul_assoc, Commute.right_comm (h.prop x (mem_zpowers x)), mul_inv_rev, inv_mul_cancel_right]
@@ -470,7 +471,8 @@ theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite 
 theorem Sylow.conj_eq_normalizer_conj_of_mem [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
     [hP : (P : Subgroup G).IsCommutative] (x g : G) (hx : x ∈ P) (hy : g⁻¹ * x * g ∈ P) :
     ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n :=
-  P.conj_eq_normalizer_conj_of_mem_centralizer x g (le_centralizer P hx) (le_centralizer P hy)
+  P.conj_eq_normalizer_conj_of_mem_centralizer x g (le_centralizer (P : Subgroup G) hx : _)
+    (le_centralizer (P : Subgroup G) hy : _)
 #align sylow.conj_eq_normalizer_conj_of_mem Sylow.conj_eq_normalizer_conj_of_mem
 -/
 
