@@ -1032,10 +1032,12 @@ theorem fract_sub_nat (a : α) (n : ℕ) : fract (a - n) = fract a := by rw [fra
 #align int.fract_sub_nat Int.fract_sub_nat
 -/
 
-#print Int.fract_int_nat /-
+/- warning: int.fract_int_nat clashes with int.fract_int_add -> Int.fract_int_add
+Case conversion may be inaccurate. Consider using '#align int.fract_int_nat Int.fract_int_addₓ'. -/
+#print Int.fract_int_add /-
 @[simp]
-theorem fract_int_nat (n : ℕ) (a : α) : fract (↑n + a) = fract a := by rw [add_comm, fract_add_nat]
-#align int.fract_int_nat Int.fract_int_nat
+theorem fract_int_add (n : ℕ) (a : α) : fract (↑n + a) = fract a := by rw [add_comm, fract_add_nat]
+#align int.fract_int_nat Int.fract_int_add
 -/
 
 #print Int.fract_add_le /-
