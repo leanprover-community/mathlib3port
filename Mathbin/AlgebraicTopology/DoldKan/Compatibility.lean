@@ -5,7 +5,7 @@ Authors: Joël Riou
 -/
 import Mathbin.CategoryTheory.Equivalence
 
-#align_import algebraic_topology.dold_kan.compatibility from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
+#align_import algebraic_topology.dold_kan.compatibility from "leanprover-community/mathlib"@"18ee599842a5d17f189fe572f0ed8cb1d064d772"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
@@ -215,6 +215,108 @@ theorem equivalence_functor : (equivalence hF hG).Functor = F ⋙ eB.inverse :=
   rfl
 #align algebraic_topology.dold_kan.compatibility.equivalence_functor AlgebraicTopology.DoldKan.Compatibility.equivalence_functor
 -/
+
+/-- The isomorphism `eB.functor ⋙ e'.inverse ⋙ e'.functor ≅ eB.functor` deduced
+from the counit isomorphism of `e'`. -/
+@[simps hom_app]
+def τ₀ : eB.Functor ⋙ e'.inverse ⋙ e'.Functor ≅ eB.Functor :=
+  calc
+    eB.Functor ⋙ e'.inverse ⋙ e'.Functor ≅ eB.Functor ⋙ 𝟭 _ := isoWhiskerLeft _ e'.counitIso
+    _ ≅ eB.Functor := Functor.rightUnitor _
+#align algebraic_topology.dold_kan.compatibility.τ₀ AlgebraicTopology.DoldKan.Compatibility.τ₀
+
+/-- The isomorphism `eB.functor ⋙ e'.inverse ⋙ e'.functor ≅ eB.functor` deduced
+from the isomorphisms `hF : eA.functor ⋙ e'.functor ≅ F`,
+`hG : eB.functor ⋙ e'.inverse ≅ G ⋙ eA.functor` and the datum of
+an isomorphism `η : G ⋙ F ≅ eB.functor`. -/
+@[simps hom_app]
+def τ₁ (η : G ⋙ F ≅ eB.Functor) : eB.Functor ⋙ e'.inverse ⋙ e'.Functor ≅ eB.Functor :=
+  calc
+    eB.Functor ⋙ e'.inverse ⋙ e'.Functor ≅ (eB.Functor ⋙ e'.inverse) ⋙ e'.Functor := Iso.refl _
+    _ ≅ (G ⋙ eA.Functor) ⋙ e'.Functor := (isoWhiskerRight hG _)
+    _ ≅ G ⋙ eA.Functor ⋙ e'.Functor := by rfl
+    _ ≅ G ⋙ F := (isoWhiskerLeft _ hF)
+    _ ≅ eB.Functor := η
+#align algebraic_topology.dold_kan.compatibility.τ₁ AlgebraicTopology.DoldKan.Compatibility.τ₁
+
+variable (η : G ⋙ F ≅ eB.Functor) (hη : τ₀ = τ₁ hF hG η)
+
+/-- The counit isomorphism of `equivalence`. -/
+@[simps]
+def equivalenceCounitIso : G ⋙ F ⋙ eB.inverse ≅ 𝟭 B :=
+  calc
+    G ⋙ F ⋙ eB.inverse ≅ (G ⋙ F) ⋙ eB.inverse := Iso.refl _
+    _ ≅ eB.Functor ⋙ eB.inverse := (isoWhiskerRight η _)
+    _ ≅ 𝟭 B := eB.unitIso.symm
+#align algebraic_topology.dold_kan.compatibility.equivalence_counit_iso AlgebraicTopology.DoldKan.Compatibility.equivalenceCounitIso
+
+variable {η hF hG}
+
+theorem equivalenceCounitIso_eq : (equivalence hF hG).counitIso = equivalenceCounitIso η :=
+  by
+  ext1; apply nat_trans.ext; ext Y
+  dsimp [Equivalence, equivalence_counit_iso, is_equivalence.of_equivalence]
+  simp only [equivalence₂_counit_iso_eq eB hF]
+  erw [nat_trans.id_app, nat_trans.id_app]
+  dsimp [equivalence₂, equivalence₁]
+  simp only [assoc, comp_id, F.map_id, id_comp, equivalence₂_counit_iso_hom_app, ←
+    eB.inverse.map_comp_assoc, ← τ₀_hom_app, hη, τ₁_hom_app]
+  erw [hF.inv.naturality_assoc]
+  congr 2
+  dsimp
+  simp only [assoc, ← e'.functor.map_comp_assoc, eA.functor.map_comp, equivalence.fun_inv_map,
+    iso.inv_hom_id_app_assoc, hG.inv_hom_id_app]
+  dsimp
+  rw [comp_id, eA.functor_unit_iso_comp, e'.functor.map_id, id_comp, hF.inv_hom_id_app_assoc]
+#align algebraic_topology.dold_kan.compatibility.equivalence_counit_iso_eq AlgebraicTopology.DoldKan.Compatibility.equivalenceCounitIso_eq
+
+variable (hF)
+
+/-- The isomorphism `eA.functor ≅ F ⋙ e'.inverse` deduced from the
+unit isomorphism of `e'` and the isomorphism `hF : eA.functor ⋙ e'.functor ≅ F`. -/
+@[simps]
+def υ : eA.Functor ≅ F ⋙ e'.inverse :=
+  calc
+    eA.Functor ≅ eA.Functor ⋙ 𝟭 A' := (Functor.leftUnitor _).symm
+    _ ≅ eA.Functor ⋙ e'.Functor ⋙ e'.inverse := (isoWhiskerLeft _ e'.unitIso)
+    _ ≅ (eA.Functor ⋙ e'.Functor) ⋙ e'.inverse := (Iso.refl _)
+    _ ≅ F ⋙ e'.inverse := isoWhiskerRight hF _
+#align algebraic_topology.dold_kan.compatibility.υ AlgebraicTopology.DoldKan.Compatibility.υ
+
+variable (ε : eA.Functor ≅ F ⋙ e'.inverse) (hε : υ hF = ε)
+
+variable (hG)
+
+/-- The unit isomorphism of `equivalence`. -/
+@[simps]
+def equivalenceUnitIso : 𝟭 A ≅ (F ⋙ eB.inverse) ⋙ G :=
+  calc
+    𝟭 A ≅ eA.Functor ⋙ eA.inverse := eA.unitIso
+    _ ≅ (F ⋙ e'.inverse) ⋙ eA.inverse := (isoWhiskerRight ε _)
+    _ ≅ F ⋙ 𝟭 B' ⋙ e'.inverse ⋙ eA.inverse := (Iso.refl _)
+    _ ≅ F ⋙ (eB.inverse ⋙ eB.Functor) ⋙ e'.inverse ⋙ eA.inverse :=
+      (isoWhiskerLeft _ (isoWhiskerRight eB.counitIso.symm _))
+    _ ≅ (F ⋙ eB.inverse) ⋙ (eB.Functor ⋙ e'.inverse) ⋙ eA.inverse := (Iso.refl _)
+    _ ≅ (F ⋙ eB.inverse) ⋙ (G ⋙ eA.Functor) ⋙ eA.inverse :=
+      (isoWhiskerLeft _ (isoWhiskerRight hG _))
+    _ ≅ (F ⋙ eB.inverse ⋙ G) ⋙ eA.Functor ⋙ eA.inverse := (Iso.refl _)
+    _ ≅ (F ⋙ eB.inverse ⋙ G) ⋙ 𝟭 A := (isoWhiskerLeft _ eA.unitIso.symm)
+    _ ≅ (F ⋙ eB.inverse) ⋙ G := Iso.refl _
+#align algebraic_topology.dold_kan.compatibility.equivalence_unit_iso AlgebraicTopology.DoldKan.Compatibility.equivalenceUnitIso
+
+variable {ε hF hG}
+
+theorem equivalenceUnitIso_eq : (equivalence hF hG).unitIso = equivalenceUnitIso hG ε :=
+  by
+  ext1; apply nat_trans.ext; ext X
+  dsimp [Equivalence, iso.refl, nat_iso.hcomp, is_equivalence.inverse,
+    is_equivalence.of_equivalence]
+  erw [nat_trans.id_app, id_comp, G.map_id, comp_id, comp_id]
+  simp only [equivalence₂_unit_iso_eq eB hF, equivalence₂_unit_iso_hom_app]
+  dsimp [equivalence₂, equivalence₁]
+  simp only [assoc, equivalence_unit_iso_hom_app, nat_iso.cancel_nat_iso_hom_left, ←
+    eA.inverse.map_comp_assoc, ← hε, υ_hom_app]
+#align algebraic_topology.dold_kan.compatibility.equivalence_unit_iso_eq AlgebraicTopology.DoldKan.Compatibility.equivalenceUnitIso_eq
 
 end Compatibility
 
