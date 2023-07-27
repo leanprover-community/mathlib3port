@@ -985,7 +985,6 @@ theorem mrange_mk' : c.mk'.mrange = ⊤ :=
 #align add_con.mrange_mk' AddCon.mrange_mk'
 -/
 
-#print Con.ker_apply_eq_preimage /-
 /-- The elements related to `x ∈ M`, `M` a monoid, by the kernel of a monoid homomorphism are
     those in the preimage of `f(x)` under `f`. -/
 @[to_additive
@@ -996,7 +995,6 @@ theorem ker_apply_eq_preimage {f : M →* P} (x) : (ker f) x = f ⁻¹' {f x} :=
       (Set.mem_singleton_iff.1 <| Set.mem_preimage.1 h).symm⟩
 #align con.ker_apply_eq_preimage Con.ker_apply_eq_preimage
 #align add_con.ker_apply_eq_preimage AddCon.ker_apply_eq_preimage
--/
 
 #print Con.comap_eq /-
 /-- Given a monoid homomorphism `f : N → M` and a congruence relation `c` on `M`, the congruence

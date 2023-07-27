@@ -94,24 +94,24 @@ theorem strictConvex_closedBall [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) :
 
 variable [NormedSpace ℝ E]
 
-#print StrictConvexSpace.ofStrictConvexClosedUnitBall /-
+#print StrictConvexSpace.of_strictConvex_closed_unit_ball /-
 /-- A real normed vector space is strictly convex provided that the unit ball is strictly convex. -/
-theorem StrictConvexSpace.ofStrictConvexClosedUnitBall [LinearMap.CompatibleSMul E E 𝕜 ℝ]
+theorem StrictConvexSpace.of_strictConvex_closed_unit_ball [LinearMap.CompatibleSMul E E 𝕜 ℝ]
     (h : StrictConvex 𝕜 (closedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
   ⟨fun r hr => by simpa only [smul_closedUnitBall_of_nonneg hr.le] using h.smul r⟩
-#align strict_convex_space.of_strict_convex_closed_unit_ball StrictConvexSpace.ofStrictConvexClosedUnitBall
+#align strict_convex_space.of_strict_convex_closed_unit_ball StrictConvexSpace.of_strictConvex_closed_unit_ball
 -/
 
-#print StrictConvexSpace.ofNormComboLtOne /-
+#print StrictConvexSpace.of_norm_combo_lt_one /-
 /-- Strict convexity is equivalent to `‖a • x + b • y‖ < 1` for all `x` and `y` of norm at most `1`
 and all strictly positive `a` and `b` such that `a + b = 1`. This lemma shows that it suffices to
 check this for points of norm one and some `a`, `b` such that `a + b = 1`. -/
-theorem StrictConvexSpace.ofNormComboLtOne
+theorem StrictConvexSpace.of_norm_combo_lt_one
     (h : ∀ x y : E, ‖x‖ = 1 → ‖y‖ = 1 → x ≠ y → ∃ a b : ℝ, a + b = 1 ∧ ‖a • x + b • y‖ < 1) :
     StrictConvexSpace ℝ E :=
   by
   refine'
-    StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ
+    StrictConvexSpace.of_strictConvex_closed_unit_ball ℝ
       ((convex_closedBall _ _).strictConvex' fun x hx y hy hne => _)
   rw [interior_closedBall (0 : E) one_ne_zero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at
     hx hy 
@@ -119,56 +119,57 @@ theorem StrictConvexSpace.ofNormComboLtOne
   use b
   rwa [AffineMap.lineMap_apply_module, interior_closedBall (0 : E) one_ne_zero, mem_ball_zero_iff,
     sub_eq_iff_eq_add.2 hab.symm]
-#align strict_convex_space.of_norm_combo_lt_one StrictConvexSpace.ofNormComboLtOne
+#align strict_convex_space.of_norm_combo_lt_one StrictConvexSpace.of_norm_combo_lt_one
 -/
 
-#print StrictConvexSpace.ofNormComboNeOne /-
-theorem StrictConvexSpace.ofNormComboNeOne
+#print StrictConvexSpace.of_norm_combo_ne_one /-
+theorem StrictConvexSpace.of_norm_combo_ne_one
     (h :
       ∀ x y : E,
         ‖x‖ = 1 → ‖y‖ = 1 → x ≠ y → ∃ a b : ℝ, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ ‖a • x + b • y‖ ≠ 1) :
     StrictConvexSpace ℝ E :=
   by
-  refine' StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closedBall _ _).StrictConvex _)
+  refine'
+    StrictConvexSpace.of_strictConvex_closed_unit_ball ℝ ((convex_closedBall _ _).StrictConvex _)
   simp only [interior_closedBall _ one_ne_zero, closed_ball_diff_ball, Set.Pairwise,
     frontier_closedBall _ one_ne_zero, mem_sphere_zero_iff_norm]
   intro x hx y hy hne
   rcases h x y hx hy hne with ⟨a, b, ha, hb, hab, hne'⟩
   exact ⟨_, ⟨a, b, ha, hb, hab, rfl⟩, mt mem_sphere_zero_iff_norm.1 hne'⟩
-#align strict_convex_space.of_norm_combo_ne_one StrictConvexSpace.ofNormComboNeOne
+#align strict_convex_space.of_norm_combo_ne_one StrictConvexSpace.of_norm_combo_ne_one
 -/
 
-#print StrictConvexSpace.ofNormAddNeTwo /-
-theorem StrictConvexSpace.ofNormAddNeTwo
+#print StrictConvexSpace.of_norm_add_ne_two /-
+theorem StrictConvexSpace.of_norm_add_ne_two
     (h : ∀ ⦃x y : E⦄, ‖x‖ = 1 → ‖y‖ = 1 → x ≠ y → ‖x + y‖ ≠ 2) : StrictConvexSpace ℝ E :=
   by
   refine'
-    StrictConvexSpace.ofNormComboNeOne fun x y hx hy hne =>
+    StrictConvexSpace.of_norm_combo_ne_one fun x y hx hy hne =>
       ⟨1 / 2, 1 / 2, one_half_pos.le, one_half_pos.le, add_halves _, _⟩
   rw [← smul_add, norm_smul, Real.norm_of_nonneg one_half_pos.le, one_div, ← div_eq_inv_mul, Ne.def,
     div_eq_one_iff_eq (two_ne_zero' ℝ)]
   exact h hx hy hne
-#align strict_convex_space.of_norm_add_ne_two StrictConvexSpace.ofNormAddNeTwo
+#align strict_convex_space.of_norm_add_ne_two StrictConvexSpace.of_norm_add_ne_two
 -/
 
-#print StrictConvexSpace.ofPairwiseSphereNormNeTwo /-
-theorem StrictConvexSpace.ofPairwiseSphereNormNeTwo
+#print StrictConvexSpace.of_pairwise_sphere_norm_ne_two /-
+theorem StrictConvexSpace.of_pairwise_sphere_norm_ne_two
     (h : (sphere (0 : E) 1).Pairwise fun x y => ‖x + y‖ ≠ 2) : StrictConvexSpace ℝ E :=
-  StrictConvexSpace.ofNormAddNeTwo fun x y hx hy =>
+  StrictConvexSpace.of_norm_add_ne_two fun x y hx hy =>
     h (mem_sphere_zero_iff_norm.2 hx) (mem_sphere_zero_iff_norm.2 hy)
-#align strict_convex_space.of_pairwise_sphere_norm_ne_two StrictConvexSpace.ofPairwiseSphereNormNeTwo
+#align strict_convex_space.of_pairwise_sphere_norm_ne_two StrictConvexSpace.of_pairwise_sphere_norm_ne_two
 -/
 
-#print StrictConvexSpace.ofNormAdd /-
+#print StrictConvexSpace.of_norm_add /-
 /-- If `‖x + y‖ = ‖x‖ + ‖y‖` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. See also a more -/
-theorem StrictConvexSpace.ofNormAdd
+theorem StrictConvexSpace.of_norm_add
     (h : ∀ x y : E, ‖x‖ = 1 → ‖y‖ = 1 → ‖x + y‖ = 2 → SameRay ℝ x y) : StrictConvexSpace ℝ E :=
   by
-  refine' StrictConvexSpace.ofPairwiseSphereNormNeTwo fun x hx y hy => mt fun h₂ => _
+  refine' StrictConvexSpace.of_pairwise_sphere_norm_ne_two fun x hx y hy => mt fun h₂ => _
   rw [mem_sphere_zero_iff_norm] at hx hy 
   exact (sameRay_iff_of_norm_eq (hx.trans hy.symm)).1 (h x y hx hy h₂)
-#align strict_convex_space.of_norm_add StrictConvexSpace.ofNormAdd
+#align strict_convex_space.of_norm_add StrictConvexSpace.of_norm_add
 -/
 
 variable [StrictConvexSpace ℝ E] {x y z : E} {a b r : ℝ}

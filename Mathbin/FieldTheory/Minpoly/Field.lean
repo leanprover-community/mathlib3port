@@ -49,10 +49,10 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
 #align minpoly.degree_le_of_ne_zero minpoly.degree_le_of_ne_zero
 -/
 
-#print minpoly.ne_zero_of_finite_field_extension /-
-theorem ne_zero_of_finite_field_extension (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=
+#print minpoly.ne_zero_of_finite /-
+theorem ne_zero_of_finite (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=
   minpoly.ne_zero <| isIntegral_of_noetherian (IsNoetherian.iff_fg.2 inferInstance) _
-#align minpoly.ne_zero_of_finite_field_extension minpoly.ne_zero_of_finite_field_extension
+#align minpoly.ne_zero_of_finite_field_extension minpoly.ne_zero_of_finite
 -/
 
 #print minpoly.unique /-
@@ -218,8 +218,8 @@ noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K)
     (x : range (FiniteDimensional.finBasis F E : _ → E)) :
     { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
   ⟨φ x, by
-    rw [mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), Subtype.val_eq_coe, ←
-      aeval_def, aeval_alg_hom_apply, minpoly.aeval, map_zero]⟩
+    rw [mem_roots_map (minpoly.ne_zero_of_finite F x.val), Subtype.val_eq_coe, ← aeval_def,
+      aeval_alg_hom_apply, minpoly.aeval, map_zero]⟩
 #align minpoly.roots_of_min_poly_pi_type minpoly.rootsOfMinPolyPiType
 -/
 

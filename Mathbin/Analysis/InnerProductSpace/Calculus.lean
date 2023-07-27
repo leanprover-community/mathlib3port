@@ -482,19 +482,19 @@ open Metric hiding mem_nhds_iffₓ
 
 variable {n : ℕ∞} {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
-#print contDiff_homeomorphUnitBall /-
-theorem contDiff_homeomorphUnitBall : ContDiff ℝ n fun x : E => (homeomorphUnitBall x : E) :=
+#print Homeomorph.contDiff_unitBall /-
+theorem Homeomorph.contDiff_unitBall : ContDiff ℝ n fun x : E => (Homeomorph.unitBall x : E) :=
   by
   suffices ContDiff ℝ n fun x => (1 + ‖x‖ ^ 2).sqrt⁻¹ by exact this.smul contDiff_id
   have h : ∀ x : E, 0 < 1 + ‖x‖ ^ 2 := fun x => by positivity
   refine' ContDiff.inv _ fun x => real.sqrt_ne_zero'.mpr (h x)
   exact (cont_diff_const.add <| contDiff_norm_sq ℝ).sqrt fun x => (h x).Ne.symm
-#align cont_diff_homeomorph_unit_ball contDiff_homeomorphUnitBall
+#align cont_diff_homeomorph_unit_ball Homeomorph.contDiff_unitBall
 -/
 
-#print contDiffOn_homeomorphUnitBall_symm /-
-theorem contDiffOn_homeomorphUnitBall_symm {f : E → E}
-    (h : ∀ (y) (hy : y ∈ ball (0 : E) 1), f y = homeomorphUnitBall.symm ⟨y, hy⟩) :
+#print Homeomorph.contDiffOn_unitBall_symm /-
+theorem Homeomorph.contDiffOn_unitBall_symm {f : E → E}
+    (h : ∀ (y) (hy : y ∈ ball (0 : E) 1), f y = Homeomorph.unitBall.symm ⟨y, hy⟩) :
     ContDiffOn ℝ n f <| ball 0 1 := by
   intro y hy
   apply ContDiffAt.contDiffWithinAt
@@ -513,7 +513,7 @@ theorem contDiffOn_homeomorphUnitBall_symm {f : E → E}
   refine' ContDiffAt.inv _ (real.sqrt_ne_zero'.mpr h)
   refine' ContDiffAt.comp _ (cont_diff_at_sqrt h.ne.symm) _
   exact cont_diff_at_const.sub (contDiff_norm_sq ℝ).ContDiffAt
-#align cont_diff_on_homeomorph_unit_ball_symm contDiffOn_homeomorphUnitBall_symm
+#align cont_diff_on_homeomorph_unit_ball_symm Homeomorph.contDiffOn_unitBall_symm
 -/
 
 end DiffeomorphUnitBall

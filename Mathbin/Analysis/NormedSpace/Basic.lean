@@ -224,7 +224,7 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
       Int.norm_eq_abs, ← Int.cast_abs, mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ←
       @Int.cast_one ℝ _, Int.cast_lt, Int.abs_lt_one_iff, smul_eq_zero, or_iff_left he]
 
-#print homeomorphUnitBall /-
+#print Homeomorph.unitBall /-
 /-- A (semi) normed real vector space is homeomorphic to the unit ball in the same space.
 This homeomorphism sends `x : E` to `(1 + ‖x‖²)^(- ½) • x`.
 
@@ -234,7 +234,7 @@ In many cases the actual implementation is not important, so we don't mark the p
 See also `cont_diff_homeomorph_unit_ball` and `cont_diff_on_homeomorph_unit_ball_symm` for
 smoothness properties that hold when `E` is an inner-product space. -/
 @[simps (config := { attrs := [] })]
-noncomputable def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1
+noncomputable def Homeomorph.unitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1
     where
   toFun x :=
     ⟨(1 + ‖x‖ ^ 2).sqrt⁻¹ • x, by
@@ -263,14 +263,14 @@ noncomputable def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E)
     intro y
     rw [Real.sqrt_ne_zero']
     nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ‖(y : E)‖ < 1)]
-#align homeomorph_unit_ball homeomorphUnitBall
+#align homeomorph_unit_ball Homeomorph.unitBall
 -/
 
-#print coe_homeomorphUnitBall_apply_zero /-
+#print Homeomorph.coe_unitBall_apply_zero /-
 @[simp]
-theorem coe_homeomorphUnitBall_apply_zero [NormedSpace ℝ E] :
-    (homeomorphUnitBall (0 : E) : E) = 0 := by simp [homeomorphUnitBall]
-#align coe_homeomorph_unit_ball_apply_zero coe_homeomorphUnitBall_apply_zero
+theorem Homeomorph.coe_unitBall_apply_zero [NormedSpace ℝ E] :
+    (Homeomorph.unitBall (0 : E) : E) = 0 := by simp [Homeomorph.unitBall]
+#align coe_homeomorph_unit_ball_apply_zero Homeomorph.coe_unitBall_apply_zero
 -/
 
 open NormedField

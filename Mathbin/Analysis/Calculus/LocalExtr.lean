@@ -359,21 +359,21 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
 #align exists_Ioo_extr_on_Icc exists_Ioo_extr_on_Icc
 -/
 
-#print exists_local_extr_Ioo /-
+#print exists_isLocalExtr_Ioo /-
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
 point of the corresponding open interval. -/
-theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+theorem exists_isLocalExtr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, IsLocalExtr f c :=
   let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
   ⟨c, cmem, hc.IsLocalExtr <| Icc_mem_nhds cmem.1 cmem.2⟩
-#align exists_local_extr_Ioo exists_local_extr_Ioo
+#align exists_local_extr_Ioo exists_isLocalExtr_Ioo
 -/
 
 #print exists_hasDerivAt_eq_zero /-
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_hasDerivAt_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
     (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
-  let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
+  let ⟨c, cmem, hc⟩ := exists_isLocalExtr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.hasDerivAt_eq_zero <| hff' c cmem⟩
 #align exists_has_deriv_at_eq_zero exists_hasDerivAt_eq_zero
 -/
@@ -382,7 +382,7 @@ theorem exists_hasDerivAt_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b))
 /-- **Rolle's Theorem** `deriv` version -/
 theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, deriv f c = 0 :=
-  let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
+  let ⟨c, cmem, hc⟩ := exists_isLocalExtr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.deriv_eq_zero⟩
 #align exists_deriv_eq_zero exists_deriv_eq_zero
 -/
@@ -401,7 +401,7 @@ theorem exists_hasDerivAt_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (�
   have hcont := continuousOn_Icc_extendFrom_Ioo hab.ne this hfa hfb
   obtain ⟨c, hc, hcextr⟩ : ∃ c ∈ Ioo a b, IsLocalExtr (extendFrom (Ioo a b) f) c :=
     by
-    apply exists_local_extr_Ioo _ hab hcont
+    apply exists_isLocalExtr_Ioo _ hab hcont
     rw [eq_lim_at_right_extendFrom_Ioo hab hfb]
     exact eq_lim_at_left_extendFrom_Ioo hab hfa
   use c, hc

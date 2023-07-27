@@ -1102,18 +1102,18 @@ theorem adjoin.finrank {x : L} (hx : IsIntegral K x) :
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-#print IntermediateField.minpoly.natDegree_le /-
-theorem IntermediateField.minpoly.natDegree_le {x : L} [FiniteDimensional K L]
-    (hx : IsIntegral K x) : (minpoly K x).natDegree ≤ finrank K L :=
+#print minpoly.natDegree_le /-
+theorem minpoly.natDegree_le {x : L} [FiniteDimensional K L] (hx : IsIntegral K x) :
+    (minpoly K x).natDegree ≤ finrank K L :=
   le_of_eq_of_le (IntermediateField.adjoin.finrank hx).symm K⟮⟯.toSubmodule.finrank_le
-#align minpoly.nat_degree_le IntermediateField.minpoly.natDegree_le
+#align minpoly.nat_degree_le minpoly.natDegree_le
 -/
 
-#print IntermediateField.minpoly.degree_le /-
-theorem IntermediateField.minpoly.degree_le {x : L} [FiniteDimensional K L] (hx : IsIntegral K x) :
+#print minpoly.degree_le /-
+theorem minpoly.degree_le {x : L} [FiniteDimensional K L] (hx : IsIntegral K x) :
     (minpoly K x).degree ≤ finrank K L :=
-  degree_le_of_natDegree_le (IntermediateField.minpoly.natDegree_le hx)
-#align minpoly.degree_le IntermediateField.minpoly.degree_le
+  degree_le_of_natDegree_le (minpoly.natDegree_le hx)
+#align minpoly.degree_le minpoly.degree_le
 -/
 
 end PowerBasis

@@ -328,34 +328,34 @@ def prodComm : R × S ≃+* S × R :=
 #align ring_equiv.prod_comm RingEquiv.prodComm
 -/
 
-#print RingEquiv.coe_prod_comm /-
+#print RingEquiv.coe_prodComm /-
 @[simp]
-theorem coe_prod_comm : ⇑(prodComm : R × S ≃+* S × R) = Prod.swap :=
+theorem coe_prodComm : ⇑(prodComm : R × S ≃+* S × R) = Prod.swap :=
   rfl
-#align ring_equiv.coe_prod_comm RingEquiv.coe_prod_comm
+#align ring_equiv.coe_prod_comm RingEquiv.coe_prodComm
 -/
 
-#print RingEquiv.coe_prod_comm_symm /-
+#print RingEquiv.coe_prodComm_symm /-
 @[simp]
-theorem coe_prod_comm_symm : ⇑(prodComm : R × S ≃+* S × R).symm = Prod.swap :=
+theorem coe_prodComm_symm : ⇑(prodComm : R × S ≃+* S × R).symm = Prod.swap :=
   rfl
-#align ring_equiv.coe_prod_comm_symm RingEquiv.coe_prod_comm_symm
+#align ring_equiv.coe_prod_comm_symm RingEquiv.coe_prodComm_symm
 -/
 
-#print RingEquiv.fst_comp_coe_prod_comm /-
+#print RingEquiv.fst_comp_coe_prodComm /-
 @[simp]
-theorem fst_comp_coe_prod_comm :
+theorem fst_comp_coe_prodComm :
     (RingHom.fst S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.snd R S :=
   RingHom.ext fun _ => rfl
-#align ring_equiv.fst_comp_coe_prod_comm RingEquiv.fst_comp_coe_prod_comm
+#align ring_equiv.fst_comp_coe_prod_comm RingEquiv.fst_comp_coe_prodComm
 -/
 
-#print RingEquiv.snd_comp_coe_prod_comm /-
+#print RingEquiv.snd_comp_coe_prodComm /-
 @[simp]
-theorem snd_comp_coe_prod_comm :
+theorem snd_comp_coe_prodComm :
     (RingHom.snd S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.fst R S :=
   RingHom.ext fun _ => rfl
-#align ring_equiv.snd_comp_coe_prod_comm RingEquiv.snd_comp_coe_prod_comm
+#align ring_equiv.snd_comp_coe_prod_comm RingEquiv.snd_comp_coe_prodComm
 -/
 
 section

@@ -105,10 +105,12 @@ directly. -/
 instance : CoeFun (CentroidHom α) fun _ => α → α :=
   FunLike.hasCoeToFun
 
+#print CentroidHom.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe {f : CentroidHom α} : f.toFun = (f : α → α) :=
   rfl
 #align centroid_hom.to_fun_eq_coe CentroidHom.toFun_eq_coe
+-/
 
 #print CentroidHom.ext /-
 @[ext]

@@ -148,7 +148,7 @@ variable [NormedAddCommGroup E] [NormedSpace ℝ E] [UniformConvexSpace E]
 #print UniformConvexSpace.toStrictConvexSpace /-
 -- See note [lower instance priority]
 instance (priority := 100) UniformConvexSpace.toStrictConvexSpace : StrictConvexSpace ℝ E :=
-  StrictConvexSpace.ofNormAddNeTwo fun x y hx hy hxy =>
+  StrictConvexSpace.of_norm_add_ne_two fun x y hx hy hxy =>
     let ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
     ((h hx.le hy.le le_rfl).trans_lt <| sub_lt_self _ hδ).Ne
 #align uniform_convex_space.to_strict_convex_space UniformConvexSpace.toStrictConvexSpace
