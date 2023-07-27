@@ -2095,6 +2095,7 @@ import Mathbin.LinearAlgebra.ProjectiveSpace.Independence
 import Mathbin.LinearAlgebra.ProjectiveSpace.Subspace
 import Mathbin.LinearAlgebra.QuadraticForm.Basic
 import Mathbin.LinearAlgebra.QuadraticForm.Complex
+import Mathbin.LinearAlgebra.QuadraticForm.Dual
 import Mathbin.LinearAlgebra.QuadraticForm.Isometry
 import Mathbin.LinearAlgebra.QuadraticForm.Prod
 import Mathbin.LinearAlgebra.QuadraticForm.Real
@@ -3212,5 +3213,5 @@ import Mathbin.Topology.VectorBundle.Basic
 import Mathbin.Topology.VectorBundle.Constructions
 import Mathbin.Topology.VectorBundle.Hom
 
-#align_import all from "leanprover-community/mathlib"@"18ee599842a5d17f189fe572f0ed8cb1d064d772"
+#align_import all from "leanprover-community/mathlib"@"d11f435d4e34a6cea0a1797d6b625b0c170be845"
 

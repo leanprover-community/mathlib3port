@@ -8,7 +8,7 @@ import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.BilinearForm
 import Mathbin.LinearAlgebra.Matrix.Symmetric
 
-#align_import linear_algebra.quadratic_form.basic from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
+#align_import linear_algebra.quadratic_form.basic from "leanprover-community/mathlib"@"d11f435d4e34a6cea0a1797d6b625b0c170be845"
 
 /-!
 # Quadratic forms
@@ -1044,7 +1044,8 @@ variable [Invertible (2 : R₁)]
 -- the more general `associated_hom` and place it in the previous section.
 /-- `associated` is the linear map that sends a quadratic form over a commutative ring to its
 associated symmetric bilinear form. -/
-abbrev associated : QuadraticForm R₁ M →ₗ[R₁] BilinForm R₁ M :=
+@[reducible]
+def associated : QuadraticForm R₁ M →ₗ[R₁] BilinForm R₁ M :=
   associatedHom R₁
 #align quadratic_form.associated QuadraticForm.associated
 -/
