@@ -29,7 +29,7 @@ def untarReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM P
 package mathlib3port where
   extraDepTargets := #[`fetchOleans]
 
-target fetchOleans (_pkg : Package) : Unit := do
+target fetchOleans (_pkg) : Unit := do
   let libDir : FilePath := __dir__ / "build" / "lib"
   IO.FS.createDirAll libDir
   let oldTrace := Hash.ofString tag
