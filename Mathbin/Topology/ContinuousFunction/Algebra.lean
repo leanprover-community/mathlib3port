@@ -1025,7 +1025,6 @@ section
 
 variable {R : Type _} [LinearOrderedField R]
 
-#print min_eq_half_add_sub_abs_sub /-
 -- TODO:
 -- This lemma (and the next) could go all the way back in `algebra.order.field`,
 -- except that it is tedious to prove without tactics.
@@ -1034,13 +1033,10 @@ variable {R : Type _} [LinearOrderedField R]
 theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - |x - y|) := by
   cases' le_total x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 #align min_eq_half_add_sub_abs_sub min_eq_half_add_sub_abs_sub
--/
 
-#print max_eq_half_add_add_abs_sub /-
 theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + |x - y|) := by
   cases' le_total x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 #align max_eq_half_add_add_abs_sub max_eq_half_add_add_abs_sub
--/
 
 end
 
@@ -1053,18 +1049,14 @@ variable {α : Type _} [TopologicalSpace α]
 variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β]
   [TopologicalRing β]
 
-#print ContinuousMap.inf_eq /-
 theorem inf_eq (f g : C(α, β)) : f ⊓ g = (2⁻¹ : β) • (f + g - |f - g|) :=
   ext fun x => by simpa using min_eq_half_add_sub_abs_sub
 #align continuous_map.inf_eq ContinuousMap.inf_eq
--/
 
-#print ContinuousMap.sup_eq /-
 -- Not sure why this is grosser than `inf_eq`:
 theorem sup_eq (f g : C(α, β)) : f ⊔ g = (2⁻¹ : β) • (f + g + |f - g|) :=
   ext fun x => by simpa [mul_add] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 #align continuous_map.sup_eq ContinuousMap.sup_eq
--/
 
 end Lattice
 

@@ -548,11 +548,11 @@ theorem subset_image_diff (f : α → β) (s t : Set α) : f '' s \ f '' t ⊆ f
 #align set.subset_image_diff Set.subset_image_diff
 -/
 
-#print Set.subset_image_symm_diff /-
-theorem subset_image_symm_diff : (f '' s) ∆ (f '' t) ⊆ f '' s ∆ t :=
+#print Set.subset_image_symmDiff /-
+theorem subset_image_symmDiff : (f '' s) ∆ (f '' t) ⊆ f '' s ∆ t :=
   (union_subset_union (subset_image_diff _ _ _) <| subset_image_diff _ _ _).trans
     (image_union _ _ _).Superset
-#align set.subset_image_symm_diff Set.subset_image_symm_diff
+#align set.subset_image_symm_diff Set.subset_image_symmDiff
 -/
 
 #print Set.image_diff /-
@@ -563,10 +563,10 @@ theorem image_diff {f : α → β} (hf : Injective f) (s t : Set α) : f '' (s \
 #align set.image_diff Set.image_diff
 -/
 
-#print Set.image_symm_diff /-
-theorem image_symm_diff (hf : Injective f) (s t : Set α) : f '' s ∆ t = (f '' s) ∆ (f '' t) := by
+#print Set.image_symmDiff /-
+theorem image_symmDiff (hf : Injective f) (s t : Set α) : f '' s ∆ t = (f '' s) ∆ (f '' t) := by
   simp_rw [Set.symmDiff_def, image_union, image_diff hf]
-#align set.image_symm_diff Set.image_symm_diff
+#align set.image_symm_diff Set.image_symmDiff
 -/
 
 #print Set.Nonempty.image /-

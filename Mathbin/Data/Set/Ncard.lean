@@ -757,8 +757,8 @@ theorem ncard_union_eq (h : Disjoint s t)
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
-#print Set.ncard_diff_add_ncard_eq_ncard /-
-theorem ncard_diff_add_ncard_eq_ncard (h : s ⊆ t)
+#print Set.ncard_diff_add_ncard_of_subset /-
+theorem ncard_diff_add_ncard_of_subset (h : s ⊆ t)
     (ht : t.Finite := by
       run_tac
         to_finite_tac) :
@@ -768,7 +768,7 @@ theorem ncard_diff_add_ncard_eq_ncard (h : s ⊆ t)
     ncard_eq_to_finset_card _ (ht.diff s), finite.to_finset_diff]
   refine' Finset.card_sdiff_add_card_eq_card _
   rwa [finite.to_finset_subset_to_finset]
-#align set.ncard_diff_add_ncard_eq_ncard Set.ncard_diff_add_ncard_eq_ncard
+#align set.ncard_diff_add_ncard_eq_ncard Set.ncard_diff_add_ncard_of_subset
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/

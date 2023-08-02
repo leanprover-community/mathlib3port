@@ -662,15 +662,15 @@ theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : |a
 #align lattice_ordered_comm_group.abs_add_le LatticeOrderedCommGroup.abs_add_le
 -/
 
-#print LatticeOrderedCommGroup.abs_inv_comm /-
+#print LatticeOrderedCommGroup.abs_div_comm /-
 -- |a - b| = |b - a|
 @[to_additive]
-theorem abs_inv_comm (a b : α) : |a / b| = |b / a| :=
+theorem abs_div_comm (a b : α) : |a / b| = |b / a| :=
   by
   unfold Abs.abs
   rw [inv_div a b, ← inv_inv (a / b), inv_div, sup_comm]
-#align lattice_ordered_comm_group.abs_inv_comm LatticeOrderedCommGroup.abs_inv_comm
-#align lattice_ordered_comm_group.abs_neg_comm LatticeOrderedCommGroup.abs_neg_comm
+#align lattice_ordered_comm_group.abs_inv_comm LatticeOrderedCommGroup.abs_div_comm
+#align lattice_ordered_comm_group.abs_neg_comm LatticeOrderedCommGroup.abs_sub_comm
 -/
 
 #print LatticeOrderedCommGroup.abs_abs_div_abs_le /-

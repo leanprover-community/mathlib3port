@@ -245,18 +245,18 @@ instance {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, Top
     [∀ i, InfConvergenceClass (α i)] : InfConvergenceClass (∀ i, α i) :=
   show InfConvergenceClass (∀ i, (α i)ᵒᵈ)ᵒᵈ from OrderDual.infConvergenceClass
 
-#print Pi.Sup_convergence_class' /-
-instance Pi.Sup_convergence_class' {ι : Type _} [Preorder α] [TopologicalSpace α]
+#print Pi.supConvergenceClass' /-
+instance Pi.supConvergenceClass' {ι : Type _} [Preorder α] [TopologicalSpace α]
     [SupConvergenceClass α] : SupConvergenceClass (ι → α) :=
   Pi.supConvergenceClass
-#align pi.Sup_convergence_class' Pi.Sup_convergence_class'
+#align pi.Sup_convergence_class' Pi.supConvergenceClass'
 -/
 
-#print Pi.Inf_convergence_class' /-
-instance Pi.Inf_convergence_class' {ι : Type _} [Preorder α] [TopologicalSpace α]
+#print Pi.infConvergenceClass' /-
+instance Pi.infConvergenceClass' {ι : Type _} [Preorder α] [TopologicalSpace α]
     [InfConvergenceClass α] : InfConvergenceClass (ι → α) :=
   Pi.infConvergenceClass
-#align pi.Inf_convergence_class' Pi.Inf_convergence_class'
+#align pi.Inf_convergence_class' Pi.infConvergenceClass'
 -/
 
 #print tendsto_of_monotone /-

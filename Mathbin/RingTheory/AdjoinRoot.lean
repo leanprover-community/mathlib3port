@@ -119,10 +119,10 @@ def of : R →+* AdjoinRoot f :=
 -/
 
 instance [DistribSMul S R] [IsScalarTower S R R] : SMul S (AdjoinRoot f) :=
-  Submodule.Quotient.hasSmul' _
+  Submodule.Quotient.instSMul' _
 
 instance [DistribSMul S R] [IsScalarTower S R R] : DistribSMul S (AdjoinRoot f) :=
-  Submodule.Quotient.distribSmul' _
+  Submodule.Quotient.distribSMul' _
 
 #print AdjoinRoot.smul_mk /-
 @[simp]

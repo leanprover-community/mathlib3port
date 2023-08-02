@@ -314,7 +314,7 @@ instance inhabited : Inhabited (SplittingField f) :=
 -/
 
 instance {S : Type _} [DistribSMul S K] [IsScalarTower S K K] : SMul S (SplittingField f) :=
-  Submodule.Quotient.hasSmul' _
+  Submodule.Quotient.instSMul' _
 
 #print Polynomial.SplittingField.algebra /-
 instance algebra : Algebra K (SplittingField f) :=

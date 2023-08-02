@@ -147,19 +147,19 @@ section SMul
 
 variable {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M] (P : Submodule R M)
 
-#print Submodule.Quotient.hasSmul' /-
-instance hasSmul' : SMul S (M ⧸ P) :=
+#print Submodule.Quotient.instSMul' /-
+instance instSMul' : SMul S (M ⧸ P) :=
   ⟨fun a =>
     Quotient.map' ((· • ·) a) fun x y h =>
       leftRel_apply.mpr <| by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
-#align submodule.quotient.has_smul' Submodule.Quotient.hasSmul'
+#align submodule.quotient.has_smul' Submodule.Quotient.instSMul'
 -/
 
-#print Submodule.Quotient.hasSmul /-
+#print Submodule.Quotient.instSMul /-
 /-- Shortcut to help the elaborator in the common case. -/
-instance hasSmul : SMul R (M ⧸ P) :=
-  Quotient.hasSmul' P
-#align submodule.quotient.has_smul Submodule.Quotient.hasSmul
+instance instSMul : SMul R (M ⧸ P) :=
+  Quotient.instSMul' P
+#align submodule.quotient.has_smul Submodule.Quotient.instSMul
 -/
 
 #print Submodule.Quotient.mk_smul /-
@@ -222,18 +222,18 @@ instance smulZeroClass (P : Submodule R M) : SMulZeroClass R (M ⧸ P) :=
 #align submodule.quotient.smul_zero_class Submodule.Quotient.smulZeroClass
 -/
 
-#print Submodule.Quotient.distribSmul' /-
-instance distribSmul' [SMul S R] [DistribSMul S M] [IsScalarTower S R M] (P : Submodule R M) :
+#print Submodule.Quotient.distribSMul' /-
+instance distribSMul' [SMul S R] [DistribSMul S M] [IsScalarTower S R M] (P : Submodule R M) :
     DistribSMul S (M ⧸ P) :=
   Function.Surjective.distribSMul ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _)
     P.Quotient.mk_smul
-#align submodule.quotient.distrib_smul' Submodule.Quotient.distribSmul'
+#align submodule.quotient.distrib_smul' Submodule.Quotient.distribSMul'
 -/
 
-#print Submodule.Quotient.distribSmul /-
-instance distribSmul (P : Submodule R M) : DistribSMul R (M ⧸ P) :=
-  Quotient.distribSmul' P
-#align submodule.quotient.distrib_smul Submodule.Quotient.distribSmul
+#print Submodule.Quotient.distribSMul /-
+instance distribSMul (P : Submodule R M) : DistribSMul R (M ⧸ P) :=
+  Quotient.distribSMul' P
+#align submodule.quotient.distrib_smul Submodule.Quotient.distribSMul
 -/
 
 #print Submodule.Quotient.distribMulAction' /-

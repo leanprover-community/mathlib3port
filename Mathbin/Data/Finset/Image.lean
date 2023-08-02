@@ -684,7 +684,7 @@ theorem image_sdiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Inj
 #print Finset.image_symmDiff /-
 theorem image_symmDiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s ∆ t).image f = s.image f ∆ t.image f :=
-  coe_injective <| by push_cast ; exact Set.image_symm_diff hf _ _
+  coe_injective <| by push_cast ; exact Set.image_symmDiff hf _ _
 #align finset.image_symm_diff Finset.image_symmDiff
 -/
 

@@ -25,10 +25,10 @@ universe u
 
 namespace Thunk
 
-#print Thunk.pure /-
+#print Thunk.mk /-
 /-- Creates a thunk with a (non-lazy) constant value. -/
-def pure {α} (x : α) : Thunk α := fun _ => x
-#align thunk.mk Thunk.pure
+def mk {α} (x : α) : Thunk α := fun _ => x
+#align thunk.mk Thunk.mk
 -/
 
 instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk α)
@@ -74,7 +74,7 @@ instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
 protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} (f : α → m β) :
     LazyList α → m (LazyList β)
   | LazyList.nil => pure LazyList.nil
-  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.pure <$> traverse (xs ())
+  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.mk <$> traverse (xs ())
 #align lazy_list.traverse LazyList.traverse
 -/
 

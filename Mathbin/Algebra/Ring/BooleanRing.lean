@@ -682,7 +682,7 @@ protected def BoundedLatticeHom.asBoolRing (f : BoundedLatticeHom α β) :
   toFun := toBoolRing ∘ f ∘ ofBoolRing
   map_zero' := f.map_bot'
   map_one' := f.map_top'
-  map_add' := map_symm_diff' f
+  map_add' := map_symmDiff' f
   map_mul' := f.map_inf'
 #align bounded_lattice_hom.as_boolring BoundedLatticeHom.asBoolRing
 -/

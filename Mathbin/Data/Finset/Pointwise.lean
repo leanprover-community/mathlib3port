@@ -2633,10 +2633,10 @@ theorem smul_finset_sdiff₀ (ha : a ≠ 0) : a • (s \ t) = a • s \ a • t 
 #align finset.smul_finset_sdiff₀ Finset.smul_finset_sdiff₀
 -/
 
-#print Finset.smul_finset_symm_diff₀ /-
-theorem smul_finset_symm_diff₀ (ha : a ≠ 0) : a • s ∆ t = (a • s) ∆ (a • t) :=
+#print Finset.smul_finset_symmDiff₀ /-
+theorem smul_finset_symmDiff₀ (ha : a ≠ 0) : a • s ∆ t = (a • s) ∆ (a • t) :=
   image_symmDiff _ _ <| MulAction.injective₀ ha
-#align finset.smul_finset_symm_diff₀ Finset.smul_finset_symm_diff₀
+#align finset.smul_finset_symm_diff₀ Finset.smul_finset_symmDiff₀
 -/
 
 #print Finset.smul_univ₀ /-
