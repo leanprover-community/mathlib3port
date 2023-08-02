@@ -294,7 +294,7 @@ alias same_cycle_extend_domain ↔ _ same_cycle.extend_domain
 theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < orderOf f, (f ^ i) x = y := by
   classical
   rintro ⟨k, rfl⟩
-  use (k % orderOf f).natAbs
+  use(k % orderOf f).natAbs
   have h₀ := int.coe_nat_pos.mpr (orderOf_pos f)
   have h₁ := Int.emod_nonneg k h₀.ne'
   rw [← zpow_ofNat, Int.natAbs_of_nonneg h₁, ← zpow_eq_mod_orderOf]

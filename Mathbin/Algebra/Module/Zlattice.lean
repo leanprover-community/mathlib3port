@@ -165,7 +165,7 @@ theorem fract_zspan_add (m : E) {v : E} (h : v ∈ span ℤ (Set.range b)) :
   classical
   refine' (Basis.ext_elem_iff b).mpr fun i => _
   simp_rw [repr_fract_apply, Int.fract_eq_fract]
-  use (b.restrict_scalars ℤ).repr ⟨v, h⟩ i
+  use(b.restrict_scalars ℤ).repr ⟨v, h⟩ i
   rw [map_add, Finsupp.coe_add, Pi.add_apply, add_tsub_cancel_right, ←
     eq_intCast (algebraMap ℤ K) _, Basis.restrictScalars_repr_apply, coe_mk]
 #align zspan.fract_zspan_add Zspan.fract_zspan_add

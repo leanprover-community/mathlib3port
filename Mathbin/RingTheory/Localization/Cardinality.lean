@@ -47,7 +47,7 @@ theorem card_le : (#L) ≤ (#R) := by
   set f : R × R → L := fun aa => IsLocalization.mk' _ aa.1 (if h : aa.2 ∈ S then ⟨aa.2, h⟩ else 1)
   refine' @Cardinal.mk_le_of_surjective _ _ f fun a => _
   obtain ⟨x, y, h⟩ := IsLocalization.mk'_surjective S a
-  use (x, y)
+  use(x, y)
   dsimp [f]
   rwa [dif_pos <| show ↑y ∈ S from y.2, SetLike.eta]
 #align is_localization.card_le IsLocalization.card_le

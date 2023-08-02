@@ -231,7 +231,7 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) :
     refine' ⟨a, fun i => (f i).val, _, fun i => (f i).property⟩
     rw [← hy, h, PFunctor.map_eq]
   rintro ⟨a, f, xeq, pf⟩
-  use ⟨a, fun i => ⟨f i, pf i⟩⟩
+  use⟨a, fun i => ⟨f i, pf i⟩⟩
   rw [xeq]; rfl
 #align pfunctor.liftp_iff PFunctor.liftp_iff
 -/
@@ -260,7 +260,7 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
     constructor; · rw [← yeq, h]; rfl
     intro i; exact (f i).property
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
-  use ⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
+  use⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
   constructor
   · rw [xeq]; rfl
   rw [yeq]; rfl

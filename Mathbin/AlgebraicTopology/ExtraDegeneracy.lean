@@ -194,8 +194,8 @@ def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
       monotone' := fun i₁ i₂ hi => by
         by_cases h₁ : i₁ = 0
         · subst h₁
-          simp only [shift_fun_0, Fin.zero_le]
-        · have h₂ : i₂ ≠ 0 := by intro h₂; subst h₂; exact h₁ (le_antisymm hi (Fin.zero_le _))
+          simp only [shift_fun_0, Fin.zero_le']
+        · have h₂ : i₂ ≠ 0 := by intro h₂; subst h₂; exact h₁ (le_antisymm hi (Fin.zero_le' _))
           cases' Fin.eq_succ_of_ne_zero h₁ with j₁ hj₁
           cases' Fin.eq_succ_of_ne_zero h₂ with j₂ hj₂
           substs hj₁ hj₂

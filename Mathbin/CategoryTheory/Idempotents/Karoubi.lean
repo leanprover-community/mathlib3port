@@ -251,9 +251,9 @@ instance : IsIdempotentComplete (Karoubi C) :=
   intro P p hp
   have hp' := hom_ext.mp hp
   simp only [comp_f] at hp' 
-  use ⟨P.X, p.f, hp'⟩
-  use ⟨p.f, by rw [comp_p p, hp']⟩
-  use ⟨p.f, by rw [hp', p_comp p]⟩
+  use⟨P.X, p.f, hp'⟩
+  use⟨p.f, by rw [comp_p p, hp']⟩
+  use⟨p.f, by rw [hp', p_comp p]⟩
   constructor <;> simpa only [hom_ext] using hp'
 
 instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=

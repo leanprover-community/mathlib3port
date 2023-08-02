@@ -85,7 +85,7 @@ namespace HasProducts
 #print ωCPO.HasProducts.product /-
 /-- The pi-type gives a cone for a product. -/
 def product {J : Type v} (f : J → ωCPO.{v}) : Fan f :=
-  Fan.mk (of (∀ j, f j)) fun j => ContinuousHom.ofMono (Pi.evalOrderHom j) fun c => rfl
+  Fan.mk (of (∀ j, f j)) fun j => ContinuousHom.mk (Pi.evalOrderHom j) fun c => rfl
 #align ωCPO.has_products.product ωCPO.HasProducts.product
 -/
 
@@ -129,7 +129,7 @@ namespace HasEqualizers
 /-- The equalizer inclusion function as a `continuous_hom`. -/
 def equalizerι {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
     (f g : α →𝒄 β) : { a : α // f a = g a } →𝒄 α :=
-  ContinuousHom.ofMono (OrderHom.Subtype.val _) fun c => rfl
+  ContinuousHom.mk (OrderHom.Subtype.val _) fun c => rfl
 #align ωCPO.has_equalizers.equalizer_ι ωCPO.HasEqualizers.equalizerι
 -/
 

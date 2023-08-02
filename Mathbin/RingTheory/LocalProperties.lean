@@ -516,7 +516,7 @@ theorem IsLocalization.smul_mem_finsetIntegerMultiple_span [Algebra R S] [Algebr
   obtain ⟨x', hx', hx'' : algebraMap _ _ _ = _⟩ := hx
   obtain ⟨⟨_, a, ha₁, rfl⟩, ha₂⟩ :=
     (IsLocalization.eq_iff_exists (M.map (algebraMap R S)) S').mp hx''
-  use (⟨a, ha₁⟩ : M) * (⟨y', hy'⟩ : M)
+  use(⟨a, ha₁⟩ : M) * (⟨y', hy'⟩ : M)
   convert
     (Submodule.span R
           (IsLocalization.finsetIntegerMultiple (Submonoid.map (algebraMap R S) M) s :

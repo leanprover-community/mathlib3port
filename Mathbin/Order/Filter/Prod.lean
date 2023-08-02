@@ -719,7 +719,7 @@ theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type _} (a 
   · rintro ⟨⟨a'', i''⟩, h₁, h₂, h₃⟩
     simp
   · rintro ⟨h₁, h₂⟩
-    use (a, i')
+    use(a, i')
     simpa using h₁.symm
 #align filter.map_prod_map_const_id_principal_coprod_principal Filter.map_prod_map_const_id_principal_coprod_principal
 -/

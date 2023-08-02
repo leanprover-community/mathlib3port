@@ -2743,11 +2743,13 @@ theorem mem_centralizer_iff_commutator_eq_one {g : G} {s : Set G} :
 #align add_subgroup.mem_centralizer_iff_commutator_eq_zero AddSubgroup.mem_centralizer_iff_commutator_eq_zero
 -/
 
+#print Subgroup.centralizer_univ /-
 @[to_additive]
 theorem centralizer_univ : centralizer Set.univ = center G :=
   SetLike.ext' (Set.centralizer_univ G)
 #align subgroup.centralizer_univ Subgroup.centralizer_univ
 #align add_subgroup.centralizer_univ AddSubgroup.centralizer_univ
+-/
 
 #print Subgroup.le_centralizer_iff /-
 @[to_additive]

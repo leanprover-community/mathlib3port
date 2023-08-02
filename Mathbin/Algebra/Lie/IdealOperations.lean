@@ -81,7 +81,7 @@ theorem lieIdeal_oper_eq_linear_span :
       intro y m' hm'; apply Submodule.span_induction hm'
       · rintro m'' ⟨x, n, hm''⟩; rw [← hm'', leibniz_lie]
         refine' Submodule.add_mem _ _ _ <;> apply Submodule.subset_span
-        · use ⟨⁅y, ↑x⁆, I.lie_mem x.property⟩, n; rfl
+        · use⟨⁅y, ↑x⁆, I.lie_mem x.property⟩, n; rfl
         · use x, ⟨⁅y, ↑n⁆, N.lie_mem n.property⟩; rfl
       · simp only [lie_zero, Submodule.zero_mem]
       · intro m₁ m₂ hm₁ hm₂; rw [lie_add]; exact Submodule.add_mem _ hm₁ hm₂
@@ -191,7 +191,7 @@ theorem mono_lie (h₁ : I ≤ J) (h₂ : N ≤ N') : ⁅I, N⁆ ≤ ⁅J, N'⁆
   intro m h
   rw [lie_ideal_oper_eq_span, mem_lie_span] at h ; rw [lie_ideal_oper_eq_span, mem_lie_span]
   intro N hN; apply h; rintro m' ⟨⟨x, hx⟩, ⟨n, hn⟩, hm⟩; rw [← hm]; apply hN
-  use ⟨x, h₁ hx⟩, ⟨n, h₂ hn⟩; rfl
+  use⟨x, h₁ hx⟩, ⟨n, h₂ hn⟩; rfl
 #align lie_submodule.mono_lie LieSubmodule.mono_lie
 -/
 
@@ -216,8 +216,8 @@ theorem lie_sup : ⁅I, N ⊔ N'⁆ = ⁅I, N⁆ ⊔ ⁅I, N'⁆ :=
   suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by exact le_antisymm this h; clear h
   rw [lie_ideal_oper_eq_span, lie_span_le]; rintro m ⟨x, ⟨n, hn⟩, h⟩; erw [LieSubmodule.mem_sup]
   erw [LieSubmodule.mem_sup] at hn ; rcases hn with ⟨n₁, hn₁, n₂, hn₂, hn'⟩
-  use ⁅(x : L), (⟨n₁, hn₁⟩ : N)⁆; constructor; · apply lie_coe_mem_lie
-  use ⁅(x : L), (⟨n₂, hn₂⟩ : N')⁆; constructor; · apply lie_coe_mem_lie
+  use⁅(x : L), (⟨n₁, hn₁⟩ : N)⁆; constructor; · apply lie_coe_mem_lie
+  use⁅(x : L), (⟨n₂, hn₂⟩ : N')⁆; constructor; · apply lie_coe_mem_lie
   simp [← h, ← hn']
 #align lie_submodule.lie_sup LieSubmodule.lie_sup
 -/
@@ -231,8 +231,8 @@ theorem sup_lie : ⁅I ⊔ J, N⁆ = ⁅I, N⁆ ⊔ ⁅J, N⁆ :=
   suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by exact le_antisymm this h; clear h
   rw [lie_ideal_oper_eq_span, lie_span_le]; rintro m ⟨⟨x, hx⟩, n, h⟩; erw [LieSubmodule.mem_sup]
   erw [LieSubmodule.mem_sup] at hx ; rcases hx with ⟨x₁, hx₁, x₂, hx₂, hx'⟩
-  use ⁅((⟨x₁, hx₁⟩ : I) : L), (n : N)⁆; constructor; · apply lie_coe_mem_lie
-  use ⁅((⟨x₂, hx₂⟩ : J) : L), (n : N)⁆; constructor; · apply lie_coe_mem_lie
+  use⁅((⟨x₁, hx₁⟩ : I) : L), (n : N)⁆; constructor; · apply lie_coe_mem_lie
+  use⁅((⟨x₂, hx₂⟩ : J) : L), (n : N)⁆; constructor; · apply lie_coe_mem_lie
   simp [← h, ← hx']
 #align lie_submodule.sup_lie LieSubmodule.sup_lie
 -/
@@ -357,7 +357,7 @@ theorem map_bracket_eq {I₁ I₂ : LieIdeal R L} (h : Function.Surjective f) :
   rintro x ⟨⟨z₁, h₁⟩, ⟨z₂, h₂⟩, rfl⟩
   obtain ⟨y₁, rfl⟩ := mem_map_of_surjective h h₁
   obtain ⟨y₂, rfl⟩ := mem_map_of_surjective h h₂
-  use ⁅(y₁ : L), (y₂ : L)⁆, y₁, y₂
+  use⁅(y₁ : L), (y₂ : L)⁆, y₁, y₂
   apply f.map_lie
 #align lie_ideal.map_bracket_eq LieIdeal.map_bracket_eq
 -/
@@ -391,14 +391,14 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     erw [LieSubmodule.mem_inf, f.mem_ideal_range_iff h] at hx₁ hx₂ 
     obtain ⟨⟨z₁, hz₁⟩, hz₁'⟩ := hx₁; rw [← hz₁] at hz₁' 
     obtain ⟨⟨z₂, hz₂⟩, hz₂'⟩ := hx₂; rw [← hz₂] at hz₂' 
-    use ⁅z₁, z₂⁆, ⟨z₁, hz₁'⟩, ⟨z₂, hz₂'⟩, rfl
+    use⁅z₁, z₂⁆, ⟨z₁, hz₁'⟩, ⟨z₂, hz₂'⟩, rfl
     simp only [hz₁, hz₂, Submodule.coe_mk, LieHom.map_lie]
   · rintro ⟨x, ⟨⟨z₁, hz₁⟩, ⟨z₂, hz₂⟩, hx⟩, hy⟩; rw [← hy, ← hx]
     have hz₁' : f z₁ ∈ f.ideal_range ⊓ J₁ := by rw [LieSubmodule.mem_inf];
       exact ⟨f.mem_ideal_range, hz₁⟩
     have hz₂' : f z₂ ∈ f.ideal_range ⊓ J₂ := by rw [LieSubmodule.mem_inf];
       exact ⟨f.mem_ideal_range, hz₂⟩
-    use ⟨f z₁, hz₁'⟩, ⟨f z₂, hz₂'⟩; simp only [Submodule.coe_mk, LieHom.map_lie]
+    use⟨f z₁, hz₁'⟩, ⟨f z₂, hz₂'⟩; simp only [Submodule.coe_mk, LieHom.map_lie]
 #align lie_ideal.comap_bracket_eq LieIdeal.comap_bracket_eq
 -/
 

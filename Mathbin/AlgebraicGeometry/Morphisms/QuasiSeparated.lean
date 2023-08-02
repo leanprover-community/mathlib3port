@@ -333,7 +333,7 @@ theorem quasiSeparatedOfComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [H : Q
   by
   rw [(quasi_separated.affine_open_cover_tfae f).out 0 1]
   rw [(quasi_separated.affine_open_cover_tfae (f ≫ g)).out 0 2] at H 
-  use (Z.affine_cover.pullback_cover g).bind fun x => Scheme.affine_cover _
+  use(Z.affine_cover.pullback_cover g).bind fun x => Scheme.affine_cover _
   constructor; · intro i; dsimp; infer_instance
   rintro ⟨i, j⟩; dsimp at *
   specialize H _ i
@@ -509,7 +509,7 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
     use finset.univ.sup n + n₁ + n₂
     -- By the sheaf condition, since `f ^ (n + n₂) * y₁ = f ^ (n + n₁) * y₂`, it can be glued into
     -- the desired section on `S ∪ U`.
-    use (X.sheaf.obj_sup_iso_prod_eq_locus S U.1).inv ⟨⟨_ * _, _ * _⟩, this⟩
+    use(X.sheaf.obj_sup_iso_prod_eq_locus S U.1).inv ⟨⟨_ * _, _ * _⟩, this⟩
     refine'
       X.sheaf.eq_of_locally_eq₂
         (hom_of_le (_ : X.basic_open (X.presheaf.map (hom_of_le le_sup_left).op f) ≤ _))

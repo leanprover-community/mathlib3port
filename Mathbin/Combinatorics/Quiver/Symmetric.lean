@@ -259,9 +259,9 @@ def Prefunctor.symmetrify (φ : U ⥤q V) : Symmetrify U ⥤q Symmetrify V
   map X Y := Sum.map φ.map φ.map
 #align prefunctor.symmetrify Prefunctor.symmetrify
 
-instance Prefunctor.symmetrifyMapReverse (φ : U ⥤q V) : Prefunctor.MapReverse φ.Symmetrify :=
+instance Prefunctor.symmetrify_mapReverse (φ : U ⥤q V) : Prefunctor.MapReverse φ.Symmetrify :=
   ⟨fun u v e => by cases e <;> rfl⟩
-#align prefunctor.symmetrify_map_reverse Prefunctor.symmetrifyMapReverse
+#align prefunctor.symmetrify_map_reverse Prefunctor.symmetrify_mapReverse
 
 end Symmetrify
 

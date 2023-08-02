@@ -936,7 +936,7 @@ theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
             simpa [Nat.succ_eq_add_one, add_comm, add_left_comm] using
               hy₂ (Nat.succ_lt_succ hi) with
           ⟨k₂, hk₂⟩
-        use (max k₁ k₂).succ
+        use(max k₁ k₂).succ
         rw [zero_add] at hk₁ 
         use Nat.le_succ_of_le <| le_max_of_le_left <| Nat.le_of_lt_succ <| evaln_bound hk₁
         use a

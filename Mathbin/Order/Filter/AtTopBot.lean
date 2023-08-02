@@ -633,7 +633,7 @@ theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, �
   by
   simp only [frequently_at_top'] at h 
   choose u hu hu' using h
-  use (fun n => Nat.recOn n (u 0 0) fun n v => u (n + 1) v : ℕ → ℕ)
+  use(fun n => Nat.recOn n (u 0 0) fun n v => u (n + 1) v : ℕ → ℕ)
   constructor
   · apply strictMono_nat_of_lt_succ
     intro n
@@ -1973,7 +1973,7 @@ theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h
   have : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x) :=
     by
     intro x y
-    use ⟨x ⊔ y ⊔ a, h le_sup_right⟩
+    use⟨x ⊔ y ⊔ a, h le_sup_right⟩
     simp only [ge_iff_le, principal_mono, Ici_subset_Ici, ← Subtype.coe_le_coe, Subtype.coe_mk]
     exact ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩
   haveI : Nonempty s := ⟨⟨a, h le_rfl⟩⟩

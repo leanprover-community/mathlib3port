@@ -1600,7 +1600,7 @@ def iterateRange (f : M →ₗ[R] M) : ℕ →o (Submodule R M)ᵒᵈ :=
     rw [LinearMap.mem_range] at h 
     obtain ⟨m, rfl⟩ := h
     rw [LinearMap.mem_range]
-    use (f ^ c) m
+    use(f ^ c) m
     rw [pow_add, LinearMap.mul_apply]⟩
 #align linear_map.iterate_range LinearMap.iterateRange
 -/

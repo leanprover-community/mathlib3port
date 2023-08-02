@@ -76,8 +76,8 @@ instance (n : ℕ) : Distrib (Fin n) :=
 instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
   { Fin.instAddMonoidWithOne, Fin.addCommGroup n, Fin.instCommSemigroup n,
     Fin.instDistrib n with
-    one_mul := Fin.one_mul
-    mul_one := Fin.mul_one }
+    one_mul := Fin.one_mul'
+    mul_one := Fin.mul_one' }
 
 /-- Note this is more general than `fin.comm_ring` as it applies (vacuously) to `fin 0` too. -/
 instance (n : ℕ) : HasDistribNeg (Fin n) :=

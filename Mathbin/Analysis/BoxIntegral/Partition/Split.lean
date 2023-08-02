@@ -436,7 +436,7 @@ theorem exists_iUnion_eq_diff (π : Prepartition I) :
     ∃ π' : Prepartition I, π'.iUnion = I \ π.iUnion :=
   by
   rcases π.eventually_split_many_inf_eq_filter.exists with ⟨s, hs⟩
-  use (split_many I s).filterₓ fun J => ¬(J : Set (ι → ℝ)) ⊆ π.Union
+  use(split_many I s).filterₓ fun J => ¬(J : Set (ι → ℝ)) ⊆ π.Union
   simp [← hs]
 #align box_integral.prepartition.exists_Union_eq_diff BoxIntegral.Prepartition.exists_iUnion_eq_diff
 -/

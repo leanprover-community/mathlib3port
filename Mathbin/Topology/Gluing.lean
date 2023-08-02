@@ -146,7 +146,7 @@ theorem rel_equiv : Equivalence D.Rel :=
     have eq₂ : (pullback.snd : _ ⟶ D.V _) z = y := pullback_iso_prod_subtype_inv_snd_apply _ _ _
     clear_value z
     right
-    use (pullback.fst : _ ⟶ D.V (i, k)) (D.t' _ _ _ z)
+    use(pullback.fst : _ ⟶ D.V (i, k)) (D.t' _ _ _ z)
     dsimp only at *
     substs e₁ e₃ e₄ eq₁ eq₂
     have h₁ : D.t' j i k ≫ pullback.fst ≫ D.f i k = pullback.fst ≫ D.t j i ≫ D.f i j := by

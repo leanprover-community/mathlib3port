@@ -153,17 +153,17 @@ instance : Inhabited (GroupFilterBasis G) :=
         Nonempty := singleton_nonempty _ .. }
     all_goals simp only [exists_prop, mem_singleton_iff]
     · rintro - - rfl rfl
-      use {1}
+      use{1}
       simp
     · simp
     · rintro - rfl
-      use {1}
+      use{1}
       simp
     · rintro - rfl
-      use {1}
+      use{1}
       simp
     · rintro x₀ - rfl
-      use {1}
+      use{1}
       simp⟩
 
 #print GroupFilterBasis.prod_subset_self /-
@@ -222,7 +222,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
     rw [(B.has_basis x).mem_iff] at U_in 
     rcases U_in with ⟨V, V_in, H⟩
     rcases GroupFilterBasis.mul V_in with ⟨W, W_in, hW⟩
-    use (fun y => x * y) '' W, image_mem_map (FilterBasis.mem_filter_of_mem _ W_in)
+    use(fun y => x * y) '' W, image_mem_map (FilterBasis.mem_filter_of_mem _ W_in)
     constructor
     · rw [image_subset_iff] at H ⊢
       exact ((B.prod_subset_self W_in).trans hW).trans H
@@ -442,7 +442,7 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
       smul_left' := by
         rintro x₀ U (h : U ∈ {{(0 : M)}})
         rw [mem_singleton_iff] at h 
-        use {0}, rfl
+        use{0}, rfl
         simp [h]
       smul_right' := by
         rintro m₀ U (h : U ∈ (0 : Set (Set M)))

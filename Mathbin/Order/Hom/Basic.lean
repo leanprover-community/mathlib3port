@@ -239,16 +239,18 @@ instance : OrderHomClass (α →o β) α β where
   coe_injective' f g h := by cases f; cases g; congr
   map_rel f := f.Monotone
 
+#print OrderHom.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe {f : α →o β} : f.toFun = f :=
   rfl
 #align order_hom.to_fun_eq_coe OrderHom.toFun_eq_coe
+-/
 
-#print OrderHom.coe_fun_mk /-
+#print OrderHom.coe_mk /-
 @[simp]
-theorem coe_fun_mk {f : α → β} (hf : Monotone f) : (mk f hf : α → β) = f :=
+theorem coe_mk {f : α → β} (hf : Monotone f) : (mk f hf : α → β) = f :=
   rfl
-#align order_hom.coe_fun_mk OrderHom.coe_fun_mk
+#align order_hom.coe_fun_mk OrderHom.coe_mk
 -/
 
 #print OrderHom.ext /-
@@ -259,8 +261,10 @@ theorem ext (f g : α →o β) (h : (f : α → β) = g) : f = g :=
 #align order_hom.ext OrderHom.ext
 -/
 
+#print OrderHom.coe_eq /-
 theorem coe_eq (f : α →o β) : coe f = f := by ext <;> rfl
 #align order_hom.coe_eq OrderHom.coe_eq
+-/
 
 /-- One can lift an unbundled monotone function to a bundled one. -/
 instance : CanLift (α → β) (α →o β) coeFn Monotone where prf f h := ⟨⟨f, h⟩, rfl⟩

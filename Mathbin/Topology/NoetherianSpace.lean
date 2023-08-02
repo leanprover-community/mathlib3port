@@ -224,8 +224,8 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
   intro s H
   by_cases h₁ : IsPreirreducible s.1
   cases h₂ : s.1.eq_empty_or_nonempty
-  · use ∅; refine' ⟨fun k => k.2.elim, _⟩; rw [Finset.sup_empty]; ext1; exact h
-  · use {s}
+  · use∅; refine' ⟨fun k => k.2.elim, _⟩; rw [Finset.sup_empty]; ext1; exact h
+  · use{s}
     simp only [coe_coe, Finset.sup_singleton, id.def, eq_self_iff_true, and_true_iff]
     rintro ⟨k, hk⟩
     cases finset.mem_singleton.mp hk

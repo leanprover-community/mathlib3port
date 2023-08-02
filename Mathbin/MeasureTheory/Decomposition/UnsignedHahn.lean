@@ -79,7 +79,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
           (ENNReal.tendsto_toNNReal <| _).comp <| tendsto_measure_Inter hs hm _
     exacts [hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
-    use (μ univ).toNNReal
+    use(μ univ).toNNReal
     rintro r ⟨s, hs, rfl⟩
     refine' le_trans (sub_le_self _ <| NNReal.coe_nonneg _) _
     rw [NNReal.coe_le_coe, ← ENNReal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]

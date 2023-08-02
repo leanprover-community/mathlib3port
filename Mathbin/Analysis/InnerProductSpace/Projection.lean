@@ -213,7 +213,7 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       have zero_le_δ : 0 ≤ δ
       apply le_ciInf; intro; exact norm_nonneg _
       have δ_le : ∀ w : K, δ ≤ ‖u - w‖
-      intro w; apply ciInf_le; use (0 : ℝ); rintro _ ⟨_, rfl⟩; exact norm_nonneg _
+      intro w; apply ciInf_le; use(0 : ℝ); rintro _ ⟨_, rfl⟩; exact norm_nonneg _
       have δ_le' : ∀ w ∈ K, δ ≤ ‖u - w‖ := fun w hw => δ_le ⟨w, hw⟩
       have : ∀ θ : ℝ, 0 < θ → θ ≤ 1 → 2 * p ≤ θ * q
       intro θ hθ₁ hθ₂
@@ -639,7 +639,7 @@ theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
   suffices ↑(orthogonalProjection (𝕜 ∙ v) ((‖v‖ ^ 2 : 𝕜) • w)) = ⟪v, w⟫ • v by simpa using this
   apply eq_orthogonalProjection_of_mem_of_inner_eq_zero
   · rw [Submodule.mem_span_singleton]
-    use ⟪v, w⟫
+    use⟪v, w⟫
   · intro x hx
     obtain ⟨c, rfl⟩ := submodule.mem_span_singleton.mp hx
     have hv : ↑‖v‖ ^ 2 = ⟪v, v⟫ := by norm_cast; simp [@norm_sq_eq_inner 𝕜]

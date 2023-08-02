@@ -1185,7 +1185,7 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
     · rintro ⟨i, _, rfl⟩
       exact (hf' i).1
     · intro hx
-      use ⟨p x, hps.symm ▸ Set.mem_image_of_mem _ hx⟩, mem_univ _
+      use⟨p x, hps.symm ▸ Set.mem_image_of_mem _ hx⟩, mem_univ _
       refine' hi _ (hf' _).1 _ hx _
       rw [(hf' _).2]
       rfl
@@ -1309,7 +1309,7 @@ theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
     · skip
       rw [Set.range_eq_empty, vectorSpan_empty, Submodule.mem_bot]
       rintro rfl
-      use ∅
+      use∅
       simp
   · rintro ⟨s, w, hw, rfl⟩
     exact weightedVSub_mem_vectorSpan hw p

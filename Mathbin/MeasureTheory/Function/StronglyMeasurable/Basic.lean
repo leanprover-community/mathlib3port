@@ -9,7 +9,7 @@ import Mathbin.MeasureTheory.Constructions.BorelSpace.Metrizable
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 
-#align_import measure_theory.function.strongly_measurable.basic from "leanprover-community/mathlib"@"ef95945cd48c932c9e034872bd25c3c220d9c946"
+#align_import measure_theory.function.strongly_measurable.basic from "leanprover-community/mathlib"@"3b52265189f3fb43aa631edffce5d060fafaf82f"
 
 /-!
 # Strongly measurable and finitely strongly measurable functions
@@ -2218,6 +2218,13 @@ theorem aestronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
 -/
 
 end AeStronglyMeasurable
+
+theorem aEStronglyMeasurable_of_absolutelyContinuous {α β : Type _} [MeasurableSpace α]
+    [TopologicalSpace β] {μ ν : Measure α} (h : ν ≪ μ) (g : α → β) (hμ : AEStronglyMeasurable g μ) :
+    AEStronglyMeasurable g ν := by
+  obtain ⟨g₁, hg₁, hg₁'⟩ := hμ
+  refine' ⟨g₁, hg₁, h.ae_eq hg₁'⟩
+#align measure_theory.ae_strongly_measurable_of_absolutely_continuous MeasureTheory.aEStronglyMeasurable_of_absolutelyContinuous
 
 /-! ## Almost everywhere finitely strongly measurable functions -/
 

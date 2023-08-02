@@ -448,7 +448,7 @@ theorem next_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
 
 #print List.prev_reverse_eq_next /-
 theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
-    prev l.reverse x (mem_reverse'.mpr hx) = next l x hx :=
+    prev l.reverse x (mem_reverse.mpr hx) = next l x hx :=
   by
   obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx
   have lpos : 0 < l.length := k.zero_le.trans_lt hk
@@ -469,7 +469,7 @@ theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l)
 
 #print List.next_reverse_eq_prev /-
 theorem next_reverse_eq_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
-    next l.reverse x (mem_reverse'.mpr hx) = prev l x hx :=
+    next l.reverse x (mem_reverse.mpr hx) = prev l x hx :=
   by
   convert (prev_reverse_eq_next l.reverse (nodup_reverse.mpr h) x (mem_reverse.mpr hx)).symm
   exact (reverse_reverse l).symm
@@ -636,7 +636,7 @@ theorem reverse_coe (l : List α) : (l : Cycle α).reverse = l.reverse :=
 #print Cycle.mem_reverse_iff /-
 @[simp]
 theorem mem_reverse_iff {a : α} {s : Cycle α} : a ∈ s.reverse ↔ a ∈ s :=
-  Quot.inductionOn s fun _ => mem_reverse'
+  Quot.inductionOn s fun _ => mem_reverse
 #align cycle.mem_reverse_iff Cycle.mem_reverse_iff
 -/
 

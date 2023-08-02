@@ -715,7 +715,7 @@ theorem Function.HasTemperateGrowth.norm_iteratedFDeriv_le_uniform_aux {f : E �
       ∀ (N : ℕ) (hN : N ≤ n) (x : E), ‖iteratedFDeriv ℝ N f x‖ ≤ C * (1 + ‖x‖) ^ k :=
   by
   choose k C f using hf_temperate.2
-  use (Finset.range (n + 1)).sup k
+  use(Finset.range (n + 1)).sup k
   let C' := max (0 : ℝ) ((Finset.range (n + 1)).sup' (by simp) C)
   have hC' : 0 ≤ C' := by simp only [le_refl, Finset.le_sup'_iff, true_or_iff, le_max_iff]
   use C', hC'
@@ -818,7 +818,7 @@ def evalCLM (m : E) : 𝓢(E, E →L[ℝ] F) →L[𝕜] 𝓢(E, F) :=
     (fun f => ContDiff.clm_apply f.2 contDiff_const)
     (by
       rintro ⟨k, n⟩
-      use {(k, n)}, ‖m‖, norm_nonneg _
+      use{(k, n)}, ‖m‖, norm_nonneg _
       intro f x
       refine'
         le_trans
@@ -1088,7 +1088,7 @@ theorem iteratedPDeriv_succ_right {n : ℕ} (m : Fin (n + 1) → E) (f : 𝓢(E,
   · rw [iterated_pderiv_zero, iterated_pderiv_one]
     rfl
   -- The proof is `∂^{n + 2} = ∂ ∂^{n + 1} = ∂ ∂^n ∂ = ∂^{n+1} ∂`
-  have hmzero : Fin.init m 0 = m 0 := by simp only [Fin.init_def, Fin.castSucc_zero]
+  have hmzero : Fin.init m 0 = m 0 := by simp only [Fin.init_def, Fin.castSucc_zero']
   have hmtail : Fin.tail m (Fin.last n) = m (Fin.last n.succ) := by
     simp only [Fin.tail_def, Fin.succ_last]
   simp only [iterated_pderiv_succ_left, IH (Fin.tail m), hmzero, hmtail, Fin.tail_init_eq_init_tail]

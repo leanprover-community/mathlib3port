@@ -388,7 +388,7 @@ noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G
     by
     intro X
     apply is_iso_of_reflects_iso _ yoneda
-    use (sheaf_yoneda_hom H i.inv).app X
+    use(sheaf_yoneda_hom H i.inv).app X
     constructor <;> ext x : 2 <;>
       simp only [sheaf_hom, nat_trans.comp_app, nat_trans.id_app, functor.image_preimage]
     exact ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id

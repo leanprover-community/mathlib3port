@@ -365,7 +365,7 @@ theorem Submodule.exists_lieSubmodule_coe_eq_iff (p : Submodule R M) :
   by
   constructor
   · rintro ⟨N, rfl⟩ _ _; exact N.lie_mem
-  · intro h; use { p with lie_mem := h }; exact LieSubmodule.coe_toSubmodule_mk p _
+  · intro h; use{ p with lie_mem := h }; exact LieSubmodule.coe_toSubmodule_mk p _
 #align submodule.exists_lie_submodule_coe_eq_iff Submodule.exists_lieSubmodule_coe_eq_iff
 -/
 
@@ -889,7 +889,7 @@ of `M'`. -/
 def map : LieSubmodule R L M' :=
   { (N : Submodule R M).map (f : M →ₗ[R] M') with
     lie_mem := fun x m' h => by
-      rcases h with ⟨m, hm, hfm⟩; use ⁅x, m⁆; constructor
+      rcases h with ⟨m, hm, hfm⟩; use⁅x, m⁆; constructor
       · apply N.lie_mem hm
       · norm_cast at hfm ; simp [hfm] }
 #align lie_submodule.map LieSubmodule.map
@@ -1265,7 +1265,7 @@ theorem idealRange_eq_top_of_surjective (h : Function.Surjective f) : f.idealRan
   rw [ideal_range_eq_lie_span_range, h, ← LieSubalgebra.coe_to_submodule, ←
     LieSubmodule.coe_toSubmodule_eq_iff, LieSubmodule.top_coeSubmodule,
     LieSubalgebra.top_coe_submodule, LieSubmodule.coe_lieSpan_submodule_eq_iff]
-  use ⊤
+  use⊤
   exact LieSubmodule.top_coeSubmodule
 #align lie_hom.ideal_range_eq_top_of_surjective LieHom.idealRange_eq_top_of_surjective
 -/
@@ -1303,7 +1303,7 @@ theorem coe_map_of_surjective (h : Function.Surjective f) :
         obtain ⟨z₁, rfl⟩ := h x
         simp only [LieHom.coe_toLinearMap, SetLike.mem_coe, Set.mem_image,
           LieSubmodule.mem_coeSubmodule, Submodule.mem_carrier, Submodule.map_coe]
-        use ⁅z₁, z₂⁆
+        use⁅z₁, z₂⁆
         exact ⟨I.lie_mem hz₂, f.map_lie z₁ z₂⟩ }
   erw [LieSubmodule.coe_lieSpan_submodule_eq_iff]
   use J
@@ -1317,7 +1317,7 @@ theorem mem_map_of_surjective {y : L'} (h₁ : Function.Surjective f) (h₂ : y 
   by
   rw [← LieSubmodule.mem_coeSubmodule, coe_map_of_surjective h₁, Submodule.mem_map] at h₂ 
   obtain ⟨x, hx, rfl⟩ := h₂
-  use ⟨x, hx⟩
+  use⟨x, hx⟩
   rfl
 #align lie_ideal.mem_map_of_surjective LieIdeal.mem_map_of_surjective
 -/

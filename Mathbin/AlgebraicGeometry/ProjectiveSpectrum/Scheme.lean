@@ -369,8 +369,8 @@ private unsafe def mem_tac : tactic Unit :=
   let b : tactic Unit := sorry
   b <|> sorry
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
 #print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier /-
 /-- The function from `Spec A⁰_f` to `Proj|D(f)` is defined by `q ↦ {a | aᵢᵐ/fⁱ ∈ q}`, i.e. sending
 `q` a prime ideal in `A⁰_f` to the homogeneous prime relevant ideal containing only and all the
@@ -402,8 +402,8 @@ def carrier (q : Spec.T A⁰_ f) : Set A :=
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
 #print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff /-
 theorem mem_carrier_iff (q : Spec.T A⁰_ f) (a : A) :
     a ∈ carrier f_deg q ↔
@@ -439,14 +439,14 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_carrier_iff' AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff'
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
 #print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.add_mem /-
 theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg q)
     (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q :=
@@ -531,8 +531,8 @@ theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i =>
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.zero_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.zero_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2357112569.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2444063103.mem_tac -/
 #print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.smul_mem /-
 theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ carrier f_deg q :=
   by

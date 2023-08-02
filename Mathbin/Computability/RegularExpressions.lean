@@ -360,7 +360,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
           apply A
         rw [IH _ hwf] at hu 
         rcases hu with ⟨S', hsum, helem⟩
-        use (a :: t) :: S'
+        use(a :: t) :: S'
         constructor
         · simp [hs, hsum]
         · intro t' ht'

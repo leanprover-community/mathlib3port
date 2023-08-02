@@ -36,7 +36,6 @@ variable (C : Type u) [Category.{v} C]
 -- TODO: generalize to `has_shift C A` for an arbitrary `[add_monoid A]` `[has_one A]`.
 variable [HasZeroMorphisms C] [HasShift C ℤ]
 
-#print CategoryTheory.DifferentialObject /-
 /-- A differential object in a category with zero morphisms and a shift is
 an object `X` equipped with
 a morphism `d : X ⟶ X⟦1⟧`, such that `d^2 = 0`.
@@ -46,8 +45,7 @@ structure DifferentialObject where
   pt : C
   d : X ⟶ X⟦1⟧
   d_squared' : d ≫ d⟦(1 : ℤ)⟧' = 0 := by obviously
-#align category_theory.differential_object CategoryTheory.DifferentialObject
--/
+#align category_theory.differential_object CategoryTheory.DifferentialObjectₓ
 
 restate_axiom differential_object.d_squared'
 
@@ -57,15 +55,13 @@ variable {C}
 
 namespace DifferentialObject
 
-#print CategoryTheory.DifferentialObject.Hom /-
 /-- A morphism of differential objects is a morphism commuting with the differentials.
 -/
 @[ext, nolint has_nonempty_instance]
 structure Hom (X Y : DifferentialObject C) where
   f : X.pt ⟶ Y.pt
   comm' : X.d ≫ f⟦1⟧' = f ≫ Y.d := by obviously
-#align category_theory.differential_object.hom CategoryTheory.DifferentialObject.Hom
--/
+#align category_theory.differential_object.hom CategoryTheory.DifferentialObject.Homₓ
 
 restate_axiom hom.comm'
 

@@ -211,7 +211,7 @@ theorem range_logb : range (logb b) = univ :=
 theorem surjOn_logb' : SurjOn (logb b) (Iio 0) univ :=
   by
   intro x x_in_univ
-  use -b ^ x
+  use-b ^ x
   constructor
   · simp only [Right.neg_neg_iff, Set.mem_Iio]; apply rpow_pos_of_pos b_pos
   · rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]

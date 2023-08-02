@@ -379,7 +379,7 @@ def pullbackConeOfLeftFst :
                     Subtype.coe_mk, functor.op_obj, Subtype.val_eq_coe]
                   apply LE.le.antisymm
                   · rintro _ ⟨_, h₁, h₂⟩
-                    use (TopCat.pullbackIsoProdSubtype _ _).inv ⟨⟨_, _⟩, h₂⟩
+                    use(TopCat.pullbackIsoProdSubtype _ _).inv ⟨⟨_, _⟩, h₂⟩
                     simpa using h₁
                   · rintro _ ⟨x, h₁, rfl⟩
                     exact ⟨_, h₁, concrete_category.congr_hom pullback.condition x⟩))
@@ -1129,8 +1129,7 @@ instance : LocallyRingedSpace.IsOpenImmersion (pullbackConeOfLeft f g).snd :=
 def pullbackConeOfLeftIsLimit : IsLimit (pullbackConeOfLeft f g) :=
   PullbackCone.isLimitAux' _ fun s =>
     by
-    use
-      PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift f.1 g.1
+    use PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift f.1 g.1
         (pullback_cone.mk s.fst.1 s.snd.1 (congr_arg LocallyRingedSpace.hom.val s.condition))
     · intro x
       have :=

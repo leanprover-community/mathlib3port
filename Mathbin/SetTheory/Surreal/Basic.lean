@@ -6,7 +6,7 @@ Authors: Mario Carneiro, Scott Morrison
 import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.SetTheory.Game.Ordinal
 
-#align_import set_theory.surreal.basic from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
+#align_import set_theory.surreal.basic from "leanprover-community/mathlib"@"8900d545017cd21961daa2a1734bb658ef52c618"
 
 /-!
 # Surreal numbers
@@ -476,6 +476,36 @@ theorem nat_toGame : ∀ n : ℕ, toGame n = n :=
   map_natCast' _ one_toGame
 #align surreal.nat_to_game Surreal.nat_toGame
 -/
+
+theorem upperBound_numeric {ι : Type u} {f : ι → PGame.{u}} (H : ∀ i, (f i).Numeric) :
+    (upperBound f).Numeric :=
+  numeric_of_isEmpty_rightMoves _ fun i => (H _).moveLeft _
+#align surreal.upper_bound_numeric Surreal.upperBound_numeric
+
+theorem lowerBound_numeric {ι : Type u} {f : ι → PGame.{u}} (H : ∀ i, (f i).Numeric) :
+    (lowerBound f).Numeric :=
+  numeric_of_isEmpty_leftMoves _ fun i => (H _).moveRight _
+#align surreal.lower_bound_numeric Surreal.lowerBound_numeric
+
+/-- A small set `s` of surreals is bounded above. -/
+theorem bddAbove_of_small (s : Set Surreal.{u}) [Small.{u} s] : BddAbove s :=
+  by
+  let g := Subtype.val ∘ Quotient.out ∘ Subtype.val ∘ (equivShrink s).symm
+  refine' ⟨mk (upper_bound g) (upper_bound_numeric fun i => Subtype.prop _), fun i hi => _⟩
+  rw [← Quotient.out_eq i]
+  show i.out.1 ≤ _
+  simpa [g] using le_upper_bound g (equivShrink s ⟨i, hi⟩)
+#align surreal.bdd_above_of_small Surreal.bddAbove_of_small
+
+/-- A small set `s` of surreals is bounded below. -/
+theorem bddBelow_of_small (s : Set Surreal.{u}) [Small.{u} s] : BddBelow s :=
+  by
+  let g := Subtype.val ∘ Quotient.out ∘ Subtype.val ∘ (equivShrink s).symm
+  refine' ⟨mk (lower_bound g) (lower_bound_numeric fun i => Subtype.prop _), fun i hi => _⟩
+  rw [← Quotient.out_eq i]
+  show _ ≤ i.out.1
+  simpa [g] using lower_bound_le g (equivShrink s ⟨i, hi⟩)
+#align surreal.bdd_below_of_small Surreal.bddBelow_of_small
 
 end Surreal
 

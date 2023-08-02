@@ -917,7 +917,7 @@ theorem mem_span_finite_of_mem_span {S : Set M} {x : M} (hx : x ∈ span R S) :
     · rwa [Finset.coe_singleton, Set.singleton_subset_iff]
     · rw [Finset.coe_singleton]
       exact Submodule.mem_span_singleton_self x
-  · use ∅; simp
+  · use∅; simp
   · rintro x y ⟨X, hX, hxX⟩ ⟨Y, hY, hyY⟩
     refine' ⟨X ∪ Y, _, _⟩
     · rw [Finset.coe_union]

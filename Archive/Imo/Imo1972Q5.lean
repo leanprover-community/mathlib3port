@@ -69,7 +69,7 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
   -- Demonstrate that `k ≤ k'` using `hk₂`.
   have H₂ : k ≤ k' :=
     by
-    have h₁ : ∃ x : ℝ, x ∈ S := by use ‖f 0‖; exact Set.mem_range_self 0
+    have h₁ : ∃ x : ℝ, x ∈ S := by use‖f 0‖; exact Set.mem_range_self 0
     have h₂ : ∀ x, ‖f x‖ ≤ k' := by
       intro x
       rw [le_div_iff]

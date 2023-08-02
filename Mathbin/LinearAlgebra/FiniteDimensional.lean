@@ -1360,7 +1360,7 @@ theorem finrank_span_singleton {v : V} (hv : v ≠ 0) : finrank K (K ∙ v) = 1 
   apply le_antisymm
   · exact finrank_span_le_card ({v} : Set V)
   · rw [Nat.succ_le_iff, finrank_pos_iff]
-    use ⟨v, mem_span_singleton_self v⟩, 0
+    use⟨v, mem_span_singleton_self v⟩, 0
     simp [hv]
 #align finrank_span_singleton finrank_span_singleton
 -/
@@ -1526,7 +1526,7 @@ theorem finrank_le_one_iff [FiniteDimensional K V] :
     · use 0; intro w; use 0; haveI := finrank_zero_iff.mp h'; apply Subsingleton.elim
     · replace h' := zero_lt_iff.mpr h'; have : finrank K V = 1 := by linarith
       obtain ⟨v, -, p⟩ := finrank_eq_one_iff'.mp this
-      use ⟨v, p⟩
+      use⟨v, p⟩
   · rintro ⟨v, p⟩
     exact finrank_le_one v p
 #align finrank_le_one_iff finrank_le_one_iff

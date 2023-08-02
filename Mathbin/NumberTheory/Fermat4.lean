@@ -83,7 +83,7 @@ theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minima
   have S_nonempty : S.nonempty := by
     use Int.natAbs c
     rw [Set.mem_setOf_eq]
-    use ⟨a, ⟨b, c⟩⟩; tauto
+    use⟨a, ⟨b, c⟩⟩; tauto
   let m : ℕ := Nat.find S_nonempty
   have m_mem : m ∈ S := Nat.find_spec S_nonempty
   rcases m_mem with ⟨s0, hs0, hs1⟩
@@ -91,7 +91,7 @@ theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minima
   intro a1 b1 c1 h1
   rw [← hs1]
   apply Nat.find_min'
-  use ⟨a1, ⟨b1, c1⟩⟩; tauto
+  use⟨a1, ⟨b1, c1⟩⟩; tauto
 #align fermat_42.exists_minimal Fermat42.exists_minimal
 -/
 

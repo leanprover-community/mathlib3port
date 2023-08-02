@@ -349,7 +349,7 @@ theorem aleph_limit {o : Ordinal} (ho : o.IsLimit) : aleph o = ⨆ a : Iio o, al
     rintro ⟨i, hi⟩
     cases lt_or_le i ω
     · rcases lt_omega.1 h with ⟨n, rfl⟩
-      use ⟨0, ho.pos⟩
+      use⟨0, ho.pos⟩
       simpa using (nat_lt_aleph_0 n).le
     · exact ⟨⟨_, (sub_lt_of_le h).2 hi⟩, aleph'_le.2 (le_add_sub _ _)⟩
   · exact fun i => aleph_le.2 (le_of_lt i.2)

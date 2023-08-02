@@ -262,7 +262,7 @@ theorem FormallySmooth.of_equiv [FormallySmooth R A] (e : A ≃ₐ[R] B) : Forma
   by
   constructor
   intro C _ _ I hI f
-  use (formally_smooth.lift I ⟨2, hI⟩ (f.comp e : A →ₐ[R] C ⧸ I)).comp e.symm
+  use(formally_smooth.lift I ⟨2, hI⟩ (f.comp e : A →ₐ[R] C ⧸ I)).comp e.symm
   rw [← AlgHom.comp_assoc, formally_smooth.comp_lift, AlgHom.comp_assoc, AlgEquiv.comp_symm,
     AlgHom.comp_id]
 #align algebra.formally_smooth.of_equiv Algebra.FormallySmooth.of_equiv

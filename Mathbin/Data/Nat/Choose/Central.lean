@@ -139,7 +139,7 @@ theorem four_pow_le_two_mul_self_mul_centralBinom :
 #print Nat.two_dvd_centralBinom_succ /-
 theorem two_dvd_centralBinom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) :=
   by
-  use (n + 1 + n).choose n
+  use(n + 1 + n).choose n
   rw [central_binom_eq_two_mul_choose, two_mul, ← add_assoc, choose_succ_succ, choose_symm_add, ←
     two_mul]
 #align nat.two_dvd_central_binom_succ Nat.two_dvd_centralBinom_succ

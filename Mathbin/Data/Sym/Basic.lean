@@ -149,18 +149,18 @@ symmetric power.
 -/
 instance : HasLift (Vector α n) (Sym α n) where lift x := ⟨↑x.val, (Multiset.coe_card _).trans x.2⟩
 
-#print Sym.of_vector_nil /-
+#print Sym.ofVector_nil /-
 @[simp]
-theorem of_vector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
+theorem ofVector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
   rfl
-#align sym.of_vector_nil Sym.of_vector_nil
+#align sym.of_vector_nil Sym.ofVector_nil
 -/
 
-#print Sym.of_vector_cons /-
+#print Sym.ofVector_cons /-
 @[simp]
-theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
+theorem ofVector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
   cases v; rfl
-#align sym.of_vector_cons Sym.of_vector_cons
+#align sym.of_vector_cons Sym.ofVector_cons
 -/
 
 /-- `α ∈ s` means that `a` appears as one of the factors in `s`.

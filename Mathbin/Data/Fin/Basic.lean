@@ -457,13 +457,11 @@ theorem val_zero (n : ℕ) [NeZero n] : ((0 : Fin n) : ℕ) = 0 :=
 
 attribute [simp] val_zero
 
-/- warning: fin.val_zero' clashes with fin.coe_zero -> Fin.val_zero
-Case conversion may be inaccurate. Consider using '#align fin.val_zero' Fin.val_zeroₓ'. -/
-#print Fin.val_zero /-
+#print Fin.val_zero' /-
 @[simp]
-theorem val_zero (n) [NeZero n] : (0 : Fin n).val = 0 :=
+theorem val_zero' (n) [NeZero n] : (0 : Fin n).val = 0 :=
   rfl
-#align fin.val_zero' Fin.val_zero
+#align fin.val_zero' Fin.val_zero'
 -/
 
 #print Fin.mk_zero /-
@@ -473,11 +471,11 @@ theorem mk_zero [NeZero n] : (⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩ : Fin n)
 #align fin.mk_zero Fin.mk_zero
 -/
 
-#print Fin.zero_le /-
+#print Fin.zero_le' /-
 @[simp]
-theorem zero_le [NeZero n] (a : Fin n) : 0 ≤ a :=
+theorem zero_le' [NeZero n] (a : Fin n) : 0 ≤ a :=
   zero_le a.1
-#align fin.zero_le Fin.zero_le
+#align fin.zero_le Fin.zero_le'
 -/
 
 #print Fin.zero_lt_one /-
@@ -493,10 +491,10 @@ theorem not_lt_zero (a : Fin n.succ) : ¬a < 0 :=
 #align fin.not_lt_zero Fin.not_lt_zero
 -/
 
-#print Fin.pos_iff_ne_zero /-
-theorem pos_iff_ne_zero [NeZero n] (a : Fin n) : 0 < a ↔ a ≠ 0 := by
+#print Fin.pos_iff_ne_zero' /-
+theorem pos_iff_ne_zero' [NeZero n] (a : Fin n) : 0 < a ↔ a ≠ 0 := by
   rw [← coe_fin_lt, coe_zero, pos_iff_ne_zero, Ne.def, Ne.def, ext_iff, coe_zero]
-#align fin.pos_iff_ne_zero Fin.pos_iff_ne_zero
+#align fin.pos_iff_ne_zero Fin.pos_iff_ne_zero'
 -/
 
 #print Fin.eq_zero_or_eq_succ /-
@@ -651,7 +649,7 @@ instance : BoundedOrder (Fin (n + 1)) where
   top := last n
   le_top := le_last
   bot := 0
-  bot_le := zero_le
+  bot_le := zero_le'
 
 instance : Lattice (Fin (n + 1)) :=
   LinearOrder.toLattice
@@ -1127,40 +1125,40 @@ theorem succ_ne_zero {n} : ∀ k : Fin n, Fin.succ k ≠ 0
 #align fin.succ_ne_zero Fin.succ_ne_zero
 -/
 
-#print Fin.succ_zero_eq_one /-
+#print Fin.succ_zero_eq_one' /-
 @[simp]
-theorem succ_zero_eq_one [NeZero n] : Fin.succ (0 : Fin n) = 1 :=
+theorem succ_zero_eq_one' [NeZero n] : Fin.succ (0 : Fin n) = 1 :=
   by
   cases n
   · exact (NeZero.ne 0 rfl).elim
   · rfl
-#align fin.succ_zero_eq_one Fin.succ_zero_eq_one
+#align fin.succ_zero_eq_one Fin.succ_zero_eq_one'
 -/
 
-#print Fin.succ_zero_eq_one' /-
+#print Fin.succ_zero_eq_one /-
 /-- Version of `succ_zero_eq_one` to be used by `dsimp` -/
 @[simp]
-theorem succ_zero_eq_one' : Fin.succ (0 : Fin (n + 1)) = 1 :=
+theorem succ_zero_eq_one : Fin.succ (0 : Fin (n + 1)) = 1 :=
   rfl
-#align fin.succ_zero_eq_one' Fin.succ_zero_eq_one'
--/
-
-#print Fin.succ_one_eq_two /-
-@[simp]
-theorem succ_one_eq_two [NeZero n] : Fin.succ (1 : Fin (n + 1)) = 2 :=
-  by
-  cases n
-  · exact (NeZero.ne 0 rfl).elim
-  · rfl
-#align fin.succ_one_eq_two Fin.succ_one_eq_two
+#align fin.succ_zero_eq_one' Fin.succ_zero_eq_one
 -/
 
 #print Fin.succ_one_eq_two' /-
+@[simp]
+theorem succ_one_eq_two' [NeZero n] : Fin.succ (1 : Fin (n + 1)) = 2 :=
+  by
+  cases n
+  · exact (NeZero.ne 0 rfl).elim
+  · rfl
+#align fin.succ_one_eq_two Fin.succ_one_eq_two'
+-/
+
+#print Fin.succ_one_eq_two /-
 /-- Version of `succ_one_eq_two` to be used by `dsimp` -/
 @[simp]
-theorem succ_one_eq_two' : Fin.succ (1 : Fin (n + 2)) = 2 :=
+theorem succ_one_eq_two : Fin.succ (1 : Fin (n + 2)) = 2 :=
   rfl
-#align fin.succ_one_eq_two' Fin.succ_one_eq_two'
+#align fin.succ_one_eq_two' Fin.succ_one_eq_two
 -/
 
 #print Fin.succ_mk /-
@@ -1226,11 +1224,11 @@ theorem lt_add_one_iff {n : ℕ} {k : Fin (n + 1)} : k < k + 1 ↔ k < last n :=
 #align fin.lt_add_one_iff Fin.lt_add_one_iff
 -/
 
-#print Fin.le_zero_iff /-
+#print Fin.le_zero_iff' /-
 @[simp]
-theorem le_zero_iff {n : ℕ} [NeZero n] {k : Fin n} : k ≤ 0 ↔ k = 0 :=
+theorem le_zero_iff' {n : ℕ} [NeZero n] {k : Fin n} : k ≤ 0 ↔ k = 0 :=
   ⟨fun h => Fin.eq_of_veq <| by rw [Nat.eq_zero_of_le_zero h] <;> rfl, by rintro rfl <;> rfl⟩
-#align fin.le_zero_iff Fin.le_zero_iff
+#align fin.le_zero_iff Fin.le_zero_iff'
 -/
 
 #print Fin.succ_succ_ne_one /-
@@ -1613,11 +1611,11 @@ theorem castSucc_lt_last (a : Fin n) : castSuccEmb a < last n :=
 #align fin.cast_succ_lt_last Fin.castSucc_lt_last
 -/
 
-#print Fin.castSucc_zero /-
+#print Fin.castSucc_zero' /-
 @[simp]
-theorem castSucc_zero [NeZero n] : castSuccEmb (0 : Fin n) = 0 :=
+theorem castSucc_zero' [NeZero n] : castSuccEmb (0 : Fin n) = 0 :=
   rfl
-#align fin.cast_succ_zero Fin.castSucc_zero
+#align fin.cast_succ_zero Fin.castSucc_zero'
 -/
 
 #print Fin.castSucc_one /-
@@ -1627,23 +1625,23 @@ theorem castSucc_one {n : ℕ} : Fin.castSuccEmb (1 : Fin (n + 2)) = 1 :=
 #align fin.cast_succ_one Fin.castSucc_one
 -/
 
-#print Fin.castSucc_pos /-
+#print Fin.castSucc_pos' /-
 /-- `cast_succ i` is positive when `i` is positive -/
-theorem castSucc_pos [NeZero n] {i : Fin n} (h : 0 < i) : 0 < castSuccEmb i := by
+theorem castSucc_pos' [NeZero n] {i : Fin n} (h : 0 < i) : 0 < castSuccEmb i := by
   simpa [lt_iff_coe_lt_coe] using h
-#align fin.cast_succ_pos Fin.castSucc_pos
+#align fin.cast_succ_pos Fin.castSucc_pos'
 -/
 
-#print Fin.castSucc_eq_zero_iff /-
+#print Fin.castSucc_eq_zero_iff' /-
 @[simp]
-theorem castSucc_eq_zero_iff [NeZero n] (a : Fin n) : a.cast_succ = 0 ↔ a = 0 :=
+theorem castSucc_eq_zero_iff' [NeZero n] (a : Fin n) : a.cast_succ = 0 ↔ a = 0 :=
   Fin.ext_iff.trans <| (Fin.ext_iff.trans <| Iff.rfl).symm
-#align fin.cast_succ_eq_zero_iff Fin.castSucc_eq_zero_iff
+#align fin.cast_succ_eq_zero_iff Fin.castSucc_eq_zero_iff'
 -/
 
 #print Fin.castSucc_ne_zero_iff /-
 theorem castSucc_ne_zero_iff [NeZero n] (a : Fin n) : a.cast_succ ≠ 0 ↔ a ≠ 0 :=
-  not_iff_not.mpr <| castSucc_eq_zero_iff a
+  not_iff_not.mpr <| castSucc_eq_zero_iff' a
 #align fin.cast_succ_ne_zero_iff Fin.castSucc_ne_zero_iff
 -/
 
@@ -2000,7 +1998,7 @@ theorem subNat_mk {i : ℕ} (h₁ : i < n + m) (h₂ : m ≤ i) :
 #print Fin.pred_castSucc_succ /-
 @[simp]
 theorem pred_castSucc_succ (i : Fin n) :
-    pred (castSuccEmb i.succ) (ne_of_gt (castSucc_pos i.succ_pos)) = i.cast_succ := by
+    pred (castSuccEmb i.succ) (ne_of_gt (castSucc_pos' i.succ_pos)) = i.cast_succ := by
   simp [eq_iff_veq]
 #align fin.pred_cast_succ_succ Fin.pred_castSucc_succ
 -/
@@ -2253,25 +2251,25 @@ termination_by' ⟨_, measure_wf fun i : Fin (n + 1) => n + 1 - i⟩
 #align fin.reverse_induction Fin.reverseInduction
 -/
 
-#print Fin.reverse_induction_last /-
+#print Fin.reverseInduction_last /-
 @[simp]
-theorem reverse_induction_last {n : ℕ} {C : Fin (n + 1) → Sort _} (h0 : C (Fin.last n))
+theorem reverseInduction_last {n : ℕ} {C : Fin (n + 1) → Sort _} (h0 : C (Fin.last n))
     (hs : ∀ i : Fin n, C i.succ → C i.cast_succ) :
     (reverseInduction h0 hs (Fin.last n) : C (Fin.last n)) = h0 := by
   rw [reverse_induction] <;> simp
-#align fin.reverse_induction_last Fin.reverse_induction_last
+#align fin.reverse_induction_last Fin.reverseInduction_last
 -/
 
-#print Fin.reverse_induction_castSucc /-
+#print Fin.reverseInduction_castSucc /-
 @[simp]
-theorem reverse_induction_castSucc {n : ℕ} {C : Fin (n + 1) → Sort _} (h0 : C (Fin.last n))
+theorem reverseInduction_castSucc {n : ℕ} {C : Fin (n + 1) → Sort _} (h0 : C (Fin.last n))
     (hs : ∀ i : Fin n, C i.succ → C i.cast_succ) (i : Fin n) :
     (reverseInduction h0 hs i.cast_succ : C i.cast_succ) = hs i (reverseInduction h0 hs i.succ) :=
   by
   rw [reverse_induction, dif_neg (ne_of_lt (Fin.castSucc_lt_last i))]
   cases i
   rfl
-#align fin.reverse_induction_cast_succ Fin.reverse_induction_castSucc
+#align fin.reverse_induction_cast_succ Fin.reverseInduction_castSucc
 -/
 
 #print Fin.lastCases /-
@@ -2289,7 +2287,7 @@ def lastCases {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.last n))
 theorem lastCases_last {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.last n))
     (hcast : ∀ i : Fin n, C i.cast_succ) :
     (Fin.lastCases hlast hcast (Fin.last n) : C (Fin.last n)) = hlast :=
-  reverse_induction_last _ _
+  reverseInduction_last _ _
 #align fin.last_cases_last Fin.lastCases_last
 -/
 
@@ -2298,7 +2296,7 @@ theorem lastCases_last {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.la
 theorem lastCases_castSucc {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.last n))
     (hcast : ∀ i : Fin n, C i.cast_succ) (i : Fin n) :
     (Fin.lastCases hlast hcast (Fin.castSuccEmb i) : C (Fin.castSuccEmb i)) = hcast i :=
-  reverse_induction_castSucc _ _ _
+  reverseInduction_castSucc _ _ _
 #align fin.last_cases_cast_succ Fin.lastCases_castSucc
 -/
 
@@ -2861,7 +2859,7 @@ section PredAbove
 #print Fin.predAbove /-
 /-- `pred_above p i` embeds `i : fin (n+1)` into `fin n` by subtracting one if `p < i`. -/
 def predAbove (p : Fin n) (i : Fin (n + 1)) : Fin n :=
-  if h : p.cast_succ < i then i.pred (ne_of_lt (lt_of_le_of_lt (zero_le p.cast_succ) h)).symm
+  if h : p.cast_succ < i then i.pred (ne_of_lt (lt_of_le_of_lt (zero_le' p.cast_succ) h)).symm
   else i.castLT (lt_of_le_of_lt (le_of_not_lt h) p.2)
 #align fin.pred_above Fin.predAbove
 -/
@@ -3177,16 +3175,16 @@ theorem coe_mul {n : ℕ} : ∀ a b : Fin n, ((a * b : Fin n) : ℕ) = a * b % n
 #align fin.coe_mul Fin.coe_mul
 -/
 
-#print Fin.mul_one /-
+#print Fin.mul_one' /-
 @[simp]
-protected theorem mul_one [NeZero n] (k : Fin n) : k * 1 = k :=
+protected theorem mul_one' [NeZero n] (k : Fin n) : k * 1 = k :=
   by
   cases n
   · simp
   cases n
   · simp
   simp [eq_iff_veq, mul_def, mod_eq_of_lt (is_lt k)]
-#align fin.mul_one Fin.mul_one
+#align fin.mul_one Fin.mul_one'
 -/
 
 #print Fin.mul_comm /-
@@ -3195,24 +3193,24 @@ protected theorem mul_comm (a b : Fin n) : a * b = b * a :=
 #align fin.mul_comm Fin.mul_comm
 -/
 
-#print Fin.one_mul /-
+#print Fin.one_mul' /-
 @[simp]
-protected theorem one_mul [NeZero n] (k : Fin n) : (1 : Fin n) * k = k := by
-  rw [Fin.mul_comm, Fin.mul_one]
-#align fin.one_mul Fin.one_mul
+protected theorem one_mul' [NeZero n] (k : Fin n) : (1 : Fin n) * k = k := by
+  rw [Fin.mul_comm, Fin.mul_one']
+#align fin.one_mul Fin.one_mul'
 -/
 
-#print Fin.mul_zero /-
+#print Fin.mul_zero' /-
 @[simp]
-protected theorem mul_zero [NeZero n] (k : Fin n) : k * 0 = 0 := by simp [eq_iff_veq, mul_def]
-#align fin.mul_zero Fin.mul_zero
+protected theorem mul_zero' [NeZero n] (k : Fin n) : k * 0 = 0 := by simp [eq_iff_veq, mul_def]
+#align fin.mul_zero Fin.mul_zero'
 -/
 
-#print Fin.zero_mul /-
+#print Fin.zero_mul' /-
 @[simp]
-protected theorem zero_mul [NeZero n] (k : Fin n) : (0 : Fin n) * k = 0 := by
+protected theorem zero_mul' [NeZero n] (k : Fin n) : (0 : Fin n) * k = 0 := by
   simp [eq_iff_veq, mul_def]
-#align fin.zero_mul Fin.zero_mul
+#align fin.zero_mul Fin.zero_mul'
 -/
 
 end Mul

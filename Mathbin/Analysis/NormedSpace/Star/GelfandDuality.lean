@@ -193,7 +193,7 @@ theorem gelfandTransform_bijective : Function.Bijective (gelfandTransform ℂ A)
       (Subalgebra.le_topologicalClosure _)
   refine'
     h ▸
-      ContinuousMap.subalgebra_isROrC_topologicalClosure_eq_top_of_separatesPoints _ (fun _ _ => _)
+      ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints _ (fun _ _ => _)
         fun f hf => _
   /- Separating points just means that elements of the `character_space` which agree at all points
     of `A` are the same functional, which is just extensionality. -/

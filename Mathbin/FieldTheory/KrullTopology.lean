@@ -171,7 +171,7 @@ def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : FilterBasis (L �
   Nonempty := ⟨⊤, ⊤, top_fixedByFinite, rfl⟩
   inter_sets := by
     rintro X Y ⟨H1, ⟨E1, h_E1, rfl⟩, rfl⟩ ⟨H2, ⟨E2, h_E2, rfl⟩, rfl⟩
-    use (IntermediateField.fixingSubgroup (E1 ⊔ E2)).carrier
+    use(IntermediateField.fixingSubgroup (E1 ⊔ E2)).carrier
     refine' ⟨⟨_, ⟨_, finiteDimensional_sup E1 E2 h_E1 h_E2, rfl⟩, rfl⟩, _⟩
     rw [Set.subset_inter_iff]
     exact

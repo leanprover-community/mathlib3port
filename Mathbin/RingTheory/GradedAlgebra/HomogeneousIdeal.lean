@@ -675,7 +675,7 @@ theorem Ideal.le_toIdeal_homogeneousHull : I ≤ (Ideal.homogeneousHull 𝒜 I).
   intro j hj
   apply Ideal.subset_span
   use j
-  use ⟨r, hr⟩
+  use⟨r, hr⟩
   rfl
 #align ideal.le_to_ideal_homogeneous_hull Ideal.le_toIdeal_homogeneousHull
 -/

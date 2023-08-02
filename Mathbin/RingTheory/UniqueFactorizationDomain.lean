@@ -876,7 +876,7 @@ theorem dvd_of_mem_normalizedFactors {a p : α} (H : p ∈ normalizedFactors a) 
 theorem exists_associated_prime_pow_of_unique_normalized_factor {p r : α}
     (h : ∀ {m}, m ∈ normalizedFactors r → m = p) (hr : r ≠ 0) : ∃ i : ℕ, Associated (p ^ i) r :=
   by
-  use (normalized_factors r).card
+  use(normalized_factors r).card
   have := UniqueFactorizationMonoid.normalizedFactors_prod hr
   rwa [Multiset.eq_replicate_of_mem fun b => h, Multiset.prod_replicate] at this 
 #align unique_factorization_monoid.exists_associated_prime_pow_of_unique_normalized_factor UniqueFactorizationMonoid.exists_associated_prime_pow_of_unique_normalized_factor
@@ -2135,7 +2135,7 @@ theorem is_pow_of_dvd_count [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {
     have pp : p = ⟨p.val, p.2⟩ := by simp only [Subtype.coe_eta, Subtype.val_eq_coe]
     rw [pp, ← count_some p.2]; exact hk p.val p.2
   obtain ⟨u, hu⟩ := Multiset.exists_smul_of_dvd_count _ hk'
-  use (u : factor_set α).Prod
+  use(u : factor_set α).Prod
   apply eq_of_factors_eq_factors
   rw [pow_factors, prod_factors, factors_mk a0 hz, ← WithTop.some_eq_coe, hu]
   exact WithBot.coe_nsmul u k

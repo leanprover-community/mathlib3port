@@ -40,7 +40,7 @@ instance : LocallyFiniteOrder ℤ
       rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h 
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
-      use (x - a).toNat
+      use(x - a).toNat
       rw [← lt_add_one_iff] at hb 
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
@@ -52,7 +52,7 @@ instance : LocallyFiniteOrder ℤ
     · rintro ⟨a, h, rfl⟩
       exact ⟨Int.le.intro rfl, lt_sub_iff_add_lt'.mp h⟩
     · rintro ⟨ha, hb⟩
-      use (x - a).toNat
+      use(x - a).toNat
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ioc a b x :=
@@ -64,7 +64,7 @@ instance : LocallyFiniteOrder ℤ
       rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h 
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
-      use (x - (a + 1)).toNat
+      use(x - (a + 1)).toNat
       rw [to_nat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel]
       exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ioo a b x :=
@@ -76,7 +76,7 @@ instance : LocallyFiniteOrder ℤ
       rw [sub_sub, lt_sub_iff_add_lt'] at h 
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
-      use (x - (a + 1)).toNat
+      use(x - (a + 1)).toNat
       rw [to_nat_sub_of_le ha, sub_sub]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
 

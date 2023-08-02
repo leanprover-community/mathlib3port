@@ -1048,7 +1048,7 @@ def boundary : Fin c.boundaries.card ↪o Fin (n + 1) :=
 theorem boundary_zero : (c.boundary ⟨0, c.card_boundaries_pos⟩ : Fin (n + 1)) = 0 :=
   by
   rw [boundary, Finset.orderEmbOfFin_zero rfl c.card_boundaries_pos]
-  exact le_antisymm (Finset.min'_le _ _ c.zero_mem) (Fin.zero_le _)
+  exact le_antisymm (Finset.min'_le _ _ c.zero_mem) (Fin.zero_le' _)
 #align composition_as_set.boundary_zero CompositionAsSet.boundary_zero
 -/
 

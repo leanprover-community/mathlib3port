@@ -105,7 +105,7 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
     specialize h ph
     rw [is_bridge_iff_adj_and_forall_walk_mem_edges] at h 
     replace h := h.2 (q.append p.reverse)
-    simp only [walk.edges_append, walk.edges_reverse, List.mem_append, List.mem_reverse'] at h 
+    simp only [walk.edges_append, walk.edges_reverse, List.mem_append, List.mem_reverse] at h 
     cases h
     · cases q
       · simpa [walk.is_path_def] using hp

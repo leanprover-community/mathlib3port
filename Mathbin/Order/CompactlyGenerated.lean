@@ -148,12 +148,12 @@ theorem isCompactElement_iff_le_of_directed_sSup_le (k : α) :
       simp only [and_self_iff, le_sup_left, le_sup_right]
     have sup_S : Sup s ≤ Sup S := by
       apply sSup_le_sSup
-      intro x hx; use {x}
+      intro x hx; use{x}
       simpa only [and_true_iff, id.def, Finset.coe_singleton, eq_self_iff_true,
         Finset.sup_singleton, Set.singleton_subset_iff]
     have Sne : S.nonempty := by
       suffices : ⊥ ∈ S; exact Set.nonempty_of_mem this
-      use ∅
+      use∅
       simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true,
         and_self_iff]
     -- Now apply the defn of compact and finish.

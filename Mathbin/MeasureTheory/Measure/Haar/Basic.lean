@@ -103,7 +103,7 @@ def index (K V : Set G) : ℕ :=
 @[to_additive add_index_empty]
 theorem index_empty {V : Set G} : index ∅ V = 0 :=
   by
-  simp only [index, Nat.sInf_eq_zero]; left; use ∅
+  simp only [index, Nat.sInf_eq_zero]; left; use∅
   simp only [Finset.card_empty, empty_subset, mem_set_of_eq, eq_self_iff_true, and_self_iff]
 #align measure_theory.measure.haar.index_empty MeasureTheory.Measure.haar.index_empty
 #align measure_theory.measure.haar.add_index_empty MeasureTheory.Measure.haar.addIndex_empty

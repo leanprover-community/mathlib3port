@@ -517,7 +517,7 @@ theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) :=
         (isClosed_singleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
       ⟨f, fx, fy, -⟩
     rw [← Ne.def, FunLike.ne_iff]
-    use (⟨coe, IsROrC.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
+    use(⟨coe, IsROrC.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
     simpa only [continuous_map_eval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne.def,
       IsROrC.ofReal_inj] using
       ((fx (Set.mem_singleton x)).symm ▸ (fy (Set.mem_singleton y)).symm ▸ zero_ne_one : f x ≠ f y)

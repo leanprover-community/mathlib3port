@@ -358,7 +358,7 @@ theorem hyperplane_separation (K : ProperCone ℝ E) {f : E →L[ℝ] F} {b : F}
       rw [to_convex_cone_eq_coe, ProperCone.coe_map]
       apply subset_closure
       rw [SetLike.mem_coe, ConvexCone.mem_map]
-      use ⟨x, hxK, rfl⟩)
+      use⟨x, hxK, rfl⟩)
 #align proper_cone.hyperplane_separation ProperCone.hyperplane_separation
 -/
 

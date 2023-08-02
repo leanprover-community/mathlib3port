@@ -516,7 +516,7 @@ protected def localizationMap : S.LocalizationMap R[S⁻¹]
   map_units' := numerator_isUnit
   surj' z := by
     induction' z using OreLocalization.ind with r s
-    use (r, s); dsimp
+    use(r, s); dsimp
     rw [numerator_hom_apply, numerator_hom_apply]; simp
   eq_iff_exists' r₁ r₂ := by
     dsimp; constructor

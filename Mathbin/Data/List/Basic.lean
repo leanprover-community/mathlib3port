@@ -816,6 +816,8 @@ theorem replicate_one (a : α) : replicate 1 a = [a] :=
 #align list.replicate_one List.replicate_one
 -/
 
+/- warning: list.length_replicate clashes with list.length_repeat -> List.length_replicate
+Case conversion may be inaccurate. Consider using '#align list.length_replicate List.length_replicateₓ'. -/
 #print List.length_replicate /-
 @[simp]
 theorem length_replicate : ∀ (n) (a : α), length (replicate n a) = n
@@ -1184,20 +1186,20 @@ theorem map_reverseAux (f : α → β) (l₁ l₂ : List α) :
 #align list.map_reverse_core List.map_reverseAux
 -/
 
-#print List.mem_reverse' /-
+#print List.mem_reverse /-
 @[simp]
-theorem mem_reverse' {a : α} {l : List α} : a ∈ reverse l ↔ a ∈ l := by
+theorem mem_reverse {a : α} {l : List α} : a ∈ reverse l ↔ a ∈ l := by
   induction l <;> [rfl;
     simp only [*, reverse_cons, mem_append, mem_singleton, mem_cons_iff, not_mem_nil, false_or_iff,
       or_false_iff, or_comm']]
-#align list.mem_reverse List.mem_reverse'
+#align list.mem_reverse List.mem_reverse
 -/
 
 #print List.reverse_replicate /-
 @[simp]
 theorem reverse_replicate (n) (a : α) : reverse (replicate n a) = replicate n a :=
   eq_replicate.2
-    ⟨by rw [length_reverse, length_replicate], fun b h => eq_of_mem_replicate (mem_reverse'.1 h)⟩
+    ⟨by rw [length_reverse, length_replicate], fun b h => eq_of_mem_replicate (mem_reverse.1 h)⟩
 #align list.reverse_replicate List.reverse_replicate
 -/
 
@@ -5036,7 +5038,7 @@ theorem filter_eq_self {l} : filter p l = l ↔ ∀ a ∈ l, p a :=
 
 #print List.filter_length_eq_length /-
 theorem filter_length_eq_length {l} : (filter p l).length = l.length ↔ ∀ a ∈ l, p a :=
-  Iff.trans ⟨l.filter_sublist.eq_of_length, congr_arg List.length⟩ filter_eq_self
+  Iff.trans ⟨l.filter_sublistₓ.eq_of_length, congr_arg List.length⟩ filter_eq_self
 #align list.filter_length_eq_length List.filter_length_eq_length
 -/
 

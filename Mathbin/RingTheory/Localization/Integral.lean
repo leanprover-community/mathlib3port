@@ -440,7 +440,7 @@ theorem isAlgebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alge
           (NoZeroSMulDivisors.algebraMap_injective R (FractionRing R)) _
       exact isAlgebraic_algebraMap_of_isAlgebraic (h a)
     · rw [← isAlgebraic_iff_isIntegral]
-      use (f.map (algebraMap R (FractionRing R))).reverse
+      use(f.map (algebraMap R (FractionRing R))).reverse
       constructor
       ·
         rwa [Ne.def, Polynomial.reverse_eq_zero, ← Polynomial.degree_eq_bot,

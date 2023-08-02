@@ -74,7 +74,7 @@ theorem eq_two_pow_mul_odd {n : ℕ} (hpos : 0 < n) : ∃ k m : ℕ, n = 2 ^ k *
   by
   have h := multiplicity.finite_nat_iff.2 ⟨nat.prime_two.ne_one, hpos⟩
   cases' multiplicity.pow_multiplicity_dvd h with m hm
-  use (multiplicity 2 n).get h, m
+  use(multiplicity 2 n).get h, m
   refine' ⟨hm, _⟩
   rw [even_iff_two_dvd]
   have hg := multiplicity.is_greatest' h (Nat.lt_succ_self _)

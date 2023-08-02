@@ -131,7 +131,7 @@ theorem ZMod.isSquare_neg_one_iff {n : ℕ} (hn : Squarefree n) :
   refine' ⟨fun H q hqp hqd => hqp.mod_four_ne_three_of_dvd_isSquare_neg_one hqd H, fun H => _⟩
   induction' n using induction_on_primes with p n hpp ih
   · exact False.elim (hn.ne_zero rfl)
-  · exact ⟨0, by simp only [Fin.zero_mul, neg_eq_zero, Fin.one_eq_zero_iff]⟩
+  · exact ⟨0, by simp only [Fin.zero_mul', neg_eq_zero, Fin.one_eq_zero_iff]⟩
   · haveI : Fact p.prime := ⟨hpp⟩
     have hcp : p.coprime n := by
       by_contra hc

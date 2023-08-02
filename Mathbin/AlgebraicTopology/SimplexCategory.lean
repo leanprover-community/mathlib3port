@@ -691,7 +691,7 @@ instance {n : ℕ} {i : Fin (n + 1)} : Epi (σ i) :=
   by
   rw [epi_iff_surjective]
   intro b
-  simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk]
+  simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_mk]
   by_cases b ≤ i
   · use b
     rw [Fin.predAbove_below i b (by simpa only [Fin.coe_eq_castSucc] using h)]
@@ -774,7 +774,7 @@ theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk 
   use δ i.succ ≫ θ
   ext1; ext1; ext1 x
   simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
-    small_category_comp, σ, mk_hom, OrderHom.coe_fun_mk]
+    small_category_comp, σ, mk_hom, OrderHom.coe_mk]
   by_cases h' : x ≤ i.cast_succ
   · rw [Fin.predAbove_below i x h']
     have eq := Fin.castSucc_castPred (gt_of_gt_of_ge (Fin.castSucc_lt_last i) h')
@@ -850,7 +850,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
     simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
       small_category_comp]
     by_cases h' : θ.to_order_hom x ≤ i
-    · simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk]
+    · simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_mk]
       rw [Fin.predAbove_below (Fin.castPred i) (θ.to_order_hom x)
           (by simpa [Fin.castSucc_castPred h] using h')]
       erw [Fin.succAbove_below i]; swap
@@ -861,7 +861,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
       rw [Fin.castSucc_castPred]
       apply lt_of_le_of_lt h' h
     · simp only [not_le] at h' 
-      simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk,
+      simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_mk,
         Fin.predAbove_above (Fin.castPred i) (θ.to_order_hom x)
           (by simpa only [Fin.castSucc_castPred h] using h')]
       erw [Fin.succAbove_above i _, Fin.succ_pred]
@@ -871,7 +871,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
     use θ ≫ σ (Fin.last _)
     ext1; ext1; ext1 x
     simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
-      small_category_comp, σ, δ, mk_hom, OrderHom.coe_fun_mk, OrderEmbedding.toOrderHom_coe,
+      small_category_comp, σ, δ, mk_hom, OrderHom.coe_mk, OrderEmbedding.toOrderHom_coe,
       Fin.predAbove_last, Fin.succAbove_last,
       Fin.castSucc_castPred ((Ne.le_iff_lt (hi x)).mp (Fin.le_last _))]
 #align simplex_category.eq_comp_δ_of_not_surjective' SimplexCategory.eq_comp_δ_of_not_surjective'

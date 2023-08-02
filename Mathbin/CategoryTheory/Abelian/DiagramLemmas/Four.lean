@@ -196,7 +196,7 @@ variable (hf'g' : Exact f' g') (hg'h' : Exact g' h') (hh'i' : Exact h' i')
 
 variable [IsIso α] [IsIso β] [IsIso δ] [IsIso ε]
 
-#print CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso /-
+#print CategoryTheory.Abelian.isIso_of_epi_of_isIso_of_isIso_of_mono /-
 /-- The five lemma. For names of objects and morphisms, refer to the following diagram:
 
 ```
@@ -208,13 +208,13 @@ v         v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D' --i'-> E'
 ```
 -/
-theorem isIso_of_isIso_of_isIso_of_isIso_of_isIso : IsIso γ :=
+theorem isIso_of_epi_of_isIso_of_isIso_of_mono : IsIso γ :=
   have : Mono γ := by
     apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ hfg hgh hf'g' <;> infer_instance
   have : Epi γ := by
     apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
   is_iso_of_mono_of_epi _
-#align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso
+#align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.isIso_of_epi_of_isIso_of_isIso_of_mono
 -/
 
 end Five

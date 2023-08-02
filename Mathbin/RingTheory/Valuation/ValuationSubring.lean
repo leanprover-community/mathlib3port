@@ -150,9 +150,9 @@ instance : ValuationRing A
     by_cases (b : K) = 0; · use 0; left; ext; simp [h]
     by_cases (a : K) = 0; · use 0; right; ext; simp [h]
     cases' A.mem_or_inv_mem (a / b) with hh hh
-    · use ⟨a / b, hh⟩; right; ext; field_simp; ring
+    · use⟨a / b, hh⟩; right; ext; field_simp; ring
     · rw [show (a / b : K)⁻¹ = b / a by field_simp] at hh 
-      use ⟨b / a, hh⟩; left; ext; field_simp; ring
+      use⟨b / a, hh⟩; left; ext; field_simp; ring
 
 instance : Algebra A K :=
   show Algebra A.toSubring K by infer_instance
@@ -169,9 +169,9 @@ instance : IsFractionRing A K
   map_units := fun ⟨y, hy⟩ =>
     (Units.mk0 (y : K) fun c => nonZeroDivisors.ne_zero hy <| Subtype.ext c).IsUnit
   surj z := by
-    by_cases z = 0; · use (0, 1); simp [h]
+    by_cases z = 0; · use(0, 1); simp [h]
     cases' A.mem_or_inv_mem z with hh hh
-    · use (⟨z, hh⟩, 1); simp
+    · use(⟨z, hh⟩, 1); simp
     · refine' ⟨⟨1, ⟨⟨_, hh⟩, _⟩⟩, mul_inv_cancel h⟩
       exact mem_nonZeroDivisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_arg coe c))
   eq_iff_exists a b :=

@@ -585,7 +585,7 @@ theorem HasBasis.inf' (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     constructor
     · simp only [mem_inf_iff, exists_prop, hl.mem_iff, hl'.mem_iff]
       rintro ⟨t, ⟨i, hi, ht⟩, t', ⟨i', hi', ht'⟩, rfl⟩
-      use ⟨i, i'⟩, ⟨hi, hi'⟩, inter_subset_inter ht ht'
+      use⟨i, i'⟩, ⟨hi, hi'⟩, inter_subset_inter ht ht'
     · rintro ⟨⟨i, i'⟩, ⟨hi, hi'⟩, H⟩
       exact mem_inf_of_inter (hl.mem_of_mem hi) (hl'.mem_of_mem hi') H⟩
 #align filter.has_basis.inf' Filter.HasBasis.inf'

@@ -205,7 +205,7 @@ theorem snd_invApp_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
   change ((π₂ i, j, k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq 
   rw [𝖣.t_inv, id_base, TopCat.id_app] at eq 
   subst Eq
-  use (inv (D.t' k i j)).base y
+  use(inv (D.t' k i j)).base y
   change (inv (D.t' k i j) ≫ π₁ k, i, j).base y = _
   congr 2
   rw [is_iso.inv_comp_eq, 𝖣.t_fac_assoc, 𝖣.t_inv, category.comp_id]

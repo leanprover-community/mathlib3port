@@ -231,7 +231,7 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
               hx
         rw [← Ideal.mem_quotient_iff_mem_sup, hz, Ideal.mem_map_iff_of_surjective] at this 
         obtain ⟨u, hu, hu'⟩ := this
-        use ⟨u, conductor_subset_adjoin hu⟩
+        use⟨u, conductor_subset_adjoin hu⟩
         simpa only [← hu']
         · exact Ideal.Quotient.mk_surjective)
 #align quot_adjoin_equiv_quot_map quotAdjoinEquivQuotMap
@@ -387,12 +387,11 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
       irreducible_of_normalized_factor y
         (show y ∈ normalized_factors (I.map (algebraMap R S)) by simp [hy])
   rw [normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map hI hI' hx hx']
-  use
-    ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm
+  use((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm
         ⟨normalize (map I.Quotient.mk (minpoly R x)), mem_norm_factors⟩ :
       Ideal S)
   rw [Multiset.map_eq_singleton]
-  use ⟨normalize (map I.Quotient.mk (minpoly R x)), mem_norm_factors⟩
+  use⟨normalize (map I.Quotient.mk (minpoly R x)), mem_norm_factors⟩
   refine' ⟨_, rfl⟩
   apply Multiset.map_injective Subtype.coe_injective
   rw [Multiset.attach_map_val, Multiset.map_singleton, Subtype.coe_mk]

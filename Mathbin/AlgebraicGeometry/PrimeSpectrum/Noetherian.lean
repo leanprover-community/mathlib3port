@@ -35,7 +35,7 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
   by
   refine' IsNoetherian.induction (fun (M : Ideal R) hgt => _) I
   by_cases h_prM : M.is_prime
-  · use {⟨M, h_prM⟩}
+  · use{⟨M, h_prM⟩}
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact le_rfl
   by_cases htop : M = ⊤
@@ -80,10 +80,10 @@ theorem exists_primeSpectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {
   · rcases h_topM with rfl
     obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by
       apply ring.not_is_field_iff_exists_prime.mp h_fA
-    use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
+    use({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
     rwa [Multiset.map_singleton, Multiset.prod_singleton]
   by_cases h_prM : M.is_prime
-  · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
+  · use({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact ⟨le_rfl, h_nzM⟩
   obtain ⟨x, hx, y, hy, h_xy⟩ := (ideal.not_is_prime_iff.mp h_prM).resolve_left h_topM

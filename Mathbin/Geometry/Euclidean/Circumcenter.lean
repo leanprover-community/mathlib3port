@@ -117,7 +117,7 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
   let ycc₂ := (x * x + y * y - cr * cr) / (2 * y)
   let cc₂ := (ycc₂ / y) • (p -ᵥ orthogonalProjection s p : V) +ᵥ cc
   let cr₂ := Real.sqrt (cr * cr + ycc₂ * ycc₂)
-  use ⟨cc₂, cr₂⟩
+  use⟨cc₂, cr₂⟩
   simp only
   have hpo : p = (1 : ℝ) • (p -ᵥ orthogonalProjection s p : V) +ᵥ orthogonalProjection s p := by
     simp
@@ -216,7 +216,7 @@ theorem AffineIndependent.existsUnique_dist_eq {ι : Type _} [hne : Nonempty ι]
     · rw [Fintype.card_eq_one_iff] at hn 
       cases' hn with i hi
       haveI : Unique ι := ⟨⟨i⟩, hi⟩
-      use ⟨p i, 0⟩
+      use⟨p i, 0⟩
       simp only [Set.range_unique, AffineSubspace.mem_affineSpan_singleton]
       constructor
       · simp_rw [hi default, Set.singleton_subset_iff, sphere.mem_coe, mem_sphere, dist_self]

@@ -447,7 +447,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
   simp only [res_mk_eq_mk_pullback, eq_mk_iff_exists]
   -- It suffices to prove equality for representatives over a
   -- convenient sufficiently large cover...
-  use (J.pullback II.f).obj (T I)
+  use(J.pullback II.f).obj (T I)
   let e0 : (J.pullback II.f).obj (T I) ⟶ (J.pullback II.f).obj ((J.pullback I.f).obj B) :=
     hom_of_le
       (by

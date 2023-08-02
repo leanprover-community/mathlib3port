@@ -307,7 +307,7 @@ protected theorem neg (h : LiouvilleWith p x) : LiouvilleWith p (-x) :=
   rcases h with ⟨C, hC⟩
   refine' ⟨C, hC.mono _⟩
   rintro n ⟨m, hne, hlt⟩
-  use -m; simp [neg_div, abs_sub_comm _ x, *]
+  use-m; simp [neg_div, abs_sub_comm _ x, *]
 #align liouville_with.neg LiouvilleWith.neg
 -/
 

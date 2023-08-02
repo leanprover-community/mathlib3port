@@ -172,7 +172,7 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) :=
     apply le_ωSup_of_le i.succ
     dsimp [approx]; rfl
   · apply ωSup_le _ _ _
-    simp only [fix.approx_chain, OrderHom.coe_fun_mk]
+    simp only [fix.approx_chain, OrderHom.coe_mk]
     intro y x; apply approx_le_fix f
 #align part.fix_eq_ωSup Part.fix_eq_ωSup
 -/
@@ -182,7 +182,7 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X :=
   by
   rw [fix_eq_ωSup f]
   apply ωSup_le _ _ _
-  simp only [fix.approx_chain, OrderHom.coe_fun_mk]
+  simp only [fix.approx_chain, OrderHom.coe_mk]
   intro i
   induction i; dsimp [fix.approx]; apply bot_le
   trans f X; apply f.monotone i_ih

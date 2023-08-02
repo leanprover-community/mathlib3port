@@ -206,7 +206,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
       · simpa
       · simpa [List.dlookup_dedupKeys, WithTop.some_eq_coe]
     · intro h
-      use (A.lookup a).getD (0 : β)
+      use(A.lookup a).getD (0 : β)
       rw [← List.dlookup_dedupKeys] at h ⊢
       simp only [h, ← List.mem_dlookup_iff A.nodupkeys_dedupkeys, and_true_iff, not_false_iff,
         Option.mem_def]

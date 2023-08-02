@@ -44,7 +44,7 @@ instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X)
     let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)
     let h : Ultrafilter X → Y := Ultrafilter.extend t
     have hh : Continuous h := continuous_ultrafilter_extend _
-    use ⟨h, hh⟩
+    use⟨h, hh⟩
     apply faithful.map_injective (forget Profinite)
     simp only [forget_map_eq_coe, ContinuousMap.coe_mk, coe_comp]
     refine' dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _

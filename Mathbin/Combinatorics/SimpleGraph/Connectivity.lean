@@ -2194,7 +2194,7 @@ theorem transfer_append (hpq) :
 @[simp]
 theorem reverse_transfer :
     (p.transfer H hp).reverse =
-      p.reverse.transfer H (by simp only [edges_reverse, List.mem_reverse']; exact hp) :=
+      p.reverse.transfer H (by simp only [edges_reverse, List.mem_reverse]; exact hp) :=
   by
   induction p <;> simp only [*, transfer_append, transfer, reverse_nil, reverse_cons]
   rfl
@@ -3117,7 +3117,7 @@ theorem reachable_deleteEdges_iff_exists_cycle.aux [DecidableEq V] {u v w : V}
   -- so they both contain the edge ⟦(v, w)⟧, but that's a contradiction since c is a trail.
   have hbq := hb (pvu.append puw)
   have hpq' := hb pwv.reverse
-  rw [walk.edges_reverse, List.mem_reverse'] at hpq' 
+  rw [walk.edges_reverse, List.mem_reverse] at hpq' 
   rw [walk.is_trail_def, this, walk.edges_append, walk.edges_append, List.nodup_append_comm, ←
     List.append_assoc, ← walk.edges_append] at hc 
   exact List.disjoint_of_nodup_append hc hbq hpq'

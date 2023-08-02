@@ -166,7 +166,7 @@ theorem iff_quotient_mvPolynomial' :
   constructor
   · rw [iff_quotient_mv_polynomial]
     rintro ⟨s, ⟨f, hsur⟩⟩
-    use { x // x ∈ s }, by infer_instance, f, hsur
+    use{ x // x ∈ s }, by infer_instance, f, hsur
   · rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
     letI : Fintype ι := hfintype
     exact finite_type.of_surjective (finite_type.mv_polynomial R ι) f hsur

@@ -273,7 +273,7 @@ theorem derivFamily_eq_enumOrd (H : ∀ i, IsNormal (f i)) :
     derivFamily f = enumOrd (⋂ i, Function.fixedPoints (f i)) :=
   by
   rw [← eq_enum_ord _ (fp_family_unbounded H)]
-  use (deriv_family_is_normal f).StrictMono
+  use(deriv_family_is_normal f).StrictMono
   rw [Set.range_eq_iff]
   refine' ⟨_, fun a ha => _⟩
   · rintro a S ⟨i, hi⟩
@@ -481,7 +481,7 @@ theorem derivBFamily_eq_enumOrd (H : ∀ i hi, IsNormal (f i hi)) :
     derivBFamily o f = enumOrd (⋂ (i) (hi), Function.fixedPoints (f i hi)) :=
   by
   rw [← eq_enum_ord _ (fp_bfamily_unbounded H)]
-  use (deriv_bfamily_is_normal f).StrictMono
+  use(deriv_bfamily_is_normal f).StrictMono
   rw [Set.range_eq_iff]
   refine' ⟨fun a => Set.mem_iInter₂.2 fun i hi => deriv_bfamily_fp (H i hi) a, fun a ha => _⟩
   rw [Set.mem_iInter₂] at ha 

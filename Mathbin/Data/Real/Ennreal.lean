@@ -2699,7 +2699,7 @@ theorem exists_nat_pos_inv_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, (
 theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, ↑(n : ℝ≥0) * a < b :=
   by
   rcases exists_nat_pos_inv_mul_lt ha hb with ⟨n, npos : 0 < n, hn⟩
-  use (n : ℝ≥0)⁻¹
+  use(n : ℝ≥0)⁻¹
   simp [*, npos.ne', zero_lt_one]
 #align ennreal.exists_nnreal_pos_mul_lt ENNReal.exists_nnreal_pos_mul_lt
 -/

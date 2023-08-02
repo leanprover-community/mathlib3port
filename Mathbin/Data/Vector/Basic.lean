@@ -473,7 +473,7 @@ theorem scanl_head : (scanl f b v).headI = b :=
   · have : v = nil := by simp only [eq_iff_true_of_subsingleton]
     simp only [this, scanl_nil, cons_head]
   · rw [← cons_head_tail v]
-    simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Fin.val_zero,
+    simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Fin.val_zero',
       List.nthLe]
 #align vector.scanl_head Vector.scanl_head
 -/
@@ -497,7 +497,7 @@ theorem scanl_get (i : Fin n) :
     simpa only [scanl_singleton, i0, nth_zero]
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
     refine' Fin.cases _ _ i
-    · simp only [nth_zero, scanl_head, Fin.castSucc_zero, cons_head]
+    · simp only [nth_zero, scanl_head, Fin.castSucc_zero', cons_head]
     · intro i'
       simp only [hn, Fin.castSucc_fin_succ, nth_cons_succ]
 #align vector.scanl_nth Vector.scanl_get

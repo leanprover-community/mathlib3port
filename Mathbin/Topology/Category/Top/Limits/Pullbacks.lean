@@ -171,7 +171,7 @@ theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     congr 1
     simp [pullback.condition]
   · intro h
-    use (pullback_iso_prod_subtype f g).inv ⟨⟨_, _⟩, h⟩
+    use(pullback_iso_prod_subtype f g).inv ⟨⟨_, _⟩, h⟩
     apply concrete.limit_ext
     rintro ⟨⟨⟩⟩ <;> simp
 #align Top.range_pullback_to_prod TopCat.range_pullback_to_prod
@@ -209,7 +209,7 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
     simp only [← comp_apply, eq₁, eq₂]
     simp only [comp_apply, hx₁, hx₂]
     simp only [← comp_apply, pullback.condition]
-  use (pullback_iso_prod_subtype f₁ f₂).inv ⟨⟨x₁, x₂⟩, this⟩
+  use(pullback_iso_prod_subtype f₁ f₂).inv ⟨⟨x₁, x₂⟩, this⟩
   apply concrete.limit_ext
   rintro (_ | _ | _)
   · simp only [TopCat.comp_app, limit.lift_π_apply, category.assoc, pullback_cone.mk_π_app_one, hx₁,
@@ -229,10 +229,10 @@ theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
   ext x
   constructor
   · rintro ⟨y, rfl⟩
-    use (pullback.snd : pullback f g ⟶ _) y
+    use(pullback.snd : pullback f g ⟶ _) y
     exact concrete_category.congr_hom pullback.condition y
   · rintro ⟨y, eq⟩
-    use (TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, Eq⟩
+    use(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, Eq⟩
     simp
 #align Top.pullback_fst_range TopCat.pullback_fst_range
 -/
@@ -244,10 +244,10 @@ theorem pullback_snd_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
   ext y
   constructor
   · rintro ⟨x, rfl⟩
-    use (pullback.fst : pullback f g ⟶ _) x
+    use(pullback.fst : pullback f g ⟶ _) x
     exact concrete_category.congr_hom pullback.condition x
   · rintro ⟨x, eq⟩
-    use (TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, Eq⟩
+    use(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, Eq⟩
     simp
 #align Top.pullback_snd_range TopCat.pullback_snd_range
 -/

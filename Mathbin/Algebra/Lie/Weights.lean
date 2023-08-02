@@ -96,7 +96,7 @@ variable (R)
 theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x : L) :
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker :=
   by
-  use (to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
+  use(to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
   simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, iInf_le, ←
     (to_endomorphism R L M x).maximalGeneralizedEigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
@@ -190,7 +190,7 @@ theorem lie_mem_preWeightSpace_of_mem_preWeightSpace {χ₁ χ₂ : L → R} {x 
   apply LieModule.weight_vector_multiplication L L M M (to_module_hom R L M) χ₁ χ₂
   simp only [LieModuleHom.coe_toLinearMap, Function.comp_apply, LinearMap.coe_comp,
     TensorProduct.mapIncl, LinearMap.mem_range]
-  use ⟨x, hx⟩ ⊗ₜ ⟨m, hm⟩
+  use⟨x, hx⟩ ⊗ₜ ⟨m, hm⟩
   simp only [Submodule.subtype_apply, to_module_hom_apply, TensorProduct.map_tmul]
   rfl
 #align lie_module.lie_mem_pre_weight_space_of_mem_pre_weight_space LieModule.lie_mem_preWeightSpace_of_mem_preWeightSpace
@@ -364,7 +364,7 @@ theorem lie_mem_weightSpace_of_mem_weightSpace {χ₁ χ₂ : H → R} {x : L} {
   apply LieModule.weight_vector_multiplication H L M M ((to_module_hom R L M).restrictLie H) χ₁ χ₂
   simp only [LieModuleHom.coe_toLinearMap, Function.comp_apply, LinearMap.coe_comp,
     TensorProduct.mapIncl, LinearMap.mem_range]
-  use ⟨x, hx⟩ ⊗ₜ ⟨m, hm⟩
+  use⟨x, hx⟩ ⊗ₜ ⟨m, hm⟩
   simp only [Submodule.subtype_apply, to_module_hom_apply, Submodule.coe_mk,
     LieModuleHom.coe_restrictLie, TensorProduct.map_tmul]
 #align lie_algebra.lie_mem_weight_space_of_mem_weight_space LieAlgebra.lie_mem_weightSpace_of_mem_weightSpace

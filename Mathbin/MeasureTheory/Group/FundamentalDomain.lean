@@ -6,7 +6,7 @@ Authors: Yury G. Kudryashov
 import Mathbin.MeasureTheory.Group.Action
 import Mathbin.MeasureTheory.Integral.SetIntegral
 
-#align_import measure_theory.group.fundamental_domain from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
+#align_import measure_theory.group.fundamental_domain from "leanprover-community/mathlib"@"3b52265189f3fb43aa631edffce5d060fafaf82f"
 
 /-!
 # Fundamental domain of a group action
@@ -300,6 +300,13 @@ theorem lintegral_eq_tsum' (h : IsFundamentalDomain G s μ) (f : α → ℝ≥0�
 #align measure_theory.is_add_fundamental_domain.lintegral_eq_tsum' MeasureTheory.IsAddFundamentalDomain.lintegral_eq_tsum'
 -/
 
+@[to_additive]
+theorem lintegral_eq_tsum'' (h : IsFundamentalDomain G s μ) (f : α → ℝ≥0∞) :
+    ∫⁻ x, f x ∂μ = ∑' g : G, ∫⁻ x in s, f (g • x) ∂μ :=
+  (lintegral_eq_tsum' h f).trans ((Equiv.inv G).tsum_eq fun g => ∫⁻ x : α in s, f (g • x) ∂μ)
+#align measure_theory.is_fundamental_domain.lintegral_eq_tsum'' MeasureTheory.IsFundamentalDomain.lintegral_eq_tsum''
+#align measure_theory.is_add_fundamental_domain.lintegral_eq_tsum'' MeasureTheory.IsAddFundamentalDomain.lintegral_eq_tsum''
+
 #print MeasureTheory.IsFundamentalDomain.set_lintegral_eq_tsum /-
 @[to_additive]
 theorem set_lintegral_eq_tsum (h : IsFundamentalDomain G s μ) (f : α → ℝ≥0∞) (t : Set α) :
@@ -515,6 +522,13 @@ theorem integral_eq_tsum' (h : IsFundamentalDomain G s μ) (f : α → E) (hf : 
 #align measure_theory.is_fundamental_domain.integral_eq_tsum' MeasureTheory.IsFundamentalDomain.integral_eq_tsum'
 #align measure_theory.is_add_fundamental_domain.integral_eq_tsum' MeasureTheory.IsAddFundamentalDomain.integral_eq_tsum'
 -/
+
+@[to_additive]
+theorem integral_eq_tsum'' (h : IsFundamentalDomain G s μ) (f : α → E) (hf : Integrable f μ) :
+    ∫ x, f x ∂μ = ∑' g : G, ∫ x in s, f (g • x) ∂μ :=
+  (integral_eq_tsum' h f hf).trans ((Equiv.inv G).tsum_eq fun g => ∫ x : α in s, f (g • x) ∂μ)
+#align measure_theory.is_fundamental_domain.integral_eq_tsum'' MeasureTheory.IsFundamentalDomain.integral_eq_tsum''
+#align measure_theory.is_add_fundamental_domain.integral_eq_tsum'' MeasureTheory.IsAddFundamentalDomain.integral_eq_tsum''
 
 #print MeasureTheory.IsFundamentalDomain.set_integral_eq_tsum /-
 @[to_additive]

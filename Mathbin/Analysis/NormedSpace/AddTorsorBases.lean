@@ -120,7 +120,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
   classical
   let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
   refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
-  · intro p hp; use ⟨p, ht₁ hp⟩; simp [w, hp]
+  · intro p hp; use⟨p, ht₁ hp⟩; simp [w, hp]
   · rintro y ⟨⟨p, hp⟩, rfl⟩
     by_cases hps : p ∈ s <;>
         simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,

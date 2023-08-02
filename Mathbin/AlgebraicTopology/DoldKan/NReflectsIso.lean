@@ -62,7 +62,7 @@ instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainCom
     intro n
     induction' n with n hn
     -- degree 0
-    · use (inv (N₁.map f)).f.f 0
+    · use(inv (N₁.map f)).f.f 0
       have h₁₀ := h₁ 0
       have h₂₀ := h₂ 0
       dsimp at h₁₀ h₂₀ 

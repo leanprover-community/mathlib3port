@@ -102,7 +102,7 @@ def inducedTopology : GrothendieckTopology C
     apply K.pullback_stable i
     refine' K.superset_covering _ (H' hg)
     rintro W _ ⟨Z', g', i', hg, rfl⟩
-    use ⟨Z', g' ≫ g, i', hg, by simp⟩
+    use⟨Z', g' ≫ g, i', hg, by simp⟩
 #align category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
 -/
 

@@ -146,7 +146,7 @@ theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inve
   nontriviality R
   rw [eventually_iff, Metric.mem_nhds_iff]
   have hinv : 0 < ‖(↑x⁻¹ : R)‖⁻¹ := by cancel_denoms
-  use ‖(↑x⁻¹ : R)‖⁻¹, hinv
+  use‖(↑x⁻¹ : R)‖⁻¹, hinv
   intro t ht
   simp only [mem_ball, dist_zero_right] at ht 
   have ht' : ‖-↑x⁻¹ * t‖ < 1 :=

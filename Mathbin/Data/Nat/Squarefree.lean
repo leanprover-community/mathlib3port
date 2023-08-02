@@ -297,7 +297,7 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
       mem_divisors]
     constructor
     · rintro ⟨⟨an, h0⟩, hsq⟩
-      use (UniqueFactorizationMonoid.normalizedFactors a).toFinset
+      use(UniqueFactorizationMonoid.normalizedFactors a).toFinset
       simp only [id.def, Finset.mem_powerset]
       rcases an with ⟨b, rfl⟩
       rw [mul_ne_zero_iff] at h0 

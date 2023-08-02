@@ -1614,7 +1614,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
       · obtain ⟨U₀, hU₀⟩ := hcne
         haveI : Nonempty { U // U ∈ c } := ⟨⟨U₀, hU₀⟩⟩
         obtain ⟨U₀compl, U₀opn, U₀ne⟩ := hc hU₀
-        use ⋃₀ c
+        use⋃₀ c
         refine' ⟨⟨_, _, _⟩, fun U hU a ha => ⟨U, hU, ha⟩⟩
         · exact fun a ha => ⟨U₀, hU₀, U₀compl ha⟩
         · exact isOpen_sUnion fun _ h => (hc h).2.1

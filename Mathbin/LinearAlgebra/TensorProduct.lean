@@ -385,13 +385,15 @@ variable {R'₂ : Type _} [Monoid R'₂] [DistribMulAction R'₂ M]
 
 variable [SMulCommClass R R'₂ M]
 
+#print TensorProduct.smulCommClass_left /-
 /-- `smul_comm_class R' R'₂ M` implies `smul_comm_class R' R'₂ (M ⊗[R] N)` -/
-instance sMulCommClass_left [SMulCommClass R' R'₂ M] : SMulCommClass R' R'₂ (M ⊗[R] N)
+instance smulCommClass_left [SMulCommClass R' R'₂ M] : SMulCommClass R' R'₂ (M ⊗[R] N)
     where smul_comm r' r'₂ x :=
     TensorProduct.induction_on x (by simp_rw [TensorProduct.smul_zero])
       (fun m n => by simp_rw [smul_tmul', smul_comm]) fun x y ihx ihy => by
       simp_rw [TensorProduct.smul_add]; rw [ihx, ihy]
-#align tensor_product.smul_comm_class_left TensorProduct.sMulCommClass_left
+#align tensor_product.smul_comm_class_left TensorProduct.smulCommClass_left
+-/
 
 variable [SMul R'₂ R']
 

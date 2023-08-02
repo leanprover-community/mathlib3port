@@ -273,7 +273,7 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
     by
     intro x hx; refine' Subring.InClosure.recOn hx _ _ _ _
     · use 1; rw [RingHom.map_one]; norm_cast
-    · use -1; rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
+    · use-1; rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
     · rintro _ ⟨z, hzs, rfl⟩ _ _; use 0;
       rw [RingHom.map_mul, lift_of, if_pos hzs, MulZeroClass.zero_mul]
       norm_cast
@@ -404,7 +404,7 @@ variable (α)
 protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRing α) := fun x =>
   by
   apply FreeCommRing.induction_on x
-  · use -1; rfl
+  · use-1; rfl
   · intro x; use FreeRing.of x; rfl
   · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x + y; exact (FreeRing.lift _).map_add _ _
   · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x * y; exact (FreeRing.lift _).map_mul _ _

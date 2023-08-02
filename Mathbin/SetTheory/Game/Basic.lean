@@ -6,7 +6,7 @@ Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison, Apurva 
 import Mathbin.SetTheory.Game.Pgame
 import Mathbin.Tactic.Abel
 
-#align_import set_theory.game.basic from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
+#align_import set_theory.game.basic from "leanprover-community/mathlib"@"8900d545017cd21961daa2a1734bb658ef52c618"
 
 /-!
 # Combinatorial games.
@@ -185,6 +185,22 @@ instance orderedAddCommGroup : OrderedAddCommGroup Game :=
     add_le_add_left := @add_le_add_left _ _ _ Game.covariantClass_add_le }
 #align game.ordered_add_comm_group Game.orderedAddCommGroup
 -/
+
+/-- A small set `s` of games is bounded above. -/
+theorem bddAbove_of_small (s : Set Game.{u}) [Small.{u} s] : BddAbove s :=
+  ⟨_, fun i hi => by
+    simpa using
+      PGame.le_iff_game_le.1
+        (upper_bound_mem_upper_bounds _ (Set.mem_image_of_mem Quotient.out hi))⟩
+#align game.bdd_above_of_small Game.bddAbove_of_small
+
+/-- A small set `s` of games is bounded below. -/
+theorem bddBelow_of_small (s : Set Game.{u}) [Small.{u} s] : BddBelow s :=
+  ⟨_, fun i hi => by
+    simpa using
+      PGame.le_iff_game_le.1
+        (lower_bound_mem_lower_bounds _ (Set.mem_image_of_mem Quotient.out hi))⟩
+#align game.bdd_below_of_small Game.bddBelow_of_small
 
 end Game
 

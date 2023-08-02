@@ -177,7 +177,7 @@ instance (priority := 100) completable : CompletableTopField K :=
       replace hF := hF.2
       intro γ
       rcases hF (min (γ * γ₀ * γ₀) γ₀) with ⟨M₁, M₁_in, H₁⟩; clear hF
-      use (fun x : K => x⁻¹) '' (M₀ ∩ M₁)
+      use(fun x : K => x⁻¹) '' (M₀ ∩ M₁)
       constructor
       · rw [mem_map]
         apply mem_of_superset (Filter.inter_mem M₀_in M₁_in)

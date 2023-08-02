@@ -71,7 +71,7 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
         linarith
     by_cases hj₁ : j₁ = 0
     · subst hj₁
-      rw [assoc, ← SimplexCategory.δ_comp_δ'' (Fin.zero_le _)]
+      rw [assoc, ← SimplexCategory.δ_comp_δ'' (Fin.zero_le' _)]
       simp only [op_comp, X.map_comp, assoc, P_infty_f]
       erw [(higher_faces_vanish.of_P _ _).comp_δ_eq_zero_assoc _ j₂.succ_ne_zero, zero_comp]
       rw [Fin.val_succ]

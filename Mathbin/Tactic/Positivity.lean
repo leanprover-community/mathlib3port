@@ -8,7 +8,7 @@ import Mathbin.Algebra.Order.Field.Power
 import Mathbin.Algebra.Order.Hom.Basic
 import Mathbin.Data.Nat.Factorial.Basic
 
-#align_import tactic.positivity from "leanprover-community/mathlib"@"70d50ecfd4900dd6d328da39ab7ebd516abe4025"
+#align_import tactic.positivity from "leanprover-community/mathlib"@"e90e0a6119d01e3ef1703b3038b555785a998285"
 
 /-! # `positivity` tactic
 
@@ -461,6 +461,57 @@ variable {ι α R : Type _}
 
 /-! ### `positivity` extensions for particular arithmetic operations -/
 
+
+section ite
+
+variable [Zero α] {p : Prop} [Decidable p] {a b : α}
+
+private theorem ite_pos [LT α] (ha : 0 < a) (hb : 0 < b) : 0 < ite p a b := by
+  by_cases p <;> simp [*]
+
+private theorem ite_nonneg [LE α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ ite p a b := by
+  by_cases p <;> simp [*]
+
+private theorem ite_nonneg_of_pos_of_nonneg [Preorder α] (ha : 0 < a) (hb : 0 ≤ b) :
+    0 ≤ ite p a b :=
+  ite_nonneg ha.le hb
+
+private theorem ite_nonneg_of_nonneg_of_pos [Preorder α] (ha : 0 ≤ a) (hb : 0 < b) :
+    0 ≤ ite p a b :=
+  ite_nonneg ha hb.le
+
+private theorem ite_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : ite p a b ≠ 0 := by by_cases p <;> simp [*]
+
+private theorem ite_ne_zero_of_pos_of_ne_zero [Preorder α] (ha : 0 < a) (hb : b ≠ 0) :
+    ite p a b ≠ 0 :=
+  ite_ne_zero ha.ne' hb
+
+private theorem ite_ne_zero_of_ne_zero_of_pos [Preorder α] (ha : a ≠ 0) (hb : 0 < b) :
+    ite p a b ≠ 0 :=
+  ite_ne_zero ha hb.ne'
+
+end ite
+
+/-- Extension for the `positivity` tactic: the `if then else` of two numbers is
+positive/nonnegative/nonzero if both are. -/
+@[positivity]
+unsafe def positivity_ite : expr → tactic strictness
+  | e@q(@ite $(typ) $(p) $(hp) $(a) $(b)) => do
+    let strictness_a ← core a
+    let strictness_b ← core b
+    match strictness_a, strictness_b with
+      | positive pa, positive pb => positive <$> mk_app `` ite_pos [pa, pb]
+      | positive pa, nonnegative pb =>
+        nonnegative <$> mk_app `` ite_nonneg_of_pos_of_nonneg [pa, pb]
+      | nonnegative pa, positive pb =>
+        nonnegative <$> mk_app `` ite_nonneg_of_nonneg_of_pos [pa, pb]
+      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` ite_nonneg [pa, pb]
+      | positive pa, nonzero pb => nonzero <$> to_expr ``(ite_ne_zero_of_pos_of_ne_zero $(pa) $(pb))
+      | nonzero pa, positive pb => nonzero <$> to_expr ``(ite_ne_zero_of_ne_zero_of_pos $(pa) $(pb))
+      | nonzero pa, nonzero pb => nonzero <$> to_expr ``(ite_ne_zero $(pa) $(pb))
+      | sa@_, sb@_ => positivity_fail e a b sa sb
+  | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `ite p a b`"
+#align tactic.positivity_ite tactic.positivity_ite
 
 section LinearOrder
 

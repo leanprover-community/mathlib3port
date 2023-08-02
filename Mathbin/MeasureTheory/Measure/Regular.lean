@@ -413,7 +413,7 @@ theorem measurableSet_of_open [OuterRegular μ] (H : InnerRegular μ p IsOpen) (
   by
   rintro s ⟨hs, hμs⟩ r hr
   obtain ⟨ε, hε, hεs, rfl⟩ : ∃ (ε : _) (_ : ε ≠ 0), ε + ε ≤ μ s ∧ r = μ s - (ε + ε) := by
-    use (μ s - r) / 2; simp [*, hr.le, ENNReal.add_halves, ENNReal.sub_sub_cancel, le_add_right]
+    use(μ s - r) / 2; simp [*, hr.le, ENNReal.add_halves, ENNReal.sub_sub_cancel, le_add_right]
   rcases hs.exists_is_open_diff_lt hμs hε with ⟨U, hsU, hUo, hUt, hμU⟩
   rcases(U \ s).exists_isOpen_lt_of_lt _ hμU with ⟨U', hsU', hU'o, hμU'⟩
   replace hsU' := diff_subset_comm.1 hsU'

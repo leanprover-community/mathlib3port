@@ -1306,7 +1306,7 @@ theorem isField_of_isIntegral_of_isField {R S : Type _} [CommRing R] [Nontrivial
   -- and `q` be `p` with coefficients reversed (so `q(a) = q'(a) * a + 1`).
   -- We claim that `q(a) = 0`, so `-q'(a)` is the inverse of `a`.
   obtain ⟨p, p_monic, hp⟩ := H a_inv
-  use -∑ i : ℕ in Finset.range p.nat_degree, p.coeff i * a ^ (p.nat_degree - i - 1)
+  use-∑ i : ℕ in Finset.range p.nat_degree, p.coeff i * a ^ (p.nat_degree - i - 1)
   -- `q(a) = 0`, because multiplying everything with `a_inv^n` gives `p(a_inv) = 0`.
   -- TODO: this could be a lemma for `polynomial.reverse`.
   have hq : ∑ i : ℕ in Finset.range (p.nat_degree + 1), p.coeff i * a ^ (p.nat_degree - i) = 0 :=

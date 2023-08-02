@@ -2023,7 +2023,7 @@ theorem subset_singleton_iff {α : Type _} {s : Set α} {x : α} : s ⊆ {x} ↔
 theorem subset_singleton_iff_eq {s : Set α} {x : α} : s ⊆ {x} ↔ s = ∅ ∨ s = {x} :=
   by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  use ⟨fun _ => Or.inl rfl, fun _ => empty_subset _⟩
+  use⟨fun _ => Or.inl rfl, fun _ => empty_subset _⟩
   simp [eq_singleton_iff_nonempty_unique_mem, hs, hs.ne_empty]
 #align set.subset_singleton_iff_eq Set.subset_singleton_iff_eq
 -/

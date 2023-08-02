@@ -54,7 +54,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
     leftMul := by
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
-      · use (1 : Γ₀ˣ)
+      · use(1 : Γ₀ˣ)
         rintro y (y_in : (v y : Γ₀) < 1)
         change v (x * y) < _
         rw [Valuation.map_mul, Hx, MulZeroClass.zero_mul]

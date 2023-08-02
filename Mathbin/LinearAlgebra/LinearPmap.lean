@@ -879,7 +879,7 @@ theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) :
     y = f ⟨x, hx⟩ ↔ (x, y) ∈ f.graph := by
   rw [mem_graph_iff]
   constructor <;> intro h
-  · use ⟨x, hx⟩
+  · use⟨x, hx⟩
     simp [h]
   rcases h with ⟨⟨x', hx'⟩, ⟨h1, h2⟩⟩
   simp only [Submodule.coe_mk] at h1 h2 

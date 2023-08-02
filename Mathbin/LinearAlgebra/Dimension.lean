@@ -1490,7 +1490,7 @@ theorem rank_submodule_le_one_iff (s : Submodule K V) :
     simp_rw [Subtype.ext_iff, coe_smul, Submodule.coe_mk] at hr 
     exact hr
   · rintro ⟨v₀, hv₀, h⟩
-    use ⟨v₀, hv₀⟩
+    use⟨v₀, hv₀⟩
     rintro ⟨v, hv⟩
     obtain ⟨r, hr⟩ := h v hv
     use r

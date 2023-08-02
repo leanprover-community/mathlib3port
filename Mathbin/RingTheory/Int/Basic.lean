@@ -205,7 +205,7 @@ theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ) (h : IsUnit u), (Int.natAbs
   by
   cases' nat_abs_eq a with h
   · use 1, isUnit_one; rw [← h, one_mul]
-  · use -1, is_unit_one.neg; rw [← neg_eq_iff_eq_neg.mpr h]
+  · use-1, is_unit_one.neg; rw [← neg_eq_iff_eq_neg.mpr h]
     simp only [neg_mul, one_mul]
 #align int.exists_unit_of_abs Int.exists_unit_of_abs
 -/

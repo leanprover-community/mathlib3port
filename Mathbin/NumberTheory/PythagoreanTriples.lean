@@ -630,7 +630,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z)
     rcases h_even with ⟨rfl, -⟩
     rw [mul_assoc, Int.mul_emod_right] at h_parity 
     exact zero_ne_one h_parity
-  · use -m, -n
+  · use-m, -n
     cases' ht1 with h_odd h_even
     · rw [neg_sq m]
       rw [neg_sq n]

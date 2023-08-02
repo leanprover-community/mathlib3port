@@ -10,7 +10,7 @@ import Mathbin.LinearAlgebra.LinearIndependent
 import Mathbin.LinearAlgebra.Multilinear.Basis
 import Mathbin.LinearAlgebra.Multilinear.TensorProduct
 
-#align_import linear_algebra.alternating from "leanprover-community/mathlib"@"bd65478311e4dfd41f48bf38c7e3b02fb75d0163"
+#align_import linear_algebra.alternating from "leanprover-community/mathlib"@"0c1d80f5a86b36c1db32e021e8d19ae7809d5b79"
 
 /-!
 # Alternating Maps
@@ -875,6 +875,13 @@ theorem domDomCongr_add (σ : ι ≃ ι') (f g : AlternatingMap R M N ι) :
 #align alternating_map.dom_dom_congr_add AlternatingMap.domDomCongr_add
 -/
 
+@[simp]
+theorem domDomCongr_smul {S : Type _} [Monoid S] [DistribMulAction S N] [SMulCommClass R S N]
+    (σ : ι ≃ ι') (c : S) (f : AlternatingMap R M N ι) :
+    (c • f).domDomCongr σ = c • f.domDomCongr σ :=
+  rfl
+#align alternating_map.dom_dom_congr_smul AlternatingMap.domDomCongr_smul
+
 #print AlternatingMap.domDomCongrEquiv /-
 /-- `alternating_map.dom_dom_congr` as an equivalence.
 
@@ -889,6 +896,38 @@ def domDomCongrEquiv (σ : ι ≃ ι') : AlternatingMap R M N ι ≃+ Alternatin
   map_add' := domDomCongr_add σ
 #align alternating_map.dom_dom_congr_equiv AlternatingMap.domDomCongrEquiv
 -/
+
+section DomDomLcongr
+
+variable (S : Type _) [Semiring S] [Module S N] [SMulCommClass R S N]
+
+/-- `alternating_map.dom_dom_congr` as a linear equivalence. -/
+@[simps apply symm_apply]
+def domDomLcongr (σ : ι ≃ ι') : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι'
+    where
+  toFun := domDomCongr σ
+  invFun := domDomCongr σ.symm
+  left_inv f := by ext; simp [Function.comp]
+  right_inv m := by ext; simp [Function.comp]
+  map_add' := domDomCongr_add σ
+  map_smul' := domDomCongr_smul σ
+#align alternating_map.dom_dom_lcongr AlternatingMap.domDomLcongr
+
+@[simp]
+theorem domDomLcongr_refl :
+    (domDomLcongr S (Equiv.refl ι) : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι) =
+      LinearEquiv.refl _ _ :=
+  LinearEquiv.ext domDomCongr_refl
+#align alternating_map.dom_dom_lcongr_refl AlternatingMap.domDomLcongr_refl
+
+@[simp]
+theorem domDomLcongr_toAddEquiv (σ : ι ≃ ι') :
+    (domDomLcongr S σ : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι').toAddEquiv =
+      domDomCongrEquiv σ :=
+  rfl
+#align alternating_map.dom_dom_lcongr_to_add_equiv AlternatingMap.domDomLcongr_toAddEquiv
+
+end DomDomLcongr
 
 #print AlternatingMap.domDomCongr_eq_iff /-
 /-- The results of applying `dom_dom_congr` to two maps are equal if and only if those maps are. -/

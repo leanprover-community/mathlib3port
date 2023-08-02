@@ -261,7 +261,7 @@ theorem finSuccEquiv_zero {n : ℕ} : (finSuccEquiv n) 0 = none :=
 #print finSuccEquiv_succ /-
 @[simp]
 theorem finSuccEquiv_succ {n : ℕ} (m : Fin n) : (finSuccEquiv n) m.succ = some m :=
-  finSuccEquiv'_above (Fin.zero_le _)
+  finSuccEquiv'_above (Fin.zero_le' _)
 #align fin_succ_equiv_succ finSuccEquiv_succ
 -/
 

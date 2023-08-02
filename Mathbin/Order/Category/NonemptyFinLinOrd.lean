@@ -180,7 +180,7 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
         by
         simp only
         split_ifs with h₁ h₂ h₂
-        any_goals apply Fin.zero_le
+        any_goals apply Fin.zero_le'
         · exfalso
           exact h₁ (lt_of_le_of_lt h h₂)
         · rfl⟩
@@ -189,7 +189,7 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
         by
         simp only
         split_ifs with h₁ h₂ h₂
-        any_goals apply Fin.zero_le
+        any_goals apply Fin.zero_le'
         · exfalso
           exact h₁ (h.trans h₂)
         · rfl⟩
@@ -197,12 +197,12 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
       congr
       rw [← cancel_epi f]
       ext a : 2
-      simp only [comp_apply, OrderHom.coe_fun_mk]
+      simp only [comp_apply, OrderHom.coe_mk]
       split_ifs with h₁ h₂ h₂
       any_goals rfl
       · exfalso; exact h₂ (le_of_lt h₁)
       · exfalso; exact hm a (eq_of_le_of_not_lt h₂ h₁)
-    simpa only [OrderHom.coe_fun_mk, lt_self_iff_false, if_false, le_refl, if_true, ULift.up_inj,
+    simpa only [OrderHom.coe_mk, lt_self_iff_false, if_false, le_refl, if_true, ULift.up_inj,
       Fin.one_eq_zero_iff, Nat.succ_succ_ne_one] using h
   · intro h
     exact concrete_category.epi_of_surjective f h

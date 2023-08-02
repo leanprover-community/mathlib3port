@@ -2944,7 +2944,7 @@ theorem nat_eq_done {val : ℕ} :
       obtain ⟨l, hdl, hvl⟩ := IH
       -- Of course, the parsed in list from position `n` would be `l` prepended with the result
       -- of parsing in `hd`, which is provided explicitly.
-      use (hd.to_nat - '0'.toNat)::l
+      use(hd.to_nat - '0'.toNat)::l
       -- We case on `l : list ℕ` so that we can make statements about the fold on `l`
       cases' l with lhd ltl
       ·-- As before, if `l = []` then `many1` produced a `[]` success, which is a contradiction.
@@ -3006,7 +3006,7 @@ theorem nat_eq_done {val : ℕ} :
       obtain rfl : n' = n + 1 := le_antisymm hn'' (Nat.succ_le_of_lt hn)
       -- This means we have only parsed in a single character, so the resulting parsed in list
       -- is explicitly formed from an expression we can construct from `hd`.
-      use [hd.to_nat - '0'.toNat]
+      use[hd.to_nat - '0'.toNat]
       -- Our list expression simplifies nicely because it is a fold over a singleton, so we
       -- do not have to supply any auxiliary lemmas for it, other than what we already know about
       -- `hd` and the function defined in `parser.nat`. However, we will have to prove that our

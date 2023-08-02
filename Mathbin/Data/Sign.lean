@@ -74,19 +74,19 @@ instance : Mul SignType :=
     | zero => zero
     | Pos => y⟩
 
-#print SignType.Le /-
+#print SignType.LE /-
 /-- The less-than relation on signs. -/
-inductive Le : SignType → SignType → Prop
+inductive LE : SignType → SignType → Prop
   | of_neg (a) : le neg a
   | zero : le zero zero
   | of_pos (a) : le a pos
-#align sign_type.le SignType.Le
+#align sign_type.le SignType.LE
 -/
 
 instance : LE SignType :=
-  ⟨Le⟩
+  ⟨LE⟩
 
-instance : DecidableRel Le := fun a b => by
+instance : DecidableRel LE := fun a b => by
   cases a <;> cases b <;>
     first
     | exact is_false (by rintro ⟨⟩)
@@ -115,13 +115,13 @@ instance : LinearOrder SignType where
   le_total a b := by casesm*_ <;> decide
   le_antisymm a b ha hb := by casesm*_ <;> rfl
   le_trans a b c hab hbc := by casesm*_ <;> constructor
-  decidableLe := Le.decidableRel
+  decidableLe := LE.decidableRel
 
 instance : BoundedOrder SignType where
   top := 1
-  le_top := Le.of_pos
+  le_top := LE.of_pos
   bot := -1
-  bot_le := Le.of_neg
+  bot_le := LE.of_neg
 
 instance : HasDistribNeg SignType :=
   { SignType.hasNeg with

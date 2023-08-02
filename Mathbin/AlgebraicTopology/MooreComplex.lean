@@ -86,7 +86,7 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     apply kernel_subobject_factors
     -- Use a simplicial identity
     dsimp [obj_X]
-    erw [category.assoc, ← X.δ_comp_δ (Fin.zero_le i.succ), ← category.assoc]
+    erw [category.assoc, ← X.δ_comp_δ (Fin.zero_le' i.succ), ← category.assoc]
     -- It's the first two factors which are zero.
     convert zero_comp
     -- We can rewrite the arrow out of the intersection of all the kernels as a composition
@@ -107,12 +107,12 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     cases n <;>
     dsimp
   · simp only [subobject.factor_thru_arrow_assoc]
-    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le (0 : Fin (0 + 2)))]
+    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le' (0 : Fin (0 + 2)))]
     rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin 2) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
   · simp [factor_thru_right]
-    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le (0 : Fin (n.succ + 2)))]
+    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le' (0 : Fin (n.succ + 2)))]
     rw [←
       factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]

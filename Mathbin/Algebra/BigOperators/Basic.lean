@@ -2491,7 +2491,7 @@ theorem toFinset_sum_count_nsmul_eq (s : Multiset α) : ∑ a in s.toFinset, s.c
 theorem exists_smul_of_dvd_count (s : Multiset α) {k : ℕ}
     (h : ∀ a : α, a ∈ s → k ∣ Multiset.count a s) : ∃ u : Multiset α, s = k • u :=
   by
-  use ∑ a in s.to_finset, (s.count a / k) • {a}
+  use∑ a in s.to_finset, (s.count a / k) • {a}
   have h₂ :
     ∑ x : α in s.to_finset, k • (count x s / k) • ({x} : Multiset α) =
       ∑ x : α in s.to_finset, count x s • {x} :=

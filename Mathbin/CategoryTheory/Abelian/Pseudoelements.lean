@@ -431,7 +431,7 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
       obtain ⟨c, hc⟩ := kernel_fork.is_limit.lift' (is_limit_image f g h) _ hb'
       -- We compute the pullback of the map into the image and c.
       -- The pseudoelement induced by the first pullback map will be our preimage.
-      use (pullback.fst : pullback (abelian.factor_thru_image f) c ⟶ P)
+      use(pullback.fst : pullback (abelian.factor_thru_image f) c ⟶ P)
       -- It remains to show that the image of this element under f is pseudo-equal to b.
       apply Quotient.sound
       -- pullback.snd is an epimorphism because the map onto the image is!

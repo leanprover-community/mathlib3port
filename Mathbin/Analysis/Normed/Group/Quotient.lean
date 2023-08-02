@@ -266,7 +266,7 @@ theorem norm_mk_lt' (S : AddSubgroup M) (m : M) {ε : ℝ} (hε : 0 < ε) :
   obtain ⟨n : M, hn : mk' S n = mk' S m, hn' : ‖n‖ < ‖mk' S m‖ + ε⟩ :=
     norm_mk_lt (QuotientAddGroup.mk' S m) hε
   erw [eq_comm, QuotientAddGroup.eq] at hn 
-  use -m + n, hn
+  use-m + n, hn
   rwa [add_neg_cancel_left]
 #align norm_mk_lt' norm_mk_lt'
 -/

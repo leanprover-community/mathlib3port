@@ -10,7 +10,7 @@ import Mathbin.Tactic.FieldSimp
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.Matrix.Basis
 
-#align_import linear_algebra.determinant from "leanprover-community/mathlib"@"bd65478311e4dfd41f48bf38c7e3b02fb75d0163"
+#align_import linear_algebra.determinant from "leanprover-community/mathlib"@"0c1d80f5a86b36c1db32e021e8d19ae7809d5b79"
 
 /-!
 # Determinant of families of vectors
@@ -740,6 +740,11 @@ theorem Basis.det_reindex {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Ba
   rw [Basis.det_apply, Basis.toMatrix_reindex', det_reindex_alg_equiv, Basis.det_apply]
 #align basis.det_reindex Basis.det_reindex
 -/
+
+theorem Basis.det_reindex' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Basis ι R M)
+    (e : ι ≃ ι') : (b.reindex e).det = b.det.domDomCongr e :=
+  AlternatingMap.ext fun _ => Basis.det_reindex _ _ _
+#align basis.det_reindex' Basis.det_reindex'
 
 #print Basis.det_reindex_symm /-
 theorem Basis.det_reindex_symm {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Basis ι R M)

@@ -657,12 +657,12 @@ section Module
 
 variable {M N R : Type _}
 
-#print Filter.Germ.hasSmul' /-
+#print Filter.Germ.instSMul' /-
 @[to_additive]
-instance hasSmul' [SMul M β] : SMul (Germ l M) (Germ l β) :=
+instance instSMul' [SMul M β] : SMul (Germ l M) (Germ l β) :=
   ⟨map₂ (· • ·)⟩
-#align filter.germ.has_smul' Filter.Germ.hasSmul'
-#align filter.germ.has_vadd' Filter.Germ.hasVadd'
+#align filter.germ.has_smul' Filter.Germ.instSMul'
+#align filter.germ.has_vadd' Filter.Germ.instVAdd'
 -/
 
 #print Filter.Germ.coe_smul' /-

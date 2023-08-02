@@ -435,19 +435,19 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
       simp only [h, comp_app, if_false] at hxt 
       exact hxt
   · rintro x (⟨⟨t, ht0, ht1⟩, hxt⟩ | ⟨⟨t, ht0, ht1⟩, hxt⟩)
-    · use ⟨t / 2, ⟨by linarith, by linarith⟩⟩
+    · use⟨t / 2, ⟨by linarith, by linarith⟩⟩
       unfold_coes
       have : t / 2 ≤ 1 / 2 := by linarith
       simp only [this, comp_app, if_true]
       ring_nf
       rwa [γ₁.extend_extends]
     · by_cases h : t = 0
-      · use ⟨1 / 2, ⟨by linarith, by linarith⟩⟩
+      · use⟨1 / 2, ⟨by linarith, by linarith⟩⟩
         unfold_coes
         simp only [h, comp_app, if_true, le_refl, mul_one_div_cancel (two_ne_zero' ℝ)]
         rw [γ₁.extend_one]
         rwa [← γ₂.extend_extends, h, γ₂.extend_zero] at hxt 
-      · use ⟨(t + 1) / 2, ⟨by linarith, by linarith⟩⟩
+      · use⟨(t + 1) / 2, ⟨by linarith, by linarith⟩⟩
         unfold_coes
         change t ≠ 0 at h 
         have ht0 := lt_of_le_of_ne ht0 h.symm
@@ -872,7 +872,7 @@ theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf�
       rw [hf₀, hf₁] at this 
       rcases this t.2 with ⟨w, hw₁, hw₂⟩
       rw [Icc_extend_of_mem _ _ hw₁] at hw₂ 
-      use ⟨w, hw₁⟩, hw₂
+      use⟨w, hw₁⟩, hw₂
   rw [range_comp, this, image_univ]
 #align path.range_reparam Path.range_reparam
 -/
@@ -1228,7 +1228,7 @@ theorem IsPathConnected.preimage_coe {U W : Set X} (hW : IsPathConnected W) (hWU
     IsPathConnected ((coe : U → X) ⁻¹' W) :=
   by
   rcases hW with ⟨x, x_in, hx⟩
-  use ⟨x, hWU x_in⟩, by simp [x_in]
+  use⟨x, hWU x_in⟩, by simp [x_in]
   rintro ⟨y, hyU⟩ hyW
   exact ⟨(hx hyW).joined_subtype.somePath.map (continuous_inclusion hWU), by simp⟩
 #align is_path_connected.preimage_coe IsPathConnected.preimage_coe

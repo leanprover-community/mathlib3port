@@ -100,7 +100,7 @@ noncomputable def quotientInfEquivSupQuotient (p p' : Submodule R M) :
       by
       rw [← range_eq_top, quotient_inf_to_sup_quotient, range_liftq, eq_top_iff']
       rintro ⟨x, hx⟩; rcases mem_sup.1 hx with ⟨y, hy, z, hz, rfl⟩
-      use ⟨y, hy⟩; apply (Submodule.Quotient.eq _).2
+      use⟨y, hy⟩; apply (Submodule.Quotient.eq _).2
       change y - (y + z) ∈ p'
       rwa [sub_add_eq_sub_sub, sub_self, zero_sub, neg_mem_iff]⟩
 #align linear_map.quotient_inf_equiv_sup_quotient LinearMap.quotientInfEquivSupQuotient

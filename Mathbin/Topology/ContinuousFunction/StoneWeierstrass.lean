@@ -384,21 +384,16 @@ variable {𝕜 : Type _} {X : Type _} [IsROrC 𝕜] [TopologicalSpace X]
 
 namespace ContinuousMap
 
-#print ContinuousMap.ConjInvariantSubalgebra /-
 /-- A real subalgebra of `C(X, 𝕜)` is `conj_invariant`, if it contains all its conjugates. -/
 def ConjInvariantSubalgebra (A : Subalgebra ℝ C(X, 𝕜)) : Prop :=
   A.map (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) ≤ A
 #align continuous_map.conj_invariant_subalgebra ContinuousMap.ConjInvariantSubalgebra
--/
 
-#print ContinuousMap.mem_conjInvariantSubalgebra /-
 theorem mem_conjInvariantSubalgebra {A : Subalgebra ℝ C(X, 𝕜)} (hA : ConjInvariantSubalgebra A)
     {f : C(X, 𝕜)} (hf : f ∈ A) : (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ A :=
   hA ⟨f, hf, rfl⟩
 #align continuous_map.mem_conj_invariant_subalgebra ContinuousMap.mem_conjInvariantSubalgebra
--/
 
-#print ContinuousMap.subalgebraConjInvariant /-
 /-- If a set `S` is conjugation-invariant, then its `𝕜`-span is conjugation-invariant. -/
 theorem subalgebraConjInvariant {S : Set C(X, 𝕜)}
     (hS : ∀ f, f ∈ S → (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ S) :
@@ -418,7 +413,6 @@ theorem subalgebraConjInvariant {S : Set C(X, 𝕜)}
     convert Subalgebra.mul_mem _ hf hg
     exact AlgHom.map_mul _ f g
 #align continuous_map.subalgebra_conj_invariant ContinuousMap.subalgebraConjInvariant
--/
 
 end ContinuousMap
 
@@ -460,12 +454,11 @@ theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜
 
 variable [CompactSpace X]
 
-#print ContinuousMap.subalgebra_isROrC_topologicalClosure_eq_top_of_separatesPoints /-
 /-- The Stone-Weierstrass approximation theorem, `is_R_or_C` version,
 that a subalgebra `A` of `C(X, 𝕜)`, where `X` is a compact topological space and `is_R_or_C 𝕜`,
 is dense if it is conjugation-invariant and separates points.
 -/
-theorem ContinuousMap.subalgebra_isROrC_topologicalClosure_eq_top_of_separatesPoints
+theorem ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints
     (A : Subalgebra 𝕜 C(X, 𝕜)) (hA : A.SeparatesPoints)
     (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) : A.topologicalClosure = ⊤ :=
   by
@@ -504,8 +497,7 @@ theorem ContinuousMap.subalgebra_isROrC_topologicalClosure_eq_top_of_separatesPo
   ext
   apply Eq.symm
   simp [I, mul_comm IsROrC.i _]
-#align continuous_map.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points ContinuousMap.subalgebra_isROrC_topologicalClosure_eq_top_of_separatesPoints
--/
+#align continuous_map.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPointsₓ
 
 end IsROrC
 

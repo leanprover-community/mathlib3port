@@ -1565,7 +1565,7 @@ theorem affineSpan_singleton_union_vadd_eq_top_of_span_eq_top {s : Set V} (p : P
     eq_top_iff, ← h]
   apply Submodule.span_mono
   rintro v ⟨v', rfl⟩
-  use (v' : V) +ᵥ p
+  use(v' : V) +ᵥ p
   simp
 #align affine_span_singleton_union_vadd_eq_top_of_span_eq_top affineSpan_singleton_union_vadd_eq_top_of_span_eq_top
 -/

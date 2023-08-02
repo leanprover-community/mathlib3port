@@ -88,11 +88,11 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           Fin.sum_univ_succ, Fin.sum_univ_two]
         simp only [pow_zero, pow_one, pow_two, Fin.val_zero, Fin.val_one, Fin.val_two, one_zsmul,
           neg_zsmul, Fin.mk_zero, Fin.mk_one, Fin.val_succ, pow_add, one_mul, neg_mul, neg_neg,
-          Fin.succ_zero_eq_one, Fin.succ_one_eq_two, comp_neg, neg_comp, add_comp, comp_add]
+          Fin.succ_zero_eq_one', Fin.succ_one_eq_two', comp_neg, neg_comp, add_comp, comp_add]
         erw [simplicial_object.δ_comp_σ_self, simplicial_object.δ_comp_σ_self_assoc,
           simplicial_object.δ_comp_σ_succ, comp_id,
           simplicial_object.δ_comp_σ_of_le X
-            (show (0 : Fin 2) ≤ Fin.castSuccEmb 0 by rw [Fin.castSucc_zero]),
+            (show (0 : Fin 2) ≤ Fin.castSuccEmb 0 by rw [Fin.castSucc_zero']),
           simplicial_object.δ_comp_σ_self_assoc, simplicial_object.δ_comp_σ_succ_assoc]
         abel
       · rw [← id_comp (X.σ i), ← (P_add_Q_f q n.succ : _ = 𝟙 (X.obj _)), add_comp, add_comp]

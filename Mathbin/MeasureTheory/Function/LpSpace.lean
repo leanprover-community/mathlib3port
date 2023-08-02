@@ -294,11 +294,11 @@ theorem coeFn_sub (f g : Lp E p μ) : ⇑(f - g) =ᵐ[μ] f - g :=
 #align measure_theory.Lp.coe_fn_sub MeasureTheory.Lp.coeFn_sub
 -/
 
-#print MeasureTheory.Lp.mem_lp_const /-
-theorem mem_lp_const (α) {m : MeasurableSpace α} (μ : Measure α) (c : E) [IsFiniteMeasure μ] :
+#print MeasureTheory.Lp.const_mem_Lp /-
+theorem const_mem_Lp (α) {m : MeasurableSpace α} (μ : Measure α) (c : E) [IsFiniteMeasure μ] :
     @AEEqFun.const α _ _ μ _ c ∈ Lp E p μ :=
   (memℒp_const c).snorm_mk_lt_top
-#align measure_theory.Lp.mem_Lp_const MeasureTheory.Lp.mem_lp_const
+#align measure_theory.Lp.mem_Lp_const MeasureTheory.Lp.const_mem_Lp
 -/
 
 instance : Norm (Lp E p μ) where norm f := ENNReal.toReal (snorm f p μ)
@@ -578,14 +578,14 @@ variable [NormedRing 𝕜] [NormedRing 𝕜'] [Module 𝕜 E] [Module 𝕜' E]
 
 variable [BoundedSMul 𝕜 E] [BoundedSMul 𝕜' E]
 
-#print MeasureTheory.Lp.mem_Lp_const_smul /-
-theorem mem_Lp_const_smul (c : 𝕜) (f : Lp E p μ) : c • ↑f ∈ Lp E p μ :=
+#print MeasureTheory.Lp.const_smul_mem_Lp /-
+theorem const_smul_mem_Lp (c : 𝕜) (f : Lp E p μ) : c • ↑f ∈ Lp E p μ :=
   by
   rw [mem_Lp_iff_snorm_lt_top, snorm_congr_ae (ae_eq_fun.coe_fn_smul _ _)]
   refine' (snorm_const_smul_le _ _).trans_lt _
   rw [ENNReal.smul_def, smul_eq_mul, ENNReal.mul_lt_top_iff]
   exact Or.inl ⟨ENNReal.coe_lt_top, f.prop⟩
-#align measure_theory.Lp.mem_Lp_const_smul MeasureTheory.Lp.mem_Lp_const_smul
+#align measure_theory.Lp.mem_Lp_const_smul MeasureTheory.Lp.const_smul_mem_Lp
 -/
 
 variable (E p μ 𝕜)

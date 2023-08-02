@@ -5149,7 +5149,7 @@ protected theorem mono (hf : f ≤ g) (hμ : μ ≤ ν) : ν.FiniteAtFilter g �
 
 #print MeasureTheory.Measure.FiniteAtFilter.eventually /-
 protected theorem eventually (h : μ.FiniteAtFilter f) : ∀ᶠ s in f.smallSets, μ s < ∞ :=
-  (eventually_small_sets' fun s t hst ht => (measure_mono hst).trans_lt ht).2 h
+  (eventually_smallSets' fun s t hst ht => (measure_mono hst).trans_lt ht).2 h
 #align measure_theory.measure.finite_at_filter.eventually MeasureTheory.Measure.FiniteAtFilter.eventually
 -/
 
@@ -5565,7 +5565,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
     (hμ : ∀ x ∈ s, μ.FiniteAtFilter (𝓝 x)) : ∃ (U : _) (_ : U ⊇ s), IsOpen U ∧ μ U < ∞ :=
   by
   refine' IsCompact.induction_on h _ _ _ _
-  · use ∅; simp [Superset]
+  · use∅; simp [Superset]
   · rintro s t hst ⟨U, htU, hUo, hU⟩; exact ⟨U, hst.trans htU, hUo, hU⟩
   · rintro s t ⟨U, hsU, hUo, hU⟩ ⟨V, htV, hVo, hV⟩
     refine'

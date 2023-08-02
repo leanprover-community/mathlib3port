@@ -1204,7 +1204,7 @@ theorem fract_neg {x : α} (hx : fract x ≠ 0) : fract (-x) = 1 - fract x :=
 theorem fract_neg_eq_zero {x : α} : fract (-x) = 0 ↔ fract x = 0 :=
   by
   simp only [fract_eq_iff, le_refl, zero_lt_one, tsub_zero, true_and_iff]
-  constructor <;> rintro ⟨z, hz⟩ <;> use -z <;> simp [← hz]
+  constructor <;> rintro ⟨z, hz⟩ <;> use-z <;> simp [← hz]
 #align int.fract_neg_eq_zero Int.fract_neg_eq_zero
 -/
 

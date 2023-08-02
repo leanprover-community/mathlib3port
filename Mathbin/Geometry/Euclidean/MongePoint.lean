@@ -309,7 +309,7 @@ theorem mongePlane_comm {n : ℕ} (s : Simplex ℝ P (n + 2)) (i₁ i₂ : Fin (
   · ext
     simp_rw [Submodule.mem_span_singleton]
     constructor
-    all_goals rintro ⟨r, rfl⟩; use -r; rw [neg_smul, ← smul_neg, neg_vsub_eq_vsub_rev]
+    all_goals rintro ⟨r, rfl⟩; use-r; rw [neg_smul, ← smul_neg, neg_vsub_eq_vsub_rev]
 #align affine.simplex.monge_plane_comm Affine.Simplex.mongePlane_comm
 -/
 
@@ -370,7 +370,7 @@ theorem eq_mongePoint_of_forall_mem_mongePlane {n : ℕ} {s : Simplex ℝ P (n +
     · rintro ⟨i, rfl⟩
       use i, ⟨Set.mem_univ _, i.property.symm⟩
     · rintro ⟨i, ⟨hiu, hi⟩, rfl⟩
-      use ⟨i, hi.symm⟩, rfl
+      use⟨i, hi.symm⟩, rfl
   rw [hu, ← vectorSpan_image_eq_span_vsub_set_left_ne ℝ _ (Set.mem_univ _), Set.image_univ] at hi 
   have hv : p -ᵥ s.monge_point ∈ vectorSpan ℝ (Set.range s.points) :=
     by

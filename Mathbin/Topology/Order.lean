@@ -820,7 +820,7 @@ theorem nhdsAdjoint_nhds_of_ne {α : Type _} (a : α) (f : Filter α) {b : α} (
   apply le_antisymm
   · intro U hU
     rw [mem_nhds_iff]
-    use {b}
+    use{b}
     simp only [and_true_iff, singleton_subset_iff, mem_singleton]
     refine' ⟨hU, fun ha => (h.symm ha).elim⟩
   · exact @pure_le_nhds α (nhdsAdjoint a f) b

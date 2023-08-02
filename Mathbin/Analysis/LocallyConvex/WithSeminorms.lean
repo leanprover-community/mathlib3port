@@ -117,7 +117,7 @@ theorem basisSets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ 
   classical
   rcases p.basis_sets_iff.mp hU with ⟨s, r₁, hr₁, hU⟩
   rcases p.basis_sets_iff.mp hV with ⟨t, r₂, hr₂, hV⟩
-  use ((s ∪ t).sup p).ball 0 (min r₁ r₂)
+  use((s ∪ t).sup p).ball 0 (min r₁ r₂)
   refine' ⟨p.basis_sets_mem (s ∪ t) (lt_min_iff.mpr ⟨hr₁, hr₂⟩), _⟩
   rw [hU, hV, ball_finset_sup_eq_Inter _ _ _ (lt_min_iff.mpr ⟨hr₁, hr₂⟩),
     ball_finset_sup_eq_Inter _ _ _ hr₁, ball_finset_sup_eq_Inter _ _ _ hr₂]
@@ -144,7 +144,7 @@ theorem basisSets_add (U) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set E) (H : V ∈ p.basis_sets), V + V ⊆ U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
-  use (s.sup p).ball 0 (r / 2)
+  use(s.sup p).ball 0 (r / 2)
   refine' ⟨p.basis_sets_mem s (div_pos hr zero_lt_two), _⟩
   refine' Set.Subset.trans (ball_add_ball_subset (s.sup p) (r / 2) (r / 2) 0 0) _
   rw [hU, add_zero, add_halves']
@@ -207,7 +207,7 @@ theorem basisSets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
   rw [hU]
   by_cases h : x ≠ 0
   · rw [(s.sup p).smul_ball_preimage 0 r x h, smul_zero]
-    use (s.sup p).ball 0 (r / ‖x‖)
+    use(s.sup p).ball 0 (r / ‖x‖)
     exact ⟨p.basis_sets_mem s (div_pos hr (norm_pos_iff.mpr h)), subset.rfl⟩
   refine' ⟨(s.sup p).ball 0 r, p.basis_sets_mem s hr, _⟩
   simp only [not_ne_iff.mp h, subset_def, mem_ball_zero, hr, mem_univ, map_zero, imp_true_iff,
@@ -286,7 +286,7 @@ theorem const_isBounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : �
   constructor <;> intro h i
   · rcases h i with ⟨s, C, h⟩
     exact ⟨C, le_trans h (smul_le_smul (Finset.sup_le fun _ _ => le_rfl) le_rfl)⟩
-  use {Classical.arbitrary ι}
+  use{Classical.arbitrary ι}
   simp only [h, Finset.sup_singleton]
 #align seminorm.const_is_bounded Seminorm.const_isBounded
 -/

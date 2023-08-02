@@ -71,7 +71,7 @@ theorem iff_card [Fact p.Prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card
   refine' ⟨fun h => _, fun ⟨n, hn⟩ => of_card hn⟩
   suffices ∀ q ∈ Nat.factors (card G), q = p
     by
-    use (card G).factors.length
+    use(card G).factors.length
     rw [← List.prod_replicate, ← List.eq_replicate_of_mem this, Nat.prod_factors hG]
   intro q hq
   obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG).mp hq

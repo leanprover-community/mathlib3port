@@ -188,7 +188,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
   constructor
   · intro h
     rcases existsUnique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
-    use -n
+    use-n
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
     have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]

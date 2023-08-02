@@ -429,7 +429,7 @@ theorem bot_mem (s : CompositionSeries X) : s.bot ∈ s :=
 #print CompositionSeries.bot_le /-
 @[simp]
 theorem bot_le {s : CompositionSeries X} (i : Fin (s.length + 1)) : s.bot ≤ s i :=
-  s.StrictMono.Monotone (Fin.zero_le _)
+  s.StrictMono.Monotone (Fin.zero_le' _)
 #align composition_series.bot_le CompositionSeries.bot_le
 -/
 
@@ -705,7 +705,7 @@ theorem snoc_castSucc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top 
 #print CompositionSeries.bot_snoc /-
 @[simp]
 theorem bot_snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) :
-    (snoc s x hsat).bot = s.bot := by rw [bot, bot, ← snoc_cast_succ s _ _ 0, Fin.castSucc_zero]
+    (snoc s x hsat).bot = s.bot := by rw [bot, bot, ← snoc_cast_succ s _ _ 0, Fin.castSucc_zero']
 #align composition_series.bot_snoc CompositionSeries.bot_snoc
 -/
 

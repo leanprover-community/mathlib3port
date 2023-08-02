@@ -961,7 +961,6 @@ instance subsingleton_units : Subsingleton (ZMod 2)ˣ :=
 #align zmod.subsingleton_units ZMod.subsingleton_units
 -/
 
-#print ZMod.le_div_two_iff_lt_neg /-
 theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : ZMod n} (hx0 : x ≠ 0) :
     x.val ≤ (n / 2 : ℕ) ↔ (n / 2 : ℕ) < (-x).val :=
   by
@@ -990,7 +989,6 @@ theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : ZMo
         sub_eq_add_neg, ← ZMod.nat_cast_zmod_val x, ← Nat.cast_sub x.val_le, ZMod.val_nat_cast,
         Nat.mod_eq_of_lt hxn, tsub_le_tsub_iff_left x.val_le]
 #align zmod.le_div_two_iff_lt_neg ZMod.le_div_two_iff_lt_neg
--/
 
 #print ZMod.ne_neg_self /-
 theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : ZMod n} (ha : a ≠ 0) : a ≠ -a :=

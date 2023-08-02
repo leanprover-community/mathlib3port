@@ -284,7 +284,7 @@ theorem range_prod_map {W X Y Z : TopCat.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
     simp only [limits.prod.map_fst, limits.prod.map_snd, exists_apply_eq_apply, comp_apply,
       and_self_iff]
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩⟩
-    use (prod_iso_prod W X).inv (x₁, x₂)
+    use(prod_iso_prod W X).inv (x₁, x₂)
     apply concrete.limit_ext
     rintro ⟨⟨⟩⟩
     · simp only [← comp_apply, category.assoc]; erw [limits.prod.map_fst]; simp [hx₁]

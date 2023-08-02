@@ -204,41 +204,41 @@ theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
-#print Finset.decidableExistsOfDecidableSsubsets /-
+#print Finset.decidableExistsOfDecidableSSubsets /-
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for any ssubset. -/
-instance decidableExistsOfDecidableSsubsets {s : Finset α} {p : ∀ (t) (_ : t ⊂ s), Prop}
+instance decidableExistsOfDecidableSSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊂ s), Prop}
     [∀ (t) (h : t ⊂ s), Decidable (p t h)] : Decidable (∃ t h, p t h) :=
   decidable_of_iff (∃ (t : _) (hs : t ∈ s.ssubsets), p t (mem_ssubsets.1 hs))
     ⟨fun ⟨t, _, hp⟩ => ⟨t, _, hp⟩, fun ⟨t, hs, hp⟩ => ⟨t, mem_ssubsets.2 hs, hp⟩⟩
-#align finset.decidable_exists_of_decidable_ssubsets Finset.decidableExistsOfDecidableSsubsets
+#align finset.decidable_exists_of_decidable_ssubsets Finset.decidableExistsOfDecidableSSubsets
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
-#print Finset.decidableForallOfDecidableSsubsets /-
+#print Finset.decidableForallOfDecidableSSubsets /-
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for every ssubset. -/
-instance decidableForallOfDecidableSsubsets {s : Finset α} {p : ∀ (t) (_ : t ⊂ s), Prop}
+instance decidableForallOfDecidableSSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊂ s), Prop}
     [∀ (t) (h : t ⊂ s), Decidable (p t h)] : Decidable (∀ t h, p t h) :=
   decidable_of_iff (∀ (t) (h : t ∈ s.ssubsets), p t (mem_ssubsets.1 h))
     ⟨fun h t hs => h t (mem_ssubsets.2 hs), fun h _ _ => h _ _⟩
-#align finset.decidable_forall_of_decidable_ssubsets Finset.decidableForallOfDecidableSsubsets
+#align finset.decidable_forall_of_decidable_ssubsets Finset.decidableForallOfDecidableSSubsets
 -/
 
-#print Finset.decidableExistsOfDecidableSsubsets' /-
+#print Finset.decidableExistsOfDecidableSSubsets' /-
 /-- A version of `finset.decidable_exists_of_decidable_ssubsets` with a non-dependent `p`.
 Typeclass inference cannot find `hu` here, so this is not an instance. -/
-def decidableExistsOfDecidableSsubsets' {s : Finset α} {p : Finset α → Prop}
+def decidableExistsOfDecidableSSubsets' {s : Finset α} {p : Finset α → Prop}
     (hu : ∀ (t) (h : t ⊂ s), Decidable (p t)) : Decidable (∃ (t : _) (h : t ⊂ s), p t) :=
-  @Finset.decidableExistsOfDecidableSsubsets _ _ _ _ hu
-#align finset.decidable_exists_of_decidable_ssubsets' Finset.decidableExistsOfDecidableSsubsets'
+  @Finset.decidableExistsOfDecidableSSubsets _ _ _ _ hu
+#align finset.decidable_exists_of_decidable_ssubsets' Finset.decidableExistsOfDecidableSSubsets'
 -/
 
-#print Finset.decidableForallOfDecidableSsubsets' /-
+#print Finset.decidableForallOfDecidableSSubsets' /-
 /-- A version of `finset.decidable_forall_of_decidable_ssubsets` with a non-dependent `p`.
 Typeclass inference cannot find `hu` here, so this is not an instance. -/
-def decidableForallOfDecidableSsubsets' {s : Finset α} {p : Finset α → Prop}
+def decidableForallOfDecidableSSubsets' {s : Finset α} {p : Finset α → Prop}
     (hu : ∀ (t) (h : t ⊂ s), Decidable (p t)) : Decidable (∀ (t) (h : t ⊂ s), p t) :=
-  @Finset.decidableForallOfDecidableSsubsets _ _ _ _ hu
-#align finset.decidable_forall_of_decidable_ssubsets' Finset.decidableForallOfDecidableSsubsets'
+  @Finset.decidableForallOfDecidableSSubsets _ _ _ _ hu
+#align finset.decidable_forall_of_decidable_ssubsets' Finset.decidableForallOfDecidableSSubsets'
 -/
 
 end Ssubsets
@@ -375,8 +375,8 @@ theorem powerset_card_biUnion [DecidableEq (Finset α)] (s : Finset α) :
 #align finset.powerset_card_bUnion Finset.powerset_card_biUnion
 -/
 
-#print Finset.powerset_len_sup /-
-theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :
+#print Finset.powersetLen_sup /-
+theorem powersetLen_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :
     (powersetLen n.succ u).sup id = u := by
   apply le_antisymm
   · simp_rw [Finset.sup_le_iff, mem_powerset_len]
@@ -393,7 +393,7 @@ theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
         exact mem_union_right _ (mem_image_of_mem _ ht)
       · rw [card_erase_of_mem hx]
         exact Nat.le_pred_of_lt hn
-#align finset.powerset_len_sup Finset.powerset_len_sup
+#align finset.powerset_len_sup Finset.powersetLen_sup
 -/
 
 #print Finset.powersetLen_card_add /-

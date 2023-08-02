@@ -122,7 +122,7 @@ def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X
     use V.1
     refine' ⟨_, V.2, hxV⟩
     intro y hy
-    use (⟨y, i.le hy⟩ : U)
+    use(⟨y, i.le hy⟩ : U)
     rw [Set.mem_setOf_eq]
     constructor
     · convert RingHom.isUnit_map (X.presheaf.germ ⟨y, hy⟩) hf

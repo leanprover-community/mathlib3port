@@ -1397,7 +1397,7 @@ theorem isLUB_sSup (s : Set (WithTop α)) : IsLUB s (sSup s) :=
     split_ifs
     · cases h
     · rw [preimage_empty, csSup_empty]; exact isLUB_empty
-    · exfalso; apply h_1; use ⊥; rintro a ⟨⟩
+    · exfalso; apply h_1; use⊥; rintro a ⟨⟩
   exact is_lub_Sup' hs
 #align with_top.is_lub_Sup WithTop.isLUB_sSup
 -/
@@ -1446,7 +1446,7 @@ theorem isGLB_sInf (s : Set (WithTop α)) : IsGLB s (sInf s) :=
   by
   by_cases hs : BddBelow s
   · exact is_glb_Inf' hs
-  · exfalso; apply hs; use ⊥; intro _ _; exact bot_le
+  · exfalso; apply hs; use⊥; intro _ _; exact bot_le
 #align with_top.is_glb_Inf WithTop.isGLB_sInf
 -/
 
@@ -1785,7 +1785,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
         split_ifs
         · rw [h] at h_1 ; cases h_1
         · convert bot_le; convert WithBot.csSup_empty; rw [h]; rfl
-        · exfalso; apply h_2; use ⊥; rw [h]; rintro b ⟨⟩
+        · exfalso; apply h_2; use⊥; rw [h]; rintro b ⟨⟩
       · refine' (WithTop.isLUB_sSup' h).2 ha
     inf_le := fun S a haS =>
       show ite _ _ _ ≤ a by
@@ -1794,7 +1794,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
           cases h haS <;> tauto
         · cases a
           · exact le_top
-          · apply WithTop.some_le_some.2; refine' csInf_le _ haS; use ⊥; intro b hb; exact bot_le
+          · apply WithTop.some_le_some.2; refine' csInf_le _ haS; use⊥; intro b hb; exact bot_le
     le_inf := fun S a haS => (WithTop.isGLB_sInf' ⟨a, haS⟩).2 haS }
 #align with_top.with_bot.complete_lattice WithTop.WithBot.completeLattice
 -/

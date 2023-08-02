@@ -78,12 +78,12 @@ theorem eventually_smallSets {p : Set α → Prop} :
 #align filter.eventually_small_sets Filter.eventually_smallSets
 -/
 
-#print Filter.eventually_small_sets' /-
-theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
+#print Filter.eventually_smallSets' /-
+theorem eventually_smallSets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_smallSets.trans <|
     exists₂_congr fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
-#align filter.eventually_small_sets' Filter.eventually_small_sets'
+#align filter.eventually_small_sets' Filter.eventually_smallSets'
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
@@ -196,7 +196,7 @@ theorem eventually_smallSets_eventually {p : α → Prop} :
     (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l ⊓ l', p x :=
   calc
     _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x :=
-      eventually_small_sets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
+      eventually_smallSets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
     _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
     _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm', mem_inter_iff, ← and_imp]
 #align filter.eventually_small_sets_eventually Filter.eventually_smallSets_eventually

@@ -96,7 +96,7 @@ section BottomRow
 theorem bottom_row_coprime {R : Type _} [CommRing R] (g : SL(2, R)) :
     IsCoprime ((↑g : Matrix (Fin 2) (Fin 2) R) 1 0) ((↑g : Matrix (Fin 2) (Fin 2) R) 1 1) :=
   by
-  use -(↑g : Matrix (Fin 2) (Fin 2) R) 0 1, (↑g : Matrix (Fin 2) (Fin 2) R) 0 0
+  use-(↑g : Matrix (Fin 2) (Fin 2) R) 0 1, (↑g : Matrix (Fin 2) (Fin 2) R) 0 0
   rw [add_comm, neg_mul, ← sub_eq_add_neg, ← det_fin_two]
   exact g.det_coe
 #align modular_group.bottom_row_coprime ModularGroup.bottom_row_coprime
@@ -405,10 +405,10 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
   have had := g.det_coe
   replace had : ↑ₘg 0 0 * ↑ₘg 1 1 = 1; · rw [det_fin_two, hc] at had ; linarith
   rcases Int.eq_one_or_neg_one_of_mul_eq_one' had with (⟨ha, hd⟩ | ⟨ha, hd⟩)
-  · use ↑ₘg 0 1
+  · use↑ₘg 0 1
     suffices g = T ^ ↑ₘg 0 1 by intro z; conv_lhs => rw [this]
     ext i j; fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
-  · use -↑ₘg 0 1
+  · use-↑ₘg 0 1
     suffices g = -T ^ (-↑ₘg 0 1) by intro z; conv_lhs => rw [this, SL_neg_smul]
     ext i j; fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
 #align modular_group.exists_eq_T_zpow_of_c_eq_zero ModularGroup.exists_eq_T_zpow_of_c_eq_zero

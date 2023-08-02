@@ -2328,12 +2328,12 @@ theorem Orthonormal.tsum_inner_products_le (hv : Orthonormal 𝕜 v) :
 theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) :
     Summable fun i => ‖⟪v i, x⟫‖ ^ 2 :=
   by
-  use ⨆ s : Finset ι, ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
+  use⨆ s : Finset ι, ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
   apply hasSum_of_isLUB_of_nonneg
   · intro b
     simp only [norm_nonneg, pow_nonneg]
   · refine' isLUB_ciSup _
-    use ‖x‖ ^ 2
+    use‖x‖ ^ 2
     rintro y ⟨s, rfl⟩
     exact hv.sum_inner_products_le x
 #align orthonormal.inner_products_summable Orthonormal.inner_products_summable

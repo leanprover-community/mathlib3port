@@ -266,7 +266,7 @@ theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ 
     · intro a; cases' x with x
       · simp only [one_pow]
       · have le := (pow_le_iff_le_right (Nat.le_add_left _ _)).mp a
-        use (x + 2) ^ (l - k)
+        use(x + 2) ^ (l - k)
         rw [← pow_add, add_comm k, tsub_add_cancel_of_le le]
 #align nat.pow_dvd_pow_iff_pow_le_pow Nat.pow_dvd_pow_iff_pow_le_pow
 -/

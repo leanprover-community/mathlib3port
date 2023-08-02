@@ -919,8 +919,8 @@ theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ
 #align vitali_family.ae_tendsto_lintegral_div VitaliFamily.ae_tendsto_lintegral_div
 -/
 
-#print VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div' /-
-theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f μ)
+#print VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'_of_integrable /-
+theorem ae_tendsto_lintegral_nnnorm_sub_div'_of_integrable {f : α → E} (hf : Integrable f μ)
     (h'f : StronglyMeasurable f) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) :=
   by
@@ -999,11 +999,11 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
       · simp only [lintegral_const, measure.restrict_apply, MeasurableSet.univ, univ_inter]
         exact mul_le_mul_right' xc.le _
     _ = ε * μ a := by rw [← add_mul, ENNReal.add_halves]
-#align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div' VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'
+#align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div' VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'_of_integrable
 -/
 
-#print VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div /-
-theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ) :
+#print VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div_of_integrable /-
+theorem ae_tendsto_lintegral_nnnorm_sub_div_of_integrable {f : α → E} (hf : Integrable f μ) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) :=
   by
   have I : integrable (hf.1.mk f) μ := hf.congr hf.1.ae_eq_mk
@@ -1016,7 +1016,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ
   apply ae_restrict_of_ae
   filter_upwards [hf.1.ae_eq_mk] with y hy
   rw [hy, h'x]
-#align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div
+#align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div_of_integrable
 -/
 
 #print VitaliFamily.ae_tendsto_average_norm_sub /-

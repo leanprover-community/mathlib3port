@@ -159,7 +159,7 @@ theorem induced_topology_pure :
   by
   apply eq_bot_of_singletons_open
   intro x
-  use {u : Ultrafilter α | {x} ∈ u}, ultrafilter_isOpen_basic _
+  use{u : Ultrafilter α | {x} ∈ u}, ultrafilter_isOpen_basic _
   simp
 #align induced_topology_pure induced_topology_pure
 -/

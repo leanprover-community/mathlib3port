@@ -73,11 +73,11 @@ instance : LE (ValueGroup A K) :=
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩; ext
         constructor
-        · rintro ⟨e, he⟩; use (c⁻¹ : Aˣ) * e * d
+        · rintro ⟨e, he⟩; use(c⁻¹ : Aˣ) * e * d
           apply_fun fun t => c⁻¹ • t at he 
           simpa [mul_smul] using he
         · rintro ⟨e, he⟩; dsimp
-          use (d⁻¹ : Aˣ) * c * e
+          use(d⁻¹ : Aˣ) * c * e
           erw [← he, ← mul_smul, ← mul_smul]
           congr 1
           rw [mul_comm]
@@ -508,12 +508,12 @@ instance (priority := 100) of_discreteValuationRing : ValuationRing A :=
   obtain ⟨m, u, rfl⟩ := DiscreteValuationRing.eq_unit_mul_pow_irreducible ha hϖ
   obtain ⟨n, v, rfl⟩ := DiscreteValuationRing.eq_unit_mul_pow_irreducible hb hϖ
   cases' le_total m n with h h
-  · use (u⁻¹ * v : Aˣ) * ϖ ^ (n - m); left
+  · use(u⁻¹ * v : Aˣ) * ϖ ^ (n - m); left
     simp_rw [mul_comm (u : A), Units.val_mul, ← mul_assoc, mul_assoc _ (u : A)]
     simp only [Units.mul_inv, mul_one, mul_comm _ (v : A), mul_assoc, ← pow_add]
     congr 2
     linarith
-  · use (v⁻¹ * u : Aˣ) * ϖ ^ (m - n); right
+  · use(v⁻¹ * u : Aˣ) * ϖ ^ (m - n); right
     simp_rw [mul_comm (v : A), Units.val_mul, ← mul_assoc, mul_assoc _ (v : A)]
     simp only [Units.mul_inv, mul_one, mul_comm _ (u : A), mul_assoc, ← pow_add]
     congr 2

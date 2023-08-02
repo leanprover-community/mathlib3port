@@ -56,7 +56,7 @@ theorem p_lemma (p : ℕ) (hpp : Nat.Prime p) (hp_mod_4_eq_1 : p ≡ 1 [MOD 4]) 
   have hnat₅ : p ∣ k ^ 2 + 4 := by
     cases' hnat₁ with x hx
     have : (p : ℤ) ∣ k ^ 2 + 4 := by
-      use (p : ℤ) - 4 * n + 4 * x
+      use(p : ℤ) - 4 * n + 4 * x
       have hcast₁ : (k : ℤ) = p - 2 * n := by assumption_mod_cast
       have hcast₂ : (n : ℤ) ^ 2 + 1 = p * x := by assumption_mod_cast
       linear_combination ((k : ℤ) + p - 2 * n) * hcast₁ + 4 * hcast₂

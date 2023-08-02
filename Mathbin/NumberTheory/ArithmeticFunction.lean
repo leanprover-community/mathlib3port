@@ -703,7 +703,7 @@ theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicati
             cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mul]
     · rintro ⟨b1, b2⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
-      use ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
+      use((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
       simp only [exists_prop, Prod.mk.inj_iff, Ne.def, mem_product, mem_divisors_antidiagonal]
       rw [← cop.gcd_mul _, ← cop.gcd_mul _, ← h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop h.1,
         Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop.symm _]

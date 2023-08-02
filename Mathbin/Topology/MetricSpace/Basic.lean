@@ -2047,7 +2047,7 @@ theorem Metric.uniformCauchySeqOn_iff {γ : Type _} {F : β → γ → α} {s : 
     rcases metric.mem_uniformity_dist.mp hu with ⟨ε, hε, hab⟩
     rcases h ε hε with ⟨N, hN⟩
     rw [prod_at_top_at_top_eq, eventually_at_top]
-    use (N, N)
+    use(N, N)
     intro b hb x hx
     rcases hb with ⟨hbl, hbr⟩
     exact hab (hN b.fst hbl.ge b.snd hbr.ge x hx)
@@ -3374,7 +3374,7 @@ theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
   rcases(has_basis_cofinite.prod_self.tendsto_iff uniformity_basis_dist).1 hf 1 zero_lt_one with
     ⟨s, hsf, hs1⟩
   rw [← image_univ, ← union_compl_self s, image_union, bounded_union]
-  use (hsf.image f).Bounded, 1
+  use(hsf.image f).Bounded, 1
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
   exact le_of_lt (hs1 (x, y) ⟨hx, hy⟩)
 #align metric.bounded_range_of_tendsto_cofinite_uniformity Metric.bounded_range_of_tendsto_cofinite_uniformity

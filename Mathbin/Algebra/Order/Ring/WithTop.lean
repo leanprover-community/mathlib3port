@@ -425,7 +425,7 @@ instance [MulZeroClass α] [Preorder α] [MulPosMonoRev α] : MulPosMonoRev (Wit
     exact le_of_mul_le_mul_right h x0⟩
 
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : OrderedCommSemiring (WithBot α) :=
-  { WithBot.zeroLeOneClass, WithBot.orderedAddCommMonoid,
+  { WithBot.zeroLEOneClass, WithBot.orderedAddCommMonoid,
     WithBot.commSemiring with
     mul_le_mul_of_nonneg_left := fun _ _ _ => mul_le_mul_of_nonneg_left
     mul_le_mul_of_nonneg_right := fun _ _ _ => mul_le_mul_of_nonneg_right }

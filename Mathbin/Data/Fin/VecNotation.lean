@@ -224,7 +224,7 @@ theorem vec_single_eq_const (a : α) : ![a] = fun _ => a :=
 -/
 @[simp]
 theorem cons_val_one (x : α) (u : Fin m.succ → α) : vecCons x u 1 = vecHead u := by
-  rw [← Fin.succ_zero_eq_one, cons_val_succ]; rfl
+  rw [← Fin.succ_zero_eq_one', cons_val_succ]; rfl
 #align matrix.cons_val_one Matrix.cons_val_one
 -/
 

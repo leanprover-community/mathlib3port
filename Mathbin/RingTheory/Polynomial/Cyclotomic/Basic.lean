@@ -548,7 +548,7 @@ theorem X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd (R) [CommRing R] {
     (h : d ∈ n.properDivisors) : (X ^ d - 1) * cyclotomic n R ∣ X ^ n - 1 :=
   by
   have hdn := (nat.mem_proper_divisors.mp h).2
-  use ∏ x in n.proper_divisors \ d.divisors, cyclotomic x R
+  use∏ x in n.proper_divisors \ d.divisors, cyclotomic x R
   symm
   convert X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd R h using 1
   rw [mul_assoc]

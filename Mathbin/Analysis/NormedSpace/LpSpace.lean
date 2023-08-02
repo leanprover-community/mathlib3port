@@ -135,7 +135,7 @@ theorem memℓp_gen {f : ∀ i, E i} (hf : Summable fun i => ‖f i‖ ^ p.toRea
 theorem memℓp_gen' {C : ℝ} {f : ∀ i, E i} (hf : ∀ s : Finset α, ∑ i in s, ‖f i‖ ^ p.toReal ≤ C) :
     Memℓp f p := by
   apply memℓp_gen
-  use ⨆ s : Finset α, ∑ i in s, ‖f i‖ ^ p.to_real
+  use⨆ s : Finset α, ∑ i in s, ‖f i‖ ^ p.to_real
   apply hasSum_of_isLUB_of_nonneg
   · intro b
     exact Real.rpow_nonneg_of_nonneg (norm_nonneg _) _

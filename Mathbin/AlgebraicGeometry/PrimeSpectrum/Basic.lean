@@ -853,7 +853,7 @@ theorem localization_comap_range [Algebra R S] (M : Submonoid R) [IsLocalization
     rintro ⟨p, rfl⟩ x ⟨hx₁, hx₂⟩
     exact (p.2.1 : ¬_) (p.as_ideal.eq_top_of_is_unit_mem hx₂ (IsLocalization.map_units S ⟨x, hx₁⟩))
   · intro h
-    use ⟨x.as_ideal.map (algebraMap R S), IsLocalization.isPrime_of_isPrime_disjoint M S _ x.2 h⟩
+    use⟨x.as_ideal.map (algebraMap R S), IsLocalization.isPrime_of_isPrime_disjoint M S _ x.2 h⟩
     ext1
     exact IsLocalization.comap_map_of_isPrime_disjoint M S _ x.2 h
 #align prime_spectrum.localization_comap_range PrimeSpectrum.localization_comap_range

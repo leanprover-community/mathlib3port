@@ -6,7 +6,7 @@ Authors: Joseph Myers
 import Mathbin.LinearAlgebra.Ray
 import Mathbin.LinearAlgebra.Determinant
 
-#align_import linear_algebra.orientation from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
+#align_import linear_algebra.orientation from "leanprover-community/mathlib"@"0c1d80f5a86b36c1db32e021e8d19ae7809d5b79"
 
 /-!
 # Orientations of modules
@@ -49,7 +49,7 @@ variable (M : Type _) [AddCommMonoid M] [Module R M]
 
 variable {N : Type _} [AddCommMonoid N] [Module R N]
 
-variable (ι : Type _)
+variable (ι ι' : Type _)
 
 #print Orientation /-
 /-- An orientation of a module, intended to be used when `ι` is a `fintype` with the same
@@ -101,6 +101,35 @@ theorem Orientation.map_symm (e : M ≃ₗ[R] N) :
 #align orientation.map_symm Orientation.map_symm
 -/
 
+section Reindex
+
+variable (R M) {ι ι'}
+
+/-- An equivalence between indices implies an equivalence between orientations. -/
+def Orientation.reindex (e : ι ≃ ι') : Orientation R M ι ≃ Orientation R M ι' :=
+  Module.Ray.map <| AlternatingMap.domDomLcongr R e
+#align orientation.reindex Orientation.reindex
+
+@[simp]
+theorem Orientation.reindex_apply (e : ι ≃ ι') (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
+    Orientation.reindex R M e (rayOfNeZero _ v hv) =
+      rayOfNeZero _ (v.domDomCongr e) (mt (v.domDomCongr_eq_zero_iff e).mp hv) :=
+  rfl
+#align orientation.reindex_apply Orientation.reindex_apply
+
+@[simp]
+theorem Orientation.reindex_refl : (Orientation.reindex R M <| Equiv.refl ι) = Equiv.refl _ := by
+  rw [Orientation.reindex, AlternatingMap.domDomLcongr_refl, Module.Ray.map_refl]
+#align orientation.reindex_refl Orientation.reindex_refl
+
+@[simp]
+theorem Orientation.reindex_symm (e : ι ≃ ι') :
+    (Orientation.reindex R M e).symm = Orientation.reindex R M e.symm :=
+  rfl
+#align orientation.reindex_symm Orientation.reindex_symm
+
+end Reindex
+
 #print IsEmpty.oriented /-
 /-- A module is canonically oriented with respect to an empty index type. -/
 instance (priority := 100) IsEmpty.oriented [Nontrivial R] [IsEmpty ι] : Module.Oriented R M ι
@@ -148,9 +177,15 @@ protected theorem Orientation.map_neg {ι : Type _} (f : M ≃ₗ[R] N) (x : Ori
 #align orientation.map_neg Orientation.map_neg
 -/
 
+@[simp]
+protected theorem Orientation.reindex_neg {ι ι' : Type _} (e : ι ≃ ι') (x : Orientation R M ι) :
+    Orientation.reindex R M e (-x) = -Orientation.reindex R M e x :=
+  Module.Ray.map_neg _ x
+#align orientation.reindex_neg Orientation.reindex_neg
+
 namespace Basis
 
-variable {ι : Type _}
+variable {ι ι' : Type _}
 
 #print Basis.map_orientation_eq_det_inv_smul /-
 /-- The value of `orientation.map` when the index type has the cardinality of a basis, in terms
@@ -168,7 +203,7 @@ theorem map_orientation_eq_det_inv_smul [Finite ι] (e : Basis ι R M) (x : Orie
 #align basis.map_orientation_eq_det_inv_smul Basis.map_orientation_eq_det_inv_smul
 -/
 
-variable [Fintype ι] [DecidableEq ι]
+variable [Fintype ι] [DecidableEq ι] [Fintype ι'] [DecidableEq ι']
 
 #print Basis.orientation /-
 /-- The orientation given by a basis. -/
@@ -183,6 +218,11 @@ theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
   simp_rw [Basis.orientation, Orientation.map_apply, Basis.det_map']
 #align basis.orientation_map Basis.orientation_map
 -/
+
+theorem orientation_reindex [Nontrivial R] (e : Basis ι R M) (eι : ι ≃ ι') :
+    (e.reindex eι).Orientation = Orientation.reindex R M eι e.Orientation := by
+  simp_rw [Basis.orientation, Orientation.reindex_apply, Basis.det_reindex']
+#align basis.orientation_reindex Basis.orientation_reindex
 
 #print Basis.orientation_unitsSMul /-
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those

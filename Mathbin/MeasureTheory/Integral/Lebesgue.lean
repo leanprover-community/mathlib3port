@@ -277,7 +277,7 @@ theorem lintegral_eq_nnreal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ
   · have h_meas : μ (φ ⁻¹' {∞}) ≠ 0 := mt measure_zero_iff_ae_nmem.1 h
     refine' le_trans le_top (ge_of_eq <| (iSup_eq_top _).2 fun b hb => _)
     obtain ⟨n, hn⟩ : ∃ n : ℕ, b < n * μ (φ ⁻¹' {∞}); exact exists_nat_mul_gt h_meas (ne_of_lt hb)
-    use (const α (n : ℝ≥0)).restrict (φ ⁻¹' {∞})
+    use(const α (n : ℝ≥0)).restrict (φ ⁻¹' {∞})
     simp only [lt_iSup_iff, exists_prop, coe_restrict, φ.measurable_set_preimage, coe_const,
       ENNReal.coe_indicator, map_coe_ennreal_restrict, simple_func.map_const, ENNReal.coe_nat,
       restrict_const_lintegral]
@@ -565,7 +565,7 @@ theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : �
   rcases exists_between hε₂0 with ⟨ε₁, hε₁0, hε₁₂⟩
   rcases exists_simple_func_forall_lintegral_sub_lt_of_pos h hε₁0.ne' with ⟨φ, hle, hφ⟩
   rcases φ.exists_forall_le with ⟨C, hC⟩
-  use (ε₂ - ε₁) / C, ENNReal.div_pos_iff.2 ⟨(tsub_pos_iff_lt.2 hε₁₂).ne', ENNReal.coe_ne_top⟩
+  use(ε₂ - ε₁) / C, ENNReal.div_pos_iff.2 ⟨(tsub_pos_iff_lt.2 hε₁₂).ne', ENNReal.coe_ne_top⟩
   refine' fun s hs => lt_of_le_of_lt _ hε₂ε
   simp only [lintegral_eq_nnreal, iSup_le_iff]
   intro ψ hψ

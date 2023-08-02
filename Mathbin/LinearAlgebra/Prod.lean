@@ -662,7 +662,7 @@ theorem ker_coprod_of_disjoint_range {M₂ : Type _} [AddCommGroup M₂] [Module
   have : f y ∈ f.range ⊓ g.range :=
     by
     simp only [true_and_iff, mem_range, mem_inf, exists_apply_eq_apply]
-    use -z
+    use-z
     rwa [eq_comm, map_neg, ← sub_eq_zero, sub_neg_eq_add]
   rw [hd.eq_bot, mem_bot] at this 
   rw [this] at h 

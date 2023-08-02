@@ -141,7 +141,7 @@ theorem d_eq :
     Finsupp.smul_single_one _ ((-1 : k) ^ _), map_smul, d_apply]
   simp only [@Fin.sum_univ_succ _ _ (n + 1), Fin.val_zero, pow_zero, one_smul, Fin.succAbove_zero,
     diagonal_hom_equiv_symm_apply f (Fin.partialProd g ∘ @Fin.succ (n + 1)), Function.comp_apply,
-    Fin.partialProd_succ, Fin.castSucc_zero, Fin.partialProd_zero, one_mul]
+    Fin.partialProd_succ, Fin.castSucc_zero', Fin.partialProd_zero, one_mul]
   congr 1
   · congr
     ext

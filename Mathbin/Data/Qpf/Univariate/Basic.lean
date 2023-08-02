@@ -123,7 +123,7 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (x : F α) :
   by
   constructor
   · rintro ⟨y, hy⟩; cases' h : repr y with a f
-    use ⟨a, fun i => (f i).val⟩; dsimp; constructor
+    use⟨a, fun i => (f i).val⟩; dsimp; constructor
     · rw [← hy, ← abs_repr y, h, ← abs_map]; rfl
     intro i; apply (f i).property
   rintro ⟨⟨a, f⟩, h₀, h₁⟩; dsimp at *

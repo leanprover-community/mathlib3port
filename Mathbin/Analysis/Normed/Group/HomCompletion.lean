@@ -70,7 +70,7 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) :
     NormedAddGroupHom (Completion G) (Completion H) :=
   { f.toAddMonoidHom.Completion f.Continuous with
     bound' := by
-      use ‖f‖
+      use‖f‖
       intro y
       apply completion.induction_on y
       ·

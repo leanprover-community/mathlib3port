@@ -431,7 +431,7 @@ theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ 
     simp only [add_zero, coe_int_re, MulZeroClass.zero_mul, mul_im, dvd_mul_right, and_self_iff,
       mul_re, MulZeroClass.mul_zero, coe_int_im]
   · rintro ⟨⟨r, hr⟩, ⟨i, hi⟩⟩
-    use ⟨r, i⟩
+    use⟨r, i⟩
     rw [smul_val, ext]
     exact ⟨hr, hi⟩
 #align zsqrtd.coe_int_dvd_iff Zsqrtd.coe_int_dvd_iff

@@ -1853,7 +1853,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
 instance : IsAtomistic (Submodule K V)
     where eq_sSup_atoms := by
     intro W
-    use {T : Submodule K V | ∃ (v : V) (hv : v ∈ W) (hz : v ≠ 0), T = span K {v}}
+    use{T : Submodule K V | ∃ (v : V) (hv : v ∈ W) (hz : v ≠ 0), T = span K {v}}
     refine' ⟨submodule_eq_Sup_le_nonzero_spans W, _⟩
     rintro _ ⟨w, ⟨_, ⟨hw, rfl⟩⟩⟩; exact nonzero_span_atom w hw
 

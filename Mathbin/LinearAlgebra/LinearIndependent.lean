@@ -1489,7 +1489,7 @@ theorem linearIndependent_fin_succ' {n} {v : Fin (n + 1) → V} :
 theorem linearIndependent_fin2 {f : Fin 2 → V} :
     LinearIndependent K f ↔ f 1 ≠ 0 ∧ ∀ a : K, a • f 1 ≠ f 0 := by
   rw [linearIndependent_fin_succ, linearIndependent_unique_iff, range_unique, mem_span_singleton,
-    not_exists, show Fin.tail f default = f 1 by rw [← Fin.succ_zero_eq_one] <;> rfl]
+    not_exists, show Fin.tail f default = f 1 by rw [← Fin.succ_zero_eq_one'] <;> rfl]
 #align linear_independent_fin2 linearIndependent_fin2
 -/
 

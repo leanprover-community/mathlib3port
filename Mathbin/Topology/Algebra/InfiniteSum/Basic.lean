@@ -8,7 +8,7 @@ import Mathbin.Logic.Encodable.Lattice
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.Star
 
-#align_import topology.algebra.infinite_sum.basic from "leanprover-community/mathlib"@"3b1890e71632be9e3b2086ab512c3259a7e9a3ef"
+#align_import topology.algebra.infinite_sum.basic from "leanprover-community/mathlib"@"3b52265189f3fb43aa631edffce5d060fafaf82f"
 
 /-!
 # Infinite sum over a topological monoid
@@ -1393,7 +1393,7 @@ theorem cauchySeq_finset_iff_vanishing :
   · intro h e he
     rcases exists_nhds_half_neg he with ⟨d, hd, hde⟩
     rcases h d hd with ⟨s, h⟩
-    use (s, s)
+    use(s, s)
     rintro ⟨t₁, t₂⟩ ⟨ht₁, ht₂⟩
     have : ∑ b in t₂, f b - ∑ b in t₁, f b = ∑ b in t₂ \ s, f b - ∑ b in t₁ \ s, f b := by
       simp only [(Finset.sum_sdiff ht₁).symm, (Finset.sum_sdiff ht₂).symm, add_sub_add_right_eq_sub]
@@ -1619,10 +1619,45 @@ theorem Summable.const_smul (b : γ) (hf : Summable f) : Summable fun i => b •
 -/
 
 #print tsum_const_smul /-
+/-- Infinite sums commute with scalar multiplication. Version for scalars living in a `monoid`, but
+  requiring a summability hypothesis. -/
 theorem tsum_const_smul [T2Space α] (b : γ) (hf : Summable f) : ∑' i, b • f i = b • ∑' i, f i :=
   (hf.HasSum.const_smul _).tsum_eq
 #align tsum_const_smul tsum_const_smul
 -/
+
+/-- Infinite sums commute with scalar multiplication. Version for scalars living in a `group`, but
+  not requiring any summability hypothesis. -/
+theorem tsum_const_smul' {γ : Type _} [Group γ] [DistribMulAction γ α] [ContinuousConstSMul γ α]
+    [T2Space α] (g : γ) : ∑' i : β, g • f i = g • ∑' i : β, f i :=
+  by
+  by_cases hf : Summable f
+  · exact tsum_const_smul _ hf
+  rw [tsum_eq_zero_of_not_summable hf]
+  simp only [smul_zero]
+  let mul_g : α ≃+ α := DistribMulAction.toAddEquiv α g
+  apply tsum_eq_zero_of_not_summable
+  change ¬Summable (mul_g ∘ f)
+  rwa [Summable.map_iff_of_equiv mul_g] <;> apply continuous_const_smul
+#align tsum_const_smul' tsum_const_smul'
+
+/-- Infinite sums commute with scalar multiplication. Version for scalars living in a
+  `division_ring`; no summability hypothesis. This could be made to work for a
+  `[group_with_zero γ]` if there was such a thing as `distrib_mul_action_with_zero`. -/
+theorem tsum_const_smul'' {γ : Type _} [DivisionRing γ] [Module γ α] [ContinuousConstSMul γ α]
+    [T2Space α] (g : γ) : ∑' i : β, g • f i = g • ∑' i : β, f i :=
+  by
+  by_cases hf : Summable f
+  · exact tsum_const_smul _ hf
+  rw [tsum_eq_zero_of_not_summable hf]
+  simp only [smul_zero]
+  by_cases hg : g = 0
+  · simp [hg]
+  let mul_g : α ≃+ α := DistribMulAction.toAddEquiv₀ α g hg
+  apply tsum_eq_zero_of_not_summable
+  change ¬Summable (mul_g ∘ f)
+  rwa [Summable.map_iff_of_equiv mul_g] <;> apply continuous_const_smul
+#align tsum_const_smul'' tsum_const_smul''
 
 end ConstSmul
 
@@ -1805,4 +1840,111 @@ theorem tsum_star : star (∑' b, f b) = ∑' b, star (f b) :=
 -/
 
 end ContinuousStar
+
+section Automorphize
+
+variable {M : Type _} [TopologicalSpace M] [AddCommMonoid M] [T2Space M] {R : Type _}
+  [DivisionRing R] [Module R M] [ContinuousConstSMul R M]
+
+/-- Given a group `α` acting on a type `β`, and a function `f : β → M`, we "automorphize" `f` to a
+  function `β ⧸ α → M` by summing over `α` orbits, `b ↦ ∑' (a : α), f(a • b)`. -/
+@[to_additive
+      "Given an additive group `α` acting on a type `β`, and a function `f : β → M`,\n  we automorphize `f` to a function `β ⧸ α → M` by summing over `α` orbits,\n  `b ↦ ∑' (a : α), f(a • b)`."]
+def MulAction.automorphize [Group α] [MulAction α β] (f : β → M) :
+    Quotient (MulAction.orbitRel α β) → M :=
+  @Quotient.lift _ _ (MulAction.orbitRel α β) (fun b => ∑' a : α, f (a • b))
+    (by
+      rintro b₁ b₂ ⟨a, rfl : a • b₂ = b₁⟩
+      simpa [mul_smul] using (Equiv.mulRight a).tsum_eq fun a' => f (a' • b₂))
+#align mul_action.automorphize MulAction.automorphize
+#align add_action.automorphize AddAction.automorphize
+
+/-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the 
+  `R`-scalar multiplication. -/
+theorem MulAction.automorphize_smul_left [Group α] [MulAction α β] (f : β → M)
+    (g : Quotient (MulAction.orbitRel α β) → R) :
+    MulAction.automorphize (g ∘ Quotient.mk'' • f) =
+      g • (MulAction.automorphize f : Quotient (MulAction.orbitRel α β) → M) :=
+  by
+  ext x
+  apply Quotient.inductionOn' x
+  intro b
+  simp only [MulAction.automorphize, Pi.smul_apply', Function.comp_apply]
+  set π : β → Quotient (MulAction.orbitRel α β) := Quotient.mk''
+  have H₁ : ∀ a : α, π (a • b) = π b := by
+    intro a
+    rw [Quotient.eq_rel]
+    fconstructor
+    exact a
+    simp
+  change ∑' a : α, g (π (a • b)) • f (a • b) = g (π b) • ∑' a : α, f (a • b)
+  simp_rw [H₁]
+  exact tsum_const_smul'' _
+#align mul_action.automorphize_smul_left MulAction.automorphize_smul_left
+
+/-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the 
+  `R`-scalar multiplication. -/
+theorem AddAction.automorphize_smul_left [AddGroup α] [AddAction α β] (f : β → M)
+    (g : Quotient (AddAction.orbitRel α β) → R) :
+    AddAction.automorphize (g ∘ Quotient.mk'' • f) =
+      g • (AddAction.automorphize f : Quotient (AddAction.orbitRel α β) → M) :=
+  by
+  ext x
+  apply Quotient.inductionOn' x
+  intro b
+  simp only [AddAction.automorphize, Pi.smul_apply', Function.comp_apply]
+  set π : β → Quotient (AddAction.orbitRel α β) := Quotient.mk''
+  have H₁ : ∀ a : α, π (a +ᵥ b) = π b := by
+    intro a
+    rw [Quotient.eq_rel]
+    fconstructor
+    exact a
+    simp
+  change ∑' a : α, g (π (a +ᵥ b)) • f (a +ᵥ b) = g (π b) • ∑' a : α, f (a +ᵥ b)
+  simp_rw [H₁]
+  exact tsum_const_smul'' _
+#align add_action.automorphize_smul_left AddAction.automorphize_smul_left
+
+attribute [to_additive MulAction.automorphize_smul_left] AddAction.automorphize_smul_left
+
+section
+
+variable {G : Type _} [Group G] {Γ : Subgroup G}
+
+/-- Given a subgroup `Γ` of a group `G`, and a function `f : G → M`, we "automorphize" `f` to a
+  function `G ⧸ Γ → M` by summing over `Γ` orbits, `g ↦ ∑' (γ : Γ), f(γ • g)`. -/
+@[to_additive
+      "Given a subgroup `Γ` of an additive group `G`, and a function `f : G → M`, we\n  automorphize `f` to a function `G ⧸ Γ → M` by summing over `Γ` orbits,\n  `g ↦ ∑' (γ : Γ), f(γ • g)`."]
+def QuotientGroup.automorphize (f : G → M) : G ⧸ Γ → M :=
+  MulAction.automorphize f
+#align quotient_group.automorphize QuotientGroup.automorphize
+#align quotient_add_group.automorphize quotientAddGroup.automorphize
+
+/-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the 
+  `R`-scalar multiplication. -/
+theorem QuotientGroup.automorphize_smul_left (f : G → M) (g : G ⧸ Γ → R) :
+    QuotientGroup.automorphize (g ∘ Quotient.mk'' • f) =
+      g • (QuotientGroup.automorphize f : G ⧸ Γ → M) :=
+  MulAction.automorphize_smul_left f g
+#align quotient_group.automorphize_smul_left QuotientGroup.automorphize_smul_left
+
+end
+
+section
+
+variable {G : Type _} [AddGroup G] {Γ : AddSubgroup G}
+
+/-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the `R`
+  -scalar multiplication. -/
+theorem quotientAddGroup.automorphize_smul_left (f : G → M) (g : G ⧸ Γ → R) :
+    quotientAddGroup.automorphize (g ∘ Quotient.mk'' • f) =
+      g • (quotientAddGroup.automorphize f : G ⧸ Γ → M) :=
+  AddAction.automorphize_smul_left f g
+#align quotient_add_group.automorphize_smul_left quotientAddGroup.automorphize_smul_left
+
+end
+
+attribute [to_additive QuotientGroup.automorphize_smul_left] quotientAddGroup.automorphize_smul_left
+
+end Automorphize
 

@@ -6,7 +6,7 @@ Authors: Chris Hughes
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.GroupTheory.GroupAction.Units
 
-#align_import group_theory.group_action.group from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
+#align_import group_theory.group_action.group from "leanprover-community/mathlib"@"3b52265189f3fb43aa631edffce5d060fafaf82f"
 
 /-!
 # Group actions applied to various types of group
@@ -317,6 +317,20 @@ def DistribMulAction.toAddEquiv (x : α) : β ≃+ β :=
   { DistribMulAction.toAddMonoidHom β x, MulAction.toPermHom α β x with }
 #align distrib_mul_action.to_add_equiv DistribMulAction.toAddEquiv
 -/
+
+/-- Each non-zero element of a `group_with_zero` defines an additive monoid isomorphism of an
+`add_monoid` on which it acts distributively.
+
+This is a stronger version of `distrib_mul_action.to_add_monoid_hom`. -/
+def DistribMulAction.toAddEquiv₀ {α : Type _} (β : Type _) [GroupWithZero α] [AddMonoid β]
+    [DistribMulAction α β] (x : α) (hx : x ≠ 0) : β ≃+ β :=
+  {
+    DistribMulAction.toAddMonoidHom β
+      x with
+    invFun := fun b => x⁻¹ • b
+    left_inv := inv_smul_smul₀ hx
+    right_inv := smul_inv_smul₀ hx }
+#align distrib_mul_action.to_add_equiv₀ DistribMulAction.toAddEquiv₀
 
 variable (α β)
 

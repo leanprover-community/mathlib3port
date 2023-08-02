@@ -3132,7 +3132,7 @@ theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
   · suffices ¬IsUnit ((e.symm : M₂ →L[R] M).comp f) by simp [this, h₁]
     contrapose! h₁
     rcases h₁ with ⟨F, hF⟩
-    use (ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
+    use(ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
     ext
     dsimp; rw [coeFn_coe_base' F, hF]; simp
 #align continuous_linear_map.to_ring_inverse ContinuousLinearMap.to_ring_inverse

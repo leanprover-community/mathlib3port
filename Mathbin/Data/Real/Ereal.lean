@@ -1505,7 +1505,7 @@ theorem sign_bot : SignType.sign (⊥ : EReal) = -1 :=
 #print EReal.sign_coe /-
 @[simp]
 theorem sign_coe (x : ℝ) : SignType.sign (x : EReal) = SignType.sign x := by
-  simp only [SignType.sign, OrderHom.coe_fun_mk, EReal.coe_pos, EReal.coe_neg']
+  simp only [SignType.sign, OrderHom.coe_mk, EReal.coe_pos, EReal.coe_neg']
 #align ereal.sign_coe EReal.sign_coe
 -/
 

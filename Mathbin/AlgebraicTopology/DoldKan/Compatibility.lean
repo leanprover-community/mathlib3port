@@ -216,6 +216,7 @@ theorem equivalence_functor : (equivalence hF hG).Functor = F ⋙ eB.inverse :=
 #align algebraic_topology.dold_kan.compatibility.equivalence_functor AlgebraicTopology.DoldKan.Compatibility.equivalence_functor
 -/
 
+#print AlgebraicTopology.DoldKan.Compatibility.τ₀ /-
 /-- The isomorphism `eB.functor ⋙ e'.inverse ⋙ e'.functor ≅ eB.functor` deduced
 from the counit isomorphism of `e'`. -/
 @[simps hom_app]
@@ -224,7 +225,9 @@ def τ₀ : eB.Functor ⋙ e'.inverse ⋙ e'.Functor ≅ eB.Functor :=
     eB.Functor ⋙ e'.inverse ⋙ e'.Functor ≅ eB.Functor ⋙ 𝟭 _ := isoWhiskerLeft _ e'.counitIso
     _ ≅ eB.Functor := Functor.rightUnitor _
 #align algebraic_topology.dold_kan.compatibility.τ₀ AlgebraicTopology.DoldKan.Compatibility.τ₀
+-/
 
+#print AlgebraicTopology.DoldKan.Compatibility.τ₁ /-
 /-- The isomorphism `eB.functor ⋙ e'.inverse ⋙ e'.functor ≅ eB.functor` deduced
 from the isomorphisms `hF : eA.functor ⋙ e'.functor ≅ F`,
 `hG : eB.functor ⋙ e'.inverse ≅ G ⋙ eA.functor` and the datum of
@@ -238,9 +241,11 @@ def τ₁ (η : G ⋙ F ≅ eB.Functor) : eB.Functor ⋙ e'.inverse ⋙ e'.Funct
     _ ≅ G ⋙ F := (isoWhiskerLeft _ hF)
     _ ≅ eB.Functor := η
 #align algebraic_topology.dold_kan.compatibility.τ₁ AlgebraicTopology.DoldKan.Compatibility.τ₁
+-/
 
 variable (η : G ⋙ F ≅ eB.Functor) (hη : τ₀ = τ₁ hF hG η)
 
+#print AlgebraicTopology.DoldKan.Compatibility.equivalenceCounitIso /-
 /-- The counit isomorphism of `equivalence`. -/
 @[simps]
 def equivalenceCounitIso : G ⋙ F ⋙ eB.inverse ≅ 𝟭 B :=
@@ -249,9 +254,11 @@ def equivalenceCounitIso : G ⋙ F ⋙ eB.inverse ≅ 𝟭 B :=
     _ ≅ eB.Functor ⋙ eB.inverse := (isoWhiskerRight η _)
     _ ≅ 𝟭 B := eB.unitIso.symm
 #align algebraic_topology.dold_kan.compatibility.equivalence_counit_iso AlgebraicTopology.DoldKan.Compatibility.equivalenceCounitIso
+-/
 
 variable {η hF hG}
 
+#print AlgebraicTopology.DoldKan.Compatibility.equivalenceCounitIso_eq /-
 theorem equivalenceCounitIso_eq : (equivalence hF hG).counitIso = equivalenceCounitIso η :=
   by
   ext1; apply nat_trans.ext; ext Y
@@ -269,9 +276,11 @@ theorem equivalenceCounitIso_eq : (equivalence hF hG).counitIso = equivalenceCou
   dsimp
   rw [comp_id, eA.functor_unit_iso_comp, e'.functor.map_id, id_comp, hF.inv_hom_id_app_assoc]
 #align algebraic_topology.dold_kan.compatibility.equivalence_counit_iso_eq AlgebraicTopology.DoldKan.Compatibility.equivalenceCounitIso_eq
+-/
 
 variable (hF)
 
+#print AlgebraicTopology.DoldKan.Compatibility.υ /-
 /-- The isomorphism `eA.functor ≅ F ⋙ e'.inverse` deduced from the
 unit isomorphism of `e'` and the isomorphism `hF : eA.functor ⋙ e'.functor ≅ F`. -/
 @[simps]
@@ -282,11 +291,13 @@ def υ : eA.Functor ≅ F ⋙ e'.inverse :=
     _ ≅ (eA.Functor ⋙ e'.Functor) ⋙ e'.inverse := (Iso.refl _)
     _ ≅ F ⋙ e'.inverse := isoWhiskerRight hF _
 #align algebraic_topology.dold_kan.compatibility.υ AlgebraicTopology.DoldKan.Compatibility.υ
+-/
 
 variable (ε : eA.Functor ≅ F ⋙ e'.inverse) (hε : υ hF = ε)
 
 variable (hG)
 
+#print AlgebraicTopology.DoldKan.Compatibility.equivalenceUnitIso /-
 /-- The unit isomorphism of `equivalence`. -/
 @[simps]
 def equivalenceUnitIso : 𝟭 A ≅ (F ⋙ eB.inverse) ⋙ G :=
@@ -303,9 +314,11 @@ def equivalenceUnitIso : 𝟭 A ≅ (F ⋙ eB.inverse) ⋙ G :=
     _ ≅ (F ⋙ eB.inverse ⋙ G) ⋙ 𝟭 A := (isoWhiskerLeft _ eA.unitIso.symm)
     _ ≅ (F ⋙ eB.inverse) ⋙ G := Iso.refl _
 #align algebraic_topology.dold_kan.compatibility.equivalence_unit_iso AlgebraicTopology.DoldKan.Compatibility.equivalenceUnitIso
+-/
 
 variable {ε hF hG}
 
+#print AlgebraicTopology.DoldKan.Compatibility.equivalenceUnitIso_eq /-
 theorem equivalenceUnitIso_eq : (equivalence hF hG).unitIso = equivalenceUnitIso hG ε :=
   by
   ext1; apply nat_trans.ext; ext X
@@ -317,6 +330,7 @@ theorem equivalenceUnitIso_eq : (equivalence hF hG).unitIso = equivalenceUnitIso
   simp only [assoc, equivalence_unit_iso_hom_app, nat_iso.cancel_nat_iso_hom_left, ←
     eA.inverse.map_comp_assoc, ← hε, υ_hom_app]
 #align algebraic_topology.dold_kan.compatibility.equivalence_unit_iso_eq AlgebraicTopology.DoldKan.Compatibility.equivalenceUnitIso_eq
+-/
 
 end Compatibility
 

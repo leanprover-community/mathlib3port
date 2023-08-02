@@ -283,7 +283,7 @@ theorem isPrincipal_inv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (
     (h : I ≠ 0) : Submodule.IsPrincipal I⁻¹.1 :=
   by
   rw [val_eq_coe, is_principal_iff]
-  use (generator (I : Submodule R₁ K))⁻¹
+  use(generator (I : Submodule R₁ K))⁻¹
   have hI : I * span_singleton _ (generator (I : Submodule R₁ K))⁻¹ = 1
   apply mul_generator_self_inv _ I h
   exact (right_inverse_eq _ I (span_singleton _ (generator (I : Submodule R₁ K))⁻¹) hI).symm
@@ -1287,7 +1287,7 @@ theorem idealFactorsFunOfQuotHom_id :
     idealFactorsFunOfQuotHom (RingHom.id (A ⧸ J)).is_surjective = OrderHom.id :=
   OrderHom.ext _ _
     (funext fun X => by
-      simp only [idealFactorsFunOfQuotHom, map_id, OrderHom.coe_fun_mk, OrderHom.id_coe, id.def,
+      simp only [idealFactorsFunOfQuotHom, map_id, OrderHom.coe_mk, OrderHom.id_coe, id.def,
         comap_map_of_surjective J.Quotient.mk quotient.mk_surjective, ←
         RingHom.ker_eq_comap_bot J.Quotient.mk, mk_ker, sup_eq_left.mpr (dvd_iff_le.mp X.prop),
         Subtype.coe_eta])
@@ -1303,8 +1303,8 @@ theorem idealFactorsFunOfQuotHom_comp {f : R ⧸ I →+* A ⧸ J} {g : A ⧸ J �
       idealFactorsFunOfQuotHom (show Function.Surjective (g.comp f) from hg.comp hf) :=
   by
   refine' OrderHom.ext _ _ (funext fun x => _)
-  rw [idealFactorsFunOfQuotHom, idealFactorsFunOfQuotHom, OrderHom.comp_coe, OrderHom.coe_fun_mk,
-    OrderHom.coe_fun_mk, Function.comp_apply, idealFactorsFunOfQuotHom, OrderHom.coe_fun_mk,
+  rw [idealFactorsFunOfQuotHom, idealFactorsFunOfQuotHom, OrderHom.comp_coe, OrderHom.coe_mk,
+    OrderHom.coe_mk, Function.comp_apply, idealFactorsFunOfQuotHom, OrderHom.coe_mk,
     Subtype.mk_eq_mk, Subtype.coe_mk, map_comap_of_surjective J.Quotient.mk quotient.mk_surjective,
     map_map]
 #align ideal_factors_fun_of_quot_hom_comp idealFactorsFunOfQuotHom_comp
@@ -1776,7 +1776,7 @@ noncomputable def normalizedFactorsEquivSpanNormalizedFactors {r : R} (hr : r �
             (Submodule.IsPrincipal.prime_generator_of_isPrime i
                 (prime_of_normalized_factor i hi).NeZero).Irreducible
             _
-        · use ⟨a, ha⟩
+        · use⟨a, ha⟩
           simp only [Subtype.coe_mk, Subtype.mk_eq_mk, ← span_singleton_eq_span_singleton.mpr ha',
             Ideal.span_singleton_generator]
         ·

@@ -148,7 +148,7 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ 
 theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) :
     IsPrime I := by
   rw [is_prime_iff]
-  use ‹_›
+  use‹_›
   apply is_pfilter.of_def
   · exact Set.nonempty_compl.2 (I.is_proper_iff.1 ‹_›)
   · intro x _ y _

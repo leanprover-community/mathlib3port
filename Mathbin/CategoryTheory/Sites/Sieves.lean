@@ -249,7 +249,7 @@ theorem functorPushforward_comp (R : Presieve X) :
   ext x f
   constructor
   · rintro ⟨X, f₁, g₁, h₁, rfl⟩; exact ⟨F.obj X, F.map f₁, g₁, ⟨X, f₁, 𝟙 _, h₁, by simp⟩, rfl⟩
-  · rintro ⟨X, f₁, g₁, ⟨X', f₂, g₂, h₁, rfl⟩, rfl⟩; use ⟨X', f₂, g₁ ≫ G.map g₂, h₁, by simp⟩
+  · rintro ⟨X, f₁, g₁, ⟨X', f₂, g₂, h₁, rfl⟩, rfl⟩; use⟨X', f₂, g₁ ≫ G.map g₂, h₁, by simp⟩
 #align category_theory.presieve.functor_pushforward_comp CategoryTheory.Presieve.functorPushforward_comp
 -/
 

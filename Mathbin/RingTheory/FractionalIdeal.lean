@@ -1697,7 +1697,7 @@ theorem canonicalEquiv_spanSingleton {P'} [CommRing P'] [Algebra R P'] [IsLocali
   · rw [mem_canonical_equiv_apply]
     obtain ⟨z, rfl⟩ := (mem_span_singleton _).mp h
     use z • x
-    use (mem_span_singleton _).mpr ⟨z, rfl⟩
+    use(mem_span_singleton _).mpr ⟨z, rfl⟩
     simp [IsLocalization.map_smul]
 #align fractional_ideal.canonical_equiv_span_singleton FractionalIdeal.canonicalEquiv_spanSingleton
 -/
@@ -1818,7 +1818,7 @@ instance isPrincipal {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] [Alg
     [IsFractionRing R K] (I : FractionalIdeal R⁰ K) : (I : Submodule R K).IsPrincipal :=
   by
   obtain ⟨a, aI, -, ha⟩ := exists_eq_span_singleton_mul I
-  use (algebraMap R K a)⁻¹ * algebraMap R K (generator aI)
+  use(algebraMap R K a)⁻¹ * algebraMap R K (generator aI)
   suffices I = span_singleton R⁰ ((algebraMap R K a)⁻¹ * algebraMap R K (generator aI)) by
     rw [span_singleton] at this ; exact congr_arg Subtype.val this
   conv_lhs => rw [ha, ← span_singleton_generator aI]

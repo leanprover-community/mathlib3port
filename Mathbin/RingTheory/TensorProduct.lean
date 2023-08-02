@@ -432,7 +432,6 @@ theorem mul_apply (a₁ a₂ : A) (b₁ b₂ : B) :
 #align algebra.tensor_product.mul_apply Algebra.TensorProduct.mul_apply
 -/
 
-#print Algebra.TensorProduct.mul_assoc' /-
 theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
     (h :
       ∀ (a₁ a₂ a₃ : A) (b₁ b₂ b₃ : B),
@@ -452,7 +451,6 @@ theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
   · intros; simp only [LinearMap.map_add, *, LinearMap.add_apply]
   · intros; simp only [LinearMap.map_add, *, LinearMap.add_apply]
 #align algebra.tensor_product.mul_assoc' Algebra.TensorProduct.mul_assoc'
--/
 
 #print Algebra.TensorProduct.mul_assoc /-
 protected theorem mul_assoc (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
@@ -532,6 +530,7 @@ def includeLeftRingHom : A →+* A ⊗[R] B
 
 variable {S : Type _}
 
+#print Algebra.TensorProduct.isScalarTower_right /-
 -- we want `is_scalar_tower_right` to take priority since it's better for unification elsewhere
 instance (priority := 100) isScalarTower_right [Monoid S] [DistribMulAction S A]
     [IsScalarTower S A A] [SMulCommClass R S A] : IsScalarTower S (A ⊗[R] B) (A ⊗[R] B)
@@ -547,7 +546,9 @@ instance (priority := 100) isScalarTower_right [Monoid S] [DistribMulAction S A]
       · intros; simp [smul_add, add_mul, *]
     · intros; simp [smul_add, mul_add, *]
 #align algebra.tensor_product.is_scalar_tower_right Algebra.TensorProduct.isScalarTower_right
+-/
 
+#print Algebra.TensorProduct.sMulCommClass_right /-
 -- we want `algebra.to_smul_comm_class` to take priority since it's better for unification elsewhere
 instance (priority := 100) sMulCommClass_right [Monoid S] [DistribMulAction S A]
     [SMulCommClass S A A] [SMulCommClass R S A] : SMulCommClass S (A ⊗[R] B) (A ⊗[R] B)
@@ -563,6 +564,7 @@ instance (priority := 100) sMulCommClass_right [Monoid S] [DistribMulAction S A]
       · intros; simp [smul_add, add_mul, *]
     · intros; simp [smul_add, mul_add, *]
 #align algebra.tensor_product.smul_comm_class_right Algebra.TensorProduct.sMulCommClass_right
+-/
 
 variable [CommSemiring S] [Algebra S A]
 

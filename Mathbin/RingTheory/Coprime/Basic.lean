@@ -459,7 +459,7 @@ theorem mul_add_right_right_iff {x y z : R} : IsCoprime x (z * x + y) ↔ IsCopr
 theorem neg_left {x y : R} (h : IsCoprime x y) : IsCoprime (-x) y :=
   by
   obtain ⟨a, b, h⟩ := h
-  use -a, b
+  use-a, b
   rwa [neg_mul_neg]
 #align is_coprime.neg_left IsCoprime.neg_left
 -/

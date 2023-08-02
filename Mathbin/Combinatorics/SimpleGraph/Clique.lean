@@ -251,7 +251,7 @@ theorem cliqueFree_iff {n : ℕ} : G.CliqueFree n ↔ IsEmpty ((⊤ : SimpleGrap
 theorem not_cliqueFree_card_of_top_embedding [Fintype α] (f : (⊤ : SimpleGraph α) ↪g G) :
     ¬G.CliqueFree (card α) := by
   rw [not_clique_free_iff]
-  use (iso.complete_graph (Fintype.equivFin α)).symm.toEmbedding.trans f
+  use(iso.complete_graph (Fintype.equivFin α)).symm.toEmbedding.trans f
 #align simple_graph.not_clique_free_card_of_top_embedding SimpleGraph.not_cliqueFree_card_of_top_embedding
 -/
 

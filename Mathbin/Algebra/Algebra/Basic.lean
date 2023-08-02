@@ -780,12 +780,10 @@ theorem algebraMap_end_eq_smul_id (a : R) : (algebraMap R (End R M)) a = a • L
 #align module.algebra_map_End_eq_smul_id Module.algebraMap_end_eq_smul_id
 -/
 
-#print Module.algebraMap_end_apply /-
 @[simp]
 theorem algebraMap_end_apply (a : R) (m : M) : (algebraMap R (End R M)) a m = a • m :=
   rfl
-#align module.algebra_map_End_apply Module.algebraMap_end_apply
--/
+#align module.algebra_map_End_apply Module.algebraMap_end_applyₓ
 
 #print Module.ker_algebraMap_end /-
 @[simp]

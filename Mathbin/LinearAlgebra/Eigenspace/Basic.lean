@@ -422,7 +422,7 @@ theorem hasGeneralizedEigenvalue_of_hasEigenvalue {f : End R M} {μ : R} {k : �
     (hμ : f.HasEigenvalue μ) : f.HasGeneralizedEigenvalue μ k :=
   by
   apply has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le hk
-  rw [has_generalized_eigenvalue, generalized_eigenspace, OrderHom.coe_fun_mk, pow_one]
+  rw [has_generalized_eigenvalue, generalized_eigenspace, OrderHom.coe_mk, pow_one]
   exact hμ
 #align module.End.has_generalized_eigenvalue_of_has_eigenvalue Module.End.hasGeneralizedEigenvalue_of_hasEigenvalue
 -/
@@ -473,7 +473,7 @@ theorem generalizedEigenspace_restrict (f : End R M) (p : Submodule R M) (k : �
     generalizedEigenspace (LinearMap.restrict f hfp) μ k =
       Submodule.comap p.Subtype (f.generalizedEigenspace μ k) :=
   by
-  simp only [generalized_eigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
+  simp only [generalized_eigenspace, OrderHom.coe_mk, ← LinearMap.ker_comp]
   induction' k with k ih
   · rw [pow_zero, pow_zero, LinearMap.one_eq_id]
     apply (Submodule.ker_subtype _).symm
@@ -506,7 +506,7 @@ theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End
             (f.generalized_eigenspace μ (finrank K V)) =
           ((f - algebraMap _ _ μ) ^ finrank K V *
               (f - algebraMap K (End K V) μ) ^ finrank K V).ker :=
-        by simpa only [generalized_eigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
+        by simpa only [generalized_eigenspace, OrderHom.coe_mk, ← LinearMap.ker_comp]
       _ = f.generalized_eigenspace μ (finrank K V + finrank K V) := by rw [← pow_add]; rfl
       _ = f.generalized_eigenspace μ (finrank K V) := by
         rw [generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le]; linarith

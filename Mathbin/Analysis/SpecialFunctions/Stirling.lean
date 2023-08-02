@@ -182,7 +182,7 @@ theorem log_stirlingSeq_bounded_aux :
     ∃ c : ℝ, ∀ n : ℕ, log (stirlingSeq 1) - log (stirlingSeq n.succ) ≤ c :=
   by
   let d := ∑' k : ℕ, (1 : ℝ) / k.succ ^ 2
-  use (1 / 4 * d : ℝ)
+  use(1 / 4 * d : ℝ)
   let log_stirling_seq' : ℕ → ℝ := fun k => log (stirling_seq k.succ)
   intro n
   have h₁ : ∀ k, log_stirling_seq' k - log_stirling_seq' (k + 1) ≤ 1 / 4 * (1 / k.succ ^ 2) := by

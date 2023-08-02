@@ -483,7 +483,7 @@ instance : Epi 𝒰.fromGlued.val.base :=
   rw [TopCat.epi_iff_surjective]
   intro x
   obtain ⟨y, h⟩ := 𝒰.covers x
-  use (𝒰.glued_cover.ι (𝒰.f x)).1.base y
+  use(𝒰.glued_cover.ι (𝒰.f x)).1.base y
   rw [← comp_apply]
   rw [← 𝒰.ι_from_glued (𝒰.f x)] at h 
   exact h

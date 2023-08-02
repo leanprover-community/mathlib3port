@@ -41,6 +41,7 @@ import Mathbin.AlgebraicTopology.DoldKan.Compatibility
 import Mathbin.AlgebraicTopology.DoldKan.Decomposition
 import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
 import Mathbin.AlgebraicTopology.DoldKan.EquivalenceAdditive
+import Mathbin.AlgebraicTopology.DoldKan.EquivalencePseudoabelian
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorGamma
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
@@ -1178,6 +1179,7 @@ import Mathbin.Combinatorics.Quiver.Arborescence
 import Mathbin.Combinatorics.Quiver.Basic
 import Mathbin.Combinatorics.Quiver.Cast
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
+import Mathbin.Combinatorics.Quiver.Covering
 import Mathbin.Combinatorics.Quiver.Path
 import Mathbin.Combinatorics.Quiver.Push
 import Mathbin.Combinatorics.Quiver.SingleObj
@@ -3213,5 +3215,5 @@ import Mathbin.Topology.VectorBundle.Basic
 import Mathbin.Topology.VectorBundle.Constructions
 import Mathbin.Topology.VectorBundle.Hom
 
-#align_import all from "leanprover-community/mathlib"@"fe18deda804e30c594e75a6e5fe0f7d14695289f"
+#align_import all from "leanprover-community/mathlib"@"63721b2c3eba6c325ecf8ae8cca27155a4f6306f"
 

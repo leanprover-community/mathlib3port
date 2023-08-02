@@ -854,7 +854,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
       mem_nonZeroDivisors_iff_ne_zero]
   surj x := by
     by_cases hx : ‖x‖ ≤ 1
-    · use (⟨x, hx⟩, 1)
+    · use(⟨x, hx⟩, 1)
       rw [Submonoid.coe_one, map_one, mul_one, PadicInt.algebraMap_apply, Subtype.coe_mk]
     · set n := Int.toNat (-x.valuation) with hn
       have hn_coe : (n : ℤ) = -x.valuation :=
@@ -873,8 +873,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
         rw [ha, padicNormE.mul, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ← zpow_add',
           hn_coe, neg_neg, add_left_neg, zpow_zero]
         exact Or.inl (nat.cast_ne_zero.mpr (NeZero.ne p))
-      use
-        (⟨a, le_of_eq ha_norm⟩,
+      use(⟨a, le_of_eq ha_norm⟩,
           ⟨(p ^ n : ℤ_[p]), mem_non_zero_divisors_iff_ne_zero.mpr (NeZero.ne _)⟩)
       simp only [SetLike.coe_mk, map_pow, map_natCast, algebraMap_apply, PadicInt.coe_pow,
         PadicInt.coe_nat_cast, Subtype.coe_mk]

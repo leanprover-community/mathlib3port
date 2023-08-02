@@ -654,7 +654,7 @@ theorem Gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : Gamma s ≠ 0 :=
   suffices ∀ {n : ℕ}, -(n : ℝ) < s → Gamma s ≠ 0
     by
     apply this
-    swap; use ⌊-s⌋₊ + 1
+    swap; use⌊-s⌋₊ + 1
     rw [neg_lt, Nat.cast_add, Nat.cast_one]
     exact Nat.lt_floor_add_one _
   intro n

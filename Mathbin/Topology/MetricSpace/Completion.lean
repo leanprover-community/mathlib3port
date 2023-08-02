@@ -189,7 +189,7 @@ protected theorem uniformity_dist' :
   by
   ext s; rw [mem_infi_of_directed]
   · simp [completion.mem_uniformity_dist, subset_def]
-  · rintro ⟨r, hr⟩ ⟨p, hp⟩; use ⟨min r p, lt_min hr hp⟩
+  · rintro ⟨r, hr⟩ ⟨p, hp⟩; use⟨min r p, lt_min hr hp⟩
     simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]
 #align uniform_space.completion.uniformity_dist' UniformSpace.Completion.uniformity_dist'
 -/

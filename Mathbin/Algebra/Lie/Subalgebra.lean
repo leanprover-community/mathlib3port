@@ -424,7 +424,7 @@ theorem Submodule.exists_lieSubalgebra_coe_eq_iff (p : Submodule R L) :
   by
   constructor
   · rintro ⟨K, rfl⟩ _ _; exact K.lie_mem'
-  · intro h; use { p with lie_mem' := h }; exact LieSubalgebra.coe_to_submodule_mk p _
+  · intro h; use{ p with lie_mem' := h }; exact LieSubalgebra.coe_to_submodule_mk p _
 #align submodule.exists_lie_subalgebra_coe_eq_iff Submodule.exists_lieSubalgebra_coe_eq_iff
 -/
 
@@ -745,7 +745,7 @@ theorem mem_ofLe (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K :=
   simp only [of_le, hom_of_le_apply, LieHom.mem_range]
   constructor
   · rintro ⟨y, rfl⟩; exact y.property
-  · intro h; use ⟨(x : L), h⟩; simp
+  · intro h; use⟨(x : L), h⟩; simp
 #align lie_subalgebra.mem_of_le LieSubalgebra.mem_ofLe
 -/
 

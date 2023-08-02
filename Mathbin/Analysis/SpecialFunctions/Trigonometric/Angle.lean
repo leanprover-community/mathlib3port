@@ -145,7 +145,7 @@ theorem coe_two_pi : ↑(2 * π : ℝ) = (0 : Angle) :=
 theorem neg_coe_pi : -(π : Angle) = π :=
   by
   rw [← coe_neg, angle_eq_iff_two_pi_dvd_sub]
-  use -1
+  use-1
   simp [two_mul, sub_eq_add_neg]
 #align real.angle.neg_coe_pi Real.Angle.neg_coe_pi
 -/

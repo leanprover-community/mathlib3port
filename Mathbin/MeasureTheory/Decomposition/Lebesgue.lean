@@ -1155,12 +1155,11 @@ private theorem have_lebesgue_decomposition_mk' (μ : Measure α) {f : α → �
   rw [vector_measure.equiv_measure.right_inv, total_variation_mutually_singular_iff] at htμ 
   refine'
     { posPart := by
-        use ⟨t.to_jordan_decomposition.pos_part, fun x => ENNReal.ofReal (f x)⟩
+        use⟨t.to_jordan_decomposition.pos_part, fun x => ENNReal.ofReal (f x)⟩
         refine' ⟨hf.ennreal_of_real, htμ.1, _⟩
         rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
-      negPart :=
-        by
-        use ⟨t.to_jordan_decomposition.neg_part, fun x => ENNReal.ofReal (-f x)⟩
+      negPart := by
+        use⟨t.to_jordan_decomposition.neg_part, fun x => ENNReal.ofReal (-f x)⟩
         refine' ⟨hf.neg.ennreal_of_real, htμ.2, _⟩
         rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] }
 

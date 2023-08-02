@@ -399,7 +399,7 @@ theorem surjective_units_map_of_local_ringHom [CommRing R] [CommRing S] (f : R �
   by
   intro a
   obtain ⟨b, hb⟩ := hf (a : S)
-  use (isUnit_of_map_unit f _ (by rw [hb]; exact Units.isUnit _)).Unit; ext; exact hb
+  use(isUnit_of_map_unit f _ (by rw [hb]; exact Units.isUnit _)).Unit; ext; exact hb
 #align local_ring.surjective_units_map_of_local_ring_hom LocalRing.surjective_units_map_of_local_ringHom
 -/
 
