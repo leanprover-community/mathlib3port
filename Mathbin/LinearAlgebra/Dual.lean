@@ -559,20 +559,16 @@ theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).ran
 #align basis.eval_range Basis.eval_range
 -/
 
-#print Basis.evalEquiv /-
 /-- A module with a basis is linearly equivalent to the dual of its dual space. -/
 def evalEquiv {ι : Type _} [Finite ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R (Dual R M) :=
   LinearEquiv.ofBijective (eval R M) ⟨ker_eq_bot.mp b.eval_ker, range_eq_top.mp b.eval_range⟩
 #align basis.eval_equiv Basis.evalEquiv
--/
 
-#print Basis.evalEquiv_toLinearMap /-
 @[simp]
 theorem evalEquiv_toLinearMap {ι : Type _} [Finite ι] (b : Basis ι R M) :
     b.evalEquiv.toLinearMap = Dual.eval R M :=
   rfl
 #align basis.eval_equiv_to_linear_map Basis.evalEquiv_toLinearMap
--/
 
 section
 

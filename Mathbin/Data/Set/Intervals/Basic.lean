@@ -2382,9 +2382,11 @@ theorem AntitoneOn.image_Icc_subset (hf : AntitoneOn f (Icc a b)) :
       hf (left_mem_Icc.2 <| hc.1.trans hc.2) hc hc.1⟩
 #align antitone_on.image_Icc_subset AntitoneOn.image_Icc_subset
 
+#print Monotone.image_Icc_subset /-
 theorem Monotone.image_Icc_subset (hf : Monotone f) : f '' Icc a b ⊆ Icc (f a) (f b) :=
   (hf.MonotoneOn _).image_Icc_subset
 #align monotone.image_Icc_subset Monotone.image_Icc_subset
+-/
 
 theorem Antitone.image_Icc_subset (hf : Antitone f) : f '' Icc a b ⊆ Icc (f b) (f a) :=
   (hf.AntitoneOn _).image_Icc_subset

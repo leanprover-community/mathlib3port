@@ -28,11 +28,11 @@ open Finset
 
 variable {ι : Type _} [Fintype ι]
 
-#print QuadraticForm.isometrySumSquares /-
+#print QuadraticForm.isometryEquivSumSquares /-
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weights 1 or 0. -/
-noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
-    Isometry (weightedSumSquares ℂ w')
+noncomputable def isometryEquivSumSquares [DecidableEq ι] (w' : ι → ℂ) :
+    IsometryEquiv (weightedSumSquares ℂ w')
       (weightedSumSquares ℂ (fun i => if w' i = 0 then 0 else 1 : ι → ℂ)) :=
   by
   let w i := if h : w' i = 0 then (1 : Units ℂ) else Units.mk0 (w' i) h
@@ -41,7 +41,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     intro i hi
     exact (w i).NeZero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
   convert
-    (weighted_sum_squares ℂ w').isometryBasisRepr
+    (weighted_sum_squares ℂ w').isometryEquivBasisRepr
       ((Pi.basisFun ℂ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hw' i).Unit)
   ext1 v
   erw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
@@ -69,21 +69,21 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     ring
   rw [← Complex.cpow_add _ _ (w j).NeZero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul],
     Complex.cpow_neg_one, inv_mul_cancel (w j).NeZero, one_mul]
-#align quadratic_form.isometry_sum_squares QuadraticForm.isometrySumSquares
+#align quadratic_form.isometry_sum_squares QuadraticForm.isometryEquivSumSquares
 -/
 
-#print QuadraticForm.isometrySumSquaresUnits /-
+#print QuadraticForm.isometryEquivSumSquaresUnits /-
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
-noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ) :
-    Isometry (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) :=
+noncomputable def isometryEquivSumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ) :
+    IsometryEquiv (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) :=
   by
   have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by ext i : 1;
     exact dif_neg (w i).NeZero
   have := isometry_sum_squares (coe ∘ w)
   rw [hw1] at this 
   exact this
-#align quadratic_form.isometry_sum_squares_units QuadraticForm.isometrySumSquaresUnits
+#align quadratic_form.isometry_sum_squares_units QuadraticForm.isometryEquivSumSquaresUnits
 -/
 
 #print QuadraticForm.equivalent_sum_squares /-
@@ -93,7 +93,7 @@ theorem equivalent_sum_squares {M : Type _} [AddCommGroup M] [Module ℂ M] [Fin
     (Q : QuadraticForm ℂ M) (hQ : (associated Q).Nondegenerate) :
     Equivalent Q (weightedSumSquares ℂ (1 : Fin (FiniteDimensional.finrank ℂ M) → ℂ)) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares_units_of_nondegenerate' hQ
-  ⟨hw₁.trans (isometrySumSquaresUnits w)⟩
+  ⟨hw₁.trans (isometryEquivSumSquaresUnits w)⟩
 #align quadratic_form.equivalent_sum_squares QuadraticForm.equivalent_sum_squares
 -/
 

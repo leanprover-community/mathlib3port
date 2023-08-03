@@ -41,7 +41,7 @@ noncomputable def norm [IsSeparable K L] : 𝓞 L →* 𝓞 K :=
 #align ring_of_integers.norm RingOfIntegers.norm
 -/
 
-attribute [local instance] NumberField.ringOfIntegersAlgebra
+attribute [local instance] NumberField.inst_ringOfIntegersAlgebra
 
 #print RingOfIntegers.coe_algebraMap_norm /-
 theorem coe_algebraMap_norm [IsSeparable K L] (x : 𝓞 L) :

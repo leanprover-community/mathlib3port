@@ -46,7 +46,7 @@ variable (K : Type _) [Field K]
 
 section IsUnit
 
-attribute [local instance] NumberField.ringOfIntegersAlgebra
+attribute [local instance] NumberField.inst_ringOfIntegersAlgebra
 
 variable {K}
 

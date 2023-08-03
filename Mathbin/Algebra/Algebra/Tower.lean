@@ -39,7 +39,6 @@ variable [AddCommMonoid M] [Module R M] [Module A M] [IsScalarTower R A M]
 
 variable {A}
 
-#print Algebra.lsmul /-
 /-- The `R`-algebra morphism `A → End (M)` corresponding to the representation of the algebra `A`
 on the `R`-module `M`.
 
@@ -53,8 +52,7 @@ def lsmul : A →ₐ[R] Module.End R M
   map_zero' := LinearMap.ext fun _ => zero_smul A _
   map_add' a b := LinearMap.ext fun _ => add_smul _ _ _
   commutes' r := LinearMap.ext <| algebraMap_smul A r
-#align algebra.lsmul Algebra.lsmul
--/
+#align algebra.lsmul Algebra.lsmulₓ
 
 #print Algebra.lsmul_coe /-
 @[simp]

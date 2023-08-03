@@ -722,7 +722,7 @@ theorem rank_pow_quot_aux [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsP
         Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ (i + 1))) :=
   by
   letI : Field (R ⧸ p) := Ideal.Quotient.field _
-  rw [rank_eq_of_injective _ (pow_quot_succ_inclusion_injective f p P i),
+  rw [rank_range_of_injective _ (pow_quot_succ_inclusion_injective f p P i),
     (quotient_range_pow_quot_succ_inclusion_equiv f p P hP0 hi).symm.rank_eq]
   exact (rank_quotient_add_rank (LinearMap.range (pow_quot_succ_inclusion f p P i))).symm
 #align ideal.rank_pow_quot_aux Ideal.rank_pow_quot_aux

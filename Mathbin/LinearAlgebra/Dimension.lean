@@ -225,11 +225,11 @@ theorem LinearEquiv.rank_eq (f : M ≃ₗ[R] M₁) : Module.rank R M = Module.ra
 #align linear_equiv.rank_eq LinearEquiv.rank_eq
 -/
 
-#print rank_eq_of_injective /-
-theorem rank_eq_of_injective (f : M →ₗ[R] M₁) (h : Injective f) :
+#print rank_range_of_injective /-
+theorem rank_range_of_injective (f : M →ₗ[R] M₁) (h : Injective f) :
     Module.rank R M = Module.rank R f.range :=
   (LinearEquiv.ofInjective f h).rank_eq
-#align rank_eq_of_injective rank_eq_of_injective
+#align rank_eq_of_injective rank_range_of_injective
 -/
 
 #print LinearEquiv.rank_map_eq /-

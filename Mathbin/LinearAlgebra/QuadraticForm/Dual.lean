@@ -111,7 +111,7 @@ variable {R M N}
 
 /-- Any module isomorphism induces a quadratic isomorphism between the corresponding `dual_prod.` -/
 @[simps]
-def dualProdIsometry (f : M ≃ₗ[R] N) : (dualProd R M).Isometry (dualProd R N)
+def dualProdIsometry (f : M ≃ₗ[R] N) : (dualProd R M).IsometryEquiv (dualProd R N)
     where
   toLinearEquiv := f.dualMap.symm.Prod f
   map_app' x := FunLike.congr_arg x.fst <| f.symm_apply_apply _
@@ -119,7 +119,7 @@ def dualProdIsometry (f : M ≃ₗ[R] N) : (dualProd R M).Isometry (dualProd R N
 
 /-- `quadratic_form.dual_prod` commutes (isometrically) with `quadratic_form.prod`. -/
 @[simps]
-def dualProdProdIsometry : (dualProd R (M × N)).Isometry ((dualProd R M).Prod (dualProd R N))
+def dualProdProdIsometry : (dualProd R (M × N)).IsometryEquiv ((dualProd R M).Prod (dualProd R N))
     where
   toLinearEquiv :=
     (Module.dualProdDualEquivDual R M N).symm.Prod (LinearEquiv.refl R (M × N)) ≪≫ₗ

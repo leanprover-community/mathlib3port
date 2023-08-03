@@ -33,17 +33,17 @@ open Real Finset
 
 variable {ι : Type _} [Fintype ι]
 
-#print QuadraticForm.isometrySignWeightedSumSquares /-
+#print QuadraticForm.isometryEquivSignWeightedSumSquares /-
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
-noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → ℝ) :
-    Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (SignType.sign ∘ w)) :=
+noncomputable def isometryEquivSignWeightedSumSquares [DecidableEq ι] (w : ι → ℝ) :
+    IsometryEquiv (weightedSumSquares ℝ w) (weightedSumSquares ℝ (SignType.sign ∘ w)) :=
   by
   let u i := if h : w i = 0 then (1 : ℝˣ) else Units.mk0 (w i) h
   have hu' : ∀ i : ι, (SignType.sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 := by intro i;
     refine' (ne_of_lt (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
   convert
-    (weighted_sum_squares ℝ w).isometryBasisRepr
+    (weighted_sum_squares ℝ w).isometryEquivBasisRepr
       ((Pi.basisFun ℝ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hu' i).Unit)
   ext1 v
   rw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
@@ -78,7 +78,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by ring, Real.rpow_neg_one, mul_inv, inv_sign,
     mul_assoc (SignType.sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_one]
   infer_instance
-#align quadratic_form.isometry_sign_weighted_sum_squares QuadraticForm.isometrySignWeightedSumSquares
+#align quadratic_form.isometry_sign_weighted_sum_squares QuadraticForm.isometryEquivSignWeightedSumSquares
 -/
 
 #print QuadraticForm.equivalent_one_neg_one_weighted_sum_squared /-
@@ -90,7 +90,7 @@ theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M
       (∀ i, w i = -1 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares_units_of_nondegenerate' hQ
   ⟨SignType.sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).NeZero,
-    ⟨hw₁.trans (isometrySignWeightedSumSquares (coe ∘ w))⟩⟩
+    ⟨hw₁.trans (isometryEquivSignWeightedSumSquares (coe ∘ w))⟩⟩
 #align quadratic_form.equivalent_one_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_neg_one_weighted_sum_squared
 -/
 
@@ -103,7 +103,7 @@ theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGr
       (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares
   ⟨SignType.sign ∘ coe ∘ w, fun i => sign_apply_eq (w i),
-    ⟨hw₁.trans (isometrySignWeightedSumSquares w)⟩⟩
+    ⟨hw₁.trans (isometryEquivSignWeightedSumSquares w)⟩⟩
 #align quadratic_form.equivalent_one_zero_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_zero_neg_one_weighted_sum_squared
 -/
 

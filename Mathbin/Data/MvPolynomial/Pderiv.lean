@@ -144,7 +144,7 @@ theorem pderiv_mul {i : σ} {f g : MvPolynomial σ R} :
 #print MvPolynomial.pderiv_C_mul /-
 @[simp]
 theorem pderiv_C_mul {f : MvPolynomial σ R} {i : σ} : pderiv i (C a * f) = C a * pderiv i f :=
-  (derivation_C_mul _ _ _).trans C_mul'.symm
+  (derivation_c_mul _ _ _).trans C_mul'.symm
 #align mv_polynomial.pderiv_C_mul MvPolynomial.pderiv_C_mul
 -/
 
