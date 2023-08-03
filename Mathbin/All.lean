@@ -616,6 +616,7 @@ import Mathbin.Analysis.Convex.KreinMilman
 import Mathbin.Analysis.Convex.Measure
 import Mathbin.Analysis.Convex.Normed
 import Mathbin.Analysis.Convex.PartitionOfUnity
+import Mathbin.Analysis.Convex.ProjIcc
 import Mathbin.Analysis.Convex.Quasiconvex
 import Mathbin.Analysis.Convex.Segment
 import Mathbin.Analysis.Convex.Side
@@ -3215,5 +3216,5 @@ import Mathbin.Topology.VectorBundle.Basic
 import Mathbin.Topology.VectorBundle.Constructions
 import Mathbin.Topology.VectorBundle.Hom
 
-#align_import all from "leanprover-community/mathlib"@"63721b2c3eba6c325ecf8ae8cca27155a4f6306f"
+#align_import all from "leanprover-community/mathlib"@"48a058d7e39a80ed56858505719a0b2197900999"
 

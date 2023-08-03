@@ -7,7 +7,7 @@ Yuyang Zhao
 import Mathbin.Algebra.CovariantAndContravariant
 import Mathbin.Order.MinMax
 
-#align_import algebra.order.monoid.lemmas from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
+#align_import algebra.order.monoid.lemmas from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 
 /-!
 # Ordered monoids
@@ -355,6 +355,28 @@ theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d := 
 #align min_le_max_of_mul_le_mul min_le_max_of_mul_le_mul
 #align min_le_max_of_add_le_add min_le_max_of_add_le_add
 -/
+
+end LinearOrder
+
+section LinearOrder
+
+variable [LinearOrder α] [CovariantClass α α (· * ·) (· ≤ ·)]
+  [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
+
+@[to_additive max_add_add_le_max_add_max]
+theorem max_mul_mul_le_max_mul_max' : max (a * b) (c * d) ≤ max a c * max b d :=
+  max_le (mul_le_mul' (le_max_left _ _) <| le_max_left _ _) <|
+    mul_le_mul' (le_max_right _ _) <| le_max_right _ _
+#align max_mul_mul_le_max_mul_max' max_mul_mul_le_max_mul_max'
+#align max_add_add_le_max_add_max max_add_add_le_max_add_max
+
+--TODO: Also missing `min_mul_min_le_min_mul_mul`
+@[to_additive min_add_min_le_min_add_add]
+theorem min_mul_min_le_min_mul_mul' : min a c * min b d ≤ min (a * b) (c * d) :=
+  le_min (mul_le_mul' (min_le_left _ _) <| min_le_left _ _) <|
+    mul_le_mul' (min_le_right _ _) <| min_le_right _ _
+#align min_mul_min_le_min_mul_mul' min_mul_min_le_min_mul_mul'
+#align min_add_min_le_min_add_add min_add_min_le_min_add_add
 
 end LinearOrder
 

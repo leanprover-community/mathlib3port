@@ -6,7 +6,7 @@ Authors: Zhouhang Zhou
 import Mathbin.Order.Bounds.Basic
 import Mathbin.Data.Set.Intervals.Basic
 
-#align_import data.set.intervals.unordered_interval from "leanprover-community/mathlib"@"4020ddee5b4580a409bfda7d2f42726ce86ae674"
+#align_import data.set.intervals.unordered_interval from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 
 /-!
 # Intervals without endpoints ordering
@@ -248,7 +248,35 @@ end DistribLattice
 
 section LinearOrder
 
-variable [LinearOrder α] [LinearOrder β] {f : α → β} {s : Set α} {a a₁ a₂ b b₁ b₂ c d x : α}
+variable [LinearOrder α]
+
+section Lattice
+
+variable [Lattice β] {f : α → β} {s : Set α} {a b : α}
+
+theorem MonotoneOn.image_uIcc_subset (hf : MonotoneOn f (uIcc a b)) :
+    f '' uIcc a b ⊆ uIcc (f a) (f b) :=
+  hf.image_Icc_subset.trans <| by
+    rw [hf.map_sup left_mem_uIcc right_mem_uIcc, hf.map_inf left_mem_uIcc right_mem_uIcc, uIcc]
+#align monotone_on.image_uIcc_subset MonotoneOn.image_uIcc_subset
+
+theorem AntitoneOn.image_uIcc_subset (hf : AntitoneOn f (uIcc a b)) :
+    f '' uIcc a b ⊆ uIcc (f a) (f b) :=
+  hf.image_Icc_subset.trans <| by
+    rw [hf.map_sup left_mem_uIcc right_mem_uIcc, hf.map_inf left_mem_uIcc right_mem_uIcc, uIcc]
+#align antitone_on.image_uIcc_subset AntitoneOn.image_uIcc_subset
+
+theorem Monotone.image_uIcc_subset (hf : Monotone f) : f '' uIcc a b ⊆ uIcc (f a) (f b) :=
+  (hf.MonotoneOn _).image_uIcc_subset
+#align monotone.image_uIcc_subset Monotone.image_uIcc_subset
+
+theorem Antitone.image_uIcc_subset (hf : Antitone f) : f '' uIcc a b ⊆ uIcc (f a) (f b) :=
+  (hf.AntitoneOn _).image_uIcc_subset
+#align antitone.image_uIcc_subset Antitone.image_uIcc_subset
+
+end Lattice
+
+variable [LinearOrder β] {f : α → β} {s : Set α} {a a₁ a₂ b b₁ b₂ c d x : α}
 
 #print Set.Icc_min_max /-
 theorem Icc_min_max : Icc (min a b) (max a b) = [a, b] :=

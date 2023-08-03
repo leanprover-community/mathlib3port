@@ -10,7 +10,7 @@ import Mathbin.Algebra.Order.Pi
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Tactic.Positivity
 
-#align_import algebra.order.smul from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
+#align_import algebra.order.smul from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 
 /-!
 # Ordered scalar product
@@ -225,13 +225,27 @@ instance Int.orderedSMul [LinearOrderedAddCommGroup M] : OrderedSMul ℤ M :=
 #align int.ordered_smul Int.orderedSMul
 -/
 
+section LinearOrderedSemiring
+
+variable [LinearOrderedSemiring R] [LinearOrderedAddCommMonoid M] [SMulWithZero R M]
+  [OrderedSMul R M] {a : R}
+
 #print LinearOrderedSemiring.toOrderedSMul /-
 -- TODO: `linear_ordered_field M → ordered_smul ℚ M`
-instance LinearOrderedSemiring.toOrderedSMul {R : Type _} [LinearOrderedSemiring R] :
-    OrderedSMul R R :=
+instance LinearOrderedSemiring.toOrderedSMul : OrderedSMul R R :=
   OrderedSMul.mk'' fun c => strictMono_mul_left_of_pos
 #align linear_ordered_semiring.to_ordered_smul LinearOrderedSemiring.toOrderedSMul
 -/
+
+theorem smul_max (ha : 0 ≤ a) (b₁ b₂ : M) : a • max b₁ b₂ = max (a • b₁) (a • b₂) :=
+  (monotone_smul_left ha : Monotone (_ : M → M)).map_max
+#align smul_max smul_max
+
+theorem smul_min (ha : 0 ≤ a) (b₁ b₂ : M) : a • min b₁ b₂ = min (a • b₁) (a • b₂) :=
+  (monotone_smul_left ha : Monotone (_ : M → M)).map_min
+#align smul_min smul_min
+
+end LinearOrderedSemiring
 
 section LinearOrderedSemifield
 

@@ -6,7 +6,7 @@ Authors: Yaël Dillies
 import Mathbin.Data.Multiset.Sum
 import Mathbin.Data.Finset.Card
 
-#align_import data.finset.sum from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
+#align_import data.finset.sum from "leanprover-community/mathlib"@"48a058d7e39a80ed56858505719a0b2197900999"
 
 /-!
 # Disjoint sum of finsets
@@ -100,6 +100,10 @@ theorem inr_mem_disjSum : inr b ∈ s.disjSum t ↔ b ∈ t :=
   inr_mem_disjSum
 #align finset.inr_mem_disj_sum Finset.inr_mem_disjSum
 -/
+
+@[simp]
+theorem disjSum_eq_empty : s.disjSum t = ∅ ↔ s = ∅ ∧ t = ∅ := by simp [ext_iff]
+#align finset.disj_sum_eq_empty Finset.disjSum_eq_empty
 
 #print Finset.disjSum_mono /-
 theorem disjSum_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁.disjSum t₁ ⊆ s₂.disjSum t₂ :=
