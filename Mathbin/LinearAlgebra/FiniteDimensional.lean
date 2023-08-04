@@ -402,7 +402,7 @@ theorem finrank_zero_iff [FiniteDimensional K V] : finrank K V = 0 ↔ Subsingle
 #align finite_dimensional.finrank_zero_iff FiniteDimensional.finrank_zero_iff
 -/
 
-#print FiniteDimensional.eq_top_of_finrank_eq /-
+#print Submodule.eq_top_of_finrank_eq /-
 /-- If a submodule has maximal dimension in a finite dimensional space, then it is equal to the
 whole space. -/
 theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V}
@@ -430,7 +430,7 @@ theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V}
   have := bS.span_eq
   rw [bS_eq, Basis.coe_ofVectorSpace, Subtype.range_coe] at this 
   rw [this, map_top (Submodule.subtype S), range_subtype]
-#align finite_dimensional.eq_top_of_finrank_eq FiniteDimensional.eq_top_of_finrank_eq
+#align finite_dimensional.eq_top_of_finrank_eq Submodule.eq_top_of_finrank_eq
 -/
 
 variable (K)
@@ -1305,6 +1305,8 @@ section DivisionRing
 variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
   [Module K V₂]
 
+/- warning: submodule.eq_top_of_finrank_eq clashes with finite_dimensional.eq_top_of_finrank_eq -> Submodule.eq_top_of_finrank_eq
+Case conversion may be inaccurate. Consider using '#align submodule.eq_top_of_finrank_eq Submodule.eq_top_of_finrank_eqₓ'. -/
 #print Submodule.eq_top_of_finrank_eq /-
 theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V}
     (h : finrank K S = finrank K V) : S = ⊤ :=

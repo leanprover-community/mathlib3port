@@ -43,7 +43,7 @@ noncomputable instance [Nontrivial R] [Module.Finite R M] :
   by
   obtain ⟨h⟩ := id ‹Module.Finite R M›
   choose s hs using h
-  exact basisFintypeOfFiniteSpans (↑s) hs (choose_basis _ _)
+  exact basis_finite_of_finite_spans (↑s) hs (choose_basis _ _)
 
 end Ring
 

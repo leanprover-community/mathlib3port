@@ -83,7 +83,6 @@ def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
 #align bitvec.shl Bitvec.shl
 -/
 
-#print Bitvec.fillShr /-
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
 padding with `fill : bool`. If `x.length < i` then this will return the constant `fill`
 bitvector. -/
@@ -98,7 +97,6 @@ def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
           rw [min_eq_left h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]) <|
     replicate (min n i) fill++ₜtake (n - i) x
 #align bitvec.fill_shr Bitvec.fillShr
--/
 
 #print Bitvec.ushr /-
 /-- unsigned shift right -/

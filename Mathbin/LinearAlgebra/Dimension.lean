@@ -380,7 +380,6 @@ theorem LinearIndependent.set_finite_of_isNoetherian [IsNoetherian R M] {s : Set
 #align linear_independent.set_finite_of_is_noetherian LinearIndependent.set_finite_of_isNoetherian
 -/
 
-#print basisFintypeOfFiniteSpans /-
 -- One might hope that a finite spanning set implies that any linearly independent set is finite.
 -- While this is true over a division ring
 -- (simply because any linearly independent set can be extended to a basis),
@@ -388,7 +387,7 @@ theorem LinearIndependent.set_finite_of_isNoetherian [IsNoetherian R M] {s : Set
 /--
 Over any nontrivial ring, the existence of a finite spanning set implies that any basis is finite.
 -/
-def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι : Type w}
+def basis_finite_of_finite_spans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι : Type w}
     (b : Basis ι R M) : Fintype ι :=
   by
   -- We'll work by contradiction, assuming `ι` is infinite.
@@ -415,8 +414,7 @@ def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι :
   -- giving the desire contradiction.
   refine' b.linear_independent.not_mem_span_image _ k'
   exact nm
-#align basis_fintype_of_finite_spans basisFintypeOfFiniteSpans
--/
+#align basis_fintype_of_finite_spans basis_finite_of_finite_spansₓ
 
 #print union_support_maximal_linearIndependent_eq_range_basis /-
 -- From [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
@@ -633,7 +631,7 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) :
   cases fintypeOrInfinite ι
   · -- `v` is a finite basis, so by `basis_fintype_of_finite_spans` so is `v'`.
     haveI : Fintype (range v) := Set.fintypeRange v
-    haveI := basisFintypeOfFiniteSpans _ v.span_eq v'
+    haveI := basis_finite_of_finite_spans _ v.span_eq v'
     -- We clean up a little:
     rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
     simp only [Cardinal.lift_natCast, Cardinal.natCast_inj]
@@ -707,7 +705,7 @@ theorem basis_le_span' {ι : Type _} (b : Basis ι R M) {w : Set M} [Fintype w] 
     (#ι) ≤ Fintype.card w :=
   by
   haveI := nontrivial_of_invariantBasisNumber R
-  haveI := basisFintypeOfFiniteSpans w s b
+  haveI := basis_finite_of_finite_spans w s b
   rw [Cardinal.mk_fintype ι]
   simp only [Cardinal.natCast_le]
   exact Basis.le_span'' b s
