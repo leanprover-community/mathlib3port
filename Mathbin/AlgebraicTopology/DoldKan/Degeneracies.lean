@@ -6,7 +6,7 @@ Authors: Joël Riou
 import Mathbin.AlgebraicTopology.DoldKan.Decomposition
 import Mathbin.Tactic.FinCases
 
-#align_import algebraic_topology.dold_kan.degeneracies from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
+#align_import algebraic_topology.dold_kan.degeneracies from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -25,6 +25,8 @@ if `X : simplicial_object C` with `C` a preadditive category,
 `θ : [n] ⟶ Δ'` is a non injective map in `simplex_category`, then
 `X.map θ.op ≫ P_infty.f n = 0`. It follows from the more precise
 statement vanishing statement `σ_comp_P_eq_zero` for the `P q`.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

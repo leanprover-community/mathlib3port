@@ -6,7 +6,7 @@ Authors: Joël Riou
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
 import Mathbin.Tactic.RingExp
 
-#align_import algebraic_topology.dold_kan.faces from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
+#align_import algebraic_topology.dold_kan.faces from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -25,6 +25,8 @@ role of these endomorphisms in the overall strategy of proof).
 The main lemma in this file is `higher_faces_vanish.induction`. It is based
 on two technical lemmas `higher_faces_vanish.comp_Hσ_eq` and
 `higher_faces_vanish.comp_Hσ_eq_zero`.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

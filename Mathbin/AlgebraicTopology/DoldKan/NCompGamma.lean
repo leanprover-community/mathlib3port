@@ -6,7 +6,7 @@ Authors: Joël Riou
 import Mathbin.AlgebraicTopology.DoldKan.GammaCompN
 import Mathbin.AlgebraicTopology.DoldKan.NReflectsIso
 
-#align_import algebraic_topology.dold_kan.n_comp_gamma from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
+#align_import algebraic_topology.dold_kan.n_comp_gamma from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
@@ -21,6 +21,8 @@ It is then shown that `Γ₂N₂.nat_trans` is an isomorphism by using
 that it becomes an isomorphism after the application of the functor
 `N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ)`
 which reflects isomorphisms.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

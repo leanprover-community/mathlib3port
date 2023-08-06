@@ -6,7 +6,7 @@ Authors: Joël Riou
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.CategoryTheory.Idempotents.Basic
 
-#align_import algebraic_topology.dold_kan.projections from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
+#align_import algebraic_topology.dold_kan.projections from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -30,6 +30,8 @@ of additive functors (see `map_P`).
 By passing to the limit, these endomorphisms `P q` shall be used in `p_infty.lean`
 in order to define `P_infty : K[X] ⟶ K[X]`, see `equivalence.lean` for the general
 strategy of proof of the Dold-Kan equivalence.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

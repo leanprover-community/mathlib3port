@@ -5,7 +5,7 @@ Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 
-#align_import algebraic_topology.dold_kan.normalized from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
+#align_import algebraic_topology.dold_kan.normalized from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -27,6 +27,8 @@ This isomorphism shall be used in `equivalence.lean` in order to obtain
 the Dold-Kan equivalence
 `category_theory.abelian.dold_kan.equivalence : simplicial_object A ≌ chain_complex A ℕ`
 with a functor (definitionally) equal to `normalized_Moore_complex A`.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

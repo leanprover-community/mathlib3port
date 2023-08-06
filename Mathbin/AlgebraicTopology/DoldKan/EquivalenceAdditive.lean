@@ -5,7 +5,7 @@ Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.DoldKan.NCompGamma
 
-#align_import algebraic_topology.dold_kan.equivalence_additive from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
+#align_import algebraic_topology.dold_kan.equivalence_additive from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
@@ -14,6 +14,8 @@ import Mathbin.AlgebraicTopology.DoldKan.NCompGamma
 
 This file defines `preadditive.dold_kan.equivalence` which is the equivalence
 of categories `karoubi (simplicial_object C) ≌ karoubi (chain_complex C ℕ)`.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

@@ -5,7 +5,7 @@ Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.DoldKan.PInfty
 
-#align_import algebraic_topology.dold_kan.functor_n from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
+#align_import algebraic_topology.dold_kan.functor_n from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -33,7 +33,7 @@ defined in `equivalence_pseudoabelian.lean`.
 When the category `C` is abelian, a relation between `N₁` and the
 normalized Moore complex functor shall be obtained in `normalized.lean`.
 
-(See `equivalence.lean` for the general strategy of proof.)
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

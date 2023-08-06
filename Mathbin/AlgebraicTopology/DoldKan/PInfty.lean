@@ -7,7 +7,7 @@ import Mathbin.AlgebraicTopology.DoldKan.Projections
 import Mathbin.CategoryTheory.Idempotents.FunctorCategories
 import Mathbin.CategoryTheory.Idempotents.FunctorExtension
 
-#align_import algebraic_topology.dold_kan.p_infty from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
+#align_import algebraic_topology.dold_kan.p_infty from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -23,7 +23,8 @@ to the limit the projections `P q` defined in `projections.lean`. This
 projection is a critical tool in this formalisation of the Dold-Kan correspondence,
 because in the case of abelian categories, `P_infty` corresponds to the
 projection on the normalized Moore subcomplex, with kernel the degenerate subcomplex.
-(See `equivalence.lean` for the general strategy of proof.)
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 

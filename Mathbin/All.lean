@@ -42,6 +42,7 @@ import Mathbin.AlgebraicTopology.DoldKan.Decomposition
 import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
 import Mathbin.AlgebraicTopology.DoldKan.EquivalenceAdditive
 import Mathbin.AlgebraicTopology.DoldKan.EquivalencePseudoabelian
+import Mathbin.AlgebraicTopology.DoldKan.Equivalence
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorGamma
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
@@ -3216,5 +3217,5 @@ import Mathbin.Topology.VectorBundle.Basic
 import Mathbin.Topology.VectorBundle.Constructions
 import Mathbin.Topology.VectorBundle.Hom
 
-#align_import all from "leanprover-community/mathlib"@"48a058d7e39a80ed56858505719a0b2197900999"
+#align_import all from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 

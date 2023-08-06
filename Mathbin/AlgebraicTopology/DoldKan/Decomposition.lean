@@ -5,7 +5,7 @@ Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.DoldKan.PInfty
 
-#align_import algebraic_topology.dold_kan.decomposition from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
+#align_import algebraic_topology.dold_kan.decomposition from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 
 /-!
 
@@ -29,6 +29,8 @@ decomposition provided by `decomposition_Q`. This shall play a critical
 role in the proof that the functor
 `N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms.
+
+(See `equivalence.lean` for the general strategy of proof of the Dold-Kan equivalence.)
 
 -/
 
