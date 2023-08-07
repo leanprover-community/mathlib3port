@@ -450,10 +450,10 @@ theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : Σ X, d ⟶
 #align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqvGen_quot_rel
 -/
 
-#print CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_pUnit /-
+#print CategoryTheory.Functor.cofinal_of_colimit_comp_coyoneda_iso_pUnit /-
 /-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
-theorem cofinal_of_colimit_comp_coyoneda_iso_pUnit
+theorem CategoryTheory.Functor.cofinal_of_colimit_comp_coyoneda_iso_pUnit
     (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : Final F :=
   ⟨fun d =>
     by
@@ -471,7 +471,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_pUnit
     have t := Types.colimit_eq.{v, v} e
     clear e y₁ y₂
     exact zigzag_of_eqv_gen_quot_rel t⟩
-#align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_pUnit
+#align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.cofinal_of_colimit_comp_coyoneda_iso_pUnit
 -/
 
 end Final

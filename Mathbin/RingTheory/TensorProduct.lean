@@ -169,7 +169,6 @@ theorem lift_tmul (f : M →ₗ[A] N →ₗ[R] P) (x : M) (y : N) : lift f (x �
 
 variable (R A M N P)
 
-#print TensorProduct.AlgebraTensorModule.uncurry /-
 /-- Heterobasic version of `tensor_product.uncurry`:
 
 Linearly constructing a linear map `M ⊗[R] N →[A] P` given a bilinear map `M →[A] N →[R] P`
@@ -181,10 +180,8 @@ def uncurry : (M →ₗ[A] N →ₗ[R] P) →ₗ[A] M ⊗[R] N →ₗ[A] P
   toFun := lift
   map_add' f g := ext fun x y => by simp only [lift_tmul, add_apply]
   map_smul' c f := ext fun x y => by simp only [lift_tmul, smul_apply, RingHom.id_apply]
-#align tensor_product.algebra_tensor_module.uncurry TensorProduct.AlgebraTensorModule.uncurry
--/
+#align tensor_product.algebra_tensor_module.uncurry TensorProduct.AlgebraTensorModule.uncurryₓ
 
-#print TensorProduct.AlgebraTensorModule.lcurry /-
 /-- Heterobasic version of `tensor_product.lcurry`:
 
 Given a linear map `M ⊗[R] N →[A] P`, compose it with the canonical
@@ -195,10 +192,8 @@ def lcurry : (M ⊗[R] N →ₗ[A] P) →ₗ[A] M →ₗ[A] N →ₗ[R] P
   toFun := curry
   map_add' f g := rfl
   map_smul' c f := rfl
-#align tensor_product.algebra_tensor_module.lcurry TensorProduct.AlgebraTensorModule.lcurry
--/
+#align tensor_product.algebra_tensor_module.lcurry TensorProduct.AlgebraTensorModule.lcurryₓ
 
-#print TensorProduct.AlgebraTensorModule.lift.equiv /-
 /-- Heterobasic version of `tensor_product.lift.equiv`:
 
 A linear equivalence constructing a linear map `M ⊗[R] N →[A] P` given a
@@ -208,8 +203,7 @@ def lift.equiv : (M →ₗ[A] N →ₗ[R] P) ≃ₗ[A] M ⊗[R] N →ₗ[A] P :=
   LinearEquiv.ofLinear (uncurry R A M N P) (lcurry R A M N P)
     (LinearMap.ext fun f => ext fun x y => lift_tmul _ x y)
     (LinearMap.ext fun f => LinearMap.ext fun x => LinearMap.ext fun y => lift_tmul f x y)
-#align tensor_product.algebra_tensor_module.lift.equiv TensorProduct.AlgebraTensorModule.lift.equiv
--/
+#align tensor_product.algebra_tensor_module.lift.equiv TensorProduct.AlgebraTensorModule.lift.equivₓ
 
 variable (R A M N P)
 
@@ -225,7 +219,6 @@ def mk : M →ₗ[A] N →ₗ[R] M ⊗[R] N :=
 
 attribute [local ext] TensorProduct.ext
 
-#print TensorProduct.AlgebraTensorModule.assoc /-
 /-- Heterobasic version of `tensor_product.assoc`:
 
 Linear equivalence between `(M ⊗[A] N) ⊗[R] P` and `M ⊗[A] (N ⊗[R] P)`. -/
@@ -241,8 +234,7 @@ def assoc : (M ⊗[A] P) ⊗[R] N ≃ₗ[A] M ⊗[A] P ⊗[R] N :=
         uncurry_apply, TensorProduct.uncurry_apply, id_apply, lift_tmul, compr₂_apply,
         restrict_scalars_apply, Function.comp_apply, to_fun_eq_coe, lcurry_apply,
         LinearMap.comp_apply])
-#align tensor_product.algebra_tensor_module.assoc TensorProduct.AlgebraTensorModule.assoc
--/
+#align tensor_product.algebra_tensor_module.assoc TensorProduct.AlgebraTensorModule.assocₓ
 
 end CommSemiring
 

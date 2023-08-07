@@ -224,13 +224,13 @@ theorem map_frobeniusPoly (n : ℕ) :
 #align witt_vector.map_frobenius_poly WittVector.map_frobeniusPoly
 -/
 
-#print WittVector.frobeniusPoly_zMod /-
-theorem frobeniusPoly_zMod (n : ℕ) :
+#print WittVector.frobeniusPoly_zmod /-
+theorem frobeniusPoly_zmod (n : ℕ) :
     MvPolynomial.map (Int.castRingHom (ZMod p)) (frobeniusPoly p n) = X n ^ p :=
   by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
   simp only [Int.cast_ofNat, add_zero, eq_intCast, ZMod.nat_cast_self, MulZeroClass.zero_mul, C_0]
-#align witt_vector.frobenius_poly_zmod WittVector.frobeniusPoly_zMod
+#align witt_vector.frobenius_poly_zmod WittVector.frobeniusPoly_zmod
 -/
 
 #print WittVector.bind₁_frobeniusPoly_wittPolynomial /-

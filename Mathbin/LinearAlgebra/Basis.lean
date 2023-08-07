@@ -1455,8 +1455,8 @@ protected theorem span_apply (i : ι) : (Basis.span hli i : M) = v i :=
 
 end Span
 
-#print Basis.groupSmul_span_eq_top /-
-theorem groupSmul_span_eq_top {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
+#print Basis.groupSMul_span_eq_top /-
+theorem groupSMul_span_eq_top {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
     [IsScalarTower G R M] {v : ι → M} (hv : Submodule.span R (Set.range v) = ⊤) {w : ι → G} :
     Submodule.span R (Set.range (w • v)) = ⊤ :=
   by
@@ -1468,31 +1468,31 @@ theorem groupSmul_span_eq_top {G : Type _} [Group G] [DistribMulAction G R] [Dis
   obtain ⟨i, rfl⟩ := hu
   have : ((w i)⁻¹ • 1 : R) • w i • v i ∈ p := p.smul_mem ((w i)⁻¹ • 1 : R) (hp ⟨i, rfl⟩)
   rwa [smul_one_smul, inv_smul_smul] at this 
-#align basis.group_smul_span_eq_top Basis.groupSmul_span_eq_top
+#align basis.group_smul_span_eq_top Basis.groupSMul_span_eq_top
 -/
 
-#print Basis.groupSmul /-
+#print Basis.groupSMul /-
 /-- Given a basis `v` and a map `w` such that for all `i`, `w i` are elements of a group,
 `group_smul` provides the basis corresponding to `w • v`. -/
-def groupSmul {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
+def groupSMul {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
     [IsScalarTower G R M] [SMulCommClass G R M] (v : Basis ι R M) (w : ι → G) : Basis ι R M :=
   @Basis.mk ι R M (w • v) _ _ _ (v.LinearIndependent.group_smul w)
-    (groupSmul_span_eq_top v.span_eq).ge
-#align basis.group_smul Basis.groupSmul
+    (groupSMul_span_eq_top v.span_eq).ge
+#align basis.group_smul Basis.groupSMul
 -/
 
-#print Basis.groupSmul_apply /-
-theorem groupSmul_apply {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
+#print Basis.groupSMul_apply /-
+theorem groupSMul_apply {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
     [IsScalarTower G R M] [SMulCommClass G R M] {v : Basis ι R M} {w : ι → G} (i : ι) :
     v.group_smul w i = (w • v : ι → M) i :=
-  mk_apply (v.LinearIndependent.group_smul w) (groupSmul_span_eq_top v.span_eq).ge i
-#align basis.group_smul_apply Basis.groupSmul_apply
+  mk_apply (v.LinearIndependent.group_smul w) (groupSMul_span_eq_top v.span_eq).ge i
+#align basis.group_smul_apply Basis.groupSMul_apply
 -/
 
 #print Basis.units_smul_span_eq_top /-
 theorem units_smul_span_eq_top {v : ι → M} (hv : Submodule.span R (Set.range v) = ⊤) {w : ι → Rˣ} :
     Submodule.span R (Set.range (w • v)) = ⊤ :=
-  groupSmul_span_eq_top hv
+  groupSMul_span_eq_top hv
 #align basis.units_smul_span_eq_top Basis.units_smul_span_eq_top
 -/
 
@@ -1578,27 +1578,27 @@ theorem coe_mkFinCons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Fin n) R
 #align basis.coe_mk_fin_cons Basis.coe_mkFinCons
 -/
 
-#print Basis.mkFinConsOfLe /-
+#print Basis.mkFinConsOfLE /-
 /-- Let `b` be a basis for a submodule `N ≤ O`. If `y ∈ O` is linear independent of `N`
 and `y` and `N` together span the whole of `O`, then there is a basis for `O`
 whose basis vectors are given by `fin.cons y b`. -/
-noncomputable def mkFinConsOfLe {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O)
+noncomputable def mkFinConsOfLE {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O)
     (b : Basis (Fin n) R N) (hNO : N ≤ O) (hli : ∀ (c : R), ∀ x ∈ N, c • y + x = 0 → c = 0)
     (hsp : ∀ z ∈ O, ∃ c : R, z + c • y ∈ N) : Basis (Fin (n + 1)) R O :=
   mkFinCons ⟨y, yO⟩ (b.map (Submodule.comapSubtypeEquivOfLe hNO).symm)
     (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_arg coe hx)) fun z => hsp z z.2
-#align basis.mk_fin_cons_of_le Basis.mkFinConsOfLe
+#align basis.mk_fin_cons_of_le Basis.mkFinConsOfLE
 -/
 
-#print Basis.coe_mkFinConsOfLe /-
+#print Basis.coe_mkFinConsOfLE /-
 @[simp]
-theorem coe_mkFinConsOfLe {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Fin n) R N)
+theorem coe_mkFinConsOfLE {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Fin n) R N)
     (hNO : N ≤ O) (hli : ∀ (c : R), ∀ x ∈ N, c • y + x = 0 → c = 0)
     (hsp : ∀ z ∈ O, ∃ c : R, z + c • y ∈ N) :
-    (mkFinConsOfLe y yO b hNO hli hsp : Fin (n + 1) → O) =
+    (mkFinConsOfLE y yO b hNO hli hsp : Fin (n + 1) → O) =
       Fin.cons ⟨y, yO⟩ (Submodule.ofLe hNO ∘ b) :=
   coe_mkFinCons _ _ _ _
-#align basis.coe_mk_fin_cons_of_le Basis.coe_mkFinConsOfLe
+#align basis.coe_mk_fin_cons_of_le Basis.coe_mkFinConsOfLE
 -/
 
 #print Basis.finTwoProd /-

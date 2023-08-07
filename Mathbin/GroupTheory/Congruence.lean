@@ -1503,12 +1503,12 @@ end Units
 
 section Actions
 
-#print Con.smulinst /-
+#print Con.instSMul /-
 @[to_additive]
-instance smulinst {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) :
+instance instSMul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) :
     SMul α c.Quotient where smul a := Quotient.map' ((· • ·) a) fun x y => c.smul a
-#align con.has_smul Con.smulinst
-#align add_con.has_vadd AddCon.smulinst
+#align con.has_smul Con.instSMul
+#align add_con.has_vadd AddCon.instVAdd
 -/
 
 #print Con.coe_smul /-

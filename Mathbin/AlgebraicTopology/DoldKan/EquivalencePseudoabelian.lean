@@ -49,47 +49,62 @@ namespace DoldKan
 
 open AlgebraicTopology.DoldKan
 
+#print CategoryTheory.Idempotents.DoldKan.N /-
 /-- The functor `N` for the equivalence is obtained by composing
 `N' : simplicial_object C ⥤ karoubi (chain_complex C ℕ)` and the inverse
 of the equivalence `chain_complex C ℕ ≌ karoubi (chain_complex C ℕ)`. -/
 @[simps, nolint unused_arguments]
-def n : SimplicialObject C ⥤ ChainComplex C ℕ :=
+def N : SimplicialObject C ⥤ ChainComplex C ℕ :=
   N₁ ⋙ (toKaroubi_equivalence _).inverse
-#align category_theory.idempotents.dold_kan.N CategoryTheory.Idempotents.DoldKan.n
+#align category_theory.idempotents.dold_kan.N CategoryTheory.Idempotents.DoldKan.N
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.Γ /-
 /-- The functor `Γ` for the equivalence is `Γ'`. -/
 @[simps, nolint unused_arguments]
 def Γ : ChainComplex C ℕ ⥤ SimplicialObject C :=
   Γ₀
 #align category_theory.idempotents.dold_kan.Γ CategoryTheory.Idempotents.DoldKan.Γ
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.hN₁ /-
 theorem hN₁ :
     (toKaroubi_equivalence (SimplicialObject C)).Functor ⋙ Preadditive.DoldKan.equivalence.Functor =
       N₁ :=
   Functor.congr_obj (functorExtension₁_comp_whiskeringLeft_toKaroubi _ _) N₁
 #align category_theory.idempotents.dold_kan.hN₁ CategoryTheory.Idempotents.DoldKan.hN₁
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.hΓ₀ /-
 theorem hΓ₀ :
     (toKaroubi_equivalence (ChainComplex C ℕ)).Functor ⋙ Preadditive.DoldKan.equivalence.inverse =
       Γ ⋙ (toKaroubi_equivalence _).Functor :=
   Functor.congr_obj (functorExtension₂_comp_whiskeringLeft_toKaroubi _ _) Γ₀
 #align category_theory.idempotents.dold_kan.hΓ₀ CategoryTheory.Idempotents.DoldKan.hΓ₀
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.equivalence /-
 /-- The Dold-Kan equivalence for pseudoabelian categories given
 by the functors `N` and `Γ`. It is obtained by applying the results in
 `compatibility.lean` to the equivalence `preadditive.dold_kan.equivalence`. -/
 def equivalence : SimplicialObject C ≌ ChainComplex C ℕ :=
   Compatibility.equivalence (eqToIso hN₁) (eqToIso hΓ₀)
 #align category_theory.idempotents.dold_kan.equivalence CategoryTheory.Idempotents.DoldKan.equivalence
+-/
 
-theorem equivalence_functor : (equivalence : SimplicialObject C ≌ _).Functor = n :=
+#print CategoryTheory.Idempotents.DoldKan.equivalence_functor /-
+theorem equivalence_functor : (equivalence : SimplicialObject C ≌ _).Functor = N :=
   rfl
 #align category_theory.idempotents.dold_kan.equivalence_functor CategoryTheory.Idempotents.DoldKan.equivalence_functor
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.equivalence_inverse /-
 theorem equivalence_inverse : (equivalence : SimplicialObject C ≌ _).inverse = Γ :=
   rfl
 #align category_theory.idempotents.dold_kan.equivalence_inverse CategoryTheory.Idempotents.DoldKan.equivalence_inverse
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.hη /-
 /-- The natural isomorphism `NΓ' satisfies the compatibility that is needed
 for the construction of our counit isomorphism `η` -/
 theorem hη :
@@ -102,19 +117,25 @@ theorem hη :
     preadditive.dold_kan.equivalence_counit_iso, N₂Γ₂_to_karoubi_iso_hom, eq_to_hom_map,
     eq_to_hom_trans_assoc, eq_to_hom_app] using N₂Γ₂_compatible_with_N₁Γ₀ K
 #align category_theory.idempotents.dold_kan.hη CategoryTheory.Idempotents.DoldKan.hη
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.η /-
 /-- The counit isomorphism induced by `N₁Γ₀` -/
 @[simps]
-def η : Γ ⋙ n ≅ 𝟭 (ChainComplex C ℕ) :=
+def η : Γ ⋙ N ≅ 𝟭 (ChainComplex C ℕ) :=
   Compatibility.equivalenceCounitIso
     (N₁Γ₀ : (Γ : ChainComplex C ℕ ⥤ _) ⋙ N₁ ≅ (toKaroubi_equivalence _).Functor)
 #align category_theory.idempotents.dold_kan.η CategoryTheory.Idempotents.DoldKan.η
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.equivalence_counitIso /-
 theorem equivalence_counitIso :
-    DoldKan.equivalence.counitIso = (η : Γ ⋙ n ≅ 𝟭 (ChainComplex C ℕ)) :=
+    DoldKan.equivalence.counitIso = (η : Γ ⋙ N ≅ 𝟭 (ChainComplex C ℕ)) :=
   Compatibility.equivalenceCounitIso_eq hη
 #align category_theory.idempotents.dold_kan.equivalence_counit_iso CategoryTheory.Idempotents.DoldKan.equivalence_counitIso
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.hε /-
 theorem hε :
     Compatibility.υ (eqToIso hN₁) =
       (Γ₂N₁ :
@@ -129,15 +150,20 @@ theorem hε :
   dsimp
   simpa only [id_comp, eq_to_hom_app, eq_to_hom_map, eq_to_hom_trans]
 #align category_theory.idempotents.dold_kan.hε CategoryTheory.Idempotents.DoldKan.hε
+-/
 
+#print CategoryTheory.Idempotents.DoldKan.ε /-
 /-- The unit isomorphism induced by `Γ₂N₁`. -/
-def ε : 𝟭 (SimplicialObject C) ≅ n ⋙ Γ :=
+def ε : 𝟭 (SimplicialObject C) ≅ N ⋙ Γ :=
   Compatibility.equivalenceUnitIso (eqToIso hΓ₀) Γ₂N₁
 #align category_theory.idempotents.dold_kan.ε CategoryTheory.Idempotents.DoldKan.ε
+-/
 
-theorem equivalence_unitIso : DoldKan.equivalence.unitIso = (ε : 𝟭 (SimplicialObject C) ≅ n ⋙ Γ) :=
+#print CategoryTheory.Idempotents.DoldKan.equivalence_unitIso /-
+theorem equivalence_unitIso : DoldKan.equivalence.unitIso = (ε : 𝟭 (SimplicialObject C) ≅ N ⋙ Γ) :=
   Compatibility.equivalenceUnitIso_eq hε
 #align category_theory.idempotents.dold_kan.equivalence_unit_iso CategoryTheory.Idempotents.DoldKan.equivalence_unitIso
+-/
 
 end DoldKan
 

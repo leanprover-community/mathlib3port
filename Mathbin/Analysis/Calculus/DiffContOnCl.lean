@@ -104,10 +104,10 @@ protected theorem differentiableAt (h : DiffContOnCl 𝕜 f s) (hs : IsOpen s) (
 #align diff_cont_on_cl.differentiable_at DiffContOnCl.differentiableAt
 -/
 
-#print DiffContOnCl.differentiable_at' /-
-theorem differentiable_at' (h : DiffContOnCl 𝕜 f s) (hx : s ∈ 𝓝 x) : DifferentiableAt 𝕜 f x :=
+#print DiffContOnCl.differentiableAt' /-
+theorem differentiableAt' (h : DiffContOnCl 𝕜 f s) (hx : s ∈ 𝓝 x) : DifferentiableAt 𝕜 f x :=
   h.DifferentiableOn.DifferentiableAt hx
-#align diff_cont_on_cl.differentiable_at' DiffContOnCl.differentiable_at'
+#align diff_cont_on_cl.differentiable_at' DiffContOnCl.differentiableAt'
 -/
 
 #print DiffContOnCl.mono /-

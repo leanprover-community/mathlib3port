@@ -866,28 +866,28 @@ variable [Fintype α] [Fintype β]
 
 open Fintype
 
-#print Equiv.ofLeftInverseOfCardLe /-
+#print Equiv.ofLeftInverseOfCardLE /-
 /-- Construct an equivalence from functions that are inverse to each other. -/
 @[simps]
-def ofLeftInverseOfCardLe (hβα : card β ≤ card α) (f : α → β) (g : β → α) (h : LeftInverse g f) :
+def ofLeftInverseOfCardLE (hβα : card β ≤ card α) (f : α → β) (g : β → α) (h : LeftInverse g f) :
     α ≃ β where
   toFun := f
   invFun := g
   left_inv := h
   right_inv := h.rightInverse_of_card_le hβα
-#align equiv.of_left_inverse_of_card_le Equiv.ofLeftInverseOfCardLe
+#align equiv.of_left_inverse_of_card_le Equiv.ofLeftInverseOfCardLE
 -/
 
-#print Equiv.ofRightInverseOfCardLe /-
+#print Equiv.ofRightInverseOfCardLE /-
 /-- Construct an equivalence from functions that are inverse to each other. -/
 @[simps]
-def ofRightInverseOfCardLe (hαβ : card α ≤ card β) (f : α → β) (g : β → α) (h : RightInverse g f) :
+def ofRightInverseOfCardLE (hαβ : card α ≤ card β) (f : α → β) (g : β → α) (h : RightInverse g f) :
     α ≃ β where
   toFun := f
   invFun := g
   left_inv := h.leftInverse_of_card_le hαβ
   right_inv := h
-#align equiv.of_right_inverse_of_card_le Equiv.ofRightInverseOfCardLe
+#align equiv.of_right_inverse_of_card_le Equiv.ofRightInverseOfCardLE
 -/
 
 end Equiv
@@ -922,11 +922,11 @@ noncomputable def Finset.equivOfCardEq {s t : Finset α} (h : s.card = t.card) :
 #align finset.equiv_of_card_eq Finset.equivOfCardEq
 -/
 
-#print Fintype.card_Prop /-
+#print Fintype.card_prop /-
 @[simp]
-theorem Fintype.card_Prop : Fintype.card Prop = 2 :=
+theorem Fintype.card_prop : Fintype.card Prop = 2 :=
   rfl
-#align fintype.card_Prop Fintype.card_Prop
+#align fintype.card_Prop Fintype.card_prop
 -/
 
 #print set_fintype_card_le_univ /-
@@ -959,28 +959,28 @@ theorem equiv_of_fintype_self_embedding_to_embedding [Finite α] (e : α ↪ α)
 #align function.embedding.equiv_of_fintype_self_embedding_to_embedding Function.Embedding.equiv_of_fintype_self_embedding_to_embedding
 -/
 
-#print Function.Embedding.is_empty_of_card_lt /-
+#print Function.Embedding.isEmpty_of_card_lt /-
 /-- If `‖β‖ < ‖α‖` there are no embeddings `α ↪ β`.
 This is a formulation of the pigeonhole principle.
 
 Note this cannot be an instance as it needs `h`. -/
 @[simp]
-theorem is_empty_of_card_lt [Fintype α] [Fintype β] (h : Fintype.card β < Fintype.card α) :
+theorem isEmpty_of_card_lt [Fintype α] [Fintype β] (h : Fintype.card β < Fintype.card α) :
     IsEmpty (α ↪ β) :=
   ⟨fun f =>
     let ⟨x, y, Ne, feq⟩ := Fintype.exists_ne_map_eq_of_card_lt f h
     Ne <| f.Injective feq⟩
-#align function.embedding.is_empty_of_card_lt Function.Embedding.is_empty_of_card_lt
+#align function.embedding.is_empty_of_card_lt Function.Embedding.isEmpty_of_card_lt
 -/
 
-#print Function.Embedding.truncOfCardLe /-
+#print Function.Embedding.truncOfCardLE /-
 /-- A constructive embedding of a fintype `α` in another fintype `β` when `card α ≤ card β`. -/
-def truncOfCardLe [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+def truncOfCardLE [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
     (h : Fintype.card α ≤ Fintype.card β) : Trunc (α ↪ β) :=
   (Fintype.truncEquivFin α).bind fun ea =>
     (Fintype.truncEquivFin β).map fun eb =>
       ea.toEmbedding.trans ((Fin.castLEEmb h).toEmbedding.trans eb.symm.toEmbedding)
-#align function.embedding.trunc_of_card_le Function.Embedding.truncOfCardLe
+#align function.embedding.trunc_of_card_le Function.Embedding.truncOfCardLE
 -/
 
 #print Function.Embedding.nonempty_of_card_le /-
@@ -1160,11 +1160,11 @@ protected theorem Fintype.false [Infinite α] (h : Fintype α) : False :=
 #align fintype.false Fintype.false
 -/
 
-#print is_empty_fintype /-
+#print isEmpty_fintype /-
 @[simp]
-theorem is_empty_fintype {α : Type _} : IsEmpty (Fintype α) ↔ Infinite α :=
+theorem isEmpty_fintype {α : Type _} : IsEmpty (Fintype α) ↔ Infinite α :=
   ⟨fun ⟨h⟩ => ⟨fun h' => (@nonempty_fintype α h').elim h⟩, fun ⟨h⟩ => ⟨fun h' => h h'.Finite⟩⟩
-#align is_empty_fintype is_empty_fintype
+#align is_empty_fintype isEmpty_fintype
 -/
 
 #print fintypeOfNotInfinite /-
@@ -1211,7 +1211,7 @@ namespace Infinite
 
 #print Infinite.of_not_fintype /-
 theorem of_not_fintype (h : Fintype α → False) : Infinite α :=
-  is_empty_fintype.mp ⟨h⟩
+  isEmpty_fintype.mp ⟨h⟩
 #align infinite.of_not_fintype Infinite.of_not_fintype
 -/
 

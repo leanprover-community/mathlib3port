@@ -153,7 +153,7 @@ def Γ : ChainComplex A ℕ ⥤ SimplicialObject A :=
 /-- The comparison isomorphism between `normalized_Moore_complex A` and
 the functor `idempotents.dold_kan.N` from the pseudoabelian case -/
 @[simps]
-def comparisonN : (n : SimplicialObject A ⥤ _) ≅ Idempotents.DoldKan.n :=
+def comparisonN : (n : SimplicialObject A ⥤ _) ≅ Idempotents.DoldKan.N :=
   calc
     n ≅ n ⋙ 𝟭 _ := Functor.leftUnitor n
     _ ≅ n ⋙ (toKaroubi_equivalence _).Functor ⋙ (toKaroubi_equivalence _).inverse :=
@@ -161,7 +161,7 @@ def comparisonN : (n : SimplicialObject A ⥤ _) ≅ Idempotents.DoldKan.n :=
     _ ≅ (n ⋙ (toKaroubi_equivalence _).Functor) ⋙ (toKaroubi_equivalence _).inverse := (Iso.refl _)
     _ ≅ N₁ ⋙ (toKaroubi_equivalence _).inverse :=
       (isoWhiskerRight (N₁_iso_normalizedMooreComplex_comp_toKaroubi A).symm _)
-    _ ≅ Idempotents.DoldKan.n := by rfl
+    _ ≅ Idempotents.DoldKan.N := by rfl
 #align category_theory.abelian.dold_kan.comparison_N CategoryTheory.Abelian.DoldKan.comparisonN
 
 /-- The Dold-Kan equivalence for abelian categories -/

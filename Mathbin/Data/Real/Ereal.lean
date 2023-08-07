@@ -78,11 +78,11 @@ def Real.toEReal : ℝ → EReal :=
 
 namespace EReal
 
-#print EReal.decidableLt /-
+#print EReal.decidableLT /-
 -- things unify with `with_bot.decidable_lt` later if we we don't provide this explicitly.
-instance decidableLt : DecidableRel ((· < ·) : EReal → EReal → Prop) :=
+instance decidableLT : DecidableRel ((· < ·) : EReal → EReal → Prop) :=
   WithBot.decidableLT
-#align ereal.decidable_lt EReal.decidableLt
+#align ereal.decidable_lt EReal.decidableLT
 -/
 
 -- TODO: Provide explicitly, otherwise it is inferred noncomputably from `complete_linear_order`

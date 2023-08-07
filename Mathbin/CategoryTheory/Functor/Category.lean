@@ -92,9 +92,11 @@ theorem comp_app {F G H : C ⥤ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) :
 #align category_theory.nat_trans.comp_app CategoryTheory.NatTrans.comp_app
 -/
 
+#print CategoryTheory.NatTrans.comp_app_assoc /-
 theorem comp_app_assoc {F G H : C ⥤ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) {X' : D} (f : H.obj X ⟶ X') :
     (α ≫ β).app X ≫ f = α.app X ≫ β.app X ≫ f := by rw [comp_app, assoc]
 #align category_theory.nat_trans.comp_app_assoc CategoryTheory.NatTrans.comp_app_assoc
+-/
 
 #print CategoryTheory.NatTrans.app_naturality /-
 theorem app_naturality {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (X : C) {Y Z : D} (f : Y ⟶ Z) :

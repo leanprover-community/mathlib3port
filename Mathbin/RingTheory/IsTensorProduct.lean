@@ -236,8 +236,8 @@ theorem IsBaseChange.inductionOn (x : N) (P : N → Prop) (h₁ : P 0) (h₂ : �
 #align is_base_change.induction_on IsBaseChange.inductionOn
 -/
 
-#print IsBaseChange.alg_hom_ext /-
-theorem IsBaseChange.alg_hom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f x) = g₂ (f x)) : g₁ = g₂ :=
+#print IsBaseChange.algHom_ext /-
+theorem IsBaseChange.algHom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f x) = g₂ (f x)) : g₁ = g₂ :=
   by
   ext x
   apply h.induction_on x
@@ -245,14 +245,14 @@ theorem IsBaseChange.alg_hom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f
   · assumption
   · intro s n e'; rw [g₁.map_smul, g₂.map_smul, e']
   · intro x y e₁ e₂; rw [map_add, map_add, e₁, e₂]
-#align is_base_change.alg_hom_ext IsBaseChange.alg_hom_ext
+#align is_base_change.alg_hom_ext IsBaseChange.algHom_ext
 -/
 
-#print IsBaseChange.alg_hom_ext' /-
-theorem IsBaseChange.alg_hom_ext' [Module R Q] [IsScalarTower R S Q] (g₁ g₂ : N →ₗ[S] Q)
+#print IsBaseChange.algHom_ext' /-
+theorem IsBaseChange.algHom_ext' [Module R Q] [IsScalarTower R S Q] (g₁ g₂ : N →ₗ[S] Q)
     (e : (g₁.restrictScalars R).comp f = (g₂.restrictScalars R).comp f) : g₁ = g₂ :=
-  h.alg_hom_ext g₁ g₂ (LinearMap.congr_fun e)
-#align is_base_change.alg_hom_ext' IsBaseChange.alg_hom_ext'
+  h.algHom_ext g₁ g₂ (LinearMap.congr_fun e)
+#align is_base_change.alg_hom_ext' IsBaseChange.algHom_ext'
 -/
 
 variable (R M N S)
