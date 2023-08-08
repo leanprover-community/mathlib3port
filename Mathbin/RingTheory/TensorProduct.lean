@@ -642,14 +642,12 @@ theorem includeRight_apply (b : B) : (includeRight : B →ₐ[R] A ⊗[R] B) b =
 #align algebra.tensor_product.include_right_apply Algebra.TensorProduct.includeRight_apply
 -/
 
-#print Algebra.TensorProduct.includeLeft_comp_algebraMap /-
-theorem includeLeft_comp_algebraMap {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+theorem includeLeftRingHom_comp_algebraMap {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Algebra R T] :
     (includeLeft.toRingHom.comp (algebraMap R S) : R →+* S ⊗[R] T) =
       includeRight.toRingHom.comp (algebraMap R T) :=
   by ext; simp
-#align algebra.tensor_product.include_left_comp_algebra_map Algebra.TensorProduct.includeLeft_comp_algebraMap
--/
+#align algebra.tensor_product.include_left_comp_algebra_map Algebra.TensorProduct.includeLeftRingHom_comp_algebraMapₓ
 
 end Semiring
 

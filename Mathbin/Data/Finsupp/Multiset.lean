@@ -66,12 +66,10 @@ theorem toMultiset_apply (f : α →₀ ℕ) : f.toMultiset = f.Sum fun a n => n
 #align finsupp.to_multiset_apply Finsupp.toMultiset_apply
 -/
 
-#print Finsupp.toMultiset_symm_apply /-
 @[simp]
 theorem toMultiset_symm_apply [DecidableEq α] (s : Multiset α) (x : α) :
     Finsupp.toMultiset.symm s x = s.count x := by convert rfl
 #align finsupp.to_multiset_symm_apply Finsupp.toMultiset_symm_apply
--/
 
 #print Finsupp.toMultiset_single /-
 @[simp]
