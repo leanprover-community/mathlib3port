@@ -394,7 +394,7 @@ indexed by `ι`.
 When `S = submodule _ M`, this is available as a `linear_map`, `direct_sum.coe_linear_map`. -/
 protected def coeAddMonoidHom {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
     [AddSubmonoidClass S M] (A : ι → S) : (⨁ i, A i) →+ M :=
-  toAddMonoid fun i => AddSubmonoidClass.Subtype (A i)
+  toAddMonoid fun i => AddSubmonoidClass.subtype (A i)
 #align direct_sum.coe_add_monoid_hom DirectSum.coeAddMonoidHom
 -/
 

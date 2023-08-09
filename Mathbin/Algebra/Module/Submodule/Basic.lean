@@ -219,7 +219,7 @@ Case conversion may be inaccurate. Consider using '#align smul_mem_class.to_modu
 -- Prefer subclasses of `module` over `smul_mem_class`.
 /-- A submodule of a `module` is a `module`.  -/
 instance (priority := 75) toModule : Module R S' :=
-  Subtype.coe_injective.Module R (AddSubmonoidClass.Subtype S') (SetLike.val_smul S')
+  Subtype.coe_injective.Module R (AddSubmonoidClass.subtype S') (SetLike.val_smul S')
 #align smul_mem_class.to_module SMulMemClass.toModule
 -/
 

@@ -116,7 +116,7 @@ instance noZeroDivisors [NoZeroDivisors R] : NoZeroDivisors s
 #print SubsemiringClass.subtype /-
 /-- The natural ring hom from a subsemiring of semiring `R` to `R`. -/
 def subtype : s →+* R :=
-  { SubmonoidClass.Subtype s, AddSubmonoidClass.Subtype s with toFun := coe }
+  { SubmonoidClass.subtype s, AddSubmonoidClass.subtype s with toFun := coe }
 #align subsemiring_class.subtype SubsemiringClass.subtype
 -/
 

@@ -779,18 +779,18 @@ instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCanc
 #align add_submonoid_class.to_linear_ordered_cancel_add_comm_monoid AddSubmonoidClass.toLinearOrderedCancelAddCommMonoid
 -/
 
-#print SubmonoidClass.Subtype /-
+#print SubmonoidClass.subtype /-
 /-- The natural monoid hom from a submonoid of monoid `M` to `M`. -/
 @[to_additive "The natural monoid hom from an `add_submonoid` of `add_monoid` `M` to `M`."]
-def Subtype : S' →* M :=
+def subtype : S' →* M :=
   ⟨coe, rfl, fun _ _ => rfl⟩
-#align submonoid_class.subtype SubmonoidClass.Subtype
-#align add_submonoid_class.subtype AddSubmonoidClass.Subtype
+#align submonoid_class.subtype SubmonoidClass.subtype
+#align add_submonoid_class.subtype AddSubmonoidClass.subtype
 -/
 
 #print SubmonoidClass.coe_subtype /-
 @[simp, to_additive]
-theorem coe_subtype : (SubmonoidClass.Subtype S' : S' → M) = coe :=
+theorem coe_subtype : (SubmonoidClass.subtype S' : S' → M) = coe :=
   rfl
 #align submonoid_class.coe_subtype SubmonoidClass.coe_subtype
 #align add_submonoid_class.coe_subtype AddSubmonoidClass.coe_subtype
@@ -1333,7 +1333,7 @@ theorem map_mclosure (f : F) (s : Set M) : (closure s).map f = closure (f '' s) 
 @[to_additive "Restriction of an add_monoid hom to an `add_submonoid` of the domain."]
 def restrict {N S : Type _} [MulOneClass N] [SetLike S M] [SubmonoidClass S M] (f : M →* N)
     (s : S) : s →* N :=
-  f.comp (SubmonoidClass.Subtype _)
+  f.comp (SubmonoidClass.subtype _)
 #align monoid_hom.restrict MonoidHom.restrict
 #align add_monoid_hom.restrict AddMonoidHom.restrict
 -/

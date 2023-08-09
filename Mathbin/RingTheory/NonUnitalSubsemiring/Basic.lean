@@ -74,7 +74,7 @@ instance noZeroDivisors [NoZeroDivisors R] : NoZeroDivisors s :=
 /-- The natural non-unital ring hom from a non-unital subsemiring of a non-unital semiring `R` to
 `R`. -/
 def subtype : s →ₙ+* R :=
-  { AddSubmonoidClass.Subtype s, MulMemClass.subtype s with toFun := coe }
+  { AddSubmonoidClass.subtype s, MulMemClass.subtype s with toFun := coe }
 #align non_unital_subsemiring_class.subtype NonUnitalSubsemiringClass.subtype
 -/
 

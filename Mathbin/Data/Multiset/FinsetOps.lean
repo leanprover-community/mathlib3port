@@ -208,7 +208,7 @@ theorem cons_ndunion (s t : Multiset α) (a : α) : ndunion (a ::ₘ s) t = ndin
 #print Multiset.mem_ndunion /-
 @[simp]
 theorem mem_ndunion {s t : Multiset α} {a : α} : a ∈ ndunion s t ↔ a ∈ s ∨ a ∈ t :=
-  Quotient.induction_on₂ s t fun l₁ l₂ => List.mem_union
+  Quotient.induction_on₂ s t fun l₁ l₂ => List.mem_union_iff
 #align multiset.mem_ndunion Multiset.mem_ndunion
 -/
 

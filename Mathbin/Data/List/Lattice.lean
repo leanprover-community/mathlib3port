@@ -198,24 +198,24 @@ theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert 
   rfl
 #align list.cons_union List.cons_unionₓ
 
-#print List.mem_union /-
+#print List.mem_union_iff /-
 @[simp]
-theorem mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
+theorem mem_union_iff : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
   induction l₁ <;>
     simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons_iff,
       or_assoc', *]
-#align list.mem_union List.mem_union
+#align list.mem_union List.mem_union_iff
 -/
 
 #print List.mem_union_left /-
 theorem mem_union_left (h : a ∈ l₁) (l₂ : List α) : a ∈ l₁ ∪ l₂ :=
-  mem_union.2 (Or.inl h)
+  mem_union_iff.2 (Or.inl h)
 #align list.mem_union_left List.mem_union_left
 -/
 
 #print List.mem_union_right /-
 theorem mem_union_right (l₁ : List α) (h : a ∈ l₂) : a ∈ l₁ ∪ l₂ :=
-  mem_union.2 (Or.inr h)
+  mem_union_iff.2 (Or.inr h)
 #align list.mem_union_right List.mem_union_right
 -/
 
@@ -309,11 +309,11 @@ theorem mem_inter_of_mem_of_mem : a ∈ l₁ → a ∈ l₂ → a ∈ l₁ ∩ l
 #align list.mem_inter_of_mem_of_mem List.mem_inter_of_mem_of_mem
 -/
 
-#print List.mem_inter /-
+#print List.mem_inter_iff /-
 @[simp]
-theorem mem_inter : a ∈ l₁ ∩ l₂ ↔ a ∈ l₁ ∧ a ∈ l₂ :=
+theorem mem_inter_iff : a ∈ l₁ ∩ l₂ ↔ a ∈ l₁ ∧ a ∈ l₂ :=
   mem_filter
-#align list.mem_inter List.mem_inter
+#align list.mem_inter List.mem_inter_iff
 -/
 
 #print List.inter_subset_left /-
@@ -329,7 +329,7 @@ theorem inter_subset_right (l₁ l₂ : List α) : l₁ ∩ l₂ ⊆ l₂ := fun
 
 #print List.subset_inter /-
 theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l₂) : l ⊆ l₁ ∩ l₂ := fun a h =>
-  mem_inter.2 ⟨h₁ h, h₂ h⟩
+  mem_inter_iff.2 ⟨h₁ h, h₂ h⟩
 #align list.subset_inter List.subset_inter
 -/
 

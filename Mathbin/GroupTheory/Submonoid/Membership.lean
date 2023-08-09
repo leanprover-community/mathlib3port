@@ -51,7 +51,7 @@ namespace SubmonoidClass
 #print SubmonoidClass.coe_list_prod /-
 @[simp, norm_cast, to_additive]
 theorem coe_list_prod (l : List S) : (l.Prod : M) = (l.map coe).Prod :=
-  (SubmonoidClass.Subtype S : _ →* M).map_list_prod l
+  (SubmonoidClass.subtype S : _ →* M).map_list_prod l
 #align submonoid_class.coe_list_prod SubmonoidClass.coe_list_prod
 #align add_submonoid_class.coe_list_sum AddSubmonoidClass.coe_list_sum
 -/
@@ -60,7 +60,7 @@ theorem coe_list_prod (l : List S) : (l.Prod : M) = (l.map coe).Prod :=
 @[simp, norm_cast, to_additive]
 theorem coe_multiset_prod {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (m : Multiset S) :
     (m.Prod : M) = (m.map coe).Prod :=
-  (SubmonoidClass.Subtype S : _ →* M).map_multiset_prod m
+  (SubmonoidClass.subtype S : _ →* M).map_multiset_prod m
 #align submonoid_class.coe_multiset_prod SubmonoidClass.coe_multiset_prod
 #align add_submonoid_class.coe_multiset_sum AddSubmonoidClass.coe_multiset_sum
 -/
@@ -69,7 +69,7 @@ theorem coe_multiset_prod {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] 
 @[simp, norm_cast, to_additive]
 theorem coe_finset_prod {ι M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (f : ι → S)
     (s : Finset ι) : ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
-  (SubmonoidClass.Subtype S : _ →* M).map_prod f s
+  (SubmonoidClass.subtype S : _ →* M).map_prod f s
 #align submonoid_class.coe_finset_prod SubmonoidClass.coe_finset_prod
 #align add_submonoid_class.coe_finset_sum AddSubmonoidClass.coe_finset_sum
 -/
