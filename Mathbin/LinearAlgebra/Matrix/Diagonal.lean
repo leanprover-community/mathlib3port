@@ -94,7 +94,7 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
 #align matrix.range_diagonal Matrix.range_diagonal
 -/
 
-#print Matrix.rank_diagonal /-
+#print LinearMap.rank_diagonal /-
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
     rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } :=
   by
@@ -105,7 +105,7 @@ theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
   rw [rank, range_diagonal, B₁, ← @rank_fun' K]
   apply LinearEquiv.rank_eq
   apply B₂
-#align matrix.rank_diagonal Matrix.rank_diagonal
+#align matrix.rank_diagonal LinearMap.rank_diagonal
 -/
 
 end Field

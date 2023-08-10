@@ -152,11 +152,9 @@ section
 
 open scoped ComplexOrder
 
-#print Complex.orderedSMul /-
 protected theorem orderedSMul : OrderedSMul ℝ ℂ :=
   OrderedSMul.mk' fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
 #align complex.ordered_smul Complex.orderedSMul
--/
 
 scoped[ComplexOrder] attribute [instance] Complex.orderedSMul
 

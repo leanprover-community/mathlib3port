@@ -408,10 +408,12 @@ variable {S₁ : Type _} {S₂ : Type _} {S₃ : Type _} [Shelf S₁] [Shelf S�
 instance : CoeFun (S₁ →◃ S₂) fun _ => S₁ → S₂ :=
   ⟨ShelfHom.toFun⟩
 
+#print ShelfHom.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (f : S₁ →◃ S₂) : f.toFun = f :=
   rfl
 #align shelf_hom.to_fun_eq_coe ShelfHom.toFun_eq_coe
+-/
 
 #print ShelfHom.map_act /-
 @[simp]

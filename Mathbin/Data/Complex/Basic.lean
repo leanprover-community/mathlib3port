@@ -1400,7 +1400,6 @@ theorem eq_re_ofReal_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re :=
 #align complex.eq_re_of_real_le Complex.eq_re_ofReal_le
 -/
 
-#print Complex.strictOrderedCommRing /-
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a strictly ordered ring.
 -/
 protected def strictOrderedCommRing : StrictOrderedCommRing ℂ :=
@@ -1411,11 +1410,9 @@ protected def strictOrderedCommRing : StrictOrderedCommRing ℂ :=
     mul_pos := fun z w hz hw => by
       simp [lt_def, mul_re, mul_im, ← hz.2, ← hw.2, mul_pos hz.1 hw.1] }
 #align complex.strict_ordered_comm_ring Complex.strictOrderedCommRing
--/
 
 scoped[ComplexOrder] attribute [instance] Complex.strictOrderedCommRing
 
-#print Complex.starOrderedRing /-
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a star ordered ring.
 (That is, a star ring in which the nonnegative elements are those of the form `star z * z`.)
 -/
@@ -1435,7 +1432,6 @@ protected def starOrderedRing : StarOrderedRing ℂ :=
     · obtain ⟨s, rfl⟩ := h
       simp only [← norm_sq_eq_conj_mul_self, norm_sq_nonneg, zero_le_real, star_def]
 #align complex.star_ordered_ring Complex.starOrderedRing
--/
 
 scoped[ComplexOrder] attribute [instance] Complex.starOrderedRing
 
