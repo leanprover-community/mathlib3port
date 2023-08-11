@@ -47,18 +47,16 @@ variable {C D : Type _} [Category C] [Category D] (L : C ⥤ D) (W : MorphismPro
 
 namespace Functor
 
-#print CategoryTheory.Functor.IsLocalization /-
 /-- The predicate expressing that, up to equivalence, a functor `L : C ⥤ D`
 identifies the category `D` with the localized category of `C` with respect
 to `W : morphism_property C`. -/
 class IsLocalization : Prop where
   inverts : W.IsInvertedBy L
   nonempty_isEquivalence : Nonempty (IsEquivalence (Localization.Construction.lift L inverts))
-#align category_theory.functor.is_localization CategoryTheory.Functor.IsLocalization
--/
+#align category_theory.functor.is_localization CategoryTheory.Functor.IsLocalizationₓ
 
 #print CategoryTheory.Functor.q_isLocalization /-
-instance q_isLocalization : W.Q.IsLocalization W
+instance q_isLocalization : W.Q.IsLocalizationₓ W
     where
   inverts := W.Q_inverts
   nonempty_isEquivalence :=
@@ -147,7 +145,8 @@ theorem IsLocalization.mk' (h₁ : Localization.StrictUniversalPropertyFixedTarg
 -/
 
 #print CategoryTheory.Functor.IsLocalization.for_id /-
-theorem IsLocalization.for_id (hW : W ⊆ MorphismProperty.isomorphisms C) : (𝟭 C).IsLocalization W :=
+theorem IsLocalization.for_id (hW : W ⊆ MorphismProperty.isomorphisms C) :
+    (𝟭 C).IsLocalizationₓ W :=
   IsLocalization.mk' _ _ (Localization.strictUniversalPropertyFixedTargetId W _ hW)
     (Localization.strictUniversalPropertyFixedTargetId W _ hW)
 #align category_theory.functor.is_localization.for_id CategoryTheory.Functor.IsLocalization.for_id
@@ -157,11 +156,11 @@ end Functor
 
 namespace Localization
 
-variable [L.IsLocalization W]
+variable [L.IsLocalizationₓ W]
 
 #print CategoryTheory.Localization.inverts /-
 theorem inverts : W.IsInvertedBy L :=
-  (inferInstance : L.IsLocalization W).inverts
+  (inferInstance : L.IsLocalizationₓ W).inverts
 #align category_theory.localization.inverts CategoryTheory.Localization.inverts
 -/
 
@@ -176,7 +175,7 @@ def isoOfHom {X Y : C} (f : X ⟶ Y) (hf : W f) : L.obj X ≅ L.obj Y :=
 -/
 
 instance : IsEquivalence (Localization.Construction.lift L (inverts L W)) :=
-  (inferInstance : L.IsLocalization W).nonempty_isEquivalence.some
+  (inferInstance : L.IsLocalizationₓ W).nonempty_isEquivalence.some
 
 #print CategoryTheory.Localization.equivalenceFromModel /-
 /-- A chosen equivalence of categories `W.localization ≅ D` for a functor
@@ -304,15 +303,13 @@ theorem natTrans_ext {F₁ F₂ : D ⥤ E} (τ τ' : F₁ ⟶ F₂)
 #align category_theory.localization.nat_trans_ext CategoryTheory.Localization.natTrans_ext
 -/
 
-#print CategoryTheory.Localization.Lifting /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
 /-- When `L : C ⥤ D` is a localization functor for `W : morphism_property C` and
 `F : C ⥤ E` is a functor, we shall say that `F' : D ⥤ E` lifts `F` if the obvious diagram
 is commutative up to an isomorphism. -/
 class Lifting (F : C ⥤ E) (F' : D ⥤ E) where
   Iso : L ⋙ F' ≅ F
-#align category_theory.localization.lifting CategoryTheory.Localization.Lifting
--/
+#align category_theory.localization.lifting CategoryTheory.Localization.Liftingₓ
 
 variable {W}
 
@@ -320,13 +317,13 @@ variable {W}
 /-- Given a localization functor `L : C ⥤ D` for `W : morphism_property C` and
 a functor `F : C ⥤ E` which inverts `W`, this is a choice of functor
 `D ⥤ E` which lifts `F`. -/
-def lift (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalization W] : D ⥤ E :=
+def lift (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalizationₓ W] : D ⥤ E :=
   (functorEquivalence L W E).inverse.obj ⟨F, hF⟩
 #align category_theory.localization.lift CategoryTheory.Localization.lift
 -/
 
 #print CategoryTheory.Localization.liftingLift /-
-instance liftingLift (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalization W] :
+instance liftingLift (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalizationₓ W] :
     Lifting L W F (lift F hF L) :=
   ⟨(inducedFunctor _).mapIso ((functorEquivalence L W E).counitIso.app ⟨F, hF⟩)⟩
 #align category_theory.localization.lifting_lift CategoryTheory.Localization.liftingLift
@@ -336,7 +333,7 @@ instance liftingLift (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L
 /-- The canonical isomorphism `L ⋙ lift F hF L ≅ F` for any functor `F : C ⥤ E`
 which inverts `W`, when `L : C ⥤ D` is a localization functor for `W`. -/
 @[simps]
-def fac (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalization W] :
+def fac (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalizationₓ W] :
     L ⋙ lift F hF L ≅ F :=
   Lifting.iso _ W _ _
 #align category_theory.localization.fac CategoryTheory.Localization.fac
@@ -444,7 +441,7 @@ namespace IsLocalization
 open Localization
 
 #print CategoryTheory.Functor.IsLocalization.of_iso /-
-theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W] : L₂.IsLocalization W :=
+theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalizationₓ W] : L₂.IsLocalizationₓ W :=
   by
   have h := localization.inverts L₁ W
   rw [morphism_property.is_inverted_by.iff_of_iso W e] at h 
@@ -461,7 +458,7 @@ theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W]
 /-- If `L : C ⥤ D` is a localization for `W : morphism_property C`, then it is also
 the case of a functor obtained by post-composing `L` with an equivalence of categories. -/
 theorem of_equivalence_target {E : Type _} [Category E] (L' : C ⥤ E) (eq : D ≌ E)
-    [L.IsLocalization W] (e : L ⋙ Eq.Functor ≅ L') : L'.IsLocalization W :=
+    [L.IsLocalizationₓ W] (e : L ⋙ Eq.Functor ≅ L') : L'.IsLocalizationₓ W :=
   by
   have h : W.is_inverted_by L' :=
     by

@@ -437,7 +437,7 @@ theorem IsInternal.collectedBasis_coe (h : IsInternal A) {α : ι → Type _}
     (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σ i, α i => ↑(v a.1 a.2) :=
   by
   funext a
-  simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.toFun_eq_coe,
+  simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.to_fun_eq_coe,
     Basis.coe_ofRepr, Basis.repr_symm_apply, DFinsupp.lsum_apply_apply,
     DFinsupp.mapRange.linearEquiv_apply, DFinsupp.mapRange.linearEquiv_symm,
     DFinsupp.mapRange_single, Finsupp.total_single, LinearEquiv.ofBijective_apply,

@@ -593,12 +593,10 @@ theorem ker_comp {E : Type _} [Groupoid E] (ψ : D ⥤ E) : ker (φ ⋙ ψ) = co
 #align category_theory.subgroupoid.ker_comp CategoryTheory.Subgroupoid.ker_comp
 -/
 
-#print CategoryTheory.Subgroupoid.Map.Arrows /-
 /-- The family of arrows of the image of a subgroupoid under a functor injective on objects -/
 inductive Map.Arrows (hφ : Function.Injective φ.obj) (S : Subgroupoid C) : ∀ c d : D, (c ⟶ d) → Prop
   | im {c d : C} (f : c ⟶ d) (hf : f ∈ S.arrows c d) : map.arrows (φ.obj c) (φ.obj d) (φ.map f)
-#align category_theory.subgroupoid.map.arrows CategoryTheory.Subgroupoid.Map.Arrows
--/
+#align category_theory.subgroupoid.map.arrows CategoryTheory.Subgroupoid.Map.Arrowsₓ
 
 #print CategoryTheory.Subgroupoid.Map.arrows_iff /-
 theorem Map.arrows_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d : D} (f : c ⟶ d) :

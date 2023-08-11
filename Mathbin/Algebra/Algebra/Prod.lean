@@ -37,7 +37,7 @@ open Algebra
 
 #print Prod.algebra /-
 instance algebra : Algebra R (A × B) :=
-  { Prod.module,
+  { Prod.instModule,
     RingHom.prod (algebraMap R A)
       (algebraMap R
         B) with

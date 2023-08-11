@@ -116,7 +116,7 @@ instance [NormedOrderedGroup α] : NormedOrderedGroup αᵒᵈ :=
 
 @[to_additive]
 instance [NormedLinearOrderedGroup α] : NormedLinearOrderedGroup αᵒᵈ :=
-  { OrderDual.normedOrderedGroup, OrderDual.linearOrder _ with }
+  { OrderDual.normedOrderedGroup, OrderDual.instLinearOrder _ with }
 
 instance [NormedOrderedGroup α] : NormedOrderedAddGroup (Additive α) :=
   { Additive.normedAddCommGroup with }

@@ -117,11 +117,11 @@ instance [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid αᵒᵈ :=
 
 @[to_additive]
 instance [LinearOrderedCancelCommMonoid α] : LinearOrderedCancelCommMonoid αᵒᵈ :=
-  { OrderDual.linearOrder α, OrderDual.orderedCancelCommMonoid with }
+  { OrderDual.instLinearOrder α, OrderDual.orderedCancelCommMonoid with }
 
 @[to_additive]
 instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoid αᵒᵈ :=
-  { OrderDual.linearOrder α, OrderDual.orderedCommMonoid with }
+  { OrderDual.instLinearOrder α, OrderDual.orderedCommMonoid with }
 
 end OrderDual
 

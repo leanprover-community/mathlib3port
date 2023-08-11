@@ -277,7 +277,7 @@ instance [Monoid S] [AddMonoid R] [AddMonoid M] [DistribMulAction S R] [DistribM
 
 instance [Semiring S] [AddCommMonoid R] [AddCommMonoid M] [Module S R] [Module S M] :
     Module S (tsze R M) :=
-  Prod.module
+  Prod.instModule
 
 #print TrivSqZeroExt.fst_zero /-
 @[simp]

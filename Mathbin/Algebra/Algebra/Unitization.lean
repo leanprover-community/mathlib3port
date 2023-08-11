@@ -218,7 +218,7 @@ instance [Monoid S] [AddMonoid R] [AddMonoid A] [DistribMulAction S R] [DistribM
 
 instance [Semiring S] [AddCommMonoid R] [AddCommMonoid A] [Module S R] [Module S A] :
     Module S (Unitization R A) :=
-  Prod.module
+  Prod.instModule
 
 #print Unitization.fst_zero /-
 @[simp]

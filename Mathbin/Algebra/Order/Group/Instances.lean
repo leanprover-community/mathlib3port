@@ -25,5 +25,5 @@ instance [OrderedCommGroup α] : OrderedCommGroup αᵒᵈ :=
 
 @[to_additive]
 instance [LinearOrderedCommGroup α] : LinearOrderedCommGroup αᵒᵈ :=
-  { OrderDual.orderedCommGroup, OrderDual.linearOrder α with }
+  { OrderDual.orderedCommGroup, OrderDual.instLinearOrder α with }
 

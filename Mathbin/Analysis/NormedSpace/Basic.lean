@@ -282,7 +282,7 @@ instance : NormedSpace α (ULift E) :=
 #print Prod.normedSpace /-
 /-- The product of two normed spaces is a normed space, with the sup norm. -/
 instance Prod.normedSpace : NormedSpace α (E × F) :=
-  { Prod.normedAddCommGroup, Prod.module with
+  { Prod.normedAddCommGroup, Prod.instModule with
     norm_smul_le := fun s x => by simp [Prod.norm_def, norm_smul_le, mul_max_of_nonneg] }
 #align prod.normed_space Prod.normedSpace
 -/

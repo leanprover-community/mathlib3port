@@ -321,7 +321,7 @@ instance (α : Type _) [ConditionallyCompleteLattice α] : ConditionallyComplete
     cInf_le := @ConditionallyCompleteLattice.le_cSup α _ }
 
 instance (α : Type _) [ConditionallyCompleteLinearOrder α] : ConditionallyCompleteLinearOrder αᵒᵈ :=
-  { OrderDual.conditionallyCompleteLattice α, OrderDual.linearOrder α with }
+  { OrderDual.conditionallyCompleteLattice α, OrderDual.instLinearOrder α with }
 
 end OrderDual
 
