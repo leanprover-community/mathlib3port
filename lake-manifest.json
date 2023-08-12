@@ -10,9 +10,9 @@
   {"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "a4d3f2d795a2d7ad89b1b4e26cdf78717d99426e",
+    "rev": "0d8a7925f9f5f61ac414a76fe10b943d8049aac2",
     "name": "lean3port",
-    "inputRev?": "a4d3f2d795a2d7ad89b1b4e26cdf78717d99426e"}},
+    "inputRev?": "0d8a7925f9f5f61ac414a76fe10b943d8049aac2"}},
   {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",
     "subDir?": null,
