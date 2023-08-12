@@ -346,7 +346,7 @@ theorem prehaar_le_index (K₀ : PositiveCompacts G) {U : Set G} (K : Compacts G
   · apply le_index_mul K₀ K hU
   · exact index_pos K₀ hU
 #align measure_theory.measure.haar.prehaar_le_index MeasureTheory.Measure.haar.prehaar_le_index
-#align measure_theory.measure.haar.add_prehaar_le_add_index MeasureTheory.Measure.haar.add_prehaar_le_add_index
+#align measure_theory.measure.haar.add_prehaar_le_add_index MeasureTheory.Measure.haar.add_prehaar_le_addIndex
 -/
 
 #print MeasureTheory.Measure.haar.prehaar_pos /-

@@ -137,8 +137,8 @@ theorem Continuous.inner_ {f g : ℝ → E} (hf : Continuous f) (hg : Continuous
 #align inner_product_spaceable.continuous.inner_ Continuous.inner_
 -/
 
-#print InnerProductSpaceable.Inner_.norm_sq /-
-theorem Inner_.norm_sq (x : E) : ‖x‖ ^ 2 = re (inner_ 𝕜 x x) :=
+#print InnerProductSpaceable.inner_.norm_sq /-
+theorem inner_.norm_sq (x : E) : ‖x‖ ^ 2 = re (inner_ 𝕜 x x) :=
   by
   simp only [inner_]
   have h₁ : norm_sq (4 : 𝕜) = 16 :=
@@ -152,11 +152,11 @@ theorem Inner_.norm_sq (x : E) : ‖x‖ ^ 2 = re (inner_ 𝕜 x x) :=
     inv_re, one_re, inv_im, bit0_re, mul_re, MulZeroClass.mul_zero, sub_self, neg_zero,
     algebra_map_eq_of_real]
   ring
-#align inner_product_spaceable.inner_.norm_sq InnerProductSpaceable.Inner_.norm_sq
+#align inner_product_spaceable.inner_.norm_sq InnerProductSpaceable.inner_.norm_sq
 -/
 
-#print InnerProductSpaceable.Inner_.conj_symm /-
-theorem Inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y :=
+#print InnerProductSpaceable.inner_.conj_symm /-
+theorem inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y :=
   by
   simp only [inner_]
   have h4 : conj (4⁻¹ : 𝕜) = 4⁻¹ := by
@@ -179,7 +179,7 @@ theorem Inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y :=
     · rw [smul_add, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add_eq_sub]
   rw [h₁, h₂, ← sub_add_eq_add_sub]
   simp only [neg_mul, sub_eq_add_neg, neg_neg]
-#align inner_product_spaceable.inner_.conj_symm InnerProductSpaceable.Inner_.conj_symm
+#align inner_product_spaceable.inner_.conj_symm InnerProductSpaceable.inner_.conj_symm
 -/
 
 variable [InnerProductSpaceable E]
@@ -385,8 +385,8 @@ parallelogram identity can be given a compatible inner product. Do
 `inner_product_space 𝕜 E`. -/
 theorem nonempty_innerProductSpace : Nonempty (InnerProductSpace 𝕜 E) :=
   ⟨{  inner := inner_ 𝕜
-      norm_sq_eq_inner := Inner_.norm_sq
-      conj_symm := Inner_.conj_symm
+      norm_sq_eq_inner := inner_.norm_sq
+      conj_symm := inner_.conj_symm
       add_left := add_left
       smul_left := fun _ _ _ => innerProp _ _ _ }⟩
 #align nonempty_inner_product_space nonempty_innerProductSpace

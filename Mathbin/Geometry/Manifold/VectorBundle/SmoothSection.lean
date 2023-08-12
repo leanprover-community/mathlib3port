@@ -133,8 +133,8 @@ theorem ext (h : ∀ x, s x = t x) : s = t := by cases s <;> cases t <;> congr <
 #align cont_mdiff_section.ext ContMDiffSection.ext
 -/
 
-#print ContMDiffSection.hasAdd /-
-instance hasAdd : Add Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instAdd /-
+instance instAdd : Add Cₛ^n⟮I; F, V⟯ :=
   by
   refine' ⟨fun s t => ⟨s + t, _⟩⟩
   intro x₀
@@ -146,7 +146,7 @@ instance hasAdd : Add Cₛ^n⟮I; F, V⟯ :=
   refine' eventually_of_mem (e.open_base_set.mem_nhds <| mem_base_set_trivialization_at F V x₀) _
   intro x hx
   apply (e.linear 𝕜 hx).1
-#align cont_mdiff_section.has_add ContMDiffSection.hasAdd
+#align cont_mdiff_section.has_add ContMDiffSection.instAdd
 -/
 
 #print ContMDiffSection.coe_add /-
@@ -156,8 +156,8 @@ theorem coe_add (s t : Cₛ^n⟮I; F, V⟯) : ⇑(s + t) = s + t :=
 #align cont_mdiff_section.coe_add ContMDiffSection.coe_add
 -/
 
-#print ContMDiffSection.hasSub /-
-instance hasSub : Sub Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instSub /-
+instance instSub : Sub Cₛ^n⟮I; F, V⟯ :=
   by
   refine' ⟨fun s t => ⟨s - t, _⟩⟩
   intro x₀
@@ -169,7 +169,7 @@ instance hasSub : Sub Cₛ^n⟮I; F, V⟯ :=
   refine' eventually_of_mem (e.open_base_set.mem_nhds <| mem_base_set_trivialization_at F V x₀) _
   intro x hx
   apply (e.linear 𝕜 hx).map_sub
-#align cont_mdiff_section.has_sub ContMDiffSection.hasSub
+#align cont_mdiff_section.has_sub ContMDiffSection.instSub
 -/
 
 #print ContMDiffSection.coe_sub /-
@@ -179,10 +179,10 @@ theorem coe_sub (s t : Cₛ^n⟮I; F, V⟯) : ⇑(s - t) = s - t :=
 #align cont_mdiff_section.coe_sub ContMDiffSection.coe_sub
 -/
 
-#print ContMDiffSection.hasZero /-
-instance hasZero : Zero Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instZero /-
+instance instZero : Zero Cₛ^n⟮I; F, V⟯ :=
   ⟨⟨fun x => 0, (smooth_zeroSection 𝕜 V).of_le le_top⟩⟩
-#align cont_mdiff_section.has_zero ContMDiffSection.hasZero
+#align cont_mdiff_section.has_zero ContMDiffSection.instZero
 -/
 
 #print ContMDiffSection.inhabited /-
@@ -198,8 +198,8 @@ theorem coe_zero : ⇑(0 : Cₛ^n⟮I; F, V⟯) = 0 :=
 #align cont_mdiff_section.coe_zero ContMDiffSection.coe_zero
 -/
 
-#print ContMDiffSection.hasSmul /-
-instance hasSmul : SMul 𝕜 Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instSMul /-
+instance instSMul : SMul 𝕜 Cₛ^n⟮I; F, V⟯ :=
   by
   refine' ⟨fun c s => ⟨c • s, _⟩⟩
   intro x₀
@@ -211,7 +211,7 @@ instance hasSmul : SMul 𝕜 Cₛ^n⟮I; F, V⟯ :=
   refine' eventually_of_mem (e.open_base_set.mem_nhds <| mem_base_set_trivialization_at F V x₀) _
   intro x hx
   apply (e.linear 𝕜 hx).2
-#align cont_mdiff_section.has_smul ContMDiffSection.hasSmul
+#align cont_mdiff_section.has_smul ContMDiffSection.instSMul
 -/
 
 #print ContMDiffSection.coe_smul /-
@@ -221,8 +221,8 @@ theorem coe_smul (r : 𝕜) (s : Cₛ^n⟮I; F, V⟯) : ⇑(r • s : Cₛ^n⟮I
 #align cont_mdiff_section.coe_smul ContMDiffSection.coe_smul
 -/
 
-#print ContMDiffSection.hasNeg /-
-instance hasNeg : Neg Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instNeg /-
+instance instNeg : Neg Cₛ^n⟮I; F, V⟯ :=
   by
   refine' ⟨fun s => ⟨-s, _⟩⟩
   intro x₀
@@ -233,7 +233,7 @@ instance hasNeg : Neg Cₛ^n⟮I; F, V⟯ :=
   refine' eventually_of_mem (e.open_base_set.mem_nhds <| mem_base_set_trivialization_at F V x₀) _
   intro x hx
   apply (e.linear 𝕜 hx).map_neg
-#align cont_mdiff_section.has_neg ContMDiffSection.hasNeg
+#align cont_mdiff_section.has_neg ContMDiffSection.instNeg
 -/
 
 #print ContMDiffSection.coe_neg /-
@@ -243,10 +243,10 @@ theorem coe_neg (s : Cₛ^n⟮I; F, V⟯) : ⇑(-s : Cₛ^n⟮I; F, V⟯) = -s :
 #align cont_mdiff_section.coe_neg ContMDiffSection.coe_neg
 -/
 
-#print ContMDiffSection.hasNsmul /-
-instance hasNsmul : SMul ℕ Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instNSMul /-
+instance instNSMul : SMul ℕ Cₛ^n⟮I; F, V⟯ :=
   ⟨nsmulRec⟩
-#align cont_mdiff_section.has_nsmul ContMDiffSection.hasNsmul
+#align cont_mdiff_section.has_nsmul ContMDiffSection.instNSMul
 -/
 
 #print ContMDiffSection.coe_nsmul /-
@@ -259,10 +259,10 @@ theorem coe_nsmul (s : Cₛ^n⟮I; F, V⟯) (k : ℕ) : ⇑(k • s : Cₛ^n⟮I
 #align cont_mdiff_section.coe_nsmul ContMDiffSection.coe_nsmul
 -/
 
-#print ContMDiffSection.hasZsmul /-
-instance hasZsmul : SMul ℤ Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instZSMul /-
+instance instZSMul : SMul ℤ Cₛ^n⟮I; F, V⟯ :=
   ⟨zsmulRec⟩
-#align cont_mdiff_section.has_zsmul ContMDiffSection.hasZsmul
+#align cont_mdiff_section.has_zsmul ContMDiffSection.instZSMul
 -/
 
 #print ContMDiffSection.coe_zsmul /-
@@ -277,10 +277,10 @@ theorem coe_zsmul (s : Cₛ^n⟮I; F, V⟯) (z : ℤ) : ⇑(z • s : Cₛ^n⟮I
 #align cont_mdiff_section.coe_zsmul ContMDiffSection.coe_zsmul
 -/
 
-#print ContMDiffSection.addCommGroup /-
-instance addCommGroup : AddCommGroup Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instAddCommGroup /-
+instance instAddCommGroup : AddCommGroup Cₛ^n⟮I; F, V⟯ :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub coe_nsmul coe_zsmul
-#align cont_mdiff_section.add_comm_group ContMDiffSection.addCommGroup
+#align cont_mdiff_section.add_comm_group ContMDiffSection.instAddCommGroup
 -/
 
 variable (I F V n)
@@ -297,10 +297,10 @@ def coeAddHom : Cₛ^n⟮I; F, V⟯ →+ ∀ x, V x
 
 variable {I F V n}
 
-#print ContMDiffSection.module /-
-instance module : Module 𝕜 Cₛ^n⟮I; F, V⟯ :=
+#print ContMDiffSection.instModule /-
+instance instModule : Module 𝕜 Cₛ^n⟮I; F, V⟯ :=
   coe_injective.Module 𝕜 (coeAddHom I F n V) coe_smul
-#align cont_mdiff_section.module ContMDiffSection.module
+#align cont_mdiff_section.module ContMDiffSection.instModule
 -/
 
 end ContMDiffSection

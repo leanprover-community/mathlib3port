@@ -356,11 +356,11 @@ theorem subgroup_on_glpos_smul_apply (s : Γ) (g : GL(2, ℝ)⁺) (z : ℍ) :
 #align upper_half_plane.subgroup_on_GL_pos_smul_apply UpperHalfPlane.subgroup_on_glpos_smul_apply
 -/
 
-#print UpperHalfPlane.subgroup_on_gLPos /-
-instance subgroup_on_gLPos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
+#print UpperHalfPlane.subgroup_on_glpos /-
+instance subgroup_on_glpos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
     where smul_assoc := by intro s g z; simp only [subgroup_on_GL_pos_smul_apply, coe_coe];
     apply mul_smul'
-#align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.subgroup_on_gLPos
+#align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.subgroup_on_glpos
 -/
 
 #print UpperHalfPlane.subgroupSL /-
