@@ -251,6 +251,7 @@ theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V')
 #align quiver.symmetrify.lift_unique Quiver.Symmetrify.lift_unique
 -/
 
+#print Prefunctor.symmetrify /-
 /-- A prefunctor canonically defines a prefunctor of the symmetrifications. -/
 @[simps]
 def Prefunctor.symmetrify (φ : U ⥤q V) : Symmetrify U ⥤q Symmetrify V
@@ -258,10 +259,13 @@ def Prefunctor.symmetrify (φ : U ⥤q V) : Symmetrify U ⥤q Symmetrify V
   obj := φ.obj
   map X Y := Sum.map φ.map φ.map
 #align prefunctor.symmetrify Prefunctor.symmetrify
+-/
 
+#print Prefunctor.symmetrify_mapReverse /-
 instance Prefunctor.symmetrify_mapReverse (φ : U ⥤q V) : Prefunctor.MapReverse φ.Symmetrify :=
   ⟨fun u v e => by cases e <;> rfl⟩
 #align prefunctor.symmetrify_map_reverse Prefunctor.symmetrify_mapReverse
+-/
 
 end Symmetrify
 
