@@ -258,7 +258,7 @@ section IsIdempotentComplete
 variable [IsIdempotentComplete D]
 
 noncomputable instance : IsEquivalence (toKaroubi D) :=
-  toKaroubi_isEquivalence D
+  toKaroubiIsEquivalence D
 
 #print CategoryTheory.Idempotents.karoubiUniversal₂ /-
 /-- The equivalence of categories `(C ⥤ D) ≌ (karoubi C ⥤ karoubi D)` when `D`
@@ -284,7 +284,7 @@ when `D` is idempotent compltete. -/
 @[simps]
 noncomputable def functorExtension : (C ⥤ D) ⥤ Karoubi C ⥤ D :=
   functorExtension₂ C D ⋙
-    (whiskeringRight (Karoubi C) (Karoubi D) D).obj (toKaroubi_isEquivalence D).inverse
+    (whiskeringRight (Karoubi C) (Karoubi D) D).obj (toKaroubiIsEquivalence D).inverse
 #align category_theory.idempotents.functor_extension CategoryTheory.Idempotents.functorExtension
 -/
 

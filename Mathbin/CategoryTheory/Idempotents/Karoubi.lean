@@ -266,26 +266,26 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
         { Hom := ⟨i, by erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩
           inv := ⟨e, by erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩ }⟩
 
-#print CategoryTheory.Idempotents.toKaroubi_isEquivalence /-
+#print CategoryTheory.Idempotents.toKaroubiIsEquivalence /-
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
-def toKaroubi_isEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
+def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
   Equivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
-#align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubi_isEquivalence
+#align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
 -/
 
-#print CategoryTheory.Idempotents.toKaroubi_equivalence /-
+#print CategoryTheory.Idempotents.toKaroubiEquivalence /-
 /-- The equivalence `C ≅ karoubi C` when `C` is idempotent complete. -/
-def toKaroubi_equivalence [IsIdempotentComplete C] : C ≌ Karoubi C :=
+def toKaroubiEquivalence [IsIdempotentComplete C] : C ≌ Karoubi C :=
   haveI := to_karoubi_is_equivalence C
   functor.as_equivalence (to_karoubi C)
-#align category_theory.idempotents.to_karoubi_equivalence CategoryTheory.Idempotents.toKaroubi_equivalence
+#align category_theory.idempotents.to_karoubi_equivalence CategoryTheory.Idempotents.toKaroubiEquivalence
 -/
 
-#print CategoryTheory.Idempotents.toKaroubi_equivalence_functor_additive /-
-instance toKaroubi_equivalence_functor_additive [Preadditive C] [IsIdempotentComplete C] :
-    (toKaroubi_equivalence C).Functor.Additive :=
+#print CategoryTheory.Idempotents.toKaroubiEquivalence_functor_additive /-
+instance toKaroubiEquivalence_functor_additive [Preadditive C] [IsIdempotentComplete C] :
+    (toKaroubiEquivalence C).Functor.Additive :=
   (inferInstance : (toKaroubi C).Additive)
-#align category_theory.idempotents.to_karoubi_equivalence_functor_additive CategoryTheory.Idempotents.toKaroubi_equivalence_functor_additive
+#align category_theory.idempotents.to_karoubi_equivalence_functor_additive CategoryTheory.Idempotents.toKaroubiEquivalence_functor_additive
 -/
 
 namespace Karoubi

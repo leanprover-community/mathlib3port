@@ -140,30 +140,37 @@ namespace DoldKan
 
 open AlgebraicTopology.DoldKan
 
+#print CategoryTheory.Abelian.DoldKan.N /-
 /-- The functor `N` for the equivalence is `normalized_Moore_complex A` -/
-def n : SimplicialObject A ⥤ ChainComplex A ℕ :=
+def N : SimplicialObject A ⥤ ChainComplex A ℕ :=
   AlgebraicTopology.normalizedMooreComplex A
-#align category_theory.abelian.dold_kan.N CategoryTheory.Abelian.DoldKan.n
+#align category_theory.abelian.dold_kan.N CategoryTheory.Abelian.DoldKan.N
+-/
 
+#print CategoryTheory.Abelian.DoldKan.Γ /-
 /-- The functor `Γ` for the equivalence is the same as in the pseudoabelian case. -/
 def Γ : ChainComplex A ℕ ⥤ SimplicialObject A :=
   Idempotents.DoldKan.Γ
 #align category_theory.abelian.dold_kan.Γ CategoryTheory.Abelian.DoldKan.Γ
+-/
 
+#print CategoryTheory.Abelian.DoldKan.comparisonN /-
 /-- The comparison isomorphism between `normalized_Moore_complex A` and
 the functor `idempotents.dold_kan.N` from the pseudoabelian case -/
 @[simps]
-def comparisonN : (n : SimplicialObject A ⥤ _) ≅ Idempotents.DoldKan.N :=
+def comparisonN : (N : SimplicialObject A ⥤ _) ≅ Idempotents.DoldKan.N :=
   calc
-    n ≅ n ⋙ 𝟭 _ := Functor.leftUnitor n
-    _ ≅ n ⋙ (toKaroubi_equivalence _).Functor ⋙ (toKaroubi_equivalence _).inverse :=
-      (isoWhiskerLeft _ (toKaroubi_equivalence _).unitIso)
-    _ ≅ (n ⋙ (toKaroubi_equivalence _).Functor) ⋙ (toKaroubi_equivalence _).inverse := (Iso.refl _)
-    _ ≅ N₁ ⋙ (toKaroubi_equivalence _).inverse :=
+    N ≅ N ⋙ 𝟭 _ := Functor.leftUnitor N
+    _ ≅ N ⋙ (toKaroubiEquivalence _).Functor ⋙ (toKaroubiEquivalence _).inverse :=
+      (isoWhiskerLeft _ (toKaroubiEquivalence _).unitIso)
+    _ ≅ (N ⋙ (toKaroubiEquivalence _).Functor) ⋙ (toKaroubiEquivalence _).inverse := (Iso.refl _)
+    _ ≅ N₁ ⋙ (toKaroubiEquivalence _).inverse :=
       (isoWhiskerRight (N₁_iso_normalizedMooreComplex_comp_toKaroubi A).symm _)
     _ ≅ Idempotents.DoldKan.N := by rfl
 #align category_theory.abelian.dold_kan.comparison_N CategoryTheory.Abelian.DoldKan.comparisonN
+-/
 
+#print CategoryTheory.Abelian.DoldKan.equivalence /-
 /-- The Dold-Kan equivalence for abelian categories -/
 @[simps Functor]
 def equivalence : SimplicialObject A ≌ ChainComplex A ℕ :=
@@ -173,10 +180,13 @@ def equivalence : SimplicialObject A ≌ ChainComplex A ℕ :=
   letI : is_equivalence (N : simplicial_object A ⥤ _) := is_equivalence.of_iso comparison_N.symm hF
   exact N.as_equivalence
 #align category_theory.abelian.dold_kan.equivalence CategoryTheory.Abelian.DoldKan.equivalence
+-/
 
+#print CategoryTheory.Abelian.DoldKan.equivalence_inverse /-
 theorem equivalence_inverse : (equivalence : SimplicialObject A ≌ _).inverse = Γ :=
   rfl
 #align category_theory.abelian.dold_kan.equivalence_inverse CategoryTheory.Abelian.DoldKan.equivalence_inverse
+-/
 
 end DoldKan
 

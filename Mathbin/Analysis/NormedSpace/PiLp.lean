@@ -701,26 +701,20 @@ instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 
 #align pi_Lp.normed_space PiLp.normedSpace
 -/
 
-#print PiLp.isScalarTower /-
 instance isScalarTower [∀ i, SeminormedAddCommGroup (β i)] [SMul 𝕜 𝕜'] [∀ i, NormedSpace 𝕜 (β i)]
     [∀ i, NormedSpace 𝕜' (β i)] [∀ i, IsScalarTower 𝕜 𝕜' (β i)] : IsScalarTower 𝕜 𝕜' (PiLp p β) :=
   Pi.isScalarTower
 #align pi_Lp.is_scalar_tower PiLp.isScalarTower
--/
 
-#print PiLp.smulCommClass /-
-instance smulCommClass [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)]
+instance sMulCommClass [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)]
     [∀ i, NormedSpace 𝕜' (β i)] [∀ i, SMulCommClass 𝕜 𝕜' (β i)] : SMulCommClass 𝕜 𝕜' (PiLp p β) :=
   Pi.smulCommClass
-#align pi_Lp.smul_comm_class PiLp.smulCommClass
--/
+#align pi_Lp.smul_comm_class PiLp.sMulCommClass
 
-#print PiLp.finiteDimensional /-
 instance finiteDimensional [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)]
     [I : ∀ i, FiniteDimensional 𝕜 (β i)] : FiniteDimensional 𝕜 (PiLp p β) :=
   FiniteDimensional.finiteDimensional_pi' _ _
 #align pi_Lp.finite_dimensional PiLp.finiteDimensional
--/
 
 /- Register simplification lemmas for the applications of `pi_Lp` elements, as the usual lemmas
 for Pi types will not trigger. -/
@@ -838,76 +832,76 @@ theorem LinearIsometryEquiv.piLpCongrLeft_single [DecidableEq ι] [DecidableEq �
 #align linear_isometry_equiv.pi_Lp_congr_left_single LinearIsometryEquiv.piLpCongrLeft_single
 -/
 
-#print PiLp.equiv_zero /-
+#print WithLp.equiv_zero /-
 @[simp]
 theorem equiv_zero : PiLp.equiv p β 0 = 0 :=
   rfl
-#align pi_Lp.equiv_zero PiLp.equiv_zero
+#align pi_Lp.equiv_zero WithLp.equiv_zero
 -/
 
-#print PiLp.equiv_symm_zero /-
+#print WithLp.equiv_symm_zero /-
 @[simp]
 theorem equiv_symm_zero : (PiLp.equiv p β).symm 0 = 0 :=
   rfl
-#align pi_Lp.equiv_symm_zero PiLp.equiv_symm_zero
+#align pi_Lp.equiv_symm_zero WithLp.equiv_symm_zero
 -/
 
-#print PiLp.equiv_add /-
+#print WithLp.equiv_add /-
 @[simp]
 theorem equiv_add : PiLp.equiv p β (x + y) = PiLp.equiv p β x + PiLp.equiv p β y :=
   rfl
-#align pi_Lp.equiv_add PiLp.equiv_add
+#align pi_Lp.equiv_add WithLp.equiv_add
 -/
 
-#print PiLp.equiv_symm_add /-
+#print WithLp.equiv_symm_add /-
 @[simp]
 theorem equiv_symm_add :
     (PiLp.equiv p β).symm (x' + y') = (PiLp.equiv p β).symm x' + (PiLp.equiv p β).symm y' :=
   rfl
-#align pi_Lp.equiv_symm_add PiLp.equiv_symm_add
+#align pi_Lp.equiv_symm_add WithLp.equiv_symm_add
 -/
 
-#print PiLp.equiv_sub /-
+#print WithLp.equiv_sub /-
 @[simp]
 theorem equiv_sub : PiLp.equiv p β (x - y) = PiLp.equiv p β x - PiLp.equiv p β y :=
   rfl
-#align pi_Lp.equiv_sub PiLp.equiv_sub
+#align pi_Lp.equiv_sub WithLp.equiv_sub
 -/
 
-#print PiLp.equiv_symm_sub /-
+#print WithLp.equiv_symm_sub /-
 @[simp]
 theorem equiv_symm_sub :
     (PiLp.equiv p β).symm (x' - y') = (PiLp.equiv p β).symm x' - (PiLp.equiv p β).symm y' :=
   rfl
-#align pi_Lp.equiv_symm_sub PiLp.equiv_symm_sub
+#align pi_Lp.equiv_symm_sub WithLp.equiv_symm_sub
 -/
 
-#print PiLp.equiv_neg /-
+#print WithLp.equiv_neg /-
 @[simp]
 theorem equiv_neg : PiLp.equiv p β (-x) = -PiLp.equiv p β x :=
   rfl
-#align pi_Lp.equiv_neg PiLp.equiv_neg
+#align pi_Lp.equiv_neg WithLp.equiv_neg
 -/
 
-#print PiLp.equiv_symm_neg /-
+#print WithLp.equiv_symm_neg /-
 @[simp]
 theorem equiv_symm_neg : (PiLp.equiv p β).symm (-x') = -(PiLp.equiv p β).symm x' :=
   rfl
-#align pi_Lp.equiv_symm_neg PiLp.equiv_symm_neg
+#align pi_Lp.equiv_symm_neg WithLp.equiv_symm_neg
 -/
 
-#print PiLp.equiv_smul /-
+#print WithLp.equiv_smul /-
 @[simp]
 theorem equiv_smul : PiLp.equiv p β (c • x) = c • PiLp.equiv p β x :=
   rfl
-#align pi_Lp.equiv_smul PiLp.equiv_smul
+#align pi_Lp.equiv_smul WithLp.equiv_smul
 -/
 
-#print PiLp.equiv_symm_smul /-
+#print WithLp.equiv_symm_smul /-
 @[simp]
 theorem equiv_symm_smul : (PiLp.equiv p β).symm (c • x') = c • (PiLp.equiv p β).symm x' :=
   rfl
-#align pi_Lp.equiv_symm_smul PiLp.equiv_symm_smul
+#align pi_Lp.equiv_symm_smul WithLp.equiv_symm_smul
 -/
 
 section Single
