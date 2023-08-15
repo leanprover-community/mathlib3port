@@ -2262,18 +2262,18 @@ section InduceHom
 variable {G G'} {G'' : SimpleGraph X} {s : Set V} {t : Set W} {r : Set X} (φ : G →g G')
   (φst : Set.MapsTo φ s t) (ψ : G' →g G'') (ψtr : Set.MapsTo ψ t r)
 
-#print SimpleGraph.InduceHom /-
+#print SimpleGraph.induceHom /-
 /-- The restriction of a morphism of graphs to induced subgraphs. -/
-def InduceHom : G.induce s →g G'.induce t
+def induceHom : G.induce s →g G'.induce t
     where
   toFun := Set.MapsTo.restrict φ s t φst
   map_rel' _ _ := φ.map_rel'
-#align simple_graph.induce_hom SimpleGraph.InduceHom
+#align simple_graph.induce_hom SimpleGraph.induceHom
 -/
 
 #print SimpleGraph.coe_induceHom /-
 @[simp, norm_cast]
-theorem coe_induceHom : ⇑(InduceHom φ φst) = Set.MapsTo.restrict φ s t φst :=
+theorem coe_induceHom : ⇑(induceHom φ φst) = Set.MapsTo.restrict φ s t φst :=
   rfl
 #align simple_graph.coe_induce_hom SimpleGraph.coe_induceHom
 -/
@@ -2281,14 +2281,14 @@ theorem coe_induceHom : ⇑(InduceHom φ φst) = Set.MapsTo.restrict φ s t φst
 #print SimpleGraph.induceHom_id /-
 @[simp]
 theorem induceHom_id (G : SimpleGraph V) (s) :
-    InduceHom (Hom.id : G →g G) (Set.mapsTo_id s) = Hom.id := by ext x; rfl
+    induceHom (Hom.id : G →g G) (Set.mapsTo_id s) = Hom.id := by ext x; rfl
 #align simple_graph.induce_hom_id SimpleGraph.induceHom_id
 -/
 
 #print SimpleGraph.induceHom_comp /-
 @[simp]
 theorem induceHom_comp :
-    (InduceHom ψ ψtr).comp (InduceHom φ φst) = InduceHom (ψ.comp φ) (ψtr.comp φst) := by ext x; rfl
+    (induceHom ψ ψtr).comp (induceHom φ φst) = induceHom (ψ.comp φ) (ψtr.comp φst) := by ext x; rfl
 #align simple_graph.induce_hom_comp SimpleGraph.induceHom_comp
 -/
 

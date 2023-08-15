@@ -44,18 +44,18 @@ section AuxLemmas
 
 variable {Ω F : Type _} {m mΩ : MeasurableSpace Ω} {μ : Measure Ω} {f : Ω → F}
 
-#print ProbabilityTheory.measurable_id'' /-
+#print measurable_id'' /-
 -- todo after the port: move to measure_theory/measurable_space, after measurable.mono
 theorem measurable_id'' (hm : m ≤ mΩ) : @Measurable Ω Ω mΩ m id :=
   measurable_id.mono le_rfl hm
-#align probability_theory.measurable_id'' ProbabilityTheory.measurable_id''
+#align probability_theory.measurable_id'' measurable_id''
 -/
 
-#print ProbabilityTheory.aemeasurable_id'' /-
+#print aemeasurable_id'' /-
 -- todo after the port: move to measure_theory/measurable_space, after measurable.mono
 theorem aemeasurable_id'' (μ : Measure Ω) (hm : m ≤ mΩ) : @AEMeasurable Ω Ω m mΩ id μ :=
   @Measurable.aemeasurable Ω Ω mΩ m id μ (measurable_id'' hm)
-#align probability_theory.ae_measurable_id'' ProbabilityTheory.aemeasurable_id''
+#align probability_theory.ae_measurable_id'' aemeasurable_id''
 -/
 
 #print MeasureTheory.AEStronglyMeasurable.comp_snd_map_prod_id /-

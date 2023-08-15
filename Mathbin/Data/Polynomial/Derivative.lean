@@ -187,13 +187,11 @@ theorem derivative_X_add_C (c : R) : (X + C c).derivative = 1 := by
 #align polynomial.derivative_X_add_C Polynomial.derivative_X_add_C
 -/
 
-#print Polynomial.iterate_derivative_add /-
 @[simp]
 theorem iterate_derivative_add {f g : R[X]} {k : ℕ} :
     (derivative^[k]) (f + g) = (derivative^[k]) f + (derivative^[k]) g :=
   derivative.toAddMonoidHom.iterate_map_add _ _ _
 #align polynomial.iterate_derivative_add Polynomial.iterate_derivative_add
--/
 
 #print Polynomial.derivative_sum /-
 @[simp]

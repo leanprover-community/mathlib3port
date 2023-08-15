@@ -2747,20 +2747,20 @@ abbrev Subgraph.Connected (H : G.Subgraph) : Prop :=
 #align simple_graph.subgraph.connected SimpleGraph.Subgraph.Connected
 -/
 
-#print SimpleGraph.singletonSubgraph_connected /-
-theorem singletonSubgraph_connected {v : V} : (G.singletonSubgraph v).Connected :=
-  by
+#print SimpleGraph.Subgraph.singletonSubgraph_connected /-
+theorem SimpleGraph.Subgraph.singletonSubgraph_connected {v : V} :
+    (G.singletonSubgraph v).Connected := by
   constructor
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   simp only [singleton_subgraph_verts, Set.mem_singleton_iff] at ha hb 
   subst_vars
-#align simple_graph.singleton_subgraph_connected SimpleGraph.singletonSubgraph_connected
+#align simple_graph.singleton_subgraph_connected SimpleGraph.Subgraph.singletonSubgraph_connected
 -/
 
-#print SimpleGraph.subgraphOfAdj_connected /-
+#print SimpleGraph.Subgraph.subgraphOfAdj_connected /-
 @[simp]
-theorem subgraphOfAdj_connected {v w : V} (hvw : G.Adj v w) : (G.subgraphOfAdj hvw).Connected :=
-  by
+theorem SimpleGraph.Subgraph.subgraphOfAdj_connected {v w : V} (hvw : G.Adj v w) :
+    (G.subgraphOfAdj hvw).Connected := by
   constructor
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   simp only [subgraph_of_adj_verts, Set.mem_insert_iff, Set.mem_singleton_iff] at ha hb 
@@ -2768,7 +2768,7 @@ theorem subgraphOfAdj_connected {v w : V} (hvw : G.Adj v w) : (G.subgraphOfAdj h
     first
     | rfl
     | · apply adj.reachable; simp
-#align simple_graph.subgraph_of_adj_connected SimpleGraph.subgraphOfAdj_connected
+#align simple_graph.subgraph_of_adj_connected SimpleGraph.Subgraph.subgraphOfAdj_connected
 -/
 
 #print SimpleGraph.Preconnected.set_univ_walk_nonempty /-

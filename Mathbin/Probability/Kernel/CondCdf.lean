@@ -946,7 +946,7 @@ theorem continuousWithinAt_condCdf'_Ici (ρ : Measure (α × ℝ)) (a : α) (x :
   rw [sInf_image']
   have h' : (⨅ r : Ioi x, cond_cdf' ρ a r) = ⨅ r : { r' : ℚ // x < r' }, cond_cdf' ρ a r :=
     by
-    refine' iInf_Ioi_eq_iInf_rat_gt x _ (monotone_cond_cdf' ρ a)
+    refine' Real.iInf_Ioi_eq_iInf_rat_gt x _ (monotone_cond_cdf' ρ a)
     refine' ⟨0, fun z => _⟩
     rintro ⟨u, hux, rfl⟩
     exact cond_cdf'_nonneg ρ a u

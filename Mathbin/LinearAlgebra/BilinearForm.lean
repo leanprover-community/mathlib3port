@@ -1144,8 +1144,8 @@ theorem isSymm_neg {B : BilinForm R₁ M₁} : (-B).IsSymm ↔ B.IsSymm :=
 #align bilin_form.is_symm_neg BilinForm.isSymm_neg
 -/
 
-#print BilinForm.isSymm_iff_flip' /-
-theorem isSymm_iff_flip' [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B :=
+#print BilinForm.isSymm_iff_flip /-
+theorem isSymm_iff_flip [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B :=
   by
   constructor
   · intro h
@@ -1154,7 +1154,7 @@ theorem isSymm_iff_flip' [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B :=
   · intro h x y
     conv_lhs => rw [← h]
     simp
-#align bilin_form.is_symm_iff_flip' BilinForm.isSymm_iff_flip'
+#align bilin_form.is_symm_iff_flip' BilinForm.isSymm_iff_flip
 -/
 
 #print BilinForm.IsAlt /-

@@ -250,8 +250,8 @@ instance (priority := 100) trivialIsNilpotent [IsTrivial L M] : IsNilpotent R L 
 #align lie_module.trivial_is_nilpotent LieModule.trivialIsNilpotent
 -/
 
-#print LieModule.nilpotent_endo_of_nilpotent_module /-
-theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
+#print LieModule.exists_forall_pow_toEndomorphism_eq_zero /-
+theorem exists_forall_pow_toEndomorphism_eq_zero [hM : IsNilpotent R L M] :
     ∃ k : ℕ, ∀ x : L, toEndomorphism R L M x ^ k = 0 :=
   by
   obtain ⟨k, hM⟩ := hM
@@ -259,7 +259,7 @@ theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
   intro x; ext m
   rw [LinearMap.pow_apply, LinearMap.zero_apply, ← @LieSubmodule.mem_bot R L M, ← hM]
   exact iterate_to_endomorphism_mem_lower_central_series R L M x m k
-#align lie_module.nilpotent_endo_of_nilpotent_module LieModule.nilpotent_endo_of_nilpotent_module
+#align lie_module.nilpotent_endo_of_nilpotent_module LieModule.exists_forall_pow_toEndomorphism_eq_zero
 -/
 
 #print LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent /-
@@ -641,7 +641,7 @@ open LieAlgebra
 #print LieAlgebra.nilpotent_ad_of_nilpotent_algebra /-
 theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] :
     ∃ k : ℕ, ∀ x : L, ad R L x ^ k = 0 :=
-  LieModule.nilpotent_endo_of_nilpotent_module R L L
+  LieModule.exists_forall_pow_toEndomorphism_eq_zero R L L
 #align lie_algebra.nilpotent_ad_of_nilpotent_algebra LieAlgebra.nilpotent_ad_of_nilpotent_algebra
 -/
 

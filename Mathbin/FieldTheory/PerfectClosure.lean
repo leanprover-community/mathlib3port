@@ -44,12 +44,10 @@ def frobeniusEquiv [PerfectRing R p] : R ≃+* R :=
 #align frobenius_equiv frobeniusEquiv
 -/
 
-#print pthRoot /-
 /-- `p`-th root of an element in a `perfect_ring` as a `ring_hom`. -/
 def pthRoot [PerfectRing R p] : R →+* R :=
   (frobeniusEquiv R p).symm
 #align pth_root pthRoot
--/
 
 end Defs
 
@@ -65,96 +63,68 @@ theorem coe_frobeniusEquiv : ⇑(frobeniusEquiv R p) = frobenius R p :=
 #align coe_frobenius_equiv coe_frobeniusEquiv
 -/
 
-#print coe_frobeniusEquiv_symm /-
 @[simp]
 theorem coe_frobeniusEquiv_symm : ⇑(frobeniusEquiv R p).symm = pthRoot R p :=
   rfl
 #align coe_frobenius_equiv_symm coe_frobeniusEquiv_symm
--/
 
-#print frobenius_pthRoot /-
 @[simp]
 theorem frobenius_pthRoot (x : R) : frobenius R p (pthRoot R p x) = x :=
   (frobeniusEquiv R p).apply_symm_apply x
 #align frobenius_pth_root frobenius_pthRoot
--/
 
-#print pthRoot_pow_p /-
 @[simp]
 theorem pthRoot_pow_p (x : R) : pthRoot R p x ^ p = x :=
   frobenius_pthRoot x
 #align pth_root_pow_p pthRoot_pow_p
--/
 
-#print pthRoot_frobenius /-
 @[simp]
 theorem pthRoot_frobenius (x : R) : pthRoot R p (frobenius R p x) = x :=
   (frobeniusEquiv R p).symm_apply_apply x
 #align pth_root_frobenius pthRoot_frobenius
--/
 
-#print pthRoot_pow_p' /-
 @[simp]
 theorem pthRoot_pow_p' (x : R) : pthRoot R p (x ^ p) = x :=
   pthRoot_frobenius x
 #align pth_root_pow_p' pthRoot_pow_p'
--/
 
-#print leftInverse_pthRoot_frobenius /-
 theorem leftInverse_pthRoot_frobenius : LeftInverse (pthRoot R p) (frobenius R p) :=
   pthRoot_frobenius
 #align left_inverse_pth_root_frobenius leftInverse_pthRoot_frobenius
--/
 
-#print rightInverse_pthRoot_frobenius /-
 theorem rightInverse_pthRoot_frobenius : Function.RightInverse (pthRoot R p) (frobenius R p) :=
   frobenius_pthRoot
 #align right_inverse_pth_root_frobenius rightInverse_pthRoot_frobenius
--/
 
-#print commute_frobenius_pthRoot /-
 theorem commute_frobenius_pthRoot : Function.Commute (frobenius R p) (pthRoot R p) := fun x =>
   (frobenius_pthRoot x).trans (pthRoot_frobenius x).symm
 #align commute_frobenius_pth_root commute_frobenius_pthRoot
--/
 
-#print eq_pthRoot_iff /-
 theorem eq_pthRoot_iff {x y : R} : x = pthRoot R p y ↔ frobenius R p x = y :=
   (frobeniusEquiv R p).toEquiv.eq_symm_apply
 #align eq_pth_root_iff eq_pthRoot_iff
--/
 
-#print pthRoot_eq_iff /-
 theorem pthRoot_eq_iff {x y : R} : pthRoot R p x = y ↔ x = frobenius R p y :=
   (frobeniusEquiv R p).toEquiv.symm_apply_eq
 #align pth_root_eq_iff pthRoot_eq_iff
--/
 
-#print MonoidHom.map_pthRoot /-
 theorem MonoidHom.map_pthRoot (x : R) : f (pthRoot R p x) = pthRoot S p (f x) :=
   eq_pthRoot_iff.2 <| by rw [← f.map_frobenius, frobenius_pthRoot]
 #align monoid_hom.map_pth_root MonoidHom.map_pthRoot
--/
 
-#print MonoidHom.map_iterate_pthRoot /-
 theorem MonoidHom.map_iterate_pthRoot (x : R) (n : ℕ) :
     f ((pthRoot R p^[n]) x) = (pthRoot S p^[n]) (f x) :=
   Semiconj.iterate_right f.map_pthRoot n x
 #align monoid_hom.map_iterate_pth_root MonoidHom.map_iterate_pthRoot
--/
 
-#print RingHom.map_pthRoot /-
 theorem RingHom.map_pthRoot (x : R) : g (pthRoot R p x) = pthRoot S p (g x) :=
   g.toMonoidHom.map_pthRoot x
 #align ring_hom.map_pth_root RingHom.map_pthRoot
--/
 
-#print RingHom.map_iterate_pthRoot /-
 theorem RingHom.map_iterate_pthRoot (x : R) (n : ℕ) :
     g ((pthRoot R p^[n]) x) = (pthRoot S p^[n]) (g x) :=
   g.toMonoidHom.map_iterate_pthRoot x n
 #align ring_hom.map_iterate_pth_root RingHom.map_iterate_pthRoot
--/
 
 variable (p)
 
@@ -594,14 +564,12 @@ instance : PerfectRing (PerfectClosure K p) p
     induction_on e fun ⟨n, x⟩ => by simp only [lift_on_mk, frobenius_mk];
       exact (Quot.sound <| r.intro _ _).symm
 
-#print PerfectClosure.eq_pthRoot /-
 theorem eq_pthRoot (x : ℕ × K) : mk K p x = (pthRoot (PerfectClosure K p) p^[x.1]) (of K p x.2) :=
   by
   rcases x with ⟨m, x⟩
   induction' m with m ih; · rfl
   rw [iterate_succ_apply', ← ih] <;> rfl
 #align perfect_closure.eq_pth_root PerfectClosure.eq_pthRoot
--/
 
 #print PerfectClosure.lift /-
 /-- Given a field `K` of characteristic `p` and a perfect ring `L` of the same characteristic,
