@@ -3261,7 +3261,8 @@ theorem Bounded.subset_ball_lt (h : Bounded s) (a : ℝ) (c : α) : ∃ r, a < r
 #print Metric.bounded_closure_of_bounded /-
 theorem bounded_closure_of_bounded (h : Bounded s) : Bounded (closure s) :=
   let ⟨C, h⟩ := h
-  ⟨C, fun a ha b hb => (isClosed_le' C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
+  ⟨C, fun a ha b hb =>
+    (ClosedIicTopology.isClosed_le' C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
 #align metric.bounded_closure_of_bounded Metric.bounded_closure_of_bounded
 -/
 

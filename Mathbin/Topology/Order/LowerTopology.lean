@@ -208,11 +208,13 @@ theorem isOpen_iff_generate_Ici_compl : IsOpen s ↔ GenerateOpen {t | ∃ a, Ic
 #align lower_topology.is_open_iff_generate_Ici_compl LowerTopology.isOpen_iff_generate_Ici_compl
 -/
 
-#print LowerTopology.isClosed_Ici /-
+/- warning: lower_topology.is_closed_Ici clashes with is_closed_Ici -> isClosed_Ici
+Case conversion may be inaccurate. Consider using '#align lower_topology.is_closed_Ici isClosed_Iciₓ'. -/
+#print isClosed_Ici /-
 /-- Left-closed right-infinite intervals [a, ∞) are closed in the lower topology. -/
 theorem isClosed_Ici (a : α) : IsClosed (Ici a) :=
   isOpen_compl_iff.1 <| isOpen_iff_generate_Ici_compl.2 <| GenerateOpen.basic _ ⟨a, rfl⟩
-#align lower_topology.is_closed_Ici LowerTopology.isClosed_Ici
+#align lower_topology.is_closed_Ici isClosed_Ici
 -/
 
 #print LowerTopology.isClosed_upperClosure /-
@@ -296,7 +298,7 @@ instance [Preorder α] [TopologicalSpace α] [LowerTopology α] [OrderBot α] [P
     by
     refine' le_antisymm (le_generateFrom _) _
     · rintro _ ⟨x, rfl⟩
-      exact ((LowerTopology.isClosed_Ici _).Prod <| LowerTopology.isClosed_Ici _).isOpen_compl
+      exact ((isClosed_Ici _).Prod <| isClosed_Ici _).isOpen_compl
     rw [(lower_topology.is_topological_basis.prod LowerTopology.isTopologicalBasis).eq_generateFrom,
       le_generate_from_iff_subset_is_open, image2_subset_iff]
     rintro _ ⟨s, hs, rfl⟩ _ ⟨t, ht, rfl⟩
@@ -320,7 +322,7 @@ theorem sInfHom.continuous (f : sInfHom α β) : Continuous f :=
   · exact LowerTopology.topology_eq_lowerTopology β
   rintro _ ⟨b, rfl⟩
   rw [preimage_compl, isOpen_compl_iff]
-  convert LowerTopology.isClosed_Ici (Inf <| f ⁻¹' Ici b)
+  convert isClosed_Ici (Inf <| f ⁻¹' Ici b)
   refine' subset_antisymm (fun a => sInf_le) fun a ha => le_trans _ <| OrderHomClass.mono f ha
   simp [map_Inf]
 #align Inf_hom.continuous sInfHom.continuous

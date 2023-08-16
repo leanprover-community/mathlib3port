@@ -200,7 +200,7 @@ section
 #print closure_of_rat_image_lt /-
 theorem closure_of_rat_image_lt {q : ℚ} : closure ((coe : ℚ → ℝ) '' {x | q < x}) = {r | ↑q ≤ r} :=
   Subset.antisymm
-    ((isClosed_ge' _).closure_subset_iff.2
+    ((ClosedIciTopology.isClosed_ge' _).closure_subset_iff.2
       (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>

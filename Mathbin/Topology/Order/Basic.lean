@@ -144,27 +144,27 @@ theorem isClosed_le [TopologicalSpace β] {f g : β → α} (hf : Continuous f) 
 #align is_closed_le isClosed_le
 -/
 
-#print isClosed_le' /-
-theorem isClosed_le' (a : α) : IsClosed {b | b ≤ a} :=
+#print ClosedIicTopology.isClosed_le' /-
+theorem ClosedIicTopology.isClosed_le' (a : α) : IsClosed {b | b ≤ a} :=
   isClosed_le continuous_id continuous_const
-#align is_closed_le' isClosed_le'
+#align is_closed_le' ClosedIicTopology.isClosed_le'
 -/
 
 #print isClosed_Iic /-
 theorem isClosed_Iic {a : α} : IsClosed (Iic a) :=
-  isClosed_le' a
+  ClosedIicTopology.isClosed_le' a
 #align is_closed_Iic isClosed_Iic
 -/
 
-#print isClosed_ge' /-
-theorem isClosed_ge' (a : α) : IsClosed {b | a ≤ b} :=
+#print ClosedIciTopology.isClosed_ge' /-
+theorem ClosedIciTopology.isClosed_ge' (a : α) : IsClosed {b | a ≤ b} :=
   isClosed_le continuous_const continuous_id
-#align is_closed_ge' isClosed_ge'
+#align is_closed_ge' ClosedIciTopology.isClosed_ge'
 -/
 
 #print isClosed_Ici /-
 theorem isClosed_Ici {a : α} : IsClosed (Ici a) :=
-  isClosed_ge' a
+  ClosedIciTopology.isClosed_ge' a
 #align is_closed_Ici isClosed_Ici
 -/
 

@@ -65,7 +65,6 @@ variable {J : Type w} [SmallCategory J]
 
 variable {K : J ⥤ C} (F : C ⥤ D) (c : Cone K)
 
-#print CategoryTheory.StructuredArrowCone.toDiagram /-
 /-- Given a cone `c : cone K` and a map `f : X ⟶ c.X`, we can construct a cone of structured
 arrows over `X` with `f` as the cone point. This is the underlying diagram.
 -/
@@ -75,29 +74,30 @@ def toDiagram : J ⥤ StructuredArrow c.pt K
   obj j := StructuredArrow.mk (c.π.app j)
   map j k g := StructuredArrow.homMk g (by simpa)
 #align category_theory.structured_arrow_cone.to_diagram CategoryTheory.StructuredArrowCone.toDiagram
--/
 
-#print CategoryTheory.StructuredArrowCone.diagramToCone /-
+#print CategoryTheory.Limits.Cone.fromStructuredArrow /-
 /-- Given a diagram of `structured_arrow X F`s, we may obtain a cone with cone point `X`. -/
 @[simps]
-def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F ⋙ F) :=
+def CategoryTheory.Limits.Cone.fromStructuredArrow {X : D} (G : J ⥤ StructuredArrow X F) :
+    Cone (G ⋙ proj X F ⋙ F) :=
   { pt
     π := { app := fun j => (G.obj j).Hom } }
-#align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
+#align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.Limits.Cone.fromStructuredArrow
 -/
 
-#print CategoryTheory.StructuredArrowCone.toCone /-
+#print CategoryTheory.Limits.Cone.toStructuredArrowCone /-
 /-- Given a cone `c : cone K` and a map `f : X ⟶ F.obj c.X`, we can construct a cone of structured
 arrows over `X` with `f` as the cone point.
 -/
 @[simps]
-def toCone {X : D} (f : X ⟶ F.obj c.pt) : Cone (toDiagram (F.mapCone c) ⋙ map f ⋙ pre _ K F)
+def CategoryTheory.Limits.Cone.toStructuredArrowCone {X : D} (f : X ⟶ F.obj c.pt) :
+    Cone (toDiagram (F.mapCone c) ⋙ map f ⋙ pre _ K F)
     where
   pt := mk f
   π :=
     { app := fun j => homMk (c.π.app j) rfl
       naturality' := fun j k g => by ext; dsimp; simp }
-#align category_theory.structured_arrow_cone.to_cone CategoryTheory.StructuredArrowCone.toCone
+#align category_theory.structured_arrow_cone.to_cone CategoryTheory.Limits.Cone.toStructuredArrowCone
 -/
 
 end StructuredArrowCone
