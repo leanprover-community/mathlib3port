@@ -83,7 +83,7 @@ instance [Monoid M] [MulAction M α] : MulAction M (Option α)
     where
   smul := (· • ·)
   one_smul b := by cases b; exacts [rfl, congr_arg some (one_smul _ _)]
-  mul_smul a₁ a₂ b := by cases b; exacts [rfl, congr_arg some (mul_smul _ _ _)]
+  hMul_smul a₁ a₂ b := by cases b; exacts [rfl, congr_arg some (mul_smul _ _ _)]
 
 end Option
 

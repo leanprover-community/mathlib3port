@@ -129,7 +129,7 @@ theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2
 @[to_additive]
 instance colimitGroup : Group G :=
   { G.Monoid, colimit_has_inv with
-    mul_left_inv := fun x => by
+    hMul_left_inv := fun x => by
       apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_inv_mk_eq,

@@ -160,7 +160,7 @@ theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
 -/
 
 instance : TopologicalRing ℚ :=
-  { Rat.topologicalAddGroup with continuous_mul := Rat.continuous_mul }
+  { Rat.topologicalAddGroup with continuous_hMul := Rat.continuous_mul }
 
 #print Rat.totallyBounded_Icc /-
 theorem totallyBounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by

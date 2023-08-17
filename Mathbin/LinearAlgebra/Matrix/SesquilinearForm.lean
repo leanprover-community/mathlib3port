@@ -717,7 +717,7 @@ theorem Matrix.isAdjointPair_equiv (P : Matrix n n R) (h : IsUnit P) :
     by
     dsimp only [Matrix.IsAdjointPair]
     repeat' rw [Matrix.transpose_mul]
-    simp only [← Matrix.mul_eq_mul, ← mul_assoc, P.transpose_nonsing_inv]
+    simp only [← Matrix.hMul_eq_hMul, ← mul_assoc, P.transpose_nonsing_inv]
     conv_lhs =>
       rhs
       rw [mul_assoc, mul_assoc]

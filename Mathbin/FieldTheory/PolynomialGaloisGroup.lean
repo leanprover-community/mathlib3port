@@ -206,7 +206,7 @@ instance galActionAux : MulAction p.Gal (rootSet p p.SplittingField)
     where
   smul ϕ := Set.MapsTo.restrict ϕ _ _ <| rootSet_mapsTo ϕ.toAlgHom
   one_smul _ := by ext; rfl
-  mul_smul _ _ _ := by ext; rfl
+  hMul_smul _ _ _ := by ext; rfl
 #align polynomial.gal.gal_action_aux Polynomial.Gal.galActionAux
 -/
 
@@ -216,7 +216,7 @@ instance galAction [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (rootSet
     where
   smul ϕ x := rootsEquivRoots p E (ϕ • (rootsEquivRoots p E).symm x)
   one_smul _ := by simp only [Equiv.apply_symm_apply, one_smul]
-  mul_smul _ _ _ := by simp only [Equiv.apply_symm_apply, Equiv.symm_apply_apply, mul_smul]
+  hMul_smul _ _ _ := by simp only [Equiv.apply_symm_apply, Equiv.symm_apply_apply, mul_smul]
 #align polynomial.gal.gal_action Polynomial.Gal.galAction
 -/
 

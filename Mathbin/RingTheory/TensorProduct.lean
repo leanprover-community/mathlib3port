@@ -1328,7 +1328,7 @@ protected def module : Module (A ⊗[R] B) M
   smul_add x m₁ m₂ := by simp only [map_add]
   add_smul x y m := by simp only [map_add, LinearMap.add_apply]
   one_smul m := by simp only [module_aux_apply, Algebra.TensorProduct.one_def, one_smul]
-  mul_smul x y m :=
+  hMul_smul x y m :=
     by
     apply TensorProduct.induction_on x <;> apply TensorProduct.induction_on y
     · simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]

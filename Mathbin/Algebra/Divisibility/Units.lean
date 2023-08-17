@@ -38,7 +38,7 @@ theorem coe_dvd : ↑u ∣ a :=
     associates of `b`. -/
 theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
   Iff.intro (fun ⟨c, Eq⟩ => ⟨c * ↑u⁻¹, by rw [← mul_assoc, ← Eq, Units.mul_inv_cancel_right]⟩)
-    fun ⟨c, Eq⟩ => Eq.symm ▸ (dvd_mul_right _ _).mul_right _
+    fun ⟨c, Eq⟩ => Eq.symm ▸ (dvd_mul_right _ _).hMul_right _
 #align units.dvd_mul_right Units.dvd_mul_right
 -/
 

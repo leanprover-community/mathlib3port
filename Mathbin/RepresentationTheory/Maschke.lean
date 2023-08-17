@@ -156,7 +156,7 @@ theorem equivariantProjection_condition (v : V) : (π.equivariantProjection G) (
   rw [LinearMap.sum_apply]
   simp only [conjugate_i π i h]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul,
-    Invertible.invOf_mul_self, one_smul]
+    Invertible.invOf_hMul_self, one_smul]
 #align linear_map.equivariant_projection_condition LinearMap.equivariantProjection_condition
 -/
 

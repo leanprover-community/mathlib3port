@@ -113,7 +113,7 @@ instance mulActionRight {X Y : C} : MulAction (End Y) (X ⟶ Y)
     where
   smul r f := f ≫ r
   one_smul := Category.comp_id
-  mul_smul r s f := Eq.symm <| Category.assoc _ _ _
+  hMul_smul r s f := Eq.symm <| Category.assoc _ _ _
 #align category_theory.End.mul_action_right CategoryTheory.End.mulActionRight
 -/
 
@@ -122,7 +122,7 @@ instance mulActionLeft {X : Cᵒᵖ} {Y : C} : MulAction (End X) (unop X ⟶ Y)
     where
   smul r f := r.unop ≫ f
   one_smul := Category.id_comp
-  mul_smul r s f := Category.assoc _ _ _
+  hMul_smul r s f := Category.assoc _ _ _
 #align category_theory.End.mul_action_left CategoryTheory.End.mulActionLeft
 -/
 
@@ -144,7 +144,7 @@ end MulAction
 /-- In a groupoid, endomorphisms form a group -/
 instance group {C : Type u} [Groupoid.{v} C] (X : C) : Group (End X) :=
   { End.monoid with
-    mul_left_inv := Groupoid.comp_inv
+    hMul_left_inv := Groupoid.comp_inv
     inv := Groupoid.inv }
 #align category_theory.End.group CategoryTheory.End.group
 -/

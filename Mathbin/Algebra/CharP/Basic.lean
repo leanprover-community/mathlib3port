@@ -439,7 +439,7 @@ theorem iterate_frobenius (n : ℕ) : (frobenius R p^[n]) x = x ^ p ^ n :=
 
 #print frobenius_mul /-
 theorem frobenius_mul : frobenius R p (x * y) = frobenius R p x * frobenius R p y :=
-  (frobenius R p).map_mul x y
+  (frobenius R p).map_hMul x y
 #align frobenius_mul frobenius_mul
 -/
 
@@ -657,7 +657,7 @@ theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.
   let ⟨e, hmul⟩ := hdvd
   have : (p : R) = 0 := (cast_eq_zero_iff R p p).mpr (dvd_refl p)
   have : (d : R) * e = 0 := @cast_mul R _ d e ▸ hmul ▸ this
-  Or.elim (eq_zero_or_eq_zero_of_mul_eq_zero this)
+  Or.elim (eq_zero_or_eq_zero_of_hMul_eq_zero this)
     (fun hd : (d : R) = 0 =>
       have : p ∣ d := (cast_eq_zero_iff R p d).mp hd
       show d = 1 ∨ d = p from Or.inr (dvd_antisymm ⟨e, hmul⟩ this))

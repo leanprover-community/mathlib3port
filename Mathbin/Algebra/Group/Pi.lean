@@ -298,7 +298,7 @@ given by `pi.mul_hom f x b = f b x`. -/
 def Pi.mulHom {γ : Type w} [∀ i, Mul (f i)] [Mul γ] (g : ∀ i, γ →ₙ* f i) : γ →ₙ* ∀ i, f i
     where
   toFun x i := g i x
-  map_mul' x y := funext fun i => (g i).map_mul x y
+  map_mul' x y := funext fun i => (g i).map_hMul x y
 #align pi.mul_hom Pi.mulHom
 #align pi.add_hom Pi.addHom
 -/
@@ -553,7 +553,7 @@ theorem Pi.mulSingle_inf [∀ i, SemilatticeInf (f i)] [∀ i, One (f i)] (i : I
 @[to_additive]
 theorem Pi.mulSingle_mul [∀ i, MulOneClass <| f i] (i : I) (x y : f i) :
     mulSingle i (x * y) = mulSingle i x * mulSingle i y :=
-  (MonoidHom.single f i).map_mul x y
+  (MonoidHom.single f i).map_hMul x y
 #align pi.mul_single_mul Pi.mulSingle_mul
 #align pi.single_add Pi.single_add
 -/
@@ -579,7 +579,7 @@ theorem Pi.single_div [∀ i, Group <| f i] (i : I) (x y : f i) :
 #print Pi.single_mul /-
 theorem Pi.single_mul [∀ i, MulZeroClass <| f i] (i : I) (x y : f i) :
     single i (x * y) = single i x * single i y :=
-  (MulHom.single f i).map_mul x y
+  (MulHom.single f i).map_hMul x y
 #align pi.single_mul Pi.single_mul
 -/
 

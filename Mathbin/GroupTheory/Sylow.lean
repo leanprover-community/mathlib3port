@@ -90,7 +90,7 @@ instance : SetLike (Sylow p G) G where
 
 instance : SubgroupClass (Sylow p G) G
     where
-  mul_mem s _ _ := s.mul_mem'
+  hMul_mem s _ _ := s.hMul_mem'
   one_mem s := s.one_mem'
   inv_mem s _ := s.inv_mem'
 
@@ -175,9 +175,9 @@ theorem IsPGroup.exists_le_sylow {P : Subgroup G} (hP : IsPGroup p P) : ∃ Q : 
         ⟨{  carrier := ⋃ R : c, R
             one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩
             inv_mem' := fun g ⟨_, ⟨R, rfl⟩, hg⟩ => ⟨R, ⟨R, rfl⟩, R.1.inv_mem hg⟩
-            mul_mem' := fun g h ⟨_, ⟨R, rfl⟩, hg⟩ ⟨_, ⟨S, rfl⟩, hh⟩ =>
-              (hc2.Total R.2 S.2).elim (fun T => ⟨S, ⟨S, rfl⟩, S.1.mul_mem (T hg) hh⟩) fun T =>
-                ⟨R, ⟨R, rfl⟩, R.1.mul_mem hg (T hh)⟩ },
+            hMul_mem' := fun g h ⟨_, ⟨R, rfl⟩, hg⟩ ⟨_, ⟨S, rfl⟩, hh⟩ =>
+              (hc2.Total R.2 S.2).elim (fun T => ⟨S, ⟨S, rfl⟩, S.1.hMul_mem (T hg) hh⟩) fun T =>
+                ⟨R, ⟨R, rfl⟩, R.1.hMul_mem hg (T hh)⟩ },
           fun ⟨g, _, ⟨S, rfl⟩, hg⟩ =>
           by
           refine' Exists.imp (fun k hk => _) (hc1 S.2 ⟨g, hg⟩)
@@ -263,7 +263,7 @@ instance Sylow.pointwiseMulAction {α : Type _} [Group α] [MulDistribMulAction 
           (congr_arg (· ∈ g⁻¹ • Q) (inv_smul_smul g s)).mp
             (smul_mem_pointwise_smul (g • s) g⁻¹ Q (hS (smul_mem_pointwise_smul s g P hs))))⟩
   one_smul P := Sylow.ext (one_smul α P)
-  mul_smul g h P := Sylow.ext (mul_smul g h P)
+  hMul_smul g h P := Sylow.ext (hMul_smul g h P)
 #align sylow.pointwise_mul_action Sylow.pointwiseMulAction
 -/
 

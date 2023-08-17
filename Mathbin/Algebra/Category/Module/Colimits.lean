@@ -214,7 +214,7 @@ instance : Module R (ColimitType F)
     apply Quot.sound
     apply relation.one_smul
     rfl
-  mul_smul s t x := by
+  hMul_smul s t x := by
     induction x
     dsimp
     apply Quot.sound

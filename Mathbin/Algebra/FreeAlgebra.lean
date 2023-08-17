@@ -252,7 +252,7 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
       by
       induction h
       · exact (algebraMap R A).map_add h_r h_s
-      · exact (algebraMap R A).map_mul h_r h_s
+      · exact (algebraMap R A).map_hMul h_r h_s
       · apply Algebra.commutes
       · change _ + _ + _ = _ + (_ + _)
         rw [add_assoc]
@@ -513,7 +513,7 @@ theorem induction {C : FreeAlgebra R X → Prop}
   -- the arguments are enough to construct a subalgebra, and a mapping into it from X
   let s : Subalgebra R (FreeAlgebra R X) :=
     { carrier := C
-      mul_mem' := h_mul
+      hMul_mem' := h_mul
       add_mem' := h_add
       algebraMap_mem' := h_grade0 }
   let of : X → s := Subtype.coind (ι R) h_grade1

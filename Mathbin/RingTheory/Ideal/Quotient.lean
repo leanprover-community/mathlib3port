@@ -231,7 +231,7 @@ theorem isDomain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   refine' ⟨fun H => ⟨zero_ne_one_iff.1 _, fun x y h => _⟩, fun h => by skip; infer_instance⟩
   · haveI : Nontrivial (R ⧸ I) := ⟨H.3⟩
     exact zero_ne_one
-  · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h ⊢
+  · simp only [← eq_zero_iff_mem, (mk I).map_hMul] at h ⊢
     haveI := @IsDomain.to_noZeroDivisors (R ⧸ I) _ H
     exact eq_zero_or_eq_zero_of_mul_eq_zero h
 #align ideal.quotient.is_domain_iff_prime Ideal.Quotient.isDomain_iff_prime
@@ -322,7 +322,7 @@ def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : R 
     map_one' := f.map_one
     map_zero' := f.map_zero
     map_add' := fun a₁ a₂ => Quotient.inductionOn₂' a₁ a₂ f.map_add
-    map_mul' := fun a₁ a₂ => Quotient.inductionOn₂' a₁ a₂ f.map_mul }
+    map_mul' := fun a₁ a₂ => Quotient.inductionOn₂' a₁ a₂ f.map_hMul }
 #align ideal.quotient.lift Ideal.Quotient.lift
 -/
 
@@ -415,7 +415,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι)
     rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr with i; exact one_mul (a i)
-  mul_smul := by
+  hMul_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     simp only [(· • ·)]

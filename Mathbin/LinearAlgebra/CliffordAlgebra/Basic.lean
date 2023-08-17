@@ -214,7 +214,7 @@ theorem induction {C : CliffordAlgebra Q → Prop}
   -- the arguments are enough to construct a subalgebra, and a mapping into it from M
   let s : Subalgebra R (CliffordAlgebra Q) :=
     { carrier := C
-      mul_mem' := h_mul
+      hMul_mem' := h_mul
       add_mem' := h_add
       algebraMap_mem' := h_grade0 }
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = algebraMap _ _ (Q m) } :=
@@ -385,9 +385,9 @@ variable (Q)
 def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m)
     where
   invOf := ι Q (⅟ (Q m) • m)
-  invOf_mul_self := by
+  invOf_hMul_self := by
     rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
-  mul_invOf_self := by
+  hMul_invOf_self := by
     rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
 #align clifford_algebra.invertible_ι_of_invertible CliffordAlgebra.invertibleιOfInvertible
 -/

@@ -132,7 +132,7 @@ instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f :
       exact h
     · rw [Finsupp.support_single_ne_zero _ H, Finset.mem_singleton] at h 
       rw [h, AddMonoidHom.map_zero]
-  mul_mem i j a b ha hb c hc := by
+  hMul_mem i j a b ha hb c hc := by
     set h := support_mul a b hc
     simp only [Finset.mem_biUnion] at h 
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩

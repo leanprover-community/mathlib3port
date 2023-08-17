@@ -418,7 +418,7 @@ instance {M : Type _} [Semiring R] [AddCommMonoid M] [Module R M] :
     Module (ArithmeticFunction R) (ArithmeticFunction M)
     where
   one_smul := one_smul'
-  mul_smul := mul_smul'
+  hMul_smul := mul_smul'
   smul_add r x y := by ext; simp only [sum_add_distrib, smul_add, smul_apply, add_apply]
   smul_zero r := by ext; simp only [smul_apply, sum_const_zero, smul_zero, zero_apply]
   add_smul r s x := by ext; simp only [add_smul, sum_add_distrib, smul_apply, add_apply]
@@ -1166,8 +1166,8 @@ variable [CommRing R]
 instance : Invertible (ζ : ArithmeticFunction R)
     where
   invOf := μ
-  invOf_mul_self := coe_moebius_mul_coe_zeta
-  mul_invOf_self := coe_zeta_mul_coe_moebius
+  invOf_hMul_self := coe_moebius_mul_coe_zeta
+  hMul_invOf_self := coe_zeta_mul_coe_moebius
 
 #print Nat.ArithmeticFunction.zetaUnit /-
 /-- A unit in `arithmetic_function R` that evaluates to `ζ`, with inverse `μ`. -/

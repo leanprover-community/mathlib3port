@@ -57,7 +57,7 @@ alias Nat.isCoprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
 #print IsCoprime.prod_left /-
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
   Finset.induction_on t (fun _ => isCoprime_one_left) fun b t hbt ih H => by
-    rw [Finset.prod_insert hbt]; rw [Finset.forall_mem_insert] at H ; exact H.1.mul_left (ih H.2)
+    rw [Finset.prod_insert hbt]; rw [Finset.forall_mem_insert] at H ; exact H.1.hMul_left (ih H.2)
 #align is_coprime.prod_left IsCoprime.prod_left
 -/
 

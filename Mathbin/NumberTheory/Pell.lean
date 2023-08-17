@@ -602,7 +602,7 @@ theorem subsingleton {a b : Solution₁ d} (ha : IsFundamental a) (hb : IsFundam
   have hx := le_antisymm (ha.2.2 hb.1) (hb.2.2 ha.1)
   refine' solution₁.ext hx _
   have : d * a.y ^ 2 = d * b.y ^ 2 := by rw [a.prop_y, b.prop_y, hx]
-  exact (sq_eq_sq ha.2.1.le hb.2.1.le).mp (Int.eq_of_mul_eq_mul_left ha.d_pos.ne' this)
+  exact (sq_eq_sq ha.2.1.le hb.2.1.le).mp (Int.eq_of_hMul_eq_hMul_left ha.d_pos.ne' this)
 #align pell.is_fundamental.subsingleton Pell.IsFundamental.subsingleton
 -/
 

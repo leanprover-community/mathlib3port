@@ -238,7 +238,7 @@ protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M)
   smul a S := S.map (DistribMulAction.toLinearMap R M a : M →ₗ[R] M)
   one_smul S :=
     (congr_arg (fun f : Module.End R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
-  mul_smul a₁ a₂ S :=
+  hMul_smul a₁ a₂ S :=
     (congr_arg (fun f : Module.End R M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans
       (S.map_comp _ _)
   smul_zero a := map_bot _

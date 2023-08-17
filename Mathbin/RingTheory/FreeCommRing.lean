@@ -394,7 +394,7 @@ protected theorem coe_sub (x y : FreeRing α) : ↑(x - y) = (x : FreeCommRing �
 #print FreeRing.coe_mul /-
 @[simp, norm_cast]
 protected theorem coe_mul (x y : FreeRing α) : ↑(x * y) = (x : FreeCommRing α) * y :=
-  (FreeRing.lift _).map_mul _ _
+  (FreeRing.lift _).map_hMul _ _
 #align free_ring.coe_mul FreeRing.coe_mul
 -/
 
@@ -407,7 +407,7 @@ protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRin
   · use-1; rfl
   · intro x; use FreeRing.of x; rfl
   · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x + y; exact (FreeRing.lift _).map_add _ _
-  · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x * y; exact (FreeRing.lift _).map_mul _ _
+  · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x * y; exact (FreeRing.lift _).map_hMul _ _
 #align free_ring.coe_surjective FreeRing.coe_surjective
 -/
 
@@ -419,7 +419,7 @@ theorem coe_eq :
     FreeAbelianGroup.lift.unique _ _ fun L => by simp_rw [FreeAbelianGroup.lift.of, (· ∘ ·)];
       exact
         FreeMonoid.recOn L rfl fun hd tl ih => by
-          rw [(FreeMonoid.lift _).map_mul, FreeMonoid.lift_eval_of, ih]; rfl
+          rw [(FreeMonoid.lift _).map_hMul, FreeMonoid.lift_eval_of, ih]; rfl
 #align free_ring.coe_eq FreeRing.coe_eq
 -/
 
@@ -442,8 +442,8 @@ instance [Subsingleton α] : CommRing (FreeRing α) :=
   { FreeRing.ring α with
     mul_comm := fun x y => by
       rw [← (subsingleton_equiv_free_comm_ring α).symm_apply_apply (y * x),
-        (subsingleton_equiv_free_comm_ring α).map_mul, mul_comm, ←
-        (subsingleton_equiv_free_comm_ring α).map_mul,
+        (subsingleton_equiv_free_comm_ring α).map_hMul, mul_comm, ←
+        (subsingleton_equiv_free_comm_ring α).map_hMul,
         (subsingleton_equiv_free_comm_ring α).symm_apply_apply] }
 
 end FreeRing

@@ -65,7 +65,7 @@ instance : Group (N ⋊[φ] G) where
   mul_assoc a b c := by ext <;> simp [mul_assoc]
   one_mul a := ext _ _ (by simp) (one_mul a.2)
   mul_one a := ext _ _ (by simp) (mul_one _)
-  mul_left_inv := fun ⟨a, b⟩ => ext _ _ (show φ b⁻¹ a⁻¹ * φ b⁻¹ a = 1 by simp) (mul_left_inv b)
+  hMul_left_inv := fun ⟨a, b⟩ => ext _ _ (show φ b⁻¹ a⁻¹ * φ b⁻¹ a = 1 by simp) (mul_left_inv b)
 
 instance : Inhabited (N ⋊[φ] G) :=
   ⟨1⟩

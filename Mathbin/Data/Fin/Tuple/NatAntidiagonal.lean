@@ -151,7 +151,7 @@ theorem antidiagonalTuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
 theorem antidiagonalTuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] :=
   by
   simp_rw [antidiagonal_tuple, antidiagonal, List.range_succ, List.map_append, List.map_singleton,
-    tsub_self, List.bind_append, List.bind_singleton, antidiagonal_tuple_zero_zero,
+    tsub_self, List.append_bind, List.bind_singleton, antidiagonal_tuple_zero_zero,
     List.map_singleton, List.map_bind]
   conv_rhs => rw [← List.nil_append [![n]]]
   congr 1

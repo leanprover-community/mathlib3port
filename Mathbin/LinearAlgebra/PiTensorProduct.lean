@@ -290,7 +290,7 @@ instance distribMulAction' : DistribMulAction R₁ (⨂[R] i, s i)
     where
   smul := (· • ·)
   smul_add r x y := AddMonoidHom.map_add _ _ _
-  mul_smul r r' x :=
+  hMul_smul r r' x :=
     PiTensorProduct.induction_on' x (fun r'' f => by simp [smul_tprod_coeff', smul_smul])
       fun x y ihx ihy => by simp_rw [PiTensorProduct.smul_add, ihx, ihy]
   one_smul x :=

@@ -36,7 +36,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 open scoped ENNReal NNReal Topology
 
 #print IsUnifLocDoublingMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_hMul] [] -/
 /-- A measure `μ` is said to be a uniformly locally doubling measure if there exists a constant `C`
 such that for all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius
 `2 * ε` is bounded by `C` times the measure of the concentric ball of radius `ε`.
@@ -48,7 +48,7 @@ of curvature -1, the area of a disc of radius `ε` is `A(ε) = 2π(cosh(ε) - 1)
 `A(2ε)/A(ε) ~ exp(ε)`. -/
 class IsUnifLocDoublingMeasure {α : Type _} [MetricSpace α] [MeasurableSpace α]
     (μ : Measure α) where
-  exists_measure_closedBall_le_mul :
+  exists_measure_closedBall_le_hMul :
     ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ C * μ (closedBall x ε)
 #align is_unif_loc_doubling_measure IsUnifLocDoublingMeasure
 -/
@@ -63,14 +63,14 @@ variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α)
 
 See also `is_unif_loc_doubling_measure.scaling_constant_of`. -/
 def doublingConstant : ℝ≥0 :=
-  Classical.choose <| exists_measure_closedBall_le_mul μ
+  Classical.choose <| exists_measure_closedBall_le_hMul μ
 #align is_unif_loc_doubling_measure.doubling_constant IsUnifLocDoublingMeasure.doublingConstant
 -/
 
 #print IsUnifLocDoublingMeasure.exists_measure_closedBall_le_mul' /-
 theorem exists_measure_closedBall_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
-  Classical.choose_spec <| exists_measure_closedBall_le_mul μ
+  Classical.choose_spec <| exists_measure_closedBall_le_hMul μ
 #align is_unif_loc_doubling_measure.exists_measure_closed_ball_le_mul' IsUnifLocDoublingMeasure.exists_measure_closedBall_le_mul'
 -/
 

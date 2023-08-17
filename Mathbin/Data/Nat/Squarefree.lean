@@ -512,10 +512,10 @@ theorem squarefreeHelper_4 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1 
   exact not_le_of_lt hd this
 #align tactic.norm_num.squarefree_helper_4 Tactic.NormNum.squarefreeHelper_4
 
-theorem not_squarefree_mul (a aa b n : ℕ) (ha : a * a = aa) (hb : aa * b = n) (h₁ : 1 < a) :
+theorem not_squarefree_hMul (a aa b n : ℕ) (ha : a * a = aa) (hb : aa * b = n) (h₁ : 1 < a) :
     ¬Squarefree n := by rw [← hb, ← ha];
   exact fun H => ne_of_gt h₁ (Nat.isUnit_iff.1 <| H _ ⟨_, rfl⟩)
-#align tactic.norm_num.not_squarefree_mul Tactic.NormNum.not_squarefree_mul
+#align tactic.norm_num.not_squarefree_mul Tactic.NormNum.not_squarefree_hMul
 
 /-- Given `e` a natural numeral and `a : nat` with `a^2 ∣ n`, return `⊢ ¬ squarefree e`. -/
 unsafe def prove_non_squarefree (e : expr) (n a : ℕ) : tactic expr := do
@@ -528,7 +528,7 @@ unsafe def prove_non_squarefree (e : expr) (n a : ℕ) : tactic expr := do
   let (c, eaa, pa) ← prove_mul_nat c ea ea
   let (c, e', pb) ← prove_mul_nat c eaa eb
   guard (e' == e)
-  return <| q(@not_squarefree_mul).mk_app [ea, eaa, eb, e, pa, pb, p₁]
+  return <| q(@not_squarefree_hMul).mk_app [ea, eaa, eb, e, pa, pb, p₁]
 #align tactic.norm_num.prove_non_squarefree tactic.norm_num.prove_non_squarefree
 
 /-- Given `en`,`en1 := bit1 en`, `n1` the value of `en1`, `ek`,

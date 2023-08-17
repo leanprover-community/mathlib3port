@@ -576,7 +576,7 @@ end Sum
 instance [Monoid S] [DistribMulAction S R] [SMulCommClass S R R] :
     DistribMulAction S (QuadraticForm R M)
     where
-  mul_smul a b Q := ext fun x => by simp only [smul_apply, mul_smul]
+  hMul_smul a b Q := ext fun x => by simp only [smul_apply, mul_smul]
   one_smul Q := ext fun x => by simp only [QuadraticForm.smul_apply, one_smul]
   smul_add a Q Q' := by ext; simp only [add_apply, smul_apply, smul_add]
   smul_zero a := by ext; simp only [zero_apply, smul_apply, smul_zero]

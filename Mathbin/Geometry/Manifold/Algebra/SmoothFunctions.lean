@@ -175,9 +175,9 @@ instance group {G : Type _} [Group G] [TopologicalSpace G] [ChartedSpace H' G] [
     Group C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.monoid with
     inv := fun f => ⟨fun x => (f x)⁻¹, f.Smooth.inv⟩
-    mul_left_inv := fun a => by ext <;> exact mul_left_inv _
+    hMul_left_inv := fun a => by ext <;> exact mul_left_inv _
     div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩
-    div_eq_mul_inv := fun f g => by ext <;> exact div_eq_mul_inv _ _ }
+    div_eq_hMul_inv := fun f g => by ext <;> exact div_eq_mul_inv _ _ }
 #align smooth_map.group SmoothMap.group
 #align smooth_map.add_group SmoothMap.addGroup
 -/
@@ -369,7 +369,7 @@ def C : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯
     where
   toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smooth_const⟩
   map_one' := by ext x <;> exact (algebraMap 𝕜 A).map_one
-  map_mul' c₁ c₂ := by ext x <;> exact (algebraMap 𝕜 A).map_mul _ _
+  map_mul' c₁ c₂ := by ext x <;> exact (algebraMap 𝕜 A).map_hMul _ _
   map_zero' := by ext x <;> exact (algebraMap 𝕜 A).map_zero
   map_add' c₁ c₂ := by ext x <;> exact (algebraMap 𝕜 A).map_add _ _
 #align smooth_map.C SmoothMap.C
@@ -435,7 +435,7 @@ instance module' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
   smul := (· • ·)
   smul_add c f g := by ext x <;> exact smul_add (c x) (f x) (g x)
   add_smul c₁ c₂ f := by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
-  mul_smul c₁ c₂ f := by ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
+  hMul_smul c₁ c₂ f := by ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
   one_smul f := by ext x <;> exact one_smul 𝕜 (f x)
   zero_smul f := by ext x <;> exact zero_smul _ _
   smul_zero r := by ext x <;> exact smul_zero _

@@ -78,7 +78,7 @@ instance : SubfieldClass (IntermediateField K L) L
   add_mem s _ _ := s.add_mem'
   zero_mem s := s.zero_mem'
   neg_mem := neg_mem'
-  mul_mem s _ _ := s.mul_mem'
+  hMul_mem s _ _ := s.hMul_mem'
   one_mem s := s.one_mem'
   inv_mem := inv_mem'
 
@@ -201,7 +201,7 @@ protected theorem zero_mem : (0 : L) ∈ S :=
 #print IntermediateField.mul_mem /-
 /-- An intermediate field is closed under multiplication. -/
 protected theorem mul_mem {x y : L} : x ∈ S → y ∈ S → x * y ∈ S :=
-  mul_mem
+  hMul_mem
 #align intermediate_field.mul_mem IntermediateField.mul_mem
 -/
 

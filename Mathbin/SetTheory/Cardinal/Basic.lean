@@ -630,7 +630,7 @@ instance : CommSemiring Cardinal.{u} where
   one_mul a := inductionOn a fun α => mk_congr <| Equiv.punitProd α
   mul_one a := inductionOn a fun α => mk_congr <| Equiv.prodPUnit α
   mul_assoc a b c := inductionOn₃ a b c fun α β γ => mk_congr <| Equiv.prodAssoc α β γ
-  mul_comm := mul_comm'
+  mul_comm := hMul_comm'
   left_distrib a b c := inductionOn₃ a b c fun α β γ => mk_congr <| Equiv.prodSumDistrib α β γ
   right_distrib a b c := inductionOn₃ a b c fun α β γ => mk_congr <| Equiv.sumProdDistrib α β γ
   npow n c := c^n

@@ -34,7 +34,7 @@ variable (v : Valuation R Γ₀)
 def integer : Subring R where
   carrier := {x | v x ≤ 1}
   one_mem' := le_of_eq v.map_one
-  mul_mem' x y hx hy := trans_rel_right (· ≤ ·) (v.map_mul x y) (mul_le_one' hx hy)
+  hMul_mem' x y hx hy := trans_rel_right (· ≤ ·) (v.map_hMul x y) (mul_le_one' hx hy)
   zero_mem' := trans_rel_right (· ≤ ·) v.map_zero zero_le_one
   add_mem' x y hx hy := le_trans (v.map_add x y) (max_le hx hy)
   neg_mem' x hx := trans_rel_right (· ≤ ·) (v.map_neg x) hx
@@ -83,7 +83,7 @@ theorem one_of_isUnit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
   le_antisymm (hv.2 _) <|
     by
     rw [← v.map_one, ← (algebraMap O R).map_one, ← u.mul_inv, ← mul_one (v (algebraMap O R x)), hu,
-      (algebraMap O R).map_mul, v.map_mul]
+      (algebraMap O R).map_hMul, v.map_mul]
     exact mul_le_mul_left' (hv.2 (u⁻¹ : Units O)) _
 #align valuation.integers.one_of_is_unit Valuation.Integers.one_of_isUnit
 -/
@@ -136,7 +136,7 @@ theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) 
     have : v ((algebraMap O F y)⁻¹ * algebraMap O F x) ≤ 1 := by
       rw [← v.map_one, ← inv_mul_cancel hy, v.map_mul, v.map_mul]; exact mul_le_mul_left' h _
     let ⟨z, hz⟩ := hv.3 this
-    ⟨z, hv.1 <| ((algebraMap O F).map_mul y z).symm ▸ hz.symm ▸ (mul_inv_cancel_left₀ hy _).symm⟩
+    ⟨z, hv.1 <| ((algebraMap O F).map_hMul y z).symm ▸ hz.symm ▸ (mul_inv_cancel_left₀ hy _).symm⟩
 #align valuation.integers.dvd_of_le Valuation.Integers.dvd_of_le
 -/
 

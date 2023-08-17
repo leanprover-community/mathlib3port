@@ -1355,7 +1355,7 @@ private theorem mul_inv_cancel_aux (a : ZMod p) (h : a ≠ 0) : a * a⁻¹ = 1 :
 instance : Field (ZMod p) :=
   { ZMod.commRing p, ZMod.hasInv p,
     ZMod.nontrivial p with
-    mul_inv_cancel := mul_inv_cancel_aux p
+    mul_inv_cancel := hMul_inv_cancel_aux p
     inv_zero := inv_zero p }
 
 /-- `zmod p` is an integral domain when `p` is prime. -/

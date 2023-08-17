@@ -142,9 +142,9 @@ instance applyMulDistribMulAction {M} [Monoid M] : MulDistribMulAction (MulAut M
     where
   smul := (· <| ·)
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
   smul_one := MulEquiv.map_one
-  smul_mul := MulEquiv.map_mul
+  smul_hMul := MulEquiv.map_mul
 #align mul_aut.apply_mul_distrib_mul_action MulAut.applyMulDistribMulAction
 -/
 
@@ -308,7 +308,7 @@ instance applyDistribMulAction {A} [AddMonoid A] : DistribMulAction (AddAut A) A
   smul_zero := AddEquiv.map_zero
   smul_add := AddEquiv.map_add
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align add_aut.apply_distrib_mul_action AddAut.applyDistribMulAction
 -/
 

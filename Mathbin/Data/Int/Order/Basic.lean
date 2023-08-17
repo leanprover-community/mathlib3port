@@ -41,7 +41,7 @@ instance : LinearOrderedCommRing ℤ :=
   { Int.commRing, Int.linearOrder,
     Int.nontrivial with
     add_le_add_left := @Int.add_le_add_left
-    mul_pos := @Int.mul_pos
+    mul_pos := @Int.hMul_pos
     zero_le_one := le_of_lt Int.zero_lt_one }
 
 /-! ### Extra instances to short-circuit type class resolution

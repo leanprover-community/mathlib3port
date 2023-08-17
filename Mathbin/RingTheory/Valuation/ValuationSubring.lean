@@ -88,7 +88,7 @@ theorem add_mem (x y : K) : x ∈ A → y ∈ A → x + y ∈ A :=
 
 #print ValuationSubring.mul_mem /-
 theorem mul_mem (x y : K) : x ∈ A → y ∈ A → x * y ∈ A :=
-  A.toSubring.mul_mem
+  A.toSubring.hMul_mem
 #align valuation_subring.mul_mem ValuationSubring.mul_mem
 -/
 
@@ -109,7 +109,7 @@ instance : SubringClass (ValuationSubring K) K
   zero_mem := zero_mem
   add_mem := add_mem
   one_mem := one_mem
-  mul_mem := mul_mem
+  hMul_mem := mul_mem
   neg_mem := neg_mem
 
 #print ValuationSubring.toSubring_injective /-
@@ -666,7 +666,7 @@ section nonunits
 def nonunits : Subsemigroup K
     where
   carrier := {x | A.Valuation x < 1}
-  mul_mem' a b ha hb := (mul_lt_mul₀ ha hb).trans_eq <| mul_one _
+  hMul_mem' a b ha hb := (mul_lt_mul₀ ha hb).trans_eq <| mul_one _
 #align valuation_subring.nonunits ValuationSubring.nonunits
 -/
 
@@ -769,7 +769,7 @@ section PrincipalUnitGroup
 def principalUnitGroup : Subgroup Kˣ
     where
   carrier := {x | A.Valuation (x - 1) < 1}
-  mul_mem' := by
+  hMul_mem' := by
     intro a b ha hb
     refine' lt_of_le_of_lt _ (max_lt hb ha)
     rw [← one_mul (A.valuation (b - 1)), ← A.valuation.map_one_add_of_lt ha, add_sub_cancel'_right,

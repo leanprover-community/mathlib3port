@@ -211,8 +211,8 @@ instance [CommMonoid Y] : CommMonoid (LocallyConstant X Y) :=
 instance [Group Y] : Group (LocallyConstant X Y) :=
   { LocallyConstant.monoid, LocallyConstant.hasInv,
     LocallyConstant.hasDiv with
-    mul_left_inv := by intros; ext; simp only [mul_apply, inv_apply, one_apply, mul_left_inv]
-    div_eq_mul_inv := by intros; ext; simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
+    hMul_left_inv := by intros; ext; simp only [mul_apply, inv_apply, one_apply, mul_left_inv]
+    div_eq_hMul_inv := by intros; ext; simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
 
 @[to_additive]
 instance [CommGroup Y] : CommGroup (LocallyConstant X Y) :=

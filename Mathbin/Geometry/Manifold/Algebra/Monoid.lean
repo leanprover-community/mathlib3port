@@ -65,7 +65,7 @@ class SmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Top
     {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
     [Mul G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G :
     Prop where
-  smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
+  smooth_hMul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
 #align has_smooth_mul SmoothMul
 #align has_smooth_add SmoothAdd
 -/
@@ -85,7 +85,7 @@ variable (I)
 #print smooth_mul /-
 @[to_additive]
 theorem smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2 :=
-  SmoothMul.smooth_mul
+  SmoothMul.smooth_hMul
 #align smooth_mul smooth_mul
 #align smooth_add smooth_add
 -/
@@ -279,7 +279,7 @@ instance SmoothMul.prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type
     (I' : ModelWithCorners 𝕜 E' H') (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G']
     [Mul G'] [SmoothMul I' G'] : SmoothMul (I.Prod I') (G × G') :=
   { SmoothManifoldWithCorners.prod G G' with
-    smooth_mul :=
+    smooth_hMul :=
       ((smooth_fst.comp smooth_fst).Smooth.mul (smooth_fst.comp smooth_snd)).prod_mk
         ((smooth_snd.comp smooth_fst).Smooth.mul (smooth_snd.comp smooth_snd)) }
 #align has_smooth_mul.prod SmoothMul.prod

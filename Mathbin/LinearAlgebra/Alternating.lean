@@ -467,7 +467,7 @@ variable {S : Type _} [Monoid S] [DistribMulAction S N] [SMulCommClass R S N]
 instance : DistribMulAction S (AlternatingMap R M N ι)
     where
   one_smul f := ext fun x => one_smul _ _
-  mul_smul c₁ c₂ f := ext fun x => mul_smul _ _ _
+  hMul_smul c₁ c₂ f := ext fun x => hMul_smul _ _ _
   smul_zero r := ext fun x => smul_zero _
   smul_add r f₁ f₂ := ext fun x => smul_add _ _ _
 

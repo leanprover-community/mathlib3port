@@ -108,7 +108,7 @@ protected theorem Nat.nsmul_eq_mul (m n : ℕ) : m • n = m * n :=
 #print Nat.cancelCommMonoidWithZero /-
 instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
   { Nat.commSemiring with
-    mul_left_cancel_of_ne_zero := fun _ _ _ h1 h2 =>
+    hMul_left_cancel_of_ne_zero := fun _ _ _ h1 h2 =>
       Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero h1) h2 }
 #align nat.cancel_comm_monoid_with_zero Nat.cancelCommMonoidWithZero
 -/

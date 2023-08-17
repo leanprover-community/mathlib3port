@@ -875,7 +875,7 @@ instance [IsDomain K] : Field (RatFunc K) :=
       run_tac
         frac_tac
     div := (· / ·)
-    div_eq_mul_inv := by
+    div_eq_hMul_inv := by
       run_tac
         frac_tac
     mul_inv_cancel := fun _ => mul_inv_cancel
@@ -1986,7 +1986,7 @@ theorem coe_neg : ((-f : RatFunc F) : LaurentSeries F) = -f :=
 #print RatFunc.coe_mul /-
 @[simp, norm_cast]
 theorem coe_mul : ((f * g : RatFunc F) : LaurentSeries F) = f * g :=
-  (coeAlgHom F).map_mul _ _
+  (coeAlgHom F).map_hMul _ _
 #align ratfunc.coe_mul RatFunc.coe_mul
 -/
 

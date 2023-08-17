@@ -197,7 +197,7 @@ instance : Group αˣ :=
     one := 1
     mul_assoc := fun u₁ u₂ u₃ => ext <| mul_assoc u₁ u₂ u₃
     inv := Inv.inv
-    mul_left_inv := fun u => ext u.inv_val }
+    hMul_left_inv := fun u => ext u.inv_val }
 
 @[to_additive]
 instance {α} [CommMonoid α] : CommGroup αˣ :=
@@ -915,7 +915,7 @@ protected theorem mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
 #print IsUnit.mul_right_injective /-
 @[to_additive]
 protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ =>
-  h.mul_left_cancel
+  h.hMul_left_cancel
 #align is_unit.mul_right_injective IsUnit.mul_right_injective
 #align is_add_unit.add_right_injective IsAddUnit.add_right_injective
 -/
@@ -923,7 +923,7 @@ protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) :
 #print IsUnit.mul_left_injective /-
 @[to_additive]
 protected theorem mul_left_injective (h : IsUnit b) : Injective (· * b) := fun _ _ =>
-  h.mul_right_cancel
+  h.hMul_right_cancel
 #align is_unit.mul_left_injective IsUnit.mul_left_injective
 #align is_add_unit.add_left_injective IsAddUnit.add_left_injective
 -/
@@ -963,7 +963,7 @@ variable {M : Type _}
 noncomputable def groupOfIsUnit [hM : Monoid M] (h : ∀ a : M, IsUnit a) : Group M :=
   { hM with
     inv := fun a => ↑(h a).Unit⁻¹
-    mul_left_inv := fun a => by
+    hMul_left_inv := fun a => by
       change ↑(h a).Unit⁻¹ * a = 1
       rw [Units.inv_mul_eq_iff_eq_mul, (h a).unit_spec, mul_one] }
 #align group_of_is_unit groupOfIsUnit
@@ -974,7 +974,7 @@ noncomputable def groupOfIsUnit [hM : Monoid M] (h : ∀ a : M, IsUnit a) : Grou
 noncomputable def commGroupOfIsUnit [hM : CommMonoid M] (h : ∀ a : M, IsUnit a) : CommGroup M :=
   { hM with
     inv := fun a => ↑(h a).Unit⁻¹
-    mul_left_inv := fun a => by
+    hMul_left_inv := fun a => by
       change ↑(h a).Unit⁻¹ * a = 1
       rw [Units.inv_mul_eq_iff_eq_mul, (h a).unit_spec, mul_one] }
 #align comm_group_of_is_unit commGroupOfIsUnit

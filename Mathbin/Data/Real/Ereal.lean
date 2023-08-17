@@ -1380,8 +1380,8 @@ protected theorem neg_mul (x y : EReal) : -x * y = -(x * y) :=
 
 instance : HasDistribNeg EReal :=
   { EReal.hasInvolutiveNeg with
-    neg_mul := EReal.neg_mul
-    mul_neg := fun x y => by rw [x.mul_comm, x.mul_comm]; exact y.neg_mul x }
+    neg_hMul := EReal.neg_mul
+    hMul_neg := fun x y => by rw [x.mul_comm, x.mul_comm]; exact y.neg_mul x }
 
 /-! ### Absolute value -/
 

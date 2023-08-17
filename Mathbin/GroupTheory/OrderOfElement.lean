@@ -1295,7 +1295,7 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
       obtain ⟨a, ha⟩ := hS1
       rw [← pow_orderOf_eq_one a, ← tsub_add_cancel_of_le (succ_le_of_lt (orderOf_pos a))]
       exact pow_mem a ha (orderOf a - 1)
-    mul_mem' := fun a b ha hb => (congr_arg₂ (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
+    hMul_mem' := fun a b ha hb => (congr_arg₂ (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
 #align submonoid_of_idempotent submonoidOfIdempotent
 #align add_submonoid_of_idempotent addSubmonoidOfIdempotent
 -/

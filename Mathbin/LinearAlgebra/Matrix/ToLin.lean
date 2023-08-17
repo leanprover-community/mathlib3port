@@ -571,13 +571,11 @@ theorem LinearMap.toMatrixAlgEquiv'_id :
 #align linear_map.to_matrix_alg_equiv'_id LinearMap.toMatrixAlgEquiv'_id
 -/
 
-#print Matrix.toLinAlgEquiv'_mul /-
 @[simp]
-theorem Matrix.toLinAlgEquiv'_mul (M N : Matrix n n R) :
+theorem map_mul (M N : Matrix n n R) :
     Matrix.toLinAlgEquiv' (M ⬝ N) = (Matrix.toLinAlgEquiv' M).comp (Matrix.toLinAlgEquiv' N) :=
   Matrix.toLin'_mul _ _
-#align matrix.to_lin_alg_equiv'_mul Matrix.toLinAlgEquiv'_mul
--/
+#align matrix.to_lin_alg_equiv'_mul map_mulₓ
 
 #print LinearMap.toMatrixAlgEquiv'_comp /-
 theorem LinearMap.toMatrixAlgEquiv'_comp (f g : (n → R) →ₗ[R] n → R) :
@@ -1049,7 +1047,7 @@ noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
   map_zero' := by rw [AlgHom.map_zero, LinearEquiv.map_zero]
   map_one' := by rw [AlgHom.map_one, LinearMap.toMatrix_one]
   map_add' x y := by rw [AlgHom.map_add, LinearEquiv.map_add]
-  map_mul' x y := by rw [AlgHom.map_mul, LinearMap.toMatrix_mul, Matrix.mul_eq_mul]
+  map_mul' x y := by rw [AlgHom.map_mul, LinearMap.toMatrix_mul, Matrix.hMul_eq_hMul]
   commutes' r := by ext;
     rw [lmul_algebra_map, to_matrix_lsmul, algebra_map_eq_diagonal, Pi.algebraMap_def,
       Algebra.id.map_eq_self]

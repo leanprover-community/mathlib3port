@@ -38,7 +38,7 @@ instance (R : Type _) [Monoid R] [MulAction R α] : MulAction R αᵐᵒᵖ :=
     MulOpposite.hasSmul α
       R with
     one_smul := fun x => unop_injective <| one_smul R (unop x)
-    mul_smul := fun r₁ r₂ x => unop_injective <| mul_smul r₁ r₂ (unop x) }
+    hMul_smul := fun r₁ r₂ x => unop_injective <| hMul_smul r₁ r₂ (unop x) }
 
 instance (R : Type _) [Monoid R] [AddMonoid α] [DistribMulAction R α] : DistribMulAction R αᵐᵒᵖ :=
   {
@@ -52,7 +52,7 @@ instance (R : Type _) [Monoid R] [Monoid α] [MulDistribMulAction R α] :
   {
     MulOpposite.mulAction α
       R with
-    smul_mul := fun r x₁ x₂ => unop_injective <| smul_mul' r (unop x₂) (unop x₁)
+    smul_hMul := fun r x₁ x₂ => unop_injective <| smul_mul' r (unop x₂) (unop x₁)
     smul_one := fun r => unop_injective <| smul_one r }
 
 @[to_additive]
@@ -162,7 +162,7 @@ instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α
     where
   smul := (· • ·)
   one_smul := mul_one
-  mul_smul x y r := (mul_assoc _ _ _).symm
+  hMul_smul x y r := (mul_assoc _ _ _).symm
 #align monoid.to_opposite_mul_action Monoid.toOppositeMulAction
 #align add_monoid.to_opposite_add_action AddMonoid.toOppositeAddAction
 -/

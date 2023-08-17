@@ -76,12 +76,12 @@ elements. -/
 class NormalizationMonoid (α : Type _) [CancelCommMonoidWithZero α] where
   normUnit : α → αˣ
   normUnit_zero : norm_unit 0 = 1
-  normUnit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a * b) = norm_unit a * norm_unit b
+  normUnit_hMul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a * b) = norm_unit a * norm_unit b
   normUnit_coe_units : ∀ u : αˣ, norm_unit u = u⁻¹
 #align normalization_monoid NormalizationMonoid
 -/
 
-export NormalizationMonoid (normUnit normUnit_zero normUnit_mul normUnit_coe_units)
+export NormalizationMonoid (normUnit normUnit_zero normUnit_hMul normUnit_coe_units)
 
 attribute [simp] norm_unit_coe_units norm_unit_zero norm_unit_mul
 
@@ -334,7 +334,7 @@ class GCDMonoid (α : Type _) [CancelCommMonoidWithZero α] where
   gcd_dvd_left : ∀ a b, gcd a b ∣ a
   gcd_dvd_right : ∀ a b, gcd a b ∣ b
   dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b
-  gcd_mul_lcm : ∀ a b, Associated (gcd a b * lcm a b) (a * b)
+  gcd_hMul_lcm : ∀ a b, Associated (gcd a b * lcm a b) (a * b)
   lcm_zero_left : ∀ a, lcm 0 a = 0
   lcm_zero_right : ∀ a, lcm a 0 = 0
 #align gcd_monoid GCDMonoid
@@ -371,7 +371,7 @@ theorem normalize_gcd [NormalizedGCDMonoid α] : ∀ a b : α, normalize (gcd a 
 
 #print gcd_mul_lcm /-
 theorem gcd_mul_lcm [GCDMonoid α] : ∀ a b : α, Associated (gcd a b * lcm a b) (a * b) :=
-  GCDMonoid.gcd_mul_lcm
+  GCDMonoid.gcd_hMul_lcm
 #align gcd_mul_lcm gcd_mul_lcm
 -/
 
@@ -1094,7 +1094,7 @@ instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoi
     where
   normUnit x := 1
   normUnit_zero := rfl
-  normUnit_mul x y hx hy := (mul_one 1).symm
+  normUnit_hMul x y hx hy := (mul_one 1).symm
   normUnit_coe_units u := Subsingleton.elim _ _
 #align normalization_monoid_of_unique_units normalizationMonoidOfUniqueUnits
 -/
@@ -1220,7 +1220,7 @@ def normalizationMonoidOfMonoidHomRightInverse [DecidableEq α] (f : Associates 
     if a = 0 then 1
     else Classical.choose (Associates.mk_eq_mk_iff_associated.1 (hinv (Associates.mk a)).symm)
   normUnit_zero := if_pos rfl
-  normUnit_mul a b ha hb :=
+  normUnit_hMul a b ha hb :=
     by
     rw [if_neg (mul_ne_zero ha hb), if_neg ha, if_neg hb, Units.ext_iff, Units.val_mul]
     suffices
@@ -1253,7 +1253,7 @@ noncomputable def gcdMonoidOfGCD [DecidableEq α] (gcd : α → α → α)
     dvd_gcd := fun a b c => dvd_gcd
     lcm := fun a b =>
       if a = 0 then 0 else Classical.choose ((gcd_dvd_left a b).trans (Dvd.intro b rfl))
-    gcd_mul_lcm := fun a b => by
+    gcd_hMul_lcm := fun a b => by
       split_ifs with a0
       · rw [MulZeroClass.mul_zero, a0, MulZeroClass.zero_mul]
       · rw [← Classical.choose_spec ((gcd_dvd_left a b).trans (Dvd.intro b rfl))]
@@ -1307,7 +1307,7 @@ noncomputable def normalizedGCDMonoidOfGCD [NormalizationMonoid α] [DecidableEq
         have h2 : normalize (gcd a b * l) = gcd a b * l := by rw [this, normalize_idem]
         rw [← normalize_gcd] at this 
         rwa [normalize.map_mul, normalize_gcd, mul_right_inj' h1] at h2 
-    gcd_mul_lcm := fun a b => by
+    gcd_hMul_lcm := fun a b => by
       split_ifs with a0
       · rw [MulZeroClass.mul_zero, a0, MulZeroClass.zero_mul]
       · rw [←
@@ -1338,7 +1338,7 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
   let exists_gcd a b := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
   { lcm
     gcd := fun a b => if a = 0 then b else if b = 0 then a else Classical.choose (exists_gcd a b)
-    gcd_mul_lcm := fun a b => by
+    gcd_hMul_lcm := fun a b => by
       split_ifs
       · rw [h, eq_zero_of_zero_dvd (dvd_lcm_left _ _), MulZeroClass.mul_zero, MulZeroClass.zero_mul]
       · rw [h_1, eq_zero_of_zero_dvd (dvd_lcm_right _ _), MulZeroClass.mul_zero]
@@ -1401,7 +1401,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
     gcd := fun a b =>
       if a = 0 then normalize b
       else if b = 0 then normalize a else Classical.choose (exists_gcd a b)
-    gcd_mul_lcm := fun a b => by
+    gcd_hMul_lcm := fun a b => by
       split_ifs with h h_1
       · rw [h, eq_zero_of_zero_dvd (dvd_lcm_left _ _), MulZeroClass.mul_zero, MulZeroClass.zero_mul]
       ·
@@ -1536,7 +1536,7 @@ instance (priority := 100) : NormalizedGCDMonoid G₀
     where
   normUnit x := if h : x = 0 then 1 else (Units.mk0 x h)⁻¹
   normUnit_zero := dif_pos rfl
-  normUnit_mul x y x0 y0 := Units.eq_iff.1 (by simp [x0, y0, mul_comm])
+  normUnit_hMul x y x0 y0 := Units.eq_iff.1 (by simp [x0, y0, mul_comm])
   normUnit_coe_units u := by rw [dif_neg (Units.ne_zero _), Units.mk0_val]; infer_instance
   gcd a b := if a = 0 ∧ b = 0 then 0 else 1
   lcm a b := if a = 0 ∨ b = 0 then 0 else 1
@@ -1547,7 +1547,7 @@ instance (priority := 100) : NormalizedGCDMonoid G₀
     cases' not_and_distrib.mp h with h h <;>
         refine' is_unit_iff_dvd_one.mp (isUnit_of_dvd_unit _ (IsUnit.mk0 _ h)) <;>
       assumption
-  gcd_mul_lcm a b := by
+  gcd_hMul_lcm a b := by
     by_cases ha : a = 0; · simp [ha]
     by_cases hb : b = 0; · simp [hb]
     rw [if_neg (not_and_of_not_left _ ha), one_mul, if_neg (not_or_of_not ha hb)]

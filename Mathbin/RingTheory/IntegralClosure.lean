@@ -355,7 +355,7 @@ theorem isIntegral_of_mem_of_FG (S : Subalgebra R A) (HS : S.toSubmodule.FG) (x 
   let S₁ : Subring A :=
     { carrier := span S₀ (insert 1 ↑y : Set A)
       one_mem' := subset_span <| Or.inl rfl
-      mul_mem' := fun p q hp hq => this <| mul_mem_mul hp hq
+      hMul_mem' := fun p q hp hq => this <| mul_mem_mul hp hq
       zero_mem' := (span S₀ (insert 1 ↑y : Set A)).zero_mem
       add_mem' := fun _ _ => (span S₀ (insert 1 ↑y : Set A)).add_mem
       neg_mem' := fun _ => (span S₀ (insert 1 ↑y : Set A)).neg_mem }
@@ -411,7 +411,7 @@ theorem isIntegral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R
   by
   let A' : Subalgebra R A :=
     { carrier := {x | ∀ n ∈ N, x • n ∈ N}
-      mul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn)
+      hMul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn)
       one_mem' := fun n hn => (one_smul A n).symm ▸ hn
       add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn)
       zero_mem' := fun n hn => (zero_smul A n).symm ▸ N.zero_mem
@@ -630,7 +630,7 @@ def integralClosure : Subalgebra R A
   zero_mem' := isIntegral_zero
   one_mem' := isIntegral_one
   add_mem' _ _ := isIntegral_add
-  mul_mem' _ _ := isIntegral_mul
+  hMul_mem' _ _ := isIntegral_mul
   algebraMap_mem' x := isIntegral_algebraMap
 #align integral_closure integralClosure
 -/

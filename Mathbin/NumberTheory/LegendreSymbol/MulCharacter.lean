@@ -164,7 +164,7 @@ instance : MulCharClass (MulChar R R') R R'
     where
   coe χ := χ.toMonoidHom.toFun
   coe_injective' f g h := ext' fun a => congr_fun h a
-  map_mul χ := χ.map_mul'
+  map_hMul χ := χ.map_mul'
   map_one χ := χ.map_one'
   map_nonunit χ := χ.map_nonunit'
 
@@ -440,7 +440,7 @@ noncomputable instance commGroup : CommGroup (MulChar R R') :=
   { one := 1
     mul := (· * ·)
     inv := Inv.inv
-    mul_left_inv := inv_mul
+    hMul_left_inv := inv_mul
     mul_assoc := by intro χ₁ χ₂ χ₃; ext a; simp [mul_assoc]
     mul_comm := by intro χ₁ χ₂; ext a; simp [mul_comm]
     one_mul

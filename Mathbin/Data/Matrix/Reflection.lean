@@ -178,7 +178,7 @@ example [add_comm_monoid α] [has_mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁�
 theorem mulᵣ_eq [Mul α] [AddCommMonoid α] (A : Matrix (Fin l) (Fin m) α)
     (B : Matrix (Fin m) (Fin n) α) : mulᵣ A B = A.mul B :=
   by
-  simp [mulᵣ, Function.comp, Matrix.mul, Matrix.transpose]
+  simp [mulᵣ, Function.comp, HMul.hMul, Matrix.transpose]
   rfl
 #align matrix.mulᵣ_eq Matrix.mulᵣ_eq
 -/

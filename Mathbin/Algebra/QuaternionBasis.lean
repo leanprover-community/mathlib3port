@@ -40,10 +40,10 @@ Note that for definitional convenience, `k` is provided as a field even though `
 determines it. -/
 structure Basis {R : Type _} (A : Type _) [CommRing R] [Ring A] [Algebra R A] (c₁ c₂ : R) where
   (i j k : A)
-  i_mul_i : i * i = c₁ • 1
-  j_mul_j : j * j = c₂ • 1
-  i_mul_j : i * j = k
-  j_mul_i : j * i = -k
+  i_hMul_i : i * i = c₁ • 1
+  j_hMul_j : j * j = c₂ • 1
+  i_hMul_j : i * j = k
+  j_hMul_i : j * i = -k
 #align quaternion_algebra.basis QuaternionAlgebra.Basis
 -/
 
@@ -74,12 +74,12 @@ variable (R)
 protected def self : Basis ℍ[R,c₁,c₂] c₁ c₂
     where
   i := ⟨0, 1, 0, 0⟩
-  i_mul_i := by ext <;> simp
+  i_hMul_i := by ext <;> simp
   j := ⟨0, 0, 1, 0⟩
-  j_mul_j := by ext <;> simp
+  j_hMul_j := by ext <;> simp
   k := ⟨0, 0, 0, 1⟩
-  i_mul_j := by ext <;> simp
-  j_mul_i := by ext <;> simp
+  i_hMul_j := by ext <;> simp
+  j_hMul_i := by ext <;> simp
 #align quaternion_algebra.basis.self QuaternionAlgebra.Basis.self
 -/
 
@@ -194,12 +194,12 @@ def liftHom : ℍ[R,c₁,c₂] →ₐ[R] A :=
 def compHom (F : A →ₐ[R] B) : Basis B c₁ c₂
     where
   i := F q.i
-  i_mul_i := by rw [← F.map_mul, q.i_mul_i, F.map_smul, F.map_one]
+  i_hMul_i := by rw [← F.map_mul, q.i_mul_i, F.map_smul, F.map_one]
   j := F q.j
-  j_mul_j := by rw [← F.map_mul, q.j_mul_j, F.map_smul, F.map_one]
+  j_hMul_j := by rw [← F.map_mul, q.j_mul_j, F.map_smul, F.map_one]
   k := F q.k
-  i_mul_j := by rw [← F.map_mul, q.i_mul_j]
-  j_mul_i := by rw [← F.map_mul, q.j_mul_i, F.map_neg]
+  i_hMul_j := by rw [← F.map_mul, q.i_mul_j]
+  j_hMul_i := by rw [← F.map_mul, q.j_mul_i, F.map_neg]
 #align quaternion_algebra.basis.comp_hom QuaternionAlgebra.Basis.compHom
 -/
 

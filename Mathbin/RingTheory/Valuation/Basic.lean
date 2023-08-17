@@ -125,7 +125,7 @@ instance : ValuationClass (Valuation R Γ₀) R Γ₀
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_one f := f.map_one'
   map_zero f := f.map_zero'
   map_add_le_max f := f.map_add_le_max'
@@ -801,7 +801,7 @@ theorem map_one : v 1 = 0 :=
 #print AddValuation.map_mul /-
 @[simp]
 theorem map_mul : ∀ x y, v (x * y) = v x + v y :=
-  v.map_mul
+  v.map_hMul
 #align add_valuation.map_mul AddValuation.map_mul
 -/
 

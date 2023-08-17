@@ -96,7 +96,7 @@ instance : StarMemClass (VonNeumannAlgebra H) (H →L[ℂ] H) where star_mem s a
 instance : SubringClass (VonNeumannAlgebra H) (H →L[ℂ] H)
     where
   add_mem := add_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
   one_mem := one_mem'
   zero_mem := zero_mem'
   neg_mem s a ha := show -a ∈ s.toStarSubalgebra from neg_mem ha

@@ -49,7 +49,7 @@ variable {α β γ : Type _}
 #print BooleanRing /-
 /-- A Boolean ring is a ring where multiplication is idempotent. -/
 class BooleanRing (α) extends Ring α where
-  mul_self : ∀ a : α, a * a = a
+  hMul_self : ∀ a : α, a * a = a
 #align boolean_ring BooleanRing
 -/
 
@@ -58,12 +58,12 @@ section BooleanRing
 variable [BooleanRing α] (a b : α)
 
 instance : IsIdempotent α (· * ·) :=
-  ⟨BooleanRing.mul_self⟩
+  ⟨BooleanRing.hMul_self⟩
 
 #print mul_self /-
 @[simp]
 theorem mul_self : a * a = a :=
-  BooleanRing.mul_self _
+  BooleanRing.hMul_self _
 #align mul_self mul_self
 -/
 
@@ -581,7 +581,7 @@ def BooleanAlgebra.toBooleanRing : BooleanRing α :=
     one := ⊤
     one_mul := fun _ => top_inf_eq
     mul_one := fun _ => inf_top_eq
-    mul_self := fun b => inf_idem }
+    hMul_self := fun b => inf_idem }
 #align boolean_algebra.to_boolean_ring BooleanAlgebra.toBooleanRing
 -/
 
@@ -748,5 +748,5 @@ instance : BooleanRing Bool where
   mul_one := Bool.and_true
   left_distrib := and_xor_distrib_left
   right_distrib := and_xor_distrib_right
-  mul_self := Bool.and_self
+  hMul_self := Bool.and_self
 

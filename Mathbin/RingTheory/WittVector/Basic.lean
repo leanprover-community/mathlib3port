@@ -350,7 +350,7 @@ def ghostMap : 𝕎 R →+* ℕ → R where
   map_zero' := ghostFun_zero
   map_one' := ghostFun_one
   map_add' := ghostFun_add
-  map_mul' := ghostFun_mul
+  map_mul' := ghostFun_hMul
 #align witt_vector.ghost_map WittVector.ghostMap
 -/
 

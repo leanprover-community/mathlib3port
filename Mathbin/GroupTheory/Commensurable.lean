@@ -113,7 +113,7 @@ def commensurator' (H : Subgroup G) : Subgroup (ConjAct G)
     where
   carrier := {g : ConjAct G | Commensurable (g • H) H}
   one_mem' := by rw [Set.mem_setOf_eq, one_smul]
-  mul_mem' a b ha hb := by
+  hMul_mem' a b ha hb := by
     rw [Set.mem_setOf_eq, mul_smul]
     exact trans ((commensurable_conj a).mp hb) ha
   inv_mem' a ha := by rwa [Set.mem_setOf_eq, comm, ← commensurable_inv]

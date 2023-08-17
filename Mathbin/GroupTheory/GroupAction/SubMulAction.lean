@@ -328,7 +328,7 @@ variable (p : SubMulAction R M)
 instance mulAction' : MulAction S p where
   smul := (· • ·)
   one_smul x := Subtype.ext <| one_smul _ x
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul c₁ c₂ x
+  hMul_smul c₁ c₂ x := Subtype.ext <| hMul_smul c₁ c₂ x
 #align sub_mul_action.mul_action' SubMulAction.mulAction'
 -/
 

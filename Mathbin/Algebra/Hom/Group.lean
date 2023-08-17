@@ -314,7 +314,7 @@ You should declare an instance of this typeclass when you extend `mul_hom`.
 @[to_additive]
 class MulHomClass (F : Type _) (M N : outParam <| Type _) [Mul M] [Mul N] extends
     FunLike F M fun _ => N where
-  map_mul : ∀ (f : F) (x y : M), f (x * y) = f x * f y
+  map_hMul : ∀ (f : F) (x y : M), f (x * y) = f x * f y
 #align mul_hom_class MulHomClass
 #align add_hom_class AddHomClass
 -/
@@ -325,7 +325,7 @@ instance MulHom.mulHomClass : MulHomClass (M →ₙ* N) M N
     where
   coe := MulHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-  map_mul := MulHom.map_mul'
+  map_hMul := MulHom.map_mul'
 #align mul_hom.mul_hom_class MulHom.mulHomClass
 #align add_hom.add_hom_class AddHom.addHomClass
 -/
@@ -333,7 +333,7 @@ instance MulHom.mulHomClass : MulHomClass (M →ₙ* N) M N
 #print map_mul /-
 @[simp, to_additive]
 theorem map_mul [MulHomClass F M N] (f : F) (x y : M) : f (x * y) = f x * f y :=
-  MulHomClass.map_mul f x y
+  MulHomClass.map_hMul f x y
 #align map_mul map_mul
 #align map_add map_add
 -/
@@ -397,7 +397,7 @@ instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N
     where
   coe := MonoidHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-  map_mul := MonoidHom.map_mul'
+  map_hMul := MonoidHom.map_mul'
   map_one := MonoidHom.map_one'
 #align monoid_hom.monoid_hom_class MonoidHom.monoidHomClass
 #align add_monoid_hom.add_monoid_hom_class AddMonoidHom.addMonoidHomClass
@@ -562,7 +562,7 @@ instance MonoidWithZeroHom.monoidWithZeroHomClass : MonoidWithZeroHomClass (M �
     where
   coe := MonoidWithZeroHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-  map_mul := MonoidWithZeroHom.map_mul'
+  map_hMul := MonoidWithZeroHom.map_mul'
   map_one := MonoidWithZeroHom.map_one'
   map_zero := MonoidWithZeroHom.map_zero'
 #align monoid_with_zero_hom.monoid_with_zero_hom_class MonoidWithZeroHom.monoidWithZeroHomClass

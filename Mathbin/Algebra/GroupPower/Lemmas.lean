@@ -53,8 +53,8 @@ variable [Monoid M] [Monoid N] [AddMonoid A] [AddMonoid B]
 instance invertiblePow (m : M) [Invertible m] (n : ℕ) : Invertible (m ^ n)
     where
   invOf := ⅟ m ^ n
-  invOf_mul_self := by rw [← (commute_invOf m).symm.mul_pow, invOf_mul_self, one_pow]
-  mul_invOf_self := by rw [← (commute_invOf m).mul_pow, mul_invOf_self, one_pow]
+  invOf_hMul_self := by rw [← (commute_invOf m).symm.mul_pow, invOf_mul_self, one_pow]
+  hMul_invOf_self := by rw [← (commute_invOf m).mul_pow, mul_invOf_self, one_pow]
 #align invertible_pow invertiblePow
 -/
 

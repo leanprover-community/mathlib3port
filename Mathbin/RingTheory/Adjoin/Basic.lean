@@ -104,7 +104,7 @@ theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : �
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   let S : Subalgebra R A :=
     { carrier := p
-      mul_mem' := Hmul
+      hMul_mem' := Hmul
       add_mem' := Hadd
       algebraMap_mem' := Halg }
   adjoin_le (show s ≤ S from Hs) h
@@ -215,7 +215,7 @@ theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s)
     rcases ih HL.2 with ⟨z, r, hr, hzr⟩; rw [List.prod_cons, ← hzr]
     rcases HL.1 with (⟨hd, rfl⟩ | hs)
     · refine' ⟨hd * z, r, hr, _⟩
-      rw [Algebra.smul_def, Algebra.smul_def, (algebraMap _ _).map_mul, _root_.mul_assoc]
+      rw [Algebra.smul_def, Algebra.smul_def, (algebraMap _ _).map_hMul, _root_.mul_assoc]
     ·
       exact
         ⟨z, hd * r, Submonoid.mul_mem _ (Submonoid.subset_closure hs) hr,

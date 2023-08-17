@@ -54,7 +54,7 @@ with an `R`-algebra structure. -/
 class GAlgebra where
   toFun : R →+ A 0
   map_one : to_fun 1 = GradedMonoid.GOne.one
-  map_mul :
+  map_hMul :
     ∀ r s, GradedMonoid.mk _ (to_fun (r * s)) = ⟨_, GradedMonoid.GMul.mul (to_fun r) (to_fun s)⟩
   commutes : ∀ r x, GradedMonoid.mk _ (to_fun r) * x = x * ⟨_, to_fun r⟩
   smul_def : ∀ (r) (x : GradedMonoid A), GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩ * x
@@ -159,7 +159,7 @@ instance Algebra.directSumGAlgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι
     where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
-  map_mul a b := Sigma.ext (zero_add _).symm (hEq_of_eq <| (algebraMap R A).map_mul a b)
+  map_hMul a b := Sigma.ext (zero_add _).symm (hEq_of_eq <| (algebraMap R A).map_hMul a b)
   commutes := fun r ⟨ai, a⟩ =>
     Sigma.ext ((zero_add _).trans (add_zero _).symm) (hEq_of_eq <| Algebra.commutes _ _)
   smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_add _).symm (hEq_of_eq <| Algebra.smul_def _ _)

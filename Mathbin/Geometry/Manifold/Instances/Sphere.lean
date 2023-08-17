@@ -667,7 +667,7 @@ instance : SmoothManifoldWithCorners (𝓡 1) circle :=
 /-- The unit circle in `ℂ` is a Lie group. -/
 instance : LieGroup (𝓡 1) circle
     where
-  smooth_mul := by
+  smooth_hMul := by
     apply ContMDiff.codRestrict_sphere
     let c : circle → ℂ := coe
     have h₂ : ContMDiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd :=

@@ -42,7 +42,7 @@ falls in `I ^ i`. -/
 def reesAlgebra : Subalgebra R R[X]
     where
   carrier := {f | ∀ i, f.coeff i ∈ I ^ i}
-  mul_mem' f g hf hg i := by
+  hMul_mem' f g hf hg i := by
     rw [coeff_mul]
     apply Ideal.sum_mem
     rintro ⟨j, k⟩ e

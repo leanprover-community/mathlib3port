@@ -345,7 +345,7 @@ instance galgebra : DirectSum.GAlgebra R fun i => (⨂[R]^i) M
     where
   toFun := (algebraMap₀ : R ≃ₗ[R] (⨂[R]^0) M).toLinearMap.toAddMonoidHom
   map_one := algebraMap₀_one
-  map_mul r s :=
+  map_hMul r s :=
     gradedMonoid_eq_of_cast rfl
       (by
         rw [← LinearEquiv.eq_symm_apply]

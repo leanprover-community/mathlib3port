@@ -46,7 +46,7 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀
   toFun := v.onQuotVal hJ
   map_zero' := v.map_zero
   map_one' := v.map_one
-  map_mul' xbar ybar := Quotient.ind₂' v.map_mul xbar ybar
+  map_mul' xbar ybar := Quotient.ind₂' v.map_hMul xbar ybar
   map_add_le_max' xbar ybar := Quotient.ind₂' v.map_add xbar ybar
 #align valuation.on_quot Valuation.onQuot
 -/

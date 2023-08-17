@@ -114,7 +114,7 @@ instance : LinearOrderedCommMonoidWithZero Foo :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-theorem not_mul_pos :
+theorem not_hMul_pos :
     ¬∀ {M : Type} [LinearOrderedCommMonoidWithZero M],
         ∀ (a b : M) (ha : 0 < a) (hb : 0 < b), 0 < a * b :=
   by
@@ -133,7 +133,7 @@ theorem not_mul_pos :
           (by
             run_tac
               boom))).elim
-#align counterexample.foo.not_mul_pos Counterexample.Foo.not_mul_pos
+#align counterexample.foo.not_mul_pos Counterexample.Foo.not_hMul_pos
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 example : 0 < ε ∧ ε * ε = 0 := by

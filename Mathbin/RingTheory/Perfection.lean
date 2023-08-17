@@ -43,7 +43,7 @@ def Monoid.perfection (M : Type u₁) [CommMonoid M] (p : ℕ) : Submonoid (ℕ 
     where
   carrier := {f | ∀ n, f (n + 1) ^ p = f n}
   one_mem' n := one_pow _
-  mul_mem' f g hf hg n := (mul_pow _ _ _).trans <| congr_arg₂ _ (hf n) (hg n)
+  hMul_mem' f g hf hg n := (mul_pow _ _ _).trans <| congr_arg₂ _ (hf n) (hg n)
 #align monoid.perfection Monoid.perfection
 -/
 
@@ -243,7 +243,7 @@ def lift (R : Type u₁) [CommSemiring R] [CharP R p] [PerfectRing R p] (S : Typ
           rw [← f.map_pow, Function.iterate_succ_apply', pthRoot_pow_p]⟩
       map_one' := ext fun n => (congr_arg f <| RingHom.iterate_map_one _ _).trans f.map_one
       map_mul' := fun x y =>
-        ext fun n => (congr_arg f <| RingHom.iterate_map_mul _ _ _ _).trans <| f.map_mul _ _
+        ext fun n => (congr_arg f <| RingHom.iterate_map_hMul _ _ _ _).trans <| f.map_hMul _ _
       map_zero' := ext fun n => (congr_arg f <| RingHom.iterate_map_zero _ _).trans f.map_zero
       map_add' := fun x y =>
         ext fun n => (congr_arg f <| RingHom.iterate_map_add _ _ _ _).trans <| f.map_add _ _ }
@@ -275,7 +275,7 @@ def map (φ : R →+* S) : Ring.Perfection R p →+* Ring.Perfection S p
     where
   toFun f := ⟨fun n => φ (coeff R p n f), fun n => by rw [← φ.map_pow, coeff_pow_p']⟩
   map_one' := Subtype.eq <| funext fun n => φ.map_one
-  map_mul' f g := Subtype.eq <| funext fun n => φ.map_mul _ _
+  map_mul' f g := Subtype.eq <| funext fun n => φ.map_hMul _ _
   map_zero' := Subtype.eq <| funext fun n => φ.map_zero
   map_add' f g := Subtype.eq <| funext fun n => φ.map_add _ _
 #align perfection.map Perfection.map

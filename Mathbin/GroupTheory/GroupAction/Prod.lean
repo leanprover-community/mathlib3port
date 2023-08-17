@@ -201,7 +201,7 @@ instance isScalarTowerBoth [Mul N] [Mul P] [SMul M N] [SMul M P] [IsScalarTower 
 @[to_additive]
 instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (α × β)
     where
-  mul_smul a₁ a₂ p := mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
+  hMul_smul a₁ a₂ p := mk.inj_iff.mpr ⟨hMul_smul _ _ _, hMul_smul _ _ _⟩
   one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
 
 instance {R M N : Type _} [Zero M] [Zero N] [SMulZeroClass R M] [SMulZeroClass R N] :
@@ -217,7 +217,7 @@ instance {R M N : Type _} {r : Monoid R} [AddMonoid M] [AddMonoid N] [DistribMul
 instance {R M N : Type _} {r : Monoid R} [Monoid M] [Monoid N] [MulDistribMulAction R M]
     [MulDistribMulAction R N] : MulDistribMulAction R (M × N)
     where
-  smul_mul a p₁ p₂ := mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
+  smul_hMul a p₁ p₂ := mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
   smul_one a := mk.inj_iff.mpr ⟨smul_one _, smul_one _⟩
 
 end Prod

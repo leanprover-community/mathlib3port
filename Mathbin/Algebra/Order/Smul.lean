@@ -69,7 +69,7 @@ instance [Zero R] [AddZeroClass M] [h : SMulWithZero R M] : SMulWithZero R Mᵒ�
 instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
   { instSMulOrderDual with
     one_smul := fun m => OrderDual.rec (one_smul _) m
-    mul_smul := fun r => OrderDual.rec mul_smul r }
+    hMul_smul := fun r => OrderDual.rec hMul_smul r }
 
 instance [MonoidWithZero R] [AddMonoid M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
   { OrderDual.mulAction, OrderDual.smulWithZero with }

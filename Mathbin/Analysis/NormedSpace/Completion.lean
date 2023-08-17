@@ -102,7 +102,8 @@ instance [SeminormedRing A] : NormedRing (Completion A) :=
         exact Continuous.comp completion.continuous_extension continuous_sub
       · intro x y
         rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
-    norm_mul := fun x y => by
+    norm_hMul := fun x y =>
+      by
       apply completion.induction_on₂ x y <;> clear x y
       ·
         exact

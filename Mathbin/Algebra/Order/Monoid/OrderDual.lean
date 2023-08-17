@@ -105,7 +105,7 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid αᵒᵈ :=
 @[to_additive OrderDual.OrderedCancelAddCommMonoid.to_contravariantClass]
 instance OrderedCancelCommMonoid.to_contravariantClass [OrderedCancelCommMonoid α] :
     ContravariantClass αᵒᵈ αᵒᵈ Mul.mul LE.le
-    where elim a b c := OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b
+    where elim a b c := OrderedCancelCommMonoid.le_of_hMul_le_hMul_left a c b
 #align order_dual.ordered_cancel_comm_monoid.to_contravariant_class OrderDual.OrderedCancelCommMonoid.to_contravariantClass
 #align ordered_cancel_add_comm_monoid.to_contravariant_class OrderDual.OrderedCancelAddCommMonoid.to_contravariantClass
 -/

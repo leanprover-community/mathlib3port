@@ -70,8 +70,8 @@ variable {α : Type u}
 /-- `invertible a` gives a two-sided multiplicative inverse of `a`. -/
 class Invertible [Mul α] [One α] (a : α) : Type u where
   invOf : α
-  invOf_mul_self : inv_of * a = 1
-  mul_invOf_self : a * inv_of = 1
+  invOf_hMul_self : inv_of * a = 1
+  hMul_invOf_self : a * inv_of = 1
 #align invertible Invertible
 -/
 
@@ -82,14 +82,14 @@ notation:1034
 #print invOf_mul_self /-
 @[simp]
 theorem invOf_mul_self [Mul α] [One α] (a : α) [Invertible a] : ⅟ a * a = 1 :=
-  Invertible.invOf_mul_self
+  Invertible.invOf_hMul_self
 #align inv_of_mul_self invOf_mul_self
 -/
 
 #print mul_invOf_self /-
 @[simp]
 theorem mul_invOf_self [Mul α] [One α] (a : α) [Invertible a] : a * ⅟ a = 1 :=
-  Invertible.mul_invOf_self
+  Invertible.hMul_invOf_self
 #align mul_inv_of_self mul_invOf_self
 -/
 
@@ -147,8 +147,8 @@ instance [Monoid α] (a : α) : Subsingleton (Invertible a) :=
 def Invertible.copy' [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (si : α) (hs : s = r)
     (hsi : si = ⅟ r) : Invertible s where
   invOf := si
-  invOf_mul_self := by rw [hs, hsi, invOf_mul_self]
-  mul_invOf_self := by rw [hs, hsi, mul_invOf_self]
+  invOf_hMul_self := by rw [hs, hsi, invOf_mul_self]
+  hMul_invOf_self := by rw [hs, hsi, mul_invOf_self]
 #align invertible.copy' Invertible.copy'
 -/
 
@@ -184,8 +184,8 @@ theorem isUnit_of_invertible [Monoid α] (a : α) [Invertible a] : IsUnit a :=
 def Units.invertible [Monoid α] (u : αˣ) : Invertible (u : α)
     where
   invOf := ↑u⁻¹
-  invOf_mul_self := u.inv_mul
-  mul_invOf_self := u.mul_inv
+  invOf_hMul_self := u.inv_mul
+  hMul_invOf_self := u.mul_inv
 #align units.invertible Units.invertible
 -/
 
@@ -377,8 +377,8 @@ variable [Monoid α]
 def invertibleOfInvertibleMul (a b : α) [Invertible a] [Invertible (a * b)] : Invertible b
     where
   invOf := ⅟ (a * b) * a
-  invOf_mul_self := by rw [mul_assoc, invOf_mul_self]
-  mul_invOf_self := by
+  invOf_hMul_self := by rw [mul_assoc, invOf_mul_self]
+  hMul_invOf_self := by
     rw [← (isUnit_of_invertible a).mul_right_inj, ← mul_assoc, ← mul_assoc, mul_invOf_self, mul_one,
       one_mul]
 #align invertible_of_invertible_mul invertibleOfInvertibleMul
@@ -390,10 +390,10 @@ def invertibleOfInvertibleMul (a b : α) [Invertible a] [Invertible (a * b)] : I
 def invertibleOfMulInvertible (a b : α) [Invertible (a * b)] [Invertible b] : Invertible a
     where
   invOf := b * ⅟ (a * b)
-  invOf_mul_self := by
+  invOf_hMul_self := by
     rw [← (isUnit_of_invertible b).mul_left_inj, mul_assoc, mul_assoc, invOf_mul_self, mul_one,
       one_mul]
-  mul_invOf_self := by rw [← mul_assoc, mul_invOf_self]
+  hMul_invOf_self := by rw [← mul_assoc, mul_invOf_self]
 #align invertible_of_mul_invertible invertibleOfMulInvertible
 -/
 
@@ -520,8 +520,8 @@ def Invertible.map {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [MulOn
     [MonoidHomClass F R S] (f : F) (r : R) [Invertible r] : Invertible (f r)
     where
   invOf := f (⅟ r)
-  invOf_mul_self := by rw [← map_mul, invOf_mul_self, map_one]
-  mul_invOf_self := by rw [← map_mul, mul_invOf_self, map_one]
+  invOf_hMul_self := by rw [← map_mul, invOf_mul_self, map_one]
+  hMul_invOf_self := by rw [← map_mul, mul_invOf_self, map_one]
 #align invertible.map Invertible.map
 -/
 

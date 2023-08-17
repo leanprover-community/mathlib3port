@@ -40,7 +40,7 @@ noncomputable instance [Monoid M] : Group (IsUnit.submonoid M) :=
     show Monoid (IsUnit.submonoid M) by
       infer_instance with
     inv := fun x => ⟨_, x.Prop.Unit⁻¹.IsUnit⟩
-    mul_left_inv := fun x => Subtype.eq x.Prop.Unit.inv_val }
+    hMul_left_inv := fun x => Subtype.eq x.Prop.Unit.inv_val }
 
 @[to_additive]
 noncomputable instance [CommMonoid M] : CommGroup (IsUnit.submonoid M) :=
@@ -66,7 +66,7 @@ variable [Monoid M] (S : Submonoid M)
 def leftInv : Submonoid M where
   carrier := {x : M | ∃ y : S, x * y = 1}
   one_mem' := ⟨1, mul_one 1⟩
-  mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
+  hMul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
     ⟨b' * a', by rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_one, ha]⟩
 #align submonoid.left_inv Submonoid.leftInv
 #align add_submonoid.left_neg AddSubmonoid.leftNeg

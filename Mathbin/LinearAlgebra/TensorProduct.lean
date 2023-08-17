@@ -328,7 +328,7 @@ instance leftDistribMulAction : DistribMulAction R' (M ⊗[R] N) :=
   have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   { smul := (· • ·)
     smul_add := fun r x y => TensorProduct.smul_add r x y
-    mul_smul := fun r s x =>
+    hMul_smul := fun r s x =>
       TensorProduct.induction_on x (by simp_rw [TensorProduct.smul_zero])
         (fun m n => by simp_rw [this, mul_smul]) fun x y ihx ihy => by
         simp_rw [TensorProduct.smul_add]; rw [ihx, ihy]

@@ -603,7 +603,7 @@ instance as it is (as of writing) used only in the construction of the Bochner i
 protected def module : Module 𝕜 (Lp.simpleFunc E p μ)
     where
   one_smul f := by ext1; exact one_smul _ _
-  mul_smul x y f := by ext1; exact mul_smul _ _ _
+  hMul_smul x y f := by ext1; exact mul_smul _ _ _
   smul_add x f g := by ext1; exact smul_add _ _ _
   smul_zero x := by ext1; exact smul_zero _
   add_smul x y f := by ext1; exact add_smul _ _ _

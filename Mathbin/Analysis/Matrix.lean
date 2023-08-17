@@ -407,7 +407,7 @@ the norm of a matrix. -/
 protected def linftyOpNonUnitalSemiNormedRing [NonUnitalSeminormedRing α] :
     NonUnitalSeminormedRing (Matrix n n α) :=
   { Matrix.linftyOpSeminormedAddCommGroup, Matrix.instNonUnitalRing with
-    norm_mul := linfty_op_norm_mul }
+    norm_hMul := linfty_op_norm_mul }
 #align matrix.linfty_op_non_unital_semi_normed_ring Matrix.linftyOpNonUnitalSemiNormedRing
 -/
 
@@ -687,7 +687,7 @@ def frobeniusNormedRing [DecidableEq m] : NormedRing (Matrix m m α) :=
   {
     Matrix.frobeniusSeminormedAddCommGroup with
     norm := Norm.norm
-    norm_mul := frobenius_norm_mul }
+    norm_hMul := frobenius_norm_mul }
 #align matrix.frobenius_normed_ring Matrix.frobeniusNormedRing
 -/
 

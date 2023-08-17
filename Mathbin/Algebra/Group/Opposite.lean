@@ -107,12 +107,12 @@ instance [Semigroup α] : Semigroup αᵐᵒᵖ :=
 @[to_additive]
 instance [RightCancelSemigroup α] : LeftCancelSemigroup αᵐᵒᵖ :=
   { MulOpposite.semigroup α with
-    mul_left_cancel := fun x y z H => unop_injective <| mul_right_cancel <| op_injective H }
+    hMul_left_cancel := fun x y z H => unop_injective <| mul_right_cancel <| op_injective H }
 
 @[to_additive]
 instance [LeftCancelSemigroup α] : RightCancelSemigroup αᵐᵒᵖ :=
   { MulOpposite.semigroup α with
-    mul_right_cancel := fun x y z H => unop_injective <| mul_left_cancel <| op_injective H }
+    hMul_right_cancel := fun x y z H => unop_injective <| mul_left_cancel <| op_injective H }
 
 @[to_additive]
 instance [CommSemigroup α] : CommSemigroup αᵐᵒᵖ :=
@@ -171,7 +171,7 @@ instance [DivisionMonoid α] : DivisionMonoid αᵐᵒᵖ :=
     MulOpposite.hasInvolutiveInv
       α with
     mul_inv_rev := fun a b => unop_injective <| mul_inv_rev _ _
-    inv_eq_of_mul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_arg unop h }
+    inv_eq_of_hMul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_arg unop h }
 
 @[to_additive AddOpposite.subtractionCommMonoid]
 instance [DivisionCommMonoid α] : DivisionCommMonoid αᵐᵒᵖ :=
@@ -180,7 +180,7 @@ instance [DivisionCommMonoid α] : DivisionCommMonoid αᵐᵒᵖ :=
 @[to_additive]
 instance [Group α] : Group αᵐᵒᵖ :=
   { MulOpposite.divInvMonoid α with
-    mul_left_inv := fun x => unop_injective <| mul_inv_self <| unop x }
+    hMul_left_inv := fun x => unop_injective <| mul_inv_self <| unop x }
 
 @[to_additive]
 instance [CommGroup α] : CommGroup αᵐᵒᵖ :=
@@ -454,7 +454,7 @@ def MulHom.fromOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
     (hf : ∀ x y, Commute (f x) (f y)) : Mᵐᵒᵖ →ₙ* N
     where
   toFun := f ∘ MulOpposite.unop
-  map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
+  map_mul' x y := (f.map_hMul _ _).trans (hf _ _).Eq
 #align mul_hom.from_opposite MulHom.fromOpposite
 #align add_hom.from_opposite AddHom.fromOpposite
 -/
@@ -486,7 +486,7 @@ def MonoidHom.fromOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M
     where
   toFun := f ∘ MulOpposite.unop
   map_one' := f.map_one
-  map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
+  map_mul' x y := (f.map_hMul _ _).trans (hf _ _).Eq
 #align monoid_hom.from_opposite MonoidHom.fromOpposite
 #align add_monoid_hom.from_opposite AddMonoidHom.fromOpposite
 -/
@@ -568,10 +568,10 @@ def MulHom.op {M N} [Mul M] [Mul N] : (M →ₙ* N) ≃ (Mᵐᵒᵖ →ₙ* Nᵐ
     where
   toFun f :=
     { toFun := op ∘ f ∘ unop
-      map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
+      map_mul' := fun x y => unop_injective (f.map_hMul y.unop x.unop) }
   invFun f :=
     { toFun := unop ∘ f ∘ op
-      map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
+      map_mul' := fun x y => congr_arg unop (f.map_hMul (op y) (op x)) }
   left_inv f := by ext; rfl
   right_inv f := by ext x; simp
 #align mul_hom.op MulHom.op
@@ -627,11 +627,11 @@ def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] : (M →* N) ≃ (Mᵐᵒ
   toFun f :=
     { toFun := op ∘ f ∘ unop
       map_one' := congr_arg op f.map_one
-      map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
+      map_mul' := fun x y => unop_injective (f.map_hMul y.unop x.unop) }
   invFun f :=
     { toFun := unop ∘ f ∘ op
       map_one' := congr_arg unop f.map_one
-      map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
+      map_mul' := fun x y => congr_arg unop (f.map_hMul (op y) (op x)) }
   left_inv f := by ext; rfl
   right_inv f := by ext x; simp
 #align monoid_hom.op MonoidHom.op
@@ -707,13 +707,13 @@ def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* β�
       invFun := op ∘ f.symm ∘ unop
       left_inv := fun x => unop_injective (f.symm_apply_apply x.unop)
       right_inv := fun x => unop_injective (f.apply_symm_apply x.unop)
-      map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
+      map_mul' := fun x y => unop_injective (f.map_hMul y.unop x.unop) }
   invFun f :=
     { toFun := unop ∘ f ∘ op
       invFun := unop ∘ f.symm ∘ op
       left_inv := fun x => by simp
       right_inv := fun x => by simp
-      map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
+      map_mul' := fun x y => congr_arg unop (f.map_hMul (op y) (op x)) }
   left_inv f := by ext; rfl
   right_inv f := by ext; simp
 #align mul_equiv.op MulEquiv.op

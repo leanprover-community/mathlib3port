@@ -99,11 +99,11 @@ instance RingHomIsometric.starRingEnd [NormedCommRing E] [StarRing E] [NormedSta
 /-- A C*-ring is a normed star ring that satifies the stronger condition `‖x⋆ * x‖ = ‖x‖^2`
 for every `x`. -/
 class CstarRing (E : Type _) [NonUnitalNormedRing E] [StarRing E] : Prop where
-  norm_star_mul_self : ∀ {x : E}, ‖x⋆ * x‖ = ‖x‖ * ‖x‖
+  norm_star_hMul_self : ∀ {x : E}, ‖x⋆ * x‖ = ‖x‖ * ‖x‖
 #align cstar_ring CstarRing
 -/
 
-instance : CstarRing ℝ where norm_star_mul_self x := by simp only [star, id.def, norm_mul]
+instance : CstarRing ℝ where norm_star_hMul_self x := by simp only [star, id.def, norm_mul]
 
 namespace CstarRing
 
@@ -153,7 +153,7 @@ theorem nnnorm_self_mul_star {x : E} : ‖x * star x‖₊ = ‖x‖₊ * ‖x�
 
 #print CstarRing.nnnorm_star_mul_self /-
 theorem nnnorm_star_mul_self {x : E} : ‖x⋆ * x‖₊ = ‖x‖₊ * ‖x‖₊ :=
-  Subtype.ext norm_star_mul_self
+  Subtype.ext norm_star_hMul_self
 #align cstar_ring.nnnorm_star_mul_self CstarRing.nnnorm_star_mul_self
 -/
 
@@ -207,7 +207,7 @@ variable [Fintype ι] [∀ i, CstarRing (R i)]
 
 #print Prod.cstarRing /-
 instance Prod.cstarRing : CstarRing (R₁ × R₂)
-    where norm_star_mul_self x := by
+    where norm_star_hMul_self x := by
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
     refine' le_antisymm _ _
@@ -221,7 +221,7 @@ instance Prod.cstarRing : CstarRing (R₁ × R₂)
 
 #print Pi.cstarRing /-
 instance Pi.cstarRing : CstarRing (∀ i, R i)
-    where norm_star_mul_self x :=
+    where norm_star_hMul_self x :=
     by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
     norm_cast
@@ -258,7 +258,7 @@ instance (priority := 100) [Nontrivial E] : NormOneClass E :=
 
 #print CstarRing.norm_coe_unitary /-
 theorem norm_coe_unitary [Nontrivial E] (U : unitary E) : ‖(U : E)‖ = 1 := by
-  rw [← sq_eq_sq (norm_nonneg _) zero_le_one, one_pow 2, sq, ← CstarRing.norm_star_mul_self,
+  rw [← sq_eq_sq (norm_nonneg _) zero_le_one, one_pow 2, sq, ← CstarRing.norm_star_hMul_self,
     unitary.coe_star_mul_self, CstarRing.norm_one]
 #align cstar_ring.norm_coe_unitary CstarRing.norm_coe_unitary
 -/
@@ -397,7 +397,7 @@ instance toNormedAlgebra {𝕜 A : Type _} [NormedField 𝕜] [StarRing 𝕜] [S
 #print StarSubalgebra.to_cstarRing /-
 instance to_cstarRing {R A} [CommRing R] [StarRing R] [NormedRing A] [StarRing A] [CstarRing A]
     [Algebra R A] [StarModule R A] (S : StarSubalgebra R A) : CstarRing S
-    where norm_star_mul_self x := @CstarRing.norm_star_mul_self A _ _ _ x
+    where norm_star_hMul_self x := @CstarRing.norm_star_hMul_self A _ _ _ x
 #align star_subalgebra.to_cstar_ring StarSubalgebra.to_cstarRing
 -/
 

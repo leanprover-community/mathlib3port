@@ -234,9 +234,9 @@ instance GMonoid.toMonoid [AddMonoid ι] [GMonoid A] : Monoid (GradedMonoid A)
   npow n a := GradedMonoid.mk _ (GMonoid.gnpow n a.snd)
   npow_zero a := GMonoid.gnpow_zero' a
   npow_succ n a := GMonoid.gnpow_succ' n a
-  one_mul := GMonoid.one_mul
-  mul_one := GMonoid.mul_one
-  mul_assoc := GMonoid.mul_assoc
+  one_mul := GMonoid.one_hMul
+  mul_one := GMonoid.hMul_one
+  mul_assoc := GMonoid.hMul_assoc
 #align graded_monoid.gmonoid.to_monoid GradedMonoid.GMonoid.toMonoid
 -/
 
@@ -263,7 +263,7 @@ class GCommMonoid [AddCommMonoid ι] extends GMonoid A where
 /-- `gcomm_monoid` implies a `comm_monoid (graded_monoid A)`, although this is only used as an
 instance locally to define notation in `gmonoid` and similar typeclasses. -/
 instance GCommMonoid.toCommMonoid [AddCommMonoid ι] [GCommMonoid A] : CommMonoid (GradedMonoid A) :=
-  { GMonoid.toMonoid A with mul_comm := GCommMonoid.mul_comm }
+  { GMonoid.toMonoid A with mul_comm := GCommMonoid.hMul_comm }
 #align graded_monoid.gcomm_monoid.to_comm_monoid GradedMonoid.GCommMonoid.toCommMonoid
 -/
 
@@ -598,14 +598,14 @@ theorem SetLike.coe_gOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι �
 #print SetLike.GradedMul /-
 /-- A version of `graded_monoid.ghas_one` for internally graded objects. -/
 class SetLike.GradedMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) : Prop where
-  mul_mem : ∀ ⦃i j⦄ {gi gj}, gi ∈ A i → gj ∈ A j → gi * gj ∈ A (i + j)
+  hMul_mem : ∀ ⦃i j⦄ {gi gj}, gi ∈ A i → gj ∈ A j → gi * gj ∈ A (i + j)
 #align set_like.has_graded_mul SetLike.GradedMul
 -/
 
 #print SetLike.mul_mem_graded /-
 theorem SetLike.mul_mem_graded {S : Type _} [SetLike S R] [Mul R] [Add ι] {A : ι → S}
     [SetLike.GradedMul A] ⦃i j⦄ {gi gj} (hi : gi ∈ A i) (hj : gj ∈ A j) : gi * gj ∈ A (i + j) :=
-  SetLike.GradedMul.mul_mem hi hj
+  SetLike.GradedMul.hMul_mem hi hj
 #align set_like.mul_mem_graded SetLike.mul_mem_graded
 -/
 
@@ -781,7 +781,7 @@ def SetLike.homogeneousSubmonoid [AddMonoid ι] [Monoid R] (A : ι → S) [SetLi
     Submonoid R where
   carrier := {a | SetLike.Homogeneous A a}
   one_mem' := SetLike.homogeneous_one A
-  mul_mem' a b := SetLike.homogeneous_mul
+  hMul_mem' a b := SetLike.homogeneous_mul
 #align set_like.homogeneous_submonoid SetLike.homogeneousSubmonoid
 -/
 

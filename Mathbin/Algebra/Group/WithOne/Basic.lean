@@ -62,7 +62,7 @@ def lift : (α →ₙ* β) ≃ (WithOne α →* β)
       map_one' := rfl
       map_mul' := fun x y =>
         WithOne.cases_on x (by rw [one_mul]; exact (one_mul _).symm) fun x =>
-          WithOne.cases_on y (by rw [mul_one]; exact (mul_one _).symm) fun y => f.map_mul x y }
+          WithOne.cases_on y (by rw [mul_one]; exact (mul_one _).symm) fun y => f.map_hMul x y }
   invFun F := F.toMulHom.comp coeMulHom
   left_inv f := MulHom.ext fun x => rfl
   right_inv F := MonoidHom.ext fun x => WithOne.cases_on x F.map_one.symm fun x => rfl

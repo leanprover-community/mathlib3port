@@ -27,7 +27,7 @@ variable {α : Type u}
 if `a ≤ b`, there is some `c` for which `a * c = b`. This is a weaker version
 of the condition on canonical orderings defined by `canonically_ordered_monoid`. -/
 class ExistsMulOfLE (α : Type u) [Mul α] [LE α] : Prop where
-  exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c : α, b = a * c
+  exists_hMul_of_le : ∀ {a b : α}, a ≤ b → ∃ c : α, b = a * c
 #align has_exists_mul_of_le ExistsMulOfLE
 -/
 
@@ -42,7 +42,7 @@ class ExistsAddOfLE (α : Type u) [Add α] [LE α] : Prop where
 
 attribute [to_additive] ExistsMulOfLE
 
-export ExistsMulOfLE (exists_mul_of_le)
+export ExistsMulOfLE (exists_hMul_of_le)
 
 export ExistsAddOfLE (exists_add_of_le)
 
@@ -139,7 +139,7 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u)
 @[protect_proj, to_additive]
 class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
-  exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c
+  exists_hMul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c
   le_self_mul : ∀ a b : α, a ≤ a * b
 #align canonically_ordered_monoid CanonicallyOrderedMonoid
 #align canonically_ordered_add_monoid CanonicallyOrderedAddMonoid
@@ -235,7 +235,7 @@ theorem le_mul_of_le_right : a ≤ c → a ≤ b * c :=
 #print le_iff_exists_mul /-
 @[to_additive]
 theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
-  ⟨exists_mul_of_le, by rintro ⟨c, rfl⟩; exact le_self_mul⟩
+  ⟨exists_hMul_of_le, by rintro ⟨c, rfl⟩; exact le_self_mul⟩
 #align le_iff_exists_mul le_iff_exists_mul
 #align le_iff_exists_add le_iff_exists_add
 -/

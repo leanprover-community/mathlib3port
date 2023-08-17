@@ -119,7 +119,7 @@ theorem Matrix.isSkewAdjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjoin
   simp only [mem_skewAdjointMatricesSubmodule] at *
   change ⁅A, B⁆ᵀ ⬝ J = J ⬝ (-⁅A, B⁆); change Aᵀ ⬝ J = J ⬝ (-A) at hA ;
   change Bᵀ ⬝ J = J ⬝ (-B) at hB 
-  simp only [← Matrix.mul_eq_mul] at *
+  simp only [← Matrix.hMul_eq_hMul] at *
   rw [Matrix.lie_transpose, LieRing.of_associative_ring_bracket,
     LieRing.of_associative_ring_bracket, sub_mul, mul_assoc, mul_assoc, hA, hB, ← mul_assoc, ←
     mul_assoc, hA, hB]
@@ -179,7 +179,7 @@ def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] 
     (by
       ext A
       suffices J.is_skew_adjoint (e.symm A) ↔ (e J).IsSkewAdjoint A by simpa [this]
-      simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.mul_eq_mul, ← h, ←
+      simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.hMul_eq_hMul, ← h, ←
         Function.Injective.eq_iff e.injective])
 #align skew_adjoint_matrices_lie_subalgebra_equiv_transpose skewAdjointMatricesLieSubalgebraEquivTranspose
 -/

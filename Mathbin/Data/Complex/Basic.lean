@@ -559,7 +559,7 @@ notation `conj` in the locale `complex_conjugate`. -/
 instance : StarRing ℂ where
   unit z := ⟨z.re, -z.im⟩
   star_involutive x := by simp only [eta, neg_neg]
-  star_mul a b := by ext <;> simp [add_comm] <;> ring
+  star_hMul a b := by ext <;> simp [add_comm] <;> ring
   star_add a b := by ext <;> simp [add_comm]
 
 #print Complex.conj_re /-
@@ -746,7 +746,7 @@ theorem normSq_conj (z : ℂ) : normSq (conj z) = normSq z := by simp [norm_sq]
 
 #print Complex.normSq_mul /-
 theorem normSq_mul (z w : ℂ) : normSq (z * w) = normSq z * normSq w :=
-  normSq.map_mul z w
+  normSq.map_hMul z w
 #align complex.norm_sq_mul Complex.normSq_mul
 -/
 

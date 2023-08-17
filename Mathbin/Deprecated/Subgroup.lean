@@ -105,7 +105,7 @@ theorem IsSubgroup.of_div (s : Set G) (one_mem : (1 : G) ∈ s)
     have : 1 * a⁻¹ ∈ s := div_mem one_mem ha
     simpa
   { inv_mem
-    mul_mem := fun a b ha hb =>
+    hMul_mem := fun a b ha hb =>
       by
       have : a * b⁻¹⁻¹ ∈ s := div_mem ha (inv_mem b hb)
       simpa
@@ -175,7 +175,7 @@ theorem inv_mem_iff : a⁻¹ ∈ s ↔ a ∈ s :=
 #print IsSubgroup.mul_mem_cancel_right /-
 @[to_additive]
 theorem mul_mem_cancel_right (h : a ∈ s) : b * a ∈ s ↔ b ∈ s :=
-  ⟨fun hba => by simpa using hs.mul_mem hba (hs.inv_mem h), fun hb => hs.mul_mem hb h⟩
+  ⟨fun hba => by simpa using hs.mul_mem hba (hs.inv_mem h), fun hb => hs.hMul_mem hb h⟩
 #align is_subgroup.mul_mem_cancel_right IsSubgroup.mul_mem_cancel_right
 #align is_add_subgroup.add_mem_cancel_right IsAddSubgroup.add_mem_cancel_right
 -/
@@ -183,7 +183,7 @@ theorem mul_mem_cancel_right (h : a ∈ s) : b * a ∈ s ↔ b ∈ s :=
 #print IsSubgroup.mul_mem_cancel_left /-
 @[to_additive]
 theorem mul_mem_cancel_left (h : a ∈ s) : a * b ∈ s ↔ b ∈ s :=
-  ⟨fun hab => by simpa using hs.mul_mem (hs.inv_mem h) hab, hs.mul_mem h⟩
+  ⟨fun hab => by simpa using hs.mul_mem (hs.inv_mem h) hab, hs.hMul_mem h⟩
 #align is_subgroup.mul_mem_cancel_left IsSubgroup.mul_mem_cancel_left
 #align is_add_subgroup.add_mem_cancel_left IsAddSubgroup.add_mem_cancel_left
 -/
@@ -338,7 +338,7 @@ theorem mem_center {a : G} : a ∈ center G ↔ ∀ g, g * a = a * g :=
 @[to_additive add_center_normal]
 theorem center_normal : IsNormalSubgroup (center G) :=
   { one_mem := by simp [center]
-    mul_mem := fun a b ha hb g => by
+    hMul_mem := fun a b ha hb g => by
       rw [← mul_assoc, mem_center.2 ha g, mul_assoc, mem_center.2 hb g, ← mul_assoc]
     inv_mem := fun a ha g =>
       calc
@@ -368,7 +368,7 @@ def normalizer (s : Set G) : Set G :=
 @[to_additive]
 theorem normalizer_isSubgroup (s : Set G) : IsSubgroup (normalizer s) :=
   { one_mem := by simp [normalizer]
-    mul_mem := fun a b (ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s) (hb : ∀ n, n ∈ s ↔ b * n * b⁻¹ ∈ s) n =>
+    hMul_mem := fun a b (ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s) (hb : ∀ n, n ∈ s ↔ b * n * b⁻¹ ∈ s) n =>
       by rw [mul_inv_rev, ← mul_assoc, mul_assoc a, mul_assoc a, ← ha, ← hb]
     inv_mem := fun a (ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s) n => by
       rw [ha (a⁻¹ * n * a⁻¹⁻¹)] <;> simp [mul_assoc] }
@@ -488,8 +488,8 @@ theorem inv_iff_ker' {f : G → H} (hf : IsGroupHom f) (a b : G) : f a = f b ↔
 @[to_additive]
 theorem image_subgroup {f : G → H} (hf : IsGroupHom f) {s : Set G} (hs : IsSubgroup s) :
     IsSubgroup (f '' s) :=
-  { mul_mem := fun a₁ a₂ ⟨b₁, hb₁, eq₁⟩ ⟨b₂, hb₂, eq₂⟩ =>
-      ⟨b₁ * b₂, hs.mul_mem hb₁ hb₂, by simp [eq₁, eq₂, hf.map_mul]⟩
+  { hMul_mem := fun a₁ a₂ ⟨b₁, hb₁, eq₁⟩ ⟨b₂, hb₂, eq₂⟩ =>
+      ⟨b₁ * b₂, hs.hMul_mem hb₁ hb₂, by simp [eq₁, eq₂, hf.map_mul]⟩
     one_mem := ⟨1, hs.to_isSubmonoid.one_mem, hf.map_one⟩
     inv_mem := fun a ⟨b, hb, Eq⟩ => ⟨b⁻¹, hs.inv_mem hb, by rw [hf.map_inv]; simp [*]⟩ }
 #align is_group_hom.image_subgroup IsGroupHom.image_subgroup
@@ -522,7 +522,7 @@ theorem preimage {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsSubgroup 
 theorem preimage_normal {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsNormalSubgroup s) :
     IsNormalSubgroup (f ⁻¹' s) :=
   { one_mem := by simp [hf.map_one, hs.to_is_subgroup.one_mem]
-    mul_mem := by simp (config := { contextual := true }) [hf.map_mul, hs.to_is_subgroup.mul_mem]
+    hMul_mem := by simp (config := { contextual := true }) [hf.map_mul, hs.to_is_subgroup.mul_mem]
     inv_mem := by simp (config := { contextual := true }) [hf.map_inv, hs.to_is_subgroup.inv_mem]
     Normal := by simp (config := { contextual := true }) [hs.normal, hf.map_mul, hf.map_inv] }
 #align is_group_hom.preimage_normal IsGroupHom.preimage_normal
@@ -642,7 +642,7 @@ theorem mem_closure {a : G} : a ∈ s → a ∈ closure s :=
 @[to_additive]
 theorem closure.isSubgroup (s : Set G) : IsSubgroup (closure s) :=
   { one_mem := InClosure.one
-    mul_mem := fun a b => InClosure.mul
+    hMul_mem := fun a b => InClosure.mul
     inv_mem := fun a => InClosure.inv }
 #align group.closure.is_subgroup Group.closure.isSubgroup
 #align add_group.closure.is_add_subgroup AddGroup.closure.isAddSubgroup
@@ -721,7 +721,7 @@ theorem image_closure [Group H] {f : G → H} (hf : IsGroupHom f) (s : Set G) :
       · rw [hf.map_inv]
         apply IsSubgroup.inv_mem (closure.is_subgroup _); assumption
       · rw [hf.to_is_monoid_hom.map_mul]
-        solve_by_elim [IsSubmonoid.mul_mem (closure.is_subgroup _).to_isSubmonoid])
+        solve_by_elim [IsSubmonoid.hMul_mem (closure.is_subgroup _).to_isSubmonoid])
     (closure_subset (hf.image_subgroup <| closure.isSubgroup _) <|
       Set.image_subset _ subset_closure)
 #align group.image_closure Group.image_closure
@@ -751,7 +751,7 @@ theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.Closure (s ∪ Inv.
   Set.Subset.antisymm
     (@closure_subset _ _ _ (Monoid.Closure (s ∪ Inv.inv ⁻¹' s))
       { one_mem := (Monoid.closure.isSubmonoid _).one_mem
-        mul_mem := fun _ _ => (Monoid.closure.isSubmonoid _).mul_mem
+        hMul_mem := fun _ _ => (Monoid.closure.isSubmonoid _).hMul_mem
         inv_mem := fun x hx =>
           Monoid.InClosure.rec_on hx
             (fun x hx =>
@@ -761,7 +761,7 @@ theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.Closure (s ∪ Inv.
                 fun hx => Monoid.subset_closure <| Or.inl hx)
             ((@inv_one G _).symm ▸ IsSubmonoid.one_mem (Monoid.closure.isSubmonoid _))
             fun x y hx hy ihx ihy =>
-            (mul_inv_rev x y).symm ▸ IsSubmonoid.mul_mem (Monoid.closure.isSubmonoid _) ihy ihx }
+            (mul_inv_rev x y).symm ▸ IsSubmonoid.hMul_mem (Monoid.closure.isSubmonoid _) ihy ihx }
       (Set.Subset.trans (Set.subset_union_left _ _) Monoid.subset_closure))
     (Monoid.closure_subset (closure.isSubgroup _).to_isSubmonoid <|
       Set.union_subset subset_closure fun x hx =>
@@ -865,7 +865,7 @@ theorem normalClosure.is_normal : IsNormalSubgroup (normalClosure s) :=
       · rw [← conj_inv]
         exact (normal_closure.is_subgroup _).inv_mem ihx
       · rw [← conj_mul]
-        exact (normal_closure.is_subgroup _).to_isSubmonoid.mul_mem ihx ihy }
+        exact (normal_closure.is_subgroup _).to_isSubmonoid.hMul_mem ihx ihy }
 #align group.normal_closure.is_normal Group.normalClosure.is_normal
 -/
 
@@ -904,7 +904,7 @@ def Subgroup.of [Group G] {s : Set G} (h : IsSubgroup s) : Subgroup G
     where
   carrier := s
   one_mem' := h.1.1
-  mul_mem' _ _ := h.1.2
+  hMul_mem' _ _ := h.1.2
   inv_mem' _ := h.2
 #align subgroup.of Subgroup.of
 #align add_subgroup.of AddSubgroup.of
@@ -914,7 +914,7 @@ def Subgroup.of [Group G] {s : Set G} (h : IsSubgroup s) : Subgroup G
 @[to_additive]
 theorem Subgroup.isSubgroup [Group G] (K : Subgroup G) : IsSubgroup (K : Set G) :=
   { one_mem := K.one_mem'
-    mul_mem := fun _ _ => K.mul_mem'
+    hMul_mem := fun _ _ => K.hMul_mem'
     inv_mem := fun _ => K.inv_mem' }
 #align subgroup.is_subgroup Subgroup.isSubgroup
 #align add_subgroup.is_add_subgroup AddSubgroup.isAddSubgroup

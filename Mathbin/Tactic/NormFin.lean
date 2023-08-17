@@ -85,10 +85,10 @@ theorem NormalizeFin.add {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n
   simp only [normalize_fin, ← h] at * <;> rw [Nat.add_mod, ← ha, ← hb, Fin.add_def]
 #align tactic.norm_fin.normalize_fin.add Tactic.NormFin.NormalizeFin.add
 
-theorem NormalizeFin.mul {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n a a')
+theorem NormalizeFin.hMul {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFin n b b') (h : a' * b' = c') : NormalizeFin n (a * b) c' := by
-  simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_mod, ← ha, ← hb, Fin.mul_def]
-#align tactic.norm_fin.normalize_fin.mul Tactic.NormFin.NormalizeFin.mul
+  simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_mod, ← ha, ← hb, Fin.hMul_def]
+#align tactic.norm_fin.normalize_fin.mul Tactic.NormFin.NormalizeFin.hMul
 
 theorem NormalizeFin.bit0 {n} {a : Fin n} {a' : ℕ} (h : NormalizeFin n a a') :
     NormalizeFin n (bit0 a) (bit0 a') :=
@@ -401,7 +401,7 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
         let (a', pa) ← eval_fin a
         let (b', pb) ← eval_fin b
         let (c, pc) ← eval_fin_m.lift_ic fun ic => prove_mul_nat ic a' b'
-        pure (c, q(@NormalizeFin.mul).mk_app [n, a, b, a', b', c, pa, pb, pc])
+        pure (c, q(@NormalizeFin.hMul).mk_app [n, a, b, a', b', c, pa, pb, pc])
       | match_fin_result.bit0 n a => do
         let (a', pa) ← eval_fin a
         pure (q(@bit0 ℕ _).mk_app [a'], q(@NormalizeFin.bit0).mk_app [n, a, a', pa])

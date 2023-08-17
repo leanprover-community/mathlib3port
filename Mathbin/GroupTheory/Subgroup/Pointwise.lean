@@ -144,7 +144,7 @@ theorem iSup_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x
 @[elab_as_elim, to_additive "A dependent version of `add_subgroup.supr_induction`. "]
 theorem iSup_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ (i), ∀ x ∈ S i, C x (mem_iSup_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
-    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : G}
+    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (hMul_mem ‹_› ‹_›)) {x : G}
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
@@ -162,7 +162,7 @@ theorem iSup_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈
 theorem closure_mul_le (S T : Set G) : closure (S * T) ≤ closure S ⊔ closure T :=
   sInf_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
-      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
+      (closure S ⊔ closure T).hMul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 #align subgroup.closure_mul_le Subgroup.closure_mul_le
 #align add_subgroup.closure_add_le AddSubgroup.closure_add_le
@@ -184,9 +184,9 @@ private def mul_normal_aux (H N : Subgroup G) [hN : N.Normal] : Subgroup G
     where
   carrier := (H : Set G) * N
   one_mem' := ⟨1, 1, H.one_mem, N.one_mem, by rw [mul_one]⟩
-  mul_mem' := fun a b ⟨h, n, hh, hn, ha⟩ ⟨h', n', hh', hn', hb⟩ =>
-    ⟨h * h', h'⁻¹ * n * h' * n', H.mul_mem hh hh',
-      N.mul_mem (by simpa using hN.conj_mem _ hn h'⁻¹) hn', by simp [← ha, ← hb, mul_assoc]⟩
+  hMul_mem' := fun a b ⟨h, n, hh, hn, ha⟩ ⟨h', n', hh', hn', hb⟩ =>
+    ⟨h * h', h'⁻¹ * n * h' * n', H.hMul_mem hh hh',
+      N.hMul_mem (by simpa using hN.conj_mem _ hn h'⁻¹) hn', by simp [← ha, ← hb, mul_assoc]⟩
   inv_mem' := fun x ⟨h, n, hh, hn, hx⟩ =>
     ⟨h⁻¹, h * n⁻¹ * h⁻¹, H.inv_mem hh, hN.conj_mem _ (N.inv_mem hn) h, by
       rw [mul_assoc h, inv_mul_cancel_left, ← hx, mul_inv_rev]⟩
@@ -208,8 +208,8 @@ private def normal_mul_aux (N H : Subgroup G) [hN : N.Normal] : Subgroup G
     where
   carrier := (N : Set G) * H
   one_mem' := ⟨1, 1, N.one_mem, H.one_mem, by rw [mul_one]⟩
-  mul_mem' := fun a b ⟨n, h, hn, hh, ha⟩ ⟨n', h', hn', hh', hb⟩ =>
-    ⟨n * (h * n' * h⁻¹), h * h', N.mul_mem hn (hN.conj_mem _ hn' _), H.mul_mem hh hh', by
+  hMul_mem' := fun a b ⟨n, h, hn, hh, ha⟩ ⟨n', h', hn', hh', hb⟩ =>
+    ⟨n * (h * n' * h⁻¹), h * h', N.hMul_mem hn (hN.conj_mem _ hn' _), H.hMul_mem hh hh', by
       simp [← ha, ← hb, mul_assoc]⟩
   inv_mem' := fun x ⟨n, h, hn, hh, hx⟩ =>
     ⟨h⁻¹ * n⁻¹ * h, h⁻¹, by simpa using hN.conj_mem _ (N.inv_mem hn) h⁻¹, H.inv_mem hh, by
@@ -300,7 +300,7 @@ protected def pointwiseMulAction : MulAction α (Subgroup G)
     where
   smul a S := S.map (MulDistribMulAction.toMonoidEnd _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul a₁ a₂ S :=
+  hMul_smul a₁ a₂ S :=
     (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 #align subgroup.pointwise_mul_action Subgroup.pointwiseMulAction
 -/
@@ -571,7 +571,7 @@ protected def pointwiseMulAction : MulAction α (AddSubgroup A)
     where
   smul a S := S.map (DistribMulAction.toAddMonoidEnd _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul a₁ a₂ S :=
+  hMul_smul a₁ a₂ S :=
     (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 #align add_subgroup.pointwise_mul_action AddSubgroup.pointwiseMulAction
 -/

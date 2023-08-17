@@ -177,7 +177,7 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
 -/
 
 instance : TopologicalRing ℝ :=
-  { Real.topologicalAddGroup with continuous_mul := Real.continuous_mul }
+  { Real.topologicalAddGroup with continuous_hMul := Real.continuous_mul }
 
 instance : CompleteSpace ℝ := by
   apply complete_of_cauchy_seq_tendsto

@@ -675,11 +675,11 @@ end OrderedSemiring
                 |
                   positive pa , nonzero pb
                   =>
-                  nonzero <$> to_expr ` `( mul_ne_zero_of_pos_of_ne_zero $ ( pa ) $ ( pb ) )
+                  nonzero <$> to_expr ` `( hMul_ne_zero_of_pos_of_ne_zero $ ( pa ) $ ( pb ) )
                 |
                   nonzero pa , positive pb
                   =>
-                  nonzero <$> to_expr ` `( mul_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
+                  nonzero <$> to_expr ` `( hMul_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
                 |
                   nonzero pa , nonzero pb
                   =>

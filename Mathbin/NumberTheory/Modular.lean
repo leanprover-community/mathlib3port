@@ -71,7 +71,7 @@ attribute [-instance] Matrix.GeneralLinearGroup.hasCoeToFun
 
 open Complex hiding abs_two
 
-open Matrix hiding mul_smul
+open Matrix hiding hMul_smul
 
 open Matrix.SpecialLinearGroup UpperHalfPlane
 

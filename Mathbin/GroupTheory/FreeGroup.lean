@@ -746,7 +746,7 @@ instance : Group (FreeGroup α) where
   mul_assoc := by rintro ⟨L₁⟩ ⟨L₂⟩ ⟨L₃⟩ <;> simp
   one_mul := by rintro ⟨L⟩ <;> rfl
   mul_one := by rintro ⟨L⟩ <;> simp [one_eq_mk]
-  mul_left_inv := by
+  hMul_left_inv := by
     rintro ⟨L⟩ <;>
       exact
         List.recOn L rfl fun ⟨x, b⟩ tl ih =>
@@ -1126,7 +1126,7 @@ theorem sum.of {x : α} : sum (of x) = x :=
 -- these manually
 @[simp]
 theorem sum.map_mul : sum (x * y) = sum x + sum y :=
-  (@prod (Multiplicative _) _).map_mul _ _
+  (@prod (Multiplicative _) _).map_hMul _ _
 #align free_group.sum.map_mul FreeGroup.sum.map_mul
 -/
 
@@ -1220,7 +1220,7 @@ theorem map_one (f : α → β) : f <$> (1 : FreeGroup α) = 1 :=
 #print FreeGroup.map_mul /-
 @[simp, to_additive]
 theorem map_mul (f : α → β) (x y : FreeGroup α) : f <$> (x * y) = f <$> x * f <$> y :=
-  (map f).map_mul x y
+  (map f).map_hMul x y
 #align free_group.map_mul FreeGroup.map_mul
 #align free_add_group.map_add FreeAddGroup.map_add
 -/
@@ -1252,7 +1252,7 @@ theorem one_bind (f : α → FreeGroup β) : 1 >>= f = 1 :=
 #print FreeGroup.mul_bind /-
 @[simp, to_additive]
 theorem mul_bind (f : α → FreeGroup β) (x y : FreeGroup α) : x * y >>= f = (x >>= f) * (y >>= f) :=
-  (lift f).map_mul _ _
+  (lift f).map_hMul _ _
 #align free_group.mul_bind FreeGroup.mul_bind
 #align free_add_group.add_bind FreeAddGroup.add_bind
 -/

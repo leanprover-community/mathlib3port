@@ -82,7 +82,7 @@ def map (f : M →* N) : Mˣ →* Nˣ :=
     (fun u =>
       ⟨f u.val, f u.inv, by rw [← f.map_mul, u.val_inv, f.map_one], by
         rw [← f.map_mul, u.inv_val, f.map_one]⟩)
-    fun x y => ext (f.map_mul x y)
+    fun x y => ext (f.map_hMul x y)
 #align units.map Units.map
 #align add_units.map AddUnits.map
 -/

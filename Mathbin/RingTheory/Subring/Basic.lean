@@ -236,7 +236,7 @@ instance : SubringClass (Subring R) R
   zero_mem := zero_mem'
   add_mem := add_mem'
   one_mem := one_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
   neg_mem := neg_mem'
 
 #print Subring.mem_carrier /-
@@ -363,7 +363,7 @@ protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : ↑s
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
-  mul_mem' x y := by simpa only [← hm] using sm.mul_mem
+  hMul_mem' x y := by simpa only [← hm] using sm.mul_mem
   neg_mem' x := by simpa only [← ha] using sa.neg_mem
 #align subring.mk' Subring.mk'
 -/
@@ -431,7 +431,7 @@ protected theorem zero_mem : (0 : R) ∈ s :=
 #print Subring.mul_mem /-
 /-- A subring is closed under multiplication. -/
 protected theorem mul_mem {x y : R} : x ∈ s → y ∈ s → x * y ∈ s :=
-  mul_mem
+  hMul_mem
 #align subring.mul_mem Subring.mul_mem
 -/
 
@@ -807,7 +807,7 @@ noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f
   {
     Equiv.Set.image f s
       hf with
-    map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _)
+    map_mul' := fun _ _ => Subtype.ext (f.map_hMul _ _)
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 #align subring.equiv_map_of_injective Subring.equivMapOfInjective
 -/
@@ -1059,7 +1059,7 @@ instance : Field (center K) :=
     inv := fun a => ⟨a⁻¹, Set.inv_mem_center₀ a.Prop⟩
     mul_inv_cancel := fun ⟨a, ha⟩ h => Subtype.ext <| mul_inv_cancel <| Subtype.coe_injective.Ne h
     div := fun a b => ⟨a / b, Set.div_mem_center₀ a.Prop b.Prop⟩
-    div_eq_mul_inv := fun a b => Subtype.ext <| div_eq_mul_inv _ _
+    div_eq_hMul_inv := fun a b => Subtype.ext <| div_eq_mul_inv _ _
     inv_zero := Subtype.ext inv_zero }
 
 #print Subring.center.coe_inv /-
@@ -1239,7 +1239,7 @@ theorem mem_closure_iff {s : Set R} {x} :
       AddSubgroup.closure_induction hy
         (fun q hq =>
           AddSubgroup.closure_induction hx
-            (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).mul_mem hp hq))
+            (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).hMul_mem hp hq))
             (by rw [MulZeroClass.zero_mul q]; apply AddSubgroup.zero_mem _)
             (fun p₁ p₂ ihp₁ ihp₂ => by rw [add_mul p₁ p₂ q]; apply AddSubgroup.add_mem _ ihp₁ ihp₂)
             fun x hx => by
@@ -1254,7 +1254,7 @@ theorem mem_closure_iff {s : Set R} {x} :
     AddSubgroup.closure_induction h
       (fun x hx =>
         Submonoid.closure_induction hx (fun x hx => subset_closure hx) (one_mem _) fun x y hx hy =>
-          mul_mem hx hy)
+          hMul_mem hx hy)
       (zero_mem _) (fun x y hx hy => add_mem hx hy) fun x hx => neg_mem hx⟩
 #align subring.mem_closure_iff Subring.mem_closure_iff
 -/
@@ -1665,7 +1665,7 @@ theorem range_snd : (snd R S).srange = ⊤ :=
 theorem prod_bot_sup_bot_prod (s : Subring R) (t : Subring S) : s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
   le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le)) fun p hp =>
     Prod.fst_mul_snd p ▸
-      mul_mem
+      hMul_mem
         ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
         ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
 #align subring.prod_bot_sup_bot_prod Subring.prod_bot_sup_bot_prod

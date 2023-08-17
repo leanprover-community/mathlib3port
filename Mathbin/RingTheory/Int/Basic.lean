@@ -96,7 +96,7 @@ instance : NormalizationMonoid ℤ
     where
   normUnit := fun a : ℤ => if 0 ≤ a then 1 else -1
   normUnit_zero := if_pos le_rfl
-  normUnit_mul a b hna hnb := by
+  normUnit_hMul a b hna hnb := by
     cases' hna.lt_or_lt with ha ha <;> cases' hnb.lt_or_lt with hb hb <;>
       simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le]
   normUnit_coe_units u :=
@@ -231,7 +231,7 @@ theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcd a b = 1 ↔ IsCoprime a b :
     obtain ⟨p, ⟨hp, ha, hb⟩⟩ := nat.prime.not_coprime_iff_dvd.mp hg
     apply Nat.Prime.not_dvd_one hp
     rw [← coe_nat_dvd, Int.ofNat_one, ← h]
-    exact dvd_add ((coe_nat_dvd_left.mpr ha).mul_left _) ((coe_nat_dvd_left.mpr hb).mul_left _)
+    exact dvd_add ((coe_nat_dvd_left.mpr ha).hMul_left _) ((coe_nat_dvd_left.mpr hb).hMul_left _)
 #align int.gcd_eq_one_iff_coprime Int.gcd_eq_one_iff_coprime
 -/
 

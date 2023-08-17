@@ -228,7 +228,7 @@ theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
-    exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
+    exact ⟨k, (S k).hMul_mem (hki hi) (hkj hj)⟩
 #align submonoid.mem_supr_of_directed Submonoid.mem_iSup_of_directed
 #align add_submonoid.mem_supr_of_directed AddSubmonoid.mem_iSup_of_directed
 -/
@@ -281,7 +281,7 @@ theorem mem_sup_right {S T : Submonoid M} : ∀ {x : M}, x ∈ T → x ∈ S ⊔
 #print Submonoid.mul_mem_sup /-
 @[to_additive]
 theorem mul_mem_sup {S T : Submonoid M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
-  (S ⊔ T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
+  (S ⊔ T).hMul_mem (mem_sup_left hx) (mem_sup_right hy)
 #align submonoid.mul_mem_sup Submonoid.mul_mem_sup
 #align add_submonoid.add_mem_sup AddSubmonoid.add_mem_sup
 -/
@@ -327,7 +327,7 @@ theorem iSup_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {
 @[elab_as_elim, to_additive "A dependent version of `add_submonoid.supr_induction`. "]
 theorem iSup_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ (i), ∀ x ∈ S i, C x (mem_iSup_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
-    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M}
+    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (hMul_mem ‹_› ‹_›)) {x : M}
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
@@ -355,7 +355,7 @@ open Submonoid
 theorem closure_range_of : closure (Set.range <| @of α) = ⊤ :=
   eq_top_iff.2 fun x hx =>
     FreeMonoid.recOn x (one_mem _) fun x xs hxs =>
-      mul_mem (subset_closure <| Set.mem_range_self _) hxs
+      hMul_mem (subset_closure <| Set.mem_range_self _) hxs
 #align free_monoid.closure_range_of FreeMonoid.closure_range_of
 #align free_add_monoid.closure_range_of FreeAddMonoid.closure_range_of
 -/
@@ -472,7 +472,8 @@ theorem induction_of_closure_eq_top_left {s : Set M} {p : M → Prop} (hs : clos
 theorem closure_induction_right {s : Set M} {p : M → Prop} {x : M} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) : p x :=
   @closure_induction_left _ _ (MulOpposite.unop ⁻¹' s) (p ∘ MulOpposite.unop) (MulOpposite.op x)
-    (closure_induction h (fun x hx => subset_closure hx) (one_mem _) fun x y hx hy => mul_mem hy hx)
+    (closure_induction h (fun x hx => subset_closure hx) (one_mem _) fun x y hx hy =>
+      hMul_mem hy hx)
     H1 fun x hx y => Hmul _ _ hx
 #align submonoid.closure_induction_right Submonoid.closure_induction_right
 #align add_submonoid.closure_induction_right AddSubmonoid.closure_induction_right
@@ -595,7 +596,7 @@ def powLogEquiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n
 #print Submonoid.log_mul /-
 theorem log_mul [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m)
     (x y : powers (n : M)) : log (x * y) = log x + log y :=
-  (powLogEquiv h).symm.map_mul x y
+  (powLogEquiv h).symm.map_hMul x y
 #align submonoid.log_mul Submonoid.log_mul
 -/
 

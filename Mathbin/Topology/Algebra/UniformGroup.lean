@@ -175,7 +175,7 @@ theorem uniformContinuous_zpow_const (n : ℤ) : UniformContinuous fun x : α =>
 @[to_additive]
 instance (priority := 10) UniformGroup.to_topologicalGroup : TopologicalGroup α
     where
-  continuous_mul := uniformContinuous_mul.Continuous
+  continuous_hMul := uniformContinuous_mul.Continuous
   continuous_inv := uniformContinuous_inv.Continuous
 #align uniform_group.to_topological_group UniformGroup.to_topologicalGroup
 #align uniform_add_group.to_topological_add_group UniformAddGroup.to_topologicalAddGroup

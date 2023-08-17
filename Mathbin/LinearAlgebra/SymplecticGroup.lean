@@ -100,7 +100,7 @@ variable [Fintype l]
 def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R)
     where
   carrier := {A | A ⬝ J l R ⬝ Aᵀ = J l R}
-  mul_mem' := by
+  hMul_mem' := by
     intro a b ha hb
     simp only [mul_eq_mul, Set.mem_setOf_eq, transpose_mul] at *
     rw [← Matrix.mul_assoc, a.mul_assoc, a.mul_assoc, hb]
@@ -173,7 +173,7 @@ theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A :=
   by
   rw [isUnit_iff_exists_inv]
   use A.det
-  refine' (is_unit_det_J l R).mul_left_cancel _
+  refine' (is_unit_det_J l R).hMul_left_cancel _
   rw [mul_one]
   rw [mem_iff] at hA 
   apply_fun det at hA 
@@ -219,7 +219,7 @@ theorem mem_iff' : A ∈ symplecticGroup l R ↔ Aᵀ ⬝ J l R ⬝ A = J l R :=
 instance : Inv (symplecticGroup l R)
     where inv A :=
     ⟨(-J l R) ⬝ (A : Matrix (Sum l l) (Sum l l) R)ᵀ ⬝ J l R,
-      mul_mem (mul_mem (neg_mem <| J_mem _ _) <| transpose_mem A.2) <| J_mem _ _⟩
+      hMul_mem (hMul_mem (neg_mem <| J_mem _ _) <| transpose_mem A.2) <| J_mem _ _⟩
 
 #print SymplecticGroup.coe_inv /-
 theorem coe_inv (A : symplecticGroup l R) : (↑A⁻¹ : Matrix _ _ _) = (-J l R) ⬝ (↑A)ᵀ ⬝ J l R :=
@@ -256,10 +256,10 @@ theorem inv_eq_symplectic_inv (A : Matrix (Sum l l) (Sum l l) R) (hA : A ∈ sym
 
 instance : Group (symplecticGroup l R) :=
   { SymplecticGroup.hasInv, Submonoid.toMonoid _ with
-    mul_left_inv := fun A => by
+    hMul_left_inv := fun A => by
       apply Subtype.ext
       simp only [Submonoid.coe_one, Submonoid.coe_mul, Matrix.neg_mul, coe_inv]
-      rw [Matrix.mul_eq_mul, Matrix.neg_mul]
+      rw [Matrix.hMul_eq_hMul, Matrix.neg_mul]
       exact inv_left_mul_aux A.2 }
 
 end SymplecticGroup

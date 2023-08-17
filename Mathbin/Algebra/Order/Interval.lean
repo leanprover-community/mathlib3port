@@ -657,10 +657,10 @@ instance : DivisionCommMonoid (NonemptyInterval α) :=
   { NonemptyInterval.commMonoid with
     inv := Inv.inv
     div := (· / ·)
-    div_eq_mul_inv := fun s t => by ext <;> exact div_eq_mul_inv _ _
+    div_eq_hMul_inv := fun s t => by ext <;> exact div_eq_mul_inv _ _
     inv_inv := fun s => by ext <;> exact inv_inv _
     mul_inv_rev := fun s t => by ext <;> exact mul_inv_rev _ _
-    inv_eq_of_mul := fun s t h =>
+    inv_eq_of_hMul := fun s t h =>
       by
       obtain ⟨a, b, rfl, rfl, hab⟩ := NonemptyInterval.mul_eq_one_iff.1 h
       rw [inv_pure, inv_eq_of_mul_eq_one_right hab] }
@@ -714,7 +714,7 @@ instance : DivisionCommMonoid (Interval α) :=
   { Interval.commMonoid with
     inv := Inv.inv
     div := (· / ·)
-    div_eq_mul_inv := by
+    div_eq_hMul_inv := by
       rintro (_ | s) (_ | t) <;>
         first
         | rfl
@@ -729,7 +729,7 @@ instance : DivisionCommMonoid (Interval α) :=
         first
         | rfl
         | exact congr_arg some (mul_inv_rev _ _)
-    inv_eq_of_mul := by
+    inv_eq_of_hMul := by
       rintro (_ | s) (_ | t) h <;>
         first
         | cases h

@@ -77,10 +77,10 @@ variable (A : Matrix n n α) (B : Matrix n n α)
 def invertibleOfDetInvertible [Invertible A.det] : Invertible A
     where
   invOf := ⅟ A.det • A.adjugate
-  mul_invOf_self := by
-    rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, invOf_mul_self, one_smul]
-  invOf_mul_self := by
-    rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, invOf_mul_self, one_smul]
+  hMul_invOf_self := by
+    rw [mul_smul_comm, Matrix.hMul_eq_hMul, mul_adjugate, smul_smul, invOf_mul_self, one_smul]
+  invOf_hMul_self := by
+    rw [smul_mul_assoc, Matrix.hMul_eq_hMul, adjugate_mul, smul_smul, invOf_mul_self, one_smul]
 #align matrix.invertible_of_det_invertible Matrix.invertibleOfDetInvertible
 -/
 
@@ -95,8 +95,8 @@ theorem invOf_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adj
 def detInvertibleOfLeftInverse (h : B ⬝ A = 1) : Invertible A.det
     where
   invOf := B.det
-  mul_invOf_self := by rw [mul_comm, ← det_mul, h, det_one]
-  invOf_mul_self := by rw [← det_mul, h, det_one]
+  hMul_invOf_self := by rw [mul_comm, ← det_mul, h, det_one]
+  invOf_hMul_self := by rw [← det_mul, h, det_one]
 #align matrix.det_invertible_of_left_inverse Matrix.detInvertibleOfLeftInverse
 -/
 
@@ -105,8 +105,8 @@ def detInvertibleOfLeftInverse (h : B ⬝ A = 1) : Invertible A.det
 def detInvertibleOfRightInverse (h : A ⬝ B = 1) : Invertible A.det
     where
   invOf := B.det
-  mul_invOf_self := by rw [← det_mul, h, det_one]
-  invOf_mul_self := by rw [mul_comm, ← det_mul, h, det_one]
+  hMul_invOf_self := by rw [← det_mul, h, det_one]
+  invOf_hMul_self := by rw [mul_comm, ← det_mul, h, det_one]
 #align matrix.det_invertible_of_right_inverse Matrix.detInvertibleOfRightInverse
 -/
 
@@ -145,10 +145,10 @@ theorem mul_eq_one_comm : A ⬝ B = 1 ↔ B ⬝ A = 1 :=
   letI : Invertible B.det := det_invertible_of_left_inverse _ _ h
   letI : Invertible B := invertible_of_det_invertible B
   calc
-    B ⬝ A = B ⬝ A ⬝ (B ⬝ ⅟ B) := by rw [Matrix.mul_invOf_self, Matrix.mul_one]
+    B ⬝ A = B ⬝ A ⬝ (B ⬝ ⅟ B) := by rw [mul_invOf_self, Matrix.mul_one]
     _ = B ⬝ (A ⬝ B ⬝ ⅟ B) := by simp only [Matrix.mul_assoc]
     _ = B ⬝ ⅟ B := by rw [h, Matrix.one_mul]
-    _ = 1 := Matrix.mul_invOf_self B
+    _ = 1 := mul_invOf_self B
 #align matrix.mul_eq_one_comm Matrix.mul_eq_one_comm
 -/
 
@@ -343,7 +343,7 @@ theorem conjTranspose_nonsing_inv [StarRing α] : A⁻¹ᴴ = Aᴴ⁻¹ := by
 theorem mul_nonsing_inv (h : IsUnit A.det) : A ⬝ A⁻¹ = 1 :=
   by
   cases (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible
-  rw [← inv_of_eq_nonsing_inv, Matrix.mul_invOf_self]
+  rw [← inv_of_eq_nonsing_inv, mul_invOf_self]
 #align matrix.mul_nonsing_inv Matrix.mul_nonsing_inv
 -/
 
@@ -353,7 +353,7 @@ theorem mul_nonsing_inv (h : IsUnit A.det) : A ⬝ A⁻¹ = 1 :=
 theorem nonsing_inv_mul (h : IsUnit A.det) : A⁻¹ ⬝ A = 1 :=
   by
   cases (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible
-  rw [← inv_of_eq_nonsing_inv, Matrix.invOf_mul_self]
+  rw [← inv_of_eq_nonsing_inv, invOf_mul_self]
 #align matrix.nonsing_inv_mul Matrix.nonsing_inv_mul
 -/
 
@@ -647,7 +647,7 @@ theorem invOf_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inve
 def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : Invertible v
     where
   invOf := diag (⅟ (diagonal v))
-  invOf_mul_self :=
+  invOf_hMul_self :=
     funext fun i =>
       by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
@@ -655,7 +655,7 @@ def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : In
       dsimp
       rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_invOf_self _
-  mul_invOf_self :=
+  hMul_invOf_self :=
     funext fun i =>
       by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
@@ -729,8 +729,8 @@ theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ :
 theorem list_prod_inv_reverse : ∀ l : List (Matrix n n α), l.Prod⁻¹ = (l.reverse.map Inv.inv).Prod
   | [] => by rw [List.reverse_nil, List.map_nil, List.prod_nil, inv_one]
   | A::Xs => by
-    rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.mul_eq_mul,
-      Matrix.mul_eq_mul, mul_inv_rev, list_prod_inv_reverse]
+    rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.hMul_eq_hMul,
+      Matrix.hMul_eq_hMul, mul_inv_rev, list_prod_inv_reverse]
 #align matrix.list_prod_inv_reverse Matrix.list_prod_inv_reverse
 -/
 
@@ -772,7 +772,7 @@ variable [DecidableEq m]
 def submatrixEquivInvertible (A : Matrix m m α) (e₁ e₂ : n ≃ m) [Invertible A] :
     Invertible (A.submatrix e₁ e₂) :=
   invertibleOfRightInverse _ ((⅟ A).submatrix e₂ e₁) <| by
-    rw [Matrix.submatrix_mul_equiv, Matrix.mul_invOf_self, submatrix_one_equiv]
+    rw [Matrix.submatrix_mul_equiv, mul_invOf_self, submatrix_one_equiv]
 #align matrix.submatrix_equiv_invertible Matrix.submatrixEquivInvertible
 -/
 
@@ -786,7 +786,7 @@ def invertibleOfSubmatrixEquivInvertible (A : Matrix m m α) (e₁ e₂ : n ≃ 
     conv in _ ⬝ _ =>
       congr
       rw [this]
-    rw [Matrix.submatrix_mul_equiv, Matrix.mul_invOf_self, submatrix_one_equiv]
+    rw [Matrix.submatrix_mul_equiv, mul_invOf_self, submatrix_one_equiv]
 #align matrix.invertible_of_submatrix_equiv_invertible Matrix.invertibleOfSubmatrixEquivInvertible
 -/
 

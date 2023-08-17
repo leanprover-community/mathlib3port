@@ -281,7 +281,7 @@ theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) :
   by
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
+  simp only [HMul.hMul, dot_product, Fin.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
     general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
     Fin.succ_zero_eq_one', Complex.ofReal_add, Complex.ofReal_mul]
   ring
@@ -295,7 +295,7 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   change _ / _ = (_ * (_ / _) + _) * _
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
+  simp only [HMul.hMul, dot_product, Fin.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
     general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
     Fin.succ_zero_eq_one', Complex.ofReal_add, Complex.ofReal_mul]
   ring
@@ -308,7 +308,7 @@ instance : MulAction GL(2, ℝ)⁺ ℍ where
   one_smul z := by
     ext1; change _ / _ = _
     simp [coeFn_coe_base']
-  mul_smul := mul_smul'
+  hMul_smul := mul_smul'
 
 section ModularScalarTowers
 
@@ -378,7 +378,7 @@ theorem subgroup_on_SL_apply (s : Γ) (g : SL(2, ℤ)) (z : ℍ) :
 
 #print UpperHalfPlane.subgroup_to_SL_tower /-
 instance subgroup_to_SL_tower : IsScalarTower Γ SL(2, ℤ) ℍ
-    where smul_assoc s g z := by rw [subgroup_on_SL_apply]; apply MulAction.mul_smul
+    where smul_assoc s g z := by rw [subgroup_on_SL_apply]; apply MulAction.hMul_smul
 #align upper_half_plane.subgroup_to_SL_tower UpperHalfPlane.subgroup_to_SL_tower
 -/
 
@@ -503,7 +503,7 @@ instance posRealAction : MulAction { x : ℝ // 0 < x } ℍ
     where
   smul x z := mk ((x : ℝ) • z) <| by simpa using mul_pos x.2 z.2
   one_smul z := Subtype.ext <| one_smul _ _
-  mul_smul x y z := Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
+  hMul_smul x y z := Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
 #align upper_half_plane.pos_real_action UpperHalfPlane.posRealAction
 -/
 

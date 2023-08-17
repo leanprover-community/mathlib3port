@@ -90,7 +90,7 @@ theorem evenOdd_mul_le (i j : ZMod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q 
 instance evenOdd.gradedMonoid : SetLike.GradedMonoid (evenOdd Q)
     where
   one_mem := Submodule.one_le.mp (one_le_evenOdd_zero Q)
-  mul_mem i j p q hp hq := Submodule.mul_le.mp (evenOdd_mul_le Q _ _) _ hp _ hq
+  hMul_mem i j p q hp hq := Submodule.mul_le.mp (evenOdd_mul_le Q _ _) _ hp _ hq
 #align clifford_algebra.even_odd.graded_monoid CliffordAlgebra.evenOdd.gradedMonoid
 -/
 

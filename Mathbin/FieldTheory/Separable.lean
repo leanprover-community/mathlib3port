@@ -223,7 +223,7 @@ theorem separable_X_sub_C {x : R} : Separable (X - C x) := by
 theorem Separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : IsCoprime f g) :
     (f * g).Separable := by rw [separable_def, derivative_mul];
   exact
-    ((hf.mul_right h).add_mul_left_right _).mul_left ((h.symm.mul_right hg).mul_add_right_right _)
+    ((hf.mul_right h).add_mul_left_right _).hMul_left ((h.symm.mul_right hg).mul_add_right_right _)
 #align polynomial.separable.mul Polynomial.Separable.mul
 -/
 

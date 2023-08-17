@@ -459,8 +459,8 @@ instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
   { FreimanHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by intros; ext; apply div_eq_mul_inv
-    mul_left_inv := by intros; ext; apply mul_left_inv
+    div_eq_hMul_inv := by intros; ext; apply div_eq_mul_inv
+    hMul_left_inv := by intros; ext; apply mul_left_inv
     zpow := fun n f =>
       { toFun := fun x => f x ^ n
         map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by

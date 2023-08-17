@@ -192,7 +192,7 @@ theorem detAux_id (b : Trunc <| Basis ι A M) : LinearMap.detAux b LinearMap.id 
 @[simp]
 theorem detAux_comp (b : Trunc <| Basis ι A M) (f g : M →ₗ[A] M) :
     LinearMap.detAux b (f.comp g) = LinearMap.detAux b f * LinearMap.detAux b g :=
-  (LinearMap.detAux b).map_mul f g
+  (LinearMap.detAux b).map_hMul f g
 #align linear_map.det_aux_comp LinearMap.detAux_comp
 -/
 
@@ -289,7 +289,7 @@ theorem det_cases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
 #print LinearMap.det_comp /-
 @[simp]
 theorem det_comp (f g : M →ₗ[A] M) : (f.comp g).det = f.det * g.det :=
-  LinearMap.det.map_mul f g
+  LinearMap.det.map_hMul f g
 #align linear_map.det_comp LinearMap.det_comp
 -/
 

@@ -624,7 +624,7 @@ theorem mellin_zetaKernel₁_eq_tsum {s : ℂ} (hs : 1 / 2 < s.re) :
     by
     intro t ht
     have :=
-      (has_sum_of_real.mpr (summable_exp_neg_pi_mul_nat_sq ht).HasSum).mul_left ((t : ℂ) ^ (s - 1))
+      (has_sum_of_real.mpr (summable_exp_neg_pi_mul_nat_sq ht).HasSum).hMul_left ((t : ℂ) ^ (s - 1))
     simpa only [of_real_mul, ← mul_assoc, of_real_bit0, of_real_one, mul_comm _ (2 : ℂ),
       of_real_sub, of_real_one, of_real_tsum] using this
   have h_sum' :

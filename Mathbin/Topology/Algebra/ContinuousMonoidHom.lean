@@ -114,7 +114,7 @@ instance : ContinuousMonoidHomClass (ContinuousMonoidHom A B) A B
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_one f := f.map_one'
   map_continuous f := f.continuous_toFun
 
@@ -307,7 +307,7 @@ instance : CommGroup (ContinuousMonoidHom A E)
   one_mul f := ext fun x => one_mul (f x)
   mul_one f := ext fun x => mul_one (f x)
   inv f := (inv E).comp f
-  mul_left_inv f := ext fun x => mul_left_inv (f x)
+  hMul_left_inv f := ext fun x => mul_left_inv (f x)
 
 @[to_additive]
 instance : TopologicalSpace (ContinuousMonoidHom A B) :=
@@ -390,7 +390,7 @@ instance [T2Space B] : T2Space (ContinuousMonoidHom A B) :=
 instance : TopologicalGroup (ContinuousMonoidHom A E) :=
   let hi := inducing_toContinuousMap A E
   let hc := hi.Continuous
-  { continuous_mul := hi.continuous_iff.mpr (continuous_mul.comp (Continuous.prod_map hc hc))
+  { continuous_hMul := hi.continuous_iff.mpr (continuous_mul.comp (Continuous.prod_map hc hc))
     continuous_inv := hi.continuous_iff.mpr (continuous_inv.comp hc) }
 
 #print ContinuousMonoidHom.continuous_of_continuous_uncurry /-

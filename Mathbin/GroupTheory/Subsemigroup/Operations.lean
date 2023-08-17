@@ -86,10 +86,10 @@ def Subsemigroup.toAddSubsemigroup : Subsemigroup M ≃o AddSubsemigroup (Additi
     where
   toFun S :=
     { carrier := Additive.toMul ⁻¹' S
-      add_mem' := fun _ _ => S.mul_mem' }
+      add_mem' := fun _ _ => S.hMul_mem' }
   invFun S :=
     { carrier := Additive.ofMul ⁻¹' S
-      mul_mem' := fun _ _ => S.add_mem' }
+      hMul_mem' := fun _ _ => S.add_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -139,10 +139,10 @@ def AddSubsemigroup.toSubsemigroup : AddSubsemigroup A ≃o Subsemigroup (Multip
     where
   toFun S :=
     { carrier := Multiplicative.toAdd ⁻¹' S
-      mul_mem' := fun _ _ => S.add_mem' }
+      hMul_mem' := fun _ _ => S.add_mem' }
   invFun S :=
     { carrier := Multiplicative.ofAdd ⁻¹' S
-      add_mem' := fun _ _ => S.mul_mem' }
+      add_mem' := fun _ _ => S.hMul_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -198,7 +198,7 @@ variable [Mul M] [Mul N] [Mul P] (S : Subsemigroup M)
 def comap (f : M →ₙ* N) (S : Subsemigroup N) : Subsemigroup M
     where
   carrier := f ⁻¹' S
-  mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact mul_mem ha hb
+  hMul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact mul_mem ha hb
 #align subsemigroup.comap Subsemigroup.comap
 #align add_subsemigroup.comap AddSubsemigroup.comap
 -/
@@ -243,7 +243,7 @@ theorem comap_id (S : Subsemigroup P) : S.comap (MulHom.id _) = S :=
 def map (f : M →ₙ* N) (S : Subsemigroup M) : Subsemigroup N
     where
   carrier := f '' S
-  mul_mem' := by
+  hMul_mem' := by
     rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
     exact ⟨x * y, @mul_mem (Subsemigroup M) M _ _ _ _ _ _ hx hy, by rw [map_mul] <;> rfl⟩
 #align subsemigroup.map Subsemigroup.map
@@ -632,7 +632,7 @@ variable {A : Type _} [Mul M] [SetLike A M] [hA : MulMemClass A M] (S' : A)
 /-- A submagma of a magma inherits a multiplication. -/
 @[to_additive "An additive submagma of an additive magma inherits an addition."]
 instance (priority := 900) mul : Mul S' :=
-  ⟨fun a b => ⟨a.1 * b.1, mul_mem a.2 b.2⟩⟩
+  ⟨fun a b => ⟨a.1 * b.1, hMul_mem a.2 b.2⟩⟩
 #align mul_mem_class.has_mul MulMemClass.mul
 #align add_mem_class.has_add AddMemClass.add
 -/
@@ -650,7 +650,7 @@ theorem coe_mul (x y : S') : (↑(x * y) : M) = ↑x * ↑y :=
 -- lower priority so later simp lemmas are used first; to appease simp_nf
 @[simp, to_additive]
 theorem mk_mul_mk (x y : M) (hx : x ∈ S') (hy : y ∈ S') :
-    (⟨x, hx⟩ : S') * ⟨y, hy⟩ = ⟨x * y, mul_mem hx hy⟩ :=
+    (⟨x, hx⟩ : S') * ⟨y, hy⟩ = ⟨x * y, hMul_mem hx hy⟩ :=
   rfl
 #align mul_mem_class.mk_mul_mk MulMemClass.mk_mul_mk
 #align add_mem_class.mk_add_mk AddMemClass.mk_add_mk
@@ -658,7 +658,7 @@ theorem mk_mul_mk (x y : M) (hx : x ∈ S') (hy : y ∈ S') :
 
 #print MulMemClass.mul_def /-
 @[to_additive]
-theorem mul_def (x y : S') : x * y = ⟨x * y, mul_mem x.2 y.2⟩ :=
+theorem mul_def (x y : S') : x * y = ⟨x * y, hMul_mem x.2 y.2⟩ :=
   rfl
 #align mul_mem_class.mul_def MulMemClass.mul_def
 #align add_mem_class.add_def AddMemClass.add_def
@@ -770,7 +770,7 @@ of `M × N`. -/
 def prod (s : Subsemigroup M) (t : Subsemigroup N) : Subsemigroup (M × N)
     where
   carrier := s ×ˢ t
-  mul_mem' p q hp hq := ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
+  hMul_mem' p q hp hq := ⟨s.hMul_mem hp.1 hq.1, t.hMul_mem hp.2 hq.2⟩
 #align subsemigroup.prod Subsemigroup.prod
 #align add_subsemigroup.prod AddSubsemigroup.prod
 -/

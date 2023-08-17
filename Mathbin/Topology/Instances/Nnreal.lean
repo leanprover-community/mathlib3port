@@ -67,7 +67,7 @@ instance : TopologicalSpace ℝ≥0 :=
 -- short-circuit type class inference
 instance : TopologicalSemiring ℝ≥0
     where
-  continuous_mul := (continuous_subtype_val.fst'.mul continuous_subtype_val.snd').subtype_mk _
+  continuous_hMul := (continuous_subtype_val.fst'.mul continuous_subtype_val.snd').subtype_mk _
   continuous_add := (continuous_subtype_val.fst'.add continuous_subtype_val.snd').subtype_mk _
 
 instance : SecondCountableTopology ℝ≥0 :=

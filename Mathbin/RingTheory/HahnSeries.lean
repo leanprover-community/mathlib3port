@@ -611,7 +611,7 @@ instance : DistribMulAction R (HahnSeries Γ V)
   one_smul _ := by ext; simp
   smul_zero _ := by ext; simp
   smul_add _ _ _ := by ext; simp [smul_add]
-  mul_smul _ _ _ := by ext; simp [mul_smul]
+  hMul_smul _ _ _ := by ext; simp [mul_smul]
 
 variable {S : Type _} [Monoid S] [DistribMulAction S V]
 
@@ -946,7 +946,7 @@ instance [NonUnitalSemiring R] : NonUnitalSemiring (HahnSeries Γ R) :=
     zero := 0
     add := (· + ·)
     mul := (· * ·)
-    mul_assoc := mul_assoc' }
+    mul_assoc := hMul_assoc' }
 
 instance [NonAssocSemiring R] : NonAssocSemiring (HahnSeries Γ R) :=
   { AddMonoidWithOne.unary,
@@ -1825,7 +1825,7 @@ instance : Module (HahnSeries Γ R) (SummableFamily Γ R α)
   one_smul x := ext fun a => one_mul _
   add_smul x y s := ext fun a => add_mul _ _ _
   smul_add x s t := ext fun a => mul_add _ _ _
-  mul_smul x y s := ext fun a => mul_assoc _ _ _
+  hMul_smul x y s := ext fun a => mul_assoc _ _ _
 
 #print HahnSeries.SummableFamily.hsum_smul /-
 @[simp]

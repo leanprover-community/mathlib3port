@@ -344,15 +344,15 @@ unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
     return (xadd' c a' x n b', p)
 #align tactic.ring.eval_neg tactic.ring.eval_neg
 
-theorem horner_const_mul {α} [CommSemiring α] (c a x n b a' b') (h₁ : c * a = a')
+theorem horner_const_hMul {α} [CommSemiring α] (c a x n b a' b') (h₁ : c * a = a')
     (h₂ : c * b = b') : c * @horner α _ a x n b = horner a' x n b' := by
   simp [h₂.symm, h₁.symm, horner, mul_add, mul_assoc]
-#align tactic.ring.horner_const_mul Tactic.Ring.horner_const_mul
+#align tactic.ring.horner_const_mul Tactic.Ring.horner_const_hMul
 
-theorem horner_mul_const {α} [CommSemiring α] (a x n b c a' b') (h₁ : a * c = a')
+theorem horner_hMul_const {α} [CommSemiring α] (a x n b c a' b') (h₁ : a * c = a')
     (h₂ : b * c = b') : @horner α _ a x n b * c = horner a' x n b' := by
   simp [h₂.symm, h₁.symm, horner, add_mul, mul_right_comm]
-#align tactic.ring.horner_mul_const Tactic.Ring.horner_mul_const
+#align tactic.ring.horner_mul_const Tactic.Ring.horner_hMul_const
 
 /-- Evaluate `k * a` where `k` is a rational numeral and `a` is in normal form. -/
 unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_expr × expr)
@@ -366,18 +366,18 @@ unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_exp
     return (xadd' c a' x n b', c `` horner_const_mul [k.1, a, x.1, n.1, b, a', b', h₁, h₂])
 #align tactic.ring.eval_const_mul tactic.ring.eval_const_mul
 
-theorem horner_mul_horner_zero {α} [CommSemiring α] (a₁ x n₁ b₁ a₂ n₂ aa t)
+theorem horner_hMul_horner_zero {α} [CommSemiring α] (a₁ x n₁ b₁ a₂ n₂ aa t)
     (h₁ : @horner α _ a₁ x n₁ b₁ * a₂ = aa) (h₂ : horner aa x n₂ 0 = t) :
     horner a₁ x n₁ b₁ * horner a₂ x n₂ 0 = t := by
   rw [← h₂, ← h₁] <;> simp [horner, mul_add, mul_comm, mul_left_comm, mul_assoc]
-#align tactic.ring.horner_mul_horner_zero Tactic.Ring.horner_mul_horner_zero
+#align tactic.ring.horner_mul_horner_zero Tactic.Ring.horner_hMul_horner_zero
 
-theorem horner_mul_horner {α} [CommSemiring α] (a₁ x n₁ b₁ a₂ n₂ b₂ aa haa ab bb t)
+theorem horner_hMul_horner {α} [CommSemiring α] (a₁ x n₁ b₁ a₂ n₂ b₂ aa haa ab bb t)
     (h₁ : @horner α _ a₁ x n₁ b₁ * a₂ = aa) (h₂ : horner aa x n₂ 0 = haa) (h₃ : a₁ * b₂ = ab)
     (h₄ : b₁ * b₂ = bb) (H : haa + horner ab x n₁ bb = t) :
     horner a₁ x n₁ b₁ * horner a₂ x n₂ b₂ = t := by
   rw [← H, ← h₂, ← h₁, ← h₃, ← h₄] <;> simp [horner, mul_add, mul_comm, mul_left_comm, mul_assoc]
-#align tactic.ring.horner_mul_horner Tactic.Ring.horner_mul_horner
+#align tactic.ring.horner_mul_horner Tactic.Ring.horner_hMul_horner
 
 /-- Evaluate `a * b` where `a` and `b` are in normal form. -/
 unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × expr)
@@ -568,7 +568,7 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
                     ic
                       =>
                       ic . mk_app
-                        ` ` NormNum.subst_into_mul [ e₁ , e₂ , e₁' , e₂' , e' , p₁ , p₂ , p' ]
+                        ` ` NormNum.subst_into_hMul [ e₁ , e₂ , e₁' , e₂' , e' , p₁ , p₂ , p' ]
             return ( e' , p )
       |
         e @ q( Inv.inv $ ( _ ) )
@@ -658,8 +658,9 @@ theorem horner_def' {α} [CommSemiring α] (a x n b) : @horner α _ a x n b = x 
   simp [horner, mul_comm]
 #align tactic.ring.horner_def' Tactic.Ring.horner_def'
 
-theorem mul_assoc_rev {α} [Semigroup α] (a b c : α) : a * (b * c) = a * b * c := by simp [mul_assoc]
-#align tactic.ring.mul_assoc_rev Tactic.Ring.mul_assoc_rev
+theorem hMul_assoc_rev {α} [Semigroup α] (a b c : α) : a * (b * c) = a * b * c := by
+  simp [mul_assoc]
+#align tactic.ring.mul_assoc_rev Tactic.Ring.hMul_assoc_rev
 
 theorem pow_add_rev {α} [Monoid α] (a : α) (m n : ℕ) : a ^ m * a ^ n = a ^ (m + n) := by
   simp [pow_add]

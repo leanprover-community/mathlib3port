@@ -80,7 +80,7 @@ protected def leftCancelSemigroup [LeftCancelSemigroup M₂] (f : M₁ → M₂)
     (mul : ∀ x y, f (x * y) = f x * f y) : LeftCancelSemigroup M₁ :=
   { hf.Semigroup f mul with
     mul := (· * ·)
-    mul_left_cancel := fun x y z H =>
+    hMul_left_cancel := fun x y z H =>
       hf <| (mul_right_inj (f x)).1 <| by erw [← mul, ← mul, H] <;> rfl }
 #align function.injective.left_cancel_semigroup Function.Injective.leftCancelSemigroup
 #align function.injective.add_left_cancel_semigroup Function.Injective.addLeftCancelSemigroup
@@ -97,7 +97,7 @@ protected def rightCancelSemigroup [RightCancelSemigroup M₂] (f : M₁ → M�
     (mul : ∀ x y, f (x * y) = f x * f y) : RightCancelSemigroup M₁ :=
   { hf.Semigroup f mul with
     mul := (· * ·)
-    mul_right_cancel := fun x y z H =>
+    hMul_right_cancel := fun x y z H =>
       hf <| (mul_left_inj (f y)).1 <| by erw [← mul, ← mul, H] <;> rfl }
 #align function.injective.right_cancel_semigroup Function.Injective.rightCancelSemigroup
 #align function.injective.add_right_cancel_semigroup Function.Injective.addRightCancelSemigroup
@@ -282,7 +282,7 @@ protected def divInvMonoid [DivInvMonoid M₂] (f : M₁ → M₂) (hf : Injecti
     zpow_zero' := fun x => hf <| by erw [zpow, zpow_zero, one]
     zpow_succ' := fun n x => hf <| by erw [zpow, mul, zpow_ofNat, pow_succ, zpow, zpow_ofNat]
     zpow_neg' := fun n x => hf <| by erw [zpow, zpow_negSucc, inv, zpow, zpow_ofNat]
-    div_eq_mul_inv := fun x y => hf <| by erw [div, mul, inv, div_eq_mul_inv] }
+    div_eq_hMul_inv := fun x y => hf <| by erw [div, mul, inv, div_eq_mul_inv] }
 #align function.injective.div_inv_monoid Function.Injective.divInvMonoid
 #align function.injective.sub_neg_monoid Function.Injective.subNegMonoid
 -/
@@ -302,7 +302,7 @@ protected def divisionMonoid [DivisionMonoid M₂] (f : M₁ → M₂) (hf : Inj
     hf.InvolutiveInv f
       inv with
     mul_inv_rev := fun x y => hf <| by erw [inv, mul, mul_inv_rev, mul, inv, inv]
-    inv_eq_of_mul := fun x y h =>
+    inv_eq_of_hMul := fun x y h =>
       hf <| by erw [inv, inv_eq_of_mul_eq_one_right (by erw [← mul, h, one])] }
 #align function.injective.division_monoid Function.Injective.divisionMonoid
 #align function.injective.subtraction_monoid Function.Injective.subtractionMonoid
@@ -337,7 +337,7 @@ protected def group [Group M₂] (f : M₁ → M₂) (hf : Injective f) (one : f
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : Group M₁ :=
   { hf.DivInvMonoid f one mul inv div npow zpow with
-    mul_left_inv := fun x => hf <| by erw [mul, inv, mul_left_inv, one] }
+    hMul_left_inv := fun x => hf <| by erw [mul, inv, mul_left_inv, one] }
 #align function.injective.group Function.Injective.group
 #align function.injective.add_group Function.Injective.addGroup
 -/
@@ -555,7 +555,7 @@ protected def divInvMonoid [DivInvMonoid M₁] (f : M₁ → M₂) (hf : Surject
       hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_ofNat, zpow_ofNat, pow_succ, ← mul]
     zpow_neg' := fun n =>
       hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_negSucc, zpow_ofNat, inv]
-    div_eq_mul_inv := hf.Forall₂.2 fun x y => by erw [← inv, ← mul, ← div, div_eq_mul_inv] }
+    div_eq_hMul_inv := hf.Forall₂.2 fun x y => by erw [← inv, ← mul, ← div, div_eq_mul_inv] }
 #align function.surjective.div_inv_monoid Function.Surjective.divInvMonoid
 #align function.surjective.sub_neg_monoid Function.Surjective.subNegMonoid
 -/
@@ -572,7 +572,7 @@ protected def group [Group M₁] (f : M₁ → M₂) (hf : Surjective f) (one : 
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : Group M₂ :=
   { hf.DivInvMonoid f one mul inv div npow zpow with
-    mul_left_inv := hf.forall.2 fun x => by erw [← inv, ← mul, mul_left_inv, one] <;> rfl }
+    hMul_left_inv := hf.forall.2 fun x => by erw [← inv, ← mul, mul_left_inv, one] <;> rfl }
 #align function.surjective.group Function.Surjective.group
 #align function.surjective.add_group Function.Surjective.addGroup
 -/

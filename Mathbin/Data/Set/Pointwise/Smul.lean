@@ -669,7 +669,7 @@ on `set β`. -/
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `set α` on `set β`"]
 protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set β)
     where
-  mul_smul _ _ _ := image2_assoc mul_smul
+  hMul_smul _ _ _ := image2_assoc hMul_smul
   one_smul s := image2_singleton_left.trans <| by simp_rw [one_smul, image_id']
 #align set.mul_action Set.mulAction
 #align set.add_action Set.addAction
@@ -681,7 +681,7 @@ protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set 
       "An additive action of an additive monoid on a type `β` gives an additive action\non `set β`."]
 protected def mulActionSet [Monoid α] [MulAction α β] : MulAction α (Set β)
     where
-  mul_smul := by intros; simp only [← image_smul, image_image, ← mul_smul]
+  hMul_smul := by intros; simp only [← image_smul, image_image, ← mul_smul]
   one_smul := by intros; simp only [← image_smul, one_smul, image_id']
 #align set.mul_action_set Set.mulActionSet
 #align set.add_action_set Set.addActionSet
@@ -705,7 +705,7 @@ protected def distribMulActionSet [Monoid α] [AddMonoid β] [DistribMulAction �
 protected def mulDistribMulActionSet [Monoid α] [Monoid β] [MulDistribMulAction α β] :
     MulDistribMulAction α (Set β)
     where
-  smul_mul _ _ _ := image_image2_distrib <| smul_mul' _
+  smul_hMul _ _ _ := image_image2_distrib <| smul_mul' _
   smul_one _ := image_singleton.trans <| by rw [smul_one, singleton_one]
 #align set.mul_distrib_mul_action_set Set.mulDistribMulActionSet
 -/

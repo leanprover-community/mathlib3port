@@ -34,7 +34,7 @@ variable [Monoid R] [MulAction R M] [One M]
 instance : One (SubMulAction R M)
     where one :=
     { carrier := Set.range fun r : R => r • (1 : M)
-      smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', mul_smul _ _ _⟩ }
+      smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', hMul_smul _ _ _⟩ }
 
 #print SubMulAction.coe_one /-
 theorem coe_one : ↑(1 : SubMulAction R M) = Set.range fun r : R => r • (1 : M) :=

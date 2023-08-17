@@ -157,7 +157,7 @@ protected theorem mul_right (c : ℕ) (h : a ≡ b [MOD n]) : a * c ≡ b * c [M
 
 #print Nat.ModEq.mul /-
 protected theorem mul (h₁ : a ≡ b [MOD n]) (h₂ : c ≡ d [MOD n]) : a * c ≡ b * d [MOD n] :=
-  (h₂.mul_left _).trans (h₁.mul_right _)
+  (h₂.hMul_left _).trans (h₁.hMul_right _)
 #align nat.modeq.mul Nat.ModEq.mul
 -/
 
@@ -508,7 +508,7 @@ theorem coprime_of_mul_modEq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n])
   rw [Nat.coprime_iff_gcd_eq_one, ← Nat.dvd_one, ← Nat.modEq_zero_iff_dvd]
   calc
     1 ≡ a * b [MOD a.gcd n] := Nat.ModEq.of_mul_right g (hh.subst h).symm
-    _ ≡ 0 * b [MOD a.gcd n] := ((nat.modeq_zero_iff_dvd.mpr (Nat.gcd_dvd_left _ _)).mul_right b)
+    _ ≡ 0 * b [MOD a.gcd n] := ((nat.modeq_zero_iff_dvd.mpr (Nat.gcd_dvd_left _ _)).hMul_right b)
     _ = 0 := by rw [MulZeroClass.zero_mul]
 #align nat.coprime_of_mul_modeq_one Nat.coprime_of_mul_modEq_one
 -/

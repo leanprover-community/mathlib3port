@@ -93,7 +93,7 @@ def symmetricSubalgebra [CommSemiring R] : Subalgebra R (MvPolynomial σ R)
     where
   carrier := setOf IsSymmetric
   algebraMap_mem' r e := rename_C e r
-  mul_mem' a b ha hb e := by rw [AlgHom.map_mul, ha, hb]
+  hMul_mem' a b ha hb e := by rw [AlgHom.map_mul, ha, hb]
   add_mem' a b ha hb e := by rw [AlgHom.map_add, ha, hb]
 #align mv_polynomial.symmetric_subalgebra MvPolynomial.symmetricSubalgebra
 -/
@@ -143,7 +143,7 @@ theorem add (hφ : IsSymmetric φ) (hψ : IsSymmetric ψ) : IsSymmetric (φ + ψ
 
 #print MvPolynomial.IsSymmetric.mul /-
 theorem mul (hφ : IsSymmetric φ) (hψ : IsSymmetric ψ) : IsSymmetric (φ * ψ) :=
-  (symmetricSubalgebra σ R).mul_mem hφ hψ
+  (symmetricSubalgebra σ R).hMul_mem hφ hψ
 #align mv_polynomial.is_symmetric.mul MvPolynomial.IsSymmetric.mul
 -/
 

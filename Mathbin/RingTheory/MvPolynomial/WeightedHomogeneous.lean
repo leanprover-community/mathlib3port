@@ -372,7 +372,7 @@ instance WeightedHomogeneousSubmodule.gcomm_monoid {w : σ → M} :
     SetLike.GradedMonoid (weightedHomogeneousSubmodule R w)
     where
   one_mem := isWeightedHomogeneous_one R w
-  mul_mem i j xi xj := IsWeightedHomogeneous.mul
+  hMul_mem i j xi xj := IsWeightedHomogeneous.mul
 #align mv_polynomial.is_weighted_homogeneous.weighted_homogeneous_submodule.gcomm_monoid MvPolynomial.IsWeightedHomogeneous.WeightedHomogeneousSubmodule.gcomm_monoid
 -/
 

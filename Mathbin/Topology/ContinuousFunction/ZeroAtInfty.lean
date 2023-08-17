@@ -578,7 +578,7 @@ variable [NonUnitalNormedRing β]
 
 noncomputable instance : NonUnitalNormedRing C₀(α, β) :=
   { ZeroAtInftyContinuousMap.nonUnitalRing, ZeroAtInftyContinuousMap.normedAddCommGroup with
-    norm_mul := fun f g => norm_mul_le f.toBcf g.toBcf }
+    norm_hMul := fun f g => norm_mul_le f.toBcf g.toBcf }
 
 end NormedRing
 
@@ -650,14 +650,14 @@ variable [NonUnitalSemiring β] [StarRing β] [TopologicalSpace β] [ContinuousS
 
 instance : StarRing C₀(α, β) :=
   { ZeroAtInftyContinuousMap.starAddMonoid with
-    star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
+    star_hMul := fun f g => ext fun x => star_hMul (f x) (g x) }
 
 end StarRing
 
 section CstarRing
 
 instance [NonUnitalNormedRing β] [StarRing β] [CstarRing β] : CstarRing C₀(α, β)
-    where norm_star_mul_self f := @CstarRing.norm_star_mul_self _ _ _ _ f.toBcf
+    where norm_star_hMul_self f := @CstarRing.norm_star_hMul_self _ _ _ _ f.toBcf
 
 end CstarRing
 

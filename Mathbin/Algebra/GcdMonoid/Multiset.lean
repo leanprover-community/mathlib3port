@@ -234,7 +234,7 @@ theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = nor
   refine' s.induction_on _ fun b s ih => _
   · simp_rw [map_zero, gcd_zero, MulZeroClass.mul_zero]
   · simp_rw [map_cons, gcd_cons, ← gcd_mul_left]; rw [ih]
-    apply ((normalize_associated a).mul_right _).gcd_eq_right
+    apply ((normalize_associated a).hMul_right _).gcd_eq_right
 #align multiset.gcd_map_mul Multiset.gcd_map_mul
 -/
 

@@ -432,9 +432,9 @@ instance cancelMonoid {α : Type _} [StrictOrderedRing α] [IsDomain α] :
     CancelMonoid (Ioc (0 : α) 1) :=
   {
     Set.Ioc.monoid with
-    mul_left_cancel := fun a b c h =>
+    hMul_left_cancel := fun a b c h =>
       Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _)
-    mul_right_cancel := fun a b c h =>
+    hMul_right_cancel := fun a b c h =>
       Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_arg Subtype.val h : _) }
 #align set.Ioc.cancel_monoid Set.Ioc.cancelMonoid
 -/

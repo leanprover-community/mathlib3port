@@ -92,7 +92,7 @@ instance [SMul R ℝ] [SMul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] : IsCentralS
 instance [Monoid R] [MulAction R ℝ] : MulAction R ℂ
     where
   one_smul x := by ext <;> simp [smul_re, smul_im, one_smul]
-  mul_smul r s x := by ext <;> simp [smul_re, smul_im, mul_smul]
+  hMul_smul r s x := by ext <;> simp [smul_re, smul_im, mul_smul]
 
 instance [DistribSMul R ℝ] : DistribSMul R ℂ
     where

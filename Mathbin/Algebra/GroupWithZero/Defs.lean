@@ -48,14 +48,14 @@ variable [MulZeroClass M₀] {a b : M₀}
 #print MulZeroClass.zero_mul /-
 @[ematch, simp]
 theorem MulZeroClass.zero_mul (a : M₀) : 0 * a = 0 :=
-  MulZeroClass.zero_mul a
+  MulZeroClass.zero_hMul a
 #align zero_mul MulZeroClass.zero_mul
 -/
 
 #print MulZeroClass.mul_zero /-
 @[ematch, simp]
 theorem MulZeroClass.mul_zero (a : M₀) : a * 0 = 0 :=
-  MulZeroClass.mul_zero a
+  MulZeroClass.hMul_zero a
 #align mul_zero MulZeroClass.mul_zero
 -/
 
@@ -65,7 +65,7 @@ end MulZeroClass
 /-- A mixin for left cancellative multiplication by nonzero elements. -/
 @[protect_proj]
 class IsLeftCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] : Prop where
-  mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
+  hMul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
 #align is_left_cancel_mul_zero IsLeftCancelMulZero
 -/
 
@@ -75,7 +75,7 @@ variable [Mul M₀] [Zero M₀] [IsLeftCancelMulZero M₀] {a b c : M₀}
 
 #print mul_left_cancel₀ /-
 theorem mul_left_cancel₀ (ha : a ≠ 0) (h : a * b = a * c) : b = c :=
-  IsLeftCancelMulZero.mul_left_cancel_of_ne_zero ha h
+  IsLeftCancelMulZero.hMul_left_cancel_of_ne_zero ha h
 #align mul_left_cancel₀ mul_left_cancel₀
 -/
 
@@ -91,7 +91,7 @@ end IsLeftCancelMulZero
 /-- A mixin for right cancellative multiplication by nonzero elements. -/
 @[protect_proj]
 class IsRightCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] : Prop where
-  mul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
+  hMul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
 #align is_right_cancel_mul_zero IsRightCancelMulZero
 -/
 
@@ -101,7 +101,7 @@ variable [Mul M₀] [Zero M₀] [IsRightCancelMulZero M₀] {a b c : M₀}
 
 #print mul_right_cancel₀ /-
 theorem mul_right_cancel₀ (hb : b ≠ 0) (h : a * b = c * b) : a = c :=
-  IsRightCancelMulZero.mul_right_cancel_of_ne_zero hb h
+  IsRightCancelMulZero.hMul_right_cancel_of_ne_zero hb h
 #align mul_right_cancel₀ mul_right_cancel₀
 -/
 
@@ -201,8 +201,8 @@ instance (priority := 100) MonoidWithZero.toSemigroupWithZero (M₀ : Type _) [M
 and right absorbing, and left/right multiplication by a non-zero element is injective. -/
 @[protect_proj]
 class CancelMonoidWithZero (M₀ : Type _) extends MonoidWithZero M₀ where
-  mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
-  mul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
+  hMul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
+  hMul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
 #align cancel_monoid_with_zero CancelMonoidWithZero
 -/
 
@@ -226,7 +226,7 @@ class CommMonoidWithZero (M₀ : Type _) extends CommMonoid M₀, MonoidWithZero
   and left/right multiplication by a non-zero element is injective. -/
 @[protect_proj]
 class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀ where
-  mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
+  hMul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
 #align cancel_comm_monoid_with_zero CancelCommMonoidWithZero
 -/
 
@@ -337,7 +337,7 @@ variable [NoZeroDivisors M₀] {a b : M₀}
 equals zero. -/
 @[simp]
 theorem mul_eq_zero : a * b = 0 ↔ a = 0 ∨ b = 0 :=
-  ⟨eq_zero_or_eq_zero_of_mul_eq_zero, fun o =>
+  ⟨eq_zero_or_eq_zero_of_hMul_eq_zero, fun o =>
     o.elim (fun h => mul_eq_zero_of_left h b) (mul_eq_zero_of_right a)⟩
 #align mul_eq_zero mul_eq_zero
 -/

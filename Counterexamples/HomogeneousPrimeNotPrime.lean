@@ -81,7 +81,7 @@ theorem grading.one_mem : (1 : R × R) ∈ grading R 0 :=
   Eq.refl (1, 1).fst
 #align counterexample.counterexample_not_prime_but_homogeneous_prime.grading.one_mem Counterexample.CounterexampleNotPrimeButHomogeneousPrime.grading.one_mem
 
-theorem grading.mul_mem :
+theorem grading.hMul_mem :
     ∀ ⦃i j : Two⦄ {a b : R × R} (ha : a ∈ grading R i) (hb : b ∈ grading R j),
       a * b ∈ grading R (i + j)
   | 0, 0, a, b, (ha : a.1 = a.2), (hb : b.1 = b.2) => show a.1 * b.1 = a.2 * b.2 by rw [ha, hb]
@@ -89,7 +89,7 @@ theorem grading.mul_mem :
     show a.1 * b.1 = 0 by rw [hb, MulZeroClass.mul_zero]
   | 1, 0, a, b, (ha : a.1 = 0), hb => show a.1 * b.1 = 0 by rw [ha, MulZeroClass.zero_mul]
   | 1, 1, a, b, (ha : a.1 = 0), hb => show a.1 * b.1 = 0 by rw [ha, MulZeroClass.zero_mul]
-#align counterexample.counterexample_not_prime_but_homogeneous_prime.grading.mul_mem Counterexample.CounterexampleNotPrimeButHomogeneousPrime.grading.mul_mem
+#align counterexample.counterexample_not_prime_but_homogeneous_prime.grading.mul_mem Counterexample.CounterexampleNotPrimeButHomogeneousPrime.grading.hMul_mem
 
 end
 
@@ -132,7 +132,7 @@ theorem grading.left_inv : Function.LeftInverse (coeLinearMap (grading R)) gradi
 instance : GradedAlgebra (grading R)
     where
   one_mem := grading.one_mem R
-  mul_mem := grading.mul_mem R
+  hMul_mem := grading.hMul_mem R
   decompose' := grading.decompose
   left_inv := by convert grading.left_inv
   right_inv := by convert grading.right_inv

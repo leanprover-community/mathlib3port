@@ -108,7 +108,7 @@ instance nontrivial [Nontrivial R] : Nontrivial s :=
 #print SubsemiringClass.noZeroDivisors /-
 instance noZeroDivisors [NoZeroDivisors R] : NoZeroDivisors s
     where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
-    Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h)
+    Or.cases_on (eq_zero_or_eq_zero_of_hMul_eq_zero <| Subtype.ext_iff.mp h)
       (fun h => Or.inl <| Subtype.eq h) fun h => Or.inr <| Subtype.eq h
 #align subsemiring_class.no_zero_divisors SubsemiringClass.noZeroDivisors
 -/
@@ -242,7 +242,7 @@ instance : SubsemiringClass (Subsemiring R) R
   zero_mem := zero_mem'
   add_mem := add_mem'
   one_mem := one_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
 
 #print Subsemiring.mem_carrier /-
 @[simp]
@@ -330,7 +330,7 @@ protected def mk' (s : Set R) (sm : Submonoid R) (hm : ↑sm = s) (sa : AddSubmo
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
-  mul_mem' x y := by simpa only [← hm] using sm.mul_mem
+  hMul_mem' x y := by simpa only [← hm] using sm.mul_mem
 #align subsemiring.mk' Subsemiring.mk'
 -/
 
@@ -389,7 +389,7 @@ protected theorem zero_mem : (0 : R) ∈ s :=
 #print Subsemiring.mul_mem /-
 /-- A subsemiring is closed under multiplication. -/
 protected theorem mul_mem {x y : R} : x ∈ s → y ∈ s → x * y ∈ s :=
-  mul_mem
+  hMul_mem
 #align subsemiring.mul_mem Subsemiring.mul_mem
 -/
 
@@ -509,7 +509,7 @@ protected theorem pow_mem {R : Type _} [Semiring R] (s : Subsemiring R) {x : R} 
 #print Subsemiring.noZeroDivisors /-
 instance noZeroDivisors [NoZeroDivisors R] : NoZeroDivisors s
     where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
-    Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h)
+    Or.cases_on (eq_zero_or_eq_zero_of_hMul_eq_zero <| Subtype.ext_iff.mp h)
       (fun h => Or.inl <| Subtype.eq h) fun h => Or.inr <| Subtype.eq h
 #align subsemiring.no_zero_divisors Subsemiring.noZeroDivisors
 -/
@@ -753,7 +753,7 @@ noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f
   {
     Equiv.Set.image f s
       hf with
-    map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _)
+    map_mul' := fun _ _ => Subtype.ext (f.map_hMul _ _)
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 #align subsemiring.equiv_map_of_injective Subsemiring.equivMapOfInjective
 -/
@@ -1111,7 +1111,7 @@ def subsemiringClosure (M : Submonoid R) : Subsemiring R :=
       (M : Set
           R) with
     one_mem' := AddSubmonoid.mem_closure.mpr fun y hy => hy M.one_mem
-    mul_mem' := fun x y => MulMemClass.mul_mem_add_closure }
+    hMul_mem' := fun x y => MulMemClass.mul_mem_add_closure }
 #align submonoid.subsemiring_closure Submonoid.subsemiringClosure
 -/
 
@@ -1633,7 +1633,7 @@ theorem prod_bot_sup_bot_prod (s : Subsemiring R) (t : Subsemiring S) :
     s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
   le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le)) fun p hp =>
     Prod.fst_mul_snd p ▸
-      mul_mem
+      hMul_mem
         ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
         ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
 #align subsemiring.prod_bot_sup_bot_prod Subsemiring.prod_bot_sup_bot_prod
@@ -1828,7 +1828,7 @@ def posSubmonoid (R : Type _) [StrictOrderedSemiring R] : Submonoid R
     where
   carrier := {x | 0 < x}
   one_mem' := show (0 : R) < 1 from zero_lt_one
-  mul_mem' x y (hx : 0 < x) (hy : 0 < y) := mul_pos hx hy
+  hMul_mem' x y (hx : 0 < x) (hy : 0 < y) := mul_pos hx hy
 #align pos_submonoid posSubmonoid
 -/
 

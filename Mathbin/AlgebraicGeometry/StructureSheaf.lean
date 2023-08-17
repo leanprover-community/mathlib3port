@@ -212,7 +212,7 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
     · simp only [RingHom.map_neg, Pi.neg_apply]
       erw [← w]
       simp only [neg_mul]
-  mul_mem' := by
+  hMul_mem' := by
     intro a b ha hb x
     rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
     rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩

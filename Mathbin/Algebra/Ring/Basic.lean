@@ -122,8 +122,8 @@ instance : HasDistribNeg αᵐᵒᵖ :=
   {
     MulOpposite.hasInvolutiveNeg
       _ with
-    neg_mul := fun _ _ => unop_injective <| mul_neg _ _
-    mul_neg := fun _ _ => unop_injective <| neg_mul _ _ }
+    neg_hMul := fun _ _ => unop_injective <| mul_neg _ _
+    hMul_neg := fun _ _ => unop_injective <| neg_mul _ _ }
 
 end Mul
 
@@ -188,7 +188,7 @@ theorem IsLeftCancelMulZero.to_noZeroDivisors [Ring α] [IsLeftCancelMulZero α]
   · left; exact hx
   · right
     rw [← sub_zero (x * y), ← MulZeroClass.mul_zero x, ← mul_sub] at h 
-    convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
+    convert IsLeftCancelMulZero.hMul_left_cancel_of_ne_zero hx h
     rw [sub_zero]
 #align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_noZeroDivisors
 -/
@@ -201,7 +201,7 @@ theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero �
   · right; exact hy
   · left
     rw [← sub_zero (x * y), ← MulZeroClass.zero_mul y, ← sub_mul] at h 
-    convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h
+    convert IsRightCancelMulZero.hMul_right_cancel_of_ne_zero hy h
     rw [sub_zero]
 #align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_noZeroDivisors
 -/
@@ -210,11 +210,11 @@ theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero �
 instance (priority := 100) NoZeroDivisors.to_isCancelMulZero [Ring α] [NoZeroDivisors α] :
     IsCancelMulZero α
     where
-  mul_left_cancel_of_ne_zero a b c ha h :=
+  hMul_left_cancel_of_ne_zero a b c ha h :=
     by
     rw [← sub_eq_zero, ← mul_sub] at h 
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
-  mul_right_cancel_of_ne_zero a b c hb h :=
+  hMul_right_cancel_of_ne_zero a b c hb h :=
     by
     rw [← sub_eq_zero, ← sub_mul] at h 
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)

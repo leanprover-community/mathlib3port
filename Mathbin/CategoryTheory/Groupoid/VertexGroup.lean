@@ -52,7 +52,7 @@ instance vertexGroup (c : C) : Group (c ⟶ c)
   one_mul := Category.id_comp
   mul_one := Category.comp_id
   inv := Groupoid.inv
-  mul_left_inv := inv_comp
+  hMul_left_inv := inv_comp
 #align category_theory.groupoid.vertex_group CategoryTheory.Groupoid.vertexGroup
 -/
 

@@ -33,7 +33,7 @@ def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R
     where
   carrier := {x | ∀ z, z * x = 0 → z = 0}
   one_mem' z hz := by rwa [mul_one] at hz 
-  mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
+  hMul_mem' x₁ x₂ hx₁ hx₂ z hz :=
     have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this
 #align non_zero_divisors nonZeroDivisors
@@ -142,14 +142,14 @@ theorem isUnit_of_mem_nonZeroDivisors {G₀ : Type _} [GroupWithZero G₀] {x : 
 #print eq_zero_of_ne_zero_of_mul_right_eq_zero /-
 theorem eq_zero_of_ne_zero_of_mul_right_eq_zero [NoZeroDivisors M] {x y : M} (hnx : x ≠ 0)
     (hxy : y * x = 0) : y = 0 :=
-  Or.resolve_right (eq_zero_or_eq_zero_of_mul_eq_zero hxy) hnx
+  Or.resolve_right (eq_zero_or_eq_zero_of_hMul_eq_zero hxy) hnx
 #align eq_zero_of_ne_zero_of_mul_right_eq_zero eq_zero_of_ne_zero_of_mul_right_eq_zero
 -/
 
 #print eq_zero_of_ne_zero_of_mul_left_eq_zero /-
 theorem eq_zero_of_ne_zero_of_mul_left_eq_zero [NoZeroDivisors M] {x y : M} (hnx : x ≠ 0)
     (hxy : x * y = 0) : y = 0 :=
-  Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hxy) hnx
+  Or.resolve_left (eq_zero_or_eq_zero_of_hMul_eq_zero hxy) hnx
 #align eq_zero_of_ne_zero_of_mul_left_eq_zero eq_zero_of_ne_zero_of_mul_left_eq_zero
 -/
 
@@ -183,7 +183,7 @@ theorem map_mem_nonZeroDivisors [Nontrivial M] [NoZeroDivisors M'] [ZeroHomClass
 #print le_nonZeroDivisors_of_noZeroDivisors /-
 theorem le_nonZeroDivisors_of_noZeroDivisors [NoZeroDivisors M] {S : Submonoid M}
     (hS : (0 : M) ∉ S) : S ≤ M⁰ := fun x hx y hy =>
-  Or.rec_on (eq_zero_or_eq_zero_of_mul_eq_zero hy) (fun h => h) fun h =>
+  Or.rec_on (eq_zero_or_eq_zero_of_hMul_eq_zero hy) (fun h => h) fun h =>
     absurd (h ▸ hx : (0 : M) ∈ S) hS
 #align le_non_zero_divisors_of_no_zero_divisors le_nonZeroDivisors_of_noZeroDivisors
 -/

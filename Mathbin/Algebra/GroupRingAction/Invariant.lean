@@ -36,11 +36,11 @@ instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSe
     where
   smul m x := ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
   one_smul s := Subtype.eq <| one_smul M s
-  mul_smul m₁ m₂ s := Subtype.eq <| mul_smul m₁ m₂ s
+  hMul_smul m₁ m₂ s := Subtype.eq <| hMul_smul m₁ m₂ s
   smul_add m s₁ s₂ := Subtype.eq <| smul_add m s₁ s₂
   smul_zero m := Subtype.eq <| smul_zero m
   smul_one m := Subtype.eq <| smul_one m
-  smul_mul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
+  smul_hMul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
 #align is_invariant_subring.to_mul_semiring_action IsInvariantSubring.toMulSemiringAction
 -/
 

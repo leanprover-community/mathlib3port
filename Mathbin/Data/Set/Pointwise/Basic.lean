@@ -1309,11 +1309,11 @@ protected def divisionMonoid : DivisionMonoid (Set α) :=
   { Set.monoid, Set.hasInvolutiveInv, Set.div,
     Set.ZPow with
     mul_inv_rev := fun s t => by simp_rw [← image_inv]; exact image_image2_antidistrib mul_inv_rev
-    inv_eq_of_mul := fun s t h =>
+    inv_eq_of_hMul := fun s t h =>
       by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Set.mul_eq_one_iff.1 h
       rw [inv_singleton, inv_eq_of_mul_eq_one_right hab]
-    div_eq_mul_inv := fun s t => by rw [← image_id (s / t), ← image_inv];
+    div_eq_hMul_inv := fun s t => by rw [← image_id (s / t), ← image_inv];
       exact image_image2_distrib_right div_eq_mul_inv }
 #align set.division_monoid Set.divisionMonoid
 #align set.subtraction_monoid Set.subtractionMonoid
@@ -1352,8 +1352,8 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (S
 protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Set α) :=
   {
     Set.hasInvolutiveNeg with
-    neg_mul := fun _ _ => by simp_rw [← image_neg]; exact image2_image_left_comm neg_mul
-    mul_neg := fun _ _ => by simp_rw [← image_neg]; exact image_image2_right_comm mul_neg }
+    neg_hMul := fun _ _ => by simp_rw [← image_neg]; exact image2_image_left_comm neg_mul
+    hMul_neg := fun _ _ => by simp_rw [← image_neg]; exact image_image2_right_comm mul_neg }
 #align set.has_distrib_neg Set.hasDistribNeg
 -/
 

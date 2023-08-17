@@ -141,11 +141,11 @@ unsafe def fin_to_pexpr {m n : ℕ} (A : Matrix (Fin m) (Fin n) pexpr) : pexpr :
 #align matrix.fin_to_pexpr matrix.fin_to_pexpr
 
 /-- This statement is defeq to `of_mul_of_fin`, but syntactically worse-/
-theorem of_mul_of_fin_aux (l m n : ℕ) ⦃α⦄ [Mul α] [AddCommMonoid α] :
+theorem of_hMul_of_fin_aux (l m n : ℕ) ⦃α⦄ [Mul α] [AddCommMonoid α] :
     Forall fun A : Matrix (Fin l) (Fin m) α =>
       Forall fun B : Matrix (Fin m) (Fin n) α => A.mul B = A.mulᵣ B :=
   by simp_rw [forall_iff, mulᵣ_eq, eq_self_iff_true, forall_const]
-#align matrix.of_mul_of_fin_aux Matrix.of_mul_of_fin_aux
+#align matrix.of_mul_of_fin_aux Matrix.of_hMul_of_fin_aux
 
 /-- Prove a statement of the form
 ```
@@ -212,7 +212,7 @@ unsafe def of_mul_of_fin.prove (l m n : ℕ) : tactic (expr × expr) := do
   let A_eq
     ←-- State and prove the equality, noting the RHS is defeq to `mulᵣ A B`.
         tactic.to_expr
-        ``(@Matrix.mul _ _ _ _ _ $(has_mul_α) $(add_comm_monoid_α) $(A) $(B) = $(AB))
+        ``(@HMul.hMul _ _ _ _ _ $(has_mul_α) $(add_comm_monoid_α) $(A) $(B) = $(AB))
   let t ← tactic.pis args A_eq
   let pr := (expr.const `matrix.of_mul_of_fin_aux [u]).mk_app [q(l), q(m), q(n)]
   let-- This seems to create a metavariable then assign it, which ensures `pr` carries the right type.
@@ -225,7 +225,7 @@ open scoped Matrix
 
 /-- Helper tactic used as an `auto_param` for `matrix.of_mul_of_fin` -/
 unsafe def of_mul_of_fin.derive : tactic Unit := do
-  let target@q(@Matrix.mul (Fin $(l)) (Fin $(m)) (Fin $(n)) $(α) $(_) $(i1) $(i2) $(A) $(B) = $(AB))
+  let target@q(@HMul.hMul (Fin $(l)) (Fin $(m)) (Fin $(n)) $(α) $(_) $(i1) $(i2) $(A) $(B) = $(AB))
     ← tactic.target
   let some (l, m, n) ← pure (Prod.mk <$> l.toNat <*> (Prod.mk <$> m.toNat <*> n.toNat)) |
     throwError "Dimensions {(← l)}, {(← m)} {← n} are not numerals"
@@ -243,14 +243,14 @@ unsafe def of_mul_of_fin.derive : tactic Unit := do
 `![![x₀₀, x₀₁], ![x₁₀, x₁₁]]`. It then uses an `auto_param` to populate `ab_coeffs` with an
 expression of the same form, containing the appropriate expressions in terms of `+`, `*`, `aᵢⱼ`,
 and `bⱼₖ`. -/
-theorem of_mul_of_fin {α} [Mul α] [AddCommMonoid α] {l m n : ℕ} {a_coeffs : Fin l → Fin m → α}
+theorem of_hMul_of_fin {α} [Mul α] [AddCommMonoid α] {l m n : ℕ} {a_coeffs : Fin l → Fin m → α}
     {b_coeffs : Fin m → Fin n → α} {ab_coeffs : Fin l → Fin n → α}
     (h : of a_coeffs ⬝ of b_coeffs = of ab_coeffs := by
       run_tac
         of_mul_of_fin.derive) :
     of a_coeffs ⬝ of b_coeffs = of ab_coeffs :=
   h
-#align matrix.of_mul_of_fin Matrix.of_mul_of_fin
+#align matrix.of_mul_of_fin Matrix.of_hMul_of_fin
 
 end OfMulOfFin
 

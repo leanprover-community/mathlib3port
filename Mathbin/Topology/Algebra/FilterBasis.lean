@@ -315,8 +315,8 @@ end GroupFilterBasis
   topology on `R` which is compatible with the ring structure.  -/
 class RingFilterBasis (R : Type u) [Ring R] extends AddGroupFilterBasis R where
   mul' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V * V ⊆ U
-  mul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ * x) ⁻¹' U
-  mul_right' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x * x₀) ⁻¹' U
+  hMul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ * x) ⁻¹' U
+  hMul_right' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x * x₀) ⁻¹' U
 #align ring_filter_basis RingFilterBasis
 -/
 
@@ -335,13 +335,13 @@ theorem mul {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V * V ⊆ U :=
 
 #print RingFilterBasis.mul_left /-
 theorem mul_left (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ * x) ⁻¹' U :=
-  mul_left' x₀ hU
+  hMul_left' x₀ hU
 #align ring_filter_basis.mul_left RingFilterBasis.mul_left
 -/
 
 #print RingFilterBasis.mul_right /-
 theorem mul_right (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x * x₀) ⁻¹' U :=
-  mul_right' x₀ hU
+  hMul_right' x₀ hU
 #align ring_filter_basis.mul_right RingFilterBasis.mul_right
 -/
 

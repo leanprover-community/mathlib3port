@@ -143,7 +143,7 @@ attribute [to_additive] Submonoid SubmonoidClass
 theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M}
     (hx : x ∈ S) : ∀ n : ℕ, x ^ n ∈ S
   | 0 => by rw [pow_zero]; exact OneMemClass.one_mem S
-  | n + 1 => by rw [pow_succ]; exact MulMemClass.mul_mem hx (pow_mem n)
+  | n + 1 => by rw [pow_succ]; exact MulMemClass.hMul_mem hx (pow_mem n)
 #align pow_mem pow_mem
 #align nsmul_mem nsmul_mem
 -/
@@ -160,7 +160,7 @@ instance : SetLike (Submonoid M) M
 instance : SubmonoidClass (Submonoid M) M
     where
   one_mem := Submonoid.one_mem'
-  mul_mem := Submonoid.mul_mem'
+  hMul_mem := Submonoid.hMul_mem'
 
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection]"]
@@ -222,7 +222,7 @@ protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M
     where
   carrier := s
   one_mem' := hs.symm ▸ S.one_mem'
-  mul_mem' _ _ := hs.symm ▸ S.mul_mem'
+  hMul_mem' _ _ := hs.symm ▸ S.hMul_mem'
 #align submonoid.copy Submonoid.copy
 #align add_submonoid.copy AddSubmonoid.copy
 -/
@@ -260,7 +260,7 @@ protected theorem one_mem : (1 : M) ∈ S :=
 /-- A submonoid is closed under multiplication. -/
 @[to_additive "An `add_submonoid` is closed under addition."]
 protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
-  mul_mem
+  hMul_mem
 #align submonoid.mul_mem Submonoid.mul_mem
 #align add_submonoid.add_mem AddSubmonoid.add_mem
 -/
@@ -270,14 +270,14 @@ protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
 instance : Top (Submonoid M) :=
   ⟨{  carrier := Set.univ
       one_mem' := Set.mem_univ 1
-      mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
+      hMul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial submonoid `{1}` of an monoid `M`. -/
 @[to_additive "The trivial `add_submonoid` `{0}` of an `add_monoid` `M`."]
 instance : Bot (Submonoid M) :=
   ⟨{  carrier := {1}
       one_mem' := Set.mem_singleton 1
-      mul_mem' := fun a b ha hb => by simp only [Set.mem_singleton_iff] at *;
+      hMul_mem' := fun a b ha hb => by simp only [Set.mem_singleton_iff] at *;
         rw [ha, hb, mul_one] }⟩
 
 @[to_additive]
@@ -322,7 +322,7 @@ instance : Inf (Submonoid M) :=
   ⟨fun S₁ S₂ =>
     { carrier := S₁ ∩ S₂
       one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩
-      mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
+      hMul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.hMul_mem hx hy, S₂.hMul_mem hx' hy'⟩ }⟩
 
 #print Submonoid.coe_inf /-
 @[simp, to_additive]
@@ -345,9 +345,9 @@ instance : InfSet (Submonoid M) :=
   ⟨fun s =>
     { carrier := ⋂ t ∈ s, ↑t
       one_mem' := Set.mem_biInter fun i h => i.one_mem
-      mul_mem' := fun x y hx hy =>
+      hMul_mem' := fun x y hx hy =>
         Set.mem_biInter fun i h =>
-          i.mul_mem (by apply Set.mem_iInter₂.1 hx i h) (by apply Set.mem_iInter₂.1 hy i h) }⟩
+          i.hMul_mem (by apply Set.mem_iInter₂.1 hx i h) (by apply Set.mem_iInter₂.1 hy i h) }⟩
 
 #print Submonoid.coe_sInf /-
 @[simp, norm_cast, to_additive]
@@ -517,7 +517,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
 @[elab_as_elim, to_additive "A dependent version of `add_submonoid.closure_induction`. "]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
     (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h)) (H1 : p 1 (one_mem _))
-    (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) :
+    (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (hMul_mem hx hy)) {x} (hx : x ∈ closure s) :
     p x hx := by
   refine' Exists.elim _ fun (hx : x ∈ closure s) (hc : p x hx) => hc
   exact
@@ -678,7 +678,7 @@ def eqLocusM (f g : M →* N) : Submonoid M
     where
   carrier := {x | f x = g x}
   one_mem' := by rw [Set.mem_setOf_eq, f.map_one, g.map_one]
-  mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
+  hMul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align monoid_hom.eq_mlocus MonoidHom.eqLocusM
 #align add_monoid_hom.eq_mlocus AddMonoidHom.eqLocusM
 -/
@@ -735,7 +735,7 @@ def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M
     where
   carrier := setOf IsUnit
   one_mem' := by simp only [isUnit_one, Set.mem_setOf_eq]
-  mul_mem' := by intro a b ha hb; rw [Set.mem_setOf_eq] at *; exact IsUnit.mul ha hb
+  hMul_mem' := by intro a b ha hb; rw [Set.mem_setOf_eq] at *; exact IsUnit.mul ha hb
 #align is_unit.submonoid IsUnit.submonoid
 #align is_add_unit.add_submonoid IsAddUnit.addSubmonoid
 -/

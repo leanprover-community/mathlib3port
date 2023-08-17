@@ -35,7 +35,7 @@ variable {l : Filter β} {f g : β → α}
 
 section continuous_mul
 
-theorem mul_tendsto_nhds_zero_right (x : α) :
+theorem hMul_tendsto_nhds_zero_right (x : α) :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 :=
   by
   have hx : 0 < 2 * (1 + |x|) := by positivity
@@ -50,22 +50,22 @@ theorem mul_tendsto_nhds_zero_right (x : α) :
     |b| = |b - x + x| := by rw [sub_add_cancel b x]
     _ ≤ |b - x| + |x| := (abs_add (b - x) x)
     _ ≤ 2 * (1 + |x|) := by linarith
-#align mul_tendsto_nhds_zero_right mul_tendsto_nhds_zero_right
+#align mul_tendsto_nhds_zero_right hMul_tendsto_nhds_zero_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mul_tendsto_nhds_zero_left (x : α) :
+theorem hMul_tendsto_nhds_zero_left (x : α) :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 x ×ᶠ 𝓝 0) <| 𝓝 0 :=
   by
   intro s hs
-  have := mul_tendsto_nhds_zero_right x hs
+  have := hMul_tendsto_nhds_zero_right x hs
   rw [Filter.mem_map, mem_prod_iff] at this ⊢
   obtain ⟨U, hU, V, hV, h⟩ := this
   exact
     ⟨V, hV, U, hU, fun y hy =>
       (mul_comm y.2 y.1 ▸ h (⟨hy.2, hy.1⟩ : Prod.mk y.2 y.1 ∈ U ×ˢ V) : y.1 * y.2 ∈ s)⟩
-#align mul_tendsto_nhds_zero_left mul_tendsto_nhds_zero_left
+#align mul_tendsto_nhds_zero_left hMul_tendsto_nhds_zero_left
 
-theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
+theorem nhds_eq_map_hMul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
     𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1) :=
   by
   have hx₀' : 0 < |x₀| := abs_pos.2 hx₀
@@ -92,14 +92,14 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
     specialize hit (x / x₀) this
     rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit 
-#align nhds_eq_map_mul_left_nhds_one nhds_eq_map_mul_left_nhds_one
+#align nhds_eq_map_mul_left_nhds_one nhds_eq_map_hMul_left_nhds_one
 
-theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
+theorem nhds_eq_map_hMul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
     𝓝 x₀ = map (fun x => x * x₀) (𝓝 1) := by
-  simp_rw [mul_comm _ x₀, nhds_eq_map_mul_left_nhds_one hx₀]
-#align nhds_eq_map_mul_right_nhds_one nhds_eq_map_mul_right_nhds_one
+  simp_rw [mul_comm _ x₀, nhds_eq_map_hMul_left_nhds_one hx₀]
+#align nhds_eq_map_mul_right_nhds_one nhds_eq_map_hMul_right_nhds_one
 
-theorem mul_tendsto_nhds_one_nhds_one :
+theorem hMul_tendsto_nhds_one_nhds_one :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 :=
   by
   rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iffₓ
@@ -131,7 +131,7 @@ theorem mul_tendsto_nhds_one_nhds_one :
             (by linarith))
           (1 + ε / 2))
       _ ≤ 1 + ε := by ring_nf
-#align mul_tendsto_nhds_one_nhds_one mul_tendsto_nhds_one_nhds_one
+#align mul_tendsto_nhds_one_nhds_one hMul_tendsto_nhds_one_nhds_one
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :=
@@ -140,10 +140,10 @@ instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :
     rintro ⟨x₀, y₀⟩
     by_cases hx₀ : x₀ = 0
     · rw [hx₀, ContinuousAt, MulZeroClass.zero_mul, nhds_prod_eq]
-      exact mul_tendsto_nhds_zero_right y₀
+      exact hMul_tendsto_nhds_zero_right y₀
     by_cases hy₀ : y₀ = 0
     · rw [hy₀, ContinuousAt, MulZeroClass.mul_zero, nhds_prod_eq]
-      exact mul_tendsto_nhds_zero_left x₀
+      exact hMul_tendsto_nhds_zero_left x₀
     have hxy : x₀ * y₀ ≠ 0 := mul_ne_zero hx₀ hy₀
     have key :
       (fun p : α × α => x₀ * p.1 * (p.2 * y₀)) =
@@ -154,16 +154,16 @@ instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :
       map (uncurry (· * ·)) (𝓝 (x₀, y₀)) = map (uncurry (· * ·)) (𝓝 x₀ ×ᶠ 𝓝 y₀) := by
         rw [nhds_prod_eq]
       _ = map (fun p : α × α => x₀ * p.1 * (p.2 * y₀)) (𝓝 1 ×ᶠ 𝓝 1) := by
-        rw [uncurry, nhds_eq_map_mul_left_nhds_one hx₀, nhds_eq_map_mul_right_nhds_one hy₀,
+        rw [uncurry, nhds_eq_map_hMul_left_nhds_one hx₀, nhds_eq_map_hMul_right_nhds_one hy₀,
           prod_map_map_eq, Filter.map_map]
       _ = map ((fun x => x₀ * x) ∘ fun x => x * y₀) (map (uncurry (· * ·)) (𝓝 1 ×ᶠ 𝓝 1)) := by
         rw [key, ← Filter.map_map]
       _ ≤ map ((fun x : α => x₀ * x) ∘ fun x => x * y₀) (𝓝 1) :=
-        (map_mono mul_tendsto_nhds_one_nhds_one)
+        (map_mono hMul_tendsto_nhds_one_nhds_one)
       _ = 𝓝 (x₀ * y₀) := by
-        rw [← Filter.map_map, ← nhds_eq_map_mul_right_nhds_one hy₀,
-          nhds_eq_map_mul_left_nhds_one hy₀, Filter.map_map, key₂, ←
-          nhds_eq_map_mul_left_nhds_one hxy]⟩
+        rw [← Filter.map_map, ← nhds_eq_map_hMul_right_nhds_one hy₀,
+          nhds_eq_map_hMul_left_nhds_one hy₀, Filter.map_map, key₂, ←
+          nhds_eq_map_hMul_left_nhds_one hxy]⟩
 #align linear_ordered_field.has_continuous_mul LinearOrderedField.continuousMul
 
 end continuous_mul

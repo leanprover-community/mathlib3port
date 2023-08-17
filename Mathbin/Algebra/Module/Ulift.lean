@@ -78,7 +78,7 @@ instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar 
 instance mulAction [Monoid R] [MulAction R M] : MulAction (ULift R) M
     where
   smul := (· • ·)
-  mul_smul _ _ := mul_smul _ _
+  hMul_smul _ _ := hMul_smul _ _
   one_smul := one_smul _
 #align ulift.mul_action ULift.mulAction
 #align ulift.add_action ULift.addAction
@@ -89,7 +89,7 @@ instance mulAction [Monoid R] [MulAction R M] : MulAction (ULift R) M
 instance mulAction' [Monoid R] [MulAction R M] : MulAction R (ULift M)
     where
   smul := (· • ·)
-  mul_smul := fun r s ⟨f⟩ => ext _ _ <| mul_smul _ _ _
+  hMul_smul := fun r s ⟨f⟩ => ext _ _ <| hMul_smul _ _ _
   one_smul := fun ⟨f⟩ => ext _ _ <| one_smul _ _
 #align ulift.mul_action' ULift.mulAction'
 #align ulift.add_action' ULift.addAction'
@@ -138,7 +138,7 @@ instance mulDistribMulAction [Monoid R] [Monoid M] [MulDistribMulAction R M] :
     MulDistribMulAction (ULift R) M
     where
   smul_one _ := smul_one _
-  smul_mul _ := smul_mul' _
+  smul_hMul _ := smul_mul' _
 #align ulift.mul_distrib_mul_action ULift.mulDistribMulAction
 -/
 
@@ -147,7 +147,7 @@ instance mulDistribMulAction' [Monoid R] [Monoid M] [MulDistribMulAction R M] :
     MulDistribMulAction R (ULift M) :=
   { ULift.mulAction' with
     smul_one := fun _ => by ext; simp [smul_one]
-    smul_mul := fun c f g => by ext; simp [smul_mul'] }
+    smul_hMul := fun c f g => by ext; simp [smul_mul'] }
 #align ulift.mul_distrib_mul_action' ULift.mulDistribMulAction'
 -/
 

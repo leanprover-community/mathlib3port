@@ -735,7 +735,7 @@ instance : MulAction S₂ (M₁ →SL[σ₁₂] M₂)
     where
   smul c f := ⟨c • f, (f.2.const_smul _ : Continuous fun x => c • f x)⟩
   one_smul f := ext fun x => one_smul _ _
-  mul_smul a b f := ext fun x => mul_smul _ _ _
+  hMul_smul a b f := ext fun x => hMul_smul _ _ _
 
 #print ContinuousLinearMap.smul_apply /-
 theorem smul_apply (c : S₂) (f : M₁ →SL[σ₁₂] M₂) (x : M₁) : (c • f) x = c • f x :=
@@ -2749,7 +2749,7 @@ instance automorphismGroup : Group (M₁ ≃L[R₁] M₁)
   mul_assoc f g h := by ext; rfl
   mul_one f := by ext; rfl
   one_mul f := by ext; rfl
-  mul_left_inv f := by ext; exact f.left_inv x
+  hMul_left_inv f := by ext; exact f.left_inv x
 #align continuous_linear_equiv.automorphism_group ContinuousLinearEquiv.automorphismGroup
 -/
 

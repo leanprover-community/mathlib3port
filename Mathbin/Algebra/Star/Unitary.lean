@@ -34,7 +34,7 @@ def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R
     where
   carrier := {U | star U * U = 1 ∧ U * star U = 1}
   one_mem' := by simp only [mul_one, and_self_iff, Set.mem_setOf_eq, star_one]
-  mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ =>
+  hMul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ =>
     by
     refine' ⟨_, _⟩
     ·
@@ -130,7 +130,7 @@ theorem mul_star_self (U : unitary R) : U * star U = 1 :=
 instance : Group (unitary R) :=
   { Submonoid.toMonoid _ with
     inv := star
-    mul_left_inv := star_mul_self }
+    hMul_left_inv := star_mul_self }
 
 instance : InvolutiveStar (unitary R) :=
   ⟨fun _ => by ext; simp only [coe_star, star_star]⟩

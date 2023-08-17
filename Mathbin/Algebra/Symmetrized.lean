@@ -351,9 +351,9 @@ instance {R : Type _} [Semiring R] [AddCommMonoid α] [Module R α] : Module R �
 instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : Invertible (sym a)
     where
   invOf := sym (⅟ a)
-  invOf_mul_self := by
+  invOf_hMul_self := by
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
-  mul_invOf_self := by
+  hMul_invOf_self := by
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
 
 #print SymAlg.invOf_sym /-

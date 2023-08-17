@@ -1567,7 +1567,7 @@ instance : NonUnitalRing (α →ᵇ R) :=
 
 instance : NonUnitalSeminormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.seminormedAddCommGroup with
-    norm_mul := fun f g =>
+    norm_hMul := fun f g =>
       norm_ofNormedAddCommGroup_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _ }
 
 end SemiNormed
@@ -1693,7 +1693,7 @@ variable {f g : α →ᵇ γ} {x : α} {c : 𝕜}
 def C : 𝕜 →+* α →ᵇ γ where
   toFun := fun c : 𝕜 => const α ((algebraMap 𝕜 γ) c)
   map_one' := ext fun x => (algebraMap 𝕜 γ).map_one
-  map_mul' c₁ c₂ := ext fun x => (algebraMap 𝕜 γ).map_mul _ _
+  map_mul' c₁ c₂ := ext fun x => (algebraMap 𝕜 γ).map_hMul _ _
   map_zero' := ext fun x => (algebraMap 𝕜 γ).map_zero
   map_add' c₁ c₂ := ext fun x => (algebraMap 𝕜 γ).map_add _ _
 #align bounded_continuous_function.C BoundedContinuousFunction.C
@@ -1741,7 +1741,7 @@ instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
     { smul := (· • ·)
       smul_add := fun c f₁ f₂ => ext fun x => smul_add _ _ _
       add_smul := fun c₁ c₂ f => ext fun x => add_smul _ _ _
-      mul_smul := fun c₁ c₂ f => ext fun x => mul_smul _ _ _
+      hMul_smul := fun c₁ c₂ f => ext fun x => hMul_smul _ _ _
       one_smul := fun f => ext fun x => one_smul 𝕜 (f x) }
 #align bounded_continuous_function.module' BoundedContinuousFunction.module'
 -/
@@ -1829,24 +1829,24 @@ variable [NonUnitalNormedRing β] [StarRing β]
 
 instance [NormedStarGroup β] : StarRing (α →ᵇ β) :=
   { BoundedContinuousFunction.starAddMonoid with
-    star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
+    star_hMul := fun f g => ext fun x => star_hMul (f x) (g x) }
 
 variable [CstarRing β]
 
 instance : CstarRing (α →ᵇ β)
-    where norm_star_mul_self := by
+    where norm_star_hMul_self := by
     intro f
     refine' le_antisymm _ _
     · rw [← sq, norm_le (sq_nonneg _)]
       dsimp [star_apply]
       intro x
-      rw [CstarRing.norm_star_mul_self, ← sq]
+      rw [CstarRing.norm_star_hMul_self, ← sq]
       refine' sq_le_sq' _ _
       · linarith [norm_nonneg (f x), norm_nonneg f]
       · exact norm_coe_le_norm f x
     · rw [← sq, ← Real.le_sqrt (norm_nonneg _) (norm_nonneg _), norm_le (Real.sqrt_nonneg _)]
       intro x
-      rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_mul_self]
+      rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_hMul_self]
       exact norm_coe_le_norm (star f * f) x
 
 end CstarRing

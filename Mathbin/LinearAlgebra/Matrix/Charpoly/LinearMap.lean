@@ -200,7 +200,7 @@ endomorphisms on `M`. -/
 def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R)
     where
   carrier := {A | ∃ f : Module.End R M, A.Represents b f}
-  mul_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ * f₂, e₁.mul e₂⟩
+  hMul_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ * f₂, e₁.mul e₂⟩
   one_mem' := ⟨1, Matrix.Represents.one⟩
   add_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ + f₂, e₁.add e₂⟩
   zero_mem' := ⟨0, Matrix.Represents.zero⟩

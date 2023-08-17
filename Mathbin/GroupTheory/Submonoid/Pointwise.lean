@@ -95,7 +95,7 @@ theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s :=
 theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
   sInf_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
-      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
+      (closure S ⊔ closure T).hMul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 #align submonoid.closure_mul_le Submonoid.closure_mul_le
 #align add_submonoid.closure_add_le AddSubmonoid.closure_add_le
@@ -140,7 +140,7 @@ protected def inv : Inv (Submonoid G)
     where inv S :=
     { carrier := (S : Set G)⁻¹
       one_mem' := show (1 : G)⁻¹ ∈ S by rw [inv_one]; exact S.one_mem
-      mul_mem' := fun a b (ha : a⁻¹ ∈ S) (hb : b⁻¹ ∈ S) =>
+      hMul_mem' := fun a b (ha : a⁻¹ ∈ S) (hb : b⁻¹ ∈ S) =>
         show (a * b)⁻¹ ∈ S by rw [mul_inv_rev]; exact S.mul_mem hb ha }
 #align submonoid.has_inv Submonoid.inv
 #align add_submonoid.has_neg AddSubmonoid.neg
@@ -274,7 +274,7 @@ protected def pointwiseMulAction : MulAction α (Submonoid M)
     where
   smul a S := S.map (MulDistribMulAction.toMonoidEnd _ M a)
   one_smul S := by ext; simp
-  mul_smul a₁ a₂ S :=
+  hMul_smul a₁ a₂ S :=
     (congr_arg (fun f : Monoid.End M => S.map f) (MonoidHom.map_mul _ _ _)).trans
       (S.map_map _ _).symm
 #align submonoid.pointwise_mul_action Submonoid.pointwiseMulAction
@@ -456,7 +456,7 @@ protected def pointwiseMulAction : MulAction α (AddSubmonoid A)
   smul a S := S.map (DistribMulAction.toAddMonoidEnd _ A a)
   one_smul S :=
     (congr_arg (fun f : AddMonoid.End A => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul a₁ a₂ S :=
+  hMul_smul a₁ a₂ S :=
     (congr_arg (fun f : AddMonoid.End A => S.map f) (MonoidHom.map_mul _ _ _)).trans
       (S.map_map _ _).symm
 #align add_submonoid.pointwise_mul_action AddSubmonoid.pointwiseMulAction
@@ -788,7 +788,7 @@ This is available as an instance in the `pointwise` locale. -/
 protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
   { AddSubmonoid.hasInvolutiveNeg with
     neg := Neg.neg
-    neg_mul := fun x y =>
+    neg_hMul := fun x y =>
       by
       refine'
           le_antisymm (mul_le.2 fun m hm n hn => _)
@@ -796,7 +796,7 @@ protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
         simp only [AddSubmonoid.mem_neg, ← neg_mul] at *
       · exact mul_mem_mul hm hn
       · exact mul_mem_mul (neg_mem_neg.2 hm) hn
-    mul_neg := fun x y =>
+    hMul_neg := fun x y =>
       by
       refine'
           le_antisymm (mul_le.2 fun m hm n hn => _)

@@ -1478,10 +1478,7 @@ theorem mul_max : a * max b c = max (a * b) (a * c) :=
 #align ennreal.mul_max ENNReal.mul_max
 -/
 
-/- warning: ennreal.mul_left_strictMono clashes with ennreal.mul_left_strict_mono -> ENNReal.mul_left_strictMono
-Case conversion may be inaccurate. Consider using '#align ennreal.mul_left_strictMono ENNReal.mul_left_strictMonoₓ'. -/
-#print ENNReal.mul_left_strictMono /-
-theorem mul_left_strictMono (h0 : a ≠ 0) (hinf : a ≠ ∞) : StrictMono ((· * ·) a) :=
+theorem hMul_left_strictMono (h0 : a ≠ 0) (hinf : a ≠ ∞) : StrictMono ((· * ·) a) :=
   by
   lift a to ℝ≥0 using hinf
   rw [coe_ne_zero] at h0 
@@ -1489,12 +1486,11 @@ theorem mul_left_strictMono (h0 : a ≠ 0) (hinf : a ≠ ∞) : StrictMono ((· 
   contrapose! h
   simpa only [← mul_assoc, ← coe_mul, inv_mul_cancel h0, coe_one, one_mul] using
     mul_le_mul_left' h ↑a⁻¹
-#align ennreal.mul_left_strictMono ENNReal.mul_left_strictMono
--/
+#align ennreal.mul_left_strictMono ENNReal.hMul_left_strictMono
 
 #print ENNReal.mul_eq_mul_left /-
 theorem mul_eq_mul_left (h₀ : a ≠ 0) (hinf : a ≠ ∞) : a * b = a * c ↔ b = c :=
-  (mul_left_strictMono h₀ hinf).Injective.eq_iff
+  (hMul_left_strictMono h₀ hinf).Injective.eq_iff
 #align ennreal.mul_eq_mul_left ENNReal.mul_eq_mul_left
 -/
 
@@ -1506,7 +1502,7 @@ theorem mul_eq_mul_right : c ≠ 0 → c ≠ ∞ → (a * c = b * c ↔ a = b) :
 
 #print ENNReal.mul_le_mul_left /-
 theorem mul_le_mul_left (h₀ : a ≠ 0) (hinf : a ≠ ∞) : a * b ≤ a * c ↔ b ≤ c :=
-  (mul_left_strictMono h₀ hinf).le_iff_le
+  (hMul_left_strictMono h₀ hinf).le_iff_le
 #align ennreal.mul_le_mul_left ENNReal.mul_le_mul_left
 -/
 
@@ -1518,7 +1514,7 @@ theorem mul_le_mul_right : c ≠ 0 → c ≠ ∞ → (a * c ≤ b * c ↔ a ≤ 
 
 #print ENNReal.mul_lt_mul_left /-
 theorem mul_lt_mul_left (h₀ : a ≠ 0) (hinf : a ≠ ∞) : a * b < a * c ↔ b < c :=
-  (mul_left_strictMono h₀ hinf).lt_iff_lt
+  (hMul_left_strictMono h₀ hinf).lt_iff_lt
 #align ennreal.mul_lt_mul_left ENNReal.mul_lt_mul_left
 -/
 
@@ -3217,7 +3213,7 @@ def toRealHom : ℝ≥0∞ →* ℝ :=
 #print ENNReal.toReal_mul /-
 @[simp]
 theorem toReal_mul : (a * b).toReal = a.toReal * b.toReal :=
-  toRealHom.map_mul a b
+  toRealHom.map_hMul a b
 #align ennreal.to_real_mul ENNReal.toReal_mul
 -/
 

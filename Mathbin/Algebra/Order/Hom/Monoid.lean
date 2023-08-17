@@ -299,7 +299,7 @@ instance : OrderMonoidHomClass (α →*o β) α β
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_one f := f.map_one'
   Monotone f := f.monotone'
 
@@ -656,7 +656,7 @@ instance : OrderMonoidWithZeroHomClass (α →*₀o β) α β
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_one f := f.map_one'
   map_zero f := f.map_zero'
   Monotone f := f.monotone'

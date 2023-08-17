@@ -955,7 +955,7 @@ instance : NonUnitalRing (lp B ∞) :=
 
 instance : NonUnitalNormedRing (lp B ∞) :=
   { lp.normedAddCommGroup with
-    norm_mul := fun f g =>
+    norm_hMul := fun f g =>
       lp.norm_le_of_forall_le (mul_nonneg (norm_nonneg f) (norm_nonneg g)) fun i =>
         calc
           ‖(f * g) i‖ ≤ ‖f i‖ * ‖g i‖ := norm_mul_le _ _
@@ -987,22 +987,22 @@ instance inftyStarRing : StarRing (lp B ∞) :=
   {
     show StarAddMonoid (lp B ∞) by letI : ∀ i, StarAddMonoid (B i) := fun i => inferInstance;
       infer_instance with
-    star_mul := fun f g => ext <| star_mul (_ : ∀ i, B i) _ }
+    star_hMul := fun f g => ext <| star_hMul (_ : ∀ i, B i) _ }
 #align lp.infty_star_ring lp.inftyStarRing
 -/
 
 #print lp.inftyCstarRing /-
 instance inftyCstarRing [∀ i, CstarRing (B i)] : CstarRing (lp B ∞)
-    where norm_star_mul_self f := by
+    where norm_star_hMul_self f := by
     apply le_antisymm
     · rw [← sq]
       refine' lp.norm_le_of_forall_le (sq_nonneg ‖f‖) fun i => _
-      simp only [lp.star_apply, CstarRing.norm_star_mul_self, ← sq, infty_coe_fn_mul, Pi.mul_apply]
+      simp only [lp.star_apply, CstarRing.norm_star_hMul_self, ← sq, infty_coe_fn_mul, Pi.mul_apply]
       refine' sq_le_sq' _ (lp.norm_apply_le_norm ENNReal.top_ne_zero _ _)
       linarith [norm_nonneg (f i), norm_nonneg f]
     · rw [← sq, ← Real.le_sqrt (norm_nonneg _) (norm_nonneg _)]
       refine' lp.norm_le_of_forall_le ‖star f * f‖.sqrt_nonneg fun i => _
-      rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_mul_self]
+      rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_hMul_self]
       exact lp.norm_apply_le_norm ENNReal.top_ne_zero (star f * f) i
 #align lp.infty_cstar_ring lp.inftyCstarRing
 -/
@@ -1038,7 +1038,7 @@ def lpInftySubring : Subring (PreLp B) :=
   { lp B ∞ with
     carrier := {f | Memℓp f ∞}
     one_mem' := one_memℓp_infty
-    mul_mem' := fun f g hf hg => hf.infty_mul hg }
+    hMul_mem' := fun f g hf hg => hf.infty_mul hg }
 #align lp_infty_subring lpInftySubring
 -/
 

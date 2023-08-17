@@ -502,7 +502,7 @@ instance : MulSemiringActionHomClass (R →+*[M] S) M R S
   map_zero := MulSemiringActionHom.map_zero'
   map_add := MulSemiringActionHom.map_add'
   map_one := MulSemiringActionHom.map_one'
-  map_mul := MulSemiringActionHom.map_mul'
+  map_hMul := MulSemiringActionHom.map_mul'
 
 variable {M R S}
 

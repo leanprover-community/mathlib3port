@@ -389,7 +389,7 @@ when `G = Rˣ` -/
 instance {R : Type _} : MulAction G (RayVector R M)
     where
   smul r := Subtype.map ((· • ·) r) fun a => (smul_ne_zero_iff_ne _).2
-  mul_smul a b m := Subtype.ext <| mul_smul a b _
+  hMul_smul a b m := Subtype.ext <| hMul_smul a b _
   one_smul m := Subtype.ext <| one_smul _ _
 
 variable [SMulCommClass R G M]
@@ -399,7 +399,7 @@ variable [SMulCommClass R G M]
 instance : MulAction G (Module.Ray R M)
     where
   smul r := Quotient.map ((· • ·) r) fun a b h => h.smul _
-  mul_smul a b := Quotient.ind fun m => congr_arg Quotient.mk' <| mul_smul a b _
+  hMul_smul a b := Quotient.ind fun m => congr_arg Quotient.mk' <| mul_smul a b _
   one_smul := Quotient.ind fun m => congr_arg Quotient.mk' <| one_smul _ _
 
 #print Module.Ray.linearEquiv_smul_eq_map /-

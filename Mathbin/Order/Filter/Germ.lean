@@ -453,7 +453,7 @@ instance [CommSemigroup M] : CommSemigroup (Germ l M) :=
 instance [LeftCancelSemigroup M] : LeftCancelSemigroup (Germ l M) :=
   { Germ.semigroup with
     mul := (· * ·)
-    mul_left_cancel := fun f₁ f₂ f₃ =>
+    hMul_left_cancel := fun f₁ f₂ f₃ =>
       inductionOn₃ f₁ f₂ f₃ fun f₁ f₂ f₃ H =>
         coe_eq.2 ((coe_eq.1 H).mono fun x => mul_left_cancel) }
 
@@ -461,7 +461,7 @@ instance [LeftCancelSemigroup M] : LeftCancelSemigroup (Germ l M) :=
 instance [RightCancelSemigroup M] : RightCancelSemigroup (Germ l M) :=
   { Germ.semigroup with
     mul := (· * ·)
-    mul_right_cancel := fun f₁ f₂ f₃ =>
+    hMul_right_cancel := fun f₁ f₂ f₃ =>
       inductionOn₃ f₁ f₂ f₃ fun f₁ f₂ f₃ H =>
         coe_eq.2 <| (coe_eq.1 H).mono fun x => mul_right_cancel }
 
@@ -589,7 +589,7 @@ instance [Group G] : Group (Germ l G) :=
   { Germ.divInvMonoid with
     mul := (· * ·)
     one := 1
-    mul_left_inv := by rintro ⟨f⟩; exact congr_arg (Quot.mk _) (mul_left_inv f) }
+    hMul_left_inv := by rintro ⟨f⟩; exact congr_arg (Quot.mk _) (mul_left_inv f) }
 
 @[to_additive]
 instance [CommGroup G] : CommGroup (Germ l G) :=
@@ -677,14 +677,14 @@ theorem coe_smul' [SMul M β] (c : α → M) (f : α → β) : ↑(c • f) = (c
 instance [Monoid M] [MulAction M β] : MulAction M (Germ l β)
     where
   one_smul f := inductionOn f fun f => by norm_cast; simp only [one_smul]
-  mul_smul c₁ c₂ f := inductionOn f fun f => by norm_cast; simp only [mul_smul]
+  hMul_smul c₁ c₂ f := inductionOn f fun f => by norm_cast; simp only [mul_smul]
 
 #print Filter.Germ.mulAction' /-
 @[to_additive]
 instance mulAction' [Monoid M] [MulAction M β] : MulAction (Germ l M) (Germ l β)
     where
   one_smul f := inductionOn f fun f => by simp only [← coe_one, ← coe_smul', one_smul]
-  mul_smul c₁ c₂ f := inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by norm_cast; simp only [mul_smul]
+  hMul_smul c₁ c₂ f := inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by norm_cast; simp only [mul_smul]
 #align filter.germ.mul_action' Filter.Germ.mulAction'
 #align filter.germ.add_action' Filter.Germ.addAction'
 -/

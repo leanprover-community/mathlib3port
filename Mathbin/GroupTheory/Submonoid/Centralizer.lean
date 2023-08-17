@@ -37,7 +37,7 @@ variable [Monoid M] (S)
 def centralizer : Submonoid M where
   carrier := S.centralizer
   one_mem' := S.one_mem_centralizer
-  mul_mem' a b := Set.mul_mem_centralizer
+  hMul_mem' a b := Set.mul_mem_centralizer
 #align submonoid.centralizer Submonoid.centralizer
 #align add_submonoid.centralizer AddSubmonoid.centralizer
 -/

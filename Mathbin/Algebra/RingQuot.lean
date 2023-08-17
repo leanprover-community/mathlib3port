@@ -544,7 +544,7 @@ def starRing {R : Type u₁} [Semiring R] [StarRing R] (r : R → R → Prop)
     where
   unit := star' r hr
   star_involutive := by rintro ⟨⟨⟩⟩; simp [star'_quot]
-  star_mul := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [star'_quot, mul_quot, star_mul]
+  star_hMul := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [star'_quot, mul_quot, star_mul]
   star_add := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [star'_quot, add_quot, star_add]
 #align ring_quot.star_ring RingQuot.starRing
 -/

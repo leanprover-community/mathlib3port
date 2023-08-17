@@ -326,7 +326,7 @@ theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ≥
   obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h
   exact
     summable_of_nonneg_of_le (fun n => mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp
-      ((summable_geometric_of_lt_1 ha.1.le ha.2).mul_left _)
+      ((summable_geometric_of_lt_1 ha.1.le ha.2).hMul_left _)
 #align formal_multilinear_series.summable_norm_mul_pow FormalMultilinearSeries.summable_norm_mul_pow
 -/
 
@@ -374,7 +374,7 @@ theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
         (show (r : ℝ≥0∞) < p.radius from h.symm ▸ ENNReal.coe_lt_top)
     refine'
       summable_of_norm_bounded (fun n => (C : ℝ) * a ^ n)
-        ((summable_geometric_of_lt_1 ha.1.le ha.2).mul_left _) fun n => _
+        ((summable_geometric_of_lt_1 ha.1.le ha.2).hMul_left _) fun n => _
     specialize hp n
     rwa [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg n))]
   · exact p.radius_eq_top_of_summable_norm
@@ -925,7 +925,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
       have : ‖a‖ < 1 := by simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
       convert
         (hasSum_coe_mul_geometric_of_norm_lt_1 this).add
-          ((hasSum_geometric_of_norm_lt_1 this).mul_left 2)
+          ((hasSum_geometric_of_norm_lt_1 this).hMul_left 2)
     exact hA.norm_le_of_bounded hBL hAB
   suffices L =O[𝓟 (EMetric.ball (x, x) r')] fun y => ‖y - (x, x)‖ * ‖y.1 - y.2‖
     by
@@ -1435,7 +1435,7 @@ theorem changeOriginSeries_summable_aux₁ {r r' : ℝ≥0} (hr : (r + r' : ℝ�
     convert_to HasSum (fun s : Finset (Fin n) => ‖p n‖₊ * (r ^ s.card * r' ^ (n - s.card))) _
     · ext1 s; rw [tsub_add_cancel_of_le (card_finset_fin_le _), mul_assoc]
     rw [← Fin.sum_pow_mul_eq_add_pow]
-    exact (hasSum_fintype _).mul_left _
+    exact (hasSum_fintype _).hMul_left _
   refine' NNReal.summable_sigma.2 ⟨fun n => (this n).Summable, _⟩
   simp only [(this _).tsum_eq]
   exact p.summable_nnnorm_mul_pow hr
@@ -1449,7 +1449,7 @@ theorem changeOriginSeries_summable_aux₂ (hr : (r : ℝ≥0∞) < p.radius) (k
   by
   rcases ENNReal.lt_iff_exists_add_pos_lt.1 hr with ⟨r', h0, hr'⟩
   simpa only [mul_inv_cancel_right₀ (pow_pos h0 _).ne'] using
-    ((NNReal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr')).1 k).mul_right (r' ^ k)⁻¹
+    ((NNReal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr')).1 k).hMul_right (r' ^ k)⁻¹
 #align formal_multilinear_series.change_origin_series_summable_aux₂ FormalMultilinearSeries.changeOriginSeries_summable_aux₂
 -/
 

@@ -1127,7 +1127,7 @@ instance : Group (E ≃ₗᵢ[R] E) where
   one_mul := trans_refl
   mul_one := refl_trans
   mul_assoc _ _ _ := trans_assoc _ _ _
-  mul_left_inv := self_trans_symm
+  hMul_left_inv := self_trans_symm
 
 #print LinearIsometryEquiv.coe_one /-
 @[simp]

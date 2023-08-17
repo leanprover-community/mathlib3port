@@ -51,7 +51,7 @@ def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R
     where
   carrier := S
   one_mem' := hs.one_mem
-  mul_mem' _ _ := hs.mul_mem
+  hMul_mem' _ _ := hs.hMul_mem
   zero_mem' := hs.zero_mem
   add_mem' _ _ := hs.add_mem
   neg_mem' _ := hs.neg_mem
@@ -201,11 +201,11 @@ theorem closure.isSubring : IsSubring (closure s) :=
     AddGroup.closure.isAddSubgroup
       _ with
     one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.isSubmonoid _
-    mul_mem := fun a b ha hb =>
+    hMul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
         (fun c hc =>
           AddGroup.InClosure.rec_on ha
-            (fun d hd => AddGroup.subset_closure ((Monoid.closure.isSubmonoid _).mul_mem hd hc))
+            (fun d hd => AddGroup.subset_closure ((Monoid.closure.isSubmonoid _).hMul_mem hd hc))
             ((MulZeroClass.zero_mul c).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
             (fun d hd hdc =>
               neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.isAddSubgroup _).neg_mem hdc)

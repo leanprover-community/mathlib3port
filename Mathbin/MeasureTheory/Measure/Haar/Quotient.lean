@@ -255,7 +255,7 @@ theorem QuotientGroup.integral_eq_integral_automorphize {E : Type _} [NormedAddC
   function `f` on `G` times the lift to `G` of a function `g` on the quotient `G ⧸ Γ` with respect
   to a right-invariant measure `μ` on `G`, is equal to the integral over the quotient of the
   automorphization of `f` times `g`. -/
-theorem QuotientGroup.integral_mul_eq_integral_automorphize_mul {K : Type _} [NormedField K]
+theorem QuotientGroup.integral_hMul_eq_integral_automorphize_hMul {K : Type _} [NormedField K]
     [CompleteSpace K] [NormedSpace ℝ K] [μ.IsMulRightInvariant] {f : G → K} (f_ℒ_1 : Integrable f μ)
     {g : G ⧸ Γ → K} (hg : AEStronglyMeasurable g μ_𝓕)
     (g_ℒ_infinity : essSup (fun x => ↑‖g x‖₊) μ_𝓕 ≠ ∞)
@@ -285,7 +285,7 @@ theorem QuotientGroup.integral_mul_eq_integral_automorphize_mul {K : Type _} [No
     simp_rw [H₀]
     exact hg.mul F_ae_measurable
   apply QuotientGroup.integral_eq_integral_automorphize h𝓕 H₁ H₂
-#align quotient_group.integral_mul_eq_integral_automorphize_mul QuotientGroup.integral_mul_eq_integral_automorphize_mul
+#align quotient_group.integral_mul_eq_integral_automorphize_mul QuotientGroup.integral_hMul_eq_integral_automorphize_hMul
 
 end
 
@@ -301,7 +301,7 @@ local notation "μ_𝓕" => Measure.map (@QuotientAddGroup.mk G' _ Γ') (μ'.res
   integral of a function `f` on `G'` times the lift to `G'` of a function `g` on the quotient
   `G' ⧸ Γ'` with respect to a right-invariant measure `μ` on `G'`, is equal to the integral over
   the quotient of the automorphization of `f` times `g`. -/
-theorem quotientAddGroup.integral_mul_eq_integral_automorphize_mul {K : Type _} [NormedField K]
+theorem quotientAddGroup.integral_hMul_eq_integral_automorphize_hMul {K : Type _} [NormedField K]
     [CompleteSpace K] [NormedSpace ℝ K] [μ'.IsAddRightInvariant] {f : G' → K}
     (f_ℒ_1 : Integrable f μ') {g : G' ⧸ Γ' → K} (hg : AEStronglyMeasurable g μ_𝓕)
     (g_ℒ_infinity : essSup (fun x => ↑‖g x‖₊) μ_𝓕 ≠ ∞)
@@ -334,10 +334,10 @@ theorem quotientAddGroup.integral_mul_eq_integral_automorphize_mul {K : Type _} 
     simp_rw [H₀]
     exact hg.mul F_ae_measurable
   apply quotientAddGroup.integral_eq_integral_automorphize h𝓕 H₁ H₂
-#align quotient_add_group.integral_mul_eq_integral_automorphize_mul quotientAddGroup.integral_mul_eq_integral_automorphize_mul
+#align quotient_add_group.integral_mul_eq_integral_automorphize_mul quotientAddGroup.integral_hMul_eq_integral_automorphize_hMul
 
 end
 
-attribute [to_additive QuotientGroup.integral_mul_eq_integral_automorphize_mul]
-  quotientAddGroup.integral_mul_eq_integral_automorphize_mul
+attribute [to_additive QuotientGroup.integral_hMul_eq_integral_automorphize_hMul]
+  quotientAddGroup.integral_hMul_eq_integral_automorphize_hMul
 

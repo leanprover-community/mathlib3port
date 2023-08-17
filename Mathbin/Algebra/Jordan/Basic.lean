@@ -103,16 +103,16 @@ class IsCommJordan [Mul A] where
 /-- A (commutative) Jordan multiplication is also a Jordan multipication -/
 instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : IsJordan A
     where
-  lmul_comm_rmul a b := by rw [IsCommJordan.mul_comm, IsCommJordan.mul_comm a b]
+  lmul_comm_rmul a b := by rw [IsCommJordan.hMul_comm, IsCommJordan.hMul_comm a b]
   lmul_lmul_comm_lmul a b := by
-    rw [IsCommJordan.mul_comm (a * a) (a * b), IsCommJordan.lmul_comm_rmul_rmul,
-      IsCommJordan.mul_comm b (a * a)]
+    rw [IsCommJordan.hMul_comm (a * a) (a * b), IsCommJordan.lmul_comm_rmul_rmul,
+      IsCommJordan.hMul_comm b (a * a)]
   lmul_comm_rmul_rmul := IsCommJordan.lmul_comm_rmul_rmul
   lmul_lmul_comm_rmul a b := by
-    rw [IsCommJordan.mul_comm (a * a) (b * a), IsCommJordan.mul_comm b a,
-      IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.mul_comm, IsCommJordan.mul_comm b (a * a)]
+    rw [IsCommJordan.hMul_comm (a * a) (b * a), IsCommJordan.hMul_comm b a,
+      IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.hMul_comm, IsCommJordan.hMul_comm b (a * a)]
   rmul_comm_rmul_rmul a b := by
-    rw [IsCommJordan.mul_comm b a, IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.mul_comm]
+    rw [IsCommJordan.hMul_comm b a, IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.hMul_comm]
 #align is_comm_jordan.to_is_jordan IsCommJordan.toIsJordan
 -/
 
@@ -203,7 +203,7 @@ theorem two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add (a b : A) :
   suffices 2 • ⁅L a, L (a * b)⁆ + 2 • ⁅L b, L (b * a)⁆ + ⁅L b, L (a * a)⁆ + ⁅L a, L (b * b)⁆ = 0 by
     rwa [← sub_eq_zero, ← sub_sub, sub_eq_add_neg, sub_eq_add_neg, lie_skew, lie_skew, nsmul_add]
   convert (commute_lmul_lmul_sq (a + b)).lie_eq
-  simp only [add_mul, mul_add, map_add, lie_add, add_lie, IsCommJordan.mul_comm b a,
+  simp only [add_mul, mul_add, map_add, lie_add, add_lie, IsCommJordan.hMul_comm b a,
     (commute_lmul_lmul_sq a).lie_eq, (commute_lmul_lmul_sq b).lie_eq]
   abel
 #align two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add
@@ -228,7 +228,7 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
         ⁅L a + L b + L c,
           L (a * a) + L (a * b) + L (c * a) + (L (a * b) + L (b * b) + L (b * c)) +
             (L (c * a) + L (b * c) + L (c * c))⁆ :=
-      by rw [IsCommJordan.mul_comm b a, IsCommJordan.mul_comm c a, IsCommJordan.mul_comm c b]
+      by rw [IsCommJordan.hMul_comm b a, IsCommJordan.hMul_comm c a, IsCommJordan.hMul_comm c b]
     _ =
         ⁅L a + L b + L c,
           L (a * a) + L (b * b) + L (c * c) + 2 • L (a * b) + 2 • L (c * a) + 2 • L (b * c)⁆ :=
@@ -275,9 +275,9 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
     _ = 2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆ :=
       by
       rw [add_left_eq_self]
-      nth_rw 2 [IsCommJordan.mul_comm a b]
-      nth_rw 1 [IsCommJordan.mul_comm c a]
-      nth_rw 2 [IsCommJordan.mul_comm b c]
+      nth_rw 2 [IsCommJordan.hMul_comm a b]
+      nth_rw 1 [IsCommJordan.hMul_comm c a]
+      nth_rw 2 [IsCommJordan.hMul_comm b c]
       rw [two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add,
         two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add,
         two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add, ← lie_skew (L (a * a)), ←

@@ -394,7 +394,7 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
 instance (priority := 200) toModule : Module R A
     where
   one_smul := by simp [smul_def'']
-  mul_smul := by simp [smul_def'', mul_assoc]
+  hMul_smul := by simp [smul_def'', mul_assoc]
   smul_add := by simp [smul_def'', mul_add]
   smul_zero := by simp [smul_def'']
   add_smul := by simp [smul_def'', add_mul]

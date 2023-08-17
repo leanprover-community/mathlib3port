@@ -99,7 +99,7 @@ variable [CanonicallyOrderedCommSemiring α] {a b : α}
 #print CanonicallyOrderedCommSemiring.toNoZeroDivisors /-
 -- see Note [lower instance priority]
 instance (priority := 100) toNoZeroDivisors : NoZeroDivisors α :=
-  ⟨fun a b h => CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero h⟩
+  ⟨fun a b h => CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_hMul_eq_zero h⟩
 #align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.toNoZeroDivisors
 -/
 

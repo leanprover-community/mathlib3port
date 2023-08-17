@@ -332,7 +332,7 @@ def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [Topol
     where
   carrier := {f : α → β | Continuous f}
   one_mem' := @continuous_const _ _ _ _ 1
-  mul_mem' f g fc gc := fc.mul gc
+  hMul_mem' f g fc gc := fc.mul gc
 #align continuous_submonoid continuousSubmonoid
 #align continuous_add_submonoid continuousAddSubmonoid
 -/
@@ -421,7 +421,7 @@ protected def MonoidHom.compLeftContinuous {γ : Type _} [Monoid β] [Continuous
     C(α, β) →* C(α, γ) where
   toFun f := (⟨g, hg⟩ : C(β, γ)).comp f
   map_one' := ext fun x => g.map_one
-  map_mul' f₁ f₂ := ext fun x => g.map_mul _ _
+  map_mul' f₁ f₂ := ext fun x => g.map_hMul _ _
 #align monoid_hom.comp_left_continuous MonoidHom.compLeftContinuous
 #align add_monoid_hom.comp_left_continuous AddMonoidHom.compLeftContinuous
 -/
@@ -473,7 +473,7 @@ instance [CommGroup β] [TopologicalGroup β] : CommGroup C(α, β) :=
 @[to_additive]
 instance [CommGroup β] [TopologicalGroup β] : TopologicalGroup C(α, β)
     where
-  continuous_mul := by
+  continuous_hMul := by
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
     have : UniformGroup β := comm_topologicalGroup_is_uniform
     rw [continuous_iff_continuousAt]
@@ -815,7 +815,7 @@ def ContinuousMap.C : R →+* C(α, A)
     where
   toFun := fun c : R => ⟨fun x : α => (algebraMap R A) c, continuous_const⟩
   map_one' := by ext x <;> exact (algebraMap R A).map_one
-  map_mul' c₁ c₂ := by ext x <;> exact (algebraMap R A).map_mul _ _
+  map_mul' c₁ c₂ := by ext x <;> exact (algebraMap R A).map_hMul _ _
   map_zero' := by ext x <;> exact (algebraMap R A).map_zero
   map_add' c₁ c₂ := by ext x <;> exact (algebraMap R A).map_add _ _
 #align continuous_map.C ContinuousMap.C
@@ -1004,7 +1004,7 @@ instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Semiring R] [
   smul := (· • ·)
   smul_add c f g := by ext x <;> exact smul_add (c x) (f x) (g x)
   add_smul c₁ c₂ f := by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
-  mul_smul c₁ c₂ f := by ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
+  hMul_smul c₁ c₂ f := by ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
   one_smul f := by ext x <;> exact one_smul R (f x)
   zero_smul f := by ext x <;> exact zero_smul _ _
   smul_zero r := by ext x <;> exact smul_zero _
@@ -1109,7 +1109,7 @@ instance [AddMonoid β] [ContinuousAdd β] [StarAddMonoid β] [ContinuousStar β
     StarAddMonoid C(α, β) where star_add f g := ext fun x => star_add _ _
 
 instance [Semigroup β] [ContinuousMul β] [StarSemigroup β] [ContinuousStar β] :
-    StarSemigroup C(α, β) where star_mul f g := ext fun x => star_mul _ _
+    StarSemigroup C(α, β) where star_hMul f g := ext fun x => star_hMul _ _
 
 instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [ContinuousStar β] :
     StarRing C(α, β) :=

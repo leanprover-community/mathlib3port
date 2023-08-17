@@ -330,8 +330,8 @@ section HasDistribNeg
 This is useful for dealing with submonoids of a ring that contain `-1` without having to duplicate
 lemmas. -/
 class HasDistribNeg (α : Type _) [Mul α] extends InvolutiveNeg α where
-  neg_mul : ∀ x y : α, -x * y = -(x * y)
-  mul_neg : ∀ x y : α, x * -y = -(x * y)
+  neg_hMul : ∀ x y : α, -x * y = -(x * y)
+  hMul_neg : ∀ x y : α, x * -y = -(x * y)
 #align has_distrib_neg HasDistribNeg
 -/
 
@@ -342,14 +342,14 @@ variable [Mul α] [HasDistribNeg α]
 #print neg_mul /-
 @[simp]
 theorem neg_mul (a b : α) : -a * b = -(a * b) :=
-  HasDistribNeg.neg_mul _ _
+  HasDistribNeg.neg_hMul _ _
 #align neg_mul neg_mul
 -/
 
 #print mul_neg /-
 @[simp]
 theorem mul_neg (a b : α) : a * -b = -(a * b) :=
-  HasDistribNeg.mul_neg _ _
+  HasDistribNeg.hMul_neg _ _
 #align mul_neg mul_neg
 -/
 
@@ -466,9 +466,9 @@ instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg
     where
   neg := Neg.neg
   neg_neg := neg_neg
-  neg_mul a b :=
+  neg_hMul a b :=
     eq_neg_of_add_eq_zero_left <| by rw [← right_distrib, add_left_neg, MulZeroClass.zero_mul]
-  mul_neg a b :=
+  hMul_neg a b :=
     eq_neg_of_add_eq_zero_left <| by rw [← left_distrib, add_left_neg, MulZeroClass.mul_zero]
 #align non_unital_non_assoc_ring.to_has_distrib_neg NonUnitalNonAssocRing.toHasDistribNeg
 -/

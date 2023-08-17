@@ -357,17 +357,17 @@ theorem mul_X_pow_eq_zero {p : R[X]} {n : ℕ} (H : p * X ^ n = 0) : p = 0 :=
 #align polynomial.mul_X_pow_eq_zero Polynomial.mul_X_pow_eq_zero
 -/
 
-theorem mul_x_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n * P :=
+theorem hMul_x_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n * P :=
   by
   intro P Q hPQ
   simp only at hPQ 
   ext i
   rw [← coeff_X_pow_mul P n i, hPQ, coeff_X_pow_mul Q n i]
-#align polynomial.mul_X_pow_injective Polynomial.mul_x_pow_injective
+#align polynomial.mul_X_pow_injective Polynomial.hMul_x_pow_injective
 
-theorem mul_x_injective : Function.Injective fun P : R[X] => X * P :=
-  pow_one (X : R[X]) ▸ mul_x_pow_injective 1
-#align polynomial.mul_X_injective Polynomial.mul_x_injective
+theorem hMul_x_injective : Function.Injective fun P : R[X] => X * P :=
+  pow_one (X : R[X]) ▸ hMul_x_pow_injective 1
+#align polynomial.mul_X_injective Polynomial.hMul_x_injective
 
 #print Polynomial.coeff_X_add_C_pow /-
 theorem coeff_X_add_C_pow (r : R) (n k : ℕ) :

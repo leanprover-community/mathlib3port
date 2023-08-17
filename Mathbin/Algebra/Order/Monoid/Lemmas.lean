@@ -364,18 +364,18 @@ variable [LinearOrder α] [CovariantClass α α (· * ·) (· ≤ ·)]
   [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
 
 @[to_additive max_add_add_le_max_add_max]
-theorem max_mul_mul_le_max_mul_max' : max (a * b) (c * d) ≤ max a c * max b d :=
+theorem max_hMul_hMul_le_max_hMul_max' : max (a * b) (c * d) ≤ max a c * max b d :=
   max_le (mul_le_mul' (le_max_left _ _) <| le_max_left _ _) <|
     mul_le_mul' (le_max_right _ _) <| le_max_right _ _
-#align max_mul_mul_le_max_mul_max' max_mul_mul_le_max_mul_max'
+#align max_mul_mul_le_max_mul_max' max_hMul_hMul_le_max_hMul_max'
 #align max_add_add_le_max_add_max max_add_add_le_max_add_max
 
 --TODO: Also missing `min_mul_min_le_min_mul_mul`
 @[to_additive min_add_min_le_min_add_add]
-theorem min_mul_min_le_min_mul_mul' : min a c * min b d ≤ min (a * b) (c * d) :=
+theorem min_hMul_min_le_min_hMul_mul' : min a c * min b d ≤ min (a * b) (c * d) :=
   le_min (mul_le_mul' (min_le_left _ _) <| min_le_left _ _) <|
     mul_le_mul' (min_le_right _ _) <| min_le_right _ _
-#align min_mul_min_le_min_mul_mul' min_mul_min_le_min_mul_mul'
+#align min_mul_min_le_min_mul_mul' min_hMul_min_le_min_hMul_mul'
 #align min_add_min_le_min_add_add min_add_min_le_min_add_add
 
 end LinearOrder
@@ -1364,7 +1364,7 @@ to the appropriate `covariant_class`. -/
       "An additive semigroup with a partial order and satisfying `left_cancel_add_semigroup`\n(i.e. `c + a < c + b → a < b`) is a `left_cancel add_semigroup`."]
 def Contravariant.toLeftCancelSemigroup [ContravariantClass α α (· * ·) (· ≤ ·)] :
     LeftCancelSemigroup α :=
-  { ‹Semigroup α› with mul_left_cancel := fun a b c => mul_left_cancel'' }
+  { ‹Semigroup α› with hMul_left_cancel := fun a b c => mul_left_cancel'' }
 #align contravariant.to_left_cancel_semigroup Contravariant.toLeftCancelSemigroup
 #align contravariant.to_left_cancel_add_semigroup Contravariant.toAddLeftCancelSemigroup
 -/
@@ -1378,7 +1378,7 @@ to the appropriate `covariant_class`. -/
       "An additive semigroup with a partial order and satisfying `right_cancel_add_semigroup`\n(`a + c < b + c → a < b`) is a `right_cancel add_semigroup`."]
 def Contravariant.toRightCancelSemigroup [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] :
     RightCancelSemigroup α :=
-  { ‹Semigroup α› with mul_right_cancel := fun a b c => mul_right_cancel'' }
+  { ‹Semigroup α› with hMul_right_cancel := fun a b c => mul_right_cancel'' }
 #align contravariant.to_right_cancel_semigroup Contravariant.toRightCancelSemigroup
 #align contravariant.to_right_cancel_add_semigroup Contravariant.toAddRightCancelSemigroup
 -/

@@ -151,7 +151,7 @@ instance : DistribMulAction ℝ (ConvexBody V)
     where
   toSMul := ConvexBody.hasSmul
   one_smul K := by ext; simp only [coe_smul, one_smul]
-  mul_smul c d K := by ext; simp only [coe_smul, mul_smul]
+  hMul_smul c d K := by ext; simp only [coe_smul, mul_smul]
   smul_add c K L := by ext; simp only [coe_smul, coe_add, smul_add]
   smul_zero c := by ext; simp only [coe_smul, coe_zero, smul_zero]
 

@@ -181,7 +181,7 @@ instance [OrderedRing β] : OrderedRing β* :=
   { Germ.ring,
     Germ.orderedAddCommGroup with
     zero_le_one := const_le zero_le_one
-    mul_nonneg := fun x y =>
+    hMul_nonneg := fun x y =>
       inductionOn₂ x y fun f g hf hg => hg.mp <| hf.mono fun a => mul_nonneg }
 
 instance [OrderedCommRing β] : OrderedCommRing β* :=

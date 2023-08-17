@@ -55,7 +55,7 @@ instance : StarMemClass (StarSubalgebra R A) A where star_mem s a := s.star_mem'
 instance : SubsemiringClass (StarSubalgebra R A) A
     where
   add_mem := add_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
   one_mem := one_mem'
   zero_mem := zero_mem'
 
@@ -68,7 +68,7 @@ instance (s : StarSubalgebra R A) : StarRing s
     where
   unit := star
   star_involutive r := Subtype.ext (star_star r)
-  star_mul r₁ r₂ := Subtype.ext (star_mul r₁ r₂)
+  star_hMul r₁ r₂ := Subtype.ext (star_hMul r₁ r₂)
   star_add r₁ r₂ := Subtype.ext (star_add r₁ r₂)
 
 instance (s : StarSubalgebra R A) : Algebra R s :=
@@ -132,7 +132,7 @@ protected def copy (S : StarSubalgebra R A) (s : Set A) (hs : s = ↑S) : StarSu
     where
   carrier := s
   add_mem' _ _ := hs.symm ▸ S.add_mem'
-  mul_mem' _ _ := hs.symm ▸ S.mul_mem'
+  hMul_mem' _ _ := hs.symm ▸ S.hMul_mem'
   algebraMap_mem' := hs.symm ▸ S.algebraMap_mem'
   star_mem' _ := hs.symm ▸ S.star_mem'
 #align star_subalgebra.copy StarSubalgebra.copy
@@ -178,7 +178,7 @@ theorem range_le : Set.range (algebraMap R A) ≤ S :=
 
 #print StarSubalgebra.smul_mem /-
 protected theorem smul_mem {x : A} (hx : x ∈ S) (r : R) : r • x ∈ S :=
-  (Algebra.smul_def r x).symm ▸ mul_mem (S.algebraMap_mem r) hx
+  (Algebra.smul_def r x).symm ▸ hMul_mem (S.algebraMap_mem r) hx
 #align star_subalgebra.smul_mem StarSubalgebra.smul_mem
 -/
 
@@ -429,7 +429,7 @@ instance : InvolutiveStar (Subalgebra R A)
     where
   unit S :=
     { carrier := star S.carrier
-      mul_mem' := fun x y hx hy =>
+      hMul_mem' := fun x y hx hy =>
         by
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
         exact (star_mul x y).symm ▸ mul_mem hy hx
@@ -798,7 +798,7 @@ theorem mem_sup_right {S T : StarSubalgebra R A} : ∀ {x : A}, x ∈ T → x �
 #print StarSubalgebra.mul_mem_sup /-
 theorem mul_mem_sup {S T : StarSubalgebra R A} {x y : A} (hx : x ∈ S) (hy : y ∈ T) :
     x * y ∈ S ⊔ T :=
-  mul_mem (mem_sup_left hx) (mem_sup_right hy)
+  hMul_mem (mem_sup_left hx) (mem_sup_right hy)
 #align star_subalgebra.mul_mem_sup StarSubalgebra.mul_mem_sup
 -/
 
@@ -917,7 +917,7 @@ variable [hF : StarAlgHomClass F R A B] (f g : F)
 def equalizer : StarSubalgebra R A
     where
   carrier := {a | f a = g a}
-  mul_mem' a b (ha : f a = g a) (hb : f b = g b) := by
+  hMul_mem' a b (ha : f a = g a) (hb : f b = g b) := by
     rw [Set.mem_setOf_eq, map_mul f, map_mul g, ha, hb]
   add_mem' a b (ha : f a = g a) (hb : f b = g b) := by
     rw [Set.mem_setOf_eq, map_add f, map_add g, ha, hb]

@@ -92,7 +92,7 @@ theorem mk_smul_mk [Add ι] [GSmul A M] {i j} (a : A i) (b : M j) :
 /-- A graded version of `mul_action`. -/
 class GMulAction [AddMonoid ι] [GMonoid A] extends GSmul A M where
   one_smul (b : GradedMonoid M) : (1 : GradedMonoid A) • b = b
-  mul_smul (a a' : GradedMonoid A) (b : GradedMonoid M) : (a * a') • b = a • a' • b
+  hMul_smul (a a' : GradedMonoid A) (b : GradedMonoid M) : (a * a') • b = a • a' • b
 #align graded_monoid.gmul_action GradedMonoid.GMulAction
 -/
 
@@ -100,8 +100,8 @@ class GMulAction [AddMonoid ι] [GMonoid A] extends GSmul A M where
 /-- The graded version of `monoid.to_mul_action`. -/
 instance GMonoid.toGMulAction [AddMonoid ι] [GMonoid A] : GMulAction A A :=
   { GMul.toGSmul _ with
-    one_smul := GMonoid.one_mul
-    mul_smul := GMonoid.mul_assoc }
+    one_smul := GMonoid.one_hMul
+    hMul_smul := GMonoid.hMul_assoc }
 #align graded_monoid.gmonoid.to_gmul_action GradedMonoid.GMonoid.toGMulAction
 -/
 
@@ -110,7 +110,7 @@ instance GMulAction.toMulAction [AddMonoid ι] [GMonoid A] [GMulAction A M] :
     MulAction (GradedMonoid A) (GradedMonoid M)
     where
   one_smul := GMulAction.one_smul
-  mul_smul := GMulAction.mul_smul
+  hMul_smul := GMulAction.hMul_smul
 #align graded_monoid.gmul_action.to_mul_action GradedMonoid.GMulAction.toMulAction
 -/
 
@@ -154,7 +154,7 @@ theorem SetLike.coe_GSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R
 /-- Internally graded version of `has_mul.to_has_smul`. -/
 instance SetLike.GradedMul.toGradedSmul [AddMonoid ι] [Monoid R] {S : Type _} [SetLike S R]
     (A : ι → S) [SetLike.GradedMonoid A] : SetLike.GradedSmul A A
-    where smul_mem i j ai bj hi hj := SetLike.GradedMonoid.mul_mem hi hj
+    where smul_mem i j ai bj hi hj := SetLike.GradedMonoid.hMul_mem hi hj
 #align set_like.has_graded_mul.to_has_graded_smul SetLike.GradedMul.toGradedSmul
 -/
 

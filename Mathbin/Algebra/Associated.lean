@@ -1338,7 +1338,7 @@ instance : NoZeroDivisors (Associates α) :=
 
 instance : CancelCommMonoidWithZero (Associates α) :=
   { (inferInstance : CommMonoidWithZero (Associates α)) with
-    mul_left_cancel_of_ne_zero := by
+    hMul_left_cancel_of_ne_zero := by
       rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ ha h
       rcases Quotient.exact' h with ⟨u, hu⟩
       rw [mul_assoc] at hu 
@@ -1371,7 +1371,7 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
 instance : CanonicallyOrderedMonoid (Associates α) :=
   { Associates.cancelCommMonoidWithZero, Associates.boundedOrder,
     Associates.orderedCommMonoid with
-    exists_mul_of_le := fun a b => id
+    exists_hMul_of_le := fun a b => id
     le_self_mul := fun a b => ⟨b, rfl⟩ }
 
 #print Associates.dvdNotUnit_iff_lt /-

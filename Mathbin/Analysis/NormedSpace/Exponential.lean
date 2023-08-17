@@ -351,7 +351,7 @@ noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : Invertible (exp 𝕂 x)
     where
   invOf := exp 𝕂 (-x)
-  invOf_mul_self :=
+  invOf_hMul_self :=
     by
     have hnx : -x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
       by
@@ -359,7 +359,7 @@ noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸}
       exact hx
     rw [← exp_add_of_commute_of_mem_ball (Commute.neg_left <| Commute.refl x) hnx hx, neg_add_self,
       exp_zero]
-  mul_invOf_self :=
+  hMul_invOf_self :=
     by
     have hnx : -x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
       by

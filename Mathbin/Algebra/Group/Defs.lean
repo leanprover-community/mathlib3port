@@ -129,7 +129,7 @@ def rightMul : G → G → G := fun g : G => fun x : G => x * g
 /-- A mixin for left cancellative multiplication. -/
 @[protect_proj]
 class IsLeftCancelMul (G : Type u) [Mul G] : Prop where
-  mul_left_cancel : ∀ a b c : G, a * b = a * c → b = c
+  hMul_left_cancel : ∀ a b c : G, a * b = a * c → b = c
 #align is_left_cancel_mul IsLeftCancelMul
 -/
 
@@ -137,7 +137,7 @@ class IsLeftCancelMul (G : Type u) [Mul G] : Prop where
 /-- A mixin for right cancellative multiplication. -/
 @[protect_proj]
 class IsRightCancelMul (G : Type u) [Mul G] : Prop where
-  mul_right_cancel : ∀ a b c : G, a * b = c * b → a = c
+  hMul_right_cancel : ∀ a b c : G, a * b = c * b → a = c
 #align is_right_cancel_mul IsRightCancelMul
 -/
 
@@ -183,7 +183,7 @@ variable [IsLeftCancelMul G] {a b c : G}
 #print mul_left_cancel /-
 @[to_additive]
 theorem mul_left_cancel : a * b = a * c → b = c :=
-  IsLeftCancelMul.mul_left_cancel a b c
+  IsLeftCancelMul.hMul_left_cancel a b c
 #align mul_left_cancel mul_left_cancel
 #align add_left_cancel add_left_cancel
 -/
@@ -228,7 +228,7 @@ variable [IsRightCancelMul G] {a b c : G}
 #print mul_right_cancel /-
 @[to_additive]
 theorem mul_right_cancel : a * b = c * b → a = c :=
-  IsRightCancelMul.mul_right_cancel a b c
+  IsRightCancelMul.hMul_right_cancel a b c
 #align mul_right_cancel mul_right_cancel
 #align add_right_cancel add_right_cancel
 -/
@@ -294,7 +294,7 @@ variable [Semigroup G]
 #print mul_assoc /-
 @[no_rsimp, to_additive]
 theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
-  Semigroup.mul_assoc
+  Semigroup.hMul_assoc
 #align mul_assoc mul_assoc
 #align add_assoc add_assoc
 -/
@@ -334,7 +334,7 @@ variable [CommSemigroup G]
 #print mul_comm /-
 @[no_rsimp, to_additive]
 theorem mul_comm : ∀ a b : G, a * b = b * a :=
-  CommSemigroup.mul_comm
+  CommSemigroup.hMul_comm
 #align mul_comm mul_comm
 #align add_comm add_comm
 -/
@@ -401,7 +401,7 @@ end CommSemigroup
 /-- A `left_cancel_semigroup` is a semigroup such that `a * b = a * c` implies `b = c`. -/
 @[protect_proj, ext]
 class LeftCancelSemigroup (G : Type u) extends Semigroup G where
-  mul_left_cancel : ∀ a b c : G, a * b = a * c → b = c
+  hMul_left_cancel : ∀ a b c : G, a * b = a * c → b = c
 #align left_cancel_semigroup LeftCancelSemigroup
 -/
 
@@ -421,7 +421,7 @@ attribute [to_additive AddLeftCancelSemigroup] LeftCancelSemigroup
 @[to_additive "Any `add_left_cancel_semigroup` satisfies `is_left_cancel_add`."]
 instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
     [LeftCancelSemigroup G] : IsLeftCancelMul G
-    where mul_left_cancel := LeftCancelSemigroup.mul_left_cancel
+    where hMul_left_cancel := LeftCancelSemigroup.hMul_left_cancel
 #align left_cancel_semigroup.to_is_left_cancel_mul LeftCancelSemigroup.toIsLeftCancelMul
 #align add_left_cancel_semigroup.to_is_left_cancel_add AddLeftCancelSemigroup.toIsLeftCancelAdd
 -/
@@ -430,7 +430,7 @@ instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
 /-- A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
 @[protect_proj, ext]
 class RightCancelSemigroup (G : Type u) extends Semigroup G where
-  mul_right_cancel : ∀ a b c : G, a * b = c * b → a = c
+  hMul_right_cancel : ∀ a b c : G, a * b = c * b → a = c
 #align right_cancel_semigroup RightCancelSemigroup
 -/
 
@@ -450,7 +450,7 @@ attribute [to_additive AddRightCancelSemigroup] RightCancelSemigroup
 @[to_additive "Any `add_right_cancel_semigroup` satisfies `is_right_cancel_add`."]
 instance (priority := 100) RightCancelSemigroup.toIsRightCancelMul (G : Type u)
     [RightCancelSemigroup G] : IsRightCancelMul G
-    where mul_right_cancel := RightCancelSemigroup.mul_right_cancel
+    where hMul_right_cancel := RightCancelSemigroup.hMul_right_cancel
 #align right_cancel_semigroup.to_is_right_cancel_mul RightCancelSemigroup.toIsRightCancelMul
 #align add_right_cancel_semigroup.to_is_right_cancel_add AddRightCancelSemigroup.toIsRightCancelAdd
 -/
@@ -493,7 +493,7 @@ variable {M : Type u} [MulOneClass M]
 #print one_mul /-
 @[ematch, simp, to_additive]
 theorem one_mul : ∀ a : M, 1 * a = a :=
-  MulOneClass.one_mul
+  MulOneClass.one_hMul
 #align one_mul one_mul
 #align zero_add zero_add
 -/
@@ -501,20 +501,20 @@ theorem one_mul : ∀ a : M, 1 * a = a :=
 #print mul_one /-
 @[ematch, simp, to_additive]
 theorem mul_one : ∀ a : M, a * 1 = a :=
-  MulOneClass.mul_one
+  MulOneClass.hMul_one
 #align mul_one mul_one
 #align add_zero add_zero
 -/
 
 @[to_additive]
 instance MulOneClass.to_isLeftId : IsLeftId M (· * ·) 1 :=
-  ⟨MulOneClass.one_mul⟩
+  ⟨MulOneClass.one_hMul⟩
 #align mul_one_class.to_is_left_id MulOneClass.to_isLeftId
 #align add_zero_class.to_is_left_id AddZeroClass.to_isLeftId
 
 @[to_additive]
 instance MulOneClass.to_isRightId : IsRightId M (· * ·) 1 :=
-  ⟨MulOneClass.mul_one⟩
+  ⟨MulOneClass.hMul_one⟩
 #align mul_one_class.to_is_right_id MulOneClass.to_isRightId
 #align add_zero_class.to_is_right_id AddZeroClass.to_isRightId
 
@@ -827,8 +827,8 @@ instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelC
 @[to_additive "Any `add_cancel_monoid M` satisfies `is_cancel_add M`."]
 instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid M] : IsCancelMul M
     where
-  mul_left_cancel := CancelMonoid.mul_left_cancel
-  mul_right_cancel := CancelMonoid.mul_right_cancel
+  hMul_left_cancel := CancelMonoid.hMul_left_cancel
+  hMul_right_cancel := CancelMonoid.hMul_right_cancel
 #align cancel_monoid.to_is_cancel_mul CancelMonoid.toIsCancelMul
 #align add_cancel_monoid.to_is_cancel_add AddCancelMonoid.toIsCancelAdd
 -/
@@ -944,7 +944,7 @@ explanations on this.
 @[protect_proj]
 class DivInvMonoid (G : Type u) extends Monoid G, Inv G, Div G where
   div := fun a b => a * b⁻¹
-  div_eq_mul_inv : ∀ a b : G, a / b = a * b⁻¹ := by intros; rfl
+  div_eq_hMul_inv : ∀ a b : G, a / b = a * b⁻¹ := by intros; rfl
   zpow : ℤ → G → G := zpowRec
   zpow_zero' : ∀ a : G, zpow 0 a = 1 := by intros; rfl
   zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by intros;
@@ -1058,7 +1058,7 @@ This is a duplicate of `div_inv_monoid.div_eq_mul_inv` ensuring that the types u
 @[to_additive
       "Subtracting an element is the same as adding by its negative.\n\nThis is a duplicate of `sub_neg_monoid.sub_eq_mul_neg` ensuring that the types unfold better."]
 theorem div_eq_mul_inv (a b : G) : a / b = a * b⁻¹ :=
-  DivInvMonoid.div_eq_mul_inv _ _
+  DivInvMonoid.div_eq_hMul_inv _ _
 #align div_eq_mul_inv div_eq_mul_inv
 #align sub_eq_add_neg sub_eq_add_neg
 -/
@@ -1145,7 +1145,7 @@ class DivisionMonoid (G : Type u) extends DivInvMonoid G, InvolutiveInv G where
   mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹
   /- Despite the asymmetry of `inv_eq_of_mul`, the symmetric version is true thanks to the
   involutivity of inversion. -/
-  inv_eq_of_mul (a b : G) : a * b = 1 → a⁻¹ = b
+  inv_eq_of_hMul (a b : G) : a * b = 1 → a⁻¹ = b
 #align division_monoid DivisionMonoid
 #align subtraction_monoid SubtractionMonoid
 -/
@@ -1165,7 +1165,7 @@ theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
 #print inv_eq_of_mul_eq_one_right /-
 @[to_additive]
 theorem inv_eq_of_mul_eq_one_right : a * b = 1 → a⁻¹ = b :=
-  DivisionMonoid.inv_eq_of_mul _ _
+  DivisionMonoid.inv_eq_of_hMul _ _
 #align inv_eq_of_mul_eq_one_right inv_eq_of_mul_eq_one_right
 #align neg_eq_of_add_eq_zero_right neg_eq_of_add_eq_zero_right
 -/
@@ -1197,7 +1197,7 @@ with a default so that `a / b = a * b⁻¹` holds by definition.
 -/
 @[protect_proj]
 class Group (G : Type u) extends DivInvMonoid G where
-  mul_left_inv : ∀ a : G, a⁻¹ * a = 1
+  hMul_left_inv : ∀ a : G, a⁻¹ * a = 1
 #align group Group
 -/
 
@@ -1235,7 +1235,7 @@ variable [Group G] {a b c : G}
 #print mul_left_inv /-
 @[simp, to_additive]
 theorem mul_left_inv : ∀ a : G, a⁻¹ * a = 1 :=
-  Group.mul_left_inv
+  Group.hMul_left_inv
 #align mul_left_inv mul_left_inv
 #align add_left_neg add_left_neg
 -/
@@ -1303,9 +1303,10 @@ theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc,
 @[to_additive AddGroup.toSubtractionMonoid]
 instance (priority := 100) Group.toDivisionMonoid : DivisionMonoid G :=
   { ‹Group G› with
-    inv_inv := fun a => inv_eq_of_mul (mul_left_inv a)
-    mul_inv_rev := fun a b => inv_eq_of_mul <| by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv]
-    inv_eq_of_mul := fun _ _ => inv_eq_of_mul }
+    inv_inv := fun a => inv_eq_of_hMul (mul_left_inv a)
+    mul_inv_rev := fun a b =>
+      inv_eq_of_hMul <| by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv]
+    inv_eq_of_hMul := fun _ _ => inv_eq_of_hMul }
 #align group.to_division_monoid Group.toDivisionMonoid
 #align add_group.to_subtraction_monoid AddGroup.toSubtractionMonoid
 -/
@@ -1317,8 +1318,8 @@ instance (priority := 100) Group.toCancelMonoid : CancelMonoid G :=
   {
     ‹Group
         G› with
-    mul_right_cancel := fun a b c h => by rw [← mul_inv_cancel_right a b, h, mul_inv_cancel_right]
-    mul_left_cancel := fun a b c h => by rw [← inv_mul_cancel_left a b, h, inv_mul_cancel_left] }
+    hMul_right_cancel := fun a b c h => by rw [← mul_inv_cancel_right a b, h, mul_inv_cancel_right]
+    hMul_left_cancel := fun a b c h => by rw [← inv_mul_cancel_left a b, h, inv_mul_cancel_left] }
 #align group.to_cancel_monoid Group.toCancelMonoid
 -/
 

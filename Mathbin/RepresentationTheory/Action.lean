@@ -80,8 +80,8 @@ def ρAut {G : GroupCat.{u}} (A : Action V (MonCat.of G)) : G ⟶ GroupCat.of (A
   toFun g :=
     { Hom := A.ρ g
       inv := A.ρ (g⁻¹ : G)
-      hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one])
-      inv_hom_id' := (A.ρ.map_mul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_self, ρ_one]) }
+      hom_inv_id' := (A.ρ.map_hMul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one])
+      inv_hom_id' := (A.ρ.map_hMul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_self, ρ_one]) }
   map_one' := by ext; exact A.ρ.map_one
   map_mul' x y := by ext; exact A.ρ.map_mul x y
 #align Action.ρ_Aut Action.ρAut
@@ -210,7 +210,7 @@ def functor : Action V G ⥤ SingleObj G ⥤ V
     { obj := fun _ => M.V
       map := fun _ _ g => M.ρ g
       map_id' := fun _ => M.ρ.map_one
-      map_comp' := fun _ _ _ g h => M.ρ.map_mul h g }
+      map_comp' := fun _ _ _ g h => M.ρ.map_hMul h g }
   map M N f :=
     { app := fun _ => f.Hom
       naturality' := fun _ _ g => f.comm g }
@@ -462,7 +462,7 @@ instance : Linear R (Action V G)
       zero_smul := by intros; ext; exact zero_smul _ _
       add_smul := by intros; ext; exact add_smul _ _ _
       smul_add := by intros; ext; exact smul_add _ _ _
-      mul_smul := by intros; ext; exact mul_smul _ _ _ }
+      hMul_smul := by intros; ext; exact mul_smul _ _ _ }
   smul_comp' := by intros; ext; exact linear.smul_comp _ _ _ _ _ _
   comp_smul' := by intros; ext; exact linear.comp_smul _ _ _ _ _ _
 

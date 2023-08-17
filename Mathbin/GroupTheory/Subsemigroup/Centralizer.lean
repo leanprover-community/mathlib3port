@@ -194,7 +194,7 @@ variable {M} [Semigroup M] (S)
 @[to_additive "The centralizer of a subset of an additive semigroup."]
 def centralizer : Subsemigroup M where
   carrier := S.centralizer
-  mul_mem' a b := Set.mul_mem_centralizer
+  hMul_mem' a b := Set.mul_mem_centralizer
 #align subsemigroup.centralizer Subsemigroup.centralizer
 #align add_subsemigroup.centralizer AddSubsemigroup.centralizer
 -/

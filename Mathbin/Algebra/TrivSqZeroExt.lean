@@ -1018,7 +1018,7 @@ def lift : { f : M →ₗ[R'] A // ∀ x y, f x * f y = 0 } ≃ (tsze R' M →�
   toFun f := liftAux f f.Prop
   invFun F :=
     ⟨F.toLinearMap.comp (inrHom R' M), fun x y =>
-      (F.map_mul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩
+      (F.map_hMul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩
   left_inv f := Subtype.ext <| liftAux_comp_inrHom _ _
   right_inv F := algHom_ext' <| liftAux_comp_inrHom _ _
 #align triv_sq_zero_ext.lift TrivSqZeroExt.lift

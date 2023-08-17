@@ -287,8 +287,8 @@ theorem Polynomial.toLaurent_C_mul_X_pow (n : ℕ) (r : R) :
 instance invertibleT (n : ℤ) : Invertible (T n : R[T;T⁻¹])
     where
   invOf := T (-n)
-  invOf_mul_self := by rw [← T_add, add_left_neg, T_zero]
-  mul_invOf_self := by rw [← T_add, add_right_neg, T_zero]
+  invOf_hMul_self := by rw [← T_add, add_left_neg, T_zero]
+  hMul_invOf_self := by rw [← T_add, add_right_neg, T_zero]
 #align laurent_polynomial.invertible_T LaurentPolynomial.invertibleT
 -/
 

@@ -976,7 +976,7 @@ theorem XYIdeal_mul_XYIdeal (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 /-- The non-zero fractional ideal $\langle X - x, Y - y \rangle$ of $F(W)$ for some $x, y \in F$. -/
 @[simp]
 noncomputable def XYIdeal' : (FractionalIdeal W.CoordinateRing⁰ W.FunctionField)ˣ :=
-  Units.mkOfMulEqOne _ _ <| XY_ideal'_mul_inv h₁
+  Units.mkOfMulEqOne _ _ <| XY_ideal'_hMul_inv h₁
 #align weierstrass_curve.XY_ideal' WeierstrassCurve.XYIdeal'
 -/
 

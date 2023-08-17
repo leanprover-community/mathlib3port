@@ -385,7 +385,7 @@ theorem hasSum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     push_cast
     ring_nf
   rw [← h_term_eq_goal, (mul_right_injective₀ (two_ne_zero' ℕ)).hasSum_iff]
-  · have h₁ := (has_sum_pow_div_log_of_abs_lt_1 (Eq.trans_lt (abs_neg x) h)).mul_left (-1)
+  · have h₁ := (has_sum_pow_div_log_of_abs_lt_1 (Eq.trans_lt (abs_neg x) h)).hMul_left (-1)
     convert h₁.add (has_sum_pow_div_log_of_abs_lt_1 h)
     ring_nf
   · intro m hm

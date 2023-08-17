@@ -409,7 +409,7 @@ scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField
 /-- A finite cyclotomic extension of an integral noetherian domain is integral -/
 theorem integral [IsDomain B] [IsNoetherianRing A] [Finite S] [IsCyclotomicExtension S A B] :
     Algebra.IsIntegral A B :=
-  isIntegral_of_noetherian <| isNoetherian_of_fg_of_noetherian' <| (Finite S A B).out
+  isIntegral_of_noetherian <| isNoetherian_of_isNoetherianRing_of_finite <| (Finite S A B).out
 #align is_cyclotomic_extension.integral IsCyclotomicExtension.integral
 -/
 

@@ -78,7 +78,7 @@ instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
 instance AddCommMonoid.natModule : Module ℕ M
     where
   one_smul := one_nsmul
-  mul_smul m n a := mul_nsmul' a m n
+  hMul_smul m n a := mul_nsmul' a m n
   smul_add n a b := nsmul_add a b n
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
@@ -264,7 +264,7 @@ variable (R M) [Semiring R] [AddCommGroup M]
 instance AddCommGroup.intModule : Module ℤ M
     where
   one_smul := one_zsmul
-  mul_smul m n a := mul_zsmul a m n
+  hMul_smul m n a := mul_zsmul a m n
   smul_add n a b := zsmul_add a b n
   smul_zero := zsmul_zero
   zero_smul := zero_zsmul
@@ -288,7 +288,7 @@ this provides a way to construct a module structure by checking less properties,
 structure Module.Core extends SMul R M where
   smul_add : ∀ (r : R) (x y : M), r • (x + y) = r • x + r • y
   add_smul : ∀ (r s : R) (x : M), (r + s) • x = r • x + s • x
-  mul_smul : ∀ (r s : R) (x : M), (r * s) • x = r • s • x
+  hMul_smul : ∀ (r s : R) (x : M), (r * s) • x = r • s • x
   one_smul : ∀ x : M, (1 : R) • x = x
 #align module.core Module.Core
 -/
@@ -433,7 +433,7 @@ instance RingHom.applyDistribMulAction [Semiring R] : DistribMulAction (R →+* 
   smul_zero := RingHom.map_zero
   smul_add := RingHom.map_add
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align ring_hom.apply_distrib_mul_action RingHom.applyDistribMulAction
 -/
 
@@ -717,7 +717,7 @@ theorem Function.Injective.noZeroSMulDivisors {R M N : Type _} [Zero R] [Zero M]
 -- See note [lower instance priority]
 instance (priority := 100) NoZeroDivisors.toNoZeroSMulDivisors [Zero R] [Mul R] [NoZeroDivisors R] :
     NoZeroSMulDivisors R R :=
-  ⟨fun c x => eq_zero_or_eq_zero_of_mul_eq_zero⟩
+  ⟨fun c x => eq_zero_or_eq_zero_of_hMul_eq_zero⟩
 #align no_zero_divisors.to_no_zero_smul_divisors NoZeroDivisors.toNoZeroSMulDivisors
 -/
 

@@ -243,7 +243,7 @@ theorem coe_neg : ((-f' : PowerSeries R') : LaurentSeries R') = -f' :=
 #print PowerSeries.coe_mul /-
 @[simp, norm_cast]
 theorem coe_mul : ((f * g : PowerSeries R) : LaurentSeries R) = f * g :=
-  (ofPowerSeries ℤ R).map_mul _ _
+  (ofPowerSeries ℤ R).map_hMul _ _
 #align power_series.coe_mul PowerSeries.coe_mul
 -/
 

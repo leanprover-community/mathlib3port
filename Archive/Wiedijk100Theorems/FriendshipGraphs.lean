@@ -212,14 +212,14 @@ theorem card_mod_p_of_regular {p : ℕ} (dmod : (d : ZMod p) = 1) (hd : G.IsRegu
 
 end Nonempty
 
-theorem adjMatrix_sq_mul_const_one_of_regular (hd : G.IsRegularOfDegree d) :
+theorem adjMatrix_sq_hMul_const_one_of_regular (hd : G.IsRegularOfDegree d) :
     (G.adjMatrix R * fun _ _ => 1) = fun _ _ => d := by ext x; simp [← hd x, degree]
-#align theorems_100.friendship.adj_matrix_sq_mul_const_one_of_regular Theorems100.Friendship.adjMatrix_sq_mul_const_one_of_regular
+#align theorems_100.friendship.adj_matrix_sq_mul_const_one_of_regular Theorems100.Friendship.adjMatrix_sq_hMul_const_one_of_regular
 
-theorem adjMatrix_mul_const_one_mod_p_of_regular {p : ℕ} (dmod : (d : ZMod p) = 1)
+theorem adjMatrix_hMul_const_one_mod_p_of_regular {p : ℕ} (dmod : (d : ZMod p) = 1)
     (hd : G.IsRegularOfDegree d) : (G.adjMatrix (ZMod p) * fun _ _ => 1) = fun _ _ => 1 := by
   rw [adj_matrix_sq_mul_const_one_of_regular hd, dmod]
-#align theorems_100.friendship.adj_matrix_mul_const_one_mod_p_of_regular Theorems100.Friendship.adjMatrix_mul_const_one_mod_p_of_regular
+#align theorems_100.friendship.adj_matrix_mul_const_one_mod_p_of_regular Theorems100.Friendship.adjMatrix_hMul_const_one_mod_p_of_regular
 
 /-- Modulo a factor of `d-1`, the square and all higher powers of the adjacency matrix
   of a `d`-regular friendship graph reduce to the matrix whose entries are all 1. -/

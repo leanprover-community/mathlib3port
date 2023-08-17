@@ -48,7 +48,7 @@ def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ
     { DistribMulAction.toLinearEquiv ℝ ℂ a with
       norm_map' := fun x => show |a * x| = |x| by rw [map_mul, abs_coe_circle, one_mul] }
   map_one' := LinearIsometryEquiv.ext <| one_smul _
-  map_mul' _ _ := LinearIsometryEquiv.ext <| mul_smul _ _
+  map_mul' _ _ := LinearIsometryEquiv.ext <| hMul_smul _ _
 #align rotation rotation
 -/
 

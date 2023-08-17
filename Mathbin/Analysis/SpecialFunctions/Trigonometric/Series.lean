@@ -61,7 +61,7 @@ theorem Complex.hasSum_sin' (z : ℂ) :
   rw [Complex.sin, Complex.exp_eq_exp_ℂ]
   have :=
     (((expSeries_div_hasSum_exp ℂ (-z * Complex.I)).sub
-              (expSeries_div_hasSum_exp ℂ (z * Complex.I))).mul_right
+              (expSeries_div_hasSum_exp ℂ (z * Complex.I))).hMul_right
           Complex.I).div_const
       2
   replace := (Nat.divModEquiv 2).symm.hasSum_iff.mpr this

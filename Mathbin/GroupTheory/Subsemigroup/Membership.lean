@@ -56,7 +56,7 @@ theorem mem_iSup_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ 
   refine' fun hx => closure_induction hx (fun y hy => mem_Union.mp hy) _
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
-    exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
+    exact ⟨k, (S k).hMul_mem (hki hi) (hkj hj)⟩
 #align subsemigroup.mem_supr_of_directed Subsemigroup.mem_iSup_of_directed
 #align add_subsemigroup.mem_supr_of_directed AddSubsemigroup.mem_iSup_of_directed
 -/
@@ -107,7 +107,7 @@ theorem mem_sup_right {S T : Subsemigroup M} : ∀ {x : M}, x ∈ T → x ∈ S 
 #print Subsemigroup.mul_mem_sup /-
 @[to_additive]
 theorem mul_mem_sup {S T : Subsemigroup M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
-  mul_mem (mem_sup_left hx) (mem_sup_right hy)
+  hMul_mem (mem_sup_left hx) (mem_sup_right hy)
 #align subsemigroup.mul_mem_sup Subsemigroup.mul_mem_sup
 #align add_subsemigroup.add_mem_sup AddSubsemigroup.add_mem_sup
 -/
@@ -152,7 +152,7 @@ theorem iSup_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx 
 @[elab_as_elim, to_additive "A dependent version of `add_subsemigroup.supr_induction`. "]
 theorem iSup_induction' (S : ι → Subsemigroup M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ (i), ∀ x ∈ S i, C x (mem_iSup_of_mem i ‹_›))
-    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M}
+    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (hMul_mem ‹_› ‹_›)) {x : M}
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc

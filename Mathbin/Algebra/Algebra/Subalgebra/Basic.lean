@@ -55,7 +55,7 @@ instance : SetLike (Subalgebra R A) A
 instance : SubsemiringClass (Subalgebra R A) A
     where
   add_mem := add_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
   one_mem := one_mem'
   zero_mem := zero_mem'
 
@@ -107,7 +107,7 @@ protected def copy (S : Subalgebra R A) (s : Set A) (hs : s = ↑S) : Subalgebra
     where
   carrier := s
   add_mem' _ _ := hs.symm ▸ S.add_mem'
-  mul_mem' _ _ := hs.symm ▸ S.mul_mem'
+  hMul_mem' _ _ := hs.symm ▸ S.hMul_mem'
   algebraMap_mem' := hs.symm ▸ S.algebraMap_mem'
 #align subalgebra.copy Subalgebra.copy
 -/
@@ -152,7 +152,7 @@ theorem range_le : Set.range (algebraMap R A) ≤ S :=
 
 #print Subalgebra.smul_mem /-
 theorem smul_mem {x : A} (hx : x ∈ S) (r : R) : r • x ∈ S :=
-  (Algebra.smul_def r x).symm ▸ mul_mem (S.algebraMap_mem r) hx
+  (Algebra.smul_def r x).symm ▸ hMul_mem (S.algebraMap_mem r) hx
 #align subalgebra.smul_mem Subalgebra.smul_mem
 -/
 
@@ -166,7 +166,7 @@ protected theorem one_mem : (1 : A) ∈ S :=
 
 #print Subalgebra.mul_mem /-
 protected theorem mul_mem {x y : A} (hx : x ∈ S) (hy : y ∈ S) : x * y ∈ S :=
-  mul_mem hx hy
+  hMul_mem hx hy
 #align subalgebra.mul_mem Subalgebra.mul_mem
 -/
 
@@ -749,7 +749,7 @@ variable (p : Submodule R A)
 def toSubalgebra (p : Submodule R A) (h_one : (1 : A) ∈ p)
     (h_mul : ∀ x y, x ∈ p → y ∈ p → x * y ∈ p) : Subalgebra R A :=
   { p with
-    mul_mem' := h_mul
+    hMul_mem' := h_mul
     algebraMap_mem' := fun r => by
       rw [Algebra.algebraMap_eq_smul_one]
       exact p.smul_mem _ h_one }
@@ -793,7 +793,7 @@ theorem toSubalgebra_toSubmodule (p : Submodule R A) (h_one h_mul) :
 #print Subalgebra.toSubmodule_toSubalgebra /-
 @[simp]
 theorem Subalgebra.toSubmodule_toSubalgebra (S : Subalgebra R A) :
-    (S.toSubmodule.toSubalgebra S.one_mem fun _ _ => S.mul_mem) = S :=
+    (S.toSubmodule.toSubalgebra S.one_mem fun _ _ => S.hMul_mem) = S :=
   SetLike.coe_injective rfl
 #align subalgebra.to_submodule_to_subalgebra Subalgebra.toSubmodule_toSubalgebra
 -/
@@ -896,7 +896,7 @@ def equalizer (ϕ ψ : A →ₐ[R] B) : Subalgebra R A
   carrier := {a | ϕ a = ψ a}
   add_mem' x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
     rw [Set.mem_setOf_eq, ϕ.map_add, ψ.map_add, hx, hy]
-  mul_mem' x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
+  hMul_mem' x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
     rw [Set.mem_setOf_eq, ϕ.map_mul, ψ.map_mul, hx, hy]
   algebraMap_mem' x := by rw [Set.mem_setOf_eq, AlgHom.commutes, AlgHom.commutes]
 #align alg_hom.equalizer AlgHom.equalizer
@@ -1102,7 +1102,7 @@ theorem mem_sup_right {S T : Subalgebra R A} : ∀ {x : A}, x ∈ T → x ∈ S 
 
 #print Algebra.mul_mem_sup /-
 theorem mul_mem_sup {S T : Subalgebra R A} {x y : A} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
-  (S ⊔ T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
+  (S ⊔ T).hMul_mem (mem_sup_left hx) (mem_sup_right hy)
 #align algebra.mul_mem_sup Algebra.mul_mem_sup
 -/
 
@@ -1534,7 +1534,7 @@ theorem coe_iSup_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Di
     ↑(iSup S) = ⋃ i, (S i : Set A) :=
   let K : Subalgebra R A :=
     { carrier := ⋃ i, S i
-      mul_mem' := fun x y hx hy =>
+      hMul_mem' := fun x y hx hy =>
         let ⟨i, hi⟩ := Set.mem_iUnion.1 hx
         let ⟨j, hj⟩ := Set.mem_iUnion.1 hy
         let ⟨k, hik, hjk⟩ := dir i j
@@ -1730,7 +1730,7 @@ theorem range_algebraMap {R A : Type _} [CommRing R] [CommRing A] [Algebra R A]
 #print Subalgebra.noZeroSMulDivisors_top /-
 instance noZeroSMulDivisors_top [NoZeroDivisors A] (S : Subalgebra R A) : NoZeroSMulDivisors S A :=
   ⟨fun c x h =>
-    have : (c : A) = 0 ∨ x = 0 := eq_zero_or_eq_zero_of_mul_eq_zero h
+    have : (c : A) = 0 ∨ x = 0 := eq_zero_or_eq_zero_of_hMul_eq_zero h
     this.imp_left (@Subtype.ext_iff _ _ c 0).mpr⟩
 #align subalgebra.no_zero_smul_divisors_top Subalgebra.noZeroSMulDivisors_top
 -/

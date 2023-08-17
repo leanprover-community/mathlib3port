@@ -216,13 +216,13 @@ instance [Mul α] [IsLeftCancelMul α] : IsLeftCancelAdd (Additive α)
     where add_left_cancel := @mul_left_cancel α _ _
 
 instance [Add α] [IsLeftCancelAdd α] : IsLeftCancelMul (Multiplicative α)
-    where mul_left_cancel := @add_left_cancel α _ _
+    where hMul_left_cancel := @add_left_cancel α _ _
 
 instance [Mul α] [IsRightCancelMul α] : IsRightCancelAdd (Additive α)
     where add_right_cancel := @mul_right_cancel α _ _
 
 instance [Add α] [IsRightCancelAdd α] : IsRightCancelMul (Multiplicative α)
-    where mul_right_cancel := @add_right_cancel α _ _
+    where hMul_right_cancel := @add_right_cancel α _ _
 
 instance [Mul α] [IsCancelMul α] : IsCancelAdd (Additive α) :=
   { Additive.isLeftCancelAdd, Additive.isRightCancelAdd with }
@@ -451,7 +451,7 @@ instance [DivInvMonoid α] : SubNegMonoid (Additive α) :=
 instance [SubNegMonoid α] : DivInvMonoid (Multiplicative α) :=
   { Multiplicative.hasInv, Multiplicative.div,
     Multiplicative.monoid with
-    div_eq_mul_inv := @sub_eq_add_neg α _
+    div_eq_hMul_inv := @sub_eq_add_neg α _
     zpow := @SubNegMonoid.zsmul α _
     zpow_zero' := SubNegMonoid.zsmul_zero'
     zpow_succ' := SubNegMonoid.zsmul_succ'
@@ -467,7 +467,7 @@ instance [SubtractionMonoid α] : DivisionMonoid (Multiplicative α) :=
   { Multiplicative.divInvMonoid,
     Multiplicative.hasInvolutiveInv with
     mul_inv_rev := @neg_add_rev _ _
-    inv_eq_of_mul := @neg_eq_of_add_eq_zero_right _ _ }
+    inv_eq_of_hMul := @neg_eq_of_add_eq_zero_right _ _ }
 
 instance [DivisionCommMonoid α] : SubtractionCommMonoid (Additive α) :=
   { Additive.subtractionMonoid, Additive.addCommSemigroup with }
@@ -479,7 +479,7 @@ instance [Group α] : AddGroup (Additive α) :=
   { Additive.subNegMonoid with add_left_neg := @mul_left_inv α _ }
 
 instance [AddGroup α] : Group (Multiplicative α) :=
-  { Multiplicative.divInvMonoid with mul_left_inv := @add_left_neg α _ }
+  { Multiplicative.divInvMonoid with hMul_left_inv := @add_left_neg α _ }
 
 instance [CommGroup α] : AddCommGroup (Additive α) :=
   { Additive.addGroup, Additive.addCommMonoid with }

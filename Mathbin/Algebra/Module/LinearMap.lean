@@ -578,7 +578,7 @@ end
 def RingHom.toSemilinearMap (f : R →+* S) : R →ₛₗ[f] S :=
   { f with
     toFun := f
-    map_smul' := f.map_mul }
+    map_smul' := f.map_hMul }
 #align ring_hom.to_semilinear_map RingHom.toSemilinearMap
 -/
 
@@ -800,7 +800,7 @@ theorem isLinearMap_smul {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Modu
 #print IsLinearMap.isLinearMap_smul' /-
 theorem isLinearMap_smul' {R M : Type _} [Semiring R] [AddCommMonoid M] [Module R M] (a : M) :
     IsLinearMap R fun c : R => c • a :=
-  IsLinearMap.mk (fun x y => add_smul x y a) fun x y => mul_smul x y a
+  IsLinearMap.mk (fun x y => add_smul x y a) fun x y => hMul_smul x y a
 #align is_linear_map.is_linear_map_smul' IsLinearMap.isLinearMap_smul'
 -/
 
@@ -1137,7 +1137,7 @@ variable [Monoid T] [DistribMulAction T M₂] [SMulCommClass R₂ T M₂]
 instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂)
     where
   one_smul f := ext fun _ => one_smul _ _
-  mul_smul c c' f := ext fun _ => mul_smul _ _ _
+  hMul_smul c c' f := ext fun _ => hMul_smul _ _ _
   smul_add c f g := ext fun x => smul_add _ _ _
   smul_zero c := ext fun x => smul_zero _
 
@@ -1326,7 +1326,7 @@ instance applyModule : Module (Module.End R M) M
   add_smul := LinearMap.add_apply
   zero_smul := (LinearMap.zero_apply : ∀ m, (0 : M →ₗ[R] M) m = 0)
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align linear_map.apply_module LinearMap.applyModule
 -/
 
@@ -1397,7 +1397,7 @@ def toModuleEnd : S →* Module.End R M
     where
   toFun := toLinearMap R M
   map_one' := LinearMap.ext <| one_smul _
-  map_mul' a b := LinearMap.ext <| mul_smul _ _
+  map_mul' a b := LinearMap.ext <| hMul_smul _ _
 #align distrib_mul_action.to_module_End DistribMulAction.toModuleEnd
 -/
 

@@ -711,7 +711,7 @@ instance : Group (α ≃ᵢ α) where
   mul_assoc e₁ e₂ e₃ := rfl
   one_mul e := ext fun _ => rfl
   mul_one e := ext fun _ => rfl
-  mul_left_inv e := ext e.symm_apply_apply
+  hMul_left_inv e := ext e.symm_apply_apply
 
 #print IsometryEquiv.coe_one /-
 @[simp]

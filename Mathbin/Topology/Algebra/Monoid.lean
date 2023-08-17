@@ -60,7 +60,7 @@ Continuity in only the left/right argument can be stated using
 `has_continuous_const_smul α α`/`has_continuous_const_smul αᵐᵒᵖ α`. -/
 @[to_additive]
 class ContinuousMul (M : Type u) [TopologicalSpace M] [Mul M] : Prop where
-  continuous_mul : Continuous fun p : M × M => p.1 * p.2
+  continuous_hMul : Continuous fun p : M × M => p.1 * p.2
 #align has_continuous_mul ContinuousMul
 #align has_continuous_add ContinuousAdd
 -/
@@ -76,7 +76,7 @@ instance : ContinuousMul Mᵒᵈ :=
 #print continuous_mul /-
 @[to_additive]
 theorem continuous_mul : Continuous fun p : M × M => p.1 * p.2 :=
-  ContinuousMul.continuous_mul
+  ContinuousMul.continuous_hMul
 #align continuous_mul continuous_mul
 #align continuous_add continuous_add
 -/
@@ -136,7 +136,7 @@ theorem ContinuousOn.mul {f g : X → M} {s : Set X} (hf : ContinuousOn f s) (hg
 #print tendsto_mul /-
 @[to_additive]
 theorem tendsto_mul {a b : M} : Tendsto (fun p : M × M => p.fst * p.snd) (𝓝 (a, b)) (𝓝 (a * b)) :=
-  continuous_iff_continuousAt.mp ContinuousMul.continuous_mul (a, b)
+  continuous_iff_continuousAt.mp ContinuousMul.continuous_hMul (a, b)
 #align tendsto_mul tendsto_mul
 #align tendsto_add tendsto_add
 -/
@@ -283,7 +283,7 @@ instance [TopologicalSpace N] [Mul N] [ContinuousMul N] : ContinuousMul (M × N)
 @[to_additive]
 instance Pi.continuousMul {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, Mul (C i)]
     [∀ i, ContinuousMul (C i)] : ContinuousMul (∀ i, C i)
-    where continuous_mul :=
+    where continuous_hMul :=
     continuous_pi fun i => (continuous_apply i).fst'.mul (continuous_apply i).snd'
 #align pi.has_continuous_mul Pi.continuousMul
 #align pi.has_continuous_add Pi.continuousAdd
@@ -475,7 +475,7 @@ variable [TopologicalSpace M] [Monoid M] [ContinuousMul M]
 theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
     closure (s : Set M) * closure s ⊆ closure s :=
   image2_subset_iff.2 fun x hx y hy =>
-    map_mem_closure₂ continuous_mul hx hy fun a ha b hb => s.mul_mem ha hb
+    map_mem_closure₂ continuous_mul hx hy fun a ha b hb => s.hMul_mem ha hb
 #align submonoid.top_closure_mul_self_subset Submonoid.top_closure_mul_self_subset
 #align add_submonoid.top_closure_add_self_subset AddSubmonoid.top_closure_add_self_subset
 -/
@@ -499,7 +499,7 @@ def Submonoid.topologicalClosure (s : Submonoid M) : Submonoid M
     where
   carrier := closure (s : Set M)
   one_mem' := subset_closure s.one_mem
-  mul_mem' a b ha hb := s.top_closure_mul_self_subset ⟨a, b, ha, hb, rfl⟩
+  hMul_mem' a b ha hb := s.top_closure_mul_self_subset ⟨a, b, ha, hb, rfl⟩
 #align submonoid.topological_closure Submonoid.topologicalClosure
 #align add_submonoid.topological_closure AddSubmonoid.topologicalClosure
 -/
@@ -969,7 +969,7 @@ instance [TopologicalSpace M] [Mul M] [ContinuousMul M] : ContinuousAdd (Additiv
     where continuous_add := @continuous_mul M _ _ _
 
 instance [TopologicalSpace M] [Add M] [ContinuousAdd M] : ContinuousMul (Multiplicative M)
-    where continuous_mul := @continuous_add M _ _ _
+    where continuous_hMul := @continuous_add M _ _ _
 
 section LatticeOps
 
@@ -980,9 +980,9 @@ variable {ι' : Sort _} [Mul M]
 theorem continuousMul_sInf {ts : Set (TopologicalSpace M)} (h : ∀ t ∈ ts, @ContinuousMul M t _) :
     @ContinuousMul M (sInf ts) _ :=
   {
-    continuous_mul :=
+    continuous_hMul :=
       continuous_sInf_rng.2 fun t ht =>
-        continuous_sInf_dom₂ ht ht (@ContinuousMul.continuous_mul M t _ (h t ht)) }
+        continuous_sInf_dom₂ ht ht (@ContinuousMul.continuous_hMul M t _ (h t ht)) }
 #align has_continuous_mul_Inf continuousMul_sInf
 #align has_continuous_add_Inf continuousAdd_sInf
 -/

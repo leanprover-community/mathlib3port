@@ -46,7 +46,7 @@ variable (β) [Monoid β] [MulAction β α] (H : Subgroup α)
 #print MulAction.QuotientAction /-
 /-- A typeclass for when a `mul_action β α` descends to the quotient `α ⧸ H`. -/
 class QuotientAction : Prop where
-  inv_mul_mem : ∀ (b : β) {a a' : α}, a⁻¹ * a' ∈ H → (b • a)⁻¹ * b • a' ∈ H
+  inv_hMul_mem : ∀ (b : β) {a a' : α}, a⁻¹ * a' ∈ H → (b • a)⁻¹ * b • a' ∈ H
 #align mul_action.quotient_action MulAction.QuotientAction
 -/
 
@@ -54,7 +54,7 @@ class QuotientAction : Prop where
 /-- A typeclass for when an `add_action β α` descends to the quotient `α ⧸ H`. -/
 class AddAction.QuotientAction {α : Type _} (β : Type _) [AddGroup α] [AddMonoid β] [AddAction β α]
     (H : AddSubgroup α) : Prop where
-  inv_mul_mem : ∀ (b : β) {a a' : α}, -a + a' ∈ H → -(b +ᵥ a) + (b +ᵥ a') ∈ H
+  inv_hMul_mem : ∀ (b : β) {a a' : α}, -a + a' ∈ H → -(b +ᵥ a) + (b +ᵥ a') ∈ H
 #align add_action.quotient_action AddAction.QuotientAction
 -/
 
@@ -94,9 +94,9 @@ instance quotient [QuotientAction β H] : MulAction β (α ⧸ H)
     where
   smul b :=
     Quotient.map' ((· • ·) b) fun a a' h =>
-      leftRel_apply.mpr <| QuotientAction.inv_mul_mem b <| leftRel_apply.mp h
+      leftRel_apply.mpr <| QuotientAction.inv_hMul_mem b <| leftRel_apply.mp h
   one_smul q := Quotient.inductionOn' q fun a => congr_arg Quotient.mk'' (one_smul β a)
-  mul_smul b b' q := Quotient.inductionOn' q fun a => congr_arg Quotient.mk'' (mul_smul b b' a)
+  hMul_smul b b' q := Quotient.inductionOn' q fun a => congr_arg Quotient.mk'' (hMul_smul b b' a)
 #align mul_action.quotient MulAction.quotient
 #align add_action.quotient AddAction.quotient
 -/
@@ -204,7 +204,7 @@ theorem ofQuotientStabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ orb
 @[to_additive]
 theorem ofQuotientStabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer α x) :
     ofQuotientStabilizer α x (g • g') = g • ofQuotientStabilizer α x g' :=
-  Quotient.inductionOn' g' fun _ => mul_smul _ _ _
+  Quotient.inductionOn' g' fun _ => hMul_smul _ _ _
 #align mul_action.of_quotient_stabilizer_smul MulAction.ofQuotientStabilizer_smul
 #align add_action.of_quotient_stabilizer_vadd AddAction.ofQuotientStabilizer_vadd
 -/

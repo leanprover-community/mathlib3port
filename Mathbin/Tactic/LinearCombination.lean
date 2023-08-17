@@ -40,9 +40,9 @@ open Tactic
 /-! ### Lemmas -/
 
 
-theorem left_mul_both_sides {α} [h : Mul α] {x y : α} (z : α) (h1 : x = y) : z * x = z * y :=
+theorem left_hMul_both_sides {α} [h : Mul α] {x y : α} (z : α) (h1 : x = y) : z * x = z * y :=
   congr_arg (Mul.mul z) h1
-#align linear_combo.left_mul_both_sides LinearCombo.left_mul_both_sides
+#align linear_combo.left_mul_both_sides LinearCombo.left_hMul_both_sides
 
 theorem sum_two_equations {α} [h : Add α] {x1 y1 x2 y2 : α} (h1 : x1 = y1) (h2 : x2 = y2) :
     x1 + x2 = y1 + y2 :=

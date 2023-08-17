@@ -332,7 +332,7 @@ def AlgHom.restrictNormalAux [h : Normal F E] :
   map_zero' := Subtype.ext ϕ.map_zero
   map_one' := Subtype.ext ϕ.map_one
   map_add' x y := Subtype.ext (ϕ.map_add x y)
-  map_mul' x y := Subtype.ext (ϕ.map_mul x y)
+  map_mul' x y := Subtype.ext (ϕ.map_hMul x y)
   commutes' x := Subtype.ext (ϕ.commutes x)
 #align alg_hom.restrict_normal_aux AlgHom.restrictNormalAux
 -/

@@ -186,7 +186,7 @@ def selmerGroup : Subgroup <| K/n
     where
   carrier := {x : K/n | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).valuationOfNeZeroMod n x = 1}
   one_mem' _ _ := by rw [map_one]
-  mul_mem' _ _ hx hy v hv := by rw [map_mul, hx v hv, hy v hv, one_mul]
+  hMul_mem' _ _ hx hy v hv := by rw [map_mul, hx v hv, hy v hv, one_mul]
   inv_mem' _ hx v hv := by rw [map_inv, hx v hv, inv_one]
 #align is_dedekind_domain.selmer_group IsDedekindDomain.selmerGroup
 -/

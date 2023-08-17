@@ -143,7 +143,7 @@ def inverse : CommMonCat.{u} ⥤ CommMon_ (Type u)
     where
   obj A :=
     { MonTypeEquivalenceMon.inverse.obj ((forget₂ CommMonCat MonCat).obj A) with
-      mul_comm' := by ext ⟨x, y⟩; exact CommMonoid.mul_comm y x }
+      mul_comm' := by ext ⟨x, y⟩; exact CommMonoid.hMul_comm y x }
   map A B f := MonTypeEquivalenceMon.inverse.map f
 #align CommMon_Type_equivalence_CommMon.inverse CommMonTypeEquivalenceCommMon.inverse
 -/

@@ -56,7 +56,7 @@ variable (Q)
 /-- The even submodule `clifford_algebra.even_odd Q 0` is also a subalgebra. -/
 def even : Subalgebra R (CliffordAlgebra Q) :=
   (evenOdd Q 0).toSubalgebra SetLike.GradedMonoid.one_mem fun x y hx hy =>
-    add_zero (0 : ZMod 2) ▸ SetLike.GradedMonoid.mul_mem hx hy
+    add_zero (0 : ZMod 2) ▸ SetLike.GradedMonoid.hMul_mem hx hy
 #align clifford_algebra.even CliffordAlgebra.even
 -/
 
@@ -89,7 +89,7 @@ def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) : EvenHom Q B
   bilin := g.bilin.compr₂ f.toLinearMap
   contract m := (f.congr_arg <| g.contract _).trans <| f.commutes _
   contract_mid m₁ m₂ m₃ :=
-    (f.map_mul _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| f.map_smul _ _
+    (f.map_hMul _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| f.map_smul _ _
 #align clifford_algebra.even_hom.compr₂ CliffordAlgebra.EvenHom.compr₂
 -/
 

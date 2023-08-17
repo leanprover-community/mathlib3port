@@ -484,7 +484,7 @@ theorem eq_zero_iff {I : FractionalIdeal S P} : I = 0 ↔ ∀ x ∈ I, x = (0 : 
 theorem IsFractional.sup {I J : Submodule R P} :
     IsFractional S I → IsFractional S J → IsFractional S (I ⊔ J)
   | ⟨aI, haI, hI⟩, ⟨aJ, haJ, hJ⟩ =>
-    ⟨aI * aJ, S.mul_mem haI haJ, fun b hb =>
+    ⟨aI * aJ, S.hMul_mem haI haJ, fun b hb =>
       by
       rcases mem_sup.mp hb with ⟨bI, hbI, bJ, hbJ, rfl⟩
       rw [smul_add]
@@ -588,7 +588,7 @@ theorem coe_nsmul (n : ℕ) (I : FractionalIdeal S P) : (↑(n • I) : Submodul
 theorem IsFractional.mul {I J : Submodule R P} :
     IsFractional S I → IsFractional S J → IsFractional S (I * J : Submodule R P)
   | ⟨aI, haI, hI⟩, ⟨aJ, haJ, hJ⟩ =>
-    ⟨aI * aJ, S.mul_mem haI haJ, fun b hb =>
+    ⟨aI * aJ, S.hMul_mem haI haJ, fun b hb =>
       by
       apply Submodule.mul_induction_on hb
       · intro m hm n hn
@@ -1292,7 +1292,7 @@ theorem IsFractional.div_of_nonzero {I J : Submodule R₁ K} :
     obtain ⟨y', hy'⟩ := hJ y mem_J
     use aI * y'
     constructor
-    · apply (nonZeroDivisors R₁).mul_mem haI (mem_non_zero_divisors_iff_ne_zero.mpr _)
+    · apply (nonZeroDivisors R₁).hMul_mem haI (mem_non_zero_divisors_iff_ne_zero.mpr _)
       intro y'_eq_zero
       have : algebraMap R₁ K aJ * y = 0 := by
         rw [← Algebra.smul_def, ← hy', y'_eq_zero, RingHom.map_zero]

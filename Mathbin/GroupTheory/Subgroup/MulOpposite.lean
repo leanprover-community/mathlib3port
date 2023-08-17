@@ -32,12 +32,12 @@ def opposite : Subgroup G ≃ Subgroup Gᵐᵒᵖ
   toFun H :=
     { carrier := MulOpposite.unop ⁻¹' (H : Set G)
       one_mem' := H.one_mem
-      mul_mem' := fun a b ha hb => H.mul_mem hb ha
+      hMul_mem' := fun a b ha hb => H.hMul_mem hb ha
       inv_mem' := fun a => H.inv_mem }
   invFun H :=
     { carrier := MulOpposite.op ⁻¹' (H : Set Gᵐᵒᵖ)
       one_mem' := H.one_mem
-      mul_mem' := fun a b ha hb => H.mul_mem hb ha
+      hMul_mem' := fun a b ha hb => H.hMul_mem hb ha
       inv_mem' := fun a => H.inv_mem }
   left_inv H := SetLike.coe_injective rfl
   right_inv H := SetLike.coe_injective rfl

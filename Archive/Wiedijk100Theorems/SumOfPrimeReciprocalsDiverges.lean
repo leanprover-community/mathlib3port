@@ -128,7 +128,7 @@ theorem range_sdiff_eq_bUnion {x k : ℕ} : range x \ m x k = u x k :=
 The number of `e < x` for which `e + 1` has a prime factor `p > k` is bounded by `x` times the sum
 of reciprocals of primes in `(k, x]`.
 -/
-theorem card_le_mul_sum {x k : ℕ} : (card (u x k) : ℝ) ≤ x * ∑ p in p x k, 1 / p :=
+theorem card_le_hMul_sum {x k : ℕ} : (card (u x k) : ℝ) ≤ x * ∑ p in p x k, 1 / p :=
   by
   let P := {p ∈ range (x + 1) | k < p ∧ Nat.Prime p}
   let N p := {e ∈ range x | p ∣ e + 1}
@@ -138,7 +138,7 @@ theorem card_le_mul_sum {x k : ℕ} : (card (u x k) : ℝ) ≤ x * ∑ p in p x 
     _ ≤ ∑ p in P, x * (1 / p) := (sum_le_sum fun p hp => _)
     _ = x * ∑ p in P, 1 / p := mul_sum.symm
   simp only [mul_one_div, N, sep_def, filter_congr_decidable, Nat.card_multiples, Nat.cast_div_le]
-#align theorems_100.card_le_mul_sum Theorems100.card_le_mul_sum
+#align theorems_100.card_le_mul_sum Theorems100.card_le_hMul_sum
 
 /--
 The number of `e < x` for which `e + 1` is a squarefree product of primes smaller than or equal to
@@ -179,7 +179,7 @@ theorem card_le_two_pow {x k : ℕ} : card ({e ∈ m x k | Squarefree (e + 1)}) 
 The number of `e < x` for which `e + 1` is a product of powers of primes smaller than or equal to
 `k` is bounded by `2 ^ k * nat.sqrt x`.
 -/
-theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (m x k) ≤ 2 ^ k * Nat.sqrt x :=
+theorem card_le_two_pow_hMul_sqrt {x k : ℕ} : card (m x k) ≤ 2 ^ k * Nat.sqrt x :=
   by
   let M₁ := {e ∈ M x k | Squarefree (e + 1)}
   let M₂ := M (Nat.sqrt x) k
@@ -212,7 +212,7 @@ theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (m x k) ≤ 2 ^ k * Nat.sqrt
     _ ≤ card K := card_image_le
     _ = card M₁ * card M₂ := (card_product M₁ M₂)
     _ ≤ 2 ^ k * x.sqrt := mul_le_mul' card_le_two_pow h2
-#align theorems_100.card_le_two_pow_mul_sqrt Theorems100.card_le_two_pow_mul_sqrt
+#align theorems_100.card_le_two_pow_mul_sqrt Theorems100.card_le_two_pow_hMul_sqrt
 
 theorem Real.tendsto_sum_one_div_prime_atTop :
     Tendsto (fun n => ∑ p in {p ∈ range n | Nat.Prime p}, 1 / (p : ℝ)) atTop atTop :=

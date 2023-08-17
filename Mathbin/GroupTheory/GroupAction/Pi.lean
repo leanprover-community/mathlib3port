@@ -148,7 +148,7 @@ instance faithfulSMul {α : Type _} [Nonempty I] [∀ i, SMul α <| f i] [∀ i,
 instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m
     where
   smul := (· • ·)
-  mul_smul r s f := funext fun i => mul_smul _ _ _
+  hMul_smul r s f := funext fun i => hMul_smul _ _ _
   one_smul f := funext fun i => one_smul α _
 #align pi.mul_action Pi.mulAction
 #align pi.add_action Pi.addAction
@@ -160,7 +160,7 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulActi
     @MulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m)
     where
   smul := (· • ·)
-  mul_smul r s f := funext fun i => mul_smul _ _ _
+  hMul_smul r s f := funext fun i => hMul_smul _ _ _
   one_smul f := funext fun i => one_smul _ _
 #align pi.mul_action' Pi.mulAction'
 #align pi.add_action' Pi.addAction'
@@ -239,7 +239,7 @@ instance mulDistribMulAction (α) {m : Monoid α} {n : ∀ i, Monoid <| f i}
     @MulDistribMulAction α (∀ i : I, f i) m (@Pi.monoid I f n) :=
   { Pi.mulAction _ with
     smul_one := fun c => funext fun i => smul_one _
-    smul_mul := fun c f g => funext fun i => smul_mul' _ _ _ }
+    smul_hMul := fun c f g => funext fun i => smul_mul' _ _ _ }
 #align pi.mul_distrib_mul_action Pi.mulDistribMulAction
 -/
 
@@ -248,7 +248,7 @@ instance mulDistribMulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} {n : 
     [∀ i, MulDistribMulAction (f i) (g i)] :
     @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.monoid I g n)
     where
-  smul_mul := by intros; ext x; apply smul_mul'
+  smul_hMul := by intros; ext x; apply smul_mul'
   smul_one := by intros; ext x; apply smul_one
 #align pi.mul_distrib_mul_action' Pi.mulDistribMulAction'
 -/

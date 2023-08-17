@@ -102,7 +102,7 @@ theorem conj_apply (f : End X) : α.conj f = α.inv ≫ f ≫ α.Hom :=
 #print CategoryTheory.Iso.conj_comp /-
 @[simp]
 theorem conj_comp (f g : End X) : α.conj (f ≫ g) = α.conj f ≫ α.conj g :=
-  α.conj.map_mul g f
+  α.conj.map_hMul g f
 #align category_theory.iso.conj_comp CategoryTheory.Iso.conj_comp
 -/
 
@@ -179,7 +179,7 @@ theorem trans_conjAut {Z : C} (β : Y ≅ Z) (f : Aut X) :
 #print CategoryTheory.Iso.conjAut_mul /-
 @[simp]
 theorem conjAut_mul (f g : Aut X) : α.conjAut (f * g) = α.conjAut f * α.conjAut g :=
-  α.conjAut.map_mul f g
+  α.conjAut.map_hMul f g
 #align category_theory.iso.conj_Aut_mul CategoryTheory.Iso.conjAut_mul
 -/
 

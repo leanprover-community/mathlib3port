@@ -698,7 +698,7 @@ theorem Prime.not_coprime_iff_dvd {m n : ℕ} : ¬coprime m n ↔ ∃ p, Prime p
 #print Nat.Prime.dvd_mul /-
 theorem Prime.dvd_mul {p m n : ℕ} (pp : Prime p) : p ∣ m * n ↔ p ∣ m ∨ p ∣ n :=
   ⟨fun H => or_iff_not_imp_left.2 fun h => (pp.coprime_iff_not_dvd.2 h).dvd_of_dvd_mul_left H,
-    Or.ndrec (fun h : p ∣ m => h.mul_right _) fun h : p ∣ n => h.mul_left _⟩
+    Or.ndrec (fun h : p ∣ m => h.hMul_right _) fun h : p ∣ n => h.hMul_left _⟩
 #align nat.prime.dvd_mul Nat.Prime.dvd_mul
 -/
 

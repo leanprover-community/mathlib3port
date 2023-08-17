@@ -75,7 +75,7 @@ protected def orderedRing [OrderedRing α] [Zero β] [One β] [Add β] [Mul β] 
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : OrderedRing β :=
   { hf.OrderedSemiring f zero one add mul nsmul npow nat_cast,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
-    mul_nonneg := fun a b ha hb =>
+    hMul_nonneg := fun a b ha hb =>
       show f 0 ≤ f (a * b) by rw [zero, mul]; apply mul_nonneg <;> rwa [← zero] }
 #align function.injective.ordered_ring Function.Injective.orderedRing
 -/

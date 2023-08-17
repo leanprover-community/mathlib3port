@@ -126,8 +126,8 @@ instance : BoundedOrder SignType where
 instance : HasDistribNeg SignType :=
   { SignType.hasNeg with
     neg_neg := fun x => by cases x <;> rfl
-    neg_mul := fun x y => by casesm*_ <;> rfl
-    mul_neg := fun x y => by casesm*_ <;> rfl }
+    neg_hMul := fun x y => by casesm*_ <;> rfl
+    hMul_neg := fun x y => by casesm*_ <;> rfl }
 
 #print SignType.fin3Equiv /-
 /-- `sign_type` is equivalent to `fin 3`. -/

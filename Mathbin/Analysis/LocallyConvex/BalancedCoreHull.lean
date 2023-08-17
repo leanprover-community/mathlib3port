@@ -186,7 +186,7 @@ theorem balancedHull.balanced (s : Set E) : Balanced 𝕜 (balancedHull 𝕜 s) 
   simp_rw [balancedHull, smul_set_Union₂, subset_def, mem_Union₂]
   rintro x ⟨r, hr, hx⟩
   rw [← smul_assoc] at hx 
-  exact ⟨a • r, (SeminormedRing.norm_mul _ _).trans (mul_le_one ha (norm_nonneg r) hr), hx⟩
+  exact ⟨a • r, (SeminormedRing.norm_hMul _ _).trans (mul_le_one ha (norm_nonneg r) hr), hx⟩
 #align balanced_hull.balanced balancedHull.balanced
 -/
 

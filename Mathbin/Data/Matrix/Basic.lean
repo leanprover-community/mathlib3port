@@ -1046,16 +1046,16 @@ end DotProduct
 
 open scoped Matrix
 
-#print Matrix.mul /-
+#print HMul.hMul /-
 /-- `M ⬝ N` is the usual product of matrices `M` and `N`, i.e. we have that
 `(M ⬝ N) i k` is the dot product of the `i`-th row of `M` by the `k`-th column of `N`.
 This is currently only defined when `m` is finite. -/
-protected def mul [Fintype m] [Mul α] [AddCommMonoid α] (M : Matrix l m α) (N : Matrix m n α) :
+protected def hMul [Fintype m] [Mul α] [AddCommMonoid α] (M : Matrix l m α) (N : Matrix m n α) :
     Matrix l n α := fun i k => (fun j => M i j) ⬝ᵥ fun j => N j k
-#align matrix.mul Matrix.mul
+#align matrix.mul HMul.hMul
 -/
 
-scoped infixl:75 " ⬝ " => Matrix.mul
+scoped infixl:75 " ⬝ " => HMul.hMul
 
 #print Matrix.mul_apply /-
 theorem mul_apply [Fintype m] [Mul α] [AddCommMonoid α] {M : Matrix l m α} {N : Matrix m n α}
@@ -1065,14 +1065,12 @@ theorem mul_apply [Fintype m] [Mul α] [AddCommMonoid α] {M : Matrix l m α} {N
 -/
 
 instance [Fintype n] [Mul α] [AddCommMonoid α] : Mul (Matrix n n α) :=
-  ⟨Matrix.mul⟩
+  ⟨HMul.hMul⟩
 
-#print Matrix.mul_eq_mul /-
 @[simp]
-theorem mul_eq_mul [Fintype n] [Mul α] [AddCommMonoid α] (M N : Matrix n n α) : M * N = M ⬝ N :=
+theorem hMul_eq_hMul [Fintype n] [Mul α] [AddCommMonoid α] (M N : Matrix n n α) : M * N = M ⬝ N :=
   rfl
-#align matrix.mul_eq_mul Matrix.mul_eq_mul
--/
+#align matrix.mul_eq_mul Matrix.hMul_eq_hMul
 
 #print Matrix.mul_apply' /-
 theorem mul_apply' [Fintype m] [Mul α] [AddCommMonoid α] {M : Matrix l m α} {N : Matrix m n α}
@@ -1104,7 +1102,7 @@ theorem two_mul_expl {R : Type _} [CommRing R] (A B : Matrix (Fin 2) (Fin 2) R) 
   by
   constructor; on_goal 2 => constructor; on_goal 3 => constructor
   all_goals
-    simp only [Matrix.mul_eq_mul]
+    simp only [Matrix.hMul_eq_hMul]
     rw [Matrix.mul_apply, Finset.sum_fin_eq_sum_range, Finset.sum_range_succ, Finset.sum_range_succ]
     simp
 #align matrix.two_mul_expl Matrix.two_mul_expl
@@ -2556,7 +2554,7 @@ theorem conjTranspose_smul_non_comm [Star R] [Star α] [SMul R α] [SMul Rᵐᵒ
 @[simp]
 theorem conjTranspose_smul_self [Semigroup α] [StarSemigroup α] (c : α) (M : Matrix m n α) :
     (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
-  conjTranspose_smul_non_comm c M star_mul
+  conjTranspose_smul_non_comm c M star_hMul
 #align matrix.conj_transpose_smul_self Matrix.conjTranspose_smul_self
 -/
 
@@ -2783,7 +2781,7 @@ instance [Star α] [Star β] [SMul α β] [StarModule α β] : StarModule α (Ma
 instance [Fintype n] [NonUnitalSemiring α] [StarRing α] : StarRing (Matrix n n α)
     where
   star_add := conjTranspose_add
-  star_mul := conjTranspose_mul
+  star_hMul := conjTranspose_mul
 
 #print Matrix.star_mul /-
 /-- A version of `star_mul` for `⬝` instead of `*`. -/
@@ -3511,7 +3509,7 @@ variable [Fintype n] [NonAssocSemiring α] [NonAssocSemiring β]
 
 #print RingHom.map_matrix_mul /-
 theorem map_matrix_mul (M : Matrix m n α) (N : Matrix n o α) (i : m) (j : o) (f : α →+* β) :
-    f (Matrix.mul M N i j) = Matrix.mul (M.map f) (N.map f) i j := by
+    f (HMul.hMul M N i j) = HMul.hMul (M.map f) (N.map f) i j := by
   simp [Matrix.mul_apply, RingHom.map_sum]
 #align ring_hom.map_matrix_mul RingHom.map_matrix_mul
 -/

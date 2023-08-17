@@ -52,16 +52,16 @@ instance (n : ℕ) : CommSemigroup (Fin n) :=
     mul_assoc := fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
       Fin.eq_of_veq
         (calc
-          a * b % n * c ≡ a * b * c [MOD n] := (Nat.mod_modEq _ _).mul_right _
+          a * b % n * c ≡ a * b * c [MOD n] := (Nat.mod_modEq _ _).hMul_right _
           _ ≡ a * (b * c) [MOD n] := by rw [mul_assoc]
-          _ ≡ a * (b * c % n) [MOD n] := (Nat.mod_modEq _ _).symm.mul_left _)
+          _ ≡ a * (b * c % n) [MOD n] := (Nat.mod_modEq _ _).symm.hMul_left _)
     mul_comm := Fin.mul_comm }
 
 private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin n, a * (b + c) = a * b + a * c :=
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
   Fin.eq_of_veq
     (calc
-      a * ((b + c) % n) ≡ a * (b + c) [MOD n] := (Nat.mod_modEq _ _).mul_left _
+      a * ((b + c) % n) ≡ a * (b + c) [MOD n] := (Nat.mod_modEq _ _).hMul_left _
       _ ≡ a * b + a * c [MOD n] := by rw [mul_add]
       _ ≡ a * b % n + a * c % n [MOD n] := (Nat.mod_modEq _ _).symm.add (Nat.mod_modEq _ _).symm)
 
@@ -83,8 +83,8 @@ instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
 instance (n : ℕ) : HasDistribNeg (Fin n) :=
   { Fin.hasInvolutiveNeg n with
     neg := Neg.neg
-    mul_neg := Nat.casesOn n finZeroElim fun i => mul_neg
-    neg_mul := Nat.casesOn n finZeroElim fun i => neg_mul }
+    hMul_neg := Nat.casesOn n finZeroElim fun i => mul_neg
+    neg_hMul := Nat.casesOn n finZeroElim fun i => neg_mul }
 
 end Fin
 

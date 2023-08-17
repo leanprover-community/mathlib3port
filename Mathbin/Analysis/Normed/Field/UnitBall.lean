@@ -30,7 +30,7 @@ variable {𝕜 : Type _}
 def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSeminormedRing 𝕜] : Subsemigroup 𝕜
     where
   carrier := ball (0 : 𝕜) 1
-  mul_mem' x y hx hy := by
+  hMul_mem' x y hx hy := by
     rw [mem_ball_zero_iff] at *
     exact (norm_mul_le x y).trans_lt (mul_lt_one_of_nonneg_of_lt_one_left (norm_nonneg _) hx hy.le)
 #align subsemigroup.unit_ball Subsemigroup.unitBall
@@ -61,7 +61,7 @@ theorem coe_mul_unitBall [NonUnitalSeminormedRing 𝕜] (x y : ball (0 : 𝕜) 1
 def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSeminormedRing 𝕜] : Subsemigroup 𝕜
     where
   carrier := closedBall 0 1
-  mul_mem' x y hx hy := by
+  hMul_mem' x y hx hy := by
     rw [mem_closedBall_zero_iff] at *
     exact (norm_mul_le x y).trans (mul_le_one hx (norm_nonneg _) hy)
 #align subsemigroup.unit_closed_ball Subsemigroup.unitClosedBall
@@ -120,7 +120,7 @@ theorem coe_pow_unitClosedBall [SeminormedRing 𝕜] [NormOneClass 𝕜] (x : cl
 def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid 𝕜
     where
   carrier := sphere (0 : 𝕜) 1
-  mul_mem' x y hx hy := by rw [mem_sphere_zero_iff_norm] at *; simp [*]
+  hMul_mem' x y hx hy := by rw [mem_sphere_zero_iff_norm] at *; simp [*]
   one_mem' := mem_sphere_zero_iff_norm.2 norm_one
 #align submonoid.unit_sphere Submonoid.unitSphere
 -/

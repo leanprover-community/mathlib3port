@@ -586,7 +586,7 @@ variable [Monoid R]
 protected def mulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
   { e.SMul R with
     one_smul := by simp [smul_def]
-    mul_smul := by simp [smul_def, mul_smul] }
+    hMul_smul := by simp [smul_def, mul_smul] }
 #align equiv.mul_action Equiv.mulAction
 -/
 
@@ -668,7 +668,7 @@ protected def algebra (e : α ≃ β) [Semiring β] :
     dsimp at p 
     erw [p]; clear p
     apply (RingEquiv e).Injective
-    simp only [(RingEquiv e).map_mul]
+    simp only [(RingEquiv e).map_hMul]
     simp [Algebra.commutes]
 #align equiv.algebra Equiv.algebra
 -/

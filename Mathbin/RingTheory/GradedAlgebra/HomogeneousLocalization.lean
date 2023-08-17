@@ -175,8 +175,8 @@ theorem den_zero : ((0 : NumDenSameDeg 𝒜 x).den : A) = 1 :=
 instance : Mul (NumDenSameDeg 𝒜 x)
     where mul p q :=
     { deg := p.deg + q.deg
-      num := ⟨p.num * q.num, mul_mem p.num.Prop q.num.Prop⟩
-      den := ⟨p.den * q.den, mul_mem p.den.Prop q.den.Prop⟩
+      num := ⟨p.num * q.num, hMul_mem p.num.Prop q.num.Prop⟩
+      den := ⟨p.den * q.den, hMul_mem p.den.Prop q.den.Prop⟩
       denom_mem := Submonoid.mul_mem _ p.denom_mem q.denom_mem }
 
 #print HomogeneousLocalization.NumDenSameDeg.deg_mul /-
@@ -205,8 +205,9 @@ instance : Add (NumDenSameDeg 𝒜 x)
     { deg := c1.deg + c2.deg
       num :=
         ⟨c1.den * c2.num + c2.den * c1.num,
-          add_mem (mul_mem c1.den.2 c2.num.2) (add_comm c2.deg c1.deg ▸ mul_mem c2.den.2 c1.num.2)⟩
-      den := ⟨c1.den * c2.den, mul_mem c1.den.2 c2.den.2⟩
+          add_mem (hMul_mem c1.den.2 c2.num.2)
+            (add_comm c2.deg c1.deg ▸ hMul_mem c2.den.2 c1.num.2)⟩
+      den := ⟨c1.den * c2.den, hMul_mem c1.den.2 c2.den.2⟩
       denom_mem := Submonoid.mul_mem _ c1.denom_mem c2.denom_mem }
 
 #print HomogeneousLocalization.NumDenSameDeg.deg_add /-

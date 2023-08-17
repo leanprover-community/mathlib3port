@@ -223,7 +223,7 @@ theorem hom.faithful : ∀ c d, Function.Injective fun f : c ⟶ d => (hom S).ma
 def vertexSubgroup {c : C} (hc : c ∈ S.objs) : Subgroup (c ⟶ c)
     where
   carrier := S.arrows c c
-  mul_mem' f g hf hg := S.mul hf hg
+  hMul_mem' f g hf hg := S.mul hf hg
   one_mem' := id_mem_of_nonempty_isotropy _ _ hc
   inv_mem' f hf := S.inv hf
 #align category_theory.subgroupoid.vertex_subgroup CategoryTheory.Subgroupoid.vertexSubgroup

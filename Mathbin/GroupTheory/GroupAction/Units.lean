@@ -63,7 +63,7 @@ instance [Monoid M] [SMul M α] [FaithfulSMul M α] : FaithfulSMul Mˣ α
 instance [Monoid M] [MulAction M α] : MulAction Mˣ α
     where
   one_smul := (one_smul M : _)
-  mul_smul m n := mul_smul (m : M) n
+  hMul_smul m n := hMul_smul (m : M) n
 
 instance [Monoid M] [Zero α] [SMulZeroClass M α] : SMulZeroClass Mˣ α
     where
@@ -78,7 +78,7 @@ instance [Monoid M] [AddMonoid α] [DistribMulAction M α] : DistribMulAction M�
 
 instance [Monoid M] [Monoid α] [MulDistribMulAction M α] : MulDistribMulAction Mˣ α
     where
-  smul_mul m := smul_mul' (m : M)
+  smul_hMul m := smul_mul' (m : M)
   smul_one m := smul_one m
 
 #print Units.smulCommClass_left /-
@@ -111,7 +111,7 @@ instance mulAction' [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M]
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by rw [smul_mul_smul, Units.mul_inv, mul_right_inv, one_smul], by
       rw [smul_mul_smul, Units.inv_mul, mul_left_inv, one_smul]⟩
   one_smul m := Units.ext <| one_smul _ _
-  mul_smul g₁ g₂ m := Units.ext <| mul_smul _ _ _
+  hMul_smul g₁ g₂ m := Units.ext <| hMul_smul _ _ _
 #align units.mul_action' Units.mulAction'
 -/
 
@@ -170,7 +170,7 @@ instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [SM
   { Units.mulAction' with
     smul := (· • ·)
     smul_one := fun m => Units.ext <| smul_one _
-    smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
+    smul_hMul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
 #align units.mul_distrib_mul_action' Units.mulDistribMulAction'
 -/
 

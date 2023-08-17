@@ -42,7 +42,7 @@ instance functorCategoryLinear : Linear R (C ⥤ D)
       smul_zero := by intros; ext; apply smul_zero
       add_smul := by intros; ext; apply add_smul
       smul_add := by intros; ext; apply smul_add
-      mul_smul := by intros; ext; apply mul_smul }
+      hMul_smul := by intros; ext; apply mul_smul }
   smul_comp' := by intros; ext; apply smul_comp
   comp_smul' := by intros; ext; apply comp_smul
 #align category_theory.functor_category_linear CategoryTheory.functorCategoryLinear

@@ -56,9 +56,9 @@ theorem subst_into_add {α} [Add α] (l r tl tr t) (prl : (l : α) = tl) (prr : 
     (prt : tl + tr = t) : l + r = t := by rw [prl, prr, prt]
 #align norm_num.subst_into_add NormNum.subst_into_add
 
-theorem subst_into_mul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr)
+theorem subst_into_hMul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr)
     (prt : tl * tr = t) : l * r = t := by rw [prl, prr, prt]
-#align norm_num.subst_into_mul NormNum.subst_into_mul
+#align norm_num.subst_into_mul NormNum.subst_into_hMul
 
 theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by
   simp [pra, prt]
@@ -288,23 +288,23 @@ unsafe def prove_add_nat' (c : instance_cache) (a b : expr) :
 
 end
 
-theorem bit0_mul {α} [Semiring α] (a b c : α) (h : a * b = c) : bit0 a * b = bit0 c :=
+theorem bit0_hMul {α} [Semiring α] (a b c : α) (h : a * b = c) : bit0 a * b = bit0 c :=
   h ▸ by simp [bit0, add_mul]
-#align norm_num.bit0_mul NormNum.bit0_mul
+#align norm_num.bit0_mul NormNum.bit0_hMul
 
-theorem mul_bit0' {α} [Semiring α] (a b c : α) (h : a * b = c) : a * bit0 b = bit0 c :=
+theorem hMul_bit0' {α} [Semiring α] (a b c : α) (h : a * b = c) : a * bit0 b = bit0 c :=
   h ▸ by simp [bit0, mul_add]
-#align norm_num.mul_bit0' NormNum.mul_bit0'
+#align norm_num.mul_bit0' NormNum.hMul_bit0'
 
-theorem mul_bit0_bit0 {α} [Semiring α] (a b c : α) (h : a * b = c) :
+theorem hMul_bit0_bit0 {α} [Semiring α] (a b c : α) (h : a * b = c) :
     bit0 a * bit0 b = bit0 (bit0 c) :=
-  bit0_mul _ _ _ (mul_bit0' _ _ _ h)
-#align norm_num.mul_bit0_bit0 NormNum.mul_bit0_bit0
+  bit0_hMul _ _ _ (hMul_bit0' _ _ _ h)
+#align norm_num.mul_bit0_bit0 NormNum.hMul_bit0_bit0
 
-theorem mul_bit1_bit1 {α} [Semiring α] (a b c d e : α) (hc : a * b = c) (hd : a + b = d)
+theorem hMul_bit1_bit1 {α} [Semiring α] (a b c d e : α) (hc : a * b = c) (hd : a + b = d)
     (he : bit0 c + d = e) : bit1 a * bit1 b = bit1 e := by
   rw [← he, ← hd, ← hc] <;> simp [bit1, bit0, mul_add, add_mul, add_left_comm, add_assoc]
-#align norm_num.mul_bit1_bit1 NormNum.mul_bit1_bit1
+#align norm_num.mul_bit1_bit1 NormNum.hMul_bit1_bit1
 
 section
 
@@ -1078,13 +1078,13 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
     return (c, b, a, p)
 #align norm_num.prove_clear_denom_simple norm_num.prove_clear_denom_simple
 
-theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
+theorem clear_denom_hMul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
     (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') :
     a * b = c :=
   mul_right_cancel₀ ha.1 <|
     mul_right_cancel₀ hb.1 <| by
       rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
-#align norm_num.clear_denom_mul NormNum.clear_denom_mul
+#align norm_num.clear_denom_mul NormNum.clear_denom_hMul
 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
 unsafe def prove_mul_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
@@ -1103,17 +1103,17 @@ unsafe def prove_mul_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ)
     return (ic, c, p)
 #align norm_num.prove_mul_nonneg_rat norm_num.prove_mul_nonneg_rat
 
-theorem mul_neg_pos {α} [Ring α] (a b c : α) (h : a * b = c) : -a * b = -c :=
+theorem hMul_neg_pos {α} [Ring α] (a b c : α) (h : a * b = c) : -a * b = -c :=
   h ▸ by simp
-#align norm_num.mul_neg_pos NormNum.mul_neg_pos
+#align norm_num.mul_neg_pos NormNum.hMul_neg_pos
 
-theorem mul_pos_neg {α} [Ring α] (a b c : α) (h : a * b = c) : a * -b = -c :=
+theorem hMul_pos_neg {α} [Ring α] (a b c : α) (h : a * b = c) : a * -b = -c :=
   h ▸ by simp
-#align norm_num.mul_pos_neg NormNum.mul_pos_neg
+#align norm_num.mul_pos_neg NormNum.hMul_pos_neg
 
-theorem mul_neg_neg {α} [Ring α] (a b c : α) (h : a * b = c) : -a * -b = c :=
+theorem hMul_neg_neg {α} [Ring α] (a b c : α) (h : a * b = c) : -a * -b = c :=
   h ▸ by simp
-#align norm_num.mul_neg_neg NormNum.mul_neg_neg
+#align norm_num.mul_neg_neg NormNum.hMul_neg_neg
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a * b = c)`. -/
 unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :

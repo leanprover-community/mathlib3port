@@ -170,7 +170,7 @@ theorem mem_smul_span_singleton {I : Ideal R} {m : M} {x : M} :
     smul_induction_on hx
       (fun r hri n hnm =>
         let ⟨s, hs⟩ := mem_span_singleton.1 hnm
-        ⟨r * s, I.mul_mem_right _ hri, hs ▸ mul_smul r s m⟩)
+        ⟨r * s, I.mul_mem_right _ hri, hs ▸ hMul_smul r s m⟩)
       fun m1 m2 ⟨y1, hyi1, hy1⟩ ⟨y2, hyi2, hy2⟩ =>
       ⟨y1 + y2, I.add_mem hyi1 hyi2, by rw [add_smul, hy1, hy2]⟩,
     fun ⟨y, hyi, hy⟩ => hy ▸ smul_mem_smul hyi (subset_span <| Set.mem_singleton m)⟩
@@ -277,7 +277,7 @@ protected theorem smul_assoc : (I • J) • N = I • J • N :=
     (smul_le.2 fun r hr sn hsn =>
       suffices J • N ≤ Submodule.comap (r • (LinearMap.id : M →ₗ[R] M)) ((I • J) • N) from this hsn
       smul_le.2 fun s hs n hn =>
-        show r • s • n ∈ (I • J) • N from mul_smul r s n ▸ smul_mem_smul (smul_mem_smul hr hs) hn)
+        show r • s • n ∈ (I • J) • N from hMul_smul r s n ▸ smul_mem_smul (smul_mem_smul hr hs) hn)
 #align submodule.smul_assoc Submodule.smul_assoc
 -/
 
@@ -2713,7 +2713,7 @@ instance moduleSubmodule : Module (Ideal R) (Submodule R M)
     where
   smul_add := smul_sup
   add_smul := sup_smul
-  mul_smul := Submodule.smul_assoc
+  hMul_smul := Submodule.smul_assoc
   one_smul := by simp
   zero_smul := bot_smul
   smul_zero := smul_bot

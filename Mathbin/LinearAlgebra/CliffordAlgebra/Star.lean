@@ -41,7 +41,7 @@ instance : StarRing (CliffordAlgebra Q)
   unit x := reverse (involute x)
   star_involutive x := by
     simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
-  star_mul x y := by simp only [map_mul, reverse.map_mul]
+  star_hMul x y := by simp only [map_mul, reverse.map_mul]
   star_add x y := by simp only [map_add]
 
 #print CliffordAlgebra.star_def /-

@@ -280,7 +280,7 @@ of `adic_completion` with respect to `adic_completion_integers`. -/
 noncomputable def finiteAdeleRing : Subring (K_hat R K)
     where
   carrier := {x : K_hat R K | x.IsFiniteAdele}
-  mul_mem' _ _ hx hy := mul hx hy
+  hMul_mem' _ _ hx hy := mul hx hy
   one_mem' := one
   add_mem' _ _ hx hy := add hx hy
   zero_mem' := zero

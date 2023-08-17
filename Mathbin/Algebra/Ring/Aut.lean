@@ -103,9 +103,9 @@ instance applyMulSemiringAction : MulSemiringAction (RingAut R) R
   smul_zero := RingEquiv.map_zero
   smul_add := RingEquiv.map_add
   smul_one := RingEquiv.map_one
-  smul_mul := RingEquiv.map_mul
+  smul_hMul := RingEquiv.map_mul
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align ring_aut.apply_mul_semiring_action RingAut.applyMulSemiringAction
 -/
 
@@ -133,7 +133,7 @@ This is a stronger version of `distrib_mul_action.to_add_aut` and
 def MulSemiringAction.toRingAut [MulSemiringAction G R] : G →* RingAut R
     where
   toFun := MulSemiringAction.toRingEquiv G R
-  map_mul' g h := RingEquiv.ext <| mul_smul g h
+  map_mul' g h := RingEquiv.ext <| hMul_smul g h
   map_one' := RingEquiv.ext <| one_smul _
 #align mul_semiring_action.to_ring_aut MulSemiringAction.toRingAut
 -/

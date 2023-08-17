@@ -333,7 +333,7 @@ theorem pd_inv [Fintype l] [Invertible (2 : R)] : PD l R * ⅟ (2 : R) • (PD l
   by
   have h : ⅟ (2 : R) • (1 : Matrix l l R) + ⅟ (2 : R) • 1 = 1 := by
     rw [← smul_add, ← two_smul R _, smul_smul, invOf_mul_self, one_smul]
-  erw [Matrix.fromBlocks_transpose, Matrix.fromBlocks_smul, Matrix.mul_eq_mul,
+  erw [Matrix.fromBlocks_transpose, Matrix.fromBlocks_smul, Matrix.hMul_eq_hMul,
     Matrix.fromBlocks_multiply]
   simp [h]
 #align lie_algebra.orthogonal.PD_inv LieAlgebra.Orthogonal.pd_inv
@@ -412,7 +412,7 @@ variable [Fintype l]
 #print LieAlgebra.Orthogonal.pb_inv /-
 theorem pb_inv [Invertible (2 : R)] : PB l R * Matrix.fromBlocks 1 0 0 (⅟ (PD l R)) = 1 :=
   by
-  rw [PB, Matrix.mul_eq_mul, Matrix.fromBlocks_multiply, Matrix.mul_invOf_self]
+  rw [PB, Matrix.hMul_eq_hMul, Matrix.fromBlocks_multiply, mul_invOf_self]
   simp only [Matrix.mul_zero, Matrix.mul_one, Matrix.zero_mul, zero_add, add_zero,
     Matrix.fromBlocks_one]
 #align lie_algebra.orthogonal.PB_inv LieAlgebra.Orthogonal.pb_inv

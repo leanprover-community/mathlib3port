@@ -522,7 +522,7 @@ instance : StarAddMonoid 𝓜(𝕜, A) :=
 
 instance : StarRing 𝓜(𝕜, A) :=
   { DoubleCentralizer.starAddMonoid with
-    star_mul := fun a b => by
+    star_hMul := fun a b => by
       ext <;>
         simp only [star_fst, star_snd, mul_fst, mul_snd, star_star, ContinuousLinearMap.coe_mul,
           Function.comp_apply] }
@@ -755,7 +755,7 @@ variable [NonUnitalNormedRing A] [StarRing A] [CstarRing A]
 variable [NormedSpace 𝕜 A] [SMulCommClass 𝕜 A A] [IsScalarTower 𝕜 A A] [StarModule 𝕜 A]
 
 instance : CstarRing 𝓜(𝕜, A)
-    where norm_star_mul_self a :=
+    where norm_star_hMul_self a :=
     congr_arg (coe : ℝ≥0 → ℝ) <|
       show ‖star a * a‖₊ = ‖a‖₊ * ‖a‖₊
         by

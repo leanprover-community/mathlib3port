@@ -128,7 +128,7 @@ theorem conj_inv {a b : α} : (b * a * b⁻¹)⁻¹ = b * a⁻¹ * b⁻¹ :=
 #print conj_mul /-
 @[simp]
 theorem conj_mul {a b c : α} : b * a * b⁻¹ * (b * c * b⁻¹) = b * (a * c) * b⁻¹ :=
-  ((MulAut.conj b).map_mul a c).symm
+  ((MulAut.conj b).map_hMul a c).symm
 #align conj_mul conj_mul
 -/
 

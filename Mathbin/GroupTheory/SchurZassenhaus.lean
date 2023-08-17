@@ -87,7 +87,7 @@ instance : MulAction G H.QuotientDiff
         (by
           rwa [smul_diff_smul', coe_mk, coe_one, mul_eq_one_iff_eq_inv, mul_right_eq_self, ←
             coe_one, ← Subtype.ext_iff])
-  mul_smul g₁ g₂ q :=
+  hMul_smul g₁ g₂ q :=
     Quotient.inductionOn' q fun T =>
       congr_arg Quotient.mk'' (by rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
   one_smul q :=

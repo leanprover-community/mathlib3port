@@ -223,7 +223,7 @@ section AddOpposite
 open AddOpposite
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousMul α] : ContinuousMul αᵃᵒᵖ
-    where continuous_mul := by
+    where continuous_hMul := by
     convert
       continuous_op.comp <|
         (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
@@ -384,7 +384,7 @@ variable {α : Type _} [Ring α]
 instance inhabited {α : Type u} [Ring α] : Inhabited (RingTopology α) :=
   ⟨{  toTopologicalSpace := ⊤
       continuous_add := continuous_top
-      continuous_mul := continuous_top
+      continuous_hMul := continuous_top
       continuous_neg := continuous_top }⟩
 #align ring_topology.inhabited RingTopology.inhabited
 -/
@@ -411,7 +411,7 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
       have h := continuous_sInf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id
-    continuous_mul := by
+    continuous_hMul := by
       apply continuous_sInf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_sInf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id

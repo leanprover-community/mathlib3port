@@ -86,7 +86,7 @@ instance : NormalizationMonoid R[X]
     ⟨C ↑(normUnit p.leadingCoeff), C ↑(normUnit p.leadingCoeff)⁻¹, by
       rw [← RingHom.map_mul, Units.mul_inv, C_1], by rw [← RingHom.map_mul, Units.inv_mul, C_1]⟩
   normUnit_zero := Units.ext (by simp)
-  normUnit_mul p q hp0 hq0 :=
+  normUnit_hMul p q hp0 hq0 :=
     Units.ext
       (by
         dsimp
@@ -268,7 +268,7 @@ instance : EuclideanDomain R[X] :=
     remainder := (· % ·)
     R := _
     r_wellFounded := degree_lt_wf
-    quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux
+    quotient_mul_add_remainder_eq := quotient_hMul_add_remainder_eq_aux
     remainder_lt := fun p q hq => remainder_lt_aux _ hq
     mul_left_not_lt := fun p q hq => not_lt_of_ge (degree_le_mul_left _ hq) }
 

@@ -35,7 +35,7 @@ set_option default_priority 100
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
 class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [TopologicalSpace R]
     [ChartedSpace H R] extends SmoothAdd I R : Prop where
-  smooth_mul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
+  smooth_hMul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
 #align smooth_ring SmoothRing
 -/
 
@@ -61,7 +61,7 @@ end SmoothRing
 #print fieldSmoothRing /-
 instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
   { normedSpaceLieAddGroup with
-    smooth_mul := by
+    smooth_hMul := by
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
       simp only [Prod.mk.eta, mfld_simps]

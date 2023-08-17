@@ -73,7 +73,7 @@ instance [OrderedAddCommMonoid α] : OrderedCommMonoid (Multiplicative α) :=
 
 instance [OrderedCommMonoid α] : OrderedAddCommMonoid (Additive α) :=
   { Additive.partialOrder, Additive.addCommMonoid with
-    add_le_add_left := @OrderedCommMonoid.mul_le_mul_left α _ }
+    add_le_add_left := @OrderedCommMonoid.hMul_le_hMul_left α _ }
 
 instance [OrderedCancelAddCommMonoid α] : OrderedCancelCommMonoid (Multiplicative α) :=
   { Multiplicative.orderedCommMonoid with
@@ -81,7 +81,7 @@ instance [OrderedCancelAddCommMonoid α] : OrderedCancelCommMonoid (Multiplicati
 
 instance [OrderedCancelCommMonoid α] : OrderedCancelAddCommMonoid (Additive α) :=
   { Additive.orderedAddCommMonoid with
-    le_of_add_le_add_left := @OrderedCancelCommMonoid.le_of_mul_le_mul_left α _ }
+    le_of_add_le_add_left := @OrderedCancelCommMonoid.le_of_hMul_le_hMul_left α _ }
 
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicative α) :=
   { Multiplicative.linearOrder, Multiplicative.orderedCommMonoid with }
@@ -93,7 +93,7 @@ instance [Add α] [LE α] [ExistsAddOfLE α] : ExistsMulOfLE (Multiplicative α)
   ⟨@exists_add_of_le α _ _ _⟩
 
 instance [Mul α] [LE α] [ExistsMulOfLE α] : ExistsAddOfLE (Additive α) :=
-  ⟨@exists_mul_of_le α _ _ _⟩
+  ⟨@exists_hMul_of_le α _ _ _⟩
 
 instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedMonoid (Multiplicative α) :=
   { Multiplicative.orderedCommMonoid, Multiplicative.orderBot, Multiplicative.existsMulOfLE with

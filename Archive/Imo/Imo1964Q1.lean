@@ -32,25 +32,25 @@ open Nat
 
 namespace Imo1964Q1
 
-theorem two_pow_three_mul_mod_seven (m : ℕ) : 2 ^ (3 * m) ≡ 1 [MOD 7] :=
+theorem two_pow_three_hMul_mod_seven (m : ℕ) : 2 ^ (3 * m) ≡ 1 [MOD 7] :=
   by
   rw [pow_mul]
   have h : 8 ≡ 1 [MOD 7] := modeq_of_dvd (by use-1; norm_num)
   convert h.pow _
   simp
-#align imo1964_q1.two_pow_three_mul_mod_seven Imo1964Q1.two_pow_three_mul_mod_seven
+#align imo1964_q1.two_pow_three_mul_mod_seven Imo1964Q1.two_pow_three_hMul_mod_seven
 
-theorem two_pow_three_mul_add_one_mod_seven (m : ℕ) : 2 ^ (3 * m + 1) ≡ 2 [MOD 7] :=
+theorem two_pow_three_hMul_add_one_mod_seven (m : ℕ) : 2 ^ (3 * m + 1) ≡ 2 [MOD 7] :=
   by
   rw [pow_add]
   exact (two_pow_three_mul_mod_seven m).mulRight _
-#align imo1964_q1.two_pow_three_mul_add_one_mod_seven Imo1964Q1.two_pow_three_mul_add_one_mod_seven
+#align imo1964_q1.two_pow_three_mul_add_one_mod_seven Imo1964Q1.two_pow_three_hMul_add_one_mod_seven
 
-theorem two_pow_three_mul_add_two_mod_seven (m : ℕ) : 2 ^ (3 * m + 2) ≡ 4 [MOD 7] :=
+theorem two_pow_three_hMul_add_two_mod_seven (m : ℕ) : 2 ^ (3 * m + 2) ≡ 4 [MOD 7] :=
   by
   rw [pow_add]
   exact (two_pow_three_mul_mod_seven m).mulRight _
-#align imo1964_q1.two_pow_three_mul_add_two_mod_seven Imo1964Q1.two_pow_three_mul_add_two_mod_seven
+#align imo1964_q1.two_pow_three_mul_add_two_mod_seven Imo1964Q1.two_pow_three_hMul_add_two_mod_seven
 
 /-!
 ## The question

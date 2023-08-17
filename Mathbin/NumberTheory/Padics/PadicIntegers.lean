@@ -91,7 +91,7 @@ def subring : Subring ℚ_[p] where
   zero_mem' := by norm_num
   one_mem' := by norm_num
   add_mem' x y hx hy := (padicNormE.nonarchimedean _ _).trans <| max_le_iff.2 ⟨hx, hy⟩
-  mul_mem' x y hx hy := (padicNormE.mul _ _).trans_le <| mul_le_one hx (norm_nonneg _) hy
+  hMul_mem' x y hx hy := (padicNormE.mul _ _).trans_le <| mul_le_one hx (norm_nonneg _) hy
   neg_mem' x hx := (norm_neg _).trans_le hx
 #align padic_int.subring PadicInt.subring
 -/
@@ -315,7 +315,7 @@ instance : NormedCommRing ℤ_[p] :=
   { PadicInt.commRing,
     PadicInt.metricSpace p with
     dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl
-    norm_mul := by simp [norm_def]
+    norm_hMul := by simp [norm_def]
     norm := norm }
 
 instance : NormOneClass ℤ_[p] :=

@@ -171,7 +171,7 @@ theorem map_zsmul_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ
 instance commGroup : CommGroup (AddChar R R') :=
   { MonoidHom.commMonoid with
     inv := Inv.inv
-    mul_left_inv := fun ψ => by ext;
+    hMul_left_inv := fun ψ => by ext;
       rw [MonoidHom.mul_apply, MonoidHom.one_apply, inv_apply, ← map_add_mul, add_left_neg,
         map_zero_one] }
 #align add_char.comm_group AddChar.commGroup

@@ -119,7 +119,7 @@ theorem den_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
   intro j hj
   by_cases h : j < p.nat_degree
   · rw [coeff_scale_roots]
-    refine' (dvd_mul_of_dvd_right _ _).mul_right _
+    refine' (dvd_mul_of_dvd_right _ _).hMul_right _
     convert pow_dvd_pow _ (nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
     · exact (pow_one _).symm
     simpa using h

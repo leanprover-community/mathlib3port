@@ -145,7 +145,7 @@ def mapHom (α : Type u) (β : Type v) [Monoid α] [Monoid β] : (α →* β) �
     { obj := id
       map := fun _ _ => ⇑f
       map_id' := fun _ => f.map_one
-      map_comp' := fun _ _ _ x y => f.map_mul y x }
+      map_comp' := fun _ _ _ x y => f.map_hMul y x }
   invFun f :=
     { toFun := @Functor.map _ _ _ _ f (SingleObj.star α) (SingleObj.star α)
       map_one' := f.map_id _

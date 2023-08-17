@@ -55,7 +55,7 @@ attribute [to_additive] OrderedCommGroup
 @[to_additive]
 instance OrderedCommGroup.to_covariantClass_left_le (α : Type u) [OrderedCommGroup α] :
     CovariantClass α α (· * ·) (· ≤ ·)
-    where elim a b c bc := OrderedCommGroup.mul_le_mul_left b c bc a
+    where elim a b c bc := OrderedCommGroup.hMul_le_hMul_left b c bc a
 #align ordered_comm_group.to_covariant_class_left_le OrderedCommGroup.to_covariantClass_left_le
 #align ordered_add_comm_group.to_covariant_class_left_le OrderedAddCommGroup.to_covariantClass_left_le
 -/

@@ -49,11 +49,11 @@ theorem closure_mul_image_mul_eq_top (hR : R ∈ rightTransversals (H : Set G)) 
   · exact ⟨1, 1, (closure U).one_mem, hR1, one_mul 1⟩
   · rintro - s hs ⟨u, r, hu, hr, rfl⟩
     rw [show u * r * s = u * (r * s * (f (r * s))⁻¹) * f (r * s) by group]
-    refine' Set.mul_mem_mul ((closure U).mul_mem hu _) (f (r * s)).coe_prop
+    refine' Set.mul_mem_mul ((closure U).hMul_mem hu _) (f (r * s)).coe_prop
     exact subset_closure ⟨r * s, Set.mul_mem_mul hr hs, rfl⟩
   · rintro - s hs ⟨u, r, hu, hr, rfl⟩
     rw [show u * r * s⁻¹ = u * (f (r * s⁻¹) * s * r⁻¹)⁻¹ * f (r * s⁻¹) by group]
-    refine' Set.mul_mem_mul ((closure U).mul_mem hu ((closure U).inv_mem _)) (f (r * s⁻¹)).2
+    refine' Set.mul_mem_mul ((closure U).hMul_mem hu ((closure U).inv_mem _)) (f (r * s⁻¹)).2
     refine' subset_closure ⟨f (r * s⁻¹) * s, Set.mul_mem_mul (f (r * s⁻¹)).2 hs, _⟩
     rw [mul_right_inj, inv_inj, ← Subtype.coe_mk r hr, ← Subtype.ext_iff, Subtype.coe_mk]
     apply

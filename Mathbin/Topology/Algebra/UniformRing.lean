@@ -182,7 +182,7 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
 instance topologicalRing : TopologicalRing (Completion α)
     where
   continuous_add := continuous_add
-  continuous_mul := continuous_mul
+  continuous_hMul := continuous_mul
 #align uniform_space.completion.top_ring_compl UniformSpace.Completion.topologicalRing
 -/
 

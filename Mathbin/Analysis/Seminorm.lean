@@ -62,11 +62,11 @@ attribute [nolint doc_blame] Seminorm.toAddGroupSeminorm
 You should extend this class when you extend `seminorm`. -/
 class SeminormClass (F : Type _) (𝕜 E : outParam <| Type _) [SeminormedRing 𝕜] [AddGroup E]
     [SMul 𝕜 E] extends AddGroupSeminormClass F E ℝ where
-  map_smul_eq_mul (f : F) (a : 𝕜) (x : E) : f (a • x) = ‖a‖ * f x
+  map_smul_eq_hMul (f : F) (a : 𝕜) (x : E) : f (a • x) = ‖a‖ * f x
 #align seminorm_class SeminormClass
 -/
 
-export SeminormClass (map_smul_eq_mul)
+export SeminormClass (map_smul_eq_hMul)
 
 -- `𝕜` is an `out_param`, so this is a false positive.
 attribute [nolint dangerous_instance] SeminormClass.toAddGroupSeminormClass
@@ -131,7 +131,7 @@ instance instSeminormClass : SeminormClass (Seminorm 𝕜 E) 𝕜 E
   map_zero f := f.map_zero'
   map_add_le_add f := f.add_le'
   map_neg_eq_map f := f.neg'
-  map_smul_eq_mul f := f.smul'
+  map_smul_eq_hMul f := f.smul'
 #align seminorm.seminorm_class Seminorm.instSeminormClass
 -/
 
@@ -260,7 +260,7 @@ instance : Sup (Seminorm 𝕜 E)
       p.toAddGroupSeminorm ⊔ q.toAddGroupSeminorm with
       toFun := p ⊔ q
       smul' := fun x v =>
-        (congr_arg₂ max (map_smul_eq_mul p x v) (map_smul_eq_mul q x v)).trans <|
+        (congr_arg₂ max (map_smul_eq_hMul p x v) (map_smul_eq_hMul q x v)).trans <|
           (mul_max_of_nonneg _ _ <| norm_nonneg x).symm }
 
 #print Seminorm.coe_sup /-
@@ -527,7 +527,7 @@ theorem comp_smul (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (
 #print Seminorm.comp_smul_apply /-
 theorem comp_smul_apply (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (c : 𝕜₂) (x : E) :
     p.comp (c • f) x = ‖c‖ * p (f x) :=
-  map_smul_eq_mul p _ _
+  map_smul_eq_hMul p _ _
 #align seminorm.comp_smul_apply Seminorm.comp_smul_apply
 -/
 

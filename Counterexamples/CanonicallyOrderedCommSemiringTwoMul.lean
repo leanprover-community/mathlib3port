@@ -138,13 +138,13 @@ theorem le_of_add_le_add_left : ∀ a b c : ℕ × ZMod 2, a + b ≤ a + c → b
 instance : ZeroLEOneClass (ℕ × ZMod 2) :=
   ⟨by decide⟩
 
-theorem mul_lt_mul_of_pos_left : ∀ a b c : ℕ × ZMod 2, a < b → 0 < c → c * a < c * b :=
+theorem hMul_lt_hMul_of_pos_left : ∀ a b c : ℕ × ZMod 2, a < b → 0 < c → c * a < c * b :=
   fun a b c ab c0 => lt_def.mpr ((mul_lt_mul_left (lt_def.mp c0)).mpr (lt_def.mp ab))
-#align counterexample.Nxzmod_2.mul_lt_mul_of_pos_left Counterexample.Nxzmod2.mul_lt_mul_of_pos_left
+#align counterexample.Nxzmod_2.mul_lt_mul_of_pos_left Counterexample.Nxzmod2.hMul_lt_hMul_of_pos_left
 
-theorem mul_lt_mul_of_pos_right : ∀ a b c : ℕ × ZMod 2, a < b → 0 < c → a * c < b * c :=
+theorem hMul_lt_hMul_of_pos_right : ∀ a b c : ℕ × ZMod 2, a < b → 0 < c → a * c < b * c :=
   fun a b c ab c0 => lt_def.mpr ((mul_lt_mul_right (lt_def.mp c0)).mpr (lt_def.mp ab))
-#align counterexample.Nxzmod_2.mul_lt_mul_of_pos_right Counterexample.Nxzmod2.mul_lt_mul_of_pos_right
+#align counterexample.Nxzmod_2.mul_lt_mul_of_pos_right Counterexample.Nxzmod2.hMul_lt_hMul_of_pos_right
 
 instance socsN2 : StrictOrderedCommSemiring (ℕ × ZMod 2) :=
   { Nxzmod2.csrN21, (inferInstance : PartialOrder (ℕ × ZMod 2)),
@@ -154,8 +154,8 @@ instance socsN2 : StrictOrderedCommSemiring (ℕ × ZMod 2) :=
     add_le_add_left := add_le_add_left
     le_of_add_le_add_left := le_of_add_le_add_left
     zero_le_one := zero_le_one
-    mul_lt_mul_of_pos_left := mul_lt_mul_of_pos_left
-    mul_lt_mul_of_pos_right := mul_lt_mul_of_pos_right }
+    mul_lt_mul_of_pos_left := hMul_lt_hMul_of_pos_left
+    mul_lt_mul_of_pos_right := hMul_lt_hMul_of_pos_right }
 #align counterexample.Nxzmod_2.socsN2 Counterexample.Nxzmod2.socsN2
 
 end Nxzmod2
@@ -180,7 +180,7 @@ theorem add_L {a b : ℕ × ZMod 2} (ha : a ≠ (0, 1)) (hb : b ≠ (0, 1)) : a 
   · simp [(a + b).succ_ne_zero]
 #align counterexample.ex_L.add_L Counterexample.ExL.add_L
 
-theorem mul_L {a b : ℕ × ZMod 2} (ha : a ≠ (0, 1)) (hb : b ≠ (0, 1)) : a * b ≠ (0, 1) :=
+theorem hMul_L {a b : ℕ × ZMod 2} (ha : a ≠ (0, 1)) (hb : b ≠ (0, 1)) : a * b ≠ (0, 1) :=
   by
   rcases a with ⟨a, a2⟩
   rcases b with ⟨b, b2⟩
@@ -201,7 +201,7 @@ theorem mul_L {a b : ℕ × ZMod 2} (ha : a ≠ (0, 1)) (hb : b ≠ (0, 1)) : a 
       simp
     exact ha rfl
   · simp [mul_ne_zero _ _, Nat.succ_ne_zero _]
-#align counterexample.ex_L.mul_L Counterexample.ExL.mul_L
+#align counterexample.ex_L.mul_L Counterexample.ExL.hMul_L
 
 /-- The subsemiring corresponding to the elements of `L`, used to transfer instances. -/
 def lSubsemiring : Subsemiring (ℕ × ZMod 2)
@@ -210,7 +210,7 @@ def lSubsemiring : Subsemiring (ℕ × ZMod 2)
   zero_mem' := by decide
   one_mem' := by decide
   add_mem' _ _ := add_L
-  mul_mem' _ _ := mul_L
+  hMul_mem' _ _ := hMul_L
 #align counterexample.ex_L.L_subsemiring Counterexample.ExL.lSubsemiring
 
 instance : OrderedCommSemiring L :=
@@ -254,7 +254,7 @@ theorem le_self_add : ∀ a b : L, a ≤ a + b :=
   · exact Or.inr ((lt_add_iff_pos_right _).mpr h)
 #align counterexample.ex_L.le_self_add Counterexample.ExL.le_self_add
 
-theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : L, a * b = 0 → a = 0 ∨ b = 0 :=
+theorem eq_zero_or_eq_zero_of_hMul_eq_zero : ∀ a b : L, a * b = 0 → a = 0 ∨ b = 0 :=
   by
   rintro ⟨⟨a, a2⟩, ha⟩ ⟨⟨b, b2⟩, hb⟩ ab1
   injection ab1 with ab
@@ -269,7 +269,7 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : L, a * b = 0 → a = 0 ∨
     rcases mem_zmod_2 b2 with (rfl | rfl)
     · rfl
     · exact (hb rfl).elim
-#align counterexample.ex_L.eq_zero_or_eq_zero_of_mul_eq_zero Counterexample.ExL.eq_zero_or_eq_zero_of_mul_eq_zero
+#align counterexample.ex_L.eq_zero_or_eq_zero_of_mul_eq_zero Counterexample.ExL.eq_zero_or_eq_zero_of_hMul_eq_zero
 
 instance can : CanonicallyOrderedCommSemiring L :=
   { (inferInstance : OrderBot L),
@@ -277,7 +277,7 @@ instance can : CanonicallyOrderedCommSemiring L :=
       OrderedCommSemiring L) with
     exists_add_of_le := exists_add_of_le
     le_self_add := le_self_add
-    eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero }
+    eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_hMul_eq_zero }
 #align counterexample.ex_L.can Counterexample.ExL.can
 
 /-- The elements `(1,0)` and `(1,1)` of `L` are different, but their doubles coincide.

@@ -681,7 +681,7 @@ theorem abs_abs_div_abs_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
   · apply div_le_iff_le_mul.2
     convert mabs_mul_le (a / b) b
     rw [div_mul_cancel']
-    exact covariant_swap_mul_le_of_covariant_mul_le α
+    exact covariant_swap_hMul_le_of_covariant_hMul_le α
   · rw [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_le_iff_le_mul, abs_inv_comm]
     convert mabs_mul_le (b / a) a
     · rw [div_mul_cancel']

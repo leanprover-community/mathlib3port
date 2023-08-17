@@ -96,7 +96,7 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
   by
   change HasSum ((fun b : ℕ => 1 / (2 * (b : ℝ) + 1) * ((1 / (2 * m.succ + 1)) ^ 2) ^ b) ∘ succ) _
   refine' (hasSum_nat_add_iff 1).mpr _
-  convert (has_sum_log_one_add_inv <| cast_pos.mpr (succ_pos m)).mul_left ((m.succ : ℝ) + 1 / 2)
+  convert (has_sum_log_one_add_inv <| cast_pos.mpr (succ_pos m)).hMul_left ((m.succ : ℝ) + 1 / 2)
   · ext k
     rw [← pow_mul, pow_add]
     push_cast
@@ -135,7 +135,7 @@ theorem log_stirlingSeq_diff_le_geo_sum (n : ℕ) :
     HasSum (fun k : ℕ => ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2) ^ k.succ)
       ((1 / (2 * n.succ + 1)) ^ 2 / (1 - (1 / (2 * n.succ + 1)) ^ 2)) :=
     by
-    have := (hasSum_geometric_of_lt_1 h_nonneg _).mul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
+    have := (hasSum_geometric_of_lt_1 h_nonneg _).hMul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
     · simp_rw [← pow_succ] at this 
       exact this
     rw [one_div, inv_pow]

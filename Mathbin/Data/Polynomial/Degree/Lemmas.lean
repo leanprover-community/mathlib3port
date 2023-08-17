@@ -393,9 +393,9 @@ theorem degree_C_mul (a0 : a ≠ 0) : (C a * p).degree = p.degree := by
 #align polynomial.degree_C_mul Polynomial.degree_C_mul
 -/
 
-theorem natDegree_mul_c (a0 : a ≠ 0) : (p * C a).natDegree = p.natDegree := by
+theorem natDegree_hMul_c (a0 : a ≠ 0) : (p * C a).natDegree = p.natDegree := by
   simp only [nat_degree, degree_mul_C a0]
-#align polynomial.nat_degree_mul_C Polynomial.natDegree_mul_c
+#align polynomial.nat_degree_mul_C Polynomial.natDegree_hMul_c
 
 #print Polynomial.natDegree_C_mul /-
 theorem natDegree_C_mul (a0 : a ≠ 0) : (C a * p).natDegree = p.natDegree := by

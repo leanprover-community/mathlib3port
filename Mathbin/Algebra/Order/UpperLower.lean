@@ -94,7 +94,7 @@ theorem IsUpperSet.mul_right (hs : IsUpperSet s) : IsUpperSet (s * t) := by rw [
 #print IsLowerSet.mul_left /-
 @[to_additive]
 theorem IsLowerSet.mul_left (ht : IsLowerSet t) : IsLowerSet (s * t) :=
-  ht.toDual.mul_left
+  ht.toDual.hMul_left
 #align is_lower_set.mul_left IsLowerSet.mul_left
 #align is_lower_set.add_left IsLowerSet.add_left
 -/
@@ -102,7 +102,7 @@ theorem IsLowerSet.mul_left (ht : IsLowerSet t) : IsLowerSet (s * t) :=
 #print IsLowerSet.mul_right /-
 @[to_additive]
 theorem IsLowerSet.mul_right (hs : IsLowerSet s) : IsLowerSet (s * t) :=
-  hs.toDual.mul_right
+  hs.toDual.hMul_right
 #align is_lower_set.mul_right IsLowerSet.mul_right
 #align is_lower_set.add_right IsLowerSet.add_right
 -/
@@ -161,7 +161,7 @@ instance : One (UpperSet α) :=
 
 @[to_additive]
 instance : Mul (UpperSet α) :=
-  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.hMul_right⟩⟩
 
 @[to_additive]
 instance : Div (UpperSet α) :=
@@ -241,7 +241,7 @@ instance : One (LowerSet α) :=
 
 @[to_additive]
 instance : Mul (LowerSet α) :=
-  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.hMul_right⟩⟩
 
 @[to_additive]
 instance : Div (LowerSet α) :=

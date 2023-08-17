@@ -119,7 +119,7 @@ instance : NonUnitalRingHomClass (α →ₙ+* β) α β
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_add := NonUnitalRingHom.map_add'
   map_zero := NonUnitalRingHom.map_zero'
-  map_mul := NonUnitalRingHom.map_mul'
+  map_hMul := NonUnitalRingHom.map_mul'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -496,7 +496,7 @@ instance : RingHomClass (α →+* β) α β
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_add := RingHom.map_add'
   map_zero := RingHom.map_zero'
-  map_mul := RingHom.map_mul'
+  map_hMul := RingHom.map_mul'
   map_one := RingHom.map_one'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`

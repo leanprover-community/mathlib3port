@@ -98,8 +98,8 @@ theorem dvd_mul_of_dvd_left (h : a ∣ b) (c : α) : a ∣ b * c :=
 #align dvd_mul_of_dvd_left dvd_mul_of_dvd_left
 -/
 
-alias dvd_mul_of_dvd_left ← Dvd.Dvd.mul_right
-#align has_dvd.dvd.mul_right Dvd.Dvd.mul_right
+alias dvd_mul_of_dvd_left ← Dvd.Dvd.hMul_right
+#align has_dvd.dvd.mul_right Dvd.Dvd.hMul_right
 
 #print dvd_of_mul_right_dvd /-
 theorem dvd_of_mul_right_dvd (h : a * b ∣ c) : a ∣ c :=
@@ -213,8 +213,8 @@ theorem dvd_mul_of_dvd_right (h : a ∣ b) (c : α) : a ∣ c * b := by rw [mul_
 #align dvd_mul_of_dvd_right dvd_mul_of_dvd_right
 -/
 
-alias dvd_mul_of_dvd_right ← Dvd.Dvd.mul_left
-#align has_dvd.dvd.mul_left Dvd.Dvd.mul_left
+alias dvd_mul_of_dvd_right ← Dvd.Dvd.hMul_left
+#align has_dvd.dvd.mul_left Dvd.Dvd.hMul_left
 
 attribute [local simp] mul_assoc mul_comm mul_left_comm
 

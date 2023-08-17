@@ -126,7 +126,7 @@ instance : RingEquivClass (R ≃+* S) R S where
   inv := invFun
   coe_injective' e f h₁ h₂ := by cases e; cases f; congr
   map_add := map_add'
-  map_mul := map_mul'
+  map_hMul := map_mul'
   left_inv := RingEquiv.left_inv
   right_inv := RingEquiv.right_inv
 

@@ -303,7 +303,7 @@ theorem of_irreducible_map (f : R →+* S) [h : IsLocalRingHom f] {x} (hfx : Irr
     Irreducible x :=
   ⟨fun h => hfx.not_unit <| IsUnit.map f h, fun p q hx =>
     let ⟨H⟩ := h
-    Or.imp (H p) (H q) <| hfx.isUnit_or_isUnit <| f.map_mul p q ▸ congr_arg f hx⟩
+    Or.imp (H p) (H q) <| hfx.isUnit_or_isUnit <| f.map_hMul p q ▸ congr_arg f hx⟩
 #align of_irreducible_map of_irreducible_map
 -/
 

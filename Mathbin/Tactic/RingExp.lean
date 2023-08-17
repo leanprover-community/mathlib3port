@@ -686,13 +686,13 @@ unsafe def add_coeff (p_p q_p : expr) (p q : Coeff) : ring_exp_m (ex Prod) := do
   pure <| ex.coeff ⟨pq_o, pq_p, pq_pf⟩ ⟨p.1 + q.1⟩
 #align tactic.ring_exp.add_coeff tactic.ring_exp.add_coeff
 
-theorem mul_coeff_pf_one_mul (q : α) : 1 * q = q :=
+theorem hMul_coeff_pf_one_hMul (q : α) : 1 * q = q :=
   one_mul q
-#align tactic.ring_exp.mul_coeff_pf_one_mul Tactic.RingExp.mul_coeff_pf_one_mul
+#align tactic.ring_exp.mul_coeff_pf_one_mul Tactic.RingExp.hMul_coeff_pf_one_hMul
 
-theorem mul_coeff_pf_mul_one (p : α) : p * 1 = p :=
+theorem hMul_coeff_pf_hMul_one (p : α) : p * 1 = p :=
   mul_one p
-#align tactic.ring_exp.mul_coeff_pf_mul_one Tactic.RingExp.mul_coeff_pf_mul_one
+#align tactic.ring_exp.mul_coeff_pf_mul_one Tactic.RingExp.hMul_coeff_pf_hMul_one
 
 /-- Compute the product of two coefficients.
 
@@ -903,31 +903,31 @@ end Addition
 
 section Multiplication
 
-theorem mul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq :=
+theorem hMul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq :=
   by cc
-#align tactic.ring_exp.mul_pf_c_c Tactic.RingExp.mul_pf_c_c
+#align tactic.ring_exp.mul_pf_c_c Tactic.RingExp.hMul_pf_c_c
 
-theorem mul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs :=
+theorem hMul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs :=
   by cc
-#align tactic.ring_exp.mul_pf_c_prod Tactic.RingExp.mul_pf_c_prod
+#align tactic.ring_exp.mul_pf_c_prod Tactic.RingExp.hMul_pf_c_prod
 
-theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs :=
+theorem hMul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs :=
   by cc
-#align tactic.ring_exp.mul_pf_prod_c Tactic.RingExp.mul_pf_prod_c
+#align tactic.ring_exp.mul_pf_prod_c Tactic.RingExp.hMul_pf_prod_c
 
-theorem mul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
+theorem hMul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
     pps = p_b ^ p_e * ps →
       qqs = p_b ^ q_e * qs → p_b ^ (p_e + q_e) * (ps * qs) = psqs → pps * qqs = psqs :=
   fun ps_pf qs_pf psqs_pf => by simp [symm psqs_pf, pow_add, ps_pf, qs_pf] <;> ac_rfl
-#align tactic.ring_exp.mul_pp_pf_overlap Tactic.RingExp.mul_pp_pf_overlap
+#align tactic.ring_exp.mul_pp_pf_overlap Tactic.RingExp.hMul_pp_pf_overlap
 
-theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} :
+theorem hMul_pp_pf_prod_lt {pps p ps qqs pqs : α} :
     pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by cc
-#align tactic.ring_exp.mul_pp_pf_prod_lt Tactic.RingExp.mul_pp_pf_prod_lt
+#align tactic.ring_exp.mul_pp_pf_prod_lt Tactic.RingExp.hMul_pp_pf_prod_lt
 
-theorem mul_pp_pf_prod_gt {pps qqs q qs pqs : α} :
+theorem hMul_pp_pf_prod_gt {pps qqs q qs pqs : α} :
     qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by cc
-#align tactic.ring_exp.mul_pp_pf_prod_gt Tactic.RingExp.mul_pp_pf_prod_gt
+#align tactic.ring_exp.mul_pp_pf_prod_gt Tactic.RingExp.hMul_pp_pf_prod_gt
 
 /-- Multiply two expressions.
 
@@ -987,17 +987,17 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
           pure <| pqqs ppqqs_o pf
 #align tactic.ring_exp.mul_pp tactic.ring_exp.mul_pp
 
-theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by
+theorem hMul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by
   rw [ps_pf, MulZeroClass.zero_mul]
-#align tactic.ring_exp.mul_p_pf_zero Tactic.RingExp.mul_p_pf_zero
+#align tactic.ring_exp.mul_p_pf_zero Tactic.RingExp.hMul_p_pf_zero
 
-theorem mul_p_pf_sum {pps p ps qs ppsqs : α} :
+theorem hMul_p_pf_sum {pps p ps qs ppsqs : α} :
     pps = p + ps → p * qs + ps * qs = ppsqs → pps * qs = ppsqs := fun pps_pf ppsqs_pf =>
   calc
     pps * qs = (p + ps) * qs := by rw [pps_pf]
     _ = p * qs + ps * qs := (add_mul _ _ _)
     _ = ppsqs := ppsqs_pf
-#align tactic.ring_exp.mul_p_pf_sum Tactic.RingExp.mul_p_pf_sum
+#align tactic.ring_exp.mul_p_pf_sum Tactic.RingExp.hMul_p_pf_sum
 
 /-- Multiply two expressions.
 
@@ -1023,17 +1023,17 @@ unsafe def mul_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     pure <| ppsqs ppsqs_o pf
 #align tactic.ring_exp.mul_p tactic.ring_exp.mul_p
 
-theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by
+theorem hMul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by
   rw [qs_pf, MulZeroClass.mul_zero]
-#align tactic.ring_exp.mul_pf_zero Tactic.RingExp.mul_pf_zero
+#align tactic.ring_exp.mul_pf_zero Tactic.RingExp.hMul_pf_zero
 
-theorem mul_pf_sum {ps qqs q qs psqqs : α} :
+theorem hMul_pf_sum {ps qqs q qs psqqs : α} :
     qqs = q + qs → ps * q + ps * qs = psqqs → ps * qqs = psqqs := fun qs_pf psqqs_pf =>
   calc
     ps * qqs = ps * (q + qs) := by rw [qs_pf]
     _ = ps * q + ps * qs := (mul_add _ _ _)
     _ = psqqs := psqqs_pf
-#align tactic.ring_exp.mul_pf_sum Tactic.RingExp.mul_pf_sum
+#align tactic.ring_exp.mul_pf_sum Tactic.RingExp.hMul_pf_sum
 
 /-- Multiply two expressions.
 

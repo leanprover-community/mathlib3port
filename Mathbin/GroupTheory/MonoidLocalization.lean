@@ -552,14 +552,14 @@ instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower R�
 instance [Monoid R] [MulAction R M] [IsScalarTower R M M] : MulAction R (Localization S)
     where
   one_smul := Localization.ind <| Prod.rec <| by intros; simp only [Localization.smul_mk, one_smul]
-  mul_smul s₁ s₂ :=
+  hMul_smul s₁ s₂ :=
     Localization.ind <| Prod.rec <| by intros; simp only [Localization.smul_mk, mul_smul]
 
 instance [Monoid R] [MulDistribMulAction R M] [IsScalarTower R M M] :
     MulDistribMulAction R (Localization S)
     where
   smul_one s := by simp only [← Localization.mk_one, Localization.smul_mk, smul_one]
-  smul_mul s x y :=
+  smul_hMul s x y :=
     Localization.induction_on₂ x y <|
       Prod.rec fun r₁ x₁ =>
         Prod.rec fun r₂ x₂ => by simp only [Localization.smul_mk, Localization.mk_mul, smul_mul']

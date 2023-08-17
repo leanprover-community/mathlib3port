@@ -120,7 +120,7 @@ instance colimitModule : Module R M
     apply Quot.inductionOn x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq F 1 ⟨j, x⟩, one_smul]
     rfl
-  mul_smul r s x := by
+  hMul_smul r s x := by
     apply Quot.inductionOn x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq F (r * s) ⟨j, x⟩, colimit_smul_mk_eq F s ⟨j, x⟩,
       colimit_smul_mk_eq F r ⟨j, _⟩, mul_smul]

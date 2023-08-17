@@ -85,7 +85,7 @@ def MulAction.toPermHom : α →* Equiv.Perm β
     where
   toFun := MulAction.toPerm
   map_one' := Equiv.ext <| one_smul α
-  map_mul' u₁ u₂ := Equiv.ext <| mul_smul (u₁ : α) u₂
+  map_mul' u₁ u₂ := Equiv.ext <| hMul_smul (u₁ : α) u₂
 #align mul_action.to_perm_hom MulAction.toPermHom
 -/
 
@@ -109,7 +109,7 @@ instance Equiv.Perm.applyMulAction (α : Type _) : MulAction (Equiv.Perm α) α
     where
   smul f a := f a
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align equiv.perm.apply_mul_action Equiv.Perm.applyMulAction
 -/
 
@@ -343,7 +343,7 @@ def DistribMulAction.toAddAut : α →* AddAut β
     where
   toFun := DistribMulAction.toAddEquiv β
   map_one' := AddEquiv.ext (one_smul _)
-  map_mul' a₁ a₂ := AddEquiv.ext (mul_smul _ _)
+  map_mul' a₁ a₂ := AddEquiv.ext (hMul_smul _ _)
 #align distrib_mul_action.to_add_aut DistribMulAction.toAddAut
 -/
 
@@ -410,7 +410,7 @@ def MulDistribMulAction.toMulAut : α →* MulAut β
     where
   toFun := MulDistribMulAction.toMulEquiv β
   map_one' := MulEquiv.ext (one_smul _)
-  map_mul' a₁ a₂ := MulEquiv.ext (mul_smul _ _)
+  map_mul' a₁ a₂ := MulEquiv.ext (hMul_smul _ _)
 #align mul_distrib_mul_action.to_mul_aut MulDistribMulAction.toMulAut
 -/
 
@@ -429,7 +429,7 @@ def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] : MulAction 
     where
   smul g F a := F (g⁻¹ • a)
   one_smul := by intro; simp only [inv_one, one_smul]
-  mul_smul := by intros; simp only [mul_smul, mul_inv_rev]
+  hMul_smul := by intros; simp only [mul_smul, mul_inv_rev]
 #align arrow_action arrowAction
 #align arrow_add_action arrowAddAction
 -/
@@ -441,7 +441,7 @@ attribute [local instance] arrowAction
 def arrowMulDistribMulAction {G A B : Type _} [Group G] [MulAction G A] [Monoid B] :
     MulDistribMulAction G (A → B) where
   smul_one g := rfl
-  smul_mul g f₁ f₂ := rfl
+  smul_hMul g f₁ f₂ := rfl
 #align arrow_mul_distrib_mul_action arrowMulDistribMulAction
 -/
 

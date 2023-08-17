@@ -266,7 +266,7 @@ instance mulAction : MulAction S <| S' →ₗ[R] M :=
     CoextendScalars.hasSMul f
       _ with
     one_smul := fun g => LinearMap.ext fun s : S => by simp
-    mul_smul := fun (s t : S) g => LinearMap.ext fun x : S => by simp [mul_assoc] }
+    hMul_smul := fun (s t : S) g => LinearMap.ext fun x : S => by simp [mul_assoc] }
 #align category_theory.Module.coextend_scalars.mul_action CategoryTheory.ModuleCat.CoextendScalars.mulAction
 -/
 

@@ -582,7 +582,7 @@ theorem op_nnnorm_comp_le [RingHomIsometric σ₁₃] (f : E →SL[σ₁₂] F) 
 /-- Continuous linear maps form a seminormed ring with respect to the operator norm. -/
 instance toSemiNormedRing : SeminormedRing (E →L[𝕜] E) :=
   { ContinuousLinearMap.toSeminormedAddCommGroup, ContinuousLinearMap.ring with
-    norm_mul := fun f g => op_norm_comp_le f g }
+    norm_hMul := fun f g => op_norm_comp_le f g }
 #align continuous_linear_map.to_semi_normed_ring ContinuousLinearMap.toSemiNormedRing
 -/
 

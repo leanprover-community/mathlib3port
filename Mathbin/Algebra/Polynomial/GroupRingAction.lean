@@ -52,7 +52,7 @@ noncomputable instance [MulSemiringAction M R] : MulSemiringAction M R[X] :=
     smul := (· • ·)
     smul_one := fun m =>
       (smul_eq_map R m).symm ▸ Polynomial.map_one (MulSemiringAction.toRingHom M R m)
-    smul_mul := fun m p q =>
+    smul_hMul := fun m p q =>
       (smul_eq_map R m).symm ▸ Polynomial.map_mul (MulSemiringAction.toRingHom M R m) }
 
 variable {M R}

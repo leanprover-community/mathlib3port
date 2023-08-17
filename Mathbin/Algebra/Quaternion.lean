@@ -743,7 +743,7 @@ instance : StarRing ℍ[R,c₁,c₂]
     where
   star_involutive x := by simp [Star.star]
   star_add a b := by ext <;> simp [neg_add]
-  star_mul a b := by ext <;> simp <;> ring
+  star_hMul a b := by ext <;> simp <;> ring
 
 #print QuaternionAlgebra.self_add_star' /-
 theorem self_add_star' : a + star a = ↑(2 * a.re) := by ext <;> simp [two_mul]
@@ -1773,7 +1773,7 @@ instance : NoZeroDivisors ℍ[R] :=
   { Quaternion.nontrivial with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b hab =>
       have : normSq a * normSq b = 0 := by rwa [← norm_sq.map_mul, norm_sq_eq_zero]
-      (eq_zero_or_eq_zero_of_mul_eq_zero this).imp normSq_eq_zero.1 normSq_eq_zero.1 }
+      (eq_zero_or_eq_zero_of_hMul_eq_zero this).imp normSq_eq_zero.1 normSq_eq_zero.1 }
 
 instance : IsDomain ℍ[R] :=
   NoZeroDivisors.to_isDomain _

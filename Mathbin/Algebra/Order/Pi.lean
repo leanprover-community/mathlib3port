@@ -49,8 +49,8 @@ instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
 instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, ExistsMulOfLE (α i)] :
     ExistsMulOfLE (∀ i, α i) :=
   ⟨fun a b h =>
-    ⟨fun i => (exists_mul_of_le <| h i).some,
-      funext fun i => (exists_mul_of_le <| h i).choose_spec⟩⟩
+    ⟨fun i => (exists_hMul_of_le <| h i).some,
+      funext fun i => (exists_hMul_of_le <| h i).choose_spec⟩⟩
 
 /-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
 @[to_additive
@@ -101,7 +101,7 @@ instance [∀ i, OrderedCommSemiring (f i)] : OrderedCommSemiring (∀ i, f i) :
   { Pi.commSemiring, Pi.orderedSemiring with }
 
 instance [∀ i, OrderedRing (f i)] : OrderedRing (∀ i, f i) :=
-  { Pi.ring, Pi.orderedSemiring with mul_nonneg := fun a b ha hb i => mul_nonneg (ha _) (hb _) }
+  { Pi.ring, Pi.orderedSemiring with hMul_nonneg := fun a b ha hb i => mul_nonneg (ha _) (hb _) }
 
 instance [∀ i, OrderedCommRing (f i)] : OrderedCommRing (∀ i, f i) :=
   { Pi.commRing, Pi.orderedRing with }

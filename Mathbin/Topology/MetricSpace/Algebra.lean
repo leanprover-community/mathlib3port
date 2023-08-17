@@ -49,7 +49,7 @@ class LipschitzAdd [AddMonoid β] : Prop where
 in the two arguments. -/
 @[to_additive]
 class LipschitzMul [Monoid β] : Prop where
-  lipschitz_mul : ∃ C, LipschitzWith C fun p : β × β => p.1 * p.2
+  lipschitz_hMul : ∃ C, LipschitzWith C fun p : β × β => p.1 * p.2
 #align has_lipschitz_mul LipschitzMul
 #align has_lipschitz_add LipschitzAdd
 -/
@@ -60,7 +60,7 @@ variable [Monoid β]
 /-- The Lipschitz constant of a monoid `β` satisfying `has_lipschitz_mul` -/
 @[to_additive "The Lipschitz constant of an `add_monoid` `β` satisfying `has_lipschitz_add`"]
 def LipschitzMul.C [_i : LipschitzMul β] : ℝ≥0 :=
-  Classical.choose _i.lipschitz_mul
+  Classical.choose _i.lipschitz_hMul
 #align has_lipschitz_mul.C LipschitzMul.C
 #align has_lipschitz_add.C LipschitzAdd.C
 -/
@@ -71,7 +71,7 @@ variable {β}
 @[to_additive]
 theorem lipschitzWith_lipschitz_const_mul_edist [_i : LipschitzMul β] :
     LipschitzWith (LipschitzMul.C β) fun p : β × β => p.1 * p.2 :=
-  Classical.choose_spec _i.lipschitz_mul
+  Classical.choose_spec _i.lipschitz_hMul
 #align lipschitz_with_lipschitz_const_mul_edist lipschitzWith_lipschitz_const_mul_edist
 #align lipschitz_with_lipschitz_const_add_edist lipschitzWith_lipschitz_const_add_edist
 -/
@@ -101,7 +101,7 @@ instance (priority := 100) LipschitzMul.continuousMul : ContinuousMul β :=
 #print Submonoid.lipschitzMul /-
 @[to_additive]
 instance Submonoid.lipschitzMul (s : Submonoid β) : LipschitzMul s
-    where lipschitz_mul :=
+    where lipschitz_hMul :=
     ⟨LipschitzMul.C β, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWith_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
@@ -112,7 +112,7 @@ instance Submonoid.lipschitzMul (s : Submonoid β) : LipschitzMul s
 #print MulOpposite.lipschitzMul /-
 @[to_additive]
 instance MulOpposite.lipschitzMul : LipschitzMul βᵐᵒᵖ
-    where lipschitz_mul :=
+    where lipschitz_hMul :=
     ⟨LipschitzMul.C β, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
       (lipschitzWith_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
         (congr_arg _ <| max_comm _ _)⟩
@@ -252,7 +252,7 @@ instance BoundedSMul.op [SMul αᵐᵒᵖ β] [IsCentralScalar α β] : BoundedS
 end BoundedSMul
 
 instance [Monoid α] [LipschitzMul α] : LipschitzAdd (Additive α) :=
-  ⟨@LipschitzMul.lipschitz_mul α _ _ _⟩
+  ⟨@LipschitzMul.lipschitz_hMul α _ _ _⟩
 
 instance [AddMonoid α] [LipschitzAdd α] : LipschitzMul (Multiplicative α) :=
   ⟨@LipschitzAdd.lipschitz_add α _ _ _⟩

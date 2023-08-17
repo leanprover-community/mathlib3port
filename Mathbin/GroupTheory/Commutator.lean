@@ -191,7 +191,7 @@ theorem commutator_def' [H₁.Normal] [H₂.Normal] :
 
 #print Subgroup.commutator_le_right /-
 theorem commutator_le_right [h : H₂.Normal] : ⁅H₁, H₂⁆ ≤ H₂ :=
-  commutator_le.mpr fun g₁ h₁ g₂ h₂ => H₂.mul_mem (h.conj_mem g₂ h₂ g₁) (H₂.inv_mem h₂)
+  commutator_le.mpr fun g₁ h₁ g₂ h₂ => H₂.hMul_mem (h.conj_mem g₂ h₂ g₁) (H₂.inv_mem h₂)
 #align subgroup.commutator_le_right Subgroup.commutator_le_right
 -/
 

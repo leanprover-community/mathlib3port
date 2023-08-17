@@ -37,7 +37,7 @@ variable (M : Type _) [Monoid M]
 def center : Submonoid M where
   carrier := Set.center M
   one_mem' := Set.one_mem_center M
-  mul_mem' a b := Set.mul_mem_center
+  hMul_mem' a b := Set.mul_mem_center
 #align submonoid.center Submonoid.center
 #align add_submonoid.center AddSubmonoid.center
 -/

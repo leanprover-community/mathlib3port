@@ -50,7 +50,7 @@ namespace Ideal
 def primeCompl : Submonoid R where
   carrier := (Iᶜ : Set R)
   one_mem' := by convert I.ne_top_iff_one.1 hp.1 <;> rfl
-  mul_mem' x y hnx hny hxy := Or.cases_on (hp.mem_or_mem hxy) hnx hny
+  hMul_mem' x y hnx hny hxy := Or.cases_on (hp.mem_or_mem hxy) hnx hny
 #align ideal.prime_compl Ideal.primeCompl
 -/
 

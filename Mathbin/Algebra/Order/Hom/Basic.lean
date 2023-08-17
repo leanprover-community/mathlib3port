@@ -99,7 +99,7 @@ class SubadditiveHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [Ad
 @[to_additive SubadditiveHomClass]
 class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Mul β]
     [LE β] extends FunLike F α fun _ => β where
-  map_mul_le_mul (f : F) : ∀ a b, f (a * b) ≤ f a * f b
+  map_hMul_le_hMul (f : F) : ∀ a b, f (a * b) ≤ f a * f b
 #align submultiplicative_hom_class SubmultiplicativeHomClass
 #align subadditive_hom_class SubadditiveHomClass
 -/
@@ -109,7 +109,7 @@ class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul �
 @[to_additive SubadditiveHomClass]
 class MulLEAddHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Add β] [LE β] extends
     FunLike F α fun _ => β where
-  map_mul_le_add (f : F) : ∀ a b, f (a * b) ≤ f a + f b
+  map_hMul_le_add (f : F) : ∀ a b, f (a * b) ≤ f a + f b
 #align mul_le_add_hom_class MulLEAddHomClass
 #align subadditive_hom_class SubadditiveHomClass
 -/
@@ -126,9 +126,9 @@ export NonnegHomClass (map_nonneg)
 
 export SubadditiveHomClass (map_add_le_add)
 
-export SubmultiplicativeHomClass (map_mul_le_mul)
+export SubmultiplicativeHomClass (map_hMul_le_hMul)
 
-export MulLEAddHomClass (map_mul_le_add)
+export MulLEAddHomClass (map_hMul_le_add)
 
 export NonarchimedeanHomClass (map_add_le_max)
 
@@ -388,7 +388,7 @@ instance (priority := 100) RingSeminormClass.toNonnegHomClass [NonUnitalNonAssoc
 -- See note [lower instance priority]
 instance (priority := 100) MulRingSeminormClass.toRingSeminormClass [NonAssocRing α]
     [OrderedSemiring β] [MulRingSeminormClass F α β] : RingSeminormClass F α β :=
-  { ‹MulRingSeminormClass F α β› with map_mul_le_mul := fun f a b => (map_mul _ _ _).le }
+  { ‹MulRingSeminormClass F α β› with map_hMul_le_hMul := fun f a b => (map_mul _ _ _).le }
 #align mul_ring_seminorm_class.to_ring_seminorm_class MulRingSeminormClass.toRingSeminormClass
 -/
 

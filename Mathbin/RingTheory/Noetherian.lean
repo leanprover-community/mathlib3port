@@ -618,12 +618,12 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
 #align is_noetherian_of_fg_of_noetherian isNoetherian_of_fg_of_noetherian
 -/
 
-#print isNoetherian_of_fg_of_noetherian' /-
-theorem isNoetherian_of_fg_of_noetherian' {R M} [Ring R] [AddCommGroup M] [Module R M]
+#print isNoetherian_of_isNoetherianRing_of_finite /-
+theorem isNoetherian_of_isNoetherianRing_of_finite {R M} [Ring R] [AddCommGroup M] [Module R M]
     [IsNoetherianRing R] (h : (⊤ : Submodule R M).FG) : IsNoetherian R M :=
   have : IsNoetherian R (⊤ : Submodule R M) := isNoetherian_of_fg_of_noetherian _ h
   isNoetherian_of_linearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
-#align is_noetherian_of_fg_of_noetherian' isNoetherian_of_fg_of_noetherian'
+#align is_noetherian_of_fg_of_noetherian' isNoetherian_of_isNoetherianRing_of_finite
 -/
 
 #print isNoetherian_span_of_finite /-

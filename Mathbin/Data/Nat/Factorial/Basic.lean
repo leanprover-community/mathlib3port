@@ -96,7 +96,7 @@ theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! :=
   · simp [Nat.eq_zero_of_le_zero h]
   obtain rfl | hl := h.eq_or_lt
   · simp
-  exact (IH (le_of_lt_succ hl)).mul_left _
+  exact (IH (le_of_lt_succ hl)).hMul_left _
 #align nat.factorial_dvd_factorial Nat.factorial_dvd_factorial
 -/
 

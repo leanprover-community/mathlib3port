@@ -82,7 +82,7 @@ open Monoid
 noncomputable def IsTorsion.group [Monoid G] (tG : IsTorsion G) : Group G :=
   { ‹Monoid G› with
     inv := fun g => g ^ (orderOf g - 1)
-    mul_left_inv := fun g =>
+    hMul_left_inv := fun g =>
       by
       erw [← pow_succ', tsub_add_cancel_of_le, pow_orderOf_eq_one]
       exact orderOf_pos' (tG g) }
@@ -224,7 +224,7 @@ namespace CommMonoid
 def torsion : Submonoid G where
   carrier := {x | IsOfFinOrder x}
   one_mem' := isOfFinOrder_one
-  mul_mem' _ _ hx hy := hx.mul hy
+  hMul_mem' _ _ hx hy := hx.mul hy
 #align comm_monoid.torsion CommMonoid.torsion
 #align add_comm_monoid.add_torsion AddCommMonoid.addTorsion
 -/
@@ -254,14 +254,14 @@ def primaryComponent : Submonoid G
     where
   carrier := {g | ∃ n : ℕ, orderOf g = p ^ n}
   one_mem' := ⟨0, by rw [pow_zero, orderOf_one]⟩
-  mul_mem' g₁ g₂ hg₁ hg₂ :=
+  hMul_mem' g₁ g₂ hg₁ hg₂ :=
     exists_orderOf_eq_prime_pow_iff.mpr <|
       by
       obtain ⟨m, hm⟩ := exists_order_of_eq_prime_pow_iff.mp hg₁
       obtain ⟨n, hn⟩ := exists_order_of_eq_prime_pow_iff.mp hg₂
       exact
         ⟨m + n, by
-          rw [mul_pow, pow_add, pow_mul, hm, one_pow, Monoid.one_mul, mul_comm, pow_mul, hn,
+          rw [mul_pow, pow_add, pow_mul, hm, one_pow, Monoid.one_hMul, mul_comm, pow_mul, hn,
             one_pow]⟩
 #align comm_monoid.primary_component CommMonoid.primaryComponent
 #align add_comm_monoid.primary_component AddCommMonoid.primaryComponent

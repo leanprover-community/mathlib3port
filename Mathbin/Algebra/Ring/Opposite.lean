@@ -87,7 +87,7 @@ instance [CommRing α] : CommRing αᵐᵒᵖ :=
 
 instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors αᵐᵒᵖ
     where eq_zero_or_eq_zero_of_mul_eq_zero x y (H : op (_ * _) = op (0 : α)) :=
-    Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| op_injective H)
+    Or.cases_on (eq_zero_or_eq_zero_of_hMul_eq_zero <| op_injective H)
       (fun hy => Or.inr <| unop_injective <| hy) fun hx => Or.inl <| unop_injective <| hx
 
 instance [Ring α] [IsDomain α] : IsDomain αᵐᵒᵖ :=
@@ -168,7 +168,7 @@ instance [CommRing α] : CommRing αᵃᵒᵖ :=
 instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors αᵃᵒᵖ
     where eq_zero_or_eq_zero_of_mul_eq_zero x y (H : op (_ * _) = op (0 : α)) :=
     Or.imp (fun hx => unop_injective hx) (fun hy => unop_injective hy)
-      (@eq_zero_or_eq_zero_of_mul_eq_zero α _ _ _ _ _ <| op_injective H)
+      (@eq_zero_or_eq_zero_of_hMul_eq_zero α _ _ _ _ _ <| op_injective H)
 
 instance [Ring α] [IsDomain α] : IsDomain αᵃᵒᵖ :=
   NoZeroDivisors.to_isDomain _

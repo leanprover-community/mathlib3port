@@ -114,7 +114,7 @@ def Gamma0 (N : ℕ) : Subgroup SL(2, ℤ)
     where
   carrier := {g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : ZMod N) = 0}
   one_mem' := by simp
-  mul_mem' := by
+  hMul_mem' := by
     intro a b ha hb
     simp only [Set.mem_setOf_eq]
     have h := (Matrix.two_mul_expl a.1 b.1).2.2.1

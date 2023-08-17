@@ -259,7 +259,7 @@ theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [DecidableEq (
     hpu (LocalRing.maximalIdeal _) ⟨this, _⟩, hpu (comap _ _) ⟨_, _⟩]
   · exact le_rfl
   · have hRS : Algebra.IsIntegral R S :=
-      isIntegral_of_noetherian (isNoetherian_of_fg_of_noetherian' Module.Finite.out)
+      isIntegral_of_noetherian (isNoetherian_of_isNoetherianRing_of_finite Module.Finite.out)
     exact mt (Ideal.eq_bot_of_comap_eq_bot (isIntegral_localization hRS)) hP0
   · exact Ideal.comap_isPrime (algebraMap (Localization.AtPrime p) Sₚ) P
   · exact (LocalRing.maximalIdeal.isMaximal _).IsPrime

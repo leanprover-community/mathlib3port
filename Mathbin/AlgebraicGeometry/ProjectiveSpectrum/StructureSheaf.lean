@@ -202,7 +202,7 @@ def sectionsSubring (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) : Subring 
   one_mem' := oneMem' U
   add_mem' := addMem' U
   neg_mem' := negMem' U
-  mul_mem' := mulMem' U
+  hMul_mem' := mulMem' U
 #align algebraic_geometry.projective_spectrum.structure_sheaf.sections_subring AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.sectionsSubring
 -/
 

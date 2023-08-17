@@ -441,7 +441,7 @@ theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜
   refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values
     rw [SetLike.mem_coe, Subalgebra.mem_comap]
-    convert (A.restrict_scalars ℝ).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
+    convert (A.restrict_scalars ℝ).hMul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
     ext1
     rw [mul_comm]
     exact (IsROrC.mul_conj _).symm

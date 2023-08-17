@@ -89,7 +89,7 @@ def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoid M] : Subgroup Mˣ
     where
   carrier := {ζ | ζ ^ (k : ℕ) = 1}
   one_mem' := one_pow _
-  mul_mem' ζ ξ hζ hξ := by simp_all only [Set.mem_setOf_eq, mul_pow, one_mul]
+  hMul_mem' ζ ξ hζ hξ := by simp_all only [Set.mem_setOf_eq, mul_pow, one_mul]
   inv_mem' ζ hζ := by simp_all only [Set.mem_setOf_eq, inv_pow, inv_one]
 #align roots_of_unity rootsOfUnity
 -/
@@ -193,7 +193,7 @@ def RingEquiv.restrictRootsOfUnity (σ : R ≃+* S) (n : ℕ+) : rootsOfUnity n 
   invFun := restrictRootsOfUnity σ.symm.toRingHom n
   left_inv ξ := by ext; exact σ.symm_apply_apply ξ
   right_inv ξ := by ext; exact σ.apply_symm_apply ξ
-  map_mul' := (restrictRootsOfUnity _ n).map_mul
+  map_mul' := (restrictRootsOfUnity _ n).map_hMul
 #align ring_equiv.restrict_roots_of_unity RingEquiv.restrictRootsOfUnity
 -/
 

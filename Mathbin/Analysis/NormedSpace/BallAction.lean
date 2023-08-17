@@ -39,7 +39,7 @@ instance mulActionClosedBallBall : MulAction (closedBall (0 : 𝕜) 1) (ball (0 
           mul_lt_mul' (mem_closedBall_zero_iff.1 c.2) (mem_ball_zero_iff.1 x.2) (norm_nonneg _)
             one_pos⟩
   one_smul x := Subtype.ext <| one_smul 𝕜 _
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
+  hMul_smul c₁ c₂ x := Subtype.ext <| hMul_smul _ _ _
 #align mul_action_closed_ball_ball mulActionClosedBallBall
 -/
 
@@ -59,7 +59,7 @@ instance mulActionClosedBallClosedBall : MulAction (closedBall (0 : 𝕜) 1) (cl
           mul_le_mul (mem_closedBall_zero_iff.1 c.2) (mem_closedBall_zero_iff.1 x.2) (norm_nonneg _)
             zero_le_one⟩
   one_smul x := Subtype.ext <| one_smul 𝕜 _
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
+  hMul_smul c₁ c₂ x := Subtype.ext <| hMul_smul _ _ _
 #align mul_action_closed_ball_closed_ball mulActionClosedBallClosedBall
 -/
 
@@ -79,7 +79,7 @@ instance mulActionSphereBall : MulAction (sphere (0 : 𝕜) 1) (ball (0 : E) r)
     where
   smul c x := inclusion sphere_subset_closedBall c • x
   one_smul x := Subtype.ext <| one_smul _ _
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
+  hMul_smul c₁ c₂ x := Subtype.ext <| hMul_smul _ _ _
 #align mul_action_sphere_ball mulActionSphereBall
 -/
 
@@ -94,7 +94,7 @@ instance mulActionSphereClosedBall : MulAction (sphere (0 : 𝕜) 1) (closedBall
     where
   smul c x := inclusion sphere_subset_closedBall c • x
   one_smul x := Subtype.ext <| one_smul _ _
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
+  hMul_smul c₁ c₂ x := Subtype.ext <| hMul_smul _ _ _
 #align mul_action_sphere_closed_ball mulActionSphereClosedBall
 -/
 
@@ -114,7 +114,7 @@ instance mulActionSphereSphere : MulAction (sphere (0 : 𝕜) 1) (sphere (0 : E)
         rw [norm_smul, mem_sphere_zero_iff_norm.1 c.coe_prop, mem_sphere_zero_iff_norm.1 x.coe_prop,
           one_mul]⟩
   one_smul x := Subtype.ext <| one_smul _ _
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
+  hMul_smul c₁ c₂ x := Subtype.ext <| hMul_smul _ _ _
 #align mul_action_sphere_sphere mulActionSphereSphere
 -/
 

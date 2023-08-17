@@ -35,8 +35,8 @@ instance [OrderedCancelCommMonoid M] [OrderedCancelCommMonoid N] :
 instance [LE α] [LE β] [Mul α] [Mul β] [ExistsMulOfLE α] [ExistsMulOfLE β] :
     ExistsMulOfLE (α × β) :=
   ⟨fun a b h =>
-    let ⟨c, hc⟩ := exists_mul_of_le h.1
-    let ⟨d, hd⟩ := exists_mul_of_le h.2
+    let ⟨c, hc⟩ := exists_hMul_of_le h.1
+    let ⟨d, hd⟩ := exists_hMul_of_le h.2
     ⟨(c, d), ext hc hd⟩⟩
 
 @[to_additive]

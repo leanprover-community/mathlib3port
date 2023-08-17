@@ -854,11 +854,11 @@ private theorem mul_eq_zero' {a b : Ordinal} : a * b = 0 ↔ a = 0 ∨ b = 0 :=
 instance : MonoidWithZero Ordinal :=
   { Ordinal.monoid with
     zero := 0
-    mul_zero := fun a => mul_eq_zero'.2 <| Or.inr rfl
-    zero_mul := fun a => mul_eq_zero'.2 <| Or.inl rfl }
+    mul_zero := fun a => hMul_eq_zero'.2 <| Or.inr rfl
+    zero_mul := fun a => hMul_eq_zero'.2 <| Or.inl rfl }
 
 instance : NoZeroDivisors Ordinal :=
-  ⟨fun a b => mul_eq_zero'.1⟩
+  ⟨fun a b => hMul_eq_zero'.1⟩
 
 #print Ordinal.lift_mul /-
 @[simp]

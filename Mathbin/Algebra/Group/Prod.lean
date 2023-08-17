@@ -268,7 +268,7 @@ instance [Monoid M] [Monoid N] : Monoid (M × N) :=
 instance [DivInvMonoid G] [DivInvMonoid H] : DivInvMonoid (G × H) :=
   { Prod.monoid, Prod.hasInv,
     Prod.hasDiv with
-    div_eq_mul_inv := fun a b => mk.inj_iff.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩
+    div_eq_hMul_inv := fun a b => mk.inj_iff.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩
     zpow := fun z a => ⟨DivInvMonoid.zpow z a.1, DivInvMonoid.zpow z a.2⟩
     zpow_zero' := fun z => ext (DivInvMonoid.zpow_zero' _) (DivInvMonoid.zpow_zero' _)
     zpow_succ' := fun z a => ext (DivInvMonoid.zpow_succ' _ _) (DivInvMonoid.zpow_succ' _ _)
@@ -279,7 +279,7 @@ instance [DivisionMonoid G] [DivisionMonoid H] : DivisionMonoid (G × H) :=
   { Prod.divInvMonoid,
     Prod.hasInvolutiveInv with
     mul_inv_rev := fun a b => ext (mul_inv_rev _ _) (mul_inv_rev _ _)
-    inv_eq_of_mul := fun a b h =>
+    inv_eq_of_hMul := fun a b h =>
       ext (inv_eq_of_mul_eq_one_right <| congr_arg fst h)
         (inv_eq_of_mul_eq_one_right <| congr_arg snd h) }
 
@@ -290,18 +290,18 @@ instance [DivisionCommMonoid G] [DivisionCommMonoid H] : DivisionCommMonoid (G �
 @[to_additive]
 instance [Group G] [Group H] : Group (G × H) :=
   { Prod.divInvMonoid with
-    mul_left_inv := fun a => mk.inj_iff.mpr ⟨mul_left_inv _, mul_left_inv _⟩ }
+    hMul_left_inv := fun a => mk.inj_iff.mpr ⟨mul_left_inv _, mul_left_inv _⟩ }
 
 @[to_additive]
 instance [LeftCancelSemigroup G] [LeftCancelSemigroup H] : LeftCancelSemigroup (G × H) :=
   { Prod.semigroup with
-    mul_left_cancel := fun a b c h =>
+    hMul_left_cancel := fun a b c h =>
       Prod.ext (mul_left_cancel (Prod.ext_iff.1 h).1) (mul_left_cancel (Prod.ext_iff.1 h).2) }
 
 @[to_additive]
 instance [RightCancelSemigroup G] [RightCancelSemigroup H] : RightCancelSemigroup (G × H) :=
   { Prod.semigroup with
-    mul_right_cancel := fun a b c h =>
+    hMul_right_cancel := fun a b c h =>
       Prod.ext (mul_right_cancel (Prod.ext_iff.1 h).1) (mul_right_cancel (Prod.ext_iff.1 h).2) }
 
 @[to_additive]
@@ -391,7 +391,7 @@ theorem coe_snd : ⇑(snd M N) = Prod.snd :=
 protected def prod (f : M →ₙ* N) (g : M →ₙ* P) : M →ₙ* N × P
     where
   toFun := Pi.prod f g
-  map_mul' x y := Prod.ext (f.map_mul x y) (g.map_mul x y)
+  map_mul' x y := Prod.ext (f.map_hMul x y) (g.map_hMul x y)
 #align mul_hom.prod MulHom.prod
 #align add_hom.prod AddHom.prod
 -/
@@ -638,7 +638,7 @@ protected def prod (f : M →* N) (g : M →* P) : M →* N × P
     where
   toFun := Pi.prod f g
   map_one' := Prod.ext f.map_one g.map_one
-  map_mul' x y := Prod.ext (f.map_mul x y) (g.map_mul x y)
+  map_mul' x y := Prod.ext (f.map_hMul x y) (g.map_hMul x y)
 #align monoid_hom.prod MonoidHom.prod
 #align add_monoid_hom.prod AddMonoidHom.prod
 -/
@@ -873,7 +873,7 @@ end
 @[to_additive prod_congr "Product of additive isomorphisms; the maps come from `equiv.prod_congr`."]
 def prodCongr (f : M ≃* M') (g : N ≃* N') : M × N ≃* M' × N' :=
   { f.toEquiv.prodCongr g.toEquiv with
-    map_mul' := fun x y => Prod.ext (f.map_mul _ _) (g.map_mul _ _) }
+    map_mul' := fun x y => Prod.ext (f.map_hMul _ _) (g.map_hMul _ _) }
 #align mul_equiv.prod_congr MulEquiv.prodCongr
 #align add_equiv.prod_congr AddEquiv.prodCongr
 -/

@@ -90,7 +90,7 @@ theorem orbit_nonempty (b : β) : Set.Nonempty (orbit α b) :=
 #print MulAction.mapsTo_smul_orbit /-
 @[to_additive]
 theorem mapsTo_smul_orbit (a : α) (b : β) : Set.MapsTo ((· • ·) a) (orbit α b) (orbit α b) :=
-  Set.range_subset_iff.2 fun a' => ⟨a * a', mul_smul _ _ _⟩
+  Set.range_subset_iff.2 fun a' => ⟨a * a', hMul_smul _ _ _⟩
 #align mul_action.maps_to_smul_orbit MulAction.mapsTo_smul_orbit
 #align add_action.maps_to_vadd_orbit AddAction.mapsTo_vadd_orbit
 -/
@@ -106,7 +106,7 @@ theorem smul_orbit_subset (a : α) (b : β) : a • orbit α b ⊆ orbit α b :=
 #print MulAction.orbit_smul_subset /-
 @[to_additive]
 theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b :=
-  Set.range_subset_iff.2 fun a' => mul_smul a' a b ▸ mem_orbit _ _
+  Set.range_subset_iff.2 fun a' => hMul_smul a' a b ▸ mem_orbit _ _
 #align mul_action.orbit_smul_subset MulAction.orbit_smul_subset
 #align add_action.orbit_vadd_subset AddAction.orbit_vadd_subset
 -/
@@ -116,7 +116,7 @@ instance {b : β} : MulAction α (orbit α b)
     where
   smul a := (mapsTo_smul_orbit a b).restrict _ _ _
   one_smul a := Subtype.ext (one_smul α a)
-  mul_smul a a' b' := Subtype.ext (mul_smul a a' b')
+  hMul_smul a a' b' := Subtype.ext (hMul_smul a a' b')
 
 #print MulAction.orbit.coe_smul /-
 @[simp, to_additive]
@@ -193,7 +193,7 @@ def Stabilizer.submonoid (b : β) : Submonoid α
     where
   carrier := {a | a • b = b}
   one_mem' := one_smul _ b
-  mul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
+  hMul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
     show (a * a') • b = b by rw [← smul_smul, hb, ha]
 #align mul_action.stabilizer.submonoid MulAction.Stabilizer.submonoid
 #align add_action.stabilizer.add_submonoid AddAction.Stabilizer.addSubmonoid

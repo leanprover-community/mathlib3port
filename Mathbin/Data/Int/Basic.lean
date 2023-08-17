@@ -41,14 +41,14 @@ instance : CommRing ℤ where
   add_left_neg := Int.add_left_neg
   add_comm := Int.add_comm
   mul := Int.mul
-  mul_assoc := Int.mul_assoc
+  mul_assoc := Int.hMul_assoc
   one := Int.one
-  one_mul := Int.one_mul
-  mul_one := Int.mul_one
+  one_mul := Int.one_hMul
+  mul_one := Int.hMul_one
   sub := Int.sub
   left_distrib := Int.mul_add
   right_distrib := Int.add_mul
-  mul_comm := Int.mul_comm
+  mul_comm := Int.hMul_comm
   natCast := Int.ofNat
   natCast_zero := rfl
   natCast_succ n := rfl
@@ -56,9 +56,9 @@ instance : CommRing ℤ where
   intCast_ofNat n := rfl
   intCast_negSucc n := rfl
   zsmul := (· * ·)
-  zsmul_zero' := Int.zero_mul
+  zsmul_zero' := Int.zero_hMul
   zsmul_succ' n x := by
-    rw [Nat.succ_eq_add_one, Nat.add_comm, of_nat_add, Int.add_mul, of_nat_one, Int.one_mul]
+    rw [Nat.succ_eq_add_one, Nat.add_comm, of_nat_add, Int.add_mul, of_nat_one, Int.one_hMul]
   zsmul_neg' n x := Int.neg_mul_eq_neg_mul_symm (n.succ : ℤ) x
 
 /-! ### Extra instances to short-circuit type class resolution

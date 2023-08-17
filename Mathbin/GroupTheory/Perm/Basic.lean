@@ -37,7 +37,7 @@ instance permGroup : Group (Perm α)
   mul_assoc f g h := (trans_assoc _ _ _).symm
   one_mul := trans_refl
   mul_one := refl_trans
-  mul_left_inv := self_trans_symm
+  hMul_left_inv := self_trans_symm
 #align equiv.perm.perm_group Equiv.Perm.permGroup
 -/
 

@@ -1753,7 +1753,7 @@ theorem comapSMul_single (g : G) (a : α) (b : M) : g • single a b = single (g
 def comapMulAction : MulAction G (α →₀ M)
     where
   one_smul f := by rw [comap_smul_def, one_smul_eq_id, map_domain_id]
-  mul_smul g g' f := by
+  hMul_smul g g' f := by
     rw [comap_smul_def, comap_smul_def, comap_smul_def, ← comp_smul_left, map_domain_comp]
 #align finsupp.comap_mul_action Finsupp.comapMulAction
 -/
@@ -1840,7 +1840,7 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R (�
   { Finsupp.distribSMul _ _ with
     smul := (· • ·)
     one_smul := fun x => ext fun _ => one_smul _ _
-    mul_smul := fun r s x => ext fun _ => mul_smul _ _ _ }
+    hMul_smul := fun r s x => ext fun _ => hMul_smul _ _ _ }
 
 instance [Zero M] [SMulZeroClass R M] [SMulZeroClass S M] [SMul R S] [IsScalarTower R S M] :
     IsScalarTower R S (α →₀ M) where smul_assoc r s a := ext fun _ => smul_assoc _ _ _

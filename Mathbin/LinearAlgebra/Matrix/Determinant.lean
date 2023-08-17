@@ -332,7 +332,7 @@ theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPEquiv.toMatrix : Matri
 #print Matrix.det_smul /-
 theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n * det A :=
   calc
-    det (c • A) = det (Matrix.mul (diagonal fun _ => c) A) := by rw [smul_eq_diagonal_mul]
+    det (c • A) = det (HMul.hMul (diagonal fun _ => c) A) := by rw [smul_eq_diagonal_mul]
     _ = det (diagonal fun _ => c) * det A := (det_mul _ _)
     _ = c ^ Fintype.card n * det A := by simp [card_univ]
 #align matrix.det_smul Matrix.det_smul

@@ -468,7 +468,7 @@ theorem prod_hom_add_index [AddZeroClass M] [CommMonoid N] {f g : α →₀ M}
     ((f + g).Prod fun a b => h a (Multiplicative.ofAdd b)) =
       (f.Prod fun a b => h a (Multiplicative.ofAdd b)) *
         g.Prod fun a b => h a (Multiplicative.ofAdd b) :=
-  prod_add_index' (fun a => (h a).map_one) fun a => (h a).map_mul
+  prod_add_index' (fun a => (h a).map_one) fun a => (h a).map_hMul
 #align finsupp.prod_hom_add_index Finsupp.prod_hom_add_index
 -/
 

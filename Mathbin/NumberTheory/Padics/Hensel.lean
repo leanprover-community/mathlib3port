@@ -423,7 +423,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0)
   have : h = 0 :=
     by_contradiction fun hne =>
       have : F.derivative.eval soln + q * h = 0 :=
-        (eq_zero_or_eq_zero_of_mul_eq_zero this).resolve_right hne
+        (eq_zero_or_eq_zero_of_hMul_eq_zero this).resolve_right hne
       have : F.derivative.eval soln = -q * h := by simpa using eq_neg_of_add_eq_zero_left this
       lt_irrefl ‖F.derivative.eval soln‖
         (calc
@@ -452,7 +452,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
   have : h = 0 :=
     by_contradiction fun hne =>
       have : F.derivative.eval a + q * h = 0 :=
-        (eq_zero_or_eq_zero_of_mul_eq_zero this).resolve_right hne
+        (eq_zero_or_eq_zero_of_hMul_eq_zero this).resolve_right hne
       have : F.derivative.eval a = -q * h := by simpa using eq_neg_of_add_eq_zero_left this
       lt_irrefl ‖F.derivative.eval a‖
         (calc

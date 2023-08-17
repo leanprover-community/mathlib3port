@@ -556,7 +556,7 @@ noncomputable instance : IsROrC ℂ
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   I := Complex.I
   i_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.I_re]
-  i_mul_i_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_true_iff]
+  i_hMul_i_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_true_iff]
   re_add_im_ax z := by
     simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebraMap,
       Complex.ofReal_eq_coe]
@@ -566,15 +566,15 @@ noncomputable instance : IsROrC ℂ
   of_real_im_ax r := by
     simp only [AddMonoidHom.coe_mk, Complex.ofReal_im, Complex.coe_algebraMap,
       Complex.ofReal_eq_coe]
-  mul_re_ax z w := by simp only [Complex.mul_re, AddMonoidHom.coe_mk]
-  mul_im_ax z w := by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
+  hMul_re_ax z w := by simp only [Complex.mul_re, AddMonoidHom.coe_mk]
+  hMul_im_ax z w := by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
   conj_re_ax z := rfl
   conj_im_ax z := rfl
   conj_i_ax := by simp only [Complex.conj_I, RingHom.coe_mk]
   norm_sq_eq_def_ax z := by
     simp only [← Complex.normSq_eq_abs, ← Complex.normSq_apply, AddMonoidHom.coe_mk,
       Complex.norm_eq_abs]
-  mul_im_i_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.I_im]
+  hMul_im_i_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.I_im]
 
 #print IsROrC.re_eq_complex_re /-
 theorem IsROrC.re_eq_complex_re : ⇑(IsROrC.re : ℂ →+ ℝ) = Complex.re :=
@@ -737,7 +737,7 @@ theorem hasSum_iff (f : α → 𝕜) (c : 𝕜) :
   refine' ⟨fun h => ⟨has_sum_re _ h, has_sum_im _ h⟩, _⟩
   rintro ⟨h₁, h₂⟩
   rw [← IsROrC.re_add_im c]
-  convert ((has_sum_of_real 𝕜).mpr h₁).add (((has_sum_of_real 𝕜).mpr h₂).mul_right I)
+  convert ((has_sum_of_real 𝕜).mpr h₁).add (((has_sum_of_real 𝕜).mpr h₂).hMul_right I)
   simp_rw [IsROrC.re_add_im]
 #align is_R_or_C.has_sum_iff IsROrC.hasSum_iff
 -/

@@ -941,7 +941,7 @@ theorem image_mul_const_uIcc (a b c : α) : (fun x => x * a) '' [b, c] = [b * a,
   else
     calc
       (fun x => x * a) '' [b, c] = (fun x => x * a⁻¹) ⁻¹' [b, c] :=
-        (Units.mk0 a ha).mul_right.image_eq_preimage _
+        (Units.mk0 a ha).hMul_right.image_eq_preimage _
       _ = (fun x => x / a) ⁻¹' [b, c] := by simp only [div_eq_mul_inv]
       _ = [b * a, c * a] := preimage_div_const_uIcc ha _ _
 #align set.image_mul_const_uIcc Set.image_mul_const_uIcc
@@ -964,7 +964,7 @@ theorem image_div_const_uIcc (a b c : α) : (fun x => x / a) '' [b, c] = [b / a,
 #print Set.image_mul_right_Icc' /-
 theorem image_mul_right_Icc' (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=
-  ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
+  ((Units.mk0 c h.ne').hMul_right.image_eq_preimage _).trans (by simp [h, division_def])
 #align set.image_mul_right_Icc' Set.image_mul_right_Icc'
 -/
 
@@ -996,7 +996,7 @@ theorem image_mul_left_Icc {a b c : α} (ha : 0 ≤ a) (hbc : b ≤ c) :
 #print Set.image_mul_right_Ioo /-
 theorem image_mul_right_Ioo (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Ioo a b = Ioo (a * c) (b * c) :=
-  ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
+  ((Units.mk0 c h.ne').hMul_right.image_eq_preimage _).trans (by simp [h, division_def])
 #align set.image_mul_right_Ioo Set.image_mul_right_Ioo
 -/
 
@@ -1028,7 +1028,7 @@ theorem inv_Ioi {a : α} (ha : 0 < a) : (Ioi a)⁻¹ = Ioo 0 a⁻¹ := by
 #print Set.image_const_mul_Ioi_zero /-
 theorem image_const_mul_Ioi_zero {k : Type _} [LinearOrderedField k] {x : k} (hx : 0 < x) :
     (fun y => x * y) '' Ioi (0 : k) = Ioi 0 := by
-  erw [(Units.mk0 x hx.ne').mul_left.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx),
+  erw [(Units.mk0 x hx.ne').hMul_left.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx),
     zero_div]
 #align set.image_const_mul_Ioi_zero Set.image_const_mul_Ioi_zero
 -/

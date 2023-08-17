@@ -778,7 +778,7 @@ instance (R : Type _) [Rack R] : DivInvMonoid (EnvelGroup R)
 
 instance (R : Type _) [Rack R] : Group (EnvelGroup R) :=
   { EnvelGroup.divInvMonoid _ with
-    mul_left_inv := fun a =>
+    hMul_left_inv := fun a =>
       Quotient.inductionOn a fun a => Quotient.sound (PreEnvelGroupRel'.mul_left_inv a).Rel }
 
 #print Rack.EnvelGroup.inhabited /-

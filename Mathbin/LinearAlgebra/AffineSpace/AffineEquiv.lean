@@ -499,7 +499,7 @@ instance : Group (P₁ ≃ᵃ[k] P₁) where
   mul_assoc e₁ e₂ e₃ := trans_assoc _ _ _
   one_mul := trans_refl
   mul_one := refl_trans
-  mul_left_inv := self_trans_symm
+  hMul_left_inv := self_trans_symm
 
 #print AffineEquiv.one_def /-
 theorem one_def : (1 : P₁ ≃ᵃ[k] P₁) = refl k P₁ :=

@@ -74,9 +74,9 @@ theorem derivation_C (D : Derivation R (MvPolynomial σ R) A) (a : R) : D (C a) 
 -/
 
 @[simp]
-theorem derivation_c_mul (D : Derivation R (MvPolynomial σ R) A) (a : R) (f : MvPolynomial σ R) :
+theorem derivation_c_hMul (D : Derivation R (MvPolynomial σ R) A) (a : R) (f : MvPolynomial σ R) :
     D (C a * f) = a • D f := by rw [C_mul', D.map_smul]
-#align mv_polynomial.derivation_C_mul MvPolynomial.derivation_c_mul
+#align mv_polynomial.derivation_C_mul MvPolynomial.derivation_c_hMul
 
 #print MvPolynomial.derivation_eqOn_supported /-
 /-- If two derivations agree on `X i`, `i ∈ s`, then they agree on all polynomials from

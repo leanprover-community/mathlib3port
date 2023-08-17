@@ -285,7 +285,7 @@ instance : MonoidWithZeroHomClass (InfinitePlace K) K ℝ
     where
   coe w x := w.1 x
   coe_injective' _ _ h := Subtype.eq (AbsoluteValue.ext fun x => congr_fun h x)
-  map_mul w _ _ := w.1.map_mul _ _
+  map_hMul w _ _ := w.1.map_hMul _ _
   map_one w := w.1.map_one
   map_zero w := w.1.map_zero
 

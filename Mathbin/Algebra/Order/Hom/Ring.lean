@@ -163,7 +163,7 @@ instance : OrderRingHomClass (α →+*o β) α β
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_one f := f.map_one'
   map_add f := f.map_add'
   map_zero f := f.map_zero'
@@ -413,7 +413,7 @@ instance : OrderRingIsoClass (α ≃+*o β) α β
   inv f := f.invFun
   coe_injective' f g h₁ h₂ := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_add f := f.map_add'
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_le_map_iff f _ _ := f.map_le_map_iff'
   left_inv f := f.left_inv
   right_inv f := f.right_inv

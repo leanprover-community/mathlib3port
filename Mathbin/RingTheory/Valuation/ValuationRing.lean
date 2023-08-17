@@ -233,7 +233,7 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
   RingEquiv.ofBijective
     (show A →ₙ+* (valuation A K).integer from
       { toFun := fun a => ⟨algebraMap A K a, (mem_integer_iff _ _ _).mpr ⟨a, rfl⟩⟩
-        map_mul' := fun _ _ => by ext1; exact (algebraMap A K).map_mul _ _
+        map_mul' := fun _ _ => by ext1; exact (algebraMap A K).map_hMul _ _
         map_zero' := by ext1; exact (algebraMap A K).map_zero
         map_add' := fun _ _ => by ext1; exact (algebraMap A K).map_add _ _ })
     (by

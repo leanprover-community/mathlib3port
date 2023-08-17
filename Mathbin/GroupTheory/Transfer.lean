@@ -64,7 +64,7 @@ noncomputable def diff : A :=
 theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=
   prod_mul_distrib.symm.trans
     (prod_congr rfl fun q hq =>
-      (ϕ.map_mul _ _).symm.trans
+      (ϕ.map_hMul _ _).symm.trans
         (congr_arg ϕ
           (by simp_rw [Subtype.ext_iff, coe_mul, coe_mk, mul_assoc, mul_inv_cancel_left])))
 #align subgroup.left_transversals.diff_mul_diff Subgroup.leftTransversals.diff_mul_diff

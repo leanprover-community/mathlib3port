@@ -958,11 +958,11 @@ protected def divisionMonoid : DivisionMonoid (Filter α) :=
   { Filter.monoid, Filter.instInvolutiveInv, Filter.instDiv,
     Filter.instZPow with
     mul_inv_rev := fun s t => map_map₂_antidistrib mul_inv_rev
-    inv_eq_of_mul := fun s t h =>
+    inv_eq_of_hMul := fun s t h =>
       by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Filter.mul_eq_one_iff.1 h
       rw [inv_pure, inv_eq_of_mul_eq_one_right hab]
-    div_eq_mul_inv := fun f g => map_map₂_distrib_right div_eq_mul_inv }
+    div_eq_hMul_inv := fun f g => map_map₂_distrib_right div_eq_mul_inv }
 #align filter.division_monoid Filter.divisionMonoid
 #align filter.subtraction_monoid Filter.subtractionMonoid
 -/
@@ -1000,8 +1000,8 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (F
 protected def instDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Filter α) :=
   {
     Filter.instInvolutiveNeg with
-    neg_mul := fun _ _ => map₂_map_left_comm neg_mul
-    mul_neg := fun _ _ => map_map₂_right_comm mul_neg }
+    neg_hMul := fun _ _ => map₂_map_left_comm neg_mul
+    hMul_neg := fun _ _ => map_map₂_right_comm mul_neg }
 #align filter.has_distrib_neg Filter.instDistribNeg
 -/
 
@@ -1655,7 +1655,7 @@ instance isCentralScalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α 
 protected def mulAction [Monoid α] [MulAction α β] : MulAction (Filter α) (Filter β)
     where
   one_smul f := map₂_pure_left.trans <| by simp_rw [one_smul, map_id']
-  mul_smul f g h := map₂_assoc mul_smul
+  hMul_smul f g h := map₂_assoc hMul_smul
 #align filter.mul_action Filter.mulAction
 #align filter.add_action Filter.addAction
 -/
@@ -1667,7 +1667,7 @@ protected def mulAction [Monoid α] [MulAction α β] : MulAction (Filter α) (F
       "An additive action of an additive monoid on a type `β` gives an additive action on\n`filter β`."]
 protected def mulActionFilter [Monoid α] [MulAction α β] : MulAction α (Filter β)
     where
-  mul_smul a b f := by simp only [← map_smul, map_map, Function.comp, ← mul_smul]
+  hMul_smul a b f := by simp only [← map_smul, map_map, Function.comp, ← mul_smul]
   one_smul f := by simp only [← map_smul, one_smul, map_id']
 #align filter.mul_action_filter Filter.mulActionFilter
 #align filter.add_action_filter Filter.addActionFilter
@@ -1693,7 +1693,7 @@ protected def distribMulActionFilter [Monoid α] [AddMonoid β] [DistribMulActio
 protected def mulDistribMulActionFilter [Monoid α] [Monoid β] [MulDistribMulAction α β] :
     MulDistribMulAction α (Set β)
     where
-  smul_mul _ _ _ := image_image2_distrib <| smul_mul' _
+  smul_hMul _ _ _ := image_image2_distrib <| smul_mul' _
   smul_one _ := image_singleton.trans <| by rw [smul_one, singleton_one]
 #align filter.mul_distrib_mul_action_filter Filter.mulDistribMulActionFilter
 -/

@@ -844,7 +844,7 @@ protected def submonoid : Submonoid (M × M)
     where
   carrier := {x | c x.1 x.2}
   one_mem' := c.iseqv.1 1
-  mul_mem' _ _ := c.mul
+  hMul_mem' _ _ := c.mul
 #align con.submonoid Con.submonoid
 #align add_con.add_submonoid AddCon.addSubmonoid
 -/
@@ -860,7 +860,7 @@ def ofSubmonoid (N : Submonoid (M × M)) (H : Equivalence fun x y => (x, y) ∈ 
     where
   R x y := (x, y) ∈ N
   iseqv := H
-  mul' _ _ _ _ := N.mul_mem
+  mul' _ _ _ _ := N.hMul_mem
 #align con.of_submonoid Con.ofSubmonoid
 #align add_con.of_add_submonoid AddCon.ofAddSubmonoid
 -/
@@ -1002,7 +1002,7 @@ theorem ker_apply_eq_preimage {f : M →* P} (x) : (ker f) x = f ⁻¹' {f x} :=
     `f`. -/
 @[to_additive
       "Given an `add_monoid` homomorphism `f : N → M` and an additive congruence relation\n`c` on `M`, the additive congruence relation induced on `N` by `f` equals the kernel of `c`'s\nquotient homomorphism composed with `f`."]
-theorem comap_eq {f : N →* M} : comap f f.map_mul c = ker (c.mk'.comp f) :=
+theorem comap_eq {f : N →* M} : comap f f.map_hMul c = ker (c.mk'.comp f) :=
   ext fun x y => show c _ _ ↔ c.mk' _ = c.mk' _ by rw [← c.eq] <;> rfl
 #align con.comap_eq Con.comap_eq
 #align add_con.comap_eq AddCon.comap_eq
@@ -1019,7 +1019,7 @@ def lift (H : c ≤ ker f) : c.Quotient →* P
     where
   toFun x := Con.liftOn x f fun _ _ h => H h
   map_one' := by rw [← f.map_one] <;> rfl
-  map_mul' x y := Con.induction_on₂ x y fun m n => f.map_mul m n ▸ rfl
+  map_mul' x y := Con.induction_on₂ x y fun m n => f.map_hMul m n ▸ rfl
 #align con.lift Con.lift
 #align add_con.lift AddCon.lift
 -/
@@ -1257,7 +1257,7 @@ noncomputable def quotientKerEquivOfSurjective (f : M →* P) (hf : Surjective f
 /-- The second isomorphism theorem for monoids. -/
 @[to_additive "The second isomorphism theorem for `add_monoid`s."]
 noncomputable def comapQuotientEquiv (f : N →* M) :
-    (comap f f.map_mul c).Quotient ≃* (c.mk'.comp f).mrange :=
+    (comap f f.map_hMul c).Quotient ≃* (c.mk'.comp f).mrange :=
   (Con.congr comap_eq).trans <| quotientKerEquivRange <| c.mk'.comp f
 #align con.comap_quotient_equiv Con.comapQuotientEquiv
 #align add_con.comap_quotient_equiv AddCon.comapQuotientEquiv
@@ -1527,7 +1527,7 @@ instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] 
     where
   smul := (· • ·)
   one_smul := Quotient.ind' fun x => congr_arg Quotient.mk'' <| one_smul _ _
-  mul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk'' <| mul_smul _ _ _
+  hMul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk'' <| mul_smul _ _ _
 #align con.mul_action Con.mulAction
 #align add_con.add_action AddCon.addAction
 -/
@@ -1538,7 +1538,7 @@ instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribM
   { c.MulAction with
     smul := (· • ·)
     smul_one := fun r => congr_arg Quotient.mk'' <| smul_one _
-    smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul' _ _ _ }
+    smul_hMul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul' _ _ _ }
 #align con.mul_distrib_mul_action Con.mulDistribMulAction
 -/
 

@@ -270,7 +270,7 @@ def mvPolynomialEquivMvPolynomial [CommSemiring S₃] (f : MvPolynomial S₁ R �
   invFun := g
   left_inv := is_id (RingHom.comp _ _) hgfC hgfX
   right_inv := is_id (RingHom.comp _ _) hfgC hfgX
-  map_mul' := f.map_mul
+  map_mul' := f.map_hMul
   map_add' := f.map_add
 #align mv_polynomial.mv_polynomial_equiv_mv_polynomial MvPolynomial.mvPolynomialEquivMvPolynomial
 -/

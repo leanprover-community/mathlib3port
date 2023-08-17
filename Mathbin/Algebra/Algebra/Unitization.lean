@@ -644,7 +644,7 @@ instance [CommSemiring R] [StarRing R] [AddCommMonoid A] [StarAddMonoid A] [Modu
 instance [CommSemiring R] [StarRing R] [NonUnitalSemiring A] [StarRing A] [Module R A]
     [IsScalarTower R A A] [SMulCommClass R A A] [StarModule R A] : StarRing (Unitization R A) :=
   { Unitization.starAddMonoid with
-    star_mul := fun x y =>
+    star_hMul := fun x y =>
       ext (by simp [star_mul]) (by simp [star_mul, add_comm (star x.fst • star y.snd)]) }
 
 end Star

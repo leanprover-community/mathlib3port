@@ -727,7 +727,7 @@ theorem adjoin_simple_isCompactElement (x : E) : IsCompactElement F⟮⟯ :=
       neg_mem' := by
         rintro x ⟨-, ⟨E, rfl⟩, ⟨-, ⟨hE, rfl⟩, hx⟩⟩
         exact mem_Union_of_mem E (mem_Union_of_mem hE (E.neg_mem hx))
-      mul_mem' :=
+      hMul_mem' :=
         by
         rintro x₁ x₂ ⟨-, ⟨F₁, rfl⟩, ⟨-, ⟨hF₁, rfl⟩, hx₁⟩⟩ ⟨-, ⟨F₂, rfl⟩, ⟨-, ⟨hF₂, rfl⟩, hx₂⟩⟩
         obtain ⟨F₃, hF₃, h₁₃, h₂₃⟩ := hs F₁ hF₁ F₂ hF₂
@@ -1312,10 +1312,10 @@ def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : IsChain (· 
     rintro _ _ ⟨x, hx, ha⟩ ⟨y, hy, hb⟩
     obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc hx hy
     exact ⟨z, hz, z.1.add_mem (hxz.1 ha) (hyz.1 hb)⟩
-  mul_mem' := by
+  hMul_mem' := by
     rintro _ _ ⟨x, hx, ha⟩ ⟨y, hy, hb⟩
     obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc hx hy
-    exact ⟨z, hz, z.1.mul_mem (hxz.1 ha) (hyz.1 hb)⟩
+    exact ⟨z, hz, z.1.hMul_mem (hxz.1 ha) (hyz.1 hb)⟩
   algebraMap_mem' s := ⟨⊥, Set.mem_insert ⊥ c, algebraMap_mem ⊥ s⟩
 #align intermediate_field.lifts.upper_bound_intermediate_field IntermediateField.Lifts.upperBoundIntermediateField
 -/
@@ -1340,7 +1340,7 @@ noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : IsChain (
     obtain ⟨w, hw, hxw, hyw, hzw⟩ :=
       lifts.exists_max_three hc (Classical.choose_spec s.mem).1 (Classical.choose_spec t.mem).1
         (Classical.choose_spec (s * t).Mem).1
-    rw [lifts.eq_of_le hxw, lifts.eq_of_le hyw, lifts.eq_of_le hzw, ← w.2.map_mul]
+    rw [lifts.eq_of_le hxw, lifts.eq_of_le hyw, lifts.eq_of_le hzw, ← w.2.map_hMul]
     rfl
   commutes' _ := AlgHom.commutes _ _
 #align intermediate_field.lifts.upper_bound_alg_hom IntermediateField.Lifts.upperBoundAlgHom
@@ -1429,7 +1429,7 @@ theorem algHom_mk_adjoin_splits
   obtain ⟨x : lifts F E K, hx⟩ := zorn_partialOrder lifts.exists_upper_bound
   refine'
     ⟨AlgHom.mk (fun s => x.2 ⟨s, adjoin_le_iff.mpr (fun s hs => _) s.Mem⟩) x.2.map_one
-        (fun s t => x.2.map_mul ⟨s, _⟩ ⟨t, _⟩) x.2.map_zero (fun s t => x.2.map_add ⟨s, _⟩ ⟨t, _⟩)
+        (fun s t => x.2.map_hMul ⟨s, _⟩ ⟨t, _⟩) x.2.map_zero (fun s t => x.2.map_add ⟨s, _⟩ ⟨t, _⟩)
         x.2.commutes⟩
   rcases x.exists_lift_of_splits (hK s hs).1 (hK s hs).2 with ⟨y, h1, h2⟩
   rwa [hx y h1] at h2 

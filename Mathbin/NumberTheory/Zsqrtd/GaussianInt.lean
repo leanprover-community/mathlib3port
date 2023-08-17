@@ -132,7 +132,7 @@ theorem toComplex_add (x y : ℤ[i]) : ((x + y : ℤ[i]) : ℂ) = x + y :=
 #print GaussianInt.toComplex_mul /-
 @[simp]
 theorem toComplex_mul (x y : ℤ[i]) : ((x * y : ℤ[i]) : ℂ) = x * y :=
-  toComplex.map_mul _ _
+  toComplex.map_hMul _ _
 #align gaussian_int.to_complex_mul GaussianInt.toComplex_mul
 -/
 

@@ -115,7 +115,7 @@ instance : AlgHomClass (A →ₐ[R] B) R A B
   coe_injective' f g h := by cases f; cases g; congr
   map_add := map_add'
   map_zero := map_zero'
-  map_mul := map_mul'
+  map_hMul := map_mul'
   map_one := map_one'
   commutes f := f.commutes'
 

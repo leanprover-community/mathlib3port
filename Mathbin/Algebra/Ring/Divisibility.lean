@@ -47,7 +47,7 @@ variable [NonUnitalCommSemiring α] [NonUnitalCommSemiring β] {a b c : α}
 
 #print Dvd.dvd.linear_comb /-
 theorem Dvd.dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ a * x + b * y :=
-  dvd_add (hdx.mul_left a) (hdy.mul_left b)
+  dvd_add (hdx.hMul_left a) (hdy.hMul_left b)
 #align has_dvd.dvd.linear_comb Dvd.dvd.linear_comb
 -/
 

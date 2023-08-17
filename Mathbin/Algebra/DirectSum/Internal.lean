@@ -341,7 +341,7 @@ instance galgebra [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R] (A 
   toFun :=
     ((Algebra.linearMap S R).codRestrict (A 0) <| SetLike.algebraMap_mem_graded A).toAddMonoidHom
   map_one := Subtype.ext <| (algebraMap S R).map_one
-  map_mul x y := Sigma.subtype_ext (add_zero 0).symm <| (algebraMap S R).map_mul _ _
+  map_hMul x y := Sigma.subtype_ext (add_zero 0).symm <| (algebraMap S R).map_hMul _ _
   commutes := fun r ⟨i, xi⟩ =>
     Sigma.subtype_ext ((zero_add i).trans (add_zero i).symm) <| Algebra.commutes _ _
   smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_add i).symm <| Algebra.smul_def _ _
@@ -363,7 +363,7 @@ instance nat_power_gradedMonoid [CommSemiring S] [Semiring R] [Algebra S R] (p :
     SetLike.GradedMonoid fun i : ℕ => p ^ i
     where
   one_mem := by rw [← one_le, pow_zero]; exact le_rfl
-  mul_mem i j p q hp hq := by rw [pow_add]; exact Submodule.mul_mem_mul hp hq
+  hMul_mem i j p q hp hq := by rw [pow_add]; exact Submodule.mul_mem_mul hp hq
 #align submodule.nat_power_graded_monoid Submodule.nat_power_gradedMonoid
 -/
 

@@ -252,7 +252,7 @@ variable (M)
 def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
   { SMulWithZero.compHom M f.toZeroHom with
     smul := (· • ·) ∘ f
-    mul_smul := fun r s m => by simp [mul_smul]
+    hMul_smul := fun r s m => by simp [mul_smul]
     one_smul := fun m => by simp }
 #align mul_action_with_zero.comp_hom MulActionWithZero.compHom
 -/

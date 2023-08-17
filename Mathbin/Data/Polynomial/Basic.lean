@@ -572,7 +572,7 @@ theorem C_1 : C (1 : R) = 1 :=
 
 #print Polynomial.C_mul /-
 theorem C_mul : C (a * b) = C a * C b :=
-  C.map_mul a b
+  C.map_hMul a b
 #align polynomial.C_mul Polynomial.C_mul
 -/
 

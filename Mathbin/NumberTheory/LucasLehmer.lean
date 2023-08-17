@@ -718,7 +718,7 @@ theorem modEq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
     skip
     skip
     rw [← one_mul (k / 2 ^ n)]
-  exact (Nat.modEq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
+  exact (Nat.modEq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).hMul_right _
 #align modeq_mersenne modEq_mersenne
 -/
 

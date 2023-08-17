@@ -59,7 +59,7 @@ instance zeroHomClass : ZeroHomClass (AbsoluteValue R S) R S
 
 #print AbsoluteValue.mulHomClass /-
 instance mulHomClass : MulHomClass (AbsoluteValue R S) R S :=
-  { AbsoluteValue.zeroHomClass with map_mul := fun f => f.map_mul' }
+  { AbsoluteValue.zeroHomClass with map_hMul := fun f => f.map_mul' }
 #align absolute_value.mul_hom_class AbsoluteValue.mulHomClass
 -/
 
@@ -373,7 +373,7 @@ instance AbsoluteValue.isAbsoluteValue (abv : AbsoluteValue R S) : IsAbsoluteVal
   abv_nonneg := abv.NonNeg
   abv_eq_zero _ := abv.eq_zero
   abv_add := abv.add_le
-  abv_mul := abv.map_mul
+  abv_mul := abv.map_hMul
 #align absolute_value.is_absolute_value AbsoluteValue.isAbsoluteValue
 -/
 

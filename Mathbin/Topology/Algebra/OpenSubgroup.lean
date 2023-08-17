@@ -94,7 +94,7 @@ instance : SetLike (OpenSubgroup G) G where
 @[to_additive]
 instance : SubgroupClass (OpenSubgroup G) G
     where
-  mul_mem U _ _ := U.mul_mem'
+  hMul_mem U _ _ := U.hMul_mem'
   one_mem U := U.one_mem'
   inv_mem U _ := U.inv_mem'
 

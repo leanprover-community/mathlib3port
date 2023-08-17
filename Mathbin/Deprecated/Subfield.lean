@@ -107,11 +107,11 @@ theorem ring_closure_subset : Ring.closure S ⊆ closure S := fun x hx =>
 
 #print Field.closure.isSubmonoid /-
 theorem closure.isSubmonoid : IsSubmonoid (closure S) :=
-  { mul_mem := by
+  { hMul_mem := by
       rintro _ _ ⟨p, hp, q, hq, hq0, rfl⟩ ⟨r, hr, s, hs, hs0, rfl⟩ <;>
         exact
-          ⟨p * r, IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hp hr, q * s,
-            IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs,
+          ⟨p * r, IsSubmonoid.hMul_mem ring.closure.is_subring.to_is_submonoid hp hr, q * s,
+            IsSubmonoid.hMul_mem ring.closure.is_subring.to_is_submonoid hq hs,
             (div_mul_div_comm _ _ _ _).symm⟩
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ring.closure.isSubring.to_isSubmonoid }
 #align field.closure.is_submonoid Field.closure.isSubmonoid

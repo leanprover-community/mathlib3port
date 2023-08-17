@@ -58,7 +58,7 @@ def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Disc
   obj X := Discrete.mk (F X.as)
   map X Y f := Discrete.eqToHom (F.congr_arg (eq_of_hom f))
   ε := Discrete.eqToHom F.map_one.symm
-  μ X Y := Discrete.eqToHom (F.map_mul X.as Y.as).symm
+  μ X Y := Discrete.eqToHom (F.map_hMul X.as Y.as).symm
 #align category_theory.discrete.monoidal_functor CategoryTheory.Discrete.monoidalFunctor
 #align category_theory.discrete.add_monoidal_functor CategoryTheory.Discrete.addMonoidalFunctor
 -/

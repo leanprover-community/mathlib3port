@@ -72,7 +72,7 @@ and such that `f x⁻¹ = f x` for all `x`. -/
 structure GroupSeminorm (G : Type _) [Group G] where
   toFun : G → ℝ
   map_one' : to_fun 1 = 0
-  mul_le' : ∀ x y, to_fun (x * y) ≤ to_fun x + to_fun y
+  hMul_le' : ∀ x y, to_fun (x * y) ≤ to_fun x + to_fun y
   inv' : ∀ x, to_fun x⁻¹ = to_fun x
 #align group_seminorm GroupSeminorm
 #align add_group_seminorm AddGroupSeminorm
@@ -212,7 +212,7 @@ instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E ℝ
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_one_eq_zero f := f.map_one'
-  map_mul_le_add f := f.mul_le'
+  map_hMul_le_add f := f.hMul_le'
   map_inv_eq_map f := f.inv'
 #align group_seminorm.group_seminorm_class GroupSeminorm.groupSeminormClass
 #align add_group_seminorm.add_group_seminorm_class AddGroupSeminorm.addGroupSeminormClass
@@ -282,7 +282,7 @@ variable (p q) (f : F →* E)
 instance : Zero (GroupSeminorm E) :=
   ⟨{  toFun := 0
       map_one' := Pi.zero_apply _
-      mul_le' := fun _ _ => (zero_add _).ge
+      hMul_le' := fun _ _ => (zero_add _).ge
       inv' := fun x => rfl }⟩
 
 #print GroupSeminorm.coe_zero /-
@@ -310,8 +310,8 @@ instance : Add (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := fun x => p x + q x
       map_one' := by rw [map_one_eq_zero p, map_one_eq_zero q, zero_add]
-      mul_le' := fun _ _ =>
-        (add_le_add (map_mul_le_add p _ _) <| map_mul_le_add q _ _).trans_eq <|
+      hMul_le' := fun _ _ =>
+        (add_le_add (map_hMul_le_add p _ _) <| map_hMul_le_add q _ _).trans_eq <|
           add_add_add_comm _ _ _ _
       inv' := fun x => by rw [map_inv_eq_map p, map_inv_eq_map q] }⟩
 
@@ -339,9 +339,9 @@ instance : Sup (GroupSeminorm E) :=
     { toFun := p ⊔ q
       map_one' := by
         rw [Pi.sup_apply, ← map_one_eq_zero p, sup_eq_left, map_one_eq_zero p, map_one_eq_zero q]
-      mul_le' := fun x y =>
-        sup_le ((map_mul_le_add p x y).trans <| add_le_add le_sup_left le_sup_left)
-          ((map_mul_le_add q x y).trans <| add_le_add le_sup_right le_sup_right)
+      hMul_le' := fun x y =>
+        sup_le ((map_hMul_le_add p x y).trans <| add_le_add le_sup_left le_sup_left)
+          ((map_hMul_le_add q x y).trans <| add_le_add le_sup_right le_sup_right)
       inv' := fun x => by rw [Pi.sup_apply, Pi.sup_apply, map_inv_eq_map p, map_inv_eq_map q] }⟩
 
 #print GroupSeminorm.coe_sup /-
@@ -372,7 +372,7 @@ def comp (p : GroupSeminorm E) (f : F →* E) : GroupSeminorm F
     where
   toFun x := p (f x)
   map_one' := by rw [f.map_one, map_one_eq_zero p]
-  mul_le' _ _ := (congr_arg p <| f.map_mul _ _).trans_le <| map_mul_le_add p _ _
+  hMul_le' _ _ := (congr_arg p <| f.map_hMul _ _).trans_le <| map_hMul_le_add p _ _
   inv' x := by rw [map_inv, map_inv_eq_map p]
 #align group_seminorm.comp GroupSeminorm.comp
 #align add_group_seminorm.comp AddGroupSeminorm.comp
@@ -452,7 +452,7 @@ variable [CommGroup E] [CommGroup F] (p q : GroupSeminorm E) (x y : E)
 #print GroupSeminorm.comp_mul_le /-
 @[to_additive]
 theorem comp_mul_le (f g : F →* E) : p.comp (f * g) ≤ p.comp f + p.comp g := fun _ =>
-  map_mul_le_add p _ _
+  map_hMul_le_add p _ _
 #align group_seminorm.comp_mul_le GroupSeminorm.comp_mul_le
 #align add_group_seminorm.comp_add_le AddGroupSeminorm.comp_add_le
 -/
@@ -473,7 +473,7 @@ noncomputable instance : Inf (GroupSeminorm E) :=
       map_one' :=
         ciInf_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => by positivity) fun r hr =>
           ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zero]⟩
-      mul_le' := fun x y =>
+      hMul_le' := fun x y =>
         le_ciInf_add_ciInf fun u v =>
           by
           refine' ciInf_le_of_le mul_bdd_below_range_add (u * v) _
@@ -716,7 +716,7 @@ variable [Group E] [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
 instance [DecidableEq E] : One (GroupSeminorm E) :=
   ⟨{  toFun := fun x => if x = 1 then 0 else 1
       map_one' := if_pos rfl
-      mul_le' := fun x y => by
+      hMul_le' := fun x y => by
         by_cases hx : x = 1
         · rw [if_pos hx, hx, one_mul, zero_add]
         · rw [if_neg hx]
@@ -739,7 +739,7 @@ instance : SMul R (GroupSeminorm E) :=
       map_one' := by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_one_eq_zero p,
           MulZeroClass.mul_zero]
-      mul_le' := fun _ _ =>
+      hMul_le' := fun _ _ =>
         by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul]
         exact
@@ -861,7 +861,7 @@ instance groupNormClass : GroupNormClass (GroupNorm E) E ℝ
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_one_eq_zero f := f.map_one'
-  map_mul_le_add f := f.mul_le'
+  map_hMul_le_add f := f.hMul_le'
   map_inv_eq_map f := f.inv'
   eq_one_of_map_eq_zero f := f.eq_one_of_map_eq_zero'
 #align group_norm.group_norm_class GroupNorm.groupNormClass

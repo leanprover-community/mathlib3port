@@ -46,7 +46,7 @@ protected def pointwiseMulAction : MulAction M (Subring R)
     where
   smul a S := S.map (MulSemiringAction.toRingHom _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
-  mul_smul a₁ a₂ S :=
+  hMul_smul a₁ a₂ S :=
     (congr_arg (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 #align subring.pointwise_mul_action Subring.pointwiseMulAction
 -/

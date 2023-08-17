@@ -86,7 +86,7 @@ theorem affineIndependent_of_toMatrix_right_inv [DecidableEq ι'] (p : ι' → P
       finset.univ.map_affine_combination p w₁ hw₁, ← finset.univ.map_affine_combination p w₂ hw₂,
       hweq]
   replace hweq' := congr_arg (fun w => A.vec_mul w) hweq'
-  simpa only [Matrix.vecMul_vecMul, ← Matrix.mul_eq_mul, hA, Matrix.vecMul_one] using hweq'
+  simpa only [Matrix.vecMul_vecMul, ← Matrix.hMul_eq_hMul, hA, Matrix.vecMul_one] using hweq'
 #align affine_basis.affine_independent_of_to_matrix_right_inv AffineBasis.affineIndependent_of_toMatrix_right_inv
 -/
 
@@ -163,7 +163,7 @@ theorem isUnit_toMatrix_iff [Nontrivial k] (p : ι → P) :
   by
   constructor
   · rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.to_matrix p⟩
-    rw [Matrix.mul_eq_mul] at hA hA' 
+    rw [Matrix.hMul_eq_hMul] at hA hA' 
     exact
       ⟨b.affine_independent_of_to_matrix_right_inv p hA,
         b.affine_span_eq_top_of_to_matrix_left_inv p hA'⟩

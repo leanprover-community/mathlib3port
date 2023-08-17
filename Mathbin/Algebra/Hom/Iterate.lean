@@ -57,9 +57,9 @@ theorem iterate_map_one (f : M →* M) (n : ℕ) : (f^[n]) 1 = 1 :=
 -/
 
 @[simp, to_additive]
-theorem iterate_map_mul (f : M →* M) (n : ℕ) (x y) : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
-  Semiconj₂.iterate f.map_mul n x y
-#align monoid_hom.iterate_map_mul MonoidHom.iterate_map_mul
+theorem iterate_map_hMul (f : M →* M) (n : ℕ) (x y) : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
+  Semiconj₂.iterate f.map_hMul n x y
+#align monoid_hom.iterate_map_mul MonoidHom.iterate_map_hMul
 #align add_monoid_hom.iterate_map_add AddMonoidHom.iterate_map_add
 
 end
@@ -165,9 +165,9 @@ theorem iterate_map_add : (f^[n]) (x + y) = (f^[n]) x + (f^[n]) y :=
   f.toAddMonoidHom.iterate_map_add n x y
 #align ring_hom.iterate_map_add RingHom.iterate_map_add
 
-theorem iterate_map_mul : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
-  f.toMonoidHom.iterate_map_mul n x y
-#align ring_hom.iterate_map_mul RingHom.iterate_map_mul
+theorem iterate_map_hMul : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
+  f.toMonoidHom.iterate_map_hMul n x y
+#align ring_hom.iterate_map_mul RingHom.iterate_map_hMul
 
 #print RingHom.iterate_map_pow /-
 theorem iterate_map_pow (a) (n m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
@@ -249,7 +249,7 @@ theorem pow_iterate (n : ℕ) (j : ℕ) : (fun x : G => x ^ n)^[j] = fun x => x 
   letI : MulAction ℕ G :=
     { smul := fun n g => g ^ n
       one_smul := pow_one
-      mul_smul := fun m n g => pow_mul' g m n }
+      hMul_smul := fun m n g => pow_mul' g m n }
   smul_iterate n j
 #align pow_iterate pow_iterate
 #align nsmul_iterate nsmul_iterate
@@ -267,7 +267,7 @@ theorem zpow_iterate (n : ℤ) (j : ℕ) : (fun x : G => x ^ n)^[j] = fun x => x
   letI : MulAction ℤ G :=
     { smul := fun n g => g ^ n
       one_smul := zpow_one
-      mul_smul := fun m n g => zpow_mul' g m n }
+      hMul_smul := fun m n g => zpow_mul' g m n }
   smul_iterate n j
 #align zpow_iterate zpow_iterate
 #align zsmul_iterate zsmul_iterate

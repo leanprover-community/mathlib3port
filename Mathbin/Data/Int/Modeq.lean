@@ -252,7 +252,7 @@ protected theorem mul_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [
 
 #print Int.ModEq.mul /-
 protected theorem mul (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a * c ≡ b * d [ZMOD n] :=
-  (h₂.mul_left _).trans (h₁.mul_right _)
+  (h₂.hMul_left _).trans (h₁.hMul_right _)
 #align int.modeq.mul Int.ModEq.mul
 -/
 

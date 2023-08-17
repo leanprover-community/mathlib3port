@@ -79,11 +79,12 @@ theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R
     obtain ⟨b, hb⟩ := h
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b
     use Ideal.Quotient.mk _ b
-    rw [← (Ideal.Quotient.mk _).map_one, ← (Ideal.Quotient.mk _).map_mul, Ideal.Quotient.eq] at hb ⊢
+    rw [← (Ideal.Quotient.mk _).map_one, ← (Ideal.Quotient.mk _).map_hMul, Ideal.Quotient.eq] at hb
+      ⊢
     exact h hb
   obtain ⟨⟨x, y, h1, h2⟩, rfl : x = _⟩ := this
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
-  rw [← (Ideal.Quotient.mk _).map_mul, ← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq,
+  rw [← (Ideal.Quotient.mk _).map_hMul, ← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq,
     Ideal.mem_jacobson_bot] at h1 h2 
   specialize h1 1
   simp at h1 

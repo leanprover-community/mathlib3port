@@ -49,7 +49,7 @@ variable {F R S : Type _} (x y : R) (r : ℝ)
 /-- A seminorm on a ring `R` is a function `f : R → ℝ` that preserves zero, takes nonnegative
   values, is subadditive and submultiplicative and such that `f (-x) = f x` for all `x ∈ R`. -/
 structure RingSeminorm (R : Type _) [NonUnitalNonAssocRing R] extends AddGroupSeminorm R where
-  mul_le' : ∀ x y : R, to_fun (x * y) ≤ to_fun x * to_fun y
+  hMul_le' : ∀ x y : R, to_fun (x * y) ≤ to_fun x * to_fun y
 #align ring_seminorm RingSeminorm
 -/
 
@@ -93,7 +93,7 @@ instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R ℝ
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
   map_add_le_add f := f.add_le'
-  map_mul_le_mul f := f.mul_le'
+  map_hMul_le_hMul f := f.hMul_le'
   map_neg_eq_map f := f.neg'
 #align ring_seminorm.ring_seminorm_class RingSeminorm.ringSeminormClass
 -/
@@ -117,7 +117,7 @@ theorem ext {p q : RingSeminorm R} : (∀ x, p x = q x) → p = q :=
 -/
 
 instance : Zero (RingSeminorm R) :=
-  ⟨{ AddGroupSeminorm.hasZero.zero with mul_le' := fun _ _ => (MulZeroClass.zero_mul _).ge }⟩
+  ⟨{ AddGroupSeminorm.hasZero.zero with hMul_le' := fun _ _ => (MulZeroClass.zero_mul _).ge }⟩
 
 #print RingSeminorm.eq_zero_iff /-
 theorem eq_zero_iff {p : RingSeminorm R} : p = 0 ↔ ∀ x, p x = 0 :=
@@ -137,7 +137,7 @@ instance : Inhabited (RingSeminorm R) :=
 every other element. -/
 instance [DecidableEq R] : One (RingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with
-      mul_le' := fun x y => by
+      hMul_le' := fun x y => by
         by_cases h : x * y = 0
         ·
           refine' (if_pos h).trans_le (mul_nonneg _ _) <;>
@@ -181,7 +181,7 @@ end RingSeminorm
 def normRingSeminorm (R : Type _) [NonUnitalSeminormedRing R] : RingSeminorm R :=
   { normAddGroupSeminorm R with
     toFun := norm
-    mul_le' := norm_mul_le }
+    hMul_le' := norm_mul_le }
 #align norm_ring_seminorm normRingSeminorm
 -/
 
@@ -196,7 +196,7 @@ instance ringNormClass : RingNormClass (RingNorm R) R ℝ
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
   map_add_le_add f := f.add_le'
-  map_mul_le_mul f := f.mul_le'
+  map_hMul_le_hMul f := f.hMul_le'
   map_neg_eq_map f := f.neg'
   eq_zero_of_map_eq_zero f := f.eq_zero_of_map_eq_zero'
 #align ring_norm.ring_norm_class RingNorm.ringNormClass
@@ -249,7 +249,7 @@ instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R ℝ
   map_zero f := f.map_zero'
   map_one f := f.map_one'
   map_add_le_add f := f.add_le'
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_neg_eq_map f := f.neg'
 #align mul_ring_seminorm.mul_ring_seminorm_class MulRingSeminorm.mulRingSeminormClass
 -/
@@ -310,7 +310,7 @@ instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R ℝ
   map_zero f := f.map_zero'
   map_one f := f.map_one'
   map_add_le_add f := f.add_le'
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_neg_eq_map f := f.neg'
   eq_zero_of_map_eq_zero f := f.eq_zero_of_map_eq_zero'
 #align mul_ring_norm.mul_ring_norm_class MulRingNorm.mulRingNormClass

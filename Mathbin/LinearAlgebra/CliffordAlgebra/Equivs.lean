@@ -322,14 +322,14 @@ def quaternionBasis : QuaternionAlgebra.Basis (CliffordAlgebra (Q c₁ c₂)) c�
   i := ι (Q c₁ c₂) (1, 0)
   j := ι (Q c₁ c₂) (0, 1)
   k := ι (Q c₁ c₂) (1, 0) * ι (Q c₁ c₂) (0, 1)
-  i_mul_i := by
+  i_hMul_i := by
     rw [ι_sq_scalar, Q_apply, ← Algebra.algebraMap_eq_smul_one]
     simp
-  j_mul_j := by
+  j_hMul_j := by
     rw [ι_sq_scalar, Q_apply, ← Algebra.algebraMap_eq_smul_one]
     simp
-  i_mul_j := rfl
-  j_mul_i := by
+  i_hMul_j := rfl
+  j_hMul_i := by
     rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticForm.polar]
     simp
 #align clifford_algebra_quaternion.quaternion_basis CliffordAlgebraQuaternion.quaternionBasis

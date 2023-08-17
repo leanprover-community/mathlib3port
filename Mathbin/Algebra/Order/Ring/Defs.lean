@@ -156,7 +156,7 @@ multiplication by a nonnegative number is monotone. -/
 @[protect_proj]
 class OrderedRing (α : Type u) extends Ring α, OrderedAddCommGroup α where
   zero_le_one : 0 ≤ (1 : α)
-  mul_nonneg : ∀ a b : α, 0 ≤ a → 0 ≤ b → 0 ≤ a * b
+  hMul_nonneg : ∀ a b : α, 0 ≤ a → 0 ≤ b → 0 ≤ a * b
 #align ordered_ring OrderedRing
 -/
 
@@ -833,7 +833,7 @@ instance (priority := 100) StrictOrderedRing.toStrictOrderedSemiring : StrictOrd
 @[reducible]
 def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRing α :=
   { ‹StrictOrderedRing α›, Ring.toSemiring with
-    mul_nonneg := fun a b ha hb =>
+    hMul_nonneg := fun a b ha hb =>
       by
       obtain ha | ha := Decidable.eq_or_lt_of_le ha
       · rw [← ha, MulZeroClass.zero_mul]
@@ -847,7 +847,7 @@ def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRin
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedRing.toOrderedRing : OrderedRing α :=
   { ‹StrictOrderedRing α› with
-    mul_nonneg := fun a b =>
+    hMul_nonneg := fun a b =>
       letI := @StrictOrderedRing.toOrderedRing' α _ (Classical.decRel _)
       mul_nonneg }
 #align strict_ordered_ring.to_ordered_ring StrictOrderedRing.toOrderedRing
@@ -1319,11 +1319,11 @@ instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
     (inferInstance :
       Nontrivial
         α) with
-    mul_left_cancel_of_ne_zero := fun a b c ha h =>
+    hMul_left_cancel_of_ne_zero := fun a b c ha h =>
       by
       rw [← sub_eq_zero, ← mul_sub] at h 
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
-    mul_right_cancel_of_ne_zero := fun a b c hb h =>
+    hMul_right_cancel_of_ne_zero := fun a b c hb h =>
       by
       rw [← sub_eq_zero, ← sub_mul] at h 
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb) }

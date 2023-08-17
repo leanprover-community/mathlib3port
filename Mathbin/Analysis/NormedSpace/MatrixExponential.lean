@@ -73,38 +73,30 @@ open scoped Matrix BigOperators
 
 section HacksForPiInstanceSearch
 
-#print Function.topologicalRing /-
 /-- A special case of `pi.topological_ring` for when `R` is not dependently typed. -/
 instance Function.topologicalRing (I : Type _) (R : Type _) [NonUnitalRing R] [TopologicalSpace R]
     [TopologicalRing R] : TopologicalRing (I → R) :=
   Pi.instTopologicalRing
 #align function.topological_ring Function.topologicalRing
--/
 
-#print Function.algebraRing /-
 /-- A special case of `function.algebra` for when A is a `ring` not a `semiring` -/
 instance Function.algebraRing (I : Type _) {R : Type _} (A : Type _) [CommSemiring R] [Ring A]
     [Algebra R A] : Algebra R (I → A) :=
   Pi.algebra _ _
 #align function.algebra_ring Function.algebraRing
--/
 
-#print Pi.matrixAlgebra /-
 /-- A special case of `pi.algebra` for when `f = λ i, matrix (m i) (m i) A`. -/
 instance Pi.matrixAlgebra (I R A : Type _) (m : I → Type _) [CommSemiring R] [Semiring A]
     [Algebra R A] [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)] :
     Algebra R (∀ i, Matrix (m i) (m i) A) :=
   @Pi.algebra I R (fun i => Matrix (m i) (m i) A) _ _ fun i => Matrix.instAlgebra
 #align pi.matrix_algebra Pi.matrixAlgebra
--/
 
-#print Pi.matrix_topologicalRing /-
 /-- A special case of `pi.topological_ring` for when `f = λ i, matrix (m i) (m i) A`. -/
 instance Pi.matrix_topologicalRing (I A : Type _) (m : I → Type _) [Ring A] [TopologicalSpace A]
     [TopologicalRing A] [∀ i, Fintype (m i)] : TopologicalRing (∀ i, Matrix (m i) (m i) A) :=
   @Pi.instTopologicalRing _ (fun i => Matrix (m i) (m i) A) _ _ fun i => Matrix.topologicalRing
 #align pi.matrix_topological_ring Pi.matrix_topologicalRing
--/
 
 end HacksForPiInstanceSearch
 

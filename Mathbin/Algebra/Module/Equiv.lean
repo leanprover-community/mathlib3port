@@ -768,7 +768,7 @@ instance automorphismGroup : Group (M ≃ₗ[R] M)
   mul_assoc f g h := rfl
   mul_one f := ext fun x => rfl
   one_mul f := ext fun x => rfl
-  mul_left_inv f := ext <| f.left_inv
+  hMul_left_inv f := ext <| f.left_inv
 #align linear_equiv.automorphism_group LinearEquiv.automorphismGroup
 -/
 
@@ -794,7 +794,7 @@ instance applyDistribMulAction : DistribMulAction (M ≃ₗ[R] M) M
   smul_zero := LinearEquiv.map_zero
   smul_add := LinearEquiv.map_add
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align linear_equiv.apply_distrib_mul_action LinearEquiv.applyDistribMulAction
 -/
 
@@ -895,7 +895,7 @@ This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 def toModuleAut : S →* M ≃ₗ[R] M where
   toFun := toLinearEquiv R M
   map_one' := LinearEquiv.ext <| one_smul _
-  map_mul' a b := LinearEquiv.ext <| mul_smul _ _
+  map_mul' a b := LinearEquiv.ext <| hMul_smul _ _
 #align distrib_mul_action.to_module_aut DistribMulAction.toModuleAut
 -/
 

@@ -60,7 +60,7 @@ structure IsPicardLindelof {E : Type _} [NormedAddCommGroup E] (v : ℝ → E �
   lipschitz : ∀ t ∈ Icc t_min t_max, LipschitzOnWith L (v t) (closedBall x₀ R)
   cont : ∀ x ∈ closedBall x₀ R, ContinuousOn (fun t : ℝ => v t x) (Icc t_min t_max)
   norm_le : ∀ t ∈ Icc t_min t_max, ∀ x ∈ closedBall x₀ R, ‖v t x‖ ≤ C
-  C_mul_le_R : (C : ℝ) * LinearOrder.max (t_max - t₀) (t₀ - t_min) ≤ R
+  C_hMul_le_R : (C : ℝ) * LinearOrder.max (t_max - t₀) (t₀ - t_min) ≤ R
 #align is_picard_lindelof IsPicardLindelof
 -/
 
@@ -97,7 +97,7 @@ instance : Inhabited (PicardLindelof E) :=
         lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _
         cont := fun _ _ => by simpa only [Pi.zero_apply] using continuousOn_const
         norm_le := fun t ht x hx => norm_zero.le
-        C_mul_le_R := (MulZeroClass.zero_mul _).le }⟩⟩
+        C_hMul_le_R := (MulZeroClass.zero_mul _).le }⟩⟩
 
 #print PicardLindelof.tMin_le_tMax /-
 theorem tMin_le_tMax : v.tMin ≤ v.tMax :=
@@ -260,7 +260,7 @@ protected theorem mem_closedBall (t : Icc v.tMin v.tMax) : f t ∈ closedBall v.
     dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by rw [f.map_t₀']
     _ ≤ v.C * dist t v.t₀ := (f.lipschitz.dist_le_mul _ _)
     _ ≤ v.C * v.tDist := (mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.C.2)
-    _ ≤ v.r := v.is_pl.C_mul_le_R
+    _ ≤ v.r := v.is_pl.C_hMul_le_R
 #align picard_lindelof.fun_space.mem_closed_ball PicardLindelof.FunSpace.mem_closedBall
 -/
 
@@ -536,7 +536,8 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
           (subset_inter_iff.mp (subset_trans (closed_ball_subset_ball (half_lt_self hr)) hball)).2
       cont := fun x hx => continuousOn_const
       norm_le := fun t ht x hx => hC ⟨x, hx, rfl⟩
-      C_mul_le_R := by
+      C_hMul_le_R :=
+        by
         rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
         split_ifs
         · rwa [← h] at hr' 

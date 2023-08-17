@@ -44,9 +44,9 @@ theorem isRightRegular_of_non_zero_divisor [NonUnitalNonAssocRing α] (k : α)
 theorem isRegular_of_ne_zero' [NonUnitalNonAssocRing α] [NoZeroDivisors α] {k : α} (hk : k ≠ 0) :
     IsRegular k :=
   ⟨isLeftRegular_of_non_zero_divisor k fun x h =>
-      (NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left hk,
+      (NoZeroDivisors.eq_zero_or_eq_zero_of_hMul_eq_zero h).resolve_left hk,
     isRightRegular_of_non_zero_divisor k fun x h =>
-      (NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hk⟩
+      (NoZeroDivisors.eq_zero_or_eq_zero_of_hMul_eq_zero h).resolve_right hk⟩
 #align is_regular_of_ne_zero' isRegular_of_ne_zero'
 -/
 
@@ -67,9 +67,9 @@ def NoZeroDivisors.toCancelMonoidWithZero [Ring α] [NoZeroDivisors α] : Cancel
     (by infer_instance :
       MonoidWithZero
         α) with
-    mul_left_cancel_of_ne_zero := fun a b c ha =>
+    hMul_left_cancel_of_ne_zero := fun a b c ha =>
       @IsRegular.left _ _ _ (isRegular_of_ne_zero' ha) _ _
-    mul_right_cancel_of_ne_zero := fun a b c hb =>
+    hMul_right_cancel_of_ne_zero := fun a b c hb =>
       @IsRegular.right _ _ _ (isRegular_of_ne_zero' hb) _ _ }
 #align no_zero_divisors.to_cancel_monoid_with_zero NoZeroDivisors.toCancelMonoidWithZero
 -/

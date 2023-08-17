@@ -1441,7 +1441,7 @@ theorem eval_X : ∀ n, eval f (X n) = f n :=
 #print MvPolynomial.smul_eval /-
 @[simp]
 theorem smul_eval (x) (p : MvPolynomial σ R) (s) : eval x (s • p) = s * eval x p := by
-  rw [smul_eq_C_mul, (eval x).map_mul, eval_C]
+  rw [smul_eq_C_mul, (eval x).map_hMul, eval_C]
 #align mv_polynomial.smul_eval MvPolynomial.smul_eval
 -/
 
@@ -1564,7 +1564,7 @@ theorem eval₂_comp_right {S₂} [CommSemiring S₂] (k : S₁ →+* S₂) (f :
   · intro r; rw [eval₂_C, map_C, eval₂_C]
   · intro p q hp hq; rw [eval₂_add, k.map_add, (map f).map_add, eval₂_add, hp, hq]
   · intro p s hp
-    rw [eval₂_mul, k.map_mul, (map f).map_mul, eval₂_mul, map_X, hp, eval₂_X, eval₂_X]
+    rw [eval₂_mul, k.map_mul, (map f).map_hMul, eval₂_mul, map_X, hp, eval₂_X, eval₂_X]
 #align mv_polynomial.eval₂_comp_right MvPolynomial.eval₂_comp_right
 -/
 
@@ -1576,7 +1576,7 @@ theorem map_eval₂ (f : R →+* S₁) (g : S₂ → MvPolynomial S₃ R) (p : M
   · intro r; rw [eval₂_C, map_C, map_C, eval₂_C]
   · intro p q hp hq; rw [eval₂_add, (map f).map_add, hp, hq, (map f).map_add, eval₂_add]
   · intro p s hp
-    rw [eval₂_mul, (map f).map_mul, hp, (map f).map_mul, map_X, eval₂_mul, eval₂_X, eval₂_X]
+    rw [eval₂_mul, (map f).map_hMul, hp, (map f).map_hMul, map_X, eval₂_mul, eval₂_X, eval₂_X]
 #align mv_polynomial.map_eval₂ MvPolynomial.map_eval₂
 -/
 
@@ -1586,7 +1586,7 @@ theorem coeff_map (p : MvPolynomial σ R) : ∀ m : σ →₀ ℕ, coeff m (map 
   apply MvPolynomial.induction_on p <;> clear p
   · intro r m; rw [map_C]; simp only [coeff_C]; split_ifs; · rfl; rw [f.map_zero]
   · intro p q hp hq m; simp only [hp, hq, (map f).map_add, coeff_add]; rw [f.map_add]
-  · intro p i hp m; simp only [hp, (map f).map_mul, map_X]
+  · intro p i hp m; simp only [hp, (map f).map_hMul, map_X]
     simp only [hp, mem_support_iff, coeff_mul_X']
     split_ifs; · rfl
     rw [f.map_zero]

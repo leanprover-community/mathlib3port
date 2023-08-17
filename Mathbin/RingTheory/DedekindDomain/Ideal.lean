@@ -728,7 +728,7 @@ noncomputable instance FractionalIdeal.semifield : Semifield (FractionalIdeal A�
     inv := fun I => I⁻¹
     inv_zero := inv_zero' _
     div := (· / ·)
-    div_eq_mul_inv := FractionalIdeal.div_eq_mul_inv
+    div_eq_hMul_inv := FractionalIdeal.div_eq_mul_inv
     mul_inv_cancel := fun I => FractionalIdeal.mul_inv_cancel }
 #align fractional_ideal.semifield FractionalIdeal.semifield
 -/

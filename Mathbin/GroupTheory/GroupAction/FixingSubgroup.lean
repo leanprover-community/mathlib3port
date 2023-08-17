@@ -55,7 +55,7 @@ def fixingSubmonoid (s : Set α) : Submonoid M
     where
   carrier := {ϕ : M | ∀ x : s, ϕ • (x : α) = x}
   one_mem' _ := one_smul _ _
-  mul_mem' x y hx hy z := by rw [mul_smul, hy z, hx z]
+  hMul_mem' x y hx hy z := by rw [mul_smul, hy z, hx z]
 #align fixing_submonoid fixingSubmonoid
 #align fixing_add_submonoid fixingAddSubmonoid
 -/

@@ -53,7 +53,7 @@ section OrderedInstances
 @[to_additive]
 instance OrderedCommMonoid.to_covariantClass_left (M : Type _) [OrderedCommMonoid M] :
     CovariantClass M M (· * ·) (· ≤ ·)
-    where elim a b c bc := OrderedCommMonoid.mul_le_mul_left _ _ bc a
+    where elim a b c bc := OrderedCommMonoid.hMul_le_hMul_left _ _ bc a
 #align ordered_comm_monoid.to_covariant_class_left OrderedCommMonoid.to_covariantClass_left
 #align ordered_add_comm_monoid.to_covariant_class_left OrderedAddCommMonoid.to_covariantClass_left
 -/
@@ -64,7 +64,7 @@ pick up a `covariant_class M M (function.swap (*)) (≤)` instance without it (s
 @[to_additive]
 instance OrderedCommMonoid.to_covariantClass_right (M : Type _) [OrderedCommMonoid M] :
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
-  covariant_swap_mul_le_of_covariant_mul_le M
+  covariant_swap_hMul_le_of_covariant_hMul_le M
 #align ordered_comm_monoid.to_covariant_class_right OrderedCommMonoid.to_covariantClass_right
 #align ordered_add_comm_monoid.to_covariant_class_right OrderedAddCommMonoid.to_covariantClass_right
 -/

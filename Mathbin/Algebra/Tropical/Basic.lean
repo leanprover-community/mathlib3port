@@ -615,7 +615,7 @@ instance [AddCommMonoid R] : CommMonoid (Tropical R) :=
 instance [AddGroup R] : Group (Tropical R) :=
   { Tropical.monoid with
     inv := Inv.inv
-    mul_left_inv := fun _ => untrop_injective <| add_left_neg _
+    hMul_left_inv := fun _ => untrop_injective <| add_left_neg _
     zpow := fun n x => trop <| n • untrop x
     zpow_zero' := fun _ => untrop_injective <| zero_zsmul _
     zpow_succ' := fun _ _ => untrop_injective <| AddGroup.zsmul_succ' _ _

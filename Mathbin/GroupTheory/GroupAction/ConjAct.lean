@@ -208,8 +208,8 @@ instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M
     where
   smul := (· • ·)
   one_smul := by simp [units_smul_def]
-  mul_smul := by simp [units_smul_def, mul_assoc, mul_inv_rev]
-  smul_mul := by simp [units_smul_def, mul_assoc]
+  hMul_smul := by simp [units_smul_def, mul_assoc, mul_inv_rev]
+  smul_hMul := by simp [units_smul_def, mul_assoc]
   smul_one := by simp [units_smul_def]
 #align conj_act.units_mul_distrib_mul_action ConjAct.unitsMulDistribMulAction
 -/
@@ -271,7 +271,7 @@ instance mulAction₀ : MulAction (ConjAct G₀) G₀
     where
   smul := (· • ·)
   one_smul := by simp [smul_def]
-  mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
+  hMul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
 #align conj_act.mul_action₀ ConjAct.mulAction₀
 -/
 
@@ -312,10 +312,10 @@ variable [Group G]
 instance : MulDistribMulAction (ConjAct G) G
     where
   smul := (· • ·)
-  smul_mul := by simp [smul_def, mul_assoc]
+  smul_hMul := by simp [smul_def, mul_assoc]
   smul_one := by simp [smul_def]
   one_smul := by simp [smul_def]
-  mul_smul := by simp [smul_def, mul_assoc]
+  hMul_smul := by simp [smul_def, mul_assoc]
 
 #print ConjAct.smulCommClass /-
 instance smulCommClass [SMul α G] [SMulCommClass α G G] [IsScalarTower α G G] :

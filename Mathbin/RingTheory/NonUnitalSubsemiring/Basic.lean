@@ -35,7 +35,7 @@ variable {R : Type u} {S : Type v} {T : Type w} [NonUnitalNonAssocSemiring R] (M
 are both an additive submonoid and also a multiplicative subsemigroup. -/
 class NonUnitalSubsemiringClass (S : Type _) (R : Type u) [NonUnitalNonAssocSemiring R]
     [SetLike S R] extends AddSubmonoidClass S R where
-  mul_mem : ∀ {s : S} {a b : R}, a ∈ s → b ∈ s → a * b ∈ s
+  hMul_mem : ∀ {s : S} {a b : R}, a ∈ s → b ∈ s → a * b ∈ s
 #align non_unital_subsemiring_class NonUnitalSubsemiringClass
 -/
 
@@ -133,7 +133,7 @@ instance : NonUnitalSubsemiringClass (NonUnitalSubsemiring R) R
     where
   zero_mem := zero_mem'
   add_mem := add_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
 
 #print NonUnitalSubsemiring.mem_carrier /-
 @[simp]
@@ -224,7 +224,7 @@ protected def mk' (s : Set R) (sg : Subsemigroup R) (hg : ↑sg = s) (sa : AddSu
   carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
-  mul_mem' x y := by simpa only [← hg] using sg.mul_mem
+  hMul_mem' x y := by simpa only [← hg] using sg.mul_mem
 #align non_unital_subsemiring.mk' NonUnitalSubsemiring.mk'
 -/
 
@@ -502,7 +502,7 @@ instance : Bot (NonUnitalSubsemiring R) :=
   ⟨{  carrier := {0}
       add_mem' := fun _ _ _ _ => by simp_all
       zero_mem' := Set.mem_singleton 0
-      mul_mem' := fun _ _ _ _ => by simp_all }⟩
+      hMul_mem' := fun _ _ _ _ => by simp_all }⟩
 
 instance : Inhabited (NonUnitalSubsemiring R) :=
   ⟨⊥⟩
@@ -790,7 +790,7 @@ namespace Subsemigroup
 #print Subsemigroup.nonUnitalSubsemiringClosure /-
 /-- The additive closure of a non-unital subsemigroup is a non-unital subsemiring. -/
 def nonUnitalSubsemiringClosure (M : Subsemigroup R) : NonUnitalSubsemiring R :=
-  { AddSubmonoid.closure (M : Set R) with mul_mem' := fun x y => MulMemClass.mul_mem_add_closure }
+  { AddSubmonoid.closure (M : Set R) with hMul_mem' := fun x y => MulMemClass.mul_mem_add_closure }
 #align subsemigroup.non_unital_subsemiring_closure Subsemigroup.nonUnitalSubsemiringClosure
 -/
 

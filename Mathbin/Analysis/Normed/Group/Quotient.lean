@@ -729,7 +729,7 @@ instance Ideal.Quotient.semiNormedCommRing : SeminormedCommRing (R ⧸ I) :=
     Submodule.Quotient.seminormedAddCommGroup
       I with
     mul_comm := mul_comm
-    norm_mul := fun x y =>
+    norm_hMul := fun x y =>
       le_of_forall_pos_le_add fun ε hε =>
         by
         have :=

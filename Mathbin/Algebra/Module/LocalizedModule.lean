@@ -446,7 +446,7 @@ instance isModule : Module (Localization S) (LocalizedModule S M)
     where
   smul := (· • ·)
   one_smul := one_smul'
-  mul_smul := mul_smul'
+  hMul_smul := hMul_smul'
   smul_add := smul_add'
   smul_zero := smul_zero'
   add_smul := add_smul'
@@ -1148,7 +1148,7 @@ theorem mk'_mul_mk'_of_map_mul {M M' : Type _} [Semiring M] [Semiring M'] [Modul
 theorem mk'_mul_mk' {M M' : Type _} [Semiring M] [Semiring M'] [Algebra R M] [Algebra R M']
     (f : M →ₐ[R] M') [IsLocalizedModule S f.toLinearMap] (m₁ m₂ : M) (s₁ s₂ : S) :
     mk' f.toLinearMap m₁ s₁ * mk' f.toLinearMap m₂ s₂ = mk' f.toLinearMap (m₁ * m₂) (s₁ * s₂) :=
-  mk'_mul_mk'_of_map_mul f.toLinearMap f.map_mul m₁ m₂ s₁ s₂
+  mk'_mul_mk'_of_map_mul f.toLinearMap f.map_hMul m₁ m₂ s₁ s₂
 #align is_localized_module.mk'_mul_mk' IsLocalizedModule.mk'_mul_mk'
 -/
 
@@ -1210,14 +1210,14 @@ theorem mkOfAlgebra {R S S' : Type _} [CommRing R] [CommRing S] [CommRing S'] [A
   by
   replace h₃ := fun x =>
     Iff.intro (h₃ x) fun ⟨⟨m, hm⟩, e⟩ =>
-      (h₁ m hm).mul_left_cancel <| by rw [← Algebra.smul_def];
+      (h₁ m hm).hMul_left_cancel <| by rw [← Algebra.smul_def];
         simpa [Submonoid.smul_def] using f.congr_arg e
   constructor
   · intro x
     rw [Module.End_isUnit_iff]
     constructor
     · rintro a b (e : x • a = x • b); simp_rw [Submonoid.smul_def, Algebra.smul_def] at e 
-      exact (h₁ x x.2).mul_left_cancel e
+      exact (h₁ x x.2).hMul_left_cancel e
     · intro a; refine' ⟨((h₁ x x.2).Unit⁻¹ : _) * a, _⟩; change (x : R) • (_ * a) = _
       rw [Algebra.smul_def, ← mul_assoc, IsUnit.mul_val_inv, one_mul]
   · exact h₂

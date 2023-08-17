@@ -157,7 +157,7 @@ def map (X : TopCat.{u}ᵒᵖ) {R S : TopCommRingCat.{u}} (φ : R ⟶ S) :
   map_one' := by ext <;> exact φ.1.map_one
   map_zero' := by ext <;> exact φ.1.map_zero
   map_add' := by intros <;> ext <;> apply φ.1.map_add
-  map_mul' := by intros <;> ext <;> apply φ.1.map_mul
+  map_mul' := by intros <;> ext <;> apply φ.1.map_hMul
 #align Top.continuous_functions.map TopCat.continuousFunctions.map
 -/
 

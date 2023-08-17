@@ -128,7 +128,7 @@ theorem exists_factors (a : α) :
     (fun u hu _ => ⟨0, fun _ h => h.elim, hu.Unit, one_mul _⟩) fun a i ha0 hi ih _ =>
     let ⟨s, hs⟩ := ih ha0
     ⟨i ::ₘ s, fun b H => (Multiset.mem_cons.1 H).elim (fun h => h.symm ▸ hi) (hs.1 b), by
-      rw [s.prod_cons i]; exact hs.2.mul_left i⟩
+      rw [s.prod_cons i]; exact hs.2.hMul_left i⟩
 #align wf_dvd_monoid.exists_factors WfDvdMonoid.exists_factors
 -/
 
@@ -442,7 +442,7 @@ theorem irreducible_iff_prime_of_exists_unique_irreducible_factors [CancelCommMo
           · exact fun i hi => (Multiset.mem_add.1 hi).elim (hfa.1 _) (hfb.1 _)
           calc
             Multiset.prod (p ::ₘ fx) ~ᵤ a * b := by
-              rw [hx, Multiset.prod_cons] <;> exact hfx.2.mul_left _
+              rw [hx, Multiset.prod_cons] <;> exact hfx.2.hMul_left _
             _ ~ᵤ fa.Prod * fb.Prod := (hfa.2.symm.mul_mul hfb.2.symm)
             _ = _ := by rw [Multiset.prod_add]
         exact
@@ -553,7 +553,7 @@ theorem exists_mem_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p
           Multiset.prod (factors a) ~ᵤ a := factors_prod ha0
           _ = p * b := hb
           _ ~ᵤ Multiset.prod (p ::ₘ factors b) := by
-            rw [Multiset.prod_cons] <;> exact (factors_prod hb0).symm.mul_left _)
+            rw [Multiset.prod_cons] <;> exact (factors_prod hb0).symm.hMul_left _)
   Multiset.exists_mem_of_rel_of_mem this (by simp)
 #align unique_factorization_monoid.exists_mem_factors_of_dvd UniqueFactorizationMonoid.exists_mem_factors_of_dvd
 -/
@@ -723,7 +723,7 @@ theorem exists_mem_normalizedFactors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irr
           Multiset.prod (normalizedFactors a) ~ᵤ a := normalizedFactors_prod ha0
           _ = p * b := hb
           _ ~ᵤ Multiset.prod (p ::ₘ normalizedFactors b) := by
-            rw [Multiset.prod_cons] <;> exact (normalized_factors_prod hb0).symm.mul_left _)
+            rw [Multiset.prod_cons] <;> exact (normalized_factors_prod hb0).symm.hMul_left _)
   Multiset.exists_mem_of_rel_of_mem this (by simp)
 #align unique_factorization_monoid.exists_mem_normalized_factors_of_dvd UniqueFactorizationMonoid.exists_mem_normalizedFactors_of_dvd
 -/
@@ -1013,7 +1013,7 @@ theorem dvd_of_dvd_mul_left_of_no_prime_factors {a b c : R} (ha : a ≠ 0) :
   · rintro _ ⟨x, rfl⟩ _ a_dvd_bx
     apply units.dvd_mul_right.mp a_dvd_bx
   · intro c p hc hp ih no_factors a_dvd_bpc
-    apply ih fun q dvd_a dvd_c hq => no_factors dvd_a (dvd_c.mul_left _) hq
+    apply ih fun q dvd_a dvd_c hq => no_factors dvd_a (dvd_c.hMul_left _) hq
     rw [mul_left_comm] at a_dvd_bpc 
     refine' Or.resolve_left (hp.left_dvd_or_dvd_right_of_dvd_mul a_dvd_bpc) fun h => _
     exact no_factors h (dvd_mul_right p c) hp

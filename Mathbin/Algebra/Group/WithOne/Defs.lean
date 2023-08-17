@@ -346,7 +346,7 @@ theorem coe_zpow [DivInvMonoid α] {a : α} (n : ℤ) : ↑(a ^ n : α) = (↑a 
 instance [DivInvMonoid α] : DivInvMonoid (WithZero α) :=
   { WithZero.hasDiv, WithZero.hasInv,
     WithZero.monoidWithZero with
-    div_eq_mul_inv := fun a b =>
+    div_eq_hMul_inv := fun a b =>
       match a, b with
       | none, _ => rfl
       | some a, none => rfl
@@ -377,7 +377,7 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
       | none, some b => rfl
       | some a, none => rfl
       | some a, some b => congr_arg some <| mul_inv_rev _ _
-    inv_eq_of_mul := fun a b =>
+    inv_eq_of_hMul := fun a b =>
       match a, b with
       | none, none => fun _ => rfl
       | none, some b => by contradiction

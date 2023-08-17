@@ -121,7 +121,7 @@ class AddAction (G : Type _) (P : Type _) [AddMonoid G] extends VAdd G P where
 @[ext, protect_proj, to_additive]
 class MulAction (α : Type _) (β : Type _) [Monoid α] extends SMul α β where
   one_smul : ∀ b : β, (1 : α) • b = b
-  mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
+  hMul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
 #align mul_action MulAction
 #align add_action AddAction
 -/
@@ -209,7 +209,7 @@ class SMulCommClass (M N α : Type _) [SMul M α] [SMul N α] : Prop where
 #align vadd_comm_class VAddCommClass
 -/
 
-export MulAction (mul_smul)
+export MulAction (hMul_smul)
 
 export AddAction (add_vadd)
 
@@ -529,7 +529,7 @@ variable [Monoid M] [MulAction M α]
 #print smul_smul /-
 @[to_additive]
 theorem smul_smul (a₁ a₂ : M) (b : α) : a₁ • a₂ • b = (a₁ * a₂) • b :=
-  (mul_smul _ _ _).symm
+  (hMul_smul _ _ _).symm
 #align smul_smul smul_smul
 #align vadd_vadd vadd_vadd
 -/
@@ -557,7 +557,7 @@ theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
 /-- `has_smul` version of `comp_mul_left` -/
 @[to_additive "`has_vadd` version of `comp_add_left`"]
 theorem comp_smul_left (a₁ a₂ : M) : (· • ·) a₁ ∘ (· • ·) a₂ = ((· • ·) (a₁ * a₂) : α → α) :=
-  funext fun _ => (mul_smul _ _ _).symm
+  funext fun _ => (hMul_smul _ _ _).symm
 #align comp_smul_left comp_smul_left
 #align comp_vadd_left comp_vadd_left
 -/
@@ -573,7 +573,7 @@ protected def Function.Injective.mulAction [SMul M β] (f : β → α) (hf : Inj
     where
   smul := (· • ·)
   one_smul x := hf <| (smul _ _).trans <| one_smul _ (f x)
-  mul_smul c₁ c₂ x := hf <| by simp only [smul, mul_smul]
+  hMul_smul c₁ c₂ x := hf <| by simp only [smul, mul_smul]
 #align function.injective.mul_action Function.Injective.mulAction
 #align function.injective.add_action Function.Injective.addAction
 -/
@@ -587,7 +587,7 @@ protected def Function.Surjective.mulAction [SMul M β] (f : α → β) (hf : Su
     where
   smul := (· • ·)
   one_smul y := by rcases hf y with ⟨x, rfl⟩; rw [← smul, one_smul]
-  mul_smul c₁ c₂ y := by rcases hf y with ⟨x, rfl⟩; simp only [← smul, mul_smul]
+  hMul_smul c₁ c₂ y := by rcases hf y with ⟨x, rfl⟩; simp only [← smul, mul_smul]
 #align function.surjective.mul_action Function.Surjective.mulAction
 #align function.surjective.add_action Function.Surjective.addAction
 -/
@@ -605,7 +605,7 @@ def Function.Surjective.mulActionLeft {R S M : Type _} [Monoid R] [MulAction R M
     MulAction S M where
   smul := (· • ·)
   one_smul b := by rw [← f.map_one, hsmul, one_smul]
-  mul_smul := hf.Forall₂.mpr fun a b x => by simp only [← f.map_mul, hsmul, mul_smul]
+  hMul_smul := hf.Forall₂.mpr fun a b x => by simp only [← f.map_mul, hsmul, mul_smul]
 #align function.surjective.mul_action_left Function.Surjective.mulActionLeft
 #align function.surjective.add_action_left Function.Surjective.addActionLeft
 -/
@@ -624,7 +624,7 @@ instance (priority := 910) Monoid.toMulAction : MulAction M M
     where
   smul := (· * ·)
   one_smul := one_mul
-  mul_smul := mul_assoc
+  hMul_smul := mul_assoc
 #align monoid.to_mul_action Monoid.toMulAction
 #align add_monoid.to_add_action AddMonoid.toAddAction
 -/
@@ -637,7 +637,7 @@ add_decl_doc AddMonoid.toAddAction
 #print IsScalarTower.left /-
 @[to_additive]
 instance IsScalarTower.left : IsScalarTower M M α :=
-  ⟨fun x y z => mul_smul x y z⟩
+  ⟨fun x y z => hMul_smul x y z⟩
 #align is_scalar_tower.left IsScalarTower.left
 #align vadd_assoc_class.left VAddAssocClass.left
 -/
@@ -695,7 +695,7 @@ def compHom [Monoid N] (g : N →* M) : MulAction N α
     where
   smul := SMul.comp.smul g
   one_smul := by simp [g.map_one, MulAction.one_smul]
-  mul_smul := by simp [g.map_mul, MulAction.mul_smul]
+  hMul_smul := by simp [g.map_mul, MulAction.hMul_smul]
 #align mul_action.comp_hom MulAction.compHom
 #align add_action.comp_hom AddAction.compHom
 -/
@@ -1033,7 +1033,7 @@ def DistribMulAction.toAddMonoidEnd : M →* AddMonoid.End A
     where
   toFun := DistribMulAction.toAddMonoidHom A
   map_one' := AddMonoidHom.ext <| one_smul M
-  map_mul' x y := AddMonoidHom.ext <| mul_smul x y
+  map_mul' x y := AddMonoidHom.ext <| hMul_smul x y
 #align distrib_mul_action.to_add_monoid_End DistribMulAction.toAddMonoidEnd
 -/
 
@@ -1090,7 +1090,7 @@ conjugation actions. -/
 @[ext]
 class MulDistribMulAction (M : Type _) (A : Type _) [Monoid M] [Monoid A] extends
     MulAction M A where
-  smul_mul : ∀ (r : M) (x y : A), r • (x * y) = r • x * r • y
+  smul_hMul : ∀ (r : M) (x y : A), r • (x * y) = r • x * r • y
   smul_one : ∀ r : M, r • (1 : A) = 1
 #align mul_distrib_mul_action MulDistribMulAction
 -/
@@ -1103,7 +1103,7 @@ variable [Monoid M] [Monoid A] [MulDistribMulAction M A]
 
 #print smul_mul' /-
 theorem smul_mul' (a : M) (b₁ b₂ : A) : a • (b₁ * b₂) = a • b₁ * a • b₂ :=
-  MulDistribMulAction.smul_mul _ _ _
+  MulDistribMulAction.smul_hMul _ _ _
 #align smul_mul' smul_mul'
 -/
 
@@ -1116,7 +1116,7 @@ protected def Function.Injective.mulDistribMulAction [Monoid B] [SMul M B] (f : 
     (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.MulAction f smul with
     smul := (· • ·)
-    smul_mul := fun c x y => hf <| by simp only [smul, f.map_mul, smul_mul']
+    smul_hMul := fun c x y => hf <| by simp only [smul, f.map_mul, smul_mul']
     smul_one := fun c => hf <| by simp only [smul, f.map_one, smul_one] }
 #align function.injective.mul_distrib_mul_action Function.Injective.mulDistribMulAction
 -/
@@ -1130,7 +1130,7 @@ protected def Function.Surjective.mulDistribMulAction [Monoid B] [SMul M B] (f :
     (hf : Surjective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.MulAction f smul with
     smul := (· • ·)
-    smul_mul := fun c x y => by
+    smul_hMul := fun c x y => by
       rcases hf x with ⟨x, rfl⟩; rcases hf y with ⟨y, rfl⟩
       simp only [smul_mul', ← smul, ← f.map_mul]
     smul_one := fun c => by simp only [← f.map_one, ← smul, smul_one] }
@@ -1147,7 +1147,7 @@ def MulDistribMulAction.compHom [Monoid N] (f : N →* M) : MulDistribMulAction 
   { MulAction.compHom A f with
     smul := SMul.comp.smul f
     smul_one := fun x => smul_one (f x)
-    smul_mul := fun x => smul_mul' (f x) }
+    smul_hMul := fun x => smul_mul' (f x) }
 #align mul_distrib_mul_action.comp_hom MulDistribMulAction.compHom
 -/
 
@@ -1180,7 +1180,7 @@ def MulDistribMulAction.toMonoidEnd : M →* Monoid.End A
     where
   toFun := MulDistribMulAction.toMonoidHom A
   map_one' := MonoidHom.ext <| one_smul M
-  map_mul' x y := MonoidHom.ext <| mul_smul x y
+  map_mul' x y := MonoidHom.ext <| hMul_smul x y
 #align mul_distrib_mul_action.to_monoid_End MulDistribMulAction.toMonoidEnd
 -/
 
@@ -1246,7 +1246,7 @@ instance Function.End.applyMulAction : MulAction (Function.End α) α
     where
   smul := (· <| ·)
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align function.End.apply_mul_action Function.End.applyMulAction
 -/
 
@@ -1274,7 +1274,7 @@ instance AddMonoid.End.applyDistribMulAction [AddMonoid α] : DistribMulAction (
   smul_zero := AddMonoidHom.map_zero
   smul_add := AddMonoidHom.map_add
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align add_monoid.End.apply_distrib_mul_action AddMonoid.End.applyDistribMulAction
 -/
 
@@ -1300,7 +1300,7 @@ def MulAction.toEndHom [Monoid M] [MulAction M α] : M →* Function.End α
     where
   toFun := (· • ·)
   map_one' := funext (one_smul M)
-  map_mul' x y := funext (mul_smul x y)
+  map_mul' x y := funext (hMul_smul x y)
 #align mul_action.to_End_hom MulAction.toEndHom
 -/
 
@@ -1397,7 +1397,7 @@ theorem ofAdd_smul [VAdd α β] (a : α) (b : β) : ofAdd a • b = a +ᵥ b :=
 instance Additive.addAction [Monoid α] [MulAction α β] : AddAction (Additive α) β
     where
   zero_vadd := MulAction.one_smul
-  add_vadd := MulAction.mul_smul
+  add_vadd := MulAction.hMul_smul
 #align additive.add_action Additive.addAction
 -/
 
@@ -1405,7 +1405,7 @@ instance Additive.addAction [Monoid α] [MulAction α β] : AddAction (Additive 
 instance Multiplicative.mulAction [AddMonoid α] [AddAction α β] : MulAction (Multiplicative α) β
     where
   one_smul := AddAction.zero_vadd
-  mul_smul := AddAction.add_vadd
+  hMul_smul := AddAction.add_vadd
 #align multiplicative.mul_action Multiplicative.mulAction
 -/
 

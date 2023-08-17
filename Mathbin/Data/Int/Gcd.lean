@@ -663,8 +663,8 @@ theorem int_gcd_helper' {d : ℕ} {x y a b : ℤ} (h₁ : (d : ℤ) ∣ x) (h₂
   refine' Nat.dvd_antisymm _ (Int.coe_nat_dvd.1 (Int.dvd_gcd h₁ h₂))
   rw [← Int.coe_nat_dvd, ← h₃]
   apply dvd_add
-  · exact (Int.gcd_dvd_left _ _).mul_right _
-  · exact (Int.gcd_dvd_right _ _).mul_right _
+  · exact (Int.gcd_dvd_left _ _).hMul_right _
+  · exact (Int.gcd_dvd_right _ _).hMul_right _
 #align tactic.norm_num.int_gcd_helper' Tactic.NormNum.int_gcd_helper'
 -/
 

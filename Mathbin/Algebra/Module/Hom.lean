@@ -37,7 +37,7 @@ instance : DistribMulAction R (A →+ B)
       map_zero' := by simp
       map_add' := fun x y => by simp [smul_add] }
   one_smul f := by simp
-  mul_smul r s f := by simp [mul_smul]
+  hMul_smul r s f := by simp [mul_smul]
   smul_add r f g := ext fun x => by simp [smul_add]
   smul_zero r := ext fun x => by simp [smul_zero]
 

@@ -275,7 +275,7 @@ instance : MulAction R (P1 →ᵃ[k] V2)
     where
   smul c f := ⟨c • f, c • f.linear, fun p v => by simp [smul_add]⟩
   one_smul f := ext fun p => one_smul _ _
-  mul_smul c₁ c₂ f := ext fun p => mul_smul _ _ _
+  hMul_smul c₁ c₂ f := ext fun p => hMul_smul _ _ _
 
 #print AffineMap.coe_smul /-
 @[simp, norm_cast]

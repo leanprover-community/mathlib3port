@@ -303,7 +303,7 @@ theorem star_im (z : ℤ√d) : (star z).im = -z.im :=
 instance : StarRing (ℤ√d)
     where
   star_involutive x := ext.mpr ⟨rfl, neg_neg _⟩
-  star_mul a b := ext.mpr ⟨by simp <;> ring, by simp <;> ring⟩
+  star_hMul a b := ext.mpr ⟨by simp <;> ring, by simp <;> ring⟩
   star_add a b := ext.mpr ⟨rfl, neg_add _ _⟩
 
 instance : Nontrivial (ℤ√d) :=
@@ -413,7 +413,7 @@ protected theorem coe_int_sub (m n : ℤ) : (↑(m - n) : ℤ√d) = ↑m - ↑n
 
 #print Zsqrtd.coe_int_mul /-
 protected theorem coe_int_mul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n :=
-  (Int.castRingHom _).map_mul _ _
+  (Int.castRingHom _).map_hMul _ _
 #align zsqrtd.coe_int_mul Zsqrtd.coe_int_mul
 -/
 
@@ -569,7 +569,7 @@ theorem sqLe_mul {d x y z w : ℕ} :
   refine' ⟨_, _, _, _⟩ <;>
     · intro xy zw
       have :=
-        Int.mul_nonneg (sub_nonneg_of_le (Int.ofNat_le_ofNat_of_le xy))
+        Int.hMul_nonneg (sub_nonneg_of_le (Int.ofNat_le_ofNat_of_le xy))
           (sub_nonneg_of_le (Int.ofNat_le_ofNat_of_le zw))
       refine' Int.le_of_ofNat_le_ofNat (le_of_sub_nonneg _)
       convert this

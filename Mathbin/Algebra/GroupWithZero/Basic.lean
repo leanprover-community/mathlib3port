@@ -97,14 +97,14 @@ variable [Mul M₀] [Zero M₀] [NoZeroDivisors M₀] {a b : M₀}
 
 #print eq_zero_of_mul_self_eq_zero /-
 theorem eq_zero_of_mul_self_eq_zero (h : a * a = 0) : a = 0 :=
-  (eq_zero_or_eq_zero_of_mul_eq_zero h).elim id id
+  (eq_zero_or_eq_zero_of_hMul_eq_zero h).elim id id
 #align eq_zero_of_mul_self_eq_zero eq_zero_of_mul_self_eq_zero
 -/
 
 #print mul_ne_zero /-
 @[field_simps]
 theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
-  mt eq_zero_or_eq_zero_of_mul_eq_zero <| not_or.mpr ⟨ha, hb⟩
+  mt eq_zero_or_eq_zero_of_hMul_eq_zero <| not_or.mpr ⟨ha, hb⟩
 #align mul_ne_zero mul_ne_zero
 -/
 
@@ -112,12 +112,10 @@ end Mul
 
 namespace NeZero
 
-#print NeZero.mul /-
-instance mul [Zero M₀] [Mul M₀] [NoZeroDivisors M₀] {x y : M₀} [NeZero x] [NeZero y] :
+instance hMul [Zero M₀] [Mul M₀] [NoZeroDivisors M₀] {x y : M₀} [NeZero x] [NeZero y] :
     NeZero (x * y) :=
   ⟨mul_ne_zero out out⟩
-#align ne_zero.mul NeZero.mul
--/
+#align ne_zero.mul NeZero.hMul
 
 end NeZero
 
@@ -375,7 +373,7 @@ instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ 
       by_cases hb : b = 0; · simp [hb]
       refine' inv_eq_of_mul _
       simp [mul_assoc, ha, hb]
-    inv_eq_of_mul := fun a b => inv_eq_of_mul }
+    inv_eq_of_hMul := fun a b => inv_eq_of_hMul }
 #align group_with_zero.to_division_monoid GroupWithZero.toDivisionMonoid
 -/
 
@@ -385,9 +383,9 @@ instance (priority := 10) GroupWithZero.toCancelMonoidWithZero : CancelMonoidWit
   {
     ‹GroupWithZero
         G₀› with
-    mul_left_cancel_of_ne_zero := fun x y z hx h => by
+    hMul_left_cancel_of_ne_zero := fun x y z hx h => by
       rw [← inv_mul_cancel_left₀ hx y, h, inv_mul_cancel_left₀ hx z]
-    mul_right_cancel_of_ne_zero := fun x y z hy h => by
+    hMul_right_cancel_of_ne_zero := fun x y z hy h => by
       rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
 #align group_with_zero.to_cancel_monoid_with_zero GroupWithZero.toCancelMonoidWithZero
 -/

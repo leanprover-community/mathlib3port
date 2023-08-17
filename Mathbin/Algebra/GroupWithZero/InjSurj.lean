@@ -64,7 +64,7 @@ protected theorem Function.Injective.noZeroDivisors [Mul M₀] [Zero M₀] [Mul 
   {
     eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H =>
       have : f x * f y = 0 := by rw [← mul, H, zero]
-      (eq_zero_or_eq_zero_of_mul_eq_zero this).imp (fun H => hf <| by rwa [zero]) fun H =>
+      (eq_zero_or_eq_zero_of_hMul_eq_zero this).imp (fun H => hf <| by rwa [zero]) fun H =>
         hf <| by rwa [zero] }
 #align function.injective.no_zero_divisors Function.Injective.noZeroDivisors
 -/
@@ -192,9 +192,9 @@ protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [
   { hf.Monoid f one mul npow,
     hf.MulZeroClass f zero
       mul with
-    mul_left_cancel_of_ne_zero := fun x y z hx H =>
+    hMul_left_cancel_of_ne_zero := fun x y z hx H =>
       hf <| mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) <| by erw [← mul, ← mul, H] <;> rfl
-    mul_right_cancel_of_ne_zero := fun x y z hx H =>
+    hMul_right_cancel_of_ne_zero := fun x y z hx H =>
       hf <| mul_right_cancel₀ ((hf.ne_iff' zero).2 hx) <| by erw [← mul, ← mul, H] <;> rfl }
 #align function.injective.cancel_monoid_with_zero Function.Injective.cancelMonoidWithZero
 -/

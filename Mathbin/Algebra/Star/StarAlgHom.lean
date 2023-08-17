@@ -118,7 +118,7 @@ instance : NonUnitalStarAlgHomClass (A →⋆ₙₐ[R] B) R A B
   map_smul f := f.map_smul'
   map_add f := f.map_add'
   map_zero f := f.map_zero'
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
   map_star f := f.map_star'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -381,7 +381,7 @@ instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B
   coe f := f.toFun
   coe_injective' f g h := by
     obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
-  map_mul := map_mul'
+  map_hMul := map_mul'
   map_one := map_one'
   map_add := map_add'
   map_zero := map_zero'
@@ -853,7 +853,7 @@ instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B
   left_inv := left_inv
   right_inv := right_inv
   coe_injective' f g h₁ h₂ := by cases f; cases g; congr
-  map_mul := map_mul'
+  map_hMul := map_mul'
   map_add := map_add'
   map_star := map_star'
   map_smul := map_smul'

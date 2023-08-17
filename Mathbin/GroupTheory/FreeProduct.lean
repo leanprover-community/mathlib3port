@@ -249,7 +249,7 @@ theorem Monoid.CoprodI.inv_def (x : Monoid.CoprodI G) :
 
 instance : Group (Monoid.CoprodI G) :=
   { Monoid.CoprodI.hasInv G, Monoid.CoprodI.monoid G with
-    mul_left_inv := by
+    hMul_left_inv := by
       intro m
       rw [inv_def]
       apply m.induction_on
@@ -463,7 +463,7 @@ instance Monoid.CoprodI.Word.summandAction (i) : MulAction (M i) (Monoid.CoprodI
       { Monoid.CoprodI.Word.equivPair i w with
         headI := m * (Monoid.CoprodI.Word.equivPair i w).headI }
   one_smul w := by simp_rw [one_mul]; apply (equiv_pair i).symm_apply_eq.mpr; ext <;> rfl
-  mul_smul m m' w := by simp only [mul_assoc, ← equiv_pair_symm, Equiv.apply_symm_apply]
+  hMul_smul m m' w := by simp only [mul_assoc, ← equiv_pair_symm, Equiv.apply_symm_apply]
 #align free_product.word.summand_action Monoid.CoprodI.Word.summandAction
 -/
 
@@ -852,7 +852,7 @@ theorem Monoid.CoprodI.lift_word_ping_pong {i j k} (w : Monoid.CoprodI.NeWord H 
   ·
     calc
       lift f (neword.append w₁ hne w₂).Prod • X m = lift f w₁.prod • lift f w₂.prod • X m := by
-        simp [MulAction.mul_smul]
+        simp [MulAction.hMul_smul]
       _ ⊆ lift f w₁.prod • X k := (set_smul_subset_set_smul_iff.mpr (hIw₂ hm))
       _ ⊆ X i := hIw₁ hne
 #align free_product.lift_word_ping_pong Monoid.CoprodI.lift_word_ping_pong
@@ -1087,7 +1087,7 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
           · intro n hle hi
             calc
               a i ^ (n + 1) • Y iᶜ = (a i ^ n * a i) • Y iᶜ := by rw [zpow_add, zpow_one]
-              _ = a i ^ n • a i • Y iᶜ := (MulAction.mul_smul _ _ _)
+              _ = a i ^ n • a i • Y iᶜ := (MulAction.hMul_smul _ _ _)
               _ ⊆ a i ^ n • X i := (smul_set_mono <| hX i)
               _ ⊆ a i ^ n • Y iᶜ := (smul_set_mono (hXYdisj i i).subset_compl_right)
               _ ⊆ X i := hi
@@ -1102,7 +1102,7 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
           · intro n hle hi
             calc
               a i ^ (n - 1) • X iᶜ = (a i ^ n * (a i)⁻¹) • X iᶜ := by rw [zpow_sub, zpow_one]
-              _ = a i ^ n • (a i)⁻¹ • X iᶜ := (MulAction.mul_smul _ _ _)
+              _ = a i ^ n • (a i)⁻¹ • X iᶜ := (MulAction.hMul_smul _ _ _)
               _ ⊆ a i ^ n • Y i := (smul_set_mono <| hY i)
               _ ⊆ a i ^ n • X iᶜ := (smul_set_mono (hXYdisj i i).symm.subset_compl_right)
               _ ⊆ Y i := hi

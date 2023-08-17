@@ -52,7 +52,7 @@ def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) : Submonoid (∀ j, F.obj j)
     where
   carrier := (F ⋙ forget MonCat).sections
   one_mem' j j' f := by simp
-  mul_mem' a b ah bh j j' f :=
+  hMul_mem' a b ah bh j j' f :=
     by
     simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
     dsimp [functor.sections] at ah bh 

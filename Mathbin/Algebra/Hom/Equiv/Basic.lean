@@ -107,7 +107,7 @@ add_decl_doc MulEquiv.toMulHom
 You should extend this class when you extend `mul_equiv`. -/
 @[to_additive]
 class MulEquivClass (F A B : Type _) [Mul A] [Mul B] extends EquivLike F A B where
-  map_mul : ∀ (f : F) (a b), f (a * b) = f a * f b
+  map_hMul : ∀ (f : F) (a b), f (a * b) = f a * f b
 #align mul_equiv_class MulEquivClass
 #align add_equiv_class AddEquivClass
 -/
@@ -197,7 +197,7 @@ instance [Mul M] [Mul N] : MulEquivClass (M ≃* N) M N
   left_inv := left_inv
   right_inv := right_inv
   coe_injective' f g h₁ h₂ := by cases f; cases g; congr
-  map_mul := map_mul'
+  map_hMul := map_mul'
 
 variable [Mul M] [Mul N] [Mul P] [Mul Q]
 
@@ -291,7 +291,7 @@ instance : Inhabited (M ≃* M) :=
 @[symm, to_additive "The inverse of an isomorphism is an isomorphism."]
 def symm (h : M ≃* N) : N ≃* M :=
   { h.toEquiv.symm with
-    map_mul' := (h.toMulHom.inverse h.toEquiv.symm h.left_inv h.right_inv).map_mul }
+    map_mul' := (h.toMulHom.inverse h.toEquiv.symm h.left_inv h.right_inv).map_hMul }
 #align mul_equiv.symm MulEquiv.symm
 #align add_equiv.symm AddEquiv.symm
 -/
@@ -764,7 +764,7 @@ def piCongrRight {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ 
       (es j).toEquiv with
     toFun := fun x j => es j (x j)
     invFun := fun x j => (es j).symm (x j)
-    map_mul' := fun x y => funext fun j => (es j).map_mul (x j) (y j) }
+    map_mul' := fun x y => funext fun j => (es j).map_hMul (x j) (y j) }
 #align mul_equiv.Pi_congr_right MulEquiv.piCongrRight
 #align add_equiv.Pi_congr_right AddEquiv.piCongrRight
 -/
@@ -851,7 +851,7 @@ def MulHom.toMulEquiv [Mul M] [Mul N] (f : M →ₙ* N) (g : N →ₙ* M) (h₁ 
   invFun := g
   left_inv := MulHom.congr_fun h₁
   right_inv := MulHom.congr_fun h₂
-  map_mul' := f.map_mul
+  map_mul' := f.map_hMul
 #align mul_hom.to_mul_equiv MulHom.toMulEquiv
 #align add_hom.to_add_equiv AddHom.toAddEquiv
 -/
@@ -870,7 +870,7 @@ def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N �
   invFun := g
   left_inv := MonoidHom.congr_fun h₁
   right_inv := MonoidHom.congr_fun h₂
-  map_mul' := f.map_mul
+  map_mul' := f.map_hMul
 #align monoid_hom.to_mul_equiv MonoidHom.toMulEquiv
 #align add_monoid_hom.to_add_equiv AddMonoidHom.toAddEquiv
 -/

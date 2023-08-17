@@ -229,7 +229,7 @@ theorem valExcept_add_eq (n : Nat) {as : List Int} : valExcept n v as + get n as
 #align omega.coeffs.val_except_add_eq Omega.Coeffs.valExcept_add_eq
 
 @[simp]
-theorem valBetween_map_mul {i : Int} {as : List Int} {l : Nat} :
+theorem valBetween_map_hMul {i : Int} {as : List Int} {l : Nat} :
     ∀ {m}, valBetween v (List.map ((· * ·) i) as) l m = i * valBetween v as l m
   | 0 => by simp only [val_between, MulZeroClass.mul_zero, List.map]
   | m + 1 => by
@@ -240,7 +240,7 @@ theorem valBetween_map_mul {i : Int} {as : List Int} {l : Nat} :
     · rw [get_map h1, mul_assoc]
     rw [not_lt] at h1 
     rw [get_eq_default_of_le, get_eq_default_of_le] <;> try simp <;> apply h1
-#align omega.coeffs.val_between_map_mul Omega.Coeffs.valBetween_map_mul
+#align omega.coeffs.val_between_map_mul Omega.Coeffs.valBetween_map_hMul
 
 theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} :
     (∀ x ∈ as, i ∣ x) → ∀ n, i ∣ get n as

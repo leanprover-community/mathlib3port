@@ -54,8 +54,8 @@ instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
   { MonoidHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by intros; ext; apply div_eq_mul_inv
-    mul_left_inv := by intros <;> ext <;> apply mul_left_inv
+    div_eq_hMul_inv := by intros; ext; apply div_eq_mul_inv
+    hMul_left_inv := by intros <;> ext <;> apply mul_left_inv
     zpow := fun n f =>
       { toFun := fun x => f x ^ n
         map_one' := by simp
@@ -134,7 +134,7 @@ def flip {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M �
   toFun y :=
     ⟨fun x => f x y, by rw [f.map_one, one_apply], fun x₁ x₂ => by rw [f.map_mul, mul_apply]⟩
   map_one' := ext fun x => (f x).map_one
-  map_mul' y₁ y₂ := ext fun x => (f x).map_mul y₁ y₂
+  map_mul' y₁ y₂ := ext fun x => (f x).map_hMul y₁ y₂
 #align monoid_hom.flip MonoidHom.flip
 #align add_monoid_hom.flip AddMonoidHom.flip
 -/
@@ -161,7 +161,7 @@ theorem map_one₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
 @[to_additive]
 theorem map_mul₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M →* N →* P)
     (m₁ m₂ : M) (n : N) : f (m₁ * m₂) n = f m₁ n * f m₂ n :=
-  (flip f n).map_mul _ _
+  (flip f n).map_hMul _ _
 #align monoid_hom.map_mul₂ MonoidHom.map_mul₂
 #align add_monoid_hom.map_mul₂ AddMonoidHom.map_mul₂
 -/

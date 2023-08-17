@@ -30,7 +30,7 @@ instance : StarSemigroup (FreeMonoid α)
     where
   unit := List.reverse
   star_involutive := List.reverse_reverse
-  star_mul := List.reverse_append
+  star_hMul := List.reverse_append
 
 #print FreeMonoid.star_of /-
 @[simp]
@@ -65,7 +65,7 @@ instance : StarRing (FreeAlgebra R X)
     · intros; simp only [lift_ι_apply, MulOpposite.unop_op]
     · intros; simp only [*, map_mul, MulOpposite.unop_mul]
     · intros; simp only [*, map_add, MulOpposite.unop_add]
-  star_mul a b := by simp only [Function.comp_apply, map_mul, MulOpposite.unop_mul]
+  star_hMul a b := by simp only [Function.comp_apply, map_mul, MulOpposite.unop_mul]
   star_add a b := by simp only [Function.comp_apply, map_add, MulOpposite.unop_add]
 
 #print FreeAlgebra.star_ι /-

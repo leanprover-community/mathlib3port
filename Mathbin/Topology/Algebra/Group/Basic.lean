@@ -947,7 +947,7 @@ def Subgroup.connectedComponentOfOne (G : Type _) [TopologicalSpace G] [Group G]
     where
   carrier := connectedComponent (1 : G)
   one_mem' := mem_connectedComponent
-  mul_mem' g h hg hh := mul_mem_connectedComponent_one hg hh
+  hMul_mem' g h hg hh := mul_mem_connectedComponent_one hg hh
   inv_mem' g hg := inv_mem_connectedComponent_one hg
 #align subgroup.connected_component_of_one Subgroup.connectedComponentOfOne
 #align add_subgroup.connected_component_of_zero AddSubgroup.connectedComponentOfZero
@@ -1171,7 +1171,7 @@ theorem QuotientGroup.isOpenMap_coe : IsOpenMap (coe : G → G ⧸ N) :=
 @[to_additive]
 instance topologicalGroup_quotient [N.Normal] : TopologicalGroup (G ⧸ N)
     where
-  continuous_mul :=
+  continuous_hMul :=
     by
     have cont : Continuous ((coe : G → G ⧸ N) ∘ fun p : G × G => p.fst * p.snd) :=
       continuous_quot_mk.comp continuous_mul
@@ -2215,7 +2215,7 @@ theorem toTopologicalSpace_le {x y : GroupTopology α} :
 @[to_additive]
 instance : Top (GroupTopology α) :=
   ⟨{  toTopologicalSpace := ⊤
-      continuous_mul := continuous_top
+      continuous_hMul := continuous_top
       continuous_inv := continuous_top }⟩
 
 #print GroupTopology.toTopologicalSpace_top /-
@@ -2229,7 +2229,7 @@ theorem toTopologicalSpace_top : (⊤ : GroupTopology α).toTopologicalSpace = �
 @[to_additive]
 instance : Bot (GroupTopology α) :=
   ⟨{  toTopologicalSpace := ⊥
-      continuous_mul := by letI : TopologicalSpace α := ⊥; haveI := discreteTopology_bot α;
+      continuous_hMul := by letI : TopologicalSpace α := ⊥; haveI := discreteTopology_bot α;
         continuity
       continuous_inv := continuous_bot }⟩
 

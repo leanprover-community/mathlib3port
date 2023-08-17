@@ -187,7 +187,7 @@ instance : SubfieldClass (Subfield K) K
   add_mem := add_mem'
   zero_mem := zero_mem'
   neg_mem := neg_mem'
-  mul_mem := mul_mem'
+  hMul_mem := hMul_mem'
   one_mem := one_mem'
   inv_mem := inv_mem'
 
@@ -300,7 +300,7 @@ protected theorem zero_mem : (0 : K) ∈ s :=
 #print Subfield.mul_mem /-
 /-- A subfield is closed under multiplication. -/
 protected theorem mul_mem {x y : K} : x ∈ s → y ∈ s → x * y ∈ s :=
-  mul_mem
+  hMul_mem
 #align subfield.mul_mem Subfield.mul_mem
 -/
 
@@ -839,7 +839,7 @@ def closure (s : Set K) : Subfield K
     exact
       ⟨nx * dy + dx * ny, Subring.add_mem _ (Subring.mul_mem _ hnx hdy) (Subring.mul_mem _ hdx hny),
         dx * dy, Subring.mul_mem _ hdx hdy, (div_add_div nx ny hx0 hy0).symm⟩
-  mul_mem' x y x_mem y_mem :=
+  hMul_mem' x y x_mem y_mem :=
     by
     obtain ⟨nx, hnx, dx, hdx, rfl⟩ := id x_mem
     obtain ⟨ny, hny, dy, hdy, rfl⟩ := id y_mem
@@ -1038,7 +1038,7 @@ theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
     exact ⟨i, (S i).inv_mem hi⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     obtain ⟨k, hki, hkj⟩ := hS i j
-    exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
+    exact ⟨k, (S k).hMul_mem (hki hi) (hkj hj)⟩
 #align subfield.mem_supr_of_directed Subfield.mem_iSup_of_directed
 -/
 

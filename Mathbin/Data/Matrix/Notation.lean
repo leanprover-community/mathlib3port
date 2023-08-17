@@ -534,7 +534,7 @@ theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂
         a₂₁ * b₁₁ + a₂₂ * b₂₁, a₂₁ * b₁₂ + a₂₂ * b₂₂] :=
   by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
+  fin_cases i <;> fin_cases j <;> simp [HMul.hMul, dot_product, Fin.sum_univ_succ]
 #align matrix.mul_fin_two Matrix.mul_fin_two
 -/
 
@@ -551,7 +551,7 @@ theorem mul_fin_three [AddCommMonoid α] [Mul α]
           a₃₁ * b₁₃ + a₃₂ * b₂₃ + a₃₃ * b₃₃] :=
   by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]
+  fin_cases i <;> fin_cases j <;> simp [HMul.hMul, dot_product, Fin.sum_univ_succ, ← add_assoc]
 #align matrix.mul_fin_three Matrix.mul_fin_three
 -/
 

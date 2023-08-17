@@ -54,7 +54,7 @@ def FixedBy.subfield : Subfield F where
   add_mem' x y hx hy := (smul_add m x y).trans <| congr_arg₂ _ hx hy
   neg_mem' x hx := (smul_neg m x).trans <| congr_arg _ hx
   one_mem' := smul_one m
-  mul_mem' x y hx hy := (smul_mul' m x y).trans <| congr_arg₂ _ hx hy
+  hMul_mem' x y hx hy := (smul_mul' m x y).trans <| congr_arg₂ _ hx hy
   inv_mem' x hx := (smul_inv'' m x).trans <| congr_arg _ hx
 #align fixed_by.subfield FixedBy.subfield
 -/
@@ -77,11 +77,11 @@ instance IsInvariantSubfield.toMulSemiringAction [IsInvariantSubfield M S] : Mul
     where
   smul m x := ⟨m • x, IsInvariantSubfield.smul_mem m x.2⟩
   one_smul s := Subtype.eq <| one_smul M s
-  mul_smul m₁ m₂ s := Subtype.eq <| mul_smul m₁ m₂ s
+  hMul_smul m₁ m₂ s := Subtype.eq <| hMul_smul m₁ m₂ s
   smul_add m s₁ s₂ := Subtype.eq <| smul_add m s₁ s₂
   smul_zero m := Subtype.eq <| smul_zero m
   smul_one m := Subtype.eq <| smul_one m
-  smul_mul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
+  smul_hMul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
 #align is_invariant_subfield.to_mul_semiring_action IsInvariantSubfield.toMulSemiringAction
 -/
 

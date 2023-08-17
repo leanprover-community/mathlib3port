@@ -47,7 +47,7 @@ class SlashAction (β G α γ : Type _) [Group G] [AddMonoid α] [SMul γ α] wh
   map : β → G → α → α
   zero_slash : ∀ (k : β) (g : G), map k g 0 = 0
   slash_one : ∀ (k : β) (a : α), map k 1 a = a
-  slash_mul : ∀ (k : β) (g h : G) (a : α), map k (g * h) a = map k h (map k g a)
+  slash_hMul : ∀ (k : β) (g h : G) (a : α), map k (g * h) a = map k h (map k g a)
   smul_slash : ∀ (k : β) (g : G) (a : α) (z : γ), map k g (z • a) = z • map k g a
   add_slash : ∀ (k : β) (g : G) (a b : α), map k g (a + b) = map k g a + map k g b
 #align slash_action SlashAction
@@ -86,7 +86,7 @@ def monoidHomSlashAction {β G H α γ : Type _} [Group G] [AddMonoid α] [SMul 
   map k g := SlashAction.map γ k (h g)
   zero_slash k g := SlashAction.zero_slash k (h g)
   slash_one k a := by simp only [map_one, SlashAction.slash_one]
-  slash_mul k g gg a := by simp only [map_mul, SlashAction.slash_mul]
+  slash_hMul k g gg a := by simp only [map_mul, SlashAction.slash_hMul]
   smul_slash _ _ := SlashAction.smul_slash _ _
   add_slash _ g _ _ := SlashAction.add_slash _ (h g) _ _
 #align monoid_hom_slash_action monoidHomSlashAction
@@ -117,7 +117,7 @@ private theorem slash_mul (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : f 
   have e3 : (A * B) • x = A • B • x := by convert UpperHalfPlane.mul_smul' A B x
   rw [e3]
   simp only [UpperHalfPlane.num, UpperHalfPlane.denom, of_real_mul, Subgroup.coe_mul, coe_coe,
-    UpperHalfPlane.coe_smul, Units.val_mul, Matrix.mul_eq_mul, Matrix.det_mul,
+    UpperHalfPlane.coe_smul, Units.val_mul, Matrix.hMul_eq_hMul, Matrix.det_mul,
     UpperHalfPlane.smulAux, UpperHalfPlane.smulAux', Subtype.coe_mk] at *
   field_simp
   have :
@@ -158,7 +158,7 @@ instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ
   map := slash
   zero_slash := zero_slash
   slash_one := slash_one
-  slash_mul := slash_mul
+  slash_hMul := slash_hMul
   smul_slash := smul_slash
   add_slash := add_slash
 

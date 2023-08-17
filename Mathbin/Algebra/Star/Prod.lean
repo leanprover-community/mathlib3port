@@ -54,7 +54,7 @@ instance [InvolutiveStar R] [InvolutiveStar S] : InvolutiveStar (R × S)
     where star_involutive _ := Prod.ext (star_star _) (star_star _)
 
 instance [Semigroup R] [Semigroup S] [StarSemigroup R] [StarSemigroup S] : StarSemigroup (R × S)
-    where star_mul _ _ := Prod.ext (star_mul _ _) (star_mul _ _)
+    where star_hMul _ _ := Prod.ext (star_hMul _ _) (star_hMul _ _)
 
 instance [AddMonoid R] [AddMonoid S] [StarAddMonoid R] [StarAddMonoid S] : StarAddMonoid (R × S)
     where star_add _ _ := Prod.ext (star_add _ _) (star_add _ _)

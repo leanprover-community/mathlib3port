@@ -153,7 +153,7 @@ instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B
   map_smul f := f.map_smul'
   map_add f := f.map_add'
   map_zero f := f.map_zero'
-  map_mul f := f.map_mul'
+  map_hMul f := f.map_mul'
 
 #print NonUnitalAlgHom.ext /-
 @[ext]

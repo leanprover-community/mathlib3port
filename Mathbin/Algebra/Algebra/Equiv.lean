@@ -109,7 +109,7 @@ instance : AlgEquivClass (A₁ ≃ₐ[R] A₂) R A₁ A₂
   inv := invFun
   coe_injective' f g h₁ h₂ := by cases f; cases g; congr
   map_add := map_add'
-  map_mul := map_mul'
+  map_hMul := map_mul'
   commutes := commutes'
   left_inv := left_inv
   right_inv := right_inv
@@ -738,7 +738,7 @@ def ofLinearEquiv : A₁ ≃ₐ[R] A₂ :=
 @[simp]
 theorem ofLinearEquiv_symm :
     (ofLinearEquiv l map_mul commutes).symm =
-      ofLinearEquiv l.symm (ofLinearEquiv l map_mul commutes).symm.map_mul
+      ofLinearEquiv l.symm (ofLinearEquiv l map_mul commutes).symm.map_hMul
         (ofLinearEquiv l map_mul commutes).symm.commutes :=
   rfl
 #align alg_equiv.of_linear_equiv_symm AlgEquiv.ofLinearEquiv_symm
@@ -785,7 +785,7 @@ instance aut : Group (A₁ ≃ₐ[R] A₁) where
   one_mul ϕ := ext fun x => rfl
   mul_one ϕ := ext fun x => rfl
   inv := symm
-  mul_left_inv ϕ := ext <| symm_apply_apply ϕ
+  hMul_left_inv ϕ := ext <| symm_apply_apply ϕ
 #align alg_equiv.aut AlgEquiv.aut
 -/
 
@@ -847,9 +847,9 @@ instance applyMulSemiringAction : MulSemiringAction (A₁ ≃ₐ[R] A₁) A₁
   smul_zero := AlgEquiv.map_zero
   smul_add := AlgEquiv.map_add
   smul_one := AlgEquiv.map_one
-  smul_mul := AlgEquiv.map_mul
+  smul_hMul := AlgEquiv.map_mul
   one_smul _ := rfl
-  mul_smul _ _ _ := rfl
+  hMul_smul _ _ _ := rfl
 #align alg_equiv.apply_mul_semiring_action AlgEquiv.applyMulSemiringAction
 -/
 

@@ -100,7 +100,7 @@ instance : NonUnitalAlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     characterSpace.continuousLinearMapClass with
     map_smul := fun φ => map_smul φ
     map_zero := fun φ => map_zero φ
-    map_mul := fun φ => φ.Prop.2 }
+    map_hMul := fun φ => φ.Prop.2 }
 
 #print WeakDual.CharacterSpace.toNonUnitalAlgHom /-
 /-- An element of the character space, as an non-unital algebra homomorphism. -/

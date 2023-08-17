@@ -431,7 +431,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   · rw [zero_pow hc0]
     simp only [sub_zero, ZMod.cast_zero, MulZeroClass.mul_zero]
     rw [unit_coeff_spec hc']
-    exact (dvd_pow_self (p : ℤ_[p]) hc0.ne').mul_left _
+    exact (dvd_pow_self (p : ℤ_[p]) hc0.ne').hMul_left _
 #align padic_int.appr_spec PadicInt.appr_spec
 -/
 

@@ -114,8 +114,8 @@ instance : CancelMonoid (FreeMonoid α)
   mul_one := List.append_nil
   one_mul := List.nil_append
   mul_assoc := List.append_assoc
-  mul_left_cancel _ _ _ := List.append_left_cancel
-  mul_right_cancel _ _ _ := List.append_right_cancel
+  hMul_left_cancel _ _ _ := List.append_left_cancel
+  hMul_right_cancel _ _ _ := List.append_right_cancel
 
 @[to_additive]
 instance : Inhabited (FreeMonoid α) :=
@@ -389,7 +389,7 @@ def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β
     where
   smul l b := l.toList.foldr f b
   one_smul x := rfl
-  mul_smul xs ys b := List.foldr_append _ _ _ _
+  hMul_smul xs ys b := List.foldr_append _ _ _ _
 #align free_monoid.mk_mul_action FreeMonoid.mkMulAction
 #align free_add_monoid.mk_add_action FreeAddMonoid.mkAddAction
 -/

@@ -268,7 +268,7 @@ def solvableByRad : IntermediateField F E
   add_mem' := IsSolvableByRad.add
   neg_mem' := IsSolvableByRad.neg
   one_mem' := by convert IsSolvableByRad.base (1 : F); rw [RingHom.map_one]
-  mul_mem' := IsSolvableByRad.mul
+  hMul_mem' := IsSolvableByRad.mul
   inv_mem' := IsSolvableByRad.inv
   algebraMap_mem' := IsSolvableByRad.base
 #align solvable_by_rad solvableByRad

@@ -62,17 +62,17 @@ class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebr
   i : K
   -- Meant to be set to 0 for K=ℝ
   i_re_ax : re I = 0
-  i_mul_i_ax : I = 0 ∨ I * I = -1
+  i_hMul_i_ax : I = 0 ∨ I * I = -1
   re_add_im_ax : ∀ z : K, 𝓚 (re z) + 𝓚 (im z) * I = z
   of_real_re_ax : ∀ r : ℝ, re (𝓚 r) = r
   of_real_im_ax : ∀ r : ℝ, im (𝓚 r) = 0
-  mul_re_ax : ∀ z w : K, re (z * w) = re z * re w - im z * im w
-  mul_im_ax : ∀ z w : K, im (z * w) = re z * im w + im z * re w
+  hMul_re_ax : ∀ z w : K, re (z * w) = re z * re w - im z * im w
+  hMul_im_ax : ∀ z w : K, im (z * w) = re z * im w + im z * re w
   conj_re_ax : ∀ z : K, re (conj z) = re z
   conj_im_ax : ∀ z : K, im (conj z) = -im z
   conj_i_ax : conj I = -I
   norm_sq_eq_def_ax : ∀ z : K, ‖z‖ ^ 2 = re z * re z + im z * im z
-  mul_im_i_ax : ∀ z : K, im z * im I = im z
+  hMul_im_i_ax : ∀ z : K, im z * im I = im z
 #align is_R_or_C IsROrC
 -/
 
@@ -140,14 +140,14 @@ theorem ofReal_im : ∀ r : ℝ, im (r : K) = 0 :=
 #print IsROrC.mul_re /-
 @[simp, is_R_or_C_simps]
 theorem mul_re : ∀ z w : K, re (z * w) = re z * re w - im z * im w :=
-  IsROrC.mul_re_ax
+  IsROrC.hMul_re_ax
 #align is_R_or_C.mul_re IsROrC.mul_re
 -/
 
 #print IsROrC.mul_im /-
 @[simp, is_R_or_C_simps]
 theorem mul_im : ∀ z w : K, im (z * w) = re z * im w + im z * re w :=
-  IsROrC.mul_im_ax
+  IsROrC.hMul_im_ax
 #align is_R_or_C.mul_im IsROrC.mul_im
 -/
 
@@ -396,7 +396,7 @@ theorem I_re : re (i : K) = 0 :=
 #print IsROrC.I_im /-
 @[simp, is_R_or_C_simps]
 theorem I_im (z : K) : im z * im (i : K) = im z :=
-  mul_im_i_ax z
+  hMul_im_i_ax z
 #align is_R_or_C.I_im IsROrC.I_im
 -/
 
@@ -415,7 +415,7 @@ theorem I_mul_re (z : K) : re (i * z) = -im z := by
 
 #print IsROrC.I_mul_I /-
 theorem I_mul_I : (i : K) = 0 ∨ (i : K) * i = -1 :=
-  i_mul_i_ax
+  i_hMul_i_ax
 #align is_R_or_C.I_mul_I IsROrC.I_mul_I
 -/
 
@@ -642,7 +642,7 @@ theorem normSq_conj (z : K) : normSq (conj z) = normSq z := by
 #print IsROrC.normSq_mul /-
 @[simp, is_R_or_C_simps]
 theorem normSq_mul (z w : K) : normSq (z * w) = normSq z * normSq w :=
-  normSq.map_mul z w
+  normSq.map_hMul z w
 #align is_R_or_C.norm_sq_mul IsROrC.normSq_mul
 -/
 
@@ -768,7 +768,7 @@ theorem ofReal_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : K) = r ^ n :=
 
 #print IsROrC.I_mul_I_of_nonzero /-
 theorem I_mul_I_of_nonzero : (i : K) ≠ 0 → (i : K) * i = -1 :=
-  i_mul_i_ax.resolve_left
+  i_hMul_i_ax.resolve_left
 #align is_R_or_C.I_mul_I_of_nonzero IsROrC.I_mul_I_of_nonzero
 -/
 
@@ -808,7 +808,7 @@ theorem norm_conj {z : K} : ‖conj z‖ = ‖z‖ := by simp only [← sqrt_nor
 -/
 
 instance (priority := 100) : CstarRing K
-    where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) norm_conj
+    where norm_star_hMul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) norm_conj
 
 /-! ### Cast lemmas -/
 
@@ -1046,15 +1046,15 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
     im := 0
     i := 0
     i_re_ax := by simp only [AddMonoidHom.map_zero]
-    i_mul_i_ax := Or.intro_left _ rfl
+    i_hMul_i_ax := Or.intro_left _ rfl
     re_add_im_ax := fun z => by
       simp only [add_zero, MulZeroClass.mul_zero, Algebra.id.map_eq_id, RingHom.id_apply,
         AddMonoidHom.id_apply]
     of_real_re_ax := fun r => by simp only [AddMonoidHom.id_apply, Algebra.id.map_eq_self]
     of_real_im_ax := fun r => by simp only [AddMonoidHom.zero_apply]
-    mul_re_ax := fun z w => by
+    hMul_re_ax := fun z w => by
       simp only [sub_zero, MulZeroClass.mul_zero, AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
-    mul_im_ax := fun z w => by
+    hMul_im_ax := fun z w => by
       simp only [add_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, AddMonoidHom.zero_apply]
     conj_re_ax := fun z => by simp only [starRingEnd_apply, star_id_of_comm]
     conj_im_ax := fun z => by simp only [neg_zero, AddMonoidHom.zero_apply]
@@ -1062,7 +1062,7 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
     norm_sq_eq_def_ax := fun z => by
       simp only [sq, Real.norm_eq_abs, ← abs_mul, abs_mul_self z, add_zero, MulZeroClass.mul_zero,
         AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
-    mul_im_i_ax := fun z => by simp only [MulZeroClass.mul_zero, AddMonoidHom.zero_apply] }
+    hMul_im_i_ax := fun z => by simp only [MulZeroClass.mul_zero, AddMonoidHom.zero_apply] }
 #align real.is_R_or_C Real.isROrC
 -/
 

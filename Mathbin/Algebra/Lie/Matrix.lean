@@ -50,7 +50,7 @@ def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
       let f := @LinearMap.toMatrix' R _ n n _ _
       change f (T.comp S - S.comp T) = f T * f S - f S * f T
       have h : ∀ T S : Module.End R _, f (T.comp S) = f T ⬝ f S := LinearMap.toMatrix'_comp
-      rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
+      rw [LinearEquiv.map_sub, h, h, Matrix.hMul_eq_hMul, Matrix.hMul_eq_hMul] }
 #align lie_equiv_matrix' lieEquivMatrix'
 -/
 
@@ -106,7 +106,7 @@ def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
     toFun := Matrix.reindex e e
     map_lie' := fun M N => by
       simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply,
-        Matrix.submatrix_mul_equiv, Matrix.mul_eq_mul, Matrix.submatrix_sub, Pi.sub_apply] }
+        Matrix.submatrix_mul_equiv, Matrix.hMul_eq_hMul, Matrix.submatrix_sub, Pi.sub_apply] }
 #align matrix.reindex_lie_equiv Matrix.reindexLieEquiv
 -/
 

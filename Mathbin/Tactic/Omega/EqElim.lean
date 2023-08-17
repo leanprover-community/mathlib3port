@@ -35,7 +35,7 @@ theorem symmod_add_one_self {i : Int} : 0 < i → symmod i (i + 1) = -1 :=
   simpa only [h2, add_mul, one_mul, add_lt_add_iff_left, not_lt] using h1
 #align omega.symmod_add_one_self Omega.symmod_add_one_self
 
-theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j :=
+theorem hMul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j :=
   by
   unfold symdiv; unfold symmod
   by_cases h1 : 2 * (i % j) < j
@@ -43,7 +43,7 @@ theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j :=
     rw [Int.mod_def, sub_sub_cancel]
   · repeat' rw [if_neg h1]
     rw [Int.mod_def, sub_sub, sub_sub_cancel, mul_add, mul_one]
-#align omega.mul_symdiv_eq Omega.mul_symdiv_eq
+#align omega.mul_symdiv_eq Omega.hMul_symdiv_eq
 
 theorem symmod_eq {i j : Int} : symmod i j = i - j * symdiv i j := by
   rw [mul_symdiv_eq, sub_sub_cancel]

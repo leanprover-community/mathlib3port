@@ -196,7 +196,7 @@ instance : Monoid (SpecialLinearGroup n R) :=
 
 instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
-    mul_left_inv := fun A => by ext1; simp [adjugate_mul] }
+    hMul_left_inv := fun A => by ext1; simp [adjugate_mul] }
 
 #print Matrix.SpecialLinearGroup.toLin' /-
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
@@ -269,7 +269,7 @@ def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S
     where
   toFun g := ⟨f.mapMatrix ↑g, by rw [← f.map_det]; simp [g.2]⟩
   map_one' := Subtype.ext <| f.mapMatrix.map_one
-  map_mul' x y := Subtype.ext <| f.mapMatrix.map_mul x y
+  map_mul' x y := Subtype.ext <| f.mapMatrix.map_hMul x y
 #align matrix.special_linear_group.map Matrix.SpecialLinearGroup.map
 -/
 
@@ -452,7 +452,7 @@ theorem coe_T_zpow (n : ℤ) : ↑ₘ(T ^ n) = !![1, n; 0, 1] :=
 #print ModularGroup.T_pow_mul_apply_one /-
 @[simp]
 theorem T_pow_mul_apply_one (n : ℤ) (g : SL(2, ℤ)) : ↑ₘ(T ^ n * g) 1 = ↑ₘg 1 := by
-  simp [coe_T_zpow, Matrix.mul, Matrix.dotProduct, Fin.sum_univ_succ]
+  simp [coe_T_zpow, HMul.hMul, Matrix.dotProduct, Fin.sum_univ_succ]
 #align modular_group.T_pow_mul_apply_one ModularGroup.T_pow_mul_apply_one
 -/
 

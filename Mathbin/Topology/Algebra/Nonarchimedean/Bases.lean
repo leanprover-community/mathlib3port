@@ -97,11 +97,11 @@ def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgrou
     rintro _ ⟨i, rfl⟩
     cases' hB.mul i with k hk
     use B k, k, rfl, hk
-  mul_left' := by
+  hMul_left' := by
     rintro x₀ _ ⟨i, rfl⟩
     cases' hB.left_mul x₀ i with k hk
     use B k, k, rfl, hk
-  mul_right' := by
+  hMul_right' := by
     rintro x₀ _ ⟨i, rfl⟩
     cases' hB.right_mul x₀ i with k hk
     use B k, k, rfl, hk

@@ -167,7 +167,7 @@ instance module [DecidableEq ι] [GSemiring A] [Gmodule A M] : Module (⨁ i, A 
     where
   smul := (· • ·)
   one_smul := one_smul _ _
-  mul_smul := mul_smul _ _
+  hMul_smul := hMul_smul _ _
   smul_add r := (smulAddMonoidHom A M r).map_add
   smul_zero r := (smulAddMonoidHom A M r).map_zero
   add_smul r s x := by simp only [smul_def, map_add, AddMonoidHom.add_apply]
@@ -202,7 +202,8 @@ instance gmulAction [AddMonoid M] [DistribMulAction A M] [SetLike σ M] [SetLike
     SetLike.toGSmul 𝓐
       𝓜 with
     one_smul := fun ⟨i, m⟩ => Sigma.subtype_ext (zero_add _) (one_smul _ _)
-    mul_smul := fun ⟨i, a⟩ ⟨j, a'⟩ ⟨k, b⟩ => Sigma.subtype_ext (add_assoc _ _ _) (mul_smul _ _ _) }
+    hMul_smul := fun ⟨i, a⟩ ⟨j, a'⟩ ⟨k, b⟩ =>
+      Sigma.subtype_ext (add_assoc _ _ _) (hMul_smul _ _ _) }
 #align set_like.gmul_action SetLike.gmulAction
 -/
 

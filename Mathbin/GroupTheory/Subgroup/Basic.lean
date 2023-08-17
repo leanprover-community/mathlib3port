@@ -182,7 +182,7 @@ theorem exists_inv_mem_iff_exists_mem {P : G → Prop} : (∃ x : G, x ∈ H ∧
 #print mul_mem_cancel_right /-
 @[to_additive]
 theorem mul_mem_cancel_right {x y : G} (h : x ∈ H) : y * x ∈ H ↔ y ∈ H :=
-  ⟨fun hba => by simpa using mul_mem hba (inv_mem h), fun hb => mul_mem hb h⟩
+  ⟨fun hba => by simpa using mul_mem hba (inv_mem h), fun hb => hMul_mem hb h⟩
 #align mul_mem_cancel_right mul_mem_cancel_right
 #align add_mem_cancel_right add_mem_cancel_right
 -/
@@ -190,7 +190,7 @@ theorem mul_mem_cancel_right {x y : G} (h : x ∈ H) : y * x ∈ H ↔ y ∈ H :
 #print mul_mem_cancel_left /-
 @[to_additive]
 theorem mul_mem_cancel_left {x y : G} (h : x ∈ H) : x * y ∈ H ↔ y ∈ H :=
-  ⟨fun hab => by simpa using mul_mem (inv_mem h) hab, mul_mem h⟩
+  ⟨fun hab => by simpa using mul_mem (inv_mem h) hab, hMul_mem h⟩
 #align mul_mem_cancel_left mul_mem_cancel_left
 #align add_mem_cancel_left add_mem_cancel_left
 -/
@@ -429,7 +429,7 @@ instance : SetLike (Subgroup G) G where
 @[to_additive]
 instance : SubgroupClass (Subgroup G) G
     where
-  mul_mem := Subgroup.mul_mem'
+  hMul_mem := Subgroup.hMul_mem'
   one_mem := Subgroup.one_mem'
   inv_mem := Subgroup.inv_mem'
 
@@ -603,7 +603,7 @@ protected def copy (K : Subgroup G) (s : Set G) (hs : s = K) : Subgroup G
     where
   carrier := s
   one_mem' := hs.symm ▸ K.one_mem'
-  mul_mem' _ _ := hs.symm ▸ K.mul_mem'
+  hMul_mem' _ _ := hs.symm ▸ K.hMul_mem'
   inv_mem' _ := hs.symm ▸ K.inv_mem'
 #align subgroup.copy Subgroup.copy
 #align add_subgroup.copy AddSubgroup.copy
@@ -647,7 +647,7 @@ protected theorem one_mem : (1 : G) ∈ H :=
 /-- A subgroup is closed under multiplication. -/
 @[to_additive "An `add_subgroup` is closed under addition."]
 protected theorem mul_mem {x y : G} : x ∈ H → y ∈ H → x * y ∈ H :=
-  mul_mem
+  hMul_mem
 #align subgroup.mul_mem Subgroup.mul_mem
 #align add_subgroup.add_mem AddSubgroup.add_mem
 -/
@@ -740,7 +740,7 @@ def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x) (_ : x ∈ s) (y) (_ : y 
   { carrier := s
     one_mem' := one_mem
     inv_mem' := inv_mem
-    mul_mem' := fun x y hx hy => by simpa using hs x hx y⁻¹ (inv_mem y hy) }
+    hMul_mem' := fun x y hx hy => by simpa using hs x hx y⁻¹ (inv_mem y hy) }
 #align subgroup.of_div Subgroup.ofDiv
 #align add_subgroup.of_sub AddSubgroup.ofSub
 -/
@@ -1227,7 +1227,7 @@ theorem mem_sup_right {S T : Subgroup G} : ∀ {x : G}, x ∈ T → x ∈ S ⊔ 
 #print Subgroup.mul_mem_sup /-
 @[to_additive]
 theorem mul_mem_sup {S T : Subgroup G} {x y : G} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
-  (S ⊔ T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
+  (S ⊔ T).hMul_mem (mem_sup_left hx) (mem_sup_right hy)
 #align subgroup.mul_mem_sup Subgroup.mul_mem_sup
 #align add_subgroup.add_mem_sup AddSubgroup.add_mem_sup
 -/
@@ -1362,7 +1362,7 @@ theorem closure_induction {p : G → Prop} {x} (h : x ∈ closure k) (Hk : ∀ x
 @[elab_as_elim, to_additive "A dependent version of `add_subgroup.closure_induction`. "]
 theorem closure_induction' {p : ∀ x, x ∈ closure k → Prop}
     (Hs : ∀ (x) (h : x ∈ k), p x (subset_closure h)) (H1 : p 1 (one_mem _))
-    (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy))
+    (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (hMul_mem hx hy))
     (Hinv : ∀ x hx, p x hx → p x⁻¹ (inv_mem hx)) {x} (hx : x ∈ closure k) : p x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ closure k) (hc : p x hx) => hc
@@ -2171,7 +2171,7 @@ def Submonoid.pi [∀ i, MulOneClass (f i)] (I : Set η) (s : ∀ i, Submonoid (
     Submonoid (∀ i, f i) where
   carrier := I.pi fun i => (s i).carrier
   one_mem' i _ := (s i).one_mem
-  mul_mem' p q hp hq i hI := (s i).mul_mem (hp i hI) (hq i hI)
+  hMul_mem' p q hp hq i hI := (s i).hMul_mem (hp i hI) (hq i hI)
 #align submonoid.pi Submonoid.pi
 #align add_submonoid.pi AddSubmonoid.pi
 -/
@@ -2544,7 +2544,7 @@ def normalizer : Subgroup G
     where
   carrier := {g : G | ∀ n, n ∈ H ↔ g * n * g⁻¹ ∈ H}
   one_mem' := by simp
-  mul_mem' a b (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) (hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H) n := by
+  hMul_mem' a b (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) (hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H) n := by
     rw [hb, ha]; simp [mul_assoc]
   inv_mem' a (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) n := by rw [ha (a⁻¹ * n * a⁻¹⁻¹)]; simp [mul_assoc]
 #align subgroup.normalizer Subgroup.normalizer
@@ -2561,7 +2561,7 @@ def setNormalizer (S : Set G) : Subgroup G
     where
   carrier := {g : G | ∀ n, n ∈ S ↔ g * n * g⁻¹ ∈ S}
   one_mem' := by simp
-  mul_mem' a b (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) (hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S) n := by
+  hMul_mem' a b (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) (hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S) n := by
     rw [hb, ha]; simp [mul_assoc]
   inv_mem' a (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) n := by rw [ha (a⁻¹ * n * a⁻¹⁻¹)]; simp [mul_assoc]
 #align subgroup.set_normalizer Subgroup.setNormalizer
@@ -3057,7 +3057,7 @@ def normalCore (H : Subgroup G) : Subgroup G
   carrier := {a : G | ∀ b : G, b * a * b⁻¹ ∈ H}
   one_mem' a := by rw [mul_one, mul_inv_self] <;> exact H.one_mem
   inv_mem' a h b := (congr_arg (· ∈ H) conj_inv).mp (H.inv_mem (h b))
-  mul_mem' a b ha hb c := (congr_arg (· ∈ H) conj_mul).mp (H.mul_mem (ha c) (hb c))
+  hMul_mem' a b ha hb c := (congr_arg (· ∈ H) conj_mul).mp (H.hMul_mem (ha c) (hb c))
 #align subgroup.normal_core Subgroup.normalCore
 -/
 
@@ -3876,7 +3876,7 @@ use `mul_equiv.subgroup_map` for better definitional equalities. -/
       "An additive subgroup is isomorphic to its image under an injective function. If you\nhave an isomorphism, use `add_equiv.add_subgroup_map` for better definitional equalities."]
 noncomputable def equivMapOfInjective (H : Subgroup G) (f : G →* N) (hf : Function.Injective f) :
     H ≃* H.map f :=
-  { Equiv.Set.image f H hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _) }
+  { Equiv.Set.image f H hf with map_mul' := fun _ _ => Subtype.ext (f.map_hMul _ _) }
 #align subgroup.equiv_map_of_injective Subgroup.equivMapOfInjective
 #align add_subgroup.equiv_map_of_injective AddSubgroup.equivMapOfInjective
 -/
@@ -4306,7 +4306,7 @@ theorem inf_subgroupOf_inf_normal_of_right (A B' B : Subgroup G) (hB : B' ≤ B)
     [hN : (B'.subgroupOf B).Normal] : ((A ⊓ B').subgroupOf (A ⊓ B)).Normal :=
   {
     conj_mem := fun n hn g =>
-      ⟨mul_mem (mul_mem (mem_inf.1 g.2).1 (mem_inf.1 n.2).1) (inv_mem (mem_inf.1 g.2).1),
+      ⟨hMul_mem (hMul_mem (mem_inf.1 g.2).1 (mem_inf.1 n.2).1) (inv_mem (mem_inf.1 g.2).1),
         (normal_subgroupOf_iff hB).mp hN n g hn.2 (mem_inf.mp g.2).2⟩ }
 #align subgroup.inf_subgroup_of_inf_normal_of_right Subgroup.inf_subgroupOf_inf_normal_of_right
 #align add_subgroup.inf_add_subgroup_of_inf_normal_of_right AddSubgroup.inf_addSubgroupOf_inf_normal_of_right
@@ -4319,7 +4319,7 @@ theorem inf_subgroupOf_inf_normal_of_left {A' A : Subgroup G} (B : Subgroup G) (
   {
     conj_mem := fun n hn g =>
       ⟨(normal_subgroupOf_iff hA).mp hN n g hn.1 (mem_inf.mp g.2).1,
-        mul_mem (mul_mem (mem_inf.1 g.2).2 (mem_inf.1 n.2).2) (inv_mem (mem_inf.1 g.2).2)⟩ }
+        hMul_mem (hMul_mem (mem_inf.1 g.2).2 (mem_inf.1 n.2).2) (inv_mem (mem_inf.1 g.2).2)⟩ }
 #align subgroup.inf_subgroup_of_inf_normal_of_left Subgroup.inf_subgroupOf_inf_normal_of_left
 #align add_subgroup.inf_add_subgroup_of_inf_normal_of_left AddSubgroup.inf_addSubgroupOf_inf_normal_of_left
 -/

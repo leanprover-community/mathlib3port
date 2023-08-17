@@ -464,7 +464,7 @@ variable {F}
 theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable)
     {F' : I.Filtration M} (hf : F' ≤ F) : F'.Stable :=
   by
-  haveI := isNoetherian_of_fg_of_noetherian' h.1
+  haveI := isNoetherian_of_isNoetherianRing_of_finite h.1
   rw [← submodule_fg_iff_stable] at hF ⊢
   any_goals intro i; exact IsNoetherian.noetherian _
   have := isNoetherian_of_fg_of_noetherian _ hF
@@ -507,7 +507,7 @@ theorem Ideal.mem_iInf_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Fin
   have hN : ∀ k, (I.stable_filtration ⊤ ⊓ I.trivial_filtration N).n k = N := by intro k;
     exact inf_eq_right.mpr ((iInf_le _ k).trans <| le_of_eq <| by simp)
   constructor
-  · haveI := isNoetherian_of_fg_of_noetherian' hM.out
+  · haveI := isNoetherian_of_isNoetherianRing_of_finite hM.out
     obtain ⟨r, hr₁, hr₂⟩ :=
       Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I N (IsNoetherian.noetherian N) _
     · intro H; exact ⟨⟨r, hr₁⟩, hr₂ _ H⟩

@@ -381,108 +381,88 @@ theorem contravariant_flip_mul_iff [CommSemigroup N] :
 #align contravariant_flip_add_iff contravariant_flip_add_iff
 -/
 
-#print contravariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
-instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N]
+instance contravariant_hMul_lt_of_covariant_hMul_le [Mul N] [LinearOrder N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (· * ·) (· < ·)
     where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
-#align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_le
+#align contravariant_mul_lt_of_covariant_mul_le contravariant_hMul_lt_of_covariant_hMul_le
 #align contravariant_add_lt_of_covariant_add_le contravariant_add_lt_of_covariant_add_le
--/
 
-#print covariant_mul_lt_of_contravariant_mul_le /-
 @[to_additive]
-instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N]
+instance covariant_hMul_lt_of_contravariant_hMul_le [Mul N] [LinearOrder N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
     where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
-#align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_le
+#align covariant_mul_lt_of_contravariant_mul_le covariant_hMul_lt_of_contravariant_hMul_le
 #align covariant_add_lt_of_contravariant_add_le covariant_add_lt_of_contravariant_add_le
--/
 
-#print covariant_swap_mul_le_of_covariant_mul_le /-
 @[to_additive]
-instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N]
+instance covariant_swap_hMul_le_of_covariant_hMul_le [CommSemigroup N] [LE N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (swap (· * ·)) (· ≤ ·)
     where elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
-#align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_le
+#align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_hMul_le_of_covariant_hMul_le
 #align covariant_swap_add_le_of_covariant_add_le covariant_swap_add_le_of_covariant_add_le
--/
 
-#print contravariant_swap_mul_le_of_contravariant_mul_le /-
 @[to_additive]
-instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroup N] [LE N]
+instance contravariant_swap_hMul_le_of_contravariant_hMul_le [CommSemigroup N] [LE N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (swap (· * ·)) (· ≤ ·)
     where elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
-#align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_le
+#align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_hMul_le_of_contravariant_hMul_le
 #align contravariant_swap_add_le_of_contravariant_add_le contravariant_swap_add_le_of_contravariant_add_le
--/
 
-#print contravariant_swap_mul_lt_of_contravariant_mul_lt /-
 @[to_additive]
-instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroup N] [LT N]
+instance contravariant_swap_hMul_lt_of_contravariant_hMul_lt [CommSemigroup N] [LT N]
     [ContravariantClass N N (· * ·) (· < ·)] : ContravariantClass N N (swap (· * ·)) (· < ·)
     where elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
-#align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_lt
+#align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_hMul_lt_of_contravariant_hMul_lt
 #align contravariant_swap_add_lt_of_contravariant_add_lt contravariant_swap_add_lt_of_contravariant_add_lt
--/
 
-#print covariant_swap_mul_lt_of_covariant_mul_lt /-
 @[to_additive]
-instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroup N] [LT N]
+instance covariant_swap_hMul_lt_of_covariant_hMul_lt [CommSemigroup N] [LT N]
     [CovariantClass N N (· * ·) (· < ·)] : CovariantClass N N (swap (· * ·)) (· < ·)
     where elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
-#align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_lt
+#align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_hMul_lt_of_covariant_hMul_lt
 #align covariant_swap_add_lt_of_covariant_add_lt covariant_swap_add_lt_of_covariant_add_lt
--/
 
-#print LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
-instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSemigroup N]
+instance LeftCancelSemigroup.covariant_hMul_lt_of_covariant_hMul_le [LeftCancelSemigroup N]
     [PartialOrder N] [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
     where elim a b c bc := by
     cases' lt_iff_le_and_ne.mp bc with bc cb
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_right a).mpr cb⟩
-#align left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le
+#align left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_hMul_lt_of_covariant_hMul_le
 #align add_left_cancel_semigroup.covariant_add_lt_of_covariant_add_le AddLeftCancelSemigroup.covariant_add_lt_of_covariant_add_le
--/
 
-#print RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le /-
 @[to_additive]
-instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
+instance RightCancelSemigroup.covariant_swap_hMul_lt_of_covariant_swap_hMul_le
     [RightCancelSemigroup N] [PartialOrder N] [CovariantClass N N (swap (· * ·)) (· ≤ ·)] :
     CovariantClass N N (swap (· * ·)) (· < ·)
     where elim a b c bc := by
     cases' lt_iff_le_and_ne.mp bc with bc cb
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_left a).mpr cb⟩
-#align right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
+#align right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le RightCancelSemigroup.covariant_swap_hMul_lt_of_covariant_swap_hMul_le
 #align add_right_cancel_semigroup.covariant_swap_add_lt_of_covariant_swap_add_le AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le
--/
 
-#print LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt /-
 @[to_additive]
-instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftCancelSemigroup N]
+instance LeftCancelSemigroup.contravariant_hMul_le_of_contravariant_hMul_lt [LeftCancelSemigroup N]
     [PartialOrder N] [ContravariantClass N N (· * ·) (· < ·)] :
     ContravariantClass N N (· * ·) (· ≤ ·)
     where elim a b c bc := by
     cases' le_iff_eq_or_lt.mp bc with h h
     · exact ((mul_right_inj a).mp h).le
     · exact (ContravariantClass.elim _ h).le
-#align left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt
+#align left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt LeftCancelSemigroup.contravariant_hMul_le_of_contravariant_hMul_lt
 #align add_left_cancel_semigroup.contravariant_add_le_of_contravariant_add_lt AddLeftCancelSemigroup.contravariant_add_le_of_contravariant_add_lt
--/
 
-#print RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt /-
 @[to_additive]
-instance RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
+instance RightCancelSemigroup.contravariant_swap_hMul_le_of_contravariant_swap_hMul_lt
     [RightCancelSemigroup N] [PartialOrder N] [ContravariantClass N N (swap (· * ·)) (· < ·)] :
     ContravariantClass N N (swap (· * ·)) (· ≤ ·)
     where elim a b c bc := by
     cases' le_iff_eq_or_lt.mp bc with h h
     · exact ((mul_left_inj a).mp h).le
     · exact (ContravariantClass.elim _ h).le
-#align right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
+#align right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt RightCancelSemigroup.contravariant_swap_hMul_le_of_contravariant_swap_hMul_lt
 #align add_right_cancel_semigroup.contravariant_swap_add_le_of_contravariant_swap_add_lt AddRightCancelSemigroup.contravariant_swap_add_le_of_contravariant_swap_add_lt
--/
 
 end Variants
 
