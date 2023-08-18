@@ -933,14 +933,14 @@ theorem norm_indicatorConstLp' (hp_pos : p ≠ 0) (hμs_pos : μ s ≠ 0) :
 #align measure_theory.norm_indicator_const_Lp' MeasureTheory.norm_indicatorConstLp'
 -/
 
-#print MeasureTheory.indicatorConst_empty /-
+#print MeasureTheory.indicatorConstLp_empty /-
 @[simp]
-theorem indicatorConst_empty : indicatorConstLp p MeasurableSet.empty (by simp : μ ∅ ≠ ∞) c = 0 :=
+theorem indicatorConstLp_empty : indicatorConstLp p MeasurableSet.empty (by simp : μ ∅ ≠ ∞) c = 0 :=
   by
   rw [Lp.eq_zero_iff_ae_eq_zero]
   convert indicator_const_Lp_coe_fn
   simp [Set.indicator_empty']
-#align measure_theory.indicator_const_empty MeasureTheory.indicatorConst_empty
+#align measure_theory.indicator_const_empty MeasureTheory.indicatorConstLp_empty
 -/
 
 #print MeasureTheory.memℒp_add_of_disjoint /-
