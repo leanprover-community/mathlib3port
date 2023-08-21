@@ -1047,7 +1047,6 @@ theorem symm_trans_self (e : R ≃+* S) : e.symm.trans e = RingEquiv.refl S :=
 #align ring_equiv.symm_trans_self RingEquiv.symm_trans_self
 -/
 
-#print RingEquiv.noZeroDivisors /-
 /-- If two rings are isomorphic, and the second doesn't have zero divisors,
 then so does the first. -/
 protected theorem noZeroDivisors {A : Type _} (B : Type _) [Ring A] [Ring B] [NoZeroDivisors B]
@@ -1058,9 +1057,7 @@ protected theorem noZeroDivisors {A : Type _} (B : Type _) [Ring A] [Ring B] [No
       have : e x * e y = 0 := by rw [← e.map_mul, hxy, e.map_zero]
       simpa using eq_zero_or_eq_zero_of_mul_eq_zero this }
 #align ring_equiv.no_zero_divisors RingEquiv.noZeroDivisors
--/
 
-#print RingEquiv.isDomain /-
 /-- If two rings are isomorphic, and the second is a domain, then so is the first. -/
 protected theorem isDomain {A : Type _} (B : Type _) [Ring A] [Ring B] [IsDomain B] (e : A ≃+* B) :
     IsDomain A :=
@@ -1069,7 +1066,6 @@ protected theorem isDomain {A : Type _} (B : Type _) [Ring A] [Ring B] [IsDomain
   haveI := e.no_zero_divisors B
   exact NoZeroDivisors.to_isDomain _
 #align ring_equiv.is_domain RingEquiv.isDomain
--/
 
 end RingEquiv
 

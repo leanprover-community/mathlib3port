@@ -1362,7 +1362,6 @@ section Unital
 
 variable (𝕜) (𝕜' : Type _) [SeminormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormOneClass 𝕜']
 
-#print ContinuousLinearMap.mulₗᵢ /-
 /-- Multiplication in a normed algebra as a linear isometry to the space of
 continuous linear maps. -/
 def mulₗᵢ : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
@@ -1372,22 +1371,17 @@ def mulₗᵢ : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
       (by
         convert ratio_le_op_norm _ (1 : 𝕜'); simp [norm_one]
         infer_instance)
-#align continuous_linear_map.mulₗᵢ ContinuousLinearMap.mulₗᵢ
--/
+#align continuous_linear_map.mulₗᵢ ContinuousLinearMap.mulₗᵢₓ
 
-#print ContinuousLinearMap.coe_mulₗᵢ /-
 @[simp]
 theorem coe_mulₗᵢ : ⇑(mulₗᵢ 𝕜 𝕜') = mul 𝕜 𝕜' :=
   rfl
-#align continuous_linear_map.coe_mulₗᵢ ContinuousLinearMap.coe_mulₗᵢ
--/
+#align continuous_linear_map.coe_mulₗᵢ ContinuousLinearMap.coe_mulₗᵢₓ
 
-#print ContinuousLinearMap.op_norm_mul_apply /-
 @[simp]
 theorem op_norm_mul_apply (x : 𝕜') : ‖mul 𝕜 𝕜' x‖ = ‖x‖ :=
   (mulₗᵢ 𝕜 𝕜').norm_map x
-#align continuous_linear_map.op_norm_mul_apply ContinuousLinearMap.op_norm_mul_apply
--/
+#align continuous_linear_map.op_norm_mul_apply ContinuousLinearMap.op_norm_mul_applyₓ
 
 end Unital
 
@@ -2203,13 +2197,11 @@ section
 
 variable [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-#print ContinuousLinearMap.op_norm_mul /-
 @[simp]
 theorem op_norm_mul [NormOneClass 𝕜'] : ‖mul 𝕜 𝕜'‖ = 1 :=
   haveI := NormOneClass.nontrivial 𝕜'
   (mulₗᵢ 𝕜 𝕜').norm_toContinuousLinearMap
-#align continuous_linear_map.op_norm_mul ContinuousLinearMap.op_norm_mul
--/
+#align continuous_linear_map.op_norm_mul ContinuousLinearMap.op_norm_mulₓ
 
 end
 

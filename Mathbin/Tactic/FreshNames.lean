@@ -139,7 +139,7 @@ unsafe def rename_fresh (renames : name_map (Sum Name (List Name))) (reserved : 
       match renames.find h.local_uniq_name with
       | none => Sum.inl h.local_pp_name
       | some new_names => new_names
-  let reserved := reserved.insert_list <| renames.filterMap Sum.getLeft
+  let reserved := reserved.insert_list <| renames.filterMap Sum.getLeft?
   let new_hyps ← intro_lst_fresh_reserved renames reserved
   pure <| reverted new_hyps
 #align tactic.rename_fresh tactic.rename_fresh

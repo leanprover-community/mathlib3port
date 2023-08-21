@@ -45,7 +45,6 @@ scoped[CanonicalEmbedding]
   notation "E" =>
     ({ w : InfinitePlace K // IsReal w } → ℝ) × ({ w : InfinitePlace K // IsComplex w } → ℂ)
 
-#print NumberField.canonicalEmbedding.space_rank /-
 theorem space_rank [NumberField K] : finrank ℝ E = finrank ℚ K :=
   by
   haveI : Module.Free ℝ ℂ := inferInstance
@@ -53,11 +52,9 @@ theorem space_rank [NumberField K] : finrank ℝ E = finrank ℚ K :=
     Finset.card_univ, ← card_real_embeddings, Algebra.id.smul_eq_mul, mul_comm, ←
     card_complex_embeddings, ← NumberField.Embeddings.card K ℂ, Fintype.card_subtype_compl,
     Nat.add_sub_of_le (Fintype.card_subtype_le _)]
-#align number_field.canonical_embedding.space_rank NumberField.canonicalEmbedding.space_rank
--/
+#align number_field.canonical_embedding.space_rank NumberField.CanonicalEmbedding.space_rank
 
-#print NumberField.canonicalEmbedding.nontrivial_space /-
-theorem nontrivial_space [NumberField K] : Nontrivial E :=
+theorem non_trivial_space [NumberField K] : Nontrivial E :=
   by
   obtain ⟨w⟩ := infinite_place.nonempty K
   obtain hw | hw := w.is_real_or_is_complex
@@ -65,8 +62,7 @@ theorem nontrivial_space [NumberField K] : Nontrivial E :=
     exact nontrivial_prod_left
   · haveI : Nonempty { w : infinite_place K // is_complex w } := ⟨⟨w, hw⟩⟩
     exact nontrivial_prod_right
-#align number_field.canonical_embedding.non_trivial_space NumberField.canonicalEmbedding.nontrivial_space
--/
+#align number_field.canonical_embedding.non_trivial_space NumberField.CanonicalEmbedding.non_trivial_space
 
 #print NumberField.canonicalEmbedding /-
 /-- The canonical embedding of a number field `K` of signature `(r₁, r₂)` into `ℝ^r₁ × ℂ^r₂`. -/
@@ -78,7 +74,7 @@ def NumberField.canonicalEmbedding : K →+* E :=
 #print NumberField.canonicalEmbedding_injective /-
 theorem NumberField.canonicalEmbedding_injective [NumberField K] :
     Injective (NumberField.canonicalEmbedding K) :=
-  @RingHom.injective _ _ _ _ (nontrivial_space K) _
+  @RingHom.injective _ _ _ _ (non_trivial_space K) _
 #align number_field.canonical_embedding_injective NumberField.canonicalEmbedding_injective
 -/
 
@@ -86,21 +82,17 @@ open NumberField
 
 variable {K}
 
-#print NumberField.canonicalEmbedding.apply_at_real_infinitePlace /-
 @[simp]
 theorem apply_at_real_infinitePlace (w : { w : InfinitePlace K // IsReal w }) (x : K) :
     (NumberField.canonicalEmbedding K x).1 w = w.Prop.Embedding x := by
   simp only [canonical_embedding, RingHom.prod_apply, Pi.ringHom_apply]
 #align number_field.canonical_embedding.apply_at_real_infinite_place NumberField.canonicalEmbedding.apply_at_real_infinitePlace
--/
 
-#print NumberField.canonicalEmbedding.apply_at_complex_infinitePlace /-
 @[simp]
 theorem apply_at_complex_infinitePlace (w : { w : InfinitePlace K // IsComplex w }) (x : K) :
     (NumberField.canonicalEmbedding K x).2 w = Embedding w.val x := by
   simp only [canonical_embedding, RingHom.prod_apply, Pi.ringHom_apply]
 #align number_field.canonical_embedding.apply_at_complex_infinite_place NumberField.canonicalEmbedding.apply_at_complex_infinitePlace
--/
 
 #print NumberField.canonicalEmbedding.nnnorm_eq /-
 theorem nnnorm_eq [NumberField K] (x : K) :
@@ -157,7 +149,6 @@ def integerLattice : Subring E :=
 #align number_field.canonical_embedding.integer_lattice NumberField.canonicalEmbedding.integerLattice
 -/
 
-#print NumberField.canonicalEmbedding.equivIntegerLattice /-
 /-- The linear equiv between `𝓞 K` and the integer lattice. -/
 def equivIntegerLattice [NumberField K] : 𝓞 K ≃ₗ[ℤ] integerLattice K :=
   LinearEquiv.ofBijective
@@ -171,7 +162,6 @@ def equivIntegerLattice [NumberField K] : 𝓞 K ≃ₗ[ℤ] integerLattice K :=
       rw [LinearMap.coe_mk, Subtype.mk_eq_mk] at h 
       exact IsFractionRing.injective (𝓞 K) K (canonical_embedding_injective K h))
 #align number_field.canonical_embedding.equiv_integer_lattice NumberField.canonicalEmbedding.equivIntegerLattice
--/
 
 #print NumberField.canonicalEmbedding.integerLattice.inter_ball_finite /-
 theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :

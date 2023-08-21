@@ -91,15 +91,15 @@ theorem finrank_lt_of_rank_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K
 #align finite_dimensional.finrank_lt_of_rank_lt FiniteDimensional.finrank_lt_of_rank_lt
 -/
 
-#print FiniteDimensional.rank_lt_of_finrank_lt /-
-theorem rank_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.rank K V :=
+#print FiniteDimensional.lt_rank_of_lt_finrank /-
+theorem lt_rank_of_lt_finrank {n : ℕ} (h : n < finrank K V) : ↑n < Module.rank K V :=
   by
   rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast]
   · exact nat_lt_aleph_0 n
   · contrapose! h
     rw [finrank, Cardinal.toNat_apply_of_aleph0_le h]
     exact n.zero_le
-#align finite_dimensional.rank_lt_of_finrank_lt FiniteDimensional.rank_lt_of_finrank_lt
+#align finite_dimensional.rank_lt_of_finrank_lt FiniteDimensional.lt_rank_of_lt_finrank
 -/
 
 #print FiniteDimensional.finrank_le_finrank_of_rank_le_rank /-
@@ -117,7 +117,7 @@ variable [Nontrivial K] [NoZeroSMulDivisors K V]
 #print FiniteDimensional.nontrivial_of_finrank_pos /-
 /-- A finite dimensional space is nontrivial if it has positive `finrank`. -/
 theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
-  rank_pos_iff_nontrivial.mp (rank_lt_of_finrank_lt h)
+  rank_pos_iff_nontrivial.mp (lt_rank_of_lt_finrank h)
 #align finite_dimensional.nontrivial_of_finrank_pos FiniteDimensional.nontrivial_of_finrank_pos
 -/
 

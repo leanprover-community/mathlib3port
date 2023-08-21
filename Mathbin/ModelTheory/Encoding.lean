@@ -264,7 +264,7 @@ def listDecode :
       simp only [List.sizeof, ← add_assoc]
       exact le_max_of_le_right le_add_self⟩
   | Sum.inr (Sum.inl ⟨n, R⟩)::Sum.inr (Sum.inr k)::l =>
-    ⟨if h : ∀ i : Fin n, ((l.map Sum.getLeft).get? i).join.isSome then
+    ⟨if h : ∀ i : Fin n, ((l.map Sum.getLeft?).get? i).join.isSome then
         if h' : ∀ i, (Option.get (h i)).1 = k then
           ⟨k, BoundedFormula.rel R fun i => Eq.mp (by rw [h' i]) (Option.get (h i)).2⟩
         else default
@@ -314,7 +314,7 @@ theorem listDecode_encode_list (l : List (Σ n, L.BoundedFormula α n)) :
     · rw [list_encode, cons_append, cons_append, singleton_append, cons_append, list_decode]
       · have h :
           ∀ i : Fin φ_l,
-            ((List.map Sum.getLeft
+            ((List.map Sum.getLeft?
                       (List.map
                           (fun i : Fin φ_l =>
                             Sum.inl
@@ -331,7 +331,7 @@ theorem listDecode_encode_list (l : List (Σ n, L.BoundedFormula α n)) :
           refine' ⟨lt_of_lt_of_le i.2 le_self_add, _⟩
           rw [nth_le_append, nth_le_map]
           ·
-            simp only [Sum.getLeft, nth_le_fin_range, Fin.eta, Function.comp_apply,
+            simp only [Sum.getLeft?, nth_le_fin_range, Fin.eta, Function.comp_apply,
               eq_self_iff_true, heq_iff_eq, and_self_iff]
           · exact lt_of_lt_of_le i.is_lt (ge_of_eq (length_fin_range _))
           · rw [length_map, length_fin_range]
