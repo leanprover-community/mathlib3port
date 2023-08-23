@@ -225,7 +225,7 @@ theorem nondegenerate_iff_det_ne_zero {A : Type _} [DecidableEq n] [CommRing A] 
 #align matrix.nondegenerate_iff_det_ne_zero Matrix.nondegenerate_iff_det_ne_zero
 -/
 
-alias nondegenerate_iff_det_ne_zero ↔ nondegenerate.det_ne_zero nondegenerate.of_det_ne_zero
+alias ⟨nondegenerate.det_ne_zero, nondegenerate.of_det_ne_zero⟩ := nondegenerate_iff_det_ne_zero
 #align matrix.nondegenerate.det_ne_zero Matrix.Nondegenerate.det_ne_zero
 #align matrix.nondegenerate.of_det_ne_zero Matrix.Nondegenerate.of_det_ne_zero
 

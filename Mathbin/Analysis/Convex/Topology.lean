@@ -40,7 +40,7 @@ theorem Real.convex_iff_isPreconnected {s : Set ℝ} : Convex ℝ s ↔ IsPrecon
 #align real.convex_iff_is_preconnected Real.convex_iff_isPreconnected
 -/
 
-alias Real.convex_iff_isPreconnected ↔ _ IsPreconnected.convex
+alias ⟨_, IsPreconnected.convex⟩ := Real.convex_iff_isPreconnected
 #align is_preconnected.convex IsPreconnected.convex
 
 /-! ### Standard simplex -/

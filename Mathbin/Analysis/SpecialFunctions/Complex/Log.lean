@@ -225,7 +225,7 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
 #align complex.countable_preimage_exp Complex.countable_preimage_exp
 -/
 
-alias countable_preimage_exp ↔ _ _root_.set.countable.preimage_cexp
+alias ⟨_, _root_.set.countable.preimage_cexp⟩ := countable_preimage_exp
 #align set.countable.preimage_cexp Set.Countable.preimage_cexp
 
 #print Complex.tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero /-

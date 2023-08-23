@@ -98,7 +98,7 @@ theorem isClique_bot_iff : (⊥ : SimpleGraph α).IsClique s ↔ (s : Set α).Su
 #align simple_graph.is_clique_bot_iff SimpleGraph.isClique_bot_iff
 -/
 
-alias is_clique_bot_iff ↔ is_clique.subsingleton _
+alias ⟨is_clique.subsingleton, _⟩ := is_clique_bot_iff
 #align simple_graph.is_clique.subsingleton SimpleGraph.IsClique.subsingleton
 
 end Clique
@@ -319,7 +319,7 @@ theorem cliqueSet_eq_empty_iff : G.cliqueSet n = ∅ ↔ G.CliqueFree n := by
 #align simple_graph.clique_set_eq_empty_iff SimpleGraph.cliqueSet_eq_empty_iff
 -/
 
-alias clique_set_eq_empty_iff ↔ _ clique_free.clique_set
+alias ⟨_, clique_free.clique_set⟩ := clique_set_eq_empty_iff
 #align simple_graph.clique_free.clique_set SimpleGraph.CliqueFree.cliqueSet
 
 attribute [protected] clique_free.clique_set
@@ -373,7 +373,7 @@ theorem cliqueFinset_eq_empty_iff : G.cliqueFinset n = ∅ ↔ G.CliqueFree n :=
 #align simple_graph.clique_finset_eq_empty_iff SimpleGraph.cliqueFinset_eq_empty_iff
 -/
 
-alias clique_finset_eq_empty_iff ↔ _ _root_.simple_graph.clique_free.clique_finset
+alias ⟨_, _root_.simple_graph.clique_free.clique_finset⟩ := clique_finset_eq_empty_iff
 #align simple_graph.clique_free.clique_finset SimpleGraph.CliqueFree.cliqueFinset
 
 attribute [protected] clique_free.clique_finset

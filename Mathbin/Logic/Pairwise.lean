@@ -56,7 +56,7 @@ theorem Function.injective_iff_pairwise_ne : Injective f ↔ Pairwise ((· ≠ �
 #align function.injective_iff_pairwise_ne Function.injective_iff_pairwise_ne
 -/
 
-alias Function.injective_iff_pairwise_ne ↔ Function.Injective.pairwise_ne _
+alias ⟨Function.Injective.pairwise_ne, _⟩ := Function.injective_iff_pairwise_ne
 #align function.injective.pairwise_ne Function.Injective.pairwise_ne
 
 namespace Set

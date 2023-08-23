@@ -960,7 +960,7 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
 #align tactic.positivity_canon_pow tactic.positivity_canon_pow
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:87:10: unsupported modifiers in user command -/
-alias abs_pos ↔ _ abs_pos_of_ne_zero
+alias ⟨_, abs_pos_of_ne_zero⟩ := abs_pos
 #align tactic.abs_pos_of_ne_zero Tactic.abs_pos_of_ne_zero
 
 /-- Extension for the `positivity` tactic: an absolute value is nonnegative, and is strictly

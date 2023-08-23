@@ -1415,10 +1415,10 @@ theorem reduce.eq_of_red (H : Red L₁ L₂) : reduce L₁ = reduce L₂ :=
 #align free_add_group.reduce.eq_of_red FreeAddGroup.reduce.eq_of_red
 -/
 
-alias reduce.eq_of_red ← red.reduce_eq
+alias red.reduce_eq := reduce.eq_of_red
 #align free_group.red.reduce_eq FreeGroup.red.reduce_eq
 
-alias FreeAddGroup.reduce.eq_of_red ← free_add_group.red.reduce_eq
+alias free_add_group.red.reduce_eq := FreeAddGroup.reduce.eq_of_red
 #align free_group.free_add_group.red.reduce_eq FreeGroup.freeAddGroup.red.reduce_eq
 
 #print FreeGroup.Red.reduce_right /-

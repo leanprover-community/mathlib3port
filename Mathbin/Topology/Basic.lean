@@ -115,11 +115,11 @@ theorem isOpen_mk {p h₁ h₂ h₃} {s : Set α} : is_open[⟨p, h₁, h₂, h�
 #align is_open_mk isOpen_mk
 -/
 
-#print topologicalSpace_eq /-
+#print TopologicalSpace.ext /-
 @[ext]
-theorem topologicalSpace_eq {f g : TopologicalSpace α} (h : is_open[f] = is_open[g]) : f = g := by
+theorem TopologicalSpace.ext {f g : TopologicalSpace α} (h : is_open[f] = is_open[g]) : f = g := by
   cases f; cases g; congr; exact h
-#align topological_space_eq topologicalSpace_eq
+#align topological_space_eq TopologicalSpace.ext
 -/
 
 section
@@ -147,11 +147,11 @@ theorem isOpen_sUnion {s : Set (Set α)} (h : ∀ t ∈ s, IsOpen t) : IsOpen (�
 
 end
 
-#print topologicalSpace_eq_iff /-
-theorem topologicalSpace_eq_iff {t t' : TopologicalSpace α} :
+#print TopologicalSpace.ext_iff /-
+theorem TopologicalSpace.ext_iff {t t' : TopologicalSpace α} :
     t = t' ↔ ∀ s, is_open[t] s ↔ is_open[t'] s :=
   ⟨fun h s => h ▸ Iff.rfl, fun h => by ext; exact h _⟩
-#align topological_space_eq_iff topologicalSpace_eq_iff
+#align topological_space_eq_iff TopologicalSpace.ext_iff
 -/
 
 #print isOpen_fold /-
@@ -668,7 +668,7 @@ theorem closure_nonempty_iff {s : Set α} : (closure s).Nonempty ↔ s.Nonempty 
 #align closure_nonempty_iff closure_nonempty_iff
 -/
 
-alias closure_nonempty_iff ↔ Set.Nonempty.of_closure Set.Nonempty.closure
+alias ⟨Set.Nonempty.of_closure, Set.Nonempty.closure⟩ := closure_nonempty_iff
 #align set.nonempty.of_closure Set.Nonempty.of_closure
 #align set.nonempty.closure Set.Nonempty.closure
 
@@ -833,7 +833,7 @@ theorem dense_closure {s : Set α} : Dense (closure s) ↔ Dense s := by
 #align dense_closure dense_closure
 -/
 
-alias dense_closure ↔ Dense.of_closure Dense.closure
+alias ⟨Dense.of_closure, Dense.closure⟩ := dense_closure
 #align dense.of_closure Dense.of_closure
 #align dense.closure Dense.closure
 
@@ -858,7 +858,7 @@ theorem dense_iff_inter_open {s : Set α} :
 #align dense_iff_inter_open dense_iff_inter_open
 -/
 
-alias dense_iff_inter_open ↔ Dense.inter_open_nonempty _
+alias ⟨Dense.inter_open_nonempty, _⟩ := dense_iff_inter_open
 #align dense.inter_open_nonempty Dense.inter_open_nonempty
 
 #print Dense.exists_mem_open /-
@@ -1695,7 +1695,7 @@ theorem mem_closure_iff_frequently {s : Set α} {a : α} : a ∈ closure s ↔ �
 #align mem_closure_iff_frequently mem_closure_iff_frequently
 -/
 
-alias mem_closure_iff_frequently ↔ _ Filter.Frequently.mem_closure
+alias ⟨_, Filter.Frequently.mem_closure⟩ := mem_closure_iff_frequently
 #align filter.frequently.mem_closure Filter.Frequently.mem_closure
 
 #print isClosed_iff_frequently /-

@@ -1470,7 +1470,7 @@ theorem affineSpan_nonempty : (affineSpan k s : Set P).Nonempty ↔ s.Nonempty :
 #align affine_span_nonempty affineSpan_nonempty
 -/
 
-alias affineSpan_nonempty ↔ _ _root_.set.nonempty.affine_span
+alias ⟨_, _root_.set.nonempty.affine_span⟩ := affineSpan_nonempty
 #align set.nonempty.affine_span Set.Nonempty.affineSpan
 
 /-- The affine span of a nonempty set is nonempty. -/

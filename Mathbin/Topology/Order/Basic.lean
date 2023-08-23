@@ -207,7 +207,7 @@ theorem le_of_tendsto_of_tendsto {f g : β → α} {b : Filter β} {a₁ a₂ : 
 #align le_of_tendsto_of_tendsto le_of_tendsto_of_tendsto
 -/
 
-alias le_of_tendsto_of_tendsto ← tendsto_le_of_eventuallyLE
+alias tendsto_le_of_eventuallyLE := le_of_tendsto_of_tendsto
 #align tendsto_le_of_eventually_le tendsto_le_of_eventuallyLE
 
 #print le_of_tendsto_of_tendsto' /-
@@ -2583,7 +2583,7 @@ theorem IsLUB.mem_of_isClosed {a : α} {s : Set α} (ha : IsLUB s a) (hs : s.Non
 #align is_lub.mem_of_is_closed IsLUB.mem_of_isClosed
 -/
 
-alias IsLUB.mem_of_isClosed ← IsClosed.isLUB_mem
+alias IsClosed.isLUB_mem := IsLUB.mem_of_isClosed
 #align is_closed.is_lub_mem IsClosed.isLUB_mem
 
 #print IsGLB.mem_of_isClosed /-
@@ -2593,7 +2593,7 @@ theorem IsGLB.mem_of_isClosed {a : α} {s : Set α} (ha : IsGLB s a) (hs : s.Non
 #align is_glb.mem_of_is_closed IsGLB.mem_of_isClosed
 -/
 
-alias IsGLB.mem_of_isClosed ← IsClosed.isGLB_mem
+alias IsClosed.isGLB_mem := IsGLB.mem_of_isClosed
 #align is_closed.is_glb_mem IsClosed.isGLB_mem
 
 /-!

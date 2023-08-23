@@ -88,13 +88,15 @@ def ψ₂ {X Y : C} (w : X ⟶ Y) (hw : W w) : ιPaths W Y ⟶ ιPaths W X :=
 #align category_theory.localization.construction.ψ₂ CategoryTheory.Localization.Construction.ψ₂
 -/
 
+#print CategoryTheory.Localization.Construction.relations /-
 /-- The relations by which we take the quotient in order to get the localized category. -/
 inductive relations : HomRel (Paths (LocQuiver W))
   | id (X : C) : relations (ψ₁ W (𝟙 X)) (𝟙 _)
   | comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : relations (ψ₁ W (f ≫ g)) (ψ₁ W f ≫ ψ₁ W g)
   | Winv₁ {X Y : C} (w : X ⟶ Y) (hw : W w) : relations (ψ₁ W w ≫ ψ₂ W w hw) (𝟙 _)
   | Winv₂ {X Y : C} (w : X ⟶ Y) (hw : W w) : relations (ψ₂ W w hw ≫ ψ₁ W w) (𝟙 _)
-#align category_theory.localization.construction.relations CategoryTheory.Localization.Construction.relationsₓ
+#align category_theory.localization.construction.relations CategoryTheory.Localization.Construction.relations
+-/
 
 end Construction
 

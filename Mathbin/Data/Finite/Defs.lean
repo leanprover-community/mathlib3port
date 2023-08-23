@@ -164,7 +164,7 @@ protected theorem Infinite.false [Finite α] (h : Infinite α) : False :=
 #align infinite.false Infinite.false
 -/
 
-alias not_infinite_iff_finite ↔ Finite.of_not_infinite Finite.not_infinite
+alias ⟨Finite.of_not_infinite, Finite.not_infinite⟩ := not_infinite_iff_finite
 #align finite.of_not_infinite Finite.of_not_infinite
 #align finite.not_infinite Finite.not_infinite
 

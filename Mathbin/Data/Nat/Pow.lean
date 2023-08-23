@@ -209,7 +209,7 @@ theorem sq_sub_sq (a b : ℕ) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by rw [sq, 
 #align nat.sq_sub_sq Nat.sq_sub_sq
 -/
 
-alias sq_sub_sq ← pow_two_sub_pow_two
+alias pow_two_sub_pow_two := sq_sub_sq
 #align nat.pow_two_sub_pow_two Nat.pow_two_sub_pow_two
 
 /-! ### `pow` and `mod` / `dvd` -/

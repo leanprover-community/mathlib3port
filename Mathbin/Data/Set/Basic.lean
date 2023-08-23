@@ -159,11 +159,11 @@ theorem lt_iff_ssubset : s < t ↔ s ⊂ t :=
 #align set.lt_iff_ssubset Set.lt_iff_ssubset
 -/
 
-alias le_iff_subset ↔ _root_.has_le.le.subset _root_.has_subset.subset.le
+alias ⟨_root_.has_le.le.subset, _root_.has_subset.subset.le⟩ := le_iff_subset
 #align has_le.le.subset LE.le.subset
 #align has_subset.subset.le HasSubset.Subset.le
 
-alias lt_iff_ssubset ↔ _root_.has_lt.lt.ssubset _root_.has_ssubset.ssubset.lt
+alias ⟨_root_.has_lt.lt.ssubset, _root_.has_ssubset.ssubset.lt⟩ := lt_iff_ssubset
 #align has_lt.lt.ssubset LT.lt.sSubset
 #align has_ssubset.ssubset.lt HasSSubset.SSubset.lt
 
@@ -547,7 +547,7 @@ theorem nonempty_coe_sort {s : Set α} : Nonempty ↥s ↔ s.Nonempty :=
 #align set.nonempty_coe_sort Set.nonempty_coe_sort
 -/
 
-alias nonempty_coe_sort ↔ _ nonempty.coe_sort
+alias ⟨_, nonempty.coe_sort⟩ := nonempty_coe_sort
 #align set.nonempty.coe_sort Set.Nonempty.coe_sort
 
 #print Set.nonempty_def /-
@@ -778,7 +778,7 @@ theorem nonempty_iff_ne_empty : s.Nonempty ↔ s ≠ ∅ :=
 #align set.nonempty_iff_ne_empty Set.nonempty_iff_ne_empty
 -/
 
-alias nonempty_iff_ne_empty ↔ nonempty.ne_empty _
+alias ⟨nonempty.ne_empty, _⟩ := nonempty_iff_ne_empty
 #align set.nonempty.ne_empty Set.Nonempty.ne_empty
 
 #print Set.not_nonempty_empty /-
@@ -822,7 +822,7 @@ theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
 #align set.empty_ssubset Set.empty_ssubset
 -/
 
-alias empty_ssubset ↔ _ nonempty.empty_ssubset
+alias ⟨_, nonempty.empty_ssubset⟩ := empty_ssubset
 #align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubset
 
 /-!
@@ -875,7 +875,7 @@ theorem univ_subset_iff {s : Set α} : univ ⊆ s ↔ s = univ :=
 #align set.univ_subset_iff Set.univ_subset_iff
 -/
 
-alias univ_subset_iff ↔ eq_univ_of_univ_subset _
+alias ⟨eq_univ_of_univ_subset, _⟩ := univ_subset_iff
 #align set.eq_univ_of_univ_subset Set.eq_univ_of_univ_subset
 
 #print Set.eq_univ_iff_forall /-
@@ -2093,7 +2093,7 @@ theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty 
 #align set.not_disjoint_iff_nonempty_inter Set.not_disjoint_iff_nonempty_inter
 -/
 
-alias not_disjoint_iff_nonempty_inter ↔ _ nonempty.not_disjoint
+alias ⟨_, nonempty.not_disjoint⟩ := not_disjoint_iff_nonempty_inter
 #align set.nonempty.not_disjoint Set.Nonempty.not_disjoint
 
 #print Set.disjoint_or_nonempty_inter /-
@@ -2431,16 +2431,16 @@ theorem disjoint_compl_right_iff_subset : Disjoint s (tᶜ) ↔ s ⊆ t :=
 #align set.disjoint_compl_right_iff_subset Set.disjoint_compl_right_iff_subset
 -/
 
-alias subset_compl_iff_disjoint_right ↔ _ _root_.disjoint.subset_compl_right
+alias ⟨_, _root_.disjoint.subset_compl_right⟩ := subset_compl_iff_disjoint_right
 #align disjoint.subset_compl_right Disjoint.subset_compl_right
 
-alias subset_compl_iff_disjoint_left ↔ _ _root_.disjoint.subset_compl_left
+alias ⟨_, _root_.disjoint.subset_compl_left⟩ := subset_compl_iff_disjoint_left
 #align disjoint.subset_compl_left Disjoint.subset_compl_left
 
-alias disjoint_compl_left_iff_subset ↔ _ _root_.has_subset.subset.disjoint_compl_left
+alias ⟨_, _root_.has_subset.subset.disjoint_compl_left⟩ := disjoint_compl_left_iff_subset
 #align has_subset.subset.disjoint_compl_left HasSubset.Subset.disjoint_compl_left
 
-alias disjoint_compl_right_iff_subset ↔ _ _root_.has_subset.subset.disjoint_compl_right
+alias ⟨_, _root_.has_subset.subset.disjoint_compl_right⟩ := disjoint_compl_right_iff_subset
 #align has_subset.subset.disjoint_compl_right HasSubset.Subset.disjoint_compl_right
 
 #print Set.subset_union_compl_iff_inter_subset /-
@@ -3582,7 +3582,7 @@ theorem nontrivial_coe_sort {s : Set α} : Nontrivial s ↔ s.Nontrivial := by
 #align set.nontrivial_coe_sort Set.nontrivial_coe_sort
 -/
 
-alias nontrivial_coe_sort ↔ _ nontrivial.coe_sort
+alias ⟨_, nontrivial.coe_sort⟩ := nontrivial_coe_sort
 #align set.nontrivial.coe_sort Set.Nontrivial.coe_sort
 
 #print Set.nontrivial_of_nontrivial_coe /-
@@ -3614,10 +3614,10 @@ theorem not_nontrivial_iff : ¬s.Nontrivial ↔ s.Subsingleton :=
 #align set.not_nontrivial_iff Set.not_nontrivial_iff
 -/
 
-alias not_nontrivial_iff ↔ _ subsingleton.not_nontrivial
+alias ⟨_, subsingleton.not_nontrivial⟩ := not_nontrivial_iff
 #align set.subsingleton.not_nontrivial Set.Subsingleton.not_nontrivial
 
-alias not_subsingleton_iff ↔ _ nontrivial.not_subsingleton
+alias ⟨_, nontrivial.not_subsingleton⟩ := not_subsingleton_iff
 #align set.nontrivial.not_subsingleton Set.Nontrivial.not_subsingleton
 
 #print Set.subsingleton_or_nontrivial /-

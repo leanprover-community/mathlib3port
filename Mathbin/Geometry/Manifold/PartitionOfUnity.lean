@@ -252,7 +252,7 @@ theorem isSubordinate_toPartitionOfUnity :
 #align smooth_partition_of_unity.is_subordinate_to_partition_of_unity SmoothPartitionOfUnity.isSubordinate_toPartitionOfUnity
 -/
 
-alias is_subordinate_to_partition_of_unity ↔ _ is_subordinate.to_partition_of_unity
+alias ⟨_, is_subordinate.to_partition_of_unity⟩ := is_subordinate_to_partition_of_unity
 #align smooth_partition_of_unity.is_subordinate.to_partition_of_unity SmoothPartitionOfUnity.IsSubordinate.toPartitionOfUnity
 
 #print SmoothPartitionOfUnity.IsSubordinate.contMDiff_finsum_smul /-
@@ -500,7 +500,7 @@ theorem isSubordinate_toBumpCovering {f : SmoothBumpCovering ι I M s} {U : M �
 #align smooth_bump_covering.is_subordinate_to_bump_covering SmoothBumpCovering.isSubordinate_toBumpCovering
 -/
 
-alias is_subordinate_to_bump_covering ↔ _ is_subordinate.to_bump_covering
+alias ⟨_, is_subordinate.to_bump_covering⟩ := is_subordinate_to_bump_covering
 #align smooth_bump_covering.is_subordinate.to_bump_covering SmoothBumpCovering.IsSubordinate.toBumpCovering
 
 #print SmoothBumpCovering.toSmoothPartitionOfUnity /-

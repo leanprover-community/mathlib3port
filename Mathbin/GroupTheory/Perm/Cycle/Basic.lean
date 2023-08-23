@@ -130,7 +130,7 @@ theorem sameCycle_inv : SameCycle f⁻¹ x y ↔ SameCycle f x y :=
 #align equiv.perm.same_cycle_inv Equiv.Perm.sameCycle_inv
 -/
 
-alias same_cycle_inv ↔ same_cycle.of_inv same_cycle.inv
+alias ⟨same_cycle.of_inv, same_cycle.inv⟩ := same_cycle_inv
 #align equiv.perm.same_cycle.of_inv Equiv.Perm.SameCycle.of_inv
 #align equiv.perm.same_cycle.inv Equiv.Perm.SameCycle.inv
 
@@ -223,35 +223,35 @@ theorem sameCycle_pow_right {n : ℕ} : SameCycle f x ((f ^ n) y) ↔ SameCycle 
 #align equiv.perm.same_cycle_pow_right Equiv.Perm.sameCycle_pow_right
 -/
 
-alias same_cycle_apply_left ↔ same_cycle.of_apply_left same_cycle.apply_left
+alias ⟨same_cycle.of_apply_left, same_cycle.apply_left⟩ := same_cycle_apply_left
 #align equiv.perm.same_cycle.of_apply_left Equiv.Perm.SameCycle.of_apply_left
 #align equiv.perm.same_cycle.apply_left Equiv.Perm.SameCycle.apply_left
 
-alias same_cycle_apply_right ↔ same_cycle.of_apply_right same_cycle.apply_right
+alias ⟨same_cycle.of_apply_right, same_cycle.apply_right⟩ := same_cycle_apply_right
 #align equiv.perm.same_cycle.of_apply_right Equiv.Perm.SameCycle.of_apply_right
 #align equiv.perm.same_cycle.apply_right Equiv.Perm.SameCycle.apply_right
 
-alias same_cycle_inv_apply_left ↔ same_cycle.of_inv_apply_left same_cycle.inv_apply_left
+alias ⟨same_cycle.of_inv_apply_left, same_cycle.inv_apply_left⟩ := same_cycle_inv_apply_left
 #align equiv.perm.same_cycle.of_inv_apply_left Equiv.Perm.SameCycle.of_inv_apply_left
 #align equiv.perm.same_cycle.inv_apply_left Equiv.Perm.SameCycle.inv_apply_left
 
-alias same_cycle_inv_apply_right ↔ same_cycle.of_inv_apply_right same_cycle.inv_apply_right
+alias ⟨same_cycle.of_inv_apply_right, same_cycle.inv_apply_right⟩ := same_cycle_inv_apply_right
 #align equiv.perm.same_cycle.of_inv_apply_right Equiv.Perm.SameCycle.of_inv_apply_right
 #align equiv.perm.same_cycle.inv_apply_right Equiv.Perm.SameCycle.inv_apply_right
 
-alias same_cycle_pow_left ↔ same_cycle.of_pow_left same_cycle.pow_left
+alias ⟨same_cycle.of_pow_left, same_cycle.pow_left⟩ := same_cycle_pow_left
 #align equiv.perm.same_cycle.of_pow_left Equiv.Perm.SameCycle.of_pow_left
 #align equiv.perm.same_cycle.pow_left Equiv.Perm.SameCycle.pow_left
 
-alias same_cycle_pow_right ↔ same_cycle.of_pow_right same_cycle.pow_right
+alias ⟨same_cycle.of_pow_right, same_cycle.pow_right⟩ := same_cycle_pow_right
 #align equiv.perm.same_cycle.of_pow_right Equiv.Perm.SameCycle.of_pow_right
 #align equiv.perm.same_cycle.pow_right Equiv.Perm.SameCycle.pow_right
 
-alias same_cycle_zpow_left ↔ same_cycle.of_zpow_left same_cycle.zpow_left
+alias ⟨same_cycle.of_zpow_left, same_cycle.zpow_left⟩ := same_cycle_zpow_left
 #align equiv.perm.same_cycle.of_zpow_left Equiv.Perm.SameCycle.of_zpow_left
 #align equiv.perm.same_cycle.zpow_left Equiv.Perm.SameCycle.zpow_left
 
-alias same_cycle_zpow_right ↔ same_cycle.of_zpow_right same_cycle.zpow_right
+alias ⟨same_cycle.of_zpow_right, same_cycle.zpow_right⟩ := same_cycle_zpow_right
 #align equiv.perm.same_cycle.of_zpow_right Equiv.Perm.SameCycle.of_zpow_right
 #align equiv.perm.same_cycle.zpow_right Equiv.Perm.SameCycle.zpow_right
 
@@ -275,7 +275,7 @@ theorem sameCycle_subtypePerm {h} {x y : { x // p x }} :
 #align equiv.perm.same_cycle_subtype_perm Equiv.Perm.sameCycle_subtypePerm
 -/
 
-alias same_cycle_subtype_perm ↔ _ same_cycle.subtype_perm
+alias ⟨_, same_cycle.subtype_perm⟩ := same_cycle_subtype_perm
 #align equiv.perm.same_cycle.subtype_perm Equiv.Perm.SameCycle.subtypePerm
 
 #print Equiv.Perm.sameCycle_extendDomain /-
@@ -287,7 +287,7 @@ theorem sameCycle_extendDomain {p : β → Prop} [DecidablePred p] {f : α ≃ S
 #align equiv.perm.same_cycle_extend_domain Equiv.Perm.sameCycle_extendDomain
 -/
 
-alias same_cycle_extend_domain ↔ _ same_cycle.extend_domain
+alias ⟨_, same_cycle.extend_domain⟩ := same_cycle_extend_domain
 #align equiv.perm.same_cycle.extend_domain Equiv.Perm.SameCycle.extendDomain
 
 #print Equiv.Perm.SameCycle.exists_pow_eq' /-
@@ -908,7 +908,7 @@ theorem isCycleOn_one : (1 : Perm α).IsCycleOn s ↔ s.Subsingleton := by
 #align equiv.perm.is_cycle_on_one Equiv.Perm.isCycleOn_one
 -/
 
-alias is_cycle_on_one ↔ is_cycle_on.subsingleton _root_.set.subsingleton.is_cycle_on_one
+alias ⟨is_cycle_on.subsingleton, _root_.set.subsingleton.is_cycle_on_one⟩ := is_cycle_on_one
 #align equiv.perm.is_cycle_on.subsingleton Equiv.Perm.IsCycleOn.subsingleton
 #align set.subsingleton.is_cycle_on_one Set.Subsingleton.isCycleOn_one
 
@@ -930,7 +930,7 @@ theorem isCycleOn_inv : f⁻¹.IsCycleOn s ↔ f.IsCycleOn s := by simp [is_cycl
 #align equiv.perm.is_cycle_on_inv Equiv.Perm.isCycleOn_inv
 -/
 
-alias is_cycle_on_inv ↔ is_cycle_on.of_inv is_cycle_on.inv
+alias ⟨is_cycle_on.of_inv, is_cycle_on.inv⟩ := is_cycle_on_inv
 #align equiv.perm.is_cycle_on.of_inv Equiv.Perm.IsCycleOn.of_inv
 #align equiv.perm.is_cycle_on.inv Equiv.Perm.IsCycleOn.inv
 

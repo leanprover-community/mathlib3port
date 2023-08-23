@@ -1113,7 +1113,7 @@ theorem radical_eq_iff : I.radical = I ↔ I.IsRadical := by
 #align ideal.radical_eq_iff Ideal.radical_eq_iff
 -/
 
-alias radical_eq_iff ↔ _ is_radical.radical
+alias ⟨_, is_radical.radical⟩ := radical_eq_iff
 #align ideal.is_radical.radical Ideal.IsRadical.radical
 
 variable (R)

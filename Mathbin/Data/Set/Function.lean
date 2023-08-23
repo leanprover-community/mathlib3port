@@ -212,7 +212,7 @@ theorem injective_codRestrict {f : ι → α} {s : Set α} (h : ∀ x, f x ∈ s
 #align set.injective_cod_restrict Set.injective_codRestrict
 -/
 
-alias injective_cod_restrict ↔ _ _root_.function.injective.cod_restrict
+alias ⟨_, _root_.function.injective.cod_restrict⟩ := injective_cod_restrict
 #align function.injective.cod_restrict Function.Injective.codRestrict
 
 variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ}
@@ -317,7 +317,7 @@ theorem eqOn_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} :
 #align set.eq_on_range Set.eqOn_range
 -/
 
-alias eq_on_range ↔ eq_on.comp_eq _
+alias ⟨eq_on.comp_eq, _⟩ := eq_on_range
 #align set.eq_on.comp_eq Set.EqOn.comp_eq
 
 /-! ### Congruence lemmas -/
@@ -777,13 +777,13 @@ theorem restrictPreimage_bijective (hf : Bijective f) : Bijective (t.restrictPre
 #align set.restrict_preimage_bijective Set.restrictPreimage_bijective
 -/
 
-alias Set.restrictPreimage_injective ← _root_.function.injective.restrict_preimage
+alias _root_.function.injective.restrict_preimage := Set.restrictPreimage_injective
 #align function.injective.restrict_preimage Function.Injective.restrictPreimage
 
-alias Set.restrictPreimage_surjective ← _root_.function.surjective.restrict_preimage
+alias _root_.function.surjective.restrict_preimage := Set.restrictPreimage_surjective
 #align function.surjective.restrict_preimage Function.Surjective.restrictPreimage
 
-alias Set.restrictPreimage_bijective ← _root_.function.bijective.restrict_preimage
+alias _root_.function.bijective.restrict_preimage := Set.restrictPreimage_bijective
 #align function.bijective.restrict_preimage Function.Bijective.restrictPreimage
 
 end
@@ -830,7 +830,7 @@ theorem InjOn.ne_iff {x y} (h : InjOn f s) (hx : x ∈ s) (hy : y ∈ s) : f x �
 #align set.inj_on.ne_iff Set.InjOn.ne_iff
 -/
 
-alias inj_on.ne_iff ↔ _ inj_on.ne
+alias ⟨_, inj_on.ne⟩ := inj_on.ne_iff
 #align set.inj_on.ne Set.InjOn.ne
 
 #print Set.InjOn.congr /-
@@ -886,7 +886,7 @@ theorem injOn_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x h
 #align set.inj_on_of_injective Set.injOn_of_injective
 -/
 
-alias inj_on_of_injective ← _root_.function.injective.inj_on
+alias _root_.function.injective.inj_on := inj_on_of_injective
 #align function.injective.inj_on Function.Injective.injOn
 
 #print Set.injOn_id /-
@@ -928,7 +928,7 @@ theorem injOn_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
 #align set.inj_on_iff_injective Set.injOn_iff_injective
 -/
 
-alias inj_on_iff_injective ↔ inj_on.injective _
+alias ⟨inj_on.injective, _⟩ := inj_on_iff_injective
 #align set.inj_on.injective Set.InjOn.injective
 
 #print Set.MapsTo.restrict_inj /-
@@ -1380,7 +1380,7 @@ theorem bijective_iff_bijOn_univ : Bijective f ↔ BijOn f univ univ :=
 #align set.bijective_iff_bij_on_univ Set.bijective_iff_bijOn_univ
 -/
 
-alias bijective_iff_bij_on_univ ↔ _root_.function.bijective.bij_on_univ _
+alias ⟨_root_.function.bijective.bij_on_univ, _⟩ := bijective_iff_bij_on_univ
 #align function.bijective.bij_on_univ Function.Bijective.bijOn_univ
 
 #print Set.BijOn.compl /-
@@ -2166,7 +2166,7 @@ theorem strictMono_restrict [Preorder α] [Preorder β] {f : α → β} {s : Set
 #align strict_mono_restrict strictMono_restrict
 -/
 
-alias strictMono_restrict ↔ _root_.strict_mono.of_restrict _root_.strict_mono_on.restrict
+alias ⟨_root_.strict_mono.of_restrict, _root_.strict_mono_on.restrict⟩ := strictMono_restrict
 #align strict_mono.of_restrict StrictMono.of_restrict
 #align strict_mono_on.restrict StrictMonoOn.restrict
 
@@ -2433,7 +2433,7 @@ theorem bijOn_symm : BijOn e.symm t s ↔ BijOn e s t :=
 #align equiv.bij_on_symm Equiv.bijOn_symm
 -/
 
-alias bij_on_symm ↔ _root_.set.bij_on.of_equiv_symm _root_.set.bij_on.equiv_symm
+alias ⟨_root_.set.bij_on.of_equiv_symm, _root_.set.bij_on.equiv_symm⟩ := bij_on_symm
 #align set.bij_on.of_equiv_symm Set.BijOn.of_equiv_symm
 #align set.bij_on.equiv_symm Set.BijOn.equiv_symm
 

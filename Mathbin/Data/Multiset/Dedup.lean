@@ -110,7 +110,7 @@ theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodup s :=
 #align multiset.dedup_eq_self Multiset.dedup_eq_self
 -/
 
-alias dedup_eq_self ↔ _ nodup.dedup
+alias ⟨_, nodup.dedup⟩ := dedup_eq_self
 #align multiset.nodup.dedup Multiset.Nodup.dedup
 
 #print Multiset.count_dedup /-

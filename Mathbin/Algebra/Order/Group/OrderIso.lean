@@ -57,7 +57,7 @@ theorem inv_le' : a⁻¹ ≤ b ↔ b⁻¹ ≤ a :=
 #align neg_le neg_le
 -/
 
-alias inv_le' ↔ inv_le_of_inv_le' _
+alias ⟨inv_le_of_inv_le', _⟩ := inv_le'
 #align inv_le_of_inv_le' inv_le_of_inv_le'
 
 attribute [to_additive neg_le_of_neg_le] inv_le_of_inv_le'
@@ -85,7 +85,7 @@ end TypeclassesLeftRightLe
 
 end Group
 
-alias le_inv' ↔ le_inv_of_le_inv _
+alias ⟨le_inv_of_le_inv, _⟩ := le_inv'
 #align le_inv_of_le_inv le_inv_of_le_inv
 
 attribute [to_additive] le_inv_of_le_inv

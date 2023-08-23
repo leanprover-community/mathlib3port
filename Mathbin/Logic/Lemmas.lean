@@ -27,16 +27,16 @@ would result in less delta-reduced statements.
 -/
 
 
-alias heq_iff_eq ↔ HEq.eq Eq.heq
+alias ⟨HEq.eq, Eq.heq⟩ := heq_iff_eq
 #align heq.eq HEq.eq
 #align eq.heq Eq.heq
 
 attribute [protected] HEq.eq Eq.heq
 
-alias ne_of_eq_of_ne ← Eq.trans_ne
+alias Eq.trans_ne := ne_of_eq_of_ne
 #align eq.trans_ne Eq.trans_ne
 
-alias ne_of_ne_of_eq ← Ne.trans_eq
+alias Ne.trans_eq := ne_of_ne_of_eq
 #align ne.trans_eq Ne.trans_eq
 
 variable {α : Sort _} {p q r : Prop} [Decidable p] [Decidable q] {a b c : α}

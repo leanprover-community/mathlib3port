@@ -470,11 +470,11 @@ theorem nodup_sublists' {l : List α} : Nodup (sublists' l) ↔ Nodup l := by
 #align list.nodup_sublists' List.nodup_sublists'
 -/
 
-alias nodup_sublists ↔ nodup.of_sublists nodup.sublists
+alias ⟨nodup.of_sublists, nodup.sublists⟩ := nodup_sublists
 #align list.nodup.of_sublists List.nodup.of_sublists
 #align list.nodup.sublists List.nodup.sublists
 
-alias nodup_sublists' ↔ nodup.of_sublists' nodup.sublists'
+alias ⟨nodup.of_sublists', nodup.sublists'⟩ := nodup_sublists'
 #align list.nodup.of_sublists' List.nodup.of_sublists'
 #align list.nodup.sublists' List.nodup.sublists'
 

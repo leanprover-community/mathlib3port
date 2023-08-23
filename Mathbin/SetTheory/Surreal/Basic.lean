@@ -161,7 +161,7 @@ theorem le_of_lf {x y : PGame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) :
 #align pgame.le_of_lf PGame.le_of_lf
 -/
 
-alias le_of_lf ← lf.le
+alias lf.le := le_of_lf
 #align pgame.lf.le PGame.Lf.le
 
 #print PGame.lt_of_lf /-
@@ -170,7 +170,7 @@ theorem lt_of_lf {x y : PGame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) :
 #align pgame.lt_of_lf PGame.lt_of_lf
 -/
 
-alias lt_of_lf ← lf.lt
+alias lf.lt := lt_of_lf
 #align pgame.lf.lt PGame.Lf.lt
 
 #print PGame.lf_iff_lt /-

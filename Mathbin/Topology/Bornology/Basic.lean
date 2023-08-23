@@ -147,11 +147,11 @@ theorem isCobounded_compl_iff : IsCobounded (sᶜ) ↔ IsBounded s :=
 #align bornology.is_cobounded_compl_iff Bornology.isCobounded_compl_iff
 -/
 
-alias is_bounded_compl_iff ↔ is_bounded.of_compl is_cobounded.compl
+alias ⟨is_bounded.of_compl, is_cobounded.compl⟩ := is_bounded_compl_iff
 #align bornology.is_bounded.of_compl Bornology.IsBounded.of_compl
 #align bornology.is_cobounded.compl Bornology.IsCobounded.compl
 
-alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
+alias ⟨is_cobounded.of_compl, is_bounded.compl⟩ := is_cobounded_compl_iff
 #align bornology.is_cobounded.of_compl Bornology.IsCobounded.of_compl
 #align bornology.is_bounded.compl Bornology.IsBounded.compl
 

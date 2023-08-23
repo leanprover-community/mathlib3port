@@ -889,7 +889,7 @@ theorem natAbs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.nat
 #align int.nat_abs_sq Int.natAbs_sq
 -/
 
-alias nat_abs_sq ← nat_abs_pow_two
+alias nat_abs_pow_two := nat_abs_sq
 #align int.nat_abs_pow_two Int.natAbs_pow_two
 
 #print Int.natAbs_le_self_sq /-
@@ -898,7 +898,7 @@ theorem natAbs_le_self_sq (a : ℤ) : (Int.natAbs a : ℤ) ≤ a ^ 2 := by rw [�
 #align int.abs_le_self_sq Int.natAbs_le_self_sq
 -/
 
-alias abs_le_self_sq ← abs_le_self_pow_two
+alias abs_le_self_pow_two := abs_le_self_sq
 #align int.abs_le_self_pow_two Int.abs_le_self_pow_two
 
 #print Int.le_self_sq /-
@@ -907,7 +907,7 @@ theorem le_self_sq (b : ℤ) : b ≤ b ^ 2 :=
 #align int.le_self_sq Int.le_self_sq
 -/
 
-alias le_self_sq ← le_self_pow_two
+alias le_self_pow_two := le_self_sq
 #align int.le_self_pow_two Int.le_self_pow_two
 
 #print Int.pow_right_injective /-

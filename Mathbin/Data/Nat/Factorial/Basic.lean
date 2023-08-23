@@ -467,7 +467,7 @@ theorem descFactorial_eq_zero_iff_lt {n : ℕ} : ∀ {k : ℕ}, n.descFactorial 
 #align nat.desc_factorial_eq_zero_iff_lt Nat.descFactorial_eq_zero_iff_lt
 -/
 
-alias desc_factorial_eq_zero_iff_lt ↔ _ desc_factorial_of_lt
+alias ⟨_, desc_factorial_of_lt⟩ := desc_factorial_eq_zero_iff_lt
 #align nat.desc_factorial_of_lt Nat.descFactorial_of_lt
 
 #print Nat.add_descFactorial_eq_ascFactorial /-

@@ -163,8 +163,8 @@ theorem approximatesLinearOn_iff_lipschitzOnWith {f : E → F} {f' : E →L[𝕜
 #align approximates_linear_on.approximates_linear_on_iff_lipschitz_on_with ApproximatesLinearOn.approximatesLinearOn_iff_lipschitzOnWith
 -/
 
-alias approximates_linear_on_iff_lipschitz_on_with ↔ LipschitzOnWith
-  _root_.lipschitz_on_with.approximates_linear_on
+alias ⟨LipschitzOnWith, _root_.lipschitz_on_with.approximates_linear_on⟩ :=
+  approximates_linear_on_iff_lipschitz_on_with
 #align approximates_linear_on.lipschitz_on_with ApproximatesLinearOn.lipschitzOnWith
 #align lipschitz_on_with.approximates_linear_on LipschitzOnWith.approximatesLinearOn
 

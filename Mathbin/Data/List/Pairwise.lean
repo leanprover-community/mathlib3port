@@ -394,7 +394,7 @@ theorem pairwise_of_forall_mem_list {l : List α} {r : α → α → Prop} (h : 
     l.Pairwise r := by
   classical
   refine' pairwise_of_reflexive_on_dupl_of_forall_ne (fun a ha' => _) fun a ha b hb _ => h a ha b hb
-  have ha := List.one_le_count_iff_mem.1 ha'.le
+  have ha := List.count_pos_iff_mem.1 ha'.le
   exact h a ha a ha
 #align list.pairwise_of_forall_mem_list List.pairwise_of_forall_mem_list
 -/
@@ -524,7 +524,7 @@ theorem pwFilter_eq_self {l : List α} : pwFilter R l = l ↔ Pairwise R l :=
 #align list.pw_filter_eq_self List.pwFilter_eq_self
 -/
 
-alias pw_filter_eq_self ↔ _ pairwise.pw_filter
+alias ⟨_, pairwise.pw_filter⟩ := pw_filter_eq_self
 #align list.pairwise.pw_filter List.Pairwise.pwFilter
 
 attribute [protected] pairwise.pw_filter

@@ -253,7 +253,6 @@ theorem adjoin_rootSet (n : ℕ) :
 instance (f : K[X]) : IsSplittingField K (SplittingFieldAux f.natDegree f) f :=
   ⟨SplittingFieldAux.splits _ _ rfl, SplittingFieldAux.adjoin_rootSet _ _ rfl⟩
 
-#print Polynomial.SplittingFieldAux.ofMvPolynomial /-
 /-- The natural map from `mv_polynomial (f.root_set (splitting_field_aux f.nat_degree f))`
 to `splitting_field_aux f.nat_degree f` sendind a variable to the corresponding root. -/
 def ofMvPolynomial (f : K[X]) :
@@ -261,9 +260,7 @@ def ofMvPolynomial (f : K[X]) :
       SplittingFieldAux f.natDegree f :=
   MvPolynomial.aeval fun i => i.1
 #align polynomial.splitting_field_aux.of_mv_polynomial Polynomial.SplittingFieldAux.ofMvPolynomial
--/
 
-#print Polynomial.SplittingFieldAux.ofMvPolynomial_surjective /-
 theorem ofMvPolynomial_surjective (f : K[X]) : Function.Surjective (ofMvPolynomial f) :=
   by
   suffices AlgHom.range (of_mv_polynomial f) = ⊤ by
@@ -272,9 +269,7 @@ theorem ofMvPolynomial_surjective (f : K[X]) : Function.Surjective (ofMvPolynomi
     adjoin_root_set _ _ rfl]
   exact Algebra.adjoin_le fun α hα => Algebra.subset_adjoin ⟨⟨α, hα⟩, rfl⟩
 #align polynomial.splitting_field_aux.of_mv_polynomial_surjective Polynomial.SplittingFieldAux.ofMvPolynomial_surjective
--/
 
-#print Polynomial.SplittingFieldAux.algEquivQuotientMvPolynomial /-
 /-- The algebra isomorphism between the quotient of
 `mv_polynomial (f.root_set (splitting_field_aux f.nat_degree f)) K` by the kernel of
 `of_mv_polynomial f` and `splitting_field_aux f.nat_degree f`. It is used to transport all the
@@ -285,7 +280,6 @@ def algEquivQuotientMvPolynomial (f : K[X]) :
       SplittingFieldAux f.natDegree f :=
   (Ideal.quotientKerAlgEquivOfSurjective (ofMvPolynomial_surjective f) : _)
 #align polynomial.splitting_field_aux.alg_equiv_quotient_mv_polynomial Polynomial.SplittingFieldAux.algEquivQuotientMvPolynomial
--/
 
 end SplittingFieldAux
 

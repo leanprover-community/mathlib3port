@@ -1209,10 +1209,10 @@ theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g
 #align category_theory.functor.map_is_pushout CategoryTheory.Functor.map_isPushout
 -/
 
-alias functor.map_is_pullback ← is_pullback.map
+alias is_pullback.map := functor.map_is_pullback
 #align category_theory.is_pullback.map CategoryTheory.IsPullback.map
 
-alias functor.map_is_pushout ← is_pushout.map
+alias is_pushout.map := functor.map_is_pushout
 #align category_theory.is_pushout.map CategoryTheory.IsPushout.map
 
 #print CategoryTheory.IsPullback.of_map /-

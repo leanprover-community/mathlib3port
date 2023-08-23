@@ -610,7 +610,7 @@ theorem contDiffWithinAt_insert {y : E} :
 #align cont_diff_within_at_insert contDiffWithinAt_insert
 -/
 
-alias contDiffWithinAt_insert ↔ ContDiffWithinAt.of_insert ContDiffWithinAt.insert'
+alias ⟨ContDiffWithinAt.of_insert, ContDiffWithinAt.insert'⟩ := contDiffWithinAt_insert
 #align cont_diff_within_at.of_insert ContDiffWithinAt.of_insert
 #align cont_diff_within_at.insert' ContDiffWithinAt.insert'
 

@@ -411,7 +411,7 @@ theorem nodup_powerset {s : Multiset α} : Nodup (powerset s) ↔ Nodup s :=
 #align multiset.nodup_powerset Multiset.nodup_powerset
 -/
 
-alias nodup_powerset ↔ nodup.of_powerset nodup.powerset
+alias ⟨nodup.of_powerset, nodup.powerset⟩ := nodup_powerset
 #align multiset.nodup.of_powerset Multiset.Nodup.ofPowerset
 #align multiset.nodup.powerset Multiset.Nodup.powerset
 

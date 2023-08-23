@@ -57,7 +57,7 @@ theorem farFromTriangleFree_iff :
 #align simple_graph.far_from_triangle_free_iff SimpleGraph.farFromTriangleFree_iff
 -/
 
-alias far_from_triangle_free_iff ↔ far_from_triangle_free.le_card_sub_card _
+alias ⟨far_from_triangle_free.le_card_sub_card, _⟩ := far_from_triangle_free_iff
 #align simple_graph.far_from_triangle_free.le_card_sub_card SimpleGraph.farFromTriangleFree.le_card_sub_card
 
 #print SimpleGraph.farFromTriangleFree.mono /-

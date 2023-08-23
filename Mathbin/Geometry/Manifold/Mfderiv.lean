@@ -1264,8 +1264,8 @@ theorem uniqueMDiffWithinAt_iff_uniqueDiffWithinAt :
 #align unique_mdiff_within_at_iff_unique_diff_within_at uniqueMDiffWithinAt_iff_uniqueDiffWithinAt
 -/
 
-alias uniqueMDiffWithinAt_iff_uniqueDiffWithinAt ↔ UniqueMDiffWithinAt.uniqueDiffWithinAt
-  UniqueDiffWithinAt.uniqueMDiffWithinAt
+alias ⟨UniqueMDiffWithinAt.uniqueDiffWithinAt, UniqueDiffWithinAt.uniqueMDiffWithinAt⟩ :=
+  uniqueMDiffWithinAt_iff_uniqueDiffWithinAt
 #align unique_mdiff_within_at.unique_diff_within_at UniqueMDiffWithinAt.uniqueDiffWithinAt
 #align unique_diff_within_at.unique_mdiff_within_at UniqueDiffWithinAt.uniqueMDiffWithinAt
 
@@ -1275,7 +1275,7 @@ theorem uniqueMDiffOn_iff_uniqueDiffOn : UniqueMDiffOn 𝓘(𝕜, E) s ↔ Uniqu
 #align unique_mdiff_on_iff_unique_diff_on uniqueMDiffOn_iff_uniqueDiffOn
 -/
 
-alias uniqueMDiffOn_iff_uniqueDiffOn ↔ UniqueMDiffOn.uniqueDiffOn UniqueDiffOn.uniqueMDiffOn
+alias ⟨UniqueMDiffOn.uniqueDiffOn, UniqueDiffOn.uniqueMDiffOn⟩ := uniqueMDiffOn_iff_uniqueDiffOn
 #align unique_mdiff_on.unique_diff_on UniqueMDiffOn.uniqueDiffOn
 #align unique_diff_on.unique_mdiff_on UniqueDiffOn.uniqueMDiffOn
 
@@ -1294,8 +1294,8 @@ theorem hasMFDerivWithinAt_iff_hasFDerivWithinAt {f'} :
 #align has_mfderiv_within_at_iff_has_fderiv_within_at hasMFDerivWithinAt_iff_hasFDerivWithinAt
 -/
 
-alias hasMFDerivWithinAt_iff_hasFDerivWithinAt ↔ HasMFDerivWithinAt.hasFDerivWithinAt
-  HasFDerivWithinAt.hasMFDerivWithinAt
+alias ⟨HasMFDerivWithinAt.hasFDerivWithinAt, HasFDerivWithinAt.hasMFDerivWithinAt⟩ :=
+  hasMFDerivWithinAt_iff_hasFDerivWithinAt
 #align has_mfderiv_within_at.has_fderiv_within_at HasMFDerivWithinAt.hasFDerivWithinAt
 #align has_fderiv_within_at.has_mfderiv_within_at HasFDerivWithinAt.hasMFDerivWithinAt
 
@@ -1306,7 +1306,7 @@ theorem hasMFDerivAt_iff_hasFDerivAt {f'} :
 #align has_mfderiv_at_iff_has_fderiv_at hasMFDerivAt_iff_hasFDerivAt
 -/
 
-alias hasMFDerivAt_iff_hasFDerivAt ↔ HasMFDerivAt.hasFDerivAt HasFDerivAt.hasMFDerivAt
+alias ⟨HasMFDerivAt.hasFDerivAt, HasFDerivAt.hasMFDerivAt⟩ := hasMFDerivAt_iff_hasFDerivAt
 #align has_mfderiv_at.has_fderiv_at HasMFDerivAt.hasFDerivAt
 #align has_fderiv_at.has_mfderiv_at HasFDerivAt.hasMFDerivAt
 
@@ -1321,8 +1321,9 @@ theorem mdifferentiableWithinAt_iff_differentiableWithinAt :
 #align mdifferentiable_within_at_iff_differentiable_within_at mdifferentiableWithinAt_iff_differentiableWithinAt
 -/
 
-alias mdifferentiableWithinAt_iff_differentiableWithinAt ↔
-  MDifferentiableWithinAt.differentiableWithinAt DifferentiableWithinAt.mdifferentiableWithinAt
+alias ⟨MDifferentiableWithinAt.differentiableWithinAt,
+  DifferentiableWithinAt.mdifferentiableWithinAt⟩ :=
+  mdifferentiableWithinAt_iff_differentiableWithinAt
 #align mdifferentiable_within_at.differentiable_within_at MDifferentiableWithinAt.differentiableWithinAt
 #align differentiable_within_at.mdifferentiable_within_at DifferentiableWithinAt.mdifferentiableWithinAt
 
@@ -1336,8 +1337,8 @@ theorem mdifferentiableAt_iff_differentiableAt :
 #align mdifferentiable_at_iff_differentiable_at mdifferentiableAt_iff_differentiableAt
 -/
 
-alias mdifferentiableAt_iff_differentiableAt ↔ MDifferentiableAt.differentiableAt
-  DifferentiableAt.mdifferentiableAt
+alias ⟨MDifferentiableAt.differentiableAt, DifferentiableAt.mdifferentiableAt⟩ :=
+  mdifferentiableAt_iff_differentiableAt
 #align mdifferentiable_at.differentiable_at MDifferentiableAt.differentiableAt
 #align differentiable_at.mdifferentiable_at DifferentiableAt.mdifferentiableAt
 
@@ -1350,8 +1351,8 @@ theorem mdifferentiableOn_iff_differentiableOn :
 #align mdifferentiable_on_iff_differentiable_on mdifferentiableOn_iff_differentiableOn
 -/
 
-alias mdifferentiableOn_iff_differentiableOn ↔ MDifferentiableOn.differentiableOn
-  DifferentiableOn.mdifferentiableOn
+alias ⟨MDifferentiableOn.differentiableOn, DifferentiableOn.mdifferentiableOn⟩ :=
+  mdifferentiableOn_iff_differentiableOn
 #align mdifferentiable_on.differentiable_on MDifferentiableOn.differentiableOn
 #align differentiable_on.mdifferentiable_on DifferentiableOn.mdifferentiableOn
 
@@ -1363,8 +1364,8 @@ theorem mdifferentiable_iff_differentiable :
 #align mdifferentiable_iff_differentiable mdifferentiable_iff_differentiable
 -/
 
-alias mdifferentiable_iff_differentiable ↔ MDifferentiable.differentiable
-  Differentiable.mdifferentiable
+alias ⟨MDifferentiable.differentiable, Differentiable.mdifferentiable⟩ :=
+  mdifferentiable_iff_differentiable
 #align mdifferentiable.differentiable MDifferentiable.differentiable
 #align differentiable.mdifferentiable Differentiable.mdifferentiable
 

@@ -99,7 +99,7 @@ theorem holderOnWith_one {C : ℝ≥0} {f : X → Y} {s : Set X} :
 #align holder_on_with_one holderOnWith_one
 -/
 
-alias holderOnWith_one ↔ _ LipschitzOnWith.holderOnWith
+alias ⟨_, LipschitzOnWith.holderOnWith⟩ := holderOnWith_one
 #align lipschitz_on_with.holder_on_with LipschitzOnWith.holderOnWith
 
 #print holderWith_one /-
@@ -109,7 +109,7 @@ theorem holderWith_one {C : ℝ≥0} {f : X → Y} : HolderWith C 1 f ↔ Lipsch
 #align holder_with_one holderWith_one
 -/
 
-alias holderWith_one ↔ _ LipschitzWith.holderWith
+alias ⟨_, LipschitzWith.holderWith⟩ := holderWith_one
 #align lipschitz_with.holder_with LipschitzWith.holderWith
 
 #print holderWith_id /-

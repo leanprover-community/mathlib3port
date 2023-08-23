@@ -682,7 +682,7 @@ theorem Memℒp.of_le {f : α → E} {g : α → F} (hg : Memℒp g p μ) (hf : 
 #align measure_theory.mem_ℒp.of_le MeasureTheory.Memℒp.of_le
 -/
 
-alias mem_ℒp.of_le ← mem_ℒp.mono
+alias mem_ℒp.mono := mem_ℒp.of_le
 #align measure_theory.mem_ℒp.mono MeasureTheory.Memℒp.mono
 
 #print MeasureTheory.Memℒp.mono' /-

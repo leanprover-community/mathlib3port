@@ -106,7 +106,7 @@ theorem disjoint_self : Disjoint a a ↔ a = ⊥ :=
 
 /- TODO: Rename `disjoint.eq_bot` to `disjoint.inf_eq` and `disjoint.eq_bot_of_self` to
 `disjoint.eq_bot` -/
-alias disjoint_self ↔ Disjoint.eq_bot_of_self _
+alias ⟨Disjoint.eq_bot_of_self, _⟩ := disjoint_self
 #align disjoint.eq_bot_of_self Disjoint.eq_bot_of_self
 
 #print Disjoint.ne /-
@@ -358,7 +358,7 @@ theorem codisjoint_self : Codisjoint a a ↔ a = ⊤ :=
 
 /- TODO: Rename `codisjoint.eq_top` to `codisjoint.sup_eq` and `codisjoint.eq_top_of_self` to
 `codisjoint.eq_top` -/
-alias codisjoint_self ↔ Codisjoint.eq_top_of_self _
+alias ⟨Codisjoint.eq_top_of_self, _⟩ := codisjoint_self
 #align codisjoint.eq_top_of_self Codisjoint.eq_top_of_self
 
 #print Codisjoint.ne /-

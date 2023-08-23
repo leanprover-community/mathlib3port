@@ -204,7 +204,7 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
     ns.mapM fun ⟨n, b⟩ =>
         (fun s =>
             to_fmt "argument " ++ to_fmt n ++ ": " ++ s ++
-              if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
+              if (ds.countP fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
           pp b
   return <| some <| ns tt
 

@@ -73,7 +73,7 @@ theorem modEq_comm : a ≡ b [PMOD p] ↔ b ≡ a [PMOD p] :=
 #align add_comm_group.modeq_comm AddCommGroup.modEq_comm
 -/
 
-alias modeq_comm ↔ modeq.symm _
+alias ⟨modeq.symm, _⟩ := modeq_comm
 #align add_comm_group.modeq.symm AddCommGroup.ModEq.symm
 
 attribute [symm] modeq.symm
@@ -95,7 +95,7 @@ theorem neg_modEq_neg : -a ≡ -b [PMOD p] ↔ a ≡ b [PMOD p] :=
 #align add_comm_group.neg_modeq_neg AddCommGroup.neg_modEq_neg
 -/
 
-alias neg_modeq_neg ↔ modeq.of_neg modeq.neg
+alias ⟨modeq.of_neg, modeq.neg⟩ := neg_modeq_neg
 #align add_comm_group.modeq.of_neg AddCommGroup.ModEq.of_neg
 #align add_comm_group.modeq.neg AddCommGroup.ModEq.neg
 
@@ -106,7 +106,7 @@ theorem modEq_neg : a ≡ b [PMOD -p] ↔ a ≡ b [PMOD p] :=
 #align add_comm_group.modeq_neg AddCommGroup.modEq_neg
 -/
 
-alias modeq_neg ↔ modeq.of_neg' modeq.neg'
+alias ⟨modeq.of_neg', modeq.neg'⟩ := modeq_neg
 #align add_comm_group.modeq.of_neg' AddCommGroup.ModEq.of_neg'
 #align add_comm_group.modeq.neg' AddCommGroup.ModEq.neg'
 
@@ -228,10 +228,10 @@ theorem nsmul_modEq_nsmul [NoZeroSMulDivisors ℕ α] (hn : n ≠ 0) :
 #align add_comm_group.nsmul_modeq_nsmul AddCommGroup.nsmul_modEq_nsmul
 -/
 
-alias zsmul_modeq_zsmul ↔ modeq.zsmul_cancel _
+alias ⟨modeq.zsmul_cancel, _⟩ := zsmul_modeq_zsmul
 #align add_comm_group.modeq.zsmul_cancel AddCommGroup.ModEq.zsmul_cancel
 
-alias nsmul_modeq_nsmul ↔ modeq.nsmul_cancel _
+alias ⟨modeq.nsmul_cancel, _⟩ := nsmul_modeq_nsmul
 #align add_comm_group.modeq.nsmul_cancel AddCommGroup.ModEq.nsmul_cancel
 
 namespace Modeq
@@ -268,18 +268,18 @@ protected theorem sub_iff_right :
 #align add_comm_group.modeq.sub_iff_right AddCommGroup.ModEq.sub_iff_right
 -/
 
-alias modeq.add_iff_left ↔ add_left_cancel add
+alias ⟨add_left_cancel, add⟩ := modeq.add_iff_left
 #align add_comm_group.modeq.add_left_cancel AddCommGroup.ModEq.add_left_cancel
 #align add_comm_group.modeq.add AddCommGroup.ModEq.add
 
-alias modeq.add_iff_right ↔ add_right_cancel _
+alias ⟨add_right_cancel, _⟩ := modeq.add_iff_right
 #align add_comm_group.modeq.add_right_cancel AddCommGroup.ModEq.add_right_cancel
 
-alias modeq.sub_iff_left ↔ sub_left_cancel sub
+alias ⟨sub_left_cancel, sub⟩ := modeq.sub_iff_left
 #align add_comm_group.modeq.sub_left_cancel AddCommGroup.ModEq.sub_left_cancel
 #align add_comm_group.modeq.sub AddCommGroup.ModEq.sub
 
-alias modeq.sub_iff_right ↔ sub_right_cancel _
+alias ⟨sub_right_cancel, _⟩ := modeq.sub_iff_right
 #align add_comm_group.modeq.sub_right_cancel AddCommGroup.ModEq.sub_right_cancel
 
 attribute [protected] add_left_cancel add_right_cancel add sub_left_cancel sub_right_cancel sub
@@ -430,11 +430,11 @@ theorem nat_cast_modEq_nat_cast {a b n : ℕ} : a ≡ b [PMOD (n : α)] ↔ a �
 #align add_comm_group.nat_cast_modeq_nat_cast AddCommGroup.nat_cast_modEq_nat_cast
 -/
 
-alias int_cast_modeq_int_cast ↔ modeq.of_int_cast modeq.int_cast
+alias ⟨modeq.of_int_cast, modeq.int_cast⟩ := int_cast_modeq_int_cast
 #align add_comm_group.modeq.of_int_cast AddCommGroup.ModEq.of_int_cast
 #align add_comm_group.modeq.int_cast AddCommGroup.ModEq.int_cast
 
-alias nat_cast_modeq_nat_cast ↔ _root_.nat.modeq.of_nat_cast modeq.nat_cast
+alias ⟨_root_.nat.modeq.of_nat_cast, modeq.nat_cast⟩ := nat_cast_modeq_nat_cast
 #align nat.modeq.of_nat_cast Nat.ModEq.of_nat_cast
 #align add_comm_group.modeq.nat_cast AddCommGroup.ModEq.nat_cast
 

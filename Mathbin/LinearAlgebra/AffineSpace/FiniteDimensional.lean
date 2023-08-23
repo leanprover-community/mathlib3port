@@ -406,7 +406,7 @@ theorem collinear_iff_finrank_le_one {s : Set P} [FiniteDimensional k (vectorSpa
 #align collinear_iff_finrank_le_one collinear_iff_finrank_le_one
 -/
 
-alias collinear_iff_finrank_le_one ↔ Collinear.finrank_le_one _
+alias ⟨Collinear.finrank_le_one, _⟩ := collinear_iff_finrank_le_one
 #align collinear.finrank_le_one Collinear.finrank_le_one
 
 #print Collinear.subset /-
@@ -764,7 +764,7 @@ theorem coplanar_iff_finrank_le_two {s : Set P} [FiniteDimensional k (vectorSpan
 #align coplanar_iff_finrank_le_two coplanar_iff_finrank_le_two
 -/
 
-alias coplanar_iff_finrank_le_two ↔ Coplanar.finrank_le_two _
+alias ⟨Coplanar.finrank_le_two, _⟩ := coplanar_iff_finrank_le_two
 #align coplanar.finrank_le_two Coplanar.finrank_le_two
 
 #print Coplanar.subset /-

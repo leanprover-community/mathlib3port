@@ -352,7 +352,7 @@ def typeDEquivSo' [Fintype l] [Invertible (2 : R)] : typeD l R ≃ₗ⁅R⁆ so'
   apply (skewAdjointMatricesLieSubalgebraEquiv (JD l R) (PD l R) (by infer_instance)).trans
   apply LieEquiv.ofEq
   ext A
-  rw [JD_transform, ← unitOfInvertible_val (2 : R), ← Units.smul_def, LieSubalgebra.mem_coe,
+  rw [JD_transform, ← val_unitOfInvertible (2 : R), ← Units.smul_def, LieSubalgebra.mem_coe,
     mem_skewAdjointMatricesLieSubalgebra_unit_smul]
   rfl
 #align lie_algebra.orthogonal.type_D_equiv_so' LieAlgebra.Orthogonal.typeDEquivSo'
@@ -460,7 +460,7 @@ def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l
         (Matrix.reindexAlgEquiv _ (Equiv.sumAssoc PUnit l l)) (Matrix.transpose_reindex _ _)).trans
   apply LieEquiv.ofEq
   ext A
-  rw [JB_transform, ← unitOfInvertible_val (2 : R), ← Units.smul_def, LieSubalgebra.mem_coe,
+  rw [JB_transform, ← val_unitOfInvertible (2 : R), ← Units.smul_def, LieSubalgebra.mem_coe,
     LieSubalgebra.mem_coe, mem_skewAdjointMatricesLieSubalgebra_unit_smul]
   simpa [indefinite_diagonal_assoc]
 #align lie_algebra.orthogonal.type_B_equiv_so' LieAlgebra.Orthogonal.typeBEquivSo'

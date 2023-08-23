@@ -722,7 +722,7 @@ theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
 #align measure_theory.measure_mono_ae MeasureTheory.measure_mono_ae
 -/
 
-alias measure_mono_ae ← _root_.filter.eventually_le.measure_le
+alias _root_.filter.eventually_le.measure_le := measure_mono_ae
 #align filter.eventually_le.measure_le Filter.EventuallyLE.measure_le
 
 #print MeasureTheory.measure_congr /-
@@ -732,7 +732,7 @@ theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
 #align measure_theory.measure_congr MeasureTheory.measure_congr
 -/
 
-alias measure_congr ← _root_.filter.eventually_eq.measure_eq
+alias _root_.filter.eventually_eq.measure_eq := measure_congr
 #align filter.eventually_eq.measure_eq Filter.EventuallyEq.measure_eq
 
 #print MeasureTheory.measure_mono_null_ae /-

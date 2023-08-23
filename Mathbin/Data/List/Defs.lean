@@ -490,18 +490,18 @@ def lookmap (f : α → Option α) : List α → List α
 #align list.lookmap List.lookmap
 -/
 
-#print List.countp /-
+#print List.countP /-
 /-- `countp p l` is the number of elements of `l` that satisfy `p`. -/
-def countp (p : α → Prop) [DecidablePred p] : List α → Nat
+def countP (p : α → Prop) [DecidablePred p] : List α → Nat
   | [] => 0
   | x :: xs => if p x then succ (countp xs) else countp xs
-#align list.countp List.countp
+#align list.countp List.countP
 -/
 
 #print List.count /-
 /-- `count a l` is the number of occurrences of `a` in `l`. -/
 def count [DecidableEq α] (a : α) : List α → Nat :=
-  countp (Eq a)
+  countP (Eq a)
 #align list.count List.count
 -/
 

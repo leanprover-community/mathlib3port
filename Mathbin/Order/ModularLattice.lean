@@ -115,10 +115,10 @@ theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b �
 #align covby_sup_of_inf_covby_of_inf_covby_right covby_sup_of_inf_covby_of_inf_covby_right
 -/
 
-alias covby_sup_of_inf_covby_of_inf_covby_left ← Covby.sup_of_inf_of_inf_left
+alias Covby.sup_of_inf_of_inf_left := covby_sup_of_inf_covby_of_inf_covby_left
 #align covby.sup_of_inf_of_inf_left Covby.sup_of_inf_of_inf_left
 
-alias covby_sup_of_inf_covby_of_inf_covby_right ← Covby.sup_of_inf_of_inf_right
+alias Covby.sup_of_inf_of_inf_right := covby_sup_of_inf_covby_of_inf_covby_right
 #align covby.sup_of_inf_of_inf_right Covby.sup_of_inf_of_inf_right
 
 instance : IsWeakLowerModularLattice (OrderDual α) :=
@@ -142,10 +142,10 @@ theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a �
 #align inf_covby_of_covby_sup_of_covby_sup_right inf_covby_of_covby_sup_of_covby_sup_right
 -/
 
-alias inf_covby_of_covby_sup_of_covby_sup_left ← Covby.inf_of_sup_of_sup_left
+alias Covby.inf_of_sup_of_sup_left := inf_covby_of_covby_sup_of_covby_sup_left
 #align covby.inf_of_sup_of_sup_left Covby.inf_of_sup_of_sup_left
 
-alias inf_covby_of_covby_sup_of_covby_sup_right ← Covby.inf_of_sup_of_sup_right
+alias Covby.inf_of_sup_of_sup_right := inf_covby_of_covby_sup_of_covby_sup_right
 #align covby.inf_of_sup_of_sup_right Covby.inf_of_sup_of_sup_right
 
 instance : IsWeakUpperModularLattice (OrderDual α) :=
@@ -169,10 +169,10 @@ theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b := by rw 
 #align covby_sup_of_inf_covby_right covby_sup_of_inf_covby_right
 -/
 
-alias covby_sup_of_inf_covby_left ← Covby.sup_of_inf_left
+alias Covby.sup_of_inf_left := covby_sup_of_inf_covby_left
 #align covby.sup_of_inf_left Covby.sup_of_inf_left
 
-alias covby_sup_of_inf_covby_right ← Covby.sup_of_inf_right
+alias Covby.sup_of_inf_right := covby_sup_of_inf_covby_right
 #align covby.sup_of_inf_right Covby.sup_of_inf_right
 
 #print IsUpperModularLattice.to_isWeakUpperModularLattice /-
@@ -204,10 +204,10 @@ theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a := by rw 
 #align inf_covby_of_covby_sup_right inf_covby_of_covby_sup_right
 -/
 
-alias inf_covby_of_covby_sup_left ← Covby.inf_of_sup_left
+alias Covby.inf_of_sup_left := inf_covby_of_covby_sup_left
 #align covby.inf_of_sup_left Covby.inf_of_sup_left
 
-alias inf_covby_of_covby_sup_right ← Covby.inf_of_sup_right
+alias Covby.inf_of_sup_right := inf_covby_of_covby_sup_right
 #align covby.inf_of_sup_right Covby.inf_of_sup_right
 
 #print IsLowerModularLattice.to_isWeakLowerModularLattice /-

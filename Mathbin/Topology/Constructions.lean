@@ -1477,7 +1477,7 @@ theorem continuousAt_codRestrict_iff {f : α → β} {t : Set β} (h1 : ∀ x, f
 #align continuous_at_cod_restrict_iff continuousAt_codRestrict_iff
 -/
 
-alias continuousAt_codRestrict_iff ↔ _ ContinuousAt.codRestrict
+alias ⟨_, ContinuousAt.codRestrict⟩ := continuousAt_codRestrict_iff
 #align continuous_at.cod_restrict ContinuousAt.codRestrict
 
 #print ContinuousAt.restrict /-

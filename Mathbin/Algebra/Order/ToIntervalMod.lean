@@ -808,10 +808,10 @@ theorem modEq_iff_toIocMod_eq_right : a ≡ b [PMOD p] ↔ toIocMod hp a b = a +
 #align add_comm_group.modeq_iff_to_Ioc_mod_eq_right AddCommGroup.modEq_iff_toIocMod_eq_right
 -/
 
-alias modeq_iff_to_Ico_mod_eq_left ↔ modeq.to_Ico_mod_eq_left _
+alias ⟨modeq.to_Ico_mod_eq_left, _⟩ := modeq_iff_to_Ico_mod_eq_left
 #align add_comm_group.modeq.to_Ico_mod_eq_left AddCommGroup.ModEq.toIcoMod_eq_left
 
-alias modeq_iff_to_Ioc_mod_eq_right ↔ modeq.to_Ico_mod_eq_right _
+alias ⟨modeq.to_Ico_mod_eq_right, _⟩ := modeq_iff_to_Ioc_mod_eq_right
 #align add_comm_group.modeq.to_Ico_mod_eq_right AddCommGroup.ModEq.toIcoMod_eq_right
 
 variable (a b)
@@ -900,7 +900,7 @@ theorem toIcoMod_inj {c : α} : toIcoMod hp c a = toIcoMod hp c b ↔ a ≡ b [P
 #align to_Ico_mod_inj toIcoMod_inj
 -/
 
-alias toIcoMod_inj ↔ _ AddCommGroup.ModEq.toIcoMod_eq_toIcoMod
+alias ⟨_, AddCommGroup.ModEq.toIcoMod_eq_toIcoMod⟩ := toIcoMod_inj
 #align add_comm_group.modeq.to_Ico_mod_eq_to_Ico_mod AddCommGroup.ModEq.toIcoMod_eq_toIcoMod
 
 #print Ico_eq_locus_Ioc_eq_iUnion_Ioo /-

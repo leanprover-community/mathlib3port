@@ -168,10 +168,10 @@ theorem add_eq_right_iff_le : a + b = b ↔ a ≤ b := by simp
 #align add_eq_right_iff_le add_eq_right_iff_le
 -/
 
-alias add_eq_left_iff_le ↔ _ LE.le.add_eq_left
+alias ⟨_, LE.le.add_eq_left⟩ := add_eq_left_iff_le
 #align has_le.le.add_eq_left LE.le.add_eq_left
 
-alias add_eq_right_iff_le ↔ _ LE.le.add_eq_right
+alias ⟨_, LE.le.add_eq_right⟩ := add_eq_right_iff_le
 #align has_le.le.add_eq_right LE.le.add_eq_right
 
 #print add_le_iff /-

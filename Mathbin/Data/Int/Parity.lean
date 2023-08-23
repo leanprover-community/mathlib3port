@@ -281,10 +281,10 @@ theorem natAbs_odd : Odd n.natAbs ↔ Odd n := by
 #align int.nat_abs_odd Int.natAbs_odd
 -/
 
-alias nat_abs_even ↔ _ _root_.even.nat_abs
+alias ⟨_, _root_.even.nat_abs⟩ := nat_abs_even
 #align even.nat_abs Even.natAbs
 
-alias nat_abs_odd ↔ _ _root_.odd.nat_abs
+alias ⟨_, _root_.odd.nat_abs⟩ := nat_abs_odd
 #align odd.nat_abs Odd.natAbs
 
 attribute [protected] Even.natAbs Odd.natAbs

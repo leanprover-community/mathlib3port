@@ -152,7 +152,7 @@ theorem subsingleton_iff_zero_eq_one : (0 : M₀) = 1 ↔ Subsingleton M₀ :=
 #align subsingleton_iff_zero_eq_one subsingleton_iff_zero_eq_one
 -/
 
-alias subsingleton_iff_zero_eq_one ↔ subsingleton_of_zero_eq_one _
+alias ⟨subsingleton_of_zero_eq_one, _⟩ := subsingleton_iff_zero_eq_one
 #align subsingleton_of_zero_eq_one subsingleton_of_zero_eq_one
 
 #print eq_of_zero_eq_one /-

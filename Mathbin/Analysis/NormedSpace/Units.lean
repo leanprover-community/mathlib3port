@@ -113,7 +113,7 @@ namespace nonunits
 `1` centered at `1 : R`. -/
 theorem subset_compl_ball : nonunits R ⊆ Metric.ball (1 : R) 1ᶜ :=
   Set.subset_compl_comm.mp fun x hx => by
-    simpa [sub_sub_self, Units.oneSub_val] using
+    simpa [sub_sub_self, Units.val_oneSub] using
       (Units.oneSub (1 - x) (by rwa [Metric.mem_ball, dist_eq_norm, norm_sub_rev] at hx )).IsUnit
 #align nonunits.subset_compl_ball nonunits.subset_compl_ball
 -/
@@ -135,7 +135,7 @@ open Asymptotics Filter Metric Finset Ring
 
 #print NormedRing.inverse_one_sub /-
 theorem inverse_one_sub (t : R) (h : ‖t‖ < 1) : inverse (1 - t) = ↑(Units.oneSub t h)⁻¹ := by
-  rw [← inverse_unit (Units.oneSub t h), Units.oneSub_val]
+  rw [← inverse_unit (Units.oneSub t h), Units.val_oneSub]
 #align normed_ring.inverse_one_sub NormedRing.inverse_one_sub
 -/
 
@@ -158,7 +158,7 @@ theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inve
   have hright := inverse_one_sub (-↑x⁻¹ * t) ht'
   have hleft := inverse_unit (x.add t ht)
   simp only [neg_mul, sub_neg_eq_add] at hright 
-  simp only [Units.add_val] at hleft 
+  simp only [Units.val_add] at hleft 
   simp [hleft, hright, Units.add]
 #align normed_ring.inverse_add NormedRing.inverse_add
 -/
@@ -174,14 +174,14 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
   simp only [inverse_one_sub t ht, Set.mem_setOf_eq]
   have h : 1 = ((range n).Sum fun i => t ^ i) * Units.oneSub t ht + t ^ n :=
     by
-    simp only [Units.oneSub_val]
+    simp only [Units.val_oneSub]
     rw [geom_sum_mul_neg]
     simp
   rw [← one_mul ↑(Units.oneSub t ht)⁻¹, h, add_mul]
   congr
   · rw [mul_assoc, (Units.oneSub t ht).mul_inv]
     simp
-  · simp only [Units.oneSub_val]
+  · simp only [Units.val_oneSub]
     rw [← add_mul, geom_sum_mul_neg]
     simp
 #align normed_ring.inverse_one_sub_nth_order NormedRing.inverse_one_sub_nth_order

@@ -222,7 +222,7 @@ theorem mem_map {f : α → β} {b : β} {l : List α} : b ∈ map f l ↔ ∃ a
 #align list.mem_map List.mem_map
 -/
 
-alias mem_map ↔ exists_of_mem_map _
+alias ⟨exists_of_mem_map, _⟩ := mem_map
 #align list.exists_of_mem_map List.exists_of_mem_map
 
 theorem mem_map_of_mem (f : α → β) {a : α} {l : List α} (h : a ∈ l) : f a ∈ map f l :=
@@ -431,7 +431,7 @@ theorem length_eq_three {l : List α} : l.length = 3 ↔ ∃ a b c, l = [a, b, c
 #align list.length_eq_three List.length_eq_three
 -/
 
-alias length_le_of_sublist ← sublist.length_le
+alias sublist.length_le := length_le_of_sublist
 #align list.sublist.length_le List.Sublist.length_le
 
 /-! ### set-theoretic notation of lists -/
@@ -846,7 +846,7 @@ theorem eq_replicate_length {a : α} : ∀ {l : List α}, l = replicate l.length
 #align list.eq_replicate_length List.eq_replicate_length
 -/
 
-alias eq_replicate_length ↔ _ eq_replicate_of_mem
+alias ⟨_, eq_replicate_of_mem⟩ := eq_replicate_length
 #align list.eq_replicate_of_mem List.eq_replicate_of_mem
 
 #print List.eq_replicate /-

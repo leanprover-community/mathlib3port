@@ -57,7 +57,7 @@ protected theorem ContinuousLinearMap.hasSum {f : ι → M} (φ : M →SL[σ] M�
 #align continuous_linear_map.has_sum ContinuousLinearMap.hasSum
 -/
 
-alias ContinuousLinearMap.hasSum ← HasSum.mapL
+alias HasSum.mapL := ContinuousLinearMap.hasSum
 #align has_sum.mapL HasSum.mapL
 
 #print ContinuousLinearMap.summable /-
@@ -67,7 +67,7 @@ protected theorem ContinuousLinearMap.summable {f : ι → M} (φ : M →SL[σ] 
 #align continuous_linear_map.summable ContinuousLinearMap.summable
 -/
 
-alias ContinuousLinearMap.summable ← Summable.mapL
+alias Summable.mapL := ContinuousLinearMap.summable
 #align summable.mapL Summable.mapL
 
 #print ContinuousLinearMap.map_tsum /-

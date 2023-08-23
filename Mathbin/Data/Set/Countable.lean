@@ -57,7 +57,7 @@ theorem to_countable (s : Set α) [Countable s] : s.Countable :=
 -/
 
 /-- Restate `set.countable` as a `countable` instance. -/
-alias countable_coe_iff ↔ _root_.countable.to_set countable.to_subtype
+alias ⟨_root_.countable.to_set, countable.to_subtype⟩ := countable_coe_iff
 #align countable.to_set Countable.to_set
 #align set.countable.to_subtype Set.Countable.to_subtype
 
@@ -134,7 +134,7 @@ protected theorem countable_iff_exists_surjective {s : Set α} (hs : s.Nonempty)
 #align set.countable_iff_exists_surjective Set.countable_iff_exists_surjective
 -/
 
-alias Set.countable_iff_exists_surjective ↔ countable.exists_surjective _
+alias ⟨countable.exists_surjective, _⟩ := Set.countable_iff_exists_surjective
 #align set.countable.exists_surjective Set.Countable.exists_surjective
 
 #print Set.countable_univ /-
@@ -259,10 +259,10 @@ theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :
 #align set.countable.sUnion_iff Set.Countable.sUnion_iff
 -/
 
-alias countable.bUnion_iff ↔ _ countable.bUnion
+alias ⟨_, countable.bUnion⟩ := countable.bUnion_iff
 #align set.countable.bUnion Set.Countable.biUnion
 
-alias countable.sUnion_iff ↔ _ countable.sUnion
+alias ⟨_, countable.sUnion⟩ := countable.sUnion_iff
 #align set.countable.sUnion Set.Countable.sUnion
 
 #print Set.countable_union /-

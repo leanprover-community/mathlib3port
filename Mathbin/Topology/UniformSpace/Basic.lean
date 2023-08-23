@@ -339,11 +339,11 @@ def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α
 #align uniform_space.core.to_topological_space UniformSpace.Core.toTopologicalSpace
 -/
 
-#print UniformSpace.core_eq /-
-theorem UniformSpace.core_eq :
+#print UniformSpace.Core.ext /-
+theorem UniformSpace.Core.ext :
     ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.uniformity = u₂.uniformity → u₁ = u₂
   | ⟨u₁, _, _, _⟩, ⟨u₂, _, _, _⟩, rfl => by congr
-#align uniform_space.core_eq UniformSpace.core_eq
+#align uniform_space.core_eq UniformSpace.Core.ext
 -/
 
 #print UniformSpace /-
@@ -398,7 +398,7 @@ def UniformSpace.ofCoreEq {α : Type u} (u : UniformSpace.Core α) (t : Topologi
 #print UniformSpace.toCore_toTopologicalSpace /-
 theorem UniformSpace.toCore_toTopologicalSpace (u : UniformSpace α) :
     u.toCore.toTopologicalSpace = u.toTopologicalSpace :=
-  topologicalSpace_eq <| funext fun s => by rw [UniformSpace.isOpen_uniformity, isOpen_mk]
+  TopologicalSpace.ext <| funext fun s => by rw [UniformSpace.isOpen_uniformity, isOpen_mk]
 #align uniform_space.to_core_to_topological_space UniformSpace.toCore_toTopologicalSpace
 -/
 
@@ -412,21 +412,21 @@ def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
 
 scoped[Topology] notation "𝓤[" u "]" => @uniformity hole! u
 
-#print uniformSpace_eq /-
+#print UniformSpace.ext /-
 @[ext]
-theorem uniformSpace_eq : ∀ {u₁ u₂ : UniformSpace α}, 𝓤[u₁] = 𝓤[u₂] → u₁ = u₂
+theorem UniformSpace.ext : ∀ {u₁ u₂ : UniformSpace α}, 𝓤[u₁] = 𝓤[u₂] → u₁ = u₂
   | UniformSpace.mk' t₁ u₁ o₁, UniformSpace.mk' t₂ u₂ o₂, h =>
     by
-    have : u₁ = u₂ := UniformSpace.core_eq h
-    have : t₁ = t₂ := topologicalSpace_eq <| funext fun s => by rw [o₁, o₂] <;> simp [this]
+    have : u₁ = u₂ := UniformSpace.Core.ext h
+    have : t₁ = t₂ := TopologicalSpace.ext <| funext fun s => by rw [o₁, o₂] <;> simp [this]
     simp [*]
-#align uniform_space_eq uniformSpace_eq
+#align uniform_space_eq UniformSpace.ext
 -/
 
 #print UniformSpace.ofCoreEq_toCore /-
 theorem UniformSpace.ofCoreEq_toCore (u : UniformSpace α) (t : TopologicalSpace α)
     (h : t = u.toCore.toTopologicalSpace) : UniformSpace.ofCoreEq u.toCore t h = u :=
-  uniformSpace_eq rfl
+  UniformSpace.ext rfl
 #align uniform_space.of_core_eq_to_core UniformSpace.ofCoreEq_toCore
 -/
 
@@ -1474,7 +1474,7 @@ section Constructions
 instance : PartialOrder (UniformSpace α)
     where
   le t s := t.uniformity ≤ s.uniformity
-  le_antisymm t s h₁ h₂ := uniformSpace_eq <| le_antisymm h₁ h₂
+  le_antisymm t s h₁ h₂ := UniformSpace.ext <| le_antisymm h₁ h₂
   le_refl t := le_rfl
   le_trans a b c h₁ h₂ := le_trans h₁ h₂
 
@@ -1624,7 +1624,7 @@ theorem UniformSpace.comap_comap {α β γ} [uγ : UniformSpace γ] {f : α → 
 #print UniformSpace.comap_inf /-
 theorem UniformSpace.comap_inf {α γ} {u₁ u₂ : UniformSpace γ} {f : α → γ} :
     (u₁ ⊓ u₂).comap f = u₁.comap f ⊓ u₂.comap f :=
-  uniformSpace_eq comap_inf
+  UniformSpace.ext comap_inf
 #align uniform_space.comap_inf UniformSpace.comap_inf
 -/
 
@@ -1818,7 +1818,7 @@ end UniformContinuousInfi
 /-- A uniform space with the discrete uniformity has the discrete topology. -/
 theorem discreteTopology_of_discrete_uniformity [hα : UniformSpace α] (h : uniformity α = 𝓟 idRel) :
     DiscreteTopology α :=
-  ⟨(uniformSpace_eq h.symm : ⊥ = hα) ▸ rfl⟩
+  ⟨(UniformSpace.ext h.symm : ⊥ = hα) ▸ rfl⟩
 #align discrete_topology_of_discrete_uniformity discreteTopology_of_discrete_uniformity
 -/
 

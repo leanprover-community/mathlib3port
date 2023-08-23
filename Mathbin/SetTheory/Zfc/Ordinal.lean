@@ -62,7 +62,7 @@ theorem isTransitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : ZFSet}, x ∈
 #align Set.is_transitive_iff_mem_trans ZFSet.isTransitive_iff_mem_trans
 -/
 
-alias is_transitive_iff_mem_trans ↔ is_transitive.mem_trans _
+alias ⟨is_transitive.mem_trans, _⟩ := is_transitive_iff_mem_trans
 #align Set.is_transitive.mem_trans ZFSet.IsTransitive.mem_trans
 
 #print ZFSet.IsTransitive.inter /-
@@ -115,7 +115,7 @@ theorem isTransitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
 #align Set.is_transitive_iff_sUnion_subset ZFSet.isTransitive_iff_sUnion_subset
 -/
 
-alias is_transitive_iff_sUnion_subset ↔ is_transitive.sUnion_subset _
+alias ⟨is_transitive.sUnion_subset, _⟩ := is_transitive_iff_sUnion_subset
 #align Set.is_transitive.sUnion_subset ZFSet.IsTransitive.sUnion_subset
 
 #print ZFSet.isTransitive_iff_subset_powerset /-
@@ -124,7 +124,7 @@ theorem isTransitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x :
 #align Set.is_transitive_iff_subset_powerset ZFSet.isTransitive_iff_subset_powerset
 -/
 
-alias is_transitive_iff_subset_powerset ↔ is_transitive.subset_powerset _
+alias ⟨is_transitive.subset_powerset, _⟩ := is_transitive_iff_subset_powerset
 #align Set.is_transitive.subset_powerset ZFSet.IsTransitive.subset_powerset
 
 end ZFSet

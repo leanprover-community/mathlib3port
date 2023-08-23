@@ -1266,7 +1266,7 @@ theorem norm_add_sq (x y : E) : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * re ⟪x, y�
 #align norm_add_sq norm_add_sq
 -/
 
-alias norm_add_sq ← norm_add_pow_two
+alias norm_add_pow_two := norm_add_sq
 #align norm_add_pow_two norm_add_pow_two
 
 #print norm_add_sq_real /-
@@ -1276,7 +1276,7 @@ theorem norm_add_sq_real (x y : F) : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * ⟪x, y
 #align norm_add_sq_real norm_add_sq_real
 -/
 
-alias norm_add_sq_real ← norm_add_pow_two_real
+alias norm_add_pow_two_real := norm_add_sq_real
 #align norm_add_pow_two_real norm_add_pow_two_real
 
 #print norm_add_mul_self /-
@@ -1302,7 +1302,7 @@ theorem norm_sub_sq (x y : E) : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * re ⟪x, y�
 #align norm_sub_sq norm_sub_sq
 -/
 
-alias norm_sub_sq ← norm_sub_pow_two
+alias norm_sub_pow_two := norm_sub_sq
 #align norm_sub_pow_two norm_sub_pow_two
 
 #print norm_sub_sq_real /-
@@ -1312,7 +1312,7 @@ theorem norm_sub_sq_real (x y : F) : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * ⟪x, y
 #align norm_sub_sq_real norm_sub_sq_real
 -/
 
-alias norm_sub_sq_real ← norm_sub_pow_two_real
+alias norm_sub_pow_two_real := norm_sub_sq_real
 #align norm_sub_pow_two_real norm_sub_pow_two_real
 
 #print norm_sub_mul_self /-

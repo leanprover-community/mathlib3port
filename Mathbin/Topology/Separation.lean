@@ -1848,7 +1848,7 @@ theorem isPreirreducible_iff_subsingleton [T2Space α] {S : Set α} :
 #align is_preirreducible_iff_subsingleton isPreirreducible_iff_subsingleton
 -/
 
-alias isPreirreducible_iff_subsingleton ↔ IsPreirreducible.subsingleton _
+alias ⟨IsPreirreducible.subsingleton, _⟩ := isPreirreducible_iff_subsingleton
 #align is_preirreducible.subsingleton IsPreirreducible.subsingleton
 
 attribute [protected] IsPreirreducible.subsingleton
@@ -2018,7 +2018,7 @@ theorem specializes_comm {a b : α} : a ⤳ b ↔ b ⤳ a := by
 #align specializes_comm specializes_comm
 -/
 
-alias specializes_comm ↔ Specializes.symm _
+alias ⟨Specializes.symm, _⟩ := specializes_comm
 #align specializes.symm Specializes.symm
 
 #print specializes_iff_inseparable /-

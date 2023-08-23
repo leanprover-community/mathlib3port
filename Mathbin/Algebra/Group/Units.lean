@@ -102,16 +102,18 @@ def Simps.coe (u : αˣ) : α :=
 #align units.simps.coe Units.Simps.coe
 #align add_units.simps.coe AddUnits.Simps.coe
 
+#print Units.Simps.val_inv /-
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
-def Simps.coeInv (u : αˣ) : α :=
+def Simps.val_inv (u : αˣ) : α :=
   ↑u⁻¹
-#align units.simps.coe_inv Units.Simps.coeInv
-#align add_units.simps.coe_neg AddUnits.Simps.coeNeg
+#align units.simps.coe_inv Units.Simps.val_inv
+#align add_units.simps.coe_neg AddUnits.Simps.val_neg
+-/
 
-initialize_simps_projections Units (val → coe, as_prefix coe, inv → coeInv, as_prefix coeInv)
+initialize_simps_projections Units (val → coe, as_prefix coe, inv → val_inv, as_prefix val_inv)
 
-initialize_simps_projections AddUnits (val → coe, as_prefix coe, neg → coeNeg, as_prefix coeNeg)
+initialize_simps_projections AddUnits (val → coe, as_prefix coe, neg → val_neg, as_prefix val_neg)
 
 #print Units.val_mk /-
 @[simp, to_additive]

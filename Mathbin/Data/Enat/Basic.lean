@@ -118,7 +118,7 @@ theorem coe_toNat_eq_self : ↑n.toNat = n ↔ n ≠ ⊤ :=
 #align enat.coe_to_nat_eq_self ENat.coe_toNat_eq_self
 -/
 
-alias coe_to_nat_eq_self ↔ _ coe_to_nat
+alias ⟨_, coe_to_nat⟩ := coe_to_nat_eq_self
 #align enat.coe_to_nat ENat.coe_toNat
 
 #print ENat.coe_toNat_le_self /-

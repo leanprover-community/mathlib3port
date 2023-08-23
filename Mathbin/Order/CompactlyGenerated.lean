@@ -56,7 +56,7 @@ complete lattice, well-founded, compact
 -/
 
 
-alias directedOn_range ↔ Directed.directedOn_range _
+alias ⟨Directed.directedOn_range, _⟩ := directedOn_range
 #align directed.directed_on_range Directed.directedOn_range
 
 attribute [protected] Directed.directedOn_range
@@ -319,14 +319,14 @@ theorem isSupClosedCompact_iff_wellFounded :
 #align complete_lattice.is_sup_closed_compact_iff_well_founded CompleteLattice.isSupClosedCompact_iff_wellFounded
 -/
 
-alias well_founded_iff_is_Sup_finite_compact ↔ _ is_Sup_finite_compact.well_founded
+alias ⟨_, is_Sup_finite_compact.well_founded⟩ := well_founded_iff_is_Sup_finite_compact
 #align complete_lattice.is_Sup_finite_compact.well_founded CompleteLattice.IsSupFiniteCompact.wellFounded
 
-alias is_Sup_finite_compact_iff_is_sup_closed_compact ↔ _
-  is_sup_closed_compact.is_Sup_finite_compact
+alias ⟨_, is_sup_closed_compact.is_Sup_finite_compact⟩ :=
+  is_Sup_finite_compact_iff_is_sup_closed_compact
 #align complete_lattice.is_sup_closed_compact.is_Sup_finite_compact CompleteLattice.IsSupClosedCompact.isSupFiniteCompact
 
-alias is_sup_closed_compact_iff_well_founded ↔ _ _root_.well_founded.is_sup_closed_compact
+alias ⟨_, _root_.well_founded.is_sup_closed_compact⟩ := is_sup_closed_compact_iff_well_founded
 #align well_founded.is_sup_closed_compact WellFounded.isSupClosedCompact
 
 variable {α}

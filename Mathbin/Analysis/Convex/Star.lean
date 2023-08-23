@@ -557,7 +557,7 @@ theorem starConvex_iff_ordConnected [LinearOrderedField 𝕜] {x : 𝕜} {s : Se
 #align star_convex_iff_ord_connected starConvex_iff_ordConnected
 -/
 
-alias starConvex_iff_ordConnected ↔ StarConvex.ordConnected _
+alias ⟨StarConvex.ordConnected, _⟩ := starConvex_iff_ordConnected
 #align star_convex.ord_connected StarConvex.ordConnected
 
 end OrdConnected

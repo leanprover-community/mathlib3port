@@ -56,7 +56,7 @@ theorem coe_of {X : Type _} (to_prod : X × X) : ↥(of to_prod) = X :=
 #align Bipointed.coe_of Bipointed.coe_of
 -/
 
-alias of ← _root_.prod.Bipointed
+alias _root_.prod.Bipointed := of
 #align prod.Bipointed Prod.Bipointed
 
 instance : Inhabited Bipointed :=

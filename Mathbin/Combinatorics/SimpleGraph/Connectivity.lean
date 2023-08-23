@@ -1968,7 +1968,7 @@ theorem map_isTrail_iff_of_injective (hinj : Function.Injective f) :
 #align simple_graph.walk.map_is_trail_iff_of_injective SimpleGraph.Walk.map_isTrail_iff_of_injective
 -/
 
-alias map_is_trail_iff_of_injective ↔ _ map_is_trail_of_injective
+alias ⟨_, map_is_trail_of_injective⟩ := map_is_trail_iff_of_injective
 #align simple_graph.walk.map_is_trail_of_injective SimpleGraph.Walk.map_isTrail_of_injective
 
 #print SimpleGraph.Walk.map_isCycle_iff_of_injective /-
@@ -1979,7 +1979,7 @@ theorem map_isCycle_iff_of_injective {p : G.Walk u u} (hinj : Function.Injective
 #align simple_graph.walk.map_is_cycle_iff_of_injective SimpleGraph.Walk.map_isCycle_iff_of_injective
 -/
 
-alias map_is_cycle_iff_of_injective ↔ _ map_is_cycle_of_injective
+alias ⟨_, map_is_cycle_of_injective⟩ := map_is_cycle_iff_of_injective
 #align simple_graph.walk.map_is_cycle_of_injective SimpleGraph.Walk.map_isCycle_of_injective
 
 variable (p f)
@@ -2019,7 +2019,7 @@ theorem mapLe_isTrail {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.Wal
 #align simple_graph.walk.map_le_is_trail SimpleGraph.Walk.mapLe_isTrail
 -/
 
-alias map_le_is_trail ↔ is_trail.of_map_le is_trail.map_le
+alias ⟨is_trail.of_map_le, is_trail.map_le⟩ := map_le_is_trail
 #align simple_graph.walk.is_trail.of_map_le SimpleGraph.Walk.IsTrail.of_mapLe
 #align simple_graph.walk.is_trail.map_le SimpleGraph.Walk.IsTrail.mapLe
 
@@ -2031,7 +2031,7 @@ theorem mapLe_isPath {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.Walk
 #align simple_graph.walk.map_le_is_path SimpleGraph.Walk.mapLe_isPath
 -/
 
-alias map_le_is_path ↔ is_path.of_map_le is_path.map_le
+alias ⟨is_path.of_map_le, is_path.map_le⟩ := map_le_is_path
 #align simple_graph.walk.is_path.of_map_le SimpleGraph.Walk.IsPath.of_mapLe
 #align simple_graph.walk.is_path.map_le SimpleGraph.Walk.IsPath.mapLe
 
@@ -2043,7 +2043,7 @@ theorem mapLe_isCycle {G G' : SimpleGraph V} (h : G ≤ G') {u : V} {p : G.Walk 
 #align simple_graph.walk.map_le_is_cycle SimpleGraph.Walk.mapLe_isCycle
 -/
 
-alias map_le_is_cycle ↔ is_cycle.of_map_le is_cycle.map_le
+alias ⟨is_cycle.of_map_le, is_cycle.map_le⟩ := map_le_is_cycle
 #align simple_graph.walk.is_cycle.of_map_le SimpleGraph.Walk.IsCycle.of_mapLe
 #align simple_graph.walk.is_cycle.map_le SimpleGraph.Walk.IsCycle.mapLe
 

@@ -141,7 +141,7 @@ theorem convexHull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.Nonempty :=
 #align convex_hull_nonempty_iff convexHull_nonempty_iff
 -/
 
-alias convexHull_nonempty_iff ↔ _ Set.Nonempty.convexHull
+alias ⟨_, Set.Nonempty.convexHull⟩ := convexHull_nonempty_iff
 #align set.nonempty.convex_hull Set.Nonempty.convexHull
 
 attribute [protected] Set.Nonempty.convexHull

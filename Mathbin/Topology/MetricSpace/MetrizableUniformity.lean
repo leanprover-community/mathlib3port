@@ -261,7 +261,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       refine' Nat.find_spec H (hU_comp (lt_add_one <| Nat.find H) _)
       exact ⟨x₂, h₁₂, x₃, h₂₃, h₃₄⟩
     · exact (dif_neg H).trans_le (zero_le _)
-  refine' ⟨I, uniformSpace_eq <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
+  refine' ⟨I, UniformSpace.ext <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
   · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
     rwa [← NNReal.coe_pow, NNReal.coe_lt_coe, ← not_le, hle_d, Classical.not_not, Prod.mk.eta]
   · refine' fun n hn => ⟨n + 1, trivial, fun x hx => _⟩

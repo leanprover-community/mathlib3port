@@ -180,7 +180,7 @@ theorem PseudoMetricSpace.ext {α : Type _} {m m' : PseudoMetricSpace α}
     simp [m_edist_dist, m'_edist_dist]
   · dsimp at m_uniformity_dist m'_uniformity_dist 
     rw [← m'_uniformity_dist] at m_uniformity_dist 
-    exact uniformSpace_eq m_uniformity_dist
+    exact UniformSpace.ext m_uniformity_dist
   · ext1
     dsimp at m_cobounded_sets m'_cobounded_sets 
     rw [← m'_cobounded_sets] at m_cobounded_sets 
@@ -989,7 +989,7 @@ theorem isBounded_iff_nndist {s : Set α} :
 theorem toUniformSpace_eq :
     ‹PseudoMetricSpace α›.toUniformSpace =
       UniformSpace.ofDist dist dist_self dist_comm dist_triangle :=
-  uniformSpace_eq PseudoMetricSpace.uniformity_dist
+  UniformSpace.ext PseudoMetricSpace.uniformity_dist
 #align metric.to_uniform_space_eq Metric.toUniformSpace_eq
 -/
 
@@ -1973,7 +1973,7 @@ theorem Filter.Tendsto.congr_dist {ι : Type _} {f₁ f₂ : ι → α} {p : Fil
 #align filter.tendsto.congr_dist Filter.Tendsto.congr_dist
 -/
 
-alias Filter.Tendsto.congr_dist ← tendsto_of_tendsto_of_dist
+alias tendsto_of_tendsto_of_dist := Filter.Tendsto.congr_dist
 #align tendsto_of_tendsto_of_dist tendsto_of_tendsto_of_dist
 
 #print tendsto_iff_of_dist /-
@@ -2933,7 +2933,7 @@ theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : 
 #align finite_cover_balls_of_compact finite_cover_balls_of_compact
 -/
 
-alias finite_cover_balls_of_compact ← IsCompact.finite_cover_balls
+alias IsCompact.finite_cover_balls := finite_cover_balls_of_compact
 #align is_compact.finite_cover_balls IsCompact.finite_cover_balls
 
 end Compact
@@ -3266,7 +3266,7 @@ theorem bounded_closure_of_bounded (h : Bounded s) : Bounded (closure s) :=
 #align metric.bounded_closure_of_bounded Metric.bounded_closure_of_bounded
 -/
 
-alias bounded_closure_of_bounded ← bounded.closure
+alias bounded.closure := bounded_closure_of_bounded
 #align metric.bounded.closure Metric.Bounded.closure
 
 #print Metric.bounded_closure_iff /-
@@ -3350,7 +3350,7 @@ theorem bounded_of_finite {s : Set α} (h : s.Finite) : Bounded s :=
 #align metric.bounded_of_finite Metric.bounded_of_finite
 -/
 
-alias bounded_of_finite ← _root_.set.finite.bounded
+alias _root_.set.finite.bounded := bounded_of_finite
 #align set.finite.bounded Set.Finite.bounded
 
 #print Metric.bounded_singleton /-

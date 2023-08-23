@@ -82,7 +82,7 @@ theorem cross_anticomm (v w : Fin 3 → R) : -(v ×₃ w) = w ×₃ v := by simp
 #align cross_anticomm cross_anticomm
 -/
 
-alias cross_anticomm ← neg_cross
+alias neg_cross := cross_anticomm
 #align neg_cross neg_cross
 
 #print cross_anticomm' /-

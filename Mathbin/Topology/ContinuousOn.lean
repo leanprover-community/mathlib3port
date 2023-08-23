@@ -1053,7 +1053,7 @@ theorem continuousWithinAt_insert_self {f : α → β} {x : α} {s : Set α} :
 #align continuous_within_at_insert_self continuousWithinAt_insert_self
 -/
 
-alias continuousWithinAt_insert_self ↔ _ ContinuousWithinAt.insert_self
+alias ⟨_, ContinuousWithinAt.insert_self⟩ := continuousWithinAt_insert_self
 #align continuous_within_at.insert_self ContinuousWithinAt.insert_self
 
 #print ContinuousWithinAt.diff_iff /-

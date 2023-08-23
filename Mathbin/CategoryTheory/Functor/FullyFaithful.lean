@@ -339,7 +339,7 @@ theorem Faithful.of_comp_iso {H : C ⥤ E} [ℋ : Faithful H] (h : F ⋙ G ≅ H
 #align category_theory.faithful.of_comp_iso CategoryTheory.Faithful.of_comp_iso
 -/
 
-alias faithful.of_comp_iso ← _root_.category_theory.iso.faithful_of_comp
+alias _root_.category_theory.iso.faithful_of_comp := faithful.of_comp_iso
 #align category_theory.iso.faithful_of_comp CategoryTheory.Iso.faithful_of_comp
 
 #print CategoryTheory.Faithful.of_comp_eq /-
@@ -350,7 +350,7 @@ theorem Faithful.of_comp_eq {H : C ⥤ E} [ℋ : Faithful H] (h : F ⋙ G = H) :
 #align category_theory.faithful.of_comp_eq CategoryTheory.Faithful.of_comp_eq
 -/
 
-alias faithful.of_comp_eq ← _root_.eq.faithful_of_comp
+alias _root_.eq.faithful_of_comp := faithful.of_comp_eq
 #align eq.faithful_of_comp Eq.faithful_of_comp
 
 variable (F G)

@@ -527,7 +527,7 @@ theorem moveLeft_lf_of_le {x y : PGame} (h : x ≤ y) (i) : x.moveLeft i ⧏ y :
 #align pgame.move_left_lf_of_le PGame.moveLeft_lf_of_le
 -/
 
-alias move_left_lf_of_le ← _root_.has_le.le.move_left_lf
+alias _root_.has_le.le.move_left_lf := move_left_lf_of_le
 #align has_le.le.move_left_lf LE.le.moveLeft_lf
 
 #print PGame.lf_moveRight_of_le /-
@@ -536,7 +536,7 @@ theorem lf_moveRight_of_le {x y : PGame} (h : x ≤ y) (j) : x ⧏ y.moveRight j
 #align pgame.lf_move_right_of_le PGame.lf_moveRight_of_le
 -/
 
-alias lf_move_right_of_le ← _root_.has_le.le.lf_move_right
+alias _root_.has_le.le.lf_move_right := lf_move_right_of_le
 #align has_le.le.lf_move_right LE.le.lf_moveRight
 
 #print PGame.lf_of_moveRight_le /-
@@ -625,7 +625,7 @@ theorem lf_of_lt {x y : PGame} (h : x < y) : x ⧏ y :=
 #align pgame.lf_of_lt PGame.lf_of_lt
 -/
 
-alias lf_of_lt ← _root_.has_lt.lt.lf
+alias _root_.has_lt.lt.lf := lf_of_lt
 #align has_lt.lt.lf LT.lt.lf
 
 #print PGame.lf_irrefl /-
@@ -651,10 +651,10 @@ theorem lf_of_lf_of_le {x y z : PGame} (h₁ : x ⧏ y) (h₂ : y ≤ z) : x ⧏
 #align pgame.lf_of_lf_of_le PGame.lf_of_lf_of_le
 -/
 
-alias lf_of_le_of_lf ← _root_.has_le.le.trans_lf
+alias _root_.has_le.le.trans_lf := lf_of_le_of_lf
 #align has_le.le.trans_lf LE.le.trans_lf
 
-alias lf_of_lf_of_le ← lf.trans_le
+alias lf.trans_le := lf_of_lf_of_le
 #align pgame.lf.trans_le PGame.Lf.trans_le
 
 #print PGame.lf_of_lt_of_lf /-
@@ -671,10 +671,10 @@ theorem lf_of_lf_of_lt {x y z : PGame} (h₁ : x ⧏ y) (h₂ : y < z) : x ⧏ z
 #align pgame.lf_of_lf_of_lt PGame.lf_of_lf_of_lt
 -/
 
-alias lf_of_lt_of_lf ← _root_.has_lt.lt.trans_lf
+alias _root_.has_lt.lt.trans_lf := lf_of_lt_of_lf
 #align has_lt.lt.trans_lf LT.lt.trans_lf
 
-alias lf_of_lf_of_lt ← lf.trans_lt
+alias lf.trans_lt := lf_of_lf_of_lt
 #align pgame.lf.trans_lt PGame.Lf.trans_lt
 
 #print PGame.moveLeft_lf /-
@@ -1180,7 +1180,7 @@ theorem lf_of_fuzzy {x y : PGame} (h : x ‖ y) : x ⧏ y :=
 #align pgame.lf_of_fuzzy PGame.lf_of_fuzzy
 -/
 
-alias lf_of_fuzzy ← fuzzy.lf
+alias fuzzy.lf := lf_of_fuzzy
 #align pgame.fuzzy.lf PGame.Fuzzy.lf
 
 #print PGame.lt_or_fuzzy_of_lf /-

@@ -208,7 +208,7 @@ theorem coe_eq : (f : Germ l β) = g ↔ f =ᶠ[l] g :=
 #align filter.germ.coe_eq Filter.Germ.coe_eq
 -/
 
-alias coe_eq ↔ _ _root_.filter.eventually_eq.germ_eq
+alias ⟨_, _root_.filter.eventually_eq.germ_eq⟩ := coe_eq
 #align filter.eventually_eq.germ_eq Filter.EventuallyEq.germ_eq
 
 #print Filter.Germ.map /-
@@ -269,7 +269,7 @@ theorem coe_tendsto {f : α → β} {lb : Filter β} : (f : Germ l β).Tendsto l
 #align filter.germ.coe_tendsto Filter.Germ.coe_tendsto
 -/
 
-alias coe_tendsto ↔ _ _root_.filter.tendsto.germ_tendsto
+alias ⟨_, _root_.filter.tendsto.germ_tendsto⟩ := coe_tendsto
 #align filter.tendsto.germ_tendsto Filter.Tendsto.germ_tendsto
 
 #print Filter.Germ.compTendsto' /-

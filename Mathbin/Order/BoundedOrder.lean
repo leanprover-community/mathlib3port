@@ -142,7 +142,7 @@ theorem ne_top_of_lt (h : a < b) : a ≠ ⊤ :=
 #align ne_top_of_lt ne_top_of_lt
 -/
 
-alias ne_top_of_lt ← LT.lt.ne_top
+alias LT.lt.ne_top := ne_top_of_lt
 #align has_lt.lt.ne_top LT.lt.ne_top
 
 end Preorder
@@ -175,10 +175,10 @@ theorem not_isTop_iff_ne_top : ¬IsTop a ↔ a ≠ ⊤ :=
 #align not_is_top_iff_ne_top not_isTop_iff_ne_top
 -/
 
-alias isMax_iff_eq_top ↔ IsMax.eq_top _
+alias ⟨IsMax.eq_top, _⟩ := isMax_iff_eq_top
 #align is_max.eq_top IsMax.eq_top
 
-alias isTop_iff_eq_top ↔ IsTop.eq_top _
+alias ⟨IsTop.eq_top, _⟩ := isTop_iff_eq_top
 #align is_top.eq_top IsTop.eq_top
 
 #print top_le_iff /-
@@ -410,7 +410,7 @@ theorem ne_bot_of_gt (h : a < b) : b ≠ ⊥ :=
 #align ne_bot_of_gt ne_bot_of_gt
 -/
 
-alias ne_bot_of_gt ← LT.lt.ne_bot
+alias LT.lt.ne_bot := ne_bot_of_gt
 #align has_lt.lt.ne_bot LT.lt.ne_bot
 
 end Preorder
@@ -443,10 +443,10 @@ theorem not_isBot_iff_ne_bot : ¬IsBot a ↔ a ≠ ⊥ :=
 #align not_is_bot_iff_ne_bot not_isBot_iff_ne_bot
 -/
 
-alias isMin_iff_eq_bot ↔ IsMin.eq_bot _
+alias ⟨IsMin.eq_bot, _⟩ := isMin_iff_eq_bot
 #align is_min.eq_bot IsMin.eq_bot
 
-alias isBot_iff_eq_bot ↔ IsBot.eq_bot _
+alias ⟨IsBot.eq_bot, _⟩ := isBot_iff_eq_bot
 #align is_bot.eq_bot IsBot.eq_bot
 
 #print le_bot_iff /-

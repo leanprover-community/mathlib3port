@@ -130,62 +130,64 @@ attribute [simp] le_refl
 
 attribute [ext] LE
 
-alias le_trans ← LE.le.trans
+alias LE.le.trans := le_trans
 #align has_le.le.trans LE.le.trans
 
-alias le_trans' ← LE.le.trans'
+alias LE.le.trans' := le_trans'
 #align has_le.le.trans' LE.le.trans'
 
-alias lt_of_le_of_lt ← LE.le.trans_lt
+alias LE.le.trans_lt := lt_of_le_of_lt
 #align has_le.le.trans_lt LE.le.trans_lt
 
-alias lt_of_le_of_lt' ← LE.le.trans_lt'
+alias LE.le.trans_lt' := lt_of_le_of_lt'
 #align has_le.le.trans_lt' LE.le.trans_lt'
 
-alias le_antisymm ← LE.le.antisymm
+alias LE.le.antisymm := le_antisymm
 #align has_le.le.antisymm LE.le.antisymm
 
-alias ge_antisymm ← LE.le.antisymm'
+alias LE.le.antisymm' := ge_antisymm
 #align has_le.le.antisymm' LE.le.antisymm'
 
-alias lt_of_le_of_ne ← LE.le.lt_of_ne
+alias LE.le.lt_of_ne := lt_of_le_of_ne
 #align has_le.le.lt_of_ne LE.le.lt_of_ne
 
-alias lt_of_le_of_ne' ← LE.le.lt_of_ne'
+alias LE.le.lt_of_ne' := lt_of_le_of_ne'
 #align has_le.le.lt_of_ne' LE.le.lt_of_ne'
 
-alias lt_of_le_not_le ← LE.le.lt_of_not_le
+alias LE.le.lt_of_not_le := lt_of_le_not_le
 #align has_le.le.lt_of_not_le LE.le.lt_of_not_le
 
-alias lt_or_eq_of_le ← LE.le.lt_or_eq
+alias LE.le.lt_or_eq := lt_or_eq_of_le
 #align has_le.le.lt_or_eq LE.le.lt_or_eq
 
-alias Decidable.lt_or_eq_of_le ← LE.le.lt_or_eq_dec
+alias LE.le.lt_or_eq_dec := Decidable.lt_or_eq_of_le
 #align has_le.le.lt_or_eq_dec LE.le.lt_or_eq_dec
 
-alias le_of_lt ← LT.lt.le
+alias LT.lt.le := le_of_lt
 #align has_lt.lt.le LT.lt.le
 
-alias lt_trans ← LT.lt.trans
+alias LT.lt.trans := lt_trans
 #align has_lt.lt.trans LT.lt.trans
 
-alias lt_trans' ← LT.lt.trans'
+alias LT.lt.trans' := lt_trans'
 #align has_lt.lt.trans' LT.lt.trans'
 
-alias lt_of_lt_of_le ← LT.lt.trans_le
+alias LT.lt.trans_le := lt_of_lt_of_le
 #align has_lt.lt.trans_le LT.lt.trans_le
 
-alias lt_of_lt_of_le' ← LT.lt.trans_le'
+alias LT.lt.trans_le' := lt_of_lt_of_le'
 #align has_lt.lt.trans_le' LT.lt.trans_le'
 
-alias ne_of_lt ← LT.lt.ne
+alias LT.lt.ne := ne_of_lt
 #align has_lt.lt.ne LT.lt.ne
 
-alias lt_asymm ← LT.lt.asymm LT.lt.not_lt
+alias LT.lt.asymm := lt_asymm
 #align has_lt.lt.asymm LT.lt.asymm
+
+alias LT.lt.not_lt := lt_asymm
 #align has_lt.lt.not_lt LT.lt.not_lt
 
-alias le_of_eq ← Eq.le
+alias Eq.le := le_of_eq
 #align eq.le Eq.le
 
 attribute [nolint decidable_classical] LE.le.lt_or_eq_dec
@@ -256,28 +258,28 @@ theorem lt_of_eq_of_lt' : b = c → a < b → a < c :=
 #align lt_of_eq_of_lt' lt_of_eq_of_lt'
 -/
 
-alias le_of_le_of_eq ← LE.le.trans_eq
+alias LE.le.trans_eq := le_of_le_of_eq
 #align has_le.le.trans_eq LE.le.trans_eq
 
-alias le_of_le_of_eq' ← LE.le.trans_eq'
+alias LE.le.trans_eq' := le_of_le_of_eq'
 #align has_le.le.trans_eq' LE.le.trans_eq'
 
-alias lt_of_lt_of_eq ← LT.lt.trans_eq
+alias LT.lt.trans_eq := lt_of_lt_of_eq
 #align has_lt.lt.trans_eq LT.lt.trans_eq
 
-alias lt_of_lt_of_eq' ← LT.lt.trans_eq'
+alias LT.lt.trans_eq' := lt_of_lt_of_eq'
 #align has_lt.lt.trans_eq' LT.lt.trans_eq'
 
-alias le_of_eq_of_le ← Eq.trans_le
+alias Eq.trans_le := le_of_eq_of_le
 #align eq.trans_le Eq.trans_le
 
-alias le_of_eq_of_le' ← Eq.trans_ge
+alias Eq.trans_ge := le_of_eq_of_le'
 #align eq.trans_ge Eq.trans_ge
 
-alias lt_of_eq_of_lt ← Eq.trans_lt
+alias Eq.trans_lt := lt_of_eq_of_lt
 #align eq.trans_lt Eq.trans_lt
 
-alias lt_of_eq_of_lt' ← Eq.trans_gt
+alias Eq.trans_gt := lt_of_eq_of_lt'
 #align eq.trans_gt Eq.trans_gt
 
 end
@@ -455,7 +457,7 @@ theorem not_le_of_lt [Preorder α] {a b : α} (h : a < b) : ¬b ≤ a :=
 #align not_le_of_lt not_le_of_lt
 -/
 
-alias not_le_of_lt ← LT.lt.not_le
+alias LT.lt.not_le := not_le_of_lt
 #align has_lt.lt.not_le LT.lt.not_le
 
 #print not_lt_of_le /-
@@ -463,7 +465,7 @@ theorem not_lt_of_le [Preorder α] {a b : α} (h : a ≤ b) : ¬b < a := fun hba
 #align not_lt_of_le not_lt_of_le
 -/
 
-alias not_lt_of_le ← LE.le.not_lt
+alias LE.le.not_lt := not_lt_of_le
 #align has_le.le.not_lt LE.le.not_lt
 
 #print ne_of_not_le /-
@@ -531,16 +533,16 @@ theorem gt_or_eq_of_le [PartialOrder α] {a b : α} (hab : a ≤ b) : a < b ∨ 
 #align gt_or_eq_of_le gt_or_eq_of_le
 -/
 
-alias Decidable.eq_or_lt_of_le ← LE.le.eq_or_lt_dec
+alias LE.le.eq_or_lt_dec := Decidable.eq_or_lt_of_le
 #align has_le.le.eq_or_lt_dec LE.le.eq_or_lt_dec
 
-alias eq_or_lt_of_le ← LE.le.eq_or_lt
+alias LE.le.eq_or_lt := eq_or_lt_of_le
 #align has_le.le.eq_or_lt LE.le.eq_or_lt
 
-alias eq_or_gt_of_le ← LE.le.eq_or_gt
+alias LE.le.eq_or_gt := eq_or_gt_of_le
 #align has_le.le.eq_or_gt LE.le.eq_or_gt
 
-alias gt_or_eq_of_le ← LE.le.gt_or_eq
+alias LE.le.gt_or_eq := gt_or_eq_of_le
 #align has_le.le.gt_or_eq LE.le.gt_or_eq
 
 attribute [nolint decidable_classical] LE.le.eq_or_lt_dec
@@ -557,10 +559,10 @@ theorem eq_of_ge_of_not_gt [PartialOrder α] {a b : α} (hab : a ≤ b) (hba : �
 #align eq_of_ge_of_not_gt eq_of_ge_of_not_gt
 -/
 
-alias eq_of_le_of_not_lt ← LE.le.eq_of_not_lt
+alias LE.le.eq_of_not_lt := eq_of_le_of_not_lt
 #align has_le.le.eq_of_not_lt LE.le.eq_of_not_lt
 
-alias eq_of_ge_of_not_gt ← LE.le.eq_of_not_gt
+alias LE.le.eq_of_not_gt := eq_of_ge_of_not_gt
 #align has_le.le.eq_of_not_gt LE.le.eq_of_not_gt
 
 #print Ne.le_iff_lt /-
@@ -1078,16 +1080,16 @@ theorem strongLT_of_le_of_strongLT (hab : a ≤ b) (hbc : b ≺ c) : a ≺ c := 
 #align strong_lt_of_le_of_strong_lt strongLT_of_le_of_strongLT
 -/
 
-alias le_of_strongLT ← StrongLT.le
+alias StrongLT.le := le_of_strongLT
 #align strong_lt.le StrongLT.le
 
-alias lt_of_strongLT ← StrongLT.lt
+alias StrongLT.lt := lt_of_strongLT
 #align strong_lt.lt StrongLT.lt
 
-alias strongLT_of_strongLT_of_le ← StrongLT.trans_le
+alias StrongLT.trans_le := strongLT_of_strongLT_of_le
 #align strong_lt.trans_le StrongLT.trans_le
 
-alias strongLT_of_le_of_strongLT ← LE.le.trans_strongLT
+alias LE.le.trans_strongLT := strongLT_of_le_of_strongLT
 #align has_le.le.trans_strong_lt LE.le.trans_strongLT
 
 end Pi

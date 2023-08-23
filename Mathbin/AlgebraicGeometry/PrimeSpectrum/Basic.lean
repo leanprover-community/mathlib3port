@@ -808,7 +808,7 @@ variable (S)
 theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalization M S] :
     Inducing (comap (algebraMap R S)) := by
   constructor
-  rw [topologicalSpace_eq_iff]
+  rw [TopologicalSpace.ext_iff]
   intro U
   simp_rw [← isClosed_compl_iff]
   generalize Uᶜ = Z
@@ -871,7 +871,7 @@ theorem comap_inducing_of_surjective (hf : Surjective f) : Inducing (comap f) :=
   {
     induced :=
       by
-      simp_rw [topologicalSpace_eq_iff, ← isClosed_compl_iff, isClosed_induced_iff,
+      simp_rw [TopologicalSpace.ext_iff, ← isClosed_compl_iff, isClosed_induced_iff,
         is_closed_iff_zero_locus]
       refine' fun s =>
         ⟨fun ⟨F, hF⟩ =>

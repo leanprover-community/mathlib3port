@@ -229,8 +229,8 @@ theorem supIndep_iff_pairwiseDisjoint : s.SupIndep f ↔ (s : Set ι).PairwiseDi
 #align finset.sup_indep_iff_pairwise_disjoint Finset.supIndep_iff_pairwiseDisjoint
 -/
 
-alias sup_indep_iff_pairwise_disjoint ↔ sup_indep.pairwise_disjoint
-  _root_.set.pairwise_disjoint.sup_indep
+alias ⟨sup_indep.pairwise_disjoint, _root_.set.pairwise_disjoint.sup_indep⟩ :=
+  sup_indep_iff_pairwise_disjoint
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 #align set.pairwise_disjoint.sup_indep Set.PairwiseDisjoint.supIndep
 
@@ -564,8 +564,8 @@ theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finse
 #align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndep
 -/
 
-alias CompleteLattice.independent_iff_supIndep ↔ CompleteLattice.Independent.supIndep
-  Finset.SupIndep.independent
+alias ⟨CompleteLattice.Independent.supIndep, Finset.SupIndep.independent⟩ :=
+  CompleteLattice.independent_iff_supIndep
 #align complete_lattice.independent.sup_indep CompleteLattice.Independent.supIndep
 #align finset.sup_indep.independent Finset.SupIndep.independent
 
@@ -578,8 +578,8 @@ theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fint
 #align complete_lattice.independent_iff_sup_indep_univ CompleteLattice.independent_iff_supIndep_univ
 -/
 
-alias CompleteLattice.independent_iff_supIndep_univ ↔ CompleteLattice.Independent.sup_indep_univ
-  Finset.SupIndep.independent_of_univ
+alias ⟨CompleteLattice.Independent.sup_indep_univ, Finset.SupIndep.independent_of_univ⟩ :=
+  CompleteLattice.independent_iff_supIndep_univ
 #align complete_lattice.independent.sup_indep_univ CompleteLattice.Independent.sup_indep_univ
 #align finset.sup_indep.independent_of_univ Finset.SupIndep.independent_of_univ
 
@@ -597,7 +597,7 @@ theorem setIndependent_iff_pairwiseDisjoint {s : Set α} :
 #align complete_lattice.set_independent_iff_pairwise_disjoint CompleteLattice.setIndependent_iff_pairwiseDisjoint
 -/
 
-alias set_independent_iff_pairwise_disjoint ↔ _ _root_.set.pairwise_disjoint.set_independent
+alias ⟨_, _root_.set.pairwise_disjoint.set_independent⟩ := set_independent_iff_pairwise_disjoint
 #align set.pairwise_disjoint.set_independent Set.PairwiseDisjoint.setIndependent
 
 #print CompleteLattice.independent_iff_pairwiseDisjoint /-

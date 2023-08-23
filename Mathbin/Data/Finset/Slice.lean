@@ -64,7 +64,7 @@ theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
 #align set.sized_union Set.sized_union
 -/
 
-alias sized_union ↔ _ sized.union
+alias ⟨_, sized.union⟩ := sized_union
 #align set.sized.union Set.sized.union
 
 #print Set.sized_iUnion /-
@@ -133,7 +133,7 @@ theorem subset_powersetLen_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : Se
 #align finset.subset_powerset_len_univ_iff Finset.subset_powersetLen_univ_iff
 -/
 
-alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
+alias ⟨_, _root_.set.sized.subset_powerset_len_univ⟩ := subset_powerset_len_univ_iff
 #align set.sized.subset_powerset_len_univ Set.Sized.subset_powersetLen_univ
 
 #print Finset.Set.Sized.card_le /-

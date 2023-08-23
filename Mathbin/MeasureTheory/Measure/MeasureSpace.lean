@@ -2287,7 +2287,7 @@ theorem ext_iff_of_iUnion_eq_univ [Countable ι] {s : ι → Set α} (hs : (⋃ 
 #align measure_theory.measure.ext_iff_of_Union_eq_univ MeasureTheory.Measure.ext_iff_of_iUnion_eq_univ
 -/
 
-alias ext_iff_of_Union_eq_univ ↔ _ ext_of_Union_eq_univ
+alias ⟨_, ext_of_Union_eq_univ⟩ := ext_iff_of_Union_eq_univ
 #align measure_theory.measure.ext_of_Union_eq_univ MeasureTheory.Measure.ext_of_iUnion_eq_univ
 
 #print MeasureTheory.Measure.ext_iff_of_biUnion_eq_univ /-
@@ -2299,7 +2299,7 @@ theorem ext_iff_of_biUnion_eq_univ {S : Set ι} {s : ι → Set α} (hc : S.Coun
 #align measure_theory.measure.ext_iff_of_bUnion_eq_univ MeasureTheory.Measure.ext_iff_of_biUnion_eq_univ
 -/
 
-alias ext_iff_of_bUnion_eq_univ ↔ _ ext_of_bUnion_eq_univ
+alias ⟨_, ext_of_bUnion_eq_univ⟩ := ext_iff_of_bUnion_eq_univ
 #align measure_theory.measure.ext_of_bUnion_eq_univ MeasureTheory.Measure.ext_of_biUnion_eq_univ
 
 #print MeasureTheory.Measure.ext_iff_of_sUnion_eq_univ /-
@@ -2311,7 +2311,7 @@ theorem ext_iff_of_sUnion_eq_univ {S : Set (Set α)} (hc : S.Countable) (hs : �
 #align measure_theory.measure.ext_iff_of_sUnion_eq_univ MeasureTheory.Measure.ext_iff_of_sUnion_eq_univ
 -/
 
-alias ext_iff_of_sUnion_eq_univ ↔ _ ext_of_sUnion_eq_univ
+alias ⟨_, ext_of_sUnion_eq_univ⟩ := ext_iff_of_sUnion_eq_univ
 #align measure_theory.measure.ext_of_sUnion_eq_univ MeasureTheory.Measure.ext_of_sUnion_eq_univ
 
 #print MeasureTheory.Measure.ext_of_generateFrom_of_cover /-
@@ -2879,7 +2879,7 @@ theorem absolutelyContinuous_of_le (h : μ ≤ ν) : μ ≪ ν := fun s hs =>
 #align measure_theory.measure.absolutely_continuous_of_le MeasureTheory.Measure.absolutelyContinuous_of_le
 -/
 
-alias absolutely_continuous_of_le ← _root_.has_le.le.absolutely_continuous
+alias _root_.has_le.le.absolutely_continuous := absolutely_continuous_of_le
 #align has_le.le.absolutely_continuous LE.le.absolutelyContinuous
 
 #print MeasureTheory.Measure.absolutelyContinuous_of_eq /-
@@ -2888,7 +2888,7 @@ theorem absolutelyContinuous_of_eq (h : μ = ν) : μ ≪ ν :=
 #align measure_theory.measure.absolutely_continuous_of_eq MeasureTheory.Measure.absolutelyContinuous_of_eq
 -/
 
-alias absolutely_continuous_of_eq ← _root_.eq.absolutely_continuous
+alias _root_.eq.absolutely_continuous := absolutely_continuous_of_eq
 #align eq.absolutely_continuous Eq.absolutelyContinuous
 
 namespace AbsolutelyContinuous
@@ -2952,12 +2952,12 @@ theorem ae_le_iff_absolutelyContinuous : μ.ae ≤ ν.ae ↔ μ ≪ ν :=
 #align measure_theory.measure.ae_le_iff_absolutely_continuous MeasureTheory.Measure.ae_le_iff_absolutelyContinuous
 -/
 
-alias ae_le_iff_absolutely_continuous ↔ _root_.has_le.le.absolutely_continuous_of_ae
-  absolutely_continuous.ae_le
+alias ⟨_root_.has_le.le.absolutely_continuous_of_ae, absolutely_continuous.ae_le⟩ :=
+  ae_le_iff_absolutely_continuous
 #align has_le.le.absolutely_continuous_of_ae LE.le.absolutelyContinuous_of_ae
 #align measure_theory.measure.absolutely_continuous.ae_le MeasureTheory.Measure.AbsolutelyContinuous.ae_le
 
-alias absolutely_continuous.ae_le ← ae_mono'
+alias ae_mono' := absolutely_continuous.ae_le
 #align measure_theory.measure.ae_mono' MeasureTheory.Measure.ae_mono'
 
 #print MeasureTheory.Measure.AbsolutelyContinuous.ae_eq /-
@@ -5125,7 +5125,7 @@ theorem inf_ae_iff : μ.FiniteAtFilter (f ⊓ μ.ae) ↔ μ.FiniteAtFilter f :=
 #align measure_theory.measure.finite_at_filter.inf_ae_iff MeasureTheory.Measure.FiniteAtFilter.inf_ae_iff
 -/
 
-alias inf_ae_iff ↔ of_inf_ae _
+alias ⟨of_inf_ae, _⟩ := inf_ae_iff
 #align measure_theory.measure.finite_at_filter.of_inf_ae MeasureTheory.Measure.FiniteAtFilter.of_inf_ae
 
 #print MeasureTheory.Measure.FiniteAtFilter.filter_mono_ae /-

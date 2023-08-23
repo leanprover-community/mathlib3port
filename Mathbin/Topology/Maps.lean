@@ -336,7 +336,7 @@ def QuotientMap {α : Type _} {β : Type _} [tα : TopologicalSpace α] [tβ : T
 #print quotientMap_iff /-
 theorem quotientMap_iff [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     QuotientMap f ↔ Surjective f ∧ ∀ s : Set β, IsOpen s ↔ IsOpen (f ⁻¹' s) :=
-  and_congr Iff.rfl topologicalSpace_eq_iff
+  and_congr Iff.rfl TopologicalSpace.ext_iff
 #align quotient_map_iff quotientMap_iff
 -/
 

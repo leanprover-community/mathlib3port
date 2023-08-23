@@ -877,7 +877,7 @@ theorem disjoint_principal_principal {s t : Set α} : Disjoint (𝓟 s) (𝓟 t)
 #align filter.disjoint_principal_principal Filter.disjoint_principal_principal
 -/
 
-alias disjoint_principal_principal ↔ _ _root_.disjoint.filter_principal
+alias ⟨_, _root_.disjoint.filter_principal⟩ := disjoint_principal_principal
 #align disjoint.filter_principal Disjoint.filter_principal
 
 #print Filter.disjoint_pure_pure /-

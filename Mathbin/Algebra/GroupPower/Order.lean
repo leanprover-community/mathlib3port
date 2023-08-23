@@ -769,7 +769,7 @@ theorem sq_nonneg (a : R) : 0 ≤ a ^ 2 :=
 #align sq_nonneg sq_nonneg
 -/
 
-alias sq_nonneg ← pow_two_nonneg
+alias pow_two_nonneg := sq_nonneg
 #align pow_two_nonneg pow_two_nonneg
 
 #print pow_bit0_pos /-
@@ -784,7 +784,7 @@ theorem sq_pos_of_ne_zero (a : R) (h : a ≠ 0) : 0 < a ^ 2 :=
 #align sq_pos_of_ne_zero sq_pos_of_ne_zero
 -/
 
-alias sq_pos_of_ne_zero ← pow_two_pos_of_ne_zero
+alias pow_two_pos_of_ne_zero := sq_pos_of_ne_zero
 #align pow_two_pos_of_ne_zero pow_two_pos_of_ne_zero
 
 #print pow_bit0_pos_iff /-
@@ -918,7 +918,7 @@ theorem two_mul_le_add_sq (a b : R) : 2 * a * b ≤ a ^ 2 + b ^ 2 :=
 #align two_mul_le_add_sq two_mul_le_add_sq
 -/
 
-alias two_mul_le_add_sq ← two_mul_le_add_pow_two
+alias two_mul_le_add_pow_two := two_mul_le_add_sq
 #align two_mul_le_add_pow_two two_mul_le_add_pow_two
 
 end LinearOrderedCommRing

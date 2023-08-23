@@ -101,7 +101,7 @@ theorem nhdsSet_eq_principal_iff : 𝓝ˢ s = 𝓟 s ↔ IsOpen s := by
 #align nhds_set_eq_principal_iff nhdsSet_eq_principal_iff
 -/
 
-alias nhdsSet_eq_principal_iff ↔ _ IsOpen.nhdsSet_eq
+alias ⟨_, IsOpen.nhdsSet_eq⟩ := nhdsSet_eq_principal_iff
 #align is_open.nhds_set_eq IsOpen.nhdsSet_eq
 
 #print nhdsSet_interior /-

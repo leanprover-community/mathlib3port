@@ -1707,16 +1707,16 @@ theorem tendsto_atBot_atBot_iff_of_monotone [Nonempty α] [SemilatticeInf α] [P
 #align filter.tendsto_at_bot_at_bot_iff_of_monotone Filter.tendsto_atBot_atBot_iff_of_monotone
 -/
 
-alias tendsto_at_top_at_top_of_monotone ← _root_.monotone.tendsto_at_top_at_top
+alias _root_.monotone.tendsto_at_top_at_top := tendsto_at_top_at_top_of_monotone
 #align monotone.tendsto_at_top_at_top Monotone.tendsto_atTop_atTop
 
-alias tendsto_at_bot_at_bot_of_monotone ← _root_.monotone.tendsto_at_bot_at_bot
+alias _root_.monotone.tendsto_at_bot_at_bot := tendsto_at_bot_at_bot_of_monotone
 #align monotone.tendsto_at_bot_at_bot Monotone.tendsto_atBot_atBot
 
-alias tendsto_at_top_at_top_iff_of_monotone ← _root_.monotone.tendsto_at_top_at_top_iff
+alias _root_.monotone.tendsto_at_top_at_top_iff := tendsto_at_top_at_top_iff_of_monotone
 #align monotone.tendsto_at_top_at_top_iff Monotone.tendsto_atTop_atTop_iff
 
-alias tendsto_at_bot_at_bot_iff_of_monotone ← _root_.monotone.tendsto_at_bot_at_bot_iff
+alias _root_.monotone.tendsto_at_bot_at_bot_iff := tendsto_at_bot_at_bot_iff_of_monotone
 #align monotone.tendsto_at_bot_at_bot_iff Monotone.tendsto_atBot_atBot_iff
 
 #print Filter.comap_embedding_atTop /-
@@ -1787,7 +1787,7 @@ theorem tendsto_atTop_finset_of_monotone [Preorder β] {f : β → Finset α} (h
 #align filter.tendsto_at_top_finset_of_monotone Filter.tendsto_atTop_finset_of_monotone
 -/
 
-alias tendsto_at_top_finset_of_monotone ← _root_.monotone.tendsto_at_top_finset
+alias _root_.monotone.tendsto_at_top_finset := tendsto_at_top_finset_of_monotone
 #align monotone.tendsto_at_top_finset Monotone.tendsto_atTop_finset
 
 #print Filter.tendsto_finset_image_atTop_atTop /-

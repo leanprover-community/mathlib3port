@@ -121,7 +121,7 @@ theorem isUnit_iff_natAbs_eq {n : ℤ} : IsUnit n ↔ n.natAbs = 1 := by
 #align int.is_unit_iff_nat_abs_eq Int.isUnit_iff_natAbs_eq
 -/
 
-alias is_unit_iff_nat_abs_eq ↔ is_unit.nat_abs_eq _
+alias ⟨is_unit.nat_abs_eq, _⟩ := is_unit_iff_nat_abs_eq
 #align int.is_unit.nat_abs_eq Int.IsUnit.natAbs_eq
 
 #print Int.ofNat_isUnit /-

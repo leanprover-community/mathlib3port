@@ -146,7 +146,7 @@ private theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : 
   simp_rw [← smul_one_smul ℂ c f, ← smul_one_smul ℂ c (f ∣[k]A)]
   ext1
   simp_rw [slash]
-  simp only [slash, Algebra.id.smul_eq_mul, Matrix.GeneralLinearGroup.det_apply_val, Pi.smul_apply,
+  simp only [slash, Algebra.id.smul_eq_mul, Matrix.GeneralLinearGroup.val_det_apply, Pi.smul_apply,
     Subtype.val_eq_coe, coe_coe]
   ring
 
@@ -237,7 +237,7 @@ theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
     (f * g) ∣[k1 + k2] A = ((↑ₘA).det : ℝ) • f ∣[k1] A * g ∣[k2] A :=
   by
   ext1
-  simp only [slash_def, slash, Matrix.GeneralLinearGroup.det_apply_val, Subtype.val_eq_coe,
+  simp only [slash_def, slash, Matrix.GeneralLinearGroup.val_det_apply, Subtype.val_eq_coe,
     Pi.mul_apply, Pi.smul_apply, Algebra.smul_mul_assoc, real_smul]
   set d : ℂ := ↑((↑ₘA).det : ℝ)
   have h1 : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1) :=

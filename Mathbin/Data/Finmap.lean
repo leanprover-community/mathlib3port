@@ -62,7 +62,7 @@ theorem nodup_keys {m : Multiset (Σ a, β a)} : m.keys.Nodup ↔ m.NodupKeys :=
 #align multiset.nodup_keys Multiset.nodup_keys
 -/
 
-alias nodup_keys ↔ _ nodupkeys.nodup_keys
+alias ⟨_, nodupkeys.nodup_keys⟩ := nodup_keys
 #align multiset.nodupkeys.nodup_keys Multiset.NodupKeys.nodup_keys
 
 #print Multiset.NodupKeys.nodup /-

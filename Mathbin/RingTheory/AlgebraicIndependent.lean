@@ -238,7 +238,7 @@ theorem algebraicIndependent_subtype_range {ι} {f : ι → A} (hf : Injective f
 #align algebraic_independent_subtype_range algebraicIndependent_subtype_range
 -/
 
-alias algebraicIndependent_subtype_range ↔ AlgebraicIndependent.of_subtype_range _
+alias ⟨AlgebraicIndependent.of_subtype_range, _⟩ := algebraicIndependent_subtype_range
 #align algebraic_independent.of_subtype_range AlgebraicIndependent.of_subtype_range
 
 #print algebraicIndependent_image /-

@@ -880,7 +880,7 @@ theorem range_iff_surjective : range f = univ ↔ Surjective f :=
 #align set.range_iff_surjective Set.range_iff_surjective
 -/
 
-alias range_iff_surjective ↔ _ _root_.function.surjective.range_eq
+alias ⟨_, _root_.function.surjective.range_eq⟩ := range_iff_surjective
 #align function.surjective.range_eq Function.Surjective.range_eq
 
 #print Set.image_univ /-

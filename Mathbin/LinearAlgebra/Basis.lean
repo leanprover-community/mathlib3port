@@ -355,7 +355,7 @@ theorem ext_elem_iff {x y : M} : x = y ↔ ∀ i, b.repr x i = b.repr y i := by
 #align basis.ext_elem_iff Basis.ext_elem_iff
 -/
 
-alias ext_elem_iff ↔ _ _root_.basis.ext_elem
+alias ⟨_, _root_.basis.ext_elem⟩ := ext_elem_iff
 #align basis.ext_elem Basis.ext_elem
 
 #print Basis.repr_eq_iff /-

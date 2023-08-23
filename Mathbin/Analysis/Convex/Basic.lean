@@ -97,7 +97,7 @@ theorem convex_iff_pointwise_add_subset :
 #align convex_iff_pointwise_add_subset convex_iff_pointwise_add_subset
 -/
 
-alias convex_iff_pointwise_add_subset ↔ Convex.set_combo_subset _
+alias ⟨Convex.set_combo_subset, _⟩ := convex_iff_pointwise_add_subset
 #align convex.set_combo_subset Convex.set_combo_subset
 
 #print convex_empty /-
@@ -814,7 +814,7 @@ theorem convex_iff_ordConnected [LinearOrderedField 𝕜] {s : Set 𝕜} : Conve
 #align convex_iff_ord_connected convex_iff_ordConnected
 -/
 
-alias convex_iff_ordConnected ↔ Convex.ordConnected _
+alias ⟨Convex.ordConnected, _⟩ := convex_iff_ordConnected
 #align convex.ord_connected Convex.ordConnected
 
 end

@@ -154,11 +154,11 @@ theorem isTheta_norm_right : (f =Θ[l] fun x => ‖g' x‖) ↔ f =Θ[l] g' := b
 #align asymptotics.is_Theta_norm_right Asymptotics.isTheta_norm_right
 -/
 
-alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
+alias ⟨is_Theta.of_norm_left, is_Theta.norm_left⟩ := is_Theta_norm_left
 #align asymptotics.is_Theta.of_norm_left Asymptotics.IsTheta.of_norm_left
 #align asymptotics.is_Theta.norm_left Asymptotics.IsTheta.norm_left
 
-alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
+alias ⟨is_Theta.of_norm_right, is_Theta.norm_right⟩ := is_Theta_norm_right
 #align asymptotics.is_Theta.of_norm_right Asymptotics.IsTheta.of_norm_right
 #align asymptotics.is_Theta.norm_right Asymptotics.IsTheta.norm_right
 
@@ -334,7 +334,7 @@ theorem isTheta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0) 
 #align asymptotics.is_Theta_const_smul_left Asymptotics.isTheta_const_smul_left
 -/
 
-alias is_Theta_const_smul_left ↔ is_Theta.of_const_smul_left is_Theta.const_smul_left
+alias ⟨is_Theta.of_const_smul_left, is_Theta.const_smul_left⟩ := is_Theta_const_smul_left
 #align asymptotics.is_Theta.of_const_smul_left Asymptotics.IsTheta.of_const_smul_left
 #align asymptotics.is_Theta.const_smul_left Asymptotics.IsTheta.const_smul_left
 
@@ -345,7 +345,7 @@ theorem isTheta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0)
 #align asymptotics.is_Theta_const_smul_right Asymptotics.isTheta_const_smul_right
 -/
 
-alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
+alias ⟨is_Theta.of_const_smul_right, is_Theta.const_smul_right⟩ := is_Theta_const_smul_right
 #align asymptotics.is_Theta.of_const_smul_right Asymptotics.IsTheta.of_const_smul_right
 #align asymptotics.is_Theta.const_smul_right Asymptotics.IsTheta.const_smul_right
 
@@ -356,7 +356,7 @@ theorem isTheta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) :
 #align asymptotics.is_Theta_const_mul_left Asymptotics.isTheta_const_mul_left
 -/
 
-alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_left
+alias ⟨is_Theta.of_const_mul_left, is_Theta.const_mul_left⟩ := is_Theta_const_mul_left
 #align asymptotics.is_Theta.of_const_mul_left Asymptotics.IsTheta.of_const_mul_left
 #align asymptotics.is_Theta.const_mul_left Asymptotics.IsTheta.const_mul_left
 
@@ -367,7 +367,7 @@ theorem isTheta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) :
 #align asymptotics.is_Theta_const_mul_right Asymptotics.isTheta_const_mul_right
 -/
 
-alias is_Theta_const_mul_right ↔ is_Theta.of_const_mul_right is_Theta.const_mul_right
+alias ⟨is_Theta.of_const_mul_right, is_Theta.const_mul_right⟩ := is_Theta_const_mul_right
 #align asymptotics.is_Theta.of_const_mul_right Asymptotics.IsTheta.of_const_mul_right
 #align asymptotics.is_Theta.const_mul_right Asymptotics.IsTheta.const_mul_right
 

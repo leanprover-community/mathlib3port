@@ -183,16 +183,16 @@ protected theorem exists {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (to
 #align order_dual.exists OrderDual.exists
 -/
 
-alias to_dual_le_to_dual ↔ _ _root_.has_le.le.dual
+alias ⟨_, _root_.has_le.le.dual⟩ := to_dual_le_to_dual
 #align has_le.le.dual LE.le.dual
 
-alias to_dual_lt_to_dual ↔ _ _root_.has_lt.lt.dual
+alias ⟨_, _root_.has_lt.lt.dual⟩ := to_dual_lt_to_dual
 #align has_lt.lt.dual LT.lt.dual
 
-alias of_dual_le_of_dual ↔ _ _root_.has_le.le.of_dual
+alias ⟨_, _root_.has_le.le.of_dual⟩ := of_dual_le_of_dual
 #align has_le.le.of_dual LE.le.ofDual
 
-alias of_dual_lt_of_dual ↔ _ _root_.has_lt.lt.of_dual
+alias ⟨_, _root_.has_lt.lt.of_dual⟩ := of_dual_lt_of_dual
 #align has_lt.lt.of_dual LT.lt.ofDual
 
 end OrderDual

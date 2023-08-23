@@ -123,7 +123,7 @@ theorem modEq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n 
 #align int.modeq_iff_add_fac Int.modEq_iff_add_fac
 -/
 
-alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
+alias ⟨modeq.dvd, modeq_of_dvd⟩ := modeq_iff_dvd
 #align int.modeq.dvd Int.ModEq.dvd
 #align int.modeq_of_dvd Int.modEq_of_dvd
 

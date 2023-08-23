@@ -56,15 +56,15 @@ def IsTrail.edgesFinset {u v : V} {p : G.Walk u v} (h : p.IsTrail) : Finset (Sym
 
 variable [DecidableEq V]
 
-#print SimpleGraph.Walk.IsTrail.even_countp_edges_iff /-
-theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail) (x : V) :
-    Even (p.edges.countp fun e => x ∈ e) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=
+#print SimpleGraph.Walk.IsTrail.even_countP_edges_iff /-
+theorem IsTrail.even_countP_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail) (x : V) :
+    Even (p.edges.countP fun e => x ∈ e) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=
   by
   induction' p with u u v w huv p ih
   · simp
   · rw [cons_is_trail_iff] at ht 
     specialize ih ht.1
-    simp only [List.countp_cons, Ne.def, edges_cons, Sym2.mem_iff]
+    simp only [List.countP_cons, Ne.def, edges_cons, Sym2.mem_iff]
     split_ifs with h
     · obtain rfl | rfl := h
       · rw [Nat.even_add_one, ih]
@@ -86,7 +86,7 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
           simp only [imp_false, eq_self_iff_true, not_true, Classical.not_not] at h' 
           cases h'
           simpa using h
-#align simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countp_edges_iff
+#align simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countP_edges_iff
 -/
 
 #print SimpleGraph.Walk.IsEulerian /-
@@ -157,7 +157,7 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
     [DecidableRel G.Adj] : Even (G.degree x) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=
   by
   convert ht.is_trail.even_countp_edges_iff x
-  rw [← Multiset.coe_countp, Multiset.countp_eq_card_filter, ← card_incidence_finset_eq_degree]
+  rw [← Multiset.coe_countP, Multiset.countP_eq_card_filter, ← card_incidence_finset_eq_degree]
   change Multiset.card _ = _
   congr 1
   convert_to _ = (ht.is_trail.edges_finset.filter (Membership.Mem x)).val

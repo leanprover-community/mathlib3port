@@ -56,7 +56,7 @@ theorem inv_pos : 0 < a⁻¹ ↔ 0 < a :=
 #align inv_pos inv_pos
 -/
 
-alias inv_pos ↔ _ inv_pos_of_pos
+alias ⟨_, inv_pos_of_pos⟩ := inv_pos
 #align inv_pos_of_pos inv_pos_of_pos
 
 #print inv_nonneg /-
@@ -65,7 +65,7 @@ theorem inv_nonneg : 0 ≤ a⁻¹ ↔ 0 ≤ a := by simp only [le_iff_eq_or_lt, 
 #align inv_nonneg inv_nonneg
 -/
 
-alias inv_nonneg ↔ _ inv_nonneg_of_nonneg
+alias ⟨_, inv_nonneg_of_nonneg⟩ := inv_nonneg
 #align inv_nonneg_of_nonneg inv_nonneg_of_nonneg
 
 #print inv_lt_zero /-
@@ -698,13 +698,13 @@ theorem half_lt_self_iff : a / 2 < a ↔ 0 < a := by
 #align half_lt_self_iff half_lt_self_iff
 -/
 
-alias half_le_self_iff ↔ _ half_le_self
+alias ⟨_, half_le_self⟩ := half_le_self_iff
 #align half_le_self half_le_self
 
-alias half_lt_self_iff ↔ _ half_lt_self
+alias ⟨_, half_lt_self⟩ := half_lt_self_iff
 #align half_lt_self half_lt_self
 
-alias half_lt_self ← div_two_lt_of_pos
+alias div_two_lt_of_pos := half_lt_self
 #align div_two_lt_of_pos div_two_lt_of_pos
 
 #print one_half_lt_one /-
@@ -1305,12 +1305,12 @@ theorem mul_sub_mul_div_mul_nonpos_iff (hc : c ≠ 0) (hd : d ≠ 0) :
 #align mul_sub_mul_div_mul_nonpos_iff mul_sub_mul_div_mul_nonpos_iff
 -/
 
-alias mul_sub_mul_div_mul_neg_iff ↔ div_lt_div_of_mul_sub_mul_div_neg mul_sub_mul_div_mul_neg
+alias ⟨div_lt_div_of_mul_sub_mul_div_neg, mul_sub_mul_div_mul_neg⟩ := mul_sub_mul_div_mul_neg_iff
 #align div_lt_div_of_mul_sub_mul_div_neg div_lt_div_of_mul_sub_mul_div_neg
 #align mul_sub_mul_div_mul_neg mul_sub_mul_div_mul_neg
 
-alias mul_sub_mul_div_mul_nonpos_iff ↔ div_le_div_of_mul_sub_mul_div_nonpos
-  mul_sub_mul_div_mul_nonpos
+alias ⟨div_le_div_of_mul_sub_mul_div_nonpos, mul_sub_mul_div_mul_nonpos⟩ :=
+  mul_sub_mul_div_mul_nonpos_iff
 #align div_le_div_of_mul_sub_mul_div_nonpos div_le_div_of_mul_sub_mul_div_nonpos
 #align mul_sub_mul_div_mul_nonpos mul_sub_mul_div_mul_nonpos
 

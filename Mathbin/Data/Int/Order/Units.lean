@@ -37,7 +37,7 @@ theorem units_sq (u : ℤˣ) : u ^ 2 = 1 := by
 #align int.units_sq Int.units_sq
 -/
 
-alias units_sq ← units_pow_two
+alias units_pow_two := units_sq
 #align int.units_pow_two Int.units_pow_two
 
 #print Int.units_mul_self /-

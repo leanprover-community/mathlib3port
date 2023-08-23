@@ -558,7 +558,7 @@ theorem IntegrableAtFilter.inf_ae_iff {l : Filter α} :
 #align measure_theory.integrable_at_filter.inf_ae_iff MeasureTheory.IntegrableAtFilter.inf_ae_iff
 -/
 
-alias integrable_at_filter.inf_ae_iff ↔ integrable_at_filter.of_inf_ae _
+alias ⟨integrable_at_filter.of_inf_ae, _⟩ := integrable_at_filter.inf_ae_iff
 #align measure_theory.integrable_at_filter.of_inf_ae MeasureTheory.IntegrableAtFilter.of_inf_ae
 
 #print MeasureTheory.Measure.FiniteAtFilter.integrableAtFilter /-
@@ -588,8 +588,8 @@ theorem Measure.FiniteAtFilter.integrableAtFilter_of_tendsto_ae {l : Filter α}
 #align measure_theory.measure.finite_at_filter.integrable_at_filter_of_tendsto_ae MeasureTheory.Measure.FiniteAtFilter.integrableAtFilter_of_tendsto_ae
 -/
 
-alias measure.finite_at_filter.integrable_at_filter_of_tendsto_ae ←
-  _root_.filter.tendsto.integrable_at_filter_ae
+alias _root_.filter.tendsto.integrable_at_filter_ae :=
+  measure.finite_at_filter.integrable_at_filter_of_tendsto_ae
 #align filter.tendsto.integrable_at_filter_ae Filter.Tendsto.integrableAtFilter_ae
 
 #print MeasureTheory.Measure.FiniteAtFilter.integrableAtFilter_of_tendsto /-
@@ -600,8 +600,8 @@ theorem Measure.FiniteAtFilter.integrableAtFilter_of_tendsto {l : Filter α}
 #align measure_theory.measure.finite_at_filter.integrable_at_filter_of_tendsto MeasureTheory.Measure.FiniteAtFilter.integrableAtFilter_of_tendsto
 -/
 
-alias measure.finite_at_filter.integrable_at_filter_of_tendsto ←
-  _root_.filter.tendsto.integrable_at_filter
+alias _root_.filter.tendsto.integrable_at_filter :=
+  measure.finite_at_filter.integrable_at_filter_of_tendsto
 #align filter.tendsto.integrable_at_filter Filter.Tendsto.integrableAtFilter
 
 #print MeasureTheory.integrable_add_of_disjoint /-

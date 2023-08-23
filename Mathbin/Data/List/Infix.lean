@@ -245,13 +245,13 @@ theorem reverse_infix : reverse l₁ <:+: reverse l₂ ↔ l₁ <:+: l₂ :=
 #align list.reverse_infix List.reverse_infix
 -/
 
-alias reverse_prefix ↔ _ is_suffix.reverse
+alias ⟨_, is_suffix.reverse⟩ := reverse_prefix
 #align list.is_suffix.reverse List.isSuffix.reverse
 
-alias reverse_suffix ↔ _ is_prefix.reverse
+alias ⟨_, is_prefix.reverse⟩ := reverse_suffix
 #align list.is_prefix.reverse List.isPrefix.reverse
 
-alias reverse_infix ↔ _ is_infix.reverse
+alias ⟨_, is_infix.reverse⟩ := reverse_infix
 #align list.is_infix.reverse List.isInfix.reverse
 
 #print List.isInfix.length_le /-
@@ -285,7 +285,7 @@ theorem infix_nil : l <:+: [] ↔ l = [] :=
 #align list.infix_nil_iff List.infix_nil
 -/
 
-alias infix_nil_iff ↔ eq_nil_of_infix_nil _
+alias ⟨eq_nil_of_infix_nil, _⟩ := infix_nil_iff
 #align list.eq_nil_of_infix_nil List.eq_nil_of_infix_nil
 
 #print List.prefix_nil /-
@@ -302,10 +302,10 @@ theorem suffix_nil : l <:+ [] ↔ l = [] :=
 #align list.suffix_nil_iff List.suffix_nil
 -/
 
-alias prefix_nil_iff ↔ eq_nil_of_prefix_nil _
+alias ⟨eq_nil_of_prefix_nil, _⟩ := prefix_nil_iff
 #align list.eq_nil_of_prefix_nil List.eq_nil_of_prefix_nil
 
-alias suffix_nil_iff ↔ eq_nil_of_suffix_nil _
+alias ⟨eq_nil_of_suffix_nil, _⟩ := suffix_nil_iff
 #align list.eq_nil_of_suffix_nil List.eq_nil_of_suffix_nil
 
 #print List.infix_iff_prefix_suffix /-

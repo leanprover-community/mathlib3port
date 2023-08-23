@@ -64,7 +64,7 @@ theorem stepBound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
 #align szemeredi_regularity.step_bound_pos_iff SzemerediRegularity.stepBound_pos_iff
 -/
 
-alias step_bound_pos_iff ↔ _ step_bound_pos
+alias ⟨_, step_bound_pos⟩ := step_bound_pos_iff
 #align szemeredi_regularity.step_bound_pos SzemerediRegularity.stepBound_pos
 
 end szemeredi_regularity

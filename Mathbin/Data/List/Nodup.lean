@@ -212,7 +212,7 @@ theorem nodup_replicate (a : α) : ∀ {n : ℕ}, Nodup (replicate n a) ↔ n �
 @[simp]
 theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : Nodup l) (h : a ∈ l) :
     count a l = 1 :=
-  le_antisymm (nodup_iff_count_le_one.1 d a) (count_pos.2 h)
+  le_antisymm (nodup_iff_count_le_one.1 d a) (count_pos_iff_mem.2 h)
 #align list.count_eq_one_of_mem List.count_eq_one_of_mem
 -/
 
@@ -321,7 +321,7 @@ theorem nodup_attach {l : List α} : Nodup (attach l) ↔ Nodup l :=
 #align list.nodup_attach List.nodup_attach
 -/
 
-alias nodup_attach ↔ nodup.of_attach nodup.attach
+alias ⟨nodup.of_attach, nodup.attach⟩ := nodup_attach
 #align list.nodup.of_attach List.Nodup.of_attach
 #align list.nodup.attach List.Nodup.attach
 

@@ -471,7 +471,7 @@ protected theorem postcomp_uniformInducing [UniformSpace γ] {f : γ → β} (hf
   change comap (Prod.map (of_fun ∘ (· ∘ ·) f ∘ to_fun) (of_fun ∘ (· ∘ ·) f ∘ to_fun)) _ = _
   rw [← uniformity_comap] at hf ⊢
   congr
-  rw [← uniformSpace_eq hf, UniformFun.comap_eq]
+  rw [← UniformSpace.ext hf, UniformFun.comap_eq]
   rfl
 #align uniform_fun.postcomp_uniform_inducing UniformFun.postcomp_uniformInducing
 -/
@@ -878,7 +878,7 @@ protected theorem postcomp_uniformInducing [UniformSpace γ] {f : γ → β} (hf
   change comap (Prod.map (of_fun 𝔖 ∘ (· ∘ ·) f ∘ to_fun 𝔖) (of_fun 𝔖 ∘ (· ∘ ·) f ∘ to_fun 𝔖)) _ = _
   rw [← uniformity_comap] at hf ⊢
   congr
-  rw [← uniformSpace_eq hf, UniformOnFun.comap_eq]
+  rw [← UniformSpace.ext hf, UniformOnFun.comap_eq]
   rfl
 #align uniform_on_fun.postcomp_uniform_inducing UniformOnFun.postcomp_uniformInducing
 -/

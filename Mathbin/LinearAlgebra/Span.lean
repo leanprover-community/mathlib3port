@@ -123,7 +123,7 @@ theorem map_span [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂) (
 #align submodule.map_span Submodule.map_span
 -/
 
-alias Submodule.map_span ← _root_.linear_map.map_span
+alias _root_.linear_map.map_span := Submodule.map_span
 #align linear_map.map_span LinearMap.map_span
 
 #print Submodule.map_span_le /-
@@ -135,7 +135,7 @@ theorem map_span_le [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂
 #align submodule.map_span_le Submodule.map_span_le
 -/
 
-alias Submodule.map_span_le ← _root_.linear_map.map_span_le
+alias _root_.linear_map.map_span_le := Submodule.map_span_le
 #align linear_map.map_span_le LinearMap.map_span_le
 
 #print Submodule.span_insert_zero /-
@@ -156,7 +156,7 @@ theorem span_preimage_le (f : M →ₛₗ[σ₁₂] M₂) (s : Set M₂) :
 #align submodule.span_preimage_le Submodule.span_preimage_le
 -/
 
-alias Submodule.span_preimage_le ← _root_.linear_map.span_preimage_le
+alias _root_.linear_map.span_preimage_le := Submodule.span_preimage_le
 #align linear_map.span_preimage_le LinearMap.span_preimage_le
 
 #print Submodule.closure_subset_span /-

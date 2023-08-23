@@ -101,13 +101,13 @@ theorem Ioo_eq_empty_iff [DenselyOrdered α] : Ioo a b = ∅ ↔ ¬a < b := by
 #align finset.Ioo_eq_empty_iff Finset.Ioo_eq_empty_iff
 -/
 
-alias Icc_eq_empty_iff ↔ _ Icc_eq_empty
+alias ⟨_, Icc_eq_empty⟩ := Icc_eq_empty_iff
 #align finset.Icc_eq_empty Finset.Icc_eq_empty
 
-alias Ico_eq_empty_iff ↔ _ Ico_eq_empty
+alias ⟨_, Ico_eq_empty⟩ := Ico_eq_empty_iff
 #align finset.Ico_eq_empty Finset.Ico_eq_empty
 
-alias Ioc_eq_empty_iff ↔ _ Ioc_eq_empty
+alias ⟨_, Ioc_eq_empty⟩ := Ioc_eq_empty_iff
 #align finset.Ioc_eq_empty Finset.Ioc_eq_empty
 
 #print Finset.Ioo_eq_empty /-

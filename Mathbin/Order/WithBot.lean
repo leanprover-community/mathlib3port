@@ -440,7 +440,7 @@ theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
 #align with_bot.monotone_map_iff WithBot.monotone_map_iff
 -/
 
-alias monotone_map_iff ↔ _ _root_.monotone.with_bot_map
+alias ⟨_, _root_.monotone.with_bot_map⟩ := monotone_map_iff
 #align monotone.with_bot_map Monotone.withBot_map
 
 #print WithBot.strictMono_iff /-
@@ -461,7 +461,7 @@ theorem strictMono_map_iff [Preorder α] [Preorder β] {f : α → β} :
 #align with_bot.strict_mono_map_iff WithBot.strictMono_map_iff
 -/
 
-alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_bot_map
+alias ⟨_, _root_.strict_mono.with_bot_map⟩ := strict_mono_map_iff
 #align strict_mono.with_bot_map StrictMono.withBot_map
 
 #print WithBot.map_le_iff /-
@@ -1439,7 +1439,7 @@ theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
 #align with_top.monotone_map_iff WithTop.monotone_map_iff
 -/
 
-alias monotone_map_iff ↔ _ _root_.monotone.with_top_map
+alias ⟨_, _root_.monotone.with_top_map⟩ := monotone_map_iff
 #align monotone.with_top_map Monotone.withTop_map
 
 #print WithTop.strictMono_iff /-
@@ -1460,7 +1460,7 @@ theorem strictMono_map_iff [Preorder α] [Preorder β] {f : α → β} :
 #align with_top.strict_mono_map_iff WithTop.strictMono_map_iff
 -/
 
-alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_top_map
+alias ⟨_, _root_.strict_mono.with_top_map⟩ := strict_mono_map_iff
 #align strict_mono.with_top_map StrictMono.withTop_map
 
 #print WithTop.map_le_iff /-

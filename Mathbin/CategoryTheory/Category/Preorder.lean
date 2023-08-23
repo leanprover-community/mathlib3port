@@ -71,7 +71,7 @@ def homOfLE {x y : X} (h : x ≤ y) : x ⟶ y :=
 #align category_theory.hom_of_le CategoryTheory.homOfLE
 -/
 
-alias hom_of_le ← _root_.has_le.le.hom
+alias _root_.has_le.le.hom := hom_of_le
 #align has_le.le.hom LE.le.hom
 
 #print CategoryTheory.homOfLE_refl /-
@@ -96,7 +96,7 @@ theorem leOfHom {x y : X} (h : x ⟶ y) : x ≤ y :=
 #align category_theory.le_of_hom CategoryTheory.leOfHom
 -/
 
-alias le_of_hom ← _root_.quiver.hom.le
+alias _root_.quiver.hom.le := le_of_hom
 #align quiver.hom.le Quiver.Hom.le
 
 #print CategoryTheory.leOfHom_homOfLE /-

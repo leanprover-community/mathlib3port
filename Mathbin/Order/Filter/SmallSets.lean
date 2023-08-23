@@ -210,7 +210,7 @@ theorem eventually_smallSets_forall {p : α → Prop} :
 #align filter.eventually_small_sets_forall Filter.eventually_smallSets_forall
 -/
 
-alias eventually_small_sets_forall ↔ eventually.of_small_sets eventually.small_sets
+alias ⟨eventually.of_small_sets, eventually.small_sets⟩ := eventually_small_sets_forall
 #align filter.eventually.of_small_sets Filter.Eventually.of_smallSets
 #align filter.eventually.small_sets Filter.Eventually.smallSets
 

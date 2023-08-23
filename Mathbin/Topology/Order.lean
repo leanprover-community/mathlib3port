@@ -180,7 +180,7 @@ section Lattice
 /-- The ordering on topologies on the type `α`. `t ≤ s` if every set open in `s` is also open in `t`
 (`t` is finer than `s`). -/
 instance : PartialOrder (TopologicalSpace α) :=
-  { PartialOrder.lift (fun s => OrderDual.toDual is_open[s]) fun _ _ => topologicalSpace_eq with
+  { PartialOrder.lift (fun s => OrderDual.toDual is_open[s]) fun _ _ => TopologicalSpace.ext with
     le := fun s t => ∀ U, is_open[t] U → is_open[s] U }
 
 #print TopologicalSpace.le_def /-
@@ -213,7 +213,7 @@ protected def mkOfClosure (s : Set (Set α)) (hs : {u | GenerateOpen s u} = s) :
 #print TopologicalSpace.mkOfClosure_sets /-
 theorem mkOfClosure_sets {s : Set (Set α)} {hs : {u | GenerateOpen s u} = s} :
     TopologicalSpace.mkOfClosure s hs = TopologicalSpace.generateFrom s :=
-  topologicalSpace_eq hs.symm
+  TopologicalSpace.ext hs.symm
 #align topological_space.mk_of_closure_sets TopologicalSpace.mkOfClosure_sets
 -/
 
@@ -598,7 +598,7 @@ theorem coinduced_iSup {ι : Sort w} {t : ι → TopologicalSpace α} :
 
 #print induced_id /-
 theorem induced_id [t : TopologicalSpace α] : t.induced id = t :=
-  topologicalSpace_eq <|
+  TopologicalSpace.ext <|
     funext fun s => propext <| ⟨fun ⟨s', hs, h⟩ => h ▸ hs, fun hs => ⟨s, hs, rfl⟩⟩
 #align induced_id induced_id
 -/
@@ -606,7 +606,7 @@ theorem induced_id [t : TopologicalSpace α] : t.induced id = t :=
 #print induced_compose /-
 theorem induced_compose [tγ : TopologicalSpace γ] {f : α → β} {g : β → γ} :
     (tγ.induced g).induced f = tγ.induced (g ∘ f) :=
-  topologicalSpace_eq <|
+  TopologicalSpace.ext <|
     funext fun s =>
       propext <|
         ⟨fun ⟨s', ⟨s, hs, h₂⟩, h₁⟩ => h₁ ▸ h₂ ▸ ⟨s, hs, rfl⟩, fun ⟨s, hs, h⟩ =>
@@ -622,14 +622,14 @@ theorem induced_const [t : TopologicalSpace α] {x : α} : (t.induced fun y : β
 
 #print coinduced_id /-
 theorem coinduced_id [t : TopologicalSpace α] : t.coinduced id = t :=
-  topologicalSpace_eq rfl
+  TopologicalSpace.ext rfl
 #align coinduced_id coinduced_id
 -/
 
 #print coinduced_compose /-
 theorem coinduced_compose [tα : TopologicalSpace α] {f : α → β} {g : β → γ} :
     (tα.coinduced f).coinduced g = tα.coinduced (g ∘ f) :=
-  topologicalSpace_eq rfl
+  TopologicalSpace.ext rfl
 #align coinduced_compose coinduced_compose
 -/
 

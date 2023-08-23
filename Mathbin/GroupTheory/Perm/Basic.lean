@@ -945,7 +945,7 @@ theorem bijOn_perm_inv : BijOn (⇑f⁻¹) t s ↔ BijOn f s t :=
   Equiv.bijOn_symm
 #align set.bij_on_perm_inv Set.bijOn_perm_inv
 
-alias bij_on_perm_inv ↔ bij_on.of_perm_inv bij_on.perm_inv
+alias ⟨bij_on.of_perm_inv, bij_on.perm_inv⟩ := bij_on_perm_inv
 #align set.bij_on.of_perm_inv Set.BijOn.of_perm_inv
 #align set.bij_on.perm_inv Set.BijOn.perm_inv
 

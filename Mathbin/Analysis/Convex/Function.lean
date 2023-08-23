@@ -1117,16 +1117,16 @@ theorem neg_strictConcaveOn_iff : StrictConcaveOn 𝕜 s (-f) ↔ StrictConvexOn
 #align neg_strict_concave_on_iff neg_strictConcaveOn_iff
 -/
 
-alias neg_convexOn_iff ↔ _ ConcaveOn.neg
+alias ⟨_, ConcaveOn.neg⟩ := neg_convexOn_iff
 #align concave_on.neg ConcaveOn.neg
 
-alias neg_concaveOn_iff ↔ _ ConvexOn.neg
+alias ⟨_, ConvexOn.neg⟩ := neg_concaveOn_iff
 #align convex_on.neg ConvexOn.neg
 
-alias neg_strictConvexOn_iff ↔ _ StrictConcaveOn.neg
+alias ⟨_, StrictConcaveOn.neg⟩ := neg_strictConvexOn_iff
 #align strict_concave_on.neg StrictConcaveOn.neg
 
-alias neg_strictConcaveOn_iff ↔ _ StrictConvexOn.neg
+alias ⟨_, StrictConvexOn.neg⟩ := neg_strictConcaveOn_iff
 #align strict_convex_on.neg StrictConvexOn.neg
 
 #print ConvexOn.sub /-

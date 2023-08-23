@@ -608,10 +608,10 @@ theorem nonempty_coe_sort {s : Finset α} : Nonempty ↥s ↔ s.Nonempty :=
 #align finset.nonempty_coe_sort Finset.nonempty_coe_sort
 -/
 
-alias coe_nonempty ↔ _ nonempty.to_set
+alias ⟨_, nonempty.to_set⟩ := coe_nonempty
 #align finset.nonempty.to_set Finset.Nonempty.to_set
 
-alias nonempty_coe_sort ↔ _ nonempty.coe_sort
+alias ⟨_, nonempty.coe_sort⟩ := nonempty_coe_sort
 #align finset.nonempty.coe_sort Finset.Nonempty.coe_sort
 
 #print Finset.Nonempty.bex /-
@@ -819,7 +819,7 @@ theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
 #align finset.empty_ssubset Finset.empty_ssubset
 -/
 
-alias empty_ssubset ↔ _ nonempty.empty_ssubset
+alias ⟨_, nonempty.empty_ssubset⟩ := empty_ssubset
 #align finset.nonempty.empty_ssubset Finset.Nonempty.empty_ssubset
 
 end Empty
@@ -951,7 +951,7 @@ theorem nonempty_iff_eq_singleton_default [Unique α] {s : Finset α} : s.Nonemp
 #align finset.nonempty_iff_eq_singleton_default Finset.nonempty_iff_eq_singleton_default
 -/
 
-alias nonempty_iff_eq_singleton_default ↔ nonempty.eq_singleton_default _
+alias ⟨nonempty.eq_singleton_default, _⟩ := nonempty_iff_eq_singleton_default
 #align finset.nonempty.eq_singleton_default Finset.Nonempty.eq_singleton_default
 
 #print Finset.singleton_iff_unique_mem /-
@@ -2417,7 +2417,7 @@ theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty 
 #align finset.not_disjoint_iff_nonempty_inter Finset.not_disjoint_iff_nonempty_inter
 -/
 
-alias not_disjoint_iff_nonempty_inter ↔ _ nonempty.not_disjoint
+alias ⟨_, nonempty.not_disjoint⟩ := not_disjoint_iff_nonempty_inter
 #align finset.nonempty.not_disjoint Finset.Nonempty.not_disjoint
 
 #print Finset.disjoint_or_nonempty_inter /-

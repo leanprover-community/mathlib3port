@@ -103,7 +103,7 @@ theorem sameRay_iff_inv_norm_smul_eq_of_ne (hx : x ≠ 0) (hy : y ≠ 0) :
 #align same_ray_iff_inv_norm_smul_eq_of_ne sameRay_iff_inv_norm_smul_eq_of_ne
 -/
 
-alias sameRay_iff_inv_norm_smul_eq_of_ne ↔ SameRay.inv_norm_smul_eq _
+alias ⟨SameRay.inv_norm_smul_eq, _⟩ := sameRay_iff_inv_norm_smul_eq_of_ne
 #align same_ray.inv_norm_smul_eq SameRay.inv_norm_smul_eq
 
 #print sameRay_iff_inv_norm_smul_eq /-

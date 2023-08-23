@@ -470,7 +470,7 @@ theorem sqrt_pos : 0 < sqrt x ↔ 0 < x :=
 #align real.sqrt_pos Real.sqrt_pos
 -/
 
-alias sqrt_pos ↔ _ sqrt_pos_of_pos
+alias ⟨_, sqrt_pos_of_pos⟩ := sqrt_pos
 #align real.sqrt_pos_of_pos Real.sqrt_pos_of_pos
 
 section

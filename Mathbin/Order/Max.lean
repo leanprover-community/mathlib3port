@@ -328,28 +328,28 @@ theorem isMax_ofDual_iff {a : αᵒᵈ} : IsMax (ofDual a) ↔ IsMin a :=
 #align is_max_of_dual_iff isMax_ofDual_iff
 -/
 
-alias isBot_toDual_iff ↔ _ IsTop.toDual
+alias ⟨_, IsTop.toDual⟩ := isBot_toDual_iff
 #align is_top.to_dual IsTop.toDual
 
-alias isTop_toDual_iff ↔ _ IsBot.toDual
+alias ⟨_, IsBot.toDual⟩ := isTop_toDual_iff
 #align is_bot.to_dual IsBot.toDual
 
-alias isMin_toDual_iff ↔ _ IsMax.toDual
+alias ⟨_, IsMax.toDual⟩ := isMin_toDual_iff
 #align is_max.to_dual IsMax.toDual
 
-alias isMax_toDual_iff ↔ _ IsMin.toDual
+alias ⟨_, IsMin.toDual⟩ := isMax_toDual_iff
 #align is_min.to_dual IsMin.toDual
 
-alias isBot_ofDual_iff ↔ _ IsTop.ofDual
+alias ⟨_, IsTop.ofDual⟩ := isBot_ofDual_iff
 #align is_top.of_dual IsTop.ofDual
 
-alias isTop_ofDual_iff ↔ _ IsBot.ofDual
+alias ⟨_, IsBot.ofDual⟩ := isTop_ofDual_iff
 #align is_bot.of_dual IsBot.ofDual
 
-alias isMin_ofDual_iff ↔ _ IsMax.ofDual
+alias ⟨_, IsMax.ofDual⟩ := isMin_ofDual_iff
 #align is_max.of_dual IsMax.ofDual
 
-alias isMax_ofDual_iff ↔ _ IsMin.ofDual
+alias ⟨_, IsMin.ofDual⟩ := isMax_ofDual_iff
 #align is_min.of_dual IsMin.ofDual
 
 end LE
@@ -400,10 +400,10 @@ theorem not_isMax_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
 #align not_is_max_of_lt not_isMax_of_lt
 -/
 
-alias not_isMin_of_lt ← LT.lt.not_isMin
+alias LT.lt.not_isMin := not_isMin_of_lt
 #align has_lt.lt.not_is_min LT.lt.not_isMin
 
-alias not_isMax_of_lt ← LT.lt.not_isMax
+alias LT.lt.not_isMax := not_isMax_of_lt
 #align has_lt.lt.not_is_max LT.lt.not_isMax
 
 #print isMin_iff_forall_not_lt /-

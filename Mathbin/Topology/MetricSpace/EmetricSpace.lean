@@ -204,7 +204,7 @@ theorem uniformity_pseudoedist : 𝓤 α = ⨅ ε > 0, 𝓟 {p : α × α | edis
 theorem uniformSpace_edist :
     ‹PseudoEMetricSpace α›.toUniformSpace =
       uniformSpaceOfEDist edist edist_self edist_comm edist_triangle :=
-  uniformSpace_eq uniformity_pseudoedist
+  UniformSpace.ext uniformity_pseudoedist
 #align uniform_space_edist uniformSpace_edist
 -/
 

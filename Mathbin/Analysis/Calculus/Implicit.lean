@@ -528,7 +528,7 @@ theorem tendsto_implicitFunction (hf : HasStrictFDerivAt f f' a) (hf' : range f'
 #align has_strict_fderiv_at.tendsto_implicit_function HasStrictFDerivAt.tendsto_implicitFunction
 -/
 
-alias tendsto_implicit_function ← _root_.filter.tendsto.implicit_function
+alias _root_.filter.tendsto.implicit_function := tendsto_implicit_function
 #align filter.tendsto.implicit_function Filter.Tendsto.implicitFunction
 
 #print HasStrictFDerivAt.map_implicitFunction_eq /-

@@ -57,7 +57,7 @@ theorem coe_of {X : Type _} (point : X) : ↥(of point) = X :=
 #align Pointed.coe_of Pointed.coe_of
 -/
 
-alias of ← _root_.prod.Pointed
+alias _root_.prod.Pointed := of
 #align prod.Pointed Prod.Pointed
 
 instance : Inhabited Pointed :=

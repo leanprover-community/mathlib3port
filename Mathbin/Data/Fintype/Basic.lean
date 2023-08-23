@@ -875,10 +875,10 @@ theorem toFinset_subset [Fintype s] {t : Finset α} : s.toFinset ⊆ t ↔ s ⊆
 #align set.to_finset_subset Set.toFinset_subset
 -/
 
-alias to_finset_subset_to_finset ↔ _ to_finset_mono
+alias ⟨_, to_finset_mono⟩ := to_finset_subset_to_finset
 #align set.to_finset_mono Set.toFinset_mono
 
-alias to_finset_ssubset_to_finset ↔ _ to_finset_strict_mono
+alias ⟨_, to_finset_strict_mono⟩ := to_finset_ssubset_to_finset
 #align set.to_finset_strict_mono Set.toFinset_strict_mono
 
 #print Set.disjoint_toFinset /-

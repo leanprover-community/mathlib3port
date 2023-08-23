@@ -251,16 +251,16 @@ theorem isUpperSet_preimage_toDual_iff {s : Set αᵒᵈ} : IsUpperSet (toDual �
 #align is_upper_set_preimage_to_dual_iff isUpperSet_preimage_toDual_iff
 -/
 
-alias isLowerSet_preimage_ofDual_iff ↔ _ IsUpperSet.toDual
+alias ⟨_, IsUpperSet.toDual⟩ := isLowerSet_preimage_ofDual_iff
 #align is_upper_set.to_dual IsUpperSet.toDual
 
-alias isUpperSet_preimage_ofDual_iff ↔ _ IsLowerSet.toDual
+alias ⟨_, IsLowerSet.toDual⟩ := isUpperSet_preimage_ofDual_iff
 #align is_lower_set.to_dual IsLowerSet.toDual
 
-alias isLowerSet_preimage_toDual_iff ↔ _ IsUpperSet.ofDual
+alias ⟨_, IsUpperSet.ofDual⟩ := isLowerSet_preimage_toDual_iff
 #align is_upper_set.of_dual IsUpperSet.ofDual
 
-alias isUpperSet_preimage_toDual_iff ↔ _ IsLowerSet.ofDual
+alias ⟨_, IsLowerSet.ofDual⟩ := isUpperSet_preimage_toDual_iff
 #align is_lower_set.of_dual IsLowerSet.ofDual
 
 end LE
@@ -301,10 +301,10 @@ theorem isLowerSet_iff_Iic_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → Ii
 #align is_lower_set_iff_Iic_subset isLowerSet_iff_Iic_subset
 -/
 
-alias isUpperSet_iff_Ici_subset ↔ IsUpperSet.Ici_subset _
+alias ⟨IsUpperSet.Ici_subset, _⟩ := isUpperSet_iff_Ici_subset
 #align is_upper_set.Ici_subset IsUpperSet.Ici_subset
 
-alias isLowerSet_iff_Iic_subset ↔ IsLowerSet.Iic_subset _
+alias ⟨IsLowerSet.Iic_subset, _⟩ := isLowerSet_iff_Iic_subset
 #align is_lower_set.Iic_subset IsLowerSet.Iic_subset
 
 #print IsUpperSet.ordConnected /-
@@ -507,10 +507,10 @@ theorem isLowerSet_iff_Iio_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → Ii
 #align is_lower_set_iff_Iio_subset isLowerSet_iff_Iio_subset
 -/
 
-alias isUpperSet_iff_Ioi_subset ↔ IsUpperSet.Ioi_subset _
+alias ⟨IsUpperSet.Ioi_subset, _⟩ := isUpperSet_iff_Ioi_subset
 #align is_upper_set.Ioi_subset IsUpperSet.Ioi_subset
 
-alias isLowerSet_iff_Iio_subset ↔ IsLowerSet.Iio_subset _
+alias ⟨IsLowerSet.Iio_subset, _⟩ := isLowerSet_iff_Iio_subset
 #align is_lower_set.Iio_subset IsLowerSet.Iio_subset
 
 end PartialOrder
@@ -2004,11 +2004,11 @@ theorem bddBelow_upperClosure : BddBelow (upperClosure s : Set α) ↔ BddBelow 
 #align bdd_below_upper_closure bddBelow_upperClosure
 -/
 
-alias bddAbove_lowerClosure ↔ BddAbove.of_lowerClosure BddAbove.lowerClosure
+alias ⟨BddAbove.of_lowerClosure, BddAbove.lowerClosure⟩ := bddAbove_lowerClosure
 #align bdd_above.of_lower_closure BddAbove.of_lowerClosure
 #align bdd_above.lower_closure BddAbove.lowerClosure
 
-alias bddBelow_upperClosure ↔ BddBelow.of_upperClosure BddBelow.upperClosure
+alias ⟨BddBelow.of_upperClosure, BddBelow.upperClosure⟩ := bddBelow_upperClosure
 #align bdd_below.of_upper_closure BddBelow.of_upperClosure
 #align bdd_below.upper_closure BddBelow.upperClosure
 

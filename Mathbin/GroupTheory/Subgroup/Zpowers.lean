@@ -241,10 +241,10 @@ theorem zpowers_le {g : G} {H : Subgroup G} : zpowers g ≤ H ↔ g ∈ H := by
 #align add_subgroup.zmultiples_le AddSubgroup.zmultiples_le
 -/
 
-alias zpowers_le ↔ _ zpowers_le_of_mem
+alias ⟨_, zpowers_le_of_mem⟩ := zpowers_le
 #align subgroup.zpowers_le_of_mem Subgroup.zpowers_le_of_mem
 
-alias AddSubgroup.zmultiples_le ↔ _ _root_.add_subgroup.zmultiples_le_of_mem
+alias ⟨_, _root_.add_subgroup.zmultiples_le_of_mem⟩ := AddSubgroup.zmultiples_le
 #align add_subgroup.zmultiples_le_of_mem AddSubgroup.zmultiples_le_of_mem
 
 attribute [to_additive zmultiples_le_of_mem] zpowers_le_of_mem

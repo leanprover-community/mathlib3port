@@ -1597,8 +1597,8 @@ theorem Subalgebra.finiteDimensional_toSubmodule {S : Subalgebra F E} :
 #align subalgebra.finite_dimensional_to_submodule Subalgebra.finiteDimensional_toSubmodule
 -/
 
-alias Subalgebra.finiteDimensional_toSubmodule ↔ FiniteDimensional.of_subalgebra_toSubmodule
-  FiniteDimensional.subalgebra_toSubmodule
+alias ⟨FiniteDimensional.of_subalgebra_toSubmodule, FiniteDimensional.subalgebra_toSubmodule⟩ :=
+  Subalgebra.finiteDimensional_toSubmodule
 #align finite_dimensional.of_subalgebra_to_submodule FiniteDimensional.of_subalgebra_toSubmodule
 #align finite_dimensional.subalgebra_to_submodule FiniteDimensional.subalgebra_toSubmodule
 
@@ -1667,10 +1667,10 @@ theorem Subalgebra.bot_eq_top_iff_finrank_eq_one [Nontrivial E] :
 #align subalgebra.bot_eq_top_iff_finrank_eq_one Subalgebra.bot_eq_top_iff_finrank_eq_one
 -/
 
-alias Subalgebra.bot_eq_top_iff_rank_eq_one ↔ _ Subalgebra.bot_eq_top_of_rank_eq_one
+alias ⟨_, Subalgebra.bot_eq_top_of_rank_eq_one⟩ := Subalgebra.bot_eq_top_iff_rank_eq_one
 #align subalgebra.bot_eq_top_of_rank_eq_one Subalgebra.bot_eq_top_of_rank_eq_one
 
-alias Subalgebra.bot_eq_top_iff_finrank_eq_one ↔ _ Subalgebra.bot_eq_top_of_finrank_eq_one
+alias ⟨_, Subalgebra.bot_eq_top_of_finrank_eq_one⟩ := Subalgebra.bot_eq_top_iff_finrank_eq_one
 #align subalgebra.bot_eq_top_of_finrank_eq_one Subalgebra.bot_eq_top_of_finrank_eq_one
 
 attribute [simp] Subalgebra.bot_eq_top_of_finrank_eq_one Subalgebra.bot_eq_top_of_rank_eq_one

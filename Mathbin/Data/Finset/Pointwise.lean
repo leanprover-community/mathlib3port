@@ -284,7 +284,7 @@ theorem inv_nonempty_iff : s⁻¹.Nonempty ↔ s.Nonempty :=
 #align finset.neg_nonempty_iff Finset.neg_nonempty_iff
 -/
 
-alias inv_nonempty_iff ↔ nonempty.of_inv nonempty.inv
+alias ⟨nonempty.of_inv, nonempty.inv⟩ := inv_nonempty_iff
 #align finset.nonempty.of_inv Finset.Nonempty.of_inv
 #align finset.nonempty.inv Finset.Nonempty.inv
 

@@ -72,7 +72,7 @@ theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.symm.Compares a b �
 #align ordering.compares_swap Ordering.compares_swap
 -/
 
-alias compares_swap ↔ compares.of_swap compares.swap
+alias ⟨compares.of_swap, compares.swap⟩ := compares_swap
 #align ordering.compares.of_swap Ordering.Compares.of_swap
 #align ordering.compares.swap Ordering.Compares.swap
 

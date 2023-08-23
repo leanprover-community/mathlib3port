@@ -3055,7 +3055,7 @@ theorem zero_eq_ofReal {p : ℝ} : 0 = ENNReal.ofReal p ↔ p ≤ 0 :=
 #align ennreal.zero_eq_of_real ENNReal.zero_eq_ofReal
 -/
 
-alias of_real_eq_zero ↔ _ of_real_of_nonpos
+alias ⟨_, of_real_of_nonpos⟩ := of_real_eq_zero
 #align ennreal.of_real_of_nonpos ENNReal.ofReal_of_nonpos
 
 #print ENNReal.ofReal_sub /-

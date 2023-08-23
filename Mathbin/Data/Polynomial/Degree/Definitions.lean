@@ -280,8 +280,9 @@ theorem natDegree_lt_iff_degree_lt (hp : p ≠ 0) : p.natDegree < n ↔ p.degree
 #align polynomial.nat_degree_lt_iff_degree_lt Polynomial.natDegree_lt_iff_degree_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Alias.lean:29:6: warning: don't know how to generate #align statements for .. -/
-alias nat_degree_le_iff_degree_le ↔ ..
+alias ⟨degree_le_of_nat_degree_le, nat_degree_le_of_degree_le⟩ := nat_degree_le_iff_degree_le
+#align polynomial.degree_le_of_nat_degree_le Polynomial.degree_le_of_natDegree_le
+#align polynomial.nat_degree_le_of_degree_le Polynomial.natDegree_le_of_degree_le
 
 #print Polynomial.natDegree_le_natDegree /-
 theorem natDegree_le_natDegree [Semiring S] {q : S[X]} (hpq : p.degree ≤ q.degree) :

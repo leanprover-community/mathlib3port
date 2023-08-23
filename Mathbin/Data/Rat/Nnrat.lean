@@ -453,7 +453,7 @@ theorem toNNRat_eq_zero : toNNRat q = 0 ↔ q ≤ 0 := by
 #align rat.to_nnrat_eq_zero Rat.toNNRat_eq_zero
 -/
 
-alias to_nnrat_eq_zero ↔ _ to_nnrat_of_nonpos
+alias ⟨_, to_nnrat_of_nonpos⟩ := to_nnrat_eq_zero
 #align rat.to_nnrat_of_nonpos Rat.toNNRat_of_nonpos
 
 #print Rat.toNNRat_le_toNNRat_iff /-

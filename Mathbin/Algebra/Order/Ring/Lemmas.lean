@@ -218,16 +218,16 @@ theorem le_of_mul_le_mul_right [MulPosMonoRev α] (bc : b * a ≤ c * a) (a0 : 0
 #align le_of_mul_le_mul_right le_of_mul_le_mul_right
 -/
 
-alias lt_of_mul_lt_mul_left ← lt_of_mul_lt_mul_of_nonneg_left
+alias lt_of_mul_lt_mul_of_nonneg_left := lt_of_mul_lt_mul_left
 #align lt_of_mul_lt_mul_of_nonneg_left lt_of_mul_lt_mul_of_nonneg_left
 
-alias lt_of_mul_lt_mul_right ← lt_of_mul_lt_mul_of_nonneg_right
+alias lt_of_mul_lt_mul_of_nonneg_right := lt_of_mul_lt_mul_right
 #align lt_of_mul_lt_mul_of_nonneg_right lt_of_mul_lt_mul_of_nonneg_right
 
-alias le_of_mul_le_mul_left ← le_of_mul_le_mul_of_pos_left
+alias le_of_mul_le_mul_of_pos_left := le_of_mul_le_mul_left
 #align le_of_mul_le_mul_of_pos_left le_of_mul_le_mul_of_pos_left
 
-alias le_of_mul_le_mul_right ← le_of_mul_le_mul_of_pos_right
+alias le_of_mul_le_mul_of_pos_right := le_of_mul_le_mul_right
 #align le_of_mul_le_mul_of_pos_right le_of_mul_le_mul_of_pos_right
 
 #print mul_lt_mul_left /-
@@ -427,7 +427,7 @@ theorem Left.mul_pos [PosMulStrictMono α] (ha : 0 < a) (hb : 0 < b) : 0 < a * b
 #align left.mul_pos Left.mul_pos
 -/
 
-alias Left.mul_pos ← mul_pos
+alias mul_pos := Left.mul_pos
 #align mul_pos mul_pos
 
 #print mul_neg_of_pos_of_neg /-
@@ -470,7 +470,7 @@ theorem Left.mul_nonneg [PosMulMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a 
 #align left.mul_nonneg Left.mul_nonneg
 -/
 
-alias Left.mul_nonneg ← mul_nonneg
+alias mul_nonneg := Left.mul_nonneg
 #align mul_nonneg mul_nonneg
 
 #print mul_nonpos_of_nonneg_of_nonpos /-

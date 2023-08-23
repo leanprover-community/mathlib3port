@@ -99,7 +99,7 @@ theorem sym2_nonempty : s.Sym2.Nonempty ↔ s.Nonempty := by
 #align finset.sym2_nonempty Finset.sym2_nonempty
 -/
 
-alias sym2_nonempty ↔ _ nonempty.sym2
+alias ⟨_, nonempty.sym2⟩ := sym2_nonempty
 #align finset.nonempty.sym2 Finset.nonempty.sym2
 
 attribute [protected] nonempty.sym2

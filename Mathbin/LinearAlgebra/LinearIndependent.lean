@@ -315,7 +315,7 @@ theorem linearIndependent_subtype_range {ι} {f : ι → M} (hf : Injective f) :
 #align linear_independent_subtype_range linearIndependent_subtype_range
 -/
 
-alias linearIndependent_subtype_range ↔ LinearIndependent.of_subtype_range _
+alias ⟨LinearIndependent.of_subtype_range, _⟩ := linearIndependent_subtype_range
 #align linear_independent.of_subtype_range LinearIndependent.of_subtype_range
 
 #print linearIndependent_image /-
@@ -577,7 +577,7 @@ theorem linearIndependent_iff_injective_total :
 #align linear_independent_iff_injective_total linearIndependent_iff_injective_total
 -/
 
-alias linearIndependent_iff_injective_total ↔ LinearIndependent.injective_total _
+alias ⟨LinearIndependent.injective_total, _⟩ := linearIndependent_iff_injective_total
 #align linear_independent.injective_total LinearIndependent.injective_total
 
 #print LinearIndependent.injective /-
@@ -1312,7 +1312,7 @@ theorem linearIndependent_unique_iff (v : ι → M) [Unique ι] :
 #align linear_independent_unique_iff linearIndependent_unique_iff
 -/
 
-alias linearIndependent_unique_iff ↔ _ linearIndependent_unique
+alias ⟨_, linearIndependent_unique⟩ := linearIndependent_unique_iff
 #align linear_independent_unique linearIndependent_unique
 
 #print linearIndependent_singleton /-

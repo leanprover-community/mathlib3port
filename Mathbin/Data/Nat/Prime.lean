@@ -714,7 +714,7 @@ theorem prime_iff {p : ℕ} : p.Prime ↔ Prime p :=
 #align nat.prime_iff Nat.prime_iff
 -/
 
-alias prime_iff ↔ prime.prime _root_.prime.nat_prime
+alias ⟨prime.prime, _root_.prime.nat_prime⟩ := prime_iff
 #align nat.prime.prime Nat.Prime.prime
 #align prime.nat_prime Prime.nat_prime
 

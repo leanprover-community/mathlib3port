@@ -187,14 +187,14 @@ theorem count_dedup (l : List α) (a : α) : l.dedup.count a = if a ∈ l then 1
 #align list.count_dedup List.count_dedup
 -/
 
-#print List.sum_map_count_dedup_filter_eq_countp /-
+#print List.sum_map_count_dedup_filter_eq_countP /-
 /-- Summing the count of `x` over a list filtered by some `p` is just `countp` applied to `p` -/
-theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p] (l : List α) :
-    ((l.dedup.filterₓ p).map fun x => l.count x).Sum = l.countp p :=
+theorem sum_map_count_dedup_filter_eq_countP (p : α → Prop) [DecidablePred p] (l : List α) :
+    ((l.dedup.filterₓ p).map fun x => l.count x).Sum = l.countP p :=
   by
   induction' l with a as h
   · simp
-  · simp_rw [List.countp_cons, List.count_cons', List.sum_map_add]
+  · simp_rw [List.countP_cons, List.count_cons', List.sum_map_add]
     congr 1
     · refine' trans _ h
       by_cases ha : a ∈ as
@@ -208,7 +208,7 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
         obtain ⟨a', ha'⟩ := List.mem_map.1 hn
         simp only [(fun h => hp (h ▸ (List.mem_filter.1 ha'.1).2) : a' ≠ a), if_false] at ha' 
         exact ha'.2.symm
-#align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countp
+#align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countP
 -/
 
 #print List.sum_map_count_dedup_eq_length /-

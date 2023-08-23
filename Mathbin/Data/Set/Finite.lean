@@ -79,7 +79,7 @@ theorem finite_def {s : Set α} : s.Finite ↔ Nonempty (Fintype s) :=
 #align set.finite_def Set.finite_def
 -/
 
-alias finite_def ↔ finite.nonempty_fintype _
+alias ⟨finite.nonempty_fintype, _⟩ := finite_def
 #align set.finite.nonempty_fintype Set.Finite.nonempty_fintype
 
 #print Set.finite_coe_iff /-
@@ -174,7 +174,7 @@ theorem not_infinite {s : Set α} : ¬s.Infinite ↔ s.Finite :=
 #align set.not_infinite Set.not_infinite
 -/
 
-alias not_infinite ↔ _ Finite.not_infinite
+alias ⟨_, Finite.not_infinite⟩ := not_infinite
 #align set.finite.not_infinite Set.Finite.not_infinite
 
 attribute [simp] Finite.not_infinite
@@ -276,10 +276,10 @@ protected theorem toFinset_ssubset_toFinset : hs.toFinset ⊂ ht.toFinset ↔ s 
 #align set.finite.to_finset_ssubset_to_finset Set.Finite.toFinset_ssubset_toFinset
 -/
 
-alias finite.to_finset_subset_to_finset ↔ _ to_finset_mono
+alias ⟨_, to_finset_mono⟩ := finite.to_finset_subset_to_finset
 #align set.finite.to_finset_mono Set.Finite.toFinset_mono
 
-alias finite.to_finset_ssubset_to_finset ↔ _ to_finset_strict_mono
+alias ⟨_, to_finset_strict_mono⟩ := finite.to_finset_ssubset_to_finset
 #align set.finite.to_finset_strict_mono Set.Finite.toFinset_strictMono
 
 attribute [protected] to_finset_mono to_finset_strict_mono
@@ -906,7 +906,7 @@ theorem finite_univ_iff : (@univ α).Finite ↔ Finite α :=
 #align set.finite_univ_iff Set.finite_univ_iff
 -/
 
-alias finite_univ_iff ↔ _root_.finite.of_finite_univ _
+alias ⟨_root_.finite.of_finite_univ, _⟩ := finite_univ_iff
 #align finite.of_finite_univ Finite.of_finite_univ
 
 #print Set.Finite.union /-
@@ -1641,7 +1641,7 @@ theorem infinite_coe_iff {s : Set α} : Infinite s ↔ s.Infinite :=
 #align set.infinite_coe_iff Set.infinite_coe_iff
 -/
 
-alias infinite_coe_iff ↔ _ infinite.to_subtype
+alias ⟨_, infinite.to_subtype⟩ := infinite_coe_iff
 #align set.infinite.to_subtype Set.Infinite.to_subtype
 
 #print Set.Infinite.natEmbedding /-
@@ -1703,7 +1703,7 @@ theorem infinite_image_iff {s : Set α} {f : α → β} (hi : InjOn f s) :
 #align set.infinite_image_iff Set.infinite_image_iff
 -/
 
-alias infinite_image_iff ↔ _ infinite.image
+alias ⟨_, infinite.image⟩ := infinite_image_iff
 #align set.infinite.image Set.Infinite.image
 
 attribute [protected] infinite.image

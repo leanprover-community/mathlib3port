@@ -196,7 +196,7 @@ theorem dimH_subsingleton {s : Set X} (h : s.Subsingleton) : dimH s = 0 :=
 #align dimH_subsingleton dimH_subsingleton
 -/
 
-alias dimH_subsingleton ← Set.Subsingleton.dimH_zero
+alias Set.Subsingleton.dimH_zero := dimH_subsingleton
 #align set.subsingleton.dimH_zero Set.Subsingleton.dimH_zero
 
 #print dimH_empty /-
@@ -257,7 +257,7 @@ theorem dimH_countable {s : Set X} (hs : s.Countable) : dimH s = 0 :=
 #align dimH_countable dimH_countable
 -/
 
-alias dimH_countable ← Set.Countable.dimH_zero
+alias Set.Countable.dimH_zero := dimH_countable
 #align set.countable.dimH_zero Set.Countable.dimH_zero
 
 #print dimH_finite /-
@@ -266,7 +266,7 @@ theorem dimH_finite {s : Set X} (hs : s.Finite) : dimH s = 0 :=
 #align dimH_finite dimH_finite
 -/
 
-alias dimH_finite ← Set.Finite.dimH_zero
+alias Set.Finite.dimH_zero := dimH_finite
 #align set.finite.dimH_zero Set.Finite.dimH_zero
 
 #print dimH_coe_finset /-
@@ -276,7 +276,7 @@ theorem dimH_coe_finset (s : Finset X) : dimH (s : Set X) = 0 :=
 #align dimH_coe_finset dimH_coe_finset
 -/
 
-alias dimH_coe_finset ← Finset.dimH_zero
+alias Finset.dimH_zero := dimH_coe_finset
 #align finset.dimH_zero Finset.dimH_zero
 
 /-!

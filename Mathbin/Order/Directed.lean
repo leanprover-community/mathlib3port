@@ -65,7 +65,7 @@ theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s
 #align directed_on_iff_directed directedOn_iff_directed
 -/
 
-alias directedOn_iff_directed ↔ DirectedOn.directed_val _
+alias ⟨DirectedOn.directed_val, _⟩ := directedOn_iff_directed
 #align directed_on.directed_coe DirectedOn.directed_val
 
 #print directedOn_range /-

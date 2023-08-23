@@ -150,10 +150,10 @@ theorem dvd_antisymm' : a ∣ b → b ∣ a → b = a :=
 #align dvd_antisymm' dvd_antisymm'
 -/
 
-alias dvd_antisymm ← Dvd.dvd.antisymm
+alias Dvd.dvd.antisymm := dvd_antisymm
 #align has_dvd.dvd.antisymm Dvd.dvd.antisymm
 
-alias dvd_antisymm' ← Dvd.dvd.antisymm'
+alias Dvd.dvd.antisymm' := dvd_antisymm'
 #align has_dvd.dvd.antisymm' Dvd.dvd.antisymm'
 
 #print eq_of_forall_dvd /-

@@ -87,7 +87,7 @@ theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succ, pow_one]
 #align two_nsmul two_nsmul
 -/
 
-alias pow_two ← sq
+alias sq := pow_two
 #align sq sq
 
 #print pow_three' /-
@@ -259,7 +259,7 @@ theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ 
 #align dvd_pow dvd_pow
 -/
 
-alias dvd_pow ← Dvd.Dvd.pow
+alias Dvd.Dvd.pow := dvd_pow
 #align has_dvd.dvd.pow Dvd.Dvd.pow
 
 #print dvd_pow_self /-

@@ -386,10 +386,10 @@ theorem mkNormedAddGroupHom_norm_le' (f : V₁ →+ V₂) {C : ℝ} (h : ∀ x, 
 #align normed_add_group_hom.mk_normed_add_group_hom_norm_le' NormedAddGroupHom.mkNormedAddGroupHom_norm_le'
 -/
 
-alias mk_normed_add_group_hom_norm_le ← _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le
+alias _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le := mk_normed_add_group_hom_norm_le
 #align add_monoid_hom.mk_normed_add_group_hom_norm_le AddMonoidHom.mkNormedAddGroupHom_norm_le
 
-alias mk_normed_add_group_hom_norm_le' ← _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le'
+alias _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le' := mk_normed_add_group_hom_norm_le'
 #align add_monoid_hom.mk_normed_add_group_hom_norm_le' AddMonoidHom.mkNormedAddGroupHom_norm_le'
 
 /-! ### Addition of normed group homs -/

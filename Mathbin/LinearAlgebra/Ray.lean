@@ -489,7 +489,7 @@ theorem sameRay_neg_iff : SameRay R (-x) (-y) ↔ SameRay R x y := by
 #align same_ray_neg_iff sameRay_neg_iff
 -/
 
-alias sameRay_neg_iff ↔ SameRay.of_neg SameRay.neg
+alias ⟨SameRay.of_neg, SameRay.neg⟩ := sameRay_neg_iff
 #align same_ray.of_neg SameRay.of_neg
 #align same_ray.neg SameRay.neg
 

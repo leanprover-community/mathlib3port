@@ -94,7 +94,7 @@ theorem card_pos : 0 < s.card ↔ s.Nonempty :=
 #align finset.card_pos Finset.card_pos
 -/
 
-alias card_pos ↔ _ nonempty.card_pos
+alias ⟨_, nonempty.card_pos⟩ := card_pos
 #align finset.nonempty.card_pos Finset.Nonempty.card_pos
 
 #print Finset.card_ne_zero_of_mem /-

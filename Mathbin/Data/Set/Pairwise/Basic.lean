@@ -121,7 +121,7 @@ theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈
 #align set.pairwise_iff_of_refl Set.pairwise_iff_of_refl
 -/
 
-alias pairwise_iff_of_refl ↔ pairwise.of_refl _
+alias ⟨pairwise.of_refl, _⟩ := pairwise_iff_of_refl
 #align set.pairwise.of_refl Set.Pairwise.of_refl
 
 #print Set.Nonempty.pairwise_iff_exists_forall /-
@@ -271,7 +271,7 @@ theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α
 #align set.pairwise_bot_iff Set.pairwise_bot_iff
 -/
 
-alias pairwise_bot_iff ↔ pairwise.subsingleton _
+alias ⟨pairwise.subsingleton, _⟩ := pairwise_bot_iff
 #align set.pairwise.subsingleton Set.Pairwise.subsingleton
 
 #print Set.InjOn.pairwise_image /-
@@ -292,7 +292,7 @@ theorem pairwise_subtype_iff_pairwise_set (s : Set α) (r : α → α → Prop) 
 #align pairwise_subtype_iff_pairwise_set pairwise_subtype_iff_pairwise_set
 -/
 
-alias pairwise_subtype_iff_pairwise_set ↔ Pairwise.set_of_subtype Set.Pairwise.subtype
+alias ⟨Pairwise.set_of_subtype, Set.Pairwise.subtype⟩ := pairwise_subtype_iff_pairwise_set
 #align pairwise.set_of_subtype Pairwise.set_of_subtype
 #align set.pairwise.subtype Set.Pairwise.subtype
 

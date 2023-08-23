@@ -138,7 +138,7 @@ protected theorem continuous {β : Type _} [TopologicalSpace β] {t : β → τ}
 #align flow.continuous Flow.continuous
 -/
 
-alias Flow.continuous ← _root_.continuous.flow
+alias _root_.continuous.flow := Flow.continuous
 #align continuous.flow Continuous.flow
 
 #print Flow.map_add /-

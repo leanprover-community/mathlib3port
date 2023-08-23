@@ -50,7 +50,7 @@ theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.co
 #align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprime
 -/
 
-alias Nat.isCoprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
+alias ⟨IsCoprime.nat_coprime, Nat.coprime.isCoprime⟩ := Nat.isCoprime_iff_coprime
 #align is_coprime.nat_coprime IsCoprime.nat_coprime
 #align nat.coprime.is_coprime Nat.coprime.isCoprime
 

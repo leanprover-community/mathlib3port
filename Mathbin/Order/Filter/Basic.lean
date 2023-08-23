@@ -230,7 +230,7 @@ theorem biInter_finset_mem {β : Type v} {s : β → Set α} (is : Finset β) :
 #align filter.bInter_finset_mem Filter.biInter_finset_mem
 -/
 
-alias bInter_finset_mem ← _root_.finset.Inter_mem_sets
+alias _root_.finset.Inter_mem_sets := bInter_finset_mem
 #align finset.Inter_mem_sets Finset.iInter_mem_sets
 
 attribute [protected] Finset.iInter_mem_sets
@@ -1308,7 +1308,7 @@ theorem principal_neBot_iff {s : Set α} : NeBot (𝓟 s) ↔ s.Nonempty :=
 #align filter.principal_ne_bot_iff Filter.principal_neBot_iff
 -/
 
-alias principal_ne_bot_iff ↔ _ _root_.set.nonempty.principal_ne_bot
+alias ⟨_, _root_.set.nonempty.principal_ne_bot⟩ := principal_ne_bot_iff
 #align set.nonempty.principal_ne_bot Set.Nonempty.principal_neBot
 
 #print Filter.isCompl_principal /-
@@ -1552,7 +1552,7 @@ theorem eventually_all_finite {ι} {I : Set ι} (hI : I.Finite) {l} {p : ι → 
 #align filter.eventually_all_finite Filter.eventually_all_finite
 -/
 
-alias eventually_all_finite ← _root_.set.finite.eventually_all
+alias _root_.set.finite.eventually_all := eventually_all_finite
 #align set.finite.eventually_all Set.Finite.eventually_all
 
 attribute [protected] Set.Finite.eventually_all
@@ -1565,7 +1565,7 @@ theorem eventually_all_finset {ι} (I : Finset ι) {l} {p : ι → α → Prop} 
 #align filter.eventually_all_finset Filter.eventually_all_finset
 -/
 
-alias eventually_all_finset ← _root_.finset.eventually_all
+alias _root_.finset.eventually_all := eventually_all_finset
 #align finset.eventually_all Finset.eventually_all
 
 attribute [protected] Finset.eventually_all
@@ -1939,7 +1939,7 @@ theorem eventuallyEq_set {s t : Set α} {l : Filter α} : s =ᶠ[l] t ↔ ∀ᶠ
 #align filter.eventually_eq_set Filter.eventuallyEq_set
 -/
 
-alias eventually_eq_set ↔ eventually_eq.mem_iff eventually.set_eq
+alias ⟨eventually_eq.mem_iff, eventually.set_eq⟩ := eventually_eq_set
 #align filter.eventually_eq.mem_iff Filter.EventuallyEq.mem_iff
 #align filter.eventually.set_eq Filter.Eventually.set_eq
 
@@ -3859,7 +3859,7 @@ theorem tendsto_iff_comap {f : α → β} {l₁ : Filter α} {l₂ : Filter β} 
 #align filter.tendsto_iff_comap Filter.tendsto_iff_comap
 -/
 
-alias tendsto_iff_comap ↔ tendsto.le_comap _
+alias ⟨tendsto.le_comap, _⟩ := tendsto_iff_comap
 #align filter.tendsto.le_comap Filter.Tendsto.le_comap
 
 #print Filter.Tendsto.disjoint /-

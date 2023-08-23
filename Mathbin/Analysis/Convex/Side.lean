@@ -244,7 +244,7 @@ theorem wSameSide_comm {s : AffineSubspace R P} {x y : P} : s.WSameSide x y ↔ 
 #align affine_subspace.w_same_side_comm AffineSubspace.wSameSide_comm
 -/
 
-alias w_same_side_comm ↔ w_same_side.symm _
+alias ⟨w_same_side.symm, _⟩ := w_same_side_comm
 #align affine_subspace.w_same_side.symm AffineSubspace.WSameSide.symm
 
 #print AffineSubspace.sSameSide_comm /-
@@ -253,7 +253,7 @@ theorem sSameSide_comm {s : AffineSubspace R P} {x y : P} : s.SSameSide x y ↔ 
 #align affine_subspace.s_same_side_comm AffineSubspace.sSameSide_comm
 -/
 
-alias s_same_side_comm ↔ s_same_side.symm _
+alias ⟨s_same_side.symm, _⟩ := s_same_side_comm
 #align affine_subspace.s_same_side.symm AffineSubspace.SSameSide.symm
 
 #print AffineSubspace.wOppSide_comm /-
@@ -269,7 +269,7 @@ theorem wOppSide_comm {s : AffineSubspace R P} {x y : P} : s.WOppSide x y ↔ s.
 #align affine_subspace.w_opp_side_comm AffineSubspace.wOppSide_comm
 -/
 
-alias w_opp_side_comm ↔ w_opp_side.symm _
+alias ⟨w_opp_side.symm, _⟩ := w_opp_side_comm
 #align affine_subspace.w_opp_side.symm AffineSubspace.WOppSide.symm
 
 #print AffineSubspace.sOppSide_comm /-
@@ -278,7 +278,7 @@ theorem sOppSide_comm {s : AffineSubspace R P} {x y : P} : s.SOppSide x y ↔ s.
 #align affine_subspace.s_opp_side_comm AffineSubspace.sOppSide_comm
 -/
 
-alias s_opp_side_comm ↔ s_opp_side.symm _
+alias ⟨s_opp_side.symm, _⟩ := s_opp_side_comm
 #align affine_subspace.s_opp_side.symm AffineSubspace.SOppSide.symm
 
 #print AffineSubspace.not_wSameSide_bot /-

@@ -310,7 +310,7 @@ theorem map_nonempty : (s.map f).Nonempty ↔ s.Nonempty := by
 #align finset.map_nonempty Finset.map_nonempty
 -/
 
-alias map_nonempty ↔ _ Nonempty.map
+alias ⟨_, Nonempty.map⟩ := map_nonempty
 #align finset.nonempty.map Finset.Nonempty.map
 
 #print Finset.attach_map_val /-

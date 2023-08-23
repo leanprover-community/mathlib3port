@@ -559,7 +559,7 @@ theorem strictConvex_iff_ordConnected : StrictConvex 𝕜 s ↔ s.OrdConnected :
 #align strict_convex_iff_ord_connected strictConvex_iff_ordConnected
 -/
 
-alias strictConvex_iff_ordConnected ↔ StrictConvex.ordConnected _
+alias ⟨StrictConvex.ordConnected, _⟩ := strictConvex_iff_ordConnected
 #align strict_convex.ord_connected StrictConvex.ordConnected
 
 end

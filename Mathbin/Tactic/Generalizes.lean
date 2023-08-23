@@ -167,7 +167,7 @@ unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := 
     (unify := true) : tactic (List expr × List expr) := do
   generalizes' args md unify
   let ks ← intron' args.length
-  let eqs ← intron' <| args.countp fun x => x.snd.fst.isSome
+  let eqs ← intron' <| args.countP fun x => x.snd.fst.isSome
   pure (ks, eqs)
 #align tactic.generalizes_intro tactic.generalizes_intro
 

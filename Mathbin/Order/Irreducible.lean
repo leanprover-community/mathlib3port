@@ -324,16 +324,16 @@ theorem supPrime_ofDual {a : αᵒᵈ} : SupPrime (ofDual a) ↔ InfPrime a :=
 #align sup_prime_of_dual supPrime_ofDual
 -/
 
-alias infIrred_toDual ↔ _ SupIrred.dual
+alias ⟨_, SupIrred.dual⟩ := infIrred_toDual
 #align sup_irred.dual SupIrred.dual
 
-alias infPrime_toDual ↔ _ SupPrime.dual
+alias ⟨_, SupPrime.dual⟩ := infPrime_toDual
 #align sup_prime.dual SupPrime.dual
 
-alias supIrred_ofDual ↔ _ InfIrred.ofDual
+alias ⟨_, InfIrred.ofDual⟩ := supIrred_ofDual
 #align inf_irred.of_dual InfIrred.ofDual
 
-alias supPrime_ofDual ↔ _ InfPrime.ofDual
+alias ⟨_, InfPrime.ofDual⟩ := supPrime_ofDual
 #align inf_prime.of_dual InfPrime.ofDual
 
 end SemilatticeSup
@@ -370,16 +370,16 @@ theorem infPrime_ofDual {a : αᵒᵈ} : InfPrime (ofDual a) ↔ SupPrime a :=
 #align inf_prime_of_dual infPrime_ofDual
 -/
 
-alias supIrred_toDual ↔ _ InfIrred.dual
+alias ⟨_, InfIrred.dual⟩ := supIrred_toDual
 #align inf_irred.dual InfIrred.dual
 
-alias supPrime_toDual ↔ _ InfPrime.dual
+alias ⟨_, InfPrime.dual⟩ := supPrime_toDual
 #align inf_prime.dual InfPrime.dual
 
-alias infIrred_ofDual ↔ _ SupIrred.ofDual
+alias ⟨_, SupIrred.ofDual⟩ := infIrred_ofDual
 #align sup_irred.of_dual SupIrred.ofDual
 
-alias infPrime_ofDual ↔ _ SupPrime.ofDual
+alias ⟨_, SupPrime.ofDual⟩ := infPrime_ofDual
 #align sup_prime.of_dual SupPrime.ofDual
 
 end SemilatticeInf
@@ -404,10 +404,10 @@ theorem infPrime_iff_infIrred : InfPrime a ↔ InfIrred a :=
 #align inf_prime_iff_inf_irred infPrime_iff_infIrred
 -/
 
-alias supPrime_iff_supIrred ↔ _ SupIrred.supPrime
+alias ⟨_, SupIrred.supPrime⟩ := supPrime_iff_supIrred
 #align sup_irred.sup_prime SupIrred.supPrime
 
-alias infPrime_iff_infIrred ↔ _ InfIrred.infPrime
+alias ⟨_, InfIrred.infPrime⟩ := infPrime_iff_infIrred
 #align inf_irred.inf_prime InfIrred.infPrime
 
 attribute [protected] SupIrred.supPrime InfIrred.infPrime

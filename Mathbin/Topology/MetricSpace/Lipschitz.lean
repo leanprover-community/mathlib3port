@@ -66,7 +66,7 @@ theorem lipschitzWith_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace 
 #align lipschitz_with_iff_dist_le_mul lipschitzWith_iff_dist_le_mul
 -/
 
-alias lipschitzWith_iff_dist_le_mul ↔ LipschitzWith.dist_le_mul LipschitzWith.of_dist_le_mul
+alias ⟨LipschitzWith.dist_le_mul, LipschitzWith.of_dist_le_mul⟩ := lipschitzWith_iff_dist_le_mul
 #align lipschitz_with.dist_le_mul LipschitzWith.dist_le_mul
 #align lipschitz_with.of_dist_le_mul LipschitzWith.of_dist_le_mul
 
@@ -101,7 +101,8 @@ theorem lipschitzOnWith_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpac
 #align lipschitz_on_with_iff_dist_le_mul lipschitzOnWith_iff_dist_le_mul
 -/
 
-alias lipschitzOnWith_iff_dist_le_mul ↔ LipschitzOnWith.dist_le_mul LipschitzOnWith.of_dist_le_mul
+alias ⟨LipschitzOnWith.dist_le_mul, LipschitzOnWith.of_dist_le_mul⟩ :=
+  lipschitzOnWith_iff_dist_le_mul
 #align lipschitz_on_with.dist_le_mul LipschitzOnWith.dist_le_mul
 #align lipschitz_on_with.of_dist_le_mul LipschitzOnWith.of_dist_le_mul
 
@@ -119,7 +120,7 @@ theorem lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace
 #align lipschitz_on_with_iff_restrict lipschitzOnWith_iff_restrict
 -/
 
-alias lipschitzOnWith_iff_restrict ↔ LipschitzOnWith.to_restrict _
+alias ⟨LipschitzOnWith.to_restrict, _⟩ := lipschitzOnWith_iff_restrict
 #align lipschitz_on_with.to_restrict LipschitzOnWith.to_restrict
 
 #print MapsTo.lipschitzOnWith_iff_restrict /-
@@ -130,7 +131,7 @@ theorem MapsTo.lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetr
 #align maps_to.lipschitz_on_with_iff_restrict MapsTo.lipschitzOnWith_iff_restrict
 -/
 
-alias MapsTo.lipschitzOnWith_iff_restrict ↔ LipschitzOnWith.to_restrict_mapsTo _
+alias ⟨LipschitzOnWith.to_restrict_mapsTo, _⟩ := MapsTo.lipschitzOnWith_iff_restrict
 #align lipschitz_on_with.to_restrict_maps_to LipschitzOnWith.to_restrict_mapsTo
 
 namespace LipschitzWith

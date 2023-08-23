@@ -1801,7 +1801,7 @@ theorem isTotallyDisconnected_of_isTotallySeparated {s : Set α} (H : IsTotallyS
 #align is_totally_disconnected_of_is_totally_separated isTotallyDisconnected_of_isTotallySeparated
 -/
 
-alias isTotallyDisconnected_of_isTotallySeparated ← IsTotallySeparated.isTotallyDisconnected
+alias IsTotallySeparated.isTotallyDisconnected := isTotallyDisconnected_of_isTotallySeparated
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.isTotallyDisconnected
 
 #print TotallySeparatedSpace /-

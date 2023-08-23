@@ -252,7 +252,7 @@ theorem measurable_iff_le_map {m₁ : MeasurableSpace α} {m₂ : MeasurableSpac
 #align measurable_iff_le_map measurable_iff_le_map
 -/
 
-alias measurable_iff_le_map ↔ Measurable.le_map Measurable.of_le_map
+alias ⟨Measurable.le_map, Measurable.of_le_map⟩ := measurable_iff_le_map
 #align measurable.le_map Measurable.le_map
 #align measurable.of_le_map Measurable.of_le_map
 
@@ -263,7 +263,7 @@ theorem measurable_iff_comap_le {m₁ : MeasurableSpace α} {m₂ : MeasurableSp
 #align measurable_iff_comap_le measurable_iff_comap_le
 -/
 
-alias measurable_iff_comap_le ↔ Measurable.comap_le Measurable.of_comap_le
+alias ⟨Measurable.comap_le, Measurable.of_comap_le⟩ := measurable_iff_comap_le
 #align measurable.comap_le Measurable.comap_le
 #align measurable.of_comap_le Measurable.of_comap_le
 
@@ -2117,8 +2117,8 @@ theorem principal_isMeasurablyGenerated_iff {s : Set α} :
 #align filter.principal_is_measurably_generated_iff Filter.principal_isMeasurablyGenerated_iff
 -/
 
-alias principal_is_measurably_generated_iff ↔ _
-  _root_.measurable_set.principal_is_measurably_generated
+alias ⟨_, _root_.measurable_set.principal_is_measurably_generated⟩ :=
+  principal_is_measurably_generated_iff
 #align measurable_set.principal_is_measurably_generated MeasurableSet.principal_isMeasurablyGenerated
 
 #print Filter.iInf_isMeasurablyGenerated /-

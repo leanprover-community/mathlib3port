@@ -203,7 +203,7 @@ theorem isCompact_iff_ultrafilter_le_nhds :
 #align is_compact_iff_ultrafilter_le_nhds isCompact_iff_ultrafilter_le_nhds
 -/
 
-alias isCompact_iff_ultrafilter_le_nhds ↔ IsCompact.ultrafilter_le_nhds _
+alias ⟨IsCompact.ultrafilter_le_nhds, _⟩ := isCompact_iff_ultrafilter_le_nhds
 #align is_compact.ultrafilter_le_nhds IsCompact.ultrafilter_le_nhds
 
 #print IsCompact.elim_directed_cover /-
@@ -1999,7 +1999,7 @@ theorem isClopen_iff_frontier_eq_empty {s : Set α} : IsClopen s ↔ frontier s 
 #align is_clopen_iff_frontier_eq_empty isClopen_iff_frontier_eq_empty
 -/
 
-alias isClopen_iff_frontier_eq_empty ↔ IsClopen.frontier_eq _
+alias ⟨IsClopen.frontier_eq, _⟩ := isClopen_iff_frontier_eq_empty
 #align is_clopen.frontier_eq IsClopen.frontier_eq
 
 #print IsClopen.union /-
@@ -2234,10 +2234,10 @@ theorem isIrreducible_iff_closure {s : Set α} : IsIrreducible (closure s) ↔ I
 #align is_irreducible_iff_closure isIrreducible_iff_closure
 -/
 
-alias isPreirreducible_iff_closure ↔ _ IsPreirreducible.closure
+alias ⟨_, IsPreirreducible.closure⟩ := isPreirreducible_iff_closure
 #align is_preirreducible.closure IsPreirreducible.closure
 
-alias isIrreducible_iff_closure ↔ _ IsIrreducible.closure
+alias ⟨_, IsIrreducible.closure⟩ := isIrreducible_iff_closure
 #align is_irreducible.closure IsIrreducible.closure
 
 #print exists_preirreducible /-

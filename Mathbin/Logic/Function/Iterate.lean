@@ -293,7 +293,7 @@ theorem iterate_add_eq_iterate (hf : Injective f) : (f^[m + n]) a = (f^[n]) a �
 #align function.iterate_add_eq_iterate Function.iterate_add_eq_iterate
 -/
 
-alias iterate_add_eq_iterate ↔ iterate_cancel_of_add _
+alias ⟨iterate_cancel_of_add, _⟩ := iterate_add_eq_iterate
 #align function.iterate_cancel_of_add Function.iterate_cancel_of_add
 
 #print Function.iterate_cancel /-

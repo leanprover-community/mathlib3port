@@ -77,7 +77,7 @@ theorem wcovby_of_le_of_le (h1 : a ≤ b) (h2 : b ≤ a) : a ⩿ b :=
 #align wcovby_of_le_of_le wcovby_of_le_of_le
 -/
 
-alias wcovby_of_le_of_le ← LE.le.wcovby_of_le
+alias LE.le.wcovby_of_le := wcovby_of_le_of_le
 #align has_le.le.wcovby_of_le LE.le.wcovby_of_le
 
 #print AntisymmRel.wcovby /-
@@ -191,10 +191,10 @@ theorem ofDual_wcovby_ofDual_iff {a b : αᵒᵈ} : ofDual a ⩿ ofDual b ↔ b 
 #align of_dual_wcovby_of_dual_iff ofDual_wcovby_ofDual_iff
 -/
 
-alias toDual_wcovby_toDual_iff ↔ _ Wcovby.toDual
+alias ⟨_, Wcovby.toDual⟩ := toDual_wcovby_toDual_iff
 #align wcovby.to_dual Wcovby.toDual
 
-alias ofDual_wcovby_ofDual_iff ↔ _ Wcovby.ofDual
+alias ⟨_, Wcovby.ofDual⟩ := ofDual_wcovby_ofDual_iff
 #align wcovby.of_dual Wcovby.ofDual
 
 end Preorder
@@ -298,10 +298,10 @@ theorem not_covby_iff (h : a < b) : ¬a ⋖ b ↔ ∃ c, a < c ∧ c < b := by
 #align not_covby_iff not_covby_iff
 -/
 
-alias not_covby_iff ↔ exists_lt_lt_of_not_covby _
+alias ⟨exists_lt_lt_of_not_covby, _⟩ := not_covby_iff
 #align exists_lt_lt_of_not_covby exists_lt_lt_of_not_covby
 
-alias exists_lt_lt_of_not_covby ← LT.lt.exists_lt_lt
+alias LT.lt.exists_lt_lt := exists_lt_lt_of_not_covby
 #align has_lt.lt.exists_lt_lt LT.lt.exists_lt_lt
 
 #print not_covby /-
@@ -333,10 +333,10 @@ theorem ofDual_covby_ofDual_iff {a b : αᵒᵈ} : ofDual a ⋖ ofDual b ↔ b �
 #align of_dual_covby_of_dual_iff ofDual_covby_ofDual_iff
 -/
 
-alias toDual_covby_toDual_iff ↔ _ Covby.toDual
+alias ⟨_, Covby.toDual⟩ := toDual_covby_toDual_iff
 #align covby.to_dual Covby.toDual
 
-alias ofDual_covby_ofDual_iff ↔ _ Covby.ofDual
+alias ⟨_, Covby.ofDual⟩ := ofDual_covby_ofDual_iff
 #align covby.of_dual Covby.ofDual
 
 end LT
@@ -514,10 +514,10 @@ theorem wcovby_iff_eq_or_covby : a ⩿ b ↔ a = b ∨ a ⋖ b :=
 #align wcovby_iff_eq_or_covby wcovby_iff_eq_or_covby
 -/
 
-alias wcovby_iff_covby_or_eq ↔ Wcovby.covby_or_eq _
+alias ⟨Wcovby.covby_or_eq, _⟩ := wcovby_iff_covby_or_eq
 #align wcovby.covby_or_eq Wcovby.covby_or_eq
 
-alias wcovby_iff_eq_or_covby ↔ Wcovby.eq_or_covby _
+alias ⟨Wcovby.eq_or_covby, _⟩ := wcovby_iff_eq_or_covby
 #align wcovby.eq_or_covby Wcovby.eq_or_covby
 
 #print Covby.eq_or_eq /-
