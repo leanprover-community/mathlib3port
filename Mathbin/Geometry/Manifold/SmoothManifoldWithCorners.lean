@@ -418,8 +418,8 @@ theorem symm_continuousWithinAt_comp_right_iff {X} [TopologicalSpace X] {f : H �
 #align model_with_corners.symm_continuous_within_at_comp_right_iff ModelWithCorners.symm_continuousWithinAt_comp_right_iff
 -/
 
-#print ModelWithCorners.locally_compact /-
-protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) :
+#print ModelWithCorners.locallyCompactSpace /-
+protected theorem locallyCompactSpace [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) :
     LocallyCompactSpace H :=
   by
   have :
@@ -432,7 +432,7 @@ protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 
   refine' locallyCompactSpace_of_hasBasis this _
   rintro x s ⟨-, hsc⟩
   exact (hsc.inter_right I.closed_range).image I.continuous_symm
-#align model_with_corners.locally_compact ModelWithCorners.locally_compact
+#align model_with_corners.locally_compact ModelWithCorners.locallyCompactSpace
 -/
 
 open TopologicalSpace

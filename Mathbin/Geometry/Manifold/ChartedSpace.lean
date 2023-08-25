@@ -658,10 +658,10 @@ theorem ChartedSpace.secondCountable_of_sigma_compact [SecondCountableTopology H
 #align charted_space.second_countable_of_sigma_compact ChartedSpace.secondCountable_of_sigma_compact
 -/
 
-#print ChartedSpace.locallyCompact /-
+#print ChartedSpace.locallyCompactSpace /-
 /-- If a topological space admits an atlas with locally compact charts, then the space itself
 is locally compact. -/
-theorem ChartedSpace.locallyCompact [LocallyCompactSpace H] : LocallyCompactSpace M :=
+theorem ChartedSpace.locallyCompactSpace [LocallyCompactSpace H] : LocallyCompactSpace M :=
   by
   have :
     ∀ x : M,
@@ -675,7 +675,7 @@ theorem ChartedSpace.locallyCompact [LocallyCompactSpace H] : LocallyCompactSpac
   refine' locallyCompactSpace_of_hasBasis this _
   rintro x s ⟨h₁, h₂, h₃⟩
   exact h₂.image_of_continuous_on ((chart_at H x).continuousOn_symm.mono h₃)
-#align charted_space.locally_compact ChartedSpace.locallyCompact
+#align charted_space.locally_compact ChartedSpace.locallyCompactSpace
 -/
 
 #print ChartedSpace.locallyConnectedSpace /-
