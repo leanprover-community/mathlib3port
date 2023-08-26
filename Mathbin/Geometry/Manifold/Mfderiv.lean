@@ -585,11 +585,11 @@ theorem HasMFDerivWithinAt.union (hs : HasMFDerivWithinAt I I' f s x f')
 #align has_mfderiv_within_at.union HasMFDerivWithinAt.union
 -/
 
-#print HasMFDerivWithinAt.nhdsWithin /-
-theorem HasMFDerivWithinAt.nhdsWithin (h : HasMFDerivWithinAt I I' f s x f') (ht : s ∈ 𝓝[t] x) :
+#print HasMFDerivWithinAt.mono_of_mem /-
+theorem HasMFDerivWithinAt.mono_of_mem (h : HasMFDerivWithinAt I I' f s x f') (ht : s ∈ 𝓝[t] x) :
     HasMFDerivWithinAt I I' f t x f' :=
   (hasMFDerivWithinAt_inter' ht).1 (h.mono (inter_subset_right _ _))
-#align has_mfderiv_within_at.nhds_within HasMFDerivWithinAt.nhdsWithin
+#align has_mfderiv_within_at.nhds_within HasMFDerivWithinAt.mono_of_mem
 -/
 
 #print HasMFDerivWithinAt.hasMFDerivAt /-

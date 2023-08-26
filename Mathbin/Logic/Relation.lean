@@ -690,10 +690,10 @@ instance : IsRefl α (ReflTransGen r) :=
 instance : IsTrans α (ReflTransGen r) :=
   ⟨@ReflTransGen.trans α r⟩
 
-#print Relation.refl_trans_gen_idem /-
-theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
+#print Relation.reflTransGen_idem /-
+theorem reflTransGen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
   reflTransGen_eq_self reflexive_reflTransGen transitive_reflTransGen
-#align relation.refl_trans_gen_idem Relation.refl_trans_gen_idem
+#align relation.refl_trans_gen_idem Relation.reflTransGen_idem
 -/
 
 #print Relation.ReflTransGen.lift' /-

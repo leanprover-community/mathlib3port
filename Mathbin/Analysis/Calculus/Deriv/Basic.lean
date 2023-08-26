@@ -513,11 +513,13 @@ theorem HasDerivWithinAt.union (hs : HasDerivWithinAt f f' s x) (ht : HasDerivWi
 #align has_deriv_within_at.union HasDerivWithinAt.union
 -/
 
-#print HasDerivWithinAt.nhdsWithin /-
-theorem HasDerivWithinAt.nhdsWithin (h : HasDerivWithinAt f f' s x) (ht : s ∈ 𝓝[t] x) :
+/- warning: has_deriv_within_at.nhds_within clashes with has_deriv_within_at.mono_of_mem -> HasDerivWithinAt.mono_of_mem
+Case conversion may be inaccurate. Consider using '#align has_deriv_within_at.nhds_within HasDerivWithinAt.mono_of_memₓ'. -/
+#print HasDerivWithinAt.mono_of_mem /-
+theorem HasDerivWithinAt.mono_of_mem (h : HasDerivWithinAt f f' s x) (ht : s ∈ 𝓝[t] x) :
     HasDerivWithinAt f f' t x :=
   (hasDerivWithinAt_inter' ht).1 (h.mono (inter_subset_right _ _))
-#align has_deriv_within_at.nhds_within HasDerivWithinAt.nhdsWithin
+#align has_deriv_within_at.nhds_within HasDerivWithinAt.mono_of_mem
 -/
 
 #print HasDerivWithinAt.hasDerivAt /-

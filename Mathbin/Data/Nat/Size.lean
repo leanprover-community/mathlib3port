@@ -19,13 +19,13 @@ namespace Nat
 /-! ### `shiftl` and `shiftr` -/
 
 
-#print Nat.shiftl_eq_mul_pow /-
-theorem shiftl_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
+#print Nat.shiftLeft_eq_mul_pow /-
+theorem shiftLeft_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
   | 0 => (Nat.mul_one _).symm
   | k + 1 =>
     show bit0 (shiftl m k) = m * (2 * 2 ^ k) by
       rw [bit0_val, shiftl_eq_mul_pow, mul_left_comm, mul_comm 2]
-#align nat.shiftl_eq_mul_pow Nat.shiftl_eq_mul_pow
+#align nat.shiftl_eq_mul_pow Nat.shiftLeft_eq_mul_pow
 -/
 
 #print Nat.shiftl'_tt_eq_mul_pow /-
@@ -39,34 +39,32 @@ theorem shiftl'_tt_eq_mul_pow (m) : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ 
 #align nat.shiftl'_tt_eq_mul_pow Nat.shiftl'_tt_eq_mul_pow
 -/
 
-#print Nat.one_shiftl /-
-theorem one_shiftl (n) : shiftl 1 n = 2 ^ n :=
-  (shiftl_eq_mul_pow _ _).trans (Nat.one_mul _)
-#align nat.one_shiftl Nat.one_shiftl
+#print Nat.one_shiftLeft /-
+theorem one_shiftLeft (n) : shiftl 1 n = 2 ^ n :=
+  (shiftLeft_eq_mul_pow _ _).trans (Nat.one_mul _)
+#align nat.one_shiftl Nat.one_shiftLeft
 -/
 
-#print Nat.zero_shiftl /-
+#print Nat.zero_shiftLeft /-
 @[simp]
-theorem zero_shiftl (n) : shiftl 0 n = 0 :=
-  (shiftl_eq_mul_pow _ _).trans (Nat.zero_mul _)
-#align nat.zero_shiftl Nat.zero_shiftl
+theorem zero_shiftLeft (n) : shiftl 0 n = 0 :=
+  (shiftLeft_eq_mul_pow _ _).trans (Nat.zero_mul _)
+#align nat.zero_shiftl Nat.zero_shiftLeft
 -/
 
-#print Nat.shiftr_eq_div_pow /-
-theorem shiftr_eq_div_pow (m) : ∀ n, shiftr m n = m / 2 ^ n
+#print Nat.shiftRight_eq_div_pow /-
+theorem shiftRight_eq_div_pow (m) : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_one _).symm
   | k + 1 =>
     (congr_arg div2 (shiftr_eq_div_pow k)).trans <| by
       rw [div2_val, Nat.div_div_eq_div_mul, mul_comm] <;> rfl
-#align nat.shiftr_eq_div_pow Nat.shiftr_eq_div_pow
+#align nat.shiftr_eq_div_pow Nat.shiftRight_eq_div_pow
 -/
 
-#print Nat.zero_shiftr /-
 @[simp]
 theorem zero_shiftr (n) : shiftr 0 n = 0 :=
-  (shiftr_eq_div_pow _ _).trans (Nat.zero_div _)
+  (shiftRight_eq_div_pow _ _).trans (Nat.zero_div _)
 #align nat.zero_shiftr Nat.zero_shiftr
--/
 
 #print Nat.shiftl'_ne_zero_left /-
 theorem shiftl'_ne_zero_left (b) {m} (h : m ≠ 0) (n) : shiftl' b m n ≠ 0 := by
@@ -144,11 +142,11 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
 #align nat.size_shiftl' Nat.size_shiftl'
 -/
 
-#print Nat.size_shiftl /-
+#print Nat.size_shiftLeft /-
 @[simp]
-theorem size_shiftl {m} (h : m ≠ 0) (n) : size (shiftl m n) = size m + n :=
+theorem size_shiftLeft {m} (h : m ≠ 0) (n) : size (shiftl m n) = size m + n :=
   size_shiftl' (shiftl'_ne_zero_left _ h _)
-#align nat.size_shiftl Nat.size_shiftl
+#align nat.size_shiftl Nat.size_shiftLeft
 -/
 
 #print Nat.lt_size_self /-

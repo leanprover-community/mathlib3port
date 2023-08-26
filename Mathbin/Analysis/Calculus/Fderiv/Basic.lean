@@ -586,11 +586,13 @@ theorem HasFDerivWithinAt.union (hs : HasFDerivWithinAt f f' s x)
 #align has_fderiv_within_at.union HasFDerivWithinAt.union
 -/
 
-#print HasFDerivWithinAt.nhdsWithin /-
-theorem HasFDerivWithinAt.nhdsWithin (h : HasFDerivWithinAt f f' s x) (ht : s ∈ 𝓝[t] x) :
+/- warning: has_fderiv_within_at.nhds_within clashes with has_fderiv_within_at.mono_of_mem -> HasFDerivWithinAt.mono_of_mem
+Case conversion may be inaccurate. Consider using '#align has_fderiv_within_at.nhds_within HasFDerivWithinAt.mono_of_memₓ'. -/
+#print HasFDerivWithinAt.mono_of_mem /-
+theorem HasFDerivWithinAt.mono_of_mem (h : HasFDerivWithinAt f f' s x) (ht : s ∈ 𝓝[t] x) :
     HasFDerivWithinAt f f' t x :=
   (hasFDerivWithinAt_inter' ht).1 (h.mono (inter_subset_right _ _))
-#align has_fderiv_within_at.nhds_within HasFDerivWithinAt.nhdsWithin
+#align has_fderiv_within_at.nhds_within HasFDerivWithinAt.mono_of_mem
 -/
 
 #print HasFDerivWithinAt.hasFDerivAt /-

@@ -1197,7 +1197,7 @@ theorem lxor'_to_nat : ∀ m n, (lxor m n : ℕ) = Nat.lxor' m n := by
 @[simp, norm_cast]
 theorem shiftl_to_nat (m n) : (shiftl m n : ℕ) = Nat.shiftl m n :=
   by
-  cases m <;> dsimp only [shiftl]; · symm; apply Nat.zero_shiftl
+  cases m <;> dsimp only [shiftl]; · symm; apply Nat.zero_shiftLeft
   simp; induction' n with n IH; · rfl
   simp [PosNum.shiftl, Nat.shiftl_succ]; rw [← IH]
 #align num.shiftl_to_nat Num.shiftl_to_nat
@@ -1210,7 +1210,7 @@ theorem shiftr_to_nat (m n) : (shiftr m n : ℕ) = Nat.shiftr m n :=
   cases' m with m <;> dsimp only [shiftr]; · symm; apply Nat.zero_shiftr
   induction' n with n IH generalizing m; · cases m <;> rfl
   cases' m with m m <;> dsimp only [PosNum.shiftr]
-  · rw [Nat.shiftr_eq_div_pow]; symm; apply Nat.div_eq_of_lt
+  · rw [Nat.shiftRight_eq_div_pow]; symm; apply Nat.div_eq_of_lt
     exact @Nat.pow_lt_pow_of_lt_right 2 (by decide) 0 (n + 1) (Nat.succ_pos _)
   · trans; apply IH
     change Nat.shiftr m n = Nat.shiftr (bit1 m) (n + 1)

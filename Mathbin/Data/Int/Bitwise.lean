@@ -453,30 +453,31 @@ theorem shiftl_sub (m : ℤ) (n : ℕ) (k : ℤ) : shiftl m (n - k) = shiftr (sh
 
 #print Int.shiftl_eq_mul_pow /-
 theorem shiftl_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftl m n = m * ↑(2 ^ n)
-  | (m : ℕ), n => congr_arg coe (Nat.shiftl_eq_mul_pow _ _)
+  | (m : ℕ), n => congr_arg coe (Nat.shiftLeft_eq_mul_pow _ _)
   | -[m+1], n => @congr_arg ℕ ℤ _ _ (fun i => -i) (Nat.shiftl'_tt_eq_mul_pow _ _)
 #align int.shiftl_eq_mul_pow Int.shiftl_eq_mul_pow
 -/
 
 #print Int.shiftr_eq_div_pow /-
 theorem shiftr_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftr m n = m / ↑(2 ^ n)
-  | (m : ℕ), n => by rw [shiftr_coe_nat] <;> exact congr_arg coe (Nat.shiftr_eq_div_pow _ _)
-  | -[m+1], n => by
-    rw [shiftr_neg_succ, neg_succ_of_nat_div, Nat.shiftr_eq_div_pow]; rfl
+  | (m : ℕ), n => by rw [shiftr_coe_nat] <;> exact congr_arg coe (Nat.shiftRight_eq_div_pow _ _)
+  | -[m+1], n =>
+    by
+    rw [shiftr_neg_succ, neg_succ_of_nat_div, Nat.shiftRight_eq_div_pow]; rfl
     exact coe_nat_lt_coe_nat_of_lt (pow_pos (by decide) _)
 #align int.shiftr_eq_div_pow Int.shiftr_eq_div_pow
 -/
 
 #print Int.one_shiftl /-
 theorem one_shiftl (n : ℕ) : shiftl 1 n = (2 ^ n : ℕ) :=
-  congr_arg coe (Nat.one_shiftl _)
+  congr_arg coe (Nat.one_shiftLeft _)
 #align int.one_shiftl Int.one_shiftl
 -/
 
 #print Int.zero_shiftl /-
 @[simp]
 theorem zero_shiftl : ∀ n : ℤ, shiftl 0 n = 0
-  | (n : ℕ) => congr_arg coe (Nat.zero_shiftl _)
+  | (n : ℕ) => congr_arg coe (Nat.zero_shiftLeft _)
   | -[n+1] => congr_arg coe (Nat.zero_shiftr _)
 #align int.zero_shiftl Int.zero_shiftl
 -/
