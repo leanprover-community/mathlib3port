@@ -7,7 +7,7 @@ import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Set.Functor
 import Mathbin.Data.Finite.Basic
 
-#align_import data.set.finite from "leanprover-community/mathlib"@"7fdd4f3746cb059edfdb5d52cba98f66fce418c0"
+#align_import data.set.finite from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
 
 /-!
 # Finite sets
@@ -2050,7 +2050,7 @@ theorem Finite.exists_maximal_wrt [PartialOrder β] (f : α → β) (s : Set α)
 
 section
 
-variable [SemilatticeSup α] [Nonempty α] {s : Set α}
+variable [Preorder α] [IsDirected α (· ≤ ·)] [Nonempty α] {s : Set α}
 
 #print Set.Finite.bddAbove /-
 /-- A finite set is bounded above.-/
@@ -2078,12 +2078,12 @@ end
 
 section
 
-variable [SemilatticeInf α] [Nonempty α] {s : Set α}
+variable [Preorder α] [IsDirected α (· ≥ ·)] [Nonempty α] {s : Set α}
 
 #print Set.Finite.bddBelow /-
 /-- A finite set is bounded below.-/
 protected theorem Finite.bddBelow (hs : s.Finite) : BddBelow s :=
-  @Finite.bddAbove αᵒᵈ _ _ _ hs
+  @Finite.bddAbove αᵒᵈ _ _ _ _ hs
 #align set.finite.bdd_below Set.Finite.bddBelow
 -/
 
@@ -2091,16 +2091,13 @@ protected theorem Finite.bddBelow (hs : s.Finite) : BddBelow s :=
 /-- A finite union of sets which are all bounded below is still bounded below.-/
 theorem Finite.bddBelow_biUnion {I : Set β} {S : β → Set α} (H : I.Finite) :
     BddBelow (⋃ i ∈ I, S i) ↔ ∀ i ∈ I, BddBelow (S i) :=
-  @Finite.bddAbove_biUnion αᵒᵈ _ _ _ _ _ H
+  @Finite.bddAbove_biUnion αᵒᵈ _ _ _ _ _ _ H
 #align set.finite.bdd_below_bUnion Set.Finite.bddBelow_biUnion
 -/
 
 #print Set.infinite_of_not_bddBelow /-
 theorem infinite_of_not_bddBelow : ¬BddBelow s → s.Infinite :=
-  by
-  contrapose!
-  rw [not_infinite]
-  apply finite.bdd_below
+  mt Finite.bddBelow
 #align set.infinite_of_not_bdd_below Set.infinite_of_not_bddBelow
 -/
 

@@ -399,7 +399,7 @@ theorem shiftr_coe_nat (m n : ℕ) : shiftr m n = Nat.shiftr m n := by cases n <
 
 #print Int.shiftl_negSucc /-
 @[simp]
-theorem shiftl_negSucc (m n : ℕ) : shiftl -[m+1] n = -[Nat.shiftl' true m n+1] :=
+theorem shiftl_negSucc (m n : ℕ) : shiftl -[m+1] n = -[Nat.shiftLeft' true m n+1] :=
   rfl
 #align int.shiftl_neg_succ Int.shiftl_negSucc
 -/
@@ -427,7 +427,7 @@ attribute [local simp] Int.zero_div
 #print Int.shiftl_add /-
 theorem shiftl_add : ∀ (m : ℤ) (n : ℕ) (k : ℤ), shiftl m (n + k) = shiftl (shiftl m n) k
   | (m : ℕ), n, (k : ℕ) => congr_arg ofNat (Nat.shiftl_add _ _ _)
-  | -[m+1], n, (k : ℕ) => congr_arg negSucc (Nat.shiftl'_add _ _ _ _)
+  | -[m+1], n, (k : ℕ) => congr_arg negSucc (Nat.shiftLeft'_add _ _ _ _)
   | (m : ℕ), n, -[k+1] =>
     subNatNat_elim n k.succ (fun n k i => shiftl (↑m) i = Nat.shiftr (Nat.shiftl m n) k)
       (fun i n =>
@@ -436,12 +436,13 @@ theorem shiftl_add : ∀ (m : ℤ) (n : ℕ) (k : ℤ), shiftl m (n + k) = shift
       congr_arg coe <| by rw [add_assoc, Nat.shiftr_add, ← Nat.shiftl_sub, tsub_self] <;> rfl
   | -[m+1], n, -[k+1] =>
     subNatNat_elim n k.succ
-      (fun n k i => shiftl -[m+1] i = -[Nat.shiftr (Nat.shiftl' true m n) k+1])
+      (fun n k i => shiftl -[m+1] i = -[Nat.shiftr (Nat.shiftLeft' true m n) k+1])
       (fun i n =>
         congr_arg negSucc <| by
-          rw [← Nat.shiftl'_sub, add_tsub_cancel_left] <;> apply Nat.le_add_right)
+          rw [← Nat.shiftLeft'_sub, add_tsub_cancel_left] <;> apply Nat.le_add_right)
       fun i n =>
-      congr_arg negSucc <| by rw [add_assoc, Nat.shiftr_add, ← Nat.shiftl'_sub, tsub_self] <;> rfl
+      congr_arg negSucc <| by
+        rw [add_assoc, Nat.shiftr_add, ← Nat.shiftLeft'_sub, tsub_self] <;> rfl
 #align int.shiftl_add Int.shiftl_add
 -/
 
@@ -454,7 +455,7 @@ theorem shiftl_sub (m : ℤ) (n : ℕ) (k : ℤ) : shiftl m (n - k) = shiftr (sh
 #print Int.shiftl_eq_mul_pow /-
 theorem shiftl_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftl m n = m * ↑(2 ^ n)
   | (m : ℕ), n => congr_arg coe (Nat.shiftLeft_eq_mul_pow _ _)
-  | -[m+1], n => @congr_arg ℕ ℤ _ _ (fun i => -i) (Nat.shiftl'_tt_eq_mul_pow _ _)
+  | -[m+1], n => @congr_arg ℕ ℤ _ _ (fun i => -i) (Nat.shiftLeft'_tt_eq_mul_pow _ _)
 #align int.shiftl_eq_mul_pow Int.shiftl_eq_mul_pow
 -/
 

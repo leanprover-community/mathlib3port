@@ -28,15 +28,15 @@ theorem shiftLeft_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
 #align nat.shiftl_eq_mul_pow Nat.shiftLeft_eq_mul_pow
 -/
 
-#print Nat.shiftl'_tt_eq_mul_pow /-
-theorem shiftl'_tt_eq_mul_pow (m) : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
+#print Nat.shiftLeft'_tt_eq_mul_pow /-
+theorem shiftLeft'_tt_eq_mul_pow (m) : ∀ n, shiftLeft' true m n + 1 = (m + 1) * 2 ^ n
   | 0 => by simp [shiftl, shiftl', pow_zero, Nat.one_mul]
   | k + 1 => by
     change bit1 (shiftl' tt m k) + 1 = (m + 1) * (2 * 2 ^ k)
     rw [bit1_val]
     change 2 * (shiftl' tt m k + 1) = _
     rw [shiftl'_tt_eq_mul_pow, mul_left_comm, mul_comm 2]
-#align nat.shiftl'_tt_eq_mul_pow Nat.shiftl'_tt_eq_mul_pow
+#align nat.shiftl'_tt_eq_mul_pow Nat.shiftLeft'_tt_eq_mul_pow
 -/
 
 #print Nat.one_shiftLeft /-
@@ -66,17 +66,17 @@ theorem zero_shiftr (n) : shiftr 0 n = 0 :=
   (shiftRight_eq_div_pow _ _).trans (Nat.zero_div _)
 #align nat.zero_shiftr Nat.zero_shiftr
 
-#print Nat.shiftl'_ne_zero_left /-
-theorem shiftl'_ne_zero_left (b) {m} (h : m ≠ 0) (n) : shiftl' b m n ≠ 0 := by
+#print Nat.shiftLeft'_ne_zero_left /-
+theorem shiftLeft'_ne_zero_left (b) {m} (h : m ≠ 0) (n) : shiftLeft' b m n ≠ 0 := by
   induction n <;> simp [bit_ne_zero, shiftl', *]
-#align nat.shiftl'_ne_zero_left Nat.shiftl'_ne_zero_left
+#align nat.shiftl'_ne_zero_left Nat.shiftLeft'_ne_zero_left
 -/
 
-#print Nat.shiftl'_tt_ne_zero /-
-theorem shiftl'_tt_ne_zero (m) : ∀ {n} (h : n ≠ 0), shiftl' true m n ≠ 0
+#print Nat.shiftLeft'_tt_ne_zero /-
+theorem shiftLeft'_tt_ne_zero (m) : ∀ {n} (h : n ≠ 0), shiftLeft' true m n ≠ 0
   | 0, h => absurd rfl h
   | succ n, _ => Nat.bit1_ne_zero _
-#align nat.shiftl'_tt_ne_zero Nat.shiftl'_tt_ne_zero
+#align nat.shiftl'_tt_ne_zero Nat.shiftLeft'_tt_ne_zero
 -/
 
 /-! ### `size` -/
@@ -122,9 +122,9 @@ theorem size_one : size 1 = 1 :=
 #align nat.size_one Nat.size_one
 -/
 
-#print Nat.size_shiftl' /-
+#print Nat.size_shiftLeft' /-
 @[simp]
-theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = size m + n :=
+theorem size_shiftLeft' {b m n} (h : shiftLeft' b m n ≠ 0) : size (shiftLeft' b m n) = size m + n :=
   by
   induction' n with n IH <;> simp [shiftl'] at h ⊢
   rw [size_bit h, Nat.add_succ]
@@ -139,13 +139,13 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
     Nat.eq_zero_of_le_zero
       (le_of_not_gt fun hn => ne_of_gt (pow_lt_pow_of_lt_right (by decide) hn) this)
   rfl
-#align nat.size_shiftl' Nat.size_shiftl'
+#align nat.size_shiftl' Nat.size_shiftLeft'
 -/
 
 #print Nat.size_shiftLeft /-
 @[simp]
 theorem size_shiftLeft {m} (h : m ≠ 0) (n) : size (shiftl m n) = size m + n :=
-  size_shiftl' (shiftl'_ne_zero_left _ h _)
+  size_shiftLeft' (shiftLeft'_ne_zero_left _ h _)
 #align nat.size_shiftl Nat.size_shiftLeft
 -/
 
