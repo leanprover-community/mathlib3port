@@ -455,10 +455,10 @@ theorem le_maximum_of_mem' (ha : a ∈ l) : (a : WithBot α) ≤ maximum l :=
 #align list.le_maximum_of_mem' List.le_maximum_of_mem'
 -/
 
-#print List.le_minimum_of_mem' /-
-theorem le_minimum_of_mem' (ha : a ∈ l) : minimum l ≤ (a : WithTop α) :=
+#print List.minimum_le_of_mem' /-
+theorem minimum_le_of_mem' (ha : a ∈ l) : minimum l ≤ (a : WithTop α) :=
   @le_maximum_of_mem' αᵒᵈ _ _ _ ha
-#align list.le_minimum_of_mem' List.le_minimum_of_mem'
+#align list.le_minimum_of_mem' List.minimum_le_of_mem'
 -/
 
 #print List.minimum_concat /-

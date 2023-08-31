@@ -56,10 +56,10 @@ instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) where
 instance [HasColimits C] : HasColimits (Over X) :=
   ⟨inferInstance⟩
 
-#print CategoryTheory.Over.createsColimits /-
-instance createsColimits : CreatesColimits (forget X) :=
-  CostructuredArrow.createsColimits
-#align category_theory.over.creates_colimits CategoryTheory.Over.createsColimits
+#print CategoryTheory.Over.createsColimitsOfSize /-
+instance createsColimitsOfSize : CreatesColimits (forget X) :=
+  CostructuredArrow.createsColimitsOfSize
+#align category_theory.over.creates_colimits CategoryTheory.Over.createsColimitsOfSize
 -/
 
 -- We can automatically infer that the forgetful functor preserves and reflects colimits.
@@ -174,10 +174,10 @@ theorem mono_iff_mono_right [HasPullbacks C] {f g : Under X} (h : f ⟶ g) : Mon
 #align category_theory.under.mono_iff_mono_right CategoryTheory.Under.mono_iff_mono_right
 -/
 
-#print CategoryTheory.Under.createsLimits /-
-instance createsLimits : CreatesLimits (forget X) :=
-  StructuredArrow.createsLimits
-#align category_theory.under.creates_limits CategoryTheory.Under.createsLimits
+#print CategoryTheory.Under.createsLimitsOfSize /-
+instance createsLimitsOfSize : CreatesLimits (forget X) :=
+  StructuredArrow.createsLimitsOfSize
+#align category_theory.under.creates_limits CategoryTheory.Under.createsLimitsOfSize
 -/
 
 -- We can automatically infer that the forgetful functor preserves and reflects limits.

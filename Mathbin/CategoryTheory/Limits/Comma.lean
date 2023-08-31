@@ -168,10 +168,10 @@ instance hasLimitsOfShape [HasLimitsOfShape J A] [HasLimitsOfShape J B]
 #align category_theory.comma.has_limits_of_shape CategoryTheory.Comma.hasLimitsOfShape
 -/
 
-#print CategoryTheory.Comma.hasLimits /-
-instance hasLimits [HasLimits A] [HasLimits B] [PreservesLimits R] : HasLimits (Comma L R) :=
+#print CategoryTheory.Comma.hasLimitsOfSize /-
+instance hasLimitsOfSize [HasLimits A] [HasLimits B] [PreservesLimits R] : HasLimits (Comma L R) :=
   ⟨inferInstance⟩
-#align category_theory.comma.has_limits CategoryTheory.Comma.hasLimits
+#align category_theory.comma.has_limits CategoryTheory.Comma.hasLimitsOfSize
 -/
 
 #print CategoryTheory.Comma.hasColimit /-
@@ -187,11 +187,11 @@ instance hasColimitsOfShape [HasColimitsOfShape J A] [HasColimitsOfShape J B]
 #align category_theory.comma.has_colimits_of_shape CategoryTheory.Comma.hasColimitsOfShape
 -/
 
-#print CategoryTheory.Comma.hasColimits /-
-instance hasColimits [HasColimits A] [HasColimits B] [PreservesColimits L] :
+#print CategoryTheory.Comma.hasColimitsOfSize /-
+instance hasColimitsOfSize [HasColimits A] [HasColimits B] [PreservesColimits L] :
     HasColimits (Comma L R) :=
   ⟨inferInstance⟩
-#align category_theory.comma.has_colimits CategoryTheory.Comma.hasColimits
+#align category_theory.comma.has_colimits CategoryTheory.Comma.hasColimitsOfSize
 -/
 
 end Comma
@@ -253,10 +253,10 @@ instance hasLimitsOfShape [HasLimitsOfShape J A] [PreservesLimitsOfShape J G] :
 #align category_theory.structured_arrow.has_limits_of_shape CategoryTheory.StructuredArrow.hasLimitsOfShape
 -/
 
-#print CategoryTheory.StructuredArrow.hasLimits /-
-instance hasLimits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
+#print CategoryTheory.StructuredArrow.hasLimitsOfSize /-
+instance hasLimitsOfSize [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
   ⟨inferInstance⟩
-#align category_theory.structured_arrow.has_limits CategoryTheory.StructuredArrow.hasLimits
+#align category_theory.structured_arrow.has_limits CategoryTheory.StructuredArrow.hasLimitsOfSize
 -/
 
 #print CategoryTheory.StructuredArrow.createsLimit /-
@@ -275,10 +275,10 @@ noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] :
 #align category_theory.structured_arrow.creates_limits_of_shape CategoryTheory.StructuredArrow.createsLimitsOfShape
 -/
 
-#print CategoryTheory.StructuredArrow.createsLimits /-
-noncomputable instance createsLimits [PreservesLimits G] : CreatesLimits (proj X G : _) :=
+#print CategoryTheory.StructuredArrow.createsLimitsOfSize /-
+noncomputable instance createsLimitsOfSize [PreservesLimits G] : CreatesLimits (proj X G : _) :=
   ⟨⟩
-#align category_theory.structured_arrow.creates_limits CategoryTheory.StructuredArrow.createsLimits
+#align category_theory.structured_arrow.creates_limits CategoryTheory.StructuredArrow.createsLimitsOfSize
 -/
 
 #print CategoryTheory.StructuredArrow.mono_right_of_mono /-
@@ -314,10 +314,11 @@ instance hasColimitsOfShape [HasColimitsOfShape J A] [PreservesColimitsOfShape J
 #align category_theory.costructured_arrow.has_colimits_of_shape CategoryTheory.CostructuredArrow.hasColimitsOfShape
 -/
 
-#print CategoryTheory.CostructuredArrow.hasColimits /-
-instance hasColimits [HasColimits A] [PreservesColimits G] : HasColimits (CostructuredArrow G X) :=
+#print CategoryTheory.CostructuredArrow.hasColimitsOfSize /-
+instance hasColimitsOfSize [HasColimits A] [PreservesColimits G] :
+    HasColimits (CostructuredArrow G X) :=
   ⟨inferInstance⟩
-#align category_theory.costructured_arrow.has_colimits CategoryTheory.CostructuredArrow.hasColimits
+#align category_theory.costructured_arrow.has_colimits CategoryTheory.CostructuredArrow.hasColimitsOfSize
 -/
 
 #print CategoryTheory.CostructuredArrow.createsColimit /-
@@ -336,10 +337,11 @@ noncomputable instance createsColimitsOfShape [PreservesColimitsOfShape J G] :
 #align category_theory.costructured_arrow.creates_colimits_of_shape CategoryTheory.CostructuredArrow.createsColimitsOfShape
 -/
 
-#print CategoryTheory.CostructuredArrow.createsColimits /-
-noncomputable instance createsColimits [PreservesColimits G] : CreatesColimits (proj G X : _) :=
+#print CategoryTheory.CostructuredArrow.createsColimitsOfSize /-
+noncomputable instance createsColimitsOfSize [PreservesColimits G] :
+    CreatesColimits (proj G X : _) :=
   ⟨⟩
-#align category_theory.costructured_arrow.creates_colimits CategoryTheory.CostructuredArrow.createsColimits
+#align category_theory.costructured_arrow.creates_colimits CategoryTheory.CostructuredArrow.createsColimitsOfSize
 -/
 
 #print CategoryTheory.CostructuredArrow.epi_left_of_epi /-

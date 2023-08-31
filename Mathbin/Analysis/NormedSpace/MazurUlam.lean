@@ -122,20 +122,20 @@ def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃�
 #align isometry_equiv.to_real_linear_isometry_equiv_of_map_zero IsometryEquiv.toRealLinearIsometryEquivOfMapZero
 -/
 
-#print IsometryEquiv.coe_to_real_linear_equiv_of_map_zero /-
+#print IsometryEquiv.coe_toRealLinearIsometryEquivOfMapZero /-
 @[simp]
-theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
+theorem coe_toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
     ⇑(f.toRealLinearIsometryEquivOfMapZero h0) = f :=
   rfl
-#align isometry_equiv.coe_to_real_linear_equiv_of_map_zero IsometryEquiv.coe_to_real_linear_equiv_of_map_zero
+#align isometry_equiv.coe_to_real_linear_equiv_of_map_zero IsometryEquiv.coe_toRealLinearIsometryEquivOfMapZero
 -/
 
-#print IsometryEquiv.coe_to_real_linear_equiv_of_map_zero_symm /-
+#print IsometryEquiv.coe_toRealLinearIsometryEquivOfMapZero_symm /-
 @[simp]
-theorem coe_to_real_linear_equiv_of_map_zero_symm (f : E ≃ᵢ F) (h0 : f 0 = 0) :
+theorem coe_toRealLinearIsometryEquivOfMapZero_symm (f : E ≃ᵢ F) (h0 : f 0 = 0) :
     ⇑(f.toRealLinearIsometryEquivOfMapZero h0).symm = f.symm :=
   rfl
-#align isometry_equiv.coe_to_real_linear_equiv_of_map_zero_symm IsometryEquiv.coe_to_real_linear_equiv_of_map_zero_symm
+#align isometry_equiv.coe_to_real_linear_equiv_of_map_zero_symm IsometryEquiv.coe_toRealLinearIsometryEquivOfMapZero_symm
 -/
 
 #print IsometryEquiv.toRealLinearIsometryEquiv /-
@@ -147,12 +147,12 @@ def toRealLinearIsometryEquiv (f : E ≃ᵢ F) : E ≃ₗᵢ[ℝ] F :=
 #align isometry_equiv.to_real_linear_isometry_equiv IsometryEquiv.toRealLinearIsometryEquiv
 -/
 
-#print IsometryEquiv.to_real_linear_equiv_apply /-
+#print IsometryEquiv.toRealLinearIsometryEquiv_apply /-
 @[simp]
-theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) :
+theorem toRealLinearIsometryEquiv_apply (f : E ≃ᵢ F) (x : E) :
     (f.toRealLinearIsometryEquiv : E → F) x = f x - f 0 :=
   (sub_eq_add_neg (f x) (f 0)).symm
-#align isometry_equiv.to_real_linear_equiv_apply IsometryEquiv.to_real_linear_equiv_apply
+#align isometry_equiv.to_real_linear_equiv_apply IsometryEquiv.toRealLinearIsometryEquiv_apply
 -/
 
 #print IsometryEquiv.toRealLinearIsometryEquiv_symm_apply /-

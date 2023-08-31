@@ -430,10 +430,10 @@ theorem IntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal (integr
 #align ideal.integral_closure.eq_bot_of_comap_eq_bot Ideal.IntegralClosure.eq_bot_of_comap_eq_bot
 -/
 
-#print Ideal.exists_ideal_over_prime_of_is_integral' /-
+#print Ideal.exists_ideal_over_prime_of_isIntegral' /-
 /-- `comap (algebra_map R S)` is a surjection from the prime spec of `R` to prime spec of `S`.
 `hP : (algebra_map R S).ker ≤ P` is a slight generalization of the extension being injective -/
-theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P : Ideal R)
+theorem exists_ideal_over_prime_of_isIntegral' (H : Algebra.IsIntegral R S) (P : Ideal R)
     [IsPrime P] (hP : (algebraMap R S).ker ≤ P) :
     ∃ Q : Ideal S, IsPrime Q ∧ Q.comap (algebraMap R S) = P :=
   by
@@ -453,7 +453,7 @@ theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P 
   convert Localization.AtPrime.comap_maximalIdeal
   rw [comap_comap, ← LocalRing.eq_maximalIdeal Qₚ_max, ← IsLocalization.map_comp _]
   rfl
-#align ideal.exists_ideal_over_prime_of_is_integral' Ideal.exists_ideal_over_prime_of_is_integral'
+#align ideal.exists_ideal_over_prime_of_is_integral' Ideal.exists_ideal_over_prime_of_isIntegral'
 -/
 
 end
