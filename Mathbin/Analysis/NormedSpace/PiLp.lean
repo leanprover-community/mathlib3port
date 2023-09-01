@@ -90,30 +90,28 @@ namespace PiLp
 
 variable (p : ℝ≥0∞) (𝕜 𝕜' : Type _) {ι : Type _} (α : ι → Type _) (β : ι → Type _)
 
-#print PiLp.equiv /-
 /-- Canonical bijection between `pi_Lp p α` and the original Pi type. We introduce it to be able
 to compare the `L^p` and `L^∞` distances through it. -/
 protected def equiv : PiLp p α ≃ ∀ i : ι, α i :=
   Equiv.refl _
 #align pi_Lp.equiv PiLp.equiv
--/
 
 /-! Note that the unapplied versions of these lemmas are deliberately omitted, as they break
 the use of the type synonym. -/
 
 
-#print PiLp.equiv_apply /-
+#print WithLp.equiv_pi_apply /-
 @[simp]
-theorem equiv_apply (x : PiLp p α) (i : ι) : PiLp.equiv p α x i = x i :=
+theorem equiv_pi_apply (x : PiLp p α) (i : ι) : PiLp.equiv p α x i = x i :=
   rfl
-#align pi_Lp.equiv_apply PiLp.equiv_apply
+#align pi_Lp.equiv_apply WithLp.equiv_pi_apply
 -/
 
-#print PiLp.equiv_symm_apply /-
+#print WithLp.equiv_symm_pi_apply /-
 @[simp]
-theorem equiv_symm_apply (x : ∀ i, α i) (i : ι) : (PiLp.equiv p α).symm x i = x i :=
+theorem equiv_symm_pi_apply (x : ∀ i, α i) (i : ι) : (PiLp.equiv p α).symm x i = x i :=
   rfl
-#align pi_Lp.equiv_symm_apply PiLp.equiv_symm_apply
+#align pi_Lp.equiv_symm_apply WithLp.equiv_symm_pi_apply
 -/
 
 section DistNorm
@@ -1047,7 +1045,6 @@ theorem norm_equiv_symm_one {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) [O
 
 variable (𝕜 p)
 
-#print PiLp.linearEquiv /-
 /-- `pi_Lp.equiv` as a linear equivalence. -/
 @[simps (config := { fullyApplied := false })]
 protected def linearEquiv : PiLp p β ≃ₗ[𝕜] ∀ i, β i :=
@@ -1055,7 +1052,6 @@ protected def linearEquiv : PiLp p β ≃ₗ[𝕜] ∀ i, β i :=
     toFun := PiLp.equiv _ _
     invFun := (PiLp.equiv _ _).symm }
 #align pi_Lp.linear_equiv PiLp.linearEquiv
--/
 
 #print PiLp.continuousLinearEquiv /-
 /-- `pi_Lp.equiv` as a continuous linear equivalence. -/

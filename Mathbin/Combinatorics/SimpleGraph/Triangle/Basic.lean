@@ -60,11 +60,11 @@ theorem farFromTriangleFree_iff :
 alias ⟨far_from_triangle_free.le_card_sub_card, _⟩ := far_from_triangle_free_iff
 #align simple_graph.far_from_triangle_free.le_card_sub_card SimpleGraph.farFromTriangleFree.le_card_sub_card
 
-#print SimpleGraph.farFromTriangleFree.mono /-
-theorem farFromTriangleFree.mono (hε : G.FarFromTriangleFree ε) (h : δ ≤ ε) :
+#print SimpleGraph.FarFromTriangleFree.mono /-
+theorem FarFromTriangleFree.mono (hε : G.FarFromTriangleFree ε) (h : δ ≤ ε) :
     G.FarFromTriangleFree δ :=
   hε.mono <| mul_le_mul_of_nonneg_right h <| cast_nonneg _
-#align simple_graph.far_from_triangle_free.mono SimpleGraph.farFromTriangleFree.mono
+#align simple_graph.far_from_triangle_free.mono SimpleGraph.FarFromTriangleFree.mono
 -/
 
 #print SimpleGraph.FarFromTriangleFree.cliqueFinset_nonempty' /-

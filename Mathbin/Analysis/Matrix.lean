@@ -584,7 +584,7 @@ instance frobenius_normedStarGroup [StarAddMonoid α] [NormedStarGroup α] :
 theorem frobenius_norm_row (v : m → α) : ‖row v‖ = ‖(PiLp.equiv 2 _).symm v‖ :=
   by
   rw [frobenius_norm_def, Fintype.sum_unique, PiLp.norm_eq_of_L2, Real.sqrt_eq_rpow]
-  simp only [row_apply, Real.rpow_two, PiLp.equiv_symm_apply]
+  simp only [row_apply, Real.rpow_two, WithLp.equiv_symm_pi_apply]
 #align matrix.frobenius_norm_row Matrix.frobenius_norm_row
 -/
 
@@ -600,7 +600,7 @@ theorem frobenius_nnnorm_row (v : m → α) : ‖row v‖₊ = ‖(PiLp.equiv 2 
 theorem frobenius_norm_col (v : n → α) : ‖col v‖ = ‖(PiLp.equiv 2 _).symm v‖ :=
   by
   simp_rw [frobenius_norm_def, Fintype.sum_unique, PiLp.norm_eq_of_L2, Real.sqrt_eq_rpow]
-  simp only [col_apply, Real.rpow_two, PiLp.equiv_symm_apply]
+  simp only [col_apply, Real.rpow_two, WithLp.equiv_symm_pi_apply]
 #align matrix.frobenius_norm_col Matrix.frobenius_norm_col
 -/
 
@@ -666,7 +666,7 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))
       ((PiLp.equiv 2 fun i => α).symm fun k => B k j)
-  simpa only [PiLp.equiv_symm_apply, PiLp.inner_apply, IsROrC.inner_apply, starRingEnd_apply,
+  simpa only [WithLp.equiv_symm_pi_apply, PiLp.inner_apply, IsROrC.inner_apply, starRingEnd_apply,
     Pi.nnnorm_def, PiLp.nnnorm_eq_of_L2, star_star, nnnorm_star, NNReal.sqrt_eq_rpow,
     NNReal.rpow_two] using this
 #align matrix.frobenius_nnnorm_mul Matrix.frobenius_nnnorm_mul

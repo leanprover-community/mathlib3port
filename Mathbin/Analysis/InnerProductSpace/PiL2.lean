@@ -277,27 +277,27 @@ def EuclideanSpace.single [DecidableEq ι] (i : ι) (a : 𝕜) : EuclideanSpace 
 #align euclidean_space.single EuclideanSpace.single
 -/
 
-#print PiLp.equiv_single /-
+#print WithLp.equiv_single /-
 @[simp]
-theorem PiLp.equiv_single [DecidableEq ι] (i : ι) (a : 𝕜) :
+theorem WithLp.equiv_single [DecidableEq ι] (i : ι) (a : 𝕜) :
     PiLp.equiv _ _ (EuclideanSpace.single i a) = Pi.single i a :=
   rfl
-#align pi_Lp.equiv_single PiLp.equiv_single
+#align pi_Lp.equiv_single WithLp.equiv_single
 -/
 
-#print PiLp.equiv_symm_single /-
+#print WithLp.equiv_symm_single /-
 @[simp]
-theorem PiLp.equiv_symm_single [DecidableEq ι] (i : ι) (a : 𝕜) :
+theorem WithLp.equiv_symm_single [DecidableEq ι] (i : ι) (a : 𝕜) :
     (PiLp.equiv _ _).symm (Pi.single i a) = EuclideanSpace.single i a :=
   rfl
-#align pi_Lp.equiv_symm_single PiLp.equiv_symm_single
+#align pi_Lp.equiv_symm_single WithLp.equiv_symm_single
 -/
 
 #print EuclideanSpace.single_apply /-
 @[simp]
 theorem EuclideanSpace.single_apply [DecidableEq ι] (i : ι) (a : 𝕜) (j : ι) :
     (EuclideanSpace.single i a) j = ite (j = i) a 0 := by
-  rw [EuclideanSpace.single, PiLp.equiv_symm_apply, ← Pi.single_apply i a j]
+  rw [EuclideanSpace.single, WithLp.equiv_symm_pi_apply, ← Pi.single_apply i a j]
 #align euclidean_space.single_apply EuclideanSpace.single_apply
 -/
 

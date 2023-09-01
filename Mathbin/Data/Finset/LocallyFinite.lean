@@ -6,7 +6,7 @@ Authors: Scott Morrison, Yaël Dillies
 import Mathbin.Order.LocallyFinite
 import Mathbin.Data.Set.Intervals.Monoid
 
-#align_import data.finset.locally_finite from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
+#align_import data.finset.locally_finite from "leanprover-community/mathlib"@"442a83d738cb208d3600056c489be16900ba701d"
 
 /-!
 # Intervals as finsets
@@ -444,21 +444,21 @@ theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (h
 #print Finset.Icc_filter_lt_of_lt_right /-
 theorem Icc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
     (Icc a b).filterₓ (· < c) = Icc a b :=
-  (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_lt (mem_Icc.1 hx).2 h
+  filter_true_of_mem fun x hx => (mem_Icc.1 hx).2.trans_lt h
 #align finset.Icc_filter_lt_of_lt_right Finset.Icc_filter_lt_of_lt_right
 -/
 
 #print Finset.Ioc_filter_lt_of_lt_right /-
 theorem Ioc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
     (Ioc a b).filterₓ (· < c) = Ioc a b :=
-  (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_lt (mem_Ioc.1 hx).2 h
+  filter_true_of_mem fun x hx => (mem_Ioc.1 hx).2.trans_lt h
 #align finset.Ioc_filter_lt_of_lt_right Finset.Ioc_filter_lt_of_lt_right
 -/
 
 #print Finset.Iic_filter_lt_of_lt_right /-
 theorem Iic_filter_lt_of_lt_right {α} [Preorder α] [LocallyFiniteOrderBot α] {a c : α}
     [DecidablePred (· < c)] (h : a < c) : (Iic a).filterₓ (· < c) = Iic a :=
-  (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_lt (mem_Iic.1 hx) h
+  filter_true_of_mem fun x hx => (mem_Iic.1 hx).trans_lt h
 #align finset.Iic_filter_lt_of_lt_right Finset.Iic_filter_lt_of_lt_right
 -/
 
