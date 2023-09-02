@@ -164,7 +164,7 @@ theorem star_singleton {β : Type _} [InvolutiveStar β] (x : β) : ({x} : Set �
 -/
 
 #print Set.star_mul /-
-protected theorem star_mul [Monoid α] [StarSemigroup α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
+protected theorem star_mul [Monoid α] [StarMul α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
   simp_rw [← image_star, ← image2_mul, image_image2, image2_image_left, image2_image_right,
     star_mul, image2_swap _ s t]
 #align set.star_mul Set.star_mul
@@ -182,7 +182,7 @@ instance [Star α] [TrivialStar α] : TrivialStar (Set α)
     where star_trivial s := by rw [← star_preimage]; ext1; simp [star_trivial]
 
 #print Set.star_inv /-
-protected theorem star_inv [Group α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by ext;
+protected theorem star_inv [Group α] [StarMul α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by ext;
   simp only [mem_star, mem_inv, star_inv]
 #align set.star_inv Set.star_inv
 -/

@@ -50,14 +50,14 @@ instance [∀ i, Star (f i)] [∀ i, TrivialStar (f i)] : TrivialStar (∀ i, f 
 instance [∀ i, InvolutiveStar (f i)] : InvolutiveStar (∀ i, f i)
     where star_involutive _ := funext fun _ => star_star _
 
-instance [∀ i, Semigroup (f i)] [∀ i, StarSemigroup (f i)] : StarSemigroup (∀ i, f i)
+instance [∀ i, Semigroup (f i)] [∀ i, StarMul (f i)] : StarMul (∀ i, f i)
     where star_hMul _ _ := funext fun _ => star_hMul _ _
 
 instance [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] : StarAddMonoid (∀ i, f i)
     where star_add _ _ := funext fun _ => star_add _ _
 
 instance [∀ i, NonUnitalSemiring (f i)] [∀ i, StarRing (f i)] : StarRing (∀ i, f i) :=
-  { Pi.starAddMonoid, (Pi.starSemigroup : StarSemigroup (∀ i, f i)) with }
+  { Pi.starAddMonoid, (Pi.starSemigroup : StarMul (∀ i, f i)) with }
 
 instance {R : Type w} [∀ i, SMul R (f i)] [Star R] [∀ i, Star (f i)] [∀ i, StarModule R (f i)] :
     StarModule R (∀ i, f i) where star_smul r x := funext fun i => star_smul r (x i)

@@ -28,15 +28,15 @@ The map to surreals is defined in `ordinal.to_surreal`.
 
 universe u
 
-open PGame
+open SetTheory.PGame
 
-open scoped NaturalOps PGame
+open scoped NaturalOps SetTheory.PGame
 
 namespace Ordinal
 
 #print Ordinal.toPGame /-
 /-- Converts an ordinal into the corresponding pre-game. -/
-noncomputable def toPGame : Ordinal.{u} → PGame.{u}
+noncomputable def toPGame : Ordinal.{u} → SetTheory.PGame.{u}
   | o =>
     ⟨o.out.α, PEmpty, fun x =>
       let hwf := Ordinal.typein_lt_self x
@@ -117,7 +117,7 @@ theorem toPGame_moveLeft {o : Ordinal} (i) :
 #print Ordinal.zeroToPgameRelabelling /-
 /-- `0.to_pgame` has the same moves as `0`. -/
 noncomputable def zeroToPgameRelabelling : toPGame 0 ≡r 0 :=
-  Relabelling.isEmpty _
+  SetTheory.PGame.Relabelling.isEmpty _
 #align ordinal.zero_to_pgame_relabelling Ordinal.zeroToPgameRelabelling
 -/
 
@@ -192,7 +192,7 @@ theorem toPGame_lf_iff {a b : Ordinal} : a.toPGame ⧏ b.toPGame ↔ a < b :=
 #print Ordinal.toPGame_le_iff /-
 @[simp]
 theorem toPGame_le_iff {a b : Ordinal} : a.toPGame ≤ b.toPGame ↔ a ≤ b :=
-  ⟨by contrapose; rw [not_le, PGame.not_le]; exact to_pgame_lf, toPGame_le⟩
+  ⟨by contrapose; rw [not_le, SetTheory.PGame.not_le]; exact to_pgame_lf, toPGame_le⟩
 #align ordinal.to_pgame_le_iff Ordinal.toPGame_le_iff
 -/
 
@@ -206,13 +206,13 @@ theorem toPGame_lt_iff {a b : Ordinal} : a.toPGame < b.toPGame ↔ a < b :=
 #print Ordinal.toPGame_equiv_iff /-
 @[simp]
 theorem toPGame_equiv_iff {a b : Ordinal} : (a.toPGame ≈ b.toPGame) ↔ a = b := by
-  rw [PGame.Equiv, le_antisymm_iff, to_pgame_le_iff, to_pgame_le_iff]
+  rw [SetTheory.PGame.Equiv, le_antisymm_iff, to_pgame_le_iff, to_pgame_le_iff]
 #align ordinal.to_pgame_equiv_iff Ordinal.toPGame_equiv_iff
 -/
 
 #print Ordinal.toPGame_injective /-
 theorem toPGame_injective : Function.Injective Ordinal.toPGame := fun a b h =>
-  toPGame_equiv_iff.1 <| equiv_of_eq h
+  toPGame_equiv_iff.1 <| SetTheory.PGame.equiv_of_eq h
 #align ordinal.to_pgame_injective Ordinal.toPGame_injective
 -/
 
@@ -226,7 +226,7 @@ theorem toPGame_eq_iff {a b : Ordinal} : a.toPGame = b.toPGame ↔ a = b :=
 #print Ordinal.toPGameEmbedding /-
 /-- The order embedding version of `to_pgame`. -/
 @[simps]
-noncomputable def toPGameEmbedding : Ordinal.{u} ↪o PGame.{u}
+noncomputable def toPGameEmbedding : Ordinal.{u} ↪o SetTheory.PGame.{u}
     where
   toFun := Ordinal.toPGame
   inj' := toPGame_injective

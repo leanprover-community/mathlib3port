@@ -25,158 +25,175 @@ disjoint parts of the chessboard give sums of games.
 -/
 
 
-namespace PGame
+namespace SetTheory.PGame
 
 namespace Domineering
 
 open Function
 
-#print PGame.Domineering.shiftUp /-
+#print SetTheory.PGame.Domineering.shiftUp /-
 /-- The equivalence `(x, y) ↦ (x, y+1)`. -/
 @[simps]
-def shiftUp : ℤ × ℤ ≃ ℤ × ℤ :=
+def SetTheory.PGame.Domineering.shiftUp : ℤ × ℤ ≃ ℤ × ℤ :=
   (Equiv.refl ℤ).prodCongr (Equiv.addRight (1 : ℤ))
-#align pgame.domineering.shift_up PGame.Domineering.shiftUp
+#align pgame.domineering.shift_up SetTheory.PGame.Domineering.shiftUp
 -/
 
-#print PGame.Domineering.shiftRight /-
+#print SetTheory.PGame.Domineering.shiftRight /-
 /-- The equivalence `(x, y) ↦ (x+1, y)`. -/
 @[simps]
-def shiftRight : ℤ × ℤ ≃ ℤ × ℤ :=
+def SetTheory.PGame.Domineering.shiftRight : ℤ × ℤ ≃ ℤ × ℤ :=
   (Equiv.addRight (1 : ℤ)).prodCongr (Equiv.refl ℤ)
-#align pgame.domineering.shift_right PGame.Domineering.shiftRight
+#align pgame.domineering.shift_right SetTheory.PGame.Domineering.shiftRight
 -/
 
-#print PGame.Domineering.Board /-
+#print SetTheory.PGame.Domineering.Board /-
 /-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/
-def Board :=
+def SetTheory.PGame.Domineering.Board :=
   Finset (ℤ × ℤ)
 deriving Inhabited
-#align pgame.domineering.board PGame.Domineering.Board
+#align pgame.domineering.board SetTheory.PGame.Domineering.Board
 -/
 
 attribute [local reducible] board
 
-#print PGame.Domineering.left /-
+#print SetTheory.PGame.Domineering.left /-
 /-- Left can play anywhere that a square and the square below it are open. -/
-def left (b : Board) : Finset (ℤ × ℤ) :=
-  b ∩ b.map shiftUp
-#align pgame.domineering.left PGame.Domineering.left
+def SetTheory.PGame.Domineering.left (b : SetTheory.PGame.Domineering.Board) : Finset (ℤ × ℤ) :=
+  b ∩ b.map SetTheory.PGame.Domineering.shiftUp
+#align pgame.domineering.left SetTheory.PGame.Domineering.left
 -/
 
-#print PGame.Domineering.right /-
+#print SetTheory.PGame.Domineering.right /-
 /-- Right can play anywhere that a square and the square to the left are open. -/
-def right (b : Board) : Finset (ℤ × ℤ) :=
-  b ∩ b.map shiftRight
-#align pgame.domineering.right PGame.Domineering.right
+def SetTheory.PGame.Domineering.right (b : SetTheory.PGame.Domineering.Board) : Finset (ℤ × ℤ) :=
+  b ∩ b.map SetTheory.PGame.Domineering.shiftRight
+#align pgame.domineering.right SetTheory.PGame.Domineering.right
 -/
 
-#print PGame.Domineering.mem_left /-
-theorem mem_left {b : Board} (x : ℤ × ℤ) : x ∈ left b ↔ x ∈ b ∧ (x.1, x.2 - 1) ∈ b :=
+#print SetTheory.PGame.Domineering.mem_left /-
+theorem SetTheory.PGame.Domineering.mem_left {b : SetTheory.PGame.Domineering.Board} (x : ℤ × ℤ) :
+    x ∈ SetTheory.PGame.Domineering.left b ↔ x ∈ b ∧ (x.1, x.2 - 1) ∈ b :=
   Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
-#align pgame.domineering.mem_left PGame.Domineering.mem_left
+#align pgame.domineering.mem_left SetTheory.PGame.Domineering.mem_left
 -/
 
-#print PGame.Domineering.mem_right /-
-theorem mem_right {b : Board} (x : ℤ × ℤ) : x ∈ right b ↔ x ∈ b ∧ (x.1 - 1, x.2) ∈ b :=
+#print SetTheory.PGame.Domineering.mem_right /-
+theorem SetTheory.PGame.Domineering.mem_right {b : SetTheory.PGame.Domineering.Board} (x : ℤ × ℤ) :
+    x ∈ SetTheory.PGame.Domineering.right b ↔ x ∈ b ∧ (x.1 - 1, x.2) ∈ b :=
   Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
-#align pgame.domineering.mem_right PGame.Domineering.mem_right
+#align pgame.domineering.mem_right SetTheory.PGame.Domineering.mem_right
 -/
 
-#print PGame.Domineering.moveLeft /-
+#print SetTheory.PGame.Domineering.moveLeft /-
 /-- After Left moves, two vertically adjacent squares are removed from the board. -/
-def moveLeft (b : Board) (m : ℤ × ℤ) : Board :=
+def SetTheory.PGame.Domineering.moveLeft (b : SetTheory.PGame.Domineering.Board) (m : ℤ × ℤ) :
+    SetTheory.PGame.Domineering.Board :=
   (b.eraseₓ m).eraseₓ (m.1, m.2 - 1)
-#align pgame.domineering.move_left PGame.Domineering.moveLeft
+#align pgame.domineering.move_left SetTheory.PGame.Domineering.moveLeft
 -/
 
-#print PGame.Domineering.moveRight /-
+#print SetTheory.PGame.Domineering.moveRight /-
 /-- After Left moves, two horizontally adjacent squares are removed from the board. -/
-def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
+def SetTheory.PGame.Domineering.moveRight (b : SetTheory.PGame.Domineering.Board) (m : ℤ × ℤ) :
+    SetTheory.PGame.Domineering.Board :=
   (b.eraseₓ m).eraseₓ (m.1 - 1, m.2)
-#align pgame.domineering.move_right PGame.Domineering.moveRight
+#align pgame.domineering.move_right SetTheory.PGame.Domineering.moveRight
 -/
 
-#print PGame.Domineering.fst_pred_mem_erase_of_mem_right /-
-theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    (m.1 - 1, m.2) ∈ b.eraseₓ m := by
+#print SetTheory.PGame.Domineering.fst_pred_mem_erase_of_mem_right /-
+theorem SetTheory.PGame.Domineering.fst_pred_mem_erase_of_mem_right
+    {b : SetTheory.PGame.Domineering.Board} {m : ℤ × ℤ}
+    (h : m ∈ SetTheory.PGame.Domineering.right b) : (m.1 - 1, m.2) ∈ b.eraseₓ m :=
+  by
   rw [mem_right] at h 
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
-#align pgame.domineering.fst_pred_mem_erase_of_mem_right PGame.Domineering.fst_pred_mem_erase_of_mem_right
+#align pgame.domineering.fst_pred_mem_erase_of_mem_right SetTheory.PGame.Domineering.fst_pred_mem_erase_of_mem_right
 -/
 
-#print PGame.Domineering.snd_pred_mem_erase_of_mem_left /-
-theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    (m.1, m.2 - 1) ∈ b.eraseₓ m := by
+#print SetTheory.PGame.Domineering.snd_pred_mem_erase_of_mem_left /-
+theorem SetTheory.PGame.Domineering.snd_pred_mem_erase_of_mem_left
+    {b : SetTheory.PGame.Domineering.Board} {m : ℤ × ℤ}
+    (h : m ∈ SetTheory.PGame.Domineering.left b) : (m.1, m.2 - 1) ∈ b.eraseₓ m :=
+  by
   rw [mem_left] at h 
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
-#align pgame.domineering.snd_pred_mem_erase_of_mem_left PGame.Domineering.snd_pred_mem_erase_of_mem_left
+#align pgame.domineering.snd_pred_mem_erase_of_mem_left SetTheory.PGame.Domineering.snd_pred_mem_erase_of_mem_left
 -/
 
-#print PGame.Domineering.card_of_mem_left /-
-theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b :=
+#print SetTheory.PGame.Domineering.card_of_mem_left /-
+theorem SetTheory.PGame.Domineering.card_of_mem_left {b : SetTheory.PGame.Domineering.Board}
+    {m : ℤ × ℤ} (h : m ∈ SetTheory.PGame.Domineering.left b) : 2 ≤ Finset.card b :=
   by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
   have w₂ : (m.1, m.2 - 1) ∈ b.erase m := snd_pred_mem_erase_of_mem_left h
   have i₁ := Finset.card_erase_lt_of_mem w₁
   have i₂ := Nat.lt_of_le_of_lt (Nat.zero_le _) (Finset.card_erase_lt_of_mem w₂)
   exact Nat.lt_of_le_of_lt i₂ i₁
-#align pgame.domineering.card_of_mem_left PGame.Domineering.card_of_mem_left
+#align pgame.domineering.card_of_mem_left SetTheory.PGame.Domineering.card_of_mem_left
 -/
 
-#print PGame.Domineering.card_of_mem_right /-
-theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finset.card b :=
+#print SetTheory.PGame.Domineering.card_of_mem_right /-
+theorem SetTheory.PGame.Domineering.card_of_mem_right {b : SetTheory.PGame.Domineering.Board}
+    {m : ℤ × ℤ} (h : m ∈ SetTheory.PGame.Domineering.right b) : 2 ≤ Finset.card b :=
   by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
   have w₂ := fst_pred_mem_erase_of_mem_right h
   have i₁ := Finset.card_erase_lt_of_mem w₁
   have i₂ := Nat.lt_of_le_of_lt (Nat.zero_le _) (Finset.card_erase_lt_of_mem w₂)
   exact Nat.lt_of_le_of_lt i₂ i₁
-#align pgame.domineering.card_of_mem_right PGame.Domineering.card_of_mem_right
+#align pgame.domineering.card_of_mem_right SetTheory.PGame.Domineering.card_of_mem_right
 -/
 
-#print PGame.Domineering.moveLeft_card /-
-theorem moveLeft_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    Finset.card (moveLeft b m) + 2 = Finset.card b :=
+#print SetTheory.PGame.Domineering.moveLeft_card /-
+theorem SetTheory.PGame.Domineering.moveLeft_card {b : SetTheory.PGame.Domineering.Board}
+    {m : ℤ × ℤ} (h : m ∈ SetTheory.PGame.Domineering.left b) :
+    Finset.card (SetTheory.PGame.Domineering.moveLeft b m) + 2 = Finset.card b :=
   by
   dsimp [move_left]
   rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
-#align pgame.domineering.move_left_card PGame.Domineering.moveLeft_card
+#align pgame.domineering.move_left_card SetTheory.PGame.Domineering.moveLeft_card
 -/
 
-#print PGame.Domineering.moveRight_card /-
-theorem moveRight_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    Finset.card (moveRight b m) + 2 = Finset.card b :=
+#print SetTheory.PGame.Domineering.moveRight_card /-
+theorem SetTheory.PGame.Domineering.moveRight_card {b : SetTheory.PGame.Domineering.Board}
+    {m : ℤ × ℤ} (h : m ∈ SetTheory.PGame.Domineering.right b) :
+    Finset.card (SetTheory.PGame.Domineering.moveRight b m) + 2 = Finset.card b :=
   by
   dsimp [move_right]
   rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_right h)
-#align pgame.domineering.move_right_card PGame.Domineering.moveRight_card
+#align pgame.domineering.move_right_card SetTheory.PGame.Domineering.moveRight_card
 -/
 
-#print PGame.Domineering.moveLeft_smaller /-
-theorem moveLeft_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    Finset.card (moveLeft b m) / 2 < Finset.card b / 2 := by simp [← move_left_card h, lt_add_one]
-#align pgame.domineering.move_left_smaller PGame.Domineering.moveLeft_smaller
+#print SetTheory.PGame.Domineering.moveLeft_smaller /-
+theorem SetTheory.PGame.Domineering.moveLeft_smaller {b : SetTheory.PGame.Domineering.Board}
+    {m : ℤ × ℤ} (h : m ∈ SetTheory.PGame.Domineering.left b) :
+    Finset.card (SetTheory.PGame.Domineering.moveLeft b m) / 2 < Finset.card b / 2 := by
+  simp [← move_left_card h, lt_add_one]
+#align pgame.domineering.move_left_smaller SetTheory.PGame.Domineering.moveLeft_smaller
 -/
 
-#print PGame.Domineering.moveRight_smaller /-
-theorem moveRight_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    Finset.card (moveRight b m) / 2 < Finset.card b / 2 := by simp [← move_right_card h, lt_add_one]
-#align pgame.domineering.move_right_smaller PGame.Domineering.moveRight_smaller
+#print SetTheory.PGame.Domineering.moveRight_smaller /-
+theorem SetTheory.PGame.Domineering.moveRight_smaller {b : SetTheory.PGame.Domineering.Board}
+    {m : ℤ × ℤ} (h : m ∈ SetTheory.PGame.Domineering.right b) :
+    Finset.card (SetTheory.PGame.Domineering.moveRight b m) / 2 < Finset.card b / 2 := by
+  simp [← move_right_card h, lt_add_one]
+#align pgame.domineering.move_right_smaller SetTheory.PGame.Domineering.moveRight_smaller
 -/
 
-#print PGame.Domineering.state /-
+#print SetTheory.PGame.Domineering.state /-
 /-- The instance describing allowed moves on a Domineering board. -/
-instance state : State Board where
+instance SetTheory.PGame.Domineering.state : SetTheory.PGame.State SetTheory.PGame.Domineering.Board
+    where
   turnBound s := s.card / 2
-  l s := (left s).image (moveLeft s)
-  r s := (right s).image (moveRight s)
+  l s := (SetTheory.PGame.Domineering.left s).image (SetTheory.PGame.Domineering.moveLeft s)
+  r s := (SetTheory.PGame.Domineering.right s).image (SetTheory.PGame.Domineering.moveRight s)
   left_bound s t m := by
     simp only [Finset.mem_image, Prod.exists] at m 
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
@@ -185,47 +202,49 @@ instance state : State Board where
     simp only [Finset.mem_image, Prod.exists] at m 
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
-#align pgame.domineering.state PGame.Domineering.state
+#align pgame.domineering.state SetTheory.PGame.Domineering.state
 -/
 
 end Domineering
 
-#print PGame.domineering /-
+#print SetTheory.PGame.domineering /-
 /-- Construct a pre-game from a Domineering board. -/
-def domineering (b : Domineering.Board) : PGame :=
-  PGame.ofState b
-#align pgame.domineering PGame.domineering
+def SetTheory.PGame.domineering (b : SetTheory.PGame.Domineering.Board) : SetTheory.PGame :=
+  SetTheory.PGame.ofState b
+#align pgame.domineering SetTheory.PGame.domineering
 -/
 
-#print PGame.shortDomineering /-
+#print SetTheory.PGame.shortDomineering /-
 /-- All games of Domineering are short, because each move removes two squares. -/
-instance shortDomineering (b : Domineering.Board) : Short (domineering b) := by dsimp [domineering];
-  infer_instance
-#align pgame.short_domineering PGame.shortDomineering
+instance SetTheory.PGame.shortDomineering (b : SetTheory.PGame.Domineering.Board) :
+    SetTheory.PGame.Short (SetTheory.PGame.domineering b) := by dsimp [domineering]; infer_instance
+#align pgame.short_domineering SetTheory.PGame.shortDomineering
 -/
 
-#print PGame.domineering.one /-
+#print SetTheory.PGame.domineering.one /-
 /-- The Domineering board with two squares arranged vertically, in which Left has the only move. -/
-def domineering.one :=
-  domineering [(0, 0), (0, 1)].toFinset
-#align pgame.domineering.one PGame.domineering.one
+def SetTheory.PGame.domineering.one :=
+  SetTheory.PGame.domineering [(0, 0), (0, 1)].toFinset
+#align pgame.domineering.one SetTheory.PGame.domineering.one
 -/
 
-#print PGame.domineering.L /-
+#print SetTheory.PGame.domineering.L /-
 /-- The `L` shaped Domineering board, in which Left is exactly half a move ahead. -/
-def domineering.L :=
-  domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
-#align pgame.domineering.L PGame.domineering.L
+def SetTheory.PGame.domineering.L :=
+  SetTheory.PGame.domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
+#align pgame.domineering.L SetTheory.PGame.domineering.L
 -/
 
-#print PGame.shortOne /-
-instance shortOne : Short domineering.one := by dsimp [domineering.one]; infer_instance
-#align pgame.short_one PGame.shortOne
+#print SetTheory.PGame.shortOne /-
+instance SetTheory.PGame.shortOne : SetTheory.PGame.Short SetTheory.PGame.domineering.one := by
+  dsimp [domineering.one]; infer_instance
+#align pgame.short_one SetTheory.PGame.shortOne
 -/
 
-#print PGame.shortL /-
-instance shortL : Short domineering.L := by dsimp [domineering.L]; infer_instance
-#align pgame.short_L PGame.shortL
+#print SetTheory.PGame.shortL /-
+instance SetTheory.PGame.shortL : SetTheory.PGame.Short SetTheory.PGame.domineering.L := by
+  dsimp [domineering.L]; infer_instance
+#align pgame.short_L SetTheory.PGame.shortL
 -/
 
 -- The VM can play small games successfully:
@@ -255,5 +274,5 @@ instance shortL : Short domineering.L := by dsimp [domineering.L]; infer_instanc
 --   (3,0), (3,1), (3,2), (3,3), (3,4),
 --   (4,0), (4,1), (4,2), (4,3), (4,4)
 --   ].to_finset) ≈ 0)
-end PGame
+end SetTheory.PGame
 

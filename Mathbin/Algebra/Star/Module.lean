@@ -99,7 +99,7 @@ def starLinearEquiv (R : Type _) {A : Type _} [CommSemiring R] [StarRing R] [Add
 #align star_linear_equiv starLinearEquiv
 -/
 
-variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R] [AddCommGroup A]
+variable (R : Type _) (A : Type _) [Semiring R] [StarMul R] [TrivialStar R] [AddCommGroup A]
   [Module R A] [StarAddMonoid A] [StarModule R A]
 
 #print selfAdjoint.submodule /-
@@ -174,9 +174,8 @@ def StarModule.decomposeProdAdjoint : A ≃ₗ[R] selfAdjoint A × skewAdjoint A
 
 #print algebraMap_star_comm /-
 @[simp]
-theorem algebraMap_star_comm {R A : Type _} [CommSemiring R] [StarRing R] [Semiring A]
-    [StarSemigroup A] [Algebra R A] [StarModule R A] (r : R) :
-    algebraMap R A (star r) = star (algebraMap R A r) := by
+theorem algebraMap_star_comm {R A : Type _} [CommSemiring R] [StarRing R] [Semiring A] [StarMul A]
+    [Algebra R A] [StarModule R A] (r : R) : algebraMap R A (star r) = star (algebraMap R A r) := by
   simp only [Algebra.algebraMap_eq_smul_one, star_smul, star_one]
 #align algebra_map_star_comm algebraMap_star_comm
 -/

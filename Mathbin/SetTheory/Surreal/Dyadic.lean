@@ -32,136 +32,145 @@ rational numbers to construct an ordered field embedding of ℝ into `surreal`.
 
 universe u
 
-local infixl:0 " ≈ " => PGame.Equiv
+local infixl:0 " ≈ " => SetTheory.PGame.Equiv
 
-namespace PGame
+namespace SetTheory.PGame
 
-#print PGame.powHalf /-
+#print SetTheory.PGame.powHalf /-
 /-- For a natural number `n`, the pre-game `pow_half (n + 1)` is recursively defined as
 `{0 | pow_half n}`. These are the explicit expressions of powers of `1 / 2`. By definition, we have
 `pow_half 0 = 1` and `pow_half 1 ≈ 1 / 2` and we prove later on that
 `pow_half (n + 1) + pow_half (n + 1) ≈ pow_half n`. -/
-def powHalf : ℕ → PGame
+def SetTheory.PGame.powHalf : ℕ → SetTheory.PGame
   | 0 => 1
   | n + 1 => ⟨PUnit, PUnit, 0, fun _ => pow_half n⟩
-#align pgame.pow_half PGame.powHalf
+#align pgame.pow_half SetTheory.PGame.powHalf
 -/
 
-#print PGame.powHalf_zero /-
+#print SetTheory.PGame.powHalf_zero /-
 @[simp]
-theorem powHalf_zero : powHalf 0 = 1 :=
+theorem SetTheory.PGame.powHalf_zero : SetTheory.PGame.powHalf 0 = 1 :=
   rfl
-#align pgame.pow_half_zero PGame.powHalf_zero
+#align pgame.pow_half_zero SetTheory.PGame.powHalf_zero
 -/
 
-#print PGame.powHalf_leftMoves /-
-theorem powHalf_leftMoves (n) : (powHalf n).LeftMoves = PUnit := by cases n <;> rfl
-#align pgame.pow_half_left_moves PGame.powHalf_leftMoves
+#print SetTheory.PGame.powHalf_leftMoves /-
+theorem SetTheory.PGame.powHalf_leftMoves (n) : (SetTheory.PGame.powHalf n).LeftMoves = PUnit := by
+  cases n <;> rfl
+#align pgame.pow_half_left_moves SetTheory.PGame.powHalf_leftMoves
 -/
 
-#print PGame.powHalf_zero_rightMoves /-
-theorem powHalf_zero_rightMoves : (powHalf 0).RightMoves = PEmpty :=
+#print SetTheory.PGame.powHalf_zero_rightMoves /-
+theorem SetTheory.PGame.powHalf_zero_rightMoves : (SetTheory.PGame.powHalf 0).RightMoves = PEmpty :=
   rfl
-#align pgame.pow_half_zero_right_moves PGame.powHalf_zero_rightMoves
+#align pgame.pow_half_zero_right_moves SetTheory.PGame.powHalf_zero_rightMoves
 -/
 
-#print PGame.powHalf_succ_rightMoves /-
-theorem powHalf_succ_rightMoves (n) : (powHalf (n + 1)).RightMoves = PUnit :=
+#print SetTheory.PGame.powHalf_succ_rightMoves /-
+theorem SetTheory.PGame.powHalf_succ_rightMoves (n) :
+    (SetTheory.PGame.powHalf (n + 1)).RightMoves = PUnit :=
   rfl
-#align pgame.pow_half_succ_right_moves PGame.powHalf_succ_rightMoves
+#align pgame.pow_half_succ_right_moves SetTheory.PGame.powHalf_succ_rightMoves
 -/
 
-#print PGame.powHalf_moveLeft /-
+#print SetTheory.PGame.powHalf_moveLeft /-
 @[simp]
-theorem powHalf_moveLeft (n i) : (powHalf n).moveLeft i = 0 := by cases n <;> cases i <;> rfl
-#align pgame.pow_half_move_left PGame.powHalf_moveLeft
+theorem SetTheory.PGame.powHalf_moveLeft (n i) : (SetTheory.PGame.powHalf n).moveLeft i = 0 := by
+  cases n <;> cases i <;> rfl
+#align pgame.pow_half_move_left SetTheory.PGame.powHalf_moveLeft
 -/
 
-#print PGame.powHalf_succ_moveRight /-
+#print SetTheory.PGame.powHalf_succ_moveRight /-
 @[simp]
-theorem powHalf_succ_moveRight (n i) : (powHalf (n + 1)).moveRight i = powHalf n :=
+theorem SetTheory.PGame.powHalf_succ_moveRight (n i) :
+    (SetTheory.PGame.powHalf (n + 1)).moveRight i = SetTheory.PGame.powHalf n :=
   rfl
-#align pgame.pow_half_succ_move_right PGame.powHalf_succ_moveRight
+#align pgame.pow_half_succ_move_right SetTheory.PGame.powHalf_succ_moveRight
 -/
 
-#print PGame.uniquePowHalfLeftMoves /-
-instance uniquePowHalfLeftMoves (n) : Unique (powHalf n).LeftMoves := by
-  cases n <;> exact PUnit.unique
-#align pgame.unique_pow_half_left_moves PGame.uniquePowHalfLeftMoves
+#print SetTheory.PGame.uniquePowHalfLeftMoves /-
+instance SetTheory.PGame.uniquePowHalfLeftMoves (n) :
+    Unique (SetTheory.PGame.powHalf n).LeftMoves := by cases n <;> exact PUnit.unique
+#align pgame.unique_pow_half_left_moves SetTheory.PGame.uniquePowHalfLeftMoves
 -/
 
-#print PGame.isEmpty_powHalf_zero_rightMoves /-
-instance isEmpty_powHalf_zero_rightMoves : IsEmpty (powHalf 0).RightMoves :=
+#print SetTheory.PGame.isEmpty_powHalf_zero_rightMoves /-
+instance SetTheory.PGame.isEmpty_powHalf_zero_rightMoves :
+    IsEmpty (SetTheory.PGame.powHalf 0).RightMoves :=
   PEmpty.isEmpty
-#align pgame.is_empty_pow_half_zero_right_moves PGame.isEmpty_powHalf_zero_rightMoves
+#align pgame.is_empty_pow_half_zero_right_moves SetTheory.PGame.isEmpty_powHalf_zero_rightMoves
 -/
 
-#print PGame.uniquePowHalfSuccRightMoves /-
-instance uniquePowHalfSuccRightMoves (n) : Unique (powHalf (n + 1)).RightMoves :=
+#print SetTheory.PGame.uniquePowHalfSuccRightMoves /-
+instance SetTheory.PGame.uniquePowHalfSuccRightMoves (n) :
+    Unique (SetTheory.PGame.powHalf (n + 1)).RightMoves :=
   PUnit.unique
-#align pgame.unique_pow_half_succ_right_moves PGame.uniquePowHalfSuccRightMoves
+#align pgame.unique_pow_half_succ_right_moves SetTheory.PGame.uniquePowHalfSuccRightMoves
 -/
 
-#print PGame.birthday_half /-
+#print SetTheory.PGame.birthday_half /-
 @[simp]
-theorem birthday_half : birthday (powHalf 1) = 2 := by rw [birthday_def]; dsimp;
-  simpa using Order.le_succ (1 : Ordinal)
-#align pgame.birthday_half PGame.birthday_half
+theorem SetTheory.PGame.birthday_half : SetTheory.PGame.birthday (SetTheory.PGame.powHalf 1) = 2 :=
+  by rw [birthday_def]; dsimp; simpa using Order.le_succ (1 : Ordinal)
+#align pgame.birthday_half SetTheory.PGame.birthday_half
 -/
 
-#print PGame.numeric_powHalf /-
+#print SetTheory.PGame.numeric_powHalf /-
 /-- For all natural numbers `n`, the pre-games `pow_half n` are numeric. -/
-theorem numeric_powHalf (n) : (powHalf n).Numeric :=
+theorem SetTheory.PGame.numeric_powHalf (n) : (SetTheory.PGame.powHalf n).Numeric :=
   by
   induction' n with n hn
   · exact numeric_one
   · constructor
     · simpa using hn.move_left_lt default
     · exact ⟨fun _ => numeric_zero, fun _ => hn⟩
-#align pgame.numeric_pow_half PGame.numeric_powHalf
+#align pgame.numeric_pow_half SetTheory.PGame.numeric_powHalf
 -/
 
-#print PGame.powHalf_succ_lt_powHalf /-
-theorem powHalf_succ_lt_powHalf (n : ℕ) : powHalf (n + 1) < powHalf n :=
-  (numeric_powHalf (n + 1)).lt_moveRight default
-#align pgame.pow_half_succ_lt_pow_half PGame.powHalf_succ_lt_powHalf
+#print SetTheory.PGame.powHalf_succ_lt_powHalf /-
+theorem SetTheory.PGame.powHalf_succ_lt_powHalf (n : ℕ) :
+    SetTheory.PGame.powHalf (n + 1) < SetTheory.PGame.powHalf n :=
+  (SetTheory.PGame.numeric_powHalf (n + 1)).lt_moveRight default
+#align pgame.pow_half_succ_lt_pow_half SetTheory.PGame.powHalf_succ_lt_powHalf
 -/
 
-#print PGame.powHalf_succ_le_powHalf /-
-theorem powHalf_succ_le_powHalf (n : ℕ) : powHalf (n + 1) ≤ powHalf n :=
-  (powHalf_succ_lt_powHalf n).le
-#align pgame.pow_half_succ_le_pow_half PGame.powHalf_succ_le_powHalf
+#print SetTheory.PGame.powHalf_succ_le_powHalf /-
+theorem SetTheory.PGame.powHalf_succ_le_powHalf (n : ℕ) :
+    SetTheory.PGame.powHalf (n + 1) ≤ SetTheory.PGame.powHalf n :=
+  (SetTheory.PGame.powHalf_succ_lt_powHalf n).le
+#align pgame.pow_half_succ_le_pow_half SetTheory.PGame.powHalf_succ_le_powHalf
 -/
 
-#print PGame.powHalf_le_one /-
-theorem powHalf_le_one (n : ℕ) : powHalf n ≤ 1 :=
+#print SetTheory.PGame.powHalf_le_one /-
+theorem SetTheory.PGame.powHalf_le_one (n : ℕ) : SetTheory.PGame.powHalf n ≤ 1 :=
   by
   induction' n with n hn
   · exact le_rfl
   · exact (pow_half_succ_le_pow_half n).trans hn
-#align pgame.pow_half_le_one PGame.powHalf_le_one
+#align pgame.pow_half_le_one SetTheory.PGame.powHalf_le_one
 -/
 
-#print PGame.powHalf_succ_lt_one /-
-theorem powHalf_succ_lt_one (n : ℕ) : powHalf (n + 1) < 1 :=
-  (powHalf_succ_lt_powHalf n).trans_le <| powHalf_le_one n
-#align pgame.pow_half_succ_lt_one PGame.powHalf_succ_lt_one
+#print SetTheory.PGame.powHalf_succ_lt_one /-
+theorem SetTheory.PGame.powHalf_succ_lt_one (n : ℕ) : SetTheory.PGame.powHalf (n + 1) < 1 :=
+  (SetTheory.PGame.powHalf_succ_lt_powHalf n).trans_le <| SetTheory.PGame.powHalf_le_one n
+#align pgame.pow_half_succ_lt_one SetTheory.PGame.powHalf_succ_lt_one
 -/
 
-#print PGame.powHalf_pos /-
-theorem powHalf_pos (n : ℕ) : 0 < powHalf n := by
+#print SetTheory.PGame.powHalf_pos /-
+theorem SetTheory.PGame.powHalf_pos (n : ℕ) : 0 < SetTheory.PGame.powHalf n := by
   rw [← lf_iff_lt numeric_zero (numeric_pow_half n), zero_lf_le]; simp
-#align pgame.pow_half_pos PGame.powHalf_pos
+#align pgame.pow_half_pos SetTheory.PGame.powHalf_pos
 -/
 
-#print PGame.zero_le_powHalf /-
-theorem zero_le_powHalf (n : ℕ) : 0 ≤ powHalf n :=
-  (powHalf_pos n).le
-#align pgame.zero_le_pow_half PGame.zero_le_powHalf
+#print SetTheory.PGame.zero_le_powHalf /-
+theorem SetTheory.PGame.zero_le_powHalf (n : ℕ) : 0 ≤ SetTheory.PGame.powHalf n :=
+  (SetTheory.PGame.powHalf_pos n).le
+#align pgame.zero_le_pow_half SetTheory.PGame.zero_le_powHalf
 -/
 
-#print PGame.add_powHalf_succ_self_eq_powHalf /-
-theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n :=
+#print SetTheory.PGame.add_powHalf_succ_self_eq_powHalf /-
+theorem SetTheory.PGame.add_powHalf_succ_self_eq_powHalf (n) :
+    SetTheory.PGame.powHalf (n + 1) + SetTheory.PGame.powHalf (n + 1) ≈ SetTheory.PGame.powHalf n :=
   by
   induction' n using Nat.strong_induction_on with n hn
   · constructor <;> rw [le_iff_forall_lf] <;> constructor
@@ -197,25 +206,26 @@ theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1)
         calc
           pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm
           _ < pow_half n.succ + pow_half n := add_lt_add_right (pow_half_pos _) _
-#align pgame.add_pow_half_succ_self_eq_pow_half PGame.add_powHalf_succ_self_eq_powHalf
+#align pgame.add_pow_half_succ_self_eq_pow_half SetTheory.PGame.add_powHalf_succ_self_eq_powHalf
 -/
 
-#print PGame.half_add_half_equiv_one /-
-theorem half_add_half_equiv_one : powHalf 1 + powHalf 1 ≈ 1 :=
-  add_powHalf_succ_self_eq_powHalf 0
-#align pgame.half_add_half_equiv_one PGame.half_add_half_equiv_one
+#print SetTheory.PGame.half_add_half_equiv_one /-
+theorem SetTheory.PGame.half_add_half_equiv_one :
+    SetTheory.PGame.powHalf 1 + SetTheory.PGame.powHalf 1 ≈ 1 :=
+  SetTheory.PGame.add_powHalf_succ_self_eq_powHalf 0
+#align pgame.half_add_half_equiv_one SetTheory.PGame.half_add_half_equiv_one
 -/
 
-end PGame
+end SetTheory.PGame
 
 namespace Surreal
 
-open PGame
+open SetTheory.PGame
 
 #print Surreal.powHalf /-
 /-- Powers of the surreal number `half`. -/
 def powHalf (n : ℕ) : Surreal :=
-  ⟦⟨PGame.powHalf n, PGame.numeric_powHalf n⟩⟧
+  ⟦⟨SetTheory.PGame.powHalf n, SetTheory.PGame.numeric_powHalf n⟩⟧
 #align surreal.pow_half Surreal.powHalf
 -/
 
@@ -229,7 +239,7 @@ theorem powHalf_zero : powHalf 0 = 1 :=
 #print Surreal.double_powHalf_succ_eq_powHalf /-
 @[simp]
 theorem double_powHalf_succ_eq_powHalf (n : ℕ) : 2 • powHalf n.succ = powHalf n := by
-  rw [two_nsmul]; exact Quotient.sound (PGame.add_powHalf_succ_self_eq_powHalf n)
+  rw [two_nsmul]; exact Quotient.sound (SetTheory.PGame.add_powHalf_succ_self_eq_powHalf n)
 #align surreal.double_pow_half_succ_eq_pow_half Surreal.double_powHalf_succ_eq_powHalf
 -/
 

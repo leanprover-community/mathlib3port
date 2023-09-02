@@ -30,7 +30,7 @@ unitary
 /-- In a *-monoid, `unitary R` is the submonoid consisting of all the elements `U` of
 `R` such that `star U * U = 1` and `U * star U = 1`.
 -/
-def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R
+def unitary (R : Type _) [Monoid R] [StarMul R] : Submonoid R
     where
   carrier := {U | star U * U = 1 ∧ U * star U = 1}
   one_mem' := by simp only [mul_one, and_self_iff, Set.mem_setOf_eq, star_one]
@@ -56,7 +56,7 @@ namespace unitary
 
 section Monoid
 
-variable [Monoid R] [StarSemigroup R]
+variable [Monoid R] [StarMul R]
 
 #print unitary.mem_iff /-
 theorem mem_iff {U : R} : U ∈ unitary R ↔ star U * U = 1 ∧ U * star U = 1 :=
@@ -135,7 +135,7 @@ instance : Group (unitary R) :=
 instance : InvolutiveStar (unitary R) :=
   ⟨fun _ => by ext; simp only [coe_star, star_star]⟩
 
-instance : StarSemigroup (unitary R) :=
+instance : StarMul (unitary R) :=
   ⟨fun _ _ => by ext; simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
 
 instance : Inhabited (unitary R) :=
@@ -174,7 +174,7 @@ end Monoid
 
 section CommMonoid
 
-variable [CommMonoid R] [StarSemigroup R]
+variable [CommMonoid R] [StarMul R]
 
 instance : CommGroup (unitary R) :=
   { unitary.group, Submonoid.toCommMonoid _ with }
@@ -195,7 +195,7 @@ end CommMonoid
 
 section GroupWithZero
 
-variable [GroupWithZero R] [StarSemigroup R]
+variable [GroupWithZero R] [StarMul R]
 
 #print unitary.coe_inv /-
 @[norm_cast]

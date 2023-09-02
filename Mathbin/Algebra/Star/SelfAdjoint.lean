@@ -98,14 +98,14 @@ theorem star_iff [InvolutiveStar R] {x : R} : IsSelfAdjoint (star x) ↔ IsSelfA
 
 #print IsSelfAdjoint.star_mul_self /-
 @[simp]
-theorem star_mul_self [Semigroup R] [StarSemigroup R] (x : R) : IsSelfAdjoint (star x * x) := by
+theorem star_mul_self [Semigroup R] [StarMul R] (x : R) : IsSelfAdjoint (star x * x) := by
   simp only [IsSelfAdjoint, star_mul, star_star]
 #align is_self_adjoint.star_mul_self IsSelfAdjoint.star_mul_self
 -/
 
 #print IsSelfAdjoint.mul_star_self /-
 @[simp]
-theorem mul_star_self [Semigroup R] [StarSemigroup R] (x : R) : IsSelfAdjoint (x * star x) := by
+theorem mul_star_self [Semigroup R] [StarMul R] (x : R) : IsSelfAdjoint (x * star x) := by
   simpa only [star_star] using star_mul_self (star x)
 #align is_self_adjoint.mul_star_self IsSelfAdjoint.mul_star_self
 -/
@@ -184,7 +184,7 @@ end AddCommMonoid
 
 section Semigroup
 
-variable [Semigroup R] [StarSemigroup R]
+variable [Semigroup R] [StarMul R]
 
 #print IsSelfAdjoint.conjugate /-
 theorem conjugate {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (z * x * star z) := by
@@ -208,7 +208,7 @@ end Semigroup
 
 section Monoid
 
-variable [Monoid R] [StarSemigroup R]
+variable [Monoid R] [StarMul R]
 
 variable (R)
 
@@ -249,7 +249,7 @@ end Semiring
 
 section CommSemigroup
 
-variable [CommSemigroup R] [StarSemigroup R]
+variable [CommSemigroup R] [StarMul R]
 
 #print IsSelfAdjoint.mul /-
 theorem mul {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x * y) := by
@@ -654,13 +654,13 @@ instance isStarNormal_zero [Semiring R] [StarRing R] : IsStarNormal (0 : R) :=
 -/
 
 #print isStarNormal_one /-
-instance isStarNormal_one [Monoid R] [StarSemigroup R] : IsStarNormal (1 : R) :=
+instance isStarNormal_one [Monoid R] [StarMul R] : IsStarNormal (1 : R) :=
   ⟨by simp only [star_comm_self, star_one]⟩
 #align is_star_normal_one isStarNormal_one
 -/
 
 #print isStarNormal_star_self /-
-instance isStarNormal_star_self [Monoid R] [StarSemigroup R] {x : R} [IsStarNormal x] :
+instance isStarNormal_star_self [Monoid R] [StarMul R] {x : R} [IsStarNormal x] :
     IsStarNormal (star x) :=
   ⟨show star (star x) * star x = star x * star (star x) by rw [star_star, star_comm_self']⟩
 #align is_star_normal_star_self isStarNormal_star_self
@@ -668,15 +668,15 @@ instance isStarNormal_star_self [Monoid R] [StarSemigroup R] {x : R} [IsStarNorm
 
 #print TrivialStar.isStarNormal /-
 -- see Note [lower instance priority]
-instance (priority := 100) TrivialStar.isStarNormal [Monoid R] [StarSemigroup R] [TrivialStar R]
-    {x : R} : IsStarNormal x :=
+instance (priority := 100) TrivialStar.isStarNormal [Monoid R] [StarMul R] [TrivialStar R] {x : R} :
+    IsStarNormal x :=
   ⟨by rw [star_trivial]⟩
 #align has_trivial_star.is_star_normal TrivialStar.isStarNormal
 -/
 
 #print CommMonoid.isStarNormal /-
 -- see Note [lower instance priority]
-instance (priority := 100) CommMonoid.isStarNormal [CommMonoid R] [StarSemigroup R] {x : R} :
+instance (priority := 100) CommMonoid.isStarNormal [CommMonoid R] [StarMul R] {x : R} :
     IsStarNormal x :=
   ⟨mul_comm _ _⟩
 #align comm_monoid.is_star_normal CommMonoid.isStarNormal

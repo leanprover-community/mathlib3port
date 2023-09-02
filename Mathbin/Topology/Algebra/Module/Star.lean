@@ -49,7 +49,7 @@ def starL' (R : Type _) {A : Type _} [CommSemiring R] [StarRing R] [TrivialStar 
 #align starL' starL'
 -/
 
-variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R] [AddCommGroup A]
+variable (R : Type _) (A : Type _) [Semiring R] [StarMul R] [TrivialStar R] [AddCommGroup A]
   [Module R A] [StarAddMonoid A] [StarModule R A] [Invertible (2 : R)] [TopologicalSpace A]
 
 #print continuous_selfAdjointPart /-

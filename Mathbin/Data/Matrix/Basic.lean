@@ -2552,7 +2552,7 @@ theorem conjTranspose_smul_non_comm [Star R] [Star α] [SMul R α] [SMul Rᵐᵒ
 
 #print Matrix.conjTranspose_smul_self /-
 @[simp]
-theorem conjTranspose_smul_self [Semigroup α] [StarSemigroup α] (c : α) (M : Matrix m n α) :
+theorem conjTranspose_smul_self [Semigroup α] [StarMul α] (c : α) (M : Matrix m n α) :
     (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
   conjTranspose_smul_non_comm c M star_hMul
 #align matrix.conj_transpose_smul_self Matrix.conjTranspose_smul_self

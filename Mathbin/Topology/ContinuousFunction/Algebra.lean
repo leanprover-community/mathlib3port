@@ -1108,8 +1108,8 @@ instance [InvolutiveStar β] [ContinuousStar β] : InvolutiveStar C(α, β)
 instance [AddMonoid β] [ContinuousAdd β] [StarAddMonoid β] [ContinuousStar β] :
     StarAddMonoid C(α, β) where star_add f g := ext fun x => star_add _ _
 
-instance [Semigroup β] [ContinuousMul β] [StarSemigroup β] [ContinuousStar β] :
-    StarSemigroup C(α, β) where star_hMul f g := ext fun x => star_hMul _ _
+instance [Semigroup β] [ContinuousMul β] [StarMul β] [ContinuousStar β] : StarMul C(α, β)
+    where star_hMul f g := ext fun x => star_hMul _ _
 
 instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [ContinuousStar β] :
     StarRing C(α, β) :=
