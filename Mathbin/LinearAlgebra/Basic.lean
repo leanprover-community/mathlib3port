@@ -845,11 +845,11 @@ theorem map_toAddSubmonoid (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) 
 #align submodule.map_to_add_submonoid Submodule.map_toAddSubmonoid
 -/
 
-#print Submodule.map_to_add_submonoid' /-
-theorem map_to_add_submonoid' (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) :
+#print Submodule.map_toAddSubmonoid' /-
+theorem map_toAddSubmonoid' (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) :
     (p.map f).toAddSubmonoid = p.toAddSubmonoid.map f :=
   SetLike.coe_injective rfl
-#align submodule.map_to_add_submonoid' Submodule.map_to_add_submonoid'
+#align submodule.map_to_add_submonoid' Submodule.map_toAddSubmonoid'
 -/
 
 #print Submodule.mem_map /-
