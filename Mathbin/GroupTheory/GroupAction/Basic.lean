@@ -231,7 +231,7 @@ theorem mem_fixedPoints_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
       x • a = z := Subtype.mk.inj (hz₁ ⟨x • a, mem_orbit _ _⟩)
       _ = a := (Subtype.mk.inj (hz₁ ⟨a, mem_orbit_self _⟩)).symm
 #align mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixedPoints_iff_card_orbit_eq_one
-#align add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixedPoints_iff_card_orbit_eq_zero
+#align add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixedPoints_iff_card_orbit_eq_one
 -/
 
 end MulAction
