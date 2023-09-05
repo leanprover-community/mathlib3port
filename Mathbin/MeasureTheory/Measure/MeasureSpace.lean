@@ -4961,7 +4961,7 @@ theorem isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts [TopologicalSpace α
     [LocallyCompactSpace α] [IsFiniteMeasureOnCompacts μ] : IsLocallyFiniteMeasure μ :=
   ⟨by
     intro x
-    rcases exists_compact_mem_nhds x with ⟨K, K_compact, K_mem⟩
+    rcases WeaklyLocallyCompactSpace.exists_compact_mem_nhds x with ⟨K, K_compact, K_mem⟩
     exact ⟨K, K_mem, K_compact.measure_lt_top⟩⟩
 #align measure_theory.is_locally_finite_measure_of_is_finite_measure_on_compacts MeasureTheory.isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
 -/

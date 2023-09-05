@@ -1515,12 +1515,13 @@ theorem exists_compact_subset [LocallyCompactSpace α] {x : α} {U : Set α} (hU
 #align exists_compact_subset exists_compact_subset
 -/
 
-#print exists_compact_mem_nhds /-
+#print WeaklyLocallyCompactSpace.exists_compact_mem_nhds /-
 /-- In a locally compact space every point has a compact neighborhood. -/
-theorem exists_compact_mem_nhds [LocallyCompactSpace α] (x : α) : ∃ K, IsCompact K ∧ K ∈ 𝓝 x :=
+theorem WeaklyLocallyCompactSpace.exists_compact_mem_nhds [LocallyCompactSpace α] (x : α) :
+    ∃ K, IsCompact K ∧ K ∈ 𝓝 x :=
   let ⟨K, hKc, hx, H⟩ := exists_compact_subset isOpen_univ (mem_univ x)
   ⟨K, hKc, mem_interior_iff_mem_nhds.1 hx⟩
-#align exists_compact_mem_nhds exists_compact_mem_nhds
+#align exists_compact_mem_nhds WeaklyLocallyCompactSpace.exists_compact_mem_nhds
 -/
 
 #print exists_compact_between /-
@@ -1672,7 +1673,7 @@ theorem SigmaCompactSpace.of_countable (S : Set (Set α)) (Hc : S.Countable)
 instance (priority := 100) sigmaCompactSpace_of_locally_compact_second_countable
     [LocallyCompactSpace α] [SecondCountableTopology α] : SigmaCompactSpace α :=
   by
-  choose K hKc hxK using fun x : α => exists_compact_mem_nhds x
+  choose K hKc hxK using fun x : α => WeaklyLocallyCompactSpace.exists_compact_mem_nhds x
   rcases countable_cover_nhds hxK with ⟨s, hsc, hsU⟩
   refine' SigmaCompactSpace.of_countable _ (hsc.image K) (ball_image_iff.2 fun x _ => hKc x) _
   rwa [sUnion_image]

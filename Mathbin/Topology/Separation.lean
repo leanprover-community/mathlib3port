@@ -1772,9 +1772,9 @@ theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact
 
 end
 
-#print locally_compact_of_compact_nhds /-
-theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s ∈ 𝓝 x ∧ IsCompact s) :
-    LocallyCompactSpace α :=
+#print WeaklyLocallyCompactSpace.locallyCompactSpace /-
+theorem WeaklyLocallyCompactSpace.locallyCompactSpace [T2Space α]
+    (h : ∀ x : α, ∃ s, s ∈ 𝓝 x ∧ IsCompact s) : LocallyCompactSpace α :=
   ⟨fun x n hn =>
     let ⟨u, un, uo, xu⟩ := mem_nhds_iff.mp hn
     let ⟨k, kx, kc⟩ := h x
@@ -1788,14 +1788,15 @@ theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s �
     have wn : wᶜ ∈ 𝓝 x :=
       mem_nhds_iff.mpr ⟨v, vw.subset_compl_right, vo, singleton_subset_iff.mp xv⟩
     ⟨k \ w, Filter.inter_mem kx wn, Subset.trans (diff_subset_comm.mp kuw) un, kc.diffₓ wo⟩⟩
-#align locally_compact_of_compact_nhds locally_compact_of_compact_nhds
+#align locally_compact_of_compact_nhds WeaklyLocallyCompactSpace.locallyCompactSpace
 -/
 
 #print locally_compact_of_compact /-
 -- see Note [lower instance priority]
 instance (priority := 100) locally_compact_of_compact [T2Space α] [CompactSpace α] :
     LocallyCompactSpace α :=
-  locally_compact_of_compact_nhds fun x => ⟨univ, isOpen_univ.mem_nhds trivial, isCompact_univ⟩
+  WeaklyLocallyCompactSpace.locallyCompactSpace fun x =>
+    ⟨univ, isOpen_univ.mem_nhds trivial, isCompact_univ⟩
 #align locally_compact_of_compact locally_compact_of_compact
 -/
 
@@ -1804,7 +1805,7 @@ instance (priority := 100) locally_compact_of_compact [T2Space α] [CompactSpace
 theorem exists_open_with_compact_closure [LocallyCompactSpace α] [T2Space α] (x : α) :
     ∃ U : Set α, IsOpen U ∧ x ∈ U ∧ IsCompact (closure U) :=
   by
-  rcases exists_compact_mem_nhds x with ⟨K, hKc, hxK⟩
+  rcases WeaklyLocallyCompactSpace.exists_compact_mem_nhds x with ⟨K, hKc, hxK⟩
   rcases mem_nhds_iff.1 hxK with ⟨t, h1t, h2t, h3t⟩
   exact ⟨t, h2t, h3t, isCompact_closure_of_subset_compact hKc h1t⟩
 #align exists_open_with_compact_closure exists_open_with_compact_closure

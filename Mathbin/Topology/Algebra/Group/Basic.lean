@@ -1881,15 +1881,15 @@ theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K)
 #align compact_covered_by_add_left_translates compact_covered_by_add_left_translates
 -/
 
-#print SeparableLocallyCompactGroup.sigmaCompactSpace /-
+#print SeparableWeaklyLocallyCompactGroup.sigmaCompactSpace /-
 /-- Every locally compact separable topological group is σ-compact.
   Note: this is not true if we drop the topological group hypothesis. -/
-@[to_additive SeparableLocallyCompactAddGroup.sigmaCompactSpace
+@[to_additive SeparableWeaklyLocallyCompactAddGroup.sigmaCompactSpace
       "Every locally\ncompact separable topological group is σ-compact.\nNote: this is not true if we drop the topological group hypothesis."]
-instance (priority := 100) SeparableLocallyCompactGroup.sigmaCompactSpace [SeparableSpace G]
+instance (priority := 100) SeparableWeaklyLocallyCompactGroup.sigmaCompactSpace [SeparableSpace G]
     [LocallyCompactSpace G] : SigmaCompactSpace G :=
   by
-  obtain ⟨L, hLc, hL1⟩ := exists_compact_mem_nhds (1 : G)
+  obtain ⟨L, hLc, hL1⟩ := WeaklyLocallyCompactSpace.exists_compact_mem_nhds (1 : G)
   refine' ⟨⟨fun n => (fun x => x * dense_seq G n) ⁻¹' L, _, _⟩⟩
   · intro n; exact (Homeomorph.mulRight _).isCompact_preimage.mpr hLc
   · refine' Union_eq_univ_iff.2 fun x => _
@@ -1900,8 +1900,8 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigmaCompactSpace [Separ
         (dense_range_dense_seq G).inter_nhds_nonempty
           ((Homeomorph.mulLeft x).Continuous.ContinuousAt <| hL1)
     exact ⟨n, hn⟩
-#align separable_locally_compact_group.sigma_compact_space SeparableLocallyCompactGroup.sigmaCompactSpace
-#align separable_locally_compact_add_group.sigma_compact_space SeparableLocallyCompactAddGroup.sigmaCompactSpace
+#align separable_locally_compact_group.sigma_compact_space SeparableWeaklyLocallyCompactGroup.sigmaCompactSpace
+#align separable_locally_compact_add_group.sigma_compact_space SeparableWeaklyLocallyCompactAddGroup.sigmaCompactSpace
 -/
 
 #print exists_disjoint_smul_of_isCompact /-

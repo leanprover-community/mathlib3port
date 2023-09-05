@@ -126,7 +126,7 @@ theorem locallyIntegrableOn_iff [LocallyCompactSpace X] [T2Space X] (hs : IsClos
   cases hs
   ·
     exact
-      let ⟨K, hK, h2K⟩ := exists_compact_mem_nhds x
+      let ⟨K, hK, h2K⟩ := WeaklyLocallyCompactSpace.exists_compact_mem_nhds x
       ⟨_, inter_mem_nhdsWithin s h2K,
         hf _ (inter_subset_left _ _)
           (isCompact_of_isClosed_subset hK (hs.inter hK.IsClosed) (inter_subset_right _ _))⟩
@@ -234,7 +234,7 @@ theorem LocallyIntegrable.integrableOn_nhds_isCompact (hf : LocallyIntegrable f 
 theorem locallyIntegrable_iff [LocallyCompactSpace X] :
     LocallyIntegrable f μ ↔ ∀ k : Set X, IsCompact k → IntegrableOn f k μ :=
   ⟨fun hf k hk => hf.integrableOn_isCompact hk, fun hf x =>
-    let ⟨K, hK, h2K⟩ := exists_compact_mem_nhds x
+    let ⟨K, hK, h2K⟩ := WeaklyLocallyCompactSpace.exists_compact_mem_nhds x
     ⟨K, h2K, hf K hK⟩⟩
 #align measure_theory.locally_integrable_iff MeasureTheory.locallyIntegrable_iff
 -/

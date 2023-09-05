@@ -484,7 +484,8 @@ the `←` direction is true unconditionally. See `tendsto_locally_uniformly_of_t
 `tendsto_of_tendsto_locally_uniformly` for versions requiring weaker hypotheses. -/
 theorem tendsto_iff_tendstoLocallyUniformly [LocallyCompactSpace α] :
     Tendsto F p (𝓝 f) ↔ TendstoLocallyUniformly (fun i a => F i a) f p :=
-  ⟨tendstoLocallyUniformly_of_tendsto exists_compact_mem_nhds, tendsto_of_tendstoLocallyUniformly⟩
+  ⟨tendstoLocallyUniformly_of_tendsto WeaklyLocallyCompactSpace.exists_compact_mem_nhds,
+    tendsto_of_tendstoLocallyUniformly⟩
 #align continuous_map.tendsto_iff_tendsto_locally_uniformly ContinuousMap.tendsto_iff_tendstoLocallyUniformly
 -/
 

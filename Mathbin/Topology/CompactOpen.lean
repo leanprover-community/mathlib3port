@@ -342,7 +342,7 @@ theorem exists_tendsto_compactOpen_iff_forall [LocallyCompactSpace α] [T2Space 
     have hs : ∀ x : α, ∃ (s : _) (hs : IsCompact s), s ∈ 𝓝 x :=
       by
       intro x
-      obtain ⟨s, hs, hs'⟩ := exists_compact_mem_nhds x
+      obtain ⟨s, hs, hs'⟩ := WeaklyLocallyCompactSpace.exists_compact_mem_nhds x
       exact ⟨s, hs, hs'⟩
     refine' ⟨lift_cover' _ _ h hs, _⟩
     rw [tendsto_compact_open_iff_forall]
