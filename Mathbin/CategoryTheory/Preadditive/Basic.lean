@@ -70,10 +70,6 @@ class Preadditive where
 
 attribute [instance] preadditive.hom_group
 
-restate_axiom preadditive.add_comp'
-
-restate_axiom preadditive.comp_add'
-
 attribute [simp, reassoc] preadditive.add_comp
 
 attribute [reassoc] preadditive.comp_add

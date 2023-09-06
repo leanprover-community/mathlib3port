@@ -140,16 +140,6 @@ structure Bimod (A B : Mon_ C) where
 #align Bimod Bimod
 -/
 
-restate_axiom Bimod.one_act_left'
-
-restate_axiom Bimod.actRight_one'
-
-restate_axiom Bimod.left_assoc'
-
-restate_axiom Bimod.right_assoc'
-
-restate_axiom Bimod.middle_assoc'
-
 attribute [simp, reassoc] Bimod.one_actLeft Bimod.actRight_one Bimod.left_assoc Bimod.right_assoc
   Bimod.middle_assoc
 
@@ -168,10 +158,6 @@ structure Hom (M N : Bimod A B) where
   right_act_hom' : M.actRight ≫ hom = (hom ⊗ 𝟙 B.pt) ≫ N.actRight := by obviously
 #align Bimod.hom Bimod.Hom
 -/
-
-restate_axiom hom.left_act_hom'
-
-restate_axiom hom.right_act_hom'
 
 attribute [simp, reassoc] hom.left_act_hom hom.right_act_hom
 

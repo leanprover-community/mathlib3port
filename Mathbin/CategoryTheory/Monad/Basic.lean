@@ -235,15 +235,7 @@ structure ComonadHom (M N : Comonad C) extends NatTrans (M : C ⥤ C) N where
 #align category_theory.comonad_hom CategoryTheory.ComonadHom
 -/
 
-restate_axiom monad_hom.app_η'
-
-restate_axiom monad_hom.app_μ'
-
 attribute [simp, reassoc] monad_hom.app_η monad_hom.app_μ
-
-restate_axiom comonad_hom.app_ε'
-
-restate_axiom comonad_hom.app_δ'
 
 attribute [simp, reassoc] comonad_hom.app_ε comonad_hom.app_δ
 

@@ -82,16 +82,6 @@ structure ExtraDegeneracy (X : SimplicialObject.Augmented C) where
 
 namespace ExtraDegeneracy
 
-restate_axiom s'_comp_ε'
-
-restate_axiom s₀_comp_δ₁'
-
-restate_axiom s_comp_δ₀'
-
-restate_axiom s_comp_δ'
-
-restate_axiom s_comp_σ'
-
 attribute [reassoc] s'_comp_ε s₀_comp_δ₁ s_comp_δ₀ s_comp_δ s_comp_σ
 
 attribute [simp] s'_comp_ε s_comp_δ₀

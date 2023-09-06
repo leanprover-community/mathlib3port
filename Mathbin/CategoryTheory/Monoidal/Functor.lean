@@ -101,19 +101,11 @@ structure LaxMonoidalFunctor extends C ⥤ D where
 #align category_theory.lax_monoidal_functor CategoryTheory.LaxMonoidalFunctor
 -/
 
-restate_axiom lax_monoidal_functor.μ_natural'
-
 attribute [simp, reassoc] lax_monoidal_functor.μ_natural
-
-restate_axiom lax_monoidal_functor.left_unitality'
 
 attribute [simp] lax_monoidal_functor.left_unitality
 
-restate_axiom lax_monoidal_functor.right_unitality'
-
 attribute [simp] lax_monoidal_functor.right_unitality
-
-restate_axiom lax_monoidal_functor.associativity'
 
 attribute [simp, reassoc] lax_monoidal_functor.associativity
 

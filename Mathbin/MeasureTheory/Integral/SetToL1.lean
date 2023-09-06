@@ -2163,7 +2163,7 @@ theorem tendsto_setToFun_of_dominated_convergence (hT : DominatedFinMeasAdditive
   -- the convergence of set_to_L1 follows from the convergence of the L1 functions
   refine' L1.tendsto_set_to_L1 hT _ _ _
   -- up to some rewriting, what we need to prove is `h_lim`
-  rw [tendsto_iff_norm_tendsto_zero]
+  rw [tendsto_iff_norm_sub_tendsto_zero]
   have lintegral_norm_tendsto_zero :
     tendsto (fun n => ENNReal.toReal <| ∫⁻ a, ENNReal.ofReal ‖fs n a - f a‖ ∂μ) at_top (𝓝 0) :=
     (tendsto_to_real zero_ne_top).comp

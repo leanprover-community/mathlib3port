@@ -83,7 +83,7 @@ parameter {p : ℕ} [Fact p.Prime] {ncs : CauSeq ℤ_[p] norm} {F : Polynomial �
   (hnorm : Tendsto (fun i => ‖F.eval (ncs i)‖) atTop (𝓝 0))
 
 private theorem tendsto_zero_of_norm_tendsto_zero : Tendsto (fun i => F.eval (ncs i)) atTop (𝓝 0) :=
-  tendsto_iff_norm_tendsto_zero.2 (by simpa using hnorm)
+  tendsto_iff_norm_sub_tendsto_zero.2 (by simpa using hnorm)
 
 #print limit_zero_of_norm_tendsto_zero /-
 theorem limit_zero_of_norm_tendsto_zero : F.eval ncs.limUnder = 0 :=

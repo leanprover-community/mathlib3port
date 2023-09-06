@@ -175,32 +175,18 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
 #align category_theory.monoidal_category CategoryTheory.MonoidalCategory
 -/
 
-restate_axiom monoidal_category.tensor_id'
-
 attribute [simp] monoidal_category.tensor_id
-
-restate_axiom monoidal_category.tensor_comp'
 
 attribute [reassoc] monoidal_category.tensor_comp
 
 -- This would be redundant in the simp set.
 attribute [simp] monoidal_category.tensor_comp
 
-restate_axiom monoidal_category.associator_naturality'
-
 attribute [reassoc] monoidal_category.associator_naturality
-
-restate_axiom monoidal_category.left_unitor_naturality'
 
 attribute [reassoc] monoidal_category.left_unitor_naturality
 
-restate_axiom monoidal_category.right_unitor_naturality'
-
 attribute [reassoc] monoidal_category.right_unitor_naturality
-
-restate_axiom monoidal_category.pentagon'
-
-restate_axiom monoidal_category.triangle'
 
 attribute [reassoc] monoidal_category.pentagon
 

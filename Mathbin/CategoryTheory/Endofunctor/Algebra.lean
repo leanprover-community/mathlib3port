@@ -72,8 +72,6 @@ structure Hom (A₀ A₁ : Algebra F) where
 #align category_theory.endofunctor.algebra.hom CategoryTheory.Endofunctor.Algebra.Hom
 -/
 
-restate_axiom hom.h'
-
 attribute [simp, reassoc] hom.h
 
 namespace Hom
@@ -332,8 +330,6 @@ structure Hom (V₀ V₁ : Coalgebra F) where
   h' : V₀.str ≫ F.map f = f ≫ V₁.str := by obviously
 #align category_theory.endofunctor.coalgebra.hom CategoryTheory.Endofunctor.Coalgebra.Hom
 -/
-
-restate_axiom hom.h'
 
 attribute [simp, reassoc] hom.h
 

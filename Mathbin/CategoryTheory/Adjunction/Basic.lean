@@ -120,10 +120,6 @@ def Adjunction.ofRightAdjoint (right : C ⥤ D) [IsRightAdjoint right] :
 
 namespace Adjunction
 
-restate_axiom hom_equiv_unit'
-
-restate_axiom hom_equiv_counit'
-
 attribute [simp] hom_equiv_unit hom_equiv_counit
 
 section
@@ -265,10 +261,6 @@ structure CoreHomEquiv (F : C ⥤ D) (G : D ⥤ C) where
 
 namespace CoreHomEquiv
 
-restate_axiom hom_equiv_naturality_left_symm'
-
-restate_axiom hom_equiv_naturality_right'
-
 attribute [simp] hom_equiv_naturality_left_symm hom_equiv_naturality_right
 
 variable {F : C ⥤ D} {G : D ⥤ C} (adj : CoreHomEquiv F G) {X' X : C} {Y Y' : D}
@@ -312,10 +304,6 @@ structure CoreUnitCounit (F : C ⥤ D) (G : D ⥤ C) where
 -/
 
 namespace CoreUnitCounit
-
-restate_axiom left_triangle'
-
-restate_axiom right_triangle'
 
 attribute [simp] left_triangle right_triangle
 

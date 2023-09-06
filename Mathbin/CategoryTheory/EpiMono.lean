@@ -62,8 +62,6 @@ structure SplitMono {X Y : C} (f : X ⟶ Y) where
 #align category_theory.split_mono CategoryTheory.SplitMono
 -/
 
-restate_axiom split_mono.id'
-
 attribute [simp, reassoc] split_mono.id
 
 #print CategoryTheory.IsSplitMono /-
@@ -93,8 +91,6 @@ structure SplitEpi {X Y : C} (f : X ⟶ Y) where
   id' : section_ ≫ f = 𝟙 Y := by obviously
 #align category_theory.split_epi CategoryTheory.SplitEpi
 -/
-
-restate_axiom split_epi.id'
 
 attribute [simp, reassoc] split_epi.id
 

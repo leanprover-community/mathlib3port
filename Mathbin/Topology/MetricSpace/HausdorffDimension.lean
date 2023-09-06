@@ -441,30 +441,30 @@ theorem dimH_range_le (h : LipschitzWith K f) : dimH (range f) ≤ dimH (univ : 
 
 end LipschitzWith
 
-#print dimH_image_le_of_locally_lipschitz_on /-
+#print dimH_image_le_of_locally_lipschitzOn /-
 /-- If `s` is a set in an extended metric space `X` with second countable topology and `f : X → Y`
 is Lipschitz in a neighborhood within `s` of every point `x ∈ s`, then the Hausdorff dimension of
 the image `f '' s` is at most the Hausdorff dimension of `s`. -/
-theorem dimH_image_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X → Y} {s : Set X}
+theorem dimH_image_le_of_locally_lipschitzOn [SecondCountableTopology X] {f : X → Y} {s : Set X}
     (hf : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, LipschitzOnWith C f t) : dimH (f '' s) ≤ dimH s :=
   by
   have : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, HolderOnWith C 1 f t := by
     simpa only [holderOnWith_one] using hf
   simpa only [ENNReal.coe_one, div_one] using dimH_image_le_of_locally_holder_on zero_lt_one this
-#align dimH_image_le_of_locally_lipschitz_on dimH_image_le_of_locally_lipschitz_on
+#align dimH_image_le_of_locally_lipschitz_on dimH_image_le_of_locally_lipschitzOn
 -/
 
-#print dimH_range_le_of_locally_lipschitz_on /-
+#print dimH_range_le_of_locally_lipschitzOn /-
 /-- If `f : X → Y` is Lipschitz in a neighborhood of each point `x : X`, then the Hausdorff
 dimension of `range f` is at most the Hausdorff dimension of `X`. -/
-theorem dimH_range_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X → Y}
+theorem dimH_range_le_of_locally_lipschitzOn [SecondCountableTopology X] {f : X → Y}
     (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, LipschitzOnWith C f s) :
     dimH (range f) ≤ dimH (univ : Set X) :=
   by
   rw [← image_univ]
-  refine' dimH_image_le_of_locally_lipschitz_on fun x _ => _
+  refine' dimH_image_le_of_locally_lipschitzOn fun x _ => _
   simpa only [exists_prop, nhdsWithin_univ] using hf x
-#align dimH_range_le_of_locally_lipschitz_on dimH_range_le_of_locally_lipschitz_on
+#align dimH_range_le_of_locally_lipschitz_on dimH_range_le_of_locally_lipschitzOn
 -/
 
 namespace AntilipschitzWith
@@ -663,7 +663,7 @@ dimension of `s`.
 TODO: do we actually need `convex ℝ s`? -/
 theorem ContDiffOn.dimH_image_le {f : E → F} {s t : Set E} (hf : ContDiffOn ℝ 1 f s)
     (hc : Convex ℝ s) (ht : t ⊆ s) : dimH (f '' t) ≤ dimH t :=
-  dimH_image_le_of_locally_lipschitz_on fun x hx =>
+  dimH_image_le_of_locally_lipschitzOn fun x hx =>
     let ⟨C, u, hu, hf⟩ := (hf x (ht hx)).exists_lipschitzOnWith hc
     ⟨C, u, nhdsWithin_mono _ ht hu, hf⟩
 #align cont_diff_on.dimH_image_le ContDiffOn.dimH_image_le

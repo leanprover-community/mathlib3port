@@ -58,10 +58,6 @@ class Linear (R : Type w) [Semiring R] (C : Type u) [Category.{v} C] [Preadditiv
 
 attribute [instance] linear.hom_module
 
-restate_axiom linear.smul_comp'
-
-restate_axiom linear.comp_smul'
-
 attribute [simp, reassoc] linear.smul_comp
 
 attribute [reassoc, simp] linear.comp_smul

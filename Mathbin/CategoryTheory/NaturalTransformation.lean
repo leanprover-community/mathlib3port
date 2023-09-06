@@ -56,8 +56,6 @@ structure NatTrans (F G : C ⥤ D) : Type max u₁ v₂ where
 #align category_theory.nat_trans CategoryTheory.NatTrans
 -/
 
-restate_axiom nat_trans.naturality'
-
 -- Rather arbitrarily, we say that the 'simpler' form is
 -- components of natural transfomations moving earlier.
 attribute [simp, reassoc] nat_trans.naturality

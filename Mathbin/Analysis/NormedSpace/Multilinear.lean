@@ -879,7 +879,7 @@ instance [CompleteSpace G] : CompleteSpace (ContinuousMultilinearMap 𝕜 E G) :
     have B : tendsto (fun m => ‖(f n - f m) v‖) at_top (𝓝 ‖(f n - Fcont) v‖) :=
       tendsto.norm (tendsto_const_nhds.sub (hF v))
     exact le_of_tendsto B A
-  erw [tendsto_iff_norm_tendsto_zero]
+  erw [tendsto_iff_norm_sub_tendsto_zero]
   exact squeeze_zero (fun n => norm_nonneg _) this b_lim
 
 end ContinuousMultilinearMap

@@ -1070,11 +1070,13 @@ theorem sup'_le_iff {a : α} : s.sup' H f ≤ a ↔ ∀ b ∈ s, f b ≤ a :=
 #align finset.sup'_le_iff Finset.sup'_le_iff
 -/
 
+#print Finset.sup'_union /-
 theorem sup'_union [DecidableEq β] {s₁ s₂ : Finset β} (h₁ : s₁.Nonempty) (h₂ : s₂.Nonempty)
     (f : β → α) :
     (s₁ ∪ s₂).sup' (h₁.mono <| subset_union_left _ _) f = s₁.sup' h₁ f ⊔ s₂.sup' h₂ f :=
   eq_of_forall_ge_iff fun a => by simp [or_imp, forall_and]
 #align finset.sup'_union Finset.sup'_union
+-/
 
 #print Finset.sup'_biUnion /-
 theorem sup'_biUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ → Finset β}
@@ -1258,11 +1260,13 @@ theorem le_inf'_iff : a ≤ s.inf' H f ↔ ∀ b ∈ s, a ≤ f b :=
 #align finset.le_inf'_iff Finset.le_inf'_iff
 -/
 
+#print Finset.inf'_union /-
 theorem inf'_union [DecidableEq β] {s₁ s₂ : Finset β} (h₁ : s₁.Nonempty) (h₂ : s₂.Nonempty)
     (f : β → α) :
     (s₁ ∪ s₂).inf' (h₁.mono <| subset_union_left _ _) f = s₁.inf' h₁ f ⊓ s₂.inf' h₂ f :=
   @sup'_union αᵒᵈ _ _ _ _ _ h₁ h₂ _
 #align finset.inf'_union Finset.inf'_union
+-/
 
 #print Finset.inf'_biUnion /-
 theorem inf'_biUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ → Finset β}
@@ -1353,11 +1357,11 @@ theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H 
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
-#print Finset.sup_closed_of_sup_closed /-
-theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
+#print SupClosed.finsetSup_mem /-
+theorem finsetSup_mem {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊔ b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
-#align finset.sup_closed_of_sup_closed Finset.sup_closed_of_sup_closed
+#align finset.sup_closed_of_sup_closed SupClosed.finsetSup_mem
 -/
 
 #print Finset.coe_sup_of_nonempty /-
@@ -1379,11 +1383,11 @@ theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H 
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
-#print Finset.inf_closed_of_inf_closed /-
-theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
+#print InfClosed.finsetInf_mem /-
+theorem finsetInf_mem {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊓ b ∈ s) : t.inf id ∈ s :=
-  @sup_closed_of_sup_closed αᵒᵈ _ _ _ t htne h_subset h
-#align finset.inf_closed_of_inf_closed Finset.inf_closed_of_inf_closed
+  @finsetSup_mem αᵒᵈ _ _ _ t htne h_subset h
+#align finset.inf_closed_of_inf_closed InfClosed.finsetInf_mem
 -/
 
 #print Finset.coe_inf_of_nonempty /-

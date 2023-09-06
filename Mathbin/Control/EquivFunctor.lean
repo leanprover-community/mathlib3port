@@ -38,10 +38,6 @@ class EquivFunctor (f : Type u₀ → Type u₁) where
 #align equiv_functor EquivFunctor
 -/
 
-restate_axiom EquivFunctor.map_refl'
-
-restate_axiom EquivFunctor.map_trans'
-
 attribute [simp] EquivFunctor.map_refl
 
 namespace EquivFunctor

@@ -32,8 +32,6 @@ structure CommMon_ extends Mon_ C where
 #align CommMon_ CommMon_
 -/
 
-restate_axiom CommMon_.mul_comm'
-
 attribute [simp, reassoc] CommMon_.mul_comm
 
 namespace CommMon_

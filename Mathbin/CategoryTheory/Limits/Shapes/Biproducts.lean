@@ -1173,14 +1173,6 @@ structure BinaryBicone (P Q : C) where
 #align category_theory.limits.binary_bicone CategoryTheory.Limits.BinaryBicone
 -/
 
-restate_axiom binary_bicone.inl_fst'
-
-restate_axiom binary_bicone.inl_snd'
-
-restate_axiom binary_bicone.inr_fst'
-
-restate_axiom binary_bicone.inr_snd'
-
 attribute [simp, reassoc] binary_bicone.inl_fst binary_bicone.inl_snd binary_bicone.inr_fst
   binary_bicone.inr_snd
 

@@ -366,10 +366,6 @@ structure EnrichedFunctor (C : Type u₁) [EnrichedCategory V C] (D : Type u₂)
 #align category_theory.enriched_functor CategoryTheory.EnrichedFunctor
 -/
 
-restate_axiom enriched_functor.map_id'
-
-restate_axiom enriched_functor.map_comp'
-
 attribute [simp, reassoc] enriched_functor.map_id
 
 attribute [simp, reassoc] enriched_functor.map_comp

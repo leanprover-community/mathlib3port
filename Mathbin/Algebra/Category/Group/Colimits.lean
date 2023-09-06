@@ -47,7 +47,6 @@ and the identifications given by the morphisms in the diagram.
 
 variable {J : Type v} [SmallCategory J] (F : J ⥤ AddCommGroupCat.{v})
 
-#print AddCommGroupCat.Colimits.Prequotient /-
 /-- An inductive type representing all group expressions (without relations)
 on a collection of types indexed by the objects of `J`.
 -/
@@ -58,15 +57,13 @@ inductive Prequotient-- There's always `of`
   | zero : prequotient
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
-#align AddCommGroup.colimits.prequotient AddCommGroupCat.Colimits.Prequotient
--/
+#align AddCommGroup.colimits.prequotient AddCommGroupCat.Colimits.Prequotientₓ
 
 instance : Inhabited (Prequotient F) :=
   ⟨Prequotient.zero⟩
 
 open Prequotient
 
-#print AddCommGroupCat.Colimits.Relation /-
 /-- The relation on `prequotient` saying when two expressions are equal
 because of the abelian group laws, or
 because one element is mapped to another by a morphism in the diagram.
@@ -103,8 +100,7 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | add_left_neg : ∀ x, relation (add (neg x) x) zero
   | add_comm : ∀ x y, relation (add x y) (add y x)
   | add_assoc : ∀ x y z, relation (add (add x y) z) (add x (add y z))
-#align AddCommGroup.colimits.relation AddCommGroupCat.Colimits.Relation
--/
+#align AddCommGroup.colimits.relation AddCommGroupCat.Colimits.Relationₓ
 
 #print AddCommGroupCat.Colimits.colimitSetoid /-
 /--
@@ -348,15 +344,15 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F)
 #align AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
 -/
 
-#print AddCommGroupCat.Colimits.hasColimits_addCommGroupCat /-
-instance hasColimits_addCommGroupCat : HasColimits AddCommGroupCat
+#print AddCommGroupCat.hasColimits /-
+instance AddCommGroupCat.hasColimits : HasColimits AddCommGroupCat
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
-#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.hasColimits_addCommGroupCat
+#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.hasColimits
 -/
 
 end AddCommGroupCat.Colimits

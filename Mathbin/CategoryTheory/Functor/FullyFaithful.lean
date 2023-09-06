@@ -52,8 +52,6 @@ class Full (F : C ⥤ D) where
 #align category_theory.full CategoryTheory.Full
 -/
 
-restate_axiom full.witness'
-
 attribute [simp] full.witness
 
 #print CategoryTheory.Faithful /-
@@ -66,8 +64,6 @@ class Faithful (F : C ⥤ D) : Prop where
   map_injective' : ∀ {X Y : C}, Function.Injective (@Functor.map _ _ _ _ F X Y) := by obviously
 #align category_theory.faithful CategoryTheory.Faithful
 -/
-
-restate_axiom faithful.map_injective'
 
 namespace Functor
 

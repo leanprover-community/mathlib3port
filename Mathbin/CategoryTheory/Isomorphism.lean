@@ -61,10 +61,6 @@ structure Iso {C : Type u} [Category.{v} C] (X Y : C) where
 #align category_theory.iso CategoryTheory.Iso
 -/
 
-restate_axiom iso.hom_inv_id'
-
-restate_axiom iso.inv_hom_id'
-
 attribute [simp, reassoc] iso.hom_inv_id iso.inv_hom_id
 
 infixr:10 " ≅ " => Iso

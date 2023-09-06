@@ -61,10 +61,6 @@ class HasZeroMorphisms where
 
 attribute [instance] has_zero_morphisms.has_zero
 
-restate_axiom has_zero_morphisms.comp_zero'
-
-restate_axiom has_zero_morphisms.zero_comp'
-
 variable {C}
 
 #print CategoryTheory.Limits.comp_zero /-

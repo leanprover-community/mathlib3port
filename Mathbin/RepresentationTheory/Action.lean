@@ -124,8 +124,6 @@ structure Hom (M N : Action V G) where
 #align Action.hom Action.Hom
 -/
 
-restate_axiom hom.comm'
-
 namespace Hom
 
 #print Action.Hom.id /-

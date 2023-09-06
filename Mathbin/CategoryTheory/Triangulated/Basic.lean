@@ -118,12 +118,6 @@ structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where
 #align category_theory.pretriangulated.triangle_morphism CategoryTheory.Pretriangulated.TriangleMorphism
 -/
 
-restate_axiom triangle_morphism.comm₁'
-
-restate_axiom triangle_morphism.comm₂'
-
-restate_axiom triangle_morphism.comm₃'
-
 attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
 
 #print CategoryTheory.Pretriangulated.triangleMorphismId /-

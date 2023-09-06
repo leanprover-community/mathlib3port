@@ -102,8 +102,6 @@ instance CommaMorphism.inhabited [Inhabited (Comma L R)] :
 #align category_theory.comma_morphism.inhabited CategoryTheory.CommaMorphism.inhabited
 -/
 
-restate_axiom comma_morphism.w'
-
 attribute [simp, reassoc] comma_morphism.w
 
 #print CategoryTheory.commaCategory /-

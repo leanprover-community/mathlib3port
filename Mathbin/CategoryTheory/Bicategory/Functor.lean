@@ -208,20 +208,6 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
 
 namespace OplaxFunctor
 
-restate_axiom map_comp_naturality_left'
-
-restate_axiom map_comp_naturality_right'
-
-restate_axiom map₂_id'
-
-restate_axiom map₂_comp'
-
-restate_axiom map₂_associator'
-
-restate_axiom map₂_left_unitor'
-
-restate_axiom map₂_right_unitor'
-
 attribute [simp] map_comp_naturality_left map_comp_naturality_right map₂_id map₂_associator
 
 attribute [reassoc] map_comp_naturality_left map_comp_naturality_right map₂_comp map₂_associator
@@ -336,10 +322,6 @@ structure PseudoCore (F : OplaxFunctor B C) where
 #align category_theory.oplax_functor.pseudo_core CategoryTheory.OplaxFunctor.PseudoCore
 -/
 
-restate_axiom pseudo_core.map_id_iso_hom'
-
-restate_axiom pseudo_core.map_comp_iso_hom'
-
 attribute [simp] pseudo_core.map_id_iso_hom pseudo_core.map_comp_iso_hom
 
 end
@@ -409,20 +391,6 @@ structure Pseudofunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
 -/
 
 namespace Pseudofunctor
-
-restate_axiom map₂_id'
-
-restate_axiom map₂_comp'
-
-restate_axiom map₂_whisker_left'
-
-restate_axiom map₂_whisker_right'
-
-restate_axiom map₂_associator'
-
-restate_axiom map₂_left_unitor'
-
-restate_axiom map₂_right_unitor'
 
 attribute [reassoc] map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator map₂_left_unitor
   map₂_right_unitor

@@ -104,11 +104,7 @@ notation "η_" => ExactPairing.coevaluation
 
 notation "ε_" => ExactPairing.evaluation
 
-restate_axiom coevaluation_evaluation'
-
 attribute [simp, reassoc] exact_pairing.coevaluation_evaluation
-
-restate_axiom evaluation_coevaluation'
 
 attribute [simp, reassoc] exact_pairing.evaluation_coevaluation
 

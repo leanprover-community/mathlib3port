@@ -115,11 +115,11 @@ variable {F}
 #print RingOfIntegers.isUnit_norm /-
 theorem isUnit_norm [CharZero K] {x : 𝓞 F} : IsUnit (norm K x) ↔ IsUnit x :=
   by
-  letI : Algebra K (AlgebraicClosure K) := AlgebraicClosure.algebra K
-  let L := normalClosure K F (AlgebraicClosure F)
+  letI : Algebra K (AlgebraicClosureAux K) := AlgebraicClosureAux.algebra K
+  let L := normalClosure K F (AlgebraicClosureAux F)
   haveI : FiniteDimensional F L := FiniteDimensional.right K F L
-  haveI : IsAlgClosure K (AlgebraicClosure F) :=
-    IsAlgClosure.ofAlgebraic K F (AlgebraicClosure F) (Algebra.isAlgebraic_of_finite K F)
+  haveI : IsAlgClosure K (AlgebraicClosureAux F) :=
+    IsAlgClosure.ofAlgebraic K F (AlgebraicClosureAux F) (Algebra.isAlgebraic_of_finite K F)
   haveI : IsGalois F L := IsGalois.tower_top_of_isGalois K F L
   calc
     IsUnit (norm K x) ↔ IsUnit ((norm K) x ^ finrank F L) :=

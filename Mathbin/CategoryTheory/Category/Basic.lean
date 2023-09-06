@@ -115,12 +115,6 @@ class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1
 -- `restate_axiom` is a command that creates a lemma from a structure field,
 -- discarding any auto_param wrappers from the type.
 -- (It removes a backtick from the name, if it finds one, and otherwise adds "_lemma".)
-restate_axiom category.id_comp'
-
-restate_axiom category.comp_id'
-
-restate_axiom category.assoc'
-
 attribute [simp] category.id_comp category.comp_id category.assoc
 
 attribute [trans] category_struct.comp

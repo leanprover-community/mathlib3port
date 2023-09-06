@@ -56,12 +56,6 @@ structure Mon_ where
 #align Mon_ Mon_
 -/
 
-restate_axiom Mon_.one_mul'
-
-restate_axiom Mon_.mul_one'
-
-restate_axiom Mon_.mul_assoc'
-
 attribute [reassoc] Mon_.one_mul Mon_.mul_one
 
 -- We prove a more general `@[simp]` lemma below.
@@ -121,10 +115,6 @@ structure Hom (M N : Mon_ C) where
   mul_hom' : M.mul ≫ hom = (hom ⊗ hom) ≫ N.mul := by obviously
 #align Mon_.hom Mon_.Hom
 -/
-
-restate_axiom hom.one_hom'
-
-restate_axiom hom.mul_hom'
 
 attribute [simp, reassoc] hom.one_hom hom.mul_hom
 

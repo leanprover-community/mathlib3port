@@ -46,10 +46,6 @@ class MonoidalLinear : Prop where
 #align category_theory.monoidal_linear CategoryTheory.MonoidalLinear
 -/
 
-restate_axiom monoidal_linear.tensor_smul'
-
-restate_axiom monoidal_linear.smul_tensor'
-
 attribute [simp] monoidal_linear.tensor_smul monoidal_linear.smul_tensor
 
 variable {C} [MonoidalLinear R C]

@@ -42,7 +42,7 @@ open Polynomial
 
 variable (k : Type u) [Field k]
 
-namespace AlgebraicClosure
+namespace AlgebraicClosureAux
 
 open MvPolynomial
 
@@ -297,55 +297,53 @@ instance toStepOfLE.directedSystem : DirectedSystem (Step k) fun i j h => toStep
 #align algebraic_closure.to_step_of_le.directed_system AlgebraicClosure.toStepOfLE.directedSystem
 -/
 
-end AlgebraicClosure
+end AlgebraicClosureAux
 
-#print AlgebraicClosure /-
+#print AlgebraicClosureAux /-
 /-- The canonical algebraic closure of a field, the direct limit of adding roots to the field for
 each polynomial over the field. -/
-def AlgebraicClosure : Type u :=
+def AlgebraicClosureAux : Type u :=
   Ring.DirectLimit (AlgebraicClosure.Step k) fun i j h => AlgebraicClosure.toStepOfLE k i j h
-#align algebraic_closure AlgebraicClosure
+#align algebraic_closure AlgebraicClosureAux
 -/
 
-namespace AlgebraicClosure
+namespace AlgebraicClosureAux
 
-instance : Field (AlgebraicClosure k) :=
+instance : Field (AlgebraicClosureAux k) :=
   Field.DirectLimit.field _ _
 
-instance : Inhabited (AlgebraicClosure k) :=
+instance : Inhabited (AlgebraicClosureAux k) :=
   ⟨37⟩
 
-#print AlgebraicClosure.ofStep /-
+#print AlgebraicClosureAux.ofStep /-
 /-- The canonical ring embedding from the `n`th step to the algebraic closure. -/
-def ofStep (n : ℕ) : Step k n →+* AlgebraicClosure k :=
+def ofStep (n : ℕ) : Step k n →+* AlgebraicClosureAux k :=
   Ring.DirectLimit.of _ _ _
-#align algebraic_closure.of_step AlgebraicClosure.ofStep
+#align algebraic_closure.of_step AlgebraicClosureAux.ofStep
 -/
 
-#print AlgebraicClosure.algebraOfStep /-
-instance algebraOfStep (n) : Algebra (Step k n) (AlgebraicClosure k) :=
+instance algebraOfStep (n) : Algebra (Step k n) (AlgebraicClosureAux k) :=
   (ofStep k n).toAlgebra
-#align algebraic_closure.algebra_of_step AlgebraicClosure.algebraOfStep
--/
+#align algebraic_closure.algebra_of_step AlgebraicClosureAux.algebraOfStep
 
-#print AlgebraicClosure.ofStep_succ /-
+#print AlgebraicClosureAux.ofStep_succ /-
 theorem ofStep_succ (n : ℕ) : (ofStep k (n + 1)).comp (toStepSucc k n) = ofStep k n :=
   RingHom.ext fun x =>
     show Ring.DirectLimit.of (Step k) (fun i j h => toStepOfLE k i j h) _ _ = _ by
       convert Ring.DirectLimit.of_f n.le_succ x; ext x; exact (Nat.leRecOn_succ' x).symm
-#align algebraic_closure.of_step_succ AlgebraicClosure.ofStep_succ
+#align algebraic_closure.of_step_succ AlgebraicClosureAux.ofStep_succ
 -/
 
-#print AlgebraicClosure.exists_ofStep /-
-theorem exists_ofStep (z : AlgebraicClosure k) : ∃ n x, ofStep k n x = z :=
+#print AlgebraicClosureAux.exists_ofStep /-
+theorem exists_ofStep (z : AlgebraicClosureAux k) : ∃ n x, ofStep k n x = z :=
   Ring.DirectLimit.exists_of z
-#align algebraic_closure.exists_of_step AlgebraicClosure.exists_ofStep
+#align algebraic_closure.exists_of_step AlgebraicClosureAux.exists_ofStep
 -/
 
-#print AlgebraicClosure.exists_root /-
+#print AlgebraicClosureAux.exists_root /-
 -- slow
-theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi : Irreducible f) :
-    ∃ x : AlgebraicClosure k, f.eval x = 0 :=
+theorem exists_root {f : Polynomial (AlgebraicClosureAux k)} (hfm : f.Monic) (hfi : Irreducible f) :
+    ∃ x : AlgebraicClosureAux k, f.eval x = 0 :=
   by
   have : ∃ n p, Polynomial.map (of_step k n) p = f := by
     convert Ring.DirectLimit.Polynomial.exists_of f
@@ -355,44 +353,42 @@ theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi :
   obtain ⟨x, hx⟩ := to_step_succ.exists_root k hfm this
   refine' ⟨of_step k (n + 1) x, _⟩
   rw [← of_step_succ k n, eval_map, ← hom_eval₂, hx, RingHom.map_zero]
-#align algebraic_closure.exists_root AlgebraicClosure.exists_root
+#align algebraic_closure.exists_root AlgebraicClosureAux.exists_root
 -/
 
-instance : IsAlgClosed (AlgebraicClosure k) :=
+instance : IsAlgClosed (AlgebraicClosureAux k) :=
   IsAlgClosed.of_exists_root _ fun f => exists_root k
 
-instance {R : Type _} [CommSemiring R] [alg : Algebra R k] : Algebra R (AlgebraicClosure k) :=
+instance {R : Type _} [CommSemiring R] [alg : Algebra R k] : Algebra R (AlgebraicClosureAux k) :=
   ((ofStep k 0).comp (@algebraMap _ _ _ _ alg)).toAlgebra
 
-#print AlgebraicClosure.algebraMap_def /-
 theorem algebraMap_def {R : Type _} [CommSemiring R] [alg : Algebra R k] :
-    algebraMap R (AlgebraicClosure k) = (ofStep k 0 : k →+* _).comp (@algebraMap _ _ _ _ alg) :=
+    algebraMap R (AlgebraicClosureAux k) = (ofStep k 0 : k →+* _).comp (@algebraMap _ _ _ _ alg) :=
   rfl
-#align algebraic_closure.algebra_map_def AlgebraicClosure.algebraMap_def
--/
+#align algebraic_closure.algebra_map_def AlgebraicClosureAux.algebraMap_def
 
 instance {R S : Type _} [CommSemiring R] [CommSemiring S] [Algebra R S] [Algebra S k] [Algebra R k]
-    [IsScalarTower R S k] : IsScalarTower R S (AlgebraicClosure k) :=
+    [IsScalarTower R S k] : IsScalarTower R S (AlgebraicClosureAux k) :=
   IsScalarTower.of_algebraMap_eq fun x =>
     RingHom.congr_arg _ (IsScalarTower.algebraMap_apply R S k x : _)
 
-#print AlgebraicClosure.ofStepHom /-
+#print AlgebraicClosureAux.ofStepHom /-
 /-- Canonical algebra embedding from the `n`th step to the algebraic closure. -/
-def ofStepHom (n) : Step k n →ₐ[k] AlgebraicClosure k :=
+def ofStepHom (n) : Step k n →ₐ[k] AlgebraicClosureAux k :=
   { ofStep k n with commutes' := fun x => Ring.DirectLimit.of_f n.zero_le x }
-#align algebraic_closure.of_step_hom AlgebraicClosure.ofStepHom
+#align algebraic_closure.of_step_hom AlgebraicClosureAux.ofStepHom
 -/
 
 #print AlgebraicClosure.isAlgebraic /-
-theorem isAlgebraic : Algebra.IsAlgebraic k (AlgebraicClosure k) := fun z =>
+theorem isAlgebraic : Algebra.IsAlgebraic k (AlgebraicClosureAux k) := fun z =>
   isAlgebraic_iff_isIntegral.2 <|
     let ⟨n, x, hx⟩ := exists_ofStep k z
     hx ▸ map_isIntegral (ofStepHom k n) (Step.isIntegral k n x)
 #align algebraic_closure.is_algebraic AlgebraicClosure.isAlgebraic
 -/
 
-instance : IsAlgClosure k (AlgebraicClosure k) :=
-  ⟨AlgebraicClosure.instIsAlgClosed k, isAlgebraic k⟩
+instance : IsAlgClosure k (AlgebraicClosureAux k) :=
+  ⟨AlgebraicClosure.isAlgClosed k, isAlgebraic k⟩
 
-end AlgebraicClosure
+end AlgebraicClosureAux
 

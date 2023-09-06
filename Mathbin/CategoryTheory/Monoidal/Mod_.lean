@@ -39,10 +39,6 @@ structure Mod_ (A : Mon_ C) where
 #align Mod_ Mod_
 -/
 
-restate_axiom Mod_.one_act'
-
-restate_axiom Mod_.assoc'
-
 attribute [simp, reassoc] Mod_.one_act Mod_.assoc
 
 namespace Mod_
@@ -66,8 +62,6 @@ structure Hom (M N : Mod_ A) where
   act_hom' : M.act ≫ hom = (𝟙 A.pt ⊗ hom) ≫ N.act := by obviously
 #align Mod_.hom Mod_.Hom
 -/
-
-restate_axiom hom.act_hom'
 
 attribute [simp, reassoc] hom.act_hom
 

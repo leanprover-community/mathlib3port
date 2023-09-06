@@ -587,7 +587,7 @@ theorem has_fderiv_at_filter_real_equiv {L : Filter E} :
       Tendsto (fun x' : E => ‖x' - x‖⁻¹ • (f x' - f x - f' (x' - x))) L (𝓝 0) :=
   by
   symm
-  rw [tendsto_iff_norm_tendsto_zero]; refine' tendsto_congr fun x' => _
+  rw [tendsto_iff_norm_sub_tendsto_zero]; refine' tendsto_congr fun x' => _
   have : ‖x' - x‖⁻¹ ≥ 0 := inv_nonneg.mpr (norm_nonneg _)
   simp [norm_smul, abs_of_nonneg this]
 #align has_fderiv_at_filter_real_equiv has_fderiv_at_filter_real_equiv

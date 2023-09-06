@@ -49,10 +49,6 @@ class MonoidalPredicate : Prop where
 #align category_theory.monoidal_category.monoidal_predicate CategoryTheory.MonoidalCategory.MonoidalPredicate
 -/
 
-restate_axiom monoidal_predicate.prop_id'
-
-restate_axiom monoidal_predicate.prop_tensor'
-
 open MonoidalPredicate
 
 variable [MonoidalPredicate P]
@@ -261,8 +257,6 @@ class ClosedPredicate : Prop where
   prop_ihom' : ∀ {X Y}, P X → P Y → P ((ihom X).obj Y) := by obviously
 #align category_theory.monoidal_category.closed_predicate CategoryTheory.MonoidalCategory.ClosedPredicate
 -/
-
-restate_axiom closed_predicate.prop_ihom'
 
 open ClosedPredicate
 

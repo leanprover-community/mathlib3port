@@ -66,11 +66,7 @@ structure IsLimit (t : Cone F) where
 #align category_theory.limits.is_limit CategoryTheory.Limits.IsLimit
 -/
 
-restate_axiom is_limit.fac'
-
 attribute [simp, reassoc] is_limit.fac
-
-restate_axiom is_limit.uniq'
 
 namespace IsLimit
 
@@ -677,11 +673,7 @@ structure IsColimit (t : Cocone F) where
 #align category_theory.limits.is_colimit CategoryTheory.Limits.IsColimit
 -/
 
-restate_axiom is_colimit.fac'
-
 attribute [simp, reassoc] is_colimit.fac
-
-restate_axiom is_colimit.uniq'
 
 namespace IsColimit
 

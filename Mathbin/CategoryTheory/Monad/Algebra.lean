@@ -49,10 +49,6 @@ structure Algebra (T : Monad C) : Type max u₁ v₁ where
 #align category_theory.monad.algebra CategoryTheory.Monad.Algebra
 -/
 
-restate_axiom algebra.unit'
-
-restate_axiom algebra.assoc'
-
 attribute [reassoc] algebra.unit algebra.assoc
 
 namespace Algebra
@@ -67,8 +63,6 @@ structure Hom (A B : Algebra T) where
   h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by obviously
 #align category_theory.monad.algebra.hom CategoryTheory.Monad.Algebra.Hom
 -/
-
-restate_axiom hom.h'
 
 attribute [simp, reassoc] hom.h
 
@@ -348,10 +342,6 @@ structure Coalgebra (G : Comonad C) : Type max u₁ v₁ where
 #align category_theory.comonad.coalgebra CategoryTheory.Comonad.Coalgebra
 -/
 
-restate_axiom coalgebra.counit'
-
-restate_axiom coalgebra.coassoc'
-
 attribute [reassoc] coalgebra.counit coalgebra.coassoc
 
 namespace Coalgebra
@@ -366,8 +356,6 @@ structure Hom (A B : Coalgebra G) where
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by obviously
 #align category_theory.comonad.coalgebra.hom CategoryTheory.Comonad.Coalgebra.Hom
 -/
-
-restate_axiom hom.h'
 
 attribute [simp, reassoc] hom.h
 

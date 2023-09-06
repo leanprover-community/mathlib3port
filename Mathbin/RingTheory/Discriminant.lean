@@ -247,7 +247,7 @@ theorem discr_powerBasis_eq_norm [IsSeparable K L] :
     discr K pb.Basis =
       (-1) ^ (n * (n - 1) / 2) * norm K (aeval pb.gen (minpoly K pb.gen).derivative) :=
   by
-  let E := AlgebraicClosure L
+  let E := AlgebraicClosureAux L
   letI := fun a b : E => Classical.propDecidable (Eq a b)
   have e : Fin pb.dim ≃ (L →ₐ[K] E) :=
     by

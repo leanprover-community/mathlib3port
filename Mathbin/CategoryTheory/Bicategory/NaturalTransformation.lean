@@ -67,12 +67,6 @@ structure OplaxNatTrans (F G : OplaxFunctor B C) where
 #align category_theory.oplax_nat_trans CategoryTheory.OplaxNatTrans
 -/
 
-restate_axiom oplax_nat_trans.naturality_naturality'
-
-restate_axiom oplax_nat_trans.naturality_id'
-
-restate_axiom oplax_nat_trans.naturality_comp'
-
 attribute [simp, reassoc] oplax_nat_trans.naturality_naturality oplax_nat_trans.naturality_id
   oplax_nat_trans.naturality_comp
 
@@ -228,8 +222,6 @@ structure Modification (η θ : F ⟶ G) where
     obviously
 #align category_theory.oplax_nat_trans.modification CategoryTheory.OplaxNatTrans.Modification
 -/
-
-restate_axiom modification.naturality'
 
 attribute [simp, reassoc] modification.naturality
 

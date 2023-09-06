@@ -380,7 +380,8 @@ theorem Algebra.isIntegral_trace [FiniteDimensional L F] {x : F} (hx : IsIntegra
     IsIntegral R (Algebra.trace L F x) :=
   by
   have hx' : IsIntegral L x := isIntegral_of_isScalarTower hx
-  rw [← isIntegral_algebraMap_iff (algebraMap L (AlgebraicClosure F)).Injective, trace_eq_sum_roots]
+  rw [← isIntegral_algebraMap_iff (algebraMap L (AlgebraicClosureAux F)).Injective,
+    trace_eq_sum_roots]
   · refine' (IsIntegral.multiset_sum _).nsmul _
     intro y hy
     rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
@@ -461,10 +462,10 @@ theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L
 theorem trace_eq_sum_automorphisms (x : L) [FiniteDimensional K L] [IsGalois K L] :
     algebraMap K L (Algebra.trace K L x) = ∑ σ : L ≃ₐ[K] L, σ x :=
   by
-  apply NoZeroSMulDivisors.algebraMap_injective L (AlgebraicClosure L)
-  rw [map_sum (algebraMap L (AlgebraicClosure L))]
-  rw [← Fintype.sum_equiv (Normal.algHomEquivAut K (AlgebraicClosure L) L)]
-  · rw [← trace_eq_sum_embeddings (AlgebraicClosure L)]
+  apply NoZeroSMulDivisors.algebraMap_injective L (AlgebraicClosureAux L)
+  rw [map_sum (algebraMap L (AlgebraicClosureAux L))]
+  rw [← Fintype.sum_equiv (Normal.algHomEquivAut K (AlgebraicClosureAux L) L)]
+  · rw [← trace_eq_sum_embeddings (AlgebraicClosureAux L)]
     · simp only [algebra_map_eq_smul_one, smul_one_smul]
     · exact IsGalois.to_isSeparable
   · intro σ
@@ -657,12 +658,12 @@ variable (pb : PowerBasis K L)
 #print det_traceMatrix_ne_zero' /-
 theorem det_traceMatrix_ne_zero' [IsSeparable K L] : det (traceMatrix K pb.Basis) ≠ 0 :=
   by
-  suffices algebraMap K (AlgebraicClosure L) (det (trace_matrix K pb.basis)) ≠ 0
+  suffices algebraMap K (AlgebraicClosureAux L) (det (trace_matrix K pb.basis)) ≠ 0
     by
     refine' mt (fun ht => _) this
     rw [ht, RingHom.map_zero]
   haveI : FiniteDimensional K L := pb.finite_dimensional
-  let e : Fin pb.dim ≃ (L →ₐ[K] AlgebraicClosure L) := (Fintype.equivFinOfCardEq _).symm
+  let e : Fin pb.dim ≃ (L →ₐ[K] AlgebraicClosureAux L) := (Fintype.equivFinOfCardEq _).symm
   rw [RingHom.map_det, RingHom.mapMatrix_apply,
     trace_matrix_eq_embeddings_matrix_reindex_mul_trans K _ _ e,
     embeddings_matrix_reindex_eq_vandermonde, det_mul, det_transpose]

@@ -119,10 +119,6 @@ structure LiftStruct (sq : CommSq f i p g) where
 
 namespace LiftStruct
 
-restate_axiom fac_left'
-
-restate_axiom fac_right'
-
 #print CategoryTheory.CommSq.LiftStruct.op /-
 /-- A `lift_struct` for a commutative square gives a `lift_struct` for the
 corresponding square in the opposite category. -/

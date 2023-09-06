@@ -82,8 +82,6 @@ structure MonoFactorisation (f : X ⟶ Y) where
 #align category_theory.limits.mono_factorisation CategoryTheory.Limits.MonoFactorisation
 -/
 
-restate_axiom mono_factorisation.fac'
-
 attribute [simp, reassoc] mono_factorisation.fac
 
 attribute [instance] mono_factorisation.m_mono
@@ -198,8 +196,6 @@ structure IsImage (F : MonoFactorisation f) where
   lift_fac : ∀ F' : MonoFactorisation f, lift F' ≫ F'.m = F.m := by obviously
 #align category_theory.limits.is_image CategoryTheory.Limits.IsImage
 -/
-
-restate_axiom is_image.lift_fac'
 
 attribute [simp, reassoc] is_image.lift_fac
 
@@ -764,8 +760,6 @@ instance inhabitedImageMap {f : Arrow C} [HasImage f.Hom] : Inhabited (ImageMap 
   ⟨⟨𝟙 _, by tidy⟩⟩
 #align category_theory.limits.inhabited_image_map CategoryTheory.Limits.inhabitedImageMap
 -/
-
-restate_axiom image_map.map_ι'
 
 attribute [simp, reassoc] image_map.map_ι
 

@@ -285,8 +285,6 @@ structure ConeMorphism (A B : Cone F) where
 #align category_theory.limits.cone_morphism CategoryTheory.Limits.ConeMorphism
 -/
 
-restate_axiom cone_morphism.w'
-
 attribute [simp, reassoc] cone_morphism.w
 
 #print CategoryTheory.Limits.inhabitedConeMorphism /-
@@ -523,8 +521,6 @@ instance inhabitedCoconeMorphism (A : Cocone F) : Inhabited (CoconeMorphism A A)
   ⟨{ Hom := 𝟙 _ }⟩
 #align category_theory.limits.inhabited_cocone_morphism CategoryTheory.Limits.inhabitedCoconeMorphism
 -/
-
-restate_axiom cocone_morphism.w'
 
 attribute [simp, reassoc] cocone_morphism.w
 

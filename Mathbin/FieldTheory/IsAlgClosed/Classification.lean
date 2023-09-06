@@ -34,7 +34,7 @@ open scoped Cardinal Polynomial
 
 open Cardinal
 
-section AlgebraicClosure
+section AlgebraicClosureAux
 
 namespace Algebra.IsAlgebraic
 
@@ -87,7 +87,7 @@ theorem cardinal_mk_le_max : (#L) ≤ max (#R) ℵ₀ :=
 
 end Algebra.IsAlgebraic
 
-end AlgebraicClosure
+end AlgebraicClosureAux
 
 namespace IsAlgClosed
 

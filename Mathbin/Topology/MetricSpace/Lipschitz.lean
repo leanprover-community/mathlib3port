@@ -106,11 +106,11 @@ alias ⟨LipschitzOnWith.dist_le_mul, LipschitzOnWith.of_dist_le_mul⟩ :=
 #align lipschitz_on_with.dist_le_mul LipschitzOnWith.dist_le_mul
 #align lipschitz_on_with.of_dist_le_mul LipschitzOnWith.of_dist_le_mul
 
-#print lipschitz_on_univ /-
+#print lipschitzOn_univ /-
 @[simp]
-theorem lipschitz_on_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0} {f : α → β} :
+theorem lipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0} {f : α → β} :
     LipschitzOnWith K f univ ↔ LipschitzWith K f := by simp [LipschitzOnWith, LipschitzWith]
-#align lipschitz_on_univ lipschitz_on_univ
+#align lipschitz_on_univ lipschitzOn_univ
 -/
 
 #print lipschitzOnWith_iff_restrict /-
@@ -813,7 +813,7 @@ theorem continuous_prod_of_continuous_lipschitzWith [PseudoEMetricSpace α] [Top
     [PseudoEMetricSpace γ] (f : α × β → γ) (K : ℝ≥0) (ha : ∀ a, Continuous fun y => f (a, y))
     (hb : ∀ b, LipschitzWith K fun x => f (x, b)) : Continuous f :=
   by
-  simp only [continuous_iff_continuousOn_univ, ← univ_prod_univ, ← lipschitz_on_univ] at *
+  simp only [continuous_iff_continuousOn_univ, ← univ_prod_univ, ← lipschitzOn_univ] at *
   exact continuousOn_prod_of_continuousOn_lipschitzOnWith f K (fun a _ => ha a) fun b _ => hb b
 #align continuous_prod_of_continuous_lipschitz continuous_prod_of_continuous_lipschitzWith
 -/

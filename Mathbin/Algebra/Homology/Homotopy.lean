@@ -181,8 +181,6 @@ variable {f g}
 
 namespace Homotopy
 
-restate_axiom Homotopy.zero'
-
 #print Homotopy.equivSubZero /-
 /-- `f` is homotopic to `g` iff `f - g` is homotopic to `0`.
 -/

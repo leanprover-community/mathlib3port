@@ -75,13 +75,7 @@ class BraidedCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] whe
 #align category_theory.braided_category CategoryTheory.BraidedCategory
 -/
 
-restate_axiom braided_category.braiding_naturality'
-
 attribute [simp, reassoc] braided_category.braiding_naturality
-
-restate_axiom braided_category.hexagon_forward'
-
-restate_axiom braided_category.hexagon_reverse'
 
 attribute [reassoc] braided_category.hexagon_forward braided_category.hexagon_reverse
 
@@ -331,8 +325,6 @@ class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] e
 #align category_theory.symmetric_category CategoryTheory.SymmetricCategory
 -/
 
-restate_axiom symmetric_category.symmetry'
-
 attribute [simp, reassoc] symmetric_category.symmetry
 
 initialize_simps_projections SymmetricCategory (to_braided_category_braiding → braiding,
@@ -352,8 +344,6 @@ structure LaxBraidedFunctor extends LaxMonoidalFunctor C D where
   braided' : ∀ X Y : C, μ X Y ≫ map (β_ X Y).Hom = (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by obviously
 #align category_theory.lax_braided_functor CategoryTheory.LaxBraidedFunctor
 -/
-
-restate_axiom lax_braided_functor.braided'
 
 namespace LaxBraidedFunctor
 
@@ -423,8 +413,6 @@ structure BraidedFunctor extends MonoidalFunctor C D where
     obviously
 #align category_theory.braided_functor CategoryTheory.BraidedFunctor
 -/
-
-restate_axiom braided_functor.braided'
 
 attribute [simp] braided_functor.braided
 

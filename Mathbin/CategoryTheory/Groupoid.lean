@@ -49,10 +49,6 @@ class Groupoid (obj : Type u) extends Category.{v} obj : Type max u (v + 1) wher
 #align category_theory.groupoid CategoryTheory.Groupoid
 -/
 
-restate_axiom groupoid.inv_comp'
-
-restate_axiom groupoid.comp_inv'
-
 initialize_simps_projections Groupoid (-to_category_to_category_struct_to_quiver_hom,
   to_category_to_category_struct_comp → comp, to_category_to_category_struct_id → id,
   -to_category_to_category_struct, -toCategory)

@@ -294,7 +294,7 @@ theorem sub_one_norm_eq_eval_cyclotomic [IsCyclotomicExtension {n} K L] (h : 2 <
     (hirr : Irreducible (cyclotomic n K)) : norm K (ζ - 1) = ↑(eval 1 (cyclotomic n ℤ)) :=
   by
   haveI := IsCyclotomicExtension.neZero' n K L
-  let E := AlgebraicClosure L
+  let E := AlgebraicClosureAux L
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root _ (degree_cyclotomic_pos n E n.pos).Ne.symm
   apply (algebraMap K E).Injective
   letI := FiniteDimensional {n} K L

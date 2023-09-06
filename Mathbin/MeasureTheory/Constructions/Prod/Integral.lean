@@ -505,7 +505,7 @@ theorem continuous_integral_integral :
   simp_rw [← lintegral_prod_of_measurable _ (this _), ← L1.of_real_norm_sub_eq_lintegral, ←
     of_real_zero]
   refine' (continuous_of_real.tendsto 0).comp _
-  rw [← tendsto_iff_norm_tendsto_zero]; exact tendsto_id
+  rw [← tendsto_iff_norm_sub_tendsto_zero]; exact tendsto_id
 #align measure_theory.continuous_integral_integral MeasureTheory.continuous_integral_integral
 -/
 

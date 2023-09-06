@@ -76,13 +76,9 @@ structure HalfBraiding (X : C) where
 #align category_theory.half_braiding CategoryTheory.HalfBraiding
 -/
 
-restate_axiom half_braiding.monoidal'
-
 attribute [reassoc, simp] half_braiding.monoidal
 
 -- the reassoc lemma is redundant as a simp lemma
-restate_axiom half_braiding.naturality'
-
 attribute [simp, reassoc] half_braiding.naturality
 
 variable (C)
@@ -111,8 +107,6 @@ structure Hom (X Y : Center C) where
   comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by obviously
 #align category_theory.center.hom CategoryTheory.Center.Hom
 -/
-
-restate_axiom hom.comm'
 
 attribute [simp, reassoc] hom.comm
 

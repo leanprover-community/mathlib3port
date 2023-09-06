@@ -89,18 +89,10 @@ class LaxMonoidal (F : C → D) [Functorial.{v₁, v₂} F] where
 #align category_theory.lax_monoidal CategoryTheory.LaxMonoidal
 -/
 
-restate_axiom lax_monoidal.μ_natural'
-
 attribute [simp] lax_monoidal.μ_natural
-
-restate_axiom lax_monoidal.left_unitality'
-
-restate_axiom lax_monoidal.right_unitality'
 
 -- The unitality axioms cannot be used as simp lemmas because they require
 -- higher-order matching to figure out the `F` and `X` from `F X`.
-restate_axiom lax_monoidal.associativity'
-
 attribute [simp] lax_monoidal.associativity
 
 namespace LaxMonoidalFunctor

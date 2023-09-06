@@ -68,8 +68,6 @@ structure HomologicalComplex (c : ComplexShape ι) where
 
 namespace HomologicalComplex
 
-restate_axiom shape'
-
 attribute [simp] shape
 
 variable {V} {c : ComplexShape ι}

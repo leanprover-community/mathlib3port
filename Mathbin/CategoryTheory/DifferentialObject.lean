@@ -47,8 +47,6 @@ structure DifferentialObject where
   d_squared' : d ≫ d⟦(1 : ℤ)⟧' = 0 := by obviously
 #align category_theory.differential_object CategoryTheory.DifferentialObjectₓ
 
-restate_axiom differential_object.d_squared'
-
 attribute [simp] differential_object.d_squared
 
 variable {C}
@@ -62,8 +60,6 @@ structure Hom (X Y : DifferentialObject C) where
   f : X.pt ⟶ Y.pt
   comm' : X.d ≫ f⟦1⟧' = f ≫ Y.d := by obviously
 #align category_theory.differential_object.hom CategoryTheory.DifferentialObject.Homₓ
-
-restate_axiom hom.comm'
 
 attribute [simp, reassoc] hom.comm
 

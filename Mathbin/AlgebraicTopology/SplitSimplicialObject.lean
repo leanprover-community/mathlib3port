@@ -471,8 +471,6 @@ theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n :
 #align simplicial_object.split.hom.ext SimplicialObject.Split.Hom.ext
 -/
 
-restate_axiom hom.comm'
-
 attribute [simp, reassoc] hom.comm
 
 end Split

@@ -96,8 +96,6 @@ structure Equivalence (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Categ
 #align category_theory.equivalence CategoryTheory.Equivalence
 -/
 
-restate_axiom equivalence.functor_unit_iso_comp'
-
 infixr:10 " ≌ " => Equivalence
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
@@ -566,8 +564,6 @@ class IsEquivalence (F : C ⥤ D) where mk' ::
     obviously
 #align category_theory.is_equivalence CategoryTheory.IsEquivalence
 -/
-
-restate_axiom is_equivalence.functor_unit_iso_comp'
 
 attribute [simp, reassoc] is_equivalence.functor_unit_iso_comp
 

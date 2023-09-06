@@ -57,11 +57,7 @@ infixr:26
   Functor
 
 -- type as \func --
-restate_axiom functor.map_id'
-
 attribute [simp] Functor.map_id
-
-restate_axiom functor.map_comp'
 
 attribute [reassoc, simp] functor.map_comp
 

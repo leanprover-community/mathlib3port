@@ -216,30 +216,6 @@ Note that `f₁ ◁ f₂ ◁ f₃ ◁ η ▷ f₄ ▷ f₅` is actually `f₁ �
 -/
 
 
-restate_axiom whisker_left_id'
-
-restate_axiom whisker_left_comp'
-
-restate_axiom id_whisker_left'
-
-restate_axiom comp_whisker_left'
-
-restate_axiom id_whisker_right'
-
-restate_axiom comp_whisker_right'
-
-restate_axiom whisker_right_id'
-
-restate_axiom whisker_right_comp'
-
-restate_axiom whisker_assoc'
-
-restate_axiom whisker_exchange'
-
-restate_axiom pentagon'
-
-restate_axiom triangle'
-
 attribute [simp] pentagon triangle
 
 attribute [reassoc] whisker_left_comp id_whisker_left comp_whisker_left comp_whisker_right

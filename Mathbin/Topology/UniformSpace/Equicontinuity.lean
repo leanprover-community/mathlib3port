@@ -495,13 +495,13 @@ theorem Equicontinuous.closure {A : Set <| X → α} (hA : A.Equicontinuous) :
 #align equicontinuous.closure Equicontinuous.closure
 -/
 
-#print Filter.Tendsto.continuous_of_equicontinuous_at /-
+#print Filter.Tendsto.continuous_of_equicontinuousAt /-
 /-- If `𝓕 : ι → X → α` tends to `f : X → α` *pointwise* along some nontrivial filter, and if the
 family `𝓕` is equicontinuous, then the limit is continuous. -/
-theorem Filter.Tendsto.continuous_of_equicontinuous_at {l : Filter ι} [l.ne_bot] {F : ι → X → α}
+theorem Filter.Tendsto.continuous_of_equicontinuousAt {l : Filter ι} [l.ne_bot] {F : ι → X → α}
     {f : X → α} (h₁ : Tendsto F l (𝓝 f)) (h₂ : Equicontinuous F) : Continuous f :=
   continuous_iff_continuousAt.mpr fun x => h₁.continuousAt_of_equicontinuousAt (h₂ x)
-#align filter.tendsto.continuous_of_equicontinuous_at Filter.Tendsto.continuous_of_equicontinuous_at
+#align filter.tendsto.continuous_of_equicontinuous_at Filter.Tendsto.continuous_of_equicontinuousAt
 -/
 
 #print UniformEquicontinuous.closure' /-

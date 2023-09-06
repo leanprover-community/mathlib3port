@@ -377,9 +377,9 @@ theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlg
 theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] (x : L) :
     algebraMap K L (norm K x) = ∏ σ : L ≃ₐ[K] L, σ x :=
   by
-  apply NoZeroSMulDivisors.algebraMap_injective L (AlgebraicClosure L)
-  rw [map_prod (algebraMap L (AlgebraicClosure L))]
-  rw [← Fintype.prod_equiv (Normal.algHomEquivAut K (AlgebraicClosure L) L)]
+  apply NoZeroSMulDivisors.algebraMap_injective L (AlgebraicClosureAux L)
+  rw [map_prod (algebraMap L (AlgebraicClosureAux L))]
+  rw [← Fintype.prod_equiv (Normal.algHomEquivAut K (AlgebraicClosureAux L) L)]
   · rw [← norm_eq_prod_embeddings]
     simp only [algebra_map_eq_smul_one, smul_one_smul]
   · intro σ
@@ -393,7 +393,8 @@ theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSep
     [FiniteDimensional K L] {x : L} (hx : IsIntegral R x) : IsIntegral R (norm K x) :=
   by
   have hx' : IsIntegral K x := isIntegral_of_isScalarTower hx
-  rw [← isIntegral_algebraMap_iff (algebraMap K (AlgebraicClosure L)).Injective, norm_eq_prod_roots]
+  rw [← isIntegral_algebraMap_iff (algebraMap K (AlgebraicClosureAux L)).Injective,
+    norm_eq_prod_roots]
   · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
     rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
     use minpoly R x, minpoly.monic hx
@@ -413,7 +414,7 @@ theorem norm_norm [Algebra L F] [IsScalarTower K L F] [IsSeparable K F] (x : F) 
   by
   by_cases hKF : FiniteDimensional K F
   · haveI := hKF
-    let A := AlgebraicClosure K
+    let A := AlgebraicClosureAux K
     apply (algebraMap K A).Injective
     haveI : FiniteDimensional L F := FiniteDimensional.right K L F
     haveI : FiniteDimensional K L := FiniteDimensional.left K L F

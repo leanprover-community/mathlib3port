@@ -53,11 +53,7 @@ structure MonoidalNatTrans (F G : LaxMonoidalFunctor C D) extends
 #align category_theory.monoidal_nat_trans CategoryTheory.MonoidalNatTrans
 -/
 
-restate_axiom monoidal_nat_trans.tensor'
-
 attribute [simp, reassoc] monoidal_nat_trans.tensor
-
-restate_axiom monoidal_nat_trans.unit'
 
 attribute [simp, reassoc] monoidal_nat_trans.unit
 

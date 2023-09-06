@@ -68,8 +68,6 @@ structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) w
 #align category_theory.presieve.cover_by_image_structure CategoryTheory.Presieve.CoverByImageStructure
 -/
 
-restate_axiom presieve.cover_by_image_structure.fac'
-
 attribute [simp, reassoc] presieve.cover_by_image_structure.fac
 
 #print CategoryTheory.Presieve.coverByImage /-

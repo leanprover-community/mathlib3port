@@ -576,7 +576,7 @@ theorem exists_homeomorph_extension {E : Type _} [NormedAddCommGroup E] [NormedS
   have hg : ApproximatesLinearOn g (f' : E →L[ℝ] F) univ (lipschitzExtensionConstant F * c) :=
     by
     apply LipschitzOnWith.approximatesLinearOn
-    rw [lipschitz_on_univ]
+    rw [lipschitzOn_univ]
     convert hu
     ext x
     simp only [add_sub_cancel', ContinuousLinearEquiv.coe_coe, Pi.sub_apply]
