@@ -568,7 +568,7 @@ def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → Loca
     intro g
     have : (fun (x : X) (a : α) => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by tidy
     rw [this]
-    apply isOpen_iInter
+    apply isOpen_iInter_of_finite
     intro a
     apply (f a).IsLocallyConstant
 #align locally_constant.unflip LocallyConstant.unflip

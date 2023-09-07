@@ -222,7 +222,7 @@ theorem isClosed_Ici (a : α) : IsClosed (Ici a) :=
 theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α) :=
   by
   simp only [← UpperSet.iInf_Ici, UpperSet.coe_iInf]
-  exact isClosed_biUnion h fun a h₁ => isClosed_Ici a
+  exact Set.Finite.isClosed_biUnion h fun a h₁ => isClosed_Ici a
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
 -/
 
@@ -305,7 +305,8 @@ instance [Preorder α] [TopologicalSpace α] [LowerTopology α] [OrderBot α] [P
     dsimp
     simp_rw [coe_upperClosure, compl_Union, prod_eq, preimage_Inter, preimage_compl]
     -- Note: `refine` doesn't work here because it tries using `prod.topological_space`.
-    apply (isOpen_biInter hs fun a _ => _).inter (isOpen_biInter ht fun b _ => _)
+    apply
+      (Set.Finite.isOpen_biInter hs fun a _ => _).inter (Set.Finite.isOpen_biInter ht fun b _ => _)
     · exact generate_open.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩
     · exact generate_open.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩
     all_goals infer_instance

@@ -114,7 +114,7 @@ theorem isTopologicalBasis_of_subbasis {s : Set (Set α)} (hs : t = generateFrom
     exact ⟨_, ⟨_, ⟨hft₁.union hft₂, union_subset ht₁b ht₂b⟩, sInter_union t₁ t₂⟩, h, subset.rfl⟩
   · rw [sUnion_image, Union₂_eq_univ_iff]
     exact fun x => ⟨∅, ⟨finite_empty, empty_subset _⟩, sInter_empty.substr <| mem_univ x⟩
-  · rintro _ ⟨t, ⟨hft, htb⟩, rfl⟩; apply isOpen_sInter
+  · rintro _ ⟨t, ⟨hft, htb⟩, rfl⟩; apply Set.Finite.isOpen_sInter
     exacts [hft, fun s hs => generate_open.basic _ <| htb hs]
   · rw [← sInter_singleton t]
     exact ⟨{t}, ⟨finite_singleton t, singleton_subset_iff.2 ht⟩, rfl⟩

@@ -317,7 +317,7 @@ theorem compactOpen_eq_compactConvergence :
     haveI := hι
     exact
       ⟨⋂ i, compact_open.gen (C i) (U i), h₂.trans hXf,
-        isOpen_iInter fun i => ContinuousMap.isOpen_gen (hC i) (hU i), h₁⟩
+        isOpen_iInter_of_finite fun i => ContinuousMap.isOpen_gen (hC i) (hU i), h₁⟩
   · simp only [TopologicalSpace.le_generateFrom_iff_subset_isOpen, and_imp, exists_prop,
       forall_exists_index, set_of_subset_set_of]
     rintro - K hK U hU rfl f hf

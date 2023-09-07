@@ -505,10 +505,10 @@ theorem exists_seq_norm_le_one_le_norm_sub (h : ¬FiniteDimensional 𝕜 E) :
 
 variable (𝕜)
 
-#print finiteDimensional_of_isCompact_closed_ball₀ /-
+#print finiteDimensional_of_isCompact_closedBall₀ /-
 /-- **Riesz's theorem**: if a closed ball with center zero of positive radius is compact in a vector
 space, then the space is finite-dimensional. -/
-theorem finiteDimensional_of_isCompact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
+theorem finiteDimensional_of_isCompact_closedBall₀ {r : ℝ} (rpos : 0 < r)
     (h : IsCompact (Metric.closedBall (0 : E) r)) : FiniteDimensional 𝕜 E :=
   by
   by_contra hfin
@@ -541,7 +541,7 @@ theorem finiteDimensional_of_isCompact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
       apply mul_le_mul_of_nonneg_left (lef _ _ (ne_of_gt _)) (norm_nonneg _)
       exact φmono (Nat.lt_succ_self N)
     _ < ‖c‖ := hN (N + 1) (Nat.le_succ N)
-#align finite_dimensional_of_is_compact_closed_ball₀ finiteDimensional_of_isCompact_closed_ball₀
+#align finite_dimensional_of_is_compact_closed_ball₀ finiteDimensional_of_isCompact_closedBall₀
 -/
 
 #print finiteDimensional_of_isCompact_closedBall /-
@@ -550,7 +550,7 @@ space is finite-dimensional. -/
 theorem finiteDimensional_of_isCompact_closedBall {r : ℝ} (rpos : 0 < r) {c : E}
     (h : IsCompact (Metric.closedBall c r)) : FiniteDimensional 𝕜 E :=
   by
-  apply finiteDimensional_of_isCompact_closed_ball₀ 𝕜 rpos
+  apply finiteDimensional_of_isCompact_closedBall₀ 𝕜 rpos
   have : Continuous fun x => -c + x := continuous_const.add continuous_id
   simpa using h.image this
 #align finite_dimensional_of_is_compact_closed_ball finiteDimensional_of_isCompact_closedBall
@@ -581,16 +581,16 @@ theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [Topologic
 
 end Riesz
 
-#print LinearEquiv.closedEmbedding_of_injective /-
+#print LinearMap.closedEmbedding_of_injective /-
 /-- An injective linear map with finite-dimensional domain is a closed embedding. -/
-theorem LinearEquiv.closedEmbedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
+theorem LinearMap.closedEmbedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
     [FiniteDimensional 𝕜 E] : ClosedEmbedding ⇑f :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
   { embedding_subtype_val.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
     closed_range := by
       haveI := f.finite_dimensional_range
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
-#align linear_equiv.closed_embedding_of_injective LinearEquiv.closedEmbedding_of_injective
+#align linear_equiv.closed_embedding_of_injective LinearMap.closedEmbedding_of_injective
 -/
 
 #print ContinuousLinearMap.exists_right_inverse_of_surjective /-
@@ -604,7 +604,7 @@ theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensiona
 
 #print closedEmbedding_smul_left /-
 theorem closedEmbedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
-  LinearEquiv.closedEmbedding_of_injective (LinearMap.ker_toSpanSingleton 𝕜 E hc)
+  LinearMap.closedEmbedding_of_injective (LinearMap.ker_toSpanSingleton 𝕜 E hc)
 #align closed_embedding_smul_left closedEmbedding_smul_left
 -/
 

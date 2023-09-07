@@ -96,7 +96,7 @@ variable {𝕜 E F : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup 
 theorem measurable_apply₂ [MeasurableSpace E] [OpensMeasurableSpace E] [SecondCountableTopology E]
     [SecondCountableTopology (E →L[𝕜] F)] [MeasurableSpace F] [BorelSpace F] :
     Measurable fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
-  isBoundedBilinearMapApply.Continuous.Measurable
+  isBoundedBilinearMap_apply.Continuous.Measurable
 #align continuous_linear_map.measurable_apply₂ ContinuousLinearMap.measurable_apply₂
 -/
 

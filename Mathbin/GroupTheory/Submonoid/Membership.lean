@@ -223,7 +223,7 @@ theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
   by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_iSup S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
-    simpa only [closure_iUnion, closure_eq (S _)] using this
+    simpa only [closure_Union_of_finite, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩

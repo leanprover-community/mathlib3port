@@ -707,7 +707,7 @@ def toFiberBundleCore : FiberBundleCore ι B F :=
   { Z with
     coordChange := fun i j b => Z.coordChange i j b
     continuousOn_coordChange := fun i j =>
-      isBoundedBilinearMapApply.Continuous.comp_continuousOn
+      isBoundedBilinearMap_apply.Continuous.comp_continuousOn
         ((Z.continuousOn_coordChange i j).Prod_map continuousOn_id) }
 #align vector_bundle_core.to_fiber_bundle_core VectorBundleCore.toFiberBundleCore
 -/

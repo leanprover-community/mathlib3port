@@ -434,7 +434,7 @@ theorem nonempty_iInter_clPrehaar (K₀ : PositiveCompacts G) :
     apply is_compact_Icc
   refine' this.inter_Inter_nonempty (cl_prehaar K₀) (fun s => isClosed_closure) fun t => _
   let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).carrier
-  have h1V₀ : IsOpen V₀ := by apply isOpen_biInter; apply Finset.finite_toSet;
+  have h1V₀ : IsOpen V₀ := by apply Set.Finite.isOpen_biInter; apply Finset.finite_toSet;
     rintro ⟨⟨V, hV₁⟩, hV₂⟩ h2V; exact hV₁
   have h2V₀ : (1 : G) ∈ V₀ := by simp only [mem_Inter]; rintro ⟨⟨V, hV₁⟩, hV₂⟩ h2V; exact hV₂
   refine' ⟨prehaar K₀ V₀, _⟩

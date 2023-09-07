@@ -175,7 +175,7 @@ theorem tendsto_normSq_coprime_pair :
   have hf' : ClosedEmbedding f :=
     by
     -- for some reason we get a timeout if we try and apply this lemma in a more sensible way
-    have := @LinearEquiv.closedEmbedding_of_injective ℝ _ (Fin 2 → ℝ) _ (id _) ℂ _ _ _ _
+    have := @LinearMap.closedEmbedding_of_injective ℝ _ (Fin 2 → ℝ) _ (id _) ℂ _ _ _ _
     rotate_left 2
     exact f
     exact this hf

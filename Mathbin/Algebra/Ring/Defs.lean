@@ -493,27 +493,23 @@ alias sub_mul := mul_sub_right_distrib
 
 variable {a b c d e : α}
 
-#print mul_add_eq_mul_add_iff_sub_mul_add_eq /-
 /-- An iff statement following from right distributivity in rings and the definition
   of subtraction. -/
-theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b) * e + c = d :=
+theorem hMul_add_eq_hMul_add_iff_sub_hMul_add_eq : a * e + c = b * e + d ↔ (a - b) * e + c = d :=
   calc
     a * e + c = b * e + d ↔ a * e + c = d + b * e := by simp [add_comm]
     _ ↔ a * e + c - b * e = d := (Iff.intro (fun h => by rw [h]; simp) fun h => by rw [← h]; simp)
     _ ↔ (a - b) * e + c = d := by simp [sub_mul, sub_add_eq_add_sub]
-#align mul_add_eq_mul_add_iff_sub_mul_add_eq mul_add_eq_mul_add_iff_sub_mul_add_eq
--/
+#align mul_add_eq_mul_add_iff_sub_mul_add_eq hMul_add_eq_hMul_add_iff_sub_hMul_add_eq
 
-#print sub_mul_add_eq_of_mul_add_eq_mul_add /-
 /-- A simplification of one side of an equation exploiting right distributivity in rings
   and the definition of subtraction. -/
-theorem sub_mul_add_eq_of_mul_add_eq_mul_add : a * e + c = b * e + d → (a - b) * e + c = d :=
+theorem sub_hMul_add_eq_of_hMul_add_eq_hMul_add : a * e + c = b * e + d → (a - b) * e + c = d :=
   fun h =>
   calc
     (a - b) * e + c = a * e + c - b * e := by simp [sub_mul, sub_add_eq_add_sub]
     _ = d := by rw [h]; simp [@add_sub_cancel α]
-#align sub_mul_add_eq_of_mul_add_eq_mul_add sub_mul_add_eq_of_mul_add_eq_mul_add
--/
+#align sub_mul_add_eq_of_mul_add_eq_mul_add sub_hMul_add_eq_of_hMul_add_eq_hMul_add
 
 end NonUnitalNonAssocRing
 

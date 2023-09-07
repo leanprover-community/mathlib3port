@@ -1733,7 +1733,8 @@ theorem Continuous.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, Topol
 #print isOpen_set_pi /-
 theorem isOpen_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hi : i.Finite)
     (hs : ∀ a ∈ i, IsOpen (s a)) : IsOpen (pi i s) := by
-  rw [pi_def] <;> exact isOpen_biInter hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
+  rw [pi_def] <;>
+    exact Set.Finite.isOpen_biInter hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
 #align is_open_set_pi isOpen_set_pi
 -/
 
@@ -1864,7 +1865,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
-    apply isOpen_biInter (Finset.finite_toSet _)
+    apply Set.Finite.isOpen_biInter (Finset.finite_toSet _)
     intro a ha; show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generateFrom _ _ (hi a ha)
     exact fun s hs => generate_open.basic _ ⟨update (fun a => univ) a s, {a}, by simp [hs]⟩
@@ -1922,7 +1923,9 @@ instance Pi.discreteTopology : DiscreteTopology (∀ i, π i) :=
     by
     rw [show {x} = ⋂ i, {y : ∀ i, π i | y i = x i} by ext;
         simp only [funext_iff, Set.mem_singleton_iff, Set.mem_iInter, Set.mem_setOf_eq]]
-    exact isOpen_iInter fun i => (continuous_apply i).isOpen_preimage {x i} (isOpen_discrete {x i})
+    exact
+      isOpen_iInter_of_finite fun i =>
+        (continuous_apply i).isOpen_preimage {x i} (isOpen_discrete {x i})
 #align Pi.discrete_topology Pi.discreteTopology
 -/
 

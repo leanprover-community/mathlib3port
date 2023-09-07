@@ -514,7 +514,7 @@ theorem isOpen_setOf_eventually_nhdsWithin [T1Space α] {p : α → Prop} :
 protected theorem Set.Finite.isClosed [T1Space α] {s : Set α} (hs : Set.Finite s) : IsClosed s :=
   by
   rw [← bUnion_of_singleton s]
-  exact isClosed_biUnion hs fun i hi => isClosed_singleton
+  exact Set.Finite.isClosed_biUnion hs fun i hi => isClosed_singleton
 #align set.finite.is_closed Set.Finite.isClosed
 -/
 
@@ -2291,7 +2291,7 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
       exact fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu x hx⟩
     · simp only [← supr_eq_Union, iSup_and']
       exact
-        isClosed_biUnion
+        Set.Finite.isClosed_biUnion
           (((finite_le_nat n).preimage_embedding (Encodable.encode' _)).Subset <|
             inter_subset_right _ _)
           fun u hu => isClosed_closure

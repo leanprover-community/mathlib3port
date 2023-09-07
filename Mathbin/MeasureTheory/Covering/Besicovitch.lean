@@ -766,7 +766,7 @@ theorem exists_disjoint_closedBall_covering_ae_of_finiteMeasure_aux (μ : Measur
     intro t ht
     set B := ⋃ (p : α × ℝ) (hp : p ∈ t), closed_ball p.1 p.2 with hB
     have B_closed : IsClosed B :=
-      isClosed_biUnion (Finset.finite_toSet _) fun i hi => is_closed_ball
+      Set.Finite.isClosed_biUnion (Finset.finite_toSet _) fun i hi => is_closed_ball
     set s' := s \ B with hs'
     have : ∀ x ∈ s', ∃ r ∈ f x ∩ Ioo 0 1, Disjoint B (closed_ball x r) :=
       by

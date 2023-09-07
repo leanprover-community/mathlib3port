@@ -188,35 +188,37 @@ theorem isOpen_empty : IsOpen (∅ : Set α) := by
 #align is_open_empty isOpen_empty
 -/
 
-#print isOpen_sInter /-
-theorem isOpen_sInter {s : Set (Set α)} (hs : s.Finite) : (∀ t ∈ s, IsOpen t) → IsOpen (⋂₀ s) :=
+#print Set.Finite.isOpen_sInter /-
+theorem Set.Finite.isOpen_sInter {s : Set (Set α)} (hs : s.Finite) :
+    (∀ t ∈ s, IsOpen t) → IsOpen (⋂₀ s) :=
   Finite.induction_on hs (fun _ => by rw [sInter_empty] <;> exact isOpen_univ)
     fun a s has hs ih h => by
     rw [sInter_insert] <;>
       exact IsOpen.inter (h _ <| mem_insert _ _) (ih fun t => h t ∘ mem_insert_of_mem _)
-#align is_open_sInter isOpen_sInter
+#align is_open_sInter Set.Finite.isOpen_sInter
 -/
 
-#print isOpen_biInter /-
-theorem isOpen_biInter {s : Set β} {f : β → Set α} (hs : s.Finite) :
+#print Set.Finite.isOpen_biInter /-
+theorem Set.Finite.isOpen_biInter {s : Set β} {f : β → Set α} (hs : s.Finite) :
     (∀ i ∈ s, IsOpen (f i)) → IsOpen (⋂ i ∈ s, f i) :=
   Finite.induction_on hs (fun _ => by rw [bInter_empty] <;> exact isOpen_univ)
     fun a s has hs ih h => by
     rw [bInter_insert] <;>
       exact IsOpen.inter (h a (mem_insert _ _)) (ih fun i hi => h i (mem_insert_of_mem _ hi))
-#align is_open_bInter isOpen_biInter
+#align is_open_bInter Set.Finite.isOpen_biInter
 -/
 
-#print isOpen_iInter /-
-theorem isOpen_iInter [Finite ι] {s : ι → Set α} (h : ∀ i, IsOpen (s i)) : IsOpen (⋂ i, s i) :=
-  isOpen_sInter (finite_range _) (forall_range_iff.2 h)
-#align is_open_Inter isOpen_iInter
+#print isOpen_iInter_of_finite /-
+theorem isOpen_iInter_of_finite [Finite ι] {s : ι → Set α} (h : ∀ i, IsOpen (s i)) :
+    IsOpen (⋂ i, s i) :=
+  Set.Finite.isOpen_sInter (finite_range _) (forall_range_iff.2 h)
+#align is_open_Inter isOpen_iInter_of_finite
 -/
 
 #print isOpen_biInter_finset /-
 theorem isOpen_biInter_finset {s : Finset β} {f : β → Set α} (h : ∀ i ∈ s, IsOpen (f i)) :
     IsOpen (⋂ i ∈ s, f i) :=
-  isOpen_biInter (toFinite _) h
+  Set.Finite.isOpen_biInter (toFinite _) h
 #align is_open_bInter_finset isOpen_biInter_finset
 -/
 
@@ -319,21 +321,21 @@ theorem IsClosed.sdiff {s t : Set α} (h₁ : IsClosed s) (h₂ : IsOpen t) : Is
 #align is_closed.sdiff IsClosed.sdiff
 -/
 
-#print isClosed_biUnion /-
-theorem isClosed_biUnion {s : Set β} {f : β → Set α} (hs : s.Finite) :
+#print Set.Finite.isClosed_biUnion /-
+theorem Set.Finite.isClosed_biUnion {s : Set β} {f : β → Set α} (hs : s.Finite) :
     (∀ i ∈ s, IsClosed (f i)) → IsClosed (⋃ i ∈ s, f i) :=
   Finite.induction_on hs (fun _ => by rw [bUnion_empty] <;> exact isClosed_empty)
     fun a s has hs ih h => by
     rw [bUnion_insert] <;>
       exact IsClosed.union (h a (mem_insert _ _)) (ih fun i hi => h i (mem_insert_of_mem _ hi))
-#align is_closed_bUnion isClosed_biUnion
+#align is_closed_bUnion Set.Finite.isClosed_biUnion
 -/
 
-#print isClosed_iUnion /-
-theorem isClosed_iUnion [Finite ι] {s : ι → Set α} (h : ∀ i, IsClosed (s i)) :
+#print isClosed_iUnion_of_finite /-
+theorem isClosed_iUnion_of_finite [Finite ι] {s : ι → Set α} (h : ∀ i, IsClosed (s i)) :
     IsClosed (⋃ i, s i) := by simp only [← isOpen_compl_iff, compl_Union] at *;
-  exact isOpen_iInter h
-#align is_closed_Union isClosed_iUnion
+  exact isOpen_iInter_of_finite h
+#align is_closed_Union isClosed_iUnion_of_finite
 -/
 
 #print isClosed_imp /-
@@ -476,12 +478,12 @@ theorem Finset.interior_iInter {ι : Type _} (s : Finset ι) (f : ι → Set α)
 #align finset.interior_Inter Finset.interior_iInter
 -/
 
-#print interior_iInter /-
+#print interior_iInter_of_finite /-
 @[simp]
-theorem interior_iInter {ι : Type _} [Finite ι] (f : ι → Set α) :
+theorem interior_iInter_of_finite {ι : Type _} [Finite ι] (f : ι → Set α) :
     interior (⋂ i, f i) = ⋂ i, interior (f i) := by cases nonempty_fintype ι;
   convert finset.univ.interior_Inter f <;> simp
-#align interior_Inter interior_iInter
+#align interior_Inter interior_iInter_of_finite
 -/
 
 #print interior_union_isClosed_of_interior_empty /-
@@ -707,12 +709,12 @@ theorem Finset.closure_biUnion {ι : Type _} (s : Finset ι) (f : ι → Set α)
 #align finset.closure_bUnion Finset.closure_biUnion
 -/
 
-#print closure_iUnion /-
+#print closure_Union_of_finite /-
 @[simp]
-theorem closure_iUnion {ι : Type _} [Finite ι] (f : ι → Set α) :
+theorem closure_Union_of_finite {ι : Type _} [Finite ι] (f : ι → Set α) :
     closure (⋃ i, f i) = ⋃ i, closure (f i) := by cases nonempty_fintype ι;
   convert finset.univ.closure_bUnion f <;> simp
-#align closure_Union closure_iUnion
+#align closure_Union closure_Union_of_finite
 -/
 
 #print interior_subset_closure /-

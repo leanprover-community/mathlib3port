@@ -819,44 +819,35 @@ section TubeLemma
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print NhdsContainBoxes /-
 /-- `nhds_contain_boxes s t` means that any open neighborhood of `s × t` in `α × β` includes
 a product of an open neighborhood of `s` by an open neighborhood of `t`. -/
 def NhdsContainBoxes (s : Set α) (t : Set β) : Prop :=
   ∀ (n : Set (α × β)) (hn : IsOpen n) (hp : s ×ˢ t ⊆ n),
     ∃ (u : Set α) (v : Set β), IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ u ×ˢ v ⊆ n
 #align nhds_contain_boxes NhdsContainBoxes
--/
 
-#print NhdsContainBoxes.symm /-
 theorem NhdsContainBoxes.symm {s : Set α} {t : Set β} :
     NhdsContainBoxes s t → NhdsContainBoxes t s := fun H n hn hp =>
   let ⟨u, v, uo, vo, su, tv, p⟩ :=
     H (Prod.swap ⁻¹' n) (hn.Preimage continuous_swap) (by rwa [← image_subset_iff, image_swap_prod])
   ⟨v, u, vo, uo, tv, su, by rwa [← image_subset_iff, image_swap_prod] at p ⟩
 #align nhds_contain_boxes.symm NhdsContainBoxes.symm
--/
 
-#print NhdsContainBoxes.comm /-
 theorem NhdsContainBoxes.comm {s : Set α} {t : Set β} :
     NhdsContainBoxes s t ↔ NhdsContainBoxes t s :=
   Iff.intro NhdsContainBoxes.symm NhdsContainBoxes.symm
 #align nhds_contain_boxes.comm NhdsContainBoxes.comm
--/
 
-#print nhdsContainBoxes_of_singleton /-
 theorem nhdsContainBoxes_of_singleton {x : α} {y : β} :
     NhdsContainBoxes ({x} : Set α) ({y} : Set β) := fun n hn hp =>
   let ⟨u, v, uo, vo, xu, yv, hp'⟩ := isOpen_prod_iff.mp hn x y (hp <| by simp)
   ⟨u, v, uo, vo, by simpa, by simpa, hp'⟩
 #align nhds_contain_boxes_of_singleton nhdsContainBoxes_of_singleton
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print nhdsContainBoxes_of_compact /-
 theorem nhdsContainBoxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set β)
     (H : ∀ x ∈ s, NhdsContainBoxes ({x} : Set α) t) : NhdsContainBoxes s t := fun n hn hp =>
   have :
@@ -873,7 +864,7 @@ theorem nhdsContainBoxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set β)
   let u := ⋃ i ∈ s0, (uvs i).1
   let v := ⋂ i ∈ s0, (uvs i).2
   have : IsOpen u := isOpen_biUnion fun i _ => (h i).1
-  have : IsOpen v := isOpen_biInter s0.finite_toSet fun i _ => (h i).2.1
+  have : IsOpen v := Set.Finite.isOpen_biInter s0.finite_toSet fun i _ => (h i).2.1
   have : t ⊆ v := subset_iInter₂ fun i _ => (h i).2.2.2.1
   have : u ×ˢ v ⊆ n := fun ⟨x', y'⟩ ⟨hx', hy'⟩ =>
     have : ∃ i ∈ s0, x' ∈ (uvs i).1 := by simpa using hx'
@@ -881,7 +872,6 @@ theorem nhdsContainBoxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set β)
     (h i).2.2.2.2 ⟨hi, (biInter_subset_of_mem is0 : v ⊆ (uvs i).2) hy'⟩
   ⟨u, v, ‹IsOpen u›, ‹IsOpen v›, s0_cover, ‹t ⊆ v›, ‹u ×ˢ v ⊆ n›⟩
 #align nhds_contain_boxes_of_compact nhdsContainBoxes_of_compact
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2056,45 +2046,45 @@ theorem IsClopen.prod {s : Set α} {t : Set β} (hs : IsClopen s) (ht : IsClopen
 #align is_clopen.prod IsClopen.prod
 -/
 
-#print isClopen_iUnion /-
-theorem isClopen_iUnion {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) :
-    IsClopen (⋃ i, s i) :=
-  ⟨isOpen_iUnion (forall_and.1 h).1, isClosed_iUnion (forall_and.1 h).2⟩
-#align is_clopen_Union isClopen_iUnion
+#print isClopen_iUnion_of_finite /-
+theorem isClopen_iUnion_of_finite {β : Type _} [Finite β] {s : β → Set α}
+    (h : ∀ i, IsClopen (s i)) : IsClopen (⋃ i, s i) :=
+  ⟨isOpen_iUnion (forall_and.1 h).1, isClosed_iUnion_of_finite (forall_and.1 h).2⟩
+#align is_clopen_Union isClopen_iUnion_of_finite
 -/
 
-#print isClopen_biUnion /-
-theorem isClopen_biUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite)
+#print Set.Finite.isClopen_biUnion /-
+theorem Set.Finite.isClopen_biUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite)
     (h : ∀ i ∈ s, IsClopen <| f i) : IsClopen (⋃ i ∈ s, f i) :=
-  ⟨isOpen_biUnion fun i hi => (h i hi).1, isClosed_biUnion hs fun i hi => (h i hi).2⟩
-#align is_clopen_bUnion isClopen_biUnion
+  ⟨isOpen_biUnion fun i hi => (h i hi).1, Set.Finite.isClosed_biUnion hs fun i hi => (h i hi).2⟩
+#align is_clopen_bUnion Set.Finite.isClopen_biUnion
 -/
 
 #print isClopen_biUnion_finset /-
 theorem isClopen_biUnion_finset {β : Type _} {s : Finset β} {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen <| f i) : IsClopen (⋃ i ∈ s, f i) :=
-  isClopen_biUnion s.finite_toSet h
+  Set.Finite.isClopen_biUnion s.finite_toSet h
 #align is_clopen_bUnion_finset isClopen_biUnion_finset
 -/
 
-#print isClopen_iInter /-
-theorem isClopen_iInter {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) :
-    IsClopen (⋂ i, s i) :=
-  ⟨isOpen_iInter (forall_and.1 h).1, isClosed_iInter (forall_and.1 h).2⟩
-#align is_clopen_Inter isClopen_iInter
+#print isClopen_iInter_of_finite /-
+theorem isClopen_iInter_of_finite {β : Type _} [Finite β] {s : β → Set α}
+    (h : ∀ i, IsClopen (s i)) : IsClopen (⋂ i, s i) :=
+  ⟨isOpen_iInter_of_finite (forall_and.1 h).1, isClosed_iInter (forall_and.1 h).2⟩
+#align is_clopen_Inter isClopen_iInter_of_finite
 -/
 
-#print isClopen_biInter /-
-theorem isClopen_biInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α}
+#print Set.Finite.isClopen_biInter /-
+theorem Set.Finite.isClopen_biInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen (f i)) : IsClopen (⋂ i ∈ s, f i) :=
-  ⟨isOpen_biInter hs fun i hi => (h i hi).1, isClosed_biInter fun i hi => (h i hi).2⟩
-#align is_clopen_bInter isClopen_biInter
+  ⟨Set.Finite.isOpen_biInter hs fun i hi => (h i hi).1, isClosed_biInter fun i hi => (h i hi).2⟩
+#align is_clopen_bInter Set.Finite.isClopen_biInter
 -/
 
 #print isClopen_biInter_finset /-
 theorem isClopen_biInter_finset {β : Type _} {s : Finset β} {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen (f i)) : IsClopen (⋂ i ∈ s, f i) :=
-  isClopen_biInter s.finite_toSet h
+  Set.Finite.isClopen_biInter s.finite_toSet h
 #align is_clopen_bInter_finset isClopen_biInter_finset
 -/
 
@@ -2471,7 +2461,7 @@ theorem isIrreducible_iff_sInter {s : Set α} :
       rw [Finset.coe_insert, sInter_insert]
       apply h.2
       · solve_by_elim [Finset.mem_insert_self]
-      · apply isOpen_sInter (Finset.finite_toSet U)
+      · apply Set.Finite.isOpen_sInter (Finset.finite_toSet U)
         intros; solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
       · apply IH
@@ -2538,7 +2528,7 @@ theorem isIrreducible_iff_sUnion_closed {s : Set α} :
         · intros; solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
       · rw [sUnion_eq_bUnion]
-        apply isClosed_biUnion (Finset.finite_toSet Z)
+        apply Set.Finite.isClosed_biUnion (Finset.finite_toSet Z)
         · intros; solve_by_elim [Finset.mem_insert_of_mem]
       · simpa using H
   · constructor

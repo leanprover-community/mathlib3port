@@ -582,10 +582,10 @@ theorem ContinuousLinearMap.isBoundedLinearMap_comp_right (f : E →L[𝕜] F) :
 #align continuous_linear_map.is_bounded_linear_map_comp_right ContinuousLinearMap.isBoundedLinearMap_comp_right
 -/
 
-#print isBoundedBilinearMapApply /-
-theorem isBoundedBilinearMapApply : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
+#print isBoundedBilinearMap_apply /-
+theorem isBoundedBilinearMap_apply : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
   (ContinuousLinearMap.flip (apply 𝕜 F : E →L[𝕜] (E →L[𝕜] F) →L[𝕜] F)).IsBoundedBilinearMap
-#align is_bounded_bilinear_map_apply isBoundedBilinearMapApply
+#align is_bounded_bilinear_map_apply isBoundedBilinearMap_apply
 -/
 
 #print isBoundedBilinearMap_smulRight /-

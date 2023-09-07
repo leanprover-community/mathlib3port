@@ -684,7 +684,8 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
     let ⟨t, htf, hst⟩ := h V hV.1
     ⟨t, htf,
       closure_minimal hst <|
-        isClosed_biUnion htf fun y hy => hV.2.Preimage (continuous_id.prod_mk continuous_const)⟩
+        Set.Finite.isClosed_biUnion htf fun y hy =>
+          hV.2.Preimage (continuous_id.prod_mk continuous_const)⟩
 #align totally_bounded.closure TotallyBounded.closure
 -/
 
