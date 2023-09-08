@@ -32,6 +32,7 @@ section Semiring
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
+#print BilinForm.dualProd /-
 /-- The symmetric bilinear form on `module.dual R M × M` defined as
 `B (f, x) (g, y) = f y + g x`. -/
 @[simps]
@@ -42,9 +43,12 @@ def dualProd : BilinForm R (Module.Dual R M × M) :=
       ((LinearMap.applyₗ.comp (LinearMap.snd R (Module.Dual R M) M)).compl₂
           (LinearMap.fst R (Module.Dual R M) M)).flip
 #align bilin_form.dual_prod BilinForm.dualProd
+-/
 
+#print BilinForm.isSymm_dualProd /-
 theorem isSymm_dualProd : (dualProd R M).IsSymm := fun x y => add_comm _ _
 #align bilin_form.is_symm_dual_prod BilinForm.isSymm_dualProd
+-/
 
 end Semiring
 
@@ -52,6 +56,7 @@ section Ring
 
 variable [CommRing R] [AddCommGroup M] [Module R M]
 
+#print BilinForm.nondenerate_dualProd /-
 theorem nondenerate_dualProd :
     (dualProd R M).Nondegenerate ↔ Function.Injective (Module.Dual.eval R M) := by
   classical
@@ -75,6 +80,7 @@ theorem nondenerate_dualProd :
   refine' prod.map_injective.trans _
   exact and_iff_right Function.injective_id
 #align bilin_form.nondenerate_dual_prod BilinForm.nondenerate_dualProd
+-/
 
 end Ring
 
@@ -86,6 +92,7 @@ section Semiring
 
 variable [CommSemiring R] [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N]
 
+#print QuadraticForm.dualProd /-
 /-- The quadratic form on `module.dual R M × M` defined as `Q (f, x) = f x`. -/
 @[simps]
 def dualProd : QuadraticForm R (Module.Dual R M × M)
@@ -100,15 +107,19 @@ def dualProd : QuadraticForm R (Module.Dual R M × M)
         map_add, add_right_comm _ (q.1 q.2), add_comm (q.1 p.2) (p.1 q.2), ← add_assoc, ←
         add_assoc]⟩
 #align quadratic_form.dual_prod QuadraticForm.dualProd
+-/
 
+#print BilinForm.dualProd.toQuadraticForm /-
 @[simp]
 theorem BilinForm.dualProd.toQuadraticForm :
     (BilinForm.dualProd R M).toQuadraticForm = 2 • dualProd R M :=
   ext fun a => (two_nsmul _).symm
 #align bilin_form.dual_prod.to_quadratic_form BilinForm.dualProd.toQuadraticForm
+-/
 
 variable {R M N}
 
+#print QuadraticForm.dualProdIsometry /-
 /-- Any module isomorphism induces a quadratic isomorphism between the corresponding `dual_prod.` -/
 @[simps]
 def dualProdIsometry (f : M ≃ₗ[R] N) : (dualProd R M).IsometryEquiv (dualProd R N)
@@ -116,7 +127,9 @@ def dualProdIsometry (f : M ≃ₗ[R] N) : (dualProd R M).IsometryEquiv (dualPro
   toLinearEquiv := f.dualMap.symm.Prod f
   map_app' x := FunLike.congr_arg x.fst <| f.symm_apply_apply _
 #align quadratic_form.dual_prod_isometry QuadraticForm.dualProdIsometry
+-/
 
+#print QuadraticForm.dualProdProdIsometry /-
 /-- `quadratic_form.dual_prod` commutes (isometrically) with `quadratic_form.prod`. -/
 @[simps]
 def dualProdProdIsometry : (dualProd R (M × N)).IsometryEquiv ((dualProd R M).Prod (dualProd R N))
@@ -127,6 +140,7 @@ def dualProdProdIsometry : (dualProd R (M × N)).IsometryEquiv ((dualProd R M).P
   map_app' m :=
     (m.fst.map_add _ _).symm.trans <| FunLike.congr_arg m.fst <| Prod.ext (add_zero _) (zero_add _)
 #align quadratic_form.dual_prod_prod_isometry QuadraticForm.dualProdProdIsometry
+-/
 
 end Semiring
 
@@ -136,6 +150,7 @@ variable [CommRing R] [AddCommGroup M] [Module R M]
 
 variable {R M}
 
+#print QuadraticForm.toDualProd /-
 /-- The isometry sending `(Q.prod $ -Q)` to `(quadratic_form.dual_prod R M)`.
 
 This is `σ` from Proposition 4.8, page 84 of
@@ -147,7 +162,9 @@ def toDualProd (Q : QuadraticForm R M) [Invertible (2 : R)] : M × M →ₗ[R] M
     (Q.Associated.toLin.comp (LinearMap.fst _ _ _) + Q.Associated.toLin.comp (LinearMap.snd _ _ _))
     (LinearMap.fst _ _ _ - LinearMap.snd _ _ _)
 #align quadratic_form.to_dual_prod QuadraticForm.toDualProd
+-/
 
+#print QuadraticForm.toDualProd_isometry /-
 theorem toDualProd_isometry [Invertible (2 : R)] (Q : QuadraticForm R M) (x : M × M) :
     QuadraticForm.dualProd R M (toDualProd Q x) = (Q.Prod <| -Q) x :=
   by
@@ -156,6 +173,7 @@ theorem toDualProd_isometry [Invertible (2 : R)] (Q : QuadraticForm R M) (x : M 
   simp [polar_comm _ x.1 x.2, ← sub_add, mul_sub, sub_mul, smul_sub, Submonoid.smul_def, ←
     sub_eq_add_neg (Q x.1) (Q x.2)]
 #align quadratic_form.to_dual_prod_isometry QuadraticForm.toDualProd_isometry
+-/
 
 -- TODO: show that `to_dual_prod` is an equivalence
 end Ring

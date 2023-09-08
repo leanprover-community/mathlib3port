@@ -207,7 +207,7 @@ theorem IsThreeCycle.alternating_normalClosure (h5 : 5 ≤ Fintype.card α) {f :
     (by
       have hi : Function.Injective (alternatingGroup α).Subtype := Subtype.coe_injective
       refine' eq_top_iff.1 (map_injective hi (le_antisymm (map_mono le_top) _))
-      rw [← MonoidHom.range_eq_map, subtype_range, normalClosure, MonoidHom.map_closure]
+      rw [← MonoidHom.range_eq_map, subtype_range, normal_closure, MonoidHom.map_closure]
       refine' (le_of_eq closure_three_cycles_eq_alternating.symm).trans (closure_mono _)
       intro g h
       obtain ⟨c, rfl⟩ := isConj_iff.1 (is_conj_iff_cycle_type_eq.2 (hf.trans h.symm))
@@ -276,7 +276,7 @@ theorem normalClosure_finRotate_five :
       rw [Set.singleton_subset_iff, SetLike.mem_coe]
       have h :
         (⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩ : alternatingGroup (Fin 5)) ∈
-          normalClosure _ :=
+          normal_closure _ :=
         SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
       exact
         mul_mem
@@ -306,7 +306,7 @@ theorem normalClosure_swap_mul_swap_five :
   rw [eq_top_iff, ← normal_closure_fin_rotate_five]
   refine' normal_closure_le_normal _
   rw [Set.singleton_subset_iff, SetLike.mem_coe, ← h5]
-  have h : g2 ∈ normalClosure {g2} :=
+  have h : g2 ∈ normal_closure {g2} :=
     SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
   exact mul_mem (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem h)
 #align alternating_group.normal_closure_swap_mul_swap_five alternatingGroup.normalClosure_swap_mul_swap_five

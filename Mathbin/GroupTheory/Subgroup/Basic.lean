@@ -2979,7 +2979,7 @@ instance normalClosure_normal : (normalClosure s).Normal :=
     by
     refine' Subgroup.closure_induction h (fun x hx => _) _ (fun x y ihx ihy => _) fun x ihx => _
     · exact conjugates_of_set_subset_normal_closure (conj_mem_conjugates_of_set hx)
-    · simpa using (normalClosure s).one_mem
+    · simpa using (normal_closure s).one_mem
     · rw [← conj_mul]
       exact mul_mem ihx ihy
     · rw [← conj_inv]

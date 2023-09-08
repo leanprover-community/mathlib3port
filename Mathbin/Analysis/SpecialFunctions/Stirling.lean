@@ -71,7 +71,6 @@ theorem stirlingSeq_one : stirlingSeq 1 = exp 1 / sqrt 2 := by
 #align stirling.stirling_seq_one Stirling.stirlingSeq_one
 -/
 
-#print Stirling.log_stirlingSeq_formula /-
 /-- We have the expression
 `log (stirling_seq (n + 1)) = log(n + 1)! - 1 / 2 * log(2 * n) - n * log ((n + 1) / e)`.
 -/
@@ -82,8 +81,7 @@ theorem log_stirlingSeq_formula (n : ℕ) :
   rw [stirling_seq, log_div, log_mul, sqrt_eq_rpow, log_rpow, Real.log_pow, tsub_tsub] <;>
       try apply ne_of_gt <;>
     positivity
-#align stirling.log_stirling_seq_formula Stirling.log_stirlingSeq_formula
--/
+#align stirling.log_stirling_seq_formula Stirling.log_stirlingSeq_formulaₓ
 
 #print Stirling.log_stirlingSeq_diff_hasSum /-
 -- TODO: Make `positivity` handle `≠ 0` goals

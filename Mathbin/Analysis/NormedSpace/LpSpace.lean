@@ -971,11 +971,11 @@ instance infty_isScalarTower {𝕜} [NormedRing 𝕜] [∀ i, Module 𝕜 (B i)]
 #align lp.infty_is_scalar_tower lp.infty_isScalarTower
 -/
 
-#print lp.infty_sMulCommClass /-
-instance infty_sMulCommClass {𝕜} [NormedRing 𝕜] [∀ i, Module 𝕜 (B i)] [∀ i, BoundedSMul 𝕜 (B i)]
+#print lp.infty_smulCommClass /-
+instance infty_smulCommClass {𝕜} [NormedRing 𝕜] [∀ i, Module 𝕜 (B i)] [∀ i, BoundedSMul 𝕜 (B i)]
     [∀ i, SMulCommClass 𝕜 (B i) (B i)] : SMulCommClass 𝕜 (lp B ∞) (lp B ∞) :=
   ⟨fun r f g => lp.ext <| smul_comm r (⇑f) ⇑g⟩
-#align lp.infty_smul_comm_class lp.infty_sMulCommClass
+#align lp.infty_smul_comm_class lp.infty_smulCommClass
 -/
 
 section StarRing

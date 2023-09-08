@@ -741,10 +741,12 @@ theorem Basis.det_reindex {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Ba
 #align basis.det_reindex Basis.det_reindex
 -/
 
+#print Basis.det_reindex' /-
 theorem Basis.det_reindex' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Basis ι R M)
     (e : ι ≃ ι') : (b.reindex e).det = b.det.domDomCongr e :=
   AlternatingMap.ext fun _ => Basis.det_reindex _ _ _
 #align basis.det_reindex' Basis.det_reindex'
+-/
 
 #print Basis.det_reindex_symm /-
 theorem Basis.det_reindex_symm {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Basis ι R M)

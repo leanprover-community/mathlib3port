@@ -105,28 +105,36 @@ section Reindex
 
 variable (R M) {ι ι'}
 
+#print Orientation.reindex /-
 /-- An equivalence between indices implies an equivalence between orientations. -/
 def Orientation.reindex (e : ι ≃ ι') : Orientation R M ι ≃ Orientation R M ι' :=
   Module.Ray.map <| AlternatingMap.domDomLcongr R e
 #align orientation.reindex Orientation.reindex
+-/
 
+#print Orientation.reindex_apply /-
 @[simp]
 theorem Orientation.reindex_apply (e : ι ≃ ι') (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
     Orientation.reindex R M e (rayOfNeZero _ v hv) =
       rayOfNeZero _ (v.domDomCongr e) (mt (v.domDomCongr_eq_zero_iff e).mp hv) :=
   rfl
 #align orientation.reindex_apply Orientation.reindex_apply
+-/
 
+#print Orientation.reindex_refl /-
 @[simp]
 theorem Orientation.reindex_refl : (Orientation.reindex R M <| Equiv.refl ι) = Equiv.refl _ := by
   rw [Orientation.reindex, AlternatingMap.domDomLcongr_refl, Module.Ray.map_refl]
 #align orientation.reindex_refl Orientation.reindex_refl
+-/
 
+#print Orientation.reindex_symm /-
 @[simp]
 theorem Orientation.reindex_symm (e : ι ≃ ι') :
     (Orientation.reindex R M e).symm = Orientation.reindex R M e.symm :=
   rfl
 #align orientation.reindex_symm Orientation.reindex_symm
+-/
 
 end Reindex
 
@@ -177,11 +185,13 @@ protected theorem Orientation.map_neg {ι : Type _} (f : M ≃ₗ[R] N) (x : Ori
 #align orientation.map_neg Orientation.map_neg
 -/
 
+#print Orientation.reindex_neg /-
 @[simp]
 protected theorem Orientation.reindex_neg {ι ι' : Type _} (e : ι ≃ ι') (x : Orientation R M ι) :
     Orientation.reindex R M e (-x) = -Orientation.reindex R M e x :=
   Module.Ray.map_neg _ x
 #align orientation.reindex_neg Orientation.reindex_neg
+-/
 
 namespace Basis
 
@@ -219,10 +229,12 @@ theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
 #align basis.orientation_map Basis.orientation_map
 -/
 
+#print Basis.orientation_reindex /-
 theorem orientation_reindex [Nontrivial R] (e : Basis ι R M) (eι : ι ≃ ι') :
     (e.reindex eι).Orientation = Orientation.reindex R M eι e.Orientation := by
   simp_rw [Basis.orientation, Orientation.reindex_apply, Basis.det_reindex']
 #align basis.orientation_reindex Basis.orientation_reindex
+-/
 
 #print Basis.orientation_unitsSMul /-
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those

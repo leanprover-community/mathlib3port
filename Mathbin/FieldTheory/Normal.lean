@@ -603,11 +603,9 @@ instance is_finiteDimensional [FiniteDimensional F K] : FiniteDimensional F (nor
 #align normal_closure.is_finite_dimensional normalClosure.is_finiteDimensional
 -/
 
-#print normalClosure.isScalarTower /-
 instance isScalarTower : IsScalarTower F (normalClosure F K L) L :=
   IsScalarTower.subalgebra' F L L _
 #align normal_closure.is_scalar_tower normalClosure.isScalarTower
--/
 
 end normalClosure
 

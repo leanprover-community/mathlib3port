@@ -1720,20 +1720,23 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G :=
 #align topological_add_group.regular_space TopologicalAddGroup.regularSpace
 -/
 
-#print TopologicalGroup.t3Space /-
+/- warning: topological_group.t3_space clashes with infer_instance -> inferInstance
+Case conversion may be inaccurate. Consider using '#align topological_group.t3_space inferInstanceₓ'. -/
+#print inferInstance /-
 @[to_additive]
-theorem TopologicalGroup.t3Space [T0Space G] : T3Space G :=
+theorem inferInstance [T0Space G] : T3Space G :=
   ⟨⟩
-#align topological_group.t3_space TopologicalGroup.t3Space
-#align topological_add_group.t3_space TopologicalAddGroup.t3Space
+#align topological_group.t3_space inferInstance
+#align infer_instance inferInstance
 -/
 
-#print TopologicalGroup.t2Space /-
+/- warning: topological_group.t2_space clashes with infer_instance -> inferInstance
+Case conversion may be inaccurate. Consider using '#align topological_group.t2_space inferInstanceₓ'. -/
+#print inferInstance /-
 @[to_additive]
-theorem TopologicalGroup.t2Space [T0Space G] : T2Space G := by haveI := TopologicalGroup.t3Space G;
-  infer_instance
-#align topological_group.t2_space TopologicalGroup.t2Space
-#align topological_add_group.t2_space TopologicalAddGroup.t2Space
+theorem inferInstance [T0Space G] : T2Space G := by haveI := inferInstance G; infer_instance
+#align topological_group.t2_space inferInstance
+#align infer_instance inferInstance
 -/
 
 variable {G} (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)]
@@ -1745,7 +1748,7 @@ instance Subgroup.t3_quotient_of_isClosed (S : Subgroup G) [Subgroup.Normal S]
   by
   rw [← QuotientGroup.ker_mk' S] at hS 
   haveI := TopologicalGroup.t1Space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)
-  exact TopologicalGroup.t3Space _
+  exact inferInstance _
 #align subgroup.t3_quotient_of_is_closed Subgroup.t3_quotient_of_isClosed
 #align add_subgroup.t3_quotient_of_is_closed AddSubgroup.t3_quotient_of_isClosed
 -/

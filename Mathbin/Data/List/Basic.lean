@@ -1430,15 +1430,15 @@ theorem head!_eq_head? [Inhabited α] (l : List α) : headI l = (head? l).iget :
 #align list.head_eq_head' List.head!_eq_head?
 -/
 
-#print List.surjective_head /-
-theorem surjective_head [Inhabited α] : Surjective (@headI α _) := fun x => ⟨[x], rfl⟩
-#align list.surjective_head List.surjective_head
+#print List.surjective_head! /-
+theorem surjective_head! [Inhabited α] : Surjective (@headI α _) := fun x => ⟨[x], rfl⟩
+#align list.surjective_head List.surjective_head!
 -/
 
-#print List.surjective_head' /-
-theorem surjective_head' : Surjective (@head? α) :=
+#print List.surjective_head? /-
+theorem surjective_head? : Surjective (@head? α) :=
   Option.forall.2 ⟨⟨[], rfl⟩, fun x => ⟨[x], rfl⟩⟩
-#align list.surjective_head' List.surjective_head'
+#align list.surjective_head' List.surjective_head?
 -/
 
 #print List.surjective_tail /-

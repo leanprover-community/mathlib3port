@@ -373,14 +373,12 @@ private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_mem _ hl), h2.tail⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Monoid.CoprodI.Word.cons_eq_rcons /-
 theorem Monoid.CoprodI.Word.cons_eq_rcons {i} {m : M i} {ls h1 h2} :
     Monoid.CoprodI.Word.mk (⟨i, m⟩::ls) h1 h2 =
       Monoid.CoprodI.Word.rcons
         ⟨m, mkAux ls h1 h2, Monoid.CoprodI.Word.fstIdx_ne_iff.mpr h2.rel_head?⟩ :=
   by rw [rcons, dif_neg]; rfl; exact h1 ⟨i, m⟩ (ls.mem_cons_self _)
 #align free_product.word.cons_eq_rcons Monoid.CoprodI.Word.cons_eq_rcons
--/
 
 #print Monoid.CoprodI.Word.prod_rcons /-
 @[simp]

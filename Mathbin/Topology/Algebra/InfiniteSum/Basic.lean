@@ -1515,7 +1515,7 @@ theorem Summable.prod_factor {f : β × γ → α} (h : Summable f) (b : β) :
 section LocInstances
 
 -- enable inferring a T3-topological space from a topological group
-attribute [local instance] TopologicalAddGroup.t3Space
+attribute [local instance] inferInstance
 
 -- disable getting a T0-space from a T3-space as this causes loops
 attribute [-instance] T3Space.to_t0Space

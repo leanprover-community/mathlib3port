@@ -875,12 +875,14 @@ theorem domDomCongr_add (σ : ι ≃ ι') (f g : AlternatingMap R M N ι) :
 #align alternating_map.dom_dom_congr_add AlternatingMap.domDomCongr_add
 -/
 
+#print AlternatingMap.domDomCongr_smul /-
 @[simp]
 theorem domDomCongr_smul {S : Type _} [Monoid S] [DistribMulAction S N] [SMulCommClass R S N]
     (σ : ι ≃ ι') (c : S) (f : AlternatingMap R M N ι) :
     (c • f).domDomCongr σ = c • f.domDomCongr σ :=
   rfl
 #align alternating_map.dom_dom_congr_smul AlternatingMap.domDomCongr_smul
+-/
 
 #print AlternatingMap.domDomCongrEquiv /-
 /-- `alternating_map.dom_dom_congr` as an equivalence.
@@ -901,6 +903,7 @@ section DomDomLcongr
 
 variable (S : Type _) [Semiring S] [Module S N] [SMulCommClass R S N]
 
+#print AlternatingMap.domDomLcongr /-
 /-- `alternating_map.dom_dom_congr` as a linear equivalence. -/
 @[simps apply symm_apply]
 def domDomLcongr (σ : ι ≃ ι') : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι'
@@ -912,20 +915,25 @@ def domDomLcongr (σ : ι ≃ ι') : AlternatingMap R M N ι ≃ₗ[S] Alternati
   map_add' := domDomCongr_add σ
   map_smul' := domDomCongr_smul σ
 #align alternating_map.dom_dom_lcongr AlternatingMap.domDomLcongr
+-/
 
+#print AlternatingMap.domDomLcongr_refl /-
 @[simp]
 theorem domDomLcongr_refl :
     (domDomLcongr S (Equiv.refl ι) : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι) =
       LinearEquiv.refl _ _ :=
   LinearEquiv.ext domDomCongr_refl
 #align alternating_map.dom_dom_lcongr_refl AlternatingMap.domDomLcongr_refl
+-/
 
+#print AlternatingMap.domDomLcongr_toAddEquiv /-
 @[simp]
 theorem domDomLcongr_toAddEquiv (σ : ι ≃ ι') :
     (domDomLcongr S σ : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι').toAddEquiv =
       domDomCongrEquiv σ :=
   rfl
 #align alternating_map.dom_dom_lcongr_to_add_equiv AlternatingMap.domDomLcongr_toAddEquiv
+-/
 
 end DomDomLcongr
 
