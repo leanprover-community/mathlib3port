@@ -1153,15 +1153,15 @@ theorem PosDef.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.PosDef) : Q.Anisot
 #align quadratic_form.pos_def.anisotropic QuadraticForm.PosDef.anisotropic
 -/
 
-#print QuadraticForm.posDefOfNonneg /-
-theorem posDefOfNonneg {Q : QuadraticForm R₂ M} (h : ∀ x, 0 ≤ Q x) (h0 : Q.Anisotropic) :
+#print QuadraticForm.posDef_of_nonneg /-
+theorem posDef_of_nonneg {Q : QuadraticForm R₂ M} (h : ∀ x, 0 ≤ Q x) (h0 : Q.Anisotropic) :
     PosDef Q := fun x hx => lt_of_le_of_ne (h x) (Ne.symm fun hQx => hx <| h0 _ hQx)
-#align quadratic_form.pos_def_of_nonneg QuadraticForm.posDefOfNonneg
+#align quadratic_form.pos_def_of_nonneg QuadraticForm.posDef_of_nonneg
 -/
 
 #print QuadraticForm.posDef_iff_nonneg /-
 theorem posDef_iff_nonneg {Q : QuadraticForm R₂ M} : PosDef Q ↔ (∀ x, 0 ≤ Q x) ∧ Q.Anisotropic :=
-  ⟨fun h => ⟨h.NonNeg, h.Anisotropic⟩, fun ⟨n, a⟩ => posDefOfNonneg n a⟩
+  ⟨fun h => ⟨h.NonNeg, h.Anisotropic⟩, fun ⟨n, a⟩ => posDef_of_nonneg n a⟩
 #align quadratic_form.pos_def_iff_nonneg QuadraticForm.posDef_iff_nonneg
 -/
 

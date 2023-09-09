@@ -1425,8 +1425,6 @@ theorem liftRel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a ∈ ca, L
 #align computation.lift_rel_mem_cases Computation.liftRel_mem_cases
 -/
 
-/- warning: computation.lift_rel_congr clashes with computation.lift_gcongr -> Computation.liftRel_congr
-Case conversion may be inaccurate. Consider using '#align computation.lift_rel_congr Computation.liftRel_congrₓ'. -/
 #print Computation.liftRel_congr /-
 theorem liftRel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β}
     (ha : ca ~ ca') (hb : cb ~ cb') : LiftRel R ca cb ↔ LiftRel R ca' cb' :=

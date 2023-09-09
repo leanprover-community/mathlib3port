@@ -310,14 +310,14 @@ section AeMeasurableOf
 
 variable [MeasurableSpace E] [NormedAddCommGroup E] [BorelSpace E]
 
-#print MeasureTheory.TendstoInMeasure.aeMeasurable /-
-theorem TendstoInMeasure.aeMeasurable {u : Filter ι} [NeBot u] [IsCountablyGenerated u]
+#print MeasureTheory.TendstoInMeasure.aemeasurable /-
+theorem TendstoInMeasure.aemeasurable {u : Filter ι} [NeBot u] [IsCountablyGenerated u]
     {f : ι → α → E} {g : α → E} (hf : ∀ n, AEMeasurable (f n) μ)
     (h_tendsto : TendstoInMeasure μ f u g) : AEMeasurable g μ :=
   by
   obtain ⟨ns, hns⟩ := h_tendsto.exists_seq_tendsto_ae'
   exact aemeasurable_of_tendsto_metrizable_ae at_top (fun n => hf (ns n)) hns
-#align measure_theory.tendsto_in_measure.ae_measurable MeasureTheory.TendstoInMeasure.aeMeasurable
+#align measure_theory.tendsto_in_measure.ae_measurable MeasureTheory.TendstoInMeasure.aemeasurable
 -/
 
 end AeMeasurableOf

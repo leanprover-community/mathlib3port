@@ -1075,7 +1075,7 @@ theorem measurable_condCdf (ρ : Measure (α × ℝ)) (x : ℝ) : Measurable fun
     rw [coe_coe, cond_cdf_eq_cond_cdf_rat]
   rw [this]
   exact
-    measurable_ciInf (fun q => measurable_cond_cdf_rat ρ q) fun a =>
+    measurable_cinfi (fun q => measurable_cond_cdf_rat ρ q) fun a =>
       bdd_below_range_cond_cdf_rat_gt ρ a _
 #align probability_theory.measurable_cond_cdf ProbabilityTheory.measurable_condCdf
 -/

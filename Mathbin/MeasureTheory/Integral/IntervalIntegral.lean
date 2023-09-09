@@ -284,11 +284,11 @@ protected theorem aestronglyMeasurable (h : IntervalIntegrable f μ a b) :
 #align interval_integrable.ae_strongly_measurable IntervalIntegrable.aestronglyMeasurable
 -/
 
-#print IntervalIntegrable.ae_strongly_measurable' /-
-protected theorem ae_strongly_measurable' (h : IntervalIntegrable f μ a b) :
+#print IntervalIntegrable.aestronglyMeasurable' /-
+protected theorem aestronglyMeasurable' (h : IntervalIntegrable f μ a b) :
     AEStronglyMeasurable f (μ.restrict (Ioc b a)) :=
   h.2.AEStronglyMeasurable
-#align interval_integrable.ae_strongly_measurable' IntervalIntegrable.ae_strongly_measurable'
+#align interval_integrable.ae_strongly_measurable' IntervalIntegrable.aestronglyMeasurable'
 -/
 
 end

@@ -1683,8 +1683,8 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α] [OrderTopology α] [SecondCountableTopology α]
 
-#print measurable_cSup /-
-theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
+#print measurable_sSup /-
+theorem measurable_sSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) (bdd : ∀ x, BddAbove ((fun i => f i x) '' s)) :
     Measurable fun x => sSup ((fun i => f i x) '' s) :=
   by
@@ -1693,33 +1693,29 @@ theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countab
   · apply measurable_of_Iic; intro y
     simp_rw [preimage, mem_Iic, csSup_le_iff (bdd _) (h2s.image _), ball_image_iff, set_of_forall]
     exact MeasurableSet.biInter hs fun i hi => measurableSet_le (hf i) measurable_const
-#align measurable_cSup measurable_cSup
+#align measurable_cSup measurable_sSup
 -/
 
-#print measurable_cInf /-
-theorem measurable_cInf {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
+#print measurable_sInf /-
+theorem measurable_sInf {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) (bdd : ∀ x, BddBelow ((fun i => f i x) '' s)) :
     Measurable fun x => sInf ((fun i => f i x) '' s) :=
-  @measurable_cSup αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hs hf bdd
-#align measurable_cInf measurable_cInf
+  @measurable_sSup αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hs hf bdd
+#align measurable_cInf measurable_sInf
 -/
 
-#print measurable_ciSup /-
-theorem measurable_ciSup {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
+theorem measurable_csupr {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
     (bdd : ∀ x, BddAbove (range fun i => f i x)) : Measurable fun x => ⨆ i, f i x :=
   by
   change Measurable fun x => Sup (range fun i : ι => f i x)
   simp_rw [← image_univ] at bdd ⊢
-  refine' measurable_cSup countable_univ hf bdd
-#align measurable_csupr measurable_ciSup
--/
+  refine' measurable_sSup countable_univ hf bdd
+#align measurable_csupr measurable_csupr
 
-#print measurable_ciInf /-
-theorem measurable_ciInf {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
+theorem measurable_cinfi {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
     (bdd : ∀ x, BddBelow (range fun i => f i x)) : Measurable fun x => ⨅ i, f i x :=
-  @measurable_ciSup αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hf bdd
-#align measurable_cinfi measurable_ciInf
--/
+  @measurable_csupr αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hf bdd
+#align measurable_cinfi measurable_cinfi
 
 end ConditionallyCompleteLinearOrder
 
