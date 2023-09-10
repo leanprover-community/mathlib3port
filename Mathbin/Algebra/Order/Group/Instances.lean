@@ -21,7 +21,7 @@ variable {α : Type _}
 
 @[to_additive]
 instance [OrderedCommGroup α] : OrderedCommGroup αᵒᵈ :=
-  { OrderDual.orderedCommMonoid, instGroupOrderDual with }
+  { OrderDual.orderedCommMonoid, OrderDual.instGroup with }
 
 @[to_additive]
 instance [LinearOrderedCommGroup α] : LinearOrderedCommGroup αᵒᵈ :=

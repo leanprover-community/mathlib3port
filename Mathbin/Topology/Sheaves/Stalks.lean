@@ -364,12 +364,12 @@ theorem germ_stalkSpecializes (F : X.Presheaf C) {U : Opens X} {y : U} {x : X} (
 #align Top.presheaf.germ_stalk_specializes TopCat.Presheaf.germ_stalkSpecializes
 -/
 
-#print TopCat.Presheaf.germ_stalk_specializes' /-
+#print TopCat.Presheaf.germ_stalkSpecializes' /-
 @[simp, reassoc, elementwise]
-theorem germ_stalk_specializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : x ⤳ y)
-    (hy : y ∈ U) : F.germ ⟨y, hy⟩ ≫ F.stalkSpecializes h = F.germ ⟨x, h.mem_open U.IsOpen hy⟩ :=
+theorem germ_stalkSpecializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : x ⤳ y) (hy : y ∈ U) :
+    F.germ ⟨y, hy⟩ ≫ F.stalkSpecializes h = F.germ ⟨x, h.mem_open U.IsOpen hy⟩ :=
   colimit.ι_desc _ _
-#align Top.presheaf.germ_stalk_specializes' TopCat.Presheaf.germ_stalk_specializes'
+#align Top.presheaf.germ_stalk_specializes' TopCat.Presheaf.germ_stalkSpecializes'
 -/
 
 #print TopCat.Presheaf.stalkSpecializes_refl /-

@@ -62,12 +62,12 @@ variable {ι 𝕜 R M N : Type _}
 namespace OrderDual
 
 instance [Zero R] [AddZeroClass M] [h : SMulWithZero R M] : SMulWithZero R Mᵒᵈ :=
-  { instSMulOrderDual with
+  { OrderDual.instSMul with
     zero_smul := fun m => OrderDual.rec (zero_smul _) m
     smul_zero := fun r => OrderDual.rec smul_zero r }
 
 instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
-  { instSMulOrderDual with
+  { OrderDual.instSMul with
     one_smul := fun m => OrderDual.rec (one_smul _) m
     hMul_smul := fun r => OrderDual.rec hMul_smul r }
 

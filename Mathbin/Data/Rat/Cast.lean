@@ -503,11 +503,11 @@ theorem cast_eq_id : (coe : ℚ → ℚ) = id :=
 #align rat.cast_eq_id Rat.cast_eq_id
 -/
 
-#print Rat.cast_hom_rat /-
+#print Rat.castHom_rat /-
 @[simp]
-theorem cast_hom_rat : castHom ℚ = RingHom.id ℚ :=
+theorem castHom_rat : castHom ℚ = RingHom.id ℚ :=
   RingHom.ext cast_id
-#align rat.cast_hom_rat Rat.cast_hom_rat
+#align rat.cast_hom_rat Rat.castHom_rat
 -/
 
 end Rat

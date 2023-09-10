@@ -982,9 +982,9 @@ end MeasureTheory
 /-! ### The Borel Isomorphism Theorem -/
 
 
-#print polish_of_countable /-
+#print PolishSpace.polish_of_countable /-
 --Note: Move to topology/metric_space/polish when porting.
-instance (priority := 50) polish_of_countable [h : Countable α] [DiscreteTopology α] :
+instance (priority := 50) PolishSpace.polish_of_countable [h : Countable α] [DiscreteTopology α] :
     PolishSpace α := by
   obtain ⟨f, hf⟩ := h.exists_injective_nat
   have : ClosedEmbedding f :=
@@ -992,7 +992,7 @@ instance (priority := 50) polish_of_countable [h : Countable α] [DiscreteTopolo
     apply closedEmbedding_of_continuous_injective_closed continuous_of_discreteTopology hf
     exact fun t _ => isClosed_discrete _
   exact this.polish_space
-#align polish_of_countable polish_of_countable
+#align polish_of_countable PolishSpace.polish_of_countable
 -/
 
 namespace PolishSpace

@@ -45,27 +45,27 @@ instance [h : Div α] : Div αᵒᵈ :=
 instance [h : SMul α β] : SMul α βᵒᵈ :=
   h
 
-#print instSMulOrderDual' /-
+#print OrderDual.instSMul' /-
 @[to_additive]
-instance instSMulOrderDual' [h : SMul α β] : SMul αᵒᵈ β :=
+instance OrderDual.instSMul' [h : SMul α β] : SMul αᵒᵈ β :=
   h
-#align order_dual.has_smul' instSMulOrderDual'
+#align order_dual.has_smul' OrderDual.instSMul'
 -/
 
-#print instPowOrderDual /-
-@[to_additive instSMulOrderDual]
-instance instPowOrderDual [h : Pow α β] : Pow αᵒᵈ β :=
+#print OrderDual.instPow /-
+@[to_additive OrderDual.instSMul]
+instance OrderDual.instPow [h : Pow α β] : Pow αᵒᵈ β :=
   h
-#align order_dual.has_pow instPowOrderDual
-#align order_dual.has_smul instSMulOrderDual
+#align order_dual.has_pow OrderDual.instPow
+#align order_dual.has_smul OrderDual.instSMul
 -/
 
-#print instPowOrderDual' /-
-@[to_additive instSMulOrderDual']
-instance instPowOrderDual' [h : Pow α β] : Pow α βᵒᵈ :=
+#print OrderDual.instPow' /-
+@[to_additive OrderDual.instSMul']
+instance OrderDual.instPow' [h : Pow α β] : Pow α βᵒᵈ :=
   h
-#align order_dual.has_pow' instPowOrderDual'
-#align order_dual.has_smul' instSMulOrderDual'
+#align order_dual.has_pow' OrderDual.instPow'
+#align order_dual.has_smul' OrderDual.instSMul'
 -/
 
 @[to_additive]
@@ -287,27 +287,27 @@ instance [h : Div α] : Div (Lex α) :=
 instance [h : SMul α β] : SMul α (Lex β) :=
   h
 
-#print instSMulLex' /-
+#print Lex.instSMul' /-
 @[to_additive]
-instance instSMulLex' [h : SMul α β] : SMul (Lex α) β :=
+instance Lex.instSMul' [h : SMul α β] : SMul (Lex α) β :=
   h
-#align lex.has_smul' instSMulLex'
+#align lex.has_smul' Lex.instSMul'
 -/
 
-#print instPowLex /-
-@[to_additive instSMulLex]
-instance instPowLex [h : Pow α β] : Pow (Lex α) β :=
+#print Lex.instPow /-
+@[to_additive Lex.instSMul]
+instance Lex.instPow [h : Pow α β] : Pow (Lex α) β :=
   h
-#align lex.has_pow instPowLex
-#align lex.has_smul instSMulLex
+#align lex.has_pow Lex.instPow
+#align lex.has_smul Lex.instSMul
 -/
 
-#print instPowLex' /-
-@[to_additive instSMulLex']
-instance instPowLex' [h : Pow α β] : Pow α (Lex β) :=
+#print Lex.instPow' /-
+@[to_additive Lex.instSMul']
+instance Lex.instPow' [h : Pow α β] : Pow α (Lex β) :=
   h
-#align lex.has_pow' instPowLex'
-#align lex.has_smul' instSMulLex'
+#align lex.has_pow' Lex.instPow'
+#align lex.has_smul' Lex.instSMul'
 -/
 
 @[to_additive]

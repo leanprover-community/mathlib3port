@@ -388,15 +388,16 @@ theorem HasFDerivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
 #align has_fderiv_at.le_of_lip' HasFDerivAt.le_of_lip'
 -/
 
-#print HasFDerivAt.le_of_lip /-
+#print HasFDerivAt.le_of_lipschitzOn /-
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`. -/
-theorem HasFDerivAt.le_of_lip {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (hf : HasFDerivAt f f' x₀)
-    {s : Set E} (hs : s ∈ 𝓝 x₀) {C : ℝ≥0} (hlip : LipschitzOnWith C f s) : ‖f'‖ ≤ C :=
+theorem HasFDerivAt.le_of_lipschitzOn {f : E → F} {f' : E →L[𝕜] F} {x₀ : E}
+    (hf : HasFDerivAt f f' x₀) {s : Set E} (hs : s ∈ 𝓝 x₀) {C : ℝ≥0}
+    (hlip : LipschitzOnWith C f s) : ‖f'‖ ≤ C :=
   by
   refine' hf.le_of_lip' C.coe_nonneg _
   filter_upwards [hs] with x hx using hlip.norm_sub_le hx (mem_of_mem_nhds hs)
-#align has_fderiv_at.le_of_lip HasFDerivAt.le_of_lip
+#align has_fderiv_at.le_of_lip HasFDerivAt.le_of_lipschitzOn
 -/
 
 #print HasFDerivAtFilter.mono /-
@@ -663,14 +664,14 @@ theorem fderiv_eq {f' : E → E →L[𝕜] F} (h : ∀ x, HasFDerivAt f (f' x) x
 #align fderiv_eq fderiv_eq
 -/
 
-#print DifferentiableAt.le_of_lip /-
+#print norm_fderiv_le_of_lipschitzOn /-
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`.
 Version using `fderiv`. -/
-theorem DifferentiableAt.le_of_lip {f : E → F} {x₀ : E} (hf : DifferentiableAt 𝕜 f x₀) {s : Set E}
-    (hs : s ∈ 𝓝 x₀) {C : ℝ≥0} (hlip : LipschitzOnWith C f s) : ‖fderiv 𝕜 f x₀‖ ≤ C :=
-  hf.HasFDerivAt.le_of_lip hs hlip
-#align fderiv_at.le_of_lip DifferentiableAt.le_of_lip
+theorem norm_fderiv_le_of_lipschitzOn {f : E → F} {x₀ : E} (hf : DifferentiableAt 𝕜 f x₀)
+    {s : Set E} (hs : s ∈ 𝓝 x₀) {C : ℝ≥0} (hlip : LipschitzOnWith C f s) : ‖fderiv 𝕜 f x₀‖ ≤ C :=
+  hf.HasFDerivAt.le_of_lipschitzOn hs hlip
+#align fderiv_at.le_of_lip norm_fderiv_le_of_lipschitzOn
 -/
 
 #print HasFDerivWithinAt.fderivWithin /-

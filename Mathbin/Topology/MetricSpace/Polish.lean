@@ -140,11 +140,9 @@ instance pi_countable {ι : Type _} [Countable ι] {E : ι → Type _} [∀ i, T
 #align polish_space.pi_countable PolishSpace.pi_countable
 -/
 
-#print PolishSpace.nat_fun /-
 /-- Without this instance, `polish_space (ℕ → ℕ)` is not found by typeclass inference. -/
 instance nat_fun [TopologicalSpace α] [PolishSpace α] : PolishSpace (ℕ → α) := by infer_instance
 #align polish_space.nat_fun PolishSpace.nat_fun
--/
 
 #print PolishSpace.sigma /-
 /-- A countable disjoint union of Polish spaces is Polish. -/
