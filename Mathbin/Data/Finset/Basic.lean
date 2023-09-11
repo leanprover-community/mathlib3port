@@ -1011,23 +1011,31 @@ theorem eq_empty_of_ssubset_singleton {s : Finset α} {x : α} (hs : s ⊂ {x}) 
 #align finset.eq_empty_of_ssubset_singleton Finset.eq_empty_of_ssubset_singleton
 -/
 
+#print Finset.Nontrivial /-
 /-- A finset is nontrivial if it has at least two elements. -/
 @[reducible]
 protected def Nontrivial (s : Finset α) : Prop :=
   (s : Set α).Nontrivial
 #align finset.nontrivial Finset.Nontrivial
+-/
 
+#print Finset.not_nontrivial_empty /-
 @[simp]
 theorem not_nontrivial_empty : ¬(∅ : Finset α).Nontrivial := by simp [Finset.Nontrivial]
 #align finset.not_nontrivial_empty Finset.not_nontrivial_empty
+-/
 
+#print Finset.not_nontrivial_singleton /-
 @[simp]
 theorem not_nontrivial_singleton : ¬({a} : Finset α).Nontrivial := by simp [Finset.Nontrivial]
 #align finset.not_nontrivial_singleton Finset.not_nontrivial_singleton
+-/
 
+#print Finset.Nontrivial.ne_singleton /-
 theorem Nontrivial.ne_singleton (hs : s.Nontrivial) : s ≠ {a} := by rintro rfl;
   exact not_nontrivial_singleton hs
 #align finset.nontrivial.ne_singleton Finset.Nontrivial.ne_singleton
+-/
 
 #print Finset.eq_singleton_or_nontrivial /-
 theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ s.Nontrivial := by
@@ -1035,9 +1043,11 @@ theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ s.Nontrivial := 
 #align finset.eq_singleton_or_nontrivial Finset.eq_singleton_or_nontrivial
 -/
 
+#print Finset.nontrivial_iff_ne_singleton /-
 theorem nontrivial_iff_ne_singleton (ha : a ∈ s) : s.Nontrivial ↔ s ≠ {a} :=
   ⟨Nontrivial.ne_singleton, (eq_singleton_or_nontrivial ha).resolve_left⟩
 #align finset.nontrivial_iff_ne_singleton Finset.nontrivial_iff_ne_singleton
+-/
 
 #print Finset.Nonempty.exists_eq_singleton_or_nontrivial /-
 theorem Nonempty.exists_eq_singleton_or_nontrivial : s.Nonempty → (∃ a, s = {a}) ∨ s.Nontrivial :=
@@ -1045,9 +1055,11 @@ theorem Nonempty.exists_eq_singleton_or_nontrivial : s.Nonempty → (∃ a, s = 
 #align finset.nonempty.exists_eq_singleton_or_nontrivial Finset.Nonempty.exists_eq_singleton_or_nontrivial
 -/
 
-instance nontrivial' [Nonempty α] : Nontrivial (Finset α) :=
+#print Finset.instNontrivial /-
+instance instNontrivial [Nonempty α] : Nontrivial (Finset α) :=
   ‹Nonempty α›.elim fun a => ⟨⟨{a}, ∅, singleton_ne_empty _⟩⟩
-#align finset.nontrivial' Finset.nontrivial'
+#align finset.nontrivial' Finset.instNontrivial
+-/
 
 instance [IsEmpty α] : Unique (Finset α)
     where
@@ -1116,10 +1128,12 @@ theorem mk_cons {s : Multiset α} (h : (a ::ₘ s).Nodup) :
 #align finset.mk_cons Finset.mk_cons
 -/
 
+#print Finset.cons_empty /-
 @[simp]
 theorem cons_empty (a : α) : cons a ∅ (not_mem_empty _) = {a} :=
   rfl
 #align finset.cons_empty Finset.cons_empty
+-/
 
 #print Finset.nonempty_cons /-
 @[simp]
@@ -3595,15 +3609,19 @@ theorem filter_filter (s : Finset α) : (s.filterₓ p).filterₓ q = s.filter�
 #align finset.filter_filter Finset.filter_filter
 -/
 
+#print Finset.filter_comm /-
 theorem filter_comm (s : Finset α) : (s.filterₓ p).filterₓ q = (s.filterₓ q).filterₓ p := by
   simp_rw [filter_filter, and_comm']
 #align finset.filter_comm Finset.filter_comm
+-/
 
+#print Finset.filter_congr_decidable /-
 -- We can simplify an application of filter where the decidability is inferred in "the wrong way"
 @[simp]
 theorem filter_congr_decidable (s : Finset α) (p : α → Prop) (h : DecidablePred p)
     [DecidablePred p] : @filter α p h s = s.filterₓ p := by congr
 #align finset.filter_congr_decidable Finset.filter_congr_decidable
+-/
 
 #print Finset.filter_True /-
 theorem filter_True {h} (s : Finset α) : @filter α (fun a => True) h s = s := by ext <;> simp
@@ -3649,10 +3667,12 @@ theorem filter_false_of_mem (h : ∀ x ∈ s, ¬p x) : s.filterₓ p = ∅ :=
 #align finset.filter_false_of_mem Finset.filter_false_of_mem
 -/
 
+#print Finset.filter_const /-
 @[simp]
 theorem filter_const (p : Prop) [Decidable p] (s : Finset α) :
     (s.filterₓ fun a => p) = if p then s else ∅ := by split_ifs <;> simp [*]
 #align finset.filter_const Finset.filter_const
+-/
 
 #print Finset.filter_congr /-
 theorem filter_congr {s : Finset α} (H : ∀ x ∈ s, p x ↔ q x) : filter p s = filter q s :=

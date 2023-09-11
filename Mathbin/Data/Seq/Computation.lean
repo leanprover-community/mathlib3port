@@ -1089,40 +1089,40 @@ theorem ret_orElse (a : α) (c₂ : Computation α) : (pure a <|> c₂) = pure a
 #align computation.ret_orelse Computation.ret_orElse
 -/
 
-#print Computation.orelse_pure /-
+#print Computation.orElse_pure /-
 @[simp]
-theorem orelse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) = pure a :=
+theorem orElse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) = pure a :=
   destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
-#align computation.orelse_ret Computation.orelse_pure
+#align computation.orelse_ret Computation.orElse_pure
 -/
 
-#print Computation.orelse_think /-
+#print Computation.orElse_think /-
 @[simp]
-theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
+theorem orElse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
   destruct_eq_think <| by unfold HasOrelse.orelse <;> simp [orelse]
-#align computation.orelse_think Computation.orelse_think
+#align computation.orelse_think Computation.orElse_think
 -/
 
-#print Computation.empty_orelse /-
+#print Computation.empty_orElse /-
 @[simp]
-theorem empty_orelse (c) : (empty α <|> c) = c :=
+theorem empty_orElse (c) : (empty α <|> c) = c :=
   by
   apply eq_of_bisim (fun c₁ c₂ => (Empty α <|> c₂) = c₁) _ rfl
   intro s' s h; rw [← h]
   apply rec_on s <;> intro s <;> rw [think_empty] <;> simp
   rw [← think_empty]
-#align computation.empty_orelse Computation.empty_orelse
+#align computation.empty_orelse Computation.empty_orElse
 -/
 
-#print Computation.orelse_empty /-
+#print Computation.orElse_empty /-
 @[simp]
-theorem orelse_empty (c : Computation α) : (c <|> empty α) = c :=
+theorem orElse_empty (c : Computation α) : (c <|> empty α) = c :=
   by
   apply eq_of_bisim (fun c₁ c₂ => (c₂ <|> Empty α) = c₁) _ rfl
   intro s' s h; rw [← h]
   apply rec_on s <;> intro s <;> rw [think_empty] <;> simp
   rw [← think_empty]
-#align computation.orelse_empty Computation.orelse_empty
+#align computation.orelse_empty Computation.orElse_empty
 -/
 
 #print Computation.Equiv /-
@@ -1293,8 +1293,8 @@ theorem LiftRel.imp {R S : α → β → Prop} (H : ∀ {a b}, R a b → S a b) 
 #align computation.lift_rel.imp Computation.LiftRel.imp
 -/
 
-#print Computation.terminates_of_LiftRel /-
-theorem terminates_of_LiftRel {R : α → β → Prop} {s t} :
+#print Computation.terminates_of_liftRel /-
+theorem terminates_of_liftRel {R : α → β → Prop} {s t} :
     LiftRel R s t → (Terminates s ↔ Terminates t)
   | ⟨l, r⟩ =>
     ⟨fun ⟨⟨a, as⟩⟩ =>
@@ -1303,16 +1303,16 @@ theorem terminates_of_LiftRel {R : α → β → Prop} {s t} :
       fun ⟨⟨b, bt⟩⟩ =>
       let ⟨a, as, ab⟩ := r bt
       ⟨⟨a, as⟩⟩⟩
-#align computation.terminates_of_lift_rel Computation.terminates_of_LiftRel
+#align computation.terminates_of_lift_rel Computation.terminates_of_liftRel
 -/
 
-#print Computation.rel_of_LiftRel /-
-theorem rel_of_LiftRel {R : α → β → Prop} {ca cb} :
+#print Computation.rel_of_liftRel /-
+theorem rel_of_liftRel {R : α → β → Prop} {ca cb} :
     LiftRel R ca cb → ∀ {a b}, a ∈ ca → b ∈ cb → R a b
   | ⟨l, r⟩, a, b, ma, mb => by
     let ⟨b', mb', ab'⟩ := l ma
     rw [mem_unique mb mb'] <;> exact ab'
-#align computation.rel_of_lift_rel Computation.rel_of_LiftRel
+#align computation.rel_of_lift_rel Computation.rel_of_liftRel
 -/
 
 #print Computation.liftRel_of_mem /-
@@ -1323,25 +1323,25 @@ theorem liftRel_of_mem {R : α → β → Prop} {a b ca cb} (ma : a ∈ ca) (mb 
 #align computation.lift_rel_of_mem Computation.liftRel_of_mem
 -/
 
-#print Computation.exists_of_LiftRel_left /-
-theorem exists_of_LiftRel_left {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {a} (h : a ∈ ca) :
+#print Computation.exists_of_liftRel_left /-
+theorem exists_of_liftRel_left {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {a} (h : a ∈ ca) :
     ∃ b, b ∈ cb ∧ R a b :=
   H.left h
-#align computation.exists_of_lift_rel_left Computation.exists_of_LiftRel_left
+#align computation.exists_of_lift_rel_left Computation.exists_of_liftRel_left
 -/
 
-#print Computation.exists_of_LiftRel_right /-
-theorem exists_of_LiftRel_right {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {b} (h : b ∈ cb) :
+#print Computation.exists_of_liftRel_right /-
+theorem exists_of_liftRel_right {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {b} (h : b ∈ cb) :
     ∃ a, a ∈ ca ∧ R a b :=
   H.right h
-#align computation.exists_of_lift_rel_right Computation.exists_of_LiftRel_right
+#align computation.exists_of_lift_rel_right Computation.exists_of_liftRel_right
 -/
 
 #print Computation.liftRel_def /-
 theorem liftRel_def {R : α → β → Prop} {ca cb} :
     LiftRel R ca cb ↔ (Terminates ca ↔ Terminates cb) ∧ ∀ {a b}, a ∈ ca → b ∈ cb → R a b :=
   ⟨fun h =>
-    ⟨terminates_of_LiftRel h, fun a b ma mb =>
+    ⟨terminates_of_liftRel h, fun a b ma mb =>
       by
       let ⟨b', mb', ab⟩ := h.left ma
       rwa [mem_unique mb mb']⟩,
@@ -1503,15 +1503,15 @@ theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computat
 #align computation.lift_rel_rec.lem Computation.LiftRelRec.lem
 -/
 
-#print Computation.lift_rel_rec /-
-theorem lift_rel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
+#print Computation.liftRel_rec /-
+theorem liftRel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
     (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) :
     LiftRel R ca cb :=
   liftRel_mem_cases (LiftRelRec.lem C (@H) ca cb Hc) fun b hb =>
     (LiftRel.swap _ _ _).2 <|
       LiftRelRec.lem (swap C) (fun cb ca h => cast (LiftRelAux.swap _ _ _ _).symm <| H h) cb ca Hc b
         hb
-#align computation.lift_rel_rec Computation.lift_rel_rec
+#align computation.lift_rel_rec Computation.liftRel_rec
 -/
 
 end Computation

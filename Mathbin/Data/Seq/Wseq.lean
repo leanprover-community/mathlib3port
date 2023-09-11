@@ -692,10 +692,10 @@ theorem LiftRel.trans (R : α → α → Prop) (H : Transitive R) : Transitive (
   have h2 := lift_rel_destruct h2
   refine'
     Computation.liftRel_def.2
-      ⟨(Computation.terminates_of_LiftRel h1).trans (Computation.terminates_of_LiftRel h2),
+      ⟨(Computation.terminates_of_liftRel h1).trans (Computation.terminates_of_liftRel h2),
         fun a c ha hc => _⟩
   rcases h1.left ha with ⟨b, hb, t1⟩
-  have t2 := Computation.rel_of_LiftRel h2 hb hc
+  have t2 := Computation.rel_of_liftRel h2 hb hc
   cases' a with a <;> cases' c with c
   · trivial
   · cases b; · cases t2; · cases t1
@@ -1880,7 +1880,7 @@ theorem liftRel_join.lem (R : α → β → Prop) {S T} {U : WSeq α → WSeq β
   intro n IH a S T ST ra; simp [destruct_join] at ra ;
   exact
     let ⟨o, m, k, rs1, rs2, en⟩ := of_results_bind ra
-    let ⟨p, mT, rop⟩ := Computation.exists_of_LiftRel_left (lift_rel_destruct ST) rs1.Mem
+    let ⟨p, mT, rop⟩ := Computation.exists_of_liftRel_left (lift_rel_destruct ST) rs1.Mem
     match o, p, rop, rs1, rs2, mT with
     | none, none, _, rs1, rs2, mT => by
       simp only [destruct_join] <;>
@@ -1890,7 +1890,7 @@ theorem liftRel_join.lem (R : α → β → Prop) {S T} {U : WSeq α → WSeq β
         exact
           let ⟨k1, rs3, ek⟩ := of_results_think rs2
           let ⟨o', m1, n1, rs4, rs5, ek1⟩ := of_results_bind rs3
-          let ⟨p', mt, rop'⟩ := Computation.exists_of_LiftRel_left (lift_rel_destruct st) rs4.Mem
+          let ⟨p', mt, rop'⟩ := Computation.exists_of_liftRel_left (lift_rel_destruct st) rs4.Mem
           match o', p', rop', rs4, rs5, mt with
           | none, none, _, rs4, rs5', mt =>
             by

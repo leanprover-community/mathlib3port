@@ -1086,22 +1086,28 @@ theorem sup'_biUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ 
 #align finset.sup'_bUnion Finset.sup'_biUnion
 -/
 
+#print Finset.sup'_comm /-
 protected theorem sup'_comm {t : Finset γ} (hs : s.Nonempty) (ht : t.Nonempty) (f : β → γ → α) :
     (s.sup' hs fun b => t.sup' ht (f b)) = t.sup' ht fun c => s.sup' hs fun b => f b c :=
   eq_of_forall_ge_iff fun a => by simpa using forall₂_swap
 #align finset.sup'_comm Finset.sup'_comm
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.sup'_product_left /-
 theorem sup'_product_left {t : Finset γ} (hs : s.Nonempty) (ht : t.Nonempty) (f : β × γ → α) :
     (s ×ˢ t).sup' (hs.product ht) f = s.sup' hs fun i => t.sup' ht fun i' => f ⟨i, i'⟩ :=
   eq_of_forall_ge_iff fun a => by simp [@forall_swap _ γ]
 #align finset.sup'_product_left Finset.sup'_product_left
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.sup'_product_right /-
 theorem sup'_product_right {t : Finset γ} (hs : s.Nonempty) (ht : t.Nonempty) (f : β × γ → α) :
     (s ×ˢ t).sup' (hs.product ht) f = t.sup' ht fun i' => s.sup' hs fun i => f ⟨i, i'⟩ := by
   rw [sup'_product_left, Finset.sup'_comm]
 #align finset.sup'_product_right Finset.sup'_product_right
+-/
 
 #print Finset.comp_sup'_eq_sup'_comp /-
 theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.Nonempty) {f : β → α}
@@ -1153,18 +1159,22 @@ theorem sup'_congr {t : Finset β} {f g : β → α} (h₁ : s = t) (h₂ : ∀ 
 #align finset.sup'_congr Finset.sup'_congr
 -/
 
+#print map_finset_sup' /-
 @[simp]
 theorem map_finset_sup' [SemilatticeSup β] [SupHomClass F α β] (f : F) {s : Finset ι} (hs)
     (g : ι → α) : f (s.sup' hs g) = s.sup' hs (f ∘ g) := by
   refine' hs.cons_induction _ _ <;> intros <;> simp [*]
 #align map_finset_sup' map_finset_sup'
+-/
 
+#print Finset.sup'_image /-
 @[simp]
 theorem sup'_image [DecidableEq β] {s : Finset γ} {f : γ → β} (hs : (s.image f).Nonempty)
     (g : β → α) (hs' : s.Nonempty := (Nonempty.image_iff _).1 hs) :
     (s.image f).sup' hs g = s.sup' hs' (g ∘ f) := by rw [← WithBot.coe_eq_coe];
   simp only [coe_sup', sup_image, WithBot.coe_sup]
 #align finset.sup'_image Finset.sup'_image
+-/
 
 #print Finset.sup'_map /-
 @[simp]
@@ -1276,22 +1286,28 @@ theorem inf'_biUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ 
 #align finset.inf'_bUnion Finset.inf'_biUnion
 -/
 
+#print Finset.inf'_comm /-
 protected theorem inf'_comm {t : Finset γ} (hs : s.Nonempty) (ht : t.Nonempty) (f : β → γ → α) :
     (s.inf' hs fun b => t.inf' ht (f b)) = t.inf' ht fun c => s.inf' hs fun b => f b c :=
   @Finset.sup'_comm αᵒᵈ _ _ _ _ _ hs ht _
 #align finset.inf'_comm Finset.inf'_comm
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.inf'_product_left /-
 theorem inf'_product_left {t : Finset γ} (hs : s.Nonempty) (ht : t.Nonempty) (f : β × γ → α) :
     (s ×ˢ t).inf' (hs.product ht) f = s.inf' hs fun i => t.inf' ht fun i' => f ⟨i, i'⟩ :=
   @sup'_product_left αᵒᵈ _ _ _ _ _ hs ht _
 #align finset.inf'_product_left Finset.inf'_product_left
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.inf'_product_right /-
 theorem inf'_product_right {t : Finset γ} (hs : s.Nonempty) (ht : t.Nonempty) (f : β × γ → α) :
     (s ×ˢ t).inf' (hs.product ht) f = t.inf' ht fun i' => s.inf' hs fun i => f ⟨i, i'⟩ :=
   @sup'_product_right αᵒᵈ _ _ _ _ _ hs ht _
 #align finset.inf'_product_right Finset.inf'_product_right
+-/
 
 #print Finset.comp_inf'_eq_inf'_comp /-
 theorem comp_inf'_eq_inf'_comp [SemilatticeInf γ] {s : Finset β} (H : s.Nonempty) {f : β → α}
@@ -1323,18 +1339,22 @@ theorem inf'_congr {t : Finset β} {f g : β → α} (h₁ : s = t) (h₂ : ∀ 
 #align finset.inf'_congr Finset.inf'_congr
 -/
 
+#print map_finset_inf' /-
 @[simp]
 theorem map_finset_inf' [SemilatticeInf β] [InfHomClass F α β] (f : F) {s : Finset ι} (hs)
     (g : ι → α) : f (s.inf' hs g) = s.inf' hs (f ∘ g) := by
   refine' hs.cons_induction _ _ <;> intros <;> simp [*]
 #align map_finset_inf' map_finset_inf'
+-/
 
+#print Finset.inf'_image /-
 @[simp]
 theorem inf'_image [DecidableEq β] {s : Finset γ} {f : γ → β} (hs : (s.image f).Nonempty)
     (g : β → α) (hs' : s.Nonempty := (Nonempty.image_iff _).1 hs) :
     (s.image f).inf' hs g = s.inf' hs' (g ∘ f) :=
   @sup'_image αᵒᵈ _ _ _ _ _ _ hs _ hs'
 #align finset.inf'_image Finset.inf'_image
+-/
 
 #print Finset.inf'_map /-
 @[simp]
@@ -1492,6 +1512,7 @@ section DistribLattice
 variable [DistribLattice α] {s : Finset ι} {t : Finset κ} (hs : s.Nonempty) (ht : t.Nonempty)
   {f : ι → α} {g : κ → α} {a : α}
 
+#print Finset.sup'_inf_distrib_left /-
 theorem sup'_inf_distrib_left (f : ι → α) (a : α) : a ⊓ s.sup' hs f = s.sup' hs fun i => a ⊓ f i :=
   by
   refine' hs.cons_induction (fun i => _) fun i s hi hs ih => _
@@ -1499,30 +1520,41 @@ theorem sup'_inf_distrib_left (f : ι → α) (a : α) : a ⊓ s.sup' hs f = s.s
   · simp_rw [sup'_cons hs, inf_sup_left]
     rw [ih]
 #align finset.sup'_inf_distrib_left Finset.sup'_inf_distrib_left
+-/
 
+#print Finset.sup'_inf_distrib_right /-
 theorem sup'_inf_distrib_right (f : ι → α) (a : α) : s.sup' hs f ⊓ a = s.sup' hs fun i => f i ⊓ a :=
   by rw [inf_comm, sup'_inf_distrib_left]; simp_rw [inf_comm]
 #align finset.sup'_inf_distrib_right Finset.sup'_inf_distrib_right
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.sup'_inf_sup' /-
 theorem sup'_inf_sup' (f : ι → α) (g : κ → α) :
     s.sup' hs f ⊓ t.sup' ht g = (s ×ˢ t).sup' (hs.product ht) fun i => f i.1 ⊓ g i.2 := by
   simp_rw [Finset.sup'_inf_distrib_right, Finset.sup'_inf_distrib_left, sup'_product_left]
 #align finset.sup'_inf_sup' Finset.sup'_inf_sup'
+-/
 
+#print Finset.inf'_sup_distrib_left /-
 theorem inf'_sup_distrib_left (f : ι → α) (a : α) : a ⊔ s.inf' hs f = s.inf' hs fun i => a ⊔ f i :=
   @sup'_inf_distrib_left αᵒᵈ _ _ _ hs _ _
 #align finset.inf'_sup_distrib_left Finset.inf'_sup_distrib_left
+-/
 
+#print Finset.inf'_sup_distrib_right /-
 theorem inf'_sup_distrib_right (f : ι → α) (a : α) : s.inf' hs f ⊔ a = s.inf' hs fun i => f i ⊔ a :=
   @sup'_inf_distrib_right αᵒᵈ _ _ _ hs _ _
 #align finset.inf'_sup_distrib_right Finset.inf'_sup_distrib_right
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.inf'_sup_inf' /-
 theorem inf'_sup_inf' (f : ι → α) (g : κ → α) :
     s.inf' hs f ⊔ t.inf' ht g = (s ×ˢ t).inf' (hs.product ht) fun i => f i.1 ⊔ g i.2 :=
   @sup'_inf_sup' αᵒᵈ _ _ _ _ _ hs ht _ _
 #align finset.inf'_sup_inf' Finset.inf'_sup_inf'
+-/
 
 end DistribLattice
 
