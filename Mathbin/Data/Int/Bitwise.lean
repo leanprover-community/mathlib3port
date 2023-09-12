@@ -371,52 +371,54 @@ theorem testBit_lnot : ∀ n k, testBit (lnot n) k = not (testBit n k)
 #align int.test_bit_lnot Int.testBit_lnot
 -/
 
-#print Int.shiftl_neg /-
+#print Int.shiftLeft_neg /-
 @[simp]
-theorem shiftl_neg (m n : ℤ) : shiftl m (-n) = shiftr m n :=
+theorem shiftLeft_neg (m n : ℤ) : shiftLeft m (-n) = shiftRight m n :=
   rfl
-#align int.shiftl_neg Int.shiftl_neg
+#align int.shiftl_neg Int.shiftLeft_neg
 -/
 
-#print Int.shiftr_neg /-
+#print Int.shiftRight_neg /-
 @[simp]
-theorem shiftr_neg (m n : ℤ) : shiftr m (-n) = shiftl m n := by rw [← shiftl_neg, neg_neg]
-#align int.shiftr_neg Int.shiftr_neg
+theorem shiftRight_neg (m n : ℤ) : shiftRight m (-n) = shiftLeft m n := by
+  rw [← shiftl_neg, neg_neg]
+#align int.shiftr_neg Int.shiftRight_neg
 -/
 
-#print Int.shiftl_coe_nat /-
+#print Int.shiftLeft_coe_nat /-
 @[simp]
-theorem shiftl_coe_nat (m n : ℕ) : shiftl m n = Nat.shiftl m n :=
+theorem shiftLeft_coe_nat (m n : ℕ) : shiftLeft m n = Nat.shiftl m n :=
   rfl
-#align int.shiftl_coe_nat Int.shiftl_coe_nat
+#align int.shiftl_coe_nat Int.shiftLeft_coe_nat
 -/
 
-#print Int.shiftr_coe_nat /-
+#print Int.shiftRight_coe_nat /-
 @[simp]
-theorem shiftr_coe_nat (m n : ℕ) : shiftr m n = Nat.shiftr m n := by cases n <;> rfl
-#align int.shiftr_coe_nat Int.shiftr_coe_nat
+theorem shiftRight_coe_nat (m n : ℕ) : shiftRight m n = Nat.shiftr m n := by cases n <;> rfl
+#align int.shiftr_coe_nat Int.shiftRight_coe_nat
 -/
 
-#print Int.shiftl_negSucc /-
+#print Int.shiftLeft_negSucc /-
 @[simp]
-theorem shiftl_negSucc (m n : ℕ) : shiftl -[m+1] n = -[Nat.shiftLeft' true m n+1] :=
+theorem shiftLeft_negSucc (m n : ℕ) : shiftLeft -[m+1] n = -[Nat.shiftLeft' true m n+1] :=
   rfl
-#align int.shiftl_neg_succ Int.shiftl_negSucc
+#align int.shiftl_neg_succ Int.shiftLeft_negSucc
 -/
 
-#print Int.shiftr_negSucc /-
+#print Int.shiftRight_negSucc /-
 @[simp]
-theorem shiftr_negSucc (m n : ℕ) : shiftr -[m+1] n = -[Nat.shiftr m n+1] := by cases n <;> rfl
-#align int.shiftr_neg_succ Int.shiftr_negSucc
+theorem shiftRight_negSucc (m n : ℕ) : shiftRight -[m+1] n = -[Nat.shiftr m n+1] := by
+  cases n <;> rfl
+#align int.shiftr_neg_succ Int.shiftRight_negSucc
 -/
 
-#print Int.shiftr_add /-
-theorem shiftr_add : ∀ (m : ℤ) (n k : ℕ), shiftr m (n + k) = shiftr (shiftr m n) k
+#print Int.shiftRight_add /-
+theorem shiftRight_add : ∀ (m : ℤ) (n k : ℕ), shiftRight m (n + k) = shiftRight (shiftRight m n) k
   | (m : ℕ), n, k => by
     rw [shiftr_coe_nat, shiftr_coe_nat, ← Int.ofNat_add, shiftr_coe_nat, Nat.shiftr_add]
   | -[m+1], n, k => by
     rw [shiftr_neg_succ, shiftr_neg_succ, ← Int.ofNat_add, shiftr_neg_succ, Nat.shiftr_add]
-#align int.shiftr_add Int.shiftr_add
+#align int.shiftr_add Int.shiftRight_add
 -/
 
 /-! ### bitwise ops -/
@@ -424,70 +426,71 @@ theorem shiftr_add : ∀ (m : ℤ) (n k : ℕ), shiftr m (n + k) = shiftr (shift
 
 attribute [local simp] Int.zero_div
 
-#print Int.shiftl_add /-
-theorem shiftl_add : ∀ (m : ℤ) (n : ℕ) (k : ℤ), shiftl m (n + k) = shiftl (shiftl m n) k
+#print Int.shiftLeft_add /-
+theorem shiftLeft_add : ∀ (m : ℤ) (n : ℕ) (k : ℤ), shiftLeft m (n + k) = shiftLeft (shiftLeft m n) k
   | (m : ℕ), n, (k : ℕ) => congr_arg ofNat (Nat.shiftl_add _ _ _)
   | -[m+1], n, (k : ℕ) => congr_arg negSucc (Nat.shiftLeft'_add _ _ _ _)
   | (m : ℕ), n, -[k+1] =>
-    subNatNat_elim n k.succ (fun n k i => shiftl (↑m) i = Nat.shiftr (Nat.shiftl m n) k)
+    subNatNat_elim n k.succ (fun n k i => shiftLeft (↑m) i = Nat.shiftr (Nat.shiftl m n) k)
       (fun i n =>
         congr_arg coe <| by rw [← Nat.shiftl_sub, add_tsub_cancel_left] <;> apply Nat.le_add_right)
       fun i n =>
       congr_arg coe <| by rw [add_assoc, Nat.shiftr_add, ← Nat.shiftl_sub, tsub_self] <;> rfl
   | -[m+1], n, -[k+1] =>
     subNatNat_elim n k.succ
-      (fun n k i => shiftl -[m+1] i = -[Nat.shiftr (Nat.shiftLeft' true m n) k+1])
+      (fun n k i => shiftLeft -[m+1] i = -[Nat.shiftr (Nat.shiftLeft' true m n) k+1])
       (fun i n =>
         congr_arg negSucc <| by
           rw [← Nat.shiftLeft'_sub, add_tsub_cancel_left] <;> apply Nat.le_add_right)
       fun i n =>
       congr_arg negSucc <| by
         rw [add_assoc, Nat.shiftr_add, ← Nat.shiftLeft'_sub, tsub_self] <;> rfl
-#align int.shiftl_add Int.shiftl_add
+#align int.shiftl_add Int.shiftLeft_add
 -/
 
-#print Int.shiftl_sub /-
-theorem shiftl_sub (m : ℤ) (n : ℕ) (k : ℤ) : shiftl m (n - k) = shiftr (shiftl m n) k :=
-  shiftl_add _ _ _
-#align int.shiftl_sub Int.shiftl_sub
+#print Int.shiftLeft_sub /-
+theorem shiftLeft_sub (m : ℤ) (n : ℕ) (k : ℤ) :
+    shiftLeft m (n - k) = shiftRight (shiftLeft m n) k :=
+  shiftLeft_add _ _ _
+#align int.shiftl_sub Int.shiftLeft_sub
 -/
 
-#print Int.shiftl_eq_mul_pow /-
-theorem shiftl_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftl m n = m * ↑(2 ^ n)
+#print Int.shiftLeft_eq_mul_pow /-
+theorem shiftLeft_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftLeft m n = m * ↑(2 ^ n)
   | (m : ℕ), n => congr_arg coe (Nat.shiftLeft_eq_mul_pow _ _)
   | -[m+1], n => @congr_arg ℕ ℤ _ _ (fun i => -i) (Nat.shiftLeft'_tt_eq_mul_pow _ _)
-#align int.shiftl_eq_mul_pow Int.shiftl_eq_mul_pow
+#align int.shiftl_eq_mul_pow Int.shiftLeft_eq_mul_pow
 -/
 
-#print Int.shiftr_eq_div_pow /-
-theorem shiftr_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftr m n = m / ↑(2 ^ n)
+#print Int.shiftRight_eq_div_pow /-
+theorem shiftRight_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftRight m n = m / ↑(2 ^ n)
   | (m : ℕ), n => by rw [shiftr_coe_nat] <;> exact congr_arg coe (Nat.shiftRight_eq_div_pow _ _)
   | -[m+1], n =>
     by
     rw [shiftr_neg_succ, neg_succ_of_nat_div, Nat.shiftRight_eq_div_pow]; rfl
     exact coe_nat_lt_coe_nat_of_lt (pow_pos (by decide) _)
-#align int.shiftr_eq_div_pow Int.shiftr_eq_div_pow
+#align int.shiftr_eq_div_pow Int.shiftRight_eq_div_pow
 -/
 
-#print Int.one_shiftl /-
-theorem one_shiftl (n : ℕ) : shiftl 1 n = (2 ^ n : ℕ) :=
+#print Int.one_shiftLeft /-
+theorem one_shiftLeft (n : ℕ) : shiftLeft 1 n = (2 ^ n : ℕ) :=
   congr_arg coe (Nat.one_shiftLeft _)
-#align int.one_shiftl Int.one_shiftl
+#align int.one_shiftl Int.one_shiftLeft
 -/
 
-#print Int.zero_shiftl /-
+#print Int.zero_shiftLeft /-
 @[simp]
-theorem zero_shiftl : ∀ n : ℤ, shiftl 0 n = 0
+theorem zero_shiftLeft : ∀ n : ℤ, shiftLeft 0 n = 0
   | (n : ℕ) => congr_arg coe (Nat.zero_shiftLeft _)
   | -[n+1] => congr_arg coe (Nat.zero_shiftr _)
-#align int.zero_shiftl Int.zero_shiftl
+#align int.zero_shiftl Int.zero_shiftLeft
 -/
 
-#print Int.zero_shiftr /-
+#print Int.zero_shiftRight /-
 @[simp]
-theorem zero_shiftr (n) : shiftr 0 n = 0 :=
-  zero_shiftl _
-#align int.zero_shiftr Int.zero_shiftr
+theorem zero_shiftRight (n) : shiftRight 0 n = 0 :=
+  zero_shiftLeft _
+#align int.zero_shiftr Int.zero_shiftRight
 -/
 
 end Int
