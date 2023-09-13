@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
 
-#align_import number_theory.legendre_symbol.gauss_eisenstein_lemmas from "leanprover-community/mathlib"@"442a83d738cb208d3600056c489be16900ba701d"
+#align_import number_theory.legendre_symbol.gauss_eisenstein_lemmas from "leanprover-community/mathlib"@"8818fdefc78642a7e6afcd20be5c184f3c7d9699"
 
 /-!
 # Lemmas of Gauss and Eisenstein
@@ -132,6 +132,7 @@ theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a 
       (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card :=
   by
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
+  haveI : Fact (2 < p) := ⟨hp.lt_of_le' (Fact.out p.prime).two_le⟩
   have :
     (legendreSym p a : ZMod p) =
       (((-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card : ℤ) :
@@ -141,7 +142,7 @@ theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a 
       cases
         neg_one_pow_eq_or ℤ
           ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card <;>
-    simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
+    simp_all only [neg_one_ne_one, neg_one_ne_one.symm, algebraMap.coe_one, Int.cast_neg]
 #align zmod.gauss_lemma ZMod.gauss_lemma
 -/
 

@@ -6,7 +6,7 @@ Authors: Yaël Dillies
 import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Set.Sups
 
-#align_import data.finset.sups from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
+#align_import data.finset.sups from "leanprover-community/mathlib"@"8818fdefc78642a7e6afcd20be5c184f3c7d9699"
 
 /-!
 # Set family operations
@@ -39,6 +39,21 @@ We define the following notation in locale `finset_family`:
 open Function
 
 open scoped SetFamily
+
+-- TODO: Is there a better spot for those two instances?
+namespace Finset
+
+variable {α : Type _} [Preorder α] {s t : Set α} {a : α}
+
+instance decidablePredMemUpperClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
+    DecidablePred (· ∈ upperClosure (s : Set α)) := fun _ => Finset.decidableDexistsFinset
+#align finset.decidable_pred_mem_upper_closure Finset.decidablePredMemUpperClosure
+
+instance decidablePredMemLowerClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
+    DecidablePred (· ∈ lowerClosure (s : Set α)) := fun _ => Finset.decidableDexistsFinset
+#align finset.decidable_pred_mem_lower_closure Finset.decidablePredMemLowerClosure
+
+end Finset
 
 variable {α : Type _} [DecidableEq α]
 
@@ -288,6 +303,21 @@ theorem sups_sups_sups_comm : s ⊻ t ⊻ (u ⊻ v) = s ⊻ u ⊻ (t ⊻ v) :=
 #align finset.sups_sups_sups_comm Finset.sups_sups_sups_comm
 -/
 
+variable [@DecidableRel α (· ≤ ·)]
+
+theorem filter_sups_le (s t : Finset α) (a : α) :
+    ((s ⊻ t).filterₓ fun b => b ≤ a) = (s.filterₓ fun b => b ≤ a) ⊻ t.filterₓ fun b => b ≤ a :=
+  by
+  ext b
+  simp only [mem_filter, mem_sups]
+  constructor
+  · rintro ⟨⟨b, hb, c, hc, rfl⟩, ha⟩
+    rw [sup_le_iff] at ha 
+    exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩
+  · rintro ⟨b, hb, c, hc, _, rfl⟩
+    exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, sup_le hb.2 hc.2⟩
+#align finset.filter_sups_le Finset.filter_sups_le
+
 end Sups
 
 section Infs
@@ -533,6 +563,21 @@ theorem infs_infs_infs_comm : s ⊼ t ⊼ (u ⊼ v) = s ⊼ u ⊼ (t ⊼ v) :=
   image₂_image₂_image₂_comm inf_inf_inf_comm
 #align finset.infs_infs_infs_comm Finset.infs_infs_infs_comm
 -/
+
+variable [@DecidableRel α (· ≤ ·)]
+
+theorem filter_infs_ge (s t : Finset α) (a : α) :
+    ((s ⊼ t).filterₓ fun b => a ≤ b) = (s.filterₓ fun b => a ≤ b) ⊼ t.filterₓ fun b => a ≤ b :=
+  by
+  ext b
+  simp only [mem_filter, mem_infs]
+  constructor
+  · rintro ⟨⟨b, hb, c, hc, rfl⟩, ha⟩
+    rw [le_inf_iff] at ha 
+    exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩
+  · rintro ⟨b, hb, c, hc, _, rfl⟩
+    exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, le_inf hb.2 hc.2⟩
+#align finset.filter_infs_ge Finset.filter_infs_ge
 
 end Infs
 
