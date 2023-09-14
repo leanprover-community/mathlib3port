@@ -405,21 +405,21 @@ protected theorem FilterBasis.hasBasis {α : Type _} (B : FilterBasis α) :
 #align filter_basis.has_basis FilterBasis.hasBasis
 -/
 
-#print Filter.HasBasis.to_has_basis' /-
-theorem HasBasis.to_has_basis' (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i)
+#print Filter.HasBasis.to_hasBasis' /-
+theorem HasBasis.to_hasBasis' (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i)
     (h' : ∀ i', p' i' → s' i' ∈ l) : l.HasBasis p' s' :=
   by
   refine' ⟨fun t => ⟨fun ht => _, fun ⟨i', hi', ht⟩ => mem_of_superset (h' i' hi') ht⟩⟩
   rcases hl.mem_iff.1 ht with ⟨i, hi, ht⟩
   rcases h i hi with ⟨i', hi', hs's⟩
   exact ⟨i', hi', subset.trans hs's ht⟩
-#align filter.has_basis.to_has_basis' Filter.HasBasis.to_has_basis'
+#align filter.has_basis.to_has_basis' Filter.HasBasis.to_hasBasis'
 -/
 
 #print Filter.HasBasis.to_hasBasis /-
 theorem HasBasis.to_hasBasis (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i)
     (h' : ∀ i', p' i' → ∃ i, p i ∧ s i ⊆ s' i') : l.HasBasis p' s' :=
-  hl.to_has_basis' h fun i' hi' =>
+  hl.to_hasBasis' h fun i' hi' =>
     let ⟨i, hi, hss'⟩ := h' i' hi'
     hl.mem_iff.2 ⟨i, hi, hss'⟩
 #align filter.has_basis.to_has_basis Filter.HasBasis.to_hasBasis
@@ -428,7 +428,7 @@ theorem HasBasis.to_hasBasis (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i', p
 #print Filter.HasBasis.to_subset /-
 theorem HasBasis.to_subset (hl : l.HasBasis p s) {t : ι → Set α} (h : ∀ i, p i → t i ⊆ s i)
     (ht : ∀ i, p i → t i ∈ l) : l.HasBasis p t :=
-  hl.to_has_basis' (fun i hi => ⟨i, hi, h i hi⟩) ht
+  hl.to_hasBasis' (fun i hi => ⟨i, hi, h i hi⟩) ht
 #align filter.has_basis.to_subset Filter.HasBasis.to_subset
 -/
 

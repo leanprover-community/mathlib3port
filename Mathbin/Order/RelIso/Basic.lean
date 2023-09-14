@@ -215,9 +215,9 @@ theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f 
 #align rel_hom.injective_of_increasing RelHom.injective_of_increasing
 -/
 
-#print Surjective.wellFounded_iff /-
+#print Function.Surjective.wellFounded_iff /-
 -- TODO: define a `rel_iff_class` so we don't have to do all the `convert` trickery?
-theorem Surjective.wellFounded_iff {f : α → β} (hf : Surjective f)
+theorem Function.Surjective.wellFounded_iff {f : α → β} (hf : Surjective f)
     (o : ∀ {a b}, r a b ↔ s (f a) (f b)) : WellFounded r ↔ WellFounded s :=
   Iff.intro
     (by
@@ -226,7 +226,7 @@ theorem Surjective.wellFounded_iff {f : α → β} (hf : Surjective f)
       intro a b h; apply o.2; convert h
       iterate 2 apply Classical.choose_spec hf.has_right_inverse)
     (RelHomClass.wellFounded (⟨f, fun _ _ => o.1⟩ : r →r s))
-#align surjective.well_founded_iff Surjective.wellFounded_iff
+#align surjective.well_founded_iff Function.Surjective.wellFounded_iff
 -/
 
 #print RelEmbedding /-

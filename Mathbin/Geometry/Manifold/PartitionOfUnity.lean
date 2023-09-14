@@ -383,7 +383,7 @@ theorem exists_isSubordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s)
   -- First we deduce some missing instances
   haveI : LocallyCompactSpace H := I.locally_compact
   haveI : LocallyCompactSpace M := ChartedSpace.locallyCompactSpace H M
-  haveI : NormalSpace M := normal_of_paracompact_t2
+  haveI : NormalSpace M := T4Space.of_paracompactSpace_t2Space
   -- Next we choose a covering by supports of smooth bump functions
   have hB := fun x hx => SmoothBumpFunction.nhds_basis_support I (hU x hx)
   rcases refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set hs hB with
@@ -614,7 +614,7 @@ theorem exists_isSubordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (h
   by
   haveI : LocallyCompactSpace H := I.locally_compact
   haveI : LocallyCompactSpace M := ChartedSpace.locallyCompactSpace H M
-  haveI : NormalSpace M := normal_of_paracompact_t2
+  haveI : NormalSpace M := T4Space.of_paracompactSpace_t2Space
   rcases BumpCovering.exists_isSubordinate_of_prop (Smooth I 𝓘(ℝ)) _ hs U ho hU with ⟨f, hf, hfU⟩
   · exact ⟨f.to_smooth_partition_of_unity hf, hfU.to_smooth_partition_of_unity hf⟩
   · intro s t hs ht hd

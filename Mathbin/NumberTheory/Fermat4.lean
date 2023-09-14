@@ -320,12 +320,12 @@ theorem not_fermat_42 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 
 #align not_fermat_42 not_fermat_42
 -/
 
-#print not_fermat_4 /-
-theorem not_fermat_4 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 4 :=
+#print fermatLastTheoremFour /-
+theorem fermatLastTheoremFour {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 4 :=
   by
   intro heq
   apply @not_fermat_42 _ _ (c ^ 2) ha hb
   rw [HEq]; ring
-#align not_fermat_4 not_fermat_4
+#align not_fermat_4 fermatLastTheoremFour
 -/
 

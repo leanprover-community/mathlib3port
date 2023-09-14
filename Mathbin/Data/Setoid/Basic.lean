@@ -584,8 +584,8 @@ theorem Quotient.subsingleton_iff {s : Setoid Î±} : Subsingleton (Quotient s) â†
   by
   simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply,
     forall_const]
-  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun a => _)
-  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun b => _)
+  refine' (surjective_quotient_mk' _).forall.trans (forall_congr' fun a => _)
+  refine' (surjective_quotient_mk' _).forall.trans (forall_congr' fun b => _)
   exact Quotient.eq''
 #align quotient.subsingleton_iff Quotient.subsingleton_iff
 -/

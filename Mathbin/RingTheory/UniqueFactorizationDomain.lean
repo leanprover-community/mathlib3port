@@ -67,7 +67,7 @@ open Associates Nat
 theorem of_wfDvdMonoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
   ⟨by
     haveI := h
-    refine' (Surjective.wellFounded_iff mk_surjective _).2 well_founded_dvd_not_unit
+    refine' (Function.Surjective.wellFounded_iff mk_surjective _).2 well_founded_dvd_not_unit
     intros; rw [mk_dvd_not_unit_mk_iff]⟩
 #align wf_dvd_monoid.of_wf_dvd_monoid_associates WfDvdMonoid.of_wfDvdMonoid_associates
 -/
@@ -77,7 +77,7 @@ variable [WfDvdMonoid α]
 #print WfDvdMonoid.wfDvdMonoid_associates /-
 instance wfDvdMonoid_associates : WfDvdMonoid (Associates α) :=
   ⟨by
-    refine' (Surjective.wellFounded_iff mk_surjective _).1 well_founded_dvd_not_unit
+    refine' (Function.Surjective.wellFounded_iff mk_surjective _).1 well_founded_dvd_not_unit
     intros; rw [mk_dvd_not_unit_mk_iff]⟩
 #align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wfDvdMonoid_associates
 -/

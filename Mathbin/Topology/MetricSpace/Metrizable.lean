@@ -184,7 +184,7 @@ variable (X) [T3Space X] [SecondCountableTopology X]
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   by
-  haveI : NormalSpace X := normalSpaceOfT3SecondCountable X
+  haveI : NormalSpace X := NormalSpace.of_regularSpace_secondCountableTopology X
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
   -- `V ∈ B`, and `closure U ⊆ V`.
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩

@@ -276,7 +276,7 @@ theorem Quotient.preimage_mem_nhds [TopologicalSpace α] [s : Setoid α] {V : Se
 /-- The image of a dense set under `quotient.mk` is a dense set. -/
 theorem Dense.quotient [Setoid α] [TopologicalSpace α] {s : Set α} (H : Dense s) :
     Dense (Quotient.mk' '' s) :=
-  (surjective_quotient_mk α).DenseRange.dense_image continuous_coinduced_rng H
+  (surjective_quotient_mk' α).DenseRange.dense_image continuous_coinduced_rng H
 #align dense.quotient Dense.quotient
 -/
 
@@ -284,7 +284,7 @@ theorem Dense.quotient [Setoid α] [TopologicalSpace α] {s : Set α} (H : Dense
 /-- The composition of `quotient.mk` and a function with dense range has dense range. -/
 theorem DenseRange.quotient [Setoid α] [TopologicalSpace α] {f : β → α} (hf : DenseRange f) :
     DenseRange (Quotient.mk' ∘ f) :=
-  (surjective_quotient_mk α).DenseRange.comp hf continuous_coinduced_rng
+  (surjective_quotient_mk' α).DenseRange.comp hf continuous_coinduced_rng
 #align dense_range.quotient DenseRange.quotient
 -/
 

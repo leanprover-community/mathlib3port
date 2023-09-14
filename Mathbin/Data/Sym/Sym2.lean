@@ -147,14 +147,14 @@ protected theorem inductionOn₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 α
 #print Sym2.exists /-
 protected theorem exists {α : Sort _} {f : Sym2 α → Prop} :
     (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
-  (surjective_quotient_mk _).exists.trans Prod.exists
+  (surjective_quotient_mk' _).exists.trans Prod.exists
 #align sym2.exists Sym2.exists
 -/
 
 #print Sym2.forall /-
 protected theorem forall {α : Sort _} {f : Sym2 α → Prop} :
     (∀ x : Sym2 α, f x) ↔ ∀ x y, f ⟦(x, y)⟧ :=
-  (surjective_quotient_mk _).forall.trans Prod.forall
+  (surjective_quotient_mk' _).forall.trans Prod.forall
 #align sym2.forall Sym2.forall
 -/
 

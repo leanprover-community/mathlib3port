@@ -198,7 +198,7 @@ private theorem one_def : 1 = (mk 1 : Cauchy abv) :=
   rfl
 
 instance : Ring (Cauchy abv) :=
-  Function.Surjective.ring mk (surjective_quotient_mk _) zero_def.symm one_def.symm
+  Function.Surjective.ring mk (surjective_quotient_mk' _) zero_def.symm one_def.symm
     (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
     (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
     (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl
@@ -230,7 +230,7 @@ variable {α : Type _} [LinearOrderedField α]
 variable {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv]
 
 instance : CommRing (Cauchy abv) :=
-  Function.Surjective.commRing mk (surjective_quotient_mk _) zero_def.symm one_def.symm
+  Function.Surjective.commRing mk (surjective_quotient_mk' _) zero_def.symm one_def.symm
     (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
     (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
     (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl

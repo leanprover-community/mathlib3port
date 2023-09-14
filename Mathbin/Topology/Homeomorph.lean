@@ -460,10 +460,10 @@ protected theorem closedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
 #align homeomorph.closed_embedding Homeomorph.closedEmbedding
 -/
 
-#print Homeomorph.normalSpace /-
-protected theorem normalSpace [NormalSpace α] (h : α ≃ₜ β) : NormalSpace β :=
+#print Homeomorph.t4Space /-
+protected theorem t4Space [NormalSpace α] (h : α ≃ₜ β) : NormalSpace β :=
   h.symm.ClosedEmbedding.NormalSpace
-#align homeomorph.normal_space Homeomorph.normalSpace
+#align homeomorph.normal_space Homeomorph.t4Space
 -/
 
 #print Homeomorph.preimage_closure /-

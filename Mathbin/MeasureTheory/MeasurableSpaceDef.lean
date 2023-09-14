@@ -7,7 +7,7 @@ import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Encodable.Lattice
 import Mathbin.Order.Disjointed
 
-#align_import measure_theory.measurable_space_def from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
+#align_import measure_theory.measurable_space_def from "leanprover-community/mathlib"@"001ffdc42920050657fd45bd2b8bfbec8eaaeb29"
 
 /-!
 # Measurable spaces and measurable functions
@@ -281,7 +281,6 @@ theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet 
 -/
 
 #print MeasurableSet.const /-
-@[simp]
 theorem MeasurableSet.const (p : Prop) : MeasurableSet {a : α | p} := by
   by_cases p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
 #align measurable_set.const MeasurableSet.const
@@ -544,14 +543,12 @@ theorem generateFrom_insert_empty (S : Set (Set α)) : generateFrom (insert ∅ 
 -/
 
 #print MeasurableSpace.generateFrom_singleton_empty /-
-@[simp]
 theorem generateFrom_singleton_empty : generateFrom {∅} = (⊥ : MeasurableSpace α) := by
   rw [eq_bot_iff, generate_from_le_iff]; simp
 #align measurable_space.generate_from_singleton_empty MeasurableSpace.generateFrom_singleton_empty
 -/
 
 #print MeasurableSpace.generateFrom_singleton_univ /-
-@[simp]
 theorem generateFrom_singleton_univ : generateFrom {Set.univ} = (⊥ : MeasurableSpace α) := by
   rw [eq_bot_iff, generate_from_le_iff]; simp
 #align measurable_space.generate_from_singleton_univ MeasurableSpace.generateFrom_singleton_univ

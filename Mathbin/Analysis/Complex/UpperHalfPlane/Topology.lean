@@ -71,7 +71,7 @@ instance : T3Space ℍ :=
   Subtype.t3Space
 
 instance : NormalSpace ℍ :=
-  normalSpaceOfT3SecondCountable ℍ
+  NormalSpace.of_regularSpace_secondCountableTopology ℍ
 
 instance : ContractibleSpace ℍ :=
   (convex_halfspace_im_gt 0).ContractibleSpace ⟨I, one_pos.trans_eq I_im.symm⟩

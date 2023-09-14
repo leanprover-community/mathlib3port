@@ -148,10 +148,10 @@ theorem getRight?_eq_some_iff {b} : x.getRight? = some b ↔ x = inr b := by
 #align sum.get_right_eq_some_iff Sum.getRight?_eq_some_iff
 -/
 
-#print Sum.not_isLeft /-
+#print Sum.bnot_isLeft /-
 @[simp]
-theorem not_isLeft (x : Sum α β) : not x.isLeft = x.isRight := by cases x <;> rfl
-#align sum.bnot_is_left Sum.not_isLeft
+theorem bnot_isLeft (x : Sum α β) : not x.isLeft = x.isRight := by cases x <;> rfl
+#align sum.bnot_is_left Sum.bnot_isLeft
 -/
 
 #print Sum.isLeft_eq_false /-
@@ -160,15 +160,15 @@ theorem isLeft_eq_false : x.isLeft = false ↔ x.isRight := by cases x <;> simp
 #align sum.is_left_eq_ff Sum.isLeft_eq_false
 -/
 
-#print Sum.Not_isLeft /-
-theorem Not_isLeft : ¬x.isLeft ↔ x.isRight := by simp
-#align sum.not_is_left Sum.Not_isLeft
+#print Sum.not_isLeft /-
+theorem not_isLeft : ¬x.isLeft ↔ x.isRight := by simp
+#align sum.not_is_left Sum.not_isLeft
 -/
 
-#print Sum.not_isRight /-
+#print Sum.bnot_isRight /-
 @[simp]
-theorem not_isRight (x : Sum α β) : not x.isRight = x.isLeft := by cases x <;> rfl
-#align sum.bnot_is_right Sum.not_isRight
+theorem bnot_isRight (x : Sum α β) : not x.isRight = x.isLeft := by cases x <;> rfl
+#align sum.bnot_is_right Sum.bnot_isRight
 -/
 
 #print Sum.isRight_eq_false /-
@@ -177,9 +177,9 @@ theorem isRight_eq_false : x.isRight = false ↔ x.isLeft := by cases x <;> simp
 #align sum.is_right_eq_ff Sum.isRight_eq_false
 -/
 
-#print Sum.Not_isRight /-
-theorem Not_isRight : ¬x.isRight ↔ x.isLeft := by simp
-#align sum.not_is_right Sum.Not_isRight
+#print Sum.not_isRight /-
+theorem not_isRight : ¬x.isRight ↔ x.isLeft := by simp
+#align sum.not_is_right Sum.not_isRight
 -/
 
 #print Sum.isLeft_iff /-

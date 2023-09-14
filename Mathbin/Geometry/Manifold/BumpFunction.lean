@@ -261,7 +261,7 @@ theorem nhdsWithin_range_basis :
   by
   refine'
     ((nhdsWithin_hasBasis nhds_basis_closed_ball _).restrict_subset
-          (extChartAt_target_mem_nhdsWithin _ _)).to_has_basis'
+          (extChartAt_target_mem_nhdsWithin _ _)).to_hasBasis'
       _ _
   · rintro R ⟨hR0, hsub⟩
     exact ⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩, hsub⟩, trivial, subset.rfl⟩
@@ -404,7 +404,7 @@ neighborhood of `c` and each neighborhood of `c` includes `support f` for some `
 smooth_bump_function I c` such that `tsupport f ⊆ s`. -/
 theorem nhds_basis_support {s : Set M} (hs : s ∈ 𝓝 c) :
     (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => tsupport f ⊆ s) fun f => support f :=
-  ((nhds_basis_tsupport I c).restrict_subset hs).to_has_basis'
+  ((nhds_basis_tsupport I c).restrict_subset hs).to_hasBasis'
     (fun f hf => ⟨f, hf.2, subset_closure⟩) fun f hf => f.support_mem_nhds
 #align smooth_bump_function.nhds_basis_support SmoothBumpFunction.nhds_basis_support
 -/

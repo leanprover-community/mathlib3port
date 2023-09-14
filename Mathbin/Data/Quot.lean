@@ -384,12 +384,12 @@ theorem surjective_quot_mk (r : α → α → Prop) : Surjective (Quot.mk r) :=
 #align surjective_quot_mk surjective_quot_mk
 -/
 
-#print surjective_quotient_mk /-
+#print surjective_quotient_mk' /-
 /-- `quotient.mk` is a surjective function. -/
-theorem surjective_quotient_mk (α : Sort _) [s : Setoid α] :
+theorem surjective_quotient_mk' (α : Sort _) [s : Setoid α] :
     Surjective (Quotient.mk' : α → Quotient s) :=
   Quot.exists_rep
-#align surjective_quotient_mk surjective_quotient_mk
+#align surjective_quotient_mk surjective_quotient_mk'
 -/
 
 #print Quot.out /-

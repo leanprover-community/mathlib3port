@@ -51,7 +51,7 @@ instance : T2Space ℝ≥0∞ := by infer_instance
 
 -- short-circuit type class inference
 instance : NormalSpace ℝ≥0∞ :=
-  normalOfCompactT2
+  T4Space.of_compactSpace_t2Space
 
 instance : SecondCountableTopology ℝ≥0∞ :=
   orderIsoUnitIntervalBirational.toHomeomorph.Embedding.SecondCountableTopology

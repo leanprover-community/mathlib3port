@@ -5,7 +5,7 @@ Authors: Rémy Degenne
 -/
 import Mathbin.MeasureTheory.Constructions.Pi
 
-#align_import probability.independence.basic from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
+#align_import probability.independence.basic from "leanprover-community/mathlib"@"001ffdc42920050657fd45bd2b8bfbec8eaaeb29"
 
 /-!
 # Independence of sets of sets and measure spaces (σ-algebras)
@@ -67,7 +67,7 @@ Part A, Chapter 4.
 -/
 
 
-open MeasureTheory MeasurableSpace
+open MeasureTheory MeasurableSpace Set
 
 open scoped BigOperators MeasureTheory ENNReal
 
@@ -699,7 +699,8 @@ We prove the following equivalences on `indep_set`, for measurable sets `s, t`.
 -/
 
 
-variable {s t : Set Ω} (S T : Set (Set Ω))
+variable {s t : Set Ω} (S T : Set (Set Ω)) {π : ι → Set (Set Ω)} {f : ι → Set Ω}
+  {m0 : MeasurableSpace Ω} {μ : Measure Ω}
 
 #print ProbabilityTheory.indepSet_iff_indepSets_singleton /-
 theorem indepSet_iff_indepSets_singleton {m0 : MeasurableSpace Ω} (hs_meas : MeasurableSet s)
@@ -757,6 +758,47 @@ theorem indep_iff_forall_indepSet (m₁ m₂ : MeasurableSpace Ω) {m0 : Measura
       (measurableSet_generateFrom (Set.mem_singleton t))⟩
 #align probability_theory.indep_iff_forall_indep_set ProbabilityTheory.indep_iff_forall_indepSet
 -/
+
+theorem iIndepSets.meas_iInter [Fintype ι] (h : iIndepSets π μ) (hf : ∀ i, f i ∈ π i) :
+    μ (⋂ i, f i) = ∏ i, μ (f i) := by simp [← h _ fun i _ => hf _]
+#align probability_theory.Indep_sets.meas_Inter ProbabilityTheory.iIndepSets.meas_iInter
+
+theorem iIndep_comap_mem_iff :
+    iIndep (fun i => MeasurableSpace.comap (· ∈ f i) ⊤) μ ↔ iIndepSet f μ := by
+  simp_rw [← generate_from_singleton]; rfl
+#align probability_theory.Indep_comap_mem_iff ProbabilityTheory.iIndep_comap_mem_iff
+
+alias ⟨_, Indep_set.Indep_comap_mem⟩ := Indep_comap_mem_iff
+#align probability_theory.Indep_set.Indep_comap_mem ProbabilityTheory.iIndepSet.iIndep_comap_mem
+
+theorem iIndepSets_singleton_iff :
+    iIndepSets (fun i => {f i}) μ ↔ ∀ t, μ (⋂ i ∈ t, f i) = ∏ i in t, μ (f i) :=
+  forall_congr' fun t =>
+    ⟨fun h => h fun _ _ => mem_singleton _, fun h f hf =>
+      by
+      refine'
+        Eq.trans _ (h.trans <| Finset.prod_congr rfl fun i hi => congr_arg _ <| (hf i hi).symm)
+      rw [Inter₂_congr hf]⟩
+#align probability_theory.Indep_sets_singleton_iff ProbabilityTheory.iIndepSets_singleton_iff
+
+variable [IsProbabilityMeasure μ]
+
+theorem iIndepSet_iff_iIndepSets_singleton (hf : ∀ i, MeasurableSet (f i)) :
+    iIndepSet f μ ↔ iIndepSets (fun i => {f i}) μ :=
+  ⟨iIndep.iIndepSets fun _ => rfl,
+    IndepSets.indep _ (fun i => generateFrom_le <| by rintro t (rfl : t = _); exact hf _) _
+      (fun _ => IsPiSystem.singleton _) fun _ => rfl⟩
+#align probability_theory.Indep_set_iff_Indep_sets_singleton ProbabilityTheory.iIndepSet_iff_iIndepSets_singleton
+
+theorem iIndepSet_iff_measure_iInter_eq_prod (hf : ∀ i, MeasurableSet (f i)) :
+    iIndepSet f μ ↔ ∀ s, μ (⋂ i ∈ s, f i) = ∏ i in s, μ (f i) :=
+  (iIndepSet_iff_iIndepSets_singleton hf).trans iIndepSets_singleton_iff
+#align probability_theory.Indep_set_iff_measure_Inter_eq_prod ProbabilityTheory.iIndepSet_iff_measure_iInter_eq_prod
+
+theorem iIndepSets.iIndepSet_of_mem (hfπ : ∀ i, f i ∈ π i) (hf : ∀ i, MeasurableSet (f i))
+    (hπ : iIndepSets π μ) : iIndepSet f μ :=
+  (iIndepSet_iff_measure_iInter_eq_prod hf).2 fun t => hπ _ fun i _ => hfπ _
+#align probability_theory.Indep_sets.Indep_set_of_mem ProbabilityTheory.iIndepSets.iIndepSet_of_mem
 
 end IndepSet
 

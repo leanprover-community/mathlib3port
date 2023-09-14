@@ -599,7 +599,7 @@ instance : T2Space (AddCircle p) :=
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is normal. -/
 instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=
-  normalOfCompactT2
+  T4Space.of_compactSpace_t2Space
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is second-countable. -/
 instance : SecondCountableTopology (AddCircle p) :=

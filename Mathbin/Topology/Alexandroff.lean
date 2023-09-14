@@ -599,7 +599,7 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (OnePoint X) :=
       ⟨coe '' u, (coe '' closure u)ᶜ, is_open_image_coe.2 hu,
         is_open_compl_image_coe.2 ⟨isClosed_closure, Hu⟩, mem_image_of_mem _ huy',
         mem_compl infty_not_mem_image_coe, (image_subset _ subset_closure).disjoint_compl_right⟩
-  refine' @normalOfCompactT2 _ _ _ ⟨fun x y hxy => _⟩
+  refine' @T4Space.of_compactSpace_t2Space _ _ _ ⟨fun x y hxy => _⟩
   induction x using OnePoint.rec <;> induction y using OnePoint.rec
   · exact (hxy rfl).elim
   · rcases key y with ⟨u, v, hu, hv, hxu, hyv, huv⟩

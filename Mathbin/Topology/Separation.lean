@@ -2208,25 +2208,25 @@ theorem normal_exists_closure_subset [NormalSpace α] {s t : Set α} (hs : IsClo
 #align normal_exists_closure_subset normal_exists_closure_subset
 -/
 
-#print NormalSpace.t3Space /-
+#print T4Space.t3Space /-
 -- see Note [lower instance priority]
-instance (priority := 100) NormalSpace.t3Space [NormalSpace α] : T3Space α
+instance (priority := 100) T4Space.t3Space [NormalSpace α] : T3Space α
     where regular s x hs hxs :=
     let ⟨u, v, hu, hv, hsu, hxv, huv⟩ :=
       normal_separation hs isClosed_singleton (disjoint_singleton_right.mpr hxs)
     disjoint_of_disjoint_of_mem huv (hu.mem_nhdsSet.2 hsu) (hv.mem_nhds <| hxv rfl)
-#align normal_space.t3_space NormalSpace.t3Space
+#align normal_space.t3_space T4Space.t3Space
 -/
 
-#print normalOfCompactT2 /-
+#print T4Space.of_compactSpace_t2Space /-
 -- We can't make this an instance because it could cause an instance loop.
-theorem normalOfCompactT2 [CompactSpace α] [T2Space α] : NormalSpace α :=
+theorem T4Space.of_compactSpace_t2Space [CompactSpace α] [T2Space α] : NormalSpace α :=
   ⟨fun s t hs ht => isCompact_isCompact_separated hs.IsCompact ht.IsCompact⟩
-#align normal_of_compact_t2 normalOfCompactT2
+#align normal_of_compact_t2 T4Space.of_compactSpace_t2Space
 -/
 
-#print ClosedEmbedding.normalSpace /-
-protected theorem ClosedEmbedding.normalSpace [TopologicalSpace β] [NormalSpace β] {f : α → β}
+#print ClosedEmbedding.t4Space /-
+protected theorem ClosedEmbedding.t4Space [TopologicalSpace β] [NormalSpace β] {f : α → β}
     (hf : ClosedEmbedding f) : NormalSpace α :=
   { to_t1Space := hf.toEmbedding.T1Space
     normal := by
@@ -2236,7 +2236,7 @@ protected theorem ClosedEmbedding.normalSpace [TopologicalSpace β] [NormalSpace
           (disjoint_image_of_injective hf.inj hst)
       exact
         (H.preimage hf.continuous).mono (subset_preimage_image _ _) (subset_preimage_image _ _) }
-#align closed_embedding.normal_space ClosedEmbedding.normalSpace
+#align closed_embedding.normal_space ClosedEmbedding.t4Space
 -/
 
 namespace SeparationQuotient
@@ -2261,10 +2261,11 @@ end SeparationQuotient
 
 variable (α)
 
-#print normalSpaceOfT3SecondCountable /-
+#print NormalSpace.of_regularSpace_secondCountableTopology /-
 /-- A T₃ topological space with second countable topology is a normal space.
 This lemma is not an instance to avoid a loop. -/
-theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α] : NormalSpace α :=
+theorem NormalSpace.of_regularSpace_secondCountableTopology [SecondCountableTopology α]
+    [T3Space α] : NormalSpace α :=
   by
   have key :
     ∀ {s t : Set α},
@@ -2319,7 +2320,7 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
     rintro a ⟨u, huU, hau, haV⟩ v hvV hav
     cases' le_total (Encodable.encode u) (Encodable.encode v) with hle hle
     exacts [⟨u, huU, hle, subset_closure hau⟩, (haV _ hvV hle <| subset_closure hav).elim]
-#align normal_space_of_t3_second_countable normalSpaceOfT3SecondCountable
+#align normal_space_of_t3_second_countable NormalSpace.of_regularSpace_secondCountableTopology
 -/
 
 end Normality
@@ -2359,14 +2360,14 @@ theorem Embedding.t5Space [TopologicalSpace β] [T5Space β] {e : α → β} (he
 instance [T5Space α] {p : α → Prop} : T5Space { x // p x } :=
   embedding_subtype_val.T5Space
 
-#print T5Space.toNormalSpace /-
+#print T5Space.toT4Space /-
 -- see Note [lower instance priority]
 /-- A `T₅` space is a `T₄` space. -/
-instance (priority := 100) T5Space.toNormalSpace [T5Space α] : NormalSpace α :=
+instance (priority := 100) T5Space.toT4Space [T5Space α] : NormalSpace α :=
   ⟨fun s t hs ht hd =>
     separatedNhds_iff_disjoint.2 <|
       completely_normal (by rwa [hs.closure_eq]) (by rwa [ht.closure_eq])⟩
-#align t5_space.to_normal_space T5Space.toNormalSpace
+#align t5_space.to_normal_space T5Space.toT4Space
 -/
 
 open SeparationQuotient
@@ -2402,7 +2403,7 @@ theorem connectedComponent_eq_iInter_clopen [T2Space α] [CompactSpace α] (x : 
     isClosed_iInter fun Z => Z.2.1.2
   rw [isPreconnected_iff_subset_of_fully_disjoint_closed hs]
   intro a b ha hb hab ab_disj
-  haveI := @normalOfCompactT2 α _ _ _
+  haveI := @T4Space.of_compactSpace_t2Space α _ _ _
   -- Since our space is normal, we get two larger disjoint open sets containing the disjoint
   -- closed sets. If we can show that our intersection is a subset of any of these we can then
   -- "descend" this to show that it is a subset of either a or b.

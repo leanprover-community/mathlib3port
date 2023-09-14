@@ -34,15 +34,15 @@ section Semiring
 variable [Semiring S] (a b : ℕ)
 
 #print Nat.cast_ascFactorial /-
-theorem cast_ascFactorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a + 1) := by
-  rw [← pochhammer_nat_eq_ascFactorial, pochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
+theorem cast_ascFactorial : (a.ascFactorial b : S) = (ascPochhammer S b).eval (a + 1) := by
+  rw [← ascPochhammer_nat_eq_ascFactorial, ascPochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
 #align nat.cast_asc_factorial Nat.cast_ascFactorial
 -/
 
 #print Nat.cast_descFactorial /-
-theorem cast_descFactorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) :=
+theorem cast_descFactorial : (a.descFactorial b : S) = (ascPochhammer S b).eval (a - (b - 1) : ℕ) :=
   by
-  rw [← pochhammer_eval_cast, pochhammer_nat_eq_descFactorial]
+  rw [← ascPochhammer_eval_cast, ascPochhammer_nat_eq_descFactorial]
   cases b
   · simp_rw [desc_factorial_zero]
   simp_rw [add_succ, succ_sub_one]
@@ -54,7 +54,7 @@ theorem cast_descFactorial : (a.descFactorial b : S) = (pochhammer S b).eval (a 
 -/
 
 #print Nat.cast_factorial /-
-theorem cast_factorial : (a ! : S) = (pochhammer S a).eval 1 := by
+theorem cast_factorial : (a ! : S) = (ascPochhammer S a).eval 1 := by
   rw [← zero_asc_factorial, cast_asc_factorial, cast_zero, zero_add]
 #align nat.cast_factorial Nat.cast_factorial
 -/
@@ -72,11 +72,11 @@ theorem cast_descFactorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
   by
   rw [cast_desc_factorial]
   cases a
-  · rw [zero_tsub, cast_zero, pochhammer_ne_zero_eval_zero _ two_ne_zero, MulZeroClass.zero_mul]
+  · rw [zero_tsub, cast_zero, ascPochhammer_ne_zero_eval_zero _ two_ne_zero, MulZeroClass.zero_mul]
   ·
-    rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, pochhammer_succ_right, pochhammer_one,
-      Polynomial.X_mul, Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one,
-      Polynomial.eval_one]
+    rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, ascPochhammer_succ_right,
+      ascPochhammer_one, Polynomial.X_mul, Polynomial.eval_mul_X, Polynomial.eval_add,
+      Polynomial.eval_X, cast_one, Polynomial.eval_one]
 #align nat.cast_desc_factorial_two Nat.cast_descFactorial_two
 -/
 
