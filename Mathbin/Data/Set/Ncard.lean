@@ -982,15 +982,15 @@ theorem Infinite.exists_subset_ncard_eq {s : Set α} (hs : s.Infinite) (k : ℕ)
 #align set.infinite.exists_subset_ncard_eq Set.Infinite.exists_subset_ncard_eq
 -/
 
-#print Set.Infinite.exists_supset_ncard_eq /-
-theorem Infinite.exists_supset_ncard_eq {s t : Set α} (ht : t.Infinite) (hst : s ⊆ t)
+#print Set.Infinite.exists_superset_ncard_eq /-
+theorem Infinite.exists_superset_ncard_eq {s t : Set α} (ht : t.Infinite) (hst : s ⊆ t)
     (hs : s.Finite) {k : ℕ} (hsk : s.ncard ≤ k) : ∃ s', s ⊆ s' ∧ s' ⊆ t ∧ s'.ncard = k :=
   by
   obtain ⟨s₁, hs₁, hs₁fin, hs₁card⟩ := (ht.diff hs).exists_subset_ncard_eq (k - s.ncard)
   refine' ⟨s ∪ s₁, subset_union_left _ _, union_subset hst (hs₁.trans (diff_subset _ _)), _⟩
   rwa [ncard_union_eq (disjoint_of_subset_right hs₁ disjoint_sdiff_right) hs hs₁fin, hs₁card,
     add_tsub_cancel_of_le]
-#align set.infinite.exists_supset_ncard_eq Set.Infinite.exists_supset_ncard_eq
+#align set.infinite.exists_supset_ncard_eq Set.Infinite.exists_superset_ncard_eq
 -/
 
 #print Set.exists_subset_or_subset_of_two_mul_lt_ncard /-

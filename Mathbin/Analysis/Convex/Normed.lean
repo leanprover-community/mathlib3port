@@ -153,17 +153,17 @@ theorem bounded_convexHull {s : Set E} : Metric.Bounded (convexHull ℝ s) ↔ M
 #align bounded_convex_hull bounded_convexHull
 -/
 
-#print NormedSpace.path_connected /-
-instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
+#print NormedSpace.instPathConnectedSpace /-
+instance (priority := 100) NormedSpace.instPathConnectedSpace : PathConnectedSpace E :=
   TopologicalAddGroup.pathConnectedSpace
-#align normed_space.path_connected NormedSpace.path_connected
+#align normed_space.path_connected NormedSpace.instPathConnectedSpace
 -/
 
-#print NormedSpace.loc_path_connected /-
-instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
+#print NormedSpace.instLocPathConnectedSpace /-
+instance (priority := 100) NormedSpace.instLocPathConnectedSpace : LocPathConnectedSpace E :=
   locPathConnected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
     (convex_ball x r).IsPathConnected <| by simp [r_pos]
-#align normed_space.loc_path_connected NormedSpace.loc_path_connected
+#align normed_space.loc_path_connected NormedSpace.instLocPathConnectedSpace
 -/
 
 #print dist_add_dist_of_mem_segment /-

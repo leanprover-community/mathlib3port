@@ -312,7 +312,7 @@ theorem Martingale.ae_not_tendsto_atTop_atTop [IsFiniteMeasure μ] (hf : Marting
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atTop := by
   filter_upwards [hf.bdd_above_range_iff_bdd_below_range hbdd] with ω hω htop using
-    unbounded_of_tendsto_at_top htop (hω.2 <| bddBelow_range_of_tendsto_atTop_atTop htop)
+    unbounded_of_tendsto_at_top htop (hω.2 <| bdd_below_range_of_tendsto_at_top_at_top htop)
 #align measure_theory.martingale.ae_not_tendsto_at_top_at_top MeasureTheory.Martingale.ae_not_tendsto_atTop_atTop
 -/
 
@@ -321,7 +321,7 @@ theorem Martingale.ae_not_tendsto_atTop_atBot [IsFiniteMeasure μ] (hf : Marting
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atBot := by
   filter_upwards [hf.bdd_above_range_iff_bdd_below_range hbdd] with ω hω htop using
-    unbounded_of_tendsto_at_bot htop (hω.1 <| bddAbove_range_of_tendsto_atTop_atBot htop)
+    unbounded_of_tendsto_at_bot htop (hω.1 <| bdd_above_range_of_tendsto_at_top_at_bot htop)
 #align measure_theory.martingale.ae_not_tendsto_at_top_at_bot MeasureTheory.Martingale.ae_not_tendsto_atTop_atBot
 -/
 

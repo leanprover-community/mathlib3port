@@ -519,6 +519,7 @@ section LinearOrder
 
 variable [LinearOrder α] {s t : Set α}
 
+#print IsUpperSet.total /-
 theorem IsUpperSet.total (hs : IsUpperSet s) (ht : IsUpperSet t) : s ⊆ t ∨ t ⊆ s :=
   by
   by_contra' h
@@ -528,10 +529,13 @@ theorem IsUpperSet.total (hs : IsUpperSet s) (ht : IsUpperSet t) : s ⊆ t ∨ t
   · exact hbs (hs hab has)
   · exact hat (ht hba hbt)
 #align is_upper_set.total IsUpperSet.total
+-/
 
+#print IsLowerSet.total /-
 theorem IsLowerSet.total (hs : IsLowerSet s) (ht : IsLowerSet t) : s ⊆ t ∨ t ⊆ s :=
   hs.toDual.Total ht.toDual
 #align is_lower_set.total IsLowerSet.total
+-/
 
 end LinearOrder
 
@@ -1279,13 +1283,17 @@ section LinearOrder
 
 variable [LinearOrder α]
 
+#print UpperSet.isTotal_le /-
 instance UpperSet.isTotal_le : IsTotal (UpperSet α) (· ≤ ·) :=
   ⟨fun s t => t.upper.Total s.upper⟩
 #align upper_set.is_total_le UpperSet.isTotal_le
+-/
 
+#print LowerSet.isTotal_le /-
 instance LowerSet.isTotal_le : IsTotal (LowerSet α) (· ≤ ·) :=
   ⟨fun s t => s.lower.Total t.lower⟩
 #align lower_set.is_total_le LowerSet.isTotal_le
+-/
 
 noncomputable instance : CompleteLinearOrder (UpperSet α) :=
   { UpperSet.completeDistribLattice with

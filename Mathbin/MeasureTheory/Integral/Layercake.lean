@@ -293,8 +293,8 @@ variable {β : Type _} [MeasurableSpace β] [MeasurableSingletonClass β]
 
 namespace Measure
 
-#print Measure.meas_le_ne_meas_lt_subset_meas_pos /-
-theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [MeasurableSpace R]
+#print Measure.meas_eq_pos_of_meas_le_ne_meas_lt /-
+theorem meas_eq_pos_of_meas_le_ne_meas_lt {R : Type _} [LinearOrder R] [MeasurableSpace R]
     [MeasurableSingletonClass R] {g : α → R} (g_mble : Measurable g) {t : R}
     (ht : μ {a : α | t ≤ g a} ≠ μ {a : α | t < g a}) : 0 < μ {a : α | g a = t} :=
   by
@@ -317,14 +317,14 @@ theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [Measura
   rw [not_lt, nonpos_iff_eq_zero] at con 
   rw [Con, add_zero] at μ_add 
   exact ht μ_add
-#align measure.meas_le_ne_meas_lt_subset_meas_pos Measure.meas_le_ne_meas_lt_subset_meas_pos
+#align measure.meas_le_ne_meas_lt_subset_meas_pos Measure.meas_eq_pos_of_meas_le_ne_meas_lt
 -/
 
 #print Measure.countable_meas_le_ne_meas_lt /-
 theorem countable_meas_le_ne_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder R]
     [MeasurableSpace R] [MeasurableSingletonClass R] {g : α → R} (g_mble : Measurable g) :
     {t : R | μ {a : α | t ≤ g a} ≠ μ {a : α | t < g a}}.Countable :=
-  Countable.mono (show _ from fun t ht => meas_le_ne_meas_lt_subset_meas_pos μ g_mble ht)
+  Countable.mono (show _ from fun t ht => meas_eq_pos_of_meas_le_ne_meas_lt μ g_mble ht)
     (Measure.countable_meas_level_set_pos g_mble)
 #align measure.countable_meas_le_ne_meas_lt Measure.countable_meas_le_ne_meas_lt
 -/

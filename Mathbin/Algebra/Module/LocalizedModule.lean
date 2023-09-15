@@ -221,9 +221,9 @@ private theorem add_zero' (x : LocalizedModule S M) : x + 0 = x :=
         exact ⟨1, by rw [one_smul, mul_smul, one_smul]⟩)
     x
 
-#print LocalizedModule.hasNatSmul /-
-instance hasNatSmul : SMul ℕ (LocalizedModule S M) where smul n := nsmulRec n
-#align localized_module.has_nat_smul LocalizedModule.hasNatSmul
+#print LocalizedModule.hasNatSMul /-
+instance hasNatSMul : SMul ℕ (LocalizedModule S M) where smul n := nsmulRec n
+#align localized_module.has_nat_smul LocalizedModule.hasNatSMul
 -/
 
 private theorem nsmul_zero' (x : LocalizedModule S M) : (0 : ℕ) • x = 0 :=

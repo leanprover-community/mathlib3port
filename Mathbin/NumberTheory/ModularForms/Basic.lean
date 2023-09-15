@@ -194,15 +194,15 @@ theorem add_apply (f g : ModularForm Γ k) (z : ℍ) : (f + g) z = f z + g z :=
 #align modular_form.add_apply ModularForm.add_apply
 -/
 
-#print ModularForm.hasZero /-
-instance hasZero : Zero (ModularForm Γ k) :=
+#print ModularForm.instZero /-
+instance instZero : Zero (ModularForm Γ k) :=
   ⟨{
       (0 :
         SlashInvariantForm Γ
           k) with
       holo' := fun _ => mdifferentiableAt_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using zero_form_is_bounded_at_im_infty }⟩
-#align modular_form.has_zero ModularForm.hasZero
+#align modular_form.has_zero ModularForm.instZero
 -/
 
 #print ModularForm.coe_zero /-
@@ -223,14 +223,14 @@ section
 
 variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
-#print ModularForm.hasSmul /-
-instance hasSmul : SMul α (ModularForm Γ k) :=
+#print ModularForm.instSMul /-
+instance instSMul : SMul α (ModularForm Γ k) :=
   ⟨fun c f =>
     { c • (f : SlashInvariantForm Γ k) with
       toFun := c • f
       holo' := by simpa using f.holo'.const_smul (c • (1 : ℂ))
       bdd_at_infty' := fun A => by simpa using (f.bdd_at_infty' A).const_smul_left (c • (1 : ℂ)) }⟩
-#align modular_form.has_smul ModularForm.hasSmul
+#align modular_form.has_smul ModularForm.instSMul
 -/
 
 #print ModularForm.coe_smul /-
@@ -249,14 +249,14 @@ theorem smul_apply (f : ModularForm Γ k) (n : α) (z : ℍ) : (n • f) z = n �
 
 end
 
-#print ModularForm.hasNeg /-
-instance hasNeg : Neg (ModularForm Γ k) :=
+#print ModularForm.instNeg /-
+instance instNeg : Neg (ModularForm Γ k) :=
   ⟨fun f =>
     { -(f : SlashInvariantForm Γ k) with
       toFun := -f
       holo' := f.holo'.neg
       bdd_at_infty' := fun A => by simpa using (f.bdd_at_infty' A).neg }⟩
-#align modular_form.has_neg ModularForm.hasNeg
+#align modular_form.has_neg ModularForm.instNeg
 -/
 
 #print ModularForm.coe_neg /-
@@ -273,10 +273,10 @@ theorem neg_apply (f : ModularForm Γ k) (z : ℍ) : (-f) z = -f z :=
 #align modular_form.neg_apply ModularForm.neg_apply
 -/
 
-#print ModularForm.hasSub /-
-instance hasSub : Sub (ModularForm Γ k) :=
+#print ModularForm.instSub /-
+instance instSub : Sub (ModularForm Γ k) :=
   ⟨fun f g => f + -g⟩
-#align modular_form.has_sub ModularForm.hasSub
+#align modular_form.has_sub ModularForm.instSub
 -/
 
 #print ModularForm.coe_sub /-
@@ -379,13 +379,13 @@ theorem add_apply (f g : CuspForm Γ k) (z : ℍ) : (f + g) z = f z + g z :=
 #align cusp_form.add_apply CuspForm.add_apply
 -/
 
-#print CuspForm.hasZero /-
-instance hasZero : Zero (CuspForm Γ k) :=
+#print CuspForm.instZero /-
+instance instZero : Zero (CuspForm Γ k) :=
   ⟨{ (0 : SlashInvariantForm Γ k) with
       toFun := 0
       holo' := fun _ => mdifferentiableAt_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       zero_at_infty' := by simpa using Filter.zero_zeroAtFilter _ }⟩
-#align cusp_form.has_zero CuspForm.hasZero
+#align cusp_form.has_zero CuspForm.instZero
 -/
 
 #print CuspForm.coe_zero /-
@@ -406,14 +406,14 @@ section
 
 variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
-#print CuspForm.hasSmul /-
-instance hasSmul : SMul α (CuspForm Γ k) :=
+#print CuspForm.instSMul /-
+instance instSMul : SMul α (CuspForm Γ k) :=
   ⟨fun c f =>
     { c • (f : SlashInvariantForm Γ k) with
       toFun := c • f
       holo' := by simpa using f.holo'.const_smul (c • (1 : ℂ))
       zero_at_infty' := fun A => by simpa using (f.zero_at_infty' A).smul (c • (1 : ℂ)) }⟩
-#align cusp_form.has_smul CuspForm.hasSmul
+#align cusp_form.has_smul CuspForm.instSMul
 -/
 
 #print CuspForm.coe_smul /-
@@ -432,14 +432,14 @@ theorem smul_apply (f : CuspForm Γ k) (n : α) {z : ℍ} : (n • f) z = n • 
 
 end
 
-#print CuspForm.hasNeg /-
-instance hasNeg : Neg (CuspForm Γ k) :=
+#print CuspForm.instNeg /-
+instance instNeg : Neg (CuspForm Γ k) :=
   ⟨fun f =>
     { -(f : SlashInvariantForm Γ k) with
       toFun := -f
       holo' := f.holo'.neg
       zero_at_infty' := fun A => by simpa using (f.zero_at_infty' A).neg }⟩
-#align cusp_form.has_neg CuspForm.hasNeg
+#align cusp_form.has_neg CuspForm.instNeg
 -/
 
 #print CuspForm.coe_neg /-
@@ -456,10 +456,10 @@ theorem neg_apply (f : CuspForm Γ k) (z : ℍ) : (-f) z = -f z :=
 #align cusp_form.neg_apply CuspForm.neg_apply
 -/
 
-#print CuspForm.hasSub /-
-instance hasSub : Sub (CuspForm Γ k) :=
+#print CuspForm.instSub /-
+instance instSub : Sub (CuspForm Γ k) :=
   ⟨fun f g => f + -g⟩
-#align cusp_form.has_sub CuspForm.hasSub
+#align cusp_form.has_sub CuspForm.instSub
 -/
 
 #print CuspForm.coe_sub /-

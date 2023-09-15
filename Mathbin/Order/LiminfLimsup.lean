@@ -294,13 +294,17 @@ section Nonempty
 
 variable [Preorder α] [Nonempty α] {f : Filter β} {u : β → α}
 
+#print Filter.isBounded_le_atBot /-
 theorem isBounded_le_atBot : (atBot : Filter α).IsBounded (· ≤ ·) :=
   ‹Nonempty α›.elim fun a => ⟨a, eventually_le_atBot _⟩
 #align filter.is_bounded_le_at_bot Filter.isBounded_le_atBot
+-/
 
+#print Filter.isBounded_ge_atTop /-
 theorem isBounded_ge_atTop : (atTop : Filter α).IsBounded (· ≥ ·) :=
   ‹Nonempty α›.elim fun a => ⟨a, eventually_ge_atTop _⟩
 #align filter.is_bounded_ge_at_top Filter.isBounded_ge_atTop
+-/
 
 #print Filter.Tendsto.isBoundedUnder_le_atBot /-
 theorem Tendsto.isBoundedUnder_le_atBot (h : Tendsto u f atBot) : f.IsBoundedUnder (· ≤ ·) u :=
@@ -314,15 +318,19 @@ theorem Tendsto.isBoundedUnder_ge_atTop (h : Tendsto u f atTop) : f.IsBoundedUnd
 #align filter.tendsto.is_bounded_under_ge_at_top Filter.Tendsto.isBoundedUnder_ge_atTop
 -/
 
+#print Filter.bddAbove_range_of_tendsto_atTop_atBot /-
 theorem bddAbove_range_of_tendsto_atTop_atBot [IsDirected α (· ≤ ·)] {u : ℕ → α}
     (hx : Tendsto u atTop atBot) : BddAbove (Set.range u) :=
   hx.isBoundedUnder_le_atBot.bddAbove_range
 #align filter.bdd_above_range_of_tendsto_at_top_at_bot Filter.bddAbove_range_of_tendsto_atTop_atBot
+-/
 
+#print Filter.bddBelow_range_of_tendsto_atTop_atTop /-
 theorem bddBelow_range_of_tendsto_atTop_atTop [IsDirected α (· ≥ ·)] {u : ℕ → α}
     (hx : Tendsto u atTop atTop) : BddBelow (Set.range u) :=
   hx.isBoundedUnder_ge_atTop.bddBelow_range
 #align filter.bdd_below_range_of_tendsto_at_top_at_top Filter.bddBelow_range_of_tendsto_atTop_atTop
+-/
 
 end Nonempty
 
@@ -1584,15 +1592,19 @@ theorem frequently_lt_of_liminf_lt {α β} [ConditionallyCompleteLinearOrder β]
 
 variable [ConditionallyCompleteLinearOrder α] {f : Filter α} {b : α}
 
+#print Filter.lt_mem_sets_of_limsSup_lt /-
 theorem lt_mem_sets_of_limsSup_lt (h : f.IsBounded (· ≤ ·)) (l : f.limsSup < b) :
     ∀ᶠ a in f, a < b :=
   let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_csInf_lt h l
   mem_of_superset h fun a => hcb.trans_le'
 #align filter.lt_mem_sets_of_Limsup_lt Filter.lt_mem_sets_of_limsSup_lt
+-/
 
+#print Filter.gt_mem_sets_of_limsInf_gt /-
 theorem gt_mem_sets_of_limsInf_gt : f.IsBounded (· ≥ ·) → b < f.limsInf → ∀ᶠ a in f, b < a :=
   @lt_mem_sets_of_limsSup_lt αᵒᵈ _ _ _
 #align filter.gt_mem_sets_of_Liminf_gt Filter.gt_mem_sets_of_limsInf_gt
+-/
 
 end ConditionallyCompleteLinearOrder
 
