@@ -220,9 +220,8 @@ instance {M} [Mul M] [UniqueProds M] : UniqueSums (Additive M)
 
 end Additive
 
-#print eq_and_eq_of_le_of_le_of_mul_le /-
 @[to_additive]
-theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
+theorem eq_and_eq_of_le_of_le_of_hMul_le {A} [Mul A] [LinearOrder A]
     [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
     [ContravariantClass A A (· * ·) (· ≤ ·)] {a b a0 b0 : A} (ha : a0 ≤ a) (hb : b0 ≤ b)
     (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 :=
@@ -232,11 +231,9 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
   push_neg at ha' hb' 
   exact ⟨ha.antisymm' (ha' ab), hb.antisymm' (hb' ab)⟩
-#align eq_and_eq_of_le_of_le_of_mul_le eq_and_eq_of_le_of_le_of_mul_le
+#align eq_and_eq_of_le_of_le_of_mul_le eq_and_eq_of_le_of_le_of_hMul_le
 #align eq_and_eq_of_le_of_le_of_add_le eq_and_eq_of_le_of_le_of_add_le
--/
 
-#print Covariants.to_uniqueProds /-
 -- see Note [lower instance priority]
 /-- This instance asserts that if `A` has a multiplication, a linear order, and multiplication
 is 'very monotone', then `A` also has `unique_prods`. -/
@@ -247,8 +244,7 @@ instance (priority := 100) Covariants.to_uniqueProds {A} [Mul A] [LinearOrder A]
     [ContravariantClass A A (· * ·) (· ≤ ·)] : UniqueProds A
     where uniqueMul_of_nonempty A B hA hB :=
     ⟨_, A.min'_mem ‹_›, _, B.min'_mem ‹_›, fun a b ha hb ab =>
-      eq_and_eq_of_le_of_le_of_mul_le (Finset.min'_le _ _ ‹_›) (Finset.min'_le _ _ ‹_›) ab.le⟩
+      eq_and_eq_of_le_of_le_of_hMul_le (Finset.min'_le _ _ ‹_›) (Finset.min'_le _ _ ‹_›) ab.le⟩
 #align covariants.to_unique_prods Covariants.to_uniqueProds
-#align covariants.to_unique_sums Covariants.to_uniqueSums
--/
+#align covariants.to_unique_sums Covariants.to_unique_sums
 

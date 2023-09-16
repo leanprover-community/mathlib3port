@@ -2640,14 +2640,12 @@ variable {R S : Type _}
 
 variable [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
 
-#print MonoidHom.map_dfinsupp_prod /-
 @[simp, to_additive]
-theorem map_dfinsupp_prod [CommMonoid R] [CommMonoid S] (h : R →* S) (f : Π₀ i, β i)
+theorem map_dFinsupp_prod [CommMonoid R] [CommMonoid S] (h : R →* S) (f : Π₀ i, β i)
     (g : ∀ i, β i → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   h.map_prod _ _
-#align monoid_hom.map_dfinsupp_prod MonoidHom.map_dfinsupp_prod
+#align monoid_hom.map_dfinsupp_prod MonoidHom.map_dFinsupp_prod
 #align add_monoid_hom.map_dfinsupp_sum AddMonoidHom.map_dfinsupp_sum
--/
 
 #print MonoidHom.coe_dfinsupp_prod /-
 @[to_additive]
@@ -2675,21 +2673,17 @@ variable {R S : Type _}
 
 variable [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
 
-#print RingHom.map_dfinsupp_prod /-
 @[simp]
-theorem map_dfinsupp_prod [CommSemiring R] [CommSemiring S] (h : R →+* S) (f : Π₀ i, β i)
+theorem map_dFinsupp_prod [CommSemiring R] [CommSemiring S] (h : R →+* S) (f : Π₀ i, β i)
     (g : ∀ i, β i → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   h.map_prod _ _
-#align ring_hom.map_dfinsupp_prod RingHom.map_dfinsupp_prod
--/
+#align ring_hom.map_dfinsupp_prod RingHom.map_dFinsupp_prod
 
-#print RingHom.map_dfinsupp_sum /-
 @[simp]
-theorem map_dfinsupp_sum [NonAssocSemiring R] [NonAssocSemiring S] (h : R →+* S) (f : Π₀ i, β i)
+theorem map_dFinsupp_sum [NonAssocSemiring R] [NonAssocSemiring S] (h : R →+* S) (f : Π₀ i, β i)
     (g : ∀ i, β i → R) : h (f.Sum g) = f.Sum fun a b => h (g a b) :=
   h.map_sum _ _
-#align ring_hom.map_dfinsupp_sum RingHom.map_dfinsupp_sum
--/
+#align ring_hom.map_dfinsupp_sum RingHom.map_dFinsupp_sum
 
 end RingHom
 
@@ -2699,14 +2693,12 @@ variable {R S : Type _}
 
 variable [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
 
-#print MulEquiv.map_dfinsupp_prod /-
 @[simp, to_additive]
-theorem map_dfinsupp_prod [CommMonoid R] [CommMonoid S] (h : R ≃* S) (f : Π₀ i, β i)
+theorem map_dFinsupp_prod [CommMonoid R] [CommMonoid S] (h : R ≃* S) (f : Π₀ i, β i)
     (g : ∀ i, β i → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   h.map_prod _ _
-#align mul_equiv.map_dfinsupp_prod MulEquiv.map_dfinsupp_prod
+#align mul_equiv.map_dfinsupp_prod MulEquiv.map_dFinsupp_prod
 #align add_equiv.map_dfinsupp_sum AddEquiv.map_dfinsupp_sum
--/
 
 end MulEquiv
 

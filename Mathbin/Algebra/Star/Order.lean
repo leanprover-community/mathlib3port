@@ -93,7 +93,7 @@ and obviates the hassle of `add_submonoid.closure_induction` when creating those
 If you are working with a `non_unital_ring` and not a `non_unital_semiring`, see
 `star_ordered_ring.of_nonneg_iff` for a more convenient version. -/
 @[reducible]
-def ofLeIff [NonUnitalSemiring R] [PartialOrder R] [StarRing R]
+def ofLEIff [NonUnitalSemiring R] [PartialOrder R] [StarRing R]
     (h_add : ∀ {x y : R}, x ≤ y → ∀ z, z + x ≤ z + y)
     (h_le_iff : ∀ x y : R, x ≤ y ↔ ∃ s, y = x + star s * s) : StarOrderedRing R :=
   { ‹StarRing R› with
@@ -112,7 +112,7 @@ def ofLeIff [NonUnitalSemiring R] [PartialOrder R] [StarRing R]
         · rintro a b ha hb x y rfl
           nth_rw 1 [← add_zero x]
           refine' h_add ((ha 0 _ (zero_add a).symm).trans (hb a _ rfl)) x }
-#align star_ordered_ring.of_le_iff StarOrderedRing.ofLeIffₓ
+#align star_ordered_ring.of_le_iff StarOrderedRing.ofLEIffₓ
 
 #print StarOrderedRing.ofNonnegIff /-
 -- set note [reducible non-instances]
@@ -146,7 +146,7 @@ instances. -/
 def ofNonnegIff' [NonUnitalRing R] [PartialOrder R] [StarRing R]
     (h_add : ∀ {x y : R}, x ≤ y → ∀ z, z + x ≤ z + y)
     (h_nonneg_iff : ∀ x : R, 0 ≤ x ↔ ∃ s, x = star s * s) : StarOrderedRing R :=
-  ofLeIff (@h_add)
+  ofLEIff (@h_add)
     (by
       haveI : CovariantClass R R (· + ·) (· ≤ ·) := ⟨fun _ _ _ h => h_add h _⟩
       simpa [sub_eq_iff_eq_add', sub_nonneg] using fun x y => h_nonneg_iff (y - x))

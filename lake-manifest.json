@@ -4,18 +4,18 @@
  [{"git":
    {"url": "https://github.com/EdAyers/ProofWidgets4",
     "subDir?": null,
-    "rev": "a0c2cd0ac3245a0dade4f925bcfa97e06dd84229",
+    "rev": "44e6673a20fc0449d003983d1e1f472df40f7107",
     "opts": {},
     "name": "proofwidgets",
-    "inputRev?": "v0.0.13",
+    "inputRev?": "v0.0.15",
     "inherited": true}},
   {"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "81cefe38df64bd7dcccb530adc8f401e7146a5c6",
+    "rev": "e0351f11f197f4dca9d5877b64fbf0e4192fd00e",
     "opts": {},
     "name": "lean3port",
-    "inputRev?": "81cefe38df64bd7dcccb530adc8f401e7146a5c6",
+    "inputRev?": "e0351f11f197f4dca9d5877b64fbf0e4192fd00e",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",
@@ -28,10 +28,10 @@
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "b639e46a19a0328adfb9b1fdf8cbe39dfc1de76b",
+    "rev": "58a284116c8566233a42cdf92feab6e16c82ebb9",
     "opts": {},
     "name": "mathlib",
-    "inputRev?": "b639e46a19a0328adfb9b1fdf8cbe39dfc1de76b",
+    "inputRev?": "58a284116c8566233a42cdf92feab6e16c82ebb9",
     "inherited": true}},
   {"git":
    {"url": "https://github.com/gebner/quote4",

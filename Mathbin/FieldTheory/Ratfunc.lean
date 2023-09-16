@@ -178,15 +178,15 @@ theorem liftOn_ofFractionRing_mk {P : Sort v} (n : K[X]) (d : K[X]⁰) (f : ∀ 
 #align ratfunc.lift_on_of_fraction_ring_mk RatFunc.liftOn_ofFractionRing_mk
 -/
 
-#print RatFunc.lift_on_condition_of_lift_on'_condition /-
-theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X], P}
+#print RatFunc.liftOn_condition_of_liftOn'_condition /-
+theorem liftOn_condition_of_liftOn'_condition {P : Sort v} {f : ∀ p q : K[X], P}
     (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) ⦃p q p' q' : K[X]⦄
     (hq : q ≠ 0) (hq' : q' ≠ 0) (h : q' * p = q * p') : f p q = f p' q' :=
   calc
     f p q = f (q' * p) (q' * q) := (H hq hq').symm
     _ = f (q * p') (q * q') := by rw [h, mul_comm q']
     _ = f p' q' := H hq' hq
-#align ratfunc.lift_on_condition_of_lift_on'_condition RatFunc.lift_on_condition_of_lift_on'_condition
+#align ratfunc.lift_on_condition_of_lift_on'_condition RatFunc.liftOn_condition_of_liftOn'_condition
 -/
 
 section IsDomain
@@ -291,7 +291,7 @@ although many usages of `lift_on'` assume `f p 0 = f 0 1`.
 protected irreducible_def liftOn' {P : Sort v} (x : RatFunc K) (f : ∀ p q : K[X], P)
     (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) : P :=
   x.liftOn f fun p q p' q' hq hq' =>
-    lift_on_condition_of_lift_on'_condition (@H) (nonZeroDivisors.ne_zero hq)
+    liftOn_condition_of_liftOn'_condition (@H) (nonZeroDivisors.ne_zero hq)
       (nonZeroDivisors.ne_zero hq')
 #align ratfunc.lift_on' RatFunc.liftOn'
 -/

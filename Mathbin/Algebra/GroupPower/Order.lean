@@ -326,16 +326,14 @@ theorem lt_of_pow_lt_pow' {a b : M} (n : ℕ) : a ^ n < b ^ n → a < b :=
 #align lt_of_nsmul_lt_nsmul lt_of_nsmul_lt_nsmul
 -/
 
-#print min_lt_max_of_mul_lt_mul /-
 @[to_additive]
 theorem min_lt_max_of_mul_lt_mul {a b c d : M} (h : a * b < c * d) : min a b < max c d :=
   lt_of_pow_lt_pow' 2 <| by simp_rw [pow_two];
     exact
       (mul_le_mul' inf_le_left inf_le_right).trans_lt
         (h.trans_le <| mul_le_mul' le_sup_left le_sup_right)
-#align min_lt_max_of_mul_lt_mul min_lt_max_of_mul_lt_mul
-#align min_lt_max_of_add_lt_add min_lt_max_of_add_lt_add
--/
+#align min_lt_max_of_mul_lt_mul min_lt_max_of_mul_lt_mulₓ
+#align min_lt_max_of_add_lt_add min_lt_max_of_add_lt_addₓ
 
 #print min_lt_of_mul_lt_sq /-
 @[to_additive min_lt_of_add_lt_two_nsmul]

@@ -337,10 +337,10 @@ theorem NNReal.summable_geometric {r : ℝ≥0} (hr : r < 1) : Summable fun n : 
 #align nnreal.summable_geometric NNReal.summable_geometric
 -/
 
-#print tsum_geometric_nNReal /-
-theorem tsum_geometric_nNReal {r : ℝ≥0} (hr : r < 1) : ∑' n : ℕ, r ^ n = (1 - r)⁻¹ :=
+#print tsum_geometric_nnreal /-
+theorem tsum_geometric_nnreal {r : ℝ≥0} (hr : r < 1) : ∑' n : ℕ, r ^ n = (1 - r)⁻¹ :=
   (NNReal.hasSum_geometric hr).tsum_eq
-#align tsum_geometric_nnreal tsum_geometric_nNReal
+#align tsum_geometric_nnreal tsum_geometric_nnreal
 -/
 
 #print ENNReal.tsum_geometric /-

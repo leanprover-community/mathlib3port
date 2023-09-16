@@ -1263,7 +1263,6 @@ theorem mul_eq_one_iff' [CovariantClass α α (· * ·) (· ≤ ·)]
 #align add_eq_zero_iff' add_eq_zero_iff'
 -/
 
-#print mul_le_mul_iff_of_ge /-
 @[to_additive]
 theorem mul_le_mul_iff_of_ge [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [CovariantClass α α (· * ·) (· < ·)]
@@ -1275,9 +1274,8 @@ theorem mul_le_mul_iff_of_ge [CovariantClass α α (· * ·) (· ≤ ·)]
   refine' ⟨fun ha => h.not_lt _, fun hb => h.not_lt _⟩
   · exact mul_lt_mul_of_lt_of_le ha hb
   · exact mul_lt_mul_of_le_of_lt ha hb
-#align mul_le_mul_iff_of_ge mul_le_mul_iff_of_ge
-#align add_le_add_iff_of_ge add_le_add_iff_of_ge
--/
+#align mul_le_mul_iff_of_ge mul_le_mul_iff_of_geₓ
+#align add_le_add_iff_of_ge add_le_add_iff_of_geₓ
 
 section Left
 
@@ -1383,9 +1381,8 @@ def Contravariant.toRightCancelSemigroup [ContravariantClass α α (swap (· * �
 #align contravariant.to_right_cancel_add_semigroup Contravariant.toAddRightCancelSemigroup
 -/
 
-#print Left.mul_eq_mul_iff_eq_and_eq /-
 @[to_additive]
-theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
+theorem Left.hMul_eq_hMul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α} (hac : a ≤ c) (hbd : b ≤ d) :
     a * b = c * d ↔ a = c ∧ b = d :=
@@ -1396,13 +1393,11 @@ theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
   rcases eq_or_lt_of_le hbd with (rfl | hbd)
   · exact ⟨mul_right_cancel'' h, rfl⟩
   exact ((Left.mul_lt_mul hac hbd).Ne h).elim
-#align left.mul_eq_mul_iff_eq_and_eq Left.mul_eq_mul_iff_eq_and_eq
+#align left.mul_eq_mul_iff_eq_and_eq Left.hMul_eq_hMul_iff_eq_and_eq
 #align left.add_eq_add_iff_eq_and_eq Left.add_eq_add_iff_eq_and_eq
--/
 
-#print Right.mul_eq_mul_iff_eq_and_eq /-
 @[to_additive]
-theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ ·)]
+theorem Right.hMul_eq_hMul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α} (hac : a ≤ c) (hbd : b ≤ d) :
     a * b = c * d ↔ a = c ∧ b = d :=
@@ -1413,12 +1408,11 @@ theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ �
   rcases eq_or_lt_of_le hbd with (rfl | hbd)
   · exact ⟨mul_right_cancel'' h, rfl⟩
   exact ((Right.mul_lt_mul hac hbd).Ne h).elim
-#align right.mul_eq_mul_iff_eq_and_eq Right.mul_eq_mul_iff_eq_and_eq
+#align right.mul_eq_mul_iff_eq_and_eq Right.hMul_eq_hMul_iff_eq_and_eq
 #align right.add_eq_add_iff_eq_and_eq Right.add_eq_add_iff_eq_and_eq
--/
 
-alias mul_eq_mul_iff_eq_and_eq := Left.mul_eq_mul_iff_eq_and_eq
-#align mul_eq_mul_iff_eq_and_eq mul_eq_mul_iff_eq_and_eq
+alias mul_eq_mul_iff_eq_and_eq := Left.hMul_eq_hMul_iff_eq_and_eq
+#align mul_eq_mul_iff_eq_and_eq mul_eq_mul_iff_eq_and_eqₓ
 
 attribute [to_additive] mul_eq_mul_iff_eq_and_eq
 
@@ -1813,23 +1807,19 @@ protected theorem inj [Mul α] [PartialOrder α] {a b c : α} (ha : MulLECancell
 #align add_le_cancellable.inj AddLECancellable.inj
 -/
 
-#print MulLECancellable.injective_left /-
 @[to_additive]
 protected theorem injective_left [CommSemigroup α] [PartialOrder α] {a : α}
     (ha : MulLECancellable a) : Injective (· * a) := fun b c h =>
   ha.Injective <| by rwa [mul_comm a, mul_comm a]
-#align mul_le_cancellable.injective_left MulLECancellable.injective_left
-#align add_le_cancellable.injective_left AddLECancellable.injective_left
--/
+#align mul_le_cancellable.injective_left MulLECancellable.injective_leftₓ
+#align add_le_cancellable.injective_left AddLECancellable.injective_leftₓ
 
-#print MulLECancellable.inj_left /-
 @[to_additive]
 protected theorem inj_left [CommSemigroup α] [PartialOrder α] {a b c : α}
     (hc : MulLECancellable c) : a * c = b * c ↔ a = b :=
-  hc.injective_left.eq_iff
-#align mul_le_cancellable.inj_left MulLECancellable.inj_left
-#align add_le_cancellable.inj_left AddLECancellable.inj_left
--/
+  hc.injective_leftₓ.eq_iff
+#align mul_le_cancellable.inj_left MulLECancellable.inj_leftₓ
+#align add_le_cancellable.inj_left AddLECancellable.inj_leftₓ
 
 variable [LE α]
 
@@ -1842,14 +1832,12 @@ protected theorem mul_le_mul_iff_left [Mul α] [CovariantClass α α (· * ·) (
 #align add_le_cancellable.add_le_add_iff_left AddLECancellable.add_le_add_iff_left
 -/
 
-#print MulLECancellable.mul_le_mul_iff_right /-
 @[to_additive]
 protected theorem mul_le_mul_iff_right [CommSemigroup α] [CovariantClass α α (· * ·) (· ≤ ·)]
     {a b c : α} (ha : MulLECancellable a) : b * a ≤ c * a ↔ b ≤ c := by
   rw [mul_comm b, mul_comm c, ha.mul_le_mul_iff_left]
-#align mul_le_cancellable.mul_le_mul_iff_right MulLECancellable.mul_le_mul_iff_right
-#align add_le_cancellable.add_le_add_iff_right AddLECancellable.add_le_add_iff_right
--/
+#align mul_le_cancellable.mul_le_mul_iff_right MulLECancellable.mul_le_mul_iff_rightₓ
+#align add_le_cancellable.add_le_add_iff_right AddLECancellable.add_le_add_iff_rightₓ
 
 #print MulLECancellable.le_mul_iff_one_le_right /-
 @[to_additive]
@@ -1869,23 +1857,19 @@ protected theorem mul_le_iff_le_one_right [MulOneClass α] [CovariantClass α α
 #align add_le_cancellable.add_le_iff_nonpos_right AddLECancellable.add_le_iff_nonpos_right
 -/
 
-#print MulLECancellable.le_mul_iff_one_le_left /-
 @[to_additive]
 protected theorem le_mul_iff_one_le_left [CommMonoid α] [CovariantClass α α (· * ·) (· ≤ ·)]
     {a b : α} (ha : MulLECancellable a) : a ≤ b * a ↔ 1 ≤ b := by
   rw [mul_comm, ha.le_mul_iff_one_le_right]
-#align mul_le_cancellable.le_mul_iff_one_le_left MulLECancellable.le_mul_iff_one_le_left
-#align add_le_cancellable.le_add_iff_nonneg_left AddLECancellable.le_add_iff_nonneg_left
--/
+#align mul_le_cancellable.le_mul_iff_one_le_left MulLECancellable.le_mul_iff_one_le_leftₓ
+#align add_le_cancellable.le_add_iff_nonneg_left AddLECancellable.le_add_iff_nonneg_leftₓ
 
-#print MulLECancellable.mul_le_iff_le_one_left /-
 @[to_additive]
 protected theorem mul_le_iff_le_one_left [CommMonoid α] [CovariantClass α α (· * ·) (· ≤ ·)]
     {a b : α} (ha : MulLECancellable a) : b * a ≤ a ↔ b ≤ 1 := by
   rw [mul_comm, ha.mul_le_iff_le_one_right]
-#align mul_le_cancellable.mul_le_iff_le_one_left MulLECancellable.mul_le_iff_le_one_left
-#align add_le_cancellable.add_le_iff_nonpos_left AddLECancellable.add_le_iff_nonpos_left
--/
+#align mul_le_cancellable.mul_le_iff_le_one_left MulLECancellable.mul_le_iff_le_one_leftₓ
+#align add_le_cancellable.add_le_iff_nonpos_left AddLECancellable.add_le_iff_nonpos_leftₓ
 
 end MulLECancellable
 

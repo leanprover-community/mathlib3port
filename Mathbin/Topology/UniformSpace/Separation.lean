@@ -218,8 +218,8 @@ theorem separationRel_comap {f : α → β}
   by
   subst h
   dsimp [separationRel]
-  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).sInter_sets, ←
-    preimage_Inter, sInter_eq_bInter]
+  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).ker, ← preimage_Inter,
+    sInter_eq_bInter]
   rfl
 #align separation_rel_comap separationRel_comap
 -/

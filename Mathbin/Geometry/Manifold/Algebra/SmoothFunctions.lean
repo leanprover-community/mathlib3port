@@ -306,11 +306,11 @@ field `𝕜` inherit a vector space structure.
 -/
 
 
-#print SmoothMap.hasSmul /-
-instance hasSmul {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
+#print SmoothMap.instSMul /-
+instance instSMul {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     SMul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩⟩
-#align smooth_map.has_smul SmoothMap.hasSmul
+#align smooth_map.has_smul SmoothMap.instSMul
 -/
 
 #print SmoothMap.coe_smul /-
@@ -412,11 +412,11 @@ If `V` is a module over `𝕜`, then we show that the space of smooth functions 
 is naturally a vector space over the ring of smooth functions from `N` to `𝕜`. -/
 
 
-#print SmoothMap.instSmul' /-
-instance instSmul' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
+#print SmoothMap.instSMul' /-
+instance instSMul' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     SMul C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun f g => ⟨fun x => f x • g x, Smooth.smul f.2 g.2⟩⟩
-#align smooth_map.has_smul' SmoothMap.instSmul'
+#align smooth_map.has_smul' SmoothMap.instSMul'
 -/
 
 #print SmoothMap.smul_comp' /-

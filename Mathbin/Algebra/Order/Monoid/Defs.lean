@@ -69,7 +69,6 @@ instance OrderedCommMonoid.to_covariantClass_right (M : Type _) [OrderedCommMono
 #align ordered_add_comm_monoid.to_covariant_class_right OrderedAddCommMonoid.to_covariantClass_right
 -/
 
-#print Mul.to_covariantClass_left /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)` implies
 `covariant_class M M (*) (<)`, see `left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le`. -/
@@ -79,9 +78,7 @@ theorem Mul.to_covariantClass_left (M : Type _) [Mul M] [PartialOrder M]
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_left Mul.to_covariantClass_left
 #align has_add.to_covariant_class_left Add.to_covariantClass_left
--/
 
-#print Mul.to_covariantClass_right /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `right_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (swap (*)) (<)`
 implies `covariant_class M M (swap (*)) (≤)`, see
@@ -92,7 +89,6 @@ theorem Mul.to_covariantClass_right (M : Type _) [Mul M] [PartialOrder M]
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_right Mul.to_covariantClass_right
 #align has_add.to_covariant_class_right Add.to_covariantClass_right
--/
 
 end OrderedInstances
 

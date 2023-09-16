@@ -1402,13 +1402,11 @@ section Sum
 
 variable [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x ≠ 0)]
 
-#print LinearMap.map_dfinsupp_sum /-
 @[simp]
-theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i → M} :
+theorem map_dFinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i → M} :
     f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum
-#align linear_map.map_dfinsupp_sum LinearMap.map_dfinsupp_sum
--/
+#align linear_map.map_dfinsupp_sum LinearMap.map_dFinsupp_sum
 
 #print LinearMap.coe_dfinsupp_sum /-
 theorem coe_dfinsupp_sum (t : Π₀ i, γ i) (g : ∀ i, γ i → M →ₛₗ[σ₁₂] M₂) :
@@ -2402,13 +2400,11 @@ variable [RingHomInvPair τ₁₂ τ₂₁] [RingHomInvPair τ₂₁ τ₁₂]
 
 variable {γ : ι → Type _} [DecidableEq ι]
 
-#print LinearEquiv.map_dfinsupp_sum /-
 @[simp]
-theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂)
+theorem map_dFinsupp_sum [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂)
     (t : Π₀ i, γ i) (g : ∀ i, γ i → M) : f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum _
-#align linear_equiv.map_dfinsupp_sum LinearEquiv.map_dfinsupp_sum
--/
+#align linear_equiv.map_dfinsupp_sum LinearEquiv.map_dFinsupp_sum
 
 #print LinearEquiv.map_dfinsupp_sumAddHom /-
 @[simp]

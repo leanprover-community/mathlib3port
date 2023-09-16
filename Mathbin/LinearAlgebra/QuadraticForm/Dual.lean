@@ -150,7 +150,6 @@ variable [CommRing R] [AddCommGroup M] [Module R M]
 
 variable {R M}
 
-#print QuadraticForm.toDualProd /-
 /-- The isometry sending `(Q.prod $ -Q)` to `(quadratic_form.dual_prod R M)`.
 
 This is `σ` from Proposition 4.8, page 84 of
@@ -161,19 +160,16 @@ def toDualProd (Q : QuadraticForm R M) [Invertible (2 : R)] : M × M →ₗ[R] M
   LinearMap.prod
     (Q.Associated.toLin.comp (LinearMap.fst _ _ _) + Q.Associated.toLin.comp (LinearMap.snd _ _ _))
     (LinearMap.fst _ _ _ - LinearMap.snd _ _ _)
-#align quadratic_form.to_dual_prod QuadraticForm.toDualProd
--/
+#align quadratic_form.to_dual_prod QuadraticForm.toDualProdₓ
 
-#print QuadraticForm.toDualProd_isometry /-
-theorem toDualProd_isometry [Invertible (2 : R)] (Q : QuadraticForm R M) (x : M × M) :
+theorem QuadraticForm.Isometry.map_app [Invertible (2 : R)] (Q : QuadraticForm R M) (x : M × M) :
     QuadraticForm.dualProd R M (toDualProd Q x) = (Q.Prod <| -Q) x :=
   by
   dsimp only [to_dual_prod, Associated, associated_hom]
   dsimp
   simp [polar_comm _ x.1 x.2, ← sub_add, mul_sub, sub_mul, smul_sub, Submonoid.smul_def, ←
     sub_eq_add_neg (Q x.1) (Q x.2)]
-#align quadratic_form.to_dual_prod_isometry QuadraticForm.toDualProd_isometry
--/
+#align quadratic_form.to_dual_prod_isometry QuadraticForm.Isometry.map_appₓ
 
 -- TODO: show that `to_dual_prod` is an equivalence
 end Ring

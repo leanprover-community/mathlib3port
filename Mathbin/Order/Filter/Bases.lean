@@ -1032,10 +1032,10 @@ protected theorem HasBasis.biInter_mem {f : Set α → Set β} (h : HasBasis l p
 #align filter.has_basis.bInter_mem Filter.HasBasis.biInter_mem
 -/
 
-#print Filter.HasBasis.sInter_sets /-
-theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i := by
+#print Filter.HasBasis.ker /-
+theorem HasBasis.ker (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i := by
   rw [sInter_eq_bInter]; exact h.bInter_mem monotone_id
-#align filter.has_basis.sInter_sets Filter.HasBasis.sInter_sets
+#align filter.has_basis.sInter_sets Filter.HasBasis.ker
 -/
 
 variable {ι'' : Type _} [Preorder ι''] (l) (s'' : ι'' → Set α)

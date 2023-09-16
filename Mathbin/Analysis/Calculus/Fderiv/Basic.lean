@@ -681,14 +681,14 @@ theorem HasFDerivWithinAt.fderivWithin (h : HasFDerivWithinAt f f' s x)
 #align has_fderiv_within_at.fderiv_within HasFDerivWithinAt.fderivWithin
 -/
 
-#print hasFDerivWithinAt_of_not_mem_closure /-
+#print hasFDerivWithinAt_of_nmem_closure /-
 /-- If `x` is not in the closure of `s`, then `f` has any derivative at `x` within `s`,
 as this statement is empty. -/
-theorem hasFDerivWithinAt_of_not_mem_closure (h : x ∉ closure s) : HasFDerivWithinAt f f' s x :=
+theorem hasFDerivWithinAt_of_nmem_closure (h : x ∉ closure s) : HasFDerivWithinAt f f' s x :=
   by
   simp only [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Ne.def, Classical.not_not] at h 
   simp [HasFDerivWithinAt, HasFDerivAtFilter, h, is_o, is_O_with]
-#align has_fderiv_within_at_of_not_mem_closure hasFDerivWithinAt_of_not_mem_closure
+#align has_fderiv_within_at_of_not_mem_closure hasFDerivWithinAt_of_nmem_closure
 -/
 
 #print DifferentiableWithinAt.mono /-

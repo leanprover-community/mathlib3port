@@ -365,21 +365,17 @@ theorem covariant_lt_iff_contravariant_le [LinearOrder N] :
 #align covariant_lt_iff_contravariant_le covariant_lt_iff_contravariant_le
 -/
 
-#print covariant_flip_mul_iff /-
 @[to_additive]
-theorem covariant_flip_mul_iff [CommSemigroup N] :
+theorem covariant_flip_hMul_iff [CommSemigroup N] :
     Covariant N N (flip (· * ·)) r ↔ Covariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
-#align covariant_flip_mul_iff covariant_flip_mul_iff
+#align covariant_flip_mul_iff covariant_flip_hMul_iff
 #align covariant_flip_add_iff covariant_flip_add_iff
--/
 
-#print contravariant_flip_mul_iff /-
 @[to_additive]
-theorem contravariant_flip_mul_iff [CommSemigroup N] :
+theorem contravariant_flip_hMul_iff [CommSemigroup N] :
     Contravariant N N (flip (· * ·)) r ↔ Contravariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
-#align contravariant_flip_mul_iff contravariant_flip_mul_iff
+#align contravariant_flip_mul_iff contravariant_flip_hMul_iff
 #align contravariant_flip_add_iff contravariant_flip_add_iff
--/
 
 @[to_additive]
 instance contravariant_hMul_lt_of_covariant_hMul_le [Mul N] [LinearOrder N]
@@ -398,28 +394,28 @@ instance covariant_hMul_lt_of_contravariant_hMul_le [Mul N] [LinearOrder N]
 @[to_additive]
 instance covariant_swap_hMul_le_of_covariant_hMul_le [CommSemigroup N] [LE N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (swap (· * ·)) (· ≤ ·)
-    where elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
+    where elim := (covariant_flip_hMul_iff N (· ≤ ·)).mpr CovariantClass.elim
 #align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_hMul_le_of_covariant_hMul_le
 #align covariant_swap_add_le_of_covariant_add_le covariant_swap_add_le_of_covariant_add_le
 
 @[to_additive]
 instance contravariant_swap_hMul_le_of_contravariant_hMul_le [CommSemigroup N] [LE N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (swap (· * ·)) (· ≤ ·)
-    where elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
+    where elim := (contravariant_flip_hMul_iff N (· ≤ ·)).mpr ContravariantClass.elim
 #align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_hMul_le_of_contravariant_hMul_le
 #align contravariant_swap_add_le_of_contravariant_add_le contravariant_swap_add_le_of_contravariant_add_le
 
 @[to_additive]
 instance contravariant_swap_hMul_lt_of_contravariant_hMul_lt [CommSemigroup N] [LT N]
     [ContravariantClass N N (· * ·) (· < ·)] : ContravariantClass N N (swap (· * ·)) (· < ·)
-    where elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
+    where elim := (contravariant_flip_hMul_iff N (· < ·)).mpr ContravariantClass.elim
 #align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_hMul_lt_of_contravariant_hMul_lt
 #align contravariant_swap_add_lt_of_contravariant_add_lt contravariant_swap_add_lt_of_contravariant_add_lt
 
 @[to_additive]
 instance covariant_swap_hMul_lt_of_covariant_hMul_lt [CommSemigroup N] [LT N]
     [CovariantClass N N (· * ·) (· < ·)] : CovariantClass N N (swap (· * ·)) (· < ·)
-    where elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
+    where elim := (covariant_flip_hMul_iff N (· < ·)).mpr CovariantClass.elim
 #align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_hMul_lt_of_covariant_hMul_lt
 #align covariant_swap_add_lt_of_covariant_add_lt covariant_swap_add_lt_of_covariant_add_lt
 
