@@ -439,7 +439,7 @@ theorem append_left_eq_cons {α : Type _} {n : ℕ} (x₀ : Fin 1 → α) (x : F
     rw [Subsingleton.elim i 0, Fin.append_left, Function.comp_apply, eq_comm]
     exact Fin.cons_zero _ _
   · intro i
-    rw [Fin.append_right, Function.comp_apply, Fin.castIso_natAdd, eq_comm, Fin.addNat_one]
+    rw [Fin.append_right, Function.comp_apply, Fin.cast_natAdd, eq_comm, Fin.addNat_one]
     exact Fin.cons_succ _ _ _
 #align fin.append_left_eq_cons Fin.append_left_eq_cons
 -/
@@ -1200,25 +1200,25 @@ theorem contractNth_apply_of_ne (j : Fin (n + 1)) (op : α → α → α) (g : F
 
 end ContractNth
 
-#print Fin.sigma_eq_of_eq_comp_castIso /-
+#print Fin.sigma_eq_of_eq_comp_cast /-
 /-- To show two sigma pairs of tuples agree, it to show the second elements are related via
 `fin.cast`. -/
-theorem sigma_eq_of_eq_comp_castIso {α : Type _} :
+theorem sigma_eq_of_eq_comp_cast {α : Type _} :
     ∀ {a b : Σ ii, Fin ii → α} (h : a.fst = b.fst), a.snd = b.snd ∘ Fin.castIso h → a = b
   | ⟨ai, a⟩, ⟨bi, b⟩, hi, h => by
     dsimp only at hi 
     subst hi
     simpa using h
-#align fin.sigma_eq_of_eq_comp_cast Fin.sigma_eq_of_eq_comp_castIso
+#align fin.sigma_eq_of_eq_comp_cast Fin.sigma_eq_of_eq_comp_cast
 -/
 
-#print Fin.sigma_eq_iff_eq_comp_castIso /-
+#print Fin.sigma_eq_iff_eq_comp_cast /-
 /-- `fin.sigma_eq_of_eq_comp_cast` as an `iff`. -/
-theorem sigma_eq_iff_eq_comp_castIso {α : Type _} {a b : Σ ii, Fin ii → α} :
+theorem sigma_eq_iff_eq_comp_cast {α : Type _} {a b : Σ ii, Fin ii → α} :
     a = b ↔ ∃ h : a.fst = b.fst, a.snd = b.snd ∘ Fin.castIso h :=
   ⟨fun h => h ▸ ⟨rfl, funext <| Fin.rec fun i hi => rfl⟩, fun ⟨h, h'⟩ =>
-    sigma_eq_of_eq_comp_castIso _ h'⟩
-#align fin.sigma_eq_iff_eq_comp_cast Fin.sigma_eq_iff_eq_comp_castIso
+    sigma_eq_of_eq_comp_cast _ h'⟩
+#align fin.sigma_eq_iff_eq_comp_cast Fin.sigma_eq_iff_eq_comp_cast
 -/
 
 end Fin

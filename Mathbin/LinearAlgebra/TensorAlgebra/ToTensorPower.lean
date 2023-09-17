@@ -176,7 +176,7 @@ theorem TensorPower.list_prod_gradedMonoid_mk_single (n : ℕ) (x : Fin n → M)
     simp_rw [Fin.append_left_eq_cons, Function.comp]
     congr 1 with i
     congr 1
-    rw [Fin.castIso_trans, Fin.castIso_refl, OrderIso.refl_apply]
+    rw [Fin.cast_trans, Fin.castIso_refl, OrderIso.refl_apply]
 #align tensor_power.list_prod_graded_monoid_mk_single TensorPower.list_prod_gradedMonoid_mk_single
 -/
 

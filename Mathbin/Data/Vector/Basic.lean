@@ -156,12 +156,10 @@ theorem tail_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map 
 #align vector.tail_map Vector.tail_map
 -/
 
-#print Vector.get_eq_get /-
 theorem get_eq_get :
     ∀ (v : Vector α n) (i), get v i = v.toList.nthLe i.1 (by rw [to_list_length] <;> exact i.2)
   | ⟨l, h⟩, i => rfl
-#align vector.nth_eq_nth_le Vector.get_eq_get
--/
+#align vector.nth_eq_nth_le Vector.get_eq_getₓ
 
 /- warning: vector.nth_replicate clashes with vector.nth_repeat -> Vector.get_replicate
 Case conversion may be inaccurate. Consider using '#align vector.nth_replicate Vector.get_replicateₓ'. -/

@@ -262,7 +262,7 @@ theorem mul_assoc {na nb nc} (a : (⨂[R]^na) M) (b : (⨂[R]^nb) M) (c : (⨂[R
   congr with j
   rw [Fin.append_assoc]
   refine' congr_arg (Fin.append a (Fin.append b c)) (Fin.ext _)
-  rw [Fin.coe_castIso, Fin.coe_castIso]
+  rw [Fin.coe_cast, Fin.coe_cast]
 #align tensor_power.mul_assoc TensorPower.mul_assoc
 -/
 

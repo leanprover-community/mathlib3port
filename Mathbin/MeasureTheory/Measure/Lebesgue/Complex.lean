@@ -29,12 +29,10 @@ noncomputable section
 
 namespace Complex
 
-#print Complex.measureSpace /-
 /-- Lebesgue measure on `ℂ`. -/
 instance measureSpace : MeasureSpace ℂ :=
   ⟨Measure.map basisOneI.equivFun.symm volume⟩
 #align complex.measure_space Complex.measureSpace
--/
 
 #print Complex.measurableEquivPi /-
 /-- Measurable equivalence between `ℂ` and `ℝ² = fin 2 → ℝ`. -/
