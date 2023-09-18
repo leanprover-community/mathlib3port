@@ -169,7 +169,7 @@ theorem SetTheory.PGame.le_of_lf {x y : SetTheory.PGame} (h : x ⧏ y)
 -/
 
 alias lf.le := le_of_lf
-#align pgame.lf.le SetTheory.PGame.Lf.le
+#align pgame.lf.le SetTheory.PGame.LF.le
 
 #print SetTheory.PGame.lt_of_lf /-
 theorem SetTheory.PGame.lt_of_lf {x y : SetTheory.PGame} (h : x ⧏ y)
@@ -179,7 +179,7 @@ theorem SetTheory.PGame.lt_of_lf {x y : SetTheory.PGame} (h : x ⧏ y)
 -/
 
 alias lf.lt := lt_of_lf
-#align pgame.lf.lt SetTheory.PGame.Lf.lt
+#align pgame.lf.lt SetTheory.PGame.LF.lt
 
 #print SetTheory.PGame.lf_iff_lt /-
 theorem SetTheory.PGame.lf_iff_lt {x y : SetTheory.PGame} (ox : SetTheory.PGame.Numeric x)

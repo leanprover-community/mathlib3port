@@ -82,17 +82,17 @@ instance : PartialOrder SetTheory.Game
   lt := Quotient.lift₂ (· < ·) fun x₁ y₁ x₂ y₂ hx hy => propext (SetTheory.PGame.lt_congr hx hy)
   lt_iff_le_not_le := by rintro ⟨x⟩ ⟨y⟩; exact @lt_iff_le_not_le _ _ x y
 
-#print SetTheory.Game.Lf /-
+#print SetTheory.Game.LF /-
 /-- The less or fuzzy relation on games.
 
 If `0 ⧏ x` (less or fuzzy with), then Left can win `x` as the first player. -/
-def SetTheory.Game.Lf : SetTheory.Game → SetTheory.Game → Prop :=
-  Quotient.lift₂ SetTheory.PGame.Lf fun x₁ y₁ x₂ y₂ hx hy =>
+def SetTheory.Game.LF : SetTheory.Game → SetTheory.Game → Prop :=
+  Quotient.lift₂ SetTheory.PGame.LF fun x₁ y₁ x₂ y₂ hx hy =>
     propext (SetTheory.PGame.lf_congr hx hy)
-#align game.lf SetTheory.Game.Lf
+#align game.lf SetTheory.Game.LF
 -/
 
-local infixl:50 " ⧏ " => SetTheory.Game.Lf
+local infixl:50 " ⧏ " => SetTheory.Game.LF
 
 #print SetTheory.Game.not_le /-
 /-- On `game`, simp-normal inequalities should use as few negations as possible. -/
@@ -121,10 +121,10 @@ theorem SetTheory.PGame.le_iff_game_le {x y : SetTheory.PGame} : x ≤ y ↔ ⟦
   Iff.rfl
 #align pgame.le_iff_game_le SetTheory.PGame.le_iff_game_le
 
-theorem SetTheory.PGame.lf_iff_game_lf {x y : SetTheory.PGame} :
-    SetTheory.PGame.Lf x y ↔ ⟦x⟧ ⧏ ⟦y⟧ :=
+theorem SetTheory.PGame.lF_iff_game_lF {x y : SetTheory.PGame} :
+    SetTheory.PGame.LF x y ↔ ⟦x⟧ ⧏ ⟦y⟧ :=
   Iff.rfl
-#align pgame.lf_iff_game_lf SetTheory.PGame.lf_iff_game_lf
+#align pgame.lf_iff_game_lf SetTheory.PGame.lF_iff_game_lF
 
 theorem SetTheory.PGame.lt_iff_game_lt {x y : SetTheory.PGame} : x < y ↔ ⟦x⟧ < ⟦y⟧ :=
   Iff.rfl

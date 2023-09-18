@@ -282,12 +282,12 @@ instance SetTheory.PGame.shortBit1 (x : SetTheory.PGame.{u}) [SetTheory.PGame.Sh
 #align pgame.short_bit1 SetTheory.PGame.shortBit1
 -/
 
-#print SetTheory.PGame.leLfDecidable /-
+#print SetTheory.PGame.leLFDecidable /-
 /-- Auxiliary construction of decidability instances.
 We build `decidable (x ≤ y)` and `decidable (x ⧏ y)` in a simultaneous induction.
 Instances for the two projections separately are provided below.
 -/
-def SetTheory.PGame.leLfDecidable :
+def SetTheory.PGame.leLFDecidable :
     ∀ (x y : SetTheory.PGame.{u}) [SetTheory.PGame.Short x] [SetTheory.PGame.Short y],
       Decidable (x ≤ y) × Decidable (x ⧏ y)
   | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty =>
@@ -311,20 +311,20 @@ def SetTheory.PGame.leLfDecidable :
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
 decreasing_by pgame_wf_tac
-#align pgame.le_lf_decidable SetTheory.PGame.leLfDecidable
+#align pgame.le_lf_decidable SetTheory.PGame.leLFDecidable
 -/
 
 #print SetTheory.PGame.leDecidable /-
 instance SetTheory.PGame.leDecidable (x y : SetTheory.PGame.{u}) [SetTheory.PGame.Short x]
     [SetTheory.PGame.Short y] : Decidable (x ≤ y) :=
-  (SetTheory.PGame.leLfDecidable x y).1
+  (SetTheory.PGame.leLFDecidable x y).1
 #align pgame.le_decidable SetTheory.PGame.leDecidable
 -/
 
 #print SetTheory.PGame.lfDecidable /-
 instance SetTheory.PGame.lfDecidable (x y : SetTheory.PGame.{u}) [SetTheory.PGame.Short x]
     [SetTheory.PGame.Short y] : Decidable (x ⧏ y) :=
-  (SetTheory.PGame.leLfDecidable x y).2
+  (SetTheory.PGame.leLFDecidable x y).2
 #align pgame.lf_decidable SetTheory.PGame.lfDecidable
 -/
 

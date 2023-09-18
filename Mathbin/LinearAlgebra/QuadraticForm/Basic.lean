@@ -874,11 +874,11 @@ variable [Ring R] [AddCommGroup M] [Module R M]
 
 variable {B : BilinForm R M}
 
-#print BilinForm.polar_to_quadratic_form /-
-theorem polar_to_quadratic_form (x y : M) : polar (fun x => B x x) x y = B x y + B y x := by
+#print BilinForm.polar_toQuadraticForm /-
+theorem polar_toQuadraticForm (x y : M) : polar (fun x => B x x) x y = B x y + B y x := by
   simp only [add_assoc, add_sub_cancel', add_right, polar, add_left_inj, add_neg_cancel_left,
     add_left, sub_eq_add_neg _ (B y y), add_comm (B y x) _]
-#align bilin_form.polar_to_quadratic_form BilinForm.polar_to_quadratic_form
+#align bilin_form.polar_to_quadratic_form BilinForm.polar_toQuadraticForm
 -/
 
 #print BilinForm.toQuadraticForm_neg /-

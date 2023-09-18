@@ -455,16 +455,16 @@ instance : LE SetTheory.PGame :=
       (∀ i, ¬le y (x.moveLeft i) (Sym2.GameAdd.snd_fst <| SetTheory.PGame.IsOption.moveLeft i)) ∧
         ∀ j, ¬le (y.moveRight j) x (Sym2.GameAdd.fst_snd <| SetTheory.PGame.IsOption.moveRight j)⟩
 
-#print SetTheory.PGame.Lf /-
+#print SetTheory.PGame.LF /-
 /-- The less or fuzzy relation on pre-games.
 
 If `0 ⧏ x`, then Left can win `x` as the first player. -/
-def SetTheory.PGame.Lf (x y : SetTheory.PGame) : Prop :=
+def SetTheory.PGame.LF (x y : SetTheory.PGame) : Prop :=
   ¬y ≤ x
-#align pgame.lf SetTheory.PGame.Lf
+#align pgame.lf SetTheory.PGame.LF
 -/
 
-scoped infixl:50 " ⧏ " => SetTheory.PGame.Lf
+scoped infixl:50 " ⧏ " => SetTheory.PGame.LF
 
 #print SetTheory.PGame.not_le /-
 @[simp]
@@ -486,10 +486,10 @@ theorem LE.le.not_gf {x y : SetTheory.PGame} : x ≤ y → ¬y ⧏ x :=
 #align has_le.le.not_gf LE.le.not_gf
 -/
 
-#print SetTheory.PGame.Lf.not_ge /-
-theorem SetTheory.PGame.Lf.not_ge {x y : SetTheory.PGame} : x ⧏ y → ¬y ≤ x :=
+#print SetTheory.PGame.LF.not_ge /-
+theorem SetTheory.PGame.LF.not_ge {x y : SetTheory.PGame} : x ⧏ y → ¬y ≤ x :=
   id
-#align pgame.lf.not_ge SetTheory.PGame.Lf.not_ge
+#align pgame.lf.not_ge SetTheory.PGame.LF.not_ge
 -/
 
 #print SetTheory.PGame.le_iff_forall_lf /-
@@ -690,7 +690,7 @@ alias _root_.has_le.le.trans_lf := lf_of_le_of_lf
 #align has_le.le.trans_lf LE.le.trans_lf
 
 alias lf.trans_le := lf_of_lf_of_le
-#align pgame.lf.trans_le SetTheory.PGame.Lf.trans_le
+#align pgame.lf.trans_le SetTheory.PGame.LF.trans_le
 
 #print SetTheory.PGame.lf_of_lt_of_lf /-
 @[trans]
@@ -712,7 +712,7 @@ alias _root_.has_lt.lt.trans_lf := lf_of_lt_of_lf
 #align has_lt.lt.trans_lf LT.lt.trans_lf
 
 alias lf.trans_lt := lf_of_lf_of_lt
-#align pgame.lf.trans_lt SetTheory.PGame.Lf.trans_lt
+#align pgame.lf.trans_lt SetTheory.PGame.LF.trans_lt
 
 #print SetTheory.PGame.moveLeft_lf /-
 theorem SetTheory.PGame.moveLeft_lf {x : SetTheory.PGame} : ∀ i, x.moveLeft i ⧏ x :=
@@ -745,7 +745,7 @@ theorem SetTheory.PGame.mk_lf {xl xr} (xL : xl → SetTheory.PGame) (xR : xr →
 preferred over `⧏`. -/
 theorem SetTheory.PGame.le_of_forall_lt {x y : SetTheory.PGame} (h₁ : ∀ i, x.moveLeft i < y)
     (h₂ : ∀ j, x < y.moveRight j) : x ≤ y :=
-  SetTheory.PGame.le_of_forall_lf (fun i => (h₁ i).Lf) fun i => (h₂ i).Lf
+  SetTheory.PGame.le_of_forall_lf (fun i => (h₁ i).LF) fun i => (h₂ i).LF
 #align pgame.le_of_forall_lt SetTheory.PGame.le_of_forall_lt
 -/
 
@@ -1026,19 +1026,19 @@ theorem SetTheory.PGame.le_of_equiv_of_le {x y z} (h₁ : x ≈ y) : y ≤ z →
 #align pgame.le_of_equiv_of_le SetTheory.PGame.le_of_equiv_of_le
 -/
 
-#print SetTheory.PGame.Lf.not_equiv /-
-theorem SetTheory.PGame.Lf.not_equiv {x y} (h : x ⧏ y) : ¬(x ≈ y) := fun h' => h.not_ge h'.2
-#align pgame.lf.not_equiv SetTheory.PGame.Lf.not_equiv
+#print SetTheory.PGame.LF.not_equiv /-
+theorem SetTheory.PGame.LF.not_equiv {x y} (h : x ⧏ y) : ¬(x ≈ y) := fun h' => h.not_ge h'.2
+#align pgame.lf.not_equiv SetTheory.PGame.LF.not_equiv
 -/
 
-#print SetTheory.PGame.Lf.not_equiv' /-
-theorem SetTheory.PGame.Lf.not_equiv' {x y} (h : x ⧏ y) : ¬(y ≈ x) := fun h' => h.not_ge h'.1
-#align pgame.lf.not_equiv' SetTheory.PGame.Lf.not_equiv'
+#print SetTheory.PGame.LF.not_equiv' /-
+theorem SetTheory.PGame.LF.not_equiv' {x y} (h : x ⧏ y) : ¬(y ≈ x) := fun h' => h.not_ge h'.1
+#align pgame.lf.not_equiv' SetTheory.PGame.LF.not_equiv'
 -/
 
-#print SetTheory.PGame.Lf.not_gt /-
-theorem SetTheory.PGame.Lf.not_gt {x y} (h : x ⧏ y) : ¬y < x := fun h' => h.not_ge h'.le
-#align pgame.lf.not_gt SetTheory.PGame.Lf.not_gt
+#print SetTheory.PGame.LF.not_gt /-
+theorem SetTheory.PGame.LF.not_gt {x y} (h : x ⧏ y) : ¬y < x := fun h' => h.not_ge h'.le
+#align pgame.lf.not_gt SetTheory.PGame.LF.not_gt
 -/
 
 #print SetTheory.PGame.le_congr_imp /-
@@ -1749,14 +1749,14 @@ decreasing_by pgame_wf_tac
 #print SetTheory.PGame.neg_le_neg_iff /-
 @[simp]
 theorem SetTheory.PGame.neg_le_neg_iff {x y : SetTheory.PGame} : -y ≤ -x ↔ x ≤ y :=
-  neg_le_lf_neg_iff.1
+  neg_le_lF_neg_iff.1
 #align pgame.neg_le_neg_iff SetTheory.PGame.neg_le_neg_iff
 -/
 
 #print SetTheory.PGame.neg_lf_neg_iff /-
 @[simp]
 theorem SetTheory.PGame.neg_lf_neg_iff {x y : SetTheory.PGame} : -y ⧏ -x ↔ x ⧏ y :=
-  neg_le_lf_neg_iff.2
+  neg_le_lF_neg_iff.2
 #align pgame.neg_lf_neg_iff SetTheory.PGame.neg_lf_neg_iff
 -/
 
@@ -2513,7 +2513,7 @@ instance : ZeroLEOneClass SetTheory.PGame :=
 #print SetTheory.PGame.zero_lf_one /-
 @[simp]
 theorem SetTheory.PGame.zero_lf_one : (0 : SetTheory.PGame) ⧏ 1 :=
-  SetTheory.PGame.zero_lt_one.Lf
+  SetTheory.PGame.zero_lt_one.LF
 #align pgame.zero_lf_one SetTheory.PGame.zero_lf_one
 -/
 
