@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
+Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov, Yaël Dillies
 -/
 import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Algebra.BigOperators.Order
@@ -11,13 +11,23 @@ import Mathbin.Order.Filter.Archimedean
 import Mathbin.Order.Filter.CountableInter
 import Mathbin.Topology.Order.Basic
 
-#align_import topology.algebra.order.liminf_limsup from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
+#align_import topology.algebra.order.liminf_limsup from "leanprover-community/mathlib"@"ce64cd319bb6b3e82f31c2d38e79080d377be451"
 
 /-!
 # Lemmas about liminf and limsup in an order topology.
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
 > Any changes to this file require a corresponding PR to mathlib4.
+
+## Main declarations
+
+* `bounded_le_nhds_class`: Typeclass stating that neighborhoods are eventually bounded above.
+* `bounded_ge_nhds_class`: Typeclass stating that neighborhoods are eventually bounded below.
+
+## Implementation notes
+
+The same lemmas are true in `ℝ`, `ℝ × ℝ`, `ι → ℝ`, `euclidean_space ι ℝ`. To avoid code
+duplication, we provide an ad hoc axiomatisation of the properties we need.
 -/
 
 
@@ -27,38 +37,48 @@ open scoped Topology Classical
 
 universe u v
 
-variable {α : Type u} {β : Type v}
+variable {ι α β R S : Type _} {π : ι → Type _}
 
-section LiminfLimsup
+/-- Ad hoc typeclass stating that neighborhoods are eventually bounded above. -/
+class BoundedLeNhdsClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
+  isBounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·)
+#align bounded_le_nhds_class BoundedLeNhdsClass
 
-section OrderClosedTopology
+/-- Ad hoc typeclass stating that neighborhoods are eventually bounded below. -/
+class BoundedGeNhdsClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
+  isBounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·)
+#align bounded_ge_nhds_class BoundedGeNhdsClass
 
-variable [SemilatticeSup α] [TopologicalSpace α] [OrderTopology α]
+section Preorder
+
+variable [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
+
+section BoundedLeNhdsClass
+
+variable [BoundedLeNhdsClass α] [BoundedLeNhdsClass β] {f : Filter ι} {u : ι → α} {a : α}
 
 #print isBounded_le_nhds /-
 theorem isBounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
-  (isTop_or_exists_gt a).elim (fun h => ⟨a, eventually_of_forall h⟩) fun ⟨b, hb⟩ =>
-    ⟨b, ge_mem_nhds hb⟩
+  BoundedLeNhdsClass.isBounded_le_nhds _
 #align is_bounded_le_nhds isBounded_le_nhds
 -/
 
 #print Filter.Tendsto.isBoundedUnder_le /-
-theorem Filter.Tendsto.isBoundedUnder_le {f : Filter β} {u : β → α} {a : α}
-    (h : Tendsto u f (𝓝 a)) : f.IsBoundedUnder (· ≤ ·) u :=
+theorem Filter.Tendsto.isBoundedUnder_le (h : Tendsto u f (𝓝 a)) : f.IsBoundedUnder (· ≤ ·) u :=
   (isBounded_le_nhds a).mono h
 #align filter.tendsto.is_bounded_under_le Filter.Tendsto.isBoundedUnder_le
 -/
 
 #print Filter.Tendsto.bddAbove_range_of_cofinite /-
-theorem Filter.Tendsto.bddAbove_range_of_cofinite {u : β → α} {a : α}
+theorem Filter.Tendsto.bddAbove_range_of_cofinite [IsDirected α (· ≤ ·)]
     (h : Tendsto u cofinite (𝓝 a)) : BddAbove (Set.range u) :=
   h.isBoundedUnder_le.bddAbove_range_of_cofinite
 #align filter.tendsto.bdd_above_range_of_cofinite Filter.Tendsto.bddAbove_range_of_cofinite
 -/
 
 #print Filter.Tendsto.bddAbove_range /-
-theorem Filter.Tendsto.bddAbove_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) :
-    BddAbove (Set.range u) :=
+theorem Filter.Tendsto.bddAbove_range [IsDirected α (· ≤ ·)] {u : ℕ → α}
+    (h : Tendsto u atTop (𝓝 a)) : BddAbove (Set.range u) :=
   h.isBoundedUnder_le.bddAbove_range
 #align filter.tendsto.bdd_above_range Filter.Tendsto.bddAbove_range
 -/
@@ -70,41 +90,59 @@ theorem isCobounded_ge_nhds (a : α) : (𝓝 a).IsCobounded (· ≥ ·) :=
 -/
 
 #print Filter.Tendsto.isCoboundedUnder_ge /-
-theorem Filter.Tendsto.isCoboundedUnder_ge {f : Filter β} {u : β → α} {a : α} [NeBot f]
-    (h : Tendsto u f (𝓝 a)) : f.IsCoboundedUnder (· ≥ ·) u :=
+theorem Filter.Tendsto.isCoboundedUnder_ge [NeBot f] (h : Tendsto u f (𝓝 a)) :
+    f.IsCoboundedUnder (· ≥ ·) u :=
   h.isBoundedUnder_le.isCobounded_flip
 #align filter.tendsto.is_cobounded_under_ge Filter.Tendsto.isCoboundedUnder_ge
 -/
 
-end OrderClosedTopology
+instance : BoundedGeNhdsClass αᵒᵈ :=
+  ⟨@isBounded_le_nhds α _ _ _⟩
 
-section OrderClosedTopology
+instance : BoundedLeNhdsClass (α × β) :=
+  by
+  refine' ⟨fun x => _⟩
+  obtain ⟨a, ha⟩ := isBounded_le_nhds x.1
+  obtain ⟨b, hb⟩ := isBounded_le_nhds x.2
+  rw [← @Prod.mk.eta _ _ x, nhds_prod_eq]
+  exact ⟨(a, b), ha.prod_mk hb⟩
 
-variable [SemilatticeInf α] [TopologicalSpace α] [OrderTopology α]
+instance [Finite ι] [∀ i, Preorder (π i)] [∀ i, TopologicalSpace (π i)]
+    [∀ i, BoundedLeNhdsClass (π i)] : BoundedLeNhdsClass (∀ i, π i) :=
+  by
+  refine' ⟨fun x => _⟩
+  rw [nhds_pi]
+  choose f hf using fun i => isBounded_le_nhds (x i)
+  exact ⟨f, eventually_pi hf⟩
+
+end BoundedLeNhdsClass
+
+section BoundedGeNhdsClass
+
+variable [BoundedGeNhdsClass α] [BoundedGeNhdsClass β] {f : Filter ι} {u : ι → α} {a : α}
 
 #print isBounded_ge_nhds /-
 theorem isBounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
-  @isBounded_le_nhds αᵒᵈ _ _ _ a
+  BoundedGeNhdsClass.isBounded_ge_nhds _
 #align is_bounded_ge_nhds isBounded_ge_nhds
 -/
 
 #print Filter.Tendsto.isBoundedUnder_ge /-
-theorem Filter.Tendsto.isBoundedUnder_ge {f : Filter β} {u : β → α} {a : α}
-    (h : Tendsto u f (𝓝 a)) : f.IsBoundedUnder (· ≥ ·) u :=
+theorem Filter.Tendsto.isBoundedUnder_ge (h : Tendsto u f (𝓝 a)) : f.IsBoundedUnder (· ≥ ·) u :=
   (isBounded_ge_nhds a).mono h
 #align filter.tendsto.is_bounded_under_ge Filter.Tendsto.isBoundedUnder_ge
 -/
 
 #print Filter.Tendsto.bddBelow_range_of_cofinite /-
-theorem Filter.Tendsto.bddBelow_range_of_cofinite {u : β → α} {a : α}
+theorem Filter.Tendsto.bddBelow_range_of_cofinite [IsDirected α (· ≥ ·)]
     (h : Tendsto u cofinite (𝓝 a)) : BddBelow (Set.range u) :=
   h.isBoundedUnder_ge.bddBelow_range_of_cofinite
 #align filter.tendsto.bdd_below_range_of_cofinite Filter.Tendsto.bddBelow_range_of_cofinite
 -/
 
 #print Filter.Tendsto.bddBelow_range /-
-theorem Filter.Tendsto.bddBelow_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) :
-    BddBelow (Set.range u) :=
+theorem Filter.Tendsto.bddBelow_range [IsDirected α (· ≥ ·)] {u : ℕ → α}
+    (h : Tendsto u atTop (𝓝 a)) : BddBelow (Set.range u) :=
   h.isBoundedUnder_ge.bddBelow_range
 #align filter.tendsto.bdd_below_range Filter.Tendsto.bddBelow_range
 -/
@@ -116,13 +154,62 @@ theorem isCobounded_le_nhds (a : α) : (𝓝 a).IsCobounded (· ≤ ·) :=
 -/
 
 #print Filter.Tendsto.isCoboundedUnder_le /-
-theorem Filter.Tendsto.isCoboundedUnder_le {f : Filter β} {u : β → α} {a : α} [NeBot f]
-    (h : Tendsto u f (𝓝 a)) : f.IsCoboundedUnder (· ≤ ·) u :=
+theorem Filter.Tendsto.isCoboundedUnder_le [NeBot f] (h : Tendsto u f (𝓝 a)) :
+    f.IsCoboundedUnder (· ≤ ·) u :=
   h.isBoundedUnder_ge.isCobounded_flip
 #align filter.tendsto.is_cobounded_under_le Filter.Tendsto.isCoboundedUnder_le
 -/
 
-end OrderClosedTopology
+instance : BoundedLeNhdsClass αᵒᵈ :=
+  ⟨@isBounded_ge_nhds α _ _ _⟩
+
+instance : BoundedGeNhdsClass (α × β) :=
+  by
+  refine' ⟨fun x => _⟩
+  obtain ⟨a, ha⟩ := isBounded_ge_nhds x.1
+  obtain ⟨b, hb⟩ := isBounded_ge_nhds x.2
+  rw [← @Prod.mk.eta _ _ x, nhds_prod_eq]
+  exact ⟨(a, b), ha.prod_mk hb⟩
+
+instance [Finite ι] [∀ i, Preorder (π i)] [∀ i, TopologicalSpace (π i)]
+    [∀ i, BoundedGeNhdsClass (π i)] : BoundedGeNhdsClass (∀ i, π i) :=
+  by
+  refine' ⟨fun x => _⟩
+  rw [nhds_pi]
+  choose f hf using fun i => isBounded_ge_nhds (x i)
+  exact ⟨f, eventually_pi hf⟩
+
+end BoundedGeNhdsClass
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderTop.to_boundedLeNhdsClass [OrderTop α] : BoundedLeNhdsClass α :=
+  ⟨fun a => isBounded_le_of_top⟩
+#align order_top.to_bounded_le_nhds_class OrderTop.to_boundedLeNhdsClass
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderBot.to_boundedGeNhdsClass [OrderBot α] : BoundedGeNhdsClass α :=
+  ⟨fun a => isBounded_ge_of_bot⟩
+#align order_bot.to_bounded_ge_nhds_class OrderBot.to_boundedGeNhdsClass
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderTopology.to_boundedLeNhdsClass [IsDirected α (· ≤ ·)]
+    [OrderTopology α] : BoundedLeNhdsClass α :=
+  ⟨fun a =>
+    ((isTop_or_exists_gt a).elim fun h => ⟨a, eventually_of_forall h⟩) <|
+      Exists.imp fun b => ge_mem_nhds⟩
+#align order_topology.to_bounded_le_nhds_class OrderTopology.to_boundedLeNhdsClass
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderTopology.to_boundedGeNhdsClass [IsDirected α (· ≥ ·)]
+    [OrderTopology α] : BoundedGeNhdsClass α :=
+  ⟨fun a =>
+    ((isBot_or_exists_lt a).elim fun h => ⟨a, eventually_of_forall h⟩) <|
+      Exists.imp fun b => le_mem_nhds⟩
+#align order_topology.to_bounded_ge_nhds_class OrderTopology.to_boundedGeNhdsClass
+
+end Preorder
+
+section LiminfLimsup
 
 section ConditionallyCompleteLinearOrder
 
@@ -340,8 +427,8 @@ end LiminfLimsup
 
 section Monotone
 
-variable {ι R S : Type _} {F : Filter ι} [NeBot F] [CompleteLinearOrder R] [TopologicalSpace R]
-  [OrderTopology R] [CompleteLinearOrder S] [TopologicalSpace S] [OrderTopology S]
+variable {F : Filter ι} [NeBot F] [CompleteLinearOrder R] [TopologicalSpace R] [OrderTopology R]
+  [CompleteLinearOrder S] [TopologicalSpace S] [OrderTopology S]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
@@ -477,7 +564,7 @@ open scoped Topology
 
 open Filter Set
 
-variable {ι : Type _} {R : Type _} [CompleteLinearOrder R] [TopologicalSpace R] [OrderTopology R]
+variable [CompleteLinearOrder R] [TopologicalSpace R] [OrderTopology R]
 
 #print iInf_eq_of_forall_le_of_tendsto /-
 theorem iInf_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (x_le : ∀ i, x ≤ as i) {F : Filter ι}
@@ -496,7 +583,7 @@ theorem iSup_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (le_x : ∀ i, a
 -/
 
 #print iUnion_Ici_eq_Ioi_of_lt_of_tendsto /-
-theorem iUnion_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
+theorem iUnion_Ici_eq_Ioi_of_lt_of_tendsto (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     (⋃ i : ι, Ici (as i)) = Ioi x :=
   by
@@ -510,10 +597,10 @@ theorem iUnion_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R}
 -/
 
 #print iUnion_Iic_eq_Iio_of_lt_of_tendsto /-
-theorem iUnion_Iic_eq_Iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
+theorem iUnion_Iic_eq_Iio_of_lt_of_tendsto (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     (⋃ i : ι, Iic (as i)) = Iio x :=
-  @iUnion_Ici_eq_Ioi_of_lt_of_tendsto (OrderDual R) _ _ _ ι x as lt_x F _ as_lim
+  @iUnion_Ici_eq_Ioi_of_lt_of_tendsto ι Rᵒᵈ _ _ _ _ _ lt_x F _ as_lim
 #align Union_Iic_eq_Iio_of_lt_of_tendsto iUnion_Iic_eq_Iio_of_lt_of_tendsto
 -/
 
