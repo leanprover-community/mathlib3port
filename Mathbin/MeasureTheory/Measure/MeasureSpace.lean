@@ -4901,28 +4901,28 @@ theorem IsCompact.measure_lt_top [TopologicalSpace α] {μ : Measure α} [IsFini
 #align is_compact.measure_lt_top IsCompact.measure_lt_top
 -/
 
-#print Metric.Bounded.measure_lt_top /-
+#print Bornology.IsBounded.measure_lt_top /-
 /-- A bounded subset has finite measure for a measure which is finite on compact sets, in a
 proper space. -/
-theorem Metric.Bounded.measure_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measure α}
-    [IsFiniteMeasureOnCompacts μ] ⦃s : Set α⦄ (hs : Metric.Bounded s) : μ s < ∞ :=
+theorem Bornology.IsBounded.measure_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measure α}
+    [IsFiniteMeasureOnCompacts μ] ⦃s : Set α⦄ (hs : Bornology.IsBounded s) : μ s < ∞ :=
   calc
     μ s ≤ μ (closure s) := measure_mono subset_closure
-    _ < ∞ := (Metric.isCompact_of_isClosed_bounded isClosed_closure hs.closure).measure_lt_top
-#align metric.bounded.measure_lt_top Metric.Bounded.measure_lt_top
+    _ < ∞ := (Metric.isCompact_of_isClosed_isBounded isClosed_closure hs.closure).measure_lt_top
+#align metric.bounded.measure_lt_top Bornology.IsBounded.measure_lt_top
 -/
 
 #print MeasureTheory.measure_closedBall_lt_top /-
 theorem measure_closedBall_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measure α}
     [IsFiniteMeasureOnCompacts μ] {x : α} {r : ℝ} : μ (Metric.closedBall x r) < ∞ :=
-  Metric.bounded_closedBall.measure_lt_top
+  Metric.isBounded_closedBall.measure_lt_top
 #align measure_theory.measure_closed_ball_lt_top MeasureTheory.measure_closedBall_lt_top
 -/
 
 #print MeasureTheory.measure_ball_lt_top /-
 theorem measure_ball_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measure α}
     [IsFiniteMeasureOnCompacts μ] {x : α} {r : ℝ} : μ (Metric.ball x r) < ∞ :=
-  Metric.bounded_ball.measure_lt_top
+  Metric.isBounded_ball.measure_lt_top
 #align measure_theory.measure_ball_lt_top MeasureTheory.measure_ball_lt_top
 -/
 

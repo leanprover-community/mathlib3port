@@ -128,16 +128,16 @@ theorem ext (h : ∀ x, f x = g x) : f = g :=
 #align bounded_continuous_function.ext BoundedContinuousFunction.ext
 -/
 
-#print BoundedContinuousFunction.bounded_range /-
-theorem bounded_range (f : α →ᵇ β) : Bounded (range f) :=
-  bounded_range_iff.2 f.Bounded
-#align bounded_continuous_function.bounded_range BoundedContinuousFunction.bounded_range
+#print BoundedContinuousFunction.isBounded_range /-
+theorem isBounded_range (f : α →ᵇ β) : IsBounded (range f) :=
+  isBounded_range_iff.2 f.Bounded
+#align bounded_continuous_function.bounded_range BoundedContinuousFunction.isBounded_range
 -/
 
-#print BoundedContinuousFunction.bounded_image /-
-theorem bounded_image (f : α →ᵇ β) (s : Set α) : Bounded (f '' s) :=
-  f.bounded_range.mono <| image_subset_range _ _
-#align bounded_continuous_function.bounded_image BoundedContinuousFunction.bounded_image
+#print BoundedContinuousFunction.isBounded_image /-
+theorem isBounded_image (f : α →ᵇ β) (s : Set α) : IsBounded (f '' s) :=
+  f.isBounded_range.mono <| image_subset_range _ _
+#align bounded_continuous_function.bounded_image BoundedContinuousFunction.isBounded_image
 -/
 
 #print BoundedContinuousFunction.eq_of_empty /-
@@ -163,7 +163,7 @@ theorem mkOfBound_coe {f} {C} {h} : (mkOfBound f C h : α → β) = (f : α → 
 #print BoundedContinuousFunction.mkOfCompact /-
 /-- A continuous function on a compact space is automatically a bounded continuous function. -/
 def mkOfCompact [CompactSpace α] (f : C(α, β)) : α →ᵇ β :=
-  ⟨f, bounded_range_iff.1 (isCompact_range f.Continuous).Bounded⟩
+  ⟨f, isBounded_range_iff.1 (isCompact_range f.Continuous).Bounded⟩
 #align bounded_continuous_function.mk_of_compact BoundedContinuousFunction.mkOfCompact
 -/
 
@@ -577,7 +577,7 @@ def extend (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : δ →ᵇ β
   continuous_toFun := continuous_of_discreteTopology
   map_bounded' :=
     by
-    rw [← bounded_range_iff, range_extend f.injective, Metric.bounded_union]
+    rw [← bounded_range_iff, range_extend f.injective, Bornology.isBounded_union]
     exact ⟨g.bounded_range, h.bounded_image _⟩
 #align bounded_continuous_function.extend BoundedContinuousFunction.extend
 -/
@@ -1158,7 +1158,7 @@ theorem norm_normComp : ‖f.normComp‖ = ‖f‖ := by simp only [norm_eq, coe
 
 #print BoundedContinuousFunction.bddAbove_range_norm_comp /-
 theorem bddAbove_range_norm_comp : BddAbove <| Set.range <| norm ∘ f :=
-  (Real.bounded_iff_bddBelow_bddAbove.mp <| @bounded_range _ _ _ _ f.normComp).2
+  (Real.isBounded_iff_bddBelow_bddAbove.mp <| @isBounded_range _ _ _ _ f.normComp).2
 #align bounded_continuous_function.bdd_above_range_norm_comp BoundedContinuousFunction.bddAbove_range_norm_comp
 -/
 

@@ -140,7 +140,7 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
 -/
 
 #print Nat.disjoint_divisors_filter_isPrimePow /-
-theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.coprime b) :
+theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.Coprime b) :
     Disjoint (a.divisors.filterₓ IsPrimePow) (b.divisors.filterₓ IsPrimePow) :=
   by
   simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]

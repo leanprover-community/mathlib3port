@@ -33,7 +33,7 @@ open Polynomial Real
 open scoped Nat Real
 
 #print Complex.isPrimitiveRoot_exp_of_coprime /-
-theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprime n) :
+theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprime n) :
     IsPrimitiveRoot (exp (2 * π * I * (i / n))) n :=
   by
   rw [IsPrimitiveRoot.iff_def]
@@ -60,7 +60,7 @@ theorem isPrimitiveRoot_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 *
 
 #print Complex.isPrimitiveRoot_iff /-
 theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
-    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.coprime n, exp (2 * π * I * (i / n)) = ζ :=
+    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ :=
   by
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn
   constructor; swap

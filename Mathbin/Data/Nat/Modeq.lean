@@ -466,7 +466,7 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
 
 #print Nat.chineseRemainder /-
 /-- The natural number less than `n*m` congruent to `a` mod `n` and `b` mod `m` -/
-def chineseRemainder (co : coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
+def chineseRemainder (co : Coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
   chineseRemainder' (by convert modeq_one)
 #align nat.chinese_remainder Nat.chineseRemainder
 -/
@@ -483,14 +483,14 @@ theorem chineseRemainder'_lt_lcm (h : a ≡ b [MOD gcd n m]) (hn : n ≠ 0) (hm 
 -/
 
 #print Nat.chineseRemainder_lt_mul /-
-theorem chineseRemainder_lt_mul (co : coprime n m) (a b : ℕ) (hn : n ≠ 0) (hm : m ≠ 0) :
+theorem chineseRemainder_lt_mul (co : Coprime n m) (a b : ℕ) (hn : n ≠ 0) (hm : m ≠ 0) :
     ↑(chineseRemainder co a b) < n * m :=
   lt_of_lt_of_le (chineseRemainder'_lt_lcm _ hn hm) (le_of_eq co.lcm_eq_mul)
 #align nat.chinese_remainder_lt_mul Nat.chineseRemainder_lt_mul
 -/
 
 #print Nat.modEq_and_modEq_iff_modEq_mul /-
-theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℕ} (hmn : coprime m n) :
+theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℕ} (hmn : Coprime m n) :
     a ≡ b [MOD m] ∧ a ≡ b [MOD n] ↔ a ≡ b [MOD m * n] :=
   ⟨fun h =>
     by
@@ -502,7 +502,7 @@ theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℕ} (hmn : coprime m n) :
 -/
 
 #print Nat.coprime_of_mul_modEq_one /-
-theorem coprime_of_mul_modEq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n]) : coprime a n :=
+theorem coprime_of_mul_modEq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n]) : Coprime a n :=
   by
   obtain ⟨g, hh⟩ := Nat.gcd_dvd_right a n
   rw [Nat.coprime_iff_gcd_eq_one, ← Nat.dvd_one, ← Nat.modEq_zero_iff_dvd]

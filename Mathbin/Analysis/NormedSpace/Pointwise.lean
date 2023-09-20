@@ -133,16 +133,16 @@ theorem smul_closedBall' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) :
 #align smul_closed_ball' smul_closedBall'
 -/
 
-#print Metric.Bounded.smul₀ /-
-theorem Metric.Bounded.smul₀ {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c • s) :=
+#print Bornology.IsBounded.smul₀ /-
+theorem Bornology.IsBounded.smul₀ {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c • s) :=
   by
   obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀ x ∈ s, ‖x‖ ≤ R := hs.exists_norm_le
-  refine' bounded_iff_forall_norm_le.2 ⟨‖c‖ * R, fun z hz => _⟩
+  refine' isBounded_iff_forall_norm_le.2 ⟨‖c‖ * R, fun z hz => _⟩
   obtain ⟨y, ys, rfl⟩ : ∃ y : E, y ∈ s ∧ c • y = z := mem_smul_set.1 hz
   calc
     ‖c • y‖ = ‖c‖ * ‖y‖ := norm_smul _ _
     _ ≤ ‖c‖ * R := mul_le_mul_of_nonneg_left (hR y ys) (norm_nonneg _)
-#align metric.bounded.smul Metric.Bounded.smul₀
+#align metric.bounded.smul Bornology.IsBounded.smul₀
 -/
 
 #print eventually_singleton_add_smul_subset /-

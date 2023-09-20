@@ -517,7 +517,7 @@ theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ‖x‖ :=
 
 #print NormedSpace.unbounded_univ /-
 protected theorem NormedSpace.unbounded_univ : ¬Bounded (univ : Set E) := fun h =>
-  let ⟨R, hR⟩ := bounded_iff_forall_norm_le.1 h
+  let ⟨R, hR⟩ := isBounded_iff_forall_norm_le.1 h
   let ⟨x, hx⟩ := NormedSpace.exists_lt_norm 𝕜 E R
   hx.not_le (hR x trivial)
 #align normed_space.unbounded_univ NormedSpace.unbounded_univ

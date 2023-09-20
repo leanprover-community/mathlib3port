@@ -400,7 +400,7 @@ theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b 
   · exact integrable_on_empty
   have hbelow : BddBelow (f '' s) := ⟨f a, fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono ha.1 hy (ha.2 hy)⟩
   have habove : BddAbove (f '' s) := ⟨f b, fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono hy hb.1 (hb.2 hy)⟩
-  have : Metric.Bounded (f '' s) := Metric.bounded_of_bddAbove_of_bddBelow habove hbelow
+  have : Bornology.IsBounded (f '' s) := Metric.isBounded_of_bddAbove_of_bddBelow habove hbelow
   rcases bounded_iff_forall_norm_le.mp this with ⟨C, hC⟩
   have A : integrable_on (fun x => C) s μ := by
     simp only [hs.lt_top, integrable_on_const, or_true_iff]

@@ -242,7 +242,7 @@ variable (hcomm)
 #print MonoidHom.independent_range_of_coprime_order /-
 @[to_additive]
 theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
-    (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :
+    (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) :
     CompleteLattice.Independent fun i => (ϕ i).range :=
   by
   cases nonempty_fintype ι
@@ -346,7 +346,7 @@ variable (hcomm)
 #print Subgroup.independent_of_coprime_order /-
 @[to_additive]
 theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
-    (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :
+    (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) :
     CompleteLattice.Independent H := by
   simpa using
     MonoidHom.independent_range_of_coprime_order (fun i => (H i).Subtype)

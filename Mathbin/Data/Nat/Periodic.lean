@@ -31,7 +31,7 @@ theorem periodic_gcd (a : ℕ) : Periodic (gcd a) a := by
 -/
 
 #print Nat.periodic_coprime /-
-theorem periodic_coprime (a : ℕ) : Periodic (coprime a) a := by
+theorem periodic_coprime (a : ℕ) : Periodic (Coprime a) a := by
   simp only [coprime_add_self_right, forall_const, iff_self_iff, eq_iff_iff, periodic]
 #align nat.periodic_coprime Nat.periodic_coprime
 -/

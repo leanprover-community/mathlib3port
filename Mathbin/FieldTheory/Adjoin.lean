@@ -997,7 +997,6 @@ variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E] {α : E}
 variable {K : Type _} [Field K] [Algebra F K]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-#print IntermediateField.minpoly_gen /-
 theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (AdjoinSimple.gen F α) = minpoly F α :=
   by
   rw [← adjoin_simple.algebra_map_gen F α] at h 
@@ -1005,8 +1004,7 @@ theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (AdjoinSimple.gen
   exact
     minpoly.eq_of_algebraMap_eq inj ((isIntegral_algebraMap_iff inj).mp h)
       (adjoin_simple.algebra_map_gen _ _).symm
-#align intermediate_field.minpoly_gen IntermediateField.minpoly_gen
--/
+#align intermediate_field.minpoly_gen IntermediateField.minpoly_genₓ
 
 variable (F)
 

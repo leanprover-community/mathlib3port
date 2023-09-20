@@ -102,7 +102,7 @@ theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : 
   clear z w; intro c
   obtain ⟨C, C₀, hC⟩ : ∃ C > (0 : ℝ), ∀ z, ‖f z‖ ≤ C :=
     by
-    rcases bounded_iff_forall_norm_le.1 hb with ⟨C, hC⟩
+    rcases isBounded_iff_forall_norm_le.1 hb with ⟨C, hC⟩
     exact
       ⟨max C 1, lt_max_iff.2 (Or.inr zero_lt_one), fun z =>
         (hC (f z) (mem_range_self _)).trans (le_max_left _ _)⟩

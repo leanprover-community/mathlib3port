@@ -158,15 +158,15 @@ theorem subset_closedBall_norm [NormOneClass A] (a : A) : σ a ⊆ Metric.closed
 #align spectrum.subset_closed_ball_norm spectrum.subset_closedBall_norm
 -/
 
-#print spectrum.is_bounded /-
-theorem is_bounded (a : A) : Metric.Bounded (σ a) :=
-  (Metric.bounded_iff_subset_ball 0).mpr ⟨‖a‖ * ‖(1 : A)‖, subset_closedBall_norm_mul a⟩
-#align spectrum.is_bounded spectrum.is_bounded
+#print spectrum.isBounded /-
+theorem isBounded (a : A) : Bornology.IsBounded (σ a) :=
+  (Metric.isBounded_iff_subset_closedBall 0).mpr ⟨‖a‖ * ‖(1 : A)‖, subset_closedBall_norm_mul a⟩
+#align spectrum.is_bounded spectrum.isBounded
 -/
 
 #print spectrum.isCompact /-
 protected theorem isCompact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
-  Metric.isCompact_of_isClosed_bounded (spectrum.isClosed a) (is_bounded a)
+  Metric.isCompact_of_isClosed_isBounded (spectrum.isClosed a) (isBounded a)
 #align spectrum.is_compact spectrum.isCompact
 -/
 

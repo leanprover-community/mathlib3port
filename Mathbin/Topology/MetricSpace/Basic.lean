@@ -3159,76 +3159,80 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
+/- warning: metric.bounded clashes with bornology.is_bounded -> Bornology.IsBounded
+Case conversion may be inaccurate. Consider using '#align metric.bounded Bornology.IsBoundedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-#print Metric.Bounded /-
+#print Bornology.IsBounded /-
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
-def Bounded (s : Set α) : Prop :=
+def IsBounded (s : Set α) : Prop :=
   ∃ C, ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), dist x y ≤ C
-#align metric.bounded Metric.Bounded
+#align metric.bounded Bornology.IsBounded
 -/
 
 section Bounded
 
 variable {x : α} {s t : Set α} {r : ℝ}
 
-#print Metric.bounded_iff_isBounded /-
-theorem bounded_iff_isBounded (s : Set α) : Bounded s ↔ IsBounded s :=
+theorem isBounded_iff_isBounded (s : Set α) : IsBounded s ↔ IsBounded s :=
   by
   change bounded s ↔ sᶜ ∈ (cobounded α).sets
-  simp [PseudoMetricSpace.cobounded_sets, Metric.Bounded]
-#align metric.bounded_iff_is_bounded Metric.bounded_iff_isBounded
--/
+  simp [PseudoMetricSpace.cobounded_sets, Bornology.IsBounded]
+#align metric.bounded_iff_is_bounded Metric.isBounded_iff_isBounded
 
-#print Metric.bounded_empty /-
+/- warning: metric.bounded_empty clashes with bornology.is_bounded_empty -> Bornology.isBounded_empty
+Case conversion may be inaccurate. Consider using '#align metric.bounded_empty Bornology.isBounded_emptyₓ'. -/
+#print Bornology.isBounded_empty /-
 @[simp]
-theorem bounded_empty : Bounded (∅ : Set α) :=
+theorem isBounded_empty : IsBounded (∅ : Set α) :=
   ⟨0, by simp⟩
-#align metric.bounded_empty Metric.bounded_empty
+#align metric.bounded_empty Bornology.isBounded_empty
 -/
 
-#print Metric.bounded_iff_mem_bounded /-
-theorem bounded_iff_mem_bounded : Bounded s ↔ ∀ x ∈ s, Bounded s :=
+#print Bornology.isBounded_iff_forall_mem /-
+theorem isBounded_iff_forall_mem : IsBounded s ↔ ∀ x ∈ s, IsBounded s :=
   ⟨fun h _ _ => h, fun H =>
-    s.eq_empty_or_nonempty.elim (fun hs => hs.symm ▸ bounded_empty) fun ⟨x, hx⟩ => H x hx⟩
-#align metric.bounded_iff_mem_bounded Metric.bounded_iff_mem_bounded
+    s.eq_empty_or_nonempty.elim (fun hs => hs.symm ▸ isBounded_empty) fun ⟨x, hx⟩ => H x hx⟩
+#align metric.bounded_iff_mem_bounded Bornology.isBounded_iff_forall_mem
 -/
 
-#print Metric.Bounded.mono /-
+/- warning: metric.bounded.mono clashes with bornology.is_bounded.subset -> Bornology.IsBounded.subset
+Case conversion may be inaccurate. Consider using '#align metric.bounded.mono Bornology.IsBounded.subsetₓ'. -/
+#print Bornology.IsBounded.subset /-
 /-- Subsets of a bounded set are also bounded -/
-theorem Bounded.mono (incl : s ⊆ t) : Bounded t → Bounded s :=
+theorem IsBounded.subset (incl : s ⊆ t) : IsBounded t → IsBounded s :=
   Exists.imp fun C hC x hx y hy => hC x (incl hx) y (incl hy)
-#align metric.bounded.mono Metric.Bounded.mono
+#align metric.bounded.mono Bornology.IsBounded.subset
 -/
 
-#print Metric.bounded_closedBall /-
+#print Metric.isBounded_closedBall /-
 /-- Closed balls are bounded -/
-theorem bounded_closedBall : Bounded (closedBall x r) :=
+theorem isBounded_closedBall : IsBounded (closedBall x r) :=
   ⟨r + r, fun y hy z hz => by
     simp only [mem_closed_ball] at *
     calc
       dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _
       _ ≤ r + r := add_le_add hy hz⟩
-#align metric.bounded_closed_ball Metric.bounded_closedBall
+#align metric.bounded_closed_ball Metric.isBounded_closedBall
 -/
 
-#print Metric.bounded_ball /-
+#print Metric.isBounded_ball /-
 /-- Open balls are bounded -/
-theorem bounded_ball : Bounded (ball x r) :=
-  bounded_closedBall.mono ball_subset_closedBall
-#align metric.bounded_ball Metric.bounded_ball
+theorem isBounded_ball : IsBounded (ball x r) :=
+  isBounded_closedBall.mono ball_subset_closedBall
+#align metric.bounded_ball Metric.isBounded_ball
 -/
 
-#print Metric.bounded_sphere /-
+#print Metric.isBounded_sphere /-
 /-- Spheres are bounded -/
-theorem bounded_sphere : Bounded (sphere x r) :=
-  bounded_closedBall.mono sphere_subset_closedBall
-#align metric.bounded_sphere Metric.bounded_sphere
+theorem isBounded_sphere : IsBounded (sphere x r) :=
+  isBounded_closedBall.mono sphere_subset_closedBall
+#align metric.bounded_sphere Metric.isBounded_sphere
 -/
 
-#print Metric.bounded_iff_subset_ball /-
+#print Metric.isBounded_iff_subset_closedBall /-
 /-- Given a point, a bounded subset is included in some ball around this point -/
-theorem bounded_iff_subset_ball (c : α) : Bounded s ↔ ∃ r, s ⊆ closedBall c r :=
+theorem isBounded_iff_subset_closedBall (c : α) : IsBounded s ↔ ∃ r, s ⊆ closedBall c r :=
   by
   constructor <;> rintro ⟨C, hC⟩
   · cases' s.eq_empty_or_nonempty with h h
@@ -3240,45 +3244,48 @@ theorem bounded_iff_subset_ball (c : α) : Bounded s ↔ ∃ r, s ⊆ closedBall
             dist y c ≤ dist y x + dist x c := dist_triangle _ _ _
             _ ≤ C + dist x c := add_le_add_right (hC y hy x hx) _⟩
   · exact bounded_closed_ball.mono hC
-#align metric.bounded_iff_subset_ball Metric.bounded_iff_subset_ball
+#align metric.bounded_iff_subset_ball Metric.isBounded_iff_subset_closedBall
 -/
 
-#print Metric.Bounded.subset_ball /-
-theorem Bounded.subset_ball (h : Bounded s) (c : α) : ∃ r, s ⊆ closedBall c r :=
-  (bounded_iff_subset_ball c).1 h
-#align metric.bounded.subset_ball Metric.Bounded.subset_ball
+#print Bornology.IsBounded.subset_closedBall /-
+theorem IsBounded.subset_closedBall (h : IsBounded s) (c : α) : ∃ r, s ⊆ closedBall c r :=
+  (isBounded_iff_subset_closedBall c).1 h
+#align metric.bounded.subset_ball Bornology.IsBounded.subset_closedBall
 -/
 
-#print Metric.Bounded.subset_ball_lt /-
-theorem Bounded.subset_ball_lt (h : Bounded s) (a : ℝ) (c : α) : ∃ r, a < r ∧ s ⊆ closedBall c r :=
+#print Bornology.IsBounded.subset_closedBall_lt /-
+theorem IsBounded.subset_closedBall_lt (h : IsBounded s) (a : ℝ) (c : α) :
+    ∃ r, a < r ∧ s ⊆ closedBall c r :=
   by
   rcases h.subset_ball c with ⟨r, hr⟩
   refine' ⟨max r (a + 1), lt_of_lt_of_le (by linarith) (le_max_right _ _), _⟩
   exact subset.trans hr (closed_ball_subset_closed_ball (le_max_left _ _))
-#align metric.bounded.subset_ball_lt Metric.Bounded.subset_ball_lt
+#align metric.bounded.subset_ball_lt Bornology.IsBounded.subset_closedBall_lt
 -/
 
-#print Metric.bounded_closure_of_bounded /-
-theorem bounded_closure_of_bounded (h : Bounded s) : Bounded (closure s) :=
+#print Metric.isBounded_closure_of_isBounded /-
+theorem isBounded_closure_of_isBounded (h : IsBounded s) : IsBounded (closure s) :=
   let ⟨C, h⟩ := h
   ⟨C, fun a ha b hb =>
     (ClosedIicTopology.isClosed_le' C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
-#align metric.bounded_closure_of_bounded Metric.bounded_closure_of_bounded
+#align metric.bounded_closure_of_bounded Metric.isBounded_closure_of_isBounded
 -/
 
 alias bounded.closure := bounded_closure_of_bounded
-#align metric.bounded.closure Metric.Bounded.closure
+#align metric.bounded.closure Bornology.IsBounded.closure
 
-#print Metric.bounded_closure_iff /-
+#print Metric.isBounded_closure_iff /-
 @[simp]
-theorem bounded_closure_iff : Bounded (closure s) ↔ Bounded s :=
+theorem isBounded_closure_iff : IsBounded (closure s) ↔ IsBounded s :=
   ⟨fun h => h.mono subset_closure, fun h => h.closure⟩
-#align metric.bounded_closure_iff Metric.bounded_closure_iff
+#align metric.bounded_closure_iff Metric.isBounded_closure_iff
 -/
 
-#print Metric.Bounded.union /-
+/- warning: metric.bounded.union clashes with bornology.is_bounded.union -> Bornology.IsBounded.union
+Case conversion may be inaccurate. Consider using '#align metric.bounded.union Bornology.IsBounded.unionₓ'. -/
+#print Bornology.IsBounded.union /-
 /-- The union of two bounded sets is bounded. -/
-theorem Bounded.union (hs : Bounded s) (ht : Bounded t) : Bounded (s ∪ t) :=
+theorem IsBounded.union (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ∪ t) :=
   by
   refine' bounded_iff_mem_bounded.2 fun x _ => _
   rw [bounded_iff_subset_ball x] at hs ht ⊢
@@ -3287,30 +3294,36 @@ theorem Bounded.union (hs : Bounded s) (ht : Bounded t) : Bounded (s ∪ t) :=
     ⟨max Cs Ct,
       union_subset (subset.trans hCs <| closed_ball_subset_closed_ball <| le_max_left _ _)
         (subset.trans hCt <| closed_ball_subset_closed_ball <| le_max_right _ _)⟩
-#align metric.bounded.union Metric.Bounded.union
+#align metric.bounded.union Bornology.IsBounded.union
 -/
 
-#print Metric.bounded_union /-
+/- warning: metric.bounded_union clashes with bornology.is_bounded_union -> Bornology.isBounded_union
+Case conversion may be inaccurate. Consider using '#align metric.bounded_union Bornology.isBounded_unionₓ'. -/
+#print Bornology.isBounded_union /-
 /-- The union of two sets is bounded iff each of the sets is bounded. -/
 @[simp]
-theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
+theorem isBounded_union : IsBounded (s ∪ t) ↔ IsBounded s ∧ IsBounded t :=
   ⟨fun h => ⟨h.mono (by simp), h.mono (by simp)⟩, fun h => h.1.union h.2⟩
-#align metric.bounded_union Metric.bounded_union
+#align metric.bounded_union Bornology.isBounded_union
 -/
 
-#print Metric.bounded_biUnion /-
+/- warning: metric.bounded_bUnion clashes with bornology.is_bounded_bUnion -> Bornology.isBounded_biUnion
+Case conversion may be inaccurate. Consider using '#align metric.bounded_bUnion Bornology.isBounded_biUnionₓ'. -/
+#print Bornology.isBounded_biUnion /-
 /-- A finite union of bounded sets is bounded -/
-theorem bounded_biUnion {I : Set β} {s : β → Set α} (H : I.Finite) :
-    Bounded (⋃ i ∈ I, s i) ↔ ∀ i ∈ I, Bounded (s i) :=
+theorem isBounded_biUnion {I : Set β} {s : β → Set α} (H : I.Finite) :
+    IsBounded (⋃ i ∈ I, s i) ↔ ∀ i ∈ I, IsBounded (s i) :=
   Finite.induction_on H (by simp) fun x I _ _ IH => by simp [or_imp, forall_and, IH]
-#align metric.bounded_bUnion Metric.bounded_biUnion
+#align metric.bounded_bUnion Bornology.isBounded_biUnion
 -/
 
+/- warning: metric.bounded.prod clashes with bornology.is_bounded.prod -> Bornology.IsBounded.prod
+Case conversion may be inaccurate. Consider using '#align metric.bounded.prod Bornology.IsBounded.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Metric.Bounded.prod /-
-protected theorem Bounded.prod [PseudoMetricSpace β] {s : Set α} {t : Set β} (hs : Bounded s)
-    (ht : Bounded t) : Bounded (s ×ˢ t) :=
+#print Bornology.IsBounded.prod /-
+protected theorem IsBounded.prod [PseudoMetricSpace β] {s : Set α} {t : Set β} (hs : IsBounded s)
+    (ht : IsBounded t) : IsBounded (s ×ˢ t) :=
   by
   refine' bounded_iff_mem_bounded.mpr fun x hx => _
   rcases hs.subset_ball x.1 with ⟨rs, hrs⟩
@@ -3321,56 +3334,62 @@ protected theorem Bounded.prod [PseudoMetricSpace β] {s : Set α} {t : Set β} 
   exact
     prod_mono (hrs.trans <| closed_ball_subset_closed_ball <| le_max_left _ _)
       (hrt.trans <| closed_ball_subset_closed_ball <| le_max_right _ _)
-#align metric.bounded.prod Metric.Bounded.prod
+#align metric.bounded.prod Bornology.IsBounded.prod
 -/
 
-#print TotallyBounded.bounded /-
+#print TotallyBounded.isBounded /-
 /-- A totally bounded set is bounded -/
-theorem TotallyBounded.bounded {s : Set α} (h : TotallyBounded s) : Bounded s :=
+theorem TotallyBounded.isBounded {s : Set α} (h : TotallyBounded s) : IsBounded s :=
   let-- We cover the totally bounded set by finitely many balls of radius 1,
     -- and then argue that a finite union of bounded sets is bounded
     ⟨t, fint, subs⟩ :=
     (totallyBounded_iff.mp h) 1 zero_lt_one
-  Bounded.mono subs <| (bounded_biUnion fint).2 fun i hi => bounded_ball
-#align totally_bounded.bounded TotallyBounded.bounded
+  IsBounded.subset subs <| (isBounded_biUnion fint).2 fun i hi => isBounded_ball
+#align totally_bounded.bounded TotallyBounded.isBounded
 -/
 
-#print IsCompact.bounded /-
+#print IsCompact.isBounded /-
 /-- A compact set is bounded -/
-theorem IsCompact.bounded {s : Set α} (h : IsCompact s) : Bounded s :=
+theorem IsCompact.isBounded {s : Set α} (h : IsCompact s) : IsBounded s :=
   -- A compact set is totally bounded, thus bounded
       h.TotallyBounded.Bounded
-#align is_compact.bounded IsCompact.bounded
+#align is_compact.bounded IsCompact.isBounded
 -/
 
-#print Metric.bounded_of_finite /-
+/- warning: metric.bounded_of_finite clashes with set.finite.is_bounded -> Set.Finite.isBounded
+Case conversion may be inaccurate. Consider using '#align metric.bounded_of_finite Set.Finite.isBoundedₓ'. -/
+#print Set.Finite.isBounded /-
 /-- A finite set is bounded -/
-theorem bounded_of_finite {s : Set α} (h : s.Finite) : Bounded s :=
+theorem Set.Finite.isBounded {s : Set α} (h : s.Finite) : IsBounded s :=
   h.IsCompact.Bounded
-#align metric.bounded_of_finite Metric.bounded_of_finite
+#align metric.bounded_of_finite Set.Finite.isBounded
 -/
 
+/- warning: set.finite.bounded clashes with set.finite.is_bounded -> Set.Finite.isBounded
+Case conversion may be inaccurate. Consider using '#align set.finite.bounded Set.Finite.isBoundedₓ'. -/
 alias _root_.set.finite.bounded := bounded_of_finite
-#align set.finite.bounded Set.Finite.bounded
+#align set.finite.bounded Set.Finite.isBounded
 
-#print Metric.bounded_singleton /-
+/- warning: metric.bounded_singleton clashes with bornology.is_bounded_singleton -> Bornology.isBounded_singleton
+Case conversion may be inaccurate. Consider using '#align metric.bounded_singleton Bornology.isBounded_singletonₓ'. -/
+#print Bornology.isBounded_singleton /-
 /-- A singleton is bounded -/
-theorem bounded_singleton {x : α} : Bounded ({x} : Set α) :=
-  bounded_of_finite <| finite_singleton _
-#align metric.bounded_singleton Metric.bounded_singleton
+theorem isBounded_singleton {x : α} : IsBounded ({x} : Set α) :=
+  Set.Finite.isBounded <| finite_singleton _
+#align metric.bounded_singleton Bornology.isBounded_singleton
 -/
 
-#print Metric.bounded_range_iff /-
+#print Metric.isBounded_range_iff /-
 /-- Characterization of the boundedness of the range of a function -/
-theorem bounded_range_iff {f : β → α} : Bounded (range f) ↔ ∃ C, ∀ x y, dist (f x) (f y) ≤ C :=
+theorem isBounded_range_iff {f : β → α} : IsBounded (range f) ↔ ∃ C, ∀ x y, dist (f x) (f y) ≤ C :=
   exists_congr fun C =>
     ⟨fun H x y => H _ ⟨x, rfl⟩ _ ⟨y, rfl⟩, by rintro H _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ <;> exact H x y⟩
-#align metric.bounded_range_iff Metric.bounded_range_iff
+#align metric.bounded_range_iff Metric.isBounded_range_iff
 -/
 
-#print Metric.bounded_range_of_tendsto_cofinite_uniformity /-
-theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
-    (hf : Tendsto (Prod.map f f) (cofinite ×ᶠ cofinite) (𝓤 α)) : Bounded (range f) :=
+#print Metric.isBounded_range_of_tendsto_cofinite_uniformity /-
+theorem isBounded_range_of_tendsto_cofinite_uniformity {f : β → α}
+    (hf : Tendsto (Prod.map f f) (cofinite ×ᶠ cofinite) (𝓤 α)) : IsBounded (range f) :=
   by
   rcases(has_basis_cofinite.prod_self.tendsto_iff uniformity_basis_dist).1 hf 1 zero_lt_one with
     ⟨s, hsf, hs1⟩
@@ -3378,50 +3397,50 @@ theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
   use(hsf.image f).Bounded, 1
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
   exact le_of_lt (hs1 (x, y) ⟨hx, hy⟩)
-#align metric.bounded_range_of_tendsto_cofinite_uniformity Metric.bounded_range_of_tendsto_cofinite_uniformity
+#align metric.bounded_range_of_tendsto_cofinite_uniformity Metric.isBounded_range_of_tendsto_cofinite_uniformity
 -/
 
-#print Metric.bounded_range_of_cauchy_map_cofinite /-
-theorem bounded_range_of_cauchy_map_cofinite {f : β → α} (hf : Cauchy (map f cofinite)) :
-    Bounded (range f) :=
-  bounded_range_of_tendsto_cofinite_uniformity <| (cauchy_map_iff.1 hf).2
-#align metric.bounded_range_of_cauchy_map_cofinite Metric.bounded_range_of_cauchy_map_cofinite
+#print Metric.isBounded_range_of_cauchy_map_cofinite /-
+theorem isBounded_range_of_cauchy_map_cofinite {f : β → α} (hf : Cauchy (map f cofinite)) :
+    IsBounded (range f) :=
+  isBounded_range_of_tendsto_cofinite_uniformity <| (cauchy_map_iff.1 hf).2
+#align metric.bounded_range_of_cauchy_map_cofinite Metric.isBounded_range_of_cauchy_map_cofinite
 -/
 
-#print CauchySeq.bounded_range /-
-theorem CauchySeq.bounded_range {f : ℕ → α} (hf : CauchySeq f) : Bounded (range f) :=
-  bounded_range_of_cauchy_map_cofinite <| by rwa [Nat.cofinite_eq_atTop]
-#align cauchy_seq.bounded_range CauchySeq.bounded_range
+#print CauchySeq.isBounded_range /-
+theorem CauchySeq.isBounded_range {f : ℕ → α} (hf : CauchySeq f) : IsBounded (range f) :=
+  isBounded_range_of_cauchy_map_cofinite <| by rwa [Nat.cofinite_eq_atTop]
+#align cauchy_seq.bounded_range CauchySeq.isBounded_range
 -/
 
-#print Metric.bounded_range_of_tendsto_cofinite /-
-theorem bounded_range_of_tendsto_cofinite {f : β → α} {a : α} (hf : Tendsto f cofinite (𝓝 a)) :
-    Bounded (range f) :=
-  bounded_range_of_tendsto_cofinite_uniformity <|
+#print Metric.isBounded_range_of_tendsto_cofinite /-
+theorem isBounded_range_of_tendsto_cofinite {f : β → α} {a : α} (hf : Tendsto f cofinite (𝓝 a)) :
+    IsBounded (range f) :=
+  isBounded_range_of_tendsto_cofinite_uniformity <|
     (hf.Prod_map hf).mono_right <| nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
-#align metric.bounded_range_of_tendsto_cofinite Metric.bounded_range_of_tendsto_cofinite
+#align metric.bounded_range_of_tendsto_cofinite Metric.isBounded_range_of_tendsto_cofinite
 -/
 
-#print Metric.bounded_of_compactSpace /-
+#print Metric.isBounded_of_compactSpace /-
 /-- In a compact space, all sets are bounded -/
-theorem bounded_of_compactSpace [CompactSpace α] : Bounded s :=
+theorem isBounded_of_compactSpace [CompactSpace α] : IsBounded s :=
   isCompact_univ.Bounded.mono (subset_univ _)
-#align metric.bounded_of_compact_space Metric.bounded_of_compactSpace
+#align metric.bounded_of_compact_space Metric.isBounded_of_compactSpace
 -/
 
-#print Metric.bounded_range_of_tendsto /-
-theorem bounded_range_of_tendsto (u : ℕ → α) {x : α} (hu : Tendsto u atTop (𝓝 x)) :
-    Bounded (range u) :=
-  hu.CauchySeq.bounded_range
-#align metric.bounded_range_of_tendsto Metric.bounded_range_of_tendsto
+#print Metric.isBounded_range_of_tendsto /-
+theorem isBounded_range_of_tendsto (u : ℕ → α) {x : α} (hu : Tendsto u atTop (𝓝 x)) :
+    IsBounded (range u) :=
+  hu.CauchySeq.isBounded_range
+#align metric.bounded_range_of_tendsto Metric.isBounded_range_of_tendsto
 -/
 
-#print Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAt /-
+#print Metric.exists_isOpen_isBounded_image_inter_of_isCompact_of_forall_continuousWithinAt /-
 /-- If a function is continuous within a set `s` at every point of a compact set `k`, then it is
 bounded on some open neighborhood of `k` in `s`. -/
-theorem exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAt
+theorem exists_isOpen_isBounded_image_inter_of_isCompact_of_forall_continuousWithinAt
     [TopologicalSpace β] {k s : Set β} {f : β → α} (hk : IsCompact k)
-    (hf : ∀ x ∈ k, ContinuousWithinAt f s x) : ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' (t ∩ s)) :=
+    (hf : ∀ x ∈ k, ContinuousWithinAt f s x) : ∃ t, k ⊆ t ∧ IsOpen t ∧ IsBounded (f '' (t ∩ s)) :=
   by
   apply hk.induction_on
   · exact ⟨∅, subset.refl _, isOpen_empty, by simp only [image_empty, bounded_empty, empty_inter]⟩
@@ -3441,114 +3460,115 @@ theorem exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithi
       exact u_open.mem_nhds xu
     · apply bounded.mono (image_subset _ uf)
       exact bounded_ball.mono (image_preimage_subset _ _)
-#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAt
+#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at Metric.exists_isOpen_isBounded_image_inter_of_isCompact_of_forall_continuousWithinAt
 -/
 
-#print Metric.exists_isOpen_bounded_image_of_isCompact_of_forall_continuousAt /-
+#print Metric.exists_isOpen_isBounded_image_of_isCompact_of_forall_continuousAt /-
 /-- If a function is continuous at every point of a compact set `k`, then it is bounded on
 some open neighborhood of `k`. -/
-theorem exists_isOpen_bounded_image_of_isCompact_of_forall_continuousAt [TopologicalSpace β]
+theorem exists_isOpen_isBounded_image_of_isCompact_of_forall_continuousAt [TopologicalSpace β]
     {k : Set β} {f : β → α} (hk : IsCompact k) (hf : ∀ x ∈ k, ContinuousAt f x) :
-    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) :=
+    ∃ t, k ⊆ t ∧ IsOpen t ∧ IsBounded (f '' t) :=
   by
   simp_rw [← continuousWithinAt_univ] at hf 
   simpa only [inter_univ] using
     exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at hk hf
-#align metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_isOpen_bounded_image_of_isCompact_of_forall_continuousAt
+#align metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_isOpen_isBounded_image_of_isCompact_of_forall_continuousAt
 -/
 
-#print Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_continuousOn /-
+#print Metric.exists_isOpen_isBounded_image_inter_of_isCompact_of_continuousOn /-
 /-- If a function is continuous on a set `s` containing a compact set `k`, then it is bounded on
 some open neighborhood of `k` in `s`. -/
-theorem exists_isOpen_bounded_image_inter_of_isCompact_of_continuousOn [TopologicalSpace β]
+theorem exists_isOpen_isBounded_image_inter_of_isCompact_of_continuousOn [TopologicalSpace β]
     {k s : Set β} {f : β → α} (hk : IsCompact k) (hks : k ⊆ s) (hf : ContinuousOn f s) :
-    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' (t ∩ s)) :=
-  exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAt hk fun x hx =>
+    ∃ t, k ⊆ t ∧ IsOpen t ∧ IsBounded (f '' (t ∩ s)) :=
+  exists_isOpen_isBounded_image_inter_of_isCompact_of_forall_continuousWithinAt hk fun x hx =>
     hf x (hks hx)
-#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_continuousOn
+#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on Metric.exists_isOpen_isBounded_image_inter_of_isCompact_of_continuousOn
 -/
 
-#print Metric.exists_isOpen_bounded_image_of_isCompact_of_continuousOn /-
+#print Metric.exists_isOpen_isBounded_image_of_isCompact_of_continuousOn /-
 /-- If a function is continuous on a neighborhood of a compact set `k`, then it is bounded on
 some open neighborhood of `k`. -/
-theorem exists_isOpen_bounded_image_of_isCompact_of_continuousOn [TopologicalSpace β] {k s : Set β}
-    {f : β → α} (hk : IsCompact k) (hs : IsOpen s) (hks : k ⊆ s) (hf : ContinuousOn f s) :
-    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) :=
-  exists_isOpen_bounded_image_of_isCompact_of_forall_continuousAt hk fun x hx =>
+theorem exists_isOpen_isBounded_image_of_isCompact_of_continuousOn [TopologicalSpace β]
+    {k s : Set β} {f : β → α} (hk : IsCompact k) (hs : IsOpen s) (hks : k ⊆ s)
+    (hf : ContinuousOn f s) : ∃ t, k ⊆ t ∧ IsOpen t ∧ IsBounded (f '' t) :=
+  exists_isOpen_isBounded_image_of_isCompact_of_forall_continuousAt hk fun x hx =>
     hf.ContinuousAt (hs.mem_nhds (hks hx))
-#align metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on Metric.exists_isOpen_bounded_image_of_isCompact_of_continuousOn
+#align metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on Metric.exists_isOpen_isBounded_image_of_isCompact_of_continuousOn
 -/
 
-#print Metric.isCompact_of_isClosed_bounded /-
+#print Metric.isCompact_of_isClosed_isBounded /-
 /-- The **Heine–Borel theorem**: In a proper space, a closed bounded set is compact. -/
-theorem isCompact_of_isClosed_bounded [ProperSpace α] (hc : IsClosed s) (hb : Bounded s) :
+theorem isCompact_of_isClosed_isBounded [ProperSpace α] (hc : IsClosed s) (hb : IsBounded s) :
     IsCompact s := by
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
   · exact isCompact_empty
   · rcases hb.subset_ball x with ⟨r, hr⟩
     exact isCompact_of_isClosed_subset (is_compact_closed_ball x r) hc hr
-#align metric.is_compact_of_is_closed_bounded Metric.isCompact_of_isClosed_bounded
+#align metric.is_compact_of_is_closed_bounded Metric.isCompact_of_isClosed_isBounded
 -/
 
-#print Metric.Bounded.isCompact_closure /-
+#print Bornology.IsBounded.isCompact_closure /-
 /-- The **Heine–Borel theorem**: In a proper space, the closure of a bounded set is compact. -/
-theorem Bounded.isCompact_closure [ProperSpace α] (h : Bounded s) : IsCompact (closure s) :=
-  isCompact_of_isClosed_bounded isClosed_closure h.closure
-#align metric.bounded.is_compact_closure Metric.Bounded.isCompact_closure
+theorem IsBounded.isCompact_closure [ProperSpace α] (h : IsBounded s) : IsCompact (closure s) :=
+  isCompact_of_isClosed_isBounded isClosed_closure h.closure
+#align metric.bounded.is_compact_closure Bornology.IsBounded.isCompact_closure
 -/
 
 #print Metric.isCompact_iff_isClosed_bounded /-
 /-- The **Heine–Borel theorem**:
 In a proper Hausdorff space, a set is compact if and only if it is closed and bounded. -/
 theorem isCompact_iff_isClosed_bounded [T2Space α] [ProperSpace α] :
-    IsCompact s ↔ IsClosed s ∧ Bounded s :=
-  ⟨fun h => ⟨h.IsClosed, h.Bounded⟩, fun h => isCompact_of_isClosed_bounded h.1 h.2⟩
+    IsCompact s ↔ IsClosed s ∧ IsBounded s :=
+  ⟨fun h => ⟨h.IsClosed, h.Bounded⟩, fun h => isCompact_of_isClosed_isBounded h.1 h.2⟩
 #align metric.is_compact_iff_is_closed_bounded Metric.isCompact_iff_isClosed_bounded
 -/
 
-#print Metric.compactSpace_iff_bounded_univ /-
-theorem compactSpace_iff_bounded_univ [ProperSpace α] : CompactSpace α ↔ Bounded (univ : Set α) :=
-  ⟨@bounded_of_compactSpace α _ _, fun hb => ⟨isCompact_of_isClosed_bounded isClosed_univ hb⟩⟩
-#align metric.compact_space_iff_bounded_univ Metric.compactSpace_iff_bounded_univ
+#print Metric.compactSpace_iff_isBounded_univ /-
+theorem compactSpace_iff_isBounded_univ [ProperSpace α] :
+    CompactSpace α ↔ IsBounded (univ : Set α) :=
+  ⟨@isBounded_of_compactSpace α _ _, fun hb => ⟨isCompact_of_isClosed_isBounded isClosed_univ hb⟩⟩
+#align metric.compact_space_iff_bounded_univ Metric.compactSpace_iff_isBounded_univ
 -/
 
 section ConditionallyCompleteLinearOrder
 
 variable [Preorder α] [CompactIccSpace α]
 
-#print Metric.bounded_Icc /-
-theorem bounded_Icc (a b : α) : Bounded (Icc a b) :=
+#print Metric.isBounded_Icc /-
+theorem isBounded_Icc (a b : α) : IsBounded (Icc a b) :=
   (totallyBounded_Icc a b).Bounded
-#align metric.bounded_Icc Metric.bounded_Icc
+#align metric.bounded_Icc Metric.isBounded_Icc
 -/
 
-#print Metric.bounded_Ico /-
-theorem bounded_Ico (a b : α) : Bounded (Ico a b) :=
+#print Metric.isBounded_Ico /-
+theorem isBounded_Ico (a b : α) : IsBounded (Ico a b) :=
   (totallyBounded_Ico a b).Bounded
-#align metric.bounded_Ico Metric.bounded_Ico
+#align metric.bounded_Ico Metric.isBounded_Ico
 -/
 
-#print Metric.bounded_Ioc /-
-theorem bounded_Ioc (a b : α) : Bounded (Ioc a b) :=
+#print Metric.isBounded_Ioc /-
+theorem isBounded_Ioc (a b : α) : IsBounded (Ioc a b) :=
   (totallyBounded_Ioc a b).Bounded
-#align metric.bounded_Ioc Metric.bounded_Ioc
+#align metric.bounded_Ioc Metric.isBounded_Ioc
 -/
 
-#print Metric.bounded_Ioo /-
-theorem bounded_Ioo (a b : α) : Bounded (Ioo a b) :=
+#print Metric.isBounded_Ioo /-
+theorem isBounded_Ioo (a b : α) : IsBounded (Ioo a b) :=
   (totallyBounded_Ioo a b).Bounded
-#align metric.bounded_Ioo Metric.bounded_Ioo
+#align metric.bounded_Ioo Metric.isBounded_Ioo
 -/
 
-#print Metric.bounded_of_bddAbove_of_bddBelow /-
+#print Metric.isBounded_of_bddAbove_of_bddBelow /-
 /-- In a pseudo metric space with a conditionally complete linear order such that the order and the
     metric structure give the same topology, any order-bounded set is metric-bounded. -/
-theorem bounded_of_bddAbove_of_bddBelow {s : Set α} (h₁ : BddAbove s) (h₂ : BddBelow s) :
-    Bounded s :=
+theorem isBounded_of_bddAbove_of_bddBelow {s : Set α} (h₁ : BddAbove s) (h₂ : BddBelow s) :
+    IsBounded s :=
   let ⟨u, hu⟩ := h₁
   let ⟨l, hl⟩ := h₂
-  Bounded.mono (fun x hx => mem_Icc.mpr ⟨hl hx, hu hx⟩) (bounded_Icc l u)
-#align metric.bounded_of_bdd_above_of_bdd_below Metric.bounded_of_bddAbove_of_bddBelow
+  IsBounded.subset (fun x hx => mem_Icc.mpr ⟨hl hx, hu hx⟩) (isBounded_Icc l u)
+#align metric.bounded_of_bdd_above_of_bdd_below Metric.isBounded_of_bddAbove_of_bddBelow
 -/
 
 end ConditionallyCompleteLinearOrder
@@ -3653,19 +3673,19 @@ theorem dist_le_diam_of_mem' (h : EMetric.diam s ≠ ⊤) (hx : x ∈ s) (hy : y
 #align metric.dist_le_diam_of_mem' Metric.dist_le_diam_of_mem'
 -/
 
-#print Metric.bounded_iff_ediam_ne_top /-
+#print Metric.isBounded_iff_ediam_ne_top /-
 /-- Characterize the boundedness of a set in terms of the finiteness of its emetric.diameter. -/
-theorem bounded_iff_ediam_ne_top : Bounded s ↔ EMetric.diam s ≠ ⊤ :=
+theorem isBounded_iff_ediam_ne_top : IsBounded s ↔ EMetric.diam s ≠ ⊤ :=
   Iff.intro
     (fun ⟨C, hC⟩ => ne_top_of_le_ne_top ENNReal.ofReal_ne_top <| ediam_le_of_forall_dist_le hC)
     fun h => ⟨diam s, fun x hx y hy => dist_le_diam_of_mem' h hx hy⟩
-#align metric.bounded_iff_ediam_ne_top Metric.bounded_iff_ediam_ne_top
+#align metric.bounded_iff_ediam_ne_top Metric.isBounded_iff_ediam_ne_top
 -/
 
-#print Metric.Bounded.ediam_ne_top /-
-theorem Bounded.ediam_ne_top (h : Bounded s) : EMetric.diam s ≠ ⊤ :=
-  bounded_iff_ediam_ne_top.1 h
-#align metric.bounded.ediam_ne_top Metric.Bounded.ediam_ne_top
+#print Bornology.IsBounded.ediam_ne_top /-
+theorem IsBounded.ediam_ne_top (h : IsBounded s) : EMetric.diam s ≠ ⊤ :=
+  isBounded_iff_ediam_ne_top.1 h
+#align metric.bounded.ediam_ne_top Bornology.IsBounded.ediam_ne_top
 -/
 
 #print Metric.ediam_univ_eq_top_iff_noncompact /-
@@ -3693,13 +3713,13 @@ theorem diam_univ_of_noncompact [ProperSpace α] [NoncompactSpace α] : diam (un
 
 #print Metric.dist_le_diam_of_mem /-
 /-- The distance between two points in a set is controlled by the diameter of the set. -/
-theorem dist_le_diam_of_mem (h : Bounded s) (hx : x ∈ s) (hy : y ∈ s) : dist x y ≤ diam s :=
+theorem dist_le_diam_of_mem (h : IsBounded s) (hx : x ∈ s) (hy : y ∈ s) : dist x y ≤ diam s :=
   dist_le_diam_of_mem' h.ediam_ne_top hx hy
 #align metric.dist_le_diam_of_mem Metric.dist_le_diam_of_mem
 -/
 
 #print Metric.ediam_of_unbounded /-
-theorem ediam_of_unbounded (h : ¬Bounded s) : EMetric.diam s = ∞ := by
+theorem ediam_of_unbounded (h : ¬IsBounded s) : EMetric.diam s = ∞ := by
   rwa [bounded_iff_ediam_ne_top, Classical.not_not] at h 
 #align metric.ediam_of_unbounded Metric.ediam_of_unbounded
 -/
@@ -3707,14 +3727,14 @@ theorem ediam_of_unbounded (h : ¬Bounded s) : EMetric.diam s = ∞ := by
 #print Metric.diam_eq_zero_of_unbounded /-
 /-- An unbounded set has zero diameter. If you would prefer to get the value ∞, use `emetric.diam`.
 This lemma makes it possible to avoid side conditions in some situations -/
-theorem diam_eq_zero_of_unbounded (h : ¬Bounded s) : diam s = 0 := by
+theorem diam_eq_zero_of_unbounded (h : ¬IsBounded s) : diam s = 0 := by
   rw [diam, ediam_of_unbounded h, ENNReal.top_toReal]
 #align metric.diam_eq_zero_of_unbounded Metric.diam_eq_zero_of_unbounded
 -/
 
 #print Metric.diam_mono /-
 /-- If `s ⊆ t`, then the diameter of `s` is bounded by that of `t`, provided `t` is bounded. -/
-theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ diam t :=
+theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : IsBounded t) : diam s ≤ diam t :=
   by
   unfold diam
   rw [ENNReal.toReal_le_toReal (bounded.mono h ht).ediam_ne_top ht.ediam_ne_top]
@@ -3782,7 +3802,7 @@ theorem diam_ball {r : ℝ} (h : 0 ≤ r) : diam (ball x r) ≤ 2 * r :=
 /-- If a family of complete sets with diameter tending to `0` is such that each finite intersection
 is nonempty, then the total intersection is also nonempty. -/
 theorem IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set α} (h0 : IsComplete (s 0))
-    (hs : ∀ n, IsClosed (s n)) (h's : ∀ n, Bounded (s n)) (h : ∀ N, (⋂ n ≤ N, s n).Nonempty)
+    (hs : ∀ n, IsClosed (s n)) (h's : ∀ n, IsBounded (s n)) (h : ∀ N, (⋂ n ≤ N, s n).Nonempty)
     (h' : Tendsto (fun n => diam (s n)) atTop (𝓝 0)) : (⋂ n, s n).Nonempty :=
   by
   let u N := (h N).some
@@ -3810,7 +3830,7 @@ theorem IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set α} (h0 
 /-- In a complete space, if a family of closed sets with diameter tending to `0` is such that each
 finite intersection is nonempty, then the total intersection is also nonempty. -/
 theorem nonempty_iInter_of_nonempty_biInter [CompleteSpace α] {s : ℕ → Set α}
-    (hs : ∀ n, IsClosed (s n)) (h's : ∀ n, Bounded (s n)) (h : ∀ N, (⋂ n ≤ N, s n).Nonempty)
+    (hs : ∀ n, IsClosed (s n)) (h's : ∀ n, IsBounded (s n)) (h : ∀ N, (⋂ n ≤ N, s n).Nonempty)
     (h' : Tendsto (fun n => diam (s n)) atTop (𝓝 0)) : (⋂ n, s n).Nonempty :=
   (hs 0).IsComplete.nonempty_iInter_of_nonempty_biInter hs h's h h'
 #align metric.nonempty_Inter_of_nonempty_bInter Metric.nonempty_iInter_of_nonempty_biInter

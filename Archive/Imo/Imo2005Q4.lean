@@ -89,7 +89,7 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
     exact (id (h 2 one_le_two) : IsCoprime (8 * 6 : ℤ) k).of_mul_left_right
   -- In particular `p` is coprime to `2` (we record the `nat.coprime` version since that's what's
   -- needed later).
-  have hp₂ : Nat.coprime 2 p := by
+  have hp₂ : Nat.Coprime 2 p := by
     rw [← Nat.isCoprime_iff_coprime]
     exact (id hp₆ : IsCoprime (3 * 2 : ℤ) p).of_mul_left_right
   -- Suppose for the sake of contradiction that `k ≠ 1`.  Then `p` is genuinely a prime factor of

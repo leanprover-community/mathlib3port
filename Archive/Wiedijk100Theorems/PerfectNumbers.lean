@@ -96,7 +96,7 @@ theorem eq_two_pow_hMul_prime_mersenne_of_even_perfect {n : ℕ} (ev : Even n)
   rw [Nat.perfect_iff_sum_divisors_eq_two_mul hpos, ← sigma_one_apply,
     is_multiplicative_sigma.map_mul_of_coprime (nat.prime_two.coprime_pow_of_not_dvd hm).symm,
     sigma_two_pow_eq_mersenne_succ, ← mul_assoc, ← pow_succ] at perf 
-  rcases Nat.coprime.dvd_of_dvd_mul_left
+  rcases Nat.Coprime.dvd_of_dvd_mul_left
       (nat.prime_two.coprime_pow_of_not_dvd (odd_mersenne_succ _)) (Dvd.intro _ perf) with
     ⟨j, rfl⟩
   rw [← mul_assoc, mul_comm _ (mersenne _), mul_assoc] at perf 

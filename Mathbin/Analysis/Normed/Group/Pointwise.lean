@@ -29,33 +29,33 @@ section SeminormedGroup
 
 variable [SeminormedGroup E] {ε δ : ℝ} {s t : Set E} {x y : E}
 
-#print Metric.Bounded.mul /-
+#print Bornology.IsBounded.mul /-
 @[to_additive]
-theorem Metric.Bounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) :=
+theorem Bornology.IsBounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) :=
   by
   obtain ⟨Rs, hRs⟩ : ∃ R, ∀ x ∈ s, ‖x‖ ≤ R := hs.exists_norm_le'
   obtain ⟨Rt, hRt⟩ : ∃ R, ∀ x ∈ t, ‖x‖ ≤ R := ht.exists_norm_le'
-  refine' bounded_iff_forall_norm_le'.2 ⟨Rs + Rt, _⟩
+  refine' isBounded_iff_forall_norm_le'.2 ⟨Rs + Rt, _⟩
   rintro z ⟨x, y, hx, hy, rfl⟩
   exact norm_mul_le_of_le (hRs x hx) (hRt y hy)
-#align metric.bounded.mul Metric.Bounded.mul
-#align metric.bounded.add Metric.Bounded.add
+#align metric.bounded.mul Bornology.IsBounded.mul
+#align metric.bounded.add Bornology.IsBounded.add
 -/
 
-#print Metric.Bounded.inv /-
+#print Bornology.IsBounded.inv /-
 @[to_additive]
-theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ := by
-  simp_rw [bounded_iff_forall_norm_le', ← image_inv, ball_image_iff, norm_inv']; exact id
-#align metric.bounded.inv Metric.Bounded.inv
-#align metric.bounded.neg Metric.Bounded.neg
+theorem Bornology.IsBounded.inv : Bounded s → Bounded s⁻¹ := by
+  simp_rw [isBounded_iff_forall_norm_le', ← image_inv, ball_image_iff, norm_inv']; exact id
+#align metric.bounded.inv Bornology.IsBounded.inv
+#align metric.bounded.neg Bornology.IsBounded.neg
 -/
 
-#print Metric.Bounded.div /-
+#print Bornology.IsBounded.div /-
 @[to_additive]
-theorem Metric.Bounded.div (hs : Bounded s) (ht : Bounded t) : Bounded (s / t) :=
+theorem Bornology.IsBounded.div (hs : Bounded s) (ht : Bounded t) : Bounded (s / t) :=
   (div_eq_mul_inv _ _).symm.subst <| hs.mul ht.inv
-#align metric.bounded.div Metric.Bounded.div
-#align metric.bounded.sub Metric.Bounded.sub
+#align metric.bounded.div Bornology.IsBounded.div
+#align metric.bounded.sub Bornology.IsBounded.sub
 -/
 
 end SeminormedGroup

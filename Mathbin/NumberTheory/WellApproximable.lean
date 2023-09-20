@@ -109,7 +109,7 @@ variable {A : Type _} [SeminormedCommGroup A] {a : A} {m n : ℕ} (δ : ℝ)
 
 #print approxOrderOf.image_pow_subset_of_coprime /-
 @[to_additive]
-theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.coprime m) :
+theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.Coprime m) :
     (fun y => y ^ m) '' approxOrderOf A n δ ⊆ approxOrderOf A n (m * δ) :=
   by
   rintro - ⟨a, ha, rfl⟩
@@ -140,7 +140,7 @@ theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
 
 #print approxOrderOf.smul_subset_of_coprime /-
 @[to_additive]
-theorem smul_subset_of_coprime (han : (orderOf a).coprime n) :
+theorem smul_subset_of_coprime (han : (orderOf a).Coprime n) :
     a • approxOrderOf A n δ ⊆ approxOrderOf A (orderOf a * n) δ :=
   by
   simp_rw [approxOrderOf, thickening_eq_bUnion_ball, ← image_smul, image_Union₂, image_smul,
@@ -320,7 +320,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
           (nat.cast_pos.mpr hp.pos) _ hδ
     refine' (sSupHom.setImage f).apply_blimsup_le.trans (mono_blimsup _)
     rintro n ⟨hn, h_div, h_ndiv⟩
-    have h_cop : (addOrderOf x).coprime (n / p) :=
+    have h_cop : (addOrderOf x).Coprime (n / p) :=
       by
       obtain ⟨q, rfl⟩ := h_div
       rw [hu₀, Subtype.coe_mk, hp.coprime_iff_not_dvd, q.mul_div_cancel_left hp.pos]

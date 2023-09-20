@@ -131,7 +131,7 @@ theorem boundedFormula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormu
       ∀ m : ∀ a : α, M a,
         φ.realize (fun i : β => (x i : (u : Filter α).product M))
           (Fin.snoc (coe ∘ v) (↑m : (u : Filter α).product M))
-    · exact forall_quotient_iff
+    · exact Quotient.forall
     have h' :
       ∀ (m : ∀ a, M a) (a : α),
         (fun i : Fin (k + 1) => (Fin.snoc v m : _ → ∀ a, M a) i a) =

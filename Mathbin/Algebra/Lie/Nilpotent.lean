@@ -262,7 +262,6 @@ theorem exists_forall_pow_toEndomorphism_eq_zero [hM : IsNilpotent R L M] :
 #align lie_module.nilpotent_endo_of_nilpotent_module LieModule.exists_forall_pow_toEndomorphism_eq_zero
 -/
 
-#print LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent /-
 /-- For a nilpotent Lie module, the weight space of the 0 weight is the whole module.
 
 This result will be used downstream to show that weight spaces are Lie submodules, at which time
@@ -278,7 +277,6 @@ theorem iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
   use k; rw [hk]
   exact LinearMap.zero_apply m
 #align lie_module.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent
--/
 
 #print LieModule.nilpotentOfNilpotentQuotient /-
 /-- If the quotient of a Lie module `M` by a Lie submodule on which the Lie algebra acts trivially
@@ -645,13 +643,11 @@ theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] :
 #align lie_algebra.nilpotent_ad_of_nilpotent_algebra LieAlgebra.nilpotent_ad_of_nilpotent_algebra
 -/
 
-#print LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent /-
 /-- See also `lie_algebra.zero_root_space_eq_top_of_nilpotent`. -/
 theorem LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L] :
     (⨅ x : L, (ad R L x).maximalGeneralizedEigenspace 0) = ⊤ :=
   LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent R L L
 #align lie_algebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent
--/
 
 -- TODO Generalise the below to Lie modules if / when we define morphisms, equivs of Lie modules
 -- covering a Lie algebra morphism of (possibly different) Lie algebras.

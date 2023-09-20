@@ -86,7 +86,6 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print UniqueMul.iff_existsUnique /-
 @[to_additive]
 theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
     UniqueMul A B a0 b0 ↔ ∃! (ab : _) (_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = a0 * b0 :=
@@ -96,13 +95,11 @@ theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
         rintro ⟨x1, x2⟩ _ _ J x y hx hy l
         rcases prod.mk.inj_iff.mp (J (a0, b0) (Finset.mk_mem_product aA bB) rfl) with ⟨rfl, rfl⟩
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
-#align unique_mul.iff_exists_unique UniqueMul.iff_existsUnique
-#align unique_add.iff_exists_unique UniqueAdd.iff_existsUnique
--/
+#align unique_mul.iff_exists_unique UniqueMul.iff_existsUniqueₓ
+#align unique_add.iff_exists_unique UniqueAdd.iff_existsUniqueₓ
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print UniqueMul.exists_iff_exists_existsUnique /-
 @[to_additive]
 theorem exists_iff_exists_existsUnique :
     (∃ a0 b0 : G, a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔
@@ -113,9 +110,8 @@ theorem exists_iff_exists_existsUnique :
     rcases h' with ⟨⟨a, b⟩, ⟨hab, rfl, -⟩, -⟩
     cases' finset.mem_product.mp hab with ha hb
     exact ⟨a, b, ha, hb, (iff_exists_unique ha hb).mpr h⟩⟩
-#align unique_mul.exists_iff_exists_exists_unique UniqueMul.exists_iff_exists_existsUnique
-#align unique_add.exists_iff_exists_exists_unique UniqueAdd.exists_iff_exists_existsUnique
--/
+#align unique_mul.exists_iff_exists_exists_unique UniqueMul.exists_iff_exists_existsUniqueₓ
+#align unique_add.exists_iff_exists_exists_unique UniqueAdd.exists_iff_exists_existsUniqueₓ
 
 #print UniqueMul.mulHom_preimage /-
 /-- `unique_mul` is preserved by inverse images under injective, multiplicative maps. -/

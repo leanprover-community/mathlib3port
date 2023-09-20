@@ -178,16 +178,16 @@ section SeminormedAddCommGroup
 
 variable [SeminormedAddCommGroup V] [NormedSpace ℝ V] (K L : ConvexBody V)
 
-#print ConvexBody.bounded /-
-protected theorem bounded : Metric.Bounded (K : Set V) :=
+#print ConvexBody.isBounded /-
+protected theorem isBounded : Bornology.IsBounded (K : Set V) :=
   K.IsCompact.Bounded
-#align convex_body.bounded ConvexBody.bounded
+#align convex_body.bounded ConvexBody.isBounded
 -/
 
 #print ConvexBody.hausdorffEdist_ne_top /-
 theorem hausdorffEdist_ne_top {K L : ConvexBody V} : EMetric.hausdorffEdist (K : Set V) L ≠ ⊤ := by
   apply_rules [Metric.hausdorffEdist_ne_top_of_nonempty_of_bounded, ConvexBody.nonempty,
-    ConvexBody.bounded]
+    ConvexBody.isBounded]
 #align convex_body.Hausdorff_edist_ne_top ConvexBody.hausdorffEdist_ne_top
 -/
 

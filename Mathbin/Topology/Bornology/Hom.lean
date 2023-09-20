@@ -56,11 +56,11 @@ end
 
 export LocallyBoundedMapClass (comap_cobounded_le)
 
-#print IsBounded.image /-
-theorem IsBounded.image [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] {f : F}
+#print Bornology.IsBounded.image /-
+theorem Bornology.IsBounded.image [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] {f : F}
     {s : Set α} (hs : IsBounded s) : IsBounded (f '' s) :=
   comap_cobounded_le_iff.1 (comap_cobounded_le f) hs
-#align is_bounded.image IsBounded.image
+#align is_bounded.image Bornology.IsBounded.image
 -/
 
 instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] :

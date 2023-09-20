@@ -236,7 +236,7 @@ theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcd a b = 1 ↔ IsCoprime a b :
 -/
 
 #print Int.coprime_iff_nat_coprime /-
-theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.coprime a.natAbs b.natAbs := by
+theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.natAbs b.natAbs := by
   rw [← gcd_eq_one_iff_coprime, Nat.coprime_iff_gcd_eq_one, gcd_eq_nat_abs]
 #align int.coprime_iff_nat_coprime Int.coprime_iff_nat_coprime
 -/

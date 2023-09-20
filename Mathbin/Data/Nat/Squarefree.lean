@@ -407,7 +407,7 @@ theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefre
 /-- `squarefree` is multiplicative. Note that the → direction does not require `hmn`
 and generalizes to arbitrary commutative monoids. See `squarefree.of_mul_left` and
 `squarefree.of_mul_right` above for auxiliary lemmas. -/
-theorem squarefree_mul {m n : ℕ} (hmn : m.coprime n) :
+theorem squarefree_mul {m n : ℕ} (hmn : m.Coprime n) :
     Squarefree (m * n) ↔ Squarefree m ∧ Squarefree n :=
   by
   simp only [squarefree_iff_prime_squarefree, ← sq, ← forall_and]

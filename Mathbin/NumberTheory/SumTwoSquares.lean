@@ -96,7 +96,7 @@ theorem ZMod.isSquare_neg_one_of_dvd {m n : ℕ} (hd : m ∣ n) (hs : IsSquare (
 #print ZMod.isSquare_neg_one_mul /-
 /-- If `-1` is a square modulo coprime natural numbers `m` and `n`, then `-1` is also
 a square modulo `m*n`. -/
-theorem ZMod.isSquare_neg_one_mul {m n : ℕ} (hc : m.coprime n) (hm : IsSquare (-1 : ZMod m))
+theorem ZMod.isSquare_neg_one_mul {m n : ℕ} (hc : m.Coprime n) (hm : IsSquare (-1 : ZMod m))
     (hn : IsSquare (-1 : ZMod n)) : IsSquare (-1 : ZMod (m * n)) :=
   by
   have : IsSquare (-1 : ZMod m × ZMod n) :=
@@ -207,7 +207,7 @@ theorem ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_isCoprime {n x y : ℤ} (h : n 
 /-- If the natural number `n` is a sum of two squares of coprime natural numbers, then
 `-1` is a square modulo `n`. -/
 theorem ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_coprime {n x y : ℕ} (h : n = x ^ 2 + y ^ 2)
-    (hc : x.coprime y) : IsSquare (-1 : ZMod n) :=
+    (hc : x.Coprime y) : IsSquare (-1 : ZMod n) :=
   by
   zify at *
   exact ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_isCoprime h hc.is_coprime

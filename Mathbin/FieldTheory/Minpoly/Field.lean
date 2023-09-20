@@ -155,7 +155,6 @@ theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p)
 #align minpoly.eq_of_irreducible minpoly.eq_of_irreducible
 -/
 
-#print minpoly.eq_of_algebraMap_eq /-
 /-- If `y` is the image of `x` in an extension, their minimal polynomials coincide.
 
 We take `h : y = algebra_map L T x` as an argument because `rw h` typically fails
@@ -170,7 +169,6 @@ theorem eq_of_algebraMap_eq {K S T : Type _} [Field K] [CommRing S] [CommRing T]
       ((aeval_algebraMap_eq_zero_iff_of_injective hST).mp
         (h ▸ root_q : Polynomial.aeval (algebraMap S T x) q = 0))
 #align minpoly.eq_of_algebra_map_eq minpoly.eq_of_algebraMap_eq
--/
 
 #print minpoly.add_algebraMap /-
 theorem add_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)

@@ -263,7 +263,7 @@ variable (𝕜)
 neighborhood `s` of the origin is a closed set. -/
 theorem isClosed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsClosed ((coeFn : WeakDual 𝕜 E → E → 𝕜) '' polar 𝕜 s) :=
-  isClosed_image_coe_of_bounded_of_closed (bounded_polar_of_mem_nhds_zero 𝕜 s_nhd)
+  isClosed_image_coe_of_bounded_of_closed (isBounded_polar_of_mem_nhds_zero 𝕜 s_nhd)
     (isClosed_polar _ _)
 #align weak_dual.is_closed_image_polar_of_mem_nhds WeakDual.isClosed_image_polar_of_mem_nhds
 -/
@@ -282,7 +282,7 @@ theorem NormedSpace.Dual.isClosed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s
 normed space `E` is a compact subset of `weak_dual 𝕜 E`. -/
 theorem isCompact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsCompact (polar 𝕜 s) :=
-  isCompact_of_bounded_of_closed (bounded_polar_of_mem_nhds_zero 𝕜 s_nhd) (isClosed_polar _ _)
+  isCompact_of_bounded_of_closed (isBounded_polar_of_mem_nhds_zero 𝕜 s_nhd) (isClosed_polar _ _)
 #align weak_dual.is_compact_polar WeakDual.isCompact_polar
 -/
 
@@ -291,7 +291,7 @@ theorem isCompact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : 
 the weak-star topology. -/
 theorem isCompact_closedBall [ProperSpace 𝕜] (x' : Dual 𝕜 E) (r : ℝ) :
     IsCompact (toNormedDual ⁻¹' closedBall x' r) :=
-  isCompact_of_bounded_of_closed bounded_closedBall (isClosed_closedBall x' r)
+  isCompact_of_bounded_of_closed isBounded_closedBall (isClosed_closedBall x' r)
 #align weak_dual.is_compact_closed_ball WeakDual.isCompact_closedBall
 -/
 

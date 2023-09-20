@@ -1801,7 +1801,7 @@ def ofMemClosureImageCoeBounded (f : E' → F) {s : Set (E' →SL[σ₁₂] F)} 
   refine' (linearMapOfMemClosureRangeCoe f _).mkContinuousOfExistsBound _
   · refine' closure_mono (image_subset_iff.2 fun g hg => _) hf; exact ⟨g, rfl⟩
   · -- We need to show that `f` has bounded norm. Choose `C` such that `‖g‖ ≤ C` for all `g ∈ s`.
-    rcases bounded_iff_forall_norm_le.1 hs with ⟨C, hC⟩
+    rcases isBounded_iff_forall_norm_le.1 hs with ⟨C, hC⟩
     -- Then `‖g x‖ ≤ C * ‖x‖` for all `g ∈ s`, `x : E`, hence `‖f x‖ ≤ C * ‖x‖` for all `x`.
     have : ∀ x, IsClosed {g : E' → F | ‖g x‖ ≤ C * ‖x‖} := fun x =>
       is_closed_Iic.preimage (@continuous_apply E' (fun _ => F) _ x).norm
@@ -1877,7 +1877,7 @@ pointwise convergence is precompact: its closure is a compact set. -/
 theorem isCompact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)}
     (hb : Bounded s) : IsCompact (closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
   have : ∀ x, IsCompact (closure (apply' F σ₁₂ x '' s)) := fun x =>
-    ((apply' F σ₁₂ x).lipschitz.bounded_image hb).isCompact_closure
+    ((apply' F σ₁₂ x).lipschitz.isBounded_image hb).isCompact_closure
   isCompact_closure_of_subset_compact (isCompact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
 #align continuous_linear_map.is_compact_closure_image_coe_of_bounded ContinuousLinearMap.isCompact_closure_image_coe_of_bounded
@@ -1946,7 +1946,7 @@ at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is closed in the topology 
 This is one of the key steps in the proof of the **Banach-Alaoglu** theorem. -/
 theorem isClosed_image_coe_closedBall (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
     IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
-  isClosed_image_coe_of_bounded_of_weak_closed bounded_closedBall (is_weak_closed_closedBall f₀ r)
+  isClosed_image_coe_of_bounded_of_weak_closed isBounded_closedBall (is_weak_closed_closedBall f₀ r)
 #align continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.isClosed_image_coe_closedBall
 -/
 
@@ -1957,7 +1957,8 @@ pointwise convergence. Other versions of this theorem can be found in
 `analysis.normed_space.weak_dual`. -/
 theorem isCompact_image_coe_closedBall [ProperSpace F] (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
     IsCompact ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
-  isCompact_image_coe_of_bounded_of_weak_closed bounded_closedBall <| is_weak_closed_closedBall f₀ r
+  isCompact_image_coe_of_bounded_of_weak_closed isBounded_closedBall <|
+    is_weak_closed_closedBall f₀ r
 #align continuous_linear_map.is_compact_image_coe_closed_ball ContinuousLinearMap.isCompact_image_coe_closedBall
 -/
 

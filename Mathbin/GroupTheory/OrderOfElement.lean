@@ -331,7 +331,7 @@ theorem orderOf_map_dvd {H : Type _} [Monoid H] (ψ : G →* H) (x : G) : orderO
 
 #print exists_pow_eq_self_of_coprime /-
 @[to_additive]
-theorem exists_pow_eq_self_of_coprime (h : n.coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x :=
+theorem exists_pow_eq_self_of_coprime (h : n.Coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x :=
   by
   by_cases h0 : orderOf x = 0
   · rw [h0, coprime_zero_right] at h 
@@ -433,7 +433,7 @@ theorem orderOf_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcd (
 
 #print orderOf_pow_coprime /-
 @[to_additive addOrderOf_nsmul_coprime]
-theorem orderOf_pow_coprime (h : (orderOf y).coprime m) : orderOf (y ^ m) = orderOf y :=
+theorem orderOf_pow_coprime (h : (orderOf y).Coprime m) : orderOf (y ^ m) = orderOf y :=
   by
   by_cases hg : orderOf y = 0
   · rw [m.coprime_zero_left.mp (hg ▸ h), pow_one]
@@ -482,7 +482,7 @@ theorem orderOf_mul_dvd_mul_orderOf : orderOf (x * y) ∣ orderOf x * orderOf y 
 
 #print Commute.orderOf_mul_eq_mul_orderOf_of_coprime /-
 @[to_additive add_order_of_add_eq_mul_add_order_of_of_coprime]
-theorem orderOf_mul_eq_mul_orderOf_of_coprime (hco : (orderOf x).coprime (orderOf y)) :
+theorem orderOf_mul_eq_mul_orderOf_of_coprime (hco : (orderOf x).Coprime (orderOf y)) :
     orderOf (x * y) = orderOf x * orderOf y :=
   by
   convert h.function_commute_mul_left.minimal_period_of_comp_eq_mul_of_coprime hco
@@ -1209,7 +1209,7 @@ theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
 #print powCoprime /-
 /-- If `gcd(|G|,n)=1` then the `n`th power map is a bijection -/
 @[to_additive "If `gcd(|G|,n)=1` then the smul by `n` is a bijection", simps]
-noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).coprime n) : G ≃ G
+noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).Coprime n) : G ≃ G
     where
   toFun g := g ^ n
   invFun g := g ^ (Nat.card G).gcdB n
@@ -1227,7 +1227,7 @@ noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).coprime n)
 
 #print powCoprime_one /-
 @[simp, to_additive]
-theorem powCoprime_one {G : Type _} [Group G] (h : (Nat.card G).coprime n) : powCoprime h 1 = 1 :=
+theorem powCoprime_one {G : Type _} [Group G] (h : (Nat.card G).Coprime n) : powCoprime h 1 = 1 :=
   one_pow n
 #align pow_coprime_one powCoprime_one
 #align nsmul_coprime_zero nsmulCoprime_zero
@@ -1235,7 +1235,7 @@ theorem powCoprime_one {G : Type _} [Group G] (h : (Nat.card G).coprime n) : pow
 
 #print powCoprime_inv /-
 @[simp, to_additive]
-theorem powCoprime_inv {G : Type _} [Group G] (h : (Nat.card G).coprime n) {g : G} :
+theorem powCoprime_inv {G : Type _} [Group G] (h : (Nat.card G).Coprime n) {g : G} :
     powCoprime h g⁻¹ = (powCoprime h g)⁻¹ :=
   inv_pow g n
 #align pow_coprime_inv powCoprime_inv
@@ -1245,7 +1245,7 @@ theorem powCoprime_inv {G : Type _} [Group G] (h : (Nat.card G).coprime n) {g : 
 #print inf_eq_bot_of_coprime /-
 @[to_additive add_inf_eq_bot_of_coprime]
 theorem inf_eq_bot_of_coprime {G : Type _} [Group G] {H K : Subgroup G} [Fintype H] [Fintype K]
-    (h : Nat.coprime (Fintype.card H) (Fintype.card K)) : H ⊓ K = ⊥ :=
+    (h : Nat.Coprime (Fintype.card H) (Fintype.card K)) : H ⊓ K = ⊥ :=
   by
   refine' (H ⊓ K).eq_bot_iff_forall.mpr fun x hx => _
   rw [← orderOf_eq_one_iff, ← Nat.dvd_one, ← h.gcd_eq_one, Nat.dvd_gcd_iff]

@@ -35,7 +35,7 @@ section
 open scoped Classical
 
 #print Nat.isCoprime_iff_coprime /-
-theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.coprime m n :=
+theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
       Int.coe_nat_dvd.1 <| by
@@ -50,9 +50,9 @@ theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.co
 #align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprime
 -/
 
-alias ⟨IsCoprime.nat_coprime, Nat.coprime.isCoprime⟩ := Nat.isCoprime_iff_coprime
+alias ⟨IsCoprime.nat_coprime, Nat.Coprime.isCoprime⟩ := Nat.isCoprime_iff_coprime
 #align is_coprime.nat_coprime IsCoprime.nat_coprime
-#align nat.coprime.is_coprime Nat.coprime.isCoprime
+#align nat.coprime.is_coprime Nat.Coprime.isCoprime
 
 #print IsCoprime.prod_left /-
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=

@@ -36,7 +36,7 @@ end imo1959_q1
 
 open imo1959_q1
 
-theorem imo1959_q1 : ∀ n : ℕ, coprime (21 * n + 4) (14 * n + 3) := fun n =>
+theorem imo1959_q1 : ∀ n : ℕ, Coprime (21 * n + 4) (14 * n + 3) := fun n =>
   coprime_of_dvd' fun k hp h1 h2 => calculation n k h1 h2
 #align imo1959_q1 imo1959_q1
 

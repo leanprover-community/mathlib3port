@@ -793,7 +793,7 @@ open multiplicity
 
 #print multiplicity_eq_zero_of_coprime /-
 theorem multiplicity_eq_zero_of_coprime {p a b : ℕ} (hp : p ≠ 1)
-    (hle : multiplicity p a ≤ multiplicity p b) (hab : Nat.coprime a b) : multiplicity p a = 0 :=
+    (hle : multiplicity p a ≤ multiplicity p b) (hab : Nat.Coprime a b) : multiplicity p a = 0 :=
   by
   rw [multiplicity_le_multiplicity_iff] at hle 
   rw [← nonpos_iff_eq_zero, ← not_lt, PartENat.pos_iff_one_le, ← Nat.cast_one, ←

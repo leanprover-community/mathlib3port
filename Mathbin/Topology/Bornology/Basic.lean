@@ -351,7 +351,7 @@ def Bornology.cofinite : Bornology α
 #print BoundedSpace /-
 /-- A space with a `bornology` is a **bounded space** if `set.univ : set α` is bounded. -/
 class BoundedSpace (α : Type _) [Bornology α] : Prop where
-  bounded_univ : Bornology.IsBounded (univ : Set α)
+  isBounded_univ : Bornology.IsBounded (univ : Set α)
 #align bounded_space BoundedSpace
 -/
 
@@ -375,7 +375,7 @@ variable [BoundedSpace α]
 
 #print Bornology.IsBounded.all /-
 theorem IsBounded.all (s : Set α) : IsBounded s :=
-  BoundedSpace.bounded_univ.Subset s.subset_univ
+  BoundedSpace.isBounded_univ.Subset s.subset_univ
 #align bornology.is_bounded.all Bornology.IsBounded.all
 -/
 

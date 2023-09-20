@@ -2,6 +2,22 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
+   {"url": "https://github.com/leanprover-community/lean3port.git",
+    "subDir?": null,
+    "rev": "6c31acf1f94f0074488f8e56c55a6b00df0ddfdd",
+    "opts": {},
+    "name": "lean3port",
+    "inputRev?": "6c31acf1f94f0074488f8e56c55a6b00df0ddfdd",
+    "inherited": false}},
+  {"git":
+   {"url": "https://github.com/leanprover-community/mathlib4.git",
+    "subDir?": null,
+    "rev": "8da7f369150d3ab5cb843226b2d91d84c55c0e7e",
+    "opts": {},
+    "name": "mathlib",
+    "inputRev?": "8da7f369150d3ab5cb843226b2d91d84c55c0e7e",
+    "inherited": true}},
+  {"git":
    {"url": "https://github.com/EdAyers/ProofWidgets4",
     "subDir?": null,
     "rev": "44e6673a20fc0449d003983d1e1f472df40f7107",
@@ -10,28 +26,12 @@
     "inputRev?": "v0.0.15",
     "inherited": true}},
   {"git":
-   {"url": "https://github.com/leanprover-community/lean3port.git",
-    "subDir?": null,
-    "rev": "b4dd938eee5eeb7ab8278fc5a6da02939d4e0bf5",
-    "opts": {},
-    "name": "lean3port",
-    "inputRev?": "b4dd938eee5eeb7ab8278fc5a6da02939d4e0bf5",
-    "inherited": false}},
-  {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",
     "subDir?": null,
     "rev": "21dac2e9cc7e3cf7da5800814787b833e680b2fd",
     "opts": {},
     "name": "Cli",
     "inputRev?": "nightly",
-    "inherited": true}},
-  {"git":
-   {"url": "https://github.com/leanprover-community/mathlib4.git",
-    "subDir?": null,
-    "rev": "193761250a9869327056b499a7f49d676ed5e3a9",
-    "opts": {},
-    "name": "mathlib",
-    "inputRev?": "193761250a9869327056b499a7f49d676ed5e3a9",
     "inherited": true}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
@@ -52,7 +52,7 @@
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,
-    "rev": "ba5e5e3af519b4fc5221ad0fa4b2c87276f1d323",
+    "rev": "67855403d60daf181775fa1ec63b04e70bcc3921",
     "opts": {},
     "name": "std",
     "inputRev?": "main",

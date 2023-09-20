@@ -363,7 +363,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
         have ht' : ∀ {a₁ a₂}, a₁ ≈ a₂ → (a₁, a₂) ∈ t := fun a₁ a₂ h => sInter_subset_of_mem ht h
         u.uniformity.sets_of_superset ht fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoid.symm h₂) h₁,
         fun h => u.uniformity.sets_of_superset h <| by simp (config := { contextual := true })⟩
-    simp only [isOpen_coinduced, isOpen_uniformity, uniformity, forall_quotient_iff, mem_preimage,
+    simp only [isOpen_coinduced, isOpen_uniformity, uniformity, Quotient.forall, mem_preimage,
       mem_map, preimage_set_of_eq, Quotient.eq']
     exact ⟨fun h a ha => (this a ha).mp <| h a ha, fun h a ha => (this a ha).mpr <| h a ha⟩
 #align uniform_space.separation_setoid.uniform_space UniformSpace.separationSetoid.uniformSpace

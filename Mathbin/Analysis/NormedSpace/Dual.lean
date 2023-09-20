@@ -313,10 +313,11 @@ theorem polar_closedBall {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] 
 #align normed_space.polar_closed_ball NormedSpace.polar_closedBall
 -/
 
-#print NormedSpace.bounded_polar_of_mem_nhds_zero /-
+#print NormedSpace.isBounded_polar_of_mem_nhds_zero /-
 /-- Given a neighborhood `s` of the origin in a normed space `E`, the dual norms
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/
-theorem bounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (polar 𝕜 s) :=
+theorem isBounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
+    Bounded (polar 𝕜 s) :=
   by
   obtain ⟨a, ha⟩ : ∃ a : 𝕜, 1 < ‖a‖ := NormedField.exists_one_lt_norm 𝕜
   obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ) (hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
@@ -324,7 +325,7 @@ theorem bounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) 
     bounded_closed_ball.mono
       (((dual_pairing 𝕜 E).flip.polar_antitone r_ball).trans <|
         polar_ball_subset_closed_ball_div ha r_pos)
-#align normed_space.bounded_polar_of_mem_nhds_zero NormedSpace.bounded_polar_of_mem_nhds_zero
+#align normed_space.bounded_polar_of_mem_nhds_zero NormedSpace.isBounded_polar_of_mem_nhds_zero
 -/
 
 end PolarSets

@@ -759,9 +759,9 @@ theorem cyclotomic_coeff_zero (R : Type _) [CommRing R] {n : ℕ} (hn : 1 < n) :
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, where `p` is a prime, then `a` and `p` are
 coprime. -/
 theorem coprime_of_root_cyclotomic {n : ℕ} (hpos : 0 < n) {p : ℕ} [hprime : Fact p.Prime] {a : ℕ}
-    (hroot : IsRoot (cyclotomic n (ZMod p)) (Nat.castRingHom (ZMod p) a)) : a.coprime p :=
+    (hroot : IsRoot (cyclotomic n (ZMod p)) (Nat.castRingHom (ZMod p) a)) : a.Coprime p :=
   by
-  apply Nat.coprime.symm
+  apply Nat.Coprime.symm
   rw [hprime.1.coprime_iff_not_dvd]
   intro h
   replace h := (ZMod.nat_cast_zmod_eq_zero_iff_dvd a p).2 h

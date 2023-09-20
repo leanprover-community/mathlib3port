@@ -143,19 +143,19 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [Seminorme
 
 #print IsCompactOperator.image_subset_compact_of_bounded /-
 theorem IsCompactOperator.image_subset_compact_of_bounded [ContinuousConstSMul 𝕜₂ M₂]
-    {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁} (hS : Metric.Bounded S) :
+    {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁} (hS : Bornology.IsBounded S) :
     ∃ K : Set M₂, IsCompact K ∧ f '' S ⊆ K :=
   hf.image_subset_compact_of_isVonNBounded
-    (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.bounded_iff_isBounded])
+    (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.isBounded_iff_isBounded])
 #align is_compact_operator.image_subset_compact_of_bounded IsCompactOperator.image_subset_compact_of_bounded
 -/
 
 #print IsCompactOperator.isCompact_closure_image_of_bounded /-
 theorem IsCompactOperator.isCompact_closure_image_of_bounded [ContinuousConstSMul 𝕜₂ M₂]
     [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁}
-    (hS : Metric.Bounded S) : IsCompact (closure <| f '' S) :=
+    (hS : Bornology.IsBounded S) : IsCompact (closure <| f '' S) :=
   hf.isCompact_closure_image_of_isVonNBounded
-    (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.bounded_iff_isBounded])
+    (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.isBounded_iff_isBounded])
 #align is_compact_operator.is_compact_closure_image_of_bounded IsCompactOperator.isCompact_closure_image_of_bounded
 -/
 

@@ -247,9 +247,9 @@ end Unique
 
 end Fintype
 
-#print Zspan.fundamentalDomain_bounded /-
-theorem fundamentalDomain_bounded [Finite ι] [HasSolidNorm K] :
-    Metric.Bounded (fundamentalDomain b) :=
+#print Zspan.fundamentalDomain_isBounded /-
+theorem fundamentalDomain_isBounded [Finite ι] [HasSolidNorm K] :
+    Bornology.IsBounded (fundamentalDomain b) :=
   by
   cases nonempty_fintype ι
   use 2 * ∑ j, ‖b j‖
@@ -258,7 +258,7 @@ theorem fundamentalDomain_bounded [Finite ι] [HasSolidNorm K] :
   rw [← fract_eq_self.mpr hx, ← fract_eq_self.mpr hy]
   refine' (add_le_add (norm_fract_le b x) (norm_fract_le b y)).trans _
   rw [← two_mul]
-#align zspan.fundamental_domain_bounded Zspan.fundamentalDomain_bounded
+#align zspan.fundamental_domain_bounded Zspan.fundamentalDomain_isBounded
 -/
 
 #print Zspan.vadd_mem_fundamentalDomain /-

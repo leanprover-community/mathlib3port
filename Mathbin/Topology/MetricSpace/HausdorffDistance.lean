@@ -725,7 +725,8 @@ theorem disjoint_closedBall_of_lt_infDist {r : ℝ} (h : r < infDist x s) :
 -/
 
 #print Metric.dist_le_infDist_add_diam /-
-theorem dist_le_infDist_add_diam (hs : Bounded s) (hy : y ∈ s) : dist x y ≤ infDist x s + diam s :=
+theorem dist_le_infDist_add_diam (hs : IsBounded s) (hy : y ∈ s) :
+    dist x y ≤ infDist x s + diam s :=
   by
   have A : inf_edist x s ≠ ∞ := inf_edist_ne_top ⟨y, hy⟩
   have B : EMetric.diam s ≠ ∞ := hs.ediam_ne_top
@@ -914,7 +915,7 @@ theorem hausdorffDist_nonneg : 0 ≤ hausdorffDist s t := by simp [Hausdorff_dis
 /-- If two sets are nonempty and bounded in a metric space, they are at finite Hausdorff
 edistance. -/
 theorem hausdorffEdist_ne_top_of_nonempty_of_bounded (hs : s.Nonempty) (ht : t.Nonempty)
-    (bs : Bounded s) (bt : Bounded t) : hausdorffEdist s t ≠ ⊤ :=
+    (bs : IsBounded s) (bt : IsBounded t) : hausdorffEdist s t ≠ ⊤ :=
   by
   rcases hs with ⟨cs, hcs⟩
   rcases ht with ⟨ct, hct⟩
@@ -1017,8 +1018,8 @@ theorem hausdorffDist_le_of_mem_dist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x ∈ s,
 
 #print Metric.hausdorffDist_le_diam /-
 /-- The Hausdorff distance is controlled by the diameter of the union -/
-theorem hausdorffDist_le_diam (hs : s.Nonempty) (bs : Bounded s) (ht : t.Nonempty)
-    (bt : Bounded t) : hausdorffDist s t ≤ diam (s ∪ t) :=
+theorem hausdorffDist_le_diam (hs : s.Nonempty) (bs : IsBounded s) (ht : t.Nonempty)
+    (bt : IsBounded t) : hausdorffDist s t ≤ diam (s ∪ t) :=
   by
   rcases hs with ⟨x, xs⟩
   rcases ht with ⟨y, yt⟩
@@ -1321,8 +1322,8 @@ theorem thickening_eq_biUnion_ball {δ : ℝ} {E : Set X} : thickening δ E = �
 #align metric.thickening_eq_bUnion_ball Metric.thickening_eq_biUnion_ball
 -/
 
-#print Metric.Bounded.thickening /-
-theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thickening δ E) :=
+#print Bornology.IsBounded.thickening /-
+theorem IsBounded.thickening {δ : ℝ} {E : Set X} (h : IsBounded E) : IsBounded (thickening δ E) :=
   by
   refine' bounded_iff_mem_bounded.2 fun x hx => _
   rcases h.subset_ball x with ⟨R, hR⟩
@@ -1332,7 +1333,7 @@ theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thi
   calc
     dist y x ≤ dist z x + dist y z := by rw [add_comm]; exact dist_triangle _ _ _
     _ ≤ R + δ := add_le_add (hR zE) hz.le
-#align metric.bounded.thickening Metric.Bounded.thickening
+#align metric.bounded.thickening Bornology.IsBounded.thickening
 -/
 
 end Thickening
@@ -1484,16 +1485,16 @@ theorem thickening_subset_cthickening_of_le {δ₁ δ₂ : ℝ} (hle : δ₁ ≤
 #align metric.thickening_subset_cthickening_of_le Metric.thickening_subset_cthickening_of_le
 -/
 
-#print Metric.Bounded.cthickening /-
-theorem Bounded.cthickening {α : Type _} [PseudoMetricSpace α] {δ : ℝ} {E : Set α} (h : Bounded E) :
-    Bounded (cthickening δ E) :=
+#print Bornology.IsBounded.cthickening /-
+theorem IsBounded.cthickening {α : Type _} [PseudoMetricSpace α] {δ : ℝ} {E : Set α}
+    (h : IsBounded E) : IsBounded (cthickening δ E) :=
   by
   have : bounded (thickening (max (δ + 1) 1) E) := h.thickening
   apply bounded.mono _ this
   exact
     cthickening_subset_thickening' (zero_lt_one.trans_le (le_max_right _ _))
       ((lt_add_one _).trans_le (le_max_left _ _)) _
-#align metric.bounded.cthickening Metric.Bounded.cthickening
+#align metric.bounded.cthickening Bornology.IsBounded.cthickening
 -/
 
 #print Metric.thickening_subset_interior_cthickening /-

@@ -154,11 +154,11 @@ protected theorem Nodup.dedup {l : List α} (h : l.Nodup) : l.dedup = l :=
 #align list.nodup.dedup List.Nodup.dedup
 -/
 
-#print List.dedup_idempotent /-
+#print List.dedup_idem /-
 @[simp]
-theorem dedup_idempotent {l : List α} : dedup (dedup l) = dedup l :=
-  pwFilter_idempotent
-#align list.dedup_idempotent List.dedup_idempotent
+theorem dedup_idem {l : List α} : dedup (dedup l) = dedup l :=
+  pwFilter_idem
+#align list.dedup_idempotent List.dedup_idem
 -/
 
 #print List.dedup_append /-

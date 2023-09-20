@@ -66,8 +66,8 @@ variable (ι)
 
 #print bounded_stdSimplex /-
 /-- `std_simplex ℝ ι` is bounded. -/
-theorem bounded_stdSimplex : Metric.Bounded (stdSimplex ℝ ι) :=
-  (Metric.bounded_iff_subset_ball 0).2 ⟨1, stdSimplex_subset_closedBall⟩
+theorem bounded_stdSimplex : Bornology.IsBounded (stdSimplex ℝ ι) :=
+  (Metric.isBounded_iff_subset_closedBall 0).2 ⟨1, stdSimplex_subset_closedBall⟩
 #align bounded_std_simplex bounded_stdSimplex
 -/
 

@@ -327,11 +327,11 @@ theorem Quotient.eq' [r : Setoid α] {x y : α} : ⟦x⟧ = ⟦y⟧ ↔ x ≈ y 
 #align quotient.eq Quotient.eq'
 -/
 
-#print forall_quotient_iff /-
-theorem forall_quotient_iff {α : Type _} [r : Setoid α] {p : Quotient r → Prop} :
+#print Quotient.forall /-
+theorem Quotient.forall {α : Type _} [r : Setoid α] {p : Quotient r → Prop} :
     (∀ a : Quotient r, p a) ↔ ∀ a : α, p ⟦a⟧ :=
   ⟨fun h x => h _, fun h a => a.inductionOn h⟩
-#align forall_quotient_iff forall_quotient_iff
+#align forall_quotient_iff Quotient.forall
 -/
 
 #print Quotient.lift_mk /-

@@ -1415,7 +1415,7 @@ theorem norm_le_of_tendsto {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, �
 
 #print lp.memℓp_of_tendsto /-
 /-- If `f` is the pointwise limit of a bounded sequence in `lp E p`, then `f` is in `lp E p`. -/
-theorem memℓp_of_tendsto {F : ι → lp E p} (hF : Metric.Bounded (Set.range F)) {f : ∀ a, E a}
+theorem memℓp_of_tendsto {F : ι → lp E p} (hF : Bornology.IsBounded (Set.range F)) {f : ∀ a, E a}
     (hf : Tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) : Memℓp f p :=
   by
   obtain ⟨C, hC, hCF'⟩ := hF.exists_pos_norm_le

@@ -116,13 +116,13 @@ theorem Int.mod_nat_eq_sub_mul_floor_rat_div {n : ℤ} {d : ℕ} : n % d = n - d
 -/
 
 #print Nat.coprime_sub_mul_floor_rat_div_of_coprime /-
-theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.coprime d) :
-    ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.coprime d :=
+theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.Coprime d) :
+    ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.Coprime d :=
   by
   have : (n : ℤ) % d = n - d * ⌊(n : ℚ) / d⌋ := Int.mod_nat_eq_sub_mul_floor_rat_div
   rw [← this]
   have : d.coprime n := n_coprime_d.symm
-  rwa [Nat.coprime, Nat.gcd_rec] at this 
+  rwa [Nat.Coprime, Nat.gcd_rec] at this 
 #align nat.coprime_sub_mul_floor_rat_div_of_coprime Nat.coprime_sub_mul_floor_rat_div_of_coprime
 -/
 
@@ -170,7 +170,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
     have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ :=
       by
-      suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.coprime q.num.nat_abs by
+      suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.Coprime q.num.nat_abs by
         exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos this
       have tmp := Nat.coprime_sub_mul_floor_rat_div_of_coprime q.cop.symm
       simpa only [Nat.cast_natAbs, abs_of_nonneg q_num_pos.le] using tmp

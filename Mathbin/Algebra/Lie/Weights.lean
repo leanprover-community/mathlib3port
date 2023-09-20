@@ -72,7 +72,6 @@ open scoped BigOperators
 
 open scoped TensorProduct
 
-#print LieModule.preWeightSpace /-
 /-- Given a Lie module `M` over a Lie algebra `L`, the pre-weight space of `M` with respect to a
 map `χ : L → R` is the simultaneous generalized eigenspace of the action of all `x : L` on `M`,
 with eigenvalues `χ x`.
@@ -81,18 +80,14 @@ See also `lie_module.weight_space`. -/
 def preWeightSpace (χ : L → R) : Submodule R M :=
   ⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace (χ x)
 #align lie_module.pre_weight_space LieModule.preWeightSpace
--/
 
-#print LieModule.mem_preWeightSpace /-
 theorem mem_preWeightSpace (χ : L → R) (m : M) :
     m ∈ preWeightSpace M χ ↔ ∀ x, ∃ k : ℕ, ((toEndomorphism R L M x - χ x • 1) ^ k) m = 0 := by
   simp [pre_weight_space, -LinearMap.pow_apply]
 #align lie_module.mem_pre_weight_space LieModule.mem_preWeightSpace
--/
 
 variable (R)
 
-#print LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian /-
 theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x : L) :
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker :=
   by
@@ -100,7 +95,6 @@ theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x 
   simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, iInf_le, ←
     (to_endomorphism R L M x).maximalGeneralizedEigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
--/
 
 variable {R} (L)
 
@@ -182,7 +176,6 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
 
 variable {L M}
 
-#print LieModule.lie_mem_preWeightSpace_of_mem_preWeightSpace /-
 theorem lie_mem_preWeightSpace_of_mem_preWeightSpace {χ₁ χ₂ : L → R} {x : L} {m : M}
     (hx : x ∈ preWeightSpace L χ₁) (hm : m ∈ preWeightSpace M χ₂) :
     ⁅x, m⁆ ∈ preWeightSpace M (χ₁ + χ₂) :=
@@ -194,7 +187,6 @@ theorem lie_mem_preWeightSpace_of_mem_preWeightSpace {χ₁ χ₂ : L → R} {x 
   simp only [Submodule.subtype_apply, to_module_hom_apply, TensorProduct.map_tmul]
   rfl
 #align lie_module.lie_mem_pre_weight_space_of_mem_pre_weight_space LieModule.lie_mem_preWeightSpace_of_mem_preWeightSpace
--/
 
 variable (M)
 
@@ -575,7 +567,6 @@ open LieAlgebra
 
 variable {R L H}
 
-#print LieModule.weightSpace' /-
 /-- A priori, weight spaces are Lie submodules over the Lie subalgebra `H` used to define them.
 However they are naturally Lie submodules over the (in general larger) Lie subalgebra
 `zero_root_subalgebra R L H`. Even though it is often the case that
@@ -590,14 +581,11 @@ def weightSpace' (χ : H → R) : LieSubmodule R (zeroRootSubalgebra R L H) M :=
       rw [← zero_add χ]
       exact lie_mem_weight_space_of_mem_weight_space hx hm }
 #align lie_module.weight_space' LieModule.weightSpace'
--/
 
-#print LieModule.coe_weightSpace' /-
 @[simp]
 theorem coe_weightSpace' (χ : H → R) : (weightSpace' M χ : Submodule R M) = weightSpace M χ :=
   rfl
 #align lie_module.coe_weight_space' LieModule.coe_weightSpace'
--/
 
 end LieModule
 

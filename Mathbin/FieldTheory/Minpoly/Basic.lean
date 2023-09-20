@@ -75,20 +75,20 @@ theorem eq_zero (hx : ¬IsIntegral A x) : minpoly A x = 0 :=
 #align minpoly.eq_zero minpoly.eq_zero
 -/
 
-#print minpoly.minpoly_algHom /-
-theorem minpoly_algHom (f : B →ₐ[A] B') (hf : Function.Injective f) (x : B) :
+#print minpoly.algHom_eq /-
+theorem algHom_eq (f : B →ₐ[A] B') (hf : Function.Injective f) (x : B) :
     minpoly A (f x) = minpoly A x :=
   by
   refine' dif_ctx_congr (isIntegral_algHom_iff _ hf) (fun _ => _) fun _ => rfl
   simp_rw [← Polynomial.aeval_def, aeval_alg_hom, AlgHom.comp_apply, _root_.map_eq_zero_iff f hf]
-#align minpoly.minpoly_alg_hom minpoly.minpoly_algHom
+#align minpoly.minpoly_alg_hom minpoly.algHom_eq
 -/
 
-#print minpoly.minpoly_algEquiv /-
+#print minpoly.algEquiv_eq /-
 @[simp]
-theorem minpoly_algEquiv (f : B ≃ₐ[A] B') (x : B) : minpoly A (f x) = minpoly A x :=
-  minpoly_algHom (f : B →ₐ[A] B') f.Injective x
-#align minpoly.minpoly_alg_equiv minpoly.minpoly_algEquiv
+theorem algEquiv_eq (f : B ≃ₐ[A] B') (x : B) : minpoly A (f x) = minpoly A x :=
+  algHom_eq (f : B →ₐ[A] B') f.Injective x
+#align minpoly.minpoly_alg_equiv minpoly.algEquiv_eq
 -/
 
 variable (A x)

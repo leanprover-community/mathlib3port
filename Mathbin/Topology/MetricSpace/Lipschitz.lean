@@ -514,17 +514,17 @@ theorem comap_cobounded_le (hf : LipschitzWith K f) :
 #align lipschitz_with.comap_cobounded_le LipschitzWith.comap_cobounded_le
 -/
 
-#print LipschitzWith.bounded_image /-
-theorem bounded_image (hf : LipschitzWith K f) {s : Set α} (hs : Metric.Bounded s) :
-    Metric.Bounded (f '' s) :=
-  Metric.bounded_iff_ediam_ne_top.2 <|
+#print LipschitzWith.isBounded_image /-
+theorem isBounded_image (hf : LipschitzWith K f) {s : Set α} (hs : Bornology.IsBounded s) :
+    Bornology.IsBounded (f '' s) :=
+  Metric.isBounded_iff_ediam_ne_top.2 <|
     ne_top_of_le_ne_top (ENNReal.mul_ne_top ENNReal.coe_ne_top hs.ediam_ne_top)
       (hf.ediam_image_le s)
-#align lipschitz_with.bounded_image LipschitzWith.bounded_image
+#align lipschitz_with.bounded_image LipschitzWith.isBounded_image
 -/
 
 #print LipschitzWith.diam_image_le /-
-theorem diam_image_le (hf : LipschitzWith K f) (s : Set α) (hs : Metric.Bounded s) :
+theorem diam_image_le (hf : LipschitzWith K f) (s : Set α) (hs : Bornology.IsBounded s) :
     Metric.diam (f '' s) ≤ K * Metric.diam s :=
   Metric.diam_le_of_forall_dist_le (mul_nonneg K.coe_nonneg Metric.diam_nonneg) <|
     ball_image_iff.2 fun x hx =>
@@ -631,36 +631,44 @@ namespace Metric
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {s : Set α} {t : Set β}
 
+/- warning: metric.bounded.left_of_prod clashes with bornology.is_bounded.fst_of_prod -> Bornology.IsBounded.fst_of_prod
+Case conversion may be inaccurate. Consider using '#align metric.bounded.left_of_prod Bornology.IsBounded.fst_of_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Metric.Bounded.left_of_prod /-
-theorem Bounded.left_of_prod (h : Bounded (s ×ˢ t)) (ht : t.Nonempty) : Bounded s := by
-  simpa only [fst_image_prod s ht] using (@LipschitzWith.prod_fst α β _ _).bounded_image h
-#align metric.bounded.left_of_prod Metric.Bounded.left_of_prod
+#print Bornology.IsBounded.fst_of_prod /-
+theorem IsBounded.fst_of_prod (h : IsBounded (s ×ˢ t)) (ht : t.Nonempty) : IsBounded s := by
+  simpa only [fst_image_prod s ht] using (@LipschitzWith.prod_fst α β _ _).isBounded_image h
+#align metric.bounded.left_of_prod Bornology.IsBounded.fst_of_prod
 -/
 
+/- warning: metric.bounded.right_of_prod clashes with bornology.is_bounded.snd_of_prod -> Bornology.IsBounded.snd_of_prod
+Case conversion may be inaccurate. Consider using '#align metric.bounded.right_of_prod Bornology.IsBounded.snd_of_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Metric.Bounded.right_of_prod /-
-theorem Bounded.right_of_prod (h : Bounded (s ×ˢ t)) (hs : s.Nonempty) : Bounded t := by
-  simpa only [snd_image_prod hs t] using (@LipschitzWith.prod_snd α β _ _).bounded_image h
-#align metric.bounded.right_of_prod Metric.Bounded.right_of_prod
+#print Bornology.IsBounded.snd_of_prod /-
+theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsBounded t := by
+  simpa only [snd_image_prod hs t] using (@LipschitzWith.prod_snd α β _ _).isBounded_image h
+#align metric.bounded.right_of_prod Bornology.IsBounded.snd_of_prod
 -/
 
+/- warning: metric.bounded_prod_of_nonempty clashes with bornology.is_bounded_prod_of_nonempty -> Bornology.isBounded_prod_of_nonempty
+Case conversion may be inaccurate. Consider using '#align metric.bounded_prod_of_nonempty Bornology.isBounded_prod_of_nonemptyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Metric.bounded_prod_of_nonempty /-
-theorem bounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) :
-    Bounded (s ×ˢ t) ↔ Bounded s ∧ Bounded t :=
-  ⟨fun h => ⟨h.left_of_prod ht, h.right_of_prod hs⟩, fun h => h.1.Prod h.2⟩
-#align metric.bounded_prod_of_nonempty Metric.bounded_prod_of_nonempty
+#print Bornology.isBounded_prod_of_nonempty /-
+theorem isBounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) :
+    IsBounded (s ×ˢ t) ↔ IsBounded s ∧ IsBounded t :=
+  ⟨fun h => ⟨h.fst_of_prod ht, h.snd_of_prod hs⟩, fun h => h.1.Prod h.2⟩
+#align metric.bounded_prod_of_nonempty Bornology.isBounded_prod_of_nonempty
 -/
 
+/- warning: metric.bounded_prod clashes with bornology.is_bounded_prod -> Bornology.isBounded_prod
+Case conversion may be inaccurate. Consider using '#align metric.bounded_prod Bornology.isBounded_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Metric.bounded_prod /-
-theorem bounded_prod : Bounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ Bounded s ∧ Bounded t :=
+#print Bornology.isBounded_prod /-
+theorem isBounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBounded s ∧ IsBounded t :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
   rcases t.eq_empty_or_nonempty with (rfl | ht); · simp
   simp only [bounded_prod_of_nonempty hs ht, hs.ne_empty, ht.ne_empty, false_or_iff]
-#align metric.bounded_prod Metric.bounded_prod
+#align metric.bounded_prod Bornology.isBounded_prod
 -/
 
 end Metric

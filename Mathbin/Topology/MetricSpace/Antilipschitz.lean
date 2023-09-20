@@ -278,20 +278,20 @@ open Metric
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
 
-#print AntilipschitzWith.bounded_preimage /-
-theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) :
-    Bounded (f ⁻¹' s) :=
+#print AntilipschitzWith.isBounded_preimage /-
+theorem isBounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : IsBounded s) :
+    IsBounded (f ⁻¹' s) :=
   Exists.intro (K * diam s) fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
-#align antilipschitz_with.bounded_preimage AntilipschitzWith.bounded_preimage
+#align antilipschitz_with.bounded_preimage AntilipschitzWith.isBounded_preimage
 -/
 
 #print AntilipschitzWith.tendsto_cobounded /-
 theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=
   compl_surjective.forall.2 fun s (hs : IsBounded s) =>
-    Metric.isBounded_iff.2 <| hf.bounded_preimage <| Metric.isBounded_iff.1 hs
+    Metric.isBounded_iff.2 <| hf.isBounded_preimage <| Metric.isBounded_iff.1 hs
 #align antilipschitz_with.tendsto_cobounded AntilipschitzWith.tendsto_cobounded
 -/
 

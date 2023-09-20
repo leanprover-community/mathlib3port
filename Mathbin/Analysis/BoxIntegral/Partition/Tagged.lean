@@ -362,7 +362,8 @@ theorem IsSubordinate.mono [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π.
 theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.IsSubordinate r)
     (hJ : J ∈ π.boxes) : diam J.Icc ≤ 2 * r (π.Tag J) :=
   calc
-    diam J.Icc ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) := diam_mono (h J hJ) bounded_closedBall
+    diam J.Icc ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) :=
+      diam_mono (h J hJ) isBounded_closedBall
     _ ≤ 2 * r (π.Tag J) := diam_closedBall (le_of_lt (r _).2)
 #align box_integral.tagged_prepartition.is_subordinate.diam_le BoxIntegral.TaggedPrepartition.IsSubordinate.diam_le
 -/

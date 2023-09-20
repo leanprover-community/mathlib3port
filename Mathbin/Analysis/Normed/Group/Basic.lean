@@ -768,29 +768,30 @@ theorem norm_div_sub_norm_div_le_norm_div (u v w : E) : ‖u / w‖ - ‖v / w�
 #align norm_sub_sub_norm_sub_le_norm_sub norm_sub_sub_norm_sub_le_norm_sub
 -/
 
-#print bounded_iff_forall_norm_le' /-
-@[to_additive bounded_iff_forall_norm_le]
-theorem bounded_iff_forall_norm_le' : Bounded s ↔ ∃ C, ∀ x ∈ s, ‖x‖ ≤ C := by
+#print isBounded_iff_forall_norm_le' /-
+@[to_additive isBounded_iff_forall_norm_le]
+theorem isBounded_iff_forall_norm_le' : IsBounded s ↔ ∃ C, ∀ x ∈ s, ‖x‖ ≤ C := by
   simpa only [Set.subset_def, mem_closedBall_one_iff] using bounded_iff_subset_ball (1 : E)
-#align bounded_iff_forall_norm_le' bounded_iff_forall_norm_le'
-#align bounded_iff_forall_norm_le bounded_iff_forall_norm_le
+#align bounded_iff_forall_norm_le' isBounded_iff_forall_norm_le'
+#align bounded_iff_forall_norm_le isBounded_iff_forall_norm_le
 -/
 
-alias ⟨Metric.Bounded.exists_norm_le', _⟩ := bounded_iff_forall_norm_le'
-#align metric.bounded.exists_norm_le' Metric.Bounded.exists_norm_le'
+alias ⟨Bornology.IsBounded.exists_norm_le', _⟩ := isBounded_iff_forall_norm_le'
+#align metric.bounded.exists_norm_le' Bornology.IsBounded.exists_norm_le'
 
-alias ⟨Metric.Bounded.exists_norm_le, _⟩ := bounded_iff_forall_norm_le
-#align metric.bounded.exists_norm_le Metric.Bounded.exists_norm_le
+alias ⟨Bornology.IsBounded.exists_norm_le, _⟩ := isBounded_iff_forall_norm_le
+#align metric.bounded.exists_norm_le Bornology.IsBounded.exists_norm_le
 
-attribute [to_additive Metric.Bounded.exists_norm_le] Metric.Bounded.exists_norm_le'
+attribute [to_additive Bornology.IsBounded.exists_norm_le] Bornology.IsBounded.exists_norm_le'
 
-#print Metric.Bounded.exists_pos_norm_le' /-
-@[to_additive Metric.Bounded.exists_pos_norm_le]
-theorem Metric.Bounded.exists_pos_norm_le' (hs : Metric.Bounded s) : ∃ R > 0, ∀ x ∈ s, ‖x‖ ≤ R :=
+#print Bornology.IsBounded.exists_pos_norm_le' /-
+@[to_additive Bornology.IsBounded.exists_pos_norm_le]
+theorem Bornology.IsBounded.exists_pos_norm_le' (hs : Bornology.IsBounded s) :
+    ∃ R > 0, ∀ x ∈ s, ‖x‖ ≤ R :=
   let ⟨R₀, hR₀⟩ := hs.exists_norm_le'
   ⟨max R₀ 1, by positivity, fun x hx => (hR₀ x hx).trans <| le_max_left _ _⟩
-#align metric.bounded.exists_pos_norm_le' Metric.Bounded.exists_pos_norm_le'
-#align metric.bounded.exists_pos_norm_le Metric.Bounded.exists_pos_norm_le
+#align metric.bounded.exists_pos_norm_le' Bornology.IsBounded.exists_pos_norm_le'
+#align metric.bounded.exists_pos_norm_le Bornology.IsBounded.exists_pos_norm_le
 -/
 
 #print mem_sphere_iff_norm' /-
@@ -992,7 +993,7 @@ theorem MonoidHomClass.uniformContinuous_of_bound [MonoidHomClass 𝓕 E F] (f :
 @[to_additive IsCompact.exists_bound_of_continuousOn]
 theorem IsCompact.exists_bound_of_continuousOn' [TopologicalSpace α] {s : Set α} (hs : IsCompact s)
     {f : α → E} (hf : ContinuousOn f s) : ∃ C, ∀ x ∈ s, ‖f x‖ ≤ C :=
-  (bounded_iff_forall_norm_le'.1 (hs.image_of_continuousOn hf).Bounded).imp fun C hC x hx =>
+  (isBounded_iff_forall_norm_le'.1 (hs.image_of_continuousOn hf).Bounded).imp fun C hC x hx =>
     hC _ <| Set.mem_image_of_mem _ hx
 #align is_compact.exists_bound_of_continuous_on' IsCompact.exists_bound_of_continuousOn'
 #align is_compact.exists_bound_of_continuous_on IsCompact.exists_bound_of_continuousOn

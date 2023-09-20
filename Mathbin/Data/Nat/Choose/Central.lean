@@ -158,7 +158,7 @@ theorem two_dvd_centralBinom_of_one_le {n : ℕ} (h : 0 < n) : 2 ∣ centralBino
   `catalan n = n.central_binom / (n + 1)`. -/
 theorem succ_dvd_centralBinom (n : ℕ) : n + 1 ∣ n.centralBinom :=
   by
-  have h_s : (n + 1).coprime (2 * n + 1) :=
+  have h_s : (n + 1).Coprime (2 * n + 1) :=
     by
     rw [two_mul, add_assoc, coprime_add_self_right, coprime_self_add_left]
     exact coprime_one_left n

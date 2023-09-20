@@ -529,11 +529,11 @@ alias ⟨_, pairwise.pw_filter⟩ := pw_filter_eq_self
 
 attribute [protected] pairwise.pw_filter
 
-#print List.pwFilter_idempotent /-
+#print List.pwFilter_idem /-
 @[simp]
-theorem pwFilter_idempotent : pwFilter R (pwFilter R l) = pwFilter R l :=
+theorem pwFilter_idem : pwFilter R (pwFilter R l) = pwFilter R l :=
   (pairwise_pwFilter l).pwFilter
-#align list.pw_filter_idempotent List.pwFilter_idempotent
+#align list.pw_filter_idempotent List.pwFilter_idem
 -/
 
 #print List.forall_mem_pwFilter /-

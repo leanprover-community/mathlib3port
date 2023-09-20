@@ -495,7 +495,7 @@ theorem coe_units_iff {ζ : Mˣ} : IsPrimitiveRoot (ζ : M) k ↔ IsPrimitiveRoo
 -/
 
 #print IsPrimitiveRoot.pow_of_coprime /-
-theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.coprime k) :
+theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.Coprime k) :
     IsPrimitiveRoot (ζ ^ i) k := by
   by_cases h0 : k = 0
   · subst k; simp_all only [pow_one, Nat.coprime_zero_right]
@@ -523,7 +523,7 @@ theorem pow_of_prime (h : IsPrimitiveRoot ζ k) {p : ℕ} (hprime : Nat.Prime p)
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 #print IsPrimitiveRoot.pow_iff_coprime /-
 theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) :
-    IsPrimitiveRoot (ζ ^ i) k ↔ i.coprime k :=
+    IsPrimitiveRoot (ζ ^ i) k ↔ i.Coprime k :=
   by
   refine' ⟨_, h.pow_of_coprime i⟩
   intro hi
@@ -947,7 +947,7 @@ theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h
 
 #print IsPrimitiveRoot.isPrimitiveRoot_iff' /-
 theorem isPrimitiveRoot_iff' {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRoot ζ k) :
-    IsPrimitiveRoot ξ k ↔ ∃ i < (k : ℕ), ∃ hi : i.coprime k, ζ ^ i = ξ :=
+    IsPrimitiveRoot ξ k ↔ ∃ i < (k : ℕ), ∃ hi : i.Coprime k, ζ ^ i = ξ :=
   by
   constructor
   · intro hξ
@@ -960,7 +960,7 @@ theorem isPrimitiveRoot_iff' {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRoot ζ k)
 
 #print IsPrimitiveRoot.isPrimitiveRoot_iff /-
 theorem isPrimitiveRoot_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) :
-    IsPrimitiveRoot ξ k ↔ ∃ i < k, ∃ hi : i.coprime k, ζ ^ i = ξ :=
+    IsPrimitiveRoot ξ k ↔ ∃ i < k, ∃ hi : i.Coprime k, ζ ^ i = ξ :=
   by
   constructor
   · intro hξ

@@ -24,7 +24,7 @@ open Denumerable
 instance : Infinite ℚ :=
   Infinite.of_injective (coe : ℕ → ℚ) Nat.cast_injective
 
-private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.coprime x.2 }
+private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 }
     where
   toFun x := ⟨⟨x.1, x.2⟩, x.3, x.4⟩
   invFun x := ⟨x.1.1, x.1.2, x.2.1, x.2.2⟩
@@ -34,7 +34,7 @@ private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs
 /-- **Denumerability of the Rational Numbers** -/
 instance : Denumerable ℚ :=
   by
-  let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.coprime x.2 }
+  let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 }
   letI : Infinite T := Infinite.of_injective _ denumerable_aux.injective
   letI : Encodable T := Subtype.encodable
   letI : Denumerable T := of_encodable_of_infinite T

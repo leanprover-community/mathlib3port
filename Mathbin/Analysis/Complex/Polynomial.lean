@@ -36,7 +36,7 @@ theorem exists_root {f : ℂ[X]} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :
   · obtain rfl : f = C c⁻¹ := Polynomial.funext fun z => by rw [eval_C, ← hc z, inv_inv]
     exact degree_C_le
   · obtain ⟨z₀, h₀⟩ := f.exists_forall_norm_le
-    simp only [bounded_iff_forall_norm_le, Set.forall_range_iff, norm_inv]
+    simp only [isBounded_iff_forall_norm_le, Set.forall_range_iff, norm_inv]
     exact ⟨‖eval z₀ f‖⁻¹, fun z => inv_le_inv_of_le (norm_pos_iff.2 <| hf z₀) (h₀ z)⟩
 #align complex.exists_root Complex.exists_root
 -/

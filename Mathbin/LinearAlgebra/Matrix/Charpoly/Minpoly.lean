@@ -42,7 +42,7 @@ variable (M : Matrix n n R)
 #print Matrix.minpoly_toLin' /-
 @[simp]
 theorem minpoly_toLin' : minpoly R M.toLin' = minpoly R M :=
-  minpoly.minpoly_algEquiv (toLinAlgEquiv' : Matrix n n R ≃ₐ[R] _) M
+  minpoly.algEquiv_eq (toLinAlgEquiv' : Matrix n n R ≃ₐ[R] _) M
 #align matrix.minpoly_to_lin' Matrix.minpoly_toLin'
 -/
 
@@ -50,7 +50,7 @@ theorem minpoly_toLin' : minpoly R M.toLin' = minpoly R M :=
 @[simp]
 theorem minpoly_toLin (b : Basis n R N) (M : Matrix n n R) :
     minpoly R (toLin b b M) = minpoly R M :=
-  minpoly.minpoly_algEquiv (toLinAlgEquiv b : Matrix n n R ≃ₐ[R] _) M
+  minpoly.algEquiv_eq (toLinAlgEquiv b : Matrix n n R ≃ₐ[R] _) M
 #align matrix.minpoly_to_lin Matrix.minpoly_toLin
 -/
 
@@ -73,7 +73,7 @@ namespace LinearMap
 #print LinearMap.minpoly_toMatrix' /-
 @[simp]
 theorem minpoly_toMatrix' (f : (n → R) →ₗ[R] n → R) : minpoly R f.toMatrix' = minpoly R f :=
-  minpoly.minpoly_algEquiv (toMatrixAlgEquiv' : _ ≃ₐ[R] Matrix n n R) f
+  minpoly.algEquiv_eq (toMatrixAlgEquiv' : _ ≃ₐ[R] Matrix n n R) f
 #align linear_map.minpoly_to_matrix' LinearMap.minpoly_toMatrix'
 -/
 
@@ -81,7 +81,7 @@ theorem minpoly_toMatrix' (f : (n → R) →ₗ[R] n → R) : minpoly R f.toMatr
 @[simp]
 theorem minpoly_toMatrix (b : Basis n R N) (f : N →ₗ[R] N) :
     minpoly R (toMatrix b b f) = minpoly R f :=
-  minpoly.minpoly_algEquiv (toMatrixAlgEquiv b : _ ≃ₐ[R] Matrix n n R) f
+  minpoly.algEquiv_eq (toMatrixAlgEquiv b : _ ≃ₐ[R] Matrix n n R) f
 #align linear_map.minpoly_to_matrix LinearMap.minpoly_toMatrix
 -/
 

@@ -744,7 +744,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       convert diam_ball (half_pos (u_pos n)).le
       ring
     refine' mem_Union.2 ⟨⟨s, sb⟩, _⟩
-    refine' mem_Union.2 ⟨⟨Metric.Bounded.mono hs bounded_ball, diam_s⟩, _⟩
+    refine' mem_Union.2 ⟨⟨Bornology.IsBounded.subset hs bounded_ball, diam_s⟩, _⟩
     apply mem_inter (subset_closure (mem_image_of_mem _ ys))
     refine' mem_Inter.2 fun t => mem_Inter.2 fun ht => ⟨_, _⟩
     · apply hq1

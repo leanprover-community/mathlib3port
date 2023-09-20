@@ -135,7 +135,7 @@ namespace Measure
 zero. This auxiliary lemma proves this assuming additionally that the set is bounded. -/
 theorem addHaar_eq_zero_of_disjoint_translates_aux {E : Type _} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E)
-    [IsAddHaarMeasure μ] {s : Set E} (u : ℕ → E) (sb : Bounded s) (hu : Bounded (range u))
+    [IsAddHaarMeasure μ] {s : Set E} (u : ℕ → E) (sb : IsBounded s) (hu : IsBounded (range u))
     (hs : Pairwise (Disjoint on fun n => {u n} + s)) (h's : MeasurableSet s) : μ s = 0 :=
   by
   by_contra h
@@ -157,7 +157,7 @@ theorem addHaar_eq_zero_of_disjoint_translates_aux {E : Type _} [NormedAddCommGr
 zero. -/
 theorem addHaar_eq_zero_of_disjoint_translates {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
-    {s : Set E} (u : ℕ → E) (hu : Bounded (range u))
+    {s : Set E} (u : ℕ → E) (hu : IsBounded (range u))
     (hs : Pairwise (Disjoint on fun n => {u n} + s)) (h's : MeasurableSet s) : μ s = 0 :=
   by
   suffices H : ∀ R, μ (s ∩ closed_ball 0 R) = 0
