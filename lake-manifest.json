@@ -4,18 +4,18 @@
  [{"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "6c31acf1f94f0074488f8e56c55a6b00df0ddfdd",
+    "rev": "dbac5ac6df12d054cd994d4f42242a4aad9c125e",
     "opts": {},
     "name": "lean3port",
-    "inputRev?": "6c31acf1f94f0074488f8e56c55a6b00df0ddfdd",
+    "inputRev?": "dbac5ac6df12d054cd994d4f42242a4aad9c125e",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "8da7f369150d3ab5cb843226b2d91d84c55c0e7e",
+    "rev": "2c3ee375d609fb8e22e675d46e5e19a145f10617",
     "opts": {},
     "name": "mathlib",
-    "inputRev?": "8da7f369150d3ab5cb843226b2d91d84c55c0e7e",
+    "inputRev?": "2c3ee375d609fb8e22e675d46e5e19a145f10617",
     "inherited": true}},
   {"git":
    {"url": "https://github.com/EdAyers/ProofWidgets4",
