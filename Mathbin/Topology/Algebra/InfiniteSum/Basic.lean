@@ -1626,6 +1626,7 @@ theorem tsum_const_smul [T2Space α] (b : γ) (hf : Summable f) : ∑' i, b • 
 #align tsum_const_smul tsum_const_smul
 -/
 
+#print tsum_const_smul' /-
 /-- Infinite sums commute with scalar multiplication. Version for scalars living in a `group`, but
   not requiring any summability hypothesis. -/
 theorem tsum_const_smul' {γ : Type _} [Group γ] [DistribMulAction γ α] [ContinuousConstSMul γ α]
@@ -1640,7 +1641,9 @@ theorem tsum_const_smul' {γ : Type _} [Group γ] [DistribMulAction γ α] [Cont
   change ¬Summable (mul_g ∘ f)
   rwa [Summable.map_iff_of_equiv mul_g] <;> apply continuous_const_smul
 #align tsum_const_smul' tsum_const_smul'
+-/
 
+#print tsum_const_smul'' /-
 /-- Infinite sums commute with scalar multiplication. Version for scalars living in a
   `division_ring`; no summability hypothesis. This could be made to work for a
   `[group_with_zero γ]` if there was such a thing as `distrib_mul_action_with_zero`. -/
@@ -1658,6 +1661,7 @@ theorem tsum_const_smul'' {γ : Type _} [DivisionRing γ] [Module γ α] [Contin
   change ¬Summable (mul_g ∘ f)
   rwa [Summable.map_iff_of_equiv mul_g] <;> apply continuous_const_smul
 #align tsum_const_smul'' tsum_const_smul''
+-/
 
 end ConstSmul
 
@@ -1846,6 +1850,7 @@ section Automorphize
 variable {M : Type _} [TopologicalSpace M] [AddCommMonoid M] [T2Space M] {R : Type _}
   [DivisionRing R] [Module R M] [ContinuousConstSMul R M]
 
+#print MulAction.automorphize /-
 /-- Given a group `α` acting on a type `β`, and a function `f : β → M`, we "automorphize" `f` to a
   function `β ⧸ α → M` by summing over `α` orbits, `b ↦ ∑' (a : α), f(a • b)`. -/
 @[to_additive
@@ -1858,7 +1863,9 @@ def MulAction.automorphize [Group α] [MulAction α β] (f : β → M) :
       simpa [mul_smul] using (Equiv.mulRight a).tsum_eq fun a' => f (a' • b₂))
 #align mul_action.automorphize MulAction.automorphize
 #align add_action.automorphize AddAction.automorphize
+-/
 
+#print MulAction.automorphize_smul_left /-
 /-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the 
   `R`-scalar multiplication. -/
 theorem MulAction.automorphize_smul_left [Group α] [MulAction α β] (f : β → M)
@@ -1881,7 +1888,9 @@ theorem MulAction.automorphize_smul_left [Group α] [MulAction α β] (f : β �
   simp_rw [H₁]
   exact tsum_const_smul'' _
 #align mul_action.automorphize_smul_left MulAction.automorphize_smul_left
+-/
 
+#print AddAction.automorphize_smul_left /-
 /-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the 
   `R`-scalar multiplication. -/
 theorem AddAction.automorphize_smul_left [AddGroup α] [AddAction α β] (f : β → M)
@@ -1904,6 +1913,7 @@ theorem AddAction.automorphize_smul_left [AddGroup α] [AddAction α β] (f : β
   simp_rw [H₁]
   exact tsum_const_smul'' _
 #align add_action.automorphize_smul_left AddAction.automorphize_smul_left
+-/
 
 attribute [to_additive MulAction.automorphize_smul_left] AddAction.automorphize_smul_left
 
@@ -1911,6 +1921,7 @@ section
 
 variable {G : Type _} [Group G] {Γ : Subgroup G}
 
+#print QuotientGroup.automorphize /-
 /-- Given a subgroup `Γ` of a group `G`, and a function `f : G → M`, we "automorphize" `f` to a
   function `G ⧸ Γ → M` by summing over `Γ` orbits, `g ↦ ∑' (γ : Γ), f(γ • g)`. -/
 @[to_additive
@@ -1918,8 +1929,9 @@ variable {G : Type _} [Group G] {Γ : Subgroup G}
 def QuotientGroup.automorphize (f : G → M) : G ⧸ Γ → M :=
   MulAction.automorphize f
 #align quotient_group.automorphize QuotientGroup.automorphize
-#align quotient_add_group.automorphize quotientAddGroup.automorphize
+-/
 
+#print QuotientGroup.automorphize_smul_left /-
 /-- Automorphization of a function into an `R`-`module` distributes, that is, commutes with the 
   `R`-scalar multiplication. -/
 theorem QuotientGroup.automorphize_smul_left (f : G → M) (g : G ⧸ Γ → R) :
@@ -1927,6 +1939,7 @@ theorem QuotientGroup.automorphize_smul_left (f : G → M) (g : G ⧸ Γ → R) 
       g • (QuotientGroup.automorphize f : G ⧸ Γ → M) :=
   MulAction.automorphize_smul_left f g
 #align quotient_group.automorphize_smul_left QuotientGroup.automorphize_smul_left
+-/
 
 end
 

@@ -197,6 +197,7 @@ theorem essSup_comp_quotient_group_mk [μ.IsMulRightInvariant] {g : G ⧸ Γ →
 #align ess_sup_comp_quotient_add_group_mk ess_sup_comp_quotient_add_group_mk
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∈ »(_, s)]] -/
+#print MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map /-
 /-- Given a quotient space `G ⧸ Γ` where `Γ` is `countable`, and the restriction,
   `μ_𝓕`, of a right-invariant measure `μ` on `G` to a fundamental domain `𝓕`, a set
   in the quotient which has `μ_𝓕`-measure zero, also has measure zero under the
@@ -222,10 +223,12 @@ theorem MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map [μ.IsMulRigh
     convert QuotientGroup.mk_mul_of_mem g γ⁻¹.2
   exact measurableSet_preimage meas_π s_meas
 #align measure_theory.is_fundamental_domain.absolutely_continuous_map MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map
-#align measure_theory.is_add_fundamental_domain.absolutely_continuous_map MeasureTheory.IsAddFundamentalDomain.absolutely_continuous_map
+#align measure_theory.is_add_fundamental_domain.absolutely_continuous_map MeasureTheory.IsAddFundamentalDomain.absolutelyContinuous_map
+-/
 
 attribute [-instance] Quotient.instMeasurableSpace
 
+#print QuotientGroup.integral_eq_integral_automorphize /-
 /-- This is a simple version of the **Unfolding Trick**: Given a subgroup `Γ` of a group `G`, the
   integral of a function `f` on `G` with respect to a right-invariant measure `μ` is equal to the
   integral over the quotient `G ⧸ Γ` of the automorphization of `f`. -/
@@ -249,7 +252,7 @@ theorem QuotientGroup.integral_eq_integral_automorphize {E : Type _} [NormedAddC
     _ = ∫ x : G ⧸ Γ, automorphize f x ∂μ_𝓕 :=
       (integral_map continuous_quotient_mk'.AEMeasurable hf₂).symm
 #align quotient_group.integral_eq_integral_automorphize QuotientGroup.integral_eq_integral_automorphize
-#align quotient_add_group.integral_eq_integral_automorphize quotientAddGroup.integral_eq_integral_automorphize
+-/
 
 /-- This is the **Unfolding Trick**: Given a subgroup `Γ` of a group `G`, the integral of a
   function `f` on `G` times the lift to `G` of a function `g` on the quotient `G ⧸ Γ` with respect

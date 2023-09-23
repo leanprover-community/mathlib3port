@@ -318,6 +318,7 @@ def DistribMulAction.toAddEquiv (x : α) : β ≃+ β :=
 #align distrib_mul_action.to_add_equiv DistribMulAction.toAddEquiv
 -/
 
+#print DistribMulAction.toAddEquiv₀ /-
 /-- Each non-zero element of a `group_with_zero` defines an additive monoid isomorphism of an
 `add_monoid` on which it acts distributively.
 
@@ -331,6 +332,7 @@ def DistribMulAction.toAddEquiv₀ {α : Type _} (β : Type _) [GroupWithZero α
     left_inv := inv_smul_smul₀ hx
     right_inv := smul_inv_smul₀ hx }
 #align distrib_mul_action.to_add_equiv₀ DistribMulAction.toAddEquiv₀
+-/
 
 variable (α β)
 
