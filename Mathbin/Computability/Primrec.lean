@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Logic.Equiv.Array
-import Mathbin.Logic.Equiv.List
-import Mathbin.Logic.Function.Iterate
+import Logic.Equiv.Array
+import Logic.Equiv.List
+import Logic.Function.Iterate
 
 #align_import computability.primrec from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
@@ -202,7 +202,7 @@ end Primrec
 end Nat
 
 #print Primcodable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
 /-- A `primcodable` type is an `encodable` type for which
   the encode/decode functions are primitive recursive. -/
 class Primcodable (α : Type _) extends Encodable α where
@@ -1761,7 +1761,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
-/- ./././Mathport/Syntax/Translate/Command.lean:698:6: unsupported: hide command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:699:6: unsupported: hide command -/
 #print Nat.Primrec'.to_prim /-
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f :=
   by

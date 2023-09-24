@@ -3,7 +3,7 @@ Copyright (c) 2022 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Tactic.Interactive
+import Tactic.Interactive
 
 #align_import tactic.swap_var from "leanprover-community/mathlib"@"b3d0944867b430bb5557ba6391ca9c7749a16cbb"
 

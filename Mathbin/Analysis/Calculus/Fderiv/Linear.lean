@@ -3,7 +3,7 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.Fderiv.Basic
+import Analysis.Calculus.Fderiv.Basic
 
 #align_import analysis.calculus.fderiv.linear from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

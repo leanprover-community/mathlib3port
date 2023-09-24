@@ -3,10 +3,10 @@ Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 -/
-import Mathbin.Algebra.Category.Mon.Basic
-import Mathbin.CategoryTheory.Limits.Preserves.Filtered
-import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
-import Mathbin.CategoryTheory.Limits.Types
+import Algebra.Category.Mon.Basic
+import CategoryTheory.Limits.Preserves.Filtered
+import CategoryTheory.ConcreteCategory.Elementwise
+import CategoryTheory.Limits.Types
 
 #align_import algebra.category.Mon.filtered_colimits from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

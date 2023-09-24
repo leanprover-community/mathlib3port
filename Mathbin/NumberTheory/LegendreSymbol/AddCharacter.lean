@@ -3,8 +3,8 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
-import Mathbin.FieldTheory.Finite.Trace
+import NumberTheory.Cyclotomic.PrimitiveRoots
+import FieldTheory.Finite.Trace
 
 #align_import number_theory.legendre_symbol.add_character from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 

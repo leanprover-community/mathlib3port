@@ -3,9 +3,9 @@ Copyright (c) 2018 Michael Jendrusch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Monoidal.Category
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Products.Basic
+import CategoryTheory.Monoidal.Category
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Products.Basic
 
 #align_import category_theory.monoidal.functor from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 

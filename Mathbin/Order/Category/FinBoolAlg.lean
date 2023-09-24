@@ -3,10 +3,10 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Fintype.Powerset
-import Mathbin.Order.Category.BoolAlg
-import Mathbin.Order.Category.FinBddDistLat
-import Mathbin.Order.Hom.CompleteLattice
+import Data.Fintype.Powerset
+import Order.Category.BoolAlg
+import Order.Category.FinBddDistLat
+import Order.Hom.CompleteLattice
 
 #align_import order.category.FinBoolAlg from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 
@@ -32,154 +32,153 @@ universe u
 
 open CategoryTheory OrderDual Opposite
 
-#print FinBoolAlgCat /-
+#print FinBoolAlg /-
 /-- The category of finite boolean algebras with bounded lattice morphisms. -/
-structure FinBoolAlgCat where
-  toBoolAlg : BoolAlgCat
+structure FinBoolAlg where
+  toBoolAlg : BoolAlg
   [isFintype : Fintype to_BoolAlg]
-#align FinBoolAlg FinBoolAlgCat
+#align FinBoolAlg FinBoolAlg
 -/
 
-namespace FinBoolAlgCat
+namespace FinBoolAlg
 
-instance : CoeSort FinBoolAlgCat (Type _) :=
+instance : CoeSort FinBoolAlg (Type _) :=
   ⟨fun X => X.toBoolAlg⟩
 
-instance (X : FinBoolAlgCat) : BooleanAlgebra X :=
+instance (X : FinBoolAlg) : BooleanAlgebra X :=
   X.toBoolAlg.str
 
-attribute [instance] FinBoolAlgCat.isFintype
+attribute [instance] FinBoolAlg.isFintype
 
 @[simp]
-theorem coe_toBoolAlg (X : FinBoolAlgCat) : ↥X.toBoolAlg = ↥X :=
+theorem coe_toBoolAlg (X : FinBoolAlg) : ↥X.toBoolAlg = ↥X :=
   rfl
-#align FinBoolAlg.coe_to_BoolAlg FinBoolAlgCat.coe_toBoolAlg
+#align FinBoolAlg.coe_to_BoolAlg FinBoolAlg.coe_toBoolAlg
 
-#print FinBoolAlgCat.of /-
+#print FinBoolAlg.of /-
 /-- Construct a bundled `FinBoolAlg` from `boolean_algebra` + `fintype`. -/
-def of (α : Type _) [BooleanAlgebra α] [Fintype α] : FinBoolAlgCat :=
+def of (α : Type _) [BooleanAlgebra α] [Fintype α] : FinBoolAlg :=
   ⟨⟨α⟩⟩
-#align FinBoolAlg.of FinBoolAlgCat.of
+#align FinBoolAlg.of FinBoolAlg.of
 -/
 
-#print FinBoolAlgCat.coe_of /-
+#print FinBoolAlg.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [BooleanAlgebra α] [Fintype α] : ↥(of α) = α :=
   rfl
-#align FinBoolAlg.coe_of FinBoolAlgCat.coe_of
+#align FinBoolAlg.coe_of FinBoolAlg.coe_of
 -/
 
-instance : Inhabited FinBoolAlgCat :=
+instance : Inhabited FinBoolAlg :=
   ⟨of PUnit⟩
 
-#print FinBoolAlgCat.largeCategory /-
-instance largeCategory : LargeCategory FinBoolAlgCat :=
-  InducedCategory.category FinBoolAlgCat.toBoolAlg
-#align FinBoolAlg.large_category FinBoolAlgCat.largeCategory
+#print FinBoolAlg.largeCategory /-
+instance largeCategory : LargeCategory FinBoolAlg :=
+  InducedCategory.category FinBoolAlg.toBoolAlg
+#align FinBoolAlg.large_category FinBoolAlg.largeCategory
 -/
 
-#print FinBoolAlgCat.concreteCategory /-
-instance concreteCategory : ConcreteCategory FinBoolAlgCat :=
-  InducedCategory.concreteCategory FinBoolAlgCat.toBoolAlg
-#align FinBoolAlg.concrete_category FinBoolAlgCat.concreteCategory
+#print FinBoolAlg.concreteCategory /-
+instance concreteCategory : ConcreteCategory FinBoolAlg :=
+  InducedCategory.concreteCategory FinBoolAlg.toBoolAlg
+#align FinBoolAlg.concrete_category FinBoolAlg.concreteCategory
 -/
 
-#print FinBoolAlgCat.hasForgetToBoolAlg /-
-instance hasForgetToBoolAlg : HasForget₂ FinBoolAlgCat BoolAlgCat :=
-  InducedCategory.hasForget₂ FinBoolAlgCat.toBoolAlg
-#align FinBoolAlg.has_forget_to_BoolAlg FinBoolAlgCat.hasForgetToBoolAlg
+#print FinBoolAlg.hasForgetToBoolAlg /-
+instance hasForgetToBoolAlg : HasForget₂ FinBoolAlg BoolAlg :=
+  InducedCategory.hasForget₂ FinBoolAlg.toBoolAlg
+#align FinBoolAlg.has_forget_to_BoolAlg FinBoolAlg.hasForgetToBoolAlg
 -/
 
-#print FinBoolAlgCat.hasForgetToFinBddDistLat /-
-instance hasForgetToFinBddDistLat : HasForget₂ FinBoolAlgCat FinBddDistLatCat
+#print FinBoolAlg.hasForgetToFinBddDistLat /-
+instance hasForgetToFinBddDistLat : HasForget₂ FinBoolAlg FinBddDistLat
     where
   forget₂ :=
-    { obj := fun X => FinBddDistLatCat.of X
+    { obj := fun X => FinBddDistLat.of X
       map := fun X Y f => f }
   forget_comp := rfl
-#align FinBoolAlg.has_forget_to_FinBddDistLat FinBoolAlgCat.hasForgetToFinBddDistLat
+#align FinBoolAlg.has_forget_to_FinBddDistLat FinBoolAlg.hasForgetToFinBddDistLat
 -/
 
-#print FinBoolAlgCat.forgetToBoolAlgFull /-
-instance forgetToBoolAlgFull : Full (forget₂ FinBoolAlgCat BoolAlgCat) :=
+#print FinBoolAlg.forgetToBoolAlgFull /-
+instance forgetToBoolAlgFull : Full (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.full _
-#align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlgCat.forgetToBoolAlgFull
+#align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlg.forgetToBoolAlgFull
 -/
 
-#print FinBoolAlgCat.forgetToBoolAlgFaithful /-
-instance forgetToBoolAlgFaithful : Faithful (forget₂ FinBoolAlgCat BoolAlgCat) :=
+#print FinBoolAlg.forgetToBoolAlgFaithful /-
+instance forgetToBoolAlgFaithful : Faithful (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.faithful _
-#align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlgCat.forgetToBoolAlgFaithful
+#align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlg.forgetToBoolAlgFaithful
 -/
 
-#print FinBoolAlgCat.hasForgetToFinPartOrd /-
+#print FinBoolAlg.hasForgetToFinPartOrd /-
 @[simps]
-instance hasForgetToFinPartOrd : HasForget₂ FinBoolAlgCat FinPartOrd
+instance hasForgetToFinPartOrd : HasForget₂ FinBoolAlg FinPartOrd
     where forget₂ :=
     { obj := fun X => FinPartOrd.of X
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
-#align FinBoolAlg.has_forget_to_FinPartOrd FinBoolAlgCat.hasForgetToFinPartOrd
+#align FinBoolAlg.has_forget_to_FinPartOrd FinBoolAlg.hasForgetToFinPartOrd
 -/
 
-#print FinBoolAlgCat.forgetToFinPartOrdFaithful /-
-instance forgetToFinPartOrdFaithful : Faithful (forget₂ FinBoolAlgCat FinPartOrd) :=
+#print FinBoolAlg.forgetToFinPartOrdFaithful /-
+instance forgetToFinPartOrdFaithful : Faithful (forget₂ FinBoolAlg FinPartOrd) :=
   ⟨fun X Y f g h =>
     haveI := congr_arg (coeFn : _ → X → Y) h
     FunLike.coe_injective this⟩
-#align FinBoolAlg.forget_to_FinPartOrd_faithful FinBoolAlgCat.forgetToFinPartOrdFaithful
+#align FinBoolAlg.forget_to_FinPartOrd_faithful FinBoolAlg.forgetToFinPartOrdFaithful
 -/
 
-#print FinBoolAlgCat.Iso.mk /-
+#print FinBoolAlg.Iso.mk /-
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/
 @[simps]
-def Iso.mk {α β : FinBoolAlgCat.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : FinBoolAlg.{u}} (e : α ≃o β) : α ≅ β
     where
   hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
-#align FinBoolAlg.iso.mk FinBoolAlgCat.Iso.mk
+#align FinBoolAlg.iso.mk FinBoolAlg.Iso.mk
 -/
 
-#print FinBoolAlgCat.dual /-
+#print FinBoolAlg.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : FinBoolAlgCat ⥤ FinBoolAlgCat
-    where
+def dual : FinBoolAlg ⥤ FinBoolAlg where
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
-#align FinBoolAlg.dual FinBoolAlgCat.dual
+#align FinBoolAlg.dual FinBoolAlg.dual
 -/
 
-#print FinBoolAlgCat.dualEquiv /-
+#print FinBoolAlg.dualEquiv /-
 /-- The equivalence between `FinBoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : FinBoolAlgCat ≌ FinBoolAlgCat :=
+def dualEquiv : FinBoolAlg ≌ FinBoolAlg :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align FinBoolAlg.dual_equiv FinBoolAlgCat.dualEquiv
+#align FinBoolAlg.dual_equiv FinBoolAlg.dualEquiv
 -/
 
-end FinBoolAlgCat
+end FinBoolAlg
 
-#print finBoolAlgCat_dual_comp_forget_to_finBddDistLatCat /-
-theorem finBoolAlgCat_dual_comp_forget_to_finBddDistLatCat :
-    FinBoolAlgCat.dual ⋙ forget₂ FinBoolAlgCat FinBddDistLatCat =
-      forget₂ FinBoolAlgCat FinBddDistLatCat ⋙ FinBddDistLatCat.dual :=
+#print finBoolAlg_dual_comp_forget_to_finBddDistLat /-
+theorem finBoolAlg_dual_comp_forget_to_finBddDistLat :
+    FinBoolAlg.dual ⋙ forget₂ FinBoolAlg FinBddDistLat =
+      forget₂ FinBoolAlg FinBddDistLat ⋙ FinBddDistLat.dual :=
   rfl
-#align FinBoolAlg_dual_comp_forget_to_FinBddDistLat finBoolAlgCat_dual_comp_forget_to_finBddDistLatCat
+#align FinBoolAlg_dual_comp_forget_to_FinBddDistLat finBoolAlg_dual_comp_forget_to_finBddDistLat
 -/
 
-#print fintypeToFinBoolAlgCatOp /-
+#print fintypeToFinBoolAlgOp /-
 /-- The powerset functor. `set` as a functor. -/
 @[simps]
-def fintypeToFinBoolAlgCatOp : FintypeCat ⥤ FinBoolAlgCatᵒᵖ
+def fintypeToFinBoolAlgOp : FintypeCat ⥤ FinBoolAlgᵒᵖ
     where
-  obj X := op <| FinBoolAlgCat.of (Set X)
+  obj X := op <| FinBoolAlg.of (Set X)
   map X Y f :=
     Quiver.Hom.op <| (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))
-#align Fintype_to_FinBoolAlg_op fintypeToFinBoolAlgCatOp
+#align Fintype_to_FinBoolAlg_op fintypeToFinBoolAlgOp
 -/
 

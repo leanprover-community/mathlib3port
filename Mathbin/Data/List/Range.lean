@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Scott Morrison
 -/
-import Mathbin.Data.List.Chain
-import Mathbin.Data.List.Zip
+import Data.List.Chain
+import Data.List.Zip
 
 #align_import data.list.range from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

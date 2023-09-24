@@ -3,9 +3,9 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Topology.MetricSpace.Gluing
-import Mathbin.Topology.MetricSpace.HausdorffDistance
-import Mathbin.Topology.ContinuousFunction.Bounded
+import Topology.MetricSpace.Gluing
+import Topology.MetricSpace.HausdorffDistance
+import Topology.ContinuousFunction.Bounded
 
 #align_import topology.metric_space.gromov_hausdorff_realized from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

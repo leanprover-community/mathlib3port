@@ -3,9 +3,9 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Arthur Paulino
 -/
-import Mathbin.Data.Bool.Basic
-import Mathbin.Meta.RbMap
-import Mathbin.Tactic.Lint.Basic
+import Data.Bool.Basic
+import Meta.RbMap
+import Tactic.Lint.Basic
 
 #align_import tactic.lint.misc from "leanprover-community/mathlib"@"58d83ed5268d96bd37757ac03062a4d69e5aa435"
 
@@ -38,7 +38,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.

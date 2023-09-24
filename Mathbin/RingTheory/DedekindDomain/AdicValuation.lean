@@ -3,11 +3,11 @@ Copyright (c) 2022 María Inés de Frutos-Fernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 -/
-import Mathbin.RingTheory.DedekindDomain.Ideal
-import Mathbin.RingTheory.Valuation.ExtendToLocalization
-import Mathbin.RingTheory.Valuation.ValuationSubring
-import Mathbin.Topology.Algebra.ValuedField
-import Mathbin.Algebra.Order.Group.TypeTags
+import RingTheory.DedekindDomain.Ideal
+import RingTheory.Valuation.ExtendToLocalization
+import RingTheory.Valuation.ValuationSubring
+import Topology.Algebra.ValuedField
+import Algebra.Order.Group.TypeTags
 
 #align_import ring_theory.dedekind_domain.adic_valuation from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

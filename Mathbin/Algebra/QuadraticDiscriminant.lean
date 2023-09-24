@@ -3,11 +3,11 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 -/
-import Mathbin.Algebra.CharP.Invertible
-import Mathbin.Order.Filter.AtTopBot
+import Algebra.CharP.Invertible
+import Order.Filter.AtTopBot
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Tactic.LinearCombination
+import Tactic.FieldSimp
+import Tactic.LinearCombination
 
 #align_import algebra.quadratic_discriminant from "leanprover-community/mathlib"@"1dac236edca9b4b6f5f00b1ad831e35f89472837"
 

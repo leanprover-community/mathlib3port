@@ -3,8 +3,8 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Traversable.Basic
-import Mathbin.Tactic.Simpa
+import Control.Traversable.Basic
+import Tactic.Simpa
 
 #align_import tactic.squeeze from "leanprover-community/mathlib"@"dff8393cf1d1fc152d148e13fe57452fc37d4852"
 

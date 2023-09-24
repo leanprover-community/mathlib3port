@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin, Andrew Yang, Joël Riou
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
-import Mathbin.CategoryTheory.Monoidal.End
-import Mathbin.CategoryTheory.Monoidal.Discrete
+import CategoryTheory.Limits.Preserves.Shapes.Zero
+import CategoryTheory.Monoidal.End
+import CategoryTheory.Monoidal.Discrete
 
 #align_import category_theory.shift.basic from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Option.Basic
-import Mathbin.Data.Nat.Basic
+import Data.Option.Basic
+import Data.Nat.Basic
 
 #align_import data.nat.psub from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

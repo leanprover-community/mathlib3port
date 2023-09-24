@@ -3,9 +3,9 @@ Copyright (c) 2020 Devon Tuma. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 -/
-import Mathbin.RingTheory.Localization.Away.Basic
-import Mathbin.RingTheory.Ideal.Over
-import Mathbin.RingTheory.JacobsonIdeal
+import RingTheory.Localization.Away.Basic
+import RingTheory.Ideal.Over
+import RingTheory.JacobsonIdeal
 
 #align_import ring_theory.jacobson from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

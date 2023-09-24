@@ -3,11 +3,11 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.Ideal.Operations
-import Mathbin.Algebra.Module.Torsion
-import Mathbin.Algebra.Ring.Idempotents
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.RingTheory.Ideal.LocalRing
+import RingTheory.Ideal.Operations
+import Algebra.Module.Torsion
+import Algebra.Ring.Idempotents
+import LinearAlgebra.FiniteDimensional
+import RingTheory.Ideal.LocalRing
 
 #align_import ring_theory.ideal.cotangent from "leanprover-community/mathlib"@"4b92a463033b5587bb011657e25e4710bfca7364"
 

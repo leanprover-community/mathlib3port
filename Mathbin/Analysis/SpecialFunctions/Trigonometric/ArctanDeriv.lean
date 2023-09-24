@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.ComplexDeriv
+import Analysis.SpecialFunctions.Trigonometric.Arctan
+import Analysis.SpecialFunctions.Trigonometric.ComplexDeriv
 
 #align_import analysis.special_functions.trigonometric.arctan_deriv from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

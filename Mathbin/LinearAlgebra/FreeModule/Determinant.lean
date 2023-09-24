@@ -3,8 +3,8 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 -/
-import Mathbin.LinearAlgebra.Determinant
-import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
+import LinearAlgebra.Determinant
+import LinearAlgebra.FreeModule.Finite.Basic
 
 #align_import linear_algebra.free_module.determinant from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

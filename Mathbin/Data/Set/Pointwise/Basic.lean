@@ -3,11 +3,11 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Algebra.Hom.Units
-import Mathbin.Data.Set.Lattice
-import Mathbin.Data.Nat.Order.Basic
+import Algebra.GroupPower.Basic
+import Algebra.Hom.Equiv.Basic
+import Algebra.Hom.Units
+import Data.Set.Lattice
+import Data.Nat.Order.Basic
 
 #align_import data.set.pointwise.basic from "leanprover-community/mathlib"@"5e526d18cea33550268dcbbddcb822d5cde40654"
 

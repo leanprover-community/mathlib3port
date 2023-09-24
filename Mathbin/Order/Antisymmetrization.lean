@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Hom.Basic
-import Mathbin.Logic.Relation
+import Order.Hom.Basic
+import Logic.Relation
 
 #align_import order.antisymmetrization from "leanprover-community/mathlib"@"3353f661228bd27f632c600cd1a58b874d847c90"
 

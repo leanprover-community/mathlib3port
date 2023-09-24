@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Thomas Read, Andrew Yang
 -/
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Yoneda
-import Mathbin.CategoryTheory.Opposites
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Yoneda
+import CategoryTheory.Opposites
 
 #align_import category_theory.adjunction.opposites from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

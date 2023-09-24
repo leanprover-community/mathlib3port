@@ -3,10 +3,10 @@ Copyright (c) 2022 Antoine Labelle, Rémi Bottinelli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle, Rémi Bottinelli
 -/
-import Mathbin.Combinatorics.Quiver.Cast
-import Mathbin.Combinatorics.Quiver.Symmetric
-import Mathbin.Data.Sigma.Basic
-import Mathbin.Logic.Equiv.Basic
+import Combinatorics.Quiver.Cast
+import Combinatorics.Quiver.Symmetric
+import Data.Sigma.Basic
+import Logic.Equiv.Basic
 
 #align_import combinatorics.quiver.covering from "leanprover-community/mathlib"@"188a411e916e1119e502dbe35b8b475716362401"
 

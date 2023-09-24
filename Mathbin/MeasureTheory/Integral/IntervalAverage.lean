@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.MeasureTheory.Integral.Average
+import MeasureTheory.Integral.IntervalIntegral
+import MeasureTheory.Integral.Average
 
 #align_import measure_theory.integral.interval_average from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

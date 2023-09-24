@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Finset.Sort
-import Mathbin.Data.Vector.Basic
-import Mathbin.Logic.Denumerable
+import Data.Finset.Sort
+import Data.Vector.Basic
+import Logic.Denumerable
 
 #align_import logic.equiv.list from "leanprover-community/mathlib"@"d11893b411025250c8e61ff2f12ccbd7ee35ab15"
 

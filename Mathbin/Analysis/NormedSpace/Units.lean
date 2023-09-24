@@ -3,8 +3,8 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Topology.Algebra.Ring.Ideal
-import Mathbin.Analysis.SpecificLimits.Normed
+import Topology.Algebra.Ring.Ideal
+import Analysis.SpecificLimits.Normed
 
 #align_import analysis.normed_space.units from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 -/
-import Mathbin.Geometry.Euclidean.Angle.Oriented.Affine
-import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
-import Mathbin.Tactic.IntervalCases
+import Geometry.Euclidean.Angle.Oriented.Affine
+import Geometry.Euclidean.Angle.Unoriented.Affine
+import Tactic.IntervalCases
 
 #align_import geometry.euclidean.triangle from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

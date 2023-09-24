@@ -3,8 +3,8 @@ Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathbin.Topology.Separation
-import Mathbin.Topology.Bases
+import Topology.Separation
+import Topology.Bases
 
 #align_import topology.dense_embedding from "leanprover-community/mathlib"@"148aefbd371a25f1cff33c85f20c661ce3155def"
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Data.Rat.MetaDefs
-import Mathbin.Tactic.NormNum
-import Mathbin.Data.Tree
-import Mathbin.Meta.Expr
+import Data.Rat.MetaDefs
+import Tactic.NormNum
+import Data.Tree
+import Meta.Expr
 
 #align_import tactic.cancel_denoms from "leanprover-community/mathlib"@"eaa771fc4f5f356afeacac4ab92e0cbf10b0b1df"
 
@@ -169,9 +169,9 @@ open Tree
       | _ => ( 1 , node 1 Tree.nil Tree.nil )
 #align cancel_factors.find_cancel_factor cancel_factors.find_cancel_factor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -246,7 +246,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 #align cancel_factors.derive cancel_factors.derive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -287,9 +287,9 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       | _ => none
 #align cancel_factors.find_comp_lemma cancel_factors.find_comp_lemma
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
 where `R ∈ {<, ≤, =, ≥, >}`.
 It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h'`.

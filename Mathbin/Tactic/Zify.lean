@@ -3,9 +3,9 @@ Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Data.Int.Cast.Lemmas
-import Mathbin.Data.Int.CharZero
-import Mathbin.Tactic.NormCast
+import Data.Int.Cast.Lemmas
+import Data.Int.CharZero
+import Tactic.NormCast
 
 #align_import tactic.zify from "leanprover-community/mathlib"@"ad7038e538b2112a0c88b985b925e64b3b022947"
 

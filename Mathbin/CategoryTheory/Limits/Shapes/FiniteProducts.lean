@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
-import Mathbin.CategoryTheory.Limits.Shapes.Products
+import CategoryTheory.Limits.Shapes.FiniteLimits
+import CategoryTheory.Limits.Shapes.Products
 
 #align_import category_theory.limits.shapes.finite_products from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -29,7 +29,7 @@ namespace CategoryTheory.Limits
 variable (C : Type u) [Category.{v} C]
 
 #print CategoryTheory.Limits.HasFiniteProducts /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- A category has finite products if there is a chosen limit for every diagram
 with shape `discrete J`, where we have `[finite J]`.
 
@@ -72,7 +72,7 @@ theorem hasFiniteProducts_of_hasProducts [HasProducts.{w} C] : HasFiniteProducts
 -/
 
 #print CategoryTheory.Limits.HasFiniteCoproducts /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- A category has finite coproducts if there is a chosen colimit for every diagram
 with shape `discrete J`, where we have `[fintype J]`.
 

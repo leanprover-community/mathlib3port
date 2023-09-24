@@ -3,8 +3,8 @@ Copyright (c) 2022 Pierre-Alexandre Bazin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 -/
-import Mathbin.Algebra.Module.Pid
-import Mathbin.Data.Zmod.Quotient
+import Algebra.Module.Pid
+import Data.Zmod.Quotient
 
 #align_import group_theory.finite_abelian from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

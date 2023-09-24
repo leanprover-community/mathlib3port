@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Reflexive
-import Mathbin.CategoryTheory.Limits.Shapes.SplitCoequalizer
-import Mathbin.CategoryTheory.Monad.Algebra
+import CategoryTheory.Limits.Shapes.Reflexive
+import CategoryTheory.Limits.Shapes.SplitCoequalizer
+import CategoryTheory.Monad.Algebra
 
 #align_import category_theory.monad.coequalizer from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

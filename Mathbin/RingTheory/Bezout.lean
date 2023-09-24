@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.PrincipalIdealDomain
-import Mathbin.Algebra.GcdMonoid.IntegrallyClosed
+import RingTheory.PrincipalIdealDomain
+import Algebra.GcdMonoid.IntegrallyClosed
 
 #align_import ring_theory.bezout from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

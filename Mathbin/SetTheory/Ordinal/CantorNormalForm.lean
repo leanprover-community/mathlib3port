@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.SetTheory.Ordinal.Arithmetic
-import Mathbin.SetTheory.Ordinal.Exponential
+import SetTheory.Ordinal.Arithmetic
+import SetTheory.Ordinal.Exponential
 
 #align_import set_theory.ordinal.cantor_normal_form from "leanprover-community/mathlib"@"991ff3b5269848f6dd942ae8e9dd3c946035dc8b"
 

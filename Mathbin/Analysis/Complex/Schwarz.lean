@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Complex.AbsMax
-import Mathbin.Analysis.Complex.RemovableSingularity
+import Analysis.Complex.AbsMax
+import Analysis.Complex.RemovableSingularity
 
 #align_import analysis.complex.schwarz from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

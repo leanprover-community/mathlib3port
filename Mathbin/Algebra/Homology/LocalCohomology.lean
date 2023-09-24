@@ -3,12 +3,12 @@ Copyright (c) 2023 Emily Witt. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Emily Witt, Scott Morrison, Jake Levinson, Sam van Gool
 -/
-import Mathbin.RingTheory.Ideal.Basic
-import Mathbin.Algebra.Category.Module.Colimits
-import Mathbin.Algebra.Category.Module.Projective
-import Mathbin.CategoryTheory.Abelian.Ext
-import Mathbin.CategoryTheory.Limits.Final
-import Mathbin.RingTheory.Noetherian
+import RingTheory.Ideal.Basic
+import Algebra.Category.Module.Colimits
+import Algebra.Category.Module.Projective
+import CategoryTheory.Abelian.Ext
+import CategoryTheory.Limits.Final
+import RingTheory.Noetherian
 
 #align_import algebra.homology.local_cohomology from "leanprover-community/mathlib"@"893964fc28cefbcffc7cb784ed00a2895b4e65cf"
 

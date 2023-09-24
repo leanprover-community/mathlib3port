@@ -3,8 +3,8 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Analysis.Calculus.MeanValue
-import Mathbin.Analysis.Calculus.Deriv.Inv
+import Analysis.Calculus.MeanValue
+import Analysis.Calculus.Deriv.Inv
 
 #align_import analysis.calculus.lhopital from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

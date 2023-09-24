@@ -3,9 +3,9 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.NormedSpace.HahnBanach.Extension
-import Mathbin.Analysis.NormedSpace.IsROrC
-import Mathbin.Analysis.LocallyConvex.Polar
+import Analysis.NormedSpace.HahnBanach.Extension
+import Analysis.NormedSpace.IsROrC
+import Analysis.LocallyConvex.Polar
 
 #align_import analysis.normed_space.dual from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

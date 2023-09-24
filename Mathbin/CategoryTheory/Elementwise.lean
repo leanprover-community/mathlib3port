@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Tactic.Elementwise
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
+import Tactic.Elementwise
+import CategoryTheory.ConcreteCategory.Basic
 
 #align_import category_theory.elementwise from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.List.Lattice
-import Mathbin.Data.List.Range
+import Data.List.Lattice
+import Data.List.Range
 
 #align_import data.list.intervals from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

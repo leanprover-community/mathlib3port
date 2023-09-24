@@ -3,9 +3,9 @@ Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 -/
-import Mathbin.Data.Nat.Bitwise
-import Mathbin.SetTheory.Game.Birthday
-import Mathbin.SetTheory.Game.Impartial
+import Data.Nat.Bitwise
+import SetTheory.Game.Birthday
+import SetTheory.Game.Impartial
 
 #align_import set_theory.game.nim from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

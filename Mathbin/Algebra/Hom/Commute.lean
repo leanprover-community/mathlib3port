@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
   Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Group.Commute
+import Algebra.Hom.Group
+import Algebra.Group.Commute
 
 #align_import algebra.hom.commute from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

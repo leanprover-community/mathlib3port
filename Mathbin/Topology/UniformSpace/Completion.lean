@@ -3,7 +3,7 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Topology.UniformSpace.AbstractCompletion
+import Topology.UniformSpace.AbstractCompletion
 
 #align_import topology.uniform_space.completion from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
@@ -237,7 +237,7 @@ theorem nonempty_cauchyFilter_iff : Nonempty (CauchyFilter α) ↔ Nonempty α :
 
 section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

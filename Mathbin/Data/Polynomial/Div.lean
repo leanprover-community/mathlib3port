@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.Polynomial.Inductions
-import Mathbin.Data.Polynomial.Monic
-import Mathbin.RingTheory.Multiplicity
+import Data.Polynomial.AlgebraMap
+import Data.Polynomial.Inductions
+import Data.Polynomial.Monic
+import RingTheory.Multiplicity
 
 #align_import data.polynomial.div from "leanprover-community/mathlib"@"e1e7190efdcefc925cb36f257a8362ef22944204"
 

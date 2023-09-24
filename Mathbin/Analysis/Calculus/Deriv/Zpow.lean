@@ -3,8 +3,8 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.Deriv.Pow
-import Mathbin.Analysis.Calculus.Deriv.Inv
+import Analysis.Calculus.Deriv.Pow
+import Analysis.Calculus.Deriv.Inv
 
 #align_import analysis.calculus.deriv.zpow from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 

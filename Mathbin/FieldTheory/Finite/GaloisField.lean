@@ -3,11 +3,11 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 -/
-import Mathbin.Algebra.CharP.Algebra
-import Mathbin.Data.Zmod.Algebra
-import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.FieldTheory.Galois
-import Mathbin.FieldTheory.SplittingField.IsSplittingField
+import Algebra.CharP.Algebra
+import Data.Zmod.Algebra
+import FieldTheory.Finite.Basic
+import FieldTheory.Galois
+import FieldTheory.SplittingField.IsSplittingField
 
 #align_import field_theory.finite.galois_field from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.LpSpace
-import Mathbin.Analysis.NormedSpace.PiLp
-import Mathbin.Topology.ContinuousFunction.Bounded
+import Analysis.NormedSpace.LpSpace
+import Analysis.NormedSpace.PiLp
+import Topology.ContinuousFunction.Bounded
 
 #align_import analysis.normed_space.lp_equiv from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

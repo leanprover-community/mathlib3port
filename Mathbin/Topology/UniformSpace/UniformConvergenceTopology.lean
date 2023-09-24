@@ -3,9 +3,9 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Topology.UniformSpace.UniformConvergence
-import Mathbin.Topology.UniformSpace.Pi
-import Mathbin.Topology.UniformSpace.Equiv
+import Topology.UniformSpace.UniformConvergence
+import Topology.UniformSpace.Pi
+import Topology.UniformSpace.Equiv
 
 #align_import topology.uniform_space.uniform_convergence_topology from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

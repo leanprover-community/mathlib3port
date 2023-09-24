@@ -3,7 +3,7 @@ Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
-import Mathbin.Algebra.ContinuedFractions.Translations
+import Algebra.ContinuedFractions.Translations
 
 #align_import algebra.continued_fractions.terminated_stable from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 

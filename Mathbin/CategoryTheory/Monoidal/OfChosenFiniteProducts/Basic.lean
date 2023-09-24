@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Simon Hudon
 -/
-import Mathbin.CategoryTheory.Monoidal.Category
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Pempty
+import CategoryTheory.Monoidal.Category
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Pempty
 
 #align_import category_theory.monoidal.of_chosen_finite_products.basic from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

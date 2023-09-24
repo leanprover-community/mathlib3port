@@ -3,7 +3,7 @@ Copyright (c) 2020 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Bryan Gin-ge Chen
 -/
-import Mathbin.Data.Nat.Prime
+import Data.Nat.Prime
 
 #align_import data.int.nat_prime from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

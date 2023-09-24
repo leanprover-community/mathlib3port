@@ -3,9 +3,9 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, David Kurniadi Angdinata, Devon Tuma, Riccardo Brasca
 -/
-import Mathbin.Data.Polynomial.Div
-import Mathbin.RingTheory.Polynomial.Basic
-import Mathbin.RingTheory.Ideal.QuotientOperations
+import Data.Polynomial.Div
+import RingTheory.Polynomial.Basic
+import RingTheory.Ideal.QuotientOperations
 
 #align_import ring_theory.polynomial.quotient from "leanprover-community/mathlib"@"4f840b8d28320b20c87db17b3a6eef3d325fca87"
 

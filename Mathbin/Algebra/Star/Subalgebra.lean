@@ -3,11 +3,11 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 -/
-import Mathbin.Algebra.Star.StarAlgHom
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.Star.Pointwise
-import Mathbin.Algebra.Star.Module
-import Mathbin.RingTheory.Adjoin.Basic
+import Algebra.Star.StarAlgHom
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.Star.Pointwise
+import Algebra.Star.Module
+import RingTheory.Adjoin.Basic
 
 #align_import algebra.star.subalgebra from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

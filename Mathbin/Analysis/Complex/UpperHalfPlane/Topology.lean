@@ -3,12 +3,12 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
-import Mathbin.Analysis.Convex.Contractible
-import Mathbin.Analysis.Convex.Normed
-import Mathbin.Analysis.Convex.Complex
-import Mathbin.Analysis.Complex.ReImTopology
-import Mathbin.Topology.Homotopy.Contractible
+import Analysis.Complex.UpperHalfPlane.Basic
+import Analysis.Convex.Contractible
+import Analysis.Convex.Normed
+import Analysis.Convex.Complex
+import Analysis.Complex.ReImTopology
+import Topology.Homotopy.Contractible
 
 #align_import analysis.complex.upper_half_plane.topology from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

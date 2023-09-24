@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.GroupTheory.Submonoid.Membership
-import Mathbin.Order.WellFoundedSet
+import Data.Set.Pointwise.Smul
+import GroupTheory.Submonoid.Membership
+import Order.WellFoundedSet
 
 #align_import group_theory.submonoid.pointwise from "leanprover-community/mathlib"@"2bbc7e3884ba234309d2a43b19144105a753292e"
 

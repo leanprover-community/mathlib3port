@@ -3,12 +3,12 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Over
-import Mathbin.CategoryTheory.Adjunction.Opposites
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.CategoryTheory.Limits.Creates
-import Mathbin.CategoryTheory.Limits.Comma
+import CategoryTheory.Over
+import CategoryTheory.Adjunction.Opposites
+import CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Creates
+import CategoryTheory.Limits.Comma
 
 #align_import category_theory.limits.over from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

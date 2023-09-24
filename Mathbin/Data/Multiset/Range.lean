@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Multiset.Basic
-import Mathbin.Data.List.Range
+import Data.Multiset.Basic
+import Data.List.Range
 
 #align_import data.multiset.range from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

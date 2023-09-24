@@ -3,7 +3,7 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Limits
+import CategoryTheory.Limits.Preserves.Limits
 
 #align_import category_theory.limits.functor_category from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

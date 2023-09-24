@@ -3,8 +3,8 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Cast.Basic
-import Mathbin.Algebra.Group.Prod
+import Data.Nat.Cast.Basic
+import Algebra.Group.Prod
 
 #align_import data.nat.cast.prod from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

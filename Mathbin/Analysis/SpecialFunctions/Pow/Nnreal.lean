@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébastien Gouëzel,
   Rémy Degenne, David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
+import Analysis.SpecialFunctions.Pow.Real
 
 #align_import analysis.special_functions.pow.nnreal from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

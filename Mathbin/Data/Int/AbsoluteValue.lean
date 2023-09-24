@@ -3,11 +3,11 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Order.AbsoluteValue
-import Mathbin.Data.Int.Cast.Lemmas
-import Mathbin.Data.Int.Units
-import Mathbin.GroupTheory.GroupAction.Units
+import Algebra.Module.Basic
+import Algebra.Order.AbsoluteValue
+import Data.Int.Cast.Lemmas
+import Data.Int.Units
+import GroupTheory.GroupAction.Units
 
 #align_import data.int.absolute_value from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

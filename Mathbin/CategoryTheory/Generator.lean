@@ -3,13 +3,13 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Balanced
-import Mathbin.CategoryTheory.Limits.EssentiallySmall
-import Mathbin.CategoryTheory.Limits.Opposites
-import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
-import Mathbin.CategoryTheory.Subobject.Lattice
-import Mathbin.CategoryTheory.Subobject.WellPowered
-import Mathbin.Data.Set.Opposite
+import CategoryTheory.Balanced
+import CategoryTheory.Limits.EssentiallySmall
+import CategoryTheory.Limits.Opposites
+import CategoryTheory.Limits.Shapes.ZeroMorphisms
+import CategoryTheory.Subobject.Lattice
+import CategoryTheory.Subobject.WellPowered
+import Data.Set.Opposite
 
 #align_import category_theory.generator from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

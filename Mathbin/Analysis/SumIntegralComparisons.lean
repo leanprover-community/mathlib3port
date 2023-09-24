@@ -3,9 +3,9 @@ Copyright (c) 2022 Kevin H. Wilson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 -/
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Data.Set.Function
-import Mathbin.Analysis.SpecialFunctions.Integrals
+import MeasureTheory.Integral.IntervalIntegral
+import Data.Set.Function
+import Analysis.SpecialFunctions.Integrals
 
 #align_import analysis.sum_integral_comparisons from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

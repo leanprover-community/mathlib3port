@@ -3,7 +3,7 @@ Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Oliver Nash
 -/
-import Mathbin.Tactic.Abel
+import Tactic.Abel
 
 #align_import tactic.noncomm_ring from "leanprover-community/mathlib"@"abaabc8c03c8bdc430975669014d3e6c19de58e4"
 
@@ -11,7 +11,7 @@ namespace Tactic
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic for simplifying identities in not-necessarily-commutative rings.
 
 An example:

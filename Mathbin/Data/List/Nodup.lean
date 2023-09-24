@@ -3,10 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
-import Mathbin.Data.List.Lattice
-import Mathbin.Data.List.Pairwise
-import Mathbin.Data.List.Forall2
-import Mathbin.Data.Set.Pairwise.Basic
+import Data.List.Lattice
+import Data.List.Pairwise
+import Data.List.Forall2
+import Data.Set.Pairwise.Basic
 
 #align_import data.list.nodup from "leanprover-community/mathlib"@"c227d107bbada5d0d9d20287e3282c0a7f1651a0"
 

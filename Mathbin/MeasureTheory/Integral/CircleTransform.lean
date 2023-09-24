@@ -3,8 +3,8 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathbin.Data.Complex.Basic
-import Mathbin.MeasureTheory.Integral.CircleIntegral
+import Data.Complex.Basic
+import MeasureTheory.Integral.CircleIntegral
 
 #align_import measure_theory.integral.circle_transform from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

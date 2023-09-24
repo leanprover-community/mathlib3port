@@ -3,11 +3,11 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 -/
-import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Set.Function
-import Mathbin.Algebra.Order.Monoid.Cancel.Defs
-import Mathbin.Algebra.Order.Monoid.Canonical.Defs
-import Mathbin.Algebra.Group.Basic
+import Data.Set.Intervals.Basic
+import Data.Set.Function
+import Algebra.Order.Monoid.Cancel.Defs
+import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Group.Basic
 
 #align_import data.set.intervals.monoid from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

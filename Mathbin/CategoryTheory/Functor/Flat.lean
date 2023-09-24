@@ -3,12 +3,12 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
-import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
-import Mathbin.CategoryTheory.Limits.Bicones
-import Mathbin.CategoryTheory.Limits.Comma
-import Mathbin.CategoryTheory.Limits.Preserves.Finite
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
+import CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
+import CategoryTheory.Limits.Preserves.FunctorCategory
+import CategoryTheory.Limits.Bicones
+import CategoryTheory.Limits.Comma
+import CategoryTheory.Limits.Preserves.Finite
+import CategoryTheory.Limits.Shapes.FiniteLimits
 
 #align_import category_theory.functor.flat from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 

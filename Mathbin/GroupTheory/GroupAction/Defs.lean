@@ -3,11 +3,11 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yury Kudryashov
 -/
-import Mathbin.Algebra.Group.TypeTags
-import Mathbin.Algebra.Group.Commute
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Opposites
-import Mathbin.Logic.Embedding.Basic
+import Algebra.Group.TypeTags
+import Algebra.Group.Commute
+import Algebra.Hom.Group
+import Algebra.Opposites
+import Logic.Embedding.Basic
 
 #align_import group_theory.group_action.defs from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

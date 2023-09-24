@@ -3,9 +3,9 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Topology.Algebra.Module.Basic
+import LinearAlgebra.AffineSpace.AffineMap
+import Topology.ContinuousFunction.Basic
+import Topology.Algebra.Module.Basic
 
 #align_import topology.algebra.continuous_affine_map from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

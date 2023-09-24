@@ -3,8 +3,8 @@ Copyright (c) 2022 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Data.Dfinsupp.WellFounded
-import Mathbin.Data.Finsupp.Lex
+import Data.Dfinsupp.WellFounded
+import Data.Finsupp.Lex
 
 #align_import data.finsupp.well_founded from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 

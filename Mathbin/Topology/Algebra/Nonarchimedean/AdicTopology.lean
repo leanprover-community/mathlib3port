@@ -3,10 +3,10 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.RingTheory.Ideal.Operations
-import Mathbin.Topology.Algebra.Nonarchimedean.Bases
-import Mathbin.Topology.UniformSpace.Completion
-import Mathbin.Topology.Algebra.UniformRing
+import RingTheory.Ideal.Operations
+import Topology.Algebra.Nonarchimedean.Bases
+import Topology.UniformSpace.Completion
+import Topology.Algebra.UniformRing
 
 #align_import topology.algebra.nonarchimedean.adic_topology from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

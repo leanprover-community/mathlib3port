@@ -3,9 +3,9 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 -/
-import Mathbin.CategoryTheory.Limits.KanExtension
-import Mathbin.Topology.Category.Top.Opens
-import Mathbin.CategoryTheory.Adjunction.Opposites
+import CategoryTheory.Limits.KanExtension
+import Topology.Category.Top.Opens
+import CategoryTheory.Adjunction.Opposites
 
 #align_import topology.sheaves.presheaf from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"
 
@@ -78,7 +78,7 @@ unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit
       dependencies := [] }
 #align Top.presheaf.restrict_attr Top.presheaf.restrict_attr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to discharge goals of type `U ≤ V` for `Top.presheaf.restrict_open` -/
 unsafe def restrict_tac : ∀ n : ℕ, tactic Unit
   | 0 => tactic.fail "`restrict_tac` failed"

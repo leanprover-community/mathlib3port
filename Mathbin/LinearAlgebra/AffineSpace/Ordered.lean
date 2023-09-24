@@ -3,11 +3,11 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Algebra.Order.Invertible
-import Mathbin.Algebra.Order.Module
-import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
-import Mathbin.LinearAlgebra.AffineSpace.Slope
-import Mathbin.Tactic.FieldSimp
+import Algebra.Order.Invertible
+import Algebra.Order.Module
+import LinearAlgebra.AffineSpace.MidpointZero
+import LinearAlgebra.AffineSpace.Slope
+import Tactic.FieldSimp
 
 #align_import linear_algebra.affine_space.ordered from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

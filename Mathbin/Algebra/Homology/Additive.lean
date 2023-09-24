@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Homology.Homology
-import Mathbin.Algebra.Homology.Single
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+import Algebra.Homology.Homology
+import Algebra.Homology.Single
+import CategoryTheory.Preadditive.AdditiveFunctor
 
 #align_import algebra.homology.additive from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

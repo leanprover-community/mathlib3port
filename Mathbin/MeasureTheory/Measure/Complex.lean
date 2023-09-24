@@ -3,7 +3,7 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Measure.VectorMeasure
+import MeasureTheory.Measure.VectorMeasure
 
 #align_import measure_theory.measure.complex from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

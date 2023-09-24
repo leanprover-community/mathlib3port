@@ -3,10 +3,10 @@ Copyright (c) 2020 Kyle Miller All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Multiset.Basic
-import Mathbin.Data.Vector.Basic
-import Mathbin.Data.Setoid.Basic
-import Mathbin.Tactic.ApplyFun
+import Data.Multiset.Basic
+import Data.Vector.Basic
+import Data.Setoid.Basic
+import Tactic.ApplyFun
 
 #align_import data.sym.basic from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

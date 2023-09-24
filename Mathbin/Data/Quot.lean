@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Logic.Relator
+import Logic.Relator
 
 #align_import data.quot from "leanprover-community/mathlib"@"6ed6abbde29b8f630001a1b481603f657a3384f1"
 

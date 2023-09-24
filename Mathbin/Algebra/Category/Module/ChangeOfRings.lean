@@ -3,8 +3,8 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.Algebra.Category.Module.Basic
-import Mathbin.RingTheory.TensorProduct
+import Algebra.Category.Module.Basic
+import RingTheory.TensorProduct
 
 #align_import algebra.category.Module.change_of_rings from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

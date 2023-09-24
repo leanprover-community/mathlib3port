@@ -3,8 +3,8 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Sites.CoverPreserving
-import Mathbin.CategoryTheory.Sites.LeftExact
+import CategoryTheory.Sites.CoverPreserving
+import CategoryTheory.Sites.LeftExact
 
 #align_import category_theory.sites.pushforward from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 

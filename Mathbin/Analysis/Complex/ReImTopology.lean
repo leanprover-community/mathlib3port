@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.Topology.FiberBundle.IsHomeomorphicTrivialBundle
+import Analysis.Complex.Basic
+import Topology.FiberBundle.IsHomeomorphicTrivialBundle
 
 #align_import analysis.complex.re_im_topology from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 

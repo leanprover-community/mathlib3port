@@ -3,8 +3,8 @@ Copyright (c) 2020 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Algebra.BigOperators.NatAntidiagonal
-import Mathbin.Data.Polynomial.RingDivision
+import Algebra.BigOperators.NatAntidiagonal
+import Data.Polynomial.RingDivision
 
 #align_import data.polynomial.mirror from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

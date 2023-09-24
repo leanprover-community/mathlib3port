@@ -3,10 +3,10 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Punit
-import Mathbin.CategoryTheory.Comma
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
-import Mathbin.CategoryTheory.EssentiallySmall
+import CategoryTheory.Punit
+import CategoryTheory.Comma
+import CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.EssentiallySmall
 
 #align_import category_theory.structured_arrow from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

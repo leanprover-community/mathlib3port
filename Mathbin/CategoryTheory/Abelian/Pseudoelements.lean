@@ -3,9 +3,9 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Abelian.Exact
-import Mathbin.CategoryTheory.Over
-import Mathbin.Algebra.Category.Module.EpiMono
+import CategoryTheory.Abelian.Exact
+import CategoryTheory.Over
+import Algebra.Category.Module.EpiMono
 
 #align_import category_theory.abelian.pseudoelements from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

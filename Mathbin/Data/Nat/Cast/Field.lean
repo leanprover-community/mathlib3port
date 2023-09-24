@@ -3,9 +3,9 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Patrick Stevens
 -/
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Algebra.Order.Ring.CharZero
-import Mathbin.Data.Nat.Cast.Basic
+import Algebra.Order.Field.Basic
+import Algebra.Order.Ring.CharZero
+import Data.Nat.Cast.Basic
 
 #align_import data.nat.cast.field from "leanprover-community/mathlib"@"acee671f47b8e7972a1eb6f4eed74b4b3abce829"
 

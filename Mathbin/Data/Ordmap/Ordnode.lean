@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Order.Compare
-import Mathbin.Data.List.Defs
-import Mathbin.Data.Nat.Psub
+import Order.Compare
+import Data.List.Defs
+import Data.Nat.Psub
 
 #align_import data.ordmap.ordnode from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 
@@ -68,7 +68,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: nil {} -/
 #print Ordnode /-
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced

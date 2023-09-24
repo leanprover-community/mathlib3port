@@ -3,11 +3,11 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Nat.Multiplicity
-import Mathbin.Data.Zmod.Algebra
-import Mathbin.RingTheory.WittVector.Basic
-import Mathbin.RingTheory.WittVector.IsPoly
-import Mathbin.FieldTheory.PerfectClosure
+import Data.Nat.Multiplicity
+import Data.Zmod.Algebra
+import RingTheory.WittVector.Basic
+import RingTheory.WittVector.IsPoly
+import FieldTheory.PerfectClosure
 
 #align_import ring_theory.witt_vector.frobenius from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

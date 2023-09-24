@@ -3,7 +3,7 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.NumberTheory.LegendreSymbol.JacobiSymbol
+import NumberTheory.LegendreSymbol.JacobiSymbol
 
 #align_import number_theory.legendre_symbol.norm_num from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

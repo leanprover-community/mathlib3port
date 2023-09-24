@@ -3,9 +3,9 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.Analysis.InnerProductSpace.Projection
-import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.Analysis.NormedSpace.Star.Basic
+import Analysis.InnerProductSpace.Projection
+import Analysis.NormedSpace.Dual
+import Analysis.NormedSpace.Star.Basic
 
 #align_import analysis.inner_product_space.dual from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

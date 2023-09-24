@@ -3,7 +3,7 @@ Copyright (c) 2021 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Topology.Homeomorph
+import Topology.Homeomorph
 
 #align_import topology.algebra.constructions from "leanprover-community/mathlib"@"c10e724be91096453ee3db13862b9fb9a992fef2"
 

@@ -3,13 +3,13 @@ Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Analysis.Calculus.BumpFunctionInner
-import Mathbin.Analysis.Calculus.ParametricIntegral
-import Mathbin.MeasureTheory.Constructions.Prod.Integral
-import Mathbin.MeasureTheory.Function.LocallyIntegrable
-import Mathbin.MeasureTheory.Group.Integration
-import Mathbin.MeasureTheory.Group.Prod
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
+import Analysis.Calculus.BumpFunctionInner
+import Analysis.Calculus.ParametricIntegral
+import MeasureTheory.Constructions.Prod.Integral
+import MeasureTheory.Function.LocallyIntegrable
+import MeasureTheory.Group.Integration
+import MeasureTheory.Group.Prod
+import MeasureTheory.Integral.IntervalIntegral
 
 #align_import analysis.convolution from "leanprover-community/mathlib"@"8905e5ed90859939681a725b00f6063e65096d95"
 
@@ -691,7 +691,7 @@ variable [TopologicalAddGroup G]
 #print HasCompactSupport.convolution /-
 theorem HasCompactSupport.convolution [T2Space G] (hcf : HasCompactSupport f)
     (hcg : HasCompactSupport g) : HasCompactSupport (f ⋆[L, μ] g) :=
-  isCompact_of_isClosed_subset (hcg.IsCompact.add hcf) isClosed_closure <|
+  IsCompact.of_isClosed_subset (hcg.IsCompact.add hcf) isClosed_closure <|
     closure_minimal
       ((support_convolution_subset_swap L).trans <| add_subset_add subset_closure subset_closure)
       (hcg.IsCompact.add hcf).IsClosed
@@ -775,7 +775,7 @@ theorem continuousOn_convolution_right_with_param' {g : P → G → E'} {s : Set
     filter_upwards [self_mem_nhdsWithin]
     rintro ⟨p, x⟩ ⟨hp, hx⟩
     refine' (HasCompactSupport.convolutionExists_right L _ hf (A _ hp) _).1
-    exact isCompact_of_isClosed_subset hk (isClosed_tsupport _) (B p hp)
+    exact IsCompact.of_isClosed_subset hk (isClosed_tsupport _) (B p hp)
   let K' := -k + {q₀.2}
   have hK' : IsCompact K' := hk.neg.add isCompact_singleton
   obtain ⟨U, U_open, K'U, hU⟩ : ∃ U, IsOpen U ∧ K' ⊆ U ∧ integrable_on f U μ
@@ -1604,7 +1604,7 @@ theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
     filter_upwards [A' q₀ hq₀]
     rintro ⟨p, x⟩ ⟨hp, hx⟩
     refine' (HasCompactSupport.convolutionExists_right L _ hf (A _ hp) _).1
-    apply isCompact_of_isClosed_subset hk (isClosed_tsupport _)
+    apply IsCompact.of_isClosed_subset hk (isClosed_tsupport _)
     exact closure_minimal (support_subset_iff'.2 fun z hz => hgs _ _ hp hz) hk.is_closed
   have I2 : integrable (fun a : G => L (f a) (g q₀.1 (q₀.2 - a))) μ :=
     by

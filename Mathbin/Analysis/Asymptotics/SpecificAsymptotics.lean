@@ -3,8 +3,8 @@ Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Analysis.Normed.Order.Basic
-import Mathbin.Analysis.Asymptotics.Asymptotics
+import Analysis.Normed.Order.Basic
+import Analysis.Asymptotics.Asymptotics
 
 #align_import analysis.asymptotics.specific_asymptotics from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Topology.Algebra.GroupCompletion
-import Mathbin.Topology.Algebra.Ring.Ideal
+import Algebra.Algebra.Basic
+import Topology.Algebra.GroupCompletion
+import Topology.Algebra.Ring.Ideal
 
 #align_import topology.algebra.uniform_ring from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
-import Mathbin.LinearAlgebra.CliffordAlgebra.Even
-import Mathbin.LinearAlgebra.QuadraticForm.Prod
+import LinearAlgebra.CliffordAlgebra.Conjugation
+import LinearAlgebra.CliffordAlgebra.Even
+import LinearAlgebra.QuadraticForm.Prod
 
 #align_import linear_algebra.clifford_algebra.even_equiv from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

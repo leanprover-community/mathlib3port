@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 -/
-import Mathbin.Data.Set.Function
-import Mathbin.Data.Set.Intervals.OrdConnected
+import Data.Set.Function
+import Data.Set.Intervals.OrdConnected
 
 #align_import data.set.intervals.proj_Icc from "leanprover-community/mathlib"@"4e24c4bfcff371c71f7ba22050308aa17815626c"
 

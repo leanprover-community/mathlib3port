@@ -3,12 +3,12 @@ Copyright (c) 2020 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Integral.IntegrableOn
-import Mathbin.MeasureTheory.Integral.Bochner
-import Mathbin.MeasureTheory.Function.LocallyIntegrable
-import Mathbin.Order.Filter.IndicatorFunction
-import Mathbin.Topology.MetricSpace.ThickenedIndicator
-import Mathbin.Topology.ContinuousFunction.Compact
+import MeasureTheory.Integral.IntegrableOn
+import MeasureTheory.Integral.Bochner
+import MeasureTheory.Function.LocallyIntegrable
+import Order.Filter.IndicatorFunction
+import Topology.MetricSpace.ThickenedIndicator
+import Topology.ContinuousFunction.Compact
 
 #align_import measure_theory.integral.set_integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
@@ -1047,7 +1047,7 @@ section TendstoMono
 variable {μ : Measure α} [NormedAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α}
   {f : α → E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args -/
 #print Antitone.tendsto_set_integral /-
 theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) :
@@ -1069,7 +1069,7 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args"
 #align antitone.tendsto_set_integral Antitone.tendsto_set_integral
 -/
 

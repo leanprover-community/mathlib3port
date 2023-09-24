@@ -3,8 +3,8 @@ Copyright (c) 2020 James Arthur. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Arthur, Chris Hughes, Shing Tak Lam
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathbin.Analysis.SpecialFunctions.Log.Basic
+import Analysis.SpecialFunctions.Trigonometric.Deriv
+import Analysis.SpecialFunctions.Log.Basic
 
 #align_import analysis.special_functions.arsinh from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

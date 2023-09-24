@@ -3,9 +3,9 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathbin.FieldTheory.Minpoly.Field
+import LinearAlgebra.FreeModule.Finite.Basic
+import LinearAlgebra.Matrix.Charpoly.Coeff
+import FieldTheory.Minpoly.Field
 
 #align_import linear_algebra.charpoly.basic from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

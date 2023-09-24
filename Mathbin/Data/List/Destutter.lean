@@ -3,7 +3,7 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez, Eric Wieser
 -/
-import Mathbin.Data.List.Chain
+import Data.List.Chain
 
 #align_import data.list.destutter from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

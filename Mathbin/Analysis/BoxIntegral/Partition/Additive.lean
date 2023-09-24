@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.BoxIntegral.Partition.Split
-import Mathbin.Analysis.NormedSpace.OperatorNorm
+import Analysis.BoxIntegral.Partition.Split
+import Analysis.NormedSpace.OperatorNorm
 
 #align_import analysis.box_integral.partition.additive from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

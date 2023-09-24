@@ -3,7 +3,7 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.LocalProperties
+import RingTheory.LocalProperties
 
 #align_import ring_theory.ring_hom.surjective from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Analysis.Normed.Order.Lattice
-import Mathbin.MeasureTheory.Function.LpSpace
+import Analysis.Normed.Order.Lattice
+import MeasureTheory.Function.LpSpace
 
 #align_import measure_theory.function.lp_order from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

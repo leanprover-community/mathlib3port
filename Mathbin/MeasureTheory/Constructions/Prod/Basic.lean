@@ -3,10 +3,10 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.MeasureTheory.Measure.GiryMonad
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
-import Mathbin.MeasureTheory.Integral.Lebesgue
-import Mathbin.MeasureTheory.Measure.OpenPos
+import MeasureTheory.Measure.GiryMonad
+import Dynamics.Ergodic.MeasurePreserving
+import MeasureTheory.Integral.Lebesgue
+import MeasureTheory.Measure.OpenPos
 
 #align_import measure_theory.constructions.prod.basic from "leanprover-community/mathlib"@"00abe0695d8767201e6d008afa22393978bb324d"
 

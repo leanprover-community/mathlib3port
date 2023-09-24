@@ -3,10 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Meta.Univs
+import Meta.Univs
 import Mathbin.Tactic.Lint.Default
-import Mathbin.Tactic.Ext
-import Mathbin.Logic.Function.Basic
+import Tactic.Ext
+import Logic.Function.Basic
 
 #align_import data.sigma.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

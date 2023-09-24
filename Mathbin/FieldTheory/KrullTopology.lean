@@ -3,10 +3,10 @@ Copyright (c) 2022 Sebastian Monnet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Monnet
 -/
-import Mathbin.FieldTheory.Galois
-import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Topology.Algebra.OpenSubgroup
-import Mathbin.Tactic.ByContra
+import FieldTheory.Galois
+import Topology.Algebra.FilterBasis
+import Topology.Algebra.OpenSubgroup
+import Tactic.ByContra
 
 #align_import field_theory.krull_topology from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

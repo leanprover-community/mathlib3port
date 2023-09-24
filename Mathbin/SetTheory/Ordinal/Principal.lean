@@ -3,7 +3,7 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Ordinal.FixedPoint
+import SetTheory.Ordinal.FixedPoint
 
 #align_import set_theory.ordinal.principal from "leanprover-community/mathlib"@"31b269b60935483943542d547a6dd83a66b37dc7"
 

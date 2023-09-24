@@ -3,7 +3,7 @@ Copyright (c) 2022 Paul Reichert. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Reichert
 -/
-import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
+import LinearAlgebra.AffineSpace.AffineSubspace
 
 #align_import linear_algebra.affine_space.restrict from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Mathieu Guay-Paquet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mathieu Guay-Paquet
 -/
-import Mathbin.Order.Ideal
+import Order.Ideal
 
 #align_import order.pfilter from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

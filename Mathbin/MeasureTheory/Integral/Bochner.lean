@@ -3,7 +3,7 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Integral.SetToL1
+import MeasureTheory.Integral.SetToL1
 
 #align_import measure_theory.integral.bochner from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
@@ -1831,7 +1831,7 @@ theorem integral_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : 
 #align measure_theory.integral_sum_measure MeasureTheory.integral_sum_measure
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args -/
 #print MeasureTheory.integral_tsum /-
 theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AEStronglyMeasurable (f i) μ)
     (hf' : ∑' i, ∫⁻ a : α, ‖f i a‖₊ ∂μ ≠ ∞) : ∫ a : α, ∑' i, f i a ∂μ = ∑' i, ∫ a : α, f i a ∂μ :=
@@ -1849,7 +1849,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AES
           _).tsum_eq.symm
   · intro n
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args"
     rfl
   · simp_rw [← coe_nnnorm, ← NNReal.coe_tsum]
     rw [aestronglyMeasurable_iff_aemeasurable]

@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 -/
-import Mathbin.Analysis.Convex.Hull
-import Mathbin.Data.Real.Basic
-import Mathbin.LinearAlgebra.LinearPmap
+import Analysis.Convex.Hull
+import Data.Real.Basic
+import LinearAlgebra.LinearPmap
 
 #align_import analysis.convex.cone.basic from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

@@ -3,11 +3,11 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.BoxIntegral.DivergenceTheorem
-import Mathbin.Analysis.BoxIntegral.Integrability
-import Mathbin.Analysis.Calculus.Deriv.Basic
-import Mathbin.MeasureTheory.Constructions.Prod.Integral
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
+import Analysis.BoxIntegral.DivergenceTheorem
+import Analysis.BoxIntegral.Integrability
+import Analysis.Calculus.Deriv.Basic
+import MeasureTheory.Constructions.Prod.Integral
+import MeasureTheory.Integral.IntervalIntegral
 
 #align_import measure_theory.integral.divergence_theorem from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

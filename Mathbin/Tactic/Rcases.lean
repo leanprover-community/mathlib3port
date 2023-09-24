@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Leanbin.Data.Dlist
-import Mathbin.Tactic.Core
-import Mathbin.Tactic.Clear
+import Data.Dlist
+import Tactic.Core
+import Tactic.Clear
 
 #align_import tactic.rcases from "leanprover-community/mathlib"@"356447fe00e75e54777321045cdff7c9ea212e60"
 

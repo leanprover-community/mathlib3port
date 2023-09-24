@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
-import Mathbin.CategoryTheory.Subobject.MonoOver
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Subobject.MonoOver
 
 #align_import category_theory.subterminal from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

@@ -3,12 +3,12 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 -/
-import Mathbin.Data.Matrix.Block
-import Mathbin.Data.Matrix.Notation
-import Mathbin.LinearAlgebra.StdBasis
-import Mathbin.RingTheory.AlgebraTower
-import Mathbin.Algebra.Module.Algebra
-import Mathbin.Algebra.Algebra.Subalgebra.Tower
+import Data.Matrix.Block
+import Data.Matrix.Notation
+import LinearAlgebra.StdBasis
+import RingTheory.AlgebraTower
+import Algebra.Module.Algebra
+import Algebra.Algebra.Subalgebra.Tower
 
 #align_import linear_algebra.matrix.to_lin from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

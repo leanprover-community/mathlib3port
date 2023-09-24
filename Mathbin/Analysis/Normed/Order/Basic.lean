@@ -3,8 +3,8 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Group.TypeTags
-import Mathbin.Analysis.NormedSpace.Basic
+import Algebra.Order.Group.TypeTags
+import Analysis.NormedSpace.Basic
 
 #align_import analysis.normed.order.basic from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

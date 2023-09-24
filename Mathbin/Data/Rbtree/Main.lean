@@ -3,10 +3,10 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 -/
-import Mathbin.Data.Rbtree.Find
-import Mathbin.Data.Rbtree.Insert
-import Mathbin.Data.Rbtree.MinMax
-import Mathbin.Order.RelClasses
+import Data.Rbtree.Find
+import Data.Rbtree.Insert
+import Data.Rbtree.MinMax
+import Order.RelClasses
 
 #align_import data.rbtree.main from "leanprover-community/mathlib"@"4d4167104581a21259f7f448e1972a63a4546be7"
 

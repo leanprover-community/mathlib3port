@@ -3,9 +3,9 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Probability.Martingale.Upcrossing
-import Mathbin.MeasureTheory.Function.UniformIntegrable
-import Mathbin.MeasureTheory.Constructions.Polish
+import Probability.Martingale.Upcrossing
+import MeasureTheory.Function.UniformIntegrable
+import MeasureTheory.Constructions.Polish
 
 #align_import probability.martingale.convergence from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.ModelTheory.Semantics
+import ModelTheory.Semantics
 
 #align_import model_theory.order from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

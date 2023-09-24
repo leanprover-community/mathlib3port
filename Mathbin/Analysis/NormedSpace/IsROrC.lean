@@ -3,9 +3,9 @@ Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathbin.Data.IsROrC.Basic
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Analysis.NormedSpace.Pointwise
+import Data.IsROrC.Basic
+import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.Pointwise
 
 #align_import analysis.normed_space.is_R_or_C from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

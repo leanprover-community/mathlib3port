@@ -3,9 +3,9 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.Topology.Algebra.Module.WeakDual
-import Mathbin.Analysis.Normed.Field.Basic
-import Mathbin.Analysis.LocallyConvex.WithSeminorms
+import Topology.Algebra.Module.WeakDual
+import Analysis.Normed.Field.Basic
+import Analysis.LocallyConvex.WithSeminorms
 
 #align_import analysis.locally_convex.weak_dual from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

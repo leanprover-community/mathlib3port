@@ -3,8 +3,8 @@ Copyright (c) 2023 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Order.SuccPred.LinearLocallyFinite
-import Mathbin.Probability.Martingale.Basic
+import Order.SuccPred.LinearLocallyFinite
+import Probability.Martingale.Basic
 
 #align_import probability.martingale.optional_sampling from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
-import Mathbin.CategoryTheory.Bicategory.Coherence
+import CategoryTheory.Bicategory.Coherence
 
 #align_import category_theory.bicategory.coherence_tactic from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
@@ -183,7 +183,7 @@ instance Mathlib.Tactic.BicategoryCoherence.liftHom₂WhiskerRight {f g : a ⟶ 
 -/
 
 #print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 /-- A typeclass carrying a choice of bicategorical structural isomorphism between two objects.
 Used by the `⊗≫` bicategorical composition operator, and the `coherence` tactic.
 -/
@@ -379,7 +379,7 @@ open CategoryTheory.Bicategory
 namespace Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Coherence tactic for bicategories. -/ unsafe
@@ -409,7 +409,7 @@ namespace Tactic
 
 namespace Bicategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Simp lemmas for rewriting a 2-morphism into a normal form. -/
 unsafe def whisker_simps : tactic Unit :=
   sorry

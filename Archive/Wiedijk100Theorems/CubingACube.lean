@@ -3,9 +3,9 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Data.Real.Basic
-import Mathbin.Data.Set.Finite
-import Mathbin.Data.Set.Intervals.Disjoint
+import Data.Real.Basic
+import Data.Set.Finite
+import Data.Set.Intervals.Disjoint
 
 #align_import wiedijk_100_theorems.cubing_a_cube from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

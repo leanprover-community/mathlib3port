@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Eric Wieser
 -/
-import Mathbin.Data.Matrix.Basis
-import Mathbin.RingTheory.TensorProduct
+import Data.Matrix.Basis
+import RingTheory.TensorProduct
 
 #align_import ring_theory.matrix_algebra from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

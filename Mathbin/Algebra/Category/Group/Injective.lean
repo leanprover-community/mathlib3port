@@ -3,12 +3,12 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.Algebra.Category.Group.EpiMono
-import Mathbin.Algebra.Category.Module.EpiMono
-import Mathbin.Algebra.Module.Injective
-import Mathbin.CategoryTheory.Preadditive.Injective
-import Mathbin.GroupTheory.Divisible
-import Mathbin.RingTheory.PrincipalIdealDomain
+import Algebra.Category.Group.EpiMono
+import Algebra.Category.Module.EpiMono
+import Algebra.Module.Injective
+import CategoryTheory.Preadditive.Injective
+import GroupTheory.Divisible
+import RingTheory.PrincipalIdealDomain
 
 #align_import algebra.category.Group.injective from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

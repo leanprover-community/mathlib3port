@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.MonoidAlgebra.Basic
-import Mathbin.Algebra.CharP.Invertible
-import Mathbin.LinearAlgebra.Basis
+import Algebra.MonoidAlgebra.Basic
+import Algebra.CharP.Invertible
+import LinearAlgebra.Basis
 
 #align_import representation_theory.maschke from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

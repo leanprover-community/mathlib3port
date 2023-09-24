@@ -3,13 +3,13 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Multiset.Sort
-import Mathbin.Data.Pnat.Interval
-import Mathbin.Data.Rat.Order
-import Mathbin.Data.Pnat.Basic
-import Mathbin.Tactic.NormNum
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Tactic.IntervalCases
+import Data.Multiset.Sort
+import Data.Pnat.Interval
+import Data.Rat.Order
+import Data.Pnat.Basic
+import Tactic.NormNum
+import Tactic.FieldSimp
+import Tactic.IntervalCases
 
 #align_import number_theory.ADE_inequality from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

@@ -3,12 +3,12 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Topology.Sheaves.SheafCondition.OpensLeCover
-import Mathbin.CategoryTheory.Limits.Final
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
-import Mathbin.CategoryTheory.Category.Pairwise
-import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
-import Mathbin.Algebra.Category.Ring.Constructions
+import Topology.Sheaves.SheafCondition.OpensLeCover
+import CategoryTheory.Limits.Final
+import CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Category.Pairwise
+import CategoryTheory.Limits.Constructions.BinaryProducts
+import Algebra.Category.Ring.Constructions
 
 #align_import topology.sheaves.sheaf_condition.pairwise_intersections from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

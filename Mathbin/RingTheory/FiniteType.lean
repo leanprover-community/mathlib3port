@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.GroupTheory.Finiteness
-import Mathbin.RingTheory.Adjoin.Tower
-import Mathbin.RingTheory.Finiteness
-import Mathbin.RingTheory.Noetherian
+import GroupTheory.Finiteness
+import RingTheory.Adjoin.Tower
+import RingTheory.Finiteness
+import RingTheory.Noetherian
 
 #align_import ring_theory.finite_type from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

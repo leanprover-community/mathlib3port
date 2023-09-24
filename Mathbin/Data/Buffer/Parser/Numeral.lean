@@ -3,7 +3,7 @@ Copyright (c) 2020 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.Buffer.Parser.Basic
+import Data.Buffer.Parser.Basic
 
 #align_import data.buffer.parser.numeral from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

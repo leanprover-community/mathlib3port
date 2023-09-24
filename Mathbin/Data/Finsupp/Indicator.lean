@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finsupp.Defs
+import Data.Finsupp.Defs
 
 #align_import data.finsupp.indicator from "leanprover-community/mathlib"@"842328d9df7e96fd90fc424e115679c15fb23a71"
 

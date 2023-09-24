@@ -3,8 +3,8 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathbin.MeasureTheory.Function.Jacobian
+import Analysis.SpecialFunctions.Trigonometric.Deriv
+import MeasureTheory.Function.Jacobian
 
 #align_import analysis.special_functions.polar_coord from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

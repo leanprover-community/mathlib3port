@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 -/
-import Mathbin.CategoryTheory.Equivalence
-import Mathbin.Order.Hom.Basic
+import CategoryTheory.Equivalence
+import Order.Hom.Basic
 
 #align_import category_theory.category.preorder from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Rishikesh Vaishnav. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rishikesh Vaishnav
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpace
+import MeasureTheory.Measure.MeasureSpace
 
 #align_import probability.conditional_probability from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

@@ -3,10 +3,10 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Homology.Homotopy
-import Mathbin.Algebra.Category.Module.Abelian
-import Mathbin.Algebra.Category.Module.Subobject
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
+import Algebra.Homology.Homotopy
+import Algebra.Category.Module.Abelian
+import Algebra.Category.Module.Subobject
+import CategoryTheory.Limits.ConcreteCategory
 
 #align_import algebra.homology.Module from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

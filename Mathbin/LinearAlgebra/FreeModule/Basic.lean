@@ -3,11 +3,11 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.LinearAlgebra.DirectSum.Finsupp
-import Mathbin.Logic.Small.Basic
-import Mathbin.LinearAlgebra.StdBasis
-import Mathbin.LinearAlgebra.FinsuppVectorSpace
-import Mathbin.LinearAlgebra.TensorProductBasis
+import LinearAlgebra.DirectSum.Finsupp
+import Logic.Small.Basic
+import LinearAlgebra.StdBasis
+import LinearAlgebra.FinsuppVectorSpace
+import LinearAlgebra.TensorProductBasis
 
 #align_import linear_algebra.free_module.basic from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
@@ -41,7 +41,7 @@ section Basic
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 #print Module.Free /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
   exists_basis : Nonempty (Σ I : Type v, Basis I R M)

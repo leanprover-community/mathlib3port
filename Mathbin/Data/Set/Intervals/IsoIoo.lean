@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Order.Monotone.Odd
-import Mathbin.Tactic.FieldSimp
+import Order.Monotone.Odd
+import Tactic.FieldSimp
 
 #align_import data.set.intervals.iso_Ioo from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
 

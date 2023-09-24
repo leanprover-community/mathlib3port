@@ -3,10 +3,10 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Order.WellFounded
-import Mathbin.Data.Nat.Basic
-import Mathbin.Combinatorics.Quiver.Subquiver
-import Mathbin.Combinatorics.Quiver.Path
+import Order.WellFounded
+import Data.Nat.Basic
+import Combinatorics.Quiver.Subquiver
+import Combinatorics.Quiver.Path
 
 #align_import combinatorics.quiver.arborescence from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

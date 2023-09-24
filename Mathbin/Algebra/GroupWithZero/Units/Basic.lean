@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.GroupWithZero.Basic
-import Mathbin.Algebra.Group.Units
-import Mathbin.Tactic.Nontriviality
-import Mathbin.Tactic.AssertExists
+import Algebra.GroupWithZero.Basic
+import Algebra.Group.Units
+import Tactic.Nontriviality
+import Tactic.AssertExists
 
 #align_import algebra.group_with_zero.units.basic from "leanprover-community/mathlib"@"df5e9937a06fdd349fc60106f54b84d47b1434f0"
 

@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton,
 Anatole Dedecker
 -/
-import Mathbin.Topology.Homeomorph
-import Mathbin.Topology.UniformSpace.UniformEmbedding
-import Mathbin.Topology.UniformSpace.Pi
+import Topology.Homeomorph
+import Topology.UniformSpace.UniformEmbedding
+import Topology.UniformSpace.Pi
 
 #align_import topology.uniform_space.equiv from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

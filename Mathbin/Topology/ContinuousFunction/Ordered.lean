@@ -3,9 +3,9 @@ Copyright © 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam
 -/
-import Mathbin.Topology.Algebra.Order.ProjIcc
-import Mathbin.Topology.Algebra.Order.Group
-import Mathbin.Topology.ContinuousFunction.Basic
+import Topology.Algebra.Order.ProjIcc
+import Topology.Algebra.Order.Group
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.continuous_function.ordered from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

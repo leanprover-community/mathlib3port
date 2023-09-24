@@ -3,8 +3,8 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Data.Fintype.Lattice
+import Algebra.Order.Field.Basic
+import Data.Fintype.Lattice
 
 #align_import algebra.order.field.pi from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

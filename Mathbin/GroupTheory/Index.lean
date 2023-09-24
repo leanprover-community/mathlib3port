@@ -3,9 +3,9 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Data.Finite.Card
-import Mathbin.GroupTheory.Finiteness
-import Mathbin.GroupTheory.GroupAction.Quotient
+import Data.Finite.Card
+import GroupTheory.Finiteness
+import GroupTheory.GroupAction.Quotient
 
 #align_import group_theory.index from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

@@ -3,7 +3,7 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.MeanValue
+import Analysis.Calculus.MeanValue
 
 #align_import analysis.calculus.fderiv_symmetric from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

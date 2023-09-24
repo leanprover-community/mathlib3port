@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.RingTheory.Adjoin.Basic
+import Algebra.Algebra.Subalgebra.Basic
+import Topology.Algebra.Module.Basic
+import RingTheory.Adjoin.Basic
 
 #align_import topology.algebra.algebra from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 

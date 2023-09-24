@@ -3,10 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 -/
-import Mathbin.Data.Set.BoolIndicator
-import Mathbin.Order.SuccPred.Relation
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Tactic.Congrm
+import Data.Set.BoolIndicator
+import Order.SuccPred.Relation
+import Topology.SubsetProperties
+import Tactic.Congrm
 
 #align_import topology.connected from "leanprover-community/mathlib"@"d101e93197bb5f6ea89bd7ba386b7f7dff1f3903"
 
@@ -119,7 +119,7 @@ theorem Set.Subsingleton.isPreconnected {s : Set α} (hs : s.Subsingleton) : IsP
 #align set.subsingleton.is_preconnected Set.Subsingleton.isPreconnected
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print isPreconnected_of_forall /-
 /-- If any point of a set is joined to a fixed point by a preconnected subset,
 then the original set is preconnected as well. -/
@@ -137,8 +137,8 @@ theorem isPreconnected_of_forall {s : Set α} (x : α)
 #align is_preconnected_of_forall isPreconnected_of_forall
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print isPreconnected_of_forall_pair /-
 /-- If any two points of a set are contained in a preconnected subset,
 then the original set is preconnected as well. -/
@@ -211,9 +211,9 @@ theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· �
 #align is_preconnected.sUnion_directed IsPreconnected.sUnion_directed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p «expr ⊆ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 #print IsPreconnected.biUnion_of_reflTransGen /-
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
@@ -253,7 +253,7 @@ theorem IsPreconnected.biUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : �
 #align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.biUnion_of_reflTransGen
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 #print IsConnected.biUnion_of_reflTransGen /-
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
@@ -1453,7 +1453,7 @@ theorem locallyConnectedSpace_iff_open_connected_basis :
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (V «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (V «expr ⊆ » U) -/
 #print locallyConnectedSpace_iff_open_connected_subsets /-
 theorem locallyConnectedSpace_iff_open_connected_subsets :
     LocallyConnectedSpace α ↔
@@ -1805,7 +1805,7 @@ alias IsTotallySeparated.isTotallyDisconnected := isTotallyDisconnected_of_isTot
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.isTotallyDisconnected
 
 #print TotallySeparatedSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where

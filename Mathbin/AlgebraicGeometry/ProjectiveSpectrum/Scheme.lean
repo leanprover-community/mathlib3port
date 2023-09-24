@@ -3,9 +3,9 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf
-import Mathbin.AlgebraicGeometry.Spec
-import Mathbin.RingTheory.GradedAlgebra.Radical
+import AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf
+import AlgebraicGeometry.Spec
+import RingTheory.GradedAlgebra.Radical
 
 #align_import algebraic_geometry.projective_spectrum.scheme from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
@@ -363,8 +363,8 @@ open _Root_.HomogeneousLocalization
 
 variable {𝒜} {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def mem_tac : tactic Unit :=
   let b : tactic Unit := sorry
   b <|> sorry

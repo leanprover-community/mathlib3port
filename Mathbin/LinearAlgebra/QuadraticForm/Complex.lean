@@ -3,8 +3,8 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.QuadraticForm.Isometry
-import Mathbin.Analysis.SpecialFunctions.Pow.Complex
+import LinearAlgebra.QuadraticForm.Isometry
+import Analysis.SpecialFunctions.Pow.Complex
 
 #align_import linear_algebra.quadratic_form.complex from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

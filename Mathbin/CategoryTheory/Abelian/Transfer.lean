@@ -3,9 +3,9 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Abelian.Basic
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
-import Mathbin.CategoryTheory.Adjunction.Limits
+import CategoryTheory.Abelian.Basic
+import CategoryTheory.Limits.Preserves.Shapes.Kernels
+import CategoryTheory.Adjunction.Limits
 
 #align_import category_theory.abelian.transfer from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

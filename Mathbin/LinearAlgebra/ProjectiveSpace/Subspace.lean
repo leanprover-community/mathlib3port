@@ -3,7 +3,7 @@ Copyright (c) 2022 Michael Blyth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
 -/
-import Mathbin.LinearAlgebra.ProjectiveSpace.Basic
+import LinearAlgebra.ProjectiveSpace.Basic
 
 #align_import linear_algebra.projective_space.subspace from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 

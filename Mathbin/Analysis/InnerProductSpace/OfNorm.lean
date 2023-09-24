@@ -3,8 +3,8 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Topology.Algebra.Algebra
-import Mathbin.Analysis.InnerProductSpace.Basic
+import Topology.Algebra.Algebra
+import Analysis.InnerProductSpace.Basic
 
 #align_import analysis.inner_product_space.of_norm from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

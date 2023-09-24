@@ -3,10 +3,10 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.DirectLimit
-import Mathbin.Algebra.CharP.Algebra
-import Mathbin.FieldTheory.IsAlgClosed.Basic
-import Mathbin.FieldTheory.SplittingField.Construction
+import Algebra.DirectLimit
+import Algebra.CharP.Algebra
+import FieldTheory.IsAlgClosed.Basic
+import FieldTheory.SplittingField.Construction
 
 #align_import field_theory.is_alg_closed.algebraic_closure from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

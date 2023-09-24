@@ -3,9 +3,9 @@ Copyright (c) 2022 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.MeasureTheory.Integral.ExpDecay
-import Mathbin.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathbin.Analysis.MellinTransform
+import MeasureTheory.Integral.ExpDecay
+import Analysis.SpecialFunctions.ImproperIntegrals
+import Analysis.MellinTransform
 
 #align_import analysis.special_functions.gamma.basic from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

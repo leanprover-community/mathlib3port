@@ -3,10 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.AbsoluteValue
-import Mathbin.Algebra.Order.Ring.WithTop
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Fintype.Card
+import Algebra.Order.AbsoluteValue
+import Algebra.Order.Ring.WithTop
+import Algebra.BigOperators.Basic
+import Data.Fintype.Card
 
 #align_import algebra.big_operators.order from "leanprover-community/mathlib"@"824f9ae93a4f5174d2ea948e2d75843dd83447bb"
 
@@ -253,7 +253,7 @@ theorem card_biUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fi
 
 variable {ι' : Type _} [DecidableEq ι']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ∉ » t) -/
 #print Finset.prod_fiberwise_le_prod_of_one_le_prod_fiber' /-
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
@@ -269,7 +269,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
 #align finset.sum_fiberwise_le_sum_of_sum_fiber_nonneg Finset.sum_fiberwise_le_sum_of_sum_fiber_nonneg
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ∉ » t) -/
 #print Finset.prod_le_prod_fiberwise_of_prod_fiber_le_one' /-
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}

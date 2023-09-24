@@ -3,7 +3,7 @@ Copyright (c) 2022 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.RingTheory.WittVector.Identities
+import RingTheory.WittVector.Identities
 
 #align_import ring_theory.witt_vector.domain from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

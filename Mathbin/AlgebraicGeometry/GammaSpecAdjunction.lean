@@ -3,9 +3,9 @@ Copyright (c) 2021 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.AlgebraicGeometry.Scheme
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Adjunction.Reflective
+import AlgebraicGeometry.Scheme
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Adjunction.Reflective
 
 #align_import algebraic_geometry.Gamma_Spec_adjunction from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

@@ -3,7 +3,7 @@ Copyright (c) 2023 María Inés de Frutos-Fernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 -/
-import Mathbin.RingTheory.DedekindDomain.AdicValuation
+import RingTheory.DedekindDomain.AdicValuation
 
 #align_import ring_theory.dedekind_domain.finite_adele_ring from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

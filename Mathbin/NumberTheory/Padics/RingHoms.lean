@@ -3,8 +3,8 @@ Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.Data.Zmod.Basic
-import Mathbin.NumberTheory.Padics.PadicIntegers
+import Data.Zmod.Basic
+import NumberTheory.Padics.PadicIntegers
 
 #align_import number_theory.padics.ring_homs from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

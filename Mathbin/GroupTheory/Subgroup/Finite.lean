@@ -3,9 +3,9 @@ Copyright (c) 2020 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Data.Set.Finite
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.GroupTheory.Submonoid.Membership
+import Data.Set.Finite
+import GroupTheory.Subgroup.Basic
+import GroupTheory.Submonoid.Membership
 
 #align_import group_theory.subgroup.finite from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 

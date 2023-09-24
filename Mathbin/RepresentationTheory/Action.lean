@@ -3,22 +3,22 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.Group.Basic
-import Mathbin.CategoryTheory.SingleObj
-import Mathbin.CategoryTheory.Limits.FunctorCategory
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Monoidal.FunctorCategory
-import Mathbin.CategoryTheory.Monoidal.Transport
-import Mathbin.CategoryTheory.Monoidal.Rigid.OfEquivalence
-import Mathbin.CategoryTheory.Monoidal.Rigid.FunctorCategory
-import Mathbin.CategoryTheory.Monoidal.Linear
-import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
-import Mathbin.CategoryTheory.Abelian.FunctorCategory
-import Mathbin.CategoryTheory.Abelian.Transfer
-import Mathbin.CategoryTheory.Conj
-import Mathbin.CategoryTheory.Linear.FunctorCategory
+import Algebra.Category.Group.Basic
+import CategoryTheory.SingleObj
+import CategoryTheory.Limits.FunctorCategory
+import CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Monoidal.FunctorCategory
+import CategoryTheory.Monoidal.Transport
+import CategoryTheory.Monoidal.Rigid.OfEquivalence
+import CategoryTheory.Monoidal.Rigid.FunctorCategory
+import CategoryTheory.Monoidal.Linear
+import CategoryTheory.Monoidal.Braided
+import CategoryTheory.Monoidal.Types.Symmetric
+import CategoryTheory.Abelian.FunctorCategory
+import CategoryTheory.Abelian.Transfer
+import CategoryTheory.Conj
+import CategoryTheory.Linear.FunctorCategory
 
 #align_import representation_theory.Action from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

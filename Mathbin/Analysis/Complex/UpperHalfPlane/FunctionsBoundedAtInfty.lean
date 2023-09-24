@@ -3,9 +3,9 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 -/
-import Mathbin.Algebra.Module.Submodule.Basic
-import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
-import Mathbin.Order.Filter.ZeroAndBoundedAtFilter
+import Algebra.Module.Submodule.Basic
+import Analysis.Complex.UpperHalfPlane.Basic
+import Order.Filter.ZeroAndBoundedAtFilter
 
 #align_import analysis.complex.upper_half_plane.functions_bounded_at_infty from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

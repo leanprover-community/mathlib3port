@@ -3,10 +3,10 @@ Copyright (c) 2018 Louis Carlin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 -/
-import Mathbin.Logic.Nontrivial
-import Mathbin.Algebra.Divisibility.Basic
-import Mathbin.Algebra.Group.Basic
-import Mathbin.Algebra.Ring.Defs
+import Logic.Nontrivial
+import Algebra.Divisibility.Basic
+import Algebra.Group.Basic
+import Algebra.Ring.Defs
 
 #align_import algebra.euclidean_domain.defs from "leanprover-community/mathlib"@"ee7b9f9a9ac2a8d9f04ea39bbfe6b1a3be053b38"
 

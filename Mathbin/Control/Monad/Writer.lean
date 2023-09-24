@@ -5,8 +5,8 @@ Authors: Simon Hudon
 
 The writer monad transformer for passing immutable state.
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Logic.Equiv.Defs
+import Algebra.Group.Defs
+import Logic.Equiv.Defs
 
 #align_import control.monad.writer from "leanprover-community/mathlib"@"9407b03373c8cd201df99d6bc5514fc2db44054f"
 

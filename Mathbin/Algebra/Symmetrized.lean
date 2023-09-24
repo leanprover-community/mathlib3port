@@ -3,8 +3,8 @@ Copyright (c) 2021 Christopher Hoskin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
-import Mathbin.Algebra.Jordan.Basic
-import Mathbin.Algebra.Module.Basic
+import Algebra.Jordan.Basic
+import Algebra.Module.Basic
 
 #align_import algebra.symmetrized from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

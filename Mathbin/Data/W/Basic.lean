@@ -3,7 +3,7 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Logic.Equiv.List
+import Logic.Equiv.List
 
 #align_import data.W.basic from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

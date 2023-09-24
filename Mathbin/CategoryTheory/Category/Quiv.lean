@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.CategoryTheory.PathCategory
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Category.Cat
+import CategoryTheory.PathCategory
 
 #align_import category_theory.category.Quiv from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
@@ -24,38 +24,38 @@ universe v u
 
 namespace CategoryTheory
 
-#print CategoryTheory.QuivCat /-
+#print CategoryTheory.Quiv /-
 -- intended to be used with explicit universe parameters
 /-- Category of quivers. -/
 @[nolint check_univs]
-def QuivCat :=
+def Quiv :=
   Bundled Quiver.{v + 1, u}
-#align category_theory.Quiv CategoryTheory.QuivCat
+#align category_theory.Quiv CategoryTheory.Quiv
 -/
 
 namespace Quiv
 
-instance : CoeSort QuivCat (Type u) where coe := Bundled.α
+instance : CoeSort Quiv (Type u) where coe := Bundled.α
 
-#print CategoryTheory.QuivCat.str' /-
-instance str' (C : QuivCat.{v, u}) : Quiver.{v + 1, u} C :=
+#print CategoryTheory.Quiv.str' /-
+instance str' (C : Quiv.{v, u}) : Quiver.{v + 1, u} C :=
   C.str
-#align category_theory.Quiv.str CategoryTheory.QuivCat.str'
+#align category_theory.Quiv.str CategoryTheory.Quiv.str'
 -/
 
-#print CategoryTheory.QuivCat.of /-
+#print CategoryTheory.Quiv.of /-
 /-- Construct a bundled `Quiv` from the underlying type and the typeclass. -/
-def of (C : Type u) [Quiver.{v + 1} C] : QuivCat.{v, u} :=
+def of (C : Type u) [Quiver.{v + 1} C] : Quiv.{v, u} :=
   Bundled.of C
-#align category_theory.Quiv.of CategoryTheory.QuivCat.of
+#align category_theory.Quiv.of CategoryTheory.Quiv.of
 -/
 
-instance : Inhabited QuivCat :=
-  ⟨QuivCat.of (Quiver.Empty PEmpty)⟩
+instance : Inhabited Quiv :=
+  ⟨Quiv.of (Quiver.Empty PEmpty)⟩
 
-#print CategoryTheory.QuivCat.category /-
+#print CategoryTheory.Quiv.category /-
 /-- Category structure on `Quiv` -/
-instance category : LargeCategory.{max v u} QuivCat.{v, u}
+instance category : LargeCategory.{max v u} Quiv.{v, u}
     where
   Hom C D := Prefunctor C D
   id C := Prefunctor.id C
@@ -63,17 +63,17 @@ instance category : LargeCategory.{max v u} QuivCat.{v, u}
   id_comp' C D F := by cases F <;> rfl
   comp_id' C D F := by cases F <;> rfl
   assoc' := by intros <;> rfl
-#align category_theory.Quiv.category CategoryTheory.QuivCat.category
+#align category_theory.Quiv.category CategoryTheory.Quiv.category
 -/
 
-#print CategoryTheory.QuivCat.forget /-
+#print CategoryTheory.Quiv.forget /-
 /-- The forgetful functor from categories to quivers. -/
 @[simps]
-def forget : Cat.{v, u} ⥤ QuivCat.{v, u}
+def forget : Cat.{v, u} ⥤ Quiv.{v, u}
     where
-  obj C := QuivCat.of C
+  obj C := Quiv.of C
   map C D F := F.toPrefunctor
-#align category_theory.Quiv.forget CategoryTheory.QuivCat.forget
+#align category_theory.Quiv.forget CategoryTheory.Quiv.forget
 -/
 
 end Quiv
@@ -83,7 +83,7 @@ namespace Cat
 #print CategoryTheory.Cat.free /-
 /-- The functor sending each quiver to its path category. -/
 @[simps]
-def free : QuivCat.{v, u} ⥤ Cat.{max u v, u}
+def free : Quiv.{v, u} ⥤ Cat.{max u v, u}
     where
   obj V := Cat.of (Paths V)
   map V W F :=
@@ -99,24 +99,24 @@ end Cat
 
 namespace Quiv
 
-#print CategoryTheory.QuivCat.lift /-
+#print CategoryTheory.Quiv.lift /-
 /-- Any prefunctor into a category lifts to a functor from the path category. -/
 @[simps]
 def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) :
     Paths V ⥤ C where
   obj X := F.obj X
   map X Y f := composePath (F.mapPath f)
-#align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
+#align category_theory.Quiv.lift CategoryTheory.Quiv.lift
 -/
 
-#print CategoryTheory.QuivCat.adj /-
+#print CategoryTheory.Quiv.adj /-
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
 -- but it would require lifting quite a bit of machinery to quivers!
 /--
 The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
 -/
-def adj : Cat.free ⊣ QuivCat.forget :=
+def adj : Cat.free ⊣ Quiv.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>
         { toFun := fun F => Paths.of.comp F.toPrefunctor
@@ -131,7 +131,7 @@ def adj : Cat.free ⊣ QuivCat.forget :=
             exact category.id_comp _ }
       homEquiv_naturality_left_symm := fun V W C f g => by change (show paths V ⥤ _ from _) = _;
         ext; apply eq_conj_eq_to_hom; rfl }
-#align category_theory.Quiv.adj CategoryTheory.QuivCat.adj
+#align category_theory.Quiv.adj CategoryTheory.Quiv.adj
 -/
 
 end Quiv

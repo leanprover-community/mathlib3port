@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 -/
-import Mathbin.Algebra.Homology.ComplexShape
-import Mathbin.CategoryTheory.Subobject.Limits
-import Mathbin.CategoryTheory.GradedObject
+import Algebra.Homology.ComplexShape
+import CategoryTheory.Subobject.Limits
+import CategoryTheory.GradedObject
 
 #align_import algebra.homology.homological_complex from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

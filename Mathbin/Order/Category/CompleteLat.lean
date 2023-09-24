@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Category.BddLat
-import Mathbin.Order.Hom.CompleteLattice
+import Order.Category.BddLat
+import Order.Hom.CompleteLattice
 
 #align_import order.category.CompleteLat from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
@@ -22,36 +22,36 @@ universe u
 
 open CategoryTheory
 
-#print CompleteLatCat /-
+#print CompleteLat /-
 /-- The category of complete lattices. -/
-def CompleteLatCat :=
+def CompleteLat :=
   Bundled CompleteLattice
-#align CompleteLat CompleteLatCat
+#align CompleteLat CompleteLat
 -/
 
-namespace CompleteLatCat
+namespace CompleteLat
 
-instance : CoeSort CompleteLatCat (Type _) :=
+instance : CoeSort CompleteLat (Type _) :=
   Bundled.hasCoeToSort
 
-instance (X : CompleteLatCat) : CompleteLattice X :=
+instance (X : CompleteLat) : CompleteLattice X :=
   X.str
 
-#print CompleteLatCat.of /-
+#print CompleteLat.of /-
 /-- Construct a bundled `CompleteLat` from a `complete_lattice`. -/
-def of (α : Type _) [CompleteLattice α] : CompleteLatCat :=
+def of (α : Type _) [CompleteLattice α] : CompleteLat :=
   Bundled.of α
-#align CompleteLat.of CompleteLatCat.of
+#align CompleteLat.of CompleteLat.of
 -/
 
-#print CompleteLatCat.coe_of /-
+#print CompleteLat.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [CompleteLattice α] : ↥(of α) = α :=
   rfl
-#align CompleteLat.coe_of CompleteLatCat.coe_of
+#align CompleteLat.coe_of CompleteLat.coe_of
 -/
 
-instance : Inhabited CompleteLatCat :=
+instance : Inhabited CompleteLat :=
   ⟨of PUnit⟩
 
 instance : BundledHom @CompleteLatticeHom
@@ -61,61 +61,59 @@ instance : BundledHom @CompleteLatticeHom
   comp := @CompleteLatticeHom.comp
   hom_ext X Y _ _ := FunLike.coe_injective
 
-instance : LargeCategory.{u} CompleteLatCat :=
+instance : LargeCategory.{u} CompleteLat :=
   BundledHom.category CompleteLatticeHom
 
-instance : ConcreteCategory CompleteLatCat :=
+instance : ConcreteCategory CompleteLat :=
   BundledHom.concreteCategory CompleteLatticeHom
 
-#print CompleteLatCat.hasForgetToBddLat /-
-instance hasForgetToBddLat : HasForget₂ CompleteLatCat BddLatCat
+#print CompleteLat.hasForgetToBddLat /-
+instance hasForgetToBddLat : HasForget₂ CompleteLat BddLat
     where
   forget₂ :=
-    { obj := fun X => BddLatCat.of X
+    { obj := fun X => BddLat.of X
       map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
   forget_comp := rfl
-#align CompleteLat.has_forget_to_BddLat CompleteLatCat.hasForgetToBddLat
+#align CompleteLat.has_forget_to_BddLat CompleteLat.hasForgetToBddLat
 -/
 
-#print CompleteLatCat.Iso.mk /-
+#print CompleteLat.Iso.mk /-
 /-- Constructs an isomorphism of complete lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : CompleteLatCat.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : CompleteLat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
-#align CompleteLat.iso.mk CompleteLatCat.Iso.mk
+#align CompleteLat.iso.mk CompleteLat.Iso.mk
 -/
 
-#print CompleteLatCat.dual /-
+#print CompleteLat.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : CompleteLatCat ⥤ CompleteLatCat
-    where
+def dual : CompleteLat ⥤ CompleteLat where
   obj X := of Xᵒᵈ
   map X Y := CompleteLatticeHom.dual
-#align CompleteLat.dual CompleteLatCat.dual
+#align CompleteLat.dual CompleteLat.dual
 -/
 
-#print CompleteLatCat.dualEquiv /-
+#print CompleteLat.dualEquiv /-
 /-- The equivalence between `CompleteLat` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : CompleteLatCat ≌ CompleteLatCat :=
+def dualEquiv : CompleteLat ≌ CompleteLat :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align CompleteLat.dual_equiv CompleteLatCat.dualEquiv
+#align CompleteLat.dual_equiv CompleteLat.dualEquiv
 -/
 
-end CompleteLatCat
+end CompleteLat
 
-#print completeLatCat_dual_comp_forget_to_bddLatCat /-
-theorem completeLatCat_dual_comp_forget_to_bddLatCat :
-    CompleteLatCat.dual ⋙ forget₂ CompleteLatCat BddLatCat =
-      forget₂ CompleteLatCat BddLatCat ⋙ BddLatCat.dual :=
+#print completeLat_dual_comp_forget_to_bddLat /-
+theorem completeLat_dual_comp_forget_to_bddLat :
+    CompleteLat.dual ⋙ forget₂ CompleteLat BddLat = forget₂ CompleteLat BddLat ⋙ BddLat.dual :=
   rfl
-#align CompleteLat_dual_comp_forget_to_BddLat completeLatCat_dual_comp_forget_to_bddLatCat
+#align CompleteLat_dual_comp_forget_to_BddLat completeLat_dual_comp_forget_to_bddLat
 -/
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.LinearAlgebra.Matrix.Adjugate
-import Mathbin.RingTheory.PolynomialAlgebra
-import Mathbin.Tactic.ApplyFun
-import Mathbin.Tactic.Squeeze
+import LinearAlgebra.Matrix.Adjugate
+import RingTheory.PolynomialAlgebra
+import Tactic.ApplyFun
+import Tactic.Squeeze
 
 #align_import linear_algebra.matrix.charpoly.basic from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

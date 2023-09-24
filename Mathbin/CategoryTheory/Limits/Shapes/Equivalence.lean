@@ -3,8 +3,8 @@ Copyright (c) Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Limits.Shapes.Terminal
 
 #align_import category_theory.limits.shapes.equivalence from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

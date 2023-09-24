@@ -3,10 +3,10 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
-import Mathbin.Algebra.Group.Opposite
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Logic.Equiv.Set
-import Mathbin.Tactic.AssertExists
+import Algebra.Group.Opposite
+import Algebra.Hom.Ring
+import Logic.Equiv.Set
+import Tactic.AssertExists
 
 #align_import algebra.ring.equiv from "leanprover-community/mathlib"@"00f91228655eecdcd3ac97a7fd8dbcb139fe990a"
 

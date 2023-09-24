@@ -3,12 +3,12 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.MeasureTheory.Covering.Differentiation
-import Mathbin.MeasureTheory.Covering.VitaliFamily
-import Mathbin.MeasureTheory.Integral.Lebesgue
-import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.SetTheory.Ordinal.Arithmetic
-import Mathbin.Topology.MetricSpace.Basic
+import MeasureTheory.Covering.Differentiation
+import MeasureTheory.Covering.VitaliFamily
+import MeasureTheory.Integral.Lebesgue
+import MeasureTheory.Measure.Regular
+import SetTheory.Ordinal.Arithmetic
+import Topology.MetricSpace.Basic
 
 #align_import measure_theory.covering.besicovitch from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
@@ -139,7 +139,7 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
 -/
 
 #print HasBesicovitchCovering /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`no_satelliteConfig] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`no_satelliteConfig] [] -/
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
@@ -985,8 +985,8 @@ theorem exists_disjoint_closedBall_covering_ae (μ : Measure α) [SigmaFinite μ
 #align besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closedBall_covering_ae
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ⊇ » s') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (v «expr ⊇ » s') -/
 #print Besicovitch.exists_closedBall_covering_tsum_measure_le /-
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of

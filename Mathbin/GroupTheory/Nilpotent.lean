@@ -3,12 +3,12 @@ Copyright (c) 2021 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Ines Wright, Joachim Breitner
 -/
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.GroupTheory.Solvable
-import Mathbin.GroupTheory.PGroup
-import Mathbin.GroupTheory.Sylow
-import Mathbin.Data.Nat.Factorization.Basic
-import Mathbin.Tactic.Tfae
+import GroupTheory.QuotientGroup
+import GroupTheory.Solvable
+import GroupTheory.PGroup
+import GroupTheory.Sylow
+import Data.Nat.Factorization.Basic
+import Tactic.Tfae
 
 #align_import group_theory.nilpotent from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 
@@ -189,7 +189,7 @@ theorem mem_upperCentralSeries_succ_iff (n : ℕ) (x : G) :
 -/
 
 #print Group.IsNilpotent /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 class Group.IsNilpotent (G : Type _) [Group G] : Prop where

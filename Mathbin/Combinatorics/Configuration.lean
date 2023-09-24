@@ -3,10 +3,10 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Combinatorics.Hall.Basic
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.SetTheory.Cardinal.Finite
+import Algebra.BigOperators.Order
+import Combinatorics.Hall.Basic
+import Data.Fintype.BigOperators
+import SetTheory.Cardinal.Finite
 
 #align_import combinatorics.configuration from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2023 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Int.Modeq
-import Mathbin.GroupTheory.QuotientGroup
+import Data.Int.Modeq
+import GroupTheory.QuotientGroup
 
 #align_import algebra.modeq from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

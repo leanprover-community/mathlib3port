@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes
 -/
-import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.GroupTheory.SpecificGroups.Cyclic
-import Mathbin.Algebra.GeomSum
+import Data.Polynomial.RingDivision
+import GroupTheory.SpecificGroups.Cyclic
+import Algebra.GeomSum
 
 #align_import ring_theory.integral_domain from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -82,7 +82,7 @@ theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [Is
 #align exists_eq_pow_of_mul_eq_pow_of_coprime exists_eq_pow_of_mul_eq_pow_of_coprime
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print Finset.exists_eq_pow_of_mul_eq_pow_of_coprime /-
 theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemiring R] [IsDomain R]
     [GCDMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}

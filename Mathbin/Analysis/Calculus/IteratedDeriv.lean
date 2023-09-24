@@ -3,8 +3,8 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.Deriv.Comp
-import Mathbin.Analysis.Calculus.ContDiffDef
+import Analysis.Calculus.Deriv.Comp
+import Analysis.Calculus.ContDiffDef
 
 #align_import analysis.calculus.iterated_deriv from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

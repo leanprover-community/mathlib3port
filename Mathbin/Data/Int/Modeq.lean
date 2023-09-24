@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Nat.Modeq
-import Mathbin.Tactic.Ring
+import Data.Nat.Modeq
+import Tactic.Ring
 
 #align_import data.int.modeq from "leanprover-community/mathlib"@"47a1a73351de8dd6c8d3d32b569c8e434b03ca47"
 

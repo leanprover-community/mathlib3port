@@ -3,9 +3,9 @@ Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
 -/
-import Mathbin.Topology.Algebra.Module.WeakDual
-import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.Analysis.NormedSpace.OperatorNorm
+import Topology.Algebra.Module.WeakDual
+import Analysis.NormedSpace.Dual
+import Analysis.NormedSpace.OperatorNorm
 
 #align_import analysis.normed_space.weak_dual from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

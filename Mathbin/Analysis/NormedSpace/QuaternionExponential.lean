@@ -3,9 +3,9 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Analysis.Quaternion
-import Mathbin.Analysis.NormedSpace.Exponential
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Series
+import Analysis.Quaternion
+import Analysis.NormedSpace.Exponential
+import Analysis.SpecialFunctions.Trigonometric.Series
 
 #align_import analysis.normed_space.quaternion_exponential from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

@@ -3,11 +3,11 @@ Copyright (c) 2017 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
 -/
-import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.Order.WithZero
-import Mathbin.Order.RelIso.Basic
-import Mathbin.Data.Nat.Order.Basic
-import Mathbin.Order.Hom.Set
+import Algebra.NeZero
+import Algebra.Order.WithZero
+import Order.RelIso.Basic
+import Data.Nat.Order.Basic
+import Order.Hom.Set
 
 #align_import data.fin.basic from "leanprover-community/mathlib"@"3a2b5524a138b5d0b818b858b516d4ac8a484b03"
 

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
   Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.Ring.Basic
+import Algebra.GroupPower.Basic
+import Algebra.Ring.Basic
 
 #align_import algebra.hom.group_instances from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

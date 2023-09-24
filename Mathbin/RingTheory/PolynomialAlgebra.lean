@@ -3,10 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.RingTheory.MatrixAlgebra
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.Matrix.Basis
-import Mathbin.Data.Matrix.Dmatrix
+import RingTheory.MatrixAlgebra
+import Data.Polynomial.AlgebraMap
+import Data.Matrix.Basis
+import Data.Matrix.Dmatrix
 
 #align_import ring_theory.polynomial_algebra from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

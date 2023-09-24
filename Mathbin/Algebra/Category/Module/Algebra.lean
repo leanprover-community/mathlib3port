@@ -3,9 +3,9 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Algebra.RestrictScalars
-import Mathbin.CategoryTheory.Linear.Basic
-import Mathbin.Algebra.Category.Module.Basic
+import Algebra.Algebra.RestrictScalars
+import CategoryTheory.Linear.Basic
+import Algebra.Category.Module.Basic
 
 #align_import algebra.category.Module.algebra from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

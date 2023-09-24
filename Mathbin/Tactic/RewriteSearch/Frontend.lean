@@ -3,9 +3,9 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 -/
-import Mathbin.Tactic.RewriteSearch.Explain
-import Mathbin.Tactic.RewriteSearch.Discovery
-import Mathbin.Tactic.RewriteSearch.Search
+import Tactic.RewriteSearch.Explain
+import Tactic.RewriteSearch.Discovery
+import Tactic.RewriteSearch.Search
 
 #align_import tactic.rewrite_search.frontend from "leanprover-community/mathlib"@"e1eba9fa9c909cb3e3d30f89e7d1a9c0acde6d80"
 

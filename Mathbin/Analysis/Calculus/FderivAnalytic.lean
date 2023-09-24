@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Analytic.Basic
-import Mathbin.Analysis.Calculus.Deriv.Basic
-import Mathbin.Analysis.Calculus.ContDiffDef
+import Analysis.Analytic.Basic
+import Analysis.Calculus.Deriv.Basic
+import Analysis.Calculus.ContDiffDef
 
 #align_import analysis.calculus.fderiv_analytic from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

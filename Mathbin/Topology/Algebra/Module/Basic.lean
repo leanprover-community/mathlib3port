@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Frédéric Dupuis,
   Heather Macbeth
 -/
-import Mathbin.Topology.Algebra.Ring.Basic
-import Mathbin.Topology.Algebra.MulAction
-import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Topology.UniformSpace.UniformEmbedding
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.LinearAlgebra.Projection
-import Mathbin.LinearAlgebra.Pi
+import Topology.Algebra.Ring.Basic
+import Topology.Algebra.MulAction
+import Topology.Algebra.UniformGroup
+import Topology.ContinuousFunction.Basic
+import Topology.UniformSpace.UniformEmbedding
+import Algebra.Algebra.Basic
+import LinearAlgebra.Projection
+import LinearAlgebra.Pi
 
 #align_import topology.algebra.module.basic from "leanprover-community/mathlib"@"6285167a053ad0990fc88e56c48ccd9fae6550eb"
 

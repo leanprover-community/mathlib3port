@@ -3,11 +3,11 @@ Copyright (c) 2020 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.CategoryTheory.Elements
-import Mathbin.CategoryTheory.IsConnected
-import Mathbin.CategoryTheory.SingleObj
-import Mathbin.GroupTheory.GroupAction.Quotient
-import Mathbin.GroupTheory.SemidirectProduct
+import CategoryTheory.Elements
+import CategoryTheory.IsConnected
+import CategoryTheory.SingleObj
+import GroupTheory.GroupAction.Quotient
+import GroupTheory.SemidirectProduct
 
 #align_import category_theory.action from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

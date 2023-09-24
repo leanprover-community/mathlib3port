@@ -3,9 +3,9 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Abelian
-import Mathbin.Algebra.Lie.IdealOperations
-import Mathbin.Algebra.Lie.Quotient
+import Algebra.Lie.Abelian
+import Algebra.Lie.IdealOperations
+import Algebra.Lie.Quotient
 
 #align_import algebra.lie.normalizer from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

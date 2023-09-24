@@ -3,8 +3,8 @@ Copyright (c) 2020 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Analysis.NormedSpace.FiniteDimension
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
+import Analysis.NormedSpace.FiniteDimension
+import MeasureTheory.Constructions.BorelSpace.Basic
 
 #align_import measure_theory.constructions.borel_space.continuous_linear_map from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

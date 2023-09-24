@@ -3,8 +3,8 @@ Copyright (c) 2022 Jesse Reimann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 -/
-import Mathbin.Topology.ContinuousFunction.Bounded
-import Mathbin.Topology.Sets.Compacts
+import Topology.ContinuousFunction.Bounded
+import Topology.Sets.Compacts
 
 #align_import measure_theory.integral.riesz_markov_kakutani from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

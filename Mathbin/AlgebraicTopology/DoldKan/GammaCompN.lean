@@ -3,8 +3,8 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.DoldKan.FunctorGamma
-import Mathbin.CategoryTheory.Idempotents.HomologicalComplex
+import AlgebraicTopology.DoldKan.FunctorGamma
+import CategoryTheory.Idempotents.HomologicalComplex
 
 #align_import algebraic_topology.dold_kan.gamma_comp_n from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.LinearAlgebra.Finrank
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
-import Mathbin.LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.Finrank
+import LinearAlgebra.FreeModule.Finite.Rank
+import LinearAlgebra.Matrix.ToLin
 
 #align_import linear_algebra.free_module.finite.matrix from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

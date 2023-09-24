@@ -3,11 +3,11 @@ Copyright (c) 2021 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Roots
-import Mathbin.Tactic.ByContra
-import Mathbin.Topology.Algebra.Polynomial
-import Mathbin.NumberTheory.Padics.PadicVal
-import Mathbin.Analysis.Complex.Arg
+import RingTheory.Polynomial.Cyclotomic.Roots
+import Tactic.ByContra
+import Topology.Algebra.Polynomial
+import NumberTheory.Padics.PadicVal
+import Analysis.Complex.Arg
 
 #align_import ring_theory.polynomial.cyclotomic.eval from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

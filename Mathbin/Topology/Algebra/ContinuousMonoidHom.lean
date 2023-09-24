@@ -3,8 +3,8 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Analysis.Complex.Circle
-import Mathbin.Topology.ContinuousFunction.Algebra
+import Analysis.Complex.Circle
+import Topology.ContinuousFunction.Algebra
 
 #align_import topology.algebra.continuous_monoid_hom from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

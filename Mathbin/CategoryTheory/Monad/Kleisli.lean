@@ -3,8 +3,8 @@ Copyright (c) 2020 Wojciech Nawrocki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wojciech Nawrocki, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Monad.Basic
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Monad.Basic
 
 #align_import category_theory.monad.kleisli from "leanprover-community/mathlib"@"94eaaaa6064d32e98cf838789144cf5318c37cf0"
 

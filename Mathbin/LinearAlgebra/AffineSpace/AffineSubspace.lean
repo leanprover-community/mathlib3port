@@ -3,7 +3,7 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
+import LinearAlgebra.AffineSpace.AffineEquiv
 
 #align_import linear_algebra.affine_space.affine_subspace from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

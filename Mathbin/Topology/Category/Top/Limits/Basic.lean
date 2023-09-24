@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 -/
-import Mathbin.Topology.Category.Top.Basic
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
+import Topology.Category.Top.Basic
+import CategoryTheory.Limits.ConcreteCategory
 
 #align_import topology.category.Top.limits.basic from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

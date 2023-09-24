@@ -3,7 +3,7 @@ Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 -/
-import Mathbin.Topology.Separation
+import Topology.Separation
 
 #align_import topology.support from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 
@@ -177,7 +177,7 @@ theorem hasCompactMulSupport_def : HasCompactMulSupport f ↔ IsCompact (closure
 #align has_compact_support_def hasCompactSupport_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » K) -/
 #print exists_compact_iff_hasCompactMulSupport /-
 @[to_additive]
 theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
@@ -188,7 +188,7 @@ theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
 #align exists_compact_iff_has_compact_support exists_compact_iff_hasCompactSupport
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » K) -/
 #print HasCompactMulSupport.intro /-
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)
@@ -216,7 +216,7 @@ theorem hasCompactMulSupport_iff_eventuallyEq :
         not_imp_comm.mpr fun hx => subset_mulTSupport f hx⟩,
     fun h =>
     let ⟨C, hC⟩ := mem_coclosed_compact'.mp h
-    isCompact_of_isClosed_subset hC.2.1 (isClosed_mulTSupport _) (closure_minimal hC.2.2 hC.1)⟩
+    IsCompact.of_isClosed_subset hC.2.1 (isClosed_mulTSupport _) (closure_minimal hC.2.2 hC.1)⟩
 #align has_compact_mul_support_iff_eventually_eq hasCompactMulSupport_iff_eventuallyEq
 #align has_compact_support_iff_eventually_eq hasCompactSupport_iff_eventuallyEq
 -/
@@ -236,7 +236,7 @@ theorem HasCompactMulSupport.isCompact_range [TopologicalSpace β] (h : HasCompa
 @[to_additive]
 theorem HasCompactMulSupport.mono' {f' : α → γ} (hf : HasCompactMulSupport f)
     (hff' : mulSupport f' ⊆ mulTSupport f) : HasCompactMulSupport f' :=
-  isCompact_of_isClosed_subset hf isClosed_closure <| closure_minimal hff' isClosed_closure
+  IsCompact.of_isClosed_subset hf isClosed_closure <| closure_minimal hff' isClosed_closure
 #align has_compact_mul_support.mono' HasCompactMulSupport.mono'
 #align has_compact_support.mono' HasCompactSupport.mono'
 -/
@@ -274,7 +274,7 @@ theorem HasCompactMulSupport.comp_closedEmbedding (hf : HasCompactMulSupport f) 
     (hg : ClosedEmbedding g) : HasCompactMulSupport (f ∘ g) :=
   by
   rw [hasCompactMulSupport_def, Function.mulSupport_comp_eq_preimage]
-  refine' isCompact_of_isClosed_subset (hg.is_compact_preimage hf) isClosed_closure _
+  refine' IsCompact.of_isClosed_subset (hg.is_compact_preimage hf) isClosed_closure _
   rw [hg.to_embedding.closure_eq_preimage_closure_image]
   exact preimage_mono (closure_mono <| image_preimage_subset _ _)
 #align has_compact_mul_support.comp_closed_embedding HasCompactMulSupport.comp_closedEmbedding

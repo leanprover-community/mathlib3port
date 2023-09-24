@@ -3,8 +3,8 @@ Copyright (c) 2022 Filippo A. E. Nuccio Mortarino Majno di Capriglio. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Junyan Xu
 -/
-import Mathbin.Topology.CompactOpen
-import Mathbin.Topology.Homotopy.Path
+import Topology.CompactOpen
+import Topology.Homotopy.Path
 
 #align_import topology.homotopy.H_spaces from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.Algebra.Category.Module.EpiMono
-import Mathbin.Algebra.Module.Projective
-import Mathbin.CategoryTheory.Preadditive.Projective
-import Mathbin.LinearAlgebra.FinsuppVectorSpace
+import Algebra.Category.Module.EpiMono
+import Algebra.Module.Projective
+import CategoryTheory.Preadditive.Projective
+import LinearAlgebra.FinsuppVectorSpace
 
 #align_import algebra.category.Module.projective from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

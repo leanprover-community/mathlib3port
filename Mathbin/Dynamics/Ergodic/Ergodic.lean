@@ -3,7 +3,7 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
+import Dynamics.Ergodic.MeasurePreserving
 
 #align_import dynamics.ergodic.ergodic from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

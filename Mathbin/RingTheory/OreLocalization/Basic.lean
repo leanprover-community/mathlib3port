@@ -3,10 +3,10 @@ Copyright (c) 2022 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 -/
-import Mathbin.GroupTheory.MonoidLocalization
-import Mathbin.RingTheory.NonZeroDivisors
-import Mathbin.RingTheory.OreLocalization.OreSet
-import Mathbin.Tactic.NoncommRing
+import GroupTheory.MonoidLocalization
+import RingTheory.NonZeroDivisors
+import RingTheory.OreLocalization.OreSet
+import Tactic.NoncommRing
 
 #align_import ring_theory.ore_localization.basic from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 

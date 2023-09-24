@@ -3,15 +3,15 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Finsupp.Defs
-import Mathbin.Data.Nat.PartEnat
-import Mathbin.Data.Set.Countable
-import Mathbin.Logic.Small.Basic
-import Mathbin.Order.ConditionallyCompleteLattice.Basic
-import Mathbin.Order.SuccPred.Limit
-import Mathbin.SetTheory.Cardinal.SchroederBernstein
-import Mathbin.Tactic.Positivity
+import Data.Fintype.BigOperators
+import Data.Finsupp.Defs
+import Data.Nat.PartEnat
+import Data.Set.Countable
+import Logic.Small.Basic
+import Order.ConditionallyCompleteLattice.Basic
+import Order.SuccPred.Limit
+import SetTheory.Cardinal.SchroederBernstein
+import Tactic.Positivity
 
 #align_import set_theory.cardinal.basic from "leanprover-community/mathlib"@"3ff3f2d6a3118b8711063de7111a0d77a53219a8"
 

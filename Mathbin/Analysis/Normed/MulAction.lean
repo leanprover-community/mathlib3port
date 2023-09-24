@@ -3,8 +3,8 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Topology.MetricSpace.Algebra
-import Mathbin.Analysis.Normed.Field.Basic
+import Topology.MetricSpace.Algebra
+import Analysis.Normed.Field.Basic
 
 #align_import analysis.normed.mul_action from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

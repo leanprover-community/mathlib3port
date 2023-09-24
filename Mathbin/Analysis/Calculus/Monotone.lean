@@ -3,9 +3,9 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.Deriv.Slope
-import Mathbin.MeasureTheory.Covering.OneDim
-import Mathbin.Order.Monotone.Extension
+import Analysis.Calculus.Deriv.Slope
+import MeasureTheory.Covering.OneDim
+import Order.Monotone.Extension
 
 #align_import analysis.calculus.monotone from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

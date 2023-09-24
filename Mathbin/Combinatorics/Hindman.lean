@@ -3,9 +3,9 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Topology.StoneCech
-import Mathbin.Topology.Algebra.Semigroup
-import Mathbin.Data.Stream.Init
+import Topology.StoneCech
+import Topology.Algebra.Semigroup
+import Data.Stream.Init
 
 #align_import combinatorics.hindman from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

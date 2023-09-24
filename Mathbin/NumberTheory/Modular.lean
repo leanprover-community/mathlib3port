@@ -3,10 +3,10 @@ Copyright (c) 2021 Alex Kontorovich and Heather Macbeth and Marc Masdeu. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 -/
-import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
-import Mathbin.Analysis.NormedSpace.FiniteDimension
-import Mathbin.LinearAlgebra.GeneralLinearGroup
-import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
+import Analysis.Complex.UpperHalfPlane.Basic
+import Analysis.NormedSpace.FiniteDimension
+import LinearAlgebra.GeneralLinearGroup
+import LinearAlgebra.Matrix.GeneralLinearGroup
 
 #align_import number_theory.modular from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

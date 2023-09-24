@@ -3,11 +3,11 @@ Copyright (c) 2021 Mark Lavrentyev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mark Lavrentyev
 -/
-import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Topology.Category.Top.Basic
-import Mathbin.Topology.PathConnected
-import Mathbin.Topology.Homotopy.Path
-import Mathbin.AlgebraicTopology.FundamentalGroupoid.Basic
+import CategoryTheory.Groupoid
+import Topology.Category.Top.Basic
+import Topology.PathConnected
+import Topology.Homotopy.Path
+import AlgebraicTopology.FundamentalGroupoid.Basic
 
 #align_import algebraic_topology.fundamental_groupoid.fundamental_group from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

@@ -3,14 +3,14 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Algebra.Invertible
-import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Algebra.Module.BigOperators
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap
-import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.Tactic.FinCases
+import Algebra.Invertible
+import Algebra.IndicatorFunction
+import Algebra.Module.BigOperators
+import Data.Fintype.BigOperators
+import LinearAlgebra.AffineSpace.AffineMap
+import LinearAlgebra.AffineSpace.AffineSubspace
+import LinearAlgebra.Finsupp
+import Tactic.FinCases
 
 #align_import linear_algebra.affine_space.combination from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
@@ -1159,7 +1159,7 @@ theorem centroid_eq_affineCombination_fintype [Fintype ι] (p : ι → P) :
 #align finset.centroid_eq_affine_combination_fintype Finset.centroid_eq_affineCombination_fintype
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print Finset.centroid_eq_centroid_image_of_inj_on /-
 /-- An indexed family of points that is injective on the given
 `finset` has the same centroid as the image of that `finset`.  This is
@@ -1196,8 +1196,8 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
 #align finset.centroid_eq_centroid_image_of_inj_on Finset.centroid_eq_centroid_image_of_inj_on
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s₂) -/
 #print Finset.centroid_eq_of_inj_on_of_image_eq /-
 /-- Two indexed families of points that are injective on the given
 `finset`s and with the same points in the image of those `finset`s

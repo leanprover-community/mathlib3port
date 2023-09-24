@@ -3,9 +3,9 @@ Copyright (c) 2021 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
-import Mathbin.Analysis.Convex.Measure
-import Mathbin.MeasureTheory.Group.FundamentalDomain
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
+import Analysis.Convex.Measure
+import MeasureTheory.Group.FundamentalDomain
+import MeasureTheory.Measure.Lebesgue.EqHaar
 
 #align_import measure_theory.group.geometry_of_numbers from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
@@ -66,7 +66,7 @@ theorem exists_pair_mem_lattice_not_disjoint_vadd [AddCommGroup L] [Countable L]
 #align measure_theory.exists_pair_mem_lattice_not_disjoint_vadd MeasureTheory.exists_pair_mem_lattice_not_disjoint_vadd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print MeasureTheory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure /-
 /-- The **Minkowksi Convex Body Theorem**. If `s` is a convex symmetric domain of `E` whose volume
 is large enough compared to the covolume of a lattice `L` of `E`, then it contains a non-zero

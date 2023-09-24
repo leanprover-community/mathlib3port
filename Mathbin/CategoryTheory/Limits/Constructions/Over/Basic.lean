@@ -3,11 +3,11 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Connected
-import Mathbin.CategoryTheory.Limits.Constructions.Over.Products
-import Mathbin.CategoryTheory.Limits.Constructions.Over.Connected
-import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
-import Mathbin.CategoryTheory.Limits.Constructions.Equalizers
+import CategoryTheory.Limits.Connected
+import CategoryTheory.Limits.Constructions.Over.Products
+import CategoryTheory.Limits.Constructions.Over.Connected
+import CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import CategoryTheory.Limits.Constructions.Equalizers
 
 #align_import category_theory.limits.constructions.over.basic from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

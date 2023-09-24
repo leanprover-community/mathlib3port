@@ -3,7 +3,7 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.Shapes.Equalizers
 
 #align_import category_theory.limits.shapes.split_coequalizer from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
@@ -138,7 +138,7 @@ end
 variable (f g)
 
 #print CategoryTheory.HasSplitCoequalizer /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`splittable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`splittable] [] -/
 /--
 The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` forms a split coequalizer
 in `C`.

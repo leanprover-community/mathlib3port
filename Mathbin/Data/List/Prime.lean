@@ -3,9 +3,9 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.Data.List.BigOperators.Lemmas
-import Mathbin.Data.List.Perm
+import Algebra.Associated
+import Data.List.BigOperators.Lemmas
+import Data.List.Perm
 
 #align_import data.list.prime from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

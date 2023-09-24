@@ -3,7 +3,7 @@ Copyright (c) 2020 Devon Tuma. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 -/
-import Mathbin.Probability.ProbabilityMassFunction.Basic
+import Probability.ProbabilityMassFunction.Basic
 
 #align_import probability.probability_mass_function.monad from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 

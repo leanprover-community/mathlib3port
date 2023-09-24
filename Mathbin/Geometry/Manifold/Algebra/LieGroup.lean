@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.Algebra.Monoid
+import Geometry.Manifold.Algebra.Monoid
 
 #align_import geometry.manifold.algebra.lie_group from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

@@ -3,13 +3,13 @@ Copyright (c) 2020 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Calle Sönne
 -/
-import Mathbin.Topology.Category.CompHaus.Basic
-import Mathbin.Topology.Connected
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.LocallyConstant.Basic
-import Mathbin.CategoryTheory.Adjunction.Reflective
-import Mathbin.CategoryTheory.Monad.Limits
-import Mathbin.CategoryTheory.Fintype
+import Topology.Category.CompHaus.Basic
+import Topology.Connected
+import Topology.SubsetProperties
+import Topology.LocallyConstant.Basic
+import CategoryTheory.Adjunction.Reflective
+import CategoryTheory.Monad.Limits
+import CategoryTheory.Fintype
 
 #align_import topology.category.Profinite.basic from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

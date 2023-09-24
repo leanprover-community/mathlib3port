@@ -3,8 +3,8 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Logic.Encodable.Basic
-import Mathbin.Logic.Pairwise
+import Logic.Encodable.Basic
+import Logic.Pairwise
 
 #align_import logic.encodable.lattice from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

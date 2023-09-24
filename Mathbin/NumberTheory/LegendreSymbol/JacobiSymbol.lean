@@ -3,7 +3,7 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
+import NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 #align_import number_theory.legendre_symbol.jacobi_symbol from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

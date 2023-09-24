@@ -3,9 +3,9 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Probability.Martingale.Convergence
-import Mathbin.Probability.Martingale.OptionalStopping
-import Mathbin.Probability.Martingale.Centering
+import Probability.Martingale.Convergence
+import Probability.Martingale.OptionalStopping
+import Probability.Martingale.Centering
 
 #align_import probability.martingale.borel_cantelli from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

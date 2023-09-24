@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.GroupTheory.GroupAction.Basic
-import Mathbin.Topology.Algebra.ConstMulAction
+import GroupTheory.GroupAction.Basic
+import Topology.Algebra.ConstMulAction
 
 #align_import dynamics.minimal from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

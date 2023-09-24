@@ -3,8 +3,8 @@ Copyright (c) 2023 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Analysis.Convex.Function
-import Mathbin.Data.Set.Intervals.ProjIcc
+import Analysis.Convex.Function
+import Data.Set.Intervals.ProjIcc
 
 #align_import analysis.convex.proj_Icc from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 

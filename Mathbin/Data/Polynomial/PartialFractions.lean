@@ -3,12 +3,12 @@ Copyright (c) Sidharth Hariharan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Sidharth Hariharan
 -/
-import Mathbin.Data.Polynomial.Div
-import Mathbin.Data.Zmod.Basic
-import Mathbin.Logic.Function.Basic
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Tactic.LinearCombination
+import Data.Polynomial.Div
+import Data.Zmod.Basic
+import Logic.Function.Basic
+import RingTheory.Localization.FractionRing
+import Tactic.FieldSimp
+import Tactic.LinearCombination
 
 #align_import data.polynomial.partial_fractions from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

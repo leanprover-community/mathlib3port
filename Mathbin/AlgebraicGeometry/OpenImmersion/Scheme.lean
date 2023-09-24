@@ -3,9 +3,9 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.AlgebraicGeometry.OpenImmersion.Basic
-import Mathbin.AlgebraicGeometry.Scheme
-import Mathbin.CategoryTheory.Limits.Shapes.CommSq
+import AlgebraicGeometry.OpenImmersion.Basic
+import AlgebraicGeometry.Scheme
+import CategoryTheory.Limits.Shapes.CommSq
 
 #align_import algebraic_geometry.open_immersion.Scheme from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

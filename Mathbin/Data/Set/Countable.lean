@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Set.Finite
-import Mathbin.Data.Countable.Basic
-import Mathbin.Logic.Equiv.List
+import Data.Set.Finite
+import Data.Countable.Basic
+import Logic.Equiv.List
 
 #align_import data.set.countable from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 

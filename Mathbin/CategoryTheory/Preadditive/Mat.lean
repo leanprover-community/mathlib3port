@@ -3,16 +3,16 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.BigOperators.Pi
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Preadditive.Basic
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
-import Mathbin.Data.Matrix.Dmatrix
-import Mathbin.Data.Matrix.Basic
-import Mathbin.CategoryTheory.Fintype
-import Mathbin.CategoryTheory.Preadditive.SingleObj
-import Mathbin.Algebra.Opposites
+import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Pi
+import CategoryTheory.Limits.Shapes.Biproducts
+import CategoryTheory.Preadditive.Basic
+import CategoryTheory.Preadditive.AdditiveFunctor
+import Data.Matrix.Dmatrix
+import Data.Matrix.Basic
+import CategoryTheory.Fintype
+import CategoryTheory.Preadditive.SingleObj
+import Algebra.Opposites
 
 #align_import category_theory.preadditive.Mat from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

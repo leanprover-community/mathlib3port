@@ -3,9 +3,9 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
-import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
-import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
+import Analysis.Complex.UpperHalfPlane.Basic
+import LinearAlgebra.Matrix.GeneralLinearGroup
+import LinearAlgebra.Matrix.SpecialLinearGroup
 
 #align_import number_theory.modular_forms.slash_actions from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

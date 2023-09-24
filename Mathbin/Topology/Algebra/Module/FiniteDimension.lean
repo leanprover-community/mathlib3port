@@ -3,10 +3,10 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Anatole Dedecker
 -/
-import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
-import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
-import Mathbin.Topology.Algebra.Module.Simple
-import Mathbin.Topology.Algebra.Module.Determinant
+import Analysis.LocallyConvex.BalancedCoreHull
+import LinearAlgebra.FreeModule.Finite.Matrix
+import Topology.Algebra.Module.Simple
+import Topology.Algebra.Module.Determinant
 
 #align_import topology.algebra.module.finite_dimension from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

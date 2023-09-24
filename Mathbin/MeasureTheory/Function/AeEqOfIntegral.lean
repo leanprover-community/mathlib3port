@@ -3,10 +3,10 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Analysis.InnerProductSpace.Basic
-import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.MeasureTheory.Function.StronglyMeasurable.Lp
-import Mathbin.MeasureTheory.Integral.SetIntegral
+import Analysis.InnerProductSpace.Basic
+import Analysis.NormedSpace.Dual
+import MeasureTheory.Function.StronglyMeasurable.Lp
+import MeasureTheory.Integral.SetIntegral
 
 #align_import measure_theory.function.ae_eq_of_integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

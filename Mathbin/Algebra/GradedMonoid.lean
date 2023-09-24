@@ -3,13 +3,13 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Group.InjSurj
-import Mathbin.Data.List.BigOperators.Basic
-import Mathbin.Data.List.FinRange
-import Mathbin.GroupTheory.GroupAction.Defs
-import Mathbin.GroupTheory.Submonoid.Basic
-import Mathbin.Data.SetLike.Basic
-import Mathbin.Data.Sigma.Basic
+import Algebra.Group.InjSurj
+import Data.List.BigOperators.Basic
+import Data.List.FinRange
+import GroupTheory.GroupAction.Defs
+import GroupTheory.Submonoid.Basic
+import Data.SetLike.Basic
+import Data.Sigma.Basic
 
 #align_import algebra.graded_monoid from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
@@ -178,7 +178,7 @@ theorem gnpowRec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd
 #align graded_monoid.gmonoid.gnpow_rec_zero GradedMonoid.GMonoid.gnpowRec_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -193,7 +193,7 @@ theorem gnpowRec_succ (n : ℕ) (a : GradedMonoid A) :
 #align graded_monoid.gmonoid.gnpow_rec_succ GradedMonoid.GMonoid.gnpowRec_succ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=

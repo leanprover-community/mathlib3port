@@ -3,7 +3,7 @@ Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Monoidal.Functor
+import CategoryTheory.Monoidal.Functor
 
 #align_import category_theory.monoidal.free.basic from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

@@ -3,7 +3,7 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.RingHomProperties
+import RingTheory.RingHomProperties
 
 #align_import ring_theory.ring_hom.finite from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

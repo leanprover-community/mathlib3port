@@ -3,12 +3,12 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.Algebra.Module.Pi
-import Mathbin.Algebra.Module.Prod
-import Mathbin.Algebra.Order.Monoid.Prod
-import Mathbin.Algebra.Order.Pi
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.Tactic.Positivity
+import Algebra.Module.Pi
+import Algebra.Module.Prod
+import Algebra.Order.Monoid.Prod
+import Algebra.Order.Pi
+import Data.Set.Pointwise.Smul
+import Tactic.Positivity
 
 #align_import algebra.order.smul from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 

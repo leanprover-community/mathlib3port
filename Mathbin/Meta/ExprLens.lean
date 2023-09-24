@@ -3,8 +3,8 @@ Copyright (c) 2020 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Keeley Hoek, Scott Morrison
 -/
-import Mathbin.Data.List.Defs
-import Mathbin.Tactic.DeriveInhabited
+import Data.List.Defs
+import Tactic.DeriveInhabited
 
 #align_import meta.expr_lens from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

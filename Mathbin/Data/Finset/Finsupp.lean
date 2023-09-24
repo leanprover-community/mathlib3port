@@ -3,10 +3,10 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Finsupp
-import Mathbin.Data.Finset.Pointwise
-import Mathbin.Data.Finsupp.Indicator
-import Mathbin.Data.Fintype.BigOperators
+import Algebra.BigOperators.Finsupp
+import Data.Finset.Pointwise
+import Data.Finsupp.Indicator
+import Data.Fintype.BigOperators
 
 #align_import data.finset.finsupp from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 

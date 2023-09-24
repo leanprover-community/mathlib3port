@@ -3,7 +3,7 @@ Copyright (c) 2021 Arthur Paulino. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Coloring
+import Combinatorics.SimpleGraph.Coloring
 
 #align_import combinatorics.simple_graph.partition from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

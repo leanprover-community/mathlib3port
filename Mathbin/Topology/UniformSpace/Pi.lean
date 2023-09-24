@@ -3,8 +3,8 @@ Copyright (c) 2019 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.UniformSpace.Cauchy
-import Mathbin.Topology.UniformSpace.Separation
+import Topology.UniformSpace.Cauchy
+import Topology.UniformSpace.Separation
 
 #align_import topology.uniform_space.pi from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

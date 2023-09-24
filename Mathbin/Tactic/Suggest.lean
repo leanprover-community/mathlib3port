@@ -3,9 +3,9 @@ Copyright (c) 2019 Lucas Allen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lucas Allen, Scott Morrison
 -/
-import Mathbin.Data.Bool.Basic
-import Mathbin.Data.Mllist
-import Mathbin.Tactic.SolveByElim
+import Data.Bool.Basic
+import Data.Mllist
+import Tactic.SolveByElim
 
 #align_import tactic.suggest from "leanprover-community/mathlib"@"1463f592a0a5aa3b73972c9ed333ee7a9ddb8e6b"
 

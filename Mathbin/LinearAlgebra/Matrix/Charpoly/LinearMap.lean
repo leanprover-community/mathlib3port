@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathbin.LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.Matrix.Charpoly.Coeff
+import LinearAlgebra.Matrix.ToLin
 
 #align_import linear_algebra.matrix.charpoly.linear_map from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

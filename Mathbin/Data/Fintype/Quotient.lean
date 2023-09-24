@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Basic
+import Data.Fintype.Basic
 
 #align_import data.fintype.quotient from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Tactic.NthRewrite.Basic
+import Tactic.Core
+import Tactic.NthRewrite.Basic
 
 #align_import tactic.nth_rewrite.congr from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

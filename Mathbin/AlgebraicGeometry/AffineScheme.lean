@@ -3,10 +3,10 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.AlgebraicGeometry.GammaSpecAdjunction
-import Mathbin.AlgebraicGeometry.OpenImmersion.Scheme
-import Mathbin.CategoryTheory.Limits.Opposites
-import Mathbin.RingTheory.Localization.InvSubmonoid
+import AlgebraicGeometry.GammaSpecAdjunction
+import AlgebraicGeometry.OpenImmersion.Scheme
+import CategoryTheory.Limits.Opposites
+import RingTheory.Localization.InvSubmonoid
 
 #align_import algebraic_geometry.AffineScheme from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

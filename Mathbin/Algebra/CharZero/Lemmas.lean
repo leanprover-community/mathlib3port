@@ -3,8 +3,8 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Cast.Field
-import Mathbin.Algebra.GroupPower.Lemmas
+import Data.Nat.Cast.Field
+import Algebra.GroupPower.Lemmas
 
 #align_import algebra.char_zero.lemmas from "leanprover-community/mathlib"@"acee671f47b8e7972a1eb6f4eed74b4b3abce829"
 

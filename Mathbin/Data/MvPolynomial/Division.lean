@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.MonoidAlgebra.Division
-import Mathbin.Data.MvPolynomial.Basic
+import Algebra.MonoidAlgebra.Division
+import Data.MvPolynomial.Basic
 
 #align_import data.mv_polynomial.division from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

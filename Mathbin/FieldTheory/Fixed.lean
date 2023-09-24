@@ -3,11 +3,11 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.GroupRingAction.Invariant
-import Mathbin.Algebra.Polynomial.GroupRingAction
-import Mathbin.FieldTheory.Normal
-import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.Tower
+import Algebra.GroupRingAction.Invariant
+import Algebra.Polynomial.GroupRingAction
+import FieldTheory.Normal
+import FieldTheory.Separable
+import FieldTheory.Tower
 
 #align_import field_theory.fixed from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

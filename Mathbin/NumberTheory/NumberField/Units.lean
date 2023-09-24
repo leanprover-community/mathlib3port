@@ -3,7 +3,7 @@ Copyright (c) 2023 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 -/
-import Mathbin.NumberTheory.NumberField.Norm
+import NumberTheory.NumberField.Norm
 
 #align_import number_theory.number_field.units from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Benjamin Davidson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 -/
-import Mathbin.MeasureTheory.Integral.FundThmCalculus
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+import MeasureTheory.Integral.FundThmCalculus
+import Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 #align_import analysis.special_functions.integrals from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

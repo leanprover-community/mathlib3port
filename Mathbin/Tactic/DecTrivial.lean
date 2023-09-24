@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Tactic.Interactive
+import Tactic.Interactive
 
 #align_import tactic.dec_trivial from "leanprover-community/mathlib"@"13881d7a4086e038e49e116066b379a043d13d34"
 

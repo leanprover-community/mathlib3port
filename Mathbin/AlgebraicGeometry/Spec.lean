@@ -3,12 +3,12 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 -/
-import Mathbin.AlgebraicGeometry.LocallyRingedSpace
-import Mathbin.AlgebraicGeometry.StructureSheaf
-import Mathbin.RingTheory.Localization.LocalizationLocalization
-import Mathbin.Topology.Sheaves.SheafCondition.Sites
-import Mathbin.Topology.Sheaves.Functors
-import Mathbin.Algebra.Module.LocalizedModule
+import AlgebraicGeometry.LocallyRingedSpace
+import AlgebraicGeometry.StructureSheaf
+import RingTheory.Localization.LocalizationLocalization
+import Topology.Sheaves.SheafCondition.Sites
+import Topology.Sheaves.Functors
+import Algebra.Module.LocalizedModule
 
 #align_import algebraic_geometry.Spec from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

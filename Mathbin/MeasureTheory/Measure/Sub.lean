@@ -3,7 +3,7 @@ Copyright (c) 2022 Martin Zinkevich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpace
+import MeasureTheory.Measure.MeasureSpace
 
 #align_import measure_theory.measure.sub from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 

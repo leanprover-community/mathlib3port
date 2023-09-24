@@ -3,8 +3,8 @@ Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 -/
-import Mathbin.Algebra.Category.Ring.Basic
-import Mathbin.Algebra.Category.Group.FilteredColimits
+import Algebra.Category.Ring.Basic
+import Algebra.Category.Group.FilteredColimits
 
 #align_import algebra.category.Ring.filtered_colimits from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

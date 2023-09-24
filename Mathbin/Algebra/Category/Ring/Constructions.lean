@@ -3,12 +3,12 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.RingTheory.TensorProduct
-import Mathbin.Algebra.Category.Ring.Limits
-import Mathbin.Algebra.Category.Ring.Instances
-import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
-import Mathbin.RingTheory.Subring.Basic
+import CategoryTheory.Limits.Shapes.Pullbacks
+import RingTheory.TensorProduct
+import Algebra.Category.Ring.Limits
+import Algebra.Category.Ring.Instances
+import CategoryTheory.Limits.Shapes.StrictInitial
+import RingTheory.Subring.Basic
 
 #align_import algebra.category.Ring.constructions from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

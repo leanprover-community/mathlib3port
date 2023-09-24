@@ -3,8 +3,8 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.SimplicialObject
-import Mathbin.CategoryTheory.Idempotents.FunctorCategories
+import AlgebraicTopology.SimplicialObject
+import CategoryTheory.Idempotents.FunctorCategories
 
 #align_import category_theory.idempotents.simplicial_object from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 

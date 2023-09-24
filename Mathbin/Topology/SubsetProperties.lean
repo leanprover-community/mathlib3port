@@ -3,14 +3,14 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 -/
-import Mathbin.Order.Filter.Pi
-import Mathbin.Topology.Bases
-import Mathbin.Data.Finset.Order
-import Mathbin.Data.Set.Accumulate
-import Mathbin.Data.Set.BoolIndicator
-import Mathbin.Topology.Bornology.Basic
-import Mathbin.Topology.LocallyFinite
-import Mathbin.Order.Minimal
+import Order.Filter.Pi
+import Topology.Bases
+import Data.Finset.Order
+import Data.Set.Accumulate
+import Data.Set.BoolIndicator
+import Topology.Bornology.Basic
+import Topology.LocallyFinite
+import Order.Minimal
 
 #align_import topology.subset_properties from "leanprover-community/mathlib"@"3efd324a3a31eaa40c9d5bfc669c4fafee5f9423"
 
@@ -148,12 +148,12 @@ theorem IsCompact.diff (hs : IsCompact s) (ht : IsOpen t) : IsCompact (s \ t) :=
 #align is_compact.diff IsCompact.diff
 -/
 
-#print isCompact_of_isClosed_subset /-
+#print IsCompact.of_isClosed_subset /-
 /-- A closed subset of a compact set is a compact set. -/
-theorem isCompact_of_isClosed_subset (hs : IsCompact s) (ht : IsClosed t) (h : t ⊆ s) :
+theorem IsCompact.of_isClosed_subset (hs : IsCompact s) (ht : IsClosed t) (h : t ⊆ s) :
     IsCompact t :=
   inter_eq_self_of_subset_right h ▸ hs.inter_right ht
-#align is_compact_of_is_closed_subset isCompact_of_isClosed_subset
+#align is_compact_of_is_closed_subset IsCompact.of_isClosed_subset
 -/
 
 #print IsCompact.image_of_continuousOn /-
@@ -370,12 +370,12 @@ theorem IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed (Z : ℕ �
   have Zmono : Antitone Z := antitone_nat_of_succ_le hZd
   have hZd : Directed (· ⊇ ·) Z := directed_of_sup Zmono
   have : ∀ i, Z i ⊆ Z 0 := fun i => Zmono <| zero_le i
-  have hZc : ∀ i, IsCompact (Z i) := fun i => isCompact_of_isClosed_subset hZ0 (hZcl i) (this i)
+  have hZc : ∀ i, IsCompact (Z i) := fun i => IsCompact.of_isClosed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
 #align is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -949,12 +949,12 @@ theorem compactSpace_of_finite_subfamily_closed
 
 #print IsClosed.isCompact /-
 theorem IsClosed.isCompact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsCompact s :=
-  isCompact_of_isClosed_subset isCompact_univ h (subset_univ _)
+  IsCompact.of_isClosed_subset isCompact_univ h (subset_univ _)
 #align is_closed.is_compact IsClosed.isCompact
 -/
 
 #print NoncompactSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (univ : Set α)
@@ -1784,7 +1784,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
 #align locally_finite.encodable LocallyFinite.encodable
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print countable_cover_nhdsWithin_of_sigma_compact /-
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
@@ -2261,7 +2261,7 @@ def irreducibleComponents (α : Type _) [TopologicalSpace α] : Set (Set α) :=
 #align irreducible_components irreducibleComponents
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
 #print isClosed_of_mem_irreducibleComponents /-
 theorem isClosed_of_mem_irreducibleComponents (s) (_ : s ∈ irreducibleComponents α) : IsClosed s :=
   by
@@ -2332,7 +2332,7 @@ theorem isClosed_irreducibleComponent {x : α} : IsClosed (irreducibleComponent 
 -/
 
 #print PreirreducibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isPreirreducible_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`isPreirreducible_univ] [] -/
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   isPreirreducible_univ : IsPreirreducible (univ : Set α)
@@ -2340,7 +2340,7 @@ class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
 -/
 
 #print IrreducibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where

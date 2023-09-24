@@ -3,10 +3,10 @@ Copyright (c) 2020 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.String.Basic
-import Mathbin.Data.Buffer.Basic
-import Mathbin.Data.Nat.Digits
-import Leanbin.Data.Buffer.Parser
+import Data.String.Basic
+import Data.Buffer.Basic
+import Data.Nat.Digits
+import Data.Buffer.Parser
 
 #align_import data.buffer.parser.basic from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
@@ -2811,7 +2811,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     exact hl h
 #align parser.nat_of_done_bounded Parser.nat_of_done_bounded
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)

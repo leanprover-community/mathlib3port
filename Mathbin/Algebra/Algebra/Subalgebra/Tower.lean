@@ -3,8 +3,8 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 -/
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.Algebra.Tower
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.Algebra.Tower
 
 #align_import algebra.algebra.subalgebra.tower from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

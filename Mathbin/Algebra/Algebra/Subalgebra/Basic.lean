@@ -3,10 +3,10 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Data.Set.UnionLift
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.RingTheory.Ideal.Operations
+import Algebra.Algebra.Basic
+import Data.Set.UnionLift
+import LinearAlgebra.Finsupp
+import RingTheory.Ideal.Operations
 
 #align_import algebra.algebra.subalgebra.basic from "leanprover-community/mathlib"@"b915e9392ecb2a861e1e766f0e1df6ac481188ca"
 

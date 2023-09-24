@@ -3,8 +3,8 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.SetLike.Basic
-import Mathbin.ModelTheory.Semantics
+import Data.SetLike.Basic
+import ModelTheory.Semantics
 
 #align_import model_theory.definability from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

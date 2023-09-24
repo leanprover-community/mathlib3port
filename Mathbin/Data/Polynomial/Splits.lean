@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.List.Prime
-import Mathbin.Data.Polynomial.FieldDivision
-import Mathbin.Data.Polynomial.Lifts
+import Data.List.Prime
+import Data.Polynomial.FieldDivision
+import Data.Polynomial.Lifts
 
 #align_import data.polynomial.splits from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

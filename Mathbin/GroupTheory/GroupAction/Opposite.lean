@@ -3,8 +3,8 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Group.Opposite
-import Mathbin.GroupTheory.GroupAction.Defs
+import Algebra.Group.Opposite
+import GroupTheory.GroupAction.Defs
 
 #align_import group_theory.group_action.opposite from "leanprover-community/mathlib"@"4330aae21f538b862f8aead371cfb6ee556398f1"
 

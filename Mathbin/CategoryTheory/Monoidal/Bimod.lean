@@ -3,9 +3,9 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Oleksandr Manzyuk
 -/
-import Mathbin.CategoryTheory.Bicategory.Basic
-import Mathbin.CategoryTheory.Monoidal.Mon_
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
+import CategoryTheory.Bicategory.Basic
+import CategoryTheory.Monoidal.Mon_
+import CategoryTheory.Limits.Preserves.Shapes.Equalizers
 
 #align_import category_theory.monoidal.Bimod from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

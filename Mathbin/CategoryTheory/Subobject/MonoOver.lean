@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Over
-import Mathbin.CategoryTheory.Limits.Shapes.Images
-import Mathbin.CategoryTheory.Adjunction.Reflective
+import CategoryTheory.Limits.Over
+import CategoryTheory.Limits.Shapes.Images
+import CategoryTheory.Adjunction.Reflective
 
 #align_import category_theory.subobject.mono_over from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.DirectSum.Basic
-import Mathbin.LinearAlgebra.Dfinsupp
+import Algebra.DirectSum.Basic
+import LinearAlgebra.Dfinsupp
 
 #align_import algebra.direct_sum.module from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

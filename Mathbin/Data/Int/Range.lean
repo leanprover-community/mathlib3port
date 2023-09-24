@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
-import Mathbin.Data.List.Range
-import Mathbin.Data.Int.Order.Basic
+import Data.List.Range
+import Data.Int.Order.Basic
 
 #align_import data.int.range from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

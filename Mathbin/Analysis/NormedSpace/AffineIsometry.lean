@@ -3,11 +3,11 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.NormedSpace.LinearIsometry
-import Mathbin.Analysis.Normed.Group.AddTorsor
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.LinearAlgebra.AffineSpace.Restrict
-import Mathbin.Algebra.CharP.Invertible
+import Analysis.NormedSpace.LinearIsometry
+import Analysis.Normed.Group.AddTorsor
+import Analysis.NormedSpace.Basic
+import LinearAlgebra.AffineSpace.Restrict
+import Algebra.CharP.Invertible
 
 #align_import analysis.normed_space.affine_isometry from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

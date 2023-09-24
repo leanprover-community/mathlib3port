@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne Baanen,
   Frédéric Dupuis, Heather Macbeth
 -/
-import Mathbin.Algebra.Hom.GroupAction
-import Mathbin.Algebra.Module.Pi
-import Mathbin.Algebra.Star.Basic
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.Algebra.Ring.CompTypeclasses
+import Algebra.Hom.GroupAction
+import Algebra.Module.Pi
+import Algebra.Star.Basic
+import Data.Set.Pointwise.Smul
+import Algebra.Ring.CompTypeclasses
 
 #align_import algebra.module.linear_map from "leanprover-community/mathlib"@"cc8e88c7c8c7bc80f91f84d11adb584bf9bd658f"
 

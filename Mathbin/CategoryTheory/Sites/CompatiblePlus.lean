@@ -3,8 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Sites.Whiskering
-import Mathbin.CategoryTheory.Sites.Plus
+import CategoryTheory.Sites.Whiskering
+import CategoryTheory.Sites.Plus
 
 #align_import category_theory.sites.compatible_plus from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

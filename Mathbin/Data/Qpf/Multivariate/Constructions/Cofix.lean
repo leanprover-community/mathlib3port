@@ -3,10 +3,10 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 -/
-import Mathbin.Control.Functor.Multivariate
-import Mathbin.Data.Pfunctor.Multivariate.Basic
-import Mathbin.Data.Pfunctor.Multivariate.M
-import Mathbin.Data.Qpf.Multivariate.Basic
+import Control.Functor.Multivariate
+import Data.Pfunctor.Multivariate.Basic
+import Data.Pfunctor.Multivariate.M
+import Data.Qpf.Multivariate.Basic
 
 #align_import data.qpf.multivariate.constructions.cofix from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

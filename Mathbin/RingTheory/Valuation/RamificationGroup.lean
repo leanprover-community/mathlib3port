@@ -3,8 +3,8 @@ Copyright (c) 2022 Michail Karatarakis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michail Karatarakis
 -/
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Valuation.ValuationSubring
+import RingTheory.Ideal.LocalRing
+import RingTheory.Valuation.ValuationSubring
 
 #align_import ring_theory.valuation.ramification_group from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

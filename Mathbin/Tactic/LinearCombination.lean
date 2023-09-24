@@ -3,7 +3,7 @@ Copyright (c) 2022 Abby J. Goldberg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abby J. Goldberg
 -/
-import Mathbin.Tactic.Ring
+import Tactic.Ring
 
 #align_import tactic.linear_combination from "leanprover-community/mathlib"@"540b766a64a8cc1e4b013f43a31e3b0b09787937"
 
@@ -67,7 +67,7 @@ theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x
 /-! ### Configuration -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.

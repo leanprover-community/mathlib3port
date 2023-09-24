@@ -3,12 +3,12 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.Inverse
-import Mathbin.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
-import Mathbin.MeasureTheory.Covering.BesicovitchVectorSpace
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathbin.Analysis.NormedSpace.Pointwise
-import Mathbin.MeasureTheory.Constructions.Polish
+import Analysis.Calculus.Inverse
+import MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
+import MeasureTheory.Covering.BesicovitchVectorSpace
+import MeasureTheory.Measure.Lebesgue.EqHaar
+import Analysis.NormedSpace.Pointwise
+import MeasureTheory.Constructions.Polish
 
 #align_import measure_theory.function.jacobian from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

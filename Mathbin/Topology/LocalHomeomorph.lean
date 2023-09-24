@@ -3,8 +3,8 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Logic.Equiv.LocalEquiv
-import Mathbin.Topology.Sets.Opens
+import Logic.Equiv.LocalEquiv
+import Topology.Sets.Opens
 
 #align_import topology.local_homeomorph from "leanprover-community/mathlib"@"431589bce478b2229eba14b14a283250428217db"
 

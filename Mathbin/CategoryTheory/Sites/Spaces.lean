@@ -3,10 +3,10 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Sites.Grothendieck
-import Mathbin.CategoryTheory.Sites.Pretopology
-import Mathbin.CategoryTheory.Limits.Lattice
-import Mathbin.Topology.Sets.Opens
+import CategoryTheory.Sites.Grothendieck
+import CategoryTheory.Sites.Pretopology
+import CategoryTheory.Limits.Lattice
+import Topology.Sets.Opens
 
 #align_import category_theory.sites.spaces from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.with_local_reducibility from "leanprover-community/mathlib"@"07cdafe9b0a377e8704f26597a3a57cb5e8b624a"
 

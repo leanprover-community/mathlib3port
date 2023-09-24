@@ -3,10 +3,10 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Analysis.NormedSpace.FiniteDimension
-import Mathbin.Analysis.PSeries
-import Mathbin.NumberTheory.ArithmeticFunction
-import Mathbin.Topology.Algebra.InfiniteSum.Basic
+import Analysis.NormedSpace.FiniteDimension
+import Analysis.PSeries
+import NumberTheory.ArithmeticFunction
+import Topology.Algebra.InfiniteSum.Basic
 
 #align_import number_theory.l_series from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

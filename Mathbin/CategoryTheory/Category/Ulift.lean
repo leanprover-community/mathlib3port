@@ -3,9 +3,9 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Category.Basic
-import Mathbin.CategoryTheory.Equivalence
-import Mathbin.CategoryTheory.EqToHom
+import CategoryTheory.Category.Basic
+import CategoryTheory.Equivalence
+import CategoryTheory.EqToHom
 
 #align_import category_theory.category.ulift from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

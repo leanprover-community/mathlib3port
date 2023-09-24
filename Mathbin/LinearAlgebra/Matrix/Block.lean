@@ -3,9 +3,9 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 -/
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.Tactic.FinCases
+import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.NonsingularInverse
+import Tactic.FinCases
 
 #align_import linear_algebra.matrix.block from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

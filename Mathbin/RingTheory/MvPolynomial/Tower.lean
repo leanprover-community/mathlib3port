@@ -3,8 +3,8 @@ Copyright (c) 2022 Yuyang Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuyang Zhao
 -/
-import Mathbin.Algebra.Algebra.Tower
-import Mathbin.Data.MvPolynomial.Basic
+import Algebra.Algebra.Tower
+import Data.MvPolynomial.Basic
 
 #align_import ring_theory.mv_polynomial.tower from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

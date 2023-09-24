@@ -3,9 +3,9 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.GroupWithZero.Basic
-import Mathbin.Algebra.Group.Opposite
-import Mathbin.Algebra.Hom.Ring
+import Algebra.GroupWithZero.Basic
+import Algebra.Group.Opposite
+import Algebra.Hom.Ring
 
 #align_import algebra.ring.opposite from "leanprover-community/mathlib"@"76de8ae01554c3b37d66544866659ff174e66e1f"
 

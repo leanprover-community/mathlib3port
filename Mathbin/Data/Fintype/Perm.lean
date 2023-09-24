@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Card
-import Mathbin.GroupTheory.Perm.Basic
+import Data.Fintype.Card
+import GroupTheory.Perm.Basic
 
 #align_import data.fintype.perm from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

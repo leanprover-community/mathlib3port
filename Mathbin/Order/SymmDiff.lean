@@ -3,8 +3,8 @@ Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bryan Gin-ge Chen, Yaël Dillies
 -/
-import Mathbin.Order.BooleanAlgebra
-import Mathbin.Logic.Equiv.Basic
+import Order.BooleanAlgebra
+import Logic.Equiv.Basic
 
 #align_import order.symm_diff from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

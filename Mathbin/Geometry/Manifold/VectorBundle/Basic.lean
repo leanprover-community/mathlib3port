@@ -3,8 +3,8 @@ Copyright (c) 2022 Floris van Doorn, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 -/
-import Mathbin.Geometry.Manifold.VectorBundle.FiberwiseLinear
-import Mathbin.Topology.VectorBundle.Constructions
+import Geometry.Manifold.VectorBundle.FiberwiseLinear
+import Topology.VectorBundle.Constructions
 
 #align_import geometry.manifold.vector_bundle.basic from "leanprover-community/mathlib"@"e473c3198bb41f68560cab68a0529c854b618833"
 
@@ -383,7 +383,7 @@ namespace VectorBundleCore
 variable {ι : Type _} {F} (Z : VectorBundleCore 𝕜 B F ι)
 
 #print VectorBundleCore.IsSmooth /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coordChangeL] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coordChangeL] [] -/
 /-- Mixin for a `vector_bundle_core` stating smoothness (of transition functions). -/
 class IsSmooth (IB : ModelWithCorners 𝕜 EB HB) : Prop where
   smoothOn_coordChangeL :
@@ -471,7 +471,7 @@ namespace VectorPrebundle
 variable [∀ x, TopologicalSpace (E x)] {F E}
 
 #print VectorPrebundle.IsSmooth /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
 /-- Mixin for a `vector_prebundle` stating smoothness of coordinate changes. -/
 class IsSmooth (a : VectorPrebundle 𝕜 F E) : Prop where
   exists_smooth_coord_change :

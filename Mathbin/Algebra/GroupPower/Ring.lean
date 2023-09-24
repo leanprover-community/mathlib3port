@@ -3,13 +3,13 @@ Copyright (c) 2015 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 -/
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.GroupWithZero.Commute
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Ring.Commute
-import Mathbin.Algebra.GroupWithZero.Divisibility
-import Mathbin.Algebra.Ring.Divisibility
-import Mathbin.Data.Nat.Order.Basic
+import Algebra.GroupPower.Basic
+import Algebra.GroupWithZero.Commute
+import Algebra.Hom.Ring
+import Algebra.Ring.Commute
+import Algebra.GroupWithZero.Divisibility
+import Algebra.Ring.Divisibility
+import Data.Nat.Order.Basic
 
 #align_import algebra.group_power.ring from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

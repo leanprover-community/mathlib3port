@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Localization.Ideal
+import RingTheory.Ideal.LocalRing
+import RingTheory.Localization.Ideal
 
 #align_import ring_theory.localization.at_prime from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

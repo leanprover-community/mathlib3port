@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Data.Sum.Order
-import Mathbin.Order.InitialSeg
-import Mathbin.SetTheory.Cardinal.Basic
+import Data.Sum.Order
+import Order.InitialSeg
+import SetTheory.Cardinal.Basic
 
 #align_import set_theory.ordinal.basic from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
 

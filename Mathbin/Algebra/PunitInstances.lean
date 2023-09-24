@@ -3,11 +3,11 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.GcdMonoid.Basic
-import Mathbin.Algebra.GroupRingAction.Basic
-import Mathbin.GroupTheory.GroupAction.Defs
-import Mathbin.Order.CompleteBooleanAlgebra
+import Algebra.Module.Basic
+import Algebra.GcdMonoid.Basic
+import Algebra.GroupRingAction.Basic
+import GroupTheory.GroupAction.Defs
+import Order.CompleteBooleanAlgebra
 
 #align_import algebra.punit_instances from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

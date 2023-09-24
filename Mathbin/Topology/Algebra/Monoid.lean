@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.Order.Filter.Pointwise
-import Mathbin.Topology.Algebra.MulAction
-import Mathbin.Algebra.BigOperators.Pi
-import Mathbin.Topology.ContinuousFunction.Basic
+import Algebra.BigOperators.Finprod
+import Order.Filter.Pointwise
+import Topology.Algebra.MulAction
+import Algebra.BigOperators.Pi
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.algebra.monoid from "leanprover-community/mathlib"@"1ac8d4304efba9d03fa720d06516fac845aa5353"
 

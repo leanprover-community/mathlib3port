@@ -3,8 +3,8 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Subalgebra
-import Mathbin.RingTheory.Noetherian
+import Algebra.Lie.Subalgebra
+import RingTheory.Noetherian
 
 #align_import algebra.lie.submodule from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
@@ -500,12 +500,12 @@ instance : Inf (LieSubmodule R L M) :=
     { (N ⊓ N' : Submodule R M) with
       lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
 instance : InfSet (LieSubmodule R L M) :=
   ⟨fun S =>
     {
       sInf
-        "./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h =>
         by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.sInf_coe, mem_set_of_eq,
@@ -519,13 +519,13 @@ theorem inf_coe : (↑(N ⊓ N') : Set M) = N ∩ N' :=
 #align lie_submodule.inf_coe LieSubmodule.inf_coe
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
 #print LieSubmodule.sInf_coe_toSubmodule /-
 @[simp]
 theorem sInf_coe_toSubmodule (S : Set (LieSubmodule R L M)) :
     (↑(sInf S) : Submodule R M) =
       sInf
-        "./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 #align lie_submodule.Inf_coe_to_submodule LieSubmodule.sInf_coe_toSubmodule
 -/

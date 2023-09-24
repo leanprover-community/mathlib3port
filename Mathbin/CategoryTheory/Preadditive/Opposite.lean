@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz, Johan Commelin, Joël Riou
 -/
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
-import Mathbin.Logic.Equiv.TransferInstance
+import CategoryTheory.Preadditive.AdditiveFunctor
+import Logic.Equiv.TransferInstance
 
 #align_import category_theory.preadditive.opposite from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

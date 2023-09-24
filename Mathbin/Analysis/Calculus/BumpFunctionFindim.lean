@@ -3,11 +3,11 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.Series
-import Mathbin.Analysis.Convolution
-import Mathbin.Analysis.InnerProductSpace.EuclideanDist
-import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
-import Mathbin.Data.Set.Pointwise.Support
+import Analysis.Calculus.Series
+import Analysis.Convolution
+import Analysis.InnerProductSpace.EuclideanDist
+import MeasureTheory.Measure.Haar.NormedSpace
+import Data.Set.Pointwise.Support
 
 #align_import analysis.calculus.bump_function_findim from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 

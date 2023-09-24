@@ -3,8 +3,8 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.Gamma.Basic
-import Mathbin.Analysis.SpecialFunctions.Gaussian
+import Analysis.SpecialFunctions.Gamma.Basic
+import Analysis.SpecialFunctions.Gaussian
 
 #align_import analysis.special_functions.gamma.bohr_mollerup from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

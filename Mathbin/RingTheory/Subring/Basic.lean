@@ -3,8 +3,8 @@ Copyright (c) 2020 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.RingTheory.Subsemiring.Basic
+import GroupTheory.Subgroup.Basic
+import RingTheory.Subsemiring.Basic
 
 #align_import ring_theory.subring.basic from "leanprover-community/mathlib"@"b915e9392ecb2a861e1e766f0e1df6ac481188ca"
 

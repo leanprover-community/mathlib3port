@@ -3,9 +3,9 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.NumberTheory.Divisors
-import Mathbin.RingTheory.Int.Basic
-import Mathbin.Tactic.RingExp
+import NumberTheory.Divisors
+import RingTheory.Int.Basic
+import Tactic.RingExp
 
 #align_import number_theory.padics.padic_val from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"
 

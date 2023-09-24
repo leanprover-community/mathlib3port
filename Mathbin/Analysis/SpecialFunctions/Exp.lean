@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 -/
-import Mathbin.Analysis.Asymptotics.Theta
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.Analysis.SpecificLimits.Normed
+import Analysis.Asymptotics.Theta
+import Analysis.Complex.Basic
+import Analysis.SpecificLimits.Normed
 
 #align_import analysis.special_functions.exp from "leanprover-community/mathlib"@"ba5ff5ad5d120fb0ef094ad2994967e9bfaf5112"
 

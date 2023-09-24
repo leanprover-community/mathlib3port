@@ -3,9 +3,9 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Star.Basic
-import Mathbin.Algebra.Ring.Prod
-import Mathbin.Algebra.Module.Prod
+import Algebra.Star.Basic
+import Algebra.Ring.Prod
+import Algebra.Module.Prod
 
 #align_import algebra.star.prod from "leanprover-community/mathlib"@"9abfa6f0727d5adc99067e325e15d1a9de17fd8e"
 

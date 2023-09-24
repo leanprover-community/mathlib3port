@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Multiset.Basic
-import Mathbin.Data.FunLike.Basic
+import Algebra.BigOperators.Multiset.Basic
+import Data.FunLike.Basic
 
 #align_import algebra.hom.freiman from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

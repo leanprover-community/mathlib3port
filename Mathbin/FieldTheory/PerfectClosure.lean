@@ -3,9 +3,9 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Algebra.Ring.Equiv
+import Algebra.CharP.Basic
+import Algebra.Hom.Iterate
+import Algebra.Ring.Equiv
 
 #align_import field_theory.perfect_closure from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 

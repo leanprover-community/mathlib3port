@@ -5,7 +5,7 @@ Authors: Johannes Hölzl
 
 Extends the theory on functors, applicatives and monads.
 -/
-import Mathbin.Tactic.MkSimpAttribute
+import Tactic.MkSimpAttribute
 
 #align_import control.basic from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

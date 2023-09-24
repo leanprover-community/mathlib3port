@@ -3,8 +3,8 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Bitraversable.Lemmas
-import Mathbin.Control.Traversable.Lemmas
+import Control.Bitraversable.Lemmas
+import Control.Traversable.Lemmas
 
 #align_import control.bitraversable.instances from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

@@ -3,10 +3,10 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.DoldKan.FunctorN
-import Mathbin.AlgebraicTopology.DoldKan.Decomposition
-import Mathbin.CategoryTheory.Idempotents.HomologicalComplex
-import Mathbin.CategoryTheory.Idempotents.KaroubiKaroubi
+import AlgebraicTopology.DoldKan.FunctorN
+import AlgebraicTopology.DoldKan.Decomposition
+import CategoryTheory.Idempotents.HomologicalComplex
+import CategoryTheory.Idempotents.KaroubiKaroubi
 
 #align_import algebraic_topology.dold_kan.n_reflects_iso from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 

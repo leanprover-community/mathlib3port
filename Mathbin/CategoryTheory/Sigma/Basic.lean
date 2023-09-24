@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Whiskering
-import Mathbin.CategoryTheory.Functor.FullyFaithful
-import Mathbin.CategoryTheory.NaturalIsomorphism
+import CategoryTheory.Whiskering
+import CategoryTheory.Functor.FullyFaithful
+import CategoryTheory.NaturalIsomorphism
 
 #align_import category_theory.sigma.basic from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

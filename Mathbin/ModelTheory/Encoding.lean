@@ -3,10 +3,10 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Computability.Encoding
-import Mathbin.Logic.Small.List
-import Mathbin.ModelTheory.Syntax
-import Mathbin.SetTheory.Cardinal.Ordinal
+import Computability.Encoding
+import Logic.Small.List
+import ModelTheory.Syntax
+import SetTheory.Cardinal.Ordinal
 
 #align_import model_theory.encoding from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

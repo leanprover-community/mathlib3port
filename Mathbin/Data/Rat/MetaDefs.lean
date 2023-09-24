@@ -3,8 +3,8 @@ Copyright (c) 2019 Robert Y. Lewis . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Data.Rat.Defs
-import Mathbin.Tactic.Core
+import Data.Rat.Defs
+import Tactic.Core
 
 #align_import data.rat.meta_defs from "leanprover-community/mathlib"@"c18a48e9f71115845326e03443913f0c3694c153"
 

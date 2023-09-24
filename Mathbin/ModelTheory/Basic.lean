@@ -3,8 +3,8 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.SetTheory.Cardinal.Basic
+import Data.Fin.VecNotation
+import SetTheory.Cardinal.Basic
 
 #align_import model_theory.basic from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

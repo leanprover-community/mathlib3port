@@ -3,11 +3,11 @@ Copyright (c) 2022 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 -/
-import Mathbin.Analysis.Complex.Polynomial
-import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
-import Mathbin.NumberTheory.NumberField.Basic
-import Mathbin.RingTheory.Norm
-import Mathbin.Topology.Instances.Complex
+import Analysis.Complex.Polynomial
+import FieldTheory.Minpoly.IsIntegrallyClosed
+import NumberTheory.NumberField.Basic
+import RingTheory.Norm
+import Topology.Instances.Complex
 
 #align_import number_theory.number_field.embeddings from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

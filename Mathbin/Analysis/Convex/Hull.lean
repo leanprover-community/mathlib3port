@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudriashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Yaël Dillies
 -/
-import Mathbin.Analysis.Convex.Basic
-import Mathbin.Order.Closure
+import Analysis.Convex.Basic
+import Order.Closure
 
 #align_import analysis.convex.hull from "leanprover-community/mathlib"@"92bd7b1ffeb306a89f450bee126ddd8a284c259d"
 

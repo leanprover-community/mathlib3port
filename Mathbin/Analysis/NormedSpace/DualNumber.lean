@@ -3,8 +3,8 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.DualNumber
-import Mathbin.Analysis.NormedSpace.TrivSqZeroExt
+import Algebra.DualNumber
+import Analysis.NormedSpace.TrivSqZeroExt
 
 #align_import analysis.normed_space.dual_number from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

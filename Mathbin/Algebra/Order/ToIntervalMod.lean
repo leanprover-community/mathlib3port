@@ -3,13 +3,13 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Algebra.Modeq
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Order.Archimedean
-import Mathbin.Algebra.Periodic
-import Mathbin.Data.Int.SuccPred
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.Order.Circular
+import Algebra.Modeq
+import Algebra.Module.Basic
+import Algebra.Order.Archimedean
+import Algebra.Periodic
+import Data.Int.SuccPred
+import GroupTheory.QuotientGroup
+import Order.Circular
 
 #align_import algebra.order.to_interval_mod from "leanprover-community/mathlib"@"213b0cff7bc5ab6696ee07cceec80829ce42efec"
 

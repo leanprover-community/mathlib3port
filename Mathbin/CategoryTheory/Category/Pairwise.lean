@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Order.CompleteLattice
-import Mathbin.CategoryTheory.Category.Preorder
-import Mathbin.CategoryTheory.Limits.IsLimit
+import Order.CompleteLattice
+import CategoryTheory.Category.Preorder
+import CategoryTheory.Limits.IsLimit
 
 #align_import category_theory.category.pairwise from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

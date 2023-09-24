@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Homology.Additive
-import Mathbin.Tactic.Abel
+import Algebra.Homology.Additive
+import Tactic.Abel
 
 #align_import algebra.homology.homotopy from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

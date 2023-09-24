@@ -3,8 +3,8 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Yaël Dillies
 -/
-import Mathbin.Order.Cover
-import Mathbin.Order.LatticeIntervals
+import Order.Cover
+import Order.LatticeIntervals
 
 #align_import order.modular_lattice from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

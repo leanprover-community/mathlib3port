@@ -3,12 +3,12 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Control.Applicative
-import Mathbin.Control.Traversable.Basic
-import Mathbin.Logic.Equiv.Defs
-import Mathbin.Data.List.Basic
+import Algebra.Hom.Group
+import Algebra.Hom.Equiv.Basic
+import Control.Applicative
+import Control.Traversable.Basic
+import Logic.Equiv.Defs
+import Data.List.Basic
 
 #align_import algebra.free from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

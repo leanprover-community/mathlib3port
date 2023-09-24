@@ -3,9 +3,9 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Dynamics.FixedPoints.Basic
+import Data.Set.Pointwise.Smul
+import Algebra.Hom.Iterate
+import Dynamics.FixedPoints.Basic
 
 #align_import data.set.pointwise.iterate from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

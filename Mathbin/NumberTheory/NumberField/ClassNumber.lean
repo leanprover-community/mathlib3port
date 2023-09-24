@@ -3,9 +3,9 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.NumberTheory.ClassNumber.AdmissibleAbs
-import Mathbin.NumberTheory.ClassNumber.Finite
-import Mathbin.NumberTheory.NumberField.Basic
+import NumberTheory.ClassNumber.AdmissibleAbs
+import NumberTheory.ClassNumber.Finite
+import NumberTheory.NumberField.Basic
 
 #align_import number_theory.number_field.class_number from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

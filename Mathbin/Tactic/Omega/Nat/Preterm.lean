@@ -3,7 +3,7 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Tactic.Omega.Term
+import Tactic.Omega.Term
 
 #align_import tactic.omega.nat.preterm from "leanprover-community/mathlib"@"a0735864ba72769da4b378673d3dbe2453924fde"
 
@@ -49,7 +49,7 @@ scoped notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

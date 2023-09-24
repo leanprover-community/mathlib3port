@@ -3,12 +3,12 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.Algebra.GeomSum
-import Mathbin.Data.MvPolynomial.CommRing
-import Mathbin.Data.MvPolynomial.Equiv
-import Mathbin.RingTheory.Polynomial.Content
-import Mathbin.RingTheory.UniqueFactorizationDomain
+import Algebra.CharP.Basic
+import Algebra.GeomSum
+import Data.MvPolynomial.CommRing
+import Data.MvPolynomial.Equiv
+import RingTheory.Polynomial.Content
+import RingTheory.UniqueFactorizationDomain
 
 #align_import ring_theory.polynomial.basic from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

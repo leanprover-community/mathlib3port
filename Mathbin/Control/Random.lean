@@ -3,10 +3,10 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Uliftable
-import Mathbin.Data.Bitvec.Basic
-import Mathbin.Data.Stream.Defs
-import Mathbin.Tactic.NormNum
+import Control.Uliftable
+import Data.Bitvec.Basic
+import Data.Stream.Defs
+import Tactic.NormNum
 
 #align_import control.random from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
@@ -87,7 +87,7 @@ class BoundedRandom (α : Type u) [Preorder α] where
 -/
 
 #print Random /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Random (α : Type u) where
   Random : ∀ (g : Type) [RandomGen g], RandG g α

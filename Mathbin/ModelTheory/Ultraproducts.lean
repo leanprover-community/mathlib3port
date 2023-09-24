@@ -3,9 +3,9 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.ModelTheory.Quotients
-import Mathbin.Order.Filter.Germ
-import Mathbin.Order.Filter.Ultrafilter
+import ModelTheory.Quotients
+import Order.Filter.Germ
+import Order.Filter.Ultrafilter
 
 #align_import model_theory.ultraproducts from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

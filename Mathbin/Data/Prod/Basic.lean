@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Tactic.Basic
-import Mathbin.Logic.Function.Basic
+import Tactic.Basic
+import Logic.Function.Basic
 
 #align_import data.prod.basic from "leanprover-community/mathlib"@"d07245fd37786daa997af4f1a73a49fa3b748408"
 

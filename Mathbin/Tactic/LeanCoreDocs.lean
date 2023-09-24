@@ -3,7 +3,7 @@ Copyright (c) 2020 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bryan Gin-ge Chen, Robert Y. Lewis, Scott Morrison
 -/
-import Mathbin.Tactic.DocCommands
+import Tactic.DocCommands
 
 #align_import tactic.lean_core_docs from "leanprover-community/mathlib"@"7e3fa4c114f6f12380cf3b181fd4bd03a2f05b79"
 

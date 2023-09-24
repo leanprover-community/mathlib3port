@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Scott Morrison, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.Algebra.Category.Module.Monoidal.Basic
+import CategoryTheory.Monoidal.Braided
+import Algebra.Category.Module.Monoidal.Basic
 
 #align_import algebra.category.Module.monoidal.symmetric from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

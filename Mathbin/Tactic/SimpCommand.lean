@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.simp_command from "leanprover-community/mathlib"@"8f6fd1b69096c6a587f745d354306c0d46396915"
 

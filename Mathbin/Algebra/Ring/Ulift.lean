@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Group.Ulift
-import Mathbin.Algebra.Ring.Equiv
+import Algebra.Group.Ulift
+import Algebra.Ring.Equiv
 
 #align_import algebra.ring.ulift from "leanprover-community/mathlib"@"13e18cfa070ea337ea960176414f5ae3a1534aae"
 

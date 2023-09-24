@@ -3,11 +3,11 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.Algebra.FreeAlgebra
-import Mathbin.Algebra.RingQuot
-import Mathbin.Algebra.TrivSqZeroExt
-import Mathbin.Algebra.Algebra.Operations
-import Mathbin.LinearAlgebra.Multilinear.Basic
+import Algebra.FreeAlgebra
+import Algebra.RingQuot
+import Algebra.TrivSqZeroExt
+import Algebra.Algebra.Operations
+import LinearAlgebra.Multilinear.Basic
 
 #align_import linear_algebra.tensor_algebra.basic from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

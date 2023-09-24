@@ -3,11 +3,11 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 -/
-import Mathbin.Data.Set.Intervals.UnorderedInterval
-import Mathbin.Data.Set.Intervals.Monoid
-import Mathbin.Data.Set.Pointwise.Basic
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Algebra.Order.Group.MinMax
+import Data.Set.Intervals.UnorderedInterval
+import Data.Set.Intervals.Monoid
+import Data.Set.Pointwise.Basic
+import Algebra.Order.Field.Basic
+import Algebra.Order.Group.MinMax
 
 #align_import data.set.pointwise.interval from "leanprover-community/mathlib"@"2196ab363eb097c008d4497125e0dde23fb36db2"
 

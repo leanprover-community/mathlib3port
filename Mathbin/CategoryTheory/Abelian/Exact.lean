@@ -3,13 +3,13 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Adam Topaz, Johan Commelin, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Abelian.Opposite
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
-import Mathbin.CategoryTheory.Preadditive.LeftExact
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.Algebra.Homology.Exact
-import Mathbin.Tactic.Tfae
+import CategoryTheory.Abelian.Opposite
+import CategoryTheory.Limits.Preserves.Shapes.Zero
+import CategoryTheory.Limits.Preserves.Shapes.Kernels
+import CategoryTheory.Preadditive.LeftExact
+import CategoryTheory.Adjunction.Limits
+import Algebra.Homology.Exact
+import Tactic.Tfae
 
 #align_import category_theory.abelian.exact from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.DirectSum.Algebra
-import Mathbin.Algebra.MonoidAlgebra.Basic
-import Mathbin.Data.Finsupp.ToDfinsupp
+import Algebra.DirectSum.Algebra
+import Algebra.MonoidAlgebra.Basic
+import Data.Finsupp.ToDfinsupp
 
 #align_import algebra.monoid_algebra.to_direct_sum from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

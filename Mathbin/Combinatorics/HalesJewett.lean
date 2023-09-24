@@ -3,10 +3,10 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Data.Fintype.Option
-import Mathbin.Data.Fintype.Pi
-import Mathbin.Data.Fintype.Sum
-import Mathbin.Algebra.BigOperators.Basic
+import Data.Fintype.Option
+import Data.Fintype.Pi
+import Data.Fintype.Sum
+import Algebra.BigOperators.Basic
 
 #align_import combinatorics.hales_jewett from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

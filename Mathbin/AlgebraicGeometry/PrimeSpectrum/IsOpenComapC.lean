@@ -3,8 +3,8 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
-import Mathbin.RingTheory.Polynomial.Basic
+import AlgebraicGeometry.PrimeSpectrum.Basic
+import RingTheory.Polynomial.Basic
 
 #align_import algebraic_geometry.prime_spectrum.is_open_comap_C from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

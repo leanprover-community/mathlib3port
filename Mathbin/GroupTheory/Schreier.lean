@@ -3,9 +3,9 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.GroupTheory.Abelianization
-import Mathbin.GroupTheory.Exponent
-import Mathbin.GroupTheory.Transfer
+import GroupTheory.Abelianization
+import GroupTheory.Exponent
+import GroupTheory.Transfer
 
 #align_import group_theory.schreier from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

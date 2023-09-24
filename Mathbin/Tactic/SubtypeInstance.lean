@@ -6,7 +6,7 @@ Authors: Simon Hudon
 Provides a `subtype_instance` tactic which builds instances for algebraic substructures
 (sub-groups, sub-rings...).
 -/
-import Mathbin.Tactic.Basic
+import Tactic.Basic
 
 #align_import tactic.subtype_instance from "leanprover-community/mathlib"@"6b936a9d2daba3bf60f963c8dad157c741813c5b"
 
@@ -23,7 +23,7 @@ def mkMemName (sub : Name) : Name → Name
   | n => n
 #align tactic.mk_mem_name Tactic.mkMemName
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop

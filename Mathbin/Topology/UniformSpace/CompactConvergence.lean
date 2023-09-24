@@ -3,8 +3,8 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Topology.CompactOpen
-import Mathbin.Topology.UniformSpace.UniformConvergence
+import Topology.CompactOpen
+import Topology.UniformSpace.UniformConvergence
 
 #align_import topology.uniform_space.compact_convergence from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

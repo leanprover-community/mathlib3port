@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.RingTheory.Ideal.QuotientOperations
-import Mathbin.RingTheory.Localization.Basic
+import RingTheory.Ideal.QuotientOperations
+import RingTheory.Localization.Basic
 
 #align_import ring_theory.localization.ideal from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

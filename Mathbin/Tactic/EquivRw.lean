@@ -3,12 +3,12 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Logic.Equiv.Defs
-import Mathbin.Tactic.Clear
-import Mathbin.Tactic.SimpResult
-import Mathbin.Tactic.Apply
-import Mathbin.Control.EquivFunctor.Instances
-import Mathbin.Logic.Equiv.Functor
+import Logic.Equiv.Defs
+import Tactic.Clear
+import Tactic.SimpResult
+import Tactic.Apply
+import Control.EquivFunctor.Instances
+import Logic.Equiv.Functor
 
 #align_import tactic.equiv_rw from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
@@ -113,10 +113,10 @@ unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 #align tactic.equiv_rw_cfg tactic.equiv_rw_cfg
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
@@ -199,7 +199,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
           Prod.fst <$> new_eqv { failIfUnchanged := ff }
 #align tactic.equiv_rw_type tactic.equiv_rw_type
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

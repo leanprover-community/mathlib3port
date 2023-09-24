@@ -3,8 +3,8 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.Algebra.Category.Module.EpiMono
-import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+import Algebra.Category.Module.EpiMono
+import CategoryTheory.ConcreteCategory.Elementwise
 
 #align_import algebra.category.Module.kernels from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

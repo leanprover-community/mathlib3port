@@ -3,9 +3,9 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.RingTheory.IntegralClosure
-import Mathbin.Data.Polynomial.IntegralNormalization
+import LinearAlgebra.FiniteDimensional
+import RingTheory.IntegralClosure
+import Data.Polynomial.IntegralNormalization
 
 #align_import ring_theory.algebraic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -372,7 +372,7 @@ end Algebra
 
 variable {R S : Type _} [CommRing R] [IsDomain R] [CommRing S]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
 #print exists_integral_multiple /-
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
@@ -389,7 +389,7 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
 #align exists_integral_multiple exists_integral_multiple
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
 #print IsIntegralClosure.exists_smul_eq_mul /-
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/

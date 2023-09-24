@@ -3,9 +3,9 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.LinearAlgebra.GeneralLinearGroup
-import Mathbin.LinearAlgebra.Matrix.Adjugate
-import Mathbin.LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.GeneralLinearGroup
+import LinearAlgebra.Matrix.Adjugate
+import LinearAlgebra.Matrix.ToLin
 
 #align_import linear_algebra.matrix.special_linear_group from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

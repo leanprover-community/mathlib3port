@@ -3,8 +3,8 @@ Copyright (c) 2018 Andreas Swerdlow. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kenny Lau
 -/
-import Mathbin.Algebra.Ring.Equiv
-import Mathbin.Algebra.Ring.Opposite
+import Algebra.Ring.Equiv
+import Algebra.Ring.Opposite
 
 #align_import ring_theory.ring_invo from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Leanbin.Data.Dlist
-import Mathbin.Tactic.Core
+import Data.Dlist
+import Tactic.Core
 
 #align_import tactic.rewrite from "leanprover-community/mathlib"@"a0735864ba72769da4b378673d3dbe2453924fde"
 

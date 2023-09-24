@@ -3,9 +3,9 @@ Copyright (c) 2021 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Basic
-import Mathbin.Combinatorics.SimpleGraph.Subgraph
-import Mathbin.Data.List.Rotate
+import Combinatorics.SimpleGraph.Basic
+import Combinatorics.SimpleGraph.Subgraph
+import Data.List.Rotate
 
 #align_import combinatorics.simple_graph.connectivity from "leanprover-community/mathlib"@"b99e2d58a5e6861833fa8de11e51a81144258db4"
 
@@ -1068,32 +1068,32 @@ structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
 -/
 
 #print SimpleGraph.Walk.IsPath /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure" :
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" :
     Prop where
   support_nodup : p.support.Nodup
 #align simple_graph.walk.is_path SimpleGraph.Walk.IsPath
 -/
 
 #print SimpleGraph.Walk.IsCircuit /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure" :
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" :
     Prop where
   ne_nil : p ≠ nil
 #align simple_graph.walk.is_circuit SimpleGraph.Walk.IsCircuit
 -/
 
 #print SimpleGraph.Walk.IsCycle /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure" :
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" :
     Prop where
   support_nodup : p.support.tail.Nodup
 #align simple_graph.walk.is_cycle SimpleGraph.Walk.IsCycle

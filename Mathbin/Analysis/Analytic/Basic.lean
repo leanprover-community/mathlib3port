@@ -3,10 +3,10 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.FormalMultilinearSeries
-import Mathbin.Analysis.SpecificLimits.Normed
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Topology.Algebra.InfiniteSum.Module
+import Analysis.Calculus.FormalMultilinearSeries
+import Analysis.SpecificLimits.Normed
+import Logic.Equiv.Fin
+import Topology.Algebra.InfiniteSum.Module
 
 #align_import analysis.analytic.basic from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
@@ -736,7 +736,7 @@ theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
 #align analytic_on.sub AnalyticOn.sub
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ≠ » 0) -/
 #print HasFPowerSeriesOnBall.coeff_zero /-
 theorem HasFPowerSeriesOnBall.coeff_zero (hf : HasFPowerSeriesOnBall f pf x r) (v : Fin 0 → E) :
     pf 0 v = f x := by
@@ -937,7 +937,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
 #align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 #print HasFPowerSeriesOnBall.image_sub_sub_deriv_le /-
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by

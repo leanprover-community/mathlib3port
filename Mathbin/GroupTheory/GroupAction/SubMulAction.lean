@@ -3,10 +3,10 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Hom.GroupAction
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Data.SetLike.Basic
-import Mathbin.GroupTheory.GroupAction.Basic
+import Algebra.Hom.GroupAction
+import Algebra.Module.Basic
+import Data.SetLike.Basic
+import GroupTheory.GroupAction.Basic
 
 #align_import group_theory.group_action.sub_mul_action from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

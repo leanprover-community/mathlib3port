@@ -3,9 +3,9 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Roots
-import Mathbin.NumberTheory.NumberField.Basic
-import Mathbin.FieldTheory.Galois
+import RingTheory.Polynomial.Cyclotomic.Roots
+import NumberTheory.NumberField.Basic
+import FieldTheory.Galois
 
 #align_import number_theory.cyclotomic.basic from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

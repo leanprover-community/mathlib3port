@@ -3,11 +3,11 @@ Copyright (c) 2018 Reid Barton All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison, David Wärn
 -/
-import Mathbin.CategoryTheory.FullSubcategory
-import Mathbin.CategoryTheory.Products.Basic
-import Mathbin.CategoryTheory.Pi.Basic
-import Mathbin.CategoryTheory.Category.Basic
-import Mathbin.Combinatorics.Quiver.ConnectedComponent
+import CategoryTheory.FullSubcategory
+import CategoryTheory.Products.Basic
+import CategoryTheory.Pi.Basic
+import CategoryTheory.Category.Basic
+import Combinatorics.Quiver.ConnectedComponent
 
 #align_import category_theory.groupoid from "leanprover-community/mathlib"@"2efd2423f8d25fa57cf7a179f5d8652ab4d0df44"
 

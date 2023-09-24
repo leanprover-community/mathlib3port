@@ -3,11 +3,11 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Zmod.Quotient
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
-import Mathbin.LinearAlgebra.FreeModule.Pid
-import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
-import Mathbin.LinearAlgebra.QuotientPi
+import Data.Zmod.Quotient
+import LinearAlgebra.FreeModule.Finite.Rank
+import LinearAlgebra.FreeModule.Pid
+import LinearAlgebra.FreeModule.StrongRankCondition
+import LinearAlgebra.QuotientPi
 
 #align_import linear_algebra.free_module.ideal_quotient from "leanprover-community/mathlib"@"90b0d53ee6ffa910e5c2a977ce7e2fc704647974"
 

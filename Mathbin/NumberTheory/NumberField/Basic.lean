@@ -3,8 +3,8 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, Anne Baanen
 -/
-import Mathbin.Algebra.CharP.Algebra
-import Mathbin.RingTheory.DedekindDomain.IntegralClosure
+import Algebra.CharP.Algebra
+import RingTheory.DedekindDomain.IntegralClosure
 
 #align_import number_theory.number_field.basic from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Data.Finsupp.Multiset
-import Mathbin.Order.Bounded
-import Mathbin.SetTheory.Ordinal.Principal
+import Data.Finsupp.Multiset
+import Order.Bounded
+import SetTheory.Ordinal.Principal
 import Mathbin.Tactic.Linarith.Default
 
 #align_import set_theory.cardinal.ordinal from "leanprover-community/mathlib"@"7c2ce0c2da15516b4e65d0c9e254bb6dc93abd1f"

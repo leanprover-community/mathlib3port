@@ -3,9 +3,9 @@ Copyright (c) 2022 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Data.Finsupp.Lex
-import Mathbin.Data.Finsupp.Multiset
-import Mathbin.Order.GameAdd
+import Data.Finsupp.Lex
+import Data.Finsupp.Multiset
+import Order.GameAdd
 
 #align_import logic.hydra from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.Group.Basic
-import Mathbin.Algebra.GroupWithZero.Defs
-import Mathbin.Algebra.Group.OrderSynonym
+import Algebra.Group.Basic
+import Algebra.GroupWithZero.Defs
+import Algebra.Group.OrderSynonym
 
 #align_import algebra.group_with_zero.basic from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

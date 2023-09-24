@@ -3,7 +3,7 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.MeasureTheory.Covering.DensityTheorem
+import MeasureTheory.Covering.DensityTheorem
 
 #align_import measure_theory.covering.liminf_limsup from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

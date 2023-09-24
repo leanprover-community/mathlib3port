@@ -3,7 +3,7 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 -/
-import Mathbin.Data.Nat.Parity
+import Data.Nat.Parity
 
 #align_import data.int.parity from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

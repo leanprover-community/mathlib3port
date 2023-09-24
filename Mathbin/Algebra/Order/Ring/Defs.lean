@@ -3,17 +3,17 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Group.Defs
-import Mathbin.Algebra.Order.Monoid.Cancel.Defs
-import Mathbin.Algebra.Order.Monoid.Canonical.Defs
-import Mathbin.Algebra.Order.Monoid.NatCast
-import Mathbin.Algebra.Order.Monoid.WithZero.Defs
-import Mathbin.Algebra.Order.Ring.Lemmas
-import Mathbin.Algebra.Ring.Defs
-import Mathbin.Order.MinMax
-import Mathbin.Tactic.Nontriviality
-import Mathbin.Data.Pi.Algebra
-import Mathbin.Algebra.Group.Units
+import Algebra.Order.Group.Defs
+import Algebra.Order.Monoid.Cancel.Defs
+import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Order.Monoid.NatCast
+import Algebra.Order.Monoid.WithZero.Defs
+import Algebra.Order.Ring.Lemmas
+import Algebra.Ring.Defs
+import Order.MinMax
+import Tactic.Nontriviality
+import Data.Pi.Algebra
+import Algebra.Group.Units
 
 #align_import algebra.order.ring.defs from "leanprover-community/mathlib"@"44e29dbcff83ba7114a464d592b8c3743987c1e5"
 

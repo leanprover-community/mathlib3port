@@ -3,8 +3,8 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Trails
-import Mathbin.Tactic.DeriveFintype
+import Combinatorics.SimpleGraph.Trails
+import Tactic.DeriveFintype
 
 #align_import wiedijk_100_theorems.konigsberg from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

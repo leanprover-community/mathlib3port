@@ -3,9 +3,9 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Finset.Sort
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.BigOperators.Fin
+import Data.Finset.Sort
+import Algebra.BigOperators.Order
+import Algebra.BigOperators.Fin
 
 #align_import combinatorics.composition from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 

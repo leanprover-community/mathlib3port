@@ -3,9 +3,9 @@ Copyright (c) 2020. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Tactic.Ring
-import Mathbin.Tactic.DocCommands
-import Mathbin.Algebra.Group.Commutator
+import Tactic.Ring
+import Tactic.DocCommands
+import Algebra.Group.Commutator
 
 #align_import tactic.group from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
@@ -95,7 +95,7 @@ namespace Tactic.Interactive
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.

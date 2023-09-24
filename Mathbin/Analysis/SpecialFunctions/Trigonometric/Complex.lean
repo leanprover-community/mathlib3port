@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Algebra.QuadraticDiscriminant
-import Mathbin.Analysis.Convex.SpecificFunctions.Deriv
+import Algebra.QuadraticDiscriminant
+import Analysis.Convex.SpecificFunctions.Deriv
 
 #align_import analysis.special_functions.trigonometric.complex from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
@@ -212,7 +212,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (w «expr ≠ » 0) -/
 #print Complex.cos_surjective /-
 theorem cos_surjective : Function.Surjective cos :=
   by

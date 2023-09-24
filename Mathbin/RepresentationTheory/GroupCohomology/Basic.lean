@@ -3,8 +3,8 @@ Copyright (c) 2023 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
-import Mathbin.Algebra.Homology.Opposite
-import Mathbin.RepresentationTheory.GroupCohomology.Resolution
+import Algebra.Homology.Opposite
+import RepresentationTheory.GroupCohomology.Resolution
 
 #align_import representation_theory.group_cohomology.basic from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

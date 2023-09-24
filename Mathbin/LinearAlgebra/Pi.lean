@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Basic
-import Mathbin.Logic.Equiv.Fin
+import LinearAlgebra.Basic
+import Logic.Equiv.Fin
 
 #align_import linear_algebra.pi from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

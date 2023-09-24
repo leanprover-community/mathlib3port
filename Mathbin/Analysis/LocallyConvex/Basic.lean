@@ -3,9 +3,9 @@ Copyright (c) 2019 Jean Lo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 -/
-import Mathbin.Analysis.Convex.Basic
-import Mathbin.Analysis.Convex.Hull
-import Mathbin.Analysis.NormedSpace.Basic
+import Analysis.Convex.Basic
+import Analysis.Convex.Hull
+import Analysis.NormedSpace.Basic
 
 #align_import analysis.locally_convex.basic from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Alena Gusakov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov
 -/
-import Mathbin.Combinatorics.SimpleGraph.Basic
-import Mathbin.Data.Set.Finite
+import Combinatorics.SimpleGraph.Basic
+import Data.Set.Finite
 
 #align_import combinatorics.simple_graph.strongly_regular from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

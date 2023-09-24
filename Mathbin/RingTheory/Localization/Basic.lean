@@ -3,12 +3,12 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.Algebra.Algebra.Tower
-import Mathbin.Algebra.Ring.Equiv
-import Mathbin.GroupTheory.MonoidLocalization
-import Mathbin.RingTheory.Ideal.Basic
-import Mathbin.RingTheory.NonZeroDivisors
-import Mathbin.Tactic.RingExp
+import Algebra.Algebra.Tower
+import Algebra.Ring.Equiv
+import GroupTheory.MonoidLocalization
+import RingTheory.Ideal.Basic
+import RingTheory.NonZeroDivisors
+import Tactic.RingExp
 
 #align_import ring_theory.localization.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -98,9 +98,9 @@ variable {R : Type _} [CommSemiring R] (M : Submonoid R) (S : Type _) [CommSemir
 variable [Algebra R S] {P : Type _} [CommSemiring P]
 
 #print IsLocalization /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
 /-- The typeclass `is_localization (M : submodule R) S` where `S` is an `R`-algebra
 expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where
@@ -1058,7 +1058,7 @@ theorem add_mk_self (a b c) : (mk a b : Localization M) + mk c b = mk (a + c) b 
 #align localization.add_mk_self Localization.add_mk_self
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def tac :=
   sorry
 

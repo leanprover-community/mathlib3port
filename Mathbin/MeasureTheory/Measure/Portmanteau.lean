@@ -3,8 +3,8 @@ Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathbin.MeasureTheory.Measure.ProbabilityMeasure
-import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
+import MeasureTheory.Measure.ProbabilityMeasure
+import MeasureTheory.Measure.Lebesgue.Basic
 
 #align_import measure_theory.measure.portmanteau from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

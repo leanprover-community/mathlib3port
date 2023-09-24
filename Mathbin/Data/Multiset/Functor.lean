@@ -3,9 +3,9 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Simon Hudon, Kenny Lau
 -/
-import Mathbin.Data.Multiset.Bind
-import Mathbin.Control.Traversable.Lemmas
-import Mathbin.Control.Traversable.Instances
+import Data.Multiset.Bind
+import Control.Traversable.Lemmas
+import Control.Traversable.Instances
 
 #align_import data.multiset.functor from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

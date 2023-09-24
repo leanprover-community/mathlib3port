@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fin.Tuple.Basic
-import Mathbin.Data.List.Join
-import Mathbin.Data.List.Pairwise
+import Data.Fin.Tuple.Basic
+import Data.List.Join
+import Data.List.Pairwise
 
 #align_import data.list.of_fn from "leanprover-community/mathlib"@"bf27744463e9620ca4e4ebe951fe83530ae6949b"
 

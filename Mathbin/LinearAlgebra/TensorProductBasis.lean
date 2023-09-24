@@ -3,8 +3,8 @@ Copyright (c) 2021 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 -/
-import Mathbin.LinearAlgebra.DirectSum.Finsupp
-import Mathbin.LinearAlgebra.FinsuppVectorSpace
+import LinearAlgebra.DirectSum.Finsupp
+import LinearAlgebra.FinsuppVectorSpace
 
 #align_import linear_algebra.tensor_product_basis from "leanprover-community/mathlib"@"f784cc6142443d9ee623a20788c282112c322081"
 

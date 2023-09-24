@@ -3,13 +3,13 @@ Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.RingTheory.Valuation.Integers
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Localization.Integer
-import Mathbin.RingTheory.DiscreteValuationRing.Basic
-import Mathbin.RingTheory.Bezout
-import Mathbin.Tactic.FieldSimp
+import RingTheory.Valuation.Integers
+import RingTheory.Ideal.LocalRing
+import RingTheory.Localization.FractionRing
+import RingTheory.Localization.Integer
+import RingTheory.DiscreteValuationRing.Basic
+import RingTheory.Bezout
+import Tactic.FieldSimp
 
 #align_import ring_theory.valuation.valuation_ring from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
@@ -41,7 +41,7 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 universe u v w
 
 #print ValuationRing /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRing A] [IsDomain A] : Prop where

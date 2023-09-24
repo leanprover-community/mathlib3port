@@ -3,7 +3,7 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Anatole Dedecker
 -/
-import Mathbin.Topology.Separation
+import Topology.Separation
 
 #align_import topology.extend_from from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

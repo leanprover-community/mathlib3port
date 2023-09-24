@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Vector.Basic
-import Mathbin.Logic.Equiv.List
-import Mathbin.Control.Traversable.Equiv
+import Data.Vector.Basic
+import Logic.Equiv.List
+import Control.Traversable.Equiv
 
 #align_import logic.equiv.array from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

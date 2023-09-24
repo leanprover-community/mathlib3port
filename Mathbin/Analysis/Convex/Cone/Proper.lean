@@ -3,8 +3,8 @@ Copyright (c) 2022 Apurva Nakade All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 -/
-import Mathbin.Analysis.Convex.Cone.Dual
-import Mathbin.Analysis.InnerProductSpace.Adjoint
+import Analysis.Convex.Cone.Dual
+import Analysis.InnerProductSpace.Adjoint
 
 #align_import analysis.convex.cone.proper from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

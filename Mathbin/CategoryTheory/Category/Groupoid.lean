@@ -3,10 +3,10 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.SingleObj
-import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.CategoryTheory.Pi.Basic
-import Mathbin.CategoryTheory.Limits.IsLimit
+import CategoryTheory.SingleObj
+import CategoryTheory.Limits.Shapes.Products
+import CategoryTheory.Pi.Basic
+import CategoryTheory.Limits.IsLimit
 
 #align_import category_theory.category.Groupoid from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

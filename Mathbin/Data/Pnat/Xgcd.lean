@@ -3,8 +3,8 @@ Copyright (c) 2019 Neil Strickland. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 -/
-import Mathbin.Tactic.Ring
-import Mathbin.Data.Pnat.Prime
+import Tactic.Ring
+import Data.Pnat.Prime
 
 #align_import data.pnat.xgcd from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

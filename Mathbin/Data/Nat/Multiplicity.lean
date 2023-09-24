@@ -3,13 +3,13 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.BigOperators.Intervals
-import Mathbin.Algebra.GeomSum
-import Mathbin.Data.Nat.Bitwise
-import Mathbin.Data.Nat.Log
-import Mathbin.Data.Nat.Parity
-import Mathbin.Data.Nat.Prime
-import Mathbin.RingTheory.Multiplicity
+import Algebra.BigOperators.Intervals
+import Algebra.GeomSum
+import Data.Nat.Bitwise
+import Data.Nat.Log
+import Data.Nat.Parity
+import Data.Nat.Prime
+import RingTheory.Multiplicity
 
 #align_import data.nat.multiplicity from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 

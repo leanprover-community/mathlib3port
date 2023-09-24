@@ -3,8 +3,8 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.Data.List.Basic
-import Mathbin.Data.Nat.Bits
+import Data.List.Basic
+import Data.Nat.Bits
 import Mathbin.Tactic.Linarith.Default
 
 #align_import data.nat.bitwise from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
@@ -250,7 +250,7 @@ theorem lor'_zero (n : ℕ) : lor' n 0 = n := by simp [lor]
 #align nat.lor_zero Nat.lor'_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=

@@ -3,10 +3,10 @@ Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
-import Mathbin.Algebra.ContinuedFractions.ContinuantsRecurrence
-import Mathbin.Algebra.ContinuedFractions.TerminatedStable
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Tactic.Ring
+import Algebra.ContinuedFractions.ContinuantsRecurrence
+import Algebra.ContinuedFractions.TerminatedStable
+import Tactic.FieldSimp
+import Tactic.Ring
 
 #align_import algebra.continued_fractions.convergents_equiv from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 

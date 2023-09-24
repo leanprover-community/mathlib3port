@@ -3,8 +3,8 @@ Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Geometry.Manifold.VectorBundle.Basic
-import Mathbin.Topology.VectorBundle.Hom
+import Geometry.Manifold.VectorBundle.Basic
+import Topology.VectorBundle.Hom
 
 #align_import geometry.manifold.vector_bundle.hom from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Topology.Algebra.InfiniteSum.Order
-import Mathbin.Topology.Algebra.InfiniteSum.Ring
-import Mathbin.Topology.Instances.Real
+import Topology.Algebra.InfiniteSum.Order
+import Topology.Algebra.InfiniteSum.Ring
+import Topology.Instances.Real
 
 #align_import topology.instances.nnreal from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
@@ -162,7 +162,7 @@ theorem tendsto_real_toNNReal_atTop : Tendsto Real.toNNReal atTop atTop :=
 #align tendsto_real_to_nnreal_at_top tendsto_real_toNNReal_atTop
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 #print NNReal.nhds_zero /-
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]

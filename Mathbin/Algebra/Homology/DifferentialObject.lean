@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Homology.HomologicalComplex
-import Mathbin.CategoryTheory.DifferentialObject
+import Algebra.Homology.HomologicalComplex
+import CategoryTheory.DifferentialObject
 
 #align_import algebra.homology.differential_object from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

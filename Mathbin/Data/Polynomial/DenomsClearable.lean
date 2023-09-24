@@ -3,8 +3,8 @@ Copyright (c) 2020 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Data.Polynomial.EraseLead
-import Mathbin.Data.Polynomial.Eval
+import Data.Polynomial.EraseLead
+import Data.Polynomial.Eval
 
 #align_import data.polynomial.denoms_clearable from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
@@ -52,7 +52,7 @@ theorem denomsClearable_zero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClear
 #align denoms_clearable_zero denomsClearable_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 #print denomsClearable_C_mul_X_pow /-
 theorem denomsClearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R)
     (nN : n ≤ N) : DenomsClearable a b N (C r * X ^ n) i :=

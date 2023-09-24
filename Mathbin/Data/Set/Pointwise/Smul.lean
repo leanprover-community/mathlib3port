@@ -3,10 +3,10 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Data.Set.Pairwise.Lattice
-import Mathbin.Data.Set.Pointwise.Basic
-import Mathbin.Tactic.ByContra
+import Algebra.Module.Basic
+import Data.Set.Pairwise.Lattice
+import Data.Set.Pointwise.Basic
+import Tactic.ByContra
 
 #align_import data.set.pointwise.smul from "leanprover-community/mathlib"@"5e526d18cea33550268dcbbddcb822d5cde40654"
 

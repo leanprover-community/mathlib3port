@@ -3,9 +3,9 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Probability.Martingale.BorelCantelli
-import Mathbin.Probability.ConditionalExpectation
-import Mathbin.Probability.Independence.Basic
+import Probability.Martingale.BorelCantelli
+import Probability.ConditionalExpectation
+import Probability.Independence.Basic
 
 #align_import probability.borel_cantelli from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

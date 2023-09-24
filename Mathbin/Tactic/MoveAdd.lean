@@ -3,8 +3,8 @@ Copyright (c) 2022 Arthur Paulino, Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Damiano Testa
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Algebra.Group.Basic
+import Tactic.Core
+import Algebra.Group.Basic
 
 #align_import tactic.move_add from "leanprover-community/mathlib"@"205a628e1fdc9220cb86832d66a50d1381abc103"
 
@@ -207,8 +207,8 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
   | e => pure (e, lp.map fun _ => true)
 #align tactic.move_op.reorder_oper tactic.move_op.reorder_oper
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Passes the user input `na` to `reorder_oper` at a single location, that could either be
 `none` (referring to the goal) or `some name` (referring to hypothesis `name`).  Replaces the
 given hypothesis/goal with the rearranged one that `reorder_hyp` receives from `reorder_oper`.

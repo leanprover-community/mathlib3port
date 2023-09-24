@@ -3,8 +3,8 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 -/
-import Mathbin.RingTheory.Derivation.Basic
-import Mathbin.RingTheory.Ideal.QuotientOperations
+import RingTheory.Derivation.Basic
+import RingTheory.Ideal.QuotientOperations
 
 #align_import ring_theory.derivation.to_square_zero from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

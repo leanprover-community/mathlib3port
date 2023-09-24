@@ -3,13 +3,13 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
-import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.MeasureTheory.Group.MeasurableEquiv
-import Mathbin.MeasureTheory.Measure.OpenPos
-import Mathbin.MeasureTheory.Group.Action
-import Mathbin.MeasureTheory.Constructions.Prod.Basic
-import Mathbin.Topology.ContinuousFunction.CocompactMap
+import Dynamics.Ergodic.MeasurePreserving
+import MeasureTheory.Measure.Regular
+import MeasureTheory.Group.MeasurableEquiv
+import MeasureTheory.Measure.OpenPos
+import MeasureTheory.Group.Action
+import MeasureTheory.Constructions.Prod.Basic
+import Topology.ContinuousFunction.CocompactMap
 
 #align_import measure_theory.group.measure from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.SetTheory.Cardinal.Basic
+import CategoryTheory.Limits.Shapes.Products
+import SetTheory.Cardinal.Basic
 
 #align_import category_theory.limits.small_complete from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

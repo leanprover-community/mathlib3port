@@ -3,10 +3,10 @@ Copyright (c) 2021 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak, Kyle Miller, Eric Wieser
 -/
-import Mathbin.Data.Matrix.Notation
-import Mathbin.LinearAlgebra.BilinearMap
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.Algebra.Lie.Basic
+import Data.Matrix.Notation
+import LinearAlgebra.BilinearMap
+import LinearAlgebra.Matrix.Determinant
+import Algebra.Lie.Basic
 
 #align_import linear_algebra.cross_product from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

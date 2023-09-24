@@ -3,9 +3,9 @@ Copyright (c) 2022 Niels Voss. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Niels Voss
 -/
-import Mathbin.Data.Nat.Prime
-import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.Order.Filter.Cofinite
+import Data.Nat.Prime
+import FieldTheory.Finite.Basic
+import Order.Filter.Cofinite
 
 #align_import number_theory.fermat_psp from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

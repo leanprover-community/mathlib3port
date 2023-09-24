@@ -3,10 +3,10 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.GroupAction.Quotient
-import Mathbin.RingTheory.Int.Basic
-import Mathbin.RingTheory.Ideal.QuotientOperations
+import Data.Zmod.Basic
+import GroupTheory.GroupAction.Quotient
+import RingTheory.Int.Basic
+import RingTheory.Ideal.QuotientOperations
 
 #align_import data.zmod.quotient from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

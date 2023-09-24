@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 -/
-import Mathbin.Algebra.Group.WithOne.Defs
-import Mathbin.Algebra.Hom.Equiv.Basic
+import Algebra.Group.WithOne.Defs
+import Algebra.Hom.Equiv.Basic
 
 #align_import algebra.group.with_one.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

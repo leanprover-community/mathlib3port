@@ -3,8 +3,8 @@ Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
-import Mathbin.Algebra.ContinuedFractions.Computation.Basic
-import Mathbin.Algebra.ContinuedFractions.Translations
+import Algebra.ContinuedFractions.Computation.Basic
+import Algebra.ContinuedFractions.Translations
 
 #align_import algebra.continued_fractions.computation.translations from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

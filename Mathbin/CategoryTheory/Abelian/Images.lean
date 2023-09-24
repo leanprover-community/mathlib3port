@@ -3,7 +3,7 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+import CategoryTheory.Limits.Shapes.Kernels
 
 #align_import category_theory.abelian.images from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

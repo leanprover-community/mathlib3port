@@ -3,10 +3,10 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.Algebra.Homology.Exact
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Limits.Preserves.Finite
+import Algebra.Homology.Exact
+import CategoryTheory.Limits.Shapes.Biproducts
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Limits.Preserves.Finite
 
 #align_import category_theory.preadditive.projective from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

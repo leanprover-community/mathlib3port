@@ -3,7 +3,7 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.CategoryTheory.Idempotents.Karoubi
+import CategoryTheory.Idempotents.Karoubi
 
 #align_import category_theory.idempotents.biproducts from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

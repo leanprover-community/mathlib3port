@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Asymptotics.Asymptotics
+import Analysis.Asymptotics.Asymptotics
 
 #align_import analysis.asymptotics.theta from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

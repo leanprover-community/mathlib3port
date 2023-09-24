@@ -3,9 +3,9 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Data.Nat.Factors
-import Mathbin.Data.Nat.Prime
-import Mathbin.Tactic.NormNum
+import Data.Nat.Factors
+import Data.Nat.Prime
+import Tactic.NormNum
 
 #align_import data.nat.prime_norm_num from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Yourong Zang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 -/
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Analysis.NormedSpace.LinearIsometry
+import Analysis.NormedSpace.Basic
+import Analysis.NormedSpace.LinearIsometry
 
 #align_import analysis.normed_space.conformal_linear_map from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

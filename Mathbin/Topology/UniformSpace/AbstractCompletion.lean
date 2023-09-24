@@ -3,8 +3,8 @@ Copyright (c) 2019 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.UniformSpace.UniformEmbedding
-import Mathbin.Topology.UniformSpace.Equiv
+import Topology.UniformSpace.UniformEmbedding
+import Topology.UniformSpace.Equiv
 
 #align_import topology.uniform_space.abstract_completion from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

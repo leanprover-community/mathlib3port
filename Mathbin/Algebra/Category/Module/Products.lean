@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.LinearAlgebra.Pi
-import Mathbin.Algebra.Category.Module.Basic
+import LinearAlgebra.Pi
+import Algebra.Category.Module.Basic
 
 #align_import algebra.category.Module.products from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

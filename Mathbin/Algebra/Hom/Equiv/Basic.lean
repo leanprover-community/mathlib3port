@@ -3,10 +3,10 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Data.FunLike.Equiv
-import Mathbin.Logic.Equiv.Basic
-import Mathbin.Data.Pi.Algebra
+import Algebra.Hom.Group
+import Data.FunLike.Equiv
+import Logic.Equiv.Basic
+import Data.Pi.Algebra
 
 #align_import algebra.hom.equiv.basic from "leanprover-community/mathlib"@"1ac8d4304efba9d03fa720d06516fac845aa5353"
 

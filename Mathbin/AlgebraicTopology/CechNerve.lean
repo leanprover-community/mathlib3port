@@ -3,10 +3,10 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.AlgebraicTopology.SimplicialObject
-import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.CategoryTheory.Arrow
+import AlgebraicTopology.SimplicialObject
+import CategoryTheory.Limits.Shapes.WidePullbacks
+import CategoryTheory.Limits.Shapes.FiniteProducts
+import CategoryTheory.Arrow
 
 #align_import algebraic_topology.cech_nerve from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

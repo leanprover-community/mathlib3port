@@ -3,9 +3,9 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Rodriguez
 -/
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Data.Nat.Choose.Basic
+import Algebra.GroupPower.Lemmas
+import Algebra.Order.Field.Basic
+import Data.Nat.Choose.Basic
 
 #align_import data.nat.choose.bounds from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -3,13 +3,13 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Order.WellFoundedSet
-import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.RingTheory.Valuation.Basic
-import Mathbin.RingTheory.PowerSeries.Basic
-import Mathbin.Data.Finsupp.Pwo
-import Mathbin.Data.Finset.MulAntidiagonal
-import Mathbin.Algebra.Order.Group.WithTop
+import Order.WellFoundedSet
+import Algebra.BigOperators.Finprod
+import RingTheory.Valuation.Basic
+import RingTheory.PowerSeries.Basic
+import Data.Finsupp.Pwo
+import Data.Finset.MulAntidiagonal
+import Algebra.Order.Group.WithTop
 
 #align_import ring_theory.hahn_series from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

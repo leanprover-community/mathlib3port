@@ -3,10 +3,10 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Prod.Basic
-import Mathbin.Data.Subtype
-import Mathbin.Logic.Function.Basic
-import Mathbin.Logic.Unique
+import Data.Prod.Basic
+import Data.Subtype
+import Logic.Function.Basic
+import Logic.Unique
 
 #align_import logic.nontrivial from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

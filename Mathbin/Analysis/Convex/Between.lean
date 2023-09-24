@@ -3,11 +3,11 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Data.Set.Intervals.Group
-import Mathbin.Analysis.Convex.Segment
-import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Algebra.CharP.Invertible
+import Data.Set.Intervals.Group
+import Analysis.Convex.Segment
+import LinearAlgebra.AffineSpace.FiniteDimensional
+import Tactic.FieldSimp
+import Algebra.CharP.Invertible
 
 #align_import analysis.convex.between from "leanprover-community/mathlib"@"571e13cacbed7bf042fd3058ce27157101433842"
 

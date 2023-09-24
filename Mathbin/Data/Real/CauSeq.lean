@@ -3,12 +3,12 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.Algebra.Order.AbsoluteValue
-import Mathbin.Algebra.Order.Group.MinMax
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Algebra.Ring.Pi
-import Mathbin.GroupTheory.GroupAction.Pi
+import Algebra.GroupPower.Lemmas
+import Algebra.Order.AbsoluteValue
+import Algebra.Order.Group.MinMax
+import Algebra.Order.Field.Basic
+import Algebra.Ring.Pi
+import GroupTheory.GroupAction.Pi
 
 #align_import data.real.cau_seq from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
@@ -115,7 +115,7 @@ namespace IsCauSeq
 
 variable [LinearOrderedField α] [Ring β] {abv : β → α} [IsAbsoluteValue abv] {f g : ℕ → β}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j k «expr ≥ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j k «expr ≥ » i) -/
 #print IsCauSeq.cauchy₂ /-
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
@@ -201,7 +201,7 @@ def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β
 
 variable [IsAbsoluteValue abv]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j k «expr ≥ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j k «expr ≥ » i) -/
 #print CauSeq.cauchy₂ /-
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]

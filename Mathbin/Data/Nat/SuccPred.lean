@@ -3,8 +3,8 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Fin.Basic
-import Mathbin.Order.SuccPred.Basic
+import Data.Fin.Basic
+import Order.SuccPred.Basic
 
 #align_import data.nat.succ_pred from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

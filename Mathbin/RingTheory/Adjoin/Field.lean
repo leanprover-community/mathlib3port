@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Polynomial.Splits
-import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.RingTheory.AdjoinRoot
+import Data.Polynomial.Splits
+import RingTheory.Adjoin.Basic
+import RingTheory.AdjoinRoot
 
 #align_import ring_theory.adjoin.field from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

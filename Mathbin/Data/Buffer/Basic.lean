@@ -5,9 +5,9 @@ Authors: Simon Hudon
 
 General utility functions for buffers.
 -/
-import Mathbin.Data.Array.Lemmas
-import Mathbin.Control.Traversable.Instances
-import Mathbin.Control.Traversable.Equiv
+import Data.Array.Lemmas
+import Control.Traversable.Instances
+import Control.Traversable.Equiv
 
 #align_import data.buffer.basic from "leanprover-community/mathlib"@"f0c8bf9245297a541f468be517f1bde6195105e9"
 

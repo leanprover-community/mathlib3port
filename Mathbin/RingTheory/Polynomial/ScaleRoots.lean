@@ -3,8 +3,8 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Devon Tuma
 -/
-import Mathbin.RingTheory.NonZeroDivisors
-import Mathbin.Data.Polynomial.AlgebraMap
+import RingTheory.NonZeroDivisors
+import Data.Polynomial.AlgebraMap
 
 #align_import ring_theory.polynomial.scale_roots from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

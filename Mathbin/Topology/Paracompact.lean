@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Yury Kudryashov
 -/
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.Separation
-import Mathbin.Data.Option.Basic
+import Topology.SubsetProperties
+import Topology.Separation
+import Data.Option.Basic
 
 #align_import topology.paracompact from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

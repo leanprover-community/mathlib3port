@@ -3,9 +3,9 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
-import Mathbin.LinearAlgebra.CliffordAlgebra.Fold
-import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
+import LinearAlgebra.ExteriorAlgebra.Basic
+import LinearAlgebra.CliffordAlgebra.Fold
+import LinearAlgebra.CliffordAlgebra.Conjugation
 
 #align_import linear_algebra.clifford_algebra.contraction from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

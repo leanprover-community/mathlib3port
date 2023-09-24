@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Limits.HasLimits
-import Mathbin.CategoryTheory.Thin
+import CategoryTheory.Limits.HasLimits
+import CategoryTheory.Thin
 
 #align_import category_theory.limits.shapes.wide_pullbacks from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

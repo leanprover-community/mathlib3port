@@ -3,9 +3,9 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.RingTheory.Valuation.Basic
+import Algebra.Associated
+import Algebra.BigOperators.Basic
+import RingTheory.Valuation.Basic
 
 #align_import ring_theory.multiplicity from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

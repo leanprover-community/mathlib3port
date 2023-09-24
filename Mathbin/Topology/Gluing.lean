@@ -3,10 +3,10 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.GlueData
-import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
-import Mathbin.Topology.Category.Top.Limits.Pullbacks
-import Mathbin.Topology.Category.Top.Opens
+import CategoryTheory.GlueData
+import CategoryTheory.ConcreteCategory.Elementwise
+import Topology.Category.Top.Limits.Pullbacks
+import Topology.Category.Top.Opens
 
 #align_import topology.gluing from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

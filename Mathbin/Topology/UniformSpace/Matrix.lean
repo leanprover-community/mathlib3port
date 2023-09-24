@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Heather Macbeth
 -/
-import Mathbin.Topology.UniformSpace.Pi
-import Mathbin.Data.Matrix.Basic
+import Topology.UniformSpace.Pi
+import Data.Matrix.Basic
 
 #align_import topology.uniform_space.matrix from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

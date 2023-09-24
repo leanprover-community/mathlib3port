@@ -3,13 +3,13 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.FgModule.Basic
-import Mathbin.Algebra.Category.Module.Limits
-import Mathbin.Algebra.Category.Module.Products
-import Mathbin.Algebra.Category.Module.EpiMono
-import Mathbin.CategoryTheory.Limits.Creates
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
-import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import Algebra.Category.FgModule.Basic
+import Algebra.Category.Module.Limits
+import Algebra.Category.Module.Products
+import Algebra.Category.Module.EpiMono
+import CategoryTheory.Limits.Creates
+import CategoryTheory.Limits.Shapes.FiniteLimits
+import CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 
 #align_import algebra.category.fgModule.limits from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

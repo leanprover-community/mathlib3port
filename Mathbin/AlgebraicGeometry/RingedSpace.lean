@@ -3,11 +3,11 @@ Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 -/
-import Mathbin.Algebra.Category.Ring.FilteredColimits
-import Mathbin.AlgebraicGeometry.SheafedSpace
-import Mathbin.Topology.Sheaves.Stalks
-import Mathbin.Algebra.Category.Ring.Colimits
-import Mathbin.Algebra.Category.Ring.Limits
+import Algebra.Category.Ring.FilteredColimits
+import AlgebraicGeometry.SheafedSpace
+import Topology.Sheaves.Stalks
+import Algebra.Category.Ring.Colimits
+import Algebra.Category.Ring.Limits
 
 #align_import algebraic_geometry.ringed_space from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Subobject.Lattice
+import CategoryTheory.Subobject.Lattice
 
 #align_import category_theory.subobject.limits from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

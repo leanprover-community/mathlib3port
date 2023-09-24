@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Simon Hudon
 -/
-import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Monoidal.Braided
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.Terminal
 
 #align_import category_theory.monoidal.of_has_finite_products from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

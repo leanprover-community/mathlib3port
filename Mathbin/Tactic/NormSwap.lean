@@ -3,8 +3,8 @@ Copyright (c) 2021 Yakov Pechersky All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Logic.Equiv.Defs
-import Mathbin.Tactic.NormFin
+import Logic.Equiv.Defs
+import Tactic.NormFin
 
 #align_import tactic.norm_swap from "leanprover-community/mathlib"@"9407b03373c8cd201df99d6bc5514fc2db44054f"
 

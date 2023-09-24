@@ -3,10 +3,10 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov
 -/
-import Mathbin.Analysis.Normed.Group.InfiniteSum
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Topology.Algebra.Order.LiminfLimsup
-import Mathbin.Topology.LocalHomeomorph
+import Analysis.Normed.Group.InfiniteSum
+import Analysis.NormedSpace.Basic
+import Topology.Algebra.Order.LiminfLimsup
+import Topology.LocalHomeomorph
 
 #align_import analysis.asymptotics.asymptotics from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Andrew Yang, Pierre-Alexandre Bazin
 -/
-import Mathbin.Algebra.Homology.ShortExact.Preadditive
-import Mathbin.CategoryTheory.Abelian.DiagramLemmas.Four
+import Algebra.Homology.ShortExact.Preadditive
+import CategoryTheory.Abelian.DiagramLemmas.Four
 
 #align_import algebra.homology.short_exact.abelian from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

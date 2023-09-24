@@ -3,8 +3,8 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.DualNumber
-import Mathbin.Algebra.Quaternion
+import Algebra.DualNumber
+import Algebra.Quaternion
 
 #align_import algebra.dual_quaternion from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Hanting Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 -/
-import Mathbin.Data.Polynomial.Splits
-import Mathbin.RingTheory.MvPolynomial.Symmetric
+import Data.Polynomial.Splits
+import RingTheory.MvPolynomial.Symmetric
 
 #align_import ring_theory.polynomial.vieta from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

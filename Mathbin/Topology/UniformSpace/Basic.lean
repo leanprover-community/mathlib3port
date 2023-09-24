@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathbin.Order.Filter.SmallSets
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.NhdsSet
+import Order.Filter.SmallSets
+import Topology.SubsetProperties
+import Topology.NhdsSet
 
 #align_import topology.uniform_space.basic from "leanprover-community/mathlib"@"195fcd60ff2bfe392543bceb0ec2adcdb472db4c"
 
@@ -121,7 +121,7 @@ open Set Filter Classical
 
 open scoped Classical Topology Filter
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 universe u
@@ -1119,7 +1119,7 @@ theorem nhds_eq_uniformity_prod {a b : α} :
 #align nhds_eq_uniformity_prod nhds_eq_uniformity_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
 #print nhdset_of_mem_uniformity /-
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α),
@@ -1452,7 +1452,7 @@ theorem Filter.HasBasis.uniformContinuous_iff {ι'} [UniformSpace β] {p : ι �
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » S) -/
 #print Filter.HasBasis.uniformContinuousOn_iff /-
 theorem Filter.HasBasis.uniformContinuousOn_iff {ι'} [UniformSpace β] {p : ι → Prop}
     {s : ι → Set (α × α)} (ha : (𝓤 α).HasBasis p s) {q : ι' → Prop} {t : ι' → Set (β × β)}

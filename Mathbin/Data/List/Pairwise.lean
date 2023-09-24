@@ -3,10 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.Count
-import Mathbin.Data.List.Lex
-import Mathbin.Logic.Pairwise
-import Mathbin.Logic.Relation
+import Data.List.Count
+import Data.List.Lex
+import Logic.Pairwise
+import Logic.Relation
 
 #align_import data.list.pairwise from "leanprover-community/mathlib"@"f694c7dead66f5d4c80f446c796a5aad14707f0e"
 

@@ -3,16 +3,16 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Data.Fintype.Sigma
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Preserves.Finite
-import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
-import Mathbin.CategoryTheory.Limits.Constructions.Equalizers
-import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
+import Data.Fintype.Prod
+import Data.Fintype.Sigma
+import CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.Shapes.FiniteProducts
+import CategoryTheory.Limits.Preserves.Shapes.Products
+import CategoryTheory.Limits.Preserves.Shapes.Equalizers
+import CategoryTheory.Limits.Preserves.Finite
+import CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
+import CategoryTheory.Limits.Constructions.Equalizers
+import CategoryTheory.Limits.Constructions.BinaryProducts
 
 #align_import category_theory.limits.constructions.limits_of_products_and_equalizers from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Computability.Halting
-import Mathbin.Computability.TuringMachine
-import Mathbin.Data.Num.Lemmas
-import Mathbin.Tactic.DeriveFintype
+import Computability.Halting
+import Computability.TuringMachine
+import Data.Num.Lemmas
+import Tactic.DeriveFintype
 
 #align_import computability.tm_to_partrec from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 
@@ -599,7 +599,7 @@ def Cfg.then : Cfg → Cont → Cfg
 #align turing.to_partrec.cfg.then Turing.ToPartrec.Cfg.then
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:340:16: warning: unsupported simp config option: constructor_eq -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:342:16: warning: unsupported simp config option: constructor_eq -/
 #print Turing.ToPartrec.stepNormal_then /-
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the

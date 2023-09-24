@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 -/
-import Mathbin.Algebra.Algebra.Equiv
-import Mathbin.Algebra.BigOperators.Finsupp
-import Mathbin.Algebra.Hom.NonUnitalAlg
-import Mathbin.Algebra.Module.BigOperators
-import Mathbin.LinearAlgebra.Finsupp
+import Algebra.Algebra.Equiv
+import Algebra.BigOperators.Finsupp
+import Algebra.Hom.NonUnitalAlg
+import Algebra.Module.BigOperators
+import LinearAlgebra.Finsupp
 
 #align_import algebra.monoid_algebra.basic from "leanprover-community/mathlib"@"949dc57e616a621462062668c9f39e4e17b64b69"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Antoine Labelle, Rémi Bottinelli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle, Rémi Bottinelli
 -/
-import Mathbin.Combinatorics.Quiver.Basic
-import Mathbin.Combinatorics.Quiver.Path
+import Combinatorics.Quiver.Basic
+import Combinatorics.Quiver.Path
 
 #align_import combinatorics.quiver.cast from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

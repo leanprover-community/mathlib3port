@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.RingTheory.Ideal.Basic
-import Mathbin.Data.Polynomial.Basic
+import RingTheory.Ideal.Basic
+import Data.Polynomial.Basic
 
 #align_import data.polynomial.induction from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

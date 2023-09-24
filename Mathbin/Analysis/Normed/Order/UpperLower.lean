@@ -3,10 +3,10 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Field.Pi
-import Mathbin.Analysis.Normed.Group.Pointwise
-import Mathbin.Analysis.Normed.Order.Basic
-import Mathbin.Topology.Algebra.Order.UpperLower
+import Algebra.Order.Field.Pi
+import Analysis.Normed.Group.Pointwise
+import Analysis.Normed.Order.Basic
+import Topology.Algebra.Order.UpperLower
 
 #align_import analysis.normed.order.upper_lower from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 

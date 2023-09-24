@@ -3,7 +3,7 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Set.Image
+import Data.Set.Image
 
 #align_import order.monotone.monovary from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 

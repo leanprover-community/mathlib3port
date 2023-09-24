@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Set.Lattice
+import Data.Set.Lattice
 
 #align_import order.concept from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 

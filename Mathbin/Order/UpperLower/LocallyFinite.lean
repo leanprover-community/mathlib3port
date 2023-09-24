@@ -3,8 +3,8 @@ Copyright (c) 2023 Yaël Dillies, Sara Rousta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.LocallyFinite
-import Mathbin.Order.UpperLower.Basic
+import Order.LocallyFinite
+import Order.UpperLower.Basic
 
 #align_import order.upper_lower.locally_finite from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

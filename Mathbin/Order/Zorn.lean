@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Order.Chain
+import Order.Chain
 
 #align_import order.zorn from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -120,7 +120,7 @@ theorem zorn_nonempty_preorder [Nonempty α]
 #align zorn_nonempty_preorder zorn_nonempty_preorder
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 #print zorn_preorder₀ /-
 theorem zorn_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) :
@@ -137,7 +137,7 @@ theorem zorn_preorder₀ (s : Set α)
 #align zorn_preorder₀ zorn_preorder₀
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 #print zorn_nonempty_preorder₀ /-
 theorem zorn_nonempty_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
@@ -152,7 +152,7 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
 #align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
 #print zorn_nonempty_Ici₀ /-
 theorem zorn_nonempty_Ici₀ (a : α)
     (ih : ∀ (c) (_ : c ⊆ Ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub)
@@ -184,7 +184,7 @@ theorem zorn_nonempty_partialOrder [Nonempty α]
 #align zorn_nonempty_partial_order zorn_nonempty_partialOrder
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 #print zorn_partialOrder₀ /-
 theorem zorn_partialOrder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) :
@@ -194,7 +194,7 @@ theorem zorn_partialOrder₀ (s : Set α)
 #align zorn_partial_order₀ zorn_partialOrder₀
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 #print zorn_nonempty_partialOrder₀ /-
 theorem zorn_nonempty_partialOrder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
@@ -206,7 +206,7 @@ theorem zorn_nonempty_partialOrder₀ (s : Set α)
 
 end PartialOrder
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 #print zorn_subset /-
 theorem zorn_subset (S : Set (Set α))
     (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub) :
@@ -215,7 +215,7 @@ theorem zorn_subset (S : Set (Set α))
 #align zorn_subset zorn_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 #print zorn_subset_nonempty /-
 theorem zorn_subset_nonempty (S : Set (Set α))
     (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub) (x)
@@ -224,7 +224,7 @@ theorem zorn_subset_nonempty (S : Set (Set α))
 #align zorn_subset_nonempty zorn_subset_nonempty
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 #print zorn_superset /-
 theorem zorn_superset (S : Set (Set α))
     (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) :
@@ -233,7 +233,7 @@ theorem zorn_superset (S : Set (Set α))
 #align zorn_superset zorn_superset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 #print zorn_superset_nonempty /-
 theorem zorn_superset_nonempty (S : Set (Set α))
     (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) (x)

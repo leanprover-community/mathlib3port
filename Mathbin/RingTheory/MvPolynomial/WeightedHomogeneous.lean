@@ -3,8 +3,8 @@ Copyright (c) 2022 María Inés de Frutos-Fernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir, María Inés de Frutos-Fernández
 -/
-import Mathbin.Algebra.GradedMonoid
-import Mathbin.Data.MvPolynomial.Variables
+import Algebra.GradedMonoid
+import Data.MvPolynomial.Variables
 
 #align_import ring_theory.mv_polynomial.weighted_homogeneous from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.Algebra.Nonarchimedean.Basic
-import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Algebra.Module.Submodule.Pointwise
+import Topology.Algebra.Nonarchimedean.Basic
+import Topology.Algebra.FilterBasis
+import Algebra.Module.Submodule.Pointwise
 
 #align_import topology.algebra.nonarchimedean.bases from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

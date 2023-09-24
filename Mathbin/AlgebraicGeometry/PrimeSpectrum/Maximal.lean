@@ -3,8 +3,8 @@ Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 -/
-import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
-import Mathbin.RingTheory.Localization.AsSubring
+import AlgebraicGeometry.PrimeSpectrum.Basic
+import RingTheory.Localization.AsSubring
 
 #align_import algebraic_geometry.prime_spectrum.maximal from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

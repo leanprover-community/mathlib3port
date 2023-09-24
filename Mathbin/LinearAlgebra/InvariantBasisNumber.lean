@@ -3,8 +3,8 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.RingTheory.Ideal.Quotient
-import Mathbin.RingTheory.PrincipalIdealDomain
+import RingTheory.Ideal.Quotient
+import RingTheory.PrincipalIdealDomain
 
 #align_import linear_algebra.invariant_basis_number from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 

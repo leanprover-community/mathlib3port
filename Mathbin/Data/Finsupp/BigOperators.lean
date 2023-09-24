@@ -3,8 +3,8 @@ Copyright (c) 2022 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.Finsupp.Defs
-import Mathbin.Data.Finset.Pairwise
+import Data.Finsupp.Defs
+import Data.Finset.Pairwise
 
 #align_import data.finsupp.big_operators from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 

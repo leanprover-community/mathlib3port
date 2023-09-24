@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Set.NAry
-import Mathbin.Order.Directed
+import Data.Set.Intervals.Basic
+import Data.Set.NAry
+import Order.Directed
 
 #align_import order.bounds.basic from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Analysis.Convex.Exposed
-import Mathbin.Analysis.NormedSpace.HahnBanach.Separation
+import Analysis.Convex.Exposed
+import Analysis.NormedSpace.HahnBanach.Separation
 
 #align_import analysis.convex.krein_milman from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -74,7 +74,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
     by_contra hyx
     obtain ⟨l, hl⟩ := geometric_hahn_banach_point_point hyx
     obtain ⟨z, hzt, hz⟩ :=
-      (isCompact_of_isClosed_subset hscomp htclos hst.1).exists_forall_ge ⟨x, hxt⟩
+      (IsCompact.of_isClosed_subset hscomp htclos hst.1).exists_forall_ge ⟨x, hxt⟩
         l.continuous.continuous_on
     have h : IsExposed ℝ t ({z ∈ t | ∀ w ∈ t, l w ≤ l z}) := fun h => ⟨l, rfl⟩
     rw [←
@@ -95,7 +95,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   refine'
     IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed _ (fun t u => _)
       (fun t => (hFS t.Mem).1)
-      (fun t => isCompact_of_isClosed_subset hscomp (hFS t.Mem).2.1 (hFS t.Mem).2.2.1) fun t =>
+      (fun t => IsCompact.of_isClosed_subset hscomp (hFS t.Mem).2.1 (hFS t.Mem).2.2.1) fun t =>
       (hFS t.Mem).2.1
   obtain htu | hut := hF.total t.mem u.mem
   exacts [⟨t, subset.rfl, htu⟩, ⟨u, hut, subset.rfl⟩]

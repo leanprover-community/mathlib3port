@@ -3,9 +3,9 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 -/
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.GroupWithZero.Divisibility
-import Mathbin.Data.Nat.Order.Lemmas
+import Algebra.GroupPower.Basic
+import Algebra.GroupWithZero.Divisibility
+import Data.Nat.Order.Lemmas
 
 #align_import data.nat.gcd.basic from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

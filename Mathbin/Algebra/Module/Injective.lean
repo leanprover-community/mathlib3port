@@ -3,10 +3,10 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.CategoryTheory.Preadditive.Injective
-import Mathbin.Algebra.Category.Module.EpiMono
-import Mathbin.RingTheory.Ideal.Basic
-import Mathbin.LinearAlgebra.LinearPmap
+import CategoryTheory.Preadditive.Injective
+import Algebra.Category.Module.EpiMono
+import RingTheory.Ideal.Basic
+import LinearAlgebra.LinearPmap
 
 #align_import algebra.module.injective from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 

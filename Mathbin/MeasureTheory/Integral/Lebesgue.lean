@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
-import Mathbin.MeasureTheory.Function.SimpleFunc
-import Mathbin.MeasureTheory.Measure.MutuallySingular
+import Dynamics.Ergodic.MeasurePreserving
+import MeasureTheory.Function.SimpleFunc
+import MeasureTheory.Measure.MutuallySingular
 
 #align_import measure_theory.integral.lebesgue from "leanprover-community/mathlib"@"c14c8fcde993801fca8946b0d80131a1a81d1520"
 
@@ -423,7 +423,7 @@ theorem lintegral_nnnorm_eq_of_nonneg {f : α → ℝ} (h_nonneg : 0 ≤ f) :
 #align measure_theory.lintegral_nnnorm_eq_of_nonneg MeasureTheory.lintegral_nnnorm_eq_of_nonneg
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 #print MeasureTheory.lintegral_iSup /-
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence.
 
@@ -1356,7 +1356,7 @@ theorem lintegral_iSup_directed_of_measurable [Countable β] {f : β → α → 
 #align measure_theory.lintegral_supr_directed_of_measurable MeasureTheory.lintegral_iSup_directed_of_measurable
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args -/
 #print MeasureTheory.lintegral_iSup_directed /-
 /-- Monotone convergence for a supremum over a directed family and indexed by a countable type. -/
 theorem lintegral_iSup_directed [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, AEMeasurable (f b) μ)
@@ -1367,7 +1367,7 @@ theorem lintegral_iSup_directed [Countable β] {f : β → α → ℝ≥0∞} (h
   have hp : ∀ᵐ x ∂μ, p x fun i => f i x :=
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args"
     obtain ⟨z, hz₁, hz₂⟩ := h_directed i j
     exact ⟨z, hz₁ x, hz₂ x⟩
   have h_ae_seq_directed : Directed LE.le (aeSeq hf p) :=

@@ -3,8 +3,8 @@ Copyright (c) 2021 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.Analysis.Convex.Cone.Basic
-import Mathbin.Analysis.InnerProductSpace.Projection
+import Analysis.Convex.Cone.Basic
+import Analysis.InnerProductSpace.Projection
 
 #align_import analysis.convex.cone.dual from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

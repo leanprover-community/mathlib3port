@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 -/
-import Mathbin.Algebra.Star.SelfAdjoint
-import Mathbin.Algebra.Module.Equiv
-import Mathbin.LinearAlgebra.Prod
+import Algebra.Star.SelfAdjoint
+import Algebra.Module.Equiv
+import LinearAlgebra.Prod
 
 #align_import algebra.star.module from "leanprover-community/mathlib"@"aa6669832974f87406a3d9d70fc5707a60546207"
 

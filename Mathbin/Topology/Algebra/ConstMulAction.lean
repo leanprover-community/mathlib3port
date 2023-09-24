@@ -3,11 +3,11 @@ Copyright (c) 2021 Alex Kontorovich, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 -/
-import Mathbin.Topology.Algebra.Constructions
-import Mathbin.Topology.Homeomorph
-import Mathbin.GroupTheory.GroupAction.Basic
-import Mathbin.Topology.Bases
-import Mathbin.Topology.Support
+import Topology.Algebra.Constructions
+import Topology.Homeomorph
+import GroupTheory.GroupAction.Basic
+import Topology.Bases
+import Topology.Support
 
 #align_import topology.algebra.const_mul_action from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 -/
-import Mathbin.NumberTheory.Padics.PadicNumbers
-import Mathbin.RingTheory.DiscreteValuationRing.Basic
+import NumberTheory.Padics.PadicNumbers
+import RingTheory.DiscreteValuationRing.Basic
 
 #align_import number_theory.padics.padic_integers from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -693,7 +693,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
 #align padic_int.norm_le_pow_iff_le_valuation PadicInt.norm_le_pow_iff_le_valuation
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 #print PadicInt.mem_span_pow_iff_le_valuation /-
 theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) ↔ ↑n ≤ x.Valuation :=

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Data.Set.Equitable
-import Mathbin.Order.Partition.Finpartition
+import Data.Set.Equitable
+import Order.Partition.Finpartition
 
 #align_import order.partition.equipartition from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

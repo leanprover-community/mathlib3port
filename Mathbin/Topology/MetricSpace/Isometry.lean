@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Topology.MetricSpace.Antilipschitz
+import Topology.MetricSpace.Antilipschitz
 
 #align_import topology.metric_space.isometry from "leanprover-community/mathlib"@"b1859b6d4636fdbb78c5d5cefd24530653cfd3eb"
 

@@ -3,10 +3,10 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Tactic.Omega.ProveUnsats
-import Mathbin.Tactic.Omega.Nat.Dnf
-import Mathbin.Tactic.Omega.Nat.NegElim
-import Mathbin.Tactic.Omega.Nat.SubElim
+import Tactic.Omega.ProveUnsats
+import Tactic.Omega.Nat.Dnf
+import Tactic.Omega.Nat.NegElim
+import Tactic.Omega.Nat.SubElim
 
 #align_import tactic.omega.nat.main from "leanprover-community/mathlib"@"dc34b216eb1a1548161e35d328ea1ab798017033"
 
@@ -28,7 +28,7 @@ attribute [sugar_nat] Ne not_le not_lt Nat.lt_iff_add_one_le Nat.succ_eq_add_one
   false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul mul_comm one_mul mul_one
   imp_iff_not_or iff_iff_not_or_and_or_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 #align omega.nat.desugar omega.nat.desugar

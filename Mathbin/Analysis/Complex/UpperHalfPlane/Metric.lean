@@ -3,9 +3,9 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
-import Mathbin.Analysis.SpecialFunctions.Arsinh
-import Mathbin.Geometry.Euclidean.Inversion
+import Analysis.Complex.UpperHalfPlane.Topology
+import Analysis.SpecialFunctions.Arsinh
+import Geometry.Euclidean.Inversion
 
 #align_import analysis.complex.upper_half_plane.metric from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

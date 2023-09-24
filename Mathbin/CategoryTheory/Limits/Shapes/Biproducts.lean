@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+import CategoryTheory.Limits.Shapes.FiniteProducts
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.Kernels
 
 #align_import category_theory.limits.shapes.biproducts from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -379,7 +379,7 @@ class HasBiproductsOfShape : Prop where
 attribute [instance 100] has_biproducts_of_shape.has_biproduct
 
 #print CategoryTheory.Limits.HasFiniteBiproducts /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type. -/
 class HasFiniteBiproducts : Prop where

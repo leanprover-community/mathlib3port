@@ -3,9 +3,9 @@ Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathbin.Topology.ContinuousFunction.Bounded
-import Mathbin.Topology.Algebra.Module.WeakDual
-import Mathbin.MeasureTheory.Integral.Bochner
+import Topology.ContinuousFunction.Bounded
+import Topology.Algebra.Module.WeakDual
+import MeasureTheory.Integral.Bochner
 
 #align_import measure_theory.measure.finite_measure from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

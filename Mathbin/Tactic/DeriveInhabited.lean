@@ -3,8 +3,8 @@ Copyright (c) 2020 Gabriel Ebner. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
 -/
-import Mathbin.Logic.Basic
-import Mathbin.Data.Rbmap.Basic
+import Logic.Basic
+import Data.Rbmap.Basic
 
 #align_import tactic.derive_inhabited from "leanprover-community/mathlib"@"d13b3a4a392ea7273dfa4727dbd1892e26cfd518"
 
@@ -19,7 +19,7 @@ instances for types in the core library.
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:

@@ -3,8 +3,8 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Algebra.NeZero
+import Algebra.Group.Defs
+import Algebra.NeZero
 
 #align_import data.nat.cast.defs from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

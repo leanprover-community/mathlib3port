@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.Mon.Basic
-import Mathbin.CategoryTheory.Monoidal.CommMon_
-import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
+import Algebra.Category.Mon.Basic
+import CategoryTheory.Monoidal.CommMon_
+import CategoryTheory.Monoidal.Types.Symmetric
 
 #align_import category_theory.monoidal.internal.types from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

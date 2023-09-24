@@ -3,9 +3,9 @@ Copyright (c) 2023 Mantas Bakšys, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys, Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.Order.Rearrangement
-import Mathbin.GroupTheory.Perm.Cycle.Basic
+import Algebra.BigOperators.Order
+import Algebra.Order.Rearrangement
+import GroupTheory.Perm.Cycle.Basic
 
 #align_import algebra.order.chebyshev from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

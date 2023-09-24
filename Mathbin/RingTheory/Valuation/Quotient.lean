@@ -3,8 +3,8 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
 -/
-import Mathbin.RingTheory.Valuation.Basic
-import Mathbin.RingTheory.Ideal.QuotientOperations
+import RingTheory.Valuation.Basic
+import RingTheory.Ideal.QuotientOperations
 
 #align_import ring_theory.valuation.quotient from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

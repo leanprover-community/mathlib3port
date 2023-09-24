@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Category.PartOrd
-import Mathbin.Order.Hom.Lattice
+import Order.Category.PartOrd
+import Order.Hom.Lattice
 
 #align_import order.category.Semilat from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
@@ -88,19 +88,18 @@ instance : ConcreteCategory SemilatSupCat
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
 #print SemilatSupCat.hasForgetToPartOrd /-
-instance hasForgetToPartOrd : HasForget₂ SemilatSupCat PartOrdCat
+instance hasForgetToPartOrd : HasForget₂ SemilatSupCat PartOrd
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
 #align SemilatSup.has_forget_to_PartOrd SemilatSupCat.hasForgetToPartOrd
 -/
 
-#print SemilatSupCat.coe_forget_to_partOrdCat /-
+#print SemilatSupCat.coe_forget_to_partOrd /-
 @[simp]
-theorem coe_forget_to_partOrdCat (X : SemilatSupCat) :
-    ↥((forget₂ SemilatSupCat PartOrdCat).obj X) = ↥X :=
+theorem coe_forget_to_partOrd (X : SemilatSupCat) : ↥((forget₂ SemilatSupCat PartOrd).obj X) = ↥X :=
   rfl
-#align SemilatSup.coe_forget_to_PartOrd SemilatSupCat.coe_forget_to_partOrdCat
+#align SemilatSup.coe_forget_to_PartOrd SemilatSupCat.coe_forget_to_partOrd
 -/
 
 end SemilatSupCat
@@ -146,19 +145,18 @@ instance : ConcreteCategory SemilatInfCat
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
 #print SemilatInfCat.hasForgetToPartOrd /-
-instance hasForgetToPartOrd : HasForget₂ SemilatInfCat PartOrdCat
+instance hasForgetToPartOrd : HasForget₂ SemilatInfCat PartOrd
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
 #align SemilatInf.has_forget_to_PartOrd SemilatInfCat.hasForgetToPartOrd
 -/
 
-#print SemilatInfCat.coe_forget_to_partOrdCat /-
+#print SemilatInfCat.coe_forget_to_partOrd /-
 @[simp]
-theorem coe_forget_to_partOrdCat (X : SemilatInfCat) :
-    ↥((forget₂ SemilatInfCat PartOrdCat).obj X) = ↥X :=
+theorem coe_forget_to_partOrd (X : SemilatInfCat) : ↥((forget₂ SemilatInfCat PartOrd).obj X) = ↥X :=
   rfl
-#align SemilatInf.coe_forget_to_PartOrd SemilatInfCat.coe_forget_to_partOrdCat
+#align SemilatInf.coe_forget_to_PartOrd SemilatInfCat.coe_forget_to_partOrd
 -/
 
 end SemilatInfCat
@@ -229,19 +227,19 @@ def SemilatSupCatEquivSemilatInfCat : SemilatSupCat ≌ SemilatInfCat :=
 #align SemilatSup_equiv_SemilatInf SemilatSupCatEquivSemilatInfCat
 -/
 
-#print SemilatSupCat_dual_comp_forget_to_partOrdCat /-
-theorem SemilatSupCat_dual_comp_forget_to_partOrdCat :
-    SemilatSupCat.dual ⋙ forget₂ SemilatInfCat PartOrdCat =
-      forget₂ SemilatSupCat PartOrdCat ⋙ PartOrdCat.dual :=
+#print SemilatSupCat_dual_comp_forget_to_partOrd /-
+theorem SemilatSupCat_dual_comp_forget_to_partOrd :
+    SemilatSupCat.dual ⋙ forget₂ SemilatInfCat PartOrd =
+      forget₂ SemilatSupCat PartOrd ⋙ PartOrd.dual :=
   rfl
-#align SemilatSup_dual_comp_forget_to_PartOrd SemilatSupCat_dual_comp_forget_to_partOrdCat
+#align SemilatSup_dual_comp_forget_to_PartOrd SemilatSupCat_dual_comp_forget_to_partOrd
 -/
 
-#print SemilatInfCat_dual_comp_forget_to_partOrdCat /-
-theorem SemilatInfCat_dual_comp_forget_to_partOrdCat :
-    SemilatInfCat.dual ⋙ forget₂ SemilatSupCat PartOrdCat =
-      forget₂ SemilatInfCat PartOrdCat ⋙ PartOrdCat.dual :=
+#print SemilatInfCat_dual_comp_forget_to_partOrd /-
+theorem SemilatInfCat_dual_comp_forget_to_partOrd :
+    SemilatInfCat.dual ⋙ forget₂ SemilatSupCat PartOrd =
+      forget₂ SemilatInfCat PartOrd ⋙ PartOrd.dual :=
   rfl
-#align SemilatInf_dual_comp_forget_to_PartOrd SemilatInfCat_dual_comp_forget_to_partOrdCat
+#align SemilatInf_dual_comp_forget_to_PartOrd SemilatInfCat_dual_comp_forget_to_partOrd
 -/
 

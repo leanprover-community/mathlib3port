@@ -3,9 +3,9 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieser, Jujian Zhang
 -/
-import Mathbin.RingTheory.GradedAlgebra.HomogeneousIdeal
-import Mathbin.Data.Zmod.Basic
-import Mathbin.Tactic.DeriveFintype
+import RingTheory.GradedAlgebra.HomogeneousIdeal
+import Data.Zmod.Basic
+import Tactic.DeriveFintype
 
 #align_import homogeneous_prime_not_prime from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
@@ -142,7 +142,7 @@ def i : Ideal (R × R) :=
   Ideal.span {((2, 2) : R × R)}
 #align counterexample.counterexample_not_prime_but_homogeneous_prime.I Counterexample.CounterexampleNotPrimeButHomogeneousPrime.i
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option class.instance_max_depth -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option class.instance_max_depth -/
 set_option class.instance_max_depth 34
 
 theorem i_not_prime : ¬i.IsPrime := by
@@ -152,7 +152,7 @@ theorem i_not_prime : ¬i.IsPrime := by
   decide
 #align counterexample.counterexample_not_prime_but_homogeneous_prime.I_not_prime Counterexample.CounterexampleNotPrimeButHomogeneousPrime.i_not_prime
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option class.instance_max_depth -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option class.instance_max_depth -/
 -- this is what we change the max instance depth for, it's only 2 above the default
 set_option class.instance_max_depth 32
 

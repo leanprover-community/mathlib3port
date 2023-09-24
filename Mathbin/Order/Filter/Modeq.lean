@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Nat.Parity
-import Mathbin.Order.Filter.AtTopBot
+import Data.Nat.Parity
+import Order.Filter.AtTopBot
 
 #align_import order.filter.modeq from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 

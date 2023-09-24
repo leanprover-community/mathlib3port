@@ -3,8 +3,8 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
-import Mathbin.Data.Set.Finite
-import Mathbin.Data.Set.Pointwise.Smul
+import Data.Set.Finite
+import Data.Set.Pointwise.Smul
 
 #align_import data.set.pointwise.finite from "leanprover-community/mathlib"@"c941bb9426d62e266612b6d99e6c9fc93e7a1d07"
 

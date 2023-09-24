@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
-import Mathbin.RingTheory.GradedAlgebra.Basic
+import LinearAlgebra.ExteriorAlgebra.Basic
+import RingTheory.GradedAlgebra.Basic
 
 #align_import linear_algebra.exterior_algebra.grading from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

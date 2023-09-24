@@ -3,8 +3,8 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Analysis.Normed.Group.Quotient
-import Mathbin.Topology.Instances.AddCircle
+import Analysis.Normed.Group.Quotient
+import Topology.Instances.AddCircle
 
 #align_import analysis.normed.group.add_circle from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 

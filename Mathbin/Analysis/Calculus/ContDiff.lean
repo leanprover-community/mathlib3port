@@ -3,11 +3,11 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 -/
-import Mathbin.Analysis.Calculus.ContDiffDef
-import Mathbin.Analysis.Calculus.Deriv.Inverse
-import Mathbin.Analysis.Calculus.MeanValue
-import Mathbin.Analysis.NormedSpace.FiniteDimension
-import Mathbin.Data.Nat.Choose.Cast
+import Analysis.Calculus.ContDiffDef
+import Analysis.Calculus.Deriv.Inverse
+import Analysis.Calculus.MeanValue
+import Analysis.NormedSpace.FiniteDimension
+import Data.Nat.Choose.Cast
 
 #align_import analysis.calculus.cont_diff from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 

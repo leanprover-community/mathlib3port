@@ -3,9 +3,9 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Data.Set.Intervals.Monotone
-import Mathbin.Probability.Process.HittingTime
-import Mathbin.Probability.Martingale.Basic
+import Data.Set.Intervals.Monotone
+import Probability.Process.HittingTime
+import Probability.Martingale.Basic
 
 #align_import probability.martingale.upcrossing from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

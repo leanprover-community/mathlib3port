@@ -3,8 +3,8 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Analysis.Complex.Polynomial
-import Mathbin.Data.Polynomial.Mirror
+import Analysis.Complex.Polynomial
+import Data.Polynomial.Mirror
 
 #align_import data.polynomial.unit_trinomial from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

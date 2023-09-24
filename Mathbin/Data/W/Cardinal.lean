@@ -3,8 +3,8 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.W.Basic
-import Mathbin.SetTheory.Cardinal.Ordinal
+import Data.W.Basic
+import SetTheory.Cardinal.Ordinal
 
 #align_import data.W.cardinal from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

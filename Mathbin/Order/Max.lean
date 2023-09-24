@@ -3,7 +3,7 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 -/
-import Mathbin.Order.Synonym
+import Order.Synonym
 
 #align_import order.max from "leanprover-community/mathlib"@"6623e6af705e97002a9054c1c05a980180276fc1"
 

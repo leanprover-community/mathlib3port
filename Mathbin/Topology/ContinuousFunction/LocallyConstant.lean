@@ -3,9 +3,9 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Topology.LocallyConstant.Algebra
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Topology.ContinuousFunction.Algebra
+import Topology.LocallyConstant.Algebra
+import Topology.ContinuousFunction.Basic
+import Topology.ContinuousFunction.Algebra
 
 #align_import topology.continuous_function.locally_constant from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

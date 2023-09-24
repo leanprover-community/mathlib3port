@@ -3,10 +3,10 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
 -/
-import Mathbin.Analysis.Normed.Group.Hom
-import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.CategoryTheory.Elementwise
+import Analysis.Normed.Group.Hom
+import CategoryTheory.Limits.Shapes.ZeroMorphisms
+import CategoryTheory.ConcreteCategory.BundledHom
+import CategoryTheory.Elementwise
 
 #align_import analysis.normed.group.SemiNormedGroup from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

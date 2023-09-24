@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Data.Fintype.CardEmbedding
-import Mathbin.Probability.CondCount
-import Mathbin.Probability.Notation
+import Data.Fintype.CardEmbedding
+import Probability.CondCount
+import Probability.Notation
 
 #align_import wiedijk_100_theorems.birthday_problem from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

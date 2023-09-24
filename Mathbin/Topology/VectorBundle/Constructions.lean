@@ -3,8 +3,8 @@ Copyright © 2022 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sébastien Gouëzel, Heather Macbeth, Floris van Doorn
 -/
-import Mathbin.Topology.FiberBundle.Constructions
-import Mathbin.Topology.VectorBundle.Basic
+import Topology.FiberBundle.Constructions
+import Topology.VectorBundle.Basic
 
 #align_import topology.vector_bundle.constructions from "leanprover-community/mathlib"@"e473c3198bb41f68560cab68a0529c854b618833"
 

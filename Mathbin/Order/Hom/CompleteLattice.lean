@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Set.Lattice
-import Mathbin.Order.Hom.Lattice
+import Data.Set.Lattice
+import Order.Hom.Lattice
 
 #align_import order.hom.complete_lattice from "leanprover-community/mathlib"@"9d684a893c52e1d6692a504a118bfccbae04feeb"
 

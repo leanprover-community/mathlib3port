@@ -3,7 +3,7 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Analysis.Convex.Topology
+import Analysis.Convex.Topology
 
 #align_import topology.algebra.module.locally_convex from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

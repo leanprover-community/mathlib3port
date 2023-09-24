@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Data.Polynomial.Eval
+import Algebra.Hom.Iterate
+import Data.Polynomial.Eval
 
 #align_import data.polynomial.derivative from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

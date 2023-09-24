@@ -3,10 +3,10 @@ Copyright (c) 2022 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
-import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+import CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
+import CategoryTheory.Limits.Preserves.Shapes.Kernels
+import CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import CategoryTheory.Preadditive.AdditiveFunctor
 
 #align_import category_theory.preadditive.left_exact from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

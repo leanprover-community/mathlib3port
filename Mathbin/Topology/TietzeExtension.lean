@@ -3,10 +3,10 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.Data.Set.Intervals.IsoIoo
-import Mathbin.Topology.Algebra.Order.MonotoneContinuity
-import Mathbin.Topology.UrysohnsBounded
+import Analysis.SpecificLimits.Basic
+import Data.Set.Intervals.IsoIoo
+import Topology.Algebra.Order.MonotoneContinuity
+import Topology.UrysohnsBounded
 
 #align_import topology.tietze_extension from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

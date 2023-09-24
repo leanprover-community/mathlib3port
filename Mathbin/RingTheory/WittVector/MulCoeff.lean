@@ -3,8 +3,8 @@ Copyright (c) 2022 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 -/
-import Mathbin.RingTheory.WittVector.Truncated
-import Mathbin.Data.MvPolynomial.Supported
+import RingTheory.WittVector.Truncated
+import Data.MvPolynomial.Supported
 
 #align_import ring_theory.witt_vector.mul_coeff from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

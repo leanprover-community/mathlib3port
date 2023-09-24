@@ -3,7 +3,7 @@ Copyright (c) 2023 Paul Reichert. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Reichert, Yaël Dillies
 -/
-import Mathbin.Analysis.NormedSpace.AddTorsorBases
+import Analysis.NormedSpace.AddTorsorBases
 
 #align_import analysis.convex.intrinsic from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

@@ -17,28 +17,28 @@ As (non-exhaustive) examples, these includes things like:
 * data.equiv.encodable.basic
 * order.complete_lattice
 -/
-import Mathbin.Tactic.Basic
-import Mathbin.Tactic.Abel
-import Mathbin.Tactic.RingExp
-import Mathbin.Tactic.NoncommRing
+import Tactic.Basic
+import Tactic.Abel
+import Tactic.RingExp
+import Tactic.NoncommRing
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.Omega.Default
-import Mathbin.Tactic.Tfae
-import Mathbin.Tactic.ApplyFun
-import Mathbin.Tactic.IntervalCases
-import Mathbin.Tactic.ReassocAxiom
-import Mathbin.Tactic.Slice
-import Mathbin.Tactic.SubtypeInstance
-import Mathbin.Tactic.DeriveFintype
-import Mathbin.Tactic.Group
-import Mathbin.Tactic.CancelDenoms
-import Mathbin.Tactic.Zify
-import Mathbin.Tactic.Transport
-import Mathbin.Tactic.UnfoldCases
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Tactic.LinearCombination
-import Mathbin.Tactic.Polyrith
-import Mathbin.Tactic.ExpandExists
+import Tactic.Tfae
+import Tactic.ApplyFun
+import Tactic.IntervalCases
+import Tactic.ReassocAxiom
+import Tactic.Slice
+import Tactic.SubtypeInstance
+import Tactic.DeriveFintype
+import Tactic.Group
+import Tactic.CancelDenoms
+import Tactic.Zify
+import Tactic.Transport
+import Tactic.UnfoldCases
+import Tactic.FieldSimp
+import Tactic.LinearCombination
+import Tactic.Polyrith
+import Tactic.ExpandExists
 
 #align_import tactic.default from "leanprover-community/mathlib"@"f9153b8a79eb28d07341706ddb18c02593eeb72a"
 

@@ -3,8 +3,8 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 -/
-import Mathbin.Tactic.Basic
-import Mathbin.Logic.Function.Basic
+import Tactic.Basic
+import Logic.Function.Basic
 
 #align_import algebra.group.defs from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
@@ -600,7 +600,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -857,7 +857,7 @@ attribute [to_additive] zpowRec
 
 section InvolutiveInv
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
 -- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
 set_option extends_priority 50
 
@@ -1070,7 +1070,7 @@ end DivInvMonoid
 
 section InvOneClass
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
 set_option extends_priority 50
 
 #print NegZeroClass /-

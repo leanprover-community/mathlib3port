@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Ordmap.Ordnode
-import Mathbin.Algebra.Order.Ring.Defs
-import Mathbin.Data.Nat.Dist
+import Data.Ordmap.Ordnode
+import Algebra.Order.Ring.Defs
+import Data.Nat.Dist
 import Mathbin.Tactic.Linarith.Default
 
 #align_import data.ordmap.ordset from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"

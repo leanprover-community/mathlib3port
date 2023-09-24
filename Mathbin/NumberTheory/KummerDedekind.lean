@@ -3,8 +3,8 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 -/
-import Mathbin.RingTheory.DedekindDomain.Ideal
-import Mathbin.RingTheory.IsAdjoinRoot
+import RingTheory.DedekindDomain.Ideal
+import RingTheory.IsAdjoinRoot
 
 #align_import number_theory.kummer_dedekind from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

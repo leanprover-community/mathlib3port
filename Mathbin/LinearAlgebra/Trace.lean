@@ -3,13 +3,13 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen, Antoine Labelle
 -/
-import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.LinearAlgebra.Matrix.Trace
-import Mathbin.LinearAlgebra.Contraction
-import Mathbin.LinearAlgebra.TensorProductBasis
-import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
-import Mathbin.LinearAlgebra.Projection
+import LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.Matrix.Trace
+import LinearAlgebra.Contraction
+import LinearAlgebra.TensorProductBasis
+import LinearAlgebra.FreeModule.StrongRankCondition
+import LinearAlgebra.FreeModule.Finite.Rank
+import LinearAlgebra.Projection
 
 #align_import linear_algebra.trace from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

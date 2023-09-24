@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
 -/
-import Mathbin.Algebra.GeomSum
-import Mathbin.Data.Complex.Basic
-import Mathbin.Data.Nat.Choose.Sum
+import Algebra.GeomSum
+import Data.Complex.Basic
+import Data.Nat.Choose.Sum
 
 #align_import data.complex.exponential from "leanprover-community/mathlib"@"a8b2226cfb0a79f5986492053fc49b1a0c6aeffb"
 

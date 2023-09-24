@@ -3,7 +3,7 @@ Copyright (c) 2020 Benjamin Davidson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+import Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 #align_import data.real.pi.leibniz from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

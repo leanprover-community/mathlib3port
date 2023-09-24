@@ -3,8 +3,8 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 -/
-import Mathbin.Algebra.Order.WithZero
-import Mathbin.Data.Polynomial.Monic
+import Algebra.Order.WithZero
+import Data.Polynomial.Monic
 
 #align_import algebra.polynomial.big_operators from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

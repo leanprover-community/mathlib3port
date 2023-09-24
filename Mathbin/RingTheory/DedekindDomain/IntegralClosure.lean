@@ -3,10 +3,10 @@ Copyright (c) 2020 Kenji Nakagawa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 -/
-import Mathbin.LinearAlgebra.FreeModule.Pid
-import Mathbin.RingTheory.DedekindDomain.Basic
-import Mathbin.RingTheory.Localization.Module
-import Mathbin.RingTheory.Trace
+import LinearAlgebra.FreeModule.Pid
+import RingTheory.DedekindDomain.Basic
+import RingTheory.Localization.Module
+import RingTheory.Trace
 
 #align_import ring_theory.dedekind_domain.integral_closure from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
@@ -142,7 +142,7 @@ theorem integralClosure_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Finty
 
 variable (A) (K)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 #print exists_integral_multiples /-
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/

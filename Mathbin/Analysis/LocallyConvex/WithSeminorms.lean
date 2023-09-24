@@ -3,10 +3,10 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 -/
-import Mathbin.Analysis.Seminorm
-import Mathbin.Analysis.LocallyConvex.Bounded
-import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Topology.Algebra.Module.LocallyConvex
+import Analysis.Seminorm
+import Analysis.LocallyConvex.Bounded
+import Topology.Algebra.FilterBasis
+import Topology.Algebra.Module.LocallyConvex
 
 #align_import analysis.locally_convex.with_seminorms from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
@@ -402,7 +402,7 @@ theorem WithSeminorms.isOpen_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
 #align with_seminorms.is_open_iff_mem_balls WithSeminorms.isOpen_iff_mem_balls
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print WithSeminorms.T1_of_separating /-
 /- Note that through the following lemmas, one also immediately has that separating families
 of seminorms induce T₂ and T₃ topologies by `topological_add_group.t2_space`
@@ -434,7 +434,7 @@ theorem WithSeminorms.separating_of_T1 [T1Space E] (hp : WithSeminorms p) (x : E
 #align with_seminorms.separating_of_t1 WithSeminorms.separating_of_T1
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print WithSeminorms.separating_iff_T1 /-
 /-- A family of seminorms is separating iff it induces a T₁ topology. -/
 theorem WithSeminorms.separating_iff_T1 (hp : WithSeminorms p) :

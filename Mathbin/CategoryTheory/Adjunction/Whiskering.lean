@@ -3,8 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Whiskering
-import Mathbin.CategoryTheory.Adjunction.Basic
+import CategoryTheory.Whiskering
+import CategoryTheory.Adjunction.Basic
 
 #align_import category_theory.adjunction.whiskering from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.GroupTheory.Perm.Basic
-import Mathbin.Data.Fintype.Perm
-import Mathbin.GroupTheory.Subgroup.Finite
+import GroupTheory.Perm.Basic
+import Data.Fintype.Perm
+import GroupTheory.Subgroup.Finite
 
 #align_import group_theory.perm.subgroup from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

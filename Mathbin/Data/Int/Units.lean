@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.Nat.Units
-import Mathbin.Data.Int.Basic
-import Mathbin.Algebra.Ring.Units
+import Data.Nat.Units
+import Data.Int.Basic
+import Algebra.Ring.Units
 
 #align_import data.int.units from "leanprover-community/mathlib"@"45a1ada01ed893722d0f8d15b9e44270996515d5"
 

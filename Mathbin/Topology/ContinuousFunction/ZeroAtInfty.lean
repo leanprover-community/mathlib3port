@@ -3,8 +3,8 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Topology.ContinuousFunction.Bounded
-import Mathbin.Topology.ContinuousFunction.CocompactMap
+import Topology.ContinuousFunction.Bounded
+import Topology.ContinuousFunction.CocompactMap
 
 #align_import topology.continuous_function.zero_at_infty from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

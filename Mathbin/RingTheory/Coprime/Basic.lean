@@ -3,8 +3,8 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 -/
-import Mathbin.Tactic.Ring
-import Mathbin.GroupTheory.GroupAction.Units
+import Tactic.Ring
+import GroupTheory.GroupAction.Units
 
 #align_import ring_theory.coprime.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

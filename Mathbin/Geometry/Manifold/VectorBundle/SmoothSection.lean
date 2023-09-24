@@ -3,9 +3,9 @@ Copyright © 2023 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 -/
-import Mathbin.Geometry.Manifold.ContMdiffMfderiv
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Geometry.Manifold.Algebra.LieGroup
+import Geometry.Manifold.ContMdiffMfderiv
+import Topology.ContinuousFunction.Basic
+import Geometry.Manifold.Algebra.LieGroup
 
 #align_import geometry.manifold.vector_bundle.smooth_section from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

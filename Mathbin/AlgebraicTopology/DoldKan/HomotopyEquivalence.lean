@@ -3,7 +3,7 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.DoldKan.Normalized
+import AlgebraicTopology.DoldKan.Normalized
 
 #align_import algebraic_topology.dold_kan.homotopy_equivalence from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

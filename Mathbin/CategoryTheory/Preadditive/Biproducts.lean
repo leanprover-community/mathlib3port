@@ -3,13 +3,13 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Group.Ext
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Biproducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.CategoryTheory.Preadditive.Basic
-import Mathbin.Tactic.Abel
+import Algebra.Group.Ext
+import CategoryTheory.Limits.Shapes.Biproducts
+import CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
+import CategoryTheory.Limits.Preserves.Shapes.Biproducts
+import CategoryTheory.Limits.Preserves.Shapes.Products
+import CategoryTheory.Preadditive.Basic
+import Tactic.Abel
 
 #align_import category_theory.preadditive.biproducts from "leanprover-community/mathlib"@"a176cb1219e300e85793d44583dede42377b51af"
 

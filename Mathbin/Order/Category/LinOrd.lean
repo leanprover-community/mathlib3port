@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Order.Category.Lat
+import Order.Category.Lat
 
 #align_import order.category.LinOrd from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
@@ -21,88 +21,88 @@ open CategoryTheory
 
 universe u
 
-#print LinOrdCat /-
+#print LinOrd /-
 /-- The category of linear orders. -/
-def LinOrdCat :=
+def LinOrd :=
   Bundled LinearOrder
-#align LinOrd LinOrdCat
+#align LinOrd LinOrd
 -/
 
-namespace LinOrdCat
+namespace LinOrd
 
 instance : BundledHom.ParentProjection @LinearOrder.toPartialOrder :=
   ⟨⟩
 
-deriving instance LargeCategory, ConcreteCategory for LinOrdCat
+deriving instance LargeCategory, ConcreteCategory for LinOrd
 
-instance : CoeSort LinOrdCat (Type _) :=
+instance : CoeSort LinOrd (Type _) :=
   Bundled.hasCoeToSort
 
-#print LinOrdCat.of /-
+#print LinOrd.of /-
 /-- Construct a bundled `LinOrd` from the underlying type and typeclass. -/
-def of (α : Type _) [LinearOrder α] : LinOrdCat :=
+def of (α : Type _) [LinearOrder α] : LinOrd :=
   Bundled.of α
-#align LinOrd.of LinOrdCat.of
+#align LinOrd.of LinOrd.of
 -/
 
-#print LinOrdCat.coe_of /-
+#print LinOrd.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [LinearOrder α] : ↥(of α) = α :=
   rfl
-#align LinOrd.coe_of LinOrdCat.coe_of
+#align LinOrd.coe_of LinOrd.coe_of
 -/
 
-instance : Inhabited LinOrdCat :=
+instance : Inhabited LinOrd :=
   ⟨of PUnit⟩
 
-instance (α : LinOrdCat) : LinearOrder α :=
+instance (α : LinOrd) : LinearOrder α :=
   α.str
 
-#print LinOrdCat.hasForgetToLatCat /-
-instance hasForgetToLatCat : HasForget₂ LinOrdCat LatCat
+#print LinOrd.hasForgetToLat /-
+instance hasForgetToLat : HasForget₂ LinOrd Lat
     where forget₂ :=
-    { obj := fun X => LatCat.of X
+    { obj := fun X => Lat.of X
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
-#align LinOrd.has_forget_to_Lat LinOrdCat.hasForgetToLatCat
+#align LinOrd.has_forget_to_Lat LinOrd.hasForgetToLat
 -/
 
-#print LinOrdCat.Iso.mk /-
+#print LinOrd.Iso.mk /-
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : LinOrdCat.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : LinOrd.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply x
   inv_hom_id' := by ext; exact e.apply_symm_apply x
-#align LinOrd.iso.mk LinOrdCat.Iso.mk
+#align LinOrd.iso.mk LinOrd.Iso.mk
 -/
 
-#print LinOrdCat.dual /-
+#print LinOrd.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : LinOrdCat ⥤ LinOrdCat where
+def dual : LinOrd ⥤ LinOrd where
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
-#align LinOrd.dual LinOrdCat.dual
+#align LinOrd.dual LinOrd.dual
 -/
 
-#print LinOrdCat.dualEquiv /-
+#print LinOrd.dualEquiv /-
 /-- The equivalence between `LinOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : LinOrdCat ≌ LinOrdCat :=
+def dualEquiv : LinOrd ≌ LinOrd :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align LinOrd.dual_equiv LinOrdCat.dualEquiv
+#align LinOrd.dual_equiv LinOrd.dualEquiv
 -/
 
-end LinOrdCat
+end LinOrd
 
-#print linOrdCat_dual_comp_forget_to_latCat /-
-theorem linOrdCat_dual_comp_forget_to_latCat :
-    LinOrdCat.dual ⋙ forget₂ LinOrdCat LatCat = forget₂ LinOrdCat LatCat ⋙ LatCat.dual :=
+#print linOrd_dual_comp_forget_to_Lat /-
+theorem linOrd_dual_comp_forget_to_Lat :
+    LinOrd.dual ⋙ forget₂ LinOrd Lat = forget₂ LinOrd Lat ⋙ Lat.dual :=
   rfl
-#align LinOrd_dual_comp_forget_to_Lat linOrdCat_dual_comp_forget_to_latCat
+#align LinOrd_dual_comp_forget_to_Lat linOrd_dual_comp_forget_to_Lat
 -/
 

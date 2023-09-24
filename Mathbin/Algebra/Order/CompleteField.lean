@@ -3,9 +3,9 @@ Copyright (c) 2022 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Hom.Ring
-import Mathbin.Algebra.Order.Pointwise
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
+import Algebra.Order.Hom.Ring
+import Algebra.Order.Pointwise
+import Analysis.SpecialFunctions.Pow.Real
 
 #align_import algebra.order.complete_field from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
@@ -57,12 +57,12 @@ open Function Rat Real Set
 open scoped Classical Pointwise
 
 #print ConditionallyCompleteLinearOrderedField /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
 @[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure",
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure",
     ConditionallyCompleteLinearOrder α
 #align conditionally_complete_linear_ordered_field ConditionallyCompleteLinearOrderedField
 -/

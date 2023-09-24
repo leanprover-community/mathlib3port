@@ -3,10 +3,10 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Fin.Tuple.Basic
-import Mathbin.Data.List.Range
-import Mathbin.GroupTheory.GroupAction.Pi
-import Mathbin.Meta.Univs
+import Data.Fin.Tuple.Basic
+import Data.List.Range
+import GroupTheory.GroupAction.Pi
+import Meta.Univs
 
 #align_import data.fin.vec_notation from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 

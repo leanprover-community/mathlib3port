@@ -3,8 +3,8 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Traversable.Lemmas
-import Mathbin.Logic.Equiv.Defs
+import Control.Traversable.Lemmas
+import Logic.Equiv.Defs
 
 #align_import control.traversable.equiv from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

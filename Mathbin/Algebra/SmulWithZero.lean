@@ -3,10 +3,10 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.Ring.Opposite
-import Mathbin.GroupTheory.GroupAction.Opposite
-import Mathbin.GroupTheory.GroupAction.Prod
+import Algebra.GroupPower.Basic
+import Algebra.Ring.Opposite
+import GroupTheory.GroupAction.Opposite
+import GroupTheory.GroupAction.Prod
 
 #align_import algebra.smul_with_zero from "leanprover-community/mathlib"@"dc17b6ac53b111affde68d96e5e7a0726816e2cf"
 

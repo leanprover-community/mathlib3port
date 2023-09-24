@@ -3,7 +3,7 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
+import CategoryTheory.ConcreteCategory.BundledHom
 
 #align_import category_theory.concrete_category.unbundled_hom from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 
@@ -25,8 +25,8 @@ universe v u
 namespace CategoryTheory
 
 #print CategoryTheory.UnbundledHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hom_id] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hom_comp] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`hom_id] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`hom_comp] [] -/
 /-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/

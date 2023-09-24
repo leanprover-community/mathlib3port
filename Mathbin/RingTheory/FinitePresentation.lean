@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.RingTheory.FiniteType
-import Mathbin.RingTheory.MvPolynomial.Tower
-import Mathbin.RingTheory.Ideal.QuotientOperations
+import RingTheory.FiniteType
+import RingTheory.MvPolynomial.Tower
+import RingTheory.Ideal.QuotientOperations
 
 #align_import ring_theory.finite_presentation from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

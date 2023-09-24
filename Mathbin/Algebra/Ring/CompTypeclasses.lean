@@ -3,7 +3,7 @@ Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 -/
-import Mathbin.Algebra.Ring.Equiv
+import Algebra.Ring.Equiv
 
 #align_import algebra.ring.comp_typeclasses from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

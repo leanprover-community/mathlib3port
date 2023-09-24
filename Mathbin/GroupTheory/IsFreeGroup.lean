@@ -3,7 +3,7 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Eric Wieser, Joachim Breitner
 -/
-import Mathbin.GroupTheory.FreeGroup
+import GroupTheory.FreeGroup
 
 #align_import group_theory.is_free_group from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 
@@ -38,7 +38,7 @@ For the explicit construction of free groups, see `group_theory/free_group`.
 universe u
 
 #print IsFreeGroup /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
 /-- `is_free_group G` means that `G` isomorphic to a free group. -/
 class IsFreeGroup (G : Type u) [Group G] where
   Generators : Type u

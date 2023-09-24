@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Finsupp.Defs
-import Mathbin.Algebra.Ring.Pi
+import Data.Finsupp.Defs
+import Algebra.Ring.Pi
 
 #align_import data.finsupp.pointwise from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

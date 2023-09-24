@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Set.Intervals.Monotone
-import Mathbin.Topology.Algebra.Order.MonotoneConvergence
-import Mathbin.Topology.MetricSpace.Basic
+import Data.Set.Intervals.Monotone
+import Topology.Algebra.Order.MonotoneConvergence
+import Topology.MetricSpace.Basic
 
 #align_import analysis.box_integral.box.basic from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

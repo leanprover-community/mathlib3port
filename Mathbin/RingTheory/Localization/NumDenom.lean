@@ -3,9 +3,9 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Localization.Integer
-import Mathbin.RingTheory.UniqueFactorizationDomain
+import RingTheory.Localization.FractionRing
+import RingTheory.Localization.Integer
+import RingTheory.UniqueFactorizationDomain
 
 #align_import ring_theory.localization.num_denom from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

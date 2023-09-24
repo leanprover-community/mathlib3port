@@ -3,8 +3,8 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Analysis.LocallyConvex.Bounded
-import Mathbin.Topology.Algebra.Module.StrongTopology
+import Analysis.LocallyConvex.Bounded
+import Topology.Algebra.Module.StrongTopology
 
 #align_import analysis.normed_space.compact_operator from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

@@ -3,14 +3,14 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.Calculus.Deriv.Inv
-import Mathbin.Analysis.NormedSpace.BallAction
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
-import Mathbin.Analysis.InnerProductSpace.Calculus
-import Mathbin.Analysis.InnerProductSpace.PiL2
-import Mathbin.Geometry.Manifold.Algebra.LieGroup
-import Mathbin.Geometry.Manifold.Instances.Real
-import Mathbin.Geometry.Manifold.ContMdiffMfderiv
+import Analysis.Calculus.Deriv.Inv
+import Analysis.NormedSpace.BallAction
+import Analysis.SpecialFunctions.ExpDeriv
+import Analysis.InnerProductSpace.Calculus
+import Analysis.InnerProductSpace.PiL2
+import Geometry.Manifold.Algebra.LieGroup
+import Geometry.Manifold.Instances.Real
+import Geometry.Manifold.ContMdiffMfderiv
 
 #align_import geometry.manifold.instances.sphere from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

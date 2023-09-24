@@ -3,13 +3,13 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Data.List.Sigma
-import Mathbin.Data.Int.Range
-import Mathbin.Data.Finsupp.Defs
-import Mathbin.Data.Finsupp.ToDfinsupp
-import Mathbin.Tactic.PrettyCases
-import Mathbin.Testing.SlimCheck.Sampleable
-import Mathbin.Testing.SlimCheck.Testable
+import Data.List.Sigma
+import Data.Int.Range
+import Data.Finsupp.Defs
+import Data.Finsupp.ToDfinsupp
+import Tactic.PrettyCases
+import Testing.SlimCheck.Sampleable
+import Testing.SlimCheck.Testable
 
 #align_import testing.slim_check.functions from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 
@@ -370,7 +370,7 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
 #align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.applyId_zip_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
 #print SlimCheck.InjectiveFunction.applyId_mem_iff /-
 theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
     (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=

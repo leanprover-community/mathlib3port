@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 -/
-import Mathbin.Order.Bounds.Basic
+import Order.Bounds.Basic
 
 #align_import order.monotone.union from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

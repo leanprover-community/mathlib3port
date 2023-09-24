@@ -3,13 +3,13 @@ Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 -/
-import Mathbin.Data.Pnat.Prime
-import Mathbin.Algebra.IsPrimePow
-import Mathbin.NumberTheory.Cyclotomic.Basic
-import Mathbin.RingTheory.Adjoin.PowerBasis
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
-import Mathbin.RingTheory.Norm
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Expand
+import Data.Pnat.Prime
+import Algebra.IsPrimePow
+import NumberTheory.Cyclotomic.Basic
+import RingTheory.Adjoin.PowerBasis
+import RingTheory.Polynomial.Cyclotomic.Eval
+import RingTheory.Norm
+import RingTheory.Polynomial.Cyclotomic.Expand
 
 #align_import number_theory.cyclotomic.primitive_roots from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

@@ -3,9 +3,9 @@ Copyright (c) 2019 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek, Robert Y. Lewis, Floris van Doorn
 -/
-import Mathbin.Data.Option.Defs
-import Mathbin.Data.String.Defs
-import Mathbin.Tactic.DeriveInhabited
+import Data.Option.Defs
+import Data.String.Defs
+import Tactic.DeriveInhabited
 
 #align_import meta.expr from "leanprover-community/mathlib"@"70fd9563a21e7b963887c9360bd29b2393e6225a"
 

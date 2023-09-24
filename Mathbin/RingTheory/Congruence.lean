@@ -3,10 +3,10 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.GroupRingAction.Basic
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Ring.InjSurj
-import Mathbin.GroupTheory.Congruence
+import Algebra.GroupRingAction.Basic
+import Algebra.Hom.Ring
+import Algebra.Ring.InjSurj
+import GroupTheory.Congruence
 
 #align_import ring_theory.congruence from "leanprover-community/mathlib"@"2f39bcbc98f8255490f8d4562762c9467694c809"
 

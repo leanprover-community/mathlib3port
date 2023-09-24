@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.Deriv.Slope
-import Mathbin.Analysis.Calculus.Deriv.Inv
+import Analysis.Calculus.Deriv.Slope
+import Analysis.Calculus.Deriv.Inv
 
 #align_import analysis.calculus.dslope from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

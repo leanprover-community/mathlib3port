@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Hom.Basic
-import Mathbin.Order.BoundedOrder
+import Order.Hom.Basic
+import Order.BoundedOrder
 
 #align_import order.hom.bounded from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

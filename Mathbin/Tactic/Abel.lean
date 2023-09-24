@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Tactic.NormNum
+import Tactic.NormNum
 
 #align_import tactic.abel from "leanprover-community/mathlib"@"ec322deb9ba5aad978f862669053069b7957c31d"
 

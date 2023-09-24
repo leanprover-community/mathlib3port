@@ -3,8 +3,8 @@ Copyright (c) 2022 Cuma Kökmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Constructions.Prod.Integral
-import Mathbin.MeasureTheory.Integral.CircleIntegral
+import MeasureTheory.Constructions.Prod.Integral
+import MeasureTheory.Integral.CircleIntegral
 
 #align_import measure_theory.integral.torus_integral from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

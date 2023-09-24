@@ -3,12 +3,12 @@ Copyright (c) 2021 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathbin.Data.Setoid.Basic
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.GroupTheory.Coset
-import Mathbin.GroupTheory.Subgroup.Pointwise
-import Mathbin.Data.Set.Basic
-import Mathbin.Tactic.Group
+import Data.Setoid.Basic
+import GroupTheory.Subgroup.Basic
+import GroupTheory.Coset
+import GroupTheory.Subgroup.Pointwise
+import Data.Set.Basic
+import Tactic.Group
 
 #align_import group_theory.double_coset from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

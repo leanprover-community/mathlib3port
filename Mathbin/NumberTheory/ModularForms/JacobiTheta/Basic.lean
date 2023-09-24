@@ -3,10 +3,10 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.Gaussian
-import Mathbin.Analysis.Complex.LocallyUniformLimit
-import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
-import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
+import Analysis.SpecialFunctions.Gaussian
+import Analysis.Complex.LocallyUniformLimit
+import Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+import Analysis.Complex.UpperHalfPlane.Topology
 
 #align_import number_theory.modular_forms.jacobi_theta.basic from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Monad.Products
-import Mathbin.CategoryTheory.Over
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Monad.Products
+import CategoryTheory.Over
 
 #align_import category_theory.adjunction.over from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 

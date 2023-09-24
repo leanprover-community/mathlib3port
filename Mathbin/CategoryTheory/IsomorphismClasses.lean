@@ -3,9 +3,9 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.CategoryTheory.Groupoid
-import Mathbin.CategoryTheory.Types
+import CategoryTheory.Category.Cat
+import CategoryTheory.Groupoid
+import CategoryTheory.Types
 
 #align_import category_theory.isomorphism_classes from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

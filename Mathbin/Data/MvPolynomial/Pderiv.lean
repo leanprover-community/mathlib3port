@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Yury Kudryashov
 -/
-import Mathbin.Data.MvPolynomial.Variables
-import Mathbin.Data.MvPolynomial.Derivation
+import Data.MvPolynomial.Variables
+import Data.MvPolynomial.Derivation
 
 #align_import data.mv_polynomial.pderiv from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

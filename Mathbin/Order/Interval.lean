@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Set.Lattice
-import Mathbin.Data.SetLike.Basic
+import Data.Set.Intervals.Basic
+import Data.Set.Lattice
+import Data.SetLike.Basic
 
 #align_import order.interval from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

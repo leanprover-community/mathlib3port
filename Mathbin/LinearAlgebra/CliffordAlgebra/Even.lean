@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.CliffordAlgebra.Fold
-import Mathbin.LinearAlgebra.CliffordAlgebra.Grading
+import LinearAlgebra.CliffordAlgebra.Fold
+import LinearAlgebra.CliffordAlgebra.Grading
 
 #align_import linear_algebra.clifford_algebra.even from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

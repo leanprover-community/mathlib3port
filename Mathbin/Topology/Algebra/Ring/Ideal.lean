@@ -3,8 +3,8 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.Algebra.Ring.Basic
-import Mathbin.RingTheory.Ideal.Quotient
+import Topology.Algebra.Ring.Basic
+import RingTheory.Ideal.Quotient
 
 #align_import topology.algebra.ring.ideal from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

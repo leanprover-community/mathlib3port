@@ -3,9 +3,9 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Abelian
-import Mathbin.Algebra.Lie.Solvable
-import Mathbin.LinearAlgebra.Dual
+import Algebra.Lie.Abelian
+import Algebra.Lie.Solvable
+import LinearAlgebra.Dual
 
 #align_import algebra.lie.character from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

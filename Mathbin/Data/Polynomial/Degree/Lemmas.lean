@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Data.Polynomial.Eval
+import Data.Polynomial.Eval
 
 #align_import data.polynomial.degree.lemmas from "leanprover-community/mathlib"@"728baa2f54e6062c5879a3e397ac6bac323e506f"
 

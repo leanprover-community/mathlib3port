@@ -3,8 +3,8 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.Category.Mon.Basic
-import Mathbin.CategoryTheory.Endomorphism
+import Algebra.Category.Mon.Basic
+import CategoryTheory.Endomorphism
 
 #align_import algebra.category.Group.basic from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

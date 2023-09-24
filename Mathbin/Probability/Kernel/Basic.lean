@@ -3,8 +3,8 @@ Copyright (c) 2022 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Integral.Bochner
-import Mathbin.MeasureTheory.Constructions.Prod.Basic
+import MeasureTheory.Integral.Bochner
+import MeasureTheory.Constructions.Prod.Basic
 
 #align_import probability.kernel.basic from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

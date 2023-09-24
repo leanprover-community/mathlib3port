@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Analysis.InnerProductSpace.Projection
-import Mathbin.MeasureTheory.Function.ConditionalExpectation.Unique
+import Analysis.InnerProductSpace.Projection
+import MeasureTheory.Function.ConditionalExpectation.Unique
 
 #align_import measure_theory.function.conditional_expectation.condexp_L2 from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

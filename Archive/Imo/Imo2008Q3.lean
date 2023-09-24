@@ -3,12 +3,12 @@ Copyright (c) 2021 Manuel Candales. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales
 -/
-import Mathbin.Data.Real.Basic
-import Mathbin.Data.Real.Sqrt
-import Mathbin.Data.Nat.Prime
-import Mathbin.NumberTheory.PrimesCongruentOne
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
-import Mathbin.Tactic.LinearCombination
+import Data.Real.Basic
+import Data.Real.Sqrt
+import Data.Nat.Prime
+import NumberTheory.PrimesCongruentOne
+import NumberTheory.LegendreSymbol.QuadraticReciprocity
+import Tactic.LinearCombination
 
 #align_import imo.imo2008_q3 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

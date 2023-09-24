@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Geometry.Manifold.Diffeomorph
-import Mathbin.Geometry.Manifold.Instances.Real
-import Mathbin.Geometry.Manifold.PartitionOfUnity
+import Geometry.Manifold.Diffeomorph
+import Geometry.Manifold.Instances.Real
+import Geometry.Manifold.PartitionOfUnity
 
 #align_import geometry.manifold.whitney_embedding from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

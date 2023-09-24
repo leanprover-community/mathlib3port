@@ -3,7 +3,7 @@ Copyright (c) 2023 Yaël Dillies, Vladimir Ivanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Ivanov
 -/
-import Mathbin.Data.Finset.Sups
+import Data.Finset.Sups
 
 #align_import combinatorics.set_family.ahlswede_zhang from "leanprover-community/mathlib"@"8818fdefc78642a7e6afcd20be5c184f3c7d9699"
 

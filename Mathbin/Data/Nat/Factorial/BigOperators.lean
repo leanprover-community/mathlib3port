@@ -3,8 +3,8 @@ Copyright (c) 2022 Pim Otte. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
 -/
-import Mathbin.Data.Nat.Factorial.Basic
-import Mathbin.Algebra.BigOperators.Order
+import Data.Nat.Factorial.Basic
+import Algebra.BigOperators.Order
 
 #align_import data.nat.factorial.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

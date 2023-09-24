@@ -3,8 +3,8 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.RingTheory.HahnSeries
-import Mathbin.RingTheory.Localization.FractionRing
+import RingTheory.HahnSeries
+import RingTheory.Localization.FractionRing
 
 #align_import ring_theory.laurent_series from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

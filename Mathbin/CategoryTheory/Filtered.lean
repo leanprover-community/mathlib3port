@@ -3,11 +3,11 @@ Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 -/
-import Mathbin.CategoryTheory.FinCategory
-import Mathbin.CategoryTheory.Limits.Cones
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Category.Preorder
-import Mathbin.CategoryTheory.Category.Ulift
+import CategoryTheory.FinCategory
+import CategoryTheory.Limits.Cones
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Category.Preorder
+import CategoryTheory.Category.Ulift
 
 #align_import category_theory.filtered from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

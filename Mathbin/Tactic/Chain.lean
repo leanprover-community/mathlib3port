@@ -3,7 +3,7 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro
 -/
-import Mathbin.Tactic.Ext
+import Tactic.Ext
 
 #align_import tactic.chain from "leanprover-community/mathlib"@"a8629a591ccfe7aa27241e843ca13ed7ed7fd152"
 

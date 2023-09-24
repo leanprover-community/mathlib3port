@@ -3,11 +3,11 @@ Copyright (c) 2021 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
-import Mathbin.Data.Pnat.Basic
-import Mathbin.Data.Nat.Parity
-import Mathbin.Algebra.BigOperators.Pi
-import Mathbin.Tactic.Ring
-import Mathbin.Tactic.FieldSimp
+import Data.Pnat.Basic
+import Data.Nat.Parity
+import Algebra.BigOperators.Pi
+import Tactic.Ring
+import Tactic.FieldSimp
 
 #align_import imo.imo2013_q1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

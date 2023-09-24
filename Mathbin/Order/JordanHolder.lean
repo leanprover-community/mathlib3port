@@ -3,11 +3,11 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Order.Lattice
-import Mathbin.Data.List.Sort
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Logic.Equiv.Functor
-import Mathbin.Data.Fintype.Card
+import Order.Lattice
+import Data.List.Sort
+import Logic.Equiv.Fin
+import Logic.Equiv.Functor
+import Data.Fintype.Card
 
 #align_import order.jordan_holder from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

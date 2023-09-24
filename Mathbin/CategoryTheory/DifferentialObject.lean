@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Int.Basic
-import Mathbin.CategoryTheory.Shift.Basic
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
+import Data.Int.Basic
+import CategoryTheory.Shift.Basic
+import CategoryTheory.ConcreteCategory.Basic
 
 #align_import category_theory.differential_object from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

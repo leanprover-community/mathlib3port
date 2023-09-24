@@ -3,8 +3,8 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
-import Mathbin.Topology.Algebra.StarSubalgebra
+import Analysis.NormedSpace.Star.GelfandDuality
+import Topology.Algebra.StarSubalgebra
 
 #align_import analysis.normed_space.star.continuous_functional_calculus from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

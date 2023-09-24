@@ -3,9 +3,9 @@ Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
-import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
-import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
-import Mathbin.Data.Rat.Floor
+import Algebra.ContinuedFractions.Computation.Approximations
+import Algebra.ContinuedFractions.Computation.CorrectnessTerminating
+import Data.Rat.Floor
 
 #align_import algebra.continued_fractions.computation.terminates_iff_rat from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

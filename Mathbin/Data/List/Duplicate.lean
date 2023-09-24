@@ -3,7 +3,7 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Chris Hughes
 -/
-import Mathbin.Data.List.Nodup
+import Data.List.Nodup
 
 #align_import data.list.duplicate from "leanprover-community/mathlib"@"f694c7dead66f5d4c80f446c796a5aad14707f0e"
 

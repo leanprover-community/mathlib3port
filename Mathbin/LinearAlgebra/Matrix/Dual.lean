@@ -3,8 +3,8 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 -/
-import Mathbin.LinearAlgebra.Dual
-import Mathbin.LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.Dual
+import LinearAlgebra.Matrix.ToLin
 
 #align_import linear_algebra.matrix.dual from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

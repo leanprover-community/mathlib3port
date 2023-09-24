@@ -3,8 +3,8 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Nilpotent
-import Mathbin.Algebra.Lie.Normalizer
+import Algebra.Lie.Nilpotent
+import Algebra.Lie.Normalizer
 
 #align_import algebra.lie.engel from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

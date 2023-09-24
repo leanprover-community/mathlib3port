@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 -/
-import Mathbin.Order.Filter.AtTopBot
-import Mathbin.Order.Filter.Pi
+import Order.Filter.AtTopBot
+import Order.Filter.Pi
 
 #align_import order.filter.cofinite from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 

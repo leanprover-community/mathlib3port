@@ -3,7 +3,7 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.CategoryTheory.Triangulated.Pretriangulated
+import CategoryTheory.Triangulated.Pretriangulated
 
 #align_import category_theory.triangulated.triangulated from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Data.Option.Defs
-import Mathbin.Data.List.Defs
+import Data.Option.Defs
+import Data.List.Defs
 
 #align_import meta.rb_map from "leanprover-community/mathlib"@"70fd9563a21e7b963887c9360bd29b2393e6225a"
 

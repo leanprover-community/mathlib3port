@@ -3,11 +3,11 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Leanbin.Data.Vector
-import Mathbin.Data.List.Nodup
-import Mathbin.Data.List.OfFn
-import Mathbin.Control.Applicative
-import Mathbin.Meta.Univs
+import Data.Vector
+import Data.List.Nodup
+import Data.List.OfFn
+import Control.Applicative
+import Meta.Univs
 
 #align_import data.vector.basic from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

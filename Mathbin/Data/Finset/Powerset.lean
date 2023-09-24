@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Finset.Lattice
-import Mathbin.Data.Multiset.Powerset
+import Data.Finset.Lattice
+import Data.Multiset.Powerset
 
 #align_import data.finset.powerset from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
@@ -139,7 +139,7 @@ theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
 #align finset.powerset_insert Finset.powerset_insert
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Finset.decidableExistsOfDecidableSubsets /-
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for any subset. -/
 instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊆ s), Prop}
@@ -149,7 +149,7 @@ instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ (t) (_ : t �
 #align finset.decidable_exists_of_decidable_subsets Finset.decidableExistsOfDecidableSubsets
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Finset.decidableForallOfDecidableSubsets /-
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for every subset. -/
 instance decidableForallOfDecidableSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊆ s), Prop}
@@ -203,7 +203,7 @@ theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets
 #align finset.empty_mem_ssubsets Finset.empty_mem_ssubsets
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 #print Finset.decidableExistsOfDecidableSSubsets /-
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for any ssubset. -/
 instance decidableExistsOfDecidableSSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊂ s), Prop}
@@ -213,7 +213,7 @@ instance decidableExistsOfDecidableSSubsets {s : Finset α} {p : ∀ (t) (_ : t 
 #align finset.decidable_exists_of_decidable_ssubsets Finset.decidableExistsOfDecidableSSubsets
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 #print Finset.decidableForallOfDecidableSSubsets /-
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for every ssubset. -/
 instance decidableForallOfDecidableSSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊂ s), Prop}

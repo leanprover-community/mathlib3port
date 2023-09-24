@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.ContDiff
-import Mathbin.Analysis.NormedSpace.Banach
+import Analysis.Calculus.ContDiff
+import Analysis.NormedSpace.Banach
 
 #align_import analysis.calculus.inverse from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 
@@ -389,7 +389,7 @@ theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRi
 #align approximates_linear_on.open_image ApproximatesLinearOn.open_image
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print ApproximatesLinearOn.image_mem_nhds /-
 theorem image_mem_nhds (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse)
     {x : E} (hs : s ∈ 𝓝 x) (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : f '' s ∈ 𝓝 (f x) :=

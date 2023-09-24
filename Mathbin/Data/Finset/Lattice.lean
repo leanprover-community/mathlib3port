@@ -3,13 +3,13 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Finset.Fold
-import Mathbin.Data.Finset.Option
-import Mathbin.Data.Finset.Pi
-import Mathbin.Data.Finset.Prod
-import Mathbin.Data.Multiset.Lattice
-import Mathbin.Order.CompleteLattice
-import Mathbin.Order.Hom.Lattice
+import Data.Finset.Fold
+import Data.Finset.Option
+import Data.Finset.Pi
+import Data.Finset.Prod
+import Data.Multiset.Lattice
+import Order.CompleteLattice
+import Order.Hom.Lattice
 
 #align_import data.finset.lattice from "leanprover-community/mathlib"@"442a83d738cb208d3600056c489be16900ba701d"
 
@@ -333,7 +333,7 @@ theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s
 #align finset.sup_le_of_le_directed Finset.sup_le_of_le_directed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.sup_mem /-
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : subsemilattice_sup_bot`
@@ -607,7 +607,7 @@ theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁, p a₁ → 
 #align finset.inf_induction Finset.inf_induction
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.inf_mem /-
 theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊓ y ∈ s)
     {ι : Type _} (t : Finset ι) (p : ι → α) (h : ∀ i ∈ t, p i ∈ s) : t.inf p ∈ s :=
@@ -1141,7 +1141,7 @@ theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
 #align finset.sup'_induction Finset.sup'_induction
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.sup'_mem /-
 theorem sup'_mem (s : Set α) (w : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊔ y ∈ s) {ι : Type _}
     (t : Finset ι) (H : t.Nonempty) (p : ι → α) (h : ∀ i ∈ t, p i ∈ s) : t.sup' H p ∈ s :=
@@ -1323,7 +1323,7 @@ theorem inf'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
 #align finset.inf'_induction Finset.inf'_induction
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.inf'_mem /-
 theorem inf'_mem (s : Set α) (w : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊓ y ∈ s) {ι : Type _}
     (t : Finset ι) (H : t.Nonempty) (p : ι → α) (h : ∀ i ∈ t, p i ∈ s) : t.inf' H p ∈ s :=
@@ -1376,7 +1376,7 @@ theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H 
 #align finset.sup'_eq_sup Finset.sup'_eq_sup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print SupClosed.finsetSup_mem /-
 theorem finsetSup_mem {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊔ b ∈ s) : t.sup id ∈ s :=
@@ -1402,7 +1402,7 @@ theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H 
 #align finset.inf'_eq_inf Finset.inf'_eq_inf
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print InfClosed.finsetInf_mem /-
 theorem finsetInf_mem {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊓ b ∈ s) : t.inf id ∈ s :=
@@ -2211,8 +2211,8 @@ theorem exists_next_left {x : α} {s : Finset α} (h : ∃ y ∈ s, y < x) :
 #align finset.exists_next_left Finset.exists_next_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.card_le_of_interleaved /-
 /-- If finsets `s` and `t` are interleaved, then `finset.card s ≤ finset.card t + 1`. -/
 theorem card_le_of_interleaved {s t : Finset α}
@@ -2246,7 +2246,7 @@ theorem card_le_of_interleaved {s t : Finset α}
 #align finset.card_le_of_interleaved Finset.card_le_of_interleaved
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.card_le_diff_of_interleaved /-
 /-- If finsets `s` and `t` are interleaved, then `finset.card s ≤ finset.card (t \ s) + 1`. -/
 theorem card_le_diff_of_interleaved {s t : Finset α}

@@ -3,9 +3,9 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.Data.Real.Sqrt
-import Mathbin.Analysis.NormedSpace.Star.Basic
-import Mathbin.Analysis.NormedSpace.ContinuousLinearMap
+import Data.Real.Sqrt
+import Analysis.NormedSpace.Star.Basic
+import Analysis.NormedSpace.ContinuousLinearMap
 
 #align_import data.is_R_or_C.basic from "leanprover-community/mathlib"@"baa88307f3e699fa7054ef04ec79fa4f056169cb"
 

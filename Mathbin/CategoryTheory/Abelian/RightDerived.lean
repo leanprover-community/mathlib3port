@@ -3,11 +3,11 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Abelian.InjectiveResolution
-import Mathbin.Algebra.Homology.Additive
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
-import Mathbin.CategoryTheory.Abelian.Homology
-import Mathbin.CategoryTheory.Abelian.Exact
+import CategoryTheory.Abelian.InjectiveResolution
+import Algebra.Homology.Additive
+import CategoryTheory.Limits.Constructions.EpiMono
+import CategoryTheory.Abelian.Homology
+import CategoryTheory.Abelian.Exact
 
 #align_import category_theory.abelian.right_derived from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathbin.Analysis.Complex.RemovableSingularity
-import Mathbin.Analysis.Calculus.Series
+import Analysis.Complex.RemovableSingularity
+import Analysis.Calculus.Series
 
 #align_import analysis.complex.locally_uniform_limit from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

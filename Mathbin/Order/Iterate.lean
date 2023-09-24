@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Logic.Function.Iterate
-import Mathbin.Order.Monotone.Basic
+import Logic.Function.Iterate
+import Order.Monotone.Basic
 
 #align_import order.iterate from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

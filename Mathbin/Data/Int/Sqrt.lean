@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Data.Nat.Sqrt
+import Data.Nat.Sqrt
 
 #align_import data.int.sqrt from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

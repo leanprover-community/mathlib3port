@@ -3,12 +3,12 @@ Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Module.LinearMap
-import Mathbin.Algebra.MonoidAlgebra.Basic
-import Mathbin.LinearAlgebra.Dual
-import Mathbin.LinearAlgebra.Contraction
-import Mathbin.RingTheory.TensorProduct
+import Algebra.Module.Basic
+import Algebra.Module.LinearMap
+import Algebra.MonoidAlgebra.Basic
+import LinearAlgebra.Dual
+import LinearAlgebra.Contraction
+import RingTheory.TensorProduct
 
 #align_import representation_theory.basic from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

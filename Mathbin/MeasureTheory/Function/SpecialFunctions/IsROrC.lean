@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Function.SpecialFunctions.Basic
-import Mathbin.Data.IsROrC.Lemmas
+import MeasureTheory.Function.SpecialFunctions.Basic
+import Data.IsROrC.Lemmas
 
 #align_import measure_theory.function.special_functions.is_R_or_C from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.Algebra.Category.Group.ZModuleEquivalence
-import Mathbin.Algebra.Category.Module.Subobject
+import Algebra.Category.Group.ZModuleEquivalence
+import Algebra.Category.Module.Subobject
 
 #align_import algebra.category.Group.subobject from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

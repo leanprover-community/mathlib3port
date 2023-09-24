@@ -3,8 +3,8 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.MeasureTheory.Constructions.Prod.Basic
-import Mathbin.MeasureTheory.Group.Measure
+import MeasureTheory.Constructions.Prod.Basic
+import MeasureTheory.Group.Measure
 
 #align_import measure_theory.group.prod from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 

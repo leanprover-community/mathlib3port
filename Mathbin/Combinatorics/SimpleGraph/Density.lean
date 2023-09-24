@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Combinatorics.SimpleGraph.Basic
-import Mathbin.Order.Partition.Finpartition
-import Mathbin.Tactic.Positivity
+import Combinatorics.SimpleGraph.Basic
+import Order.Partition.Finpartition
+import Tactic.Positivity
 
 #align_import combinatorics.simple_graph.density from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

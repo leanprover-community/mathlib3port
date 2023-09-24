@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Abs
-import Mathbin.Algebra.Order.Group.OrderIso
-import Mathbin.Order.MinMax
+import Algebra.Abs
+import Algebra.Order.Group.OrderIso
+import Order.MinMax
 
 #align_import algebra.order.group.abs from "leanprover-community/mathlib"@"2196ab363eb097c008d4497125e0dde23fb36db2"
 

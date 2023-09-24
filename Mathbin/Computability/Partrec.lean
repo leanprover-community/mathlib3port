@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Computability.Primrec
-import Mathbin.Data.Nat.Psub
-import Mathbin.Data.Pfun
+import Computability.Primrec
+import Data.Nat.Psub
+import Data.Pfun
 
 #align_import computability.partrec from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

@@ -3,9 +3,9 @@ Copyright (c) 2023 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Set.Image
-import Mathbin.Data.List.Basic
-import Mathbin.Data.Fin.Basic
+import Data.Set.Image
+import Data.List.Basic
+import Data.Fin.Basic
 
 #align_import data.set.list from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

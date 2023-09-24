@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.AlgebraicGeometry.PresheafedSpace
-import Mathbin.Topology.Category.Top.Limits.Basic
-import Mathbin.Topology.Sheaves.Limits
+import AlgebraicGeometry.PresheafedSpace
+import Topology.Category.Top.Limits.Basic
+import Topology.Sheaves.Limits
 
 #align_import algebraic_geometry.presheafed_space.has_colimits from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

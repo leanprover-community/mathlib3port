@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
-import Mathbin.Algebra.Algebra.Tower
+import Algebra.Algebra.Tower
 
 #align_import algebra.algebra.restrict_scalars from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

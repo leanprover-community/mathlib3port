@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Johannes Hölzl
 -/
-import Mathbin.Order.ConditionallyCompleteLattice.Basic
-import Mathbin.Order.RelIso.Basic
+import Order.ConditionallyCompleteLattice.Basic
+import Order.RelIso.Basic
 
 #align_import order.ord_continuous from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

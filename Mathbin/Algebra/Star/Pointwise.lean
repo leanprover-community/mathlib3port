@@ -3,9 +3,9 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Algebra.Star.Basic
-import Mathbin.Data.Set.Finite
-import Mathbin.Data.Set.Pointwise.Basic
+import Algebra.Star.Basic
+import Data.Set.Finite
+import Data.Set.Pointwise.Basic
 
 #align_import algebra.star.pointwise from "leanprover-community/mathlib"@"30413fc89f202a090a54d78e540963ed3de0056e"
 

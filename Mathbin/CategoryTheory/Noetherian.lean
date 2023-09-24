@@ -3,9 +3,9 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Subobject.Lattice
-import Mathbin.CategoryTheory.EssentiallySmall
-import Mathbin.CategoryTheory.Simple
+import CategoryTheory.Subobject.Lattice
+import CategoryTheory.EssentiallySmall
+import CategoryTheory.Simple
 
 #align_import category_theory.noetherian from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 
@@ -46,7 +46,7 @@ class NoetherianObject (X : C) : Prop where
 -/
 
 #print CategoryTheory.ArtinianObject /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
 /-- An artinian object is an object
 which does not have infinite decreasing sequences of subobjects.
 

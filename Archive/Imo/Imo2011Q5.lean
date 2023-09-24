@@ -3,7 +3,7 @@ Copyright (c) 2021 Alain Verberkmoes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alain Verberkmoes
 -/
-import Mathbin.Data.Int.Dvd.Basic
+import Data.Int.Dvd.Basic
 
 #align_import imo.imo2011_q5 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

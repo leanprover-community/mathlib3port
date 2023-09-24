@@ -3,7 +3,7 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.MeasurableSpace
+import MeasureTheory.MeasurableSpace
 
 #align_import measure_theory.function.ae_measurable_sequence from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 

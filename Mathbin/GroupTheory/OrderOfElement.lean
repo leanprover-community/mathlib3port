@@ -3,13 +3,13 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 -/
-import Mathbin.Algebra.GcdMonoid.Finset
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Data.Int.Modeq
-import Mathbin.Data.Set.Pointwise.Basic
-import Mathbin.Data.Set.Intervals.Infinite
-import Mathbin.Dynamics.PeriodicPts
-import Mathbin.GroupTheory.Index
+import Algebra.GcdMonoid.Finset
+import Algebra.Hom.Iterate
+import Data.Int.Modeq
+import Data.Set.Pointwise.Basic
+import Data.Set.Intervals.Infinite
+import Dynamics.PeriodicPts
+import GroupTheory.Index
 
 #align_import group_theory.order_of_element from "leanprover-community/mathlib"@"d07245fd37786daa997af4f1a73a49fa3b748408"
 

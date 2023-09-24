@@ -3,11 +3,11 @@ Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
-import Mathbin.Algebra.ContinuedFractions.Computation.Translations
-import Mathbin.Algebra.ContinuedFractions.TerminatedStable
-import Mathbin.Algebra.ContinuedFractions.ContinuantsRecurrence
-import Mathbin.Order.Filter.AtTopBot
-import Mathbin.Tactic.FieldSimp
+import Algebra.ContinuedFractions.Computation.Translations
+import Algebra.ContinuedFractions.TerminatedStable
+import Algebra.ContinuedFractions.ContinuantsRecurrence
+import Order.Filter.AtTopBot
+import Tactic.FieldSimp
 
 #align_import algebra.continued_fractions.computation.correctness_terminating from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

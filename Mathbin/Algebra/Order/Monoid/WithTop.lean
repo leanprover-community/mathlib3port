@@ -3,10 +3,10 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Order.Monoid.OrderDual
-import Mathbin.Algebra.Order.Monoid.WithZero.Basic
-import Mathbin.Data.Nat.Cast.Defs
+import Algebra.Hom.Group
+import Algebra.Order.Monoid.OrderDual
+import Algebra.Order.Monoid.WithZero.Basic
+import Data.Nat.Cast.Defs
 
 #align_import algebra.order.monoid.with_top from "leanprover-community/mathlib"@"0111834459f5d7400215223ea95ae38a1265a907"
 

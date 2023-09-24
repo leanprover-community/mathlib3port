@@ -3,8 +3,8 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.MeasureTheory.Integral.Periodic
-import Mathbin.Data.Zmod.Quotient
+import MeasureTheory.Integral.Periodic
+import Data.Zmod.Quotient
 
 #align_import measure_theory.group.add_circle from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

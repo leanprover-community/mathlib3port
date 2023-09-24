@@ -3,9 +3,9 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.RingTheory.Polynomial.Basic
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.Tactic.RingExp
+import RingTheory.Polynomial.Basic
+import RingTheory.Ideal.LocalRing
+import Tactic.RingExp
 
 #align_import data.polynomial.expand from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

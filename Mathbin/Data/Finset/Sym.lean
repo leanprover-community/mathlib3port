@@ -3,10 +3,10 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.Lattice
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Data.Fintype.Vector
-import Mathbin.Data.Sym.Sym2
+import Data.Finset.Lattice
+import Data.Fintype.Prod
+import Data.Fintype.Vector
+import Data.Sym.Sym2
 
 #align_import data.finset.sym from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

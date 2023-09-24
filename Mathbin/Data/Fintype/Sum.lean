@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Card
-import Mathbin.Data.Finset.Sum
-import Mathbin.Logic.Embedding.Set
+import Data.Fintype.Card
+import Data.Finset.Sum
+import Logic.Embedding.Set
 
 #align_import data.fintype.sum from "leanprover-community/mathlib"@"6623e6af705e97002a9054c1c05a980180276fc1"
 

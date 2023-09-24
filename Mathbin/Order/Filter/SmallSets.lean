@@ -3,8 +3,8 @@ Copyright (c) 2022 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Floris van Doorn, Yury Kudryashov
 -/
-import Mathbin.Order.Filter.Lift
-import Mathbin.Order.Filter.AtTopBot
+import Order.Filter.Lift
+import Order.Filter.AtTopBot
 
 #align_import order.filter.small_sets from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 
@@ -70,7 +70,7 @@ theorem tendsto_smallSets_iff {f : α → Set β} :
 #align filter.tendsto_small_sets_iff Filter.tendsto_smallSets_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.eventually_smallSets /-
 theorem eventually_smallSets {p : Set α → Prop} :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
@@ -86,7 +86,7 @@ theorem eventually_smallSets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t
 #align filter.eventually_small_sets' Filter.eventually_smallSets'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 #print Filter.frequently_smallSets /-
 theorem frequently_smallSets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _) (_ : s ⊆ t), p s :=

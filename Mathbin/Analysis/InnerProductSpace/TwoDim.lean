@@ -3,10 +3,10 @@ Copyright (c) 2022 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.InnerProductSpace.Dual
-import Mathbin.Analysis.InnerProductSpace.Orientation
-import Mathbin.Data.Complex.Orientation
-import Mathbin.Tactic.LinearCombination
+import Analysis.InnerProductSpace.Dual
+import Analysis.InnerProductSpace.Orientation
+import Data.Complex.Orientation
+import Tactic.LinearCombination
 
 #align_import analysis.inner_product_space.two_dim from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

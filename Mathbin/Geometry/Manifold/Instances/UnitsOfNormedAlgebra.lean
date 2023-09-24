@@ -3,8 +3,8 @@ Copyright © 2021 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Heather Macbeth
 -/
-import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
-import Mathbin.Analysis.NormedSpace.Units
+import Geometry.Manifold.SmoothManifoldWithCorners
+import Analysis.NormedSpace.Units
 
 #align_import geometry.manifold.instances.units_of_normed_algebra from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

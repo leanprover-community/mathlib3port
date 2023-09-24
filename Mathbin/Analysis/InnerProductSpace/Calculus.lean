@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.InnerProductSpace.PiL2
-import Mathbin.Analysis.SpecialFunctions.Sqrt
+import Analysis.InnerProductSpace.PiL2
+import Analysis.SpecialFunctions.Sqrt
 
 #align_import analysis.inner_product_space.calculus from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

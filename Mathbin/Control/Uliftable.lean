@@ -3,11 +3,11 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Monad.Basic
-import Mathbin.Control.Monad.Cont
-import Mathbin.Control.Monad.Writer
-import Mathbin.Logic.Equiv.Basic
-import Mathbin.Tactic.Interactive
+import Control.Monad.Basic
+import Control.Monad.Cont
+import Control.Monad.Writer
+import Logic.Equiv.Basic
+import Tactic.Interactive
 
 #align_import control.uliftable from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
@@ -44,7 +44,7 @@ universe u₀ u₁ v₀ v₁ v₂ w w₀ w₁
 variable {s : Type u₀} {s' : Type u₁} {r r' w w' : Type _}
 
 #print ULiftable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`congr] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`congr] [] -/
 /-- Given a universe polymorphic type family `M.{u} : Type u₁ → Type
 u₂`, this class convert between instantiations, from
 `M.{u} : Type u₁ → Type u₂` to `M.{v} : Type v₁ → Type v₂` and back -/

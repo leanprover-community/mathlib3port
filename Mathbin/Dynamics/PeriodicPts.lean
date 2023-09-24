@@ -3,12 +3,12 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Data.List.Cycle
-import Mathbin.Data.Pnat.Basic
-import Mathbin.Data.Nat.Prime
-import Mathbin.Dynamics.FixedPoints.Basic
-import Mathbin.GroupTheory.GroupAction.Group
+import Algebra.Hom.Iterate
+import Data.List.Cycle
+import Data.Pnat.Basic
+import Data.Nat.Prime
+import Dynamics.FixedPoints.Basic
+import GroupTheory.GroupAction.Group
 
 #align_import dynamics.periodic_pts from "leanprover-community/mathlib"@"d07245fd37786daa997af4f1a73a49fa3b748408"
 

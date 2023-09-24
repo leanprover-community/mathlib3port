@@ -3,14 +3,14 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.PunitInstances
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.RingTheory.Ideal.Over
-import Mathbin.RingTheory.Ideal.Prod
-import Mathbin.RingTheory.Localization.Away.Basic
-import Mathbin.RingTheory.Nilpotent
-import Mathbin.Topology.Sets.Closeds
-import Mathbin.Topology.Sober
+import Algebra.PunitInstances
+import LinearAlgebra.Finsupp
+import RingTheory.Ideal.Over
+import RingTheory.Ideal.Prod
+import RingTheory.Localization.Away.Basic
+import RingTheory.Nilpotent
+import Topology.Sets.Closeds
+import Topology.Sober
 
 #align_import algebraic_geometry.prime_spectrum.basic from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

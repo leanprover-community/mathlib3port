@@ -3,11 +3,11 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.GeomSum
-import Mathbin.Algebra.Group.UniqueProds
-import Mathbin.Algebra.MonoidAlgebra.Basic
-import Mathbin.Data.Finsupp.Lex
-import Mathbin.Data.Zmod.Basic
+import Algebra.GeomSum
+import Algebra.Group.UniqueProds
+import Algebra.MonoidAlgebra.Basic
+import Data.Finsupp.Lex
+import Data.Zmod.Basic
 
 #align_import zero_divisors_in_add_monoid_algebras from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
@@ -176,7 +176,7 @@ instance : Zero F :=
 instance : One F :=
   ⟨F.one⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to prove trivial goals by enumeration. -/
 unsafe def boom : tactic Unit :=
   sorry

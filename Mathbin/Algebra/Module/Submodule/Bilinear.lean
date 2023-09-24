@@ -3,8 +3,8 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Span
-import Mathbin.LinearAlgebra.BilinearMap
+import LinearAlgebra.Span
+import LinearAlgebra.BilinearMap
 
 #align_import algebra.module.submodule.bilinear from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison
 -/
-import Mathbin.Algebra.Order.Hom.Monoid
-import Mathbin.SetTheory.Game.Ordinal
+import Algebra.Order.Hom.Monoid
+import SetTheory.Game.Ordinal
 
 #align_import set_theory.surreal.basic from "leanprover-community/mathlib"@"8900d545017cd21961daa2a1734bb658ef52c618"
 

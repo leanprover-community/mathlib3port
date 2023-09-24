@@ -3,13 +3,13 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.FiniteType
-import Mathbin.RingTheory.Localization.AtPrime
-import Mathbin.RingTheory.Localization.Away.Basic
-import Mathbin.RingTheory.Localization.Integer
-import Mathbin.RingTheory.Localization.Submodule
-import Mathbin.RingTheory.Nilpotent
-import Mathbin.RingTheory.RingHomProperties
+import RingTheory.FiniteType
+import RingTheory.Localization.AtPrime
+import RingTheory.Localization.Away.Basic
+import RingTheory.Localization.Integer
+import RingTheory.Localization.Submodule
+import RingTheory.Nilpotent
+import RingTheory.RingHomProperties
 
 #align_import ring_theory.local_properties from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

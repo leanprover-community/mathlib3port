@@ -3,10 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.FreeAlgebra
-import Mathbin.Algebra.Category.Ring.Basic
-import Mathbin.Algebra.Category.Module.Basic
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.FreeAlgebra
+import Algebra.Category.Ring.Basic
+import Algebra.Category.Module.Basic
 
 #align_import algebra.category.Algebra.basic from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

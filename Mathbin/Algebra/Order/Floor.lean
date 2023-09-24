@@ -3,12 +3,12 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Kappelmann
 -/
-import Mathbin.Data.Int.Lemmas
-import Mathbin.Data.Set.Intervals.Group
-import Mathbin.Data.Set.Lattice
-import Mathbin.Tactic.Abel
+import Data.Int.Lemmas
+import Data.Set.Intervals.Group
+import Data.Set.Lattice
+import Tactic.Abel
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.Positivity
+import Tactic.Positivity
 
 #align_import algebra.order.floor from "leanprover-community/mathlib"@"afdb43429311b885a7988ea15d0bac2aac80f69c"
 

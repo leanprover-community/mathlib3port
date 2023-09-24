@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Control.EquivFunctor
+import Data.Fintype.Basic
+import Control.EquivFunctor
 
 #align_import control.equiv_functor.instances from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

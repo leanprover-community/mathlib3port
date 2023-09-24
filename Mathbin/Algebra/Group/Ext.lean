@@ -3,7 +3,7 @@ Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yury Kudryashov
 -/
-import Mathbin.Algebra.Hom.Group
+import Algebra.Hom.Group
 
 #align_import algebra.group.ext from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

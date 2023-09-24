@@ -3,8 +3,8 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.List.OfFn
-import Mathbin.Data.List.Perm
+import Data.List.OfFn
+import Data.List.Perm
 
 #align_import data.list.sort from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

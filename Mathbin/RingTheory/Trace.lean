@@ -3,16 +3,16 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.LinearAlgebra.Matrix.BilinearForm
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
-import Mathbin.LinearAlgebra.Determinant
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.Vandermonde
-import Mathbin.LinearAlgebra.Trace
-import Mathbin.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathbin.FieldTheory.PrimitiveElement
-import Mathbin.FieldTheory.Galois
-import Mathbin.RingTheory.PowerBasis
+import LinearAlgebra.Matrix.BilinearForm
+import LinearAlgebra.Matrix.Charpoly.Minpoly
+import LinearAlgebra.Determinant
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.Vandermonde
+import LinearAlgebra.Trace
+import FieldTheory.IsAlgClosed.AlgebraicClosure
+import FieldTheory.PrimitiveElement
+import FieldTheory.Galois
+import RingTheory.PowerBasis
 
 #align_import ring_theory.trace from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

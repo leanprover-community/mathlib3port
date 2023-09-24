@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 -/
-import Mathbin.Analysis.Calculus.Deriv.Pow
-import Mathbin.Analysis.Calculus.Deriv.Inv
-import Mathbin.Analysis.SpecialFunctions.Log.Basic
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
+import Analysis.Calculus.Deriv.Pow
+import Analysis.Calculus.Deriv.Inv
+import Analysis.SpecialFunctions.Log.Basic
+import Analysis.SpecialFunctions.ExpDeriv
 
 #align_import analysis.special_functions.log.deriv from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

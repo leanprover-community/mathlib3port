@@ -3,8 +3,8 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Images
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
+import CategoryTheory.Limits.Shapes.Images
+import CategoryTheory.Limits.Constructions.EpiMono
 
 #align_import category_theory.limits.preserves.shapes.images from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

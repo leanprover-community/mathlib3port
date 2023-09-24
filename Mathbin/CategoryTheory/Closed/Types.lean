@@ -3,10 +3,10 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Presheaf
-import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
-import Mathbin.CategoryTheory.Limits.Shapes.Types
-import Mathbin.CategoryTheory.Closed.Cartesian
+import CategoryTheory.Limits.Presheaf
+import CategoryTheory.Limits.Preserves.FunctorCategory
+import CategoryTheory.Limits.Shapes.Types
+import CategoryTheory.Closed.Cartesian
 
 #align_import category_theory.closed.types from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

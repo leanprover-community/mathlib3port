@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Topology.Sheaves.SheafCondition.Sites
+import Topology.Sheaves.SheafCondition.Sites
 
 #align_import topology.sheaves.sheaf_condition.opens_le_cover from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

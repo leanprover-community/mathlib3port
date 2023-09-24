@@ -3,7 +3,7 @@ Copyright (c) 2020 Gabriel Ebner. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
 -/
-import Mathbin.Tactic.Lint.Basic
+import Tactic.Lint.Basic
 
 #align_import tactic.lint.simp from "leanprover-community/mathlib"@"7b7cd0a140c51844aa4d5a7d6ea15cb5f6e1afd7"
 

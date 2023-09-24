@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Types
-import Mathbin.CategoryTheory.Functor.Currying
-import Mathbin.CategoryTheory.Limits.FunctorCategory
+import CategoryTheory.Limits.Types
+import CategoryTheory.Functor.Currying
+import CategoryTheory.Limits.FunctorCategory
 
 #align_import category_theory.limits.colimit_limit from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

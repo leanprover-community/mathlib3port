@@ -3,10 +3,10 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 -/
-import Mathbin.Algebra.EuclideanDomain.Basic
-import Mathbin.Data.Nat.Factors
-import Mathbin.RingTheory.Coprime.Basic
-import Mathbin.RingTheory.PrincipalIdealDomain
+import Algebra.EuclideanDomain.Basic
+import Data.Nat.Factors
+import RingTheory.Coprime.Basic
+import RingTheory.PrincipalIdealDomain
 
 #align_import ring_theory.int.basic from "leanprover-community/mathlib"@"e655e4ea5c6d02854696f97494997ba4c31be802"
 

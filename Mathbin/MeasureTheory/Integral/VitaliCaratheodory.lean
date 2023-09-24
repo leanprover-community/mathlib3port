@@ -3,10 +3,10 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.Topology.Semicontinuous
-import Mathbin.MeasureTheory.Integral.Bochner
-import Mathbin.Topology.Instances.Ereal
+import MeasureTheory.Measure.Regular
+import Topology.Semicontinuous
+import MeasureTheory.Integral.Bochner
+import Topology.Instances.Ereal
 
 #align_import measure_theory.integral.vitali_caratheodory from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
@@ -89,7 +89,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (u «expr ⊇ » s) -/
 #print MeasureTheory.SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge /-
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
@@ -332,7 +332,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 #print MeasureTheory.SimpleFunc.exists_upperSemicontinuous_le_lintegral_le /-
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of

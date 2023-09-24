@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Topology.Order.Basic
-import Mathbin.Topology.Filter
+import Topology.Order.Basic
+import Topology.Filter
 
 #align_import topology.algebra.order.filter from "leanprover-community/mathlib"@"ad0089aca372256fe53dde13ca0dfea569bf5ac7"
 

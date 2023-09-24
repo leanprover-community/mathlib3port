@@ -3,8 +3,8 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Tactic.Basic
-import Mathbin.Logic.IsEmpty
+import Tactic.Basic
+import Logic.IsEmpty
 
 #align_import logic.unique from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

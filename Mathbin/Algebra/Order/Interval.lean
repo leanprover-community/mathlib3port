@@ -3,12 +3,12 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Data.Option.NAry
-import Mathbin.Data.Set.Pointwise.Basic
-import Mathbin.Order.Interval
-import Mathbin.Tactic.Positivity
+import Algebra.BigOperators.Order
+import Algebra.Group.Prod
+import Data.Option.NAry
+import Data.Set.Pointwise.Basic
+import Order.Interval
+import Tactic.Positivity
 
 #align_import algebra.order.interval from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

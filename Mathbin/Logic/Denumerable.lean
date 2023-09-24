@@ -3,10 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Lattice
-import Mathbin.Data.List.MinMax
-import Mathbin.Data.Nat.Order.Lemmas
-import Mathbin.Logic.Encodable.Basic
+import Data.Fintype.Lattice
+import Data.List.MinMax
+import Data.Nat.Order.Lemmas
+import Logic.Encodable.Basic
 
 #align_import logic.denumerable from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

@@ -3,7 +3,7 @@ Copyright (c) 2021 Lu-Ming Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 -/
-import Mathbin.LinearAlgebra.Matrix.Symmetric
+import LinearAlgebra.Matrix.Symmetric
 
 #align_import linear_algebra.matrix.circulant from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

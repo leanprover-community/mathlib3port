@@ -3,10 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Monoidal.Functor
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Adjunction.Mates
-import Mathbin.CategoryTheory.Functor.InvIsos
+import CategoryTheory.Monoidal.Functor
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Adjunction.Mates
+import CategoryTheory.Functor.InvIsos
 
 #align_import category_theory.closed.monoidal from "leanprover-community/mathlib"@"0caf3701139ef2e69c215717665361cda205a90b"
 

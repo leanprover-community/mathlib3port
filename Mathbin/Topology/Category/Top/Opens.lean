@@ -3,10 +3,10 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Category.Preorder
-import Mathbin.CategoryTheory.EqToHom
-import Mathbin.Topology.Category.Top.EpiMono
-import Mathbin.Topology.Sets.Opens
+import CategoryTheory.Category.Preorder
+import CategoryTheory.EqToHom
+import Topology.Category.Top.EpiMono
+import Topology.Sets.Opens
 
 #align_import topology.category.Top.opens from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

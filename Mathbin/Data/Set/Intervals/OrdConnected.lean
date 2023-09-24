@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Data.Set.Intervals.UnorderedInterval
-import Mathbin.Data.Set.Lattice
-import Mathbin.Order.Antichain
+import Data.Set.Intervals.UnorderedInterval
+import Data.Set.Lattice
+import Order.Antichain
 
 #align_import data.set.intervals.ord_connected from "leanprover-community/mathlib"@"76de8ae01554c3b37d66544866659ff174e66e1f"
 

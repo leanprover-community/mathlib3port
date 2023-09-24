@@ -3,14 +3,14 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Data.Polynomial.Expand
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.Matrix.Charpoly.LinearMap
-import Mathbin.RingTheory.Adjoin.Fg
-import Mathbin.RingTheory.FiniteType
-import Mathbin.RingTheory.Polynomial.ScaleRoots
-import Mathbin.RingTheory.Polynomial.Tower
-import Mathbin.RingTheory.TensorProduct
+import Data.Polynomial.Expand
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.Matrix.Charpoly.LinearMap
+import RingTheory.Adjoin.Fg
+import RingTheory.FiniteType
+import RingTheory.Polynomial.ScaleRoots
+import RingTheory.Polynomial.Tower
+import RingTheory.TensorProduct
 
 #align_import ring_theory.integral_closure from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -952,7 +952,7 @@ end
 section IsIntegralClosure
 
 #print IsIntegralClosure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`algebraMap_injective] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`algebraMap_injective] [] -/
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.

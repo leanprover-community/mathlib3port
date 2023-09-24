@@ -3,10 +3,10 @@ Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 -/
-import Mathbin.Algebra.PunitInstances
-import Mathbin.Tactic.Abel
-import Mathbin.Tactic.Ring
-import Mathbin.Order.Hom.Lattice
+import Algebra.PunitInstances
+import Tactic.Abel
+import Tactic.Ring
+import Order.Hom.Lattice
 
 #align_import algebra.ring.boolean_ring from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

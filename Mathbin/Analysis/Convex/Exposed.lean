@@ -3,10 +3,10 @@ Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Analysis.Convex.Extreme
-import Mathbin.Analysis.Convex.Function
-import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.Topology.Order.Basic
+import Analysis.Convex.Extreme
+import Analysis.Convex.Function
+import Topology.Algebra.Module.Basic
+import Topology.Order.Basic
 
 #align_import analysis.convex.exposed from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
@@ -240,7 +240,7 @@ protected theorem isClosed [OrderClosedTopology 𝕜] {A B : Set E} (hAB : IsExp
 #print IsExposed.isCompact /-
 protected theorem isCompact [OrderClosedTopology 𝕜] [T2Space E] {A B : Set E}
     (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
-  isCompact_of_isClosed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
+  IsCompact.of_isClosed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
 #align is_exposed.is_compact IsExposed.isCompact
 -/
 

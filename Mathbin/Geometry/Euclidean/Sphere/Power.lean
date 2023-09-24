@@ -3,8 +3,8 @@ Copyright (c) 2021 Manuel Candales. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales, Benjamin Davidson
 -/
-import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
-import Mathbin.Geometry.Euclidean.Sphere.Basic
+import Geometry.Euclidean.Angle.Unoriented.Affine
+import Geometry.Euclidean.Sphere.Basic
 
 #align_import geometry.euclidean.sphere.power from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

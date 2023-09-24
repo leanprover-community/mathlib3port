@@ -3,17 +3,17 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 -/
-import Mathbin.Algebra.Algebra.Pi
-import Mathbin.Algebra.Periodic
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.Star.StarAlgHom
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.Topology.Algebra.InfiniteSum.Basic
-import Mathbin.Topology.Algebra.Star
-import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Topology.ContinuousFunction.Ordered
-import Mathbin.Topology.UniformSpace.CompactConvergence
+import Algebra.Algebra.Pi
+import Algebra.Periodic
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.Star.StarAlgHom
+import Tactic.FieldSimp
+import Topology.Algebra.Module.Basic
+import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.Star
+import Topology.Algebra.UniformGroup
+import Topology.ContinuousFunction.Ordered
+import Topology.UniformSpace.CompactConvergence
 
 #align_import topology.continuous_function.algebra from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

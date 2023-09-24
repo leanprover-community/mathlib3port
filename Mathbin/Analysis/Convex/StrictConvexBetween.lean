@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Analysis.Convex.Between
-import Mathbin.Analysis.Convex.StrictConvexSpace
+import Analysis.Convex.Between
+import Analysis.Convex.StrictConvexSpace
 
 #align_import analysis.convex.strict_convex_between from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

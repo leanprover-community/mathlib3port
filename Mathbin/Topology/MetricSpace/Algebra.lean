@@ -3,8 +3,8 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Topology.Algebra.MulAction
-import Mathbin.Topology.MetricSpace.Lipschitz
+import Topology.Algebra.MulAction
+import Topology.MetricSpace.Lipschitz
 
 #align_import topology.metric_space.algebra from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

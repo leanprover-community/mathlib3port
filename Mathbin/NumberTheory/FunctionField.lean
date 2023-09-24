@@ -3,11 +3,11 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Ashvni Narayanan
 -/
-import Mathbin.Algebra.Order.Group.TypeTags
-import Mathbin.FieldTheory.Ratfunc
-import Mathbin.RingTheory.DedekindDomain.IntegralClosure
-import Mathbin.RingTheory.IntegrallyClosed
-import Mathbin.Topology.Algebra.ValuedField
+import Algebra.Order.Group.TypeTags
+import FieldTheory.Ratfunc
+import RingTheory.DedekindDomain.IntegralClosure
+import RingTheory.IntegrallyClosed
+import Topology.Algebra.ValuedField
 
 #align_import number_theory.function_field from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

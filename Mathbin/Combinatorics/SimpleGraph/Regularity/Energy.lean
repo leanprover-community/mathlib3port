@@ -3,10 +3,10 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Combinatorics.SimpleGraph.Density
-import Mathbin.Data.Rat.BigOperators
+import Algebra.BigOperators.Order
+import Algebra.Module.Basic
+import Combinatorics.SimpleGraph.Density
+import Data.Rat.BigOperators
 
 #align_import combinatorics.simple_graph.regularity.energy from "leanprover-community/mathlib"@"bf7ef0e83e5b7e6c1169e97f055e58a2e4e9d52d"
 

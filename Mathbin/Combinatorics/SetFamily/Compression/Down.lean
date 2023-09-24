@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.Card
+import Data.Finset.Card
 
 #align_import combinatorics.set_family.compression.down from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

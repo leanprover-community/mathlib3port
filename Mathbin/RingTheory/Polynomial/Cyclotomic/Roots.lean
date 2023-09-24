@@ -3,8 +3,8 @@ Copyright (c) 2020 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
-import Mathbin.RingTheory.RootsOfUnity.Minpoly
+import RingTheory.Polynomial.Cyclotomic.Basic
+import RingTheory.RootsOfUnity.Minpoly
 
 #align_import ring_theory.polynomial.cyclotomic.roots from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

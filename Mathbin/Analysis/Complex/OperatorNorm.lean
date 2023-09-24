@@ -3,9 +3,9 @@ Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Data.Complex.Determinant
+import Analysis.Complex.Basic
+import Analysis.NormedSpace.OperatorNorm
+import Data.Complex.Determinant
 
 #align_import analysis.complex.operator_norm from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

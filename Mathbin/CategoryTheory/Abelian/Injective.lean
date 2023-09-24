@@ -3,10 +3,10 @@ Copyright (c) 2022 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Abelian.Exact
-import Mathbin.CategoryTheory.Preadditive.Injective
-import Mathbin.CategoryTheory.Preadditive.Yoneda.Limits
-import Mathbin.CategoryTheory.Preadditive.Yoneda.Injective
+import CategoryTheory.Abelian.Exact
+import CategoryTheory.Preadditive.Injective
+import CategoryTheory.Preadditive.Yoneda.Limits
+import CategoryTheory.Preadditive.Yoneda.Injective
 
 #align_import category_theory.abelian.injective from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

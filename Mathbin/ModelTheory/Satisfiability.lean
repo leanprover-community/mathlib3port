@@ -3,9 +3,9 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.ModelTheory.Ultraproducts
-import Mathbin.ModelTheory.Bundled
-import Mathbin.ModelTheory.Skolem
+import ModelTheory.Ultraproducts
+import ModelTheory.Bundled
+import ModelTheory.Skolem
 
 #align_import model_theory.satisfiability from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

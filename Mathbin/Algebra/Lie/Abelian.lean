@@ -3,8 +3,8 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.OfAssociative
-import Mathbin.Algebra.Lie.IdealOperations
+import Algebra.Lie.OfAssociative
+import Algebra.Lie.IdealOperations
 
 #align_import algebra.lie.abelian from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

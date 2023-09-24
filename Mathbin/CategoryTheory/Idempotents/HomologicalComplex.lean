@@ -3,8 +3,8 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.Algebra.Homology.Additive
-import Mathbin.CategoryTheory.Idempotents.Karoubi
+import Algebra.Homology.Additive
+import CategoryTheory.Idempotents.Karoubi
 
 #align_import category_theory.idempotents.homological_complex from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

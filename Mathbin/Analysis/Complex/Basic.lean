@@ -3,11 +3,11 @@ Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Complex.Module
-import Mathbin.Data.Complex.Exponential
-import Mathbin.Data.IsROrC.Basic
-import Mathbin.Topology.Algebra.InfiniteSum.Module
-import Mathbin.Topology.Instances.RealVectorSpace
+import Data.Complex.Module
+import Data.Complex.Exponential
+import Data.IsROrC.Basic
+import Topology.Algebra.InfiniteSum.Module
+import Topology.Instances.RealVectorSpace
 
 #align_import analysis.complex.basic from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 

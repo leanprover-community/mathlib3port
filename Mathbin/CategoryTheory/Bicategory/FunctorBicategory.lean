@@ -3,7 +3,7 @@ Copyright (c) 2022 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
-import Mathbin.CategoryTheory.Bicategory.NaturalTransformation
+import CategoryTheory.Bicategory.NaturalTransformation
 
 #align_import category_theory.bicategory.functor_bicategory from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Combinatorics.SetFamily.HarrisKleitman
-import Mathbin.Combinatorics.SetFamily.Intersecting
+import Combinatorics.SetFamily.HarrisKleitman
+import Combinatorics.SetFamily.Intersecting
 
 #align_import combinatorics.set_family.kleitman from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

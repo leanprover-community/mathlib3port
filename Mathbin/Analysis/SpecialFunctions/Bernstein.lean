@@ -3,10 +3,10 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.RingTheory.Polynomial.Bernstein
-import Mathbin.Topology.ContinuousFunction.Polynomial
-import Mathbin.Topology.ContinuousFunction.Compact
+import Analysis.SpecificLimits.Basic
+import RingTheory.Polynomial.Bernstein
+import Topology.ContinuousFunction.Polynomial
+import Topology.ContinuousFunction.Compact
 
 #align_import analysis.special_functions.bernstein from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

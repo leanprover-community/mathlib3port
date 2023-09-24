@@ -3,10 +3,10 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.AlgebraicGeometry.Gluing
-import Mathbin.CategoryTheory.Limits.Opposites
-import Mathbin.AlgebraicGeometry.AffineScheme
-import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
+import AlgebraicGeometry.Gluing
+import CategoryTheory.Limits.Opposites
+import AlgebraicGeometry.AffineScheme
+import CategoryTheory.Limits.Shapes.Diagonal
 
 #align_import algebraic_geometry.pullbacks from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

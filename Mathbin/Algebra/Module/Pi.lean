@@ -3,10 +3,10 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Regular.Smul
-import Mathbin.Algebra.Ring.Pi
-import Mathbin.GroupTheory.GroupAction.Pi
+import Algebra.Module.Basic
+import Algebra.Regular.Smul
+import Algebra.Ring.Pi
+import GroupTheory.GroupAction.Pi
 
 #align_import algebra.module.pi from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

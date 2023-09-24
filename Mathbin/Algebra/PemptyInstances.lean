@@ -3,8 +3,8 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Tactic.ToAdditive
+import Algebra.Group.Defs
+import Tactic.ToAdditive
 
 #align_import algebra.pempty_instances from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

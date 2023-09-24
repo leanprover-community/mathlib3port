@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Data.Fintype.Sum
-import Mathbin.Data.Int.Units
+import Data.Fintype.Prod
+import Data.Fintype.Sum
+import Data.Int.Units
 
 #align_import data.fintype.units from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

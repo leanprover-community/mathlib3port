@@ -3,10 +3,10 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Combinatorics.Quiver.Basic
-import Mathbin.Combinatorics.Quiver.Path
-import Mathbin.Combinatorics.Quiver.Push
-import Mathbin.Data.Sum.Basic
+import Combinatorics.Quiver.Basic
+import Combinatorics.Quiver.Path
+import Combinatorics.Quiver.Push
+import Data.Sum.Basic
 
 #align_import combinatorics.quiver.symmetric from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

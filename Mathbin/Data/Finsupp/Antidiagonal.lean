@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Data.Finsupp.Multiset
-import Mathbin.Data.Multiset.Antidiagonal
+import Data.Finsupp.Multiset
+import Data.Multiset.Antidiagonal
 
 #align_import data.finsupp.antidiagonal from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 

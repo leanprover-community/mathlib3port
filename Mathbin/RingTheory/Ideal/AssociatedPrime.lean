@@ -3,10 +3,10 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.LinearAlgebra.Span
-import Mathbin.RingTheory.Ideal.Operations
-import Mathbin.RingTheory.Ideal.QuotientOperations
-import Mathbin.RingTheory.Noetherian
+import LinearAlgebra.Span
+import RingTheory.Ideal.Operations
+import RingTheory.Ideal.QuotientOperations
+import RingTheory.Noetherian
 
 #align_import ring_theory.ideal.associated_prime from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 

@@ -3,11 +3,11 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 -/
-import Mathbin.Analysis.Convex.Combination
-import Mathbin.Analysis.Convex.Strict
-import Mathbin.Topology.PathConnected
-import Mathbin.Topology.Algebra.Affine
-import Mathbin.Topology.Algebra.Module.Basic
+import Analysis.Convex.Combination
+import Analysis.Convex.Strict
+import Topology.PathConnected
+import Topology.Algebra.Affine
+import Topology.Algebra.Module.Basic
 
 #align_import analysis.convex.topology from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

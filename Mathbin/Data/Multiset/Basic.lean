@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Set.List
-import Mathbin.Data.List.Perm
+import Data.Set.List
+import Data.List.Perm
 
 #align_import data.multiset.basic from "leanprover-community/mathlib"@"06a655b5fcfbda03502f9158bbf6c0f1400886f9"
 
@@ -3347,7 +3347,7 @@ theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableE
 #align multiset.count_map Multiset.count_map
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∈ » s) -/
 #print Multiset.count_map_eq_count /-
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/

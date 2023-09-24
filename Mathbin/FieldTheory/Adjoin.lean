@@ -3,10 +3,10 @@ Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 -/
-import Mathbin.FieldTheory.IntermediateField
-import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.SplittingField.IsSplittingField
-import Mathbin.RingTheory.TensorProduct
+import FieldTheory.IntermediateField
+import FieldTheory.Separable
+import FieldTheory.SplittingField.IsSplittingField
+import RingTheory.TensorProduct
 
 #align_import field_theory.adjoin from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

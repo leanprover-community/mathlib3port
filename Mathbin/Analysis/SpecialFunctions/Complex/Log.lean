@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Analysis.SpecialFunctions.Complex.Arg
-import Mathbin.Analysis.SpecialFunctions.Log.Basic
+import Analysis.SpecialFunctions.Complex.Arg
+import Analysis.SpecialFunctions.Log.Basic
 
 #align_import analysis.special_functions.complex.log from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

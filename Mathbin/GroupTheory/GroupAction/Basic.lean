@@ -3,12 +3,12 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Fintype.Card
-import Mathbin.GroupTheory.GroupAction.Defs
-import Mathbin.GroupTheory.GroupAction.Group
-import Mathbin.Data.Setoid.Basic
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.GroupTheory.Subgroup.Basic
+import Data.Fintype.Card
+import GroupTheory.GroupAction.Defs
+import GroupTheory.GroupAction.Group
+import Data.Setoid.Basic
+import Data.Set.Pointwise.Smul
+import GroupTheory.Subgroup.Basic
 
 #align_import group_theory.group_action.basic from "leanprover-community/mathlib"@"d30d31261cdb4d2f5e612eabc3c4bf45556350d5"
 

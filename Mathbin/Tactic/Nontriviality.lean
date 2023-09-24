@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Logic.Nontrivial
+import Logic.Nontrivial
 
 #align_import tactic.nontriviality from "leanprover-community/mathlib"@"c93660aa62cc7be8026b707c31edcbc0ca018057"
 
@@ -33,7 +33,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
   reset_instance_cache
 #align tactic.nontriviality_by_elim tactic.nontriviality_by_elim
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

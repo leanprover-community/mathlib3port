@@ -3,10 +3,10 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.OfAssociative
-import Mathbin.Algebra.Lie.NonUnitalNonAssocAlgebra
-import Mathbin.Algebra.Lie.UniversalEnveloping
-import Mathbin.Algebra.FreeNonUnitalNonAssocAlgebra
+import Algebra.Lie.OfAssociative
+import Algebra.Lie.NonUnitalNonAssocAlgebra
+import Algebra.Lie.UniversalEnveloping
+import Algebra.FreeNonUnitalNonAssocAlgebra
 
 #align_import algebra.lie.free from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

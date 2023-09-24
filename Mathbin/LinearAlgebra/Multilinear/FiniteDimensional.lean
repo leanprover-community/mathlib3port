@@ -3,8 +3,8 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.LinearAlgebra.Multilinear.Basic
-import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
+import LinearAlgebra.Multilinear.Basic
+import LinearAlgebra.FreeModule.Finite.Matrix
 
 #align_import linear_algebra.multilinear.finite_dimensional from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

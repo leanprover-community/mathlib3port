@@ -3,7 +3,7 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.MeanValue
+import Analysis.Calculus.MeanValue
 
 #align_import analysis.calculus.extend_deriv from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
@@ -198,7 +198,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
 #align has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ≠ » x) -/
 #print hasDerivAt_of_hasDerivAt_of_ne /-
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
@@ -236,7 +236,7 @@ theorem hasDerivAt_of_hasDerivAt_of_ne {f g : ℝ → E} {x : ℝ}
 #align has_deriv_at_of_has_deriv_at_of_ne hasDerivAt_of_hasDerivAt_of_ne
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ≠ » x) -/
 #print hasDerivAt_of_hasDerivAt_of_ne' /-
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/

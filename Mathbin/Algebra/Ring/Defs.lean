@@ -3,9 +3,9 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 -/
-import Mathbin.Algebra.Group.Basic
-import Mathbin.Algebra.GroupWithZero.Defs
-import Mathbin.Data.Int.Cast.Defs
+import Algebra.Group.Basic
+import Algebra.GroupWithZero.Defs
+import Data.Int.Cast.Defs
 
 #align_import algebra.ring.defs from "leanprover-community/mathlib"@"76de8ae01554c3b37d66544866659ff174e66e1f"
 

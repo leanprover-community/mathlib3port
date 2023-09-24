@@ -3,9 +3,9 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Yury G. Kudryashov
 -/
-import Mathbin.Topology.ContinuousOn
-import Mathbin.Data.Setoid.Basic
-import Mathbin.Tactic.Tfae
+import Topology.ContinuousOn
+import Data.Setoid.Basic
+import Tactic.Tfae
 
 #align_import topology.inseparable from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

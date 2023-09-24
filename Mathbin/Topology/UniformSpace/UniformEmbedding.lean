@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Patrick Massot
 -/
-import Mathbin.Topology.UniformSpace.Cauchy
-import Mathbin.Topology.UniformSpace.Separation
-import Mathbin.Topology.DenseEmbedding
+import Topology.UniformSpace.Cauchy
+import Topology.UniformSpace.Separation
+import Topology.DenseEmbedding
 
 #align_import topology.uniform_space.uniform_embedding from "leanprover-community/mathlib"@"195fcd60ff2bfe392543bceb0ec2adcdb472db4c"
 

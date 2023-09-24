@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Finite.Defs
+import Data.Finite.Defs
 
 #align_import data.countable.defs from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
@@ -33,7 +33,7 @@ variable {α : Sort u} {β : Sort v}
 
 
 #print Countable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_injective_nat] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_injective_nat] [] -/
 /-- A type `α` is countable if there exists an injective map `α → ℕ`. -/
 @[mk_iff countable_iff_exists_injective]
 class Countable (α : Sort u) : Prop where

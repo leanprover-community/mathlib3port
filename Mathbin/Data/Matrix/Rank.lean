@@ -3,11 +3,11 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieer
 -/
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
-import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.Matrix.DotProduct
-import Mathbin.Data.Complex.Module
+import LinearAlgebra.FreeModule.Finite.Rank
+import LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.Matrix.DotProduct
+import Data.Complex.Module
 
 #align_import data.matrix.rank from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

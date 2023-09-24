@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Algebra.Order.Positive.Ring
+import Algebra.Order.Field.Basic
+import Algebra.Order.Positive.Ring
 
 #align_import algebra.order.positive.field from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

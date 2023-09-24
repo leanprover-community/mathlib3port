@@ -3,9 +3,9 @@ Copyright (c) 2022 Christopher Hoskin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
-import Mathbin.Order.Basic
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.Ring.Defs
+import Order.Basic
+import Algebra.GroupPower.Basic
+import Algebra.Ring.Defs
 import Mathbin.Tactic.NthRewrite.Default
 
 #align_import algebra.ring.idempotents from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

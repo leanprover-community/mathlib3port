@@ -3,14 +3,14 @@ Copyright (c) 2022 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.Algebra.BigOperators.Fin
-import Mathbin.Algebra.BigOperators.NatAntidiagonal
-import Mathbin.Algebra.CharZero.Lemmas
-import Mathbin.Data.Finset.NatAntidiagonal
-import Mathbin.Data.Nat.Choose.Central
-import Mathbin.Data.Tree
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Tactic.LinearCombination
+import Algebra.BigOperators.Fin
+import Algebra.BigOperators.NatAntidiagonal
+import Algebra.CharZero.Lemmas
+import Data.Finset.NatAntidiagonal
+import Data.Nat.Choose.Central
+import Data.Tree
+import Tactic.FieldSimp
+import Tactic.LinearCombination
 
 #align_import combinatorics.catalan from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

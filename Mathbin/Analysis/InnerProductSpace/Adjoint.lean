@@ -3,8 +3,8 @@ Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 -/
-import Mathbin.Analysis.InnerProductSpace.Dual
-import Mathbin.Analysis.InnerProductSpace.PiL2
+import Analysis.InnerProductSpace.Dual
+import Analysis.InnerProductSpace.PiL2
 
 #align_import analysis.inner_product_space.adjoint from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

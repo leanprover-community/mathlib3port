@@ -3,7 +3,7 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Scott Morrison
 -/
-import Mathbin.Data.Opposite
+import Data.Opposite
 
 #align_import combinatorics.quiver.basic from "leanprover-community/mathlib"@"56adee5b5eef9e734d82272918300fca4f3e7cef"
 
@@ -52,7 +52,7 @@ class Quiver (V : Type u) where
 infixr:10 " ⟶ " => Quiver.Hom
 
 #print Prefunctor /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.

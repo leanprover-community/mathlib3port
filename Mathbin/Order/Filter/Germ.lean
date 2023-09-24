@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Abhimanyu Pallavi Sudhir
 -/
-import Mathbin.Order.Filter.Basic
-import Mathbin.Algebra.Module.Pi
+import Order.Filter.Basic
+import Algebra.Module.Pi
 
 #align_import order.filter.germ from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

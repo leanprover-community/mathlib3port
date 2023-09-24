@@ -3,12 +3,12 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.Int.Basic
-import Mathbin.Data.Int.Cast.Basic
-import Mathbin.Algebra.Ring.Divisibility
-import Mathbin.Algebra.Order.Group.Abs
-import Mathbin.Algebra.Order.Ring.CharZero
-import Mathbin.Tactic.AssertExists
+import Data.Int.Basic
+import Data.Int.Cast.Basic
+import Algebra.Ring.Divisibility
+import Algebra.Order.Group.Abs
+import Algebra.Order.Ring.CharZero
+import Tactic.AssertExists
 
 #align_import data.int.order.basic from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

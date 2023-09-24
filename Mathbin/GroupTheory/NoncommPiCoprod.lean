@@ -3,11 +3,11 @@ Copyright (c) 2022 Joachim Breitner. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joachim Breitner
 -/
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Data.Finset.NoncommProd
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Nat.Gcd.BigOperators
-import Mathbin.Order.SupIndep
+import GroupTheory.OrderOfElement
+import Data.Finset.NoncommProd
+import Data.Fintype.BigOperators
+import Data.Nat.Gcd.BigOperators
+import Order.SupIndep
 
 #align_import group_theory.noncomm_pi_coprod from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 

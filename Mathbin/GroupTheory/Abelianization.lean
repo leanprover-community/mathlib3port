@@ -3,9 +3,9 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
 -/
-import Mathbin.Data.Finite.Card
-import Mathbin.GroupTheory.Commutator
-import Mathbin.GroupTheory.Finiteness
+import Data.Finite.Card
+import GroupTheory.Commutator
+import GroupTheory.Finiteness
 
 #align_import group_theory.abelianization from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

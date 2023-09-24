@@ -3,9 +3,9 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.Algebra.EuclideanDomain.Instances
-import Mathbin.Data.Fintype.Units
+import Algebra.CharP.Basic
+import Algebra.EuclideanDomain.Instances
+import Data.Fintype.Units
 
 #align_import number_theory.legendre_symbol.mul_character from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
-import Mathbin.Topology.Paracompact
-import Mathbin.Topology.MetricSpace.Metrizable
+import Geometry.Manifold.SmoothManifoldWithCorners
+import Topology.Paracompact
+import Topology.MetricSpace.Metrizable
 
 #align_import geometry.manifold.metrizable from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

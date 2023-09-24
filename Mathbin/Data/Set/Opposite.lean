@@ -3,8 +3,8 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.Data.Opposite
-import Mathbin.Data.Set.Image
+import Data.Opposite
+import Data.Set.Image
 
 #align_import data.set.opposite from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

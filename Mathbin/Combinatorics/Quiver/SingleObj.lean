@@ -3,8 +3,8 @@ Copyright (c) 2023 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import Mathbin.Combinatorics.Quiver.Cast
-import Mathbin.Combinatorics.Quiver.Symmetric
+import Combinatorics.Quiver.Cast
+import Combinatorics.Quiver.Symmetric
 
 #align_import combinatorics.quiver.single_obj from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

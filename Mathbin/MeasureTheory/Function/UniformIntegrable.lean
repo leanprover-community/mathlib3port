@@ -3,8 +3,8 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Function.ConvergenceInMeasure
-import Mathbin.MeasureTheory.Function.L1Space
+import MeasureTheory.Function.ConvergenceInMeasure
+import MeasureTheory.Function.L1Space
 
 #align_import measure_theory.function.uniform_integrable from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
@@ -359,7 +359,7 @@ theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : St
 
 end
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args -/
 #print MeasureTheory.snorm_indicator_le_of_bound /-
 theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : ℝ} (hε : 0 < ε) {M : ℝ}
     (hf : ∀ x, ‖f x‖ < M) :
@@ -382,7 +382,7 @@ theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : �
   have haebdd : ∀ᵐ x ∂μ.restrict s, ‖f x‖ ≤ M :=
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args"
     exact fun x => (hf x).le
   refine' le_trans (snorm_le_of_ae_bound haebdd) _
   rw [measure.restrict_apply MeasurableSet.univ, univ_inter, ←

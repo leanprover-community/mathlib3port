@@ -3,7 +3,7 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Topology.Algebra.UniformConvergence
+import Topology.Algebra.UniformConvergence
 
 #align_import topology.algebra.equicontinuity from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

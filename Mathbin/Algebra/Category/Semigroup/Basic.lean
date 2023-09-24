@@ -3,11 +3,11 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.Algebra.PemptyInstances
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
-import Mathbin.CategoryTheory.Elementwise
+import Algebra.PemptyInstances
+import Algebra.Hom.Equiv.Basic
+import CategoryTheory.ConcreteCategory.BundledHom
+import CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Elementwise
 
 #align_import algebra.category.Semigroup.basic from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

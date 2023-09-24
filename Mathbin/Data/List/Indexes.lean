@@ -3,8 +3,8 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Data.List.OfFn
-import Mathbin.Data.List.Range
+import Data.List.OfFn
+import Data.List.Range
 
 #align_import data.list.indexes from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Data.Nat.Choose.Sum
-import Mathbin.Algebra.Algebra.Bilinear
-import Mathbin.RingTheory.Ideal.Operations
+import Data.Nat.Choose.Sum
+import Algebra.Algebra.Bilinear
+import RingTheory.Ideal.Operations
 
 #align_import ring_theory.nilpotent from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

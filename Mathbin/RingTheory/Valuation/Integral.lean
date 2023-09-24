@@ -3,8 +3,8 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.RingTheory.IntegrallyClosed
-import Mathbin.RingTheory.Valuation.Integers
+import RingTheory.IntegrallyClosed
+import RingTheory.Valuation.Integers
 
 #align_import ring_theory.valuation.integral from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

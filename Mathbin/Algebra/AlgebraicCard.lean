@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.Data.Polynomial.Cardinal
-import Mathbin.RingTheory.Algebraic
+import Data.Polynomial.Cardinal
+import RingTheory.Algebraic
 
 #align_import algebra.algebraic_card from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl
 -/
-import Mathbin.Algebra.Category.Group.Basic
-import Mathbin.GroupTheory.FreeAbelianGroup
+import Algebra.Category.Group.Basic
+import GroupTheory.FreeAbelianGroup
 
 #align_import algebra.category.Group.adjunctions from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.PiTensorProduct
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Algebra.DirectSum.Algebra
+import LinearAlgebra.PiTensorProduct
+import Logic.Equiv.Fin
+import Algebra.DirectSum.Algebra
 
 #align_import linear_algebra.tensor_power from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 

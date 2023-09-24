@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
-import Mathbin.Algebra.Algebra.Equiv
+import Algebra.Algebra.Equiv
 
 #align_import algebra.algebra.pi from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

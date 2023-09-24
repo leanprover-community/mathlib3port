@@ -3,10 +3,10 @@ Copyright (c) 2022 Mario Carneiro, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, Yaël Dillies
 -/
-import Mathbin.Tactic.NormNum
-import Mathbin.Algebra.Order.Field.Power
-import Mathbin.Algebra.Order.Hom.Basic
-import Mathbin.Data.Nat.Factorial.Basic
+import Tactic.NormNum
+import Algebra.Order.Field.Power
+import Algebra.Order.Hom.Basic
+import Data.Nat.Factorial.Basic
 
 #align_import tactic.positivity from "leanprover-community/mathlib"@"e90e0a6119d01e3ef1703b3038b555785a998285"
 
@@ -959,7 +959,7 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
                 "` is not of the form `a ^ n` for `a` in a `canonically_ordered_comm_semiring` and `n : ℕ`"
 #align tactic.positivity_canon_pow tactic.positivity_canon_pow
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:87:10: unsupported modifiers in user command -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:88:10: unsupported modifiers in user command -/
 alias ⟨_, abs_pos_of_ne_zero⟩ := abs_pos
 #align tactic.abs_pos_of_ne_zero Tactic.abs_pos_of_ne_zero
 

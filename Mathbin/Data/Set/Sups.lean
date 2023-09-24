@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Set.NAry
-import Mathbin.Order.UpperLower.Basic
+import Data.Set.NAry
+import Order.UpperLower.Basic
 
 #align_import data.set.sups from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

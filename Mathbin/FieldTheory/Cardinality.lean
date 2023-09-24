@@ -3,14 +3,14 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.Field.Ulift
-import Mathbin.Data.MvPolynomial.Cardinal
-import Mathbin.Data.Nat.Factorization.PrimePow
-import Mathbin.Data.Rat.Denumerable
-import Mathbin.FieldTheory.Finite.GaloisField
-import Mathbin.Logic.Equiv.TransferInstance
-import Mathbin.RingTheory.Localization.Cardinality
-import Mathbin.SetTheory.Cardinal.Divisibility
+import Algebra.Field.Ulift
+import Data.MvPolynomial.Cardinal
+import Data.Nat.Factorization.PrimePow
+import Data.Rat.Denumerable
+import FieldTheory.Finite.GaloisField
+import Logic.Equiv.TransferInstance
+import RingTheory.Localization.Cardinality
+import SetTheory.Cardinal.Divisibility
 
 #align_import field_theory.cardinality from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

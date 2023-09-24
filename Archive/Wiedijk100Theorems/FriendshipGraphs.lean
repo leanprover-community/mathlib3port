@@ -3,11 +3,11 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.AdjMatrix
-import Mathbin.LinearAlgebra.Matrix.Charpoly.FiniteField
-import Mathbin.Data.Int.Modeq
-import Mathbin.Data.Zmod.Basic
-import Mathbin.Tactic.IntervalCases
+import Combinatorics.SimpleGraph.AdjMatrix
+import LinearAlgebra.Matrix.Charpoly.FiniteField
+import Data.Int.Modeq
+import Data.Zmod.Basic
+import Tactic.IntervalCases
 
 #align_import wiedijk_100_theorems.friendship_graphs from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

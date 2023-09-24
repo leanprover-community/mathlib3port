@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Order.Floor
-import Mathbin.Data.Nat.Log
+import Algebra.Order.Floor
+import Data.Nat.Log
 
 #align_import data.int.log from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

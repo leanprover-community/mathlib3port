@@ -3,8 +3,8 @@ Copyright (c) 2018 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.Algebra.Module.Pi
-import Mathbin.Algebra.BigOperators.Basic
+import Algebra.Module.Pi
+import Algebra.BigOperators.Basic
 
 #align_import data.holor from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.CategoryTheory.Functor.Category
-import Mathbin.CategoryTheory.Functor.Const
+import CategoryTheory.Monoidal.Braided
+import CategoryTheory.Functor.Category
+import CategoryTheory.Functor.Const
 
 #align_import category_theory.monoidal.functor_category from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 

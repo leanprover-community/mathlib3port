@@ -3,10 +3,10 @@ Copyright (c) 2020 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 -/
-import Mathbin.Topology.UniformSpace.UniformConvergence
-import Mathbin.Topology.UniformSpace.Equicontinuity
-import Mathbin.Topology.Separation
-import Mathbin.Topology.Support
+import Topology.UniformSpace.UniformConvergence
+import Topology.UniformSpace.Equicontinuity
+import Topology.Separation
+import Topology.Support
 
 #align_import topology.uniform_space.compact from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
@@ -94,7 +94,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ≠ » x) -/
 #print uniformSpaceOfCompactT2 /-
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ

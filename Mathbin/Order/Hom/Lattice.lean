@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Hom.Bounded
-import Mathbin.Order.SymmDiff
+import Order.Hom.Bounded
+import Order.SymmDiff
 
 #align_import order.hom.lattice from "leanprover-community/mathlib"@"7581030920af3dcb241d1df0e36f6ec8289dd6be"
 

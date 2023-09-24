@@ -3,10 +3,10 @@ Copyright (c) 2022 Siddhartha Prasad, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Prasad, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Ring.Canonical
-import Mathbin.Algebra.Ring.Pi
-import Mathbin.Algebra.Ring.Prod
-import Mathbin.Order.Hom.CompleteLattice
+import Algebra.Order.Ring.Canonical
+import Algebra.Ring.Pi
+import Algebra.Ring.Prod
+import Order.Hom.CompleteLattice
 
 #align_import algebra.order.kleene from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 

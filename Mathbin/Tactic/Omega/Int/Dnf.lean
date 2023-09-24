@@ -3,9 +3,9 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Data.List.ProdSigma
-import Mathbin.Tactic.Omega.Clause
-import Mathbin.Tactic.Omega.Int.Form
+import Data.List.ProdSigma
+import Tactic.Omega.Clause
+import Tactic.Omega.Int.Form
 
 #align_import tactic.omega.int.dnf from "leanprover-community/mathlib"@"402f8982dddc1864bd703da2d6e2ee304a866973"
 
@@ -32,7 +32,7 @@ def pushNeg : Preform → Preform
 #align omega.int.push_neg Omega.Int.pushNeg
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem pushNeg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
   by
   run_tac
@@ -61,7 +61,7 @@ def IsNnf : Preform → Prop
 #align omega.int.is_nnf Omega.Int.IsNnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem isNnf_pushNeg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
   by
   run_tac
@@ -81,7 +81,7 @@ def NegFree : Preform → Prop
 #align omega.int.neg_free Omega.Int.NegFree
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem isNnf_nnf : ∀ p : Preform, IsNnf (nnf p) :=
   by
   run_tac
@@ -92,7 +92,7 @@ theorem isNnf_nnf : ∀ p : Preform, IsNnf (nnf p) :=
 #align omega.int.is_nnf_nnf Omega.Int.isNnf_nnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p :=
   by
   run_tac
@@ -114,7 +114,7 @@ def negElim : Preform → Preform
 #align omega.int.neg_elim Omega.Int.negElim
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem negFree_negElim : ∀ p : Preform, IsNnf p → NegFree (negElim p) :=
   by
   run_tac
@@ -132,7 +132,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ 
 #align omega.int.le_and_le_iff_eq Omega.Int.le_and_le_iff_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem implies_negElim : ∀ {p : Preform}, Preform.Implies p (negElim p) :=
   by
   run_tac
@@ -163,7 +163,7 @@ def dnf (p : Preform) : List Clause :=
 #align omega.int.dnf Omega.Int.dnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 theorem exists_clause_holds {v : Nat → Int} :
     ∀ {p : Preform}, NegFree p → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds v c :=
   by

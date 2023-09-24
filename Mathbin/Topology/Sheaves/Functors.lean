@@ -3,7 +3,7 @@ Copyright (c) 2021 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Topology.Sheaves.SheafCondition.PairwiseIntersections
+import Topology.Sheaves.SheafCondition.PairwiseIntersections
 
 #align_import topology.sheaves.functors from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

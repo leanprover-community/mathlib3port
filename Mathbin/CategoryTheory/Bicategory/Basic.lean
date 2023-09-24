@@ -3,8 +3,8 @@ Copyright (c) 2021 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
-import Mathbin.CategoryTheory.Isomorphism
-import Mathbin.Tactic.Slice
+import CategoryTheory.Isomorphism
+import Tactic.Slice
 
 #align_import category_theory.bicategory.basic from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
@@ -51,11 +51,11 @@ universe w v u
 open Category Iso
 
 #print CategoryTheory.Bicategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/

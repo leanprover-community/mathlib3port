@@ -3,14 +3,14 @@ Copyright (c) 2020 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Algebra.Group.Conj
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Order.Group.InjSurj
-import Mathbin.Data.Countable.Basic
-import Mathbin.GroupTheory.Submonoid.Centralizer
-import Mathbin.Logic.Encodable.Basic
-import Mathbin.Order.Atoms
-import Mathbin.Tactic.ApplyFun
+import Algebra.Group.Conj
+import Algebra.Module.Basic
+import Algebra.Order.Group.InjSurj
+import Data.Countable.Basic
+import GroupTheory.Submonoid.Centralizer
+import Logic.Encodable.Basic
+import Order.Atoms
+import Tactic.ApplyFun
 
 #align_import group_theory.subgroup.basic from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 
@@ -727,7 +727,7 @@ protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
 #align add_subgroup.zsmul_mem AddSubgroup.zsmul_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Subgroup.ofDiv /-
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
@@ -2292,7 +2292,7 @@ end Subgroup
 namespace AddSubgroup
 
 #print AddSubgroup.Normal /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`conj_mem] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`conj_mem] [] -/
 /-- An add_subgroup is normal if whenever `n ∈ H`, then `g + n - g ∈ H` for every `g : G` -/
 structure Normal (H : AddSubgroup A) : Prop where
   conj_mem : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H

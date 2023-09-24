@@ -3,9 +3,9 @@ Copyright (c) 2021 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Antoine Labelle
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.LinearAlgebra.FreeModule.Basic
+import Algebra.Module.Basic
+import LinearAlgebra.Finsupp
+import LinearAlgebra.FreeModule.Basic
 
 #align_import algebra.module.projective from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 
@@ -186,7 +186,7 @@ theorem Module.Projective.of_basis {ι : Type _} (b : Basis ι R P) : Projective
   use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
   intro m
   simp only [b.constr_apply, mul_one, id.def, Finsupp.smul_single', Finsupp.total_single,
-    LinearMap.map_finsupp_sum]
+    map_finsupp_sum]
   exact b.total_repr m
 #align module.projective_of_basis Module.Projective.of_basis
 -/

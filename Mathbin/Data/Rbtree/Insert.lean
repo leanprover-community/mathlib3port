@@ -3,7 +3,7 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 -/
-import Mathbin.Data.Rbtree.Find
+import Data.Rbtree.Find
 
 #align_import data.rbtree.insert from "leanprover-community/mathlib"@"4d4167104581a21259f7f448e1972a63a4546be7"
 
@@ -472,7 +472,7 @@ theorem Std.RBNode.ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b
 
 attribute [local simp] ite_eq_of_not_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def simp_fi : tactic Unit :=
   sorry
 
@@ -605,7 +605,7 @@ theorem Std.RBNode.find?_balance1_lt {l r t v x y lo hi} (h : lt x y)
     · apply weak_trichotomous lt y_1 x <;> intros <;> simp [*]
 #align rbnode.find_balance1_lt Std.RBNode.find?_balance1_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def ins_ne_leaf_tac :=
   sorry
 #align rbnode.ins_ne_leaf_tac rbnode.ins_ne_leaf_tac

@@ -3,7 +3,7 @@ Copyright (c) 2020 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Kevin Lacker
 -/
-import Mathbin.Tactic.Ring
+import Tactic.Ring
 
 #align_import algebra.group_power.identities from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

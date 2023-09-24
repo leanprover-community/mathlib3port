@@ -3,9 +3,9 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.GroupTheory.Perm.Sign
-import Mathbin.Logic.Equiv.Defs
+import Data.Fintype.Basic
+import GroupTheory.Perm.Sign
+import Logic.Equiv.Defs
 
 #align_import logic.equiv.fintype from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

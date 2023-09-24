@@ -3,11 +3,11 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.AlgebraicGeometry.AffineScheme
-import Mathbin.RingTheory.Nilpotent
-import Mathbin.Topology.Sheaves.SheafCondition.Sites
-import Mathbin.Algebra.Category.Ring.Constructions
-import Mathbin.RingTheory.LocalProperties
+import AlgebraicGeometry.AffineScheme
+import RingTheory.Nilpotent
+import Topology.Sheaves.SheafCondition.Sites
+import Algebra.Category.Ring.Constructions
+import RingTheory.LocalProperties
 
 #align_import algebraic_geometry.properties from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

@@ -3,10 +3,10 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.Data.Polynomial.Degree.CardPowDegree
+import NumberTheory.ClassNumber.AdmissibleAbsoluteValue
+import Analysis.SpecialFunctions.Pow.Real
+import RingTheory.Ideal.LocalRing
+import Data.Polynomial.Degree.CardPowDegree
 
 #align_import number_theory.class_number.admissible_card_pow_degree from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

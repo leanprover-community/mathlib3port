@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández
 -/
-import Mathbin.Data.Finsupp.Basic
-import Mathbin.Data.List.Alist
+import Data.Finsupp.Basic
+import Data.List.Alist
 
 #align_import data.finsupp.alist from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

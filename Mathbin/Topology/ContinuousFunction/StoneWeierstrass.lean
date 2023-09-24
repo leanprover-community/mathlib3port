@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 -/
-import Mathbin.Topology.ContinuousFunction.Weierstrass
-import Mathbin.Data.IsROrC.Basic
+import Topology.ContinuousFunction.Weierstrass
+import Data.IsROrC.Basic
 
 #align_import topology.continuous_function.stone_weierstrass from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
@@ -194,8 +194,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open scoped Topology
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f g «expr ∈ » L) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 #print ContinuousMap.sublattice_closure_eq_top /-
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)

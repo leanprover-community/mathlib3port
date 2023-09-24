@@ -3,9 +3,9 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 -/
-import Mathbin.Algebra.Ring.Defs
-import Mathbin.Algebra.Opposites
-import Mathbin.Algebra.GroupWithZero.InjSurj
+import Algebra.Ring.Defs
+import Algebra.Opposites
+import Algebra.GroupWithZero.InjSurj
 
 #align_import algebra.ring.inj_surj from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

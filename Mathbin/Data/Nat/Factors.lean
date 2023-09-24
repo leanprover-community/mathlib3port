@@ -3,9 +3,9 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Data.Nat.Prime
-import Mathbin.Data.List.Prime
-import Mathbin.Data.List.Sort
+import Data.Nat.Prime
+import Data.List.Prime
+import Data.List.Sort
 import Mathbin.Tactic.NthRewrite.Default
 
 #align_import data.nat.factors from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"

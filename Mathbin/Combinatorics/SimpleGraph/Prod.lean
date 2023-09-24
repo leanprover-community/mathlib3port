@@ -3,7 +3,7 @@ Copyright (c) 2022 George Peter Banyard, Yaël Dillies, Kyle Miller. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: George Peter Banyard, Yaël Dillies, Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Connectivity
+import Combinatorics.SimpleGraph.Connectivity
 
 #align_import combinatorics.simple_graph.prod from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

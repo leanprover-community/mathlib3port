@@ -3,11 +3,11 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Nat.Prime
-import Mathbin.Data.Rat.Defs
-import Mathbin.Order.WellFounded
+import Data.Nat.Prime
+import Data.Rat.Defs
+import Order.WellFounded
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.Wlog
+import Tactic.Wlog
 
 #align_import imo.imo1988_q6 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

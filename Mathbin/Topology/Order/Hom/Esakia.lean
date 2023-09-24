@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Hom.Bounded
-import Mathbin.Topology.Order.Hom.Basic
+import Order.Hom.Bounded
+import Topology.Order.Hom.Basic
 
 #align_import topology.order.hom.esakia from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Basic
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Nat.Parity
-import Mathbin.Data.Zmod.Parity
+import Combinatorics.SimpleGraph.Basic
+import Algebra.BigOperators.Basic
+import Data.Nat.Parity
+import Data.Zmod.Parity
 
 #align_import combinatorics.simple_graph.degree_sum from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

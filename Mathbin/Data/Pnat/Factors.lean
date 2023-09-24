@@ -3,10 +3,10 @@ Copyright (c) 2019 Neil Strickland. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 -/
-import Mathbin.Algebra.BigOperators.Multiset.Basic
-import Mathbin.Data.Pnat.Prime
-import Mathbin.Data.Nat.Factors
-import Mathbin.Data.Multiset.Sort
+import Algebra.BigOperators.Multiset.Basic
+import Data.Pnat.Prime
+import Data.Nat.Factors
+import Data.Multiset.Sort
 
 #align_import data.pnat.factors from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

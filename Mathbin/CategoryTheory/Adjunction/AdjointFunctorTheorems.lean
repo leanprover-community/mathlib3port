@@ -3,11 +3,11 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Generator
-import Mathbin.CategoryTheory.Limits.ConeCategory
-import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial
-import Mathbin.CategoryTheory.Limits.FunctorCategory
-import Mathbin.CategoryTheory.Subobject.Comma
+import CategoryTheory.Generator
+import CategoryTheory.Limits.ConeCategory
+import CategoryTheory.Limits.Constructions.WeaklyInitial
+import CategoryTheory.Limits.FunctorCategory
+import CategoryTheory.Subobject.Comma
 
 #align_import category_theory.adjunction.adjoint_functor_theorems from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

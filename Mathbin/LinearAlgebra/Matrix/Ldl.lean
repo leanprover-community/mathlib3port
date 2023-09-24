@@ -3,8 +3,8 @@ Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.Analysis.InnerProductSpace.GramSchmidtOrtho
-import Mathbin.LinearAlgebra.Matrix.PosDef
+import Analysis.InnerProductSpace.GramSchmidtOrtho
+import LinearAlgebra.Matrix.PosDef
 
 #align_import linear_algebra.matrix.ldl from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

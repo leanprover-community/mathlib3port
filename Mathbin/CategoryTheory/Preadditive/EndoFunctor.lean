@@ -3,9 +3,9 @@ Copyright (c) 2022 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.CategoryTheory.Preadditive.Basic
-import Mathbin.CategoryTheory.Endofunctor.Algebra
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+import CategoryTheory.Preadditive.Basic
+import CategoryTheory.Endofunctor.Algebra
+import CategoryTheory.Preadditive.AdditiveFunctor
 
 #align_import category_theory.preadditive.endo_functor from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

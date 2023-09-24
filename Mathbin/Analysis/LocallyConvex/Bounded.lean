@@ -3,12 +3,12 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.Analysis.LocallyConvex.Basic
-import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
-import Mathbin.Analysis.Seminorm
-import Mathbin.Topology.Bornology.Basic
-import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Topology.UniformSpace.Cauchy
+import Analysis.LocallyConvex.Basic
+import Analysis.LocallyConvex.BalancedCoreHull
+import Analysis.Seminorm
+import Topology.Bornology.Basic
+import Topology.Algebra.UniformGroup
+import Topology.UniformSpace.Cauchy
 
 #align_import analysis.locally_convex.bounded from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

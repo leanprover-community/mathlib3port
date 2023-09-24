@@ -3,9 +3,9 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Isomorphism
-import Mathbin.CategoryTheory.Functor.Category
-import Mathbin.CategoryTheory.EqToHom
+import CategoryTheory.Isomorphism
+import CategoryTheory.Functor.Category
+import CategoryTheory.EqToHom
 
 #align_import category_theory.comma from "leanprover-community/mathlib"@"8a318021995877a44630c898d0b2bc376fceef3b"
 

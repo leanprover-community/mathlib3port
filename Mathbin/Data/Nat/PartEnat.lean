@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Data.Part
-import Mathbin.Data.Enat.Lattice
-import Mathbin.Tactic.NormNum
+import Algebra.Hom.Equiv.Basic
+import Data.Part
+import Data.Enat.Lattice
+import Tactic.NormNum
 
 #align_import data.nat.part_enat from "leanprover-community/mathlib"@"3ff3f2d6a3118b8711063de7111a0d77a53219a8"
 

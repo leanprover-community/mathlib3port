@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 -/
-import Mathbin.Probability.ProbabilityMassFunction.Monad
+import Probability.ProbabilityMassFunction.Monad
 
 #align_import probability.probability_mass_function.constructions from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -195,7 +195,7 @@ instance : LawfulMonad Pmf where
 
 section OfFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Pmf.ofFinset /-
 /-- Given a finset `s` and a function `f : α → ℝ≥0∞` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
@@ -205,7 +205,7 @@ def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : ∑ a in s, f a = 1)
 #align pmf.of_finset Pmf.ofFinset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ∉ » s) -/
 variable {f : α → ℝ≥0∞} {s : Finset α} (h : ∑ a in s, f a = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 #print Pmf.ofFinset_apply /-

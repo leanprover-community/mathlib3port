@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Preserves.Basic
 
 #align_import category_theory.limits.preserves.shapes.binary_products from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Yourong Zang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 -/
-import Mathbin.Analysis.Calculus.Conformal.NormedSpace
-import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic
+import Analysis.Calculus.Conformal.NormedSpace
+import Geometry.Euclidean.Angle.Unoriented.Basic
 
 #align_import geometry.euclidean.angle.unoriented.conformal from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

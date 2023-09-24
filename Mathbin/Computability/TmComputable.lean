@@ -3,10 +3,10 @@ Copyright (c) 2020 Pim Spelier, Daan van Gent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pim Spelier, Daan van Gent
 -/
-import Mathbin.Computability.Encoding
-import Mathbin.Computability.TuringMachine
-import Mathbin.Data.Polynomial.Basic
-import Mathbin.Data.Polynomial.Eval
+import Computability.Encoding
+import Computability.TuringMachine
+import Data.Polynomial.Basic
+import Data.Polynomial.Eval
 
 #align_import computability.tm_computable from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

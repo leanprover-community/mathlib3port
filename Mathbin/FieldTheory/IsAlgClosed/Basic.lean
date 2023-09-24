@@ -3,9 +3,9 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.FieldTheory.Normal
-import Mathbin.FieldTheory.PerfectClosure
-import Mathbin.RingTheory.Localization.Integral
+import FieldTheory.Normal
+import FieldTheory.PerfectClosure
+import RingTheory.Localization.Integral
 
 #align_import field_theory.is_alg_closed.basic from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

@@ -3,11 +3,11 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.CommSq
-import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
-import Mathbin.CategoryTheory.Limits.Shapes.Types
-import Mathbin.Topology.Category.Top.Limits.Pullbacks
-import Mathbin.CategoryTheory.Limits.FunctorCategory
+import CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.StrictInitial
+import CategoryTheory.Limits.Shapes.Types
+import Topology.Category.Top.Limits.Pullbacks
+import CategoryTheory.Limits.FunctorCategory
 
 #align_import category_theory.extensive from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

@@ -3,10 +3,10 @@ Copyright (c) 2015, 2017 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 -/
-import Mathbin.Tactic.Positivity
-import Mathbin.Topology.Algebra.Order.Compact
-import Mathbin.Topology.MetricSpace.EmetricSpace
-import Mathbin.Topology.Bornology.Constructions
+import Tactic.Positivity
+import Topology.Algebra.Order.Compact
+import Topology.MetricSpace.EmetricSpace
+import Topology.Bornology.Constructions
 
 #align_import topology.metric_space.basic from "leanprover-community/mathlib"@"8047de4d911cdef39c2d646165eea972f7f9f539"
 
@@ -128,7 +128,7 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
       _ ≥ 0 := by rw [← dist_self x] <;> apply dist_triangle
   nonneg_of_mul_nonneg_right this zero_lt_two
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
@@ -1125,7 +1125,7 @@ theorem uniformContinuous_iff [PseudoMetricSpace β] {f : α → β} :
 #align metric.uniform_continuous_iff Metric.uniformContinuous_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff /-
 theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1134,7 +1134,7 @@ theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set 
 #align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff_le /-
 theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1201,7 +1201,7 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
 #align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretization
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Metric.finite_approx_of_totallyBounded /-
 theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
@@ -1270,7 +1270,7 @@ theorem tendstoUniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α
 #align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print Metric.cauchy_iff /-
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
@@ -2002,7 +2002,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Metric.cauchySeq_iff /-
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
@@ -2917,7 +2917,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print finite_cover_balls_of_compact /-
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
@@ -2955,7 +2955,7 @@ export ProperSpace (isCompact_closedBall)
 /-- In a proper pseudometric space, all spheres are compact. -/
 theorem isCompact_sphere {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) :
     IsCompact (sphere x r) :=
-  isCompact_of_isClosed_subset (isCompact_closedBall x r) isClosed_sphere sphere_subset_closedBall
+  IsCompact.of_isClosed_subset (isCompact_closedBall x r) isClosed_sphere sphere_subset_closedBall
 #align is_compact_sphere isCompact_sphere
 -/
 
@@ -3029,7 +3029,7 @@ instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyC
 #align locally_compact_of_proper locally_compact_of_proper
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print complete_of_proper /-
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
@@ -3083,7 +3083,7 @@ theorem exists_pos_lt_subset_ball (hr : 0 < r) (hs : IsClosed s) (h : s ⊆ ball
   rcases eq_empty_or_nonempty s with (rfl | hne)
   · exact ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩, empty_subset _⟩
   have : IsCompact s :=
-    isCompact_of_isClosed_subset (is_compact_closed_ball x r) hs
+    IsCompact.of_isClosed_subset (is_compact_closed_ball x r) hs
       (subset.trans h ball_subset_closed_ball)
   obtain ⟨y, hys, hy⟩ : ∃ y ∈ s, s ⊆ closed_ball x (dist y x)
   exact this.exists_forall_ge hne (continuous_id.dist continuous_const).ContinuousOn
@@ -3161,7 +3161,7 @@ namespace Metric
 
 /- warning: metric.bounded clashes with bornology.is_bounded -> Bornology.IsBounded
 Case conversion may be inaccurate. Consider using '#align metric.bounded Bornology.IsBoundedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Bornology.IsBounded /-
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
@@ -3505,7 +3505,7 @@ theorem isCompact_of_isClosed_isBounded [ProperSpace α] (hc : IsClosed s) (hb :
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
   · exact isCompact_empty
   · rcases hb.subset_ball x with ⟨r, hr⟩
-    exact isCompact_of_isClosed_subset (is_compact_closed_ball x r) hc hr
+    exact IsCompact.of_isClosed_subset (is_compact_closed_ball x r) hc hr
 #align metric.is_compact_of_is_closed_bounded Metric.isCompact_of_isClosed_isBounded
 -/
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.Data.Int.Range
-import Mathbin.Data.Zmod.Basic
-import Mathbin.NumberTheory.LegendreSymbol.MulCharacter
+import Data.Int.Range
+import Data.Zmod.Basic
+import NumberTheory.LegendreSymbol.MulCharacter
 
 #align_import number_theory.legendre_symbol.zmod_char from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

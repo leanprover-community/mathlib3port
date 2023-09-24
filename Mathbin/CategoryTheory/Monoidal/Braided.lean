@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.CoherenceLemmas
-import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
-import Mathbin.CategoryTheory.Monoidal.Discrete
+import CategoryTheory.Monoidal.CoherenceLemmas
+import CategoryTheory.Monoidal.NaturalTransformation
+import CategoryTheory.Monoidal.Discrete
 
 #align_import category_theory.monoidal.braided from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

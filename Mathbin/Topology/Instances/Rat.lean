@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Topology.MetricSpace.Basic
-import Mathbin.Topology.Algebra.Order.Archimedean
-import Mathbin.Topology.Instances.Int
-import Mathbin.Topology.Instances.Nat
-import Mathbin.Topology.Instances.Real
+import Topology.MetricSpace.Basic
+import Topology.Algebra.Order.Archimedean
+import Topology.Instances.Int
+import Topology.Instances.Nat
+import Topology.Instances.Real
 
 #align_import topology.instances.rat from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

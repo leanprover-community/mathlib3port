@@ -3,9 +3,9 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 -/
-import Mathbin.Data.Fin.Fin2
-import Mathbin.Logic.Function.Basic
-import Mathbin.Tactic.Basic
+import Data.Fin.Fin2
+import Logic.Function.Basic
+import Tactic.Basic
 
 #align_import data.typevec from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

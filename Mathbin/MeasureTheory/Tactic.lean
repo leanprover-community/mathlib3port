@@ -3,10 +3,10 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
-import Mathbin.Tactic.AutoCases
-import Mathbin.Tactic.Tidy
-import Mathbin.Tactic.WithLocalReducibility
+import MeasureTheory.Measure.MeasureSpaceDef
+import Tactic.AutoCases
+import Tactic.Tidy
+import Tactic.WithLocalReducibility
 
 #align_import measure_theory.tactic from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 
@@ -53,7 +53,7 @@ attribute [measurability] measurable_id measurable_id' aemeasurable_id aemeasura
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -74,7 +74,7 @@ unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 #align tactic.apply_measurable.comp tactic.apply_measurable.comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -108,8 +108,8 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | _ => skip
 #align tactic.goal_is_not_measurable tactic.goal_is_not_measurable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/

@@ -3,9 +3,9 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.List.Cycle
-import Mathbin.GroupTheory.Perm.Cycle.Type
-import Mathbin.GroupTheory.Perm.List
+import Data.List.Cycle
+import GroupTheory.Perm.Cycle.Type
+import GroupTheory.Perm.List
 
 #align_import group_theory.perm.cycle.concrete from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

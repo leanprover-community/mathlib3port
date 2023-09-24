@@ -3,8 +3,8 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.LinearAlgebra.AffineSpace.Basis
-import Mathbin.LinearAlgebra.FiniteDimensional
+import LinearAlgebra.AffineSpace.Basis
+import LinearAlgebra.FiniteDimensional
 
 #align_import linear_algebra.affine_space.finite_dimensional from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Logic.Embedding.Basic
+import Algebra.Group.Defs
+import Logic.Embedding.Basic
 
 #align_import algebra.hom.embedding from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

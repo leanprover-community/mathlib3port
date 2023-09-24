@@ -3,15 +3,15 @@ Copyright (c) 2018 Mario Carneiro, Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 -/
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.Algebra.Tower
-import Mathbin.Algebra.Ring.Idempotents
-import Mathbin.GroupTheory.Finiteness
-import Mathbin.LinearAlgebra.LinearIndependent
-import Mathbin.Order.CompactlyGenerated
-import Mathbin.Order.OrderIsoNat
-import Mathbin.RingTheory.Finiteness
-import Mathbin.RingTheory.Nilpotent
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.Algebra.Tower
+import Algebra.Ring.Idempotents
+import GroupTheory.Finiteness
+import LinearAlgebra.LinearIndependent
+import Order.CompactlyGenerated
+import Order.OrderIsoNat
+import RingTheory.Finiteness
+import RingTheory.Nilpotent
 
 #align_import ring_theory.noetherian from "leanprover-community/mathlib"@"210657c4ea4a4a7b234392f70a3a2a83346dfa90"
 

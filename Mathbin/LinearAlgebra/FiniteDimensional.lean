@@ -3,10 +3,10 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.FieldTheory.Finiteness
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
-import Mathbin.Tactic.IntervalCases
+import Algebra.Algebra.Subalgebra.Basic
+import FieldTheory.Finiteness
+import LinearAlgebra.FreeModule.Finite.Rank
+import Tactic.IntervalCases
 
 #align_import linear_algebra.finite_dimensional from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

@@ -3,11 +3,11 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 -/
-import Mathbin.Topology.Algebra.InfiniteSum.Basic
-import Mathbin.Topology.Algebra.Ring.Basic
-import Mathbin.Topology.Algebra.Star
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.LinearAlgebra.Matrix.Trace
+import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.Ring.Basic
+import Topology.Algebra.Star
+import LinearAlgebra.Matrix.NonsingularInverse
+import LinearAlgebra.Matrix.Trace
 
 #align_import topology.instances.matrix from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

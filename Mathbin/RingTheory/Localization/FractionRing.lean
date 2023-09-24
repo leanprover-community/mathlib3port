@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.Algebra.Algebra.Tower
-import Mathbin.RingTheory.Localization.Basic
+import Algebra.Algebra.Tower
+import RingTheory.Localization.Basic
 
 #align_import ring_theory.localization.fraction_ring from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"
 

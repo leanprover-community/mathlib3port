@@ -3,11 +3,11 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 -/
-import Mathbin.Analysis.NormedSpace.FiniteDimension
-import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Metrizable
-import Mathbin.MeasureTheory.Integral.Lebesgue
-import Mathbin.MeasureTheory.Function.SimpleFuncDense
+import Analysis.NormedSpace.FiniteDimension
+import Analysis.NormedSpace.BoundedLinearMaps
+import MeasureTheory.Constructions.BorelSpace.Metrizable
+import MeasureTheory.Integral.Lebesgue
+import MeasureTheory.Function.SimpleFuncDense
 
 #align_import measure_theory.function.strongly_measurable.basic from "leanprover-community/mathlib"@"3b52265189f3fb43aa631edffce5d060fafaf82f"
 
@@ -339,7 +339,7 @@ theorem stronglyMeasurable_bot_iff [Nonempty β] [T2Space β] :
 
 end BasicPropertiesInAnyTopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » t) -/
 #print MeasureTheory.StronglyMeasurable.finStronglyMeasurable_of_set_sigmaFinite /-
 theorem finStronglyMeasurable_of_set_sigmaFinite [TopologicalSpace β] [Zero β]
     {m : MeasurableSpace α} {μ : Measure α} (hf_meas : StronglyMeasurable f) {t : Set α}
@@ -1046,9 +1046,9 @@ theorem measurableSet_le {m : MeasurableSpace α} [TopologicalSpace β] [Preorde
 #align measure_theory.strongly_measurable.measurable_set_le MeasureTheory.StronglyMeasurable.measurableSet_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print MeasureTheory.StronglyMeasurable.stronglyMeasurable_in_set /-
 theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β] [Zero β] {s : Set α}
     {f : α → β} (hs : MeasurableSet s) (hf : StronglyMeasurable f)
@@ -1074,7 +1074,7 @@ theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β]
 #align measure_theory.strongly_measurable.strongly_measurable_in_set MeasureTheory.StronglyMeasurable.stronglyMeasurable_in_set
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print MeasureTheory.StronglyMeasurable.stronglyMeasurable_of_measurableSpace_le_on /-
 /-- If the restriction to a set `s` of a σ-algebra `m` is included in the restriction to `s` of
 another σ-algebra `m₂` (hypothesis `hs`), the set `s` is `m` measurable and a function `f` supported

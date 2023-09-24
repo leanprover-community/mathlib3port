@@ -3,10 +3,10 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.BigOperators.Fin
-import Mathbin.Data.Finset.NatAntidiagonal
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.Logic.Equiv.Fin
+import Algebra.BigOperators.Fin
+import Data.Finset.NatAntidiagonal
+import Data.Fin.VecNotation
+import Logic.Equiv.Fin
 
 #align_import data.fin.tuple.nat_antidiagonal from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

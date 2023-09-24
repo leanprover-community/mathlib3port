@@ -3,7 +3,7 @@ Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 -/
-import Mathbin.Data.List.Join
+import Data.List.Join
 
 #align_import data.list.permutation from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

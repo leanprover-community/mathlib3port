@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Order.RelIso.Basic
-import Mathbin.Logic.Embedding.Set
+import Order.RelIso.Basic
+import Logic.Embedding.Set
 
 #align_import order.rel_iso.set from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

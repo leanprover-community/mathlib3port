@@ -3,11 +3,11 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Matrix.Basis
-import Mathbin.Data.Matrix.Dmatrix
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.Matrix.Reindex
-import Mathbin.Tactic.FieldSimp
+import Data.Matrix.Basis
+import Data.Matrix.Dmatrix
+import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Reindex
+import Tactic.FieldSimp
 
 #align_import linear_algebra.matrix.transvection from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

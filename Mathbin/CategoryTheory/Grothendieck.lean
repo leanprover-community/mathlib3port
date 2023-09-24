@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.CategoryTheory.Elements
+import CategoryTheory.Category.Cat
+import CategoryTheory.Elements
 
 #align_import category_theory.grothendieck from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 

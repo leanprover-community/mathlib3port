@@ -3,9 +3,9 @@ Copyright (c) 2022 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 -/
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.FieldTheory.IntermediateField
-import Mathbin.Topology.Algebra.UniformRing
+import Analysis.Complex.Basic
+import FieldTheory.IntermediateField
+import Topology.Algebra.UniformRing
 
 #align_import topology.instances.complex from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -51,8 +51,8 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
 #align complex.subfield_eq_of_closed Complex.subfield_eq_of_closed
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:307:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:307:22: continuitity! not supported at the moment -/
 #print Complex.uniformContinuous_ringHom_eq_id_or_conj /-
 /-- Let `K` a subfield of `ℂ` and let `ψ : K →+* ℂ` a ring homomorphism. Assume that `ψ` is uniform
 continuous, then `ψ` is either the inclusion map or the composition of the inclusion map with the

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.CategoryTheory.Fintype
-import Mathbin.Order.Category.PartOrd
+import CategoryTheory.Fintype
+import Order.Category.PartOrd
 
 #align_import order.category.FinPartOrd from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -32,7 +32,7 @@ open CategoryTheory
 #print FinPartOrd /-
 /-- The category of finite partial orders with monotone functions. -/
 structure FinPartOrd where
-  toPartOrd : PartOrdCat
+  toPartOrd : PartOrd
   [isFintype : Fintype to_PartOrd]
 #align FinPartOrd FinPartOrd
 -/
@@ -81,10 +81,10 @@ instance concreteCategory : ConcreteCategory FinPartOrd :=
 #align FinPartOrd.concrete_category FinPartOrd.concreteCategory
 -/
 
-#print FinPartOrd.hasForgetToPartOrdCat /-
-instance hasForgetToPartOrdCat : HasForget₂ FinPartOrd PartOrdCat :=
+#print FinPartOrd.hasForgetToPartOrd /-
+instance hasForgetToPartOrd : HasForget₂ FinPartOrd PartOrd :=
   InducedCategory.hasForget₂ FinPartOrd.toPartOrd
-#align FinPartOrd.has_forget_to_PartOrd FinPartOrd.hasForgetToPartOrdCat
+#align FinPartOrd.has_forget_to_PartOrd FinPartOrd.hasForgetToPartOrd
 -/
 
 #print FinPartOrd.hasForgetToFintype /-
@@ -128,11 +128,10 @@ def dualEquiv : FinPartOrd ≌ FinPartOrd :=
 
 end FinPartOrd
 
-#print FinPartOrd_dual_comp_forget_to_partOrdCat /-
-theorem FinPartOrd_dual_comp_forget_to_partOrdCat :
-    FinPartOrd.dual ⋙ forget₂ FinPartOrd PartOrdCat =
-      forget₂ FinPartOrd PartOrdCat ⋙ PartOrdCat.dual :=
+#print FinPartOrd_dual_comp_forget_to_partOrd /-
+theorem FinPartOrd_dual_comp_forget_to_partOrd :
+    FinPartOrd.dual ⋙ forget₂ FinPartOrd PartOrd = forget₂ FinPartOrd PartOrd ⋙ PartOrd.dual :=
   rfl
-#align FinPartOrd_dual_comp_forget_to_PartOrd FinPartOrd_dual_comp_forget_to_partOrdCat
+#align FinPartOrd_dual_comp_forget_to_PartOrd FinPartOrd_dual_comp_forget_to_partOrd
 -/
 

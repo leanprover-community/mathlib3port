@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.SetTheory.Cardinal.Ordinal
+import SetTheory.Cardinal.Ordinal
 
 #align_import set_theory.cardinal.continuum from "leanprover-community/mathlib"@"e08a42b2dd544cf11eba72e5fc7bf199d4349925"
 

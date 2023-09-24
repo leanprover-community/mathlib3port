@@ -3,10 +3,10 @@ Copyright (c) 2022 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
-import Mathbin.Algebra.Category.Module.Projective
-import Mathbin.AlgebraicTopology.ExtraDegeneracy
-import Mathbin.CategoryTheory.Abelian.Ext
-import Mathbin.RepresentationTheory.Rep
+import Algebra.Category.Module.Projective
+import AlgebraicTopology.ExtraDegeneracy
+import CategoryTheory.Abelian.Ext
+import RepresentationTheory.Rep
 
 #align_import representation_theory.group_cohomology.resolution from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

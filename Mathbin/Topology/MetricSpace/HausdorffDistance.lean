@@ -3,10 +3,10 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.Topology.MetricSpace.IsometricSmul
-import Mathbin.Topology.MetricSpace.Isometry
-import Mathbin.Topology.Instances.Ennreal
+import Analysis.SpecificLimits.Basic
+import Topology.MetricSpace.IsometricSmul
+import Topology.MetricSpace.Isometry
+import Topology.Instances.Ennreal
 
 #align_import topology.metric_space.hausdorff_distance from "leanprover-community/mathlib"@"bc91ed7093bf098d253401e69df601fc33dde156"
 

@@ -3,10 +3,10 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 -/
-import Mathbin.Algebra.Hom.Embedding
-import Mathbin.Data.Fin.Basic
-import Mathbin.Data.Finset.Basic
-import Mathbin.Data.Int.Order.Basic
+import Algebra.Hom.Embedding
+import Data.Fin.Basic
+import Data.Finset.Basic
+import Data.Int.Order.Basic
 
 #align_import data.finset.image from "leanprover-community/mathlib"@"b685f506164f8d17a6404048bc4d696739c5d976"
 

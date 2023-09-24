@@ -3,8 +3,8 @@ Copyright (c) 2022 Jiale Miao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao
 -/
-import Mathbin.Tactic.NormCast
-import Mathbin.Data.Rat.Cast
+import Tactic.NormCast
+import Data.Rat.Cast
 
 #align_import tactic.qify from "leanprover-community/mathlib"@"9fe85cd025655fc6285758c29b6a392c0fa96743"
 

@@ -3,13 +3,13 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Algebra.CharZero.Defs
-import Mathbin.Algebra.GroupWithZero.Commute
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Order.Group.Abs
-import Mathbin.Algebra.Ring.Commute
-import Mathbin.Data.Nat.Order.Basic
-import Mathbin.Algebra.Group.Opposite
+import Algebra.CharZero.Defs
+import Algebra.GroupWithZero.Commute
+import Algebra.Hom.Ring
+import Algebra.Order.Group.Abs
+import Algebra.Ring.Commute
+import Data.Nat.Order.Basic
+import Algebra.Group.Opposite
 
 #align_import data.nat.cast.basic from "leanprover-community/mathlib"@"acebd8d49928f6ed8920e502a6c90674e75bd441"
 

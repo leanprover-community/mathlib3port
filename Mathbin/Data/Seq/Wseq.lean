@@ -3,8 +3,8 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.Basic
-import Mathbin.Data.Seq.Seq
+import Data.List.Basic
+import Data.Seq.Seq
 
 #align_import data.seq.wseq from "leanprover-community/mathlib"@"a7e36e48519ab281320c4d192da6a7b348ce40ad"
 

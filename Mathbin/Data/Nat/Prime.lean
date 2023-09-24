@@ -3,15 +3,15 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.Algebra.Parity
-import Mathbin.Data.Int.Dvd.Basic
-import Mathbin.Data.Int.Units
-import Mathbin.Data.Nat.Factorial.Basic
-import Mathbin.Data.Nat.Gcd.Basic
-import Mathbin.Data.Nat.Sqrt
-import Mathbin.Order.Bounds.Basic
-import Mathbin.Tactic.ByContra
+import Algebra.Associated
+import Algebra.Parity
+import Data.Int.Dvd.Basic
+import Data.Int.Units
+import Data.Nat.Factorial.Basic
+import Data.Nat.Gcd.Basic
+import Data.Nat.Sqrt
+import Order.Bounds.Basic
+import Tactic.ByContra
 
 #align_import data.nat.prime from "leanprover-community/mathlib"@"8631e2d5ea77f6c13054d9151d82b83069680cb1"
 
@@ -120,7 +120,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
 #align nat.prime.eq_one_or_self_of_dvd Nat.Prime.eq_one_or_self_of_dvd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m «expr ∣ » p) -/
 #print Nat.prime_def_lt'' /-
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p :=
   by

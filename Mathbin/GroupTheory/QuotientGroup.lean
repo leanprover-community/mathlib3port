@@ -5,10 +5,10 @@ Authors: Kevin Buzzard, Patrick Massot
 
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 -/
-import Mathbin.GroupTheory.Congruence
-import Mathbin.GroupTheory.Coset
-import Mathbin.GroupTheory.Subgroup.Finite
-import Mathbin.GroupTheory.Subgroup.Pointwise
+import GroupTheory.Congruence
+import GroupTheory.Coset
+import GroupTheory.Subgroup.Finite
+import GroupTheory.Subgroup.Pointwise
 
 #align_import group_theory.quotient_group from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

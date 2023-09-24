@@ -3,8 +3,8 @@ Copyright (c) 2023 Mark Andrew Gerads. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mark Andrew Gerads, Junyan Xu, Eric Wieser
 -/
-import Mathbin.Tactic.Ring
-import Mathbin.Data.Nat.Parity
+import Tactic.Ring
+import Data.Nat.Parity
 
 #align_import data.nat.hyperoperation from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

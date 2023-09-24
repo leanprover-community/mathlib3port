@@ -3,10 +3,10 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.Algebra.Category.Mon.Basic
-import Mathbin.Combinatorics.Quiver.SingleObj
+import CategoryTheory.Endomorphism
+import CategoryTheory.Category.Cat
+import Algebra.Category.Mon.Basic
+import Combinatorics.Quiver.SingleObj
 
 #align_import category_theory.single_obj from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 

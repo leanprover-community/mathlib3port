@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Ordinal.Arithmetic
-import Mathbin.Topology.Order.Basic
+import SetTheory.Ordinal.Arithmetic
+import Topology.Order.Basic
 
 #align_import set_theory.ordinal.topology from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
@@ -262,7 +262,7 @@ theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u})
 #align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.isNormal_iff_strictMono_and_continuous
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr < » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr < » a) -/
 #print Ordinal.enumOrd_isNormal_iff_isClosed /-
 theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
     IsNormal (enumOrd s) ↔ IsClosed s :=

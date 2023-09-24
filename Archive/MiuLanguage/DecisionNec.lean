@@ -3,10 +3,10 @@ Copyright (c) 2020 Gihan Marasingha. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gihan Marasingha
 -/
-import Archive.MiuLanguage.Basic
-import Mathbin.Data.List.Count
-import Mathbin.Data.Nat.Modeq
-import Mathbin.Tactic.Ring
+import MiuLanguage.Basic
+import Data.List.Count
+import Data.Nat.Modeq
+import Tactic.Ring
 
 #align_import miu_language.decision_nec from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

@@ -3,13 +3,13 @@ Copyright (c) 2020 Bhavik Mehta, Edward Ayers, Thomas Read. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Edward Ayers, Thomas Read
 -/
-import Mathbin.CategoryTheory.EpiMono
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.CategoryTheory.Monoidal.OfHasFiniteProducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Adjunction.Mates
-import Mathbin.CategoryTheory.Closed.Monoidal
+import CategoryTheory.EpiMono
+import CategoryTheory.Limits.Shapes.FiniteProducts
+import CategoryTheory.Monoidal.OfHasFiniteProducts
+import CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Adjunction.Mates
+import CategoryTheory.Closed.Monoidal
 
 #align_import category_theory.closed.cartesian from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

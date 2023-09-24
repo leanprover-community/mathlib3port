@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Linear.LinearFunctor
-import Mathbin.CategoryTheory.Monoidal.Preadditive
+import CategoryTheory.Linear.LinearFunctor
+import CategoryTheory.Monoidal.Preadditive
 
 #align_import category_theory.monoidal.linear from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

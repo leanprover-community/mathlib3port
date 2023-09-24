@@ -3,9 +3,9 @@ Copyright (c) 2022 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.Topology.Algebra.Module.CharacterSpace
-import Mathbin.Analysis.NormedSpace.WeakDual
-import Mathbin.Analysis.NormedSpace.Spectrum
+import Topology.Algebra.Module.CharacterSpace
+import Analysis.NormedSpace.WeakDual
+import Analysis.NormedSpace.Spectrum
 
 #align_import analysis.normed_space.algebra from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 
@@ -55,7 +55,7 @@ instance [ProperSpace 𝕜] : CompactSpace (characterSpace 𝕜 A) :=
     intro φ hφ
     rw [Set.mem_preimage, mem_closedBall_zero_iff]
     exact (norm_le_norm_one ⟨φ, ⟨hφ.1, hφ.2⟩⟩ : _)
-  exact isCompact_of_isClosed_subset (is_compact_closed_ball 𝕜 0 _) character_space.is_closed h
+  exact IsCompact.of_isClosed_subset (is_compact_closed_ball 𝕜 0 _) character_space.is_closed h
 
 end CharacterSpace
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.CategoryTheory.Pi.Basic
-import Mathbin.CategoryTheory.Shift.Basic
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
+import Algebra.GroupPower.Lemmas
+import CategoryTheory.Pi.Basic
+import CategoryTheory.Shift.Basic
+import CategoryTheory.ConcreteCategory.Basic
 
 #align_import category_theory.graded_object from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

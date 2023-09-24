@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Set.Image
-import Mathbin.Order.Lattice
-import Mathbin.Order.Max
+import Data.Set.Image
+import Order.Lattice
+import Order.Max
 
 #align_import order.directed from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
 

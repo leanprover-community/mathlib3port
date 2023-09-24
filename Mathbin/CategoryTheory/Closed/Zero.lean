@@ -3,10 +3,10 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Closed.Cartesian
-import Mathbin.CategoryTheory.Punit
-import Mathbin.CategoryTheory.Conj
-import Mathbin.CategoryTheory.Limits.Shapes.ZeroObjects
+import CategoryTheory.Closed.Cartesian
+import CategoryTheory.Punit
+import CategoryTheory.Conj
+import CategoryTheory.Limits.Shapes.ZeroObjects
 
 #align_import category_theory.closed.zero from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

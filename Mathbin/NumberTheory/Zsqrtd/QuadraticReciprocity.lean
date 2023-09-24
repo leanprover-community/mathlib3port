@@ -3,8 +3,8 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.NumberTheory.Zsqrtd.GaussianInt
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
+import NumberTheory.Zsqrtd.GaussianInt
+import NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 #align_import number_theory.zsqrtd.quadratic_reciprocity from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

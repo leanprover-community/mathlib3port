@@ -3,8 +3,8 @@ Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 -/
-import Mathbin.Computability.DFA
-import Mathbin.Data.Fintype.Powerset
+import Computability.DFA
+import Data.Fintype.Powerset
 
 #align_import computability.NFA from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

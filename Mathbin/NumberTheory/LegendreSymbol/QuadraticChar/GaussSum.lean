@@ -3,8 +3,8 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar.Basic
-import Mathbin.NumberTheory.LegendreSymbol.GaussSum
+import NumberTheory.LegendreSymbol.QuadraticChar.Basic
+import NumberTheory.LegendreSymbol.GaussSum
 
 #align_import number_theory.legendre_symbol.quadratic_char.gauss_sum from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

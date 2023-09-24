@@ -3,7 +3,7 @@ Copyright (c) 2015 Joseph Hua. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Hua
 -/
-import Mathbin.Data.W.Basic
+import Data.W.Basic
 
 #align_import data.W.constructions from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Yourong Zang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 -/
-import Mathbin.Analysis.Calculus.Conformal.NormedSpace
-import Mathbin.Analysis.InnerProductSpace.ConformalLinearMap
+import Analysis.Calculus.Conformal.NormedSpace
+import Analysis.InnerProductSpace.ConformalLinearMap
 
 #align_import analysis.calculus.conformal.inner_product from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

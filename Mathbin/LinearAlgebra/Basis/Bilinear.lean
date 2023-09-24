@@ -3,8 +3,8 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.LinearAlgebra.Basis
-import Mathbin.LinearAlgebra.BilinearMap
+import LinearAlgebra.Basis
+import LinearAlgebra.BilinearMap
 
 #align_import linear_algebra.basis.bilinear from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

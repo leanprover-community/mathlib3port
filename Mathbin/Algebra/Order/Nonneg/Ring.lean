@@ -3,12 +3,12 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Data.Nat.Cast.Basic
-import Mathbin.Algebra.Order.Ring.Defs
-import Mathbin.Algebra.Order.Ring.InjSurj
-import Mathbin.Algebra.GroupPower.Order
-import Mathbin.Order.CompleteLatticeIntervals
-import Mathbin.Order.LatticeIntervals
+import Data.Nat.Cast.Basic
+import Algebra.Order.Ring.Defs
+import Algebra.Order.Ring.InjSurj
+import Algebra.GroupPower.Order
+import Order.CompleteLatticeIntervals
+import Order.LatticeIntervals
 
 #align_import algebra.order.nonneg.ring from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

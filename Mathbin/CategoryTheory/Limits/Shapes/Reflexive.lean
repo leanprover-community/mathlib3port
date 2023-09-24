@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
+import CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.Shapes.KernelPair
 
 #align_import category_theory.limits.shapes.reflexive from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
@@ -43,7 +43,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 variable {A B : C} {f g : A ⟶ B}
 
 #print CategoryTheory.IsReflexivePair /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`common_section] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`common_section] [] -/
 /-- The pair `f g : A ⟶ B` is reflexive if there is a morphism `B ⟶ A` which is a section for both.
 -/
 class IsReflexivePair (f g : A ⟶ B) : Prop where
@@ -52,7 +52,7 @@ class IsReflexivePair (f g : A ⟶ B) : Prop where
 -/
 
 #print CategoryTheory.IsCoreflexivePair /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`common_retraction] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`common_retraction] [] -/
 /--
 The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
 -/

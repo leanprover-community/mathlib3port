@@ -3,7 +3,7 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 -/
-import Mathbin.Probability.Process.Adapted
+import Probability.Process.Adapted
 
 #align_import probability.process.stopping from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

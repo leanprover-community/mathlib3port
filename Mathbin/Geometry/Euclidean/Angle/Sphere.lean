@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Geometry.Euclidean.Angle.Oriented.RightAngle
-import Mathbin.Geometry.Euclidean.Circumcenter
+import Geometry.Euclidean.Angle.Oriented.RightAngle
+import Geometry.Euclidean.Circumcenter
 
 #align_import geometry.euclidean.angle.sphere from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

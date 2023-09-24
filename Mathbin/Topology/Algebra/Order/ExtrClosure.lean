@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Topology.LocalExtr
-import Mathbin.Topology.Order.Basic
+import Topology.LocalExtr
+import Topology.Order.Basic
 
 #align_import topology.algebra.order.extr_closure from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

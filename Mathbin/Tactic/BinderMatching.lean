@@ -3,8 +3,8 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Data.Option.Defs
-import Mathbin.Meta.Expr
+import Data.Option.Defs
+import Meta.Expr
 
 #align_import tactic.binder_matching from "leanprover-community/mathlib"@"d36af184d154f2e99f60fec5cd71bb3e53899d5c"
 

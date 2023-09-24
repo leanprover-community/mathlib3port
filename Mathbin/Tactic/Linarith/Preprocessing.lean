@@ -3,10 +3,10 @@ Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Data.Prod.Lex
-import Mathbin.Tactic.CancelDenoms
-import Mathbin.Tactic.Linarith.Datatypes
-import Mathbin.Tactic.Zify
+import Data.Prod.Lex
+import Tactic.CancelDenoms
+import Tactic.Linarith.Datatypes
+import Tactic.Zify
 
 #align_import tactic.linarith.preprocessing from "leanprover-community/mathlib"@"016138c2e83fa76d338d5df7d32d0acb6c587792"
 
@@ -36,7 +36,7 @@ namespace Linarith
 
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,

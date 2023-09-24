@@ -3,8 +3,8 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.RingTheory.Nakayama
-import Mathbin.Data.SetLike.Fintype
+import RingTheory.Nakayama
+import Data.SetLike.Fintype
 
 #align_import ring_theory.artinian from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -47,7 +47,7 @@ open Set
 open scoped BigOperators Pointwise
 
 #print IsArtinian /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`wellFounded_submodule_lt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`wellFounded_submodule_lt] [] -/
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/

@@ -3,8 +3,8 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 -/
-import Mathbin.Analysis.Convex.Between
-import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic
+import Analysis.Convex.Between
+import Geometry.Euclidean.Angle.Unoriented.Basic
 
 #align_import geometry.euclidean.angle.unoriented.affine from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

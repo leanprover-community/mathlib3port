@@ -3,8 +3,8 @@ Copyright (c) 2022 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Data.Sym.Sym2
-import Mathbin.Logic.Relation
+import Data.Sym.Sym2
+import Logic.Relation
 
 #align_import order.game_add from "leanprover-community/mathlib"@"fee218fb033b2fd390c447f8be27754bc9093be9"
 

@@ -3,11 +3,11 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Group.InjSurj
-import Mathbin.Algebra.Group.Commute
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Algebra.Opposites
-import Mathbin.Data.Int.Cast.Defs
+import Algebra.Group.InjSurj
+import Algebra.Group.Commute
+import Algebra.Hom.Equiv.Basic
+import Algebra.Opposites
+import Data.Int.Cast.Defs
 
 #align_import algebra.group.opposite from "leanprover-community/mathlib"@"0372d31fb681ef40a687506bc5870fd55ebc8bb9"
 

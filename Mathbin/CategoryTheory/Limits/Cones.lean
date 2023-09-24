@@ -3,10 +3,10 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.Functor.Const
-import Mathbin.CategoryTheory.DiscreteCategory
-import Mathbin.CategoryTheory.Yoneda
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Functor.Const
+import CategoryTheory.DiscreteCategory
+import CategoryTheory.Yoneda
+import CategoryTheory.Functor.ReflectsIsomorphisms
 
 #align_import category_theory.limits.cones from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

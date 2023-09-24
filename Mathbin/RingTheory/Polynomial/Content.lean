@@ -3,10 +3,10 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Algebra.GcdMonoid.Finset
-import Mathbin.Data.Polynomial.FieldDivision
-import Mathbin.Data.Polynomial.EraseLead
-import Mathbin.Data.Polynomial.CancelLeads
+import Algebra.GcdMonoid.Finset
+import Data.Polynomial.FieldDivision
+import Data.Polynomial.EraseLead
+import Data.Polynomial.CancelLeads
 
 #align_import ring_theory.polynomial.content from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

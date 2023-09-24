@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathbin.Data.Prod.Pprod
-import Mathbin.Data.Set.Countable
-import Mathbin.Order.Filter.Prod
+import Data.Prod.Pprod
+import Data.Set.Countable
+import Order.Filter.Prod
 
 #align_import order.filter.bases from "leanprover-community/mathlib"@"f974ae84dfc9fea6a036a8f30f09414254e3bc40"
 
@@ -475,7 +475,7 @@ theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s
 #align filter.has_basis.eq_bot_iff Filter.HasBasis.eq_bot_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.generate_neBot_iff /-
 theorem generate_neBot_iff {s : Set (Set α)} :
     NeBot (generate s) ↔ ∀ (t) (_ : t ⊆ s), t.Finite → (⋂₀ t).Nonempty :=
@@ -1221,7 +1221,7 @@ namespace Filter
 variable {α β γ ι : Type _} {ι' : Sort _}
 
 #print Filter.IsCountablyGenerated /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
 class IsCountablyGenerated (f : Filter α) : Prop where
   out : ∃ s : Set (Set α), s.Countable ∧ f = generate s

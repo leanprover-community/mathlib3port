@@ -3,8 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Sites.CompatiblePlus
-import Mathbin.CategoryTheory.Sites.Sheafification
+import CategoryTheory.Sites.CompatiblePlus
+import CategoryTheory.Sites.Sheafification
 
 #align_import category_theory.sites.compatible_sheafification from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

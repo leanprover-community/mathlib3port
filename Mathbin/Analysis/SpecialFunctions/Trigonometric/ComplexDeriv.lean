@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Complex
+import Analysis.SpecialFunctions.Trigonometric.Complex
 
 #align_import analysis.special_functions.trigonometric.complex_deriv from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

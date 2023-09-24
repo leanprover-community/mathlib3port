@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.GroupAction.Quotient
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.Topology.Algebra.Monoid
-import Mathbin.Topology.Algebra.Constructions
+import GroupTheory.GroupAction.ConjAct
+import GroupTheory.GroupAction.Quotient
+import GroupTheory.QuotientGroup
+import Topology.Algebra.Monoid
+import Topology.Algebra.Constructions
 
 #align_import topology.algebra.group.basic from "leanprover-community/mathlib"@"3b1890e71632be9e3b2086ab512c3259a7e9a3ef"
 
@@ -1668,7 +1668,7 @@ theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : closure s / t = s / t 
 
 end TopologicalGroup
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 
@@ -1953,7 +1953,7 @@ theorem local_isCompact_isClosed_nhds_of_group [LocallyCompactSpace G] {U : Set 
       _ ⊆ V * V := (mul_subset_mul_right interior_subset)
       _ ⊆ L := by rintro x ⟨y, z, yv, zv, rfl⟩; exact hV _ yv _ zv
   exact
-    ⟨closure V, isCompact_of_isClosed_subset Lcomp isClosed_closure VL, isClosed_closure,
+    ⟨closure V, IsCompact.of_isClosed_subset Lcomp isClosed_closure VL, isClosed_closure,
       VL.trans LU, interior_mono subset_closure (mem_interior_iff_mem_nhds.2 Vnhds)⟩
 #align local_is_compact_is_closed_nhds_of_group local_isCompact_isClosed_nhds_of_group
 #align local_is_compact_is_closed_nhds_of_add_group local_isCompact_isClosed_nhds_of_addGroup

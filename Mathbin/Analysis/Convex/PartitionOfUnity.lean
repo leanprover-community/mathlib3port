@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Topology.PartitionOfUnity
-import Mathbin.Analysis.Convex.Combination
+import Topology.PartitionOfUnity
+import Analysis.Convex.Combination
 
 #align_import analysis.convex.partition_of_unity from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

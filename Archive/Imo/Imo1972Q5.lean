@@ -3,8 +3,8 @@ Copyright (c) 2020 Ruben Van de Velde, Stanislas Polu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ruben Van de Velde, Stanislas Polu
 -/
-import Mathbin.Data.Real.Basic
-import Mathbin.Analysis.NormedSpace.Basic
+import Data.Real.Basic
+import Analysis.NormedSpace.Basic
 
 #align_import imo.imo1972_q5 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

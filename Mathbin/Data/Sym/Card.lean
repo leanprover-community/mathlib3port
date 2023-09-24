@@ -3,9 +3,9 @@ Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta, Huỳnh Trần Khanh, Stuart Presnell
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Finset.Sym
-import Mathbin.Data.Fintype.Sum
+import Algebra.BigOperators.Basic
+import Data.Finset.Sym
+import Data.Fintype.Sum
 
 #align_import data.sym.card from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

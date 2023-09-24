@@ -3,11 +3,11 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
-import Mathbin.CategoryTheory.IsConnected
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.Shapes.WidePullbacks
+import CategoryTheory.IsConnected
+import CategoryTheory.Limits.Preserves.Basic
 
 #align_import category_theory.limits.connected from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 -/
-import Mathbin.Data.Bool.Basic
-import Mathbin.Meta.RbMap
-import Mathbin.Tactic.Lint.Basic
+import Data.Bool.Basic
+import Meta.RbMap
+import Tactic.Lint.Basic
 
 #align_import tactic.lint.type_classes from "leanprover-community/mathlib"@"8f66240cab125b938b327d3850169d490cfbcdd8"
 

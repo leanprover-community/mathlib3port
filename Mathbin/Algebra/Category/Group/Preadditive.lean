@@ -3,8 +3,8 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.Algebra.Category.Group.Basic
-import Mathbin.CategoryTheory.Preadditive.Basic
+import Algebra.Category.Group.Basic
+import CategoryTheory.Preadditive.Basic
 
 #align_import algebra.category.Group.preadditive from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

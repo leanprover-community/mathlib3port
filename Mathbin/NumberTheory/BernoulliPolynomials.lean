@@ -3,10 +3,10 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, David Loeffler
 -/
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.Polynomial.Derivative
-import Mathbin.Data.Nat.Choose.Cast
-import Mathbin.NumberTheory.Bernoulli
+import Data.Polynomial.AlgebraMap
+import Data.Polynomial.Derivative
+import Data.Nat.Choose.Cast
+import NumberTheory.Bernoulli
 
 #align_import number_theory.bernoulli_polynomials from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

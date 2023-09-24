@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 
 Some proofs and docs came from `algebra/commute` (c) Neil Strickland
 -/
-import Mathbin.Algebra.Group.Units
+import Algebra.Group.Units
 
 #align_import algebra.group.semiconj from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

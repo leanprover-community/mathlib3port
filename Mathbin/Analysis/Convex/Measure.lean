@@ -3,9 +3,9 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Convex.Topology
-import Mathbin.Analysis.NormedSpace.AddTorsorBases
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
+import Analysis.Convex.Topology
+import Analysis.NormedSpace.AddTorsorBases
+import MeasureTheory.Measure.Lebesgue.EqHaar
 
 #align_import analysis.convex.measure from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

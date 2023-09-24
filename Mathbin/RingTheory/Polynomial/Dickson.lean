@@ -3,11 +3,11 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.Algebra.CharP.Invertible
-import Mathbin.Data.Zmod.Basic
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Polynomial.Chebyshev
-import Mathbin.RingTheory.Ideal.LocalRing
+import Algebra.CharP.Invertible
+import Data.Zmod.Basic
+import RingTheory.Localization.FractionRing
+import RingTheory.Polynomial.Chebyshev
+import RingTheory.Ideal.LocalRing
 
 #align_import ring_theory.polynomial.dickson from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

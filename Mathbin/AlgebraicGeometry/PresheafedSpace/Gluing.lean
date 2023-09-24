@@ -3,9 +3,9 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Topology.Gluing
-import Mathbin.AlgebraicGeometry.OpenImmersion.Basic
-import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
+import Topology.Gluing
+import AlgebraicGeometry.OpenImmersion.Basic
+import AlgebraicGeometry.LocallyRingedSpace.HasColimits
 
 #align_import algebraic_geometry.presheafed_space.gluing from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 

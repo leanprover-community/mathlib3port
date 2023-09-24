@@ -3,7 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 import Mathbin.Tactic.Lint.Default
 
 #align_import tactic.mk_iff_of_inductive_prop from "leanprover-community/mathlib"@"4f8c490fa3c3086f55427f664db7742ecf88b852"

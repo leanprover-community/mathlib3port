@@ -3,12 +3,12 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.Data.Zmod.Quotient
-import Mathbin.GroupTheory.NoncommPiCoprod
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Algebra.GcdMonoid.Finset
-import Mathbin.Data.Nat.Factorization.Basic
-import Mathbin.Tactic.ByContra
+import Data.Zmod.Quotient
+import GroupTheory.NoncommPiCoprod
+import GroupTheory.OrderOfElement
+import Algebra.GcdMonoid.Finset
+import Data.Nat.Factorization.Basic
+import Tactic.ByContra
 
 #align_import group_theory.exponent from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

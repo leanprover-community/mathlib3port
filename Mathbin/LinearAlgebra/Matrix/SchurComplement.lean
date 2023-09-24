@@ -3,9 +3,9 @@ Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Eric Wieser, Jeremy Avigad, Johan Commelin
 -/
-import Mathbin.Data.Matrix.Invertible
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.LinearAlgebra.Matrix.PosDef
+import Data.Matrix.Invertible
+import LinearAlgebra.Matrix.NonsingularInverse
+import LinearAlgebra.Matrix.PosDef
 
 #align_import linear_algebra.matrix.schur_complement from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

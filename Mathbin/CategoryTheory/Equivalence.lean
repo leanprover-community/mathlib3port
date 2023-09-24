@@ -3,11 +3,11 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.Functor.FullyFaithful
-import Mathbin.CategoryTheory.FullSubcategory
-import Mathbin.CategoryTheory.Whiskering
-import Mathbin.CategoryTheory.EssentialImage
-import Mathbin.Tactic.Slice
+import CategoryTheory.Functor.FullyFaithful
+import CategoryTheory.FullSubcategory
+import CategoryTheory.Whiskering
+import CategoryTheory.EssentialImage
+import Tactic.Slice
 
 #align_import category_theory.equivalence from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

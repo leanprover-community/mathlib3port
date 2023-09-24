@@ -3,9 +3,9 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
-import Mathbin.Analysis.Complex.UpperHalfPlane.Manifold
-import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
+import Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+import Analysis.Complex.UpperHalfPlane.Manifold
+import NumberTheory.ModularForms.SlashInvariantForms
 
 #align_import number_theory.modular_forms.basic from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

@@ -3,13 +3,13 @@ Copyright (c) 2020 Paul van Wamelen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 -/
-import Mathbin.Algebra.Field.Basic
-import Mathbin.RingTheory.Int.Basic
-import Mathbin.Tactic.Ring
-import Mathbin.Tactic.RingExp
-import Mathbin.Tactic.FieldSimp
-import Mathbin.Data.Int.NatPrime
-import Mathbin.Data.Zmod.Basic
+import Algebra.Field.Basic
+import RingTheory.Int.Basic
+import Tactic.Ring
+import Tactic.RingExp
+import Tactic.FieldSimp
+import Data.Int.NatPrime
+import Data.Zmod.Basic
 
 #align_import number_theory.pythagorean_triples from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 
@@ -461,7 +461,7 @@ theorem isPrimitiveClassified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : ℤ}
 #align pythagorean_triple.is_primitive_classified_aux PythagoreanTriple.isPrimitiveClassified_aux
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 #print PythagoreanTriple.isPrimitiveClassified_of_coprime_of_odd_of_pos /-
 theorem isPrimitiveClassified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) (hyo : y % 2 = 1)
     (hzpos : 0 < z) : h.IsPrimitiveClassified :=

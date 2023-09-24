@@ -3,8 +3,8 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.LinearAlgebra.Multilinear.Basic
+import Topology.Algebra.Module.Basic
+import LinearAlgebra.Multilinear.Basic
 
 #align_import topology.algebra.module.multilinear from "leanprover-community/mathlib"@"f40476639bac089693a489c9e354ebd75dc0f886"
 

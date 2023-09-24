@@ -3,9 +3,9 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Sébastien Gouëzel, Yury G. Kudryashov, Dylan MacKenzie, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Analysis.Asymptotics.Asymptotics
-import Mathbin.Analysis.SpecificLimits.Basic
+import Algebra.Order.Field.Basic
+import Analysis.Asymptotics.Asymptotics
+import Analysis.SpecificLimits.Basic
 
 #align_import analysis.specific_limits.normed from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

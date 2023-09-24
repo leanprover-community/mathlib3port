@@ -3,10 +3,10 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.Field.Defs
-import Mathbin.Algebra.GroupWithZero.Units.Lemmas
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Ring.Commute
+import Algebra.Field.Defs
+import Algebra.GroupWithZero.Units.Lemmas
+import Algebra.Hom.Ring
+import Algebra.Ring.Commute
 
 #align_import algebra.field.basic from "leanprover-community/mathlib"@"05101c3df9d9cfe9430edc205860c79b6d660102"
 

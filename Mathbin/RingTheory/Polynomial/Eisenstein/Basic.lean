@@ -3,8 +3,8 @@ Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.RingTheory.EisensteinCriterion
-import Mathbin.RingTheory.Polynomial.ScaleRoots
+import RingTheory.EisensteinCriterion
+import RingTheory.Polynomial.ScaleRoots
 
 #align_import ring_theory.polynomial.eisenstein.basic from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

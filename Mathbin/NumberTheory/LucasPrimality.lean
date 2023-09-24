@@ -3,10 +3,10 @@ Copyright (c) 2020 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Tactic.Zify
-import Mathbin.Data.Nat.Totient
+import Data.Fintype.Basic
+import GroupTheory.OrderOfElement
+import Tactic.Zify
+import Data.Nat.Totient
 
 #align_import number_theory.lucas_primality from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

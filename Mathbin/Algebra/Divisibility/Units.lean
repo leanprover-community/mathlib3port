@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, Yury Kudryashov,
 Neil Strickland, Aaron Anderson
 -/
-import Mathbin.Algebra.Divisibility.Basic
-import Mathbin.Algebra.Group.Units
+import Algebra.Divisibility.Basic
+import Algebra.Group.Units
 
 #align_import algebra.divisibility.units from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
@@ -148,7 +148,7 @@ theorem isUnit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x 
 #align is_unit_of_dvd_unit isUnit_of_dvd_unit
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∣ » 1) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ∣ » 1) -/
 #print isUnit_of_dvd_one /-
 theorem isUnit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩

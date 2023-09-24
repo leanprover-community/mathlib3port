@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Adam Topaz
 -/
-import Mathbin.CategoryTheory.Functor.Category
-import Mathbin.CategoryTheory.Functor.FullyFaithful
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Functor.Category
+import CategoryTheory.Functor.FullyFaithful
+import CategoryTheory.Functor.ReflectsIsomorphisms
 
 #align_import category_theory.monad.basic from "leanprover-community/mathlib"@"9c6816cab5872990d450d2c2e7832176167b1c07"
 
@@ -35,8 +35,8 @@ universe v₁ u₁
 variable (C : Type u₁) [Category.{v₁} C]
 
 #print CategoryTheory.Monad /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`η'] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`μ'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`η'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`μ'] [] -/
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -53,8 +53,8 @@ structure Monad extends C ⥤ C where
 -/
 
 #print CategoryTheory.Comonad /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`ε'] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`δ'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`ε'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`δ'] [] -/
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)

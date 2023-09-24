@@ -3,8 +3,8 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathbin.MeasureTheory.Covering.Besicovitch
+import MeasureTheory.Measure.Lebesgue.EqHaar
+import MeasureTheory.Covering.Besicovitch
 
 #align_import measure_theory.covering.besicovitch_vector_space from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

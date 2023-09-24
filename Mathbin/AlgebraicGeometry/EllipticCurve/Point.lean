@@ -3,9 +3,9 @@ Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 -/
-import Mathbin.AlgebraicGeometry.EllipticCurve.Weierstrass
-import Mathbin.LinearAlgebra.FreeModule.Norm
-import Mathbin.RingTheory.ClassGroup
+import AlgebraicGeometry.EllipticCurve.Weierstrass
+import LinearAlgebra.FreeModule.Norm
+import RingTheory.ClassGroup
 
 #align_import algebraic_geometry.elliptic_curve.point from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
@@ -73,19 +73,19 @@ elliptic curve, rational point, group law
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def map_simp : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def eval_simp : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def C_simp : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def derivative_simp : tactic Unit :=
   sorry
 

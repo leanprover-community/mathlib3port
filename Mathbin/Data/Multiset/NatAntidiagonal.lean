@@ -3,8 +3,8 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Multiset.Nodup
-import Mathbin.Data.List.NatAntidiagonal
+import Data.Multiset.Nodup
+import Data.List.NatAntidiagonal
 
 #align_import data.multiset.nat_antidiagonal from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

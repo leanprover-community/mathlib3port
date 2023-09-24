@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.Algebra.Ring.Ulift
-import Mathbin.RingTheory.WittVector.Basic
-import Mathbin.Data.MvPolynomial.Funext
+import Algebra.Ring.Ulift
+import RingTheory.WittVector.Basic
+import Data.MvPolynomial.Funext
 
 #align_import ring_theory.witt_vector.is_poly from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

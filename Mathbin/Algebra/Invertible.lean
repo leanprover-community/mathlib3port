@@ -3,9 +3,9 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.Group.Units
-import Mathbin.Algebra.GroupWithZero.Units.Lemmas
-import Mathbin.Algebra.Ring.Defs
+import Algebra.Group.Units
+import Algebra.GroupWithZero.Units.Lemmas
+import Algebra.Ring.Defs
 
 #align_import algebra.invertible from "leanprover-community/mathlib"@"722b3b152ddd5e0cf21c0a29787c76596cb6b422"
 

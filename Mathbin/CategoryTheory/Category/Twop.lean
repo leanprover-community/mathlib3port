@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.CategoryTheory.Category.Bipointed
-import Mathbin.Data.TwoPointing
+import CategoryTheory.Category.Bipointed
+import Data.TwoPointing
 
 #align_import category_theory.category.Twop from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

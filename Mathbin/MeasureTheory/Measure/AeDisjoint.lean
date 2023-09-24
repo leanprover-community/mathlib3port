@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
+import MeasureTheory.Measure.MeasureSpaceDef
 
 #align_import measure_theory.measure.ae_disjoint from "leanprover-community/mathlib"@"b5ad141426bb005414324f89719c77c0aa3ec612"
 
@@ -34,7 +34,7 @@ def AEDisjoint (s t : Set α) :=
 
 variable {μ} {s t u v : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print MeasureTheory.exists_null_pairwise_disjoint_diff /-
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/

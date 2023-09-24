@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.RingTheory.Noetherian
+import RingTheory.Noetherian
 
 #align_import ring_theory.flat from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
 

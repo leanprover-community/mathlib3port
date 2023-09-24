@@ -3,9 +3,9 @@ Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 -/
-import Mathbin.Data.Fintype.Card
-import Mathbin.Computability.Language
-import Mathbin.Tactic.NormNum
+import Data.Fintype.Card
+import Computability.Language
+import Tactic.NormNum
 
 #align_import computability.DFA from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

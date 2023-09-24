@@ -3,9 +3,9 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 -/
-import Mathbin.Analysis.Normed.Group.AddTorsor
-import Mathbin.Analysis.Normed.Group.Pointwise
-import Mathbin.Analysis.NormedSpace.Basic
+import Analysis.Normed.Group.AddTorsor
+import Analysis.Normed.Group.Pointwise
+import Analysis.NormedSpace.Basic
 
 #align_import analysis.normed_space.pointwise from "leanprover-community/mathlib"@"bc91ed7093bf098d253401e69df601fc33dde156"
 

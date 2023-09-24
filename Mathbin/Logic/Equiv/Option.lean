@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Control.EquivFunctor
-import Mathbin.Data.Option.Basic
-import Mathbin.Data.Subtype
-import Mathbin.Logic.Equiv.Defs
+import Control.EquivFunctor
+import Data.Option.Basic
+import Data.Subtype
+import Logic.Equiv.Defs
 
 #align_import logic.equiv.option from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

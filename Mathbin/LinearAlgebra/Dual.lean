@@ -3,11 +3,11 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle, Kyle Miller
 -/
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.Projection
-import Mathbin.LinearAlgebra.SesquilinearForm
-import Mathbin.RingTheory.Finiteness
-import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.Projection
+import LinearAlgebra.SesquilinearForm
+import RingTheory.Finiteness
+import LinearAlgebra.FreeModule.Finite.Basic
 
 #align_import linear_algebra.dual from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -747,7 +747,7 @@ variable {R M ι : Type _}
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M] [DecidableEq ι]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- TODO: In Lean 4 we can remove this and use `by { intros; exact Set.toFinite _ }` as a default
 -- argument.
 /-- Try using `set.to_finite` to dispatch a `set.finite` goal. -/

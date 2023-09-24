@@ -3,9 +3,9 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Topology.Algebra.ContinuousAffineMap
-import Mathbin.Analysis.NormedSpace.AffineIsometry
-import Mathbin.Analysis.NormedSpace.OperatorNorm
+import Topology.Algebra.ContinuousAffineMap
+import Analysis.NormedSpace.AffineIsometry
+import Analysis.NormedSpace.OperatorNorm
 
 #align_import analysis.normed_space.continuous_affine_map from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

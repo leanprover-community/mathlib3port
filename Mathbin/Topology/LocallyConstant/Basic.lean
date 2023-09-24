@@ -3,12 +3,12 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.Connected
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Tactic.Tfae
-import Mathbin.Tactic.FinCases
+import Topology.SubsetProperties
+import Topology.Connected
+import Topology.ContinuousFunction.Basic
+import Algebra.IndicatorFunction
+import Tactic.Tfae
+import Tactic.FinCases
 
 #align_import topology.locally_constant.basic from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 

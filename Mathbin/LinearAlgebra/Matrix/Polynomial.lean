@@ -3,9 +3,9 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Algebra.Polynomial.BigOperators
-import Mathbin.Data.Polynomial.Degree.Lemmas
-import Mathbin.LinearAlgebra.Matrix.Determinant
+import Algebra.Polynomial.BigOperators
+import Data.Polynomial.Degree.Lemmas
+import LinearAlgebra.Matrix.Determinant
 
 #align_import linear_algebra.matrix.polynomial from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

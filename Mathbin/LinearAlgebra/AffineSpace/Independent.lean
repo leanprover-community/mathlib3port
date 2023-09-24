@@ -3,12 +3,12 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Data.Finset.Sort
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.Data.Sign
-import Mathbin.LinearAlgebra.AffineSpace.Combination
-import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
-import Mathbin.LinearAlgebra.Basis
+import Data.Finset.Sort
+import Data.Fin.VecNotation
+import Data.Sign
+import LinearAlgebra.AffineSpace.Combination
+import LinearAlgebra.AffineSpace.AffineEquiv
+import LinearAlgebra.Basis
 
 #align_import linear_algebra.affine_space.independent from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 
@@ -648,7 +648,7 @@ theorem exists_subset_affineIndependent_affineSpan_eq_top {s : Set P}
 
 variable (k V)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print exists_affineIndependent /-
 theorem exists_affineIndependent (s : Set P) :
     ∃ (t : _) (_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) :=

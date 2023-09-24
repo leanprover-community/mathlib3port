@@ -3,9 +3,9 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.TrivSqZeroExt
-import Mathbin.Topology.Algebra.InfiniteSum.Basic
-import Mathbin.Topology.Algebra.Module.Basic
+import Algebra.TrivSqZeroExt
+import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.Module.Basic
 
 #align_import topology.instances.triv_sq_zero_ext from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 

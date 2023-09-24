@@ -3,9 +3,9 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.QuadraticForm.Basic
-import Mathbin.Algebra.CharP.Two
-import Mathbin.Data.Zmod.Basic
+import LinearAlgebra.QuadraticForm.Basic
+import Algebra.CharP.Two
+import Data.Zmod.Basic
 
 #align_import quadratic_form from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

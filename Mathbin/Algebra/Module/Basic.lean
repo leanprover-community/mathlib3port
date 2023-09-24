@@ -3,9 +3,9 @@ Copyright (c) 2015 Nathaniel Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.SmulWithZero
-import Mathbin.GroupTheory.GroupAction.Group
-import Mathbin.Tactic.Abel
+import Algebra.SmulWithZero
+import GroupTheory.GroupAction.Group
+import Tactic.Abel
 
 #align_import algebra.module.basic from "leanprover-community/mathlib"@"30413fc89f202a090a54d78e540963ed3de0056e"
 

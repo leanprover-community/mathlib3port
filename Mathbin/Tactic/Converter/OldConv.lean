@@ -5,7 +5,7 @@ Authors: Leonardo de Moura
 
 Converter monad for building simplifiers.
 -/
-import Mathbin.Control.Basic
+import Control.Basic
 
 #align_import tactic.converter.old_conv from "leanprover-community/mathlib"@"8f6fd1b69096c6a587f745d354306c0d46396915"
 

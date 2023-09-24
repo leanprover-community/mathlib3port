@@ -3,9 +3,9 @@ Copyright (c) 2020 Paul van Wamelen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 -/
-import Mathbin.NumberTheory.PythagoreanTriples
-import Mathbin.RingTheory.Coprime.Lemmas
-import Mathbin.Tactic.LinearCombination
+import NumberTheory.PythagoreanTriples
+import RingTheory.Coprime.Lemmas
+import Tactic.LinearCombination
 
 #align_import number_theory.fermat4 from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

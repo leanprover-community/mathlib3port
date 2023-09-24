@@ -3,10 +3,10 @@ Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Adam Topaz
 -/
-import Mathbin.CategoryTheory.Abelian.Homology
-import Mathbin.CategoryTheory.Functor.LeftDerived
-import Mathbin.CategoryTheory.Abelian.Projective
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
+import CategoryTheory.Abelian.Homology
+import CategoryTheory.Functor.LeftDerived
+import CategoryTheory.Abelian.Projective
+import CategoryTheory.Limits.Constructions.EpiMono
 
 #align_import category_theory.abelian.left_derived from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

@@ -3,9 +3,9 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
 -/
-import Mathbin.Data.Fin.Basic
-import Mathbin.Data.Pi.Lex
-import Mathbin.Data.Set.Intervals.Basic
+import Data.Fin.Basic
+import Data.Pi.Lex
+import Data.Set.Intervals.Basic
 
 #align_import data.fin.tuple.basic from "leanprover-community/mathlib"@"ef997baa41b5c428be3fb50089a7139bf4ee886b"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.RingTheory.Localization.Basic
+import Data.Polynomial.AlgebraMap
+import RingTheory.Localization.Basic
 
 #align_import data.polynomial.laurent from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 

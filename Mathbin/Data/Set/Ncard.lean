@@ -3,8 +3,8 @@ Copyright (c) 2023 Peter Nelson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Peter Nelson
 -/
-import Mathbin.Data.Finite.Card
-import Mathbin.Algebra.BigOperators.Finprod
+import Data.Finite.Card
+import Algebra.BigOperators.Finprod
 
 #align_import data.set.ncard from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 
@@ -59,7 +59,7 @@ noncomputable def ncard (s : Set α) :=
 #align set.ncard Set.ncard
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic, for use in `auto_param`s, that finds a `t.finite` term for a set `t`
   whose finiteness can be deduced from typeclasses (eg. in a `finite` type). -/
 unsafe def to_finite_tac : tactic Unit :=
@@ -1022,7 +1022,7 @@ theorem ncard_eq_one : s.ncard = 1 ↔ ∃ a, s = {a} :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Set.exists_eq_insert_iff_ncard /-
 theorem exists_eq_insert_iff_ncard
     (hs : s.Finite := by

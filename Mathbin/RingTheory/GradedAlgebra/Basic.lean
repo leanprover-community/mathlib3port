@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 -/
-import Mathbin.Algebra.DirectSum.Algebra
-import Mathbin.Algebra.DirectSum.Decomposition
-import Mathbin.Algebra.DirectSum.Internal
-import Mathbin.Algebra.DirectSum.Ring
+import Algebra.DirectSum.Algebra
+import Algebra.DirectSum.Decomposition
+import Algebra.DirectSum.Internal
+import Algebra.DirectSum.Ring
 
 #align_import ring_theory.graded_algebra.basic from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

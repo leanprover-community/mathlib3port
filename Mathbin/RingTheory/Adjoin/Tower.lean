@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.RingTheory.Adjoin.Fg
+import RingTheory.Adjoin.Fg
 
 #align_import ring_theory.adjoin.tower from "leanprover-community/mathlib"@"94eaaaa6064d32e98cf838789144cf5318c37cf0"
 

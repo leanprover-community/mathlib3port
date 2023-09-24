@@ -3,8 +3,8 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 -/
-import Mathbin.Topology.Sets.Closeds
-import Mathbin.Topology.QuasiSeparated
+import Topology.Sets.Closeds
+import Topology.QuasiSeparated
 
 #align_import topology.sets.compacts from "leanprover-community/mathlib"@"8c1b484d6a214e059531e22f1be9898ed6c1fd47"
 

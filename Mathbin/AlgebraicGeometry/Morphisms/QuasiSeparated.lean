@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.AlgebraicGeometry.Morphisms.QuasiCompact
-import Mathbin.Topology.QuasiSeparated
+import AlgebraicGeometry.Morphisms.QuasiCompact
+import Topology.QuasiSeparated
 
 #align_import algebraic_geometry.morphisms.quasi_separated from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

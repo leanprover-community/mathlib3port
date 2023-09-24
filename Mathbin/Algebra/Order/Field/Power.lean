@@ -3,10 +3,10 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Algebra.Parity
-import Mathbin.Algebra.CharZero.Lemmas
-import Mathbin.Algebra.GroupWithZero.Power
-import Mathbin.Algebra.Order.Field.Basic
+import Algebra.Parity
+import Algebra.CharZero.Lemmas
+import Algebra.GroupWithZero.Power
+import Algebra.Order.Field.Basic
 
 #align_import algebra.order.field.power from "leanprover-community/mathlib"@"acb3d204d4ee883eb686f45d486a2a6811a01329"
 

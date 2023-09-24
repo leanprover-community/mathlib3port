@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Topology.MetricSpace.Basic
-import Mathbin.Topology.MetricSpace.EmetricParacompact
-import Mathbin.Topology.ShrinkingLemma
+import Topology.MetricSpace.Basic
+import Topology.MetricSpace.EmetricParacompact
+import Topology.ShrinkingLemma
 
 #align_import topology.metric_space.shrinking_lemma from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

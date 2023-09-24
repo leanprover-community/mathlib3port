@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.Basic
+import Data.List.Basic
 
 #align_import data.list.infix from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 
@@ -602,7 +602,7 @@ instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l
 #align list.decidable_infix List.decidableInfix
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
 #print List.prefix_take_le_iff /-
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
     L.take m <+: L.take n ↔ m ≤ n :=

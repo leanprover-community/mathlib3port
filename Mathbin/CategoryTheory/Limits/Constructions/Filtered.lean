@@ -3,8 +3,8 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
-import Mathbin.CategoryTheory.Limits.Opposites
+import CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import CategoryTheory.Limits.Opposites
 
 #align_import category_theory.limits.constructions.filtered from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

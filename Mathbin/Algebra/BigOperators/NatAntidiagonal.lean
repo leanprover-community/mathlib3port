@@ -3,8 +3,8 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.Finset.NatAntidiagonal
-import Mathbin.Algebra.BigOperators.Basic
+import Data.Finset.NatAntidiagonal
+import Algebra.BigOperators.Basic
 
 #align_import algebra.big_operators.nat_antidiagonal from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

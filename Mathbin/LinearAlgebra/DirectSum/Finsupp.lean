@@ -3,9 +3,9 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Algebra.DirectSum.Finsupp
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.LinearAlgebra.DirectSum.TensorProduct
+import Algebra.DirectSum.Finsupp
+import LinearAlgebra.Finsupp
+import LinearAlgebra.DirectSum.TensorProduct
 
 #align_import linear_algebra.direct_sum.finsupp from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.RingTheory.Trace
-import Mathbin.RingTheory.Norm
-import Mathbin.NumberTheory.NumberField.Basic
+import RingTheory.Trace
+import RingTheory.Norm
+import NumberTheory.NumberField.Basic
 
 #align_import ring_theory.discriminant from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

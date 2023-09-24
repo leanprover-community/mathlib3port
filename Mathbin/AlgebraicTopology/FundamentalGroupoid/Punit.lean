@@ -3,8 +3,8 @@ Copyright (c) 2022 Praneeth Kolichala. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 -/
-import Mathbin.CategoryTheory.Punit
-import Mathbin.AlgebraicTopology.FundamentalGroupoid.Basic
+import CategoryTheory.Punit
+import AlgebraicTopology.FundamentalGroupoid.Basic
 
 #align_import algebraic_topology.fundamental_groupoid.punit from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

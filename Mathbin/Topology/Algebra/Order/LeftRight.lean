@@ -3,7 +3,7 @@ Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Topology.ContinuousOn
+import Topology.ContinuousOn
 
 #align_import topology.algebra.order.left_right from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

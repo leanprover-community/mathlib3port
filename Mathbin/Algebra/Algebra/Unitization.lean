@@ -3,9 +3,9 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.LinearAlgebra.Prod
-import Mathbin.Algebra.Hom.NonUnitalAlg
+import Algebra.Algebra.Basic
+import LinearAlgebra.Prod
+import Algebra.Hom.NonUnitalAlg
 
 #align_import algebra.algebra.unitization from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

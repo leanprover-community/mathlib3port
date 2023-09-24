@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
-import Mathbin.RingTheory.RingHom.FiniteType
+import AlgebraicGeometry.Morphisms.RingHomProperties
+import RingTheory.RingHom.FiniteType
 
 #align_import algebraic_geometry.morphisms.finite_type from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Combinatorics.SetFamily.Compression.Down
-import Mathbin.Order.UpperLower.Basic
-import Mathbin.Data.Fintype.BigOperators
+import Combinatorics.SetFamily.Compression.Down
+import Order.UpperLower.Basic
+import Data.Fintype.BigOperators
 
 #align_import combinatorics.set_family.harris_kleitman from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

@@ -3,10 +3,10 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Analysis.Calculus.Fderiv.Linear
-import Mathbin.Analysis.Calculus.Fderiv.Comp
-import Mathbin.Analysis.Calculus.Fderiv.Equiv
-import Mathbin.Analysis.NormedSpace.Star.Basic
+import Analysis.Calculus.Fderiv.Linear
+import Analysis.Calculus.Fderiv.Comp
+import Analysis.Calculus.Fderiv.Equiv
+import Analysis.NormedSpace.Star.Basic
 
 #align_import analysis.calculus.fderiv.star from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

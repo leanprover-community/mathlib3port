@@ -3,9 +3,9 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.NumberTheory.Zsqrtd.Basic
-import Mathbin.Data.Complex.Basic
-import Mathbin.RingTheory.PrincipalIdealDomain
+import NumberTheory.Zsqrtd.Basic
+import Data.Complex.Basic
+import RingTheory.PrincipalIdealDomain
 
 #align_import number_theory.zsqrtd.gaussian_int from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

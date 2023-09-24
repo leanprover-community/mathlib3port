@@ -3,8 +3,8 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.Integrals
-import Mathbin.MeasureTheory.Integral.PeakFunction
+import Analysis.SpecialFunctions.Integrals
+import MeasureTheory.Integral.PeakFunction
 
 #align_import analysis.special_functions.trigonometric.euler_sine_prod from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

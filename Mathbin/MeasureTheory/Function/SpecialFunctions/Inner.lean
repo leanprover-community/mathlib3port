@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.InnerProductSpace.Basic
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Complex
+import Analysis.InnerProductSpace.Basic
+import MeasureTheory.Constructions.BorelSpace.Complex
 
 #align_import measure_theory.function.special_functions.inner from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

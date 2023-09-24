@@ -3,12 +3,12 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Joachim Breitner
 -/
-import Mathbin.Algebra.FreeMonoid.Basic
-import Mathbin.GroupTheory.Congruence
-import Mathbin.GroupTheory.IsFreeGroup
-import Mathbin.Data.List.Chain
-import Mathbin.SetTheory.Cardinal.Ordinal
-import Mathbin.Data.Set.Pointwise.Smul
+import Algebra.FreeMonoid.Basic
+import GroupTheory.Congruence
+import GroupTheory.IsFreeGroup
+import Data.List.Chain
+import SetTheory.Cardinal.Ordinal
+import Data.Set.Pointwise.Smul
 
 #align_import group_theory.free_product from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

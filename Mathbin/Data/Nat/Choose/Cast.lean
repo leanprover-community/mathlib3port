@@ -3,8 +3,8 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Nat.Choose.Basic
-import Mathbin.Data.Nat.Factorial.Cast
+import Data.Nat.Choose.Basic
+import Data.Nat.Factorial.Cast
 
 #align_import data.nat.choose.cast from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

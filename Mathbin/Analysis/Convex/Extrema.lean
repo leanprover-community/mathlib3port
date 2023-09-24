@@ -3,10 +3,10 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.Analysis.Convex.Function
-import Mathbin.Topology.Algebra.Affine
-import Mathbin.Topology.LocalExtr
-import Mathbin.Topology.MetricSpace.Basic
+import Analysis.Convex.Function
+import Topology.Algebra.Affine
+import Topology.LocalExtr
+import Topology.MetricSpace.Basic
 
 #align_import analysis.convex.extrema from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Testing.SlimCheck.Testable
-import Mathbin.Data.List.Sort
+import Testing.SlimCheck.Testable
+import Data.List.Sort
 
 #align_import tactic.slim_check from "leanprover-community/mathlib"@"c0a51cf2de54089d69301befc4c73bbc2f5c7342"
 

@@ -3,10 +3,10 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.ExactFunctor
-import Mathbin.CategoryTheory.Limits.Preserves.Finite
-import Mathbin.CategoryTheory.Preadditive.Biproducts
-import Mathbin.CategoryTheory.Preadditive.FunctorCategory
+import CategoryTheory.Limits.ExactFunctor
+import CategoryTheory.Limits.Preserves.Finite
+import CategoryTheory.Preadditive.Biproducts
+import CategoryTheory.Preadditive.FunctorCategory
 
 #align_import category_theory.preadditive.additive_functor from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

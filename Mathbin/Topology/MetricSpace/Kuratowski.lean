@@ -3,8 +3,8 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.NormedSpace.LpSpace
-import Mathbin.Topology.Sets.Compacts
+import Analysis.NormedSpace.LpSpace
+import Topology.Sets.Compacts
 
 #align_import topology.metric_space.kuratowski from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

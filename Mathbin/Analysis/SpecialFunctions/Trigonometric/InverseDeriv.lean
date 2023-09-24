@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Analysis.SpecialFunctions.Trigonometric.Inverse
+import Analysis.SpecialFunctions.Trigonometric.Deriv
 
 #align_import analysis.special_functions.trigonometric.inverse_deriv from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

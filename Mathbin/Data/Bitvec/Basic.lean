@@ -3,10 +3,10 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Data.Bitvec.Core
-import Mathbin.Data.Fin.Basic
+import Data.Bitvec.Core
+import Data.Fin.Basic
 import Mathbin.Tactic.Monotonicity.Default
-import Mathbin.Tactic.NormNum
+import Tactic.NormNum
 
 #align_import data.bitvec.basic from "leanprover-community/mathlib"@"008af8bb14b3ebef7e04ec3b0d63b947dee4d26a"
 

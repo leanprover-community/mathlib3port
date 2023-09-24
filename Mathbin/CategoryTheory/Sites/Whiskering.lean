@@ -3,7 +3,7 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Sites.Sheaf
+import CategoryTheory.Sites.Sheaf
 
 #align_import category_theory.sites.whiskering from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

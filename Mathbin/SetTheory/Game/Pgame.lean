@@ -3,11 +3,11 @@ Copyright (c) 2019 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 -/
-import Mathbin.Data.Fin.Basic
-import Mathbin.Data.List.Basic
-import Mathbin.Logic.Relation
-import Mathbin.Logic.Small.Basic
-import Mathbin.Order.GameAdd
+import Data.Fin.Basic
+import Data.List.Basic
+import Logic.Relation
+import Logic.Small.Basic
+import Order.GameAdd
 
 #align_import set_theory.game.pgame from "leanprover-community/mathlib"@"8900d545017cd21961daa2a1734bb658ef52c618"
 
@@ -365,7 +365,7 @@ theorem SetTheory.PGame.Subsequent.mk_right {xl xr} (xL : xl → SetTheory.PGame
 #align pgame.subsequent.mk_right SetTheory.PGame.Subsequent.mk_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry

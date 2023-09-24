@@ -3,9 +3,9 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Monad.Basic
-import Mathbin.CategoryTheory.Monoidal.End
-import Mathbin.CategoryTheory.Monoidal.Mon_
+import CategoryTheory.Monad.Basic
+import CategoryTheory.Monoidal.End
+import CategoryTheory.Monoidal.Mon_
 
 #align_import category_theory.monad.equiv_mon from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

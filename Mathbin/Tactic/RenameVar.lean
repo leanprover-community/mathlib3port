@@ -3,7 +3,7 @@ Copyright (c) 2019 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Tactic.Interactive
+import Tactic.Interactive
 
 #align_import tactic.rename_var from "leanprover-community/mathlib"@"591a0a006de5e8fe75b1c55258123d91dd416b2d"
 

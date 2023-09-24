@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.Data.MvPolynomial.Counit
-import Mathbin.Data.MvPolynomial.Invertible
-import Mathbin.RingTheory.WittVector.Defs
+import Data.MvPolynomial.Counit
+import Data.MvPolynomial.Invertible
+import RingTheory.WittVector.Defs
 
 #align_import ring_theory.witt_vector.basic from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
@@ -91,7 +91,7 @@ theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
@@ -193,9 +193,9 @@ section Tactic
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
   let fn ← to_expr `(($(fn) : Fin _ → ℕ → R))

@@ -3,11 +3,11 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.Data.Zmod.Basic
-import Mathbin.Data.Nat.Basic
-import Mathbin.Tactic.IntervalCases
-import Mathbin.GroupTheory.SpecificGroups.Dihedral
-import Mathbin.GroupTheory.SpecificGroups.Cyclic
+import Data.Zmod.Basic
+import Data.Nat.Basic
+import Tactic.IntervalCases
+import GroupTheory.SpecificGroups.Dihedral
+import GroupTheory.SpecificGroups.Cyclic
 
 #align_import group_theory.specific_groups.quaternion from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

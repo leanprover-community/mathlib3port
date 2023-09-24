@@ -3,7 +3,7 @@ Copyright (c) 2020 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 -/
-import Mathbin.Data.Set.Finite
+import Data.Set.Finite
 
 #align_import data.set.intervals.infinite from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 

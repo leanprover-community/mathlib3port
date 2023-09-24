@@ -3,10 +3,10 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.GroupTheory.Submonoid.Inverses
-import Mathbin.RingTheory.FiniteType
-import Mathbin.RingTheory.Localization.Basic
-import Mathbin.Tactic.RingExp
+import GroupTheory.Submonoid.Inverses
+import RingTheory.FiniteType
+import RingTheory.Localization.Basic
+import Tactic.RingExp
 
 #align_import ring_theory.localization.inv_submonoid from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

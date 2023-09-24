@@ -3,9 +3,9 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Data.IsROrC.Lemmas
-import Mathbin.MeasureTheory.Function.StronglyMeasurable.Inner
-import Mathbin.MeasureTheory.Integral.SetIntegral
+import Data.IsROrC.Lemmas
+import MeasureTheory.Function.StronglyMeasurable.Inner
+import MeasureTheory.Integral.SetIntegral
 
 #align_import measure_theory.function.l2_space from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

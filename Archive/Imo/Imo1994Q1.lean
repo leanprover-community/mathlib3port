@@ -3,13 +3,13 @@ Copyright (c) 2021 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Finset.Sort
-import Mathbin.Data.Fin.Interval
+import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Order
+import Data.Fintype.BigOperators
+import Data.Finset.Sort
+import Data.Fin.Interval
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.ByContra
+import Tactic.ByContra
 
 #align_import imo.imo1994_q1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
@@ -55,7 +55,7 @@ end imo1994_q1
 
 open imo1994_q1
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » A) -/
 theorem imo1994_q1 (n : ℕ) (m : ℕ) (A : Finset ℕ) (hm : A.card = m + 1)
     (hrange : ∀ a ∈ A, 0 < a ∧ a ≤ n)
     (hadd : ∀ (a) (_ : a ∈ A) (b) (_ : b ∈ A), a + b ≤ n → a + b ∈ A) :

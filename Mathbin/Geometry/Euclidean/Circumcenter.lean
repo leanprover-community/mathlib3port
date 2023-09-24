@@ -3,9 +3,9 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Geometry.Euclidean.Sphere.Basic
-import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathbin.Tactic.DeriveFintype
+import Geometry.Euclidean.Sphere.Basic
+import LinearAlgebra.AffineSpace.FiniteDimensional
+import Tactic.DeriveFintype
 
 #align_import geometry.euclidean.circumcenter from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

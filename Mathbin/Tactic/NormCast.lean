@@ -3,8 +3,8 @@ Copyright (c) 2019 Paul-Nicolas Madelaine. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul-Nicolas Madelaine, Robert Y. Lewis
 -/
-import Mathbin.Tactic.Converter.Interactive
-import Mathbin.Tactic.Hint
+import Tactic.Converter.Interactive
+import Tactic.Hint
 
 #align_import tactic.norm_cast from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

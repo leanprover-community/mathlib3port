@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 -/
-import Mathbin.GroupTheory.Subsemigroup.Basic
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Group.TypeTags
+import GroupTheory.Subsemigroup.Basic
+import Algebra.Group.Prod
+import Algebra.Group.TypeTags
 
 #align_import group_theory.subsemigroup.operations from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -3,10 +3,10 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Topology.MetricSpace.PiNat
-import Mathbin.Topology.MetricSpace.Isometry
-import Mathbin.Topology.MetricSpace.Gluing
-import Mathbin.Analysis.Normed.Field.Basic
+import Topology.MetricSpace.PiNat
+import Topology.MetricSpace.Isometry
+import Topology.MetricSpace.Gluing
+import Analysis.Normed.Field.Basic
 
 #align_import topology.metric_space.polish from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 
@@ -61,7 +61,7 @@ variable {α : Type _} {β : Type _}
 
 
 #print PolishSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the

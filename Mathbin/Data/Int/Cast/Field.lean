@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.Data.Int.Cast.Lemmas
-import Mathbin.Algebra.Field.Defs
-import Mathbin.Algebra.GroupWithZero.Units.Lemmas
+import Data.Int.Cast.Lemmas
+import Algebra.Field.Defs
+import Algebra.GroupWithZero.Units.Lemmas
 
 #align_import data.int.cast.field from "leanprover-community/mathlib"@"acee671f47b8e7972a1eb6f4eed74b4b3abce829"
 

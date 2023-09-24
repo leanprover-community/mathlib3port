@@ -3,13 +3,13 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin, Patrick Massot
 -/
-import Mathbin.Algebra.Hom.Equiv.Units.GroupWithZero
-import Mathbin.Algebra.GroupWithZero.InjSurj
-import Mathbin.Algebra.Order.Group.Units
-import Mathbin.Algebra.Order.Monoid.Basic
-import Mathbin.Algebra.Order.Monoid.WithZero.Defs
-import Mathbin.Algebra.Order.Group.Instances
-import Mathbin.Algebra.Order.Monoid.TypeTags
+import Algebra.Hom.Equiv.Units.GroupWithZero
+import Algebra.GroupWithZero.InjSurj
+import Algebra.Order.Group.Units
+import Algebra.Order.Monoid.Basic
+import Algebra.Order.Monoid.WithZero.Defs
+import Algebra.Order.Group.Instances
+import Algebra.Order.Monoid.TypeTags
 
 #align_import algebra.order.with_zero from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

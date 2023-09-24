@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Pi
-import Mathbin.Logic.Equiv.Array
+import Data.Fintype.Pi
+import Logic.Equiv.Array
 
 #align_import data.fintype.array from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

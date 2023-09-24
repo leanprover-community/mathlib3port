@@ -3,11 +3,11 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.GroupPower.Identities
-import Mathbin.Data.Zmod.Basic
-import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.Data.Int.Parity
-import Mathbin.Data.Fintype.BigOperators
+import Algebra.GroupPower.Identities
+import Data.Zmod.Basic
+import FieldTheory.Finite.Basic
+import Data.Int.Parity
+import Data.Fintype.BigOperators
 
 #align_import number_theory.sum_four_squares from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 

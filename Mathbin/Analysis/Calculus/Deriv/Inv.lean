@@ -3,8 +3,8 @@ Copyright (c) 2023 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.Deriv.Mul
-import Mathbin.Analysis.Calculus.Deriv.Comp
+import Analysis.Calculus.Deriv.Mul
+import Analysis.Calculus.Deriv.Comp
 
 #align_import analysis.calculus.deriv.inv from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

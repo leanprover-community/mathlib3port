@@ -3,8 +3,8 @@ Copyright (c) 2019 Abhimanyu Pallavi Sudhir. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir, Yury Kudryashov
 -/
-import Mathbin.Order.Filter.Ultrafilter
-import Mathbin.Order.Filter.Germ
+import Order.Filter.Ultrafilter
+import Order.Filter.Germ
 
 #align_import order.filter.filter_product from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

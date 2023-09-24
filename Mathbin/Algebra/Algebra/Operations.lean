@@ -3,16 +3,16 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Algebra.Bilinear
-import Mathbin.Algebra.Algebra.Equiv
-import Mathbin.Algebra.Module.Submodule.Pointwise
-import Mathbin.Algebra.Module.Submodule.Bilinear
-import Mathbin.Algebra.Module.Opposites
-import Mathbin.Algebra.Order.Kleene
-import Mathbin.Data.Finset.Pointwise
-import Mathbin.Data.Set.Semiring
-import Mathbin.Data.Set.Pointwise.BigOperators
-import Mathbin.GroupTheory.GroupAction.SubMulAction.Pointwise
+import Algebra.Algebra.Bilinear
+import Algebra.Algebra.Equiv
+import Algebra.Module.Submodule.Pointwise
+import Algebra.Module.Submodule.Bilinear
+import Algebra.Module.Opposites
+import Algebra.Order.Kleene
+import Data.Finset.Pointwise
+import Data.Set.Semiring
+import Data.Set.Pointwise.BigOperators
+import GroupTheory.GroupAction.SubMulAction.Pointwise
 
 #align_import algebra.algebra.operations from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
@@ -840,7 +840,7 @@ theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 :=
 #align submodule.one_le_one_div Submodule.one_le_one_div
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 #print Submodule.le_self_mul_one_div /-
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I * (1 / I) :=
   by

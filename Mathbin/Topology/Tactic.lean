@@ -3,11 +3,11 @@ Copyright (c) 2020 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 -/
-import Mathbin.Tactic.AutoCases
-import Mathbin.Tactic.Tidy
-import Mathbin.Tactic.WithLocalReducibility
-import Mathbin.Tactic.ShowTerm
-import Mathbin.Topology.Basic
+import Tactic.AutoCases
+import Tactic.Tidy
+import Tactic.WithLocalReducibility
+import Tactic.ShowTerm
+import Topology.Basic
 
 #align_import topology.tactic from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
@@ -54,7 +54,7 @@ theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : 
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `continuous.comp` when appropriate.
 
 Applying `continuous.comp` is not always a good idea, so we have some

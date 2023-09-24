@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Algebra.BigOperators.Option
-import Mathbin.Analysis.BoxIntegral.Box.Basic
+import Algebra.BigOperators.Option
+import Analysis.BoxIntegral.Box.Basic
 
 #align_import analysis.box_integral.partition.basic from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 
@@ -944,7 +944,7 @@ theorem iUnion_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.iUni
 #align box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.iUnion_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (J «expr ∈ » π) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (J «expr ∈ » π) -/
 #print BoxIntegral.Prepartition.IsPartition.existsUnique /-
 protected theorem existsUnique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _) (_ : J ∈ π), x ∈ J :=
   by

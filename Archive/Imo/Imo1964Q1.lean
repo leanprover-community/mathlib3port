@@ -3,8 +3,8 @@ Copyright (c) 2020 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 -/
-import Mathbin.Tactic.IntervalCases
-import Mathbin.Data.Nat.Modeq
+import Tactic.IntervalCases
+import Data.Nat.Modeq
 
 #align_import imo.imo1964_q1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

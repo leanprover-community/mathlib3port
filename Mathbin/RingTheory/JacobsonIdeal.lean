@@ -3,8 +3,8 @@ Copyright (c) 2020 Devon Tuma. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
 -/
-import Mathbin.RingTheory.Ideal.Quotient
-import Mathbin.RingTheory.Polynomial.Quotient
+import RingTheory.Ideal.Quotient
+import RingTheory.Polynomial.Quotient
 
 #align_import ring_theory.jacobson_ideal from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
@@ -196,7 +196,7 @@ theorem eq_jacobson_iff_sInf_maximal' :
 #align ideal.eq_jacobson_iff_Inf_maximal' Ideal.eq_jacobson_iff_sInf_maximal'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » I) -/
 #print Ideal.eq_jacobson_iff_not_mem /-
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/

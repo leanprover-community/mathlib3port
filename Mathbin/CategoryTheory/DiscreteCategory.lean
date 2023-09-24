@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.EqToHom
-import Mathbin.Data.Ulift
+import CategoryTheory.EqToHom
+import Data.Ulift
 
 #align_import category_theory.discrete_category from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
@@ -102,7 +102,7 @@ instance [Inhabited α] : Inhabited (Discrete α) :=
 instance [Subsingleton α] : Subsingleton (Discrete α) :=
   ⟨by intros; ext; apply Subsingleton.elim⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/
 unsafe def _root_.tactic.discrete_cases : tactic Unit :=
   sorry

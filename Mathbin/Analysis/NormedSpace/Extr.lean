@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.NormedSpace.Ray
-import Mathbin.Topology.LocalExtr
+import Analysis.NormedSpace.Ray
+import Topology.LocalExtr
 
 #align_import analysis.normed_space.extr from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

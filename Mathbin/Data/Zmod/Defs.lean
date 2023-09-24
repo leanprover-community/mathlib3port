@@ -3,9 +3,9 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.NeZero
-import Mathbin.Data.Nat.Modeq
-import Mathbin.Data.Fintype.Lattice
+import Algebra.NeZero
+import Data.Nat.Modeq
+import Data.Fintype.Lattice
 
 #align_import data.zmod.defs from "leanprover-community/mathlib"@"3a2b5524a138b5d0b818b858b516d4ac8a484b03"
 

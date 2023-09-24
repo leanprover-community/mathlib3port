@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
+import NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 #align_import number_theory.legendre_symbol.gauss_eisenstein_lemmas from "leanprover-community/mathlib"@"8818fdefc78642a7e6afcd20be5c184f3c7d9699"
 

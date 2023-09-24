@@ -3,10 +3,10 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.NumberTheory.ArithmeticFunction
-import Mathbin.NumberTheory.LucasLehmer
-import Mathbin.Algebra.GeomSum
-import Mathbin.RingTheory.Multiplicity
+import NumberTheory.ArithmeticFunction
+import NumberTheory.LucasLehmer
+import Algebra.GeomSum
+import RingTheory.Multiplicity
 
 #align_import wiedijk_100_theorems.perfect_numbers from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

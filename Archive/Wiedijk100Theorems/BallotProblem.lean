@@ -3,7 +3,7 @@ Copyright (c) 2022 Bhavik Mehta, Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Kexing Ying
 -/
-import Mathbin.Probability.CondCount
+import Probability.CondCount
 
 #align_import wiedijk_100_theorems.ballot_problem from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

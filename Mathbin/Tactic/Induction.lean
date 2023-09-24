@@ -3,12 +3,12 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Tactic.Clear
-import Mathbin.Tactic.Dependencies
-import Mathbin.Tactic.FreshNames
-import Mathbin.Tactic.Generalizes
-import Mathbin.Tactic.HasVariableNames
-import Mathbin.Tactic.UnifyEquations
+import Tactic.Clear
+import Tactic.Dependencies
+import Tactic.FreshNames
+import Tactic.Generalizes
+import Tactic.HasVariableNames
+import Tactic.UnifyEquations
 
 #align_import tactic.induction from "leanprover-community/mathlib"@"f694c7dead66f5d4c80f446c796a5aad14707f0e"
 

@@ -3,10 +3,10 @@ Copyright (c) 2022 Praneeth Kolichala. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 -/
-import Mathbin.AlgebraicTopology.FundamentalGroupoid.InducedMaps
-import Mathbin.Topology.Homotopy.Contractible
-import Mathbin.CategoryTheory.Punit
-import Mathbin.AlgebraicTopology.FundamentalGroupoid.Punit
+import AlgebraicTopology.FundamentalGroupoid.InducedMaps
+import Topology.Homotopy.Contractible
+import CategoryTheory.Punit
+import AlgebraicTopology.FundamentalGroupoid.Punit
 
 #align_import algebraic_topology.fundamental_groupoid.simply_connected from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 
@@ -35,7 +35,7 @@ open ContinuousMap
 open scoped ContinuousMap
 
 #print SimplyConnectedSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
 /-- A simply connected space is one whose fundamental groupoid is equivalent to `discrete unit` -/
 class SimplyConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
   equiv_unit : Nonempty (FundamentalGroupoid X ≌ Discrete Unit)

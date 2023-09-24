@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.RingTheory.UniqueFactorizationDomain
-import Mathbin.RingTheory.Localization.Basic
+import RingTheory.UniqueFactorizationDomain
+import RingTheory.Localization.Basic
 
 #align_import ring_theory.localization.away.basic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

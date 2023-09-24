@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Preadditive.Basic
-import Mathbin.CategoryTheory.SingleObj
+import CategoryTheory.Preadditive.Basic
+import CategoryTheory.SingleObj
 
 #align_import category_theory.preadditive.single_obj from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"
 

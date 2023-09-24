@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.FunLike.Basic
-import Mathbin.Logic.Embedding.Basic
-import Mathbin.Order.RelClasses
+import Data.FunLike.Basic
+import Logic.Embedding.Basic
+import Order.RelClasses
 
 #align_import order.rel_iso.basic from "leanprover-community/mathlib"@"f29120f82f6e24a6f6579896dfa2de6769fec962"
 

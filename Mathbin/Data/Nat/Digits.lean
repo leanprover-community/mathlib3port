@@ -3,13 +3,13 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 -/
-import Mathbin.Data.Int.Modeq
-import Mathbin.Data.Nat.Bits
-import Mathbin.Data.Nat.Log
-import Mathbin.Data.List.Indexes
-import Mathbin.Data.List.Palindrome
-import Mathbin.Algebra.Parity
-import Mathbin.Tactic.IntervalCases
+import Data.Int.Modeq
+import Data.Nat.Bits
+import Data.Nat.Log
+import Data.List.Indexes
+import Data.List.Palindrome
+import Algebra.Parity
+import Tactic.IntervalCases
 import Mathbin.Tactic.Linarith.Default
 
 #align_import data.nat.digits from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"

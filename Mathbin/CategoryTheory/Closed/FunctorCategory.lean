@@ -3,8 +3,8 @@ Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import Mathbin.CategoryTheory.Closed.Monoidal
-import Mathbin.CategoryTheory.Monoidal.FunctorCategory
+import CategoryTheory.Closed.Monoidal
+import CategoryTheory.Monoidal.FunctorCategory
 
 #align_import category_theory.closed.functor_category from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

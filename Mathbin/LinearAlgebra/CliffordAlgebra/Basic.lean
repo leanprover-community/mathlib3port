@@ -3,9 +3,9 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Utensil Song
 -/
-import Mathbin.Algebra.RingQuot
-import Mathbin.LinearAlgebra.TensorAlgebra.Basic
-import Mathbin.LinearAlgebra.QuadraticForm.Isometry
+import Algebra.RingQuot
+import LinearAlgebra.TensorAlgebra.Basic
+import LinearAlgebra.QuadraticForm.Isometry
 
 #align_import linear_algebra.clifford_algebra.basic from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

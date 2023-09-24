@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Probability.ProbabilityMassFunction.Basic
-import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
+import Probability.ProbabilityMassFunction.Basic
+import MeasureTheory.Function.ConditionalExpectation.Basic
 
 #align_import probability.notation from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

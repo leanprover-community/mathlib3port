@@ -3,11 +3,11 @@ Copyright (c) 2020 Kevin Buzzard, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.CategoryTheory.Limits.Yoneda
-import Mathbin.CategoryTheory.Preadditive.FunctorCategory
-import Mathbin.CategoryTheory.Sites.SheafOfTypes
+import CategoryTheory.Limits.Preserves.Shapes.Equalizers
+import CategoryTheory.Limits.Preserves.Shapes.Products
+import CategoryTheory.Limits.Yoneda
+import CategoryTheory.Preadditive.FunctorCategory
+import CategoryTheory.Sites.SheafOfTypes
 
 #align_import category_theory.sites.sheaf from "leanprover-community/mathlib"@"2efd2423f8d25fa57cf7a179f5d8652ab4d0df44"
 

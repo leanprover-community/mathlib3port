@@ -3,9 +3,9 @@ Copyright (c) 2017 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johannes Hölzl, Chris Hughes, Jens Wagemaker, Jon Eugster
 -/
-import Mathbin.Algebra.Group.Basic
-import Mathbin.Logic.Unique
-import Mathbin.Tactic.Nontriviality
+import Algebra.Group.Basic
+import Logic.Unique
+import Tactic.Nontriviality
 
 #align_import algebra.group.units from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Order.UpperLower
-import Mathbin.Topology.Algebra.Group.Basic
+import Algebra.Order.UpperLower
+import Topology.Algebra.Group.Basic
 
 #align_import topology.algebra.order.upper_lower from "leanprover-community/mathlib"@"c0c52abb75074ed8b73a948341f50521fbf43b4c"
 

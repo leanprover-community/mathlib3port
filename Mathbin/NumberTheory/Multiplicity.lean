@@ -3,11 +3,11 @@ Copyright (c) 2022 Tian Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen, Mantas Bakšys
 -/
-import Mathbin.Algebra.GeomSum
-import Mathbin.Data.Int.Parity
-import Mathbin.Data.Zmod.Basic
-import Mathbin.NumberTheory.Padics.PadicVal
-import Mathbin.RingTheory.Ideal.QuotientOperations
+import Algebra.GeomSum
+import Data.Int.Parity
+import Data.Zmod.Basic
+import NumberTheory.Padics.PadicVal
+import RingTheory.Ideal.QuotientOperations
 
 #align_import number_theory.multiplicity from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

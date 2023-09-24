@@ -3,8 +3,8 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.HasLimits
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.HasLimits
+import CategoryTheory.Limits.Shapes.Equalizers
 
 #align_import category_theory.limits.shapes.wide_equalizers from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

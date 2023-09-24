@@ -3,9 +3,9 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Field.Defs
-import Mathbin.Algebra.Ring.Opposite
-import Mathbin.Data.Int.Cast.Lemmas
+import Algebra.Field.Defs
+import Algebra.Ring.Opposite
+import Data.Int.Cast.Lemmas
 
 #align_import algebra.field.opposite from "leanprover-community/mathlib"@"76de8ae01554c3b37d66544866659ff174e66e1f"
 

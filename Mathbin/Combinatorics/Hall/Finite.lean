@@ -3,8 +3,8 @@ Copyright (c) 2021 Alena Gusakov, Bhavik Mehta, Kyle Miller. All rights reserved
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Data.Set.Finite
+import Data.Fintype.Basic
+import Data.Set.Finite
 
 #align_import combinatorics.hall.finite from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 

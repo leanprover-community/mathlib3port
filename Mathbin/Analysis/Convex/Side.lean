@@ -3,9 +3,9 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Analysis.Convex.Between
-import Mathbin.Analysis.Convex.Normed
-import Mathbin.Analysis.Normed.Group.AddTorsor
+import Analysis.Convex.Between
+import Analysis.Convex.Normed
+import Analysis.Normed.Group.AddTorsor
 
 #align_import analysis.convex.side from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
@@ -43,7 +43,7 @@ variable [StrictOrderedCommRing R] [AddCommGroup V] [Module R V] [AddTorsor V P]
 
 variable [AddCommGroup V'] [Module R V'] [AddTorsor V' P']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 #print AffineSubspace.WSameSide /-
 /-- The points `x` and `y` are weakly on the same side of `s`. -/
 def WSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
@@ -58,7 +58,7 @@ def SSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
 #align affine_subspace.s_same_side AffineSubspace.SSameSide
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 #print AffineSubspace.WOppSide /-
 /-- The points `x` and `y` are weakly on opposite sides of `s`. -/
 def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=

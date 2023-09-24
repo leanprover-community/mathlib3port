@@ -3,10 +3,10 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Damiano Testa, Jens Wagemaker
 -/
-import Mathbin.Algebra.MonoidAlgebra.Division
-import Mathbin.Data.Nat.Interval
-import Mathbin.Data.Polynomial.Degree.Definitions
-import Mathbin.Data.Polynomial.Induction
+import Algebra.MonoidAlgebra.Division
+import Data.Nat.Interval
+import Data.Polynomial.Degree.Definitions
+import Data.Polynomial.Induction
 
 #align_import data.polynomial.inductions from "leanprover-community/mathlib"@"57e09a1296bfb4330ddf6624f1028ba186117d82"
 

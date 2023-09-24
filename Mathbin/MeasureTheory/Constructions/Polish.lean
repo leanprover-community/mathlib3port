@@ -3,9 +3,9 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Felix Weilacher
 -/
-import Mathbin.Data.Real.Cardinality
-import Mathbin.Topology.Perfect
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
+import Data.Real.Cardinality
+import Topology.Perfect
+import MeasureTheory.Constructions.BorelSpace.Basic
 
 #align_import measure_theory.constructions.polish from "leanprover-community/mathlib"@"9f55d0d4363ae59948c33864cbc52e0b12e0e8ce"
 

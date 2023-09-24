@@ -3,11 +3,11 @@ Copyright (c) 2020 Kevin Lacker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker
 -/
-import Mathbin.Algebra.GroupPower.Identities
-import Mathbin.Data.Int.NatPrime
+import Algebra.GroupPower.Identities
+import Data.Int.NatPrime
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.NormCast
-import Mathbin.Data.Set.Finite
+import Tactic.NormCast
+import Data.Set.Finite
 
 #align_import imo.imo1969_q1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

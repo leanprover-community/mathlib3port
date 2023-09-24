@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudriashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Malo Jaffré
 -/
-import Mathbin.Analysis.Convex.Function
-import Mathbin.Tactic.FieldSimp
+import Analysis.Convex.Function
+import Tactic.FieldSimp
 import Mathbin.Tactic.Linarith.Default
 
 #align_import analysis.convex.slope from "leanprover-community/mathlib"@"a8b2226cfb0a79f5986492053fc49b1a0c6aeffb"

@@ -3,9 +3,9 @@ Copyright (c) 2022 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 -/
-import Mathbin.MeasureTheory.Function.ConditionalExpectation.Indicator
-import Mathbin.MeasureTheory.Function.UniformIntegrable
-import Mathbin.MeasureTheory.Decomposition.RadonNikodym
+import MeasureTheory.Function.ConditionalExpectation.Indicator
+import MeasureTheory.Function.UniformIntegrable
+import MeasureTheory.Decomposition.RadonNikodym
 
 #align_import measure_theory.function.conditional_expectation.real from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

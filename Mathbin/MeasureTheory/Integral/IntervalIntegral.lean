@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 -/
-import Mathbin.Data.Set.Intervals.Disjoint
-import Mathbin.MeasureTheory.Integral.SetIntegral
-import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
+import Data.Set.Intervals.Disjoint
+import MeasureTheory.Integral.SetIntegral
+import MeasureTheory.Measure.Lebesgue.Basic
 
 #align_import measure_theory.integral.interval_integral from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

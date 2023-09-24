@@ -3,11 +3,11 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux, Jon Bannon
 -/
-import Mathbin.Algebra.Star.StarAlgHom
-import Mathbin.Analysis.NormedSpace.Star.Basic
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
-import Mathbin.Analysis.NormedSpace.Star.Mul
+import Algebra.Star.StarAlgHom
+import Analysis.NormedSpace.Star.Basic
+import Analysis.NormedSpace.OperatorNorm
+import Analysis.SpecialFunctions.Pow.Nnreal
+import Analysis.NormedSpace.Star.Mul
 
 #align_import analysis.normed_space.star.multiplier from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

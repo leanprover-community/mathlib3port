@@ -3,8 +3,8 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Data.Sum.Basic
-import Mathbin.Tactic.Dependencies
+import Data.Sum.Basic
+import Tactic.Dependencies
 
 #align_import tactic.fresh_names from "leanprover-community/mathlib"@"dc1525fb3ef6eb4348fb1749c302d8abc303d34a"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Tactic.Interactive
-import Mathbin.Tactic.NormNum
+import Tactic.Interactive
+import Tactic.NormNum
 
 #align_import tactic.field_simp from "leanprover-community/mathlib"@"24a09b317861fb5aa3850cfd1254acf729b0a398"
 
@@ -17,7 +17,7 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

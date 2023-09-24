@@ -3,10 +3,10 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Scott Morrison, Simon Hudon
 -/
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.CategoryTheory.Groupoid
-import Mathbin.CategoryTheory.Opposites
-import Mathbin.GroupTheory.GroupAction.Defs
+import Algebra.Hom.Equiv.Basic
+import CategoryTheory.Groupoid
+import CategoryTheory.Opposites
+import GroupTheory.GroupAction.Defs
 
 #align_import category_theory.endomorphism from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

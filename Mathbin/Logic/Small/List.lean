@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Logic.Small.Basic
-import Mathbin.Data.Vector.Basic
+import Logic.Small.Basic
+import Data.Vector.Basic
 
 #align_import logic.small.list from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

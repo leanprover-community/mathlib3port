@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Topology.MetricSpace.Isometry
+import Topology.MetricSpace.Isometry
 
 #align_import topology.metric_space.isometric_smul from "leanprover-community/mathlib"@"bc91ed7093bf098d253401e69df601fc33dde156"
 
@@ -40,7 +40,7 @@ universe u v w
 variable (M : Type u) (G : Type v) (X : Type w)
 
 #print IsometricVAdd /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isometry_vadd] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`isometry_vadd] [] -/
 /-- An additive action is isometric if each map `x ↦ c +ᵥ x` is an isometry. -/
 class IsometricVAdd [PseudoEMetricSpace X] [VAdd M X] : Prop where
   isometry_vadd : ∀ c : M, Isometry ((· +ᵥ ·) c : X → X)
@@ -48,7 +48,7 @@ class IsometricVAdd [PseudoEMetricSpace X] [VAdd M X] : Prop where
 -/
 
 #print IsometricSMul /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isometry_smul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`isometry_smul] [] -/
 /-- A multiplicative action is isometric if each map `x ↦ c • x` is an isometry. -/
 @[to_additive]
 class IsometricSMul [PseudoEMetricSpace X] [SMul M X] : Prop where

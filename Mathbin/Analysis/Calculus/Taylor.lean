@@ -3,9 +3,9 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.Analysis.Calculus.IteratedDeriv
-import Mathbin.Analysis.Calculus.MeanValue
-import Mathbin.Data.Polynomial.Module
+import Analysis.Calculus.IteratedDeriv
+import Analysis.Calculus.MeanValue
+import Data.Polynomial.Module
 
 #align_import analysis.calculus.taylor from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

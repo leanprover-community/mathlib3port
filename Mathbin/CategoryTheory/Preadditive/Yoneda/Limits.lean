@@ -3,8 +3,8 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Preadditive.Yoneda.Basic
-import Mathbin.Algebra.Category.Module.Abelian
+import CategoryTheory.Preadditive.Yoneda.Basic
+import Algebra.Category.Module.Abelian
 
 #align_import category_theory.preadditive.yoneda.limits from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

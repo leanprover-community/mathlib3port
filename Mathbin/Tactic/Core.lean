@@ -3,14 +3,14 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
 -/
-import Mathbin.Control.Basic
-import Mathbin.Data.Dlist.Basic
-import Mathbin.Meta.Expr
-import Leanbin.System.Io
-import Mathbin.Tactic.BinderMatching
-import Mathbin.Tactic.InteractiveExpr
-import Mathbin.Tactic.LeanCoreDocs
-import Mathbin.Tactic.ProjectDir
+import Control.Basic
+import Data.Dlist.Basic
+import Meta.Expr
+import System.Io
+import Tactic.BinderMatching
+import Tactic.InteractiveExpr
+import Tactic.LeanCoreDocs
+import Tactic.ProjectDir
 
 #align_import tactic.core from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 
@@ -630,7 +630,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   applyc n
 #align tactic.extract_def tactic.extract_def
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry

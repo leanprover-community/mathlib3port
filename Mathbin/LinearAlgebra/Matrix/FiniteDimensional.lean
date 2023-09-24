@@ -3,10 +3,10 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 -/
-import Mathbin.Data.Matrix.Basic
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
-import Mathbin.LinearAlgebra.Matrix.ToLin
+import Data.Matrix.Basic
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FreeModule.Finite.Matrix
+import LinearAlgebra.Matrix.ToLin
 
 #align_import linear_algebra.matrix.finite_dimensional from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

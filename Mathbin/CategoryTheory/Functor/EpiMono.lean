@@ -3,9 +3,9 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.EpiMono
-import Mathbin.CategoryTheory.Limits.Shapes.StrongEpi
-import Mathbin.CategoryTheory.LiftingProperties.Adjunction
+import CategoryTheory.EpiMono
+import CategoryTheory.Limits.Shapes.StrongEpi
+import CategoryTheory.LiftingProperties.Adjunction
 
 #align_import category_theory.functor.epi_mono from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 

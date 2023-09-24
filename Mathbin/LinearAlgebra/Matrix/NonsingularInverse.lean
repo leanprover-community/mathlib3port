@@ -3,8 +3,8 @@ Copyright (c) 2019 Tim Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 -/
-import Mathbin.Data.Matrix.Invertible
-import Mathbin.LinearAlgebra.Matrix.Adjugate
+import Data.Matrix.Invertible
+import LinearAlgebra.Matrix.Adjugate
 
 #align_import linear_algebra.matrix.nonsingular_inverse from "leanprover-community/mathlib"@"722b3b152ddd5e0cf21c0a29787c76596cb6b422"
 

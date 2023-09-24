@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Order.Monoid.WithTop
-import Mathbin.Algebra.Order.Ring.Canonical
+import Algebra.Hom.Ring
+import Algebra.Order.Monoid.WithTop
+import Algebra.Order.Ring.Canonical
 
 #align_import algebra.order.ring.with_top from "leanprover-community/mathlib"@"0111834459f5d7400215223ea95ae38a1265a907"
 

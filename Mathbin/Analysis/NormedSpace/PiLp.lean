@@ -3,9 +3,9 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 -/
-import Mathbin.Analysis.MeanInequalities
-import Mathbin.Data.Fintype.Order
-import Mathbin.LinearAlgebra.Matrix.Basis
+import Analysis.MeanInequalities
+import Data.Fintype.Order
+import LinearAlgebra.Matrix.Basis
 
 #align_import analysis.normed_space.pi_Lp from "leanprover-community/mathlib"@"9d013ad8430ddddd350cff5c3db830278ded3c79"
 

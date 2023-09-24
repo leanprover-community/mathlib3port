@@ -1,17 +1,17 @@
-import Counterexamples.CanonicallyOrderedCommSemiringTwoMul
-import Counterexamples.CharPZeroNeCharZero
-import Counterexamples.Cyclotomic105
-import Counterexamples.DirectSumIsInternal
-import Counterexamples.Girard
-import Counterexamples.HomogeneousPrimeNotPrime
-import Counterexamples.LinearOrderWithPosMulPosEqZero
-import Counterexamples.MapFloor
-import Counterexamples.Phillips
-import Counterexamples.Pseudoelement
-import Counterexamples.QuadraticForm
-import Counterexamples.SeminormLatticeNotDistrib
-import Counterexamples.SorgenfreyLine
-import Counterexamples.ZeroDivisorsInAddMonoidAlgebras
+import CanonicallyOrderedCommSemiringTwoMul
+import CharPZeroNeCharZero
+import Cyclotomic105
+import DirectSumIsInternal
+import Girard
+import HomogeneousPrimeNotPrime
+import LinearOrderWithPosMulPosEqZero
+import MapFloor
+import Phillips
+import Pseudoelement
+import QuadraticForm
+import SeminormLatticeNotDistrib
+import SorgenfreyLine
+import ZeroDivisorsInAddMonoidAlgebras
 
 #align_import all from "leanprover-community/mathlib"@"ce64cd319bb6b3e82f31c2d38e79080d377be451"
 

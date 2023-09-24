@@ -3,13 +3,13 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Option
-import Mathbin.Data.Fintype.Powerset
-import Mathbin.Data.Fintype.Sigma
-import Mathbin.Data.Fintype.Sum
-import Mathbin.Data.Fintype.Vector
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Algebra.BigOperators.Option
+import Data.Fintype.Option
+import Data.Fintype.Powerset
+import Data.Fintype.Sigma
+import Data.Fintype.Sum
+import Data.Fintype.Vector
+import Algebra.BigOperators.Ring
+import Algebra.BigOperators.Option
 
 #align_import data.fintype.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
@@ -88,7 +88,7 @@ theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : ∏ a, f a = ∏ a,
 #align fintype.sum_congr Fintype.sum_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Fintype.prod_eq_single /-
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : ∏ x, f x = f a :=

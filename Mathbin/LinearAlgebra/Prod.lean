@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Span
-import Mathbin.Order.PartialSups
-import Mathbin.Algebra.Algebra.Prod
+import LinearAlgebra.Span
+import Order.PartialSups
+import Algebra.Algebra.Prod
 
 #align_import linear_algebra.prod from "leanprover-community/mathlib"@"cd391184c85986113f8c00844cfe6dda1d34be3d"
 

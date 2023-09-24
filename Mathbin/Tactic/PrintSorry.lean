@@ -3,8 +3,8 @@ Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Data.Bool.Basic
+import Tactic.Core
+import Data.Bool.Basic
 
 #align_import tactic.print_sorry from "leanprover-community/mathlib"@"cfa57f46c99598023cb2dcb19d2484024e496ba6"
 

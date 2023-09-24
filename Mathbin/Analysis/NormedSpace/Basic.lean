@@ -3,12 +3,12 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Algebra.Algebra.Pi
-import Mathbin.Algebra.Algebra.RestrictScalars
-import Mathbin.Analysis.Normed.Field.Basic
-import Mathbin.Analysis.Normed.MulAction
-import Mathbin.Data.Real.Sqrt
-import Mathbin.Topology.Algebra.Module.Basic
+import Algebra.Algebra.Pi
+import Algebra.Algebra.RestrictScalars
+import Analysis.Normed.Field.Basic
+import Analysis.Normed.MulAction
+import Data.Real.Sqrt
+import Topology.Algebra.Module.Basic
 
 #align_import analysis.normed_space.basic from "leanprover-community/mathlib"@"bc91ed7093bf098d253401e69df601fc33dde156"
 
@@ -33,7 +33,7 @@ section SeminormedAddCommGroup
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
 set_option extends_priority 920
 
 #print NormedSpace /-

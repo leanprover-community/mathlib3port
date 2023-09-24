@@ -3,8 +3,8 @@ Copyright (c) 2019 Abhimanyu Pallavi Sudhir. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
 -/
-import Mathbin.Order.Filter.FilterProduct
-import Mathbin.Analysis.SpecificLimits.Basic
+import Order.Filter.FilterProduct
+import Analysis.SpecificLimits.Basic
 
 #align_import data.real.hyperreal from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

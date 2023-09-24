@@ -3,7 +3,7 @@ Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 -/
-import Mathbin.Topology.Category.Top.Adjunctions
+import Topology.Category.Top.Adjunctions
 
 #align_import topology.category.Top.epi_mono from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

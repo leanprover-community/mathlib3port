@@ -3,11 +3,11 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 -/
-import Mathbin.Algebra.Category.Module.Monoidal.Basic
-import Mathbin.CategoryTheory.Monoidal.Functorial
-import Mathbin.CategoryTheory.Monoidal.Types.Basic
-import Mathbin.LinearAlgebra.DirectSum.Finsupp
-import Mathbin.CategoryTheory.Linear.LinearFunctor
+import Algebra.Category.Module.Monoidal.Basic
+import CategoryTheory.Monoidal.Functorial
+import CategoryTheory.Monoidal.Types.Basic
+import LinearAlgebra.DirectSum.Finsupp
+import CategoryTheory.Linear.LinearFunctor
 
 #align_import algebra.category.Module.adjunctions from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.TensorProduct
-import Mathbin.Algebra.DirectSum.Module
+import LinearAlgebra.TensorProduct
+import Algebra.DirectSum.Module
 
 #align_import linear_algebra.direct_sum.tensor_product from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

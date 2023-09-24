@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Subobject.Limits
+import CategoryTheory.Subobject.Limits
 
 #align_import algebra.homology.image_to_kernel from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
@@ -392,7 +392,7 @@ section
 variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C}
   (w' : f' ≫ g' = 0) [HasKernels V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
   sorry

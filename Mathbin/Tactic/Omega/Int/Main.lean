@@ -3,8 +3,8 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Tactic.Omega.ProveUnsats
-import Mathbin.Tactic.Omega.Int.Dnf
+import Tactic.Omega.ProveUnsats
+import Tactic.Omega.Int.Dnf
 
 #align_import tactic.omega.int.main from "leanprover-community/mathlib"@"58581d0fe523063f5651df0619be2bf65012a94a"
 
@@ -26,7 +26,7 @@ attribute [sugar] Ne not_le not_lt Int.lt_iff_add_one_le or_false_iff false_or_i
   true_and_iff GE.ge GT.gt mul_add add_mul one_mul mul_one mul_comm sub_eq_add_neg imp_iff_not_or
   iff_iff_not_or_and_or_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 #align omega.int.desugar omega.int.desugar

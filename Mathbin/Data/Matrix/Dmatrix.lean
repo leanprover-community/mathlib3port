@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Group.Pi
-import Mathbin.Data.Fintype.Basic
+import Algebra.Group.Pi
+import Data.Fintype.Basic
 
 #align_import data.matrix.dmatrix from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

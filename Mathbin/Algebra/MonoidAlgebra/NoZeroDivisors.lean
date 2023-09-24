@@ -3,7 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.MonoidAlgebra.Support
+import Algebra.MonoidAlgebra.Support
 
 #align_import algebra.monoid_algebra.no_zero_divisors from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

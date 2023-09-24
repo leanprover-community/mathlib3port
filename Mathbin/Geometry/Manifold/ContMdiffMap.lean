@@ -3,8 +3,8 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.ContMdiff
-import Mathbin.Topology.ContinuousFunction.Basic
+import Geometry.Manifold.ContMdiff
+import Topology.ContinuousFunction.Basic
 
 #align_import geometry.manifold.cont_mdiff_map from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

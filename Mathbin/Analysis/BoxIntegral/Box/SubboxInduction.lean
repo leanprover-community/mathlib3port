@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.BoxIntegral.Box.Basic
-import Mathbin.Analysis.SpecificLimits.Basic
+import Analysis.BoxIntegral.Box.Basic
+import Analysis.SpecificLimits.Basic
 
 #align_import analysis.box_integral.box.subbox_induction from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

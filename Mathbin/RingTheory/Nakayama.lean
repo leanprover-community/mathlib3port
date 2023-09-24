@@ -3,7 +3,7 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.RingTheory.JacobsonIdeal
+import RingTheory.JacobsonIdeal
 
 #align_import ring_theory.nakayama from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 -/
-import Mathbin.Algebra.Category.Group.FilteredColimits
-import Mathbin.Algebra.Category.Module.Basic
+import Algebra.Category.Group.FilteredColimits
+import Algebra.Category.Module.Basic
 
 #align_import algebra.category.Module.filtered_colimits from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 

@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Group.WithOne.Defs
-import Mathbin.Algebra.Order.Monoid.Canonical.Defs
-import Mathbin.Algebra.Order.ZeroLeOne
+import Algebra.Group.WithOne.Defs
+import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Order.ZeroLeOne
 
 #align_import algebra.order.monoid.with_zero.defs from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

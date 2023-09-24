@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Algebra.Order.Ring.Defs
-import Mathbin.Algebra.Order.Sub.Canonical
-import Mathbin.GroupTheory.GroupAction.Defs
+import Algebra.Order.Ring.Defs
+import Algebra.Order.Sub.Canonical
+import GroupTheory.GroupAction.Defs
 
 #align_import algebra.order.ring.canonical from "leanprover-community/mathlib"@"824f9ae93a4f5174d2ea948e2d75843dd83447bb"
 

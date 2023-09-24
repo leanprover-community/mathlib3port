@@ -3,10 +3,10 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Order.Hom.Basic
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Algebra.Ring.Basic
-import Mathbin.Algebra.Order.Sub.Defs
+import Order.Hom.Basic
+import Algebra.Hom.Equiv.Basic
+import Algebra.Ring.Basic
+import Algebra.Order.Sub.Defs
 
 #align_import algebra.order.sub.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

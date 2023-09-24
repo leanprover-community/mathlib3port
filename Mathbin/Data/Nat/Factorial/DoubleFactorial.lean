@@ -3,9 +3,9 @@ Copyright (c) 2023 Jake Levinson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jake Levinson
 -/
-import Mathbin.Data.Nat.Factorial.Basic
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Tactic.Ring
+import Data.Nat.Factorial.Basic
+import Algebra.BigOperators.Order
+import Tactic.Ring
 
 #align_import data.nat.factorial.double_factorial from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

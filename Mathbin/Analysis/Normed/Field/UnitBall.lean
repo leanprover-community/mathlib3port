@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 -/
-import Mathbin.Analysis.Normed.Field.Basic
-import Mathbin.Analysis.Normed.Group.BallSphere
+import Analysis.Normed.Field.Basic
+import Analysis.Normed.Group.BallSphere
 
 #align_import analysis.normed.field.unit_ball from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

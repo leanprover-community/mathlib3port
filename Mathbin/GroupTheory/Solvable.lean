@@ -3,11 +3,11 @@ Copyright (c) 2021 Jordan Brown, Thomas Browning, Patrick Lutz. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
 -/
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.GroupTheory.Abelianization
-import Mathbin.GroupTheory.Perm.ViaEmbedding
-import Mathbin.GroupTheory.Subgroup.Simple
-import Mathbin.SetTheory.Cardinal.Basic
+import Data.Fin.VecNotation
+import GroupTheory.Abelianization
+import GroupTheory.Perm.ViaEmbedding
+import GroupTheory.Subgroup.Simple
+import SetTheory.Cardinal.Basic
 
 #align_import group_theory.solvable from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

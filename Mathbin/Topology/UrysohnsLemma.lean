@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.NormedSpace.AddTorsor
-import Mathbin.LinearAlgebra.AffineSpace.Ordered
-import Mathbin.Topology.ContinuousFunction.Basic
+import Analysis.NormedSpace.AddTorsor
+import LinearAlgebra.AffineSpace.Ordered
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.urysohns_lemma from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

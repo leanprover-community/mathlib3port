@@ -3,7 +3,7 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Testing.SlimCheck.Sampleable
+import Testing.SlimCheck.Sampleable
 
 #align_import testing.slim_check.testable from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
@@ -187,7 +187,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
-/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: gave_up {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: gave_up {} -/
 #print SlimCheck.TestResult /-
 /-- Result of trying to disprove `p`
 
@@ -267,7 +267,7 @@ instance (priority := 100) defaultPrintableProp {p} : PrintableProp p :=
 #align slim_check.default_printable_prop SlimCheck.defaultPrintableProp
 
 #print SlimCheck.Testable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testable (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Gen (TestResult p)

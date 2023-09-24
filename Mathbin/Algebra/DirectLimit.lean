@@ -3,10 +3,10 @@ Copyright (c) 2019 Kenny Lau, Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes
 -/
-import Mathbin.Data.Finset.Order
-import Mathbin.Algebra.DirectSum.Module
-import Mathbin.RingTheory.FreeCommRing
-import Mathbin.RingTheory.Ideal.Quotient
+import Data.Finset.Order
+import Algebra.DirectSum.Module
+import RingTheory.FreeCommRing
+import RingTheory.Ideal.Quotient
 
 #align_import algebra.direct_limit from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
@@ -48,8 +48,8 @@ variable [dec_ι : DecidableEq ι] [Preorder ι]
 variable (G : ι → Type w)
 
 #print DirectedSystem /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x

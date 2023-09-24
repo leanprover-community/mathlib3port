@@ -3,9 +3,9 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Topology.Algebra.UniformMulAction
-import Mathbin.Topology.UniformSpace.Completion
+import Topology.Algebra.UniformGroup
+import Topology.Algebra.UniformMulAction
+import Topology.UniformSpace.Completion
 
 #align_import topology.algebra.group_completion from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

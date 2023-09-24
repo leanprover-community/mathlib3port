@@ -3,9 +3,9 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Complex.Module
-import Mathbin.RingTheory.Norm
-import Mathbin.RingTheory.Trace
+import Data.Complex.Module
+import RingTheory.Norm
+import RingTheory.Trace
 
 #align_import ring_theory.complex from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

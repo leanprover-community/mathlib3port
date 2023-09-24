@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Set.Function
-import Mathbin.Logic.Function.Iterate
-import Mathbin.GroupTheory.Perm.Basic
+import Data.Set.Function
+import Logic.Function.Iterate
+import GroupTheory.Perm.Basic
 
 #align_import dynamics.fixed_points.basic from "leanprover-community/mathlib"@"b86832321b586c6ac23ef8cdef6a7a27e42b13bd"
 

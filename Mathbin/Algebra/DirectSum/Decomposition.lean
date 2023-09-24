@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jujian Zhang
 -/
-import Mathbin.Algebra.DirectSum.Module
-import Mathbin.Algebra.Module.Submodule.Basic
+import Algebra.DirectSum.Module
+import Algebra.Module.Submodule.Basic
 
 #align_import algebra.direct_sum.decomposition from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

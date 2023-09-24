@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky
 -/
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Data.Set.Lattice
-import Mathbin.Data.SetLike.Basic
+import Algebra.Hom.Group
+import Data.Set.Lattice
+import Data.SetLike.Basic
 
 #align_import group_theory.subsemigroup.basic from "leanprover-community/mathlib"@"feb99064803fd3108e37c18b0f77d0a8344677a3"
 

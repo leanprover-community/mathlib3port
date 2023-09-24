@@ -3,18 +3,18 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Analysis.Normed.Group.Basic
-import Mathbin.MeasureTheory.Function.AeMeasurableSequence
-import Mathbin.MeasureTheory.Group.Arithmetic
-import Mathbin.MeasureTheory.Lattice
-import Mathbin.MeasureTheory.Measure.OpenPos
-import Mathbin.Topology.Algebra.Order.LiminfLimsup
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Topology.Instances.Ereal
-import Mathbin.Topology.MetricSpace.HausdorffDistance
-import Mathbin.Topology.GDelta
-import Mathbin.Topology.Order.Lattice
-import Mathbin.Topology.Semicontinuous
+import Analysis.Normed.Group.Basic
+import MeasureTheory.Function.AeMeasurableSequence
+import MeasureTheory.Group.Arithmetic
+import MeasureTheory.Lattice
+import MeasureTheory.Measure.OpenPos
+import Topology.Algebra.Order.LiminfLimsup
+import Topology.ContinuousFunction.Basic
+import Topology.Instances.Ereal
+import Topology.MetricSpace.HausdorffDistance
+import Topology.GDelta
+import Topology.Order.Lattice
+import Topology.Semicontinuous
 
 #align_import measure_theory.constructions.borel_space.basic from "leanprover-community/mathlib"@"9f55d0d4363ae59948c33864cbc52e0b12e0e8ce"
 

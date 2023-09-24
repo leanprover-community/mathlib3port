@@ -3,9 +3,9 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Order.CompleteBooleanAlgebra
-import Mathbin.Order.Directed
-import Mathbin.Order.GaloisConnection
+import Order.CompleteBooleanAlgebra
+import Order.Directed
+import Order.GaloisConnection
 
 #align_import data.set.lattice from "leanprover-community/mathlib"@"bc7d81beddb3d6c66f71449c5bc76c38cb77cf9e"
 

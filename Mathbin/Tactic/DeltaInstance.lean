@@ -3,7 +3,7 @@ Copyright (c) 2019 Rob Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rob Lewis
 -/
-import Mathbin.Tactic.SimpResult
+import Tactic.SimpResult
 
 #align_import tactic.delta_instance from "leanprover-community/mathlib"@"1f10390872a75359a9a42cd6d7644cc5e45660c2"
 

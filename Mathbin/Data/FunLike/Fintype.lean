@@ -3,9 +3,9 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Finite.Basic
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Data.FunLike.Basic
+import Data.Finite.Basic
+import Data.Fintype.Basic
+import Data.FunLike.Basic
 
 #align_import data.fun_like.fintype from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 

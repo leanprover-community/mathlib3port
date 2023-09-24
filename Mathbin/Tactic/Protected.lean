@@ -3,7 +3,7 @@ Copyright (c) 2020 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.protected from "leanprover-community/mathlib"@"f36c98e877dd86af12606abbba5275513baa8a26"
 

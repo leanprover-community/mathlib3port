@@ -3,7 +3,7 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import data.json from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
@@ -42,7 +42,7 @@ unsafe instance : HasOrelse exceptional
     | success x => success x
     | exception msg => g
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
 /-- A class to indicate that a type is json serializable -/
 unsafe class json_serializable (α : Type) where
   to_json : α → json

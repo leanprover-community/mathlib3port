@@ -3,9 +3,9 @@ Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Module
-import Mathbin.Analysis.Convex.Star
-import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
+import Algebra.Order.Module
+import Analysis.Convex.Star
+import LinearAlgebra.AffineSpace.AffineSubspace
 
 #align_import analysis.convex.basic from "leanprover-community/mathlib"@"92bd7b1ffeb306a89f450bee126ddd8a284c259d"
 

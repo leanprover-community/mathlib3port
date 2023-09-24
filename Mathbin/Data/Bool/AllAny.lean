@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.Basic
+import Data.List.Basic
 
 #align_import data.bool.all_any from "leanprover-community/mathlib"@"10708587e81b68c763fcdb7505f279d52e569768"
 

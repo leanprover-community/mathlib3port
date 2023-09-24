@@ -3,9 +3,9 @@ Copyright (c) 2022 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.InnerProductSpace.Projection
-import Mathbin.Analysis.NormedSpace.LpSpace
-import Mathbin.Analysis.InnerProductSpace.PiL2
+import Analysis.InnerProductSpace.Projection
+import Analysis.NormedSpace.LpSpace
+import Analysis.InnerProductSpace.PiL2
 
 #align_import analysis.inner_product_space.l2_space from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

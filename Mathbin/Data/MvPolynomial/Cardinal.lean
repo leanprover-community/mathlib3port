@@ -3,9 +3,9 @@ Copyright (c) 2021 Chris Hughes, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
 -/
-import Mathbin.Data.Finsupp.Fintype
-import Mathbin.Data.MvPolynomial.Equiv
-import Mathbin.SetTheory.Cardinal.Ordinal
+import Data.Finsupp.Fintype
+import Data.MvPolynomial.Equiv
+import SetTheory.Cardinal.Ordinal
 
 #align_import data.mv_polynomial.cardinal from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

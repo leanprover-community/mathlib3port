@@ -3,9 +3,9 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Violeta Hernández Palacios
 -/
-import Mathbin.MeasureTheory.MeasurableSpaceDef
-import Mathbin.SetTheory.Cardinal.Cofinality
-import Mathbin.SetTheory.Cardinal.Continuum
+import MeasureTheory.MeasurableSpaceDef
+import SetTheory.Cardinal.Cofinality
+import SetTheory.Cardinal.Continuum
 
 #align_import measure_theory.card_measurable_space from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

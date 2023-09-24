@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Ordinal.Arithmetic
+import SetTheory.Ordinal.Arithmetic
 
 #align_import set_theory.ordinal.exponential from "leanprover-community/mathlib"@"b67044ba53af18680e1dd246861d9584e968495d"
 

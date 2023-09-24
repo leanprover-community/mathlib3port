@@ -3,10 +3,10 @@ Copyright (c) 2020 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 -/
-import Mathbin.Topology.Instances.Real
-import Mathbin.Topology.Algebra.Field
-import Mathbin.Data.Set.Intervals.ProjIcc
-import Mathbin.Data.Set.Intervals.Instances
+import Topology.Instances.Real
+import Topology.Algebra.Field
+import Data.Set.Intervals.ProjIcc
+import Data.Set.Intervals.Instances
 
 #align_import topology.unit_interval from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -161,7 +161,7 @@ theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
 #align unit_interval.coe_symm_eq unitInterval.coe_symm_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:307:22: continuitity! not supported at the moment -/
 #print unitInterval.continuous_symm /-
 @[continuity]
 theorem continuous_symm : Continuous σ := by continuity
@@ -251,10 +251,10 @@ theorem projIcc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 �
 
 namespace Tactic.Interactive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def unit_interval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry

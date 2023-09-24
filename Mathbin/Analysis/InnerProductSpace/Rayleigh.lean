@@ -3,11 +3,11 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 -/
-import Mathbin.Analysis.InnerProductSpace.Calculus
-import Mathbin.Analysis.InnerProductSpace.Dual
-import Mathbin.Analysis.InnerProductSpace.Adjoint
-import Mathbin.Analysis.Calculus.LagrangeMultipliers
-import Mathbin.LinearAlgebra.Eigenspace.Basic
+import Analysis.InnerProductSpace.Calculus
+import Analysis.InnerProductSpace.Dual
+import Analysis.InnerProductSpace.Adjoint
+import Analysis.Calculus.LagrangeMultipliers
+import LinearAlgebra.Eigenspace.Basic
 
 #align_import analysis.inner_product_space.rayleigh from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

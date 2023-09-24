@@ -3,10 +3,10 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.Tactic.FreshNames
-import Mathbin.Tactic.ReassocAxiom
-import Mathbin.Tactic.Slice
+import CategoryTheory.ConcreteCategory.Basic
+import Tactic.FreshNames
+import Tactic.ReassocAxiom
+import Tactic.Slice
 
 #align_import tactic.elementwise from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

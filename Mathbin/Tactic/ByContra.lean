@@ -3,8 +3,8 @@ Copyright (c) 2021 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Tactic.PushNeg
+import Tactic.Core
+import Tactic.PushNeg
 
 #align_import tactic.by_contra from "leanprover-community/mathlib"@"770703645cbd2f8d0e96743527f9ca57e7b9b63d"
 

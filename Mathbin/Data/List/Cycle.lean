@@ -3,9 +3,9 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.Multiset.Sort
-import Mathbin.Data.Fintype.List
-import Mathbin.Data.List.Rotate
+import Data.Multiset.Sort
+import Data.Fintype.List
+import Data.List.Rotate
 
 #align_import data.list.cycle from "leanprover-community/mathlib"@"7413128c3bcb3b0818e3e18720abc9ea3100fb49"
 

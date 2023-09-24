@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Subobject.WellPowered
-import Mathbin.CategoryTheory.Types
+import CategoryTheory.Subobject.WellPowered
+import CategoryTheory.Types
 
 #align_import category_theory.subobject.types from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

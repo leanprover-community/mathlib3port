@@ -3,12 +3,12 @@ Copyright (c) 2021 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.FieldTheory.IsAlgClosed.Spectrum
-import Mathbin.Analysis.Complex.Liouville
-import Mathbin.Analysis.Complex.Polynomial
-import Mathbin.Analysis.Analytic.RadiusLiminf
-import Mathbin.Topology.Algebra.Module.CharacterSpace
-import Mathbin.Analysis.NormedSpace.Exponential
+import FieldTheory.IsAlgClosed.Spectrum
+import Analysis.Complex.Liouville
+import Analysis.Complex.Polynomial
+import Analysis.Analytic.RadiusLiminf
+import Topology.Algebra.Module.CharacterSpace
+import Analysis.NormedSpace.Exponential
 
 #align_import analysis.normed_space.spectrum from "leanprover-community/mathlib"@"d608fc5d4e69d4cc21885913fb573a88b0deb521"
 

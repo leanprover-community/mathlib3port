@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Fintype.Perm
-import Mathbin.GroupTheory.Perm.Sign
-import Mathbin.Logic.Equiv.Option
+import Data.Fintype.Perm
+import GroupTheory.Perm.Sign
+import Logic.Equiv.Option
 
 #align_import group_theory.perm.option from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

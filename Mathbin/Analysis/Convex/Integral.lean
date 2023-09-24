@@ -3,10 +3,10 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Convex.Function
-import Mathbin.Analysis.Convex.StrictConvexSpace
-import Mathbin.MeasureTheory.Function.AeEqOfIntegral
-import Mathbin.MeasureTheory.Integral.Average
+import Analysis.Convex.Function
+import Analysis.Convex.StrictConvexSpace
+import MeasureTheory.Function.AeEqOfIntegral
+import MeasureTheory.Integral.Average
 
 #align_import analysis.convex.integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Topology.Instances.Int
+import Topology.Instances.Int
 
 #align_import topology.instances.nat from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

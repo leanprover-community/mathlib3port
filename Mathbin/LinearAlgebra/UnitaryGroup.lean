@@ -3,10 +3,10 @@ Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.LinearAlgebra.GeneralLinearGroup
-import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.Algebra.Star.Unitary
+import LinearAlgebra.GeneralLinearGroup
+import LinearAlgebra.Matrix.ToLin
+import LinearAlgebra.Matrix.NonsingularInverse
+import Algebra.Star.Unitary
 
 #align_import linear_algebra.unitary_group from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

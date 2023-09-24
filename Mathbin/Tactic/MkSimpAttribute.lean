@@ -3,7 +3,7 @@ Copyright (c) 2019 Rob Lewis All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rob Lewis
 -/
-import Mathbin.Tactic.DocCommands
+import Tactic.DocCommands
 
 #align_import tactic.mk_simp_attribute from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

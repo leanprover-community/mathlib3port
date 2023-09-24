@@ -3,8 +3,8 @@ Copyright (c) 2018 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Products.Basic
-import Mathbin.CategoryTheory.Types
+import CategoryTheory.Products.Basic
+import CategoryTheory.Types
 
 #align_import category_theory.functor.hom from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

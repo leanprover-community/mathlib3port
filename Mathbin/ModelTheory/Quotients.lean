@@ -3,8 +3,8 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.Fintype.Quotient
-import Mathbin.ModelTheory.Semantics
+import Data.Fintype.Quotient
+import ModelTheory.Semantics
 
 #align_import model_theory.quotients from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

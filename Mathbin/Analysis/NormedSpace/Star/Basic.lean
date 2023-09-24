@@ -3,13 +3,13 @@ Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.Analysis.Normed.Group.Hom
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Analysis.NormedSpace.LinearIsometry
-import Mathbin.Algebra.Star.SelfAdjoint
-import Mathbin.Algebra.Star.Unitary
-import Mathbin.Topology.Algebra.StarSubalgebra
-import Mathbin.Topology.Algebra.Module.Star
+import Analysis.Normed.Group.Hom
+import Analysis.NormedSpace.Basic
+import Analysis.NormedSpace.LinearIsometry
+import Algebra.Star.SelfAdjoint
+import Algebra.Star.Unitary
+import Topology.Algebra.StarSubalgebra
+import Topology.Algebra.Module.Star
 
 #align_import analysis.normed_space.star.basic from "leanprover-community/mathlib"@"aa6669832974f87406a3d9d70fc5707a60546207"
 

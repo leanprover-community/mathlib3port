@@ -3,7 +3,7 @@ Copyright (c) 2022 María Inés de Frutos-Fernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 -/
-import Mathbin.Analysis.Normed.Field.Basic
+import Analysis.Normed.Field.Basic
 
 #align_import analysis.normed.ring.seminorm from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

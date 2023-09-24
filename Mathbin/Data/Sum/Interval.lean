@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.Sum
-import Mathbin.Data.Sum.Order
-import Mathbin.Order.LocallyFinite
+import Data.Finset.Sum
+import Data.Sum.Order
+import Order.LocallyFinite
 
 #align_import data.sum.interval from "leanprover-community/mathlib"@"48a058d7e39a80ed56858505719a0b2197900999"
 
@@ -385,7 +385,7 @@ namespace Lex
 variable [Preorder α] [Preorder β] [OrderTop α] [OrderBot β] [LocallyFiniteOrder α]
   [LocallyFiniteOrder β]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Throwaway tactic. -/
 private unsafe def simp_lex : tactic Unit :=
   sorry

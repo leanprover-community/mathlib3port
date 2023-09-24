@@ -3,11 +3,11 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Monad.Basic
-import Mathbin.Data.Part
-import Mathbin.Order.Hom.Order
-import Mathbin.Data.Nat.Order.Basic
-import Mathbin.Tactic.Wlog
+import Control.Monad.Basic
+import Data.Part
+import Order.Hom.Order
+import Data.Nat.Order.Basic
+import Tactic.Wlog
 
 #align_import order.omega_complete_partial_order from "leanprover-community/mathlib"@"92ca63f0fb391a9ca5f22d2409a6080e786d99f7"
 
@@ -187,7 +187,7 @@ open OmegaCompletePartialOrder
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
 set_option extends_priority 50
 
 #print OmegaCompletePartialOrder /-

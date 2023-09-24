@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Weiser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Algebra.Operations
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.RingTheory.Subring.Pointwise
-import Mathbin.RingTheory.Adjoin.Basic
+import Algebra.Algebra.Operations
+import Algebra.Algebra.Subalgebra.Basic
+import RingTheory.Subring.Pointwise
+import RingTheory.Adjoin.Basic
 
 #align_import algebra.algebra.subalgebra.pointwise from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

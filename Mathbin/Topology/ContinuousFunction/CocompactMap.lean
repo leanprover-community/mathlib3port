@@ -3,7 +3,7 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Topology.ContinuousFunction.Basic
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.continuous_function.cocompact_map from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
@@ -219,7 +219,7 @@ theorem isCompact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β�
             (cocompact_tendsto f <|
               mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
   exact
-    isCompact_of_isClosed_subset ht (hs.is_closed.preimage <| map_continuous f) (by simpa using hts)
+    IsCompact.of_isClosed_subset ht (hs.is_closed.preimage <| map_continuous f) (by simpa using hts)
 #align cocompact_map.is_compact_preimage CocompactMap.isCompact_preimage
 -/
 

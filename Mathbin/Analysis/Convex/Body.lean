@@ -3,9 +3,9 @@ Copyright (c) 2022 Paul A. Reichert. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 -/
-import Mathbin.Analysis.Convex.Basic
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Topology.MetricSpace.HausdorffDistance
+import Analysis.Convex.Basic
+import Analysis.NormedSpace.Basic
+import Topology.MetricSpace.HausdorffDistance
 
 #align_import analysis.convex.body from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

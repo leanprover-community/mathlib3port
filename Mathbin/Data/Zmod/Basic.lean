@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.Data.Fintype.Units
-import Mathbin.Data.Nat.Parity
-import Mathbin.Tactic.FinCases
+import Algebra.CharP.Basic
+import Data.Fintype.Units
+import Data.Nat.Parity
+import Tactic.FinCases
 
 #align_import data.zmod.basic from "leanprover-community/mathlib"@"74ad1c88c77e799d2fea62801d1dbbd698cff1b7"
 

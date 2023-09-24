@@ -3,8 +3,8 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
-import Mathbin.Algebra.Hom.Equiv.Units.Basic
-import Mathbin.Algebra.GroupWithZero.Units.Basic
+import Algebra.Hom.Equiv.Units.Basic
+import Algebra.GroupWithZero.Units.Basic
 
 #align_import algebra.hom.equiv.units.group_with_zero from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

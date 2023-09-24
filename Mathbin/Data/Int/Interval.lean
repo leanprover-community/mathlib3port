@@ -3,9 +3,9 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.CharZero.Lemmas
-import Mathbin.Order.LocallyFinite
-import Mathbin.Data.Finset.LocallyFinite
+import Algebra.CharZero.Lemmas
+import Order.LocallyFinite
+import Data.Finset.LocallyFinite
 
 #align_import data.int.interval from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
 

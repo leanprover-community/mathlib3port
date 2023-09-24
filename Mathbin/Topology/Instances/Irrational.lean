@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Data.Real.Irrational
-import Mathbin.Data.Rat.Encodable
-import Mathbin.Topology.MetricSpace.Baire
+import Data.Real.Irrational
+import Data.Rat.Encodable
+import Topology.MetricSpace.Baire
 
 #align_import topology.instances.irrational from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

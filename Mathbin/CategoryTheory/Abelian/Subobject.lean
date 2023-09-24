@@ -3,8 +3,8 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Subobject.Limits
-import Mathbin.CategoryTheory.Abelian.Basic
+import CategoryTheory.Subobject.Limits
+import CategoryTheory.Abelian.Basic
 
 #align_import category_theory.abelian.subobject from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

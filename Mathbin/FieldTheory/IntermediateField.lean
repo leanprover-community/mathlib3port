@@ -3,9 +3,9 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.FieldTheory.Minpoly.Field
-import Mathbin.FieldTheory.Subfield
-import Mathbin.FieldTheory.Tower
+import FieldTheory.Minpoly.Field
+import FieldTheory.Subfield
+import FieldTheory.Tower
 
 #align_import field_theory.intermediate_field from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

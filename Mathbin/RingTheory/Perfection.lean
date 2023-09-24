@@ -3,15 +3,15 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.CharP.Pi
-import Mathbin.Algebra.CharP.Quotient
-import Mathbin.Algebra.CharP.Subring
-import Mathbin.Algebra.Ring.Pi
-import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
-import Mathbin.FieldTheory.PerfectClosure
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Subring.Basic
-import Mathbin.RingTheory.Valuation.Integers
+import Algebra.CharP.Pi
+import Algebra.CharP.Quotient
+import Algebra.CharP.Subring
+import Algebra.Ring.Pi
+import Analysis.SpecialFunctions.Pow.Nnreal
+import FieldTheory.PerfectClosure
+import RingTheory.Localization.FractionRing
+import RingTheory.Subring.Basic
+import RingTheory.Valuation.Integers
 
 #align_import ring_theory.perfection from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 

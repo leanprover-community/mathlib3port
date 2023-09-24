@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.GroupTheory.Perm.Basic
-import Mathbin.Logic.Equiv.Set
+import GroupTheory.Perm.Basic
+import Logic.Equiv.Set
 
 #align_import group_theory.perm.via_embedding from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

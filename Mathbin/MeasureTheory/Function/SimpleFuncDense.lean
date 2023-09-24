@@ -3,7 +3,7 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 -/
-import Mathbin.MeasureTheory.Function.SimpleFunc
+import MeasureTheory.Function.SimpleFunc
 
 #align_import measure_theory.function.simple_func_dense from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

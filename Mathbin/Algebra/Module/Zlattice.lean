@@ -3,7 +3,7 @@ Copyright (c) 2023 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 -/
-import Mathbin.MeasureTheory.Group.FundamentalDomain
+import MeasureTheory.Group.FundamentalDomain
 
 #align_import algebra.module.zlattice from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

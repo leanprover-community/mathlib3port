@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 -/
-import Mathbin.Analysis.SpecialFunctions.Exp
-import Mathbin.Data.Nat.Factorization.Basic
+import Analysis.SpecialFunctions.Exp
+import Data.Nat.Factorization.Basic
 
 #align_import analysis.special_functions.log.basic from "leanprover-community/mathlib"@"f23a09ce6d3f367220dc3cecad6b7eb69eb01690"
 

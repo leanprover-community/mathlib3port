@@ -3,8 +3,8 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.Algebra.SmoothFunctions
-import Mathbin.RingTheory.Derivation.Basic
+import Geometry.Manifold.Algebra.SmoothFunctions
+import RingTheory.Derivation.Basic
 
 #align_import geometry.manifold.derivation_bundle from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

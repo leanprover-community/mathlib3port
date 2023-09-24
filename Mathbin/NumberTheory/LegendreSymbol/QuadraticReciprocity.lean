@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 -/
-import Mathbin.NumberTheory.LegendreSymbol.Basic
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar.GaussSum
+import NumberTheory.LegendreSymbol.Basic
+import NumberTheory.LegendreSymbol.QuadraticChar.GaussSum
 
 #align_import number_theory.legendre_symbol.quadratic_reciprocity from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

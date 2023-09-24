@@ -3,10 +3,10 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Algebra.GroupPower.Order
-import Mathbin.Algebra.Order.Monoid.WithTop
-import Mathbin.Algebra.SmulWithZero
-import Mathbin.Algebra.Order.Monoid.MinMax
+import Algebra.GroupPower.Order
+import Algebra.Order.Monoid.WithTop
+import Algebra.SmulWithZero
+import Algebra.Order.Monoid.MinMax
 
 #align_import algebra.tropical.basic from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 

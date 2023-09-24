@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.BumpFunctionFindim
-import Mathbin.Geometry.Manifold.ContMdiff
+import Analysis.Calculus.BumpFunctionFindim
+import Geometry.Manifold.ContMdiff
 
 #align_import geometry.manifold.bump_function from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
@@ -369,7 +369,7 @@ theorem tsupport_subset_chartAt_source : tsupport f ⊆ (chartAt H c).source := 
 
 #print SmoothBumpFunction.hasCompactSupport /-
 protected theorem hasCompactSupport : HasCompactSupport f :=
-  isCompact_of_isClosed_subset f.isCompact_symm_image_closedBall isClosed_closure
+  IsCompact.of_isClosed_subset f.isCompact_symm_image_closedBall isClosed_closure
     f.tsupport_subset_symm_image_closedBall
 #align smooth_bump_function.has_compact_support SmoothBumpFunction.hasCompactSupport
 -/

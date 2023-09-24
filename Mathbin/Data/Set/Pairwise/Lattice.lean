@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Set.Lattice
-import Mathbin.Data.Set.Pairwise.Basic
+import Data.Set.Lattice
+import Data.Set.Pairwise.Basic
 
 #align_import data.set.pairwise.lattice from "leanprover-community/mathlib"@"c4c2ed622f43768eff32608d4a0f8a6cec1c047d"
 

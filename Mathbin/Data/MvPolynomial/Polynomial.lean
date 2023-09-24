@@ -3,8 +3,8 @@ Copyright (c) 2023 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.MvPolynomial.Equiv
-import Mathbin.Data.Polynomial.Eval
+import Data.MvPolynomial.Equiv
+import Data.Polynomial.Eval
 
 #align_import data.mv_polynomial.polynomial from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

@@ -3,11 +3,11 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Analysis.Calculus.LocalExtr
-import Mathbin.Data.Nat.PrimeNormNum
-import Mathbin.FieldTheory.AbelRuffini
-import Mathbin.RingTheory.RootsOfUnity.Minpoly
-import Mathbin.RingTheory.EisensteinCriterion
+import Analysis.Calculus.LocalExtr
+import Data.Nat.PrimeNormNum
+import FieldTheory.AbelRuffini
+import RingTheory.RootsOfUnity.Minpoly
+import RingTheory.EisensteinCriterion
 
 #align_import wiedijk_100_theorems.abel_ruffini from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

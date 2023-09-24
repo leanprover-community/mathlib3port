@@ -3,9 +3,9 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Polynomial.Taylor
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.LinearAlgebra.AdicCompletion
+import Data.Polynomial.Taylor
+import RingTheory.Ideal.LocalRing
+import LinearAlgebra.AdicCompletion
 
 #align_import ring_theory.henselian from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

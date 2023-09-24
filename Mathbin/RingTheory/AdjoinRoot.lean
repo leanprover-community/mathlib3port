@@ -3,15 +3,15 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Data.Polynomial.FieldDivision
-import Mathbin.FieldTheory.Minpoly.Basic
-import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.RingTheory.FinitePresentation
-import Mathbin.RingTheory.FiniteType
-import Mathbin.RingTheory.PowerBasis
-import Mathbin.RingTheory.PrincipalIdealDomain
-import Mathbin.RingTheory.QuotientNoetherian
+import Algebra.Algebra.Basic
+import Data.Polynomial.FieldDivision
+import FieldTheory.Minpoly.Basic
+import RingTheory.Adjoin.Basic
+import RingTheory.FinitePresentation
+import RingTheory.FiniteType
+import RingTheory.PowerBasis
+import RingTheory.PrincipalIdealDomain
+import RingTheory.QuotientNoetherian
 
 #align_import ring_theory.adjoin_root from "leanprover-community/mathlib"@"5c4b3d41a84bd2a1d79c7d9265e58a891e71be89"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.Data.Fin.Tuple.Sort
-import Mathbin.Data.Fintype.Perm
-import Mathbin.Order.WellFounded
+import Data.Fin.Tuple.Sort
+import Data.Fintype.Perm
+import Order.WellFounded
 
 #align_import data.fin.tuple.bubble_sort_induction from "leanprover-community/mathlib"@"bf2428c9486c407ca38b5b3fb10b87dad0bc99fa"
 

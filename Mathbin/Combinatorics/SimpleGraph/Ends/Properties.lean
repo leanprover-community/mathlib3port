@@ -3,7 +3,7 @@ Copyright (c) 2022 Anand Rao, Rémi Bottinelli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anand Rao, Rémi Bottinelli
 -/
-import Mathbin.Combinatorics.SimpleGraph.Ends.Defs
+import Combinatorics.SimpleGraph.Ends.Defs
 
 #align_import combinatorics.simple_graph.ends.properties from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

@@ -3,14 +3,14 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Option
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Data.Fintype.Pi
-import Mathbin.Data.Vector.Basic
-import Mathbin.Data.Pfun
-import Mathbin.Logic.Function.Iterate
-import Mathbin.Order.Basic
-import Mathbin.Tactic.ApplyFun
+import Data.Fintype.Option
+import Data.Fintype.Prod
+import Data.Fintype.Pi
+import Data.Vector.Basic
+import Data.Pfun
+import Logic.Function.Iterate
+import Order.Basic
+import Tactic.ApplyFun
 
 #align_import computability.turing_machine from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 
@@ -3118,7 +3118,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
 #align turing.TM2to1.tr_cfg Turing.TM2to1.TrCfg
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
 #print Turing.TM2to1.tr_respects_aux₁ /-
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :

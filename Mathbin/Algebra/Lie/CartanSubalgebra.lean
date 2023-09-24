@@ -3,8 +3,8 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Nilpotent
-import Mathbin.Algebra.Lie.Normalizer
+import Algebra.Lie.Nilpotent
+import Algebra.Lie.Normalizer
 
 #align_import algebra.lie.cartan_subalgebra from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

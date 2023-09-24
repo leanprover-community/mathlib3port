@@ -3,9 +3,9 @@ Copyright (c) 2022 Rémy Degenne, Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
-import Mathbin.MeasureTheory.Function.Egorov
-import Mathbin.MeasureTheory.Function.LpSpace
+import Analysis.SpecialFunctions.Pow.Real
+import MeasureTheory.Function.Egorov
+import MeasureTheory.Function.LpSpace
 
 #align_import measure_theory.function.convergence_in_measure from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

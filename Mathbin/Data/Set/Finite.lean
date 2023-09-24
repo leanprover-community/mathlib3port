@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 -/
-import Mathbin.Data.Finset.Basic
-import Mathbin.Data.Set.Functor
-import Mathbin.Data.Finite.Basic
+import Data.Finset.Basic
+import Data.Set.Functor
+import Data.Finite.Basic
 
 #align_import data.set.finite from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
 
@@ -842,11 +842,11 @@ instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) 
 #align finite.set.finite_image Finite.Set.finite_image
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {(f x) | x : α} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {(f x) | x : α} -/
 #print Finite.Set.finite_replacement /-
 instance finite_replacement [Finite α] (f : α → β) :
     Finite
-      "./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {(f x) | x : α}" :=
+      "./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 #align finite.set.finite_replacement Finite.Set.finite_replacement
 -/
@@ -1012,7 +1012,7 @@ theorem Finite.sInter {α : Type _} {s : Set (Set α)} {t : Set α} (ht : t ∈ 
 #align set.finite.sInter Set.Finite.sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » t) -/
 #print Set.Finite.iUnion /-
 /-- If sets `s i` are finite for all `i` from a finite set `t` and are empty for `i ∉ t`, then the
 union `⋃ i, s i` is a finite set. -/
@@ -2137,7 +2137,7 @@ theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z �
 #align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
 #print Set.finite_of_forall_not_lt_lt /-
 /-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
 theorem Set.finite_of_forall_not_lt_lt {s : Set α}

@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Logic.Equiv.Embedding
+import Data.Fintype.BigOperators
+import Logic.Equiv.Embedding
 
 #align_import data.fintype.card_embedding from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

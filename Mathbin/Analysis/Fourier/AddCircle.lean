@@ -3,15 +3,15 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
-import Mathbin.Analysis.SpecialFunctions.Complex.Circle
-import Mathbin.Analysis.InnerProductSpace.L2Space
-import Mathbin.MeasureTheory.Function.ContinuousMapDense
-import Mathbin.MeasureTheory.Function.L2Space
-import Mathbin.MeasureTheory.Group.Integration
-import Mathbin.MeasureTheory.Integral.Periodic
-import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
-import Mathbin.MeasureTheory.Integral.FundThmCalculus
+import Analysis.SpecialFunctions.ExpDeriv
+import Analysis.SpecialFunctions.Complex.Circle
+import Analysis.InnerProductSpace.L2Space
+import MeasureTheory.Function.ContinuousMapDense
+import MeasureTheory.Function.L2Space
+import MeasureTheory.Group.Integration
+import MeasureTheory.Integral.Periodic
+import Topology.ContinuousFunction.StoneWeierstrass
+import MeasureTheory.Integral.FundThmCalculus
 
 #align_import analysis.fourier.add_circle from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

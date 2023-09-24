@@ -3,9 +3,9 @@ Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 -/
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Topology.DenseEmbedding
-import Mathbin.Topology.Support
+import Logic.Equiv.Fin
+import Topology.DenseEmbedding
+import Topology.Support
 
 #align_import topology.homeomorph from "leanprover-community/mathlib"@"4c3e1721c58ef9087bbc2c8c38b540f70eda2e53"
 
@@ -838,8 +838,8 @@ def finTwoArrow : (Fin 2 → α) ≃ₜ α × α :=
 #align homeomorph.fin_two_arrow Homeomorph.finTwoArrow
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:307:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:307:22: continuitity! not supported at the moment -/
 #print Homeomorph.image /-
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/

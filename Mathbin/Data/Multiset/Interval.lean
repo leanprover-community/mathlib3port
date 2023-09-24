@@ -3,10 +3,10 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Finset.LocallyFinite
-import Mathbin.Data.Dfinsupp.Interval
-import Mathbin.Data.Dfinsupp.Multiset
-import Mathbin.Data.Nat.Interval
+import Data.Finset.LocallyFinite
+import Data.Dfinsupp.Interval
+import Data.Dfinsupp.Multiset
+import Data.Nat.Interval
 
 #align_import data.multiset.interval from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
 

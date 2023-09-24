@@ -3,10 +3,10 @@ Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.CategoryTheory.Category.Groupoid
-import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Topology.Category.Top.Basic
-import Mathbin.Topology.Homotopy.Path
+import CategoryTheory.Category.Groupoid
+import CategoryTheory.Groupoid
+import Topology.Category.Top.Basic
+import Topology.Homotopy.Path
 
 #align_import algebraic_topology.fundamental_groupoid.basic from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.Algebra.PunitInstances
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.ConcreteCategory.BundledHom
+import Algebra.PunitInstances
+import CategoryTheory.Functor.ReflectsIsomorphisms
 
 #align_import algebra.category.Mon.basic from "leanprover-community/mathlib"@"0caf3701139ef2e69c215717665361cda205a90b"
 

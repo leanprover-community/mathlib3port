@@ -3,10 +3,10 @@ Copyright (c) 2021 Arthur Paulino. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Clique
-import Mathbin.Data.Nat.Lattice
-import Mathbin.Data.Setoid.Partition
-import Mathbin.Order.Antichain
+import Combinatorics.SimpleGraph.Clique
+import Data.Nat.Lattice
+import Data.Setoid.Partition
+import Order.Antichain
 
 #align_import combinatorics.simple_graph.coloring from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

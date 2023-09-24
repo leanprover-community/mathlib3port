@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies, Ella Yu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Ella Yu
 -/
-import Mathbin.Data.Finset.Prod
-import Mathbin.Data.Fintype.Prod
+import Data.Finset.Prod
+import Data.Fintype.Prod
 
 #align_import combinatorics.additive.energy from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

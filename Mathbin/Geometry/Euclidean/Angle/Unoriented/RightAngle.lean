@@ -3,8 +3,8 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
+import Analysis.SpecialFunctions.Trigonometric.Arctan
+import Geometry.Euclidean.Angle.Unoriented.Affine
 
 #align_import geometry.euclidean.angle.unoriented.right_angle from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

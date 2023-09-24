@@ -3,8 +3,8 @@ Copyright (c) 2022 Joanna Choules. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joanna Choules
 -/
-import Mathbin.CategoryTheory.CofilteredSystem
-import Mathbin.Combinatorics.SimpleGraph.Subgraph
+import CategoryTheory.CofilteredSystem
+import Combinatorics.SimpleGraph.Subgraph
 
 #align_import combinatorics.simple_graph.finsubgraph from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

@@ -5,8 +5,8 @@ Authors: Mario Carneiro
 
 Coinductive formalization of unbounded computations.
 -/
-import Mathbin.Data.Stream.Init
-import Mathbin.Tactic.Basic
+import Data.Stream.Init
+import Tactic.Basic
 
 #align_import data.seq.computation from "leanprover-community/mathlib"@"70fd9563a21e7b963887c9360bd29b2393e6225a"
 

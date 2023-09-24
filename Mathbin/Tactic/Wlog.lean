@@ -3,8 +3,8 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Johan Commelin, Reid Barton
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Tactic.Dependencies
+import Tactic.Core
+import Tactic.Dependencies
 
 #align_import tactic.wlog from "leanprover-community/mathlib"@"92ca63f0fb391a9ca5f22d2409a6080e786d99f7"
 

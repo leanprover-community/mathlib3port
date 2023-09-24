@@ -3,11 +3,11 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Algebra.Category.Ring.Constructions
-import Mathbin.Algebra.Category.Ring.Colimits
-import Mathbin.CategoryTheory.Isomorphism
-import Mathbin.RingTheory.Localization.Away.Basic
-import Mathbin.RingTheory.IsTensorProduct
+import Algebra.Category.Ring.Constructions
+import Algebra.Category.Ring.Colimits
+import CategoryTheory.Isomorphism
+import RingTheory.Localization.Away.Basic
+import RingTheory.IsTensorProduct
 
 #align_import ring_theory.ring_hom_properties from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

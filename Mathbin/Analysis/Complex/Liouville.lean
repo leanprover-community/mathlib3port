@@ -3,9 +3,9 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Complex.CauchyIntegral
-import Mathbin.Analysis.Calculus.FderivAnalytic
-import Mathbin.Analysis.NormedSpace.Completion
+import Analysis.Complex.CauchyIntegral
+import Analysis.Calculus.FderivAnalytic
+import Analysis.NormedSpace.Completion
 
 #align_import analysis.complex.liouville from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

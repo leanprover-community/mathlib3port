@@ -3,10 +3,10 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 -/
-import Mathbin.FieldTheory.Adjoin
-import Mathbin.FieldTheory.Tower
-import Mathbin.GroupTheory.Solvable
-import Mathbin.RingTheory.PowerBasis
+import FieldTheory.Adjoin
+import FieldTheory.Tower
+import GroupTheory.Solvable
+import RingTheory.PowerBasis
 
 #align_import field_theory.normal from "leanprover-community/mathlib"@"9fb8964792b4237dac6200193a0d533f1b3f7423"
 

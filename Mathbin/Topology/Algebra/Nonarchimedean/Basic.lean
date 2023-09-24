@@ -3,9 +3,9 @@ Copyright (c) 2021 Ashwin Iyengar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 -/
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.Topology.Algebra.OpenSubgroup
-import Mathbin.Topology.Algebra.Ring.Basic
+import GroupTheory.Subgroup.Basic
+import Topology.Algebra.OpenSubgroup
+import Topology.Algebra.Ring.Basic
 
 #align_import topology.algebra.nonarchimedean.basic from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

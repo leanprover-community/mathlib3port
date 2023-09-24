@@ -3,8 +3,8 @@ Copyright (c) 2022 Praneeth Kolichala. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 -/
-import Mathbin.Topology.Homotopy.Path
-import Mathbin.Topology.Homotopy.Equiv
+import Topology.Homotopy.Path
+import Topology.Homotopy.Equiv
 
 #align_import topology.homotopy.contractible from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 
@@ -58,7 +58,7 @@ open ContinuousMap
 open scoped ContinuousMap
 
 #print ContractibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] [] -/
 /-- A contractible space is one that is homotopy equivalent to `unit`. -/
 class ContractibleSpace (X : Type _) [TopologicalSpace X] : Prop where
   hequiv_unit : Nonempty (X ≃ₕ Unit)

@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro, Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 -/
-import Mathbin.Algebra.Ring.Idempotents
-import Mathbin.RingTheory.Finiteness
+import Algebra.Ring.Idempotents
+import RingTheory.Finiteness
 
 #align_import ring_theory.ideal.idempotent_fg from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 

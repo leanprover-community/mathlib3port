@@ -3,13 +3,13 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
-import Mathbin.LinearAlgebra.FreeModule.Pid
-import Mathbin.LinearAlgebra.Matrix.AbsoluteValue
-import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
-import Mathbin.RingTheory.ClassGroup
-import Mathbin.RingTheory.DedekindDomain.IntegralClosure
-import Mathbin.RingTheory.Norm
+import Analysis.SpecialFunctions.Pow.Real
+import LinearAlgebra.FreeModule.Pid
+import LinearAlgebra.Matrix.AbsoluteValue
+import NumberTheory.ClassNumber.AdmissibleAbsoluteValue
+import RingTheory.ClassGroup
+import RingTheory.DedekindDomain.IntegralClosure
+import RingTheory.Norm
 
 #align_import number_theory.class_number.finite from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

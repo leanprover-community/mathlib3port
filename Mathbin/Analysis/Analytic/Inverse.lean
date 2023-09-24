@@ -3,8 +3,8 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Analytic.Composition
-import Mathbin.Tactic.Congrm
+import Analysis.Analytic.Composition
+import Tactic.Congrm
 
 #align_import analysis.analytic.inverse from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

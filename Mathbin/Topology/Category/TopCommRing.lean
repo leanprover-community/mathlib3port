@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.Ring.Basic
-import Mathbin.Topology.Category.Top.Basic
-import Mathbin.Topology.Algebra.Ring.Basic
+import Algebra.Category.Ring.Basic
+import Topology.Category.Top.Basic
+import Topology.Algebra.Ring.Basic
 
 #align_import topology.category.TopCommRing from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

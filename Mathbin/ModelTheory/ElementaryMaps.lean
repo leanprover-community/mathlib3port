@@ -3,8 +3,8 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.ModelTheory.Substructures
+import Data.Fintype.Basic
+import ModelTheory.Substructures
 
 #align_import model_theory.elementary_maps from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

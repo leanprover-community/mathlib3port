@@ -3,10 +3,10 @@ Copyright (c) 2020 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Integral.Lebesgue
-import Mathbin.Analysis.MeanInequalities
-import Mathbin.Analysis.MeanInequalitiesPow
-import Mathbin.MeasureTheory.Function.SpecialFunctions.Basic
+import MeasureTheory.Integral.Lebesgue
+import Analysis.MeanInequalities
+import Analysis.MeanInequalitiesPow
+import MeasureTheory.Function.SpecialFunctions.Basic
 
 #align_import measure_theory.integral.mean_inequalities from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

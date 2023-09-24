@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
+import CategoryTheory.Limits.Preserves.Shapes.Products
+import Topology.Sheaves.SheafCondition.EqualizerProducts
 
 #align_import topology.sheaves.forget from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"
 

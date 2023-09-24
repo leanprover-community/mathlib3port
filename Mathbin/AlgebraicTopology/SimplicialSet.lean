@@ -3,12 +3,12 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 -/
-import Mathbin.AlgebraicTopology.SimplicialObject
-import Mathbin.AlgebraicTopology.TopologicalSimplex
-import Mathbin.CategoryTheory.Limits.Presheaf
-import Mathbin.CategoryTheory.Limits.Types
-import Mathbin.CategoryTheory.Yoneda
-import Mathbin.Topology.Category.Top.Limits.Basic
+import AlgebraicTopology.SimplicialObject
+import AlgebraicTopology.TopologicalSimplex
+import CategoryTheory.Limits.Presheaf
+import CategoryTheory.Limits.Types
+import CategoryTheory.Yoneda
+import Topology.Category.Top.Limits.Basic
 
 #align_import algebraic_topology.simplicial_set from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

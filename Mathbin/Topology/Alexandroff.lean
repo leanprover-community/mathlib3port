@@ -3,9 +3,9 @@ Copyright (c) 2021 Yourong Zang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 -/
-import Mathbin.Data.Fintype.Option
-import Mathbin.Topology.Separation
-import Mathbin.Topology.Sets.Opens
+import Data.Fintype.Option
+import Topology.Separation
+import Topology.Sets.Opens
 
 #align_import topology.alexandroff from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 
@@ -235,7 +235,7 @@ instance : TopologicalSpace (OnePoint X)
     suffices IsOpen (coe ⁻¹' ⋃₀ S : Set X) by
       refine' ⟨_, this⟩
       rintro ⟨s, hsS : s ∈ S, hs : ∞ ∈ s⟩
-      refine' isCompact_of_isClosed_subset ((ho s hsS).1 hs) this.is_closed_compl _
+      refine' IsCompact.of_isClosed_subset ((ho s hsS).1 hs) this.is_closed_compl _
       exact compl_subset_compl.mpr (preimage_mono <| subset_sUnion_of_mem hsS)
     rw [preimage_sUnion]
     exact isOpen_biUnion fun s hs => (ho s hs).2

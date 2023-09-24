@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.AlgebraicGeometry.PresheafedSpace
-import Mathbin.CategoryTheory.Limits.Final
-import Mathbin.Topology.Sheaves.Stalks
+import AlgebraicGeometry.PresheafedSpace
+import CategoryTheory.Limits.Final
+import Topology.Sheaves.Stalks
 
 #align_import algebraic_geometry.stalks from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

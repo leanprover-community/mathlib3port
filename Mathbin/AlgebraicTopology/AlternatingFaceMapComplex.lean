@@ -3,12 +3,12 @@ Copyright (c) 2021 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou, Adam Topaz, Johan Commelin
 -/
-import Mathbin.Algebra.Homology.Additive
-import Mathbin.AlgebraicTopology.MooreComplex
-import Mathbin.Algebra.BigOperators.Fin
-import Mathbin.CategoryTheory.Preadditive.Opposite
-import Mathbin.CategoryTheory.Idempotents.FunctorCategories
-import Mathbin.Tactic.EquivRw
+import Algebra.Homology.Additive
+import AlgebraicTopology.MooreComplex
+import Algebra.BigOperators.Fin
+import CategoryTheory.Preadditive.Opposite
+import CategoryTheory.Idempotents.FunctorCategories
+import Tactic.EquivRw
 
 #align_import algebraic_topology.alternating_face_map_complex from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

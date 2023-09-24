@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.InnerProductSpace.Calculus
-import Mathbin.Analysis.InnerProductSpace.PiL2
+import Analysis.InnerProductSpace.Calculus
+import Analysis.InnerProductSpace.PiL2
 
 #align_import analysis.inner_product_space.euclidean_dist from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

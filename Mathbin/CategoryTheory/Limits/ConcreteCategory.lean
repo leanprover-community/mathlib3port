@@ -3,13 +3,13 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
-import Mathbin.CategoryTheory.Limits.Types
-import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.Multiequalizer
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
-import Mathbin.Tactic.ApplyFun
+import CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Limits.Types
+import CategoryTheory.Limits.Shapes.WidePullbacks
+import CategoryTheory.Limits.Shapes.Multiequalizer
+import CategoryTheory.ConcreteCategory.Basic
+import CategoryTheory.Limits.Shapes.Kernels
+import Tactic.ApplyFun
 
 #align_import category_theory.limits.concrete_category from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

@@ -3,12 +3,12 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 -/
-import Mathbin.Analysis.Calculus.Deriv.Inv
-import Mathbin.Analysis.Calculus.ExtendDeriv
-import Mathbin.Analysis.Calculus.IteratedDeriv
-import Mathbin.Analysis.InnerProductSpace.Calculus
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
-import Mathbin.MeasureTheory.Integral.SetIntegral
+import Analysis.Calculus.Deriv.Inv
+import Analysis.Calculus.ExtendDeriv
+import Analysis.Calculus.IteratedDeriv
+import Analysis.InnerProductSpace.Calculus
+import Analysis.SpecialFunctions.ExpDeriv
+import MeasureTheory.Integral.SetIntegral
 
 #align_import analysis.calculus.bump_function_inner from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

@@ -3,10 +3,10 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.List.MinMax
-import Mathbin.Algebra.Tropical.Basic
-import Mathbin.Order.ConditionallyCompleteLattice.Finset
+import Algebra.BigOperators.Basic
+import Data.List.MinMax
+import Algebra.Tropical.Basic
+import Order.ConditionallyCompleteLattice.Finset
 
 #align_import algebra.tropical.big_operators from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 

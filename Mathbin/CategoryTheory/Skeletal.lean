@@ -3,10 +3,10 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Category.Preorder
-import Mathbin.CategoryTheory.IsomorphismClasses
-import Mathbin.CategoryTheory.Thin
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Category.Preorder
+import CategoryTheory.IsomorphismClasses
+import CategoryTheory.Thin
 
 #align_import category_theory.skeletal from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

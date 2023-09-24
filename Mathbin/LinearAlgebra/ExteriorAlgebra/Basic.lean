@@ -3,8 +3,8 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.CliffordAlgebra.Basic
-import Mathbin.LinearAlgebra.Alternating
+import LinearAlgebra.CliffordAlgebra.Basic
+import LinearAlgebra.Alternating
 
 #align_import linear_algebra.exterior_algebra.basic from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

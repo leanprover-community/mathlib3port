@@ -3,8 +3,8 @@ Copyright (c) 2021 Manuel Candales. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales
 -/
-import Mathbin.Topology.Instances.Ennreal
-import Mathbin.Data.Nat.Squarefree
+import Topology.Instances.Ennreal
+import Data.Nat.Squarefree
 
 #align_import wiedijk_100_theorems.sum_of_prime_reciprocals_diverges from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

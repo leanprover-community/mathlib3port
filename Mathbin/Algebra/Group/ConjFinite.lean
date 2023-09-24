@@ -3,9 +3,9 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.Group.Conj
-import Mathbin.Data.Finite.Basic
-import Mathbin.Data.Fintype.Units
+import Algebra.Group.Conj
+import Data.Finite.Basic
+import Data.Fintype.Units
 
 #align_import algebra.group.conj_finite from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

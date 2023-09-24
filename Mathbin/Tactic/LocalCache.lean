@@ -3,7 +3,7 @@ Copyright (c) 2019 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 -/
-import Mathbin.Tactic.NormNum
+import Tactic.NormNum
 
 #align_import tactic.local_cache from "leanprover-community/mathlib"@"2558b3b31d33969bb3ef330982ff131533eebfdd"
 

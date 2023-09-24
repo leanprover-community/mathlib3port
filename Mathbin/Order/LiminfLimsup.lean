@@ -3,8 +3,8 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
 -/
-import Mathbin.Order.Filter.Cofinite
-import Mathbin.Order.Hom.CompleteLattice
+import Order.Filter.Cofinite
+import Order.Hom.CompleteLattice
 
 #align_import order.liminf_limsup from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.CompleteLattice
-import Mathbin.Order.Cover
-import Mathbin.Order.Iterate
+import Order.CompleteLattice
+import Order.Cover
+import Order.Iterate
 
 #align_import order.succ_pred.basic from "leanprover-community/mathlib"@"0111834459f5d7400215223ea95ae38a1265a907"
 

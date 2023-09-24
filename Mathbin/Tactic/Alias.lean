@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.alias from "leanprover-community/mathlib"@"c8ab806ef73c20cab1d87b5157e43a82c205f28e"
 

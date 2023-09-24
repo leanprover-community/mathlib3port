@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébastien Gouëzel,
   Rémy Degenne
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
-import Mathbin.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathbin.Analysis.Calculus.ExtendDeriv
-import Mathbin.Analysis.Calculus.Deriv.Prod
-import Mathbin.Analysis.SpecialFunctions.Log.Deriv
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Analysis.SpecialFunctions.Pow.Continuity
+import Analysis.SpecialFunctions.Complex.LogDeriv
+import Analysis.Calculus.ExtendDeriv
+import Analysis.Calculus.Deriv.Prod
+import Analysis.SpecialFunctions.Log.Deriv
+import Analysis.SpecialFunctions.Trigonometric.Deriv
 
 #align_import analysis.special_functions.pow.deriv from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

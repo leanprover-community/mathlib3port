@@ -3,11 +3,11 @@ Copyright (c) 2022 Julian Berman. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Berman
 -/
-import Mathbin.GroupTheory.Exponent
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.GroupTheory.PGroup
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.GroupTheory.Submonoid.Operations
+import GroupTheory.Exponent
+import GroupTheory.OrderOfElement
+import GroupTheory.PGroup
+import GroupTheory.QuotientGroup
+import GroupTheory.Submonoid.Operations
 
 #align_import group_theory.torsion from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

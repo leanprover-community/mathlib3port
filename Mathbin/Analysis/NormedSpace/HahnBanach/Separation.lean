@@ -3,10 +3,10 @@ Copyright (c) 2022 Bhavik Mehta All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
 -/
-import Mathbin.Analysis.Convex.Cone.Basic
-import Mathbin.Analysis.Convex.Gauge
-import Mathbin.Topology.Algebra.Module.FiniteDimension
-import Mathbin.Topology.Algebra.Module.LocallyConvex
+import Analysis.Convex.Cone.Basic
+import Analysis.Convex.Gauge
+import Topology.Algebra.Module.FiniteDimension
+import Topology.Algebra.Module.LocallyConvex
 
 #align_import analysis.normed_space.hahn_banach.separation from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

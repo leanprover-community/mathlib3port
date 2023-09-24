@@ -3,9 +3,9 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Adjunction.Whiskering
-import Mathbin.CategoryTheory.Sites.Sheafification
-import Mathbin.CategoryTheory.Sites.Whiskering
+import CategoryTheory.Adjunction.Whiskering
+import CategoryTheory.Sites.Sheafification
+import CategoryTheory.Sites.Whiskering
 
 #align_import category_theory.sites.adjunction from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

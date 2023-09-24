@@ -3,13 +3,13 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Algebra.Module.BigOperators
-import Mathbin.NumberTheory.Divisors
-import Mathbin.Data.Nat.Squarefree
-import Mathbin.Data.Nat.Gcd.BigOperators
-import Mathbin.Algebra.Invertible
-import Mathbin.Data.Nat.Factorization.Basic
+import Algebra.BigOperators.Ring
+import Algebra.Module.BigOperators
+import NumberTheory.Divisors
+import Data.Nat.Squarefree
+import Data.Nat.Gcd.BigOperators
+import Algebra.Invertible
+import Data.Nat.Factorization.Basic
 
 #align_import number_theory.arithmetic_function from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

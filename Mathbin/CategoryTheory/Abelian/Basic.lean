@@ -3,11 +3,11 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Johan Commelin, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
-import Mathbin.CategoryTheory.Preadditive.Biproducts
-import Mathbin.CategoryTheory.Limits.Shapes.Images
-import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
-import Mathbin.CategoryTheory.Abelian.NonPreadditive
+import CategoryTheory.Limits.Constructions.Pullbacks
+import CategoryTheory.Preadditive.Biproducts
+import CategoryTheory.Limits.Shapes.Images
+import CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import CategoryTheory.Abelian.NonPreadditive
 
 #align_import category_theory.abelian.basic from "leanprover-community/mathlib"@"a5ff45a1c92c278b03b52459a620cfd9c49ebc80"
 

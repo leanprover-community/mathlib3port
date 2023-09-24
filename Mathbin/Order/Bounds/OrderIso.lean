@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Order.Bounds.Basic
-import Mathbin.Order.Hom.Set
+import Order.Bounds.Basic
+import Order.Hom.Set
 
 #align_import order.bounds.order_iso from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -3,12 +3,12 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.ColimitLimit
-import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
-import Mathbin.CategoryTheory.Limits.Preserves.Finite
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
-import Mathbin.CategoryTheory.Limits.Preserves.Filtered
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
+import CategoryTheory.Limits.ColimitLimit
+import CategoryTheory.Limits.Preserves.FunctorCategory
+import CategoryTheory.Limits.Preserves.Finite
+import CategoryTheory.Limits.Shapes.FiniteLimits
+import CategoryTheory.Limits.Preserves.Filtered
+import CategoryTheory.ConcreteCategory.Basic
 
 #align_import category_theory.limits.filtered_colimit_commutes_finite_limit from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

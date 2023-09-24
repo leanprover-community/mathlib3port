@@ -3,12 +3,12 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.SetTheory.Ordinal.Basic
-import Mathbin.Topology.ContinuousFunction.Algebra
-import Mathbin.Topology.Paracompact
-import Mathbin.Topology.ShrinkingLemma
-import Mathbin.Topology.UrysohnsLemma
+import Algebra.BigOperators.Finprod
+import SetTheory.Ordinal.Basic
+import Topology.ContinuousFunction.Algebra
+import Topology.Paracompact
+import Topology.ShrinkingLemma
+import Topology.UrysohnsLemma
 
 #align_import topology.partition_of_unity from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Pi.Basic
-import Mathbin.CategoryTheory.Limits.HasLimits
+import CategoryTheory.Pi.Basic
+import CategoryTheory.Limits.HasLimits
 
 #align_import category_theory.limits.pi from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

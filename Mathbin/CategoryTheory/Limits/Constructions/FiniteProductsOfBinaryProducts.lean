@@ -3,11 +3,11 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.Logic.Equiv.Fin
+import CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
+import CategoryTheory.Limits.Preserves.Shapes.Products
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.FiniteProducts
+import Logic.Equiv.Fin
 
 #align_import category_theory.limits.constructions.finite_products_of_binary_products from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

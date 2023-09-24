@@ -10,7 +10,7 @@ terminates_parallel and exists_of_mem_parallel.
 (This operation is nondeterministic in the sense that it does not
 honor sequence equivalence (irrelevance of computation time).)
 -/
-import Mathbin.Data.Seq.Wseq
+import Data.Seq.Wseq
 
 #align_import data.seq.parallel from "leanprover-community/mathlib"@"a7e36e48519ab281320c4d192da6a7b348ce40ad"
 

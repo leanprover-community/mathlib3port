@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Tactic.Chain
-import Mathbin.Data.Quot
+import Tactic.Chain
+import Data.Quot
 
 #align_import tactic.trunc_cases from "leanprover-community/mathlib"@"3c11bd771ef17197a9e9fcd4a3fabfa2804d950c"
 
@@ -43,7 +43,7 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
   tactic.swap
   return e
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr := do
   let-- If all else fails, just use the general induction principle.

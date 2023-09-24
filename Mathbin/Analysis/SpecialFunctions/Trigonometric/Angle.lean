@@ -3,10 +3,10 @@ Copyright (c) 2019 Calle Sönne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathbin.Analysis.Normed.Group.AddCircle
-import Mathbin.Algebra.CharZero.Quotient
-import Mathbin.Topology.Instances.Sign
+import Analysis.SpecialFunctions.Trigonometric.Basic
+import Analysis.Normed.Group.AddCircle
+import Algebra.CharZero.Quotient
+import Topology.Instances.Sign
 
 #align_import analysis.special_functions.trigonometric.angle from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

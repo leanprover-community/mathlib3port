@@ -3,7 +3,7 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.pretty_cases from "leanprover-community/mathlib"@"60e279ba2bfe69f937b5f69b110a440538b8f6a5"
 

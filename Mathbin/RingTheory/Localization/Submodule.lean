@@ -3,9 +3,9 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Localization.Ideal
-import Mathbin.RingTheory.PrincipalIdealDomain
+import RingTheory.Localization.FractionRing
+import RingTheory.Localization.Ideal
+import RingTheory.PrincipalIdealDomain
 
 #align_import ring_theory.localization.submodule from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon, Scott Morrison
 -/
-import Mathbin.Control.Bifunctor
-import Mathbin.Logic.Equiv.Defs
+import Control.Bifunctor
+import Logic.Equiv.Defs
 
 #align_import logic.equiv.functor from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

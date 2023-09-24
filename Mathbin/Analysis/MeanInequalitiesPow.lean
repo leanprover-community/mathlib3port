@@ -3,10 +3,10 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 -/
-import Mathbin.Analysis.Convex.Jensen
-import Mathbin.Analysis.Convex.SpecificFunctions.Basic
-import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
-import Mathbin.Tactic.Positivity
+import Analysis.Convex.Jensen
+import Analysis.Convex.SpecificFunctions.Basic
+import Analysis.SpecialFunctions.Pow.Nnreal
+import Tactic.Positivity
 
 #align_import analysis.mean_inequalities_pow from "leanprover-community/mathlib"@"ccdbfb6e5614667af5aa3ab2d50885e0ef44a46f"
 

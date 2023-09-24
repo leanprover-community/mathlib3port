@@ -3,10 +3,10 @@ Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.DirectSum.Module
-import Mathbin.Algebra.Lie.OfAssociative
-import Mathbin.Algebra.Lie.Submodule
-import Mathbin.Algebra.Lie.Basic
+import Algebra.DirectSum.Module
+import Algebra.Lie.OfAssociative
+import Algebra.Lie.Submodule
+import Algebra.Lie.Basic
 
 #align_import algebra.lie.direct_sum from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Yury Kudryashov All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 -/
-import Mathbin.Analysis.Convex.Cone.Basic
-import Mathbin.Analysis.NormedSpace.IsROrC
-import Mathbin.Analysis.NormedSpace.Extend
-import Mathbin.Data.IsROrC.Lemmas
+import Analysis.Convex.Cone.Basic
+import Analysis.NormedSpace.IsROrC
+import Analysis.NormedSpace.Extend
+import Data.IsROrC.Lemmas
 
 #align_import analysis.normed_space.hahn_banach.extension from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

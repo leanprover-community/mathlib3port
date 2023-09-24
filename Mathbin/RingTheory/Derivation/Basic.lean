@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 -/
-import Mathbin.RingTheory.Adjoin.Basic
+import RingTheory.Adjoin.Basic
 
 #align_import ring_theory.derivation.basic from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Nat.Parity
-import Mathbin.Data.List.Chain
+import Data.Nat.Parity
+import Data.List.Chain
 
 #align_import data.bool.count from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

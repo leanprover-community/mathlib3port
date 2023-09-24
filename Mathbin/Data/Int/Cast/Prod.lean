@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Int.Cast.Lemmas
-import Mathbin.Data.Nat.Cast.Prod
+import Data.Int.Cast.Lemmas
+import Data.Nat.Cast.Prod
 
 #align_import data.int.cast.prod from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

@@ -3,13 +3,13 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Nilpotent
-import Mathbin.Algebra.Lie.TensorProduct
-import Mathbin.Algebra.Lie.Character
-import Mathbin.Algebra.Lie.Engel
-import Mathbin.Algebra.Lie.CartanSubalgebra
-import Mathbin.LinearAlgebra.Eigenspace.Basic
-import Mathbin.RingTheory.TensorProduct
+import Algebra.Lie.Nilpotent
+import Algebra.Lie.TensorProduct
+import Algebra.Lie.Character
+import Algebra.Lie.Engel
+import Algebra.Lie.CartanSubalgebra
+import LinearAlgebra.Eigenspace.Basic
+import RingTheory.TensorProduct
 
 #align_import algebra.lie.weights from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

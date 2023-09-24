@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Combinatorics.SimpleGraph.Density
-import Mathbin.SetTheory.Ordinal.Basic
+import Combinatorics.SimpleGraph.Density
+import SetTheory.Ordinal.Basic
 
 #align_import combinatorics.simple_graph.regularity.uniform from "leanprover-community/mathlib"@"bf7ef0e83e5b7e6c1169e97f055e58a2e4e9d52d"
 

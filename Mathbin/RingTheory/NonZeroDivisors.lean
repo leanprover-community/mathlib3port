@@ -3,8 +3,8 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
 -/
-import Mathbin.GroupTheory.Submonoid.Operations
-import Mathbin.GroupTheory.Submonoid.Membership
+import GroupTheory.Submonoid.Operations
+import GroupTheory.Submonoid.Membership
 
 #align_import ring_theory.non_zero_divisors from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

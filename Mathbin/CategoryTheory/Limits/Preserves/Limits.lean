@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Limits.Preserves.Basic
 
 #align_import category_theory.limits.preserves.limits from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

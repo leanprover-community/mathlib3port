@@ -3,13 +3,13 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.LinearAlgebra.Basic
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Data.List.FinRange
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Fintype.Sort
+import LinearAlgebra.Basic
+import Algebra.Algebra.Basic
+import Algebra.BigOperators.Order
+import Algebra.BigOperators.Ring
+import Data.List.FinRange
+import Data.Fintype.BigOperators
+import Data.Fintype.Sort
 
 #align_import linear_algebra.multilinear.basic from "leanprover-community/mathlib"@"78fdf68dcd2fdb3fe64c0dd6f88926a49418a6ea"
 

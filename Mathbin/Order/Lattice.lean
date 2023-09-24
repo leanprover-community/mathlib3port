@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Order.Monotone.Basic
-import Mathbin.Tactic.Simps
-import Mathbin.Tactic.PiInstances
+import Order.Monotone.Basic
+import Tactic.Simps
+import Tactic.PiInstances
 
 #align_import order.lattice from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 

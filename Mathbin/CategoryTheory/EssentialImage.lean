@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.NaturalIsomorphism
-import Mathbin.CategoryTheory.FullSubcategory
+import CategoryTheory.NaturalIsomorphism
+import CategoryTheory.FullSubcategory
 
 #align_import category_theory.essential_image from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -133,7 +133,7 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 end Functor
 
 #print CategoryTheory.EssSurj /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 

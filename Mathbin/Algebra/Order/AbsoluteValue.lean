@@ -3,10 +3,10 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 -/
-import Mathbin.Algebra.GroupWithZero.Units.Lemmas
-import Mathbin.Algebra.Order.Field.Defs
-import Mathbin.Algebra.Order.Hom.Basic
-import Mathbin.Algebra.Ring.Regular
+import Algebra.GroupWithZero.Units.Lemmas
+import Algebra.Order.Field.Defs
+import Algebra.Order.Hom.Basic
+import Algebra.Ring.Regular
 
 #align_import algebra.order.absolute_value from "leanprover-community/mathlib"@"0013240bce820e3096cebb7ccf6d17e3f35f77ca"
 
@@ -341,10 +341,10 @@ end LinearOrderedCommRing
 end AbsoluteValue
 
 #print IsAbsoluteValue /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`abv_add] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`abv_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`abv_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`abv_mul] [] -/
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 

@@ -3,7 +3,7 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.W.Basic
+import Data.W.Basic
 
 #align_import data.pfunctor.univariate.basic from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

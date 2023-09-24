@@ -3,11 +3,11 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Probability.IdentDistrib
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Analysis.SpecificLimits.FloorPow
-import Mathbin.Analysis.PSeries
-import Mathbin.Analysis.Asymptotics.SpecificAsymptotics
+import Probability.IdentDistrib
+import MeasureTheory.Integral.IntervalIntegral
+import Analysis.SpecificLimits.FloorPow
+import Analysis.PSeries
+import Analysis.Asymptotics.SpecificAsymptotics
 
 #align_import probability.strong_law from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

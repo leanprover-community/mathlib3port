@@ -3,9 +3,9 @@ Copyright (c) 2022 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathbin.Analysis.Analytic.IsolatedZeros
-import Mathbin.Analysis.Complex.CauchyIntegral
-import Mathbin.Analysis.Complex.AbsMax
+import Analysis.Analytic.IsolatedZeros
+import Analysis.Complex.CauchyIntegral
+import Analysis.Complex.AbsMax
 
 #align_import analysis.complex.open_mapping from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
@@ -176,7 +176,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
 #align analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s «expr ⊆ » U) -/
 #print AnalyticOn.is_constant_or_isOpen /-
 /-- The *open mapping theorem* for holomorphic functions, global version: if a function `g : E → ℂ`
 is analytic on a connected set `U`, then either it is constant on `U`, or it is open on `U` (in the

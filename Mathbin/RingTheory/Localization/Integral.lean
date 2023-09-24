@@ -3,15 +3,15 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.Data.Polynomial.Lifts
-import Mathbin.GroupTheory.MonoidLocalization
-import Mathbin.RingTheory.Algebraic
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.IntegralClosure
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Localization.Integer
-import Mathbin.RingTheory.NonZeroDivisors
-import Mathbin.Tactic.RingExp
+import Data.Polynomial.Lifts
+import GroupTheory.MonoidLocalization
+import RingTheory.Algebraic
+import RingTheory.Ideal.LocalRing
+import RingTheory.IntegralClosure
+import RingTheory.Localization.FractionRing
+import RingTheory.Localization.Integer
+import RingTheory.NonZeroDivisors
+import Tactic.RingExp
 
 #align_import ring_theory.localization.integral from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

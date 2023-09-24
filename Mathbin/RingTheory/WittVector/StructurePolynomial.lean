@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.FieldTheory.Finite.Polynomial
-import Mathbin.NumberTheory.Basic
-import Mathbin.RingTheory.WittVector.WittPolynomial
+import FieldTheory.Finite.Polynomial
+import NumberTheory.Basic
+import RingTheory.WittVector.WittPolynomial
 
 #align_import ring_theory.witt_vector.structure_polynomial from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

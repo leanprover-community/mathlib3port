@@ -3,8 +3,8 @@ Copyright (c) 2020 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 -/
-import Mathbin.Order.Bounds.Basic
-import Mathbin.Data.Set.Intervals.Basic
+import Order.Bounds.Basic
+import Data.Set.Intervals.Basic
 
 #align_import data.set.intervals.unordered_interval from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 
@@ -347,7 +347,7 @@ theorem monotone_or_antitone_iff_uIcc :
 #align set.monotone_or_antitone_iff_uIcc Set.monotone_or_antitone_iff_uIcc
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.monotoneOn_or_antitoneOn_iff_uIcc /-
 theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔

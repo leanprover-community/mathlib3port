@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.SetTheory.Cardinal.Ordinal
-import Mathbin.RingTheory.Artinian
+import SetTheory.Cardinal.Ordinal
+import RingTheory.Artinian
 
 #align_import ring_theory.localization.cardinality from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

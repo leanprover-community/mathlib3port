@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.Data.Complex.Basic
-import Mathbin.Data.Real.Cardinality
+import Data.Complex.Basic
+import Data.Real.Cardinality
 
 #align_import data.complex.cardinality from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

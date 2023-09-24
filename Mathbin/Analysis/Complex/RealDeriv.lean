@@ -3,10 +3,10 @@ Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yourong Zang
 -/
-import Mathbin.Analysis.Calculus.ContDiff
-import Mathbin.Analysis.Calculus.Deriv.Linear
-import Mathbin.Analysis.Complex.Conformal
-import Mathbin.Analysis.Calculus.Conformal.NormedSpace
+import Analysis.Calculus.ContDiff
+import Analysis.Calculus.Deriv.Linear
+import Analysis.Complex.Conformal
+import Analysis.Calculus.Conformal.NormedSpace
 
 #align_import analysis.complex.real_deriv from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"
 

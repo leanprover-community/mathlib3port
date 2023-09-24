@@ -3,9 +3,9 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.Data.Polynomial.UnitTrinomial
-import Mathbin.RingTheory.Polynomial.GaussLemma
-import Mathbin.Tactic.LinearCombination
+import Data.Polynomial.UnitTrinomial
+import RingTheory.Polynomial.GaussLemma
+import Tactic.LinearCombination
 
 #align_import ring_theory.polynomial.selmer from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

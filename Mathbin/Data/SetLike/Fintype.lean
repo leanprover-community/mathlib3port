@@ -3,8 +3,8 @@ Copyright (c) 2021 . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.SetLike.Basic
-import Mathbin.Data.Fintype.Powerset
+import Data.SetLike.Basic
+import Data.Fintype.Powerset
 
 #align_import data.set_like.fintype from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"
 

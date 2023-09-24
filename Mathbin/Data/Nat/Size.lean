@@ -3,8 +3,8 @@ Copyright (c) 2014 Floris van Doorn (c) 2016 Microsoft Corporation. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Data.Nat.Pow
-import Mathbin.Data.Nat.Bits
+import Data.Nat.Pow
+import Data.Nat.Bits
 
 #align_import data.nat.size from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

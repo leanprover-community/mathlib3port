@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Functor
-import Mathbin.CategoryTheory.FullSubcategory
+import CategoryTheory.Monoidal.Functor
+import CategoryTheory.FullSubcategory
 
 #align_import category_theory.monoidal.natural_transformation from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

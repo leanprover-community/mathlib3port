@@ -3,7 +3,7 @@ Copyright (c) 2020 Google LLC. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Wong
 -/
-import Mathbin.Data.List.Basic
+import Data.List.Basic
 
 #align_import data.list.palindrome from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 

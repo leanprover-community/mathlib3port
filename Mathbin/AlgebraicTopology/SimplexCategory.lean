@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 -/
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.CategoryTheory.Skeletal
-import Mathbin.Data.Fintype.Sort
-import Mathbin.Order.Category.NonemptyFinLinOrd
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Skeletal
+import Data.Fintype.Sort
+import Order.Category.NonemptyFinLinOrd
+import CategoryTheory.Functor.ReflectsIsomorphisms
 
 #align_import algebraic_topology.simplex_category from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
@@ -496,9 +496,9 @@ section Skeleton
 /-- The functor that exhibits `simplex_category` as skeleton
 of `NonemptyFinLinOrd` -/
 @[simps obj map]
-def skeletalFunctor : SimplexCategory ⥤ NonemptyFinLinOrdCat.{v}
+def skeletalFunctor : SimplexCategory ⥤ NonemptyFinLinOrd.{v}
     where
-  obj a := NonemptyFinLinOrdCat.of <| ULift (Fin (a.len + 1))
+  obj a := NonemptyFinLinOrd.of <| ULift (Fin (a.len + 1))
   map a b f := ⟨fun i => ULift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
   map_id' a := by ext; simp
   map_comp' a b c f g := by ext; simp
@@ -566,7 +566,7 @@ end SkeletalFunctor
 #print SimplexCategory.skeletalEquivalence /-
 /-- The equivalence that exhibits `simplex_category` as skeleton
 of `NonemptyFinLinOrd` -/
-noncomputable def skeletalEquivalence : SimplexCategory ≌ NonemptyFinLinOrdCat.{v} :=
+noncomputable def skeletalEquivalence : SimplexCategory ≌ NonemptyFinLinOrd.{v} :=
   Functor.asEquivalence skeletalFunctor
 #align simplex_category.skeletal_equivalence SimplexCategory.skeletalEquivalence
 -/
@@ -576,8 +576,7 @@ end Skeleton
 #print SimplexCategory.isSkeletonOf /-
 /-- `simplex_category` is a skeleton of `NonemptyFinLinOrd`.
 -/
-noncomputable def isSkeletonOf :
-    IsSkeletonOf NonemptyFinLinOrdCat SimplexCategory skeletalFunctor.{v}
+noncomputable def isSkeletonOf : IsSkeletonOf NonemptyFinLinOrd SimplexCategory skeletalFunctor.{v}
     where
   skel := skeletal
   eqv := SkeletalFunctor.isEquivalence
@@ -630,7 +629,7 @@ theorem mono_iff_injective {n m : SimplexCategory} {f : n ⟶ m} :
   by
   rw [← functor.mono_map_iff_mono skeletal_equivalence.Functor]
   dsimp only [skeletal_equivalence, functor.as_equivalence_functor]
-  rw [NonemptyFinLinOrdCat.mono_iff_injective, skeletal_functor.coe_map,
+  rw [NonemptyFinLinOrd.mono_iff_injective, skeletal_functor.coe_map,
     Function.Injective.of_comp_iff ULift.up_injective,
     Function.Injective.of_comp_iff' _ ULift.down_bijective]
 #align simplex_category.mono_iff_injective SimplexCategory.mono_iff_injective
@@ -644,7 +643,7 @@ theorem epi_iff_surjective {n m : SimplexCategory} {f : n ⟶ m} :
   by
   rw [← functor.epi_map_iff_epi skeletal_equivalence.Functor]
   dsimp only [skeletal_equivalence, functor.as_equivalence_functor]
-  rw [NonemptyFinLinOrdCat.epi_iff_surjective, skeletal_functor.coe_map,
+  rw [NonemptyFinLinOrd.epi_iff_surjective, skeletal_functor.coe_map,
     Function.Surjective.of_comp_iff' ULift.up_bijective,
     Function.Surjective.of_comp_iff _ ULift.down_surjective]
 #align simplex_category.epi_iff_surjective SimplexCategory.epi_iff_surjective
@@ -1000,9 +999,8 @@ to the category attached to the ordered set `{0, 1, ..., n}` -/
 @[simps obj map]
 def toCat : SimplexCategory ⥤ Cat.{0} :=
   SimplexCategory.skeletalFunctor ⋙
-    forget₂ NonemptyFinLinOrdCat LinOrdCat ⋙
-      forget₂ LinOrdCat LatCat ⋙
-        forget₂ LatCat PartOrdCat ⋙ forget₂ PartOrdCat PreordCat ⋙ preordCatToCat
+    forget₂ NonemptyFinLinOrd LinOrd ⋙
+      forget₂ LinOrd Lat ⋙ forget₂ Lat PartOrd ⋙ forget₂ PartOrd Preord ⋙ preordToCat
 #align simplex_category.to_Cat SimplexCategory.toCat
 -/
 

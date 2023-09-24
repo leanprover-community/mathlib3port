@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Topology.Instances.Nnreal
-import Mathbin.Topology.Algebra.Order.MonotoneContinuity
-import Mathbin.Topology.Algebra.InfiniteSum.Real
-import Mathbin.Topology.Algebra.Order.LiminfLimsup
-import Mathbin.Topology.MetricSpace.Lipschitz
+import Topology.Instances.Nnreal
+import Topology.Algebra.Order.MonotoneContinuity
+import Topology.Algebra.InfiniteSum.Real
+import Topology.Algebra.Order.LiminfLimsup
+import Topology.MetricSpace.Lipschitz
 
 #align_import topology.instances.ennreal from "leanprover-community/mathlib"@"ec4b2eeb50364487f80421c0b4c41328a611f30d"
 
@@ -208,7 +208,7 @@ def ltTopHomeomorphNNReal : {a | a < ∞} ≃ₜ ℝ≥0 := by
 #align ennreal.lt_top_homeomorph_nnreal ENNReal.ltTopHomeomorphNNReal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 #print ENNReal.nhds_top /-
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
@@ -273,7 +273,7 @@ theorem tendsto_ofReal_atTop : Tendsto ENNReal.ofReal atTop (𝓝 ∞) :=
 #align ennreal.tendsto_of_real_at_top ENNReal.tendsto_ofReal_atTop
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 #print ENNReal.nhds_zero /-
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]

@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.FunctorCategory
-import Mathbin.Tactic.AssertExists
+import CategoryTheory.Limits.FunctorCategory
+import Tactic.AssertExists
 
 #align_import category_theory.limits.yoneda from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

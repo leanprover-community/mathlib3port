@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Fintype.Card
-import Mathbin.Order.UpperLower.Basic
+import Data.Fintype.Card
+import Order.UpperLower.Basic
 
 #align_import combinatorics.set_family.intersecting from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

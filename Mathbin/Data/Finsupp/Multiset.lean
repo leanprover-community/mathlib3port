@@ -3,8 +3,8 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Finsupp.Basic
-import Mathbin.Data.Finsupp.Order
+import Data.Finsupp.Basic
+import Data.Finsupp.Order
 
 #align_import data.finsupp.multiset from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"
 

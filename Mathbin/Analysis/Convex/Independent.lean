@@ -3,8 +3,8 @@ Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Analysis.Convex.Combination
-import Mathbin.Analysis.Convex.Extreme
+import Analysis.Convex.Combination
+import Analysis.Convex.Extreme
 
 #align_import analysis.convex.independent from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

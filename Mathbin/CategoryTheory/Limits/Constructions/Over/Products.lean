@@ -3,10 +3,10 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Over
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
+import CategoryTheory.Over
+import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.WidePullbacks
+import CategoryTheory.Limits.Shapes.FiniteProducts
 
 #align_import category_theory.limits.constructions.over.products from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

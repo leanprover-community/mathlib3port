@@ -3,9 +3,9 @@ Copyright (c) 2020 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 -/
-import Mathbin.Logic.IsEmpty
-import Mathbin.Logic.Relation
-import Mathbin.Order.Basic
+import Logic.IsEmpty
+import Logic.Relation
+import Order.Basic
 
 #align_import order.rel_classes from "leanprover-community/mathlib"@"7413128c3bcb3b0818e3e18720abc9ea3100fb49"
 

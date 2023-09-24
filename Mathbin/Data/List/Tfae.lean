@@ -3,7 +3,7 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon
 -/
-import Mathbin.Data.List.Basic
+import Data.List.Basic
 
 #align_import data.list.tfae from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 

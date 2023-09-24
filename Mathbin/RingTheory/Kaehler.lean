@@ -3,9 +3,9 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 -/
-import Mathbin.RingTheory.Derivation.ToSquareZero
-import Mathbin.RingTheory.Ideal.Cotangent
-import Mathbin.RingTheory.IsTensorProduct
+import RingTheory.Derivation.ToSquareZero
+import RingTheory.Ideal.Cotangent
+import RingTheory.IsTensorProduct
 
 #align_import ring_theory.kaehler from "leanprover-community/mathlib"@"4b92a463033b5587bb011657e25e4710bfca7364"
 

@@ -3,13 +3,13 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Logic.Equiv.Defs
-import Mathbin.Data.Option.Basic
-import Mathbin.Data.Prod.Basic
-import Mathbin.Data.Sigma.Basic
-import Mathbin.Data.Subtype
-import Mathbin.Data.Sum.Basic
-import Mathbin.Logic.Function.Conjugate
+import Logic.Equiv.Defs
+import Data.Option.Basic
+import Data.Prod.Basic
+import Data.Sigma.Basic
+import Data.Subtype
+import Data.Sum.Basic
+import Logic.Function.Conjugate
 
 #align_import logic.equiv.basic from "leanprover-community/mathlib"@"cd391184c85986113f8c00844cfe6dda1d34be3d"
 

@@ -3,15 +3,15 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Order.Atoms
-import Mathbin.Order.OrderIsoNat
-import Mathbin.Order.RelIso.Set
-import Mathbin.Order.SupIndep
-import Mathbin.Order.Zorn
-import Mathbin.Data.Finset.Order
-import Mathbin.Data.Set.Intervals.OrderIso
-import Mathbin.Data.Finite.Set
-import Mathbin.Tactic.Tfae
+import Order.Atoms
+import Order.OrderIsoNat
+import Order.RelIso.Set
+import Order.SupIndep
+import Order.Zorn
+import Data.Finset.Order
+import Data.Set.Intervals.OrderIso
+import Data.Finite.Set
+import Tactic.Tfae
 
 #align_import order.compactly_generated from "leanprover-community/mathlib"@"c813ed7de0f5115f956239124e9b30f3a621966f"
 
@@ -67,7 +67,7 @@ namespace CompleteLattice
 
 variable (α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print CompleteLattice.IsSupClosedCompact /-
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/

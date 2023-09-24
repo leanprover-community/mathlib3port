@@ -3,11 +3,11 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Ring.Aut
-import Mathbin.Algebra.Ring.CompTypeclasses
-import Mathbin.Data.Rat.Cast
-import Mathbin.GroupTheory.GroupAction.Opposite
-import Mathbin.Data.SetLike.Basic
+import Algebra.Ring.Aut
+import Algebra.Ring.CompTypeclasses
+import Data.Rat.Cast
+import GroupTheory.GroupAction.Opposite
+import Data.SetLike.Basic
 
 #align_import algebra.star.basic from "leanprover-community/mathlib"@"31c24aa72e7b3e5ed97a8412470e904f82b81004"
 

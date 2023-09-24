@@ -3,10 +3,10 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Fintype.Card
-import Mathbin.CategoryTheory.DiscreteCategory
-import Mathbin.CategoryTheory.Opposites
-import Mathbin.CategoryTheory.Category.Ulift
+import Data.Fintype.Card
+import CategoryTheory.DiscreteCategory
+import CategoryTheory.Opposites
+import CategoryTheory.Category.Ulift
 
 #align_import category_theory.fin_category from "leanprover-community/mathlib"@"2efd2423f8d25fa57cf7a179f5d8652ab4d0df44"
 

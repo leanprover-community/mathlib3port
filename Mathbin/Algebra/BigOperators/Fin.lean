@@ -3,10 +3,10 @@ Copyright (c) 2020 Yury Kudryashov, Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Anne Baanen
 -/
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Fintype.Fin
-import Mathbin.Data.List.FinRange
-import Mathbin.Logic.Equiv.Fin
+import Data.Fintype.BigOperators
+import Data.Fintype.Fin
+import Data.List.FinRange
+import Logic.Equiv.Fin
 
 #align_import algebra.big_operators.fin from "leanprover-community/mathlib"@"cc5dd6244981976cc9da7afc4eee5682b037a013"
 

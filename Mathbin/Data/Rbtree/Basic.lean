@@ -3,15 +3,15 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 -/
-import Mathbin.Data.Rbtree.Init
-import Mathbin.Logic.IsEmpty
-import Mathbin.Tactic.Interactive
+import Data.Rbtree.Init
+import Logic.IsEmpty
+import Tactic.Interactive
 
 #align_import data.rbtree.basic from "leanprover-community/mathlib"@"5cb17dd1617d2dc55eb17777c3dcded3306fadb5"
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 #align tactic.interactive.blast_disjs tactic.interactive.blast_disjs
@@ -42,7 +42,7 @@ inductive Std.RBNode.IsSearchable (lt : α → α → Prop) : Std.RBNode α → 
     is_searchable (black_node l v r) lo hi
 #align rbnode.is_searchable Std.RBNode.IsSearchable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 #align rbnode.is_searchable_tactic rbnode.is_searchable_tactic

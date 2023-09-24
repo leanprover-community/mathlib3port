@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 -/
-import Mathbin.FieldTheory.Separable
-import Mathbin.RingTheory.IntegralDomain
-import Mathbin.Tactic.ApplyFun
+import FieldTheory.Separable
+import RingTheory.IntegralDomain
+import Tactic.ApplyFun
 
 #align_import field_theory.finite.basic from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

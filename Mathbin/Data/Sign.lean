@@ -3,10 +3,10 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Int.Lemmas
-import Mathbin.Tactic.DeriveFintype
+import Algebra.BigOperators.Order
+import Data.Fintype.BigOperators
+import Data.Int.Lemmas
+import Tactic.DeriveFintype
 
 #align_import data.sign from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

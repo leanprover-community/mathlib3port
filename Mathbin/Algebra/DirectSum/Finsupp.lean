@@ -3,8 +3,8 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Algebra.DirectSum.Module
-import Mathbin.Data.Finsupp.ToDfinsupp
+import Algebra.DirectSum.Module
+import Data.Finsupp.ToDfinsupp
 
 #align_import algebra.direct_sum.finsupp from "leanprover-community/mathlib"@"aa3a420527e0fbfd0f6615b95b761254a9166e12"
 

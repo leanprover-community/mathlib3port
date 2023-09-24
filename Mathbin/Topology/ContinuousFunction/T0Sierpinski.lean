@@ -3,9 +3,9 @@ Copyright (c) 2022 Ivan Sadofschi Costa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 -/
-import Mathbin.Topology.Order
-import Mathbin.Topology.Sets.Opens
-import Mathbin.Topology.ContinuousFunction.Basic
+import Topology.Order
+import Topology.Sets.Opens
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.continuous_function.t0_sierpinski from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

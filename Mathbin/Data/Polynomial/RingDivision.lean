@@ -3,12 +3,12 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
 -/
-import Mathbin.Algebra.CharZero.Infinite
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.Polynomial.Degree.Lemmas
-import Mathbin.Data.Polynomial.Div
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.Algebra.Polynomial.BigOperators
+import Algebra.CharZero.Infinite
+import Data.Polynomial.AlgebraMap
+import Data.Polynomial.Degree.Lemmas
+import Data.Polynomial.Div
+import RingTheory.Localization.FractionRing
+import Algebra.Polynomial.BigOperators
 
 #align_import data.polynomial.ring_division from "leanprover-community/mathlib"@"8efcf8022aac8e01df8d302dcebdbc25d6a886c8"
 

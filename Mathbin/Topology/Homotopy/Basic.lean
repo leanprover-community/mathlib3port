@@ -3,10 +3,10 @@ Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.Topology.Algebra.Order.ProjIcc
-import Mathbin.Topology.ContinuousFunction.Ordered
-import Mathbin.Topology.CompactOpen
-import Mathbin.Topology.UnitInterval
+import Topology.Algebra.Order.ProjIcc
+import Topology.ContinuousFunction.Ordered
+import Topology.CompactOpen
+import Topology.UnitInterval
 
 #align_import topology.homotopy.basic from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

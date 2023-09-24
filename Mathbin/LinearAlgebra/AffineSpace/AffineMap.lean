@@ -3,11 +3,11 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Data.Set.Pointwise.Interval
-import Mathbin.LinearAlgebra.AffineSpace.Basic
-import Mathbin.LinearAlgebra.BilinearMap
-import Mathbin.LinearAlgebra.Pi
-import Mathbin.LinearAlgebra.Prod
+import Data.Set.Pointwise.Interval
+import LinearAlgebra.AffineSpace.Basic
+import LinearAlgebra.BilinearMap
+import LinearAlgebra.Pi
+import LinearAlgebra.Prod
 
 #align_import linear_algebra.affine_space.affine_map from "leanprover-community/mathlib"@"bd1fc183335ea95a9519a1630bcf901fe9326d83"
 

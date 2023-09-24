@@ -3,8 +3,8 @@ Copyright (c) 2021 Yakov Pechersky All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Mario Carneiro
 -/
-import Mathbin.Data.Fin.Basic
-import Mathbin.Tactic.NormNum
+import Data.Fin.Basic
+import Tactic.NormNum
 
 #align_import tactic.norm_fin from "leanprover-community/mathlib"@"0bd2ea37bcba5769e14866170f251c9bc64e35d7"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 -/
-import Mathbin.Algebra.GradedMonoid
+import Algebra.GradedMonoid
 
 #align_import algebra.graded_mul_action from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

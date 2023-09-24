@@ -3,9 +3,9 @@ Copyright (c) 2021 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
-import Mathbin.Algebra.Periodic
-import Mathbin.Data.Nat.Count
-import Mathbin.Data.Nat.Interval
+import Algebra.Periodic
+import Data.Nat.Count
+import Data.Nat.Interval
 
 #align_import data.nat.periodic from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

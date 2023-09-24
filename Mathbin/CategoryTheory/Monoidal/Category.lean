@@ -3,7 +3,7 @@ Copyright (c) 2018 Michael Jendrusch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Products.Basic
+import CategoryTheory.Products.Basic
 
 #align_import category_theory.monoidal.category from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
@@ -64,22 +64,22 @@ open CategoryTheory.Iso
 namespace CategoryTheory
 
 #print CategoryTheory.MonoidalCategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
@@ -88,14 +88,14 @@ namespace CategoryTheory
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
-/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/

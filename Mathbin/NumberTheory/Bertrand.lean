@@ -3,11 +3,11 @@ Copyright (c) 2020 Patrick Stevens. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 -/
-import Mathbin.Data.Nat.Choose.Factorization
-import Mathbin.Data.Nat.PrimeNormNum
-import Mathbin.NumberTheory.Primorial
-import Mathbin.Analysis.Convex.SpecificFunctions.Basic
-import Mathbin.Analysis.Convex.SpecificFunctions.Deriv
+import Data.Nat.Choose.Factorization
+import Data.Nat.PrimeNormNum
+import NumberTheory.Primorial
+import Analysis.Convex.SpecificFunctions.Basic
+import Analysis.Convex.SpecificFunctions.Deriv
 
 #align_import number_theory.bertrand from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
@@ -224,7 +224,7 @@ theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Pri
 #align nat.exists_prime_lt_and_le_two_mul_succ Nat.exists_prime_lt_and_le_two_mul_succ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 #print Nat.exists_prime_lt_and_le_two_mul /-
 /--
 **Bertrand's Postulate**: For any positive natural number, there is a prime which is greater than

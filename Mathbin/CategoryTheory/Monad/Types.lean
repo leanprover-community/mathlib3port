@@ -3,10 +3,10 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Monad.Basic
-import Mathbin.CategoryTheory.Monad.Kleisli
-import Mathbin.CategoryTheory.Category.Kleisli
-import Mathbin.CategoryTheory.Types
+import CategoryTheory.Monad.Basic
+import CategoryTheory.Monad.Kleisli
+import CategoryTheory.Category.Kleisli
+import CategoryTheory.Types
 
 #align_import category_theory.monad.types from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

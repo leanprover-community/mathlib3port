@@ -3,7 +3,7 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
+import RingTheory.Polynomial.Cyclotomic.Basic
 
 #align_import cyclotomic_105 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

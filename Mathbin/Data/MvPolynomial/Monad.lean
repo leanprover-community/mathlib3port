@@ -3,8 +3,8 @@ Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.Data.MvPolynomial.Rename
-import Mathbin.Data.MvPolynomial.Variables
+import Data.MvPolynomial.Rename
+import Data.MvPolynomial.Variables
 
 #align_import data.mv_polynomial.monad from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"
 

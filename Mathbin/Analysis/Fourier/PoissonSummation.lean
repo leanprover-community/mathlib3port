@@ -3,11 +3,11 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.Fourier.AddCircle
-import Mathbin.Analysis.Fourier.FourierTransform
-import Mathbin.Analysis.PSeries
-import Mathbin.Analysis.SchwartzSpace
-import Mathbin.MeasureTheory.Measure.Lebesgue.Integral
+import Analysis.Fourier.AddCircle
+import Analysis.Fourier.FourierTransform
+import Analysis.PSeries
+import Analysis.SchwartzSpace
+import MeasureTheory.Measure.Lebesgue.Integral
 
 #align_import analysis.fourier.poisson_summation from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

@@ -3,13 +3,13 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
-import Mathbin.LinearAlgebra.Determinant
-import Mathbin.LinearAlgebra.Matrix.Diagonal
-import Mathbin.LinearAlgebra.Matrix.Transvection
-import Mathbin.MeasureTheory.Constructions.Pi
-import Mathbin.MeasureTheory.Measure.Stieltjes
-import Mathbin.MeasureTheory.Measure.Haar.OfBasis
+import Dynamics.Ergodic.MeasurePreserving
+import LinearAlgebra.Determinant
+import LinearAlgebra.Matrix.Diagonal
+import LinearAlgebra.Matrix.Transvection
+import MeasureTheory.Constructions.Pi
+import MeasureTheory.Measure.Stieltjes
+import MeasureTheory.Measure.Haar.OfBasis
 
 #align_import measure_theory.measure.lebesgue.basic from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

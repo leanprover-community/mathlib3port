@@ -3,8 +3,8 @@ Copyright (c) 2021 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.LinearAlgebra.Basis
-import Mathbin.LinearAlgebra.Multilinear.Basic
+import LinearAlgebra.Basis
+import LinearAlgebra.Multilinear.Basic
 
 #align_import linear_algebra.multilinear.basis from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

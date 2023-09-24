@@ -3,8 +3,8 @@ Copyright (c) 2022 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 -/
-import Mathbin.Algebra.Ring.Regular
-import Mathbin.GroupTheory.Submonoid.Basic
+import Algebra.Ring.Regular
+import GroupTheory.Submonoid.Basic
 
 #align_import ring_theory.ore_localization.ore_set from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

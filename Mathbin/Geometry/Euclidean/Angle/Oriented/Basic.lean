@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 -/
-import Mathbin.Analysis.InnerProductSpace.TwoDim
-import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic
+import Analysis.InnerProductSpace.TwoDim
+import Geometry.Euclidean.Angle.Unoriented.Basic
 
 #align_import geometry.euclidean.angle.oriented.basic from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
@@ -742,7 +742,7 @@ theorem oangle_sub_eq_oangle_sub_rev_of_norm_eq {x y : V} (h : ‖x‖ = ‖y‖
 #align orientation.oangle_sub_eq_oangle_sub_rev_of_norm_eq Orientation.oangle_sub_eq_oangle_sub_rev_of_norm_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 #print Orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq /-
 /-- The angle at the apex of an isosceles triangle is `π` minus twice a base angle, oriented
 vector angle form. -/

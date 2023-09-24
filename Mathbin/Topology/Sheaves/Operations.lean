@@ -3,10 +3,10 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Algebra.Category.Ring.Instances
-import Mathbin.Algebra.Category.Ring.FilteredColimits
-import Mathbin.RingTheory.Localization.Basic
-import Mathbin.Topology.Sheaves.Stalks
+import Algebra.Category.Ring.Instances
+import Algebra.Category.Ring.FilteredColimits
+import RingTheory.Localization.Basic
+import Topology.Sheaves.Stalks
 
 #align_import topology.sheaves.operations from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

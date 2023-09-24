@@ -3,9 +3,9 @@ Copyright (c) 2017 Simon Hudon All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Cast
-import Mathbin.Data.Rat.MetaDefs
-import Mathbin.Data.Int.Lemmas
+import Data.Rat.Cast
+import Data.Rat.MetaDefs
+import Data.Int.Lemmas
 
 #align_import tactic.norm_num from "leanprover-community/mathlib"@"c1acdccd694b692db2619fff903e0e40de428169"
 

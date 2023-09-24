@@ -3,7 +3,7 @@ Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 -/
-import Mathbin.Analysis.Convex.Basic
+import Analysis.Convex.Basic
 
 #align_import analysis.convex.function from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 

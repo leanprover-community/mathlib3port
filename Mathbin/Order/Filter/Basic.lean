@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 -/
-import Mathbin.Control.Traversable.Instances
-import Mathbin.Data.Set.Finite
-import Mathbin.Order.Copy
+import Control.Traversable.Instances
+import Data.Set.Finite
+import Order.Copy
 import Mathbin.Tactic.Monotonicity.Default
 
 #align_import order.filter.basic from "leanprover-community/mathlib"@"d4f691b9e5f94cfc64639973f3544c95f8d5d494"
@@ -287,7 +287,7 @@ namespace Tactic.Interactive
 open Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- `filter_upwards [h₁, ⋯, hₙ]` replaces a goal of the form `s ∈ f` and terms
 `h₁ : t₁ ∈ f, ⋯, hₙ : tₙ ∈ f` with `∀ x, x ∈ t₁ → ⋯ → x ∈ tₙ → x ∈ s`.
 The list is an optional parameter, `[]` being its default value.
@@ -429,7 +429,7 @@ theorem le_generate_iff {s : Set (Set α)} {f : Filter α} : f ≤ Filter.genera
 #align filter.sets_iff_generate Filter.le_generate_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.mem_generate_iff /-
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
     U ∈ generate s ↔ ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ ⋂₀ t ⊆ U :=
@@ -792,7 +792,7 @@ theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
 #align filter.mem_infi Filter.mem_iInf
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » I) -/
 #print Filter.mem_iInf' /-
 theorem mem_iInf' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔

@@ -3,12 +3,12 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.Data.Set.Pointwise.Finite
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.GroupTheory.Submonoid.Operations
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.SetTheory.Cardinal.Finite
-import Mathbin.Data.Finset.Preimage
+import Data.Set.Pointwise.Finite
+import GroupTheory.QuotientGroup
+import GroupTheory.Submonoid.Operations
+import GroupTheory.Subgroup.Basic
+import SetTheory.Cardinal.Finite
+import Data.Finset.Preimage
 
 #align_import group_theory.finiteness from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

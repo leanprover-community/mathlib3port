@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Eric Wieser
 -/
-import Mathbin.Tactic.DocCommands
+import Tactic.DocCommands
 
 #align_import algebra.hierarchy_design from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

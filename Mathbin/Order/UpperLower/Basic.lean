@@ -3,10 +3,10 @@ Copyright (c) 2022 Yaël Dillies, Sara Rousta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 -/
-import Mathbin.Data.SetLike.Basic
-import Mathbin.Data.Set.Intervals.OrdConnected
-import Mathbin.Data.Set.Intervals.OrderIso
-import Mathbin.Tactic.ByContra
+import Data.SetLike.Basic
+import Data.Set.Intervals.OrdConnected
+import Data.Set.Intervals.OrderIso
+import Tactic.ByContra
 
 #align_import order.upper_lower.basic from "leanprover-community/mathlib"@"c0c52abb75074ed8b73a948341f50521fbf43b4c"
 

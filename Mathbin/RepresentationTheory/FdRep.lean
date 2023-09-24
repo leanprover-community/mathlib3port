@@ -3,10 +3,10 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.RepresentationTheory.Rep
-import Mathbin.Algebra.Category.FgModule.Limits
-import Mathbin.CategoryTheory.Preadditive.Schur
-import Mathbin.RepresentationTheory.Basic
+import RepresentationTheory.Rep
+import Algebra.Category.FgModule.Limits
+import CategoryTheory.Preadditive.Schur
+import RepresentationTheory.Basic
 
 #align_import representation_theory.fdRep from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 
@@ -44,7 +44,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:328:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:329:31: unsupported: @[derive] abbrev -/
 #print FdRep /-
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoid G] :=

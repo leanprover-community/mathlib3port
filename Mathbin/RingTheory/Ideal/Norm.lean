@@ -3,15 +3,15 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 -/
-import Mathbin.Algebra.CharP.Quotient
-import Mathbin.Data.Finsupp.Fintype
-import Mathbin.Data.Int.AbsoluteValue
-import Mathbin.Data.Int.Associated
-import Mathbin.LinearAlgebra.FreeModule.Determinant
-import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
-import Mathbin.RingTheory.DedekindDomain.Pid
-import Mathbin.RingTheory.LocalProperties
-import Mathbin.RingTheory.Localization.Norm
+import Algebra.CharP.Quotient
+import Data.Finsupp.Fintype
+import Data.Int.AbsoluteValue
+import Data.Int.Associated
+import LinearAlgebra.FreeModule.Determinant
+import LinearAlgebra.FreeModule.IdealQuotient
+import RingTheory.DedekindDomain.Pid
+import RingTheory.LocalProperties
+import RingTheory.Localization.Norm
 
 #align_import ring_theory.ideal.norm from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

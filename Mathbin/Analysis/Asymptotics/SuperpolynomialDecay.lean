@@ -3,10 +3,10 @@ Copyright (c) 2021 Devon Tuma. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 -/
-import Mathbin.Analysis.Asymptotics.Asymptotics
-import Mathbin.Analysis.Normed.Order.Basic
-import Mathbin.Data.Polynomial.Eval
-import Mathbin.Topology.Algebra.Order.LiminfLimsup
+import Analysis.Asymptotics.Asymptotics
+import Analysis.Normed.Order.Basic
+import Data.Polynomial.Eval
+import Topology.Algebra.Order.LiminfLimsup
 
 #align_import analysis.asymptotics.superpolynomial_decay from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 -/
-import Mathbin.Analysis.Normed.Group.Basic
-import Mathbin.Topology.MetricSpace.HausdorffDistance
+import Analysis.Normed.Group.Basic
+import Topology.MetricSpace.HausdorffDistance
 
 #align_import analysis.normed.group.pointwise from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Bicategory.Basic
-import Mathbin.CategoryTheory.Monoidal.Category
+import CategoryTheory.Bicategory.Basic
+import CategoryTheory.Monoidal.Category
 
 #align_import category_theory.bicategory.End from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 

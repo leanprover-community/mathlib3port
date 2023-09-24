@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.CategoryTheory.Category.Bipointed
-import Mathbin.Algebra.Category.Mon.Basic
+import CategoryTheory.Category.Bipointed
+import Algebra.Category.Mon.Basic
 
 #align_import algebra.category.GroupWithZero from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

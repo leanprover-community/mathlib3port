@@ -3,9 +3,9 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 -/
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.Order.Filter.NAry
-import Mathbin.Order.Filter.Ultrafilter
+import Data.Set.Pointwise.Smul
+import Order.Filter.NAry
+import Order.Filter.Ultrafilter
 
 #align_import order.filter.pointwise from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.IsPrimePow
-import Mathbin.SetTheory.Cardinal.Ordinal
+import Algebra.IsPrimePow
+import SetTheory.Cardinal.Ordinal
 
 #align_import set_theory.cardinal.divisibility from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

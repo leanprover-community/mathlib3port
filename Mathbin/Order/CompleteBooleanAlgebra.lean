@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 -/
-import Mathbin.Order.CompleteLattice
-import Mathbin.Order.Directed
-import Mathbin.Logic.Equiv.Set
+import Order.CompleteLattice
+import Order.Directed
+import Logic.Equiv.Set
 
 #align_import order.complete_boolean_algebra from "leanprover-community/mathlib"@"71b36b6f3bbe3b44e6538673819324d3ee9fcc96"
 

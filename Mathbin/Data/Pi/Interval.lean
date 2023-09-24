@@ -3,8 +3,8 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.LocallyFinite
-import Mathbin.Data.Fintype.BigOperators
+import Data.Finset.LocallyFinite
+import Data.Fintype.BigOperators
 
 #align_import data.pi.interval from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
 

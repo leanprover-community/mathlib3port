@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.DirectSum.Module
-import Mathbin.Algebra.DirectSum.Ring
+import Algebra.Algebra.Basic
+import Algebra.DirectSum.Module
+import Algebra.DirectSum.Ring
 
 #align_import algebra.direct_sum.algebra from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

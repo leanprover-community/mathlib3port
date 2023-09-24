@@ -3,10 +3,10 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.Polynomial.BigOperators
-import Mathbin.Data.Nat.Choose.Cast
-import Mathbin.Data.Nat.Choose.Vandermonde
-import Mathbin.Data.Polynomial.Derivative
+import Algebra.Polynomial.BigOperators
+import Data.Nat.Choose.Cast
+import Data.Nat.Choose.Vandermonde
+import Data.Polynomial.Derivative
 
 #align_import data.polynomial.hasse_deriv from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

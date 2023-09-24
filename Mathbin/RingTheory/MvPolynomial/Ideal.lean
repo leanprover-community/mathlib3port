@@ -3,8 +3,8 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.MonoidAlgebra.Ideal
-import Mathbin.Data.MvPolynomial.Division
+import Algebra.MonoidAlgebra.Ideal
+import Data.MvPolynomial.Division
 
 #align_import ring_theory.mv_polynomial.ideal from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 

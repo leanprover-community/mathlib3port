@@ -3,10 +3,10 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Geometry.Manifold.Algebra.Structures
-import Mathbin.Geometry.Manifold.BumpFunction
-import Mathbin.Topology.MetricSpace.PartitionOfUnity
-import Mathbin.Topology.ShrinkingLemma
+import Geometry.Manifold.Algebra.Structures
+import Geometry.Manifold.BumpFunction
+import Topology.MetricSpace.PartitionOfUnity
+import Topology.ShrinkingLemma
 
 #align_import geometry.manifold.partition_of_unity from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 -/
-import Mathbin.Analysis.SpecialFunctions.Complex.Circle
-import Mathbin.Geometry.Euclidean.Angle.Oriented.Basic
+import Analysis.SpecialFunctions.Complex.Circle
+import Geometry.Euclidean.Angle.Oriented.Basic
 
 #align_import geometry.euclidean.angle.oriented.rotation from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu, Anne Baanen
 -/
-import Mathbin.LinearAlgebra.Basis
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Localization.Integer
+import LinearAlgebra.Basis
+import RingTheory.Localization.FractionRing
+import RingTheory.Localization.Integer
 
 #align_import ring_theory.localization.module from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

@@ -3,14 +3,14 @@ Copyright (c) 2022 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.Fourier.FourierTransform
-import Mathbin.Analysis.InnerProductSpace.Dual
-import Mathbin.Analysis.InnerProductSpace.EuclideanDist
-import Mathbin.MeasureTheory.Function.ContinuousMapDense
-import Mathbin.MeasureTheory.Group.Integration
-import Mathbin.MeasureTheory.Integral.SetIntegral
-import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
-import Mathbin.Topology.MetricSpace.EmetricParacompact
+import Analysis.Fourier.FourierTransform
+import Analysis.InnerProductSpace.Dual
+import Analysis.InnerProductSpace.EuclideanDist
+import MeasureTheory.Function.ContinuousMapDense
+import MeasureTheory.Group.Integration
+import MeasureTheory.Integral.SetIntegral
+import MeasureTheory.Measure.Haar.NormedSpace
+import Topology.MetricSpace.EmetricParacompact
 
 #align_import analysis.fourier.riemann_lebesgue_lemma from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

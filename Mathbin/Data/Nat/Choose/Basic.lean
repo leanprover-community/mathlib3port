@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Bhavik Mehta, Stuart Presnell
 -/
-import Mathbin.Data.Nat.Factorial.Basic
+import Data.Nat.Factorial.Basic
 
 #align_import data.nat.choose.basic from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

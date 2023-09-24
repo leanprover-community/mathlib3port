@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.Algebra.Structures
+import Geometry.Manifold.Algebra.Structures
 
 #align_import geometry.manifold.algebra.smooth_functions from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

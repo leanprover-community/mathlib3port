@@ -3,9 +3,9 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
-import Mathbin.Algebra.GroupRingAction.Basic
-import Mathbin.Algebra.Hom.Aut
-import Mathbin.Algebra.Ring.Equiv
+import Algebra.GroupRingAction.Basic
+import Algebra.Hom.Aut
+import Algebra.Ring.Equiv
 
 #align_import algebra.ring.aut from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

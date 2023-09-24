@@ -3,8 +3,8 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Tactic.NormNum
+import Data.Fintype.Basic
+import Tactic.NormNum
 
 #align_import tactic.fin_cases from "leanprover-community/mathlib"@"82a53736b96112a948cb35faa4ab72aa705d56f8"
 
@@ -46,7 +46,7 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
   | _ => failed
 #align tactic.expr_list_to_list_expr tactic.expr_list_to_list_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), tactic Unit
   | with_list, e => do
     let result ← cases_core e

@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Set.Countable
-import Mathbin.Logic.Encodable.Lattice
-import Mathbin.Order.Disjointed
+import Data.Set.Countable
+import Logic.Encodable.Lattice
+import Order.Disjointed
 
 #align_import measure_theory.measurable_space_def from "leanprover-community/mathlib"@"001ffdc42920050657fd45bd2b8bfbec8eaaeb29"
 

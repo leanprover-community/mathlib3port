@@ -3,8 +3,8 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yakov Pechersky
 -/
-import Mathbin.Data.List.Perm
-import Mathbin.Data.List.Range
+import Data.List.Perm
+import Data.List.Range
 
 #align_import data.list.rotate from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

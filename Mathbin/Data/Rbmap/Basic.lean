@@ -3,7 +3,7 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 -/
-import Mathbin.Data.Rbtree.Init
+import Data.Rbtree.Init
 
 #align_import data.rbmap.basic from "leanprover-community/mathlib"@"d13b3a4a392ea7273dfa4727dbd1892e26cfd518"
 
@@ -13,7 +13,7 @@ def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × �
   lt a.1 b.1
 #align rbmap_lt RbmapLt
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/

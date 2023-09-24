@@ -3,10 +3,10 @@ Copyright (c) 2020 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.Algebra.Order.ProjIcc
-import Mathbin.Topology.CompactOpen
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Topology.UnitInterval
+import Topology.Algebra.Order.ProjIcc
+import Topology.CompactOpen
+import Topology.ContinuousFunction.Basic
+import Topology.UnitInterval
 
 #align_import topology.path_connected from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 
@@ -1164,7 +1164,7 @@ theorem isPathConnected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathComponen
 #align is_path_connected_iff_eq isPathConnected_iff_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 #print IsPathConnected.joinedIn /-
 theorem IsPathConnected.joinedIn (h : IsPathConnected F) :
     ∀ (x) (_ : x ∈ F) (y) (_ : y ∈ F), JoinedIn F x y := fun x x_in x y_in =>
@@ -1173,7 +1173,7 @@ theorem IsPathConnected.joinedIn (h : IsPathConnected F) :
 #align is_path_connected.joined_in IsPathConnected.joinedIn
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 #print isPathConnected_iff /-
 theorem isPathConnected_iff :
     IsPathConnected F ↔ F.Nonempty ∧ ∀ (x) (_ : x ∈ F) (y) (_ : y ∈ F), JoinedIn F x y :=

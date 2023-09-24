@@ -3,8 +3,8 @@ Copyright (c) 2020 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.Exponent
+import Data.Zmod.Basic
+import GroupTheory.Exponent
 
 #align_import group_theory.specific_groups.dihedral from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

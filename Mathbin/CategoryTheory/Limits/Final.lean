@@ -3,11 +3,11 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Punit
-import Mathbin.CategoryTheory.StructuredArrow
-import Mathbin.CategoryTheory.IsConnected
-import Mathbin.CategoryTheory.Limits.Yoneda
-import Mathbin.CategoryTheory.Limits.Types
+import CategoryTheory.Punit
+import CategoryTheory.StructuredArrow
+import CategoryTheory.IsConnected
+import CategoryTheory.Limits.Yoneda
+import CategoryTheory.Limits.Types
 
 #align_import category_theory.limits.final from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

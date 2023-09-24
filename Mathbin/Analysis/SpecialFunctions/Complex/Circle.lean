@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Complex.Circle
-import Mathbin.Analysis.SpecialFunctions.Complex.Log
+import Analysis.Complex.Circle
+import Analysis.SpecialFunctions.Complex.Log
 
 #align_import analysis.special_functions.complex.circle from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

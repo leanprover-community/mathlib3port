@@ -3,8 +3,8 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Meta.RbMap
-import Mathbin.Tactic.Core
+import Meta.RbMap
+import Tactic.Core
 
 #align_import tactic.dependencies from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

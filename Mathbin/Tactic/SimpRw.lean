@@ -3,7 +3,7 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.simp_rw from "leanprover-community/mathlib"@"610861666826c95213acd9dac829a2321e141b64"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
-import Mathbin.Data.Finset.Basic
-import Mathbin.ModelTheory.Syntax
+import Data.Finset.Basic
+import ModelTheory.Syntax
 
 #align_import model_theory.semantics from "leanprover-community/mathlib"@"6cf5900728239efa287df7761ec2a1ac9cf39b29"
 

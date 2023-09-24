@@ -3,8 +3,8 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.RingTheory.SimpleModule
-import Mathbin.Topology.Algebra.Module.Basic
+import RingTheory.SimpleModule
+import Topology.Algebra.Module.Basic
 
 #align_import topology.algebra.module.simple from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

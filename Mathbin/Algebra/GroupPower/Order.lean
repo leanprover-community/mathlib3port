@@ -3,10 +3,10 @@ Copyright (c) 2015 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 -/
-import Mathbin.Algebra.Order.Ring.Abs
-import Mathbin.Algebra.Order.WithZero
-import Mathbin.Algebra.GroupPower.Ring
-import Mathbin.Data.Set.Intervals.Basic
+import Algebra.Order.Ring.Abs
+import Algebra.Order.WithZero
+import Algebra.GroupPower.Ring
+import Data.Set.Intervals.Basic
 
 #align_import algebra.group_power.order from "leanprover-community/mathlib"@"00f91228655eecdcd3ac97a7fd8dbcb139fe990a"
 

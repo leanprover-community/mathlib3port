@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Sites.Subsheaf
-import Mathbin.CategoryTheory.Sites.CompatibleSheafification
+import CategoryTheory.Sites.Subsheaf
+import CategoryTheory.Sites.CompatibleSheafification
 
 #align_import category_theory.sites.surjective from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 

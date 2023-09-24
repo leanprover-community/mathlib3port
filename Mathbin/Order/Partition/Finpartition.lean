@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Order.Atoms.Finite
-import Mathbin.Order.SupIndep
+import Algebra.BigOperators.Basic
+import Order.Atoms.Finite
+import Order.SupIndep
 
 #align_import order.partition.finpartition from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 
@@ -618,7 +618,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
 #print Finpartition.mem_atomise /-
 theorem mem_atomise :
     t ∈ (atomise s F).parts ↔

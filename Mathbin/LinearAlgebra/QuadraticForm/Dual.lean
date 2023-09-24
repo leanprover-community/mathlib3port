@@ -3,8 +3,8 @@ Copyright (c) 2023 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.QuadraticForm.Isometry
-import Mathbin.LinearAlgebra.QuadraticForm.Prod
+import LinearAlgebra.QuadraticForm.Isometry
+import LinearAlgebra.QuadraticForm.Prod
 
 #align_import linear_algebra.quadratic_form.dual from "leanprover-community/mathlib"@"d11f435d4e34a6cea0a1797d6b625b0c170be845"
 

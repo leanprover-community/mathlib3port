@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.Combinatorics.Composition
-import Mathbin.Data.Nat.Parity
-import Mathbin.Tactic.ApplyFun
+import Combinatorics.Composition
+import Data.Nat.Parity
+import Tactic.ApplyFun
 
 #align_import combinatorics.partition from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

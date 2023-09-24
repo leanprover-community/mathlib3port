@@ -3,10 +3,10 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Rat.Encodable
-import Mathbin.Data.Real.Ereal
-import Mathbin.Topology.Algebra.Order.MonotoneContinuity
-import Mathbin.Topology.Instances.Ennreal
+import Data.Rat.Encodable
+import Data.Real.Ereal
+import Topology.Algebra.Order.MonotoneContinuity
+import Topology.Instances.Ennreal
 
 #align_import topology.instances.ereal from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 
@@ -239,7 +239,7 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} :
 /-! ### Neighborhoods of infinity -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
 #print EReal.nhds_top /-
 theorem nhds_top : 𝓝 (⊤ : EReal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
@@ -276,7 +276,7 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → EReal} {f : Filter �
 #align ereal.tendsto_nhds_top_iff_real EReal.tendsto_nhds_top_iff_real
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
 #print EReal.nhds_bot /-
 theorem nhds_bot : 𝓝 (⊥ : EReal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]

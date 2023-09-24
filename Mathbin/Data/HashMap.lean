@@ -3,11 +3,11 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Data.Array.Lemmas
-import Mathbin.Data.List.Join
-import Mathbin.Data.List.Range
-import Mathbin.Data.List.Nodup
-import Mathbin.Data.Pnat.Defs
+import Data.Array.Lemmas
+import Data.List.Join
+import Data.List.Range
+import Data.List.Nodup
+import Data.Pnat.Defs
 
 #align_import data.hash_map from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

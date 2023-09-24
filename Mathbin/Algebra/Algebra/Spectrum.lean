@@ -3,9 +3,9 @@ Copyright (c) 2021 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Algebra.Star.Pointwise
-import Mathbin.Algebra.Star.Subalgebra
-import Mathbin.Tactic.NoncommRing
+import Algebra.Star.Pointwise
+import Algebra.Star.Subalgebra
+import Tactic.NoncommRing
 
 #align_import algebra.algebra.spectrum from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

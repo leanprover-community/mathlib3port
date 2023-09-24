@@ -3,11 +3,11 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Fintype.Powerset
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Data.Fintype.Sigma
-import Mathbin.Data.Fintype.Sum
-import Mathbin.Data.Fintype.Vector
+import Data.Fintype.Powerset
+import Data.Fintype.Prod
+import Data.Fintype.Sigma
+import Data.Fintype.Sum
+import Data.Fintype.Vector
 
 #align_import data.finite.basic from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

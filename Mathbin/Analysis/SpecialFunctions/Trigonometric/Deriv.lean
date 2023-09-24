@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Order.Monotone.Odd
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
+import Order.Monotone.Odd
+import Analysis.SpecialFunctions.ExpDeriv
+import Analysis.SpecialFunctions.Trigonometric.Basic
 
 #align_import analysis.special_functions.trigonometric.deriv from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

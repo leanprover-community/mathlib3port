@@ -3,12 +3,12 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Init
-import Mathbin.Data.Int.Cast.Defs
-import Mathbin.Data.Int.Dvd.Basic
-import Mathbin.Algebra.Ring.Regular
-import Mathbin.Data.Nat.Gcd.Basic
-import Mathbin.Data.Pnat.Defs
+import Data.Rat.Init
+import Data.Int.Cast.Defs
+import Data.Int.Dvd.Basic
+import Algebra.Ring.Regular
+import Data.Nat.Gcd.Basic
+import Data.Pnat.Defs
 
 #align_import data.rat.defs from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

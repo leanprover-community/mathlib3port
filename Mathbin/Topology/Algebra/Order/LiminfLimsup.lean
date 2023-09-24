@@ -3,13 +3,13 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov, Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Intervals
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Order.LiminfLimsup
-import Mathbin.Order.Filter.Archimedean
-import Mathbin.Order.Filter.CountableInter
-import Mathbin.Topology.Order.Basic
+import Algebra.BigOperators.Intervals
+import Algebra.BigOperators.Order
+import Algebra.IndicatorFunction
+import Order.LiminfLimsup
+import Order.Filter.Archimedean
+import Order.Filter.CountableInter
+import Topology.Order.Basic
 
 #align_import topology.algebra.order.liminf_limsup from "leanprover-community/mathlib"@"ce64cd319bb6b3e82f31c2d38e79080d377be451"
 

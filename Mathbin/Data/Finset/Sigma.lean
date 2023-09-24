@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Data.Finset.Lattice
-import Mathbin.Data.Set.Sigma
+import Data.Finset.Lattice
+import Data.Set.Sigma
 
 #align_import data.finset.sigma from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

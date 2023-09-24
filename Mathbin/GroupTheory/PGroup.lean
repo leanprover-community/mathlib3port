@@ -3,13 +3,13 @@ Copyright (c) 2018 . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 -/
-import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.Index
-import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.GroupAction.Quotient
-import Mathbin.GroupTheory.Perm.Cycle.Type
-import Mathbin.GroupTheory.SpecificGroups.Cyclic
-import Mathbin.Tactic.IntervalCases
+import Data.Zmod.Basic
+import GroupTheory.Index
+import GroupTheory.GroupAction.ConjAct
+import GroupTheory.GroupAction.Quotient
+import GroupTheory.Perm.Cycle.Type
+import GroupTheory.SpecificGroups.Cyclic
+import Tactic.IntervalCases
 
 #align_import group_theory.p_group from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

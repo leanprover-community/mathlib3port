@@ -3,8 +3,8 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Data.List.Basic
-import Mathbin.Tactic.Omega.Term
+import Data.List.Basic
+import Tactic.Omega.Term
 
 #align_import tactic.omega.clause from "leanprover-community/mathlib"@"23f67f2fd1b092739d7fbfcdfaab65ea2783a39d"
 

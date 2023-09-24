@@ -3,13 +3,13 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.Star.Spectrum
-import Mathbin.Analysis.Normed.Group.Quotient
-import Mathbin.Analysis.NormedSpace.Algebra
-import Mathbin.Topology.ContinuousFunction.Units
-import Mathbin.Topology.ContinuousFunction.Compact
-import Mathbin.Topology.Algebra.Algebra
-import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
+import Analysis.NormedSpace.Star.Spectrum
+import Analysis.Normed.Group.Quotient
+import Analysis.NormedSpace.Algebra
+import Topology.ContinuousFunction.Units
+import Topology.ContinuousFunction.Compact
+import Topology.Algebra.Algebra
+import Topology.ContinuousFunction.StoneWeierstrass
 
 #align_import analysis.normed_space.star.gelfand_duality from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 

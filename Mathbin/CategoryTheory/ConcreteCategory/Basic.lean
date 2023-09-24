@@ -3,9 +3,9 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.Types
-import Mathbin.CategoryTheory.Functor.EpiMono
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
+import CategoryTheory.Types
+import CategoryTheory.Functor.EpiMono
+import CategoryTheory.Limits.Constructions.EpiMono
 
 #align_import category_theory.concrete_category.basic from "leanprover-community/mathlib"@"311ef8c4b4ae2804ea76b8a611bc5ea1d9c16872"
 
@@ -48,7 +48,7 @@ namespace CategoryTheory
 open CategoryTheory.Limits
 
 #print CategoryTheory.ConcreteCategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,

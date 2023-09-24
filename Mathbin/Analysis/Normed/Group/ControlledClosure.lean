@@ -3,8 +3,8 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Analysis.Normed.Group.Hom
-import Mathbin.Analysis.SpecificLimits.Normed
+import Analysis.Normed.Group.Hom
+import Analysis.SpecificLimits.Normed
 
 #align_import analysis.normed.group.controlled_closure from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

@@ -3,12 +3,12 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.Algebra.CharP.Invertible
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.MvPolynomial.Variables
-import Mathbin.Data.MvPolynomial.CommRing
-import Mathbin.Data.MvPolynomial.Expand
-import Mathbin.Data.Zmod.Basic
+import Algebra.CharP.Invertible
+import Data.Fintype.BigOperators
+import Data.MvPolynomial.Variables
+import Data.MvPolynomial.CommRing
+import Data.MvPolynomial.Expand
+import Data.Zmod.Basic
 
 #align_import ring_theory.witt_vector.witt_polynomial from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

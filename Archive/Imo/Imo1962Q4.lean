@@ -3,7 +3,7 @@ Copyright (c) 2020 Kevin Lacker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Heather Macbeth
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Complex
+import Analysis.SpecialFunctions.Trigonometric.Complex
 
 #align_import imo.imo1962_q4 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

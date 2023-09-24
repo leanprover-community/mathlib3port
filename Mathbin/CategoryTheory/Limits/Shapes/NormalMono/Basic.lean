@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Limits.Shapes.RegularMono
+import CategoryTheory.Limits.Shapes.Kernels
+import CategoryTheory.Limits.Preserves.Basic
 
 #align_import category_theory.limits.shapes.normal_mono.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

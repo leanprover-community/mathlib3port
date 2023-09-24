@@ -3,10 +3,10 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
 -/
-import Mathbin.Tactic.TransformDecl
-import Mathbin.Tactic.Algebra
-import Mathbin.Tactic.Lint.Basic
-import Mathbin.Tactic.Alias
+import Tactic.TransformDecl
+import Tactic.Algebra
+import Tactic.Lint.Basic
+import Tactic.Alias
 
 #align_import tactic.to_additive from "leanprover-community/mathlib"@"bfe9e712c5178b227be330f7c10c2e91ab48eaf8"
 

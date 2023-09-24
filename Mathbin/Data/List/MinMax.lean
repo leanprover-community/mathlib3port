@@ -3,7 +3,7 @@ Copyright (c) 2019 Minchao Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Chris Hughes, Mantas Bakšys
 -/
-import Mathbin.Data.List.Basic
+import Data.List.Basic
 
 #align_import data.list.min_max from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 

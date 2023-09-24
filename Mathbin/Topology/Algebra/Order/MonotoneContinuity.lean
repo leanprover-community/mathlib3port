@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Heather Macbeth
 -/
-import Mathbin.Topology.Order.Basic
-import Mathbin.Topology.Homeomorph
+import Topology.Order.Basic
+import Topology.Homeomorph
 
 #align_import topology.algebra.order.monotone_continuity from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Adjunction.Reflective
-import Mathbin.CategoryTheory.Monad.Algebra
+import CategoryTheory.Adjunction.Reflective
+import CategoryTheory.Monad.Algebra
 
 #align_import category_theory.monad.adjunction from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

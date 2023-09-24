@@ -3,7 +3,7 @@ Copyright (c) 2022 Devon Tuma. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 -/
-import Mathbin.Probability.ProbabilityMassFunction.Constructions
+import Probability.ProbabilityMassFunction.Constructions
 
 #align_import probability.probability_mass_function.uniform from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

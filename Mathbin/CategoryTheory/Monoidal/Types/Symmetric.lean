@@ -3,8 +3,8 @@ Copyright (c) 2018 Michael Jendrusch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts.Symmetric
-import Mathbin.CategoryTheory.Monoidal.Types.Basic
+import CategoryTheory.Monoidal.OfChosenFiniteProducts.Symmetric
+import CategoryTheory.Monoidal.Types.Basic
 
 #align_import category_theory.monoidal.types.symmetric from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

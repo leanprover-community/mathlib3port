@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Data.Complex.Module
-import Mathbin.LinearAlgebra.Determinant
+import Data.Complex.Module
+import LinearAlgebra.Determinant
 
 #align_import data.complex.determinant from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

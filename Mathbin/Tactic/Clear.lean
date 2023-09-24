@@ -3,8 +3,8 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Data.Bool.Basic
-import Mathbin.Tactic.Core
+import Data.Bool.Basic
+import Tactic.Core
 
 #align_import tactic.clear from "leanprover-community/mathlib"@"e68fcf8dede813727dd0a47c873938ade3f90ef1"
 

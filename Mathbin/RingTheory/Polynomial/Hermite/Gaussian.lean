@@ -3,11 +3,11 @@ Copyright (c) 2023 Luke Mantle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle, Jake Levinson
 -/
-import Mathbin.RingTheory.Polynomial.Hermite.Basic
-import Mathbin.Analysis.Calculus.Deriv.Pow
-import Mathbin.Analysis.Calculus.Deriv.Add
-import Mathbin.Analysis.SpecialFunctions.Exp
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
+import RingTheory.Polynomial.Hermite.Basic
+import Analysis.Calculus.Deriv.Pow
+import Analysis.Calculus.Deriv.Add
+import Analysis.SpecialFunctions.Exp
+import Analysis.SpecialFunctions.ExpDeriv
 
 #align_import ring_theory.polynomial.hermite.gaussian from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

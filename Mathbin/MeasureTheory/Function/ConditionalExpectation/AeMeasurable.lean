@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Function.L2Space
-import Mathbin.MeasureTheory.Function.StronglyMeasurable.Lp
+import MeasureTheory.Function.L2Space
+import MeasureTheory.Function.StronglyMeasurable.Lp
 
 #align_import measure_theory.function.conditional_expectation.ae_measurable from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

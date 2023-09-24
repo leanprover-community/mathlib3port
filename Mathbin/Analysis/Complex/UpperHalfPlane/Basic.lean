@@ -3,12 +3,12 @@ Copyright (c) 2021 Alex Kontorovich and Heather Macbeth and Marc Masdeu. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 -/
-import Mathbin.Data.Fintype.Parity
-import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.GroupTheory.GroupAction.Defs
-import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
-import Mathbin.Tactic.LinearCombination
+import Data.Fintype.Parity
+import LinearAlgebra.Matrix.SpecialLinearGroup
+import Analysis.Complex.Basic
+import GroupTheory.GroupAction.Defs
+import LinearAlgebra.Matrix.GeneralLinearGroup
+import Tactic.LinearCombination
 
 #align_import analysis.complex.upper_half_plane.basic from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

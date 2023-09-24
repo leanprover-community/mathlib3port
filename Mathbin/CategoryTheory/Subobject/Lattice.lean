@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Subobject.FactorThru
-import Mathbin.CategoryTheory.Subobject.WellPowered
+import CategoryTheory.Subobject.FactorThru
+import CategoryTheory.Subobject.WellPowered
 
 #align_import category_theory.subobject.lattice from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
@@ -782,7 +782,7 @@ def sInf {A : C} (s : Set (Subobject A)) : Subobject A :=
 #align category_theory.subobject.Inf CategoryTheory.Subobject.sInf
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (f «expr ∈ » s) -/
 #print CategoryTheory.Subobject.sInf_le /-
 theorem sInf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : sInf s ≤ f :=
   by
@@ -847,7 +847,7 @@ def sup {A : C} (s : Set (Subobject A)) : Subobject A :=
 #align category_theory.subobject.Sup CategoryTheory.Subobject.sup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (f «expr ∈ » s) -/
 #print CategoryTheory.Subobject.le_sSup /-
 theorem le_sSup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s :=
   by

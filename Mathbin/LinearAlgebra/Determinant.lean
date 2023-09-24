@@ -3,12 +3,12 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 -/
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.GeneralLinearGroup
-import Mathbin.LinearAlgebra.Matrix.Reindex
-import Mathbin.Tactic.FieldSimp
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.LinearAlgebra.Matrix.Basis
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.GeneralLinearGroup
+import LinearAlgebra.Matrix.Reindex
+import Tactic.FieldSimp
+import LinearAlgebra.Matrix.NonsingularInverse
+import LinearAlgebra.Matrix.Basis
 
 #align_import linear_algebra.determinant from "leanprover-community/mathlib"@"0c1d80f5a86b36c1db32e021e8d19ae7809d5b79"
 

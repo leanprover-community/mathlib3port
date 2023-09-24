@@ -3,8 +3,8 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.SmulWithZero
-import Mathbin.Algebra.Regular.Basic
+import Algebra.SmulWithZero
+import Algebra.Regular.Basic
 
 #align_import algebra.regular.smul from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.Polynomial.Degree.Definitions
-import Mathbin.Tactic.ComputeDegree
-import Mathbin.Data.Polynomial.Degree.Lemmas
+import Data.Polynomial.Degree.Definitions
+import Tactic.ComputeDegree
+import Data.Polynomial.Degree.Lemmas
 
 #align_import data.polynomial.cancel_leads from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

@@ -3,10 +3,10 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.RingTheory.Int.Basic
-import Mathbin.Tactic.Ring
-import Mathbin.Algebra.Star.Unitary
+import Algebra.Associated
+import RingTheory.Int.Basic
+import Tactic.Ring
+import Algebra.Star.Unitary
 
 #align_import number_theory.zsqrtd.basic from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 
@@ -1033,7 +1033,7 @@ theorem not_sqLe_succ (c d y) (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
 -/
 
 #print Zsqrtd.Nonsquare /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/

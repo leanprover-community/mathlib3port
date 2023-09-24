@@ -3,7 +3,7 @@ Copyright (c) 2019 Keeley Hoek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.where from "leanprover-community/mathlib"@"8f16001837e0fcf72ff1ed9c3738a88afc06e53e"
 

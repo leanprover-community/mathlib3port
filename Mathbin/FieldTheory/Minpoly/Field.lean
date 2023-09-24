@@ -3,9 +3,9 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
 -/
-import Mathbin.Data.Polynomial.FieldDivision
-import Mathbin.FieldTheory.Minpoly.Basic
-import Mathbin.RingTheory.Algebraic
+import Data.Polynomial.FieldDivision
+import FieldTheory.Minpoly.Basic
+import RingTheory.Algebraic
 
 #align_import field_theory.minpoly.field from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

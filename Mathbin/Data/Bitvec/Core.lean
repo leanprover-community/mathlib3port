@@ -3,8 +3,8 @@ Copyright (c) 2015 Joe Hendrix. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joe Hendrix, Sebastian Ullrich
 -/
-import Mathbin.Data.Vector.Basic
-import Mathbin.Data.Nat.Pow
+import Data.Vector.Basic
+import Data.Nat.Pow
 
 #align_import data.bitvec.core from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

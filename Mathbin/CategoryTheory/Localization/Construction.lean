@@ -3,8 +3,8 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.CategoryTheory.MorphismProperty
-import Mathbin.CategoryTheory.Category.Quiv
+import CategoryTheory.MorphismProperty
+import CategoryTheory.Category.Quiv
 
 #align_import category_theory.localization.construction from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
@@ -167,7 +167,7 @@ variable {W} (G : C ⥤ D) (hG : W.IsInvertedBy G)
 /-- The lifting of a functor to the path category of `loc_quiver W` -/
 @[simps]
 def liftToPathCategory : Paths (LocQuiver W) ⥤ D :=
-  QuivCat.lift
+  Quiv.lift
     { obj := fun X => G.obj X.obj
       map := fun X Y => by
         rintro (f | ⟨g, hg⟩)

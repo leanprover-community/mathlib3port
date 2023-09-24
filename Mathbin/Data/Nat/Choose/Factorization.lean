@@ -3,9 +3,9 @@ Copyright (c) 2022 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey, Patrick Stevens, Thomas Browning
 -/
-import Mathbin.Data.Nat.Choose.Central
-import Mathbin.Data.Nat.Factorization.Basic
-import Mathbin.Data.Nat.Multiplicity
+import Data.Nat.Choose.Central
+import Data.Nat.Factorization.Basic
+import Data.Nat.Multiplicity
 
 #align_import data.nat.choose.factorization from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

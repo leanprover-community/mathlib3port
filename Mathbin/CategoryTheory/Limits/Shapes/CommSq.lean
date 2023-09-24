@@ -3,12 +3,12 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 -/
-import Mathbin.CategoryTheory.CommSq
-import Mathbin.CategoryTheory.Limits.Opposites
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
-import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Constructions.ZeroObjects
+import CategoryTheory.CommSq
+import CategoryTheory.Limits.Opposites
+import CategoryTheory.Limits.Shapes.Biproducts
+import CategoryTheory.Limits.Shapes.ZeroMorphisms
+import CategoryTheory.Limits.Constructions.BinaryProducts
+import CategoryTheory.Limits.Constructions.ZeroObjects
 
 #align_import category_theory.limits.shapes.comm_sq from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

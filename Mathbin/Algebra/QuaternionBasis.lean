@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.Quaternion
-import Mathbin.Tactic.Ring
+import Algebra.Quaternion
+import Tactic.Ring
 
 #align_import algebra.quaternion_basis from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

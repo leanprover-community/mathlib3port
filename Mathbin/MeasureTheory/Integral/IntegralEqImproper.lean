@@ -3,11 +3,11 @@ Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Bhavik Mehta
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Deriv
-import Mathbin.MeasureTheory.Integral.FundThmCalculus
-import Mathbin.Order.Filter.AtTopBot
-import Mathbin.MeasureTheory.Function.Jacobian
-import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
+import Analysis.SpecialFunctions.Pow.Deriv
+import MeasureTheory.Integral.FundThmCalculus
+import Order.Filter.AtTopBot
+import MeasureTheory.Function.Jacobian
+import MeasureTheory.Measure.Haar.NormedSpace
 
 #align_import measure_theory.integral.integral_eq_improper from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

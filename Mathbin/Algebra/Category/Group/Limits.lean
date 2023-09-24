@@ -3,11 +3,11 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.Mon.Limits
-import Mathbin.Algebra.Category.Group.Preadditive
-import Mathbin.CategoryTheory.Over
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+import Algebra.Category.Mon.Limits
+import Algebra.Category.Group.Preadditive
+import CategoryTheory.Over
+import GroupTheory.Subgroup.Basic
+import CategoryTheory.ConcreteCategory.Elementwise
 
 #align_import algebra.category.Group.limits from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

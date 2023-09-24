@@ -3,9 +3,9 @@ Copyright (c) 2021 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 -/
-import Mathbin.Algebra.CubicDiscriminant
-import Mathbin.RingTheory.Norm
-import Mathbin.Tactic.LinearCombination
+import Algebra.CubicDiscriminant
+import RingTheory.Norm
+import Tactic.LinearCombination
 
 #align_import algebraic_geometry.elliptic_curve.weierstrass from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
@@ -82,15 +82,15 @@ elliptic curve, weierstrass equation, j invariant
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def map_simp : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def eval_simp : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def C_simp : tactic Unit :=
   sorry
 

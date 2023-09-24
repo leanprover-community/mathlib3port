@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.RingTheory.WittVector.StructurePolynomial
+import RingTheory.WittVector.StructurePolynomial
 
 #align_import ring_theory.witt_vector.defs from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
@@ -44,7 +44,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 noncomputable section
 
 #print WittVector /-
-/- ./././Mathport/Syntax/Translate/Command.lean:429:34: infer kinds are unsupported in Lean 4: mk [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:430:34: infer kinds are unsupported in Lean 4: mk [] -/
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 

@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.Algebra.MonoidAlgebra.Support
-import Mathbin.Algebra.DirectSum.Internal
-import Mathbin.RingTheory.GradedAlgebra.Basic
+import LinearAlgebra.Finsupp
+import Algebra.MonoidAlgebra.Support
+import Algebra.DirectSum.Internal
+import RingTheory.GradedAlgebra.Basic
 
 #align_import algebra.monoid_algebra.grading from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

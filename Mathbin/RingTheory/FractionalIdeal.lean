@@ -3,13 +3,13 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 -/
-import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.RingTheory.IntegralClosure
-import Mathbin.RingTheory.Localization.Integer
-import Mathbin.RingTheory.Localization.Submodule
-import Mathbin.RingTheory.Noetherian
-import Mathbin.RingTheory.PrincipalIdealDomain
-import Mathbin.Tactic.FieldSimp
+import Algebra.BigOperators.Finprod
+import RingTheory.IntegralClosure
+import RingTheory.Localization.Integer
+import RingTheory.Localization.Submodule
+import RingTheory.Noetherian
+import RingTheory.PrincipalIdealDomain
+import Tactic.FieldSimp
 
 #align_import ring_theory.fractional_ideal from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
@@ -1172,7 +1172,7 @@ variable [Algebra R K] [IsFractionRing R K] [Algebra R K'] [IsFractionRing R K']
 
 variable {I J : FractionalIdeal R⁰ K} (h : K →ₐ[R] K')
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 #print FractionalIdeal.exists_ne_zero_mem_isInteger /-
 /-- Nonzero fractional ideals contain a nonzero integer. -/
 theorem exists_ne_zero_mem_isInteger [Nontrivial R] (hI : I ≠ 0) :

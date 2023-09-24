@@ -3,8 +3,8 @@ Copyright (c) 2022 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Tactic.NormNum
-import Mathbin.Data.Nat.Sqrt
+import Tactic.NormNum
+import Data.Nat.Sqrt
 
 #align_import data.nat.sqrt_norm_num from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Topology.Algebra.UniformGroup
+import Topology.Algebra.FilterBasis
+import Topology.Algebra.UniformGroup
 
 #align_import topology.algebra.uniform_filter_basis from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 
@@ -46,8 +46,8 @@ protected theorem uniformAddGroup : @UniformAddGroup G B.UniformSpace _ :=
 #align add_group_filter_basis.uniform_add_group AddGroupFilterBasis.uniformAddGroup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » M) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 #print AddGroupFilterBasis.cauchy_iff /-
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔

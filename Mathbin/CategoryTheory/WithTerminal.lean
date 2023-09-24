@@ -3,7 +3,7 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Limits.Shapes.Terminal
 
 #align_import category_theory.with_terminal from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

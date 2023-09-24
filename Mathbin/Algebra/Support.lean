@@ -3,13 +3,13 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Order.ConditionallyCompleteLattice.Basic
-import Mathbin.Data.Set.Finite
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Module.Basic
-import Mathbin.GroupTheory.GroupAction.Pi
+import Order.ConditionallyCompleteLattice.Basic
+import Data.Set.Finite
+import Algebra.BigOperators.Basic
+import Algebra.Group.Prod
+import Algebra.Group.Pi
+import Algebra.Module.Basic
+import GroupTheory.GroupAction.Pi
 
 #align_import algebra.support from "leanprover-community/mathlib"@"29cb56a7b35f72758b05a30490e1f10bd62c35c1"
 
@@ -92,7 +92,7 @@ theorem mulSupport_subset_iff {f : α → M} {s : Set α} : mulSupport f ⊆ s �
 #align function.support_subset_iff Function.support_subset_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print Function.mulSupport_subset_iff' /-
 @[to_additive]
 theorem mulSupport_subset_iff' {f : α → M} {s : Set α} :

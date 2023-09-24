@@ -7,8 +7,8 @@ Monad encapsulating continuation passing programming style, similar to
 Haskell's `Cont`, `ContT` and `MonadCont`:
 <http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Cont.html>
 -/
-import Mathbin.Control.Monad.Basic
-import Mathbin.Control.Monad.Writer
+import Control.Monad.Basic
+import Control.Monad.Writer
 
 #align_import control.monad.cont from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

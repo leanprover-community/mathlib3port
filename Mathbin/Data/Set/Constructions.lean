@@ -3,7 +3,7 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.Data.Finset.Basic
+import Data.Finset.Basic
 
 #align_import data.set.constructions from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
 
@@ -71,7 +71,7 @@ theorem finiteInter_mem (cond : FiniteInter S) (F : Finset (Set α)) :
 #align has_finite_inter.finite_inter_mem FiniteInter.finiteInter_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
 #print FiniteInter.finiteInterClosure_insert /-
 theorem finiteInterClosure_insert {A : Set α} (cond : FiniteInter S) (P)
     (_ : P ∈ finiteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q :=

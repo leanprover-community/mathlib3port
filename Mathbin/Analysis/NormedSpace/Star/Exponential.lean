@@ -3,7 +3,7 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.Exponential
+import Analysis.NormedSpace.Exponential
 
 #align_import analysis.normed_space.star.exponential from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

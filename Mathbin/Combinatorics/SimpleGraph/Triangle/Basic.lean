@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Combinatorics.SimpleGraph.Clique
+import Combinatorics.SimpleGraph.Clique
 
 #align_import combinatorics.simple_graph.triangle.basic from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

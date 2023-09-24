@@ -3,8 +3,8 @@ Copyright (c) 2021 Manuel Candales. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales
 -/
-import Mathbin.Data.Real.Basic
-import Mathbin.Tactic.Positivity
+import Data.Real.Basic
+import Tactic.Positivity
 
 #align_import imo.imo2005_q3 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

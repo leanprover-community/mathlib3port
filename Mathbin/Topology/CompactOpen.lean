@@ -3,11 +3,11 @@ Copyright (c) 2018 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 -/
-import Mathbin.Tactic.Tidy
-import Mathbin.Topology.ContinuousFunction.Basic
-import Mathbin.Topology.Homeomorph
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.Maps
+import Tactic.Tidy
+import Topology.ContinuousFunction.Basic
+import Topology.Homeomorph
+import Topology.SubsetProperties
+import Topology.Maps
 
 #align_import topology.compact_open from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

@@ -3,8 +3,8 @@ Copyright (c) 2023 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Probability.Kernel.MeasurableIntegral
-import Mathbin.MeasureTheory.Integral.SetIntegral
+import Probability.Kernel.MeasurableIntegral
+import MeasureTheory.Integral.SetIntegral
 
 #align_import probability.kernel.with_density from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

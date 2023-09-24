@@ -3,9 +3,9 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.LinearAlgebra.Dimension
-import Mathbin.LinearAlgebra.FreeModule.Basic
-import Mathbin.RingTheory.Finiteness
+import LinearAlgebra.Dimension
+import LinearAlgebra.FreeModule.Basic
+import RingTheory.Finiteness
 
 #align_import linear_algebra.free_module.finite.basic from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 

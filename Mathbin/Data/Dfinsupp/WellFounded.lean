@@ -3,10 +3,10 @@ Copyright (c) 2022 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Data.Dfinsupp.Lex
-import Mathbin.Order.GameAdd
-import Mathbin.Order.Antisymmetrization
-import Mathbin.SetTheory.Ordinal.Basic
+import Data.Dfinsupp.Lex
+import Order.GameAdd
+import Order.Antisymmetrization
+import SetTheory.Ordinal.Basic
 
 #align_import data.dfinsupp.well_founded from "leanprover-community/mathlib"@"1dac236edca9b4b6f5f00b1ad831e35f89472837"
 

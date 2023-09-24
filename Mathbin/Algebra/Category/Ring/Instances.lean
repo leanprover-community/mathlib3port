@@ -3,9 +3,9 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Algebra.Category.Ring.Basic
-import Mathbin.RingTheory.Localization.Away.Basic
-import Mathbin.RingTheory.Ideal.LocalRing
+import Algebra.Category.Ring.Basic
+import RingTheory.Localization.Away.Basic
+import RingTheory.Ideal.LocalRing
 
 #align_import algebra.category.Ring.instances from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

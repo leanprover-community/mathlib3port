@@ -3,10 +3,10 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Order.Bounds.Basic
-import Mathbin.Order.WellFounded
-import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Set.Lattice
+import Order.Bounds.Basic
+import Order.WellFounded
+import Data.Set.Intervals.Basic
+import Data.Set.Lattice
 
 #align_import order.conditionally_complete_lattice.basic from "leanprover-community/mathlib"@"29cb56a7b35f72758b05a30490e1f10bd62c35c1"
 
@@ -210,7 +210,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, SupSet α, 
 -/
 
 #print ConditionallyCompleteLinearOrder /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -221,7 +221,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure"
 #align conditionally_complete_linear_order ConditionallyCompleteLinearOrder
 -/
 

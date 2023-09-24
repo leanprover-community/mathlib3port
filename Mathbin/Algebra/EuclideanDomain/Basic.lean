@@ -3,11 +3,11 @@ Copyright (c) 2018 Louis Carlin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 -/
-import Mathbin.Algebra.EuclideanDomain.Defs
-import Mathbin.Algebra.Ring.Divisibility
-import Mathbin.Algebra.Ring.Regular
-import Mathbin.Algebra.GroupWithZero.Divisibility
-import Mathbin.Algebra.Ring.Basic
+import Algebra.EuclideanDomain.Defs
+import Algebra.Ring.Divisibility
+import Algebra.Ring.Regular
+import Algebra.GroupWithZero.Divisibility
+import Algebra.Ring.Basic
 
 #align_import algebra.euclidean_domain.basic from "leanprover-community/mathlib"@"bf9bbbcf0c1c1ead18280b0d010e417b10abb1b6"
 

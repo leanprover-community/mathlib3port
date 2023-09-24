@@ -3,11 +3,11 @@ Copyright (c) 2022 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Order.LocallyFinite
-import Mathbin.Order.SuccPred.Basic
-import Mathbin.Order.Hom.Basic
-import Mathbin.Data.Countable.Basic
-import Mathbin.Logic.Encodable.Basic
+import Order.LocallyFinite
+import Order.SuccPred.Basic
+import Order.Hom.Basic
+import Data.Countable.Basic
+import Logic.Encodable.Basic
 
 #align_import order.succ_pred.linear_locally_finite from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"
 

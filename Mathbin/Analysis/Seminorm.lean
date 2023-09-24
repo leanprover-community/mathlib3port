@@ -3,10 +3,10 @@ Copyright (c) 2019 Jean Lo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 -/
-import Mathbin.Data.Real.Pointwise
-import Mathbin.Analysis.Convex.Function
-import Mathbin.Analysis.LocallyConvex.Basic
-import Mathbin.Analysis.Normed.Group.AddTorsor
+import Data.Real.Pointwise
+import Analysis.Convex.Function
+import Analysis.LocallyConvex.Basic
+import Analysis.Normed.Group.AddTorsor
 
 #align_import analysis.seminorm from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

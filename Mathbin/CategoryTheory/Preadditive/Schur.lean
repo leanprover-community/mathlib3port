@@ -3,11 +3,11 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.Algebra.Group.Ext
-import Mathbin.CategoryTheory.Simple
-import Mathbin.CategoryTheory.Linear.Basic
-import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.FieldTheory.IsAlgClosed.Spectrum
+import Algebra.Group.Ext
+import CategoryTheory.Simple
+import CategoryTheory.Linear.Basic
+import CategoryTheory.Endomorphism
+import FieldTheory.IsAlgClosed.Spectrum
 
 #align_import category_theory.preadditive.schur from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

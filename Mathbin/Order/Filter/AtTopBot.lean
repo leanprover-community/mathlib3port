@@ -3,12 +3,12 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Data.Finset.Preimage
-import Mathbin.Data.Set.Intervals.Disjoint
-import Mathbin.Data.Set.Intervals.OrderIso
-import Mathbin.Order.Filter.Bases
-import Mathbin.Algebra.Order.Group.MinMax
+import Algebra.Order.Field.Basic
+import Data.Finset.Preimage
+import Data.Set.Intervals.Disjoint
+import Data.Set.Intervals.OrderIso
+import Order.Filter.Bases
+import Algebra.Order.Group.MinMax
 
 #align_import order.filter.at_top_bot from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 
@@ -2518,7 +2518,7 @@ theorem exists_le_mul_self (a : R) : ∃ x ≥ 0, a ≤ x * x :=
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
 #print Function.Injective.map_atTop_finset_prod_eq /-
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters

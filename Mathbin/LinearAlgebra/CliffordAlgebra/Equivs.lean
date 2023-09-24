@@ -3,12 +3,12 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.DualNumber
-import Mathbin.Algebra.QuaternionBasis
-import Mathbin.Data.Complex.Module
-import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
-import Mathbin.LinearAlgebra.CliffordAlgebra.Star
-import Mathbin.LinearAlgebra.QuadraticForm.Prod
+import Algebra.DualNumber
+import Algebra.QuaternionBasis
+import Data.Complex.Module
+import LinearAlgebra.CliffordAlgebra.Conjugation
+import LinearAlgebra.CliffordAlgebra.Star
+import LinearAlgebra.QuadraticForm.Prod
 
 #align_import linear_algebra.clifford_algebra.equivs from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

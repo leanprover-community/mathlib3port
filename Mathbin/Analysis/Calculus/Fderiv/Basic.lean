@@ -3,9 +3,9 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
-import Mathbin.Analysis.Calculus.TangentCone
-import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
+import Analysis.Asymptotics.AsymptoticEquivalent
+import Analysis.Calculus.TangentCone
+import Analysis.NormedSpace.BoundedLinearMaps
 
 #align_import analysis.calculus.fderiv.basic from "leanprover-community/mathlib"@"41bef4ae1254365bc190aee63b947674d2977f01"
 

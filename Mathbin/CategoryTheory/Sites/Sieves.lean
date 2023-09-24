@@ -3,11 +3,11 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 -/
-import Mathbin.Order.CompleteLattice
-import Mathbin.CategoryTheory.Over
-import Mathbin.CategoryTheory.Yoneda
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.Data.Set.Lattice
+import Order.CompleteLattice
+import CategoryTheory.Over
+import CategoryTheory.Yoneda
+import CategoryTheory.Limits.Shapes.Pullbacks
+import Data.Set.Lattice
 
 #align_import category_theory.sites.sieves from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

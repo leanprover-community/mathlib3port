@@ -3,8 +3,8 @@ Copyright (c) 2022. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yuma Mizuno, Oleksandr Manzyuk
 -/
-import Mathbin.CategoryTheory.Monoidal.Free.Coherence
-import Mathbin.CategoryTheory.Bicategory.CoherenceTactic
+import CategoryTheory.Monoidal.Free.Coherence
+import CategoryTheory.Bicategory.CoherenceTactic
 
 #align_import category_theory.monoidal.coherence from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
@@ -102,7 +102,7 @@ instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftOb
     where lift := LiftHom.lift f ⊗ LiftHom.lift g
 #align category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
@@ -300,7 +300,7 @@ unsafe def mk_project_map_expr (e : expr) : tactic expr :=
         (CategoryTheory.MonoidalCategory.LiftHom.lift $(e)))
 #align tactic.mk_project_map_expr tactic.mk_project_map_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Coherence tactic for monoidal categories. -/ unsafe
@@ -365,9 +365,9 @@ theorem assoc_liftHom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W �
   (Category.assoc _ _ _).symm
 #align tactic.coherence.assoc_lift_hom Tactic.Coherence.assoc_liftHom
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Internal tactic used in `coherence`.
 
 Rewrites an equation `f = g` as `f₀ ≫ f₁ = g₀ ≫ g₁`,
@@ -400,8 +400,8 @@ end Coherence
 
 open Coherence
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- The main part of `coherence` tactic. -/
 unsafe def coherence_loop : tactic Unit := do
   -- To prove an equality `f = g` in a monoidal category,
@@ -443,8 +443,8 @@ unsafe def coherence_loop : tactic Unit := do
             coherence_loop
 #align tactic.coherence_loop tactic.coherence_loop
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
 where the two sides only differ by replacing strings of monoidal structural morphisms
 (that is, associators, unitors, and identities)

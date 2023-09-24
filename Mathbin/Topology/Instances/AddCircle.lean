@@ -3,13 +3,13 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Data.Nat.Totient
-import Mathbin.Algebra.Ring.AddAut
-import Mathbin.GroupTheory.Divisible
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Algebra.Order.Floor
-import Mathbin.Algebra.Order.ToIntervalMod
-import Mathbin.Topology.Instances.Real
+import Data.Nat.Totient
+import Algebra.Ring.AddAut
+import GroupTheory.Divisible
+import GroupTheory.OrderOfElement
+import Algebra.Order.Floor
+import Algebra.Order.ToIntervalMod
+import Topology.Instances.Real
 
 #align_import topology.instances.add_circle from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
@@ -609,7 +609,7 @@ end AddCircle
 
 attribute [local instance] Real.fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:328:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:329:31: unsupported: @[derive] abbrev -/
 #print UnitAddCircle /-
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=

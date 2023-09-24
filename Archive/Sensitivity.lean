@@ -4,12 +4,12 @@ Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert Y. Lewis, Patrick Massot
 -/
-import Mathbin.Tactic.FinCases
-import Mathbin.Tactic.ApplyFun
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.Dual
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Data.Real.Sqrt
+import Tactic.FinCases
+import Tactic.ApplyFun
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.Dual
+import Analysis.NormedSpace.Basic
+import Data.Real.Sqrt
 
 #align_import sensitivity from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Order.SuccPred.Basic
+import Order.SuccPred.Basic
 
 #align_import order.succ_pred.relation from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

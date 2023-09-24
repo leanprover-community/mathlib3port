@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin, Scott Morrison
 -/
-import Mathbin.Analysis.Normed.Group.SemiNormedGroup
-import Mathbin.Analysis.Normed.Group.Quotient
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+import Analysis.Normed.Group.SemiNormedGroup
+import Analysis.Normed.Group.Quotient
+import CategoryTheory.Limits.Shapes.Kernels
 
 #align_import analysis.normed.group.SemiNormedGroup.kernels from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

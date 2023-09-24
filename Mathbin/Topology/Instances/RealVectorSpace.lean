@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.Topology.Instances.Rat
+import Topology.Algebra.Module.Basic
+import Topology.Instances.Rat
 
 #align_import topology.instances.real_vector_space from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 

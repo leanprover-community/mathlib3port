@@ -3,7 +3,7 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 -/
-import Mathbin.RingTheory.GradedAlgebra.HomogeneousIdeal
+import RingTheory.GradedAlgebra.HomogeneousIdeal
 
 #align_import ring_theory.graded_algebra.radical from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

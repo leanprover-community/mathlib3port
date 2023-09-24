@@ -3,8 +3,8 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 -/
-import Mathbin.LinearAlgebra.Pi
-import Mathbin.LinearAlgebra.Quotient
+import LinearAlgebra.Pi
+import LinearAlgebra.Quotient
 
 #align_import linear_algebra.quotient_pi from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

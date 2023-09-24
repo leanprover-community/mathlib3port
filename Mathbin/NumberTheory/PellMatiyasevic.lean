@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Algebra.Star.Unitary
-import Mathbin.Data.Nat.Modeq
-import Mathbin.NumberTheory.Zsqrtd.Basic
+import Algebra.Star.Unitary
+import Data.Nat.Modeq
+import NumberTheory.Zsqrtd.Basic
 
 #align_import number_theory.pell_matiyasevic from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

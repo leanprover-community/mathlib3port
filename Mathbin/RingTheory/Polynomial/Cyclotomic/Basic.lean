@@ -3,16 +3,16 @@ Copyright (c) 2020 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.Polynomial.BigOperators
-import Mathbin.RingTheory.RootsOfUnity.Complex
-import Mathbin.Data.Polynomial.Lifts
-import Mathbin.Data.Polynomial.Splits
-import Mathbin.Data.Zmod.Algebra
-import Mathbin.FieldTheory.Ratfunc
-import Mathbin.FieldTheory.Separable
-import Mathbin.NumberTheory.ArithmeticFunction
-import Mathbin.RingTheory.RootsOfUnity.Basic
+import Algebra.NeZero
+import Algebra.Polynomial.BigOperators
+import RingTheory.RootsOfUnity.Complex
+import Data.Polynomial.Lifts
+import Data.Polynomial.Splits
+import Data.Zmod.Algebra
+import FieldTheory.Ratfunc
+import FieldTheory.Separable
+import NumberTheory.ArithmeticFunction
+import RingTheory.RootsOfUnity.Basic
 
 #align_import ring_theory.polynomial.cyclotomic.basic from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

@@ -3,8 +3,8 @@ Copyright (c) 2023 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.Ring.Ulift
+import Algebra.Field.Basic
+import Algebra.Ring.Ulift
 
 #align_import algebra.field.ulift from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

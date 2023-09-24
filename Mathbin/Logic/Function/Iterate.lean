@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Logic.Function.Conjugate
-import Mathbin.Tactic.Alias
+import Logic.Function.Conjugate
+import Tactic.Alias
 
 #align_import logic.function.iterate from "leanprover-community/mathlib"@"792a2a264169d64986541c6f8f7e3bbb6acb6295"
 

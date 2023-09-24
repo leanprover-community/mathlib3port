@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.CategoryTheory.Category.Pointed
+import CategoryTheory.Category.Pointed
 
 #align_import category_theory.category.Bipointed from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

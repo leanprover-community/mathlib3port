@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.Algebra.RestrictScalars
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.GroupTheory.Finiteness
-import Mathbin.RingTheory.Ideal.Operations
+import Algebra.Algebra.RestrictScalars
+import Algebra.Algebra.Subalgebra.Basic
+import GroupTheory.Finiteness
+import RingTheory.Ideal.Operations
 
 #align_import ring_theory.finiteness from "leanprover-community/mathlib"@"c813ed7de0f5115f956239124e9b30f3a621966f"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov
 -/
-import Mathbin.Analysis.Convex.Combination
-import Mathbin.Analysis.Convex.Function
+import Analysis.Convex.Combination
+import Analysis.Convex.Function
 
 #align_import analysis.convex.jensen from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

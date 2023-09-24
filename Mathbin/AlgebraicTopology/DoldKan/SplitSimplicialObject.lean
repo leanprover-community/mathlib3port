@@ -3,9 +3,9 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.SplitSimplicialObject
-import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
-import Mathbin.AlgebraicTopology.DoldKan.FunctorN
+import AlgebraicTopology.SplitSimplicialObject
+import AlgebraicTopology.DoldKan.Degeneracies
+import AlgebraicTopology.DoldKan.FunctorN
 
 #align_import algebraic_topology.dold_kan.split_simplicial_object from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 

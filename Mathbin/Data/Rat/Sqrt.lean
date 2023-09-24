@@ -3,9 +3,9 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Order
-import Mathbin.Data.Rat.Lemmas
-import Mathbin.Data.Int.Sqrt
+import Data.Rat.Order
+import Data.Rat.Lemmas
+import Data.Int.Sqrt
 
 #align_import data.rat.sqrt from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

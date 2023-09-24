@@ -3,7 +3,7 @@ Copyright (c) 2019 Minchao Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Mario Carneiro
 -/
-import Mathbin.Computability.Halting
+import Computability.Halting
 
 #align_import computability.reduce from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 

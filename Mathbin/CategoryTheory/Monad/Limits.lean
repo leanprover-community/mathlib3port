@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Monad.Adjunction
-import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Monad.Adjunction
+import CategoryTheory.Adjunction.Limits
+import CategoryTheory.Limits.Shapes.Terminal
 
 #align_import category_theory.monad.limits from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

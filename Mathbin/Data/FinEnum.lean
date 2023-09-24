@@ -3,9 +3,9 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Monad.Basic
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Data.List.ProdSigma
+import Control.Monad.Basic
+import Data.Fintype.Basic
+import Data.List.ProdSigma
 
 #align_import data.fin_enum from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 
@@ -24,7 +24,7 @@ universe u v
 open Finset
 
 #print FinEnum /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
 class FinEnum (α : Sort _) where

@@ -3,7 +3,7 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
-import Mathbin.ModelTheory.Basic
+import ModelTheory.Basic
 
 #align_import model_theory.language_map from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 

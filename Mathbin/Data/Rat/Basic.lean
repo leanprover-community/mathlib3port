@@ -3,8 +3,8 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.Field.Defs
-import Mathbin.Data.Rat.Defs
+import Algebra.Field.Defs
+import Data.Rat.Defs
 
 #align_import data.rat.basic from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

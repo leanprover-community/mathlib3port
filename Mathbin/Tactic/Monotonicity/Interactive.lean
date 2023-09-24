@@ -3,10 +3,10 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Traversable.Derive
-import Mathbin.Control.Traversable.Lemmas
-import Leanbin.Data.Dlist
-import Mathbin.Tactic.Monotonicity.Basic
+import Control.Traversable.Derive
+import Control.Traversable.Lemmas
+import Data.Dlist
+import Tactic.Monotonicity.Basic
 
 #align_import tactic.monotonicity.interactive from "leanprover-community/mathlib"@"69be6fe368f5617a607ebb6b356a7a71419cede3"
 
@@ -650,10 +650,10 @@ add_tactic_doc
     declNames := [`tactic.interactive.mono]
     tags := ["monotonicity"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 

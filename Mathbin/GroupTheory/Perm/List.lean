@@ -3,8 +3,8 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.List.Rotate
-import Mathbin.GroupTheory.Perm.Support
+import Data.List.Rotate
+import GroupTheory.Perm.Support
 
 #align_import group_theory.perm.list from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

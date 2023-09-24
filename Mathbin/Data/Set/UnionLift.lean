@@ -3,8 +3,8 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Set.Lattice
-import Mathbin.Order.Directed
+import Data.Set.Lattice
+import Order.Directed
 
 #align_import data.set.Union_lift from "leanprover-community/mathlib"@"5a4ea8453f128345f73cc656e80a49de2a54f481"
 

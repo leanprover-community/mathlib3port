@@ -3,8 +3,8 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Order.CompleteLattice
-import Mathbin.Order.GaloisConnection
+import Order.CompleteLattice
+import Order.GaloisConnection
 
 #align_import data.rel from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

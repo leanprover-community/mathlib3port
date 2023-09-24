@@ -3,8 +3,8 @@ Copyright (c) 2021 Peter Nelson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Peter Nelson, Yaël Dillies
 -/
-import Mathbin.Data.Fintype.Lattice
-import Mathbin.Data.Finset.Order
+import Data.Fintype.Lattice
+import Data.Finset.Order
 
 #align_import data.fintype.order from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 

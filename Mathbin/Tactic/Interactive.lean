@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Sébastien Gouëzel, Scott Morrison
 -/
-import Mathbin.Logic.Nonempty
+import Logic.Nonempty
 import Mathbin.Tactic.Lint.Default
-import Mathbin.Tactic.Dependencies
+import Tactic.Dependencies
 
 #align_import tactic.interactive from "leanprover-community/mathlib"@"f89fa08bb6455c96c58e860902fadc8eb2c854ed"
 

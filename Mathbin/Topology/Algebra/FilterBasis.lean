@@ -3,8 +3,8 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Order.Filter.Bases
-import Mathbin.Topology.Algebra.Module.Basic
+import Order.Filter.Bases
+import Topology.Algebra.Module.Basic
 
 #align_import topology.algebra.filter_basis from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

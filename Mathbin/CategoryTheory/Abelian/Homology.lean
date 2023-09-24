@@ -3,10 +3,10 @@ Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Amelia Livingston
 -/
-import Mathbin.Algebra.Homology.Additive
-import Mathbin.CategoryTheory.Abelian.Pseudoelements
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Images
+import Algebra.Homology.Additive
+import CategoryTheory.Abelian.Pseudoelements
+import CategoryTheory.Limits.Preserves.Shapes.Kernels
+import CategoryTheory.Limits.Preserves.Shapes.Images
 
 #align_import category_theory.abelian.homology from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

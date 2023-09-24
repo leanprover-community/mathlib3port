@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.Int.Order.Basic
-import Mathbin.Algebra.GroupWithZero.Divisibility
-import Mathbin.Algebra.Order.Ring.Abs
+import Data.Int.Order.Basic
+import Algebra.GroupWithZero.Divisibility
+import Algebra.Order.Ring.Abs
 
 #align_import data.int.order.lemmas from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

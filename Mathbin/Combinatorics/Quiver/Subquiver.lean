@@ -3,8 +3,8 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Order.BoundedOrder
-import Mathbin.Combinatorics.Quiver.Basic
+import Order.BoundedOrder
+import Combinatorics.Quiver.Basic
 
 #align_import combinatorics.quiver.subquiver from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

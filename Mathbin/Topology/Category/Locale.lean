@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Category.Frm
+import Order.Category.Frm
 
 #align_import topology.category.Locale from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
@@ -24,7 +24,7 @@ open CategoryTheory Opposite Order TopologicalSpace
 #print Locale /-
 /-- The category of locales. -/
 def Locale :=
-  FrmCatᵒᵖ
+  Frmᵒᵖ
 deriving LargeCategory
 #align Locale Locale
 -/
@@ -40,7 +40,7 @@ instance (X : Locale) : Frame X :=
 #print Locale.of /-
 /-- Construct a bundled `Locale` from a `frame`. -/
 def of (α : Type _) [Frame α] : Locale :=
-  op <| FrmCat.of α
+  op <| Frm.of α
 #align Locale.of Locale.of
 -/
 
@@ -61,7 +61,7 @@ end Locale
 -/
 @[simps]
 def topToLocale : TopCat ⥤ Locale :=
-  topCatOpToFrameCat.rightOp
+  topCatOpToFrm.rightOp
 #align Top_to_Locale topToLocale
 -/
 

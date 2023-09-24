@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 -/
 import Mathbin.Tactic.NthRewrite.Default
-import Mathbin.Tactic.RewriteSearch.Types
+import Tactic.RewriteSearch.Types
 
 #align_import tactic.rewrite_search.discovery from "leanprover-community/mathlib"@"137a6e0f6e30fc1e6d940326d313c07fe95a3188"
 

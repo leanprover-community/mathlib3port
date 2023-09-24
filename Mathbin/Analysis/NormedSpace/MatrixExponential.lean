@@ -3,12 +3,12 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Analysis.NormedSpace.Exponential
-import Mathbin.Analysis.Matrix
-import Mathbin.LinearAlgebra.Matrix.Zpow
-import Mathbin.LinearAlgebra.Matrix.Hermitian
-import Mathbin.LinearAlgebra.Matrix.Symmetric
-import Mathbin.Topology.UniformSpace.Matrix
+import Analysis.NormedSpace.Exponential
+import Analysis.Matrix
+import LinearAlgebra.Matrix.Zpow
+import LinearAlgebra.Matrix.Hermitian
+import LinearAlgebra.Matrix.Symmetric
+import Topology.UniformSpace.Matrix
 
 #align_import analysis.normed_space.matrix_exponential from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

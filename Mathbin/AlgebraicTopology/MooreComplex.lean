@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Homology.HomologicalComplex
-import Mathbin.AlgebraicTopology.SimplicialObject
-import Mathbin.CategoryTheory.Abelian.Basic
+import Algebra.Homology.HomologicalComplex
+import AlgebraicTopology.SimplicialObject
+import CategoryTheory.Abelian.Basic
 
 #align_import algebraic_topology.Moore_complex from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

@@ -5,8 +5,8 @@ Authors: Lucas Allen, Keeley Hoek, Leonardo de Moura
 
 Converter monad for building simplifiers.
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Tactic.Converter.OldConv
+import Tactic.Core
+import Tactic.Converter.OldConv
 
 #align_import tactic.converter.interactive from "leanprover-community/mathlib"@"3c11bd771ef17197a9e9fcd4a3fabfa2804d950c"
 

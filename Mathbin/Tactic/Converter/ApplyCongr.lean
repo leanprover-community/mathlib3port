@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lucas Allen, Scott Morrison
 -/
-import Mathbin.Tactic.Interactive
-import Mathbin.Tactic.Converter.Interactive
+import Tactic.Interactive
+import Tactic.Converter.Interactive
 
 #align_import tactic.converter.apply_congr from "leanprover-community/mathlib"@"3d7987cda72abc473c7cdbbb075170e9ac620042"
 

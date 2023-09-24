@@ -3,9 +3,9 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 -/
-import Mathbin.Algebra.Divisibility.Basic
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.Algebra.Parity
+import Algebra.Divisibility.Basic
+import Algebra.GroupPower.Lemmas
+import Algebra.Parity
 
 #align_import algebra.associated from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

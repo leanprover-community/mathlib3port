@@ -3,11 +3,11 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.LinearAlgebra.Basic
-import Mathbin.RingTheory.MvPolynomial.Basic
-import Mathbin.Data.MvPolynomial.Expand
-import Mathbin.FieldTheory.Finite.Basic
+import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.Basic
+import RingTheory.MvPolynomial.Basic
+import Data.MvPolynomial.Expand
+import FieldTheory.Finite.Basic
 
 #align_import field_theory.finite.polynomial from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

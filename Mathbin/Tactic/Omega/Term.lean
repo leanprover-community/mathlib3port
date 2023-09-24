@@ -3,7 +3,7 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Tactic.Omega.Coeffs
+import Tactic.Omega.Coeffs
 
 #align_import tactic.omega.term from "leanprover-community/mathlib"@"2558b3b31d33969bb3ef330982ff131533eebfdd"
 

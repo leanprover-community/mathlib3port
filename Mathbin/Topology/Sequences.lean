@@ -3,8 +3,8 @@ Copyright (c) 2018 Jan-David Salchow. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Patrick Massot, Yury Kudryashov
 -/
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.MetricSpace.Basic
+import Topology.SubsetProperties
+import Topology.MetricSpace.Basic
 
 #align_import topology.sequences from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

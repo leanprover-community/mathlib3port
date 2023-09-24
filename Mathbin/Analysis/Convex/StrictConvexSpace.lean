@@ -3,12 +3,12 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Yury Kudryashov
 -/
-import Mathbin.Analysis.Convex.Normed
-import Mathbin.Analysis.Convex.Strict
-import Mathbin.Analysis.Normed.Order.Basic
-import Mathbin.Analysis.NormedSpace.AddTorsor
-import Mathbin.Analysis.NormedSpace.Pointwise
-import Mathbin.Analysis.NormedSpace.AffineIsometry
+import Analysis.Convex.Normed
+import Analysis.Convex.Strict
+import Analysis.Normed.Order.Basic
+import Analysis.NormedSpace.AddTorsor
+import Analysis.NormedSpace.Pointwise
+import Analysis.NormedSpace.AffineIsometry
 
 #align_import analysis.convex.strict_convex_space from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

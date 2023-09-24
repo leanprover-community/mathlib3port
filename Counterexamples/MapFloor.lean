@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Hom.Ring
-import Mathbin.Data.Polynomial.Reverse
+import Algebra.Order.Hom.Ring
+import Data.Polynomial.Reverse
 
 #align_import map_floor from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

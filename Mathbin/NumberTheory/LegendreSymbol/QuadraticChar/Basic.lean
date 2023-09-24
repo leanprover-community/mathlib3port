@@ -3,9 +3,9 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.Data.Fintype.Parity
-import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
-import Mathbin.FieldTheory.Finite.Basic
+import Data.Fintype.Parity
+import NumberTheory.LegendreSymbol.ZmodChar
+import FieldTheory.Finite.Basic
 
 #align_import number_theory.legendre_symbol.quadratic_char.basic from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Bool.Set
-import Mathbin.Data.Nat.Set
-import Mathbin.Data.Ulift
-import Mathbin.Order.Bounds.Basic
-import Mathbin.Order.Hom.Basic
+import Data.Bool.Set
+import Data.Nat.Set
+import Data.Ulift
+import Order.Bounds.Basic
+import Order.Hom.Basic
 
 #align_import order.complete_lattice from "leanprover-community/mathlib"@"5709b0d8725255e76f47debca6400c07b5c2d8e6"
 
@@ -414,10 +414,10 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
 -/
 
 #print CompleteLinearOrder /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure"
 #align complete_linear_order CompleteLinearOrder
 -/
 

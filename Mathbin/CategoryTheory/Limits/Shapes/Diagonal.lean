@@ -3,9 +3,9 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
-import Mathbin.CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.KernelPair
+import CategoryTheory.Limits.Shapes.CommSq
 
 #align_import category_theory.limits.shapes.diagonal from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

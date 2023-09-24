@@ -3,11 +3,11 @@ Copyright (c) 2022 Bhavik Mehta, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Combinatorics.DoubleCounting
-import Mathbin.Combinatorics.SetFamily.Shadow
-import Mathbin.Data.Rat.Order
+import Algebra.BigOperators.Ring
+import Algebra.Order.Field.Basic
+import Combinatorics.DoubleCounting
+import Combinatorics.SetFamily.Shadow
+import Data.Rat.Order
 
 #align_import combinatorics.set_family.lym from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

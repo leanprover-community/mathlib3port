@@ -3,9 +3,9 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
-import Mathbin.RingTheory.PowerBasis
+import Data.Polynomial.AlgebraMap
+import FieldTheory.Minpoly.IsIntegrallyClosed
+import RingTheory.PowerBasis
 
 #align_import ring_theory.is_adjoin_root from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

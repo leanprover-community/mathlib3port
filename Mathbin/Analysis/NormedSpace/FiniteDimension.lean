@@ -3,14 +3,14 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
-import Mathbin.Analysis.NormedSpace.AddTorsor
-import Mathbin.Analysis.NormedSpace.AffineIsometry
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Analysis.NormedSpace.RieszLemma
-import Mathbin.Topology.Algebra.Module.FiniteDimension
-import Mathbin.Topology.Algebra.InfiniteSum.Module
-import Mathbin.Topology.Instances.Matrix
+import Analysis.Asymptotics.AsymptoticEquivalent
+import Analysis.NormedSpace.AddTorsor
+import Analysis.NormedSpace.AffineIsometry
+import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.RieszLemma
+import Topology.Algebra.Module.FiniteDimension
+import Topology.Algebra.InfiniteSum.Module
+import Topology.Instances.Matrix
 
 #align_import analysis.normed_space.finite_dimension from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 
@@ -573,7 +573,7 @@ theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [Topologic
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ) (hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
   have : IsCompact (Metric.closedBall x r) :=
-    isCompact_of_isClosed_subset hf Metric.isClosed_ball (hr.trans (subset_mulTSupport _))
+    IsCompact.of_isClosed_subset hf Metric.isClosed_ball (hr.trans (subset_mulTSupport _))
   exact finiteDimensional_of_isCompact_closedBall 𝕜 rpos this
 #align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finiteDimensional
 #align has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finiteDimensional
@@ -740,7 +740,7 @@ theorem IsCompact.exists_mem_frontier_infDist_compl_eq_dist {E : Type _} [Normed
     rcases hx' with ⟨r, hr₀, hrK⟩
     have : FiniteDimensional ℝ E :=
       finiteDimensional_of_isCompact_closedBall ℝ hr₀
-        (isCompact_of_isClosed_subset hK Metric.isClosed_ball hrK)
+        (IsCompact.of_isClosed_subset hK Metric.isClosed_ball hrK)
     exact exists_mem_frontier_infDist_compl_eq_dist hx hK.ne_univ
   · refine' ⟨x, hx', _⟩
     rw [frontier_eq_closure_inter_closure] at hx' 

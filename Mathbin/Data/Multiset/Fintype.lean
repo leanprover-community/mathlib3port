@@ -3,9 +3,9 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Fintype.Card
-import Mathbin.Data.Prod.Lex
+import Algebra.BigOperators.Basic
+import Data.Fintype.Card
+import Data.Prod.Lex
 
 #align_import data.multiset.fintype from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

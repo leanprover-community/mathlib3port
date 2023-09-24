@@ -3,11 +3,11 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.Order.Iterate
-import Mathbin.Order.SemiconjSup
-import Mathbin.Topology.Algebra.Order.MonotoneContinuity
+import Algebra.Hom.Iterate
+import Analysis.SpecificLimits.Basic
+import Order.Iterate
+import Order.SemiconjSup
+import Topology.Algebra.Order.MonotoneContinuity
 
 #align_import dynamics.circle.rotation_number.translation_number from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

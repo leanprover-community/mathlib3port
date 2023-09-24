@@ -3,8 +3,8 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
+import Analysis.SpecificLimits.Basic
+import Analysis.SpecialFunctions.Pow.Real
 
 #align_import analysis.specific_limits.floor_pow from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 

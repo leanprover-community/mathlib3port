@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.NormedSpace.Banach
-import Mathbin.Analysis.NormedSpace.FiniteDimension
+import Analysis.NormedSpace.Banach
+import Analysis.NormedSpace.FiniteDimension
 
 #align_import analysis.normed_space.complemented from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

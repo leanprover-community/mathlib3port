@@ -3,11 +3,11 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.Data.Polynomial.Identities
-import Mathbin.NumberTheory.Padics.PadicIntegers
-import Mathbin.Topology.Algebra.Polynomial
-import Mathbin.Topology.MetricSpace.CauSeqFilter
+import Analysis.SpecificLimits.Basic
+import Data.Polynomial.Identities
+import NumberTheory.Padics.PadicIntegers
+import Topology.Algebra.Polynomial
+import Topology.MetricSpace.CauSeqFilter
 
 #align_import number_theory.padics.hensel from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -206,7 +206,7 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
     _ = ‖F.derivative.eval a‖ ^ 2 * (T ^ 2 ^ n) ^ 2 := (div_sq_cancel _ _)
     _ = ‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ (n + 1) := by rw [← pow_mul, pow_succ' 2]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 /-- Given `z : ℤ_[p]` satisfying `ih n z`, construct `z' : ℤ_[p]` satisfying `ih (n+1) z'`. We need
@@ -228,7 +228,7 @@ private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n
       calc_eval_z'_norm hz HEq h1 rfl
     ⟨hfeq, hnle⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta false
 
 -- why doesn't "noncomputable theory" stick here?

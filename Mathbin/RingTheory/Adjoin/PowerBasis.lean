@@ -3,9 +3,9 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.RingTheory.PowerBasis
-import Mathbin.LinearAlgebra.Matrix.Basis
+import RingTheory.Adjoin.Basic
+import RingTheory.PowerBasis
+import LinearAlgebra.Matrix.Basis
 
 #align_import ring_theory.adjoin.power_basis from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

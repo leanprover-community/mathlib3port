@@ -3,8 +3,8 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Decomposition.RadonNikodym
-import Mathbin.MeasureTheory.Measure.Haar.OfBasis
+import MeasureTheory.Decomposition.RadonNikodym
+import MeasureTheory.Measure.Haar.OfBasis
 
 #align_import probability.density from "leanprover-community/mathlib"@"c14c8fcde993801fca8946b0d80131a1a81d1520"
 

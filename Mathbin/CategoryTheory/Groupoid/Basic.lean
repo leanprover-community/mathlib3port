@@ -3,8 +3,8 @@ Copyright (c) 2022 Rémi Bottinelli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 -/
-import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Combinatorics.Quiver.Basic
+import CategoryTheory.Groupoid
+import Combinatorics.Quiver.Basic
 
 #align_import category_theory.groupoid.basic from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

@@ -3,12 +3,12 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.FunLike.Embedding
-import Mathbin.Data.Prod.Pprod
-import Mathbin.Data.Sigma.Basic
-import Mathbin.Data.Option.Basic
-import Mathbin.Data.Subtype
-import Mathbin.Logic.Equiv.Basic
+import Data.FunLike.Embedding
+import Data.Prod.Pprod
+import Data.Sigma.Basic
+import Data.Option.Basic
+import Data.Subtype
+import Logic.Equiv.Basic
 
 #align_import logic.embedding.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

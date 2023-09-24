@@ -3,8 +3,8 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Init
-import Mathbin.Algebra.Ring.Defs
+import Data.Rat.Init
+import Algebra.Ring.Defs
 
 #align_import algebra.field.defs from "leanprover-community/mathlib"@"2651125b48fc5c170ab1111afd0817c903b1fc6c"
 

@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.CategoryTheory.Category.Preorder
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.Order.Hom.Basic
+import CategoryTheory.Category.Cat
+import CategoryTheory.Category.Preorder
+import CategoryTheory.ConcreteCategory.BundledHom
+import Order.Hom.Basic
 
 #align_import order.category.Preord from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 
@@ -24,14 +24,14 @@ universe u
 
 open CategoryTheory
 
-#print PreordCat /-
+#print Preord /-
 /-- The category of preorders. -/
-def PreordCat :=
+def Preord :=
   Bundled Preorder
-#align Preord PreordCat
+#align Preord Preord
 -/
 
-namespace PreordCat
+namespace Preord
 
 instance : BundledHom @OrderHom where
   toFun := @OrderHom.toFun
@@ -39,81 +39,80 @@ instance : BundledHom @OrderHom where
   comp := @OrderHom.comp
   hom_ext := @OrderHom.ext
 
-deriving instance LargeCategory, ConcreteCategory for PreordCat
+deriving instance LargeCategory, ConcreteCategory for Preord
 
-instance : CoeSort PreordCat (Type _) :=
+instance : CoeSort Preord (Type _) :=
   Bundled.hasCoeToSort
 
-#print PreordCat.of /-
+#print Preord.of /-
 /-- Construct a bundled Preord from the underlying type and typeclass. -/
-def of (α : Type _) [Preorder α] : PreordCat :=
+def of (α : Type _) [Preorder α] : Preord :=
   Bundled.of α
-#align Preord.of PreordCat.of
+#align Preord.of Preord.of
 -/
 
-#print PreordCat.coe_of /-
+#print Preord.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [Preorder α] : ↥(of α) = α :=
   rfl
-#align Preord.coe_of PreordCat.coe_of
+#align Preord.coe_of Preord.coe_of
 -/
 
-instance : Inhabited PreordCat :=
+instance : Inhabited Preord :=
   ⟨of PUnit⟩
 
-instance (α : PreordCat) : Preorder α :=
+instance (α : Preord) : Preorder α :=
   α.str
 
-#print PreordCat.Iso.mk /-
+#print Preord.Iso.mk /-
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : PreordCat.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : Preord.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply x
   inv_hom_id' := by ext; exact e.apply_symm_apply x
-#align Preord.iso.mk PreordCat.Iso.mk
+#align Preord.iso.mk Preord.Iso.mk
 -/
 
-#print PreordCat.dual /-
+#print Preord.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : PreordCat ⥤ PreordCat where
+def dual : Preord ⥤ Preord where
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
-#align Preord.dual PreordCat.dual
+#align Preord.dual Preord.dual
 -/
 
-#print PreordCat.dualEquiv /-
+#print Preord.dualEquiv /-
 /-- The equivalence between `Preord` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : PreordCat ≌ PreordCat :=
+def dualEquiv : Preord ≌ Preord :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align Preord.dual_equiv PreordCat.dualEquiv
+#align Preord.dual_equiv Preord.dualEquiv
 -/
 
-end PreordCat
+end Preord
 
-#print preordCatToCat /-
+#print preordToCat /-
 /-- The embedding of `Preord` into `Cat`.
 -/
 @[simps]
-def preordCatToCat : PreordCat.{u} ⥤ Cat
-    where
+def preordToCat : Preord.{u} ⥤ Cat where
   obj X := Cat.of X.1
   map X Y f := f.Monotone.Functor
   map_id' X := by apply CategoryTheory.Functor.ext; tidy
   map_comp' X Y Z f g := by apply CategoryTheory.Functor.ext; tidy
-#align Preord_to_Cat preordCatToCat
+#align Preord_to_Cat preordToCat
 -/
 
-instance : Faithful preordCatToCat.{u}
+instance : Faithful preordToCat.{u}
     where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
 
-instance : Full preordCatToCat.{u}
+instance : Full preordToCat.{u}
     where
   preimage X Y f := ⟨f.obj, f.Monotone⟩
   witness' X Y f := by apply CategoryTheory.Functor.ext; tidy

@@ -3,11 +3,11 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Tactic.Elementwise
-import Mathbin.CategoryTheory.Limits.HasLimits
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.Tactic.FreshNames
+import Tactic.Elementwise
+import CategoryTheory.Limits.HasLimits
+import CategoryTheory.Limits.Shapes.Kernels
+import CategoryTheory.ConcreteCategory.Basic
+import Tactic.FreshNames
 
 #align_import category_theory.concrete_category.elementwise from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

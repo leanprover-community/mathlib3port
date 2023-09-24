@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Mathbin.Analysis.Calculus.Inverse
-import Mathbin.Analysis.SpecialFunctions.Complex.Log
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv
+import Analysis.Calculus.Inverse
+import Analysis.SpecialFunctions.Complex.Log
+import Analysis.SpecialFunctions.ExpDeriv
 
 #align_import analysis.special_functions.complex.log_deriv from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

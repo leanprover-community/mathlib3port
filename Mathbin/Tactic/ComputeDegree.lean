@@ -3,7 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Data.Polynomial.Degree.Lemmas
+import Data.Polynomial.Degree.Lemmas
 
 #align_import tactic.compute_degree from "leanprover-community/mathlib"@"2d915e4ef8f55de94a850f0e5363ba8b25dc4c29"
 
@@ -199,7 +199,7 @@ open Expr Polynomial
               | e => throwError "'{ ← e }' is not supported"
 #align tactic.compute_degree.resolve_sum_step tactic.compute_degree.resolve_sum_step
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- `norm_assum` simply tries `norm_num` and `assumption`.
 It is used to try to discharge as many as possible of the side-goals of `compute_degree_le`.
 Several side-goals are of the form `m ≤ n`, for natural numbers `m, n` or of the form `c ≠ 0`,

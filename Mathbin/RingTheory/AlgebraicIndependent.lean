@@ -3,12 +3,12 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.LinearAlgebra.LinearIndependent
-import Mathbin.RingTheory.MvPolynomial.Basic
-import Mathbin.Data.MvPolynomial.Supported
-import Mathbin.RingTheory.Algebraic
-import Mathbin.Data.MvPolynomial.Equiv
+import RingTheory.Adjoin.Basic
+import LinearAlgebra.LinearIndependent
+import RingTheory.MvPolynomial.Basic
+import Data.MvPolynomial.Supported
+import RingTheory.Algebraic
+import Data.MvPolynomial.Equiv
 
 #align_import ring_theory.algebraic_independent from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -377,7 +377,7 @@ theorem algebraicIndependent_subtype {s : Set A} :
 #align algebraic_independent_subtype algebraicIndependent_subtype
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print algebraicIndependent_of_finite /-
 theorem algebraicIndependent_of_finite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :

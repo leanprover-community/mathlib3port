@@ -3,8 +3,8 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Data.Complex.Module
-import Mathbin.LinearAlgebra.Orientation
+import Data.Complex.Module
+import LinearAlgebra.Orientation
 
 #align_import data.complex.orientation from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

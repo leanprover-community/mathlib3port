@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Combinatorics.SimpleGraph.Regularity.Chunk
-import Mathbin.Combinatorics.SimpleGraph.Regularity.Energy
+import Combinatorics.SimpleGraph.Regularity.Chunk
+import Combinatorics.SimpleGraph.Regularity.Energy
 
 #align_import combinatorics.simple_graph.regularity.increment from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

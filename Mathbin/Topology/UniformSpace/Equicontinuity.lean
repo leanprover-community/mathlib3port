@@ -3,7 +3,7 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Topology.UniformSpace.UniformConvergenceTopology
+import Topology.UniformSpace.UniformConvergenceTopology
 
 #align_import topology.uniform_space.equicontinuity from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 
@@ -143,7 +143,7 @@ protected abbrev Set.UniformEquicontinuous (H : Set <| β → α) : Prop :=
 #align set.uniform_equicontinuous Set.UniformEquicontinuous
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » V) -/
 #print equicontinuousAt_iff_pair /-
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/

@@ -3,10 +3,10 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
-import Mathbin.NumberTheory.Liouville.Residual
-import Mathbin.NumberTheory.Liouville.LiouvilleWith
-import Mathbin.Analysis.PSeries
+import MeasureTheory.Measure.Lebesgue.Basic
+import NumberTheory.Liouville.Residual
+import NumberTheory.Liouville.LiouvilleWith
+import Analysis.PSeries
 
 #align_import number_theory.liouville.measure from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Topology.Category.Profinite.Basic
-import Mathbin.Topology.StoneCech
-import Mathbin.CategoryTheory.Preadditive.Projective
+import Topology.Category.Profinite.Basic
+import Topology.StoneCech
+import CategoryTheory.Preadditive.Projective
 
 #align_import topology.category.Profinite.projective from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

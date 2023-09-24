@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.MonoidAlgebra.Basic
-import Mathbin.Data.Finsupp.Order
+import Algebra.MonoidAlgebra.Basic
+import Data.Finsupp.Order
 
 #align_import algebra.monoid_algebra.division from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl (CMU)
 -/
 prelude
-import Leanbin.Init.Meta.Tactic
-import Leanbin.Init.Meta.MatchTactic
-import Leanbin.Init.Meta.MkDecEqInstance
-import Leanbin.Init.Data.List.Instances
-import Mathbin.Logic.Relator
+import Init.Meta.Tactic
+import Init.Meta.MatchTactic
+import Init.Meta.MkDecEqInstance
+import Init.Data.List.Instances
+import Logic.Relator
 
 #align_import tactic.transfer from "leanprover-community/mathlib"@"60e279ba2bfe69f937b5f69b110a440538b8f6a5"
 

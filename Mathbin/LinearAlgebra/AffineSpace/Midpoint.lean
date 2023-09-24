@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Algebra.Invertible
-import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
+import Algebra.Invertible
+import LinearAlgebra.AffineSpace.AffineEquiv
 
 #align_import linear_algebra.affine_space.midpoint from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

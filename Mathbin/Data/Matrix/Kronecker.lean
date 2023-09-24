@@ -3,12 +3,12 @@ Copyright (c) 2021 Filippo A. E. Nuccio. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 -/
-import Mathbin.Data.Matrix.Basic
-import Mathbin.Data.Matrix.Block
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.LinearAlgebra.TensorProduct
-import Mathbin.RingTheory.TensorProduct
+import Data.Matrix.Basic
+import Data.Matrix.Block
+import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.NonsingularInverse
+import LinearAlgebra.TensorProduct
+import RingTheory.TensorProduct
 
 #align_import data.matrix.kronecker from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.DoldKan.EquivalenceAdditive
-import Mathbin.AlgebraicTopology.DoldKan.Compatibility
-import Mathbin.CategoryTheory.Idempotents.SimplicialObject
+import AlgebraicTopology.DoldKan.EquivalenceAdditive
+import AlgebraicTopology.DoldKan.Compatibility
+import CategoryTheory.Idempotents.SimplicialObject
 
 #align_import algebraic_topology.dold_kan.equivalence_pseudoabelian from "leanprover-community/mathlib"@"32a7e535287f9c73f2e4d2aef306a39190f0b504"
 

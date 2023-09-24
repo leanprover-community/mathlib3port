@@ -3,8 +3,8 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Order.Filter.Extr
-import Mathbin.Topology.ContinuousOn
+import Order.Filter.Extr
+import Topology.ContinuousOn
 
 #align_import topology.local_extr from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

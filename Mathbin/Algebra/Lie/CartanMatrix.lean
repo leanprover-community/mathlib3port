@@ -3,9 +3,9 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Algebra.Lie.Free
-import Mathbin.Algebra.Lie.Quotient
-import Mathbin.Data.Matrix.Notation
+import Algebra.Lie.Free
+import Algebra.Lie.Quotient
+import Data.Matrix.Notation
 
 #align_import algebra.lie.cartan_matrix from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

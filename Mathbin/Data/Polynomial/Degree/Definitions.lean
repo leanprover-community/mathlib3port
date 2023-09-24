@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Nat.WithBot
-import Mathbin.Data.Polynomial.Monomial
-import Mathbin.Data.Polynomial.Coeff
+import Data.Fintype.BigOperators
+import Data.Nat.WithBot
+import Data.Polynomial.Monomial
+import Data.Polynomial.Coeff
 
 #align_import data.polynomial.degree.definitions from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

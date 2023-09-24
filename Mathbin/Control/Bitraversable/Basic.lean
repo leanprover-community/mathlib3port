@@ -3,8 +3,8 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Bifunctor
-import Mathbin.Control.Traversable.Basic
+import Control.Bifunctor
+import Control.Traversable.Basic
 
 #align_import control.bitraversable.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

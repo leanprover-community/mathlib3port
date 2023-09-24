@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Antichain
-import Mathbin.Order.UpperLower.Basic
+import Order.Antichain
+import Order.UpperLower.Basic
 
 #align_import order.minimal from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 

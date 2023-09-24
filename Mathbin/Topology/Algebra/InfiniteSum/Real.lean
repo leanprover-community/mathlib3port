@@ -3,9 +3,9 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
-import Mathbin.Algebra.BigOperators.Intervals
-import Mathbin.Topology.Algebra.InfiniteSum.Order
-import Mathbin.Topology.Instances.Real
+import Algebra.BigOperators.Intervals
+import Topology.Algebra.InfiniteSum.Order
+import Topology.Instances.Real
 
 #align_import topology.algebra.infinite_sum.real from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

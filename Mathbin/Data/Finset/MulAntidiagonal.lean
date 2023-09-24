@@ -3,8 +3,8 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 -/
-import Mathbin.Data.Set.Pointwise.Basic
-import Mathbin.Data.Set.MulAntidiagonal
+import Data.Set.Pointwise.Basic
+import Data.Set.MulAntidiagonal
 
 #align_import data.finset.mul_antidiagonal from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

@@ -3,11 +3,11 @@ Copyright (c) 2021 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
-import Mathbin.CategoryTheory.Monoidal.Subcategory
-import Mathbin.LinearAlgebra.Coevaluation
-import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
-import Mathbin.Algebra.Category.Module.Monoidal.Closed
+import CategoryTheory.Monoidal.Rigid.Basic
+import CategoryTheory.Monoidal.Subcategory
+import LinearAlgebra.Coevaluation
+import LinearAlgebra.FreeModule.Finite.Matrix
+import Algebra.Category.Module.Monoidal.Closed
 
 #align_import algebra.category.fgModule.basic from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

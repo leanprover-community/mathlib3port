@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.RingTheory.AdjoinRoot
-import Mathbin.RingTheory.Localization.Away.Basic
+import RingTheory.AdjoinRoot
+import RingTheory.Localization.Away.Basic
 
 #align_import ring_theory.localization.away.adjoin_root from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

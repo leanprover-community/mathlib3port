@@ -3,7 +3,7 @@ Copyright (c) 2022 María Inés de Frutos-Fernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 -/
-import Mathbin.RingTheory.DedekindDomain.Ideal
+import RingTheory.DedekindDomain.Ideal
 
 #align_import ring_theory.dedekind_domain.factorization from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

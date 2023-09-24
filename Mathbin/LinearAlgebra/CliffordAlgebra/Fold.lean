@@ -3,7 +3,7 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
+import LinearAlgebra.CliffordAlgebra.Conjugation
 
 #align_import linear_algebra.clifford_algebra.fold from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

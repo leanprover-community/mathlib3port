@@ -3,9 +3,9 @@ Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
-import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
-import Mathbin.Data.Nat.Fib
-import Mathbin.Tactic.SolveByElim
+import Algebra.ContinuedFractions.Computation.CorrectnessTerminating
+import Data.Nat.Fib
+import Tactic.SolveByElim
 
 #align_import algebra.continued_fractions.computation.approximations from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

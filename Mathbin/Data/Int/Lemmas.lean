@@ -3,11 +3,11 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.Set.Function
-import Mathbin.Data.Int.Order.Lemmas
-import Mathbin.Data.Int.Bitwise
-import Mathbin.Data.Nat.Cast.Basic
-import Mathbin.Data.Nat.Order.Lemmas
+import Data.Set.Function
+import Data.Int.Order.Lemmas
+import Data.Int.Bitwise
+import Data.Nat.Cast.Basic
+import Data.Nat.Order.Lemmas
 
 #align_import data.int.lemmas from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

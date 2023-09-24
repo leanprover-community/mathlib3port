@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.BoxIntegral.Partition.Filter
-import Mathbin.Analysis.BoxIntegral.Partition.Measure
-import Mathbin.Topology.UniformSpace.Compact
+import Analysis.BoxIntegral.Partition.Filter
+import Analysis.BoxIntegral.Partition.Measure
+import Topology.UniformSpace.Compact
 
 #align_import analysis.box_integral.basic from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

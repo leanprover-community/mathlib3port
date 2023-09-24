@@ -3,8 +3,8 @@ Copyright (c) 2021 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.LinearAlgebra.Ray
-import Mathbin.LinearAlgebra.Determinant
+import LinearAlgebra.Ray
+import LinearAlgebra.Determinant
 
 #align_import linear_algebra.orientation from "leanprover-community/mathlib"@"0c1d80f5a86b36c1db32e021e8d19ae7809d5b79"
 

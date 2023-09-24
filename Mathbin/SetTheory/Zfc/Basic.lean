@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Set.Lattice
-import Mathbin.Logic.Small.Basic
-import Mathbin.Order.WellFounded
+import Data.Set.Lattice
+import Logic.Small.Basic
+import Order.WellFounded
 
 #align_import set_theory.zfc.basic from "leanprover-community/mathlib"@"f0b3759a8ef0bd8239ecdaa5e1089add5feebe1a"
 

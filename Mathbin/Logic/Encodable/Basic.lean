@@ -3,12 +3,12 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Logic.Equiv.Nat
-import Mathbin.Data.Pnat.Basic
-import Mathbin.Order.Directed
-import Mathbin.Data.Countable.Defs
-import Mathbin.Order.RelIso.Basic
-import Mathbin.Data.Fin.Basic
+import Logic.Equiv.Nat
+import Data.Pnat.Basic
+import Order.Directed
+import Data.Countable.Defs
+import Order.RelIso.Basic
+import Data.Fin.Basic
 
 #align_import logic.encodable.basic from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 
@@ -43,7 +43,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 open Option List Nat Function
 
 #print Encodable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/

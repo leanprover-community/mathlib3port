@@ -3,8 +3,8 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Preadditive.Injective
-import Mathbin.Algebra.Homology.Single
+import CategoryTheory.Preadditive.Injective
+import Algebra.Homology.Single
 
 #align_import category_theory.preadditive.injective_resolution from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
 
@@ -72,7 +72,7 @@ structure InjectiveResolution (Z : C) where
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
 #print CategoryTheory.HasInjectiveResolution /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
   out : Nonempty (InjectiveResolution Z)

@@ -3,10 +3,10 @@ Copyright (c) 2019 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.Regular.Basic
-import Mathbin.LinearAlgebra.Matrix.MvPolynomial
-import Mathbin.LinearAlgebra.Matrix.Polynomial
-import Mathbin.RingTheory.Polynomial.Basic
+import Algebra.Regular.Basic
+import LinearAlgebra.Matrix.MvPolynomial
+import LinearAlgebra.Matrix.Polynomial
+import RingTheory.Polynomial.Basic
 
 #align_import linear_algebra.matrix.adjugate from "leanprover-community/mathlib"@"a99f85220eaf38f14f94e04699943e185a5e1d1a"
 

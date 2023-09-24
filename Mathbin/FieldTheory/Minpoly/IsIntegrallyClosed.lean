@@ -3,9 +3,9 @@ Copyright (c) 2019 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Paul Lezeau, Junyan Xu
 -/
-import Mathbin.RingTheory.AdjoinRoot
-import Mathbin.FieldTheory.Minpoly.Field
-import Mathbin.RingTheory.Polynomial.GaussLemma
+import RingTheory.AdjoinRoot
+import FieldTheory.Minpoly.Field
+import RingTheory.Polynomial.GaussLemma
 
 #align_import field_theory.minpoly.is_integrally_closed from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

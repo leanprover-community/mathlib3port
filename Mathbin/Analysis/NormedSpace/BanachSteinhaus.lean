@@ -3,9 +3,9 @@ Copyright (c) 2021 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Topology.MetricSpace.Baire
-import Mathbin.Topology.Algebra.Module.Basic
+import Analysis.NormedSpace.OperatorNorm
+import Topology.MetricSpace.Baire
+import Topology.Algebra.Module.Basic
 
 #align_import analysis.normed_space.banach_steinhaus from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

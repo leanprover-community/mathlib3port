@@ -3,7 +3,7 @@ Copyright (c) 2021 Ivan Sadofschi Costa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 -/
-import Mathbin.Data.Finsupp.Defs
+import Data.Finsupp.Defs
 
 #align_import data.finsupp.fin from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

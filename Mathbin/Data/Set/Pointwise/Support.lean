@@ -3,8 +3,8 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Set.Pointwise.Smul
-import Mathbin.Algebra.Support
+import Data.Set.Pointwise.Smul
+import Algebra.Support
 
 #align_import data.set.pointwise.support from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

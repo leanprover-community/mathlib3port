@@ -3,8 +3,8 @@ Copyright (c) 2018 Violeta Hernández Palacios, Mario Carneiro. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios, Mario Carneiro
 -/
-import Mathbin.SetTheory.Ordinal.Arithmetic
-import Mathbin.SetTheory.Ordinal.Exponential
+import SetTheory.Ordinal.Arithmetic
+import SetTheory.Ordinal.Exponential
 
 #align_import set_theory.ordinal.fixed_point from "leanprover-community/mathlib"@"0dd4319a17376eda5763cd0a7e0d35bbaaa50e83"
 

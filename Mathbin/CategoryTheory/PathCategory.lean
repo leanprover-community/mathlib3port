@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.EqToHom
-import Mathbin.CategoryTheory.Quotient
-import Mathbin.Combinatorics.Quiver.Path
+import CategoryTheory.EqToHom
+import CategoryTheory.Quotient
+import Combinatorics.Quiver.Path
 
 #align_import category_theory.path_category from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

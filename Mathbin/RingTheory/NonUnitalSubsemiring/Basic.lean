@@ -3,12 +3,12 @@ Copyright (c) 2022 Jireh Loreaux All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Algebra.Ring.Equiv
-import Mathbin.Algebra.Ring.Prod
-import Mathbin.Data.Set.Finite
-import Mathbin.GroupTheory.Submonoid.Membership
-import Mathbin.GroupTheory.Subsemigroup.Membership
-import Mathbin.GroupTheory.Subsemigroup.Centralizer
+import Algebra.Ring.Equiv
+import Algebra.Ring.Prod
+import Data.Set.Finite
+import GroupTheory.Submonoid.Membership
+import GroupTheory.Subsemigroup.Membership
+import GroupTheory.Subsemigroup.Centralizer
 
 #align_import ring_theory.non_unital_subsemiring.basic from "leanprover-community/mathlib"@"b915e9392ecb2a861e1e766f0e1df6ac481188ca"
 

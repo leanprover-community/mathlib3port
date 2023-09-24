@@ -3,7 +3,7 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Data.Set.Prod
+import Data.Set.Prod
 
 #align_import data.set.n_ary from "leanprover-community/mathlib"@"5e526d18cea33550268dcbbddcb822d5cde40654"
 

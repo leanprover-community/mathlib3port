@@ -3,10 +3,10 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.MeasureTheory.Group.MeasurableEquiv
-import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
-import Mathbin.Dynamics.Minimal
+import MeasureTheory.Group.MeasurableEquiv
+import MeasureTheory.Measure.Regular
+import Dynamics.Ergodic.MeasurePreserving
+import Dynamics.Minimal
 
 #align_import measure_theory.group.action from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 
@@ -32,7 +32,7 @@ namespace MeasureTheory
 variable {G M α : Type _} {s : Set α}
 
 #print MeasureTheory.VAddInvariantMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
@@ -43,7 +43,7 @@ class VAddInvariantMeasure (M α : Type _) [VAdd M α] {_ : MeasurableSpace α} 
 -/
 
 #print MeasureTheory.SMulInvariantMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/

@@ -3,7 +3,7 @@ Copyright (c) 2021 Matt Kempster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Kempster
 -/
-import Mathbin.Geometry.Euclidean.Triangle
+import Geometry.Euclidean.Triangle
 
 #align_import wiedijk_100_theorems.herons_formula from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Set.Intervals.OrdConnected
-import Mathbin.Tactic.Wlog
+import Data.Set.Intervals.OrdConnected
+import Tactic.Wlog
 
 #align_import data.set.intervals.ord_connected_component from "leanprover-community/mathlib"@"92ca63f0fb391a9ca5f22d2409a6080e786d99f7"
 

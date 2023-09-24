@@ -3,12 +3,12 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 -/
-import Mathbin.Algebra.Hom.GroupAction
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Dynamics.PeriodicPts
-import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.Commutator
-import Mathbin.GroupTheory.Coset
+import Algebra.Hom.GroupAction
+import Data.Fintype.BigOperators
+import Dynamics.PeriodicPts
+import GroupTheory.GroupAction.ConjAct
+import GroupTheory.Commutator
+import GroupTheory.Coset
 
 #align_import group_theory.group_action.quotient from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

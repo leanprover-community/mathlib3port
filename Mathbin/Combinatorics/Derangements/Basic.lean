@@ -3,10 +3,10 @@ Copyright (c) 2021 Henry Swanson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 -/
-import Mathbin.Dynamics.FixedPoints.Basic
-import Mathbin.GroupTheory.Perm.Option
-import Mathbin.Logic.Equiv.Defs
-import Mathbin.Logic.Equiv.Option
+import Dynamics.FixedPoints.Basic
+import GroupTheory.Perm.Option
+import Logic.Equiv.Defs
+import Logic.Equiv.Option
 
 #align_import combinatorics.derangements.basic from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

@@ -3,11 +3,11 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Pi.Algebra
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Order.Group.Instances
-import Mathbin.Algebra.Order.Monoid.WithZero.Defs
-import Mathbin.Order.Hom.Basic
+import Data.Pi.Algebra
+import Algebra.Hom.Group
+import Algebra.Order.Group.Instances
+import Algebra.Order.Monoid.WithZero.Defs
+import Order.Hom.Basic
 
 #align_import algebra.order.hom.monoid from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

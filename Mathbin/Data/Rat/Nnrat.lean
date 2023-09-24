@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Order.Nonneg.Field
-import Mathbin.Algebra.Order.Nonneg.Floor
+import Algebra.Algebra.Basic
+import Algebra.Order.Nonneg.Field
+import Algebra.Order.Nonneg.Floor
 
 #align_import data.rat.nnrat from "leanprover-community/mathlib"@"b3f4f007a962e3787aa0f3b5c7942a1317f7d88e"
 

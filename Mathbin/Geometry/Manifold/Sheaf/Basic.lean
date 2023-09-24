@@ -3,8 +3,8 @@ Copyright © 2023 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Geometry.Manifold.LocalInvariantProperties
-import Mathbin.Topology.Sheaves.LocalPredicate
+import Geometry.Manifold.LocalInvariantProperties
+import Topology.Sheaves.LocalPredicate
 
 #align_import geometry.manifold.sheaf.basic from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 

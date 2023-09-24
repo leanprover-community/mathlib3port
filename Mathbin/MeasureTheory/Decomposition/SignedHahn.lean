@@ -3,8 +3,8 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Measure.VectorMeasure
-import Mathbin.Order.SymmDiff
+import MeasureTheory.Measure.VectorMeasure
+import Order.SymmDiff
 
 #align_import measure_theory.decomposition.signed_hahn from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

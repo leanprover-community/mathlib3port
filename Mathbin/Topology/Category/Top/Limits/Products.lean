@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 -/
-import Mathbin.Topology.Category.Top.EpiMono
-import Mathbin.Topology.Category.Top.Limits.Basic
+import Topology.Category.Top.EpiMono
+import Topology.Category.Top.Limits.Basic
 
 #align_import topology.category.Top.limits.products from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

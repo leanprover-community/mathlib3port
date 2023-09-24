@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.Star.Basic
+import Algebra.BigOperators.Basic
+import Algebra.Star.Basic
 
 #align_import algebra.star.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

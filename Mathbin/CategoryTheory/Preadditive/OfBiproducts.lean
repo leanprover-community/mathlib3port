@@ -3,8 +3,8 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.GroupTheory.EckmannHilton
+import CategoryTheory.Limits.Shapes.Biproducts
+import GroupTheory.EckmannHilton
 
 #align_import category_theory.preadditive.of_biproducts from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

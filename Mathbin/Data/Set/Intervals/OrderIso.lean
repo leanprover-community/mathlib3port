@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
 -/
-import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Order.Hom.Set
+import Data.Set.Intervals.Basic
+import Order.Hom.Set
 
 #align_import data.set.intervals.order_iso from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

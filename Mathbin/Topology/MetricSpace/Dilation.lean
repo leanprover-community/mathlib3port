@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Dilations of emetric and metric spaces
 Authors: Hanting Zhang
 -/
-import Mathbin.Topology.MetricSpace.Antilipschitz
-import Mathbin.Data.FunLike.Basic
+import Topology.MetricSpace.Antilipschitz
+import Data.FunLike.Basic
 
 #align_import topology.metric_space.dilation from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

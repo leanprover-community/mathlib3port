@@ -3,7 +3,7 @@ Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Tactic.Linarith.Datatypes
+import Tactic.Linarith.Datatypes
 
 #align_import tactic.linarith.elimination from "leanprover-community/mathlib"@"693ae04fbc9cfe7fe0be4b0eb83ab3ee3b4268da"
 

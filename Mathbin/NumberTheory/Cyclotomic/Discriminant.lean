@@ -3,8 +3,8 @@ Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
-import Mathbin.RingTheory.Discriminant
+import NumberTheory.Cyclotomic.PrimitiveRoots
+import RingTheory.Discriminant
 
 #align_import number_theory.cyclotomic.discriminant from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 

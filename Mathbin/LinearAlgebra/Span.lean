@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Frédéric Dupuis,
   Heather Macbeth
 -/
-import Mathbin.LinearAlgebra.Basic
-import Mathbin.Order.CompactlyGenerated
-import Mathbin.Order.OmegaCompletePartialOrder
+import LinearAlgebra.Basic
+import Order.CompactlyGenerated
+import Order.OmegaCompletePartialOrder
 
 #align_import linear_algebra.span from "leanprover-community/mathlib"@"10878f6bf1dab863445907ab23fbfcefcb5845d0"
 

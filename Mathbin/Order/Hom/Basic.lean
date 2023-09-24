@@ -3,11 +3,11 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Logic.Equiv.Option
-import Mathbin.Order.RelIso.Basic
-import Mathbin.Tactic.Monotonicity.Basic
-import Mathbin.Tactic.AssertExists
-import Mathbin.Order.Disjoint
+import Logic.Equiv.Option
+import Order.RelIso.Basic
+import Tactic.Monotonicity.Basic
+import Tactic.AssertExists
+import Order.Disjoint
 
 #align_import order.hom.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

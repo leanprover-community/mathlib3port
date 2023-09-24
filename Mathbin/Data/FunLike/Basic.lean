@@ -3,9 +3,9 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Logic.Function.Basic
+import Logic.Function.Basic
 import Mathbin.Tactic.Lint.Default
-import Mathbin.Tactic.NormCast
+import Tactic.NormCast
 
 #align_import data.fun_like.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

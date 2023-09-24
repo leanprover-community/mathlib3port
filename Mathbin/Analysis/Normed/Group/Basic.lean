@@ -3,13 +3,13 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 -/
-import Mathbin.Analysis.Normed.Group.Seminorm
-import Mathbin.Order.LiminfLimsup
-import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Topology.Instances.Rat
-import Mathbin.Topology.MetricSpace.Algebra
-import Mathbin.Topology.MetricSpace.IsometricSmul
-import Mathbin.Topology.Sequences
+import Analysis.Normed.Group.Seminorm
+import Order.LiminfLimsup
+import Topology.Algebra.UniformGroup
+import Topology.Instances.Rat
+import Topology.MetricSpace.Algebra
+import Topology.MetricSpace.IsometricSmul
+import Topology.Sequences
 
 #align_import analysis.normed.group.basic from "leanprover-community/mathlib"@"41bef4ae1254365bc190aee63b947674d2977f01"
 

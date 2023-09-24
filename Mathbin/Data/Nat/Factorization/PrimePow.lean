@@ -3,8 +3,8 @@ Copyright (c) 2022 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.Algebra.IsPrimePow
-import Mathbin.Data.Nat.Factorization.Basic
+import Algebra.IsPrimePow
+import Data.Nat.Factorization.Basic
 
 #align_import data.nat.factorization.prime_pow from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

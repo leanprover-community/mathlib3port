@@ -3,9 +3,9 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Topology.Algebra.Valuation
-import Mathbin.Topology.Algebra.WithZeroTopology
-import Mathbin.Topology.Algebra.UniformField
+import Topology.Algebra.Valuation
+import Topology.Algebra.WithZeroTopology
+import Topology.Algebra.UniformField
 
 #align_import topology.algebra.valued_field from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 
@@ -212,7 +212,7 @@ noncomputable def extension : hat K → Γ₀ :=
 #align valued.extension Valued.extension
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » V') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » V') -/
 #print Valued.continuous_extension /-
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :=
   by

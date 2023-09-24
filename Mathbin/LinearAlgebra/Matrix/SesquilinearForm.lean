@@ -3,12 +3,12 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Moritz Doll
 -/
-import Mathbin.LinearAlgebra.FinsuppVectorSpace
-import Mathbin.LinearAlgebra.Matrix.Basis
-import Mathbin.LinearAlgebra.Matrix.Nondegenerate
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
-import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathbin.LinearAlgebra.SesquilinearForm
+import LinearAlgebra.FinsuppVectorSpace
+import LinearAlgebra.Matrix.Basis
+import LinearAlgebra.Matrix.Nondegenerate
+import LinearAlgebra.Matrix.NonsingularInverse
+import LinearAlgebra.Matrix.ToLinearEquiv
+import LinearAlgebra.SesquilinearForm
 
 #align_import linear_algebra.matrix.sesquilinear_form from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

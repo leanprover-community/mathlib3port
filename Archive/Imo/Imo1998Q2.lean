@@ -3,11 +3,11 @@ Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Data.Int.Parity
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Tactic.Ring
-import Mathbin.Tactic.NoncommRing
+import Data.Fintype.Prod
+import Data.Int.Parity
+import Algebra.BigOperators.Order
+import Tactic.Ring
+import Tactic.NoncommRing
 
 #align_import imo.imo1998_q2 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

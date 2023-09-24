@@ -5,7 +5,7 @@ Authors: Gabriel Ebner
 
 Tactic to split if-then-else-expressions.
 -/
-import Mathbin.Tactic.Hint
+import Tactic.Hint
 
 #align_import tactic.split_ifs from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

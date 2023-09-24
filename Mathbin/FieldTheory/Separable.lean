@@ -3,11 +3,11 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Squarefree
-import Mathbin.Data.Polynomial.Expand
-import Mathbin.Data.Polynomial.Splits
-import Mathbin.FieldTheory.Minpoly.Field
-import Mathbin.RingTheory.PowerBasis
+import Algebra.Squarefree
+import Data.Polynomial.Expand
+import Data.Polynomial.Splits
+import FieldTheory.Minpoly.Field
+import RingTheory.PowerBasis
 
 #align_import field_theory.separable from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

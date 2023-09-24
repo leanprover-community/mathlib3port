@@ -3,7 +3,7 @@ Copyright (c) 2020 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 -/
-import Mathbin.NumberTheory.Liouville.Basic
+import NumberTheory.Liouville.Basic
 
 #align_import number_theory.liouville.liouville_number from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"
 

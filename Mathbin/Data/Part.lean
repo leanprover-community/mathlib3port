@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 -/
-import Mathbin.Data.Set.Basic
-import Mathbin.Logic.Equiv.Defs
+import Data.Set.Basic
+import Logic.Equiv.Defs
 
 #align_import data.part from "leanprover-community/mathlib"@"80c43012d26f63026d362c3aba28f3c3bafb07e6"
 

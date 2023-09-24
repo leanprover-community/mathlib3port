@@ -3,12 +3,12 @@ Copyright (c) 2022 Pim Otte. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
 -/
-import Mathbin.Algebra.BigOperators.Fin
-import Mathbin.Data.Nat.Choose.Sum
-import Mathbin.Data.Nat.Factorial.BigOperators
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.Data.Finset.Sym
-import Mathbin.Data.Finsupp.Multiset
+import Algebra.BigOperators.Fin
+import Data.Nat.Choose.Sum
+import Data.Nat.Factorial.BigOperators
+import Data.Fin.VecNotation
+import Data.Finset.Sym
+import Data.Finsupp.Multiset
 
 #align_import data.nat.choose.multinomial from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

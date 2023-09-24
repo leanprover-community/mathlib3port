@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.Mon.Basic
-import Mathbin.CategoryTheory.Limits.HasLimits
-import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+import Algebra.Category.Mon.Basic
+import CategoryTheory.Limits.HasLimits
+import CategoryTheory.ConcreteCategory.Elementwise
 
 #align_import algebra.category.Mon.colimits from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

@@ -3,7 +3,7 @@ Copyright (c) 2018 Simon Hudon All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Tactic.Tauto
+import Tactic.Tauto
 
 #align_import tactic.scc from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

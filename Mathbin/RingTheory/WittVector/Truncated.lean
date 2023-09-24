@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.RingTheory.WittVector.InitTail
+import RingTheory.WittVector.InitTail
 
 #align_import ring_theory.witt_vector.truncated from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
@@ -258,7 +258,7 @@ theorem coeff_zero (i : Fin n) : (0 : TruncatedWittVector p n R).coeff i = 0 :=
 
 end TruncatedWittVector
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- A macro tactic used to prove that `truncate_fun` respects ring operations. -/
 unsafe def tactic.interactive.witt_truncate_fun_tac : tactic Unit :=
   sorry

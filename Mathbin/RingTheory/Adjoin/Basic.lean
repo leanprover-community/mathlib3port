@@ -3,10 +3,10 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Algebra.Operations
-import Mathbin.Algebra.Algebra.Subalgebra.Tower
-import Mathbin.LinearAlgebra.Prod
-import Mathbin.LinearAlgebra.Finsupp
+import Algebra.Algebra.Operations
+import Algebra.Algebra.Subalgebra.Tower
+import LinearAlgebra.Prod
+import LinearAlgebra.Finsupp
 
 #align_import ring_theory.adjoin.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

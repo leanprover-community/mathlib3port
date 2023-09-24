@@ -3,7 +3,7 @@ Copyright (c) 2020 Dany Fabian. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dany Fabian
 -/
-import Mathbin.Tactic.SplitIfs
+import Tactic.SplitIfs
 
 #align_import tactic.unfold_cases from "leanprover-community/mathlib"@"0035e2dd30b71232b3bf7d0827eeaa0c002c1825"
 

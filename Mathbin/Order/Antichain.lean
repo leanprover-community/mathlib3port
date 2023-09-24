@@ -3,10 +3,10 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Set.Pairwise.Basic
-import Mathbin.Order.Bounds.Basic
-import Mathbin.Order.Directed
-import Mathbin.Order.Hom.Set
+import Data.Set.Pairwise.Basic
+import Order.Bounds.Basic
+import Order.Directed
+import Order.Hom.Set
 
 #align_import order.antichain from "leanprover-community/mathlib"@"c227d107bbada5d0d9d20287e3282c0a7f1651a0"
 

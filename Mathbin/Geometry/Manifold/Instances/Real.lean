@@ -3,8 +3,8 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
-import Mathbin.Analysis.InnerProductSpace.PiL2
+import Geometry.Manifold.SmoothManifoldWithCorners
+import Analysis.InnerProductSpace.PiL2
 
 #align_import geometry.manifold.instances.real from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
@@ -99,7 +99,7 @@ theorem range_quadrant (n : ℕ) :
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
 #print modelWithCornersEuclideanHalfSpace /-
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as

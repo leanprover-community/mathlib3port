@@ -3,9 +3,9 @@ Copyright (c) 2020 Kevin Lacker, Keeley Hoek, Scott Morrison. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 -/
-import Mathbin.Data.Buffer.Basic
-import Mathbin.Tactic.RewriteSearch.Discovery
-import Mathbin.Tactic.RewriteSearch.Types
+import Data.Buffer.Basic
+import Tactic.RewriteSearch.Discovery
+import Tactic.RewriteSearch.Types
 
 #align_import tactic.rewrite_search.search from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

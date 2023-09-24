@@ -3,9 +3,9 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Heather Macbeth, Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Algebra.BigOperators.Intervals
-import Mathbin.Analysis.Normed.Group.Basic
-import Mathbin.Topology.Instances.Nnreal
+import Algebra.BigOperators.Intervals
+import Analysis.Normed.Group.Basic
+import Topology.Instances.Nnreal
 
 #align_import analysis.normed.group.infinite_sum from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

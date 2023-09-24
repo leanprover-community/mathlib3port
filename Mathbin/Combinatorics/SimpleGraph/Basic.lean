@@ -3,9 +3,9 @@ Copyright (c) 2020 Aaron Anderson, Jalex Stark, Kyle Miller. All rights reserved
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Alena Gusakov, Hunter Monroe
 -/
-import Mathbin.Data.Rel
-import Mathbin.Data.Set.Finite
-import Mathbin.Data.Sym.Sym2
+import Data.Rel
+import Data.Set.Finite
+import Data.Sym.Sym2
 
 #align_import combinatorics.simple_graph.basic from "leanprover-community/mathlib"@"c6ef6387ede9983aee397d442974e61f89dfd87b"
 

@@ -3,7 +3,7 @@ Copyright (c) 2014 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Jeremy Avigad
 -/
-import Mathbin.Data.Nat.Order.Basic
+import Data.Nat.Order.Basic
 
 #align_import data.nat.dist from "leanprover-community/mathlib"@"d50b12ae8e2bd910d08a94823976adae9825718b"
 

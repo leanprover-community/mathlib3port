@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.Algebra.LieGroup
+import Geometry.Manifold.Algebra.LieGroup
 
 #align_import geometry.manifold.algebra.structures from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
@@ -25,7 +25,7 @@ section SmoothRing
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option default_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 #print SmoothRing /-

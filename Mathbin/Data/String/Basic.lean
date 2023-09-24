@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.Lex
-import Mathbin.Data.Char
+import Data.List.Lex
+import Data.Char
 
 #align_import data.string.basic from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 

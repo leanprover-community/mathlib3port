@@ -3,7 +3,7 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 -/
-import Mathbin.Data.Set.Basic
+import Data.Set.Basic
 
 #align_import data.set.image from "leanprover-community/mathlib"@"001ffdc42920050657fd45bd2b8bfbec8eaaeb29"
 
@@ -1042,7 +1042,7 @@ theorem exists_subset_range_and_iff {f : α → β} {p : Set β → Prop} :
 #align set.exists_subset_range_and_iff Set.exists_subset_range_and_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
 #print Set.exists_subset_range_iff /-
 theorem exists_subset_range_iff {f : α → β} {p : Set β → Prop} :
     (∃ (s : _) (_ : s ⊆ range f), p s) ↔ ∃ s, p (f '' s) := by

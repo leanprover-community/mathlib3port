@@ -3,10 +3,10 @@ Copyright (c) 2020 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Algebra.Hom.Aut
-import Mathbin.Data.Zmod.Defs
-import Mathbin.Tactic.Group
+import Algebra.Hom.Equiv.Basic
+import Algebra.Hom.Aut
+import Data.Zmod.Defs
+import Tactic.Group
 
 #align_import algebra.quandle from "leanprover-community/mathlib"@"28aa996fc6fb4317f0083c4e6daf79878d81be33"
 

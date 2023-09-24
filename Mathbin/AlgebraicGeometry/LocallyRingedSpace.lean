@@ -3,8 +3,8 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.AlgebraicGeometry.RingedSpace
-import Mathbin.AlgebraicGeometry.Stalks
+import AlgebraicGeometry.RingedSpace
+import AlgebraicGeometry.Stalks
 
 #align_import algebraic_geometry.locally_ringed_space from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

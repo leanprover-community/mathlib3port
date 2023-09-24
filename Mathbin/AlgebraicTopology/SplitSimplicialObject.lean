@@ -3,8 +3,8 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.SimplicialObject
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
+import AlgebraicTopology.SimplicialObject
+import CategoryTheory.Limits.Shapes.FiniteProducts
 
 #align_import algebraic_topology.split_simplicial_object from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

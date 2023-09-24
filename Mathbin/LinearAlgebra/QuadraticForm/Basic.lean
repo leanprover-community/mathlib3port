@@ -3,10 +3,10 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 -/
-import Mathbin.Algebra.Invertible
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.Matrix.BilinearForm
-import Mathbin.LinearAlgebra.Matrix.Symmetric
+import Algebra.Invertible
+import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.BilinearForm
+import LinearAlgebra.Matrix.Symmetric
 
 #align_import linear_algebra.quadratic_form.basic from "leanprover-community/mathlib"@"d11f435d4e34a6cea0a1797d6b625b0c170be845"
 
@@ -1078,7 +1078,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
 #align quadratic_form.anisotropic QuadraticForm.Anisotropic
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print QuadraticForm.not_anisotropic_iff_exists /-
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) :
     ¬Anisotropic Q ↔ ∃ (x : _) (_ : x ≠ 0), Q x = 0 := by
@@ -1121,7 +1121,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoid M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print QuadraticForm.PosDef /-
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=

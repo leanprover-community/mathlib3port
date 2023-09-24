@@ -3,11 +3,11 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Arrow
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
-import Mathbin.CategoryTheory.Limits.Creates
-import Mathbin.CategoryTheory.Limits.Unit
-import Mathbin.CategoryTheory.StructuredArrow
+import CategoryTheory.Arrow
+import CategoryTheory.Limits.Constructions.EpiMono
+import CategoryTheory.Limits.Creates
+import CategoryTheory.Limits.Unit
+import CategoryTheory.StructuredArrow
 
 #align_import category_theory.limits.comma from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

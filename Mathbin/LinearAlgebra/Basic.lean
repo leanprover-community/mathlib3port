@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Frédéric Dupuis,
   Heather Macbeth
 -/
-import Mathbin.Algebra.BigOperators.Pi
-import Mathbin.Algebra.Module.Hom
-import Mathbin.Algebra.Module.Prod
-import Mathbin.Algebra.Module.Submodule.Lattice
-import Mathbin.Data.Dfinsupp.Basic
-import Mathbin.Data.Finsupp.Basic
+import Algebra.BigOperators.Pi
+import Algebra.Module.Hom
+import Algebra.Module.Prod
+import Algebra.Module.Submodule.Lattice
+import Data.Dfinsupp.Basic
+import Data.Finsupp.Basic
 
 #align_import linear_algebra.basic from "leanprover-community/mathlib"@"9d684a893c52e1d6692a504a118bfccbae04feeb"
 
@@ -1367,13 +1367,11 @@ section Finsupp
 
 variable {γ : Type _} [Zero γ]
 
-#print LinearMap.map_finsupp_sum /-
 @[simp]
 theorem map_finsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : ι →₀ γ} {g : ι → γ → M} :
     f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum
-#align linear_map.map_finsupp_sum LinearMap.map_finsupp_sum
--/
+#align linear_map.map_finsupp_sum map_finsupp_sumₓ
 
 #print LinearMap.coe_finsupp_sum /-
 theorem coe_finsupp_sum (t : ι →₀ γ) (g : ι → γ → M →ₛₗ[σ₁₂] M₂) :
@@ -1868,7 +1866,7 @@ theorem sub_mem_ker_iff {x y} : x - y ∈ ker f ↔ f x = f y := by rw [mem_ker,
 #align linear_map.sub_mem_ker_iff LinearMap.sub_mem_ker_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » p) -/
 #print LinearMap.disjoint_ker' /-
 theorem disjoint_ker' {p : Submodule R M} :
     Disjoint p (ker f) ↔ ∀ (x) (_ : x ∈ p) (y) (_ : y ∈ p), f x = f y → x = y :=
@@ -2378,12 +2376,14 @@ variable {τ₁₂ : R →+* R₂} {τ₂₁ : R₂ →+* R}
 
 variable [RingHomInvPair τ₁₂ τ₂₁] [RingHomInvPair τ₂₁ τ₁₂]
 
-#print LinearEquiv.map_finsupp_sum /-
+/- warning: linear_equiv.map_finsupp_sum clashes with linear_map.map_finsupp_sum -> map_finsupp_sumₓ
+Case conversion may be inaccurate. Consider using '#align linear_equiv.map_finsupp_sum map_finsupp_sumₓₓ'. -/
+#print map_finsupp_sumₓ /-
 @[simp]
 theorem map_finsupp_sum (f : M ≃ₛₗ[τ₁₂] M₂) {t : ι →₀ γ} {g : ι → γ → M} :
     f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum _
-#align linear_equiv.map_finsupp_sum LinearEquiv.map_finsupp_sum
+#align linear_equiv.map_finsupp_sum map_finsupp_sumₓ
 -/
 
 end Finsupp

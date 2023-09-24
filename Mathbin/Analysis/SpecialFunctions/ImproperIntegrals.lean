@@ -3,11 +3,11 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.Integrals
-import Mathbin.MeasureTheory.Group.Integration
-import Mathbin.MeasureTheory.Integral.ExpDecay
-import Mathbin.MeasureTheory.Integral.IntegralEqImproper
-import Mathbin.MeasureTheory.Measure.Lebesgue.Integral
+import Analysis.SpecialFunctions.Integrals
+import MeasureTheory.Group.Integration
+import MeasureTheory.Integral.ExpDecay
+import MeasureTheory.Integral.IntegralEqImproper
+import MeasureTheory.Measure.Lebesgue.Integral
 
 #align_import analysis.special_functions.improper_integrals from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

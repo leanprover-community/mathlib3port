@@ -3,9 +3,9 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.NumberTheory.LegendreSymbol.AddCharacter
-import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
-import Mathbin.Algebra.CharP.CharAndCard
+import NumberTheory.LegendreSymbol.AddCharacter
+import NumberTheory.LegendreSymbol.ZmodChar
+import Algebra.CharP.CharAndCard
 
 #align_import number_theory.legendre_symbol.gauss_sum from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

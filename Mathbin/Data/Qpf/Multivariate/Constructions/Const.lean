@@ -3,8 +3,8 @@ Copyright (c) 2020 Simon Hudon All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Control.Functor.Multivariate
-import Mathbin.Data.Qpf.Multivariate.Basic
+import Control.Functor.Multivariate
+import Data.Qpf.Multivariate.Basic
 
 #align_import data.qpf.multivariate.constructions.const from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

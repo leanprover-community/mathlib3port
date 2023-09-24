@@ -3,8 +3,8 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.NaturalIsomorphism
-import Mathbin.Logic.Equiv.Defs
+import CategoryTheory.NaturalIsomorphism
+import Logic.Equiv.Defs
 
 #align_import category_theory.functor.fully_faithful from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -55,7 +55,7 @@ class Full (F : C ⥤ D) where
 attribute [simp] full.witness
 
 #print CategoryTheory.Faithful /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_injective'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_injective'] [] -/
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.

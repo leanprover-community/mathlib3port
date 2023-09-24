@@ -3,10 +3,10 @@ Copyright (c) 2019 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Data.Setoid.Basic
-import Mathbin.GroupTheory.Submonoid.Operations
+import Algebra.Group.Prod
+import Algebra.Hom.Equiv.Basic
+import Data.Setoid.Basic
+import GroupTheory.Submonoid.Operations
 
 #align_import group_theory.congruence from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

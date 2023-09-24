@@ -3,11 +3,11 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Module.Basic
-import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+import Algebra.BigOperators.Basic
+import Algebra.Hom.Group
+import Algebra.Module.Basic
+import CategoryTheory.Endomorphism
+import CategoryTheory.Limits.Shapes.Kernels
 
 #align_import category_theory.preadditive.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

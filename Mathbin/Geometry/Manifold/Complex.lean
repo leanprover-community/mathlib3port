@@ -3,10 +3,10 @@ Copyright (c) 2022 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.Complex.AbsMax
-import Mathbin.Analysis.LocallyConvex.WithSeminorms
-import Mathbin.Geometry.Manifold.Mfderiv
-import Mathbin.Topology.LocallyConstant.Basic
+import Analysis.Complex.AbsMax
+import Analysis.LocallyConvex.WithSeminorms
+import Geometry.Manifold.Mfderiv
+import Topology.LocallyConstant.Basic
 
 #align_import geometry.manifold.complex from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

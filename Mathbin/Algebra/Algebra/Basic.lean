@@ -3,16 +3,16 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
-import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Module.Ulift
-import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.PunitInstances
-import Mathbin.Algebra.Ring.Aut
-import Mathbin.Algebra.Ring.Ulift
-import Mathbin.Algebra.CharZero.Lemmas
-import Mathbin.LinearAlgebra.Basic
-import Mathbin.RingTheory.Subring.Basic
-import Mathbin.Tactic.Abel
+import Algebra.Module.Basic
+import Algebra.Module.Ulift
+import Algebra.NeZero
+import Algebra.PunitInstances
+import Algebra.Ring.Aut
+import Algebra.Ring.Ulift
+import Algebra.CharZero.Lemmas
+import LinearAlgebra.Basic
+import RingTheory.Subring.Basic
+import Tactic.Abel
 
 #align_import algebra.algebra.basic from "leanprover-community/mathlib"@"36b8aa61ea7c05727161f96a0532897bd72aedab"
 
@@ -105,7 +105,7 @@ open scoped BigOperators
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 

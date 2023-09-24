@@ -3,10 +3,10 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Order.RelIso.Set
-import Mathbin.Data.Fintype.Lattice
-import Mathbin.Data.Multiset.Sort
-import Mathbin.Data.List.NodupEquivFin
+import Order.RelIso.Set
+import Data.Fintype.Lattice
+import Data.Multiset.Sort
+import Data.List.NodupEquivFin
 
 #align_import data.finset.sort from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

@@ -3,14 +3,14 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.FderivMeasurable
-import Mathbin.Analysis.Calculus.Deriv.Comp
-import Mathbin.Analysis.Calculus.Deriv.Add
-import Mathbin.Analysis.Calculus.Deriv.Slope
-import Mathbin.Analysis.Calculus.Deriv.Mul
-import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.MeasureTheory.Integral.VitaliCaratheodory
+import Analysis.Calculus.FderivMeasurable
+import Analysis.Calculus.Deriv.Comp
+import Analysis.Calculus.Deriv.Add
+import Analysis.Calculus.Deriv.Slope
+import Analysis.Calculus.Deriv.Mul
+import Analysis.NormedSpace.Dual
+import MeasureTheory.Integral.IntervalIntegral
+import MeasureTheory.Integral.VitaliCaratheodory
 
 #align_import measure_theory.integral.fund_thm_calculus from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
@@ -946,7 +946,7 @@ theorem integral_hasFDerivWithinAt (hf : IntervalIntegrable f volume a b)
 #align interval_integral.integral_has_fderiv_within_at intervalIntegral.integral_hasFDerivWithinAt
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic closing goals `unique_diff_within_at ℝ s a` where
 `s ∈ {Iic a, Ici a, univ}`. -/
 unsafe def unique_diff_within_at_Ici_Iic_univ : tactic Unit :=

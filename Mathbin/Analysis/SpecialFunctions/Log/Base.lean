@@ -3,8 +3,8 @@ Copyright (c) 2022 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey, Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
-import Mathbin.Data.Int.Log
+import Analysis.SpecialFunctions.Pow.Real
+import Data.Int.Log
 
 #align_import analysis.special_functions.log.base from "leanprover-community/mathlib"@"f23a09ce6d3f367220dc3cecad6b7eb69eb01690"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Functorial
-import Mathbin.CategoryTheory.Monoidal.FunctorCategory
-import Mathbin.CategoryTheory.Limits.HasLimits
+import CategoryTheory.Monoidal.Functorial
+import CategoryTheory.Monoidal.FunctorCategory
+import CategoryTheory.Limits.HasLimits
 
 #align_import category_theory.monoidal.limits from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

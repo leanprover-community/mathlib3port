@@ -3,11 +3,11 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 -/
-import Mathbin.Tactic.ToAdditive
-import Mathbin.Tactic.Lint.Frontend
-import Mathbin.Tactic.Lint.Misc
-import Mathbin.Tactic.Lint.Simp
-import Mathbin.Tactic.Lint.TypeClasses
+import Tactic.ToAdditive
+import Tactic.Lint.Frontend
+import Tactic.Lint.Misc
+import Tactic.Lint.Simp
+import Tactic.Lint.TypeClasses
 
 #align_import tactic.lint.default from "leanprover-community/mathlib"@"159e1e20a319952da3541c20c230ae0111df7ae7"
 

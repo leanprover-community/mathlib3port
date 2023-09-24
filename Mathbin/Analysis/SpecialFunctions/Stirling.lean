@@ -3,8 +3,8 @@ Copyright (c) 2022. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Firsching, Fabian Kruse, Nikolas Kuhn
 -/
-import Mathbin.Analysis.PSeries
-import Mathbin.Data.Real.Pi.Wallis
+import Analysis.PSeries
+import Data.Real.Pi.Wallis
 
 #align_import analysis.special_functions.stirling from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

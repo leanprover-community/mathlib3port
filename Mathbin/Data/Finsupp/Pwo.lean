@@ -3,8 +3,8 @@ Copyright (c) 2022 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
-import Mathbin.Data.Finsupp.Order
-import Mathbin.Order.WellFoundedSet
+import Data.Finsupp.Order
+import Order.WellFoundedSet
 
 #align_import data.finsupp.pwo from "leanprover-community/mathlib"@"f16e7a22e11fc09c71f25446ac1db23a24e8a0bd"
 

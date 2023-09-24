@@ -3,11 +3,11 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.SetTheory.Cardinal.Basic
-import Mathbin.Topology.MetricSpace.Closeds
-import Mathbin.Topology.MetricSpace.Completion
-import Mathbin.Topology.MetricSpace.GromovHausdorffRealized
-import Mathbin.Topology.MetricSpace.Kuratowski
+import SetTheory.Cardinal.Basic
+import Topology.MetricSpace.Closeds
+import Topology.MetricSpace.Completion
+import Topology.MetricSpace.GromovHausdorffRealized
+import Topology.MetricSpace.Kuratowski
 
 #align_import topology.metric_space.gromov_hausdorff from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

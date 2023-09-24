@@ -3,14 +3,14 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Prod.Tprod
-import Mathbin.GroupTheory.Coset
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Logic.Lemmas
-import Mathbin.MeasureTheory.MeasurableSpaceDef
-import Mathbin.Order.Filter.SmallSets
-import Mathbin.Order.LiminfLimsup
-import Mathbin.MeasureTheory.Tactic
+import Data.Prod.Tprod
+import GroupTheory.Coset
+import Logic.Equiv.Fin
+import Logic.Lemmas
+import MeasureTheory.MeasurableSpaceDef
+import Order.Filter.SmallSets
+import Order.LiminfLimsup
+import MeasureTheory.Tactic
 
 #align_import measure_theory.measurable_space from "leanprover-community/mathlib"@"001ffdc42920050657fd45bd2b8bfbec8eaaeb29"
 

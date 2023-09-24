@@ -3,8 +3,8 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Analysis.Convex.Basic
-import Mathbin.Topology.Algebra.Order.Group
+import Analysis.Convex.Basic
+import Topology.Algebra.Order.Group
 
 #align_import analysis.convex.strict from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

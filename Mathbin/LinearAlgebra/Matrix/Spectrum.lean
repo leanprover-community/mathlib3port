@@ -3,8 +3,8 @@ Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.Analysis.InnerProductSpace.Spectrum
-import Mathbin.LinearAlgebra.Matrix.Hermitian
+import Analysis.InnerProductSpace.Spectrum
+import LinearAlgebra.Matrix.Hermitian
 
 #align_import linear_algebra.matrix.spectrum from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Damiano Testa
 -/
-import Mathbin.Tactic.Interactive
+import Tactic.Interactive
 
 #align_import tactic.congrm from "leanprover-community/mathlib"@"e985d48324225202b17a7f9eb50b29ba09b77b44"
 

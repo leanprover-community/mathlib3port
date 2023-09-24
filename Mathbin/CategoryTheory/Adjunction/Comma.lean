@@ -3,9 +3,9 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Punit
-import Mathbin.CategoryTheory.StructuredArrow
+import CategoryTheory.Adjunction.Basic
+import CategoryTheory.Punit
+import CategoryTheory.StructuredArrow
 
 #align_import category_theory.adjunction.comma from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

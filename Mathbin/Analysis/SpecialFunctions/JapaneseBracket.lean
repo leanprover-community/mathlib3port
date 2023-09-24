@@ -3,8 +3,8 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathbin.MeasureTheory.Integral.Layercake
+import MeasureTheory.Measure.Lebesgue.EqHaar
+import MeasureTheory.Integral.Layercake
 
 #align_import analysis.special_functions.japanese_bracket from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

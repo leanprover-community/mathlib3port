@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Topology.ContinuousFunction.Basic
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.hom.open from "leanprover-community/mathlib"@"ad0089aca372256fe53dde13ca0dfea569bf5ac7"
 

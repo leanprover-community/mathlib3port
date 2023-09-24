@@ -3,8 +3,8 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 -/
-import Mathbin.Geometry.Manifold.Mfderiv
-import Mathbin.Geometry.Manifold.ContMdiffMap
+import Geometry.Manifold.Mfderiv
+import Geometry.Manifold.ContMdiffMap
 
 #align_import geometry.manifold.cont_mdiff_mfderiv from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

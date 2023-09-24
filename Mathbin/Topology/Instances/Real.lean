@@ -3,17 +3,17 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Topology.MetricSpace.Basic
-import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Topology.Algebra.UniformMulAction
-import Mathbin.Topology.Algebra.Ring.Basic
-import Mathbin.Topology.Algebra.Star
-import Mathbin.Topology.Algebra.Order.Field
-import Mathbin.RingTheory.Subring.Basic
-import Mathbin.GroupTheory.Archimedean
-import Mathbin.Algebra.Order.Group.Bounds
-import Mathbin.Algebra.Periodic
-import Mathbin.Topology.Instances.Int
+import Topology.MetricSpace.Basic
+import Topology.Algebra.UniformGroup
+import Topology.Algebra.UniformMulAction
+import Topology.Algebra.Ring.Basic
+import Topology.Algebra.Star
+import Topology.Algebra.Order.Field
+import RingTheory.Subring.Basic
+import GroupTheory.Archimedean
+import Algebra.Order.Group.Bounds
+import Algebra.Periodic
+import Topology.Instances.Int
 
 #align_import topology.instances.real from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

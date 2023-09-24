@@ -3,9 +3,9 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Probability.Notation
-import Mathbin.Probability.Independence.Basic
-import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
+import Probability.Notation
+import Probability.Independence.Basic
+import MeasureTheory.Function.ConditionalExpectation.Basic
 
 #align_import probability.conditional_expectation from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

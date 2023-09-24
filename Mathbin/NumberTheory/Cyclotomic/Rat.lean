@@ -3,8 +3,8 @@ Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.NumberTheory.Cyclotomic.Discriminant
-import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
+import NumberTheory.Cyclotomic.Discriminant
+import RingTheory.Polynomial.Eisenstein.IsIntegral
 
 #align_import number_theory.cyclotomic.rat from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

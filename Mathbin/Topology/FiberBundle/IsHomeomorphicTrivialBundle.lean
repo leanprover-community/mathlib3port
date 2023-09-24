@@ -3,7 +3,7 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Topology.Homeomorph
+import Topology.Homeomorph
 
 #align_import topology.fiber_bundle.is_homeomorphic_trivial_bundle from "leanprover-community/mathlib"@"be2c24f56783935652cefffb4bfca7e4b25d167e"
 

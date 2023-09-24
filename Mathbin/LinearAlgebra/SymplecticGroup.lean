@@ -3,7 +3,7 @@ Copyright (c) 2022 Matej Penciak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matej Penciak, Moritz Doll, Fabien Clery
 -/
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
+import LinearAlgebra.Matrix.NonsingularInverse
 
 #align_import linear_algebra.symplectic_group from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

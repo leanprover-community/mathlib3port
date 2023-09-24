@@ -3,11 +3,11 @@ Copyright (c) 2015 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 -/
-import Mathbin.Algebra.Invertible
-import Mathbin.Algebra.GroupPower.Ring
-import Mathbin.Algebra.Order.Monoid.WithTop
-import Mathbin.Data.Nat.Pow
-import Mathbin.Data.Int.Cast.Lemmas
+import Algebra.Invertible
+import Algebra.GroupPower.Ring
+import Algebra.Order.Monoid.WithTop
+import Data.Nat.Pow
+import Data.Int.Cast.Lemmas
 
 #align_import algebra.group_power.lemmas from "leanprover-community/mathlib"@"a07d750983b94c530ab69a726862c2ab6802b38c"
 

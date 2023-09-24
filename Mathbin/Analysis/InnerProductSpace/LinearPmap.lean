@@ -3,9 +3,9 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.Analysis.InnerProductSpace.Adjoint
-import Mathbin.Topology.Algebra.Module.LinearPmap
-import Mathbin.Topology.Algebra.Module.Basic
+import Analysis.InnerProductSpace.Adjoint
+import Topology.Algebra.Module.LinearPmap
+import Topology.Algebra.Module.Basic
 
 #align_import analysis.inner_product_space.linear_pmap from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

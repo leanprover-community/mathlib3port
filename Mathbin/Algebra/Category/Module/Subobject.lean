@@ -3,10 +3,10 @@ Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.Algebra.Category.Module.EpiMono
-import Mathbin.Algebra.Category.Module.Kernels
-import Mathbin.CategoryTheory.Subobject.WellPowered
-import Mathbin.CategoryTheory.Subobject.Limits
+import Algebra.Category.Module.EpiMono
+import Algebra.Category.Module.Kernels
+import CategoryTheory.Subobject.WellPowered
+import CategoryTheory.Subobject.Limits
 
 #align_import algebra.category.Module.subobject from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

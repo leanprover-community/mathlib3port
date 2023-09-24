@@ -3,9 +3,9 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Functor.Flat
-import Mathbin.CategoryTheory.Sites.Sheaf
-import Mathbin.Tactic.ApplyFun
+import CategoryTheory.Functor.Flat
+import CategoryTheory.Sites.Sheaf
+import Tactic.ApplyFun
 
 #align_import category_theory.sites.cover_preserving from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

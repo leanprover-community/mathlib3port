@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Calculus.Inverse
-import Mathbin.Analysis.NormedSpace.Complemented
+import Analysis.Calculus.Inverse
+import Analysis.NormedSpace.Complemented
 
 #align_import analysis.calculus.implicit from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

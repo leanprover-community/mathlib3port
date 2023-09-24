@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.Dynamics.PeriodicPts
+import Data.Polynomial.RingDivision
+import Dynamics.PeriodicPts
 
 #align_import imo.imo2006_q5 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

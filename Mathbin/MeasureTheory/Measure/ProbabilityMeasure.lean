@@ -3,8 +3,8 @@ Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathbin.MeasureTheory.Measure.FiniteMeasure
-import Mathbin.MeasureTheory.Integral.Average
+import MeasureTheory.Measure.FiniteMeasure
+import MeasureTheory.Integral.Average
 
 #align_import measure_theory.measure.probability_measure from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

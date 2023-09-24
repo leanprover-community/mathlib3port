@@ -3,9 +3,9 @@ Copyright (c) 2020 Kyle Miller All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Finset.Prod
-import Mathbin.Data.Sym.Basic
-import Mathbin.Data.SetLike.Basic
+import Data.Finset.Prod
+import Data.Sym.Basic
+import Data.SetLike.Basic
 import Mathbin.Tactic.Linarith.Default
 
 #align_import data.sym.sym2 from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"

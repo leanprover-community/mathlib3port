@@ -3,11 +3,11 @@ Copyright (c) 2022 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathbin.Analysis.Analytic.Basic
-import Mathbin.Analysis.Calculus.Dslope
-import Mathbin.Analysis.Calculus.FderivAnalytic
-import Mathbin.Analysis.Calculus.FormalMultilinearSeries
-import Mathbin.Analysis.Analytic.Uniqueness
+import Analysis.Analytic.Basic
+import Analysis.Calculus.Dslope
+import Analysis.Calculus.FderivAnalytic
+import Analysis.Calculus.FormalMultilinearSeries
+import Analysis.Analytic.Uniqueness
 
 #align_import analysis.analytic.isolated_zeros from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

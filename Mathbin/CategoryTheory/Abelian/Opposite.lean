@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Abelian.Basic
-import Mathbin.CategoryTheory.Preadditive.Opposite
-import Mathbin.CategoryTheory.Limits.Opposites
+import CategoryTheory.Abelian.Basic
+import CategoryTheory.Preadditive.Opposite
+import CategoryTheory.Limits.Opposites
 
 #align_import category_theory.abelian.opposite from "leanprover-community/mathlib"@"a5ff45a1c92c278b03b52459a620cfd9c49ebc80"
 

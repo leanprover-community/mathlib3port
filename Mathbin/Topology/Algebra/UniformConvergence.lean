@@ -3,9 +3,9 @@ Copyright (c) 2022 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Topology.UniformSpace.UniformConvergenceTopology
-import Mathbin.Analysis.LocallyConvex.Bounded
-import Mathbin.Topology.Algebra.FilterBasis
+import Topology.UniformSpace.UniformConvergenceTopology
+import Analysis.LocallyConvex.Bounded
+import Topology.Algebra.FilterBasis
 
 #align_import topology.algebra.uniform_convergence from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

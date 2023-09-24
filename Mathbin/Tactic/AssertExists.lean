@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Tactic.Lint.Basic
+import Tactic.Core
+import Tactic.Lint.Basic
 
 #align_import tactic.assert_exists from "leanprover-community/mathlib"@"90367774bb3afc7bdc1e9acbc770970042378306"
 

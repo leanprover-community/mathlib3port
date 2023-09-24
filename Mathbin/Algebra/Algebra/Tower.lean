@@ -3,8 +3,8 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 -/
-import Mathbin.Algebra.Algebra.Equiv
-import Mathbin.LinearAlgebra.Span
+import Algebra.Algebra.Equiv
+import LinearAlgebra.Span
 
 #align_import algebra.algebra.tower from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Yuyang Zhao
 -/
-import Mathbin.Algebra.CovariantAndContravariant
-import Mathbin.Algebra.GroupWithZero.Defs
+import Algebra.CovariantAndContravariant
+import Algebra.GroupWithZero.Defs
 
 #align_import algebra.order.ring.lemmas from "leanprover-community/mathlib"@"44e29dbcff83ba7114a464d592b8c3743987c1e5"
 

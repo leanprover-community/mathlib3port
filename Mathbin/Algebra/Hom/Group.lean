@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
   Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.Group.Basic
-import Mathbin.Algebra.GroupWithZero.Defs
-import Mathbin.Data.FunLike.Basic
+import Algebra.NeZero
+import Algebra.Group.Basic
+import Algebra.GroupWithZero.Defs
+import Data.FunLike.Basic
 
 #align_import algebra.hom.group from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

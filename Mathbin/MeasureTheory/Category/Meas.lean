@@ -3,10 +3,10 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.MeasureTheory.Measure.GiryMonad
-import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
-import Mathbin.CategoryTheory.Monad.Algebra
-import Mathbin.Topology.Category.Top.Basic
+import MeasureTheory.Measure.GiryMonad
+import CategoryTheory.ConcreteCategory.UnbundledHom
+import CategoryTheory.Monad.Algebra
+import Topology.Category.Top.Basic
 
 #align_import measure_theory.category.Meas from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

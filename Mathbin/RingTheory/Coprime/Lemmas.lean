@@ -3,10 +3,10 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 -/
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Data.Int.Gcd
-import Mathbin.RingTheory.Coprime.Basic
+import Algebra.BigOperators.Ring
+import Data.Fintype.Basic
+import Data.Int.Gcd
+import RingTheory.Coprime.Basic
 
 #align_import ring_theory.coprime.lemmas from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

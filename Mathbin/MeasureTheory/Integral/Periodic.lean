@@ -3,11 +3,11 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathbin.MeasureTheory.Measure.Haar.Quotient
-import Mathbin.MeasureTheory.Constructions.Polish
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Topology.Algebra.Order.Floor
+import MeasureTheory.Measure.Lebesgue.EqHaar
+import MeasureTheory.Measure.Haar.Quotient
+import MeasureTheory.Constructions.Polish
+import MeasureTheory.Integral.IntervalIntegral
+import Topology.Algebra.Order.Floor
 
 #align_import measure_theory.integral.periodic from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

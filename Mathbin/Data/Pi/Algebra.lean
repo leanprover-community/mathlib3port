@@ -3,14 +3,14 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 -/
-import Mathbin.Tactic.ToAdditive
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Logic.Unique
-import Mathbin.Tactic.Congr
-import Mathbin.Tactic.Simpa
-import Mathbin.Tactic.SplitIfs
-import Mathbin.Data.Sum.Basic
-import Mathbin.Data.Prod.Basic
+import Tactic.ToAdditive
+import Algebra.Group.Defs
+import Logic.Unique
+import Tactic.Congr
+import Tactic.Simpa
+import Tactic.SplitIfs
+import Data.Sum.Basic
+import Data.Prod.Basic
 
 #align_import data.pi.algebra from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

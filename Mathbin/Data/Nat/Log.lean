@@ -3,8 +3,8 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yaël Dillies
 -/
-import Mathbin.Data.Nat.Pow
-import Mathbin.Tactic.ByContra
+import Data.Nat.Pow
+import Tactic.ByContra
 
 #align_import data.nat.log from "leanprover-community/mathlib"@"55d224c38461be1e8e4363247dd110137c24a4ff"
 

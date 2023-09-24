@@ -3,9 +3,9 @@ Copyright (c) 2022 Alex J. Best. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
-import Mathbin.Algebra.Squarefree
-import Mathbin.Data.Zmod.Basic
-import Mathbin.RingTheory.Int.Basic
+import Algebra.Squarefree
+import Data.Zmod.Basic
+import RingTheory.Int.Basic
 
 #align_import ring_theory.zmod from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

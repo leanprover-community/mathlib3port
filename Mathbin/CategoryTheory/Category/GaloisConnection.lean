@@ -3,9 +3,9 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 -/
-import Mathbin.CategoryTheory.Category.Preorder
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.Order.GaloisConnection
+import CategoryTheory.Category.Preorder
+import CategoryTheory.Adjunction.Basic
+import Order.GaloisConnection
 
 #align_import category_theory.category.galois_connection from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

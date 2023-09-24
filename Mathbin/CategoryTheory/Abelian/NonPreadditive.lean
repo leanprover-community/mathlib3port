@@ -3,11 +3,11 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
-import Mathbin.CategoryTheory.Limits.Shapes.NormalMono.Equalizers
-import Mathbin.CategoryTheory.Abelian.Images
-import Mathbin.CategoryTheory.Preadditive.Basic
+import CategoryTheory.Limits.Shapes.FiniteProducts
+import CategoryTheory.Limits.Shapes.Kernels
+import CategoryTheory.Limits.Shapes.NormalMono.Equalizers
+import CategoryTheory.Abelian.Images
+import CategoryTheory.Preadditive.Basic
 
 #align_import category_theory.abelian.non_preadditive from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -81,7 +81,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C,
 #align category_theory.non_preadditive_abelian CategoryTheory.NonPreadditiveAbelian
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option default_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object

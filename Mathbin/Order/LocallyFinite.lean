@@ -3,8 +3,8 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.Preimage
-import Mathbin.Data.Set.Intervals.UnorderedInterval
+import Data.Finset.Preimage
+import Data.Set.Intervals.UnorderedInterval
 
 #align_import order.locally_finite from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
 

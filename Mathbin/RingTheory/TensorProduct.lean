@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 -/
-import Mathbin.LinearAlgebra.FiniteDimensional
-import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.LinearAlgebra.DirectSum.Finsupp
+import LinearAlgebra.FiniteDimensional
+import RingTheory.Adjoin.Basic
+import LinearAlgebra.DirectSum.Finsupp
 
 #align_import ring_theory.tensor_product from "leanprover-community/mathlib"@"88fcdc3da43943f5b01925deddaa5bf0c0e85e4e"
 

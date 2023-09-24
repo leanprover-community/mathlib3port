@@ -3,8 +3,8 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Order.ConditionallyCompleteLattice.Basic
-import Mathbin.Algebra.Order.Group.TypeTags
+import Order.ConditionallyCompleteLattice.Basic
+import Algebra.Order.Group.TypeTags
 
 #align_import order.conditionally_complete_lattice.group from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

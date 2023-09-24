@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.Group.Defs
-import Mathbin.Algebra.Order.Monoid.Defs
-import Mathbin.Algebra.Order.Monoid.Units
+import Algebra.Order.Group.Defs
+import Algebra.Order.Monoid.Defs
+import Algebra.Order.Monoid.Units
 
 #align_import algebra.order.group.units from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

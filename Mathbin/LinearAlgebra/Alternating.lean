@@ -3,12 +3,12 @@ Copyright (c) 2020 Zhangir Azerbayev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 -/
-import Mathbin.GroupTheory.GroupAction.Quotient
-import Mathbin.GroupTheory.Perm.Sign
-import Mathbin.GroupTheory.Perm.Subgroup
-import Mathbin.LinearAlgebra.LinearIndependent
-import Mathbin.LinearAlgebra.Multilinear.Basis
-import Mathbin.LinearAlgebra.Multilinear.TensorProduct
+import GroupTheory.GroupAction.Quotient
+import GroupTheory.Perm.Sign
+import GroupTheory.Perm.Subgroup
+import LinearAlgebra.LinearIndependent
+import LinearAlgebra.Multilinear.Basis
+import LinearAlgebra.Multilinear.TensorProduct
 
 #align_import linear_algebra.alternating from "leanprover-community/mathlib"@"0c1d80f5a86b36c1db32e021e8d19ae7809d5b79"
 

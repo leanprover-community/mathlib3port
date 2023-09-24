@@ -3,17 +3,17 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 -/
-import Mathbin.Data.List.BigOperators.Basic
-import Mathbin.Algebra.Group.Opposite
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.GroupWithZero.Commute
-import Mathbin.Algebra.GroupWithZero.Divisibility
-import Mathbin.Algebra.Order.WithZero
-import Mathbin.Algebra.Ring.Basic
-import Mathbin.Algebra.Ring.Divisibility
-import Mathbin.Algebra.Ring.Commute
-import Mathbin.Data.Int.Units
-import Mathbin.Data.Set.Basic
+import Data.List.BigOperators.Basic
+import Algebra.Group.Opposite
+import Algebra.GroupPower.Basic
+import Algebra.GroupWithZero.Commute
+import Algebra.GroupWithZero.Divisibility
+import Algebra.Order.WithZero
+import Algebra.Ring.Basic
+import Algebra.Ring.Divisibility
+import Algebra.Ring.Commute
+import Data.Int.Units
+import Data.Set.Basic
 
 #align_import data.list.big_operators.lemmas from "leanprover-community/mathlib"@"f694c7dead66f5d4c80f446c796a5aad14707f0e"
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Algebra.Order.Floor
-import Mathbin.Topology.Algebra.Order.Group
+import Algebra.Order.Floor
+import Topology.Algebra.Order.Group
 
 #align_import topology.algebra.order.floor from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

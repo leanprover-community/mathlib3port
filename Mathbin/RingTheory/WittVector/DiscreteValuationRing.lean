@@ -3,10 +3,10 @@ Copyright (c) 2022 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth, Johan Commelin
 -/
-import Mathbin.RingTheory.WittVector.Domain
-import Mathbin.RingTheory.WittVector.MulCoeff
-import Mathbin.RingTheory.DiscreteValuationRing.Basic
-import Mathbin.Tactic.LinearCombination
+import RingTheory.WittVector.Domain
+import RingTheory.WittVector.MulCoeff
+import RingTheory.DiscreteValuationRing.Basic
+import Tactic.LinearCombination
 
 #align_import ring_theory.witt_vector.discrete_valuation_ring from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

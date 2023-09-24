@@ -3,9 +3,9 @@ Copyright (c) 2021 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Monoidal.Free.Basic
-import Mathbin.CategoryTheory.Groupoid
-import Mathbin.CategoryTheory.DiscreteCategory
+import CategoryTheory.Monoidal.Free.Basic
+import CategoryTheory.Groupoid
+import CategoryTheory.DiscreteCategory
 
 #align_import category_theory.monoidal.free.coherence from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

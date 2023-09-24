@@ -3,12 +3,12 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.MeasureTheory.Covering.VitaliFamily
-import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.MeasureTheory.Function.AeMeasurableOrder
-import Mathbin.MeasureTheory.Integral.Lebesgue
-import Mathbin.MeasureTheory.Integral.Average
-import Mathbin.MeasureTheory.Decomposition.Lebesgue
+import MeasureTheory.Covering.VitaliFamily
+import MeasureTheory.Measure.Regular
+import MeasureTheory.Function.AeMeasurableOrder
+import MeasureTheory.Integral.Lebesgue
+import MeasureTheory.Integral.Average
+import MeasureTheory.Decomposition.Lebesgue
 
 #align_import measure_theory.covering.differentiation from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

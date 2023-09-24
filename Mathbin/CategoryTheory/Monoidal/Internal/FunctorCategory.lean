@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.CommMon_
-import Mathbin.CategoryTheory.Monoidal.FunctorCategory
+import CategoryTheory.Monoidal.CommMon_
+import CategoryTheory.Monoidal.FunctorCategory
 
 #align_import category_theory.monoidal.internal.functor_category from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

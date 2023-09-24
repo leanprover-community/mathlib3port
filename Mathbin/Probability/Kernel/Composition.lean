@@ -3,7 +3,7 @@ Copyright (c) 2023 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Probability.Kernel.MeasurableIntegral
+import Probability.Kernel.MeasurableIntegral
 
 #align_import probability.kernel.composition from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

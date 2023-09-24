@@ -3,10 +3,10 @@ Copyright (c) 2022 Jon Eugster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 -/
-import Mathbin.Algebra.CharP.Algebra
-import Mathbin.Algebra.CharP.LocalRing
-import Mathbin.RingTheory.Ideal.Quotient
-import Mathbin.Tactic.FieldSimp
+import Algebra.CharP.Algebra
+import Algebra.CharP.LocalRing
+import RingTheory.Ideal.Quotient
+import Tactic.FieldSimp
 
 #align_import algebra.char_p.mixed_char_zero from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

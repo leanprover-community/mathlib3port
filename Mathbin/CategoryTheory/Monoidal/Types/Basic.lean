@@ -3,10 +3,10 @@ Copyright (c) 2018 Michael Jendrusch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Functor
-import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts.Basic
-import Mathbin.CategoryTheory.Limits.Shapes.Types
-import Mathbin.Logic.Equiv.Fin
+import CategoryTheory.Monoidal.Functor
+import CategoryTheory.Monoidal.OfChosenFiniteProducts.Basic
+import CategoryTheory.Limits.Shapes.Types
+import Logic.Equiv.Fin
 
 #align_import category_theory.monoidal.types.basic from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

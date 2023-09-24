@@ -3,8 +3,8 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathbin.MeasureTheory.Integral.Bochner
+import MeasureTheory.Measure.Lebesgue.EqHaar
+import MeasureTheory.Integral.Bochner
 
 #align_import measure_theory.measure.haar.normed_space from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

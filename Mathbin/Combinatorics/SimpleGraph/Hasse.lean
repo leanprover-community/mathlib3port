@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Combinatorics.SimpleGraph.Prod
-import Mathbin.Data.Fin.SuccPred
-import Mathbin.Order.SuccPred.Relation
+import Combinatorics.SimpleGraph.Prod
+import Data.Fin.SuccPred
+import Order.SuccPred.Relation
 
 #align_import combinatorics.simple_graph.hasse from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

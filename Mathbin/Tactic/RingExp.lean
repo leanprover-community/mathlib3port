@@ -3,8 +3,8 @@ Copyright (c) 2019 Tim Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
 -/
-import Mathbin.Tactic.NormNum
-import Mathbin.Control.Traversable.Basic
+import Tactic.NormNum
+import Control.Traversable.Basic
 
 #align_import tactic.ring_exp from "leanprover-community/mathlib"@"72e87ce0bf26144ceb122d280a43aa10f1d20abb"
 

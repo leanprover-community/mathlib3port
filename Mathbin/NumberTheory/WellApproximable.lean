@@ -3,8 +3,8 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Dynamics.Ergodic.AddCircle
-import Mathbin.MeasureTheory.Covering.LiminfLimsup
+import Dynamics.Ergodic.AddCircle
+import MeasureTheory.Covering.LiminfLimsup
 
 #align_import number_theory.well_approximable from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

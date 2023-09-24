@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Topology.LocalAtTarget
-import Mathbin.AlgebraicGeometry.Morphisms.Basic
+import Topology.LocalAtTarget
+import AlgebraicGeometry.Morphisms.Basic
 
 #align_import algebraic_geometry.morphisms.open_immersion from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

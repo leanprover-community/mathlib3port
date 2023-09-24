@@ -3,7 +3,7 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
+import MeasureTheory.Function.SimpleFuncDenseLp
 
 #align_import measure_theory.integral.set_to_l1 from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
@@ -173,7 +173,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
 #align measure_theory.fin_meas_additive.map_empty_eq_zero MeasureTheory.FinMeasAdditive.map_empty_eq_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
 #print MeasureTheory.FinMeasAdditive.map_iUnion_fin_meas_set_eq_sum /-
 theorem map_iUnion_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
     (h_add : FinMeasAdditive μ T) {ι} (S : ι → Set α) (sι : Finset ι)

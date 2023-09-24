@@ -3,8 +3,8 @@ Copyright (c) 2020 Eric Weiser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Weiser
 -/
-import Mathbin.Algebra.Star.Basic
-import Mathbin.Algebra.FreeAlgebra
+import Algebra.Star.Basic
+import Algebra.FreeAlgebra
 
 #align_import algebra.star.free from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

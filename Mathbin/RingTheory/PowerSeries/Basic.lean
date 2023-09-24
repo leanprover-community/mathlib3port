@@ -3,13 +3,13 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 -/
-import Mathbin.Data.Finsupp.Interval
-import Mathbin.Data.MvPolynomial.Basic
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.Polynomial.Coeff
-import Mathbin.LinearAlgebra.StdBasis
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Multiplicity
+import Data.Finsupp.Interval
+import Data.MvPolynomial.Basic
+import Data.Polynomial.AlgebraMap
+import Data.Polynomial.Coeff
+import LinearAlgebra.StdBasis
+import RingTheory.Ideal.LocalRing
+import RingTheory.Multiplicity
 import Mathbin.Tactic.Linarith.Default
 
 #align_import ring_theory.power_series.basic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"

@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.Data.MvPolynomial.Rename
-import Mathbin.RingTheory.Polynomial.Basic
-import Mathbin.Data.MvPolynomial.Polynomial
+import Data.Polynomial.RingDivision
+import Data.MvPolynomial.Rename
+import RingTheory.Polynomial.Basic
+import Data.MvPolynomial.Polynomial
 
 #align_import data.mv_polynomial.funext from "leanprover-community/mathlib"@"0b89934139d3be96f9dab477f10c20f9f93da580"
 

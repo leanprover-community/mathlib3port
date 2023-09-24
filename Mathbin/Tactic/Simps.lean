@@ -3,8 +3,8 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Tactic.Protected
-import Mathbin.Tactic.ToAdditive
+import Tactic.Protected
+import Tactic.ToAdditive
 
 #align_import tactic.simps from "leanprover-community/mathlib"@"e3d9ab8faa9dea8f78155c6c27d62a621f4c152d"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathbin.Dynamics.Ergodic.MeasurePreserving
-import Mathbin.Combinatorics.Pigeonhole
+import MeasureTheory.Constructions.BorelSpace.Basic
+import Dynamics.Ergodic.MeasurePreserving
+import Combinatorics.Pigeonhole
 
 #align_import dynamics.ergodic.conservative from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -54,7 +54,7 @@ namespace MeasureTheory
 open Measure
 
 #print MeasureTheory.Conservative /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m «expr ≠ » 0) -/
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/

@@ -3,10 +3,10 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Analysis.SpecificLimits.Basic
-import Mathbin.Data.Rat.Denumerable
-import Mathbin.Data.Set.Pointwise.Interval
-import Mathbin.SetTheory.Cardinal.Continuum
+import Analysis.SpecificLimits.Basic
+import Data.Rat.Denumerable
+import Data.Set.Pointwise.Interval
+import SetTheory.Cardinal.Continuum
 
 #align_import data.real.cardinality from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

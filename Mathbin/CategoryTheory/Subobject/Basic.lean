@@ -3,11 +3,11 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Subobject.MonoOver
-import Mathbin.CategoryTheory.Skeletal
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.Tactic.ApplyFun
-import Mathbin.Tactic.Elementwise
+import CategoryTheory.Subobject.MonoOver
+import CategoryTheory.Skeletal
+import CategoryTheory.ConcreteCategory.Basic
+import Tactic.ApplyFun
+import Tactic.Elementwise
 
 #align_import category_theory.subobject.basic from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

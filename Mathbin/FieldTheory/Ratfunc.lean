@@ -3,10 +3,10 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.RingTheory.EuclideanDomain
-import Mathbin.RingTheory.LaurentSeries
-import Mathbin.RingTheory.Localization.FractionRing
-import Mathbin.RingTheory.Polynomial.Content
+import RingTheory.EuclideanDomain
+import RingTheory.LaurentSeries
+import RingTheory.Localization.FractionRing
+import RingTheory.Polynomial.Content
 
 #align_import field_theory.ratfunc from "leanprover-community/mathlib"@"bf9bbbcf0c1c1ead18280b0d010e417b10abb1b6"
 
@@ -571,14 +571,14 @@ end Field
 
 section TacticInterlude
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 -- pre-porting note: should comm_ring be disabled here?
 /-- Solve equations for `ratfunc K` by working in `fraction_ring K[X]`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
 #align ratfunc.frac_tac ratfunc.frac_tac
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry

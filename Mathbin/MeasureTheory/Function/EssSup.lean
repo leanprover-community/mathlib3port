@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathbin.Order.Filter.Ennreal
+import MeasureTheory.Constructions.BorelSpace.Basic
+import Order.Filter.Ennreal
 
 #align_import measure_theory.function.ess_sup from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

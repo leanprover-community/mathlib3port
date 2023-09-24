@@ -3,9 +3,9 @@ Copyright (c) 2023 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Algebra.Star.Order
-import Mathbin.Data.Rat.Lemmas
-import Mathbin.GroupTheory.Submonoid.Membership
+import Algebra.Star.Order
+import Data.Rat.Lemmas
+import GroupTheory.Submonoid.Membership
 
 #align_import data.rat.star from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

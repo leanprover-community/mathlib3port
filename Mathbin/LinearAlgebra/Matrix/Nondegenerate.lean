@@ -3,9 +3,9 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Matrix.Basic
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.Matrix.Adjugate
+import Data.Matrix.Basic
+import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Adjugate
 
 #align_import linear_algebra.matrix.nondegenerate from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 

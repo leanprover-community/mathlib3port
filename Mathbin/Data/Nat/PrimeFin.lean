@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Data.Nat.Factors
-import Mathbin.Data.Set.Finite
+import Data.Nat.Factors
+import Data.Set.Finite
 
 #align_import data.nat.prime_fin from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Combinatorics.Quiver.Subquiver
-import Mathbin.Combinatorics.Quiver.Path
-import Mathbin.Combinatorics.Quiver.Symmetric
+import Combinatorics.Quiver.Subquiver
+import Combinatorics.Quiver.Path
+import Combinatorics.Quiver.Symmetric
 
 #align_import combinatorics.quiver.connected_component from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Chris Hughes All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
 -/
-import Mathbin.Analysis.Complex.Liouville
-import Mathbin.FieldTheory.IsAlgClosed.Basic
+import Analysis.Complex.Liouville
+import FieldTheory.IsAlgClosed.Basic
 
 #align_import analysis.complex.polynomial from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.MvPolynomial.Supported
-import Mathbin.RingTheory.Derivation.Basic
+import Data.MvPolynomial.Supported
+import RingTheory.Derivation.Basic
 
 #align_import data.mv_polynomial.derivation from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

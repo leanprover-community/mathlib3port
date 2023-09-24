@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Set.Function
-import Mathbin.Logic.Relation
-import Mathbin.Logic.Pairwise
+import Data.Set.Function
+import Logic.Relation
+import Logic.Pairwise
 
 #align_import data.set.pairwise.basic from "leanprover-community/mathlib"@"c4c2ed622f43768eff32608d4a0f8a6cec1c047d"
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Algebra.GeomSum
+import Data.Fintype.Basic
+import Algebra.GeomSum
 
 #align_import combinatorics.colex from "leanprover-community/mathlib"@"0a0ec35061ed9960bf0e7ffb0335f44447b58977"
 

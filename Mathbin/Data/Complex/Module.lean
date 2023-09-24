@@ -3,11 +3,11 @@ Copyright (c) 2020 Alexander Bentkamp, Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 -/
-import Mathbin.Algebra.Order.Smul
-import Mathbin.Data.Complex.Basic
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.FieldTheory.Tower
-import Mathbin.Algebra.CharP.Invertible
+import Algebra.Order.Smul
+import Data.Complex.Basic
+import Data.Fin.VecNotation
+import FieldTheory.Tower
+import Algebra.CharP.Invertible
 
 #align_import data.complex.module from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

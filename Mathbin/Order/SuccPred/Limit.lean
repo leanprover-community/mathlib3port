@@ -3,7 +3,7 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.Order.SuccPred.Basic
+import Order.SuccPred.Basic
 
 #align_import order.succ_pred.limit from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 

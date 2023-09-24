@@ -3,7 +3,7 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Tactic.Omega.EqElim
+import Tactic.Omega.EqElim
 
 #align_import tactic.omega.find_ees from "leanprover-community/mathlib"@"a0735864ba72769da4b378673d3dbe2453924fde"
 

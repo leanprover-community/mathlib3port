@@ -3,12 +3,12 @@ Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 -/
-import Mathbin.Analysis.Analytic.Basic
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.Analysis.Normed.Field.InfiniteSum
-import Mathbin.Data.Nat.Choose.Cast
-import Mathbin.Data.Finset.NoncommProd
-import Mathbin.Topology.Algebra.Algebra
+import Analysis.Analytic.Basic
+import Analysis.Complex.Basic
+import Analysis.Normed.Field.InfiniteSum
+import Data.Nat.Choose.Cast
+import Data.Finset.NoncommProd
+import Topology.Algebra.Algebra
 
 #align_import analysis.normed_space.exponential from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

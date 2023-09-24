@@ -3,9 +3,9 @@ Copyright (c) 2021 Henry Swanson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson, Patrick Massot
 -/
-import Mathbin.Analysis.SpecialFunctions.Exponential
-import Mathbin.Combinatorics.Derangements.Finite
-import Mathbin.Order.Filter.Basic
+import Analysis.SpecialFunctions.Exponential
+import Combinatorics.Derangements.Finite
+import Order.Filter.Basic
 
 #align_import combinatorics.derangements.exponential from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

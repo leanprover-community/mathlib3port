@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.RingTheory.WittVector.Truncated
-import Mathbin.RingTheory.WittVector.Identities
-import Mathbin.NumberTheory.Padics.RingHoms
+import RingTheory.WittVector.Truncated
+import RingTheory.WittVector.Identities
+import NumberTheory.Padics.RingHoms
 
 #align_import ring_theory.witt_vector.compare from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

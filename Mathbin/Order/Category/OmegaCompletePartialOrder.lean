@@ -3,11 +3,11 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Order.OmegaCompletePartialOrder
-import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
+import Order.OmegaCompletePartialOrder
+import CategoryTheory.Limits.Shapes.Products
+import CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import CategoryTheory.ConcreteCategory.BundledHom
 
 #align_import order.category.omega_complete_partial_order from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

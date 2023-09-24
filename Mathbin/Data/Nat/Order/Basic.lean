@@ -3,8 +3,8 @@ Copyright (c) 2014 Floris van Doorn (c) 2016 Microsoft Corporation. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Algebra.Order.Ring.Canonical
-import Mathbin.Data.Nat.Basic
+import Algebra.Order.Ring.Canonical
+import Data.Nat.Basic
 
 #align_import data.nat.order.basic from "leanprover-community/mathlib"@"3ed3f98a1e836241990d3d308f1577e434977130"
 
@@ -695,7 +695,7 @@ theorem div_eq_self : m / n = m ↔ m = 0 ∨ n = 1 :=
 #align nat.div_eq_self Nat.div_eq_self
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 #print Nat.div_eq_sub_mod_div /-
 theorem div_eq_sub_mod_div : m / n = (m - m % n) / n :=
   by

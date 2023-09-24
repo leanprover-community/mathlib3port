@@ -3,9 +3,9 @@ Copyright (c) 2021 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 -/
-import Mathbin.Analysis.NormedSpace.Exponential
-import Mathbin.Analysis.Calculus.FderivAnalytic
-import Mathbin.Topology.MetricSpace.CauSeqFilter
+import Analysis.NormedSpace.Exponential
+import Analysis.Calculus.FderivAnalytic
+import Topology.MetricSpace.CauSeqFilter
 
 #align_import analysis.special_functions.exponential from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Logic.Small.Basic
-import Mathbin.Data.Countable.Defs
+import Logic.Small.Basic
+import Data.Countable.Defs
 
 #align_import data.countable.small from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

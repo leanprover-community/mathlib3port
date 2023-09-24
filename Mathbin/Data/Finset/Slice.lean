@@ -3,9 +3,9 @@ Copyright (c) 2021 Bhavik Mehta, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Nat.Interval
-import Mathbin.Order.Antichain
+import Algebra.BigOperators.Basic
+import Data.Nat.Interval
+import Order.Antichain
 
 #align_import data.finset.slice from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

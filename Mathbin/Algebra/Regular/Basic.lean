@@ -3,9 +3,9 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.Group.Commute
-import Mathbin.Algebra.Order.Monoid.Lemmas
-import Mathbin.Algebra.GroupWithZero.Basic
+import Algebra.Group.Commute
+import Algebra.Order.Monoid.Lemmas
+import Algebra.GroupWithZero.Basic
 
 #align_import algebra.regular.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.GroupTheory.Subgroup.Pointwise
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.Algebra.Group.Pi
+import GroupTheory.Subgroup.Pointwise
+import GroupTheory.QuotientGroup
+import Algebra.Group.Pi
 
 #align_import group_theory.divisible from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 

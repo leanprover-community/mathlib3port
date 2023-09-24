@@ -3,7 +3,7 @@ Copyright (c) 2023 Felix Weilacher. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Felix Weilacher
 -/
-import Mathbin.Topology.MetricSpace.PiNat
+import Topology.MetricSpace.PiNat
 
 #align_import topology.metric_space.cantor_scheme from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 
@@ -156,7 +156,7 @@ def VanishingDiam : Prop :=
 
 variable {A}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
 #print CantorScheme.VanishingDiam.dist_lt /-
 theorem VanishingDiam.dist_lt (hA : VanishingDiam A) (ε : ℝ) (ε_pos : 0 < ε) (x : ℕ → β) :
     ∃ n : ℕ, ∀ (y) (_ : y ∈ A (res x n)) (z) (_ : z ∈ A (res x n)), dist y z < ε :=

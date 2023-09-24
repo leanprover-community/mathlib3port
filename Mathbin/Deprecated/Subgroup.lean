@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario Carneiro,
   Michael Howes
 -/
-import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.Deprecated.Submonoid
+import GroupTheory.Subgroup.Basic
+import Deprecated.Submonoid
 
 #align_import deprecated.subgroup from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

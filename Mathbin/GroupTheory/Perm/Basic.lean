@@ -3,10 +3,10 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Logic.Equiv.Set
+import Algebra.Group.Pi
+import Algebra.Group.Prod
+import Algebra.Hom.Iterate
+import Logic.Equiv.Set
 
 #align_import group_theory.perm.basic from "leanprover-community/mathlib"@"b86832321b586c6ac23ef8cdef6a7a27e42b13bd"
 

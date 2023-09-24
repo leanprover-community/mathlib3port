@@ -3,10 +3,10 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Adjunction.FullyFaithful
-import Mathbin.CategoryTheory.Sites.Plus
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
-import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+import CategoryTheory.Adjunction.FullyFaithful
+import CategoryTheory.Sites.Plus
+import CategoryTheory.Limits.ConcreteCategory
+import CategoryTheory.ConcreteCategory.Elementwise
 
 #align_import category_theory.sites.sheafification from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

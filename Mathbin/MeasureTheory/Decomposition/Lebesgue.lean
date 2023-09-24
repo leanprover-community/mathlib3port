@@ -3,11 +3,11 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Measure.Complex
-import Mathbin.MeasureTheory.Measure.Sub
-import Mathbin.MeasureTheory.Decomposition.Jordan
-import Mathbin.MeasureTheory.Measure.WithDensityVectorMeasure
-import Mathbin.MeasureTheory.Function.AeEqOfIntegral
+import MeasureTheory.Measure.Complex
+import MeasureTheory.Measure.Sub
+import MeasureTheory.Decomposition.Jordan
+import MeasureTheory.Measure.WithDensityVectorMeasure
+import MeasureTheory.Function.AeEqOfIntegral
 
 #align_import measure_theory.decomposition.lebesgue from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

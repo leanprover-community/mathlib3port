@@ -3,8 +3,8 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 -/
-import Mathbin.Data.Pfunctor.Multivariate.W
-import Mathbin.Data.Qpf.Multivariate.Basic
+import Data.Pfunctor.Multivariate.W
+import Data.Qpf.Multivariate.Basic
 
 #align_import data.qpf.multivariate.constructions.fix from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 

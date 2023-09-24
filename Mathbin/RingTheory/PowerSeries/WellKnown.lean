@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.RingTheory.PowerSeries.Basic
-import Mathbin.Data.Nat.Parity
-import Mathbin.Algebra.BigOperators.NatAntidiagonal
+import RingTheory.PowerSeries.Basic
+import Data.Nat.Parity
+import Algebra.BigOperators.NatAntidiagonal
 
 #align_import ring_theory.power_series.well_known from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.Star.Basic
-import Mathbin.Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.Star.Basic
+import Analysis.NormedSpace.OperatorNorm
 
 #align_import analysis.normed_space.star.mul from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

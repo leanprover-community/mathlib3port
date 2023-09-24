@@ -3,7 +3,7 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.lint.basic from "leanprover-community/mathlib"@"8f6fd1b69096c6a587f745d354306c0d46396915"
 

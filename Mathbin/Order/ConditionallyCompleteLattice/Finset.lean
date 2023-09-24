@@ -3,8 +3,8 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Order.ConditionallyCompleteLattice.Basic
-import Mathbin.Data.Set.Finite
+import Order.ConditionallyCompleteLattice.Basic
+import Data.Set.Finite
 
 #align_import order.conditionally_complete_lattice.finset from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

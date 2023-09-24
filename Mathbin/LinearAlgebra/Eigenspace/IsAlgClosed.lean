@@ -3,8 +3,8 @@ Copyright (c) 2020 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.LinearAlgebra.Eigenspace.Basic
-import Mathbin.FieldTheory.IsAlgClosed.Spectrum
+import LinearAlgebra.Eigenspace.Basic
+import FieldTheory.IsAlgClosed.Spectrum
 
 #align_import linear_algebra.eigenspace.is_alg_closed from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

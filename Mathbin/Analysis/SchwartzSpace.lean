@@ -3,13 +3,13 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.Analysis.Calculus.ContDiff
-import Mathbin.Analysis.Calculus.IteratedDeriv
-import Mathbin.Analysis.LocallyConvex.WithSeminorms
-import Mathbin.Topology.Algebra.UniformFilterBasis
-import Mathbin.Topology.ContinuousFunction.Bounded
-import Mathbin.Tactic.Positivity
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
+import Analysis.Calculus.ContDiff
+import Analysis.Calculus.IteratedDeriv
+import Analysis.LocallyConvex.WithSeminorms
+import Topology.Algebra.UniformFilterBasis
+import Topology.ContinuousFunction.Bounded
+import Tactic.Positivity
+import Analysis.SpecialFunctions.Pow.Real
 
 #align_import analysis.schwartz_space from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

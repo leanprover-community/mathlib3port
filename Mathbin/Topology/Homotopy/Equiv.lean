@@ -3,7 +3,7 @@ Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.Topology.Homotopy.Basic
+import Topology.Homotopy.Basic
 
 #align_import topology.homotopy.equiv from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

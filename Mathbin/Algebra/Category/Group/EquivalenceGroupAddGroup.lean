@@ -3,8 +3,8 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Mathbin.Algebra.Category.Group.Basic
-import Mathbin.Algebra.Hom.Equiv.TypeTags
+import Algebra.Category.Group.Basic
+import Algebra.Hom.Equiv.TypeTags
 
 #align_import algebra.category.Group.equivalence_Group_AddGroup from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

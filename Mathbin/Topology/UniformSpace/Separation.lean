@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 -/
-import Mathbin.Tactic.ApplyFun
-import Mathbin.Topology.UniformSpace.Basic
-import Mathbin.Topology.Separation
+import Tactic.ApplyFun
+import Topology.UniformSpace.Basic
+import Topology.Separation
 
 #align_import topology.uniform_space.separation from "leanprover-community/mathlib"@"0c1f285a9f6e608ae2bdffa3f993eafb01eba829"
 
@@ -76,7 +76,7 @@ open scoped Classical Topology uniformity Filter
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 universe u v w

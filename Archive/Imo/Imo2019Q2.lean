@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Geometry.Euclidean.Angle.Sphere
-import Mathbin.Geometry.Euclidean.Sphere.SecondInter
+import Geometry.Euclidean.Angle.Sphere
+import Geometry.Euclidean.Sphere.SecondInter
 
 #align_import imo.imo2019_q2 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

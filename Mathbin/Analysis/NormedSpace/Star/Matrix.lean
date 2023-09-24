@@ -3,10 +3,10 @@ Copyright (c) 2022 Hans Parshall. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hans Parshall
 -/
-import Mathbin.Analysis.Matrix
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Data.IsROrC.Basic
-import Mathbin.LinearAlgebra.UnitaryGroup
+import Analysis.Matrix
+import Analysis.NormedSpace.Basic
+import Data.IsROrC.Basic
+import LinearAlgebra.UnitaryGroup
 
 #align_import analysis.normed_space.star.matrix from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

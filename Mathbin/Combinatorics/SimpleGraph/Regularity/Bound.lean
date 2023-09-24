@@ -3,9 +3,9 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Algebra.Order.Chebyshev
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
-import Mathbin.Order.Partition.Equipartition
+import Algebra.Order.Chebyshev
+import Analysis.SpecialFunctions.Pow.Real
+import Order.Partition.Equipartition
 
 #align_import combinatorics.simple_graph.regularity.bound from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

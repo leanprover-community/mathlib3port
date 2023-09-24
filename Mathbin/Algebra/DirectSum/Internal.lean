@@ -3,9 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 -/
-import Mathbin.Algebra.Algebra.Operations
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.DirectSum.Algebra
+import Algebra.Algebra.Operations
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.DirectSum.Algebra
 
 #align_import algebra.direct_sum.internal from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

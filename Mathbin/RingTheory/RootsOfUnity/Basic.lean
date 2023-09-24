@@ -3,16 +3,16 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.CharP.Two
-import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.GcdMonoid.IntegrallyClosed
-import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.FieldTheory.Separable
-import Mathbin.GroupTheory.SpecificGroups.Cyclic
-import Mathbin.NumberTheory.Divisors
-import Mathbin.RingTheory.IntegralDomain
-import Mathbin.Tactic.Zify
+import Algebra.CharP.Two
+import Algebra.NeZero
+import Algebra.GcdMonoid.IntegrallyClosed
+import Data.Polynomial.RingDivision
+import FieldTheory.Finite.Basic
+import FieldTheory.Separable
+import GroupTheory.SpecificGroups.Cyclic
+import NumberTheory.Divisors
+import RingTheory.IntegralDomain
+import Tactic.Zify
 
 #align_import ring_theory.roots_of_unity.basic from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
@@ -520,7 +520,7 @@ theorem pow_of_prime (h : IsPrimitiveRoot ζ k) {p : ℕ} (hprime : Nat.Prime p)
 #align is_primitive_root.pow_of_prime IsPrimitiveRoot.pow_of_prime
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 #print IsPrimitiveRoot.pow_iff_coprime /-
 theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) :
     IsPrimitiveRoot (ζ ^ i) k ↔ i.Coprime k :=
@@ -1138,7 +1138,7 @@ section Automorphisms
 variable {S} [CommRing S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitiveRoot μ n) (R) [CommRing R]
   [Algebra R S]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 #print IsPrimitiveRoot.autToPow /-
 /-- The `monoid_hom` that takes an automorphism to the power of μ that μ gets mapped to under it. -/
 noncomputable def autToPow : (S ≃ₐ[R] S) →* (ZMod n)ˣ :=

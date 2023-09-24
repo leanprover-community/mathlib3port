@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Logic.Equiv.Set
-import Mathbin.Order.RelIso.Set
-import Mathbin.Order.WellFounded
+import Logic.Equiv.Set
+import Order.RelIso.Set
+import Order.WellFounded
 
 #align_import order.initial_seg from "leanprover-community/mathlib"@"8ea5598db6caeddde6cb734aa179cc2408dbd345"
 

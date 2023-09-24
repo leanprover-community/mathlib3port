@@ -3,10 +3,10 @@ Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 -/
-import Mathbin.Logic.Basic
-import Mathbin.Tactic.Cache
-import Mathbin.Data.Rbmap.Basic
-import Mathbin.Data.Rbtree.DefaultLt
+import Logic.Basic
+import Tactic.Cache
+import Data.Rbmap.Basic
+import Data.Rbtree.DefaultLt
 
 #align_import data.list.defs from "leanprover-community/mathlib"@"d2d8742b0c21426362a9dacebc6005db895ca963"
 

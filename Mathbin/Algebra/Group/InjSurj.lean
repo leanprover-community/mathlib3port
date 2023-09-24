@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Logic.Function.Basic
-import Mathbin.Data.Int.Cast.Basic
+import Algebra.Group.Defs
+import Logic.Function.Basic
+import Data.Int.Cast.Basic
 
 #align_import algebra.group.inj_surj from "leanprover-community/mathlib"@"d23418e009d2bc37f9e1047ecaa229790b7356be"
 

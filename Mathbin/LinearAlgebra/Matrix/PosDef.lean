@@ -3,8 +3,8 @@ Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.LinearAlgebra.Matrix.Spectrum
-import Mathbin.LinearAlgebra.QuadraticForm.Basic
+import LinearAlgebra.Matrix.Spectrum
+import LinearAlgebra.QuadraticForm.Basic
 
 #align_import linear_algebra.matrix.pos_def from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

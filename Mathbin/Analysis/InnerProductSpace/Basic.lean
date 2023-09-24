@@ -3,12 +3,12 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 -/
-import Mathbin.Algebra.DirectSum.Module
-import Mathbin.Analysis.Complex.Basic
-import Mathbin.Analysis.Convex.Uniform
-import Mathbin.Analysis.NormedSpace.Completion
-import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.LinearAlgebra.BilinearForm
+import Algebra.DirectSum.Module
+import Analysis.Complex.Basic
+import Analysis.Convex.Uniform
+import Analysis.NormedSpace.Completion
+import Analysis.NormedSpace.BoundedLinearMaps
+import LinearAlgebra.BilinearForm
 
 #align_import analysis.inner_product_space.basic from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -1163,8 +1163,8 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
 #align orthonormal_sUnion_of_directed orthonormal_sUnion_of_directed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » w) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (w «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (u «expr ⊇ » w) -/
 #print exists_maximal_orthonormal /-
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/

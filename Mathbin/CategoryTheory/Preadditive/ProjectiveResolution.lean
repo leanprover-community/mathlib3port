@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Preadditive.Projective
-import Mathbin.Algebra.Homology.Single
-import Mathbin.Algebra.Homology.HomotopyCategory
+import CategoryTheory.Preadditive.Projective
+import Algebra.Homology.Single
+import Algebra.Homology.HomotopyCategory
 
 #align_import category_theory.preadditive.projective_resolution from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 
@@ -90,7 +90,7 @@ structure ProjectiveResolution (Z : C) where
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
 #print CategoryTheory.HasProjectiveResolution /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where

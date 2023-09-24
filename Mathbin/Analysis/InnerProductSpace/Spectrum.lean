@@ -3,10 +3,10 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.InnerProductSpace.Rayleigh
-import Mathbin.Analysis.InnerProductSpace.PiL2
-import Mathbin.Algebra.DirectSum.Decomposition
-import Mathbin.LinearAlgebra.Eigenspace.Minpoly
+import Analysis.InnerProductSpace.Rayleigh
+import Analysis.InnerProductSpace.PiL2
+import Algebra.DirectSum.Decomposition
+import LinearAlgebra.Eigenspace.Minpoly
 
 #align_import analysis.inner_product_space.spectrum from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

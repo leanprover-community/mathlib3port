@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathbin.Topology.Algebra.Group.Basic
-import Mathbin.Topology.CompactOpen
-import Mathbin.Topology.Sets.Compacts
+import Topology.Algebra.Group.Basic
+import Topology.CompactOpen
+import Topology.Sets.Compacts
 
 #align_import topology.algebra.group.compact from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

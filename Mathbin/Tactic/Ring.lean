@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Tactic.NormNum
-import Mathbin.Data.Fin.Basic
+import Tactic.NormNum
+import Data.Fin.Basic
 
 #align_import tactic.ring from "leanprover-community/mathlib"@"c1ada9d195393af8a78376fb35d4d7108666bda9"
 

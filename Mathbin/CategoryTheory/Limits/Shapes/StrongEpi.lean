@@ -3,8 +3,8 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Balanced
-import Mathbin.CategoryTheory.LiftingProperties.Basic
+import CategoryTheory.Balanced
+import CategoryTheory.LiftingProperties.Basic
 
 #align_import category_theory.limits.shapes.strong_epi from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

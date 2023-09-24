@@ -3,8 +3,8 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.GroupTheory.Complement
-import Mathbin.GroupTheory.Sylow
+import GroupTheory.Complement
+import GroupTheory.Sylow
 
 #align_import group_theory.transfer from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

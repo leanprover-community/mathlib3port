@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.CategoryTheory.Limits.Types
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
+import CategoryTheory.Category.Cat
+import CategoryTheory.Limits.Types
+import CategoryTheory.Limits.Preserves.Basic
 
 #align_import category_theory.category.Cat.limit from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

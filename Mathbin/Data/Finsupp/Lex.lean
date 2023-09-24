@@ -3,9 +3,9 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Data.Finsupp.Order
-import Mathbin.Data.Dfinsupp.Lex
-import Mathbin.Data.Finsupp.ToDfinsupp
+import Data.Finsupp.Order
+import Data.Dfinsupp.Lex
+import Data.Finsupp.ToDfinsupp
 
 #align_import data.finsupp.lex from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

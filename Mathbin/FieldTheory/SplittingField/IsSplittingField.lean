@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.CharP.Algebra
-import Mathbin.FieldTheory.IntermediateField
-import Mathbin.RingTheory.Adjoin.Field
+import Algebra.CharP.Algebra
+import FieldTheory.IntermediateField
+import RingTheory.Adjoin.Field
 
 #align_import field_theory.splitting_field.is_splitting_field from "leanprover-community/mathlib"@"9fb8964792b4237dac6200193a0d533f1b3f7423"
 
@@ -47,8 +47,8 @@ namespace Polynomial
 variable [Field K] [Field L] [Field F] [Algebra K L]
 
 #print Polynomial.IsSplittingField /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Splits] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`adjoin_rootSet] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Splits] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`adjoin_rootSet] [] -/
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
   Splits : Splits (algebraMap K L) f

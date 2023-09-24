@@ -3,11 +3,11 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Patrick Massot, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Adjunction.Reflective
-import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
-import Mathbin.CategoryTheory.Monad.Limits
-import Mathbin.Topology.Category.Top.Basic
-import Mathbin.Topology.UniformSpace.Completion
+import CategoryTheory.Adjunction.Reflective
+import CategoryTheory.ConcreteCategory.UnbundledHom
+import CategoryTheory.Monad.Limits
+import Topology.Category.Top.Basic
+import Topology.UniformSpace.Completion
 
 #align_import topology.category.UniformSpace from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

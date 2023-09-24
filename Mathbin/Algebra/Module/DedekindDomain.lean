@@ -3,8 +3,8 @@ Copyright (c) 2022 Pierre-Alexandre Bazin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 -/
-import Mathbin.Algebra.Module.Torsion
-import Mathbin.RingTheory.DedekindDomain.Ideal
+import Algebra.Module.Torsion
+import RingTheory.DedekindDomain.Ideal
 
 #align_import algebra.module.dedekind_domain from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

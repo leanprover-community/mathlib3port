@@ -3,8 +3,8 @@ Copyright (c) 2020 Aaron Anderson, Jalex Stark. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 -/
-import Mathbin.Data.Polynomial.Expand
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Basic
+import Data.Polynomial.Expand
+import LinearAlgebra.Matrix.Charpoly.Basic
 
 #align_import linear_algebra.matrix.charpoly.coeff from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

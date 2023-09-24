@@ -3,7 +3,7 @@ Copyright (c) 2022 John Nicol. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: John Nicol
 -/
-import Mathbin.FieldTheory.Finite.Basic
+import FieldTheory.Finite.Basic
 
 #align_import number_theory.wilson from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 

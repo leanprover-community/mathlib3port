@@ -3,7 +3,7 @@ Copyright (c) 2023 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.Probability.Kernel.Composition
+import Probability.Kernel.Composition
 
 #align_import probability.kernel.invariance from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

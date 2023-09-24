@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 -/
-import Mathbin.Probability.Notation
-import Mathbin.Probability.Process.Stopping
+import Probability.Notation
+import Probability.Process.Stopping
 
 #align_import probability.martingale.basic from "leanprover-community/mathlib"@"f2ad3645af9effcdb587637dc28a6074edc813f9"
 

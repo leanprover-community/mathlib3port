@@ -3,9 +3,9 @@ Copyright (c) 2022 Christopher Hoskin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
-import Mathbin.Algebra.Ring.Idempotents
-import Mathbin.Tactic.NoncommRing
-import Mathbin.Analysis.Normed.Group.Basic
+import Algebra.Ring.Idempotents
+import Tactic.NoncommRing
+import Analysis.Normed.Group.Basic
 
 #align_import analysis.normed_space.M_structure from "leanprover-community/mathlib"@"d11893b411025250c8e61ff2f12ccbd7ee35ab15"
 

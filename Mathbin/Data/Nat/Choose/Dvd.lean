@@ -3,8 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 -/
-import Mathbin.Data.Nat.Choose.Basic
-import Mathbin.Data.Nat.Prime
+import Data.Nat.Choose.Basic
+import Data.Nat.Prime
 
 #align_import data.nat.choose.dvd from "leanprover-community/mathlib"@"966e0cf0685c9cedf8a3283ac69eef4d5f2eaca2"
 

@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Tactic.Tidy
-import Mathbin.Tactic.Replacer
+import Tactic.Tidy
+import Tactic.Replacer
 
 #align_import tactic.obviously from "leanprover-community/mathlib"@"06823d6dd94d25bce25ae8793ae9012c508df898"
 

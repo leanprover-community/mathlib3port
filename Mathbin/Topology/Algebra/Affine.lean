@@ -3,9 +3,9 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap
-import Mathbin.Topology.Algebra.Group.Basic
-import Mathbin.Topology.Algebra.MulAction
+import LinearAlgebra.AffineSpace.AffineMap
+import Topology.Algebra.Group.Basic
+import Topology.Algebra.MulAction
 
 #align_import topology.algebra.affine from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

@@ -3,10 +3,10 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
 -/
-import Mathbin.Data.MvPolynomial.Equiv
-import Mathbin.Data.MvPolynomial.CommRing
-import Mathbin.Logic.Equiv.Functor
-import Mathbin.RingTheory.FreeRing
+import Data.MvPolynomial.Equiv
+import Data.MvPolynomial.CommRing
+import Logic.Equiv.Functor
+import RingTheory.FreeRing
 
 #align_import ring_theory.free_comm_ring from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

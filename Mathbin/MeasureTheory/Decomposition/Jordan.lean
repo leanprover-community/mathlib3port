@@ -3,8 +3,8 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Decomposition.SignedHahn
-import Mathbin.MeasureTheory.Measure.MutuallySingular
+import MeasureTheory.Decomposition.SignedHahn
+import MeasureTheory.Measure.MutuallySingular
 
 #align_import measure_theory.decomposition.jordan from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

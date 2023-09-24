@@ -3,9 +3,9 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.ConeCategory
+import CategoryTheory.Limits.Shapes.Products
+import CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.ConeCategory
 
 #align_import category_theory.limits.shapes.multiequalizer from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

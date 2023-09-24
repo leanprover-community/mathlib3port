@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Yury Kudryashov
 -/
-import Mathbin.Algebra.Group.Opposite
-import Mathbin.Algebra.GroupWithZero.Units.Basic
-import Mathbin.Algebra.Hom.Units
+import Algebra.Group.Opposite
+import Algebra.GroupWithZero.Units.Basic
+import Algebra.Hom.Units
 
 #align_import algebra.group.prod from "leanprover-community/mathlib"@"cd391184c85986113f8c00844cfe6dda1d34be3d"
 

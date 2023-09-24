@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.NaturalTransformation
-import Mathbin.CategoryTheory.Isomorphism
+import CategoryTheory.NaturalTransformation
+import CategoryTheory.Isomorphism
 
 #align_import category_theory.functor.category from "leanprover-community/mathlib"@"63721b2c3eba6c325ecf8ae8cca27155a4f6306f"
 

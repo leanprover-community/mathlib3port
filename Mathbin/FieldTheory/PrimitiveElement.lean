@@ -3,10 +3,10 @@ Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 -/
-import Mathbin.FieldTheory.SplittingField.Construction
-import Mathbin.FieldTheory.IsAlgClosed.Basic
-import Mathbin.FieldTheory.Separable
-import Mathbin.RingTheory.IntegralDomain
+import FieldTheory.SplittingField.Construction
+import FieldTheory.IsAlgClosed.Basic
+import FieldTheory.Separable
+import RingTheory.IntegralDomain
 
 #align_import field_theory.primitive_element from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

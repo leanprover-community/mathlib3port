@@ -3,9 +3,9 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.WideEqualizers
-import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Limits.Shapes.WideEqualizers
+import CategoryTheory.Limits.Shapes.Products
+import CategoryTheory.Limits.Shapes.Terminal
 
 #align_import category_theory.limits.constructions.weakly_initial from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Data.Polynomial.Derivative
-import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.RingTheory.EuclideanDomain
+import Data.Polynomial.Derivative
+import Data.Polynomial.RingDivision
+import RingTheory.EuclideanDomain
 
 #align_import data.polynomial.field_division from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

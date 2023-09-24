@@ -3,8 +3,8 @@ Copyright (c) 2021 Jakob Scholbach. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.Data.Nat.Prime
+import Algebra.CharP.Basic
+import Data.Nat.Prime
 
 #align_import algebra.char_p.exp_char from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

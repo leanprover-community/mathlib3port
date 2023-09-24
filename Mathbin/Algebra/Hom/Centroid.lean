@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christopher Hoskin
 -/
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.Algebra.Hom.GroupInstances
+import Algebra.GroupPower.Lemmas
+import Algebra.Hom.GroupInstances
 
 #align_import algebra.hom.centroid from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

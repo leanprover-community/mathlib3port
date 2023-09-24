@@ -3,9 +3,9 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Kexing Ying
 -/
-import Mathbin.Probability.Notation
-import Mathbin.Probability.Integration
-import Mathbin.MeasureTheory.Function.L2Space
+import Probability.Notation
+import Probability.Integration
+import MeasureTheory.Function.L2Space
 
 #align_import probability.variance from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

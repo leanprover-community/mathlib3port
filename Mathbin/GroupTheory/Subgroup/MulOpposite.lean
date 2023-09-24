@@ -3,7 +3,7 @@ Copyright (c) 2022 Alex Kontorovich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich
 -/
-import Mathbin.GroupTheory.Subgroup.Actions
+import GroupTheory.Subgroup.Actions
 
 #align_import group_theory.subgroup.mul_opposite from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

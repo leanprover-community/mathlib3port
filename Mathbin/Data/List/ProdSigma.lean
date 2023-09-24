@@ -3,7 +3,7 @@ Copyright (c) 2015 Leonardo de Moura. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Data.List.BigOperators.Basic
+import Data.List.BigOperators.Basic
 
 #align_import data.list.prod_sigma from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

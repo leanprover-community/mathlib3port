@@ -3,8 +3,8 @@ Copyright (c) 2019 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Algebra.Order.AbsoluteValue
-import Mathbin.Topology.UniformSpace.Basic
+import Algebra.Order.AbsoluteValue
+import Topology.UniformSpace.Basic
 
 #align_import topology.uniform_space.absolute_value from "leanprover-community/mathlib"@"e1a7bdeb4fd826b7e71d130d34988f0a2d26a177"
 

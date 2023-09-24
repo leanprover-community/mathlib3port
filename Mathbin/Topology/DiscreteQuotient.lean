@@ -3,9 +3,9 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 -/
-import Mathbin.Topology.Separation
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.LocallyConstant.Basic
+import Topology.Separation
+import Topology.SubsetProperties
+import Topology.LocallyConstant.Basic
 
 #align_import topology.discrete_quotient from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

@@ -3,8 +3,8 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Data.Pfunctor.Multivariate.Basic
-import Mathbin.Data.Qpf.Multivariate.Basic
+import Data.Pfunctor.Multivariate.Basic
+import Data.Qpf.Multivariate.Basic
 
 #align_import data.qpf.multivariate.constructions.sigma from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

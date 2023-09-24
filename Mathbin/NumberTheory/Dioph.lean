@@ -3,10 +3,10 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fin.Fin2
-import Mathbin.Data.Pfun
-import Mathbin.Data.Vector3
-import Mathbin.NumberTheory.PellMatiyasevic
+import Data.Fin.Fin2
+import Data.Pfun
+import Data.Vector3
+import NumberTheory.PellMatiyasevic
 
 #align_import number_theory.dioph from "leanprover-community/mathlib"@"087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197"
 

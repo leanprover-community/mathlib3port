@@ -3,7 +3,7 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
-import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
+import MeasureTheory.Function.StronglyMeasurable.Basic
 
 #align_import measure_theory.function.egorov from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -230,7 +230,7 @@ end Egorov
 variable [SemilatticeSup ι] [Nonempty ι] [Countable ι] {γ : Type _} [TopologicalSpace γ]
   {f : ι → α → β} {g : α → β} {s : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.tendstoUniformlyOn_of_ae_tendsto /-
 /-- **Egorov's theorem**: If `f : ι → α → β` is a sequence of strongly measurable functions that
 converges to `g : α → β` almost everywhere on a measurable set `s` of finite measure,

@@ -3,10 +3,10 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Group.Pi
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.Algebra.Category.Module.Abelian
-import Mathbin.Algebra.Homology.ShortExact.Abelian
+import Algebra.Group.Pi
+import CategoryTheory.Limits.Shapes.Biproducts
+import Algebra.Category.Module.Abelian
+import Algebra.Homology.ShortExact.Abelian
 
 #align_import algebra.category.Module.biproducts from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

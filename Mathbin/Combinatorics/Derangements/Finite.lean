@@ -3,10 +3,10 @@ Copyright (c) 2021 Henry Swanson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 -/
-import Mathbin.Combinatorics.Derangements.Basic
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Tactic.DeltaInstance
-import Mathbin.Tactic.Ring
+import Combinatorics.Derangements.Basic
+import Data.Fintype.BigOperators
+import Tactic.DeltaInstance
+import Tactic.Ring
 
 #align_import combinatorics.derangements.finite from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

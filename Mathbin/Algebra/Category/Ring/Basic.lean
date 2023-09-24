@@ -3,10 +3,10 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 -/
-import Mathbin.Algebra.Category.Group.Basic
-import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms
-import Mathbin.CategoryTheory.Elementwise
-import Mathbin.Algebra.Ring.Equiv
+import Algebra.Category.Group.Basic
+import CategoryTheory.ConcreteCategory.ReflectsIsomorphisms
+import CategoryTheory.Elementwise
+import Algebra.Ring.Equiv
 
 #align_import algebra.category.Ring.basic from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

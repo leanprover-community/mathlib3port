@@ -3,8 +3,8 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 -/
-import Mathbin.Data.Fin.Fin2
-import Mathbin.Data.Typevec
+import Data.Fin.Fin2
+import Data.Typevec
 
 #align_import control.functor.multivariate from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 

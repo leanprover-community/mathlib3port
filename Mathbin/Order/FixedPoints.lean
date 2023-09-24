@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Yury Kudryashov
 -/
-import Mathbin.Dynamics.FixedPoints.Basic
-import Mathbin.Order.Hom.Order
+import Dynamics.FixedPoints.Basic
+import Order.Hom.Order
 
 #align_import order.fixed_points from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

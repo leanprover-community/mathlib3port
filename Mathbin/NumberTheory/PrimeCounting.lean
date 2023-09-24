@@ -3,11 +3,11 @@ Copyright (c) 2021 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
-import Mathbin.Data.Nat.PrimeFin
-import Mathbin.Data.Nat.Totient
-import Mathbin.Data.Finset.LocallyFinite
-import Mathbin.Data.Nat.Count
-import Mathbin.Data.Nat.Nth
+import Data.Nat.PrimeFin
+import Data.Nat.Totient
+import Data.Finset.LocallyFinite
+import Data.Nat.Count
+import Data.Nat.Nth
 
 #align_import number_theory.prime_counting from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

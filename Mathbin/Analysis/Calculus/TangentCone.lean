@@ -3,9 +3,9 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Convex.Topology
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Analysis.SpecificLimits.Basic
+import Analysis.Convex.Topology
+import Analysis.NormedSpace.Basic
+import Analysis.SpecificLimits.Basic
 
 #align_import analysis.calculus.tangent_cone from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
@@ -221,8 +221,8 @@ theorem subset_tangentCone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s)
 #align subset_tangent_cone_prod_right subset_tangentCone_prod_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print mapsTo_tangentCone_pi /-
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem mapsTo_tangentCone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _}

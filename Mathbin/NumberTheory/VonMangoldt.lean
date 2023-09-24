@@ -3,9 +3,9 @@ Copyright (c) 2022 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.Algebra.IsPrimePow
-import Mathbin.NumberTheory.ArithmeticFunction
-import Mathbin.Analysis.SpecialFunctions.Log.Basic
+import Algebra.IsPrimePow
+import NumberTheory.ArithmeticFunction
+import Analysis.SpecialFunctions.Log.Basic
 
 #align_import number_theory.von_mangoldt from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

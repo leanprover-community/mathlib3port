@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Topology.Bornology.Basic
+import Topology.Bornology.Basic
 
 #align_import topology.bornology.constructions from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"
 

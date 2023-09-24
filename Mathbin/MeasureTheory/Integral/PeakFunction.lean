@@ -3,8 +3,8 @@ Copyright (c) 2023 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.MeasureTheory.Integral.SetIntegral
-import Mathbin.MeasureTheory.Function.LocallyIntegrable
+import MeasureTheory.Integral.SetIntegral
+import MeasureTheory.Function.LocallyIntegrable
 
 #align_import measure_theory.integral.peak_function from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Order.Basic
-import Mathbin.Order.Monotone.Basic
+import Algebra.Group.Defs
+import Order.Basic
+import Order.Monotone.Basic
 
 #align_import algebra.covariant_and_contravariant from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

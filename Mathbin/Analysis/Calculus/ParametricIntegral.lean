@@ -3,8 +3,8 @@ Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
-import Mathbin.Analysis.Calculus.MeanValue
-import Mathbin.MeasureTheory.Integral.SetIntegral
+import Analysis.Calculus.MeanValue
+import MeasureTheory.Integral.SetIntegral
 
 #align_import analysis.calculus.parametric_integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

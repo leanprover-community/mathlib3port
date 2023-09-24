@@ -3,12 +3,12 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Order
-import Mathbin.Data.Rat.Lemmas
-import Mathbin.Data.Int.CharZero
-import Mathbin.Algebra.GroupWithZero.Power
-import Mathbin.Algebra.Field.Opposite
-import Mathbin.Algebra.Order.Field.Basic
+import Data.Rat.Order
+import Data.Rat.Lemmas
+import Data.Int.CharZero
+import Algebra.GroupWithZero.Power
+import Algebra.Field.Opposite
+import Algebra.Order.Field.Basic
 
 #align_import data.rat.cast from "leanprover-community/mathlib"@"acebd8d49928f6ed8920e502a6c90674e75bd441"
 

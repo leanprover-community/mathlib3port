@@ -3,9 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.Int.Basic
-import Mathbin.Data.Nat.Pow
-import Mathbin.Data.Nat.Size
+import Data.Int.Basic
+import Data.Nat.Pow
+import Data.Nat.Size
 
 #align_import data.int.bitwise from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -223,7 +223,7 @@ theorem testBit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
 #align int.test_bit_succ Int.testBit_succ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 
@@ -259,7 +259,7 @@ theorem bitwise_xor : bitwise xor = lxor' := by
 #align int.bitwise_xor Int.bitwise_xor
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:506:27: warning: unsupported: unfold config -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:508:27: warning: unsupported: unfold config -/
 #print Int.bitwise_bit /-
 @[simp]
 theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :

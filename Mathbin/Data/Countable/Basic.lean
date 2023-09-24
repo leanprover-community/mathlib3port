@@ -3,9 +3,9 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Logic.Equiv.Nat
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Data.Countable.Defs
+import Logic.Equiv.Nat
+import Logic.Equiv.Fin
+import Data.Countable.Defs
 
 #align_import data.countable.basic from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 

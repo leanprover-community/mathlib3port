@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Cardinal.Ordinal
-import Mathbin.SetTheory.Ordinal.FixedPoint
+import SetTheory.Cardinal.Ordinal
+import SetTheory.Ordinal.FixedPoint
 
 #align_import set_theory.cardinal.cofinality from "leanprover-community/mathlib"@"7c2ce0c2da15516b4e65d0c9e254bb6dc93abd1f"
 

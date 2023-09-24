@@ -3,9 +3,9 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Normed.Group.Completion
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Topology.Algebra.UniformRing
+import Analysis.Normed.Group.Completion
+import Analysis.NormedSpace.OperatorNorm
+import Topology.Algebra.UniformRing
 
 #align_import analysis.normed_space.completion from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

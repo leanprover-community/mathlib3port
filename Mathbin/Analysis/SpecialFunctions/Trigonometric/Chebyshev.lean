@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Complex.Exponential
-import Mathbin.Data.Complex.Module
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.RingTheory.Polynomial.Chebyshev
+import Data.Complex.Exponential
+import Data.Complex.Module
+import Data.Polynomial.AlgebraMap
+import RingTheory.Polynomial.Chebyshev
 
 #align_import analysis.special_functions.trigonometric.chebyshev from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"
 

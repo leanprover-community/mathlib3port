@@ -3,8 +3,8 @@ Copyright (c) 2021 Vladimir Goryachev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 -/
-import Mathbin.SetTheory.Cardinal.Basic
-import Mathbin.Tactic.Ring
+import SetTheory.Cardinal.Basic
+import Tactic.Ring
 
 #align_import data.nat.count from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

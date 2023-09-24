@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Data.Polynomial.Basic
-import Mathbin.Data.Finset.NatAntidiagonal
-import Mathbin.Data.Nat.Choose.Sum
+import Data.Polynomial.Basic
+import Data.Finset.NatAntidiagonal
+import Data.Nat.Choose.Sum
 
 #align_import data.polynomial.coeff from "leanprover-community/mathlib"@"2651125b48fc5c170ab1111afd0817c903b1fc6c"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Wrenna Robson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 -/
-import Mathbin.Analysis.Normed.Group.Basic
+import Analysis.Normed.Group.Basic
 
 #align_import information_theory.hamming from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

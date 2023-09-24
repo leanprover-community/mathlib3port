@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Ordinal.Arithmetic
-import Mathbin.Tactic.Abel
+import SetTheory.Ordinal.Arithmetic
+import Tactic.Abel
 
 #align_import set_theory.ordinal.natural_ops from "leanprover-community/mathlib"@"31b269b60935483943542d547a6dd83a66b37dc7"
 

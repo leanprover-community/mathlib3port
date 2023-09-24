@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.GroupTheory.Perm.Cycle.Type
-import Mathbin.GroupTheory.Perm.Option
-import Mathbin.Logic.Equiv.Fin
-import Mathbin.Logic.Equiv.Fintype
+import GroupTheory.Perm.Cycle.Type
+import GroupTheory.Perm.Option
+import Logic.Equiv.Fin
+import Logic.Equiv.Fintype
 
 #align_import group_theory.perm.fin from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

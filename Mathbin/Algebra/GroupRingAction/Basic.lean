@@ -3,9 +3,9 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Ring.Equiv
-import Mathbin.Algebra.Field.Defs
-import Mathbin.GroupTheory.GroupAction.Group
+import Algebra.Ring.Equiv
+import Algebra.Field.Defs
+import GroupTheory.GroupAction.Group
 
 #align_import algebra.group_ring_action.basic from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

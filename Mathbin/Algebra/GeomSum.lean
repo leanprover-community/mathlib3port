@@ -3,11 +3,11 @@ Copyright (c) 2019 Neil Strickland. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Algebra.BigOperators.Intervals
-import Mathbin.Tactic.Abel
-import Mathbin.Data.Nat.Parity
+import Algebra.BigOperators.Order
+import Algebra.BigOperators.Ring
+import Algebra.BigOperators.Intervals
+import Tactic.Abel
+import Data.Nat.Parity
 
 #align_import algebra.geom_sum from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

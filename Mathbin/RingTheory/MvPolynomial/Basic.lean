@@ -3,10 +3,10 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.MvPolynomial.Variables
-import Mathbin.LinearAlgebra.FinsuppVectorSpace
+import Algebra.CharP.Basic
+import Data.Polynomial.AlgebraMap
+import Data.MvPolynomial.Variables
+import LinearAlgebra.FinsuppVectorSpace
 
 #align_import ring_theory.mv_polynomial.basic from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import Mathbin.RepresentationTheory.Basic
-import Mathbin.RepresentationTheory.FdRep
+import RepresentationTheory.Basic
+import RepresentationTheory.FdRep
 
 #align_import representation_theory.invariants from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

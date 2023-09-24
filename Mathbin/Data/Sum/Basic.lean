@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury G. Kudryashov
 -/
-import Mathbin.Logic.Function.Basic
-import Mathbin.Tactic.Basic
+import Logic.Function.Basic
+import Tactic.Basic
 
 #align_import data.sum.basic from "leanprover-community/mathlib"@"bd9851ca476957ea4549eb19b40e7b5ade9428cc"
 

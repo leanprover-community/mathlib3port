@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Data.MvPolynomial.Rename
+import Algebra.BigOperators.Order
+import Data.MvPolynomial.Rename
 
 #align_import data.mv_polynomial.variables from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"
 

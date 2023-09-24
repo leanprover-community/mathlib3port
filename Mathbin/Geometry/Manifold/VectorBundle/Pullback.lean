@@ -3,8 +3,8 @@ Copyright (c) 2023 Floris van Doorn, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 -/
-import Mathbin.Geometry.Manifold.ContMdiffMap
-import Mathbin.Geometry.Manifold.VectorBundle.Basic
+import Geometry.Manifold.ContMdiffMap
+import Geometry.Manifold.VectorBundle.Basic
 
 #align_import geometry.manifold.vector_bundle.pullback from "leanprover-community/mathlib"@"e473c3198bb41f68560cab68a0529c854b618833"
 

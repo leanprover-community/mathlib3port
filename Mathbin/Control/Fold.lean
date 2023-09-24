@@ -3,13 +3,13 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Sean Leather
 -/
-import Mathbin.Algebra.Group.Opposite
-import Mathbin.Algebra.FreeMonoid.Basic
-import Mathbin.Control.Traversable.Instances
-import Mathbin.Control.Traversable.Lemmas
-import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.CategoryTheory.Types
-import Mathbin.CategoryTheory.Category.Kleisli
+import Algebra.Group.Opposite
+import Algebra.FreeMonoid.Basic
+import Control.Traversable.Instances
+import Control.Traversable.Lemmas
+import CategoryTheory.Endomorphism
+import CategoryTheory.Types
+import CategoryTheory.Category.Kleisli
 
 #align_import control.fold from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 

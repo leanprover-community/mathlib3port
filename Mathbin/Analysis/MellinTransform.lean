@@ -3,9 +3,9 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathbin.Analysis.Calculus.ParametricIntegral
-import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
+import Analysis.SpecialFunctions.ImproperIntegrals
+import Analysis.Calculus.ParametricIntegral
+import MeasureTheory.Measure.Haar.NormedSpace
 
 #align_import analysis.mellin_transform from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

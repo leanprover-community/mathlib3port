@@ -3,7 +3,7 @@ Copyright (c) 2019 Seul Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 -/
-import Mathbin.Tactic.Omega.Nat.Preterm
+import Tactic.Omega.Nat.Preterm
 
 #align_import tactic.omega.nat.form from "leanprover-community/mathlib"@"3d7987cda72abc473c7cdbbb075170e9ac620042"
 
@@ -183,7 +183,7 @@ theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
   rw [not_exists_not]; intro h; assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

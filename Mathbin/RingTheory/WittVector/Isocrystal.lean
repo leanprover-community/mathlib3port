@@ -3,7 +3,7 @@ Copyright (c) 2022 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.RingTheory.WittVector.FrobeniusFractionField
+import RingTheory.WittVector.FrobeniusFractionField
 
 #align_import ring_theory.witt_vector.isocrystal from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

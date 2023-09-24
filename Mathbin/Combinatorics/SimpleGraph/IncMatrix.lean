@@ -3,8 +3,8 @@ Copyright (c) 2021 Gabriel Moise. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Moise, Yaël Dillies, Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Basic
-import Mathbin.Data.Matrix.Basic
+import Combinatorics.SimpleGraph.Basic
+import Data.Matrix.Basic
 
 #align_import combinatorics.simple_graph.inc_matrix from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"
 

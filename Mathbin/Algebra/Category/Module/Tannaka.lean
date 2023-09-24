@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.Module.Basic
-import Mathbin.LinearAlgebra.Span
+import Algebra.Category.Module.Basic
+import LinearAlgebra.Span
 
 #align_import algebra.category.Module.tannaka from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

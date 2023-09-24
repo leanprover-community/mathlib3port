@@ -3,11 +3,11 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
-import Mathbin.CategoryTheory.Abelian.Basic
-import Mathbin.CategoryTheory.Subobject.Lattice
-import Mathbin.Order.Atoms
+import CategoryTheory.Limits.Shapes.ZeroMorphisms
+import CategoryTheory.Limits.Shapes.Kernels
+import CategoryTheory.Abelian.Basic
+import CategoryTheory.Subobject.Lattice
+import Order.Atoms
 
 #align_import category_theory.simple from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 Jakob Scholbach. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.CharP.ExpChar
-import Mathbin.FieldTheory.Separable
+import Algebra.Algebra.Basic
+import Algebra.CharP.ExpChar
+import FieldTheory.Separable
 
 #align_import field_theory.separable_degree from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

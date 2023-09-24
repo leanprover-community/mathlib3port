@@ -3,9 +3,9 @@ Copyright (c) 2019 Yury Kudriashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov
 -/
-import Mathbin.Algebra.BigOperators.Order
-import Mathbin.Analysis.Convex.Hull
-import Mathbin.LinearAlgebra.AffineSpace.Basis
+import Algebra.BigOperators.Order
+import Analysis.Convex.Hull
+import LinearAlgebra.AffineSpace.Basis
 
 #align_import analysis.convex.combination from "leanprover-community/mathlib"@"92bd7b1ffeb306a89f450bee126ddd8a284c259d"
 

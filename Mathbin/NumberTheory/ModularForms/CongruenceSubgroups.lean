@@ -3,10 +3,10 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.Subgroup.Pointwise
-import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
+import Data.Zmod.Basic
+import GroupTheory.GroupAction.ConjAct
+import GroupTheory.Subgroup.Pointwise
+import LinearAlgebra.Matrix.SpecialLinearGroup
 
 #align_import number_theory.modular_forms.congruence_subgroups from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

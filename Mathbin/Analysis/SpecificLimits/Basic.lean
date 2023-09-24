@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 -/
-import Mathbin.Algebra.GeomSum
-import Mathbin.Order.Filter.Archimedean
-import Mathbin.Order.Iterate
-import Mathbin.Topology.Instances.Ennreal
-import Mathbin.Topology.Algebra.Algebra
+import Algebra.GeomSum
+import Order.Filter.Archimedean
+import Order.Iterate
+import Topology.Instances.Ennreal
+import Topology.Algebra.Algebra
 
 #align_import analysis.specific_limits.basic from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

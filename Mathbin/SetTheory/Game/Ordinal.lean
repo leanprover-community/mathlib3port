@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Game.Basic
-import Mathbin.SetTheory.Ordinal.NaturalOps
+import SetTheory.Game.Basic
+import SetTheory.Ordinal.NaturalOps
 
 #align_import set_theory.game.ordinal from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 

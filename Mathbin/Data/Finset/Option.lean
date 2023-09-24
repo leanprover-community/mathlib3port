@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Mario Carneiro, Sean Leather
 -/
-import Mathbin.Data.Finset.Card
+import Data.Finset.Card
 
 #align_import data.finset.option from "leanprover-community/mathlib"@"c227d107bbada5d0d9d20287e3282c0a7f1651a0"
 

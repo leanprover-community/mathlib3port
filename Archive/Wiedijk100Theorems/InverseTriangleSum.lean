@@ -3,8 +3,8 @@ Copyright (c) 2020. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jalex Stark, Yury Kudryashov
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Real.Basic
+import Algebra.BigOperators.Basic
+import Data.Real.Basic
 
 #align_import wiedijk_100_theorems.inverse_triangle_sum from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

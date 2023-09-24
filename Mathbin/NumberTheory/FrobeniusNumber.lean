@@ -3,11 +3,11 @@ Copyright (c) 2021 Alex Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Zhao
 -/
-import Mathbin.Data.Nat.Modeq
-import Mathbin.GroupTheory.Submonoid.Basic
-import Mathbin.GroupTheory.Submonoid.Membership
-import Mathbin.Tactic.Ring
-import Mathbin.Tactic.Zify
+import Data.Nat.Modeq
+import GroupTheory.Submonoid.Basic
+import GroupTheory.Submonoid.Membership
+import Tactic.Ring
+import Tactic.Zify
 
 #align_import number_theory.frobenius_number from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

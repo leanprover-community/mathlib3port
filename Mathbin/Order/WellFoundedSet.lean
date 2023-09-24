@@ -3,11 +3,11 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.Sigma.Lex
-import Mathbin.Order.Antichain
-import Mathbin.Order.OrderIsoNat
-import Mathbin.Order.WellFounded
-import Mathbin.Tactic.Tfae
+import Data.Sigma.Lex
+import Order.Antichain
+import Order.OrderIsoNat
+import Order.WellFounded
+import Tactic.Tfae
 
 #align_import order.well_founded_set from "leanprover-community/mathlib"@"2c84c2c5496117349007d97104e7bbb471381592"
 
@@ -151,7 +151,7 @@ protected theorem mono (h : t.WellFoundedOn r') (hle : r ≤ r') (hst : s ⊆ t)
 #align set.well_founded_on.mono Set.WellFoundedOn.mono
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Set.WellFoundedOn.mono' /-
 theorem mono' (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), r' a b → r a b) :
     s.WellFoundedOn r → s.WellFoundedOn r' :=
@@ -438,7 +438,7 @@ protected theorem PartiallyWellOrderedOn.insert (h : PartiallyWellOrderedOn s r)
 #align set.partially_well_ordered_on.insert Set.PartiallyWellOrderedOn.insert
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Set.partiallyWellOrderedOn_iff_finite_antichains /-
 theorem partiallyWellOrderedOn_iff_finite_antichains [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite :=

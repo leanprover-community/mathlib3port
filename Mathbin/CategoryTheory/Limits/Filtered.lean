@@ -3,8 +3,8 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Filtered
-import Mathbin.CategoryTheory.Limits.HasLimits
+import CategoryTheory.Filtered
+import CategoryTheory.Limits.HasLimits
 
 #align_import category_theory.limits.filtered from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

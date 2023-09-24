@@ -3,8 +3,8 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 -/
-import Mathbin.Data.Nat.Prime
-import Mathbin.Data.Pnat.Basic
+import Data.Nat.Prime
+import Data.Pnat.Basic
 
 #align_import data.pnat.prime from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 

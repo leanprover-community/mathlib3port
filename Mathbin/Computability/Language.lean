@@ -3,10 +3,10 @@ Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 -/
-import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Order.Kleene
-import Mathbin.Data.List.Join
-import Mathbin.Data.Set.Lattice
+import Algebra.Hom.Ring
+import Algebra.Order.Kleene
+import Data.List.Join
+import Data.Set.Lattice
 
 #align_import computability.language from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

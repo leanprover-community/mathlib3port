@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
-import Mathbin.CategoryTheory.Monoidal.FunctorCategory
+import CategoryTheory.Monoidal.Rigid.Basic
+import CategoryTheory.Monoidal.FunctorCategory
 
 #align_import category_theory.monoidal.rigid.functor_category from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

@@ -3,7 +3,7 @@ Copyright (c) 2018 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Opposites
+import CategoryTheory.Opposites
 
 #align_import category_theory.eq_to_hom from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

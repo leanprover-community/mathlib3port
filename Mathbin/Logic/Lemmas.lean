@@ -3,11 +3,11 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Tactic.Congr
-import Mathbin.Tactic.Protected
-import Mathbin.Tactic.Rcases
-import Mathbin.Tactic.SplitIfs
-import Mathbin.Logic.Basic
+import Tactic.Congr
+import Tactic.Protected
+import Tactic.Rcases
+import Tactic.SplitIfs
+import Logic.Basic
 
 #align_import logic.lemmas from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

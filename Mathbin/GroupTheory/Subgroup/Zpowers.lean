@@ -3,7 +3,7 @@ Copyright (c) 2020 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.GroupTheory.Subgroup.Basic
+import GroupTheory.Subgroup.Basic
 
 #align_import group_theory.subgroup.zpowers from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

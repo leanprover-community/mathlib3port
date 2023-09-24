@@ -3,8 +3,8 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 -/
-import Mathbin.Algebra.Algebra.Subalgebra.Basic
-import Mathbin.Algebra.MonoidAlgebra.Basic
+import Algebra.Algebra.Subalgebra.Basic
+import Algebra.MonoidAlgebra.Basic
 
 #align_import algebra.free_algebra from "leanprover-community/mathlib"@"aa3a420527e0fbfd0f6615b95b761254a9166e12"
 

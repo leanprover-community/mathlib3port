@@ -3,10 +3,10 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Eric Wieser
 -/
-import Mathbin.Data.Matrix.Basic
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.Tactic.FinCases
-import Mathbin.Algebra.BigOperators.Fin
+import Data.Matrix.Basic
+import Data.Fin.VecNotation
+import Tactic.FinCases
+import Algebra.BigOperators.Fin
 
 #align_import data.matrix.notation from "leanprover-community/mathlib"@"a99f85220eaf38f14f94e04699943e185a5e1d1a"
 

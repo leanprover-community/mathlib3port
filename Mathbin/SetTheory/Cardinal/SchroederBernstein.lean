@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Order.FixedPoints
-import Mathbin.Order.Zorn
+import Order.FixedPoints
+import Order.Zorn
 
 #align_import set_theory.cardinal.schroeder_bernstein from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

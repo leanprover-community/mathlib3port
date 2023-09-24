@@ -3,12 +3,12 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.FinCategory
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.Data.Fintype.Option
+import CategoryTheory.FinCategory
+import CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.Equalizers
+import CategoryTheory.Limits.Shapes.WidePullbacks
+import CategoryTheory.Limits.Shapes.Pullbacks
+import Data.Fintype.Option
 
 #align_import category_theory.limits.shapes.finite_limits from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

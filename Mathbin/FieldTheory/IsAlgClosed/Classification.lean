@@ -3,11 +3,11 @@ Copyright (c) 2022 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.RingTheory.AlgebraicIndependent
-import Mathbin.FieldTheory.IsAlgClosed.Basic
-import Mathbin.Data.Polynomial.Cardinal
-import Mathbin.Data.MvPolynomial.Cardinal
-import Mathbin.Data.Zmod.Algebra
+import RingTheory.AlgebraicIndependent
+import FieldTheory.IsAlgClosed.Basic
+import Data.Polynomial.Cardinal
+import Data.MvPolynomial.Cardinal
+import Data.Zmod.Algebra
 
 #align_import field_theory.is_alg_closed.classification from "leanprover-community/mathlib"@"0723536a0522d24fc2f159a096fb3304bef77472"
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.Algebra.Ring.Regular
+import Algebra.Associated
+import Algebra.GroupPower.Lemmas
+import Algebra.Ring.Regular
 
 #align_import algebra.gcd_monoid.basic from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 

@@ -3,12 +3,12 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 -/
-import Mathbin.Algebra.Ring.Fin
-import Mathbin.Algebra.Ring.Prod
-import Mathbin.LinearAlgebra.Quotient
-import Mathbin.RingTheory.Congruence
-import Mathbin.RingTheory.Ideal.Basic
-import Mathbin.Tactic.FinCases
+import Algebra.Ring.Fin
+import Algebra.Ring.Prod
+import LinearAlgebra.Quotient
+import RingTheory.Congruence
+import RingTheory.Ideal.Basic
+import Tactic.FinCases
 
 #align_import ring_theory.ideal.quotient from "leanprover-community/mathlib"@"949dc57e616a621462062668c9f39e4e17b64b69"
 

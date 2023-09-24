@@ -3,9 +3,9 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Isomorphism
-import Mathbin.CategoryTheory.Functor.Category
-import Mathbin.CategoryTheory.Functor.FullyFaithful
+import CategoryTheory.Isomorphism
+import CategoryTheory.Functor.Category
+import CategoryTheory.Functor.FullyFaithful
 
 #align_import category_theory.whiskering from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -3,11 +3,11 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Adam Topaz
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.CategoryTheory.FullSubcategory
-import Mathbin.CategoryTheory.Skeletal
-import Mathbin.CategoryTheory.Elementwise
-import Mathbin.Data.Fintype.Card
+import CategoryTheory.ConcreteCategory.Basic
+import CategoryTheory.FullSubcategory
+import CategoryTheory.Skeletal
+import CategoryTheory.Elementwise
+import Data.Fintype.Card
 
 #align_import category_theory.Fintype from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 

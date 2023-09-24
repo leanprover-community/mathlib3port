@@ -3,9 +3,9 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 -/
-import Mathbin.Analysis.Normed.Group.Basic
-import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
-import Mathbin.LinearAlgebra.AffineSpace.Midpoint
+import Analysis.Normed.Group.Basic
+import LinearAlgebra.AffineSpace.AffineSubspace
+import LinearAlgebra.AffineSpace.Midpoint
 
 #align_import analysis.normed.group.add_torsor from "leanprover-community/mathlib"@"837f72de63ad6cd96519cde5f1ffd5ed8d280ad0"
 

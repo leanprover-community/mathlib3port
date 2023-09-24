@@ -3,12 +3,12 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 -/
-import Mathbin.Data.Nat.Factorization.Basic
-import Mathbin.Data.SetLike.Fintype
-import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.PGroup
-import Mathbin.GroupTheory.NoncommPiCoprod
-import Mathbin.Order.Atoms.Finite
+import Data.Nat.Factorization.Basic
+import Data.SetLike.Fintype
+import GroupTheory.GroupAction.ConjAct
+import GroupTheory.PGroup
+import GroupTheory.NoncommPiCoprod
+import Order.Atoms.Finite
 
 #align_import group_theory.sylow from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

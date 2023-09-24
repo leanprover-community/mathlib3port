@@ -3,8 +3,8 @@ Copyright (c) 2021 Praneeth Kolichala. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 -/
-import Mathbin.Topology.Constructions
-import Mathbin.Topology.Homotopy.Path
+import Topology.Constructions
+import Topology.Homotopy.Path
 
 #align_import topology.homotopy.product from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

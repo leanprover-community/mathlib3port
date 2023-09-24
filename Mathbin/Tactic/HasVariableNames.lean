@@ -3,7 +3,7 @@ Copyright (c) 2020 Jannis Limperg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 -/
-import Mathbin.Tactic.Core
+import Tactic.Core
 
 #align_import tactic.has_variable_names from "leanprover-community/mathlib"@"0c024a6270e43657c28aaf9664565a85593b3865"
 

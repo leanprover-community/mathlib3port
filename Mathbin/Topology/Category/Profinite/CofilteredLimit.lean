@@ -3,11 +3,11 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.Topology.Category.Profinite.Basic
-import Mathbin.Topology.LocallyConstant.Basic
-import Mathbin.Topology.DiscreteQuotient
-import Mathbin.Topology.Category.Top.Limits.Cofiltered
-import Mathbin.Topology.Category.Top.Limits.Konig
+import Topology.Category.Profinite.Basic
+import Topology.LocallyConstant.Basic
+import Topology.DiscreteQuotient
+import Topology.Category.Top.Limits.Cofiltered
+import Topology.Category.Top.Limits.Konig
 
 #align_import topology.category.Profinite.cofiltered_limit from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

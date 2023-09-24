@@ -3,10 +3,10 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 -/
-import Mathbin.Analysis.Convex.Jensen
-import Mathbin.Analysis.Convex.Topology
-import Mathbin.Analysis.Normed.Group.Pointwise
-import Mathbin.Analysis.NormedSpace.Ray
+import Analysis.Convex.Jensen
+import Analysis.Convex.Topology
+import Analysis.Normed.Group.Pointwise
+import Analysis.NormedSpace.Ray
 
 #align_import analysis.convex.normed from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

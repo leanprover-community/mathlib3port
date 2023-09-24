@@ -3,14 +3,14 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue.Complex
-import Mathbin.MeasureTheory.Integral.DivergenceTheorem
-import Mathbin.MeasureTheory.Integral.CircleIntegral
-import Mathbin.Analysis.Calculus.Dslope
-import Mathbin.Analysis.Analytic.Basic
-import Mathbin.Analysis.Complex.ReImTopology
-import Mathbin.Analysis.Calculus.DiffContOnCl
-import Mathbin.Data.Real.Cardinality
+import MeasureTheory.Measure.Lebesgue.Complex
+import MeasureTheory.Integral.DivergenceTheorem
+import MeasureTheory.Integral.CircleIntegral
+import Analysis.Calculus.Dslope
+import Analysis.Analytic.Basic
+import Analysis.Complex.ReImTopology
+import Analysis.Calculus.DiffContOnCl
+import Data.Real.Cardinality
 
 #align_import analysis.complex.cauchy_integral from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

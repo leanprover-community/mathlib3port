@@ -3,10 +3,10 @@ Copyright (c) 2023 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 -/
-import Mathbin.Tactic.Qify
-import Mathbin.Data.Zmod.Basic
-import Mathbin.NumberTheory.DiophantineApproximation
-import Mathbin.NumberTheory.Zsqrtd.Basic
+import Tactic.Qify
+import Data.Zmod.Basic
+import NumberTheory.DiophantineApproximation
+import NumberTheory.Zsqrtd.Basic
 
 #align_import number_theory.pell from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

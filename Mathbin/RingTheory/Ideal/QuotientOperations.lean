@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.RingTheory.Ideal.Operations
-import Mathbin.RingTheory.Ideal.Quotient
+import RingTheory.Ideal.Operations
+import RingTheory.Ideal.Quotient
 
 #align_import ring_theory.ideal.quotient_operations from "leanprover-community/mathlib"@"b88d81c84530450a8989e918608e5960f015e6c8"
 

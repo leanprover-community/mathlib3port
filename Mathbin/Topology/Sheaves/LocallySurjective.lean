@@ -3,9 +3,9 @@ Copyright (c) 2022 Sam van Gool and Jake Levinson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sam van Gool, Jake Levinson
 -/
-import Mathbin.Topology.Sheaves.Presheaf
-import Mathbin.Topology.Sheaves.Stalks
-import Mathbin.CategoryTheory.Sites.Surjective
+import Topology.Sheaves.Presheaf
+import Topology.Sheaves.Stalks
+import CategoryTheory.Sites.Surjective
 
 #align_import topology.sheaves.locally_surjective from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

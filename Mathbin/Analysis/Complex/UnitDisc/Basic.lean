@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Complex.Circle
-import Mathbin.Analysis.NormedSpace.BallAction
+import Analysis.Complex.Circle
+import Analysis.NormedSpace.BallAction
 
 #align_import analysis.complex.unit_disc.basic from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

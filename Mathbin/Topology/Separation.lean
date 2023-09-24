@@ -3,10 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.Connected
-import Mathbin.Topology.NhdsSet
-import Mathbin.Topology.Inseparable
+import Topology.SubsetProperties
+import Topology.Connected
+import Topology.NhdsSet
+import Topology.Inseparable
 
 #align_import topology.separation from "leanprover-community/mathlib"@"d91e7f7a7f1c7e9f0e18fdb6bde4f652004c735d"
 
@@ -306,7 +306,7 @@ instance : T0Space (SeparationQuotient α) :=
     Quotient.inductionOn₂' x' y' fun x y h =>
       SeparationQuotient.mk_eq_mk.2 <| SeparationQuotient.inducing_mk.inseparable_iff.1 h⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_closed_subsingleton /-
 theorem minimal_nonempty_closed_subsingleton [T0Space α] {s : Set α} (hs : IsClosed s)
     (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsClosed t → t = s) : s.Subsingleton :=
@@ -321,7 +321,7 @@ theorem minimal_nonempty_closed_subsingleton [T0Space α] {s : Set α} (hs : IsC
 #align minimal_nonempty_closed_subsingleton minimal_nonempty_closed_subsingleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_closed_eq_singleton /-
 theorem minimal_nonempty_closed_eq_singleton [T0Space α] {s : Set α} (hs : IsClosed s)
     (hne : s.Nonempty) (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsClosed t → t = s) : ∃ x, s = {x} :=
@@ -343,7 +343,7 @@ theorem IsClosed.exists_closed_singleton {α : Type _} [TopologicalSpace α] [T0
 #align is_closed.exists_closed_singleton IsClosed.exists_closed_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_open_subsingleton /-
 theorem minimal_nonempty_open_subsingleton [T0Space α] {s : Set α} (hs : IsOpen s)
     (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsOpen t → t = s) : s.Subsingleton :=
@@ -358,7 +358,7 @@ theorem minimal_nonempty_open_subsingleton [T0Space α] {s : Set α} (hs : IsOpe
 #align minimal_nonempty_open_subsingleton minimal_nonempty_open_subsingleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_open_eq_singleton /-
 theorem minimal_nonempty_open_eq_singleton [T0Space α] {s : Set α} (hs : IsOpen s)
     (hne : s.Nonempty) (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsOpen t → t = s) : ∃ x, s = {x} :=
@@ -366,7 +366,7 @@ theorem minimal_nonempty_open_eq_singleton [T0Space α] {s : Set α} (hs : IsOpe
 #align minimal_nonempty_open_eq_singleton minimal_nonempty_open_eq_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 #print exists_open_singleton_of_open_finite /-
 /-- Given an open finite set `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
 theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s.Finite)
@@ -558,7 +558,7 @@ theorem Bornology.relativelyCompact.isBounded_iff [T1Space α] {s : Set α} :
   constructor
   · rintro ⟨t, ht₁, ht₂, hst⟩
     rw [compl_subset_compl] at hst 
-    exact isCompact_of_isClosed_subset ht₂ isClosed_closure (closure_minimal hst ht₁)
+    exact IsCompact.of_isClosed_subset ht₂ isClosed_closure (closure_minimal hst ht₁)
   · intro h
     exact ⟨closure s, isClosed_closure, h, compl_subset_compl.mpr subset_closure⟩
 #align bornology.relatively_compact.is_bounded_iff Bornology.relativelyCompact.isBounded_iff
@@ -1681,7 +1681,7 @@ theorem IsCompact.inter [T2Space α] {s t : Set α} (hs : IsCompact s) (ht : IsC
 #print isCompact_closure_of_subset_compact /-
 theorem isCompact_closure_of_subset_compact [T2Space α] {s t : Set α} (ht : IsCompact t)
     (h : s ⊆ t) : IsCompact (closure s) :=
-  isCompact_of_isClosed_subset ht isClosed_closure (closure_minimal h ht.IsClosed)
+  IsCompact.of_isClosed_subset ht isClosed_closure (closure_minimal h ht.IsClosed)
 #align is_compact_closure_of_subset_compact isCompact_closure_of_subset_compact
 -/
 
@@ -1883,7 +1883,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
 #align regular_space RegularSpace
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » closure[closure] s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ∉ » closure[closure] s) -/
 #print regularSpace_TFAE /-
 theorem regularSpace_TFAE (X : Type u) [TopologicalSpace X] :
     TFAE
@@ -2145,8 +2145,8 @@ instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [�
     T3Space (∀ i, π i) :=
   ⟨⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » nhds() x) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » nhds() y) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » nhds() x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » nhds() y) -/
 #print disjoint_nested_nhds /-
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/

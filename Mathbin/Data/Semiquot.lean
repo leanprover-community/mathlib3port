@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Set.Lattice
+import Data.Set.Lattice
 
 #align_import data.semiquot from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -136,7 +136,7 @@ def toTrunc (q : Semiquot α) : Trunc α :=
 #align semiquot.to_trunc Semiquot.toTrunc
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 #print Semiquot.liftOn /-
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
@@ -145,7 +145,7 @@ def liftOn (q : Semiquot α) (f : α → β) (h : ∀ (a) (_ : a ∈ q) (b) (_ :
 #align semiquot.lift_on Semiquot.liftOn
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 #print Semiquot.liftOn_ofMem /-
 theorem liftOn_ofMem (q : Semiquot α) (f : α → β) (h : ∀ (a) (_ : a ∈ q) (b) (_ : b ∈ q), f a = f b)
     (a : α) (aq : a ∈ q) : liftOn q f h = f a := by
@@ -256,7 +256,7 @@ theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
 #align semiquot.pure_le Semiquot.pure_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 #print Semiquot.IsPure /-
 /-- Assert that a `semiquot` contains only one possible value. -/
 def IsPure (q : Semiquot α) : Prop :=

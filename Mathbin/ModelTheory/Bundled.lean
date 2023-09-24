@@ -3,8 +3,8 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.ModelTheory.ElementaryMaps
-import Mathbin.CategoryTheory.ConcreteCategory.Bundled
+import ModelTheory.ElementaryMaps
+import CategoryTheory.ConcreteCategory.Bundled
 
 #align_import model_theory.bundled from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

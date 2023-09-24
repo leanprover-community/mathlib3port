@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Topology.Algebra.Monoid
-import Mathbin.Algebra.Group.Pi
-import Mathbin.Topology.Homeomorph
+import Topology.Algebra.Monoid
+import Algebra.Group.Pi
+import Topology.Homeomorph
 
 #align_import topology.algebra.group_with_zero from "leanprover-community/mathlib"@"c10e724be91096453ee3db13862b9fb9a992fef2"
 

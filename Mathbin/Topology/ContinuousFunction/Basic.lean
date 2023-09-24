@@ -3,8 +3,8 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Data.Set.UnionLift
-import Mathbin.Topology.Homeomorph
+import Data.Set.UnionLift
+import Topology.Homeomorph
 
 #align_import topology.continuous_function.basic from "leanprover-community/mathlib"@"55d771df074d0dd020139ee1cd4b95521422df9f"
 

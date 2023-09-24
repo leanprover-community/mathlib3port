@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 -/
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+import NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
 #align_import number_theory.legendre_symbol.basic from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

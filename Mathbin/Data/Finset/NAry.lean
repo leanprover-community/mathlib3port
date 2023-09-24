@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.Prod
-import Mathbin.Data.Set.Finite
+import Data.Finset.Prod
+import Data.Set.Finite
 
 #align_import data.finset.n_ary from "leanprover-community/mathlib"@"eba7871095e834365616b5e43c8c7bb0b37058d0"
 

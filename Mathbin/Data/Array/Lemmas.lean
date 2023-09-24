@@ -3,8 +3,8 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Data.Fin.Basic
-import Mathbin.Data.List.Basic
+import Data.Fin.Basic
+import Data.List.Basic
 
 #align_import data.array.lemmas from "leanprover-community/mathlib"@"f0c8bf9245297a541f468be517f1bde6195105e9"
 

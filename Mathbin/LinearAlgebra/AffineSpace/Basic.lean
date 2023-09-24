@@ -3,7 +3,7 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Algebra.AddTorsor
+import Algebra.AddTorsor
 
 #align_import linear_algebra.affine_space.basic from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 

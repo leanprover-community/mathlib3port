@@ -3,9 +3,9 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap
-import Mathbin.LinearAlgebra.GeneralLinearGroup
-import Mathbin.Algebra.Invertible
+import LinearAlgebra.AffineSpace.AffineMap
+import LinearAlgebra.GeneralLinearGroup
+import Algebra.Invertible
 
 #align_import linear_algebra.affine_space.affine_equiv from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Ring.Defs
-import Mathbin.Algebra.Ring.Pi
-import Mathbin.Tactic.Positivity
+import Algebra.Order.Ring.Defs
+import Algebra.Ring.Pi
+import Tactic.Positivity
 
 #align_import algebra.order.pi from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

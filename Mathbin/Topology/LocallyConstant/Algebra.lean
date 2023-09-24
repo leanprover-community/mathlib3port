@@ -3,8 +3,8 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.Algebra.Pi
-import Mathbin.Topology.LocallyConstant.Basic
+import Algebra.Algebra.Pi
+import Topology.LocallyConstant.Basic
 
 #align_import topology.locally_constant.algebra from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

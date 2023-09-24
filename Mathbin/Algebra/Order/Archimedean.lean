@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Int.LeastGreatest
-import Mathbin.Data.Rat.Floor
+import Data.Int.LeastGreatest
+import Data.Rat.Floor
 
 #align_import algebra.order.archimedean from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

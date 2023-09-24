@@ -3,10 +3,10 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.BigOperators.Fin
-import Mathbin.Algebra.GeomSum
-import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.Matrix.Nondegenerate
+import Algebra.BigOperators.Fin
+import Algebra.GeomSum
+import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Nondegenerate
 
 #align_import linear_algebra.vandermonde from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

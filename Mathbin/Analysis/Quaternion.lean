@@ -3,10 +3,10 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 -/
-import Mathbin.Algebra.Quaternion
-import Mathbin.Analysis.InnerProductSpace.Basic
-import Mathbin.Analysis.InnerProductSpace.PiL2
-import Mathbin.Topology.Algebra.Algebra
+import Algebra.Quaternion
+import Analysis.InnerProductSpace.Basic
+import Analysis.InnerProductSpace.PiL2
+import Topology.Algebra.Algebra
 
 #align_import analysis.quaternion from "leanprover-community/mathlib"@"599fffe78f0e11eb6a034e834ec51882167b9688"
 

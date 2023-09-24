@@ -3,8 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 -/
-import Mathbin.Topology.Category.Profinite.Basic
-import Mathbin.Topology.DiscreteQuotient
+import Topology.Category.Profinite.Basic
+import Topology.DiscreteQuotient
 
 #align_import topology.category.Profinite.as_limit from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

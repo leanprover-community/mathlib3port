@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.CharP.Two
-import Mathbin.Data.Nat.Factorization.Basic
-import Mathbin.Data.Nat.Periodic
-import Mathbin.Data.Zmod.Basic
+import Algebra.CharP.Two
+import Data.Nat.Factorization.Basic
+import Data.Nat.Periodic
+import Data.Zmod.Basic
 
 #align_import data.nat.totient from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

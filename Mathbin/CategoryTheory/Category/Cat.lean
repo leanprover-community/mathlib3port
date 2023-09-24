@@ -3,10 +3,10 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.Bundled
-import Mathbin.CategoryTheory.DiscreteCategory
-import Mathbin.CategoryTheory.Types
-import Mathbin.CategoryTheory.Bicategory.Strict
+import CategoryTheory.ConcreteCategory.Bundled
+import CategoryTheory.DiscreteCategory
+import CategoryTheory.Types
+import CategoryTheory.Bicategory.Strict
 
 #align_import category_theory.category.Cat from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Int.Interval
-import Mathbin.Tactic.NormNum
+import Algebra.BigOperators.Basic
+import Data.Int.Interval
+import Tactic.NormNum
 
 #align_import algebra.big_operators.norm_num from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

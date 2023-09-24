@@ -3,9 +3,9 @@ Copyright (c) 2020 Aaron Anderson, Jalex Stark. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.RingTheory.PowerBasis
+import LinearAlgebra.Matrix.Charpoly.Coeff
+import LinearAlgebra.Matrix.ToLin
+import RingTheory.PowerBasis
 
 #align_import linear_algebra.matrix.charpoly.minpoly from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

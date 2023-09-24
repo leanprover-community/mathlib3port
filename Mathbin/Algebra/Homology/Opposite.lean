@@ -3,9 +3,9 @@ Copyright (c) 2022 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Amelia Livingston
 -/
-import Mathbin.CategoryTheory.Abelian.Opposite
-import Mathbin.CategoryTheory.Abelian.Homology
-import Mathbin.Algebra.Homology.Additive
+import CategoryTheory.Abelian.Opposite
+import CategoryTheory.Abelian.Homology
+import Algebra.Homology.Additive
 
 #align_import algebra.homology.opposite from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

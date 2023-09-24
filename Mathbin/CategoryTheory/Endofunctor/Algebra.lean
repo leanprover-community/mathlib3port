@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Hua. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Johan Commelin, Reid Barton, Rob Lewis, Joseph Hua
 -/
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Limits.Shapes.Terminal
 
 #align_import category_theory.endofunctor.algebra from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 

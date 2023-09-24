@@ -3,11 +3,11 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 -/
-import Mathbin.Algebra.Category.Module.Abelian
-import Mathbin.CategoryTheory.Functor.LeftDerived
-import Mathbin.CategoryTheory.Linear.Yoneda
-import Mathbin.CategoryTheory.Abelian.Opposite
-import Mathbin.CategoryTheory.Abelian.Projective
+import Algebra.Category.Module.Abelian
+import CategoryTheory.Functor.LeftDerived
+import CategoryTheory.Linear.Yoneda
+import CategoryTheory.Abelian.Opposite
+import CategoryTheory.Abelian.Projective
 
 #align_import category_theory.abelian.ext from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

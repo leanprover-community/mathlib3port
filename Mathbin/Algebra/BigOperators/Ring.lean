@@ -3,10 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.Field.Defs
-import Mathbin.Data.Finset.Pi
-import Mathbin.Data.Finset.Powerset
+import Algebra.BigOperators.Basic
+import Algebra.Field.Defs
+import Data.Finset.Pi
+import Data.Finset.Powerset
 
 #align_import algebra.big_operators.ring from "leanprover-community/mathlib"@"b2c89893177f66a48daf993b7ba5ef7cddeff8c9"
 

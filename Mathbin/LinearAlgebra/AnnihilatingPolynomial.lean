@@ -3,8 +3,8 @@ Copyright (c) 2022 Justin Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justin Thomas
 -/
-import Mathbin.FieldTheory.Minpoly.Field
-import Mathbin.RingTheory.PrincipalIdealDomain
+import FieldTheory.Minpoly.Field
+import RingTheory.PrincipalIdealDomain
 
 #align_import linear_algebra.annihilating_polynomial from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

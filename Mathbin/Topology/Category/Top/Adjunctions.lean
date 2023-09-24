@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Mario Carneiro
 -/
-import Mathbin.Topology.Category.Top.Basic
-import Mathbin.CategoryTheory.Adjunction.Basic
+import Topology.Category.Top.Basic
+import CategoryTheory.Adjunction.Basic
 
 #align_import topology.category.Top.adjunctions from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

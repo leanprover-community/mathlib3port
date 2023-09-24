@@ -3,9 +3,9 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 -/
-import Mathbin.Algebra.Star.Order
-import Mathbin.Data.Matrix.Basic
-import Mathbin.LinearAlgebra.StdBasis
+import Algebra.Star.Order
+import Data.Matrix.Basic
+import LinearAlgebra.StdBasis
 
 #align_import linear_algebra.matrix.dot_product from "leanprover-community/mathlib"@"31c24aa72e7b3e5ed97a8412470e904f82b81004"
 

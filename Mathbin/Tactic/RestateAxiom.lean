@@ -3,7 +3,7 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Tactic.DocCommands
+import Tactic.DocCommands
 
 #align_import tactic.restate_axiom from "leanprover-community/mathlib"@"d6814c584384ddf2825ff038e868451a7c956f31"
 

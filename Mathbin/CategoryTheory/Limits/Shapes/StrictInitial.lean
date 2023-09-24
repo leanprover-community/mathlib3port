@@ -3,8 +3,8 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
+import CategoryTheory.Limits.Shapes.Terminal
+import CategoryTheory.Limits.Shapes.BinaryProducts
 
 #align_import category_theory.limits.shapes.strict_initial from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 
@@ -248,7 +248,7 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CategoryTheory.Limits.limit_π_isIso_of_is_strict_terminal /-
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/

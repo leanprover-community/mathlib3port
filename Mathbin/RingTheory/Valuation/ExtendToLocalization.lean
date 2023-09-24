@@ -3,8 +3,8 @@ Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.RingTheory.Localization.AtPrime
-import Mathbin.RingTheory.Valuation.Basic
+import RingTheory.Localization.AtPrime
+import RingTheory.Valuation.Basic
 
 #align_import ring_theory.valuation.extend_to_localization from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

@@ -3,9 +3,9 @@ Copyright (c) 2022 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.ModelTheory.FinitelyGenerated
-import Mathbin.ModelTheory.DirectLimit
-import Mathbin.ModelTheory.Bundled
+import ModelTheory.FinitelyGenerated
+import ModelTheory.DirectLimit
+import ModelTheory.Bundled
 
 #align_import model_theory.fraisse from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

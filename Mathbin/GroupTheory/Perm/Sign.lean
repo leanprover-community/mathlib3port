@@ -3,10 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.GroupTheory.Perm.Support
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Data.Finset.Fin
-import Mathbin.Data.Int.Order.Units
+import GroupTheory.Perm.Support
+import GroupTheory.OrderOfElement
+import Data.Finset.Fin
+import Data.Int.Order.Units
 
 #align_import group_theory.perm.sign from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

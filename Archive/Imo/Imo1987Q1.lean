@@ -3,10 +3,10 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Fintype.BigOperators
-import Mathbin.Data.Fintype.Perm
-import Mathbin.Data.Fintype.Prod
-import Mathbin.Dynamics.FixedPoints.Basic
+import Data.Fintype.BigOperators
+import Data.Fintype.Perm
+import Data.Fintype.Prod
+import Dynamics.FixedPoints.Basic
 
 #align_import imo.imo1987_q1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

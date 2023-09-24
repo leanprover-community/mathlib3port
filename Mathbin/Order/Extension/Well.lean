@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Junyan Xu
 -/
-import Mathbin.Data.Prod.Lex
-import Mathbin.SetTheory.Ordinal.Arithmetic
+import Data.Prod.Lex
+import SetTheory.Ordinal.Arithmetic
 
 #align_import order.extension.well from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

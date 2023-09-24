@@ -3,9 +3,9 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 -/
-import Mathbin.Algebra.Homology.QuasiIso
-import Mathbin.CategoryTheory.Preadditive.InjectiveResolution
-import Mathbin.Algebra.Homology.HomotopyCategory
+import Algebra.Homology.QuasiIso
+import CategoryTheory.Preadditive.InjectiveResolution
+import Algebra.Homology.HomotopyCategory
 
 #align_import category_theory.abelian.injective_resolution from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

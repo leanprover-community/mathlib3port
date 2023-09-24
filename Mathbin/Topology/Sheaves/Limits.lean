@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Topology.Sheaves.Sheaf
-import Mathbin.CategoryTheory.Sites.Limits
-import Mathbin.CategoryTheory.Limits.FunctorCategory
+import Topology.Sheaves.Sheaf
+import CategoryTheory.Sites.Limits
+import CategoryTheory.Limits.FunctorCategory
 
 #align_import topology.sheaves.limits from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

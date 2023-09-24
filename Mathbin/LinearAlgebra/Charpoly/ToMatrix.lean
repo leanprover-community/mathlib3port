@@ -3,8 +3,8 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.LinearAlgebra.Charpoly.Basic
-import Mathbin.LinearAlgebra.Matrix.Basis
+import LinearAlgebra.Charpoly.Basic
+import LinearAlgebra.Matrix.Basis
 
 #align_import linear_algebra.charpoly.to_matrix from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

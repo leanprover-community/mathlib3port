@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.GroupTheory.Subgroup.Pointwise
-import Mathbin.LinearAlgebra.Span
+import GroupTheory.Subgroup.Pointwise
+import LinearAlgebra.Span
 
 #align_import algebra.module.submodule.pointwise from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

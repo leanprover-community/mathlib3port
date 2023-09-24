@@ -3,7 +3,7 @@ Copyright (c) 2021 Jakob Scholbach. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach, Joël Riou
 -/
-import Mathbin.CategoryTheory.CommSq
+import CategoryTheory.CommSq
 
 #align_import category_theory.lifting_properties.basic from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"
 

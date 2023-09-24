@@ -3,10 +3,10 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Order.BoundedOrder
-import Mathbin.Order.MinMax
-import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.Order.Monoid.Defs
+import Order.BoundedOrder
+import Order.MinMax
+import Algebra.NeZero
+import Algebra.Order.Monoid.Defs
 
 #align_import algebra.order.monoid.canonical.defs from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

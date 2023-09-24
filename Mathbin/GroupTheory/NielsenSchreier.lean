@@ -3,10 +3,10 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.CategoryTheory.Action
-import Mathbin.Combinatorics.Quiver.Arborescence
-import Mathbin.Combinatorics.Quiver.ConnectedComponent
-import Mathbin.GroupTheory.IsFreeGroup
+import CategoryTheory.Action
+import Combinatorics.Quiver.Arborescence
+import Combinatorics.Quiver.ConnectedComponent
+import GroupTheory.IsFreeGroup
 
 #align_import group_theory.nielsen_schreier from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
@@ -202,7 +202,7 @@ def loopOfHom {a b : G} (p : a ⟶ b) : End (root' T) :=
 #align is_free_groupoid.spanning_tree.loop_of_hom IsFreeGroupoid.SpanningTree.loopOfHom
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
 #print IsFreeGroupoid.SpanningTree.loopOfHom_eq_id /-
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loopOfHom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :

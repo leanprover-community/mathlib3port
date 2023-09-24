@@ -3,10 +3,10 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathbin.Analysis.Convolution
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
-import Mathbin.Analysis.SpecialFunctions.Gamma.BohrMollerup
-import Mathbin.Analysis.Analytic.IsolatedZeros
+import Analysis.Convolution
+import Analysis.SpecialFunctions.Trigonometric.EulerSineProd
+import Analysis.SpecialFunctions.Gamma.BohrMollerup
+import Analysis.Analytic.IsolatedZeros
 
 #align_import analysis.special_functions.gamma.beta from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

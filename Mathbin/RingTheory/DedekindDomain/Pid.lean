@@ -3,8 +3,8 @@ Copyright (c) 2023 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.RingTheory.DedekindDomain.Dvr
-import Mathbin.RingTheory.DedekindDomain.Ideal
+import RingTheory.DedekindDomain.Dvr
+import RingTheory.DedekindDomain.Ideal
 
 #align_import ring_theory.dedekind_domain.pid from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

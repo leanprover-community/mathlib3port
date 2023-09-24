@@ -3,13 +3,13 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 -/
-import Mathbin.Data.Nat.Parity
-import Mathbin.Data.Pnat.Interval
-import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.RingTheory.Fintype
-import Mathbin.Tactic.IntervalCases
-import Mathbin.Tactic.RingExp
+import Data.Nat.Parity
+import Data.Pnat.Interval
+import Data.Zmod.Basic
+import GroupTheory.OrderOfElement
+import RingTheory.Fintype
+import Tactic.IntervalCases
+import Tactic.RingExp
 
 #align_import number_theory.lucas_lehmer from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
@@ -646,9 +646,9 @@ theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/

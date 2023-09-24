@@ -3,10 +3,10 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 -/
-import Mathbin.Data.Int.Modeq
-import Mathbin.Data.Nat.Multiplicity
-import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.RingTheory.Nilpotent
+import Data.Int.Modeq
+import Data.Nat.Multiplicity
+import GroupTheory.OrderOfElement
+import RingTheory.Nilpotent
 
 #align_import algebra.char_p.basic from "leanprover-community/mathlib"@"47a1a73351de8dd6c8d3d32b569c8e434b03ca47"
 
@@ -113,7 +113,7 @@ end CommSemiring
 variable (R)
 
 #print CharP /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -649,7 +649,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (d «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (d «expr ∣ » p) -/
 #print CharP.char_is_prime_of_two_le /-
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩

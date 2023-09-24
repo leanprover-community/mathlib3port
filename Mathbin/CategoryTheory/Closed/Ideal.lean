@@ -3,13 +3,13 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
-import Mathbin.CategoryTheory.Monad.Limits
-import Mathbin.CategoryTheory.Adjunction.FullyFaithful
-import Mathbin.CategoryTheory.Adjunction.Reflective
-import Mathbin.CategoryTheory.Closed.Cartesian
-import Mathbin.CategoryTheory.Subterminal
+import CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
+import CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
+import CategoryTheory.Monad.Limits
+import CategoryTheory.Adjunction.FullyFaithful
+import CategoryTheory.Adjunction.Reflective
+import CategoryTheory.Closed.Cartesian
+import CategoryTheory.Subterminal
 
 #align_import category_theory.closed.ideal from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

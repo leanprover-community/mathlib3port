@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.ConcreteCategory.Basic
+import CategoryTheory.Functor.ReflectsIsomorphisms
 
 #align_import category_theory.concrete_category.reflects_isomorphisms from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

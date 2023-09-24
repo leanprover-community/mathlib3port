@@ -3,7 +3,7 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Order.WithBot
+import Order.WithBot
 
 #align_import tactic.monotonicity.basic from "leanprover-community/mathlib"@"97be0de92337e2393d9a78b357f345d00c482eb5"
 

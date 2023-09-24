@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap
-import Mathbin.Tactic.FieldSimp
+import LinearAlgebra.AffineSpace.AffineMap
+import Tactic.FieldSimp
 
 #align_import linear_algebra.affine_space.slope from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Order.Hom.Basic
-import Mathbin.Logic.Equiv.Set
-import Mathbin.Data.Set.Image
+import Order.Hom.Basic
+import Logic.Equiv.Set
+import Data.Set.Image
 
 #align_import order.hom.set from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

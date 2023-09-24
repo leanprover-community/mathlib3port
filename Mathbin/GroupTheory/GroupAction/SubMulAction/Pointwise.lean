@@ -3,7 +3,7 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.GroupTheory.GroupAction.SubMulAction
+import GroupTheory.GroupAction.SubMulAction
 
 #align_import group_theory.group_action.sub_mul_action.pointwise from "leanprover-community/mathlib"@"2bbc7e3884ba234309d2a43b19144105a753292e"
 

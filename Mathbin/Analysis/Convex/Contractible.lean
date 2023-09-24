@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.Convex.Star
-import Mathbin.Topology.Homotopy.Contractible
+import Analysis.Convex.Star
+import Topology.Homotopy.Contractible
 
 #align_import analysis.convex.contractible from "leanprover-community/mathlib"@"dbdf71cee7bb20367cb7e37279c08b0c218cf967"
 

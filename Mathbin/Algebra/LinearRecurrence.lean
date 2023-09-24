@@ -3,8 +3,8 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
-import Mathbin.Data.Polynomial.Eval
-import Mathbin.LinearAlgebra.Dimension
+import Data.Polynomial.Eval
+import LinearAlgebra.Dimension
 
 #align_import algebra.linear_recurrence from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 

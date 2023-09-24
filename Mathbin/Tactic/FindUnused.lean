@@ -3,9 +3,9 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Data.Bool.Basic
-import Mathbin.Meta.RbMap
-import Mathbin.Tactic.Core
+import Data.Bool.Basic
+import Meta.RbMap
+import Tactic.Core
 
 #align_import tactic.find_unused from "leanprover-community/mathlib"@"e68fcf8dede813727dd0a47c873938ade3f90ef1"
 

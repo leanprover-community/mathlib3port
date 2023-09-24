@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Closed.Cartesian
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Adjunction.FullyFaithful
+import CategoryTheory.Closed.Cartesian
+import CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
+import CategoryTheory.Adjunction.FullyFaithful
 
 #align_import category_theory.closed.functor from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

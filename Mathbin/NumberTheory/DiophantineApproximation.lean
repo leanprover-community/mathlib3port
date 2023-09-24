@@ -3,13 +3,13 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 -/
-import Mathbin.Algebra.ContinuedFractions.Computation.ApproximationCorollaries
-import Mathbin.Algebra.ContinuedFractions.Computation.Translations
-import Mathbin.Combinatorics.Pigeonhole
-import Mathbin.Data.Int.Units
-import Mathbin.Data.Real.Irrational
-import Mathbin.RingTheory.Coprime.Lemmas
-import Mathbin.Tactic.Basic
+import Algebra.ContinuedFractions.Computation.ApproximationCorollaries
+import Algebra.ContinuedFractions.Computation.Translations
+import Combinatorics.Pigeonhole
+import Data.Int.Units
+import Data.Real.Irrational
+import RingTheory.Coprime.Lemmas
+import Tactic.Basic
 
 #align_import number_theory.diophantine_approximation from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"
 

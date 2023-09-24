@@ -3,9 +3,9 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Eric Wieser
 -/
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Analysis.NormedSpace.PiLp
-import Mathbin.Analysis.InnerProductSpace.PiL2
+import Analysis.NormedSpace.Basic
+import Analysis.NormedSpace.PiLp
+import Analysis.InnerProductSpace.PiL2
 
 #align_import analysis.matrix from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

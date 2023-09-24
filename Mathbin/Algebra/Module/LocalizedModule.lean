@@ -3,9 +3,9 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
 -/
-import Mathbin.GroupTheory.MonoidLocalization
-import Mathbin.RingTheory.Localization.Basic
-import Mathbin.Algebra.Algebra.RestrictScalars
+import GroupTheory.MonoidLocalization
+import RingTheory.Localization.Basic
+import Algebra.Algebra.RestrictScalars
 
 #align_import algebra.module.localized_module from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 
@@ -613,9 +613,9 @@ variable {M M' M'' : Type _} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid
 variable [Module R M] [Module R M'] [Module R M''] (f : M →ₗ[R] M') (g : M →ₗ[R] M'')
 
 #print IsLocalizedModule /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
 /-- The characteristic predicate for localized module.
 `is_localized_module S f` describes that `f : M ⟶ M'` is the localization map identifying `M'` as
 `localized_module S M`.

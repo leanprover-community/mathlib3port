@@ -3,9 +3,9 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Logic.IsEmpty
-import Mathbin.Control.Traversable.Basic
-import Mathbin.Tactic.Basic
+import Logic.IsEmpty
+import Control.Traversable.Basic
+import Tactic.Basic
 
 #align_import data.option.basic from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
@@ -766,7 +766,7 @@ theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = som
 #align option.ne_none_iff_exists' Option.ne_none_iff_exists'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.bex_ne_none /-
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _) (_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_isSome.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ =>
@@ -774,7 +774,7 @@ theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _) (_ : x ≠ none), p 
 #align option.bex_ne_none Option.bex_ne_none
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.ball_ne_none /-
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by

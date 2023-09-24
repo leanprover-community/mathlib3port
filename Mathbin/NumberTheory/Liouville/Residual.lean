@@ -3,9 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.NumberTheory.Liouville.Basic
-import Mathbin.Topology.MetricSpace.Baire
-import Mathbin.Topology.Instances.Irrational
+import NumberTheory.Liouville.Basic
+import Topology.MetricSpace.Baire
+import Topology.Instances.Irrational
 
 #align_import number_theory.liouville.residual from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

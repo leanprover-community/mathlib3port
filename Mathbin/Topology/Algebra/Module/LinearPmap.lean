@@ -3,8 +3,8 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Mathbin.LinearAlgebra.LinearPmap
-import Mathbin.Topology.Algebra.Module.Basic
+import LinearAlgebra.LinearPmap
+import Topology.Algebra.Module.Basic
 
 #align_import topology.algebra.module.linear_pmap from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

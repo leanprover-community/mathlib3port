@@ -3,10 +3,10 @@ Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu, Jack McKoen
 -/
-import Mathbin.RingTheory.Valuation.ValuationRing
-import Mathbin.RingTheory.Localization.AsSubring
-import Mathbin.RingTheory.Subring.Pointwise
-import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
+import RingTheory.Valuation.ValuationRing
+import RingTheory.Localization.AsSubring
+import RingTheory.Subring.Pointwise
+import AlgebraicGeometry.PrimeSpectrum.Basic
 
 #align_import ring_theory.valuation.valuation_subring from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 

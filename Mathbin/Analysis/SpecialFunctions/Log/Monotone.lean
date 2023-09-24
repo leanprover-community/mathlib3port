@@ -3,7 +3,7 @@ Copyright (c) 2021 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow.Real
+import Analysis.SpecialFunctions.Pow.Real
 
 #align_import analysis.special_functions.log.monotone from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

@@ -3,10 +3,10 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Algebra.AddTorsor
-import Mathbin.Topology.Algebra.Constructions
-import Mathbin.GroupTheory.GroupAction.Prod
-import Mathbin.Topology.Algebra.ConstMulAction
+import Algebra.AddTorsor
+import Topology.Algebra.Constructions
+import GroupTheory.GroupAction.Prod
+import Topology.Algebra.ConstMulAction
 
 #align_import topology.algebra.mul_action from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"
 

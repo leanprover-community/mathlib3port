@@ -3,9 +3,9 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Balanced
-import Mathbin.CategoryTheory.Functor.EpiMono
-import Mathbin.CategoryTheory.Functor.FullyFaithful
+import CategoryTheory.Balanced
+import CategoryTheory.Functor.EpiMono
+import CategoryTheory.Functor.FullyFaithful
 
 #align_import category_theory.functor.reflects_isomorphisms from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"
 

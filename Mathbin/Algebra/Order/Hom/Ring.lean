@@ -3,12 +3,12 @@ Copyright (c) 2022 Alex J. Best, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Archimedean
-import Mathbin.Algebra.Order.Hom.Monoid
-import Mathbin.Algebra.Order.Ring.Defs
-import Mathbin.Algebra.Ring.Equiv
-import Mathbin.Tactic.ByContra
-import Mathbin.Tactic.Wlog
+import Algebra.Order.Archimedean
+import Algebra.Order.Hom.Monoid
+import Algebra.Order.Ring.Defs
+import Algebra.Ring.Equiv
+import Tactic.ByContra
+import Tactic.Wlog
 
 #align_import algebra.order.hom.ring from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

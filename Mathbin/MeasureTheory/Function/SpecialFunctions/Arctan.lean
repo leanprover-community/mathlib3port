@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
+import Analysis.SpecialFunctions.Trigonometric.Arctan
+import MeasureTheory.Constructions.BorelSpace.Basic
 
 #align_import measure_theory.function.special_functions.arctan from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

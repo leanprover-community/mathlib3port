@@ -3,7 +3,7 @@ Copyright (c) 2021 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Function.ConditionalExpectation.Real
+import MeasureTheory.Function.ConditionalExpectation.Real
 
 #align_import probability.process.filtration from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
 

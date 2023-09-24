@@ -3,9 +3,9 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Linear.Basic
-import Mathbin.CategoryTheory.Preadditive.Biproducts
-import Mathbin.LinearAlgebra.Matrix.InvariantBasisNumber
+import CategoryTheory.Linear.Basic
+import CategoryTheory.Preadditive.Biproducts
+import LinearAlgebra.Matrix.InvariantBasisNumber
 
 #align_import category_theory.preadditive.hom_orthogonal from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

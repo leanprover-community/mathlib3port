@@ -3,8 +3,8 @@ Copyright (c) 2020 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Nat.Parity
-import Mathbin.Data.Zmod.Basic
+import Data.Nat.Parity
+import Data.Zmod.Basic
 
 #align_import data.zmod.parity from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
 

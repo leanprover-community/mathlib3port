@@ -3,12 +3,12 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Alexey Soloyev, Junyan Xu
 -/
-import Mathbin.Data.Real.Irrational
-import Mathbin.Data.Nat.Fib
-import Mathbin.Data.Nat.PrimeNormNum
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.Tactic.RingExp
-import Mathbin.Algebra.LinearRecurrence
+import Data.Real.Irrational
+import Data.Nat.Fib
+import Data.Nat.PrimeNormNum
+import Data.Fin.VecNotation
+import Tactic.RingExp
+import Algebra.LinearRecurrence
 
 #align_import data.real.golden_ratio from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

@@ -3,9 +3,9 @@ Copyright (c) 2021 . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.GroupTheory.GroupAction.Basic
-import Mathbin.GroupTheory.Subgroup.Zpowers
-import Mathbin.Algebra.GroupRingAction.Basic
+import GroupTheory.GroupAction.Basic
+import GroupTheory.Subgroup.Zpowers
+import Algebra.GroupRingAction.Basic
 
 #align_import group_theory.group_action.conj_act from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

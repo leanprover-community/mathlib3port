@@ -3,9 +3,9 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Algebra.Support
+import MeasureTheory.Constructions.BorelSpace.Basic
+import Algebra.IndicatorFunction
+import Algebra.Support
 
 #align_import measure_theory.function.simple_func from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
@@ -1462,7 +1462,7 @@ theorem finMeasSupp_iff_support : f.FinMeasSupp μ ↔ μ (support f) < ∞ :=
 #align measure_theory.simple_func.fin_meas_supp_iff_support MeasureTheory.SimpleFunc.finMeasSupp_iff_support
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 #print MeasureTheory.SimpleFunc.finMeasSupp_iff /-
 theorem finMeasSupp_iff : f.FinMeasSupp μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
   by

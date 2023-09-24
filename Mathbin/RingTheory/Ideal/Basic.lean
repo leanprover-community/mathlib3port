@@ -3,13 +3,13 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.LinearAlgebra.Basic
-import Mathbin.Order.Atoms
-import Mathbin.Order.CompactlyGenerated
-import Mathbin.Tactic.Abel
-import Mathbin.Data.Nat.Choose.Sum
-import Mathbin.LinearAlgebra.Finsupp
+import Algebra.Associated
+import LinearAlgebra.Basic
+import Order.Atoms
+import Order.CompactlyGenerated
+import Tactic.Abel
+import Data.Nat.Choose.Sum
+import LinearAlgebra.Finsupp
 
 #align_import ring_theory.ideal.basic from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
@@ -351,8 +351,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ∉ » I) -/
 #print Ideal.not_isPrime_iff /-
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _) (_ : x ∉ I) (y : _) (_ : y ∉ I), x * y ∈ I :=
@@ -945,7 +945,7 @@ namespace Ring
 
 variable {R : Type _} [CommSemiring R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 #print Ring.exists_not_isUnit_of_not_isField /-
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _) (_ : x ≠ (0 : R)), ¬IsUnit x :=

@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Topology.Sheaves.Presheaf
-import Mathbin.CategoryTheory.Adjunction.FullyFaithful
+import Topology.Sheaves.Presheaf
+import CategoryTheory.Adjunction.FullyFaithful
 
 #align_import algebraic_geometry.presheafed_space from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

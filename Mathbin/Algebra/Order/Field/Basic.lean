@@ -3,10 +3,10 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Order.Bounds.OrderIso
-import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.Order.Field.Defs
-import Mathbin.Algebra.GroupPower.Order
+import Order.Bounds.OrderIso
+import Algebra.Field.Basic
+import Algebra.Order.Field.Defs
+import Algebra.GroupPower.Order
 
 #align_import algebra.order.field.basic from "leanprover-community/mathlib"@"84771a9f5f0bd5e5d6218811556508ddf476dcbd"
 

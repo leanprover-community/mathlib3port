@@ -3,9 +3,9 @@ Copyright (c) 2022 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathbin.Data.Real.Ennreal
-import Mathbin.Topology.ContinuousFunction.Bounded
-import Mathbin.Topology.MetricSpace.HausdorffDistance
+import Data.Real.Ennreal
+import Topology.ContinuousFunction.Bounded
+import Topology.MetricSpace.HausdorffDistance
 
 #align_import topology.metric_space.thickened_indicator from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

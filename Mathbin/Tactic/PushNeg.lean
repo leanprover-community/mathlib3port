@@ -3,8 +3,8 @@ Copyright (c) 2019 Patrick Massot All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Simon Hudon
 -/
-import Mathbin.Tactic.Core
-import Mathbin.Logic.Basic
+import Tactic.Core
+import Logic.Basic
 
 #align_import tactic.push_neg from "leanprover-community/mathlib"@"da8ded3f1074e0c4fc2be04ca37d4d5ef39a8c52"
 
@@ -238,8 +238,8 @@ local postfix:1024 "*" => many
 
 open PushNeg
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
 /-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into

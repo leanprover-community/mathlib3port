@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Topology.ContinuousOn
-import Mathbin.Order.Filter.SmallSets
+import Topology.ContinuousOn
+import Order.Filter.SmallSets
 
 #align_import topology.locally_finite from "leanprover-community/mathlib"@"55d771df074d0dd020139ee1cd4b95521422df9f"
 

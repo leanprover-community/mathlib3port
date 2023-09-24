@@ -3,8 +3,8 @@ Copyright (c) 2020 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.BigOperators.Fin
-import Mathbin.Data.Polynomial.Degree.Definitions
+import Algebra.BigOperators.Fin
+import Data.Polynomial.Degree.Definitions
 
 #align_import data.polynomial.erase_lead from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

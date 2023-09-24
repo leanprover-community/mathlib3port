@@ -3,7 +3,7 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Order.Filter.Basic
+import Order.Filter.Basic
 
 #align_import order.filter.extr from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 

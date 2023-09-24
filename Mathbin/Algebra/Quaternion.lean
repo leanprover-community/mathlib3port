@@ -3,12 +3,12 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Algebra.Algebra.Equiv
-import Mathbin.LinearAlgebra.Finrank
-import Mathbin.LinearAlgebra.FreeModule.Basic
-import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
-import Mathbin.SetTheory.Cardinal.Ordinal
-import Mathbin.Tactic.RingExp
+import Algebra.Algebra.Equiv
+import LinearAlgebra.Finrank
+import LinearAlgebra.FreeModule.Basic
+import LinearAlgebra.FreeModule.Finite.Basic
+import SetTheory.Cardinal.Ordinal
+import Tactic.RingExp
 
 #align_import algebra.quaternion from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -56,7 +56,7 @@ quaternion
 
 
 #print QuaternionAlgebra /-
-/- ./././Mathport/Syntax/Translate/Command.lean:429:34: infer kinds are unsupported in Lean 4: mk {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:430:34: infer kinds are unsupported in Lean 4: mk {} -/
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
 @[nolint unused_arguments, ext]

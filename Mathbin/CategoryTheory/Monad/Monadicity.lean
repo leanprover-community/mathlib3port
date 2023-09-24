@@ -3,10 +3,10 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
-import Mathbin.CategoryTheory.Limits.Shapes.Reflexive
-import Mathbin.CategoryTheory.Monad.Coequalizer
-import Mathbin.CategoryTheory.Monad.Limits
+import CategoryTheory.Limits.Preserves.Shapes.Equalizers
+import CategoryTheory.Limits.Shapes.Reflexive
+import CategoryTheory.Monad.Coequalizer
+import CategoryTheory.Monad.Limits
 
 #align_import category_theory.monad.monadicity from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

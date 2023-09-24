@@ -3,8 +3,8 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.Algebra.BigOperators.Finsupp
+import Algebra.Associated
+import Algebra.BigOperators.Finsupp
 
 #align_import algebra.big_operators.associated from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"
 

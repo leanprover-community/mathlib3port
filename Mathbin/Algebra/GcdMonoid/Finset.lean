@@ -3,8 +3,8 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Data.Finset.Fold
-import Mathbin.Algebra.GcdMonoid.Multiset
+import Data.Finset.Fold
+import Algebra.GcdMonoid.Multiset
 
 #align_import algebra.gcd_monoid.finset from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Hom.Basic
-import Mathbin.Topology.ContinuousFunction.Basic
+import Order.Hom.Basic
+import Topology.ContinuousFunction.Basic
 
 #align_import topology.order.hom.basic from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 

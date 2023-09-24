@@ -3,12 +3,12 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Noetherian
-import Mathbin.RingTheory.ReesAlgebra
-import Mathbin.RingTheory.Finiteness
-import Mathbin.Data.Polynomial.Module
-import Mathbin.Order.Hom.Lattice
+import RingTheory.Ideal.LocalRing
+import RingTheory.Noetherian
+import RingTheory.ReesAlgebra
+import RingTheory.Finiteness
+import Data.Polynomial.Module
+import Order.Hom.Lattice
 
 #align_import ring_theory.filtration from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
 

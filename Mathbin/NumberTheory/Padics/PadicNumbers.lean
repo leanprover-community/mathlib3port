@@ -3,8 +3,8 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.NumberTheory.Padics.PadicNorm
-import Mathbin.Analysis.Normed.Field.Basic
+import NumberTheory.Padics.PadicNorm
+import Analysis.Normed.Field.Basic
 
 #align_import number_theory.padics.padic_numbers from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -750,7 +750,7 @@ open PadicSeq Padic
 
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Padic.rat_dense' /-
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   Quotient.inductionOn q fun q' =>
@@ -1133,7 +1133,7 @@ namespace Padic
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 #print Padic.complete /-

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, Yury Kudryashov,
 Neil Strickland, Aaron Anderson
 -/
-import Mathbin.Algebra.GroupWithZero.Basic
-import Mathbin.Algebra.Divisibility.Units
+import Algebra.GroupWithZero.Basic
+import Algebra.Divisibility.Units
 
 #align_import algebra.group_with_zero.divisibility from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 

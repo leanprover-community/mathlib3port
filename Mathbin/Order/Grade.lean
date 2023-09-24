@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies, Violeta Hernández Palacios. All rights reserv
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Vladimir Ivanov
 -/
-import Mathbin.Data.Finset.Basic
-import Mathbin.Data.Int.SuccPred
+import Data.Finset.Basic
+import Data.Int.SuccPred
 
 #align_import order.grade from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

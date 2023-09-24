@@ -3,7 +3,7 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov
 -/
-import Mathbin.Data.Set.Lattice
+import Data.Set.Lattice
 
 #align_import data.set.intervals.disjoint from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

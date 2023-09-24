@@ -3,8 +3,8 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.LinearAlgebra.Isomorphisms
-import Mathbin.Order.JordanHolder
+import LinearAlgebra.Isomorphisms
+import Order.JordanHolder
 
 #align_import ring_theory.simple_module from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

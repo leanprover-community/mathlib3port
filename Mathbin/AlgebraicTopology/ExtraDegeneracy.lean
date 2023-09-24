@@ -3,11 +3,11 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.AlgebraicTopology.AlternatingFaceMapComplex
-import Mathbin.AlgebraicTopology.SimplicialSet
-import Mathbin.AlgebraicTopology.CechNerve
-import Mathbin.Algebra.Homology.Homotopy
-import Mathbin.Tactic.FinCases
+import AlgebraicTopology.AlternatingFaceMapComplex
+import AlgebraicTopology.SimplicialSet
+import AlgebraicTopology.CechNerve
+import Algebra.Homology.Homotopy
+import Tactic.FinCases
 
 #align_import algebraic_topology.extra_degeneracy from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

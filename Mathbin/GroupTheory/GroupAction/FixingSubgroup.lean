@@ -3,8 +3,8 @@ Copyright (c) 2022 Antoine Chambert-Loir. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir
 -/
-import Mathbin.GroupTheory.Subgroup.Actions
-import Mathbin.GroupTheory.GroupAction.Basic
+import GroupTheory.Subgroup.Actions
+import GroupTheory.GroupAction.Basic
 
 #align_import group_theory.group_action.fixing_subgroup from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

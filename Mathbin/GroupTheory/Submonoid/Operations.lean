@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
-import Mathbin.Algebra.Order.Monoid.Cancel.Basic
-import Mathbin.GroupTheory.GroupAction.Defs
-import Mathbin.GroupTheory.Submonoid.Basic
-import Mathbin.GroupTheory.Subsemigroup.Operations
+import Algebra.Order.Monoid.Cancel.Basic
+import GroupTheory.GroupAction.Defs
+import GroupTheory.Submonoid.Basic
+import GroupTheory.Subsemigroup.Operations
 
 #align_import group_theory.submonoid.operations from "leanprover-community/mathlib"@"cf8e77c636317b059a8ce20807a29cf3772a0640"
 

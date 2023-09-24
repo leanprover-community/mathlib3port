@@ -3,7 +3,7 @@ Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 -/
-import Mathbin.SetTheory.Game.Basic
+import SetTheory.Game.Basic
 import Mathbin.Tactic.NthRewrite.Default
 
 #align_import set_theory.game.impartial from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"

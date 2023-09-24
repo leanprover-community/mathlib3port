@@ -3,8 +3,8 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Enat.Basic
-import Mathbin.Data.Real.Ennreal
+import Data.Enat.Basic
+import Data.Real.Ennreal
 
 #align_import data.real.enat_ennreal from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

@@ -3,12 +3,12 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 -/
-import Mathbin.Analysis.Normed.Order.Lattice
-import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Analysis.NormedSpace.Star.Basic
-import Mathbin.Data.Real.Sqrt
-import Mathbin.Topology.ContinuousFunction.Algebra
-import Mathbin.Topology.MetricSpace.Equicontinuity
+import Analysis.Normed.Order.Lattice
+import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.Star.Basic
+import Data.Real.Sqrt
+import Topology.ContinuousFunction.Algebra
+import Topology.MetricSpace.Equicontinuity
 
 #align_import topology.continuous_function.bounded from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 
@@ -652,7 +652,7 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 #print BoundedContinuousFunction.arzela_ascoli₁ /-
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
@@ -735,7 +735,7 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   have M : LipschitzWith 1 coe := LipschitzWith.subtype_val s
   let F : (α →ᵇ s) → α →ᵇ β := comp coe M
   refine'
-    isCompact_of_isClosed_subset ((_ : IsCompact (F ⁻¹' A)).image (continuous_comp M)) closed
+    IsCompact.of_isClosed_subset ((_ : IsCompact (F ⁻¹' A)).image (continuous_comp M)) closed
       fun f hf => _
   · haveI : CompactSpace s := isCompact_iff_compactSpace.1 hs
     refine' arzela_ascoli₁ _ (continuous_iff_isClosed.1 (continuous_comp M) _ closed) _

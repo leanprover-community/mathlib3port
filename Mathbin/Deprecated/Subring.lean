@@ -3,9 +3,9 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Deprecated.Subgroup
-import Mathbin.Deprecated.Group
-import Mathbin.RingTheory.Subring.Basic
+import Deprecated.Subgroup
+import Deprecated.Group
+import RingTheory.Subring.Basic
 
 #align_import deprecated.subring from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

@@ -3,8 +3,8 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.LinearAlgebra.Charpoly.Basic
-import Mathbin.LinearAlgebra.InvariantBasisNumber
+import LinearAlgebra.Charpoly.Basic
+import LinearAlgebra.InvariantBasisNumber
 
 #align_import linear_algebra.free_module.strong_rank_condition from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

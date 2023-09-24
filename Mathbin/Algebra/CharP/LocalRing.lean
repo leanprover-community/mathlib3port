@@ -3,10 +3,10 @@ Copyright (c) 2022 Jon Eugster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 -/
-import Mathbin.Algebra.CharP.Basic
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.Algebra.IsPrimePow
-import Mathbin.Data.Nat.Factorization.Basic
+import Algebra.CharP.Basic
+import RingTheory.Ideal.LocalRing
+import Algebra.IsPrimePow
+import Data.Nat.Factorization.Basic
 
 #align_import algebra.char_p.local_ring from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
