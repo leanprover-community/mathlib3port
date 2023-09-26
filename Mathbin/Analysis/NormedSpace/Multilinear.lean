@@ -554,9 +554,10 @@ theorem op_norm_prod (f : ContinuousMultilinearMap 𝕜 E G) (g : ContinuousMult
 #align continuous_multilinear_map.op_norm_prod ContinuousMultilinearMap.op_norm_prod
 -/
 
-#print ContinuousMultilinearMap.norm_pi /-
-theorem norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', NormedAddCommGroup (E' i')]
-    [∀ i', NormedSpace 𝕜 (E' i')] (f : ∀ i', ContinuousMultilinearMap 𝕜 E (E' i')) : ‖pi f‖ = ‖f‖ :=
+#print ContinuousMultilinearMap.op_norm_pi /-
+theorem op_norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'}
+    [∀ i', NormedAddCommGroup (E' i')] [∀ i', NormedSpace 𝕜 (E' i')]
+    (f : ∀ i', ContinuousMultilinearMap 𝕜 E (E' i')) : ‖pi f‖ = ‖f‖ :=
   by
   apply le_antisymm
   · refine' op_norm_le_bound _ (norm_nonneg f) fun m => _
@@ -568,7 +569,7 @@ theorem norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', N
     refine' op_norm_le_bound _ (norm_nonneg _) fun m => _
     refine' le_trans _ ((pi f).le_op_norm m)
     convert norm_le_pi_norm (fun j => f j m) i
-#align continuous_multilinear_map.norm_pi ContinuousMultilinearMap.norm_pi
+#align continuous_multilinear_map.norm_pi ContinuousMultilinearMap.op_norm_pi
 -/
 
 section
@@ -666,7 +667,7 @@ def piₗᵢ {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', Norm
     { piEquiv with
       map_add' := fun f g => rfl
       map_smul' := fun c f => rfl }
-  norm_map' := norm_pi
+  norm_map' := op_norm_pi
 #align continuous_multilinear_map.piₗᵢ ContinuousMultilinearMap.piₗᵢ
 -/
 
