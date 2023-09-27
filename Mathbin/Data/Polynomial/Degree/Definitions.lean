@@ -270,7 +270,7 @@ theorem degree_ne_of_natDegree_ne {n : ℕ} : p.natDegree ≠ n → degree p ≠
 
 #print Polynomial.natDegree_le_iff_degree_le /-
 theorem natDegree_le_iff_degree_le {n : ℕ} : natDegree p ≤ n ↔ degree p ≤ n :=
-  WithBot.unbot'_bot_le_iff
+  WithBot.unbot'_le_iff
 #align polynomial.nat_degree_le_iff_degree_le Polynomial.natDegree_le_iff_degree_le
 -/
 

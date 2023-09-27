@@ -480,10 +480,10 @@ theorem le_coe_unbot' [Preorder α] : ∀ (a : WithBot α) (b : α), a ≤ a.unb
 #align with_bot.le_coe_unbot' WithBot.le_coe_unbot'
 -/
 
-#print WithBot.unbot'_bot_le_iff /-
-theorem unbot'_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.unbot' ⊥ ≤ b ↔ a ≤ b := by
+#print WithBot.unbot'_le_iff /-
+theorem unbot'_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.unbot' ⊥ ≤ b ↔ a ≤ b := by
   cases a <;> simp [none_eq_bot, some_eq_coe]
-#align with_bot.unbot'_bot_le_iff WithBot.unbot'_bot_le_iff
+#align with_bot.unbot'_bot_le_iff WithBot.unbot'_le_iff
 -/
 
 #print WithBot.unbot'_lt_iff /-

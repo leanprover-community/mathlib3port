@@ -4,18 +4,18 @@
  [{"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "1ce0a5a3986b4c41d2282f72802fc3776d8b8381",
+    "rev": "758cb0e8c273df825524e578128e3e94e0c639d3",
     "opts": {},
     "name": "lean3port",
-    "inputRev?": "1ce0a5a3986b4c41d2282f72802fc3776d8b8381",
+    "inputRev?": "758cb0e8c273df825524e578128e3e94e0c639d3",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "6f7f5f38aeade5fd16b2d96674a055b3a850e736",
+    "rev": "0fd376a2a6771146b41dfd81b6726431ebc5f2c4",
     "opts": {},
     "name": "mathlib",
-    "inputRev?": "6f7f5f38aeade5fd16b2d96674a055b3a850e736",
+    "inputRev?": "0fd376a2a6771146b41dfd81b6726431ebc5f2c4",
     "inherited": true}},
   {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",

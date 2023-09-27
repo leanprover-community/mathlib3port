@@ -1176,7 +1176,7 @@ coercion form a Galois insertion. -/
 def WithBot.giUnbot'Bot [Preorder α] [OrderBot α] :
     GaloisInsertion (WithBot.unbot' ⊥) (coe : α → WithBot α)
     where
-  gc a b := WithBot.unbot'_bot_le_iff
+  gc a b := WithBot.unbot'_le_iff
   le_l_u a := le_rfl
   choice o ho := o.unbot' ⊥
   choice_eq _ _ := rfl
