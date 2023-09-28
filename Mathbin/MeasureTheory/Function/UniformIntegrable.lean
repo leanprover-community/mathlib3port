@@ -1110,9 +1110,9 @@ theorem uniformIntegrable_iff [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
 #align measure_theory.uniform_integrable_iff MeasureTheory.uniformIntegrable_iff
 -/
 
-#print MeasureTheory.uniformIntegrable_average /-
+#print MeasureTheory.uniformIntegrable_average_real /-
 /-- The averaging of a uniformly integrable sequence is also uniformly integrable. -/
-theorem uniformIntegrable_average (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf : UniformIntegrable f p μ) :
+theorem uniformIntegrable_average_real (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf : UniformIntegrable f p μ) :
     UniformIntegrable (fun n => (∑ i in Finset.range n, f i) / n) p μ :=
   by
   obtain ⟨hf₁, hf₂, hf₃⟩ := hf
@@ -1164,7 +1164,7 @@ theorem uniformIntegrable_average (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf : 
         ENNReal.inv_mul_cancel _ (ENNReal.nat_ne_top _), one_mul]
       · exact le_rfl
       all_goals simpa only [Ne.def, Nat.cast_eq_zero]
-#align measure_theory.uniform_integrable_average MeasureTheory.uniformIntegrable_average
+#align measure_theory.uniform_integrable_average MeasureTheory.uniformIntegrable_average_real
 -/
 
 end UniformIntegrable

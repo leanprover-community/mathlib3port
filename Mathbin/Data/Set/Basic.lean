@@ -4092,8 +4092,10 @@ theorem subset_right_of_subset_union (h : s ⊆ t ∪ u) (hab : Disjoint s t) : 
 
 end Disjoint
 
+#print Prop.compl_singleton /-
 @[simp]
 theorem Prop.compl_singleton (p : Prop) : ({p}ᶜ : Set Prop) = {¬p} :=
   ext fun q => by simpa [@Iff.comm q] using not_iff
 #align Prop.compl_singleton Prop.compl_singleton
+-/
 

@@ -769,12 +769,12 @@ theorem strong_law_aux7 :
 
 end StrongLawNonneg
 
-#print ProbabilityTheory.strong_law_ae /-
+#print ProbabilityTheory.strong_law_ae_real /-
 /-- *Strong law of large numbers*, almost sure version: if `X n` is a sequence of independent
 identically distributed integrable real-valued random variables, then `∑ i in range n, X i / n`
 converges almost surely to `𝔼[X 0]`. We give here the strong version, due to Etemadi, that only
 requires pairwise independence. -/
-theorem strong_law_ae (X : ℕ → Ω → ℝ) (hint : Integrable (X 0))
+theorem strong_law_ae_real (X : ℕ → Ω → ℝ) (hint : Integrable (X 0))
     (hindep : Pairwise fun i j => IndepFun (X i) (X j)) (hident : ∀ i, IdentDistrib (X i) (X 0)) :
     ∀ᵐ ω, Tendsto (fun n : ℕ => (∑ i in range n, X i ω) / n) atTop (𝓝 𝔼[X 0]) :=
   by
@@ -794,7 +794,7 @@ theorem strong_law_ae (X : ℕ → Ω → ℝ) (hint : Integrable (X 0))
   convert hωpos.sub hωneg
   · simp only [← sub_div, ← sum_sub_distrib, max_zero_sub_max_neg_zero_eq_self]
   · simp only [← integral_sub hint.pos_part hint.neg_part, max_zero_sub_max_neg_zero_eq_self]
-#align probability_theory.strong_law_ae ProbabilityTheory.strong_law_ae
+#align probability_theory.strong_law_ae ProbabilityTheory.strong_law_ae_real
 -/
 
 end StrongLawAe

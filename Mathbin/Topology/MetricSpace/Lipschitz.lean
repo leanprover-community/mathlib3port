@@ -372,11 +372,11 @@ theorem edist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f)
 #align lipschitz_with.edist_iterate_succ_le_geometric LipschitzWith.edist_iterate_succ_le_geometric
 -/
 
-#print LipschitzWith.mul /-
-protected theorem mul {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf f)
+#print LipschitzWith.mul_end /-
+protected theorem mul_end {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf f)
     (hg : LipschitzWith Kg g) : LipschitzWith (Kf * Kg) (f * g : Function.End α) :=
   hf.comp hg
-#align lipschitz_with.mul LipschitzWith.mul
+#align lipschitz_with.mul LipschitzWith.mul_end
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -390,12 +390,12 @@ protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0)
 #align lipschitz_with.list_prod LipschitzWith.list_prod
 -/
 
-#print LipschitzWith.pow /-
-protected theorem pow {f : Function.End α} {K} (h : LipschitzWith K f) :
+#print LipschitzWith.pow_end /-
+protected theorem pow_end {f : Function.End α} {K} (h : LipschitzWith K f) :
     ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.End α)
   | 0 => by simpa only [pow_zero] using LipschitzWith.id
   | n + 1 => by rw [pow_succ, pow_succ]; exact h.mul (pow n)
-#align lipschitz_with.pow LipschitzWith.pow
+#align lipschitz_with.pow LipschitzWith.pow_end
 -/
 
 end Emetric

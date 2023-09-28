@@ -289,7 +289,6 @@ theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : Par
 #align order_top.ext_top OrderTop.ext_top
 -/
 
-#print OrderTop.ext /-
 theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B :=
   by
   have tt := OrderTop.ext_top A B fun _ _ => Iff.rfl
@@ -297,7 +296,6 @@ theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B :=
   congr
   exact le_antisymm (hb _) (ha _)
 #align order_top.ext OrderTop.ext
--/
 
 #print OrderBot /-
 /-- An order is an `order_bot` if it has a least element.
@@ -562,7 +560,6 @@ theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : Par
 #align order_bot.ext_bot OrderBot.ext_bot
 -/
 
-#print OrderBot.ext /-
 theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B :=
   by
   have tt := OrderBot.ext_bot A B fun _ _ => Iff.rfl
@@ -570,7 +567,6 @@ theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B :=
   congr
   exact le_antisymm (ha _) (hb _)
 #align order_bot.ext OrderBot.ext
--/
 
 section SemilatticeSupTop
 
@@ -678,7 +674,6 @@ class BoundedOrder (α : Type u) [LE α] extends OrderTop α, OrderBot α
 instance (α : Type u) [LE α] [BoundedOrder α] : BoundedOrder αᵒᵈ :=
   { OrderDual.orderTop α, OrderDual.orderBot α with }
 
-#print BoundedOrder.ext /-
 theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B :=
   by
   have ht : @BoundedOrder.toOrderTop α _ A = @BoundedOrder.toOrderTop α _ B := OrderTop.ext
@@ -691,7 +686,6 @@ theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B 
   · exact h.symm
   · exact h'.symm
 #align bounded_order.ext BoundedOrder.ext
--/
 
 section Logic
 

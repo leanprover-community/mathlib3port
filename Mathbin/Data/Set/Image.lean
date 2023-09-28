@@ -231,13 +231,17 @@ theorem nonempty_of_nonempty_preimage {s : Set β} {f : α → β} (hf : (f ⁻�
 #align set.nonempty_of_nonempty_preimage Set.nonempty_of_nonempty_preimage
 -/
 
+#print Set.preimage_singleton_true /-
 @[simp]
 theorem preimage_singleton_true (p : α → Prop) : p ⁻¹' {True} = {a | p a} := by ext; simp
 #align set.preimage_singleton_true Set.preimage_singleton_true
+-/
 
+#print Set.preimage_singleton_false /-
 @[simp]
 theorem preimage_singleton_false (p : α → Prop) : p ⁻¹' {False} = {a | ¬p a} := by ext; simp
 #align set.preimage_singleton_false Set.preimage_singleton_false
+-/
 
 #print Set.preimage_subtype_coe_eq_compl /-
 theorem preimage_subtype_coe_eq_compl {α : Type _} {s u v : Set α} (hsuv : s ⊆ u ∪ v)
@@ -1714,9 +1718,11 @@ theorem LeftInverse.preimage_preimage {g : β → α} (h : LeftInverse g f) (s :
 #align function.left_inverse.preimage_preimage Function.LeftInverse.preimage_preimage
 -/
 
+#print Function.Involutive.preimage /-
 protected theorem Involutive.preimage {f : α → α} (hf : Involutive f) : Involutive (preimage f) :=
   hf.RightInverse.preimage_preimage
 #align function.involutive.preimage Function.Involutive.preimage
+-/
 
 end Function
 
