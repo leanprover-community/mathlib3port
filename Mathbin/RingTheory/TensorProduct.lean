@@ -935,13 +935,11 @@ theorem assoc_aux_1 (a₁ a₂ : A) (b₁ b₂ : B) (c₁ c₂ : C) :
 #align algebra.tensor_product.assoc_aux_1 Algebra.TensorProduct.assoc_aux_1
 -/
 
-#print Algebra.TensorProduct.assoc_aux_2 /-
 theorem assoc_aux_2 (r : R) :
     (TensorProduct.assoc R A B C) (((algebraMap R A) r ⊗ₜ[R] 1) ⊗ₜ[R] 1) =
       (algebraMap R (A ⊗ (B ⊗ C))) r :=
   rfl
-#align algebra.tensor_product.assoc_aux_2 Algebra.TensorProduct.assoc_aux_2
--/
+#align algebra.tensor_product.assoc_aux_2 Algebra.TensorProduct.assoc_aux_2ₓ
 
 variable (R A B C)
 

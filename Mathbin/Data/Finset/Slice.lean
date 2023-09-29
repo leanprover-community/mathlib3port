@@ -136,13 +136,13 @@ theorem subset_powersetLen_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : Se
 alias ⟨_, _root_.set.sized.subset_powerset_len_univ⟩ := subset_powerset_len_univ_iff
 #align set.sized.subset_powerset_len_univ Set.Sized.subset_powersetLen_univ
 
-#print Finset.Set.Sized.card_le /-
-theorem Finset.Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
+#print Set.Sized.card_le /-
+theorem Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     card 𝒜 ≤ (Fintype.card α).choose r :=
   by
   rw [Fintype.card, ← card_powerset_len]
   exact card_le_of_subset h𝒜.subset_powerset_len_univ
-#align set.sized.card_le Finset.Set.Sized.card_le
+#align set.sized.card_le Set.Sized.card_le
 -/
 
 end Sized

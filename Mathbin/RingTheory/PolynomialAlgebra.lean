@@ -132,13 +132,11 @@ theorem toFunLinear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul PolyEquivTensor.toFunLinear_mul_tmul_mul
 -/
 
-#print PolyEquivTensor.toFunLinear_algebraMap_tmul_one /-
-theorem toFunLinear_algebraMap_tmul_one (r : R) :
+theorem toFunLinear_one_tmul_one (r : R) :
     (toFunLinear R A) ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R A[X]) r := by
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_apply, Polynomial.aeval_one, algebraMap_smul,
     Algebra.algebraMap_eq_smul_one]
-#align poly_equiv_tensor.to_fun_linear_algebra_map_tmul_one PolyEquivTensor.toFunLinear_algebraMap_tmul_one
--/
+#align poly_equiv_tensor.to_fun_linear_algebra_map_tmul_one PolyEquivTensor.toFunLinear_one_tmul_oneₓ
 
 #print PolyEquivTensor.toFunAlgHom /-
 /-- (Implementation detail).
@@ -146,7 +144,7 @@ The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] A[X]`.
 -/
 def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] A[X] :=
   algHomOfLinearMapTensorProduct (toFunLinear R A) (toFunLinear_mul_tmul_mul R A)
-    (toFunLinear_algebraMap_tmul_one R A)
+    (toFunLinear_one_tmul_one R A)
 #align poly_equiv_tensor.to_fun_alg_hom PolyEquivTensor.toFunAlgHom
 -/
 

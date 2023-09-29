@@ -3540,11 +3540,11 @@ instance decidableEqPiFinset {β : α → Type _} [h : ∀ a, DecidableEq (β a)
 #align finset.decidable_eq_pi_finset Finset.decidableEqPiFinset
 -/
 
-#print Finset.decidableDexistsFinset /-
-instance decidableDexistsFinset {p : ∀ a ∈ s, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
+#print Finset.decidableDExistsFinset /-
+instance decidableDExistsFinset {p : ∀ a ∈ s, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
     Decidable (∃ (a : _) (h : a ∈ s), p a h) :=
   Multiset.decidableDexistsMultiset
-#align finset.decidable_dexists_finset Finset.decidableDexistsFinset
+#align finset.decidable_dexists_finset Finset.decidableDExistsFinset
 -/
 
 end DecidablePiExists

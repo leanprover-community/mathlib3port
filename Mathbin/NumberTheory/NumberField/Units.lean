@@ -50,13 +50,13 @@ attribute [local instance] NumberField.inst_ringOfIntegersAlgebra
 
 variable {K}
 
-#print isUnit_iff_norm /-
-theorem isUnit_iff_norm [NumberField K] (x : 𝓞 K) :
+#print NumberField.isUnit_iff_norm /-
+theorem NumberField.isUnit_iff_norm [NumberField K] (x : 𝓞 K) :
     IsUnit x ↔ |(RingOfIntegers.norm ℚ x : ℚ)| = 1 :=
   by
   convert (RingOfIntegers.isUnit_norm ℚ).symm
   rw [← abs_one, abs_eq_abs, ← Rat.RingOfIntegers.isUnit_iff]
-#align is_unit_iff_norm isUnit_iff_norm
+#align is_unit_iff_norm NumberField.isUnit_iff_norm
 -/
 
 end IsUnit

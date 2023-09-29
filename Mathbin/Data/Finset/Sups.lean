@@ -46,11 +46,11 @@ namespace Finset
 variable {α : Type _} [Preorder α] {s t : Set α} {a : α}
 
 instance decidablePredMemUpperClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
-    DecidablePred (· ∈ upperClosure (s : Set α)) := fun _ => Finset.decidableDexistsFinset
+    DecidablePred (· ∈ upperClosure (s : Set α)) := fun _ => Finset.decidableDExistsFinset
 #align finset.decidable_pred_mem_upper_closure Finset.decidablePredMemUpperClosure
 
 instance decidablePredMemLowerClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
-    DecidablePred (· ∈ lowerClosure (s : Set α)) := fun _ => Finset.decidableDexistsFinset
+    DecidablePred (· ∈ lowerClosure (s : Set α)) := fun _ => Finset.decidableDExistsFinset
 #align finset.decidable_pred_mem_lower_closure Finset.decidablePredMemLowerClosure
 
 end Finset
@@ -305,6 +305,7 @@ theorem sups_sups_sups_comm : s ⊻ t ⊻ (u ⊻ v) = s ⊻ u ⊻ (t ⊻ v) :=
 
 variable [@DecidableRel α (· ≤ ·)]
 
+#print Finset.filter_sups_le /-
 theorem filter_sups_le (s t : Finset α) (a : α) :
     ((s ⊻ t).filterₓ fun b => b ≤ a) = (s.filterₓ fun b => b ≤ a) ⊻ t.filterₓ fun b => b ≤ a :=
   by
@@ -317,6 +318,7 @@ theorem filter_sups_le (s t : Finset α) (a : α) :
   · rintro ⟨b, hb, c, hc, _, rfl⟩
     exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, sup_le hb.2 hc.2⟩
 #align finset.filter_sups_le Finset.filter_sups_le
+-/
 
 end Sups
 
