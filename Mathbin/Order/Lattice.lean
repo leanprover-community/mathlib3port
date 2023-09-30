@@ -1496,6 +1496,7 @@ theorem of_map_sup [SemilatticeSup α] [SemilatticeSup β]
 
 variable [LinearOrder α]
 
+#print MonotoneOn.map_sup /-
 theorem map_sup [SemilatticeSup β] (hf : MonotoneOn f s) (hx : x ∈ s) (hy : y ∈ s) :
     f (x ⊔ y) = f x ⊔ f y := by
   cases le_total x y <;> have := hf _ _ h <;>
@@ -1503,11 +1504,14 @@ theorem map_sup [SemilatticeSup β] (hf : MonotoneOn f s) (hx : x ∈ s) (hy : y
     | assumption
     | simp only [h, this, sup_of_le_left, sup_of_le_right]
 #align monotone_on.map_sup MonotoneOn.map_sup
+-/
 
+#print MonotoneOn.map_inf /-
 theorem map_inf [SemilatticeInf β] (hf : MonotoneOn f s) (hx : x ∈ s) (hy : y ∈ s) :
     f (x ⊓ y) = f x ⊓ f y :=
   hf.dual.map_sup hx hy
 #align monotone_on.map_inf MonotoneOn.map_inf
+-/
 
 end MonotoneOn
 
@@ -1623,6 +1627,7 @@ theorem of_map_sup [SemilatticeSup α] [SemilatticeInf β]
 
 variable [LinearOrder α]
 
+#print AntitoneOn.map_sup /-
 theorem map_sup [SemilatticeInf β] (hf : AntitoneOn f s) (hx : x ∈ s) (hy : y ∈ s) :
     f (x ⊔ y) = f x ⊓ f y := by
   cases le_total x y <;> have := hf _ _ h <;>
@@ -1630,11 +1635,14 @@ theorem map_sup [SemilatticeInf β] (hf : AntitoneOn f s) (hx : x ∈ s) (hy : y
     | assumption
     | simp only [h, this, sup_of_le_left, sup_of_le_right, inf_of_le_left, inf_of_le_right]
 #align antitone_on.map_sup AntitoneOn.map_sup
+-/
 
+#print AntitoneOn.map_inf /-
 theorem map_inf [SemilatticeSup β] (hf : AntitoneOn f s) (hx : x ∈ s) (hy : y ∈ s) :
     f (x ⊓ y) = f x ⊔ f y :=
   hf.dual.map_sup hx hy
 #align antitone_on.map_inf AntitoneOn.map_inf
+-/
 
 end AntitoneOn
 

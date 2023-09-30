@@ -57,7 +57,7 @@ instance QuotientGroup.measurableSMul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (
 #align quotient_add_group.has_measurable_vadd QuotientAddGroup.measurableVAdd
 -/
 
-variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opposite 𝓕 μ)
+variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opEquiv 𝓕 μ)
 
 variable [Countable Γ] [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)]
 
@@ -239,8 +239,8 @@ theorem QuotientGroup.integral_eq_integral_automorphize {E : Type _} [NormedAddC
     (hf₂ : AEStronglyMeasurable (automorphize f) μ_𝓕) :
     ∫ x : G, f x ∂μ = ∫ x : G ⧸ Γ, automorphize f x ∂μ_𝓕 :=
   calc
-    ∫ x : G, f x ∂μ = ∑' γ : Γ.opposite, ∫ x in 𝓕, f (γ • x) ∂μ := h𝓕.integral_eq_tsum'' f hf₁
-    _ = ∫ x in 𝓕, ∑' γ : Γ.opposite, f (γ • x) ∂μ :=
+    ∫ x : G, f x ∂μ = ∑' γ : Γ.opEquiv, ∫ x in 𝓕, f (γ • x) ∂μ := h𝓕.integral_eq_tsum'' f hf₁
+    _ = ∫ x in 𝓕, ∑' γ : Γ.opEquiv, f (γ • x) ∂μ :=
       by
       rw [integral_tsum]
       ·
@@ -309,7 +309,7 @@ theorem quotientAddGroup.integral_hMul_eq_integral_automorphize_hMul {K : Type _
     (f_ℒ_1 : Integrable f μ') {g : G' ⧸ Γ' → K} (hg : AEStronglyMeasurable g μ_𝓕)
     (g_ℒ_infinity : essSup (fun x => ↑‖g x‖₊) μ_𝓕 ≠ ∞)
     (F_ae_measurable : AEStronglyMeasurable (quotientAddGroup.automorphize f) μ_𝓕)
-    (h𝓕 : IsAddFundamentalDomain Γ'.opposite 𝓕' μ') :
+    (h𝓕 : IsAddFundamentalDomain Γ'.opEquiv 𝓕' μ') :
     ∫ x : G', g (x : G' ⧸ Γ') * f x ∂μ' =
       ∫ x : G' ⧸ Γ', g x * quotientAddGroup.automorphize f x ∂μ_𝓕 :=
   by

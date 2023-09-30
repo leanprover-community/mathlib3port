@@ -589,7 +589,7 @@ instance compactSpace [Fact (0 < p)] : CompactSpace <| AddCircle p :=
 
 /-- The action on `ℝ` by right multiplication of its the subgroup `zmultiples p` (the multiples of
 `p:ℝ`) is properly discontinuous. -/
-instance : ProperlyDiscontinuousVAdd (zmultiples p).opposite ℝ :=
+instance : ProperlyDiscontinuousVAdd (zmultiples p).opEquiv ℝ :=
   (zmultiples p).properlyDiscontinuousVAdd_opposite_of_tendsto_cofinite
     (AddSubgroup.tendsto_zmultiples_subtype_cofinite p)
 

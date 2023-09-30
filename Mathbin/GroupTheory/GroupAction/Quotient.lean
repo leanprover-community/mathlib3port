@@ -70,7 +70,7 @@ instance left_quotientAction : QuotientAction α H :=
 
 #print MulAction.right_quotientAction /-
 @[to_additive]
-instance right_quotientAction : QuotientAction H.normalizer.opposite H :=
+instance right_quotientAction : QuotientAction H.normalizer.opEquiv H :=
   ⟨fun b c _ _ => by
     rwa [smul_def, smul_def, smul_eq_mul_unop, smul_eq_mul_unop, mul_inv_rev, ← mul_assoc,
       mem_normalizer_iff'.mp b.prop, mul_assoc, mul_inv_cancel_left]⟩

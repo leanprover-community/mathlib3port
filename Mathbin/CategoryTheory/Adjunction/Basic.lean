@@ -619,21 +619,15 @@ def toAdjunction (e : C ≌ D) : e.Functor ⊣ e.inverse :=
 #align category_theory.equivalence.to_adjunction CategoryTheory.Equivalence.toAdjunction
 -/
 
-#print CategoryTheory.Equivalence.asEquivalence_toAdjunction_unit /-
 @[simp]
-theorem asEquivalence_toAdjunction_unit {e : C ≌ D} :
-    e.Functor.asEquivalence.toAdjunction.Unit = e.Unit :=
+theorem toAdjunction_unit {e : C ≌ D} : e.Functor.asEquivalence.toAdjunction.Unit = e.Unit :=
   rfl
-#align category_theory.equivalence.as_equivalence_to_adjunction_unit CategoryTheory.Equivalence.asEquivalence_toAdjunction_unit
--/
+#align category_theory.equivalence.as_equivalence_to_adjunction_unit CategoryTheory.Equivalence.toAdjunction_unitₓ
 
-#print CategoryTheory.Equivalence.asEquivalence_toAdjunction_counit /-
 @[simp]
-theorem asEquivalence_toAdjunction_counit {e : C ≌ D} :
-    e.Functor.asEquivalence.toAdjunction.counit = e.counit :=
+theorem toAdjunction_counit {e : C ≌ D} : e.Functor.asEquivalence.toAdjunction.counit = e.counit :=
   rfl
-#align category_theory.equivalence.as_equivalence_to_adjunction_counit CategoryTheory.Equivalence.asEquivalence_toAdjunction_counit
--/
+#align category_theory.equivalence.as_equivalence_to_adjunction_counit CategoryTheory.Equivalence.toAdjunction_counitₓ
 
 end Equivalence
 

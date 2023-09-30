@@ -23,11 +23,11 @@ variable {G : Type _} [Group G]
 
 namespace Subgroup
 
-#print Subgroup.opposite /-
+#print Subgroup.opEquiv /-
 /-- A subgroup `H` of `G` determines a subgroup `H.opposite` of the opposite group `Gᵐᵒᵖ`. -/
 @[to_additive
       "An additive subgroup `H` of `G` determines an additive subgroup `H.opposite` of the\n  opposite additive group `Gᵃᵒᵖ`."]
-def opposite : Subgroup G ≃ Subgroup Gᵐᵒᵖ
+def opEquiv : Subgroup G ≃ Subgroup Gᵐᵒᵖ
     where
   toFun H :=
     { carrier := MulOpposite.unop ⁻¹' (H : Set G)
@@ -41,30 +41,30 @@ def opposite : Subgroup G ≃ Subgroup Gᵐᵒᵖ
       inv_mem' := fun a => H.inv_mem }
   left_inv H := SetLike.coe_injective rfl
   right_inv H := SetLike.coe_injective rfl
-#align subgroup.opposite Subgroup.opposite
-#align add_subgroup.opposite AddSubgroup.opposite
+#align subgroup.opposite Subgroup.opEquiv
+#align add_subgroup.opposite AddSubgroup.opEquiv
 -/
 
-#print Subgroup.oppositeEquiv /-
+#print Subgroup.equivOp /-
 /-- Bijection between a subgroup `H` and its opposite. -/
 @[to_additive "Bijection between an additive subgroup `H` and its opposite.", simps]
-def oppositeEquiv (H : Subgroup G) : H ≃ H.opposite :=
+def equivOp (H : Subgroup G) : H ≃ H.opEquiv :=
   MulOpposite.opEquiv.subtypeEquiv fun _ => Iff.rfl
-#align subgroup.opposite_equiv Subgroup.oppositeEquiv
-#align add_subgroup.opposite_equiv AddSubgroup.oppositeEquiv
+#align subgroup.opposite_equiv Subgroup.equivOp
+#align add_subgroup.opposite_equiv AddSubgroup.equivOp
 -/
 
 @[to_additive]
-instance (H : Subgroup G) [Encodable H] : Encodable H.opposite :=
-  Encodable.ofEquiv H H.oppositeEquiv.symm
+instance (H : Subgroup G) [Encodable H] : Encodable H.opEquiv :=
+  Encodable.ofEquiv H H.equivOp.symm
 
 @[to_additive]
-instance (H : Subgroup G) [Countable H] : Countable H.opposite :=
-  Countable.of_equiv H H.oppositeEquiv
+instance (H : Subgroup G) [Countable H] : Countable H.opEquiv :=
+  Countable.of_equiv H H.equivOp
 
 #print Subgroup.smul_opposite_mul /-
 @[to_additive]
-theorem smul_opposite_mul {H : Subgroup G} (x g : G) (h : H.opposite) : h • (g * x) = g * h • x :=
+theorem smul_opposite_mul {H : Subgroup G} (x g : G) (h : H.opEquiv) : h • (g * x) = g * h • x :=
   by
   cases h
   simp [(· • ·), mul_assoc]

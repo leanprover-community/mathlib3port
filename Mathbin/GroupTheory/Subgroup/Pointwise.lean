@@ -278,7 +278,7 @@ instance sup_normal (H K : Subgroup G) [hH : H.Normal] [hK : K.Normal] : (H ⊔ 
 
 #print Subgroup.smul_opposite_image_mul_preimage /-
 @[to_additive]
-theorem smul_opposite_image_mul_preimage {H : Subgroup G} (g : G) (h : H.opposite) (s : Set G) :
+theorem smul_opposite_image_mul_preimage {H : Subgroup G} (g : G) (h : H.opEquiv) (s : Set G) :
     (fun y => h • y) '' (Mul.mul g ⁻¹' s) = Mul.mul g ⁻¹' ((fun y => h • y) '' s) := by ext x;
   cases h; simp [(· • ·), mul_assoc]
 #align subgroup.smul_opposite_image_mul_preimage Subgroup.smul_opposite_image_mul_preimage

@@ -358,7 +358,7 @@ of a subgroup.-/
 @[to_additive
       "The equivalence relation corresponding to the partition of a group by left cosets\nof a subgroup."]
 def leftRel : Setoid α :=
-  MulAction.orbitRel s.opposite α
+  MulAction.orbitRel s.opEquiv α
 #align quotient_group.left_rel QuotientGroup.leftRel
 #align quotient_add_group.left_rel QuotientAddGroup.leftRel
 -/
@@ -369,8 +369,8 @@ variable {s}
 @[to_additive]
 theorem leftRel_apply {x y : α} : @Setoid.r _ (leftRel s) x y ↔ x⁻¹ * y ∈ s :=
   calc
-    (∃ a : s.opposite, y * MulOpposite.unop a = x) ↔ ∃ a : s, y * a = x :=
-      s.oppositeEquiv.symm.exists_congr_left
+    (∃ a : s.opEquiv, y * MulOpposite.unop a = x) ↔ ∃ a : s, y * a = x :=
+      s.equivOp.symm.exists_congr_left
     _ ↔ ∃ a : s, x⁻¹ * y = a⁻¹ := by simp only [inv_mul_eq_iff_eq_mul, eq_mul_inv_iff_mul_eq]
     _ ↔ x⁻¹ * y ∈ s := by simp [SetLike.exists]
 #align quotient_group.left_rel_apply QuotientGroup.leftRel_apply

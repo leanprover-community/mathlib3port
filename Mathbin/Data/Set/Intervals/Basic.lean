@@ -2368,19 +2368,23 @@ section Lattice
 
 variable [Lattice β] {f : α → β}
 
+#print MonotoneOn.image_Icc_subset /-
 theorem MonotoneOn.image_Icc_subset (hf : MonotoneOn f (Icc a b)) :
     f '' Icc a b ⊆ Icc (f a) (f b) :=
   image_subset_iff.2 fun c hc =>
     ⟨hf (left_mem_Icc.2 <| hc.1.trans hc.2) hc hc.1,
       hf hc (right_mem_Icc.2 <| hc.1.trans hc.2) hc.2⟩
 #align monotone_on.image_Icc_subset MonotoneOn.image_Icc_subset
+-/
 
+#print AntitoneOn.image_Icc_subset /-
 theorem AntitoneOn.image_Icc_subset (hf : AntitoneOn f (Icc a b)) :
     f '' Icc a b ⊆ Icc (f b) (f a) :=
   image_subset_iff.2 fun c hc =>
     ⟨hf hc (right_mem_Icc.2 <| hc.1.trans hc.2) hc.2,
       hf (left_mem_Icc.2 <| hc.1.trans hc.2) hc hc.1⟩
 #align antitone_on.image_Icc_subset AntitoneOn.image_Icc_subset
+-/
 
 #print Monotone.image_Icc_subset /-
 theorem Monotone.image_Icc_subset (hf : Monotone f) : f '' Icc a b ⊆ Icc (f a) (f b) :=
@@ -2388,9 +2392,11 @@ theorem Monotone.image_Icc_subset (hf : Monotone f) : f '' Icc a b ⊆ Icc (f a)
 #align monotone.image_Icc_subset Monotone.image_Icc_subset
 -/
 
+#print Antitone.image_Icc_subset /-
 theorem Antitone.image_Icc_subset (hf : Antitone f) : f '' Icc a b ⊆ Icc (f b) (f a) :=
   (hf.AntitoneOn _).image_Icc_subset
 #align antitone.image_Icc_subset Antitone.image_Icc_subset
+-/
 
 end Lattice
 

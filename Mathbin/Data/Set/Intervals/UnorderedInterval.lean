@@ -254,25 +254,33 @@ section Lattice
 
 variable [Lattice β] {f : α → β} {s : Set α} {a b : α}
 
+#print MonotoneOn.image_uIcc_subset /-
 theorem MonotoneOn.image_uIcc_subset (hf : MonotoneOn f (uIcc a b)) :
     f '' uIcc a b ⊆ uIcc (f a) (f b) :=
   hf.image_Icc_subset.trans <| by
     rw [hf.map_sup left_mem_uIcc right_mem_uIcc, hf.map_inf left_mem_uIcc right_mem_uIcc, uIcc]
 #align monotone_on.image_uIcc_subset MonotoneOn.image_uIcc_subset
+-/
 
+#print AntitoneOn.image_uIcc_subset /-
 theorem AntitoneOn.image_uIcc_subset (hf : AntitoneOn f (uIcc a b)) :
     f '' uIcc a b ⊆ uIcc (f a) (f b) :=
   hf.image_Icc_subset.trans <| by
     rw [hf.map_sup left_mem_uIcc right_mem_uIcc, hf.map_inf left_mem_uIcc right_mem_uIcc, uIcc]
 #align antitone_on.image_uIcc_subset AntitoneOn.image_uIcc_subset
+-/
 
+#print Monotone.image_uIcc_subset /-
 theorem Monotone.image_uIcc_subset (hf : Monotone f) : f '' uIcc a b ⊆ uIcc (f a) (f b) :=
   (hf.MonotoneOn _).image_uIcc_subset
 #align monotone.image_uIcc_subset Monotone.image_uIcc_subset
+-/
 
+#print Antitone.image_uIcc_subset /-
 theorem Antitone.image_uIcc_subset (hf : Antitone f) : f '' uIcc a b ⊆ uIcc (f a) (f b) :=
   (hf.AntitoneOn _).image_uIcc_subset
 #align antitone.image_uIcc_subset Antitone.image_uIcc_subset
+-/
 
 end Lattice
 
