@@ -628,7 +628,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (
         by
         simp only [B, C, Function.update_same, Finset.sdiff_union_self_eq_union]
         symm
-        simp only [hj₂, Finset.singleton_subset_iff, Finset.union_eq_left_iff_subset]
+        simp only [hj₂, Finset.singleton_subset_iff, Finset.union_eq_left]
       rw [this]
       apply Finset.sum_union
       apply Finset.disjoint_right.2 fun j hj => _

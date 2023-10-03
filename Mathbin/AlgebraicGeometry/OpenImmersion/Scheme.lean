@@ -760,7 +760,7 @@ theorem image_basicOpen {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersionCat f] 
   rw [← e]
   ext1
   refine' set.image_preimage_eq_inter_range.trans _
-  erw [Set.inter_eq_left_iff_subset]
+  erw [Set.inter_eq_left]
   refine' Set.Subset.trans (Scheme.basic_open_le _ _) (Set.image_subset_range _ _)
   refine' le_trans (Scheme.basic_open_le _ _) (le_of_eq _)
   ext1
@@ -1234,7 +1234,7 @@ def morphismRestrictRestrictBasicOpen {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.
   rw [eq_to_hom_op, eq_to_hom_op, eq_to_hom_map, eq_to_hom_trans]
   erw [← e]
   ext1; dsimp [opens.map, opens.inclusion]
-  rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset, Subtype.range_coe]
+  rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left, Subtype.range_coe]
   exact Y.basic_open_le r
 #align algebraic_geometry.morphism_restrict_restrict_basic_open AlgebraicGeometry.morphismRestrictRestrictBasicOpen
 -/

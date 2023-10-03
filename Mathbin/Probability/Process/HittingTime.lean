@@ -117,7 +117,7 @@ theorem hitting_of_le {m : ι} (hmn : m ≤ n) : hitting u s n m ω = m :=
   · simp only [hitting, Set.Icc_self, ite_eq_right_iff, Set.mem_Icc, exists_prop,
       forall_exists_index, and_imp]
     intro i hi₁ hi₂ hi
-    rw [Set.inter_eq_left_iff_subset.2, csInf_singleton]
+    rw [Set.inter_eq_left.2, csInf_singleton]
     exact Set.singleton_subset_iff.2 (le_antisymm hi₂ hi₁ ▸ hi)
   · exact hitting_of_lt h
 #align measure_theory.hitting_of_le MeasureTheory.hitting_of_le

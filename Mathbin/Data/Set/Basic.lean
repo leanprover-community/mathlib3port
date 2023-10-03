@@ -1036,19 +1036,15 @@ theorem union_right_comm (s₁ s₂ s₃ : Set α) : s₁ ∪ s₂ ∪ s₃ = s�
 #align set.union_right_comm Set.union_right_comm
 -/
 
-#print Set.union_eq_left_iff_subset /-
 @[simp]
 theorem union_eq_left_iff_subset {s t : Set α} : s ∪ t = s ↔ t ⊆ s :=
   sup_eq_left
 #align set.union_eq_left_iff_subset Set.union_eq_left_iff_subset
--/
 
-#print Set.union_eq_right_iff_subset /-
 @[simp]
 theorem union_eq_right_iff_subset {s t : Set α} : s ∪ t = t ↔ s ⊆ t :=
   sup_eq_right
 #align set.union_eq_right_iff_subset Set.union_eq_right_iff_subset
--/
 
 #print Set.union_eq_self_of_subset_left /-
 theorem union_eq_self_of_subset_left {s t : Set α} (h : s ⊆ t) : s ∪ t = t :=
@@ -1278,29 +1274,29 @@ theorem subset_inter_iff {s t r : Set α} : r ⊆ s ∩ t ↔ r ⊆ s ∧ r ⊆ 
 #align set.subset_inter_iff Set.subset_inter_iff
 -/
 
-#print Set.inter_eq_left_iff_subset /-
+#print Set.inter_eq_left /-
 @[simp]
-theorem inter_eq_left_iff_subset {s t : Set α} : s ∩ t = s ↔ s ⊆ t :=
+theorem inter_eq_left {s t : Set α} : s ∩ t = s ↔ s ⊆ t :=
   inf_eq_left
-#align set.inter_eq_left_iff_subset Set.inter_eq_left_iff_subset
+#align set.inter_eq_left_iff_subset Set.inter_eq_left
 -/
 
-#print Set.inter_eq_right_iff_subset /-
+#print Set.inter_eq_right /-
 @[simp]
-theorem inter_eq_right_iff_subset {s t : Set α} : s ∩ t = t ↔ t ⊆ s :=
+theorem inter_eq_right {s t : Set α} : s ∩ t = t ↔ t ⊆ s :=
   inf_eq_right
-#align set.inter_eq_right_iff_subset Set.inter_eq_right_iff_subset
+#align set.inter_eq_right_iff_subset Set.inter_eq_right
 -/
 
 #print Set.inter_eq_self_of_subset_left /-
 theorem inter_eq_self_of_subset_left {s t : Set α} : s ⊆ t → s ∩ t = s :=
-  inter_eq_left_iff_subset.mpr
+  inter_eq_left.mpr
 #align set.inter_eq_self_of_subset_left Set.inter_eq_self_of_subset_left
 -/
 
 #print Set.inter_eq_self_of_subset_right /-
 theorem inter_eq_self_of_subset_right {s t : Set α} : t ⊆ s → s ∩ t = t :=
-  inter_eq_right_iff_subset.mpr
+  inter_eq_right.mpr
 #align set.inter_eq_self_of_subset_right Set.inter_eq_self_of_subset_right
 -/
 

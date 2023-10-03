@@ -406,7 +406,7 @@ theorem IsAffineOpen.basicOpenIsAffine {X : Scheme} {U : Opens X.carrier} (hU : 
     hU.from_Spec.val.base '' (hU.from_Spec.val.base ⁻¹' (X.basic_open f : Set X.carrier)) =
       (X.basic_open f : Set X.carrier) :=
     by
-    rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset, hU.from_Spec_range]
+    rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left, hU.from_Spec_range]
     exact Scheme.basic_open_le _ _
   rw [Scheme.hom.opens_range_coe, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
@@ -797,7 +797,7 @@ theorem IsAffineOpen.basicOpen_union_eq_self_iff {X : Scheme} {U : Opens X.carri
     apply_fun Set.image hU.from_Spec.1.base at h 
     rw [Set.image_preimage_eq_inter_range, Set.image_preimage_eq_inter_range, hU.from_Spec_range] at
       h 
-    simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right_iff_subset] at h 
+    simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right] at h 
     ext1
     refine' Set.Subset.antisymm _ h
     simp only [Set.iUnion_subset_iff, SetCoe.forall, opens.coe_supr]

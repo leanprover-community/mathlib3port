@@ -2870,7 +2870,7 @@ theorem sphere_pi (x : ∀ b, π b) {r : ℝ} (h : 0 < r ∨ Nonempty β) :
   by
   obtain hr | rfl | hr := lt_trichotomy r 0
   · simp [hr]
-  · rw [closed_ball_eq_sphere_of_nonpos le_rfl, eq_comm, Set.inter_eq_right_iff_subset]
+  · rw [closed_ball_eq_sphere_of_nonpos le_rfl, eq_comm, Set.inter_eq_right]
     letI := h.resolve_left (lt_irrefl _)
     inhabit β
     refine' subset_Union_of_subset default _
