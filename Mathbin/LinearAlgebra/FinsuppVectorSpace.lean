@@ -184,7 +184,7 @@ theorem equivFun_symm_stdBasis (b : Basis n R M) (i : n) :
   by
   have := EquivLike.injective b.repr
   apply_fun b.repr
-  simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ,
+  simp only [equiv_fun_symm_apply, std_basis_apply', map_sum, LinearEquiv.map_smulₛₗ,
     RingHom.id_apply, repr_self, Finsupp.smul_single', boole_mul]
   exact Finset.sum_single_ite 1 i
 #align basis.equiv_fun_symm_std_basis Basis.equivFun_symm_stdBasis

@@ -225,7 +225,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   let y' : O := ∑ i, c i • b'M i
   have y'M : y' ∈ M := M.sum_mem fun i _ => M.smul_mem (c i) (b'M i).2
   have mk_y' : (⟨y', y'M⟩ : M) = ∑ i, c i • b'M i :=
-    Subtype.ext (show y' = M.subtype _ by simp only [LinearMap.map_sum, LinearMap.map_smul]; rfl)
+    Subtype.ext (show y' = M.subtype _ by simp only [map_sum, LinearMap.map_smul]; rfl)
   have a_smul_y' : a • y' = y :=
     by
     refine' congr_arg coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)

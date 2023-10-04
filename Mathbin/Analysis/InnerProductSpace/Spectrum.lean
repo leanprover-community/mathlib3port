@@ -312,8 +312,7 @@ theorem eigenvectorBasis_apply_self_apply (v : E) (i : Fin n) :
       congr_arg (fun v => (hT.eigenvector_basis hn).repr v i)
         (this ((hT.eigenvector_basis hn).repr v))
   intro w
-  simp_rw [← OrthonormalBasis.sum_repr_symm, LinearMap.map_sum, LinearMap.map_smul,
-    apply_eigenvector_basis]
+  simp_rw [← OrthonormalBasis.sum_repr_symm, map_sum, LinearMap.map_smul, apply_eigenvector_basis]
   apply Fintype.sum_congr
   intro a
   rw [smul_smul, mul_comm]

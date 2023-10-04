@@ -169,7 +169,7 @@ theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCom
   rw [to_lin_eq_to_lin', to_lin'_apply'] at aux₁ 
   rw [Pi.basisFun_apply, LinearMap.coe_stdBasis] at aux₁ aux₂ 
   simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
-    LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
+    LinearMap.coe_single, to_lin_self, map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
 -/
 

@@ -137,8 +137,8 @@ theorem d_eq :
   simp only [ModuleCat.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
     LinearEquiv.toModuleIso_inv, linear_yoneda_obj_resolution_d_apply, LinearEquiv.toModuleIso_hom,
     diagonal_hom_equiv_apply, Action.comp_hom, resolution.d_eq k G n,
-    resolution.d_of (Fin.partialProd g), LinearMap.map_sum, ←
-    Finsupp.smul_single_one _ ((-1 : k) ^ _), map_smul, d_apply]
+    resolution.d_of (Fin.partialProd g), map_sum, ← Finsupp.smul_single_one _ ((-1 : k) ^ _),
+    map_smul, d_apply]
   simp only [@Fin.sum_univ_succ _ _ (n + 1), Fin.val_zero, pow_zero, one_smul, Fin.succAbove_zero,
     diagonal_hom_equiv_symm_apply f (Fin.partialProd g ∘ @Fin.succ (n + 1)), Function.comp_apply,
     Fin.partialProd_succ, Fin.castSucc_zero', Fin.partialProd_zero, one_mul]

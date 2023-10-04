@@ -101,7 +101,7 @@ theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
     have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by intro j;
       simp [mul_comm]
     simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
-      this j, ← LinearMap.map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
+      this j, ← map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
   by_contra h
   rw [discr_def] at h 
   simpa [Matrix.eq_zero_of_mulVec_eq_zero h this] using hi

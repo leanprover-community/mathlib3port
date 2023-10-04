@@ -2017,7 +2017,7 @@ theorem count_eq_zero_of_ne {p q : Associates α} (hp : Irreducible p) (hq : Irr
   not_ne_iff.mp fun h' =>
     h <|
       associated_iff_eq.mp <|
-        hp.associated_of_dvd hq <| by nontriviality α; exact le_of_count_ne_zero hq.ne_zero hp h'
+        hp.associated_of_dvdₓ hq <| by nontriviality α; exact le_of_count_ne_zero hq.ne_zero hp h'
 #align associates.count_eq_zero_of_ne Associates.count_eq_zero_of_ne
 -/
 

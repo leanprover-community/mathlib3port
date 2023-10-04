@@ -295,7 +295,7 @@ theorem hasseDeriv_mul (f g : R[X]) :
     apply_congr
     skip
     rw [aux _ H]
-  rw_mod_cast [← LinearMap.map_sum, ← Finset.sum_mul, ← Nat.add_choose_eq]
+  rw_mod_cast [← map_sum, ← Finset.sum_mul, ← Nat.add_choose_eq]
 #align polynomial.hasse_deriv_mul Polynomial.hasseDeriv_mul
 -/
 

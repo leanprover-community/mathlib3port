@@ -734,12 +734,10 @@ protected theorem Associated.prime [CommMonoidWithZero α] {p q : α} (h : p ~�
 #align associated.prime Associated.prime
 -/
 
-#print Irreducible.associated_of_dvd /-
 theorem Irreducible.associated_of_dvd [CancelMonoidWithZero α] {p q : α} (p_irr : Irreducible p)
     (q_irr : Irreducible q) (dvd : p ∣ q) : Associated p q :=
   associated_of_dvd_dvd dvd (p_irr.dvd_symm q_irr dvd)
-#align irreducible.associated_of_dvd Irreducible.associated_of_dvd
--/
+#align irreducible.associated_of_dvd Irreducible.associated_of_dvdₓ
 
 #print Irreducible.dvd_irreducible_iff_associated /-
 theorem Irreducible.dvd_irreducible_iff_associated [CancelMonoidWithZero α] {p q : α}
@@ -751,7 +749,7 @@ theorem Irreducible.dvd_irreducible_iff_associated [CancelMonoidWithZero α] {p 
 #print Prime.associated_of_dvd /-
 theorem Prime.associated_of_dvd [CancelCommMonoidWithZero α] {p q : α} (p_prime : Prime p)
     (q_prime : Prime q) (dvd : p ∣ q) : Associated p q :=
-  p_prime.Irreducible.associated_of_dvd q_prime.Irreducible dvd
+  p_prime.Irreducible.associated_of_dvdₓ q_prime.Irreducible dvd
 #align prime.associated_of_dvd Prime.associated_of_dvd
 -/
 

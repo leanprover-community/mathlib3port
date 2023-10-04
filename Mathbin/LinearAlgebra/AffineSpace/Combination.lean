@@ -776,7 +776,7 @@ theorem map_affineCombination {V₂ P₂ : Type _} [AddCommGroup V₂] [Module k
     s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w (f ∘ p) hw b₂, ←
     s.weighted_vsub_of_point_vadd_eq_of_sum_eq_one w (f ∘ p) hw (f b) b₂]
   simp only [weighted_vsub_of_point_apply, RingHom.id_apply, AffineMap.map_vadd,
-    LinearMap.map_smulₛₗ, AffineMap.linearMap_vsub, LinearMap.map_sum]
+    LinearMap.map_smulₛₗ, AffineMap.linearMap_vsub, map_sum]
 #align finset.map_affine_combination Finset.map_affineCombination
 -/
 
