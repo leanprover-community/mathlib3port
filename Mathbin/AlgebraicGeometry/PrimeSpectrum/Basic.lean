@@ -79,12 +79,10 @@ instance [Nontrivial R] : Nonempty <| PrimeSpectrum R :=
   let ⟨I, hI⟩ := Ideal.exists_maximal R
   ⟨⟨I, hI.IsPrime⟩⟩
 
-#print PrimeSpectrum.punit /-
 /-- The prime spectrum of the zero ring is empty. -/
-theorem punit (x : PrimeSpectrum PUnit) : False :=
+theorem pUnit (x : PrimeSpectrum PUnit) : False :=
   x.1.ne_top_iff_one.1 x.2.1 <| Subsingleton.elim (0 : PUnit) 1 ▸ x.1.zero_mem
-#align prime_spectrum.punit PrimeSpectrum.punit
--/
+#align prime_spectrum.punit PrimeSpectrum.pUnit
 
 variable (R S)
 

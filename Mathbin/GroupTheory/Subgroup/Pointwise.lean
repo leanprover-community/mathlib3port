@@ -168,15 +168,15 @@ theorem closure_mul_le (S T : Set G) : closure (S * T) ≤ closure S ⊔ closure
 #align add_subgroup.closure_add_le AddSubgroup.closure_add_le
 -/
 
-#print Subgroup.sup_eq_closure /-
+#print Subgroup.sup_eq_closure_mul /-
 @[to_additive]
-theorem sup_eq_closure (H K : Subgroup G) : H ⊔ K = closure (H * K) :=
+theorem sup_eq_closure_mul (H K : Subgroup G) : H ⊔ K = closure (H * K) :=
   le_antisymm
     (sup_le (fun h hh => subset_closure ⟨h, 1, hh, K.one_mem, mul_one h⟩) fun k hk =>
       subset_closure ⟨1, k, H.one_mem, hk, one_mul k⟩)
     (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
-#align subgroup.sup_eq_closure Subgroup.sup_eq_closure
-#align add_subgroup.sup_eq_closure AddSubgroup.sup_eq_closure
+#align subgroup.sup_eq_closure Subgroup.sup_eq_closure_mul
+#align add_subgroup.sup_eq_closure AddSubgroup.sup_eq_closure_add
 -/
 
 @[to_additive]
@@ -198,7 +198,7 @@ private def mul_normal_aux (H N : Subgroup G) [hN : N.Normal] : Subgroup G
 theorem mul_normal (H N : Subgroup G) [N.Normal] : (↑(H ⊔ N) : Set G) = H * N :=
   Set.Subset.antisymm
     (show H ⊔ N ≤ mulNormalAux H N by rw [sup_eq_closure]; apply sInf_le _; dsimp; rfl)
-    ((sup_eq_closure H N).symm ▸ subset_closure)
+    ((sup_eq_closure_mul H N).symm ▸ subset_closure)
 #align subgroup.mul_normal Subgroup.mul_normal
 #align add_subgroup.add_normal AddSubgroup.add_normal
 -/
@@ -222,7 +222,7 @@ private def normal_mul_aux (N H : Subgroup G) [hN : N.Normal] : Subgroup G
 theorem normal_mul (N H : Subgroup G) [N.Normal] : (↑(N ⊔ H) : Set G) = N * H :=
   Set.Subset.antisymm
     (show N ⊔ H ≤ normalMulAux N H by rw [sup_eq_closure]; apply sInf_le _; dsimp; rfl)
-    ((sup_eq_closure N H).symm ▸ subset_closure)
+    ((sup_eq_closure_mul N H).symm ▸ subset_closure)
 #align subgroup.normal_mul Subgroup.normal_mul
 #align add_subgroup.normal_add AddSubgroup.normal_add
 -/

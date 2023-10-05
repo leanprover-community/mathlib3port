@@ -96,7 +96,7 @@ instance : IsEmpty Scheme.empty.carrier :=
 
 #print AlgebraicGeometry.spec_punit_isEmpty /-
 instance spec_punit_isEmpty : IsEmpty (Scheme.Spec.obj (op <| CommRingCat.of PUnit)).carrier :=
-  ⟨PrimeSpectrum.punit⟩
+  ⟨PrimeSpectrum.pUnit⟩
 #align algebraic_geometry.Spec_punit_is_empty AlgebraicGeometry.spec_punit_isEmpty
 -/
 

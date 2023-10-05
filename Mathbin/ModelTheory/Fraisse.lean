@@ -162,13 +162,13 @@ theorem Structure.FG.mem_age_of_equiv {M N : Bundled L.Structure} (h : Structure
 #align first_order.language.Structure.fg.mem_age_of_equiv FirstOrder.Language.Structure.FG.mem_age_of_equiv
 -/
 
-#print FirstOrder.Language.Hereditary.is_equiv_invariant_of_fG /-
-theorem Hereditary.is_equiv_invariant_of_fG (h : Hereditary K)
+#print FirstOrder.Language.Hereditary.is_equiv_invariant_of_fg /-
+theorem Hereditary.is_equiv_invariant_of_fg (h : Hereditary K)
     (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.FG L M) (M N : Bundled.{w} L.Structure)
     (hn : Nonempty (M ≃[L] N)) : M ∈ K ↔ N ∈ K :=
   ⟨fun MK => h M MK ((fg M MK).mem_age_of_equiv hn), fun NK =>
     h N NK ((fg N NK).mem_age_of_equiv ⟨hn.some.symm⟩)⟩
-#align first_order.language.hereditary.is_equiv_invariant_of_fg FirstOrder.Language.Hereditary.is_equiv_invariant_of_fG
+#align first_order.language.hereditary.is_equiv_invariant_of_fg FirstOrder.Language.Hereditary.is_equiv_invariant_of_fg
 -/
 
 variable (M)

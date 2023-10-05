@@ -101,15 +101,15 @@ theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure
 #align add_submonoid.closure_add_le AddSubmonoid.closure_add_le
 -/
 
-#print Submonoid.sup_eq_closure /-
+#print Submonoid.sup_eq_closure_mul /-
 @[to_additive]
-theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
+theorem sup_eq_closure_mul (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
   le_antisymm
     (sup_le (fun h hh => subset_closure ⟨h, 1, hh, K.one_mem, mul_one h⟩) fun k hk =>
       subset_closure ⟨1, k, H.one_mem, hk, one_mul k⟩)
     (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
-#align submonoid.sup_eq_closure Submonoid.sup_eq_closure
-#align add_submonoid.sup_eq_closure AddSubmonoid.sup_eq_closure
+#align submonoid.sup_eq_closure Submonoid.sup_eq_closure_mul
+#align add_submonoid.sup_eq_closure AddSubmonoid.sup_eq_closure_add
 -/
 
 #print Submonoid.pow_smul_mem_closure_smul /-
