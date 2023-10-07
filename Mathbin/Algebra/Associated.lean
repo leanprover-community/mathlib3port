@@ -1366,7 +1366,7 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
 #align associates.one_or_eq_of_le_of_prime Associates.one_or_eq_of_le_of_prime
 -/
 
-instance : CanonicallyOrderedMonoid (Associates α) :=
+instance : CanonicallyOrderedCommMonoid (Associates α) :=
   { Associates.cancelCommMonoidWithZero, Associates.boundedOrder,
     Associates.orderedCommMonoid with
     exists_hMul_of_le := fun a b => id

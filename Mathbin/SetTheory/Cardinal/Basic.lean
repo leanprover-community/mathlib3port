@@ -806,11 +806,11 @@ instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
       inductionOn₂ a b fun α β => by simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
 
-instance : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
+instance : CanonicallyLinearOrderedAddCommMonoid Cardinal.{u} :=
   { Cardinal.canonicallyOrderedCommSemiring, Cardinal.linearOrder with }
 
 -- Computable instance to prevent a non-computable one being found via the one above
-instance : CanonicallyOrderedAddMonoid Cardinal.{u} :=
+instance : CanonicallyOrderedAddCommMonoid Cardinal.{u} :=
   { Cardinal.canonicallyOrderedCommSemiring with }
 
 instance : LinearOrderedCommMonoidWithZero Cardinal.{u} :=

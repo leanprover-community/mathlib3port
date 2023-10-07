@@ -169,9 +169,9 @@ instance [∀ i, OrderedAddCommMonoid (α i)] [∀ i, ContravariantClass (α i) 
   ⟨fun f g h H i => by specialize H i; rw [add_apply, add_apply] at H ;
     exact le_of_add_le_add_left H⟩
 
-section CanonicallyOrderedAddMonoid
+section CanonicallyOrderedAddCommMonoid
 
-variable (α) [∀ i, CanonicallyOrderedAddMonoid (α i)]
+variable (α) [∀ i, CanonicallyOrderedAddCommMonoid (α i)]
 
 instance : OrderBot (Π₀ i, α i) where
   bot := 0
@@ -257,7 +257,7 @@ variable (α)
 instance : OrderedSub (Π₀ i, α i) :=
   ⟨fun n m k => forall_congr' fun i => by rw [add_apply, tsub_apply]; exact tsub_le_iff_right⟩
 
-instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
+instance : CanonicallyOrderedAddCommMonoid (Π₀ i, α i) :=
   { DFinsupp.orderBot α,
     DFinsupp.orderedAddCommMonoid
       α with
@@ -293,11 +293,11 @@ theorem subset_support_tsub : f.support \ g.support ⊆ (f - g).support := by
 #align dfinsupp.subset_support_tsub DFinsupp.subset_support_tsub
 -/
 
-end CanonicallyOrderedAddMonoid
+end CanonicallyOrderedAddCommMonoid
 
-section CanonicallyLinearOrderedAddMonoid
+section CanonicallyLinearOrderedAddCommMonoid
 
-variable [∀ i, CanonicallyLinearOrderedAddMonoid (α i)] [DecidableEq ι] {f g : Π₀ i, α i}
+variable [∀ i, CanonicallyLinearOrderedAddCommMonoid (α i)] [DecidableEq ι] {f g : Π₀ i, α i}
 
 #print DFinsupp.support_inf /-
 @[simp]
@@ -329,7 +329,7 @@ theorem disjoint_iff : Disjoint f g ↔ Disjoint f.support g.support :=
 #align dfinsupp.disjoint_iff DFinsupp.disjoint_iff
 -/
 
-end CanonicallyLinearOrderedAddMonoid
+end CanonicallyLinearOrderedAddCommMonoid
 
 end DFinsupp
 

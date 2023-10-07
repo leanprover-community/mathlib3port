@@ -27,7 +27,7 @@ about this type.
 def ENat : Type :=
   WithTop ℕ
 deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrder,
-  OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub,
+  OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddCommMonoid, Sub, OrderedSub,
   LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLT, WellFoundedRelation, CharZero,
   «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat ENat

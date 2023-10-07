@@ -32,7 +32,7 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
  below. -/
 def PrimeMultiset :=
   Multiset Nat.Primes
-deriving Inhabited, CanonicallyOrderedAddMonoid, DistribLattice, SemilatticeSup, OrderBot, Sub,
+deriving Inhabited, CanonicallyOrderedAddCommMonoid, DistribLattice, SemilatticeSup, OrderBot, Sub,
   OrderedSub
 #align prime_multiset PrimeMultiset
 -/

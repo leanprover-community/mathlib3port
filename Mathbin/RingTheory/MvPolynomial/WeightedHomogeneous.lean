@@ -521,9 +521,9 @@ end WeightedHomogeneousComponent
 
 end AddCommMonoid
 
-section CanonicallyOrderedAddMonoid
+section CanonicallyOrderedAddCommMonoid
 
-variable [CanonicallyOrderedAddMonoid M] {w : σ → M} (φ : MvPolynomial σ R)
+variable [CanonicallyOrderedAddCommMonoid M] {w : σ → M} (φ : MvPolynomial σ R)
 
 #print MvPolynomial.weightedHomogeneousComponent_zero /-
 /-- If `M` is a `canonically_ordered_add_monoid`, then the `weighted_homogeneous_component`
@@ -545,7 +545,7 @@ theorem weightedHomogeneousComponent_zero [NoZeroSMulDivisors ℕ M] (hw : ∀ i
 #align mv_polynomial.weighted_homogeneous_component_zero MvPolynomial.weightedHomogeneousComponent_zero
 -/
 
-end CanonicallyOrderedAddMonoid
+end CanonicallyOrderedAddCommMonoid
 
 end MvPolynomial
 

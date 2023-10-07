@@ -159,7 +159,7 @@ end Fold
 section Order
 
 #print Multiset.max_le_of_forall_le /-
-theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddMonoid α] (l : Multiset α)
+theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddCommMonoid α] (l : Multiset α)
     (n : α) (h : ∀ x ∈ l, x ≤ n) : l.fold max ⊥ ≤ n :=
   by
   induction l using Quotient.inductionOn

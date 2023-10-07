@@ -88,7 +88,8 @@ def ENNReal :=
   WithTop ℝ≥0
 deriving Zero, AddCommMonoidWithOne, SemilatticeSup, DistribLattice, OrderBot, BoundedOrder,
   CanonicallyOrderedCommSemiring, CompleteLinearOrder, DenselyOrdered, Nontrivial,
-  CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub, LinearOrderedAddCommMonoidWithTop, CharZero
+  CanonicallyLinearOrderedAddCommMonoid, Sub, OrderedSub, LinearOrderedAddCommMonoidWithTop,
+  CharZero
 #align ennreal ENNReal
 -/
 

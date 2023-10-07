@@ -260,11 +260,11 @@ theorem coe_mul_of_apply_add [AddRightCancelMonoid ι] [SetLike.GradedMonoid A] 
 
 end coe
 
-section CanonicallyOrderedAddMonoid
+section CanonicallyOrderedAddCommMonoid
 
 variable [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
 
-variable [CanonicallyOrderedAddMonoid ι] [SetLike.GradedMonoid A]
+variable [CanonicallyOrderedAddCommMonoid ι] [SetLike.GradedMonoid A]
 
 #print DirectSum.coe_of_mul_apply_of_not_le /-
 theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h : ¬i ≤ n) :
@@ -324,7 +324,7 @@ theorem coe_of_mul_apply {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) [Decidabl
 #align direct_sum.coe_of_mul_apply DirectSum.coe_of_mul_apply
 -/
 
-end CanonicallyOrderedAddMonoid
+end CanonicallyOrderedAddCommMonoid
 
 end DirectSum
 

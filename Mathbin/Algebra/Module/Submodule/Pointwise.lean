@@ -215,7 +215,7 @@ theorem zero_eq_bot : (0 : Submodule R M) = ⊥ :=
 #align submodule.zero_eq_bot Submodule.zero_eq_bot
 -/
 
-instance : CanonicallyOrderedAddMonoid (Submodule R M) :=
+instance : CanonicallyOrderedAddCommMonoid (Submodule R M) :=
   { Submodule.pointwiseAddCommMonoid,
     Submodule.completeLattice with
     zero := 0

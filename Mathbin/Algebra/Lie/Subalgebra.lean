@@ -633,7 +633,7 @@ instance : AddCommMonoid (LieSubalgebra R L)
   add_zero _ := sup_bot_eq
   add_comm _ _ := sup_comm
 
-instance : CanonicallyOrderedAddMonoid (LieSubalgebra R L) :=
+instance : CanonicallyOrderedAddCommMonoid (LieSubalgebra R L) :=
   { LieSubalgebra.addCommMonoid,
     LieSubalgebra.completeLattice with
     add_le_add_left := fun a b => sup_le_sup_left

@@ -834,7 +834,7 @@ theorem le_iff_exists_add {s t : Multiset α} : s ≤ t ↔ ∃ u, t = s + u :=
 #align multiset.le_iff_exists_add Multiset.le_iff_exists_add
 -/
 
-instance : CanonicallyOrderedAddMonoid (Multiset α) :=
+instance : CanonicallyOrderedAddCommMonoid (Multiset α) :=
   { Multiset.orderBot,
     Multiset.orderedCancelAddCommMonoid with
     le_self_add := le_add_right

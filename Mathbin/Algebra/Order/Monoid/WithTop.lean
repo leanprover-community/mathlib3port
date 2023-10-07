@@ -420,7 +420,7 @@ instance [LE α] [Add α] [ExistsAddOfLE α] : ExistsAddOfLE (WithTop α) :=
       exact ⟨c, rfl⟩
     | ⊤, (b : α) => fun h => (not_top_le_coe _ h).elim⟩
 
-instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedAddMonoid (WithTop α) :=
+instance [CanonicallyOrderedAddCommMonoid α] : CanonicallyOrderedAddCommMonoid (WithTop α) :=
   { WithTop.orderBot, WithTop.orderedAddCommMonoid, WithTop.existsAddOfLE with
     le_self_add := fun a b =>
       match a, b with
@@ -429,7 +429,8 @@ instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedAddMonoid (WithTop
       | (a : α), (b : α) => WithTop.coe_le_coe.2 le_self_add
       | ⊤, (b : α) => le_rfl }
 
-instance [CanonicallyLinearOrderedAddMonoid α] : CanonicallyLinearOrderedAddMonoid (WithTop α) :=
+instance [CanonicallyLinearOrderedAddCommMonoid α] :
+    CanonicallyLinearOrderedAddCommMonoid (WithTop α) :=
   { WithTop.canonicallyOrderedAddMonoid, WithTop.linearOrder with }
 
 #print WithTop.coe_nat /-

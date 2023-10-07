@@ -80,8 +80,8 @@ instance : CanonicallyOrderedCommSemiring ℕ :=
     le_self_add := Nat.le_add_right
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero }
 
-instance : CanonicallyLinearOrderedAddMonoid ℕ :=
-  { (inferInstance : CanonicallyOrderedAddMonoid ℕ), Nat.linearOrder with }
+instance : CanonicallyLinearOrderedAddCommMonoid ℕ :=
+  { (inferInstance : CanonicallyOrderedAddCommMonoid ℕ), Nat.linearOrder with }
 
 variable {a b m n k l : ℕ}
 

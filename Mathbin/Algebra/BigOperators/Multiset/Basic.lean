@@ -558,7 +558,7 @@ theorem prod_eq_one [CommMonoid α] {m : Multiset α} (h : ∀ x ∈ m, x = (1 :
 
 #print Multiset.le_prod_of_mem /-
 @[to_additive]
-theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) :
+theorem le_prod_of_mem [CanonicallyOrderedCommMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) :
     a ≤ m.Prod := by
   obtain ⟨m', rfl⟩ := exists_cons_of_mem h
   rw [prod_cons]

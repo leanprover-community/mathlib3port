@@ -569,11 +569,9 @@ theorem mk_leftInverse (hg : g.Monic) : Function.LeftInverse (mk g) (modByMonicH
 #align adjoin_root.mk_left_inverse AdjoinRoot.mk_leftInverse
 -/
 
-#print AdjoinRoot.mk_surjective /-
 theorem mk_surjective (hg : g.Monic) : Function.Surjective (mk g) :=
   (mk_leftInverse hg).Surjective
-#align adjoin_root.mk_surjective AdjoinRoot.mk_surjective
--/
+#align adjoin_root.mk_surjective AdjoinRoot.mk_surjectiveₓ
 
 #print AdjoinRoot.powerBasisAux' /-
 /-- The elements `1, root g, ..., root g ^ (d - 1)` form a basis for `adjoin_root g`,

@@ -408,30 +408,30 @@ def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
 #align nonneg.coe_ring_hom Nonneg.coeRingHom
 -/
 
-#print Nonneg.canonicallyOrderedAddMonoid /-
-instance canonicallyOrderedAddMonoid [OrderedRing α] :
-    CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
+#print Nonneg.canonicallyOrderedAddCommMonoid /-
+instance canonicallyOrderedAddCommMonoid [OrderedRing α] :
+    CanonicallyOrderedAddCommMonoid { x : α // 0 ≤ x } :=
   { Nonneg.orderedAddCommMonoid,
     Nonneg.orderBot with
     le_self_add := fun a b => le_add_of_nonneg_right b.2
     exists_add_of_le := fun a b h =>
       ⟨⟨b - a, sub_nonneg_of_le h⟩, Subtype.ext (add_sub_cancel'_right _ _).symm⟩ }
-#align nonneg.canonically_ordered_add_monoid Nonneg.canonicallyOrderedAddMonoid
+#align nonneg.canonically_ordered_add_monoid Nonneg.canonicallyOrderedAddCommMonoid
 -/
 
 #print Nonneg.canonicallyOrderedCommSemiring /-
 instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α] :
     CanonicallyOrderedCommSemiring { x : α // 0 ≤ x } :=
-  { Nonneg.canonicallyOrderedAddMonoid, Nonneg.orderedCommSemiring with
+  { Nonneg.canonicallyOrderedAddCommMonoid, Nonneg.orderedCommSemiring with
     eq_zero_or_eq_zero_of_mul_eq_zero := by rintro ⟨a, ha⟩ ⟨b, hb⟩; simp }
 #align nonneg.canonically_ordered_comm_semiring Nonneg.canonicallyOrderedCommSemiring
 -/
 
-#print Nonneg.canonicallyLinearOrderedAddMonoid /-
-instance canonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
-    CanonicallyLinearOrderedAddMonoid { x : α // 0 ≤ x } :=
-  { Subtype.linearOrder _, Nonneg.canonicallyOrderedAddMonoid with }
-#align nonneg.canonically_linear_ordered_add_monoid Nonneg.canonicallyLinearOrderedAddMonoid
+#print Nonneg.canonicallyLinearOrderedAddCommMonoid /-
+instance canonicallyLinearOrderedAddCommMonoid [LinearOrderedRing α] :
+    CanonicallyLinearOrderedAddCommMonoid { x : α // 0 ≤ x } :=
+  { Subtype.linearOrder _, Nonneg.canonicallyOrderedAddCommMonoid with }
+#align nonneg.canonically_linear_ordered_add_monoid Nonneg.canonicallyLinearOrderedAddCommMonoid
 -/
 
 section LinearOrder

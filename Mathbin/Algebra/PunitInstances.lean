@@ -115,7 +115,7 @@ theorem norm_unit_eq : normUnit x = 1 :=
 #align punit.norm_unit_eq PUnit.norm_unit_eq
 -/
 
-instance : CanonicallyOrderedAddMonoid PUnit := by
+instance : CanonicallyOrderedAddCommMonoid PUnit := by
   refine'
         { PUnit.commRing, PUnit.completeBooleanAlgebra with
           exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elim _ _⟩ .. } <;>

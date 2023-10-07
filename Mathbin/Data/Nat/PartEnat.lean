@@ -521,7 +521,7 @@ instance : OrderedAddCommMonoid PartENat :=
         ⟨fun h => And.intro (dom_natCast _) (h₁ h.2), fun h => by
           simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
 
-instance : CanonicallyOrderedAddMonoid PartENat :=
+instance : CanonicallyOrderedAddCommMonoid PartENat :=
   { PartENat.semilatticeSup, PartENat.orderBot,
     PartENat.orderedAddCommMonoid with
     le_self_add := fun a b =>

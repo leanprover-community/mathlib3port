@@ -506,7 +506,7 @@ example : OrderBot ℝ≥0 := by infer_instance
 
 example : PartialOrder ℝ≥0 := by infer_instance
 
-noncomputable example : CanonicallyLinearOrderedAddMonoid ℝ≥0 := by infer_instance
+noncomputable example : CanonicallyLinearOrderedAddCommMonoid ℝ≥0 := by infer_instance
 
 noncomputable example : LinearOrderedAddCommMonoid ℝ≥0 := by infer_instance
 

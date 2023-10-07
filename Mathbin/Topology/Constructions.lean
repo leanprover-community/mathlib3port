@@ -702,7 +702,6 @@ theorem nhds_prod_eq {a : α} {b : β} : 𝓝 (a, b) = 𝓝 a ×ᶠ 𝓝 b := by
 #align nhds_prod_eq nhds_prod_eq
 -/
 
-#print continuous_uncurry_of_discreteTopology /-
 /-- If a function `f x y` is such that `y ↦ f x y` is continuous for all `x`, and `x` lives in a
 discrete space, then `f` is continuous. -/
 theorem continuous_uncurry_of_discreteTopology [DiscreteTopology α] {f : α → β → γ}
@@ -714,7 +713,6 @@ theorem continuous_uncurry_of_discreteTopology [DiscreteTopology α] {f : α →
   rw [nhds_prod_eq, nhds_discrete, Filter.map_pure_prod]
   exact (hf a).ContinuousAt
 #align continuous_uncurry_of_discrete_topology continuous_uncurry_of_discreteTopology
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print mem_nhds_prod_iff /-
@@ -907,14 +905,12 @@ theorem prod_induced_induced {α γ : Type _} (f : α → β) (g : γ → δ) :
 #align prod_induced_induced prod_induced_induced
 -/
 
-#print continuous_uncurry_of_discreteTopology_left /-
 theorem continuous_uncurry_of_discreteTopology_left [DiscreteTopology α] {f : α → β → γ}
     (h : ∀ a, Continuous (f a)) : Continuous (uncurry f) :=
   continuous_iff_continuousAt.2 fun ⟨a, b⟩ => by
     simp only [ContinuousAt, nhds_prod_eq, nhds_discrete α, pure_prod, tendsto_map'_iff, (· ∘ ·),
       uncurry, (h a).Tendsto]
 #align continuous_uncurry_of_discrete_topology_left continuous_uncurry_of_discreteTopology_left
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print exists_nhds_square /-

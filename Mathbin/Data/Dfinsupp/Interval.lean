@@ -266,7 +266,7 @@ section CanonicallyOrdered
 
 variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
-variable [∀ i, CanonicallyOrderedAddMonoid (α i)] [∀ i, LocallyFiniteOrder (α i)]
+variable [∀ i, CanonicallyOrderedAddCommMonoid (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 variable (f : Π₀ i, α i)
 

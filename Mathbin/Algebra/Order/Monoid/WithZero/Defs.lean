@@ -36,11 +36,11 @@ instance (priority := 100) LinearOrderedCommMonoidWithZero.toZeroLeOneClass
 #align linear_ordered_comm_monoid_with_zero.to_zero_le_one_class LinearOrderedCommMonoidWithZero.toZeroLeOneClass
 -/
 
-#print CanonicallyOrderedAddMonoid.toZeroLeOneClass /-
-instance (priority := 100) CanonicallyOrderedAddMonoid.toZeroLeOneClass
-    [CanonicallyOrderedAddMonoid α] [One α] : ZeroLEOneClass α :=
+#print canonicallyOrderedAddCommMonoid.toZeroLeOneClass /-
+instance (priority := 100) canonicallyOrderedAddCommMonoid.toZeroLeOneClass
+    [CanonicallyOrderedAddCommMonoid α] [One α] : ZeroLEOneClass α :=
   ⟨zero_le 1⟩
-#align canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClass
+#align canonically_ordered_add_monoid.to_zero_le_one_class canonicallyOrderedAddCommMonoid.toZeroLeOneClass
 -/
 
 namespace WithZero
@@ -167,7 +167,7 @@ protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : 
 
 end WithZero
 
-section CanonicallyOrderedMonoid
+section CanonicallyOrderedCommMonoid
 
 #print WithZero.existsAddOfLE /-
 instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
@@ -183,11 +183,11 @@ instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
 #align with_zero.has_exists_add_of_le WithZero.existsAddOfLE
 -/
 
-#print WithZero.canonicallyOrderedAddMonoid /-
+#print WithZero.canonicallyOrderedAddCommMonoid /-
 -- This instance looks absurd: a monoid already has a zero
 /-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
-instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
-    CanonicallyOrderedAddMonoid (WithZero α) :=
+instance WithZero.canonicallyOrderedAddCommMonoid {α : Type u} [CanonicallyOrderedAddCommMonoid α] :
+    CanonicallyOrderedAddCommMonoid (WithZero α) :=
   { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le, WithZero.existsAddOfLE with
     le_self_add := fun a b => by
       apply WithZero.cases_on a
@@ -195,19 +195,20 @@ instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedA
       apply WithZero.cases_on b
       · exact fun b' => le_rfl
       · exact fun a' b' => WithZero.coe_le_coe.2 le_self_add }
-#align with_zero.canonically_ordered_add_monoid WithZero.canonicallyOrderedAddMonoid
+#align with_zero.canonically_ordered_add_monoid WithZero.canonicallyOrderedAddCommMonoid
 -/
 
-end CanonicallyOrderedMonoid
+end CanonicallyOrderedCommMonoid
 
-section CanonicallyLinearOrderedMonoid
+section CanonicallyLinearOrderedCommMonoid
 
-#print WithZero.canonicallyLinearOrderedAddMonoid /-
-instance WithZero.canonicallyLinearOrderedAddMonoid (α : Type _)
-    [CanonicallyLinearOrderedAddMonoid α] : CanonicallyLinearOrderedAddMonoid (WithZero α) :=
-  { WithZero.canonicallyOrderedAddMonoid, WithZero.linearOrder with }
-#align with_zero.canonically_linear_ordered_add_monoid WithZero.canonicallyLinearOrderedAddMonoid
+#print WithZero.canonicallyLinearOrderedAddCommMonoid /-
+instance WithZero.canonicallyLinearOrderedAddCommMonoid (α : Type _)
+    [CanonicallyLinearOrderedAddCommMonoid α] :
+    CanonicallyLinearOrderedAddCommMonoid (WithZero α) :=
+  { WithZero.canonicallyOrderedAddCommMonoid, WithZero.linearOrder with }
+#align with_zero.canonically_linear_ordered_add_monoid WithZero.canonicallyLinearOrderedAddCommMonoid
 -/
 
-end CanonicallyLinearOrderedMonoid
+end CanonicallyLinearOrderedCommMonoid
 

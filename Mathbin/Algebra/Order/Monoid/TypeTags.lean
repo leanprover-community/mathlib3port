@@ -95,19 +95,20 @@ instance [Add α] [LE α] [ExistsAddOfLE α] : ExistsMulOfLE (Multiplicative α)
 instance [Mul α] [LE α] [ExistsMulOfLE α] : ExistsAddOfLE (Additive α) :=
   ⟨@exists_hMul_of_le α _ _ _⟩
 
-instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedMonoid (Multiplicative α) :=
+instance [CanonicallyOrderedAddCommMonoid α] : CanonicallyOrderedCommMonoid (Multiplicative α) :=
   { Multiplicative.orderedCommMonoid, Multiplicative.orderBot, Multiplicative.existsMulOfLE with
     le_self_mul := @le_self_add α _ }
 
-instance [CanonicallyOrderedMonoid α] : CanonicallyOrderedAddMonoid (Additive α) :=
+instance [CanonicallyOrderedCommMonoid α] : CanonicallyOrderedAddCommMonoid (Additive α) :=
   { Additive.orderedAddCommMonoid, Additive.orderBot, Additive.existsAddOfLE with
     le_self_add := @le_self_mul α _ }
 
-instance [CanonicallyLinearOrderedAddMonoid α] :
-    CanonicallyLinearOrderedMonoid (Multiplicative α) :=
+instance [CanonicallyLinearOrderedAddCommMonoid α] :
+    CanonicallyLinearOrderedCommMonoid (Multiplicative α) :=
   { Multiplicative.canonicallyOrderedMonoid, Multiplicative.linearOrder with }
 
-instance [CanonicallyLinearOrderedMonoid α] : CanonicallyLinearOrderedAddMonoid (Additive α) :=
+instance [CanonicallyLinearOrderedCommMonoid α] :
+    CanonicallyLinearOrderedAddCommMonoid (Additive α) :=
   { Additive.canonicallyOrderedAddMonoid, Additive.linearOrder with }
 
 namespace Additive
