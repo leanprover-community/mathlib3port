@@ -87,8 +87,7 @@ theorem Real.isTopologicalBasis_Ioo_rat :
 #print Real.cocompact_eq /-
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = atBot ⊔ atTop := by
-  simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero,
-    comap_abs_at_top]
+  simp only [← Metric.cobounded_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero, comap_abs_at_top]
 #align real.cocompact_eq Real.cocompact_eq
 -/
 

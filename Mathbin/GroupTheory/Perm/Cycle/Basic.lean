@@ -2277,8 +2277,8 @@ namespace Finset
 
 variable {f : Perm α} {s : Finset α}
 
-#print Finset.product_self_eq_disj_Union_perm_aux /-
-theorem product_self_eq_disj_Union_perm_aux (hf : f.IsCycleOn s) :
+#print Finset.product_self_eq_disjiUnion_perm_aux /-
+theorem product_self_eq_disjiUnion_perm_aux (hf : f.IsCycleOn s) :
     (range s.card : Set ℕ).PairwiseDisjoint fun k =>
       s.map ⟨fun i => (i, (f ^ k) i), fun i j => congr_arg Prod.fst⟩ :=
   by
@@ -2294,7 +2294,7 @@ theorem product_self_eq_disj_Union_perm_aux (hf : f.IsCycleOn s) :
   rw [hf.pow_apply_eq_pow_apply ha] at h 
   rw [mem_coe, mem_range] at hm hn 
   exact hmn.symm (h.eq_of_lt_of_lt hn hm)
-#align finset.product_self_eq_disj_Union_perm_aux Finset.product_self_eq_disj_Union_perm_aux
+#align finset.product_self_eq_disj_Union_perm_aux Finset.product_self_eq_disjiUnion_perm_aux
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2309,11 +2309,11 @@ theorem product_self_eq_disj_Union_perm_aux (hf : f.IsCycleOn s) :
 
 The diagonals are given by the cycle `f`.
 -/
-theorem product_self_eq_disjUnion_perm (hf : f.IsCycleOn s) :
+theorem product_self_eq_disjiUnion_perm (hf : f.IsCycleOn s) :
     s ×ˢ s =
       (range s.card).disjUnionₓ
         (fun k => s.map ⟨fun i => (i, (f ^ k) i), fun i j => congr_arg Prod.fst⟩)
-        (product_self_eq_disj_Union_perm_aux hf) :=
+        (product_self_eq_disjiUnion_perm_aux hf) :=
   by
   ext ⟨a, b⟩
   simp only [mem_product, Equiv.Perm.coe_pow, mem_disj_Union, mem_range, mem_map,
@@ -2323,7 +2323,7 @@ theorem product_self_eq_disjUnion_perm (hf : f.IsCycleOn s) :
     exact ⟨n, hn, a, hx.1, rfl, by rw [f.iterate_eq_pow]⟩
   · rintro ⟨n, -, a, ha, rfl, rfl⟩
     exact ⟨ha, (hf.1.iterate _).MapsTo ha⟩
-#align finset.product_self_eq_disj_Union_perm Finset.product_self_eq_disjUnionₓ_perm
+#align finset.product_self_eq_disj_Union_perm Finset.product_self_eq_disjiUnion_permₓ
 
 end Finset
 

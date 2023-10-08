@@ -1186,31 +1186,31 @@ theorem ae_differentiableAt {f : ℝ → V} (h : LocallyBoundedVariationOn f uni
 
 end LocallyBoundedVariationOn
 
-#print LipschitzOnWith.ae_differentiableWithinAt_of_mem /-
+#print LipschitzOnWith.ae_differentiableWithinAt_of_mem_real /-
 /-- A real function into a finite dimensional real vector space which is Lipschitz on a set
 is differentiable almost everywhere in this set . -/
-theorem LipschitzOnWith.ae_differentiableWithinAt_of_mem {C : ℝ≥0} {f : ℝ → V} {s : Set ℝ}
+theorem LipschitzOnWith.ae_differentiableWithinAt_of_mem_real {C : ℝ≥0} {f : ℝ → V} {s : Set ℝ}
     (h : LipschitzOnWith C f s) : ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ f s x :=
   h.LocallyBoundedVariationOn.ae_differentiableWithinAt_of_mem
-#align lipschitz_on_with.ae_differentiable_within_at_of_mem LipschitzOnWith.ae_differentiableWithinAt_of_mem
+#align lipschitz_on_with.ae_differentiable_within_at_of_mem LipschitzOnWith.ae_differentiableWithinAt_of_mem_real
 -/
 
-#print LipschitzOnWith.ae_differentiableWithinAt /-
+#print LipschitzOnWith.ae_differentiableWithinAt_real /-
 /-- A real function into a finite dimensional real vector space which is Lipschitz on a set
 is differentiable almost everywhere in this set. -/
-theorem LipschitzOnWith.ae_differentiableWithinAt {C : ℝ≥0} {f : ℝ → V} {s : Set ℝ}
+theorem LipschitzOnWith.ae_differentiableWithinAt_real {C : ℝ≥0} {f : ℝ → V} {s : Set ℝ}
     (h : LipschitzOnWith C f s) (hs : MeasurableSet s) :
     ∀ᵐ x ∂volume.restrict s, DifferentiableWithinAt ℝ f s x :=
   h.LocallyBoundedVariationOn.ae_differentiableWithinAt hs
-#align lipschitz_on_with.ae_differentiable_within_at LipschitzOnWith.ae_differentiableWithinAt
+#align lipschitz_on_with.ae_differentiable_within_at LipschitzOnWith.ae_differentiableWithinAt_real
 -/
 
-#print LipschitzWith.ae_differentiableAt /-
+#print LipschitzWith.ae_differentiableAt_real /-
 /-- A real Lipschitz function into a finite dimensional real vector space is differentiable
 almost everywhere. -/
-theorem LipschitzWith.ae_differentiableAt {C : ℝ≥0} {f : ℝ → V} (h : LipschitzWith C f) :
+theorem LipschitzWith.ae_differentiableAt_real {C : ℝ≥0} {f : ℝ → V} (h : LipschitzWith C f) :
     ∀ᵐ x, DifferentiableAt ℝ f x :=
   (h.LocallyBoundedVariationOn univ).ae_differentiableAt
-#align lipschitz_with.ae_differentiable_at LipschitzWith.ae_differentiableAt
+#align lipschitz_with.ae_differentiable_at LipschitzWith.ae_differentiableAt_real
 -/
 

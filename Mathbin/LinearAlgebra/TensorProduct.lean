@@ -1488,11 +1488,9 @@ def Neg.aux : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
 
 variable {R}
 
-#print TensorProduct.Neg.aux_of /-
 theorem Neg.aux_of (m : M) (n : N) : Neg.aux R (FreeAddMonoid.of (m, n)) = (-m) ⊗ₜ[R] n :=
   rfl
 #align tensor_product.neg.aux_of TensorProduct.Neg.aux_of
--/
 
 instance : Neg (M ⊗[R] N)
     where neg :=

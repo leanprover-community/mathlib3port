@@ -480,7 +480,6 @@ section ChineseRemainder
 
 variable {ι : Type v}
 
-#print Ideal.exists_sub_one_mem_and_mem /-
 theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     (hf : ∀ i ∈ s, ∀ j ∈ s, i ≠ j → f i ⊔ f j = ⊤) (i : ι) (his : i ∈ s) :
     ∃ r : R, r - 1 ∈ f i ∧ ∀ j ∈ s, j ≠ i → r ∈ f j :=
@@ -510,9 +509,7 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
   rw [quotient.eq_zero_iff_mem]
   exact hgj j hjs hji
 #align ideal.exists_sub_one_mem_and_mem Ideal.exists_sub_one_mem_and_mem
--/
 
-#print Ideal.exists_sub_mem /-
 theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i ⊔ f j = ⊤)
     (g : ι → R) : ∃ r : R, ∀ i, r - g i ∈ f i :=
   by
@@ -533,7 +530,6 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   specialize hφ1 i; rw [← Quotient.eq', RingHom.map_one] at hφ1 
   rw [RingHom.map_mul, hφ1, mul_one]
 #align ideal.exists_sub_mem Ideal.exists_sub_mem
--/
 
 #print Ideal.quotientInfToPiQuotient /-
 /-- The homomorphism from `R/(⋂ i, f i)` to `∏ i, (R / f i)` featured in the Chinese
@@ -547,7 +543,6 @@ def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ 
 #align ideal.quotient_inf_to_pi_quotient Ideal.quotientInfToPiQuotient
 -/
 
-#print Ideal.quotientInfToPiQuotient_bijective /-
 theorem quotientInfToPiQuotient_bijective [Finite ι] {f : ι → Ideal R}
     (hf : ∀ i j, i ≠ j → f i ⊔ f j = ⊤) : Function.Bijective (quotientInfToPiQuotient f) :=
   ⟨fun x y =>
@@ -560,7 +555,6 @@ theorem quotientInfToPiQuotient_bijective [Finite ι] {f : ι → Ideal R}
     let ⟨r, hr⟩ := exists_sub_mem hf fun i => Quotient.out' (g i)
     ⟨Quotient.mk _ r, funext fun i => Quotient.out_eq' (g i) ▸ Quotient.eq.2 (hr i)⟩⟩
 #align ideal.quotient_inf_to_pi_quotient_bijective Ideal.quotientInfToPiQuotient_bijective
--/
 
 #print Ideal.quotientInfRingEquivPiQuotient /-
 /-- Chinese Remainder Theorem. Eisenbud Ex.2.6. Similar to Atiyah-Macdonald 1.10 and Stacks 00DT -/

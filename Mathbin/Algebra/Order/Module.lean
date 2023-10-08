@@ -286,13 +286,17 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing k] [LinearOrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {a : k}
 
+#print smul_max_of_nonpos /-
 theorem smul_max_of_nonpos (ha : a ≤ 0) (b₁ b₂ : M) : a • max b₁ b₂ = min (a • b₁) (a • b₂) :=
   (antitone_smul_left ha : Antitone (_ : M → M)).map_max
 #align smul_max_of_nonpos smul_max_of_nonpos
+-/
 
+#print smul_min_of_nonpos /-
 theorem smul_min_of_nonpos (ha : a ≤ 0) (b₁ b₂ : M) : a • min b₁ b₂ = max (a • b₁) (a • b₂) :=
   (antitone_smul_left ha : Antitone (_ : M → M)).map_min
 #align smul_min_of_nonpos smul_min_of_nonpos
+-/
 
 end LinearOrderedRing
 

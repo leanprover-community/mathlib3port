@@ -1484,15 +1484,19 @@ protected theorem min [Preorder α] [LinearOrder β] {f g : α → β} {s : Set 
 #align monotone_on.min MonotoneOn.min
 -/
 
+#print MonotoneOn.of_map_inf /-
 theorem of_map_inf [SemilatticeInf α] [SemilatticeInf β]
     (h : ∀ x ∈ s, ∀ y ∈ s, f (x ⊓ y) = f x ⊓ f y) : MonotoneOn f s := fun x hx y hy hxy =>
   inf_eq_left.1 <| by rw [← h _ hx _ hy, inf_eq_left.2 hxy]
 #align monotone_on.of_map_inf MonotoneOn.of_map_inf
+-/
 
+#print MonotoneOn.of_map_sup /-
 theorem of_map_sup [SemilatticeSup α] [SemilatticeSup β]
     (h : ∀ x ∈ s, ∀ y ∈ s, f (x ⊔ y) = f x ⊔ f y) : MonotoneOn f s :=
   (@of_map_inf αᵒᵈ βᵒᵈ _ _ _ _ h).dual
 #align monotone_on.of_map_sup MonotoneOn.of_map_sup
+-/
 
 variable [LinearOrder α]
 
@@ -1615,15 +1619,19 @@ protected theorem min [Preorder α] [LinearOrder β] {f g : α → β} {s : Set 
 #align antitone_on.min AntitoneOn.min
 -/
 
+#print AntitoneOn.of_map_inf /-
 theorem of_map_inf [SemilatticeInf α] [SemilatticeSup β]
     (h : ∀ x ∈ s, ∀ y ∈ s, f (x ⊓ y) = f x ⊔ f y) : AntitoneOn f s := fun x hx y hy hxy =>
   sup_eq_left.1 <| by rw [← h _ hx _ hy, inf_eq_left.2 hxy]
 #align antitone_on.of_map_inf AntitoneOn.of_map_inf
+-/
 
+#print AntitoneOn.of_map_sup /-
 theorem of_map_sup [SemilatticeSup α] [SemilatticeInf β]
     (h : ∀ x ∈ s, ∀ y ∈ s, f (x ⊔ y) = f x ⊓ f y) : AntitoneOn f s :=
   (@of_map_inf αᵒᵈ βᵒᵈ _ _ _ _ h).dual
 #align antitone_on.of_map_sup AntitoneOn.of_map_sup
+-/
 
 variable [LinearOrder α]
 

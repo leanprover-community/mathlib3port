@@ -28,7 +28,7 @@ This file defines a number of uniform `pmf` distributions from various inputs,
 -/
 
 
-namespace Pmf
+namespace PMF
 
 noncomputable section
 
@@ -38,9 +38,9 @@ open scoped Classical BigOperators NNReal ENNReal
 
 section UniformOfFinset
 
-#print Pmf.uniformOfFinset /-
+#print PMF.uniformOfFinset /-
 /-- Uniform distribution taking the same non-zero probability on the nonempty finset `s` -/
-def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
+def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : PMF α :=
   ofFinset (fun a => if a ∈ s then s.card⁻¹ else 0) s
     (Exists.rec_on hs fun x hx =>
       calc
@@ -54,50 +54,50 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
                 Finset.nonempty_iff_ne_empty.1 hs)
             (ENNReal.nat_ne_top s.card))
     fun x hx => by simp only [hx, if_false]
-#align pmf.uniform_of_finset Pmf.uniformOfFinset
+#align pmf.uniform_of_finset PMF.uniformOfFinset
 -/
 
 variable {s : Finset α} (hs : s.Nonempty) {a : α}
 
-#print Pmf.uniformOfFinset_apply /-
+#print PMF.uniformOfFinset_apply /-
 @[simp]
 theorem uniformOfFinset_apply (a : α) : uniformOfFinset s hs a = if a ∈ s then s.card⁻¹ else 0 :=
   rfl
-#align pmf.uniform_of_finset_apply Pmf.uniformOfFinset_apply
+#align pmf.uniform_of_finset_apply PMF.uniformOfFinset_apply
 -/
 
-#print Pmf.uniformOfFinset_apply_of_mem /-
+#print PMF.uniformOfFinset_apply_of_mem /-
 theorem uniformOfFinset_apply_of_mem (ha : a ∈ s) : uniformOfFinset s hs a = s.card⁻¹ := by
   simp [ha]
-#align pmf.uniform_of_finset_apply_of_mem Pmf.uniformOfFinset_apply_of_mem
+#align pmf.uniform_of_finset_apply_of_mem PMF.uniformOfFinset_apply_of_mem
 -/
 
-#print Pmf.uniformOfFinset_apply_of_not_mem /-
+#print PMF.uniformOfFinset_apply_of_not_mem /-
 theorem uniformOfFinset_apply_of_not_mem (ha : a ∉ s) : uniformOfFinset s hs a = 0 := by simp [ha]
-#align pmf.uniform_of_finset_apply_of_not_mem Pmf.uniformOfFinset_apply_of_not_mem
+#align pmf.uniform_of_finset_apply_of_not_mem PMF.uniformOfFinset_apply_of_not_mem
 -/
 
-#print Pmf.support_uniformOfFinset /-
+#print PMF.support_uniformOfFinset /-
 @[simp]
 theorem support_uniformOfFinset : (uniformOfFinset s hs).support = s :=
   Set.ext
     (by
       let ⟨a, ha⟩ := hs
       simp [mem_support_iff, Finset.ne_empty_of_mem ha])
-#align pmf.support_uniform_of_finset Pmf.support_uniformOfFinset
+#align pmf.support_uniform_of_finset PMF.support_uniformOfFinset
 -/
 
-#print Pmf.mem_support_uniformOfFinset_iff /-
+#print PMF.mem_support_uniformOfFinset_iff /-
 theorem mem_support_uniformOfFinset_iff (a : α) : a ∈ (uniformOfFinset s hs).support ↔ a ∈ s := by
   simp
-#align pmf.mem_support_uniform_of_finset_iff Pmf.mem_support_uniformOfFinset_iff
+#align pmf.mem_support_uniform_of_finset_iff PMF.mem_support_uniformOfFinset_iff
 -/
 
 section Measure
 
 variable (t : Set α)
 
-#print Pmf.toOuterMeasure_uniformOfFinset_apply /-
+#print PMF.toOuterMeasure_uniformOfFinset_apply /-
 @[simp]
 theorem toOuterMeasure_uniformOfFinset_apply :
     (uniformOfFinset s hs).toOuterMeasure t = (s.filterₓ (· ∈ t)).card / s.card :=
@@ -119,15 +119,15 @@ theorem toOuterMeasure_uniformOfFinset_apply :
       have : (s.card : ℝ≥0∞) ≠ 0 :=
         Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
       simp only [div_eq_mul_inv, Finset.sum_const, nsmul_eq_mul]
-#align pmf.to_outer_measure_uniform_of_finset_apply Pmf.toOuterMeasure_uniformOfFinset_apply
+#align pmf.to_outer_measure_uniform_of_finset_apply PMF.toOuterMeasure_uniformOfFinset_apply
 -/
 
-#print Pmf.toMeasure_uniformOfFinset_apply /-
+#print PMF.toMeasure_uniformOfFinset_apply /-
 @[simp]
 theorem toMeasure_uniformOfFinset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
     (uniformOfFinset s hs).toMeasure t = (s.filterₓ (· ∈ t)).card / s.card :=
   (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_uniformOfFinset_apply hs t)
-#align pmf.to_measure_uniform_of_finset_apply Pmf.toMeasure_uniformOfFinset_apply
+#align pmf.to_measure_uniform_of_finset_apply PMF.toMeasure_uniformOfFinset_apply
 -/
 
 end Measure
@@ -136,51 +136,51 @@ end UniformOfFinset
 
 section UniformOfFintype
 
-#print Pmf.uniformOfFintype /-
+#print PMF.uniformOfFintype /-
 /-- The uniform pmf taking the same uniform value on all of the fintype `α` -/
-def uniformOfFintype (α : Type _) [Fintype α] [Nonempty α] : Pmf α :=
+def uniformOfFintype (α : Type _) [Fintype α] [Nonempty α] : PMF α :=
   uniformOfFinset Finset.univ Finset.univ_nonempty
-#align pmf.uniform_of_fintype Pmf.uniformOfFintype
+#align pmf.uniform_of_fintype PMF.uniformOfFintype
 -/
 
 variable [Fintype α] [Nonempty α]
 
-#print Pmf.uniformOfFintype_apply /-
+#print PMF.uniformOfFintype_apply /-
 @[simp]
 theorem uniformOfFintype_apply (a : α) : uniformOfFintype α a = (Fintype.card α)⁻¹ := by
   simpa only [uniform_of_fintype, Finset.mem_univ, if_true, uniform_of_finset_apply]
-#align pmf.uniform_of_fintype_apply Pmf.uniformOfFintype_apply
+#align pmf.uniform_of_fintype_apply PMF.uniformOfFintype_apply
 -/
 
-#print Pmf.support_uniformOfFintype /-
+#print PMF.support_uniformOfFintype /-
 @[simp]
 theorem support_uniformOfFintype (α : Type _) [Fintype α] [Nonempty α] :
     (uniformOfFintype α).support = ⊤ :=
   Set.ext fun x => by simp [mem_support_iff]
-#align pmf.support_uniform_of_fintype Pmf.support_uniformOfFintype
+#align pmf.support_uniform_of_fintype PMF.support_uniformOfFintype
 -/
 
-#print Pmf.mem_support_uniformOfFintype /-
+#print PMF.mem_support_uniformOfFintype /-
 theorem mem_support_uniformOfFintype (a : α) : a ∈ (uniformOfFintype α).support := by simp
-#align pmf.mem_support_uniform_of_fintype Pmf.mem_support_uniformOfFintype
+#align pmf.mem_support_uniform_of_fintype PMF.mem_support_uniformOfFintype
 -/
 
 section Measure
 
 variable (s : Set α)
 
-#print Pmf.toOuterMeasure_uniformOfFintype_apply /-
+#print PMF.toOuterMeasure_uniformOfFintype_apply /-
 theorem toOuterMeasure_uniformOfFintype_apply :
     (uniformOfFintype α).toOuterMeasure s = Fintype.card s / Fintype.card α := by
   simpa [uniform_of_fintype]
-#align pmf.to_outer_measure_uniform_of_fintype_apply Pmf.toOuterMeasure_uniformOfFintype_apply
+#align pmf.to_outer_measure_uniform_of_fintype_apply PMF.toOuterMeasure_uniformOfFintype_apply
 -/
 
-#print Pmf.toMeasure_uniformOfFintype_apply /-
+#print PMF.toMeasure_uniformOfFintype_apply /-
 theorem toMeasure_uniformOfFintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
     (uniformOfFintype α).toMeasure s = Fintype.card s / Fintype.card α := by
   simpa [uniform_of_fintype, hs]
-#align pmf.to_measure_uniform_of_fintype_apply Pmf.toMeasure_uniformOfFintype_apply
+#align pmf.to_measure_uniform_of_fintype_apply PMF.toMeasure_uniformOfFintype_apply
 -/
 
 end Measure
@@ -189,10 +189,10 @@ end UniformOfFintype
 
 section OfMultiset
 
-#print Pmf.ofMultiset /-
+#print PMF.ofMultiset /-
 /-- Given a non-empty multiset `s` we construct the `pmf` which sends `a` to the fraction of
   elements in `s` that are `a`. -/
-def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
+def ofMultiset (s : Multiset α) (hs : s ≠ 0) : PMF α :=
   ⟨fun a => s.count a / s.card,
     ENNReal.summable.hasSum_iff.2
       (calc
@@ -206,43 +206,43 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
           rw [← Nat.cast_sum, Multiset.toFinset_sum_count_eq s,
             ENNReal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))
               (ENNReal.nat_ne_top _)])⟩
-#align pmf.of_multiset Pmf.ofMultiset
+#align pmf.of_multiset PMF.ofMultiset
 -/
 
 variable {s : Multiset α} (hs : s ≠ 0)
 
-#print Pmf.ofMultiset_apply /-
+#print PMF.ofMultiset_apply /-
 @[simp]
 theorem ofMultiset_apply (a : α) : ofMultiset s hs a = s.count a / s.card :=
   rfl
-#align pmf.of_multiset_apply Pmf.ofMultiset_apply
+#align pmf.of_multiset_apply PMF.ofMultiset_apply
 -/
 
-#print Pmf.support_ofMultiset /-
+#print PMF.support_ofMultiset /-
 @[simp]
 theorem support_ofMultiset : (ofMultiset s hs).support = s.toFinset :=
   Set.ext (by simp [mem_support_iff, hs])
-#align pmf.support_of_multiset Pmf.support_ofMultiset
+#align pmf.support_of_multiset PMF.support_ofMultiset
 -/
 
-#print Pmf.mem_support_ofMultiset_iff /-
+#print PMF.mem_support_ofMultiset_iff /-
 theorem mem_support_ofMultiset_iff (a : α) : a ∈ (ofMultiset s hs).support ↔ a ∈ s.toFinset := by
   simp
-#align pmf.mem_support_of_multiset_iff Pmf.mem_support_ofMultiset_iff
+#align pmf.mem_support_of_multiset_iff PMF.mem_support_ofMultiset_iff
 -/
 
-#print Pmf.ofMultiset_apply_of_not_mem /-
+#print PMF.ofMultiset_apply_of_not_mem /-
 theorem ofMultiset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofMultiset s hs a = 0 := by
   simpa only [of_multiset_apply, ENNReal.div_eq_zero_iff, Nat.cast_eq_zero, Multiset.count_eq_zero,
     ENNReal.nat_ne_top, or_false_iff] using ha
-#align pmf.of_multiset_apply_of_not_mem Pmf.ofMultiset_apply_of_not_mem
+#align pmf.of_multiset_apply_of_not_mem PMF.ofMultiset_apply_of_not_mem
 -/
 
 section Measure
 
 variable (t : Set α)
 
-#print Pmf.toOuterMeasure_ofMultiset_apply /-
+#print PMF.toOuterMeasure_ofMultiset_apply /-
 @[simp]
 theorem toOuterMeasure_ofMultiset_apply :
     (ofMultiset s hs).toOuterMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
@@ -250,20 +250,20 @@ theorem toOuterMeasure_ofMultiset_apply :
   rw [div_eq_mul_inv, ← ENNReal.tsum_mul_right, to_outer_measure_apply]
   refine' tsum_congr fun x => _
   by_cases hx : x ∈ t <;> simp [Set.indicator, hx, div_eq_mul_inv]
-#align pmf.to_outer_measure_of_multiset_apply Pmf.toOuterMeasure_ofMultiset_apply
+#align pmf.to_outer_measure_of_multiset_apply PMF.toOuterMeasure_ofMultiset_apply
 -/
 
-#print Pmf.toMeasure_ofMultiset_apply /-
+#print PMF.toMeasure_ofMultiset_apply /-
 @[simp]
 theorem toMeasure_ofMultiset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
     (ofMultiset s hs).toMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
   (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_ofMultiset_apply hs t)
-#align pmf.to_measure_of_multiset_apply Pmf.toMeasure_ofMultiset_apply
+#align pmf.to_measure_of_multiset_apply PMF.toMeasure_ofMultiset_apply
 -/
 
 end Measure
 
 end OfMultiset
 
-end Pmf
+end PMF
 

@@ -152,12 +152,12 @@ theorem intentClosure_iUnion₂ (f : ∀ i, κ i → Set α) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-#print extentClosure_Union₂ /-
+#print extentClosure_iUnion₂ /-
 @[simp]
-theorem extentClosure_Union₂ (f : ∀ i, κ i → Set β) :
+theorem extentClosure_iUnion₂ (f : ∀ i, κ i → Set β) :
     extentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), extentClosure r (f i j) :=
   intentClosure_iUnion₂ _ _
-#align extent_closure_Union₂ extentClosure_Union₂
+#align extent_closure_Union₂ extentClosure_iUnion₂
 -/
 
 #print subset_extentClosure_intentClosure /-
@@ -350,7 +350,7 @@ instance : InfSet (Concept α β r) :=
       snd := intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst)
       closure_fst := rfl
       closure_snd := by
-        simp_rw [← closure_snd, ← extentClosure_Union₂,
+        simp_rw [← closure_snd, ← extentClosure_iUnion₂,
           extentClosure_intentClosure_extentClosure] }⟩
 
 instance : CompleteLattice (Concept α β r) :=

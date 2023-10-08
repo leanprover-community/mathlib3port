@@ -363,20 +363,24 @@ section LinearOrder
 variable [LinearOrder α] [CovariantClass α α (· * ·) (· ≤ ·)]
   [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
 
+#print max_mul_mul_le_max_mul_max' /-
 @[to_additive max_add_add_le_max_add_max]
-theorem max_hMul_hMul_le_max_hMul_max' : max (a * b) (c * d) ≤ max a c * max b d :=
+theorem max_mul_mul_le_max_mul_max' : max (a * b) (c * d) ≤ max a c * max b d :=
   max_le (mul_le_mul' (le_max_left _ _) <| le_max_left _ _) <|
     mul_le_mul' (le_max_right _ _) <| le_max_right _ _
-#align max_mul_mul_le_max_mul_max' max_hMul_hMul_le_max_hMul_max'
+#align max_mul_mul_le_max_mul_max' max_mul_mul_le_max_mul_max'
 #align max_add_add_le_max_add_max max_add_add_le_max_add_max
+-/
 
+#print min_mul_min_le_min_mul_mul' /-
 --TODO: Also missing `min_mul_min_le_min_mul_mul`
 @[to_additive min_add_min_le_min_add_add]
-theorem min_hMul_min_le_min_hMul_mul' : min a c * min b d ≤ min (a * b) (c * d) :=
+theorem min_mul_min_le_min_mul_mul' : min a c * min b d ≤ min (a * b) (c * d) :=
   le_min (mul_le_mul' (min_le_left _ _) <| min_le_left _ _) <|
     mul_le_mul' (min_le_right _ _) <| min_le_right _ _
-#align min_mul_min_le_min_mul_mul' min_hMul_min_le_min_hMul_mul'
+#align min_mul_min_le_min_mul_mul' min_mul_min_le_min_mul_mul'
 #align min_add_min_le_min_add_add min_add_min_le_min_add_add
+-/
 
 end LinearOrder
 

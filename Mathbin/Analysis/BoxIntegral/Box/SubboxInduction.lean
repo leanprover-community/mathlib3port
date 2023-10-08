@@ -182,7 +182,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   set z : ι → ℝ := ⨆ m, (J m).lower
   have hzJ : ∀ m, z ∈ (J m).Icc :=
     mem_Inter.1
-      (ciSup_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
+      (ciSup_mem_iInter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
         (J m).lower_le_upper)
   have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc
   have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc

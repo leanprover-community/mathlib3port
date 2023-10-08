@@ -232,7 +232,7 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
 
 #print balanced_iUnion /-
 theorem balanced_iUnion {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
-  fun a ha => (smul_set_Union _ _).Subset.trans <| iUnion_mono fun _ => h _ _ ha
+  fun a ha => (smul_set_iUnion _ _).Subset.trans <| iUnion_mono fun _ => h _ _ ha
 #align balanced_Union balanced_iUnion
 -/
 

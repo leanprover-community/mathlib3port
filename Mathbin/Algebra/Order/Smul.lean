@@ -237,13 +237,17 @@ instance LinearOrderedSemiring.toOrderedSMul : OrderedSMul R R :=
 #align linear_ordered_semiring.to_ordered_smul LinearOrderedSemiring.toOrderedSMul
 -/
 
+#print smul_max /-
 theorem smul_max (ha : 0 ≤ a) (b₁ b₂ : M) : a • max b₁ b₂ = max (a • b₁) (a • b₂) :=
   (monotone_smul_left ha : Monotone (_ : M → M)).map_max
 #align smul_max smul_max
+-/
 
+#print smul_min /-
 theorem smul_min (ha : 0 ≤ a) (b₁ b₂ : M) : a • min b₁ b₂ = min (a • b₁) (a • b₂) :=
   (monotone_smul_left ha : Monotone (_ : M → M)).map_min
 #align smul_min smul_min
+-/
 
 end LinearOrderedSemiring
 

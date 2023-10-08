@@ -97,8 +97,8 @@ instance : ProperSpace ℤ :=
 #print Int.cocompact_eq /-
 @[simp]
 theorem cocompact_eq : cocompact ℤ = atBot ⊔ atTop := by
-  simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ←
-    cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_cast_atTop, comap_abs_at_top]
+  simp only [← Metric.cobounded_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ← cast_abs, ←
+    @comap_comap _ _ _ _ abs, Int.comap_cast_atTop, comap_abs_at_top]
 #align int.cocompact_eq Int.cocompact_eq
 -/
 

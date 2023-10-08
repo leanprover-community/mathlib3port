@@ -3866,41 +3866,39 @@ unsafe def positivity_diam : expr → tactic strictness
 
 end Tactic
 
-#print comap_dist_right_atTop_le_cocompact /-
-theorem comap_dist_right_atTop_le_cocompact (x : α) :
-    comap (fun y => dist y x) atTop ≤ cocompact α :=
+theorem Metric.cobounded_le_cocompact (x : α) : comap (fun y => dist y x) atTop ≤ cocompact α :=
   by
   refine' filter.has_basis_cocompact.ge_iff.2 fun s hs => mem_comap.2 _
   rcases hs.bounded.subset_ball x with ⟨r, hr⟩
   exact ⟨Ioi r, Ioi_mem_at_top r, fun y hy hys => (mem_closed_ball.1 <| hr hys).not_lt hy⟩
-#align comap_dist_right_at_top_le_cocompact comap_dist_right_atTop_le_cocompact
+#align comap_dist_right_at_top_le_cocompact Metric.cobounded_le_cocompactₓ
+
+/- warning: comap_dist_left_at_top_le_cocompact clashes with comap_dist_right_at_top_le_cocompact -> Metric.cobounded_le_cocompactₓ
+Case conversion may be inaccurate. Consider using '#align comap_dist_left_at_top_le_cocompact Metric.cobounded_le_cocompactₓₓ'. -/
+#print Metric.cobounded_le_cocompactₓ /-
+theorem Metric.cobounded_le_cocompact (x : α) : comap (dist x) atTop ≤ cocompact α := by
+  simpa only [dist_comm _ x] using Metric.cobounded_le_cocompact x
+#align comap_dist_left_at_top_le_cocompact Metric.cobounded_le_cocompactₓ
 -/
 
-#print comap_dist_left_atTop_le_cocompact /-
-theorem comap_dist_left_atTop_le_cocompact (x : α) : comap (dist x) atTop ≤ cocompact α := by
-  simpa only [dist_comm _ x] using comap_dist_right_atTop_le_cocompact x
-#align comap_dist_left_at_top_le_cocompact comap_dist_left_atTop_le_cocompact
--/
-
-#print comap_dist_right_atTop_eq_cocompact /-
-theorem comap_dist_right_atTop_eq_cocompact [ProperSpace α] (x : α) :
+#print Metric.cobounded_eq_cocompact /-
+theorem Metric.cobounded_eq_cocompact [ProperSpace α] (x : α) :
     comap (fun y => dist y x) atTop = cocompact α :=
-  (comap_dist_right_atTop_le_cocompact x).antisymm <|
-    (tendsto_dist_right_cocompact_atTop x).le_comap
-#align comap_dist_right_at_top_eq_cocompact comap_dist_right_atTop_eq_cocompact
+  (Metric.cobounded_le_cocompact x).antisymm <| (tendsto_dist_right_cocompact_atTop x).le_comap
+#align comap_dist_right_at_top_eq_cocompact Metric.cobounded_eq_cocompact
 -/
 
 #print comap_dist_left_atTop_eq_cocompact /-
 theorem comap_dist_left_atTop_eq_cocompact [ProperSpace α] (x : α) :
     comap (dist x) atTop = cocompact α :=
-  (comap_dist_left_atTop_le_cocompact x).antisymm <| (tendsto_dist_left_cocompact_atTop x).le_comap
+  (Metric.cobounded_le_cocompact x).antisymm <| (tendsto_dist_left_cocompact_atTop x).le_comap
 #align comap_dist_left_at_top_eq_cocompact comap_dist_left_atTop_eq_cocompact
 -/
 
 #print tendsto_cocompact_of_tendsto_dist_comp_atTop /-
 theorem tendsto_cocompact_of_tendsto_dist_comp_atTop {f : β → α} {l : Filter β} (x : α)
     (h : Tendsto (fun y => dist (f y) x) l atTop) : Tendsto f l (cocompact α) := by
-  refine' tendsto.mono_right _ (comap_dist_right_atTop_le_cocompact x); rwa [tendsto_comap_iff]
+  refine' tendsto.mono_right _ (Metric.cobounded_le_cocompact x); rwa [tendsto_comap_iff]
 #align tendsto_cocompact_of_tendsto_dist_comp_at_top tendsto_cocompact_of_tendsto_dist_comp_atTop
 -/
 

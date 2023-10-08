@@ -514,18 +514,18 @@ theorem interior_iInter_subset (s : ι → Set α) : interior (⋂ i, s i) ⊆ �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-#print interior_Inter₂_subset /-
-theorem interior_Inter₂_subset (p : ι → Sort _) (s : ∀ i, p i → Set α) :
+#print interior_iInter₂_subset /-
+theorem interior_iInter₂_subset (p : ι → Sort _) (s : ∀ i, p i → Set α) :
     interior (⋂ (i) (j), s i j) ⊆ ⋂ (i) (j), interior (s i j) :=
   (interior_iInter_subset _).trans <| iInter_mono fun i => interior_iInter_subset _
-#align interior_Inter₂_subset interior_Inter₂_subset
+#align interior_Inter₂_subset interior_iInter₂_subset
 -/
 
 #print interior_sInter_subset /-
 theorem interior_sInter_subset (S : Set (Set α)) : interior (⋂₀ S) ⊆ ⋂ s ∈ S, interior s :=
   calc
     interior (⋂₀ S) = interior (⋂ s ∈ S, s) := by rw [sInter_eq_bInter]
-    _ ⊆ ⋂ s ∈ S, interior s := interior_Inter₂_subset _ _
+    _ ⊆ ⋂ s ∈ S, interior s := interior_iInter₂_subset _ _
 #align interior_sInter_subset interior_sInter_subset
 -/
 
@@ -709,12 +709,12 @@ theorem Finset.closure_biUnion {ι : Type _} (s : Finset ι) (f : ι → Set α)
 #align finset.closure_bUnion Finset.closure_biUnion
 -/
 
-#print closure_Union_of_finite /-
+#print closure_iUnion_of_finite /-
 @[simp]
-theorem closure_Union_of_finite {ι : Type _} [Finite ι] (f : ι → Set α) :
+theorem closure_iUnion_of_finite {ι : Type _} [Finite ι] (f : ι → Set α) :
     closure (⋃ i, f i) = ⋃ i, closure (f i) := by cases nonempty_fintype ι;
   convert finset.univ.closure_bUnion f <;> simp
-#align closure_Union closure_Union_of_finite
+#align closure_Union closure_iUnion_of_finite
 -/
 
 #print interior_subset_closure /-

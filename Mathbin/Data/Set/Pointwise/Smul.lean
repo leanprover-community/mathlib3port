@@ -481,12 +481,12 @@ theorem smul_set_inter_subset : a • (t₁ ∩ t₂) ⊆ a • t₁ ∩ a • t
 #align set.vadd_set_inter_subset Set.vadd_set_inter_subset
 -/
 
-#print Set.smul_set_Union /-
+#print Set.smul_set_iUnion /-
 @[to_additive]
-theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
+theorem smul_set_iUnion (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
   image_iUnion
-#align set.smul_set_Union Set.smul_set_Union
-#align set.vadd_set_Union Set.vadd_set_Union
+#align set.smul_set_Union Set.smul_set_iUnion
+#align set.vadd_set_Union Set.vadd_set_iUnion
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
