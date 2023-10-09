@@ -1036,25 +1036,29 @@ theorem union_right_comm (s₁ s₂ s₃ : Set α) : s₁ ∪ s₂ ∪ s₃ = s�
 #align set.union_right_comm Set.union_right_comm
 -/
 
+#print Set.union_eq_left /-
 @[simp]
-theorem union_eq_left_iff_subset {s t : Set α} : s ∪ t = s ↔ t ⊆ s :=
+theorem union_eq_left {s t : Set α} : s ∪ t = s ↔ t ⊆ s :=
   sup_eq_left
-#align set.union_eq_left_iff_subset Set.union_eq_left_iff_subset
+#align set.union_eq_left_iff_subset Set.union_eq_left
+-/
 
+#print Set.union_eq_right /-
 @[simp]
-theorem union_eq_right_iff_subset {s t : Set α} : s ∪ t = t ↔ s ⊆ t :=
+theorem union_eq_right {s t : Set α} : s ∪ t = t ↔ s ⊆ t :=
   sup_eq_right
-#align set.union_eq_right_iff_subset Set.union_eq_right_iff_subset
+#align set.union_eq_right_iff_subset Set.union_eq_right
+-/
 
 #print Set.union_eq_self_of_subset_left /-
 theorem union_eq_self_of_subset_left {s t : Set α} (h : s ⊆ t) : s ∪ t = t :=
-  union_eq_right_iff_subset.mpr h
+  union_eq_right.mpr h
 #align set.union_eq_self_of_subset_left Set.union_eq_self_of_subset_left
 -/
 
 #print Set.union_eq_self_of_subset_right /-
 theorem union_eq_self_of_subset_right {s t : Set α} (h : t ⊆ s) : s ∪ t = s :=
-  union_eq_left_iff_subset.mpr h
+  union_eq_left.mpr h
 #align set.union_eq_self_of_subset_right Set.union_eq_self_of_subset_right
 -/
 

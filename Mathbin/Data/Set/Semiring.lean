@@ -253,7 +253,7 @@ instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
   { SetSemiring.idemSemiring, Set.commMonoid,
     SetSemiring.noZeroDivisors with
     add_le_add_left := fun a b => add_le_add_left
-    exists_add_of_le := fun a b ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩
+    exists_add_of_le := fun a b ab => ⟨b, (union_eq_right.2 ab).symm⟩
     le_self_add := subset_union_left }
 
 #print SetSemiring.imageHom /-
