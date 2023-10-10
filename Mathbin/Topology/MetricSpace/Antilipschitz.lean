@@ -6,7 +6,7 @@ Authors: Yury Kudryashov
 import Topology.MetricSpace.Lipschitz
 import Topology.UniformSpace.CompleteSeparated
 
-#align_import topology.metric_space.antilipschitz from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
+#align_import topology.metric_space.antilipschitz from "leanprover-community/mathlib"@"c8f305514e0d47dfaa710f5a52f0d21b588e6328"
 
 /-!
 # Antilipschitz functions
@@ -276,7 +276,9 @@ namespace AntilipschitzWith
 
 open Metric
 
-variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] [PseudoMetricSpace γ]
+
+variable {K : ℝ≥0} {f : α → β}
 
 #print AntilipschitzWith.isBounded_preimage /-
 theorem isBounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : IsBounded s) :
@@ -310,6 +312,26 @@ protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : 
   exact (hf.image_preimage _).symm
 #align antilipschitz_with.proper_space AntilipschitzWith.properSpace
 -/
+
+theorem isBounded_of_image2_left (f : α → β → γ) {K₁ : ℝ≥0}
+    (hf : ∀ b, AntilipschitzWith K₁ fun a => f a b) {s : Set α} {t : Set β}
+    (hst : IsBounded (Set.image2 f s t)) : IsBounded s ∨ IsBounded t :=
+  by
+  contrapose! hst
+  obtain ⟨b, hb⟩ : t.nonempty := nonempty_of_unbounded hst.2
+  have : ¬bounded (Set.image2 f s {b}) := by
+    intro h
+    apply hst.1
+    rw [Set.image2_singleton_right] at h 
+    replace h := (hf b).isBounded_preimage h
+    refine' h.mono (subset_preimage_image _ _)
+  exact mt (bounded.mono (image2_subset subset.rfl (singleton_subset_iff.mpr hb))) this
+#align antilipschitz_with.bounded_of_image2_left AntilipschitzWith.isBounded_of_image2_left
+
+theorem isBounded_of_image2_right {f : α → β → γ} {K₂ : ℝ≥0} (hf : ∀ a, AntilipschitzWith K₂ (f a))
+    {s : Set α} {t : Set β} (hst : IsBounded (Set.image2 f s t)) : IsBounded s ∨ IsBounded t :=
+  Or.symm <| isBounded_of_image2_left (flip f) hf <| image2_swap f s t ▸ hst
+#align antilipschitz_with.bounded_of_image2_right AntilipschitzWith.isBounded_of_image2_right
 
 end AntilipschitzWith
 

@@ -9,7 +9,7 @@ import Topology.UniformSpace.Pi
 import Topology.UniformSpace.UniformConvergence
 import Topology.UniformSpace.UniformEmbedding
 
-#align_import topology.metric_space.emetric_space from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
+#align_import topology.metric_space.emetric_space from "leanprover-community/mathlib"@"c8f305514e0d47dfaa710f5a52f0d21b588e6328"
 
 /-!
 # Extended metric spaces
@@ -35,7 +35,7 @@ to `emetric_space` at the end.
 
 open Set Filter Classical
 
-open scoped uniformity Topology BigOperators Filter NNReal ENNReal
+open scoped uniformity Topology BigOperators Filter NNReal ENNReal Pointwise
 
 universe u v w
 
@@ -1160,6 +1160,12 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
   diam_subsingleton subsingleton_singleton
 #align emetric.diam_singleton EMetric.diam_singleton
 -/
+
+@[simp, to_additive]
+theorem diam_one [One α] : diam (1 : Set α) = 0 :=
+  diam_singleton
+#align emetric.diam_one Emetric.diam_one
+#align emetric.diam_zero Emetric.diam_zero
 
 #print EMetric.diam_iUnion_mem_option /-
 theorem diam_iUnion_mem_option {ι : Type _} (o : Option ι) (s : ι → Set α) :

@@ -8,7 +8,7 @@ import Topology.Algebra.Order.Compact
 import Topology.MetricSpace.EmetricSpace
 import Topology.Bornology.Constructions
 
-#align_import topology.metric_space.basic from "leanprover-community/mathlib"@"8047de4d911cdef39c2d646165eea972f7f9f539"
+#align_import topology.metric_space.basic from "leanprover-community/mathlib"@"c8f305514e0d47dfaa710f5a52f0d21b588e6328"
 
 /-!
 # Metric spaces
@@ -54,7 +54,7 @@ metric, pseudo_metric, dist
 
 open Set Filter TopologicalSpace Bornology
 
-open scoped uniformity Topology BigOperators Filter NNReal ENNReal
+open scoped uniformity Topology BigOperators Filter NNReal ENNReal Pointwise
 
 universe u v w
 
@@ -3189,6 +3189,13 @@ theorem isBounded_empty : IsBounded (∅ : Set α) :=
 #align metric.bounded_empty Bornology.isBounded_empty
 -/
 
+theorem nonempty_of_unbounded (h : ¬IsBounded s) : s.Nonempty :=
+  by
+  rw [nonempty_iff_ne_empty]
+  rintro rfl
+  exact h bounded_empty
+#align metric.nonempty_of_unbounded Metric.nonempty_of_unbounded
+
 #print Bornology.isBounded_iff_forall_mem /-
 theorem isBounded_iff_forall_mem : IsBounded s ↔ ∀ x ∈ s, IsBounded s :=
   ⟨fun h _ _ => h, fun H =>
@@ -3615,6 +3622,12 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
   diam_subsingleton subsingleton_singleton
 #align metric.diam_singleton Metric.diam_singleton
 -/
+
+@[simp, to_additive]
+theorem diam_one [One α] : diam (1 : Set α) = 0 :=
+  diam_singleton
+#align metric.diam_one Metric.diam_one
+#align metric.diam_zero Metric.diam_zero
 
 #print Metric.diam_pair /-
 -- Does not work as a simp-lemma, since {x, y} reduces to (insert y {x})

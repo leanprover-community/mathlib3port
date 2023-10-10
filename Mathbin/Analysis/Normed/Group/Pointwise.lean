@@ -5,8 +5,9 @@ Authors: Sébastien Gouëzel, Yaël Dillies
 -/
 import Analysis.Normed.Group.Basic
 import Topology.MetricSpace.HausdorffDistance
+import Topology.MetricSpace.IsometricSmul
 
-#align_import analysis.normed.group.pointwise from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
+#align_import analysis.normed.group.pointwise from "leanprover-community/mathlib"@"c8f305514e0d47dfaa710f5a52f0d21b588e6328"
 
 /-!
 # Properties of pointwise addition of sets in normed groups
@@ -30,6 +31,7 @@ section SeminormedGroup
 variable [SeminormedGroup E] {ε δ : ℝ} {s t : Set E} {x y : E}
 
 #print Bornology.IsBounded.mul /-
+-- note: we can't use `lipschitz_on_with.bounded_image2` here without adding `[isometric_smul E E]`
 @[to_additive]
 theorem Bornology.IsBounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) :=
   by
@@ -41,6 +43,12 @@ theorem Bornology.IsBounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s *
 #align metric.bounded.mul Bornology.IsBounded.mul
 #align metric.bounded.add Bornology.IsBounded.add
 -/
+
+@[to_additive]
+theorem Bornology.IsBounded.of_hMul (hst : Bounded (s * t)) : Bounded s ∨ Bounded t :=
+  AntilipschitzWith.isBounded_of_image2_left _ (fun x => (isometry_mul_right x).antilipschitz) hst
+#align metric.bounded.of_mul Bornology.IsBounded.of_hMul
+#align metric.bounded.of_add Bornology.IsBounded.of_add
 
 #print Bornology.IsBounded.inv /-
 @[to_additive]
@@ -83,6 +91,15 @@ theorem infEdist_inv_inv (x : E) (s : Set E) : infEdist x⁻¹ s⁻¹ = infEdist
 #align inf_edist_inv_inv infEdist_inv_inv
 #align inf_edist_neg_neg infEdist_neg_neg
 -/
+
+@[to_additive]
+theorem ediam_hMul_le (x y : Set E) : EMetric.diam (x * y) ≤ EMetric.diam x + EMetric.diam y :=
+  (LipschitzOnWith.ediam_image2_le (· * ·) _ _
+        (fun _ _ => (isometry_mul_right _).lipschitz.LipschitzOnWith _) fun _ _ =>
+        (isometry_mul_left _).lipschitz.LipschitzOnWith _).trans_eq <|
+    by simp only [ENNReal.coe_one, one_mul]
+#align ediam_mul_le ediam_hMul_le
+#align ediam_add_le ediam_add_le
 
 end Emetric
 
