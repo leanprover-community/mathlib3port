@@ -720,7 +720,6 @@ section OfLinearEquiv
 variable (l : A₁ ≃ₗ[R] A₂) (map_mul : ∀ x y : A₁, l (x * y) = l x * l y)
   (commutes : ∀ r : R, l (algebraMap R A₁ r) = algebraMap R A₂ r)
 
-#print AlgEquiv.ofLinearEquiv /-
 /-- Upgrade a linear equivalence to an algebra equivalence,
 given that it distributes over multiplication and action of scalars.
 -/
@@ -731,8 +730,7 @@ def ofLinearEquiv : A₁ ≃ₐ[R] A₂ :=
     invFun := l.symm
     map_mul' := map_mul
     commutes' := commutes }
-#align alg_equiv.of_linear_equiv AlgEquiv.ofLinearEquiv
--/
+#align alg_equiv.of_linear_equiv AlgEquiv.ofLinearEquivₓ
 
 #print AlgEquiv.ofLinearEquiv_symm /-
 @[simp]

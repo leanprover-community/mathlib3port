@@ -332,7 +332,7 @@ instance forget₂CommMonPreservesLimitsOfSize :
 /-- The forgetful functor from commutative groups to types preserves all limits. (That is, the
 underlying types could have been computed instead as limits in the category of types.)
 -/
-@[to_additive AddCommGroupCat.forgetPreservesLimits
+@[to_additive AddCommGroupCat.forgetPreservesLimitsOfSize
       "The forgetful functor from additive commutative groups to types preserves all limits. (That is,\nthe underlying types could have been computed instead as limits in the category of types.)"]
 instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget CommGroupCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
@@ -340,7 +340,7 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Comm
       PreservesLimit := fun F =>
         limits.comp_preserves_limit (forget₂ CommGroupCat GroupCat) (forget GroupCat) }
 #align CommGroup.forget_preserves_limits_of_size CommGroupCat.forgetPreservesLimitsOfSize
-#align AddCommGroup.forget_preserves_limits AddCommGroupCat.forgetPreservesLimits
+#align AddCommGroup.forget_preserves_limits AddCommGroupCat.forgetPreservesLimitsOfSize
 -/
 
 -- Verify we can form limits indexed over smaller categories.

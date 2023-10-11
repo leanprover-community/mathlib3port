@@ -185,7 +185,6 @@ attribute [local simp] transport_tensor_hom transport_associator transport_left_
   transport_right_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print CategoryTheory.Monoidal.laxToTransported /-
 /--
 We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
@@ -243,7 +242,6 @@ def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e)
     congr 1
     simp only [← right_unitor_naturality, id_comp, ← tensor_comp_assoc, comp_id]
 #align category_theory.monoidal.lax_to_transported CategoryTheory.Monoidal.laxToTransported
--/
 
 end
 
