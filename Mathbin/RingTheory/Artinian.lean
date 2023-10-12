@@ -244,11 +244,11 @@ theorem induction {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J < I, P J) �
 #align is_artinian.induction IsArtinian.induction
 -/
 
-#print IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top /-
+#print LinearMap.eventually_codisjoint_ker_pow_range_pow /-
 /-- For any endomorphism of a Artinian module, there is some nontrivial iterate
 with disjoint kernel and range.
 -/
-theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
+theorem eventually_codisjoint_ker_pow_range_pow (f : M →ₗ[R] M) :
     ∃ n : ℕ, n ≠ 0 ∧ (f ^ n).ker ⊔ (f ^ n).range = ⊤ :=
   by
   obtain ⟨n, w⟩ :=
@@ -266,7 +266,7 @@ theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
     simp [iterate_add_apply]
   · use(f ^ (n + 1)) y
     simp
-#align is_artinian.exists_endomorphism_iterate_ker_sup_range_eq_top IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top
+#align is_artinian.exists_endomorphism_iterate_ker_sup_range_eq_top LinearMap.eventually_codisjoint_ker_pow_range_pow
 -/
 
 #print IsArtinian.surjective_of_injective_endomorphism /-

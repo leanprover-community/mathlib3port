@@ -428,12 +428,12 @@ theorem isNoetherian_of_range_eq_ker [IsNoetherian R M] [IsNoetherian R P] (f : 
 #align is_noetherian_of_range_eq_ker isNoetherian_of_range_eq_ker
 -/
 
-#print IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot /-
+#print LinearMap.eventually_disjoint_ker_pow_range_pow /-
 /-- For any endomorphism of a Noetherian module, there is some nontrivial iterate
 with disjoint kernel and range.
 -/
-theorem IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot [I : IsNoetherian R M]
-    (f : M →ₗ[R] M) : ∃ n : ℕ, n ≠ 0 ∧ (f ^ n).ker ⊓ (f ^ n).range = ⊥ :=
+theorem LinearMap.eventually_disjoint_ker_pow_range_pow [I : IsNoetherian R M] (f : M →ₗ[R] M) :
+    ∃ n : ℕ, n ≠ 0 ∧ (f ^ n).ker ⊓ (f ^ n).range = ⊥ :=
   by
   obtain ⟨n, w⟩ :=
     monotone_stabilizes_iff_noetherian.mpr I
@@ -449,7 +449,7 @@ theorem IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot [I : IsNoe
   rw [← pow_add] at h 
   convert h using 3
   ring
-#align is_noetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot
+#align is_noetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot LinearMap.eventually_disjoint_ker_pow_range_pow
 -/
 
 #print IsNoetherian.injective_of_surjective_endomorphism /-
@@ -457,7 +457,7 @@ theorem IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot [I : IsNoe
 theorem IsNoetherian.injective_of_surjective_endomorphism [IsNoetherian R M] (f : M →ₗ[R] M)
     (s : Surjective f) : Injective f :=
   by
-  obtain ⟨n, ne, w⟩ := IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot f
+  obtain ⟨n, ne, w⟩ := LinearMap.eventually_disjoint_ker_pow_range_pow f
   rw [linear_map.range_eq_top.mpr (LinearMap.iterate_surjective s n), inf_top_eq,
     LinearMap.ker_eq_bot] at w 
   exact LinearMap.injective_of_iterate_injective Ne w
