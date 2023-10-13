@@ -414,13 +414,13 @@ theorem Chain'.infix (h : Chain' R l) (h' : l₁ <:+: l) : Chain' R l₁ := by
 
 #print List.Chain'.suffix /-
 theorem Chain'.suffix (h : Chain' R l) (h' : l₁ <:+ l) : Chain' R l₁ :=
-  h.infix h'.isInfix
+  h.infix h'.IsInfix
 #align list.chain'.suffix List.Chain'.suffix
 -/
 
 #print List.Chain'.prefix /-
 theorem Chain'.prefix (h : Chain' R l) (h' : l₁ <+: l) : Chain' R l₁ :=
-  h.infix h'.isInfix
+  h.infix h'.IsInfix
 #align list.chain'.prefix List.Chain'.prefix
 -/
 

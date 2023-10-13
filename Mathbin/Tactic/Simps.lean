@@ -66,7 +66,7 @@ unsafe structure projection_data where
   expr : expr
   proj_nrs : List ℕ
   is_default : Bool
-  isPrefix : Bool
+  IsPrefix : Bool
   deriving has_reflect, Inhabited
 #align projection_data projection_data
 
@@ -78,7 +78,7 @@ unsafe structure parsed_projection_data where
   new_name : Name
   -- name for this projection used in the generated `simp` lemmas
   is_default : Bool
-  isPrefix : Bool
+  IsPrefix : Bool
 #align parsed_projection_data parsed_projection_data
 
 section
@@ -168,7 +168,7 @@ unsafe def projections_info (l : List projection_data) (pref : String) (str : Na
   let to_print ←
     defaults.mapM fun s =>
         toString <$>
-          let prefix_str := if s.isPrefix then "(prefix) " else ""
+          let prefix_str := if s.IsPrefix then "(prefix) " else ""
           f!"Projection {(← prefix_str)}{(← s.Name)}: {← s.expr}"
   let print2 :=
     String.join <| (nondefaults.map fun nm : projection_data => toString nm.1).intersperse ", "
@@ -317,7 +317,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                   if proj = old_nm then
                     { proj with
                       new_name := new_nm
-                      isPrefix }
+                      IsPrefix }
                   else proj
               else projs ++ [⟨old_nm, new_nm, tt, is_prefix⟩]
             | (inr nm, is_prefix) =>
@@ -326,7 +326,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                   if proj = nm then
                     { proj with
                       is_default := ff
-                      isPrefix }
+                      IsPrefix }
                   else proj
               else projs ++ [⟨nm, nm, ff, is_prefix⟩])
           projs

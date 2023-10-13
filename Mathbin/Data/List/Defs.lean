@@ -505,35 +505,35 @@ def count [DecidableEq α] (a : α) : List α → Nat :=
 #align list.count List.count
 -/
 
-#print List.isPrefix /-
+#print List.IsPrefix /-
 /-- `is_prefix l₁ l₂`, or `l₁ <+: l₂`, means that `l₁` is a prefix of `l₂`,
   that is, `l₂` has the form `l₁ ++ t` for some `t`. -/
-def isPrefix (l₁ : List α) (l₂ : List α) : Prop :=
+def IsPrefix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ t, l₁ ++ t = l₂
-#align list.is_prefix List.isPrefix
+#align list.is_prefix List.IsPrefix
 -/
 
-#print List.isSuffix /-
+#print List.IsSuffix /-
 /-- `is_suffix l₁ l₂`, or `l₁ <:+ l₂`, means that `l₁` is a suffix of `l₂`,
   that is, `l₂` has the form `t ++ l₁` for some `t`. -/
-def isSuffix (l₁ : List α) (l₂ : List α) : Prop :=
+def IsSuffix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ t, t ++ l₁ = l₂
-#align list.is_suffix List.isSuffix
+#align list.is_suffix List.IsSuffix
 -/
 
-#print List.isInfix /-
+#print List.IsInfix /-
 /-- `is_infix l₁ l₂`, or `l₁ <:+: l₂`, means that `l₁` is a contiguous
   substring of `l₂`, that is, `l₂` has the form `s ++ l₁ ++ t` for some `s, t`. -/
-def isInfix (l₁ : List α) (l₂ : List α) : Prop :=
+def IsInfix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ s t, s ++ l₁ ++ t = l₂
-#align list.is_infix List.isInfix
+#align list.is_infix List.IsInfix
 -/
 
-infixl:50 " <+: " => isPrefix
+infixl:50 " <+: " => IsPrefix
 
-infixl:50 " <:+ " => isSuffix
+infixl:50 " <:+ " => IsSuffix
 
-infixl:50 " <:+: " => isInfix
+infixl:50 " <:+: " => IsInfix
 
 #print List.inits /-
 /-- `inits l` is the list of initial segments of `l`.
