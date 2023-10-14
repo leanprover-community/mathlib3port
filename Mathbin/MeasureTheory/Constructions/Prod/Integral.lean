@@ -350,15 +350,16 @@ theorem Integrable.integral_norm_prod_right [SigmaFinite μ] ⦃f : α × β →
 #align measure_theory.integrable.integral_norm_prod_right MeasureTheory.Integrable.integral_norm_prod_right
 -/
 
-#print MeasureTheory.integrable_prod_mul /-
-theorem integrable_prod_mul {L : Type _} [IsROrC L] {f : α → L} {g : β → L} (hf : Integrable f μ)
-    (hg : Integrable g ν) : Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=
+#print MeasureTheory.Integrable.prod_mul /-
+theorem MeasureTheory.Integrable.prod_mul {L : Type _} [IsROrC L] {f : α → L} {g : β → L}
+    (hf : Integrable f μ) (hg : Integrable g ν) :
+    Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=
   by
   refine' (integrable_prod_iff _).2 ⟨_, _⟩
   · exact hf.1.fst.mul hg.1.snd
   · exact eventually_of_forall fun x => hg.const_mul (f x)
   · simpa only [norm_mul, integral_mul_left] using hf.norm.mul_const _
-#align measure_theory.integrable_prod_mul MeasureTheory.integrable_prod_mul
+#align measure_theory.integrable_prod_mul MeasureTheory.Integrable.prod_mul
 -/
 
 end

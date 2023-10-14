@@ -132,13 +132,13 @@ end PosNum
 
 namespace Num
 
-#print Num.lor /-
+#print OrOp.or /-
 /-- Bitwise "or" for `num`. -/
-def lor : Num → Num → Num
+def or : Num → Num → Num
   | 0, q => q
   | p, 0 => p
   | Pos p, Pos q => pos (p.lor' q)
-#align num.lor Num.lor
+#align num.lor OrOp.or
 -/
 
 #print Num.land /-

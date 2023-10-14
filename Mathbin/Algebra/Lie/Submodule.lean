@@ -540,7 +540,6 @@ theorem sInf_coe (S : Set (LieSubmodule R L M)) : (↑(sInf S) : Set M) = ⋂ s 
 #align lie_submodule.Inf_coe LieSubmodule.sInf_coe
 -/
 
-#print LieSubmodule.sInf_glb /-
 theorem sInf_glb (S : Set (LieSubmodule R L M)) : IsGLB S (sInf S) :=
   by
   have h : ∀ N N' : LieSubmodule R L M, (N : Set M) ≤ N' ↔ N ≤ N' := by intros; rfl
@@ -548,7 +547,6 @@ theorem sInf_glb (S : Set (LieSubmodule R L M)) : IsGLB S (sInf S) :=
   simp only [Inf_coe]
   exact isGLB_biInf
 #align lie_submodule.Inf_glb LieSubmodule.sInf_glb
--/
 
 /-- The set of Lie submodules of a Lie module form a complete lattice.
 

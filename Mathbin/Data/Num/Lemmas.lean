@@ -1165,7 +1165,7 @@ theorem bitwise'_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (
 
 #print Num.lor'_to_nat /-
 @[simp, norm_cast]
-theorem lor'_to_nat : ∀ m n, (lor m n : ℕ) = Nat.lor' m n := by
+theorem lor'_to_nat : ∀ m n, (or m n : ℕ) = Nat.lor' m n := by
   apply bitwise_to_nat fun x y => Pos (PosNum.lor x y) <;> intros <;> try cases a <;>
       try cases b <;>
     rfl
