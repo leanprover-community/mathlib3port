@@ -648,15 +648,16 @@ protected theorem smul [Regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • �
 #align measure_theory.measure.regular.smul MeasureTheory.Measure.Regular.smul
 -/
 
-#print MeasureTheory.Measure.Regular.sigmaFinite /-
+#print MeasureTheory.SigmaFinite.of_isFiniteMeasureOnCompacts /-
 -- see Note [lower instance priority]
 /-- A regular measure in a σ-compact space is σ-finite. -/
-instance (priority := 100) sigmaFinite [SigmaCompactSpace α] [Regular μ] : SigmaFinite μ :=
+instance (priority := 100) MeasureTheory.SigmaFinite.of_isFiniteMeasureOnCompacts
+    [SigmaCompactSpace α] [Regular μ] : SigmaFinite μ :=
   ⟨⟨{   Set := compactCovering α
         set_mem := fun n => trivial
         Finite := fun n => (isCompact_compactCovering α n).measure_lt_top
         spanning := iUnion_compactCovering α }⟩⟩
-#align measure_theory.measure.regular.sigma_finite MeasureTheory.Measure.Regular.sigmaFinite
+#align measure_theory.measure.regular.sigma_finite MeasureTheory.SigmaFinite.of_isFiniteMeasureOnCompacts
 -/
 
 end Regular
