@@ -34,17 +34,13 @@ open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgro
 
 open scoped MeasureTheory NNReal ENNReal
 
-#print AddCircle.measurableSpace /-
 noncomputable instance AddCircle.measurableSpace {a : ℝ} : MeasurableSpace (AddCircle a) :=
   QuotientAddGroup.measurableSpace _
 #align add_circle.measurable_space AddCircle.measurableSpace
--/
 
-#print AddCircle.borelSpace /-
 instance AddCircle.borelSpace {a : ℝ} : BorelSpace (AddCircle a) :=
   QuotientAddGroup.borelSpace
 #align add_circle.borel_space AddCircle.borelSpace
--/
 
 #print AddCircle.measurable_mk' /-
 @[measurability]
@@ -252,11 +248,9 @@ namespace UnitAddCircle
 
 attribute [local instance] Real.fact_zero_lt_one
 
-#print UnitAddCircle.measureSpace /-
 noncomputable instance measureSpace : MeasureSpace UnitAddCircle :=
   AddCircle.measureSpace 1
 #align unit_add_circle.measure_space UnitAddCircle.measureSpace
--/
 
 #print UnitAddCircle.measure_univ /-
 @[simp]
@@ -264,11 +258,9 @@ protected theorem measure_univ : volume (Set.univ : Set UnitAddCircle) = 1 := by
 #align unit_add_circle.measure_univ UnitAddCircle.measure_univ
 -/
 
-#print UnitAddCircle.isFiniteMeasure /-
 instance isFiniteMeasure : IsFiniteMeasure (volume : Measure UnitAddCircle) :=
   AddCircle.isFiniteMeasure 1
 #align unit_add_circle.is_finite_measure UnitAddCircle.isFiniteMeasure
--/
 
 #print UnitAddCircle.measurePreserving_mk /-
 /-- The covering map from `ℝ` to the "unit additive circle" `ℝ ⧸ ℤ` is measure-preserving,

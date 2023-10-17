@@ -13,5 +13,5 @@ import SeminormLatticeNotDistrib
 import SorgenfreyLine
 import ZeroDivisorsInAddMonoidAlgebras
 
-#align_import all from "leanprover-community/mathlib"@"19c869efa56bbb8b500f2724c0b77261edbfa28c"
+#align_import all from "leanprover-community/mathlib"@"b1abe23ae96fef89ad30d9f4362c307f72a55010"
 

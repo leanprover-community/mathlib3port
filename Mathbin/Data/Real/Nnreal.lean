@@ -11,7 +11,7 @@ import Data.Real.Pointwise
 import Order.ConditionallyCompleteLattice.Group
 import Tactic.Positivity
 
-#align_import data.real.nnreal from "leanprover-community/mathlib"@"de29c328903507bb7aff506af9135f4bdaf1849c"
+#align_import data.real.nnreal from "leanprover-community/mathlib"@"b1abe23ae96fef89ad30d9f4362c307f72a55010"
 
 /-!
 # Nonnegative real numbers
@@ -1412,6 +1412,11 @@ theorem coe_toNNReal_le (x : ℝ) : (toNNReal x : ℝ) ≤ |x| :=
   max_le (le_abs_self _) (abs_nonneg _)
 #align real.coe_to_nnreal_le Real.coe_toNNReal_le
 -/
+
+@[simp]
+theorem toNNReal_abs (x : ℝ) : |x|.toNNReal = x.nnabs :=
+  NNReal.coe_injective <| by simp
+#align real.to_nnreal_abs Real.toNNReal_abs
 
 #print Real.cast_natAbs_eq_nnabs_cast /-
 theorem cast_natAbs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n := by ext;
