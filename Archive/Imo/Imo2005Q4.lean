@@ -100,7 +100,7 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
   have hp₃ : 3 ≤ p :=
     by
     have : 2 ≠ p := by rwa [Nat.coprime_primes Nat.prime_two hp] at hp₂ 
-    apply Nat.lt_of_le_and_ne hp.two_le this
+    apply Nat.lt_of_le_of_ne hp.two_le this
   -- Testing the special property of `k` for the `p - 2`th term of the sequence, we see that `p` is
   -- coprime to `a (p - 2)`.
   have : IsCoprime (↑p) (a (p - 2)) :=

@@ -344,7 +344,7 @@ protected theorem secondCountableTopology [TopologicalSpace.SecondCountableTopol
 
 #print Homeomorph.isCompact_image /-
 theorem isCompact_image {s : Set α} (h : α ≃ₜ β) : IsCompact (h '' s) ↔ IsCompact s :=
-  h.Embedding.isCompact_iff_isCompact_image.symm
+  h.Embedding.isCompact_iff.symm
 #align homeomorph.is_compact_image Homeomorph.isCompact_image
 -/
 

@@ -956,10 +956,10 @@ def FactorsThrough (g : α → γ) (f : α → β) : Prop :=
 #align function.factors_through Function.FactorsThrough
 -/
 
-#print Function.Injective.FactorsThrough /-
-theorem Injective.FactorsThrough (hf : Injective f) (g : α → γ) : g.FactorsThrough f := fun a b h =>
+#print Function.Injective.factorsThrough /-
+theorem Injective.factorsThrough (hf : Injective f) (g : α → γ) : g.FactorsThrough f := fun a b h =>
   congr_arg g (hf h)
-#align function.injective.factors_through Function.Injective.FactorsThrough
+#align function.injective.factors_through Function.Injective.factorsThrough
 -/
 
 #print Function.extend_def /-

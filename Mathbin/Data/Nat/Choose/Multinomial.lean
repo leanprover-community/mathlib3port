@@ -99,7 +99,7 @@ theorem multinomial_insert [DecidableEq α] (h : a ∉ s) :
   rw [div_mul_div_comm ((f a).factorial_mul_factorial_dvd_factorial_add (s.sum f))
       (prod_factorial_dvd_factorial_sum _ _),
     mul_comm (f a)! (s.sum f)!, mul_assoc, mul_comm _ (s.sum f)!,
-    Nat.mul_div_mul _ _ (factorial_pos _)]
+    Nat.mul_div_mul_left _ _ (factorial_pos _)]
 #align nat.multinomial_insert Nat.multinomial_insert
 -/
 

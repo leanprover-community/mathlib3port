@@ -187,7 +187,7 @@ theorem hundred_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ 
 theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card :=
   by
   have h : 1 ≤ 4 ^ P.parts.card := one_le_pow_of_one_le (by norm_num) _
-  rw [step_bound, ← Nat.div_div_eq_div_mul, ← Nat.le_sub_iff_right h, tsub_le_iff_left, ←
+  rw [step_bound, ← Nat.div_div_eq_div_mul, ← Nat.le_sub_iff_add_le h, tsub_le_iff_left, ←
     Nat.add_sub_assoc h]
   exact Nat.le_pred_of_lt (Nat.lt_div_mul_add h)
 #align szemeredi_regularity.a_add_one_le_four_pow_parts_card SzemerediRegularity.a_add_one_le_four_pow_parts_card

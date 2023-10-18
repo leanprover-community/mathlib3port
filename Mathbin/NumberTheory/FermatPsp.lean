@@ -72,7 +72,7 @@ namespace Nat.FermatPsp
 
 #print Nat.decidableProbablePrime /-
 instance decidableProbablePrime (n b : ℕ) : Decidable (ProbablePrime n b) :=
-  Nat.decidableDvd _ _
+  Nat.decidable_dvd _ _
 #align fermat_psp.decidable_probable_prime Nat.decidableProbablePrime
 -/
 

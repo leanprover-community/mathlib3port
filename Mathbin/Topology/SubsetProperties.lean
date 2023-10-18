@@ -1156,14 +1156,13 @@ theorem Inducing.isCompact_iff {f : α → β} (hf : Inducing f) {s : Set α} :
 #align inducing.is_compact_iff Inducing.isCompact_iff
 -/
 
-#print Embedding.isCompact_iff_isCompact_image /-
+#print Embedding.isCompact_iff /-
 /-- If `f : α → β` is an `embedding` (or more generally, an `inducing` map, see
 `inducing.is_compact_iff`), then the image `f '' s` of a set `s` is compact if and only if the set
 `s` is closed. -/
-theorem Embedding.isCompact_iff_isCompact_image {f : α → β} (hf : Embedding f) :
-    IsCompact s ↔ IsCompact (f '' s) :=
+theorem Embedding.isCompact_iff {f : α → β} (hf : Embedding f) : IsCompact s ↔ IsCompact (f '' s) :=
   hf.to_inducing.isCompact_iff.symm
-#align embedding.is_compact_iff_is_compact_image Embedding.isCompact_iff_isCompact_image
+#align embedding.is_compact_iff_is_compact_image Embedding.isCompact_iff
 -/
 
 #print ClosedEmbedding.isCompact_preimage /-
@@ -1186,16 +1185,16 @@ theorem ClosedEmbedding.tendsto_cocompact {f : α → β} (hf : ClosedEmbedding 
 #align closed_embedding.tendsto_cocompact ClosedEmbedding.tendsto_cocompact
 -/
 
-#print isCompact_iff_isCompact_in_subtype /-
-theorem isCompact_iff_isCompact_in_subtype {p : α → Prop} {s : Set { a // p a }} :
+#print Subtype.isCompact_iff /-
+theorem Subtype.isCompact_iff {p : α → Prop} {s : Set { a // p a }} :
     IsCompact s ↔ IsCompact ((coe : _ → α) '' s) :=
-  embedding_subtype_val.isCompact_iff_isCompact_image
-#align is_compact_iff_is_compact_in_subtype isCompact_iff_isCompact_in_subtype
+  embedding_subtype_val.isCompact_iff
+#align is_compact_iff_is_compact_in_subtype Subtype.isCompact_iff
 -/
 
 #print isCompact_iff_isCompact_univ /-
 theorem isCompact_iff_isCompact_univ {s : Set α} : IsCompact s ↔ IsCompact (univ : Set s) := by
-  rw [isCompact_iff_isCompact_in_subtype, image_univ, Subtype.range_coe] <;> rfl
+  rw [Subtype.isCompact_iff, image_univ, Subtype.range_coe] <;> rfl
 #align is_compact_iff_is_compact_univ isCompact_iff_isCompact_univ
 -/
 

@@ -2938,7 +2938,7 @@ theorem succAbove_predAbove {p : Fin n} {i : Fin (n + 1)} (h : i ≠ p.cast_succ
     · simp
     · simp only [Fin.mk_eq_mk, Ne.def, Fin.castSucc_mk] at h 
       simp only [pred, Fin.mk_lt_mk, not_lt]
-      exact Nat.le_pred_of_lt (Nat.lt_of_le_and_ne H (Ne.symm h))
+      exact Nat.le_pred_of_lt (Nat.lt_of_le_of_ne H (Ne.symm h))
 #align fin.succ_above_pred_above Fin.succAbove_predAbove
 -/
 

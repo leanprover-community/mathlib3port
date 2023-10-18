@@ -652,7 +652,7 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
       rw [mul_neg, Int.div_neg, Int.div_neg] <;> apply congr_arg Neg.neg <;> apply this
   fun m k b =>
   match b, k with
-  | (n : ℕ), k => congr_arg ofNat (Nat.mul_div_mul _ _ m.succ_pos)
+  | (n : ℕ), k => congr_arg ofNat (Nat.mul_div_mul_left _ _ m.succ_pos)
   | -[n+1], 0 => by rw [Int.ofNat_zero, MulZeroClass.mul_zero, Int.div_zero, Int.div_zero]
   | -[n+1], k + 1 =>
     congr_arg negSucc <|
@@ -660,7 +660,7 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
         by
         apply Nat.div_eq_of_lt_le
         · refine' le_trans _ (Nat.le_add_right _ _)
-          rw [← Nat.mul_div_mul _ _ m.succ_pos]
+          rw [← Nat.mul_div_mul_left _ _ m.succ_pos]
           apply Nat.div_mul_le_self
         · change m.succ * n.succ ≤ _
           rw [mul_left_comm]
