@@ -492,7 +492,7 @@ theorem le_mulRothNumber_product (s : Finset α) (t : Finset β) :
 #print mulRothNumber_lt_of_forall_not_mulSalemSpencer /-
 @[to_additive]
 theorem mulRothNumber_lt_of_forall_not_mulSalemSpencer
-    (h : ∀ t ∈ powersetLen n s, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n :=
+    (h : ∀ t ∈ powersetCard n s, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n :=
   by
   obtain ⟨t, hts, hcard, ht⟩ := mulRothNumber_spec s
   rw [← hcard, ← not_le]

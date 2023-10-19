@@ -58,14 +58,14 @@ variable {R : Type _} [CommSemiring R]
 #print Multiset.esymm /-
 /-- The `n`th elementary symmetric function evaluated at the elements of `s` -/
 def esymm (s : Multiset R) (n : ℕ) : R :=
-  ((s.powersetLen n).map Multiset.prod).Sum
+  ((s.powersetCard n).map Multiset.prod).Sum
 #align multiset.esymm Multiset.esymm
 -/
 
 #print Finset.esymm_map_val /-
 theorem Finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
-    (s.val.map f).esymm n = (s.powersetLen n).Sum fun t => t.Prod f := by
-  simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powersetLen, map_map]
+    (s.val.map f).esymm n = (s.powersetCard n).Sum fun t => t.Prod f := by
+  simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powersetCard, map_map]
 #align finset.esymm_map_val Finset.esymm_map_val
 -/
 
@@ -191,7 +191,7 @@ variable (σ R) [CommSemiring R] [CommSemiring S] [Fintype σ] [Fintype τ]
 #print MvPolynomial.esymm /-
 /-- The `n`th elementary symmetric `mv_polynomial σ R`. -/
 def esymm (n : ℕ) : MvPolynomial σ R :=
-  ∑ t in powersetLen n univ, ∏ i in t, X i
+  ∑ t in powersetCard n univ, ∏ i in t, X i
 #align mv_polynomial.esymm MvPolynomial.esymm
 -/
 
@@ -214,14 +214,14 @@ theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
 theorem esymm_eq_sum_subtype (n : ℕ) :
     esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), X i :=
-  sum_subtype _ (fun _ => mem_powersetLen_univ) _
+  sum_subtype _ (fun _ => mem_powersetCard_univ) _
 #align mv_polynomial.esymm_eq_sum_subtype MvPolynomial.esymm_eq_sum_subtype
 -/
 
 #print MvPolynomial.esymm_eq_sum_monomial /-
 /-- We can define `esymm σ R n` as a sum over explicit monomials -/
 theorem esymm_eq_sum_monomial (n : ℕ) :
-    esymm σ R n = ∑ t in powersetLen n univ, monomial (∑ i in t, Finsupp.single i 1) 1 :=
+    esymm σ R n = ∑ t in powersetCard n univ, monomial (∑ i in t, Finsupp.single i 1) 1 :=
   by
   simp_rw [monomial_sum_one]
   rfl
@@ -244,11 +244,11 @@ theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S 
 #print MvPolynomial.rename_esymm /-
 theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n :=
   calc
-    rename e (esymm σ R n) = ∑ x in powersetLen n univ, ∏ i in x, X (e i) := by
+    rename e (esymm σ R n) = ∑ x in powersetCard n univ, ∏ i in x, X (e i) := by
       simp_rw [esymm, map_sum, map_prod, rename_X]
-    _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, X i := by
-      simp [Finset.powersetLen_map, -Finset.map_univ_equiv]
-    _ = ∑ t in powersetLen n univ, ∏ i in t, X i := by rw [Finset.map_univ_equiv]
+    _ = ∑ t in powersetCard n (univ.map e.toEmbedding), ∏ i in t, X i := by
+      simp [Finset.powersetCard_map, -Finset.map_univ_equiv]
+    _ = ∑ t in powersetCard n univ, ∏ i in t, X i := by rw [Finset.map_univ_equiv]
 #align mv_polynomial.rename_esymm MvPolynomial.rename_esymm
 -/
 
@@ -260,7 +260,7 @@ theorem esymm_isSymmetric (n : ℕ) : IsSymmetric (esymm σ R n) := by intro; rw
 #print MvPolynomial.support_esymm'' /-
 theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
-      (powersetLen n (univ : Finset σ)).biUnion fun t =>
+      (powersetCard n (univ : Finset σ)).biUnion fun t =>
         (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
   by
   rw [esymm_eq_sum_monomial]
@@ -281,7 +281,7 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 #print MvPolynomial.support_esymm' /-
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
-      (powersetLen n (univ : Finset σ)).biUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
+      (powersetCard n (univ : Finset σ)).biUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
   by
   rw [support_esymm'']
   congr
@@ -293,7 +293,7 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 #print MvPolynomial.support_esymm /-
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
-      (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
+      (powersetCard n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
   by rw [support_esymm']; exact bUnion_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 -/

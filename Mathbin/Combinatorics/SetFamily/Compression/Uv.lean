@@ -168,11 +168,11 @@ theorem compression_self (u : α) (s : Finset α) : 𝓒 u u s = s :=
 #align uv.compression_self UV.compression_self
 -/
 
-#print UV.is_compressed_self /-
+#print UV.isCompressed_self /-
 /-- Any family is compressed along two identical elements. -/
-theorem is_compressed_self (u : α) (s : Finset α) : IsCompressed u u s :=
+theorem isCompressed_self (u : α) (s : Finset α) : IsCompressed u u s :=
   compression_self u s
-#align uv.is_compressed_self UV.is_compressed_self
+#align uv.is_compressed_self UV.isCompressed_self
 -/
 
 #print UV.compress_sdiff_sdiff /-

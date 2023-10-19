@@ -113,10 +113,10 @@ theorem Sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔
 #align set.sized.univ_mem_iff Set.Sized.univ_mem_iff
 -/
 
-#print Set.sized_powersetLen /-
-theorem sized_powersetLen (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r :=
-  fun t ht => (mem_powersetLen.1 ht).2
-#align set.sized_powerset_len Set.sized_powersetLen
+#print Set.sized_powersetCard /-
+theorem sized_powersetCard (s : Finset α) (r : ℕ) : (powersetCard r s : Set (Finset α)).Sized r :=
+  fun t ht => (mem_powersetCard.1 ht).2
+#align set.sized_powerset_len Set.sized_powersetCard
 -/
 
 end Set
@@ -127,14 +127,14 @@ section Sized
 
 variable [Fintype α] {𝒜 : Finset (Finset α)} {s : Finset α} {r : ℕ}
 
-#print Finset.subset_powersetLen_univ_iff /-
-theorem subset_powersetLen_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : Set (Finset α)).Sized r :=
+#print Finset.subset_powersetCard_univ_iff /-
+theorem subset_powersetCard_univ_iff : 𝒜 ⊆ powersetCard r univ ↔ (𝒜 : Set (Finset α)).Sized r :=
   forall_congr' fun A => by rw [mem_powerset_len_univ_iff, mem_coe]
-#align finset.subset_powerset_len_univ_iff Finset.subset_powersetLen_univ_iff
+#align finset.subset_powerset_len_univ_iff Finset.subset_powersetCard_univ_iff
 -/
 
 alias ⟨_, _root_.set.sized.subset_powerset_len_univ⟩ := subset_powerset_len_univ_iff
-#align set.sized.subset_powerset_len_univ Set.Sized.subset_powersetLen_univ
+#align set.sized.subset_powerset_len_univ Set.Sized.subset_powersetCard_univ
 
 #print Set.Sized.card_le /-
 theorem Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :

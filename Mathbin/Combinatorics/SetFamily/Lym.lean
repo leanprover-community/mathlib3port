@@ -129,7 +129,7 @@ variable [DecidableEq α] (k : ℕ) (𝒜 : Finset (Finset α))
 #print Finset.falling /-
 /-- `falling k 𝒜` is all the finsets of cardinality `k` which are a subset of something in `𝒜`. -/
 def falling : Finset (Finset α) :=
-  𝒜.sup <| powersetLen k
+  𝒜.sup <| powersetCard k
 #align finset.falling Finset.falling
 -/
 

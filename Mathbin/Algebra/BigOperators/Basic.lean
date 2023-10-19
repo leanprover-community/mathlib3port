@@ -2454,7 +2454,7 @@ theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β →
 
 #print Multiset.sup_powerset_len /-
 theorem sup_powerset_len {α : Type _} [DecidableEq α] (x : Multiset α) :
-    (Finset.sup (Finset.range (x.card + 1)) fun k => x.powersetLen k) = x.powerset :=
+    (Finset.sup (Finset.range (x.card + 1)) fun k => x.powersetCard k) = x.powerset :=
   by
   convert bind_powerset_len x
   rw [Multiset.bind, Multiset.join, ← Finset.range_val, ← Finset.sum_eq_multiset_sum]

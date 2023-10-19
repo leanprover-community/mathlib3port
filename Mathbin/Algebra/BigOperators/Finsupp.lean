@@ -526,18 +526,18 @@ theorem sum_single [AddCommMonoid M] (f : α →₀ M) : f.Sum single = f :=
 #align finsupp.sum_single Finsupp.sum_single
 -/
 
-#print Finsupp.sum_univ_single /-
+#print Finsupp.univ_sum_single_apply /-
 @[simp]
-theorem sum_univ_single [AddCommMonoid M] [Fintype α] (i : α) (m : M) :
+theorem univ_sum_single_apply [AddCommMonoid M] [Fintype α] (i : α) (m : M) :
     ∑ j : α, (single i m) j = m := by simp [single]
-#align finsupp.sum_univ_single Finsupp.sum_univ_single
+#align finsupp.sum_univ_single Finsupp.univ_sum_single_apply
 -/
 
-#print Finsupp.sum_univ_single' /-
+#print Finsupp.univ_sum_single_apply' /-
 @[simp]
-theorem sum_univ_single' [AddCommMonoid M] [Fintype α] (i : α) (m : M) :
+theorem univ_sum_single_apply' [AddCommMonoid M] [Fintype α] (i : α) (m : M) :
     ∑ j : α, (single j m) i = m := by simp [single]
-#align finsupp.sum_univ_single' Finsupp.sum_univ_single'
+#align finsupp.sum_univ_single' Finsupp.univ_sum_single_apply'
 -/
 
 #print Finsupp.liftAddHom_apply_single /-

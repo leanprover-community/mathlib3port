@@ -629,7 +629,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
             (Finset.range_mono hnm))
         _
     rintro ⟨i, h⟩
-    simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff'] at h 
+    simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] at h 
     induction' i with k hk
     · obtain ⟨j, hj₁, hj₂⟩ := hω 1
       refine'

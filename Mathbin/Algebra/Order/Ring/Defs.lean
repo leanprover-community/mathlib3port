@@ -998,8 +998,8 @@ instance (priority := 200) LinearOrderedSemiring.toMulPosReflectLT : MulPosRefle
 
 attribute [local instance] LinearOrderedSemiring.decidableLe LinearOrderedSemiring.decidableLt
 
-#print nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg /-
-theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b) :
+#print nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nonneg /-
+theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nonneg (hab : 0 ≤ a * b) :
     0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
   by
   refine' Decidable.or_iff_not_and_not.2 _
@@ -1007,7 +1007,7 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
   exacts [mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
     mul_neg_of_neg_of_pos ha (nab ha.le)]
-#align nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
+#align nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nonneg
 -/
 
 #print nonneg_of_mul_nonneg_left /-
@@ -1345,7 +1345,7 @@ theorem mul_neg_iff : a * b < 0 ↔ 0 < a ∧ b < 0 ∨ a < 0 ∧ 0 < b := by
 
 #print mul_nonneg_iff /-
 theorem mul_nonneg_iff : 0 ≤ a * b ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
-  ⟨nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg, fun h =>
+  ⟨nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nonneg, fun h =>
     h.elim (and_imp.2 mul_nonneg) (and_imp.2 mul_nonneg_of_nonpos_of_nonpos)⟩
 #align mul_nonneg_iff mul_nonneg_iff
 -/

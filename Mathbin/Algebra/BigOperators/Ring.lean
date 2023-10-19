@@ -310,7 +310,7 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoid β] {s : Finset α} {x
 @[to_additive
       "A sum over `powerset s` is equal to the double sum over sets of subsets of `s` with\n`card s = k`, for `k = 1, ..., card s`"]
 theorem prod_powerset [CommMonoid β] (s : Finset α) (f : Finset α → β) :
-    ∏ t in powerset s, f t = ∏ j in range (card s + 1), ∏ t in powersetLen j s, f t := by
+    ∏ t in powerset s, f t = ∏ j in range (card s + 1), ∏ t in powersetCard j s, f t := by
   rw [powerset_card_disj_Union, prod_disj_Union]
 #align finset.prod_powerset Finset.prod_powerset
 #align finset.sum_powerset Finset.sum_powerset
