@@ -530,7 +530,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V}
     ∃ f : V → k, ∑ e in t, f e • e = 0 ∧ ∑ e in t, f e = 0 ∧ ∃ x ∈ t, f x ≠ 0 := by
   classical
   rw [affineIndependent_iff_of_fintype] at h 
-  simp only [exists_prop, not_forall] at h 
+  simp only [exists_prop, Classical.not_forall] at h 
   obtain ⟨w, hw, hwt, i, hi⟩ := h
   simp only [Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero _ w (coe : t → V) hw 0,
     vsub_eq_sub, Finset.weightedVSubOfPoint_apply, sub_zero] at hwt 

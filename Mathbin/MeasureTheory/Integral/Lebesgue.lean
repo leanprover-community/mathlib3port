@@ -2071,7 +2071,7 @@ theorem withDensity_apply_eq_zero {f : α → ℝ≥0∞} {s : Set α} (hf : Mea
     convert A
     ext x
     simp only [and_comm', exists_prop, mem_inter_iff, iff_self_iff, mem_set_of_eq, mem_compl_iff,
-      not_forall]
+      Classical.not_forall]
   · intro hs
     let t := to_measurable μ ({x | f x ≠ 0} ∩ s)
     have A : s ⊆ t ∪ {x | f x = 0} := by
@@ -2098,7 +2098,7 @@ theorem ae_withDensity_iff {p : α → Prop} {f : α → ℝ≥0∞} (hf : Measu
   rw [ae_iff, ae_iff, with_density_apply_eq_zero hf]
   congr
   ext x
-  simp only [exists_prop, mem_inter_iff, iff_self_iff, mem_set_of_eq, not_forall]
+  simp only [exists_prop, mem_inter_iff, iff_self_iff, mem_set_of_eq, Classical.not_forall]
 #align measure_theory.ae_with_density_iff MeasureTheory.ae_withDensity_iff
 -/
 

@@ -194,7 +194,7 @@ theorem isEmpty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by simp only [← not_non
 #print isEmpty_pi /-
 @[simp]
 theorem isEmpty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
-  simp only [← not_nonempty_iff, Classical.nonempty_pi, not_forall]
+  simp only [← not_nonempty_iff, Classical.nonempty_pi, Classical.not_forall]
 #align is_empty_pi isEmpty_pi
 -/
 

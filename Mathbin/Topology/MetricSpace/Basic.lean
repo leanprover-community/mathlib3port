@@ -2741,7 +2741,7 @@ theorem nndist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
 theorem nndist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
     nndist f g = r ↔ (∃ i, nndist (f i) (g i) = r) ∧ ∀ b, nndist (f b) (g b) ≤ r :=
   by
-  rw [eq_iff_le_not_lt, nndist_pi_lt_iff hr, nndist_pi_le_iff, not_forall, and_comm']
+  rw [eq_iff_le_not_lt, nndist_pi_lt_iff hr, nndist_pi_le_iff, Classical.not_forall, and_comm']
   simp_rw [not_lt, and_congr_left_iff, le_antisymm_iff]
   intro h
   refine' exists_congr fun b => _

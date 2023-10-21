@@ -1183,7 +1183,7 @@ theorem mem_cons (s : WSeq α) (a) : a ∈ cons a s :=
 #print Stream'.WSeq.mem_of_mem_tail /-
 theorem mem_of_mem_tail {s : WSeq α} {a} : a ∈ tail s → a ∈ s :=
   by
-  intro h; have := h; cases' h with n e; revert s; simp [Stream'.nth]
+  intro h; have := h; cases' h with n e; revert s; simp [Stream'.get]
   induction' n with n IH <;> intro s <;> apply s.rec_on _ (fun x s => _) fun s => _ <;>
         repeat' simp <;>
       intro m e <;>

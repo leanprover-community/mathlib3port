@@ -470,7 +470,7 @@ theorem not_mem_subset (h : s ⊆ t) : a ∉ t → a ∉ s :=
 -/
 
 #print Set.not_subset /-
-theorem not_subset : ¬s ⊆ t ↔ ∃ a ∈ s, a ∉ t := by simp only [subset_def, not_forall]
+theorem not_subset : ¬s ⊆ t ↔ ∃ a ∈ s, a ∉ t := by simp only [subset_def, Classical.not_forall]
 #align set.not_subset Set.not_subset
 -/
 
@@ -910,7 +910,7 @@ theorem exists_mem_of_nonempty (α) : ∀ [Nonempty α], ∃ x : α, x ∈ (univ
 
 #print Set.ne_univ_iff_exists_not_mem /-
 theorem ne_univ_iff_exists_not_mem {α : Type _} (s : Set α) : s ≠ univ ↔ ∃ a, a ∉ s := by
-  rw [← not_forall, ← eq_univ_iff_forall]
+  rw [← Classical.not_forall, ← eq_univ_iff_forall]
 #align set.ne_univ_iff_exists_not_mem Set.ne_univ_iff_exists_not_mem
 -/
 
@@ -2083,7 +2083,8 @@ theorem disjoint_right : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ t → a ∉ s := by
 
 #print Set.not_disjoint_iff /-
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ x, x ∈ s ∧ x ∈ t :=
-  Set.disjoint_iff.Not.trans <| not_forall.trans <| exists_congr fun x => Classical.not_not
+  Set.disjoint_iff.Not.trans <|
+    Classical.not_forall.trans <| exists_congr fun x => Classical.not_not
 #align set.not_disjoint_iff Set.not_disjoint_iff
 -/
 
@@ -3603,7 +3604,7 @@ theorem nontrivial_mono {α : Type _} {s t : Set α} (hst : s ⊆ t) (hs : Nontr
 #print Set.not_subsingleton_iff /-
 @[simp]
 theorem not_subsingleton_iff : ¬s.Subsingleton ↔ s.Nontrivial := by
-  simp_rw [Set.Subsingleton, Set.Nontrivial, not_forall]
+  simp_rw [Set.Subsingleton, Set.Nontrivial, Classical.not_forall]
 #align set.not_subsingleton_iff Set.not_subsingleton_iff
 -/
 

@@ -307,7 +307,7 @@ theorem FinrankQuotientMap.linearIndependent_of_nontrivial [IsDomain R] [IsDedek
   -- then we can find a linear dependence with coefficients `I.quotient.mk g'` in `R/I`,
   -- where `I = ker (algebra_map R S)`.
   -- We make use of the same principle but stay in `R` everywhere.
-  simp only [linearIndependent_iff', not_forall] at hb ⊢
+  simp only [linearIndependent_iff', Classical.not_forall] at hb ⊢
   obtain ⟨s, g, eq, j', hj's, hj'g⟩ := hb
   use s
   obtain ⟨a, hag, j, hjs, hgI⟩ := Ideal.exist_integer_multiples_not_mem hRS s g hj's hj'g

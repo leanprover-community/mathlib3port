@@ -1183,7 +1183,7 @@ theorem not_monotone_not_antitone_iff_exists_le_le :
     ¬Monotone f ∧ ¬Antitone f ↔
       ∃ a b c, a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
-  simp_rw [Monotone, Antitone, not_forall, not_le]
+  simp_rw [Monotone, Antitone, Classical.not_forall, not_le]
   refine' Iff.symm ⟨_, _⟩
   · rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
     exacts [⟨⟨_, _, hbc, hfcb⟩, _, _, hab, hfab⟩, ⟨⟨_, _, hab, hfba⟩, _, _, hbc, hfbc⟩]

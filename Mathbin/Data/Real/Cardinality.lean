@@ -186,7 +186,7 @@ theorem cantorFunction_injective (h1 : 0 < c) (h2 : c < 1 / 2) :
   classical
   by_contra h
   revert hfg
-  have : ∃ n, f n ≠ g n := by rw [← not_forall]; intro h'; apply h; ext; apply h'
+  have : ∃ n, f n ≠ g n := by rw [← Classical.not_forall]; intro h'; apply h; ext; apply h'
   let n := Nat.find this
   have hn : ∀ k : ℕ, k < n → f k = g k := by intro k hk; apply of_not_not;
     exact Nat.find_min this hk

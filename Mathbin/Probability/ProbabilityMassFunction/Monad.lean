@@ -286,7 +286,7 @@ theorem support_bindOnSupport :
   by
   refine' Set.ext fun b => _
   simp only [ENNReal.tsum_eq_zero, not_or, mem_support_iff, bind_on_support_apply, Ne.def,
-    not_forall, mul_eq_zero, Set.mem_iUnion]
+    Classical.not_forall, mul_eq_zero, Set.mem_iUnion]
   exact
     ⟨fun hb =>
       let ⟨a, ⟨ha, ha'⟩⟩ := hb

@@ -116,7 +116,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
       by_contradiction fun h =>
         have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by
-          simpa only [not_exists, not_forall] using h
+          simpa only [not_exists, Classical.not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=
           have : insert f s ∈ sets := fun x hx y hy =>

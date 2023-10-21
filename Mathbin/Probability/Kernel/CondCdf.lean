@@ -99,7 +99,7 @@ theorem Real.iUnion_Iic_rat : (⋃ r : ℚ, Iic (r : ℝ)) = univ :=
 theorem Real.iInter_Iic_rat : (⋂ r : ℚ, Iic (r : ℝ)) = ∅ :=
   by
   ext1
-  simp only [mem_Inter, mem_Iic, mem_empty_iff_false, iff_false_iff, not_forall, not_le]
+  simp only [mem_Inter, mem_Iic, mem_empty_iff_false, iff_false_iff, Classical.not_forall, not_le]
   exact exists_rat_lt x
 #align real.Inter_Iic_rat Real.iInter_Iic_rat
 -/
@@ -621,7 +621,8 @@ theorem tendsto_preCdf_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
       by
       suffices (⋂ r : ℚ, Iic (-(r : ℝ))) = ∅ by rwa [← prod_iInter, this, prod_empty, measure_empty]
       ext1 x
-      simp only [mem_Inter, mem_Iic, mem_empty_iff_false, iff_false_iff, not_forall, not_le]
+      simp only [mem_Inter, mem_Iic, mem_empty_iff_false, iff_false_iff, Classical.not_forall,
+        not_le]
       simp_rw [neg_lt]
       exact exists_rat_gt _
     rw [h_zero_eq_measure_Inter]

@@ -115,7 +115,7 @@ def rADIX := by apply_normed 2 ^ 64
 
 def hashByte (seed : ℕ) (c : Char) : ℕ :=
   let n : ℕ := c.toNat
-  seed.lxor' n * fNVPRIME % rADIX
+  seed.xor n * fNVPRIME % rADIX
 #align tactic.local_cache.internal.def_local.hash_byte Tactic.LocalCache.Internal.DefLocal.hashByte
 
 def hashString (s : String) : ℕ :=

@@ -327,7 +327,7 @@ theorem krullTopology_totallyDisconnected {K L : Type _} [Field K] [Field L] [Al
       ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
       ⟨1, E.fixing_subgroup.one_mem', mul_one σ⟩, _⟩
   simp only [mem_leftCoset_iff, SetLike.mem_coe, IntermediateField.mem_fixingSubgroup_iff,
-    not_forall]
+    Classical.not_forall]
   exact ⟨x, IntermediateField.mem_adjoin_simple_self K x, hx⟩
 #align krull_topology_totally_disconnected krullTopology_totallyDisconnected
 -/

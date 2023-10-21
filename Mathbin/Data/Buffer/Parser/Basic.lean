@@ -1193,7 +1193,7 @@ theorem sat_iff {p : Char → Prop} [DecidablePred p] : Static (sat p) ↔ ∀ c
     exact zero_ne_one (of_done this)
   · contrapose!
     simp only [Iff, sat_eq_done, and_imp, exists_prop, exists_and_right, exists_and_left,
-      exists_imp, not_forall]
+      exists_imp, Classical.not_forall]
     rintro _ _ _ a h hne rfl hp -
     exact ⟨a, hp⟩
 #align parser.static.sat_iff Parser.Static.sat_iff

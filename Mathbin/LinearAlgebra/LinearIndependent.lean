@@ -163,7 +163,7 @@ theorem not_linearIndependent_iff :
       ∃ s : Finset ι, ∃ g : ι → R, ∑ i in s, g i • v i = 0 ∧ ∃ i ∈ s, g i ≠ 0 :=
   by
   rw [linearIndependent_iff']
-  simp only [exists_prop, not_forall]
+  simp only [exists_prop, Classical.not_forall]
 #align not_linear_independent_iff not_linearIndependent_iff
 -/
 

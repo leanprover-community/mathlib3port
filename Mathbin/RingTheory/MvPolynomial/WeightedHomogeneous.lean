@@ -537,9 +537,9 @@ theorem weightedHomogeneousComponent_zero [NoZeroSMulDivisors ℕ M] (hw : ∀ i
   · simp only [coeff_weighted_homogeneous_component, if_pos, map_zero, coeff_zero_C]
   · rw [coeff_weighted_homogeneous_component, if_neg, coeff_C, if_neg (Ne.symm hd)]
     simp only [weighted_degree', LinearMap.toAddMonoidHom_coe, Finsupp.total_apply, Finsupp.sum,
-      sum_eq_zero_iff, Finsupp.mem_support_iff, Ne.def, smul_eq_zero, not_forall, not_or,
+      sum_eq_zero_iff, Finsupp.mem_support_iff, Ne.def, smul_eq_zero, Classical.not_forall, not_or,
       and_self_left, exists_prop]
-    simp only [Finsupp.ext_iff, Finsupp.coe_zero, Pi.zero_apply, not_forall] at hd 
+    simp only [Finsupp.ext_iff, Finsupp.coe_zero, Pi.zero_apply, Classical.not_forall] at hd 
     obtain ⟨i, hi⟩ := hd
     exact ⟨i, hi, hw i⟩
 #align mv_polynomial.weighted_homogeneous_component_zero MvPolynomial.weightedHomogeneousComponent_zero

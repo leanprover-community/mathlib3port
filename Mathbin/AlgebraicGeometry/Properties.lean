@@ -271,10 +271,10 @@ instance is_irreducible_of_isIntegral [IsIntegral X] : IrreducibleSpace X.carrie
   replace H : ¬IsPreirreducible (⊤ : Set X.carrier) := fun h =>
     H { to_preirreducibleSpace := ⟨h⟩
         to_nonempty := inferInstance }
-  simp_rw [isPreirreducible_iff_closed_union_closed, not_forall, not_or] at H 
+  simp_rw [isPreirreducible_iff_closed_union_closed, Classical.not_forall, not_or] at H 
   rcases H with ⟨S, T, hS, hT, h₁, h₂, h₃⟩
-  erw [not_forall] at h₂ h₃ 
-  simp_rw [not_forall] at h₂ h₃ 
+  erw [Classical.not_forall] at h₂ h₃ 
+  simp_rw [Classical.not_forall] at h₂ h₃ 
   haveI : Nonempty (⟨Sᶜ, hS.1⟩ : opens X.carrier) := ⟨⟨_, h₂.some_spec.some_spec⟩⟩
   haveI : Nonempty (⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, h₃.some_spec.some_spec⟩⟩
   haveI : Nonempty (⟨Sᶜ, hS.1⟩ ⊔ ⟨Tᶜ, hT.1⟩ : opens X.carrier) :=

@@ -379,8 +379,8 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Inf
 theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup {y : ℝ | (y : ℝ*) < x}) :=
   let S : Set ℝ := {y : ℝ | (y : ℝ*) < x}
   let R : _ := sSup S
-  have hnile := not_forall.mp (not_or.mp hni).1
-  have hnige := not_forall.mp (not_or.mp hni).2
+  have hnile := Classical.not_forall.mp (not_or.mp hni).1
+  have hnige := Classical.not_forall.mp (not_or.mp hni).2
   Exists.dcases_on hnile <|
     Exists.dcases_on hnige fun r₁ hr₁ r₂ hr₂ =>
       have HR₁ : S.Nonempty :=
@@ -872,8 +872,8 @@ theorem not_infinite_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : 
 #print Hyperreal.not_infinite_iff_exist_lt_gt /-
 theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ, (r : ℝ*) < x ∧ x < s :=
   ⟨fun hni =>
-    Exists.dcases_on (not_forall.mp (not_or.mp hni).1) <|
-      Exists.dcases_on (not_forall.mp (not_or.mp hni).2) fun r hr s hs => by
+    Exists.dcases_on (Classical.not_forall.mp (not_or.mp hni).1) <|
+      Exists.dcases_on (Classical.not_forall.mp (not_or.mp hni).2) fun r hr s hs => by
         rw [not_lt] at hr hs  <;>
           exact
             ⟨r - 1, s + 1,
@@ -882,7 +882,9 @@ theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ
     fun hrs =>
     Exists.dcases_on hrs fun r hr =>
       Exists.dcases_on hr fun s hs =>
-        not_or.mpr ⟨not_forall.mpr ⟨s, lt_asymm hs.2⟩, not_forall.mpr ⟨r, lt_asymm hs.1⟩⟩⟩
+        not_or.mpr
+          ⟨Classical.not_forall.mpr ⟨s, lt_asymm hs.2⟩,
+            Classical.not_forall.mpr ⟨r, lt_asymm hs.1⟩⟩⟩
 #align hyperreal.not_infinite_iff_exist_lt_gt Hyperreal.not_infinite_iff_exist_lt_gt
 -/
 
@@ -1248,7 +1250,7 @@ theorem infinite_omega : Infinite ω :=
 #print Hyperreal.infinitePos_mul_of_infinitePos_not_infinitesimal_pos /-
 theorem infinitePos_mul_of_infinitePos_not_infinitesimal_pos {x y : ℝ*} :
     InfinitePos x → ¬Infinitesimal y → 0 < y → InfinitePos (x * y) := fun hx hy₁ hy₂ r =>
-  have hy₁' := not_forall.mp (by rw [infinitesimal_def] at hy₁  <;> exact hy₁)
+  have hy₁' := Classical.not_forall.mp (by rw [infinitesimal_def] at hy₁  <;> exact hy₁)
   Exists.dcases_on hy₁' fun r₁ hy₁'' =>
     by
     have hyr := by rw [not_imp, ← abs_lt, not_lt, abs_of_pos hy₂] at hy₁''  <;> exact hy₁''

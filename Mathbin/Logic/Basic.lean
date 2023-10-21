@@ -2054,11 +2054,11 @@ protected theorem Decidable.not_forall {p : α → Prop} [Decidable (∃ x, ¬p 
 #align decidable.not_forall Decidable.not_forall
 -/
 
-#print not_forall /-
+#print Classical.not_forall /-
 @[simp]
-theorem not_forall {p : α → Prop} : (¬∀ x, p x) ↔ ∃ x, ¬p x :=
+theorem Classical.not_forall {p : α → Prop} : (¬∀ x, p x) ↔ ∃ x, ¬p x :=
   Decidable.not_forall
-#align not_forall not_forall
+#align not_forall Classical.not_forall
 -/
 
 #print Decidable.not_forall_not /-
@@ -2081,11 +2081,11 @@ protected theorem Decidable.not_exists_not [∀ x, Decidable (p x)] : (¬∃ x, 
 #align decidable.not_exists_not Decidable.not_exists_not
 -/
 
-#print not_exists_not /-
+#print Classical.not_exists_not /-
 @[simp]
-theorem not_exists_not : (¬∃ x, ¬p x) ↔ ∀ x, p x :=
+theorem Classical.not_exists_not : (¬∃ x, ¬p x) ↔ ∀ x, p x :=
   Decidable.not_exists_not
-#align not_exists_not not_exists_not
+#align not_exists_not Classical.not_exists_not
 -/
 
 #print forall_imp_iff_exists_imp /-
@@ -2945,13 +2945,13 @@ theorem ite_eq_right_iff : ite P a b = b ↔ P → a = b :=
 
 #print dite_ne_left_iff /-
 theorem dite_ne_left_iff : dite P (fun _ => a) B ≠ a ↔ ∃ h, a ≠ B h := by
-  rw [Ne.def, dite_eq_left_iff, not_forall]; exact exists_congr fun h => by rw [ne_comm]
+  rw [Ne.def, dite_eq_left_iff, Classical.not_forall]; exact exists_congr fun h => by rw [ne_comm]
 #align dite_ne_left_iff dite_ne_left_iff
 -/
 
 #print dite_ne_right_iff /-
 theorem dite_ne_right_iff : (dite P A fun _ => b) ≠ b ↔ ∃ h, A h ≠ b := by
-  simp only [Ne.def, dite_eq_right_iff, not_forall]
+  simp only [Ne.def, dite_eq_right_iff, Classical.not_forall]
 #align dite_ne_right_iff dite_ne_right_iff
 -/
 

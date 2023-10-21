@@ -310,7 +310,7 @@ theorem Finset.card_le_univ [Fintype α] (s : Finset α) : s.card ≤ Fintype.ca
 #print Finset.card_lt_univ_of_not_mem /-
 theorem Finset.card_lt_univ_of_not_mem [Fintype α] {s : Finset α} {x : α} (hx : x ∉ s) :
     s.card < Fintype.card α :=
-  card_lt_card ⟨subset_univ s, not_forall.2 ⟨x, fun hx' => hx (hx' <| mem_univ x)⟩⟩
+  card_lt_card ⟨subset_univ s, Classical.not_forall.2 ⟨x, fun hx' => hx (hx' <| mem_univ x)⟩⟩
 #align finset.card_lt_univ_of_not_mem Finset.card_lt_univ_of_not_mem
 -/
 
@@ -592,7 +592,7 @@ theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective 
 #print Fintype.card_lt_of_injective_not_surjective /-
 theorem card_lt_of_injective_not_surjective (f : α → β) (h : Function.Injective f)
     (h' : ¬Function.Surjective f) : card α < card β :=
-  let ⟨y, hy⟩ := not_forall.1 h'
+  let ⟨y, hy⟩ := Classical.not_forall.1 h'
   card_lt_of_injective_of_not_mem f h hy
 #align fintype.card_lt_of_injective_not_surjective Fintype.card_lt_of_injective_not_surjective
 -/
@@ -1241,7 +1241,7 @@ theorem of_surjective_from_set {s : Set α} (hs : s ≠ Set.univ) {f : s → α}
 
 #print Infinite.exists_not_mem_finset /-
 theorem exists_not_mem_finset [Infinite α] (s : Finset α) : ∃ x, x ∉ s :=
-  not_forall.1 fun h => Fintype.false ⟨s, h⟩
+  Classical.not_forall.1 fun h => Fintype.false ⟨s, h⟩
 #align infinite.exists_not_mem_finset Infinite.exists_not_mem_finset
 -/
 
@@ -1411,7 +1411,8 @@ See also: `fintype.exists_ne_map_eq_of_card_lt`, `finite.exists_infinite_fiber`.
 -/
 theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f : α → β) :
     ∃ x y : α, x ≠ y ∧ f x = f y := by
-  simpa only [injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
+  simpa only [injective, Classical.not_forall, not_imp, and_comm] using
+    not_injective_infinite_finite f
 #align finite.exists_ne_map_eq_of_infinite Finite.exists_ne_map_eq_of_infinite
 -/
 

@@ -235,7 +235,7 @@ theorem le_ωSup_of_le {c : Chain α} {x : α} (i : ℕ) (h : x ≤ c i) : x ≤
 #print OmegaCompletePartialOrder.ωSup_total /-
 theorem ωSup_total {c : Chain α} {x : α} (h : ∀ i, c i ≤ x ∨ x ≤ c i) : ωSup c ≤ x ∨ x ≤ ωSup c :=
   by_cases (fun this : ∀ i, c i ≤ x => Or.inl (ωSup_le _ _ this)) fun this : ¬∀ i, c i ≤ x =>
-    have : ∃ i, ¬c i ≤ x := by simp only [not_forall] at this ⊢ <;> assumption
+    have : ∃ i, ¬c i ≤ x := by simp only [Classical.not_forall] at this ⊢ <;> assumption
     let ⟨i, hx⟩ := this
     have : x ≤ c i := (h i).resolve_left hx
     Or.inr <| le_ωSup_of_le _ this

@@ -137,7 +137,7 @@ namespace Num
 def or : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => pos (p.lor' q)
+  | Pos p, Pos q => pos (p.lor q)
 #align num.lor OrOp.or
 -/
 
@@ -146,7 +146,7 @@ def or : Num → Num → Num
 def land : Num → Num → Num
   | 0, q => 0
   | p, 0 => 0
-  | Pos p, Pos q => p.land' q
+  | Pos p, Pos q => p.land q
 #align num.land Num.land
 -/
 
@@ -162,7 +162,7 @@ def land : Num → Num → Num
 def ldiff : Num → Num → Num
   | 0, q => 0
   | p, 0 => p
-  | Pos p, Pos q => p.ldiff' q
+  | Pos p, Pos q => p.ldiff q
 #align num.ldiff Num.ldiff
 -/
 
@@ -171,7 +171,7 @@ def ldiff : Num → Num → Num
 def lxor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => p.lxor' q
+  | Pos p, Pos q => p.xor q
 #align num.lxor Num.lxor
 -/
 

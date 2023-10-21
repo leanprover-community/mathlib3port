@@ -440,7 +440,7 @@ theorem models_not_iff (h : T.IsComplete) (φ : L.Sentence) : T ⊨ φ.Not ↔ �
   by
   cases' h.2 φ with hφ hφn
   · simp only [hφ, not_true, iff_false_iff]
-    rw [models_sentence_iff, not_forall]
+    rw [models_sentence_iff, Classical.not_forall]
     refine' ⟨h.1.some, _⟩
     simp only [sentence.realize_not, Classical.not_not]
     exact models_sentence_iff.1 hφ _

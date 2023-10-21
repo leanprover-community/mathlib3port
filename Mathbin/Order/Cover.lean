@@ -125,7 +125,7 @@ theorem wcovby_congr_right (hab : AntisymmRel (· ≤ ·) a b) : c ⩿ a ↔ c �
 #print not_wcovby_iff /-
 /-- If `a ≤ b`, then `b` does not cover `a` iff there's an element in between. -/
 theorem not_wcovby_iff (h : a ≤ b) : ¬a ⩿ b ↔ ∃ c, a < c ∧ c < b := by
-  simp_rw [Wcovby, h, true_and_iff, not_forall, exists_prop, Classical.not_not]
+  simp_rw [Wcovby, h, true_and_iff, Classical.not_forall, exists_prop, Classical.not_not]
 #align not_wcovby_iff not_wcovby_iff
 -/
 
@@ -294,7 +294,7 @@ theorem Covby.lt (h : a ⋖ b) : a < b :=
 #print not_covby_iff /-
 /-- If `a < b`, then `b` does not cover `a` iff there's an element in between. -/
 theorem not_covby_iff (h : a < b) : ¬a ⋖ b ↔ ∃ c, a < c ∧ c < b := by
-  simp_rw [Covby, h, true_and_iff, not_forall, exists_prop, Classical.not_not]
+  simp_rw [Covby, h, true_and_iff, Classical.not_forall, exists_prop, Classical.not_not]
 #align not_covby_iff not_covby_iff
 -/
 

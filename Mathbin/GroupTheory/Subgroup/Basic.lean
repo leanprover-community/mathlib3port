@@ -1113,7 +1113,7 @@ theorem bot_or_nontrivial (H : Subgroup G) : H = ⊥ ∨ Nontrivial H := by
   · left
     exact H.eq_bot_iff_forall.mpr h
   · right
-    simp only [not_forall] at h 
+    simp only [Classical.not_forall] at h 
     simpa only [nontrivial_iff_exists_ne_one]
 #align subgroup.bot_or_nontrivial Subgroup.bot_or_nontrivial
 #align add_subgroup.bot_or_nontrivial AddSubgroup.bot_or_nontrivial

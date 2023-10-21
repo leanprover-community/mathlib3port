@@ -1595,7 +1595,7 @@ theorem sup_le {ι} {f : ι → Ordinal} {a} : (∀ i, f i ≤ a) → sup f ≤ 
 
 #print Ordinal.lt_sup /-
 theorem lt_sup {ι} {f : ι → Ordinal} {a} : a < sup f ↔ ∃ i, a < f i := by
-  simpa only [not_forall, not_le] using not_congr (@sup_le_iff _ f a)
+  simpa only [Classical.not_forall, not_le] using not_congr (@sup_le_iff _ f a)
 #align ordinal.lt_sup Ordinal.lt_sup
 -/
 
@@ -1858,7 +1858,7 @@ theorem le_bsup {o} (f : ∀ a < o, Ordinal) (i h) : f i h ≤ bsup o f :=
 
 #print Ordinal.lt_bsup /-
 theorem lt_bsup {o} (f : ∀ a < o, Ordinal) {a} : a < bsup o f ↔ ∃ i hi, a < f i hi := by
-  simpa only [not_forall, not_le] using not_congr (@bsup_le_iff _ f a)
+  simpa only [Classical.not_forall, not_le] using not_congr (@bsup_le_iff _ f a)
 #align ordinal.lt_bsup Ordinal.lt_bsup
 -/
 
@@ -1984,7 +1984,7 @@ theorem lt_lsub {ι} (f : ι → Ordinal) (i) : f i < lsub f :=
 
 #print Ordinal.lt_lsub_iff /-
 theorem lt_lsub_iff {ι} {f : ι → Ordinal} {a} : a < lsub f ↔ ∃ i, a ≤ f i := by
-  simpa only [not_forall, not_lt, not_le] using not_congr (@lsub_le_iff _ f a)
+  simpa only [Classical.not_forall, not_lt, not_le] using not_congr (@lsub_le_iff _ f a)
 #align ordinal.lt_lsub_iff Ordinal.lt_lsub_iff
 -/
 
@@ -2246,7 +2246,7 @@ theorem lt_blsub {o} (f : ∀ a < o, Ordinal) (i h) : f i h < blsub o f :=
 
 #print Ordinal.lt_blsub_iff /-
 theorem lt_blsub_iff {o f a} : a < blsub o f ↔ ∃ i hi, a ≤ f i hi := by
-  simpa only [not_forall, not_lt, not_le] using not_congr (@blsub_le_iff _ f a)
+  simpa only [Classical.not_forall, not_lt, not_le] using not_congr (@blsub_le_iff _ f a)
 #align ordinal.lt_blsub_iff Ordinal.lt_blsub_iff
 -/
 

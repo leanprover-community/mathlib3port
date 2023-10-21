@@ -1005,7 +1005,7 @@ instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R
     · left; exact hx
     right
     contrapose! xy
-    rw [HahnSeries.ext_iff, Function.funext_iff, not_forall]
+    rw [HahnSeries.ext_iff, Function.funext_iff, Classical.not_forall]
     refine' ⟨x.order + y.order, _⟩
     rw [mul_coeff_order_add_order x y, zero_coeff, mul_eq_zero]
     simp [coeff_order_ne_zero, hx, xy]
@@ -1236,12 +1236,12 @@ theorem algebraMap_apply {r : R} : algebraMap R (HahnSeries Γ A) r = C (algebra
 
 instance [Nontrivial Γ] [Nontrivial R] : Nontrivial (Subalgebra R (HahnSeries Γ R)) :=
   ⟨⟨⊥, ⊤, by
-      rw [Ne.def, SetLike.ext_iff, not_forall]
+      rw [Ne.def, SetLike.ext_iff, Classical.not_forall]
       obtain ⟨a, ha⟩ := exists_ne (0 : Γ)
       refine' ⟨single a 1, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top]
       intro x
-      rw [ext_iff, Function.funext_iff, not_forall]
+      rw [ext_iff, Function.funext_iff, Classical.not_forall]
       refine' ⟨a, _⟩
       rw [single_coeff_same, algebraMap_apply, C_apply, single_coeff_of_ne ha]
       exact zero_ne_one⟩⟩
@@ -1572,8 +1572,8 @@ theorem isPwo_iUnion_support_powers [LinearOrderedCancelAddCommMonoid Γ] [Ring 
   refine' Set.iUnion_subset fun n => _
   induction' n with n ih <;> intro g hn
   · simp only [exists_prop, and_true_iff, Set.mem_singleton_iff, Set.setOf_eq_eq_singleton,
-      mem_support, ite_eq_right_iff, Ne.def, not_false_iff, one_ne_zero, pow_zero, not_forall,
-      one_coeff] at hn 
+      mem_support, ite_eq_right_iff, Ne.def, not_false_iff, one_ne_zero, pow_zero,
+      Classical.not_forall, one_coeff] at hn 
     rw [hn, SetLike.mem_coe]
     exact AddSubmonoid.zero_mem _
   · obtain ⟨i, j, hi, hj, rfl⟩ := support_mul_subset_add_support hn

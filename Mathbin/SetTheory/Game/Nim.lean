@@ -491,7 +491,7 @@ xor. -/
 @[simp]
 theorem SetTheory.PGame.grundyValue_nim_add_nim (n m : ℕ) :
     SetTheory.PGame.grundyValue (SetTheory.PGame.nim.{u} n + SetTheory.PGame.nim.{u} m) =
-      Nat.lxor' n m :=
+      Nat.xor n m :=
   by
   -- We do strong induction on both variables.
   induction' n using Nat.strong_induction_on with n hn generalizing m
@@ -514,26 +514,26 @@ theorem SetTheory.PGame.grundyValue_nim_add_nim (n m : ℕ) :
         refine' fun h => hk.ne _
         rw [Ordinal.nat_cast_inj] at h 
         first
-        | rwa [Nat.lxor'_left_inj] at h 
-        | rwa [Nat.lxor'_right_inj] at h 
+        | rwa [Nat.xor_left_inj] at h 
+        | rwa [Nat.xor_right_inj] at h 
   -- Every other smaller Grundy value can be reached by left moves.
   · -- If `u < nat.lxor m n`, then either `nat.lxor u n < m` or `nat.lxor u m < n`.
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))
     replace hu := Ordinal.nat_cast_lt.1 hu
-    cases' Nat.lt_lxor'_cases hu with h h
+    cases' Nat.lt_xor_cases hu with h h
     -- In the first case, reducing the `m` pile to `nat.lxor u n` gives the desired Grundy value.
     · refine' ⟨to_left_moves_add (Sum.inl <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
       simp [Nat.lxor_cancel_right, hn _ h]
     -- In the second case, reducing the `n` pile to `nat.lxor u m` gives the desired Grundy value.
     · refine' ⟨to_left_moves_add (Sum.inr <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
-      have : n.lxor (u.lxor n) = u; rw [Nat.lxor'_comm u, Nat.lxor'_cancel_left]
+      have : n.lxor (u.lxor n) = u; rw [Nat.xor_comm u, Nat.xor_cancel_left]
       simpa [hm _ h] using this
 #align pgame.grundy_value_nim_add_nim SetTheory.PGame.grundyValue_nim_add_nim
 -/
 
 #print SetTheory.PGame.nim_add_nim_equiv /-
 theorem SetTheory.PGame.nim_add_nim_equiv {n m : ℕ} :
-    SetTheory.PGame.nim n + SetTheory.PGame.nim m ≈ SetTheory.PGame.nim (Nat.lxor' n m) := by
+    SetTheory.PGame.nim n + SetTheory.PGame.nim m ≈ SetTheory.PGame.nim (Nat.xor n m) := by
   rw [← grundy_value_eq_iff_equiv_nim, grundy_value_nim_add_nim]
 #align pgame.nim_add_nim_equiv SetTheory.PGame.nim_add_nim_equiv
 -/
@@ -541,9 +541,9 @@ theorem SetTheory.PGame.nim_add_nim_equiv {n m : ℕ} :
 #print SetTheory.PGame.grundyValue_add /-
 theorem SetTheory.PGame.grundyValue_add (G H : SetTheory.PGame) [G.Impartial] [H.Impartial]
     {n m : ℕ} (hG : SetTheory.PGame.grundyValue G = n) (hH : SetTheory.PGame.grundyValue H = m) :
-    SetTheory.PGame.grundyValue (G + H) = Nat.lxor' n m :=
+    SetTheory.PGame.grundyValue (G + H) = Nat.xor n m :=
   by
-  rw [← nim_grundy_value (Nat.lxor' n m), grundy_value_eq_iff_equiv]
+  rw [← nim_grundy_value (Nat.xor n m), grundy_value_eq_iff_equiv]
   refine' Equiv.trans _ nim_add_nim_equiv
   convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]
 #align pgame.grundy_value_add SetTheory.PGame.grundyValue_add

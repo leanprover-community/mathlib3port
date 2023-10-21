@@ -143,7 +143,7 @@ theorem boundedFormula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormu
     simp only [← Fin.comp_snoc, ih, h']
     refine' ⟨fun h => _, fun h m => _⟩
     · contrapose! h
-      simp_rw [← Ultrafilter.eventually_not, not_forall] at h 
+      simp_rw [← Ultrafilter.eventually_not, Classical.not_forall] at h 
       refine'
         ⟨fun a : α =>
           Classical.epsilon fun m : M a =>

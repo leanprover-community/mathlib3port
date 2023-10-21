@@ -38,11 +38,11 @@ protected theorem eta (s : Stream' α) : (head s::tail s) = s :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Stream'.nth_zero_cons /-
+#print Stream'.get_zero_cons /-
 @[simp]
-theorem nth_zero_cons (a : α) (s : Stream' α) : nth (a::s) 0 = a :=
+theorem get_zero_cons (a : α) (s : Stream' α) : get (a::s) 0 = a :=
   rfl
-#align stream.nth_zero_cons Stream'.nth_zero_cons
+#align stream.nth_zero_cons Stream'.get_zero_cons
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -65,10 +65,10 @@ theorem tail_drop (n : Nat) (s : Stream' α) : tail (drop n s) = drop n (tail s)
 #align stream.tail_drop Stream'.tail_drop
 -/
 
-#print Stream'.nth_drop /-
-theorem nth_drop (n m : Nat) (s : Stream' α) : nth (drop m s) n = nth s (n + m) :=
+#print Stream'.get_drop /-
+theorem get_drop (n m : Nat) (s : Stream' α) : get (drop m s) n = get s (n + m) :=
   rfl
-#align stream.nth_drop Stream'.nth_drop
+#align stream.nth_drop Stream'.get_drop
 -/
 
 #print Stream'.tail_eq_drop /-
@@ -83,18 +83,18 @@ theorem drop_drop (n m : Nat) (s : Stream' α) : drop n (drop m s) = drop (n + m
 #align stream.drop_drop Stream'.drop_drop
 -/
 
-#print Stream'.nth_succ /-
-theorem nth_succ (n : Nat) (s : Stream' α) : nth s (succ n) = nth (tail s) n :=
+#print Stream'.get_succ /-
+theorem get_succ (n : Nat) (s : Stream' α) : get s (succ n) = get (tail s) n :=
   rfl
-#align stream.nth_succ Stream'.nth_succ
+#align stream.nth_succ Stream'.get_succ
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Stream'.nth_succ_cons /-
+#print Stream'.get_succ_cons /-
 @[simp]
-theorem nth_succ_cons (n : Nat) (s : Stream' α) (x : α) : nth (x::s) n.succ = nth s n :=
+theorem get_succ_cons (n : Nat) (s : Stream' α) (x : α) : get (x::s) n.succ = get s n :=
   rfl
-#align stream.nth_succ_cons Stream'.nth_succ_cons
+#align stream.nth_succ_cons Stream'.get_succ_cons
 -/
 
 #print Stream'.drop_succ /-
@@ -106,13 +106,13 @@ theorem drop_succ (n : Nat) (s : Stream' α) : drop (succ n) s = drop n (tail s)
 #print Stream'.head_drop /-
 @[simp]
 theorem head_drop {α} (a : Stream' α) (n : ℕ) : (a.drop n).headI = a.get? n := by
-  simp only [drop, head, Nat.zero_add, Stream'.nth]
+  simp only [drop, head, Nat.zero_add, Stream'.get]
 #align stream.head_drop Stream'.head_drop
 -/
 
 #print Stream'.ext /-
 @[ext]
-protected theorem ext {s₁ s₂ : Stream' α} : (∀ n, nth s₁ n = nth s₂ n) → s₁ = s₂ := fun h =>
+protected theorem ext {s₁ s₂ : Stream' α} : (∀ n, get s₁ n = get s₂ n) → s₁ = s₂ := fun h =>
   funext h
 #align stream.ext Stream'.ext
 -/
@@ -137,13 +137,13 @@ theorem cons_injective_right (x : α) : Function.Injective (cons x) :=
 -/
 
 #print Stream'.all_def /-
-theorem all_def (p : α → Prop) (s : Stream' α) : All p s = ∀ n, p (nth s n) :=
+theorem all_def (p : α → Prop) (s : Stream' α) : All p s = ∀ n, p (get s n) :=
   rfl
 #align stream.all_def Stream'.all_def
 -/
 
 #print Stream'.any_def /-
-theorem any_def (p : α → Prop) (s : Stream' α) : Any p s = ∃ n, p (nth s n) :=
+theorem any_def (p : α → Prop) (s : Stream' α) : Any p s = ∃ n, p (get s n) :=
   rfl
 #align stream.any_def Stream'.any_def
 -/
@@ -172,10 +172,10 @@ theorem eq_or_mem_of_mem_cons {a b : α} {s : Stream' α} : (a ∈ b::s) → a =
 #align stream.eq_or_mem_of_mem_cons Stream'.eq_or_mem_of_mem_cons
 -/
 
-#print Stream'.mem_of_nth_eq /-
-theorem mem_of_nth_eq {n : Nat} {s : Stream' α} {a : α} : a = nth s n → a ∈ s := fun h =>
+#print Stream'.mem_of_get_eq /-
+theorem mem_of_get_eq {n : Nat} {s : Stream' α} {a : α} : a = get s n → a ∈ s := fun h =>
   Exists.intro n h
-#align stream.mem_of_nth_eq Stream'.mem_of_nth_eq
+#align stream.mem_of_nth_eq Stream'.mem_of_get_eq
 -/
 
 section Map
@@ -188,10 +188,10 @@ theorem drop_map (n : Nat) (s : Stream' α) : drop n (map f s) = map f (drop n s
 #align stream.drop_map Stream'.drop_map
 -/
 
-#print Stream'.nth_map /-
-theorem nth_map (n : Nat) (s : Stream' α) : nth (map f s) n = f (nth s n) :=
+#print Stream'.get_map /-
+theorem get_map (n : Nat) (s : Stream' α) : get (map f s) n = f (get s n) :=
   rfl
-#align stream.nth_map Stream'.nth_map
+#align stream.nth_map Stream'.get_map
 -/
 
 #print Stream'.tail_map /-
@@ -247,7 +247,7 @@ theorem mem_map {a : α} {s : Stream' α} : a ∈ s → f a ∈ map f s := fun �
 
 #print Stream'.exists_of_mem_map /-
 theorem exists_of_mem_map {f} {b : β} {s : Stream' α} : b ∈ map f s → ∃ a, a ∈ s ∧ f a = b :=
-  fun ⟨n, h⟩ => ⟨nth s n, ⟨n, rfl⟩, h.symm⟩
+  fun ⟨n, h⟩ => ⟨get s n, ⟨n, rfl⟩, h.symm⟩
 #align stream.exists_of_mem_map Stream'.exists_of_mem_map
 -/
 
@@ -264,11 +264,11 @@ theorem drop_zip (n : Nat) (s₁ : Stream' α) (s₂ : Stream' β) :
 #align stream.drop_zip Stream'.drop_zip
 -/
 
-#print Stream'.nth_zip /-
-theorem nth_zip (n : Nat) (s₁ : Stream' α) (s₂ : Stream' β) :
-    nth (zip f s₁ s₂) n = f (nth s₁ n) (nth s₂ n) :=
+#print Stream'.get_zip /-
+theorem get_zip (n : Nat) (s₁ : Stream' α) (s₂ : Stream' β) :
+    get (zip f s₁ s₂) n = f (get s₁ n) (get s₂ n) :=
   rfl
-#align stream.nth_zip Stream'.nth_zip
+#align stream.nth_zip Stream'.get_zip
 -/
 
 #print Stream'.head_zip /-
@@ -292,11 +292,11 @@ theorem zip_eq (s₁ : Stream' α) (s₂ : Stream' β) :
 #align stream.zip_eq Stream'.zip_eq
 -/
 
-#print Stream'.nth_enum /-
+#print Stream'.get_enum /-
 @[simp]
-theorem nth_enum (s : Stream' α) (n : ℕ) : nth (enum s) n = (n, s.get? n) :=
+theorem get_enum (s : Stream' α) (n : ℕ) : get (enum s) n = (n, s.get? n) :=
   rfl
-#align stream.nth_enum Stream'.nth_enum
+#align stream.nth_enum Stream'.get_enum
 -/
 
 #print Stream'.enum_eq_zip /-
@@ -336,10 +336,10 @@ theorem map_const (f : α → β) (a : α) : map f (const a) = const (f a) :=
 #align stream.map_const Stream'.map_const
 -/
 
-#print Stream'.nth_const /-
-theorem nth_const (n : Nat) (a : α) : nth (const a) n = a :=
+#print Stream'.get_const /-
+theorem get_const (n : Nat) (a : α) : get (const a) n = a :=
   rfl
-#align stream.nth_const Stream'.nth_const
+#align stream.nth_const Stream'.get_const
 -/
 
 #print Stream'.drop_const /-
@@ -376,16 +376,16 @@ theorem iterate_eq (f : α → α) (a : α) : iterate f a = a::iterate f (f a) :
 #align stream.iterate_eq Stream'.iterate_eq
 -/
 
-#print Stream'.nth_zero_iterate /-
-theorem nth_zero_iterate (f : α → α) (a : α) : nth (iterate f a) 0 = a :=
+#print Stream'.get_zero_iterate /-
+theorem get_zero_iterate (f : α → α) (a : α) : get (iterate f a) 0 = a :=
   rfl
-#align stream.nth_zero_iterate Stream'.nth_zero_iterate
+#align stream.nth_zero_iterate Stream'.get_zero_iterate
 -/
 
-#print Stream'.nth_succ_iterate /-
-theorem nth_succ_iterate (n : Nat) (f : α → α) (a : α) :
-    nth (iterate f a) (succ n) = nth (iterate f (f a)) n := by rw [nth_succ, tail_iterate]
-#align stream.nth_succ_iterate Stream'.nth_succ_iterate
+#print Stream'.get_succ_iterate /-
+theorem get_succ_iterate (n : Nat) (f : α → α) (a : α) :
+    get (iterate f a) (succ n) = get (iterate f (f a)) n := by rw [nth_succ, tail_iterate]
+#align stream.nth_succ_iterate Stream'.get_succ_iterate
 -/
 
 section Bisim
@@ -400,20 +400,20 @@ def IsBisimulation :=
 #align stream.is_bisimulation Stream'.IsBisimulation
 -/
 
-#print Stream'.nth_of_bisim /-
-theorem nth_of_bisim (bisim : IsBisimulation R) :
-    ∀ {s₁ s₂} (n), s₁ ~ s₂ → nth s₁ n = nth s₂ n ∧ drop (n + 1) s₁ ~ drop (n + 1) s₂
+#print Stream'.get_of_bisim /-
+theorem get_of_bisim (bisim : IsBisimulation R) :
+    ∀ {s₁ s₂} (n), s₁ ~ s₂ → get s₁ n = get s₂ n ∧ drop (n + 1) s₁ ~ drop (n + 1) s₂
   | s₁, s₂, 0, h => bisim h
   | s₁, s₂, n + 1, h =>
     match bisim h with
     | ⟨h₁, trel⟩ => nth_of_bisim n trel
-#align stream.nth_of_bisim Stream'.nth_of_bisim
+#align stream.nth_of_bisim Stream'.get_of_bisim
 -/
 
 #print Stream'.eq_of_bisim /-
 -- If two streams are bisimilar, then they are equal
 theorem eq_of_bisim (bisim : IsBisimulation R) : ∀ {s₁ s₂}, s₁ ~ s₂ → s₁ = s₂ := fun s₁ s₂ r =>
-  Stream'.ext fun n => And.left (nth_of_bisim R bisim n r)
+  Stream'.ext fun n => And.left (get_of_bisim R bisim n r)
 #align stream.eq_of_bisim Stream'.eq_of_bisim
 -/
 
@@ -518,19 +518,19 @@ theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g 
 #align stream.unfolds_eq Stream'.unfolds_eq
 -/
 
-#print Stream'.nth_unfolds_head_tail /-
-theorem nth_unfolds_head_tail :
-    ∀ (n : Nat) (s : Stream' α), nth (unfolds head tail s) n = nth s n :=
+#print Stream'.get_unfolds_head_tail /-
+theorem get_unfolds_head_tail :
+    ∀ (n : Nat) (s : Stream' α), get (unfolds head tail s) n = get s n :=
   by
   intro n; induction' n with n' ih
   · intro s; rfl
   · intro s; rw [nth_succ, nth_succ, unfolds_eq, tail_cons, ih]
-#align stream.nth_unfolds_head_tail Stream'.nth_unfolds_head_tail
+#align stream.nth_unfolds_head_tail Stream'.get_unfolds_head_tail
 -/
 
 #print Stream'.unfolds_head_eq /-
 theorem unfolds_head_eq : ∀ s : Stream' α, unfolds head tail s = s := fun s =>
-  Stream'.ext fun n => nth_unfolds_head_tail n s
+  Stream'.ext fun n => get_unfolds_head_tail n s
 #align stream.unfolds_head_eq Stream'.unfolds_head_eq
 -/
 
@@ -554,26 +554,26 @@ theorem interleave_tail_tail (s₁ s₂ : Stream' α) : tail s₁ ⋈ tail s₂ 
 #align stream.interleave_tail_tail Stream'.interleave_tail_tail
 -/
 
-#print Stream'.nth_interleave_left /-
-theorem nth_interleave_left : ∀ (n : Nat) (s₁ s₂ : Stream' α), nth (s₁ ⋈ s₂) (2 * n) = nth s₁ n
+#print Stream'.get_interleave_left /-
+theorem get_interleave_left : ∀ (n : Nat) (s₁ s₂ : Stream' α), get (s₁ ⋈ s₂) (2 * n) = get s₁ n
   | 0, s₁, s₂ => rfl
   | succ n, s₁, s₂ =>
     by
     change nth (s₁ ⋈ s₂) (succ (succ (2 * n))) = nth s₁ (succ n)
     rw [nth_succ, nth_succ, interleave_eq, tail_cons, tail_cons, nth_interleave_left]
     rfl
-#align stream.nth_interleave_left Stream'.nth_interleave_left
+#align stream.nth_interleave_left Stream'.get_interleave_left
 -/
 
-#print Stream'.nth_interleave_right /-
-theorem nth_interleave_right : ∀ (n : Nat) (s₁ s₂ : Stream' α), nth (s₁ ⋈ s₂) (2 * n + 1) = nth s₂ n
+#print Stream'.get_interleave_right /-
+theorem get_interleave_right : ∀ (n : Nat) (s₁ s₂ : Stream' α), get (s₁ ⋈ s₂) (2 * n + 1) = get s₂ n
   | 0, s₁, s₂ => rfl
   | succ n, s₁, s₂ =>
     by
     change nth (s₁ ⋈ s₂) (succ (succ (2 * n + 1))) = nth s₂ (succ n)
     rw [nth_succ, nth_succ, interleave_eq, tail_cons, tail_cons, nth_interleave_right]
     rfl
-#align stream.nth_interleave_right Stream'.nth_interleave_right
+#align stream.nth_interleave_right Stream'.get_interleave_right
 -/
 
 #print Stream'.mem_interleave_left /-
@@ -644,19 +644,19 @@ theorem interleave_even_odd (s₁ : Stream' α) : even s₁ ⋈ odd s₁ = s₁ 
 #align stream.interleave_even_odd Stream'.interleave_even_odd
 -/
 
-#print Stream'.nth_even /-
-theorem nth_even : ∀ (n : Nat) (s : Stream' α), nth (even s) n = nth s (2 * n)
+#print Stream'.get_even /-
+theorem get_even : ∀ (n : Nat) (s : Stream' α), get (even s) n = get s (2 * n)
   | 0, s => rfl
   | succ n, s => by
     change nth (Even s) (succ n) = nth s (succ (succ (2 * n)))
     rw [nth_succ, nth_succ, tail_even, nth_even]; rfl
-#align stream.nth_even Stream'.nth_even
+#align stream.nth_even Stream'.get_even
 -/
 
-#print Stream'.nth_odd /-
-theorem nth_odd : ∀ (n : Nat) (s : Stream' α), nth (odd s) n = nth s (2 * n + 1) := fun n s => by
+#print Stream'.get_odd /-
+theorem get_odd : ∀ (n : Nat) (s : Stream' α), get (odd s) n = get s (2 * n + 1) := fun n s => by
   rw [odd_eq, nth_even]; rfl
-#align stream.nth_odd Stream'.nth_odd
+#align stream.nth_odd Stream'.get_odd
 -/
 
 #print Stream'.mem_of_mem_even /-
@@ -759,7 +759,7 @@ theorem length_take (n : ℕ) (s : Stream' α) : (take n s).length = n := by
 -/
 
 #print Stream'.get?_take_succ /-
-theorem get?_take_succ : ∀ (n : Nat) (s : Stream' α), List.get? (take (succ n) s) n = some (nth s n)
+theorem get?_take_succ : ∀ (n : Nat) (s : Stream' α), List.get? (take (succ n) s) n = some (get s n)
   | 0, s => rfl
   | n + 1, s => by rw [take_succ, add_one, List.get?, nth_take_succ]; rfl
 #align stream.nth_take_succ Stream'.get?_take_succ
@@ -834,13 +834,13 @@ theorem tails_eq (s : Stream' α) : tails s = tail s::tails (tail s) := by
 #align stream.tails_eq Stream'.tails_eq
 -/
 
-#print Stream'.nth_tails /-
-theorem nth_tails : ∀ (n : Nat) (s : Stream' α), nth (tails s) n = drop n (tail s) :=
+#print Stream'.get_tails /-
+theorem get_tails : ∀ (n : Nat) (s : Stream' α), get (tails s) n = drop n (tail s) :=
   by
   intro n; induction' n with n' ih
   · intros; rfl
   · intro s; rw [nth_succ, drop_succ, tails_eq, tail_cons, ih]
-#align stream.nth_tails Stream'.nth_tails
+#align stream.nth_tails Stream'.get_tails
 -/
 
 #print Stream'.tails_eq_iterate /-
@@ -873,25 +873,25 @@ theorem inits_tail (s : Stream' α) : inits (tail s) = initsCore [head (tail s)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Stream'.cons_nth_inits_core /-
-theorem cons_nth_inits_core :
+#print Stream'.cons_get_inits_core /-
+theorem cons_get_inits_core :
     ∀ (a : α) (n : Nat) (l : List α) (s : Stream' α),
-      (a::nth (initsCore l s) n) = nth (initsCore (a::l) s) n :=
+      (a::get (initsCore l s) n) = get (initsCore (a::l) s) n :=
   by
   intro a n
   induction' n with n' ih
   · intros; rfl
   · intro l s; rw [nth_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a::l) s]; rfl
-#align stream.cons_nth_inits_core Stream'.cons_nth_inits_core
+#align stream.cons_nth_inits_core Stream'.cons_get_inits_core
 -/
 
-#print Stream'.nth_inits /-
-theorem nth_inits : ∀ (n : Nat) (s : Stream' α), nth (inits s) n = take (succ n) s :=
+#print Stream'.get_inits /-
+theorem get_inits : ∀ (n : Nat) (s : Stream' α), get (inits s) n = take (succ n) s :=
   by
   intro n; induction' n with n' ih
   · intros; rfl
   · intros; rw [nth_succ, take_succ, ← ih, tail_inits, inits_tail, cons_nth_inits_core]
-#align stream.nth_inits Stream'.nth_inits
+#align stream.nth_inits Stream'.get_inits
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -946,10 +946,10 @@ theorem map_eq_apply (f : α → β) (s : Stream' α) : map f s = pure f ⊛ s :
 #align stream.map_eq_apply Stream'.map_eq_apply
 -/
 
-#print Stream'.nth_nats /-
-theorem nth_nats (n : Nat) : nth nats n = n :=
+#print Stream'.get_nats /-
+theorem get_nats (n : Nat) : get nats n = n :=
   rfl
-#align stream.nth_nats Stream'.nth_nats
+#align stream.nth_nats Stream'.get_nats
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

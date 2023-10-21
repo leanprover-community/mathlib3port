@@ -293,7 +293,7 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
   case union s hs ih =>
     apply Or.imp_left h.antisymm'
     apply by_contradiction
-    simp [not_or, sUnion_subset_iff, not_forall]
+    simp [not_or, sUnion_subset_iff, Classical.not_forall]
     intro c₃ hc₃ h₁ h₂
     obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
     · exact h₁ (subset_succ_chain.trans h)

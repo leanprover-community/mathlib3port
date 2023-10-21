@@ -731,12 +731,12 @@ theorem algebraMap_apply {r : R} : algebraMap R (MvPowerSeries σ A) r = C σ A 
 
 instance [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries σ R)) :=
   ⟨⟨⊥, ⊤, by
-      rw [Ne.def, SetLike.ext_iff, not_forall]
+      rw [Ne.def, SetLike.ext_iff, Classical.not_forall]
       inhabit σ
       refine' ⟨X default, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top]
       intro x
-      rw [ext_iff, not_forall]
+      rw [ext_iff, Classical.not_forall]
       refine' ⟨Finsupp.single default 1, _⟩
       simp [algebraMap_apply, coeff_C]⟩⟩
 

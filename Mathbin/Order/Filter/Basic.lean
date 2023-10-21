@@ -396,7 +396,7 @@ theorem le_def : f ≤ g ↔ ∀ x ∈ g, x ∈ f :=
 -/
 
 #print Filter.not_le /-
-protected theorem not_le : ¬f ≤ g ↔ ∃ s ∈ g, s ∉ f := by simp_rw [le_def, not_forall]
+protected theorem not_le : ¬f ≤ g ↔ ∃ s ∈ g, s ∉ f := by simp_rw [le_def, Classical.not_forall]
 #align filter.not_le Filter.not_le
 -/
 
@@ -1863,7 +1863,7 @@ theorem frequently_top {p : α → Prop} : (∃ᶠ x in ⊤, p x) ↔ ∃ x, p x
 #print Filter.frequently_principal /-
 @[simp]
 theorem frequently_principal {a : Set α} {p : α → Prop} : (∃ᶠ x in 𝓟 a, p x) ↔ ∃ x ∈ a, p x := by
-  simp [Filter.Frequently, not_forall]
+  simp [Filter.Frequently, Classical.not_forall]
 #align filter.frequently_principal Filter.frequently_principal
 -/
 
@@ -1878,7 +1878,7 @@ theorem frequently_sup {p : α → Prop} {f g : Filter α} :
 @[simp]
 theorem frequently_sSup {p : α → Prop} {fs : Set (Filter α)} :
     (∃ᶠ x in sSup fs, p x) ↔ ∃ f ∈ fs, ∃ᶠ x in f, p x := by
-  simp [Filter.Frequently, -not_eventually, not_forall]
+  simp [Filter.Frequently, -not_eventually, Classical.not_forall]
 #align filter.frequently_Sup Filter.frequently_sSup
 -/
 
@@ -1886,7 +1886,7 @@ theorem frequently_sSup {p : α → Prop} {fs : Set (Filter α)} :
 @[simp]
 theorem frequently_iSup {p : α → Prop} {fs : β → Filter α} :
     (∃ᶠ x in ⨆ b, fs b, p x) ↔ ∃ b, ∃ᶠ x in fs b, p x := by
-  simp [Filter.Frequently, -not_eventually, not_forall]
+  simp [Filter.Frequently, -not_eventually, Classical.not_forall]
 #align filter.frequently_supr Filter.frequently_iSup
 -/
 

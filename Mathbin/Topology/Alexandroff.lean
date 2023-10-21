@@ -620,7 +620,7 @@ theorem not_continuous_cofiniteTopology_of_symm [Infinite X] [DiscreteTopology X
     ¬Continuous (@CofiniteTopology.of (OnePoint X)).symm :=
   by
   inhabit X
-  simp only [continuous_iff_continuousAt, ContinuousAt, not_forall]
+  simp only [continuous_iff_continuousAt, ContinuousAt, Classical.not_forall]
   use CofiniteTopology.of ↑(default : X)
   simpa [nhds_coe_eq, nhds_discrete, CofiniteTopology.nhds_eq] using
     (finite_singleton ((default : X) : OnePoint X)).infinite_compl

@@ -283,7 +283,8 @@ theorem mem_filterAt_iff {x : α} {s : Set (Set α)} :
 instance filterAt_neBot (x : α) : (v.filterAt x).ne_bot :=
   by
   simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_prop,
-    mem_empty_iff_false, and_true_iff, gt_iff_lt, not_and, Ne.def, not_false_iff, not_forall]
+    mem_empty_iff_false, and_true_iff, gt_iff_lt, not_and, Ne.def, not_false_iff,
+    Classical.not_forall]
   intro ε εpos
   obtain ⟨w, w_sets, hw⟩ : ∃ w ∈ v.sets_at x, w ⊆ closed_ball x ε := v.nontrivial x ε εpos
   exact ⟨w, w_sets, hw⟩
@@ -340,7 +341,7 @@ theorem eventually_filterAt_measurableSet (x : α) : ∀ᶠ a in v.filterAt x, M
 theorem frequently_filterAt_iff {x : α} {P : Set α → Prop} :
     (∃ᶠ a in v.filterAt x, P a) ↔ ∀ ε > (0 : ℝ), ∃ a ∈ v.setsAt x, a ⊆ closedBall x ε ∧ P a := by
   simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and,
-    Classical.not_not, not_forall]
+    Classical.not_not, Classical.not_forall]
 #align vitali_family.frequently_filter_at_iff VitaliFamily.frequently_filterAt_iff
 -/
 

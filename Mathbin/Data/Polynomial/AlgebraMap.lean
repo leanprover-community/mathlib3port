@@ -121,12 +121,12 @@ variable {R}
 
 instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
   ⟨⟨⊥, ⊤, by
-      rw [Ne.def, SetLike.ext_iff, not_forall]
+      rw [Ne.def, SetLike.ext_iff, Classical.not_forall]
       refine' ⟨X, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top,
-        algebraMap_apply, not_forall]
+        algebraMap_apply, Classical.not_forall]
       intro x
-      rw [ext_iff, not_forall]
+      rw [ext_iff, Classical.not_forall]
       refine' ⟨1, _⟩
       simp [coeff_C]⟩⟩
 

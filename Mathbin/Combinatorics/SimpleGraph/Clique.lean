@@ -200,7 +200,8 @@ theorem IsNClique.not_cliqueFree (hG : G.IsNClique n s) : ¬G.CliqueFree n := fu
 theorem not_cliqueFree_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Fin n)) ↪g G) :
     ¬G.CliqueFree n :=
   by
-  simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall, Classical.not_not]
+  simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, Classical.not_forall,
+    Classical.not_not]
   use finset.univ.map f.to_embedding
   simp only [card_map, Finset.card_fin, eq_self_iff_true, and_true_iff]
   ext ⟨v, hv⟩ ⟨w, hw⟩
@@ -219,7 +220,7 @@ theorem not_cliqueFree_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Fin n
 noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) :
     (⊤ : SimpleGraph (Fin n)) ↪g G :=
   by
-  simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall,
+  simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, Classical.not_forall,
     Classical.not_not] at h 
   obtain ⟨ha, hb⟩ := h.some_spec
   have : (⊤ : SimpleGraph (Fin h.some.card)) ≃g (⊤ : SimpleGraph h.some) :=

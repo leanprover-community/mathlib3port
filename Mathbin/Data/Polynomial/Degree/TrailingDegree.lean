@@ -131,7 +131,7 @@ theorem trailingDegree_eq_natTrailingDegree (hp : p ≠ 0) :
     trailingDegree p = (natTrailingDegree p : ℕ∞) :=
   by
   let ⟨n, hn⟩ :=
-    not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt trailingDegree_eq_top.1 hp))
+    Classical.not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt trailingDegree_eq_top.1 hp))
   have hn : trailingDegree p = n := Classical.not_not.1 hn
   rw [nat_trailing_degree, hn] <;> rfl
 #align polynomial.trailing_degree_eq_nat_trailing_degree Polynomial.trailingDegree_eq_natTrailingDegree

@@ -1657,7 +1657,7 @@ theorem extend_iUnion_le_tsum_nat' (s : ℕ → Set α) : extend m (⋃ i, s i) 
   · rw [extend_eq _ (PU h), congr_arg tsum _]
     · apply msU h
     funext i; apply extend_eq _ (h i)
-  · cases' not_forall.1 h with i hi
+  · cases' Classical.not_forall.1 h with i hi
     exact le_trans (le_iInf fun h => hi.elim h) (ENNReal.le_tsum i)
 #align measure_theory.extend_Union_le_tsum_nat' MeasureTheory.extend_iUnion_le_tsum_nat'
 -/

@@ -213,7 +213,7 @@ theorem frange_one : frange (1 : R[X]) ⊆ {1} :=
   simp [frange, Finset.image_subset_iff]
   simp only [← C_1, coeff_C]
   intro n hn
-  simp only [exists_prop, ite_eq_right_iff, not_forall] at hn 
+  simp only [exists_prop, ite_eq_right_iff, Classical.not_forall] at hn 
   simp [hn]
 #align polynomial.frange_one Polynomial.frange_one
 -/
@@ -799,7 +799,7 @@ theorem isPrime_map_C_iff_isPrime (P : Ideal R) :
     · intro h; simpa only [coeff_C_zero] using h 0
   · intro h
     constructor
-    · rw [Ne.def, eq_top_iff_one, mem_map_C_iff, not_forall]
+    · rw [Ne.def, eq_top_iff_one, mem_map_C_iff, Classical.not_forall]
       use 0
       rw [coeff_one_zero, ← eq_top_iff_one]; exact h.1
     · intro f g; simp only [mem_map_C_iff]; contrapose!

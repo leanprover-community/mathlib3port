@@ -997,7 +997,7 @@ def Biproduct.columnNonzeroOfIso {σ τ : Type} [Fintype τ] {S : σ → C} [Has
   apply truncSigmaOfExists
   have t := Biproduct.column_nonzero_of_iso'.{v} s f
   by_contra h
-  simp only [not_exists_not] at h 
+  simp only [Classical.not_exists_not] at h 
   exact nz (t h)
 #align category_theory.biproduct.column_nonzero_of_iso CategoryTheory.Biproduct.columnNonzeroOfIso
 -/

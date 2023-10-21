@@ -99,7 +99,7 @@ theorem Algebra.isAlgebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra 
 #print isAlgebraic_iff_not_injective /-
 theorem isAlgebraic_iff_not_injective {x : A} :
     IsAlgebraic R x ↔ ¬Function.Injective (Polynomial.aeval x : R[X] →ₐ[R] A) := by
-  simp only [IsAlgebraic, injective_iff_map_eq_zero, not_forall, and_comm, exists_prop]
+  simp only [IsAlgebraic, injective_iff_map_eq_zero, Classical.not_forall, and_comm, exists_prop]
 #align is_algebraic_iff_not_injective isAlgebraic_iff_not_injective
 -/
 

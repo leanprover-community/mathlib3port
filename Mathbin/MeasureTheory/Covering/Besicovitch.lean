@@ -316,7 +316,7 @@ theorem lastStep_nonempty : {i | ¬∃ b : β, p.c b ∉ p.iUnionUpTo i ∧ p.R 
   · exact (this hxy.symm (le_of_not_le x_le_y)).symm
   rcases eq_or_lt_of_le x_le_y with (rfl | H); · rfl
   simp only [nonempty_def, not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq,
-    not_forall] at h 
+    Classical.not_forall] at h 
   specialize h y
   have A : p.c (p.index y) ∉ p.Union_up_to y :=
     by
@@ -440,8 +440,8 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
       by rw [index]; rfl
     rw [this]
     have : ∃ t, p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
-      simpa only [not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq, not_forall] using
-        not_mem_of_lt_csInf (G_lt_last n hn) (OrderBot.bddBelow _)
+      simpa only [not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq,
+        Classical.not_forall] using not_mem_of_lt_csInf (G_lt_last n hn) (OrderBot.bddBelow _)
     exact Classical.epsilon_spec this
   -- the balls with indices `G k` satisfy the characteristic property of satellite configurations.
   have Gab :
@@ -1067,7 +1067,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
     have : ¬x ∈ s' :=
       by
       simp only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_lt, not_le,
-        mem_diff, not_forall]
+        mem_diff, Classical.not_forall]
       intro h'x
       refine' ⟨x, hx, _⟩
       rw [dist_self]

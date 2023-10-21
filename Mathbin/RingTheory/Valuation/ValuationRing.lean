@@ -289,7 +289,7 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
     le_total := by
       intro α β
       by_cases h : α ≤ β; · exact Or.inl h
-      erw [not_forall] at h 
+      erw [Classical.not_forall] at h 
       push_neg at h 
       obtain ⟨a, h₁, h₂⟩ := h
       right

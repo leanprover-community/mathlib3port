@@ -3090,7 +3090,7 @@ theorem isBridge_iff_adj_and_forall_walk_mem_edges {v w : V} :
     G.IsBridge ⟦(v, w)⟧ ↔ G.Adj v w ∧ ∀ p : G.Walk v w, ⟦(v, w)⟧ ∈ p.edges :=
   by
   rw [is_bridge_iff, and_congr_right']
-  rw [reachable_delete_edges_iff_exists_walk, not_exists_not]
+  rw [reachable_delete_edges_iff_exists_walk, Classical.not_exists_not]
 #align simple_graph.is_bridge_iff_adj_and_forall_walk_mem_edges SimpleGraph.isBridge_iff_adj_and_forall_walk_mem_edges
 -/
 

@@ -222,7 +222,7 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
         exact @Set.eq_empty_of_isEmpty _ hj _
       · ext x
         exact hj.elim' (C.π.app j x)
-    simp only [← not_nonempty_iff, ← not_forall]
+    simp only [← not_nonempty_iff, ← Classical.not_forall]
     intro h
     haveI : ∀ j : J, Nonempty ((F ⋙ Profinite.toTopCat).obj j) := h
     haveI : ∀ j : J, T2Space ((F ⋙ Profinite.toTopCat).obj j) := fun j =>

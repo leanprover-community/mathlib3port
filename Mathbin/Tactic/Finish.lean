@@ -134,7 +134,7 @@ theorem not_or_eq : (¬(p ∨ q)) = (¬p ∧ ¬q) :=
 #align auto.not_or_eq Auto.not_or_eq
 
 theorem not_forall_eq : (¬∀ x, s x) = ∃ x, ¬s x :=
-  propext not_forall
+  propext Classical.not_forall
 #align auto.not_forall_eq Auto.not_forall_eq
 
 theorem not_exists_eq : (¬∃ x, s x) = ∀ x, ¬s x :=

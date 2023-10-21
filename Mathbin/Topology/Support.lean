@@ -140,7 +140,7 @@ variable {g : β → γ} {f : α → β} {f₂ : α → γ} {m : β → γ → �
 #print not_mem_mulTSupport_iff_eventuallyEq /-
 @[to_additive]
 theorem not_mem_mulTSupport_iff_eventuallyEq : x ∉ mulTSupport f ↔ f =ᶠ[𝓝 x] 1 := by
-  simp_rw [mulTSupport, mem_closure_iff_nhds, not_forall, not_nonempty_iff_eq_empty, ←
+  simp_rw [mulTSupport, mem_closure_iff_nhds, Classical.not_forall, not_nonempty_iff_eq_empty, ←
     disjoint_iff_inter_eq_empty, disjoint_mul_support_iff, eventually_eq_iff_exists_mem]
 #align not_mem_mul_tsupport_iff_eventually_eq not_mem_mulTSupport_iff_eventuallyEq
 #align not_mem_tsupport_iff_eventually_eq not_mem_tsupport_iff_eventuallyEq

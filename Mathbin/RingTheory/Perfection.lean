@@ -700,8 +700,8 @@ theorem valAux_mul (f g : PreTilt K v O hv p) :
   by
   by_cases hf : f = 0; · rw [hf, MulZeroClass.zero_mul, val_aux_zero, MulZeroClass.zero_mul]
   by_cases hg : g = 0; · rw [hg, MulZeroClass.mul_zero, val_aux_zero, MulZeroClass.mul_zero]
-  obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
-  obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
+  obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := Classical.not_forall.1 fun h => hf <| Perfection.ext h
+  obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := Classical.not_forall.1 fun h => hg <| Perfection.ext h
   replace hm := coeff_ne_zero_of_le hm (le_max_left m n)
   replace hn := coeff_ne_zero_of_le hn (le_max_right m n)
   have hfg : coeff _ _ (max m n + 1) (f * g) ≠ 0 :=
@@ -722,9 +722,10 @@ theorem valAux_add (f g : PreTilt K v O hv p) :
   by_cases hf : f = 0; · rw [hf, zero_add, val_aux_zero, max_eq_right]; exact zero_le _
   by_cases hg : g = 0; · rw [hg, add_zero, val_aux_zero, max_eq_left]; exact zero_le _
   by_cases hfg : f + g = 0; · rw [hfg, val_aux_zero]; exact zero_le _
-  replace hf : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
-  replace hg : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
-  replace hfg : ∃ n, coeff _ _ n (f + g) ≠ 0 := not_forall.1 fun h => hfg <| Perfection.ext h
+  replace hf : ∃ n, coeff _ _ n f ≠ 0 := Classical.not_forall.1 fun h => hf <| Perfection.ext h
+  replace hg : ∃ n, coeff _ _ n g ≠ 0 := Classical.not_forall.1 fun h => hg <| Perfection.ext h
+  replace hfg : ∃ n, coeff _ _ n (f + g) ≠ 0 :=
+    Classical.not_forall.1 fun h => hfg <| Perfection.ext h
   obtain ⟨m, hm⟩ := hf; obtain ⟨n, hn⟩ := hg; obtain ⟨k, hk⟩ := hfg
   replace hm := coeff_ne_zero_of_le hm (le_trans (le_max_left m n) (le_max_left _ k))
   replace hn := coeff_ne_zero_of_le hn (le_trans (le_max_right m n) (le_max_left _ k))
@@ -761,7 +762,7 @@ variable {K v O hv p}
 theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 :=
   by
   by_cases hf0 : f = 0; · rw [hf0]; exact iff_of_true (Valuation.map_zero _) rfl
-  obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf0 <| Perfection.ext h
+  obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n f ≠ 0 := Classical.not_forall.1 fun h => hf0 <| Perfection.ext h
   show val_aux K v O hv p f = 0 ↔ f = 0; refine' iff_of_false (fun hvf => hn _) hf0
   rw [val_aux_eq hn] at hvf ; replace hvf := pow_eq_zero hvf; rwa [ModP.preVal_eq_zero] at hvf 
 #align pre_tilt.map_eq_zero PreTilt.map_eq_zero

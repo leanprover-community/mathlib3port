@@ -74,7 +74,8 @@ theorem einfsep_zero :
 theorem einfsep_pos :
     0 < s.einfsep ↔
       ∃ (C : _) (hC : 0 < C), ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y :=
-  by rw [pos_iff_ne_zero, Ne.def, einfsep_zero]; simp only [not_forall, not_exists, not_lt]
+  by rw [pos_iff_ne_zero, Ne.def, einfsep_zero];
+  simp only [Classical.not_forall, not_exists, not_lt]
 #align set.einfsep_pos Set.einfsep_pos
 -/
 

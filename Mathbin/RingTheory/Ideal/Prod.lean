@@ -179,7 +179,7 @@ theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} :
     (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ :=
   by
   contrapose!
-  simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or]
+  simp only [ne_top_iff_one, is_prime_iff, not_and, Classical.not_forall, not_or]
   exact fun ⟨hI, hJ⟩ hIJ => ⟨⟨0, 1⟩, ⟨1, 0⟩, by simp, by simp [hJ], by simp [hI]⟩
 #align ideal.ideal_prod_prime_aux Ideal.ideal_prod_prime_aux
 -/

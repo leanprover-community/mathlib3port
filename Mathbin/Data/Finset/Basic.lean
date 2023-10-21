@@ -1233,7 +1233,7 @@ theorem Disjoint.forall_ne_finset (h : Disjoint s t) (ha : a ∈ s) (hb : b ∈ 
 #print Finset.not_disjoint_iff /-
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ a, a ∈ s ∧ a ∈ t :=
   disjoint_left.Not.trans <|
-    not_forall.trans <| exists_congr fun _ => by rw [not_imp, Classical.not_not]
+    Classical.not_forall.trans <| exists_congr fun _ => by rw [not_imp, Classical.not_not]
 #align finset.not_disjoint_iff Finset.not_disjoint_iff
 -/
 
@@ -3645,7 +3645,8 @@ theorem filter_eq_empty_iff : s.filterₓ p = ∅ ↔ ∀ ⦃x⦄, x ∈ s → �
 
 #print Finset.filter_nonempty_iff /-
 theorem filter_nonempty_iff {s : Finset α} : (s.filterₓ p).Nonempty ↔ ∃ a ∈ s, p a := by
-  simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, Classical.not_not, not_forall]
+  simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, Classical.not_not,
+    Classical.not_forall]
 #align finset.filter_nonempty_iff Finset.filter_nonempty_iff
 -/
 

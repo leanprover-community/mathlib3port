@@ -214,7 +214,7 @@ protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
 
 #print FunLike.ne_iff /-
 theorem ne_iff {f g : F} : f ≠ g ↔ ∃ a, f a ≠ g a :=
-  ext_iff.Not.trans not_forall
+  ext_iff.Not.trans Classical.not_forall
 #align fun_like.ne_iff FunLike.ne_iff
 -/
 

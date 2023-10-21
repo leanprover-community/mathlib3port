@@ -288,12 +288,12 @@ theorem IsCompact.elim_directed_family_closed {ι : Type v} [hι : Nonempty ι] 
   let ⟨t, ht⟩ :=
     hs.elim_directed_cover (compl ∘ Z) (fun i => (hZc i).isOpen_compl)
       (by
-        simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
-          mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using hsZ)
+        simpa only [subset_def, Classical.not_forall, eq_empty_iff_forall_not_mem, mem_Union,
+          exists_prop, mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using hsZ)
       (hdZ.mono_comp _ fun _ _ => compl_subset_compl.mpr)
   ⟨t, by
-    simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
-      mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
+    simpa only [subset_def, Classical.not_forall, eq_empty_iff_forall_not_mem, mem_Union,
+      exists_prop, mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
 #align is_compact.elim_directed_family_closed IsCompact.elim_directed_family_closed
 -/
 
@@ -306,11 +306,11 @@ theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : 
   let ⟨t, ht⟩ :=
     hs.elim_finite_subcover (fun i => Z iᶜ) (fun i => (hZc i).isOpen_compl)
       (by
-        simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
-          mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using hsZ)
+        simpa only [subset_def, Classical.not_forall, eq_empty_iff_forall_not_mem, mem_Union,
+          exists_prop, mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using hsZ)
   ⟨t, by
-    simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
-      mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
+    simpa only [subset_def, Classical.not_forall, eq_empty_iff_forall_not_mem, mem_Union,
+      exists_prop, mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
 #align is_compact.elim_finite_subfamily_closed IsCompact.elim_finite_subfamily_closed
 -/
 
@@ -415,7 +415,7 @@ theorem isCompact_of_finite_subfamily_closed
       mem_of_superset this fun x ⟨hxs, hx⟩ =>
         let ⟨i, hit, hxi⟩ :=
           show ∃ i ∈ t, x ∉ closure (Subtype.val i) by rw [eq_empty_iff_forall_not_mem] at ht ;
-            simpa [hxs, not_forall] using ht x
+            simpa [hxs, Classical.not_forall] using ht x
         have : x ∈ closure i.val := subset_closure (by rw [mem_Inter₂] at hx ; exact hx i hit)
         show False from hxi this
     hfn.Ne <| by rwa [empty_mem_iff_bot] at this 
@@ -433,11 +433,11 @@ theorem isCompact_of_finite_subcover
     let ⟨t, ht⟩ :=
       h (fun i => Z iᶜ) (fun i => isOpen_compl_iff.mpr <| hZc i)
         (by
-          simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
-            mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using hsZ)
+          simpa only [subset_def, Classical.not_forall, eq_empty_iff_forall_not_mem, mem_Union,
+            exists_prop, mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using hsZ)
     ⟨t, by
-      simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
-        mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
+      simpa only [subset_def, Classical.not_forall, eq_empty_iff_forall_not_mem, mem_Union,
+        exists_prop, mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
 #align is_compact_of_finite_subcover isCompact_of_finite_subcover
 -/
 
@@ -708,7 +708,8 @@ theorem Tendsto.isCompact_insert_range_of_cocompact {f : α → β} {b}
   by
   intro l hne hle
   by_cases hb : ClusterPt b l; · exact ⟨b, Or.inl rfl, hb⟩
-  simp only [clusterPt_iff, not_forall, ← not_disjoint_iff_nonempty_inter, Classical.not_not] at hb 
+  simp only [clusterPt_iff, Classical.not_forall, ← not_disjoint_iff_nonempty_inter,
+    Classical.not_not] at hb 
   rcases hb with ⟨s, hsb, t, htl, hd⟩
   rcases mem_cocompact.1 (hf hsb) with ⟨K, hKc, hKs⟩
   have : f '' K ∈ l :=

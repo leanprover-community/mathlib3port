@@ -126,7 +126,7 @@ theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = 
 
 #print Function.ne_iff /-
 theorem ne_iff {β : α → Sort _} {f₁ f₂ : ∀ a, β a} : f₁ ≠ f₂ ↔ ∃ a, f₁ a ≠ f₂ a :=
-  funext_iff.Not.trans not_forall
+  funext_iff.Not.trans Classical.not_forall
 #align function.ne_iff Function.ne_iff
 -/
 

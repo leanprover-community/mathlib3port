@@ -960,7 +960,7 @@ theorem Dense.exists_le' {s : Set α} (hs : Dense s) (hbot : ∀ x, IsBot x → 
     ∃ y ∈ s, y ≤ x := by
   by_cases hx : IsBot x
   · exact ⟨x, hbot x hx, le_rfl⟩
-  · simp only [IsBot, not_forall, not_le] at hx 
+  · simp only [IsBot, Classical.not_forall, not_le] at hx 
     rcases hs.exists_mem_open isOpen_Iio hx with ⟨y, hys, hy : y < x⟩
     exact ⟨y, hys, hy.le⟩
 #align dense.exists_le' Dense.exists_le'
@@ -1708,7 +1708,7 @@ theorem countable_of_isolated_right' [SecondCountableTopology α] :
   have : ∀ x ∈ t, ∃ z < x, Ioc z x ⊆ a := by
     intro x hx
     apply exists_Ioc_subset_of_mem_nhds (ha.mem_nhds hx.2.1)
-    simpa only [IsBot, not_forall, not_le] using hx.right.right.right
+    simpa only [IsBot, Classical.not_forall, not_le] using hx.right.right.right
   choose! z hz h'z using this
   have : pairwise_disjoint t fun x => Ioc (z x) x :=
     by

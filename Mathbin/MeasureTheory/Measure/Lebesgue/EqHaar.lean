@@ -183,7 +183,7 @@ theorem addHaar_submodule {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E
     (hs : s ≠ ⊤) : μ s = 0 :=
   by
   obtain ⟨x, hx⟩ : ∃ x, x ∉ s := by
-    simpa only [Submodule.eq_top_iff', not_exists, Ne.def, not_forall] using hs
+    simpa only [Submodule.eq_top_iff', not_exists, Ne.def, Classical.not_forall] using hs
   obtain ⟨c, cpos, cone⟩ : ∃ c : ℝ, 0 < c ∧ c < 1 := ⟨1 / 2, by norm_num, by norm_num⟩
   have A : bounded (range fun n : ℕ => c ^ n • x) :=
     haveI : tendsto (fun n : ℕ => c ^ n • x) at_top (𝓝 ((0 : ℝ) • x)) :=

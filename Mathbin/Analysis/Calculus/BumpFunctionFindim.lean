@@ -516,7 +516,8 @@ theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
       intro y hy
       simp only [support_mul, W_support E Dpos]
       simp only [φ, mem_inter_iff, mem_support, Ne.def, indicator_apply_eq_zero,
-        mem_closedBall_zero_iff, one_ne_zero, not_forall, not_false_iff, exists_prop, and_true_iff]
+        mem_closedBall_zero_iff, one_ne_zero, Classical.not_forall, not_false_iff, exists_prop,
+        and_true_iff]
       constructor
       · apply ball_subset_ball' _ hy
         simp only [z, norm_smul, abs_of_nonneg Dpos.le, abs_of_nonneg B.le, dist_zero_right,

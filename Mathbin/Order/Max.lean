@@ -421,14 +421,14 @@ theorem isMax_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
 #print not_isMin_iff /-
 @[simp]
 theorem not_isMin_iff : ¬IsMin a ↔ ∃ b, b < a := by
-  simp_rw [lt_iff_le_not_le, IsMin, not_forall, exists_prop]
+  simp_rw [lt_iff_le_not_le, IsMin, Classical.not_forall, exists_prop]
 #align not_is_min_iff not_isMin_iff
 -/
 
 #print not_isMax_iff /-
 @[simp]
 theorem not_isMax_iff : ¬IsMax a ↔ ∃ b, a < b := by
-  simp_rw [lt_iff_le_not_le, IsMax, not_forall, exists_prop]
+  simp_rw [lt_iff_le_not_le, IsMax, Classical.not_forall, exists_prop]
 #align not_is_max_iff not_isMax_iff
 -/
 

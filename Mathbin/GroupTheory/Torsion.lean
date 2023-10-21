@@ -67,7 +67,7 @@ def IsTorsion :=
 @[simp,
   to_additive "An additive monoid is not a torsion monoid if it has an element of infinite order."]
 theorem not_isTorsion_iff : ¬IsTorsion G ↔ ∃ g : G, ¬IsOfFinOrder g := by
-  rw [is_torsion, not_forall]
+  rw [is_torsion, Classical.not_forall]
 #align monoid.not_is_torsion_iff Monoid.not_isTorsion_iff
 #align add_monoid.not_is_torsion_iff AddMonoid.not_isTorsion_iff
 -/
@@ -422,7 +422,7 @@ def IsTorsionFree :=
 @[simp,
   to_additive "An additive monoid is not torsion free if any nontrivial element has finite order."]
 theorem not_isTorsionFree_iff : ¬IsTorsionFree G ↔ ∃ g : G, g ≠ 1 ∧ IsOfFinOrder g := by
-  simp_rw [is_torsion_free, Ne.def, not_forall, Classical.not_not, exists_prop]
+  simp_rw [is_torsion_free, Ne.def, Classical.not_forall, Classical.not_not, exists_prop]
 #align monoid.not_is_torsion_free_iff Monoid.not_isTorsionFree_iff
 #align add_monoid.not_is_torsion_free_iff AddMonoid.not_isTorsionFree_iff
 -/

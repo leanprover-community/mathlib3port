@@ -58,8 +58,8 @@ def factorization (n : ℕ) : ℕ →₀ ℕ
   toFun p := if p.Prime then padicValNat p n else 0
   mem_support_toFun := by
     rcases eq_or_ne n 0 with (rfl | hn0); · simp
-    simp only [mem_factors hn0, mem_to_finset, Ne.def, ite_eq_right_iff, not_forall, exists_prop,
-      and_congr_right_iff]
+    simp only [mem_factors hn0, mem_to_finset, Ne.def, ite_eq_right_iff, Classical.not_forall,
+      exists_prop, and_congr_right_iff]
     rintro p hp
     haveI := fact_iff.mpr hp
     exact dvd_iff_padicValNat_ne_zero hn0
@@ -778,7 +778,7 @@ theorem dvd_iff_prime_pow_dvd_dvd (n d : ℕ) : d ∣ n ↔ ∀ p k : ℕ, Prime
   by
   rcases eq_or_ne n 0 with (rfl | hn); · simp
   rcases eq_or_ne d 0 with (rfl | hd)
-  · simp only [zero_dvd_iff, hn, false_iff_iff, not_forall]
+  · simp only [zero_dvd_iff, hn, false_iff_iff, Classical.not_forall]
     exact ⟨2, n, prime_two, dvd_zero _, mt (le_of_dvd hn.bot_lt) (lt_two_pow n).not_le⟩
   refine' ⟨fun h p k _ hpkd => dvd_trans hpkd h, _⟩
   rw [← factorization_prime_le_iff_dvd hd hn]

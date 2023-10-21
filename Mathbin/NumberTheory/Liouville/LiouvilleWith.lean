@@ -434,7 +434,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     ∃ᶠ b : ℕ in atTop, ∃ a : ℤ, x ≠ a / b ∧ |x - a / b| < 1 / b ^ n :=
   by
   refine' Classical.not_not.1 fun H => _
-  simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_lt,
+  simp only [Liouville, Classical.not_forall, not_exists, not_frequently, not_and, not_lt,
     eventually_at_top] at H 
   rcases H with ⟨N, hN⟩
   have : ∀ b > (1 : ℕ), ∀ᶠ m : ℕ in at_top, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=

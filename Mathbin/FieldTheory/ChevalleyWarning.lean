@@ -143,7 +143,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
       rw [hS] at hx 
       rw [hx i hi, zero_pow hq, sub_zero]
     · obtain ⟨i, hi, hx⟩ : ∃ i : ι, i ∈ s ∧ eval x (f i) ≠ 0 := by
-        simpa only [hS, not_forall, not_imp] using hx
+        simpa only [hS, Classical.not_forall, not_imp] using hx
       apply Finset.prod_eq_zero hi
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
   -- In particular, we can now show:

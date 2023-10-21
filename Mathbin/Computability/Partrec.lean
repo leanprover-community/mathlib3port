@@ -28,7 +28,7 @@ using the `part` monad, and there is an additional operation, called
 
 open Encodable Denumerable Part
 
-attribute [-simp] not_forall
+attribute [-simp] Classical.not_forall
 
 namespace Nat
 

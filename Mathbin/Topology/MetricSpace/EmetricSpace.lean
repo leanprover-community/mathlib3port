@@ -1461,7 +1461,7 @@ theorem diam_eq_zero_iff : diam s = 0 ↔ s.Subsingleton :=
 
 #print EMetric.diam_pos_iff' /-
 theorem diam_pos_iff' : 0 < diam s ↔ ∃ x ∈ s, ∃ y ∈ s, x ≠ y := by
-  simp only [pos_iff_ne_zero, Ne.def, diam_eq_zero_iff, Set.Subsingleton, not_forall]
+  simp only [pos_iff_ne_zero, Ne.def, diam_eq_zero_iff, Set.Subsingleton, Classical.not_forall]
 #align emetric.diam_pos_iff EMetric.diam_pos_iff'
 -/
 

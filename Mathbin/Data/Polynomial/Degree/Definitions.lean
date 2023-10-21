@@ -156,7 +156,8 @@ theorem natDegree_of_subsingleton [Subsingleton R] : natDegree p = 0 := by
 #print Polynomial.degree_eq_natDegree /-
 theorem degree_eq_natDegree (hp : p ≠ 0) : degree p = (natDegree p : WithBot ℕ) :=
   by
-  let ⟨n, hn⟩ := not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt degree_eq_bot.1 hp))
+  let ⟨n, hn⟩ :=
+    Classical.not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt degree_eq_bot.1 hp))
   have hn : degree p = some n := Classical.not_not.1 hn
   rw [nat_degree, hn] <;> rfl
 #align polynomial.degree_eq_nat_degree Polynomial.degree_eq_natDegree

@@ -234,7 +234,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
     simp only [true_imp_iff]
     split_ifs with h
-    · rw [← not_forall] at h ; simp [h, pow_eq_zero_iff']
+    · rw [← Classical.not_forall] at h ; simp [h, pow_eq_zero_iff']
     · simpa only [not_exists, Classical.not_not, eq_self_iff_true, true_iff_iff] using h
   have hd_symm : ∀ x y, d x y = d y x := by
     intro x y; dsimp only [d]

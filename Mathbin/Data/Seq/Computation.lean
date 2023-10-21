@@ -393,7 +393,7 @@ theorem terminates_of_mem {s : Computation α} {a : α} (h : a ∈ s) : Terminat
 
 #print Computation.terminates_def /-
 theorem terminates_def (s : Computation α) : Terminates s ↔ ∃ n, (s.1 n).isSome :=
-  ⟨fun ⟨⟨a, n, h⟩⟩ => ⟨n, by dsimp [Stream'.nth] at h ; rw [← h]; exact rfl⟩, fun ⟨n, h⟩ =>
+  ⟨fun ⟨⟨a, n, h⟩⟩ => ⟨n, by dsimp [Stream'.get] at h ; rw [← h]; exact rfl⟩, fun ⟨n, h⟩ =>
     ⟨⟨Option.get h, n, (Option.eq_some_of_isSome h).symm⟩⟩⟩
 #align computation.terminates_def Computation.terminates_def
 -/
@@ -752,7 +752,7 @@ def map (f : α → β) : Computation α → Computation β
   | ⟨s, al⟩ =>
     ⟨s.map fun o => Option.casesOn o none (some ∘ f), fun n b =>
       by
-      dsimp [Stream'.map, Stream'.nth]
+      dsimp [Stream'.map, Stream'.get]
       induction' e : s n with a <;> intro h
       · contradiction; · rw [al e, ← h]⟩
 #align computation.map Computation.map

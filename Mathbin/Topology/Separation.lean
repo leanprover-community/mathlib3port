@@ -282,7 +282,7 @@ theorem inseparable_eq_eq [T0Space α] : Inseparable = @Eq α :=
 #print t0Space_iff_exists_isOpen_xor'_mem /-
 theorem t0Space_iff_exists_isOpen_xor'_mem (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xor' (x ∈ U) (y ∈ U) := by
-  simp only [t0Space_iff_not_inseparable, xor_iff_not_iff, not_forall, exists_prop,
+  simp only [t0Space_iff_not_inseparable, xor_iff_not_iff, Classical.not_forall, exists_prop,
     inseparable_iff_forall_open]
 #align t0_space_iff_exists_is_open_xor_mem t0Space_iff_exists_isOpen_xor'_mem
 -/
@@ -1512,7 +1512,7 @@ instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [
 instance Pi.t2Space {α : Type _} {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)]
     [∀ a, T2Space (β a)] : T2Space (∀ a, β a) :=
   ⟨fun x y h =>
-    let ⟨i, hi⟩ := not_forall.mp (mt funext h)
+    let ⟨i, hi⟩ := Classical.not_forall.mp (mt funext h)
     separated_by_continuous (continuous_apply i) hi⟩
 #align Pi.t2_space Pi.t2Space
 -/
@@ -2315,7 +2315,7 @@ theorem NormalSpace.of_regularSpace_secondCountableTopology [SecondCountableTopo
     simp only [mem_Union]
     rintro ⟨u, huU, -, hxu⟩
     exact (hUd u huU).le_bot ⟨hxu, hx⟩
-  · simp only [disjoint_left, mem_Union, mem_diff, not_exists, not_and, not_forall,
+  · simp only [disjoint_left, mem_Union, mem_diff, not_exists, not_and, Classical.not_forall,
       Classical.not_not]
     rintro a ⟨u, huU, hau, haV⟩ v hvV hav
     cases' le_total (Encodable.encode u) (Encodable.encode v) with hle hle
@@ -2452,7 +2452,7 @@ theorem connectedComponent_eq_iInter_clopen [T2Space α] [CompactSpace α] (x : 
   have H1 :=
     (hu.union hv).isClosed_compl.IsCompact.inter_iInter_nonempty
       (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => Z) fun Z => Z.2.1.2
-  rw [← not_disjoint_iff_nonempty_inter, imp_not_comm, not_forall] at H1 
+  rw [← not_disjoint_iff_nonempty_inter, imp_not_comm, Classical.not_forall] at H1 
   cases' H1 (disjoint_compl_left_iff_subset.2 <| hab.trans <| union_subset_union hau hbv) with Zi H2
   refine' ⟨⋂ U ∈ Zi, Subtype.val U, _, _, _⟩
   · exact isClopen_biInter_finset fun Z hZ => Z.2.1

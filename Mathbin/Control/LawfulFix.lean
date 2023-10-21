@@ -142,7 +142,7 @@ theorem le_f_of_mem_approx {x} : x ∈ approxChain f → x ≤ f x :=
 
 #print Part.Fix.approx_mem_approxChain /-
 theorem approx_mem_approxChain {i} : approx f i ∈ approxChain f :=
-  Stream'.mem_of_nth_eq rfl
+  Stream'.mem_of_get_eq rfl
 #align part.fix.approx_mem_approx_chain Part.Fix.approx_mem_approxChain
 -/
 

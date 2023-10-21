@@ -303,7 +303,7 @@ theorem tsum_eq_zero_iff (hf : Summable f) : ∑' i, f i = 0 ↔ ∀ x, f x = 0 
 
 #print tsum_ne_zero_iff /-
 theorem tsum_ne_zero_iff (hf : Summable f) : ∑' i, f i ≠ 0 ↔ ∃ x, f x ≠ 0 := by
-  rw [Ne.def, tsum_eq_zero_iff hf, not_forall]
+  rw [Ne.def, tsum_eq_zero_iff hf, Classical.not_forall]
 #align tsum_ne_zero_iff tsum_ne_zero_iff
 -/
 

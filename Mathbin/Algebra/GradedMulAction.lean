@@ -61,13 +61,11 @@ section Defs
 
 variable (A : ι → Type _) (M : ι → Type _)
 
-#print GradedMonoid.GSmul /-
 /-- A graded version of `has_smul`. Scalar multiplication combines grades additively, i.e.
 if `a ∈ A i` and `m ∈ M j`, then `a • b` must be in `M (i + j)`-/
 class GSmul [Add ι] where
   smul {i j} : A i → M j → M (i + j)
-#align graded_monoid.ghas_smul GradedMonoid.GSmul
--/
+#align graded_monoid.ghas_smul GradedMonoid.GSmulₓ
 
 #print GradedMonoid.GMul.toGSmul /-
 /-- A graded version of `has_mul.to_has_smul` -/
@@ -88,13 +86,11 @@ theorem mk_smul_mk [Add ι] [GSmul A M] {i j} (a : A i) (b : M j) :
 #align graded_monoid.mk_smul_mk GradedMonoid.mk_smul_mk
 -/
 
-#print GradedMonoid.GMulAction /-
 /-- A graded version of `mul_action`. -/
 class GMulAction [AddMonoid ι] [GMonoid A] extends GSmul A M where
   one_smul (b : GradedMonoid M) : (1 : GradedMonoid A) • b = b
   hMul_smul (a a' : GradedMonoid A) (b : GradedMonoid M) : (a * a') • b = a • a' • b
-#align graded_monoid.gmul_action GradedMonoid.GMulAction
--/
+#align graded_monoid.gmul_action GradedMonoid.GMulActionₓ
 
 #print GradedMonoid.GMonoid.toGMulAction /-
 /-- The graded version of `monoid.to_mul_action`. -/
@@ -125,13 +121,11 @@ section Subobjects
 
 variable {R : Type _}
 
-#print SetLike.GradedSmul /-
 /-- A version of `graded_monoid.ghas_smul` for internally graded objects. -/
 class SetLike.GradedSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R M] [Add ι]
     (A : ι → S) (B : ι → N) : Prop where
   smul_mem : ∀ ⦃i j : ι⦄ {ai bj}, ai ∈ A i → bj ∈ B j → ai • bj ∈ B (i + j)
-#align set_like.has_graded_smul SetLike.GradedSmul
--/
+#align set_like.has_graded_smul SetLike.GradedSmulₓ
 
 #print SetLike.toGSmul /-
 instance SetLike.toGSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R M] [Add ι]

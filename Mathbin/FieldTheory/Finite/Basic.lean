@@ -549,7 +549,7 @@ theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a :=
   let sq : F → F := fun x => x ^ 2
   have h : ¬injective sq :=
     by
-    simp only [injective, not_forall, exists_prop]
+    simp only [injective, Classical.not_forall, exists_prop]
     refine' ⟨-1, 1, _, Ring.neg_one_ne_one_of_char_ne_two hF⟩
     simp only [sq, one_pow, neg_one_sq]
   rw [Finite.injective_iff_surjective] at h 

@@ -985,7 +985,7 @@ theorem pi_congr (h : s₁ = s₂) (h' : ∀ i ∈ s₁, t₁ i = t₂ i) : s₁
 #print Set.pi_eq_empty /-
 theorem pi_eq_empty (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ :=
   by
-  ext f; simp only [mem_empty_iff_false, not_forall, iff_false_iff, mem_pi, not_imp]
+  ext f; simp only [mem_empty_iff_false, Classical.not_forall, iff_false_iff, mem_pi, not_imp]
   exact ⟨i, hs, by simp [ht]⟩
 #align set.pi_eq_empty Set.pi_eq_empty
 -/

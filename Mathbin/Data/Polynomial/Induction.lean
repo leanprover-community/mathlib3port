@@ -104,7 +104,7 @@ theorem mem_span_C_coeff : f ∈ Ideal.span {g : R[X] | ∃ i : ℕ, g = C (coef
 
 #print Polynomial.exists_C_coeff_not_mem /-
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, C (coeff f i) ∉ I :=
-  Not.imp_symm fun cf => span_le_of_C_coeff_mem (not_exists_not.mp cf) mem_span_C_coeff
+  Not.imp_symm fun cf => span_le_of_C_coeff_mem (Classical.not_exists_not.mp cf) mem_span_C_coeff
 #align polynomial.exists_C_coeff_not_mem Polynomial.exists_C_coeff_not_mem
 -/
 

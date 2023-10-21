@@ -63,7 +63,7 @@ theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp 
   by
   rw [← Multiset.prod_toList, AlgHom.map_list_prod] at h 
   replace h := mt List.prod_isUnit h
-  simp only [not_forall, exists_prop, aeval_C, Multiset.mem_toList, List.mem_map, aeval_X,
+  simp only [Classical.not_forall, exists_prop, aeval_C, Multiset.mem_toList, List.mem_map, aeval_X,
     exists_exists_and_eq_and, Multiset.mem_map, AlgHom.map_sub] at h 
   rcases h with ⟨r, r_mem, r_nu⟩
   exact ⟨r, by rwa [mem_iff, ← IsUnit.sub_iff], by rwa [← is_root.def, ← mem_roots hp]⟩

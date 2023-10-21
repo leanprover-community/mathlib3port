@@ -92,7 +92,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
             simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply,
               exists_and_right, mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image,
-              not_forall] }
+              Classical.not_forall] }
       left_inv := fun g => by
         ext i; rw [← (b i).repr.Injective.eq_iff]; ext x
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]

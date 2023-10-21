@@ -92,10 +92,12 @@ protected theorem div_eq_zero_iff {a b : ℕ} (hb : 0 < b) : a / b = 0 ↔ a < b
 #align nat.div_eq_zero_iff Nat.div_eq_zero_iff
 -/
 
-#print Nat.div_eq_zero /-
-protected theorem div_eq_zero {a b : ℕ} (hb : a < b) : a / b = 0 :=
+/- warning: nat.div_eq_zero clashes with nat.div_eq_of_lt -> Nat.div_eq_of_lt
+Case conversion may be inaccurate. Consider using '#align nat.div_eq_zero Nat.div_eq_of_ltₓ'. -/
+#print Nat.div_eq_of_lt /-
+protected theorem div_eq_of_lt {a b : ℕ} (hb : a < b) : a / b = 0 :=
   (Nat.div_eq_zero_iff <| (zero_le a).trans_lt hb).mpr hb
-#align nat.div_eq_zero Nat.div_eq_zero
+#align nat.div_eq_zero Nat.div_eq_of_lt
 -/
 
 /-! ### `mod`, `dvd` -/
@@ -264,7 +266,7 @@ theorem mod_div_self (m n : ℕ) : m % n / n = 0 :=
   by
   cases n
   · exact (m % 0).div_zero
-  · exact Nat.div_eq_zero (m.mod_lt n.succ_pos)
+  · exact Nat.div_eq_of_lt (m.mod_lt n.succ_pos)
 #align nat.mod_div_self Nat.mod_div_self
 -/
 

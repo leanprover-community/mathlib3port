@@ -956,7 +956,7 @@ theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c :=
   rcases b, c with ⟨⟨β⟩, ⟨γ⟩⟩
   cases' le_of_lt hlt with f
   have : ¬surjective f := fun hn => (not_le_of_lt hlt) (mk_le_of_surjective hn)
-  simp only [surjective, not_forall] at this 
+  simp only [surjective, Classical.not_forall] at this 
   rcases this with ⟨b, hb⟩
   calc
     (#γ) + 1 = (#Option γ) := mk_option.symm

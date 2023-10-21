@@ -356,7 +356,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       rw [hC]
     exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hE₀ h hu
   · right
-    simp only [not_forall, not_and_or] at h 
+    simp only [Classical.not_forall, not_and_or] at h 
     obtain ⟨p, hp⟩ := h
     rw [hE₁ p]
     cases hp

@@ -251,7 +251,7 @@ theorem isSuccLimit_iff_succ_ne : IsSuccLimit a ↔ ∀ b, succ b ≠ a :=
 
 #print Order.not_isSuccLimit_iff' /-
 theorem not_isSuccLimit_iff' : ¬IsSuccLimit a ↔ a ∈ range (@succ α _ _) := by
-  simp_rw [is_succ_limit_iff_succ_ne, not_forall, not_ne_iff]; rfl
+  simp_rw [is_succ_limit_iff_succ_ne, Classical.not_forall, not_ne_iff]; rfl
 #align order.not_is_succ_limit_iff' Order.not_isSuccLimit_iff'
 -/
 

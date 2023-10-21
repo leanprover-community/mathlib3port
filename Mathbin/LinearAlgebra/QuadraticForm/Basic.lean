@@ -1024,7 +1024,7 @@ instance canLift : CanLift (BilinForm R M) (QuadraticForm R M) (associatedHom �
 bilinear form is non-zero, i.e. there exists `x` such that `Q x ≠ 0`. -/
 theorem exists_quadraticForm_ne_zero {Q : QuadraticForm R M} (hB₁ : Q.associated' ≠ 0) :
     ∃ x, Q x ≠ 0 := by
-  rw [← not_forall]
+  rw [← Classical.not_forall]
   intro h
   apply hB₁
   rw [(QuadraticForm.ext h : Q = 0), LinearMap.map_zero]
@@ -1082,7 +1082,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
 #print QuadraticForm.not_anisotropic_iff_exists /-
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) :
     ¬Anisotropic Q ↔ ∃ (x : _) (_ : x ≠ 0), Q x = 0 := by
-  simp only [anisotropic, not_forall, exists_prop, and_comm']
+  simp only [anisotropic, Classical.not_forall, exists_prop, and_comm']
 #align quadratic_form.not_anisotropic_iff_exists QuadraticForm.not_anisotropic_iff_exists
 -/
 

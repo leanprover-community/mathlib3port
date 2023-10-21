@@ -389,7 +389,7 @@ theorem sum_range_pow (n p : ℕ) :
     -- the power series `exp ℚ - 1` is non-zero, a fact we need in order to use `mul_right_inj'`
     have hexp : exp ℚ - 1 ≠ 0 :=
       by
-      simp only [exp, PowerSeries.ext_iff, Ne, not_forall]
+      simp only [exp, PowerSeries.ext_iff, Ne, Classical.not_forall]
       use 1
       simp
     have h_r : exp ℚ ^ n - 1 = X * mk fun p => coeff ℚ (p + 1) (exp ℚ ^ n) :=

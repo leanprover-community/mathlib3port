@@ -154,7 +154,7 @@ theorem div2_bit (b n) : div2 (bit b n) = n :=
   rw [bit_val, div2_val, add_comm, Int.add_mul_ediv_left, (_ : (_ / 2 : ℤ) = 0), zero_add]
   cases b
   · simp
-  · show of_nat _ = _; rw [Nat.div_eq_zero] <;> simp
+  · show of_nat _ = _; rw [Nat.div_eq_of_lt] <;> simp
   · cc
 #align int.div2_bit Int.div2_bit
 -/

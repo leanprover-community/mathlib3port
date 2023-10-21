@@ -275,13 +275,13 @@ theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, Tendsto (fun a => ρ a / μ a) (
     lift d to ℝ≥0 using I d hd
     apply v.null_of_frequently_le_of_frequently_ge hρ (ENNReal.coe_lt_coe.1 hcd)
     · simp only [and_imp, exists_prop, not_frequently, not_and, not_lt, not_le, not_eventually,
-        mem_set_of_eq, mem_compl_iff, not_forall]
+        mem_set_of_eq, mem_compl_iff, Classical.not_forall]
       intro x h1x h2x
       apply h1x.mono fun a ha => _
       refine' (ENNReal.div_le_iff_le_mul _ (Or.inr (bot_le.trans_lt ha).ne')).1 ha.le
       simp only [ENNReal.coe_ne_top, Ne.def, or_true_iff, not_false_iff]
     · simp only [and_imp, exists_prop, not_frequently, not_and, not_lt, not_le, not_eventually,
-        mem_set_of_eq, mem_compl_iff, not_forall]
+        mem_set_of_eq, mem_compl_iff, Classical.not_forall]
       intro x h1x h2x
       apply h2x.mono fun a ha => _
       exact ENNReal.mul_le_of_le_div ha.le

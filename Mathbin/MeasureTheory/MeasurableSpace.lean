@@ -998,7 +998,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
     intro x
     by_cases H : ∀ i : ℕ, x ∉ t i
     · exact ⟨0, Or.inr (by simpa only [mem_Inter, compl_Union] using H)⟩
-    · simp only [not_forall, not_not_mem] at H 
+    · simp only [Classical.not_forall, not_not_mem] at H 
       rcases H with ⟨n, hn⟩
       exact ⟨n, Or.inl hn⟩
   refine' ⟨fun x => g (Nat.find (P x)) x, Measurable.find hg M P, _⟩
@@ -1006,8 +1006,8 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
   have : x ∈ t (Nat.find (P x)) :=
     by
     have B : x ∈ t (Nat.find (P x)) ∪ (⋃ k, t k)ᶜ := Nat.find_spec (P x)
-    have B' : (∀ i : ℕ, x ∉ t i) ↔ False := by simp only [iff_false_iff, not_forall, not_not_mem];
-      exact ⟨n, hx⟩
+    have B' : (∀ i : ℕ, x ∉ t i) ↔ False := by
+      simp only [iff_false_iff, Classical.not_forall, not_not_mem]; exact ⟨n, hx⟩
     simpa only [B', mem_union, mem_Inter, or_false_iff, compl_Union, mem_compl_iff] using B
   congr
   by_contra h

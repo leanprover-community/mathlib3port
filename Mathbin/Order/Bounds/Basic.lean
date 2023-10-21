@@ -1513,7 +1513,7 @@ variable [LinearOrder α] {s : Set α} {a b : α}
 
 #print lt_isLUB_iff /-
 theorem lt_isLUB_iff (h : IsLUB s a) : b < a ↔ ∃ c ∈ s, b < c := by
-  simp only [← not_le, isLUB_le_iff h, mem_upperBounds, not_forall]
+  simp only [← not_le, isLUB_le_iff h, mem_upperBounds, Classical.not_forall]
 #align lt_is_lub_iff lt_isLUB_iff
 -/
 

@@ -359,7 +359,7 @@ def recOn {C : Seq α → Sort v} (s : Seq α) (h1 : C nil) (h2 : ∀ x s, C (co
 theorem mem_rec_on {C : Seq α → Prop} {a s} (M : a ∈ s)
     (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) : C s :=
   by
-  cases' M with k e; unfold Stream'.nth at e 
+  cases' M with k e; unfold Stream'.get at e 
   induction' k with k IH generalizing s
   · have TH : s = cons a (tail s) := by
       apply destruct_eq_cons
@@ -522,11 +522,11 @@ theorem ofList_nil : ofList [] = (nil : Seq α) :=
 #align stream.seq.of_list_nil Stream'.Seq.ofList_nil
 -/
 
-#print Stream'.Seq.ofList_nth /-
+#print Stream'.Seq.ofList_get /-
 @[simp]
-theorem ofList_nth (l : List α) (n : ℕ) : (ofList l).get? n = l.get? n :=
+theorem ofList_get (l : List α) (n : ℕ) : (ofList l).get? n = l.get? n :=
   rfl
-#align stream.seq.of_list_nth Stream'.Seq.ofList_nth
+#align stream.seq.of_list_nth Stream'.Seq.ofList_get
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -620,7 +620,7 @@ def map (f : α → β) : Seq α → Seq β
   | ⟨s, al⟩ =>
     ⟨s.map (Option.map f), fun n =>
       by
-      dsimp [Stream'.map, Stream'.nth]
+      dsimp [Stream'.map, Stream'.get]
       induction' e : s n with <;> intro
       · rw [al e]; assumption; · contradiction⟩
 #align stream.seq.map Stream'.Seq.map

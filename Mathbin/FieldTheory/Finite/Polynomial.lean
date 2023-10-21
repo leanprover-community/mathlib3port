@@ -131,7 +131,8 @@ variable [Field K]
 #print MvPolynomial.eval_indicator_apply_eq_zero /-
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 :=
   by
-  obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by rwa [(· ≠ ·), Function.funext_iff, not_forall] at h 
+  obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by
+    rwa [(· ≠ ·), Function.funext_iff, Classical.not_forall] at h 
   simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
     Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩

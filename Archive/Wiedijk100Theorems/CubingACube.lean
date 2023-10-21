@@ -509,7 +509,7 @@ theorem valley_mi : Valley cs (cs (mi h v)).shiftUp :=
     rcases h2i' with ⟨p1, hp1, h2p1⟩
     have : ∃ p3, p3 ∈ (cs i').tail.to_set ∧ p3 ∉ (cs i).tail.to_set ∧ p3 ∈ c.tail.to_set :=
       by
-      simp only [to_set, not_forall, mem_set_of_eq] at h2p1 ; cases' h2p1 with j hj
+      simp only [to_set, Classical.not_forall, mem_set_of_eq] at h2p1 ; cases' h2p1 with j hj
       rcases Ico_lemma (mi_not_on_boundary' j).1 (by simp [hw]) (mi_not_on_boundary' j).2
           (le_trans (hp2 j).1 <| le_of_lt (h2p2 j).2) (le_trans (h2p2 j).1 <| le_of_lt (hp2 j).2)
           ⟨hj, hp1 j⟩ with
@@ -518,7 +518,7 @@ theorem valley_mi : Valley cs (cs (mi h v)).shiftUp :=
       · intro j'; by_cases h : j' = j
         · simp only [if_pos h]; convert h3w
         · simp only [if_neg h]; exact hp2 j'
-      · simp only [to_set, not_forall, mem_set_of_eq]; use j; rw [if_pos rfl]; convert h2w
+      · simp only [to_set, Classical.not_forall, mem_set_of_eq]; use j; rw [if_pos rfl]; convert h2w
       · intro j'; by_cases h : j' = j
         · simp only [if_pos h, side_tail]; convert hw
         · simp only [if_neg h]; apply hi.2; apply h2p2

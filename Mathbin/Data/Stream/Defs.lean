@@ -61,24 +61,24 @@ def drop (n : Nat) (s : Stream' α) : Stream' α := fun i => s (i + n)
 #align stream.drop Stream'.drop
 -/
 
-#print Stream'.nth /-
+#print Stream'.get /-
 /-- `n`-th element of a stream. -/
-def nth (s : Stream' α) (n : ℕ) : α :=
+def get (s : Stream' α) (n : ℕ) : α :=
   s n
-#align stream.nth Stream'.nth
+#align stream.nth Stream'.get
 -/
 
 #print Stream'.All /-
 /-- Proposition saying that all elements of a stream satisfy a predicate. -/
 def All (p : α → Prop) (s : Stream' α) :=
-  ∀ n, p (nth s n)
+  ∀ n, p (get s n)
 #align stream.all Stream'.All
 -/
 
 #print Stream'.Any /-
 /-- Proposition saying that at least one element of a stream satisfies a predicate. -/
 def Any (p : α → Prop) (s : Stream' α) :=
-  ∃ n, p (nth s n)
+  ∃ n, p (get s n)
 #align stream.any Stream'.Any
 -/
 
@@ -88,7 +88,7 @@ instance : Membership α (Stream' α) :=
 
 #print Stream'.map /-
 /-- Apply a function `f` to all elements of a stream `s`. -/
-def map (f : α → β) (s : Stream' α) : Stream' β := fun n => f (nth s n)
+def map (f : α → β) (s : Stream' α) : Stream' β := fun n => f (get s n)
 #align stream.map Stream'.map
 -/
 
@@ -96,7 +96,7 @@ def map (f : α → β) (s : Stream' α) : Stream' β := fun n => f (nth s n)
 /-- Zip two streams using a binary operation:
 `stream.nth n (stream.zip f s₁ s₂) = f (stream.nth s₁) (stream.nth s₂)`. -/
 def zip (f : α → β → δ) (s₁ : Stream' α) (s₂ : Stream' β) : Stream' δ := fun n =>
-  f (nth s₁ n) (nth s₂ n)
+  f (get s₁ n) (get s₂ n)
 #align stream.zip Stream'.zip
 -/
 
@@ -246,7 +246,7 @@ def pure (a : α) : Stream' α :=
 
 #print Stream'.apply /-
 /-- Given a stream of functions and a stream of values, apply `n`-th function to `n`-th value. -/
-def apply (f : Stream' (α → β)) (s : Stream' α) : Stream' β := fun n => (nth f n) (nth s n)
+def apply (f : Stream' (α → β)) (s : Stream' α) : Stream' β := fun n => (get f n) (get s n)
 #align stream.apply Stream'.apply
 -/
 

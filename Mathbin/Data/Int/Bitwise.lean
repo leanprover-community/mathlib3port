@@ -245,7 +245,7 @@ theorem bitwise_and : bitwise and = land := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_diff /-
-theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff' := by
+theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
   run_tac
     bitwise_tac
 #align int.bitwise_diff Int.bitwise_diff
@@ -253,7 +253,7 @@ theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff' := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_xor /-
-theorem bitwise_xor : bitwise xor = lxor' := by
+theorem bitwise_xor : bitwise xor = xor := by
   run_tac
     bitwise_tac
 #align int.bitwise_xor Int.bitwise_xor
@@ -275,7 +275,7 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
     [induction' h : f ff ff with; induction' h : f ff tt with; induction' h : f tt ff with;
     induction' h : f tt tt with]
   all_goals
-    unfold cond; rw [Nat.bitwise'_bit]
+    unfold cond; rw [Nat.bitwise_bit]
     repeat'
       first
       | rw [bit_coe_nat]
@@ -301,14 +301,14 @@ theorem land_bit (a m b n) : land (bit a m) (bit b n) = bit (a && b) (land m n) 
 
 #print Int.ldiff_bit /-
 @[simp]
-theorem ldiff_bit (a m b n) : ldiff' (bit a m) (bit b n) = bit (a && not b) (ldiff' m n) := by
+theorem ldiff_bit (a m b n) : ldiff (bit a m) (bit b n) = bit (a && not b) (ldiff m n) := by
   rw [← bitwise_diff, bitwise_bit]
 #align int.ldiff_bit Int.ldiff_bit
 -/
 
 #print Int.lxor_bit /-
 @[simp]
-theorem lxor_bit (a m b n) : lxor' (bit a m) (bit b n) = bit (xor a b) (lxor' m n) := by
+theorem lxor_bit (a m b n) : xor (bit a m) (bit b n) = bit (xor a b) (xor m n) := by
   rw [← bitwise_xor, bitwise_bit]
 #align int.lxor_bit Int.lxor_bit
 -/
@@ -351,14 +351,14 @@ theorem testBit_land (m n k) : testBit (land m n) k = (testBit m k && testBit n 
 
 #print Int.testBit_ldiff /-
 @[simp]
-theorem testBit_ldiff (m n k) : testBit (ldiff' m n) k = (testBit m k && not (testBit n k)) := by
+theorem testBit_ldiff (m n k) : testBit (ldiff m n) k = (testBit m k && not (testBit n k)) := by
   rw [← bitwise_diff, test_bit_bitwise]
 #align int.test_bit_ldiff Int.testBit_ldiff
 -/
 
 #print Int.testBit_lxor /-
 @[simp]
-theorem testBit_lxor (m n k) : testBit (lxor' m n) k = xor (testBit m k) (testBit n k) := by
+theorem testBit_lxor (m n k) : testBit (xor m n) k = xor (testBit m k) (testBit n k) := by
   rw [← bitwise_xor, test_bit_bitwise]
 #align int.test_bit_lxor Int.testBit_lxor
 -/

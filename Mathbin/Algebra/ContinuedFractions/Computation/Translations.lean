@@ -315,7 +315,7 @@ theorem of_s_head_aux (v : K) :
   by
   rw [of, int_fract_pair.seq1, of._match_1]
   simp only [seq.map_tail, seq.map, seq.tail, seq.head, seq.nth, Stream'.map]
-  rw [← Stream'.nth_succ, Stream'.nth, Option.map]
+  rw [← Stream'.get_succ, Stream'.get, Option.map]
 #align generalized_continued_fraction.of_s_head_aux GeneralizedContinuedFraction.of_s_head_aux
 -/
 

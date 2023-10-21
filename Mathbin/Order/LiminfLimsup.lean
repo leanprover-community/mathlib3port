@@ -1422,10 +1422,11 @@ variable {p : ι → Prop} {s : ι → Set α}
 #print Filter.cofinite.blimsup_set_eq /-
 theorem cofinite.blimsup_set_eq : blimsup s cofinite p = {x | {n | p n ∧ x ∈ s n}.Infinite} :=
   by
-  simp only [blimsup_eq, le_eq_subset, eventually_cofinite, not_forall, Inf_eq_sInter, exists_prop]
+  simp only [blimsup_eq, le_eq_subset, eventually_cofinite, Classical.not_forall, Inf_eq_sInter,
+    exists_prop]
   ext x
   refine' ⟨fun h => _, fun hx t h => _⟩ <;> contrapose! h
-  · simp only [mem_sInter, mem_set_of_eq, not_forall, exists_prop]
+  · simp only [mem_sInter, mem_set_of_eq, Classical.not_forall, exists_prop]
     exact ⟨{x}ᶜ, by simpa using h, by simp⟩
   · exact hx.mono fun i hi => ⟨hi.1, fun hit => h (hit hi.2)⟩
 #align filter.cofinite.blimsup_set_eq Filter.cofinite.blimsup_set_eq

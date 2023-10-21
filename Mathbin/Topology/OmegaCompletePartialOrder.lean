@@ -125,7 +125,7 @@ theorem notBelow_isOpen : IsOpen (notBelow y) :=
   apply eq_of_forall_ge_iff; intro z
   rw [ωSup_le_iff]
   simp only [ωSup_le_iff, notBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_mk, chain.map_coe,
-    Function.comp_apply, exists_imp, not_forall]
+    Function.comp_apply, exists_imp, Classical.not_forall]
 #align not_below_is_open notBelow_isOpen
 -/
 
@@ -165,7 +165,7 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
   rw [← not_iff_not]
   simp only [ωSup_le_iff, hf_h, ωSup, iSup, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
     exists_prop, mem_range, OrderHom.coe_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,
-    not_forall]
+    Classical.not_forall]
   tauto
 #align Scott_continuous_of_continuous scottContinuous_of_continuous
 -/

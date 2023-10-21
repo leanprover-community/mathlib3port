@@ -1192,7 +1192,7 @@ protected def single (p) (i : α) (a : E i) : lp E p :=
     refine' (Set.finite_singleton i).Subset _
     intro j
     simp only [forall_exists_index, Set.mem_singleton_iff, Ne.def, dite_eq_right_iff,
-      Set.mem_setOf_eq, not_forall]
+      Set.mem_setOf_eq, Classical.not_forall]
     rintro rfl
     simp⟩
 #align lp.single lp.single

@@ -60,7 +60,7 @@ theorem squarefree_one [CommMonoid R] : Squarefree (1 : R) :=
 @[simp]
 theorem not_squarefree_zero [MonoidWithZero R] [Nontrivial R] : ¬Squarefree (0 : R) :=
   by
-  erw [not_forall]
+  erw [Classical.not_forall]
   exact ⟨0, by simp⟩
 #align not_squarefree_zero not_squarefree_zero
 -/

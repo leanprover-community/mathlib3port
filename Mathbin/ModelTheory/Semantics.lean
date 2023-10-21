@@ -404,7 +404,7 @@ theorem realize_all : (all θ).realize v xs ↔ ∀ a : M, θ.realize v (Fin.sno
 @[simp]
 theorem realize_ex : θ.ex.realize v xs ↔ ∃ a : M, θ.realize v (Fin.snoc xs a) :=
   by
-  rw [bounded_formula.ex, realize_not, realize_all, not_forall]
+  rw [bounded_formula.ex, realize_not, realize_all, Classical.not_forall]
   simp_rw [realize_not, Classical.not_not]
 #align first_order.language.bounded_formula.realize_ex FirstOrder.Language.BoundedFormula.realize_ex
 -/
@@ -645,7 +645,7 @@ theorem realize_toPrenexImp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ) 
     · by_cases ψ.realize v xs
       · inhabit M
         exact ⟨default, fun h'' => h⟩
-      · obtain ⟨a, ha⟩ := not_forall.1 (h ∘ h')
+      · obtain ⟨a, ha⟩ := Classical.not_forall.1 (h ∘ h')
         exact ⟨a, fun h => (ha h).elim⟩
   · refine' trans (forall_congr' fun _ => ih hψ.lift_at) _
     simp

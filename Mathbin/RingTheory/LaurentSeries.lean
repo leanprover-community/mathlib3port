@@ -94,7 +94,7 @@ theorem powerSeriesPart_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 �
   constructor
   · contrapose!
     intro h
-    rw [PowerSeries.ext_iff, not_forall]
+    rw [PowerSeries.ext_iff, Classical.not_forall]
     refine' ⟨0, _⟩
     simp [coeff_order_ne_zero h]
   · rintro rfl

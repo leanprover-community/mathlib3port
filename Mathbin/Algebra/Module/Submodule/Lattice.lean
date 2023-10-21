@@ -123,7 +123,7 @@ protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y :=
 
 #print Submodule.ne_bot_iff /-
 protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x ≠ (0 : M) := by
-  haveI := Classical.propDecidable; simp_rw [Ne.def, p.eq_bot_iff, not_forall]
+  haveI := Classical.propDecidable; simp_rw [Ne.def, p.eq_bot_iff, Classical.not_forall]
 #align submodule.ne_bot_iff Submodule.ne_bot_iff
 -/
 

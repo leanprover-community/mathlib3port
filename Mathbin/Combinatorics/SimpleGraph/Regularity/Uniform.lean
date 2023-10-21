@@ -134,7 +134,7 @@ theorem not_isUniform_iff :
             t' ⊆ t ∧
               ↑s.card * ε ≤ s'.card ∧
                 ↑t.card * ε ≤ t'.card ∧ ε ≤ |G.edgeDensity s' t' - G.edgeDensity s t| :=
-  by unfold is_uniform; simp only [not_forall, not_lt, exists_prop]
+  by unfold is_uniform; simp only [Classical.not_forall, not_lt, exists_prop]
 #align simple_graph.not_is_uniform_iff SimpleGraph.not_isUniform_iff
 -/
 

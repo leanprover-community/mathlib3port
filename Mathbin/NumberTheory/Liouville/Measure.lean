@@ -129,7 +129,7 @@ theorem volume_iUnion_setOf_liouvilleWith :
 
 #print ae_not_liouvilleWith /-
 theorem ae_not_liouvilleWith : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
-  simpa only [ae_iff, not_forall, Classical.not_not, set_of_exists] using
+  simpa only [ae_iff, Classical.not_forall, Classical.not_not, set_of_exists] using
     volume_iUnion_setOf_liouvilleWith
 #align ae_not_liouville_with ae_not_liouvilleWith
 -/

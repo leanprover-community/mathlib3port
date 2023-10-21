@@ -338,8 +338,8 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
   refine' contDiff_tsum (fun i => (hf i).of_le hm) h'u _
   rintro k ⟨i, hi⟩ x hk
   dsimp
-  simp only [finite.mem_to_finset, mem_set_of_eq, Finset.mem_range, not_forall, not_le, exists_prop,
-    not_exists, not_and, not_lt] at hi 
+  simp only [finite.mem_to_finset, mem_set_of_eq, Finset.mem_range, Classical.not_forall, not_le,
+    exists_prop, not_exists, not_and, not_lt] at hi 
   exact hi k (Nat.lt_succ_iff.2 (WithTop.coe_le_coe.1 hk)) x
 #align cont_diff_tsum_of_eventually contDiff_tsum_of_eventually
 -/

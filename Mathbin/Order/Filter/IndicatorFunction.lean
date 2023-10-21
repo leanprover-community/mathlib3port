@@ -94,7 +94,7 @@ theorem Antitone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set 
   · rcases h with ⟨i, hi⟩
     refine' tendsto_pure.2 ((eventually_ge_at_top i).mono fun n hn => _)
     rw [indicator_of_not_mem _ _, indicator_of_not_mem _ _]
-    · simp only [mem_Inter, not_forall]; exact ⟨i, hi⟩
+    · simp only [mem_Inter, Classical.not_forall]; exact ⟨i, hi⟩
     · intro h; have := hs hn h; contradiction
   · push_neg at h 
     simp only [indicator_of_mem, h, mem_Inter.2 h, tendsto_const_pure]

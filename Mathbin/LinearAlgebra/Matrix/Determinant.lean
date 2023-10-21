@@ -92,7 +92,7 @@ theorem det_diagonal {d : n → R} : det (diagonal d) = ∏ i, d i :=
   rw [det_apply']
   refine' (Finset.sum_eq_single 1 _ _).trans _
   · intro σ h1 h2
-    cases' not_forall.1 (mt Equiv.ext h2) with x h3
+    cases' Classical.not_forall.1 (mt Equiv.ext h2) with x h3
     convert MulZeroClass.mul_zero _
     apply Finset.prod_eq_zero
     · change x ∈ _; simp

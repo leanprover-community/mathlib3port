@@ -180,7 +180,7 @@ theorem univClose_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.va
 theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
   by
   simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
-  rw [not_exists_not]; intro h; assumption
+  rw [Classical.not_exists_not]; intro h; assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/

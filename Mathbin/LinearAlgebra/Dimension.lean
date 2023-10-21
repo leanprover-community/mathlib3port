@@ -428,7 +428,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   by
   -- If that's not the case,
   by_contra h
-  simp only [← Ne.def, ne_univ_iff_exists_not_mem, mem_Union, not_exists_not,
+  simp only [← Ne.def, ne_univ_iff_exists_not_mem, mem_Union, Classical.not_exists_not,
     Finsupp.mem_support_iff, Finset.mem_coe] at h 
   -- We have some basis element `b b'` which is not in the support of any of the `v i`.
   obtain ⟨b', w⟩ := h

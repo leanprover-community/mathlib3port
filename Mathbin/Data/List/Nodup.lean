@@ -175,7 +175,7 @@ theorem nthLe_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.len
     (hm : m < xs.length) (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs :=
   by
   rw [nodup_iff_nth_le_inj]
-  simp only [exists_prop, exists_and_right, not_forall]
+  simp only [exists_prop, exists_and_right, Classical.not_forall]
   exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
 #align list.nth_le_eq_of_ne_imp_not_nodup List.nthLe_eq_of_ne_imp_not_nodup
 -/

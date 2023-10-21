@@ -1017,14 +1017,14 @@ theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x
     · refine' fun hcon => hR _
       filter_upwards [hcon] with x hx using not_lt.2 (lt_of_lt_of_le hq (not_lt.1 hx)).le
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
-        not_exists, not_forall, not_le, exists_prop] at hbdd 
+        not_exists, Classical.not_forall, not_le, exists_prop] at hbdd 
       refine' fun hcon => hbdd ↑(q + 1) _
       filter_upwards [hcon] with x hx using not_lt.1 hx
   · obtain ⟨R, hR⟩ := exists_frequently_lt_of_liminf_ne_top' hf
     obtain ⟨q, hq⟩ := exists_rat_lt R
     refine' ⟨q - 1, q, (sub_lt_self_iff _).2 zero_lt_one, _, _⟩
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
-        not_exists, not_forall, not_le, exists_prop] at hbdd 
+        not_exists, Classical.not_forall, not_le, exists_prop] at hbdd 
       refine' fun hcon => hbdd ↑(q - 1) _
       filter_upwards [hcon] with x hx using not_lt.1 hx
     · refine' fun hcon => hR _
@@ -1252,7 +1252,7 @@ protected theorem ne_top_of_tsum_ne_top (h : ∑' a, f a ≠ ∞) (a : α) : f a
 protected theorem tsum_mul_left : ∑' i, a * f i = a * ∑' i, f i :=
   if h : ∀ i, f i = 0 then by simp [h]
   else
-    let ⟨i, (hi : f i ≠ 0)⟩ := not_forall.mp h
+    let ⟨i, (hi : f i ≠ 0)⟩ := Classical.not_forall.mp h
     have sum_ne_0 : ∑' i, f i ≠ 0 :=
       ne_of_gt <|
         calc
