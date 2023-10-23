@@ -42,7 +42,6 @@ namespace TopCat
 
 namespace Presheaf.SheafConditionPairwiseIntersections
 
-#print TopCat.Presheaf.SheafConditionPairwiseIntersections.map_diagram /-
 theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Opens.map f).obj ∘ U) :=
   by
   apply functor.hext
@@ -50,9 +49,7 @@ theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Op
   intro i j g; apply Subsingleton.helim
   iterate 2 rw [map_diagram.obj_eq]
 #align Top.presheaf.sheaf_condition_pairwise_intersections.map_diagram TopCat.Presheaf.SheafConditionPairwiseIntersections.map_diagram
--/
 
-#print TopCat.Presheaf.SheafConditionPairwiseIntersections.mapCocone /-
 theorem mapCocone :
     HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) :=
   by
@@ -61,9 +58,7 @@ theorem mapCocone :
   apply Subsingleton.helim; rw [map_diagram, opens.map_supr]
   apply proof_irrel_heq
 #align Top.presheaf.sheaf_condition_pairwise_intersections.map_cocone TopCat.Presheaf.SheafConditionPairwiseIntersections.mapCocone
--/
 
-#print TopCat.Presheaf.SheafConditionPairwiseIntersections.pushforward_sheaf_of_sheaf /-
 theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseIntersections) :
     (f _* F).IsSheafPairwiseIntersections := fun ι U =>
   by
@@ -72,7 +67,6 @@ theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseInte
   change HEq (F.map_cone ((opens.map f).mapCocone _).op) _
   congr; iterate 2 rw [map_diagram]; apply map_cocone
 #align Top.presheaf.sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf TopCat.Presheaf.SheafConditionPairwiseIntersections.pushforward_sheaf_of_sheaf
--/
 
 end Presheaf.SheafConditionPairwiseIntersections
 

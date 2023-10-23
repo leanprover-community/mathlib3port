@@ -111,7 +111,6 @@ section TypeValued
 
 variable {X : TopCat.{v}} (F : Presheaf (Type v) X) {ι : Type v} (U : ι → Opens X)
 
-#print TopCat.Presheaf.piOpensIsoSectionsFamily /-
 /-- For presheaves of types, terms of `pi_opens F U` are just families of sections.
 -/
 def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
@@ -119,9 +118,7 @@ def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
     (limit.isLimit (Discrete.functor fun i : ι => F.obj (op (U i))))
     (Types.productLimitCone.{v, v} fun i : ι => F.obj (op (U i))).IsLimit
 #align Top.presheaf.pi_opens_iso_sections_family TopCat.Presheaf.piOpensIsoSectionsFamily
--/
 
-#print TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes /-
 /-- Under the isomorphism `pi_opens_iso_sections_family`, compatibility of sections is the same
 as being equalized by the arrows `left_res` and `right_res` of the equalizer diagram.
 -/
@@ -138,9 +135,7 @@ theorem compatible_iff_leftRes_eq_rightRes (sf : piOpens F U) :
     · rw [left_res, types.pi_lift_π_apply]; rfl
     · rw [right_res, types.pi_lift_π_apply]; rfl
 #align Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes
--/
 
-#print TopCat.Presheaf.isGluing_iff_eq_res /-
 /-- Under the isomorphism `pi_opens_iso_sections_family`, being a gluing of a family of
 sections `sf` is the same as lying in the preimage of `res` (the leftmost arrow of the
 equalizer diagram).
@@ -158,7 +153,6 @@ theorem isGluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (iSup U))) :
     rw [res, types.pi_lift_π_apply]
     rfl
 #align Top.presheaf.is_gluing_iff_eq_res TopCat.Presheaf.isGluing_iff_eq_res
--/
 
 #print TopCat.Presheaf.isSheaf_of_isSheafUniqueGluing_types /-
 /-- The "equalizer" sheaf condition can be obtained from the sheaf condition
@@ -190,11 +184,10 @@ theorem isSheaf_of_isSheafUniqueGluing_types (Fsh : F.IsSheafUniqueGluing) : F.I
 #align Top.presheaf.is_sheaf_of_is_sheaf_unique_gluing_types TopCat.Presheaf.isSheaf_of_isSheafUniqueGluing_types
 -/
 
-#print TopCat.Presheaf.isSheafUniqueGluing_of_isSheaf_types /-
 /-- The sheaf condition in terms of unique gluings can be obtained from the usual
 "equalizer" sheaf condition.
 -/
-theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUniqueGluing :=
+theorem isSheafUniqueGluingOfIsSheafTypes (Fsh : F.IsSheaf) : F.IsSheafUniqueGluing :=
   by
   rw [is_sheaf_iff_is_sheaf_equalizer_products] at Fsh 
   intro ι U sf hsf
@@ -212,15 +205,14 @@ theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUnique
     rw [← is_gluing_iff_eq_res F U]
     convert hy
     rw [inv_hom_id_apply]
-#align Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.isSheafUniqueGluing_of_isSheaf_types
--/
+#align Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.isSheafUniqueGluingOfIsSheafTypes
 
 #print TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types /-
 /-- For type-valued presheaves, the sheaf condition in terms of unique gluings is equivalent to the
 usual sheaf condition in terms of equalizer diagrams.
 -/
 theorem isSheaf_iff_isSheafUniqueGluing_types : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
-  Iff.intro (isSheafUniqueGluing_of_isSheaf_types F) (isSheaf_of_isSheafUniqueGluing_types F)
+  Iff.intro (isSheafUniqueGluingOfIsSheafTypes F) (isSheaf_of_isSheafUniqueGluing_types F)
 #align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types
 -/
 

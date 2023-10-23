@@ -62,7 +62,6 @@ variable {ι : Type v} (U : ι → Opens X)
 
 attribute [local reducible] diagram left_res right_res
 
-#print TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits /-
 /-- When `G` preserves limits, the sheaf condition diagram for `F` composed with `G` is
 naturally isomorphic to the sheaf condition diagram for `F ⋙ G`.
 -/
@@ -85,11 +84,9 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :
     dsimp; simp
   · ext; simp; dsimp; simp
 #align Top.presheaf.sheaf_condition.diagram_comp_preserves_limits TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits
--/
 
 attribute [local reducible] res
 
-#print TopCat.Presheaf.SheafCondition.mapConeFork /-
 /-- When `G` preserves limits, the image under `G` of the sheaf condition fork for `F`
 is the sheaf condition fork for `F ⋙ G`,
 postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves_limits`.
@@ -109,7 +106,6 @@ def mapConeFork :
       dsimp
       simp only [limit.lift_π, fan.mk_π_app, ← G.map_comp, limit.lift_π_assoc, fan.mk_π_app]
 #align Top.presheaf.sheaf_condition.map_cone_fork TopCat.Presheaf.SheafCondition.mapConeFork
--/
 
 end SheafCondition
 
