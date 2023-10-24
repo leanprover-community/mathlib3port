@@ -335,10 +335,10 @@ theorem sumsq_nonneg (x : α → ℕ) : ∀ l, 0 ≤ sumsq l x
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Poly.sumsq_eq_zero /-
-theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.All₂ fun a : Poly α => a x = 0
+theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.Forall fun a : Poly α => a x = 0
   | [] => eq_self_iff_true _
   | p::ps => by
-    rw [List.all₂_cons, ← sumsq_eq_zero ps] <;> rw [sumsq] <;> simp [-add_comm] <;>
+    rw [List.forall_cons, ← sumsq_eq_zero ps] <;> rw [sumsq] <;> simp [-add_comm] <;>
       exact
         ⟨fun h : p x * p x + sumsq ps x = 0 =>
           have : p x = 0 :=
@@ -442,15 +442,15 @@ theorem reindex_dioph (f : α → β) : ∀ d : Dioph S, Dioph {v | v ∘ f ∈ 
 variable {β}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Dioph.DiophList.all₂ /-
-theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
-    Dioph {v | l.All₂ fun S : Set (α → ℕ) => v ∈ S} :=
+#print Dioph.DiophList.forall /-
+theorem DiophList.forall (l : List (Set <| α → ℕ)) (d : l.Forall Dioph) :
+    Dioph {v | l.Forall fun S : Set (α → ℕ) => v ∈ S} :=
   by
   suffices
     ∃ (β : _) (pl : List (Poly (Sum α β))),
       ∀ v,
-        List.All₂ (fun S : Set _ => S v) l ↔
-          ∃ t, List.All₂ (fun p : Poly (Sum α β) => p (v ⊗ t) = 0) pl
+        List.Forall (fun S : Set _ => S v) l ↔
+          ∃ t, List.Forall (fun p : Poly (Sum α β) => p (v ⊗ t) = 0) pl
     from
     let ⟨β, pl, h⟩ := this
     ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
@@ -470,7 +470,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                       funext fun s => by cases' s with a b <;> rfl] <;>
                   exact hm,
                 by
-                refine' List.All₂.imp (fun q hq => _) hn; dsimp [(· ∘ ·)]
+                refine' List.Forall.imp (fun q hq => _) hn; dsimp [(· ∘ ·)]
                 rw [show
                       (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n
                       from funext fun s => by cases' s with a b <;> rfl] <;>
@@ -481,18 +481,18 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                       funext fun s => by cases' s with a b <;> rfl] at
                     hl ⟩,
                 ⟨t ∘ inr, by
-                  refine' List.All₂.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq 
+                  refine' List.Forall.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq 
                   rwa [show
                       (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) =
                         v ⊗ t ∘ inr
                       from funext fun s => by cases' s with a b <;> rfl] at
                     hq ⟩⟩⟩⟩
-#align dioph.dioph_list.all₂ Dioph.DiophList.all₂
+#align dioph.dioph_list.all₂ Dioph.DiophList.forall
 -/
 
 #print Dioph.inter /-
 theorem inter (d : Dioph S) (d' : Dioph S') : Dioph (S ∩ S') :=
-  DiophList.all₂ [S, S'] ⟨d, d'⟩
+  DiophList.forall [S, S'] ⟨d, d'⟩
 #align dioph.inter Dioph.inter
 -/
 

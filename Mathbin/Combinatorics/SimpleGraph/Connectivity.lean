@@ -2422,7 +2422,7 @@ def Preconnected : Prop :=
 #print SimpleGraph.Preconnected.map /-
 theorem Preconnected.map {G : SimpleGraph V} {H : SimpleGraph V'} (f : G →g H) (hf : Surjective f)
     (hG : G.Preconnected) : H.Preconnected :=
-  hf.forall₂.2 fun a b => Nonempty.map (Walk.map _) <| hG _ _
+  hf.Forall₂.2 fun a b => Nonempty.map (Walk.map _) <| hG _ _
 #align simple_graph.preconnected.map SimpleGraph.Preconnected.map
 -/
 

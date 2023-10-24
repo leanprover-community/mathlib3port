@@ -6203,37 +6203,37 @@ section All₂
 
 variable {p q : α → Prop} {l : List α}
 
-#print List.all₂_cons /-
+#print List.forall_cons /-
 @[simp]
-theorem all₂_cons (p : α → Prop) (x : α) : ∀ l : List α, All₂ p (x :: l) ↔ p x ∧ All₂ p l
+theorem forall_cons (p : α → Prop) (x : α) : ∀ l : List α, Forall p (x :: l) ↔ p x ∧ Forall p l
   | [] => (and_true_iff _).symm
   | x :: l => Iff.rfl
-#align list.all₂_cons List.all₂_cons
+#align list.all₂_cons List.forall_cons
 -/
 
-#print List.all₂_iff_forall /-
-theorem all₂_iff_forall : ∀ {l : List α}, All₂ p l ↔ ∀ x ∈ l, p x
+#print List.forall_iff_forall_mem /-
+theorem forall_iff_forall_mem : ∀ {l : List α}, Forall p l ↔ ∀ x ∈ l, p x
   | [] => (iff_true_intro <| forall_mem_nil _).symm
   | x :: l => by rw [ball_cons, all₂_cons, all₂_iff_forall]
-#align list.all₂_iff_forall List.all₂_iff_forall
+#align list.all₂_iff_forall List.forall_iff_forall_mem
 -/
 
-#print List.All₂.imp /-
-theorem All₂.imp (h : ∀ x, p x → q x) : ∀ {l : List α}, All₂ p l → All₂ q l
+#print List.Forall.imp /-
+theorem Forall.imp (h : ∀ x, p x → q x) : ∀ {l : List α}, Forall p l → Forall q l
   | [] => id
   | x :: l => by simpa using And.imp (h x) all₂.imp
-#align list.all₂.imp List.All₂.imp
+#align list.all₂.imp List.Forall.imp
 -/
 
-#print List.all₂_map_iff /-
+#print List.forall_map_iff /-
 @[simp]
-theorem all₂_map_iff {p : β → Prop} (f : α → β) : All₂ p (l.map f) ↔ All₂ (p ∘ f) l := by
+theorem forall_map_iff {p : β → Prop} (f : α → β) : Forall p (l.map f) ↔ Forall (p ∘ f) l := by
   induction l <;> simp [*]
-#align list.all₂_map_iff List.all₂_map_iff
+#align list.all₂_map_iff List.forall_map_iff
 -/
 
-instance (p : α → Prop) [DecidablePred p] : DecidablePred (All₂ p) := fun l =>
-  decidable_of_iff' _ all₂_iff_forall
+instance (p : α → Prop) [DecidablePred p] : DecidablePred (Forall p) := fun l =>
+  decidable_of_iff' _ forall_iff_forall_mem
 
 end All₂
 

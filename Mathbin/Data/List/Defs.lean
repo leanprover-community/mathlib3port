@@ -616,15 +616,15 @@ attribute [simp] forall₂.nil
 
 end Forall₂
 
-#print List.All₂ /-
+#print List.Forall /-
 /-- `l.all₂ p` is equivalent to `∀ a ∈ l, p a`, but unfolds directly to a conjunction, i.e.
 `list.all₂ p [0, 1, 2] = p 0 ∧ p 1 ∧ p 2`. -/
 @[simp]
-def All₂ (p : α → Prop) : List α → Prop
+def Forall (p : α → Prop) : List α → Prop
   | [] => True
   | x :: [] => p x
   | x :: l => p x ∧ all₂ l
-#align list.all₂ List.All₂
+#align list.all₂ List.Forall
 -/
 
 /-- Auxiliary definition used to define `transpose`.

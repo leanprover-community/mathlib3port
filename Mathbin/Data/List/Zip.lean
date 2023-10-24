@@ -113,13 +113,13 @@ theorem length_zip :
 #align list.length_zip List.length_zip
 -/
 
-#print List.all₂_zipWith /-
-theorem all₂_zipWith {f : α → β → γ} {p : γ → Prop} :
+#print List.forall_zipWith /-
+theorem forall_zipWith {f : α → β → γ} {p : γ → Prop} :
     ∀ {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂),
-      All₂ p (zipWith f l₁ l₂) ↔ Forall₂ (fun x y => p (f x y)) l₁ l₂
+      Forall p (zipWith f l₁ l₂) ↔ Forall₂ (fun x y => p (f x y)) l₁ l₂
   | [], [], _ => by simp
   | a :: l₁, b :: l₂, h => by simp only [length_cons, add_left_inj] at h ; simp [all₂_zip_with h]
-#align list.all₂_zip_with List.all₂_zipWith
+#align list.all₂_zip_with List.forall_zipWith
 -/
 
 #print List.lt_length_left_of_zipWith /-

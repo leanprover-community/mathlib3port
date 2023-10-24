@@ -6,7 +6,7 @@ Authors: Leonardo de Moura, Jeremy Avigad
 import Data.Finset.Image
 import Tactic.ByContra
 
-#align_import data.finset.card from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"
+#align_import data.finset.card from "leanprover-community/mathlib"@"3365b20c2ffa7c35e47e5209b89ba9abdddf3ffe"
 
 /-!
 # Cardinality of a finite set
@@ -703,6 +703,13 @@ theorem card_le_one_iff_subset_singleton [Nonempty α] : s.card ≤ 1 ↔ ∃ x 
     exact card_le_of_subset hx
 #align finset.card_le_one_iff_subset_singleton Finset.card_le_one_iff_subset_singleton
 -/
+
+theorem exists_mem_ne (hs : 1 < s.card) (a : α) : ∃ b ∈ s, b ≠ a :=
+  by
+  by_contra'
+  haveI : Nonempty α := ⟨a⟩
+  exact hs.not_le (card_le_one_iff_subset_singleton.2 ⟨a, subset_singleton_iff'.2 this⟩)
+#align finset.exists_mem_ne Finset.exists_mem_ne
 
 #print Finset.card_le_one_of_subsingleton /-
 /-- A `finset` of a subsingleton type has cardinality at most one. -/

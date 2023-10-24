@@ -6,7 +6,7 @@ Authors: Jeremy Avigad, Leonardo de Moura
 import Tactic.MkSimpAttribute
 import Tactic.ReservedNotation
 
-#align_import logic.basic from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
+#align_import logic.basic from "leanprover-community/mathlib"@"3365b20c2ffa7c35e47e5209b89ba9abdddf3ffe"
 
 /-!
 # Basic logic properties
@@ -749,6 +749,18 @@ theorem Iff.not_right (h : ¬a ↔ b) : a ↔ ¬b :=
   Classical.not_not.symm.trans h.Not
 #align iff.not_right Iff.not_right
 -/
+
+protected theorem Iff.ne {α β : Sort _} {a b : α} {c d : β} : (a = b ↔ c = d) → (a ≠ b ↔ c ≠ d) :=
+  Iff.not
+#align iff.ne Iff.ne
+
+theorem Iff.ne_left {α β : Sort _} {a b : α} {c d : β} : (a = b ↔ c ≠ d) → (a ≠ b ↔ c = d) :=
+  Iff.not_left
+#align iff.ne_left Iff.ne_left
+
+theorem Iff.ne_right {α β : Sort _} {a b : α} {c d : β} : (a ≠ b ↔ c = d) → (a = b ↔ c ≠ d) :=
+  Iff.not_right
+#align iff.ne_right Iff.ne_right
 
 /-! ### Declarations about `xor` -/
 

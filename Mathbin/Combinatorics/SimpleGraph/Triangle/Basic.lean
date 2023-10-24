@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Combinatorics.SimpleGraph.Clique
 
-#align_import combinatorics.simple_graph.triangle.basic from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
+#align_import combinatorics.simple_graph.triangle.basic from "leanprover-community/mathlib"@"3365b20c2ffa7c35e47e5209b89ba9abdddf3ffe"
 
 /-!
 # Triangles in graphs
@@ -51,8 +51,8 @@ def FarFromTriangleFree (G : SimpleGraph α) (ε : 𝕜) : Prop :=
 #print SimpleGraph.farFromTriangleFree_iff /-
 theorem farFromTriangleFree_iff :
     G.FarFromTriangleFree ε ↔
-      ∀ ⦃H⦄,
-        H ≤ G → H.CliqueFree 3 → ε * (card α ^ 2 : ℕ) ≤ G.edgeFinset.card - H.edgeFinset.card :=
+      ∀ ⦃H : SimpleGraph _⦄ [DecidableRel H.Adj],
+        H ≤ G → H.clique_free 3 → ε * (card α ^ 2 : ℕ) ≤ G.edge_finset.card - H.edge_finset.card :=
   deleteFar_iff
 #align simple_graph.far_from_triangle_free_iff SimpleGraph.farFromTriangleFree_iff
 -/
