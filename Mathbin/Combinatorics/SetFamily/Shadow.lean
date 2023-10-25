@@ -318,9 +318,9 @@ theorem mem_upShadow_iff_exists_mem_card_add :
 #align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_upShadow_iff_exists_mem_card_add
 -/
 
-#print Finset.shadow_image_compl /-
+#print Finset.upShadow_compls /-
 @[simp]
-theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) :=
+theorem upShadow_compls : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) :=
   by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
@@ -329,12 +329,12 @@ theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image c
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, not_mem_compl.2 ha, compl_erase.symm⟩
   · rintro ⟨_, ⟨s, hs, rfl⟩, a, ha, rfl⟩
     exact ⟨s.erase a, ⟨s, hs, a, not_mem_compl.1 ha, rfl⟩, compl_erase⟩
-#align finset.shadow_image_compl Finset.shadow_image_compl
+#align finset.shadow_image_compl Finset.upShadow_compls
 -/
 
-#print Finset.upShadow_image_compl /-
+#print Finset.shadow_compls /-
 @[simp]
-theorem upShadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) :=
+theorem shadow_compls : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) :=
   by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
@@ -343,7 +343,7 @@ theorem upShadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, mem_compl.2 ha, compl_insert.symm⟩
   · rintro ⟨_, ⟨s, hs, rfl⟩, a, ha, rfl⟩
     exact ⟨insert a s, ⟨s, hs, a, mem_compl.1 ha, rfl⟩, compl_insert⟩
-#align finset.up_shadow_image_compl Finset.upShadow_image_compl
+#align finset.up_shadow_image_compl Finset.shadow_compls
 -/
 
 end UpShadow

@@ -198,9 +198,9 @@ theorem not_ne_id : not ≠ id := fun h => false_ne_true <| congr_fun h true
 #align bool.bnot_ne_id Bool.not_ne_id
 -/
 
-#print Bool.coe_bool_iff /-
-theorem coe_bool_iff : ∀ {a b : Bool}, (a ↔ b) ↔ a = b := by decide
-#align bool.coe_bool_iff Bool.coe_bool_iff
+#print Bool.coe_iff_coe /-
+theorem coe_iff_coe : ∀ {a b : Bool}, (a ↔ b) ↔ a = b := by decide
+#align bool.coe_bool_iff Bool.coe_iff_coe
 -/
 
 #print Bool.eq_true_of_ne_false /-
