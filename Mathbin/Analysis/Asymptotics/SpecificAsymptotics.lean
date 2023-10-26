@@ -62,13 +62,14 @@ theorem pow_div_pow_eventuallyEq_atBot {p q : ℕ} :
 #align pow_div_pow_eventually_eq_at_bot pow_div_pow_eventuallyEq_atBot
 -/
 
-#print tendsto_zpow_atTop_atTop /-
-theorem tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) : Tendsto (fun x : 𝕜 => x ^ n) atTop atTop :=
+#print Filter.tendsto_zpow_atTop_atTop /-
+theorem Filter.tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) :
+    Tendsto (fun x : 𝕜 => x ^ n) atTop atTop :=
   by
   lift n to ℕ using hn.le
   simp only [zpow_ofNat]
   exact tendsto_pow_at_top (nat.cast_pos.mp hn).ne'
-#align tendsto_zpow_at_top_at_top tendsto_zpow_atTop_atTop
+#align tendsto_zpow_at_top_at_top Filter.tendsto_zpow_atTop_atTop
 -/
 
 #print tendsto_pow_div_pow_atTop_atTop /-
@@ -76,7 +77,7 @@ theorem tendsto_pow_div_pow_atTop_atTop {p q : ℕ} (hpq : q < p) :
     Tendsto (fun x : 𝕜 => x ^ p / x ^ q) atTop atTop :=
   by
   rw [tendsto_congr' pow_div_pow_eventuallyEq_atTop]
-  apply tendsto_zpow_atTop_atTop
+  apply Filter.tendsto_zpow_atTop_atTop
   linarith
 #align tendsto_pow_div_pow_at_top_at_top tendsto_pow_div_pow_atTop_atTop
 -/

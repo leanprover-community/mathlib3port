@@ -499,10 +499,10 @@ theorem IsPicardLindelof.exists_forall_hasDerivWithinAt_Icc_eq [CompleteSpace E]
 
 variable [ProperSpace E] {v : E → E} (t₀ : ℝ) (x₀ : E)
 
-#print exists_isPicardLindelof_const_of_contDiffOn_nhds /-
+#print exists_isPicardLindelof_const_of_contDiffAt /-
 /-- A time-independent, locally continuously differentiable ODE satisfies the hypotheses of the
   Picard-Lindelöf theorem. -/
-theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s)
+theorem exists_isPicardLindelof_const_of_contDiffAt {s : Set E} (hv : ContDiffOn ℝ 1 v s)
     (hs : s ∈ 𝓝 x₀) :
     ∃ ε > (0 : ℝ), ∃ L R C, IsPicardLindelof (fun t => v) (t₀ - ε) t₀ (t₀ + ε) x₀ L R C :=
   by
@@ -542,18 +542,18 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
         split_ifs
         · rwa [← h] at hr' 
         · exact (mul_div_cancel' (r / 2) h).le }
-#align exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_isPicardLindelof_const_of_contDiffOn_nhds
+#align exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_isPicardLindelof_const_of_contDiffAt
 -/
 
-#print exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds /-
+#print exists_forall_hasDerivAt_Ioo_eq_of_contDiffAt /-
 /-- A time-independent, locally continuously differentiable ODE admits a solution in some open
 interval. -/
-theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s)
+theorem exists_forall_hasDerivAt_Ioo_eq_of_contDiffAt {s : Set E} (hv : ContDiffOn ℝ 1 v s)
     (hs : s ∈ 𝓝 x₀) :
     ∃ ε > (0 : ℝ),
       ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), f t ∈ s ∧ HasDerivAt f (v (f t)) t :=
   by
-  obtain ⟨ε, hε, L, R, C, hpl⟩ := exists_isPicardLindelof_const_of_contDiffOn_nhds t₀ x₀ hv hs
+  obtain ⟨ε, hε, L, R, C, hpl⟩ := exists_isPicardLindelof_const_of_contDiffAt t₀ x₀ hv hs
   obtain ⟨f, hf1, hf2⟩ := IsPicardLindelof.exists_forall_hasDerivWithinAt_Icc_eq x₀ hpl
   have hf2' : ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t := fun t ht =>
     (hf2 t (Ioo_subset_Icc_self ht)).HasDerivAt (Icc_mem_nhds ht.1 ht.2)
@@ -577,7 +577,7 @@ theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContD
   apply Set.mem_of_mem_of_subset ht
   rw [← Real.ball_eq_Ioo]
   exact Metric.ball_subset_ball (min_le_left _ _)
-#align exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds
+#align exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_hasDerivAt_Ioo_eq_of_contDiffAt
 -/
 
 #print exists_forall_hasDerivAt_Ioo_eq_of_contDiff /-
@@ -585,7 +585,7 @@ theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContD
 theorem exists_forall_hasDerivAt_Ioo_eq_of_contDiff (hv : ContDiff ℝ 1 v) :
     ∃ ε > (0 : ℝ), ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t :=
   let ⟨ε, hε, f, hf1, hf2⟩ :=
-    exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds t₀ x₀ hv.ContDiffOn
+    exists_forall_hasDerivAt_Ioo_eq_of_contDiffAt t₀ x₀ hv.ContDiffOn
       (IsOpen.mem_nhds isOpen_univ (mem_univ _))
   ⟨ε, hε, f, hf1, fun t ht => (hf2 t ht).2⟩
 #align exists_forall_deriv_at_Ioo_eq_of_cont_diff exists_forall_hasDerivAt_Ioo_eq_of_contDiff

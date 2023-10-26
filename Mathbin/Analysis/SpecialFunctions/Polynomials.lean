@@ -221,7 +221,7 @@ theorem div_tendsto_atTop_of_degree_gt' (hdeg : Q.degree < P.degree)
   rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg 
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_atTop _
   apply tendsto.const_mul_at_top hpos
-  apply tendsto_zpow_atTop_atTop
+  apply Filter.tendsto_zpow_atTop_atTop
   linarith
 #align polynomial.div_tendsto_at_top_of_degree_gt' Polynomial.div_tendsto_atTop_of_degree_gt'
 -/
@@ -247,7 +247,7 @@ theorem div_tendsto_atBot_of_degree_gt' (hdeg : Q.degree < P.degree)
   rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg 
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_atBot _
   apply tendsto.neg_const_mul_at_top hneg
-  apply tendsto_zpow_atTop_atTop
+  apply Filter.tendsto_zpow_atTop_atTop
   linarith
 #align polynomial.div_tendsto_at_bot_of_degree_gt' Polynomial.div_tendsto_atBot_of_degree_gt'
 -/
