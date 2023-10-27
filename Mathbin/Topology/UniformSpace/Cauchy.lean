@@ -731,8 +731,9 @@ theorem totallyBounded_iff_filter {s : Set α} :
   · intro H d hd
     contrapose! H with hd_cover
     set f := ⨅ t : Finset α, 𝓟 (s \ ⋃ y ∈ t, {x | (x, y) ∈ d})
-    have : ne_bot f := by
-      refine' infi_ne_bot_of_directed' (directed_of_sup _) _
+    have : ne_bot f :=
+      by
+      refine' infi_ne_bot_of_directed' (directed_of_isDirected_le _) _
       · intro t₁ t₂ h
         exact principal_mono.2 (diff_subset_diff_right <| bUnion_subset_bUnion_left h)
       · intro t

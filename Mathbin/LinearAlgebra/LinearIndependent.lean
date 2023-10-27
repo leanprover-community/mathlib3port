@@ -835,7 +835,7 @@ theorem linearIndependent_iUnion_finite_subtype {ι : Type _} {f : ι → Set M}
   by
   rw [Union_eq_Union_finset f]
   apply linearIndependent_iUnion_of_directed
-  · apply directed_of_sup
+  · apply directed_of_isDirected_le
     exact fun t₁ t₂ ht => Union_mono fun i => Union_subset_Union_const fun h => ht h
   intro t
   induction' t using Finset.induction_on with i s his ih

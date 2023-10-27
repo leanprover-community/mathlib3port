@@ -166,7 +166,7 @@ theorem disjoint_atTop_atBot [PartialOrder α] [Nontrivial α] : Disjoint (atTop
 
 #print Filter.atTop_basis /-
 theorem atTop_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (fun _ => True) Ici :=
-  hasBasis_iInf_principal (directed_of_sup fun a b => Ici_subset_Ici.2)
+  hasBasis_iInf_principal (directed_of_isDirected_le fun a b => Ici_subset_Ici.2)
 #align filter.at_top_basis Filter.atTop_basis
 -/
 

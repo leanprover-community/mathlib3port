@@ -81,7 +81,7 @@ theorem hasBasis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ �
   by
   rw [nhds_zero]
   refine' has_basis_binfi_principal _ ⟨1, one_ne_zero⟩
-  exact directedOn_iff_directed.2 (directed_of_inf fun a b hab => Iio_subset_Iio hab)
+  exact directedOn_iff_directed.2 (directed_of_isDirected_ge fun a b hab => Iio_subset_Iio hab)
 #align with_zero_topology.has_basis_nhds_zero WithZeroTopology.hasBasis_nhds_zero
 -/
 

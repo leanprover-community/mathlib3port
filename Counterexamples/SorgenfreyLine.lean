@@ -85,7 +85,7 @@ theorem nhds_basis_Ico (a : ℝₗ) : (𝓝 a).HasBasis (fun b => a < b) fun b =
     iInf_inf, this, iInf_subtype]
   suffices : (⨅ x ∈ Ioi a, 𝓟 (Iio x)).HasBasis ((· < ·) a) Iio; exact this.principal_inf _
   refine' has_basis_binfi_principal _ nonempty_Ioi
-  exact directedOn_iff_directed.2 (directed_of_inf fun x y hxy => Iio_subset_Iio hxy)
+  exact directedOn_iff_directed.2 (directed_of_isDirected_ge fun x y hxy => Iio_subset_Iio hxy)
 #align counterexample.sorgenfrey_line.nhds_basis_Ico Counterexample.SorgenfreyLine.nhds_basis_Ico
 
 theorem nhds_basis_Ico_rat (a : ℝₗ) :

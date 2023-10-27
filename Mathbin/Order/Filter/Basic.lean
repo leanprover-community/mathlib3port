@@ -1111,7 +1111,7 @@ theorem iInf_sets_eq_finite {ι : Type _} (f : ι → Filter α) :
     (⨅ i, f i).sets = ⋃ t : Finset ι, (⨅ i ∈ t, f i).sets :=
   by
   rw [iInf_eq_iInf_finset, infi_sets_eq]
-  exact directed_of_sup fun s₁ s₂ => biInf_mono
+  exact directed_of_isDirected_le fun s₁ s₂ => biInf_mono
 #align filter.infi_sets_eq_finite Filter.iInf_sets_eq_finite
 -/
 

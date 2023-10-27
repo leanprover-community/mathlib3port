@@ -480,7 +480,7 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
   by
   obtain ⟨x, hx⟩ : (⋂ Q, proj Q ⁻¹' {Qs Q}).Nonempty :=
     IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
-      (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _}) (directed_of_inf fun A B h => _)
+      (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _}) (directed_of_isDirected_ge fun A B h => _)
       (fun Q => (singleton_nonempty _).Preimage Q.proj_surjective)
       (fun i => (is_closed_preimage _ _).IsCompact) fun i => is_closed_preimage _ _
   · refine' ⟨x, fun Q => _⟩

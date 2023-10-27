@@ -472,7 +472,7 @@ theorem lintegral_iSup {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
       simp only [(Eq _).symm]
     _ = ∑ r in (rs.map c).range, ⨆ n, r * μ (rs.map c ⁻¹' {r} ∩ {a | r ≤ f n a}) :=
       (Finset.sum_congr rfl fun x hx => by
-        rw [measure_Union_eq_supr (directed_of_sup <| mono x), ENNReal.mul_iSup])
+        rw [measure_Union_eq_supr (directed_of_isDirected_le <| mono x), ENNReal.mul_iSup])
     _ = ⨆ n, ∑ r in (rs.map c).range, r * μ (rs.map c ⁻¹' {r} ∩ {a | r ≤ f n a}) :=
       by
       rw [ENNReal.finset_sum_iSup_nat]

@@ -609,7 +609,7 @@ theorem indep_iSup_of_antitone [SemilatticeInf ι] {Ω} {m : ι → MeasurableSp
     {m' m0 : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
     (h_indep : ∀ i, Indep (m i) m' μ) (h_le : ∀ i, m i ≤ m0) (h_le' : m' ≤ m0) (hm : Antitone m) :
     Indep (⨆ i, m i) m' μ :=
-  indep_iSup_of_directed_le h_indep h_le h_le' (directed_of_inf hm)
+  indep_iSup_of_directed_le h_indep h_le h_le' (directed_of_isDirected_ge hm)
 #align probability_theory.indep_supr_of_antitone ProbabilityTheory.indep_iSup_of_antitone
 -/
 

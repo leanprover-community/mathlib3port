@@ -4,18 +4,18 @@
  [{"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "96476b6f38497296cd36a8b1da58037e46cd1274",
+    "rev": "8171d0b564853563be6ae1b2a71c78d0c960bdbb",
     "opts": {},
     "name": "lean3port",
-    "inputRev?": "96476b6f38497296cd36a8b1da58037e46cd1274",
+    "inputRev?": "8171d0b564853563be6ae1b2a71c78d0c960bdbb",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "0935274497e96485e5df03e957039bc81d254fcd",
+    "rev": "cccdf1fd3cf96540d6005f6e4961816e762c7b13",
     "opts": {},
     "name": "mathlib",
-    "inputRev?": "0935274497e96485e5df03e957039bc81d254fcd",
+    "inputRev?": "cccdf1fd3cf96540d6005f6e4961816e762c7b13",
     "inherited": true}},
   {"git":
    {"url": "https://github.com/leanprover/std4",

@@ -115,25 +115,25 @@ theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : �
 #align directed.mono_comp Directed.mono_comp
 -/
 
-#print directed_of_sup /-
+#print directed_of_isDirected_le /-
 /-- A monotone function on a sup-semilattice is directed. -/
-theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop}
+theorem directed_of_isDirected_le [SemilatticeSup α] {f : α → β} {r : β → β → Prop}
     (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) : Directed r f := fun a b =>
   ⟨a ⊔ b, H le_sup_left, H le_sup_right⟩
-#align directed_of_sup directed_of_sup
+#align directed_of_sup directed_of_isDirected_le
 -/
 
 #print Monotone.directed_le /-
 theorem Monotone.directed_le [SemilatticeSup α] [Preorder β] {f : α → β} :
     Monotone f → Directed (· ≤ ·) f :=
-  directed_of_sup
+  directed_of_isDirected_le
 #align monotone.directed_le Monotone.directed_le
 -/
 
 #print Antitone.directed_ge /-
 theorem Antitone.directed_ge [SemilatticeSup α] [Preorder β] {f : α → β} (hf : Antitone f) :
     Directed (· ≥ ·) f :=
-  directed_of_sup hf
+  directed_of_isDirected_le hf
 #align antitone.directed_ge Antitone.directed_ge
 -/
 
@@ -161,25 +161,25 @@ theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι 
 #align directed.extend_bot Directed.extend_bot
 -/
 
-#print directed_of_inf /-
+#print directed_of_isDirected_ge /-
 /-- An antitone function on an inf-semilattice is directed. -/
-theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β}
+theorem directed_of_isDirected_ge [SemilatticeInf α] {r : β → β → Prop} {f : α → β}
     (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) : Directed r f := fun x y =>
   ⟨x ⊓ y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
-#align directed_of_inf directed_of_inf
+#align directed_of_inf directed_of_isDirected_ge
 -/
 
 #print Monotone.directed_ge /-
 theorem Monotone.directed_ge [SemilatticeInf α] [Preorder β] {f : α → β} (hf : Monotone f) :
     Directed (· ≥ ·) f :=
-  directed_of_inf hf
+  directed_of_isDirected_ge hf
 #align monotone.directed_ge Monotone.directed_ge
 -/
 
 #print Antitone.directed_le /-
 theorem Antitone.directed_le [SemilatticeInf α] [Preorder β] {f : α → β} (hf : Antitone f) :
     Directed (· ≤ ·) f :=
-  directed_of_inf hf
+  directed_of_isDirected_ge hf
 #align antitone.directed_le Antitone.directed_le
 -/
 

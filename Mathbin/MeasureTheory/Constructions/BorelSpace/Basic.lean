@@ -930,7 +930,8 @@ theorem ext_of_Iic {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
   by
   refine' ext_of_Ioc_finite μ ν _ fun a b hlt => _
   · rcases exists_countable_dense_bot_top α with ⟨s, hsc, hsd, -, hst⟩
-    have : DirectedOn (· ≤ ·) s := directedOn_iff_directed.2 (directed_of_sup fun _ _ => id)
+    have : DirectedOn (· ≤ ·) s :=
+      directedOn_iff_directed.2 (directed_of_isDirected_le fun _ _ => id)
     simp only [← bsupr_measure_Iic hsc (hsd.exists_ge' hst) this, h]
   rw [← Iic_diff_Iic, measure_diff (Iic_subset_Iic.2 hlt.le) measurableSet_Iic,
     measure_diff (Iic_subset_Iic.2 hlt.le) measurableSet_Iic, h a, h b]

@@ -1359,7 +1359,7 @@ theorem HasBasis.exists_antitone_subbasis {f : Filter α} [h : f.IsCountablyGene
     exacts [hs.set_index_subset _, subset.trans (hs.set_index_subset _) (inter_subset_left _ _)]
   refine' ⟨fun i => x i, fun i => (x i).2, _⟩
   have : (⨅ i, 𝓟 (s (x i))).HasAntitoneBasis fun i => s (x i) :=
-    ⟨has_basis_infi_principal (directed_of_sup x_mono), x_mono⟩
+    ⟨has_basis_infi_principal (directed_of_isDirected_le x_mono), x_mono⟩
   convert this
   exact
     le_antisymm (le_iInf fun i => le_principal_iff.2 <| by cases i <;> apply hs.set_index_mem)

@@ -628,7 +628,7 @@ is the limit of the measures. -/
 theorem tendsto_measure_iUnion [SemilatticeSup ι] [Countable ι] {s : ι → Set α} (hm : Monotone s) :
     Tendsto (μ ∘ s) atTop (𝓝 (μ (⋃ n, s n))) :=
   by
-  rw [measure_Union_eq_supr (directed_of_sup hm)]
+  rw [measure_Union_eq_supr (directed_of_isDirected_le hm)]
   exact tendsto_atTop_iSup fun n m hnm => measure_mono <| hm hnm
 #align measure_theory.tendsto_measure_Union MeasureTheory.tendsto_measure_iUnion
 -/
@@ -640,7 +640,7 @@ theorem tendsto_measure_iInter [Countable ι] [SemilatticeSup ι] {s : ι → Se
     (hs : ∀ n, MeasurableSet (s n)) (hm : Antitone s) (hf : ∃ i, μ (s i) ≠ ∞) :
     Tendsto (μ ∘ s) atTop (𝓝 (μ (⋂ n, s n))) :=
   by
-  rw [measure_Inter_eq_infi hs (directed_of_sup hm) hf]
+  rw [measure_Inter_eq_infi hs (directed_of_isDirected_le hm) hf]
   exact tendsto_atTop_iInf fun n m hnm => measure_mono <| hm hnm
 #align measure_theory.tendsto_measure_Inter MeasureTheory.tendsto_measure_iInter
 -/
@@ -2230,7 +2230,7 @@ theorem restrict_iUnion_congr [Countable ι] {s : ι → Set α} :
   refine' ⟨fun h i => restrict_congr_mono (subset_Union _ _) h, fun h => _⟩
   ext1 t ht
   have D : Directed (· ⊆ ·) fun t : Finset ι => ⋃ i ∈ t, s i :=
-    directed_of_sup fun t₁ t₂ ht => bUnion_subset_bUnion_left ht
+    directed_of_isDirected_le fun t₁ t₂ ht => bUnion_subset_bUnion_left ht
   rw [Union_eq_Union_finset]
   simp only [restrict_Union_apply_eq_supr D ht, restrict_finset_bUnion_congr.2 fun i hi => h i]
 #align measure_theory.measure.restrict_Union_congr MeasureTheory.Measure.restrict_iUnion_congr
@@ -4413,7 +4413,7 @@ theorem iSup_restrict_spanningSets [SigmaFinite μ] (hs : MeasurableSet s) :
     (⨆ i, μ.restrict (spanningSets μ i) s) = μ s :=
   calc
     (⨆ i, μ.restrict (spanningSets μ i) s) = μ.restrict (⋃ i, spanningSets μ i) s :=
-      (restrict_iUnion_apply_eq_iSup (directed_of_sup (monotone_spanningSets μ)) hs).symm
+      (restrict_iUnion_apply_eq_iSup (directed_of_isDirected_le (monotone_spanningSets μ)) hs).symm
     _ = μ s := by rw [Union_spanning_sets, restrict_univ]
 #align measure_theory.measure.supr_restrict_spanning_sets MeasureTheory.Measure.iSup_restrict_spanningSets
 -/
