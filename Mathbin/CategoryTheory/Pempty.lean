@@ -26,15 +26,15 @@ namespace Functor
 
 variable (C : Type u) [Category.{v} C]
 
-#print CategoryTheory.Functor.emptyEquivalence /-
+#print CategoryTheory.emptyEquivalence /-
 /-- Equivalence between two empty categories. -/
-def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
+def CategoryTheory.emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
   Equivalence.mk
     { obj := PEmpty.elim ∘ Discrete.as
       map := fun x => x.as.elim }
     { obj := PEmpty.elim ∘ Discrete.as
       map := fun x => x.as.elim } (by tidy) (by tidy)
-#align category_theory.functor.empty_equivalence CategoryTheory.Functor.emptyEquivalence
+#align category_theory.functor.empty_equivalence CategoryTheory.emptyEquivalence
 -/
 
 #print CategoryTheory.Functor.empty /-

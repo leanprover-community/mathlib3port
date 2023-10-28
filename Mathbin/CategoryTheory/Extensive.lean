@@ -548,9 +548,9 @@ theorem IsVanKampenColimit.of_iso {F : J ⥤ C} {c c' : Cocone F} (H : IsVanKamp
 #align category_theory.is_van_kampen_colimit.of_iso CategoryTheory.IsVanKampenColimit.of_iso
 -/
 
-#print CategoryTheory.IsVanKampenColimit.of_map /-
-theorem IsVanKampenColimit.of_map {D : Type _} [Category D] (G : C ⥤ D) {F : J ⥤ C} {c : Cocone F}
-    [PreservesLimitsOfShape WalkingCospan G] [ReflectsLimitsOfShape WalkingCospan G]
+#print CategoryTheory.IsVanKampenColimit.of_mapCocone /-
+theorem IsVanKampenColimit.of_mapCocone {D : Type _} [Category D] (G : C ⥤ D) {F : J ⥤ C}
+    {c : Cocone F} [PreservesLimitsOfShape WalkingCospan G] [ReflectsLimitsOfShape WalkingCospan G]
     [PreservesColimitsOfShape J G] [ReflectsColimitsOfShape J G]
     (H : IsVanKampenColimit (G.mapCocone c)) : IsVanKampenColimit c :=
   by
@@ -563,7 +563,7 @@ theorem IsVanKampenColimit.of_map {D : Type _} [Category D] (G : C ⥤ D) {F : J
       (forall_congr' fun j => _)
   · exact ⟨fun h => ⟨is_colimit_of_preserves G h.some⟩, fun h => ⟨is_colimit_of_reflects G h.some⟩⟩
   · exact is_pullback.map_iff G (nat_trans.congr_app h.symm j)
-#align category_theory.is_van_kampen_colimit.of_map CategoryTheory.IsVanKampenColimit.of_map
+#align category_theory.is_van_kampen_colimit.of_map CategoryTheory.IsVanKampenColimit.of_mapCocone
 -/
 
 #print CategoryTheory.isVanKampenColimit_of_evaluation /-

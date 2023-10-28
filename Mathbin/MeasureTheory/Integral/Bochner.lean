@@ -1962,11 +1962,11 @@ theorem MeasurePreserving.integral_comp {β} {_ : MeasurableSpace β} {f : α �
 #align measure_theory.measure_preserving.integral_comp MeasureTheory.MeasurePreserving.integral_comp
 -/
 
-#print MeasureTheory.set_integral_eq_subtype /-
-theorem set_integral_eq_subtype {α} [MeasureSpace α] {s : Set α} (hs : MeasurableSet s)
-    (f : α → E) : ∫ x in s, f x = ∫ x : s, f x := by rw [← map_comap_subtype_coe hs];
+#print MeasureTheory.integral_subtype /-
+theorem integral_subtype {α} [MeasureSpace α] {s : Set α} (hs : MeasurableSet s) (f : α → E) :
+    ∫ x in s, f x = ∫ x : s, f x := by rw [← map_comap_subtype_coe hs];
   exact (MeasurableEmbedding.subtype_coe hs).integral_map _
-#align measure_theory.set_integral_eq_subtype MeasureTheory.set_integral_eq_subtype
+#align measure_theory.set_integral_eq_subtype MeasureTheory.integral_subtype
 -/
 
 #print MeasureTheory.integral_dirac' /-
