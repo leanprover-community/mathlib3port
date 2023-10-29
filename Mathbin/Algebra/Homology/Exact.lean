@@ -87,17 +87,17 @@ variable [HasZeroObject V] [Preadditive V] [HasKernels V] [HasCokernels V]
 
 open scoped ZeroObject
 
-#print CategoryTheory.Preadditive.exact_iff_homology_zero /-
+#print CategoryTheory.Preadditive.exact_iff_homology'_zero /-
 /-- In any preadditive category,
 composable morphisms `f g` are exact iff they compose to zero and the homology vanishes.
 -/
-theorem Preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶ C) :
-    Exact f g ↔ ∃ w : f ≫ g = 0, Nonempty (homology f g w ≅ 0) :=
+theorem Preadditive.exact_iff_homology'_zero {A B C : V} (f : A ⟶ B) (g : B ⟶ C) :
+    Exact f g ↔ ∃ w : f ≫ g = 0, Nonempty (homology' f g w ≅ 0) :=
   ⟨fun h => ⟨h.w, ⟨cokernel.ofEpi _⟩⟩, fun h =>
     by
     obtain ⟨w, ⟨i⟩⟩ := h
     exact ⟨w, preadditive.epi_of_cokernel_zero ((cancel_mono i.hom).mp (by ext))⟩⟩
-#align category_theory.preadditive.exact_iff_homology_zero CategoryTheory.Preadditive.exact_iff_homology_zero
+#align category_theory.preadditive.exact_iff_homology_zero CategoryTheory.Preadditive.exact_iff_homology'_zero
 -/
 
 #print CategoryTheory.Preadditive.exact_of_iso_of_exact /-
@@ -107,7 +107,7 @@ theorem Preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f
   by
   rw [preadditive.exact_iff_homology_zero] at h ⊢
   rcases h with ⟨w₁, ⟨i⟩⟩
-  suffices w₂ : f₂ ≫ g₂ = 0; exact ⟨w₂, ⟨(homology.mapIso w₁ w₂ α β p).symm.trans i⟩⟩
+  suffices w₂ : f₂ ≫ g₂ = 0; exact ⟨w₂, ⟨(homology'.mapIso w₁ w₂ α β p).symm.trans i⟩⟩
   rw [← cancel_epi α.hom.left, ← cancel_mono β.inv.right, comp_zero, zero_comp, ← w₁]
   simp only [← arrow.mk_hom f₁, ← arrow.left_hom_inv_right α.hom, ← arrow.mk_hom g₁, ←
     arrow.left_hom_inv_right β.hom, p]

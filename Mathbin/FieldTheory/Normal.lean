@@ -377,8 +377,7 @@ theorem AlgHom.fieldRange_of_normal {E : IntermediateField F K} [Normal F E] (f 
   haveI : IsScalarTower F E E := by infer_instance
   let g := f.restrict_normal' E
   rw [← show E.val.comp ↑g = f from fun_like.ext_iff.mpr (f.restrict_normal_commutes E), ←
-    IntermediateField.AlgHom.map_fieldRange, g.field_range_eq_top, ← E.val.field_range_eq_map,
-    E.field_range_val]
+    AlgHom.map_fieldRange, g.field_range_eq_top, ← E.val.field_range_eq_map, E.field_range_val]
 #align alg_hom.field_range_of_normal AlgHom.fieldRange_of_normal
 -/
 

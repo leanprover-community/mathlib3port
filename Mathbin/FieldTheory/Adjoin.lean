@@ -330,33 +330,33 @@ theorem restrictScalars_top {K : Type _} [Field K] [Algebra K E] [Algebra K F]
 #align intermediate_field.restrict_scalars_top IntermediateField.restrictScalars_top
 -/
 
-#print IntermediateField.AlgHom.fieldRange_eq_map /-
-theorem IntermediateField.AlgHom.fieldRange_eq_map {K : Type _} [Field K] [Algebra F K]
-    (f : E →ₐ[F] K) : f.fieldRange = IntermediateField.map f ⊤ :=
+#print AlgHom.fieldRange_eq_map /-
+theorem AlgHom.fieldRange_eq_map {K : Type _} [Field K] [Algebra F K] (f : E →ₐ[F] K) :
+    f.fieldRange = IntermediateField.map f ⊤ :=
   SetLike.ext' Set.image_univ.symm
-#align alg_hom.field_range_eq_map IntermediateField.AlgHom.fieldRange_eq_map
+#align alg_hom.field_range_eq_map AlgHom.fieldRange_eq_map
 -/
 
-#print IntermediateField.AlgHom.map_fieldRange /-
-theorem IntermediateField.AlgHom.map_fieldRange {K L : Type _} [Field K] [Field L] [Algebra F K]
-    [Algebra F L] (f : E →ₐ[F] K) (g : K →ₐ[F] L) : f.fieldRange.map g = (g.comp f).fieldRange :=
+#print AlgHom.map_fieldRange /-
+theorem AlgHom.map_fieldRange {K L : Type _} [Field K] [Field L] [Algebra F K] [Algebra F L]
+    (f : E →ₐ[F] K) (g : K →ₐ[F] L) : f.fieldRange.map g = (g.comp f).fieldRange :=
   SetLike.ext' (Set.range_comp g f).symm
-#align alg_hom.map_field_range IntermediateField.AlgHom.map_fieldRange
+#align alg_hom.map_field_range AlgHom.map_fieldRange
 -/
 
-#print IntermediateField.AlgHom.fieldRange_eq_top /-
-theorem IntermediateField.AlgHom.fieldRange_eq_top {K : Type _} [Field K] [Algebra F K]
-    {f : E →ₐ[F] K} : f.fieldRange = ⊤ ↔ Function.Surjective f :=
+#print AlgHom.fieldRange_eq_top /-
+theorem AlgHom.fieldRange_eq_top {K : Type _} [Field K] [Algebra F K] {f : E →ₐ[F] K} :
+    f.fieldRange = ⊤ ↔ Function.Surjective f :=
   SetLike.ext'_iff.trans Set.range_iff_surjective
-#align alg_hom.field_range_eq_top IntermediateField.AlgHom.fieldRange_eq_top
+#align alg_hom.field_range_eq_top AlgHom.fieldRange_eq_top
 -/
 
-#print IntermediateField.AlgEquiv.fieldRange_eq_top /-
+#print AlgEquiv.fieldRange_eq_top /-
 @[simp]
-theorem IntermediateField.AlgEquiv.fieldRange_eq_top {K : Type _} [Field K] [Algebra F K]
-    (f : E ≃ₐ[F] K) : (f : E →ₐ[F] K).fieldRange = ⊤ :=
-  IntermediateField.AlgHom.fieldRange_eq_top.mpr f.Surjective
-#align alg_equiv.field_range_eq_top IntermediateField.AlgEquiv.fieldRange_eq_top
+theorem AlgEquiv.fieldRange_eq_top {K : Type _} [Field K] [Algebra F K] (f : E ≃ₐ[F] K) :
+    (f : E →ₐ[F] K).fieldRange = ⊤ :=
+  AlgHom.fieldRange_eq_top.mpr f.Surjective
+#align alg_equiv.field_range_eq_top AlgEquiv.fieldRange_eq_top
 -/
 
 end Lattice

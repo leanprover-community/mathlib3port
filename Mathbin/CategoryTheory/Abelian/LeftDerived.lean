@@ -73,7 +73,7 @@ theorem exact_of_map_projectiveResolution (P : ProjectiveResolution X) [Preserve
 def leftDerivedZeroToSelfApp [EnoughProjectives C] {X : C} (P : ProjectiveResolution X) :
     (F.leftDerived 0).obj X ⟶ F.obj X :=
   (leftDerivedObjIso F 0 P).Hom ≫
-    homology.desc' _ _ _ (kernel.ι _ ≫ F.map (P.π.f 0))
+    homology'.desc' _ _ _ (kernel.ι _ ≫ F.map (P.π.f 0))
       (by
         rw [kernel.lift_ι_assoc,
           HomologicalComplex.dTo_eq _ (by simp : (ComplexShape.down ℕ).Rel 1 0),
@@ -90,7 +90,7 @@ def leftDerivedZeroToSelfAppInv [EnoughProjectives C] [PreservesFiniteColimits F
   by
   refine'
     (as_iso (cokernel.desc _ _ (exact_of_map_projective_resolution F P).w)).inv ≫
-      _ ≫ (homologyIsoCokernelLift _ _ _).inv ≫ (left_derived_obj_iso F 0 P).inv
+      _ ≫ (homology'IsoCokernelLift _ _ _).inv ≫ (left_derived_obj_iso F 0 P).inv
   exact cokernel.map _ _ (𝟙 _) (kernel.lift _ (𝟙 _) (by simp)) (by ext; simp)
 #align category_theory.abelian.functor.left_derived_zero_to_self_app_inv CategoryTheory.Abelian.Functor.leftDerivedZeroToSelfAppInv
 -/
@@ -106,8 +106,8 @@ theorem leftDerivedZeroToSelfApp_comp_inv [EnoughProjectives C] [PreservesFinite
   convert category.comp_id _
   rw [← category.assoc, ← category.assoc, iso.comp_inv_eq, category.id_comp]
   ext
-  rw [← category.assoc, ← category.assoc, homology.π'_desc', category.assoc, category.assoc, ←
-    category.assoc (F.map _), abelian.cokernel.desc.inv, cokernel.π_desc, homology.π',
+  rw [← category.assoc, ← category.assoc, homology'.π'_desc', category.assoc, category.assoc, ←
+    category.assoc (F.map _), abelian.cokernel.desc.inv, cokernel.π_desc, homology'.π',
     category.assoc, iso.inv_hom_id, category.comp_id, ← category.assoc]
   convert category.id_comp _ using 2
   ext
@@ -125,8 +125,8 @@ theorem leftDerivedZeroToSelfAppInv_comp [EnoughProjectives C] [PreservesFiniteC
     category.assoc (F.left_derived_obj_iso 0 P).inv, iso.inv_hom_id, category.id_comp,
     is_iso.inv_comp_eq, category.comp_id]
   ext
-  simp only [cokernel.π_desc_assoc, category.assoc, cokernel.π_desc, homology.desc']
-  rw [← category.assoc, ← category.assoc (homologyIsoCokernelLift _ _ _).inv, iso.inv_hom_id,
+  simp only [cokernel.π_desc_assoc, category.assoc, cokernel.π_desc, homology'.desc']
+  rw [← category.assoc, ← category.assoc (homology'IsoCokernelLift _ _ _).inv, iso.inv_hom_id,
     category.id_comp]
   simp only [category.assoc, cokernel.π_desc, kernel.lift_ι_assoc, category.id_comp]
 #align category_theory.abelian.functor.left_derived_zero_to_self_app_inv_comp CategoryTheory.Abelian.Functor.leftDerivedZeroToSelfAppInv_comp
@@ -157,11 +157,11 @@ theorem leftDerived_zero_to_self_natural [EnoughProjectives C] {X : C} {Y : C} (
   rw [functor.left_derived_map_eq F 0 f (ProjectiveResolution.lift f P Q) (by simp), category.assoc,
     category.assoc, ← category.assoc _ (F.left_derived_obj_iso 0 Q).Hom, iso.inv_hom_id,
     category.id_comp, category.assoc, whisker_eq]
-  dsimp only [homologyFunctor_map]
+  dsimp only [homology'Functor_map]
   ext
   simp only [HomologicalComplex.Hom.sqTo_right, map_homological_complex_map_f,
-    homology.π'_map_assoc, homology.π'_desc', kernel.lift_ι_assoc, category.assoc,
-    homology.π'_desc'_assoc, ← map_comp,
+    homology'.π'_map_assoc, homology'.π'_desc', kernel.lift_ι_assoc, category.assoc,
+    homology'.π'_desc'_assoc, ← map_comp,
     show (ProjectiveResolution.lift f P Q).f 0 ≫ _ = _ ≫ f from
       HomologicalComplex.congr_hom (ProjectiveResolution.lift_commutes f P Q) 0]
 #align category_theory.abelian.functor.left_derived_zero_to_self_natural CategoryTheory.Abelian.Functor.leftDerived_zero_to_self_natural

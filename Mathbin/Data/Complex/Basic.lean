@@ -1129,12 +1129,12 @@ theorem abs_of_nonneg {r : ℝ} (h : 0 ≤ r) : abs r = r :=
 #align complex.abs_of_nonneg Complex.abs_of_nonneg
 -/
 
-#print Complex.abs_of_nat /-
-theorem abs_of_nat (n : ℕ) : Complex.abs n = n :=
+#print Complex.abs_natCast /-
+theorem abs_natCast (n : ℕ) : Complex.abs n = n :=
   calc
     Complex.abs n = Complex.abs (n : ℝ) := by rw [of_real_nat_cast]
     _ = _ := abs_of_nonneg (Nat.cast_nonneg n)
-#align complex.abs_of_nat Complex.abs_of_nat
+#align complex.abs_of_nat Complex.abs_natCast
 -/
 
 #print Complex.mul_self_abs /-

@@ -351,7 +351,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 /-- If `X` is a cochain complex of injective objects and we have a quasi-isomorphism
 `f : Y[0] ⟶ X`, then `X` is an injective resolution of `Y.` -/
 def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex C ℕ) (Y : C)
-    (f : (CochainComplex.single₀ C).obj Y ⟶ X) [QuasiIso f] (H : ∀ n, Injective (X.pt n)) :
+    (f : (CochainComplex.single₀ C).obj Y ⟶ X) [QuasiIso' f] (H : ∀ n, Injective (X.pt n)) :
     InjectiveResolution Y where
   cocomplex := X
   ι := f

@@ -203,7 +203,7 @@ theorem norm_rat (r : ℚ) : ‖(r : ℂ)‖ = |(r : ℝ)| := by rw [← of_real
 #print Complex.norm_nat /-
 @[simp]
 theorem norm_nat (n : ℕ) : ‖(n : ℂ)‖ = n :=
-  abs_of_nat _
+  abs_natCast _
 #align complex.norm_nat Complex.norm_nat
 -/
 
