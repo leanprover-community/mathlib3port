@@ -321,14 +321,14 @@ theorem hasStrictInitial_of_isUniversal [HasInitial C]
 #align category_theory.has_strict_initial_of_is_universal CategoryTheory.hasStrictInitial_of_isUniversal
 -/
 
-#print CategoryTheory.hasStrictInitialObjects_of_finitaryExtensive /-
-instance (priority := 100) hasStrictInitialObjects_of_finitaryExtensive [FinitaryExtensive C] :
+#print CategoryTheory.hasStrictInitialObjects_of_finitaryPreExtensive /-
+instance (priority := 100) hasStrictInitialObjects_of_finitaryPreExtensive [FinitaryExtensive C] :
     HasStrictInitialObjects C :=
   hasStrictInitial_of_isUniversal
     (FinitaryExtensive.vanKampen _
         ((BinaryCofan.isColimit_iff_isIso_inr initialIsInitial _).mpr
             (by dsimp; infer_instance)).some).isUniversal
-#align category_theory.has_strict_initial_objects_of_finitary_extensive CategoryTheory.hasStrictInitialObjects_of_finitaryExtensive
+#align category_theory.has_strict_initial_objects_of_finitary_extensive CategoryTheory.hasStrictInitialObjects_of_finitaryPreExtensive
 -/
 
 #print CategoryTheory.finitaryExtensive_iff_of_isTerminal /-

@@ -72,12 +72,10 @@ def of : Generators G → G :=
 #align is_free_group.of IsFreeGroup.of
 -/
 
-#print IsFreeGroup.of_eq_freeGroup_of /-
 @[simp]
 theorem of_eq_freeGroup_of {A : Type u} : @of (FreeGroup A) _ _ = FreeGroup.of :=
   rfl
 #align is_free_group.of_eq_free_group_of IsFreeGroup.of_eq_freeGroup_of
--/
 
 variable {H : Type _} [Group H]
 
@@ -93,12 +91,10 @@ def lift : (Generators G → H) ≃ (G →* H) :=
 #align is_free_group.lift IsFreeGroup.lift
 -/
 
-#print IsFreeGroup.lift'_eq_freeGroup_lift /-
 @[simp]
 theorem lift'_eq_freeGroup_lift {A : Type u} : @lift (FreeGroup A) _ _ H _ = FreeGroup.lift :=
   rfl
 #align is_free_group.lift'_eq_free_group_lift IsFreeGroup.lift'_eq_freeGroup_lift
--/
 
 #print IsFreeGroup.lift_of /-
 @[simp]
@@ -132,10 +128,9 @@ theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a
 #align is_free_group.unique_lift IsFreeGroup.unique_lift
 -/
 
-#print IsFreeGroup.ofLift /-
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
-def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G)
+def of_lift {G : Type u} [Group G] (X : Type u) (of : X → G)
     (lift : ∀ {H : Type u} [Group H], (X → H) ≃ (G →* H))
     (lift_of : ∀ {H : Type u} [Group H], ∀ (f : X → H) (a), lift f (of a) = f a) : IsFreeGroup G
     where
@@ -152,13 +147,11 @@ def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G)
         apply lift.symm.injective; ext x
         simp only [MonoidHom.coe_comp, Function.comp_apply, MonoidHom.id_apply, FreeGroup.lift.of,
           lift_of, lift_symm_of])
-#align is_free_group.of_lift IsFreeGroup.ofLift
--/
+#align is_free_group.of_lift IsFreeGroup.of_lift
 
-#print IsFreeGroup.ofUniqueLift /-
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.unique_lift`.  -/
-noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G)
+noncomputable def of_unique_lift {G : Type u} [Group G] (X : Type u) (of : X → G)
     (h : ∀ {H : Type u} [Group H] (f : X → H), ∃! F : G →* H, ∀ a, F (of a) = f a) :
     IsFreeGroup G :=
   let lift {H : Type u} [Group H] : (X → H) ≃ (G →* H) :=
@@ -168,18 +161,15 @@ noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G
       right_inv := fun F => ((Classical.choose_spec (h (F ∘ of))).right F fun _ => rfl).symm }
   let lift_of {H : Type u} [Group H] (f : X → H) (a : X) : lift f (of a) = f a :=
     congr_fun (lift.symm_apply_apply f) a
-  ofLift X of @lift @lift_of
-#align is_free_group.of_unique_lift IsFreeGroup.ofUniqueLift
--/
+  of_lift X of @lift @lift_of
+#align is_free_group.of_unique_lift IsFreeGroup.of_unique_lift
 
-#print IsFreeGroup.ofMulEquiv /-
 /-- Being a free group transports across group isomorphisms. -/
-def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) : IsFreeGroup H
+def of_mulEquiv {H : Type _} [Group H] (h : G ≃* H) : IsFreeGroup H
     where
   Generators := Generators G
   MulEquiv := (mulEquiv G).trans h
-#align is_free_group.of_mul_equiv IsFreeGroup.ofMulEquiv
--/
+#align is_free_group.of_mul_equiv IsFreeGroup.of_mulEquiv
 
 end IsFreeGroup
 
