@@ -179,10 +179,10 @@ instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (�
 variable (X) [T3Space X] [SecondCountableTopology X]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print TopologicalSpace.exists_embedding_l_infty /-
+#print TopologicalSpace.exists_inducing_l_infty /-
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
-theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
+theorem exists_inducing_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   by
   haveI : NormalSpace X := NormalSpace.of_regularSpace_secondCountableTopology X
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
@@ -275,7 +275,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     refine' this.mono fun y hy => (BoundedContinuousFunction.dist_le δ0.le).2 fun UV => _
     cases' le_total δ (ε UV) with hle hle
     exacts [hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
-#align topological_space.exists_embedding_l_infty TopologicalSpace.exists_embedding_l_infty
+#align topological_space.exists_embedding_l_infty TopologicalSpace.exists_inducing_l_infty
 -/
 
 #print TopologicalSpace.metrizableSpace_of_t3_second_countable /-
@@ -283,7 +283,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
 countable topology `X` is metrizable, i.e., there exists a metric space structure that generates the
 same topology. -/
 theorem metrizableSpace_of_t3_second_countable : MetrizableSpace X :=
-  let ⟨f, hf⟩ := exists_embedding_l_infty X
+  let ⟨f, hf⟩ := exists_inducing_l_infty X
   hf.MetrizableSpace
 #align topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizableSpace_of_t3_second_countable
 -/

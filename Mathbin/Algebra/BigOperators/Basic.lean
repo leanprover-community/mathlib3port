@@ -14,7 +14,7 @@ import Data.Finset.Sigma
 import Data.Multiset.Powerset
 import Data.Set.Pairwise.Basic
 
-#align_import algebra.big_operators.basic from "leanprover-community/mathlib"@"fa2309577c7009ea243cffdf990cd6c84f0ad497"
+#align_import algebra.big_operators.basic from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # Big operators
@@ -128,6 +128,12 @@ theorem prod_eq_multiset_prod [CommMonoid β] (s : Finset α) (f : α → β) :
 #align finset.prod_eq_multiset_prod Finset.prod_eq_multiset_prod
 #align finset.sum_eq_multiset_sum Finset.sum_eq_multiset_sum
 -/
+
+@[simp, to_additive]
+theorem prod_map_val [CommMonoid β] (s : Finset α) (f : α → β) : (s.1.map f).Prod = ∏ a in s, f a :=
+  rfl
+#align finset.prod_map_val Finset.prod_map_val
+#align finset.sum_map_val Finset.sum_map_val
 
 #print Finset.prod_eq_fold /-
 @[to_additive]
@@ -1998,12 +2004,22 @@ theorem sum_const_nat {m : ℕ} {f : α → ℕ} (h₁ : ∀ x ∈ s, f x = m) :
 #align finset.sum_const_nat Finset.sum_const_nat
 -/
 
+theorem nat_cast_card_filter [AddCommMonoidWithOne β] (p) [DecidablePred p] (s : Finset α) :
+    ((filter p s).card : β) = ∑ a in s, if p a then 1 else 0 := by
+  simp only [add_zero, sum_const, nsmul_eq_mul, eq_self_iff_true, sum_const_zero, sum_ite,
+    nsmul_one]
+#align finset.nat_cast_card_filter Finset.nat_cast_card_filter
+
+theorem card_filter (p) [DecidablePred p] (s : Finset α) :
+    (filter p s).card = ∑ a in s, ite (p a) 1 0 :=
+  nat_cast_card_filter _ _
+#align finset.card_filter Finset.card_filter
+
 #print Finset.sum_boole /-
 @[simp]
-theorem sum_boole {s : Finset α} {p : α → Prop} [NonAssocSemiring β] {hp : DecidablePred p} :
-    (∑ x in s, if p x then (1 : β) else (0 : β)) = (s.filterₓ p).card := by
-  simp only [add_zero, mul_one, Finset.sum_const, nsmul_eq_mul, eq_self_iff_true,
-    Finset.sum_const_zero, Finset.sum_ite]
+theorem sum_boole {s : Finset α} {p : α → Prop} [AddCommMonoidWithOne β] {hp : DecidablePred p} :
+    (∑ x in s, if p x then 1 else 0 : β) = (s.filterₓ p).card :=
+  (nat_cast_card_filter _ _).symm
 #align finset.sum_boole Finset.sum_boole
 -/
 

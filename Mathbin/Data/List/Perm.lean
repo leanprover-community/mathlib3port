@@ -8,7 +8,7 @@ import Data.List.Permutation
 import Data.List.Range
 import Data.Nat.Factorial.Basic
 
-#align_import data.list.perm from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
+#align_import data.list.perm from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # List Permutations
@@ -579,7 +579,7 @@ theorem Subperm.countP_le (p : α → Prop) [DecidablePred p] {l₁ l₂ : List 
 
 #print List.Perm.countP_congr /-
 theorem Perm.countP_congr (s : l₁ ~ l₂) {p p' : α → Prop} [DecidablePred p] [DecidablePred p']
-    (hp : ∀ x ∈ l₁, p x = p' x) : l₁.countP p = l₂.countP p' :=
+    (hp : ∀ x ∈ l₁, p x ↔ p' x) : l₁.countP p = l₂.countP p' :=
   by
   rw [← s.countp_eq p']
   clear s

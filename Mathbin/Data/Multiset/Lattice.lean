@@ -6,7 +6,7 @@ Authors: Mario Carneiro
 import Data.Multiset.FinsetOps
 import Data.Multiset.Fold
 
-#align_import data.multiset.lattice from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
+#align_import data.multiset.lattice from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # Lattice operations on multisets
@@ -71,6 +71,7 @@ theorem sup_add (s₁ s₂ : Multiset α) : (s₁ + s₂).sup = s₁.sup ⊔ s�
 -/
 
 #print Multiset.sup_le /-
+@[simp]
 theorem sup_le {s : Multiset α} {a : α} : s.sup ≤ a ↔ ∀ b ∈ s, b ≤ a :=
   Multiset.induction_on s (by simp)
     (by simp (config := { contextual := true }) [or_imp, forall_and])

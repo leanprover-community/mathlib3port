@@ -5,7 +5,7 @@ Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, M
 -/
 import Data.List.BigOperators.Basic
 
-#align_import data.list.count from "leanprover-community/mathlib"@"47adfab39a11a072db552f47594bf8ed2cf8a722"
+#align_import data.list.count from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # Counting in lists
@@ -155,6 +155,11 @@ theorem countP_map (p : β → Prop) [DecidablePred p] (f : α → β) :
   | a :: l => by rw [map_cons, countp_cons, countp_cons, countp_map]
 #align list.countp_map List.countP_map
 -/
+
+@[simp]
+theorem countP_attach (l : List α) : (l.attach.countP fun a => p ↑a) = l.countP p := by
+  rw [← countp_map, attach_map_coe]
+#align list.countp_attach List.countP_attach
 
 variable {p q}
 
@@ -376,6 +381,11 @@ theorem count_bind {α β} [DecidableEq β] (l : List α) (f : α → List β) (
     count x (l.bind f) = sum (map (count x ∘ f) l) := by rw [List.bind, count_join, map_map]
 #align list.count_bind List.count_bind
 -/
+
+@[simp]
+theorem count_attach (a : { x // x ∈ l }) : l.attach.count a = l.count a :=
+  Eq.trans (countP_congr fun _ _ => Subtype.ext_iff) <| countP_attach _ _
+#align list.count_attach List.count_attach
 
 #print List.count_map_of_injective /-
 @[simp]

@@ -6,7 +6,7 @@ Authors: Leonardo de Moura, Jeremy Avigad
 import Data.Finset.Image
 import Tactic.ByContra
 
-#align_import data.finset.card from "leanprover-community/mathlib"@"3365b20c2ffa7c35e47e5209b89ba9abdddf3ffe"
+#align_import data.finset.card from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # Cardinality of a finite set
@@ -54,6 +54,11 @@ theorem card_def (s : Finset α) : s.card = s.1.card :=
   rfl
 #align finset.card_def Finset.card_def
 -/
+
+@[simp]
+theorem card_val (s : Finset α) : s.1.card = s.card :=
+  rfl
+#align finset.card_val Finset.card_val
 
 #print Finset.card_mk /-
 @[simp]

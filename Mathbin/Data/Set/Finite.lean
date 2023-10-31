@@ -7,7 +7,7 @@ import Data.Finset.Basic
 import Data.Set.Functor
 import Data.Finite.Basic
 
-#align_import data.set.finite from "leanprover-community/mathlib"@"ffde2d8a6e689149e44fd95fa862c23a57f8c780"
+#align_import data.set.finite from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # Finite sets
@@ -1530,7 +1530,7 @@ theorem empty_card' {h : Fintype.{u} (∅ : Set α)} : @Fintype.card (∅ : Set 
 #print Set.card_fintypeInsertOfNotMem /-
 theorem card_fintypeInsertOfNotMem {a : α} (s : Set α) [Fintype s] (h : a ∉ s) :
     @Fintype.card _ (fintypeInsertOfNotMem s h) = Fintype.card s + 1 := by
-  rw [fintype_insert_of_not_mem, Fintype.card_ofFinset] <;> simp [Finset.card, to_finset] <;> rfl
+  simp [fintype_insert_of_not_mem, Fintype.card_ofFinset]
 #align set.card_fintype_insert_of_not_mem Set.card_fintypeInsertOfNotMem
 -/
 
