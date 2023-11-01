@@ -729,15 +729,12 @@ end SymEquiv
 
 section Decidable
 
-#print Sym2.relBool /-
 /-- An algorithm for computing `sym2.rel`.
 -/
 def relBool [DecidableEq α] (x y : α × α) : Bool :=
   if x.1 = y.1 then x.2 = y.2 else if x.1 = y.2 then x.2 = y.1 else false
 #align sym2.rel_bool Sym2.relBool
--/
 
-#print Sym2.relBool_spec /-
 theorem relBool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y :=
   by
   cases' x with x₁ x₂; cases' y with y₁ y₂
@@ -748,7 +745,6 @@ theorem relBool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Re
     · subst h1 <;> apply Sym2.Rel.swap
     · cases h1 <;> cc
 #align sym2.rel_bool_spec Sym2.relBool_spec
--/
 
 /-- Given `[decidable_eq α]` and `[fintype α]`, the following instance gives `fintype (sym2 α)`.
 -/

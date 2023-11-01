@@ -199,8 +199,8 @@ def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
   | 0 => {nil}
   | n + 1 =>
     (Finset.Nat.antidiagonal n).attach.biUnion fun ijh =>
-      have := Nat.lt_succ_of_le (fst_le ijh.2)
-      have := Nat.lt_succ_of_le (snd_le ijh.2)
+      have := Nat.lt_succ_of_le (Finset.antidiagonal.fst_le ijh.2)
+      have := Nat.lt_succ_of_le (Finset.antidiagonal.snd_le ijh.2)
       pairwiseNode (trees_of_num_nodes_eq ijh.1.1) (trees_of_num_nodes_eq ijh.1.2)
 #align tree.trees_of_num_nodes_eq Tree.treesOfNumNodesEq
 -/

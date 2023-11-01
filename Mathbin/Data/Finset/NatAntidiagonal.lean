@@ -28,21 +28,17 @@ namespace Finset
 
 namespace Nat
 
-#print Finset.Nat.antidiagonal /-
 /-- The antidiagonal of a natural number `n` is
     the finset of pairs `(i, j)` such that `i + j = n`. -/
 def antidiagonal (n : ℕ) : Finset (ℕ × ℕ) :=
   ⟨Multiset.Nat.antidiagonal n, Multiset.Nat.nodup_antidiagonal n⟩
 #align finset.nat.antidiagonal Finset.Nat.antidiagonal
--/
 
-#print Finset.Nat.mem_antidiagonal /-
 /-- A pair (i, j) is contained in the antidiagonal of `n` if and only if `i + j = n`. -/
 @[simp]
 theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x.1 + x.2 = n := by
   rw [antidiagonal, mem_def, Multiset.Nat.mem_antidiagonal]
 #align finset.nat.mem_antidiagonal Finset.Nat.mem_antidiagonal
--/
 
 #print Finset.Nat.card_antidiagonal /-
 /-- The cardinality of the antidiagonal of `n` is `n + 1`. -/
@@ -101,44 +97,44 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
 #align finset.nat.antidiagonal_succ_succ' Finset.Nat.antidiagonal_succ_succ'
 -/
 
-#print Finset.Nat.map_swap_antidiagonal /-
-theorem map_swap_antidiagonal {n : ℕ} :
+#print Finset.map_swap_antidiagonal /-
+theorem Finset.map_swap_antidiagonal {n : ℕ} :
     (antidiagonal n).map ⟨Prod.swap, Prod.swap_rightInverse.Injective⟩ = antidiagonal n :=
   eq_of_veq <| by simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
-#align finset.nat.map_swap_antidiagonal Finset.Nat.map_swap_antidiagonal
+#align finset.nat.map_swap_antidiagonal Finset.map_swap_antidiagonal
 -/
 
-#print Finset.Nat.antidiagonal_congr /-
+#print Finset.antidiagonal_congr /-
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
-theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n)
+theorem Finset.antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n)
     (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst :=
   by
   refine' ⟨congr_arg Prod.fst, fun h => Prod.ext h ((add_right_inj q.fst).mp _)⟩
   rw [mem_antidiagonal] at hp hq 
   rw [hq, ← h, hp]
-#align finset.nat.antidiagonal_congr Finset.Nat.antidiagonal_congr
+#align finset.nat.antidiagonal_congr Finset.antidiagonal_congr
 -/
 
-#print Finset.Nat.antidiagonal.fst_le /-
-theorem antidiagonal.fst_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.1 ≤ n :=
+#print Finset.antidiagonal.fst_le /-
+theorem Finset.antidiagonal.fst_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.1 ≤ n :=
   by
   rw [le_iff_exists_add]
   use kl.2
   rwa [mem_antidiagonal, eq_comm] at hlk 
-#align finset.nat.antidiagonal.fst_le Finset.Nat.antidiagonal.fst_le
+#align finset.nat.antidiagonal.fst_le Finset.antidiagonal.fst_le
 -/
 
-#print Finset.Nat.antidiagonal.snd_le /-
-theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.2 ≤ n :=
+#print Finset.antidiagonal.snd_le /-
+theorem Finset.antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.2 ≤ n :=
   by
   rw [le_iff_exists_add]
   use kl.1
   rwa [mem_antidiagonal, eq_comm, add_comm] at hlk 
-#align finset.nat.antidiagonal.snd_le Finset.Nat.antidiagonal.snd_le
+#align finset.nat.antidiagonal.snd_le Finset.antidiagonal.snd_le
 -/
 
-#print Finset.Nat.filter_fst_eq_antidiagonal /-
-theorem filter_fst_eq_antidiagonal (n m : ℕ) :
+#print Finset.filter_fst_eq_antidiagonal /-
+theorem Finset.filter_fst_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
   by
   ext ⟨x, y⟩
@@ -148,26 +144,26 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
   · rw [not_le] at h 
     simp only [not_mem_empty, iff_false_iff, not_and]
     exact fun hn => ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h)
-#align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonal
+#align finset.nat.filter_fst_eq_antidiagonal Finset.filter_fst_eq_antidiagonal
 -/
 
-#print Finset.Nat.filter_snd_eq_antidiagonal /-
-theorem filter_snd_eq_antidiagonal (n m : ℕ) :
+#print Finset.filter_snd_eq_antidiagonal /-
+theorem Finset.filter_snd_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
   by
   have : (fun x : ℕ × ℕ => x.snd = m) ∘ Prod.swap = fun x : ℕ × ℕ => x.fst = m := by ext; simp
   rw [← map_swap_antidiagonal]
   simp [filter_map, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
-#align finset.nat.filter_snd_eq_antidiagonal Finset.Nat.filter_snd_eq_antidiagonal
+#align finset.nat.filter_snd_eq_antidiagonal Finset.filter_snd_eq_antidiagonal
 -/
 
 section EquivProd
 
-#print Finset.Nat.sigmaAntidiagonalEquivProd /-
+#print Finset.sigmaAntidiagonalEquivProd /-
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigmaAntidiagonalEquivProd : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ
+def Finset.sigmaAntidiagonalEquivProd : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ
     where
   toFun x := x.2
   invFun x := ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩
@@ -176,7 +172,7 @@ def sigmaAntidiagonalEquivProd : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ
     rw [mem_antidiagonal] at h 
     exact Sigma.subtype_ext h rfl
   right_inv x := rfl
-#align finset.nat.sigma_antidiagonal_equiv_prod Finset.Nat.sigmaAntidiagonalEquivProd
+#align finset.nat.sigma_antidiagonal_equiv_prod Finset.sigmaAntidiagonalEquivProd
 -/
 
 end EquivProd

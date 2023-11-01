@@ -849,26 +849,26 @@ theorem sum_take_map_length_splitWrtComposition (l : List α) (c : Composition l
 #align list.sum_take_map_length_split_wrt_composition List.sum_take_map_length_splitWrtComposition
 -/
 
-#print List.nthLe_splitWrtCompositionAux /-
-theorem nthLe_splitWrtCompositionAux (l : List α) (ns : List ℕ) {i : ℕ} (hi) :
+#print List.get_splitWrtCompositionAux /-
+theorem get_splitWrtCompositionAux (l : List α) (ns : List ℕ) {i : ℕ} (hi) :
     nthLe (l.splitWrtCompositionAux ns) i hi =
       (l.take (ns.take (i + 1)).Sum).drop (ns.take i).Sum :=
   by
   induction' ns with n ns IH generalizing l i; · cases hi
   cases i <;> simp [IH]
   rw [add_comm n, drop_add, drop_take]
-#align list.nth_le_split_wrt_composition_aux List.nthLe_splitWrtCompositionAux
+#align list.nth_le_split_wrt_composition_aux List.get_splitWrtCompositionAux
 -/
 
-#print List.nthLe_splitWrtComposition /-
+#print List.get_splitWrtComposition' /-
 /-- The `i`-th sublist in the splitting of a list `l` along a composition `c`, is the slice of `l`
 between the indices `c.size_up_to i` and `c.size_up_to (i+1)`, i.e., the indices in the `i`-th
 block of the composition. -/
-theorem nthLe_splitWrtComposition (l : List α) (c : Composition n) {i : ℕ}
+theorem get_splitWrtComposition' (l : List α) (c : Composition n) {i : ℕ}
     (hi : i < (l.splitWrtComposition c).length) :
     nthLe (l.splitWrtComposition c) i hi = (l.take (c.sizeUpTo (i + 1))).drop (c.sizeUpTo i) :=
-  nthLe_splitWrtCompositionAux _ _ _
-#align list.nth_le_split_wrt_composition List.nthLe_splitWrtComposition
+  get_splitWrtCompositionAux _ _ _
+#align list.nth_le_split_wrt_composition List.get_splitWrtComposition'
 -/
 
 #print List.join_splitWrtCompositionAux /-

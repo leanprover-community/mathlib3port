@@ -38,15 +38,12 @@ def antidiagonal' (f : α →₀ ℕ) : (α →₀ ℕ) × (α →₀ ℕ) →�
 #align finsupp.antidiagonal' Finsupp.antidiagonal'
 -/
 
-#print Finsupp.antidiagonal /-
 /-- The antidiagonal of `s : α →₀ ℕ` is the finset of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)`
 such that `t₁ + t₂ = s`. -/
 def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ)) :=
   f.antidiagonal'.support
 #align finsupp.antidiagonal Finsupp.antidiagonal
--/
 
-#print Finsupp.mem_antidiagonal /-
 @[simp]
 theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ ℕ)} :
     p ∈ antidiagonal f ↔ p.1 + p.2 = f :=
@@ -54,17 +51,16 @@ theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ 
   rcases p with ⟨p₁, p₂⟩
   simp [antidiagonal, antidiagonal', ← and_assoc, ← finsupp.to_multiset.apply_eq_iff_eq]
 #align finsupp.mem_antidiagonal Finsupp.mem_antidiagonal
--/
 
-#print Finsupp.swap_mem_antidiagonal /-
 theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α →₀ ℕ)} :
     f.symm ∈ antidiagonal n ↔ f ∈ antidiagonal n := by
   simp only [mem_antidiagonal, add_comm, Prod.swap]
 #align finsupp.swap_mem_antidiagonal Finsupp.swap_mem_antidiagonal
--/
 
-#print Finsupp.antidiagonal_filter_fst_eq /-
-theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
+/- warning: finsupp.antidiagonal_filter_fst_eq clashes with finset.nat.filter_fst_eq_antidiagonal -> Finset.filter_fst_eq_antidiagonal
+Case conversion may be inaccurate. Consider using '#align finsupp.antidiagonal_filter_fst_eq Finset.filter_fst_eq_antidiagonalₓ'. -/
+#print Finset.filter_fst_eq_antidiagonal /-
+theorem filter_fst_eq_antidiagonal (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
     ((antidiagonal f).filterₓ fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ :=
   by
@@ -74,11 +70,13 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
   rintro rfl; constructor
   · rintro rfl; exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
   · rintro ⟨h, rfl⟩; exact add_tsub_cancel_of_le h
-#align finsupp.antidiagonal_filter_fst_eq Finsupp.antidiagonal_filter_fst_eq
+#align finsupp.antidiagonal_filter_fst_eq Finset.filter_fst_eq_antidiagonal
 -/
 
-#print Finsupp.antidiagonal_filter_snd_eq /-
-theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
+/- warning: finsupp.antidiagonal_filter_snd_eq clashes with finset.nat.filter_snd_eq_antidiagonal -> Finset.filter_snd_eq_antidiagonal
+Case conversion may be inaccurate. Consider using '#align finsupp.antidiagonal_filter_snd_eq Finset.filter_snd_eq_antidiagonalₓ'. -/
+#print Finset.filter_snd_eq_antidiagonal /-
+theorem filter_snd_eq_antidiagonal (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.2 = g)] :
     ((antidiagonal f).filterₓ fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ :=
   by
@@ -88,7 +86,7 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
   rintro rfl; constructor
   · rintro rfl; exact ⟨le_add_left le_rfl, (add_tsub_cancel_right _ _).symm⟩
   · rintro ⟨h, rfl⟩; exact tsub_add_cancel_of_le h
-#align finsupp.antidiagonal_filter_snd_eq Finsupp.antidiagonal_filter_snd_eq
+#align finsupp.antidiagonal_filter_snd_eq Finset.filter_snd_eq_antidiagonal
 -/
 
 #print Finsupp.antidiagonal_zero /-
