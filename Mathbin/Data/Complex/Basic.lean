@@ -1394,10 +1394,10 @@ theorem not_lt_zero_iff {z : ℂ} : ¬z < 0 ↔ 0 ≤ z.re ∨ z.im ≠ 0 :=
 #align complex.not_lt_zero_iff Complex.not_lt_zero_iff
 -/
 
-#print Complex.eq_re_ofReal_le /-
-theorem eq_re_ofReal_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re := by ext; rfl;
+#print Complex.eq_re_of_ofReal_le /-
+theorem eq_re_of_ofReal_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re := by ext; rfl;
   simp only [← (Complex.le_def.1 hz).2, Complex.zero_im, Complex.ofReal_im]
-#align complex.eq_re_of_real_le Complex.eq_re_ofReal_le
+#align complex.eq_re_of_real_le Complex.eq_re_of_ofReal_le
 -/
 
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a strictly ordered ring.
