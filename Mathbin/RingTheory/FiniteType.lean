@@ -755,24 +755,19 @@ variable {R : Type _} [CommRing R] {M : Type _} [AddCommGroup M] [Module R M] (f
 
 noncomputable section
 
-#print modulePolynomialOfEndo /-
 /-- The structure of a module `M` over a ring `R` as a module over `R[X]` when given a
 choice of how `X` acts by choosing a linear map `f : M →ₗ[R] M` -/
 def modulePolynomialOfEndo : Module R[X] M :=
   Module.compHom M (Polynomial.aeval f).toRingHom
 #align module_polynomial_of_endo modulePolynomialOfEndo
--/
 
-#print modulePolynomialOfEndo_smul_def /-
 theorem modulePolynomialOfEndo_smul_def (n : R[X]) (a : M) :
     @SMul.smul (modulePolynomialOfEndo f).toSMul n a = Polynomial.aeval f n a :=
   rfl
 #align module_polynomial_of_endo_smul_def modulePolynomialOfEndo_smul_def
--/
 
 attribute [local simp] modulePolynomialOfEndo_smul_def
 
-#print modulePolynomialOfEndo.isScalarTower /-
 theorem modulePolynomialOfEndo.isScalarTower :
     @IsScalarTower R R[X] M _ (by letI := modulePolynomialOfEndo f; infer_instance) _ :=
   by
@@ -781,7 +776,6 @@ theorem modulePolynomialOfEndo.isScalarTower :
   intro x y z
   simp
 #align module_polynomial_of_endo.is_scalar_tower modulePolynomialOfEndo.isScalarTower
--/
 
 open Polynomial Module
 

@@ -118,7 +118,7 @@ theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.
   | 0, [] => rfl
   | 0, a :: as => by rw [max_eq_left]; rfl; simp [Nat.le_add_right]
   | m + 1, [] => by simp only [Set, Nat.zero_max, length, @length_set m]
-  | m + 1, a :: as => by simp only [Set, Nat.max_succ_succ, length, @length_set m]
+  | m + 1, a :: as => by simp only [Set, Nat.succ_max_succ, length, @length_set m]
 #align list.func.length_set List.Func.length_set
 -/
 
@@ -337,7 +337,7 @@ theorem length_pointwise {f : α → β → γ} :
     simp only [pointwise, length, length_map, max_eq_right (Nat.zero_le (length bs + 1))]
   | a :: as, [] => by
     simp only [pointwise, length, length_map, max_eq_left (Nat.zero_le (length as + 1))]
-  | a :: as, b :: bs => by simp only [pointwise, length, Nat.max_succ_succ, @length_pointwise as bs]
+  | a :: as, b :: bs => by simp only [pointwise, length, Nat.succ_max_succ, @length_pointwise as bs]
 #align list.func.length_pointwise List.Func.length_pointwise
 -/
 

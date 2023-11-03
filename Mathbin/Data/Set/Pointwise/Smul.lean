@@ -98,7 +98,6 @@ theorem image2_smul : image2 SMul.smul s t = s • t :=
 theorem image_smul_prod : (fun x : α × β => x.fst • x.snd) '' s ×ˢ t = s • t :=
   image_prod _
 #align set.image_smul_prod Set.image_smul_prod
-#align set.add_image_prod Set.add_image_prod
 -/
 
 #print Set.mem_smul /-

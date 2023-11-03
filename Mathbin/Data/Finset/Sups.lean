@@ -45,13 +45,17 @@ namespace Finset
 
 variable {α : Type _} [Preorder α] {s t : Set α} {a : α}
 
-instance decidablePredMemUpperClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
+#print instDecidablePredMemUpperClosure /-
+instance instDecidablePredMemUpperClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
     DecidablePred (· ∈ upperClosure (s : Set α)) := fun _ => Finset.decidableDExistsFinset
-#align finset.decidable_pred_mem_upper_closure Finset.decidablePredMemUpperClosure
+#align finset.decidable_pred_mem_upper_closure instDecidablePredMemUpperClosure
+-/
 
-instance decidablePredMemLowerClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
+#print instDecidablePredMemLowerClosure /-
+instance instDecidablePredMemLowerClosure (s : Finset α) [@DecidableRel α (· ≤ ·)] :
     DecidablePred (· ∈ lowerClosure (s : Set α)) := fun _ => Finset.decidableDExistsFinset
-#align finset.decidable_pred_mem_lower_closure Finset.decidablePredMemLowerClosure
+#align finset.decidable_pred_mem_lower_closure instDecidablePredMemLowerClosure
+-/
 
 end Finset
 
@@ -568,7 +572,8 @@ theorem infs_infs_infs_comm : s ⊼ t ⊼ (u ⊼ v) = s ⊼ u ⊼ (t ⊼ v) :=
 
 variable [@DecidableRel α (· ≤ ·)]
 
-theorem filter_infs_ge (s t : Finset α) (a : α) :
+#print Finset.filter_infs_le /-
+theorem filter_infs_le (s t : Finset α) (a : α) :
     ((s ⊼ t).filterₓ fun b => a ≤ b) = (s.filterₓ fun b => a ≤ b) ⊼ t.filterₓ fun b => a ≤ b :=
   by
   ext b
@@ -579,7 +584,8 @@ theorem filter_infs_ge (s t : Finset α) (a : α) :
     exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩
   · rintro ⟨b, hb, c, hc, _, rfl⟩
     exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, le_inf hb.2 hc.2⟩
-#align finset.filter_infs_ge Finset.filter_infs_ge
+#align finset.filter_infs_ge Finset.filter_infs_le
+-/
 
 end Infs
 

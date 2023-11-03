@@ -101,9 +101,11 @@ theorem inr_mem_disjSum : inr b ∈ s.disjSum t ↔ b ∈ t :=
 #align finset.inr_mem_disj_sum Finset.inr_mem_disjSum
 -/
 
+#print Finset.disjSum_eq_empty /-
 @[simp]
 theorem disjSum_eq_empty : s.disjSum t = ∅ ↔ s = ∅ ∧ t = ∅ := by simp [ext_iff]
 #align finset.disj_sum_eq_empty Finset.disjSum_eq_empty
+-/
 
 #print Finset.disjSum_mono /-
 theorem disjSum_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁.disjSum t₁ ⊆ s₂.disjSum t₂ :=

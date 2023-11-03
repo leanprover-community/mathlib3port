@@ -39,27 +39,31 @@ universe u v
 
 variable {ι α β R S : Type _} {π : ι → Type _}
 
+#print BoundedLENhdsClass /-
 /-- Ad hoc typeclass stating that neighborhoods are eventually bounded above. -/
-class BoundedLeNhdsClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
+class BoundedLENhdsClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
   isBounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·)
-#align bounded_le_nhds_class BoundedLeNhdsClass
+#align bounded_le_nhds_class BoundedLENhdsClass
+-/
 
+#print BoundedGENhdsClass /-
 /-- Ad hoc typeclass stating that neighborhoods are eventually bounded below. -/
-class BoundedGeNhdsClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
+class BoundedGENhdsClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
   isBounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·)
-#align bounded_ge_nhds_class BoundedGeNhdsClass
+#align bounded_ge_nhds_class BoundedGENhdsClass
+-/
 
 section Preorder
 
 variable [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
 
-section BoundedLeNhdsClass
+section BoundedLENhdsClass
 
-variable [BoundedLeNhdsClass α] [BoundedLeNhdsClass β] {f : Filter ι} {u : ι → α} {a : α}
+variable [BoundedLENhdsClass α] [BoundedLENhdsClass β] {f : Filter ι} {u : ι → α} {a : α}
 
 #print isBounded_le_nhds /-
 theorem isBounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
-  BoundedLeNhdsClass.isBounded_le_nhds _
+  BoundedLENhdsClass.isBounded_le_nhds _
 #align is_bounded_le_nhds isBounded_le_nhds
 -/
 
@@ -96,10 +100,10 @@ theorem Filter.Tendsto.isCoboundedUnder_ge [NeBot f] (h : Tendsto u f (𝓝 a)) 
 #align filter.tendsto.is_cobounded_under_ge Filter.Tendsto.isCoboundedUnder_ge
 -/
 
-instance : BoundedGeNhdsClass αᵒᵈ :=
+instance : BoundedGENhdsClass αᵒᵈ :=
   ⟨@isBounded_le_nhds α _ _ _⟩
 
-instance : BoundedLeNhdsClass (α × β) :=
+instance : BoundedLENhdsClass (α × β) :=
   by
   refine' ⟨fun x => _⟩
   obtain ⟨a, ha⟩ := isBounded_le_nhds x.1
@@ -108,22 +112,22 @@ instance : BoundedLeNhdsClass (α × β) :=
   exact ⟨(a, b), ha.prod_mk hb⟩
 
 instance [Finite ι] [∀ i, Preorder (π i)] [∀ i, TopologicalSpace (π i)]
-    [∀ i, BoundedLeNhdsClass (π i)] : BoundedLeNhdsClass (∀ i, π i) :=
+    [∀ i, BoundedLENhdsClass (π i)] : BoundedLENhdsClass (∀ i, π i) :=
   by
   refine' ⟨fun x => _⟩
   rw [nhds_pi]
   choose f hf using fun i => isBounded_le_nhds (x i)
   exact ⟨f, eventually_pi hf⟩
 
-end BoundedLeNhdsClass
+end BoundedLENhdsClass
 
-section BoundedGeNhdsClass
+section BoundedGENhdsClass
 
-variable [BoundedGeNhdsClass α] [BoundedGeNhdsClass β] {f : Filter ι} {u : ι → α} {a : α}
+variable [BoundedGENhdsClass α] [BoundedGENhdsClass β] {f : Filter ι} {u : ι → α} {a : α}
 
 #print isBounded_ge_nhds /-
 theorem isBounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
-  BoundedGeNhdsClass.isBounded_ge_nhds _
+  BoundedGENhdsClass.isBounded_ge_nhds _
 #align is_bounded_ge_nhds isBounded_ge_nhds
 -/
 
@@ -160,10 +164,10 @@ theorem Filter.Tendsto.isCoboundedUnder_le [NeBot f] (h : Tendsto u f (𝓝 a)) 
 #align filter.tendsto.is_cobounded_under_le Filter.Tendsto.isCoboundedUnder_le
 -/
 
-instance : BoundedLeNhdsClass αᵒᵈ :=
+instance : BoundedLENhdsClass αᵒᵈ :=
   ⟨@isBounded_ge_nhds α _ _ _⟩
 
-instance : BoundedGeNhdsClass (α × β) :=
+instance : BoundedGENhdsClass (α × β) :=
   by
   refine' ⟨fun x => _⟩
   obtain ⟨a, ha⟩ := isBounded_ge_nhds x.1
@@ -172,40 +176,48 @@ instance : BoundedGeNhdsClass (α × β) :=
   exact ⟨(a, b), ha.prod_mk hb⟩
 
 instance [Finite ι] [∀ i, Preorder (π i)] [∀ i, TopologicalSpace (π i)]
-    [∀ i, BoundedGeNhdsClass (π i)] : BoundedGeNhdsClass (∀ i, π i) :=
+    [∀ i, BoundedGENhdsClass (π i)] : BoundedGENhdsClass (∀ i, π i) :=
   by
   refine' ⟨fun x => _⟩
   rw [nhds_pi]
   choose f hf using fun i => isBounded_ge_nhds (x i)
   exact ⟨f, eventually_pi hf⟩
 
-end BoundedGeNhdsClass
+end BoundedGENhdsClass
 
+#print OrderTop.to_BoundedLENhdsClass /-
 -- See note [lower instance priority]
-instance (priority := 100) OrderTop.to_boundedLeNhdsClass [OrderTop α] : BoundedLeNhdsClass α :=
+instance (priority := 100) OrderTop.to_BoundedLENhdsClass [OrderTop α] : BoundedLENhdsClass α :=
   ⟨fun a => isBounded_le_of_top⟩
-#align order_top.to_bounded_le_nhds_class OrderTop.to_boundedLeNhdsClass
+#align order_top.to_bounded_le_nhds_class OrderTop.to_BoundedLENhdsClass
+-/
 
+#print OrderBot.to_BoundedGENhdsClass /-
 -- See note [lower instance priority]
-instance (priority := 100) OrderBot.to_boundedGeNhdsClass [OrderBot α] : BoundedGeNhdsClass α :=
+instance (priority := 100) OrderBot.to_BoundedGENhdsClass [OrderBot α] : BoundedGENhdsClass α :=
   ⟨fun a => isBounded_ge_of_bot⟩
-#align order_bot.to_bounded_ge_nhds_class OrderBot.to_boundedGeNhdsClass
+#align order_bot.to_bounded_ge_nhds_class OrderBot.to_BoundedGENhdsClass
+-/
 
+#print OrderTopology.to_BoundedLENhdsClass /-
 -- See note [lower instance priority]
-instance (priority := 100) OrderTopology.to_boundedLeNhdsClass [IsDirected α (· ≤ ·)]
-    [OrderTopology α] : BoundedLeNhdsClass α :=
+instance (priority := 100) OrderTopology.to_BoundedLENhdsClass [IsDirected α (· ≤ ·)]
+    [OrderTopology α] : BoundedLENhdsClass α :=
   ⟨fun a =>
     ((isTop_or_exists_gt a).elim fun h => ⟨a, eventually_of_forall h⟩) <|
       Exists.imp fun b => ge_mem_nhds⟩
-#align order_topology.to_bounded_le_nhds_class OrderTopology.to_boundedLeNhdsClass
+#align order_topology.to_bounded_le_nhds_class OrderTopology.to_BoundedLENhdsClass
+-/
 
+#print OrderTopology.to_BoundedGENhdsClass /-
 -- See note [lower instance priority]
-instance (priority := 100) OrderTopology.to_boundedGeNhdsClass [IsDirected α (· ≥ ·)]
-    [OrderTopology α] : BoundedGeNhdsClass α :=
+instance (priority := 100) OrderTopology.to_BoundedGENhdsClass [IsDirected α (· ≥ ·)]
+    [OrderTopology α] : BoundedGENhdsClass α :=
   ⟨fun a =>
     ((isBot_or_exists_lt a).elim fun h => ⟨a, eventually_of_forall h⟩) <|
       Exists.imp fun b => le_mem_nhds⟩
-#align order_topology.to_bounded_ge_nhds_class OrderTopology.to_boundedGeNhdsClass
+#align order_topology.to_bounded_ge_nhds_class OrderTopology.to_BoundedGENhdsClass
+-/
 
 end Preorder
 

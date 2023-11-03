@@ -313,6 +313,7 @@ protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : 
 #align antilipschitz_with.proper_space AntilipschitzWith.properSpace
 -/
 
+#print AntilipschitzWith.isBounded_of_image2_left /-
 theorem isBounded_of_image2_left (f : α → β → γ) {K₁ : ℝ≥0}
     (hf : ∀ b, AntilipschitzWith K₁ fun a => f a b) {s : Set α} {t : Set β}
     (hst : IsBounded (Set.image2 f s t)) : IsBounded s ∨ IsBounded t :=
@@ -327,11 +328,14 @@ theorem isBounded_of_image2_left (f : α → β → γ) {K₁ : ℝ≥0}
     refine' h.mono (subset_preimage_image _ _)
   exact mt (bounded.mono (image2_subset subset.rfl (singleton_subset_iff.mpr hb))) this
 #align antilipschitz_with.bounded_of_image2_left AntilipschitzWith.isBounded_of_image2_left
+-/
 
+#print AntilipschitzWith.isBounded_of_image2_right /-
 theorem isBounded_of_image2_right {f : α → β → γ} {K₂ : ℝ≥0} (hf : ∀ a, AntilipschitzWith K₂ (f a))
     {s : Set α} {t : Set β} (hst : IsBounded (Set.image2 f s t)) : IsBounded s ∨ IsBounded t :=
   Or.symm <| isBounded_of_image2_left (flip f) hf <| image2_swap f s t ▸ hst
 #align antilipschitz_with.bounded_of_image2_right AntilipschitzWith.isBounded_of_image2_right
+-/
 
 end AntilipschitzWith
 

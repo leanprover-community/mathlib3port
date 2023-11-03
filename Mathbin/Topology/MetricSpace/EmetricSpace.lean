@@ -1161,11 +1161,13 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
 #align emetric.diam_singleton EMetric.diam_singleton
 -/
 
+#print EMetric.diam_one /-
 @[simp, to_additive]
 theorem diam_one [One α] : diam (1 : Set α) = 0 :=
   diam_singleton
-#align emetric.diam_one Emetric.diam_one
-#align emetric.diam_zero Emetric.diam_zero
+#align emetric.diam_one EMetric.diam_one
+#align emetric.diam_zero EMetric.diam_zero
+-/
 
 #print EMetric.diam_iUnion_mem_option /-
 theorem diam_iUnion_mem_option {ι : Type _} (o : Option ι) (s : ι → Set α) :

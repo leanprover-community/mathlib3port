@@ -708,6 +708,7 @@ protected theorem comp {g : β → γ} {t : Set β} {Kg : ℝ≥0} (hg : Lipschi
 #align lipschitz_on_with.comp LipschitzOnWith.comp
 -/
 
+#print LipschitzOnWith.ediam_image2_le /-
 theorem ediam_image2_le (f : α → β → γ) {K₁ K₂ : ℝ≥0} (s : Set α) (t : Set β)
     (hf₁ : ∀ b ∈ t, LipschitzOnWith K₁ (fun a => f a b) s)
     (hf₂ : ∀ a ∈ s, LipschitzOnWith K₂ (f a) t) :
@@ -721,6 +722,7 @@ theorem ediam_image2_le (f : α → β → γ) {K₁ K₂ : ℝ≥0} (s : Set α
       ((hf₁ b₁ hb₁ ha₁ ha₂).trans <| ENNReal.mul_left_mono <| EMetric.edist_le_diam_of_mem ha₁ ha₂)
       ((hf₂ a₂ ha₂ hb₁ hb₂).trans <| ENNReal.mul_left_mono <| EMetric.edist_le_diam_of_mem hb₁ hb₂)
 #align lipschitz_on_with.ediam_image2_le LipschitzOnWith.ediam_image2_le
+-/
 
 end Emetric
 
@@ -787,6 +789,7 @@ protected theorem iff_le_add_mul {f : α → ℝ} {K : ℝ≥0} :
 #align lipschitz_on_with.iff_le_add_mul LipschitzOnWith.iff_le_add_mul
 -/
 
+#print LipschitzOnWith.isBounded_image2 /-
 theorem isBounded_image2 (f : α → β → γ) {K₁ K₂ : ℝ≥0} {s : Set α} {t : Set β}
     (hs : Bornology.IsBounded s) (ht : Bornology.IsBounded t)
     (hf₁ : ∀ b ∈ t, LipschitzOnWith K₁ (fun a => f a b) s)
@@ -798,6 +801,7 @@ theorem isBounded_image2 (f : α → β → γ) {K₁ K₂ : ℝ≥0} {s : Set �
           ENNReal.mul_ne_top ENNReal.coe_ne_top ht.ediam_ne_top⟩)
       (ediam_image2_le _ _ _ hf₁ hf₂)
 #align lipschitz_on_with.bounded_image2 LipschitzOnWith.isBounded_image2
+-/
 
 end Metric
 

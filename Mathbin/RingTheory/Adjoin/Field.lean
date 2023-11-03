@@ -56,11 +56,11 @@ def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Al
 
 open Finset
 
-#print lift_of_splits /-
+#print Polynomial.lift_of_splits /-
 /-- If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
 the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`. -/
-theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L]
-    (s : Finset K) :
+theorem Polynomial.lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K]
+    [Algebra F L] (s : Finset K) :
     (∀ x ∈ s, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
       Nonempty (Algebra.adjoin F (↑s : Set K) →ₐ[F] L) :=
   by
@@ -93,7 +93,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
   refine' ⟨Subalgebra.ofRestrictScalars _ _ _⟩
   refine' (AdjoinRoot.liftHom (minpoly (Algebra.adjoin F (↑s : Set K)) a) y hy).comp _
   exact AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly (Algebra.adjoin F (↑s : Set K)) a
-#align lift_of_splits lift_of_splits
+#align lift_of_splits Polynomial.lift_of_splits
 -/
 
 end Embeddings

@@ -217,14 +217,14 @@ theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
 #align nat.succ_le_succ_iff Nat.succ_le_succ_iff
 -/
 
-#print Nat.max_succ_succ /-
-theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
+#print Nat.succ_max_succ /-
+theorem succ_max_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
   by
   by_cases h1 : m ≤ n
   rw [max_eq_right h1, max_eq_right (succ_le_succ h1)]
   · rw [not_le] at h1 ; have h2 := le_of_lt h1
     rw [max_eq_left h2, max_eq_left (succ_le_succ h2)]
-#align nat.max_succ_succ Nat.max_succ_succ
+#align nat.max_succ_succ Nat.succ_max_succ
 -/
 
 #print Nat.not_succ_lt_self /-

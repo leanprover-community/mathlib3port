@@ -131,7 +131,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f]
       (by rw [← adjoin_root_set L f];
         exact
           Classical.choice
-            (lift_of_splits _ fun y hy =>
+            (Polynomial.lift_of_splits _ fun y hy =>
               have : aeval y f = 0 :=
                 (eval₂_eq_eval_map _).trans <|
                   (mem_roots <| map_ne_zero hf0).1 (multiset.mem_to_finset.mp hy)

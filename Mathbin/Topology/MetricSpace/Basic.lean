@@ -3189,12 +3189,14 @@ theorem isBounded_empty : IsBounded (∅ : Set α) :=
 #align metric.bounded_empty Bornology.isBounded_empty
 -/
 
-theorem nonempty_of_unbounded (h : ¬IsBounded s) : s.Nonempty :=
+#print Bornology.nonempty_of_not_isBounded /-
+theorem nonempty_of_not_isBounded (h : ¬IsBounded s) : s.Nonempty :=
   by
   rw [nonempty_iff_ne_empty]
   rintro rfl
   exact h bounded_empty
-#align metric.nonempty_of_unbounded Metric.nonempty_of_unbounded
+#align metric.nonempty_of_unbounded Bornology.nonempty_of_not_isBounded
+-/
 
 #print Bornology.isBounded_iff_forall_mem /-
 theorem isBounded_iff_forall_mem : IsBounded s ↔ ∀ x ∈ s, IsBounded s :=
@@ -3623,11 +3625,13 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
 #align metric.diam_singleton Metric.diam_singleton
 -/
 
+#print Metric.diam_one /-
 @[simp, to_additive]
 theorem diam_one [One α] : diam (1 : Set α) = 0 :=
   diam_singleton
 #align metric.diam_one Metric.diam_one
 #align metric.diam_zero Metric.diam_zero
+-/
 
 #print Metric.diam_pair /-
 -- Does not work as a simp-lemma, since {x, y} reduces to (insert y {x})

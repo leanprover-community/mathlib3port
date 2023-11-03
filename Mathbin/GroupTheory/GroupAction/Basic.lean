@@ -186,25 +186,26 @@ theorem mem_fixedPoints' {b : β} : b ∈ fixedPoints α β ↔ ∀ b', b' ∈ o
 
 variable (α) {β}
 
-#print MulAction.Stabilizer.submonoid /-
+#print MulAction.stabilizerSubmonoid /-
 /-- The stabilizer of a point `b` as a submonoid of `α`. -/
 @[to_additive "The stabilizer of a point `b` as an additive submonoid of `α`."]
-def Stabilizer.submonoid (b : β) : Submonoid α
+def MulAction.stabilizerSubmonoid (b : β) : Submonoid α
     where
   carrier := {a | a • b = b}
   one_mem' := one_smul _ b
   hMul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
     show (a * a') • b = b by rw [← smul_smul, hb, ha]
-#align mul_action.stabilizer.submonoid MulAction.Stabilizer.submonoid
-#align add_action.stabilizer.add_submonoid AddAction.Stabilizer.addSubmonoid
+#align mul_action.stabilizer.submonoid MulAction.stabilizerSubmonoid
+#align add_action.stabilizer.add_submonoid AddAction.stabilizerAddSubmonoid
 -/
 
-#print MulAction.mem_stabilizer_submonoid_iff /-
+#print MulAction.mem_stabilizerSubmonoid_iff /-
 @[simp, to_additive]
-theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ Stabilizer.submonoid α b ↔ a • b = b :=
+theorem mem_stabilizerSubmonoid_iff {b : β} {a : α} :
+    a ∈ MulAction.stabilizerSubmonoid α b ↔ a • b = b :=
   Iff.rfl
-#align mul_action.mem_stabilizer_submonoid_iff MulAction.mem_stabilizer_submonoid_iff
-#align add_action.mem_stabilizer_add_submonoid_iff AddAction.mem_stabilizer_addSubmonoid_iff
+#align mul_action.mem_stabilizer_submonoid_iff MulAction.mem_stabilizerSubmonoid_iff
+#align add_action.mem_stabilizer_add_submonoid_iff AddAction.mem_stabilizerAddSubmonoid_iff
 -/
 
 #print MulAction.orbit_eq_univ /-
@@ -248,7 +249,7 @@ A subgroup. -/
 @[to_additive
       "The stabilizer of an element under an action, i.e. what sends the element to itself.\nAn additive subgroup."]
 def stabilizer (b : β) : Subgroup α :=
-  { Stabilizer.submonoid α b with
+  { MulAction.stabilizerSubmonoid α b with
     inv_mem' := fun a (ha : a • b = b) => show a⁻¹ • b = b by rw [inv_smul_eq_iff, ha] }
 #align mul_action.stabilizer MulAction.stabilizer
 #align add_action.stabilizer AddAction.stabilizer
