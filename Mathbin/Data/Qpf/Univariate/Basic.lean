@@ -302,7 +302,7 @@ theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
     rw [fix.rec, fix.mk]
     dsimp
   cases' h : repr x with a f
-  rw [PFunctor.map_eq, recF_eq, ← PFunctor.map_eq, PFunctor.W.dest_mk, ← PFunctor.comp_map, abs_map,
+  rw [PFunctor.map_eq, recF_eq, ← PFunctor.map_eq, PFunctor.W.dest_mk, ← PFunctor.map_map, abs_map,
     ← h, abs_repr, this]
 #align qpf.fix.rec_eq QPF.Fix.rec_eq
 -/
@@ -492,9 +492,9 @@ private theorem cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
           intro c d; apply Quot.inductionOn d; clear d
           intro d rcd; apply Quot.sound; apply rcd)
     have : f ∘ Quot.mk r ∘ Quot.mk Mcongr = Quot.mk r' := rfl
-    rw [← this, PFunctor.comp_map _ _ f, PFunctor.comp_map _ _ (Quot.mk r), abs_map, abs_map,
-      abs_map, h₀]
-    rw [PFunctor.comp_map _ _ f, PFunctor.comp_map _ _ (Quot.mk r), abs_map, abs_map, abs_map]
+    rw [← this, PFunctor.map_map _ _ f, PFunctor.map_map _ _ (Quot.mk r), abs_map, abs_map, abs_map,
+      h₀]
+    rw [PFunctor.map_map _ _ f, PFunctor.map_map _ _ (Quot.mk r), abs_map, abs_map, abs_map]
   refine' ⟨r', this, rxy⟩
 
 #print QPF.Cofix.bisim_rel /-

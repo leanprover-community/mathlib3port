@@ -413,34 +413,38 @@ theorem xor_left_comm : ∀ a b c, xor a (xor b c) = xor b (xor a c) := by decid
 #align bool.bxor_left_comm Bool.xor_left_comm
 -/
 
-#print Bool.xor_not_left /-
+#print Bool.not_xor /-
 @[simp]
-theorem xor_not_left : ∀ a, xor (!a) a = true := by decide
-#align bool.bxor_bnot_left Bool.xor_not_left
+theorem not_xor : ∀ a, xor (!a) a = true := by decide
+#align bool.bxor_bnot_left Bool.not_xor
 -/
 
-#print Bool.xor_not_right /-
+#print Bool.xor_not /-
 @[simp]
-theorem xor_not_right : ∀ a, xor a (!a) = true := by decide
-#align bool.bxor_bnot_right Bool.xor_not_right
+theorem xor_not : ∀ a, xor a (!a) = true := by decide
+#align bool.bxor_bnot_right Bool.xor_not
 -/
 
-#print Bool.xor_not_not /-
+#print Bool.not_xor_not /-
 @[simp]
-theorem xor_not_not : ∀ a b, xor (!a) (!b) = xor a b := by decide
-#align bool.bxor_bnot_bnot Bool.xor_not_not
+theorem not_xor_not : ∀ a b, xor (!a) (!b) = xor a b := by decide
+#align bool.bxor_bnot_bnot Bool.not_xor_not
 -/
 
-#print Bool.xor_false_left /-
+/- warning: bool.bxor_ff_left clashes with ff_bxor -> Bool.false_xor
+Case conversion may be inaccurate. Consider using '#align bool.bxor_ff_left Bool.false_xorₓ'. -/
+#print Bool.false_xor /-
 @[simp]
-theorem xor_false_left : ∀ a, xor false a = a := by decide
-#align bool.bxor_ff_left Bool.xor_false_left
+theorem false_xor : ∀ a, xor false a = a := by decide
+#align bool.bxor_ff_left Bool.false_xor
 -/
 
-#print Bool.xor_false_right /-
+/- warning: bool.bxor_ff_right clashes with bxor_ff -> Bool.xor_false
+Case conversion may be inaccurate. Consider using '#align bool.bxor_ff_right Bool.xor_falseₓ'. -/
+#print Bool.xor_false /-
 @[simp]
-theorem xor_false_right : ∀ a, xor a false = a := by decide
-#align bool.bxor_ff_right Bool.xor_false_right
+theorem xor_false : ∀ a, xor a false = a := by decide
+#align bool.bxor_ff_right Bool.xor_false
 -/
 
 #print Bool.and_xor_distrib_left /-

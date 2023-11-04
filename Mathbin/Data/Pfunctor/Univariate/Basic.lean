@@ -75,15 +75,15 @@ protected theorem id_map {α : Type _} : ∀ x : P.Obj α, id <$> x = id x := fu
 #align pfunctor.id_map PFunctor.id_map
 -/
 
-#print PFunctor.comp_map /-
-protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) :
+#print PFunctor.map_map /-
+protected theorem map_map {α β γ : Type _} (f : α → β) (g : β → γ) :
     ∀ x : P.Obj α, (g ∘ f) <$> x = g <$> f <$> x := fun ⟨a, b⟩ => rfl
-#align pfunctor.comp_map PFunctor.comp_map
+#align pfunctor.comp_map PFunctor.map_map
 -/
 
 instance : LawfulFunctor P.Obj where
   id_map := @PFunctor.id_map P
-  comp_map := @PFunctor.comp_map P
+  comp_map := @PFunctor.map_map P
 
 #print PFunctor.W /-
 /-- re-export existing definition of W-types and
