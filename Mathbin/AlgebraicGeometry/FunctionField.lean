@@ -58,7 +58,7 @@ noncomputable instance [IsIntegral X] : Field X.functionField :=
   apply fieldOfIsUnitOrEqZero
   intro a
   obtain ⟨U, m, s, rfl⟩ := TopCat.Presheaf.germ_exist _ _ a
-  rw [or_iff_not_imp_right, ← (X.presheaf.germ ⟨_, m⟩).map_zero]
+  rw [Classical.or_iff_not_imp_right, ← (X.presheaf.germ ⟨_, m⟩).map_zero]
   intro ha
   replace ha := ne_of_apply_ne _ ha
   have hs : genericPoint X.carrier ∈ RingedSpace.basic_open _ s :=

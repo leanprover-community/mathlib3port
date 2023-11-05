@@ -937,7 +937,7 @@ section NoZeroSMulDivisors
 protected theorem noZeroSMulDivisors [NoZeroDivisors R] (b : Basis ι R M) :
     NoZeroSMulDivisors R M :=
   ⟨fun c x hcx =>
-    or_iff_not_imp_right.mpr fun hx =>
+    Classical.or_iff_not_imp_right.mpr fun hx =>
       by
       rw [← b.total_repr x, ← LinearMap.map_smul] at hcx 
       have := linear_independent_iff.mp b.linear_independent (c • b.repr x) hcx

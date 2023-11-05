@@ -53,7 +53,7 @@ def degree (p : R[X]) : WithBot ℕ :=
 
 #print Polynomial.degree_lt_wf /-
 theorem degree_lt_wf : WellFounded fun p q : R[X] => degree p < degree q :=
-  InvImage.wf degree (WithBot.wellFounded_lt Nat.lt_wfRel)
+  InvImage.wf degree (WithBot.instWellFoundedLT Nat.lt_wfRel)
 #align polynomial.degree_lt_wf Polynomial.degree_lt_wf
 -/
 

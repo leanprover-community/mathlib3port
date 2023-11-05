@@ -207,7 +207,7 @@ theorem hasFiniteIntegral_congr {f g : α → β} (h : f =ᵐ[μ] g) :
 theorem hasFiniteIntegral_const_iff {c : β} :
     HasFiniteIntegral (fun x : α => c) μ ↔ c = 0 ∨ μ univ < ∞ := by
   simp [has_finite_integral, lintegral_const, lt_top_iff_ne_top, ENNReal.mul_eq_top,
-    or_iff_not_imp_left]
+    Classical.or_iff_not_imp_left]
 #align measure_theory.has_finite_integral_const_iff MeasureTheory.hasFiniteIntegral_const_iff
 -/
 

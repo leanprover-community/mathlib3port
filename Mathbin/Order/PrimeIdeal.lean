@@ -216,7 +216,7 @@ theorem IsPrime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ �
 #print Order.Ideal.isPrime_of_mem_or_compl_mem /-
 theorem isPrime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I :=
   by
-  simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
+  simp only [is_prime_iff_mem_or_mem, Classical.or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
   have ass : x ⊓ y ⊔ y ⊓ xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)

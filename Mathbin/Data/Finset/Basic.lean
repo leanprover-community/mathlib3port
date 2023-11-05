@@ -2678,7 +2678,7 @@ theorem erase_right_comm {a b : α} {s : Finset α} : erase (erase s a) b = eras
 
 #print Finset.subset_insert_iff /-
 theorem subset_insert_iff {a : α} {s t : Finset α} : s ⊆ insert a t ↔ erase s a ⊆ t := by
-  simp only [subset_iff, or_iff_not_imp_left, mem_erase, mem_insert, and_imp] <;>
+  simp only [subset_iff, Classical.or_iff_not_imp_left, mem_erase, mem_insert, and_imp] <;>
     exact forall_congr' fun x => forall_swap
 #align finset.subset_insert_iff Finset.subset_insert_iff
 -/

@@ -322,7 +322,8 @@ theorem bindOnSupport_eq_bind (p : PMF α) (f : α → PMF β) :
 theorem bindOnSupport_eq_zero_iff (b : β) :
     p.bindOnSupport f b = 0 ↔ ∀ (a) (ha : p a ≠ 0), f a ha b = 0 :=
   by
-  simp only [bind_on_support_apply, ENNReal.tsum_eq_zero, mul_eq_zero, or_iff_not_imp_left]
+  simp only [bind_on_support_apply, ENNReal.tsum_eq_zero, mul_eq_zero,
+    Classical.or_iff_not_imp_left]
   exact ⟨fun h a ha => trans (dif_neg ha).symm (h a ha), fun h a ha => trans (dif_neg ha) (h a ha)⟩
 #align pmf.bind_on_support_eq_zero_iff PMF.bindOnSupport_eq_zero_iff
 -/

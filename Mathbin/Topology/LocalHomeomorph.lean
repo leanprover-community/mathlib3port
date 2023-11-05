@@ -1358,11 +1358,11 @@ theorem trans_symm_self : e.symm.trans e ≈ LocalHomeomorph.ofSet e.target e.op
 #align local_homeomorph.trans_symm_self LocalHomeomorph.trans_symm_self
 -/
 
-#print LocalHomeomorph.eq_of_eq_on_source_univ /-
-theorem eq_of_eq_on_source_univ {e e' : LocalHomeomorph α β} (h : e ≈ e') (s : e.source = univ)
+#print LocalHomeomorph.eq_of_eqOnSource_univ /-
+theorem eq_of_eqOnSource_univ {e e' : LocalHomeomorph α β} (h : e ≈ e') (s : e.source = univ)
     (t : e.target = univ) : e = e' :=
-  eq_of_localEquiv_eq <| LocalEquiv.eq_of_eq_on_source_univ _ _ h s t
-#align local_homeomorph.eq_of_eq_on_source_univ LocalHomeomorph.eq_of_eq_on_source_univ
+  eq_of_localEquiv_eq <| LocalEquiv.eq_of_eqOnSource_univ _ _ h s t
+#align local_homeomorph.eq_of_eq_on_source_univ LocalHomeomorph.eq_of_eqOnSource_univ
 -/
 
 section Prod

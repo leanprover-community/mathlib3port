@@ -136,7 +136,7 @@ open Function
 
 #print Pi.toLex_monotone /-
 theorem toLex_monotone : Monotone (@toLex (∀ i, β i)) := fun a b h =>
-  or_iff_not_imp_left.2 fun hne =>
+  Classical.or_iff_not_imp_left.2 fun hne =>
     let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min {i | a i ≠ b i} (Function.ne_iff.1 hne)
     ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 #align pi.to_lex_monotone Pi.toLex_monotone

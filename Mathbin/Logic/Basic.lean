@@ -1080,10 +1080,10 @@ protected theorem Decidable.or_iff_not_imp_left [Decidable a] : a ∨ b ↔ ¬a 
 #align decidable.or_iff_not_imp_left Decidable.or_iff_not_imp_left
 -/
 
-#print or_iff_not_imp_left /-
-theorem or_iff_not_imp_left : a ∨ b ↔ ¬a → b :=
+#print Classical.or_iff_not_imp_left /-
+theorem Classical.or_iff_not_imp_left : a ∨ b ↔ ¬a → b :=
   Decidable.or_iff_not_imp_left
-#align or_iff_not_imp_left or_iff_not_imp_left
+#align or_iff_not_imp_left Classical.or_iff_not_imp_left
 -/
 
 -- See Note [decidable namespace]
@@ -1091,10 +1091,10 @@ protected theorem Decidable.or_iff_not_imp_right [Decidable b] : a ∨ b ↔ ¬b
   or_comm.trans Decidable.or_iff_not_imp_left
 #align decidable.or_iff_not_imp_right Decidable.or_iff_not_imp_rightₓ
 
-#print or_iff_not_imp_right /-
-theorem or_iff_not_imp_right : a ∨ b ↔ ¬b → a :=
+#print Classical.or_iff_not_imp_right /-
+theorem Classical.or_iff_not_imp_right : a ∨ b ↔ ¬b → a :=
   Decidable.or_iff_not_imp_right
-#align or_iff_not_imp_right or_iff_not_imp_right
+#align or_iff_not_imp_right Classical.or_iff_not_imp_right
 -/
 
 #print Decidable.not_or_of_imp /-

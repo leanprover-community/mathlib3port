@@ -366,7 +366,7 @@ theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : a ≠ 
 theorem eq_two_pow_or_exists_odd_prime_and_dvd (n : ℕ) :
     (∃ k : ℕ, n = 2 ^ k) ∨ ∃ p, Nat.Prime p ∧ p ∣ n ∧ Odd p :=
   (eq_or_ne n 0).elim (fun hn => Or.inr ⟨3, prime_three, hn.symm ▸ dvd_zero 3, ⟨1, rfl⟩⟩) fun hn =>
-    or_iff_not_imp_right.mpr fun H =>
+    Classical.or_iff_not_imp_right.mpr fun H =>
       ⟨n.factors.length,
         eq_prime_pow_of_unique_prime_dvd hn fun p hprime hdvd =>
           hprime.eq_two_or_odd'.resolve_right fun hodd => H ⟨p, hprime, hdvd, hodd⟩⟩

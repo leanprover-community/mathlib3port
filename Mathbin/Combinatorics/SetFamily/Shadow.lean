@@ -120,6 +120,9 @@ theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _) (_ : a ∉
 #align finset.mem_shadow_iff_insert_mem Finset.mem_shadow_iff_insert_mem
 -/
 
+/- warning: set.sized.shadow clashes with finset.set.sized.shadow -> Set.Sized.shadow
+Case conversion may be inaccurate. Consider using '#align set.sized.shadow Set.Sized.shadowₓ'. -/
+#print Set.Sized.shadow /-
 /-- The shadow of a family of `r`-sets is a family of `r - 1`-sets. -/
 protected theorem Set.Sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     ((∂ ) 𝒜 : Set (Finset α)).Sized (r - 1) :=
@@ -128,6 +131,7 @@ protected theorem Set.Sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_shadow_iff.1 h
   rw [card_erase_of_mem hi, h𝒜 hA]
 #align set.sized.shadow Set.Sized.shadow
+-/
 
 #print Finset.sized_shadow_iff /-
 theorem sized_shadow_iff (h : ∅ ∉ 𝒜) :
@@ -164,9 +168,9 @@ theorem exists_subset_of_mem_shadow (hs : s ∈ (∂ ) 𝒜) : ∃ t ∈ 𝒜, s
 #align finset.exists_subset_of_mem_shadow Finset.exists_subset_of_mem_shadow
 -/
 
-#print Finset.mem_shadow_iff_exists_mem_card_add /-
+#print Finset.mem_shadow_iterate_iff_exists_mem_card_add /-
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements less than something in `𝒜`. -/
-theorem mem_shadow_iff_exists_mem_card_add :
+theorem mem_shadow_iterate_iff_exists_mem_card_add :
     s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k :=
   by
   induction' k with k ih generalizing 𝒜 s
@@ -189,7 +193,7 @@ theorem mem_shadow_iff_exists_mem_card_add :
     refine' ⟨u, mem_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, hut, _⟩, hsu, hu⟩
     rw [hcard, hu]
     rfl
-#align finset.mem_shadow_iff_exists_mem_card_add Finset.mem_shadow_iff_exists_mem_card_add
+#align finset.mem_shadow_iff_exists_mem_card_add Finset.mem_shadow_iterate_iff_exists_mem_card_add
 -/
 
 end Shadow
@@ -242,6 +246,9 @@ theorem insert_mem_upShadow (hs : s ∈ 𝒜) (ha : a ∉ s) : insert a s ∈ (�
 #align finset.insert_mem_up_shadow Finset.insert_mem_upShadow
 -/
 
+/- warning: set.sized.up_shadow clashes with finset.set.sized.up_shadow -> Set.Sized.upShadow
+Case conversion may be inaccurate. Consider using '#align set.sized.up_shadow Set.Sized.upShadowₓ'. -/
+#print Set.Sized.upShadow /-
 /-- The upper shadow of a family of `r`-sets is a family of `r + 1`-sets. -/
 protected theorem Set.Sized.upShadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) :=
@@ -250,6 +257,7 @@ protected theorem Set.Sized.upShadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) 
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_up_shadow_iff.1 h
   rw [card_insert_of_not_mem hi, h𝒜 hA]
 #align set.sized.up_shadow Set.Sized.upShadow
+-/
 
 #print Finset.mem_upShadow_iff_erase_mem /-
 /-- `t` is in the upper shadow of `𝒜` iff we can remove an element from it so that the resulting

@@ -405,8 +405,8 @@ theorem insert_mem_nhdsWithin_insert {a : α} {s t : Set α} (h : t ∈ 𝓝[s] 
 
 #print insert_mem_nhds_iff /-
 theorem insert_mem_nhds_iff {a : α} {s : Set α} : insert a s ∈ 𝓝 a ↔ s ∈ 𝓝[≠] a := by
-  simp only [nhdsWithin, mem_inf_principal, mem_compl_iff, mem_singleton_iff, or_iff_not_imp_left,
-    insert_def]
+  simp only [nhdsWithin, mem_inf_principal, mem_compl_iff, mem_singleton_iff,
+    Classical.or_iff_not_imp_left, insert_def]
 #align insert_mem_nhds_iff insert_mem_nhds_iff
 -/
 

@@ -1466,7 +1466,7 @@ variable [Algebra R₁ K] [IsFractionRing R₁ K] [Algebra K L] [IsFractionRing 
 #print FractionalIdeal.eq_zero_or_one /-
 theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 :=
   by
-  rw [or_iff_not_imp_left]
+  rw [Classical.or_iff_not_imp_left]
   intro hI
   simp_rw [@SetLike.ext_iff _ _ _ I 1, mem_one_iff]
   intro x

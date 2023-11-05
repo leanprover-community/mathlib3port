@@ -50,7 +50,7 @@ instance {r : Semiring R} [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Modu
 instance {r : Semiring R} [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N]
     [NoZeroSMulDivisors R M] [NoZeroSMulDivisors R N] : NoZeroSMulDivisors R (M × N) :=
   ⟨fun c ⟨x, y⟩ h =>
-    or_iff_not_imp_left.mpr fun hc =>
+    Classical.or_iff_not_imp_left.mpr fun hc =>
       mk.inj_iff.mpr
         ⟨(smul_eq_zero.mp (congr_arg fst h)).resolve_left hc,
           (smul_eq_zero.mp (congr_arg snd h)).resolve_left hc⟩⟩

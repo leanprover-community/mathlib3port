@@ -279,7 +279,7 @@ theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x :=
 
 #print Part.eq_none_or_eq_some /-
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
-  or_iff_not_imp_left.2 ne_none_iff.1
+  Classical.or_iff_not_imp_left.2 ne_none_iff.1
 #align part.eq_none_or_eq_some Part.eq_none_or_eq_some
 -/
 

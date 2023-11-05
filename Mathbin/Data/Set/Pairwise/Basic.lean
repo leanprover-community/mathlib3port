@@ -117,7 +117,7 @@ theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} 
 
 #print Set.pairwise_iff_of_refl /-
 theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
-  forall₄_congr fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp of_eq
+  forall₄_congr fun a _ b _ => Classical.or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp of_eq
 #align set.pairwise_iff_of_refl Set.pairwise_iff_of_refl
 -/
 

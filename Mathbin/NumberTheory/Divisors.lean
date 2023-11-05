@@ -441,7 +441,7 @@ theorem sum_properDivisors_dvd (h : ∑ x in n.properDivisors, x ∣ n) :
   cases n
   · contrapose! h
     simp
-  rw [or_iff_not_imp_right]
+  rw [Classical.or_iff_not_imp_right]
   intro ne_n
   have hlt : ∑ x in n.succ.succ.proper_divisors, x < n.succ.succ :=
     lt_of_le_of_ne (Nat.le_of_dvd (Nat.succ_pos _) h) ne_n

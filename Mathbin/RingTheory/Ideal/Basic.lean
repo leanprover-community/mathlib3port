@@ -604,7 +604,7 @@ theorem sInf_isPrime_of_isChain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : Is
     let ⟨x, hx⟩ := hs
     (H x hx).ne_top (eq_top_iff.mpr (e.symm.trans_le (sInf_le hx))),
     fun x y e =>
-    or_iff_not_imp_left.mpr fun hx =>
+    Classical.or_iff_not_imp_left.mpr fun hx =>
       by
       rw [Ideal.mem_sInf] at hx e ⊢
       push_neg at hx 
@@ -686,7 +686,7 @@ theorem span_singleton_prime {p : α} (hp : p ≠ 0) : IsPrime (span ({p} : Set 
 #print Ideal.IsMaximal.isPrime /-
 theorem IsMaximal.isPrime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
   ⟨H.1.1, fun x y hxy =>
-    or_iff_not_imp_left.2 fun hx =>
+    Classical.or_iff_not_imp_left.2 fun hx =>
       by
       let J : Ideal α := Submodule.span α (insert x ↑I)
       have IJ : I ≤ J := Set.Subset.trans (subset_insert _ _) subset_span
@@ -889,7 +889,7 @@ namespace Ideal
 /-- All ideals in a division (semi)ring are trivial. -/
 theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ :=
   by
-  rw [or_iff_not_imp_right]
+  rw [Classical.or_iff_not_imp_right]
   change _ ≠ _ → _
   rw [Ideal.ne_top_iff_one]
   intro h1
@@ -907,14 +907,14 @@ instance : IsSimpleOrder (Ideal K) :=
 
 #print Ideal.eq_bot_of_prime /-
 theorem eq_bot_of_prime [h : I.IsPrime] : I = ⊥ :=
-  or_iff_not_imp_right.mp I.eq_bot_or_top h.1
+  Classical.or_iff_not_imp_right.mp I.eq_bot_or_top h.1
 #align ideal.eq_bot_of_prime Ideal.eq_bot_of_prime
 -/
 
 #print Ideal.bot_isMaximal /-
 theorem bot_isMaximal : IsMaximal (⊥ : Ideal K) :=
   ⟨⟨fun h => absurd ((eq_top_iff_one (⊤ : Ideal K)).mp rfl) (by rw [← h] <;> simp), fun I hI =>
-      or_iff_not_imp_left.mp (eq_bot_or_top I) (ne_of_gt hI)⟩⟩
+      Classical.or_iff_not_imp_left.mp (eq_bot_or_top I) (ne_of_gt hI)⟩⟩
 #align ideal.bot_is_maximal Ideal.bot_isMaximal
 -/
 
@@ -1002,7 +1002,7 @@ theorem isField_iff_isSimpleOrder_ideal : IsField R ↔ IsSimpleOrder (Ideal R) 
         (false_of_nontrivial_of_subsingleton <| Ideal R).elim⟩
   rw [← not_iff_not, Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top, ← not_iff_not]
   push_neg
-  simp_rw [lt_top_iff_ne_top, bot_lt_iff_ne_bot, ← or_iff_not_imp_left, not_ne_iff]
+  simp_rw [lt_top_iff_ne_top, bot_lt_iff_ne_bot, ← Classical.or_iff_not_imp_left, not_ne_iff]
   exact ⟨fun h => ⟨h⟩, fun h => h.2⟩
 #align ring.is_field_iff_is_simple_order_ideal Ring.isField_iff_isSimpleOrder_ideal
 -/

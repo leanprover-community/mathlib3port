@@ -181,7 +181,7 @@ theorem intervalIntegrable_sub_inv_iff {a b c : ℝ} :
     IntervalIntegrable (fun x => (x - c)⁻¹) volume a b ↔ a = b ∨ c ∉ [a, b] :=
   by
   constructor
-  · refine' fun h => or_iff_not_imp_left.2 fun hne hc => _
+  · refine' fun h => Classical.or_iff_not_imp_left.2 fun hne hc => _
     exact not_intervalIntegrable_of_sub_inv_isBigO_punctured (is_O_refl _ _) hne hc h
   · rintro (rfl | h₀)
     · exact IntervalIntegrable.refl

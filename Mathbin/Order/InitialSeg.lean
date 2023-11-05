@@ -215,7 +215,7 @@ theorem antisymm_symm [IsWellOrder α r] [IsWellOrder β s] (f : r ≼i s) (g : 
 #print InitialSeg.eq_or_principal /-
 theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) :
     Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
-  or_iff_not_imp_right.2 fun h b =>
+  Classical.or_iff_not_imp_right.2 fun h b =>
     Acc.recOn (IsWellFounded.wf.apply b : Acc s b) fun x H IH =>
       not_forall_not.1 fun hn =>
         h

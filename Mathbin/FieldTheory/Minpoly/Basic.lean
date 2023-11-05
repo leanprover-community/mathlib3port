@@ -238,7 +238,7 @@ theorem eq_X_sub_C_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMa
   nontriviality A
   refine' (unique' A _ (monic_X_sub_C a) _ _).symm
   · rw [map_sub, aeval_C, aeval_X, sub_self]
-  simp_rw [or_iff_not_imp_left]
+  simp_rw [Classical.or_iff_not_imp_left]
   intro q hl h0
   rw [← nat_degree_lt_nat_degree_iff h0, nat_degree_X_sub_C, Nat.lt_one_iff] at hl 
   rw [eq_C_of_nat_degree_eq_zero hl] at h0 ⊢

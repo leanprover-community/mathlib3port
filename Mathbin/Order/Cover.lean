@@ -401,7 +401,8 @@ theorem covby_iff_wcovby_and_not_le : a ⋖ b ↔ a ⩿ b ∧ ¬b ≤ a :=
 
 #print wcovby_iff_covby_or_le_and_le /-
 theorem wcovby_iff_covby_or_le_and_le : a ⩿ b ↔ a ⋖ b ∨ a ≤ b ∧ b ≤ a :=
-  ⟨fun h => or_iff_not_imp_right.mpr fun h' => h.covby_of_not_le fun hba => h' ⟨h.le, hba⟩,
+  ⟨fun h =>
+    Classical.or_iff_not_imp_right.mpr fun h' => h.covby_of_not_le fun hba => h' ⟨h.le, hba⟩,
     fun h' => h'.elim (fun h => h.Wcovby) fun h => h.1.wcovby_of_le h.2⟩
 #align wcovby_iff_covby_or_le_and_le wcovby_iff_covby_or_le_and_le
 -/

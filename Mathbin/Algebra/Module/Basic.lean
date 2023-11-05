@@ -874,7 +874,7 @@ variable [GroupWithZero R] [AddMonoid M] [DistribMulAction R M]
 -- see note [lower instance priority]
 /-- This instance applies to `division_semiring`s, in particular `nnreal` and `nnrat`. -/
 instance (priority := 100) GroupWithZero.toNoZeroSMulDivisors : NoZeroSMulDivisors R M :=
-  ⟨fun c x h => or_iff_not_imp_left.2 fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
+  ⟨fun c x h => Classical.or_iff_not_imp_left.2 fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
 #align group_with_zero.to_no_zero_smul_divisors GroupWithZero.toNoZeroSMulDivisors
 -/
 

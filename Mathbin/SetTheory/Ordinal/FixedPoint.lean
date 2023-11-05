@@ -836,7 +836,7 @@ theorem eq_zero_or_opow_omega_le_of_mul_eq_right {a b : Ordinal} (hab : a * b = 
   cases' eq_zero_or_pos a with ha ha
   · rw [ha, zero_opow omega_ne_zero]
     exact Or.inr (Ordinal.zero_le b)
-  rw [or_iff_not_imp_left]
+  rw [Classical.or_iff_not_imp_left]
   intro hb
   change b ≠ 0 at hb 
   rw [← nfp_mul_one ha]

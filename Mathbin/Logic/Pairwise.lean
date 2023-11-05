@@ -96,7 +96,7 @@ protected theorem Pairwise.eq (hs : s.Pairwise r) (ha : a ∈ s) (hb : b ∈ s) 
 theorem Reflexive.set_pairwise_iff (hr : Reflexive r) :
     s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
   forall₄_congr fun a _ b _ =>
-    or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp <| Eq.ndrec <| hr a
+    Classical.or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp <| Eq.ndrec <| hr a
 #align reflexive.set_pairwise_iff Reflexive.set_pairwise_iff
 -/
 

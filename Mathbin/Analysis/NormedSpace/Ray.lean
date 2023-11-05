@@ -88,8 +88,9 @@ theorem norm_injOn_ray_right (hy : y ≠ 0) : {x | SameRay ℝ x y}.InjOn norm :
 #print sameRay_iff_norm_smul_eq /-
 theorem sameRay_iff_norm_smul_eq : SameRay ℝ x y ↔ ‖x‖ • y = ‖y‖ • x :=
   ⟨SameRay.norm_smul_eq, fun h =>
-    or_iff_not_imp_left.2 fun hx =>
-      or_iff_not_imp_left.2 fun hy => ⟨‖y‖, ‖x‖, norm_pos_iff.2 hy, norm_pos_iff.2 hx, h.symm⟩⟩
+    Classical.or_iff_not_imp_left.2 fun hx =>
+      Classical.or_iff_not_imp_left.2 fun hy =>
+        ⟨‖y‖, ‖x‖, norm_pos_iff.2 hy, norm_pos_iff.2 hx, h.symm⟩⟩
 #align same_ray_iff_norm_smul_eq sameRay_iff_norm_smul_eq
 -/
 

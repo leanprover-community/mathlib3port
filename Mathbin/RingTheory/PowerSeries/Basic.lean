@@ -2194,7 +2194,7 @@ variable [Ring R]
 #print PowerSeries.eq_zero_or_eq_zero_of_mul_eq_zero /-
 theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : PowerSeries R) (h : φ * ψ = 0) :
     φ = 0 ∨ ψ = 0 := by
-  rw [or_iff_not_imp_left]; intro H
+  rw [Classical.or_iff_not_imp_left]; intro H
   have ex : ∃ m, coeff R m φ ≠ 0 := by contrapose! H; exact ext H
   let m := Nat.find ex
   have hm₁ : coeff R m φ ≠ 0 := Nat.find_spec ex
@@ -2204,7 +2204,7 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : PowerSerie
   replace h := congr_arg (coeff R (m + n)) h
   rw [LinearMap.map_zero, coeff_mul, Finset.sum_eq_single (m, n)] at h 
   · replace h := eq_zero_or_eq_zero_of_mul_eq_zero h
-    rw [or_iff_not_imp_left] at h ; exact h hm₁
+    rw [Classical.or_iff_not_imp_left] at h ; exact h hm₁
   · rintro ⟨i, j⟩ hij hne
     by_cases hj : j < n; · rw [ih j hj, MulZeroClass.mul_zero]
     by_cases hi : i < m

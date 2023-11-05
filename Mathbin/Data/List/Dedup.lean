@@ -131,7 +131,7 @@ theorem dedup_eq_cons (l : List α) (a : α) (l' : List α) :
     exact not_le_of_lt (count_pos.2 ha) this
   · have := @cons_head_tail α ⟨a⟩ _ (ne_nil_of_mem (mem_dedup.2 h.1))
     have hal : a ∈ l.dedup := mem_dedup.2 h.1
-    rw [← this, mem_cons_iff, or_iff_not_imp_right] at hal 
+    rw [← this, mem_cons_iff, Classical.or_iff_not_imp_right] at hal 
     exact this ▸ h.2.2.symm ▸ cons_eq_cons.2 ⟨(hal (h.2.2.symm ▸ h.2.1)).symm, rfl⟩
 #align list.dedup_eq_cons List.dedup_eq_cons
 -/

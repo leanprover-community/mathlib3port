@@ -175,7 +175,7 @@ theorem Prime.dvd_of_pow_dvd_pow_mul_pow_of_square_not_dvd [CancelCommMonoidWith
 theorem prime_pow_succ_dvd_mul {α : Type _} [CancelCommMonoidWithZero α] {p x y : α} (h : Prime p)
     {i : ℕ} (hxy : p ^ (i + 1) ∣ x * y) : p ^ (i + 1) ∣ x ∨ p ∣ y :=
   by
-  rw [or_iff_not_imp_right]
+  rw [Classical.or_iff_not_imp_right]
   intro hy
   induction' i with i ih generalizing x
   · simp only [zero_add, pow_one] at *
@@ -274,7 +274,7 @@ theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
     Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ a * b = x :=
   by
   haveI := Classical.dec
-  refine' or_iff_not_imp_right.2 fun H => _
+  refine' Classical.or_iff_not_imp_right.2 fun H => _
   simp [h, irreducible_iff] at H ⊢
   refine' fun a b h => by_contradiction fun o => _
   simp [not_or] at o 

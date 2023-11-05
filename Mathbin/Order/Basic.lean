@@ -1596,7 +1596,7 @@ theorem eq_of_le_of_forall_ge_of_dense [LinearOrder α] [DenselyOrdered α] {a�
 #print dense_or_discrete /-
 theorem dense_or_discrete [LinearOrder α] (a₁ a₂ : α) :
     (∃ a, a₁ < a ∧ a < a₂) ∨ (∀ a, a₁ < a → a₂ ≤ a) ∧ ∀ a < a₂, a ≤ a₁ :=
-  or_iff_not_imp_left.2 fun h =>
+  Classical.or_iff_not_imp_left.2 fun h =>
     ⟨fun a ha₁ => le_of_not_gt fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ =>
       le_of_not_gt fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
 #align dense_or_discrete dense_or_discrete

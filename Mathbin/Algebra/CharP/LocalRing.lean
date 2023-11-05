@@ -30,7 +30,7 @@ theorem charP_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : â
     [char_R_q : CharP R q] : q = 0 âˆ¨ IsPrimePow q :=
   by
   -- Assume `q := char(R)` is not zero.
-  apply or_iff_not_imp_left.2
+  apply Classical.or_iff_not_imp_left.2
   intro q_pos
   let K := LocalRing.ResidueField R
   haveI RM_char := ringChar.charP K

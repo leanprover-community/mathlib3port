@@ -245,7 +245,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 :=
       by
       intro μ hμ
-      apply or_iff_not_imp_left.1 (smul_eq_zero.1 (h_smul_eq_0 μ))
+      apply Classical.or_iff_not_imp_left.1 (smul_eq_zero.1 (h_smul_eq_0 μ))
       rwa [sub_eq_zero]
     -- So if we sum over all these representatives, we obtain `0`.
     have h_sum_l_support'_eq_0 : (Finset.sum l_support' fun μ => (l μ : V)) = 0 :=

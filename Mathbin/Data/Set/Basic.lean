@@ -796,7 +796,7 @@ theorem isEmpty_coe_sort {s : Set α} : IsEmpty ↥s ↔ s = ∅ :=
 
 #print Set.eq_empty_or_nonempty /-
 theorem eq_empty_or_nonempty (s : Set α) : s = ∅ ∨ s.Nonempty :=
-  or_iff_not_imp_left.2 nonempty_iff_ne_empty.2
+  Classical.or_iff_not_imp_left.2 nonempty_iff_ne_empty.2
 #align set.eq_empty_or_nonempty Set.eq_empty_or_nonempty
 -/
 
@@ -2452,7 +2452,7 @@ theorem subset_union_compl_iff_inter_subset {s t u : Set α} : s ⊆ t ∪ uᶜ 
 
 #print Set.compl_subset_iff_union /-
 theorem compl_subset_iff_union {s t : Set α} : sᶜ ⊆ t ↔ s ∪ t = univ :=
-  Iff.symm <| eq_univ_iff_forall.trans <| forall_congr' fun a => or_iff_not_imp_left
+  Iff.symm <| eq_univ_iff_forall.trans <| forall_congr' fun a => Classical.or_iff_not_imp_left
 #align set.compl_subset_iff_union Set.compl_subset_iff_union
 -/
 
@@ -3623,7 +3623,7 @@ alias ⟨_, nontrivial.not_subsingleton⟩ := not_subsingleton_iff
 
 #print Set.subsingleton_or_nontrivial /-
 protected theorem subsingleton_or_nontrivial (s : Set α) : s.Subsingleton ∨ s.Nontrivial := by
-  simp [or_iff_not_imp_right]
+  simp [Classical.or_iff_not_imp_right]
 #align set.subsingleton_or_nontrivial Set.subsingleton_or_nontrivial
 -/
 

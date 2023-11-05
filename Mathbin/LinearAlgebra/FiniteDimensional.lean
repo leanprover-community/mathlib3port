@@ -1571,7 +1571,7 @@ theorem is_simple_module_of_finrank_eq_one {A} [Semiring A] [Module A V] [SMul K
     [IsScalarTower K A V] (h : finrank K V = 1) : IsSimpleOrder (Submodule A V) :=
   by
   haveI := nontrivial_of_finrank_eq_succ h
-  refine' ⟨fun S => or_iff_not_imp_left.2 fun hn => _⟩
+  refine' ⟨fun S => Classical.or_iff_not_imp_left.2 fun hn => _⟩
   rw [← restrict_scalars_inj K] at hn ⊢
   haveI := finite_dimensional_of_finrank_eq_succ h
   refine' eq_top_of_finrank_eq ((Submodule.finrank_le _).antisymm _)

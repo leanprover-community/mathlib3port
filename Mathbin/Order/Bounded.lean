@@ -416,7 +416,7 @@ theorem bounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c m)
   refine' ⟨_, bounded.mono (Set.inter_subset_left s _)⟩
   rintro ⟨b, hb⟩
   cases' H a b with m hm
-  exact ⟨m, fun c hc => hm c (or_iff_not_imp_left.2 fun hca => hb c ⟨hc, hca⟩)⟩
+  exact ⟨m, fun c hc => hm c (Classical.or_iff_not_imp_left.2 fun hca => hb c ⟨hc, hca⟩)⟩
 #align set.bounded_inter_not Set.bounded_inter_not
 -/
 

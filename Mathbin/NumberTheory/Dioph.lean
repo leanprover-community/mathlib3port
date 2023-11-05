@@ -855,7 +855,7 @@ theorem mod_dioph : DiophFn fun v => f v % g v :=
               exact mod_eq_of_lt hl, fun e => by
               rw [← e] <;>
                 exact
-                  ⟨or_iff_not_imp_left.2 fun h => mod_lt _ (Nat.pos_of_ne_zero h), x / y,
+                  ⟨Classical.or_iff_not_imp_left.2 fun h => mod_lt _ (Nat.pos_of_ne_zero h), x / y,
                     mod_add_div _ _⟩⟩
 #align dioph.mod_dioph Dioph.mod_dioph
 -/

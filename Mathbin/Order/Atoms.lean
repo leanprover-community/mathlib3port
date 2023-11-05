@@ -378,7 +378,7 @@ section WellFounded
 theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
     (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
   ⟨fun a =>
-    or_iff_not_imp_left.2 fun ha =>
+    Classical.or_iff_not_imp_left.2 fun ha =>
       let ⟨b, hb, hm⟩ := h.has_min {b | b ≠ ⊥ ∧ b ≤ a} ⟨a, ha, le_rfl⟩
       ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
 #align is_atomic_of_order_bot_well_founded_lt isAtomic_of_orderBot_wellFounded_lt

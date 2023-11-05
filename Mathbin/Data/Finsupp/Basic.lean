@@ -1975,7 +1975,7 @@ theorem sum_smul_index_addMonoidHom [AddMonoid M] [AddCommMonoid N] [DistribSMul
 instance [Semiring R] [AddCommMonoid M] [Module R M] {ι : Type _} [NoZeroSMulDivisors R M] :
     NoZeroSMulDivisors R (ι →₀ M) :=
   ⟨fun c f h =>
-    or_iff_not_imp_left.mpr fun hc =>
+    Classical.or_iff_not_imp_left.mpr fun hc =>
       Finsupp.ext fun i => (smul_eq_zero.mp (Finsupp.ext_iff.mp h i)).resolve_left hc⟩
 
 section DistribMulActionHom

@@ -426,7 +426,7 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
 theorem isUnit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
     (hf : (expand F (p ^ n) f).Separable) : IsUnit f ∨ n = 0 :=
   by
-  rw [or_iff_not_imp_right]
+  rw [Classical.or_iff_not_imp_right]
   rintro hn : n ≠ 0
   have hf2 : (expand F (p ^ n) f).derivative = 0 := by
     rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow hn.bot_lt,

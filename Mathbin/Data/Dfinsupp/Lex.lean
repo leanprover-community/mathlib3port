@@ -156,7 +156,7 @@ variable [∀ i, PartialOrder (α i)]
 #print DFinsupp.toLex_monotone /-
 theorem toLex_monotone : Monotone (@toLex (Π₀ i, α i)) := fun a b h =>
   le_of_lt_or_eq <|
-    or_iff_not_imp_right.2 fun hne => by
+    Classical.or_iff_not_imp_right.2 fun hne => by
       classical exact
         ⟨Finset.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
           not_mem_ne_locus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,

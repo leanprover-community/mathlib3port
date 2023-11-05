@@ -117,7 +117,7 @@ theorem IsChain.insert (hs : IsChain r s) (ha : ∀ b ∈ s, a ≠ b → a ≺ b
 theorem isChain_univ_iff : IsChain r (univ : Set α) ↔ IsTrichotomous α r :=
   by
   refine' ⟨fun h => ⟨fun a b => _⟩, fun h => @isChain_of_trichotomous _ _ h univ⟩
-  rw [or_left_comm, or_iff_not_imp_left]
+  rw [or_left_comm, Classical.or_iff_not_imp_left]
   exact h trivial trivial
 #align is_chain_univ_iff isChain_univ_iff
 -/
@@ -277,7 +277,7 @@ private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc�
     · exact (h hc₃ ih).imp_left fun h => h ▸ subset.rfl
   case union s hs
     ih =>
-    refine' or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
+    refine' Classical.or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
     exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
 
 private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)

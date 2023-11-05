@@ -205,13 +205,13 @@ theorem isUnit_or_isUnit_one_sub_self (a : R) : IsUnit a ∨ IsUnit (1 - a) :=
 
 #print LocalRing.isUnit_of_mem_nonunits_one_sub_self /-
 theorem isUnit_of_mem_nonunits_one_sub_self (a : R) (h : 1 - a ∈ nonunits R) : IsUnit a :=
-  or_iff_not_imp_right.1 (isUnit_or_isUnit_one_sub_self a) h
+  Classical.or_iff_not_imp_right.1 (isUnit_or_isUnit_one_sub_self a) h
 #align local_ring.is_unit_of_mem_nonunits_one_sub_self LocalRing.isUnit_of_mem_nonunits_one_sub_self
 -/
 
 #print LocalRing.isUnit_one_sub_self_of_mem_nonunits /-
 theorem isUnit_one_sub_self_of_mem_nonunits (a : R) (h : a ∈ nonunits R) : IsUnit (1 - a) :=
-  or_iff_not_imp_left.1 (isUnit_or_isUnit_one_sub_self a) h
+  Classical.or_iff_not_imp_left.1 (isUnit_or_isUnit_one_sub_self a) h
 #align local_ring.is_unit_one_sub_self_of_mem_nonunits LocalRing.isUnit_one_sub_self_of_mem_nonunits
 -/
 

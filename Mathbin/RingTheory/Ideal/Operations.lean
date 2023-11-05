@@ -1041,7 +1041,7 @@ theorem pow_mono {I J : Ideal R} (e : I ≤ J) (n : ℕ) : I ^ n ≤ J ^ n :=
 theorem mul_eq_bot {R : Type _} [CommSemiring R] [NoZeroDivisors R] {I J : Ideal R} :
     I * J = ⊥ ↔ I = ⊥ ∨ J = ⊥ :=
   ⟨fun hij =>
-    or_iff_not_imp_left.mpr fun I_ne_bot =>
+    Classical.or_iff_not_imp_left.mpr fun I_ne_bot =>
       J.eq_bot_iff.mpr fun j hj =>
         let ⟨i, hi, ne0⟩ := I.ne_bot_iff.mp I_ne_bot
         Or.resolve_left (mul_eq_zero.mp ((I * J).eq_bot_iff.mp hij _ (mul_mem_mul hi hj))) ne0,
@@ -1235,7 +1235,7 @@ theorem radical_eq_sInf (I : Ideal R) : radical I = sInf {J : Ideal R | I ≤ J 
               (le_sup_right : _ ≤ m ⊔ span {x}) (subset_span <| Set.mem_singleton _)
       have : IsPrime m :=
         ⟨by rintro rfl <;> rw [radical_top] at hrm  <;> exact hrm trivial, fun x y hxym =>
-          or_iff_not_imp_left.2 fun hxm =>
+          Classical.or_iff_not_imp_left.2 fun hxm =>
             by_contradiction fun hym =>
               let ⟨n, hrn⟩ := this _ hxm
               let ⟨p, hpm, q, hq, hpqrn⟩ := Submodule.mem_sup.1 hrn
@@ -1303,7 +1303,7 @@ theorem radical_pow (n : ℕ) (H : n > 0) : radical (I ^ n) = radical I :=
 #print Ideal.IsPrime.mul_le /-
 theorem IsPrime.mul_le {I J P : Ideal R} (hp : IsPrime P) : I * J ≤ P ↔ I ≤ P ∨ J ≤ P :=
   ⟨fun h =>
-    or_iff_not_imp_left.2 fun hip j hj =>
+    Classical.or_iff_not_imp_left.2 fun hip j hj =>
       let ⟨i, hi, hip⟩ := Set.not_subset.1 hip
       (hp.mem_or_mem <| h <| mul_mem_mul hi hj).resolve_left hip,
     fun h =>
@@ -1371,7 +1371,7 @@ theorem IsPrime.inf_le' {s : Finset ι} {f : ι → Ideal R} {P : Ideal R} (hp :
 theorem subset_union {R : Type u} [Ring R] {I J K : Ideal R} :
     (I : Set R) ⊆ J ∪ K ↔ I ≤ J ∨ I ≤ K :=
   ⟨fun h =>
-    or_iff_not_imp_left.2 fun hij s hsi =>
+    Classical.or_iff_not_imp_left.2 fun hij s hsi =>
       let ⟨r, hri, hrj⟩ := Set.not_subset.1 hij
       by_contradiction fun hsk =>
         Or.cases_on (h <| I.add_mem hri hsi)
@@ -2089,7 +2089,7 @@ def orderEmbeddingOfSurjective : Ideal S ↪o Ideal R :=
 theorem map_eq_top_or_isMaximal_of_surjective {I : Ideal R} (H : IsMaximal I) :
     map f I = ⊤ ∨ IsMaximal (map f I) :=
   by
-  refine' or_iff_not_imp_left.2 fun ne_top => ⟨⟨fun h => ne_top h, fun J hJ => _⟩⟩
+  refine' Classical.or_iff_not_imp_left.2 fun ne_top => ⟨⟨fun h => ne_top h, fun J hJ => _⟩⟩
   · refine'
       (rel_iso_of_surjective f hf).Injective
         (Subtype.ext_iff.2 (Eq.trans (H.1.2 (comap f J) (lt_of_le_of_ne _ _)) comap_top.symm))
@@ -2179,7 +2179,7 @@ theorem comap_le_iff_le_map {I : Ideal R} {K : Ideal S} : comap f K ≤ I ↔ K 
 #print Ideal.map.isMaximal /-
 theorem map.isMaximal {I : Ideal R} (H : IsMaximal I) : IsMaximal (map f I) := by
   refine'
-      or_iff_not_imp_left.1 (map_eq_top_or_is_maximal_of_surjective f hf.right H) fun h =>
+      Classical.or_iff_not_imp_left.1 (map_eq_top_or_is_maximal_of_surjective f hf.right H) fun h =>
         H.1.1 _ <;>
     calc
       I = comap f (map f I) := ((rel_iso_of_bijective f hf).right_inv I).symm

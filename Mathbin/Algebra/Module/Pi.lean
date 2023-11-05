@@ -115,7 +115,7 @@ instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddC
 instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i]
     [∀ i, NoZeroSMulDivisors α <| f i] : NoZeroSMulDivisors α (∀ i : I, f i) :=
   ⟨fun c x h =>
-    or_iff_not_imp_left.mpr fun hc =>
+    Classical.or_iff_not_imp_left.mpr fun hc =>
       funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 
 #print Function.noZeroSMulDivisors /-

@@ -475,7 +475,7 @@ theorem isCoprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0))
 -- this should be proved for UFDs surely?
 theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y :=
   by
-  refine' or_iff_not_imp_left.2 fun h' => _
+  refine' Classical.or_iff_not_imp_left.2 fun h' => _
   apply isCoprime_of_dvd
   · rintro ⟨rfl, rfl⟩; simpa using h
   · rintro z nu nz ⟨w, rfl⟩ dy

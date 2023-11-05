@@ -817,7 +817,7 @@ theorem isPrime_map_C_iff_isPrime (P : Ideal R) :
       simp only [Ne.def, Prod.mk.inj_iff, not_and_or] at hij 
       obtain hi | hj : i < m ∨ j < n :=
         by
-        rw [or_iff_not_imp_left, not_lt, le_iff_lt_or_eq]
+        rw [Classical.or_iff_not_imp_left, not_lt, le_iff_lt_or_eq]
         rintro (hmi | rfl)
         · rw [← not_le]; intro hnj; exact (add_lt_add_of_lt_of_le hmi hnj).Ne hij.2.symm
         ·
@@ -933,7 +933,7 @@ instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R
         (⟨fun p : R[X] => ((if p = 0 then ⊤ else ↑p.degree : WithTop (WithBot ℕ)), p.leadingCoeff),
             _⟩ :
           DvdNotUnit →r Prod.Lex (· < ·) DvdNotUnit)
-        (WellFounded.prod_lex (WithTop.wellFounded_lt <| WithBot.wellFounded_lt Nat.lt_wfRel)
+        (WellFounded.prod_lex (WithTop.instWellFoundedLT <| WithBot.instWellFoundedLT Nat.lt_wfRel)
           ‹WfDvdMonoid R›.wellFounded_dvdNotUnit)
     rintro a b ⟨ane0, ⟨c, ⟨not_unit_c, rfl⟩⟩⟩
     rw [Polynomial.degree_mul, if_neg ane0]

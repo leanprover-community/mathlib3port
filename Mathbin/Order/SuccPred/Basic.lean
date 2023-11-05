@@ -495,7 +495,7 @@ theorem le_le_succ_iff : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a :=
   by
   refine'
     ⟨fun h =>
-      or_iff_not_imp_left.2 fun hba : b ≠ a =>
+      Classical.or_iff_not_imp_left.2 fun hba : b ≠ a =>
         h.2.antisymm (succ_le_of_lt <| h.1.lt_of_ne <| hba.symm),
       _⟩
   rintro (rfl | rfl)
@@ -983,7 +983,9 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
   by
   refine'
     ⟨fun h =>
-      or_iff_not_imp_left.2 fun hba : b ≠ a => (le_pred_of_lt <| h.2.lt_of_ne hba).antisymm h.1, _⟩
+      Classical.or_iff_not_imp_left.2 fun hba : b ≠ a =>
+        (le_pred_of_lt <| h.2.lt_of_ne hba).antisymm h.1,
+      _⟩
   rintro (rfl | rfl)
   · exact ⟨pred_le b, le_rfl⟩
   · exact ⟨le_rfl, pred_le a⟩

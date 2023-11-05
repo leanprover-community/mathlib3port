@@ -231,7 +231,7 @@ theorem balancedSz_zero {l : ℕ} : BalancedSz l 0 ↔ l ≤ 1 := by
 theorem balancedSz_up {l r₁ r₂ : ℕ} (h₁ : r₁ ≤ r₂) (h₂ : l + r₂ ≤ 1 ∨ r₂ ≤ delta * l)
     (H : BalancedSz l r₁) : BalancedSz l r₂ :=
   by
-  refine' or_iff_not_imp_left.2 fun h => _
+  refine' Classical.or_iff_not_imp_left.2 fun h => _
   refine' ⟨_, h₂.resolve_left h⟩
   cases H
   · cases r₂

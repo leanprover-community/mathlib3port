@@ -1090,9 +1090,9 @@ theorem trans_symm_self : e.symm.trans e ≈ LocalEquiv.ofSet e.target :=
 #align local_equiv.trans_symm_self LocalEquiv.trans_symm_self
 -/
 
-#print LocalEquiv.eq_of_eq_on_source_univ /-
+#print LocalEquiv.eq_of_eqOnSource_univ /-
 /-- Two equivalent local equivs are equal when the source and target are univ -/
-theorem eq_of_eq_on_source_univ (e e' : LocalEquiv α β) (h : e ≈ e') (s : e.source = univ)
+theorem eq_of_eqOnSource_univ (e e' : LocalEquiv α β) (h : e ≈ e') (s : e.source = univ)
     (t : e.target = univ) : e = e' :=
   by
   apply LocalEquiv.ext (fun x => _) (fun x => _) h.1
@@ -1102,7 +1102,7 @@ theorem eq_of_eq_on_source_univ (e e' : LocalEquiv α β) (h : e ≈ e') (s : e.
   · apply h.symm'.2
     rw [symm_source, t]
     exact mem_univ _
-#align local_equiv.eq_of_eq_on_source_univ LocalEquiv.eq_of_eq_on_source_univ
+#align local_equiv.eq_of_eq_on_source_univ LocalEquiv.eq_of_eqOnSource_univ
 -/
 
 section Prod

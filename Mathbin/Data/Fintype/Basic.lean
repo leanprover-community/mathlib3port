@@ -175,7 +175,7 @@ theorem ssubset_univ_iff {s : Finset α} : s ⊂ univ ↔ s ≠ univ :=
 
 #print Finset.codisjoint_left /-
 theorem codisjoint_left : Codisjoint s t ↔ ∀ ⦃a⦄, a ∉ s → a ∈ t := by
-  classical simp [codisjoint_iff, eq_univ_iff_forall, or_iff_not_imp_left]
+  classical simp [codisjoint_iff, eq_univ_iff_forall, Classical.or_iff_not_imp_left]
 #align finset.codisjoint_left Finset.codisjoint_left
 -/
 
@@ -281,7 +281,7 @@ theorem compl_inter (s t : Finset α) : (s ∩ t)ᶜ = sᶜ ∪ tᶜ :=
 #print Finset.compl_erase /-
 @[simp]
 theorem compl_erase : s.eraseₓ aᶜ = insert a (sᶜ) := by ext;
-  simp only [or_iff_not_imp_left, mem_insert, not_and, mem_compl, mem_erase]
+  simp only [Classical.or_iff_not_imp_left, mem_insert, not_and, mem_compl, mem_erase]
 #align finset.compl_erase Finset.compl_erase
 -/
 

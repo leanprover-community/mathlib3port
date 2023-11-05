@@ -881,7 +881,8 @@ theorem lt_top_of_mul_ne_top_right (h : a * b ≠ ∞) (ha : a ≠ 0) : b < ∞ 
 theorem mul_lt_top_iff {a b : ℝ≥0∞} : a * b < ∞ ↔ a < ∞ ∧ b < ∞ ∨ a = 0 ∨ b = 0 :=
   by
   constructor
-  · intro h; rw [← or_assoc', or_iff_not_imp_right, or_iff_not_imp_right]; intro hb ha
+  · intro h; rw [← or_assoc', Classical.or_iff_not_imp_right, Classical.or_iff_not_imp_right];
+    intro hb ha
     exact ⟨lt_top_of_mul_ne_top_left h.ne hb, lt_top_of_mul_ne_top_right h.ne ha⟩
   · rintro (⟨ha, hb⟩ | rfl | rfl) <;> [exact mul_lt_top ha.ne hb.ne; simp; simp]
 #align ennreal.mul_lt_top_iff ENNReal.mul_lt_top_iff
@@ -3269,7 +3270,7 @@ theorem toReal_smul (r : ℝ≥0) (s : ℝ≥0∞) : (r • s).toReal = r • s.
 
 #print ENNReal.trichotomy /-
 protected theorem trichotomy (p : ℝ≥0∞) : p = 0 ∨ p = ∞ ∨ 0 < p.toReal := by
-  simpa only [or_iff_not_imp_left] using to_real_pos
+  simpa only [Classical.or_iff_not_imp_left] using to_real_pos
 #align ennreal.trichotomy ENNReal.trichotomy
 -/
 

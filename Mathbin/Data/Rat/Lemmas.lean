@@ -167,7 +167,7 @@ theorem mul_num_den' (q r : ℚ) : (q * r).num * q.den * r.den = q.num * r.num *
   nth_rw 1 [c_mul_denom]
   repeat' rw [mul_assoc]
   apply mul_eq_mul_left_iff.2
-  rw [or_iff_not_imp_right]
+  rw [Classical.or_iff_not_imp_right]
   intro c_pos
   have h : _ = s :=
     @mul_def q.num q.denom r.num r.denom (int.coe_nat_ne_zero_iff_pos.mpr q.pos)
@@ -192,7 +192,7 @@ theorem add_num_den' (q r : ℚ) :
   nth_rw 1 [c_mul_denom]
   repeat' rw [mul_assoc]
   apply mul_eq_mul_left_iff.2
-  rw [or_iff_not_imp_right]
+  rw [Classical.or_iff_not_imp_right]
   intro c_pos
   have h : _ = s :=
     @add_def q.num q.denom r.num r.denom (int.coe_nat_ne_zero_iff_pos.mpr q.pos)

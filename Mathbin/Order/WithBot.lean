@@ -600,8 +600,8 @@ theorem coe_max [LinearOrder α] (x y : α) : ((max x y : α) : WithBot α) = ma
 #align with_bot.coe_max WithBot.coe_max
 -/
 
-#print WithBot.wellFounded_lt /-
-theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
+#print WithBot.instWellFoundedLT /-
+theorem instWellFoundedLT [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithBot α) (· < ·) :=
   have acc_bot : Acc ((· < ·) : WithBot α → WithBot α → Prop) ⊥ :=
     Acc.intro _ fun a ha => (not_le_of_gt ha bot_le).elim
@@ -619,7 +619,7 @@ theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
               Acc.intro _ fun c =>
                 Option.recOn c (fun _ => acc_bot) fun c hc =>
                   ih _ (some_lt_some.1 hc) (lt_trans hc hba))⟩
-#align with_bot.well_founded_lt WithBot.wellFounded_lt
+#align with_bot.well_founded_lt WithBot.instWellFoundedLT
 -/
 
 instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot α) :=
@@ -1564,8 +1564,8 @@ theorem coe_max [LinearOrder α] (x y : α) : (↑(max x y) : WithTop α) = max 
 #align with_top.coe_max WithTop.coe_max
 -/
 
-#print WithTop.wellFounded_lt /-
-theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
+#print WithTop.instWellFoundedLT /-
+theorem instWellFoundedLT [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithTop α) (· < ·) :=
   have acc_some : ∀ a : α, Acc ((· < ·) : WithTop α → WithTop α → Prop) (some a) := fun a =>
     Acc.intro _
@@ -1581,37 +1581,37 @@ theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     Option.recOn a
       (Acc.intro _ fun y => Option.recOn y (fun h => (lt_irrefl _ h).elim) fun _ _ => acc_some _)
       acc_some⟩
-#align with_top.well_founded_lt WithTop.wellFounded_lt
+#align with_top.well_founded_lt WithTop.instWellFoundedLT
 -/
 
 open OrderDual
 
-#print WithTop.wellFounded_gt /-
-theorem wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
+#print WithTop.instWellFoundedGT /-
+theorem instWellFoundedGT [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithTop α) (· > ·) :=
   ⟨fun a =>
     by
     -- ideally, use rel_hom_class.acc, but that is defined later
-    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithBot.wellFounded_lt h) _
+    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithBot.instWellFoundedLT h) _
     revert this
     generalize ha : a.to_dual = b; intro ac
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
-#align with_top.well_founded_gt WithTop.wellFounded_gt
+#align with_top.well_founded_gt WithTop.instWellFoundedGT
 -/
 
-#print WithBot.wellFounded_gt /-
-theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
+#print WithBot.instWellFoundedGT /-
+theorem WithBot.instWellFoundedGT [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithBot α) (· > ·) :=
   ⟨fun a =>
     by
     -- ideally, use rel_hom_class.acc, but that is defined later
-    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithTop.wellFounded_lt h) _
+    have : Acc (· < ·) a.to_dual := WellFounded.apply (WithTop.instWellFoundedLT h) _
     revert this
     generalize ha : a.to_dual = b; intro ac
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
-#align with_bot.well_founded_gt WithBot.wellFounded_gt
+#align with_bot.well_founded_gt WithBot.instWellFoundedGT
 -/
 
 #print WithTop.trichotomous.lt /-
@@ -1626,7 +1626,7 @@ instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
 
 #print WithTop.IsWellOrder.lt /-
 instance IsWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] : IsWellOrder (WithTop α) (· < ·)
-    where wf := wellFounded_lt h.wf
+    where wf := instWellFoundedLT h.wf
 #align with_top.is_well_order.lt WithTop.IsWellOrder.lt
 -/
 
@@ -1642,7 +1642,7 @@ instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
 
 #print WithTop.IsWellOrder.gt /-
 instance IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] : IsWellOrder (WithTop α) (· > ·)
-    where wf := wellFounded_gt h.wf
+    where wf := instWellFoundedGT h.wf
 #align with_top.is_well_order.gt WithTop.IsWellOrder.gt
 -/
 

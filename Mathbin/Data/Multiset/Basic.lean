@@ -343,7 +343,7 @@ theorem exists_mem_of_ne_zero {s : Multiset α} : s ≠ 0 → ∃ a : α, a ∈ 
 
 #print Multiset.empty_or_exists_mem /-
 theorem empty_or_exists_mem (s : Multiset α) : s = 0 ∨ ∃ a, a ∈ s :=
-  or_iff_not_imp_left.mpr Multiset.exists_mem_of_ne_zero
+  Classical.or_iff_not_imp_left.mpr Multiset.exists_mem_of_ne_zero
 #align multiset.empty_or_exists_mem Multiset.empty_or_exists_mem
 -/
 
@@ -1109,17 +1109,17 @@ theorem strongDownwardInductionOn_eq {p : Multiset α → Sort _} (s : Multiset 
 #align multiset.strong_downward_induction_on_eq Multiset.strongDownwardInductionOn_eq
 -/
 
-#print Multiset.wellFounded_lt /-
+#print wellFounded_lt /-
 /-- Another way of expressing `strong_induction_on`: the `(<)` relation is well-founded. -/
 theorem wellFounded_lt : WellFounded ((· < ·) : Multiset α → Multiset α → Prop) :=
   Subrelation.wf (fun _ _ => Multiset.card_lt_of_lt) (measure_wf Multiset.card)
-#align multiset.well_founded_lt Multiset.wellFounded_lt
+#align multiset.well_founded_lt wellFounded_lt
 -/
 
-#print Multiset.is_wellFounded_lt /-
-instance is_wellFounded_lt : WellFoundedLT (Multiset α) :=
+#print Multiset.instWellFoundedLT /-
+instance instWellFoundedLT : WellFoundedLT (Multiset α) :=
   ⟨wellFounded_lt⟩
-#align multiset.is_well_founded_lt Multiset.is_wellFounded_lt
+#align multiset.is_well_founded_lt Multiset.instWellFoundedLT
 -/
 
 /-! ### `multiset.replicate` -/

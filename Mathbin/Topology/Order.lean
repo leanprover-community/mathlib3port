@@ -320,7 +320,7 @@ theorem TopologicalSpace.isOpen_top_iff {α} (U : Set α) : is_open[⊤] U ↔ U
     induction' h with V h _ _ _ _ ih₁ ih₂ _ _ ih
     · cases h; · exact Or.inr rfl
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
-    · rw [sUnion_eq_empty, or_iff_not_imp_left]
+    · rw [sUnion_eq_empty, Classical.or_iff_not_imp_left]
       intro h; push_neg at h ; obtain ⟨U, hU, hne⟩ := h
       have := (ih U hU).resolve_left hne; subst this
       refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩, by rintro (rfl | rfl);

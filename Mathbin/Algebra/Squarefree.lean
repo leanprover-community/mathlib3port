@@ -139,7 +139,7 @@ theorem squarefree_iff_multiplicity_le_one (r : R) :
     Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x :=
   by
   refine' forall_congr' fun a => _
-  rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_le, imp_congr _ Iff.rfl]
+  rw [← sq, pow_dvd_iff_le_multiplicity, Classical.or_iff_not_imp_left, not_le, imp_congr _ Iff.rfl]
   simpa using PartENat.add_one_le_iff_lt (PartENat.natCast_ne_top 1)
 #align multiplicity.squarefree_iff_multiplicity_le_one multiplicity.squarefree_iff_multiplicity_le_one
 -/
@@ -290,7 +290,7 @@ theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [Decidabl
         assumption_mod_cast
       · have := ha.1; contradiction
     · simp [Multiset.count_eq_zero_of_not_mem hmem]
-  · rw [or_iff_not_imp_right]; intro hu
+  · rw [Classical.or_iff_not_imp_right]; intro hu
     by_cases h0 : a = 0
     · simp [h0, x0]
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩

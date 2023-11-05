@@ -253,7 +253,7 @@ theorem minpolyGen_eq (pb : PowerBasis A S) : pb.minpolyGen = minpoly A pb.gen :
   nontriviality A
   refine'
     minpoly.unique' A _ pb.minpoly_gen_monic pb.aeval_minpoly_gen fun q hq =>
-      or_iff_not_imp_left.2 fun hn0 h0 => _
+      Classical.or_iff_not_imp_left.2 fun hn0 h0 => _
   exact (pb.dim_le_degree_of_root hn0 h0).not_lt (pb.degree_minpoly_gen ▸ hq)
 #align power_basis.minpoly_gen_eq PowerBasis.minpolyGen_eq
 -/

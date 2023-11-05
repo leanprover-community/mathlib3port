@@ -150,7 +150,7 @@ theorem mulSupport_nonempty_iff {f : α → M} : (mulSupport f).Nonempty ↔ f �
 @[to_additive]
 theorem range_subset_insert_image_mulSupport (f : α → M) : range f ⊆ insert 1 (f '' mulSupport f) :=
   by
-  simpa only [range_subset_iff, mem_insert_iff, or_iff_not_imp_left] using
+  simpa only [range_subset_iff, mem_insert_iff, Classical.or_iff_not_imp_left] using
     fun x (hx : x ∈ mul_support f) => mem_image_of_mem f hx
 #align function.range_subset_insert_image_mul_support Function.range_subset_insert_image_mulSupport
 #align function.range_subset_insert_image_support Function.range_subset_insert_image_support

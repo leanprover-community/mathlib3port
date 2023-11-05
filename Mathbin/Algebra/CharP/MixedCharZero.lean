@@ -103,7 +103,7 @@ theorem reduce_to_p_prime {P : Prop} :
       apply ne_zero_of_dvd_ne_zero (ne_of_gt q_pos)
       exact (CharP.cast_eq_zero_iff (R ⧸ M) r q).mp q_zero
     have r_prime : Nat.Prime r :=
-      or_iff_not_imp_right.1 (CharP.char_is_prime_or_zero (R ⧸ M) r) r_pos
+      Classical.or_iff_not_imp_right.1 (CharP.char_is_prime_or_zero (R ⧸ M) r) r_pos
     apply h r r_prime
     haveI : CharZero R := q_mixed_char.to_char_zero
     exact ⟨⟨M, hM_max.ne_top, ringChar.of_eq rfl⟩⟩

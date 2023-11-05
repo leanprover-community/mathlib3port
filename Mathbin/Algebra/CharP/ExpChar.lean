@@ -126,7 +126,7 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
 #print expChar_is_prime_or_one /-
 /-- The exponential characteristic is a prime number or one. -/
 theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
-  or_iff_not_imp_right.mpr fun h =>
+  Classical.or_iff_not_imp_right.mpr fun h =>
     by
     cases' CharP.exists R with p hp
     have p_ne_zero : p ≠ 0 := by

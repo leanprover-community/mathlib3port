@@ -130,7 +130,7 @@ def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i)
     f.support'.bind fun fs =>
       g.support'.map fun gs =>
         ⟨fs + gs, fun i =>
-          or_iff_not_imp_left.2 fun h =>
+          Classical.or_iff_not_imp_left.2 fun h =>
             by
             have hf : f i = 0 :=
               (fs.prop i).resolve_left

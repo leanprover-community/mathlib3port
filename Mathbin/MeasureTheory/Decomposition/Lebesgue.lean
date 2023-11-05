@@ -844,7 +844,7 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
           · rw [codisjoint_iff_le_sup]
             intro x hx
             simp only [mem_Union, sup_eq_union, mem_inter_iff, mem_union, mem_compl_iff,
-              or_iff_not_imp_left]
+              Classical.or_iff_not_imp_left]
             intro h; push_neg at h 
             rw [top_eq_univ, ← S.spanning, mem_Union] at hx 
             obtain ⟨i, hi⟩ := hx

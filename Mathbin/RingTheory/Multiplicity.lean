@@ -351,7 +351,7 @@ theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b :=
     le_zero_iff]
   exact
     ⟨fun h =>
-      or_iff_not_imp_right.2 fun hb =>
+      Classical.or_iff_not_imp_right.2 fun hb =>
         have ha : a ≠ 0 := fun ha => by simpa [ha] using h 1
         by_contradiction fun ha1 : a ≠ 1 =>
           have ha_gt_one : 1 < a := lt_of_not_ge fun ha' => by clear h; revert ha ha1; decide!

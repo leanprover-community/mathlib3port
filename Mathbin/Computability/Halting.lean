@@ -244,7 +244,7 @@ theorem rice₂ (C : Set Code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C �
     have hC : ∀ f, f ∈ C ↔ eval f ∈ eval '' C := fun f =>
       ⟨Set.mem_image_of_mem _, fun ⟨g, hg, e⟩ => (H _ _ e).1 hg⟩
     ⟨fun h =>
-      or_iff_not_imp_left.2 fun C0 =>
+      Classical.or_iff_not_imp_left.2 fun C0 =>
         Set.eq_univ_of_forall fun cg =>
           let ⟨cf, fC⟩ := Set.nonempty_iff_ne_empty.2 C0
           (hC _).2 <|

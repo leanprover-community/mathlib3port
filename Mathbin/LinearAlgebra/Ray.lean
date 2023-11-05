@@ -652,7 +652,8 @@ variable [NoZeroSMulDivisors R M]
 #print sameRay_smul_right_iff /-
 @[simp]
 theorem sameRay_smul_right_iff {v : M} {r : R} : SameRay R v (r • v) ↔ 0 ≤ r ∨ v = 0 :=
-  ⟨fun hrv => or_iff_not_imp_left.2 fun hr => eq_zero_of_sameRay_neg_smul_right (not_le.1 hr) hrv,
+  ⟨fun hrv =>
+    Classical.or_iff_not_imp_left.2 fun hr => eq_zero_of_sameRay_neg_smul_right (not_le.1 hr) hrv,
     or_imp.2 ⟨SameRay.sameRay_nonneg_smul_right v, fun h => h.symm ▸ SameRay.zero_left _⟩⟩
 #align same_ray_smul_right_iff sameRay_smul_right_iff
 -/

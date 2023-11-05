@@ -397,7 +397,7 @@ theorem isOpen_iff {s : Set (CofiniteTopology α)} : IsOpen s ↔ s.Nonempty →
 
 #print CofiniteTopology.isOpen_iff' /-
 theorem isOpen_iff' {s : Set (CofiniteTopology α)} : IsOpen s ↔ s = ∅ ∨ sᶜ.Finite := by
-  simp only [is_open_iff, nonempty_iff_ne_empty, or_iff_not_imp_left]
+  simp only [is_open_iff, nonempty_iff_ne_empty, Classical.or_iff_not_imp_left]
 #align cofinite_topology.is_open_iff' CofiniteTopology.isOpen_iff'
 -/
 

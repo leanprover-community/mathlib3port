@@ -228,7 +228,7 @@ theorem union_mem_iff : s ∪ t ∈ f ↔ s ∈ f ∨ t ∈ f := by
 
 #print Ultrafilter.mem_or_compl_mem /-
 theorem mem_or_compl_mem (f : Ultrafilter α) (s : Set α) : s ∈ f ∨ sᶜ ∈ f :=
-  or_iff_not_imp_left.2 compl_mem_iff_not_mem.2
+  Classical.or_iff_not_imp_left.2 compl_mem_iff_not_mem.2
 #align ultrafilter.mem_or_compl_mem Ultrafilter.mem_or_compl_mem
 -/
 
@@ -425,7 +425,7 @@ theorem eq_pure_of_finite [Finite α] (f : Ultrafilter α) : ∃ a, f = pure a :
 
 #print Ultrafilter.le_cofinite_or_eq_pure /-
 theorem le_cofinite_or_eq_pure (f : Ultrafilter α) : (f : Filter α) ≤ cofinite ∨ ∃ a, f = pure a :=
-  or_iff_not_imp_left.2 fun h =>
+  Classical.or_iff_not_imp_left.2 fun h =>
     let ⟨s, hs, hfin⟩ := Filter.disjoint_cofinite_right.1 (disjoint_iff_not_le.2 h)
     let ⟨a, has, hf⟩ := eq_pure_of_finite_mem hfin hs
     ⟨a, hf⟩

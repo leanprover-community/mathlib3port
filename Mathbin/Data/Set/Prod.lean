@@ -1204,7 +1204,8 @@ theorem eval_image_univ_pi (ht : (pi univ t).Nonempty) :
 theorem pi_subset_pi_iff : pi s t₁ ⊆ pi s t₂ ↔ (∀ i ∈ s, t₁ i ⊆ t₂ i) ∨ pi s t₁ = ∅ :=
   by
   refine'
-    ⟨fun h => or_iff_not_imp_right.2 _, fun h => h.elim pi_mono fun h' => h'.symm ▸ empty_subset _⟩
+    ⟨fun h => Classical.or_iff_not_imp_right.2 _, fun h =>
+      h.elim pi_mono fun h' => h'.symm ▸ empty_subset _⟩
   rw [← Ne.def, ← nonempty_iff_ne_empty]
   intro hne i hi
   simpa only [eval_image_pi hi hne, eval_image_pi hi (hne.mono h)] using

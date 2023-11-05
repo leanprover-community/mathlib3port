@@ -1520,7 +1520,7 @@ def cycleFactorsAux [Fintype α] :
         ((List.mem_cons _ _ _).1 hg).elim (fun hg => hg.symm ▸ isCycle_cycleOf _ hx) (hm₂ g),
         List.pairwise_cons.2
           ⟨fun g hg y =>
-            or_iff_not_imp_left.2 fun hfy =>
+            Classical.or_iff_not_imp_left.2 fun hfy =>
               have hxy : SameCycle f x y :=
                 Classical.not_not.1 (mt cycleOf_apply_of_not_sameCycle hfy)
               have hgm : (g::m.eraseₓ g) ~ m :=

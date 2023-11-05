@@ -959,7 +959,7 @@ def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2
         mul_comm (f y) (f x)] at hxy 
       simp only [add_assoc, add_sub_assoc, add_sub_cancel'_right] at hxy 
       rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero,
-        or_iff_not_imp_left] at hxy 
+        Classical.or_iff_not_imp_left] at hxy 
       exact hxy h_two }
 #align add_monoid_hom.mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero
 -/

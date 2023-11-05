@@ -165,7 +165,7 @@ theorem contDiffOn_arcsin {n : ℕ∞} : ContDiffOn ℝ n arcsin ({-1, 1}ᶜ) :=
 #print Real.contDiffAt_arcsin_iff /-
 theorem contDiffAt_arcsin_iff {x : ℝ} {n : ℕ∞} : ContDiffAt ℝ n arcsin x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
-    or_iff_not_imp_left.2 fun hn =>
+    Classical.or_iff_not_imp_left.2 fun hn =>
       differentiableAt_arcsin.1 <| h.DifferentiableAt <| ENat.one_le_iff_ne_zero.2 hn,
     fun h =>
     h.elim (fun hn => hn.symm ▸ (contDiff_zero.2 continuous_arcsin).ContDiffAt) fun hx =>

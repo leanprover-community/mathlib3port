@@ -113,7 +113,7 @@ theorem exists_le_isAssociatedPrime_of_isNoetherianRing [H : IsNoetherianRing R]
       ⟨(R ∙ x).annihilator, rfl.le, this, x, rfl⟩
   refine' ⟨_, ⟨⟨h₁, _⟩, y, rfl⟩, l⟩
   intro a b hab
-  rw [or_iff_not_imp_left]
+  rw [Classical.or_iff_not_imp_left]
   intro ha
   rw [Submodule.mem_annihilator_span_singleton] at ha hab 
   have H₁ : (R ∙ y).annihilator ≤ (R ∙ a • y).annihilator :=

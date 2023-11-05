@@ -431,7 +431,7 @@ theorem le_minFac {m n : ℕ} : n = 1 ∨ m ≤ minFac n ↔ ∀ p, Prime p → 
   ⟨fun h p pp d =>
     h.elim (by rintro rfl <;> cases pp.not_dvd_one d) fun h =>
       le_trans h <| minFac_le_of_dvd pp.two_le d,
-    fun H => or_iff_not_imp_left.2 fun n1 => H _ (minFac_prime n1) (minFac_dvd _)⟩
+    fun H => Classical.or_iff_not_imp_left.2 fun n1 => H _ (minFac_prime n1) (minFac_dvd _)⟩
 #align nat.le_min_fac Nat.le_minFac
 -/
 
@@ -697,7 +697,8 @@ theorem Prime.not_coprime_iff_dvd {m n : ℕ} : ¬Coprime m n ↔ ∃ p, Prime p
 
 #print Nat.Prime.dvd_mul /-
 theorem Prime.dvd_mul {p m n : ℕ} (pp : Prime p) : p ∣ m * n ↔ p ∣ m ∨ p ∣ n :=
-  ⟨fun H => or_iff_not_imp_left.2 fun h => (pp.coprime_iff_not_dvd.2 h).dvd_of_dvd_mul_left H,
+  ⟨fun H =>
+    Classical.or_iff_not_imp_left.2 fun h => (pp.coprime_iff_not_dvd.2 h).dvd_of_dvd_mul_left H,
     Or.ndrec (fun h : p ∣ m => h.hMul_right _) fun h : p ∣ n => h.hMul_left _⟩
 #align nat.prime.dvd_mul Nat.Prime.dvd_mul
 -/

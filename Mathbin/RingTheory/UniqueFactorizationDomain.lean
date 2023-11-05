@@ -97,7 +97,7 @@ theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) :
   ⟨b,
     ⟨hs.2, fun c d he =>
       let h := dvd_trans ⟨d, he⟩ hs.1
-      or_iff_not_imp_left.2 fun hc =>
+      Classical.or_iff_not_imp_left.2 fun hc =>
         of_not_not fun hd => hr c ⟨h, hc⟩ ⟨ne_zero_of_dvd_ne_zero ha0 h, d, hd, he⟩⟩,
     hs.1⟩
 #align wf_dvd_monoid.exists_irreducible_factor WfDvdMonoid.exists_irreducible_factor
@@ -324,7 +324,7 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
     refine'
       RelHomClass.wellFounded
         (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : ℕ∞ → ℕ∞ → Prop))
-        (WithTop.wellFounded_lt Nat.lt_wfRel)
+        (WithTop.instWellFoundedLT Nat.lt_wfRel)
     · intro a
       by_cases h : a = 0; · exact ⊤
       exact (Classical.choose (pf a h)).card
@@ -2038,7 +2038,7 @@ theorem count_of_coprime {a : Associates α} (ha : a ≠ 0) {b : Associates α} 
     (hab : ∀ d, d ∣ a → d ∣ b → ¬Prime d) {p : Associates α} (hp : Irreducible p) :
     count p a.factors = 0 ∨ count p b.factors = 0 :=
   by
-  rw [or_iff_not_imp_left, ← Ne.def]
+  rw [Classical.or_iff_not_imp_left, ← Ne.def]
   intro hca
   contrapose! hab with hcb
   exact
