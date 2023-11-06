@@ -855,7 +855,7 @@ theorem coprime_or_dvd_of_prime {p} (pp : Prime p) (i : ℕ) : Coprime p i ∨ p
 
 #print Nat.coprime_of_lt_prime /-
 theorem coprime_of_lt_prime {n p} (n_pos : 0 < n) (hlt : n < p) (pp : Prime p) : Coprime p n :=
-  (coprime_or_dvd_of_prime pp n).resolve_right fun h => lt_le_antisymm hlt (le_of_dvd n_pos h)
+  (coprime_or_dvd_of_prime pp n).resolve_right fun h => lt_le_asymm hlt (le_of_dvd n_pos h)
 #align nat.coprime_of_lt_prime Nat.coprime_of_lt_prime
 -/
 
