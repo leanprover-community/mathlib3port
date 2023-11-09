@@ -661,7 +661,7 @@ theorem derivWithin_inter (ht : t ∈ 𝓝 x) : derivWithin f (s ∩ t) x = deri
 
 #print derivWithin_of_open /-
 theorem derivWithin_of_open (hs : IsOpen s) (hx : x ∈ s) : derivWithin f s x = deriv f x := by
-  unfold derivWithin; rw [fderivWithin_of_open hs hx]; rfl
+  unfold derivWithin; rw [fderivWithin_of_isOpen hs hx]; rfl
 #align deriv_within_of_open derivWithin_of_open
 -/
 

@@ -808,10 +808,10 @@ theorem fderivWithin_univ : fderivWithin 𝕜 f univ = fderiv 𝕜 f :=
 #align fderiv_within_univ fderivWithin_univ
 -/
 
-#print fderivWithin_of_open /-
-theorem fderivWithin_of_open (hs : IsOpen s) (hx : x ∈ s) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
+#print fderivWithin_of_isOpen /-
+theorem fderivWithin_of_isOpen (hs : IsOpen s) (hx : x ∈ s) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
   fderivWithin_of_mem_nhds (hs.mem_nhds hx)
-#align fderiv_within_of_open fderivWithin_of_open
+#align fderiv_within_of_open fderivWithin_of_isOpen
 -/
 
 #print fderivWithin_eq_fderiv /-

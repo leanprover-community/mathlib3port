@@ -544,11 +544,11 @@ theorem tensor_rho {X Y : Action V G} {g : G} : (X ⊗ Y).ρ g = X.ρ g ⊗ Y.ρ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Action.tensorHom /-
+#print Action.tensor_hom /-
 @[simp]
-theorem tensorHom {W X Y Z : Action V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
+theorem tensor_hom {W X Y Z : Action V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
   rfl
-#align Action.tensor_hom Action.tensorHom
+#align Action.tensor_hom Action.tensor_hom
 -/
 
 #print Action.associator_hom_hom /-

@@ -1405,7 +1405,7 @@ theorem contDiffOn_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply contDiffOn_congr
   intro x hx
-  exact fderivWithin_of_open hs hx
+  exact fderivWithin_of_isOpen hs hx
 #align cont_diff_on_succ_iff_fderiv_of_open contDiffOn_succ_iff_fderiv_of_open
 -/
 
@@ -1441,7 +1441,7 @@ theorem contDiffOn_top_iff_fderiv_of_open (hs : IsOpen s) :
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply contDiffOn_congr
   intro x hx
-  exact fderivWithin_of_open hs hx
+  exact fderivWithin_of_isOpen hs hx
 #align cont_diff_on_top_iff_fderiv_of_open contDiffOn_top_iff_fderiv_of_open
 -/
 
@@ -1462,7 +1462,7 @@ theorem ContDiffOn.fderivWithin (hf : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 
 #print ContDiffOn.fderiv_of_open /-
 theorem ContDiffOn.fderiv_of_open (hf : ContDiffOn 𝕜 n f s) (hs : IsOpen s) (hmn : m + 1 ≤ n) :
     ContDiffOn 𝕜 m (fun y => fderiv 𝕜 f y) s :=
-  (hf.fderivWithin hs.UniqueDiffOn hmn).congr fun x hx => (fderivWithin_of_open hs hx).symm
+  (hf.fderivWithin hs.UniqueDiffOn hmn).congr fun x hx => (fderivWithin_of_isOpen hs hx).symm
 #align cont_diff_on.fderiv_of_open ContDiffOn.fderiv_of_open
 -/
 
@@ -1984,7 +1984,7 @@ theorem iteratedFDerivWithin_of_isOpen (n : ℕ) (hs : IsOpen s) :
     rw [iteratedFDeriv_succ_eq_comp_left, iteratedFDerivWithin_succ_eq_comp_left]
     dsimp
     congr 1
-    rw [fderivWithin_of_open hs hx]
+    rw [fderivWithin_of_isOpen hs hx]
     apply Filter.EventuallyEq.fderiv_eq
     filter_upwards [hs.mem_nhds hx]
     exact IH
