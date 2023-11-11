@@ -388,8 +388,8 @@ theorem HD_candidatesBDist_le :
           by
           apply add_le_add (add_le_add _ le_rfl)
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-          any_goals exact OrderedAddCommMonoid.to_covariantClass_left ℝ
-          any_goals exact OrderedAddCommMonoid.to_covariantClass_right ℝ
+          any_goals exact OrderedAddCommMonoid.toCovariantClassLeft ℝ
+          any_goals exact OrderedAddCommMonoid.toCovariantClassRight ℝ
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
     exact le_trans A B
   · have A :
@@ -402,8 +402,8 @@ theorem HD_candidatesBDist_le :
           by
           apply add_le_add (add_le_add _ le_rfl)
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-          any_goals exact OrderedAddCommMonoid.to_covariantClass_left ℝ
-          any_goals exact OrderedAddCommMonoid.to_covariantClass_right ℝ
+          any_goals exact OrderedAddCommMonoid.toCovariantClassLeft ℝ
+          any_goals exact OrderedAddCommMonoid.toCovariantClassRight ℝ
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
     exact le_trans A B
 #align Gromov_Hausdorff.HD_candidates_b_dist_le GromovHausdorff.HD_candidatesBDist_le

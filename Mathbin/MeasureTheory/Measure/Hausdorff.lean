@@ -1215,9 +1215,8 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
 variable (ι X)
 
 #print MeasureTheory.hausdorffMeasure_measurePreserving_funUnique /-
-theorem hausdorffMeasure_measurePreserving_funUnique [Unique ι]
-    [TopologicalSpace.SecondCountableTopology X] (d : ℝ) :
-    MeasurePreserving (MeasurableEquiv.funUnique ι X) μH[d] μH[d] :=
+theorem hausdorffMeasure_measurePreserving_funUnique [Unique ι] [SecondCountableTopology X]
+    (d : ℝ) : MeasurePreserving (MeasurableEquiv.funUnique ι X) μH[d] μH[d] :=
   (IsometryEquiv.funUnique ι X).measurePreserving_hausdorffMeasure _
 #align measure_theory.hausdorff_measure_measure_preserving_fun_unique MeasureTheory.hausdorffMeasure_measurePreserving_funUnique
 -/
@@ -1225,7 +1224,7 @@ theorem hausdorffMeasure_measurePreserving_funUnique [Unique ι]
 #print MeasureTheory.hausdorffMeasure_measurePreserving_piFinTwo /-
 theorem hausdorffMeasure_measurePreserving_piFinTwo (α : Fin 2 → Type _)
     [∀ i, MeasurableSpace (α i)] [∀ i, EMetricSpace (α i)] [∀ i, BorelSpace (α i)]
-    [∀ i, TopologicalSpace.SecondCountableTopology (α i)] (d : ℝ) :
+    [∀ i, SecondCountableTopology (α i)] (d : ℝ) :
     MeasurePreserving (MeasurableEquiv.piFinTwo α) μH[d] μH[d] :=
   (IsometryEquiv.piFinTwo α).measurePreserving_hausdorffMeasure _
 #align measure_theory.hausdorff_measure_measure_preserving_pi_fin_two MeasureTheory.hausdorffMeasure_measurePreserving_piFinTwo

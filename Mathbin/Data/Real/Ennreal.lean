@@ -110,7 +110,7 @@ instance covariantClass_mul_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·) 
 
 #print ENNReal.covariantClass_add_le /-
 instance covariantClass_add_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· ≤ ·) :=
-  OrderedAddCommMonoid.to_covariantClass_left ℝ≥0∞
+  OrderedAddCommMonoid.toCovariantClassLeft ℝ≥0∞
 #align ennreal.covariant_class_add_le ENNReal.covariantClass_add_le
 -/
 

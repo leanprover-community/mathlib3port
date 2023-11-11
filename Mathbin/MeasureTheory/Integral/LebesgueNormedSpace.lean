@@ -22,8 +22,8 @@ variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ : MeasureTheory.Mea
 
 #print aemeasurable_withDensity_iff /-
 theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [TopologicalSpace.SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] {f : α → ℝ≥0}
-    (hf : Measurable f) {g : α → E} :
+    [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] {f : α → ℝ≥0} (hf : Measurable f)
+    {g : α → E} :
     AEMeasurable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔
       AEMeasurable (fun x => (f x : ℝ) • g x) μ :=
   by

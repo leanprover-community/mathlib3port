@@ -55,10 +55,12 @@ theorem card_def (s : Finset α) : s.card = s.1.card :=
 #align finset.card_def Finset.card_def
 -/
 
+#print Finset.card_val /-
 @[simp]
 theorem card_val (s : Finset α) : s.1.card = s.card :=
   rfl
 #align finset.card_val Finset.card_val
+-/
 
 #print Finset.card_mk /-
 @[simp]

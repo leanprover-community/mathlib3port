@@ -593,10 +593,10 @@ theorem sup_lt_of_lt_sdiff_right (h : x < z \ y) (hyz : y ≤ z) : x ⊔ y < z :
 #align sup_lt_of_lt_sdiff_right sup_lt_of_lt_sdiff_right
 -/
 
-#print Pi.generalizedBooleanAlgebra /-
-instance Pi.generalizedBooleanAlgebra {α : Type u} {β : Type v} [GeneralizedBooleanAlgebra β] :
+#print Pi.instGeneralizedBooleanAlgebra /-
+instance Pi.instGeneralizedBooleanAlgebra {α : Type u} {β : Type v} [GeneralizedBooleanAlgebra β] :
     GeneralizedBooleanAlgebra (α → β) := by pi_instance
-#align pi.generalized_boolean_algebra Pi.generalizedBooleanAlgebra
+#align pi.generalized_boolean_algebra Pi.instGeneralizedBooleanAlgebra
 -/
 
 end GeneralizedBooleanAlgebra

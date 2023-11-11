@@ -717,12 +717,12 @@ variable [BorelSpace G] [FirstCountableTopology G] [TopologicalSpace P] [FirstCo
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print continuousOn_convolution_right_with_param' /-
+#print continuousOn_convolution_right_with_param /-
 /-- The convolution `f * g` is continuous if `f` is locally integrable and `g` is continuous and
 compactly supported. Version where `g` depends on an additional parameter in a subset `s` of
 a parameter space `P` (and the compact support `k` is independent of the parameter in `s`),
 not assuming `t2_space G`. -/
-theorem continuousOn_convolution_right_with_param' {g : P → G → E'} {s : Set P} {k : Set G}
+theorem continuousOn_convolution_right_with_param {g : P → G → E'} {s : Set P} {k : Set G}
     (hk : IsCompact k) (h'k : IsClosed k) (hgs : ∀ p, ∀ x, p ∈ s → x ∉ k → g p x = 0)
     (hf : LocallyIntegrable f μ) (hg : ContinuousOn (↿g) (s ×ˢ univ)) :
     ContinuousOn (fun q : P × G => (f ⋆[L, μ] g q.1) q.2) (s ×ˢ univ) :=
@@ -821,9 +821,11 @@ theorem continuousOn_convolution_right_with_param' {g : P → G → E'} {s : Set
     rintro ⟨q, x⟩ ⟨hq, hx⟩
     exact ⟨hq, mem_univ _⟩
   exact continuous_within_at_of_dominated I1 I2 I3 I4
-#align continuous_on_convolution_right_with_param' continuousOn_convolution_right_with_param'
+#align continuous_on_convolution_right_with_param' continuousOn_convolution_right_with_param
 -/
 
+/- warning: continuous_on_convolution_right_with_param clashes with continuous_on_convolution_right_with_param' -> continuousOn_convolution_right_with_param
+Case conversion may be inaccurate. Consider using '#align continuous_on_convolution_right_with_param continuousOn_convolution_right_with_paramₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print continuousOn_convolution_right_with_param /-
@@ -834,29 +836,31 @@ theorem continuousOn_convolution_right_with_param [T2Space G] {g : P → G → E
     {k : Set G} (hk : IsCompact k) (hgs : ∀ p, ∀ x, p ∈ s → x ∉ k → g p x = 0)
     (hf : LocallyIntegrable f μ) (hg : ContinuousOn (↿g) (s ×ˢ univ)) :
     ContinuousOn (fun q : P × G => (f ⋆[L, μ] g q.1) q.2) (s ×ˢ univ) :=
-  continuousOn_convolution_right_with_param' L hk hk.IsClosed hgs hf hg
+  continuousOn_convolution_right_with_param L hk hk.IsClosed hgs hf hg
 #align continuous_on_convolution_right_with_param continuousOn_convolution_right_with_param
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print continuousOn_convolution_right_with_param_comp' /-
+#print continuousOn_convolution_right_with_param_comp /-
 /-- The convolution `f * g` is continuous if `f` is locally integrable and `g` is continuous and
 compactly supported. Version where `g` depends on an additional parameter in an open subset `s` of
 a parameter space `P` (and the compact support `k` is independent of the parameter in `s`),
 given in terms of compositions with an additional continuous map.
 Version not assuming `t2_space G`. -/
-theorem continuousOn_convolution_right_with_param_comp' {s : Set P} {v : P → G}
+theorem continuousOn_convolution_right_with_param_comp {s : Set P} {v : P → G}
     (hv : ContinuousOn v s) {g : P → G → E'} {k : Set G} (hk : IsCompact k) (h'k : IsClosed k)
     (hgs : ∀ p, ∀ x, p ∈ s → x ∉ k → g p x = 0) (hf : LocallyIntegrable f μ)
     (hg : ContinuousOn (↿g) (s ×ˢ univ)) : ContinuousOn (fun x => (f ⋆[L, μ] g x) (v x)) s :=
   by
   apply
-    (continuousOn_convolution_right_with_param' L hk h'k hgs hf hg).comp (continuous_on_id.prod hv)
+    (continuousOn_convolution_right_with_param L hk h'k hgs hf hg).comp (continuous_on_id.prod hv)
   intro x hx
   simp only [hx, prod_mk_mem_set_prod_eq, mem_univ, and_self_iff, id.def]
-#align continuous_on_convolution_right_with_param_comp' continuousOn_convolution_right_with_param_comp'
+#align continuous_on_convolution_right_with_param_comp' continuousOn_convolution_right_with_param_comp
 -/
 
+/- warning: continuous_on_convolution_right_with_param_comp clashes with continuous_on_convolution_right_with_param_comp' -> continuousOn_convolution_right_with_param_comp
+Case conversion may be inaccurate. Consider using '#align continuous_on_convolution_right_with_param_comp continuousOn_convolution_right_with_param_compₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print continuousOn_convolution_right_with_param_comp /-
 /-- The convolution `f * g` is continuous if `f` is locally integrable and `g` is continuous and
@@ -867,7 +871,7 @@ theorem continuousOn_convolution_right_with_param_comp [T2Space G] {s : Set P} {
     (hv : ContinuousOn v s) {g : P → G → E'} {k : Set G} (hk : IsCompact k)
     (hgs : ∀ p, ∀ x, p ∈ s → x ∉ k → g p x = 0) (hf : LocallyIntegrable f μ)
     (hg : ContinuousOn (↿g) (s ×ˢ univ)) : ContinuousOn (fun x => (f ⋆[L, μ] g x) (v x)) s :=
-  continuousOn_convolution_right_with_param_comp' L hv hk hk.IsClosed hgs hf hg
+  continuousOn_convolution_right_with_param_comp L hv hk hk.IsClosed hgs hf hg
 #align continuous_on_convolution_right_with_param_comp continuousOn_convolution_right_with_param_comp
 -/
 
@@ -882,7 +886,7 @@ theorem HasCompactSupport.continuous_convolution_right (hcg : HasCompactSupport 
   let g' : G → G → E' := fun p q => g q
   have : ContinuousOn (↿g') (univ ×ˢ univ) := (hg.comp continuous_snd).ContinuousOn
   exact
-    continuousOn_convolution_right_with_param_comp' L
+    continuousOn_convolution_right_with_param_comp L
       (continuous_iff_continuousOn_univ.1 continuous_id) hcg (isClosed_tsupport _)
       (fun p x hp hx => image_eq_zero_of_nmem_tsupport hx) hf this
 #align has_compact_support.continuous_convolution_right HasCompactSupport.continuous_convolution_right

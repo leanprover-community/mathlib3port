@@ -888,8 +888,7 @@ variable [UniformSpace E] [UniformAddGroup E]
 #print WithSeminorms.first_countable /-
 /-- If the topology of a space is induced by a countable family of seminorms, then the topology
 is first countable. -/
-theorem WithSeminorms.first_countable (hp : WithSeminorms p) :
-    TopologicalSpace.FirstCountableTopology E :=
+theorem WithSeminorms.first_countable (hp : WithSeminorms p) : FirstCountableTopology E :=
   by
   have : (𝓝 (0 : E)).IsCountablyGenerated :=
     by

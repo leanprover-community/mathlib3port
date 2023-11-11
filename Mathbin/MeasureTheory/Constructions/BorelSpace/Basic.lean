@@ -428,15 +428,15 @@ theorem measurable_of_isClosed {f : δ → γ} (hf : ∀ s, IsClosed s → Measu
 #align measurable_of_is_closed measurable_of_isClosed
 -/
 
-#print measurable_of_is_closed' /-
-theorem measurable_of_is_closed' {f : δ → γ}
+#print measurable_of_isClosed' /-
+theorem measurable_of_isClosed' {f : δ → γ}
     (hf : ∀ s, IsClosed s → s.Nonempty → s ≠ univ → MeasurableSet (f ⁻¹' s)) : Measurable f :=
   by
   apply measurable_of_isClosed; intro s hs
   cases' eq_empty_or_nonempty s with h1 h1; · simp [h1]
   by_cases h2 : s = univ; · simp [h2]
   exact hf s hs h1 h2
-#align measurable_of_is_closed' measurable_of_is_closed'
+#align measurable_of_is_closed' measurable_of_isClosed'
 -/
 
 #print nhds_isMeasurablyGenerated /-

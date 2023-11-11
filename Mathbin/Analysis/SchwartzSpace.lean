@@ -690,7 +690,7 @@ instance : UniformAddGroup 𝓢(E, F) :=
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
   (schwartz_withSeminorms ℝ E F).toLocallyConvexSpace
 
-instance : TopologicalSpace.FirstCountableTopology 𝓢(E, F) :=
+instance : FirstCountableTopology 𝓢(E, F) :=
   (schwartz_withSeminorms ℝ E F).first_countable
 
 end Topology

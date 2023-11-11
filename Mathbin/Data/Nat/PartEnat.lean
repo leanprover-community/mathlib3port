@@ -272,19 +272,15 @@ instance decidableLe (x y : PartENat) [Decidable x.Dom] [Decidable y.Dom] : Deci
 #align part_enat.decidable_le PartENat.decidableLe
 -/
 
-#print PartENat.natCast_AddMonoidHom /-
 /-- The coercion `ℕ → part_enat` preserves `0` and addition. -/
-def natCast_AddMonoidHom : ℕ →+ PartENat :=
+def coeHom : ℕ →+ PartENat :=
   ⟨coe, Nat.cast_zero, Nat.cast_add⟩
-#align part_enat.coe_hom PartENat.natCast_AddMonoidHom
--/
+#align part_enat.coe_hom PartENat.coeHom
 
-#print PartENat.coe_coeHom /-
 @[simp]
-theorem coe_coeHom : ⇑natCast_AddMonoidHom = coe :=
+theorem coe_coeHom : ⇑coeHom = coe :=
   rfl
 #align part_enat.coe_coe_hom PartENat.coe_coeHom
--/
 
 instance : PartialOrder PartENat where
   le := (· ≤ ·)
@@ -369,11 +365,9 @@ theorem coe_lt_iff (n : ℕ) (x : PartENat) : (n : PartENat) < x ↔ ∀ h : x.D
 #align part_enat.coe_lt_iff PartENat.coe_lt_iff
 -/
 
-#print PartENat.NeZero.one /-
 instance NeZero.one : NeZero (1 : PartENat) :=
   ⟨natCast_inj.Not.mpr (by decide)⟩
 #align part_enat.ne_zero.one PartENat.NeZero.one
--/
 
 #print PartENat.semilatticeSup /-
 instance semilatticeSup : SemilatticeSup PartENat :=

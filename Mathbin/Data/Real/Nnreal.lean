@@ -631,19 +631,19 @@ example : Archimedean ℝ≥0 := by infer_instance
 #print NNReal.covariant_add /-
 -- TODO: why are these three instances necessary? why aren't they inferred?
 instance covariant_add : CovariantClass ℝ≥0 ℝ≥0 (· + ·) (· ≤ ·) :=
-  OrderedAddCommMonoid.to_covariantClass_left ℝ≥0
+  OrderedAddCommMonoid.toCovariantClassLeft ℝ≥0
 #align nnreal.covariant_add NNReal.covariant_add
 -/
 
 #print NNReal.contravariant_add /-
 instance contravariant_add : ContravariantClass ℝ≥0 ℝ≥0 (· + ·) (· < ·) :=
-  OrderedCancelAddCommMonoid.to_contravariantClass_left ℝ≥0
+  OrderedCancelAddCommMonoid.toContravariantClassLeft ℝ≥0
 #align nnreal.contravariant_add NNReal.contravariant_add
 -/
 
 #print NNReal.covariant_mul /-
 instance covariant_mul : CovariantClass ℝ≥0 ℝ≥0 (· * ·) (· ≤ ·) :=
-  OrderedCommMonoid.to_covariantClass_left ℝ≥0
+  OrderedCommMonoid.toCovariantClassLeft ℝ≥0
 #align nnreal.covariant_mul NNReal.covariant_mul
 -/
 

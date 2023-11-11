@@ -336,8 +336,8 @@ noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set
 -/
 
 #print Homeomorph.secondCountableTopology /-
-protected theorem secondCountableTopology [TopologicalSpace.SecondCountableTopology β]
-    (h : α ≃ₜ β) : TopologicalSpace.SecondCountableTopology α :=
+protected theorem secondCountableTopology [SecondCountableTopology β] (h : α ≃ₜ β) :
+    SecondCountableTopology α :=
   h.Inducing.SecondCountableTopology
 #align homeomorph.second_countable_topology Homeomorph.secondCountableTopology
 -/

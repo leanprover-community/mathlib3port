@@ -48,46 +48,44 @@ section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid α] {a b c d : α}
 
-#print OrderedCancelCommMonoid.to_contravariantClass_le_left /-
+#print OrderedCancelCommMonoid.toContravariantClassLeLeft /-
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 200) OrderedCancelCommMonoid.to_contravariantClass_le_left :
+instance (priority := 200) OrderedCancelCommMonoid.toContravariantClassLeLeft :
     ContravariantClass α α (· * ·) (· ≤ ·) :=
   ⟨OrderedCancelCommMonoid.le_of_hMul_le_hMul_left⟩
-#align ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariantClass_le_left
-#align ordered_cancel_add_comm_monoid.to_contravariant_class_le_left OrderedCancelAddCommMonoid.to_contravariantClass_le_left
+#align ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.toContravariantClassLeLeft
+#align ordered_cancel_add_comm_monoid.to_contravariant_class_le_left OrderedCancelAddCommMonoid.toContravariantClassLeLeft
 -/
 
-#print OrderedCancelCommMonoid.lt_of_mul_lt_mul_left /-
 @[to_additive]
-theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < a * c → b < c :=
+theorem OrderedCancelCommMonoid.lt_of_hMul_lt_hMul_left : ∀ a b c : α, a * b < a * c → b < c :=
   fun a b c h =>
   lt_of_le_not_le (OrderedCancelCommMonoid.le_of_hMul_le_hMul_left a b c h.le) <|
     mt (fun h => OrderedCancelCommMonoid.hMul_le_hMul_left _ _ h _) (not_le_of_gt h)
-#align ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_mul_lt_mul_left
+#align ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_hMul_lt_hMul_left
 #align ordered_cancel_add_comm_monoid.lt_of_add_lt_add_left OrderedCancelAddCommMonoid.lt_of_add_lt_add_left
--/
 
-#print OrderedCancelCommMonoid.to_contravariantClass_left /-
+#print OrderedCancelCommMonoid.toContravariantClassLeft /-
 @[to_additive]
-instance OrderedCancelCommMonoid.to_contravariantClass_left (M : Type _)
-    [OrderedCancelCommMonoid M] : ContravariantClass M M (· * ·) (· < ·)
-    where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
-#align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariantClass_left
-#align ordered_cancel_add_comm_monoid.to_contravariant_class_left OrderedCancelAddCommMonoid.to_contravariantClass_left
+instance OrderedCancelCommMonoid.toContravariantClassLeft (M : Type _) [OrderedCancelCommMonoid M] :
+    ContravariantClass M M (· * ·) (· < ·)
+    where elim a b c := OrderedCancelCommMonoid.lt_of_hMul_lt_hMul_left _ _ _
+#align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.toContravariantClassLeft
+#align ordered_cancel_add_comm_monoid.to_contravariant_class_left OrderedCancelAddCommMonoid.toContravariantClassLeft
 -/
 
-#print OrderedCancelCommMonoid.to_contravariantClass_right /-
+#print OrderedCancelCommMonoid.toContravariantClassRight /-
 /- This instance can be proven with `by apply_instance`.  However, by analogy with the
 instance `ordered_cancel_comm_monoid.to_covariant_class_right` above, I imagine that without
 this instance, some Type would not have a `contravariant_class M M (function.swap (*)) (<)`
 instance. -/
 @[to_additive]
-instance OrderedCancelCommMonoid.to_contravariantClass_right (M : Type _)
+instance OrderedCancelCommMonoid.toContravariantClassRight (M : Type _)
     [OrderedCancelCommMonoid M] : ContravariantClass M M (swap (· * ·)) (· < ·) :=
   contravariant_swap_hMul_lt_of_contravariant_hMul_lt M
-#align ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariantClass_right
-#align ordered_cancel_add_comm_monoid.to_contravariant_class_right OrderedCancelAddCommMonoid.to_contravariantClass_right
+#align ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.toContravariantClassRight
+#align ordered_cancel_add_comm_monoid.to_contravariant_class_right OrderedCancelAddCommMonoid.toContravariantClassRight
 -/
 
 #print OrderedCancelCommMonoid.toOrderedCommMonoid /-

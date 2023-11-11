@@ -64,7 +64,7 @@ theorem continuous_im : Continuous im :=
 #align upper_half_plane.continuous_im UpperHalfPlane.continuous_im
 -/
 
-instance : TopologicalSpace.SecondCountableTopology ℍ :=
+instance : SecondCountableTopology ℍ :=
   TopologicalSpace.Subtype.secondCountableTopology _ _
 
 instance : T3Space ℍ :=

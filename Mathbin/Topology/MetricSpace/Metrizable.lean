@@ -82,7 +82,7 @@ theorem Inducing.pseudoMetrizableSpace [PseudoMetrizableSpace Y] {f : X → Y} (
 #print TopologicalSpace.PseudoMetrizableSpace.firstCountableTopology /-
 /-- Every pseudo-metrizable space is first countable. -/
 instance (priority := 100) PseudoMetrizableSpace.firstCountableTopology
-    [h : PseudoMetrizableSpace X] : TopologicalSpace.FirstCountableTopology X :=
+    [h : PseudoMetrizableSpace X] : FirstCountableTopology X :=
   by
   rcases h with ⟨_, hm⟩; rw [← hm]
   exact

@@ -202,13 +202,13 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
 #align frechet_urysohn_space.of_seq_tendsto_imp_tendsto FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
 -/
 
-#print TopologicalSpace.FirstCountableTopology.frechetUrysohnSpace /-
+#print FirstCountableTopology.frechetUrysohnSpace /-
 -- see Note [lower instance priority]
 /-- Every first-countable space is a Fréchet-Urysohn space. -/
-instance (priority := 100) TopologicalSpace.FirstCountableTopology.frechetUrysohnSpace
-    [FirstCountableTopology X] : FrechetUrysohnSpace X :=
+instance (priority := 100) FirstCountableTopology.frechetUrysohnSpace [FirstCountableTopology X] :
+    FrechetUrysohnSpace X :=
   FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto fun f a => tendsto_iff_seq_tendsto.2
-#align topological_space.first_countable_topology.frechet_urysohn_space TopologicalSpace.FirstCountableTopology.frechetUrysohnSpace
+#align topological_space.first_countable_topology.frechet_urysohn_space FirstCountableTopology.frechetUrysohnSpace
 -/
 
 #print SequentialSpace /-
@@ -298,7 +298,7 @@ end TopologicalSpace
 
 section SeqCompact
 
-open TopologicalSpace TopologicalSpace.FirstCountableTopology
+open TopologicalSpace FirstCountableTopology
 
 variable [TopologicalSpace X]
 
@@ -343,7 +343,7 @@ section FirstCountableTopology
 
 variable [FirstCountableTopology X]
 
-open TopologicalSpace.FirstCountableTopology
+open FirstCountableTopology
 
 #print IsCompact.isSeqCompact /-
 protected theorem IsCompact.isSeqCompact {s : Set X} (hs : IsCompact s) : IsSeqCompact s :=

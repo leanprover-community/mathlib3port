@@ -156,10 +156,12 @@ theorem countP_map (p : β → Prop) [DecidablePred p] (f : α → β) :
 #align list.countp_map List.countP_map
 -/
 
+#print List.countP_attach /-
 @[simp]
 theorem countP_attach (l : List α) : (l.attach.countP fun a => p ↑a) = l.countP p := by
   rw [← countp_map, attach_map_coe]
 #align list.countp_attach List.countP_attach
+-/
 
 variable {p q}
 
@@ -382,10 +384,12 @@ theorem count_bind {α β} [DecidableEq β] (l : List α) (f : α → List β) (
 #align list.count_bind List.count_bind
 -/
 
+#print List.count_attach /-
 @[simp]
 theorem count_attach (a : { x // x ∈ l }) : l.attach.count a = l.count a :=
   Eq.trans (countP_congr fun _ _ => Subtype.ext_iff) <| countP_attach _ _
 #align list.count_attach List.count_attach
+-/
 
 #print List.count_map_of_injective /-
 @[simp]

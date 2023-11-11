@@ -4287,10 +4287,12 @@ def attach (l : List α) : List { x // x ∈ l } :=
 #align list.attach List.attach
 -/
 
+#print List.attach_nil /-
 @[simp]
 theorem attach_nil : ([] : List α).attach = [] :=
   rfl
 #align list.attach_nil List.attach_nil
+-/
 
 #print List.sizeOf_lt_sizeOf_of_mem /-
 theorem sizeOf_lt_sizeOf_of_mem [SizeOf α] {x : α} {l : List α} (hx : x ∈ l) :
@@ -5087,12 +5089,15 @@ theorem map_filter (f : β → α) (l : List β) : filter p (map f l) = map f (f
 #align list.map_filter List.map_filter
 -/
 
+#print List.map_filter' /-
 theorem map_filter' {f : α → β} (hf : Injective f) (l : List α)
     [DecidablePred fun b => ∃ a, p a ∧ f a = b] :
     (l.filterₓ p).map f = (l.map f).filterₓ fun b => ∃ a, p a ∧ f a = b := by
   simp [(· ∘ ·), map_filter, hf.eq_iff]
 #align list.map_filter' List.map_filter'
+-/
 
+#print List.filter_attach' /-
 theorem filter_attach' (l : List α) (p : { a // a ∈ l } → Prop) [DecidableEq α] [DecidablePred p] :
     l.attach.filterₓ p =
       (l.filterₓ fun x => ∃ h, p ⟨x, h⟩).attach.map
@@ -5103,15 +5108,18 @@ theorem filter_attach' (l : List α) (p : { a // a ∈ l } → Prop) [DecidableE
   classical
   refine' map_injective_iff.2 Subtype.coe_injective _
   simp [(· ∘ ·), map_filter' _ Subtype.coe_injective]
-#align list.filter_attach' List.filterₓ_attach'
+#align list.filter_attach' List.filter_attach'
+-/
 
+#print List.filter_attach /-
 @[simp]
 theorem filter_attach (l : List α) (p : α → Prop) [DecidablePred p] :
     (l.attach.filterₓ fun x => p ↑x) =
       (l.filterₓ p).attach.map (Subtype.map id fun _ => mem_of_mem_filter) :=
   map_injective_iff.2 Subtype.coe_injective <| by
     simp_rw [map_map, (· ∘ ·), Subtype.map, Subtype.coe_mk, id.def, ← map_filter, attach_map_coe]
-#align list.filter_attach List.filterₓ_attach
+#align list.filter_attach List.filter_attach
+-/
 
 #print List.filter_filter /-
 @[simp]
@@ -5125,9 +5133,11 @@ theorem filter_filter (q) [DecidablePred q] :
 #align list.filter_filter List.filter_filter
 -/
 
+#print List.filter_comm /-
 theorem filter_comm (q) [DecidablePred q] (l : List α) :
     filter p (filter q l) = filter q (filter p l) := by simp [and_comm']
-#align list.filter_comm List.filterₓ_comm
+#align list.filter_comm List.filter_comm
+-/
 
 #print List.filter_true /-
 @[simp]

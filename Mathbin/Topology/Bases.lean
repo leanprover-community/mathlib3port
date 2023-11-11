@@ -666,12 +666,12 @@ universe u
 
 variable (α : Type u) [t : TopologicalSpace α]
 
-#print TopologicalSpace.FirstCountableTopology /-
+#print FirstCountableTopology /-
 /-- A first-countable space is one in which every point has a
   countable neighborhood basis. -/
 class FirstCountableTopology : Prop where
   nhds_generated_countable : ∀ a : α, (𝓝 a).IsCountablyGenerated
-#align topological_space.first_countable_topology TopologicalSpace.FirstCountableTopology
+#align topological_space.first_countable_topology FirstCountableTopology
 -/
 
 attribute [instance] first_countable_topology.nhds_generated_countable
@@ -714,12 +714,12 @@ instance isCountablyGenerated_nhdsWithin (x : α) [IsCountablyGenerated (𝓝 x)
 
 variable (α)
 
-#print TopologicalSpace.SecondCountableTopology /-
+#print SecondCountableTopology /-
 /- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`is_open_generated_countable] [] -/
 /-- A second-countable space is one with a countable basis. -/
 class SecondCountableTopology : Prop where
   is_open_generated_countable : ∃ b : Set (Set α), b.Countable ∧ t = TopologicalSpace.generateFrom b
-#align topological_space.second_countable_topology TopologicalSpace.SecondCountableTopology
+#align topological_space.second_countable_topology SecondCountableTopology
 -/
 
 variable {α}

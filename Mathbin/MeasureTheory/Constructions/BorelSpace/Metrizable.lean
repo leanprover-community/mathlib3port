@@ -79,7 +79,7 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
     Measurable g :=
   by
   letI : PseudoMetricSpace β := pseudo_metrizable_space_pseudo_metric β
-  apply measurable_of_is_closed'; intro s h1s h2s h3s
+  apply measurable_of_isClosed'; intro s h1s h2s h3s
   have : Measurable fun x => inf_nndist (g x) s :=
     by
     suffices : tendsto (fun i x => inf_nndist (f i x) s) u (𝓝 fun x => inf_nndist (g x) s)
