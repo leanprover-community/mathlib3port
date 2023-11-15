@@ -397,7 +397,6 @@ variable [CompleteLinearOrder β]
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
-#print essSup_indicator_eq_essSup_restrict /-
 theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → β}
     (hf : 0 ≤ᵐ[μ.restrict s] f) (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) :
     essSup (s.indicator f) μ = essSup f (μ.restrict s) :=
@@ -440,7 +439,6 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
   · simpa [hxs] using hxc hxs
   · simpa [hxs] using hc
 #align ess_sup_indicator_eq_ess_sup_restrict essSup_indicator_eq_essSup_restrict
--/
 
 end CompleteLinearOrder
 

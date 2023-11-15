@@ -149,35 +149,26 @@ def single₀ : V ⥤ ChainComplex V ℕ
 #align chain_complex.single₀ ChainComplex.single₀
 -/
 
-#print ChainComplex.single₀_obj_X_0 /-
 @[simp]
-theorem single₀_obj_X_0 (X : V) : ((single₀ V).obj X).pt 0 = X :=
+theorem single₀_obj_x_0 (X : V) : ((single₀ V).obj X).pt 0 = X :=
   rfl
-#align chain_complex.single₀_obj_X_0 ChainComplex.single₀_obj_X_0
--/
+#align chain_complex.single₀_obj_X_0 ChainComplex.single₀_obj_x_0
 
-#print ChainComplex.single₀_obj_X_succ /-
 @[simp]
-theorem single₀_obj_X_succ (X : V) (n : ℕ) : ((single₀ V).obj X).pt (n + 1) = 0 :=
+theorem single₀_obj_x_succ (X : V) (n : ℕ) : ((single₀ V).obj X).pt (n + 1) = 0 :=
   rfl
-#align chain_complex.single₀_obj_X_succ ChainComplex.single₀_obj_X_succ
--/
+#align chain_complex.single₀_obj_X_succ ChainComplex.single₀_obj_x_succ
 
-#print ChainComplex.single₀_obj_X_d /-
 @[simp]
-theorem single₀_obj_X_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
+theorem single₀_obj_x_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
   rfl
-#align chain_complex.single₀_obj_X_d ChainComplex.single₀_obj_X_d
--/
+#align chain_complex.single₀_obj_X_d ChainComplex.single₀_obj_x_d
 
-#print ChainComplex.single₀_obj_X_dTo /-
 @[simp]
-theorem single₀_obj_X_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 := by
+theorem single₀_obj_x_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 := by
   rw [d_to_eq ((single₀ V).obj X) rfl]; simp
-#align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_X_dTo
--/
+#align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_x_dTo
 
-#print ChainComplex.single₀_obj_x_dFrom /-
 @[simp]
 theorem single₀_obj_x_dFrom (X : V) (i : ℕ) : ((single₀ V).obj X).dFrom i = 0 :=
   by
@@ -185,21 +176,16 @@ theorem single₀_obj_x_dFrom (X : V) (i : ℕ) : ((single₀ V).obj X).dFrom i 
   · rw [d_from_eq_zero]; simp
   · rw [d_from_eq ((single₀ V).obj X) rfl]; simp
 #align chain_complex.single₀_obj_X_d_from ChainComplex.single₀_obj_x_dFrom
--/
 
-#print ChainComplex.single₀_map_f_0 /-
 @[simp]
 theorem single₀_map_f_0 {X Y : V} (f : X ⟶ Y) : ((single₀ V).map f).f 0 = f :=
   rfl
 #align chain_complex.single₀_map_f_0 ChainComplex.single₀_map_f_0
--/
 
-#print ChainComplex.single₀_map_f_succ /-
 @[simp]
 theorem single₀_map_f_succ {X Y : V} (f : X ⟶ Y) (n : ℕ) : ((single₀ V).map f).f (n + 1) = 0 :=
   rfl
 #align chain_complex.single₀_map_f_succ ChainComplex.single₀_map_f_succ
--/
 
 section
 
@@ -264,13 +250,11 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
 #align chain_complex.to_single₀_equiv ChainComplex.toSingle₀Equiv
 -/
 
-#print ChainComplex.to_single₀_ext /-
 @[ext]
 theorem to_single₀_ext {C : ChainComplex V ℕ} {X : V} (f g : C ⟶ (single₀ V).obj X)
     (h : f.f 0 = g.f 0) : f = g :=
   (toSingle₀Equiv C X).Injective (by ext; exact h)
 #align chain_complex.to_single₀_ext ChainComplex.to_single₀_ext
--/
 
 #print ChainComplex.fromSingle₀Equiv /-
 /-- Morphisms from a single object chain complex with `X` concentrated in degree 0
@@ -300,7 +284,6 @@ def fromSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : ((single₀ V).obj X �
 
 variable (V)
 
-#print ChainComplex.single₀IsoSingle /-
 /-- `single₀` is the same as `single V _ 0`. -/
 def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
@@ -314,7 +297,6 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
           · apply has_zero_object.to_zero_ext })
     fun X Y f => by ext (_ | i) <;> · dsimp; simp
 #align chain_complex.single₀_iso_single ChainComplex.single₀IsoSingle
--/
 
 instance : Faithful (single₀ V) :=
   Faithful.of_iso (single₀IsoSingle V).symm
@@ -353,35 +335,26 @@ def single₀ : V ⥤ CochainComplex V ℕ
 #align cochain_complex.single₀ CochainComplex.single₀
 -/
 
-#print CochainComplex.single₀_obj_X_0 /-
 @[simp]
-theorem single₀_obj_X_0 (X : V) : ((single₀ V).obj X).pt 0 = X :=
+theorem single₀_obj_x_0 (X : V) : ((single₀ V).obj X).pt 0 = X :=
   rfl
-#align cochain_complex.single₀_obj_X_0 CochainComplex.single₀_obj_X_0
--/
+#align cochain_complex.single₀_obj_X_0 CochainComplex.single₀_obj_x_0
 
-#print CochainComplex.single₀_obj_X_succ /-
 @[simp]
-theorem single₀_obj_X_succ (X : V) (n : ℕ) : ((single₀ V).obj X).pt (n + 1) = 0 :=
+theorem single₀_obj_x_succ (X : V) (n : ℕ) : ((single₀ V).obj X).pt (n + 1) = 0 :=
   rfl
-#align cochain_complex.single₀_obj_X_succ CochainComplex.single₀_obj_X_succ
--/
+#align cochain_complex.single₀_obj_X_succ CochainComplex.single₀_obj_x_succ
 
-#print CochainComplex.single₀_obj_X_d /-
 @[simp]
-theorem single₀_obj_X_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
+theorem single₀_obj_x_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
   rfl
-#align cochain_complex.single₀_obj_X_d CochainComplex.single₀_obj_X_d
--/
+#align cochain_complex.single₀_obj_X_d CochainComplex.single₀_obj_x_d
 
-#print CochainComplex.single₀_obj_x_dFrom /-
 @[simp]
 theorem single₀_obj_x_dFrom (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j = 0 := by
   rw [d_from_eq ((single₀ V).obj X) rfl]; simp
 #align cochain_complex.single₀_obj_X_d_from CochainComplex.single₀_obj_x_dFrom
--/
 
-#print CochainComplex.single₀_obj_x_dTo /-
 @[simp]
 theorem single₀_obj_x_dTo (X : V) (i : ℕ) : ((single₀ V).obj X).dTo i = 0 :=
   by
@@ -389,21 +362,16 @@ theorem single₀_obj_x_dTo (X : V) (i : ℕ) : ((single₀ V).obj X).dTo i = 0 
   · rw [d_to_eq_zero]; simp
   · rw [d_to_eq ((single₀ V).obj X) rfl]; simp
 #align cochain_complex.single₀_obj_X_d_to CochainComplex.single₀_obj_x_dTo
--/
 
-#print CochainComplex.single₀_map_f_0 /-
 @[simp]
 theorem single₀_map_f_0 {X Y : V} (f : X ⟶ Y) : ((single₀ V).map f).f 0 = f :=
   rfl
 #align cochain_complex.single₀_map_f_0 CochainComplex.single₀_map_f_0
--/
 
-#print CochainComplex.single₀_map_f_succ /-
 @[simp]
 theorem single₀_map_f_succ {X Y : V} (f : X ⟶ Y) (n : ℕ) : ((single₀ V).map f).f (n + 1) = 0 :=
   rfl
 #align cochain_complex.single₀_map_f_succ CochainComplex.single₀_map_f_succ
--/
 
 section
 
@@ -470,7 +438,6 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
 
 variable (V)
 
-#print CochainComplex.single₀IsoSingle /-
 /-- `single₀` is the same as `single V _ 0`. -/
 def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
@@ -484,7 +451,6 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
           · apply has_zero_object.to_zero_ext })
     fun X Y f => by ext (_ | i) <;> · dsimp; simp
 #align cochain_complex.single₀_iso_single CochainComplex.single₀IsoSingle
--/
 
 instance : Faithful (single₀ V) :=
   Faithful.of_iso (single₀IsoSingle V).symm

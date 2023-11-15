@@ -1864,7 +1864,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AES
     filter_upwards [hhh] with a ha
     exact ENNReal.coe_tsum (nnreal.summable_coe.mp ha)
   · filter_upwards [hhh] with x hx
-    exact (summable_of_summable_norm hx).HasSum
+    exact (Summable.of_norm hx).HasSum
 #align measure_theory.integral_tsum MeasureTheory.integral_tsum
 -/
 

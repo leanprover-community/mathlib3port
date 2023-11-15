@@ -79,7 +79,7 @@ theorem LSeriesSummable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {
       arithmetic_function.ext fun n =>
         complex.abs.eq_zero.1 (le_antisymm (h n) (complex.abs.nonneg _))
     simp [hf]
-  refine' summable_of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
+  refine' Summable.of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
   · simp_rw [div_eq_mul_inv]
     exact (summable_mul_left_iff h0).2 (Real.summable_nat_rpow_inv.2 hz)
   · intro n
@@ -88,7 +88,7 @@ theorem LSeriesSummable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {
     · simp [hm, Real.zero_rpow (ne_of_gt (lt_trans Real.zero_lt_one hz))]
     simp only [map_div₀, Complex.norm_eq_abs]
     apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eq _)
-    rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
+    rw [Complex.abs_cpow_real, Complex.abs_natCast]
 #align nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_real Nat.ArithmeticFunction.LSeriesSummable_of_bounded_of_one_lt_real
 -/
 

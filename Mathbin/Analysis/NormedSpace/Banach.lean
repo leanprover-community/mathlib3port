@@ -211,9 +211,9 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
       _ = (1 / 2) ^ n * (C * ‖y‖) := by ring
   have sNu : Summable fun n => ‖u n‖ :=
     by
-    refine' summable_of_nonneg_of_le (fun n => norm_nonneg _) ule _
+    refine' Summable.of_nonneg_of_le (fun n => norm_nonneg _) ule _
     exact Summable.mul_right _ (summable_geometric_of_lt_1 (by norm_num) (by norm_num))
-  have su : Summable u := summable_of_summable_norm sNu
+  have su : Summable u := Summable.of_norm sNu
   let x := tsum u
   have x_ineq : ‖x‖ ≤ (2 * C + 1) * ‖y‖ :=
     calc

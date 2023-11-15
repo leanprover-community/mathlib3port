@@ -437,15 +437,15 @@ theorem rnDeriv_withDensity (ν : Measure α) [SigmaFinite ν] {f : α → ℝ�
 #align measure_theory.measure.rn_deriv_with_density MeasureTheory.Measure.rnDeriv_withDensity
 -/
 
-#print MeasureTheory.Measure.rnDeriv_restrict /-
+#print MeasureTheory.Measure.rnDeriv_restrict_self /-
 /-- The Radon-Nikodym derivative of the restriction of a measure to a measurable set is the
 indicator function of this set. -/
-theorem rnDeriv_restrict (ν : Measure α) [SigmaFinite ν] {s : Set α} (hs : MeasurableSet s) :
+theorem rnDeriv_restrict_self (ν : Measure α) [SigmaFinite ν] {s : Set α} (hs : MeasurableSet s) :
     (ν.restrict s).rnDeriv ν =ᵐ[ν] s.indicator 1 :=
   by
   rw [← with_density_indicator_one hs]
   exact rn_deriv_with_density _ (measurable_one.indicator hs)
-#align measure_theory.measure.rn_deriv_restrict MeasureTheory.Measure.rnDeriv_restrict
+#align measure_theory.measure.rn_deriv_restrict MeasureTheory.Measure.rnDeriv_restrict_self
 -/
 
 open VectorMeasure SignedMeasure

@@ -37,7 +37,7 @@ theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
   rcases eq_or_ne n 0 with (rfl | hn')
   · simpa using h
   refine' ⟨_, _, (Nat.minFac_prime hn).Prime, _, h⟩
-  rw [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.factor_iff_mem_factorization,
+  rw [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.mem_primeFactors_iff_mem_factors,
     Nat.mem_factors_iff_dvd hn' (Nat.minFac_prime hn)]
   apply Nat.minFac_dvd
 #align is_prime_pow_of_min_fac_pow_factorization_eq isPrimePow_of_minFac_pow_factorization_eq
@@ -65,16 +65,16 @@ theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
       simpa only [Finsupp.single_eq_zero, eq_comm, Nat.factorization_zero, hk.ne'] using hn
     rw [Nat.eq_pow_of_factorization_eq_single hn0 hn]
     exact
-      ⟨Nat.prime_of_mem_factorization (by simp [hn, hk.ne'] : p ∈ n.factorization.support), hk, rfl⟩
+      ⟨Nat.prime_of_mem_primeFactors (by simp [hn, hk.ne'] : p ∈ n.factorization.support), hk, rfl⟩
 #align is_prime_pow_iff_factorization_eq_single isPrimePow_iff_factorization_eq_single
 -/
 
-#print isPrimePow_iff_card_support_factorization_eq_one /-
-theorem isPrimePow_iff_card_support_factorization_eq_one {n : ℕ} :
+#print isPrimePow_iff_card_primeFactors_eq_one /-
+theorem isPrimePow_iff_card_primeFactors_eq_one {n : ℕ} :
     IsPrimePow n ↔ n.factorization.support.card = 1 := by
   simp_rw [isPrimePow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop,
     pos_iff_ne_zero]
-#align is_prime_pow_iff_card_support_factorization_eq_one isPrimePow_iff_card_support_factorization_eq_one
+#align is_prime_pow_iff_card_support_factorization_eq_one isPrimePow_iff_card_primeFactors_eq_one
 -/
 
 #print IsPrimePow.exists_ord_compl_eq_one /-
@@ -165,7 +165,7 @@ theorem Nat.Coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (hn
     by
     rw [← Finsupp.not_mem_support_iff, ← Finsupp.not_mem_support_iff, ← not_and_or, ←
       Finset.mem_inter]
-    exact fun t => (Nat.factorization_disjoint_of_coprime hab).le_bot t
+    exact fun t => (Nat.Coprime.disjoint_primeFactors hab).le_bot t
   cases this <;> simp [this, imp_or]
 #align nat.coprime.is_prime_pow_dvd_mul Nat.Coprime.isPrimePow_dvd_mul
 -/

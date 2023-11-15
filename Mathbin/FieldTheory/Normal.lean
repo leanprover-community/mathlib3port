@@ -232,7 +232,7 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
   let S : Set D := ((p.map (algebraMap F E)).roots.map (algebraMap E D)).toFinset
   suffices ⊤ ≤ IntermediateField.adjoin C S
     by
-    refine' IntermediateField.algHom_mk_adjoin_splits' (top_le_iff.mp this) fun y hy => _
+    refine' IntermediateField.nonempty_algHom_of_adjoin_splits (top_le_iff.mp this) fun y hy => _
     rcases multiset.mem_map.mp (multiset.mem_to_finset.mp hy) with ⟨z, hz1, hz2⟩
     have Hz : IsIntegral F z := isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) z
     use show IsIntegral C y from
@@ -448,7 +448,7 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
   @AlgHom.restrictScalars F K₁ E E _ _ _ _ _ _
       ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ _ _ _ <|
     Nonempty.some <|
-      @IntermediateField.algHom_mk_adjoin_splits' _ _ _ _ _ _ _
+      @IntermediateField.nonempty_algHom_of_adjoin_splits _ _ _ _ _ _ _
         ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _
         (IntermediateField.adjoin_univ _ _) fun x hx =>
         ⟨isIntegral_of_isScalarTower (h.out x).1,

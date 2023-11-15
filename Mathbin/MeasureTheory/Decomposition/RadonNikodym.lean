@@ -77,8 +77,8 @@ theorem absolutelyContinuous_iff_withDensity_rnDeriv_eq {μ ν : Measure α}
 #align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq
 -/
 
-#print MeasureTheory.Measure.withDensity_rnDeriv_toReal_eq /-
-theorem withDensity_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
+#print MeasureTheory.Measure.set_integral_toReal_rnDeriv /-
+theorem set_integral_toReal_rnDeriv {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
     ∫ x in i, (μ.rnDeriv ν x).toReal ∂ν = (μ i).toReal :=
   by
@@ -88,7 +88,7 @@ theorem withDensity_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
       ae_lt_top (μ.measurable_rn_deriv ν) (lt_of_le_of_lt (lintegral_mono_set i.subset_univ) _).Ne
     rw [← with_density_apply _ MeasurableSet.univ, with_density_rn_deriv_eq μ ν h]
     exact measure_lt_top _ _
-#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.withDensity_rnDeriv_toReal_eq
+#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.set_integral_toReal_rnDeriv
 -/
 
 end Measure

@@ -1267,13 +1267,10 @@ noncomputable instance : OrderBot (Lifts F E K)
 noncomputable instance : Inhabited (Lifts F E K) :=
   ⟨⊥⟩
 
-#print IntermediateField.Lifts.eq_of_le /-
 theorem Lifts.eq_of_le {x y : Lifts F E K} (hxy : x ≤ y) (s : x.1) : x.2 s = y.2 ⟨s, hxy.1 s.Mem⟩ :=
   hxy.2 s ⟨s, hxy.1 s.Mem⟩ rfl
 #align intermediate_field.lifts.eq_of_le IntermediateField.Lifts.eq_of_le
--/
 
-#print IntermediateField.Lifts.exists_max_two /-
 theorem Lifts.exists_max_two {c : Set (Lifts F E K)} {x y : Lifts F E K} (hc : IsChain (· ≤ ·) c)
     (hx : x ∈ Insert.insert ⊥ c) (hy : y ∈ Insert.insert ⊥ c) :
     ∃ z : Lifts F E K, z ∈ Insert.insert ⊥ c ∧ x ≤ z ∧ y ≤ z :=
@@ -1282,9 +1279,7 @@ theorem Lifts.exists_max_two {c : Set (Lifts F E K)} {x y : Lifts F E K} (hc : I
   · exact ⟨y, hy, hxy, le_refl y⟩
   · exact ⟨x, hx, le_refl x, hyx⟩
 #align intermediate_field.lifts.exists_max_two IntermediateField.Lifts.exists_max_two
--/
 
-#print IntermediateField.Lifts.exists_max_three /-
 theorem Lifts.exists_max_three {c : Set (Lifts F E K)} {x y z : Lifts F E K}
     (hc : IsChain (· ≤ ·) c) (hx : x ∈ Insert.insert ⊥ c) (hy : y ∈ Insert.insert ⊥ c)
     (hz : z ∈ Insert.insert ⊥ c) :
@@ -1294,9 +1289,7 @@ theorem Lifts.exists_max_three {c : Set (Lifts F E K)} {x y z : Lifts F E K}
   obtain ⟨w, hw, hzw, hvw⟩ := lifts.exists_max_two hc hz hv
   exact ⟨w, hw, le_trans hxv hvw, le_trans hyv hvw, hzw⟩
 #align intermediate_field.lifts.exists_max_three IntermediateField.Lifts.exists_max_three
--/
 
-#print IntermediateField.Lifts.upperBoundIntermediateField /-
 /-- An upper bound on a chain of lifts -/
 def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) :
     IntermediateField F E
@@ -1316,9 +1309,7 @@ def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : IsChain (· 
     exact ⟨z, hz, z.1.hMul_mem (hxz.1 ha) (hyz.1 hb)⟩
   algebraMap_mem' s := ⟨⊥, Set.mem_insert ⊥ c, algebraMap_mem ⊥ s⟩
 #align intermediate_field.lifts.upper_bound_intermediate_field IntermediateField.Lifts.upperBoundIntermediateField
--/
 
-#print IntermediateField.Lifts.upperBoundAlgHom /-
 /-- The lift on the upper bound on a chain of lifts -/
 noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) :
     Lifts.upperBoundIntermediateField hc →ₐ[F] K
@@ -1342,14 +1333,11 @@ noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : IsChain (
     rfl
   commutes' _ := AlgHom.commutes _ _
 #align intermediate_field.lifts.upper_bound_alg_hom IntermediateField.Lifts.upperBoundAlgHom
--/
 
-#print IntermediateField.Lifts.upperBound /-
 /-- An upper bound on a chain of lifts -/
 noncomputable def Lifts.upperBound {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) : Lifts F E K :=
   ⟨Lifts.upperBoundIntermediateField hc, Lifts.upperBoundAlgHom hc⟩
 #align intermediate_field.lifts.upper_bound IntermediateField.Lifts.upperBound
--/
 
 #print IntermediateField.Lifts.exists_upper_bound /-
 theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ ·) c) :
@@ -1370,7 +1358,6 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-#print IntermediateField.Lifts.liftOfSplits /-
 /-- Extend a lift `x : lifts F E K` to an element `s : E` whose conjugates are all in `K` -/
 noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : Lifts F E K :=
@@ -1389,11 +1376,9 @@ noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral 
             simp_rw [mem_roots (map_ne_zero (minpoly.ne_zero h3)), is_root, ← eval₂_eq_eval_map]
             exact map_root_of_splits x.2.toRingHom key (ne_of_gt (minpoly.degree_pos h3))⟩⟩⟩
 #align intermediate_field.lifts.lift_of_splits IntermediateField.Lifts.liftOfSplits
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-#print IntermediateField.Lifts.le_lifts_of_splits /-
 theorem Lifts.le_lifts_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : x ≤ x.lift_of_splits h1 h2 :=
   ⟨fun z hz => algebraMap_mem x.1⟮⟯ ⟨z, hz⟩, fun t u htu =>
@@ -1403,14 +1388,11 @@ theorem Lifts.le_lifts_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
         letI : Algebra x.1 K := x.2.toRingHom.toAlgebra
         exact AlgHom.commutes _ t)⟩
 #align intermediate_field.lifts.le_lifts_of_splits IntermediateField.Lifts.le_lifts_of_splits
--/
 
-#print IntermediateField.Lifts.mem_lifts_of_splits /-
 theorem Lifts.mem_lifts_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : s ∈ (x.lift_of_splits h1 h2).1 :=
   mem_adjoin_simple_self x.1 s
 #align intermediate_field.lifts.mem_lifts_of_splits IntermediateField.Lifts.mem_lifts_of_splits
--/
 
 #print IntermediateField.Lifts.exists_lift_of_splits /-
 theorem Lifts.exists_lift_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
@@ -1419,8 +1401,8 @@ theorem Lifts.exists_lift_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F
 #align intermediate_field.lifts.exists_lift_of_splits IntermediateField.Lifts.exists_lift_of_splits
 -/
 
-#print IntermediateField.algHom_mk_adjoin_splits /-
-theorem algHom_mk_adjoin_splits
+#print IntermediateField.nonempty_algHom_adjoin_of_splits /-
+theorem nonempty_algHom_adjoin_of_splits
     (hK : ∀ s ∈ S, IsIntegral F (s : E) ∧ (minpoly F s).Splits (algebraMap F K)) :
     Nonempty (adjoin F S →ₐ[F] K) :=
   by
@@ -1431,17 +1413,17 @@ theorem algHom_mk_adjoin_splits
         x.2.commutes⟩
   rcases x.exists_lift_of_splits (hK s hs).1 (hK s hs).2 with ⟨y, h1, h2⟩
   rwa [hx y h1] at h2 
-#align intermediate_field.alg_hom_mk_adjoin_splits IntermediateField.algHom_mk_adjoin_splits
+#align intermediate_field.alg_hom_mk_adjoin_splits IntermediateField.nonempty_algHom_adjoin_of_splits
 -/
 
-#print IntermediateField.algHom_mk_adjoin_splits' /-
-theorem algHom_mk_adjoin_splits' (hS : adjoin F S = ⊤)
+#print IntermediateField.nonempty_algHom_of_adjoin_splits /-
+theorem nonempty_algHom_of_adjoin_splits (hS : adjoin F S = ⊤)
     (hK : ∀ x ∈ S, IsIntegral F (x : E) ∧ (minpoly F x).Splits (algebraMap F K)) :
     Nonempty (E →ₐ[F] K) := by
   cases' alg_hom_mk_adjoin_splits hK with ϕ
   rw [hS] at ϕ 
   exact ⟨ϕ.comp top_equiv.symm.to_alg_hom⟩
-#align intermediate_field.alg_hom_mk_adjoin_splits' IntermediateField.algHom_mk_adjoin_splits'
+#align intermediate_field.alg_hom_mk_adjoin_splits' IntermediateField.nonempty_algHom_of_adjoin_splits
 -/
 
 end AlgHomMkAdjoinSplits

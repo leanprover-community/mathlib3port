@@ -325,7 +325,7 @@ theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ≥
   by
   obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h
   exact
-    summable_of_nonneg_of_le (fun n => mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp
+    Summable.of_nonneg_of_le (fun n => mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp
       ((summable_geometric_of_lt_1 ha.1.le ha.2).hMul_left _)
 #align formal_multilinear_series.summable_norm_mul_pow FormalMultilinearSeries.summable_norm_mul_pow
 -/
@@ -336,7 +336,7 @@ theorem summable_norm_apply (p : FormalMultilinearSeries 𝕜 E F) {x : E}
   by
   rw [mem_emetric_ball_zero_iff] at hx 
   refine'
-    summable_of_nonneg_of_le (fun _ => norm_nonneg _) (fun n => ((p n).le_op_norm _).trans_eq _)
+    Summable.of_nonneg_of_le (fun _ => norm_nonneg _) (fun n => ((p n).le_op_norm _).trans_eq _)
       (p.summable_norm_mul_pow hx)
   simp
 #align formal_multilinear_series.summable_norm_apply FormalMultilinearSeries.summable_norm_apply
@@ -352,7 +352,7 @@ theorem summable_nnnorm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ�
 #print FormalMultilinearSeries.summable /-
 protected theorem summable [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
     (hx : x ∈ EMetric.ball (0 : E) p.radius) : Summable fun n : ℕ => p n fun _ => x :=
-  summable_of_summable_norm (p.summable_norm_apply hx)
+  Summable.of_norm (p.summable_norm_apply hx)
 #align formal_multilinear_series.summable FormalMultilinearSeries.summable
 -/
 
@@ -373,7 +373,7 @@ theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
       p.norm_mul_pow_le_mul_pow_of_lt_radius
         (show (r : ℝ≥0∞) < p.radius from h.symm ▸ ENNReal.coe_lt_top)
     refine'
-      summable_of_norm_bounded (fun n => (C : ℝ) * a ^ n)
+      Summable.of_norm_bounded (fun n => (C : ℝ) * a ^ n)
         ((summable_geometric_of_lt_1 ha.1.le ha.2).hMul_left _) fun n => _
     specialize hp n
     rwa [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg n))]
@@ -1540,7 +1540,7 @@ theorem changeOrigin_eval (h : (‖x‖₊ + ‖y‖₊ : ℝ≥0∞) < p.radius
     p.change_origin_series_term s.1 s.2.1 s.2.2 s.2.2.2 (fun _ => x) fun _ => y
   have hsf : Summable f :=
     by
-    refine' summable_of_nnnorm_bounded _ (p.change_origin_series_summable_aux₁ h) _
+    refine' Summable.of_nnnorm_bounded _ (p.change_origin_series_summable_aux₁ h) _
     rintro ⟨k, l, s, hs⟩; dsimp only [Subtype.coe_mk]
     exact p.nnnorm_change_origin_series_term_apply_le _ _ _ _ _ _
   have hf : HasSum f ((p.change_origin x).Sum y) :=
@@ -1554,7 +1554,7 @@ theorem changeOrigin_eval (h : (‖x‖₊ + ‖y‖₊ : ℝ≥0∞) < p.radius
       · simp only [change_origin_series, ContinuousMultilinearMap.sum_apply]
         apply hasSum_fintype
       · refine'
-          summable_of_nnnorm_bounded _
+          Summable.of_nnnorm_bounded _
             (p.change_origin_series_summable_aux₂ (mem_emetric_ball_zero_iff.1 x_mem_ball) k)
             fun s => _
         refine' (ContinuousMultilinearMap.le_op_nnnorm _ _).trans_eq _

@@ -176,16 +176,16 @@ theorem Infinite.orderOf_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
   classical
   rw [orderOf_eq_zero_iff']
   refine' fun n hn hgn => _
-  have ho := orderOf_pos' ((isOfFinOrder_iff_pow_eq_one g).mpr ⟨n, hn, hgn⟩)
+  have ho := IsOfFinOrder.orderOf_pos ((isOfFinOrder_iff_pow_eq_one g).mpr ⟨n, hn, hgn⟩)
   obtain ⟨x, hx⟩ :=
     Infinite.exists_not_mem_finset (Finset.image (pow g) <| Finset.range <| orderOf g)
   apply hx
-  rw [← mem_powers_iff_mem_range_order_of' g x ho, Submonoid.mem_powers_iff]
+  rw [← IsOfFinOrder.mem_powers_iff_mem_range_orderOf g x ho, Submonoid.mem_powers_iff]
   obtain ⟨k, hk⟩ := h x
   obtain ⟨k, rfl | rfl⟩ := k.eq_coe_or_neg
   · exact ⟨k, by exact_mod_cast hk⟩
   let t : ℤ := -k % orderOf g
-  rw [zpow_eq_mod_orderOf] at hk 
+  rw [zpow_mod_orderOf] at hk 
   have : 0 ≤ t := Int.emod_nonneg (-k) (by exact_mod_cast ho.ne')
   refine' ⟨t.to_nat, _⟩
   rwa [← zpow_ofNat, Int.toNat_of_nonneg this]

@@ -591,7 +591,7 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
   lift K to compacts X using hK
   have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by intro s;
     ext1 x; simp
-  simpa only [HasSum, A] using summable_of_summable_norm (hF K)
+  simpa only [HasSum, A] using Summable.of_norm (hF K)
 #align continuous_map.summable_of_locally_summable_norm ContinuousMap.summable_of_locally_summable_norm
 -/
 

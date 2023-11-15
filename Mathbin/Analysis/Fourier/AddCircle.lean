@@ -575,7 +575,7 @@ theorem hasSum_fourier_series_of_summable (h : Summable (fourierCoeff f)) :
   by
   have sum_L2 := hasSum_fourier_series_L2 (to_Lp 2 haar_add_circle ℂ f)
   simp_rw [fourierCoeff_toLp] at sum_L2 
-  refine' ContinuousMap.hasSum_of_hasSum_Lp (summable_of_summable_norm _) sum_L2
+  refine' ContinuousMap.hasSum_of_hasSum_Lp (Summable.of_norm _) sum_L2
   simp_rw [norm_smul, fourier_norm, mul_one, summable_norm_iff]
   exact h
 #align has_sum_fourier_series_of_summable hasSum_fourier_series_of_summable

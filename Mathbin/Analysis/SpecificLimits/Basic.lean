@@ -289,7 +289,7 @@ theorem tsum_geometric_inv_two : ∑' n : ℕ, (2 : ℝ)⁻¹ ^ n = 2 :=
 theorem tsum_geometric_inv_two_ge (n : ℕ) : ∑' i, ite (n ≤ i) ((2 : ℝ)⁻¹ ^ i) 0 = 2 * 2⁻¹ ^ n :=
   by
   have A : Summable fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0 := by
-    apply summable_of_nonneg_of_le _ _ summable_geometric_two <;>
+    apply Summable.of_nonneg_of_le _ _ summable_geometric_two <;>
       · intro i; by_cases hi : n ≤ i <;> simp [hi]
   have B : ((Finset.range n).Sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
     Finset.sum_eq_zero fun i hi =>
@@ -543,7 +543,7 @@ theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi 
     Summable fun i => 1 / m ^ f i :=
   by
   refine'
-    summable_of_nonneg_of_le (fun a => one_div_nonneg.mpr (pow_nonneg (zero_le_one.trans hm.le) _))
+    Summable.of_nonneg_of_le (fun a => one_div_nonneg.mpr (pow_nonneg (zero_le_one.trans hm.le) _))
       (fun a => _)
       (summable_geometric_of_lt_1 (one_div_nonneg.mpr (zero_le_one.trans hm.le))
         ((one_div_lt (zero_lt_one.trans hm) zero_lt_one).mpr (one_div_one.le.trans_lt hm)))

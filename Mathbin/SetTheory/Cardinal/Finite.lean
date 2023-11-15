@@ -205,17 +205,17 @@ theorem card_congr {α : Type _} {β : Type _} (f : α ≃ β) : PartENat.card �
 #align part_enat.card_congr PartENat.card_congr
 -/
 
-#print PartENat.card_uLift /-
-theorem card_uLift (α : Type _) : card (ULift α) = card α :=
+#print PartENat.card_ulift /-
+theorem card_ulift (α : Type _) : card (ULift α) = card α :=
   card_congr Equiv.ulift
-#align part_enat.card_ulift PartENat.card_uLift
+#align part_enat.card_ulift PartENat.card_ulift
 -/
 
-#print PartENat.card_pLift /-
+#print PartENat.card_plift /-
 @[simp]
-theorem card_pLift (α : Type _) : card (PLift α) = card α :=
+theorem card_plift (α : Type _) : card (PLift α) = card α :=
   card_congr Equiv.plift
-#align part_enat.card_plift PartENat.card_pLift
+#align part_enat.card_plift PartENat.card_plift
 -/
 
 #print PartENat.card_image_of_injOn /-

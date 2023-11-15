@@ -1336,7 +1336,7 @@ theorem hasSum_intervalIntegral_of_summable_norm [Countable ι] {f : ι → C(�
       (ae_of_all _ fun x hx => hf_sum) intervalIntegrable_const
       (ae_of_all _ fun x hx => Summable.hasSum _)
   -- next line is slow, & doesn't work with "exact" in place of "apply" -- ?
-  apply ContinuousMap.summable_apply (summable_of_summable_norm hf_sum) ⟨x, ⟨hx.1.le, hx.2⟩⟩
+  apply ContinuousMap.summable_apply (Summable.of_norm hf_sum) ⟨x, ⟨hx.1.le, hx.2⟩⟩
 #align interval_integral.has_sum_interval_integral_of_summable_norm intervalIntegral.hasSum_intervalIntegral_of_summable_norm
 -/
 

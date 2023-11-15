@@ -251,42 +251,35 @@ variable (K L M)
 
 open Subalgebra AlgHom Function
 
-#print IsAlgClosed.lift.SubfieldWithHom /-
 /-- This structure is used to prove the existence of a homomorphism from any algebraic extension
 into an algebraic closure -/
-structure IsAlgClosed.lift.SubfieldWithHom where
+structure SubfieldWithHom where
   carrier : Subalgebra K L
   emb : carrier →ₐ[K] M
-#align lift.subfield_with_hom IsAlgClosed.lift.SubfieldWithHom
--/
+#align lift.subfield_with_hom lift.SubfieldWithHom
 
 variable {K L M hL}
 
 namespace SubfieldWithHom
 
-variable {E₁ E₂ E₃ : IsAlgClosed.lift.SubfieldWithHom K L M hL}
+variable {E₁ E₂ E₃ : SubfieldWithHom K L M hL}
 
-instance : LE (IsAlgClosed.lift.SubfieldWithHom K L M hL)
+instance : LE (SubfieldWithHom K L M hL)
     where le E₁ E₂ := ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x
 
-noncomputable instance : Inhabited (IsAlgClosed.lift.SubfieldWithHom K L M hL) :=
+noncomputable instance : Inhabited (SubfieldWithHom K L M hL) :=
   ⟨{  carrier := ⊥
       emb := (Algebra.ofId K M).comp (Algebra.botEquiv K L).toAlgHom }⟩
 
-#print IsAlgClosed.lift.SubfieldWithHom.le_def /-
-theorem IsAlgClosed.lift.SubfieldWithHom.le_def :
-    E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x :=
+theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x :=
   Iff.rfl
-#align lift.subfield_with_hom.le_def IsAlgClosed.lift.SubfieldWithHom.le_def
--/
+#align lift.subfield_with_hom.le_def lift.SubfieldWithHom.le_def
 
-#print IsAlgClosed.lift.SubfieldWithHom.compat /-
-theorem IsAlgClosed.lift.SubfieldWithHom.compat (h : E₁ ≤ E₂) :
-    ∀ x, E₂.emb (inclusion h.fst x) = E₁.emb x := by rw [le_def] at h ; cases h; assumption
-#align lift.subfield_with_hom.compat IsAlgClosed.lift.SubfieldWithHom.compat
--/
+theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.emb x := by rw [le_def] at h ;
+  cases h; assumption
+#align lift.subfield_with_hom.compat lift.SubfieldWithHom.compat
 
-instance : Preorder (IsAlgClosed.lift.SubfieldWithHom K L M hL)
+instance : Preorder (SubfieldWithHom K L M hL)
     where
   le := (· ≤ ·)
   le_refl E := ⟨le_rfl, by simp⟩
@@ -296,12 +289,10 @@ instance : Preorder (IsAlgClosed.lift.SubfieldWithHom K L M hL)
 
 open Lattice
 
-#print IsAlgClosed.lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded /-
-theorem IsAlgClosed.lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded
-    (c : Set (IsAlgClosed.lift.SubfieldWithHom K L M hL)) (hc : IsChain (· ≤ ·) c) :
-    ∃ ub : IsAlgClosed.lift.SubfieldWithHom K L M hL, ∀ N, N ∈ c → N ≤ ub :=
+theorem maximal_subfieldWithHom_chain_bounded (c : Set (SubfieldWithHom K L M hL))
+    (hc : IsChain (· ≤ ·) c) : ∃ ub : SubfieldWithHom K L M hL, ∀ N, N ∈ c → N ≤ ub :=
   if hcn : c.Nonempty then
-    let ub : IsAlgClosed.lift.SubfieldWithHom K L M hL :=
+    let ub : SubfieldWithHom K L M hL :=
       haveI : Nonempty c := Set.Nonempty.to_subtype hcn
       { carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).carrier
         emb :=
@@ -320,45 +311,32 @@ theorem IsAlgClosed.lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded
                   inclusion_self, AlgHom.id_apply x])
             _ rfl }
     ⟨ub, fun N hN =>
-      ⟨(le_iSup (fun i : c => (i : IsAlgClosed.lift.SubfieldWithHom K L M hL).carrier) ⟨N, hN⟩ : _),
+      ⟨(le_iSup (fun i : c => (i : SubfieldWithHom K L M hL).carrier) ⟨N, hN⟩ : _),
         by
         intro x
         simp [ub]
         rfl⟩⟩
   else by rw [Set.not_nonempty_iff_eq_empty] at hcn ; simp [hcn]
-#align lift.subfield_with_hom.maximal_subfield_with_hom_chain_bounded IsAlgClosed.lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded
--/
+#align lift.subfield_with_hom.maximal_subfield_with_hom_chain_bounded lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded
 
 variable (hL M)
 
-#print IsAlgClosed.lift.SubfieldWithHom.exists_maximal_subfieldWithHom /-
-theorem IsAlgClosed.lift.SubfieldWithHom.exists_maximal_subfieldWithHom :
-    ∃ E : IsAlgClosed.lift.SubfieldWithHom K L M hL, ∀ N, E ≤ N → N ≤ E :=
-  exists_maximal_of_chains_bounded
-    IsAlgClosed.lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded fun _ _ _ => le_trans
-#align lift.subfield_with_hom.exists_maximal_subfield_with_hom IsAlgClosed.lift.SubfieldWithHom.exists_maximal_subfieldWithHom
--/
+theorem exists_maximal_subfieldWithHom : ∃ E : SubfieldWithHom K L M hL, ∀ N, E ≤ N → N ≤ E :=
+  exists_maximal_of_chains_bounded maximal_subfieldWithHom_chain_bounded fun _ _ _ => le_trans
+#align lift.subfield_with_hom.exists_maximal_subfield_with_hom lift.SubfieldWithHom.exists_maximal_subfieldWithHom
 
-#print IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom /-
 /-- The maximal `subfield_with_hom`. We later prove that this is equal to `⊤`. -/
-noncomputable def IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom :
-    IsAlgClosed.lift.SubfieldWithHom K L M hL :=
-  Classical.choose (IsAlgClosed.lift.SubfieldWithHom.exists_maximal_subfieldWithHom M hL)
-#align lift.subfield_with_hom.maximal_subfield_with_hom IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom
--/
+noncomputable def maximalSubfieldWithHom : SubfieldWithHom K L M hL :=
+  Classical.choose (exists_maximal_subfieldWithHom M hL)
+#align lift.subfield_with_hom.maximal_subfield_with_hom lift.SubfieldWithHom.maximalSubfieldWithHom
 
-#print IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_is_maximal /-
-theorem IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_is_maximal :
-    ∀ N : IsAlgClosed.lift.SubfieldWithHom K L M hL,
-      IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom M hL ≤ N →
-        N ≤ IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom M hL :=
-  Classical.choose_spec (IsAlgClosed.lift.SubfieldWithHom.exists_maximal_subfieldWithHom M hL)
-#align lift.subfield_with_hom.maximal_subfield_with_hom_is_maximal IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_is_maximal
--/
+theorem maximalSubfieldWithHom_is_maximal :
+    ∀ N : SubfieldWithHom K L M hL,
+      maximalSubfieldWithHom M hL ≤ N → N ≤ maximalSubfieldWithHom M hL :=
+  Classical.choose_spec (exists_maximal_subfieldWithHom M hL)
+#align lift.subfield_with_hom.maximal_subfield_with_hom_is_maximal lift.SubfieldWithHom.maximalSubfieldWithHom_is_maximal
 
-#print IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top /-
-theorem IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top :
-    (IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom M hL).carrier = ⊤ :=
+theorem maximalSubfieldWithHom_eq_top : (maximalSubfieldWithHom M hL).carrier = ⊤ :=
   by
   rw [eq_top_iff]
   intro x _
@@ -391,8 +369,7 @@ theorem IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top :
     simp only [O', restrict_scalars_apply, AlgHom.commutes]
   refine' (maximal_subfield_with_hom_is_maximal M hL O' hO').fst _
   exact Algebra.subset_adjoin (Set.mem_singleton x)
-#align lift.subfield_with_hom.maximal_subfield_with_hom_eq_top IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top
--/
+#align lift.subfield_with_hom.maximal_subfield_with_hom_eq_top lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top
 
 end SubfieldWithHom
 
@@ -407,9 +384,8 @@ variable (K L M)
 
 /-- Less general version of `lift`. -/
 private noncomputable irreducible_def lift_aux : L →ₐ[K] M :=
-  (IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp <|
-    Eq.recOn (IsAlgClosed.lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top M hL).symm
-      Algebra.toTop
+  (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp <|
+    Eq.recOn (lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top M hL).symm Algebra.toTop
 
 variable {R : Type u} [CommRing R]
 

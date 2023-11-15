@@ -105,13 +105,11 @@ open SlashInvariantForm
 
 variable {F : Type _} {Γ : outParam <| Subgroup SL(2, ℤ)} {k : outParam ℤ}
 
-#print SlashInvariantForm.SlashInvariantFormClass.coeToFun /-
 @[nolint dangerous_instance]
 instance (priority := 100) SlashInvariantFormClass.coeToFun [SlashInvariantFormClass F Γ k] :
     CoeFun F fun _ => ℍ → ℂ :=
   FunLike.hasCoeToFun
 #align slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
--/
 
 #print SlashInvariantForm.slash_action_eqn /-
 @[simp]

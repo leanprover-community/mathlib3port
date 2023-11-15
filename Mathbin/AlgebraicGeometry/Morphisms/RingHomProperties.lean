@@ -107,7 +107,7 @@ theorem RespectsIso.ofRestrict_morphismRestrict_iff (hP : RingHom.RespectsIso @P
   · exact AlgebraicGeometry.Γ_restrict_isLocalization Y r
   · rw [← U.open_embedding_obj_top] at hU 
     dsimp [Scheme.Γ_obj_op, Scheme.Γ_map_op, Scheme.restrict]
-    apply AlgebraicGeometry.isLocalization_of_eq_basicOpen _ hU
+    apply AlgebraicGeometry.IsAffineOpen.isLocalization_of_eq_basicOpen _ hU
     rw [opens.open_embedding_obj_top, opens.functor_obj_map_obj]
     convert (X.basic_open_res (Scheme.Γ.map f.op r) (hom_of_le le_top).op).symm using 1
     rw [opens.open_embedding_obj_top, opens.open_embedding_obj_top, inf_comm, Scheme.Γ_map_op, ←

@@ -1049,7 +1049,7 @@ theorem isNilpotent_of_product_of_sylow_group
   have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G) :=
     by
     intro p P
-    haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
+    haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_primeFactors (Finset.coe_mem p))
     exact P.is_p_group'.is_nilpotent
   exact nilpotent_of_mulEquiv e
 #align is_nilpotent_of_product_of_sylow_group isNilpotent_of_product_of_sylow_group

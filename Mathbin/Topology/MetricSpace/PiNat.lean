@@ -1018,7 +1018,7 @@ theorem dist_summable (x y : ∀ i, F i) :
     Summable fun i : ι => min ((1 / 2) ^ encode i) (dist (x i) (y i)) :=
   by
   refine'
-    summable_of_nonneg_of_le (fun i => _) (fun i => min_le_left _ _) summable_geometric_two_encode
+    Summable.of_nonneg_of_le (fun i => _) (fun i => min_le_left _ _) summable_geometric_two_encode
   exact le_min (pow_nonneg (by norm_num) _) dist_nonneg
 #align pi_countable.dist_summable PiCountable.dist_summable
 -/

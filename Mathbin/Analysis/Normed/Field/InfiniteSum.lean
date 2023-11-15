@@ -59,7 +59,7 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
 #print Summable.mul_norm /-
 theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖)
     (hg : Summable fun x => ‖g x‖) : Summable fun x : ι × ι' => ‖f x.1 * g x.2‖ :=
-  summable_of_nonneg_of_le (fun x => norm_nonneg (f x.1 * g x.2))
+  Summable.of_nonneg_of_le (fun x => norm_nonneg (f x.1 * g x.2))
     (fun x => norm_mul_le (f x.1) (g x.2))
     (hf.mul_of_nonneg hg (fun x => norm_nonneg <| f x) fun x => norm_nonneg <| g x : _)
 #align summable.mul_norm Summable.mul_norm
@@ -69,7 +69,7 @@ theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x 
 theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
     Summable fun x : ι × ι' => f x.1 * g x.2 :=
-  summable_of_summable_norm (hf.mul_norm hg)
+  Summable.of_norm (hf.mul_norm hg)
 #align summable_mul_of_summable_norm summable_mul_of_summable_norm
 -/
 
@@ -79,8 +79,7 @@ theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι
 theorem tsum_mul_tsum_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
     (∑' x, f x) * ∑' y, g y = ∑' z : ι × ι', f z.1 * g z.2 :=
-  tsum_mul_tsum (summable_of_summable_norm hf) (summable_of_summable_norm hg)
-    (summable_mul_of_summable_norm hf hg)
+  tsum_mul_tsum (Summable.of_norm hf) (Summable.of_norm hg) (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_of_summable_norm tsum_mul_tsum_of_summable_norm
 -/
 
@@ -107,7 +106,7 @@ theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
   have :=
     summable_sum_mul_antidiagonal_of_summable_mul
       (Summable.mul_of_nonneg hf hg (fun _ => norm_nonneg _) fun _ => norm_nonneg _)
-  refine' summable_of_nonneg_of_le (fun _ => norm_nonneg _) _ this
+  refine' Summable.of_nonneg_of_le (fun _ => norm_nonneg _) _ this
   intro n
   calc
     ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ ≤ ∑ kl in antidiagonal n, ‖f kl.1 * g kl.2‖ :=
@@ -124,8 +123,8 @@ theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
 theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm [CompleteSpace α] {f g : ℕ → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
     (∑' n, f n) * ∑' n, g n = ∑' n, ∑ kl in antidiagonal n, f kl.1 * g kl.2 :=
-  tsum_mul_tsum_eq_tsum_sum_antidiagonal (summable_of_summable_norm hf)
-    (summable_of_summable_norm hg) (summable_mul_of_summable_norm hf hg)
+  tsum_mul_tsum_eq_tsum_sum_antidiagonal (Summable.of_norm hf) (Summable.of_norm hg)
+    (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
 -/
 

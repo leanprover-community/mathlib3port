@@ -93,7 +93,7 @@ private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K
     all_goals infer_instance
   by_contra hnμ
   have ho : 0 < orderOf μ := by
-    apply orderOf_pos'
+    apply IsOfFinOrder.orderOf_pos
     rw [isOfFinOrder_iff_pow_eq_one]
     exact ⟨n, hnpos, hμn⟩
   have := pow_orderOf_eq_one μ

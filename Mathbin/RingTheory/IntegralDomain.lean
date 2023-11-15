@@ -287,12 +287,11 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0
             simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.val_pow_eq_pow_val,
               coe_coe])
           (fun m n hm hn =>
-            pow_injective_of_lt_orderOf _ (by simpa only [mem_range] using hm)
+            pow_injOn_Iio_orderOf _ (by simpa only [mem_range] using hm)
               (by simpa only [mem_range] using hn))
           fun b hb =>
           let ⟨n, hn⟩ := hx b
-          ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (orderOf_pos _)), by
-            rw [← pow_eq_mod_orderOf, hn]⟩
+          ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (orderOf_pos _)), by rw [← pow_mod_orderOf, hn]⟩
     _ = 0 := _
   rw [← mul_left_inj' hx1, MulZeroClass.zero_mul, geom_sum_mul, coe_coe]
   norm_cast

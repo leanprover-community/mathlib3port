@@ -384,7 +384,6 @@ end HomologicalComplex
 
 namespace ChainComplex
 
-#print ChainComplex.single₀MapHomologicalComplex /-
 /-- Turning an object into a chain complex supported at zero then applying a functor is
 the same as applying the functor then forming the complex.
 -/
@@ -414,45 +413,35 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
         inv_hom_id' := by ext (_ | i) <;> · unfold_aux; dsimp; simp })
     fun X Y f => by ext (_ | i) <;> · unfold_aux; dsimp; simp
 #align chain_complex.single₀_map_homological_complex ChainComplex.single₀MapHomologicalComplex
--/
 
-#print ChainComplex.single₀MapHomologicalComplex_hom_app_zero /-
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
   rfl
 #align chain_complex.single₀_map_homological_complex_hom_app_zero ChainComplex.single₀MapHomologicalComplex_hom_app_zero
--/
 
-#print ChainComplex.single₀MapHomologicalComplex_hom_app_succ /-
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
   rfl
 #align chain_complex.single₀_map_homological_complex_hom_app_succ ChainComplex.single₀MapHomologicalComplex_hom_app_succ
--/
 
-#print ChainComplex.single₀MapHomologicalComplex_inv_app_zero /-
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
   rfl
 #align chain_complex.single₀_map_homological_complex_inv_app_zero ChainComplex.single₀MapHomologicalComplex_inv_app_zero
--/
 
-#print ChainComplex.single₀MapHomologicalComplex_inv_app_succ /-
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=
   rfl
 #align chain_complex.single₀_map_homological_complex_inv_app_succ ChainComplex.single₀MapHomologicalComplex_inv_app_succ
--/
 
 end ChainComplex
 
 namespace CochainComplex
 
-#print CochainComplex.single₀MapHomologicalComplex /-
 /-- Turning an object into a cochain complex supported at zero then applying a functor is
 the same as applying the functor then forming the cochain complex.
 -/
@@ -482,39 +471,30 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
         inv_hom_id' := by ext (_ | i) <;> · unfold_aux; dsimp; simp })
     fun X Y f => by ext (_ | i) <;> · unfold_aux; dsimp; simp
 #align cochain_complex.single₀_map_homological_complex CochainComplex.single₀MapHomologicalComplex
--/
 
-#print CochainComplex.single₀MapHomologicalComplex_hom_app_zero /-
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_hom_app_zero CochainComplex.single₀MapHomologicalComplex_hom_app_zero
--/
 
-#print CochainComplex.single₀MapHomologicalComplex_hom_app_succ /-
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_hom_app_succ CochainComplex.single₀MapHomologicalComplex_hom_app_succ
--/
 
-#print CochainComplex.single₀MapHomologicalComplex_inv_app_zero /-
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_inv_app_zero CochainComplex.single₀MapHomologicalComplex_inv_app_zero
--/
 
-#print CochainComplex.single₀MapHomologicalComplex_inv_app_succ /-
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_inv_app_succ CochainComplex.single₀MapHomologicalComplex_inv_app_succ
--/
 
 end CochainComplex
 

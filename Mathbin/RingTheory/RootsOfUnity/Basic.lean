@@ -305,7 +305,7 @@ theorem map_rootsOfUnity_eq_pow_self [RingHomClass F R R] (σ : F) (ζ : rootsOf
     ∃ m : ℕ, σ ζ = ζ ^ m :=
   by
   obtain ⟨m, hm⟩ := MonoidHom.map_cyclic (restrictRootsOfUnity σ k)
-  rw [← restrictRootsOfUnity_coe_apply, hm, zpow_eq_mod_orderOf, ←
+  rw [← restrictRootsOfUnity_coe_apply, hm, zpow_mod_orderOf, ←
     Int.toNat_of_nonneg
       (m.mod_nonneg (int.coe_nat_ne_zero.mpr (pos_iff_ne_zero.mp (orderOf_pos ζ)))),
     zpow_ofNat, rootsOfUnity.coe_pow]

@@ -805,7 +805,6 @@ class IsHaarMeasure {G : Type _} [Group G] [TopologicalSpace G] [MeasurableSpace
 #align measure_theory.measure.is_add_haar_measure MeasureTheory.Measure.IsAddHaarMeasure
 -/
 
-#print MeasureTheory.Measure.isLocallyFiniteMeasure_of_isHaarMeasure /-
 /-- Record that a Haar measure on a locally compact space is locally finite. This is needed as the
 fact that a measure which is finite on compacts is locally finite is not registered as an instance,
 to avoid an instance loop.
@@ -818,8 +817,7 @@ instance (priority := 100) isLocallyFiniteMeasure_of_isHaarMeasure {G : Type _} 
     [IsHaarMeasure μ] : IsLocallyFiniteMeasure μ :=
   isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
 #align measure_theory.measure.is_locally_finite_measure_of_is_haar_measure MeasureTheory.Measure.isLocallyFiniteMeasure_of_isHaarMeasure
-#align measure_theory.measure.is_locally_finite_measure_of_is_add_haar_measure MeasureTheory.Measure.isLocallyFiniteMeasure_of_isAddHaarMeasure
--/
+#align measure_theory.measure.is_locally_finite_measure_of_is_add_haar_measure MeasureTheory.Measure.isLocallyFiniteMeasure_of_is_add_haar_measure
 
 section
 

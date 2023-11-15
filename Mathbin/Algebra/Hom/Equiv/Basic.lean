@@ -797,17 +797,17 @@ theorem piCongrRight_trans {η : Type _} {Ms Ns Ps : η → Type _} [∀ j, Mul 
 #align add_equiv.Pi_congr_right_trans AddEquiv.piCongrRight_trans
 -/
 
-#print MulEquiv.piSubsingleton /-
+#print MulEquiv.piUnique /-
 /-- A family indexed by a nonempty subsingleton type is equivalent to the element at the single
 index. -/
-@[to_additive AddEquiv.piSubsingleton
+@[to_additive AddEquiv.piUnique
       "A family indexed by a nonempty subsingleton type is\nequivalent to the element at the single index.",
   simps]
-def piSubsingleton {ι : Type _} (M : ι → Type _) [∀ j, Mul (M j)] [Subsingleton ι] (i : ι) :
+def piUnique {ι : Type _} (M : ι → Type _) [∀ j, Mul (M j)] [Subsingleton ι] (i : ι) :
     (∀ j, M j) ≃* M i :=
   { Equiv.piSubsingleton M i with map_mul' := fun f1 f2 => Pi.mul_apply _ _ _ }
-#align mul_equiv.Pi_subsingleton MulEquiv.piSubsingleton
-#align add_equiv.Pi_subsingleton AddEquiv.piSubsingleton
+#align mul_equiv.Pi_subsingleton MulEquiv.piUnique
+#align add_equiv.Pi_subsingleton AddEquiv.piUnique
 -/
 
 /-!

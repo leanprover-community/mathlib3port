@@ -129,13 +129,13 @@ theorem hasSum_iff_tendsto_nat_of_summable_norm {f : ℕ → E} {a : E} (hf : Su
 #align has_sum_iff_tendsto_nat_of_summable_norm hasSum_iff_tendsto_nat_of_summable_norm
 -/
 
-#print summable_of_norm_bounded /-
+#print Summable.of_norm_bounded /-
 /-- The direct comparison test for series:  if the norm of `f` is bounded by a real function `g`
 which is summable, then `f` is summable. -/
-theorem summable_of_norm_bounded [CompleteSpace E] {f : ι → E} (g : ι → ℝ) (hg : Summable g)
+theorem Summable.of_norm_bounded [CompleteSpace E] {f : ι → E} (g : ι → ℝ) (hg : Summable g)
     (h : ∀ i, ‖f i‖ ≤ g i) : Summable f := by rw [summable_iff_cauchySeq_finset];
   exact cauchySeq_finset_of_norm_bounded g hg h
-#align summable_of_norm_bounded summable_of_norm_bounded
+#align summable_of_norm_bounded Summable.of_norm_bounded
 -/
 
 #print HasSum.norm_le_of_bounded /-
@@ -192,32 +192,32 @@ theorem nnnorm_tsum_le {f : ι → E} (hf : Summable fun i => ‖f i‖₊) : �
 
 variable [CompleteSpace E]
 
-#print summable_of_norm_bounded_eventually /-
+#print Summable.of_norm_bounded_eventually /-
 /-- Variant of the direct comparison test for series:  if the norm of `f` is eventually bounded by a
 real function `g` which is summable, then `f` is summable. -/
-theorem summable_of_norm_bounded_eventually {f : ι → E} (g : ι → ℝ) (hg : Summable g)
+theorem Summable.of_norm_bounded_eventually {f : ι → E} (g : ι → ℝ) (hg : Summable g)
     (h : ∀ᶠ i in cofinite, ‖f i‖ ≤ g i) : Summable f :=
   summable_iff_cauchySeq_finset.2 <| cauchySeq_finset_of_norm_bounded_eventually hg h
-#align summable_of_norm_bounded_eventually summable_of_norm_bounded_eventually
+#align summable_of_norm_bounded_eventually Summable.of_norm_bounded_eventually
 -/
 
-#print summable_of_nnnorm_bounded /-
-theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0) (hg : Summable g)
+#print Summable.of_nnnorm_bounded /-
+theorem Summable.of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0) (hg : Summable g)
     (h : ∀ i, ‖f i‖₊ ≤ g i) : Summable f :=
-  summable_of_norm_bounded (fun i => (g i : ℝ)) (NNReal.summable_coe.2 hg) fun i => by
+  Summable.of_norm_bounded (fun i => (g i : ℝ)) (NNReal.summable_coe.2 hg) fun i => by
     exact_mod_cast h i
-#align summable_of_nnnorm_bounded summable_of_nnnorm_bounded
+#align summable_of_nnnorm_bounded Summable.of_nnnorm_bounded
 -/
 
-#print summable_of_summable_norm /-
-theorem summable_of_summable_norm {f : ι → E} (hf : Summable fun a => ‖f a‖) : Summable f :=
-  summable_of_norm_bounded _ hf fun i => le_rfl
-#align summable_of_summable_norm summable_of_summable_norm
+#print Summable.of_norm /-
+theorem Summable.of_norm {f : ι → E} (hf : Summable fun a => ‖f a‖) : Summable f :=
+  Summable.of_norm_bounded _ hf fun i => le_rfl
+#align summable_of_summable_norm Summable.of_norm
 -/
 
-#print summable_of_summable_nnnorm /-
-theorem summable_of_summable_nnnorm {f : ι → E} (hf : Summable fun a => ‖f a‖₊) : Summable f :=
-  summable_of_nnnorm_bounded _ hf fun i => le_rfl
-#align summable_of_summable_nnnorm summable_of_summable_nnnorm
+#print Summable.of_nnnorm /-
+theorem Summable.of_nnnorm {f : ι → E} (hf : Summable fun a => ‖f a‖₊) : Summable f :=
+  Summable.of_nnnorm_bounded _ hf fun i => le_rfl
+#align summable_of_summable_nnnorm Summable.of_nnnorm
 -/
 

@@ -66,7 +66,7 @@ theorem Real.integrable_of_summable_norm_Icc {E : Type _} [NormedAddCommGroup E]
   by
   refine'
     integrable_of_summable_norm_restrict
-      (summable_of_nonneg_of_le
+      (Summable.of_nonneg_of_le
         (fun n : ℤ =>
           mul_nonneg (norm_nonneg (f.restrict (⟨Icc n (n + 1), is_compact_Icc⟩ : compacts ℝ)))
             ENNReal.toReal_nonneg)

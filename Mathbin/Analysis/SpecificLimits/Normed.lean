@@ -41,7 +41,7 @@ theorem summable_of_absolute_convergence_real {f : ℕ → ℝ} :
     (∃ r, Tendsto (fun n => ∑ i in range n, |f i|) atTop (𝓝 r)) → Summable f
   | ⟨r, hr⟩ =>
     by
-    refine' summable_of_summable_norm ⟨r, (hasSum_iff_tendsto_nat_of_nonneg _ _).2 _⟩
+    refine' Summable.of_norm ⟨r, (hasSum_iff_tendsto_nat_of_nonneg _ _).2 _⟩
     exact fun i => norm_nonneg _
     simpa only using hr
 #align summable_of_absolute_convergence_real summable_of_absolute_convergence_real
@@ -405,7 +405,7 @@ theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R]
 #print summable_pow_mul_geometric_of_norm_lt_1 /-
 theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [CompleteSpace R]
     (k : ℕ) {r : R} (hr : ‖r‖ < 1) : Summable (fun n => n ^ k * r ^ n : ℕ → R) :=
-  summable_of_summable_norm <| summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
+  Summable.of_norm <| summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
 #align summable_pow_mul_geometric_of_norm_lt_1 summable_pow_mul_geometric_of_norm_lt_1
 -/
 
@@ -554,7 +554,7 @@ theorem NormedRing.summable_geometric_of_norm_lt_1 (x : R) (h : ‖x‖ < 1) :
     Summable fun n : ℕ => x ^ n :=
   by
   have h1 : Summable fun n : ℕ => ‖x‖ ^ n := summable_geometric_of_lt_1 (norm_nonneg _) h
-  refine' summable_of_norm_bounded_eventually _ h1 _
+  refine' Summable.of_norm_bounded_eventually _ h1 _
   rw [Nat.cofinite_eq_atTop]
   exact eventually_norm_pow_le x
 #align normed_ring.summable_geometric_of_norm_lt_1 NormedRing.summable_geometric_of_norm_lt_1
@@ -619,14 +619,14 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     rcases h with ⟨N, hN⟩
     rw [← @summable_nat_add_iff α _ _ _ _ N]
     refine'
-      summable_of_norm_bounded (fun n => ‖f N‖ * r ^ n)
+      Summable.of_norm_bounded (fun n => ‖f N‖ * r ^ n)
         (Summable.mul_left _ <| summable_geometric_of_lt_1 hr₀ hr₁) fun n => _
     conv_rhs => rw [mul_comm, ← zero_add N]
     refine' le_geom hr₀ n fun i _ => _
     convert hN (i + N) (N.le_add_left i) using 3
     ac_rfl
   · push_neg at hr₀ 
-    refine' summable_of_norm_bounded_eventually 0 summable_zero _
+    refine' Summable.of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_atTop]
     filter_upwards [h] with _ hn
     by_contra' h

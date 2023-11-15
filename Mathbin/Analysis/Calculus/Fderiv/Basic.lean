@@ -861,18 +861,18 @@ theorem Asymptotics.IsBigO.hasFDerivAt {x₀ : E} {n : ℕ} (h : f =O[𝓝 x₀]
 #align asymptotics.is_O.has_fderiv_at Asymptotics.IsBigO.hasFDerivAt
 -/
 
-#print HasFDerivWithinAt.isBigO /-
-theorem HasFDerivWithinAt.isBigO {f : E → F} {s : Set E} {x₀ : E} {f' : E →L[𝕜] F}
+#print HasFDerivWithinAt.isBigO_sub /-
+theorem HasFDerivWithinAt.isBigO_sub {f : E → F} {s : Set E} {x₀ : E} {f' : E →L[𝕜] F}
     (h : HasFDerivWithinAt f f' s x₀) : (fun x => f x - f x₀) =O[𝓝[s] x₀] fun x => x - x₀ := by
   simpa only [sub_add_cancel] using h.is_O.add (is_O_sub f' (𝓝[s] x₀) x₀)
-#align has_fderiv_within_at.is_O HasFDerivWithinAt.isBigO
+#align has_fderiv_within_at.is_O HasFDerivWithinAt.isBigO_sub
 -/
 
-#print HasFDerivAt.isBigO /-
-theorem HasFDerivAt.isBigO {f : E → F} {x₀ : E} {f' : E →L[𝕜] F} (h : HasFDerivAt f f' x₀) :
+#print HasFDerivAt.isBigO_sub /-
+theorem HasFDerivAt.isBigO_sub {f : E → F} {x₀ : E} {f' : E →L[𝕜] F} (h : HasFDerivAt f f' x₀) :
     (fun x => f x - f x₀) =O[𝓝 x₀] fun x => x - x₀ := by
   simpa only [sub_add_cancel] using h.is_O.add (is_O_sub f' (𝓝 x₀) x₀)
-#align has_fderiv_at.is_O HasFDerivAt.isBigO
+#align has_fderiv_at.is_O HasFDerivAt.isBigO_sub
 -/
 
 end FderivProperties

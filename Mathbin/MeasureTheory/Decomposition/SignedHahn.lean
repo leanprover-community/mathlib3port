@@ -316,7 +316,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
       HasSum.summable
         (s.m_Union (fun _ => restrict_nonpos_seq_measurable_set _) restrict_nonpos_seq_disjoint)
     refine'
-      summable_of_nonneg_of_le (fun n => _) (fun n => _)
+      Summable.of_nonneg_of_le (fun n => _) (fun n => _)
         (Summable.comp_injective this Nat.succ_injective)
     · exact le_of_lt Nat.one_div_pos_of_nat
     · exact le_of_lt (restrict_nonpos_seq_lt n (hn' n))

@@ -85,7 +85,7 @@ noncomputable def IsTorsion.group [Monoid G] (tG : IsTorsion G) : Group G :=
     hMul_left_inv := fun g =>
       by
       erw [← pow_succ', tsub_add_cancel_of_le, pow_orderOf_eq_one]
-      exact orderOf_pos' (tG g) }
+      exact IsOfFinOrder.orderOf_pos (tG g) }
 #align is_torsion.group IsTorsion.group
 #align is_torsion.add_group IsTorsion.addGroup
 -/
@@ -98,7 +98,7 @@ variable [Group G] {N : Subgroup G} [Group H]
 /-- Subgroups of torsion groups are torsion groups. -/
 @[to_additive "Subgroups of additive torsion groups are additive torsion groups."]
 theorem IsTorsion.subgroup (tG : IsTorsion G) (H : Subgroup G) : IsTorsion H := fun h =>
-  (isOfFinOrder_iff_coe H.toSubmonoid h).mpr <| tG h
+  (Submonoid.isOfFinOrder_coe H.toSubmonoid h).mpr <| tG h
 #align is_torsion.subgroup IsTorsion.subgroup
 #align is_torsion.add_subgroup IsTorsion.addSubgroup
 -/
@@ -164,7 +164,7 @@ theorem ExponentExists.isTorsion (h : ExponentExists G) : IsTorsion G := fun g =
 theorem IsTorsion.exponentExists (tG : IsTorsion G)
     (bounded : (Set.range fun g : G => orderOf g).Finite) : ExponentExists G :=
   exponentExists_iff_ne_zero.mpr <|
-    (exponent_ne_zero_iff_range_orderOf_finite fun g => orderOf_pos' (tG g)).mpr bounded
+    (exponent_ne_zero_iff_range_orderOf_finite fun g => IsOfFinOrder.orderOf_pos (tG g)).mpr bounded
 #align is_torsion.exponent_exists IsTorsion.exponentExists
 #align is_add_torsion.exponent_exists IsAddTorsion.exponentExists
 -/
@@ -466,7 +466,7 @@ theorem IsTorsionFree.not_torsion [hN : Nontrivial G] : IsTorsionFree G → ¬Is
 @[to_additive "Subgroups of additive torsion-free groups are additively torsion-free."]
 theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsionFree H :=
   fun h hne =>
-  (isOfFinOrder_iff_coe H.toSubmonoid h).Not.mpr <|
+  (Submonoid.isOfFinOrder_coe H.toSubmonoid h).Not.mpr <|
     tG h <| by norm_cast <;> simp [hne, not_false_iff]
 #align is_torsion_free.subgroup IsTorsionFree.subgroup
 #align is_torsion_free.add_subgroup IsTorsionFree.addSubgroup

@@ -267,7 +267,6 @@ theorem hasDerivAt_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) :
 #align spectrum.has_deriv_at_resolvent spectrum.hasDerivAt_resolvent
 -/
 
-#print spectrum.norm_resolvent_le_forall /-
 /- TODO: Once there is sufficient API for bornology, we should get a nice filter / asymptotics
 version of this, for example: `tendsto (resolvent a) (cobounded 𝕜) (𝓝 0)` or more specifically
 `(resolvent a) =O[cobounded 𝕜] (λ z, z⁻¹)`. -/
@@ -310,7 +309,6 @@ theorem norm_resolvent_le_forall (a : A) :
         (mul_pos hε (inv_pos.mpr c_pos)).le
     _ = _ := inv_mul_cancel_right₀ c_pos.ne.symm ε
 #align spectrum.norm_resolvent_le_forall spectrum.norm_resolvent_le_forall
--/
 
 end resolvent
 
@@ -590,7 +588,7 @@ theorem exp_mem_exp [IsROrC 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [Complet
   let b := ∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n
   have hb : Summable fun n : ℕ => ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n :=
     by
-    refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ‖a - ↑ₐ z‖) _
+    refine' Summable.of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ‖a - ↑ₐ z‖) _
     filter_upwards [Filter.eventually_cofinite_ne 0] with n hn
     rw [norm_smul, mul_comm, norm_inv, IsROrC.norm_natCast, ← div_eq_mul_inv]
     exact

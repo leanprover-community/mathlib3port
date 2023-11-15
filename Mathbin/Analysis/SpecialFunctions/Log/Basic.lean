@@ -469,7 +469,7 @@ theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun
   rw [Finsupp.prod, Nat.cast_prod, log_prod _ _ fun p hp => _, Finsupp.sum]
   · simp_rw [Nat.cast_pow, log_pow]
   · norm_cast
-    exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).NeZero
+    exact pow_ne_zero _ (Nat.prime_of_mem_primeFactors hp).NeZero
 #align real.log_nat_eq_sum_factorization Real.log_nat_eq_sum_factorization
 -/
 

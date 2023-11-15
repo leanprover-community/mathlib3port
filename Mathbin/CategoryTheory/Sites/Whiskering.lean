@@ -132,7 +132,6 @@ end GrothendieckTopology.Cover
 
 variable [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ A), PreservesLimit (S.index P).multicospan F]
 
-#print CategoryTheory.Presheaf.IsSheaf.comp /-
 theorem Presheaf.IsSheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) :
     Presheaf.IsSheaf J (P ⋙ F) :=
   by
@@ -143,7 +142,6 @@ theorem Presheaf.IsSheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) :
   replace h := limits.is_limit.of_iso_limit h (S.map_multifork F P)
   exact ⟨limits.is_limit.postcompose_hom_equiv (S.multicospan_comp F P) _ h⟩
 #align category_theory.presheaf.is_sheaf.comp CategoryTheory.Presheaf.IsSheaf.comp
--/
 
 variable (J)
 

@@ -1294,11 +1294,13 @@ theorem abs_im_div_abs_le_one (z : ℂ) : |z.im / z.abs| ≤ 1 :=
 #align complex.abs_im_div_abs_le_one Complex.abs_im_div_abs_le_one
 -/
 
-#print Complex.abs_cast_nat /-
+/- warning: complex.abs_cast_nat clashes with complex.abs_of_nat -> Complex.abs_natCast
+Case conversion may be inaccurate. Consider using '#align complex.abs_cast_nat Complex.abs_natCastₓ'. -/
+#print Complex.abs_natCast /-
 @[simp, norm_cast]
-theorem abs_cast_nat (n : ℕ) : abs (n : ℂ) = n := by
+theorem abs_natCast (n : ℕ) : abs (n : ℂ) = n := by
   rw [← of_real_nat_cast, abs_of_nonneg (Nat.cast_nonneg n)]
-#align complex.abs_cast_nat Complex.abs_cast_nat
+#align complex.abs_cast_nat Complex.abs_natCast
 -/
 
 #print Complex.int_cast_abs /-

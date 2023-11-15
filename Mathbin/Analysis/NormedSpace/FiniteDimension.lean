@@ -755,7 +755,7 @@ any complete normed space, while the other holds only in finite dimensional spac
 theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : α → E} : (Summable fun x => ‖f x‖) ↔ Summable f :=
   by
-  refine' ⟨summable_of_summable_norm, fun hf => _⟩
+  refine' ⟨Summable.of_norm, fun hf => _⟩
   -- First we use a finite basis to reduce the problem to the case `E = fin N → ℝ`
   suffices ∀ {N : ℕ} {g : α → Fin N → ℝ}, Summable g → Summable fun x => ‖g x‖
     by
@@ -763,7 +763,7 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
     set e := v.equiv_funL
     have : Summable fun x => ‖e (f x)‖ := this (e.summable.2 hf)
     refine'
-      summable_of_norm_bounded _ (this.mul_left ↑‖(e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E)‖₊)
+      Summable.of_norm_bounded _ (this.mul_left ↑‖(e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E)‖₊)
         fun i => _
     simpa using (e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e <| f i)
   clear! E
@@ -771,7 +771,7 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
   intro N g hg
   have : ∀ i, Summable fun x => ‖g x i‖ := fun i => (Pi.summable.1 hg i).abs
   refine'
-    summable_of_norm_bounded _ (summable_sum fun i (hi : i ∈ Finset.univ) => this i) fun x => _
+    Summable.of_norm_bounded _ (summable_sum fun i (hi : i ∈ Finset.univ) => this i) fun x => _
   rw [norm_norm, pi_norm_le_iff_of_nonneg]
   · refine' fun i => Finset.single_le_sum (fun i hi => _) (Finset.mem_univ i)
     exact norm_nonneg (g x i)

@@ -501,7 +501,7 @@ def toSignedMeasure (μ : Measure α) [hμ : IsFiniteMeasure μ] : SignedMeasure
     rw [μ.m_Union hf₁ hf₂, ENNReal.tsum_toReal_eq, if_pos (MeasurableSet.iUnion hf₁),
       Summable.hasSum_iff]
     · congr; ext n; rw [if_pos (hf₁ n)]
-    · refine' @summable_of_nonneg_of_le _ (ENNReal.toReal ∘ μ ∘ f) _ _ _ _
+    · refine' @Summable.of_nonneg_of_le _ (ENNReal.toReal ∘ μ ∘ f) _ _ _ _
       · intro; split_ifs
         exacts [ENNReal.toReal_nonneg, le_rfl]
       · intro; split_ifs

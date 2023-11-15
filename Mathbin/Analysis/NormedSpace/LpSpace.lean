@@ -238,7 +238,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
       Real.rpow_le_rpow this (hA ⟨i, rfl⟩) (inv_nonneg.mpr hq.le)
   · apply memℓp_gen
     have hf' := hfq.summable hq
-    refine' summable_of_norm_bounded_eventually _ hf' (@Set.Finite.subset _ {i | 1 ≤ ‖f i‖} _ _ _)
+    refine' Summable.of_norm_bounded_eventually _ hf' (@Set.Finite.subset _ {i | 1 ≤ ‖f i‖} _ _ _)
     · have H : {x : α | 1 ≤ ‖f x‖ ^ q.to_real}.Finite := by
         simpa using
           eventually_lt_of_tendsto_lt (by norm_num : (0 : ℝ) < 1) hf'.tendsto_cofinite_zero
@@ -271,7 +271,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
   apply memℓp_gen
   let C : ℝ := if p.to_real < 1 then 1 else 2 ^ (p.to_real - 1)
   refine'
-    summable_of_nonneg_of_le _ (fun i => _) (((hf.summable hp).add (hg.summable hp)).mul_left C)
+    Summable.of_nonneg_of_le _ (fun i => _) (((hf.summable hp).add (hg.summable hp)).mul_left C)
   · exact fun b => Real.rpow_nonneg_of_nonneg (norm_nonneg (f b + g b)) p.to_real
   · refine' (Real.rpow_le_rpow (norm_nonneg _) (norm_add_le _ _) hp.le).trans _
     dsimp [C]

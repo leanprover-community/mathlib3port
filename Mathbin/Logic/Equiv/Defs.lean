@@ -924,7 +924,6 @@ def arrowPUnitEquivPUnit (α : Sort _) : (α → PUnit.{v}) ≃ PUnit.{w} :=
 #align equiv.arrow_punit_equiv_punit Equiv.arrowPUnitEquivPUnit
 -/
 
-#print Equiv.piSubsingleton /-
 /-- If `α` is `subsingleton` and `a : α`, then the type of dependent functions `Π (i : α), β
 i` is equivalent to `β i`. -/
 @[simps]
@@ -935,7 +934,6 @@ def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) : (∀ a
   left_inv f := funext fun b => by rw [Subsingleton.elim b a]; rfl
   right_inv b := rfl
 #align equiv.Pi_subsingleton Equiv.piSubsingleton
--/
 
 #print Equiv.funUnique /-
 /-- If `α` has a unique term, then the type of function `α → β` is equivalent to `β`. -/

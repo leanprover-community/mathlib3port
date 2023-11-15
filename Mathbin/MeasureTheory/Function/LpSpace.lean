@@ -1743,8 +1743,7 @@ theorem ae_tendsto_of_cauchy_snorm' [CompleteSpace E] {f : ℕ → α → E} {p 
       tsum_nnnorm_sub_ae_lt_top hf hp1 hB h3
     exact
       h4.mono fun x hx =>
-        summable_of_summable_nnnorm
-          (ennreal.tsum_coe_ne_top_iff_summable.mp (lt_top_iff_ne_top.mp hx))
+        Summable.of_nnnorm (ennreal.tsum_coe_ne_top_iff_summable.mp (lt_top_iff_ne_top.mp hx))
   have h :
     ∀ᵐ x ∂μ,
       ∃ l : E, at_top.tendsto (fun n => ∑ i in Finset.range n, (f (i + 1) x - f i x)) (𝓝 l) :=

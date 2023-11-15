@@ -114,7 +114,8 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.Coprime m) :
   by
   rintro - ⟨a, ha, rfl⟩
   obtain ⟨b, hb, hab⟩ := mem_approx_order_of_iff.mp ha
-  replace hb : b ^ m ∈ {u : A | orderOf u = n}; · rw [← hb] at hmn ⊢; exact orderOf_pow_coprime hmn
+  replace hb : b ^ m ∈ {u : A | orderOf u = n};
+  · rw [← hb] at hmn ⊢; exact Nat.Coprime.orderOf_pow hmn
   apply ball_subset_thickening hb ((m : ℝ) • δ)
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]

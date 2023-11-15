@@ -158,7 +158,7 @@ theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso' f] : Exact (X.d 1 0) (f.f
   by
   rw [preadditive.exact_iff_homology_zero]
   have h : X.d 1 0 ≫ f.f 0 = 0 := by
-    simp only [← f.2 1 0 rfl, ChainComplex.single₀_obj_X_d, comp_zero]
+    simp only [← f.2 1 0 rfl, ChainComplex.single₀_obj_x_d, comp_zero]
   refine' ⟨h, Nonempty.intro (homology'IsoKernelDesc _ _ _ ≪≫ _)⟩
   · suffices is_iso (cokernel.desc _ _ h) by haveI := this; apply kernel.of_mono
     rw [← to_single₀_cokernel_at_zero_iso_hom_eq]
@@ -225,7 +225,7 @@ theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso' f] : Exact (f.f 0) (X.d
   by
   rw [preadditive.exact_iff_homology_zero]
   have h : f.f 0 ≫ X.d 0 1 = 0 := by
-    simp only [HomologicalComplex.Hom.comm, CochainComplex.single₀_obj_X_d, zero_comp]
+    simp only [HomologicalComplex.Hom.comm, CochainComplex.single₀_obj_x_d, zero_comp]
   refine' ⟨h, Nonempty.intro (homology'IsoCokernelLift _ _ _ ≪≫ _)⟩
   · suffices is_iso (kernel.lift (X.d 0 1) (f.f 0) h) by haveI := this; apply cokernel.of_epi
     rw [← from_single₀_kernel_at_zero_iso_inv_eq f]

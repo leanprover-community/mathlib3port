@@ -5290,10 +5290,12 @@ variable [MeasureSpace α] {s t : Set α}
 -/
 
 
-#print SetCoe.measureSpace /-
-instance SetCoe.measureSpace (s : Set α) : MeasureSpace s :=
+/- warning: set_coe.measure_space clashes with measure_theory.measure.subtype.measure_space -> MeasureTheory.Measure.Subtype.measureSpace
+Case conversion may be inaccurate. Consider using '#align set_coe.measure_space MeasureTheory.Measure.Subtype.measureSpaceₓ'. -/
+#print MeasureTheory.Measure.Subtype.measureSpace /-
+instance MeasureTheory.Measure.Subtype.measureSpace (s : Set α) : MeasureSpace s :=
   ⟨comap (coe : s → α) volume⟩
-#align set_coe.measure_space SetCoe.measureSpace
+#align set_coe.measure_space MeasureTheory.Measure.Subtype.measureSpace
 -/
 
 #print volume_set_coe_def /-

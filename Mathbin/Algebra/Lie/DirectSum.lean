@@ -178,14 +178,14 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : 
 #align direct_sum.lie_of_of_ne DirectSum.lie_of_of_ne
 -/
 
-#print DirectSum.lie_of_of_eq /-
-theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L j) :
+#print DirectSum.lie_of_same /-
+theorem lie_of_same [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = of L i ⁅x, hij.recOn y⁆ :=
   by
   have : of L j y = of L i (hij.rec_on y) := Eq.drec (Eq.refl _) hij
   rw [this, ← lie_algebra_of_apply R ι L i ⁅x, hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply,
     lie_algebra_of_apply]
-#align direct_sum.lie_of_of_eq DirectSum.lie_of_of_eq
+#align direct_sum.lie_of_of_eq DirectSum.lie_of_same
 -/
 
 #print DirectSum.lie_of /-

@@ -172,10 +172,10 @@ theorem star_mul_self_nonneg (r : R) : 0 ≤ star r * r :=
 #align star_mul_self_nonneg star_mul_self_nonneg
 -/
 
-#print star_mul_self_nonneg' /-
-theorem star_mul_self_nonneg' (r : R) : 0 ≤ r * star r := by nth_rw_rhs 1 [← star_star r];
+#print mul_star_self_nonneg /-
+theorem mul_star_self_nonneg (r : R) : 0 ≤ r * star r := by nth_rw_rhs 1 [← star_star r];
   exact star_mul_self_nonneg (star r)
-#align star_mul_self_nonneg' star_mul_self_nonneg'
+#align star_mul_self_nonneg' mul_star_self_nonneg
 -/
 
 #print conjugate_nonneg /-

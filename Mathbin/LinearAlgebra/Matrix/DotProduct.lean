@@ -116,7 +116,7 @@ theorem dotProduct_star_self_eq_zero [PartialOrder R] [NonUnitalRing R] [StarOrd
 @[simp]
 theorem dotProduct_self_star_eq_zero [PartialOrder R] [NonUnitalRing R] [StarOrderedRing R]
     [NoZeroDivisors R] {v : n → R} : dotProduct v (star v) = 0 ↔ v = 0 :=
-  (Finset.sum_eq_zero_iff_of_nonneg fun i _ => (@star_mul_self_nonneg' _ _ _ _ (v i) : _)).trans <|
+  (Finset.sum_eq_zero_iff_of_nonneg fun i _ => (@mul_star_self_nonneg _ _ _ _ (v i) : _)).trans <|
     by simp [Function.funext_iff, mul_eq_zero]
 #align matrix.dot_product_self_star_eq_zero Matrix.dotProduct_self_star_eq_zero
 -/

@@ -451,19 +451,19 @@ theorem le_of_lt_minimalPeriod_of_iterate_eq {m n : ℕ} (hm : m < minimalPeriod
 #align function.le_of_lt_minimal_period_of_iterate_eq Function.le_of_lt_minimalPeriod_of_iterate_eq
 -/
 
-#print Function.eq_of_lt_minimalPeriod_of_iterate_eq /-
-theorem eq_of_lt_minimalPeriod_of_iterate_eq {m n : ℕ} (hm : m < minimalPeriod f x)
+#print Function.iterate_injOn_Iio_minimalPeriod /-
+theorem iterate_injOn_Iio_minimalPeriod {m n : ℕ} (hm : m < minimalPeriod f x)
     (hn : n < minimalPeriod f x) (hmn : (f^[m]) x = (f^[n]) x) : m = n :=
   (le_of_lt_minimalPeriod_of_iterate_eq hm hmn).antisymm
     (le_of_lt_minimalPeriod_of_iterate_eq hn hmn.symm)
-#align function.eq_of_lt_minimal_period_of_iterate_eq Function.eq_of_lt_minimalPeriod_of_iterate_eq
+#align function.eq_of_lt_minimal_period_of_iterate_eq Function.iterate_injOn_Iio_minimalPeriod
 -/
 
-#print Function.eq_iff_lt_minimalPeriod_of_iterate_eq /-
-theorem eq_iff_lt_minimalPeriod_of_iterate_eq {m n : ℕ} (hm : m < minimalPeriod f x)
+#print Function.iterate_eq_iterate_iff_of_lt_minimalPeriod /-
+theorem iterate_eq_iterate_iff_of_lt_minimalPeriod {m n : ℕ} (hm : m < minimalPeriod f x)
     (hn : n < minimalPeriod f x) : (f^[m]) x = (f^[n]) x ↔ m = n :=
-  ⟨eq_of_lt_minimalPeriod_of_iterate_eq hm hn, congr_arg _⟩
-#align function.eq_iff_lt_minimal_period_of_iterate_eq Function.eq_iff_lt_minimalPeriod_of_iterate_eq
+  ⟨iterate_injOn_Iio_minimalPeriod hm hn, congr_arg _⟩
+#align function.eq_iff_lt_minimal_period_of_iterate_eq Function.iterate_eq_iterate_iff_of_lt_minimalPeriod
 -/
 
 #print Function.minimalPeriod_id /-

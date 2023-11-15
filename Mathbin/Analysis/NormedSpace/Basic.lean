@@ -532,10 +532,10 @@ protected theorem NormedSpace.noncompactSpace : NoncompactSpace E :=
 #align normed_space.noncompact_space NormedSpace.noncompactSpace
 -/
 
-#print NontriviallyNormedField.noncompactSpace /-
-instance (priority := 100) NontriviallyNormedField.noncompactSpace : NoncompactSpace 𝕜 :=
+#print NormedField.noncompactSpace /-
+instance (priority := 100) NormedField.noncompactSpace : NoncompactSpace 𝕜 :=
   NormedSpace.noncompactSpace 𝕜 𝕜
-#align nontrivially_normed_field.noncompact_space NontriviallyNormedField.noncompactSpace
+#align nontrivially_normed_field.noncompact_space NormedField.noncompactSpace
 -/
 
 #print RealNormedSpace.noncompactSpace /-

@@ -2170,7 +2170,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
         ∑ i : ℕ in range k, abs (x ^ (n + i) / ((n + i)! : ℂ)) :=
       abv_sum_le_sum_abv _ _
     _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n + i)! := by
-      simp only [Complex.abs_cast_nat, map_div₀, abv_pow abs]
+      simp only [Complex.abs_natCast, map_div₀, abv_pow abs]
     _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n ! * n.succ ^ i) := _
     _ = ∑ i : ℕ in range k, abs x ^ n / n ! * (abs x ^ i / n.succ ^ i) := _
     _ ≤ abs x ^ n / ↑n ! * 2 := _
