@@ -20,7 +20,7 @@ sed -i.bak '
   /^require lean3port / s/@"\([^"]*\)"$/@"'$lean3port_rev'"/
 ' lakefile.lean
 rm lakefile.lean.bak
-lake update
+MATHLIB_NO_CACHE_ON_UPDATE=1 lake update
 
 rm -rf Mathbin Archive Counterexamples
 for lib in mathlib3 archive counterexamples; do
