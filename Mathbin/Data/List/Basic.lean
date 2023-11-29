@@ -5649,17 +5649,17 @@ end Diff
 /-! ### enum -/
 
 
-#print List.length_enumFrom /-
-theorem length_enumFrom : ∀ (n) (l : List α), length (enumFrom n l) = length l
+#print List.enumFrom_length /-
+theorem enumFrom_length : ∀ (n) (l : List α), length (enumFrom n l) = length l
   | n, [] => rfl
   | n, a :: l => congr_arg Nat.succ (length_enum_from _ _)
-#align list.length_enum_from List.length_enumFrom
+#align list.length_enum_from List.enumFrom_length
 -/
 
-#print List.length_enum /-
-theorem length_enum : ∀ l : List α, length (enum l) = length l :=
-  length_enumFrom _
-#align list.length_enum List.length_enum
+#print List.enum_length /-
+theorem enum_length : ∀ l : List α, length (enum l) = length l :=
+  enumFrom_length _
+#align list.length_enum List.enum_length
 -/
 
 #print List.enumFrom_get? /-

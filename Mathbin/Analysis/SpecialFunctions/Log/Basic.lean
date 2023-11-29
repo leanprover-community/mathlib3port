@@ -80,7 +80,7 @@ theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by rw [exp_log_eq_abs 
 theorem le_exp_log (x : ℝ) : x ≤ exp (log x) :=
   by
   by_cases h_zero : x = 0
-  · rw [h_zero, log, dif_pos rfl, exp_zero]; exact zero_le_one
+  · rw [h_zero, log, dif_pos rfl, NormedSpace.exp_zero]; exact zero_le_one
   · rw [exp_log_eq_abs h_zero]; exact le_abs_self _
 #align real.le_exp_log Real.le_exp_log
 -/
@@ -119,7 +119,7 @@ theorem log_zero : log 0 = 0 :=
 #print Real.log_one /-
 @[simp]
 theorem log_one : log 1 = 0 :=
-  exp_injective <| by rw [exp_log zero_lt_one, exp_zero]
+  exp_injective <| by rw [exp_log zero_lt_one, NormedSpace.exp_zero]
 #align real.log_one Real.log_one
 -/
 
@@ -129,7 +129,7 @@ theorem log_abs (x : ℝ) : log |x| = log x :=
   by
   by_cases h : x = 0
   · simp [h]
-  · rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
+  · rw [← NormedSpace.exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
 #align real.log_abs Real.log_abs
 -/
 
@@ -141,13 +141,13 @@ theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by rw [← log_abs x, ←
 
 #print Real.sinh_log /-
 theorem sinh_log {x : ℝ} (hx : 0 < x) : sinh (log x) = (x - x⁻¹) / 2 := by
-  rw [sinh_eq, exp_neg, exp_log hx]
+  rw [sinh_eq, NormedSpace.exp_neg, exp_log hx]
 #align real.sinh_log Real.sinh_log
 -/
 
 #print Real.cosh_log /-
 theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by
-  rw [cosh_eq, exp_neg, exp_log hx]
+  rw [cosh_eq, NormedSpace.exp_neg, exp_log hx]
 #align real.cosh_log Real.cosh_log
 -/
 
@@ -160,7 +160,8 @@ theorem surjOn_log' : SurjOn log (Iio 0) univ := fun x _ =>
 #print Real.log_mul /-
 theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y :=
   exp_injective <| by
-    rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
+    rw [exp_log_eq_abs (mul_ne_zero hx hy), NormedSpace.exp_add, exp_log_eq_abs hx,
+      exp_log_eq_abs hy, abs_mul]
 #align real.log_mul Real.log_mul
 -/
 
@@ -176,7 +177,8 @@ theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
 theorem log_inv (x : ℝ) : log x⁻¹ = -log x :=
   by
   by_cases hx : x = 0; · simp [hx]
-  rw [← exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), exp_neg, exp_log_eq_abs hx, abs_inv]
+  rw [← NormedSpace.exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), NormedSpace.exp_neg,
+    exp_log_eq_abs hx, abs_inv]
 #align real.log_inv Real.log_inv
 -/
 

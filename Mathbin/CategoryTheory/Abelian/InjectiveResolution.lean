@@ -236,23 +236,19 @@ abbrev injectiveResolution (Z : C) [HasInjectiveResolution Z] : CochainComplex C
 #align category_theory.injective_resolution CategoryTheory.injectiveResolution
 -/
 
-#print CategoryTheory.injectiveResolution.ι /-
 /-- The cochain map from cochain complex consisting of `Z` supported in degree `0`
 back to the arbitrarily chosen injective resolution `injective_resolution Z`. -/
 abbrev injectiveResolution.ι (Z : C) [HasInjectiveResolution Z] :
     (CochainComplex.single₀ C).obj Z ⟶ injectiveResolution Z :=
   (HasInjectiveResolution.out Z).some.ι
 #align category_theory.injective_resolution.ι CategoryTheory.injectiveResolution.ι
--/
 
-#print CategoryTheory.injectiveResolution.desc /-
 /-- The descent of a morphism to a cochain map between the arbitrarily chosen injective resolutions.
 -/
 abbrev injectiveResolution.desc {X Y : C} (f : X ⟶ Y) [HasInjectiveResolution X]
     [HasInjectiveResolution Y] : injectiveResolution X ⟶ injectiveResolution Y :=
   InjectiveResolution.desc f _ _
 #align category_theory.injective_resolution.desc CategoryTheory.injectiveResolution.desc
--/
 
 variable (C) [HasInjectiveResolutions C]
 
@@ -347,7 +343,6 @@ namespace HomologicalComplex.Hom
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
-#print HomologicalComplex.Hom.HomologicalComplex.Hom.fromSingle₀InjectiveResolution /-
 /-- If `X` is a cochain complex of injective objects and we have a quasi-isomorphism
 `f : Y[0] ⟶ X`, then `X` is an injective resolution of `Y.` -/
 def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex C ℕ) (Y : C)
@@ -360,7 +355,6 @@ def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex 
   exact := f.from_single₀_exact_at_succ
   Mono := f.from_single₀_mono_at_zero
 #align homological_complex.hom.homological_complex.hom.from_single₀_InjectiveResolution HomologicalComplex.Hom.HomologicalComplex.Hom.fromSingle₀InjectiveResolution
--/
 
 end HomologicalComplex.Hom
 

@@ -32,7 +32,7 @@ variable {ι : Type _} (α : ι → Type u) [U : ∀ i, UniformSpace (α i)]
 instance Pi.uniformSpace : UniformSpace (∀ i, α i) :=
   UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore
       Pi.topologicalSpace <|
-    Eq.symm toTopologicalSpace_iInf
+    Eq.symm UniformSpace.toTopologicalSpace_iInf
 #align Pi.uniform_space Pi.uniformSpace
 -/
 

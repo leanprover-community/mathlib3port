@@ -728,39 +728,39 @@ open Set
 
 variable {p p'}
 
-#print Submodule.ofLe /-
+#print Submodule.inclusion /-
 /-- If two submodules `p` and `p'` satisfy `p ⊆ p'`, then `of_le p p'` is the linear map version of
 this inclusion. -/
-def ofLe (h : p ≤ p') : p →ₗ[R] p' :=
+def inclusion (h : p ≤ p') : p →ₗ[R] p' :=
   p.Subtype.codRestrict p' fun ⟨x, hx⟩ => h hx
-#align submodule.of_le Submodule.ofLe
+#align submodule.of_le Submodule.inclusion
 -/
 
-#print Submodule.coe_ofLe /-
+#print Submodule.coe_inclusion /-
 @[simp]
-theorem coe_ofLe (h : p ≤ p') (x : p) : (ofLe h x : M) = x :=
+theorem coe_inclusion (h : p ≤ p') (x : p) : (inclusion h x : M) = x :=
   rfl
-#align submodule.coe_of_le Submodule.coe_ofLe
+#align submodule.coe_of_le Submodule.coe_inclusion
 -/
 
-#print Submodule.ofLe_apply /-
-theorem ofLe_apply (h : p ≤ p') (x : p) : ofLe h x = ⟨x, h x.2⟩ :=
+#print Submodule.inclusion_apply /-
+theorem inclusion_apply (h : p ≤ p') (x : p) : inclusion h x = ⟨x, h x.2⟩ :=
   rfl
-#align submodule.of_le_apply Submodule.ofLe_apply
+#align submodule.of_le_apply Submodule.inclusion_apply
 -/
 
-#print Submodule.ofLe_injective /-
-theorem ofLe_injective (h : p ≤ p') : Function.Injective (ofLe h) := fun x y h =>
+#print Submodule.inclusion_injective /-
+theorem inclusion_injective (h : p ≤ p') : Function.Injective (inclusion h) := fun x y h =>
   Subtype.val_injective (Subtype.mk.inj h)
-#align submodule.of_le_injective Submodule.ofLe_injective
+#align submodule.of_le_injective Submodule.inclusion_injective
 -/
 
 variable (p p')
 
-#print Submodule.subtype_comp_ofLe /-
-theorem subtype_comp_ofLe (p q : Submodule R M) (h : p ≤ q) : q.Subtype.comp (ofLe h) = p.Subtype :=
-  by ext ⟨b, hb⟩; rfl
-#align submodule.subtype_comp_of_le Submodule.subtype_comp_ofLe
+#print Submodule.subtype_comp_inclusion /-
+theorem subtype_comp_inclusion (p q : Submodule R M) (h : p ≤ q) :
+    q.Subtype.comp (inclusion h) = p.Subtype := by ext ⟨b, hb⟩; rfl
+#align submodule.subtype_comp_of_le Submodule.subtype_comp_inclusion
 -/
 
 variable (R)
@@ -2050,24 +2050,25 @@ theorem comap_subtype_self : comap p.Subtype p = ⊤ :=
 #align submodule.comap_subtype_self Submodule.comap_subtype_self
 -/
 
-#print Submodule.ker_ofLe /-
+#print Submodule.ker_inclusion /-
 @[simp]
-theorem ker_ofLe (p p' : Submodule R M) (h : p ≤ p') : (ofLe h).ker = ⊥ := by
+theorem ker_inclusion (p p' : Submodule R M) (h : p ≤ p') : (inclusion h).ker = ⊥ := by
   rw [of_le, ker_cod_restrict, ker_subtype]
-#align submodule.ker_of_le Submodule.ker_ofLe
+#align submodule.ker_of_le Submodule.ker_inclusion
 -/
 
-#print Submodule.range_ofLe /-
-theorem range_ofLe (p q : Submodule R M) (h : p ≤ q) : (ofLe h).range = comap q.Subtype p := by
+#print Submodule.range_inclusion /-
+theorem range_inclusion (p q : Submodule R M) (h : p ≤ q) :
+    (inclusion h).range = comap q.Subtype p := by
   rw [← map_top, of_le, LinearMap.map_codRestrict, map_top, range_subtype]
-#align submodule.range_of_le Submodule.range_ofLe
+#align submodule.range_of_le Submodule.range_inclusion
 -/
 
-#print Submodule.map_subtype_range_ofLe /-
+#print Submodule.map_subtype_range_inclusion /-
 @[simp]
-theorem map_subtype_range_ofLe {p p' : Submodule R M} (h : p ≤ p') :
-    map p'.Subtype (ofLe h).range = p := by simp [range_of_le, map_comap_eq, h]
-#align submodule.map_subtype_range_of_le Submodule.map_subtype_range_ofLe
+theorem map_subtype_range_inclusion {p p' : Submodule R M} (h : p ≤ p') :
+    map p'.Subtype (inclusion h).range = p := by simp [range_of_le, map_comap_eq, h]
+#align submodule.map_subtype_range_of_le Submodule.map_subtype_range_inclusion
 -/
 
 #print Submodule.disjoint_iff_comap_eq_bot /-
@@ -2190,12 +2191,12 @@ theorem mem_submoduleImage_of_le {M' : Type _} [AddCommMonoid M'] [Module R M'] 
 #align linear_map.mem_submodule_image_of_le LinearMap.mem_submoduleImage_of_le
 -/
 
-#print LinearMap.submoduleImage_apply_ofLe /-
-theorem submoduleImage_apply_ofLe {M' : Type _} [AddCommGroup M'] [Module R M'] {O : Submodule R M}
+#print LinearMap.submoduleImage_apply_of_le /-
+theorem submoduleImage_apply_of_le {M' : Type _} [AddCommGroup M'] [Module R M'] {O : Submodule R M}
     (ϕ : O →ₗ[R] M') (N : Submodule R M) (hNO : N ≤ O) :
-    ϕ.submoduleImage N = (ϕ.comp (Submodule.ofLe hNO)).range := by
-  rw [submodule_image, range_comp, Submodule.range_ofLe]
-#align linear_map.submodule_image_apply_of_le LinearMap.submoduleImage_apply_ofLe
+    ϕ.submoduleImage N = (ϕ.comp (Submodule.inclusion hNO)).range := by
+  rw [submodule_image, range_comp, Submodule.range_inclusion]
+#align linear_map.submodule_image_apply_of_le LinearMap.submoduleImage_apply_of_le
 -/
 
 end Image

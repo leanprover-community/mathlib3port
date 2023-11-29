@@ -96,7 +96,7 @@ theorem isIntegralClosure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExt
         (le_integralClosure_iff_isIntegral.1
           (adjoin_le_integralClosure (hζ.is_integral (p ^ k).Pos)) _)
   let B := hζ.sub_one_power_basis ℚ
-  have hint : IsIntegral ℤ B.gen := isIntegral_sub (hζ.is_integral (p ^ k).Pos) isIntegral_one
+  have hint : IsIntegral ℤ B.gen := IsIntegral.sub (hζ.is_integral (p ^ k).Pos) isIntegral_one
   have H := discr_mul_is_integral_mem_adjoin ℚ hint h
   obtain ⟨u, n, hun⟩ := discr_prime_pow_eq_unit_mul_pow' hζ
   rw [hun] at H 

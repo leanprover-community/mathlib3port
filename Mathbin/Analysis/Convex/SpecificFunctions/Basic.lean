@@ -51,22 +51,25 @@ theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp :=
   by
   apply strictConvexOn_of_slope_strict_mono_adjacent convex_univ
   rintro x y z - - hxy hyz
-  trans exp y
+  trans NormedSpace.exp y
   · have h1 : 0 < y - x := by linarith
     have h2 : x - y < 0 := by linarith
     rw [div_lt_iff h1]
     calc
-      exp y - exp x = exp y - exp y * exp (x - y) := by rw [← exp_add] <;> ring_nf
-      _ = exp y * (1 - exp (x - y)) := by ring
-      _ < exp y * -(x - y) := (mul_lt_mul_of_pos_left _ y.exp_pos)
-      _ = exp y * (y - x) := by ring
+      NormedSpace.exp y - NormedSpace.exp x =
+          NormedSpace.exp y - NormedSpace.exp y * NormedSpace.exp (x - y) :=
+        by rw [← NormedSpace.exp_add] <;> ring_nf
+      _ = NormedSpace.exp y * (1 - NormedSpace.exp (x - y)) := by ring
+      _ < NormedSpace.exp y * -(x - y) := (mul_lt_mul_of_pos_left _ y.exp_pos)
+      _ = NormedSpace.exp y * (y - x) := by ring
     linarith [add_one_lt_exp_of_nonzero h2.ne]
   · have h1 : 0 < z - y := by linarith
     rw [lt_div_iff h1]
     calc
-      exp y * (z - y) < exp y * (exp (z - y) - 1) := mul_lt_mul_of_pos_left _ y.exp_pos
-      _ = exp (z - y) * exp y - exp y := by ring
-      _ ≤ exp z - exp y := by rw [← exp_add] <;> ring_nf
+      NormedSpace.exp y * (z - y) < NormedSpace.exp y * (NormedSpace.exp (z - y) - 1) :=
+        mul_lt_mul_of_pos_left _ y.exp_pos
+      _ = NormedSpace.exp (z - y) * NormedSpace.exp y - NormedSpace.exp y := by ring
+      _ ≤ NormedSpace.exp z - NormedSpace.exp y := by rw [← NormedSpace.exp_add] <;> ring_nf
     linarith [add_one_lt_exp_of_nonzero h1.ne']
 #align strict_convex_on_exp strictConvexOn_exp
 -/

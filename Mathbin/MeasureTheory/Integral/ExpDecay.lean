@@ -33,7 +33,7 @@ open scoped Topology
 theorem exp_neg_integrableOn_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) :
     IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) :=
   by
-  have : tendsto (fun x => -exp (-b * x) / b) at_top (𝓝 (-0 / b)) :=
+  have : tendsto (fun x => -NormedSpace.exp (-b * x) / b) at_top (𝓝 (-0 / b)) :=
     by
     refine' tendsto.div_const (tendsto.neg _) _
     exact tendsto_exp_at_bot.comp (tendsto_id.neg_const_mul_at_top (Right.neg_neg_iff.2 h))
@@ -65,7 +65,8 @@ theorem integrable_of_isBigO_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b)
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
   · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AEStronglyMeasurable measurableSet_Ioi
-  have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
+  have :
+    has_finite_integral (fun x : ℝ => c * NormedSpace.exp (-b * x)) (volume.restrict (Ioi v)) :=
     (exp_neg_integrableOn_Ioi v h0).HasFiniteIntegral.const_mul c
   apply this.mono
   refine' (ae_restrict_iff' measurableSet_Ioi).mpr _

@@ -49,16 +49,17 @@ attribute [local instance] reflects_limits_of_reflects_isomorphisms
 instance {X : C} : IsCofiltered (J.cover X) :=
   inferInstance
 
-#print CategoryTheory.Sites.pushforward /-
+#print CategoryTheory.Functor.sheafPullback /-
 /-- The pushforward functor `Sheaf J A ⥤ Sheaf K A` associated to a functor `G : C ⥤ D` in the
 same direction as `G`. -/
 @[simps]
-def Sites.pushforward (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
+def Functor.sheafPullback (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
   sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
-#align category_theory.sites.pushforward CategoryTheory.Sites.pushforward
+#align category_theory.sites.pushforward CategoryTheory.Functor.sheafPullback
 -/
 
-instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) :=
+instance (G : C ⥤ D) [RepresentablyFlat G] :
+    PreservesFiniteLimits (Functor.sheafPullback A J K G) :=
   by
   apply (config := { instances := false }) comp_preserves_finite_limits
   · infer_instance
@@ -67,17 +68,18 @@ instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.push
   · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₁, v₁, v₁}
     infer_instance
 
-#print CategoryTheory.Sites.pullbackPushforwardAdjunction /-
+#print CategoryTheory.Functor.sheafAdjunctionContinuous /-
 /-- The pushforward functor is left adjoint to the pullback functor. -/
-def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
-    (hG₂ : CoverPreserving J K G) : Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
+def Functor.sheafAdjunctionContinuous {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
+    (hG₂ : CoverPreserving J K G) :
+    Functor.sheafPullback A J K G ⊣ Functor.sheafPushforwardContinuous A hG₁ hG₂ :=
   ((Lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful
     (sheafToPresheaf J A) (𝟭 _)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)
-#align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
+#align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Functor.sheafAdjunctionContinuous
 -/
 
 end CategoryTheory

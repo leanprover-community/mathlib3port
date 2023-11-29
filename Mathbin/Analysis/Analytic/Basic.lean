@@ -344,7 +344,7 @@ theorem summable_norm_apply (p : FormalMultilinearSeries 𝕜 E F) {x : E}
 
 #print FormalMultilinearSeries.summable_nnnorm_mul_pow /-
 theorem summable_nnnorm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ≥0} (h : ↑r < p.radius) :
-    Summable fun n : ℕ => ‖p n‖₊ * r ^ n := by rw [← NNReal.summable_coe]; push_cast ;
+    Summable fun n : ℕ => ‖p n‖₊ * r ^ n := by rw [← NNReal.summable_coe]; push_cast;
   exact p.summable_norm_mul_pow h
 #align formal_multilinear_series.summable_nnnorm_mul_pow FormalMultilinearSeries.summable_nnnorm_mul_pow
 -/

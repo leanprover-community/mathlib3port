@@ -135,7 +135,7 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
   by
   refine' ⟨fun h => _, fun h => (integrable_exp_neg_mul_sq h).IntegrableOn⟩
   by_contra' hb
-  have : ∫⁻ x : ℝ in Ioi 0, 1 ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ :=
+  have : ∫⁻ x : ℝ in Ioi 0, 1 ≤ ∫⁻ x : ℝ in Ioi 0, ‖NormedSpace.exp (-b * x ^ 2)‖₊ :=
     by
     apply lintegral_mono fun x => _
     simp only [neg_mul, ENNReal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
@@ -293,7 +293,7 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
     exact integrable_exp_neg_mul_sq hb
   have f_cts : ∀ x : ℝ, ContinuousAt (fun c => f c x) b := fun x =>
     (complex.continuous_exp.comp (continuous_id'.neg.mul continuous_const)).ContinuousAt
-  have f_le_bd : ∀ᶠ c : ℂ in 𝓝 b, ∀ᵐ x : ℝ, ‖f c x‖ ≤ exp (-d * x ^ 2) :=
+  have f_le_bd : ∀ᶠ c : ℂ in 𝓝 b, ∀ᵐ x : ℝ, ‖f c x‖ ≤ NormedSpace.exp (-d * x ^ 2) :=
     by
     refine' eventually_of_mem ((continuous_re.is_open_preimage _ isOpen_Ioi).mem_nhds hd') _
     refine' fun c hc => ae_of_all _ fun x => _
@@ -331,7 +331,7 @@ theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
     rw [Ne.def, cpow_eq_zero_iff, not_and_or]
     exact Or.inl (div_ne_zero (of_real_ne_zero.mpr pi_ne_zero) (nv hc))
   · -- equality at 1
-    have : ∀ x : ℝ, cexp (-1 * x ^ 2) = exp (-1 * x ^ 2) :=
+    have : ∀ x : ℝ, cexp (-1 * x ^ 2) = NormedSpace.exp (-1 * x ^ 2) :=
       by
       intro x
       simp only [of_real_exp, neg_mul, one_mul, of_real_neg, of_real_pow]
@@ -483,7 +483,7 @@ theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤
         ∀ {c y : ℝ},
           |y| ≤ |c| →
             ‖cexp (-b * (T + y * I) ^ 2)‖ ≤
-              exp (-(b.re * T ^ 2 - 2 * |b.im| * |c| * T - b.re * c ^ 2)) :=
+              NormedSpace.exp (-(b.re * T ^ 2 - 2 * |b.im| * |c| * T - b.re * c ^ 2)) :=
     by
     intro T hT c y hy
     rw [norm_cexp_neg_mul_sq_add_mul_I b, exp_le_exp, neg_le_neg_iff]
@@ -552,7 +552,7 @@ theorem integrable_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
   rw [← has_finite_integral_norm_iff]
   simp_rw [norm_cexp_neg_mul_sq_add_mul_I' hb.ne', neg_sub _ (c ^ 2 * _),
     sub_eq_add_neg _ (b.re * _), Real.exp_add]
-  suffices integrable fun x : ℝ => exp (-(b.re * x ^ 2)) by
+  suffices integrable fun x : ℝ => NormedSpace.exp (-(b.re * x ^ 2)) by
     exact (integrable.comp_sub_right this (b.im * c / b.re)).HasFiniteIntegral.const_mul _
   simp_rw [← neg_mul]
   apply integrable_exp_neg_mul_sq hb
@@ -646,7 +646,7 @@ theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
   convert _root_.fourier_transform_gaussian h1 (-2 * π * t) using 1
   · congr 1 with x : 1
     congr 2
-    all_goals push_cast ; ring
+    all_goals push_cast; ring
   · conv_lhs => rw [mul_comm]
     congr 2
     · field_simp [of_real_ne_zero.mpr pi_ne_zero]; ring

@@ -129,7 +129,6 @@ theorem N₁Γ₀_inv_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
 #align algebraic_topology.dold_kan.N₁Γ₀_inv_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_inv_app_f_f
 -/
 
-#print AlgebraicTopology.DoldKan.N₂Γ₂_toKaroubi /-
 theorem N₂Γ₂_toKaroubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ = Γ₀ ⋙ N₁ :=
   by
   have h :=
@@ -143,7 +142,6 @@ theorem N₂Γ₂_toKaroubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ 
   dsimp [N₂, Γ₂, functor_extension₁] at h h' ⊢
   rw [← functor.assoc, h, functor.assoc, h']
 #align algebraic_topology.dold_kan.N₂Γ₂_to_karoubi AlgebraicTopology.DoldKan.N₂Γ₂_toKaroubi
--/
 
 #print AlgebraicTopology.DoldKan.N₂Γ₂ToKaroubiIso /-
 /-- Compatibility isomorphism between `to_karoubi _ ⋙ Γ₂ ⋙ N₂` and `Γ₀ ⋙ N₁` which

@@ -233,14 +233,14 @@ theorem ext_iff {c d : Con M} : (∀ x y, c x y ↔ d x y) ↔ c = d :=
 #align add_con.ext_iff AddCon.ext_iff
 -/
 
-#print Con.ext'_iff /-
+#print Con.coe_inj /-
 /-- Two congruence relations are equal iff their underlying binary relations are equal. -/
 @[to_additive
       "Two additive congruence relations are equal iff their underlying binary relations\nare equal."]
-theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
+theorem coe_inj {c d : Con M} : c.R = d.R ↔ c = d :=
   ⟨ext', fun h => h ▸ rfl⟩
-#align con.ext'_iff Con.ext'_iff
-#align add_con.ext'_iff AddCon.ext'_iff
+#align con.ext'_iff Con.coe_inj
+#align add_con.ext'_iff AddCon.coe_inj
 -/
 
 #print Con.mulKer /-
@@ -499,15 +499,15 @@ theorem sInf_toSetoid (S : Set (Con M)) : (sInf S).toSetoid = sInf (toSetoid '' 
 #align add_con.Inf_to_setoid AddCon.sInf_toSetoid
 -/
 
-#print Con.sInf_def /-
+#print Con.coe_sInf /-
 /-- The infimum of a set of congruence relations is the same as the infimum of the set's image
     under the map to the underlying binary relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
-theorem sInf_def (S : Set (Con M)) : ⇑(sInf S) = sInf (@Set.image (Con M) (M → M → Prop) coeFn S) :=
+theorem coe_sInf (S : Set (Con M)) : ⇑(sInf S) = sInf (@Set.image (Con M) (M → M → Prop) coeFn S) :=
   by ext; simp only [sInf_image, iInf_apply, iInf_Prop_eq]; rfl
-#align con.Inf_def Con.sInf_def
-#align add_con.Inf_def AddCon.sInf_def
+#align con.Inf_def Con.coe_sInf
+#align add_con.Inf_def AddCon.coe_sInf
 -/
 
 @[to_additive]
@@ -538,15 +538,15 @@ instance : CompleteLattice (Con M) :=
     bot := { Setoid.completeLattice.bot with mul' := fun _ _ _ _ h1 h2 => h1 ▸ h2 ▸ rfl }
     bot_le := fun c x y h => h ▸ c.refl x }
 
-#print Con.inf_def /-
+#print Con.coe_inf /-
 /-- The infimum of two congruence relations equals the infimum of the underlying binary
     operations. -/
 @[to_additive
       "The infimum of two additive congruence relations equals the infimum of the\nunderlying binary operations."]
-theorem inf_def {c d : Con M} : (c ⊓ d).R = c.R ⊓ d.R :=
+theorem coe_inf {c d : Con M} : (c ⊓ d).R = c.R ⊓ d.R :=
   rfl
-#align con.inf_def Con.inf_def
-#align add_con.inf_def AddCon.inf_def
+#align con.inf_def Con.coe_inf
+#align add_con.inf_def AddCon.coe_inf
 -/
 
 #print Con.inf_iff_and /-

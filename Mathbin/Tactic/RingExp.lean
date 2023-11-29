@@ -162,7 +162,7 @@ inductive ExType : Type
   | base : ex_type
   | Sum : ex_type
   | Prod : ex_type
-  | exp : ex_type
+  | NormedSpace.exp : ex_type
   deriving DecidableEq, Inhabited
 #align tactic.ring_exp.ex_type Tactic.RingExp.ExType
 
@@ -226,7 +226,7 @@ unsafe inductive ex : ExType → Type
   | Prod (info : ex_info) : ex exp → ex Prod → ex Prod
   | var (info : ex_info) : atom → ex base
   | sum_b (info : ex_info) : ex Sum → ex base
-  | exp (info : ex_info) : ex base → ex Prod → ex exp
+  | NormedSpace.exp (info : ex_info) : ex base → ex Prod → ex exp
 #align tactic.ring_exp.ex tactic.ring_exp.ex
 
 /-- Return the proof information associated to the `ex`.
@@ -238,7 +238,7 @@ unsafe def ex.info : ∀ {et : ExType} (ps : ex et), ex_info
   | Prod, ex.prod i _ _ => i
   | base, ex.var i _ => i
   | base, ex.sum_b i _ => i
-  | exp, ex.exp i _ _ => i
+  | NormedSpace.exp, ex.exp i _ _ => i
 #align tactic.ring_exp.ex.info tactic.ring_exp.ex.info
 
 /-- Return the original, non-normalized version of this `ex`.
@@ -288,7 +288,7 @@ unsafe def ex.set_info : ∀ {et : ExType} (ps : ex et), Option expr → Option 
   | Prod, ex.prod i p ps, o, pf => ex.prod (i.Set o pf) p ps
   | base, ex.var i x, o, pf => ex.var (i.Set o pf) x
   | base, ex.sum_b i ps, o, pf => ex.sum_b (i.Set o pf) ps
-  | exp, ex.exp i p ps, o, pf => ex.exp (i.Set o pf) p ps
+  | NormedSpace.exp, ex.exp i p ps, o, pf => ex.exp (i.Set o pf) p ps
 #align tactic.ring_exp.ex.set_info tactic.ring_exp.ex.set_info
 
 instance coeffHasRepr : Repr Coeff :=
@@ -303,7 +303,7 @@ unsafe def ex.repr : ∀ {et : ExType}, ex et → String
   | Prod, ex.prod _ p ps => ex.repr p ++ " * " ++ ex.repr ps
   | base, ex.var _ x => repr x
   | base, ex.sum_b _ ps => "(" ++ ex.repr ps ++ ")"
-  | exp, ex.exp _ p ps => ex.repr p ++ " ^ " ++ ex.repr ps
+  | NormedSpace.exp, ex.exp _ p ps => ex.repr p ++ " ^ " ++ ex.repr ps
 #align tactic.ring_exp.ex.repr tactic.ring_exp.ex.repr
 
 unsafe instance {et : ExType} : Repr (ex et) :=
@@ -327,7 +327,7 @@ unsafe def ex.eq : ∀ {et : ExType}, ex et → ex et → Bool
   | base, ex.var _ _, ex.sum_b _ _ => false
   | base, ex.sum_b _ _, ex.var _ _ => false
   | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.Eq qs
-  | exp, ex.exp _ p ps, ex.exp _ q qs => p.Eq q && ps.Eq qs
+  | NormedSpace.exp, ex.exp _ p ps, ex.exp _ q qs => p.Eq q && ps.Eq qs
 #align tactic.ring_exp.ex.eq tactic.ring_exp.ex.eq
 
 /-- The ordering on expressions.
@@ -346,7 +346,7 @@ unsafe def ex.lt : ∀ {et : ExType}, ex et → ex et → Bool
   | base, ex.var _ _, ex.sum_b _ _ => true
   | base, ex.sum_b _ _, ex.var _ _ => false
   | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.lt qs
-  | exp, ex.exp _ p ps, ex.exp _ q qs => p.lt q || p.Eq q && ps.lt qs
+  | NormedSpace.exp, ex.exp _ p ps, ex.exp _ q qs => p.lt q || p.Eq q && ps.lt qs
 #align tactic.ring_exp.ex.lt tactic.ring_exp.ex.lt
 
 end Expression
@@ -1319,10 +1319,10 @@ unsafe def ex.simple : ∀ {et : ExType}, ex et → ring_exp_m (expr × expr)
     let (ps_p, ps_pf) ← ps.simple
     Prod.mk <$> mk_mul [p_p, ps_p] <*> mk_app_csr `` prod_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
   | base, ex.sum_b pps_i ps => ps.simple
-  | exp, ex.exp pps_i p (ex.coeff _ ⟨⟨1, 1, _, _⟩⟩) => do
+  | NormedSpace.exp, ex.exp pps_i p (ex.coeff _ ⟨⟨1, 1, _, _⟩⟩) => do
     let (p_p, p_pf) ← p.simple
     Prod.mk p_p <$> mk_app_csr `` simple_pf_exp_one [p, p_p, p_pf]
-  | exp, ex.exp pps_i p ps => do
+  | NormedSpace.exp, ex.exp pps_i p ps => do
     let (p_p, p_pf) ← p.simple
     let (ps_p, ps_pf) ← in_exponent <| ps.simple
     Prod.mk <$> mk_pow [p_p, ps_p] <*> mk_app_csr `` exp_congr [p, p_p, ps, ps_p, p_pf, ps_pf]

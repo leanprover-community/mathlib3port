@@ -148,7 +148,7 @@ theorem product_subset_product_right (ht : t ⊆ t') : s ×ˢ t ⊆ s ×ˢ t' :=
 #print Finset.map_swap_product /-
 theorem map_swap_product (s : Finset α) (t : Finset β) :
     (t ×ˢ s).map ⟨Prod.swap, Prod.swap_injective⟩ = s ×ˢ t :=
-  coe_injective <| by push_cast ; exact Set.image_swap_prod _ _
+  coe_injective <| by push_cast; exact Set.image_swap_prod _ _
 #align finset.map_swap_product Finset.map_swap_product
 -/
 
@@ -158,7 +158,7 @@ theorem map_swap_product (s : Finset α) (t : Finset β) :
 @[simp]
 theorem image_swap_product [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     (t ×ˢ s).image Prod.swap = s ×ˢ t :=
-  coe_injective <| by push_cast ; exact Set.image_swap_prod _ _
+  coe_injective <| by push_cast; exact Set.image_swap_prod _ _
 #align finset.image_swap_product Finset.image_swap_product
 -/
 
@@ -548,7 +548,7 @@ theorem diag_inter : (s ∩ t).diag = s.diag ∩ t.diag :=
 
 #print Finset.offDiag_inter /-
 theorem offDiag_inter : (s ∩ t).offDiag = s.offDiag ∩ t.offDiag :=
-  coe_injective <| by push_cast ; exact Set.offDiag_inter _ _
+  coe_injective <| by push_cast; exact Set.offDiag_inter _ _
 #align finset.off_diag_inter Finset.offDiag_inter
 -/
 
@@ -565,7 +565,7 @@ variable {s t}
 #print Finset.offDiag_union /-
 theorem offDiag_union (h : Disjoint s t) :
     (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s :=
-  coe_injective <| by push_cast ; exact Set.offDiag_union (disjoint_coe.2 h)
+  coe_injective <| by push_cast; exact Set.offDiag_union (disjoint_coe.2 h)
 #align finset.off_diag_union Finset.offDiag_union
 -/
 

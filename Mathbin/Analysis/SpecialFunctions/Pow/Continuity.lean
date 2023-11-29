@@ -70,7 +70,7 @@ theorem cpow_eq_nhds' {p : ℂ × ℂ} (hp_fst : p.fst ≠ 0) :
 -- Continuity of `λ x, a ^ x`: union of these two lemmas is optimal.
 theorem continuousAt_const_cpow {a b : ℂ} (ha : a ≠ 0) : ContinuousAt (fun x => a ^ x) b :=
   by
-  have cpow_eq : (fun x : ℂ => a ^ x) = fun x => exp (log a * x) := by ext1 b;
+  have cpow_eq : (fun x : ℂ => a ^ x) = fun x => NormedSpace.exp (log a * x) := by ext1 b;
     rw [cpow_def_of_ne_zero ha]
   rw [cpow_eq]
   exact continuous_exp.continuous_at.comp (ContinuousAt.mul continuousAt_const continuousAt_id)
@@ -273,7 +273,7 @@ theorem continuousAt_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.2) :
   cases' p with x y
   obtain hx | rfl := ne_or_eq x 0
   · exact continuous_at_rpow_of_ne (x, y) hx
-  have A : tendsto (fun p : ℝ × ℝ => exp (log p.1 * p.2)) (𝓝[≠] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
+  have A : tendsto (fun p : ℝ × ℝ => NormedSpace.exp (log p.1 * p.2)) (𝓝[≠] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
     tendsto_exp_at_bot.comp
       ((tendsto_log_nhds_within_zero.comp tendsto_fst).atBot_mul hp tendsto_snd)
   have B : tendsto (fun p : ℝ × ℝ => p.1 ^ p.2) (𝓝[≠] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
@@ -468,7 +468,8 @@ theorem continuousAt_ofReal_cpow (x : ℝ) (y : ℂ) (h : 0 < y.re ∨ x ≠ 0) 
       continuous_of_real.continuous_at.prod_map continuousAt_id
     exact @ContinuousAt.comp (ℝ × ℂ) (ℂ × ℂ) ℂ _ _ _ _ (fun p => ⟨↑p.1, p.2⟩) ⟨0, y⟩ A B
   · -- x < 0 : difficult case
-    suffices ContinuousAt (fun p => (-↑p.1) ^ p.2 * exp (π * I * p.2) : ℝ × ℂ → ℂ) (x, y)
+    suffices
+      ContinuousAt (fun p => (-↑p.1) ^ p.2 * NormedSpace.exp (π * I * p.2) : ℝ × ℂ → ℂ) (x, y)
       by
       refine' this.congr (eventually_of_mem (prod_mem_nhds (Iio_mem_nhds hx) univ_mem) _)
       exact fun p hp => (of_real_cpow_of_nonpos (le_of_lt hp.1) p.2).symm

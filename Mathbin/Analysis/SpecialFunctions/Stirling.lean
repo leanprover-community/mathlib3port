@@ -220,7 +220,7 @@ theorem stirlingSeq'_pos (n : ℕ) : 0 < stirlingSeq n.succ := by unfold stirlin
 theorem stirlingSeq'_bounded_by_pos_constant : ∃ a, 0 < a ∧ ∀ n : ℕ, a ≤ stirlingSeq n.succ :=
   by
   cases' log_stirling_seq_bounded_by_constant with c h
-  refine' ⟨exp c, exp_pos _, fun n => _⟩
+  refine' ⟨NormedSpace.exp c, exp_pos _, fun n => _⟩
   rw [← le_log_iff_exp_le (stirling_seq'_pos n)]
   exact h n
 #align stirling.stirling_seq'_bounded_by_pos_constant Stirling.stirlingSeq'_bounded_by_pos_constant
@@ -281,7 +281,7 @@ theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0)
   rw [sq_sqrt, sq_sqrt]
   any_goals positivity
   have : (n : ℝ) ≠ 0 := cast_ne_zero.mpr hn
-  have : exp 1 ≠ 0 := exp_ne_zero 1
+  have : NormedSpace.exp 1 ≠ 0 := exp_ne_zero 1
   have : ((2 * n)! : ℝ) ≠ 0 := cast_ne_zero.mpr (factorial_ne_zero (2 * n))
   have : 2 * (n : ℝ) + 1 ≠ 0 := by norm_cast; exact succ_ne_zero (2 * n)
   field_simp

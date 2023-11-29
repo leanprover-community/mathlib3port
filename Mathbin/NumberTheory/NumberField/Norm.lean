@@ -73,7 +73,7 @@ theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) 
   refine'
     @isUnit_of_mul_isUnit_right (𝓞 L) _
       ⟨(univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x,
-        prod_mem fun σ hσ => map_isIntegral (σ : L →+* L).toIntAlgHom x.2⟩
+        prod_mem fun σ hσ => IsIntegral.map (σ : L →+* L).toIntAlgHom x.2⟩
       _ _
   convert hx using 1
   ext
@@ -94,7 +94,7 @@ theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L
   classical
   have hint : ∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x ∈ 𝓞 L :=
     Subalgebra.prod_mem _ fun σ hσ =>
-      (mem_ring_of_integers _ _).2 (map_isIntegral σ (ring_of_integers.is_integral_coe x))
+      (mem_ring_of_integers _ _).2 (IsIntegral.map σ (ring_of_integers.is_integral_coe x))
   refine' ⟨⟨_, hint⟩, Subtype.ext _⟩
   rw [coe_algebra_map_norm K x, norm_eq_prod_automorphisms]
   simp [← Finset.mul_prod_erase _ _ (mem_univ AlgEquiv.refl)]
@@ -119,7 +119,7 @@ theorem isUnit_norm [CharZero K] {x : 𝓞 F} : IsUnit (norm K x) ↔ IsUnit x :
   let L := normalClosure K F (AlgebraicClosureAux F)
   haveI : FiniteDimensional F L := FiniteDimensional.right K F L
   haveI : IsAlgClosure K (AlgebraicClosureAux F) :=
-    IsAlgClosure.ofAlgebraic K F (AlgebraicClosureAux F) (Algebra.isAlgebraic_of_finite K F)
+    IsAlgClosure.ofAlgebraic K F (AlgebraicClosureAux F) (Algebra.IsAlgebraic.of_finite K F)
   haveI : IsGalois F L := IsGalois.tower_top_of_isGalois K F L
   calc
     IsUnit (norm K x) ↔ IsUnit ((norm K) x ^ finrank F L) :=

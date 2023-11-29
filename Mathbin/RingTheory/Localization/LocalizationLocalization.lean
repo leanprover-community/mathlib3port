@@ -105,8 +105,7 @@ theorem localization_localization_surj [IsLocalization N T] (x : T) :
 #align is_localization.localization_localization_surj IsLocalization.localization_localization_surj
 -/
 
-#print IsLocalization.localization_localization_eq_iff_exists /-
-theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
+theorem localization_localization_exists_of_eq [IsLocalization N T] (x y : R) :
     algebraMap R T x = algebraMap R T y ↔
       ∃ c : localizationLocalizationSubmodule M N, ↑c * x = ↑c * y :=
   by
@@ -131,8 +130,7 @@ theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
     refine' (IsLocalization.map_units S z).mul_right_inj.mp _
     rw [← mul_assoc, mul_comm _ ↑z₁, ← eq₂, ← map_mul, eq₁, map_mul, eq₂, ← mul_assoc,
       mul_comm _ ↑z₁]
-#align is_localization.localization_localization_eq_iff_exists IsLocalization.localization_localization_eq_iff_exists
--/
+#align is_localization.localization_localization_eq_iff_exists IsLocalization.localization_localization_exists_of_eqₓ
 
 #print IsLocalization.localization_localization_isLocalization /-
 /-- Given submodules `M ⊆ R` and `N ⊆ S = M⁻¹R`, with `f : R →+* S` the localization map, we have
@@ -142,7 +140,7 @@ theorem localization_localization_isLocalization [IsLocalization N T] :
     IsLocalization (localizationLocalizationSubmodule M N) T :=
   { map_units := localization_localization_map_units M N T
     surj := localization_localization_surj M N T
-    eq_iff_exists := localization_localization_eq_iff_exists M N T }
+    eq_iff_exists := localization_localization_exists_of_eq M N T }
 #align is_localization.localization_localization_is_localization IsLocalization.localization_localization_isLocalization
 -/
 

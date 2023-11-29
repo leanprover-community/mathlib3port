@@ -443,7 +443,7 @@ noncomputable def fintypeOfAdmissibleOfFinite : Fintype (ClassGroup S) :=
   let bS := b.map ((LinearMap.quotKerEquivRange _).symm ≪≫ₗ _)
   refine'
     fintype_of_admissible_of_algebraic L bS adm fun x =>
-      (IsFractionRing.isAlgebraic_iff R K L).mpr (Algebra.isAlgebraic_of_finite _ _ x)
+      (IsFractionRing.isAlgebraic_iff R K L).mpr (Algebra.IsAlgebraic.of_finite _ _ x)
   · rw [linear_map.ker_eq_bot.mpr]
     · exact Submodule.quotEquivOfEqBot _ rfl
     · exact IsIntegralClosure.algebraMap_injective _ R _

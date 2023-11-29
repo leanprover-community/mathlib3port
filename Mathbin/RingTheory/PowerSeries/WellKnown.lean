@@ -181,7 +181,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
     rescale a (exp A) * rescale b (exp A) = rescale (a + b) (exp A) :=
   by
   ext
-  simp only [coeff_mul, exp, rescale, coeff_mk, coe_mk, factorial,
+  simp only [coeff_mul, NormedSpace.exp, rescale, coeff_mk, coe_mk, factorial,
     nat.sum_antidiagonal_eq_sum_range_succ_mk, add_pow, sum_mul]
   apply sum_congr rfl
   rintro x hx
@@ -220,7 +220,7 @@ theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (
     simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
       coe_comp]
   simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply,
-    rescale_one] using pow_succ' (exp A) k
+    rescale_one] using pow_succ' (NormedSpace.exp A) k
 #align power_series.exp_pow_eq_rescale_exp PowerSeries.exp_pow_eq_rescale_exp
 -/
 

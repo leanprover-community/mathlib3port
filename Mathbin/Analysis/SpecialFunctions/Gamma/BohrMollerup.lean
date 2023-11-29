@@ -129,7 +129,7 @@ theorem Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma {s t a b : ℝ} (hs : 0 <
   by
   -- We will apply Hölder's inequality, for the conjugate exponents `p = 1 / a`
   -- and `q = 1 / b`, to the functions `f a s` and `f b t`, where `f` is as follows:
-  let f : ℝ → ℝ → ℝ → ℝ := fun c u x => exp (-c * x) * x ^ (c * (u - 1))
+  let f : ℝ → ℝ → ℝ → ℝ := fun c u x => NormedSpace.exp (-c * x) * x ^ (c * (u - 1))
   have e : is_conjugate_exponent (1 / a) (1 / b) := Real.isConjugateExponent_one_div ha hb hab
   have hab' : b = 1 - a := by linarith
   have hst : 0 < a * s + b * t := add_pos (mul_pos ha hs) (mul_pos hb ht)
@@ -139,7 +139,8 @@ theorem Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma {s t a b : ℝ} (hs : 0 <
   have posf' : ∀ c u : ℝ, ∀ᵐ x : ℝ ∂volume.restrict (Ioi 0), 0 ≤ f c u x := fun c u =>
     (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ (posf c u))
   have fpow :
-    ∀ {c x : ℝ} (hc : 0 < c) (u : ℝ) (hx : 0 < x), exp (-x) * x ^ (u - 1) = f c u x ^ (1 / c) :=
+    ∀ {c x : ℝ} (hc : 0 < c) (u : ℝ) (hx : 0 < x),
+      NormedSpace.exp (-x) * x ^ (u - 1) = f c u x ^ (1 / c) :=
     by
     intro c x hc u hx
     dsimp only [f]
@@ -174,8 +175,8 @@ theorem Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma {s t a b : ℝ} (hs : 0 <
     1
   · refine' set_integral_congr measurableSet_Ioi fun x hx => _
     dsimp only [f]
-    have A : exp (-x) = exp (-a * x) * exp (-b * x) := by
-      rw [← exp_add, ← add_mul, ← neg_add, hab, neg_one_mul]
+    have A : NormedSpace.exp (-x) = NormedSpace.exp (-a * x) * NormedSpace.exp (-b * x) := by
+      rw [← NormedSpace.exp_add, ← add_mul, ← neg_add, hab, neg_one_mul]
     have B : x ^ (a * s + b * t - 1) = x ^ (a * (s - 1)) * x ^ (b * (t - 1)) := by
       rw [← rpow_add hx, hab']; congr 1; ring
     rw [A, B]
@@ -251,7 +252,7 @@ theorem f_add_nat_eq (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = f y + log y)
   by
   induction' n with n hn
   · simp
-  · have : x + n.succ = x + n + 1 := by push_cast ; ring
+  · have : x + n.succ = x + n + 1 := by push_cast; ring
     rw [this, hf_feq, hn]
     rw [Finset.range_succ, Finset.sum_insert Finset.not_mem_range_self]
     abel

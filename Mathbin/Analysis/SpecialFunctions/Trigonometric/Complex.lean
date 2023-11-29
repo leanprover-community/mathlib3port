@@ -34,10 +34,13 @@ open scoped Real
 #print Complex.cos_eq_zero_iff /-
 theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 :=
   by
-  have h : (exp (θ * I) + exp (-θ * I)) / 2 = 0 ↔ exp (2 * θ * I) = -1 :=
+  have h :
+    (NormedSpace.exp (θ * I) + NormedSpace.exp (-θ * I)) / 2 = 0 ↔
+      NormedSpace.exp (2 * θ * I) = -1 :=
     by
-    rw [@div_eq_iff _ _ (exp (θ * I) + exp (-θ * I)) 2 0 two_ne_zero, MulZeroClass.zero_mul,
-      add_eq_zero_iff_eq_neg, neg_eq_neg_one_mul, ← div_eq_iff (exp_ne_zero _), ← exp_sub]
+    rw [@div_eq_iff _ _ (NormedSpace.exp (θ * I) + NormedSpace.exp (-θ * I)) 2 0 two_ne_zero,
+      MulZeroClass.zero_mul, add_eq_zero_iff_eq_neg, neg_eq_neg_one_mul, ←
+      div_eq_iff (exp_ne_zero _), ← exp_sub]
     field_simp only; congr 3; ring
   rw [cos, h, ← exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_comm]
   refine' exists_congr fun x => _
@@ -206,7 +209,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
     cos z = w ↔ exp (z * I) ^ 2 - 2 * w * exp (z * I) + 1 = 0 :=
   by
   rw [← sub_eq_zero]
-  field_simp [cos, exp_neg, exp_ne_zero]
+  field_simp [cos, NormedSpace.exp_neg, exp_ne_zero]
   refine' Eq.congr _ rfl
   ring
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic

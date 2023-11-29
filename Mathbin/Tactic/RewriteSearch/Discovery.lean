@@ -82,14 +82,14 @@ private unsafe def from_tracked (rule_index : ℕ) (tracked : ℕ × tracked_rew
 private unsafe def rewrites_for_rule (exp : expr) (cfg : config) (numbered_rule : ℕ × expr × Bool) :
     tactic (List rewrite) := do
   let (rule_index, rule) := numbered_rule
-  let tracked ← all_rewrites exp rule cfg.to_cfg
+  let tracked ← all_rewrites NormedSpace.exp rule cfg.to_cfg
   return (List.map (from_tracked rule_index) tracked)
 
 /-- Get all rewrites that start at the given expression and use one of the given rewrite rules.
 -/
 unsafe def get_rewrites (rules : List (expr × Bool)) (exp : expr) (cfg : config) :
     tactic (Buffer rewrite) := do
-  let lists ← List.mapM (rewrites_for_rule exp cfg) rules.enum
+  let lists ← List.mapM (rewrites_for_rule NormedSpace.exp cfg) rules.enum
   return (List.foldl Buffer.appendList Buffer.nil Lists)
 #align tactic.rewrite_search.get_rewrites tactic.rewrite_search.get_rewrites
 

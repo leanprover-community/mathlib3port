@@ -225,7 +225,7 @@ variable {x y z : ℝ}
 
 #print Real.rpow_add /-
 theorem rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z := by
-  simp only [rpow_def_of_pos hx, mul_add, exp_add]
+  simp only [rpow_def_of_pos hx, mul_add, NormedSpace.exp_add]
 #align real.rpow_add Real.rpow_add
 -/
 
@@ -288,7 +288,7 @@ theorem rpow_sum_of_nonneg {ι : Type _} {a : ℝ} (ha : 0 ≤ a) {s : Finset ι
 
 #print Real.rpow_neg /-
 theorem rpow_neg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : x ^ (-y) = (x ^ y)⁻¹ := by
-  simp only [rpow_def_of_nonneg hx] <;> split_ifs <;> simp_all [exp_neg]
+  simp only [rpow_def_of_nonneg hx] <;> split_ifs <;> simp_all [NormedSpace.exp_neg]
 #align real.rpow_neg Real.rpow_neg
 -/
 
@@ -327,8 +327,8 @@ theorem ofReal_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
   rcases hx.eq_or_lt with (rfl | hlt)
   · rcases eq_or_ne y 0 with (rfl | hy) <;> simp [*]
   have hne : (x : ℂ) ≠ 0 := of_real_ne_zero.mpr hlt.ne
-  rw [cpow_def_of_ne_zero hne, cpow_def_of_ne_zero (neg_ne_zero.2 hne), ← exp_add, ← add_mul, log,
-    log, abs.map_neg, arg_of_real_of_neg hlt, ← of_real_neg,
+  rw [cpow_def_of_ne_zero hne, cpow_def_of_ne_zero (neg_ne_zero.2 hne), ← NormedSpace.exp_add, ←
+    add_mul, log, log, abs.map_neg, arg_of_real_of_neg hlt, ← of_real_neg,
     arg_of_real_of_nonneg (neg_nonneg.2 hx), of_real_zero, MulZeroClass.zero_mul, add_zero]
 #align complex.of_real_cpow_of_nonpos Complex.ofReal_cpow_of_nonpos
 -/
@@ -492,7 +492,7 @@ theorem mul_rpow {x y z : ℝ} (h : 0 ≤ x) (h₁ : 0 ≤ y) : (x * y) ^ z = x 
     have hy : 0 < y := by
       cases' lt_or_eq_of_le h₁ with h₂ h₂; · exact h₂
       exfalso; apply h_3; exact Eq.symm h₂
-    rw [log_mul (ne_of_gt hx) (ne_of_gt hy), add_mul, exp_add]
+    rw [log_mul (ne_of_gt hx) (ne_of_gt hy), add_mul, NormedSpace.exp_add]
   · exact h₁
   · exact h
   · exact mul_nonneg h h₁

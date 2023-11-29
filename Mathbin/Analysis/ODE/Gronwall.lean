@@ -97,8 +97,8 @@ theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
   by_cases hK : K = 0
   · simp only [gronwallBound, if_pos hK, MulZeroClass.mul_zero, add_zero]
   ·
-    simp only [gronwallBound, if_neg hK, MulZeroClass.mul_zero, exp_zero, sub_self, mul_one,
-      add_zero]
+    simp only [gronwallBound, if_neg hK, MulZeroClass.mul_zero, NormedSpace.exp_zero, sub_self,
+      mul_one, add_zero]
 #align gronwall_bound_x0 gronwallBound_x0
 -/
 
@@ -106,7 +106,7 @@ theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
 theorem gronwallBound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) :=
   by
   by_cases hK : K = 0
-  · simp only [gronwallBound_K0, hK, MulZeroClass.zero_mul, exp_zero, add_zero, mul_one]
+  · simp only [gronwallBound_K0, hK, MulZeroClass.zero_mul, NormedSpace.exp_zero, add_zero, mul_one]
   · simp only [gronwallBound_of_K_ne_0 hK, zero_div, MulZeroClass.zero_mul, add_zero]
 #align gronwall_bound_ε0 gronwallBound_ε0
 -/

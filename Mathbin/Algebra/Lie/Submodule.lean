@@ -724,30 +724,31 @@ theorem incl_eq_val : (N.incl : N → M) = Subtype.val :=
 
 variable {N N'} (h : N ≤ N')
 
-#print LieSubmodule.homOfLe /-
+#print LieSubmodule.inclusion /-
 /-- Given two nested Lie submodules `N ⊆ N'`, the inclusion `N ↪ N'` is a morphism of Lie modules.-/
-def homOfLe : N →ₗ⁅R,L⁆ N' :=
-  { Submodule.ofLe (show N.toSubmodule ≤ N'.toSubmodule from h) with map_lie' := fun x m => rfl }
-#align lie_submodule.hom_of_le LieSubmodule.homOfLe
+def inclusion : N →ₗ⁅R,L⁆ N' :=
+  { Submodule.inclusion (show N.toSubmodule ≤ N'.toSubmodule from h) with
+    map_lie' := fun x m => rfl }
+#align lie_submodule.hom_of_le LieSubmodule.inclusion
 -/
 
-#print LieSubmodule.coe_homOfLe /-
+#print LieSubmodule.coe_inclusion /-
 @[simp]
-theorem coe_homOfLe (m : N) : (homOfLe h m : M) = m :=
+theorem coe_inclusion (m : N) : (inclusion h m : M) = m :=
   rfl
-#align lie_submodule.coe_hom_of_le LieSubmodule.coe_homOfLe
+#align lie_submodule.coe_hom_of_le LieSubmodule.coe_inclusion
 -/
 
-#print LieSubmodule.homOfLe_apply /-
-theorem homOfLe_apply (m : N) : homOfLe h m = ⟨m.1, h m.2⟩ :=
+#print LieSubmodule.inclusion_apply /-
+theorem inclusion_apply (m : N) : inclusion h m = ⟨m.1, h m.2⟩ :=
   rfl
-#align lie_submodule.hom_of_le_apply LieSubmodule.homOfLe_apply
+#align lie_submodule.hom_of_le_apply LieSubmodule.inclusion_apply
 -/
 
-#print LieSubmodule.homOfLe_injective /-
-theorem homOfLe_injective : Function.Injective (homOfLe h) := fun x y => by
+#print LieSubmodule.inclusion_injective /-
+theorem inclusion_injective : Function.Injective (inclusion h) := fun x y => by
   simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
-#align lie_submodule.hom_of_le_injective LieSubmodule.homOfLe_injective
+#align lie_submodule.hom_of_le_injective LieSubmodule.inclusion_injective
 -/
 
 end InclusionMaps
@@ -1329,31 +1330,33 @@ theorem bot_of_map_eq_bot {I : LieIdeal R L} (h₁ : Function.Injective f) (h₂
 #align lie_ideal.bot_of_map_eq_bot LieIdeal.bot_of_map_eq_bot
 -/
 
-#print LieIdeal.homOfLe /-
+#print LieIdeal.inclusion /-
 /-- Given two nested Lie ideals `I₁ ⊆ I₂`, the inclusion `I₁ ↪ I₂` is a morphism of Lie algebras. -/
-def homOfLe {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) : I₁ →ₗ⁅R⁆ I₂ :=
-  { Submodule.ofLe (show I₁.toSubmodule ≤ I₂.toSubmodule from h) with map_lie' := fun x y => rfl }
-#align lie_ideal.hom_of_le LieIdeal.homOfLe
+def inclusion {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) : I₁ →ₗ⁅R⁆ I₂ :=
+  { Submodule.inclusion (show I₁.toSubmodule ≤ I₂.toSubmodule from h) with
+    map_lie' := fun x y => rfl }
+#align lie_ideal.hom_of_le LieIdeal.inclusion
 -/
 
-#print LieIdeal.coe_homOfLe /-
+#print LieIdeal.coe_inclusion /-
 @[simp]
-theorem coe_homOfLe {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) (x : I₁) : (homOfLe h x : L) = x :=
+theorem coe_inclusion {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) (x : I₁) : (inclusion h x : L) = x :=
   rfl
-#align lie_ideal.coe_hom_of_le LieIdeal.coe_homOfLe
+#align lie_ideal.coe_hom_of_le LieIdeal.coe_inclusion
 -/
 
-#print LieIdeal.homOfLe_apply /-
-theorem homOfLe_apply {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) (x : I₁) : homOfLe h x = ⟨x.1, h x.2⟩ :=
+#print LieIdeal.inclusion_apply /-
+theorem inclusion_apply {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) (x : I₁) :
+    inclusion h x = ⟨x.1, h x.2⟩ :=
   rfl
-#align lie_ideal.hom_of_le_apply LieIdeal.homOfLe_apply
+#align lie_ideal.hom_of_le_apply LieIdeal.inclusion_apply
 -/
 
-#print LieIdeal.homOfLe_injective /-
-theorem homOfLe_injective {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) : Function.Injective (homOfLe h) :=
-  fun x y => by
+#print LieIdeal.inclusion_injective /-
+theorem inclusion_injective {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) :
+    Function.Injective (inclusion h) := fun x y => by
   simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
-#align lie_ideal.hom_of_le_injective LieIdeal.homOfLe_injective
+#align lie_ideal.hom_of_le_injective LieIdeal.inclusion_injective
 -/
 
 #print LieIdeal.map_sup_ker_eq_map /-

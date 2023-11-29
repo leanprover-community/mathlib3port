@@ -689,8 +689,8 @@ protected theorem topologicalSpace_eq :
       ⨅ (s : Set α) (hs : s ∈ 𝔖),
         TopologicalSpace.induced s.restrict (UniformFun.topologicalSpace s β) :=
   by
-  simp only [UniformOnFun.topologicalSpace, toTopologicalSpace_iInf, toTopologicalSpace_iInf,
-    toTopologicalSpace_comap]
+  simp only [UniformOnFun.topologicalSpace, UniformSpace.toTopologicalSpace_iInf,
+    UniformSpace.toTopologicalSpace_iInf, UniformSpace.toTopologicalSpace_comap]
   rfl
 #align uniform_on_fun.topological_space_eq UniformOnFun.topologicalSpace_eq
 -/

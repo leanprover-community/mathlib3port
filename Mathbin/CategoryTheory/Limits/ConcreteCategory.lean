@@ -177,16 +177,16 @@ end Limits
 
 section Colimits
 
-#print CategoryTheory.Limits.cokernel_funext /-
+#print CategoryTheory.Limits.Concrete.cokernel_funext /-
 -- We don't mark this as an `@[ext]` lemma as we don't always want to work elementwise.
-theorem cokernel_funext {C : Type _} [Category C] [HasZeroMorphisms C] [ConcreteCategory C]
-    {M N K : C} {f : M ⟶ N} [HasCokernel f] {g h : cokernel f ⟶ K}
-    (w : ∀ n : N, g (cokernel.π f n) = h (cokernel.π f n)) : g = h :=
+theorem CategoryTheory.Limits.Concrete.cokernel_funext {C : Type _} [Category C]
+    [HasZeroMorphisms C] [ConcreteCategory C] {M N K : C} {f : M ⟶ N} [HasCokernel f]
+    {g h : cokernel f ⟶ K} (w : ∀ n : N, g (cokernel.π f n) = h (cokernel.π f n)) : g = h :=
   by
   apply coequalizer.hom_ext
   apply concrete_category.hom_ext _ _
   simpa using w
-#align category_theory.limits.cokernel_funext CategoryTheory.Limits.cokernel_funext
+#align category_theory.limits.cokernel_funext CategoryTheory.Limits.Concrete.cokernel_funext
 -/
 
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {J : Type v} [SmallCategory J]

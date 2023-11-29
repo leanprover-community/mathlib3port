@@ -79,7 +79,7 @@ theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
   convert hfg
   rw [hμ.eq_order_of]
   rw [← hμ.coe_to_roots_of_unity_coe]
-  rw [orderOf_units, orderOf_subgroup]
+  rw [orderOf_units, Subgroup.orderOf_coe]
 #align is_primitive_root.aut_to_pow_injective IsPrimitiveRoot.autToPow_injective
 -/
 
@@ -137,8 +137,9 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
       rw [← hζ.coe_to_roots_of_unity_coe] at key 
       simp only [← coe_coe, ← rootsOfUnity.coe_pow] at key 
       replace key := rootsOfUnity.coe_injective key
-      rw [pow_eq_pow_iff_modEq, ← orderOf_subgroup, ← orderOf_units, hζ.coe_to_roots_of_unity_coe, ←
-        (zeta_spec n K L).eq_orderOf, ← ZMod.eq_iff_modEq_nat] at key 
+      rw [pow_eq_pow_iff_modEq, ← Subgroup.orderOf_coe, ← orderOf_units,
+        hζ.coe_to_roots_of_unity_coe, ← (zeta_spec n K L).eq_orderOf, ← ZMod.eq_iff_modEq_nat] at
+        key 
       simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key 
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow

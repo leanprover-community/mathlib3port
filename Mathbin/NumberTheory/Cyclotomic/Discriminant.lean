@@ -52,9 +52,9 @@ theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
       fun i j => to_matrix_is_integral H₂ _ _ _ _
   · exact hζ.is_integral n.pos
   · refine' minpoly.isIntegrallyClosed_eq_field_fractions' _ (hζ.is_integral n.pos)
-  · exact isIntegral_sub (hζ.is_integral n.pos) isIntegral_one
+  · exact IsIntegral.sub (hζ.is_integral n.pos) isIntegral_one
   · refine' minpoly.isIntegrallyClosed_eq_field_fractions' _ _
-    exact isIntegral_sub (hζ.is_integral n.pos) isIntegral_one
+    exact IsIntegral.sub (hζ.is_integral n.pos) isIntegral_one
 #align is_primitive_root.discr_zeta_eq_discr_zeta_sub_one IsPrimitiveRoot.discr_zeta_eq_discr_zeta_sub_one
 -/
 

@@ -34,8 +34,8 @@ namespace Quaternion
 
 #print Quaternion.exp_coe /-
 @[simp, norm_cast]
-theorem exp_coe (r : ℝ) : exp ℝ (r : ℍ[ℝ]) = ↑(exp ℝ r) :=
-  (map_exp ℝ (algebraMap ℝ ℍ[ℝ]) (continuous_algebraMap _ _) _).symm
+theorem exp_coe (r : ℝ) : NormedSpace.exp ℝ (r : ℍ[ℝ]) = ↑(NormedSpace.exp ℝ r) :=
+  (NormedSpace.map_exp ℝ (algebraMap ℝ ℍ[ℝ]) (continuous_algebraMap _ _) _).symm
 #align quaternion.exp_coe Quaternion.exp_coe
 -/
 
@@ -45,12 +45,12 @@ at `‖q‖` tend to `c` and `s`, then the exponential series tends to `c + (s /
 theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s : ℝ}
     (hc : HasSum (fun n => (-1) ^ n * ‖q‖ ^ (2 * n) / (2 * n)!) c)
     (hs : HasSum (fun n => (-1) ^ n * ‖q‖ ^ (2 * n + 1) / (2 * n + 1)!) s) :
-    HasSum (fun n => expSeries ℝ _ n fun _ => q) (↑c + (s / ‖q‖) • q) :=
+    HasSum (fun n => NormedSpace.expSeries ℝ _ n fun _ => q) (↑c + (s / ‖q‖) • q) :=
   by
   replace hc := has_sum_coe.mpr hc
   replace hs := (hs.div_const ‖q‖).smul_const q
   obtain rfl | hq0 := eq_or_ne q 0
-  · simp_rw [expSeries_apply_zero, norm_zero, div_zero, zero_smul, add_zero]
+  · simp_rw [NormedSpace.expSeries_apply_zero, norm_zero, div_zero, zero_smul, add_zero]
     simp_rw [norm_zero] at hc 
     convert hc
     ext (_ | n) : 1
@@ -60,7 +60,7 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
     ·
       rw [zero_pow (mul_pos two_pos (Nat.succ_pos _)), MulZeroClass.mul_zero, zero_div,
         Pi.single_eq_of_ne n.succ_ne_zero, coe_zero]
-  simp_rw [expSeries_apply_eq]
+  simp_rw [NormedSpace.expSeries_apply_eq]
   have hq2 : q ^ 2 = -norm_sq q := sq_eq_neg_norm_sq.mpr hq
   have hqn := norm_ne_zero_iff.mpr hq0
   refine' HasSum.even_add_odd _ _
@@ -97,11 +97,11 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
 #print Quaternion.exp_of_re_eq_zero /-
 /-- The closed form for the quaternion exponential on imaginary quaternions. -/
 theorem exp_of_re_eq_zero (q : Quaternion ℝ) (hq : q.re = 0) :
-    exp ℝ q = ↑(Real.cos ‖q‖) + (Real.sin ‖q‖ / ‖q‖) • q :=
+    NormedSpace.exp ℝ q = ↑(Real.cos ‖q‖) + (Real.sin ‖q‖ / ‖q‖) • q :=
   by
-  rw [exp_eq_tsum]
+  rw [NormedSpace.exp_eq_tsum]
   refine' HasSum.tsum_eq _
-  simp_rw [← expSeries_apply_eq]
+  simp_rw [← NormedSpace.expSeries_apply_eq]
   exact has_sum_exp_series_of_imaginary hq (Real.hasSum_cos _) (Real.hasSum_sin _)
 #align quaternion.exp_of_re_eq_zero Quaternion.exp_of_re_eq_zero
 -/
@@ -109,34 +109,40 @@ theorem exp_of_re_eq_zero (q : Quaternion ℝ) (hq : q.re = 0) :
 #print Quaternion.exp_eq /-
 /-- The closed form for the quaternion exponential on arbitrary quaternions. -/
 theorem exp_eq (q : Quaternion ℝ) :
-    exp ℝ q = exp ℝ q.re • (↑(Real.cos ‖q.im‖) + (Real.sin ‖q.im‖ / ‖q.im‖) • q.im) :=
+    NormedSpace.exp ℝ q =
+      NormedSpace.exp ℝ q.re • (↑(Real.cos ‖q.im‖) + (Real.sin ‖q.im‖ / ‖q.im‖) • q.im) :=
   by
-  rw [← exp_of_re_eq_zero q.im q.im_re, ← coe_mul_eq_smul, ← exp_coe, ← exp_add_of_commute,
-    re_add_im]
+  rw [← exp_of_re_eq_zero q.im q.im_re, ← coe_mul_eq_smul, ← exp_coe, ←
+    NormedSpace.exp_add_of_commute, re_add_im]
   exact Algebra.commutes q.re (_ : ℍ[ℝ])
 #align quaternion.exp_eq Quaternion.exp_eq
 -/
 
 #print Quaternion.re_exp /-
-theorem re_exp (q : ℍ[ℝ]) : (exp ℝ q).re = exp ℝ q.re * Real.cos ‖q - q.re‖ := by simp [exp_eq]
+theorem re_exp (q : ℍ[ℝ]) :
+    (NormedSpace.exp ℝ q).re = NormedSpace.exp ℝ q.re * Real.cos ‖q - q.re‖ := by simp [exp_eq]
 #align quaternion.re_exp Quaternion.re_exp
 -/
 
 #print Quaternion.im_exp /-
-theorem im_exp (q : ℍ[ℝ]) : (exp ℝ q).im = (exp ℝ q.re * (Real.sin ‖q.im‖ / ‖q.im‖)) • q.im := by
+theorem im_exp (q : ℍ[ℝ]) :
+    (NormedSpace.exp ℝ q).im = (NormedSpace.exp ℝ q.re * (Real.sin ‖q.im‖ / ‖q.im‖)) • q.im := by
   simp [exp_eq, smul_smul]
 #align quaternion.im_exp Quaternion.im_exp
 -/
 
 #print Quaternion.normSq_exp /-
-theorem normSq_exp (q : ℍ[ℝ]) : normSq (exp ℝ q) = exp ℝ q.re ^ 2 :=
+theorem normSq_exp (q : ℍ[ℝ]) : normSq (NormedSpace.exp ℝ q) = NormedSpace.exp ℝ q.re ^ 2 :=
   calc
-    normSq (exp ℝ q) =
-        normSq (exp ℝ q.re • (↑(Real.cos ‖q.im‖) + (Real.sin ‖q.im‖ / ‖q.im‖) • q.im)) :=
+    normSq (NormedSpace.exp ℝ q) =
+        normSq
+          (NormedSpace.exp ℝ q.re • (↑(Real.cos ‖q.im‖) + (Real.sin ‖q.im‖ / ‖q.im‖) • q.im)) :=
       by rw [exp_eq]
-    _ = exp ℝ q.re ^ 2 * normSq (↑(Real.cos ‖q.im‖) + (Real.sin ‖q.im‖ / ‖q.im‖) • q.im) := by
-      rw [norm_sq_smul]
-    _ = exp ℝ q.re ^ 2 * (Real.cos ‖q.im‖ ^ 2 + Real.sin ‖q.im‖ ^ 2) :=
+    _ =
+        NormedSpace.exp ℝ q.re ^ 2 *
+          normSq (↑(Real.cos ‖q.im‖) + (Real.sin ‖q.im‖ / ‖q.im‖) • q.im) :=
+      by rw [norm_sq_smul]
+    _ = NormedSpace.exp ℝ q.re ^ 2 * (Real.cos ‖q.im‖ ^ 2 + Real.sin ‖q.im‖ ^ 2) :=
       by
       congr 1
       obtain hv | hv := eq_or_ne ‖q.im‖ 0
@@ -144,7 +150,7 @@ theorem normSq_exp (q : ℍ[ℝ]) : normSq (exp ℝ q) = exp ℝ q.re ^ 2 :=
       rw [norm_sq_add, norm_sq_smul, star_smul, coe_mul_eq_smul, smul_re, smul_re, star_re, im_re,
         smul_zero, smul_zero, MulZeroClass.mul_zero, add_zero, div_pow, norm_sq_coe,
         norm_sq_eq_norm_sq, ← sq, div_mul_cancel _ (pow_ne_zero _ hv)]
-    _ = exp ℝ q.re ^ 2 := by rw [Real.cos_sq_add_sin_sq, mul_one]
+    _ = NormedSpace.exp ℝ q.re ^ 2 := by rw [Real.cos_sq_add_sin_sq, mul_one]
 #align quaternion.norm_sq_exp Quaternion.normSq_exp
 -/
 
@@ -152,8 +158,8 @@ theorem normSq_exp (q : ℍ[ℝ]) : normSq (exp ℝ q) = exp ℝ q.re ^ 2 :=
 /-- Note that this implies that exponentials of pure imaginary quaternions are unit quaternions
 since in that case the RHS is `1` via `exp_zero` and `norm_one`. -/
 @[simp]
-theorem norm_exp (q : ℍ[ℝ]) : ‖exp ℝ q‖ = ‖exp ℝ q.re‖ := by
-  rw [norm_eq_sqrt_real_inner (exp ℝ q), inner_self, norm_sq_exp, Real.sqrt_sq_eq_abs,
+theorem norm_exp (q : ℍ[ℝ]) : ‖NormedSpace.exp ℝ q‖ = ‖NormedSpace.exp ℝ q.re‖ := by
+  rw [norm_eq_sqrt_real_inner (NormedSpace.exp ℝ q), inner_self, norm_sq_exp, Real.sqrt_sq_eq_abs,
     Real.norm_eq_abs]
 #align quaternion.norm_exp Quaternion.norm_exp
 -/

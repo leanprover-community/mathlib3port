@@ -428,9 +428,9 @@ theorem exp_neg_two_mul_le {x : ℝ} (hx : 0 < x) : exp (-2 * x) < exp (2 - ⌈x
     apply (add_le_add_left h₁.le _).trans_eq
     rw [← add_assoc, sub_add_cancel]
     rfl
-  have h₃ : exp (-(x + 1)) ≤ 1 / (x + 1) :=
+  have h₃ : NormedSpace.exp (-(x + 1)) ≤ 1 / (x + 1) :=
     by
-    rw [exp_neg, inv_eq_one_div]
+    rw [NormedSpace.exp_neg, inv_eq_one_div]
     refine' one_div_le_one_div_of_le (add_pos hx zero_lt_one) _
     apply le_trans _ (add_one_le_exp_of_nonneg <| add_nonneg hx.le zero_le_one)
     exact le_add_of_nonneg_right zero_le_one
@@ -447,7 +447,8 @@ theorem exp_neg_two_mul_le {x : ℝ} (hx : 0 < x) : exp (-2 * x) < exp (2 - ⌈x
 theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (⌊x / 2⌋₊ : ℝ) :=
   by
   apply lt_of_le_of_lt _ (sub_one_lt_floor _)
-  have : 0 < 1 - 2 / exp 1 := by
+  have : 0 < 1 - 2 / NormedSpace.exp 1 :=
+    by
     rw [sub_pos, div_lt_one (exp_pos _)]
     exact lt_of_le_of_lt (by norm_num) exp_one_gt_d9
   rwa [le_sub_comm, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ←
@@ -623,10 +624,13 @@ theorem roth_lower_bound_explicit (hN : 4096 ≤ N) :
     mul_comm (_ / _), mul_one_div, cast_sub hn₂, cast_two, same_sub_div hn.ne', exp_one_rpow,
     div_div, rpow_sub hN₀, rpow_one, div_div, div_eq_mul_inv]
   refine' mul_le_mul_of_nonneg_left _ (cast_nonneg _)
-  rw [mul_inv, mul_inv, ← exp_neg, ← rpow_neg (cast_nonneg _), neg_sub, ← div_eq_mul_inv]
-  have : exp (-4 * sqrt (log N)) = exp (-2 * sqrt (log N)) * exp (-2 * sqrt (log N)) :=
+  rw [mul_inv, mul_inv, ← NormedSpace.exp_neg, ← rpow_neg (cast_nonneg _), neg_sub, ←
+    div_eq_mul_inv]
+  have :
+    NormedSpace.exp (-4 * sqrt (log N)) =
+      NormedSpace.exp (-2 * sqrt (log N)) * NormedSpace.exp (-2 * sqrt (log N)) :=
     by
-    rw [← exp_add, ← add_mul]
+    rw [← NormedSpace.exp_add, ← add_mul]
     norm_num
   rw [this]
   refine'

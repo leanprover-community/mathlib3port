@@ -527,7 +527,7 @@ theorem le_op_norm_mul_pow_of_le {Ei : Fin n → Type _} [∀ i, NormedAddCommGr
 /-- The fundamental property of the operator norm of a continuous multilinear map:
 `‖f m‖` is bounded by `‖f‖` times the product of the `‖m i‖`, `nnnorm` version. -/
 theorem le_op_nnnorm : ‖f m‖₊ ≤ ‖f‖₊ * ∏ i, ‖m i‖₊ :=
-  NNReal.coe_le_coe.1 <| by push_cast ; exact f.le_op_norm m
+  NNReal.coe_le_coe.1 <| by push_cast; exact f.le_op_norm m
 #align continuous_multilinear_map.le_op_nnnorm ContinuousMultilinearMap.le_op_nnnorm
 -/
 
@@ -576,16 +576,16 @@ section
 
 variable (𝕜 G)
 
-#print ContinuousMultilinearMap.norm_ofSubsingleton_le /-
-theorem norm_ofSubsingleton_le [Subsingleton ι] (i' : ι) : ‖ofSubsingleton 𝕜 G i'‖ ≤ 1 :=
+#print ContinuousMultilinearMap.norm_ofSubsingleton_id_le /-
+theorem norm_ofSubsingleton_id_le [Subsingleton ι] (i' : ι) : ‖ofSubsingleton 𝕜 G i'‖ ≤ 1 :=
   op_norm_le_bound _ zero_le_one fun m => by
     rw [Fintype.prod_subsingleton _ i', one_mul, of_subsingleton_apply]
-#align continuous_multilinear_map.norm_of_subsingleton_le ContinuousMultilinearMap.norm_ofSubsingleton_le
+#align continuous_multilinear_map.norm_of_subsingleton_le ContinuousMultilinearMap.norm_ofSubsingleton_id_le
 -/
 
-#print ContinuousMultilinearMap.norm_ofSubsingleton /-
+#print ContinuousMultilinearMap.norm_ofSubsingleton_id /-
 @[simp]
-theorem norm_ofSubsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
+theorem norm_ofSubsingleton_id [Subsingleton ι] [Nontrivial G] (i' : ι) :
     ‖ofSubsingleton 𝕜 G i'‖ = 1 :=
   by
   apply le_antisymm (norm_of_subsingleton_le 𝕜 G i')
@@ -593,21 +593,21 @@ theorem norm_ofSubsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
   rw [← norm_ne_zero_iff] at hg 
   have := (of_subsingleton 𝕜 G i').ratio_le_op_norm fun _ => g
   rwa [Fintype.prod_subsingleton _ i', of_subsingleton_apply, div_self hg] at this 
-#align continuous_multilinear_map.norm_of_subsingleton ContinuousMultilinearMap.norm_ofSubsingleton
+#align continuous_multilinear_map.norm_of_subsingleton ContinuousMultilinearMap.norm_ofSubsingleton_id
 -/
 
-#print ContinuousMultilinearMap.nnnorm_ofSubsingleton_le /-
-theorem nnnorm_ofSubsingleton_le [Subsingleton ι] (i' : ι) : ‖ofSubsingleton 𝕜 G i'‖₊ ≤ 1 :=
-  norm_ofSubsingleton_le _ _ _
-#align continuous_multilinear_map.nnnorm_of_subsingleton_le ContinuousMultilinearMap.nnnorm_ofSubsingleton_le
+#print ContinuousMultilinearMap.nnnorm_ofSubsingleton_id_le /-
+theorem nnnorm_ofSubsingleton_id_le [Subsingleton ι] (i' : ι) : ‖ofSubsingleton 𝕜 G i'‖₊ ≤ 1 :=
+  norm_ofSubsingleton_id_le _ _ _
+#align continuous_multilinear_map.nnnorm_of_subsingleton_le ContinuousMultilinearMap.nnnorm_ofSubsingleton_id_le
 -/
 
-#print ContinuousMultilinearMap.nnnorm_ofSubsingleton /-
+#print ContinuousMultilinearMap.nnnorm_ofSubsingleton_id /-
 @[simp]
-theorem nnnorm_ofSubsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
+theorem nnnorm_ofSubsingleton_id [Subsingleton ι] [Nontrivial G] (i' : ι) :
     ‖ofSubsingleton 𝕜 G i'‖₊ = 1 :=
-  NNReal.eq <| norm_ofSubsingleton _ _ _
-#align continuous_multilinear_map.nnnorm_of_subsingleton ContinuousMultilinearMap.nnnorm_ofSubsingleton
+  NNReal.eq <| norm_ofSubsingleton_id _ _ _
+#align continuous_multilinear_map.nnnorm_of_subsingleton ContinuousMultilinearMap.nnnorm_ofSubsingleton_id
 -/
 
 variable {G} (E)

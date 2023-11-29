@@ -191,8 +191,8 @@ theorem integral_cos_mul_cos_pow_even (n : ℕ) (hz : z ≠ 0) :
     nth_rw_rhs 3 [← mul_one (2 : ℂ)]
     rw [← mul_add, mul_pow, ← div_div]
     ring
-  · push_cast ; ring
-  · push_cast ; ring
+  · push_cast; ring
+  · push_cast; ring
 #align euler_sine.integral_cos_mul_cos_pow_even EulerSine.integral_cos_mul_cos_pow_even
 -/
 
@@ -245,7 +245,7 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
       integral_one, sub_zero]
     rw [integral_cos_mul_complex (mul_ne_zero two_ne_zero hz), Complex.ofReal_zero,
       MulZeroClass.mul_zero, Complex.sin_zero, zero_div, sub_zero,
-      (by push_cast ; field_simp; ring : 2 * z * ↑(π / 2) = π * z)]
+      (by push_cast; field_simp; ring : 2 * z * ↑(π / 2) = π * z)]
     field_simp [complex.of_real_ne_zero.mpr pi_pos.ne']
     ring
   · rw [hn, Finset.prod_range_succ]
@@ -292,7 +292,7 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
       have : 2 * (n : ℂ) + 2 ≠ 0 :=
         by
         convert (Nat.cast_add_one_ne_zero (2 * n + 1) : (↑(2 * n + 1) + 1 : ℂ) ≠ 0) using 1
-        push_cast ; ring
+        push_cast; ring
       field_simp; ring
     convert integral_cos_mul_cos_pow_even n hz
     rw [Nat.cast_succ]

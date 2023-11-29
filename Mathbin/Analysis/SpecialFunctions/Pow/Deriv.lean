@@ -39,7 +39,7 @@ theorem hasStrictFDerivAt_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 
       p :=
   by
   have A : p.1 ≠ 0 := by intro h; simpa [h, lt_irrefl] using hp
-  have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
+  have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => NormedSpace.exp (log x.1 * x.2) :=
     ((is_open_ne.preimage continuous_fst).eventually_mem A).mono fun p hp =>
       cpow_def_of_ne_zero hp _
   rw [cpow_sub _ _ A, cpow_one, mul_div_left_comm, mul_smul, mul_smul, ← smul_add]
@@ -285,20 +285,21 @@ theorem hasDerivAt_ofReal_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1
   · -- harder case : `x < 0`
     have :
       ∀ᶠ y : ℝ in nhds x,
-        (y : ℂ) ^ (r + 1) / (r + 1) = (-y : ℂ) ^ (r + 1) * exp (π * I * (r + 1)) / (r + 1) :=
+        (y : ℂ) ^ (r + 1) / (r + 1) =
+          (-y : ℂ) ^ (r + 1) * NormedSpace.exp (π * I * (r + 1)) / (r + 1) :=
       by
       refine' Filter.eventually_of_mem (Iio_mem_nhds hx) fun y hy => _
       rw [of_real_cpow_of_nonpos (le_of_lt hy)]
     refine' HasDerivAt.congr_of_eventuallyEq _ this
     rw [of_real_cpow_of_nonpos (le_of_lt hx)]
     suffices
-      HasDerivAt (fun y : ℝ => (-↑y) ^ (r + 1) * exp (↑π * I * (r + 1)))
-        ((r + 1) * (-↑x) ^ r * exp (↑π * I * r)) x
+      HasDerivAt (fun y : ℝ => (-↑y) ^ (r + 1) * NormedSpace.exp (↑π * I * (r + 1)))
+        ((r + 1) * (-↑x) ^ r * NormedSpace.exp (↑π * I * r)) x
       by
       convert this.div_const (r + 1) using 1
       conv_rhs => rw [mul_assoc, mul_comm, mul_div_cancel _ hr]
-    rw [mul_add ((π : ℂ) * _), mul_one, exp_add, exp_pi_mul_I, mul_comm (_ : ℂ) (-1 : ℂ),
-      neg_one_mul]
+    rw [mul_add ((π : ℂ) * _), mul_one, NormedSpace.exp_add, exp_pi_mul_I,
+      mul_comm (_ : ℂ) (-1 : ℂ), neg_one_mul]
     simp_rw [mul_neg, ← neg_mul, ← of_real_neg]
     suffices HasDerivAt (fun y : ℝ => ↑(-y) ^ (r + 1)) (-(r + 1) * ↑(-x) ^ r) x by
       convert this.neg.mul_const _; ring
@@ -329,7 +330,7 @@ theorem hasStrictFDerivAt_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.1) :
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℝ ℝ ℝ)
       p :=
   by
-  have : (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
+  have : (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => NormedSpace.exp (log x.1 * x.2) :=
     (continuous_at_fst.eventually (lt_mem_nhds hp)).mono fun p hp => rpow_def_of_pos hp _
   refine' HasStrictFDerivAt.congr_of_eventuallyEq _ this.symm
   convert ((has_strict_fderiv_at_fst.log hp.ne').mul hasStrictFDerivAt_snd).exp
@@ -347,7 +348,8 @@ theorem hasStrictFDerivAt_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
           ContinuousLinearMap.snd ℝ ℝ ℝ)
       p :=
   by
-  have : (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) * cos (x.2 * π) :=
+  have :
+    (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => NormedSpace.exp (log x.1 * x.2) * cos (x.2 * π) :=
     (continuous_at_fst.eventually (gt_mem_nhds hp)).mono fun p hp => rpow_def_of_neg hp _
   refine' HasStrictFDerivAt.congr_of_eventuallyEq _ this.symm
   convert

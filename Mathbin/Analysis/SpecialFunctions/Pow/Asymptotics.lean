@@ -278,7 +278,7 @@ open Asymptotics
 theorem isLittleO_rpow_exp_pos_mul_atTop (s : ℝ) {b : ℝ} (hb : 0 < b) :
     (fun x : ℝ => x ^ s) =o[atTop] fun x => exp (b * x) :=
   Iff.mpr (isLittleO_iff_tendsto fun x h => absurd h (exp_pos _).ne') <| by
-    simpa only [div_eq_mul_inv, exp_neg, neg_mul] using
+    simpa only [div_eq_mul_inv, NormedSpace.exp_neg, neg_mul] using
       tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0 s b hb
 #align is_o_rpow_exp_pos_mul_at_top isLittleO_rpow_exp_pos_mul_atTop
 -/

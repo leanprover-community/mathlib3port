@@ -118,7 +118,7 @@ theorem coe_quotientInfToSupQuotient (p p' : Submodule R M) :
 @[simp]
 theorem quotientInfEquivSupQuotient_apply_mk (p p' : Submodule R M) (x : p) :
     quotientInfEquivSupQuotient p p' (Submodule.Quotient.mk x) =
-      Submodule.Quotient.mk (ofLe (le_sup_left : p ≤ p ⊔ p') x) :=
+      Submodule.Quotient.mk (inclusion (le_sup_left : p ≤ p ⊔ p') x) :=
   rfl
 #align linear_map.quotient_inf_equiv_sup_quotient_apply_mk LinearMap.quotientInfEquivSupQuotient_apply_mk
 -/

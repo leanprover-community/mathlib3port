@@ -1423,24 +1423,18 @@ section Scalar
 
 variable [DecidableEq n] [Fintype n]
 
-#print Matrix.coe_scalar /-
 @[simp]
-theorem coe_scalar : (scalar n : α → Matrix n n α) = fun a => a • 1 :=
+theorem scalar_apply : (scalar n : α → Matrix n n α) = fun a => a • 1 :=
   rfl
-#align matrix.coe_scalar Matrix.coe_scalar
--/
+#align matrix.coe_scalar Matrix.scalar_applyₓ
 
-#print Matrix.scalar_apply_eq /-
 theorem scalar_apply_eq (a : α) (i : n) : scalar n a i i = a := by
   simp only [coe_scalar, smul_eq_mul, mul_one, one_apply_eq, Pi.smul_apply]
 #align matrix.scalar_apply_eq Matrix.scalar_apply_eq
--/
 
-#print Matrix.scalar_apply_ne /-
 theorem scalar_apply_ne (a : α) (i j : n) (h : i ≠ j) : scalar n a i j = 0 := by
   simp only [h, coe_scalar, one_apply_ne, Ne.def, not_false_iff, Pi.smul_apply, smul_zero]
 #align matrix.scalar_apply_ne Matrix.scalar_apply_ne
--/
 
 #print Matrix.scalar_inj /-
 theorem scalar_inj [Nonempty n] {r s : α} : scalar n r = scalar n s ↔ r = s :=
@@ -1475,11 +1469,9 @@ theorem mul_mul_right (M : Matrix m n α) (N : Matrix n o α) (a : α) :
 #align matrix.mul_mul_right Matrix.mul_mul_right
 -/
 
-#print Matrix.scalar.commute /-
-theorem scalar.commute [DecidableEq n] (r : α) (M : Matrix n n α) : Commute (scalar n r) M := by
-  simp [Commute, SemiconjBy]
-#align matrix.scalar.commute Matrix.scalar.commute
--/
+theorem Matrix.scalar_commute [DecidableEq n] (r : α) (M : Matrix n n α) : Commute (scalar n r) M :=
+  by simp [Commute, SemiconjBy]
+#align matrix.scalar.commute Matrix.scalar_commuteₓ
 
 end CommSemiring
 
@@ -1514,11 +1506,13 @@ theorem algebraMap_eq_diagonal (r : R) :
 #align matrix.algebra_map_eq_diagonal Matrix.algebraMap_eq_diagonal
 -/
 
-#print Matrix.algebraMap_eq_smul /-
+/- warning: matrix.algebra_map_eq_smul clashes with algebra.algebra_map_eq_smul_one -> Algebra.algebraMap_eq_smul_one
+Case conversion may be inaccurate. Consider using '#align matrix.algebra_map_eq_smul Algebra.algebraMap_eq_smul_oneₓ'. -/
+#print Algebra.algebraMap_eq_smul_one /-
 @[simp]
-theorem algebraMap_eq_smul (r : R) : algebraMap R (Matrix n n R) r = r • (1 : Matrix n n R) :=
+theorem algebraMap_eq_smul_one (r : R) : algebraMap R (Matrix n n R) r = r • (1 : Matrix n n R) :=
   rfl
-#align matrix.algebra_map_eq_smul Matrix.algebraMap_eq_smul
+#align matrix.algebra_map_eq_smul Algebra.algebraMap_eq_smul_one
 -/
 
 #print Matrix.algebraMap_eq_diagonalRingHom /-

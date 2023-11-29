@@ -1361,7 +1361,7 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
 /-- Extend a lift `x : lifts F E K` to an element `s : E` whose conjugates are all in `K` -/
 noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : Lifts F E K :=
-  let h3 : IsIntegral x.1 s := isIntegral_of_isScalarTower h1
+  let h3 : IsIntegral x.1 s := IsIntegral.tower_top h1
   let key : (minpoly x.1 s).Splits x.2.toRingHom :=
     splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero h1))
       ((splits_map_iff _ _).mpr (by convert h2; exact RingHom.ext fun y => x.2.commutes y))
@@ -1520,7 +1520,7 @@ theorem isAlgebraic_iSup {ι : Type _} {f : ι → IntermediateField K L}
   rw [is_algebraic_iff, Subtype.coe_mk, ← Subtype.coe_mk x hx, ← is_algebraic_iff]
   haveI : ∀ i : Σ i, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
     adjoin.finite_dimensional (is_integral_iff.1 (isAlgebraic_iff_isIntegral.1 (h i x)))
-  apply Algebra.isAlgebraic_of_finite
+  apply Algebra.IsAlgebraic.of_finite
 #align intermediate_field.is_algebraic_supr IntermediateField.isAlgebraic_iSup
 -/
 

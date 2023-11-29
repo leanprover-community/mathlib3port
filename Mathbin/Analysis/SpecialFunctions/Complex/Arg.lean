@@ -90,7 +90,8 @@ theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z 
   refine' ⟨fun hz => ⟨arg z, _⟩, _⟩
   ·
     calc
-      exp (arg z * I) = abs z * exp (arg z * I) := by rw [hz, of_real_one, one_mul]
+      NormedSpace.exp (arg z * I) = abs z * NormedSpace.exp (arg z * I) := by
+        rw [hz, of_real_one, one_mul]
       _ = z := abs_mul_exp_arg_mul_I z
   · rintro ⟨θ, rfl⟩
     exact Complex.abs_exp_ofReal_mul_I θ
@@ -592,9 +593,9 @@ theorem arg_mul_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
       (arg x + arg y : Real.Angle) using
     3
   simp_rw [← Real.Angle.coe_add, Real.Angle.sin_coe, Real.Angle.cos_coe, of_real_cos, of_real_sin,
-    cos_add_sin_I, of_real_add, add_mul, exp_add, of_real_mul]
-  rw [mul_assoc, mul_comm (exp _), ← mul_assoc (abs y : ℂ), abs_mul_exp_arg_mul_I, mul_comm y, ←
-    mul_assoc, abs_mul_exp_arg_mul_I]
+    cos_add_sin_I, of_real_add, add_mul, NormedSpace.exp_add, of_real_mul]
+  rw [mul_assoc, mul_comm (NormedSpace.exp _), ← mul_assoc (abs y : ℂ), abs_mul_exp_arg_mul_I,
+    mul_comm y, ← mul_assoc, abs_mul_exp_arg_mul_I]
 #align complex.arg_mul_coe_angle Complex.arg_mul_coe_angle
 -/
 

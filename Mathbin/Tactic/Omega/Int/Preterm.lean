@@ -21,7 +21,7 @@ namespace Int
 multiplication by constant is allowed by the omega test. -/
 unsafe inductive exprterm : Type
   | cst : Int → exprterm
-  | exp : Int → expr → exprterm
+  | NormedSpace.exp : Int → expr → exprterm
   | add : exprterm → exprterm → exprterm
 #align omega.int.exprterm omega.int.exprterm
 

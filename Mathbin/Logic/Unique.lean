@@ -128,11 +128,9 @@ theorem Fin.eq_zero : ∀ n : Fin 1, n = 0
 instance {n : ℕ} : Inhabited (Fin n.succ) :=
   ⟨0⟩
 
-#print inhabitedFinOneAdd /-
 instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Fin (1 + n)) :=
   ⟨⟨0, Nat.zero_lt_one_add n⟩⟩
 #align inhabited_fin_one_add inhabitedFinOneAdd
--/
 
 #print Fin.default_eq_zero /-
 @[simp]
@@ -141,11 +139,9 @@ theorem Fin.default_eq_zero (n : ℕ) : (default : Fin n.succ) = 0 :=
 #align fin.default_eq_zero Fin.default_eq_zero
 -/
 
-#print Fin.unique /-
 instance Fin.unique : Unique (Fin 1) :=
   { Fin.inhabited with uniq := Fin.eq_zero }
 #align fin.unique Fin.unique
--/
 
 namespace Unique
 

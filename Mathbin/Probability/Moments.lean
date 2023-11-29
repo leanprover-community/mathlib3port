@@ -136,7 +136,7 @@ def cgf (X : Ω → ℝ) (μ : Measure Ω) (t : ℝ) : ℝ :=
 #print ProbabilityTheory.mgf_zero_fun /-
 @[simp]
 theorem mgf_zero_fun : mgf 0 μ t = (μ Set.univ).toReal := by
-  simp only [mgf, Pi.zero_apply, MulZeroClass.mul_zero, exp_zero, integral_const,
+  simp only [mgf, Pi.zero_apply, MulZeroClass.mul_zero, NormedSpace.exp_zero, integral_const,
     Algebra.id.smul_eq_mul, mul_one]
 #align probability_theory.mgf_zero_fun ProbabilityTheory.mgf_zero_fun
 -/
@@ -197,7 +197,8 @@ theorem cgf_const [IsProbabilityMeasure μ] (c : ℝ) : cgf (fun _ => c) μ t = 
 #print ProbabilityTheory.mgf_zero' /-
 @[simp]
 theorem mgf_zero' : mgf X μ 0 = (μ Set.univ).toReal := by
-  simp only [mgf, MulZeroClass.zero_mul, exp_zero, integral_const, Algebra.id.smul_eq_mul, mul_one]
+  simp only [mgf, MulZeroClass.zero_mul, NormedSpace.exp_zero, integral_const,
+    Algebra.id.smul_eq_mul, mul_one]
 #align probability_theory.mgf_zero' ProbabilityTheory.mgf_zero'
 -/
 
@@ -247,10 +248,11 @@ theorem mgf_nonneg : 0 ≤ mgf X μ t :=
 theorem mgf_pos' (hμ : μ ≠ 0) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ) : 0 < mgf X μ t :=
   by
   simp_rw [mgf]
-  have : ∫ x : Ω, exp (t * X x) ∂μ = ∫ x : Ω in Set.univ, exp (t * X x) ∂μ := by
+  have :
+    ∫ x : Ω, NormedSpace.exp (t * X x) ∂μ = ∫ x : Ω in Set.univ, NormedSpace.exp (t * X x) ∂μ := by
     simp only [measure.restrict_univ]
   rw [this, set_integral_pos_iff_support_of_nonneg_ae _ _]
-  · have h_eq_univ : (Function.support fun x : Ω => exp (t * X x)) = Set.univ :=
+  · have h_eq_univ : (Function.support fun x : Ω => NormedSpace.exp (t * X x)) = Set.univ :=
       by
       ext1 x
       simp only [Function.mem_support, Set.mem_univ, iff_true_iff]
@@ -287,8 +289,10 @@ theorem cgf_neg : cgf (-X) μ t = cgf X μ (-t) := by simp_rw [cgf, mgf_neg]
 theorem IndepFun.exp_mul {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ) (s t : ℝ) :
     IndepFun (fun ω => exp (s * X ω)) (fun ω => exp (t * Y ω)) μ :=
   by
-  have h_meas : ∀ t, Measurable fun x => exp (t * x) := fun t => (measurable_id'.const_mul t).exp
-  change indep_fun ((fun x => exp (s * x)) ∘ X) ((fun x => exp (t * x)) ∘ Y) μ
+  have h_meas : ∀ t, Measurable fun x => NormedSpace.exp (t * x) := fun t =>
+    (measurable_id'.const_mul t).exp
+  change
+    indep_fun ((fun x => NormedSpace.exp (s * x)) ∘ X) ((fun x => NormedSpace.exp (t * x)) ∘ Y) μ
   exact indep_fun.comp h_indep (h_meas s) (h_meas t)
 #align probability_theory.indep_fun.exp_mul ProbabilityTheory.IndepFun.exp_mul
 -/
@@ -299,7 +303,7 @@ theorem IndepFun.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ)
     (hY : AEStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
     mgf (X + Y) μ t = mgf X μ t * mgf Y μ t :=
   by
-  simp_rw [mgf, Pi.add_apply, mul_add, exp_add]
+  simp_rw [mgf, Pi.add_apply, mul_add, NormedSpace.exp_add]
   exact (h_indep.exp_mul t t).integral_mul hX hY
 #align probability_theory.indep_fun.mgf_add ProbabilityTheory.IndepFun.mgf_add
 -/
@@ -308,10 +312,10 @@ theorem IndepFun.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ)
 theorem IndepFun.mgf_add' {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ) (hX : AEStronglyMeasurable X μ)
     (hY : AEStronglyMeasurable Y μ) : mgf (X + Y) μ t = mgf X μ t * mgf Y μ t :=
   by
-  have A : Continuous fun x : ℝ => exp (t * x) := by continuity
-  have h'X : ae_strongly_measurable (fun ω => exp (t * X ω)) μ :=
+  have A : Continuous fun x : ℝ => NormedSpace.exp (t * x) := by continuity
+  have h'X : ae_strongly_measurable (fun ω => NormedSpace.exp (t * X ω)) μ :=
     A.ae_strongly_measurable.comp_ae_measurable hX.ae_measurable
-  have h'Y : ae_strongly_measurable (fun ω => exp (t * Y ω)) μ :=
+  have h'Y : ae_strongly_measurable (fun ω => NormedSpace.exp (t * Y ω)) μ :=
     A.ae_strongly_measurable.comp_ae_measurable hY.ae_measurable
   exact h_indep.mgf_add h'X h'Y
 #align probability_theory.indep_fun.mgf_add' ProbabilityTheory.IndepFun.mgf_add'
@@ -335,7 +339,7 @@ theorem aestronglyMeasurable_exp_mul_add {X Y : Ω → ℝ}
     (h_int_Y : AEStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
     AEStronglyMeasurable (fun ω => exp (t * (X + Y) ω)) μ :=
   by
-  simp_rw [Pi.add_apply, mul_add, exp_add]
+  simp_rw [Pi.add_apply, mul_add, NormedSpace.exp_add]
   exact ae_strongly_measurable.mul h_int_X h_int_Y
 #align probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aestronglyMeasurable_exp_mul_add
 -/
@@ -346,10 +350,10 @@ theorem aestronglyMeasurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
     AEStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
   classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-  · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, exp_zero]
+  · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, NormedSpace.exp_zero]
     exact ae_strongly_measurable_const
-  · have : ∀ i : ι, i ∈ s → ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
-      h_int i (mem_insert_of_mem hi)
+  · have : ∀ i : ι, i ∈ s → ae_strongly_measurable (fun ω : Ω => NormedSpace.exp (t * X i ω)) μ :=
+      fun i hi => h_int i (mem_insert_of_mem hi)
     specialize h_rec this
     rw [sum_insert hi_notin_s]
     apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
@@ -362,7 +366,7 @@ theorem IndepFun.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : IndepFun X
     (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) :
     Integrable (fun ω => exp (t * (X + Y) ω)) μ :=
   by
-  simp_rw [Pi.add_apply, mul_add, exp_add]
+  simp_rw [Pi.add_apply, mul_add, NormedSpace.exp_add]
   exact (h_indep.exp_mul t t).integrable_mul h_int_X h_int_Y
 #align probability_theory.indep_fun.integrable_exp_mul_add ProbabilityTheory.IndepFun.integrable_exp_mul_add
 -/
@@ -374,9 +378,9 @@ theorem iIndepFun.integrable_exp_mul_sum [IsProbabilityMeasure μ] {X : ι → �
     Integrable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
   classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-  · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, exp_zero]
+  · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, NormedSpace.exp_zero]
     exact integrable_const _
-  · have : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
+  · have : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => NormedSpace.exp (t * X i ω)) μ := fun i hi =>
       h_int i (mem_insert_of_mem hi)
     specialize h_rec this
     rw [sum_insert hi_notin_s]
@@ -392,8 +396,8 @@ theorem iIndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
   classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
   · simp only [sum_empty, mgf_zero_fun, measure_univ, ENNReal.one_toReal, prod_empty]
-  · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>
-      ((h_meas i).const_mul t).exp.AEStronglyMeasurable
+  · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => NormedSpace.exp (t * X i ω)) μ :=
+      fun i => ((h_meas i).const_mul t).exp.AEStronglyMeasurable
     rw [sum_insert hi_notin_s,
       indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm (h_int' i)
         (ae_strongly_measurable_exp_mul_sum fun i hi => h_int' i),
@@ -422,23 +426,26 @@ theorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
   by
   cases' ht.eq_or_lt with ht_zero_eq ht_pos
   · rw [ht_zero_eq.symm]
-    simp only [neg_zero, MulZeroClass.zero_mul, exp_zero, mgf_zero', one_mul]
+    simp only [neg_zero, MulZeroClass.zero_mul, NormedSpace.exp_zero, mgf_zero', one_mul]
     rw [ENNReal.toReal_le_toReal (measure_ne_top μ _) (measure_ne_top μ _)]
     exact measure_mono (Set.subset_univ _)
   calc
-    (μ {ω | ε ≤ X ω}).toReal = (μ {ω | exp (t * ε) ≤ exp (t * X ω)}).toReal :=
+    (μ {ω | ε ≤ X ω}).toReal =
+        (μ {ω | NormedSpace.exp (t * ε) ≤ NormedSpace.exp (t * X ω)}).toReal :=
       by
       congr with ω
       simp only [exp_le_exp, eq_iff_iff]
       exact
         ⟨fun h => mul_le_mul_of_nonneg_left h ht_pos.le, fun h => le_of_mul_le_mul_left h ht_pos⟩
-    _ ≤ (exp (t * ε))⁻¹ * μ[fun ω => exp (t * X ω)] :=
+    _ ≤ (NormedSpace.exp (t * ε))⁻¹ * μ[fun ω => NormedSpace.exp (t * X ω)] :=
       by
       have :
-        exp (t * ε) * (μ {ω | exp (t * ε) ≤ exp (t * X ω)}).toReal ≤ μ[fun ω => exp (t * X ω)] :=
+        NormedSpace.exp (t * ε) *
+            (μ {ω | NormedSpace.exp (t * ε) ≤ NormedSpace.exp (t * X ω)}).toReal ≤
+          μ[fun ω => NormedSpace.exp (t * X ω)] :=
         mul_meas_ge_le_integral_of_nonneg (fun x => (exp_pos _).le) h_int _
-      rwa [mul_comm (exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff' (exp_pos _)]
-    _ = exp (-t * ε) * mgf X μ t := by rw [neg_mul, exp_neg]; rfl
+      rwa [mul_comm (NormedSpace.exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff' (exp_pos _)]
+    _ = NormedSpace.exp (-t * ε) * mgf X μ t := by rw [neg_mul, NormedSpace.exp_neg]; rfl
 #align probability_theory.measure_ge_le_exp_mul_mgf ProbabilityTheory.measure_ge_le_exp_mul_mgf
 -/
 
@@ -464,7 +471,7 @@ theorem measure_ge_le_exp_cgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
     (μ {ω | ε ≤ X ω}).toReal ≤ exp (-t * ε + cgf X μ t) :=
   by
   refine' (measure_ge_le_exp_mul_mgf ε ht h_int).trans _
-  rw [exp_add]
+  rw [NormedSpace.exp_add]
   exact mul_le_mul le_rfl (le_exp_log _) mgf_nonneg (exp_pos _).le
 #align probability_theory.measure_ge_le_exp_cgf ProbabilityTheory.measure_ge_le_exp_cgf
 -/
@@ -476,7 +483,7 @@ theorem measure_le_le_exp_cgf [IsFiniteMeasure μ] (ε : ℝ) (ht : t ≤ 0)
     (μ {ω | X ω ≤ ε}).toReal ≤ exp (-t * ε + cgf X μ t) :=
   by
   refine' (measure_le_le_exp_mul_mgf ε ht h_int).trans _
-  rw [exp_add]
+  rw [NormedSpace.exp_add]
   exact mul_le_mul le_rfl (le_exp_log _) mgf_nonneg (exp_pos _).le
 #align probability_theory.measure_le_le_exp_cgf ProbabilityTheory.measure_le_le_exp_cgf
 -/

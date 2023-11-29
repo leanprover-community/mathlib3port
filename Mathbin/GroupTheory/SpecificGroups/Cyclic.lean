@@ -120,7 +120,7 @@ theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fint
   classical
   use x
   simp_rw [← SetLike.mem_coe, ← Set.eq_univ_iff_forall]
-  rw [← Fintype.card_congr (Equiv.Set.univ α), orderOf_eq_card_zpowers] at hx 
+  rw [← Fintype.card_congr (Equiv.Set.univ α), Fintype.card_zpowers] at hx 
   exact Set.eq_of_subset_of_card_le (Set.subset_univ _) (ge_of_eq hx)
 #align is_cyclic_of_order_of_eq_card isCyclic_of_orderOf_eq_card
 #align is_add_cyclic_of_order_of_eq_card isAddCyclic_of_orderOf_eq_card
@@ -162,7 +162,7 @@ theorem isCyclic_of_prime_card {α : Type u} [Group α] [Fintype α] {p : ℕ} [
 theorem orderOf_eq_card_of_forall_mem_zpowers [Fintype α] {g : α} (hx : ∀ x, x ∈ zpowers g) :
     orderOf g = Fintype.card α := by
   classical
-  rw [orderOf_eq_card_zpowers]
+  rw [Fintype.card_zpowers]
   apply Fintype.card_of_finset'
   simpa using hx
 #align order_of_eq_card_of_forall_mem_zpowers orderOf_eq_card_of_forall_mem_zpowers
@@ -285,7 +285,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
         Nat.pos_of_ne_zero fun hm0 => by
           rw [hm0, MulZeroClass.mul_zero, Fintype.card_eq_zero_iff] at hm ; exact hm.elim' 1
       simp only [Set.toFinset_card, SetLike.coe_sort_coe]
-      rw [← orderOf_eq_card_zpowers, orderOf_pow g, orderOf_eq_card_of_forall_mem_zpowers hg]
+      rw [← Fintype.card_zpowers, orderOf_pow g, orderOf_eq_card_of_forall_mem_zpowers hg]
       rw [hm]
       rw [Nat.mul_div_cancel_left _ (gcd_pos_of_pos_left _ hn0), gcd_mul_left_left, hm,
         Nat.mul_div_cancel _ hm0]
@@ -340,7 +340,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
     (Finset.univ.filterₓ fun b : α => b ^ orderOf a = 1).card = orderOf a :=
   le_antisymm (hn _ (orderOf_pos a))
     (calc
-      orderOf a = @Fintype.card (zpowers a) (id _) := orderOf_eq_card_zpowers
+      orderOf a = @Fintype.card (zpowers a) (id _) := Fintype.card_zpowers
       _ ≤
           @Fintype.card (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α)
             (Fintype.ofFinset _ fun _ => Iff.rfl) :=
@@ -610,7 +610,7 @@ theorem IsCyclic.exponent_eq_card [Group α] [IsCyclic α] [Fintype α] :
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator α
   apply Nat.dvd_antisymm
   · rw [← lcm_order_eq_exponent, Finset.lcm_dvd_iff]
-    exact fun b _ => orderOf_dvd_card_univ
+    exact fun b _ => orderOf_dvd_card
   rw [← orderOf_eq_card_of_forall_mem_zpowers hg]
   exact order_dvd_exponent _
 #align is_cyclic.exponent_eq_card IsCyclic.exponent_eq_card

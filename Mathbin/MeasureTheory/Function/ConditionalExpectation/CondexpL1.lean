@@ -375,7 +375,7 @@ theorem condexpInd_disjoint_union_apply (hs : MeasurableSet s) (ht : MeasurableS
 theorem condexpInd_disjoint_union (hs : MeasurableSet s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞)
     (hμt : μ t ≠ ∞) (hst : s ∩ t = ∅) :
     (condexpInd hm μ (s ∪ t) : G →L[ℝ] α →₁[μ] G) = condexpInd hm μ s + condexpInd hm μ t := by
-  ext1; push_cast ; exact condexp_ind_disjoint_union_apply hs ht hμs hμt hst x
+  ext1; push_cast; exact condexp_ind_disjoint_union_apply hs ht hμs hμt hst x
 #align measure_theory.condexp_ind_disjoint_union MeasureTheory.condexpInd_disjoint_union
 -/
 

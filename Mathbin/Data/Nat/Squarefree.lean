@@ -43,8 +43,8 @@ theorem squarefree_iff_prime_squarefree {n : ℕ} : Squarefree n ↔ ∀ x, Prim
 #align nat.squarefree_iff_prime_squarefree Nat.squarefree_iff_prime_squarefree
 -/
 
-#print Nat.Squarefree.factorization_le_one /-
-theorem Squarefree.factorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) :
+#print Squarefree.natFactorization_le_one /-
+theorem Squarefree.natFactorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) :
     n.factorization p ≤ 1 := by
   rcases eq_or_ne n 0 with (rfl | hn')
   · simp
@@ -56,7 +56,7 @@ theorem Squarefree.factorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) 
     exact_mod_cast this
   · rw [factorization_eq_zero_of_non_prime _ hp]
     exact zero_le_one
-#align nat.squarefree.factorization_le_one Nat.Squarefree.factorization_le_one
+#align nat.squarefree.factorization_le_one Squarefree.natFactorization_le_one
 -/
 
 #print Nat.squarefree_of_factorization_le_one /-
@@ -73,7 +73,7 @@ theorem squarefree_of_factorization_le_one {n : ℕ} (hn : n ≠ 0) (hn' : ∀ p
 #print Nat.squarefree_iff_factorization_le_one /-
 theorem squarefree_iff_factorization_le_one {n : ℕ} (hn : n ≠ 0) :
     Squarefree n ↔ ∀ p, n.factorization p ≤ 1 :=
-  ⟨fun p hn => Squarefree.factorization_le_one hn p, squarefree_of_factorization_le_one hn⟩
+  ⟨fun p hn => Squarefree.natFactorization_le_one hn p, squarefree_of_factorization_le_one hn⟩
 #align nat.squarefree_iff_factorization_le_one Nat.squarefree_iff_factorization_le_one
 -/
 

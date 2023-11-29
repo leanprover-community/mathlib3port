@@ -26,7 +26,7 @@ open TensorProduct Algebra.TensorProduct
 
 #print RingHom.isIntegral_stableUnderComposition /-
 theorem isIntegral_stableUnderComposition : StableUnderComposition fun R S _ _ f => f.is_integral :=
-  by introv R hf hg; exact RingHom.isIntegral_trans _ _ hf hg
+  by introv R hf hg; exact RingHom.IsIntegral.trans _ _ hf hg
 #align ring_hom.is_integral_stable_under_composition RingHom.isIntegral_stableUnderComposition
 -/
 
@@ -37,7 +37,7 @@ theorem isIntegral_respectsIso : RespectsIso fun R S _ _ f => f.is_integral :=
   introv x
   skip
   rw [← e.apply_symm_apply x]
-  apply RingHom.is_integral_map
+  apply RingHom.isIntegralElem_map
 #align ring_hom.is_integral_respects_iso RingHom.isIntegral_respectsIso
 -/
 
@@ -50,7 +50,7 @@ theorem isIntegral_stableUnderBaseChange : StableUnderBaseChange fun R S _ _ f =
   apply TensorProduct.induction_on x
   · apply isIntegral_zero
   · intro x y; exact IsIntegral.tmul x (h y)
-  · intro x y hx hy; exact isIntegral_add _ hx hy
+  · intro x y hx hy; exact IsIntegral.add _ hx hy
 #align ring_hom.is_integral_stable_under_base_change RingHom.isIntegral_stableUnderBaseChange
 -/
 

@@ -127,7 +127,7 @@ def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
         dsimp
         simp_rw [smul_mul_smul]
         refine' ⟨fun h x y => h.symm ▸ smul_zero _, fun h => by simpa using h 1 1⟩)
-    TrivSqZeroExt.lift
+    TrivSqZeroExt.liftEquiv
 #align dual_number.lift DualNumber.lift
 -/
 
@@ -135,17 +135,15 @@ def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
 -- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0.
 @[simp]
 theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : R[ε]) = e :=
-  (TrivSqZeroExt.liftAux_apply_inr _ _ _).trans <| one_smul _ _
+  (TrivSqZeroExt.lift_apply_inr _ _ _).trans <| one_smul _ _
 #align dual_number.lift_apply_eps DualNumber.lift_apply_eps
 -/
 
-#print DualNumber.lift_eps /-
 -- Lifting `dual_number.eps` itself gives the identity.
 @[simp]
-theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R R[ε] :=
+theorem lift_inlAlgHom_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R R[ε] :=
   algHom_ext <| lift_apply_eps _
-#align dual_number.lift_eps DualNumber.lift_eps
--/
+#align dual_number.lift_eps DualNumber.lift_inlAlgHom_epsₓ
 
 end DualNumber
 

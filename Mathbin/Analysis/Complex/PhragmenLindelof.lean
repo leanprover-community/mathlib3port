@@ -176,7 +176,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     simpa only [max_lt_iff] using exists_between (max_lt hc hπb)
   have hb' : d * b < π / 2 := (lt_div_iff hb).1 hd
   set aff : ℂ → ℂ := fun w => d * (w - a * I)
-  set g : ℝ → ℂ → ℂ := fun ε w => exp (ε * (exp (aff w) + exp (-aff w)))
+  set g : ℝ → ℂ → ℂ := fun ε w =>
+    NormedSpace.exp (ε * (NormedSpace.exp (aff w) + NormedSpace.exp (-aff w)))
   /- Since `g ε z → 1` as `ε → 0⁻`, it suffices to prove that `‖g ε z • f z‖ ≤ C`
     for all negative `ε`. -/
   suffices ∀ᶠ ε : ℝ in 𝓝[<] 0, ‖g ε z • f z‖ ≤ C
@@ -446,15 +447,15 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
   rcases eq_or_ne z 0 with (rfl | hzne);
   · exact hre 0 le_rfl
   -- Otherwise, `z = e ^ ζ` for some `ζ : ℂ`, `0 < Im ζ < π / 2`.
-  obtain ⟨ζ, hζ, rfl⟩ : ∃ ζ : ℂ, ζ.im ∈ Icc 0 (π / 2) ∧ exp ζ = z :=
+  obtain ⟨ζ, hζ, rfl⟩ : ∃ ζ : ℂ, ζ.im ∈ Icc 0 (π / 2) ∧ NormedSpace.exp ζ = z :=
     by
     refine' ⟨log z, _, exp_log hzne⟩
     rw [log_im]
     exact ⟨arg_nonneg_iff.2 hz_im, arg_le_pi_div_two_iff.2 (Or.inl hz_re)⟩
   clear hz_re hz_im hzne
   -- We are going to apply `phragmen_lindelof.horizontal_strip` to `f ∘ complex.exp` and `ζ`.
-  change ‖(f ∘ exp) ζ‖ ≤ C
-  have H : maps_to exp (im ⁻¹' Ioo 0 (π / 2)) (Ioi 0 ×ℂ Ioi 0) :=
+  change ‖(f ∘ NormedSpace.exp) ζ‖ ≤ C
+  have H : maps_to NormedSpace.exp (im ⁻¹' Ioo 0 (π / 2)) (Ioi 0 ×ℂ Ioi 0) :=
     by
     intro z hz
     rw [mem_re_prod_im, exp_re, exp_im, mem_Ioi, mem_Ioi]
@@ -904,13 +905,13 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f {z | 0 < z.
   -- For each `ε < 0`, the function `λ z, exp (ε * z) • f z` satisfies assumptions of
   -- `right_half_plane_of_tendsto_zero_on_real`, hence `‖exp (ε * z) • f z‖ ≤ C` for all `ε < 0`.
   -- Taking the limit as `ε → 0`, we obtain the required inequality.
-  suffices ∀ᶠ ε : ℝ in 𝓝[<] 0, ‖exp (ε * z) • f z‖ ≤ C
+  suffices ∀ᶠ ε : ℝ in 𝓝[<] 0, ‖NormedSpace.exp (ε * z) • f z‖ ≤ C
     by
     refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp; infer_instance
   filter_upwards [self_mem_nhdsWithin] with ε ε₀; change ε < 0 at ε₀ 
-  set g : ℂ → E := fun z => exp (ε * z) • f z; change ‖g z‖ ≤ C
+  set g : ℂ → E := fun z => NormedSpace.exp (ε * z) • f z; change ‖g z‖ ≤ C
   replace hd : DiffContOnCl ℂ g {z : ℂ | 0 < z.re}
   exact (differentiable_id.const_mul _).cexp.DiffContOnCl.smul hd
   have hgn : ∀ z, ‖g z‖ = expR (ε * z.re) * ‖f z‖ := by intro z;
@@ -954,7 +955,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
     simpa only [closure_set_of_lt_re] using
       eq_on.of_subset_closure this hd.continuous_on continuousOn_const subset_closure subset.rfl
   -- Consider $g_n(z)=e^{nz}f(z)$.
-  set g : ℕ → ℂ → E := fun n z => exp z ^ n • f z
+  set g : ℕ → ℂ → E := fun n z => NormedSpace.exp z ^ n • f z
   have hg : ∀ n z, ‖g n z‖ = expR z.re ^ n * ‖f z‖ := by intro n z;
     simp only [norm_smul, norm_eq_abs, Complex.abs_pow, abs_exp]
   intro z hz

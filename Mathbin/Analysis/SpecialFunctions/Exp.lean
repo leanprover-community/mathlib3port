@@ -38,7 +38,8 @@ variable {z y x : ℝ}
 theorem exp_bound_sq (x z : ℂ) (hz : ‖z‖ ≤ 1) :
     ‖exp (x + z) - exp x - z • exp x‖ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=
   calc
-    ‖exp (x + z) - exp x - z * exp x‖ = ‖exp x * (exp z - 1 - z)‖ := by congr; rw [exp_add]; ring
+    ‖exp (x + z) - exp x - z * exp x‖ = ‖exp x * (exp z - 1 - z)‖ := by congr;
+      rw [NormedSpace.exp_add]; ring
     _ = ‖exp x‖ * ‖exp z - 1 - z‖ := (norm_mul _ _)
     _ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=
       mul_le_mul_of_nonneg_left (abs_exp_sub_one_sub_id_le hz) (norm_nonneg _)
@@ -54,18 +55,27 @@ theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) 
     by
     rw [pow_two]
     exact mul_le_mul hyx.le le_rfl (norm_nonneg _) hr_nonneg
-  have h_sq : ∀ z, ‖z‖ ≤ 1 → ‖exp (x + z) - exp x‖ ≤ ‖z‖ * ‖exp x‖ + ‖exp x‖ * ‖z‖ ^ 2 :=
+  have h_sq :
+    ∀ z,
+      ‖z‖ ≤ 1 →
+        ‖NormedSpace.exp (x + z) - NormedSpace.exp x‖ ≤
+          ‖z‖ * ‖NormedSpace.exp x‖ + ‖NormedSpace.exp x‖ * ‖z‖ ^ 2 :=
     by
     intro z hz
-    have : ‖exp (x + z) - exp x - z • exp x‖ ≤ ‖exp x‖ * ‖z‖ ^ 2 := exp_bound_sq x z hz
+    have :
+      ‖NormedSpace.exp (x + z) - NormedSpace.exp x - z • NormedSpace.exp x‖ ≤
+        ‖NormedSpace.exp x‖ * ‖z‖ ^ 2 :=
+      exp_bound_sq x z hz
     rw [← sub_le_iff_le_add', ← norm_smul z (_ : ℂ)]
     exact (norm_sub_norm_le _ _).trans this
   calc
-    ‖exp y - exp x‖ = ‖exp (x + (y - x)) - exp x‖ := by nth_rw 1 [hy_eq]
-    _ ≤ ‖y - x‖ * ‖exp x‖ + ‖exp x‖ * ‖y - x‖ ^ 2 := (h_sq (y - x) (hyx.le.trans hr_le))
-    _ ≤ ‖y - x‖ * ‖exp x‖ + ‖exp x‖ * (r * ‖y - x‖) :=
+    ‖NormedSpace.exp y - NormedSpace.exp x‖ = ‖NormedSpace.exp (x + (y - x)) - NormedSpace.exp x‖ :=
+      by nth_rw 1 [hy_eq]
+    _ ≤ ‖y - x‖ * ‖NormedSpace.exp x‖ + ‖NormedSpace.exp x‖ * ‖y - x‖ ^ 2 :=
+      (h_sq (y - x) (hyx.le.trans hr_le))
+    _ ≤ ‖y - x‖ * ‖NormedSpace.exp x‖ + ‖NormedSpace.exp x‖ * (r * ‖y - x‖) :=
       (add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _)
-    _ = (1 + r) * ‖exp x‖ * ‖y - x‖ := by ring
+    _ = (1 + r) * ‖NormedSpace.exp x‖ * ‖y - x‖ := by ring
 #align complex.locally_lipschitz_exp Complex.locally_lipschitz_exp
 -/
 
@@ -193,7 +203,7 @@ variable {α : Type _} {x y z : ℝ} {l : Filter α}
 
 #print Real.exp_half /-
 theorem exp_half (x : ℝ) : exp (x / 2) = sqrt (exp x) := by
-  rw [eq_comm, sqrt_eq_iff_sq_eq, sq, ← exp_add, add_halves] <;> exact (exp_pos _).le
+  rw [eq_comm, sqrt_eq_iff_sq_eq, sq, ← NormedSpace.exp_add, add_halves] <;> exact (exp_pos _).le
 #align real.exp_half Real.exp_half
 -/
 
@@ -203,7 +213,8 @@ theorem tendsto_exp_atTop : Tendsto exp atTop atTop :=
   by
   have A : tendsto (fun x : ℝ => x + 1) at_top at_top :=
     tendsto_at_top_add_const_right at_top 1 tendsto_id
-  have B : ∀ᶠ x in at_top, x + 1 ≤ exp x := eventually_at_top.2 ⟨0, fun x hx => add_one_le_exp x⟩
+  have B : ∀ᶠ x in at_top, x + 1 ≤ NormedSpace.exp x :=
+    eventually_at_top.2 ⟨0, fun x hx => add_one_le_exp x⟩
   exact tendsto_at_top_mono' at_top B A
 #align real.tendsto_exp_at_top Real.tendsto_exp_atTop
 -/
@@ -258,8 +269,8 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
   by
   refine' (at_top_basis_Ioi.tendsto_iff (at_top_basis' 1)).2 fun C hC₁ => _
   have hC₀ : 0 < C := zero_lt_one.trans_le hC₁
-  have : 0 < (exp 1 * C)⁻¹ := inv_pos.2 (mul_pos (exp_pos _) hC₀)
-  obtain ⟨N, hN⟩ : ∃ N, ∀ k ≥ N, (↑k ^ n : ℝ) / exp 1 ^ k < (exp 1 * C)⁻¹ :=
+  have : 0 < (NormedSpace.exp 1 * C)⁻¹ := inv_pos.2 (mul_pos (exp_pos _) hC₀)
+  obtain ⟨N, hN⟩ : ∃ N, ∀ k ≥ N, (↑k ^ n : ℝ) / NormedSpace.exp 1 ^ k < (NormedSpace.exp 1 * C)⁻¹ :=
     eventually_at_top.1
       ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).Eventually
         (gt_mem_nhds this))
@@ -269,11 +280,12 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
   rw [Set.mem_Ici, le_div_iff (pow_pos hx₀ _), ← le_div_iff' hC₀]
   calc
     x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _
-    _ ≤ exp ⌈x⌉₊ / (exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
-    _ ≤ exp (x + 1) / (exp 1 * C) :=
+    _ ≤ NormedSpace.exp ⌈x⌉₊ / (NormedSpace.exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
+    _ ≤ NormedSpace.exp (x + 1) / (NormedSpace.exp 1 * C) :=
       (div_le_div_of_le (mul_pos (exp_pos _) hC₀).le
         (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le))
-    _ = exp x / C := by rw [add_comm, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
+    _ = NormedSpace.exp x / C := by
+      rw [add_comm, NormedSpace.exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
 #align real.tendsto_exp_div_pow_at_top Real.tendsto_exp_div_pow_atTop
 -/
 
@@ -282,7 +294,7 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
 theorem tendsto_pow_mul_exp_neg_atTop_nhds_0 (n : ℕ) :
     Tendsto (fun x => x ^ n * exp (-x)) atTop (𝓝 0) :=
   (tendsto_inv_atTop_zero.comp (tendsto_exp_div_pow_atTop n)).congr fun x => by
-    rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mul, div_eq_mul_inv, exp_neg]
+    rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mul, div_eq_mul_inv, NormedSpace.exp_neg]
 #align real.tendsto_pow_mul_exp_neg_at_top_nhds_0 Real.tendsto_pow_mul_exp_neg_atTop_nhds_0
 -/
 
@@ -308,7 +320,7 @@ theorem tendsto_mul_exp_add_div_pow_atTop (b c : ℝ) (n : ℕ) (hb : 0 < b) :
 theorem tendsto_div_pow_mul_exp_add_atTop (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) :
     Tendsto (fun x => x ^ n / (b * exp x + c)) atTop (𝓝 0) :=
   by
-  have H : ∀ d e, 0 < d → tendsto (fun x : ℝ => x ^ n / (d * exp x + e)) at_top (𝓝 0) :=
+  have H : ∀ d e, 0 < d → tendsto (fun x : ℝ => x ^ n / (d * NormedSpace.exp x + e)) at_top (𝓝 0) :=
     by
     intro b' c' h
     convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_atTop
@@ -319,7 +331,7 @@ theorem tendsto_div_pow_mul_exp_add_atTop (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) :
   · convert (H (-b) (-c) (neg_pos.mpr h)).neg
     · ext x
       field_simp
-      rw [← neg_add (b * exp x) c, neg_div_neg_eq]
+      rw [← neg_add (b * NormedSpace.exp x) c, neg_div_neg_eq]
     · exact neg_zero.symm
 #align real.tendsto_div_pow_mul_exp_add_at_top Real.tendsto_div_pow_mul_exp_add_atTop
 -/
@@ -460,7 +472,7 @@ theorem isLittleO_exp_comp_exp_comp {f g : α → ℝ} :
 @[simp]
 theorem isLittleO_one_exp_comp {f : α → ℝ} :
     ((fun x => 1 : α → ℝ) =o[l] fun x => exp (f x)) ↔ Tendsto f l atTop := by
-  simp only [← exp_zero, is_o_exp_comp_exp_comp, sub_zero]
+  simp only [← NormedSpace.exp_zero, is_o_exp_comp_exp_comp, sub_zero]
 #align real.is_o_one_exp_comp Real.isLittleO_one_exp_comp
 -/
 
@@ -470,7 +482,8 @@ from below under `f`. -/
 @[simp]
 theorem isBigO_one_exp_comp {f : α → ℝ} :
     ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ IsBoundedUnder (· ≥ ·) l f := by
-  simp only [← exp_zero, is_O_exp_comp_exp_comp, Pi.sub_def, zero_sub, is_bounded_under_le_neg]
+  simp only [← NormedSpace.exp_zero, is_O_exp_comp_exp_comp, Pi.sub_def, zero_sub,
+    is_bounded_under_le_neg]
 #align real.is_O_one_exp_comp Real.isBigO_one_exp_comp
 -/
 
@@ -489,7 +502,7 @@ theorem isBigO_exp_comp_one {f : α → ℝ} :
 @[simp]
 theorem isTheta_exp_comp_one {f : α → ℝ} :
     (fun x => exp (f x)) =Θ[l] (fun x => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l fun x => |f x| := by
-  simp only [← exp_zero, is_Theta_exp_comp_exp_comp, sub_zero]
+  simp only [← NormedSpace.exp_zero, is_Theta_exp_comp_exp_comp, sub_zero]
 #align real.is_Theta_exp_comp_one Real.isTheta_exp_comp_one
 -/
 

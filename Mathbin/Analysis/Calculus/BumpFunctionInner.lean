@@ -124,7 +124,7 @@ theorem f_aux_limit (n : ℕ) :
   by
   have A : tendsto (fun x => (P_aux n).eval x) (𝓝[>] 0) (𝓝 ((P_aux n).eval 0)) :=
     (P_aux n).ContinuousWithinAt
-  have B : tendsto (fun x => exp (-x⁻¹) / x ^ (2 * n)) (𝓝[>] 0) (𝓝 0) :=
+  have B : tendsto (fun x => NormedSpace.exp (-x⁻¹) / x ^ (2 * n)) (𝓝[>] 0) (𝓝 0) :=
     by
     convert (tendsto_pow_mul_exp_neg_at_top_nhds_0 (2 * n)).comp tendsto_inv_zero_atTop
     ext x
@@ -180,8 +180,8 @@ theorem fAux_hasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) 
   · have : f_aux (n + 1) 0 = 0 := by simp [f_aux, le_refl]
     rw [hx, this]
     exact f_aux_deriv_zero n
-  · have : f_aux (n + 1) x = (P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1)) := by
-      simp [f_aux, not_le_of_gt hx]
+  · have : f_aux (n + 1) x = (P_aux (n + 1)).eval x * NormedSpace.exp (-x⁻¹) / x ^ (2 * (n + 1)) :=
+      by simp [f_aux, not_le_of_gt hx]
     rw [this]
     exact f_aux_deriv_pos n x hx
 #align exp_neg_inv_glue.f_aux_has_deriv_at expNegInvGlue.fAux_hasDerivAt

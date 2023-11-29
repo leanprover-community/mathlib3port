@@ -36,7 +36,7 @@ open scoped Topology
 theorem integrableOn_exp_Iic (c : ℝ) : IntegrableOn exp (Iic c) :=
   by
   refine'
-    integrable_on_Iic_of_interval_integral_norm_bounded (exp c) c
+    integrable_on_Iic_of_interval_integral_norm_bounded (NormedSpace.exp c) c
       (fun y => interval_integrable_exp.1) tendsto_id
       (eventually_of_mem (Iic_mem_at_bot 0) fun y hy => _)
   simp_rw [norm_of_nonneg (exp_pos _).le, integral_exp, sub_le_self_iff]
@@ -50,7 +50,7 @@ theorem integral_exp_Iic (c : ℝ) : ∫ x : ℝ in Iic c, exp x = exp c :=
   refine'
     tendsto_nhds_unique
       (interval_integral_tendsto_integral_Iic _ (integrableOn_exp_Iic _) tendsto_id) _
-  simp_rw [integral_exp, show 𝓝 (exp c) = 𝓝 (exp c - 0) by rw [sub_zero]]
+  simp_rw [integral_exp, show 𝓝 (NormedSpace.exp c) = 𝓝 (NormedSpace.exp c - 0) by rw [sub_zero]]
   exact tendsto_exp_at_bot.const_sub _
 #align integral_exp_Iic integral_exp_Iic
 -/
@@ -69,7 +69,7 @@ theorem integral_exp_neg_Ioi (c : ℝ) : ∫ x : ℝ in Ioi c, exp (-x) = exp (-
 
 #print integral_exp_neg_Ioi_zero /-
 theorem integral_exp_neg_Ioi_zero : ∫ x : ℝ in Ioi 0, exp (-x) = 1 := by
-  simpa only [neg_zero, exp_zero] using integral_exp_neg_Ioi 0
+  simpa only [neg_zero, NormedSpace.exp_zero] using integral_exp_neg_Ioi 0
 #align integral_exp_neg_Ioi_zero integral_exp_neg_Ioi_zero
 -/
 

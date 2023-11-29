@@ -126,7 +126,9 @@ instance (priority := 100) CanonicallyOrderedAddCommMonoid.toOrderBot (α : Type
 #align canonically_ordered_add_monoid.to_order_bot CanonicallyOrderedAddCommMonoid.toOrderBot
 -/
 
-#print CanonicallyOrderedCommMonoid /-
+/- warning: canonically_ordered_monoid clashes with canonically_ordered_add_monoid -> CanonicallyOrderedAddCommMonoid
+Case conversion may be inaccurate. Consider using '#align canonically_ordered_monoid CanonicallyOrderedAddCommMonoidₓ'. -/
+#print CanonicallyOrderedAddCommMonoid /-
 /-- A canonically ordered monoid is an ordered commutative monoid
   in which the ordering coincides with the divisibility relation,
   which is to say, `a ≤ b` iff there exists `c` with `b = a * c`.
@@ -137,11 +139,11 @@ instance (priority := 100) CanonicallyOrderedAddCommMonoid.toOrderBot (α : Type
   be more natural that collections of all things ≥ 1).
 -/
 @[protect_proj, to_additive]
-class CanonicallyOrderedCommMonoid (α : Type _) extends OrderedCommMonoid α, Bot α where
+class CanonicallyOrderedAddCommMonoid (α : Type _) extends OrderedCommMonoid α, Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   exists_hMul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c
   le_self_mul : ∀ a b : α, a ≤ a * b
-#align canonically_ordered_monoid CanonicallyOrderedCommMonoid
+#align canonically_ordered_monoid CanonicallyOrderedAddCommMonoid
 #align canonically_ordered_add_monoid CanonicallyOrderedAddCommMonoid
 -/
 
@@ -149,7 +151,7 @@ class CanonicallyOrderedCommMonoid (α : Type _) extends OrderedCommMonoid α, B
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CanonicallyOrderedCommMonoid.toOrderBot (α : Type u)
-    [h : CanonicallyOrderedCommMonoid α] : OrderBot α :=
+    [h : CanonicallyOrderedAddCommMonoid α] : OrderBot α :=
   { h with }
 #align canonically_ordered_monoid.to_order_bot CanonicallyOrderedCommMonoid.toOrderBot
 #align canonically_ordered_add_monoid.to_order_bot CanonicallyOrderedAddCommMonoid.toOrderBot
@@ -159,20 +161,20 @@ instance (priority := 100) CanonicallyOrderedCommMonoid.toOrderBot (α : Type u)
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CanonicallyOrderedCommMonoid.existsMulOfLE (α : Type u)
-    [h : CanonicallyOrderedCommMonoid α] : ExistsMulOfLE α :=
+    [h : CanonicallyOrderedAddCommMonoid α] : ExistsMulOfLE α :=
   { h with }
 #align canonically_ordered_monoid.has_exists_mul_of_le CanonicallyOrderedCommMonoid.existsMulOfLE
 #align canonically_ordered_add_monoid.has_exists_add_of_le CanonicallyOrderedAddCommMonoid.existsAddOfLE
 -/
 
-section CanonicallyOrderedCommMonoid
+section CanonicallyOrderedAddCommMonoid
 
-variable [CanonicallyOrderedCommMonoid α] {a b c d : α}
+variable [CanonicallyOrderedAddCommMonoid α] {a b c d : α}
 
 #print le_self_mul /-
 @[to_additive]
 theorem le_self_mul : a ≤ a * c :=
-  CanonicallyOrderedCommMonoid.le_self_mul _ _
+  CanonicallyOrderedAddCommMonoid.le_self_mul _ _
 #align le_self_mul le_self_mul
 #align le_self_add le_self_add
 -/
@@ -352,7 +354,7 @@ theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔
 #align lt_iff_exists_add lt_iff_exists_add
 -/
 
-end CanonicallyOrderedCommMonoid
+end CanonicallyOrderedAddCommMonoid
 
 #print pos_of_gt /-
 theorem pos_of_gt {M : Type _} [CanonicallyOrderedAddCommMonoid M] {n m : M} (h : n < m) : 0 < m :=
@@ -405,7 +407,7 @@ class CanonicallyLinearOrderedAddCommMonoid (α : Type _) extends CanonicallyOrd
 /-- A canonically linear-ordered monoid is a canonically ordered monoid
     whose ordering is a linear order. -/
 @[protect_proj, to_additive]
-class CanonicallyLinearOrderedCommMonoid (α : Type _) extends CanonicallyOrderedCommMonoid α,
+class CanonicallyLinearOrderedCommMonoid (α : Type _) extends CanonicallyOrderedAddCommMonoid α,
     LinearOrder α
 #align canonically_linear_ordered_monoid CanonicallyLinearOrderedCommMonoid
 #align canonically_linear_ordered_add_monoid CanonicallyLinearOrderedAddCommMonoid

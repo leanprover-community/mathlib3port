@@ -192,7 +192,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
     have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
-  · rintro ⟨n, rfl⟩; exact (exp_periodic.int_mul n).Eq.trans exp_zero
+  · rintro ⟨n, rfl⟩; exact (exp_periodic.int_mul n).Eq.trans NormedSpace.exp_zero
 #align complex.exp_eq_one_iff Complex.exp_eq_one_iff
 -/
 
@@ -213,12 +213,12 @@ theorem exp_eq_exp_iff_exists_int {x y : ℂ} : exp x = exp y ↔ ∃ n : ℤ, x
 theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Countable :=
   by
   refine' ⟨fun hs => _, fun hs => _⟩
-  · refine' ((hs.image exp).insert 0).mono _
+  · refine' ((hs.image NormedSpace.exp).insert 0).mono _
     rw [image_preimage_eq_inter_range, range_exp, ← diff_eq, ← union_singleton, diff_union_self]
     exact subset_union_left _ _
   · rw [← bUnion_preimage_singleton]
     refine' hs.bUnion fun z hz => _
-    rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
+    rcases em (∃ w, NormedSpace.exp w = z) with (⟨w, rfl⟩ | hne)
     · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
       exact countable_Union fun m => countable_singleton _
     · push_neg at hne ; simp [preimage, hne]

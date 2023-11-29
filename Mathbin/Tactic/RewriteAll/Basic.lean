@@ -53,8 +53,8 @@ unsafe def eval (rw : tracked_rewrite) : tactic (expr × expr) := do
 #align tactic.rewrite_all.tracked_rewrite.eval tactic.rewrite_all.tracked_rewrite.eval
 
 unsafe def replace_target (rw : tracked_rewrite) : tactic Unit := do
-  let (exp, prf) ← rw.eval
-  tactic.replace_target exp prf
+  let (NormedSpace.exp, prf) ← rw.eval
+  tactic.replace_target NormedSpace.exp prf
 #align tactic.rewrite_all.tracked_rewrite.replace_target tactic.rewrite_all.tracked_rewrite.replace_target
 
 private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : tactic Unit := do

@@ -807,7 +807,7 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : ZMod n) : a * a⁻¹ = Nat.gcd a.val n :=
     calc
       a * a⁻¹ = a * a⁻¹ + k * Nat.gcdB (val a) k := by
         rw [nat_cast_self, MulZeroClass.zero_mul, add_zero]
-      _ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) := by push_cast ;
+      _ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) := by push_cast;
         rw [nat_cast_zmod_val]; rfl
       _ = Nat.gcd a.val k := (congr_arg coe (Nat.gcd_eq_gcd_ab a.val k)).symm
 #align zmod.mul_inv_eq_gcd ZMod.mul_inv_eq_gcd
@@ -975,7 +975,7 @@ theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : ZMo
     conv =>
       lhs
       congr
-      rw [← Nat.succ_sub_one n, Nat.succ_sub <| NeZero.pos n]
+      rw [← Nat.add_one_sub_one n, Nat.succ_sub <| NeZero.pos n]
     rw [← Nat.two_mul_odd_div_two hn.1, two_mul, ← Nat.succ_add, add_tsub_cancel_right]
   have hxn : (n : ℕ) - x.val < n :=
     by

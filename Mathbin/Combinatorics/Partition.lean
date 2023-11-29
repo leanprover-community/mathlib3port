@@ -113,15 +113,15 @@ def ofMultiset (l : Multiset ℕ) : Partition l.Sum :=
 #align nat.partition.of_multiset Nat.Partition.ofMultiset
 -/
 
-#print Nat.Partition.indiscretePartition /-
+#print Nat.Partition.indiscrete /-
 /-- The partition of exactly one part. -/
-def indiscretePartition (n : ℕ) : Partition n :=
+def indiscrete (n : ℕ) : Partition n :=
   ofSums n {n} rfl
-#align nat.partition.indiscrete_partition Nat.Partition.indiscretePartition
+#align nat.partition.indiscrete_partition Nat.Partition.indiscrete
 -/
 
 instance {n : ℕ} : Inhabited (Partition n) :=
-  ⟨indiscretePartition n⟩
+  ⟨indiscrete n⟩
 
 #print Nat.Partition.count_ofSums_of_ne_zero /-
 /-- The number of times a positive integer `i` appears in the partition `of_sums n l hl` is the same

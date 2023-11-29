@@ -201,7 +201,7 @@ theorem rank_map_le (f : M →ₗ[R] M₁) (p : Submodule R M) :
 #print rank_le_of_submodule /-
 theorem rank_le_of_submodule (s t : Submodule R M) (h : s ≤ t) :
     Module.rank R s ≤ Module.rank R t :=
-  (ofLe h).rank_le_of_injective fun ⟨x, hx⟩ ⟨y, hy⟩ eq =>
+  (inclusion h).rank_le_of_injective fun ⟨x, hx⟩ ⟨y, hy⟩ eq =>
     Subtype.eq <| show x = y from Subtype.ext_iff_val.1 Eq
 #align rank_le_of_submodule rank_le_of_submodule
 -/
@@ -966,7 +966,7 @@ theorem Basis.card_le_card_of_submodule (N : Submodule R M) [Fintype ι] (b : Ba
 theorem Basis.card_le_card_of_le {N O : Submodule R M} (hNO : N ≤ O) [Fintype ι] (b : Basis ι R O)
     [Fintype ι'] (b' : Basis ι' R N) : Fintype.card ι' ≤ Fintype.card ι :=
   b.card_le_card_of_linearIndependent
-    (b'.LinearIndependent.map' (Submodule.ofLe hNO) (N.ker_ofLe O _))
+    (b'.LinearIndependent.map' (Submodule.inclusion hNO) (N.ker_inclusion O _))
 #align basis.card_le_card_of_le Basis.card_le_card_of_le
 -/
 
@@ -1365,13 +1365,14 @@ theorem rank_add_rank_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd 
 theorem Submodule.rank_sup_add_rank_inf_eq (s t : Submodule K V) :
     Module.rank K (s ⊔ t : Submodule K V) + Module.rank K (s ⊓ t : Submodule K V) =
       Module.rank K s + Module.rank K t :=
-  rank_add_rank_split (ofLe le_sup_left) (ofLe le_sup_right) (ofLe inf_le_left) (ofLe inf_le_right)
+  rank_add_rank_split (inclusion le_sup_left) (inclusion le_sup_right) (inclusion inf_le_left)
+    (inclusion inf_le_right)
     (by
       rw [← map_le_map_iff' (ker_subtype <| s ⊔ t), Submodule.map_sup, Submodule.map_top, ←
         LinearMap.range_comp, ← LinearMap.range_comp, subtype_comp_of_le, subtype_comp_of_le,
         range_subtype, range_subtype, range_subtype]
       exact le_rfl)
-    (ker_ofLe _ _ _) (by ext ⟨x, hx⟩; rfl)
+    (ker_inclusion _ _ _) (by ext ⟨x, hx⟩; rfl)
     (by
       rintro ⟨b₁, hb₁⟩ ⟨b₂, hb₂⟩ eq
       obtain rfl : b₁ = b₂ := congr_arg Subtype.val Eq

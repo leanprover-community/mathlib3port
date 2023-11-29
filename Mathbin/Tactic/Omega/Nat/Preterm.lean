@@ -23,7 +23,7 @@ namespace Nat
 multiplication by constant is allowed by the omega test. -/
 unsafe inductive exprterm : Type
   | cst : Nat → exprterm
-  | exp : Nat → expr → exprterm
+  | NormedSpace.exp : Nat → expr → exprterm
   | add : exprterm → exprterm → exprterm
   | sub : exprterm → exprterm → exprterm
 #align omega.nat.exprterm omega.nat.exprterm

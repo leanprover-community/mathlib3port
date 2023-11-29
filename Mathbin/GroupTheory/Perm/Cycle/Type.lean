@@ -657,7 +657,7 @@ theorem subgroup_eq_top_of_swap_mem [DecidableEq α] {H : Subgroup (Perm α)}
   by
   haveI : Fact (Fintype.card α).Prime := ⟨h0⟩
   obtain ⟨σ, hσ⟩ := exists_prime_orderOf_dvd_card (Fintype.card α) h1
-  have hσ1 : orderOf (σ : perm α) = Fintype.card α := (orderOf_subgroup σ).trans hσ
+  have hσ1 : orderOf (σ : perm α) = Fintype.card α := (Subgroup.orderOf_coe σ).trans hσ
   have hσ2 : is_cycle ↑σ := is_cycle_of_prime_order'' h0 hσ1
   have hσ3 : (σ : perm α).support = ⊤ :=
     Finset.eq_univ_of_card (σ : perm α).support (hσ2.order_of.symm.trans hσ1)

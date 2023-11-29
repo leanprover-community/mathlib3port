@@ -97,7 +97,7 @@ abbrev exp : C ⥤ C :=
 #align category_theory.exp CategoryTheory.exp
 -/
 
-namespace exp
+namespace NormedSpace.exp
 
 #print CategoryTheory.exp.adjunction /-
 /-- The adjunction between A ⨯ - and (-)^A. -/
@@ -138,7 +138,7 @@ theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (
 #align category_theory.exp.coev_ev CategoryTheory.exp.coev_ev
 -/
 
-end exp
+end NormedSpace.exp
 
 instance : PreservesColimits (prod.functor.obj A) :=
   (ihom.adjunction A).leftAdjointPreservesColimits
@@ -256,7 +256,7 @@ theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) 
 
 #print CategoryTheory.CartesianClosed.curry_id_eq_coev /-
 theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X := by
-  rw [curry_eq, (exp A).map_id (A ⨯ _)]; apply comp_id
+  rw [curry_eq, (NormedSpace.exp A).map_id (A ⨯ _)]; apply comp_id
 #align category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
 -/
 

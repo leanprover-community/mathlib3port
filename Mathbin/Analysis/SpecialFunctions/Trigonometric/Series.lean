@@ -37,8 +37,8 @@ theorem Complex.hasSum_cos' (z : ℂ) :
   by
   rw [Complex.cos, Complex.exp_eq_exp_ℂ]
   have :=
-    ((expSeries_div_hasSum_exp ℂ (z * Complex.I)).add
-          (expSeries_div_hasSum_exp ℂ (-z * Complex.I))).div_const
+    ((NormedSpace.expSeries_div_hasSum_exp ℂ (z * Complex.I)).add
+          (NormedSpace.expSeries_div_hasSum_exp ℂ (-z * Complex.I))).div_const
       2
   replace := (Nat.divModEquiv 2).symm.hasSum_iff.mpr this
   dsimp [Function.comp] at this 
@@ -60,8 +60,8 @@ theorem Complex.hasSum_sin' (z : ℂ) :
   by
   rw [Complex.sin, Complex.exp_eq_exp_ℂ]
   have :=
-    (((expSeries_div_hasSum_exp ℂ (-z * Complex.I)).sub
-              (expSeries_div_hasSum_exp ℂ (z * Complex.I))).hMul_right
+    (((NormedSpace.expSeries_div_hasSum_exp ℂ (-z * Complex.I)).sub
+              (NormedSpace.expSeries_div_hasSum_exp ℂ (z * Complex.I))).hMul_right
           Complex.I).div_const
       2
   replace := (Nat.divModEquiv 2).symm.hasSum_iff.mpr this

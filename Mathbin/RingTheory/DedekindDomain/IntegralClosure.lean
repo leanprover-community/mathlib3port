@@ -124,7 +124,7 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
     rw [← IsScalarTower.algebraMap_smul K (Classical.choose (hc' i)) (db i)]
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
   rw [BilinForm.dualBasis_repr_apply]
-  exact is_integral_trace (isIntegral_mul hx (hb_int i))
+  exact is_integral_trace (IsIntegral.mul hx (hb_int i))
 #align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dualBasis
 -/
 
@@ -161,9 +161,9 @@ theorem exists_integral_multiples (s : Finset L) :
     refine' ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
     · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
-      exact isIntegral_mul isIntegral_algebraMap x'.2
+      exact IsIntegral.mul isIntegral_algebraMap x'.2
     · rw [mul_comm, mul_smul, Algebra.smul_def]
-      exact isIntegral_mul isIntegral_algebraMap (hs _ hx'')
+      exact IsIntegral.mul isIntegral_algebraMap (hs _ hx'')
     · rw [IsScalarTower.algebraMap_eq A K L]
       apply (algebraMap K L).Injective.comp
       exact IsFractionRing.injective _ _
@@ -222,10 +222,10 @@ theorem IsIntegralClosure.isNoetherian [IsIntegrallyClosed A] [IsNoetherianRing 
   let b' := (trace_form K L).dualBasis (traceForm_nondegenerate K L) b
   letI := isNoetherian_span_of_finite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.range b') :=
-    (Submodule.ofLe (IsIntegralClosure.range_le_span_dualBasis C b hb_int)).comp
+    (Submodule.inclusion (IsIntegralClosure.range_le_span_dualBasis C b hb_int)).comp
       ((Algebra.linearMap C L).restrictScalars A).range_restrict
   refine' isNoetherian_of_ker_bot f _
-  rw [LinearMap.ker_comp, Submodule.ker_ofLe, Submodule.comap_bot, LinearMap.ker_codRestrict]
+  rw [LinearMap.ker_comp, Submodule.ker_inclusion, Submodule.comap_bot, LinearMap.ker_codRestrict]
   exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebraMap_injective C A L)
 #align is_integral_closure.is_noetherian IsIntegralClosure.isNoetherian
 -/

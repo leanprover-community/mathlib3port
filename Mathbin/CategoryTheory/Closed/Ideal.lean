@@ -62,7 +62,7 @@ theorem ExponentialIdeal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.ess
     ExponentialIdeal i :=
   ⟨fun B hB A => by
     rcases hB with ⟨B', ⟨iB'⟩⟩
-    exact functor.ess_image.of_iso ((exp A).mapIso iB') (h B' A)⟩
+    exact functor.ess_image.of_iso ((NormedSpace.exp A).mapIso iB') (h B' A)⟩
 #align category_theory.exponential_ideal.mk' CategoryTheory.ExponentialIdeal.mk'
 -/
 

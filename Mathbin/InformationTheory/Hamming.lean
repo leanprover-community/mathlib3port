@@ -527,9 +527,9 @@ theorem dist_eq_hammingDist (x y : Hamming β) :
 instance : PseudoMetricSpace (Hamming β) :=
   {
     Hamming.hasDist with
-    dist_self := by push_cast ; exact_mod_cast hammingDist_self
-    dist_comm := by push_cast ; exact_mod_cast hammingDist_comm
-    dist_triangle := by push_cast ; exact_mod_cast hammingDist_triangle
+    dist_self := by push_cast; exact_mod_cast hammingDist_self
+    dist_comm := by push_cast; exact_mod_cast hammingDist_comm
+    dist_triangle := by push_cast; exact_mod_cast hammingDist_triangle
     toUniformSpace := ⊥
     uniformity_dist :=
       uniformity_dist_of_mem_uniformity _ _ fun s =>
@@ -562,7 +562,7 @@ theorem nndist_eq_hammingDist (x y : Hamming β) :
 
 instance : MetricSpace (Hamming β) :=
   { Hamming.pseudoMetricSpace with
-    eq_of_dist_eq_zero := by push_cast ; exact_mod_cast @eq_of_hammingDist_eq_zero _ _ _ _ }
+    eq_of_dist_eq_zero := by push_cast; exact_mod_cast @eq_of_hammingDist_eq_zero _ _ _ _ }
 
 instance [∀ i, Zero (β i)] : Norm (Hamming β) :=
   ⟨fun x => hammingNorm (ofHamming x)⟩
@@ -575,7 +575,7 @@ theorem norm_eq_hammingNorm [∀ i, Zero (β i)] (x : Hamming β) : ‖x‖ = ha
 -/
 
 instance [∀ i, AddCommGroup (β i)] : SeminormedAddCommGroup (Hamming β) :=
-  { Pi.addCommGroup with dist_eq := by push_cast ; exact_mod_cast hammingDist_eq_hammingNorm }
+  { Pi.addCommGroup with dist_eq := by push_cast; exact_mod_cast hammingDist_eq_hammingNorm }
 
 #print Hamming.nnnorm_eq_hammingNorm /-
 @[simp, push_cast]

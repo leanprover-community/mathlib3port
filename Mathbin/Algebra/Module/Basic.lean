@@ -423,19 +423,17 @@ def RingHom.toModule [Semiring R] [Semiring S] (f : R →+* S) : Module R S :=
 #align ring_hom.to_module RingHom.toModule
 -/
 
-#print RingHom.applyDistribMulAction /-
 /-- The tautological action by `R →+* R` on `R`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance RingHom.applyDistribMulAction [Semiring R] : DistribMulAction (R →+* R) R
+instance RingHom.applyMulSemiringAction [Semiring R] : DistribMulAction (R →+* R) R
     where
   smul := (· <| ·)
   smul_zero := RingHom.map_zero
   smul_add := RingHom.map_add
   one_smul _ := rfl
   hMul_smul _ _ _ := rfl
-#align ring_hom.apply_distrib_mul_action RingHom.applyDistribMulAction
--/
+#align ring_hom.apply_distrib_mul_action RingHom.applyMulSemiringActionₓ
 
 #print RingHom.smul_def /-
 @[simp]

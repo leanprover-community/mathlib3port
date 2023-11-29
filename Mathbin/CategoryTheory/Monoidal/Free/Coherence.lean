@@ -76,7 +76,7 @@ local infixr:10 " ⟶ᵐ " => Hom
 /-- Auxiliary definition for `inclusion`. -/
 @[simp]
 def inclusionObj : NormalMonoidalObject C → F C
-  | normal_monoidal_object.unit => Unit
+  | normal_monoidal_object.unit => unit
   | normal_monoidal_object.tensor n a => tensor (inclusion_obj n) (of a)
 #align category_theory.free_monoidal_category.inclusion_obj CategoryTheory.FreeMonoidalCategory.inclusionObj
 -/
@@ -176,8 +176,8 @@ def normalize' : F C ⥤ N C ⥤ F C :=
 /-- The normalization functor for the free monoidal category over `C`. -/
 def fullNormalize : F C ⥤ N C
     where
-  obj X := ((normalize C).obj X).obj ⟨NormalMonoidalObject.Unit⟩
-  map X Y f := ((normalize C).map f).app ⟨NormalMonoidalObject.Unit⟩
+  obj X := ((normalize C).obj X).obj ⟨NormalMonoidalObject.unit⟩
+  map X Y f := ((normalize C).map f).app ⟨NormalMonoidalObject.unit⟩
 #align category_theory.free_monoidal_category.full_normalize CategoryTheory.FreeMonoidalCategory.fullNormalize
 -/
 
@@ -342,7 +342,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
 /-- The isomorphism between an object and its normal form is natural. -/
 def fullNormalizeIso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
   NatIso.ofComponents
-    (fun X => (λ_ X).symm ≪≫ ((normalizeIso C).app X).app ⟨NormalMonoidalObject.Unit⟩)
+    (fun X => (λ_ X).symm ≪≫ ((normalizeIso C).app X).app ⟨NormalMonoidalObject.unit⟩)
     (by
       intro X Y f
       dsimp

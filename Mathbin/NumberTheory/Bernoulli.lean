@@ -208,7 +208,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
 theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoulli' n = 0 :=
   by
   let B := mk fun n => bernoulli' n / n !
-  suffices (B - eval_neg_hom B) * (exp ℚ - 1) = X * (exp ℚ - 1)
+  suffices (B - eval_neg_hom B) * (NormedSpace.exp ℚ - 1) = X * (NormedSpace.exp ℚ - 1)
     by
     cases mul_eq_mul_right_iff.mp this <;>
       simp only [PowerSeries.ext_iff, eval_neg_hom, coeff_X] at h 
@@ -216,11 +216,14 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
       specialize h n
       split_ifs at h  <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
     · simpa using h 1
-  have h : B * (exp ℚ - 1) = X * exp ℚ := by
+  have h : B * (NormedSpace.exp ℚ - 1) = X * NormedSpace.exp ℚ := by
     simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ
   rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_eq_neg]
-  suffices eval_neg_hom (B * (exp ℚ - 1)) * exp ℚ = eval_neg_hom (X * exp ℚ) * exp ℚ by
-    simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one]
+  suffices
+    eval_neg_hom (B * (NormedSpace.exp ℚ - 1)) * NormedSpace.exp ℚ =
+      eval_neg_hom (X * NormedSpace.exp ℚ) * NormedSpace.exp ℚ
+    by
+    simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (NormedSpace.exp ℚ)), exp_mul_exp_neg_eq_one]
   congr
 #align bernoulli'_odd_eq_zero bernoulli'_odd_eq_zero
 -/
@@ -353,12 +356,12 @@ theorem sum_range_pow (n p : ℕ) :
   have hne : ∀ m : ℕ, (m ! : ℚ) ≠ 0 := fun m => by exact_mod_cast factorial_ne_zero m
   -- compute the Cauchy product of two power series
   have h_cauchy :
-    ((mk fun p => bernoulli p / p !) * mk fun q => coeff ℚ (q + 1) (exp ℚ ^ n)) =
+    ((mk fun p => bernoulli p / p !) * mk fun q => coeff ℚ (q + 1) (NormedSpace.exp ℚ ^ n)) =
       mk fun p =>
         ∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)! :=
     by
     ext q : 1
-    let f a b := bernoulli a / a ! * coeff ℚ (b + 1) (exp ℚ ^ n)
+    let f a b := bernoulli a / a ! * coeff ℚ (b + 1) (NormedSpace.exp ℚ ^ n)
     -- key step: use `power_series.coeff_mul` and then rewrite sums
     simp only [coeff_mul, coeff_mk, cast_mul, sum_antidiagonal_eq_sum_range_succ f]
     apply sum_congr rfl
@@ -387,14 +390,15 @@ theorem sum_range_pow (n p : ℕ) :
       rw [PowerSeries.ext_iff] at this 
       simpa using this p
     -- the power series `exp ℚ - 1` is non-zero, a fact we need in order to use `mul_right_inj'`
-    have hexp : exp ℚ - 1 ≠ 0 :=
+    have hexp : NormedSpace.exp ℚ - 1 ≠ 0 :=
       by
-      simp only [exp, PowerSeries.ext_iff, Ne, Classical.not_forall]
+      simp only [NormedSpace.exp, PowerSeries.ext_iff, Ne, Classical.not_forall]
       use 1
       simp
-    have h_r : exp ℚ ^ n - 1 = X * mk fun p => coeff ℚ (p + 1) (exp ℚ ^ n) :=
+    have h_r :
+      NormedSpace.exp ℚ ^ n - 1 = X * mk fun p => coeff ℚ (p + 1) (NormedSpace.exp ℚ ^ n) :=
       by
-      have h_const : C ℚ (constant_coeff ℚ (exp ℚ ^ n)) = 1 := by simp
+      have h_const : C ℚ (constant_coeff ℚ (NormedSpace.exp ℚ ^ n)) = 1 := by simp
       rw [← h_const, sub_const_eq_X_mul_shift]
     -- key step: a chain of equalities of power series
     rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, geom_sum_mul, h_r, ←

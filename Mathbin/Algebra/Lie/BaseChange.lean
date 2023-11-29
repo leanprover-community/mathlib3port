@@ -131,9 +131,9 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ =
   · intro z₁ z₂ h₁ h₂
     simp only [h₁, h₂, smul_add, add_lie]
 
-#print LieAlgebra.ExtendScalars.lieAlgebra /-
-instance lieAlgebra : LieAlgebra A (A ⊗[R] L) where lie_smul := bracket_lie_smul R A L
-#align lie_algebra.extend_scalars.lie_algebra LieAlgebra.ExtendScalars.lieAlgebra
+#print LieAlgebra.ExtendScalars.instLieAlgebra /-
+instance instLieAlgebra : LieAlgebra A (A ⊗[R] L) where lie_smul := bracket_lie_smul R A L
+#align lie_algebra.extend_scalars.lie_algebra LieAlgebra.ExtendScalars.instLieAlgebra
 -/
 
 end ExtendScalars

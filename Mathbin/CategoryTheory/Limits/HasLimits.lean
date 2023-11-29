@@ -1491,20 +1491,20 @@ theorem hasColimitsOfShape_of_equivalence {J' : Type u₂} [Category.{v₂} J'] 
 
 variable (C)
 
-#print CategoryTheory.Limits.hasColimitsOfSize_shrink /-
+#print CategoryTheory.Limits.hasColimitsOfSizeShrink /-
 /-- `has_colimits_of_size_shrink.{v u} C` tries to obtain `has_colimits_of_size.{v u} C`
 from some other `has_colimits_of_size C`.
 -/
-theorem hasColimitsOfSize_shrink [HasColimitsOfSize.{max v₁ v₂, max u₁ u₂} C] :
+theorem hasColimitsOfSizeShrink [HasColimitsOfSize.{max v₁ v₂, max u₁ u₂} C] :
     HasColimitsOfSize.{v₁, u₁} C :=
   ⟨fun J hJ => has_colimits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v₂, u₂} J).symm⟩
-#align category_theory.limits.has_colimits_of_size_shrink CategoryTheory.Limits.hasColimitsOfSize_shrink
+#align category_theory.limits.has_colimits_of_size_shrink CategoryTheory.Limits.hasColimitsOfSizeShrink
 -/
 
 #print CategoryTheory.Limits.hasSmallestColimitsOfHasColimits /-
 instance (priority := 100) hasSmallestColimitsOfHasColimits [HasColimits C] :
     HasColimitsOfSize.{0, 0} C :=
-  hasColimitsOfSize_shrink.{0, 0} C
+  hasColimitsOfSizeShrink.{0, 0} C
 #align category_theory.limits.has_smallest_colimits_of_has_colimits CategoryTheory.Limits.hasSmallestColimitsOfHasColimits
 -/
 

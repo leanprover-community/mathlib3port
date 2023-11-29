@@ -69,10 +69,10 @@ inductive Hom : F C → F C → Type u
   | id (X) : hom X X
   | α_hom (X Y Z : F C) : hom ((X.tensor Y).tensor Z) (X.tensor (Y.tensor Z))
   | α_inv (X Y Z : F C) : hom (X.tensor (Y.tensor Z)) ((X.tensor Y).tensor Z)
-  | l_hom (X) : hom (Unit.tensor X) X
-  | l_inv (X) : hom X (Unit.tensor X)
-  | ρ_hom (X : F C) : hom (X.tensor Unit) X
-  | ρ_inv (X : F C) : hom X (X.tensor Unit)
+  | l_hom (X) : hom (unit.tensor X) X
+  | l_inv (X) : hom X (unit.tensor X)
+  | ρ_hom (X : F C) : hom (X.tensor unit) X
+  | ρ_inv (X : F C) : hom X (X.tensor unit)
   | comp {X Y Z} (f : hom X Y) (g : hom Y Z) : hom X Z
   | tensor {W X Y Z} (f : hom W Y) (g : hom X Z) : hom (W.tensor X) (Y.tensor Z)
 #align category_theory.free_monoidal_category.hom CategoryTheory.FreeMonoidalCategory.Hom
@@ -112,12 +112,12 @@ inductive HomEquivCat : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | ρ_inv_hom {X} : hom_equiv ((Hom.ρ_inv X).comp (Hom.ρ_hom X)) (Hom.id _)
   |
   ρ_naturality {X Y} (f : X ⟶ᵐ Y) :
-    hom_equiv ((f.tensor (Hom.id Unit)).comp (Hom.ρ_hom Y)) ((Hom.ρ_hom X).comp f)
+    hom_equiv ((f.tensor (Hom.id unit)).comp (Hom.ρ_hom Y)) ((Hom.ρ_hom X).comp f)
   | l_hom_inv {X} : hom_equiv ((Hom.l_hom X).comp (Hom.l_inv X)) (Hom.id _)
   | l_inv_hom {X} : hom_equiv ((Hom.l_inv X).comp (Hom.l_hom X)) (Hom.id _)
   |
   l_naturality {X Y} (f : X ⟶ᵐ Y) :
-    hom_equiv (((Hom.id Unit).tensor f).comp (Hom.l_hom Y)) ((Hom.l_hom X).comp f)
+    hom_equiv (((Hom.id unit).tensor f).comp (Hom.l_hom Y)) ((Hom.l_hom X).comp f)
   |
   pentagon {W X Y Z} :
     hom_equiv
@@ -126,7 +126,7 @@ inductive HomEquivCat : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
       ((Hom.α_hom (W.tensor X) Y Z).comp (Hom.α_hom W X (Y.tensor Z)))
   |
   triangle {X Y} :
-    hom_equiv ((Hom.α_hom X Unit Y).comp ((Hom.id X).tensor (Hom.l_hom Y)))
+    hom_equiv ((Hom.α_hom X unit Y).comp ((Hom.id X).tensor (Hom.l_hom Y)))
       ((Hom.ρ_hom X).tensor (Hom.id Y))
 #align category_theory.free_monoidal_category.hom_equiv CategoryTheory.FreeMonoidalCategory.HomEquivCat
 
@@ -167,7 +167,7 @@ instance : MonoidalCategory (F C)
   tensor_id' X Y := Quotient.sound tensor_id
   tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩;
     exact Quotient.sound (tensor_comp _ _ _ _)
-  tensorUnit := FreeMonoidalCategory.Unit
+  tensorUnit := FreeMonoidalCategory.unit
   associator X Y Z :=
     ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotient.sound α_hom_inv, Quotient.sound α_inv_hom⟩
   associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ := by rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩;
@@ -255,7 +255,7 @@ theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
 
 #print CategoryTheory.FreeMonoidalCategory.unit_eq_unit /-
 @[simp]
-theorem unit_eq_unit : FreeMonoidalCategory.Unit = 𝟙_ (F C) :=
+theorem unit_eq_unit : FreeMonoidalCategory.unit = 𝟙_ (F C) :=
   rfl
 #align category_theory.free_monoidal_category.unit_eq_unit CategoryTheory.FreeMonoidalCategory.unit_eq_unit
 -/

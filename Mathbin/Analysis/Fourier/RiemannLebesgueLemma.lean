@@ -95,9 +95,10 @@ theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
     by
     ext1 v
     simp_rw [inner_add_left, hiw, Real.fourierChar_apply, neg_add, mul_add, of_real_add, add_mul,
-      exp_add]
+      NormedSpace.exp_add]
     have : 2 * π * -(1 / 2) = -π := by field_simp; ring
-    rw [this, of_real_neg, neg_mul, exp_neg, exp_pi_mul_I, inv_neg, inv_one, mul_neg_one, neg_neg]
+    rw [this, of_real_neg, neg_mul, NormedSpace.exp_neg, exp_pi_mul_I, inv_neg, inv_one,
+      mul_neg_one, neg_neg]
   rw [this, integral_add_right_eq_self]
   simp only [neg_smul, integral_neg]
 #align fourier_integral_half_period_translate fourier_integral_half_period_translate

@@ -36,16 +36,16 @@ namespace Finset
 
 variable {α : Type _} [DecidableEq α] {s t : Finset α} {a b : α}
 
-#print Finset.isDiag_mk'_of_mem_diag /-
-theorem isDiag_mk'_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
+#print Finset.isDiag_mk_of_mem_diag /-
+theorem isDiag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
   (Sym2.isDiag_iff_proj_eq _).2 (mem_diag.1 h).2
-#align finset.is_diag_mk_of_mem_diag Finset.isDiag_mk'_of_mem_diag
+#align finset.is_diag_mk_of_mem_diag Finset.isDiag_mk_of_mem_diag
 -/
 
-#print Finset.not_isDiag_mk'_of_mem_offDiag /-
-theorem not_isDiag_mk'_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
+#print Finset.not_isDiag_mk_of_mem_offDiag /-
+theorem not_isDiag_mk_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
   rw [Sym2.isDiag_iff_proj_eq]; exact (mem_off_diag.1 h).2.2
-#align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk'_of_mem_offDiag
+#align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk_of_mem_offDiag
 -/
 
 section Sym2
@@ -73,9 +73,9 @@ theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s :=
 #align finset.mem_sym2_iff Finset.mem_sym2_iff
 -/
 
-#print Finset.mk'_mem_sym2_iff /-
-theorem mk'_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
-#align finset.mk_mem_sym2_iff Finset.mk'_mem_sym2_iff
+#print Finset.mk_mem_sym2_iff /-
+theorem mk_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
+#align finset.mk_mem_sym2_iff Finset.mk_mem_sym2_iff
 -/
 
 #print Finset.sym2_empty /-
@@ -100,7 +100,7 @@ theorem sym2_nonempty : s.Sym2.Nonempty ↔ s.Nonempty := by
 -/
 
 alias ⟨_, nonempty.sym2⟩ := sym2_nonempty
-#align finset.nonempty.sym2 Finset.nonempty.sym2
+#align finset.nonempty.sym2 Finset.Nonempty.sym2
 
 attribute [protected] nonempty.sym2
 
@@ -121,7 +121,7 @@ theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
 #print Finset.diag_mem_sym2_iff /-
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
-  mk'_mem_sym2_iff.trans <| and_self_iff _
+  mk_mem_sym2_iff.trans <| and_self_iff _
 #align finset.diag_mem_sym2_iff Finset.diag_mem_sym2_iff
 -/
 

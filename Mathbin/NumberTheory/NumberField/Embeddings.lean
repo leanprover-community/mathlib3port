@@ -119,7 +119,7 @@ theorem finite_of_norm_le (B : ℝ) : {x : K | IsIntegral ℤ x ∧ ∀ φ : K �
   have h_map_ℚ_minpoly := minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hx.1
   refine' ⟨_, ⟨_, fun i => _⟩, mem_root_set.2 ⟨minpoly.ne_zero hx.1, minpoly.aeval ℤ x⟩⟩
   · rw [← (minpoly.monic hx.1).natDegree_map (algebraMap ℤ ℚ), ← h_map_ℚ_minpoly]
-    exact minpoly.natDegree_le (isIntegral_of_isScalarTower hx.1)
+    exact minpoly.natDegree_le (IsIntegral.tower_top hx.1)
   rw [mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
   refine' (Eq.trans_le _ <| coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
   rw [h_map_ℚ_minpoly, coeff_map, eq_intCast, Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]

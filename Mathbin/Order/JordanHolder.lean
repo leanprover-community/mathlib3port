@@ -342,7 +342,7 @@ theorem ofList_toList (s : CompositionSeries X) :
     ofList s.toList s.toList_ne_nil s.chain'_toList = s :=
   by
   refine' ext_fun _ _
-  · rw [length_of_list, length_to_list, Nat.succ_sub_one]
+  · rw [length_of_list, length_to_list, Nat.add_one_sub_one]
   · rintro ⟨i, hi⟩
     dsimp [of_list, to_list]
     rw [List.nthLe_ofFn']
@@ -505,7 +505,8 @@ theorem mem_eraseTop_of_ne_of_mem {s : CompositionSeries X} {x : X} (hx : x ≠ 
   rcases hxs with ⟨i, rfl⟩
   have hi : (i : ℕ) < (s.length - 1).succ :=
     by
-    conv_rhs => rw [← Nat.succ_sub (length_pos_of_mem_ne ⟨i, rfl⟩ s.top_mem hx), Nat.succ_sub_one]
+    conv_rhs =>
+      rw [← Nat.succ_sub (length_pos_of_mem_ne ⟨i, rfl⟩ s.top_mem hx), Nat.add_one_sub_one]
     exact lt_of_le_of_ne (Nat.le_of_lt_succ i.2) (by simpa [top, s.inj, Fin.ext_iff] using hx)
   refine' ⟨i.cast_succ, _⟩
   simp [Fin.ext_iff, Nat.mod_eq_of_lt hi]
@@ -522,7 +523,7 @@ theorem mem_eraseTop {s : CompositionSeries X} {x : X} (h : 0 < s.length) :
   · rintro ⟨i, rfl⟩
     have hi : (i : ℕ) < s.length :=
       by
-      conv_rhs => rw [← Nat.succ_sub_one s.length, Nat.succ_sub h]
+      conv_rhs => rw [← Nat.add_one_sub_one s.length, Nat.succ_sub h]
       exact i.2
     simp [top, Fin.ext_iff, ne_of_lt hi]
   · intro h
@@ -542,7 +543,7 @@ theorem isMaximal_eraseTop_top {s : CompositionSeries X} (h : 0 < s.length) :
     IsMaximal s.eraseTop.top s.top :=
   by
   have : s.length - 1 + 1 = s.length := by
-    conv_rhs => rw [← Nat.succ_sub_one s.length] <;> rw [Nat.succ_sub h]
+    conv_rhs => rw [← Nat.add_one_sub_one s.length] <;> rw [Nat.succ_sub h]
   rw [top_erase_top, top]
   convert s.step ⟨s.length - 1, Nat.sub_lt h zero_lt_one⟩ <;> ext <;> simp [this]
 #align composition_series.is_maximal_erase_top_top CompositionSeries.isMaximal_eraseTop_top

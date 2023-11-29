@@ -453,9 +453,9 @@ theorem card_le_card_biUnion_add_one {s : Finset ι} {f : ι → Finset α} (hf 
 
 end DoubleCounting
 
-section CanonicallyOrderedCommMonoid
+section CanonicallyOrderedAddCommMonoid
 
-variable [CanonicallyOrderedCommMonoid M] {f : ι → M} {s t : Finset ι}
+variable [CanonicallyOrderedAddCommMonoid M] {f : ι → M} {s t : Finset ι}
 
 #print Finset.prod_eq_one_iff' /-
 @[simp, to_additive sum_eq_zero_iff]
@@ -498,7 +498,7 @@ theorem prod_le_prod_of_ne_one' (h : ∀ x ∈ s, f x ≠ 1 → x ∈ t) : ∏ x
 #align finset.sum_le_sum_of_ne_zero Finset.sum_le_sum_of_ne_zero
 -/
 
-end CanonicallyOrderedCommMonoid
+end CanonicallyOrderedAddCommMonoid
 
 section OrderedCancelCommMonoid
 

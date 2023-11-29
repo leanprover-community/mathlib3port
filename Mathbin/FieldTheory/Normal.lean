@@ -123,7 +123,7 @@ theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
     cases' h.out x with hx hhx
     rw [algebra_map_eq F K E] at hhx 
     exact
-      ⟨isIntegral_of_isScalarTower hx,
+      ⟨IsIntegral.tower_top hx,
         Polynomial.splits_of_splits_of_dvd (algebraMap K E)
           (Polynomial.map_ne_zero (minpoly.ne_zero hx))
           ((Polynomial.splits_map_iff (algebraMap F K) (algebraMap K E)).mpr hhx)
@@ -141,8 +141,7 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
       minpoly.mem_range_of_degree_eq_one E x
         (h2.def.resolve_left (minpoly.ne_zero h1)
           (minpoly.irreducible
-            (isIntegral_of_isScalarTower
-              ((isIntegral_algebraMap_iff (algebraMap K E).Injective).mp h1)))
+            (IsIntegral.tower_top ((isIntegral_algebraMap_iff (algebraMap K E).Injective).mp h1)))
           (minpoly.dvd E x
             ((algebraMap K E).Injective
               (by
@@ -159,7 +158,7 @@ variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 theorem Normal.of_algEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
   normal_iff.2 fun x => by
     cases' h.out (f.symm x) with hx hhx
-    have H := map_isIntegral f.to_alg_hom hx
+    have H := IsIntegral.map f.to_alg_hom hx
     rw [AlgEquiv.toAlgHom_eq_coe, AlgEquiv.coe_algHom, AlgEquiv.apply_symm_apply] at H 
     use H
     apply Polynomial.splits_of_splits_of_dvd (algebraMap F E') (minpoly.ne_zero hx)
@@ -327,8 +326,8 @@ def AlgHom.restrictNormalAux [h : Normal F E] :
         Or.resolve_left (h.splits z).def (minpoly.ne_zero (h.is_integral z)) (minpoly.irreducible _)
           (minpoly.dvd E _ (by simp [aeval_alg_hom_apply]))
       simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
-      suffices IsIntegral F _ by exact isIntegral_of_isScalarTower this
-      exact map_isIntegral ϕ (map_isIntegral (to_alg_hom F E K₁) (h.is_integral z))⟩
+      suffices IsIntegral F _ by exact IsIntegral.tower_top this
+      exact IsIntegral.map ϕ (IsIntegral.map (to_alg_hom F E K₁) (h.is_integral z))⟩
   map_zero' := Subtype.ext ϕ.map_zero
   map_one' := Subtype.ext ϕ.map_one
   map_add' x y := Subtype.ext (ϕ.map_add x y)
@@ -451,7 +450,7 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
       @IntermediateField.nonempty_algHom_of_adjoin_splits _ _ _ _ _ _ _
         ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _
         (IntermediateField.adjoin_univ _ _) fun x hx =>
-        ⟨isIntegral_of_isScalarTower (h.out x).1,
+        ⟨IsIntegral.tower_top (h.out x).1,
           splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero (h.out x).1))
             (by rw [splits_map_iff, ← IsScalarTower.algebraMap_eq]; exact (h.out x).2)
             (minpoly.dvd_map_of_isScalarTower F K₁ x)⟩
@@ -547,8 +546,8 @@ noncomputable def normalClosure : IntermediateField K L :=
 
 namespace normalClosure
 
-#print normalClosure.restrictScalars_eq_iSup_adjoin /-
-theorem restrictScalars_eq_iSup_adjoin [h : Normal F L] :
+#print normalClosure_eq_iSup_adjoin /-
+theorem normalClosure_eq_iSup_adjoin [h : Normal F L] :
     (normalClosure F K L).restrictScalars F = ⨆ x : K, adjoin F ((minpoly F x).rootSet L) :=
   by
   refine' le_antisymm (iSup_le _) (iSup_le fun x => adjoin_le_iff.mpr fun y hy => _)
@@ -574,7 +573,7 @@ theorem restrictScalars_eq_iSup_adjoin [h : Normal F L] :
         ⟨x, (g.lift_normal_commutes L (adjoin_simple.gen F x)).trans _⟩
     rw [Algebra.id.map_eq_id, RingHom.id_apply]
     apply PowerBasis.lift_gen
-#align normal_closure.restrict_scalars_eq_supr_adjoin normalClosure.restrictScalars_eq_iSup_adjoin
+#align normal_closure.restrict_scalars_eq_supr_adjoin normalClosure_eq_iSup_adjoin
 -/
 
 #print normalClosure.normal /-

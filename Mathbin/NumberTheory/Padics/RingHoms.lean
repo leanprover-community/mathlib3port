@@ -404,7 +404,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   dsimp only [appr]
   split_ifs with h
   · rw [h]; apply dvd_zero
-  push_cast ; rw [sub_add_eq_sub_sub]
+  push_cast; rw [sub_add_eq_sub_sub]
   obtain ⟨c, hc⟩ := ih x
   simp only [map_natCast, ZMod.nat_cast_self, RingHom.map_pow, RingHom.map_mul, ZMod.nat_cast_val]
   have hc' : c ≠ 0 := by rintro rfl; simp only [MulZeroClass.mul_zero] at hc ; contradiction

@@ -255,11 +255,11 @@ theorem neg_apply (f : E →ₗ.[R] F) (x) : (-f) x = -f x :=
 instance : LE (E →ₗ.[R] F) :=
   ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y⟩
 
-#print LinearPMap.apply_comp_ofLe /-
-theorem apply_comp_ofLe {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) :
-    T x = S (Submodule.ofLe h.1 x) :=
+#print LinearPMap.apply_comp_inclusion /-
+theorem apply_comp_inclusion {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) :
+    T x = S (Submodule.inclusion h.1 x) :=
   h.2 rfl
-#align linear_pmap.apply_comp_of_le LinearPMap.apply_comp_ofLe
+#align linear_pmap.apply_comp_of_le LinearPMap.apply_comp_inclusion
 -/
 
 #print LinearPMap.exists_of_le /-
@@ -292,7 +292,7 @@ def eqLocus (f g : E →ₗ.[R] F) : Submodule R E
 -/
 
 instance : Inf (E →ₗ.[R] F) :=
-  ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp <| ofLe fun x hx => hx.fst⟩⟩
+  ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp <| inclusion fun x hx => hx.fst⟩⟩
 
 instance : Bot (E →ₗ.[R] F) :=
   ⟨⟨⊥, 0⟩⟩
@@ -305,7 +305,7 @@ instance : SemilatticeInf (E →ₗ.[R] F) where
   le_refl f := ⟨le_refl f.domain, fun x y h => Subtype.eq h ▸ rfl⟩
   le_trans := fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
     ⟨le_trans fg_le gh_le, fun x z hxz =>
-      have hxy : (x : E) = ofLe fg_le x := rfl
+      have hxy : (x : E) = inclusion fg_le x := rfl
       (fg_eq hxy).trans (gh_eq <| hxy.symm.trans hxz)⟩
   le_antisymm f g fg gf := eq_of_le_of_domain_eq fg (le_antisymm fg.1 gf.1)
   inf := (· ⊓ ·)
@@ -707,7 +707,7 @@ theorem coprod_apply (f : E →ₗ.[R] G) (g : F →ₗ.[R] G) (x) :
 #print LinearPMap.domRestrict /-
 /-- Restrict a partially defined linear map to a submodule of `E` contained in `f.domain`. -/
 def domRestrict (f : E →ₗ.[R] F) (S : Submodule R E) : E →ₗ.[R] F :=
-  ⟨S ⊓ f.domain, f.toFun.comp (Submodule.ofLe (by simp))⟩
+  ⟨S ⊓ f.domain, f.toFun.comp (Submodule.inclusion (by simp))⟩
 #align linear_pmap.dom_restrict LinearPMap.domRestrict
 -/
 
@@ -723,7 +723,7 @@ theorem domRestrict_domain (f : E →ₗ.[R] F) {S : Submodule R E} :
 theorem domRestrict_apply {f : E →ₗ.[R] F} {S : Submodule R E} ⦃x : S ⊓ f.domain⦄ ⦃y : f.domain⦄
     (h : (x : E) = y) : f.domRestrict S x = f y :=
   by
-  have : Submodule.ofLe (by simp) x = y := by ext; simp [h]
+  have : Submodule.inclusion (by simp) x = y := by ext; simp [h]
   rw [← this]
   exact LinearPMap.mk_apply _ _ _
 #align linear_pmap.dom_restrict_apply LinearPMap.domRestrict_apply

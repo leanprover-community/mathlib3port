@@ -230,8 +230,8 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } 
 theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 :=
   by
   rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag,
-    Sym2.card_image_offDiag, Nat.choose_two_right, add_comm, ← Nat.triangle_succ, Nat.succ_sub_one,
-    mul_comm]
+    Sym2.card_image_offDiag, Nat.choose_two_right, add_comm, ← Nat.triangle_succ,
+    Nat.add_one_sub_one, mul_comm]
   rw [disjoint_left]
   rintro m ha hb
   rw [mem_image] at ha hb 

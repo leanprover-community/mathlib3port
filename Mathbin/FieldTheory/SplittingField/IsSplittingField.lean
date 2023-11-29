@@ -145,7 +145,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f]
 theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
   ⟨@Algebra.top_toSubmodule K L _ _ _ ▸
       adjoin_rootSet L f ▸
-        FG_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
+        fg_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
           if hf : f = 0 then by rw [hf, root_set_zero] at hy ; cases hy
           else
             isAlgebraic_iff_isIntegral.1

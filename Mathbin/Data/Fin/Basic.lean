@@ -2389,7 +2389,7 @@ theorem coe_neg_one : ↑(-1 : Fin (n + 1)) = n :=
   by
   cases n
   · simp
-  rw [Fin.coe_neg, Fin.val_one, Nat.succ_sub_one, Nat.mod_eq_of_lt]
+  rw [Fin.coe_neg, Fin.val_one, Nat.add_one_sub_one, Nat.mod_eq_of_lt]
   constructor
 #align fin.coe_neg_one Fin.coe_neg_one
 -/

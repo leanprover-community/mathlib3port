@@ -110,12 +110,10 @@ theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ring A] :
 #align commutative_ring_iff_abelian_lie_ring commutative_ring_iff_abelian_lie_ring
 -/
 
-#print LieAlgebra.isLieAbelian_bot /-
 theorem LieAlgebra.isLieAbelian_bot (R : Type u) (L : Type v) [CommRing R] [LieRing L]
     [LieAlgebra R L] : IsLieAbelian (⊥ : LieIdeal R L) :=
   ⟨fun ⟨x, hx⟩ _ => by convert zero_lie _⟩
 #align lie_algebra.is_lie_abelian_bot LieAlgebra.isLieAbelian_bot
--/
 
 section Center
 

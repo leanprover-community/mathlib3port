@@ -734,7 +734,7 @@ def toBasicOpen (f : R) : Localization.Away f →+* (structureSheaf R).1.obj (op
 @[simp]
 theorem toBasicOpen_mk' (s f : R) (g : Submonoid.powers s) :
     toBasicOpen R s (IsLocalization.mk' (Localization.Away s) f g) =
-      const R f g (basicOpen s) fun x hx => Submonoid.powers_subset hx g.2 :=
+      const R f g (basicOpen s) fun x hx => Submonoid.powers_le hx g.2 :=
   (IsLocalization.lift_mk'_spec _ _ _ _).2 <| by
     rw [to_open_eq_const, to_open_eq_const, const_mul_cancel']
 #align algebraic_geometry.structure_sheaf.to_basic_open_mk' AlgebraicGeometry.StructureSheaf.toBasicOpen_mk'

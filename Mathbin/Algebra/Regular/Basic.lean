@@ -408,37 +408,35 @@ theorem IsUnit.isRegular (ua : IsUnit a) : IsRegular a :=
 
 end Monoid
 
-#print isLeftRegular_of_leftCancelSemigroup /-
+#print IsLeftRegular.all /-
 /-- Elements of a left cancel semigroup are left regular. -/
 @[to_additive "Elements of an add left cancel semigroup are add-left-regular."]
-theorem isLeftRegular_of_leftCancelSemigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
+theorem IsLeftRegular.all [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
   mul_right_injective g
-#align is_left_regular_of_left_cancel_semigroup isLeftRegular_of_leftCancelSemigroup
-#align is_add_left_regular_of_left_cancel_add_semigroup isAddLeftRegular_of_addLeftCancelSemigroup
+#align is_left_regular_of_left_cancel_semigroup IsLeftRegular.all
+#align is_add_left_regular_of_left_cancel_add_semigroup IsAddLeftRegular.all
 -/
 
-#print isRightRegular_of_rightCancelSemigroup /-
+#print IsRightRegular.all /-
 /-- Elements of a right cancel semigroup are right regular. -/
 @[to_additive "Elements of an add right cancel semigroup are add-right-regular"]
-theorem isRightRegular_of_rightCancelSemigroup [RightCancelSemigroup R] (g : R) :
-    IsRightRegular g :=
+theorem IsRightRegular.all [RightCancelSemigroup R] (g : R) : IsRightRegular g :=
   mul_left_injective g
-#align is_right_regular_of_right_cancel_semigroup isRightRegular_of_rightCancelSemigroup
-#align is_add_right_regular_of_right_cancel_add_semigroup isAddRightRegular_of_addRightCancelSemigroup
+#align is_right_regular_of_right_cancel_semigroup IsRightRegular.all
 -/
 
 section CancelMonoid
 
 variable [CancelMonoid R]
 
-#print isRegular_of_cancelMonoid /-
+#print IsRegular.all /-
 /-- Elements of a cancel monoid are regular.  Cancel semigroups do not appear to exist. -/
 @[to_additive
       "Elements of an add cancel monoid are regular.  Add cancel semigroups do not appear to exist."]
-theorem isRegular_of_cancelMonoid (g : R) : IsRegular g :=
+theorem IsRegular.all (g : R) : IsRegular g :=
   ⟨mul_right_injective g, mul_left_injective g⟩
-#align is_regular_of_cancel_monoid isRegular_of_cancelMonoid
-#align is_add_regular_of_cancel_add_monoid isAddRegular_of_addCancelMonoid
+#align is_regular_of_cancel_monoid IsRegular.all
+#align is_add_regular_of_cancel_add_monoid IsAddRegular.all
 -/
 
 end CancelMonoid

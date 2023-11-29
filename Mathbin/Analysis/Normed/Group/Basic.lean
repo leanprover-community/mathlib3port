@@ -2037,7 +2037,7 @@ theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
 #print nnnorm_multiset_prod_le /-
 @[to_additive]
 theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
-  NNReal.coe_le_coe.1 <| by push_cast ; rw [Multiset.map_map]; exact norm_multiset_prod_le _
+  NNReal.coe_le_coe.1 <| by push_cast; rw [Multiset.map_map]; exact norm_multiset_prod_le _
 #align nnnorm_multiset_prod_le nnnorm_multiset_prod_le
 #align nnnorm_multiset_sum_le nnnorm_multiset_sum_le
 -/
@@ -2045,7 +2045,7 @@ theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fu
 #print nnnorm_prod_le /-
 @[to_additive]
 theorem nnnorm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ a in s, f a‖₊ ≤ ∑ a in s, ‖f a‖₊ :=
-  NNReal.coe_le_coe.1 <| by push_cast ; exact norm_prod_le _ _
+  NNReal.coe_le_coe.1 <| by push_cast; exact norm_prod_le _ _
 #align nnnorm_prod_le nnnorm_prod_le
 #align nnnorm_sum_le nnnorm_sum_le
 -/

@@ -623,7 +623,7 @@ variable (F K E : Type _) [Field F] [Field K] [Field E] [Algebra F K] [Algebra F
 
 #print isSeparable_tower_top_of_isSeparable /-
 theorem isSeparable_tower_top_of_isSeparable [IsSeparable F E] : IsSeparable K E :=
-  ⟨fun x => isIntegral_of_isScalarTower (IsSeparable.isIntegral F x), fun x =>
+  ⟨fun x => IsIntegral.tower_top (IsSeparable.isIntegral F x), fun x =>
     (IsSeparable.separable F x).map.of_dvd (minpoly.dvd_map_of_isScalarTower _ _ _)⟩
 #align is_separable_tower_top_of_is_separable isSeparable_tower_top_of_isSeparable
 -/
@@ -632,9 +632,7 @@ theorem isSeparable_tower_top_of_isSeparable [IsSeparable F E] : IsSeparable K E
 theorem isSeparable_tower_bot_of_isSeparable [h : IsSeparable F E] : IsSeparable F K :=
   isSeparable_iff.2 fun x =>
     by
-    refine'
-      (isSeparable_iff.1 h (algebraMap K E x)).imp isIntegral_tower_bot_of_isIntegral_field
-        fun hs => _
+    refine' (isSeparable_iff.1 h (algebraMap K E x)).imp IsIntegral.tower_bot_of_field fun hs => _
     obtain ⟨q, hq⟩ :=
       minpoly.dvd F x
         ((aeval_algebra_map_eq_zero_iff _ _ _).mp (minpoly.aeval F ((algebraMap K E) x)))

@@ -167,7 +167,7 @@ protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : 
 
 end WithZero
 
-section CanonicallyOrderedCommMonoid
+section CanonicallyOrderedAddCommMonoid
 
 #print WithZero.existsAddOfLE /-
 instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
@@ -198,7 +198,7 @@ instance WithZero.canonicallyOrderedAddCommMonoid {α : Type u} [CanonicallyOrde
 #align with_zero.canonically_ordered_add_monoid WithZero.canonicallyOrderedAddCommMonoid
 -/
 
-end CanonicallyOrderedCommMonoid
+end CanonicallyOrderedAddCommMonoid
 
 section CanonicallyLinearOrderedCommMonoid
 

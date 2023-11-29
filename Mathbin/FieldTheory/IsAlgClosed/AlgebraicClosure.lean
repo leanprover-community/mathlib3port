@@ -170,9 +170,9 @@ theorem AdjoinMonic.algebraMap : algebraMap k (AdjoinMonic k) = (Ideal.Quotient.
 theorem AdjoinMonic.isIntegral (z : AdjoinMonic k) : IsIntegral k z :=
   let ⟨p, hp⟩ := Ideal.Quotient.mk_surjective z
   hp ▸
-    MvPolynomial.induction_on p (fun x => isIntegral_algebraMap) (fun p q => isIntegral_add)
+    MvPolynomial.induction_on p (fun x => isIntegral_algebraMap) (fun p q => IsIntegral.add)
       fun p f ih =>
-      @isIntegral_mul _ _ _ _ _ _ (Ideal.Quotient.mk _ _) ih
+      @IsIntegral.mul _ _ _ _ _ _ (Ideal.Quotient.mk _ _) ih
         ⟨f, f.2.1,
           by
           erw [adjoin_monic.algebra_map, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
@@ -383,7 +383,7 @@ def ofStepHom (n) : Step k n →ₐ[k] AlgebraicClosureAux k :=
 theorem isAlgebraic : Algebra.IsAlgebraic k (AlgebraicClosureAux k) := fun z =>
   isAlgebraic_iff_isIntegral.2 <|
     let ⟨n, x, hx⟩ := exists_ofStep k z
-    hx ▸ map_isIntegral (ofStepHom k n) (Step.isIntegral k n x)
+    hx ▸ IsIntegral.map (ofStepHom k n) (Step.isIntegral k n x)
 #align algebraic_closure.is_algebraic AlgebraicClosure.isAlgebraic
 -/
 

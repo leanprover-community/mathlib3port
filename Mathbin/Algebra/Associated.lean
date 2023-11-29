@@ -256,7 +256,6 @@ theorem of_irreducible_mul {α} [Monoid α] {x y : α} : Irreducible (x * y) →
 #align of_irreducible_mul of_irreducible_mul
 -/
 
-#print of_irreducible_pow /-
 theorem of_irreducible_pow {α} [Monoid α] {x : α} {n : ℕ} (hn : n ≠ 1) :
     Irreducible (x ^ n) → IsUnit x :=
   by
@@ -267,7 +266,6 @@ theorem of_irreducible_pow {α} [Monoid α] {x : α} {n : ℕ} (hn : n ≠ 1) :
   rw [pow_succ, add_comm] at h 
   exact (or_iff_left_of_imp is_unit_pow_succ_iff.mp).mp (of_irreducible_mul h)
 #align of_irreducible_pow of_irreducible_pow
--/
 
 #print irreducible_or_factor /-
 theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
@@ -431,10 +429,10 @@ theorem IsSquare.not_prime (ha : IsSquare a) : ¬Prime a := fun h => h.not_squar
 #align is_square.not_prime IsSquare.not_prime
 -/
 
-#print pow_not_prime /-
-theorem pow_not_prime {n : ℕ} (hn : n ≠ 1) : ¬Prime (a ^ n) := fun hp =>
+#print not_prime_pow /-
+theorem not_prime_pow {n : ℕ} (hn : n ≠ 1) : ¬Prime (a ^ n) := fun hp =>
   hp.not_unit <| IsUnit.pow _ <| of_irreducible_pow hn <| hp.Irreducible
-#align pow_not_prime pow_not_prime
+#align pow_not_prime not_prime_pow
 -/
 
 end CancelCommMonoidWithZero
@@ -1366,7 +1364,7 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
 #align associates.one_or_eq_of_le_of_prime Associates.one_or_eq_of_le_of_prime
 -/
 
-instance : CanonicallyOrderedCommMonoid (Associates α) :=
+instance : CanonicallyOrderedAddCommMonoid (Associates α) :=
   { Associates.cancelCommMonoidWithZero, Associates.boundedOrder,
     Associates.orderedCommMonoid with
     exists_hMul_of_le := fun a b => id

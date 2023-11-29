@@ -46,7 +46,7 @@ theorem norm_exp_mul_sq_le {z : ℂ} (hz : 0 < z.im) (n : ℤ) :
   · rw [Complex.norm_eq_abs, Complex.abs_exp]
     have : (↑π * I * n ^ 2 * z).re = -π * z.im * n ^ 2 :=
       by
-      rw [(by push_cast ; ring : ↑π * I * n ^ 2 * z = ↑(π * n ^ 2) * (z * I)), of_real_mul_re,
+      rw [(by push_cast; ring : ↑π * I * n ^ 2 * z = ↑(π * n ^ 2) * (z * I)), of_real_mul_re,
         mul_I_re]
       ring
     obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (sq_nonneg n)
@@ -87,7 +87,7 @@ theorem jacobiTheta_two_add (z : ℂ) : jacobiTheta (2 + z) = jacobiTheta z :=
   by
   refine' tsum_congr fun n => _
   suffices cexp (↑π * I * ↑n ^ 2 * 2) = 1 by rw [mul_add, Complex.exp_add, this, one_mul]
-  rw [(by push_cast ; ring : ↑π * I * ↑n ^ 2 * 2 = ↑(n ^ 2) * (2 * π * I)), Complex.exp_int_mul,
+  rw [(by push_cast; ring : ↑π * I * ↑n ^ 2 * 2 = ↑(n ^ 2) * (2 * π * I)), Complex.exp_int_mul,
     Complex.exp_two_pi_mul_I, one_zpow]
 #align jacobi_theta_two_add jacobiTheta_two_add
 -/
@@ -160,7 +160,10 @@ theorem jacobiTheta_eq_tsum_nat {z : ℂ} (hz : 0 < im z) :
 theorem norm_jacobiTheta_sub_one_le {z : ℂ} (hz : 0 < im z) :
     ‖jacobiTheta z - 1‖ ≤ 2 / (1 - exp (-π * z.im)) * exp (-π * z.im) :=
   by
-  suffices ‖∑' n : ℕ, cexp (π * I * (n + 1) ^ 2 * z)‖ ≤ exp (-π * z.im) / (1 - exp (-π * z.im)) by
+  suffices
+    ‖∑' n : ℕ, cexp (π * I * (n + 1) ^ 2 * z)‖ ≤
+      NormedSpace.exp (-π * z.im) / (1 - NormedSpace.exp (-π * z.im))
+    by
     calc
       ‖jacobiTheta z - 1‖ = 2 * ‖∑' n : ℕ, cexp (π * I * (n + 1) ^ 2 * z)‖ := by
         rw [sub_eq_iff_eq_add'.mpr (jacobiTheta_eq_tsum_nat hz), norm_mul, Complex.norm_eq_abs,
@@ -168,12 +171,13 @@ theorem norm_jacobiTheta_sub_one_le {z : ℂ} (hz : 0 < im z) :
       _ ≤ 2 * (rexp (-π * z.im) / (1 - rexp (-π * z.im))) := by
         rwa [mul_le_mul_left (zero_lt_two' ℝ)]
       _ = 2 / (1 - rexp (-π * z.im)) * rexp (-π * z.im) := by rw [div_mul_comm, mul_comm]
-  have : ∀ n : ℕ, ‖cexp (π * I * (n + 1) ^ 2 * z)‖ ≤ exp (-π * z.im) ^ (n + 1) :=
+  have : ∀ n : ℕ, ‖cexp (π * I * (n + 1) ^ 2 * z)‖ ≤ NormedSpace.exp (-π * z.im) ^ (n + 1) :=
     by
     intro n
     simpa only [Int.cast_add, Int.cast_one] using norm_exp_mul_sq_le hz (n + 1)
   have s :
-    HasSum (fun n : ℕ => rexp (-π * z.im) ^ (n + 1)) (exp (-π * z.im) / (1 - exp (-π * z.im))) :=
+    HasSum (fun n : ℕ => rexp (-π * z.im) ^ (n + 1))
+      (NormedSpace.exp (-π * z.im) / (1 - NormedSpace.exp (-π * z.im))) :=
     by
     simp_rw [pow_succ, div_eq_mul_inv, hasSum_mul_left_iff (Real.exp_ne_zero _)]
     exact

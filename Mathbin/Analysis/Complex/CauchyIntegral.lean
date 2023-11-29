@@ -343,11 +343,11 @@ theorem circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_c
     ∫ θ in 0 ..2 * π, I • f (circleMap c (Real.exp b) θ) =
       ∫ θ in 0 ..2 * π, I • f (circleMap c (Real.exp a) θ)
     by
-    simpa only [circleIntegral, add_sub_cancel', of_real_exp, ← exp_add, smul_smul, ←
+    simpa only [circleIntegral, add_sub_cancel', of_real_exp, ← NormedSpace.exp_add, smul_smul, ←
       div_eq_mul_inv, mul_div_cancel_left _ (circleMap_ne_center (Real.exp_pos _).ne'),
       circleMap_sub_center, deriv_circleMap]
   set R := [a, b] ×ℂ [0, 2 * π]
-  set g : ℂ → ℂ := (· + ·) c ∘ exp
+  set g : ℂ → ℂ := (· + ·) c ∘ NormedSpace.exp
   have hdg : Differentiable ℂ g := differentiable_exp.const_add _
   replace hs : (g ⁻¹' s).Countable := (hs.preimage (add_right_injective c)).preimage_cexp
   have h_maps : maps_to g R A := by rintro z ⟨h, -⟩; simpa [dist_eq, g, abs_exp, hle] using h.symm
@@ -357,7 +357,7 @@ theorem circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_c
       DifferentiableAt ℂ (f ∘ g) z
   · refine' fun z hz => (hd (g z) ⟨_, hz.2⟩).comp z (hdg _)
     simpa [g, dist_eq, abs_exp, hle, and_comm] using hz.1.1
-  simpa [g, circleMap, exp_periodic _, sub_eq_zero, ← exp_add] using
+  simpa [g, circleMap, exp_periodic _, sub_eq_zero, ← NormedSpace.exp_add] using
     integral_boundary_rect_eq_zero_of_differentiable_on_off_countable _ ⟨a, 0⟩ ⟨b, 2 * π⟩ _ hs hc hd
 #align complex.circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable Complex.circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable
 -/

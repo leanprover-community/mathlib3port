@@ -104,9 +104,9 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
 theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) {z : ℂ}
     (hz : z ∈ spectrum ℂ a) : z = z.re :=
   by
-  have hu := exp_mem_unitary_of_mem_skewAdjoint ℂ (ha.smul_mem_skew_adjoint conj_I)
+  have hu := NormedSpace.exp_mem_unitary_of_mem_skewAdjoint ℂ (ha.smul_mem_skew_adjoint conj_I)
   let Iu := Units.mk0 I I_ne_zero
-  have : exp ℂ (I • z) ∈ spectrum ℂ (exp ℂ (I • a)) := by
+  have : NormedSpace.exp ℂ (I • z) ∈ spectrum ℂ (NormedSpace.exp ℂ (I • a)) := by
     simpa only [Units.smul_def, Units.val_mk0] using
       spectrum.exp_mem_exp (Iu • a) (smul_mem_smul_iff.mpr hz)
   exact

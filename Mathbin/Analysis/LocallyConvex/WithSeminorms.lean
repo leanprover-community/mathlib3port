@@ -568,7 +568,7 @@ theorem SeminormFamily.withSeminorms_iff_uniformSpace_eq_iInf [u : UniformSpace 
   by
   rw [p.with_seminorms_iff_nhds_eq_infi,
     UniformAddGroup.ext_iff inferInstance (uniformAddGroup_iInf fun i => inferInstance),
-    toTopologicalSpace_iInf, nhds_iInf]
+    UniformSpace.toTopologicalSpace_iInf, nhds_iInf]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup

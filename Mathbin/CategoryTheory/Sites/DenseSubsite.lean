@@ -96,15 +96,15 @@ theorem Presieve.in_coverByImage (G : C ⥤ D) {X : D} {Y : C} (f : G.obj Y ⟶ 
 #align category_theory.presieve.in_cover_by_image CategoryTheory.Presieve.in_coverByImage
 -/
 
-#print CategoryTheory.CoverDense /-
+#print CategoryTheory.Functor.IsCoverDense /-
 /-- A functor `G : (C, J) ⥤ (D, K)` is called `cover_dense` if for each object in `D`,
   there exists a covering sieve in `D` that factors through images of `G`.
 
 This definition can be found in https://ncatlab.org/nlab/show/dense+sub-site Definition 2.2.
 -/
-structure CoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop where
+structure CategoryTheory.Functor.IsCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop where
   is_cover : ∀ U : D, Sieve.coverByImage G U ∈ K U
-#align category_theory.cover_dense CategoryTheory.CoverDense
+#align category_theory.cover_dense CategoryTheory.Functor.IsCoverDense
 -/
 
 open Presieve Opposite
@@ -113,22 +113,24 @@ namespace CoverDense
 
 variable {K}
 
-variable {A : Type _} [Category A] {G : C ⥤ D} (H : CoverDense K G)
+variable {A : Type _} [Category A] {G : C ⥤ D} (H : CategoryTheory.Functor.IsCoverDense K G)
 
-#print CategoryTheory.CoverDense.ext /-
+#print CategoryTheory.Functor.IsCoverDense.ext /-
 -- this is not marked with `@[ext]` because `H` can not be inferred from the type
-theorem ext (H : CoverDense K G) (ℱ : SheafOfTypes K) (X : D) {s t : ℱ.val.obj (op X)}
+theorem CategoryTheory.Functor.IsCoverDense.ext (H : CategoryTheory.Functor.IsCoverDense K G)
+    (ℱ : SheafOfTypes K) (X : D) {s t : ℱ.val.obj (op X)}
     (h : ∀ ⦃Y : C⦄ (f : G.obj Y ⟶ X), ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t :=
   by
   apply (ℱ.cond (sieve.cover_by_image G X) (H.is_cover X)).IsSeparatedFor.ext
   rintro Y _ ⟨Z, f₁, f₂, ⟨rfl⟩⟩
   simp [h f₂]
-#align category_theory.cover_dense.ext CategoryTheory.CoverDense.ext
+#align category_theory.cover_dense.ext CategoryTheory.Functor.IsCoverDense.ext
 -/
 
-#print CategoryTheory.CoverDense.functorPullback_pushforward_covering /-
-theorem functorPullback_pushforward_covering [Full G] (H : CoverDense K G) {X : C}
-    (T : K (G.obj X)) : (T.val.functorPullback G).functorPushforward G ∈ K (G.obj X) :=
+#print CategoryTheory.Functor.IsCoverDense.functorPullback_pushforward_covering /-
+theorem CategoryTheory.Functor.IsCoverDense.functorPullback_pushforward_covering [Full G]
+    (H : CategoryTheory.Functor.IsCoverDense K G) {X : C} (T : K (G.obj X)) :
+    (T.val.functorPullback G).functorPushforward G ∈ K (G.obj X) :=
   by
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
   rintro Y _ ⟨Z, _, f, hf, ⟨W, g, f', ⟨rfl⟩⟩, rfl⟩
@@ -136,37 +138,39 @@ theorem functorPullback_pushforward_covering [Full G] (H : CoverDense K G) {X : 
   constructor
   · simpa using T.val.downward_closed hf f'
   · simp
-#align category_theory.cover_dense.functor_pullback_pushforward_covering CategoryTheory.CoverDense.functorPullback_pushforward_covering
+#align category_theory.cover_dense.functor_pullback_pushforward_covering CategoryTheory.Functor.IsCoverDense.functorPullback_pushforward_covering
 -/
 
-#print CategoryTheory.CoverDense.homOver /-
+#print CategoryTheory.Functor.IsCoverDense.homOver /-
 /-- (Implementation). Given an hom between the pullbacks of two sheaves, we can whisker it with
 `coyoneda` to obtain an hom between the pullbacks of the sheaves of maps from `X`.
 -/
 @[simps]
-def homOver {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) (X : A) :
+def CategoryTheory.Functor.IsCoverDense.homOver {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A}
+    (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) (X : A) :
     G.op ⋙ ℱ ⋙ coyoneda.obj (op X) ⟶ G.op ⋙ (sheafOver ℱ' X).val :=
   whiskerRight α (coyoneda.obj (op X))
-#align category_theory.cover_dense.hom_over CategoryTheory.CoverDense.homOver
+#align category_theory.cover_dense.hom_over CategoryTheory.Functor.IsCoverDense.homOver
 -/
 
-#print CategoryTheory.CoverDense.isoOver /-
+#print CategoryTheory.Functor.IsCoverDense.isoOver /-
 /-- (Implementation). Given an iso between the pullbacks of two sheaves, we can whisker it with
 `coyoneda` to obtain an iso between the pullbacks of the sheaves of maps from `X`.
 -/
 @[simps]
-def isoOver {ℱ ℱ' : Sheaf K A} (α : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : A) :
+def CategoryTheory.Functor.IsCoverDense.isoOver {ℱ ℱ' : Sheaf K A}
+    (α : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : A) :
     G.op ⋙ (sheafOver ℱ X).val ≅ G.op ⋙ (sheafOver ℱ' X).val :=
   isoWhiskerRight α (coyoneda.obj (op X))
-#align category_theory.cover_dense.iso_over CategoryTheory.CoverDense.isoOver
+#align category_theory.cover_dense.iso_over CategoryTheory.Functor.IsCoverDense.isoOver
 -/
 
-#print CategoryTheory.CoverDense.sheaf_eq_amalgamation /-
-theorem sheaf_eq_amalgamation (ℱ : Sheaf K A) {X : A} {U : D} {T : Sieve U} (hT)
-    (x : FamilyOfElements _ T) (hx) (t) (h : x.IsAmalgamation t) :
+#print CategoryTheory.Functor.IsCoverDense.sheaf_eq_amalgamation /-
+theorem CategoryTheory.Functor.IsCoverDense.sheaf_eq_amalgamation (ℱ : Sheaf K A) {X : A} {U : D}
+    {T : Sieve U} (hT) (x : FamilyOfElements _ T) (hx) (t) (h : x.IsAmalgamation t) :
     t = (ℱ.cond X T hT).amalgamate x hx :=
   (ℱ.cond X T hT).IsSeparatedFor x t _ h ((ℱ.cond X T hT).IsAmalgamation hx)
-#align category_theory.cover_dense.sheaf_eq_amalgamation CategoryTheory.CoverDense.sheaf_eq_amalgamation
+#align category_theory.cover_dense.sheaf_eq_amalgamation CategoryTheory.Functor.IsCoverDense.sheaf_eq_amalgamation
 -/
 
 variable [Full G]
@@ -175,20 +179,22 @@ namespace Types
 
 variable {ℱ : Dᵒᵖ ⥤ Type v} {ℱ' : SheafOfTypes.{v} K} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val)
 
-#print CategoryTheory.CoverDense.Types.pushforwardFamily /-
+#print CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily /-
 /--
 (Implementation). Given a section of `ℱ` on `X`, we can obtain a family of elements valued in `ℱ'`
 that is defined on a cover generated by the images of `G`. -/
 @[simp, nolint unused_arguments]
-noncomputable def pushforwardFamily {X} (x : ℱ.obj (op X)) :
-    FamilyOfElements ℱ'.val (coverByImage G X) := fun Y f hf =>
+noncomputable def CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily {X}
+    (x : ℱ.obj (op X)) : FamilyOfElements ℱ'.val (coverByImage G X) := fun Y f hf =>
   ℱ'.val.map hf.some.lift.op <| α.app (op _) (ℱ.map hf.some.map.op x : _)
-#align category_theory.cover_dense.types.pushforward_family CategoryTheory.CoverDense.Types.pushforwardFamily
+#align category_theory.cover_dense.types.pushforward_family CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily
 -/
 
-#print CategoryTheory.CoverDense.Types.pushforwardFamily_compatible /-
+#print CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_compatible /-
 /-- (Implementation). The `pushforward_family` defined is compatible. -/
-theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) : (pushforwardFamily α x).Compatible :=
+theorem CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_compatible {X}
+    (x : ℱ.obj (op X)) :
+    (CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily α x).Compatible :=
   by
   intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ e
   apply H.ext
@@ -204,20 +210,26 @@ theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) : (pushforwardFami
     ℱ.map_comp, G.image_preimage]
   congr 3
   simp [e]
-#align category_theory.cover_dense.types.pushforward_family_compatible CategoryTheory.CoverDense.Types.pushforwardFamily_compatible
+#align category_theory.cover_dense.types.pushforward_family_compatible CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_compatible
 -/
 
-#print CategoryTheory.CoverDense.Types.appHom /-
+#print CategoryTheory.Functor.IsCoverDense.Types.appHom /-
 /-- (Implementation). The morphism `ℱ(X) ⟶ ℱ'(X)` given by gluing the `pushforward_family`. -/
-noncomputable def appHom (X : D) : ℱ.obj (op X) ⟶ ℱ'.val.obj (op X) := fun x =>
-  (ℱ'.cond _ (H.is_cover X)).amalgamate (pushforwardFamily α x) (pushforwardFamily_compatible H α x)
-#align category_theory.cover_dense.types.app_hom CategoryTheory.CoverDense.Types.appHom
+noncomputable def CategoryTheory.Functor.IsCoverDense.Types.appHom (X : D) :
+    ℱ.obj (op X) ⟶ ℱ'.val.obj (op X) := fun x =>
+  (ℱ'.cond _ (H.is_cover X)).amalgamate
+    (CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily α x)
+    (CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_compatible H α x)
+#align category_theory.cover_dense.types.app_hom CategoryTheory.Functor.IsCoverDense.Types.appHom
 -/
 
-#print CategoryTheory.CoverDense.Types.pushforwardFamily_apply /-
+#print CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_apply /-
 @[simp]
-theorem pushforwardFamily_apply {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y ⟶ X) :
-    pushforwardFamily α x f (Presieve.in_coverByImage G f) = α.app (op Y) (ℱ.map f.op x) :=
+theorem CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_apply {X} (x : ℱ.obj (op X))
+    {Y : C} (f : G.obj Y ⟶ X) :
+    CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily α x f
+        (Presieve.in_coverByImage G f) =
+      α.app (op Y) (ℱ.map f.op x) :=
   by
   unfold pushforward_family
   refine' congr_fun _ x
@@ -226,84 +238,92 @@ theorem pushforwardFamily_apply {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y �
   erw [← α.naturality (G.preimage _).op]
   simp only [← functor.map_comp, ← category.assoc, functor.comp_map, G.image_preimage, G.op_map,
     Quiver.Hom.unop_op, ← op_comp, presieve.cover_by_image_structure.fac]
-#align category_theory.cover_dense.types.pushforward_family_apply CategoryTheory.CoverDense.Types.pushforwardFamily_apply
+#align category_theory.cover_dense.types.pushforward_family_apply CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_apply
 -/
 
-#print CategoryTheory.CoverDense.Types.appHom_restrict /-
+#print CategoryTheory.Functor.IsCoverDense.Types.appHom_restrict /-
 @[simp]
-theorem appHom_restrict {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) (x) :
-    ℱ'.val.map f (appHom H α X x) = α.app (op Y) (ℱ.map f x) :=
+theorem CategoryTheory.Functor.IsCoverDense.Types.appHom_restrict {X : D} {Y : C}
+    (f : op X ⟶ op (G.obj Y)) (x) :
+    ℱ'.val.map f (CategoryTheory.Functor.IsCoverDense.Types.appHom H α X x) =
+      α.app (op Y) (ℱ.map f x) :=
   by
   refine'
     ((ℱ'.cond _ (H.is_cover X)).valid_glue (pushforward_family_compatible H α x) f.unop
           (presieve.in_cover_by_image G f.unop)).trans
       _
   apply pushforward_family_apply
-#align category_theory.cover_dense.types.app_hom_restrict CategoryTheory.CoverDense.Types.appHom_restrict
+#align category_theory.cover_dense.types.app_hom_restrict CategoryTheory.Functor.IsCoverDense.Types.appHom_restrict
 -/
 
-#print CategoryTheory.CoverDense.Types.appHom_valid_glue /-
+#print CategoryTheory.Functor.IsCoverDense.Types.appHom_valid_glue /-
 @[simp]
-theorem appHom_valid_glue {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) :
-    appHom H α X ≫ ℱ'.val.map f = ℱ.map f ≫ α.app (op Y) := by ext; apply app_hom_restrict
-#align category_theory.cover_dense.types.app_hom_valid_glue CategoryTheory.CoverDense.Types.appHom_valid_glue
+theorem CategoryTheory.Functor.IsCoverDense.Types.appHom_valid_glue {X : D} {Y : C}
+    (f : op X ⟶ op (G.obj Y)) :
+    CategoryTheory.Functor.IsCoverDense.Types.appHom H α X ≫ ℱ'.val.map f =
+      ℱ.map f ≫ α.app (op Y) :=
+  by ext; apply app_hom_restrict
+#align category_theory.cover_dense.types.app_hom_valid_glue CategoryTheory.Functor.IsCoverDense.Types.appHom_valid_glue
 -/
 
-#print CategoryTheory.CoverDense.Types.appIso /-
+#print CategoryTheory.Functor.IsCoverDense.Types.appIso /-
 /--
 (Implementation). The maps given in `app_iso` is inverse to each other and gives a `ℱ(X) ≅ ℱ'(X)`.
 -/
 @[simps]
-noncomputable def appIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : D) :
-    ℱ.val.obj (op X) ≅ ℱ'.val.obj (op X)
+noncomputable def CategoryTheory.Functor.IsCoverDense.Types.appIso {ℱ ℱ' : SheafOfTypes.{v} K}
+    (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : D) : ℱ.val.obj (op X) ≅ ℱ'.val.obj (op X)
     where
-  Hom := appHom H i.Hom X
-  inv := appHom H i.inv X
+  Hom := CategoryTheory.Functor.IsCoverDense.Types.appHom H i.Hom X
+  inv := CategoryTheory.Functor.IsCoverDense.Types.appHom H i.inv X
   hom_inv_id' := by ext x; apply H.ext; intro Y f; simp
   inv_hom_id' := by ext x; apply H.ext; intro Y f; simp
-#align category_theory.cover_dense.types.app_iso CategoryTheory.CoverDense.Types.appIso
+#align category_theory.cover_dense.types.app_iso CategoryTheory.Functor.IsCoverDense.Types.appIso
 -/
 
-#print CategoryTheory.CoverDense.Types.presheafHom /-
+#print CategoryTheory.Functor.IsCoverDense.Types.presheafHom /-
 /-- Given an natural transformation `G ⋙ ℱ ⟶ G ⋙ ℱ'` between presheaves of types, where `G` is full
 and cover-dense, and `ℱ'` is a sheaf, we may obtain a natural transformation between sheaves.
 -/
 @[simps]
-noncomputable def presheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ ℱ'.val
+noncomputable def CategoryTheory.Functor.IsCoverDense.Types.presheafHom
+    (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ ℱ'.val
     where
-  app X := appHom H α (unop X)
+  app X := CategoryTheory.Functor.IsCoverDense.Types.appHom H α (unop X)
   naturality' X Y f := by
     ext x
     apply H.ext ℱ' (unop Y)
     intro Y' f'
     simp only [app_hom_restrict, types_comp_apply, ← functor_to_types.map_comp_apply]
     rw [app_hom_restrict H α (f ≫ f'.op : op (unop X) ⟶ _)]
-#align category_theory.cover_dense.types.presheaf_hom CategoryTheory.CoverDense.Types.presheafHom
+#align category_theory.cover_dense.types.presheaf_hom CategoryTheory.Functor.IsCoverDense.Types.presheafHom
 -/
 
-#print CategoryTheory.CoverDense.Types.presheafIso /-
+#print CategoryTheory.Functor.IsCoverDense.Types.presheafIso /-
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of types, where `G` is full and
 cover-dense, and `ℱ, ℱ'` are sheaves, we may obtain a natural isomorphism between presheaves.
 -/
 @[simps]
-noncomputable def presheafIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
-    ℱ.val ≅ ℱ'.val :=
-  NatIso.ofComponents (fun X => appIso H i (unop X)) (presheafHom H i.Hom).naturality
-#align category_theory.cover_dense.types.presheaf_iso CategoryTheory.CoverDense.Types.presheafIso
+noncomputable def CategoryTheory.Functor.IsCoverDense.Types.presheafIso {ℱ ℱ' : SheafOfTypes.{v} K}
+    (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ.val ≅ ℱ'.val :=
+  NatIso.ofComponents (fun X => CategoryTheory.Functor.IsCoverDense.Types.appIso H i (unop X))
+    (CategoryTheory.Functor.IsCoverDense.Types.presheafHom H i.Hom).naturality
+#align category_theory.cover_dense.types.presheaf_iso CategoryTheory.Functor.IsCoverDense.Types.presheafIso
 -/
 
-#print CategoryTheory.CoverDense.Types.sheafIso /-
+#print CategoryTheory.Functor.IsCoverDense.Types.sheafIso /-
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of types, where `G` is full and
 cover-dense, and `ℱ, ℱ'` are sheaves, we may obtain a natural isomorphism between sheaves.
 -/
 @[simps]
-noncomputable def sheafIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
+noncomputable def CategoryTheory.Functor.IsCoverDense.Types.sheafIso {ℱ ℱ' : SheafOfTypes.{v} K}
+    (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
     where
-  Hom := ⟨(presheafIso H i).Hom⟩
-  inv := ⟨(presheafIso H i).inv⟩
+  Hom := ⟨(CategoryTheory.Functor.IsCoverDense.Types.presheafIso H i).Hom⟩
+  inv := ⟨(CategoryTheory.Functor.IsCoverDense.Types.presheafIso H i).inv⟩
   hom_inv_id' := by ext1; apply (presheaf_iso H i).hom_inv_id
   inv_hom_id' := by ext1; apply (presheaf_iso H i).inv_hom_id
-#align category_theory.cover_dense.types.sheaf_iso CategoryTheory.CoverDense.Types.sheafIso
+#align category_theory.cover_dense.types.sheaf_iso CategoryTheory.Functor.IsCoverDense.Types.sheafIso
 -/
 
 end Types
@@ -312,14 +332,17 @@ open Types
 
 variable {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A}
 
-#print CategoryTheory.CoverDense.sheafCoyonedaHom /-
+#print CategoryTheory.Functor.IsCoverDense.sheafCoyonedaHom /-
 /-- (Implementation). The sheaf map given in `types.sheaf_hom` is natural in terms of `X`. -/
 @[simps]
-noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
+noncomputable def CategoryTheory.Functor.IsCoverDense.sheafCoyonedaHom
+    (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     coyoneda ⋙ (whiskeringLeft Dᵒᵖ A (Type _)).obj ℱ ⟶
       coyoneda ⋙ (whiskeringLeft Dᵒᵖ A (Type _)).obj ℱ'.val
     where
-  app X := presheafHom H (homOver α (unop X))
+  app X :=
+    CategoryTheory.Functor.IsCoverDense.Types.presheafHom H
+      (CategoryTheory.Functor.IsCoverDense.homOver α (unop X))
   naturality' X Y f := by
     ext U x
     change
@@ -338,14 +361,15 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     congr 1
     refine' (app_hom_restrict H (hom_over α (unop X)) hf'.some.map.op x).trans _
     simp
-#align category_theory.cover_dense.sheaf_coyoneda_hom CategoryTheory.CoverDense.sheafCoyonedaHom
+#align category_theory.cover_dense.sheaf_coyoneda_hom CategoryTheory.Functor.IsCoverDense.sheafCoyonedaHom
 -/
 
-#print CategoryTheory.CoverDense.sheafYonedaHom /-
+#print CategoryTheory.Functor.IsCoverDense.sheafYonedaHom /-
 /--
 (Implementation). `sheaf_coyoneda_hom` but the order of the arguments of the functor are swapped.
 -/
-noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⋙ yoneda ⟶ ℱ'.val ⋙ yoneda :=
+noncomputable def CategoryTheory.Functor.IsCoverDense.sheafYonedaHom
+    (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⋙ yoneda ⟶ ℱ'.val ⋙ yoneda :=
   by
   let α := sheaf_coyoneda_hom H α
   refine'
@@ -358,29 +382,30 @@ noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ
   · intro U V i
     ext X x
     exact congr_fun ((α.app X).naturality i) x
-#align category_theory.cover_dense.sheaf_yoneda_hom CategoryTheory.CoverDense.sheafYonedaHom
+#align category_theory.cover_dense.sheaf_yoneda_hom CategoryTheory.Functor.IsCoverDense.sheafYonedaHom
 -/
 
-#print CategoryTheory.CoverDense.sheafHom /-
+#print CategoryTheory.Functor.IsCoverDense.sheafHom /-
 /-- Given an natural transformation `G ⋙ ℱ ⟶ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ'` is a sheaf, we may obtain a natural transformation
 between presheaves.
 -/
-noncomputable def sheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ ℱ'.val :=
-  let α' := sheafYonedaHom H α
+noncomputable def CategoryTheory.Functor.IsCoverDense.sheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
+    ℱ ⟶ ℱ'.val :=
+  let α' := CategoryTheory.Functor.IsCoverDense.sheafYonedaHom H α
   { app := fun X => yoneda.preimage (α'.app X)
     naturality' := fun X Y f => yoneda.map_injective (by simpa using α'.naturality f) }
-#align category_theory.cover_dense.sheaf_hom CategoryTheory.CoverDense.sheafHom
+#align category_theory.cover_dense.sheaf_hom CategoryTheory.Functor.IsCoverDense.sheafHom
 -/
 
-#print CategoryTheory.CoverDense.presheafIso /-
+#print CategoryTheory.Functor.IsCoverDense.presheafIso /-
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
 we may obtain a natural isomorphism between presheaves.
 -/
 @[simps]
-noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
-    ℱ.val ≅ ℱ'.val :=
+noncomputable def CategoryTheory.Functor.IsCoverDense.presheafIso {ℱ ℱ' : Sheaf K A}
+    (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ.val ≅ ℱ'.val :=
   by
   have : ∀ X : Dᵒᵖ, is_iso ((sheaf_hom H i.hom).app X) :=
     by
@@ -394,28 +419,30 @@ noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G
     infer_instance
   haveI : is_iso (sheaf_hom H i.hom) := by apply nat_iso.is_iso_of_is_iso_app
   apply as_iso (sheaf_hom H i.hom)
-#align category_theory.cover_dense.presheaf_iso CategoryTheory.CoverDense.presheafIso
+#align category_theory.cover_dense.presheaf_iso CategoryTheory.Functor.IsCoverDense.presheafIso
 -/
 
-#print CategoryTheory.CoverDense.sheafIso /-
+#print CategoryTheory.Functor.IsCoverDense.sheafIso /-
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
 we may obtain a natural isomorphism between presheaves.
 -/
 @[simps]
-noncomputable def sheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
+noncomputable def CategoryTheory.Functor.IsCoverDense.sheafIso {ℱ ℱ' : Sheaf K A}
+    (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
     where
-  Hom := ⟨(presheafIso H i).Hom⟩
-  inv := ⟨(presheafIso H i).inv⟩
+  Hom := ⟨(CategoryTheory.Functor.IsCoverDense.presheafIso H i).Hom⟩
+  inv := ⟨(CategoryTheory.Functor.IsCoverDense.presheafIso H i).inv⟩
   hom_inv_id' := by ext1; apply (presheaf_iso H i).hom_inv_id
   inv_hom_id' := by ext1; apply (presheaf_iso H i).inv_hom_id
-#align category_theory.cover_dense.sheaf_iso CategoryTheory.CoverDense.sheafIso
+#align category_theory.cover_dense.sheaf_iso CategoryTheory.Functor.IsCoverDense.sheafIso
 -/
 
-#print CategoryTheory.CoverDense.sheafHom_restrict_eq /-
+#print CategoryTheory.Functor.IsCoverDense.sheafHom_restrict_eq /-
 /-- The constructed `sheaf_hom α` is equal to `α` when restricted onto `C`.
 -/
-theorem sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : whiskerLeft G.op (sheafHom H α) = α :=
+theorem CategoryTheory.Functor.IsCoverDense.sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
+    whiskerLeft G.op (CategoryTheory.Functor.IsCoverDense.sheafHom H α) = α :=
   by
   ext X
   apply yoneda.map_injective
@@ -435,14 +462,15 @@ theorem sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : whisker
   symm
   apply α.naturality (G.preimage hf.some.map).op
   infer_instance
-#align category_theory.cover_dense.sheaf_hom_restrict_eq CategoryTheory.CoverDense.sheafHom_restrict_eq
+#align category_theory.cover_dense.sheaf_hom_restrict_eq CategoryTheory.Functor.IsCoverDense.sheafHom_restrict_eq
 -/
 
-#print CategoryTheory.CoverDense.sheafHom_eq /-
+#print CategoryTheory.Functor.IsCoverDense.sheafHom_eq /-
 /-- If the pullback map is obtained via whiskering,
 then the result `sheaf_hom (whisker_left G.op α)` is equal to `α`.
 -/
-theorem sheafHom_eq (α : ℱ ⟶ ℱ'.val) : sheafHom H (whiskerLeft G.op α) = α :=
+theorem CategoryTheory.Functor.IsCoverDense.sheafHom_eq (α : ℱ ⟶ ℱ'.val) :
+    CategoryTheory.Functor.IsCoverDense.sheafHom H (whiskerLeft G.op α) = α :=
   by
   ext X
   apply yoneda.map_injective
@@ -456,39 +484,40 @@ theorem sheafHom_eq (α : ℱ ⟶ ℱ'.val) : sheafHom H (whiskerLeft G.op α) =
   conv_lhs => rw [← hf.some.fac]
   dsimp
   simp
-#align category_theory.cover_dense.sheaf_hom_eq CategoryTheory.CoverDense.sheafHom_eq
+#align category_theory.cover_dense.sheaf_hom_eq CategoryTheory.Functor.IsCoverDense.sheafHom_eq
 -/
 
-#print CategoryTheory.CoverDense.restrictHomEquivHom /-
+#print CategoryTheory.Functor.IsCoverDense.restrictHomEquivHom /-
 /-- A full and cover-dense functor `G` induces an equivalence between morphisms into a sheaf and
 morphisms over the restrictions via `G`.
 -/
-noncomputable def restrictHomEquivHom : (G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) ≃ (ℱ ⟶ ℱ'.val)
+noncomputable def CategoryTheory.Functor.IsCoverDense.restrictHomEquivHom :
+    (G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) ≃ (ℱ ⟶ ℱ'.val)
     where
-  toFun := sheafHom H
+  toFun := CategoryTheory.Functor.IsCoverDense.sheafHom H
   invFun := whiskerLeft G.op
-  left_inv := sheafHom_restrict_eq H
-  right_inv := sheafHom_eq H
-#align category_theory.cover_dense.restrict_hom_equiv_hom CategoryTheory.CoverDense.restrictHomEquivHom
+  left_inv := CategoryTheory.Functor.IsCoverDense.sheafHom_restrict_eq H
+  right_inv := CategoryTheory.Functor.IsCoverDense.sheafHom_eq H
+#align category_theory.cover_dense.restrict_hom_equiv_hom CategoryTheory.Functor.IsCoverDense.restrictHomEquivHom
 -/
 
-#print CategoryTheory.CoverDense.iso_of_restrict_iso /-
+#print CategoryTheory.Functor.IsCoverDense.iso_of_restrict_iso /-
 /-- Given a full and cover-dense functor `G` and a natural transformation of sheaves `α : ℱ ⟶ ℱ'`,
 if the pullback of `α` along `G` is iso, then `α` is also iso.
 -/
-theorem iso_of_restrict_iso {ℱ ℱ' : Sheaf K A} (α : ℱ ⟶ ℱ') (i : IsIso (whiskerLeft G.op α.val)) :
-    IsIso α :=
+theorem CategoryTheory.Functor.IsCoverDense.iso_of_restrict_iso {ℱ ℱ' : Sheaf K A} (α : ℱ ⟶ ℱ')
+    (i : IsIso (whiskerLeft G.op α.val)) : IsIso α :=
   by
   convert is_iso.of_iso (sheaf_iso H (as_iso (whisker_left G.op α.val))) using 1
   ext1
   apply (sheaf_hom_eq _ _).symm
-#align category_theory.cover_dense.iso_of_restrict_iso CategoryTheory.CoverDense.iso_of_restrict_iso
+#align category_theory.cover_dense.iso_of_restrict_iso CategoryTheory.Functor.IsCoverDense.iso_of_restrict_iso
 -/
 
-#print CategoryTheory.CoverDense.compatiblePreserving /-
+#print CategoryTheory.Functor.IsCoverDense.compatiblePreserving /-
 /-- A fully faithful cover-dense functor preserves compatible families. -/
-theorem compatiblePreserving [Faithful G] : CompatiblePreserving K G :=
-  by
+theorem CategoryTheory.Functor.IsCoverDense.compatiblePreserving [Faithful G] :
+    CompatiblePreserving K G := by
   constructor
   intro ℱ Z T x hx Y₁ Y₂ X f₁ f₂ g₁ g₂ hg₁ hg₂ eq
   apply H.ext
@@ -499,35 +528,37 @@ theorem compatiblePreserving [Faithful G] : CompatiblePreserving K G :=
   apply hx
   apply G.map_injective
   simp [Eq]
-#align category_theory.cover_dense.compatible_preserving CategoryTheory.CoverDense.compatiblePreserving
+#align category_theory.cover_dense.compatible_preserving CategoryTheory.Functor.IsCoverDense.compatiblePreserving
 -/
 
-#print CategoryTheory.CoverDense.Sites.Pullback.full /-
-noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J K G) :
-    Full (Sites.pullback A H.CompatiblePreserving Hp)
+#print CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous /-
+noncomputable instance CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous
+    [Faithful G] (Hp : CoverPreserving J K G) :
+    Full (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
     where
   preimage ℱ ℱ' α := ⟨H.sheafHom α.val⟩
   witness' ℱ ℱ' α := Sheaf.Hom.ext _ _ <| H.sheafHom_restrict_eq α.val
-#align category_theory.cover_dense.sites.pullback.full CategoryTheory.CoverDense.Sites.Pullback.full
+#align category_theory.cover_dense.sites.pullback.full CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous
 -/
 
-#print CategoryTheory.CoverDense.Sites.Pullback.faithful /-
-instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
-    Faithful (Sites.pullback A H.CompatiblePreserving Hp)
+#print CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous /-
+instance CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous [Faithful G]
+    (Hp : CoverPreserving J K G) :
+    Faithful (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
     where map_injective' := by
     intro ℱ ℱ' α β e
     ext1
     apply_fun fun e => e.val at e 
     dsimp at e 
     rw [← H.sheaf_hom_eq α.val, ← H.sheaf_hom_eq β.val, e]
-#align category_theory.cover_dense.sites.pullback.faithful CategoryTheory.CoverDense.Sites.Pullback.faithful
+#align category_theory.cover_dense.sites.pullback.faithful CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous
 -/
 
 end CoverDense
 
 end CategoryTheory
 
-namespace CategoryTheory.CoverDense
+namespace CategoryTheory.Functor.IsCoverDense
 
 open CategoryTheory
 
@@ -539,17 +570,18 @@ variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
 variable {A : Type w} [Category.{max u v} A] [Limits.HasLimits A]
 
-variable (Hd : CoverDense K G) (Hp : CoverPreserving J K G) (Hl : CoverLifting J K G)
+variable (Hd : CategoryTheory.Functor.IsCoverDense K G) (Hp : CoverPreserving J K G)
+  (Hl : CategoryTheory.Functor.IsCocontinuous J K G)
 
-#print CategoryTheory.CoverDense.sheafEquivOfCoverPreservingCoverLifting /-
+#print CategoryTheory.Functor.IsCoverDense.sheafEquivOfCoverPreservingCoverLifting /-
 /-- Given a functor between small sites that is cover-dense, cover-preserving, and cover-lifting,
 it induces an equivalence of category of sheaves valued in a complete category.
 -/
 @[simps Functor inverse]
-noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf K A :=
-  by
+noncomputable def CategoryTheory.Functor.IsCoverDense.sheafEquivOfCoverPreservingCoverLifting :
+    Sheaf J A ≌ Sheaf K A := by
   symm
-  let α := Sites.pullbackCopullbackAdjunction.{w, v, u} A Hp Hl Hd.compatible_preserving
+  let α := Functor.sheafAdjunctionCocontinuous.{w, v, u} A Hp Hl Hd.compatible_preserving
   have : ∀ X : Sheaf J A, is_iso (α.counit.app X) :=
     by
     intro ℱ
@@ -562,8 +594,8 @@ noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf 
       unitIso := as_iso α.unit
       counitIso := as_iso α.counit
       functor_unitIso_comp' := fun ℱ => by convert α.left_triangle_components }
-#align category_theory.cover_dense.Sheaf_equiv_of_cover_preserving_cover_lifting CategoryTheory.CoverDense.sheafEquivOfCoverPreservingCoverLifting
+#align category_theory.cover_dense.Sheaf_equiv_of_cover_preserving_cover_lifting CategoryTheory.Functor.IsCoverDense.sheafEquivOfCoverPreservingCoverLifting
 -/
 
-end CategoryTheory.CoverDense
+end CategoryTheory.Functor.IsCoverDense
 

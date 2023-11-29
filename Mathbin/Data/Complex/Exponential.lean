@@ -542,7 +542,7 @@ variable (x y : ℂ)
 #print Complex.exp_zero /-
 @[simp]
 theorem exp_zero : exp 0 = 1 := by
-  rw [exp]
+  rw [NormedSpace.exp]
   refine' lim_eq_of_equiv_const fun ε ε0 => ⟨1, fun j hj => _⟩
   convert ε0
   cases j
@@ -576,7 +576,7 @@ theorem exp_add : exp (x + y) = exp x * exp y :=
       mul_comm (m.choose i : ℂ)]
     rw [inv_mul_cancel h₁]
     simp [div_eq_mul_inv, mul_comm, mul_assoc, mul_left_comm]
-  simp_rw [exp, exp', lim_mul_lim]
+  simp_rw [NormedSpace.exp, exp', lim_mul_lim]
   apply (lim_eq_lim_of_equiv _).symm
   simp only [hj]
   exact cauchy_product (is_cau_abs_exp x) (is_cau_exp y)
@@ -604,26 +604,28 @@ theorem exp_sum {α : Type _} (s : Finset α) (f : α → ℂ) :
 
 #print Complex.exp_nat_mul /-
 theorem exp_nat_mul (x : ℂ) : ∀ n : ℕ, exp (n * x) = exp x ^ n
-  | 0 => by rw [Nat.cast_zero, MulZeroClass.zero_mul, exp_zero, pow_zero]
-  | Nat.succ n => by rw [pow_succ', Nat.cast_add_one, add_mul, exp_add, ← exp_nat_mul, one_mul]
+  | 0 => by rw [Nat.cast_zero, MulZeroClass.zero_mul, NormedSpace.exp_zero, pow_zero]
+  | Nat.succ n => by
+    rw [pow_succ', Nat.cast_add_one, add_mul, NormedSpace.exp_add, ← exp_nat_mul, one_mul]
 #align complex.exp_nat_mul Complex.exp_nat_mul
 -/
 
 #print Complex.exp_ne_zero /-
 theorem exp_ne_zero : exp x ≠ 0 := fun h =>
-  zero_ne_one <| by rw [← exp_zero, ← add_neg_self x, exp_add, h] <;> simp
+  zero_ne_one <| by rw [← NormedSpace.exp_zero, ← add_neg_self x, NormedSpace.exp_add, h] <;> simp
 #align complex.exp_ne_zero Complex.exp_ne_zero
 -/
 
 #print Complex.exp_neg /-
 theorem exp_neg : exp (-x) = (exp x)⁻¹ := by
-  rw [← mul_right_inj' (exp_ne_zero x), ← exp_add] <;> simp [mul_inv_cancel (exp_ne_zero x)]
+  rw [← mul_right_inj' (exp_ne_zero x), ← NormedSpace.exp_add] <;>
+    simp [mul_inv_cancel (exp_ne_zero x)]
 #align complex.exp_neg Complex.exp_neg
 -/
 
 #print Complex.exp_sub /-
 theorem exp_sub : exp (x - y) = exp x / exp y := by
-  simp [sub_eq_add_neg, exp_add, exp_neg, div_eq_mul_inv]
+  simp [sub_eq_add_neg, NormedSpace.exp_add, NormedSpace.exp_neg, div_eq_mul_inv]
 #align complex.exp_sub Complex.exp_sub
 -/
 
@@ -640,7 +642,7 @@ theorem exp_int_mul (z : ℂ) (n : ℤ) : Complex.exp (n * z) = Complex.exp z ^ 
 @[simp]
 theorem exp_conj : exp (conj x) = conj (exp x) :=
   by
-  dsimp [exp]
+  dsimp [NormedSpace.exp]
   rw [← lim_conj]
   refine' congr_arg limUnder (CauSeq.ext fun _ => _)
   dsimp [exp', Function.comp, cau_seq_conj]
@@ -653,7 +655,7 @@ theorem exp_conj : exp (conj x) = conj (exp x) :=
 #print Complex.ofReal_exp_ofReal_re /-
 @[simp]
 theorem ofReal_exp_ofReal_re (x : ℝ) : ((exp x).re : ℂ) = exp x :=
-  conj_eq_iff_re.1 <| by rw [← exp_conj, conj_of_real]
+  conj_eq_iff_re.1 <| by rw [← NormedSpace.exp_conj, conj_of_real]
 #align complex.of_real_exp_of_real_re Complex.ofReal_exp_ofReal_re
 -/
 
@@ -696,7 +698,8 @@ theorem sinh_zero : sinh 0 = 0 := by simp [sinh]
 
 #print Complex.sinh_neg /-
 @[simp]
-theorem sinh_neg : sinh (-x) = -sinh x := by simp [sinh, exp_neg, (neg_div _ _).symm, add_mul]
+theorem sinh_neg : sinh (-x) = -sinh x := by
+  simp [sinh, NormedSpace.exp_neg, (neg_div _ _).symm, add_mul]
 #align complex.sinh_neg Complex.sinh_neg
 -/
 
@@ -706,9 +709,9 @@ private theorem sinh_add_aux {a b c d : ℂ} :
 #print Complex.sinh_add /-
 theorem sinh_add : sinh (x + y) = sinh x * cosh y + cosh x * sinh y :=
   by
-  rw [← mul_right_inj' (two_ne_zero' ℂ), two_sinh, exp_add, neg_add, exp_add, eq_comm, mul_add, ←
-    mul_assoc, two_sinh, mul_left_comm, two_sinh, ← mul_right_inj' (two_ne_zero' ℂ), mul_add,
-    mul_left_comm, two_cosh, ← mul_assoc, two_cosh]
+  rw [← mul_right_inj' (two_ne_zero' ℂ), two_sinh, NormedSpace.exp_add, neg_add,
+    NormedSpace.exp_add, eq_comm, mul_add, ← mul_assoc, two_sinh, mul_left_comm, two_sinh, ←
+    mul_right_inj' (two_ne_zero' ℂ), mul_add, mul_left_comm, two_cosh, ← mul_assoc, two_cosh]
   exact sinh_add_aux
 #align complex.sinh_add Complex.sinh_add
 -/
@@ -721,7 +724,7 @@ theorem cosh_zero : cosh 0 = 1 := by simp [cosh]
 
 #print Complex.cosh_neg /-
 @[simp]
-theorem cosh_neg : cosh (-x) = cosh x := by simp [add_comm, cosh, exp_neg]
+theorem cosh_neg : cosh (-x) = cosh x := by simp [add_comm, cosh, NormedSpace.exp_neg]
 #align complex.cosh_neg Complex.cosh_neg
 -/
 
@@ -731,9 +734,9 @@ private theorem cosh_add_aux {a b c d : ℂ} :
 #print Complex.cosh_add /-
 theorem cosh_add : cosh (x + y) = cosh x * cosh y + sinh x * sinh y :=
   by
-  rw [← mul_right_inj' (two_ne_zero' ℂ), two_cosh, exp_add, neg_add, exp_add, eq_comm, mul_add, ←
-    mul_assoc, two_cosh, ← mul_assoc, two_sinh, ← mul_right_inj' (two_ne_zero' ℂ), mul_add,
-    mul_left_comm, two_cosh, mul_left_comm, two_sinh]
+  rw [← mul_right_inj' (two_ne_zero' ℂ), two_cosh, NormedSpace.exp_add, neg_add,
+    NormedSpace.exp_add, eq_comm, mul_add, ← mul_assoc, two_cosh, ← mul_assoc, two_sinh, ←
+    mul_right_inj' (two_ne_zero' ℂ), mul_add, mul_left_comm, two_cosh, mul_left_comm, two_sinh]
   exact cosh_add_aux
 #align complex.cosh_add Complex.cosh_add
 -/
@@ -752,8 +755,8 @@ theorem cosh_sub : cosh (x - y) = cosh x * cosh y - sinh x * sinh y := by
 
 #print Complex.sinh_conj /-
 theorem sinh_conj : sinh (conj x) = conj (sinh x) := by
-  rw [sinh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_sub, sinh, map_div₀, conj_bit0,
-    RingHom.map_one]
+  rw [sinh, ← RingHom.map_neg, NormedSpace.exp_conj, NormedSpace.exp_conj, ← RingHom.map_sub, sinh,
+    map_div₀, conj_bit0, RingHom.map_one]
 #align complex.sinh_conj Complex.sinh_conj
 -/
 
@@ -785,8 +788,8 @@ theorem sinh_ofReal_re (x : ℝ) : (sinh x).re = Real.sinh x :=
 
 #print Complex.cosh_conj /-
 theorem cosh_conj : cosh (conj x) = conj (cosh x) := by
-  rw [cosh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_add, cosh, map_div₀, conj_bit0,
-    RingHom.map_one]
+  rw [cosh, ← RingHom.map_neg, NormedSpace.exp_conj, NormedSpace.exp_conj, ← RingHom.map_add, cosh,
+    map_div₀, conj_bit0, RingHom.map_one]
 #align complex.cosh_conj Complex.cosh_conj
 -/
 
@@ -909,7 +912,8 @@ theorem sinh_sub_cosh : sinh x - cosh x = -exp (-x) := by rw [← neg_sub, cosh_
 #print Complex.cosh_sq_sub_sinh_sq /-
 @[simp]
 theorem cosh_sq_sub_sinh_sq : cosh x ^ 2 - sinh x ^ 2 = 1 := by
-  rw [sq_sub_sq, cosh_add_sinh, cosh_sub_sinh, ← exp_add, add_neg_self, exp_zero]
+  rw [sq_sub_sq, cosh_add_sinh, cosh_sub_sinh, ← NormedSpace.exp_add, add_neg_self,
+    NormedSpace.exp_zero]
 #align complex.cosh_sq_sub_sinh_sq Complex.cosh_sq_sub_sinh_sq
 -/
 
@@ -975,7 +979,7 @@ theorem sin_zero : sin 0 = 0 := by simp [sin]
 #print Complex.sin_neg /-
 @[simp]
 theorem sin_neg : sin (-x) = -sin x := by
-  simp [sin, sub_eq_add_neg, exp_neg, (neg_div _ _).symm, add_mul]
+  simp [sin, sub_eq_add_neg, NormedSpace.exp_neg, (neg_div _ _).symm, add_mul]
 #align complex.sin_neg Complex.sin_neg
 -/
 
@@ -1044,7 +1048,7 @@ theorem cos_zero : cos 0 = 1 := by simp [cos]
 
 #print Complex.cos_neg /-
 @[simp]
-theorem cos_neg : cos (-x) = cos x := by simp [cos, sub_eq_add_neg, exp_neg, add_comm]
+theorem cos_neg : cos (-x) = cos x := by simp [cos, sub_eq_add_neg, NormedSpace.exp_neg, add_comm]
 #align complex.cos_neg Complex.cos_neg
 -/
 
@@ -1362,7 +1366,8 @@ theorem exp_mul_I : exp (x * I) = cos x + sin x * I :=
 -/
 
 #print Complex.exp_add_mul_I /-
-theorem exp_add_mul_I : exp (x + y * I) = exp x * (cos y + sin y * I) := by rw [exp_add, exp_mul_I]
+theorem exp_add_mul_I : exp (x + y * I) = exp x * (cos y + sin y * I) := by
+  rw [NormedSpace.exp_add, exp_mul_I]
 #align complex.exp_add_mul_I Complex.exp_add_mul_I
 -/
 
@@ -1405,8 +1410,8 @@ theorem cos_add_sin_mul_I_pow (n : ℕ) (z : ℂ) :
   by
   rw [← exp_mul_I, ← exp_mul_I]
   induction' n with n ih
-  · rw [pow_zero, Nat.cast_zero, MulZeroClass.zero_mul, MulZeroClass.zero_mul, exp_zero]
-  · rw [pow_succ', ih, Nat.cast_succ, add_mul, add_mul, one_mul, exp_add]
+  · rw [pow_zero, Nat.cast_zero, MulZeroClass.zero_mul, MulZeroClass.zero_mul, NormedSpace.exp_zero]
+  · rw [pow_succ', ih, Nat.cast_succ, add_mul, add_mul, one_mul, NormedSpace.exp_add]
 #align complex.cos_add_sin_mul_I_pow Complex.cos_add_sin_mul_I_pow
 -/
 
@@ -1425,7 +1430,7 @@ theorem exp_zero : exp 0 = 1 := by simp [Real.exp]
 -/
 
 #print Real.exp_add /-
-theorem exp_add : exp (x + y) = exp x * exp y := by simp [exp_add, exp]
+theorem exp_add : exp (x + y) = exp x * exp y := by simp [NormedSpace.exp_add, NormedSpace.exp]
 #align real.exp_add Real.exp_add
 -/
 
@@ -1450,26 +1455,28 @@ theorem exp_sum {α : Type _} (s : Finset α) (f : α → ℝ) :
 
 #print Real.exp_nat_mul /-
 theorem exp_nat_mul (x : ℝ) : ∀ n : ℕ, exp (n * x) = exp x ^ n
-  | 0 => by rw [Nat.cast_zero, MulZeroClass.zero_mul, exp_zero, pow_zero]
-  | Nat.succ n => by rw [pow_succ', Nat.cast_add_one, add_mul, exp_add, ← exp_nat_mul, one_mul]
+  | 0 => by rw [Nat.cast_zero, MulZeroClass.zero_mul, NormedSpace.exp_zero, pow_zero]
+  | Nat.succ n => by
+    rw [pow_succ', Nat.cast_add_one, add_mul, NormedSpace.exp_add, ← exp_nat_mul, one_mul]
 #align real.exp_nat_mul Real.exp_nat_mul
 -/
 
 #print Real.exp_ne_zero /-
 theorem exp_ne_zero : exp x ≠ 0 := fun h =>
-  exp_ne_zero x <| by rw [exp, ← of_real_inj] at h  <;> simp_all
+  exp_ne_zero x <| by rw [NormedSpace.exp, ← of_real_inj] at h  <;> simp_all
 #align real.exp_ne_zero Real.exp_ne_zero
 -/
 
 #print Real.exp_neg /-
 theorem exp_neg : exp (-x) = (exp x)⁻¹ := by
-  rw [← of_real_inj, exp, of_real_exp_of_real_re, of_real_neg, exp_neg, of_real_inv, of_real_exp]
+  rw [← of_real_inj, NormedSpace.exp, of_real_exp_of_real_re, of_real_neg, NormedSpace.exp_neg,
+    of_real_inv, of_real_exp]
 #align real.exp_neg Real.exp_neg
 -/
 
 #print Real.exp_sub /-
 theorem exp_sub : exp (x - y) = exp x / exp y := by
-  simp [sub_eq_add_neg, exp_add, exp_neg, div_eq_mul_inv]
+  simp [sub_eq_add_neg, NormedSpace.exp_add, NormedSpace.exp_neg, div_eq_mul_inv]
 #align real.exp_sub Real.exp_sub
 -/
 
@@ -1481,7 +1488,8 @@ theorem sin_zero : sin 0 = 0 := by simp [sin]
 
 #print Real.sin_neg /-
 @[simp]
-theorem sin_neg : sin (-x) = -sin x := by simp [sin, exp_neg, (neg_div _ _).symm, add_mul]
+theorem sin_neg : sin (-x) = -sin x := by
+  simp [sin, NormedSpace.exp_neg, (neg_div _ _).symm, add_mul]
 #align real.sin_neg Real.sin_neg
 -/
 
@@ -1499,7 +1507,7 @@ theorem cos_zero : cos 0 = 1 := by simp [cos]
 
 #print Real.cos_neg /-
 @[simp]
-theorem cos_neg : cos (-x) = cos x := by simp [cos, exp_neg]
+theorem cos_neg : cos (-x) = cos x := by simp [cos, NormedSpace.exp_neg]
 #align real.cos_neg Real.cos_neg
 -/
 
@@ -1734,8 +1742,8 @@ theorem sin_three_mul : sin (3 * x) = 3 * sin x - 4 * sin x ^ 3 := by
 /-- The definition of `sinh` in terms of `exp`. -/
 theorem sinh_eq (x : ℝ) : sinh x = (exp x - exp (-x)) / 2 :=
   eq_div_of_mul_eq two_ne_zero <| by
-    rw [sinh, exp, exp, Complex.ofReal_neg, Complex.sinh, mul_two, ← Complex.add_re, ← mul_two,
-      div_mul_cancel _ (two_ne_zero' ℂ), Complex.sub_re]
+    rw [sinh, NormedSpace.exp, NormedSpace.exp, Complex.ofReal_neg, Complex.sinh, mul_two, ←
+      Complex.add_re, ← mul_two, div_mul_cancel _ (two_ne_zero' ℂ), Complex.sub_re]
 #align real.sinh_eq Real.sinh_eq
 -/
 
@@ -1747,7 +1755,8 @@ theorem sinh_zero : sinh 0 = 0 := by simp [sinh]
 
 #print Real.sinh_neg /-
 @[simp]
-theorem sinh_neg : sinh (-x) = -sinh x := by simp [sinh, exp_neg, (neg_div _ _).symm, add_mul]
+theorem sinh_neg : sinh (-x) = -sinh x := by
+  simp [sinh, NormedSpace.exp_neg, (neg_div _ _).symm, add_mul]
 #align real.sinh_neg Real.sinh_neg
 -/
 
@@ -1761,8 +1770,8 @@ theorem sinh_add : sinh (x + y) = sinh x * cosh y + cosh x * sinh y := by
 /-- The definition of `cosh` in terms of `exp`. -/
 theorem cosh_eq (x : ℝ) : cosh x = (exp x + exp (-x)) / 2 :=
   eq_div_of_mul_eq two_ne_zero <| by
-    rw [cosh, exp, exp, Complex.ofReal_neg, Complex.cosh, mul_two, ← Complex.add_re, ← mul_two,
-      div_mul_cancel _ (two_ne_zero' ℂ), Complex.add_re]
+    rw [cosh, NormedSpace.exp, NormedSpace.exp, Complex.ofReal_neg, Complex.cosh, mul_two, ←
+      Complex.add_re, ← mul_two, div_mul_cancel _ (two_ne_zero' ℂ), Complex.add_re]
 #align real.cosh_eq Real.cosh_eq
 -/
 
@@ -1919,7 +1928,7 @@ theorem sum_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : ∑ i in range
       rw [← Nat.add_sub_of_le hj, Finset.sum_range_add]
       refine' le_add_of_nonneg_right (sum_nonneg fun i hi => _)
       positivity
-    _ = exp x := by rw [exp, Complex.exp, ← cau_seq_re, lim_re]
+    _ = exp x := by rw [NormedSpace.exp, Complex.exp, ← cau_seq_re, lim_re]
 #align real.sum_le_exp_of_nonneg Real.sum_le_exp_of_nonneg
 -/
 
@@ -2021,13 +2030,13 @@ theorem exp_eq_one_iff : exp x = 1 ↔ x = 0 :=
 
 #print Real.one_lt_exp_iff /-
 @[simp]
-theorem one_lt_exp_iff {x : ℝ} : 1 < exp x ↔ 0 < x := by rw [← exp_zero, exp_lt_exp]
+theorem one_lt_exp_iff {x : ℝ} : 1 < exp x ↔ 0 < x := by rw [← NormedSpace.exp_zero, exp_lt_exp]
 #align real.one_lt_exp_iff Real.one_lt_exp_iff
 -/
 
 #print Real.exp_lt_one_iff /-
 @[simp]
-theorem exp_lt_one_iff {x : ℝ} : exp x < 1 ↔ x < 0 := by rw [← exp_zero, exp_lt_exp]
+theorem exp_lt_one_iff {x : ℝ} : exp x < 1 ↔ x < 0 := by rw [← NormedSpace.exp_zero, exp_lt_exp]
 #align real.exp_lt_one_iff Real.exp_lt_one_iff
 -/
 
@@ -2122,7 +2131,8 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
 theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
     abs (exp x - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n * (n.succ * (n ! * n)⁻¹) :=
   by
-  rw [← lim_const (∑ m in range n, _), exp, sub_eq_add_neg, ← lim_neg, lim_add, ← lim_abs]
+  rw [← lim_const (∑ m in range n, _), NormedSpace.exp, sub_eq_add_neg, ← lim_neg, lim_add, ←
+    lim_abs]
   refine' lim_le (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
   simp_rw [← sub_eq_add_neg]
   show
@@ -2158,7 +2168,8 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
 theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     abs (exp x - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n / n ! * 2 :=
   by
-  rw [← lim_const (∑ m in range n, _), exp, sub_eq_add_neg, ← lim_neg, lim_add, ← lim_abs]
+  rw [← lim_const (∑ m in range n, _), NormedSpace.exp, sub_eq_add_neg, ← lim_neg, lim_add, ←
+    lim_abs]
   refine' lim_le (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
   simp_rw [← sub_eq_add_neg]
   show abs (∑ m in range j, x ^ m / m ! - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n / n ! * 2
@@ -2529,7 +2540,7 @@ theorem one_sub_lt_exp_minus_of_pos {y : ℝ} (h : 0 < y) : 1 - y < Real.exp (-y
   by
   cases' le_or_lt 1 y with h' h'
   · linarith [(-y).exp_pos]
-  rw [exp_neg, lt_inv _ y.exp_pos, inv_eq_one_div]
+  rw [NormedSpace.exp_neg, lt_inv _ y.exp_pos, inv_eq_one_div]
   · exact exp_bound_div_one_sub_of_interval' h h'
   · linarith
 #align real.one_sub_lt_exp_minus_of_pos Real.one_sub_lt_exp_minus_of_pos

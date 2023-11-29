@@ -322,9 +322,9 @@ theorem isIntegral (α : solvableByRad F E) : IsIntegral F α :=
   revert α
   apply solvableByRad.induction
   · exact fun _ => isIntegral_algebraMap
-  · exact fun _ _ => isIntegral_add
-  · exact fun _ => isIntegral_neg
-  · exact fun _ _ => isIntegral_mul
+  · exact fun _ _ => IsIntegral.add
+  · exact fun _ => IsIntegral.neg
+  · exact fun _ _ => IsIntegral.mul
   ·
     exact fun α hα =>
       Subalgebra.inv_mem_of_algebraic (integralClosure F (solvableByRad F E))

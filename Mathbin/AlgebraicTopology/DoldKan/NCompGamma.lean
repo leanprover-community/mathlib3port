@@ -172,12 +172,12 @@ def natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶ toKaroubi _
 
 end Γ₂N₁
 
-#print AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂ /-
+#print AlgebraicTopology.DoldKan.Γ₂N₂ToKaroubiIso /-
 /-- The compatibility isomorphism relating `N₂ ⋙ Γ₂` and `N₁ ⋙ Γ₂`. -/
 @[simps]
-def compatibility_Γ₂N₁_Γ₂N₂ : toKaroubi (SimplicialObject C) ⋙ N₂ ⋙ Γ₂ ≅ N₁ ⋙ Γ₂ :=
+def Γ₂N₂ToKaroubiIso : toKaroubi (SimplicialObject C) ⋙ N₂ ⋙ Γ₂ ≅ N₁ ⋙ Γ₂ :=
   eqToIso (Functor.congr_obj (functorExtension₁_comp_whiskeringLeft_toKaroubi _ _) (N₁ ⋙ Γ₂))
-#align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂ AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂
+#align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂ AlgebraicTopology.DoldKan.Γ₂N₂ToKaroubiIso
 -/
 
 namespace Γ₂N₂
@@ -185,25 +185,22 @@ namespace Γ₂N₂
 #print AlgebraicTopology.DoldKan.Γ₂N₂.natTrans /-
 /-- The natural transformation `N₂ ⋙ Γ₂ ⟶ 𝟭 (simplicial_object C)`. -/
 def natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ ⟶ 𝟭 _ :=
-  ((whiskeringLeft _ _ _).obj _).Preimage (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans)
+  ((whiskeringLeft _ _ _).obj _).Preimage (Γ₂N₂ToKaroubiIso.Hom ≫ Γ₂N₁.natTrans)
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans AlgebraicTopology.DoldKan.Γ₂N₂.natTrans
 -/
 
 #print AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app /-
 theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
     Γ₂N₂.natTrans.app P =
-      (N₂ ⋙ Γ₂).map P.decompId_i ≫
-        (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.pt ≫ P.decompId_p :=
-  whiskeringLeft_obj_preimage_app (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans) P
+      (N₂ ⋙ Γ₂).map P.decompId_i ≫ (Γ₂N₂ToKaroubiIso.Hom ≫ Γ₂N₁.natTrans).app P.pt ≫ P.decompId_p :=
+  whiskeringLeft_obj_preimage_app (Γ₂N₂ToKaroubiIso.Hom ≫ Γ₂N₁.natTrans) P
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app
 -/
 
 end Γ₂N₂
 
-#print AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTrans /-
-theorem compatibility_Γ₂N₁_Γ₂N₂_natTrans (X : SimplicialObject C) :
-    Γ₂N₁.natTrans.app X =
-      (compatibility_Γ₂N₁_Γ₂N₂.app X).inv ≫ Γ₂N₂.natTrans.app ((toKaroubi _).obj X) :=
+theorem Γ₂N₂ToKaroubiIso_natTrans (X : SimplicialObject C) :
+    Γ₂N₁.natTrans.app X = (Γ₂N₂ToKaroubiIso.app X).inv ≫ Γ₂N₂.natTrans.app ((toKaroubi _).obj X) :=
   by
   rw [← cancel_epi (compatibility_Γ₂N₁_Γ₂N₂.app X).Hom, iso.hom_inv_id_assoc]
   exact
@@ -211,8 +208,7 @@ theorem compatibility_Γ₂N₁_Γ₂N₂_natTrans (X : SimplicialObject C) :
       (((whiskering_left _ _ _).obj _).image_preimage
           (compatibility_Γ₂N₁_Γ₂N₂.hom ≫ Γ₂N₁.nat_trans : _ ⟶ to_karoubi _ ⋙ 𝟭 _)).symm
       X
-#align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTrans
--/
+#align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.Γ₂N₂ToKaroubiIso_natTrans
 
 #print AlgebraicTopology.DoldKan.identity_N₂_objectwise /-
 theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :

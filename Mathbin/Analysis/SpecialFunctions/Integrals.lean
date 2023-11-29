@@ -551,7 +551,7 @@ theorem integral_one_div_of_neg (ha : a < 0) (hb : b < 0) : ∫ x : ℝ in a..b,
 #print integral_exp /-
 @[simp]
 theorem integral_exp : ∫ x in a..b, exp x = exp b - exp a := by
-  rw [integral_deriv_eq_sub'] <;> norm_num [continuousOn_exp]
+  rw [integral_deriv_eq_sub'] <;> norm_num [NormedSpace.continuousOn_exp]
 #align integral_exp integral_exp
 -/
 

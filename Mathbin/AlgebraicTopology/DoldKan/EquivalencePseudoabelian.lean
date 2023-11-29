@@ -67,21 +67,17 @@ def Γ : ChainComplex C ℕ ⥤ SimplicialObject C :=
 #align category_theory.idempotents.dold_kan.Γ CategoryTheory.Idempotents.DoldKan.Γ
 -/
 
-#print CategoryTheory.Idempotents.DoldKan.hN₁ /-
 theorem hN₁ :
     (toKaroubiEquivalence (SimplicialObject C)).Functor ⋙ Preadditive.DoldKan.equivalence.Functor =
       N₁ :=
   Functor.congr_obj (functorExtension₁_comp_whiskeringLeft_toKaroubi _ _) N₁
 #align category_theory.idempotents.dold_kan.hN₁ CategoryTheory.Idempotents.DoldKan.hN₁
--/
 
-#print CategoryTheory.Idempotents.DoldKan.hΓ₀ /-
 theorem hΓ₀ :
     (toKaroubiEquivalence (ChainComplex C ℕ)).Functor ⋙ Preadditive.DoldKan.equivalence.inverse =
       Γ ⋙ (toKaroubiEquivalence _).Functor :=
   Functor.congr_obj (functorExtension₂_comp_whiskeringLeft_toKaroubi _ _) Γ₀
 #align category_theory.idempotents.dold_kan.hΓ₀ CategoryTheory.Idempotents.DoldKan.hΓ₀
--/
 
 #print CategoryTheory.Idempotents.DoldKan.equivalence /-
 /-- The Dold-Kan equivalence for pseudoabelian categories given

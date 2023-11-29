@@ -113,35 +113,38 @@ variable [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype
   [Algebra 𝕂 𝔸] [T2Space 𝔸]
 
 #print Matrix.exp_diagonal /-
-theorem exp_diagonal (v : m → 𝔸) : exp 𝕂 (diagonal v) = diagonal (exp 𝕂 v) := by
-  simp_rw [exp_eq_tsum, diagonal_pow, ← diagonal_smul, ← diagonal_tsum]
+theorem exp_diagonal (v : m → 𝔸) :
+    NormedSpace.exp 𝕂 (diagonal v) = diagonal (NormedSpace.exp 𝕂 v) := by
+  simp_rw [NormedSpace.exp_eq_tsum, diagonal_pow, ← diagonal_smul, ← diagonal_tsum]
 #align matrix.exp_diagonal Matrix.exp_diagonal
 -/
 
 #print Matrix.exp_blockDiagonal /-
 theorem exp_blockDiagonal (v : m → Matrix n n 𝔸) :
-    exp 𝕂 (blockDiagonal v) = blockDiagonal (exp 𝕂 v) := by
-  simp_rw [exp_eq_tsum, ← block_diagonal_pow, ← block_diagonal_smul, ← block_diagonal_tsum]
+    NormedSpace.exp 𝕂 (blockDiagonal v) = blockDiagonal (NormedSpace.exp 𝕂 v) := by
+  simp_rw [NormedSpace.exp_eq_tsum, ← block_diagonal_pow, ← block_diagonal_smul, ←
+    block_diagonal_tsum]
 #align matrix.exp_block_diagonal Matrix.exp_blockDiagonal
 -/
 
 #print Matrix.exp_blockDiagonal' /-
 theorem exp_blockDiagonal' (v : ∀ i, Matrix (n' i) (n' i) 𝔸) :
-    exp 𝕂 (blockDiagonal' v) = blockDiagonal' (exp 𝕂 v) := by
-  simp_rw [exp_eq_tsum, ← block_diagonal'_pow, ← block_diagonal'_smul, ← block_diagonal'_tsum]
+    NormedSpace.exp 𝕂 (blockDiagonal' v) = blockDiagonal' (NormedSpace.exp 𝕂 v) := by
+  simp_rw [NormedSpace.exp_eq_tsum, ← block_diagonal'_pow, ← block_diagonal'_smul, ←
+    block_diagonal'_tsum]
 #align matrix.exp_block_diagonal' Matrix.exp_blockDiagonal'
 -/
 
 #print Matrix.exp_conjTranspose /-
 theorem exp_conjTranspose [StarRing 𝔸] [ContinuousStar 𝔸] (A : Matrix m m 𝔸) :
-    exp 𝕂 Aᴴ = (exp 𝕂 A)ᴴ :=
-  (star_exp A).symm
+    NormedSpace.exp 𝕂 Aᴴ = (NormedSpace.exp 𝕂 A)ᴴ :=
+  (NormedSpace.star_exp A).symm
 #align matrix.exp_conj_transpose Matrix.exp_conjTranspose
 -/
 
 #print Matrix.IsHermitian.exp /-
 theorem IsHermitian.exp [StarRing 𝔸] [ContinuousStar 𝔸] {A : Matrix m m 𝔸} (h : A.IsHermitian) :
-    (exp 𝕂 A).IsHermitian :=
+    (NormedSpace.exp 𝕂 A).IsHermitian :=
   (exp_conjTranspose _ _).symm.trans <| congr_arg _ h
 #align matrix.is_hermitian.exp Matrix.IsHermitian.exp
 -/
@@ -154,13 +157,13 @@ variable [Fintype m] [DecidableEq m] [Field 𝕂] [CommRing 𝔸] [TopologicalSp
   [Algebra 𝕂 𝔸] [T2Space 𝔸]
 
 #print Matrix.exp_transpose /-
-theorem exp_transpose (A : Matrix m m 𝔸) : exp 𝕂 Aᵀ = (exp 𝕂 A)ᵀ := by
-  simp_rw [exp_eq_tsum, transpose_tsum, transpose_smul, transpose_pow]
+theorem exp_transpose (A : Matrix m m 𝔸) : NormedSpace.exp 𝕂 Aᵀ = (NormedSpace.exp 𝕂 A)ᵀ := by
+  simp_rw [NormedSpace.exp_eq_tsum, transpose_tsum, transpose_smul, transpose_pow]
 #align matrix.exp_transpose Matrix.exp_transpose
 -/
 
 #print Matrix.IsSymm.exp /-
-theorem IsSymm.exp {A : Matrix m m 𝔸} (h : A.IsSymm) : (exp 𝕂 A).IsSymm :=
+theorem IsSymm.exp {A : Matrix m m 𝔸} (h : A.IsSymm) : (NormedSpace.exp 𝕂 A).IsSymm :=
   (exp_transpose _ _).symm.trans <| congr_arg _ h
 #align matrix.is_symm.exp Matrix.IsSymm.exp
 -/
@@ -176,62 +179,63 @@ variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [
 
 #print Matrix.exp_add_of_commute /-
 theorem exp_add_of_commute (A B : Matrix m m 𝔸) (h : Commute A B) :
-    exp 𝕂 (A + B) = exp 𝕂 A ⬝ exp 𝕂 B :=
+    NormedSpace.exp 𝕂 (A + B) = NormedSpace.exp 𝕂 A ⬝ NormedSpace.exp 𝕂 B :=
   by
   letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
-  exact exp_add_of_commute h
+  exact NormedSpace.exp_add_of_commute h
 #align matrix.exp_add_of_commute Matrix.exp_add_of_commute
 -/
 
 #print Matrix.exp_sum_of_commute /-
 theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸)
     (h : (s : Set ι).Pairwise fun i j => Commute (f i) (f j)) :
-    exp 𝕂 (∑ i in s, f i) =
-      s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj _ => (h.of_refl hi hj).exp 𝕂 :=
+    NormedSpace.exp 𝕂 (∑ i in s, f i) =
+      s.noncommProd (fun i => NormedSpace.exp 𝕂 (f i)) fun i hi j hj _ => (h.of_refl hi hj).exp 𝕂 :=
   by
   letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
-  exact exp_sum_of_commute s f h
+  exact NormedSpace.exp_sum_of_commute s f h
 #align matrix.exp_sum_of_commute Matrix.exp_sum_of_commute
 -/
 
 #print Matrix.exp_nsmul /-
-theorem exp_nsmul (n : ℕ) (A : Matrix m m 𝔸) : exp 𝕂 (n • A) = exp 𝕂 A ^ n :=
+theorem exp_nsmul (n : ℕ) (A : Matrix m m 𝔸) :
+    NormedSpace.exp 𝕂 (n • A) = NormedSpace.exp 𝕂 A ^ n :=
   by
   letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
-  exact exp_nsmul n A
+  exact NormedSpace.exp_nsmul n A
 #align matrix.exp_nsmul Matrix.exp_nsmul
 -/
 
 #print Matrix.isUnit_exp /-
-theorem isUnit_exp (A : Matrix m m 𝔸) : IsUnit (exp 𝕂 A) :=
+theorem isUnit_exp (A : Matrix m m 𝔸) : IsUnit (NormedSpace.exp 𝕂 A) :=
   by
   letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
-  exact isUnit_exp _ A
+  exact NormedSpace.isUnit_exp _ A
 #align matrix.is_unit_exp Matrix.isUnit_exp
 -/
 
 #print Matrix.exp_units_conj /-
 theorem exp_units_conj (U : (Matrix m m 𝔸)ˣ) (A : Matrix m m 𝔸) :
-    exp 𝕂 (↑U ⬝ A ⬝ ↑U⁻¹ : Matrix m m 𝔸) = ↑U ⬝ exp 𝕂 A ⬝ ↑U⁻¹ :=
+    NormedSpace.exp 𝕂 (↑U ⬝ A ⬝ ↑U⁻¹ : Matrix m m 𝔸) = ↑U ⬝ NormedSpace.exp 𝕂 A ⬝ ↑U⁻¹ :=
   by
   letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
-  exact exp_units_conj _ U A
+  exact NormedSpace.exp_units_conj _ U A
 #align matrix.exp_units_conj Matrix.exp_units_conj
 -/
 
 #print Matrix.exp_units_conj' /-
 theorem exp_units_conj' (U : (Matrix m m 𝔸)ˣ) (A : Matrix m m 𝔸) :
-    exp 𝕂 (↑U⁻¹ ⬝ A ⬝ U : Matrix m m 𝔸) = ↑U⁻¹ ⬝ exp 𝕂 A ⬝ U :=
+    NormedSpace.exp 𝕂 (↑U⁻¹ ⬝ A ⬝ U : Matrix m m 𝔸) = ↑U⁻¹ ⬝ NormedSpace.exp 𝕂 A ⬝ U :=
   exp_units_conj 𝕂 U⁻¹ A
 #align matrix.exp_units_conj' Matrix.exp_units_conj'
 -/
@@ -244,7 +248,7 @@ variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [
   [∀ i, DecidableEq (n' i)] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 #print Matrix.exp_neg /-
-theorem exp_neg (A : Matrix m m 𝔸) : exp 𝕂 (-A) = (exp 𝕂 A)⁻¹ :=
+theorem exp_neg (A : Matrix m m 𝔸) : NormedSpace.exp 𝕂 (-A) = (NormedSpace.exp 𝕂 A)⁻¹ :=
   by
   rw [nonsing_inv_eq_ring_inverse]
   letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
@@ -255,28 +259,31 @@ theorem exp_neg (A : Matrix m m 𝔸) : exp 𝕂 (-A) = (exp 𝕂 A)⁻¹ :=
 -/
 
 #print Matrix.exp_zsmul /-
-theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) : exp 𝕂 (z • A) = exp 𝕂 A ^ z :=
+theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) :
+    NormedSpace.exp 𝕂 (z • A) = NormedSpace.exp 𝕂 A ^ z :=
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_ofNat, coe_nat_zsmul, exp_nsmul]
-  · have : IsUnit (exp 𝕂 A).det := (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_exp _ _)
-    rw [Matrix.zpow_neg this, zpow_ofNat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
+  · rw [zpow_ofNat, coe_nat_zsmul, NormedSpace.exp_nsmul]
+  · have : IsUnit (NormedSpace.exp 𝕂 A).det :=
+      (Matrix.isUnit_iff_isUnit_det _).mp (NormedSpace.isUnit_exp _ _)
+    rw [Matrix.zpow_neg this, zpow_ofNat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul,
+      NormedSpace.exp_nsmul]
 #align matrix.exp_zsmul Matrix.exp_zsmul
 -/
 
 #print Matrix.exp_conj /-
 theorem exp_conj (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) :
-    exp 𝕂 (U ⬝ A ⬝ U⁻¹) = U ⬝ exp 𝕂 A ⬝ U⁻¹ :=
+    NormedSpace.exp 𝕂 (U ⬝ A ⬝ U⁻¹) = U ⬝ NormedSpace.exp 𝕂 A ⬝ U⁻¹ :=
   let ⟨u, hu⟩ := hy
-  hu ▸ by simpa only [Matrix.coe_units_inv] using exp_units_conj 𝕂 u A
+  hu ▸ by simpa only [Matrix.coe_units_inv] using NormedSpace.exp_units_conj 𝕂 u A
 #align matrix.exp_conj Matrix.exp_conj
 -/
 
 #print Matrix.exp_conj' /-
 theorem exp_conj' (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) :
-    exp 𝕂 (U⁻¹ ⬝ A ⬝ U) = U⁻¹ ⬝ exp 𝕂 A ⬝ U :=
+    NormedSpace.exp 𝕂 (U⁻¹ ⬝ A ⬝ U) = U⁻¹ ⬝ NormedSpace.exp 𝕂 A ⬝ U :=
   let ⟨u, hu⟩ := hy
-  hu ▸ by simpa only [Matrix.coe_units_inv] using exp_units_conj' 𝕂 u A
+  hu ▸ by simpa only [Matrix.coe_units_inv] using NormedSpace.exp_units_conj' 𝕂 u A
 #align matrix.exp_conj' Matrix.exp_conj'
 -/
 

@@ -196,7 +196,6 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
 #align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 -/
 
-#print CategoryTheory.pullback_isSheaf_of_coverPreserving /-
 /-- If `G` is cover-preserving and compatible-preserving,
 then `G.op ⋙ _` pulls sheaves back to sheaves.
 
@@ -225,30 +224,28 @@ theorem pullback_isSheaf_of_coverPreserving {G : C ⥤ D} (hG₁ : CompatiblePre
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
 #align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_isSheaf_of_coverPreserving
--/
 
-#print CategoryTheory.pullbackSheaf /-
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
     (ℱ : Sheaf K A) : Sheaf J A :=
   ⟨G.op ⋙ ℱ.val, pullback_isSheaf_of_coverPreserving hG₁ hG₂ ℱ⟩
 #align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
--/
 
 variable (A)
 
-#print CategoryTheory.Sites.pullback /-
+#print CategoryTheory.Functor.sheafPushforwardContinuous /-
 /-- The induced functor from `Sheaf K A ⥤ Sheaf J A` given by `G.op ⋙ _`
 if `G` is cover-preserving and compatible-preserving.
 -/
 @[simps]
-def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
-    Sheaf K A ⥤ Sheaf J A where
+def Functor.sheafPushforwardContinuous {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
+    (hG₂ : CoverPreserving J K G) : Sheaf K A ⥤ Sheaf J A
+    where
   obj ℱ := pullbackSheaf hG₁ hG₂ ℱ
   map _ _ f := ⟨((whiskeringLeft _ _ _).obj G.op).map f.val⟩
   map_id' ℱ := by ext1; apply ((whiskering_left _ _ _).obj G.op).map_id
   map_comp' _ _ _ f g := by ext1; apply ((whiskering_left _ _ _).obj G.op).map_comp
-#align category_theory.sites.pullback CategoryTheory.Sites.pullback
+#align category_theory.sites.pullback CategoryTheory.Functor.sheafPushforwardContinuous
 -/
 
 end CategoryTheory

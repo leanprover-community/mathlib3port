@@ -963,12 +963,12 @@ theorem algHom_ext' {A} [Semiring A] [Algebra R' A] ⦃f g : tsze R' M →ₐ[R'
 
 variable {A : Type _} [Semiring A] [Algebra R' A]
 
-#print TrivSqZeroExt.liftAux /-
+#print TrivSqZeroExt.lift /-
 /-- There is an alg_hom from the trivial square zero extension to any `R`-algebra with a submodule
 whose products are all zero.
 
 See `triv_sq_zero_ext.lift` for this as an equiv. -/
-def liftAux (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) : tsze R' M →ₐ[R'] A :=
+def lift (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) : tsze R' M →ₐ[R'] A :=
   AlgHom.ofLinearMap
     ((Algebra.linearMap _ _).comp (fstHom R' R' M).toLinearMap + f.comp (sndHom R' M))
     (show algebraMap R' _ 1 + f (0 : M) = 1 by rw [map_zero, map_one, add_zero])
@@ -979,49 +979,47 @@ def liftAux (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) : tsze R' M →�
           op_smul_eq_smul]
         rw [← RingHom.map_mul, LinearMap.map_add, ← Algebra.commutes _ (f _), ← Algebra.smul_def, ←
           Algebra.smul_def, add_right_comm, add_assoc, LinearMap.map_smul, LinearMap.map_smul])
-#align triv_sq_zero_ext.lift_aux TrivSqZeroExt.liftAux
+#align triv_sq_zero_ext.lift_aux TrivSqZeroExt.lift
 -/
 
-#print TrivSqZeroExt.liftAux_apply_inr /-
+#print TrivSqZeroExt.lift_apply_inr /-
 @[simp]
-theorem liftAux_apply_inr (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) (m : M) :
-    liftAux f hf (inr m) = f m :=
+theorem lift_apply_inr (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) (m : M) :
+    lift f hf (inr m) = f m :=
   show algebraMap R' A 0 + f m = f m by rw [RingHom.map_zero, zero_add]
-#align triv_sq_zero_ext.lift_aux_apply_inr TrivSqZeroExt.liftAux_apply_inr
+#align triv_sq_zero_ext.lift_aux_apply_inr TrivSqZeroExt.lift_apply_inr
 -/
 
-#print TrivSqZeroExt.liftAux_comp_inrHom /-
+#print TrivSqZeroExt.lift_comp_inrHom /-
 @[simp]
-theorem liftAux_comp_inrHom (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) :
-    (liftAux f hf).toLinearMap.comp (inrHom R' M) = f :=
-  LinearMap.ext <| liftAux_apply_inr f hf
-#align triv_sq_zero_ext.lift_aux_comp_inr_hom TrivSqZeroExt.liftAux_comp_inrHom
+theorem lift_comp_inrHom (f : M →ₗ[R'] A) (hf : ∀ x y, f x * f y = 0) :
+    (lift f hf).toLinearMap.comp (inrHom R' M) = f :=
+  LinearMap.ext <| lift_apply_inr f hf
+#align triv_sq_zero_ext.lift_aux_comp_inr_hom TrivSqZeroExt.lift_comp_inrHom
 -/
 
-#print TrivSqZeroExt.liftAux_inrHom /-
 -- When applied to `inr` itself, `lift_aux` is the identity.
 @[simp]
-theorem liftAux_inrHom : liftAux (inrHom R' M) (inr_mul_inr R') = AlgHom.id R' (tsze R' M) :=
-  algHom_ext' <| liftAux_comp_inrHom _ _
-#align triv_sq_zero_ext.lift_aux_inr_hom TrivSqZeroExt.liftAux_inrHom
--/
+theorem lift_inlAlgHom_inrHom : lift (inrHom R' M) (inr_mul_inr R') = AlgHom.id R' (tsze R' M) :=
+  algHom_ext' <| lift_comp_inrHom _ _
+#align triv_sq_zero_ext.lift_aux_inr_hom TrivSqZeroExt.lift_inlAlgHom_inrHomₓ
 
-#print TrivSqZeroExt.lift /-
+#print TrivSqZeroExt.liftEquiv /-
 /-- A universal property of the trivial square-zero extension, providing a unique
 `triv_sq_zero_ext R M →ₐ[R] A` for every linear map `M →ₗ[R] A` whose range has no non-zero
 products.
 
 This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps]
-def lift : { f : M →ₗ[R'] A // ∀ x y, f x * f y = 0 } ≃ (tsze R' M →ₐ[R'] A)
+def liftEquiv : { f : M →ₗ[R'] A // ∀ x y, f x * f y = 0 } ≃ (tsze R' M →ₐ[R'] A)
     where
-  toFun f := liftAux f f.Prop
+  toFun f := lift f f.Prop
   invFun F :=
     ⟨F.toLinearMap.comp (inrHom R' M), fun x y =>
       (F.map_hMul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩
-  left_inv f := Subtype.ext <| liftAux_comp_inrHom _ _
-  right_inv F := algHom_ext' <| liftAux_comp_inrHom _ _
-#align triv_sq_zero_ext.lift TrivSqZeroExt.lift
+  left_inv f := Subtype.ext <| lift_comp_inrHom _ _
+  right_inv F := algHom_ext' <| lift_comp_inrHom _ _
+#align triv_sq_zero_ext.lift TrivSqZeroExt.liftEquiv
 -/
 
 attribute [nolint simp_nf] lift_symm_apply_coe

@@ -220,7 +220,7 @@ theorem isLittleO_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b
       ((isBigO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_isLittleO <|
         hl.isLittleO_cpow_exp _ (sub_pos.2 hb))
     _ =ᶠ[l] fun z => z ^ a₂ * exp (b₂ * z) := by
-      simp only [of_real_sub, sub_mul, mul_assoc, ← exp_add, add_sub_cancel'_right]
+      simp only [of_real_sub, sub_mul, mul_assoc, ← NormedSpace.exp_add, add_sub_cancel'_right]
 #align complex.is_exp_cmp_filter.is_o_cpow_mul_exp Complex.IsExpCmpFilter.isLittleO_cpow_mul_exp
 -/
 

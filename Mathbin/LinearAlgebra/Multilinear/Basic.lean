@@ -316,7 +316,6 @@ section
 
 variable (R M₂)
 
-#print MultilinearMap.ofSubsingleton /-
 /-- The evaluation map from `ι → M₂` to `M₂` is multilinear at a given `i` when `ι` is subsingleton.
 -/
 @[simps]
@@ -327,8 +326,7 @@ def ofSubsingleton [Subsingleton ι] (i' : ι) : MultilinearMap R (fun _ : ι =>
     simp only [Function.eval, Function.update_same]
   map_smul' _ m i r x := by rw [Subsingleton.elim i i'];
     simp only [Function.eval, Function.update_same]
-#align multilinear_map.of_subsingleton MultilinearMap.ofSubsingleton
--/
+#align multilinear_map.of_subsingleton MultilinearMap.ofSubsingletonₓ
 
 variable (M₁) {M₂}
 

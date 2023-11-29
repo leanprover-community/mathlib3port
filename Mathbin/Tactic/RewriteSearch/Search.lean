@@ -130,13 +130,13 @@ private unsafe def solution_paths : tactic (List edge × List edge) := do
 Returns none if there is none.
 -/
 private unsafe def find_defeq : expr → List ℕ → tactic (Option ℕ)
-  | exp, [] => return none
-  | exp, id :: rest => do
+  | NormedSpace.exp, [] => return none
+  | NormedSpace.exp, id :: rest => do
     let v ← g.vertices.read_t id
     (do
-          tactic.is_def_eq v exp
+          tactic.is_def_eq v NormedSpace.exp
           return (some id)) <|>
-        find_defeq exp rest
+        find_defeq NormedSpace.exp rest
 
 /-- Add the new vertex and edge to the graph, that can be proved in one step starting
 at a given vertex, with a given rewrite expression.
@@ -212,7 +212,7 @@ of the form a = a.
 private unsafe def find_trivial_proof : tactic (graph × expr × List proof_unit) := do
   is_def_eq g g
   let exp ← mk_eq_refl g.lhs
-  return (g, exp, [])
+  return (g, NormedSpace.exp, [])
 
 /-- Run the search to find a proof for the provided graph.
 Normally, this is the only external method needed to run the graph search.

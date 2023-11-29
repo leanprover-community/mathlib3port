@@ -604,14 +604,14 @@ open PointsWithCircumcenterIndex
 
 #print Affine.Simplex.pointsWithCircumcenterIndexInhabited /-
 instance pointsWithCircumcenterIndexInhabited (n : ℕ) : Inhabited (PointsWithCircumcenterIndex n) :=
-  ⟨circumcenter_index⟩
+  ⟨circumcenterIndex⟩
 #align affine.simplex.points_with_circumcenter_index_inhabited Affine.Simplex.pointsWithCircumcenterIndexInhabited
 -/
 
 #print Affine.Simplex.pointIndexEmbedding /-
 /-- `point_index` as an embedding. -/
 def pointIndexEmbedding (n : ℕ) : Fin (n + 1) ↪ PointsWithCircumcenterIndex n :=
-  ⟨fun i => point_index i, fun _ _ h => by injection h⟩
+  ⟨fun i => pointIndex i, fun _ _ h => by injection h⟩
 #align affine.simplex.point_index_embedding Affine.Simplex.pointIndexEmbedding
 -/
 
@@ -619,7 +619,7 @@ def pointIndexEmbedding (n : ℕ) : Fin (n + 1) ↪ PointsWithCircumcenterIndex 
 /-- The sum of a function over `points_with_circumcenter_index`. -/
 theorem sum_pointsWithCircumcenter {α : Type _} [AddCommMonoid α] {n : ℕ}
     (f : PointsWithCircumcenterIndex n → α) :
-    ∑ i, f i = ∑ i : Fin (n + 1), f (point_index i) + f circumcenter_index :=
+    ∑ i, f i = ∑ i : Fin (n + 1), f (pointIndex i) + f circumcenterIndex :=
   by
   have h : univ = insert circumcenter_index (univ.map (point_index_embedding n)) :=
     by
@@ -649,7 +649,7 @@ def pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n) : PointsWithCircumcen
 equals `points` applied to that value. -/
 @[simp]
 theorem pointsWithCircumcenter_point {n : ℕ} (s : Simplex ℝ P n) (i : Fin (n + 1)) :
-    s.pointsWithCircumcenter (point_index i) = s.points i :=
+    s.pointsWithCircumcenter (pointIndex i) = s.points i :=
   rfl
 #align affine.simplex.points_with_circumcenter_point Affine.Simplex.pointsWithCircumcenter_point
 -/
@@ -659,7 +659,7 @@ theorem pointsWithCircumcenter_point {n : ℕ} (s : Simplex ℝ P n) (i : Fin (n
 circumcenter. -/
 @[simp]
 theorem pointsWithCircumcenter_eq_circumcenter {n : ℕ} (s : Simplex ℝ P n) :
-    s.pointsWithCircumcenter circumcenter_index = s.circumcenter :=
+    s.pointsWithCircumcenter circumcenterIndex = s.circumcenter :=
   rfl
 #align affine.simplex.points_with_circumcenter_eq_circumcenter Affine.Simplex.pointsWithCircumcenter_eq_circumcenter
 -/

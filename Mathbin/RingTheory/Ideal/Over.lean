@@ -345,7 +345,7 @@ theorem isMaximal_comap_of_isIntegral_of_isMaximal (hRS : Algebra.IsIntegral R S
   refine' quotient.maximal_of_is_field _ _
   haveI : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _
   exact
-    isField_of_isIntegral_of_isField (isIntegral_quotient_of_isIntegral hRS)
+    isField_of_isIntegral_of_isField (Algebra.IsIntegral.quotient hRS)
       algebra_map_quotient_injective (by rwa [← quotient.maximal_ideal_iff_is_field_quotient])
 #align ideal.is_maximal_comap_of_is_integral_of_is_maximal Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
 -/
@@ -430,10 +430,10 @@ theorem IntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal (integr
 #align ideal.integral_closure.eq_bot_of_comap_eq_bot Ideal.IntegralClosure.eq_bot_of_comap_eq_bot
 -/
 
-#print Ideal.exists_ideal_over_prime_of_isIntegral' /-
+#print Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain /-
 /-- `comap (algebra_map R S)` is a surjection from the prime spec of `R` to prime spec of `S`.
 `hP : (algebra_map R S).ker ≤ P` is a slight generalization of the extension being injective -/
-theorem exists_ideal_over_prime_of_isIntegral' (H : Algebra.IsIntegral R S) (P : Ideal R)
+theorem exists_ideal_over_prime_of_isIntegral_of_isDomain (H : Algebra.IsIntegral R S) (P : Ideal R)
     [IsPrime P] (hP : (algebraMap R S).ker ≤ P) :
     ∃ Q : Ideal S, IsPrime Q ∧ Q.comap (algebraMap R S) = P :=
   by
@@ -453,7 +453,7 @@ theorem exists_ideal_over_prime_of_isIntegral' (H : Algebra.IsIntegral R S) (P :
   convert Localization.AtPrime.comap_maximalIdeal
   rw [comap_comap, ← LocalRing.eq_maximalIdeal Qₚ_max, ← IsLocalization.map_comp _]
   rfl
-#align ideal.exists_ideal_over_prime_of_is_integral' Ideal.exists_ideal_over_prime_of_isIntegral'
+#align ideal.exists_ideal_over_prime_of_is_integral' Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain
 -/
 
 end
@@ -469,7 +469,7 @@ theorem exists_ideal_over_prime_of_isIntegral (H : Algebra.IsIntegral R S) (P : 
   let quot := R ⧸ I.comap (algebraMap R S)
   obtain ⟨Q' : Ideal (S ⧸ I), ⟨Q'_prime, hQ'⟩⟩ :=
     @exists_ideal_over_prime_of_is_integral' Quot _ (S ⧸ I) _ Ideal.quotientAlgebra _
-      (isIntegral_quotient_of_isIntegral H) (map (Quotient.mk' (I.comap (algebraMap R S))) P)
+      (Algebra.IsIntegral.quotient H) (map (Quotient.mk' (I.comap (algebraMap R S))) P)
       (map_is_prime_of_surjective quotient.mk_surjective (by simp [hIP]))
       (le_trans (le_of_eq ((RingHom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective))
         bot_le)

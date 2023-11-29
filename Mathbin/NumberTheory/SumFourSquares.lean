@@ -169,7 +169,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hnat_abs :
         w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 =
           (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
-        by push_cast ; simp_rw [sq_abs]
+        by push_cast; simp_rw [sq_abs]
       have hwxyzlt : w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 < m ^ 2 :=
         calc
           w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 =
@@ -222,11 +222,11 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hawbxcydz : ((m : ℕ) : ℤ) ∣ a * w + b * x + c * y + d * z :=
         (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by rw [← hwxyz0]; simp_rw [sq]; push_cast
       have haxbwczdy : ((m : ℕ) : ℤ) ∣ a * x - b * w - c * z + d * y :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast ; ring
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
       have haybzcwdx : ((m : ℕ) : ℤ) ∣ a * y + b * z - c * w - d * x :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast ; ring
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
       have hazbycxdw : ((m : ℕ) : ℤ) ∣ a * z - b * y + c * x - d * w :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast ; ring
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
       let ⟨s, hs⟩ := hawbxcydz
       let ⟨t, ht⟩ := haxbwczdy
       let ⟨u, hu⟩ := haybzcwdx

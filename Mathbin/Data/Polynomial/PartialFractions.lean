@@ -117,7 +117,7 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type _} {g : ι → R[X]} {s
     norm_cast at hf IH ⊢
     rw [Finset.prod_insert hab, hf, IH, Finset.sum_insert hab, if_pos rfl]
     trans (↑(q₀ + q : R[X]) : K) + (↑r₁ / ↑(g a) + ∑ i : ι in b, ↑(r i) / ↑(g i))
-    · push_cast ; ring
+    · push_cast; ring
     congr 2
     refine' Finset.sum_congr rfl fun x hxb => _
     rw [if_neg]

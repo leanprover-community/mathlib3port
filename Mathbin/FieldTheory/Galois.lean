@@ -469,7 +469,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     Fintype.card (K⟮⟯.restrictScalars F →ₐ[F] E) = Fintype.card (K →ₐ[F] E) * finrank K K⟮⟯ :=
   by
   have h : IsIntegral K x :=
-    isIntegral_of_isScalarTower (isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
+    IsIntegral.tower_top (isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
   have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx 
   have h2 : minpoly K x ∣ p.map (algebraMap F K) :=
     by

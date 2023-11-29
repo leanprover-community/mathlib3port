@@ -65,7 +65,7 @@ attribute [instance] NumberField.to_charZero NumberField.to_finiteDimensional
 
 #print NumberField.isAlgebraic /-
 protected theorem isAlgebraic : Algebra.IsAlgebraic ℚ K :=
-  Algebra.isAlgebraic_of_finite _ _
+  Algebra.IsAlgebraic.of_finite _ _
 #align number_field.is_algebraic NumberField.isAlgebraic
 -/
 

@@ -2488,7 +2488,7 @@ theorem smul_finset_subset_smul_finset_iff : a • s ⊆ a • t ↔ s ⊆ t :=
 
 #print Finset.smul_finset_subset_iff /-
 @[to_additive]
-theorem smul_finset_subset_iff : a • s ⊆ t ↔ s ⊆ a⁻¹ • t := by simp_rw [← coe_subset]; push_cast ;
+theorem smul_finset_subset_iff : a • s ⊆ t ↔ s ⊆ a⁻¹ • t := by simp_rw [← coe_subset]; push_cast;
   exact Set.set_smul_subset_iff
 #align finset.smul_finset_subset_iff Finset.smul_finset_subset_iff
 #align finset.vadd_finset_subset_iff Finset.vadd_finset_subset_iff
@@ -2496,7 +2496,7 @@ theorem smul_finset_subset_iff : a • s ⊆ t ↔ s ⊆ a⁻¹ • t := by simp
 
 #print Finset.subset_smul_finset_iff /-
 @[to_additive]
-theorem subset_smul_finset_iff : s ⊆ a • t ↔ a⁻¹ • s ⊆ t := by simp_rw [← coe_subset]; push_cast ;
+theorem subset_smul_finset_iff : s ⊆ a • t ↔ a⁻¹ • s ⊆ t := by simp_rw [← coe_subset]; push_cast;
   exact Set.subset_set_smul_iff
 #align finset.subset_smul_finset_iff Finset.subset_smul_finset_iff
 #align finset.subset_vadd_finset_iff Finset.subset_vadd_finset_iff
@@ -2537,7 +2537,7 @@ theorem smul_finset_univ [Fintype β] : a • (univ : Finset β) = univ :=
 #print Finset.smul_univ /-
 @[simp, to_additive]
 theorem smul_univ [Fintype β] {s : Finset α} (hs : s.Nonempty) : s • (univ : Finset β) = univ :=
-  coe_injective <| by push_cast ; exact Set.smul_univ hs
+  coe_injective <| by push_cast; exact Set.smul_univ hs
 #align finset.smul_univ Finset.smul_univ
 #align finset.vadd_univ Finset.vadd_univ
 -/
@@ -2647,7 +2647,7 @@ theorem smul_univ₀ [Fintype β] {s : Finset α} (hs : ¬s ⊆ 0) : s • (univ
 
 #print Finset.smul_finset_univ₀ /-
 theorem smul_finset_univ₀ [Fintype β] (ha : a ≠ 0) : a • (univ : Finset β) = univ :=
-  coe_injective <| by push_cast ; exact Set.smul_set_univ₀ ha
+  coe_injective <| by push_cast; exact Set.smul_set_univ₀ ha
 #align finset.smul_finset_univ₀ Finset.smul_finset_univ₀
 -/
 

@@ -71,7 +71,7 @@ inductive Pre
 namespace Pre
 
 instance : Inhabited (Pre R X) :=
-  ⟨of_scalar 0⟩
+  ⟨ofScalar 0⟩
 
 #print FreeAlgebra.Pre.hasCoeGenerator /-
 -- Note: These instances are only used to simplify the notation.
@@ -84,7 +84,7 @@ def hasCoeGenerator : Coe X (Pre R X) :=
 #print FreeAlgebra.Pre.hasCoeSemiring /-
 /-- Coercion from `R` to `pre R X`. Note: Used for notation only. -/
 def hasCoeSemiring : Coe R (Pre R X) :=
-  ⟨of_scalar⟩
+  ⟨ofScalar⟩
 #align free_algebra.pre.has_coe_semiring FreeAlgebra.Pre.hasCoeSemiring
 -/
 
@@ -105,14 +105,14 @@ def hasAdd : Add (Pre R X) :=
 #print FreeAlgebra.Pre.hasZero /-
 /-- Zero in `pre R X` defined as the image of `0` from `R`. Note: Used for notation only. -/
 def hasZero : Zero (Pre R X) :=
-  ⟨of_scalar 0⟩
+  ⟨ofScalar 0⟩
 #align free_algebra.pre.has_zero FreeAlgebra.Pre.hasZero
 -/
 
 #print FreeAlgebra.Pre.hasOne /-
 /-- One in `pre R X` defined as the image of `1` from `R`. Note: Used for notation only. -/
 def hasOne : One (Pre R X) :=
-  ⟨of_scalar 1⟩
+  ⟨ofScalar 1⟩
 #align free_algebra.pre.has_one FreeAlgebra.Pre.hasOne
 -/
 
@@ -121,7 +121,7 @@ def hasOne : One (Pre R X) :=
 Note: Used for notation only.
 -/
 def hasSmul : SMul R (Pre R X) :=
-  ⟨fun r m => mul (of_scalar r) m⟩
+  ⟨fun r m => mul (ofScalar r) m⟩
 #align free_algebra.pre.has_smul FreeAlgebra.Pre.hasSmul
 -/
 

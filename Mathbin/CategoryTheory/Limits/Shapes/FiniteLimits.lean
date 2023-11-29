@@ -111,7 +111,7 @@ instance (priority := 100) hasColimitsOfShape_of_hasFiniteColimits (J : Type w) 
 instance (priority := 100) hasFiniteColimits_of_hasColimitsOfSize [HasColimitsOfSize.{v', u'} C] :
     HasFiniteColimits C :=
   ⟨fun J hJ hJ' =>
-    haveI := hasColimitsOfSize_shrink.{0, 0} C
+    haveI := hasColimitsOfSizeShrink.{0, 0} C
     has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 #align category_theory.limits.has_finite_colimits_of_has_colimits_of_size CategoryTheory.Limits.hasFiniteColimits_of_hasColimitsOfSize
 -/

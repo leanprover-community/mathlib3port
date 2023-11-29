@@ -689,12 +689,12 @@ theorem orderOf_inv (x : G) : orderOf x⁻¹ = orderOf x := by simp [orderOf_eq_
 #align order_of_neg addOrderOf_neg
 -/
 
-#print orderOf_subgroup /-
+#print Subgroup.orderOf_coe /-
 @[simp, norm_cast, to_additive]
-theorem orderOf_subgroup {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y :=
+theorem Subgroup.orderOf_coe {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y :=
   orderOf_injective H.Subtype Subtype.coe_injective y
-#align order_of_subgroup orderOf_subgroup
-#align order_of_add_subgroup addOrderOf_addSubgroup
+#align order_of_subgroup Subgroup.orderOf_coe
+#align order_of_add_subgroup AddSubgroup.addOrderOf_coe
 -/
 
 #print zpow_mod_orderOf /-
@@ -1121,20 +1121,20 @@ theorem zpowersEquivZpowers_apply [Finite G] (h : orderOf x = orderOf y) (n : �
 
 variable [Fintype G]
 
-#print orderOf_eq_card_zpowers /-
+#print Fintype.card_zpowers /-
 /-- See also `nat.card_zpowers'`. -/
-@[to_additive addOrderOf_eq_card_zmultiples "See also `nat.card_zmultiples`."]
-theorem orderOf_eq_card_zpowers : orderOf x = Fintype.card (zpowers x) :=
+@[to_additive Fintype.card_zmultiples "See also `nat.card_zmultiples`."]
+theorem Fintype.card_zpowers : orderOf x = Fintype.card (zpowers x) :=
   (Fintype.card_fin (orderOf x)).symm.trans (Fintype.card_eq.2 ⟨finEquivZpowers x⟩)
-#align order_eq_card_zpowers orderOf_eq_card_zpowers
-#align add_order_eq_card_zmultiples addOrderOf_eq_card_zmultiples
+#align order_eq_card_zpowers Fintype.card_zpowers
+#align add_order_eq_card_zmultiples Fintype.card_zmultiples
 -/
 
 open QuotientGroup
 
-#print orderOf_dvd_card_univ /-
-@[to_additive addOrderOf_dvd_card_univ]
-theorem orderOf_dvd_card_univ : orderOf x ∣ Fintype.card G := by
+#print orderOf_dvd_card /-
+@[to_additive addOrderOf_dvd_card]
+theorem orderOf_dvd_card : orderOf x ∣ Fintype.card G := by
   classical
   have ft_prod : Fintype ((G ⧸ zpowers x) × zpowers x) :=
     Fintype.ofEquiv G group_equiv_quotient_times_subgroup
@@ -1150,28 +1150,28 @@ theorem orderOf_dvd_card_univ : orderOf x ∣ Fintype.card G := by
       _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
   have eq₂ : orderOf x = @Fintype.card _ ft_s :=
     calc
-      orderOf x = _ := orderOf_eq_card_zpowers
+      orderOf x = _ := Fintype.card_zpowers
       _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
   exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
-#align order_of_dvd_card_univ orderOf_dvd_card_univ
-#align add_order_of_dvd_card_univ addOrderOf_dvd_card_univ
+#align order_of_dvd_card_univ orderOf_dvd_card
+#align add_order_of_dvd_card_univ addOrderOf_dvd_card
 -/
 
-#print orderOf_dvd_nat_card /-
-@[to_additive addOrderOf_dvd_nat_card]
-theorem orderOf_dvd_nat_card {G : Type _} [Group G] {x : G} : orderOf x ∣ Nat.card G :=
+#print orderOf_dvd_natCard /-
+@[to_additive addOrderOf_dvd_natCard]
+theorem orderOf_dvd_natCard {G : Type _} [Group G] {x : G} : orderOf x ∣ Nat.card G :=
   by
   cases' fintypeOrInfinite G with h h
-  · simp only [Nat.card_eq_fintype_card, orderOf_dvd_card_univ]
+  · simp only [Nat.card_eq_fintype_card, orderOf_dvd_card]
   · simp only [card_eq_zero_of_infinite, dvd_zero]
-#align order_of_dvd_nat_card orderOf_dvd_nat_card
-#align add_order_of_dvd_nat_card addOrderOf_dvd_nat_card
+#align order_of_dvd_nat_card orderOf_dvd_natCard
+#align add_order_of_dvd_nat_card addOrderOf_dvd_natCard
 -/
 
 #print pow_card_eq_one' /-
 @[simp, to_additive card_nsmul_eq_zero']
 theorem pow_card_eq_one' {G : Type _} [Group G] {x : G} : x ^ Nat.card G = 1 :=
-  orderOf_dvd_iff_pow_eq_one.mp orderOf_dvd_nat_card
+  orderOf_dvd_iff_pow_eq_one.mp orderOf_dvd_natCard
 #align pow_card_eq_one' pow_card_eq_one'
 #align card_nsmul_eq_zero' card_nsmul_eq_zero'
 -/
@@ -1195,7 +1195,7 @@ theorem Subgroup.pow_index_mem {G : Type _} [Group G] (H : Subgroup G) [Normal H
 #print pow_eq_mod_card /-
 @[to_additive]
 theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
-  rw [pow_mod_orderOf, ← Nat.mod_mod_of_dvd n orderOf_dvd_card_univ, ← pow_mod_orderOf]
+  rw [pow_mod_orderOf, ← Nat.mod_mod_of_dvd n orderOf_dvd_card, ← pow_mod_orderOf]
 #align pow_eq_mod_card pow_eq_mod_card
 #align nsmul_eq_mod_card nsmul_eq_mod_card
 -/
@@ -1203,7 +1203,7 @@ theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
 #print zpow_eq_mod_card /-
 @[to_additive]
 theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
-  rw [zpow_mod_orderOf, ← Int.emod_emod_of_dvd n (Int.coe_nat_dvd.2 orderOf_dvd_card_univ), ←
+  rw [zpow_mod_orderOf, ← Int.emod_emod_of_dvd n (Int.coe_nat_dvd.2 orderOf_dvd_card), ←
     zpow_mod_orderOf]
 #align zpow_eq_mod_card zpow_eq_mod_card
 #align zsmul_eq_mod_card zsmul_eq_mod_card
@@ -1253,8 +1253,8 @@ theorem inf_eq_bot_of_coprime {G : Type _} [Group G] {H K : Subgroup G} [Fintype
   refine' (H ⊓ K).eq_bot_iff_forall.mpr fun x hx => _
   rw [← orderOf_eq_one_iff, ← Nat.dvd_one, ← h.gcd_eq_one, Nat.dvd_gcd_iff]
   exact
-    ⟨(congr_arg (· ∣ Fintype.card H) (orderOf_subgroup ⟨x, hx.1⟩)).mpr orderOf_dvd_card_univ,
-      (congr_arg (· ∣ Fintype.card K) (orderOf_subgroup ⟨x, hx.2⟩)).mpr orderOf_dvd_card_univ⟩
+    ⟨(congr_arg (· ∣ Fintype.card H) (Subgroup.orderOf_coe ⟨x, hx.1⟩)).mpr orderOf_dvd_card,
+      (congr_arg (· ∣ Fintype.card K) (Subgroup.orderOf_coe ⟨x, hx.2⟩)).mpr orderOf_dvd_card⟩
 #align inf_eq_bot_of_coprime inf_eq_bot_of_coprime
 #align add_inf_eq_bot_of_coprime add_inf_eq_bot_of_coprime
 -/

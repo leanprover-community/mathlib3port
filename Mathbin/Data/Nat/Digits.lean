@@ -274,7 +274,7 @@ theorem coe_ofDigits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) :
   by
   induction' L with d L ih
   · simp [of_digits]
-  · dsimp [of_digits]; push_cast ; rw [ih]
+  · dsimp [of_digits]; push_cast; rw [ih]
 #align nat.coe_of_digits Nat.coe_ofDigits
 -/
 

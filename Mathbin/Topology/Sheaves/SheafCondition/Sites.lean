@@ -158,7 +158,8 @@ variable {X : TopCat} {ι : Type _}
 
 #print TopCat.Opens.coverDense_iff_isBasis /-
 theorem coverDense_iff_isBasis [Category ι] (B : ι ⥤ Opens X) :
-    CoverDense (Opens.grothendieckTopology X) B ↔ Opens.IsBasis (Set.range B.obj) :=
+    CategoryTheory.Functor.IsCoverDense (Opens.grothendieckTopology X) B ↔
+      Opens.IsBasis (Set.range B.obj) :=
   by
   rw [opens.is_basis_iff_nbhd]
   constructor; intro hd U x hx; rcases hd.1 U x hx with ⟨V, f, ⟨i, f₁, f₂, hc⟩, hV⟩
@@ -170,7 +171,7 @@ theorem coverDense_iff_isBasis [Category ι] (B : ι ⥤ Opens X) :
 
 #print TopCat.Opens.coverDense_inducedFunctor /-
 theorem coverDense_inducedFunctor {B : ι → Opens X} (h : Opens.IsBasis (Set.range B)) :
-    CoverDense (Opens.grothendieckTopology X) (inducedFunctor B) :=
+    CategoryTheory.Functor.IsCoverDense (Opens.grothendieckTopology X) (inducedFunctor B) :=
   (coverDense_iff_isBasis _).2 h
 #align Top.opens.cover_dense_induced_functor TopCat.Opens.coverDense_inducedFunctor
 -/
@@ -249,7 +250,8 @@ def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ⊥) :
     is equivalent to a homomorphism between their restrictions to the indexing type
     `ι` of `B`, with the induced category structure on `ι`. -/
 def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) ≃ (F ⟶ F'.1) :=
-  @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.coverDense_inducedFunctor h) _ F F'
+  @CategoryTheory.Functor.IsCoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _
+    (Opens.coverDense_inducedFunctor h) _ F F'
 #align Top.sheaf.restrict_hom_equiv_hom TopCat.Sheaf.restrictHomEquivHom
 -/
 

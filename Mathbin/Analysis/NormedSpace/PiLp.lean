@@ -551,14 +551,14 @@ instance [∀ i, MetricSpace (α i)] : MetricSpace (PiLp p α) :=
 theorem nndist_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)]
     (hp : p ≠ ∞) (x y : PiLp p β) :
     nndist x y = (∑ i : ι, nndist (x i) (y i) ^ p.toReal) ^ (1 / p.toReal) :=
-  Subtype.ext <| by push_cast ; exact dist_eq_sum (p.to_real_pos_iff_ne_top.mpr hp) _ _
+  Subtype.ext <| by push_cast; exact dist_eq_sum (p.to_real_pos_iff_ne_top.mpr hp) _ _
 #align pi_Lp.nndist_eq_sum PiLp.nndist_eq_sum
 -/
 
 #print PiLp.nndist_eq_iSup /-
 theorem nndist_eq_iSup {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x y : PiLp ∞ β) :
     nndist x y = ⨆ i, nndist (x i) (y i) :=
-  Subtype.ext <| by push_cast ; exact dist_eq_csupr _ _
+  Subtype.ext <| by push_cast; exact dist_eq_csupr _ _
 #align pi_Lp.nndist_eq_supr PiLp.nndist_eq_iSup
 -/
 
@@ -644,7 +644,7 @@ theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)
 #print PiLp.nnnorm_eq_of_L2 /-
 theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ‖x‖₊ = NNReal.sqrt (∑ i : ι, ‖x i‖₊ ^ 2) :=
-  Subtype.ext <| by push_cast ; exact norm_eq_of_L2 x
+  Subtype.ext <| by push_cast; exact norm_eq_of_L2 x
 #align pi_Lp.nnnorm_eq_of_L2 PiLp.nnnorm_eq_of_L2
 -/
 
@@ -668,7 +668,7 @@ theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)
 #print PiLp.nndist_eq_of_L2 /-
 theorem nndist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     nndist x y = (∑ i, nndist (x i) (y i) ^ 2).sqrt :=
-  Subtype.ext <| by push_cast ; exact dist_eq_of_L2 _ _
+  Subtype.ext <| by push_cast; exact dist_eq_of_L2 _ _
 #align pi_Lp.nndist_eq_of_L2 PiLp.nndist_eq_of_L2
 -/
 

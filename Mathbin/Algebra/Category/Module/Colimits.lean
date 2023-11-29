@@ -396,11 +396,11 @@ instance hasColimits_moduleCat : HasColimits (ModuleCat.{max v u} R)
 #align Module.colimits.has_colimits_Module ModuleCat.Colimits.hasColimits_moduleCat
 
 instance hasColimitsOfSize_moduleCat : HasColimitsOfSize.{v} (ModuleCat.{max v u} R) :=
-  hasColimitsOfSize_shrink _
+  hasColimitsOfSizeShrink _
 #align Module.colimits.has_colimits_of_size_Module ModuleCat.Colimits.hasColimitsOfSize_moduleCat
 
 instance hasColimitsOfSize_zero_moduleCat : HasColimitsOfSize.{0} (ModuleCat.{max v u} R) :=
-  @hasColimitsOfSize_shrink.{0} (ModuleCat.{max v u} R) _ ModuleCat.Colimits.hasColimits_moduleCat
+  @hasColimitsOfSizeShrink.{0} (ModuleCat.{max v u} R) _ ModuleCat.Colimits.hasColimits_moduleCat
 #align Module.colimits.has_colimits_of_size_zero_Module ModuleCat.Colimits.hasColimitsOfSize_zero_moduleCat
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise

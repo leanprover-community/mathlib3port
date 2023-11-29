@@ -95,7 +95,7 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
     replace hI : I =ᵐ[volume] closed_ball x (T / (2 * ↑n)) := hI.trans closed_ball_ae_eq_ball.symm
     haveI : Fintype G := @Fintype.ofFinite _ hu.finite_zmultiples
     have hG_card : (Finset.univ : Finset G).card = n := by show _ = addOrderOf u;
-      rw [add_order_eq_card_zmultiples', Nat.card_eq_fintype_card]; rfl
+      rw [Nat.card_zmultiples, Nat.card_eq_fintype_card]; rfl
     simp_rw [measure_vadd]
     rw [AddCircle.measure_univ, tsum_fintype, Finset.sum_const, measure_congr hI,
       volume_closed_ball, ← ENNReal.ofReal_nsmul, mul_div, mul_div_mul_comm,
@@ -117,7 +117,7 @@ theorem volume_of_add_preimage_eq (s I : Set <| AddCircle T) (u x : AddCircle T)
     exact (vadd_ae_eq_self_of_mem_zmultiples hs hy : _)
   rw [(is_add_fundamental_domain_of_ae_ball I u x hu hI).measure_eq_card_smul_of_vadd_ae_eq_self s
       hsG,
-    add_order_eq_card_zmultiples' u, Nat.card_eq_fintype_card]
+    Nat.card_zmultiples u, Nat.card_eq_fintype_card]
 #align add_circle.volume_of_add_preimage_eq AddCircle.volume_of_add_preimage_eq
 -/
 

@@ -73,7 +73,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
         · exact (Submodule.range_subtype _).symm
       map_rel_iff' := fun S T =>
         by
-        refine' ⟨fun h => _, fun h => mk_le_mk_of_comm (↟(Submodule.ofLe h)) (by ext; rfl)⟩
+        refine' ⟨fun h => _, fun h => mk_le_mk_of_comm (↟(Submodule.inclusion h)) (by ext; rfl)⟩
         convert LinearMap.range_comp_le_range (of_mk_le_mk _ _ h) (↾T.subtype)
         · simpa only [← comp_def, of_mk_le_mk_comp] using (Submodule.range_subtype _).symm
         · exact (Submodule.range_subtype _).symm }

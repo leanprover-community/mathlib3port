@@ -95,11 +95,11 @@ instance [Add α] [LE α] [ExistsAddOfLE α] : ExistsMulOfLE (Multiplicative α)
 instance [Mul α] [LE α] [ExistsMulOfLE α] : ExistsAddOfLE (Additive α) :=
   ⟨@exists_hMul_of_le α _ _ _⟩
 
-instance [CanonicallyOrderedAddCommMonoid α] : CanonicallyOrderedCommMonoid (Multiplicative α) :=
+instance [CanonicallyOrderedAddCommMonoid α] : CanonicallyOrderedAddCommMonoid (Multiplicative α) :=
   { Multiplicative.orderedCommMonoid, Multiplicative.orderBot, Multiplicative.existsMulOfLE with
     le_self_mul := @le_self_add α _ }
 
-instance [CanonicallyOrderedCommMonoid α] : CanonicallyOrderedAddCommMonoid (Additive α) :=
+instance [CanonicallyOrderedAddCommMonoid α] : CanonicallyOrderedAddCommMonoid (Additive α) :=
   { Additive.orderedAddCommMonoid, Additive.orderBot, Additive.existsAddOfLE with
     le_self_add := @le_self_mul α _ }
 

@@ -123,7 +123,6 @@ def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D
 #align category_theory.idempotents.functor_extension₁ CategoryTheory.Idempotents.functorExtension₁
 -/
 
-#print CategoryTheory.Idempotents.functorExtension₁_comp_whiskeringLeft_toKaroubi /-
 theorem functorExtension₁_comp_whiskeringLeft_toKaroubi :
     functorExtension₁ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) = 𝟭 _ :=
   by
@@ -148,16 +147,15 @@ theorem functorExtension₁_comp_whiskeringLeft_toKaroubi :
     simp only [eq_to_hom_app, F.map_id, comp_f, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl, comp_id,
       comp_p, functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
 #align category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functorExtension₁_comp_whiskeringLeft_toKaroubi
--/
 
-#print CategoryTheory.Idempotents.functorExtension₁_comp_whiskeringLeft_toKaroubi_iso /-
+#print CategoryTheory.Idempotents.functorExtension₁CompWhiskeringLeftToKaroubiIso /-
 /-- The natural isomorphism expressing that functors `karoubi C ⥤ karoubi D` obtained
 using `functor_extension₁` actually extends the original functors `C ⥤ karoubi D`. -/
 @[simps]
-def functorExtension₁_comp_whiskeringLeft_toKaroubi_iso :
+def functorExtension₁CompWhiskeringLeftToKaroubiIso :
     functorExtension₁ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) ≅ 𝟭 _ :=
   eqToIso (functorExtension₁_comp_whiskeringLeft_toKaroubi C D)
-#align category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi_iso CategoryTheory.Idempotents.functorExtension₁_comp_whiskeringLeft_toKaroubi_iso
+#align category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi_iso CategoryTheory.Idempotents.functorExtension₁CompWhiskeringLeftToKaroubiIso
 -/
 
 #print CategoryTheory.Idempotents.KaroubiUniversal₁.counitIso /-
@@ -206,7 +204,7 @@ def karoubiUniversal₁ : C ⥤ Karoubi D ≌ Karoubi C ⥤ Karoubi D
     where
   Functor := functorExtension₁ C D
   inverse := (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C)
-  unitIso := (functorExtension₁_comp_whiskeringLeft_toKaroubi_iso C D).symm
+  unitIso := (functorExtension₁CompWhiskeringLeftToKaroubiIso C D).symm
   counitIso := KaroubiUniversal₁.counitIso C D
   functor_unitIso_comp' F := by
     ext P
@@ -216,13 +214,11 @@ def karoubiUniversal₁ : C ⥤ Karoubi D ≌ Karoubi C ⥤ Karoubi D
 #align category_theory.idempotents.karoubi_universal₁ CategoryTheory.Idempotents.karoubiUniversal₁
 -/
 
-#print CategoryTheory.Idempotents.functorExtension₁_comp /-
 theorem functorExtension₁_comp (F : C ⥤ Karoubi D) (G : D ⥤ Karoubi E) :
     (functorExtension₁ C E).obj (F ⋙ (functorExtension₁ D E).obj G) =
       (functorExtension₁ C D).obj F ⋙ (functorExtension₁ D E).obj G :=
   Functor.ext (by tidy) fun X Y f => by dsimp; simpa only [id_comp, comp_id]
 #align category_theory.idempotents.functor_extension₁_comp CategoryTheory.Idempotents.functorExtension₁_comp
--/
 
 #print CategoryTheory.Idempotents.functorExtension₂ /-
 /-- The canonical functor `(C ⥤ D) ⥤ (karoubi C ⥤ karoubi D)` -/
@@ -232,7 +228,6 @@ def functorExtension₂ : (C ⥤ D) ⥤ Karoubi C ⥤ Karoubi D :=
 #align category_theory.idempotents.functor_extension₂ CategoryTheory.Idempotents.functorExtension₂
 -/
 
-#print CategoryTheory.Idempotents.functorExtension₂_comp_whiskeringLeft_toKaroubi /-
 theorem functorExtension₂_comp_whiskeringLeft_toKaroubi :
     functorExtension₂ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) =
       (whiskeringRight C D (Karoubi D)).obj (toKaroubi D) :=
@@ -240,7 +235,6 @@ theorem functorExtension₂_comp_whiskeringLeft_toKaroubi :
   simp only [functor_extension₂, functor.assoc, functor_extension₁_comp_whiskering_left_to_karoubi,
     functor.comp_id]
 #align category_theory.idempotents.functor_extension₂_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functorExtension₂_comp_whiskeringLeft_toKaroubi
--/
 
 #print CategoryTheory.Idempotents.functorExtension₂CompWhiskeringLeftToKaroubiIso /-
 /-- The natural isomorphism expressing that functors `karoubi C ⥤ karoubi D` obtained

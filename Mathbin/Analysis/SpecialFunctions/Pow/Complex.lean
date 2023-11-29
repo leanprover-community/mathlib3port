@@ -111,7 +111,8 @@ theorem one_cpow (x : ℂ) : (1 : ℂ) ^ x = 1 := by
 
 #print Complex.cpow_add /-
 theorem cpow_add {x : ℂ} (y z : ℂ) (hx : x ≠ 0) : x ^ (y + z) = x ^ y * x ^ z := by
-  simp only [cpow_def, ite_mul, boole_mul, mul_ite, mul_boole] <;> simp_all [exp_add, mul_add]
+  simp only [cpow_def, ite_mul, boole_mul, mul_ite, mul_boole] <;>
+    simp_all [NormedSpace.exp_add, mul_add]
 #align complex.cpow_add Complex.cpow_add
 -/
 
@@ -125,7 +126,7 @@ theorem cpow_mul {x y : ℂ} (z : ℂ) (h₁ : -π < (log x * y).im) (h₂ : (lo
 
 #print Complex.cpow_neg /-
 theorem cpow_neg (x y : ℂ) : x ^ (-y) = (x ^ y)⁻¹ := by
-  simp only [cpow_def, neg_eq_zero, mul_neg] <;> split_ifs <;> simp [exp_neg]
+  simp only [cpow_def, neg_eq_zero, mul_neg] <;> split_ifs <;> simp [NormedSpace.exp_neg]
 #align complex.cpow_neg Complex.cpow_neg
 -/
 
@@ -208,7 +209,7 @@ theorem mul_cpow_ofReal_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : �
   have ha'' : (a : ℂ) ≠ 0 := of_real_ne_zero.mpr ha'.ne'
   have hb'' : (b : ℂ) ≠ 0 := of_real_ne_zero.mpr hb'.ne'
   rw [cpow_def_of_ne_zero (mul_ne_zero ha'' hb''), log_of_real_mul ha' hb'', of_real_log ha,
-    add_mul, exp_add, ← cpow_def_of_ne_zero ha'', ← cpow_def_of_ne_zero hb'']
+    add_mul, NormedSpace.exp_add, ← cpow_def_of_ne_zero ha'', ← cpow_def_of_ne_zero hb'']
 #align complex.mul_cpow_of_real_nonneg Complex.mul_cpow_ofReal_nonneg
 -/
 
@@ -217,8 +218,8 @@ theorem inv_cpow_eq_ite (x : ℂ) (n : ℂ) :
     x⁻¹ ^ n = if x.arg = π then conj (x ^ conj n)⁻¹ else (x ^ n)⁻¹ :=
   by
   simp_rw [Complex.cpow_def, log_inv_eq_ite, inv_eq_zero, map_eq_zero, ite_mul, neg_mul,
-    IsROrC.conj_inv, apply_ite conj, apply_ite exp, apply_ite Inv.inv, map_zero, map_one, exp_neg,
-    inv_one, inv_zero, ← exp_conj, map_mul, conj_conj]
+    IsROrC.conj_inv, apply_ite conj, apply_ite NormedSpace.exp, apply_ite Inv.inv, map_zero,
+    map_one, NormedSpace.exp_neg, inv_one, inv_zero, ← NormedSpace.exp_conj, map_mul, conj_conj]
   split_ifs with hx hn ha ha <;> rfl
 #align complex.inv_cpow_eq_ite Complex.inv_cpow_eq_ite
 -/
@@ -245,8 +246,8 @@ theorem inv_cpow_eq_ite' (x : ℂ) (n : ℂ) :
 theorem conj_cpow_eq_ite (x : ℂ) (n : ℂ) :
     conj x ^ n = if x.arg = π then x ^ n else conj (x ^ conj n) :=
   by
-  simp_rw [cpow_def, map_eq_zero, apply_ite conj, map_one, map_zero, ← exp_conj, map_mul, conj_conj,
-    log_conj_eq_ite]
+  simp_rw [cpow_def, map_eq_zero, apply_ite conj, map_one, map_zero, ← NormedSpace.exp_conj,
+    map_mul, conj_conj, log_conj_eq_ite]
   split_ifs with hcx hn hx <;> rfl
 #align complex.conj_cpow_eq_ite Complex.conj_cpow_eq_ite
 -/

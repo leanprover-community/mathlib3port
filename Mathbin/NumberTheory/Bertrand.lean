@@ -240,7 +240,6 @@ theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) :
   · exact exists_prime_lt_and_le_two_mul_eventually n h
   replace h : n < 521 := h.trans_lt (by norm_num1)
   revert h
-  -- For small `n`, supply a list of primes to cover the initial cases.
   run_tac
     [317, 163, 83, 43, 23, 13, 7, 5, 3, 2].mapM' fun n => sorry
   exact fun h2 => ⟨2, prime_two, h2, Nat.mul_le_mul_left 2 (Nat.pos_of_ne_zero hn0)⟩

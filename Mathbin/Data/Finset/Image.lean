@@ -602,7 +602,7 @@ theorem image_mono (f : α → β) : Monotone (Finset.image f) := fun _ _ => ima
 
 #print Finset.image_subset_image_iff /-
 theorem image_subset_image_iff {t : Finset α} (hf : Injective f) : s.image f ⊆ t.image f ↔ s ⊆ t :=
-  by simp_rw [← coe_subset]; push_cast ; exact Set.image_subset_image_iff hf
+  by simp_rw [← coe_subset]; push_cast; exact Set.image_subset_image_iff hf
 #align finset.image_subset_image_iff Finset.image_subset_image_iff
 -/
 
@@ -643,7 +643,7 @@ theorem image_inter_subset [DecidableEq α] (f : α → β) (s t : Finset α) :
 #print Finset.image_inter_of_injOn /-
 theorem image_inter_of_injOn [DecidableEq α] {f : α → β} (s t : Finset α)
     (hf : Set.InjOn f (s ∪ t)) : (s ∩ t).image f = s.image f ∩ t.image f :=
-  coe_injective <| by push_cast ;
+  coe_injective <| by push_cast;
     exact Set.image_inter_on fun a ha b hb => hf (Or.inr ha) <| Or.inl hb
 #align finset.image_inter_of_inj_on Finset.image_inter_of_injOn
 -/
@@ -703,14 +703,14 @@ theorem image_eq_empty : s.image f = ∅ ↔ s = ∅ :=
 #print Finset.image_sdiff /-
 theorem image_sdiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s \ t).image f = s.image f \ t.image f :=
-  coe_injective <| by push_cast ; exact Set.image_diff hf _ _
+  coe_injective <| by push_cast; exact Set.image_diff hf _ _
 #align finset.image_sdiff Finset.image_sdiff
 -/
 
 #print Finset.image_symmDiff /-
 theorem image_symmDiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s ∆ t).image f = s.image f ∆ t.image f :=
-  coe_injective <| by push_cast ; exact Set.image_symmDiff hf _ _
+  coe_injective <| by push_cast; exact Set.image_symmDiff hf _ _
 #align finset.image_symm_diff Finset.image_symmDiff
 -/
 

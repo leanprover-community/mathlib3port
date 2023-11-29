@@ -92,7 +92,7 @@ theorem betaIntegral_convergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
   convert ((beta_integral_convergent_left hv u).comp_add_right 1).symm
   · ext1 x
     conv_lhs => rw [mul_comm]
-    congr 2 <;> · push_cast ; ring
+    congr 2 <;> · push_cast; ring
   · norm_num
   · norm_num
 #align complex.beta_integral_convergent Complex.betaIntegral_convergent
@@ -107,7 +107,7 @@ theorem betaIntegral_symm (u v : ℂ) : betaIntegral v u = betaIntegral u v :=
       neg_one_lt_zero.ne 1
   rw [inv_neg, inv_one, neg_one_smul, ← intervalIntegral.integral_symm] at this 
   convert this
-  · ext1 x; rw [mul_comm]; congr <;> · push_cast ; ring
+  · ext1 x; rw [mul_comm]; congr <;> · push_cast; ring
   · ring; · ring
 #align complex.beta_integral_symm Complex.betaIntegral_symm
 -/
@@ -264,7 +264,7 @@ theorem betaIntegral_eval_nat_add_one_right {u : ℂ} (hu : 0 < re u) (n : ℕ) 
     rw [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one, Nat.cast_zero, add_zero, ←
       mul_div_assoc, ← div_div]
     congr 3 with j : 1
-    push_cast ; abel
+    push_cast; abel
 #align complex.beta_integral_eval_nat_add_one_right Complex.betaIntegral_eval_nat_add_one_right
 -/
 
@@ -305,7 +305,7 @@ theorem GammaSeq_add_one_left (s : ℂ) {n : ℕ} (hn : n ≠ 0) :
   congr 3
   · rw [cpow_add _ _ (nat.cast_ne_zero.mpr hn), cpow_one, mul_comm]
   · refine' Finset.prod_congr (by rfl) fun x hx => _
-    push_cast ; ring
+    push_cast; ring
   · abel
 #align complex.Gamma_seq_add_one_left Complex.GammaSeq_add_one_left
 -/

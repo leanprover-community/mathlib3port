@@ -998,9 +998,9 @@ theorem mulIndicator_iUnion_apply {ι M} [CompleteLattice M] [One M] (h1 : (⊥ 
 
 end Order
 
-section CanonicallyOrderedCommMonoid
+section CanonicallyOrderedAddCommMonoid
 
-variable [CanonicallyOrderedCommMonoid M]
+variable [CanonicallyOrderedAddCommMonoid M]
 
 #print Set.mulIndicator_le_self /-
 @[to_additive]
@@ -1028,7 +1028,7 @@ theorem mulIndicator_le {s : Set α} {f g : α → M} (hfg : ∀ a ∈ s, f a �
 #align set.indicator_le Set.indicator_le
 -/
 
-end CanonicallyOrderedCommMonoid
+end CanonicallyOrderedAddCommMonoid
 
 #print Set.indicator_le_indicator_nonneg /-
 theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :

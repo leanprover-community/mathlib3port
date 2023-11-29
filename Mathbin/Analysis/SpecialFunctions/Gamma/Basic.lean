@@ -62,11 +62,11 @@ theorem Gamma_integrand_isLittleO (s : ℝ) :
   refine' is_o_of_tendsto (fun x hx => _) _
   · exfalso; exact (exp_pos (-(1 / 2) * x)).ne' hx
   have :
-    (fun x : ℝ => exp (-x) * x ^ s / exp (-(1 / 2) * x)) =
-      (fun x : ℝ => exp (1 / 2 * x) / x ^ s)⁻¹ :=
+    (fun x : ℝ => NormedSpace.exp (-x) * x ^ s / NormedSpace.exp (-(1 / 2) * x)) =
+      (fun x : ℝ => NormedSpace.exp (1 / 2 * x) / x ^ s)⁻¹ :=
     by
     ext1 x
-    field_simp [exp_ne_zero, exp_neg, ← Real.exp_add]
+    field_simp [exp_ne_zero, NormedSpace.exp_neg, ← Real.exp_add]
     left
     ring
   rw [this]
@@ -142,8 +142,8 @@ theorem GammaIntegral_conj (s : ℂ) : GammaIntegral (conj s) = conj (GammaInteg
   refine' set_integral_congr measurableSet_Ioi fun x hx => _
   dsimp only
   rw [RingHom.map_mul, conj_of_real, cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)),
-    cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)), ← exp_conj, RingHom.map_mul, ←
-    of_real_log (le_of_lt hx), conj_of_real, RingHom.map_sub, RingHom.map_one]
+    cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)), ← NormedSpace.exp_conj,
+    RingHom.map_mul, ← of_real_log (le_of_lt hx), conj_of_real, RingHom.map_sub, RingHom.map_one]
 #align complex.Gamma_integral_conj Complex.GammaIntegral_conj
 -/
 
@@ -572,8 +572,8 @@ theorem Gamma_eq_integral {s : ℝ} (hs : 0 < s) : Gamma s = ∫ x in Ioi 0, exp
   dsimp only [Complex.GammaIntegral]
   simp_rw [← Complex.ofReal_one, ← Complex.ofReal_sub]
   suffices
-    ∫ x : ℝ in Ioi 0, ↑(exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ) =
-      ∫ x : ℝ in Ioi 0, ((exp (-x) * x ^ (s - 1) : ℝ) : ℂ)
+    ∫ x : ℝ in Ioi 0, ↑(NormedSpace.exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ) =
+      ∫ x : ℝ in Ioi 0, ((NormedSpace.exp (-x) * x ^ (s - 1) : ℝ) : ℂ)
     by rw [this, _root_.integral_of_real, Complex.ofReal_re]
   refine' set_integral_congr measurableSet_Ioi fun x hx => _
   push_cast
@@ -631,7 +631,7 @@ theorem Gamma_neg_nat_eq_zero (n : ℕ) : Gamma (-n) = 0 := by
 theorem Gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < Gamma s :=
   by
   rw [Gamma_eq_integral hs]
-  have : (Function.support fun x : ℝ => exp (-x) * x ^ (s - 1)) ∩ Ioi 0 = Ioi 0 :=
+  have : (Function.support fun x : ℝ => NormedSpace.exp (-x) * x ^ (s - 1)) ∩ Ioi 0 = Ioi 0 :=
     by
     rw [inter_eq_right_iff_subset]
     intro x hx

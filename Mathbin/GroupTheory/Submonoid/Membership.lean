@@ -522,17 +522,17 @@ theorem powers_eq_closure (n : M) : powers n = closure {n} := by ext;
 #align submonoid.powers_eq_closure Submonoid.powers_eq_closure
 -/
 
-#print Submonoid.powers_subset /-
-theorem powers_subset {n : M} {P : Submonoid M} (h : n ∈ P) : powers n ≤ P := fun x hx =>
+#print Submonoid.powers_le /-
+theorem powers_le {n : M} {P : Submonoid M} (h : n ∈ P) : powers n ≤ P := fun x hx =>
   match x, hx with
   | _, ⟨i, rfl⟩ => pow_mem h i
-#align submonoid.powers_subset Submonoid.powers_subset
+#align submonoid.powers_subset Submonoid.powers_le
 -/
 
 #print Submonoid.powers_one /-
 @[simp]
 theorem powers_one : powers (1 : M) = ⊥ :=
-  bot_unique <| powers_subset (one_mem _)
+  bot_unique <| powers_le (one_mem _)
 #align submonoid.powers_one Submonoid.powers_one
 -/
 
@@ -731,7 +731,7 @@ attribute [to_additive mem_multiples_iff] Submonoid.mem_powers_iff
 
 attribute [to_additive multiples_eq_closure] Submonoid.powers_eq_closure
 
-attribute [to_additive multiples_subset] Submonoid.powers_subset
+attribute [to_additive multiples_subset] Submonoid.powers_le
 
 attribute [to_additive multiples_zero] Submonoid.powers_one
 

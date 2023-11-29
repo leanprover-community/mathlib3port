@@ -55,7 +55,7 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
   symm
   refine' prod_bij (fun a _ => (a : ZMod p).val) _ _ _ _
   · intro a ha
-    rw [mem_Ico, ← Nat.succ_sub hp, Nat.succ_sub_one]
+    rw [mem_Ico, ← Nat.succ_sub hp, Nat.add_one_sub_one]
     constructor
     · apply Nat.pos_of_ne_zero; rw [← @val_zero p]
       intro h; apply Units.ne_zero a (val_injective p h)

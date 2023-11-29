@@ -1144,7 +1144,7 @@ variable {S} [CommRing S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitiveRoo
 noncomputable def autToPow : (S ≃ₐ[R] S) →* (ZMod n)ˣ :=
   let μ' := hμ.toRootsOfUnity
   have ho : orderOf μ' = n := by
-    rw [hμ.eq_order_of, ← hμ.coe_to_roots_of_unity_coe, orderOf_units, orderOf_subgroup]
+    rw [hμ.eq_order_of, ← hμ.coe_to_roots_of_unity_coe, orderOf_units, Subgroup.orderOf_coe]
   MonoidHom.toHomUnits
     { toFun := fun σ => (map_rootsOfUnity_eq_pow_self σ.toAlgHom μ').some
       map_one' := by
@@ -1194,7 +1194,7 @@ theorem autToPow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : ZMod n).val
   refine' (_ : ↑hμ.to_roots_of_unity ^ _ = _).trans this.symm
   rw [← rootsOfUnity.coe_pow, ← rootsOfUnity.coe_pow]
   congr 1
-  rw [pow_eq_pow_iff_modEq, ← orderOf_subgroup, ← orderOf_units, hμ.coe_to_roots_of_unity_coe, ←
+  rw [pow_eq_pow_iff_modEq, ← Subgroup.orderOf_coe, ← orderOf_units, hμ.coe_to_roots_of_unity_coe, ←
     hμ.eq_order_of, ZMod.val_nat_cast]
   exact Nat.mod_modEq _ _
 #align is_primitive_root.aut_to_pow_spec IsPrimitiveRoot.autToPow_spec

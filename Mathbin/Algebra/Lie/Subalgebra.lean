@@ -703,38 +703,38 @@ section NestedSubalgebras
 
 variable (h : K ≤ K')
 
-#print LieSubalgebra.homOfLe /-
+#print LieSubalgebra.inclusion /-
 /-- Given two nested Lie subalgebras `K ⊆ K'`, the inclusion `K ↪ K'` is a morphism of Lie
 algebras. -/
-def homOfLe : K →ₗ⁅R⁆ K' :=
-  { Submodule.ofLe h with map_lie' := fun x y => rfl }
-#align lie_subalgebra.hom_of_le LieSubalgebra.homOfLe
+def inclusion : K →ₗ⁅R⁆ K' :=
+  { Submodule.inclusion h with map_lie' := fun x y => rfl }
+#align lie_subalgebra.hom_of_le LieSubalgebra.inclusion
 -/
 
-#print LieSubalgebra.coe_homOfLe /-
+#print LieSubalgebra.coe_inclusion /-
 @[simp]
-theorem coe_homOfLe (x : K) : (homOfLe h x : L) = x :=
+theorem coe_inclusion (x : K) : (inclusion h x : L) = x :=
   rfl
-#align lie_subalgebra.coe_hom_of_le LieSubalgebra.coe_homOfLe
+#align lie_subalgebra.coe_hom_of_le LieSubalgebra.coe_inclusion
 -/
 
-#print LieSubalgebra.homOfLe_apply /-
-theorem homOfLe_apply (x : K) : homOfLe h x = ⟨x.1, h x.2⟩ :=
+#print LieSubalgebra.inclusion_apply /-
+theorem inclusion_apply (x : K) : inclusion h x = ⟨x.1, h x.2⟩ :=
   rfl
-#align lie_subalgebra.hom_of_le_apply LieSubalgebra.homOfLe_apply
+#align lie_subalgebra.hom_of_le_apply LieSubalgebra.inclusion_apply
 -/
 
-#print LieSubalgebra.homOfLe_injective /-
-theorem homOfLe_injective : Function.Injective (homOfLe h) := fun x y => by
+#print LieSubalgebra.inclusion_injective /-
+theorem inclusion_injective : Function.Injective (inclusion h) := fun x y => by
   simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
-#align lie_subalgebra.hom_of_le_injective LieSubalgebra.homOfLe_injective
+#align lie_subalgebra.hom_of_le_injective LieSubalgebra.inclusion_injective
 -/
 
 #print LieSubalgebra.ofLe /-
 /-- Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
 regarded as Lie algebra in its own right. -/
 def ofLe : LieSubalgebra R K' :=
-  (homOfLe h).range
+  (inclusion h).range
 #align lie_subalgebra.of_le LieSubalgebra.ofLe
 -/
 
@@ -756,7 +756,7 @@ theorem ofLe_eq_comap_incl : ofLe h = K.comap K'.incl := by ext; rw [mem_of_le];
 
 #print LieSubalgebra.coe_ofLe /-
 @[simp]
-theorem coe_ofLe : (ofLe h : Submodule R K') = (Submodule.ofLe h).range :=
+theorem coe_ofLe : (ofLe h : Submodule R K') = (Submodule.inclusion h).range :=
   rfl
 #align lie_subalgebra.coe_of_le LieSubalgebra.coe_ofLe
 -/
@@ -765,13 +765,13 @@ theorem coe_ofLe : (ofLe h : Submodule R K') = (Submodule.ofLe h).range :=
 /-- Given nested Lie subalgebras `K ⊆ K'`, there is a natural equivalence from `K` to its image in
 `K'`.  -/
 noncomputable def equivOfLe : K ≃ₗ⁅R⁆ ofLe h :=
-  (homOfLe h).equivRangeOfInjective (homOfLe_injective h)
+  (inclusion h).equivRangeOfInjective (inclusion_injective h)
 #align lie_subalgebra.equiv_of_le LieSubalgebra.equivOfLe
 -/
 
 #print LieSubalgebra.equivOfLe_apply /-
 @[simp]
-theorem equivOfLe_apply (x : K) : equivOfLe h x = ⟨homOfLe h x, (homOfLe h).mem_range_self x⟩ :=
+theorem equivOfLe_apply (x : K) : equivOfLe h x = ⟨inclusion h x, (inclusion h).mem_range_self x⟩ :=
   rfl
 #align lie_subalgebra.equiv_of_le_apply LieSubalgebra.equivOfLe_apply
 -/

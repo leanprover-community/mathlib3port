@@ -70,7 +70,7 @@ theorem coeff_derivative (p : R[X]) (n : ℕ) : coeff (derivative p) n = coeff p
   · intro b; cases b
     · intros; rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
     · intro _ H;
-      rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), MulZeroClass.mul_zero]
+      rw [Nat.add_one_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), MulZeroClass.mul_zero]
   · rw [if_pos (add_tsub_cancel_right n 1).symm, mul_one, Nat.cast_add, Nat.cast_one,
       mem_support_iff]
     intro h; push_neg at h ; simp [h]
@@ -367,7 +367,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
           cases n <;> cases m <;>
               simp_rw [add_smul, mul_smul_comm, smul_mul_assoc, X_pow_mul_assoc, ← mul_assoc, ←
                 C_mul, mul_assoc, ← pow_add] <;>
-            simp only [Nat.add_succ, Nat.succ_add, Nat.succ_sub_one, zero_smul, add_comm])
+            simp only [Nat.add_succ, Nat.succ_add, Nat.add_one_sub_one, zero_smul, add_comm])
     _ = derivative f * g + f * derivative g :=
       by
       conv =>

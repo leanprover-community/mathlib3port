@@ -257,9 +257,9 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
   cases' hxp with g hgf
   cases' hxi with g' hg'f
   have hxi : orderOf f ∣ Fintype.card (H i) := by rw [← hg'f];
-    exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
+    exact (orderOf_map_dvd _ _).trans orderOf_dvd_card
   have hxp : orderOf f ∣ ∏ j : { j // j ≠ i }, Fintype.card (H j) := by
-    rw [← hgf, ← Fintype.card_pi]; exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
+    rw [← hgf, ← Fintype.card_pi]; exact (orderOf_map_dvd _ _).trans orderOf_dvd_card
   change f = 1
   rw [← pow_one f, ← orderOf_dvd_iff_pow_eq_one]
   convert ← Nat.dvd_gcd hxp hxi

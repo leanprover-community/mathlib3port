@@ -1282,7 +1282,7 @@ theorem uIcc_of_not_ge (h : ¬b ≤ a) : [a, b] = Icc a b :=
 
 #print Finset.uIcc_eq_union /-
 theorem uIcc_eq_union : [a, b] = Icc a b ∪ Icc b a :=
-  coe_injective <| by push_cast ; exact Set.uIcc_eq_union
+  coe_injective <| by push_cast; exact Set.uIcc_eq_union
 #align finset.uIcc_eq_union Finset.uIcc_eq_union
 -/
 
@@ -1313,7 +1313,7 @@ theorem uIcc_subset_uIcc_iff_le :
 #print Finset.uIcc_subset_uIcc_union_uIcc /-
 /-- A sort of triangle inequality. -/
 theorem uIcc_subset_uIcc_union_uIcc : [a, c] ⊆ [a, b] ∪ [b, c] :=
-  coe_subset.1 <| by push_cast ; exact Set.uIcc_subset_uIcc_union_uIcc
+  coe_subset.1 <| by push_cast; exact Set.uIcc_subset_uIcc_union_uIcc
 #align finset.uIcc_subset_uIcc_union_uIcc Finset.uIcc_subset_uIcc_union_uIcc
 -/
 

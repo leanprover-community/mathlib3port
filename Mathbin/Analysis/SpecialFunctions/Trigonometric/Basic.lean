@@ -55,7 +55,8 @@ namespace Complex
 #print Complex.continuous_sin /-
 @[continuity]
 theorem continuous_sin : Continuous sin := by
-  change Continuous fun z => (exp (-z * I) - exp (z * I)) * I / 2; continuity
+  change Continuous fun z => (NormedSpace.exp (-z * I) - NormedSpace.exp (z * I)) * I / 2;
+  continuity
 #align complex.continuous_sin Complex.continuous_sin
 -/
 
@@ -68,7 +69,7 @@ theorem continuousOn_sin {s : Set ℂ} : ContinuousOn sin s :=
 #print Complex.continuous_cos /-
 @[continuity]
 theorem continuous_cos : Continuous cos := by
-  change Continuous fun z => (exp (z * I) + exp (-z * I)) / 2; continuity
+  change Continuous fun z => (NormedSpace.exp (z * I) + NormedSpace.exp (-z * I)) / 2; continuity
 #align complex.continuous_cos Complex.continuous_cos
 -/
 
@@ -80,15 +81,15 @@ theorem continuousOn_cos {s : Set ℂ} : ContinuousOn cos s :=
 
 #print Complex.continuous_sinh /-
 @[continuity]
-theorem continuous_sinh : Continuous sinh := by change Continuous fun z => (exp z - exp (-z)) / 2;
-  continuity
+theorem continuous_sinh : Continuous sinh := by
+  change Continuous fun z => (NormedSpace.exp z - NormedSpace.exp (-z)) / 2; continuity
 #align complex.continuous_sinh Complex.continuous_sinh
 -/
 
 #print Complex.continuous_cosh /-
 @[continuity]
-theorem continuous_cosh : Continuous cosh := by change Continuous fun z => (exp z + exp (-z)) / 2;
-  continuity
+theorem continuous_cosh : Continuous cosh := by
+  change Continuous fun z => (NormedSpace.exp z + NormedSpace.exp (-z)) / 2; continuity
 #align complex.continuous_cosh Complex.continuous_cosh
 -/
 
@@ -1797,7 +1798,8 @@ theorem tan_int_mul_pi_sub (x : ℂ) (n : ℤ) : tan (n * π - x) = -tan x :=
 -/
 
 #print Complex.exp_antiperiodic /-
-theorem exp_antiperiodic : Function.Antiperiodic exp (π * I) := by simp [exp_add, exp_mul_I]
+theorem exp_antiperiodic : Function.Antiperiodic exp (π * I) := by
+  simp [NormedSpace.exp_add, exp_mul_I]
 #align complex.exp_antiperiodic Complex.exp_antiperiodic
 -/
 

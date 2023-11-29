@@ -557,7 +557,7 @@ theorem eq_of_prod_take_eq [LeftCancelMonoid M] {L L' : List M} (h : L.length = 
 
 #print List.monotone_prod_take /-
 @[to_additive]
-theorem monotone_prod_take [CanonicallyOrderedCommMonoid M] (L : List M) :
+theorem monotone_prod_take [CanonicallyOrderedAddCommMonoid M] (L : List M) :
     Monotone fun i => (L.take i).Prod :=
   by
   apply monotone_nat_of_le_succ fun n => _

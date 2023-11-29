@@ -4615,12 +4615,12 @@ theorem restrict_toMeasurable_of_cover {s : Set α} {v : ℕ → Set α} (hv : s
 #align measure_theory.measure.restrict_to_measurable_of_cover MeasureTheory.Measure.restrict_toMeasurable_of_cover
 -/
 
-#print MeasureTheory.Measure.measure_toMeasurable_inter_of_sigmaFinite /-
+#print MeasureTheory.Measure.measure_toMeasurable_inter_of_sFinite /-
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
 This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
 that `t` has finite measure), see `measure_to_measurable_inter`. -/
-theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} (hs : MeasurableSet s)
+theorem measure_toMeasurable_inter_of_sFinite [SigmaFinite μ] {s : Set α} (hs : MeasurableSet s)
     (t : Set α) : μ (toMeasurable μ t ∩ s) = μ (t ∩ s) :=
   by
   have : t ⊆ ⋃ n, spanning_sets μ n := by rw [Union_spanning_sets]; exact subset_univ _
@@ -4628,16 +4628,16 @@ theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} 
   calc
     μ (t ∩ spanning_sets μ n) ≤ μ (spanning_sets μ n) := measure_mono (inter_subset_right _ _)
     _ < ∞ := measure_spanning_sets_lt_top μ n
-#align measure_theory.measure.measure_to_measurable_inter_of_sigma_finite MeasureTheory.Measure.measure_toMeasurable_inter_of_sigmaFinite
+#align measure_theory.measure.measure_to_measurable_inter_of_sigma_finite MeasureTheory.Measure.measure_toMeasurable_inter_of_sFinite
 -/
 
-#print MeasureTheory.Measure.restrict_toMeasurable_of_sigmaFinite /-
+#print MeasureTheory.Measure.restrict_toMeasurable_of_sFinite /-
 @[simp]
-theorem restrict_toMeasurable_of_sigmaFinite [SigmaFinite μ] (s : Set α) :
+theorem restrict_toMeasurable_of_sFinite [SigmaFinite μ] (s : Set α) :
     μ.restrict (toMeasurable μ s) = μ.restrict s :=
   ext fun t ht => by
     simp only [restrict_apply ht, inter_comm t, measure_to_measurable_inter_of_sigma_finite ht]
-#align measure_theory.measure.restrict_to_measurable_of_sigma_finite MeasureTheory.Measure.restrict_toMeasurable_of_sigmaFinite
+#align measure_theory.measure.restrict_to_measurable_of_sigma_finite MeasureTheory.Measure.restrict_toMeasurable_of_sFinite
 -/
 
 namespace FiniteSpanningSetsIn
