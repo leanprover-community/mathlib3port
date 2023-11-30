@@ -6,10 +6,10 @@ echo and creates a bump commit.
 set -ex
 
 lake resolve-deps
-pushd lake-packages/lean3port
+pushd .lake/packages/lean3port
 git fetch origin
 git checkout origin/master
-cp lean-toolchain ../..
+cp lean-toolchain ../../..
 lean3port_rev=$(git rev-parse HEAD)
 tag=$(sed '/^def tag /!d;s/.*"\(.*\)"$/\1/' lakefile.lean)
 popd
