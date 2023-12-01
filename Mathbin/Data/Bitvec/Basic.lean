@@ -10,50 +10,49 @@ import Tactic.NormNum
 
 #align_import data.bitvec.basic from "leanprover-community/mathlib"@"008af8bb14b3ebef7e04ec3b0d63b947dee4d26a"
 
-namespace Bitvec
+namespace Std.BitVec
 
-instance (n : ℕ) : Preorder (Bitvec n) :=
-  Preorder.lift Bitvec.toNat
+instance (n : ℕ) : Preorder (Std.BitVec n) :=
+  Preorder.lift Std.BitVec.toNat
 
-#print Bitvec.ofFin /-
+#print Std.BitVec.ofFin /-
 /-- convert `fin` to `bitvec` -/
-def ofFin {n : ℕ} (i : Fin <| 2 ^ n) : Bitvec n :=
-  Bitvec.ofNat _ i.val
-#align bitvec.of_fin Bitvec.ofFin
+def Std.BitVec.ofFin {n : ℕ} (i : Fin <| 2 ^ n) : Std.BitVec n :=
+  Std.BitVec.ofNat _ i.val
+#align bitvec.of_fin Std.BitVec.ofFin
 -/
 
-#print Bitvec.ofFin_val /-
-theorem ofFin_val {n : ℕ} (i : Fin <| 2 ^ n) : (ofFin i).toNat = i.val := by
+#print Std.BitVec.ofFin_val /-
+theorem Std.BitVec.ofFin_val {n : ℕ} (i : Fin <| 2 ^ n) : (Std.BitVec.ofFin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_lt] <;> apply i.is_lt
-#align bitvec.of_fin_val Bitvec.ofFin_val
+#align bitvec.of_fin_val Std.BitVec.ofFin_val
 -/
 
-#print Bitvec.toFin /-
+#print Std.BitVec.toFin /-
 /-- convert `bitvec` to `fin` -/
-def toFin {n : ℕ} (i : Bitvec n) : Fin <| 2 ^ n :=
+def Std.BitVec.toFin {n : ℕ} (i : Std.BitVec n) : Fin <| 2 ^ n :=
   i.toNat
-#align bitvec.to_fin Bitvec.toFin
+#align bitvec.to_fin Std.BitVec.toFin
 -/
 
-#print Bitvec.addLsb_eq_twice_add_one /-
-theorem addLsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by
+#print Std.BitVec.addLsb_eq_twice_add_one /-
+theorem Std.BitVec.addLsb_eq_twice_add_one {x b} : Std.BitVec.addLsb x b = 2 * x + cond b 1 0 := by
   simp [add_lsb, two_mul]
-#align bitvec.add_lsb_eq_twice_add_one Bitvec.addLsb_eq_twice_add_one
+#align bitvec.add_lsb_eq_twice_add_one Std.BitVec.addLsb_eq_twice_add_one
 -/
 
-#print Bitvec.toNat_eq_foldr_reverse /-
-theorem toNat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) :
-    v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by rw [List.foldr_reverse, flip] <;> rfl
-#align bitvec.to_nat_eq_foldr_reverse Bitvec.toNat_eq_foldr_reverse
--/
+theorem Std.BitVec.toNat_eq_foldr_reverse {n : ℕ} (v : Std.BitVec n) :
+    v.toNat = v.toList.reverse.foldr (flip Std.BitVec.addLsb) 0 := by
+  rw [List.foldr_reverse, flip] <;> rfl
+#align bitvec.to_nat_eq_foldr_reverse Std.BitVec.toNat_eq_foldr_reverse
 
-#print Bitvec.toNat_lt /-
-theorem toNat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n :=
+#print Std.BitVec.toNat_lt /-
+theorem Std.BitVec.toNat_lt {n : ℕ} (v : Std.BitVec n) : v.toNat < 2 ^ n :=
   by
   suffices v.to_nat + 1 ≤ 2 ^ n by simpa
   rw [to_nat_eq_foldr_reverse]
   cases' v with xs h
-  dsimp [Bitvec.toNat, bits_to_nat]
+  dsimp [Std.BitVec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h 
   generalize xs.reverse = ys at h ⊢; clear xs
   induction ys generalizing n
@@ -64,77 +63,79 @@ theorem toNat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n :=
     · ac_mono; rw [two_mul]; mono; cases ys_hd <;> simp
     · rw [← left_distrib]; ac_mono
       exact ys_ih rfl; norm_num
-#align bitvec.to_nat_lt Bitvec.toNat_lt
+#align bitvec.to_nat_lt Std.BitVec.toNat_lt
 -/
 
-#print Bitvec.addLsb_div_two /-
-theorem addLsb_div_two {x b} : addLsb x b / 2 = x := by
+#print Std.BitVec.addLsb_div_two /-
+theorem Std.BitVec.addLsb_div_two {x b} : Std.BitVec.addLsb x b / 2 = x := by
   cases b <;>
       simp only [Nat.add_mul_div_left, add_lsb, ← two_mul, add_comm, Nat.succ_pos',
         Nat.mul_div_right, gt_iff_lt, zero_add, cond] <;>
     norm_num
-#align bitvec.add_lsb_div_two Bitvec.addLsb_div_two
+#align bitvec.add_lsb_div_two Std.BitVec.addLsb_div_two
 -/
 
-#print Bitvec.decide_addLsb_mod_two /-
-theorem decide_addLsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
+#print Std.BitVec.decide_addLsb_mod_two /-
+theorem Std.BitVec.decide_addLsb_mod_two {x b} : decide (Std.BitVec.addLsb x b % 2 = 1) = b := by
   cases b <;>
       simp only [Bool.decide_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm,
         Bool.decide_False, Nat.mul_mod_right, zero_add, cond, zero_ne_one] <;>
     norm_num
-#align bitvec.to_bool_add_lsb_mod_two Bitvec.decide_addLsb_mod_two
+#align bitvec.to_bool_add_lsb_mod_two Std.BitVec.decide_addLsb_mod_two
 -/
 
-#print Bitvec.ofNat_toNat /-
-theorem ofNat_toNat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=
+#print Std.BitVec.ofNat_toNat /-
+theorem Std.BitVec.ofNat_toNat {n : ℕ} (v : Std.BitVec n) : Std.BitVec.ofNat _ v.toNat = v :=
   by
   cases' v with xs h
   ext1
   change Vector.toList _ = xs
-  dsimp [Bitvec.toNat, bits_to_nat]
+  dsimp [Std.BitVec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h 
   rw [← List.reverse_reverse xs, List.foldl_reverse]
   generalize xs.reverse = ys at h ⊢; clear xs
   induction ys generalizing n
-  · cases h; simp [Bitvec.ofNat]
+  · cases h; simp [Std.BitVec.ofNat]
   · simp only [← Nat.succ_eq_add_one, List.length] at h ; subst n
-    simp only [Bitvec.ofNat, Vector.toList_cons, Vector.toList_nil, List.reverse_cons,
+    simp only [Std.BitVec.ofNat, Vector.toList_cons, Vector.toList_nil, List.reverse_cons,
       Vector.toList_append, List.foldr]
     erw [add_lsb_div_two, to_bool_add_lsb_mod_two]
     congr; apply ys_ih; rfl
-#align bitvec.of_nat_to_nat Bitvec.ofNat_toNat
+#align bitvec.of_nat_to_nat Std.BitVec.ofNat_toNat
 -/
 
-#print Bitvec.toFin_val /-
-theorem toFin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
+#print Std.BitVec.toFin_val /-
+theorem Std.BitVec.toFin_val {n : ℕ} (v : Std.BitVec n) : (Std.BitVec.toFin v : ℕ) = v.toNat := by
   rw [to_fin, Fin.coe_ofNat_eq_mod, Nat.mod_eq_of_lt] <;> apply to_nat_lt
-#align bitvec.to_fin_val Bitvec.toFin_val
+#align bitvec.to_fin_val Std.BitVec.toFin_val
 -/
 
-#print Bitvec.toFin_le_toFin_of_le /-
-theorem toFin_le_toFin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
+#print Std.BitVec.toFin_le_toFin_of_le /-
+theorem Std.BitVec.toFin_le_toFin_of_le {n} {v₀ v₁ : Std.BitVec n} (h : v₀ ≤ v₁) :
+    v₀.toFin ≤ v₁.toFin :=
   show (v₀.toFin : ℕ) ≤ v₁.toFin by rw [to_fin_val, to_fin_val] <;> exact h
-#align bitvec.to_fin_le_to_fin_of_le Bitvec.toFin_le_toFin_of_le
+#align bitvec.to_fin_le_to_fin_of_le Std.BitVec.toFin_le_toFin_of_le
 -/
 
-#print Bitvec.ofFin_le_ofFin_of_le /-
-theorem ofFin_le_ofFin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
-  show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat by
+#print Std.BitVec.ofFin_le_ofFin_of_le /-
+theorem Std.BitVec.ofFin_le_ofFin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) :
+    Std.BitVec.ofFin i ≤ Std.BitVec.ofFin j :=
+  show (Std.BitVec.ofNat n i).toNat ≤ (Std.BitVec.ofNat n j).toNat by
     simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]; exact h
-#align bitvec.of_fin_le_of_fin_of_le Bitvec.ofFin_le_ofFin_of_le
+#align bitvec.of_fin_le_of_fin_of_le Std.BitVec.ofFin_le_ofFin_of_le
 -/
 
-#print Bitvec.toFin_ofFin /-
-theorem toFin_ofFin {n} (i : Fin <| 2 ^ n) : (ofFin i).toFin = i :=
+#print Std.BitVec.toFin_ofFin /-
+theorem Std.BitVec.toFin_ofFin {n} (i : Fin <| 2 ^ n) : (Std.BitVec.ofFin i).toFin = i :=
   Fin.eq_of_veq (by simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_lt, i.is_lt])
-#align bitvec.to_fin_of_fin Bitvec.toFin_ofFin
+#align bitvec.to_fin_of_fin Std.BitVec.toFin_ofFin
 -/
 
-#print Bitvec.ofFin_toFin /-
-theorem ofFin_toFin {n} (v : Bitvec n) : ofFin (toFin v) = v := by
-  dsimp [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
-#align bitvec.of_fin_to_fin Bitvec.ofFin_toFin
+#print Std.BitVec.ofFin_toFin /-
+theorem Std.BitVec.ofFin_toFin {n} (v : Std.BitVec n) : Std.BitVec.ofFin (Std.BitVec.toFin v) = v :=
+  by dsimp [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
+#align bitvec.of_fin_to_fin Std.BitVec.ofFin_toFin
 -/
 
-end Bitvec
+end Std.BitVec
 

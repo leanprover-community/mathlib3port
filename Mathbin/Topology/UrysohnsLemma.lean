@@ -365,7 +365,7 @@ end Urysohns
 
 variable [NormalSpace X]
 
-#print exists_continuous_zero_one_of_closed /-
+#print exists_continuous_zero_one_of_isClosed /-
 /-- Urysohns lemma: if `s` and `t` are two disjoint closed sets in a normal topological space `X`,
 then there exists a continuous function `f : X → ℝ` such that
 
@@ -373,7 +373,7 @@ then there exists a continuous function `f : X → ℝ` such that
 * `f` equals one on `t`;
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
-theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t)
+theorem exists_continuous_zero_one_of_isClosed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t)
     (hd : Disjoint s t) : ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
   by
   -- The actual proof is in the code above. Here we just repack it into the expected format.
@@ -381,6 +381,6 @@ theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht
   exact
     ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx,
       c.lim_mem_Icc⟩
-#align exists_continuous_zero_one_of_closed exists_continuous_zero_one_of_closed
+#align exists_continuous_zero_one_of_closed exists_continuous_zero_one_of_isClosed
 -/
 

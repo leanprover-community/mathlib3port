@@ -821,10 +821,10 @@ theorem regular_of_isMulLeftInvariant {μ : Measure G} [SigmaFinite μ] [IsMulLe
 #align measure_theory.measure.regular_of_is_add_left_invariant MeasureTheory.Measure.regular_of_isAddLeftInvariant
 -/
 
-#print MeasureTheory.Measure.isHaarMeasure_eq_smul_isHaarMeasure /-
+#print MeasureTheory.Measure.isHaarMeasure_eq_smul /-
 @[to_additive is_add_haar_measure_eq_smul_is_add_haar_measure]
-theorem isHaarMeasure_eq_smul_isHaarMeasure [LocallyCompactSpace G] (μ ν : Measure G)
-    [IsHaarMeasure μ] [IsHaarMeasure ν] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • ν :=
+theorem isHaarMeasure_eq_smul [LocallyCompactSpace G] (μ ν : Measure G) [IsHaarMeasure μ]
+    [IsHaarMeasure ν] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • ν :=
   by
   have K : positive_compacts G := Classical.arbitrary _
   have νpos : 0 < ν K := measure_pos_of_nonempty_interior _ K.interior_nonempty
@@ -843,11 +843,10 @@ theorem isHaarMeasure_eq_smul_isHaarMeasure [LocallyCompactSpace G] (μ ν : Mea
       _ = (μ K / ν K) • ν K • haar_measure K := by
         rw [smul_smul, div_eq_mul_inv, mul_assoc, ENNReal.inv_mul_cancel νpos.ne' νne, mul_one]
       _ = (μ K / ν K) • ν := by rw [← haar_measure_unique ν K]
-#align measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.isHaarMeasure_eq_smul_isHaarMeasure
-#align measure_theory.measure.is_add_haar_measure_eq_smul_is_add_haar_measure MeasureTheory.Measure.isAddHaarMeasure_eq_smul_isAddHaarMeasure
+#align measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.isHaarMeasure_eq_smul
+#align measure_theory.measure.is_add_haar_measure_eq_smul_is_add_haar_measure MeasureTheory.Measure.isAddHaarMeasure_eq_smul
 -/
 
-#print MeasureTheory.Measure.regular_of_isHaarMeasure /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 90) regular_of_isHaarMeasure [LocallyCompactSpace G] (μ : Measure G)
@@ -859,8 +858,7 @@ instance (priority := 90) regular_of_isHaarMeasure [LocallyCompactSpace G] (μ :
   rw [hμ]
   exact regular.smul Ctop
 #align measure_theory.measure.regular_of_is_haar_measure MeasureTheory.Measure.regular_of_isHaarMeasure
-#align measure_theory.measure.regular_of_is_add_haar_measure MeasureTheory.Measure.regular_of_isAddHaarMeasure
--/
+#align measure_theory.measure.regular_of_is_add_haar_measure MeasureTheory.Measure.regular_of_is_add_haar_measure
 
 #print MeasureTheory.Measure.div_mem_nhds_one_of_haar_pos /-
 /-- **Steinhaus Theorem** In any locally compact group `G` with a haar measure `μ`, for any
@@ -924,10 +922,10 @@ section CommGroup
 variable {G : Type _} [CommGroup G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G]
   [MeasurableSpace G] [BorelSpace G] [SecondCountableTopology G] (μ : Measure G) [IsHaarMeasure μ]
 
-#print MeasureTheory.Measure.IsHaarMeasure.isInvInvariant /-
+#print MeasureTheory.Measure.IsHaarMeasure.isInvInvariant_of_regular /-
 /-- Any Haar measure is invariant under inversion in an abelian group. -/
 @[to_additive "Any additive Haar measure is invariant under negation in an abelian group."]
-instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] :
+instance (priority := 100) IsHaarMeasure.isInvInvariant_of_regular [LocallyCompactSpace G] :
     IsInvInvariant μ :=
   by
   -- the image measure is a Haar measure. By uniqueness up to multiplication, it is of the form
@@ -955,8 +953,8 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] 
       this
   have : c = 1 := (ENNReal.pow_strictMono two_ne_zero).Injective this
   rw [measure.inv, hc, this, one_smul]
-#align measure_theory.measure.is_haar_measure.is_inv_invariant MeasureTheory.Measure.IsHaarMeasure.isInvInvariant
-#align measure_theory.measure.is_add_haar_measure.is_neg_invariant MeasureTheory.Measure.IsAddHaarMeasure.isNegInvariant
+#align measure_theory.measure.is_haar_measure.is_inv_invariant MeasureTheory.Measure.IsHaarMeasure.isInvInvariant_of_regular
+#align measure_theory.measure.is_add_haar_measure.is_neg_invariant MeasureTheory.Measure.IsAddHaarMeasure.isNegInvariant_of_regular
 -/
 
 #print MeasureTheory.Measure.measurePreserving_zpow /-

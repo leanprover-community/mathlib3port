@@ -219,7 +219,7 @@ theorem exists_inducing_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
         eq_on f 0 UV.1.1 ∧ eq_on f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) :=
     by
     intro UV
-    rcases exists_continuous_zero_one_of_closed isClosed_closure
+    rcases exists_continuous_zero_one_of_isClosed isClosed_closure
         (hB.is_open UV.2.1.2).isClosed_compl (hd UV) with
       ⟨f, hf₀, hf₁, hf01⟩
     exact

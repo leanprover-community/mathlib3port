@@ -108,7 +108,7 @@ variable (R M) {ι ι'}
 #print Orientation.reindex /-
 /-- An equivalence between indices implies an equivalence between orientations. -/
 def Orientation.reindex (e : ι ≃ ι') : Orientation R M ι ≃ Orientation R M ι' :=
-  Module.Ray.map <| AlternatingMap.domDomLcongr R e
+  Module.Ray.map <| AlternatingMap.domDomCongrₗ R e
 #align orientation.reindex Orientation.reindex
 -/
 
@@ -124,7 +124,7 @@ theorem Orientation.reindex_apply (e : ι ≃ ι') (v : AlternatingMap R M R ι)
 #print Orientation.reindex_refl /-
 @[simp]
 theorem Orientation.reindex_refl : (Orientation.reindex R M <| Equiv.refl ι) = Equiv.refl _ := by
-  rw [Orientation.reindex, AlternatingMap.domDomLcongr_refl, Module.Ray.map_refl]
+  rw [Orientation.reindex, AlternatingMap.domDomCongrₗ_refl, Module.Ray.map_refl]
 #align orientation.reindex_refl Orientation.reindex_refl
 -/
 

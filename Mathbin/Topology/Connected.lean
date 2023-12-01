@@ -483,8 +483,8 @@ theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (
 #align is_preconnected.preimage_of_open_map IsPreconnected.preimage_of_open_map
 -/
 
-#print IsPreconnected.preimage_of_closed_map /-
-theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β}
+#print IsPreconnected.preimage_of_isClosedMap /-
+theorem IsPreconnected.preimage_of_isClosedMap [TopologicalSpace β] {s : Set β}
     (hs : IsPreconnected s) {f : α → β} (hinj : Function.Injective f) (hf : IsClosedMap f)
     (hsf : s ⊆ range f) : IsPreconnected (f ⁻¹' s) :=
   isPreconnected_closed_iff.2 fun u v hu hv hsuv hsu hsv =>
@@ -500,7 +500,7 @@ theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β}
       exact ⟨f x, hx1, x, hx2, rfl⟩
     · obtain ⟨y, hy1, hy2⟩ := hsv
       exact ⟨f y, hy1, y, hy2, rfl⟩
-#align is_preconnected.preimage_of_closed_map IsPreconnected.preimage_of_closed_map
+#align is_preconnected.preimage_of_closed_map IsPreconnected.preimage_of_isClosedMap
 -/
 
 #print IsConnected.preimage_of_openMap /-
@@ -511,12 +511,12 @@ theorem IsConnected.preimage_of_openMap [TopologicalSpace β] {s : Set β} (hs :
 #align is_connected.preimage_of_open_map IsConnected.preimage_of_openMap
 -/
 
-#print IsConnected.preimage_of_closedMap /-
-theorem IsConnected.preimage_of_closedMap [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
+#print IsConnected.preimage_of_isClosedMap /-
+theorem IsConnected.preimage_of_isClosedMap [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
     {f : α → β} (hinj : Function.Injective f) (hf : IsClosedMap f) (hsf : s ⊆ range f) :
     IsConnected (f ⁻¹' s) :=
-  ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_closed_map hinj hf hsf⟩
-#align is_connected.preimage_of_closed_map IsConnected.preimage_of_closedMap
+  ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_isClosedMap hinj hf hsf⟩
+#align is_connected.preimage_of_closed_map IsConnected.preimage_of_isClosedMap
 -/
 
 #print IsPreconnected.subset_or_subset /-

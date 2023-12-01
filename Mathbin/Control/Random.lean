@@ -335,27 +335,29 @@ instance : BoundedRandom Bool
       @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.toNat_le_toNat p)
 
 /-- generate a random bit vector of length `n` -/
-def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
-  Bitvec.ofFin <$> Rand.random (Fin <| 2 ^ n)
-#align bitvec.random Bitvec.random
+def Std.BitVec.random (n : ℕ) : RandG g (Std.BitVec n) :=
+  Std.BitVec.ofFin <$> Rand.random (Fin <| 2 ^ n)
+#align bitvec.random Std.BitVec.random
 
 /-- generate a random bit vector of length `n` -/
-def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=
-  have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) :=
+def Std.BitVec.randomR {n : ℕ} (x y : Std.BitVec n) (h : x ≤ y) : RandG g (x .. y) :=
+  have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Std.BitVec.ofFin a ∈ (x .. y) :=
     by
     simp only [and_imp, Set.mem_Icc]; intro z h₀ h₁
-    replace h₀ := Bitvec.ofFin_le_ofFin_of_le h₀
-    replace h₁ := Bitvec.ofFin_le_ofFin_of_le h₁
-    rw [Bitvec.ofFin_toFin] at h₀ h₁ ; constructor <;> assumption
-  Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.toFin_le_toFin_of_le h)
-#align bitvec.random_r Bitvec.randomR
+    replace h₀ := Std.BitVec.ofFin_le_ofFin_of_le h₀
+    replace h₁ := Std.BitVec.ofFin_le_ofFin_of_le h₁
+    rw [Std.BitVec.ofFin_toFin] at h₀ h₁ ; constructor <;> assumption
+  Subtype.map Std.BitVec.ofFin h' <$>
+    Rand.randomR x.toFin y.toFin (Std.BitVec.toFin_le_toFin_of_le h)
+#align bitvec.random_r Std.BitVec.randomR
 
 open Nat
 
-instance randomBitvec (n : ℕ) : Random (Bitvec n) where Random _ inst := @Bitvec.random _ inst n
+instance randomBitvec (n : ℕ) : Random (Std.BitVec n)
+    where Random _ inst := @Std.BitVec.random _ inst n
 #align random_bitvec randomBitvec
 
-instance boundedRandomBitvec (n : ℕ) : BoundedRandom (Bitvec n)
-    where randomR _ inst x y p := @Bitvec.randomR _ inst _ _ _ p
+instance boundedRandomBitvec (n : ℕ) : BoundedRandom (Std.BitVec n)
+    where randomR _ inst x y p := @Std.BitVec.randomR _ inst _ _ _ p
 #align bounded_random_bitvec boundedRandomBitvec
 

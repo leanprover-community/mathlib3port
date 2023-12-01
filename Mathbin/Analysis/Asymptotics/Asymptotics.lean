@@ -2375,11 +2375,10 @@ theorem isLittleO_pure {x} : f'' =o[pure x] g'' ↔ f'' x = 0 :=
 #align asymptotics.is_o_pure Asymptotics.isLittleO_pure
 -/
 
-#print Asymptotics.isLittleO_const_id_comap_norm_atTop /-
-theorem isLittleO_const_id_comap_norm_atTop (c : F'') :
-    (fun x : E'' => c) =o[comap norm atTop] id :=
+#print Asymptotics.isLittleO_const_id_cobounded /-
+theorem isLittleO_const_id_cobounded (c : F'') : (fun x : E'' => c) =o[comap norm atTop] id :=
   isLittleO_const_left.2 <| Or.inr tendsto_comap
-#align asymptotics.is_o_const_id_comap_norm_at_top Asymptotics.isLittleO_const_id_comap_norm_atTop
+#align asymptotics.is_o_const_id_comap_norm_at_top Asymptotics.isLittleO_const_id_cobounded
 -/
 
 #print Asymptotics.isLittleO_const_id_atTop /-

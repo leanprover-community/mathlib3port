@@ -903,10 +903,10 @@ section DomDomLcongr
 
 variable (S : Type _) [Semiring S] [Module S N] [SMulCommClass R S N]
 
-#print AlternatingMap.domDomLcongr /-
+#print AlternatingMap.domDomCongrₗ /-
 /-- `alternating_map.dom_dom_congr` as a linear equivalence. -/
 @[simps apply symm_apply]
-def domDomLcongr (σ : ι ≃ ι') : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι'
+def domDomCongrₗ (σ : ι ≃ ι') : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι'
     where
   toFun := domDomCongr σ
   invFun := domDomCongr σ.symm
@@ -914,25 +914,25 @@ def domDomLcongr (σ : ι ≃ ι') : AlternatingMap R M N ι ≃ₗ[S] Alternati
   right_inv m := by ext; simp [Function.comp]
   map_add' := domDomCongr_add σ
   map_smul' := domDomCongr_smul σ
-#align alternating_map.dom_dom_lcongr AlternatingMap.domDomLcongr
+#align alternating_map.dom_dom_lcongr AlternatingMap.domDomCongrₗ
 -/
 
-#print AlternatingMap.domDomLcongr_refl /-
+#print AlternatingMap.domDomCongrₗ_refl /-
 @[simp]
-theorem domDomLcongr_refl :
-    (domDomLcongr S (Equiv.refl ι) : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι) =
+theorem domDomCongrₗ_refl :
+    (domDomCongrₗ S (Equiv.refl ι) : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι) =
       LinearEquiv.refl _ _ :=
   LinearEquiv.ext domDomCongr_refl
-#align alternating_map.dom_dom_lcongr_refl AlternatingMap.domDomLcongr_refl
+#align alternating_map.dom_dom_lcongr_refl AlternatingMap.domDomCongrₗ_refl
 -/
 
-#print AlternatingMap.domDomLcongr_toAddEquiv /-
+#print AlternatingMap.domDomCongrₗ_toAddEquiv /-
 @[simp]
-theorem domDomLcongr_toAddEquiv (σ : ι ≃ ι') :
-    (domDomLcongr S σ : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι').toAddEquiv =
+theorem domDomCongrₗ_toAddEquiv (σ : ι ≃ ι') :
+    (domDomCongrₗ S σ : AlternatingMap R M N ι ≃ₗ[S] AlternatingMap R M N ι').toAddEquiv =
       domDomCongrEquiv σ :=
   rfl
-#align alternating_map.dom_dom_lcongr_to_add_equiv AlternatingMap.domDomLcongr_toAddEquiv
+#align alternating_map.dom_dom_lcongr_to_add_equiv AlternatingMap.domDomCongrₗ_toAddEquiv
 -/
 
 end DomDomLcongr

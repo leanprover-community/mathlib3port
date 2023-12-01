@@ -377,7 +377,7 @@ theorem setOfIdeal_ofSet_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 s
   /- Apply Urysohn's lemma to get `g : C(X, ℝ)` which is zero on `sᶜ` and `g x ≠ 0`, then compose
     with the natural embedding `ℝ ↪ 𝕜` to produce the desired `f`. -/
   obtain ⟨g, hgs, hgx : Set.EqOn g 1 {x}, -⟩ :=
-    exists_continuous_zero_one_of_closed isClosed_closure isClosed_singleton
+    exists_continuous_zero_one_of_isClosed isClosed_closure isClosed_singleton
       (set.disjoint_singleton_right.mpr hx)
   exact
     ⟨⟨fun x => g x, continuous_of_real.comp (map_continuous g)⟩, by
@@ -513,7 +513,7 @@ theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) :=
   refine' ⟨fun x y hxy => _, fun φ => _⟩
   · contrapose! hxy
     haveI := @T4Space.of_compactSpace_t2Space X _ _ _
-    rcases exists_continuous_zero_one_of_closed (isClosed_singleton : _root_.is_closed {x})
+    rcases exists_continuous_zero_one_of_isClosed (isClosed_singleton : _root_.is_closed {x})
         (isClosed_singleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
       ⟨f, fx, fy, -⟩
     rw [← Ne.def, FunLike.ne_iff]
