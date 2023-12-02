@@ -45,10 +45,10 @@ theorem upper (s : ClopenUpperSet α) : IsUpperSet (s : Set α) :=
 #align clopen_upper_set.upper ClopenUpperSet.upper
 -/
 
-#print ClopenUpperSet.clopen /-
-theorem clopen (s : ClopenUpperSet α) : IsClopen (s : Set α) :=
+#print ClopenUpperSet.isClopen /-
+theorem isClopen (s : ClopenUpperSet α) : IsClopen (s : Set α) :=
   s.clopen'
-#align clopen_upper_set.clopen ClopenUpperSet.clopen
+#align clopen_upper_set.clopen ClopenUpperSet.isClopen
 -/
 
 #print ClopenUpperSet.toUpperSet /-

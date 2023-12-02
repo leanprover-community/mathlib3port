@@ -62,14 +62,14 @@ open scoped Classical
 variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Space E]
   [TopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] {s : Set E}
 
-#print IsCompact.has_extreme_point /-
+#print IsCompact.extremePoints_nonempty /-
 /-- **Krein-Milman lemma**: In a LCTVS, any nonempty compact set has an extreme point. -/
-theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) :
+theorem IsCompact.extremePoints_nonempty (hscomp : IsCompact s) (hsnemp : s.Nonempty) :
     (s.extremePoints ℝ).Nonempty :=
   by
   let S : Set (Set E) := {t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t}
   rsuffices ⟨t, ⟨⟨x, hxt⟩, htclos, hst⟩, hBmin⟩ : ∃ t ∈ S, ∀ u ∈ S, u ⊆ t → u = t
-  · refine' ⟨x, mem_extremePoints_iff_extreme_singleton.2 _⟩
+  · refine' ⟨x, isExtreme_singleton.2 _⟩
     rwa [← eq_singleton_iff_unique_mem.2 ⟨hxt, fun y hyB => _⟩]
     by_contra hyx
     obtain ⟨l, hl⟩ := geometric_hahn_banach_point_point hyx
@@ -99,7 +99,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
       (hFS t.Mem).2.1
   obtain htu | hut := hF.total t.mem u.mem
   exacts [⟨t, subset.rfl, htu⟩, ⟨u, hut, subset.rfl⟩]
-#align is_compact.has_extreme_point IsCompact.has_extreme_point
+#align is_compact.has_extreme_point IsCompact.extremePoints_nonempty
 -/
 
 #print closure_convexHull_extremePoints /-
@@ -115,7 +115,7 @@ theorem closure_convexHull_extremePoints (hscomp : IsCompact s) (hAconv : Convex
     geometric_hahn_banach_closed_point (convex_convexHull _ _).closure isClosed_closure hxt
   have h : IsExposed ℝ s ({y ∈ s | ∀ z ∈ s, l z ≤ l y}) := fun _ => ⟨l, rfl⟩
   obtain ⟨z, hzA, hz⟩ := hscomp.exists_forall_ge ⟨x, hxA⟩ l.continuous.continuous_on
-  obtain ⟨y, hy⟩ := (h.is_compact hscomp).has_extreme_point ⟨z, hzA, hz⟩
+  obtain ⟨y, hy⟩ := (h.is_compact hscomp).extremePoints_nonempty ⟨z, hzA, hz⟩
   linarith [hlr _
       (subset_closure <|
         subset_convexHull _ _ <| h.is_extreme.extreme_points_subset_extreme_points hy),

@@ -1212,24 +1212,24 @@ theorem isConnected_iff_sUnion_disjoint_open {s : Set α} :
 #align is_connected_iff_sUnion_disjoint_open isConnected_iff_sUnion_disjoint_open
 -/
 
-#print IsPreconnected.subset_clopen /-
+#print IsPreconnected.subset_isClopen /-
 /-- Preconnected sets are either contained in or disjoint to any given clopen set. -/
-theorem IsPreconnected.subset_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t)
+theorem IsPreconnected.subset_isClopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t)
     (hne : (s ∩ t).Nonempty) : s ⊆ t := by
   by_contra h
   have : (s ∩ tᶜ).Nonempty := inter_compl_nonempty_iff.2 h
   obtain ⟨x, -, hx, hx'⟩ : (s ∩ (t ∩ tᶜ)).Nonempty
   exact hs t (tᶜ) ht.is_open ht.compl.is_open (fun x hx => em _) hne this
   exact hx' hx
-#align is_preconnected.subset_clopen IsPreconnected.subset_clopen
+#align is_preconnected.subset_clopen IsPreconnected.subset_isClopen
 -/
 
-#print disjoint_or_subset_of_clopen /-
+#print disjoint_or_subset_of_isClopen /-
 /-- Preconnected sets are either contained in or disjoint to any given clopen set. -/
-theorem disjoint_or_subset_of_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t) :
+theorem disjoint_or_subset_of_isClopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t) :
     Disjoint s t ∨ s ⊆ t :=
-  (disjoint_or_nonempty_inter s t).imp_right <| hs.subset_clopen ht
-#align disjoint_or_subset_of_clopen disjoint_or_subset_of_clopen
+  (disjoint_or_nonempty_inter s t).imp_right <| hs.subset_isClopen ht
+#align disjoint_or_subset_of_clopen disjoint_or_subset_of_isClopen
 -/
 
 #print isPreconnected_iff_subset_of_disjoint_closed /-
@@ -1294,17 +1294,17 @@ theorem isPreconnected_iff_subset_of_fully_disjoint_closed {s : Set α} (hs : Is
 #print IsClopen.connectedComponent_subset /-
 theorem IsClopen.connectedComponent_subset {x} (hs : IsClopen s) (hx : x ∈ s) :
     connectedComponent x ⊆ s :=
-  isPreconnected_connectedComponent.subset_clopen hs ⟨x, mem_connectedComponent, hx⟩
+  isPreconnected_connectedComponent.subset_isClopen hs ⟨x, mem_connectedComponent, hx⟩
 #align is_clopen.connected_component_subset IsClopen.connectedComponent_subset
 -/
 
-#print connectedComponent_subset_iInter_clopen /-
+#print connectedComponent_subset_iInter_isClopen /-
 /-- The connected component of a point is always a subset of the intersection of all its clopen
 neighbourhoods. -/
-theorem connectedComponent_subset_iInter_clopen {x : α} :
+theorem connectedComponent_subset_iInter_isClopen {x : α} :
     connectedComponent x ⊆ ⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z :=
   subset_iInter fun Z => Z.2.1.connectedComponent_subset Z.2.2
-#align connected_component_subset_Inter_clopen connectedComponent_subset_iInter_clopen
+#align connected_component_subset_Inter_clopen connectedComponent_subset_iInter_isClopen
 -/
 
 #print IsClopen.biUnion_connectedComponent_eq /-
@@ -1663,10 +1663,10 @@ instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i
   · obtain ⟨a, t, ht, rfl⟩ := Sigma.isConnected_iff.1 ⟨h, hs⟩
     exact ht.is_preconnected.subsingleton.image _
 
-#print isTotallyDisconnected_of_clopen_set /-
+#print isTotallyDisconnected_of_isClopen_set /-
 /-- Let `X` be a topological space, and suppose that for all distinct `x,y ∈ X`, there
   is some clopen set `U` such that `x ∈ U` and `y ∉ U`. Then `X` is totally disconnected. -/
-theorem isTotallyDisconnected_of_clopen_set {X : Type _} [TopologicalSpace X]
+theorem isTotallyDisconnected_of_isClopen_set {X : Type _} [TopologicalSpace X]
     (hX : ∀ {x y : X} (h_diff : x ≠ y), ∃ (U : Set X) (h_clopen : IsClopen U), x ∈ U ∧ y ∉ U) :
     IsTotallyDisconnected (Set.univ : Set X) :=
   by
@@ -1679,7 +1679,7 @@ theorem isTotallyDisconnected_of_clopen_set {X : Type _} [TopologicalSpace X]
     hS U (Uᶜ) h_clopen.1 h_clopen.compl.1 (fun a ha => em (a ∈ U)) ⟨x, hx, hxU⟩ ⟨y, hy, hyU⟩
   rw [inter_compl_self, Set.inter_empty] at hS 
   exact Set.not_nonempty_empty hS
-#align is_totally_disconnected_of_clopen_set isTotallyDisconnected_of_clopen_set
+#align is_totally_disconnected_of_clopen_set isTotallyDisconnected_of_isClopen_set
 -/
 
 #print totallyDisconnectedSpace_iff_connectedComponent_subsingleton /-
@@ -1829,8 +1829,8 @@ instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [Topo
 #align totally_separated_space.of_discrete TotallySeparatedSpace.of_discrete
 -/
 
-#print exists_clopen_of_totally_separated /-
-theorem exists_clopen_of_totally_separated {α : Type _} [TopologicalSpace α]
+#print exists_isClopen_of_totally_separated /-
+theorem exists_isClopen_of_totally_separated {α : Type _} [TopologicalSpace α]
     [TotallySeparatedSpace α] {x y : α} (hxy : x ≠ y) :
     ∃ (U : Set α) (hU : IsClopen U), x ∈ U ∧ y ∈ Uᶜ :=
   by
@@ -1840,7 +1840,7 @@ theorem exists_clopen_of_totally_separated {α : Type _} [TopologicalSpace α]
   rw [univ_inter _] at clopen_U 
   rw [← Set.subset_compl_iff_disjoint_right, subset_compl_comm] at disj 
   exact ⟨U, clopen_U, Ux, disj Vy⟩
-#align exists_clopen_of_totally_separated exists_clopen_of_totally_separated
+#align exists_clopen_of_totally_separated exists_isClopen_of_totally_separated
 -/
 
 end TotallySeparated
@@ -2052,7 +2052,7 @@ theorem isPreconnected_of_forall_constant {s : Set α}
   have hy : y ∉ u := fun y_in_u => eq_empty_iff_forall_not_mem.mp H y ⟨y_in_s, ⟨y_in_u, y_in_v⟩⟩
   have : ContinuousOn u.bool_indicator s :=
     by
-    apply (continuousOn_boolIndicator_iff_clopen _ _).mpr ⟨_, _⟩
+    apply (continuousOn_boolIndicator_iff_isClopen _ _).mpr ⟨_, _⟩
     · exact continuous_subtype_coe.is_open_preimage u u_op
     · rw [preimage_subtype_coe_eq_compl hsuv H]
       exact (continuous_subtype_coe.is_open_preimage v v_op).isClosed_compl

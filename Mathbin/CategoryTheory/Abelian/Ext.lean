@@ -63,7 +63,6 @@ def Ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
 
 open scoped ZeroObject
 
-#print extSuccOfProjective /-
 /-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
 def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :
     ((Ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
@@ -78,5 +77,4 @@ def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :
         dsimp
         decide }
 #align Ext_succ_of_projective extSuccOfProjective
--/
 

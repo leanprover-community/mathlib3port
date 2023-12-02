@@ -316,7 +316,7 @@ section TotallyDisconnected
 theorem krullTopology_totallyDisconnected {K L : Type _} [Field K] [Field L] [Algebra K L]
     (h_int : Algebra.IsIntegral K L) : IsTotallyDisconnected (Set.univ : Set (L ≃ₐ[K] L)) :=
   by
-  apply isTotallyDisconnected_of_clopen_set
+  apply isTotallyDisconnected_of_isClopen_set
   intro σ τ h_diff
   have hστ : σ⁻¹ * τ ≠ 1 := by rwa [Ne.def, inv_mul_eq_one]
   rcases FunLike.exists_ne hστ with ⟨x, hx : (σ⁻¹ * τ) x ≠ x⟩

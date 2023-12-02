@@ -2387,13 +2387,13 @@ instance [T5Space α] : T5Space (SeparationQuotient α)
 
 end CompletelyNormal
 
-#print connectedComponent_eq_iInter_clopen /-
+#print connectedComponent_eq_iInter_isClopen /-
 /-- In a compact t2 space, the connected component of a point equals the intersection of all
 its clopen neighbourhoods. -/
-theorem connectedComponent_eq_iInter_clopen [T2Space α] [CompactSpace α] (x : α) :
+theorem connectedComponent_eq_iInter_isClopen [T2Space α] [CompactSpace α] (x : α) :
     connectedComponent x = ⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z :=
   by
-  apply eq_of_subset_of_subset connectedComponent_subset_iInter_clopen
+  apply eq_of_subset_of_subset connectedComponent_subset_iInter_isClopen
   -- Reduce to showing that the clopen intersection is connected.
   refine' IsPreconnected.subset_connectedComponent _ (mem_Inter.2 fun Z => Z.2.2)
   -- We do this by showing that any disjoint cover by two closed sets implies
@@ -2458,7 +2458,7 @@ theorem connectedComponent_eq_iInter_clopen [T2Space α] [CompactSpace α] (x : 
   · exact isClopen_biInter_finset fun Z hZ => Z.2.1
   · exact mem_Inter₂.2 fun Z hZ => Z.2.2
   · rwa [← disjoint_compl_left_iff_subset, disjoint_iff_inter_eq_empty, ← not_nonempty_iff_eq_empty]
-#align connected_component_eq_Inter_clopen connectedComponent_eq_iInter_clopen
+#align connected_component_eq_Inter_clopen connectedComponent_eq_iInter_isClopen
 -/
 
 section Profinite
@@ -2491,7 +2491,7 @@ theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ Totall
     intro hyp
     suffices x ∈ connectedComponent y by
       simpa [totallyDisconnectedSpace_iff_connectedComponent_singleton.1 h y, mem_singleton_iff]
-    rw [connectedComponent_eq_iInter_clopen, mem_Inter]
+    rw [connectedComponent_eq_iInter_isClopen, mem_Inter]
     rintro ⟨w : Set α, hw : IsClopen w, hy : y ∈ w⟩
     by_contra hx
     exact
@@ -2509,7 +2509,7 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
     constructor
     · have : connectedComponent x = {x} :=
         totally_disconnected_space_iff_connected_component_singleton.mp ‹_› x
-      rw [connectedComponent_eq_iInter_clopen] at this 
+      rw [connectedComponent_eq_iInter_isClopen] at this 
       intro hU
       let N := { Z // IsClopen Z ∧ x ∈ Z }
       rsuffices ⟨⟨s, hs, hs'⟩, hs''⟩ : ∃ Z : N, Z.val ⊆ U
@@ -2626,7 +2626,7 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
   rw [ConnectedComponents.coe_ne_coe] at ne 
   have h := connectedComponent_disjoint Ne
   -- write ↑b as the intersection of all clopen subsets containing it
-  rw [connectedComponent_eq_iInter_clopen b, disjoint_iff_inter_eq_empty] at h 
+  rw [connectedComponent_eq_iInter_isClopen b, disjoint_iff_inter_eq_empty] at h 
   -- Now we show that this can be reduced to some clopen containing `↑b` being disjoint to `↑a`
   obtain ⟨U, V, hU, ha, hb, rfl⟩ :
     ∃ (U : Set α) (V : Set (ConnectedComponents α)),

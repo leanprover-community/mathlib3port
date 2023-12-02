@@ -1404,7 +1404,7 @@ unsafe def eval_pow : expr → tactic (expr × expr)
     let c ← mk_instance_cache α
     match β with
       | q(ℕ) => do
-        let (c, m') ← c `` Monoid.Pow []
+        let (c, m') ← c `` Monoid.toNatPow []
         is_def_eq m m'
         Prod.snd <$> prove_pow e₁ n₁ c e₂
       | q(ℤ) => do

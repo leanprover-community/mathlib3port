@@ -1582,7 +1582,7 @@ unsafe def make_eval_info (α : expr) : tactic eval_info := do
   let dr_instance ← some <$> (mk_app `` DivisionRing [α] >>= mk_instance) <|> pure none
   let ha_instance ← mk_app `` Add [α] >>= mk_instance
   let hm_instance ← mk_app `` Mul [α] >>= mk_instance
-  let hp_instance ← mk_mapp `` Monoid.Pow [some α, none]
+  let hp_instance ← mk_mapp `` Monoid.toNatPow [some α, none]
   let z ← mk_mapp `` Zero.zero [α, none]
   let o ← mk_mapp `` One.one [α, none]
   pure ⟨α, u, csr_instance, ha_instance, hm_instance, hp_instance, ring_instance, dr_instance, z, o⟩

@@ -662,19 +662,19 @@ class Monoid (M : Type u) extends Semigroup M, MulOneClass M where
 #align add_monoid AddMonoid
 -/
 
-#print Monoid.Pow /-
-instance Monoid.Pow {M : Type _} [Monoid M] : Pow M ℕ :=
+#print Monoid.toNatPow /-
+instance Monoid.toNatPow {M : Type _} [Monoid M] : Pow M ℕ :=
   ⟨fun x n => Monoid.npow n x⟩
-#align monoid.has_pow Monoid.Pow
+#align monoid.has_pow Monoid.toNatPow
 -/
 
-#print AddMonoid.SMul /-
-instance AddMonoid.SMul {M : Type _} [AddMonoid M] : SMul ℕ M :=
+#print AddMonoid.toNatSMul /-
+instance AddMonoid.toNatSMul {M : Type _} [AddMonoid M] : SMul ℕ M :=
   ⟨AddMonoid.nsmul⟩
-#align add_monoid.has_smul_nat AddMonoid.SMul
+#align add_monoid.has_smul_nat AddMonoid.toNatSMul
 -/
 
-attribute [to_additive AddMonoid.SMul] Monoid.Pow
+attribute [to_additive AddMonoid.toNatSMul] Monoid.toNatPow
 
 section
 

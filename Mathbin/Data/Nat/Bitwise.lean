@@ -226,28 +226,28 @@ theorem xor_zero (n : ℕ) : xor n 0 = n := by simp [lxor]
 #align nat.lxor_zero Nat.xor_zero
 -/
 
-#print Nat.zero_land /-
+#print Nat.zero_and /-
 @[simp]
-theorem zero_land (n : ℕ) : land 0 n = 0 := by simp [land]
-#align nat.zero_land Nat.zero_land
+theorem zero_and (n : ℕ) : land 0 n = 0 := by simp [land]
+#align nat.zero_land Nat.zero_and
 -/
 
-#print Nat.land_zero /-
+#print Nat.and_zero /-
 @[simp]
-theorem land_zero (n : ℕ) : land n 0 = 0 := by simp [land]
-#align nat.land_zero Nat.land_zero
+theorem and_zero (n : ℕ) : land n 0 = 0 := by simp [land]
+#align nat.land_zero Nat.and_zero
 -/
 
-#print Nat.zero_lor /-
+#print Nat.zero_or /-
 @[simp]
-theorem zero_lor (n : ℕ) : lor 0 n = n := by simp [lor]
-#align nat.zero_lor Nat.zero_lor
+theorem zero_or (n : ℕ) : lor 0 n = n := by simp [lor]
+#align nat.zero_lor Nat.zero_or
 -/
 
-#print Nat.lor_zero /-
+#print Nat.or_zero /-
 @[simp]
-theorem lor_zero (n : ℕ) : lor n 0 = n := by simp [lor]
-#align nat.lor_zero Nat.lor_zero
+theorem or_zero (n : ℕ) : lor n 0 = n := by simp [lor]
+#align nat.lor_zero Nat.or_zero
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/

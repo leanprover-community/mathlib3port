@@ -1013,14 +1013,14 @@ theorem lt_mul_div_succ (m : ℕ) {n : ℕ} (n0 : 0 < n) : m < n * (m / n + 1) :
 #align nat.lt_mul_div_succ Nat.lt_mul_div_succ
 -/
 
-#print Nat.mul_add_mod /-
-theorem mul_add_mod (a b c : ℕ) : (a * b + c) % b = c % b := by simp [Nat.add_mod]
-#align nat.mul_add_mod Nat.mul_add_mod
+#print Nat.mul_add_mod' /-
+theorem mul_add_mod' (a b c : ℕ) : (a * b + c) % b = c % b := by simp [Nat.add_mod]
+#align nat.mul_add_mod Nat.mul_add_mod'
 -/
 
 #print Nat.mul_add_mod_of_lt /-
 theorem mul_add_mod_of_lt {a b c : ℕ} (h : c < b) : (a * b + c) % b = c := by
-  rw [Nat.mul_add_mod, Nat.mod_eq_of_lt h]
+  rw [Nat.mul_add_mod', Nat.mod_eq_of_lt h]
 #align nat.mul_add_mod_of_lt Nat.mul_add_mod_of_lt
 -/
 

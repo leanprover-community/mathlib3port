@@ -574,7 +574,7 @@ instance : Pow Cardinal.{u} Cardinal.{u} :=
 
 local infixr:0 "^" => @Pow.pow Cardinal Cardinal Cardinal.hasPow
 
-local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoid.Pow
+local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoid.toNatPow
 
 #print Cardinal.power_def /-
 theorem power_def (α β) : ((#α)^#β) = (#β → α) :=

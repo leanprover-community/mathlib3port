@@ -67,7 +67,7 @@ end
 
 instance [Semiring R] [AddMonoid A] [AddCommMonoid B] [Module R B] : Module R (A →+ B) :=
   {
-    AddMonoidHom.distribMulAction with
+    AddMonoidHom.instDistribMulAction with
     add_smul := fun r s x => ext fun y => by simp [add_smul]
     zero_smul := fun x => ext fun y => by simp [zero_smul] }
 

@@ -428,9 +428,9 @@ theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
 #align locally_constant.coe_const LocallyConstant.coe_const
 -/
 
-#print LocallyConstant.ofClopen /-
+#print LocallyConstant.ofIsClopen /-
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
-def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
+def ofIsClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
     (hU : IsClopen U) : LocallyConstant X (Fin 2)
     where
   toFun x := if x ∈ U then 0 else 1
@@ -448,31 +448,31 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
       convert hU.2
       ext
       simp
-#align locally_constant.of_clopen LocallyConstant.ofClopen
+#align locally_constant.of_clopen LocallyConstant.ofIsClopen
 -/
 
-#print LocallyConstant.ofClopen_fiber_zero /-
+#print LocallyConstant.ofIsClopen_fiber_zero /-
 @[simp]
-theorem ofClopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
-    (hU : IsClopen U) : ofClopen hU ⁻¹' ({0} : Set (Fin 2)) = U :=
+theorem ofIsClopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
+    (hU : IsClopen U) : ofIsClopen hU ⁻¹' ({0} : Set (Fin 2)) = U :=
   by
   ext
   simp only [of_clopen, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk, mem_preimage,
     ite_eq_left_iff, Nat.succ_succ_ne_one]
   tauto
-#align locally_constant.of_clopen_fiber_zero LocallyConstant.ofClopen_fiber_zero
+#align locally_constant.of_clopen_fiber_zero LocallyConstant.ofIsClopen_fiber_zero
 -/
 
-#print LocallyConstant.ofClopen_fiber_one /-
+#print LocallyConstant.ofIsClopen_fiber_one /-
 @[simp]
-theorem ofClopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
-    (hU : IsClopen U) : ofClopen hU ⁻¹' ({1} : Set (Fin 2)) = Uᶜ :=
+theorem ofIsClopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
+    (hU : IsClopen U) : ofIsClopen hU ⁻¹' ({1} : Set (Fin 2)) = Uᶜ :=
   by
   ext
   simp only [of_clopen, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff, mem_preimage,
     ite_eq_right_iff, mem_compl_iff, Nat.succ_succ_ne_one]
   tauto
-#align locally_constant.of_clopen_fiber_one LocallyConstant.ofClopen_fiber_one
+#align locally_constant.of_clopen_fiber_one LocallyConstant.ofIsClopen_fiber_one
 -/
 
 #print LocallyConstant.locallyConstant_eq_of_fiber_zero_eq /-

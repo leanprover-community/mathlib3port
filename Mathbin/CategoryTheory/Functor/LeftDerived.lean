@@ -70,7 +70,6 @@ def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
 #align category_theory.functor.left_derived CategoryTheory.Functor.leftDerived
 -/
 
-#print CategoryTheory.Functor.leftDerivedObjIso /-
 -- TODO the left derived functors are additive (and linear when `F` is linear)
 /-- We can compute a left derived functor using a chosen projective resolution. -/
 @[simps]
@@ -83,13 +82,11 @@ def Functor.leftDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C}
         (F.mapHomotopyEquiv (ProjectiveResolution.homotopyEquiv _ P))) ≪≫
     (HomotopyCategory.homology'Factors D _ n).app _
 #align category_theory.functor.left_derived_obj_iso CategoryTheory.Functor.leftDerivedObjIso
--/
 
 section
 
 variable [HasZeroObject D]
 
-#print CategoryTheory.Functor.leftDerivedObjProjectiveZero /-
 /-- The 0-th derived functor of `F` on a projective object `X` is just `F.obj X`. -/
 @[simps]
 def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Projective X] :
@@ -98,11 +95,9 @@ def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Pro
     (homology'Functor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (ChainComplex.homology'Functor0Single₀ D).app (F.obj X)
 #align category_theory.functor.left_derived_obj_projective_zero CategoryTheory.Functor.leftDerivedObjProjectiveZero
--/
 
 open scoped ZeroObject
 
-#print CategoryTheory.Functor.leftDerivedObjProjectiveSucc /-
 /-- The higher derived functors vanish on projective objects. -/
 @[simps inv]
 def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X : C) [Projective X] :
@@ -111,7 +106,6 @@ def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X
     (homology'Functor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (ChainComplex.homology'FunctorSuccSingle₀ D n).app (F.obj X) ≪≫ (Functor.zero_obj _).isoZero
 #align category_theory.functor.left_derived_obj_projective_succ CategoryTheory.Functor.leftDerivedObjProjectiveSucc
--/
 
 end
 
@@ -169,7 +163,6 @@ theorem NatTrans.leftDerived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H
 #align category_theory.nat_trans.left_derived_comp CategoryTheory.NatTrans.leftDerived_comp
 -/
 
-#print CategoryTheory.NatTrans.leftDerived_eq /-
 /-- A component of the natural transformation between left-derived functors can be computed
 using a chosen projective resolution.
 -/
@@ -193,7 +186,6 @@ theorem NatTrans.leftDerived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : 
   apply functor.map_homotopy
   apply HomotopyEquiv.homotopyHomInvId
 #align category_theory.nat_trans.left_derived_eq CategoryTheory.NatTrans.leftDerived_eq
--/
 
 -- TODO:
 -- lemma nat_trans.left_derived_projective_zero {F G : C ⥤ D} [F.additive] [G.additive] (α : F ⟶ G)

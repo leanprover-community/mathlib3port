@@ -119,7 +119,6 @@ namespace HomologicalComplex.Hom
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
-#print HomologicalComplex.Hom.toSingle₀ProjectiveResolution /-
 /-- If `X` is a chain complex of projective objects and we have a quasi-isomorphism `f : X ⟶ Y[0]`,
 then `X` is a projective resolution of `Y.` -/
 def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
@@ -132,7 +131,6 @@ def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
   exact := f.to_single₀_exact_at_succ
   Epi := f.to_single₀_epi_at_zero
 #align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
--/
 
 end HomologicalComplex.Hom
 

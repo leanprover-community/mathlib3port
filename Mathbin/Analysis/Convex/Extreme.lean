@@ -167,16 +167,16 @@ theorem mem_extremePoints :
 #align mem_extreme_points mem_extremePoints
 -/
 
-#print mem_extremePoints_iff_extreme_singleton /-
+#print isExtreme_singleton /-
 /-- x is an extreme point to A iff {x} is an extreme set of A. -/
-theorem mem_extremePoints_iff_extreme_singleton : x ∈ A.extremePoints 𝕜 ↔ IsExtreme 𝕜 A {x} :=
+theorem isExtreme_singleton : x ∈ A.extremePoints 𝕜 ↔ IsExtreme 𝕜 A {x} :=
   by
   refine' ⟨_, fun hx => ⟨singleton_subset_iff.1 hx.1, fun x₁ hx₁ x₂ hx₂ => hx.2 hx₁ hx₂ rfl⟩⟩
   rintro ⟨hxA, hAx⟩
   use singleton_subset_iff.2 hxA
   rintro x₁ hx₁A x₂ hx₂A y (rfl : y = x)
   exact hAx hx₁A hx₂A
-#align mem_extreme_points_iff_extreme_singleton mem_extremePoints_iff_extreme_singleton
+#align mem_extreme_points_iff_extreme_singleton isExtreme_singleton
 -/
 
 #print extremePoints_subset /-
@@ -209,8 +209,7 @@ theorem inter_extremePoints_subset_extremePoints_of_subset (hBA : B ⊆ A) :
 #print IsExtreme.extremePoints_subset_extremePoints /-
 theorem IsExtreme.extremePoints_subset_extremePoints (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
-  mem_extremePoints_iff_extreme_singleton.2
-    (hAB.trans (mem_extremePoints_iff_extreme_singleton.1 hx))
+  isExtreme_singleton.2 (hAB.trans (isExtreme_singleton.1 hx))
 #align is_extreme.extreme_points_subset_extreme_points IsExtreme.extremePoints_subset_extremePoints
 -/
 
@@ -324,7 +323,7 @@ theorem mem_extremePoints_iff_forall_segment :
 theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
     x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) :=
   by
-  use fun hx => ⟨hx.1, (mem_extremePoints_iff_extreme_singleton.1 hx).convex_diff hA⟩
+  use fun hx => ⟨hx.1, (isExtreme_singleton.1 hx).convex_diff hA⟩
   rintro ⟨hxA, hAx⟩
   refine' mem_extremePoints_iff_forall_segment.2 ⟨hxA, fun x₁ hx₁ x₂ hx₂ hx => _⟩
   rw [convex_iff_segment_subset] at hAx 

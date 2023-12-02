@@ -41,11 +41,11 @@ universe u
 variable {J : Type u} [SmallCategory J] [IsCofiltered J] {F : J ⥤ Profinite.{u}} (C : Cone F)
   (hC : IsLimit C)
 
-#print Profinite.exists_clopen_of_cofiltered /-
+#print Profinite.exists_isClopen_of_cofiltered /-
 /-- If `X` is a cofiltered limit of profinite sets, then any clopen subset of `X` arises from
 a clopen set in one of the terms in the limit.
 -/
-theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
+theorem exists_isClopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
     ∃ (j : J) (V : Set (F.obj j)) (hV : IsClopen V), U = C.π.app j ⁻¹' V :=
   by
   -- First, we have the topological basis of the cofiltered limit obtained by pulling back
@@ -114,7 +114,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
       rw [(hV s).2]
       dsimp only [W] at hx 
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx 
-#align Profinite.exists_clopen_of_cofiltered Profinite.exists_clopen_of_cofiltered
+#align Profinite.exists_clopen_of_cofiltered Profinite.exists_isClopen_of_cofiltered
 -/
 
 #print Profinite.exists_locallyConstant_fin_two /-
@@ -124,11 +124,11 @@ theorem exists_locallyConstant_fin_two (f : LocallyConstant C.pt (Fin 2)) :
   let U := f ⁻¹' {0}
   have hU : IsClopen U := f.is_locally_constant.is_clopen_fiber _
   obtain ⟨j, V, hV, h⟩ := exists_clopen_of_cofiltered C hC hU
-  use j, LocallyConstant.ofClopen hV
+  use j, LocallyConstant.ofIsClopen hV
   apply LocallyConstant.locallyConstant_eq_of_fiber_zero_eq
   rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
   conv_rhs => rw [Set.preimage_comp]
-  rw [LocallyConstant.ofClopen_fiber_zero hV, ← h]
+  rw [LocallyConstant.ofIsClopen_fiber_zero hV, ← h]
 #align Profinite.exists_locally_constant_fin_two Profinite.exists_locallyConstant_fin_two
 -/
 

@@ -339,17 +339,17 @@ instance : SetLike (Clopens α) α where
   coe s := s.carrier
   coe_injective' s t h := by cases s; cases t; congr
 
-#print TopologicalSpace.Clopens.clopen /-
-theorem clopen (s : Clopens α) : IsClopen (s : Set α) :=
+#print TopologicalSpace.Clopens.isClopen /-
+theorem isClopen (s : Clopens α) : IsClopen (s : Set α) :=
   s.clopen'
-#align topological_space.clopens.clopen TopologicalSpace.Clopens.clopen
+#align topological_space.clopens.clopen TopologicalSpace.Clopens.isClopen
 -/
 
 #print TopologicalSpace.Clopens.toOpens /-
 /-- Reinterpret a compact open as an open. -/
 @[simps]
 def toOpens (s : Clopens α) : Opens α :=
-  ⟨s, s.clopen.IsOpen⟩
+  ⟨s, s.isClopen.IsOpen⟩
 #align topological_space.clopens.to_opens TopologicalSpace.Clopens.toOpens
 -/
 
@@ -368,10 +368,10 @@ theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
 -/
 
 instance : Sup (Clopens α) :=
-  ⟨fun s t => ⟨s ∪ t, s.clopen.union t.clopen⟩⟩
+  ⟨fun s t => ⟨s ∪ t, s.isClopen.union t.isClopen⟩⟩
 
 instance : Inf (Clopens α) :=
-  ⟨fun s t => ⟨s ∩ t, s.clopen.inter t.clopen⟩⟩
+  ⟨fun s t => ⟨s ∩ t, s.isClopen.inter t.isClopen⟩⟩
 
 instance : Top (Clopens α) :=
   ⟨⟨⊤, isClopen_univ⟩⟩
@@ -380,10 +380,10 @@ instance : Bot (Clopens α) :=
   ⟨⟨⊥, isClopen_empty⟩⟩
 
 instance : SDiff (Clopens α) :=
-  ⟨fun s t => ⟨s \ t, s.clopen.diffₓ t.clopen⟩⟩
+  ⟨fun s t => ⟨s \ t, s.isClopen.diffₓ t.isClopen⟩⟩
 
 instance : HasCompl (Clopens α) :=
-  ⟨fun s => ⟨sᶜ, s.clopen.compl⟩⟩
+  ⟨fun s => ⟨sᶜ, s.isClopen.compl⟩⟩
 
 instance : BooleanAlgebra (Clopens α) :=
   SetLike.coe_injective.BooleanAlgebra _ (fun _ _ => rfl) (fun _ _ => rfl) rfl rfl (fun _ => rfl)

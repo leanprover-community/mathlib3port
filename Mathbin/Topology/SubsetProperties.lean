@@ -2096,12 +2096,12 @@ theorem IsClopen.preimage {s : Set β} (h : IsClopen s) {f : α → β} (hf : Co
 #align is_clopen.preimage IsClopen.preimage
 -/
 
-#print ContinuousOn.preimage_clopen_of_clopen /-
-theorem ContinuousOn.preimage_clopen_of_clopen {f : α → β} {s : Set α} {t : Set β}
+#print ContinuousOn.preimage_isClopen_of_isClopen /-
+theorem ContinuousOn.preimage_isClopen_of_isClopen {f : α → β} {s : Set α} {t : Set β}
     (hf : ContinuousOn f s) (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∩ f ⁻¹' t) :=
   ⟨ContinuousOn.preimage_open_of_open hf hs.1 ht.1,
-    ContinuousOn.preimage_closed_of_closed hf hs.2 ht.2⟩
-#align continuous_on.preimage_clopen_of_clopen ContinuousOn.preimage_clopen_of_clopen
+    ContinuousOn.preimage_isClosed_of_isClosed hf hs.2 ht.2⟩
+#align continuous_on.preimage_clopen_of_clopen ContinuousOn.preimage_isClopen_of_isClopen
 -/
 
 #print isClopen_inter_of_disjoint_cover_clopen /-
@@ -2141,8 +2141,9 @@ protected theorem QuotientMap.isClopen_preimage {f : α → β} (hf : QuotientMa
 
 variable {X : Type _} [TopologicalSpace X]
 
-#print continuous_boolIndicator_iff_clopen /-
-theorem continuous_boolIndicator_iff_clopen (U : Set X) : Continuous U.boolIndicator ↔ IsClopen U :=
+#print continuous_boolIndicator_iff_isClopen /-
+theorem continuous_boolIndicator_iff_isClopen (U : Set X) :
+    Continuous U.boolIndicator ↔ IsClopen U :=
   by
   constructor
   · intro hc
@@ -2151,16 +2152,16 @@ theorem continuous_boolIndicator_iff_clopen (U : Set X) : Continuous U.boolIndic
   · refine' fun hU => ⟨fun s hs => _⟩
     rcases U.preimage_bool_indicator s with (h | h | h | h) <;> rw [h]
     exacts [isOpen_univ, hU.1, hU.2.isOpen_compl, isOpen_empty]
-#align continuous_bool_indicator_iff_clopen continuous_boolIndicator_iff_clopen
+#align continuous_bool_indicator_iff_clopen continuous_boolIndicator_iff_isClopen
 -/
 
-#print continuousOn_boolIndicator_iff_clopen /-
-theorem continuousOn_boolIndicator_iff_clopen (s U : Set X) :
+#print continuousOn_boolIndicator_iff_isClopen /-
+theorem continuousOn_boolIndicator_iff_isClopen (s U : Set X) :
     ContinuousOn U.boolIndicator s ↔ IsClopen ((coe : s → X) ⁻¹' U) :=
   by
-  rw [continuousOn_iff_continuous_restrict, ← continuous_boolIndicator_iff_clopen]
+  rw [continuousOn_iff_continuous_restrict, ← continuous_boolIndicator_iff_isClopen]
   rfl
-#align continuous_on_indicator_iff_clopen continuousOn_boolIndicator_iff_clopen
+#align continuous_on_indicator_iff_clopen continuousOn_boolIndicator_iff_isClopen
 -/
 
 end Clopen

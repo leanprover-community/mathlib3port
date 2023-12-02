@@ -338,7 +338,7 @@ end IsExposed
 
 #print exposedPoints_subset_extremePoints /-
 theorem exposedPoints_subset_extremePoints : A.exposedPoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
-  mem_extremePoints_iff_extreme_singleton.2 (mem_exposedPoints_iff_exposed_singleton.1 hx).IsExtreme
+  isExtreme_singleton.2 (mem_exposedPoints_iff_exposed_singleton.1 hx).IsExtreme
 #align exposed_points_subset_extreme_points exposedPoints_subset_extremePoints
 -/
 

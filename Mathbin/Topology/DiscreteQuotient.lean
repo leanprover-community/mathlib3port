@@ -82,14 +82,14 @@ namespace DiscreteQuotient
 
 variable (S : DiscreteQuotient X)
 
-#print DiscreteQuotient.ofClopen /-
+#print DiscreteQuotient.ofIsClopen /-
 /-- Construct a discrete quotient from a clopen set. -/
-def ofClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X
+def ofIsClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X
     where
   toSetoid :=
     ⟨fun x y => x ∈ A ↔ y ∈ A, fun _ => Iff.rfl, fun _ _ => Iff.symm, fun _ _ _ => Iff.trans⟩
   isOpen_setOf_rel x := by by_cases hx : x ∈ A <;> simp [Setoid.Rel, hx, h.1, h.2, ← compl_set_of]
-#align discrete_quotient.of_clopen DiscreteQuotient.ofClopen
+#align discrete_quotient.of_clopen DiscreteQuotient.ofIsClopen
 -/
 
 #print DiscreteQuotient.refl /-
@@ -456,7 +456,7 @@ end Map
 theorem eq_of_forall_proj_eq [T2Space X] [CompactSpace X] [disc : TotallyDisconnectedSpace X]
     {x y : X} (h : ∀ Q : DiscreteQuotient X, Q.proj x = Q.proj y) : x = y :=
   by
-  rw [← mem_singleton_iff, ← connectedComponent_eq_singleton, connectedComponent_eq_iInter_clopen,
+  rw [← mem_singleton_iff, ← connectedComponent_eq_singleton, connectedComponent_eq_iInter_isClopen,
     mem_Inter]
   rintro ⟨U, hU1, hU2⟩
   exact (Quotient.exact' (h (of_clopen hU1))).mpr hU2

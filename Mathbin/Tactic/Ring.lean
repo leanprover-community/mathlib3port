@@ -607,7 +607,7 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
           (
               succeeds
                 do
-                  let inst' ← ic_lift fun ic => ic . mk_app ` ` Monoid.Pow [ ]
+                  let inst' ← ic_lift fun ic => ic . mk_app ` ` Monoid.toNatPow [ ]
                     lift <| is_def_eq inst inst'
               )
             (
