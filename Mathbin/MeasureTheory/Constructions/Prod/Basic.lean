@@ -649,22 +649,22 @@ theorem dirac_prod_dirac {x : α} {y : β} : (dirac x).Prod (dirac y) = dirac (x
 #align measure_theory.measure.dirac_prod_dirac MeasureTheory.Measure.dirac_prod_dirac
 -/
 
-#print MeasureTheory.Measure.prod_sum /-
-theorem prod_sum {ι : Type _} [Finite ι] (ν : ι → Measure β) [∀ i, SigmaFinite (ν i)] :
+#print MeasureTheory.Measure.prod_sum_right /-
+theorem prod_sum_right {ι : Type _} [Finite ι] (ν : ι → Measure β) [∀ i, SigmaFinite (ν i)] :
     μ.Prod (sum ν) = sum fun i => μ.Prod (ν i) :=
   by
   refine' prod_eq fun s t hs ht => _
   simp_rw [sum_apply _ (hs.prod ht), sum_apply _ ht, prod_prod, ENNReal.tsum_mul_left]
-#align measure_theory.measure.prod_sum MeasureTheory.Measure.prod_sum
+#align measure_theory.measure.prod_sum MeasureTheory.Measure.prod_sum_right
 -/
 
-#print MeasureTheory.Measure.sum_prod /-
-theorem sum_prod {ι : Type _} [Finite ι] (μ : ι → Measure α) [∀ i, SigmaFinite (μ i)] :
+#print MeasureTheory.Measure.prod_sum_left /-
+theorem prod_sum_left {ι : Type _} [Finite ι] (μ : ι → Measure α) [∀ i, SigmaFinite (μ i)] :
     (sum μ).Prod ν = sum fun i => (μ i).Prod ν :=
   by
   refine' prod_eq fun s t hs ht => _
   simp_rw [sum_apply _ (hs.prod ht), sum_apply _ hs, prod_prod, ENNReal.tsum_mul_right]
-#align measure_theory.measure.sum_prod MeasureTheory.Measure.sum_prod
+#align measure_theory.measure.sum_prod MeasureTheory.Measure.prod_sum_left
 -/
 
 #print MeasureTheory.Measure.prod_add /-

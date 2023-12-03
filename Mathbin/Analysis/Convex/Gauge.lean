@@ -420,25 +420,26 @@ theorem interior_subset_gauge_lt_one (s : Set E) : interior s ⊆ {x | gauge s x
 #align interior_subset_gauge_lt_one interior_subset_gauge_lt_one
 -/
 
-#print gauge_lt_one_eq_self_of_open /-
-theorem gauge_lt_one_eq_self_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) :
+#print gauge_lt_one_eq_self_of_isOpen /-
+theorem gauge_lt_one_eq_self_of_isOpen (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) :
     {x | gauge s x < 1} = s :=
   by
   refine' (gauge_lt_one_subset_self hs₁ ‹_› <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀).antisymm _
   convert interior_subset_gauge_lt_one s
   exact hs₂.interior_eq.symm
-#align gauge_lt_one_eq_self_of_open gauge_lt_one_eq_self_of_open
+#align gauge_lt_one_eq_self_of_open gauge_lt_one_eq_self_of_isOpen
 -/
 
-theorem gauge_lt_one_of_mem_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) {x : E}
-    (hx : x ∈ s) : gauge s x < 1 := by rwa [← gauge_lt_one_eq_self_of_open hs₁ hs₀ hs₂] at hx 
-#align gauge_lt_one_of_mem_of_open gauge_lt_one_of_mem_of_openₓ
+theorem gauge_lt_one_of_mem_of_isOpen (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s)
+    {x : E} (hx : x ∈ s) : gauge s x < 1 := by
+  rwa [← gauge_lt_one_eq_self_of_isOpen hs₁ hs₀ hs₂] at hx 
+#align gauge_lt_one_of_mem_of_open gauge_lt_one_of_mem_of_isOpenₓ
 
 theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₀ : (0 : E) ∈ s) (hs₁ : Convex ℝ s)
     (hs₂ : IsOpen s) (hx : x ∈ ε • s) : gauge s x < ε :=
   by
   have : ε⁻¹ • x ∈ s := by rwa [← mem_smul_set_iff_inv_smul_mem₀ hε.ne']
-  have h_gauge_lt := gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ this
+  have h_gauge_lt := gauge_lt_one_of_mem_of_isOpen hs₁ hs₀ hs₂ this
   rwa [gauge_smul_of_nonneg (inv_nonneg.2 hε.le), smul_eq_mul, inv_mul_lt_iff hε, mul_one] at
     h_gauge_lt 
   infer_instance
@@ -481,18 +482,18 @@ def gaugeSeminorm (hs₀ : Balanced 𝕜 s) (hs₁ : Convex ℝ s) (hs₂ : Abso
 variable {hs₀ : Balanced 𝕜 s} {hs₁ : Convex ℝ s} {hs₂ : Absorbent ℝ s} [TopologicalSpace E]
   [ContinuousSMul ℝ E]
 
-#print gaugeSeminorm_lt_one_of_open /-
-theorem gaugeSeminorm_lt_one_of_open (hs : IsOpen s) {x : E} (hx : x ∈ s) :
+#print gaugeSeminorm_lt_one_of_isOpen /-
+theorem gaugeSeminorm_lt_one_of_isOpen (hs : IsOpen s) {x : E} (hx : x ∈ s) :
     gaugeSeminorm hs₀ hs₁ hs₂ x < 1 :=
-  gauge_lt_one_of_mem_of_open hs₁ hs₂.zero_mem hs hx
-#align gauge_seminorm_lt_one_of_open gaugeSeminorm_lt_one_of_open
+  gauge_lt_one_of_mem_of_isOpen hs₁ hs₂.zero_mem hs hx
+#align gauge_seminorm_lt_one_of_open gaugeSeminorm_lt_one_of_isOpen
 -/
 
 #print gaugeSeminorm_ball_one /-
 theorem gaugeSeminorm_ball_one (hs : IsOpen s) : (gaugeSeminorm hs₀ hs₁ hs₂).ball 0 1 = s :=
   by
   rw [Seminorm.ball_zero_eq]
-  exact gauge_lt_one_eq_self_of_open hs₁ hs₂.zero_mem hs
+  exact gauge_lt_one_eq_self_of_isOpen hs₁ hs₂.zero_mem hs
 #align gauge_seminorm_ball_one gaugeSeminorm_ball_one
 -/
 

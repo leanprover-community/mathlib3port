@@ -57,7 +57,7 @@ theorem exists_isClopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
   rotate_left
   · intro i
     change TopologicalSpace.IsTopologicalBasis {W : Set (F.obj i) | IsClopen W}
-    apply isTopologicalBasis_clopen
+    apply isTopologicalBasis_isClopen
   · rintro i j f V (hV : IsClopen _)
     refine' ⟨hV.1.preimage _, hV.2.preimage _⟩ <;> continuity
   -- Using this, since `U` is open, we can write `U` as a union of clopen sets all of which

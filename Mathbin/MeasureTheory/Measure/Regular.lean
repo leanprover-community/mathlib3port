@@ -404,10 +404,10 @@ namespace InnerRegular
 variable {p q : Set α → Prop} {U s : Set α} {ε r : ℝ≥0∞}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (ε «expr ≠ » 0) -/
-#print MeasureTheory.Measure.InnerRegularWRT.measurableSet_of_open /-
+#print MeasureTheory.Measure.InnerRegularWRT.measurableSet_of_isOpen /-
 /-- If a measure is inner regular (using closed or compact sets), then every measurable set of
 finite measure can by approximated by a (closed or compact) subset. -/
-theorem measurableSet_of_open [OuterRegular μ] (H : InnerRegularWRT μ p IsOpen) (h0 : p ∅)
+theorem measurableSet_of_isOpen [OuterRegular μ] (H : InnerRegularWRT μ p IsOpen) (h0 : p ∅)
     (hd : ∀ ⦃s U⦄, p s → IsOpen U → p (s \ U)) :
     InnerRegularWRT μ p fun s => MeasurableSet s ∧ μ s ≠ ∞ :=
   by
@@ -425,7 +425,7 @@ theorem measurableSet_of_open [OuterRegular μ] (H : InnerRegularWRT μ p IsOpen
     _ ≤ μ (K \ U') + μ U' + ε := (add_le_add_right (tsub_le_iff_right.1 le_measure_diff) _)
     _ ≤ μ (K \ U') + ε + ε := by mono*; exacts [hμU'.le, le_rfl]
     _ = μ (K \ U') + (ε + ε) := add_assoc _ _ _
-#align measure_theory.measure.inner_regular.measurable_set_of_open MeasureTheory.Measure.InnerRegularWRT.measurableSet_of_open
+#align measure_theory.measure.inner_regular.measurable_set_of_open MeasureTheory.Measure.InnerRegularWRT.measurableSet_of_isOpen
 -/
 
 open Finset
@@ -574,7 +574,7 @@ compact subset. See also `measurable_set.exists_is_compact_lt_add` and
 `measurable_set.exists_lt_is_compact_of_ne_top`. -/
 theorem innerRegularWRT_measurable [Regular μ] :
     InnerRegularWRT μ IsCompact fun s => MeasurableSet s ∧ μ s ≠ ∞ :=
-  Regular.innerRegularWRT.measurableSet_of_open isCompact_empty fun _ _ => IsCompact.diff
+  Regular.innerRegularWRT.measurableSet_of_isOpen isCompact_empty fun _ _ => IsCompact.diff
 #align measure_theory.measure.regular.inner_regular_measurable MeasureTheory.Measure.Regular.innerRegularWRT_measurable
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (K «expr ⊆ » A) -/
@@ -683,7 +683,7 @@ theorem IsOpen.measure_eq_iSup_isClosed ⦃U : Set α⦄ (hU : IsOpen U) (μ : M
 #print MeasureTheory.Measure.WeaklyRegular.innerRegular_measurable /-
 theorem innerRegular_measurable [WeaklyRegular μ] :
     InnerRegularWRT μ IsClosed fun s => MeasurableSet s ∧ μ s ≠ ∞ :=
-  WeaklyRegular.innerRegular.measurableSet_of_open isClosed_empty fun _ _ h₁ h₂ =>
+  WeaklyRegular.innerRegular.measurableSet_of_isOpen isClosed_empty fun _ _ h₁ h₂ =>
     h₁.inter h₂.isClosed_compl
 #align measure_theory.measure.weakly_regular.inner_regular_measurable MeasureTheory.Measure.WeaklyRegular.innerRegular_measurable
 -/

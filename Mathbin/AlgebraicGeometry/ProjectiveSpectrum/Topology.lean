@@ -585,7 +585,7 @@ theorem isTopologicalBasis_basic_opens :
     TopologicalSpace.IsTopologicalBasis
       (Set.range fun r : A => (basicOpen 𝒜 r : Set (ProjectiveSpectrum 𝒜))) :=
   by
-  apply TopologicalSpace.isTopologicalBasis_of_open_of_nhds
+  apply TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
   · rintro _ ⟨r, rfl⟩
     exact is_open_basic_open 𝒜
   · rintro p U hp ⟨s, hs⟩

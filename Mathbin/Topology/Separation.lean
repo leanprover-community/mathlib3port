@@ -367,9 +367,9 @@ theorem minimal_nonempty_open_eq_singleton [T0Space α] {s : Set α} (hs : IsOpe
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊂ » s) -/
-#print exists_open_singleton_of_open_finite /-
+#print exists_isOpen_singleton_of_isOpen_finite /-
 /-- Given an open finite set `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
-theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s.Finite)
+theorem exists_isOpen_singleton_of_isOpen_finite [T0Space α] {s : Set α} (hfin : s.Finite)
     (hne : s.Nonempty) (ho : IsOpen s) : ∃ x ∈ s, IsOpen ({x} : Set α) :=
   by
   lift s to Finset α using hfin
@@ -382,13 +382,14 @@ theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s
     refine' fun t hts htne hto => of_not_not fun hts' => ht _
     lift t to Finset α using s.finite_to_set.subset hts
     exact ⟨t, ssubset_iff_subset_ne.2 ⟨hts, mt Finset.coe_inj.2 hts'⟩, htne, hto⟩
-#align exists_open_singleton_of_open_finite exists_open_singleton_of_open_finite
+#align exists_open_singleton_of_open_finite exists_isOpen_singleton_of_isOpen_finite
 -/
 
 #print exists_open_singleton_of_finite /-
 theorem exists_open_singleton_of_finite [T0Space α] [Finite α] [Nonempty α] :
     ∃ x : α, IsOpen ({x} : Set α) :=
-  let ⟨x, _, h⟩ := exists_open_singleton_of_open_finite (Set.toFinite _) univ_nonempty isOpen_univ
+  let ⟨x, _, h⟩ :=
+    exists_isOpen_singleton_of_isOpen_finite (Set.toFinite _) univ_nonempty isOpen_univ
   ⟨x, h⟩
 #align exists_open_singleton_of_fintype exists_open_singleton_of_finite
 -/
@@ -902,7 +903,7 @@ theorem nhds_le_nhdsSet_iff [T1Space α] {s : Set α} {x : α} : 𝓝 x ≤ 𝓝
 /-- Removing a non-isolated point from a dense set, one still obtains a dense set. -/
 theorem Dense.diff_singleton [T1Space α] {s : Set α} (hs : Dense s) (x : α) [NeBot (𝓝[≠] x)] :
     Dense (s \ {x}) :=
-  hs.inter_of_open_right (dense_compl_singleton x) isOpen_compl_singleton
+  hs.inter_of_isOpen_right (dense_compl_singleton x) isOpen_compl_singleton
 #align dense.diff_singleton Dense.diff_singleton
 -/
 
@@ -2532,8 +2533,8 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
 #align nhds_basis_clopen nhds_basis_clopen
 -/
 
-#print isTopologicalBasis_clopen /-
-theorem isTopologicalBasis_clopen : IsTopologicalBasis {s : Set α | IsClopen s} :=
+#print isTopologicalBasis_isClopen /-
+theorem isTopologicalBasis_isClopen : IsTopologicalBasis {s : Set α | IsClopen s} :=
   by
   apply is_topological_basis_of_open_of_nhds fun U (hU : IsClopen U) => hU.1
   intro x U hxU U_op
@@ -2541,16 +2542,16 @@ theorem isTopologicalBasis_clopen : IsTopologicalBasis {s : Set α | IsClopen s}
   rcases(nhds_basis_clopen x).mem_iff.mp this with ⟨V, ⟨hxV, hV⟩, hVU : V ⊆ U⟩
   use V
   tauto
-#align is_topological_basis_clopen isTopologicalBasis_clopen
+#align is_topological_basis_clopen isTopologicalBasis_isClopen
 -/
 
-#print compact_exists_clopen_in_open /-
+#print compact_exists_isClopen_in_isOpen /-
 /-- Every member of an open set in a compact Hausdorff totally disconnected space
   is contained in a clopen set contained in the open set.  -/
-theorem compact_exists_clopen_in_open {x : α} {U : Set α} (is_open : IsOpen U) (memU : x ∈ U) :
+theorem compact_exists_isClopen_in_isOpen {x : α} {U : Set α} (is_open : IsOpen U) (memU : x ∈ U) :
     ∃ (V : Set α) (hV : IsClopen V), x ∈ V ∧ V ⊆ U :=
-  (IsTopologicalBasis.mem_nhds_iff isTopologicalBasis_clopen).1 (IsOpen.mem_nhds memU)
-#align compact_exists_clopen_in_open compact_exists_clopen_in_open
+  (IsTopologicalBasis.mem_nhds_iff isTopologicalBasis_isClopen).1 (IsOpen.mem_nhds memU)
+#align compact_exists_clopen_in_open compact_exists_isClopen_in_isOpen
 -/
 
 end Profinite
@@ -2573,7 +2574,7 @@ theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
   let X : s := ⟨x, h xt⟩
   have Xu : X ∈ u := xs
   haveI : CompactSpace s := isCompact_iff_compactSpace.1 comp
-  obtain ⟨V : Set s, clopen_in_s, Vx, V_sub⟩ := compact_exists_clopen_in_open u_open_in_s Xu
+  obtain ⟨V : Set s, clopen_in_s, Vx, V_sub⟩ := compact_exists_isClopen_in_isOpen u_open_in_s Xu
   have V_clopen : IsClopen ((coe : s → H) '' V) :=
     by
     refine' ⟨_, comp.is_closed.closed_embedding_subtype_coe.closed_iff_image_closed.1 clopen_in_s.2⟩

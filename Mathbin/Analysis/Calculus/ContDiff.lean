@@ -2738,17 +2738,17 @@ theorem contDiffOn_succ_iff_derivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s₂) 
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
-#print contDiffOn_succ_iff_deriv_of_open /-
+#print contDiffOn_succ_iff_deriv_of_isOpen /-
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (formulated with `deriv`) is `C^n`. -/
-theorem contDiffOn_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
+theorem contDiffOn_succ_iff_deriv_of_isOpen {n : ℕ} (hs : IsOpen s₂) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 n (deriv f₂) s₂ :=
   by
   rw [contDiffOn_succ_iff_derivWithin hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
-  exact contDiffOn_congr fun _ => derivWithin_of_open hs
-#align cont_diff_on_succ_iff_deriv_of_open contDiffOn_succ_iff_deriv_of_open
+  exact contDiffOn_congr fun _ => derivWithin_of_isOpen hs
+#align cont_diff_on_succ_iff_deriv_of_open contDiffOn_succ_iff_deriv_of_isOpen
 -/
 
 #print contDiffOn_top_iff_derivWithin /-
@@ -2771,17 +2771,17 @@ theorem contDiffOn_top_iff_derivWithin (hs : UniqueDiffOn 𝕜 s₂) :
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
-#print contDiffOn_top_iff_deriv_of_open /-
+#print contDiffOn_top_iff_deriv_of_isOpen /-
 /-- A function is `C^∞` on an open domain if and only if it is differentiable
 there, and its derivative (formulated with `deriv`) is `C^∞`. -/
-theorem contDiffOn_top_iff_deriv_of_open (hs : IsOpen s₂) :
+theorem contDiffOn_top_iff_deriv_of_isOpen (hs : IsOpen s₂) :
     ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (deriv f₂) s₂ :=
   by
   rw [contDiffOn_top_iff_derivWithin hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
-  exact contDiffOn_congr fun _ => derivWithin_of_open hs
-#align cont_diff_on_top_iff_deriv_of_open contDiffOn_top_iff_deriv_of_open
+  exact contDiffOn_congr fun _ => derivWithin_of_isOpen hs
+#align cont_diff_on_top_iff_deriv_of_open contDiffOn_top_iff_deriv_of_isOpen
 -/
 
 #print ContDiffOn.derivWithin /-
@@ -2798,11 +2798,11 @@ theorem ContDiffOn.derivWithin (hf : ContDiffOn 𝕜 n f₂ s₂) (hs : UniqueDi
 #align cont_diff_on.deriv_within ContDiffOn.derivWithin
 -/
 
-#print ContDiffOn.deriv_of_open /-
-theorem ContDiffOn.deriv_of_open (hf : ContDiffOn 𝕜 n f₂ s₂) (hs : IsOpen s₂) (hmn : m + 1 ≤ n) :
+#print ContDiffOn.deriv_of_isOpen /-
+theorem ContDiffOn.deriv_of_isOpen (hf : ContDiffOn 𝕜 n f₂ s₂) (hs : IsOpen s₂) (hmn : m + 1 ≤ n) :
     ContDiffOn 𝕜 m (deriv f₂) s₂ :=
-  (hf.derivWithin hs.UniqueDiffOn hmn).congr fun x hx => (derivWithin_of_open hs hx).symm
-#align cont_diff_on.deriv_of_open ContDiffOn.deriv_of_open
+  (hf.derivWithin hs.UniqueDiffOn hmn).congr fun x hx => (derivWithin_of_isOpen hs hx).symm
+#align cont_diff_on.deriv_of_open ContDiffOn.deriv_of_isOpen
 -/
 
 #print ContDiffOn.continuousOn_derivWithin /-
@@ -2812,11 +2812,11 @@ theorem ContDiffOn.continuousOn_derivWithin (h : ContDiffOn 𝕜 n f₂ s₂) (h
 #align cont_diff_on.continuous_on_deriv_within ContDiffOn.continuousOn_derivWithin
 -/
 
-#print ContDiffOn.continuousOn_deriv_of_open /-
-theorem ContDiffOn.continuousOn_deriv_of_open (h : ContDiffOn 𝕜 n f₂ s₂) (hs : IsOpen s₂)
+#print ContDiffOn.continuousOn_deriv_of_isOpen /-
+theorem ContDiffOn.continuousOn_deriv_of_isOpen (h : ContDiffOn 𝕜 n f₂ s₂) (hs : IsOpen s₂)
     (hn : 1 ≤ n) : ContinuousOn (deriv f₂) s₂ :=
-  ((contDiffOn_succ_iff_deriv_of_open hs).1 (h.of_le hn)).2.ContinuousOn
-#align cont_diff_on.continuous_on_deriv_of_open ContDiffOn.continuousOn_deriv_of_open
+  ((contDiffOn_succ_iff_deriv_of_isOpen hs).1 (h.of_le hn)).2.ContinuousOn
+#align cont_diff_on.continuous_on_deriv_of_open ContDiffOn.continuousOn_deriv_of_isOpen
 -/
 
 #print contDiff_succ_iff_deriv /-
@@ -2824,7 +2824,7 @@ theorem ContDiffOn.continuousOn_deriv_of_open (h : ContDiffOn 𝕜 n f₂ s₂) 
   and its derivative (formulated in terms of `deriv`) is `C^n`. -/
 theorem contDiff_succ_iff_deriv {n : ℕ} :
     ContDiff 𝕜 (n + 1 : ℕ) f₂ ↔ Differentiable 𝕜 f₂ ∧ ContDiff 𝕜 n (deriv f₂) := by
-  simp only [← contDiffOn_univ, contDiffOn_succ_iff_deriv_of_open, isOpen_univ,
+  simp only [← contDiffOn_univ, contDiffOn_succ_iff_deriv_of_isOpen, isOpen_univ,
     differentiableOn_univ]
 #align cont_diff_succ_iff_deriv contDiff_succ_iff_deriv
 -/

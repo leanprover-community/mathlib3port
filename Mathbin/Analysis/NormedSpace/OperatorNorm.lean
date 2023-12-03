@@ -382,7 +382,6 @@ theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' 
 #align continuous_linear_map.op_norm_smul_le ContinuousLinearMap.op_norm_smul_le
 -/
 
-#print ContinuousLinearMap.tmpSeminormedAddCommGroup /-
 /-- Continuous linear maps themselves form a seminormed space with respect to
 the operator norm. This is only a temporary definition because we want to replace the topology
 with `continuous_linear_map.topological_space` to avoid diamond issues.
@@ -394,34 +393,27 @@ protected def tmpSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁�
       add_le' := op_norm_add_le
       neg' := op_norm_neg }
 #align continuous_linear_map.tmp_seminormed_add_comm_group ContinuousLinearMap.tmpSeminormedAddCommGroup
--/
 
-#print ContinuousLinearMap.tmpPseudoMetricSpace /-
 /-- The `pseudo_metric_space` structure on `E →SL[σ₁₂] F` coming from
 `continuous_linear_map.tmp_seminormed_add_comm_group`.
 See Note [forgetful inheritance] -/
 protected def tmpPseudoMetricSpace : PseudoMetricSpace (E →SL[σ₁₂] F) :=
   ContinuousLinearMap.tmpSeminormedAddCommGroup.toPseudoMetricSpace
 #align continuous_linear_map.tmp_pseudo_metric_space ContinuousLinearMap.tmpPseudoMetricSpace
--/
 
-#print ContinuousLinearMap.tmpUniformSpace /-
 /-- The `uniform_space` structure on `E →SL[σ₁₂] F` coming from
 `continuous_linear_map.tmp_seminormed_add_comm_group`.
 See Note [forgetful inheritance] -/
 protected def tmpUniformSpace : UniformSpace (E →SL[σ₁₂] F) :=
   ContinuousLinearMap.tmpPseudoMetricSpace.toUniformSpace
 #align continuous_linear_map.tmp_uniform_space ContinuousLinearMap.tmpUniformSpace
--/
 
-#print ContinuousLinearMap.tmpTopologicalSpace /-
 /-- The `topological_space` structure on `E →SL[σ₁₂] F` coming from
 `continuous_linear_map.tmp_seminormed_add_comm_group`.
 See Note [forgetful inheritance] -/
 protected def tmpTopologicalSpace : TopologicalSpace (E →SL[σ₁₂] F) :=
   ContinuousLinearMap.tmpUniformSpace.toTopologicalSpace
 #align continuous_linear_map.tmp_topological_space ContinuousLinearMap.tmpTopologicalSpace
--/
 
 section Tmp
 
@@ -431,13 +423,10 @@ attribute [-instance] ContinuousLinearMap.uniformSpace
 
 attribute [local instance] ContinuousLinearMap.tmpSeminormedAddCommGroup
 
-#print ContinuousLinearMap.tmpTopologicalAddGroup /-
-protected theorem tmpTopologicalAddGroup : TopologicalAddGroup (E →SL[σ₁₂] F) :=
+protected theorem tmp_topologicalAddGroup : TopologicalAddGroup (E →SL[σ₁₂] F) :=
   inferInstance
-#align continuous_linear_map.tmp_topological_add_group ContinuousLinearMap.tmpTopologicalAddGroup
--/
+#align continuous_linear_map.tmp_topological_add_group ContinuousLinearMap.tmp_topologicalAddGroup
 
-#print ContinuousLinearMap.tmp_closedBall_div_subset /-
 protected theorem tmp_closedBall_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
     closedBall (0 : E →SL[σ₁₂] F) (a / b) ⊆
       {f | ∀ x ∈ closedBall (0 : E) b, f x ∈ closedBall (0 : F) a} :=
@@ -449,11 +438,9 @@ protected theorem tmp_closedBall_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b
     _ ≤ a / b * b := (mul_le_mul hf hx (norm_nonneg _) (div_pos ha hb).le)
     _ = a := div_mul_cancel a hb.ne.symm
 #align continuous_linear_map.tmp_closed_ball_div_subset ContinuousLinearMap.tmp_closedBall_div_subset
--/
 
 end Tmp
 
-#print ContinuousLinearMap.tmp_topology_eq /-
 protected theorem tmp_topology_eq :
     (ContinuousLinearMap.tmpTopologicalSpace : TopologicalSpace (E →SL[σ₁₂] F)) =
       ContinuousLinearMap.topologicalSpace :=
@@ -479,9 +466,7 @@ protected theorem tmp_topology_eq :
       ⟨ε / δ, div_pos hε hδ,
         (ContinuousLinearMap.tmp_closedBall_div_subset hε hδ).trans fun f hf x hx => hf x <| hSδ hx⟩
 #align continuous_linear_map.tmp_topology_eq ContinuousLinearMap.tmp_topology_eq
--/
 
-#print ContinuousLinearMap.tmpUniformSpace_eq /-
 protected theorem tmpUniformSpace_eq :
     (ContinuousLinearMap.tmpUniformSpace : UniformSpace (E →SL[σ₁₂] F)) =
       ContinuousLinearMap.uniformSpace :=
@@ -491,7 +476,6 @@ protected theorem tmpUniformSpace_eq :
   congr 1
   exact ContinuousLinearMap.tmp_topology_eq
 #align continuous_linear_map.tmp_uniform_space_eq ContinuousLinearMap.tmpUniformSpace_eq
--/
 
 #print ContinuousLinearMap.toPseudoMetricSpace /-
 instance toPseudoMetricSpace : PseudoMetricSpace (E →SL[σ₁₂] F) :=

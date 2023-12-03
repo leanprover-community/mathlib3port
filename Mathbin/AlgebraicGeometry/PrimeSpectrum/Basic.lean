@@ -1017,7 +1017,7 @@ theorem isTopologicalBasis_basic_opens :
     TopologicalSpace.IsTopologicalBasis
       (Set.range fun r : R => (basicOpen r : Set (PrimeSpectrum R))) :=
   by
-  apply TopologicalSpace.isTopologicalBasis_of_open_of_nhds
+  apply TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
   · rintro _ ⟨r, rfl⟩
     exact is_open_basic_open
   · rintro p U hp ⟨s, hs⟩

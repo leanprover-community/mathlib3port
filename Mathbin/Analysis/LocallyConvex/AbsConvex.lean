@@ -180,7 +180,7 @@ theorem gaugeSeminormFamily_ball (s : AbsConvexOpenSets 𝕜 E) :
   dsimp only [gaugeSeminormFamily]
   rw [Seminorm.ball_zero_eq]
   simp_rw [gaugeSeminorm_to_fun]
-  exact gauge_lt_one_eq_self_of_open s.coe_convex s.coe_zero_mem s.coe_is_open
+  exact gauge_lt_one_eq_self_of_isOpen s.coe_convex s.coe_zero_mem s.coe_is_open
 #align gauge_seminorm_family_ball gaugeSeminormFamily_ball
 -/
 

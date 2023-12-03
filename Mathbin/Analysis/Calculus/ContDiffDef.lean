@@ -1393,10 +1393,10 @@ theorem contDiffOn_succ_iff_has_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
-#print contDiffOn_succ_iff_fderiv_of_open /-
+#print contDiffOn_succ_iff_fderiv_of_isOpen /-
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
-theorem contDiffOn_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
+theorem contDiffOn_succ_iff_fderiv_of_isOpen {n : ℕ} (hs : IsOpen s) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔
       DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 n (fun y => fderiv 𝕜 f y) s :=
   by
@@ -1406,7 +1406,7 @@ theorem contDiffOn_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
   apply contDiffOn_congr
   intro x hx
   exact fderivWithin_of_isOpen hs hx
-#align cont_diff_on_succ_iff_fderiv_of_open contDiffOn_succ_iff_fderiv_of_open
+#align cont_diff_on_succ_iff_fderiv_of_open contDiffOn_succ_iff_fderiv_of_isOpen
 -/
 
 #print contDiffOn_top_iff_fderivWithin /-
@@ -1430,10 +1430,10 @@ theorem contDiffOn_top_iff_fderivWithin (hs : UniqueDiffOn 𝕜 s) :
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
-#print contDiffOn_top_iff_fderiv_of_open /-
+#print contDiffOn_top_iff_fderiv_of_isOpen /-
 /-- A function is `C^∞` on an open domain if and only if it is differentiable there, and its
 derivative (expressed with `fderiv`) is `C^∞`. -/
-theorem contDiffOn_top_iff_fderiv_of_open (hs : IsOpen s) :
+theorem contDiffOn_top_iff_fderiv_of_isOpen (hs : IsOpen s) :
     ContDiffOn 𝕜 ∞ f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 ∞ (fun y => fderiv 𝕜 f y) s :=
   by
   rw [contDiffOn_top_iff_fderivWithin hs.unique_diff_on]
@@ -1442,7 +1442,7 @@ theorem contDiffOn_top_iff_fderiv_of_open (hs : IsOpen s) :
   apply contDiffOn_congr
   intro x hx
   exact fderivWithin_of_isOpen hs hx
-#align cont_diff_on_top_iff_fderiv_of_open contDiffOn_top_iff_fderiv_of_open
+#align cont_diff_on_top_iff_fderiv_of_open contDiffOn_top_iff_fderiv_of_isOpen
 -/
 
 #print ContDiffOn.fderivWithin /-
@@ -1459,11 +1459,11 @@ theorem ContDiffOn.fderivWithin (hf : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 
 #align cont_diff_on.fderiv_within ContDiffOn.fderivWithin
 -/
 
-#print ContDiffOn.fderiv_of_open /-
-theorem ContDiffOn.fderiv_of_open (hf : ContDiffOn 𝕜 n f s) (hs : IsOpen s) (hmn : m + 1 ≤ n) :
+#print ContDiffOn.fderiv_of_isOpen /-
+theorem ContDiffOn.fderiv_of_isOpen (hf : ContDiffOn 𝕜 n f s) (hs : IsOpen s) (hmn : m + 1 ≤ n) :
     ContDiffOn 𝕜 m (fun y => fderiv 𝕜 f y) s :=
   (hf.fderivWithin hs.UniqueDiffOn hmn).congr fun x hx => (fderivWithin_of_isOpen hs hx).symm
-#align cont_diff_on.fderiv_of_open ContDiffOn.fderiv_of_open
+#align cont_diff_on.fderiv_of_open ContDiffOn.fderiv_of_isOpen
 -/
 
 #print ContDiffOn.continuousOn_fderivWithin /-
@@ -1473,11 +1473,11 @@ theorem ContDiffOn.continuousOn_fderivWithin (h : ContDiffOn 𝕜 n f s) (hs : U
 #align cont_diff_on.continuous_on_fderiv_within ContDiffOn.continuousOn_fderivWithin
 -/
 
-#print ContDiffOn.continuousOn_fderiv_of_open /-
-theorem ContDiffOn.continuousOn_fderiv_of_open (h : ContDiffOn 𝕜 n f s) (hs : IsOpen s)
+#print ContDiffOn.continuousOn_fderiv_of_isOpen /-
+theorem ContDiffOn.continuousOn_fderiv_of_isOpen (h : ContDiffOn 𝕜 n f s) (hs : IsOpen s)
     (hn : 1 ≤ n) : ContinuousOn (fun x => fderiv 𝕜 f x) s :=
-  ((contDiffOn_succ_iff_fderiv_of_open hs).1 (h.of_le hn)).2.ContinuousOn
-#align cont_diff_on.continuous_on_fderiv_of_open ContDiffOn.continuousOn_fderiv_of_open
+  ((contDiffOn_succ_iff_fderiv_of_isOpen hs).1 (h.of_le hn)).2.ContinuousOn
+#align cont_diff_on.continuous_on_fderiv_of_open ContDiffOn.continuousOn_fderiv_of_isOpen
 -/
 
 /-! ### Functions with a Taylor series on the whole space -/

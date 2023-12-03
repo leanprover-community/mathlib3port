@@ -63,12 +63,14 @@ attribute [ematch] le_trans lt_of_le_of_lt lt_of_lt_of_le lt_trans
 
 section
 
-#print le_antisymm' /-
+/- warning: le_antisymm' clashes with le_antisymm -> le_antisymm
+Case conversion may be inaccurate. Consider using '#align le_antisymm' le_antisymmₓ'. -/
+#print le_antisymm /-
 -- TODO: this seems crazy, but it also seems to work reasonably well
 @[ematch]
-theorem le_antisymm' [PartialOrder α] : ∀ {a b : α}, a ≤ b → b ≤ a → a = b :=
+theorem le_antisymm [PartialOrder α] : ∀ {a b : α}, a ≤ b → b ≤ a → a = b :=
   @le_antisymm _ _
-#align le_antisymm' le_antisymm'
+#align le_antisymm' le_antisymm
 -/
 
 end

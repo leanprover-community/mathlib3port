@@ -2284,11 +2284,12 @@ theorem union_mem_uniformity_sum {a : Set (α × α)} (ha : a ∈ 𝓤 α) {b : 
 #align union_mem_uniformity_sum union_mem_uniformity_sum
 -/
 
-#print uniformity_sum_of_open_aux /-
+#print uniformity_sum_of_isOpen_aux /-
 /- To prove that the topology defined by the uniform structure on the disjoint union coincides with
 the disjoint union topology, we need two lemmas saying that open sets can be characterized by
 the uniform structure -/
-theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Sum α β} (xs : x ∈ s) :
+theorem uniformity_sum_of_isOpen_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Sum α β}
+    (xs : x ∈ s) :
     {p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s} ∈ (@UniformSpace.Core.sum α β _ _).uniformity :=
   by
   cases x
@@ -2306,11 +2307,11 @@ theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Su
           (union_subset _ _) <;>
       rintro _ ⟨⟨a, _⟩, h, ⟨⟩⟩ ⟨⟩
     exact h rfl
-#align uniformity_sum_of_open_aux uniformity_sum_of_open_aux
+#align uniformity_sum_of_open_aux uniformity_sum_of_isOpen_aux
 -/
 
-#print open_of_uniformity_sum_aux /-
-theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
+#print isOpen_of_uniformity_sum_aux /-
+theorem isOpen_of_uniformity_sum_aux {s : Set (Sum α β)}
     (hs :
       ∀ x ∈ s,
         {p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s} ∈ (@UniformSpace.Core.sum α β _ _).uniformity) :
@@ -2324,7 +2325,7 @@ theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
     rcases mem_map_iff_exists_image.1 (hs _ hb).2 with ⟨t, ht, st⟩
     refine' mem_of_superset ht _
     rintro p pt rfl; exact st ⟨_, pt, rfl⟩ rfl
-#align open_of_uniformity_sum_aux open_of_uniformity_sum_aux
+#align open_of_uniformity_sum_aux isOpen_of_uniformity_sum_aux
 -/
 
 #print Sum.uniformSpace /-
@@ -2332,7 +2333,7 @@ theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
 instance Sum.uniformSpace : UniformSpace (Sum α β)
     where
   toCore := UniformSpace.Core.sum
-  isOpen_uniformity s := ⟨uniformity_sum_of_open_aux, open_of_uniformity_sum_aux⟩
+  isOpen_uniformity s := ⟨uniformity_sum_of_isOpen_aux, isOpen_of_uniformity_sum_aux⟩
 #align sum.uniform_space Sum.uniformSpace
 -/
 

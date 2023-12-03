@@ -463,12 +463,12 @@ theorem Inducing.isPreconnected_image [TopologicalSpace β] {s : Set α} {f : α
 #align inducing.is_preconnected_image Inducing.isPreconnected_image
 -/
 
-#print IsPreconnected.preimage_of_open_map /-
+#print IsPreconnected.preimage_of_isOpenMap /-
 /- TODO: The following lemmas about connection of preimages hold more generally for strict maps
 (the quotient and subspace topologies of the image agree) whose fibers are preconnected. -/
-theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsPreconnected s)
-    {f : α → β} (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) :
-    IsPreconnected (f ⁻¹' s) := fun u v hu hv hsuv hsu hsv =>
+theorem IsPreconnected.preimage_of_isOpenMap [TopologicalSpace β] {s : Set β}
+    (hs : IsPreconnected s) {f : α → β} (hinj : Function.Injective f) (hf : IsOpenMap f)
+    (hsf : s ⊆ range f) : IsPreconnected (f ⁻¹' s) := fun u v hu hv hsuv hsu hsv =>
   by
   obtain ⟨b, hbs, hbu, hbv⟩ := hs (f '' u) (f '' v) (hf u hu) (hf v hv) _ _ _
   obtain ⟨a, rfl⟩ := hsf hbs
@@ -480,7 +480,7 @@ theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (
     exact ⟨f x, hx1, x, hx2, rfl⟩
   · obtain ⟨y, hy1, hy2⟩ := hsv
     exact ⟨f y, hy1, y, hy2, rfl⟩
-#align is_preconnected.preimage_of_open_map IsPreconnected.preimage_of_open_map
+#align is_preconnected.preimage_of_open_map IsPreconnected.preimage_of_isOpenMap
 -/
 
 #print IsPreconnected.preimage_of_isClosedMap /-
@@ -503,12 +503,12 @@ theorem IsPreconnected.preimage_of_isClosedMap [TopologicalSpace β] {s : Set β
 #align is_preconnected.preimage_of_closed_map IsPreconnected.preimage_of_isClosedMap
 -/
 
-#print IsConnected.preimage_of_openMap /-
-theorem IsConnected.preimage_of_openMap [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
+#print IsConnected.preimage_of_isOpenMap /-
+theorem IsConnected.preimage_of_isOpenMap [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
     {f : α → β} (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) :
     IsConnected (f ⁻¹' s) :=
-  ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_open_map hinj hf hsf⟩
-#align is_connected.preimage_of_open_map IsConnected.preimage_of_openMap
+  ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_isOpenMap hinj hf hsf⟩
+#align is_connected.preimage_of_open_map IsConnected.preimage_of_isOpenMap
 -/
 
 #print IsConnected.preimage_of_isClosedMap /-

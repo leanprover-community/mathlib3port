@@ -650,7 +650,7 @@ def localTriv (i : ι) : Trivialization F Z.proj
     exact ⟨i, s, s_open, rfl⟩
   continuous_invFun :=
     by
-    apply continuousOn_open_of_generateFrom ((Z.is_open_base_set i).Prod isOpen_univ)
+    apply continuousOn_isOpen_of_generateFrom ((Z.is_open_base_set i).Prod isOpen_univ)
     intro t ht
     simp only [exists_prop, mem_Union, mem_singleton_iff] at ht 
     obtain ⟨j, s, s_open, ts⟩ :

@@ -463,11 +463,11 @@ variable {R : Type _} [CommRing R]
 
 variable [TopologicalSpace R] [TopologicalRing R]
 
-#print Ideal.isOpen_of_open_subideal /-
-theorem isOpen_of_open_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) :
+#print Ideal.isOpen_of_isOpen_subideal /-
+theorem isOpen_of_isOpen_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) :
     IsOpen (I : Set R) :=
   Submodule.isOpen_mono h hU
-#align ideal.is_open_of_open_subideal Ideal.isOpen_of_open_subideal
+#align ideal.is_open_of_open_subideal Ideal.isOpen_of_isOpen_subideal
 -/
 
 end Ideal

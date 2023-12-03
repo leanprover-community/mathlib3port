@@ -569,10 +569,10 @@ theorem preimage_eventuallyEq_target_inter_preimage_inter {e : LocalHomeomorph �
 #align local_homeomorph.preimage_eventually_eq_target_inter_preimage_inter LocalHomeomorph.preimage_eventuallyEq_target_inter_preimage_inter
 -/
 
-#print LocalHomeomorph.preimage_open_of_open /-
-theorem preimage_open_of_open {s : Set β} (hs : IsOpen s) : IsOpen (e.source ∩ e ⁻¹' s) :=
-  e.ContinuousOn.preimage_open_of_open e.open_source hs
-#align local_homeomorph.preimage_open_of_open LocalHomeomorph.preimage_open_of_open
+#print LocalHomeomorph.isOpen_inter_preimage /-
+theorem isOpen_inter_preimage {s : Set β} (hs : IsOpen s) : IsOpen (e.source ∩ e ⁻¹' s) :=
+  e.ContinuousOn.isOpen_inter_preimage e.open_source hs
+#align local_homeomorph.preimage_open_of_open LocalHomeomorph.isOpen_inter_preimage
 -/
 
 /-!
@@ -790,8 +790,8 @@ protected theorem frontier (h : e.IsImage s t) : e.IsImage (frontier s) (frontie
 
 #print LocalHomeomorph.IsImage.isOpen_iff /-
 theorem isOpen_iff (h : e.IsImage s t) : IsOpen (e.source ∩ s) ↔ IsOpen (e.target ∩ t) :=
-  ⟨fun hs => h.symm_preimage_eq' ▸ e.symm.preimage_open_of_open hs, fun hs =>
-    h.preimage_eq' ▸ e.preimage_open_of_open hs⟩
+  ⟨fun hs => h.symm_preimage_eq' ▸ e.symm.isOpen_inter_preimage hs, fun hs =>
+    h.preimage_eq' ▸ e.isOpen_inter_preimage hs⟩
 #align local_homeomorph.is_image.is_open_iff LocalHomeomorph.IsImage.isOpen_iff
 -/
 
@@ -846,27 +846,27 @@ theorem preimage_frontier (s : Set β) :
 #align local_homeomorph.preimage_frontier LocalHomeomorph.preimage_frontier
 -/
 
-#print LocalHomeomorph.preimage_open_of_open_symm /-
-theorem preimage_open_of_open_symm {s : Set α} (hs : IsOpen s) : IsOpen (e.target ∩ e.symm ⁻¹' s) :=
-  e.symm.ContinuousOn.preimage_open_of_open e.open_target hs
-#align local_homeomorph.preimage_open_of_open_symm LocalHomeomorph.preimage_open_of_open_symm
+#print LocalHomeomorph.isOpen_inter_preimage_symm /-
+theorem isOpen_inter_preimage_symm {s : Set α} (hs : IsOpen s) : IsOpen (e.target ∩ e.symm ⁻¹' s) :=
+  e.symm.ContinuousOn.isOpen_inter_preimage e.open_target hs
+#align local_homeomorph.preimage_open_of_open_symm LocalHomeomorph.isOpen_inter_preimage_symm
 -/
 
-#print LocalHomeomorph.image_open_of_open /-
+#print LocalHomeomorph.image_isOpen_of_isOpen /-
 /-- The image of an open set in the source is open. -/
-theorem image_open_of_open {s : Set α} (hs : IsOpen s) (h : s ⊆ e.source) : IsOpen (e '' s) :=
+theorem image_isOpen_of_isOpen {s : Set α} (hs : IsOpen s) (h : s ⊆ e.source) : IsOpen (e '' s) :=
   by
   have : e '' s = e.target ∩ e.symm ⁻¹' s := e.to_local_equiv.image_eq_target_inter_inv_preimage h
   rw [this]
   exact e.continuous_on_symm.preimage_open_of_open e.open_target hs
-#align local_homeomorph.image_open_of_open LocalHomeomorph.image_open_of_open
+#align local_homeomorph.image_open_of_open LocalHomeomorph.image_isOpen_of_isOpen
 -/
 
-#print LocalHomeomorph.image_open_of_open' /-
+#print LocalHomeomorph.image_isOpen_of_isOpen' /-
 /-- The image of the restriction of an open set to the source is open. -/
-theorem image_open_of_open' {s : Set α} (hs : IsOpen s) : IsOpen (e '' (e.source ∩ s)) :=
-  image_open_of_open _ (IsOpen.inter e.open_source hs) (inter_subset_left _ _)
-#align local_homeomorph.image_open_of_open' LocalHomeomorph.image_open_of_open'
+theorem image_isOpen_of_isOpen' {s : Set α} (hs : IsOpen s) : IsOpen (e '' (e.source ∩ s)) :=
+  image_isOpen_of_isOpen _ (IsOpen.inter e.open_source hs) (inter_subset_left _ _)
+#align local_homeomorph.image_open_of_open' LocalHomeomorph.image_isOpen_of_isOpen'
 -/
 
 #print LocalHomeomorph.ofContinuousOpenRestrict /-

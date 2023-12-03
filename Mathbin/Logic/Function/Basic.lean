@@ -1002,9 +1002,9 @@ theorem factorsThrough_iff (g : α → γ) [Nonempty γ] : g.FactorsThrough f �
 #align function.factors_through_iff Function.factorsThrough_iff
 -/
 
-#print Function.FactorsThrough.apply_extend /-
-theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g f) (F : γ → δ)
-    (e' : β → γ) (b : β) : F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b :=
+#print Function.apply_extend /-
+theorem Function.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g f) (F : γ → δ) (e' : β → γ)
+    (b : β) : F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b :=
   by
   by_cases hb : ∃ a, f a = b
   · cases' hb with a ha; subst b
@@ -1012,14 +1012,16 @@ theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g 
     · intro a b h; simp only [comp_apply]; apply congr_arg; exact hf h
     · exact hf
   · rw [extend_apply' _ _ _ hb, extend_apply' _ _ _ hb]
-#align function.factors_through.apply_extend Function.FactorsThrough.apply_extend
+#align function.factors_through.apply_extend Function.apply_extend
 -/
 
-#print Function.Injective.apply_extend /-
-theorem Injective.apply_extend {δ} (hf : Injective f) (F : γ → δ) (g : α → γ) (e' : β → γ) (b : β) :
+/- warning: function.injective.apply_extend clashes with function.factors_through.apply_extend -> Function.apply_extend
+Case conversion may be inaccurate. Consider using '#align function.injective.apply_extend Function.apply_extendₓ'. -/
+#print Function.apply_extend /-
+theorem Function.apply_extend {δ} (hf : Injective f) (F : γ → δ) (g : α → γ) (e' : β → γ) (b : β) :
     F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b :=
   (hf.FactorsThrough g).apply_extend F e' b
-#align function.injective.apply_extend Function.Injective.apply_extend
+#align function.injective.apply_extend Function.apply_extend
 -/
 
 #print Function.extend_injective /-

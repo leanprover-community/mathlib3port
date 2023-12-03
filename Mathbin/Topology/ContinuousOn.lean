@@ -1377,11 +1377,11 @@ theorem continuousOn_open_iff {f : α → β} {s : Set α} (hs : IsOpen s) :
 #align continuous_on_open_iff continuousOn_open_iff
 -/
 
-#print ContinuousOn.preimage_open_of_open /-
-theorem ContinuousOn.preimage_open_of_open {f : α → β} {s : Set α} {t : Set β}
+#print ContinuousOn.isOpen_inter_preimage /-
+theorem ContinuousOn.isOpen_inter_preimage {f : α → β} {s : Set α} {t : Set β}
     (hf : ContinuousOn f s) (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ∩ f ⁻¹' t) :=
   (continuousOn_open_iff hs).1 hf t ht
-#align continuous_on.preimage_open_of_open ContinuousOn.preimage_open_of_open
+#align continuous_on.preimage_open_of_open ContinuousOn.isOpen_inter_preimage
 -/
 
 #print ContinuousOn.isOpen_preimage /-
@@ -1409,7 +1409,7 @@ theorem ContinuousOn.preimage_interior_subset_interior_preimage {f : α → β} 
   calc
     s ∩ f ⁻¹' interior t ⊆ interior (s ∩ f ⁻¹' t) :=
       interior_maximal (inter_subset_inter (Subset.refl _) (preimage_mono interior_subset))
-        (hf.preimage_open_of_open hs isOpen_interior)
+        (hf.isOpen_inter_preimage hs isOpen_interior)
     _ = s ∩ interior (f ⁻¹' t) := by rw [interior_inter, hs.interior_eq]
 #align continuous_on.preimage_interior_subset_interior_preimage ContinuousOn.preimage_interior_subset_interior_preimage
 -/
@@ -1425,7 +1425,7 @@ theorem continuousOn_of_locally_continuousOn {f : α → β} {s : Set α}
 #align continuous_on_of_locally_continuous_on continuousOn_of_locally_continuousOn
 -/
 
-theorem continuousOn_open_of_generateFrom {β : Type _} {s : Set α} {T : Set (Set β)} {f : α → β}
+theorem continuousOn_isOpen_of_generateFrom {β : Type _} {s : Set α} {T : Set (Set β)} {f : α → β}
     (hs : IsOpen s) (h : ∀ t ∈ T, IsOpen (s ∩ f ⁻¹' t)) :
     @ContinuousOn α β _ (TopologicalSpace.generateFrom T) f s :=
   by
@@ -1441,7 +1441,7 @@ theorem continuousOn_open_of_generateFrom {β : Type _} {s : Set α} {T : Set (S
   · rw [preimage_sUnion, inter_Union₂]
     exact isOpen_biUnion hU'
   · exact hs
-#align continuous_on_open_of_generate_from continuousOn_open_of_generateFromₓ
+#align continuous_on_open_of_generate_from continuousOn_isOpen_of_generateFromₓ
 
 #print ContinuousWithinAt.prod /-
 theorem ContinuousWithinAt.prod {f : α → β} {g : α → γ} {s : Set α} {x : α}

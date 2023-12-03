@@ -346,7 +346,7 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H
     · apply PG.locality e.open_target fun x xu => _
       rcases he (e.symm x) (e.map_target xu) with ⟨s, s_open, xs, hs⟩
       refine' ⟨e.target ∩ e.symm ⁻¹' s, _, ⟨xu, xs⟩, _⟩
-      · exact ContinuousOn.preimage_open_of_open e.continuous_inv_fun e.open_target s_open
+      · exact ContinuousOn.isOpen_inter_preimage e.continuous_inv_fun e.open_target s_open
       · rw [← inter_assoc, inter_self]
         convert hs.2 using 1
         dsimp [LocalHomeomorph.restr]; rw [s_open.interior_eq]
@@ -918,7 +918,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
       exact ⟨e, he, ⟨s, s_open, rfl⟩⟩
     continuous_invFun := by
       letI : TopologicalSpace M := c.to_topological_space
-      apply continuousOn_open_of_generateFrom (c.open_target he)
+      apply continuousOn_isOpen_of_generateFrom (c.open_target he)
       intro t ht
       simp only [exists_prop, mem_Union, mem_singleton_iff] at ht 
       rcases ht with ⟨e', e'_atlas, s, s_open, ts⟩
@@ -1320,7 +1320,7 @@ def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') :
       have hg₂ := mem_chart_source H y
       let s := (c.symm ≫ₕ f₁).source ∩ c.symm ≫ₕ f₁ ⁻¹' g.source
       have open_s : IsOpen s := by
-        apply (c.symm ≫ₕ f₁).continuous_toFun.preimage_open_of_open <;> apply open_source
+        apply (c.symm ≫ₕ f₁).continuous_toFun.isOpen_inter_preimage <;> apply open_source
       have : x ∈ s := by
         constructor
         · simp only [trans_source, preimage_univ, inter_univ, Homeomorph.toLocalHomeomorph_source]

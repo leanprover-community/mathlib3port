@@ -121,10 +121,10 @@ theorem isTopologicalBasis_of_subbasis {s : Set (Set α)} (hs : t = generateFrom
 #align topological_space.is_topological_basis_of_subbasis TopologicalSpace.isTopologicalBasis_of_subbasis
 -/
 
-#print TopologicalSpace.isTopologicalBasis_of_open_of_nhds /-
+#print TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds /-
 /-- If a family of open sets `s` is such that every open neighbourhood contains some
 member of `s`, then `s` is a topological basis. -/
-theorem isTopologicalBasis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀ u ∈ s, IsOpen u)
+theorem isTopologicalBasis_of_isOpen_of_nhds {s : Set (Set α)} (h_open : ∀ u ∈ s, IsOpen u)
     (h_nhds : ∀ (a : α) (u : Set α), a ∈ u → IsOpen u → ∃ v ∈ s, a ∈ v ∧ v ⊆ u) :
     IsTopologicalBasis s :=
   by
@@ -138,7 +138,7 @@ theorem isTopologicalBasis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀ u �
     rcases h_nhds a u ha hu with ⟨v, hvs, hav, hvu⟩
     rw [nhds_generate_from]
     exact iInf₂_le_of_le v ⟨hav, hvs⟩ (le_principal_iff.2 hvu)
-#align topological_space.is_topological_basis_of_open_of_nhds TopologicalSpace.isTopologicalBasis_of_open_of_nhds
+#align topological_space.is_topological_basis_of_open_of_nhds TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
 -/
 
 #print TopologicalSpace.IsTopologicalBasis.mem_nhds_iff /-
@@ -272,7 +272,7 @@ theorem IsTopologicalBasis.exists_nonempty_subset {B : Set (Set α)} (hb : IsTop
 
 #print TopologicalSpace.isTopologicalBasis_opens /-
 theorem isTopologicalBasis_opens : IsTopologicalBasis {U : Set α | IsOpen U} :=
-  isTopologicalBasis_of_open_of_nhds (by tauto) (by tauto)
+  isTopologicalBasis_of_isOpen_of_nhds (by tauto) (by tauto)
 #align topological_space.is_topological_basis_opens TopologicalSpace.isTopologicalBasis_opens
 -/
 
@@ -597,7 +597,7 @@ theorem isTopologicalBasis_iInf {β : Type _} {ι : Type _} {X : ι → Type _}
 #print isTopologicalBasis_singletons /-
 theorem isTopologicalBasis_singletons (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
     IsTopologicalBasis {s | ∃ x : α, (s : Set α) = {x}} :=
-  isTopologicalBasis_of_open_of_nhds (fun u hu => isOpen_discrete _) fun x u hx u_open =>
+  isTopologicalBasis_of_isOpen_of_nhds (fun u hu => isOpen_discrete _) fun x u hx u_open =>
     ⟨{x}, ⟨x, rfl⟩, mem_singleton x, singleton_subset_iff.2 hx⟩
 #align is_topological_basis_singletons isTopologicalBasis_singletons
 -/

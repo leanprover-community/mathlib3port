@@ -236,7 +236,7 @@ theorem is_bot_adic_iff {A : Type _} [CommRing A] [TopologicalSpace A] [Topologi
   rw [isAdic_iff]
   constructor
   · rintro ⟨h, h'⟩
-    rw [discreteTopology_iff_open_singleton_zero]
+    rw [discreteTopology_iff_isOpen_singleton_zero]
     simpa using h 1
   · intros
     constructor

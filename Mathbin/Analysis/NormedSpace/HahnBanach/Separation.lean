@@ -60,7 +60,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
     rw [← Submodule.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
       LinearPMap.mkSpanSingleton'_apply_self]
   have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx =>
-    (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ hx)
+    (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_isOpen hs₁ hs₀ hs₂ hx)
   · refine' ⟨⟨φ, _⟩, hφ₃, hφ₄⟩
     refine'
       φ.continuous_of_nonzero_on_open _ (hs₂.vadd (-x₀)) (nonempty.vadd_set ⟨0, hs₀⟩)
