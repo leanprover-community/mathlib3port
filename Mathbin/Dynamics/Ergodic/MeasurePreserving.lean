@@ -174,10 +174,10 @@ protected theorem iterate {f : α → α} (hf : MeasurePreserving f μa μa) :
 
 variable {μ : Measure α} {f : α → α} {s : Set α}
 
-#print MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume /-
+#print MeasureTheory.MeasurePreserving.exists_mem_iterate_mem_of_volume_lt_mul_volume /-
 /-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
-theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ)
+theorem exists_mem_iterate_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ)
     (hs : MeasurableSet s) {n : ℕ} (hvol : μ (univ : Set α) < n * μ s) :
     ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s :=
   by
@@ -192,22 +192,22 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
   simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj 
   refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩
   rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
-#align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume
+#align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_iterate_mem_of_volume_lt_mul_volume
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m «expr ≠ » 0) -/
-#print MeasureTheory.MeasurePreserving.exists_mem_image_mem /-
+#print MeasureTheory.MeasurePreserving.exists_mem_iterate_mem /-
 /-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
 `x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about
 `measure_theory.conservative`. -/
-theorem exists_mem_image_mem [IsFiniteMeasure μ] (hf : MeasurePreserving f μ μ)
+theorem exists_mem_iterate_mem [IsFiniteMeasure μ] (hf : MeasurePreserving f μ μ)
     (hs : MeasurableSet s) (hs' : μ s ≠ 0) : ∃ x ∈ s, ∃ (m : _) (_ : m ≠ 0), (f^[m]) x ∈ s :=
   by
   rcases ENNReal.exists_nat_mul_gt hs' (measure_ne_top μ (univ : Set α)) with ⟨N, hN⟩
   rcases hf.exists_mem_image_mem_of_volume_lt_mul_volume hs hN with ⟨x, hx, m, hm, hmx⟩
   exact ⟨x, hx, m, hm.1.ne', hmx⟩
-#align measure_theory.measure_preserving.exists_mem_image_mem MeasureTheory.MeasurePreserving.exists_mem_image_mem
+#align measure_theory.measure_preserving.exists_mem_image_mem MeasureTheory.MeasurePreserving.exists_mem_iterate_mem
 -/
 
 end MeasurePreserving

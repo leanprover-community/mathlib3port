@@ -61,7 +61,7 @@ returns back to `s` under some iteration of `f`. -/
 structure Conservative (f : α → α)
     (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
     QuasiMeasurePreserving f μ μ : Prop where
-  exists_mem_image_mem :
+  exists_mem_iterate_mem :
     ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _) (_ : m ≠ 0), (f^[m]) x ∈ s
 #align measure_theory.conservative MeasureTheory.Conservative
 -/
@@ -70,7 +70,7 @@ structure Conservative (f : α → α)
 /-- A self-map preserving a finite measure is conservative. -/
 protected theorem MeasurePreserving.conservative [IsFiniteMeasure μ] (h : MeasurePreserving f μ μ) :
     Conservative f μ :=
-  ⟨h.QuasiMeasurePreserving, fun s hsm h0 => h.exists_mem_image_mem hsm h0⟩
+  ⟨h.QuasiMeasurePreserving, fun s hsm h0 => h.exists_mem_iterate_mem hsm h0⟩
 #align measure_theory.measure_preserving.conservative MeasureTheory.MeasurePreserving.conservative
 -/
 
@@ -80,7 +80,7 @@ namespace Conservative
 /-- The identity map is conservative w.r.t. any measure. -/
 protected theorem id (μ : Measure α) : Conservative id μ :=
   { to_quasiMeasurePreserving := QuasiMeasurePreserving.id μ
-    exists_mem_image_mem := fun s hs h0 =>
+    exists_mem_iterate_mem := fun s hs h0 =>
       let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
       ⟨x, hx, 1, one_ne_zero, hx⟩ }
 #align measure_theory.conservative.id MeasureTheory.Conservative.id
