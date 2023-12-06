@@ -78,7 +78,7 @@ theorem normBound_pos : 0 < normBound abv bS :=
   by
   obtain ⟨i, j, k, hijk⟩ : ∃ i j k, Algebra.leftMulMatrix bS (bS i) j k ≠ 0 :=
     by
-    by_contra' h
+    by_contra! h
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
     apply

@@ -629,7 +629,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     refine' Summable.of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_atTop]
     filter_upwards [h] with _ hn
-    by_contra' h
+    by_contra! h
     exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_lt hn <| mul_neg_of_neg_of_pos hr₀ h)
 #align summable_of_ratio_norm_eventually_le summable_of_ratio_norm_eventually_le
 -/

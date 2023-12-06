@@ -134,7 +134,7 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
     IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (Ioi 0) ↔ 0 < b :=
   by
   refine' ⟨fun h => _, fun h => (integrable_exp_neg_mul_sq h).IntegrableOn⟩
-  by_contra' hb
+  by_contra! hb
   have : ∫⁻ x : ℝ in Ioi 0, 1 ≤ ∫⁻ x : ℝ in Ioi 0, ‖NormedSpace.exp (-b * x ^ 2)‖₊ :=
     by
     apply lintegral_mono fun x => _

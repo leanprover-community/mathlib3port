@@ -166,15 +166,13 @@ theorem map_prod [CommMonoid β] [CommMonoid γ] {G : Type _} [MonoidHomClass G 
 
 section Deprecated
 
-#print MonoidHom.map_prod /-
 /-- Deprecated: use `_root_.map_prod` instead. -/
 @[to_additive "Deprecated: use `_root_.map_sum` instead."]
-protected theorem MonoidHom.map_prod [CommMonoid β] [CommMonoid γ] (g : β →* γ) (f : α → β)
-    (s : Finset α) : g (∏ x in s, f x) = ∏ x in s, g (f x) :=
+protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β →* γ) (f : α → β) (s : Finset α) :
+    g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
-#align monoid_hom.map_prod MonoidHom.map_prod
-#align add_monoid_hom.map_sum AddMonoidHom.map_sum
--/
+#align monoid_hom.map_prod map_prodₓ
+#align add_monoid_hom.map_sum map_sumₓ
 
 #print MulEquiv.map_prod /-
 /-- Deprecated: use `_root_.map_prod` instead. -/

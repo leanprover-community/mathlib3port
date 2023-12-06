@@ -2308,8 +2308,8 @@ theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜
   rw [@norm_sub_sq 𝕜, sub_add]
   simp only [@InnerProductSpace.norm_sq_eq_inner 𝕜, inner_sum]
   simp only [sum_inner, two_mul, inner_smul_right, inner_conj_symm, ← mul_assoc, h₂, ← h₃,
-    inner_conj_symm, AddMonoidHom.map_sum, Finset.mul_sum, ← Finset.sum_sub_distrib,
-    inner_smul_left, add_sub_cancel']
+    inner_conj_symm, map_sum, Finset.mul_sum, ← Finset.sum_sub_distrib, inner_smul_left,
+    add_sub_cancel']
 #align orthonormal.sum_inner_products_le Orthonormal.sum_inner_products_le
 -/
 

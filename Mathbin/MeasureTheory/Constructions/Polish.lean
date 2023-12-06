@@ -770,7 +770,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       by
       intro m n
       rw [← not_disjoint_iff_nonempty_inter]
-      by_contra' h
+      by_contra! h
       have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ :=
         haveI := mem_Inter.1 (hxs m).2 (s n)
         (mem_Inter.1 this h : _)
@@ -797,7 +797,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
     have y_lim : tendsto y at_top (𝓝 z) := cauchy_y.tendsto_lim
     suffices f z = x by rw [← this]; exact mem_range_self _
     -- assume for a contradiction that `f z ≠ x`.
-    by_contra' hne
+    by_contra! hne
     -- introduce disjoint open sets `v` and `w` separating `f z` from `x`.
     obtain ⟨v, w, v_open, w_open, fzv, xw, hvw⟩ := t2_separation hne
     obtain ⟨δ, δpos, hδ⟩ : ∃ δ > (0 : ℝ), ball z δ ⊆ f ⁻¹' v :=

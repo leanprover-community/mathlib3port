@@ -2273,7 +2273,7 @@ instance [DecidableEq α] [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisor
 instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors (Finset α) (Finset β) :=
   ⟨fun s t h => by
-    by_contra' H
+    by_contra! H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset,
       mem_zero] at H 

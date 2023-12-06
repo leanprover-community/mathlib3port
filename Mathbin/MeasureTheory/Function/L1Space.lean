@@ -992,10 +992,10 @@ theorem Memℒp.integrable {q : ℝ≥0∞} (hq1 : 1 ≤ q) {f : α → β} [IsF
 #align measure_theory.mem_ℒp.integrable MeasureTheory.Memℒp.integrable
 -/
 
-#print MeasureTheory.Integrable.measure_ge_lt_top /-
+#print MeasureTheory.Integrable.measure_norm_ge_lt_top /-
 /-- A non-quantitative version of Markov inequality for integrable functions: the measure of points
 where `‖f x‖ ≥ ε` is finite for all positive `ε`. -/
-theorem Integrable.measure_ge_lt_top {f : α → β} (hf : Integrable f μ) {ε : ℝ} (hε : 0 < ε) :
+theorem Integrable.measure_norm_ge_lt_top {f : α → β} (hf : Integrable f μ) {ε : ℝ} (hε : 0 < ε) :
     μ {x | ε ≤ ‖f x‖} < ∞ :=
   by
   rw [show {x | ε ≤ ‖f x‖} = {x | ENNReal.ofReal ε ≤ ‖f x‖₊} by
@@ -1008,7 +1008,7 @@ theorem Integrable.measure_ge_lt_top {f : α → β} (hf : Integrable f μ) {ε 
       ENNReal.ofReal_eq_zero, not_le] using hε
   simpa only [ENNReal.one_toReal, ENNReal.rpow_one] using
     (mem_ℒp_one_iff_integrable.2 hf).snorm_ne_top
-#align measure_theory.integrable.measure_ge_lt_top MeasureTheory.Integrable.measure_ge_lt_top
+#align measure_theory.integrable.measure_ge_lt_top MeasureTheory.Integrable.measure_norm_ge_lt_top
 -/
 
 #print MeasureTheory.LipschitzWith.integrable_comp_iff_of_antilipschitz /-

@@ -494,7 +494,7 @@ theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <
 theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ ⊥) : Injective t :=
   by
   intro i j h
-  by_contra' contra
+  by_contra! contra
   apply h_ne_bot j
   suffices t j ≤ ⨆ (k) (hk : k ≠ i), t k
     by

@@ -90,14 +90,12 @@ def toMonoidHom : AddChar R R' → Multiplicative R →* R' :=
 
 open Multiplicative
 
-#print AddChar.hasCoeToFun /-
 /-- Define coercion to a function so that it includes the move from `R` to `multiplicative R`.
 After we have proved the API lemmas below, we don't need to worry about writing `of_add a`
 when we want to apply an additive character. -/
 instance hasCoeToFun : CoeFun (AddChar R R') fun x => R → R'
     where coe ψ x := ψ.toMonoidHom (ofAdd x)
 #align add_char.has_coe_to_fun AddChar.hasCoeToFun
--/
 
 #print AddChar.coe_to_fun_apply /-
 theorem coe_to_fun_apply (ψ : AddChar R R') (a : R) : ψ a = ψ.toMonoidHom (ofAdd a) :=
@@ -105,11 +103,9 @@ theorem coe_to_fun_apply (ψ : AddChar R R') (a : R) : ψ a = ψ.toMonoidHom (of
 #align add_char.coe_to_fun_apply AddChar.coe_to_fun_apply
 -/
 
-#print AddChar.monoidHomClass /-
 instance monoidHomClass : MonoidHomClass (AddChar R R') (Multiplicative R) R' :=
   MonoidHom.monoidHomClass
 #align add_char.monoid_hom_class AddChar.monoidHomClass
--/
 
 #print AddChar.map_zero_one /-
 /-- An additive character maps `0` to `1`. -/

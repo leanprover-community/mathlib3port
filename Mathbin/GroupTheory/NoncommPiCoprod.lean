@@ -297,7 +297,7 @@ theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
     ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) := by rintro ⟨x, hx⟩ ⟨y, hy⟩;
   exact hcomm i j hne x y hx hy
 #align subgroup.commute_subtype_of_commute Subgroup.commute_subtype_of_commute
-#align add_subgroup.commute_subtype_of_commute AddSubgroup.commute_subtype_of_commute
+#align add_subgroup.commute_subtype_of_commute AddSubgroup.addCommute_subtype_of_addCommute
 -/
 
 #print Subgroup.noncommPiCoprod /-

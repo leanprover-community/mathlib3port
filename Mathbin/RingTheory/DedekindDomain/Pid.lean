@@ -136,7 +136,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
       ((hf.mem_to_finset.1 hM).ne_top.lt_top.trans_eq (Ideal.sup_iInf_eq_top <| coprime M hM).symm)
   have : ∀ M ∈ s, ∃ a ∈ I, ∃ b ∈ I', a * b ∉ IsLocalization.coeSubmodule A M :=
     by
-    intro M hM; by_contra' h
+    intro M hM; by_contra! h
     obtain ⟨x, hx, hxM⟩ :=
       SetLike.exists_of_lt
         ((IsLocalization.coeSubmodule_strictMono hS (hf.mem_to_finset.1 hM).ne_top.lt_top).trans_eq

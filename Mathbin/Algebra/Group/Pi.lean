@@ -625,7 +625,7 @@ theorem Pi.mulSingle_commute [∀ i, MulOneClass <| f i] :
   by_cases h2 : j = k; · subst h2; simp [hij]
   simp [h1, h2]
 #align pi.mul_single_commute Pi.mulSingle_commute
-#align pi.single_commute Pi.single_commute
+#align pi.single_commute Pi.single_addCommute
 -/
 
 #print Pi.mulSingle_apply_commute /-
@@ -638,7 +638,7 @@ theorem Pi.mulSingle_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i) 
   · rfl
   · exact Pi.mulSingle_commute hij _ _
 #align pi.mul_single_apply_commute Pi.mulSingle_apply_commute
-#align pi.single_apply_commute Pi.single_apply_commute
+#align pi.single_apply_commute Pi.single_apply_addCommute
 -/
 
 #print Pi.update_eq_div_mul_mulSingle /-

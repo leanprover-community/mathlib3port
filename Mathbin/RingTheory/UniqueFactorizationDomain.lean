@@ -2213,11 +2213,9 @@ section
 
 open Associates UniqueFactorizationMonoid
 
-#print Associates.quot_out /-
 theorem Associates.quot_out {α : Type _} [CommMonoid α] (a : Associates α) :
     Associates.mk (Quot.out a) = a := by rw [← quot_mk_eq_mk, Quot.out_eq]
-#align associates.quot_out Associates.quot_out
--/
+#align associates.quot_out Associates.quot_outₓ
 
 #print UniqueFactorizationMonoid.toGCDMonoid /-
 /-- `to_gcd_monoid` constructs a GCD monoid out of a unique factorization domain. -/
@@ -2228,15 +2226,15 @@ noncomputable def UniqueFactorizationMonoid.toGCDMonoid (α : Type _) [CancelCom
   lcm a b := Quot.out (Associates.mk a ⊔ Associates.mk b : Associates α)
   gcd_dvd_left a b :=
     by
-    rw [← mk_dvd_mk, (Associates.mk a ⊓ Associates.mk b).quot_out, dvd_eq_le]
+    rw [← mk_dvd_mk, (Associates.mk a ⊓ Associates.mk b).quot_outₓ, dvd_eq_le]
     exact inf_le_left
   gcd_dvd_right a b :=
     by
-    rw [← mk_dvd_mk, (Associates.mk a ⊓ Associates.mk b).quot_out, dvd_eq_le]
+    rw [← mk_dvd_mk, (Associates.mk a ⊓ Associates.mk b).quot_outₓ, dvd_eq_le]
     exact inf_le_right
   dvd_gcd a b c hac hab :=
     by
-    rw [← mk_dvd_mk, (Associates.mk c ⊓ Associates.mk b).quot_out, dvd_eq_le, le_inf_iff,
+    rw [← mk_dvd_mk, (Associates.mk c ⊓ Associates.mk b).quot_outₓ, dvd_eq_le, le_inf_iff,
       mk_le_mk_iff_dvd_iff, mk_le_mk_iff_dvd_iff]
     exact ⟨hac, hab⟩
   lcm_zero_left a := by

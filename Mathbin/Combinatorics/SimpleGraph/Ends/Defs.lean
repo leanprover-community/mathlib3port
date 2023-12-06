@@ -193,7 +193,7 @@ theorem exists_adj_boundary_pair (Gc : G.Preconnected) (hK : K.Nonempty) :
   refine' component_compl.ind fun v vnK => _
   let C : G.component_compl K := G.component_compl_mk vnK
   let dis := set.disjoint_iff.mp C.disjoint_right
-  by_contra' h
+  by_contra! h
   suffices Set.univ = (C : Set V) by exact dis ⟨hK.some_spec, this ▸ Set.mem_univ hK.some⟩
   symm
   rw [Set.eq_univ_iff_forall]

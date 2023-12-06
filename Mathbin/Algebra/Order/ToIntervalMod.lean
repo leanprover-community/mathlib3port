@@ -1155,7 +1155,7 @@ private theorem to_Ixx_mod_cyclic_left {x₁ x₂ x₃ : α} (h : toIcoMod hp x�
 private theorem to_Ixx_mod_antisymm (h₁₂₃ : toIcoMod hp a b ≤ toIocMod hp a c)
     (h₁₃₂ : toIcoMod hp a c ≤ toIocMod hp a b) : b ≡ a [PMOD p] ∨ c ≡ b [PMOD p] ∨ a ≡ c [PMOD p] :=
   by
-  by_contra' h
+  by_contra! h
   rw [modeq_comm] at h 
   rw [← (not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp).mp h.2.2] at h₁₂₃ 
   rw [← (not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp).mp h.1] at h₁₃₂ 

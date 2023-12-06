@@ -56,13 +56,13 @@ variable [NonUnitalNonAssocSemiring β]
 
 #print Finset.sum_mul /-
 theorem sum_mul : (∑ x in s, f x) * b = ∑ x in s, f x * b :=
-  AddMonoidHom.map_sum (AddMonoidHom.mulRight b) _ s
+  map_sum (AddMonoidHom.mulRight b) _ s
 #align finset.sum_mul Finset.sum_mul
 -/
 
 #print Finset.mul_sum /-
 theorem mul_sum : b * ∑ x in s, f x = ∑ x in s, b * f x :=
-  AddMonoidHom.map_sum (AddMonoidHom.mulLeft b) _ s
+  map_sum (AddMonoidHom.mulLeft b) _ s
 #align finset.mul_sum Finset.mul_sum
 -/
 

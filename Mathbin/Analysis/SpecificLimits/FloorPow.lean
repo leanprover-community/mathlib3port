@@ -84,7 +84,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     let N := Nat.find exN
     have ncN : n < c N := Nat.find_spec exN
     have aN : a + 1 ≤ N := by
-      by_contra' h
+      by_contra! h
       have cNM : c N ≤ M := by
         apply le_max'
         apply mem_image_of_mem
@@ -151,7 +151,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     let N := Nat.find exN
     have ncN : n < c N := Nat.find_spec exN
     have aN : a + 1 ≤ N := by
-      by_contra' h
+      by_contra! h
       have cNM : c N ≤ M := by
         apply le_max'
         apply mem_image_of_mem

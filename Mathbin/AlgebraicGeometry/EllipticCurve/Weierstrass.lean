@@ -423,58 +423,58 @@ open Polynomial
 
 open scoped Polynomial PolynomialPolynomial
 
-#print WeierstrassCurve.polynomial /-
+#print WeierstrassCurve.Affine.polynomial /-
 /-- The polynomial $W(X, Y) := Y^2 + a_1XY + a_3Y - (X^3 + a_2X^2 + a_4X + a_6)$ associated to a
 Weierstrass curve `W` over `R`. For ease of polynomial manipulation, this is represented as a term
 of type `R[X][X]`, where the inner variable represents $X$ and the outer variable represents $Y$.
 For clarity, the alternative notations `Y` and `R[X][Y]` are provided in the `polynomial_polynomial`
 locale to represent the outer variable and the bivariate polynomial ring `R[X][X]` respectively. -/
-protected noncomputable def polynomial : R[X][Y] :=
+protected noncomputable def WeierstrassCurve.Affine.polynomial : R[X][Y] :=
   Y ^ 2 + C (C W.a₁ * X + C W.a₃) * Y - C (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆)
-#align weierstrass_curve.polynomial WeierstrassCurve.polynomial
+#align weierstrass_curve.polynomial WeierstrassCurve.Affine.polynomial
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4150285101.C_simp -/
-#print WeierstrassCurve.polynomial_eq /-
-theorem polynomial_eq :
+#print WeierstrassCurve.Affine.polynomial_eq /-
+theorem WeierstrassCurve.Affine.polynomial_eq :
     W.Polynomial =
       Cubic.toPoly
         ⟨0, 1, Cubic.toPoly ⟨0, 0, W.a₁, W.a₃⟩, Cubic.toPoly ⟨-1, -W.a₂, -W.a₄, -W.a₆⟩⟩ :=
-  by simp only [WeierstrassCurve.polynomial, Cubic.toPoly];
+  by simp only [WeierstrassCurve.Affine.polynomial, Cubic.toPoly];
   run_tac
     C_simp;
   ring1
-#align weierstrass_curve.polynomial_eq WeierstrassCurve.polynomial_eq
+#align weierstrass_curve.polynomial_eq WeierstrassCurve.Affine.polynomial_eq
 -/
 
-#print WeierstrassCurve.polynomial_ne_zero /-
-theorem polynomial_ne_zero [Nontrivial R] : W.Polynomial ≠ 0 := by rw [polynomial_eq];
-  exact Cubic.ne_zero_of_b_ne_zero one_ne_zero
-#align weierstrass_curve.polynomial_ne_zero WeierstrassCurve.polynomial_ne_zero
+#print WeierstrassCurve.Affine.polynomial_ne_zero /-
+theorem WeierstrassCurve.Affine.polynomial_ne_zero [Nontrivial R] : W.Polynomial ≠ 0 := by
+  rw [polynomial_eq]; exact Cubic.ne_zero_of_b_ne_zero one_ne_zero
+#align weierstrass_curve.polynomial_ne_zero WeierstrassCurve.Affine.polynomial_ne_zero
 -/
 
-#print WeierstrassCurve.degree_polynomial /-
+#print WeierstrassCurve.Affine.degree_polynomial /-
 @[simp]
-theorem degree_polynomial [Nontrivial R] : W.Polynomial.degree = 2 := by rw [polynomial_eq];
-  exact Cubic.degree_of_b_ne_zero' one_ne_zero
-#align weierstrass_curve.degree_polynomial WeierstrassCurve.degree_polynomial
+theorem WeierstrassCurve.Affine.degree_polynomial [Nontrivial R] : W.Polynomial.degree = 2 := by
+  rw [polynomial_eq]; exact Cubic.degree_of_b_ne_zero' one_ne_zero
+#align weierstrass_curve.degree_polynomial WeierstrassCurve.Affine.degree_polynomial
 -/
 
-#print WeierstrassCurve.natDegree_polynomial /-
+#print WeierstrassCurve.Affine.natDegree_polynomial /-
 @[simp]
-theorem natDegree_polynomial [Nontrivial R] : W.Polynomial.natDegree = 2 := by rw [polynomial_eq];
-  exact Cubic.natDegree_of_b_ne_zero' one_ne_zero
-#align weierstrass_curve.nat_degree_polynomial WeierstrassCurve.natDegree_polynomial
+theorem WeierstrassCurve.Affine.natDegree_polynomial [Nontrivial R] : W.Polynomial.natDegree = 2 :=
+  by rw [polynomial_eq]; exact Cubic.natDegree_of_b_ne_zero' one_ne_zero
+#align weierstrass_curve.nat_degree_polynomial WeierstrassCurve.Affine.natDegree_polynomial
 -/
 
-#print WeierstrassCurve.monic_polynomial /-
-theorem monic_polynomial : W.Polynomial.Monic := by nontriviality R;
+#print WeierstrassCurve.Affine.monic_polynomial /-
+theorem WeierstrassCurve.Affine.monic_polynomial : W.Polynomial.Monic := by nontriviality R;
   simpa only [polynomial_eq] using Cubic.monic_of_b_eq_one'
-#align weierstrass_curve.monic_polynomial WeierstrassCurve.monic_polynomial
+#align weierstrass_curve.monic_polynomial WeierstrassCurve.Affine.monic_polynomial
 -/
 
-#print WeierstrassCurve.irreducible_polynomial /-
-theorem irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
+#print WeierstrassCurve.Affine.irreducible_polynomial /-
+theorem WeierstrassCurve.Affine.irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
   by
   by_contra h
   rcases(W.monic_polynomial.not_irreducible_iff_exists_add_mul_eq_coeff W.nat_degree_polynomial).mp
@@ -487,75 +487,75 @@ theorem irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
   rcases nat.with_bot.add_eq_three_iff.mp h0.symm with (h | h | h | h)
   any_goals rw [degree_add_eq_left_of_degree_lt] <;> simp only [h] <;> decide
   any_goals rw [degree_add_eq_right_of_degree_lt] <;> simp only [h] <;> decide
-#align weierstrass_curve.irreducible_polynomial WeierstrassCurve.irreducible_polynomial
+#align weierstrass_curve.irreducible_polynomial WeierstrassCurve.Affine.irreducible_polynomial
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3243647861.eval_simp -/
-#print WeierstrassCurve.eval_polynomial /-
+#print WeierstrassCurve.Affine.eval_polynomial /-
 @[simp]
-theorem eval_polynomial (x y : R) :
+theorem WeierstrassCurve.Affine.eval_polynomial (x y : R) :
     (W.Polynomial.eval <| C y).eval x =
       y ^ 2 + W.a₁ * x * y + W.a₃ * y - (x ^ 3 + W.a₂ * x ^ 2 + W.a₄ * x + W.a₆) :=
-  by simp only [WeierstrassCurve.polynomial];
+  by simp only [WeierstrassCurve.Affine.polynomial];
   run_tac
     eval_simp;
   rw [add_mul, ← add_assoc]
-#align weierstrass_curve.eval_polynomial WeierstrassCurve.eval_polynomial
+#align weierstrass_curve.eval_polynomial WeierstrassCurve.Affine.eval_polynomial
 -/
 
-#print WeierstrassCurve.eval_polynomial_zero /-
+#print WeierstrassCurve.Affine.eval_polynomial_zero /-
 @[simp]
-theorem eval_polynomial_zero : (W.Polynomial.eval 0).eval 0 = -W.a₆ := by
+theorem WeierstrassCurve.Affine.eval_polynomial_zero : (W.Polynomial.eval 0).eval 0 = -W.a₆ := by
   simp only [← C_0, eval_polynomial, zero_add, zero_sub, MulZeroClass.mul_zero,
     zero_pow (Nat.zero_lt_succ _)]
-#align weierstrass_curve.eval_polynomial_zero WeierstrassCurve.eval_polynomial_zero
+#align weierstrass_curve.eval_polynomial_zero WeierstrassCurve.Affine.eval_polynomial_zero
 -/
 
-#print WeierstrassCurve.equation /-
+#print WeierstrassCurve.Affine.equation /-
 /-- The proposition that an affine point $(x, y)$ lies in `W`. In other words, $W(x, y) = 0$. -/
-def equation (x y : R) : Prop :=
+def WeierstrassCurve.Affine.equation (x y : R) : Prop :=
   (W.Polynomial.eval <| C y).eval x = 0
-#align weierstrass_curve.equation WeierstrassCurve.equation
+#align weierstrass_curve.equation WeierstrassCurve.Affine.equation
 -/
 
-#print WeierstrassCurve.equation_iff' /-
-theorem equation_iff' (x y : R) :
+#print WeierstrassCurve.Affine.equation_iff' /-
+theorem WeierstrassCurve.Affine.equation_iff' (x y : R) :
     W.equation x y ↔
       y ^ 2 + W.a₁ * x * y + W.a₃ * y - (x ^ 3 + W.a₂ * x ^ 2 + W.a₄ * x + W.a₆) = 0 :=
   by rw [equation, eval_polynomial]
-#align weierstrass_curve.equation_iff' WeierstrassCurve.equation_iff'
+#align weierstrass_curve.equation_iff' WeierstrassCurve.Affine.equation_iff'
 -/
 
-#print WeierstrassCurve.equation_iff /-
+#print WeierstrassCurve.Affine.equation_iff /-
 @[simp]
-theorem equation_iff (x y : R) :
+theorem WeierstrassCurve.Affine.equation_iff (x y : R) :
     W.equation x y ↔ y ^ 2 + W.a₁ * x * y + W.a₃ * y = x ^ 3 + W.a₂ * x ^ 2 + W.a₄ * x + W.a₆ := by
   rw [equation_iff', sub_eq_zero]
-#align weierstrass_curve.equation_iff WeierstrassCurve.equation_iff
+#align weierstrass_curve.equation_iff WeierstrassCurve.Affine.equation_iff
 -/
 
-#print WeierstrassCurve.equation_zero /-
+#print WeierstrassCurve.Affine.equation_zero /-
 @[simp]
-theorem equation_zero : W.equation 0 0 ↔ W.a₆ = 0 := by
+theorem WeierstrassCurve.Affine.equation_zero : W.equation 0 0 ↔ W.a₆ = 0 := by
   rw [equation, C_0, eval_polynomial_zero, neg_eq_zero]
-#align weierstrass_curve.equation_zero WeierstrassCurve.equation_zero
+#align weierstrass_curve.equation_zero WeierstrassCurve.Affine.equation_zero
 -/
 
-#print WeierstrassCurve.equation_iff_variableChange /-
-theorem equation_iff_variableChange (x y : R) :
+#print WeierstrassCurve.Affine.equation_iff_variableChange /-
+theorem WeierstrassCurve.Affine.equation_iff_variableChange (x y : R) :
     W.equation x y ↔ (W.variableChange 1 x 0 y).equation 0 0 :=
   by
   rw [equation_iff', ← neg_eq_zero, equation_zero, variable_change_a₆, inv_one, Units.val_one]
   congr 2
   ring1
-#align weierstrass_curve.equation_iff_variable_change WeierstrassCurve.equation_iff_variableChange
+#align weierstrass_curve.equation_iff_variable_change WeierstrassCurve.Affine.equation_iff_variableChange
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.equation_iff_baseChange /-
-theorem equation_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R) :
-    W.equation x y ↔ (W.base_change A).equation (algebraMap R A x) (algebraMap R A y) :=
+#print WeierstrassCurve.Affine.equation_iff_baseChange /-
+theorem WeierstrassCurve.Affine.equation_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A]
+    (x y : R) : W.equation x y ↔ (W.base_change A).equation (algebraMap R A x) (algebraMap R A y) :=
   by
   simp only [equation_iff]
   refine' ⟨fun h => _, fun h => _⟩
@@ -569,123 +569,126 @@ theorem equation_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R
     run_tac
       map_simp;
     exact h
-#align weierstrass_curve.equation_iff_base_change WeierstrassCurve.equation_iff_baseChange
+#align weierstrass_curve.equation_iff_base_change WeierstrassCurve.Affine.equation_iff_baseChange
 -/
 
-#print WeierstrassCurve.equation_iff_baseChange_of_baseChange /-
-theorem equation_iff_baseChange_of_baseChange [Nontrivial B] [NoZeroSMulDivisors A B] (x y : A) :
+#print WeierstrassCurve.Affine.equation_iff_baseChange_of_baseChange /-
+theorem WeierstrassCurve.Affine.equation_iff_baseChange_of_baseChange [Nontrivial B]
+    [NoZeroSMulDivisors A B] (x y : A) :
     (W.base_change A).equation x y ↔
       (W.base_change B).equation (algebraMap A B x) (algebraMap A B y) :=
   by rw [equation_iff_base_change (W.base_change A) B, base_change_base_change]
-#align weierstrass_curve.equation_iff_base_change_of_base_change WeierstrassCurve.equation_iff_baseChange_of_baseChange
+#align weierstrass_curve.equation_iff_base_change_of_base_change WeierstrassCurve.Affine.equation_iff_baseChange_of_baseChange
 -/
 
 /-! ### Nonsingularity of Weierstrass curves -/
 
 
-#print WeierstrassCurve.polynomialX /-
+#print WeierstrassCurve.Affine.polynomialX /-
 /-- The partial derivative $W_X(X, Y)$ of $W(X, Y)$ with respect to $X$.
 
 TODO: define this in terms of `polynomial.derivative`. -/
-noncomputable def polynomialX : R[X][Y] :=
+noncomputable def WeierstrassCurve.Affine.polynomialX : R[X][Y] :=
   C (C W.a₁) * Y - C (C 3 * X ^ 2 + C (2 * W.a₂) * X + C W.a₄)
-#align weierstrass_curve.polynomial_X WeierstrassCurve.polynomialX
+#align weierstrass_curve.polynomial_X WeierstrassCurve.Affine.polynomialX
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3243647861.eval_simp -/
-#print WeierstrassCurve.eval_polynomialX /-
+#print WeierstrassCurve.Affine.eval_polynomialX /-
 @[simp]
-theorem eval_polynomialX (x y : R) :
+theorem WeierstrassCurve.Affine.eval_polynomialX (x y : R) :
     (W.polynomialX.eval <| C y).eval x = W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) := by
   simp only [polynomial_X];
   run_tac
     eval_simp
-#align weierstrass_curve.eval_polynomial_X WeierstrassCurve.eval_polynomialX
+#align weierstrass_curve.eval_polynomial_X WeierstrassCurve.Affine.eval_polynomialX
 -/
 
-#print WeierstrassCurve.eval_polynomialX_zero /-
+#print WeierstrassCurve.Affine.eval_polynomialX_zero /-
 @[simp]
-theorem eval_polynomialX_zero : (W.polynomialX.eval 0).eval 0 = -W.a₄ := by
+theorem WeierstrassCurve.Affine.eval_polynomialX_zero : (W.polynomialX.eval 0).eval 0 = -W.a₄ := by
   simp only [← C_0, eval_polynomial_X, zero_add, zero_sub, MulZeroClass.mul_zero,
     zero_pow zero_lt_two]
-#align weierstrass_curve.eval_polynomial_X_zero WeierstrassCurve.eval_polynomialX_zero
+#align weierstrass_curve.eval_polynomial_X_zero WeierstrassCurve.Affine.eval_polynomialX_zero
 -/
 
-#print WeierstrassCurve.polynomialY /-
+#print WeierstrassCurve.Affine.polynomialY /-
 /-- The partial derivative $W_Y(X, Y)$ of $W(X, Y)$ with respect to $Y$.
 
 TODO: define this in terms of `polynomial.derivative`. -/
-noncomputable def polynomialY : R[X][Y] :=
+noncomputable def WeierstrassCurve.Affine.polynomialY : R[X][Y] :=
   C (C 2) * Y + C (C W.a₁ * X + C W.a₃)
-#align weierstrass_curve.polynomial_Y WeierstrassCurve.polynomialY
+#align weierstrass_curve.polynomial_Y WeierstrassCurve.Affine.polynomialY
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3243647861.eval_simp -/
-#print WeierstrassCurve.eval_polynomialY /-
+#print WeierstrassCurve.Affine.eval_polynomialY /-
 @[simp]
-theorem eval_polynomialY (x y : R) : (W.polynomialY.eval <| C y).eval x = 2 * y + W.a₁ * x + W.a₃ :=
-  by simp only [polynomial_Y];
+theorem WeierstrassCurve.Affine.eval_polynomialY (x y : R) :
+    (W.polynomialY.eval <| C y).eval x = 2 * y + W.a₁ * x + W.a₃ := by simp only [polynomial_Y];
   run_tac
     eval_simp;
   rw [← add_assoc]
-#align weierstrass_curve.eval_polynomial_Y WeierstrassCurve.eval_polynomialY
+#align weierstrass_curve.eval_polynomial_Y WeierstrassCurve.Affine.eval_polynomialY
 -/
 
-#print WeierstrassCurve.eval_polynomialY_zero /-
+#print WeierstrassCurve.Affine.eval_polynomialY_zero /-
 @[simp]
-theorem eval_polynomialY_zero : (W.polynomialY.eval 0).eval 0 = W.a₃ := by
+theorem WeierstrassCurve.Affine.eval_polynomialY_zero : (W.polynomialY.eval 0).eval 0 = W.a₃ := by
   simp only [← C_0, eval_polynomial_Y, zero_add, MulZeroClass.mul_zero]
-#align weierstrass_curve.eval_polynomial_Y_zero WeierstrassCurve.eval_polynomialY_zero
+#align weierstrass_curve.eval_polynomial_Y_zero WeierstrassCurve.Affine.eval_polynomialY_zero
 -/
 
-#print WeierstrassCurve.nonsingular /-
+#print WeierstrassCurve.Affine.nonsingular /-
 /-- The proposition that an affine point $(x, y)$ on `W` is nonsingular.
 In other words, either $W_X(x, y) \ne 0$ or $W_Y(x, y) \ne 0$. -/
-def nonsingular (x y : R) : Prop :=
+def WeierstrassCurve.Affine.nonsingular (x y : R) : Prop :=
   W.equation x y ∧ ((W.polynomialX.eval <| C y).eval x ≠ 0 ∨ (W.polynomialY.eval <| C y).eval x ≠ 0)
-#align weierstrass_curve.nonsingular WeierstrassCurve.nonsingular
+#align weierstrass_curve.nonsingular WeierstrassCurve.Affine.nonsingular
 -/
 
-#print WeierstrassCurve.nonsingular_iff' /-
-theorem nonsingular_iff' (x y : R) :
+#print WeierstrassCurve.Affine.nonsingular_iff' /-
+theorem WeierstrassCurve.Affine.nonsingular_iff' (x y : R) :
     W.nonsingular x y ↔
       W.equation x y ∧
         (W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) ≠ 0 ∨ 2 * y + W.a₁ * x + W.a₃ ≠ 0) :=
   by rw [nonsingular, equation_iff', eval_polynomial_X, eval_polynomial_Y]
-#align weierstrass_curve.nonsingular_iff' WeierstrassCurve.nonsingular_iff'
+#align weierstrass_curve.nonsingular_iff' WeierstrassCurve.Affine.nonsingular_iff'
 -/
 
-#print WeierstrassCurve.nonsingular_iff /-
+#print WeierstrassCurve.Affine.nonsingular_iff /-
 @[simp]
-theorem nonsingular_iff (x y : R) :
+theorem WeierstrassCurve.Affine.nonsingular_iff (x y : R) :
     W.nonsingular x y ↔
       W.equation x y ∧ (W.a₁ * y ≠ 3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ ∨ y ≠ -y - W.a₁ * x - W.a₃) :=
   by rw [nonsingular_iff', sub_ne_zero, ← @sub_ne_zero _ _ y]; congr 4 <;> ring1
-#align weierstrass_curve.nonsingular_iff WeierstrassCurve.nonsingular_iff
+#align weierstrass_curve.nonsingular_iff WeierstrassCurve.Affine.nonsingular_iff
 -/
 
-#print WeierstrassCurve.nonsingular_zero /-
+#print WeierstrassCurve.Affine.nonsingular_zero /-
 @[simp]
-theorem nonsingular_zero : W.nonsingular 0 0 ↔ W.a₆ = 0 ∧ (W.a₃ ≠ 0 ∨ W.a₄ ≠ 0) := by
+theorem WeierstrassCurve.Affine.nonsingular_zero :
+    W.nonsingular 0 0 ↔ W.a₆ = 0 ∧ (W.a₃ ≠ 0 ∨ W.a₄ ≠ 0) := by
   rw [nonsingular, equation_zero, C_0, eval_polynomial_X_zero, neg_ne_zero, eval_polynomial_Y_zero,
     or_comm']
-#align weierstrass_curve.nonsingular_zero WeierstrassCurve.nonsingular_zero
+#align weierstrass_curve.nonsingular_zero WeierstrassCurve.Affine.nonsingular_zero
 -/
 
-#print WeierstrassCurve.nonsingular_iff_variableChange /-
-theorem nonsingular_iff_variableChange (x y : R) :
+#print WeierstrassCurve.Affine.nonsingular_iff_variableChange /-
+theorem WeierstrassCurve.Affine.nonsingular_iff_variableChange (x y : R) :
     W.nonsingular x y ↔ (W.variableChange 1 x 0 y).nonsingular 0 0 :=
   by
   rw [nonsingular_iff', equation_iff_variable_change, equation_zero, ← neg_ne_zero, or_comm',
     nonsingular_zero, variable_change_a₃, variable_change_a₄, inv_one, Units.val_one]
   congr 4 <;> ring1
-#align weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.nonsingular_iff_variableChange
+#align weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.Affine.nonsingular_iff_variableChange
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.nonsingular_iff_baseChange /-
-theorem nonsingular_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R) :
+#print WeierstrassCurve.Affine.nonsingular_iff_baseChange /-
+theorem WeierstrassCurve.Affine.nonsingular_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A]
+    (x y : R) :
     W.nonsingular x y ↔ (W.base_change A).nonsingular (algebraMap R A x) (algebraMap R A y) :=
   by
   rw [nonsingular_iff, nonsingular_iff, and_congr <| W.equation_iff_base_change A x y]
@@ -702,37 +705,40 @@ theorem nonsingular_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A] (x y 
         run_tac
           map_simp;
         rfl
-#align weierstrass_curve.nonsingular_iff_base_change WeierstrassCurve.nonsingular_iff_baseChange
+#align weierstrass_curve.nonsingular_iff_base_change WeierstrassCurve.Affine.nonsingular_iff_baseChange
 -/
 
-#print WeierstrassCurve.nonsingular_iff_baseChange_of_baseChange /-
-theorem nonsingular_iff_baseChange_of_baseChange [Nontrivial B] [NoZeroSMulDivisors A B] (x y : A) :
+#print WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange /-
+theorem WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange [Nontrivial B]
+    [NoZeroSMulDivisors A B] (x y : A) :
     (W.base_change A).nonsingular x y ↔
       (W.base_change B).nonsingular (algebraMap A B x) (algebraMap A B y) :=
   by rw [nonsingular_iff_base_change (W.base_change A) B, base_change_base_change]
-#align weierstrass_curve.nonsingular_iff_base_change_of_base_change WeierstrassCurve.nonsingular_iff_baseChange_of_baseChange
+#align weierstrass_curve.nonsingular_iff_base_change_of_base_change WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange
 -/
 
-#print WeierstrassCurve.nonsingular_zero_of_Δ_ne_zero /-
-theorem nonsingular_zero_of_Δ_ne_zero (h : W.equation 0 0) (hΔ : W.Δ ≠ 0) : W.nonsingular 0 0 := by
-  simp only [equation_zero, nonsingular_zero] at *; contrapose! hΔ; simp [h, hΔ]
-#align weierstrass_curve.nonsingular_zero_of_Δ_ne_zero WeierstrassCurve.nonsingular_zero_of_Δ_ne_zero
+#print WeierstrassCurve.Affine.nonsingular_zero_of_Δ_ne_zero /-
+theorem WeierstrassCurve.Affine.nonsingular_zero_of_Δ_ne_zero (h : W.equation 0 0) (hΔ : W.Δ ≠ 0) :
+    W.nonsingular 0 0 := by simp only [equation_zero, nonsingular_zero] at *; contrapose! hΔ;
+  simp [h, hΔ]
+#align weierstrass_curve.nonsingular_zero_of_Δ_ne_zero WeierstrassCurve.Affine.nonsingular_zero_of_Δ_ne_zero
 -/
 
-#print WeierstrassCurve.nonsingular_of_Δ_ne_zero /-
+#print WeierstrassCurve.Affine.nonsingular_of_Δ_ne_zero /-
 /-- A Weierstrass curve is nonsingular at every point if its discriminant is non-zero. -/
-theorem nonsingular_of_Δ_ne_zero {x y : R} (h : W.equation x y) (hΔ : W.Δ ≠ 0) :
-    W.nonsingular x y :=
+theorem WeierstrassCurve.Affine.nonsingular_of_Δ_ne_zero {x y : R} (h : W.equation x y)
+    (hΔ : W.Δ ≠ 0) : W.nonsingular x y :=
   (W.nonsingular_iff_variableChange x y).mpr <|
-    nonsingular_zero_of_Δ_ne_zero _ ((W.equation_iff_variableChange x y).mp h) <| by
-      rwa [variable_change_Δ, inv_one, Units.val_one, one_pow, one_mul]
-#align weierstrass_curve.nonsingular_of_Δ_ne_zero WeierstrassCurve.nonsingular_of_Δ_ne_zero
+    WeierstrassCurve.Affine.nonsingular_zero_of_Δ_ne_zero _
+        ((W.equation_iff_variableChange x y).mp h) <|
+      by rwa [variable_change_Δ, inv_one, Units.val_one, one_pow, one_mul]
+#align weierstrass_curve.nonsingular_of_Δ_ne_zero WeierstrassCurve.Affine.nonsingular_of_Δ_ne_zero
 -/
 
 /-! ### Ideals in the coordinate ring -/
 
 
-#print WeierstrassCurve.CoordinateRing /-
+#print WeierstrassCurve.Affine.CoordinateRing /-
 /-- The coordinate ring $R[W] := R[X, Y] / \langle W(X, Y) \rangle$ of `W`.
 
 Note that `derive comm_ring` generates a reducible instance of `comm_ring` for `coordinate_ring`.
@@ -744,17 +750,17 @@ TODO Lean 4: verify if the new def-eq cache (lean4#1102) fixed this issue.
 
 See Zulip thread:
 https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/.E2.9C.94.20class_group.2Emk -/
-def CoordinateRing : Type u :=
+def WeierstrassCurve.Affine.CoordinateRing : Type u :=
   AdjoinRoot W.Polynomial
 deriving Inhabited, CommRing
-#align weierstrass_curve.coordinate_ring WeierstrassCurve.CoordinateRing
+#align weierstrass_curve.coordinate_ring WeierstrassCurve.Affine.CoordinateRing
 -/
 
-#print WeierstrassCurve.FunctionField /-
+#print WeierstrassCurve.Affine.FunctionField /-
 /-- The function field $R(W) := \mathrm{Frac}(R[W])$ of `W`. -/
-abbrev FunctionField : Type u :=
+abbrev WeierstrassCurve.Affine.FunctionField : Type u :=
   FractionRing W.CoordinateRing
-#align weierstrass_curve.function_field WeierstrassCurve.FunctionField
+#align weierstrass_curve.function_field WeierstrassCurve.Affine.FunctionField
 -/
 
 namespace CoordinateRing
@@ -766,66 +772,71 @@ instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
     simpa only [span_singleton_prime W.polynomial_ne_zero, ← GCDMonoid.irreducible_iff_prime] using
       W.irreducible_polynomial
 
-#print WeierstrassCurve.CoordinateRing.instIsDomainCoordinateRing_of_Field /-
-instance instIsDomainCoordinateRing_of_Field {F : Type u} [Field F] (W : WeierstrassCurve F) :
-    IsDomain W.CoordinateRing := by classical infer_instance
-#align weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.CoordinateRing.instIsDomainCoordinateRing_of_Field
+#print WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field /-
+instance WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field {F : Type u}
+    [Field F] (W : WeierstrassCurve F) : IsDomain W.CoordinateRing := by classical infer_instance
+#align weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field
 -/
 
 variable (x : R) (y : R[X])
 
-#print WeierstrassCurve.CoordinateRing.XClass /-
+#print WeierstrassCurve.Affine.CoordinateRing.XClass /-
 /-- The class of the element $X - x$ in $R[W]$ for some $x \in R$. -/
 @[simp]
-noncomputable def XClass : W.CoordinateRing :=
+noncomputable def WeierstrassCurve.Affine.CoordinateRing.XClass : W.CoordinateRing :=
   AdjoinRoot.mk W.Polynomial <| C <| X - C x
-#align weierstrass_curve.coordinate_ring.X_class WeierstrassCurve.CoordinateRing.XClass
+#align weierstrass_curve.coordinate_ring.X_class WeierstrassCurve.Affine.CoordinateRing.XClass
 -/
 
-#print WeierstrassCurve.CoordinateRing.XClass_ne_zero /-
-theorem XClass_ne_zero [Nontrivial R] : XClass W x ≠ 0 :=
+#print WeierstrassCurve.Affine.CoordinateRing.XClass_ne_zero /-
+theorem WeierstrassCurve.Affine.CoordinateRing.XClass_ne_zero [Nontrivial R] :
+    WeierstrassCurve.Affine.CoordinateRing.XClass W x ≠ 0 :=
   AdjoinRoot.mk_ne_zero_of_natDegree_lt W.monic_polynomial (C_ne_zero.mpr <| X_sub_C_ne_zero x) <|
     by rw [nat_degree_polynomial, nat_degree_C]; norm_num1
-#align weierstrass_curve.coordinate_ring.X_class_ne_zero WeierstrassCurve.CoordinateRing.XClass_ne_zero
+#align weierstrass_curve.coordinate_ring.X_class_ne_zero WeierstrassCurve.Affine.CoordinateRing.XClass_ne_zero
 -/
 
-#print WeierstrassCurve.CoordinateRing.YClass /-
+#print WeierstrassCurve.Affine.CoordinateRing.YClass /-
 /-- The class of the element $Y - y(X)$ in $R[W]$ for some $y(X) \in R[X]$. -/
 @[simp]
-noncomputable def YClass : W.CoordinateRing :=
+noncomputable def WeierstrassCurve.Affine.CoordinateRing.YClass : W.CoordinateRing :=
   AdjoinRoot.mk W.Polynomial <| Y - C y
-#align weierstrass_curve.coordinate_ring.Y_class WeierstrassCurve.CoordinateRing.YClass
+#align weierstrass_curve.coordinate_ring.Y_class WeierstrassCurve.Affine.CoordinateRing.YClass
 -/
 
-#print WeierstrassCurve.CoordinateRing.YClass_ne_zero /-
-theorem YClass_ne_zero [Nontrivial R] : YClass W y ≠ 0 :=
+#print WeierstrassCurve.Affine.CoordinateRing.YClass_ne_zero /-
+theorem WeierstrassCurve.Affine.CoordinateRing.YClass_ne_zero [Nontrivial R] :
+    WeierstrassCurve.Affine.CoordinateRing.YClass W y ≠ 0 :=
   AdjoinRoot.mk_ne_zero_of_natDegree_lt W.monic_polynomial (X_sub_C_ne_zero y) <| by
     rw [nat_degree_polynomial, nat_degree_X_sub_C]; norm_num1
-#align weierstrass_curve.coordinate_ring.Y_class_ne_zero WeierstrassCurve.CoordinateRing.YClass_ne_zero
+#align weierstrass_curve.coordinate_ring.Y_class_ne_zero WeierstrassCurve.Affine.CoordinateRing.YClass_ne_zero
 -/
 
-#print WeierstrassCurve.CoordinateRing.XIdeal /-
+#print WeierstrassCurve.Affine.CoordinateRing.XIdeal /-
 /-- The ideal $\langle X - x \rangle$ of $R[W]$ for some $x \in R$. -/
 @[simp]
-noncomputable def XIdeal : Ideal W.CoordinateRing :=
-  span {XClass W x}
-#align weierstrass_curve.coordinate_ring.X_ideal WeierstrassCurve.CoordinateRing.XIdeal
+noncomputable def WeierstrassCurve.Affine.CoordinateRing.XIdeal : Ideal W.CoordinateRing :=
+  span {WeierstrassCurve.Affine.CoordinateRing.XClass W x}
+#align weierstrass_curve.coordinate_ring.X_ideal WeierstrassCurve.Affine.CoordinateRing.XIdeal
 -/
 
-#print WeierstrassCurve.CoordinateRing.YIdeal /-
+#print WeierstrassCurve.Affine.CoordinateRing.YIdeal /-
 /-- The ideal $\langle Y - y(X) \rangle$ of $R[W]$ for some $y(X) \in R[X]$. -/
 @[simp]
-noncomputable def YIdeal : Ideal W.CoordinateRing :=
-  span {YClass W y}
-#align weierstrass_curve.coordinate_ring.Y_ideal WeierstrassCurve.CoordinateRing.YIdeal
+noncomputable def WeierstrassCurve.Affine.CoordinateRing.YIdeal : Ideal W.CoordinateRing :=
+  span {WeierstrassCurve.Affine.CoordinateRing.YClass W y}
+#align weierstrass_curve.coordinate_ring.Y_ideal WeierstrassCurve.Affine.CoordinateRing.YIdeal
 -/
 
-#print WeierstrassCurve.CoordinateRing.XYIdeal /-
+#print WeierstrassCurve.Affine.CoordinateRing.XYIdeal /-
 /-- The ideal $\langle X - x, Y - y(X) \rangle$ of $R[W]$ for some $x \in R$ and $y(X) \in R[X]$. -/
 @[simp]
-noncomputable def XYIdeal (x : R) (y : R[X]) : Ideal W.CoordinateRing :=
-  span {XClass W x, YClass W y}
-#align weierstrass_curve.coordinate_ring.XY_ideal WeierstrassCurve.CoordinateRing.XYIdeal
+noncomputable def WeierstrassCurve.Affine.CoordinateRing.XYIdeal (x : R) (y : R[X]) :
+    Ideal W.CoordinateRing :=
+  span
+    {WeierstrassCurve.Affine.CoordinateRing.XClass W x,
+      WeierstrassCurve.Affine.CoordinateRing.YClass W y}
+#align weierstrass_curve.coordinate_ring.XY_ideal WeierstrassCurve.Affine.CoordinateRing.XYIdeal
 -/
 
 /-! ### The coordinate ring as an `R[X]`-algebra -/
@@ -834,10 +845,11 @@ noncomputable def XYIdeal (x : R) (y : R[X]) : Ideal W.CoordinateRing :=
 noncomputable instance : Algebra R[X] W.CoordinateRing :=
   Quotient.algebra R[X]
 
-#print WeierstrassCurve.CoordinateRing.instAlgebraCoordinateRing' /-
-noncomputable instance instAlgebraCoordinateRing' : Algebra R W.CoordinateRing :=
+#print WeierstrassCurve.Affine.CoordinateRing.instAlgebraCoordinateRing' /-
+noncomputable instance WeierstrassCurve.Affine.CoordinateRing.instAlgebraCoordinateRing' :
+    Algebra R W.CoordinateRing :=
   Quotient.algebra R
-#align weierstrass_curve.coordinate_ring.algebra' WeierstrassCurve.CoordinateRing.instAlgebraCoordinateRing'
+#align weierstrass_curve.coordinate_ring.algebra' WeierstrassCurve.Affine.CoordinateRing.instAlgebraCoordinateRing'
 -/
 
 instance : IsScalarTower R R[X] W.CoordinateRing :=
@@ -846,11 +858,12 @@ instance : IsScalarTower R R[X] W.CoordinateRing :=
 instance [Subsingleton R] : Subsingleton W.CoordinateRing :=
   Module.subsingleton R[X] _
 
-#print WeierstrassCurve.CoordinateRing.quotientXYIdealEquiv /-
+#print WeierstrassCurve.Affine.CoordinateRing.quotientXYIdealEquiv /-
 /-- The $R$-algebra isomorphism from $R[W] / \langle X - x, Y - y(X) \rangle$ to $R$ obtained by
 evaluation at $y(X)$ and at $x$ provided that $W(x, y(x)) = 0$. -/
-noncomputable def quotientXYIdealEquiv {x : R} {y : R[X]} (h : (W.Polynomial.eval y).eval x = 0) :
-    (W.CoordinateRing ⧸ XYIdeal W x y) ≃ₐ[R] R :=
+noncomputable def WeierstrassCurve.Affine.CoordinateRing.quotientXYIdealEquiv {x : R} {y : R[X]}
+    (h : (W.Polynomial.eval y).eval x = 0) :
+    (W.CoordinateRing ⧸ WeierstrassCurve.Affine.CoordinateRing.XYIdeal W x y) ≃ₐ[R] R :=
   (quotientEquivAlgOfEq R <| by
         simpa only [XY_ideal, X_class, Y_class, ← Set.image_pair, ← map_span]).trans <|
     (DoubleQuot.quotQuotEquivQuotOfLEₐ R <|
@@ -858,88 +871,92 @@ noncomputable def quotientXYIdealEquiv {x : R} {y : R[X]} (h : (W.Polynomial.eva
             mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero.mpr h).trans <|
       ((quotientSpanCXSubCAlgEquiv (X - C x) y).restrictScalars R).trans <|
         quotientSpanXSubCAlgEquiv x
-#align weierstrass_curve.coordinate_ring.quotient_XY_ideal_equiv WeierstrassCurve.CoordinateRing.quotientXYIdealEquiv
+#align weierstrass_curve.coordinate_ring.quotient_XY_ideal_equiv WeierstrassCurve.Affine.CoordinateRing.quotientXYIdealEquiv
 -/
 
-#print WeierstrassCurve.CoordinateRing.basis /-
+#print WeierstrassCurve.Affine.CoordinateRing.basis /-
 /-- The basis $\{1, Y\}$ for the coordinate ring $R[W]$ over the polynomial ring $R[X]$.
 
 Given a Weierstrass curve `W`, write `W^.coordinate_ring.basis` for this basis. -/
-protected noncomputable def basis : Basis (Fin 2) R[X] W.CoordinateRing :=
+protected noncomputable def WeierstrassCurve.Affine.CoordinateRing.basis :
+    Basis (Fin 2) R[X] W.CoordinateRing :=
   (subsingleton_or_nontrivial R).byCases (fun _ => default) fun _ =>
     (AdjoinRoot.powerBasis' W.monic_polynomial).Basis.reindex <| finCongr W.nat_degree_polynomial
-#align weierstrass_curve.coordinate_ring.basis WeierstrassCurve.CoordinateRing.basis
+#align weierstrass_curve.coordinate_ring.basis WeierstrassCurve.Affine.CoordinateRing.basis
 -/
 
-#print WeierstrassCurve.CoordinateRing.basis_apply /-
-theorem basis_apply (n : Fin 2) :
+#print WeierstrassCurve.Affine.CoordinateRing.basis_apply /-
+theorem WeierstrassCurve.Affine.CoordinateRing.basis_apply (n : Fin 2) :
     W.CoordinateRing.Basis n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) := by
   classical
   nontriviality R
   simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R), Basis.reindex_apply,
     PowerBasis.basis_eq_pow]
-#align weierstrass_curve.coordinate_ring.basis_apply WeierstrassCurve.CoordinateRing.basis_apply
+#align weierstrass_curve.coordinate_ring.basis_apply WeierstrassCurve.Affine.CoordinateRing.basis_apply
 -/
 
-#print WeierstrassCurve.CoordinateRing.basis_zero /-
-theorem basis_zero : W.CoordinateRing.Basis 0 = 1 := by simpa only [basis_apply] using pow_zero _
-#align weierstrass_curve.coordinate_ring.basis_zero WeierstrassCurve.CoordinateRing.basis_zero
+#print WeierstrassCurve.Affine.CoordinateRing.basis_zero /-
+theorem WeierstrassCurve.Affine.CoordinateRing.basis_zero : W.CoordinateRing.Basis 0 = 1 := by
+  simpa only [basis_apply] using pow_zero _
+#align weierstrass_curve.coordinate_ring.basis_zero WeierstrassCurve.Affine.CoordinateRing.basis_zero
 -/
 
-#print WeierstrassCurve.CoordinateRing.basis_one /-
-theorem basis_one : W.CoordinateRing.Basis 1 = AdjoinRoot.mk W.Polynomial Y := by
+#print WeierstrassCurve.Affine.CoordinateRing.basis_one /-
+theorem WeierstrassCurve.Affine.CoordinateRing.basis_one :
+    W.CoordinateRing.Basis 1 = AdjoinRoot.mk W.Polynomial Y := by
   simpa only [basis_apply] using pow_one _
-#align weierstrass_curve.coordinate_ring.basis_one WeierstrassCurve.CoordinateRing.basis_one
+#align weierstrass_curve.coordinate_ring.basis_one WeierstrassCurve.Affine.CoordinateRing.basis_one
 -/
 
-#print WeierstrassCurve.CoordinateRing.coe_basis /-
+#print WeierstrassCurve.Affine.CoordinateRing.coe_basis /-
 @[simp]
-theorem coe_basis :
+theorem WeierstrassCurve.Affine.CoordinateRing.coe_basis :
     (W.CoordinateRing.Basis : Fin 2 → W.CoordinateRing) = ![1, AdjoinRoot.mk W.Polynomial Y] := by
   ext n; fin_cases n; exacts [basis_zero W, basis_one W]
-#align weierstrass_curve.coordinate_ring.coe_basis WeierstrassCurve.CoordinateRing.coe_basis
+#align weierstrass_curve.coordinate_ring.coe_basis WeierstrassCurve.Affine.CoordinateRing.coe_basis
 -/
 
 variable {W}
 
-#print WeierstrassCurve.CoordinateRing.smul /-
-theorem smul (x : R[X]) (y : W.CoordinateRing) : x • y = AdjoinRoot.mk W.Polynomial (C x) * y :=
+#print WeierstrassCurve.Affine.CoordinateRing.smul /-
+theorem WeierstrassCurve.Affine.CoordinateRing.smul (x : R[X]) (y : W.CoordinateRing) :
+    x • y = AdjoinRoot.mk W.Polynomial (C x) * y :=
   (algebraMap_smul W.CoordinateRing x y).symm
-#align weierstrass_curve.coordinate_ring.smul WeierstrassCurve.CoordinateRing.smul
+#align weierstrass_curve.coordinate_ring.smul WeierstrassCurve.Affine.CoordinateRing.smul
 -/
 
-#print WeierstrassCurve.CoordinateRing.smul_basis_eq_zero /-
-theorem smul_basis_eq_zero {p q : R[X]} (hpq : p • 1 + q • AdjoinRoot.mk W.Polynomial Y = 0) :
-    p = 0 ∧ q = 0 :=
+#print WeierstrassCurve.Affine.CoordinateRing.smul_basis_eq_zero /-
+theorem WeierstrassCurve.Affine.CoordinateRing.smul_basis_eq_zero {p q : R[X]}
+    (hpq : p • 1 + q • AdjoinRoot.mk W.Polynomial Y = 0) : p = 0 ∧ q = 0 :=
   by
   have h := fintype.linear_independent_iff.mp (coordinate_ring.basis W).LinearIndependent ![p, q]
   erw [Fin.sum_univ_succ, basis_zero, Fin.sum_univ_one, basis_one] at h 
   exact ⟨h hpq 0, h hpq 1⟩
-#align weierstrass_curve.coordinate_ring.smul_basis_eq_zero WeierstrassCurve.CoordinateRing.smul_basis_eq_zero
+#align weierstrass_curve.coordinate_ring.smul_basis_eq_zero WeierstrassCurve.Affine.CoordinateRing.smul_basis_eq_zero
 -/
 
-#print WeierstrassCurve.CoordinateRing.exists_smul_basis_eq /-
-theorem exists_smul_basis_eq (x : W.CoordinateRing) :
+#print WeierstrassCurve.Affine.CoordinateRing.exists_smul_basis_eq /-
+theorem WeierstrassCurve.Affine.CoordinateRing.exists_smul_basis_eq (x : W.CoordinateRing) :
     ∃ p q : R[X], p • 1 + q • AdjoinRoot.mk W.Polynomial Y = x :=
   by
   have h := (coordinate_ring.basis W).sum_equivFun x
   erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h 
   exact ⟨_, _, h⟩
-#align weierstrass_curve.coordinate_ring.exists_smul_basis_eq WeierstrassCurve.CoordinateRing.exists_smul_basis_eq
+#align weierstrass_curve.coordinate_ring.exists_smul_basis_eq WeierstrassCurve.Affine.CoordinateRing.exists_smul_basis_eq
 -/
 
 variable (W)
 
-#print WeierstrassCurve.CoordinateRing.smul_basis_mul_C /-
-theorem smul_basis_mul_C (p q : R[X]) :
+#print WeierstrassCurve.Affine.CoordinateRing.smul_basis_mul_C /-
+theorem WeierstrassCurve.Affine.CoordinateRing.smul_basis_mul_C (p q : R[X]) :
     (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) * AdjoinRoot.mk W.Polynomial (C y) =
       (p * y) • 1 + (q * y) • AdjoinRoot.mk W.Polynomial Y :=
   by simp only [smul, _root_.map_mul]; ring1
-#align weierstrass_curve.coordinate_ring.smul_basis_mul_C WeierstrassCurve.CoordinateRing.smul_basis_mul_C
+#align weierstrass_curve.coordinate_ring.smul_basis_mul_C WeierstrassCurve.Affine.CoordinateRing.smul_basis_mul_C
 -/
 
-#print WeierstrassCurve.CoordinateRing.smul_basis_mul_Y /-
-theorem smul_basis_mul_Y (p q : R[X]) :
+#print WeierstrassCurve.Affine.CoordinateRing.smul_basis_mul_Y /-
+theorem WeierstrassCurve.Affine.CoordinateRing.smul_basis_mul_Y (p q : R[X]) :
     (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) * AdjoinRoot.mk W.Polynomial Y =
       (q * (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆)) • 1 +
         (p - q * (C W.a₁ * X + C W.a₃)) • AdjoinRoot.mk W.Polynomial Y :=
@@ -948,17 +965,17 @@ theorem smul_basis_mul_Y (p q : R[X]) :
     AdjoinRoot.mk W.polynomial Y ^ 2 =
       AdjoinRoot.mk W.polynomial
         (C (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆) - C (C W.a₁ * X + C W.a₃) * Y) :=
-    adjoin_root.mk_eq_mk.mpr ⟨1, by simp only [WeierstrassCurve.polynomial]; ring1⟩
+    adjoin_root.mk_eq_mk.mpr ⟨1, by simp only [WeierstrassCurve.Affine.polynomial]; ring1⟩
   simp only [smul, add_mul, mul_assoc, ← sq, Y_sq, map_sub, _root_.map_mul]
   ring1
-#align weierstrass_curve.coordinate_ring.smul_basis_mul_Y WeierstrassCurve.CoordinateRing.smul_basis_mul_Y
+#align weierstrass_curve.coordinate_ring.smul_basis_mul_Y WeierstrassCurve.Affine.CoordinateRing.smul_basis_mul_Y
 -/
 
 /-! ### Norms on the coordinate ring -/
 
 
-#print WeierstrassCurve.CoordinateRing.norm_smul_basis /-
-theorem norm_smul_basis (p q : R[X]) :
+#print WeierstrassCurve.Affine.CoordinateRing.norm_smul_basis /-
+theorem WeierstrassCurve.Affine.CoordinateRing.norm_smul_basis (p q : R[X]) :
     Algebra.norm R[X] (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) =
       p ^ 2 - p * q * (C W.a₁ * X + C W.a₃) -
         q ^ 2 * (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆) :=
@@ -968,24 +985,24 @@ theorem norm_smul_basis (p q : R[X]) :
     Finsupp.add_apply, map_smul, Finsupp.smul_apply, ← basis_zero, ← basis_one,
     Basis.repr_self_apply, if_pos, if_neg one_ne_zero, if_neg zero_ne_one, smul_eq_mul]
   ring1
-#align weierstrass_curve.coordinate_ring.norm_smul_basis WeierstrassCurve.CoordinateRing.norm_smul_basis
+#align weierstrass_curve.coordinate_ring.norm_smul_basis WeierstrassCurve.Affine.CoordinateRing.norm_smul_basis
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4150285101.C_simp -/
-#print WeierstrassCurve.CoordinateRing.coe_norm_smul_basis /-
-theorem coe_norm_smul_basis (p q : R[X]) :
+#print WeierstrassCurve.Affine.CoordinateRing.coe_norm_smul_basis /-
+theorem WeierstrassCurve.Affine.CoordinateRing.coe_norm_smul_basis (p q : R[X]) :
     ↑(Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial Y) =
       AdjoinRoot.mk W.Polynomial ((C p + C q * X) * (C p + C q * (-Y - C (C W.a₁ * X + C W.a₃)))) :=
   AdjoinRoot.mk_eq_mk.mpr
-    ⟨C q ^ 2, by rw [norm_smul_basis, WeierstrassCurve.polynomial];
+    ⟨C q ^ 2, by rw [norm_smul_basis, WeierstrassCurve.Affine.polynomial];
       run_tac
         C_simp;
       ring1⟩
-#align weierstrass_curve.coordinate_ring.coe_norm_smul_basis WeierstrassCurve.CoordinateRing.coe_norm_smul_basis
+#align weierstrass_curve.coordinate_ring.coe_norm_smul_basis WeierstrassCurve.Affine.CoordinateRing.coe_norm_smul_basis
 -/
 
-#print WeierstrassCurve.CoordinateRing.degree_norm_smul_basis /-
-theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
+#print WeierstrassCurve.Affine.CoordinateRing.degree_norm_smul_basis /-
+theorem WeierstrassCurve.Affine.CoordinateRing.degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
     (Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial Y).degree =
       max (2 • p.degree) (2 • q.degree + 3) :=
   by
@@ -1023,27 +1040,29 @@ theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
             (max_eq_left_of_lt _).symm <;>
         rw [hdp] <;>
       exact with_bot.coe_lt_coe.mpr (by linarith only [hpq])
-#align weierstrass_curve.coordinate_ring.degree_norm_smul_basis WeierstrassCurve.CoordinateRing.degree_norm_smul_basis
+#align weierstrass_curve.coordinate_ring.degree_norm_smul_basis WeierstrassCurve.Affine.CoordinateRing.degree_norm_smul_basis
 -/
 
 variable {W}
 
-#print WeierstrassCurve.CoordinateRing.degree_norm_ne_one /-
-theorem degree_norm_ne_one [IsDomain R] (x : W.CoordinateRing) : (Algebra.norm R[X] x).degree ≠ 1 :=
+#print WeierstrassCurve.Affine.CoordinateRing.degree_norm_ne_one /-
+theorem WeierstrassCurve.Affine.CoordinateRing.degree_norm_ne_one [IsDomain R]
+    (x : W.CoordinateRing) : (Algebra.norm R[X] x).degree ≠ 1 :=
   by
   rcases exists_smul_basis_eq x with ⟨p, q, rfl⟩
   rw [degree_norm_smul_basis]
   rcases p.degree with (_ | _ | _ | _) <;> cases q.degree
   any_goals rintro (_ | _)
   exact (lt_max_of_lt_right (by decide)).ne'
-#align weierstrass_curve.coordinate_ring.degree_norm_ne_one WeierstrassCurve.CoordinateRing.degree_norm_ne_one
+#align weierstrass_curve.coordinate_ring.degree_norm_ne_one WeierstrassCurve.Affine.CoordinateRing.degree_norm_ne_one
 -/
 
-#print WeierstrassCurve.CoordinateRing.natDegree_norm_ne_one /-
-theorem natDegree_norm_ne_one [IsDomain R] (x : W.CoordinateRing) :
-    (Algebra.norm R[X] x).natDegree ≠ 1 :=
-  mt (degree_eq_iff_natDegree_eq_of_pos zero_lt_one).mpr <| degree_norm_ne_one x
-#align weierstrass_curve.coordinate_ring.nat_degree_norm_ne_one WeierstrassCurve.CoordinateRing.natDegree_norm_ne_one
+#print WeierstrassCurve.Affine.CoordinateRing.natDegree_norm_ne_one /-
+theorem WeierstrassCurve.Affine.CoordinateRing.natDegree_norm_ne_one [IsDomain R]
+    (x : W.CoordinateRing) : (Algebra.norm R[X] x).natDegree ≠ 1 :=
+  mt (degree_eq_iff_natDegree_eq_of_pos zero_lt_one).mpr <|
+    WeierstrassCurve.Affine.CoordinateRing.degree_norm_ne_one x
+#align weierstrass_curve.coordinate_ring.nat_degree_norm_ne_one WeierstrassCurve.Affine.CoordinateRing.natDegree_norm_ne_one
 -/
 
 end CoordinateRing
@@ -1087,10 +1106,11 @@ theorem twoTorsionPolynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] :
 #align elliptic_curve.two_torsion_polynomial_disc_ne_zero EllipticCurve.twoTorsionPolynomial_disc_ne_zero
 -/
 
-#print EllipticCurve.nonsingular /-
-theorem nonsingular [Nontrivial R] {x y : R} (h : E.equation x y) : E.nonsingular x y :=
+#print EllipticCurve.Affine.nonsingular /-
+theorem EllipticCurve.Affine.nonsingular [Nontrivial R] {x y : R} (h : E.equation x y) :
+    E.nonsingular x y :=
   E.nonsingular_of_Δ_ne_zero h <| E.coe_Δ' ▸ E.Δ'.NeZero
-#align elliptic_curve.nonsingular EllipticCurve.nonsingular
+#align elliptic_curve.nonsingular EllipticCurve.Affine.nonsingular
 -/
 
 section VariableChange

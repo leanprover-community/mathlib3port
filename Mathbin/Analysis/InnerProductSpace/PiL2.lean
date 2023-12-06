@@ -88,8 +88,7 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _)
     InnerProductSpace 𝕜 (PiLp 2 f)
     where
   inner x y := ∑ i, inner (x i) (y i)
-  norm_sq_eq_inner x := by
-    simp only [PiLp.norm_sq_eq_of_L2, AddMonoidHom.map_sum, ← norm_sq_eq_inner, one_div]
+  norm_sq_eq_inner x := by simp only [PiLp.norm_sq_eq_of_L2, map_sum, ← norm_sq_eq_inner, one_div]
   conj_symm := by
     intro x y
     unfold inner

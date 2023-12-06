@@ -278,7 +278,7 @@ theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) :=
   by
   refine' (irreducible_of_monic (monic hx) <| ne_one A x).2 fun f g hf hg he => _
   rw [← hf.is_unit_iff, ← hg.is_unit_iff]
-  by_contra' h
+  by_contra! h
   have heval := congr_arg (Polynomial.aeval x) he
   rw [aeval A x, aeval_mul, mul_eq_zero] at heval 
   cases heval

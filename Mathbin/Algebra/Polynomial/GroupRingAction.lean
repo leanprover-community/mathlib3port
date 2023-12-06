@@ -119,7 +119,7 @@ theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
 
 #print prodXSubSmul.eval /-
 theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
-  (MonoidHom.map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : R[X] →* R) _ _).trans <|
+  (map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : R[X] →* R) _ _).trans <|
     Finset.prod_eq_zero (Finset.mem_univ <| QuotientGroup.mk 1) <| by simp
 #align prod_X_sub_smul.eval prodXSubSmul.eval
 -/

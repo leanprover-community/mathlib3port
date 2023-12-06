@@ -78,7 +78,7 @@ theorem hammingDist_triangle (x y z : ∀ i, β i) :
   rw [← filter_or]
   refine' monotone_filter_right _ _
   intro i h
-  by_contra' H
+  by_contra! H
   exact h (Eq.trans H.1 H.2)
 #align hamming_dist_triangle hammingDist_triangle
 -/

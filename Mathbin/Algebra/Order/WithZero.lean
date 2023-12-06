@@ -58,7 +58,7 @@ instance [LinearOrderedAddCommMonoidWithTop α] :
 instance [LinearOrderedAddCommGroupWithTop α] :
     LinearOrderedCommGroupWithZero (Multiplicative αᵒᵈ) :=
   { Multiplicative.divInvMonoid, instLinearOrderedCommMonoidWithZeroMultiplicativeOrderDual,
-    instNontrivialMultiplicative with
+    Multiplicative.instNontrivial with
     inv_zero := LinearOrderedAddCommGroupWithTop.neg_top
     mul_inv_cancel := LinearOrderedAddCommGroupWithTop.add_neg_cancel }
 
@@ -345,7 +345,7 @@ theorem OrderIso.mulRight₀'_symm {a : α} (ha : a ≠ 0) :
 
 instance : LinearOrderedAddCommGroupWithTop (Additive αᵒᵈ) :=
   { Additive.subNegMonoid, instLinearOrderedAddCommMonoidWithTopAdditiveOrderDual,
-    instNontrivialAdditive with
+    Additive.instNontrivial with
     neg_top := inv_zero
     add_neg_cancel := fun a ha => mul_inv_cancel ha }
 

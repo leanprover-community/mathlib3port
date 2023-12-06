@@ -407,7 +407,7 @@ theorem sizeUpTo_index_le (j : Fin n) : c.sizeUpTo (c.index j) ≤ j :=
   set i := c.index j with hi
   push_neg at H 
   have i_pos : (0 : ℕ) < i := by
-    by_contra' i_pos
+    by_contra! i_pos
     revert H; simp [nonpos_iff_eq_zero.1 i_pos, c.size_up_to_zero]
   let i₁ := (i : ℕ).pred
   have i₁_lt_i : i₁ < i := Nat.pred_lt (ne_of_gt i_pos)

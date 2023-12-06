@@ -202,10 +202,14 @@ variable [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄] [RingHomCompTriple σ₁
 
 variable (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] M₃)
 
+/- warning: linear_map.map_sum clashes with add_monoid_hom.map_sum -> map_sumₓ
+Case conversion may be inaccurate. Consider using '#align linear_map.map_sum map_sumₓₓ'. -/
+#print map_sumₓ /-
 @[simp]
 theorem map_sum {ι : Type _} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
   f.toAddMonoidHom.map_sum _ _
 #align linear_map.map_sum map_sumₓ
+-/
 
 #print LinearMap.comp_assoc /-
 theorem comp_assoc (h : M₃ →ₛₗ[σ₃₄] M₄) :
@@ -344,7 +348,7 @@ def toAddMonoidHom' : (M →ₛₗ[σ₁₂] M₂) →+ M →+ M₂
 #print LinearMap.sum_apply /-
 theorem sum_apply (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) (b : M) :
     (∑ d in t, f d) b = ∑ d in t, f d b :=
-  AddMonoidHom.map_sum ((AddMonoidHom.eval b).comp toAddMonoidHom') f _
+  map_sum ((AddMonoidHom.eval b).comp toAddMonoidHom') f _
 #align linear_map.sum_apply LinearMap.sum_apply
 -/
 
@@ -386,7 +390,7 @@ instance [Nontrivial M] : Nontrivial (Module.End R M) :=
 @[simp, norm_cast]
 theorem coeFn_sum {ι : Type _} (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) :
     ⇑(∑ i in t, f i) = ∑ i in t, (f i : M → M₂) :=
-  AddMonoidHom.map_sum ⟨@toFun R R₂ _ _ σ₁₂ M M₂ _ _ _ _, rfl, fun x y => rfl⟩ _ _
+  map_sum ⟨@toFun R R₂ _ _ σ₁₂ M M₂ _ _ _ _, rfl, fun x y => rfl⟩ _ _
 #align linear_map.coe_fn_sum LinearMap.coeFn_sum
 -/
 
@@ -2303,7 +2307,7 @@ variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₁ : RingHomInvPai
 
 variable (e e' : M ≃ₛₗ[σ₁₂] M₂)
 
-/- warning: linear_equiv.map_sum clashes with linear_map.map_sum -> map_sumₓ
+/- warning: linear_equiv.map_sum clashes with add_monoid_hom.map_sum -> map_sumₓ
 Case conversion may be inaccurate. Consider using '#align linear_equiv.map_sum map_sumₓₓ'. -/
 #print map_sumₓ /-
 @[simp]

@@ -529,7 +529,7 @@ theorem exists_primitive_lcm_of_isPrimitive {p q : R[X]} (hp : p.IsPrimitive) (h
   suffices hs : ∀ (n : ℕ) (s : R[X]), s.natDegree = n → p ∣ s ∧ q ∣ s → r ∣ s
   · apply hs s.nat_degree s rfl
   clear s
-  by_contra' con
+  by_contra! con
   rcases Nat.find_spec Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
   have s0 : s ≠ 0 := by contrapose! rs; simp [rs]
   have hs :=

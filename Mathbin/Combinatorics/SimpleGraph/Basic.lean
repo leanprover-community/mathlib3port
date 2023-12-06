@@ -794,6 +794,7 @@ theorem fromEdgeSet_mono {s t : Set (Sym2 V)} (h : s ⊆ t) : fromEdgeSet s ≤ 
 #align simple_graph.from_edge_set_mono SimpleGraph.fromEdgeSet_mono
 -/
 
+#print SimpleGraph.disjoint_fromEdgeSet /-
 @[simp]
 theorem disjoint_fromEdgeSet : Disjoint G (fromEdgeSet s) ↔ Disjoint G.edgeSetEmbedding s :=
   by
@@ -801,11 +802,14 @@ theorem disjoint_fromEdgeSet : Disjoint G (fromEdgeSet s) ↔ Disjoint G.edgeSet
   rw [← disjoint_edge_set, edge_set_from_edge_set, Set.disjoint_union_right, and_iff_left]
   exact Set.disjoint_left.2 fun e he he' => not_is_diag_of_mem_edge_set _ he he'.2
 #align simple_graph.disjoint_from_edge_set SimpleGraph.disjoint_fromEdgeSet
+-/
 
+#print SimpleGraph.fromEdgeSet_disjoint /-
 @[simp]
 theorem fromEdgeSet_disjoint : Disjoint (fromEdgeSet s) G ↔ Disjoint s G.edgeSetEmbedding := by
   rw [disjoint_comm, disjoint_from_edge_set, disjoint_comm]
 #align simple_graph.from_edge_set_disjoint SimpleGraph.fromEdgeSet_disjoint
+-/
 
 instance [DecidableEq V] [Fintype s] : Fintype (fromEdgeSet s).edgeSetEmbedding := by
   rw [edge_set_from_edge_set s]; infer_instance
@@ -1395,10 +1399,12 @@ theorem deleteEdges_eq_sdiff_fromEdgeSet (s : Set (Sym2 V)) : G.deleteEdges s = 
 #align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSet
 -/
 
+#print SimpleGraph.deleteEdges_eq /-
 @[simp]
 theorem deleteEdges_eq {s : Set (Sym2 V)} : G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s :=
   by rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
 #align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq
+-/
 
 #print SimpleGraph.compl_eq_deleteEdges /-
 theorem compl_eq_deleteEdges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSetEmbedding := by ext;
@@ -1532,9 +1538,11 @@ theorem map_adj (f : V ↪ W) (G : SimpleGraph V) (u v : W) :
 #align simple_graph.map_adj SimpleGraph.map_adj
 -/
 
+#print SimpleGraph.map_adj_apply /-
 theorem map_adj_apply {G : SimpleGraph V} {f : V ↪ W} {a b : V} :
     (G.map f).Adj (f a) (f b) ↔ G.Adj a b := by simp
 #align simple_graph.map_adj_apply SimpleGraph.map_adj_apply
+-/
 
 #print SimpleGraph.map_monotone /-
 theorem map_monotone (f : V ↪ W) : Monotone (SimpleGraph.map f) := by
@@ -1542,15 +1550,19 @@ theorem map_monotone (f : V ↪ W) : Monotone (SimpleGraph.map f) := by
 #align simple_graph.map_monotone SimpleGraph.map_monotone
 -/
 
+#print SimpleGraph.map_id /-
 @[simp]
 theorem map_id : G.map (Function.Embedding.refl _) = G :=
   ext _ _ <| Relation.map_id_id _
 #align simple_graph.map_id SimpleGraph.map_id
+-/
 
+#print SimpleGraph.map_map /-
 @[simp]
 theorem map_map (f : V ↪ W) (g : W ↪ X) : (G.map f).map g = G.map (f.trans g) :=
   ext _ _ <| Relation.map_map _ _ _ _ _
 #align simple_graph.map_map SimpleGraph.map_map
+-/
 
 instance decidableMap (f : V ↪ W) (G : SimpleGraph V) [DecidableRel (Relation.Map G.Adj f f)] :
     DecidableRel (G.map f).Adj :=
@@ -1569,30 +1581,38 @@ protected def comap (f : V → W) (G : SimpleGraph W) : SimpleGraph V
 #align simple_graph.comap SimpleGraph.comap
 -/
 
+#print SimpleGraph.comap_id /-
 @[simp]
 theorem comap_id {G : SimpleGraph V} : G.comap id = G :=
   ext _ _ rfl
 #align simple_graph.comap_id SimpleGraph.comap_id
+-/
 
+#print SimpleGraph.comap_comap /-
 @[simp]
 theorem comap_comap {G : SimpleGraph X} (f : V → W) (g : W → X) :
     (G.comap g).comap f = G.comap (g ∘ f) :=
   rfl
 #align simple_graph.comap_comap SimpleGraph.comap_comap
+-/
 
 instance decidableComap (f : V → W) (G : SimpleGraph W) [DecidableRel G.Adj] :
     DecidableRel (SimpleGraph.comap f G).Adj := fun _ _ => ‹DecidableRel G.Adj› _ _
 #align simple_graph.decidable_comap SimpleGraph.decidableComap
 
+#print SimpleGraph.comap_symm /-
 theorem comap_symm (G : SimpleGraph V) (e : V ≃ W) :
     G.comap e.symm.toEmbedding = G.map e.toEmbedding := by ext;
   simp only [Equiv.apply_eq_iff_eq_symm_apply, comap_adj, map_adj, Equiv.toEmbedding_apply,
     exists_eq_right_right, exists_eq_right]
 #align simple_graph.comap_symm SimpleGraph.comap_symm
+-/
 
+#print SimpleGraph.map_symm /-
 theorem map_symm (G : SimpleGraph W) (e : V ≃ W) :
     G.map e.symm.toEmbedding = G.comap e.toEmbedding := by rw [← comap_symm, e.symm_symm]
 #align simple_graph.map_symm SimpleGraph.map_symm
+-/
 
 #print SimpleGraph.comap_monotone /-
 theorem comap_monotone (f : V ↪ W) : Monotone (SimpleGraph.comap f) := by intro G G' h _ _ ha;
@@ -1638,6 +1658,7 @@ theorem map_comap_le (f : V ↪ W) (G : SimpleGraph W) : (G.comap f).map f ≤ G
 #align simple_graph.map_comap_le SimpleGraph.map_comap_le
 -/
 
+#print Equiv.simpleGraph /-
 /-- Equivalent types have equivalent simple graphs. -/
 @[simps apply]
 protected def Equiv.simpleGraph (e : V ≃ W) : SimpleGraph V ≃ SimpleGraph W
@@ -1647,21 +1668,28 @@ protected def Equiv.simpleGraph (e : V ≃ W) : SimpleGraph V ≃ SimpleGraph W
   left_inv _ := by simp
   right_inv _ := by simp
 #align equiv.simple_graph Equiv.simpleGraph
+-/
 
+#print Equiv.simpleGraph_refl /-
 @[simp]
 theorem Equiv.simpleGraph_refl : (Equiv.refl V).SimpleGraph = Equiv.refl _ := by ext; rfl
 #align equiv.simple_graph_refl Equiv.simpleGraph_refl
+-/
 
+#print Equiv.simpleGraph_trans /-
 @[simp]
 theorem Equiv.simpleGraph_trans (e₁ : V ≃ W) (e₂ : W ≃ X) :
     (e₁.trans e₂).SimpleGraph = e₁.SimpleGraph.trans e₂.SimpleGraph :=
   rfl
 #align equiv.simple_graph_trans Equiv.simpleGraph_trans
+-/
 
+#print Equiv.symm_simpleGraph /-
 @[simp]
 theorem Equiv.symm_simpleGraph (e : V ≃ W) : e.SimpleGraph.symm = e.symm.SimpleGraph :=
   rfl
 #align equiv.symm_simple_graph Equiv.symm_simpleGraph
+-/
 
 /-! ## Induced graphs -/
 
@@ -2150,10 +2178,12 @@ protected abbrev id : G →g G :=
 #align simple_graph.hom.id SimpleGraph.Hom.id
 -/
 
+#print SimpleGraph.Hom.coe_id /-
 @[simp, norm_cast]
 theorem coe_id : ⇑(Hom.id : G →g G) = id :=
   rfl
 #align simple_graph.hom.coe_id SimpleGraph.Hom.coe_id
+-/
 
 instance [Subsingleton (V → W)] : Subsingleton (G →g H) :=
   FunLike.coe_injective.Subsingleton
@@ -2275,15 +2305,19 @@ theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑(f'.comp f) = f' ∘ f 
 #align simple_graph.hom.coe_comp SimpleGraph.Hom.coe_comp
 -/
 
+#print SimpleGraph.Hom.ofLe /-
 /-- The graph homomorphism from a smaller graph to a bigger one. -/
 def ofLe {H : SimpleGraph V} (h : G ≤ H) : G →g H :=
   ⟨id, h⟩
 #align simple_graph.hom.of_le SimpleGraph.Hom.ofLe
+-/
 
+#print SimpleGraph.Hom.coe_ofLe /-
 @[simp, norm_cast]
 theorem coe_ofLe {H : SimpleGraph V} (h : G ≤ H) : ⇑(ofLe h) = id :=
   rfl
 #align simple_graph.hom.coe_of_le SimpleGraph.Hom.coe_ofLe
+-/
 
 end Hom
 
@@ -2305,10 +2339,12 @@ abbrev toHom : G →g G' :=
 #align simple_graph.embedding.to_hom SimpleGraph.Embedding.toHom
 -/
 
+#print SimpleGraph.Embedding.coe_toHom /-
 @[simp]
 theorem coe_toHom (f : G ↪g H) : ⇑f.toHom = f :=
   rfl
 #align simple_graph.embedding.coe_to_hom SimpleGraph.Embedding.coe_toHom
+-/
 
 #print SimpleGraph.Embedding.map_adj_iff /-
 @[simp]

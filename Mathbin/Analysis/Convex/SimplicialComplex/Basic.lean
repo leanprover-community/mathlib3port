@@ -121,7 +121,7 @@ theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ 
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
   by
   classical
-  by_contra' h
+  by_contra! h
   refine'
     h.2 (s ∩ t)
       (K.down_closed hs (inter_subset_left _ _) fun hst =>

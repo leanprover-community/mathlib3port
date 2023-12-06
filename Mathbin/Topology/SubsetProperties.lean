@@ -597,7 +597,7 @@ theorem exists_subset_nhds_of_isCompact' {ι : Type _} [Nonempty ι] {V : ι →
   obtain ⟨W, hsubW, W_op, hWU⟩ := exists_open_set_nhds hU
   rsuffices ⟨i, hi⟩ : ∃ i, V i ⊆ W
   · exact ⟨i, hi.trans hWU⟩
-  by_contra' H
+  by_contra! H
   replace H : ∀ i, (V i ∩ Wᶜ).Nonempty := fun i => set.inter_compl_nonempty_iff.mpr (H i)
   have : (⋂ i, V i ∩ Wᶜ).Nonempty :=
     by
@@ -1019,7 +1019,7 @@ theorem finite_of_compact_of_discrete [CompactSpace α] [DiscreteTopology α] : 
 #print exists_nhds_ne_neBot /-
 theorem exists_nhds_ne_neBot (α : Type _) [TopologicalSpace α] [CompactSpace α] [Infinite α] :
     ∃ z : α, (𝓝[≠] z).ne_bot := by
-  by_contra' H
+  by_contra! H
   simp_rw [not_ne_bot] at H 
   haveI := discrete_topology_iff_nhds_ne.mpr H
   exact Infinite.not_finite (finite_of_compact_of_discrete : Finite α)
@@ -1215,7 +1215,7 @@ theorem IsCompact.finite {s : Set α} (hs : IsCompact s) (hs' : DiscreteTopology
 #print exists_nhds_ne_inf_principal_neBot /-
 theorem exists_nhds_ne_inf_principal_neBot {s : Set α} (hs : IsCompact s) (hs' : s.Infinite) :
     ∃ z ∈ s, (𝓝[≠] z ⊓ 𝓟 s).ne_bot := by
-  by_contra' H
+  by_contra! H
   simp_rw [not_ne_bot] at H 
   exact hs' (hs.finite <| discrete_topology_subtype_iff.mpr H)
 #align exists_nhds_ne_inf_principal_ne_bot exists_nhds_ne_inf_principal_neBot

@@ -634,7 +634,7 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
     Subsingleton (α →+*o β) :=
   ⟨fun f g => by
     ext x
-    by_contra' h' : f x ≠ g x
+    by_contra! h' : f x ≠ g x
     wlog h : f x < g x
     · exact this g f x (Ne.symm h') (h'.lt_or_lt.resolve_left h)
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h

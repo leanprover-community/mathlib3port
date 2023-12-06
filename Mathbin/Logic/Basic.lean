@@ -750,17 +750,23 @@ theorem Iff.not_right (h : ¬a ↔ b) : a ↔ ¬b :=
 #align iff.not_right Iff.not_right
 -/
 
+#print Iff.ne /-
 protected theorem Iff.ne {α β : Sort _} {a b : α} {c d : β} : (a = b ↔ c = d) → (a ≠ b ↔ c ≠ d) :=
   Iff.not
 #align iff.ne Iff.ne
+-/
 
+#print Iff.ne_left /-
 theorem Iff.ne_left {α β : Sort _} {a b : α} {c d : β} : (a = b ↔ c ≠ d) → (a ≠ b ↔ c = d) :=
   Iff.not_left
 #align iff.ne_left Iff.ne_left
+-/
 
+#print Iff.ne_right /-
 theorem Iff.ne_right {α β : Sort _} {a b : α} {c d : β} : (a ≠ b ↔ c = d) → (a = b ↔ c ≠ d) :=
   Iff.not_right
 #align iff.ne_right Iff.ne_right
+-/
 
 /-! ### Declarations about `xor` -/
 

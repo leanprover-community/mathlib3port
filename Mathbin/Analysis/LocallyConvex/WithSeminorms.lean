@@ -306,7 +306,7 @@ theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂
     refine' (hf i).trans (smul_le_smul _ (Finset.le_sup hi))
     exact Finset.sup_mono (Finset.subset_biUnion_of_mem fₛ hi)
   refine' (comp_mono f (finset_sup_le_sum q s')).trans _
-  simp_rw [← pullback_apply, AddMonoidHom.map_sum, pullback_apply]
+  simp_rw [← pullback_apply, map_sum, pullback_apply]
   refine' (Finset.sum_le_sum hs).trans _
   rw [Finset.sum_const, smul_assoc]
   exact le_rfl
@@ -426,7 +426,7 @@ theorem WithSeminorms.T1_of_separating (hp : WithSeminorms p)
 theorem WithSeminorms.separating_of_T1 [T1Space E] (hp : WithSeminorms p) (x : E) (hx : x ≠ 0) :
     ∃ i, p i x ≠ 0 := by
   have := ((t1Space_TFAE E).out 0 9).mp inferInstance
-  by_contra' h
+  by_contra! h
   refine' hx (this _)
   rw [hp.has_basis_zero_ball.specializes_iff]
   rintro ⟨s, r⟩ (hr : 0 < r)

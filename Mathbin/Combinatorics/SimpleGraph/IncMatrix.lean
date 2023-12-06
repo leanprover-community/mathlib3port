@@ -86,8 +86,8 @@ variable [MulZeroOneClass R] {a b : α} {e : Sym2 α}
 theorem incMatrix_apply_mul_incMatrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.incidenceSet a ∩ G.incidenceSet b).indicator 1 e :=
   by
-  classical simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_one,
-    Set.mem_inter_iff]
+  classical simp only [inc_matrix, Set.indicator_apply, ← ite_zero_mul_ite_zero, Pi.one_apply,
+    mul_one, Set.mem_inter_iff]
 #align simple_graph.inc_matrix_apply_mul_inc_matrix_apply SimpleGraph.incMatrix_apply_mul_incMatrix_apply
 -/
 
@@ -147,7 +147,7 @@ theorem incMatrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
     (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a a = G.degree a :=
   by
   rw [← sum_inc_matrix_apply]
-  simp [Matrix.mul_apply, inc_matrix_apply', ← ite_and_mul_zero]
+  simp [Matrix.mul_apply, inc_matrix_apply', ← ite_zero_mul_ite_zero]
 #align simple_graph.inc_matrix_mul_transpose_diag SimpleGraph.incMatrix_mul_transpose_diag
 -/
 
@@ -177,7 +177,7 @@ theorem sum_incMatrix_apply_of_not_mem_edgeSet (h : e ∉ G.edgeSetEmbedding) :
 theorem incMatrix_transpose_mul_diag [DecidableRel G.Adj] :
     ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSetEmbedding then 2 else 0 := by
   classical
-  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mul,
+  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_zero_mul_ite_zero, one_mul,
     sum_boole, and_self_iff]
   split_ifs with h
   · revert h

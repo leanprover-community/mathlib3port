@@ -126,7 +126,7 @@ theorem strongUniformity.uniformAddGroup [UniformSpace F] [UniformAddGroup F] (�
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
   rw [strong_uniformity, UniformSpace.replaceTopology_eq]
   let φ : (E →SL[σ] F) →+ E →ᵤ[𝔖] F := ⟨(coeFn : (E →SL[σ] F) → E →ᵤ F), rfl, fun _ _ => rfl⟩
-  exact uniformAddGroup_comap φ
+  exact UniformAddGroup.comap φ
 #align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniformAddGroup
 -/
 

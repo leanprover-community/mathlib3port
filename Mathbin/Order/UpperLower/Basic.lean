@@ -522,7 +522,7 @@ variable [LinearOrder α] {s t : Set α}
 #print IsUpperSet.total /-
 theorem IsUpperSet.total (hs : IsUpperSet s) (ht : IsUpperSet t) : s ⊆ t ∨ t ⊆ s :=
   by
-  by_contra' h
+  by_contra! h
   simp_rw [Set.not_subset] at h 
   obtain ⟨⟨a, has, hat⟩, b, hbt, hbs⟩ := h
   obtain hab | hba := le_total a b

@@ -96,7 +96,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
       rcases ENNReal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
       refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
       simpa only [div_eq_mul_inv, mul_comm] using (ENNReal.mul_lt_of_lt_div hn).le
-    by_contra' h
+    by_contra! h
     apply h n (ind x)
     exact memD.2 ⟨x, rfl, hn, fun _ _ _ => h _ _, mem_ball_self (pow_pos _)⟩
   -- Each `D n i` is a union of open balls, hence it is an open set
@@ -152,7 +152,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
     have Hle : ∀ m ≤ n + k, Set.Subsingleton {j | (D m j ∩ B).Nonempty} :=
       by
       rintro m hm j₁ ⟨y, hyD, hyB⟩ j₂ ⟨z, hzD, hzB⟩
-      by_contra' h' : j₁ ≠ j₂
+      by_contra! h' : j₁ ≠ j₂
       wlog h : j₁ < j₂ generalizing j₁ j₂ y z
       · exact this z hzD hzB y hyD hyB h'.symm (h'.lt_or_lt.resolve_left h)
       rcases memD.1 hyD with ⟨y', rfl, hsuby, -, hdisty⟩

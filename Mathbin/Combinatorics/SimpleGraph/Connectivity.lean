@@ -3146,10 +3146,10 @@ theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
     let pvu := c.drop_until v hvc
     obtain hw | hw' : w ∈ puv.support ∨ w ∈ pvu.support := by
       rwa [← walk.mem_support_append_iff, walk.take_spec]
-    · by_contra' h
+    · by_contra! h
       specialize h (c.adj_of_mem_edges he)
       exact reachable_delete_edges_iff_exists_cycle.aux h c hc.to_trail he hw
-    · by_contra' hb
+    · by_contra! hb
       specialize hb (c.adj_of_mem_edges he)
       have hb' : ∀ p : G.walk w v, ⟦(w, v)⟧ ∈ p.edges :=
         by

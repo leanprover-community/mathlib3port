@@ -79,7 +79,7 @@ protected theorem symm {a b : S} (h : Commute a b) : Commute b a :=
 protected theorem semiconjBy {a b : S} (h : Commute a b) : SemiconjBy a b b :=
   h
 #align commute.semiconj_by Commute.semiconjBy
-#align add_commute.semiconj_by AddCommute.semiconjBy
+#align add_commute.semiconj_by AddCommute.addSemiconjBy
 -/
 
 #print Commute.symm_iff /-

@@ -112,7 +112,7 @@ theorem firstDiff_comm (x y : ∀ n, E n) : firstDiff x y = firstDiff y x :=
 theorem min_firstDiff_le (x y z : ∀ n, E n) (h : x ≠ z) :
     min (firstDiff x y) (firstDiff y z) ≤ firstDiff x z :=
   by
-  by_contra' H
+  by_contra! H
   have : x (first_diff x z) = z (first_diff x z) :=
     calc
       x (first_diff x z) = y (first_diff x z) :=
@@ -195,7 +195,7 @@ theorem mem_cylinder_iff_le_firstDiff {x y : ∀ n, E n} (hne : x ≠ y) (i : �
     x ∈ cylinder y i ↔ i ≤ firstDiff x y := by
   constructor
   · intro h
-    by_contra'
+    by_contra!
     exact apply_first_diff_ne hne (h _ this)
   · intro hi j hj
     exact apply_eq_of_lt_first_diff (hj.trans_le hi)
@@ -407,7 +407,7 @@ theorem mem_cylinder_iff_dist_le {x y : ∀ n, E n} {n : ℕ} :
   suffices (∀ i : ℕ, i < n → y i = x i) ↔ n ≤ first_diff y x by simpa [dist_eq_of_ne hne]
   constructor
   · intro hy
-    by_contra' H
+    by_contra! H
     exact apply_first_diff_ne hne (hy _ H)
   · intro h i hi
     exact apply_eq_of_lt_first_diff (hi.trans_le h)
@@ -911,7 +911,7 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
     let n := first_diff x.1 y.1 - 1
     have diff_pos : 0 < first_diff x.1 y.1 :=
       by
-      by_contra' h
+      by_contra! h
       apply apply_first_diff_ne hne'
       rw [le_zero_iff.1 h]
       apply apply_eq_of_dist_lt _ le_rfl

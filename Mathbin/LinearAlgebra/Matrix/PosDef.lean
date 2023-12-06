@@ -99,24 +99,24 @@ theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef :=
 #align matrix.pos_def.transpose Matrix.PosDef.transpose
 -/
 
-#print Matrix.posDef_of_toQuadraticForm' /-
-theorem posDef_of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
+#print Matrix.PosDef.of_toQuadraticForm' /-
+theorem Matrix.PosDef.of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
   by
   refine' ⟨hM, fun x hx => _⟩
   simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
     Matrix.toBilin'_apply'] at hMq 
   apply hMq x hx
-#align matrix.pos_def_of_to_quadratic_form' Matrix.posDef_of_toQuadraticForm'
+#align matrix.pos_def_of_to_quadratic_form' Matrix.PosDef.of_toQuadraticForm'
 -/
 
-#print Matrix.posDef_toQuadraticForm' /-
-theorem posDef_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
+#print Matrix.PosDef.toQuadraticForm' /-
+theorem Matrix.PosDef.toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
   intro x hx
   simp only [to_quadratic_form', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
-#align matrix.pos_def_to_quadratic_form' Matrix.posDef_toQuadraticForm'
+#align matrix.pos_def_to_quadratic_form' Matrix.PosDef.toQuadraticForm'
 -/
 
 namespace PosDef
@@ -151,7 +151,7 @@ theorem posDef_of_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)}
     (hQ : Q.toMatrix'.PosDef) : Q.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
-  apply Matrix.posDef_toQuadraticForm' hQ
+  apply Matrix.PosDef.toQuadraticForm' hQ
 #align quadratic_form.pos_def_of_to_matrix' QuadraticForm.posDef_of_toMatrix'
 -/
 
@@ -161,7 +161,7 @@ theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ
   by
   rw [← to_quadratic_form_associated ℝ Q, ←
     bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ 
-  apply Matrix.posDef_of_toQuadraticForm' (is_symm_to_matrix' Q) hQ
+  apply Matrix.PosDef.of_toQuadraticForm' (is_symm_to_matrix' Q) hQ
 #align quadratic_form.pos_def_to_matrix' QuadraticForm.posDef_toMatrix'
 -/
 
@@ -188,7 +188,7 @@ noncomputable def NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosD
         · exact le_of_lt (hM.2 x h)
       definite := fun x (hx : dotProduct _ _ = 0) =>
         by
-        by_contra' h
+        by_contra! h
         simpa [hx, lt_irrefl] using hM.2 x h
       add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const]
       smul_left := fun x y r => by

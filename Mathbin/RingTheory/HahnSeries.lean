@@ -1926,7 +1926,7 @@ theorem hsum_ofFinsupp {f : α →₀ HahnSeries Γ R} : (ofFinsupp f).hsum = f.
   ext g
   simp only [hsum_coeff, coe_of_finsupp, Finsupp.sum, Ne.def]
   simp_rw [← coeff.add_monoid_hom_apply, id.def]
-  rw [AddMonoidHom.map_sum, finsum_eq_sum_of_support_subset]
+  rw [map_sum, finsum_eq_sum_of_support_subset]
   intro x h
   simp only [coeff.add_monoid_hom_apply, mem_coe, Finsupp.mem_support_iff, Ne.def]
   contrapose! h

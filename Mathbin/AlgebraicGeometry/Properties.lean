@@ -306,7 +306,7 @@ theorem isIntegralOfIsIrreducibleIsReduced [IsReduced X] [H : IrreducibleSpace X
     by
     refine' ⟨fun a b e => _⟩
     simp_rw [← basic_open_eq_bot_iff, ← opens.not_nonempty_iff_eq_bot]
-    by_contra' h
+    by_contra! h
     obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
       @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
     replace e' := Subtype.eq e'

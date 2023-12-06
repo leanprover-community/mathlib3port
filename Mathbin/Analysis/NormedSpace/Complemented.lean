@@ -99,7 +99,7 @@ namespace Subspace
 
 variable [CompleteSpace E] (p q : Subspace 𝕜 E)
 
-#print Subspace.prodEquivOfClosedCompl /-
+#print Submodule.prodEquivOfClosedCompl /-
 /-- If `q` is a closed complement of a closed subspace `p`, then `p × q` is continuously
 isomorphic to `E`. -/
 def prodEquivOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E))
@@ -108,79 +108,79 @@ def prodEquivOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E))
   haveI := hp.complete_space_coe; haveI := hq.complete_space_coe
   refine' (p.prod_equiv_of_is_compl q h).toContinuousLinearEquivOfContinuous _
   exact (p.subtypeL.coprod q.subtypeL).Continuous
-#align subspace.prod_equiv_of_closed_compl Subspace.prodEquivOfClosedCompl
+#align subspace.prod_equiv_of_closed_compl Submodule.prodEquivOfClosedCompl
 -/
 
-#print Subspace.linearProjOfClosedCompl /-
+#print Submodule.linearProjOfClosedCompl /-
 /-- Projection to a closed submodule along a closed complement. -/
 def linearProjOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E))
     (hq : IsClosed (q : Set E)) : E →L[𝕜] p :=
   ContinuousLinearMap.fst 𝕜 p q ∘L ↑(prodEquivOfClosedCompl p q h hp hq).symm
-#align subspace.linear_proj_of_closed_compl Subspace.linearProjOfClosedCompl
+#align subspace.linear_proj_of_closed_compl Submodule.linearProjOfClosedCompl
 -/
 
 variable {p q}
 
-#print Subspace.coe_prodEquivOfClosedCompl /-
+#print Submodule.coe_prodEquivOfClosedCompl /-
 @[simp]
 theorem coe_prodEquivOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E))
     (hq : IsClosed (q : Set E)) :
     ⇑(p.prodEquivOfClosedCompl q h hp hq) = p.prodEquivOfIsCompl q h :=
   rfl
-#align subspace.coe_prod_equiv_of_closed_compl Subspace.coe_prodEquivOfClosedCompl
+#align subspace.coe_prod_equiv_of_closed_compl Submodule.coe_prodEquivOfClosedCompl
 -/
 
-#print Subspace.coe_prodEquivOfClosedCompl_symm /-
+#print Submodule.coe_prodEquivOfClosedCompl_symm /-
 @[simp]
 theorem coe_prodEquivOfClosedCompl_symm (h : IsCompl p q) (hp : IsClosed (p : Set E))
     (hq : IsClosed (q : Set E)) :
     ⇑(p.prodEquivOfClosedCompl q h hp hq).symm = (p.prodEquivOfIsCompl q h).symm :=
   rfl
-#align subspace.coe_prod_equiv_of_closed_compl_symm Subspace.coe_prodEquivOfClosedCompl_symm
+#align subspace.coe_prod_equiv_of_closed_compl_symm Submodule.coe_prodEquivOfClosedCompl_symm
 -/
 
-#print Subspace.coe_continuous_linearProjOfClosedCompl /-
+#print Submodule.coe_continuous_linearProjOfClosedCompl /-
 @[simp]
 theorem coe_continuous_linearProjOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E))
     (hq : IsClosed (q : Set E)) :
     (p.linearProjOfClosedCompl q h hp hq : E →ₗ[𝕜] p) = p.linearProjOfIsCompl q h :=
   rfl
-#align subspace.coe_continuous_linear_proj_of_closed_compl Subspace.coe_continuous_linearProjOfClosedCompl
+#align subspace.coe_continuous_linear_proj_of_closed_compl Submodule.coe_continuous_linearProjOfClosedCompl
 -/
 
-#print Subspace.coe_continuous_linearProjOfClosedCompl' /-
+#print Submodule.coe_continuous_linearProjOfClosedCompl' /-
 @[simp]
 theorem coe_continuous_linearProjOfClosedCompl' (h : IsCompl p q) (hp : IsClosed (p : Set E))
     (hq : IsClosed (q : Set E)) :
     ⇑(p.linearProjOfClosedCompl q h hp hq) = p.linearProjOfIsCompl q h :=
   rfl
-#align subspace.coe_continuous_linear_proj_of_closed_compl' Subspace.coe_continuous_linearProjOfClosedCompl'
+#align subspace.coe_continuous_linear_proj_of_closed_compl' Submodule.coe_continuous_linearProjOfClosedCompl'
 -/
 
-#print Subspace.closedComplemented_of_closed_compl /-
-theorem closedComplemented_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E))
-    (hq : IsClosed (q : Set E)) : p.ClosedComplemented :=
+#print Submodule.ClosedComplemented.of_isCompl_isClosed /-
+theorem Submodule.ClosedComplemented.of_isCompl_isClosed (h : IsCompl p q)
+    (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) : p.ClosedComplemented :=
   ⟨p.linearProjOfClosedCompl q h hp hq, Submodule.linearProjOfIsCompl_apply_left h⟩
-#align subspace.closed_complemented_of_closed_compl Subspace.closedComplemented_of_closed_compl
+#align subspace.closed_complemented_of_closed_compl Submodule.ClosedComplemented.of_isCompl_isClosed
 -/
 
-#print Subspace.closedComplemented_iff_has_closed_compl /-
-theorem closedComplemented_iff_has_closed_compl :
+#print Submodule.closedComplemented_iff_isClosed_exists_isClosed_isCompl /-
+theorem closedComplemented_iff_isClosed_exists_isClosed_isCompl :
     p.ClosedComplemented ↔
       IsClosed (p : Set E) ∧ ∃ (q : Subspace 𝕜 E) (hq : IsClosed (q : Set E)), IsCompl p q :=
-  ⟨fun h => ⟨h.IsClosed, h.has_closed_complement⟩, fun ⟨hp, ⟨q, hq, hpq⟩⟩ =>
-    closedComplemented_of_closed_compl hpq hp hq⟩
-#align subspace.closed_complemented_iff_has_closed_compl Subspace.closedComplemented_iff_has_closed_compl
+  ⟨fun h => ⟨h.IsClosed, h.exists_isClosed_isCompl⟩, fun ⟨hp, ⟨q, hq, hpq⟩⟩ =>
+    Submodule.ClosedComplemented.of_isCompl_isClosed hpq hp hq⟩
+#align subspace.closed_complemented_iff_has_closed_compl Submodule.closedComplemented_iff_isClosed_exists_isClosed_isCompl
 -/
 
-#print Subspace.closedComplemented_of_quotient_finiteDimensional /-
-theorem closedComplemented_of_quotient_finiteDimensional [CompleteSpace 𝕜]
+#print Submodule.ClosedComplemented.of_quotient_finiteDimensional /-
+theorem Submodule.ClosedComplemented.of_quotient_finiteDimensional [CompleteSpace 𝕜]
     [FiniteDimensional 𝕜 (E ⧸ p)] (hp : IsClosed (p : Set E)) : p.ClosedComplemented :=
   by
   obtain ⟨q, hq⟩ : ∃ q, IsCompl p q := p.exists_is_compl
   haveI : FiniteDimensional 𝕜 q := (p.quotient_equiv_of_is_compl q hq).FiniteDimensional
   exact closed_complemented_of_closed_compl hq hp q.closed_of_finite_dimensional
-#align subspace.closed_complemented_of_quotient_finite_dimensional Subspace.closedComplemented_of_quotient_finiteDimensional
+#align subspace.closed_complemented_of_quotient_finite_dimensional Submodule.ClosedComplemented.of_quotient_finiteDimensional
 -/
 
 end Subspace

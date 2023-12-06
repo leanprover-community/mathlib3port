@@ -188,7 +188,7 @@ theorem hasConstantSpeedOnWith_zero_iff :
   dsimp [HasConstantSpeedOnWith]
   simp only [MulZeroClass.zero_mul, ENNReal.ofReal_zero, ← eVariationOn.eq_zero_iff]
   constructor
-  · by_contra'
+  · by_contra!
     obtain ⟨h, hfs⟩ := this
     simp_rw [eVariationOn.eq_zero_iff] at hfs h 
     push_neg at hfs 

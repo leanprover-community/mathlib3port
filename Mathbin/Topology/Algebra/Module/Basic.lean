@@ -816,7 +816,7 @@ instance uniqueOfRight [Subsingleton M₂] : Unique (M₁ →SL[σ₁₂] M₂) 
 -/
 
 #print ContinuousLinearMap.exists_ne_zero /-
-theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 := by by_contra' h;
+theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 := by by_contra! h;
   exact hf (ContinuousLinearMap.ext h)
 #align continuous_linear_map.exists_ne_zero ContinuousLinearMap.exists_ne_zero
 -/
@@ -3164,11 +3164,11 @@ def ClosedComplemented (p : Submodule R M) : Prop :=
 #align submodule.closed_complemented Submodule.ClosedComplemented
 -/
 
-#print Submodule.ClosedComplemented.has_closed_complement /-
-theorem ClosedComplemented.has_closed_complement {p : Submodule R M} [T1Space p]
+#print Submodule.ClosedComplemented.exists_isClosed_isCompl /-
+theorem ClosedComplemented.exists_isClosed_isCompl {p : Submodule R M} [T1Space p]
     (h : ClosedComplemented p) : ∃ (q : Submodule R M) (hq : IsClosed (q : Set M)), IsCompl p q :=
   Exists.elim h fun f hf => ⟨ker f, f.isClosed_ker, LinearMap.isCompl_of_proj hf⟩
-#align submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
+#align submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.exists_isClosed_isCompl
 -/
 
 #print Submodule.ClosedComplemented.isClosed /-

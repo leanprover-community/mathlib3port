@@ -253,23 +253,23 @@ theorem boole_mul {α} [MulZeroOneClass α] (P : Prop) [Decidable P] (a : α) :
 #align boole_mul boole_mul
 -/
 
-#print ite_mul_zero_left /-
-theorem ite_mul_zero_left {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
+#print ite_zero_mul /-
+theorem ite_zero_mul {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
     ite P (a * b) 0 = ite P a 0 * b := by by_cases h : P <;> simp [h]
-#align ite_mul_zero_left ite_mul_zero_left
+#align ite_mul_zero_left ite_zero_mul
 -/
 
-#print ite_mul_zero_right /-
-theorem ite_mul_zero_right {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
+#print mul_ite_zero /-
+theorem mul_ite_zero {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
     ite P (a * b) 0 = a * ite P b 0 := by by_cases h : P <;> simp [h]
-#align ite_mul_zero_right ite_mul_zero_right
+#align ite_mul_zero_right mul_ite_zero
 -/
 
-#print ite_and_mul_zero /-
-theorem ite_and_mul_zero {α : Type _} [MulZeroClass α] (P Q : Prop) [Decidable P] [Decidable Q]
+#print ite_zero_mul_ite_zero /-
+theorem ite_zero_mul_ite_zero {α : Type _} [MulZeroClass α] (P Q : Prop) [Decidable P] [Decidable Q]
     (a b : α) : ite (P ∧ Q) (a * b) 0 = ite P a 0 * ite Q b 0 := by
   simp only [← ite_and, ite_mul, mul_ite, MulZeroClass.mul_zero, MulZeroClass.zero_mul, and_comm']
-#align ite_and_mul_zero ite_and_mul_zero
+#align ite_and_mul_zero ite_zero_mul_ite_zero
 -/
 
 end Semiring

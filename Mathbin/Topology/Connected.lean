@@ -1672,7 +1672,7 @@ theorem isTotallyDisconnected_of_isClopen_set {X : Type _} [TopologicalSpace X]
   by
   rintro S - hS
   unfold Set.Subsingleton
-  by_contra' h_contra
+  by_contra! h_contra
   rcases h_contra with ⟨x, hx, y, hy, hxy⟩
   obtain ⟨U, h_clopen, hxU, hyU⟩ := hX hxy
   specialize
@@ -2046,7 +2046,7 @@ theorem isPreconnected_of_forall_constant {s : Set α}
     (hs : ∀ f : α → Bool, ContinuousOn f s → ∀ x ∈ s, ∀ y ∈ s, f x = f y) : IsPreconnected s :=
   by
   unfold IsPreconnected
-  by_contra'
+  by_contra!
   rcases this with ⟨u, v, u_op, v_op, hsuv, ⟨x, x_in_s, x_in_u⟩, ⟨y, y_in_s, y_in_v⟩, H⟩
   rw [not_nonempty_iff_eq_empty] at H 
   have hy : y ∉ u := fun y_in_u => eq_empty_iff_forall_not_mem.mp H y ⟨y_in_s, ⟨y_in_u, y_in_v⟩⟩

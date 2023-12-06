@@ -1433,7 +1433,7 @@ See also: `finite.exists_ne_map_eq_of_infinite`
 theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
     ∃ y : β, Infinite (f ⁻¹' {y}) := by
   classical
-  by_contra' hf
+  by_contra! hf
   cases nonempty_fintype β
   haveI := fun y => fintypeOfNotInfinite <| hf y
   let key : Fintype α :=

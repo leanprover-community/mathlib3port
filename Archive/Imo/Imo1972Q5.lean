@@ -53,7 +53,7 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
       _ ≤ k + k := (add_le_add (hk₁ _) (hk₁ _))
       _ = 2 * k := (two_mul _).symm
   -- Suppose the conclusion does not hold.
-  by_contra' hneg
+  by_contra! hneg
   set k' := k / ‖g y‖
   -- Demonstrate that `k' < k` using `hneg`.
   have H₁ : k' < k :=
@@ -98,7 +98,7 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
   obtain ⟨x, hx⟩ := hf3
   set k := ⨆ x, ‖f x‖
   have h : ∀ x, ‖f x‖ ≤ k := le_ciSup hf2
-  by_contra' H
+  by_contra! H
   have hgy : 0 < ‖g y‖ := by linarith
   have k_pos : 0 < k := lt_of_lt_of_le (norm_pos_iff.mpr hx) (h x)
   have : k / ‖g y‖ < k := (div_lt_iff hgy).mpr (lt_mul_of_one_lt_right k_pos H)

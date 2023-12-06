@@ -217,7 +217,7 @@ theorem prime_three : Prime 3 := by decide
 #print Nat.Prime.five_le_of_ne_two_of_ne_three /-
 theorem Prime.five_le_of_ne_two_of_ne_three {p : ℕ} (hp : p.Prime) (h_two : p ≠ 2)
     (h_three : p ≠ 3) : 5 ≤ p := by
-  by_contra' h
+  by_contra! h
   revert h_two h_three hp
   decide!
 #align nat.prime.five_le_of_ne_two_of_ne_three Nat.Prime.five_le_of_ne_two_of_ne_three

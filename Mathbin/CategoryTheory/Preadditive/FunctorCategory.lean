@@ -115,8 +115,7 @@ theorem app_zsmul (X : C) (α : F ⟶ G) (n : ℤ) : (n • α).app X = n • α
 #print CategoryTheory.NatTrans.app_sum /-
 @[simp]
 theorem app_sum {ι : Type _} (s : Finset ι) (X : C) (α : ι → (F ⟶ G)) :
-    (∑ i in s, α i).app X = ∑ i in s, (α i).app X := by rw [← app_hom_apply, AddMonoidHom.map_sum];
-  rfl
+    (∑ i in s, α i).app X = ∑ i in s, (α i).app X := by rw [← app_hom_apply, map_sum]; rfl
 #align category_theory.nat_trans.app_sum CategoryTheory.NatTrans.app_sum
 -/
 

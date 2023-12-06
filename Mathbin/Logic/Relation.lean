@@ -270,10 +270,13 @@ theorem map_apply : Relation.Map r f g c d ↔ ∃ a b, r a b ∧ f a = c ∧ g 
   Iff.rfl
 #align relation.map_apply Relation.map_apply
 
+#print Relation.map_id_id /-
 @[simp]
 theorem map_id_id (r : α → β → Prop) : Relation.Map r id id = r := by simp [Relation.Map]
 #align relation.map_id_id Relation.map_id_id
+-/
 
+#print Relation.map_map /-
 @[simp]
 theorem map_map (r : α → β → Prop) (f₁ : α → γ) (g₁ : β → δ) (f₂ : γ → ε) (g₂ : δ → κ) :
     Relation.Map (Relation.Map r f₁ g₁) f₂ g₂ = Relation.Map r (f₂ ∘ f₁) (g₂ ∘ g₁) :=
@@ -283,6 +286,7 @@ theorem map_map (r : α → β → Prop) (f₁ : α → γ) (g₁ : β → δ) (
   refine' exists₂_congr fun a b => _
   simp [and_assoc']
 #align relation.map_map Relation.map_map
+-/
 
 instance [Decidable (∃ a b, r a b ∧ f a = c ∧ g b = d)] : Decidable (Relation.Map r f g c d) :=
   ‹Decidable _›

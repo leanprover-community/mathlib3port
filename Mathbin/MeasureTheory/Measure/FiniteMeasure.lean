@@ -678,7 +678,7 @@ This section is about bounded convergence theorems for finite measures.
 
 variable {Ω : Type _} [MeasurableSpace Ω] [TopologicalSpace Ω] [OpensMeasurableSpace Ω]
 
-#print MeasureTheory.FiniteMeasure.tendsto_lintegral_nn_filter_of_le_const /-
+#print MeasureTheory.tendsto_lintegral_nn_filter_of_le_const /-
 /-- A bounded convergence theorem for a finite measure:
 If bounded continuous non-negative functions are uniformly bounded by a constant and tend to a
 limit, then their integrals against the finite measure tend to the integral of the limit.
@@ -689,8 +689,8 @@ This formulation assumes:
  * integration is `measure_theory.lintegral`, i.e., the functions and their integrals are
    `ℝ≥0∞`-valued.
 -/
-theorem tendsto_lintegral_nn_filter_of_le_const {ι : Type _} {L : Filter ι} [L.IsCountablyGenerated]
-    (μ : Measure Ω) [IsFiniteMeasure μ] {fs : ι → Ω →ᵇ ℝ≥0} {c : ℝ≥0}
+theorem MeasureTheory.tendsto_lintegral_nn_filter_of_le_const {ι : Type _} {L : Filter ι}
+    [L.IsCountablyGenerated] (μ : Measure Ω) [IsFiniteMeasure μ] {fs : ι → Ω →ᵇ ℝ≥0} {c : ℝ≥0}
     (fs_le_const : ∀ᶠ i in L, ∀ᵐ ω : Ω ∂μ, fs i ω ≤ c) {f : Ω → ℝ≥0}
     (fs_lim : ∀ᵐ ω : Ω ∂μ, Tendsto (fun i => fs i ω) L (𝓝 (f ω))) :
     Tendsto (fun i => ∫⁻ ω, fs i ω ∂μ) L (𝓝 (∫⁻ ω, f ω ∂μ)) :=
@@ -701,7 +701,7 @@ theorem tendsto_lintegral_nn_filter_of_le_const {ι : Type _} {L : Filter ι} [L
       (@lintegral_const_lt_top _ _ μ _ _ (@ENNReal.coe_ne_top c)).Ne _
   · simpa only [ENNReal.coe_le_coe] using fs_le_const
   · simpa only [ENNReal.tendsto_coe] using fs_lim
-#align measure_theory.finite_measure.tendsto_lintegral_nn_filter_of_le_const MeasureTheory.FiniteMeasure.tendsto_lintegral_nn_filter_of_le_const
+#align measure_theory.finite_measure.tendsto_lintegral_nn_filter_of_le_const MeasureTheory.tendsto_lintegral_nn_filter_of_le_const
 -/
 
 #print MeasureTheory.FiniteMeasure.tendsto_lintegral_nn_of_le_const /-
@@ -717,7 +717,7 @@ theorem tendsto_lintegral_nn_of_le_const (μ : FiniteMeasure Ω) {fs : ℕ → �
     (fs_le_const : ∀ n ω, fs n ω ≤ c) {f : Ω → ℝ≥0}
     (fs_lim : ∀ ω, Tendsto (fun n => fs n ω) atTop (𝓝 (f ω))) :
     Tendsto (fun n => ∫⁻ ω, fs n ω ∂(μ : Measure Ω)) atTop (𝓝 (∫⁻ ω, f ω ∂(μ : Measure Ω))) :=
-  tendsto_lintegral_nn_filter_of_le_const μ
+  MeasureTheory.tendsto_lintegral_nn_filter_of_le_const μ
     (eventually_of_forall fun n => eventually_of_forall (fs_le_const n))
     (eventually_of_forall fs_lim)
 #align measure_theory.finite_measure.tendsto_lintegral_nn_of_le_const MeasureTheory.FiniteMeasure.tendsto_lintegral_nn_of_le_const

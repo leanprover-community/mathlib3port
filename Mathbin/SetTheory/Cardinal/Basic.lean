@@ -1731,7 +1731,7 @@ theorem isLimit_aleph0 : IsLimit ℵ₀ :=
 #print Cardinal.IsLimit.aleph0_le /-
 theorem IsLimit.aleph0_le {c : Cardinal} (h : IsLimit c) : ℵ₀ ≤ c :=
   by
-  by_contra' h'
+  by_contra! h'
   rcases lt_aleph_0.1 h' with ⟨_ | n, rfl⟩
   · exact h.ne_zero.irrefl
   · rw [nat_succ] at h 

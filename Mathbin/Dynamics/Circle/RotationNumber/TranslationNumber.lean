@@ -1216,10 +1216,10 @@ theorem exists_eq_add_translationNumber (hf : Continuous f) : ∃ x, f x = x + �
   by
   obtain ⟨a, ha⟩ : ∃ x, f x ≤ x + f.translation_number :=
     by
-    by_contra' H
+    by_contra! H
     exact lt_irrefl _ (f.lt_translation_number_of_forall_add_lt hf H)
   obtain ⟨b, hb⟩ : ∃ x, x + τ f ≤ f x := by
-    by_contra' H
+    by_contra! H
     exact lt_irrefl _ (f.translation_number_lt_of_forall_lt_add hf H)
   exact intermediate_value_univ₂ hf (continuous_id.add continuous_const) ha hb
 #align circle_deg1_lift.exists_eq_add_translation_number CircleDeg1Lift.exists_eq_add_translationNumber

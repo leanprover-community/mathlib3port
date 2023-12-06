@@ -270,9 +270,9 @@ theorem uniformGroup_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β 
 #align uniform_add_group_inf uniformAddGroup_inf
 -/
 
-#print uniformGroup_comap /-
+#print UniformGroup.comap /-
 @[to_additive]
-theorem uniformGroup_comap {γ : Type _} [Group γ] {u : UniformSpace γ} [UniformGroup γ] {F : Type _}
+theorem UniformGroup.comap {γ : Type _} [Group γ] {u : UniformSpace γ} [UniformGroup γ] {F : Type _}
     [MonoidHomClass F β γ] (f : F) : @UniformGroup β (u.comap f) _ :=
   {
     uniformContinuous_div := by
@@ -282,8 +282,8 @@ theorem uniformGroup_comap {γ : Type _} [Group γ] {u : UniformSpace γ} [Unifo
       change UniformContinuous ((fun p : γ × γ => p.1 / p.2) ∘ Prod.map f f)
       exact
         uniform_continuous_div.comp (uniform_continuous_comap.prod_map uniformContinuous_comap) }
-#align uniform_group_comap uniformGroup_comap
-#align uniform_add_group_comap uniformAddGroup_comap
+#align uniform_group_comap UniformGroup.comap
+#align uniform_add_group_comap UniformAddGroup.comap
 -/
 
 end LatticeOps

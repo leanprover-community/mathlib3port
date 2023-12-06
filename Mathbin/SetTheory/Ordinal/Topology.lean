@@ -140,7 +140,7 @@ theorem mem_closure_iff_sup :
       refine'
         ⟨_, out_nonempty_iff_ne_zero.2 (Ordinal.pos_iff_ne_zero.1 ha₀), f, fun i => (hf i).2,
           le_antisymm (sup_le fun i => le_of_lt_succ (hf i).1.2) _⟩
-      by_contra' h
+      by_contra! h
       cases' H _ h with b hb
       rcases eq_or_lt_of_le (le_of_lt_succ hb.1.2) with (rfl | hba)
       · exact has hb.2
@@ -286,7 +286,7 @@ theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
       b hb
     rw [← hb]
     apply Hs.monotone
-    by_contra' hba
+    by_contra! hba
     apply (Hs (lt_succ b)).not_le
     rw [hb]
     exact le_bsup.{u, u} _ _ (ha.2 _ hba)

@@ -1187,7 +1187,7 @@ protected theorem infinite_prod :
   by
   refine' ⟨fun h => _, _⟩
   · simp_rw [Set.Infinite, and_comm' ¬_, ← not_imp]
-    by_contra'
+    by_contra!
     exact h ((this.1 h.nonempty.snd).Prod <| this.2 h.nonempty.fst)
   · rintro (h | h)
     · exact h.1.prodLeft h.2

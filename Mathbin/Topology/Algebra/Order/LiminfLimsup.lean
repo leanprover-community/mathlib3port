@@ -357,7 +357,7 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
   haveI : ne_bot f := ⟨hbot⟩
   refine' ⟨limsup u f, _⟩
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
-  by_contra' hlt
+  by_contra! hlt
   obtain ⟨a, ⟨⟨la, au⟩, as⟩⟩ : ∃ a, (f.liminf u < a ∧ a < f.limsup u) ∧ a ∈ s :=
     dense_iff_inter_open.1 hs (Set.Ioo (f.liminf u) (f.limsup u)) isOpen_Ioo
       (Set.nonempty_Ioo.2 hlt)
@@ -477,12 +477,12 @@ theorem Antitone.map_limsSup_of_continuousAt {F : Filter R} [NeBot F] {f : R →
                   is_bounded_default)
               c_lt).mono
         intro x hx
-        by_contra'
+        by_contra!
         have : (Set.Ioo c F.Limsup).Nonempty := ⟨x, ⟨hx, this⟩⟩
         simpa [hc]
       apply liminf_le_of_frequently_le
       exact B.mono fun x hx => f_decr hx
-    by_contra' H
+    by_contra! H
     obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.Ioc l F.Limsup ⊆ {x : R | f x < F.liminf f}
     exact exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
     obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.Limsup).Nonempty :=

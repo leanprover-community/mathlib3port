@@ -128,35 +128,35 @@ theorem Continuous.sup [Sup L] [ContinuousSup L] {f g : X → L} (hf : Continuou
 #align continuous.sup Continuous.sup
 -/
 
-#print Filter.Tendsto.sup_right_nhds' /-
-theorem Filter.Tendsto.sup_right_nhds' {ι β} [TopologicalSpace β] [Sup β] [ContinuousSup β]
-    {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
+#print Filter.Tendsto.sup_nhds' /-
+theorem Filter.Tendsto.sup_nhds' {ι β} [TopologicalSpace β] [Sup β] [ContinuousSup β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (f ⊔ g) l (𝓝 (x ⊔ y)) :=
   (continuous_sup.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
-#align filter.tendsto.sup_right_nhds' Filter.Tendsto.sup_right_nhds'
+#align filter.tendsto.sup_right_nhds' Filter.Tendsto.sup_nhds'
 -/
 
-#print Filter.Tendsto.sup_right_nhds /-
-theorem Filter.Tendsto.sup_right_nhds {ι β} [TopologicalSpace β] [Sup β] [ContinuousSup β]
-    {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
+#print Filter.Tendsto.sup_nhds /-
+theorem Filter.Tendsto.sup_nhds {ι β} [TopologicalSpace β] [Sup β] [ContinuousSup β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (fun i => f i ⊔ g i) l (𝓝 (x ⊔ y)) :=
-  hf.sup_right_nhds' hg
-#align filter.tendsto.sup_right_nhds Filter.Tendsto.sup_right_nhds
+  hf.sup_nhds' hg
+#align filter.tendsto.sup_right_nhds Filter.Tendsto.sup_nhds
 -/
 
-#print Filter.Tendsto.inf_right_nhds' /-
-theorem Filter.Tendsto.inf_right_nhds' {ι β} [TopologicalSpace β] [Inf β] [ContinuousInf β]
-    {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
+#print Filter.Tendsto.inf_nhds' /-
+theorem Filter.Tendsto.inf_nhds' {ι β} [TopologicalSpace β] [Inf β] [ContinuousInf β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (f ⊓ g) l (𝓝 (x ⊓ y)) :=
   (continuous_inf.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
-#align filter.tendsto.inf_right_nhds' Filter.Tendsto.inf_right_nhds'
+#align filter.tendsto.inf_right_nhds' Filter.Tendsto.inf_nhds'
 -/
 
-#print Filter.Tendsto.inf_right_nhds /-
-theorem Filter.Tendsto.inf_right_nhds {ι β} [TopologicalSpace β] [Inf β] [ContinuousInf β]
-    {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
+#print Filter.Tendsto.inf_nhds /-
+theorem Filter.Tendsto.inf_nhds {ι β} [TopologicalSpace β] [Inf β] [ContinuousInf β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (fun i => f i ⊓ g i) l (𝓝 (x ⊓ y)) :=
-  hf.inf_right_nhds' hg
-#align filter.tendsto.inf_right_nhds Filter.Tendsto.inf_right_nhds
+  hf.inf_nhds' hg
+#align filter.tendsto.inf_right_nhds Filter.Tendsto.inf_nhds
 -/
 
