@@ -78,7 +78,6 @@ theorem eq_bot_of_le_smul_of_le_jacobson_bot (I : Ideal R) (N : Submodule R M) (
 #align submodule.eq_bot_of_le_smul_of_le_jacobson_bot Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
 -/
 
-#print Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson /-
 /-- *Nakayama's Lemma** - A slightly more general version of (4) in
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `smul_sup_eq_of_le_smul_of_le_jacobson_bot` for the special case when `J = ⊥`.  -/
@@ -99,9 +98,7 @@ theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : S
     hNN'] at this 
   rw [this, sup_comm]
 #align submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
--/
 
-#print Submodule.smul_sup_le_of_le_smul_of_le_jacobson_bot /-
 /-- *Nakayama's Lemma** - Statement (4) in
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson` for a generalisation
@@ -111,7 +108,6 @@ theorem smul_sup_le_of_le_smul_of_le_jacobson_bot {I : Ideal R} {N N' : Submodul
   rw [← sup_eq_left, smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson hN' hIJ hNN, bot_smul,
     sup_bot_eq]
 #align submodule.smul_sup_le_of_le_smul_of_le_jacobson_bot Submodule.smul_sup_le_of_le_smul_of_le_jacobson_bot
--/
 
 end Submodule
 

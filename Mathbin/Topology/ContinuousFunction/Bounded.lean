@@ -1746,10 +1746,12 @@ instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
 #align bounded_continuous_function.module' BoundedContinuousFunction.module'
 -/
 
-#print BoundedContinuousFunction.norm_smul_le /-
+/- warning: bounded_continuous_function.norm_smul_le clashes with norm_smul_le -> norm_smul_le
+Case conversion may be inaccurate. Consider using '#align bounded_continuous_function.norm_smul_le norm_smul_leₓ'. -/
+#print norm_smul_le /-
 theorem norm_smul_le (f : α →ᵇ 𝕜) (g : α →ᵇ β) : ‖f • g‖ ≤ ‖f‖ * ‖g‖ :=
   norm_ofNormedAddCommGroup_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
-#align bounded_continuous_function.norm_smul_le BoundedContinuousFunction.norm_smul_le
+#align bounded_continuous_function.norm_smul_le norm_smul_le
 -/
 
 /- TODO: When `normed_module` has been added to `normed_space.basic`, the above facts
