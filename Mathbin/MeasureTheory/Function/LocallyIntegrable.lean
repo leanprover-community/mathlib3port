@@ -52,11 +52,11 @@ def LocallyIntegrableOn (f : X → E) (s : Set X)
 #align measure_theory.locally_integrable_on MeasureTheory.LocallyIntegrableOn
 -/
 
-#print MeasureTheory.LocallyIntegrableOn.mono /-
-theorem LocallyIntegrableOn.mono (hf : MeasureTheory.LocallyIntegrableOn f s μ) {t : Set X}
+#print MeasureTheory.LocallyIntegrableOn.mono_set /-
+theorem LocallyIntegrableOn.mono_set (hf : MeasureTheory.LocallyIntegrableOn f s μ) {t : Set X}
     (hst : t ⊆ s) : LocallyIntegrableOn f t μ := fun x hx =>
   (hf x <| hst hx).filter_mono (nhdsWithin_mono x hst)
-#align measure_theory.locally_integrable_on.mono MeasureTheory.LocallyIntegrableOn.mono
+#align measure_theory.locally_integrable_on.mono MeasureTheory.LocallyIntegrableOn.mono_set
 -/
 
 #print MeasureTheory.LocallyIntegrableOn.norm /-

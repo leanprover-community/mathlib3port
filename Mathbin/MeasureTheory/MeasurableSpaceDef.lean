@@ -696,10 +696,10 @@ theorem Measurable.le {α} {m m0 : MeasurableSpace α} {mb : MeasurableSpace β}
 #align measurable.le Measurable.le
 -/
 
-#print MeasurableSpace.Top.measurable /-
-theorem MeasurableSpace.Top.measurable {α β : Type _} [MeasurableSpace β] (f : α → β) :
+#print measurable_discrete /-
+theorem measurable_discrete {α β : Type _} [MeasurableSpace β] (f : α → β) :
     @Measurable α β ⊤ _ f := fun s hs => MeasurableSpace.measurableSet_top
-#align measurable_space.top.measurable MeasurableSpace.Top.measurable
+#align measurable_space.top.measurable measurable_discrete
 -/
 
 end MeasurableFunctions

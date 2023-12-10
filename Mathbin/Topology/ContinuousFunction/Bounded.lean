@@ -1737,7 +1737,7 @@ instance hasSmul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
 
 #print BoundedContinuousFunction.module' /-
 instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
-  Module.ofCore <|
+  Module.ofMinimalAxioms <|
     { smul := (· • ·)
       smul_add := fun c f₁ f₂ => ext fun x => smul_add _ _ _
       add_smul := fun c₁ c₂ f => ext fun x => add_smul _ _ _

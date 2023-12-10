@@ -279,7 +279,6 @@ theorem AddMonoid.End.int_cast_def (z : ℤ) :
 #align add_monoid.End.int_cast_def AddMonoid.End.int_cast_def
 -/
 
-#print Module.Core /-
 /-- A structure containing most informations as in a module, except the fields `zero_smul`
 and `smul_zero`. As these fields can be deduced from the other ones when `M` is an `add_comm_group`,
 this provides a way to construct a module structure by checking less properties, in
@@ -291,21 +290,20 @@ structure Module.Core extends SMul R M where
   hMul_smul : ∀ (r s : R) (x : M), (r * s) • x = r • s • x
   one_smul : ∀ x : M, (1 : R) • x = x
 #align module.core Module.Core
--/
 
 variable {R M}
 
-#print Module.ofCore /-
+#print Module.ofMinimalAxioms /-
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
-def Module.ofCore (H : Module.Core R M) : Module R M :=
+def Module.ofMinimalAxioms (H : Module.Core R M) : Module R M :=
   letI := H.to_has_smul
   {
     H with
     zero_smul := fun x =>
       (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero
     smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
-#align module.of_core Module.ofCore
+#align module.of_core Module.ofMinimalAxioms
 -/
 
 #print Convex.combo_eq_smul_sub_add /-

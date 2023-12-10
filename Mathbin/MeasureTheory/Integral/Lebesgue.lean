@@ -1642,12 +1642,10 @@ theorem MeasurePreserving.set_lintegral_comp_emb {mb : MeasurableSpace β} {ν :
 
 section DiracAndCount
 
-#print MeasurableSpace.Top.measurableSingletonClass /-
 instance (priority := 10) MeasurableSpace.Top.measurableSingletonClass {α : Type _} :
     @MeasurableSingletonClass α (⊤ : MeasurableSpace α)
     where measurableSet_singleton i := MeasurableSpace.measurableSet_top
 #align measurable_space.top.measurable_singleton_class MeasurableSpace.Top.measurableSingletonClass
--/
 
 variable [MeasurableSpace α]
 

@@ -1547,11 +1547,11 @@ def restrict (B : BilinForm R M) (W : Submodule R M) : BilinForm R W
 #align bilin_form.restrict BilinForm.restrict
 -/
 
-#print BilinForm.restrictSymm /-
+#print BilinForm.IsSymm.restrict /-
 /-- The restriction of a symmetric bilinear form on a submodule is also symmetric. -/
-theorem restrictSymm (B : BilinForm R M) (b : B.IsSymm) (W : Submodule R M) :
+theorem BilinForm.IsSymm.restrict (B : BilinForm R M) (b : B.IsSymm) (W : Submodule R M) :
     (B.restrict W).IsSymm := fun x y => b x y
-#align bilin_form.restrict_symm BilinForm.restrictSymm
+#align bilin_form.restrict_symm BilinForm.IsSymm.restrict
 -/
 
 #print BilinForm.Nondegenerate /-

@@ -79,9 +79,9 @@ instance : Preorder (Π₀ i, α i) :=
     le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
-#print DFinsupp.coeFn_mono /-
-theorem coeFn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
-#align dfinsupp.coe_fn_mono DFinsupp.coeFn_mono
+#print DFinsupp.coe_mono /-
+theorem coe_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
+#align dfinsupp.coe_fn_mono DFinsupp.coe_mono
 -/
 
 end Preorder

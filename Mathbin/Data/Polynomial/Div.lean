@@ -692,8 +692,8 @@ theorem pow_rootMultiplicity_dvd (p : R[X]) (a : R) : (X - C a) ^ rootMultiplici
 #align polynomial.pow_root_multiplicity_dvd Polynomial.pow_rootMultiplicity_dvd
 -/
 
-#print Polynomial.divByMonic_mul_pow_rootMultiplicity_eq /-
-theorem divByMonic_mul_pow_rootMultiplicity_eq (p : R[X]) (a : R) :
+#print Polynomial.pow_mul_divByMonic_rootMultiplicity_eq /-
+theorem pow_mul_divByMonic_rootMultiplicity_eq (p : R[X]) (a : R) :
     p /ₘ (X - C a) ^ rootMultiplicity a p * (X - C a) ^ rootMultiplicity a p = p :=
   by
   have : Monic ((X - C a) ^ rootMultiplicity a p) := (monic_X_sub_C _).pow _
@@ -701,7 +701,7 @@ theorem divByMonic_mul_pow_rootMultiplicity_eq (p : R[X]) (a : R) :
       rw [← mod_by_monic_add_div p this,
         (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>
     simp [mul_comm]
-#align polynomial.div_by_monic_mul_pow_root_multiplicity_eq Polynomial.divByMonic_mul_pow_rootMultiplicity_eq
+#align polynomial.div_by_monic_mul_pow_root_multiplicity_eq Polynomial.pow_mul_divByMonic_rootMultiplicity_eq
 -/
 
 #print Polynomial.eval_divByMonic_pow_rootMultiplicity_ne_zero /-
