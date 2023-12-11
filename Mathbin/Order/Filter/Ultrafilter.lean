@@ -189,7 +189,7 @@ def ofAtom (f : Filter α) (hf : IsAtom f) : Ultrafilter α
     where
   toFilter := f
   ne_bot' := ⟨hf.1⟩
-  le_of_le g hg := (isAtom_iff.1 hf).2 g hg.Ne
+  le_of_le g hg := (isAtom_iff_le_of_ge.1 hf).2 g hg.Ne
 #align ultrafilter.of_atom Ultrafilter.ofAtom
 -/
 

@@ -103,14 +103,14 @@ theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
 
 namespace SurjectiveOfEpiAuxs
 
-local notation "X" => Set.range (Function.swap leftCoset f.range.carrier)
+local notation "X" => Set.range (Function.swap HSMul.hSMul f.range.carrier)
 
 #print GroupCat.SurjectiveOfEpiAuxs.XWithInfinity /-
 /-- Define `X'` to be the set of all left cosets with an extra point at "infinity".
 -/
 @[nolint has_nonempty_instance]
 inductive XWithInfinity
-  | from_coset : Set.range (Function.swap leftCoset f.range.carrier) → X_with_infinity
+  | from_coset : Set.range (Function.swap HSMul.hSMul f.range.carrier) → X_with_infinity
   | infinity : X_with_infinity
 #align Group.surjective_of_epi_auxs.X_with_infinity GroupCat.SurjectiveOfEpiAuxs.XWithInfinity
 -/

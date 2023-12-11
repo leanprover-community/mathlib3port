@@ -420,7 +420,7 @@ theorem idealOfSet_isMaximal_iff (s : Opens X) :
     (idealOfSet 𝕜 (s : Set X)).IsMaximal ↔ IsCoatom s :=
   by
   rw [Ideal.isMaximal_def]
-  refine' (ideal_opens_gi X 𝕜).isCoatom_iff (fun I hI => _) s
+  refine' (ideal_opens_gi X 𝕜).isCoatom_iff_ge_of_le (fun I hI => _) s
   rw [← Ideal.isMaximal_def] at hI 
   skip
   exact ideal_of_set_of_ideal_is_closed inferInstance

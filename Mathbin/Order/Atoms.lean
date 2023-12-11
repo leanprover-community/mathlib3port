@@ -83,11 +83,11 @@ theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : �
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
-#print isAtom_iff /-
-theorem isAtom_iff {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
+#print isAtom_iff_le_of_ge /-
+theorem isAtom_iff_le_of_ge {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
   and_congr Iff.rfl <|
     forall_congr' fun b => by simp only [Ne.def, @not_imp_comm (b = ⊥), not_imp, lt_iff_le_not_le]
-#align is_atom_iff isAtom_iff
+#align is_atom_iff isAtom_iff_le_of_ge
 -/
 
 end Preorder
@@ -173,10 +173,10 @@ theorem IsCoatom.of_isCoatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoato
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
-#print isCoatom_iff /-
-theorem isCoatom_iff {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
-  @isAtom_iff αᵒᵈ _ _ _
-#align is_coatom_iff isCoatom_iff
+#print isCoatom_iff_ge_of_le /-
+theorem isCoatom_iff_ge_of_le {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
+  @isAtom_iff_le_of_ge αᵒᵈ _ _ _
+#align is_coatom_iff isCoatom_iff_ge_of_le
 -/
 
 end Preorder
@@ -931,7 +931,7 @@ theorem isCoatom_of_l_top [OrderTop α] [OrderTop β] {l : α → β} {u : β �
 theorem isCoatom_iff [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b)
     (b : β) : IsCoatom (u b) ↔ IsCoatom b :=
-  gi.dual.isAtom_iff htop h_coatom b
+  gi.dual.isAtom_iff_le_of_ge htop h_coatom b
 #align galois_coinsertion.is_coatom_iff GaloisCoinsertion.isCoatom_iff
 -/
 
@@ -954,7 +954,7 @@ theorem isAtom_of_image [OrderBot α] [OrderBot β] {l : α → β} {u : β → 
 theorem isAtom_iff [OrderBot α] [OrderBot β] [IsAtomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (h_atom : ∀ b, IsAtom b → l (u b) = b) (a : α) :
     IsAtom (l a) ↔ IsAtom a :=
-  gi.dual.isCoatom_iff h_atom a
+  gi.dual.isCoatom_iff_ge_of_le h_atom a
 #align galois_coinsertion.is_atom_iff GaloisCoinsertion.isAtom_iff
 -/
 
@@ -975,7 +975,7 @@ theorem isAtom_iff [OrderBot α] [OrderBot β] (f : α ≃o β) (a : α) : IsAto
 #print OrderIso.isCoatom_iff /-
 @[simp]
 theorem isCoatom_iff [OrderTop α] [OrderTop β] (f : α ≃o β) (a : α) : IsCoatom (f a) ↔ IsCoatom a :=
-  f.dual.isAtom_iff a
+  f.dual.isAtom_iff_le_of_ge a
 #align order_iso.is_coatom_iff OrderIso.isCoatom_iff
 -/
 
@@ -1077,7 +1077,7 @@ theorem isAtom_singleton (x : α) : IsAtom ({x} : Set α) :=
 theorem isAtom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} :=
   by
   refine' ⟨_, by rintro ⟨x, rfl⟩; exact is_atom_singleton x⟩
-  rw [isAtom_iff, bot_eq_empty, ← nonempty_iff_ne_empty]
+  rw [isAtom_iff_le_of_ge, bot_eq_empty, ← nonempty_iff_ne_empty]
   rintro ⟨⟨x, hx⟩, hs⟩
   exact
     ⟨x,
@@ -1088,7 +1088,7 @@ theorem isAtom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} :=
 
 #print Set.isCoatom_iff /-
 theorem isCoatom_iff (s : Set α) : IsCoatom s ↔ ∃ x, s = {x}ᶜ := by
-  simp_rw [is_compl_compl.is_coatom_iff_is_atom, isAtom_iff, @eq_comm _ s, compl_eq_comm]
+  simp_rw [is_compl_compl.is_coatom_iff_is_atom, isAtom_iff_le_of_ge, @eq_comm _ s, compl_eq_comm]
 #align set.is_coatom_iff Set.isCoatom_iff
 -/
 

@@ -302,7 +302,7 @@ theorem Closeds.isAtom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, s
     refine' closeds.gi.is_atom_iff' rfl (fun t ht => _) s
     obtain ⟨x, rfl⟩ := t.is_atom_iff.mp ht
     exact closure_singleton
-  simpa only [← this, (s : Set α).isAtom_iff, SetLike.ext_iff, Set.ext_iff]
+  simpa only [← this, (s : Set α).isAtom_iff_le_of_ge, SetLike.ext_iff, Set.ext_iff]
 #align topological_space.closeds.is_atom_iff TopologicalSpace.Closeds.isAtom_iff
 -/
 
@@ -315,7 +315,7 @@ theorem Opens.isCoatom_iff [T1Space α] {s : Opens α} :
   by
   rw [← s.compl_compl, ← isAtom_dual_iff_isCoatom]
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
-  rw [(closeds.compl_order_iso α).isAtom_iff, closeds.is_atom_iff]
+  rw [(closeds.compl_order_iso α).isAtom_iff_le_of_ge, closeds.is_atom_iff]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm

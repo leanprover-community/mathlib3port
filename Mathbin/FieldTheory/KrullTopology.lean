@@ -288,7 +288,7 @@ theorem krullTopology_t2 {K L : Type _} [Field K] [Field L] [Algebra K L]
       rw [mem_nhds_iff] at h_nhd 
       rcases h_nhd with ⟨W, hWH, hW_open, hW_1⟩
       refine'
-        ⟨leftCoset f W, leftCoset g W,
+        ⟨HSMul.hSMul f W, HSMul.hSMul g W,
           ⟨hW_open.left_coset f, hW_open.left_coset g, ⟨1, hW_1, mul_one _⟩, ⟨1, hW_1, mul_one _⟩,
             _⟩⟩
       rw [Set.disjoint_left]
@@ -323,7 +323,7 @@ theorem krullTopology_totallyDisconnected {K L : Type _} [Field K] [Field L] [Al
   let E := IntermediateField.adjoin K ({x} : Set L)
   haveI := IntermediateField.adjoin.finiteDimensional (h_int x)
   refine'
-    ⟨leftCoset σ E.fixing_subgroup,
+    ⟨HSMul.hSMul σ E.fixing_subgroup,
       ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
       ⟨1, E.fixing_subgroup.one_mem', mul_one σ⟩, _⟩
   simp only [mem_leftCoset_iff, SetLike.mem_coe, IntermediateField.mem_fixingSubgroup_iff,

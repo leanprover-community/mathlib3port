@@ -93,7 +93,7 @@ theorem isOpenMap_mul_left (a : G) : IsOpenMap fun x => a * x :=
 
 #print IsOpen.leftCoset /-
 @[to_additive IsOpen.left_addCoset]
-theorem IsOpen.leftCoset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (leftCoset x U) :=
+theorem IsOpen.leftCoset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (HSMul.hSMul x U) :=
   isOpenMap_mul_left x _ h
 #align is_open.left_coset IsOpen.leftCoset
 #align is_open.left_add_coset IsOpen.left_addCoset
@@ -109,7 +109,7 @@ theorem isClosedMap_mul_left (a : G) : IsClosedMap fun x => a * x :=
 
 #print IsClosed.leftCoset /-
 @[to_additive IsClosed.left_addCoset]
-theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (leftCoset x U) :=
+theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (HSMul.hSMul x U) :=
   isClosedMap_mul_left x _ h
 #align is_closed.left_coset IsClosed.leftCoset
 #align is_closed.left_add_coset IsClosed.left_addCoset

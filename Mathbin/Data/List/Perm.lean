@@ -1105,12 +1105,12 @@ instance decidableSubperm : DecidableRel ((· <+~ ·) : List α → List α → 
 #align list.decidable_subperm List.decidableSubperm
 -/
 
-#print List.subperm_singleton_iff /-
+#print List.singleton_subperm_iff /-
 @[simp]
-theorem subperm_singleton_iff {α} {l : List α} {a : α} : [a] <+~ l ↔ a ∈ l :=
+theorem singleton_subperm_iff {α} {l : List α} {a : α} : [a] <+~ l ↔ a ∈ l :=
   ⟨fun ⟨s, hla, h⟩ => by rwa [perm_singleton.mp hla, singleton_sublist] at h , fun h =>
     ⟨[a], Perm.refl _, singleton_sublist.mpr h⟩⟩
-#align list.subperm_singleton_iff List.subperm_singleton_iff
+#align list.subperm_singleton_iff List.singleton_subperm_iff
 -/
 
 #print List.Subperm.cons_left /-

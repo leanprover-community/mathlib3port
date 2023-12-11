@@ -235,7 +235,7 @@ theorem doset_union_rightCoset (H K : Subgroup G) (a : G) :
 
 #print Doset.doset_union_leftCoset /-
 theorem doset_union_leftCoset (H K : Subgroup G) (a : G) :
-    (⋃ h : H, leftCoset (h * a : G) K) = Doset.doset a H K :=
+    (⋃ h : H, HSMul.hSMul (h * a : G) K) = Doset.doset a H K :=
   by
   ext x
   simp only [mem_leftCoset_iff, mul_inv_rev, Set.mem_iUnion, mem_doset]
