@@ -126,22 +126,22 @@ theorem isComplement'_comm : IsComplement' H K ↔ IsComplement' K H :=
 #align add_subgroup.is_complement'_comm AddSubgroup.isComplement'_comm
 -/
 
-#print Subgroup.isComplement_top_singleton /-
+#print Subgroup.isComplement_univ_singleton /-
 @[to_additive]
-theorem isComplement_top_singleton {g : G} : IsComplement (⊤ : Set G) {g} :=
+theorem isComplement_univ_singleton {g : G} : IsComplement (⊤ : Set G) {g} :=
   ⟨fun ⟨x, _, rfl⟩ ⟨y, _, rfl⟩ h => Prod.ext (Subtype.ext (mul_right_cancel h)) rfl, fun x =>
     ⟨⟨⟨x * g⁻¹, ⟨⟩⟩, g, rfl⟩, inv_mul_cancel_right x g⟩⟩
-#align subgroup.is_complement_top_singleton Subgroup.isComplement_top_singleton
-#align add_subgroup.is_complement_top_singleton AddSubgroup.isComplement_top_singleton
+#align subgroup.is_complement_top_singleton Subgroup.isComplement_univ_singleton
+#align add_subgroup.is_complement_top_singleton AddSubgroup.isComplement_univ_singleton
 -/
 
-#print Subgroup.isComplement_singleton_top /-
+#print Subgroup.isComplement_singleton_univ /-
 @[to_additive]
-theorem isComplement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
+theorem isComplement_singleton_univ {g : G} : IsComplement ({g} : Set G) ⊤ :=
   ⟨fun ⟨⟨_, rfl⟩, x⟩ ⟨⟨_, rfl⟩, y⟩ h => Prod.ext rfl (Subtype.ext (mul_left_cancel h)), fun x =>
     ⟨⟨⟨g, rfl⟩, g⁻¹ * x, ⟨⟩⟩, mul_inv_cancel_left g x⟩⟩
-#align subgroup.is_complement_singleton_top Subgroup.isComplement_singleton_top
-#align add_subgroup.is_complement_singleton_top AddSubgroup.isComplement_singleton_top
+#align subgroup.is_complement_singleton_top Subgroup.isComplement_singleton_univ
+#align add_subgroup.is_complement_singleton_top AddSubgroup.isComplement_singleton_univ
 -/
 
 #print Subgroup.isComplement_singleton_left /-
@@ -170,9 +170,9 @@ theorem isComplement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ :=
 #align add_subgroup.is_complement_singleton_right AddSubgroup.isComplement_singleton_right
 -/
 
-#print Subgroup.isComplement_top_left /-
+#print Subgroup.isComplement_univ_left /-
 @[to_additive]
-theorem isComplement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} :=
+theorem isComplement_univ_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} :=
   by
   refine'
     ⟨fun h => set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨_, fun a ha b hb => _⟩, _⟩
@@ -183,13 +183,13 @@ theorem isComplement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} :=
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).2
   · rintro ⟨g, rfl⟩
     exact is_complement_top_singleton
-#align subgroup.is_complement_top_left Subgroup.isComplement_top_left
-#align add_subgroup.is_complement_top_left AddSubgroup.isComplement_top_left
+#align subgroup.is_complement_top_left Subgroup.isComplement_univ_left
+#align add_subgroup.is_complement_top_left AddSubgroup.isComplement_univ_left
 -/
 
-#print Subgroup.isComplement_top_right /-
+#print Subgroup.isComplement_univ_right /-
 @[to_additive]
-theorem isComplement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} :=
+theorem isComplement_univ_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} :=
   by
   refine'
     ⟨fun h => set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨_, fun a ha b hb => _⟩, _⟩
@@ -200,14 +200,14 @@ theorem isComplement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} :=
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).1
   · rintro ⟨g, rfl⟩
     exact is_complement_singleton_top
-#align subgroup.is_complement_top_right Subgroup.isComplement_top_right
-#align add_subgroup.is_complement_top_right AddSubgroup.isComplement_top_right
+#align subgroup.is_complement_top_right Subgroup.isComplement_univ_right
+#align add_subgroup.is_complement_top_right AddSubgroup.isComplement_univ_right
 -/
 
 #print Subgroup.isComplement'_top_bot /-
 @[to_additive]
 theorem isComplement'_top_bot : IsComplement' (⊤ : Subgroup G) ⊥ :=
-  isComplement_top_singleton
+  isComplement_univ_singleton
 #align subgroup.is_complement'_top_bot Subgroup.isComplement'_top_bot
 #align add_subgroup.is_complement'_top_bot AddSubgroup.isComplement'_top_bot
 -/
@@ -215,7 +215,7 @@ theorem isComplement'_top_bot : IsComplement' (⊤ : Subgroup G) ⊥ :=
 #print Subgroup.isComplement'_bot_top /-
 @[to_additive]
 theorem isComplement'_bot_top : IsComplement' (⊥ : Subgroup G) ⊤ :=
-  isComplement_singleton_top
+  isComplement_singleton_univ
 #align subgroup.is_complement'_bot_top Subgroup.isComplement'_bot_top
 #align add_subgroup.is_complement'_bot_top AddSubgroup.isComplement'_bot_top
 -/
@@ -239,7 +239,7 @@ theorem isComplement'_bot_right : IsComplement' H ⊥ ↔ H = ⊤ :=
 #print Subgroup.isComplement'_top_left /-
 @[simp, to_additive]
 theorem isComplement'_top_left : IsComplement' ⊤ H ↔ H = ⊥ :=
-  isComplement_top_left.trans coe_eq_singleton
+  isComplement_univ_left.trans coe_eq_singleton
 #align subgroup.is_complement'_top_left Subgroup.isComplement'_top_left
 #align add_subgroup.is_complement'_top_left AddSubgroup.isComplement'_top_left
 -/
@@ -247,7 +247,7 @@ theorem isComplement'_top_left : IsComplement' ⊤ H ↔ H = ⊥ :=
 #print Subgroup.isComplement'_top_right /-
 @[simp, to_additive]
 theorem isComplement'_top_right : IsComplement' H ⊤ ↔ H = ⊥ :=
-  isComplement_top_right.trans coe_eq_singleton
+  isComplement_univ_right.trans coe_eq_singleton
 #align subgroup.is_complement'_top_right Subgroup.isComplement'_top_right
 #align add_subgroup.is_complement'_top_right AddSubgroup.isComplement'_top_right
 -/

@@ -278,14 +278,16 @@ theorem perm_cons_erase [DecidableEq α] {a : α} {l : List α} (h : a ∈ l) : 
 #align list.perm_cons_erase List.perm_cons_erase
 -/
 
+#print List.Perm.recOnSwap' /-
 @[elab_as_elim]
-theorem perm_induction_on {P : List α → List α → Prop} {l₁ l₂ : List α} (p : l₁ ~ l₂) (h₁ : P [] [])
-    (h₂ : ∀ x l₁ l₂, l₁ ~ l₂ → P l₁ l₂ → P (x :: l₁) (x :: l₂))
+theorem List.Perm.recOnSwap' {P : List α → List α → Prop} {l₁ l₂ : List α} (p : l₁ ~ l₂)
+    (h₁ : P [] []) (h₂ : ∀ x l₁ l₂, l₁ ~ l₂ → P l₁ l₂ → P (x :: l₁) (x :: l₂))
     (h₃ : ∀ x y l₁ l₂, l₁ ~ l₂ → P l₁ l₂ → P (y :: x :: l₁) (x :: y :: l₂))
     (h₄ : ∀ l₁ l₂ l₃, l₁ ~ l₂ → l₂ ~ l₃ → P l₁ l₂ → P l₂ l₃ → P l₁ l₃) : P l₁ l₂ :=
   have P_refl : ∀ l, P l l := fun l => List.recOn l h₁ fun x xs ih => h₂ x xs xs (Perm.refl xs) ih
   Perm.rec_on p h₁ h₂ (fun x y l => h₃ x y l l (Perm.refl l) (P_refl l)) h₄
-#align list.perm_induction_on List.perm_induction_onₓ
+#align list.perm_induction_on List.Perm.recOnSwap'
+-/
 
 #print List.Perm.filterMap /-
 @[congr]
@@ -614,7 +616,7 @@ theorem Subperm.count_le [DecidableEq α] {l₁ l₂ : List α} (s : l₁ <+~ l�
 #print List.Perm.foldl_eq' /-
 theorem Perm.foldl_eq' {f : β → α → β} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
     (∀ x ∈ l₁, ∀ y ∈ l₁, ∀ (z), f (f z x) y = f (f z y) x) → ∀ b, foldl f b l₁ = foldl f b l₂ :=
-  perm_induction_on p (fun H b => rfl)
+  List.Perm.recOnSwap' p (fun H b => rfl)
     (fun x t₁ t₂ p r H b => r (fun x hx y hy => H _ (Or.inr hx) _ (Or.inr hy)) _)
     (fun x y t₁ t₂ p r H b => by
       simp only [foldl]
@@ -635,7 +637,7 @@ theorem Perm.foldl_eq {f : β → α → β} {l₁ l₂ : List α} (rcomm : Righ
 #print List.Perm.foldr_eq /-
 theorem Perm.foldr_eq {f : α → β → β} {l₁ l₂ : List α} (lcomm : LeftCommutative f) (p : l₁ ~ l₂) :
     ∀ b, foldr f b l₁ = foldr f b l₂ :=
-  perm_induction_on p (fun b => rfl) (fun x t₁ t₂ p r b => by simp <;> rw [r b])
+  List.Perm.recOnSwap' p (fun b => rfl) (fun x t₁ t₂ p r b => by simp <;> rw [r b])
     (fun x y t₁ t₂ p r b => by simp <;> rw [lcomm, r b]) fun t₁ t₂ t₃ p₁ p₂ r₁ r₂ a =>
     Eq.trans (r₁ a) (r₂ a)
 #align list.perm.foldr_eq List.Perm.foldr_eq
@@ -865,17 +867,17 @@ protected theorem Nodup.subperm (d : Nodup l₁) (H : l₁ ⊆ l₂) : l₁ <+~ 
 #align list.nodup.subperm List.Nodup.subperm
 -/
 
-#print List.perm_ext /-
-theorem perm_ext {l₁ l₂ : List α} (d₁ : Nodup l₁) (d₂ : Nodup l₂) :
+#print List.perm_ext_iff_of_nodup /-
+theorem perm_ext_iff_of_nodup {l₁ l₂ : List α} (d₁ : Nodup l₁) (d₂ : Nodup l₂) :
     l₁ ~ l₂ ↔ ∀ a, a ∈ l₁ ↔ a ∈ l₂ :=
   ⟨fun p a => p.mem_iff, fun H =>
     (d₁.Subperm fun a => (H a).1).antisymm <| d₂.Subperm fun a => (H a).2⟩
-#align list.perm_ext List.perm_ext
+#align list.perm_ext List.perm_ext_iff_of_nodup
 -/
 
-#print List.Nodup.sublist_ext /-
-theorem Nodup.sublist_ext {l₁ l₂ l : List α} (d : Nodup l) (s₁ : l₁ <+ l) (s₂ : l₂ <+ l) :
-    l₁ ~ l₂ ↔ l₁ = l₂ :=
+#print List.Nodup.perm_iff_eq_of_sublist /-
+theorem Nodup.perm_iff_eq_of_sublist {l₁ l₂ l : List α} (d : Nodup l) (s₁ : l₁ <+ l)
+    (s₂ : l₂ <+ l) : l₁ ~ l₂ ↔ l₁ = l₂ :=
   ⟨fun h => by
     induction' s₂ with l₂ l a s₂ IH l₂ l a s₂ IH generalizing l₁
     · exact h.eq_nil
@@ -889,7 +891,7 @@ theorem Nodup.sublist_ext {l₁ l₂ l : List α} (d : Nodup l) (s₁ : l₁ <+ 
       · apply d.1.elim
         exact subperm.subset ⟨_, h, s₁⟩ (mem_cons_self _ _)
       · rw [IH d.2 s₁ h.cons_inv], fun h => by rw [h]⟩
-#align list.nodup.sublist_ext List.Nodup.sublist_ext
+#align list.nodup.sublist_ext List.Nodup.perm_iff_eq_of_sublist
 -/
 
 section
@@ -1372,8 +1374,8 @@ theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
 #align list.perm_lookmap List.perm_lookmap
 -/
 
-#print List.Perm.erasep /-
-theorem Perm.erasep (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α}
+#print List.Perm.eraseP /-
+theorem Perm.eraseP (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α}
     (H : Pairwise (fun a b => f a → f b → False) l₁) (p : l₁ ~ l₂) : eraseP f l₁ ~ eraseP f l₂ :=
   by
   let F a b := f a → f b → False
@@ -1387,7 +1389,7 @@ theorem Perm.erasep (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α}
     · apply swap
   · refine' (IH₁ H).trans (IH₂ ((p₁.pairwise_iff _).1 H))
     exact fun a b h h₁ h₂ => h h₂ h₁
-#align list.perm.erasep List.Perm.erasep
+#align list.perm.erasep List.Perm.eraseP
 -/
 
 #print List.Perm.take_inter /-
