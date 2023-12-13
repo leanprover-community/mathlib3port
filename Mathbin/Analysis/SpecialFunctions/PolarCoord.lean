@@ -34,7 +34,7 @@ open scoped Real Topology
 /-- The polar coordinates local homeomorphism in `ℝ^2`, mapping `(r cos θ, r sin θ)` to `(r, θ)`.
 It is a homeomorphism between `ℝ^2 - (-∞, 0]` and `(0, +∞) × (-π, π)`. -/
 @[simps]
-def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
+def polarCoord : PartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     where
   toFun q := (Real.sqrt (q.1 ^ 2 + q.2 ^ 2), Complex.arg (Complex.equivRealProd.symm q))
   invFun p := (p.1 * cos p.2, p.1 * sin p.2)

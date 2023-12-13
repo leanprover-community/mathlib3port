@@ -32,12 +32,12 @@ theorem isOpenMap_exp : IsOpenMap exp :=
 #align complex.is_open_map_exp Complex.isOpenMap_exp
 -/
 
-#print Complex.expLocalHomeomorph /-
+#print Complex.expPartialHomeomorph /-
 /-- `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
 `target = {z | 0 < re z} ∪ {z | im z ≠ 0}`. This definition is used to prove that `complex.log`
 is complex differentiable at all points but the negative real semi-axis. -/
-def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
-  LocalHomeomorph.ofContinuousOpen
+def expPartialHomeomorph : PartialHomeomorph ℂ ℂ :=
+  PartialHomeomorph.ofContinuousOpen
     { toFun := exp
       invFun := log
       source := {z : ℂ | z.im ∈ Ioo (-π) π}
@@ -57,13 +57,13 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
       left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2)
       right_inv' := fun x hx => exp_log <| by rintro rfl; simpa [lt_irrefl] using hx }
     continuous_exp.ContinuousOn isOpenMap_exp (isOpen_Ioo.Preimage continuous_im)
-#align complex.exp_local_homeomorph Complex.expLocalHomeomorph
+#align complex.exp_local_homeomorph Complex.expPartialHomeomorph
 -/
 
 #print Complex.hasStrictDerivAt_log /-
 theorem hasStrictDerivAt_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
   have h0 : x ≠ 0 := by rintro rfl; simpa [lt_irrefl] using h
-  expLocalHomeomorph.hasStrictDerivAt_symm h h0 <| by
+  expPartialHomeomorph.hasStrictDerivAt_symm h h0 <| by
     simpa [exp_log h0] using hasStrictDerivAt_exp (log x)
 #align complex.has_strict_deriv_at_log Complex.hasStrictDerivAt_log
 -/
@@ -77,7 +77,7 @@ theorem hasStrictFDerivAt_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
 
 #print Complex.contDiffAt_log /-
 theorem contDiffAt_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) {n : ℕ∞} : ContDiffAt ℂ n log x :=
-  expLocalHomeomorph.contDiffAt_symm_deriv (exp_ne_zero <| log x) h (hasDerivAt_exp _)
+  expPartialHomeomorph.contDiffAt_symm_deriv (exp_ne_zero <| log x) h (hasDerivAt_exp _)
     contDiff_exp.ContDiffAt
 #align complex.cont_diff_at_log Complex.contDiffAt_log
 -/

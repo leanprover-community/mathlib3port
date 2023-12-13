@@ -494,7 +494,7 @@ def proj : Z.TotalSpace → B :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FiberBundleCore.trivChange /-
 /-- Local homeomorphism version of the trivialization change. -/
-def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F)
+def trivChange (i j : ι) : PartialHomeomorph (B × F) (B × F)
     where
   source := (Z.baseSet i ∩ Z.baseSet j) ×ˢ univ
   target := (Z.baseSet i ∩ Z.baseSet j) ×ˢ univ
@@ -704,7 +704,7 @@ theorem continuous_const_section (v : F)
   apply continuous_iff_continuousAt.2 fun x => _
   have A : Z.base_set (Z.index_at x) ∈ 𝓝 x :=
     IsOpen.mem_nhds (Z.is_open_base_set (Z.index_at x)) (Z.mem_base_set_at x)
-  apply ((Z.local_triv_at x).toLocalHomeomorph.continuousAt_iff_continuousAt_comp_left _).2
+  apply ((Z.local_triv_at x).toPartialHomeomorph.continuousAt_iff_continuousAt_comp_left _).2
   · simp only [(· ∘ ·), mfld_simps]
     apply continuous_at_id.prod
     have : ContinuousOn (fun y : B => v) (Z.base_set (Z.index_at x)) := continuousOn_const
@@ -819,7 +819,7 @@ theorem mem_localTrivAt_target (p : B × F) (b : B) :
 #print FiberBundleCore.localTriv_symm_apply /-
 @[simp, mfld_simps]
 theorem localTriv_symm_apply (p : B × F) :
-    (Z.localTriv i).toLocalHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
+    (Z.localTriv i).toPartialHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
   rfl
 #align fiber_bundle_core.local_triv_symm_apply FiberBundleCore.localTriv_symm_apply
 -/

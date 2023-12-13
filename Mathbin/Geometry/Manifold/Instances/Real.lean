@@ -174,7 +174,7 @@ scoped[Manifold]
 /-- The left chart for the topological space `[x, y]`, defined on `[x,y)` and sending `x` to `0` in
 `euclidean_half_space 1`.
 -/
-def IccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
+def IccLeftChart (x y : ℝ) [Fact (x < y)] : PartialHomeomorph (Icc x y) (EuclideanHalfSpace 1)
     where
   source := {z : Icc x y | z.val < y}
   target := {z : EuclideanHalfSpace 1 | z.val 0 < y - x}
@@ -224,7 +224,7 @@ def IccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
 /-- The right chart for the topological space `[x, y]`, defined on `(x,y]` and sending `y` to `0` in
 `euclidean_half_space 1`.
 -/
-def IccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
+def IccRightChart (x y : ℝ) [Fact (x < y)] : PartialHomeomorph (Icc x y) (EuclideanHalfSpace 1)
     where
   source := {z : Icc x y | x < z.val}
   target := {z : EuclideanHalfSpace 1 | z.val 0 < y - x}

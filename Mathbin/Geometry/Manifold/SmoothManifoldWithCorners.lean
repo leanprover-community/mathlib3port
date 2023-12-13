@@ -392,7 +392,7 @@ theorem unique_diff_preimage {s : Set H} (hs : IsOpen s) :
 -/
 
 #print ModelWithCorners.unique_diff_preimage_source /-
-theorem unique_diff_preimage_source {β : Type _} [TopologicalSpace β] {e : LocalHomeomorph H β} :
+theorem unique_diff_preimage_source {β : Type _} [TopologicalSpace β] {e : PartialHomeomorph H β} :
     UniqueDiffOn 𝕜 (I.symm ⁻¹' e.source ∩ range I) :=
   I.unique_diff_preimage e.open_source
 #align model_with_corners.unique_diff_preimage_source ModelWithCorners.unique_diff_preimage_source
@@ -711,7 +711,7 @@ variable (n)
 #print ofSet_mem_contDiffGroupoid /-
 /-- An identity local homeomorphism belongs to the `C^n` groupoid. -/
 theorem ofSet_mem_contDiffGroupoid {s : Set H} (hs : IsOpen s) :
-    LocalHomeomorph.ofSet s hs ∈ contDiffGroupoid n I :=
+    PartialHomeomorph.ofSet s hs ∈ contDiffGroupoid n I :=
   by
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
   suffices h : ContDiffOn 𝕜 n (I ∘ I.symm) (I.symm ⁻¹' s ∩ range I)
@@ -724,10 +724,10 @@ theorem ofSet_mem_contDiffGroupoid {s : Set H} (hs : IsOpen s) :
 #print symm_trans_mem_contDiffGroupoid /-
 /-- The composition of a local homeomorphism from `H` to `M` and its inverse belongs to
 the `C^n` groupoid. -/
-theorem symm_trans_mem_contDiffGroupoid (e : LocalHomeomorph M H) :
+theorem symm_trans_mem_contDiffGroupoid (e : PartialHomeomorph M H) :
     e.symm.trans e ∈ contDiffGroupoid n I :=
-  haveI : e.symm.trans e ≈ LocalHomeomorph.ofSet e.target e.open_target :=
-    LocalHomeomorph.trans_symm_self _
+  haveI : e.symm.trans e ≈ PartialHomeomorph.ofSet e.target e.open_target :=
+    PartialHomeomorph.trans_symm_self _
   StructureGroupoid.eq_on_source _ (ofSet_mem_contDiffGroupoid n I e.open_target) this
 #align symm_trans_mem_cont_diff_groupoid symm_trans_mem_contDiffGroupoid
 -/
@@ -737,13 +737,13 @@ variable {E' H' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] [Topolog
 #print contDiffGroupoid_prod /-
 /-- The product of two smooth local homeomorphisms is smooth. -/
 theorem contDiffGroupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'}
-    {e : LocalHomeomorph H H} {e' : LocalHomeomorph H' H'} (he : e ∈ contDiffGroupoid ⊤ I)
+    {e : PartialHomeomorph H H} {e' : PartialHomeomorph H' H'} (he : e ∈ contDiffGroupoid ⊤ I)
     (he' : e' ∈ contDiffGroupoid ⊤ I') : e.Prod e' ∈ contDiffGroupoid ⊤ (I.Prod I') :=
   by
   cases' he with he he_symm
   cases' he' with he' he'_symm
   simp only at he he_symm he' he'_symm 
-  constructor <;> simp only [LocalEquiv.prod_source, LocalHomeomorph.prod_toLocalEquiv]
+  constructor <;> simp only [LocalEquiv.prod_source, PartialHomeomorph.prod_toLocalEquiv]
   · have h3 := ContDiffOn.prod_map he he'
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3 
     rw [← (I.prod I').image_eq]
@@ -795,7 +795,7 @@ theorem smoothManifoldWithCorners_of_contDiffOn {𝕜 : Type _} [NontriviallyNor
     {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H]
     (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
     (h :
-      ∀ e e' : LocalHomeomorph M H,
+      ∀ e e' : PartialHomeomorph M H,
         e ∈ atlas H M →
           e' ∈ atlas H M →
             ContDiffOn 𝕜 ⊤ (I ∘ e.symm ≫ₕ e' ∘ I.symm)
@@ -855,7 +855,7 @@ theorem chart_mem_maximalAtlas [SmoothManifoldWithCorners I M] (x : M) :
 variable {I}
 
 #print SmoothManifoldWithCorners.compatible_of_mem_maximalAtlas /-
-theorem compatible_of_mem_maximalAtlas {e e' : LocalHomeomorph M H} (he : e ∈ maximalAtlas I M)
+theorem compatible_of_mem_maximalAtlas {e e' : PartialHomeomorph M H} (he : e ∈ maximalAtlas I M)
     (he' : e' ∈ maximalAtlas I M) : e.symm.trans e' ∈ contDiffGroupoid ∞ I :=
   StructureGroupoid.compatible_of_mem_maximalAtlas he he'
 #align smooth_manifold_with_corners.compatible_of_mem_maximal_atlas SmoothManifoldWithCorners.compatible_of_mem_maximalAtlas
@@ -872,7 +872,7 @@ instance prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [Norme
     where compatible :=
     by
     rintro f g ⟨f1, f2, hf1, hf2, rfl⟩ ⟨g1, g2, hg1, hg2, rfl⟩
-    rw [LocalHomeomorph.prod_symm, LocalHomeomorph.prod_trans]
+    rw [PartialHomeomorph.prod_symm, PartialHomeomorph.prod_trans]
     have h1 := HasGroupoid.compatible (contDiffGroupoid ⊤ I) hf1 hg1
     have h2 := HasGroupoid.compatible (contDiffGroupoid ⊤ I') hf2 hg2
     exact contDiffGroupoid_prod h1 h2
@@ -881,15 +881,15 @@ instance prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [Norme
 
 end SmoothManifoldWithCorners
 
-#print LocalHomeomorph.singleton_smoothManifoldWithCorners /-
-theorem LocalHomeomorph.singleton_smoothManifoldWithCorners {𝕜 : Type _} [NontriviallyNormedField 𝕜]
-    {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H]
-    (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] (e : LocalHomeomorph M H)
-    (h : e.source = Set.univ) :
+#print PartialHomeomorph.singleton_smoothManifoldWithCorners /-
+theorem PartialHomeomorph.singleton_smoothManifoldWithCorners {𝕜 : Type _}
+    [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
+    [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M]
+    (e : PartialHomeomorph M H) (h : e.source = Set.univ) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ (e.singletonChartedSpace h) :=
   @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <|
     e.singleton_hasGroupoid h (contDiffGroupoid ∞ I)
-#align local_homeomorph.singleton_smooth_manifold_with_corners LocalHomeomorph.singleton_smoothManifoldWithCorners
+#align local_homeomorph.singleton_smooth_manifold_with_corners PartialHomeomorph.singleton_smoothManifoldWithCorners
 -/
 
 #print OpenEmbedding.singleton_smoothManifoldWithCorners /-
@@ -898,7 +898,7 @@ theorem OpenEmbedding.singleton_smoothManifoldWithCorners {𝕜 : Type _} [Nontr
     (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [Nonempty M] {f : M → H}
     (h : OpenEmbedding f) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ h.singletonChartedSpace :=
-  (h.toLocalHomeomorph f).singleton_smoothManifoldWithCorners I (by simp)
+  (h.toPartialHomeomorph f).singleton_smoothManifoldWithCorners I (by simp)
 #align open_embedding.singleton_smooth_manifold_with_corners OpenEmbedding.singleton_smoothManifoldWithCorners
 -/
 
@@ -920,7 +920,7 @@ section ExtendedCharts
 open scoped Topology
 
 variable {𝕜 E M H E' M' H' : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E] [TopologicalSpace H] [TopologicalSpace M] (f f' : LocalHomeomorph M H)
+  [NormedSpace 𝕜 E] [TopologicalSpace H] [TopologicalSpace M] (f f' : PartialHomeomorph M H)
   (I : ModelWithCorners 𝕜 E H) [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] [TopologicalSpace H']
   [TopologicalSpace M'] (I' : ModelWithCorners 𝕜 E' H') (x : M) {s t : Set M}
 
@@ -934,162 +934,162 @@ as `local_equiv`.
 -/
 
 
-namespace LocalHomeomorph
+namespace PartialHomeomorph
 
-#print LocalHomeomorph.extend /-
+#print PartialHomeomorph.extend /-
 /-- Given a chart `f` on a manifold with corners, `f.extend I` is the extended chart to the model
 vector space. -/
 @[simp, mfld_simps]
 def extend : LocalEquiv M E :=
   f.toLocalEquiv ≫ I.toLocalEquiv
-#align local_homeomorph.extend LocalHomeomorph.extend
+#align local_homeomorph.extend PartialHomeomorph.extend
 -/
 
-#print LocalHomeomorph.extend_coe /-
+#print PartialHomeomorph.extend_coe /-
 theorem extend_coe : ⇑(f.extend I) = I ∘ f :=
   rfl
-#align local_homeomorph.extend_coe LocalHomeomorph.extend_coe
+#align local_homeomorph.extend_coe PartialHomeomorph.extend_coe
 -/
 
-#print LocalHomeomorph.extend_coe_symm /-
+#print PartialHomeomorph.extend_coe_symm /-
 theorem extend_coe_symm : ⇑(f.extend I).symm = f.symm ∘ I.symm :=
   rfl
-#align local_homeomorph.extend_coe_symm LocalHomeomorph.extend_coe_symm
+#align local_homeomorph.extend_coe_symm PartialHomeomorph.extend_coe_symm
 -/
 
-#print LocalHomeomorph.extend_source /-
+#print PartialHomeomorph.extend_source /-
 theorem extend_source : (f.extend I).source = f.source := by
   rw [extend, LocalEquiv.trans_source, I.source_eq, preimage_univ, inter_univ]
-#align local_homeomorph.extend_source LocalHomeomorph.extend_source
+#align local_homeomorph.extend_source PartialHomeomorph.extend_source
 -/
 
-#print LocalHomeomorph.isOpen_extend_source /-
+#print PartialHomeomorph.isOpen_extend_source /-
 theorem isOpen_extend_source : IsOpen (f.extend I).source := by rw [extend_source];
   exact f.open_source
-#align local_homeomorph.is_open_extend_source LocalHomeomorph.isOpen_extend_source
+#align local_homeomorph.is_open_extend_source PartialHomeomorph.isOpen_extend_source
 -/
 
-#print LocalHomeomorph.extend_target /-
+#print PartialHomeomorph.extend_target /-
 theorem extend_target : (f.extend I).target = I.symm ⁻¹' f.target ∩ range I := by
   simp_rw [extend, LocalEquiv.trans_target, I.target_eq, I.to_local_equiv_coe_symm, inter_comm]
-#align local_homeomorph.extend_target LocalHomeomorph.extend_target
+#align local_homeomorph.extend_target PartialHomeomorph.extend_target
 -/
 
-#print LocalHomeomorph.mapsTo_extend /-
+#print PartialHomeomorph.mapsTo_extend /-
 theorem mapsTo_extend (hs : s ⊆ f.source) :
     MapsTo (f.extend I) s ((f.extend I).symm ⁻¹' s ∩ range I) :=
   by
   rw [maps_to', extend_coe, extend_coe_symm, preimage_comp, ← I.image_eq, image_comp,
     f.image_eq_target_inter_inv_preimage hs]
   exact image_subset _ (inter_subset_right _ _)
-#align local_homeomorph.maps_to_extend LocalHomeomorph.mapsTo_extend
+#align local_homeomorph.maps_to_extend PartialHomeomorph.mapsTo_extend
 -/
 
-#print LocalHomeomorph.extend_left_inv /-
+#print PartialHomeomorph.extend_left_inv /-
 theorem extend_left_inv {x : M} (hxf : x ∈ f.source) : (f.extend I).symm (f.extend I x) = x :=
   (f.extend I).left_inv <| by rwa [f.extend_source]
-#align local_homeomorph.extend_left_inv LocalHomeomorph.extend_left_inv
+#align local_homeomorph.extend_left_inv PartialHomeomorph.extend_left_inv
 -/
 
-#print LocalHomeomorph.extend_source_mem_nhds /-
+#print PartialHomeomorph.extend_source_mem_nhds /-
 theorem extend_source_mem_nhds {x : M} (h : x ∈ f.source) : (f.extend I).source ∈ 𝓝 x :=
   (isOpen_extend_source f I).mem_nhds <| by rwa [f.extend_source I]
-#align local_homeomorph.extend_source_mem_nhds LocalHomeomorph.extend_source_mem_nhds
+#align local_homeomorph.extend_source_mem_nhds PartialHomeomorph.extend_source_mem_nhds
 -/
 
-#print LocalHomeomorph.extend_source_mem_nhdsWithin /-
+#print PartialHomeomorph.extend_source_mem_nhdsWithin /-
 theorem extend_source_mem_nhdsWithin {x : M} (h : x ∈ f.source) : (f.extend I).source ∈ 𝓝[s] x :=
   mem_nhdsWithin_of_mem_nhds <| extend_source_mem_nhds f I h
-#align local_homeomorph.extend_source_mem_nhds_within LocalHomeomorph.extend_source_mem_nhdsWithin
+#align local_homeomorph.extend_source_mem_nhds_within PartialHomeomorph.extend_source_mem_nhdsWithin
 -/
 
-#print LocalHomeomorph.continuousOn_extend /-
+#print PartialHomeomorph.continuousOn_extend /-
 theorem continuousOn_extend : ContinuousOn (f.extend I) (f.extend I).source :=
   by
   refine' I.continuous.comp_continuous_on _
   rw [extend_source]
   exact f.continuous_on
-#align local_homeomorph.continuous_on_extend LocalHomeomorph.continuousOn_extend
+#align local_homeomorph.continuous_on_extend PartialHomeomorph.continuousOn_extend
 -/
 
-#print LocalHomeomorph.continuousAt_extend /-
+#print PartialHomeomorph.continuousAt_extend /-
 theorem continuousAt_extend {x : M} (h : x ∈ f.source) : ContinuousAt (f.extend I) x :=
   (continuousOn_extend f I).ContinuousAt <| extend_source_mem_nhds f I h
-#align local_homeomorph.continuous_at_extend LocalHomeomorph.continuousAt_extend
+#align local_homeomorph.continuous_at_extend PartialHomeomorph.continuousAt_extend
 -/
 
-#print LocalHomeomorph.map_extend_nhds /-
+#print PartialHomeomorph.map_extend_nhds /-
 theorem map_extend_nhds {x : M} (hy : x ∈ f.source) :
     map (f.extend I) (𝓝 x) = 𝓝[range I] f.extend I x := by
   rwa [extend_coe, (· ∘ ·), ← I.map_nhds_eq, ← f.map_nhds_eq, map_map]
-#align local_homeomorph.map_extend_nhds LocalHomeomorph.map_extend_nhds
+#align local_homeomorph.map_extend_nhds PartialHomeomorph.map_extend_nhds
 -/
 
-#print LocalHomeomorph.extend_target_mem_nhdsWithin /-
+#print PartialHomeomorph.extend_target_mem_nhdsWithin /-
 theorem extend_target_mem_nhdsWithin {y : M} (hy : y ∈ f.source) :
     (f.extend I).target ∈ 𝓝[range I] f.extend I y :=
   by
   rw [← LocalEquiv.image_source_eq_target, ← map_extend_nhds f I hy]
   exact image_mem_map (extend_source_mem_nhds _ _ hy)
-#align local_homeomorph.extend_target_mem_nhds_within LocalHomeomorph.extend_target_mem_nhdsWithin
+#align local_homeomorph.extend_target_mem_nhds_within PartialHomeomorph.extend_target_mem_nhdsWithin
 -/
 
-#print LocalHomeomorph.extend_target_subset_range /-
+#print PartialHomeomorph.extend_target_subset_range /-
 theorem extend_target_subset_range : (f.extend I).target ⊆ range I := by simp only [mfld_simps]
-#align local_homeomorph.extend_target_subset_range LocalHomeomorph.extend_target_subset_range
+#align local_homeomorph.extend_target_subset_range PartialHomeomorph.extend_target_subset_range
 -/
 
-#print LocalHomeomorph.nhdsWithin_extend_target_eq /-
+#print PartialHomeomorph.nhdsWithin_extend_target_eq /-
 theorem nhdsWithin_extend_target_eq {y : M} (hy : y ∈ f.source) :
     𝓝[(f.extend I).target] f.extend I y = 𝓝[range I] f.extend I y :=
   (nhdsWithin_mono _ (extend_target_subset_range _ _)).antisymm <|
     nhdsWithin_le_of_mem (extend_target_mem_nhdsWithin _ _ hy)
-#align local_homeomorph.nhds_within_extend_target_eq LocalHomeomorph.nhdsWithin_extend_target_eq
+#align local_homeomorph.nhds_within_extend_target_eq PartialHomeomorph.nhdsWithin_extend_target_eq
 -/
 
-#print LocalHomeomorph.continuousAt_extend_symm' /-
+#print PartialHomeomorph.continuousAt_extend_symm' /-
 theorem continuousAt_extend_symm' {x : E} (h : x ∈ (f.extend I).target) :
     ContinuousAt (f.extend I).symm x :=
   ContinuousAt.comp (f.continuousAt_symm h.2) I.continuous_symm.ContinuousAt
-#align local_homeomorph.continuous_at_extend_symm' LocalHomeomorph.continuousAt_extend_symm'
+#align local_homeomorph.continuous_at_extend_symm' PartialHomeomorph.continuousAt_extend_symm'
 -/
 
-#print LocalHomeomorph.continuousAt_extend_symm /-
+#print PartialHomeomorph.continuousAt_extend_symm /-
 theorem continuousAt_extend_symm {x : M} (h : x ∈ f.source) :
     ContinuousAt (f.extend I).symm (f.extend I x) :=
   continuousAt_extend_symm' f I <| (f.extend I).map_source <| by rwa [f.extend_source]
-#align local_homeomorph.continuous_at_extend_symm LocalHomeomorph.continuousAt_extend_symm
+#align local_homeomorph.continuous_at_extend_symm PartialHomeomorph.continuousAt_extend_symm
 -/
 
-#print LocalHomeomorph.continuousOn_extend_symm /-
+#print PartialHomeomorph.continuousOn_extend_symm /-
 theorem continuousOn_extend_symm : ContinuousOn (f.extend I).symm (f.extend I).target := fun y hy =>
   (continuousAt_extend_symm' _ _ hy).ContinuousWithinAt
-#align local_homeomorph.continuous_on_extend_symm LocalHomeomorph.continuousOn_extend_symm
+#align local_homeomorph.continuous_on_extend_symm PartialHomeomorph.continuousOn_extend_symm
 -/
 
-#print LocalHomeomorph.extend_symm_continuousWithinAt_comp_right_iff /-
+#print PartialHomeomorph.extend_symm_continuousWithinAt_comp_right_iff /-
 theorem extend_symm_continuousWithinAt_comp_right_iff {X} [TopologicalSpace X] {g : M → X}
     {s : Set M} {x : M} :
     ContinuousWithinAt (g ∘ (f.extend I).symm) ((f.extend I).symm ⁻¹' s ∩ range I) (f.extend I x) ↔
       ContinuousWithinAt (g ∘ f.symm) (f.symm ⁻¹' s) (f x) :=
   by convert I.symm_continuous_within_at_comp_right_iff <;> rfl
-#align local_homeomorph.extend_symm_continuous_within_at_comp_right_iff LocalHomeomorph.extend_symm_continuousWithinAt_comp_right_iff
+#align local_homeomorph.extend_symm_continuous_within_at_comp_right_iff PartialHomeomorph.extend_symm_continuousWithinAt_comp_right_iff
 -/
 
-#print LocalHomeomorph.isOpen_extend_preimage' /-
+#print PartialHomeomorph.isOpen_extend_preimage' /-
 theorem isOpen_extend_preimage' {s : Set E} (hs : IsOpen s) :
     IsOpen ((f.extend I).source ∩ f.extend I ⁻¹' s) :=
   (continuousOn_extend f I).isOpen_inter_preimage (isOpen_extend_source _ _) hs
-#align local_homeomorph.is_open_extend_preimage' LocalHomeomorph.isOpen_extend_preimage'
+#align local_homeomorph.is_open_extend_preimage' PartialHomeomorph.isOpen_extend_preimage'
 -/
 
-#print LocalHomeomorph.isOpen_extend_preimage /-
+#print PartialHomeomorph.isOpen_extend_preimage /-
 theorem isOpen_extend_preimage {s : Set E} (hs : IsOpen s) : IsOpen (f.source ∩ f.extend I ⁻¹' s) :=
   by rw [← extend_source f I]; exact is_open_extend_preimage' f I hs
-#align local_homeomorph.is_open_extend_preimage LocalHomeomorph.isOpen_extend_preimage
+#align local_homeomorph.is_open_extend_preimage PartialHomeomorph.isOpen_extend_preimage
 -/
 
-#print LocalHomeomorph.map_extend_nhdsWithin_eq_image /-
+#print PartialHomeomorph.map_extend_nhdsWithin_eq_image /-
 theorem map_extend_nhdsWithin_eq_image {y : M} (hy : y ∈ f.source) :
     map (f.extend I) (𝓝[s] y) = 𝓝[f.extend I '' ((f.extend I).source ∩ s)] f.extend I y := by
   set e := f.extend I <;>
@@ -1101,64 +1101,64 @@ theorem map_extend_nhdsWithin_eq_image {y : M} (hy : y ∈ f.source) :
           ((f.extend I).left_inv <| by rwa [f.extend_source])
           (continuous_at_extend_symm f I hy).ContinuousWithinAt
           (continuous_at_extend f I hy).ContinuousWithinAt
-#align local_homeomorph.map_extend_nhds_within_eq_image LocalHomeomorph.map_extend_nhdsWithin_eq_image
+#align local_homeomorph.map_extend_nhds_within_eq_image PartialHomeomorph.map_extend_nhdsWithin_eq_image
 -/
 
-#print LocalHomeomorph.map_extend_nhdsWithin /-
+#print PartialHomeomorph.map_extend_nhdsWithin /-
 theorem map_extend_nhdsWithin {y : M} (hy : y ∈ f.source) :
     map (f.extend I) (𝓝[s] y) = 𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I y := by
   rw [map_extend_nhds_within_eq_image f I hy, nhdsWithin_inter, ←
     nhds_within_extend_target_eq _ _ hy, ← nhdsWithin_inter, (f.extend I).image_source_inter_eq',
     inter_comm]
-#align local_homeomorph.map_extend_nhds_within LocalHomeomorph.map_extend_nhdsWithin
+#align local_homeomorph.map_extend_nhds_within PartialHomeomorph.map_extend_nhdsWithin
 -/
 
-#print LocalHomeomorph.map_extend_symm_nhdsWithin /-
+#print PartialHomeomorph.map_extend_symm_nhdsWithin /-
 theorem map_extend_symm_nhdsWithin {y : M} (hy : y ∈ f.source) :
     map (f.extend I).symm (𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I y) = 𝓝[s] y :=
   by
   rw [← map_extend_nhds_within f I hy, map_map, map_congr, map_id]
   exact (f.extend I).LeftInvOn.EqOn.eventuallyEq_of_mem (extend_source_mem_nhds_within _ _ hy)
-#align local_homeomorph.map_extend_symm_nhds_within LocalHomeomorph.map_extend_symm_nhdsWithin
+#align local_homeomorph.map_extend_symm_nhds_within PartialHomeomorph.map_extend_symm_nhdsWithin
 -/
 
-#print LocalHomeomorph.map_extend_symm_nhdsWithin_range /-
+#print PartialHomeomorph.map_extend_symm_nhdsWithin_range /-
 theorem map_extend_symm_nhdsWithin_range {y : M} (hy : y ∈ f.source) :
     map (f.extend I).symm (𝓝[range I] f.extend I y) = 𝓝 y := by
   rw [← nhdsWithin_univ, ← map_extend_symm_nhds_within f I hy, preimage_univ, univ_inter]
-#align local_homeomorph.map_extend_symm_nhds_within_range LocalHomeomorph.map_extend_symm_nhdsWithin_range
+#align local_homeomorph.map_extend_symm_nhds_within_range PartialHomeomorph.map_extend_symm_nhdsWithin_range
 -/
 
-#print LocalHomeomorph.extend_preimage_mem_nhdsWithin /-
+#print PartialHomeomorph.extend_preimage_mem_nhdsWithin /-
 /-- Technical lemma ensuring that the preimage under an extended chart of a neighborhood of a point
 in the source is a neighborhood of the preimage, within a set. -/
 theorem extend_preimage_mem_nhdsWithin {x : M} (h : x ∈ f.source) (ht : t ∈ 𝓝[s] x) :
     (f.extend I).symm ⁻¹' t ∈ 𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I x := by
   rwa [← map_extend_symm_nhds_within f I h, mem_map] at ht 
-#align local_homeomorph.extend_preimage_mem_nhds_within LocalHomeomorph.extend_preimage_mem_nhdsWithin
+#align local_homeomorph.extend_preimage_mem_nhds_within PartialHomeomorph.extend_preimage_mem_nhdsWithin
 -/
 
-#print LocalHomeomorph.extend_preimage_mem_nhds /-
+#print PartialHomeomorph.extend_preimage_mem_nhds /-
 theorem extend_preimage_mem_nhds {x : M} (h : x ∈ f.source) (ht : t ∈ 𝓝 x) :
     (f.extend I).symm ⁻¹' t ∈ 𝓝 (f.extend I x) :=
   by
   apply (continuous_at_extend_symm f I h).preimage_mem_nhds
   rwa [(f.extend I).left_inv]
   rwa [f.extend_source]
-#align local_homeomorph.extend_preimage_mem_nhds LocalHomeomorph.extend_preimage_mem_nhds
+#align local_homeomorph.extend_preimage_mem_nhds PartialHomeomorph.extend_preimage_mem_nhds
 -/
 
-#print LocalHomeomorph.extend_preimage_inter_eq /-
+#print PartialHomeomorph.extend_preimage_inter_eq /-
 /-- Technical lemma to rewrite suitably the preimage of an intersection under an extended chart, to
 bring it into a convenient form to apply derivative lemmas. -/
 theorem extend_preimage_inter_eq :
     (f.extend I).symm ⁻¹' (s ∩ t) ∩ range I =
       (f.extend I).symm ⁻¹' s ∩ range I ∩ (f.extend I).symm ⁻¹' t :=
   by mfld_set_tac
-#align local_homeomorph.extend_preimage_inter_eq LocalHomeomorph.extend_preimage_inter_eq
+#align local_homeomorph.extend_preimage_inter_eq PartialHomeomorph.extend_preimage_inter_eq
 -/
 
-#print LocalHomeomorph.extend_symm_preimage_inter_range_eventuallyEq_aux /-
+#print PartialHomeomorph.extend_symm_preimage_inter_range_eventuallyEq_aux /-
 theorem extend_symm_preimage_inter_range_eventuallyEq_aux {s : Set M} {x : M} (hx : x ∈ f.source) :
     ((f.extend I).symm ⁻¹' s ∩ range I : Set _) =ᶠ[𝓝 (f.extend I x)]
       ((f.extend I).target ∩ (f.extend I).symm ⁻¹' s : Set _) :=
@@ -1171,10 +1171,10 @@ theorem extend_symm_preimage_inter_range_eventuallyEq_aux {s : Set M} {x : M} (h
   refine' (eventually_eq_univ.mpr _).symm.inter eventually_eq.rfl
   refine' I.continuous_at_symm.preimage_mem_nhds (f.open_target.mem_nhds _)
   simp_rw [f.extend_coe, Function.comp_apply, I.left_inv, f.maps_to hx]
-#align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq_aux LocalHomeomorph.extend_symm_preimage_inter_range_eventuallyEq_aux
+#align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq_aux PartialHomeomorph.extend_symm_preimage_inter_range_eventuallyEq_aux
 -/
 
-#print LocalHomeomorph.extend_symm_preimage_inter_range_eventuallyEq /-
+#print PartialHomeomorph.extend_symm_preimage_inter_range_eventuallyEq /-
 theorem extend_symm_preimage_inter_range_eventuallyEq {s : Set M} {x : M} (hs : s ⊆ f.source)
     (hx : x ∈ f.source) :
     ((f.extend I).symm ⁻¹' s ∩ range I : Set _) =ᶠ[𝓝 (f.extend I x)] f.extend I '' s :=
@@ -1182,31 +1182,31 @@ theorem extend_symm_preimage_inter_range_eventuallyEq {s : Set M} {x : M} (hs : 
   rw [← f.extend_source I] at hs 
   rw [(f.extend I).image_eq_target_inter_inv_preimage hs]
   exact f.extend_symm_preimage_inter_range_eventually_eq_aux I hx
-#align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq LocalHomeomorph.extend_symm_preimage_inter_range_eventuallyEq
+#align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq PartialHomeomorph.extend_symm_preimage_inter_range_eventuallyEq
 -/
 
 /-! We use the name `extend_coord_change` for `(f'.extend I).symm ≫ f.extend I`. -/
 
 
-#print LocalHomeomorph.extend_coord_change_source /-
+#print PartialHomeomorph.extend_coord_change_source /-
 theorem extend_coord_change_source :
     ((f.extend I).symm ≫ f'.extend I).source = I '' (f.symm ≫ₕ f').source :=
   by
   simp_rw [LocalEquiv.trans_source, I.image_eq, extend_source, LocalEquiv.symm_source,
     extend_target, inter_right_comm _ (range I)]
   rfl
-#align local_homeomorph.extend_coord_change_source LocalHomeomorph.extend_coord_change_source
+#align local_homeomorph.extend_coord_change_source PartialHomeomorph.extend_coord_change_source
 -/
 
-#print LocalHomeomorph.extend_image_source_inter /-
+#print PartialHomeomorph.extend_image_source_inter /-
 theorem extend_image_source_inter :
     f.extend I '' (f.source ∩ f'.source) = ((f.extend I).symm ≫ f'.extend I).source := by
   simp_rw [f.extend_coord_change_source, f.extend_coe, image_comp I f, trans_source'', symm_symm,
     symm_target]
-#align local_homeomorph.extend_image_source_inter LocalHomeomorph.extend_image_source_inter
+#align local_homeomorph.extend_image_source_inter PartialHomeomorph.extend_image_source_inter
 -/
 
-#print LocalHomeomorph.extend_coord_change_source_mem_nhdsWithin /-
+#print PartialHomeomorph.extend_coord_change_source_mem_nhdsWithin /-
 theorem extend_coord_change_source_mem_nhdsWithin {x : E}
     (hx : x ∈ ((f.extend I).symm ≫ f'.extend I).source) :
     ((f.extend I).symm ≫ f'.extend I).source ∈ 𝓝[range I] x :=
@@ -1214,35 +1214,35 @@ theorem extend_coord_change_source_mem_nhdsWithin {x : E}
   rw [f.extend_coord_change_source] at hx ⊢
   obtain ⟨x, hx, rfl⟩ := hx
   refine' I.image_mem_nhds_within _
-  refine' (LocalHomeomorph.open_source _).mem_nhds hx
-#align local_homeomorph.extend_coord_change_source_mem_nhds_within LocalHomeomorph.extend_coord_change_source_mem_nhdsWithin
+  refine' (PartialHomeomorph.open_source _).mem_nhds hx
+#align local_homeomorph.extend_coord_change_source_mem_nhds_within PartialHomeomorph.extend_coord_change_source_mem_nhdsWithin
 -/
 
-#print LocalHomeomorph.extend_coord_change_source_mem_nhdsWithin' /-
+#print PartialHomeomorph.extend_coord_change_source_mem_nhdsWithin' /-
 theorem extend_coord_change_source_mem_nhdsWithin' {x : M} (hxf : x ∈ f.source)
     (hxf' : x ∈ f'.source) : ((f.extend I).symm ≫ f'.extend I).source ∈ 𝓝[range I] f.extend I x :=
   by
   apply extend_coord_change_source_mem_nhds_within
   rw [← extend_image_source_inter]
   exact mem_image_of_mem _ ⟨hxf, hxf'⟩
-#align local_homeomorph.extend_coord_change_source_mem_nhds_within' LocalHomeomorph.extend_coord_change_source_mem_nhdsWithin'
+#align local_homeomorph.extend_coord_change_source_mem_nhds_within' PartialHomeomorph.extend_coord_change_source_mem_nhdsWithin'
 -/
 
 variable {f f'}
 
 open SmoothManifoldWithCorners
 
-#print LocalHomeomorph.contDiffOn_extend_coord_change /-
+#print PartialHomeomorph.contDiffOn_extend_coord_change /-
 theorem contDiffOn_extend_coord_change [ChartedSpace H M] (hf : f ∈ maximalAtlas I M)
     (hf' : f' ∈ maximalAtlas I M) :
     ContDiffOn 𝕜 ⊤ (f.extend I ∘ (f'.extend I).symm) ((f'.extend I).symm ≫ f.extend I).source :=
   by
   rw [extend_coord_change_source, I.image_eq]
   exact (StructureGroupoid.compatible_of_mem_maximalAtlas hf' hf).1
-#align local_homeomorph.cont_diff_on_extend_coord_change LocalHomeomorph.contDiffOn_extend_coord_change
+#align local_homeomorph.cont_diff_on_extend_coord_change PartialHomeomorph.contDiffOn_extend_coord_change
 -/
 
-#print LocalHomeomorph.contDiffWithinAt_extend_coord_change /-
+#print PartialHomeomorph.contDiffWithinAt_extend_coord_change /-
 theorem contDiffWithinAt_extend_coord_change [ChartedSpace H M] (hf : f ∈ maximalAtlas I M)
     (hf' : f' ∈ maximalAtlas I M) {x : E} (hx : x ∈ ((f'.extend I).symm ≫ f.extend I).source) :
     ContDiffWithinAt 𝕜 ⊤ (f.extend I ∘ (f'.extend I).symm) (range I) x :=
@@ -1250,11 +1250,11 @@ theorem contDiffWithinAt_extend_coord_change [ChartedSpace H M] (hf : f ∈ maxi
   apply (cont_diff_on_extend_coord_change I hf hf' x hx).mono_of_mem
   rw [extend_coord_change_source] at hx ⊢
   obtain ⟨z, hz, rfl⟩ := hx
-  exact I.image_mem_nhds_within ((LocalHomeomorph.open_source _).mem_nhds hz)
-#align local_homeomorph.cont_diff_within_at_extend_coord_change LocalHomeomorph.contDiffWithinAt_extend_coord_change
+  exact I.image_mem_nhds_within ((PartialHomeomorph.open_source _).mem_nhds hz)
+#align local_homeomorph.cont_diff_within_at_extend_coord_change PartialHomeomorph.contDiffWithinAt_extend_coord_change
 -/
 
-#print LocalHomeomorph.contDiffWithinAt_extend_coord_change' /-
+#print PartialHomeomorph.contDiffWithinAt_extend_coord_change' /-
 theorem contDiffWithinAt_extend_coord_change' [ChartedSpace H M] (hf : f ∈ maximalAtlas I M)
     (hf' : f' ∈ maximalAtlas I M) {x : M} (hxf : x ∈ f.source) (hxf' : x ∈ f'.source) :
     ContDiffWithinAt 𝕜 ⊤ (f.extend I ∘ (f'.extend I).symm) (range I) (f'.extend I x) :=
@@ -1262,12 +1262,12 @@ theorem contDiffWithinAt_extend_coord_change' [ChartedSpace H M] (hf : f ∈ max
   refine' cont_diff_within_at_extend_coord_change I hf hf' _
   rw [← extend_image_source_inter]
   exact mem_image_of_mem _ ⟨hxf', hxf⟩
-#align local_homeomorph.cont_diff_within_at_extend_coord_change' LocalHomeomorph.contDiffWithinAt_extend_coord_change'
+#align local_homeomorph.cont_diff_within_at_extend_coord_change' PartialHomeomorph.contDiffWithinAt_extend_coord_change'
 -/
 
-end LocalHomeomorph
+end PartialHomeomorph
 
-open LocalHomeomorph
+open PartialHomeomorph
 
 variable [ChartedSpace H M] [ChartedSpace H' M']
 

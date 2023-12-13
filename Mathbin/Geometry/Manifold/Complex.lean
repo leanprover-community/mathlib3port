@@ -85,7 +85,7 @@ protected theorem isLocallyConstant {f : M → F} (hf : MDifferentiable 𝓘(ℂ
     rw [← Filter.mem_map, (chart_at E p).symm_map_nhds_eq (mem_chart_source E p)]
     exact hps'
   have key₂ : (chart_at E p).target ∈ 𝓝 (chart_at E p p) :=
-    (LocalHomeomorph.open_target _).mem_nhds (mem_chart_target E p)
+    (PartialHomeomorph.open_target _).mem_nhds (mem_chart_target E p)
   -- `f` pulled back by the chart at `p` is differentiable around `chart_at E p p`
   have hf' : ∀ᶠ z : E in 𝓝 (chart_at E p p), DifferentiableAt ℂ (f ∘ (chart_at E p).symm) z :=
     by
@@ -94,22 +94,22 @@ protected theorem isLocallyConstant {f : M → F} (hf : MDifferentiable 𝓘(ℂ
     have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).source := trivial
     have H := (mdifferentiableAt_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
     simp only [differentiableWithinAt_univ, mfld_simps] at H 
-    simpa [LocalHomeomorph.right_inv _ hz] using H.2
+    simpa [PartialHomeomorph.right_inv _ hz] using H.2
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
   have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) :=
     by
     refine' Filter.eventually_of_mem key₁ fun z hz => _
     refine' (hp₀ ((chart_at E p).symm z) hz).trans (_ : ‖f p₀‖ ≤ ‖f _‖)
-    rw [← hp, LocalHomeomorph.left_inv _ (mem_chart_source E p)]
+    rw [← hp, PartialHomeomorph.left_inv _ (mem_chart_source E p)]
   -- so by the maximum principle `f` is equal to `f p` near `p`
   obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_isLocalMax_norm hf' hf'').exists_mem
   have H₁ : chart_at E p ⁻¹' U ∈ 𝓝 p := (chart_at E p).ContinuousAt (mem_chart_source E p) hU
   have H₂ : (chart_at E p).source ∈ 𝓝 p :=
-    (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
+    (PartialHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
   apply Filter.mem_of_superset (Filter.inter_mem hps' (Filter.inter_mem H₁ H₂))
   rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩
-  simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
+  simpa [PartialHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
 #align mdifferentiable.is_locally_constant MDifferentiable.isLocallyConstant
 -/
 

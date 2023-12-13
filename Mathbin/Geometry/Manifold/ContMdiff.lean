@@ -86,8 +86,8 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
   [NormedSpace 𝕜 F₂] {F₃ : Type _} [NormedAddCommGroup F₃] [NormedSpace 𝕜 F₃] {F₄ : Type _}
   [NormedAddCommGroup F₄] [NormedSpace 𝕜 F₄]
   -- declare functions, sets, points and smoothness indices
-  {e : LocalHomeomorph M H}
-  {e' : LocalHomeomorph M' H'} {f f₁ : M → M'} {s s₁ t : Set M} {x : M} {m n : ℕ∞}
+  {e : PartialHomeomorph M H}
+  {e' : PartialHomeomorph M' H'} {f f₁ : M → M'} {s s₁ t : Set M} {x : M} {m n : ℕ∞}
 
 #print ContDiffWithinAtProp /-
 /-- Property in the model space of a model with corners of being `C^n` within at set at a point,
@@ -424,9 +424,9 @@ theorem contMDiffWithinAt_iff_target :
     exact
       inter_mem self_mem_nhdsWithin
         (h.preimage_mem_nhds_within <| (chart_at _ _).open_source.mem_nhds <| mem_chart_source _ _)
-  simp_rw [Cont, ContDiffWithinAtProp, extChartAt, LocalHomeomorph.extend, LocalEquiv.coe_trans,
-    ModelWithCorners.toLocalEquiv_coe, LocalHomeomorph.coe_coe, modelWithCornersSelf_coe,
-    chartAt_self_eq, LocalHomeomorph.refl_apply, comp.left_id]
+  simp_rw [Cont, ContDiffWithinAtProp, extChartAt, PartialHomeomorph.extend, LocalEquiv.coe_trans,
+    ModelWithCorners.toLocalEquiv_coe, PartialHomeomorph.coe_coe, modelWithCornersSelf_coe,
+    chartAt_self_eq, PartialHomeomorph.refl_apply, comp.left_id]
 #align cont_mdiff_within_at_iff_target contMDiffWithinAt_iff_target
 -/
 
@@ -671,7 +671,7 @@ theorem contMDiffOn_iff_target :
   by
   inhabit E'
   simp only [contMDiffOn_iff, ModelWithCorners.source_eq, chartAt_self_eq,
-    LocalHomeomorph.refl_localEquiv, LocalEquiv.refl_trans, extChartAt, LocalHomeomorph.extend,
+    PartialHomeomorph.refl_localEquiv, LocalEquiv.refl_trans, extChartAt, PartialHomeomorph.extend,
     Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
   intro h
   constructor
@@ -1001,10 +1001,10 @@ theorem contMDiffWithinAt_iff_contMDiffOn_nhds {n : ℕ} :
         IsOpen o ∧ x ∈ o ∧ o ⊆ (chart_at H x).source ∧ o ∩ s ⊆ f ⁻¹' (chart_at H' (f x)).source :=
       by
       have : (chart_at H' (f x)).source ∈ 𝓝 (f x) :=
-        IsOpen.mem_nhds (LocalHomeomorph.open_source _) (mem_chart_source H' (f x))
+        IsOpen.mem_nhds (PartialHomeomorph.open_source _) (mem_chart_source H' (f x))
       rcases mem_nhdsWithin.1 (h.1.preimage_mem_nhdsWithin this) with ⟨u, u_open, xu, hu⟩
       refine' ⟨u ∩ (chart_at H x).source, _, ⟨xu, mem_chart_source _ _⟩, _, _⟩
-      · exact IsOpen.inter u_open (LocalHomeomorph.open_source _)
+      · exact IsOpen.inter u_open (PartialHomeomorph.open_source _)
       · intro y hy; exact hy.2
       · intro y hy; exact hu ⟨hy.1.1, hy.2⟩
     have h' : ContMDiffWithinAt I I' n f (s ∩ o) x := h.mono (inter_subset_left _ _)
@@ -1490,7 +1490,7 @@ theorem contMDiffOn_extChartAt_symm (x : M) :
 
 #print contMDiffOn_of_mem_contDiffGroupoid /-
 /-- An element of `cont_diff_groupoid ⊤ I` is `C^n` for any `n`. -/
-theorem contMDiffOn_of_mem_contDiffGroupoid {e' : LocalHomeomorph H H}
+theorem contMDiffOn_of_mem_contDiffGroupoid {e' : PartialHomeomorph H H}
     (h : e' ∈ contDiffGroupoid ⊤ I) : ContMDiffOn I I n e' e'.source :=
   (contDiffWithinAt_localInvariantProp I I n).liftPropOn_of_mem_groupoid (contDiffWithinAtProp_id I)
     h
@@ -2518,7 +2518,7 @@ section
 variable [ChartedSpace H M'] [IsM' : SmoothManifoldWithCorners I M']
 
 #print isLocalStructomorphOn_contDiffGroupoid_iff_aux /-
-theorem isLocalStructomorphOn_contDiffGroupoid_iff_aux {f : LocalHomeomorph M M'}
+theorem isLocalStructomorphOn_contDiffGroupoid_iff_aux {f : PartialHomeomorph M M'}
     (hf : LiftPropOn (contDiffGroupoid ⊤ I).IsLocalStructomorphWithinAt f f.source) :
     SmoothOn I I f f.source :=
   by
@@ -2568,7 +2568,7 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff_aux {f : LocalHomeomorph M M'
 /-- Let `M` and `M'` be smooth manifolds with the same model-with-corners, `I`.  Then `f : M → M'`
 is a local structomorphism for `I`, if and only if it is manifold-smooth on the domain of definition
 in both directions. -/
-theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : LocalHomeomorph M M') :
+theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : PartialHomeomorph M M') :
     LiftPropOn (contDiffGroupoid ⊤ I).IsLocalStructomorphWithinAt f f.source ↔
       SmoothOn I I f f.source ∧ SmoothOn I I f.symm f.target :=
   by
@@ -2586,7 +2586,7 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : LocalHomeomorph M M') :
     obtain ⟨-, hxf⟩ := h x hx
     refine' ⟨(f.symm.continuous_at hX).ContinuousWithinAt, fun h2x => _⟩
     obtain ⟨e, he, h2e, hef, hex⟩ :
-      ∃ e : LocalHomeomorph H H,
+      ∃ e : PartialHomeomorph H H,
         e ∈ contDiffGroupoid ⊤ I ∧
           e.source ⊆ (c.symm ≫ₕ f ≫ₕ c').source ∧
             eq_on (c' ∘ f ∘ c.symm) e e.source ∧ c x ∈ e.source :=
@@ -2595,7 +2595,7 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : LocalHomeomorph M M') :
       have h2 : ⇑c' ∘ ⇑f ∘ ⇑c.symm = ⇑(c.symm ≫ₕ f ≫ₕ c') := rfl
       have hcx : c x ∈ c.symm ⁻¹' f.source := by simp only [hx, mfld_simps]
       rw [h2]
-      rw [← h1, h2, LocalHomeomorph.isLocalStructomorphWithinAt_iff'] at hxf 
+      rw [← h1, h2, PartialHomeomorph.isLocalStructomorphWithinAt_iff'] at hxf 
       · exact hxf hcx
       · mfld_set_tac
       · apply Or.inl
@@ -2616,7 +2616,7 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : LocalHomeomorph M M') :
       have h2 : e.target ⊆ (c.symm ≫ₕ f ≫ₕ c').target :=
         by
         intro x hx; rw [← e.right_inv hx, ← hef (e.symm.maps_to hx)]
-        exact LocalHomeomorph.mapsTo _ (h2e <| e.symm.maps_to hx)
+        exact PartialHomeomorph.mapsTo _ (h2e <| e.symm.maps_to hx)
       rw [inter_self] at h1 
       rwa [inter_eq_right_iff_subset.mpr]
       refine' h2.trans _

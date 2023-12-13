@@ -287,9 +287,9 @@ theorem continuousAt_arctan {x : ℝ} : ContinuousAt arctan x :=
 #align real.continuous_at_arctan Real.continuousAt_arctan
 -/
 
-#print Real.tanLocalHomeomorph /-
+#print Real.tanPartialHomeomorph /-
 /-- `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line. -/
-def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
+def tanPartialHomeomorph : PartialHomeomorph ℝ ℝ
     where
   toFun := tan
   invFun := arctan
@@ -303,21 +303,21 @@ def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
   open_target := isOpen_univ
   continuous_toFun := continuousOn_tan_Ioo
   continuous_invFun := continuous_arctan.ContinuousOn
-#align real.tan_local_homeomorph Real.tanLocalHomeomorph
+#align real.tan_local_homeomorph Real.tanPartialHomeomorph
 -/
 
-#print Real.coe_tanLocalHomeomorph /-
+#print Real.coe_tanPartialHomeomorph /-
 @[simp]
-theorem coe_tanLocalHomeomorph : ⇑tanLocalHomeomorph = tan :=
+theorem coe_tanPartialHomeomorph : ⇑tanPartialHomeomorph = tan :=
   rfl
-#align real.coe_tan_local_homeomorph Real.coe_tanLocalHomeomorph
+#align real.coe_tan_local_homeomorph Real.coe_tanPartialHomeomorph
 -/
 
-#print Real.coe_tanLocalHomeomorph_symm /-
+#print Real.coe_tanPartialHomeomorph_symm /-
 @[simp]
-theorem coe_tanLocalHomeomorph_symm : ⇑tanLocalHomeomorph.symm = arctan :=
+theorem coe_tanPartialHomeomorph_symm : ⇑tanPartialHomeomorph.symm = arctan :=
   rfl
-#align real.coe_tan_local_homeomorph_symm Real.coe_tanLocalHomeomorph_symm
+#align real.coe_tan_local_homeomorph_symm Real.coe_tanPartialHomeomorph_symm
 -/
 
 end Real

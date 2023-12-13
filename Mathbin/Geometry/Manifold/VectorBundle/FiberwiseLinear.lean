@@ -43,7 +43,7 @@ variable {φ φ' : B → F ≃L[𝕜] F} {U U' : Set B}
 determines a local homeomorphism from `B × F` to itself by its action fiberwise. -/
 def localHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
     (hφ : ContinuousOn (fun x => φ x : B → F →L[𝕜] F) U)
-    (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) : LocalHomeomorph (B × F) (B × F)
+    (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) : PartialHomeomorph (B × F) (B × F)
     where
   toFun x := (x.1, φ x.1 x.2)
   invFun x := (x.1, (φ x.1).symm x.2)
@@ -130,7 +130,7 @@ local homeomorphism.
 Then the source of `e` is of the form `U ×ˢ univ`, for some set `U` in `B`, and, at any point `x` in
 `U`, admits a neighbourhood `u` of `x` such that `e` is equal on `u ×ˢ univ` to some bi-smooth
 fiberwise linear local homeomorphism. -/
-theorem SmoothFiberwiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B × F))
+theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B × F))
     (h :
       ∀ p ∈ e.source,
         ∃ s : Set (B × F),
@@ -203,7 +203,7 @@ together the various bi-smooth fiberwise linear local homeomorphism which exist 
 
 The `U` in the conclusion is the same `U` as in the hypothesis. We state it like this, because this
 is exactly what we need for `smooth_fiberwise_linear`. -/
-theorem SmoothFiberwiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B × F)) (U : Set B)
+theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B × F)) (U : Set B)
     (hU : e.source = U ×ˢ univ)
     (h :
       ∀ x ∈ U,
@@ -320,11 +320,11 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     · apply contMDiffOn_const
     · apply contMDiffOn_const
     ·
-      simp only [FiberwiseLinear.localHomeomorph, LocalHomeomorph.refl_localEquiv,
+      simp only [FiberwiseLinear.localHomeomorph, PartialHomeomorph.refl_localEquiv,
         LocalEquiv.refl_source, univ_prod_univ]
     ·
-      simp only [FiberwiseLinear.localHomeomorph, LocalHomeomorph.refl_apply, Prod.mk.eta, id.def,
-        ContinuousLinearEquiv.coe_refl', LocalHomeomorph.mk_coe, LocalEquiv.coe_mk]
+      simp only [FiberwiseLinear.localHomeomorph, PartialHomeomorph.refl_apply, Prod.mk.eta, id.def,
+        ContinuousLinearEquiv.coe_refl', PartialHomeomorph.mk_coe, LocalEquiv.coe_mk]
   locality' :=
     by
     -- the hard work has been extracted to `locality_aux₁` and `locality_aux₂`
@@ -341,7 +341,7 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
 
 #print mem_smoothFiberwiseLinear_iff /-
 @[simp]
-theorem mem_smoothFiberwiseLinear_iff (e : LocalHomeomorph (B × F) (B × F)) :
+theorem mem_smoothFiberwiseLinear_iff (e : PartialHomeomorph (B × F) (B × F)) :
     e ∈ smoothFiberwiseLinear B F IB ↔
       ∃ (φ : B → F ≃L[𝕜] F) (U : Set B) (hU : IsOpen U) (hφ :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => φ x : B → F →L[𝕜] F) U) (h2φ :

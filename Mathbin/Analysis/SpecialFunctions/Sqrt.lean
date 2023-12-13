@@ -28,10 +28,10 @@ open scoped Topology
 
 namespace Real
 
-#print Real.sqLocalHomeomorph /-
+#print Real.sqPartialHomeomorph /-
 /-- Local homeomorph between `(0, +∞)` and `(0, +∞)` with `to_fun = λ x, x ^ 2` and
 `inv_fun = sqrt`. -/
-noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ
+noncomputable def sqPartialHomeomorph : PartialHomeomorph ℝ ℝ
     where
   toFun x := x ^ 2
   invFun := sqrt
@@ -45,7 +45,7 @@ noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ
   open_target := isOpen_Ioi
   continuous_toFun := (continuous_pow 2).ContinuousOn
   continuous_invFun := continuousOn_id.sqrt
-#align real.sq_local_homeomorph Real.sqLocalHomeomorph
+#align real.sq_local_homeomorph Real.sqPartialHomeomorph
 -/
 
 #print Real.deriv_sqrt_aux /-

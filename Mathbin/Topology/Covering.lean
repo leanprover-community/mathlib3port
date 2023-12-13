@@ -125,11 +125,11 @@ protected theorem continuousOn (hf : IsCoveringMapOn f s) : ContinuousOn f (f �
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print IsCoveringMapOn.isLocallyHomeomorphOn /-
-protected theorem isLocallyHomeomorphOn (hf : IsCoveringMapOn f s) :
-    IsLocallyHomeomorphOn f (f ⁻¹' s) :=
+#print IsCoveringMapOn.isLocalHomeomorphOn /-
+protected theorem isLocalHomeomorphOn (hf : IsCoveringMapOn f s) :
+    IsLocalHomeomorphOn f (f ⁻¹' s) :=
   by
-  refine' IsLocallyHomeomorphOn.mk f (f ⁻¹' s) fun x hx => _
+  refine' IsLocalHomeomorphOn.mk f (f ⁻¹' s) fun x hx => _
   let e := (hf (f x) hx).toTrivialization
   have h := (hf (f x) hx).mem_toTrivialization_baseSet
   let he := e.mem_source.2 h
@@ -151,7 +151,7 @@ protected theorem isLocallyHomeomorphOn (hf : IsCoveringMapOn f s) :
       ⟨he, by rwa [e.to_local_homeomorph.symm_symm, e.proj_to_fun x he],
         (hf (f x) hx).toTrivialization_apply⟩,
       fun p h => (e.proj_to_fun p h.1).symm⟩
-#align is_covering_map_on.is_locally_homeomorph_on IsCoveringMapOn.isLocallyHomeomorphOn
+#align is_covering_map_on.is_locally_homeomorph_on IsCoveringMapOn.isLocalHomeomorphOn
 -/
 
 end IsCoveringMapOn
@@ -199,15 +199,15 @@ protected theorem continuous (hf : IsCoveringMap f) : Continuous f :=
 #align is_covering_map.continuous IsCoveringMap.continuous
 -/
 
-#print IsCoveringMap.isLocallyHomeomorph /-
-protected theorem isLocallyHomeomorph (hf : IsCoveringMap f) : IsLocallyHomeomorph f :=
-  isLocallyHomeomorph_iff_isLocallyHomeomorphOn_univ.mpr hf.IsCoveringMapOn.IsLocallyHomeomorphOn
-#align is_covering_map.is_locally_homeomorph IsCoveringMap.isLocallyHomeomorph
+#print IsCoveringMap.isLocalHomeomorph /-
+protected theorem isLocalHomeomorph (hf : IsCoveringMap f) : IsLocalHomeomorph f :=
+  isLocalHomeomorph_iff_isLocalHomeomorphOn_univ.mpr hf.IsCoveringMapOn.IsLocalHomeomorphOn
+#align is_covering_map.is_locally_homeomorph IsCoveringMap.isLocalHomeomorph
 -/
 
 #print IsCoveringMap.isOpenMap /-
 protected theorem isOpenMap (hf : IsCoveringMap f) : IsOpenMap f :=
-  hf.IsLocallyHomeomorph.IsOpenMap
+  hf.IsLocalHomeomorph.IsOpenMap
 #align is_covering_map.is_open_map IsCoveringMap.isOpenMap
 -/
 

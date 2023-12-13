@@ -408,7 +408,7 @@ theorem mk_coordChangeL (e e' : Trivialization F (π F E)) [e.isLinear R] [e'.is
 #print Trivialization.apply_symm_apply_eq_coordChangeL /-
 theorem apply_symm_apply_eq_coordChangeL (e e' : Trivialization F (π F E)) [e.isLinear R]
     [e'.isLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
-    e' (e.toLocalHomeomorph.symm (b, v)) = (b, e.coordChangeL R e' b v) := by
+    e' (e.toPartialHomeomorph.symm (b, v)) = (b, e.coordChangeL R e' b v) := by
   rw [e.mk_coord_changeL e' hb, e.mk_symm hb.1]
 #align trivialization.apply_symm_apply_eq_coord_changeL Trivialization.apply_symm_apply_eq_coordChangeL
 -/
@@ -418,7 +418,7 @@ theorem apply_symm_apply_eq_coordChangeL (e e' : Trivialization F (π F E)) [e.i
 ugly, but has good definitional properties for specifically defined trivializations. -/
 theorem coordChangeL_apply' (e e' : Trivialization F (π F E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (y : F) :
-    coordChangeL R e e' b y = (e' (e.toLocalHomeomorph.symm (b, y))).2 := by
+    coordChangeL R e e' b y = (e' (e.toPartialHomeomorph.symm (b, y))).2 := by
   rw [e.coord_changeL_apply e' hb, e.mk_symm hb.1]
 #align trivialization.coord_changeL_apply' Trivialization.coordChangeL_apply'
 -/
@@ -630,7 +630,7 @@ variable {R}
 #print Trivialization.symm_apply_eq_mk_continuousLinearEquivAt_symm /-
 theorem symm_apply_eq_mk_continuousLinearEquivAt_symm (e : Trivialization F (π F E)) [e.isLinear R]
     (b : B) (hb : b ∈ e.baseSet) (z : F) :
-    e.toLocalHomeomorph.symm ⟨b, z⟩ = ⟨b, (e.continuousLinearEquivAt R b hb).symm z⟩ :=
+    e.toPartialHomeomorph.symm ⟨b, z⟩ = ⟨b, (e.continuousLinearEquivAt R b hb).symm z⟩ :=
   by
   have h : (b, z) ∈ e.target := by
     rw [e.target_eq]
@@ -790,7 +790,7 @@ protected def TotalSpace :=
 
 #print VectorBundleCore.trivChange /-
 /-- Local homeomorphism version of the trivialization change. -/
-def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F) :=
+def trivChange (i j : ι) : PartialHomeomorph (B × F) (B × F) :=
   FiberBundleCore.trivChange (↑Z) i j
 #align vector_bundle_core.triv_change VectorBundleCore.trivChange
 -/
@@ -875,7 +875,7 @@ theorem mem_localTriv_target (p : B × F) :
 #print VectorBundleCore.localTriv_symm_fst /-
 @[simp, mfld_simps]
 theorem localTriv_symm_fst (p : B × F) :
-    (Z.localTriv i).toLocalHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
+    (Z.localTriv i).toPartialHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
   rfl
 #align vector_bundle_core.local_triv_symm_fst VectorBundleCore.localTriv_symm_fst
 -/

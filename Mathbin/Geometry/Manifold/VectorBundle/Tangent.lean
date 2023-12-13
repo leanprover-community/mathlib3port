@@ -34,7 +34,7 @@ This defines a smooth vector bundle `tangent_bundle` with fibers `tangent_space`
 -/
 
 
-open Bundle Set SmoothManifoldWithCorners LocalHomeomorph ContinuousLinearMap
+open Bundle Set SmoothManifoldWithCorners PartialHomeomorph ContinuousLinearMap
 
 open scoped Manifold Topology Bundle
 
@@ -63,7 +63,7 @@ theorem contDiffOn_fderiv_coord_change (i j : atlas H M) :
   intro x hx
   refine' (ContDiffWithinAt.fderivWithin_right _ I.unique_diff le_top <| h hx).mono h
   refine'
-    (LocalHomeomorph.contDiffOn_extend_coord_change I (subset_maximal_atlas I j.2)
+    (PartialHomeomorph.contDiffOn_extend_coord_change I (subset_maximal_atlas I j.2)
           (subset_maximal_atlas I i.2) x hx).mono_of_mem
       _
   exact i.1.extend_coord_change_source_mem_nhdsWithin j.1 I hx
@@ -198,8 +198,8 @@ namespace TangentBundle
 #print TangentBundle.chartAt /-
 protected theorem chartAt (p : TM) :
     chartAt (ModelProd H E) p =
-      ((tangentBundleCore I M).toFiberBundleCore.localTriv (achart H p.1)).toLocalHomeomorph ≫ₕ
-        (chartAt H p.1).Prod (LocalHomeomorph.refl E) :=
+      ((tangentBundleCore I M).toFiberBundleCore.localTriv (achart H p.1)).toPartialHomeomorph ≫ₕ
+        (chartAt H p.1).Prod (PartialHomeomorph.refl E) :=
   rfl
 #align tangent_bundle.chart_at TangentBundle.chartAt
 -/
@@ -405,7 +405,7 @@ theorem tangentBundle_model_space_coe_chartAt_symm (p : TangentBundle I H) :
       (TotalSpace.toProd H E).symm :=
   by
   unfold_coes
-  simp_rw [LocalHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]; rfl
+  simp_rw [PartialHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]; rfl
 #align tangent_bundle_model_space_coe_chart_at_symm tangentBundle_model_space_coe_chartAt_symm
 -/
 
@@ -430,7 +430,7 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
       have : Continuous (chart_at (ModelProd H E) p) :=
         by
         rw [continuous_iff_continuousOn_univ]
-        convert LocalHomeomorph.continuousOn _
+        convert PartialHomeomorph.continuousOn _
         simp only [TangentSpace.fiberBundle, mfld_simps]
       simpa only [mfld_simps] using this
     continuous_invFun :=
@@ -439,7 +439,7 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
       have : Continuous (chart_at (ModelProd H E) p).symm :=
         by
         rw [continuous_iff_continuousOn_univ]
-        convert LocalHomeomorph.continuousOn _
+        convert PartialHomeomorph.continuousOn _
         simp only [mfld_simps]
       simpa only [mfld_simps] using this }
 #align tangent_bundle_model_space_homeomorph tangentBundleModelSpaceHomeomorph

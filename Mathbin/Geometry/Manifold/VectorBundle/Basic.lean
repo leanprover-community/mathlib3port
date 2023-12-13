@@ -64,7 +64,7 @@ fields, they can also be C^k vector bundles, etc.
 
 assert_not_exists mfderiv
 
-open Bundle Set LocalHomeomorph
+open Bundle Set PartialHomeomorph
 
 open Function (id_def)
 
@@ -87,8 +87,8 @@ variable [TopologicalSpace F] [TopologicalSpace (TotalSpace F E)] [∀ x, Topolo
 `B × F`. -/
 instance FiberBundle.chartedSpace' : ChartedSpace (B × F) (TotalSpace F E)
     where
-  atlas := (fun e : Trivialization F (π F E) => e.toLocalHomeomorph) '' trivializationAtlas F E
-  chartAt x := (trivializationAt F E x.proj).toLocalHomeomorph
+  atlas := (fun e : Trivialization F (π F E) => e.toPartialHomeomorph) '' trivializationAtlas F E
+  chartAt x := (trivializationAt F E x.proj).toPartialHomeomorph
   mem_chart_source x :=
     (trivializationAt F E x.proj).mem_source.mpr (mem_baseSet_trivializationAt F E x.proj)
   chart_mem_atlas x := mem_image_of_mem _ (trivialization_mem_atlas F E _)
@@ -112,8 +112,8 @@ end
 #print FiberBundle.chartedSpace_chartAt /-
 theorem FiberBundle.chartedSpace_chartAt (x : TotalSpace F E) :
     chartAt (ModelProd HB F) x =
-      (trivializationAt F E x.proj).toLocalHomeomorph ≫ₕ
-        (chartAt HB x.proj).Prod (LocalHomeomorph.refl F) :=
+      (trivializationAt F E x.proj).toPartialHomeomorph ≫ₕ
+        (chartAt HB x.proj).Prod (PartialHomeomorph.refl F) :=
   by
   dsimp only [FiberBundle.chartedSpace, ChartedSpace.comp, FiberBundle.chartedSpace',
     prodChartedSpace, chartedSpaceSelf]
@@ -188,7 +188,7 @@ theorem contMDiffWithinAt_totalSpace (f : M → TotalSpace F E) {s : Set M} {x�
   refine'
     and_congr (eventually_eq.cont_mdiff_within_at_iff (eventually_of_mem h1 fun x hx => _) _)
       Iff.rfl
-  · simp_rw [Function.comp, LocalHomeomorph.coe_coe, Trivialization.coe_coe]
+  · simp_rw [Function.comp, PartialHomeomorph.coe_coe, Trivialization.coe_coe]
     rw [Trivialization.coe_fst']
     exact hx
   · simp only [mfld_simps]

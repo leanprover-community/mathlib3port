@@ -374,10 +374,10 @@ theorem mapsTo_sin_Ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := f
 #align real.maps_to_sin_Ioo Real.mapsTo_sin_Ioo
 -/
 
-#print Real.sinLocalHomeomorph /-
+#print Real.sinPartialHomeomorph /-
 /-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
-def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
+def sinPartialHomeomorph : PartialHomeomorph ℝ ℝ
     where
   toFun := sin
   invFun := arcsin
@@ -391,7 +391,7 @@ def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
   open_target := isOpen_Ioo
   continuous_toFun := continuous_sin.ContinuousOn
   continuous_invFun := continuous_arcsin.ContinuousOn
-#align real.sin_local_homeomorph Real.sinLocalHomeomorph
+#align real.sin_local_homeomorph Real.sinPartialHomeomorph
 -/
 
 #print Real.cos_arcsin_nonneg /-

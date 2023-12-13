@@ -79,18 +79,18 @@ theorem HasStrictDerivAt.of_local_left_inverse {f g : 𝕜 → 𝕜} {f' a : �
 #align has_strict_deriv_at.of_local_left_inverse HasStrictDerivAt.of_local_left_inverse
 -/
 
-#print LocalHomeomorph.hasStrictDerivAt_symm /-
+#print PartialHomeomorph.hasStrictDerivAt_symm /-
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has a
 nonzero derivative `f'` at `f.symm a` in the strict sense, then `f.symm` has the derivative `f'⁻¹`
 at `a` in the strict sense.
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
-theorem LocalHomeomorph.hasStrictDerivAt_symm (f : LocalHomeomorph 𝕜 𝕜) {a f' : 𝕜}
+theorem PartialHomeomorph.hasStrictDerivAt_symm (f : PartialHomeomorph 𝕜 𝕜) {a f' : 𝕜}
     (ha : a ∈ f.target) (hf' : f' ≠ 0) (htff' : HasStrictDerivAt f f' (f.symm a)) :
     HasStrictDerivAt f.symm f'⁻¹ a :=
   htff'.of_local_left_inverse (f.symm.ContinuousAt ha) hf' (f.eventually_right_inverse ha)
-#align local_homeomorph.has_strict_deriv_at_symm LocalHomeomorph.hasStrictDerivAt_symm
+#align local_homeomorph.has_strict_deriv_at_symm PartialHomeomorph.hasStrictDerivAt_symm
 -/
 
 #print HasDerivAt.of_local_left_inverse /-
@@ -106,16 +106,16 @@ theorem HasDerivAt.of_local_left_inverse {f g : 𝕜 → 𝕜} {f' a : 𝕜} (hg
 #align has_deriv_at.of_local_left_inverse HasDerivAt.of_local_left_inverse
 -/
 
-#print LocalHomeomorph.hasDerivAt_symm /-
+#print PartialHomeomorph.hasDerivAt_symm /-
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has an
 nonzero derivative `f'` at `f.symm a`, then `f.symm` has the derivative `f'⁻¹` at `a`.
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
-theorem LocalHomeomorph.hasDerivAt_symm (f : LocalHomeomorph 𝕜 𝕜) {a f' : 𝕜} (ha : a ∈ f.target)
+theorem PartialHomeomorph.hasDerivAt_symm (f : PartialHomeomorph 𝕜 𝕜) {a f' : 𝕜} (ha : a ∈ f.target)
     (hf' : f' ≠ 0) (htff' : HasDerivAt f f' (f.symm a)) : HasDerivAt f.symm f'⁻¹ a :=
   htff'.of_local_left_inverse (f.symm.ContinuousAt ha) hf' (f.eventually_right_inverse ha)
-#align local_homeomorph.has_deriv_at_symm LocalHomeomorph.hasDerivAt_symm
+#align local_homeomorph.has_deriv_at_symm PartialHomeomorph.hasDerivAt_symm
 -/
 
 #print HasDerivAt.eventually_ne /-
