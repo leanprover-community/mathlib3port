@@ -196,7 +196,8 @@ theorem weightedVSubOfPoint_indicator_subset (w : ι → k) (p : ι → P) (b : 
   by
   rw [weighted_vsub_of_point_apply, weighted_vsub_of_point_apply]
   exact
-    Set.sum_indicator_subset_of_eq_zero w (fun i wi => wi • (p i -ᵥ b : V)) h fun i => zero_smul k _
+    Finset.sum_indicator_subset_of_eq_zero w (fun i wi => wi • (p i -ᵥ b : V)) h fun i =>
+      zero_smul k _
 #align finset.weighted_vsub_of_point_indicator_subset Finset.weightedVSubOfPoint_indicator_subset
 -/
 
@@ -1113,7 +1114,7 @@ theorem centroidWeightsIndicator_def :
 /-- The sum of the weights for the centroid indexed by a `fintype`. -/
 theorem sum_centroidWeightsIndicator [Fintype ι] :
     ∑ i, s.centroidWeightsIndicator k i = ∑ i in s, s.centroidWeights k i :=
-  (Set.sum_indicator_subset _ (subset_univ _)).symm
+  (Finset.sum_indicator_subset _ (subset_univ _)).symm
 #align finset.sum_centroid_weights_indicator Finset.sum_centroidWeightsIndicator
 -/
 
@@ -1337,7 +1338,7 @@ theorem eq_affineCombination_of_mem_affineSpan {p1 : P} {p : ι → P}
   let s' := insert i0 s
   let w' := Set.indicator (↑s) w
   have h' : ∑ i in s', w' i = 0 := by
-    rw [← h, Set.sum_indicator_subset _ (Finset.subset_insert i0 s)]
+    rw [← h, Finset.sum_indicator_subset _ (Finset.subset_insert i0 s)]
   have hs' : s'.weighted_vsub p w' = p1 -ᵥ p i0 :=
     by
     rw [hs]

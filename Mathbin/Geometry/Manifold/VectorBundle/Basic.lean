@@ -148,11 +148,11 @@ variable [TopologicalSpace B] [ChartedSpace HB B] [FiberBundle F E]
 #print FiberBundle.extChartAt /-
 protected theorem FiberBundle.extChartAt (x : TotalSpace F E) :
     extChartAt (IB.Prod 𝓘(𝕜, F)) x =
-      (trivializationAt F E x.proj).toLocalEquiv ≫
-        (extChartAt IB x.proj).Prod (LocalEquiv.refl F) :=
+      (trivializationAt F E x.proj).toPartialEquiv ≫
+        (extChartAt IB x.proj).Prod (PartialEquiv.refl F) :=
   by
   simp_rw [extChartAt, FiberBundle.chartedSpace_chartAt, extend]
-  simp only [LocalEquiv.trans_assoc, mfld_simps]
+  simp only [PartialEquiv.trans_assoc, mfld_simps]
 #align fiber_bundle.ext_chart_at FiberBundle.extChartAt
 -/
 
@@ -177,9 +177,9 @@ theorem contMDiffWithinAt_totalSpace (f : M → TotalSpace F E) {s : Set M} {x�
   simp (config := { singlePass := true }) only [contMDiffWithinAt_iff_target]
   rw [and_and_and_comm, ← continuous_within_at_total_space, and_congr_right_iff]
   intro hf
-  simp_rw [modelWithCornersSelf_prod, FiberBundle.extChartAt, Function.comp, LocalEquiv.trans_apply,
-    LocalEquiv.prod_coe, LocalEquiv.refl_coe, extChartAt_self_apply, modelWithCornersSelf_coe,
-    id_def]
+  simp_rw [modelWithCornersSelf_prod, FiberBundle.extChartAt, Function.comp,
+    PartialEquiv.trans_apply, PartialEquiv.prod_coe, PartialEquiv.refl_coe, extChartAt_self_apply,
+    modelWithCornersSelf_coe, id_def]
   refine' (contMDiffWithinAt_prod_iff _).trans _
   -- rw doesn't do this?
   have h1 : (fun x => (f x).proj) ⁻¹' (trivialization_at F E (f x₀).proj).baseSet ∈ 𝓝[s] x₀ :=

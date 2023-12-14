@@ -198,7 +198,7 @@ theorem continuousLinearMap_apply (p : TotalSpace (F₁ →SL[σ] F₂) fun x =>
 
 #print Pretrivialization.continuousLinearMap_symm_apply /-
 theorem continuousLinearMap_symm_apply (p : B × (F₁ →SL[σ] F₂)) :
-    (continuousLinearMap σ e₁ e₂).toLocalEquiv.symm p =
+    (continuousLinearMap σ e₁ e₂).toPartialEquiv.symm p =
       ⟨p.1,
         ContinuousLinearMap.comp (e₂.symmL 𝕜₂ p.1)
           (p.2.comp (e₁.continuousLinearMapAt 𝕜₁ p.1 : E₁ p.1 →L[𝕜₁] F₁) : E₁ p.1 →SL[σ] F₂)⟩ :=

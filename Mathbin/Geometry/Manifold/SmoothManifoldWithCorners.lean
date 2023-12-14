@@ -136,7 +136,7 @@ define a smooth manifold with model space `H`, and model vector space `E`.
 @[ext, nolint has_nonempty_instance]
 structure ModelWithCorners (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] (H : Type _) [TopologicalSpace H] extends
-    LocalEquiv H E where
+    PartialEquiv H E where
   source_eq : source = univ
   unique_diff' : UniqueDiffOn 𝕜 to_local_equiv.target
   continuous_toFun : Continuous to_fun := by continuity
@@ -151,7 +151,7 @@ attribute [simp, mfld_simps] ModelWithCorners.source_eq
 def modelWithCornersSelf (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] : ModelWithCorners 𝕜 E E
     where
-  toLocalEquiv := LocalEquiv.refl E
+  toPartialEquiv := PartialEquiv.refl E
   source_eq := rfl
   unique_diff' := uniqueDiffOn_univ
   continuous_toFun := continuous_id
@@ -175,8 +175,8 @@ instance : CoeFun (ModelWithCorners 𝕜 E H) fun _ => H → E :=
 
 #print ModelWithCorners.symm /-
 /-- The inverse to a model with corners, only registered as a local equiv. -/
-protected def symm : LocalEquiv E H :=
-  I.toLocalEquiv.symm
+protected def symm : PartialEquiv E H :=
+  I.toPartialEquiv.symm
 #align model_with_corners.symm ModelWithCorners.symm
 -/
 
@@ -198,35 +198,35 @@ def Simps.symm_apply (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
 -/
 
 initialize_simps_projections ModelWithCorners (to_local_equiv_to_fun → apply,
-  to_local_equiv_inv_fun → symm_apply, toLocalEquiv_source → source, toLocalEquiv_target → target,
-  -toLocalEquiv)
+  to_local_equiv_inv_fun → symm_apply, toPartialEquiv_source → source, toPartialEquiv_target →
+  target, -toPartialEquiv)
 
-#print ModelWithCorners.toLocalEquiv_coe /-
+#print ModelWithCorners.toPartialEquiv_coe /-
 -- Register a few lemmas to make sure that `simp` puts expressions in normal form
 @[simp, mfld_simps]
-theorem toLocalEquiv_coe : (I.toLocalEquiv : H → E) = I :=
+theorem toPartialEquiv_coe : (I.toPartialEquiv : H → E) = I :=
   rfl
-#align model_with_corners.to_local_equiv_coe ModelWithCorners.toLocalEquiv_coe
+#align model_with_corners.to_local_equiv_coe ModelWithCorners.toPartialEquiv_coe
 -/
 
 #print ModelWithCorners.mk_coe /-
 @[simp, mfld_simps]
-theorem mk_coe (e : LocalEquiv H E) (a b c d) :
+theorem mk_coe (e : PartialEquiv H E) (a b c d) :
     ((ModelWithCorners.mk e a b c d : ModelWithCorners 𝕜 E H) : H → E) = (e : H → E) :=
   rfl
 #align model_with_corners.mk_coe ModelWithCorners.mk_coe
 -/
 
-#print ModelWithCorners.toLocalEquiv_coe_symm /-
+#print ModelWithCorners.toPartialEquiv_coe_symm /-
 @[simp, mfld_simps]
-theorem toLocalEquiv_coe_symm : (I.toLocalEquiv.symm : E → H) = I.symm :=
+theorem toPartialEquiv_coe_symm : (I.toPartialEquiv.symm : E → H) = I.symm :=
   rfl
-#align model_with_corners.to_local_equiv_coe_symm ModelWithCorners.toLocalEquiv_coe_symm
+#align model_with_corners.to_local_equiv_coe_symm ModelWithCorners.toPartialEquiv_coe_symm
 -/
 
 #print ModelWithCorners.mk_symm /-
 @[simp, mfld_simps]
-theorem mk_symm (e : LocalEquiv H E) (a b c d) :
+theorem mk_symm (e : PartialEquiv H E) (a b c d) :
     (ModelWithCorners.mk e a b c d : ModelWithCorners 𝕜 E H).symm = e.symm :=
   rfl
 #align model_with_corners.mk_symm ModelWithCorners.mk_symm
@@ -453,7 +453,7 @@ variable (𝕜 E)
 #print modelWithCornersSelf_localEquiv /-
 /-- In the trivial model with corners, the associated local equiv is the identity. -/
 @[simp, mfld_simps]
-theorem modelWithCornersSelf_localEquiv : 𝓘(𝕜, E).toLocalEquiv = LocalEquiv.refl E :=
+theorem modelWithCornersSelf_localEquiv : 𝓘(𝕜, E).toPartialEquiv = PartialEquiv.refl E :=
   rfl
 #align model_with_corners_self_local_equiv modelWithCornersSelf_localEquiv
 -/
@@ -491,8 +491,8 @@ def ModelWithCorners.prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Ty
     {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') :
     ModelWithCorners 𝕜 (E × E') (ModelProd H H') :=
   {
-    I.toLocalEquiv.Prod
-      I'.toLocalEquiv with
+    I.toPartialEquiv.Prod
+      I'.toPartialEquiv with
     toFun := fun x => (I x.1, I' x.2)
     invFun := fun x => (I.symm x.1, I'.symm x.2)
     source := {x | x.1 ∈ I.source ∧ x.2 ∈ I'.source}
@@ -512,7 +512,7 @@ def ModelWithCorners.pi {𝕜 : Type u} [NontriviallyNormedField 𝕜] {ι : Typ
     [∀ i, TopologicalSpace (H i)] (I : ∀ i, ModelWithCorners 𝕜 (E i) (H i)) :
     ModelWithCorners 𝕜 (∀ i, E i) (ModelPi H)
     where
-  toLocalEquiv := LocalEquiv.pi fun i => (I i).toLocalEquiv
+  toPartialEquiv := PartialEquiv.pi fun i => (I i).toPartialEquiv
   source_eq := by simp only [Set.pi_univ, mfld_simps]
   unique_diff' := UniqueDiffOn.pi ι E _ _ fun i _ => (I i).unique_diff'
   continuous_toFun := continuous_pi fun i => (I i).Continuous.comp (continuous_apply i)
@@ -538,12 +538,12 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [TopologicalSpace G] {G' : Type _} [TopologicalSpace G'] {I : ModelWithCorners 𝕜 E H}
   {J : ModelWithCorners 𝕜 F G}
 
-#print modelWithCorners_prod_toLocalEquiv /-
+#print modelWithCorners_prod_toPartialEquiv /-
 @[simp, mfld_simps]
-theorem modelWithCorners_prod_toLocalEquiv :
-    (I.Prod J).toLocalEquiv = I.toLocalEquiv.Prod J.toLocalEquiv :=
+theorem modelWithCorners_prod_toPartialEquiv :
+    (I.Prod J).toPartialEquiv = I.toPartialEquiv.Prod J.toPartialEquiv :=
   rfl
-#align model_with_corners_prod_to_local_equiv modelWithCorners_prod_toLocalEquiv
+#align model_with_corners_prod_to_local_equiv modelWithCorners_prod_toPartialEquiv
 -/
 
 #print modelWithCorners_prod_coe /-
@@ -743,7 +743,7 @@ theorem contDiffGroupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCor
   cases' he with he he_symm
   cases' he' with he' he'_symm
   simp only at he he_symm he' he'_symm 
-  constructor <;> simp only [LocalEquiv.prod_source, PartialHomeomorph.prod_toLocalEquiv]
+  constructor <;> simp only [PartialEquiv.prod_source, PartialHomeomorph.prod_toLocalEquiv]
   · have h3 := ContDiffOn.prod_map he he'
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3 
     rw [← (I.prod I').image_eq]
@@ -940,8 +940,8 @@ namespace PartialHomeomorph
 /-- Given a chart `f` on a manifold with corners, `f.extend I` is the extended chart to the model
 vector space. -/
 @[simp, mfld_simps]
-def extend : LocalEquiv M E :=
-  f.toLocalEquiv ≫ I.toLocalEquiv
+def extend : PartialEquiv M E :=
+  f.toPartialEquiv ≫ I.toPartialEquiv
 #align local_homeomorph.extend PartialHomeomorph.extend
 -/
 
@@ -959,7 +959,7 @@ theorem extend_coe_symm : ⇑(f.extend I).symm = f.symm ∘ I.symm :=
 
 #print PartialHomeomorph.extend_source /-
 theorem extend_source : (f.extend I).source = f.source := by
-  rw [extend, LocalEquiv.trans_source, I.source_eq, preimage_univ, inter_univ]
+  rw [extend, PartialEquiv.trans_source, I.source_eq, preimage_univ, inter_univ]
 #align local_homeomorph.extend_source PartialHomeomorph.extend_source
 -/
 
@@ -971,7 +971,7 @@ theorem isOpen_extend_source : IsOpen (f.extend I).source := by rw [extend_sourc
 
 #print PartialHomeomorph.extend_target /-
 theorem extend_target : (f.extend I).target = I.symm ⁻¹' f.target ∩ range I := by
-  simp_rw [extend, LocalEquiv.trans_target, I.target_eq, I.to_local_equiv_coe_symm, inter_comm]
+  simp_rw [extend, PartialEquiv.trans_target, I.target_eq, I.to_local_equiv_coe_symm, inter_comm]
 #align local_homeomorph.extend_target PartialHomeomorph.extend_target
 -/
 
@@ -1029,7 +1029,7 @@ theorem map_extend_nhds {x : M} (hy : x ∈ f.source) :
 theorem extend_target_mem_nhdsWithin {y : M} (hy : y ∈ f.source) :
     (f.extend I).target ∈ 𝓝[range I] f.extend I y :=
   by
-  rw [← LocalEquiv.image_source_eq_target, ← map_extend_nhds f I hy]
+  rw [← PartialEquiv.image_source_eq_target, ← map_extend_nhds f I hy]
   exact image_mem_map (extend_source_mem_nhds _ _ hy)
 #align local_homeomorph.extend_target_mem_nhds_within PartialHomeomorph.extend_target_mem_nhdsWithin
 -/
@@ -1192,7 +1192,7 @@ theorem extend_symm_preimage_inter_range_eventuallyEq {s : Set M} {x : M} (hs : 
 theorem extend_coord_change_source :
     ((f.extend I).symm ≫ f'.extend I).source = I '' (f.symm ≫ₕ f').source :=
   by
-  simp_rw [LocalEquiv.trans_source, I.image_eq, extend_source, LocalEquiv.symm_source,
+  simp_rw [PartialEquiv.trans_source, I.image_eq, extend_source, PartialEquiv.symm_source,
     extend_target, inter_right_comm _ (range I)]
   rfl
 #align local_homeomorph.extend_coord_change_source PartialHomeomorph.extend_coord_change_source
@@ -1275,7 +1275,7 @@ variable [ChartedSpace H M] [ChartedSpace H' M']
 /-- The preferred extended chart on a manifold with corners around a point `x`, from a neighborhood
 of `x` to the model vector space. -/
 @[simp, mfld_simps]
-def extChartAt (x : M) : LocalEquiv M E :=
+def extChartAt (x : M) : PartialEquiv M E :=
   (chartAt H x).extend I
 #align ext_chart_at extChartAt
 -/
@@ -1624,7 +1624,7 @@ theorem extChartAt_self_apply {x y : H} : extChartAt I x y = I y :=
 #print extChartAt_model_space_eq_id /-
 /-- In the case of the manifold structure on a vector space, the extended charts are just the
 identity.-/
-theorem extChartAt_model_space_eq_id (x : E) : extChartAt 𝓘(𝕜, E) x = LocalEquiv.refl E := by
+theorem extChartAt_model_space_eq_id (x : E) : extChartAt 𝓘(𝕜, E) x = PartialEquiv.refl E := by
   simp only [mfld_simps]
 #align ext_chart_at_model_space_eq_id extChartAt_model_space_eq_id
 -/

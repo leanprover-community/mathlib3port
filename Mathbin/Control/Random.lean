@@ -79,20 +79,16 @@ local infixl:41 " .. " => Set.Icc
 
 open Stream'
 
-#print BoundedRandom /-
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
 class BoundedRandom (α : Type u) [Preorder α] where
   randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandG g (x .. y)
-#align bounded_random BoundedRandom
--/
+#align bounded_random BoundedRandomₓ
 
-#print Random /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Randomₓ] [] -/
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Random (α : Type u) where
-  Random : ∀ (g : Type) [RandomGen g], RandG g α
-#align random Random
--/
+  Randomₓ : ∀ (g : Type) [RandomGen g], RandG g α
+#align random Randomₓ
 
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it
@@ -121,7 +117,7 @@ section Random
 
 variable [Random α]
 
-export Random (Random)
+export Random (Randomₓ)
 
 /-- Generate a random value of type `α`. -/
 def random : RandG g α :=
@@ -300,7 +296,8 @@ instance intBoundedRandom : BoundedRandom ℤ
               (le_of_eq <| Int.ofNat_natAbs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
 #align int_bounded_random intBoundedRandom
 
-instance finRandom (n : ℕ) [NeZero n] : Random (Fin n) where Random g inst := @Fin.random g inst _ _
+instance finRandom (n : ℕ) [NeZero n] : Random (Fin n)
+    where Randomₓ g inst := @Fin.random g inst _ _
 #align fin_random finRandom
 
 instance finBoundedRandom (n : ℕ) : BoundedRandom (Fin n)
@@ -326,7 +323,7 @@ theorem bool_ofNat_mem_Icc_of_mem_Icc_toNat (x y : Bool) (n : ℕ) :
 #align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_ofNat_mem_Icc_of_mem_Icc_toNat
 
 instance : Random Bool
-    where Random g inst :=
+    where Randomₓ g inst :=
     (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_le _)
 
 instance : BoundedRandom Bool
@@ -354,7 +351,7 @@ def Std.BitVec.randomR {n : ℕ} (x y : Std.BitVec n) (h : x ≤ y) : RandG g (x
 open Nat
 
 instance randomBitvec (n : ℕ) : Random (Std.BitVec n)
-    where Random _ inst := @Std.BitVec.random _ inst n
+    where Randomₓ _ inst := @Std.BitVec.random _ inst n
 #align random_bitvec randomBitvec
 
 instance boundedRandomBitvec (n : ℕ) : BoundedRandom (Std.BitVec n)

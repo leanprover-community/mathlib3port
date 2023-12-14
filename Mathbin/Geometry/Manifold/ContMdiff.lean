@@ -424,8 +424,8 @@ theorem contMDiffWithinAt_iff_target :
     exact
       inter_mem self_mem_nhdsWithin
         (h.preimage_mem_nhds_within <| (chart_at _ _).open_source.mem_nhds <| mem_chart_source _ _)
-  simp_rw [Cont, ContDiffWithinAtProp, extChartAt, PartialHomeomorph.extend, LocalEquiv.coe_trans,
-    ModelWithCorners.toLocalEquiv_coe, PartialHomeomorph.coe_coe, modelWithCornersSelf_coe,
+  simp_rw [Cont, ContDiffWithinAtProp, extChartAt, PartialHomeomorph.extend, PartialEquiv.coe_trans,
+    ModelWithCorners.toPartialEquiv_coe, PartialHomeomorph.coe_coe, modelWithCornersSelf_coe,
     chartAt_self_eq, PartialHomeomorph.refl_apply, comp.left_id]
 #align cont_mdiff_within_at_iff_target contMDiffWithinAt_iff_target
 -/
@@ -671,8 +671,8 @@ theorem contMDiffOn_iff_target :
   by
   inhabit E'
   simp only [contMDiffOn_iff, ModelWithCorners.source_eq, chartAt_self_eq,
-    PartialHomeomorph.refl_localEquiv, LocalEquiv.refl_trans, extChartAt, PartialHomeomorph.extend,
-    Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
+    PartialHomeomorph.refl_localEquiv, PartialEquiv.refl_trans, extChartAt,
+    PartialHomeomorph.extend, Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
   intro h
   constructor
   · refine' fun h' y => ⟨_, fun x _ => h' x y⟩
@@ -1474,7 +1474,7 @@ theorem contMDiffOn_extend_symm (he : e ∈ maximalAtlas I M) :
   by
   have h2 := contMDiffOn_symm_of_mem_maximalAtlas he
   refine' h2.comp (cont_mdiff_on_model_symm.mono <| image_subset_range _ _) _
-  simp_rw [image_subset_iff, LocalEquiv.restr_coe_symm, I.to_local_equiv_coe_symm,
+  simp_rw [image_subset_iff, PartialEquiv.restr_coe_symm, I.to_local_equiv_coe_symm,
     preimage_preimage, I.left_inv, preimage_id']
 #align cont_mdiff_on_extend_symm contMDiffOn_extend_symm
 -/
@@ -2269,7 +2269,7 @@ theorem contMDiffWithinAt_pi_space :
       ∀ i, ContMDiffWithinAt I 𝓘(𝕜, Fi i) n (fun x => φ x i) s x :=
   by
   simp only [contMDiffWithinAt_iff, continuousWithinAt_pi, contDiffWithinAt_pi, forall_and,
-    writtenInExtChartAt, extChartAt_model_space_eq_id, (· ∘ ·), LocalEquiv.refl_coe, id]
+    writtenInExtChartAt, extChartAt_model_space_eq_id, (· ∘ ·), PartialEquiv.refl_coe, id]
 #align cont_mdiff_within_at_pi_space contMDiffWithinAt_pi_space
 -/
 

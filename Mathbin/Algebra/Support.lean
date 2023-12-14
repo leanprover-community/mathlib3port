@@ -499,7 +499,7 @@ theorem support_div [GroupWithZero G₀] (f g : α → G₀) :
 #align function.support_div Function.support_div
 -/
 
-#print Function.mulSupport_prod /-
+#print Finset.mulSupport_prod /-
 @[to_additive]
 theorem mulSupport_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
     (mulSupport fun x => ∏ i in s, f i x) ⊆ ⋃ i ∈ s, mulSupport (f i) :=
@@ -507,23 +507,23 @@ theorem mulSupport_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
   rw [mul_support_subset_iff']
   simp only [mem_Union, not_exists, nmem_mul_support]
   exact fun x => Finset.prod_eq_one
-#align function.mul_support_prod Function.mulSupport_prod
-#align function.support_sum Function.support_sum
+#align function.mul_support_prod Finset.mulSupport_prod
+#align function.support_sum Finset.support_sum
 -/
 
-#print Function.support_prod_subset /-
+#print Finset.support_prod_subset /-
 theorem support_prod_subset [CommMonoidWithZero A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) ⊆ ⋂ i ∈ s, support (f i) := fun x hx =>
   mem_iInter₂.2 fun i hi H => hx <| Finset.prod_eq_zero hi H
-#align function.support_prod_subset Function.support_prod_subset
+#align function.support_prod_subset Finset.support_prod_subset
 -/
 
-#print Function.support_prod /-
+#print Finset.support_prod /-
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α)
     (f : α → β → A) : (support fun x => ∏ i in s, f i x) = ⋂ i ∈ s, support (f i) :=
   Set.ext fun x => by
     simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_iInter, not_exists]
-#align function.support_prod Function.support_prod
+#align function.support_prod Finset.support_prod
 -/
 
 #print Function.mulSupport_one_add /-

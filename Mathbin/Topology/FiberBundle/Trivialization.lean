@@ -69,7 +69,7 @@ have a topology on both the fiber and the base space. Through the construction
 `topological_fiber_prebundle F proj` it will be possible to promote a
 `pretrivialization F proj` to a `trivialization F proj`. -/
 @[ext, nolint has_nonempty_instance]
-structure Pretrivialization (proj : Z → B) extends LocalEquiv Z (B × F) where
+structure Pretrivialization (proj : Z → B) extends PartialEquiv Z (B × F) where
   open_target : IsOpen target
   baseSet : Set B
   open_baseSet : IsOpen base_set
@@ -88,7 +88,7 @@ variable {F} (e : Pretrivialization F proj) {x : Z}
 
 #print Pretrivialization.coe_coe /-
 @[simp, mfld_simps]
-theorem coe_coe : ⇑e.toLocalEquiv = e :=
+theorem coe_coe : ⇑e.toPartialEquiv = e :=
   rfl
 #align pretrivialization.coe_coe Pretrivialization.coe_coe
 -/
@@ -131,7 +131,7 @@ theorem mk_proj_snd' (ex : proj x ∈ e.baseSet) : (proj x, (e x).2) = e x :=
 #print Pretrivialization.setSymm /-
 /-- Composition of inverse and coercion from the subtype of the target. -/
 def setSymm : e.target → Z :=
-  e.target.restrict e.toLocalEquiv.symm
+  e.target.restrict e.toPartialEquiv.symm
 #align pretrivialization.set_symm Pretrivialization.setSymm
 -/
 
@@ -142,7 +142,7 @@ theorem mem_target {x : B × F} : x ∈ e.target ↔ x.1 ∈ e.baseSet := by
 -/
 
 #print Pretrivialization.proj_symm_apply /-
-theorem proj_symm_apply {x : B × F} (hx : x ∈ e.target) : proj (e.toLocalEquiv.symm x) = x.1 :=
+theorem proj_symm_apply {x : B × F} (hx : x ∈ e.target) : proj (e.toPartialEquiv.symm x) = x.1 :=
   by
   have := (e.coe_fst (e.to_local_equiv.map_target hx)).symm
   rwa [← e.coe_coe, e.to_local_equiv.right_inv hx] at this 
@@ -151,7 +151,7 @@ theorem proj_symm_apply {x : B × F} (hx : x ∈ e.target) : proj (e.toLocalEqui
 
 #print Pretrivialization.proj_symm_apply' /-
 theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.baseSet) :
-    proj (e.toLocalEquiv.symm (b, x)) = b :=
+    proj (e.toPartialEquiv.symm (b, x)) = b :=
   e.proj_symm_apply (e.mem_target.2 hx)
 #align pretrivialization.proj_symm_apply' Pretrivialization.proj_symm_apply'
 -/
@@ -159,34 +159,34 @@ theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.baseSet) :
 #print Pretrivialization.proj_surjOn_baseSet /-
 theorem proj_surjOn_baseSet [Nonempty F] : Set.SurjOn proj e.source e.baseSet := fun b hb =>
   let ⟨y⟩ := ‹Nonempty F›
-  ⟨e.toLocalEquiv.symm (b, y), e.toLocalEquiv.map_target <| e.mem_target.2 hb,
+  ⟨e.toPartialEquiv.symm (b, y), e.toPartialEquiv.map_target <| e.mem_target.2 hb,
     e.proj_symm_apply' hb⟩
 #align pretrivialization.proj_surj_on_base_set Pretrivialization.proj_surjOn_baseSet
 -/
 
 #print Pretrivialization.apply_symm_apply /-
-theorem apply_symm_apply {x : B × F} (hx : x ∈ e.target) : e (e.toLocalEquiv.symm x) = x :=
-  e.toLocalEquiv.right_inv hx
+theorem apply_symm_apply {x : B × F} (hx : x ∈ e.target) : e (e.toPartialEquiv.symm x) = x :=
+  e.toPartialEquiv.right_inv hx
 #align pretrivialization.apply_symm_apply Pretrivialization.apply_symm_apply
 -/
 
 #print Pretrivialization.apply_symm_apply' /-
 theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.baseSet) :
-    e (e.toLocalEquiv.symm (b, x)) = (b, x) :=
+    e (e.toPartialEquiv.symm (b, x)) = (b, x) :=
   e.apply_symm_apply (e.mem_target.2 hx)
 #align pretrivialization.apply_symm_apply' Pretrivialization.apply_symm_apply'
 -/
 
 #print Pretrivialization.symm_apply_apply /-
-theorem symm_apply_apply {x : Z} (hx : x ∈ e.source) : e.toLocalEquiv.symm (e x) = x :=
-  e.toLocalEquiv.left_inv hx
+theorem symm_apply_apply {x : Z} (hx : x ∈ e.source) : e.toPartialEquiv.symm (e x) = x :=
+  e.toPartialEquiv.left_inv hx
 #align pretrivialization.symm_apply_apply Pretrivialization.symm_apply_apply
 -/
 
 #print Pretrivialization.symm_apply_mk_proj /-
 @[simp, mfld_simps]
 theorem symm_apply_mk_proj {x : Z} (ex : x ∈ e.source) :
-    e.toLocalEquiv.symm (proj x, (e x).2) = x := by
+    e.toPartialEquiv.symm (proj x, (e x).2) = x := by
   rw [← e.coe_fst ex, Prod.mk.eta, ← e.coe_coe, e.to_local_equiv.left_inv ex]
 #align pretrivialization.symm_apply_mk_proj Pretrivialization.symm_apply_mk_proj
 -/
@@ -194,10 +194,10 @@ theorem symm_apply_mk_proj {x : Z} (ex : x ∈ e.source) :
 #print Pretrivialization.preimage_symm_proj_baseSet /-
 @[simp, mfld_simps]
 theorem preimage_symm_proj_baseSet :
-    e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' e.baseSet) ∩ e.target = e.target :=
+    e.toPartialEquiv.symm ⁻¹' (proj ⁻¹' e.baseSet) ∩ e.target = e.target :=
   by
   refine' inter_eq_right_iff_subset.mpr fun x hx => _
-  simp only [mem_preimage, LocalEquiv.invFun_as_coe, e.proj_symm_apply hx]
+  simp only [mem_preimage, PartialEquiv.invFun_as_coe, e.proj_symm_apply hx]
   exact e.mem_target.mp hx
 #align pretrivialization.preimage_symm_proj_base_set Pretrivialization.preimage_symm_proj_baseSet
 -/
@@ -207,7 +207,7 @@ theorem preimage_symm_proj_baseSet :
 #print Pretrivialization.preimage_symm_proj_inter /-
 @[simp, mfld_simps]
 theorem preimage_symm_proj_inter (s : Set B) :
-    e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.baseSet ×ˢ univ = (s ∩ e.baseSet) ×ˢ univ :=
+    e.toPartialEquiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.baseSet ×ˢ univ = (s ∩ e.baseSet) ×ˢ univ :=
   by
   ext ⟨x, y⟩
   suffices x ∈ e.base_set → (proj (e.to_local_equiv.symm (x, y)) ∈ s ↔ x ∈ s) by
@@ -220,7 +220,7 @@ theorem preimage_symm_proj_inter (s : Set B) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.target_inter_preimage_symm_source_eq /-
 theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
-    f.target ∩ f.toLocalEquiv.symm ⁻¹' e.source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
+    f.target ∩ f.toPartialEquiv.symm ⁻¹' e.source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
   rw [inter_comm, f.target_eq, e.source_eq, f.preimage_symm_proj_inter]
 #align pretrivialization.target_inter_preimage_symm_source_eq Pretrivialization.target_inter_preimage_symm_source_eq
 -/
@@ -228,23 +228,24 @@ theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.trans_source /-
 theorem trans_source (e f : Pretrivialization F proj) :
-    (f.toLocalEquiv.symm.trans e.toLocalEquiv).source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
-  rw [LocalEquiv.trans_source, LocalEquiv.symm_source, e.target_inter_preimage_symm_source_eq]
+    (f.toPartialEquiv.symm.trans e.toPartialEquiv).source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
+  rw [PartialEquiv.trans_source, PartialEquiv.symm_source, e.target_inter_preimage_symm_source_eq]
 #align pretrivialization.trans_source Pretrivialization.trans_source
 -/
 
 #print Pretrivialization.symm_trans_symm /-
 theorem symm_trans_symm (e e' : Pretrivialization F proj) :
-    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).symm = e'.toLocalEquiv.symm.trans e.toLocalEquiv :=
-  by rw [LocalEquiv.trans_symm_eq_symm_trans_symm, LocalEquiv.symm_symm]
+    (e.toPartialEquiv.symm.trans e'.toPartialEquiv).symm =
+      e'.toPartialEquiv.symm.trans e.toPartialEquiv :=
+  by rw [PartialEquiv.trans_symm_eq_symm_trans_symm, PartialEquiv.symm_symm]
 #align pretrivialization.symm_trans_symm Pretrivialization.symm_trans_symm
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.symm_trans_source_eq /-
 theorem symm_trans_source_eq (e e' : Pretrivialization F proj) :
-    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).source = (e.baseSet ∩ e'.baseSet) ×ˢ univ := by
-  rw [LocalEquiv.trans_source, e'.source_eq, LocalEquiv.symm_source, e.target_eq, inter_comm,
+    (e.toPartialEquiv.symm.trans e'.toPartialEquiv).source = (e.baseSet ∩ e'.baseSet) ×ˢ univ := by
+  rw [PartialEquiv.trans_source, e'.source_eq, PartialEquiv.symm_source, e.target_eq, inter_comm,
     e.preimage_symm_proj_inter, inter_comm]
 #align pretrivialization.symm_trans_source_eq Pretrivialization.symm_trans_source_eq
 -/
@@ -252,8 +253,8 @@ theorem symm_trans_source_eq (e e' : Pretrivialization F proj) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.symm_trans_target_eq /-
 theorem symm_trans_target_eq (e e' : Pretrivialization F proj) :
-    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).target = (e.baseSet ∩ e'.baseSet) ×ˢ univ := by
-  rw [← LocalEquiv.symm_source, symm_trans_symm, symm_trans_source_eq, inter_comm]
+    (e.toPartialEquiv.symm.trans e'.toPartialEquiv).target = (e.baseSet ∩ e'.baseSet) ×ˢ univ := by
+  rw [← PartialEquiv.symm_source, symm_trans_symm, symm_trans_source_eq, inter_comm]
 #align pretrivialization.symm_trans_target_eq Pretrivialization.symm_trans_target_eq
 -/
 
@@ -281,7 +282,7 @@ theorem mk_mem_target {x : B} {y : F} : (x, y) ∈ e'.target ↔ x ∈ e'.baseSe
 
 #print Pretrivialization.symm_coe_proj /-
 theorem symm_coe_proj {x : B} {y : F} (e' : Pretrivialization F (π F E)) (h : x ∈ e'.baseSet) :
-    (e'.toLocalEquiv.symm (x, y)).1 = x :=
+    (e'.toPartialEquiv.symm (x, y)).1 = x :=
   e'.proj_symm_apply' h
 #align pretrivialization.symm_coe_proj Pretrivialization.symm_coe_proj
 -/
@@ -295,14 +296,14 @@ variable [∀ x, Zero (E x)]
 `B × F → total_space F E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
 protected noncomputable def symm (e : Pretrivialization F (π F E)) (b : B) (y : F) : E b :=
   if hb : b ∈ e.baseSet then
-    cast (congr_arg E (e.proj_symm_apply' hb)) (e.toLocalEquiv.symm (b, y)).2
+    cast (congr_arg E (e.proj_symm_apply' hb)) (e.toPartialEquiv.symm (b, y)).2
   else 0
 #align pretrivialization.symm Pretrivialization.symm
 -/
 
 #print Pretrivialization.symm_apply /-
 theorem symm_apply (e : Pretrivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
-    e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalEquiv.symm (b, y)).2 :=
+    e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toPartialEquiv.symm (b, y)).2 :=
   dif_pos hb
 #align pretrivialization.symm_apply Pretrivialization.symm_apply
 -/
@@ -323,7 +324,7 @@ theorem coe_symm_of_not_mem (e : Pretrivialization F (π F E)) {b : B} (hb : b �
 
 #print Pretrivialization.mk_symm /-
 theorem mk_symm (e : Pretrivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
-    TotalSpace.mk b (e.symm b y) = e.toLocalEquiv.symm (b, y) := by
+    TotalSpace.mk b (e.symm b y) = e.toPartialEquiv.symm (b, y) := by
   rw [e.symm_apply hb, total_space.mk_cast, total_space.eta]
 #align pretrivialization.mk_symm Pretrivialization.mk_symm
 -/
@@ -510,7 +511,7 @@ theorem symm_apply_mk_proj (ex : x ∈ e.source) : e.toPartialHomeomorph.symm (p
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.symm_trans_source_eq /-
 theorem symm_trans_source_eq (e e' : Trivialization F proj) :
-    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).source = (e.baseSet ∩ e'.baseSet) ×ˢ univ :=
+    (e.toPartialEquiv.symm.trans e'.toPartialEquiv).source = (e.baseSet ∩ e'.baseSet) ×ˢ univ :=
   Pretrivialization.symm_trans_source_eq e.toPretrivialization e'
 #align trivialization.symm_trans_source_eq Trivialization.symm_trans_source_eq
 -/
@@ -518,7 +519,7 @@ theorem symm_trans_source_eq (e e' : Trivialization F proj) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.symm_trans_target_eq /-
 theorem symm_trans_target_eq (e e' : Trivialization F proj) :
-    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).target = (e.baseSet ∩ e'.baseSet) ×ˢ univ :=
+    (e.toPartialEquiv.symm.trans e'.toPartialEquiv).target = (e.baseSet ∩ e'.baseSet) ×ˢ univ :=
   Pretrivialization.symm_trans_target_eq e.toPretrivialization e'
 #align trivialization.symm_trans_target_eq Trivialization.symm_trans_target_eq
 -/
@@ -664,11 +665,11 @@ protected def compHomeomorph {Z' : Type _} [TopologicalSpace Z'] (h : Z' ≃ₜ 
 trivialization of `Z` containing `z`. -/
 theorem continuousAt_of_comp_right {X : Type _} [TopologicalSpace X] {f : Z → X} {z : Z}
     (e : Trivialization F proj) (he : proj z ∈ e.baseSet)
-    (hf : ContinuousAt (f ∘ e.toLocalEquiv.symm) (e z)) : ContinuousAt f z :=
+    (hf : ContinuousAt (f ∘ e.toPartialEquiv.symm) (e z)) : ContinuousAt f z :=
   by
   have hez : z ∈ e.to_local_equiv.symm.target :=
     by
-    rw [LocalEquiv.symm_target, e.mem_source]
+    rw [PartialEquiv.symm_target, e.mem_source]
     exact he
   rwa [e.to_local_homeomorph.symm.continuous_at_iff_continuous_at_comp_right hez,
     PartialHomeomorph.symm_symm]
@@ -725,7 +726,7 @@ theorem mk_mem_target {y : F} : (b, y) ∈ e'.target ↔ b ∈ e'.baseSet :=
 #print Trivialization.symm_apply_apply /-
 theorem symm_apply_apply {x : TotalSpace F E} (hx : x ∈ e'.source) :
     e'.toPartialHomeomorph.symm (e' x) = x :=
-  e'.toLocalEquiv.left_inv hx
+  e'.toPartialEquiv.left_inv hx
 #align trivialization.symm_apply_apply Trivialization.symm_apply_apply
 -/
 

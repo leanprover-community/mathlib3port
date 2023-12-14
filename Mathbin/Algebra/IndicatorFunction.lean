@@ -686,7 +686,7 @@ section CommMonoid
 
 variable [CommMonoid M]
 
-#print Set.prod_mulIndicator_subset_of_eq_one /-
+#print Finset.prod_mulIndicator_subset_of_eq_one /-
 /-- Consider a product of `g i (f i)` over a `finset`.  Suppose `g` is a
 function such as `pow`, which maps a second argument of `1` to
 `1`. Then if `f` is replaced by the corresponding multiplicative indicator
@@ -706,8 +706,8 @@ theorem prod_mulIndicator_subset_of_eq_one [One N] (f : α → N) (g : α → N 
   · refine' fun i hi hn => _
     convert hg i
     exact mul_indicator_of_not_mem hn _
-#align set.prod_mul_indicator_subset_of_eq_one Set.prod_mulIndicator_subset_of_eq_one
-#align set.sum_indicator_subset_of_eq_zero Set.sum_indicator_subset_of_eq_zero
+#align set.prod_mul_indicator_subset_of_eq_one Finset.prod_mulIndicator_subset_of_eq_one
+#align set.sum_indicator_subset_of_eq_zero Finset.sum_indicator_subset_of_eq_zero
 -/
 
 /-- Consider a sum of `g i (f i)` over a `finset`. Suppose `g` is a
@@ -717,9 +717,9 @@ function such as multiplication, which maps a second argument of 0 to
 function `h`.)  Then if `f` is replaced by the corresponding indicator
 function, the `finset` may be replaced by a possibly larger `finset`
 without changing the value of the sum. -/
-add_decl_doc Set.sum_indicator_subset_of_eq_zero
+add_decl_doc Finset.sum_indicator_subset_of_eq_zero
 
-#print Set.prod_mulIndicator_subset /-
+#print Finset.prod_mulIndicator_subset /-
 /-- Taking the product of an indicator function over a possibly larger `finset` is the same as
 taking the original function over the original `finset`. -/
 @[to_additive
@@ -727,8 +727,8 @@ taking the original function over the original `finset`. -/
 theorem prod_mulIndicator_subset (f : α → M) {s t : Finset α} (h : s ⊆ t) :
     ∏ i in s, f i = ∏ i in t, mulIndicator (↑s) f i :=
   prod_mulIndicator_subset_of_eq_one _ (fun a b => b) h fun _ => rfl
-#align set.prod_mul_indicator_subset Set.prod_mulIndicator_subset
-#align set.sum_indicator_subset Set.sum_indicator_subset
+#align set.prod_mul_indicator_subset Finset.prod_mulIndicator_subset
+#align set.sum_indicator_subset Finset.sum_indicator_subset
 -/
 
 #print Finset.prod_mulIndicator_eq_prod_filter /-
@@ -747,18 +747,18 @@ theorem Finset.prod_mulIndicator_eq_prod_filter (s : Finset ι) (f : ι → α �
 #align finset.sum_indicator_eq_sum_filter Finset.sum_indicator_eq_sum_filter
 -/
 
-#print Set.mulIndicator_finset_prod /-
+#print Finset.mulIndicator_prod /-
 @[to_additive]
-theorem mulIndicator_finset_prod (I : Finset ι) (s : Set α) (f : ι → α → M) :
+theorem mulIndicator_prod (I : Finset ι) (s : Set α) (f : ι → α → M) :
     mulIndicator s (∏ i in I, f i) = ∏ i in I, mulIndicator s (f i) :=
   (mulIndicatorHom M s).map_prod _ _
-#align set.mul_indicator_finset_prod Set.mulIndicator_finset_prod
-#align set.indicator_finset_sum Set.indicator_finset_sum
+#align set.mul_indicator_finset_prod Finset.mulIndicator_prod
+#align set.indicator_finset_sum Finset.indicator_sum
 -/
 
-#print Set.mulIndicator_finset_biUnion /-
+#print Finset.mulIndicator_biUnion /-
 @[to_additive]
-theorem mulIndicator_finset_biUnion {ι} (I : Finset ι) (s : ι → Set α) {f : α → M} :
+theorem mulIndicator_biUnion {ι} (I : Finset ι) (s : ι → Set α) {f : α → M} :
     (∀ i ∈ I, ∀ j ∈ I, i ≠ j → Disjoint (s i) (s j)) →
       mulIndicator (⋃ i ∈ I, s i) f = fun a => ∏ i in I, mulIndicator (s i) f a :=
   by
@@ -774,18 +774,18 @@ theorem mulIndicator_finset_biUnion {ι} (I : Finset ι) (s : ι → Set α) {f 
   intro hx a' ha'
   refine' disjoint_left.1 (hI a (Finset.mem_insert_self _ _) a' (Finset.mem_insert_of_mem ha') _) hx
   exact (ne_of_mem_of_not_mem ha' haI).symm
-#align set.mul_indicator_finset_bUnion Set.mulIndicator_finset_biUnion
-#align set.indicator_finset_bUnion Set.indicator_finset_biUnion
+#align set.mul_indicator_finset_bUnion Finset.mulIndicator_biUnion
+#align set.indicator_finset_bUnion Finset.indicator_biUnion
 -/
 
-#print Set.mulIndicator_finset_biUnion_apply /-
+#print Finset.mulIndicator_biUnion_apply /-
 @[to_additive]
-theorem mulIndicator_finset_biUnion_apply {ι} (I : Finset ι) (s : ι → Set α) {f : α → M}
+theorem mulIndicator_biUnion_apply {ι} (I : Finset ι) (s : ι → Set α) {f : α → M}
     (h : ∀ i ∈ I, ∀ j ∈ I, i ≠ j → Disjoint (s i) (s j)) (x : α) :
     mulIndicator (⋃ i ∈ I, s i) f x = ∏ i in I, mulIndicator (s i) f x := by
-  rw [Set.mulIndicator_finset_biUnion I s h]
-#align set.mul_indicator_finset_bUnion_apply Set.mulIndicator_finset_biUnion_apply
-#align set.indicator_finset_bUnion_apply Set.indicator_finset_biUnion_apply
+  rw [Finset.mulIndicator_biUnion I s h]
+#align set.mul_indicator_finset_bUnion_apply Finset.mulIndicator_biUnion_apply
+#align set.indicator_finset_bUnion_apply Finset.indicator_biUnion_apply
 -/
 
 end CommMonoid

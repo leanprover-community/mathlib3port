@@ -321,10 +321,10 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     · apply contMDiffOn_const
     ·
       simp only [FiberwiseLinear.localHomeomorph, PartialHomeomorph.refl_localEquiv,
-        LocalEquiv.refl_source, univ_prod_univ]
+        PartialEquiv.refl_source, univ_prod_univ]
     ·
       simp only [FiberwiseLinear.localHomeomorph, PartialHomeomorph.refl_apply, Prod.mk.eta, id.def,
-        ContinuousLinearEquiv.coe_refl', PartialHomeomorph.mk_coe, LocalEquiv.coe_mk]
+        ContinuousLinearEquiv.coe_refl', PartialHomeomorph.mk_coe, PartialEquiv.coe_mk]
   locality' :=
     by
     -- the hard work has been extracted to `locality_aux₁` and `locality_aux₂`

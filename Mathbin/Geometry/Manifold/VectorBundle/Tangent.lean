@@ -204,13 +204,13 @@ protected theorem chartAt (p : TM) :
 #align tangent_bundle.chart_at TangentBundle.chartAt
 -/
 
-#print TangentBundle.chartAt_toLocalEquiv /-
-theorem chartAt_toLocalEquiv (p : TM) :
-    (chartAt (ModelProd H E) p).toLocalEquiv =
-      (tangentBundleCore I M).toFiberBundleCore.localTrivAsLocalEquiv (achart H p.1) ≫
-        (chartAt H p.1).toLocalEquiv.Prod (LocalEquiv.refl E) :=
+#print TangentBundle.chartAt_toPartialEquiv /-
+theorem chartAt_toPartialEquiv (p : TM) :
+    (chartAt (ModelProd H E) p).toPartialEquiv =
+      (tangentBundleCore I M).toFiberBundleCore.localTrivAsPartialEquiv (achart H p.1) ≫
+        (chartAt H p.1).toPartialEquiv.Prod (PartialEquiv.refl E) :=
   rfl
-#align tangent_bundle.chart_at_to_local_equiv TangentBundle.chartAt_toLocalEquiv
+#align tangent_bundle.chart_at_to_local_equiv TangentBundle.chartAt_toPartialEquiv
 -/
 
 #print TangentBundle.trivializationAt_eq_localTriv /-
@@ -354,7 +354,7 @@ instance tangentBundleCore.isSmooth : (tangentBundleCore I M).IsSmooth I :=
   rw [SmoothOn, contMDiffOn_iff_source_of_mem_maximalAtlas (subset_maximal_atlas I i.2),
     contMDiffOn_iff_contDiffOn]
   refine' ((contDiffOn_fderiv_coord_change I i j).congr fun x hx => _).mono _
-  · rw [LocalEquiv.trans_source'] at hx 
+  · rw [PartialEquiv.trans_source'] at hx 
     simp_rw [Function.comp_apply, tangentBundleCore_coordChange, (i.1.extend I).right_inv hx.1]
   · exact (i.1.extend_image_source_inter j.1 I).Subset
   · apply inter_subset_left
@@ -377,15 +377,16 @@ end TangentBundleInstances
 between a product type and a sigma type, a.k.a. `equiv.sigma_equiv_prod`. -/
 @[simp, mfld_simps]
 theorem tangentBundle_model_space_chartAt (p : TangentBundle I H) :
-    (chartAt (ModelProd H E) p).toLocalEquiv = (TotalSpace.toProd H E).toLocalEquiv :=
+    (chartAt (ModelProd H E) p).toPartialEquiv = (TotalSpace.toProd H E).toPartialEquiv :=
   by
   ext x : 1
   · ext; · rfl
     exact (tangentBundleCore I H).coordChange_self (achart _ x.1) x.1 (mem_achart_source H x.1) x.2
   · intro x; ext; · rfl; apply hEq_of_eq
     exact (tangentBundleCore I H).coordChange_self (achart _ x.1) x.1 (mem_achart_source H x.1) x.2
-  simp_rw [TangentBundle.chartAt, FiberBundleCore.localTriv, FiberBundleCore.localTrivAsLocalEquiv,
-    VectorBundleCore.toFiberBundleCore_baseSet, tangentBundleCore_baseSet]
+  simp_rw [TangentBundle.chartAt, FiberBundleCore.localTriv,
+    FiberBundleCore.localTrivAsPartialEquiv, VectorBundleCore.toFiberBundleCore_baseSet,
+    tangentBundleCore_baseSet]
   simp only [mfld_simps]
 #align tangent_bundle_model_space_chart_at tangentBundle_model_space_chartAt
 -/
@@ -405,7 +406,7 @@ theorem tangentBundle_model_space_coe_chartAt_symm (p : TangentBundle I H) :
       (TotalSpace.toProd H E).symm :=
   by
   unfold_coes
-  simp_rw [PartialHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]; rfl
+  simp_rw [PartialHomeomorph.symm_toPartialEquiv, tangentBundle_model_space_chartAt]; rfl
 #align tangent_bundle_model_space_coe_chart_at_symm tangentBundle_model_space_coe_chartAt_symm
 -/
 
