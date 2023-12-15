@@ -179,10 +179,10 @@ theorem pow_dvd_iff_le_multiplicity {a b : α} {k : ℕ} :
 #align multiplicity.pow_dvd_iff_le_multiplicity multiplicity.pow_dvd_iff_le_multiplicity
 -/
 
-#print multiplicity.multiplicity_lt_iff_neg_dvd /-
-theorem multiplicity_lt_iff_neg_dvd {a b : α} {k : ℕ} :
+#print multiplicity.multiplicity_lt_iff_not_dvd /-
+theorem multiplicity_lt_iff_not_dvd {a b : α} {k : ℕ} :
     multiplicity a b < (k : PartENat) ↔ ¬a ^ k ∣ b := by rw [pow_dvd_iff_le_multiplicity, not_le]
-#align multiplicity.multiplicity_lt_iff_neg_dvd multiplicity.multiplicity_lt_iff_neg_dvd
+#align multiplicity.multiplicity_lt_iff_neg_dvd multiplicity.multiplicity_lt_iff_not_dvd
 -/
 
 #print multiplicity.eq_coe_iff /-

@@ -1938,20 +1938,20 @@ def finTwoArrow : (Fin 2 → α) ≃ᵐ α × α :=
 #align measurable_equiv.fin_two_arrow MeasurableEquiv.finTwoArrow
 -/
 
-#print MeasurableEquiv.piFinSuccAboveEquiv /-
+#print MeasurableEquiv.piFinSuccAbove /-
 /-- Measurable equivalence between `Π j : fin (n + 1), α j` and
 `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 @[simps (config := { fullyApplied := false })]
-def piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type _) [∀ i, MeasurableSpace (α i)]
+def piFinSuccAbove {n : ℕ} (α : Fin (n + 1) → Type _) [∀ i, MeasurableSpace (α i)]
     (i : Fin (n + 1)) : (∀ j, α j) ≃ᵐ α i × ∀ j, α (i.succAboveEmb j)
     where
-  toEquiv := piFinSuccAboveEquiv α i
+  toEquiv := piFinSuccAbove α i
   measurable_to_fun :=
     (measurable_pi_apply i).prod_mk <| measurable_pi_iff.2 fun j => measurable_pi_apply _
   measurable_inv_fun := by
     simp [measurable_pi_iff, i.forall_iff_succ_above, measurable_fst,
       (measurable_pi_apply _).comp measurable_snd]
-#align measurable_equiv.pi_fin_succ_above_equiv MeasurableEquiv.piFinSuccAboveEquiv
+#align measurable_equiv.pi_fin_succ_above_equiv MeasurableEquiv.piFinSuccAbove
 -/
 
 variable (π)

@@ -301,7 +301,7 @@ theorem torusIntegral_succAbove {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : �
     ∯ x in T(c, R), f x =
       ∮ x in C(c i, R i), ∯ y in T(c ∘ i.succAboveEmb, R ∘ i.succAboveEmb), f (i.insertNth x y) :=
   by
-  set e : ℝ × ℝⁿ ≃ᵐ ℝⁿ⁺¹ := (MeasurableEquiv.piFinSuccAboveEquiv (fun _ => ℝ) i).symm
+  set e : ℝ × ℝⁿ ≃ᵐ ℝⁿ⁺¹ := (MeasurableEquiv.piFinSuccAbove (fun _ => ℝ) i).symm
   have hem : measure_preserving e :=
     (volume_preserving_pi_fin_succ_above_equiv (fun j : Fin (n + 1) => ℝ) i).symm _
   have heπ : (e ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) ×ˢ Icc (0 : ℝⁿ) fun _ => 2 * π :=
@@ -312,7 +312,7 @@ theorem torusIntegral_succAbove {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : �
     simp only [torusIntegral, ← integral_smul, deriv_circleMap, i.prod_univ_succ_above _, smul_smul,
       torusMap, circleMap_zero]
     refine' set_integral_congr measurableSet_Icc fun Θ hΘ => _
-    simp only [MeasurableEquiv.piFinSuccAboveEquiv_symm_apply, i.insert_nth_apply_same,
+    simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, i.insert_nth_apply_same,
       i.insert_nth_apply_succ_above, (· ∘ ·)]
     congr 2
     simp only [funext_iff, i.forall_iff_succ_above, circleMap, Fin.insertNth_apply_same,

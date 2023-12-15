@@ -1035,7 +1035,7 @@ each factor. -/
 @[simps]
 def diagonalSucc (G : Type u) [Monoid G] (n : ℕ) :
     diagonal G (n + 1) ≅ leftRegular G ⊗ diagonal G n :=
-  mkIso (Equiv.piFinSuccAboveEquiv _ 0).toIso fun g => rfl
+  mkIso (Equiv.piFinSuccAbove _ 0).toIso fun g => rfl
 #align Action.diagonal_succ Action.diagonalSucc
 -/
 

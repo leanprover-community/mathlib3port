@@ -1154,11 +1154,11 @@ theorem reverse_eq_iff {l l' : List α} : l.reverse = l' ↔ l = l'.reverse :=
 #align list.reverse_eq_iff List.reverse_eq_iff
 -/
 
-#print List.reverse_eq_nil /-
+#print List.reverse_eq_nil_iff /-
 @[simp]
-theorem reverse_eq_nil {l : List α} : reverse l = [] ↔ l = [] :=
+theorem reverse_eq_nil_iff {l : List α} : reverse l = [] ↔ l = [] :=
   @reverse_inj _ l []
-#align list.reverse_eq_nil List.reverse_eq_nil
+#align list.reverse_eq_nil List.reverse_eq_nil_iff
 -/
 
 #print List.concat_eq_reverse_cons /-

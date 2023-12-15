@@ -103,7 +103,7 @@ def actionDiagonalSucc (G : Type u) [Group G] :
       tensorIso (Iso.refl _) (Action_diagonal_succ n) ≪≫
         leftRegularTensorIso _ _ ≪≫
           tensorIso (Iso.refl _)
-            (mkIso (Equiv.piFinSuccAboveEquiv (fun j => G) 0).symm.toIso fun g => rfl)
+            (mkIso (Equiv.piFinSuccAbove (fun j => G) 0).symm.toIso fun g => rfl)
 #align group_cohomology.resolution.Action_diagonal_succ groupCohomology.resolution.actionDiagonalSucc
 -/
 
@@ -118,7 +118,7 @@ theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (
     · dsimp only [Action_diagonal_succ]
       simp only [iso.trans_hom, comp_hom, types_comp_apply, diagonal_succ_hom_hom,
         left_regular_tensor_iso_hom_hom, tensor_iso_hom, mk_iso_hom_hom, Equiv.toIso_hom,
-        tensor_hom, Equiv.piFinSuccAboveEquiv_symm_apply, tensor_apply, types_id_apply, tensor_rho,
+        tensor_hom, Equiv.piFinSuccAbove_symm_apply, tensor_apply, types_id_apply, tensor_rho,
         MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ, Fin.insertNth_zero']
       refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
       · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ]

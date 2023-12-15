@@ -854,28 +854,28 @@ theorem volume_preserving_piEquivPiSubtypeProd {ι : Type _} (α : ι → Type _
 #align measure_theory.volume_preserving_pi_equiv_pi_subtype_prod MeasureTheory.volume_preserving_piEquivPiSubtypeProd
 -/
 
-#print MeasureTheory.measurePreserving_piFinSuccAboveEquiv /-
-theorem measurePreserving_piFinSuccAboveEquiv {n : ℕ} {α : Fin (n + 1) → Type u}
+#print MeasureTheory.measurePreserving_piFinSuccAbove /-
+theorem measurePreserving_piFinSuccAbove {n : ℕ} {α : Fin (n + 1) → Type u}
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)]
     (i : Fin (n + 1)) :
-    MeasurePreserving (MeasurableEquiv.piFinSuccAboveEquiv α i) (Measure.pi μ)
+    MeasurePreserving (MeasurableEquiv.piFinSuccAbove α i) (Measure.pi μ)
       ((μ i).Prod <| Measure.pi fun j => μ (i.succAboveEmb j)) :=
   by
-  set e := (MeasurableEquiv.piFinSuccAboveEquiv α i).symm
+  set e := (MeasurableEquiv.piFinSuccAbove α i).symm
   refine' measure_preserving.symm e _
   refine' ⟨e.measurable, (pi_eq fun s hs => _).symm⟩
   rw [e.map_apply, i.prod_univ_succ_above _, ← pi_pi, ← prod_prod]
   congr 1 with ⟨x, f⟩
   simp [i.forall_iff_succ_above]
-#align measure_theory.measure_preserving_pi_fin_succ_above_equiv MeasureTheory.measurePreserving_piFinSuccAboveEquiv
+#align measure_theory.measure_preserving_pi_fin_succ_above_equiv MeasureTheory.measurePreserving_piFinSuccAbove
 -/
 
-#print MeasureTheory.volume_preserving_piFinSuccAboveEquiv /-
-theorem volume_preserving_piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u)
+#print MeasureTheory.volume_preserving_piFinSuccAbove /-
+theorem volume_preserving_piFinSuccAbove {n : ℕ} (α : Fin (n + 1) → Type u)
     [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (volume : Measure (α i))] (i : Fin (n + 1)) :
-    MeasurePreserving (MeasurableEquiv.piFinSuccAboveEquiv α i) :=
-  measurePreserving_piFinSuccAboveEquiv (fun _ => volume) i
-#align measure_theory.volume_preserving_pi_fin_succ_above_equiv MeasureTheory.volume_preserving_piFinSuccAboveEquiv
+    MeasurePreserving (MeasurableEquiv.piFinSuccAbove α i) :=
+  measurePreserving_piFinSuccAbove (fun _ => volume) i
+#align measure_theory.volume_preserving_pi_fin_succ_above_equiv MeasureTheory.volume_preserving_piFinSuccAbove
 -/
 
 #print MeasureTheory.measurePreserving_funUnique /-

@@ -410,17 +410,17 @@ theorem finSuccEquivLast_symm_none {n : ℕ} : finSuccEquivLast.symm none = Fin.
 #align fin_succ_equiv_last_symm_none finSuccEquivLast_symm_none
 -/
 
-#print Equiv.piFinSuccAboveEquiv /-
+#print Equiv.piFinSuccAbove /-
 /-- Equivalence between `Π j : fin (n + 1), α j` and `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 @[simps (config := { fullyApplied := false })]
-def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (n + 1)) :
+def Equiv.piFinSuccAbove {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (n + 1)) :
     (∀ j, α j) ≃ α i × ∀ j, α (i.succAboveEmb j)
     where
   toFun f := (f i, fun j => f (i.succAboveEmb j))
   invFun f := i.insertNth f.1 f.2
   left_inv f := by simp [Fin.insertNth_eq_iff]
   right_inv f := by simp
-#align equiv.pi_fin_succ_above_equiv Equiv.piFinSuccAboveEquiv
+#align equiv.pi_fin_succ_above_equiv Equiv.piFinSuccAbove
 -/
 
 #print OrderIso.piFinSuccAboveIso /-
@@ -429,7 +429,7 @@ def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (
 def OrderIso.piFinSuccAboveIso {n : ℕ} (α : Fin (n + 1) → Type u) [∀ i, LE (α i)]
     (i : Fin (n + 1)) : (∀ j, α j) ≃o α i × ∀ j, α (i.succAboveEmb j)
     where
-  toEquiv := Equiv.piFinSuccAboveEquiv α i
+  toEquiv := Equiv.piFinSuccAbove α i
   map_rel_iff' f g := i.forall_iff_succAbove.symm
 #align order_iso.pi_fin_succ_above_iso OrderIso.piFinSuccAboveIso
 -/
@@ -438,7 +438,7 @@ def OrderIso.piFinSuccAboveIso {n : ℕ} (α : Fin (n + 1) → Type u) [∀ i, L
 /-- Equivalence between `fin (n + 1) → β` and `β × (fin n → β)`. -/
 @[simps (config := { fullyApplied := false })]
 def Equiv.piFinSucc (n : ℕ) (β : Type u) : (Fin (n + 1) → β) ≃ β × (Fin n → β) :=
-  Equiv.piFinSuccAboveEquiv (fun _ => β) 0
+  Equiv.piFinSuccAbove (fun _ => β) 0
 #align equiv.pi_fin_succ Equiv.piFinSucc
 -/
 
