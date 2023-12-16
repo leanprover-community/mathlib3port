@@ -80,34 +80,46 @@ instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.Is
 
 variable {G H} {a b : α}
 
+#print SimpleGraph.isClique_empty /-
 @[simp]
 theorem isClique_empty : G.IsClique ∅ :=
   Set.pairwise_empty _
 #align simple_graph.is_clique_empty SimpleGraph.isClique_empty
+-/
 
+#print SimpleGraph.isClique_singleton /-
 @[simp]
 theorem isClique_singleton (a : α) : G.IsClique {a} :=
   Set.pairwise_singleton _ _
 #align simple_graph.is_clique_singleton SimpleGraph.isClique_singleton
+-/
 
+#print SimpleGraph.isClique_pair /-
 theorem isClique_pair : G.IsClique {a, b} ↔ a ≠ b → G.Adj a b :=
   Set.pairwise_pair_of_symmetric G.symm
 #align simple_graph.is_clique_pair SimpleGraph.isClique_pair
+-/
 
+#print SimpleGraph.isClique_insert /-
 @[simp]
 theorem isClique_insert : G.IsClique (insert a s) ↔ G.IsClique s ∧ ∀ b ∈ s, a ≠ b → G.Adj a b :=
   Set.pairwise_insert_of_symmetric G.symm
 #align simple_graph.is_clique_insert SimpleGraph.isClique_insert
+-/
 
+#print SimpleGraph.isClique_insert_of_not_mem /-
 theorem isClique_insert_of_not_mem (ha : a ∉ s) :
     G.IsClique (insert a s) ↔ G.IsClique s ∧ ∀ b ∈ s, G.Adj a b :=
   Set.pairwise_insert_of_symmetric_of_not_mem G.symm ha
 #align simple_graph.is_clique_insert_of_not_mem SimpleGraph.isClique_insert_of_not_mem
+-/
 
+#print SimpleGraph.IsClique.insert /-
 theorem IsClique.insert (hs : G.IsClique s) (h : ∀ b ∈ s, a ≠ b → G.Adj a b) :
     G.IsClique (insert a s) :=
   hs.insert_of_symmetric G.symm h
 #align simple_graph.is_clique.insert SimpleGraph.IsClique.insert
+-/
 
 #print SimpleGraph.IsClique.mono /-
 theorem IsClique.mono (h : G ≤ H) : G.IsClique s → H.IsClique s :=
@@ -121,12 +133,14 @@ theorem IsClique.subset (h : t ⊆ s) : G.IsClique s → G.IsClique t :=
 #align simple_graph.is_clique.subset SimpleGraph.IsClique.subset
 -/
 
+#print SimpleGraph.IsClique.map /-
 protected theorem IsClique.map {G : SimpleGraph α} {s : Set α} (h : G.IsClique s) {f : α ↪ β} :
     (G.map f).IsClique (f '' s) :=
   by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ hab
   exact ⟨a, b, h ha hb <| ne_of_apply_ne _ hab, rfl, rfl⟩
 #align simple_graph.is_clique.map SimpleGraph.IsClique.map
+-/
 
 #print SimpleGraph.isClique_bot_iff /-
 @[simp]
@@ -167,13 +181,17 @@ instance [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {s : Finset α} :
 
 variable {G H} {a b c : α}
 
+#print SimpleGraph.isNClique_empty /-
 @[simp]
 theorem isNClique_empty : G.IsNClique n ∅ ↔ n = 0 := by simp [is_n_clique_iff, eq_comm]
 #align simple_graph.is_n_clique_empty SimpleGraph.isNClique_empty
+-/
 
+#print SimpleGraph.isNClique_singleton /-
 @[simp]
 theorem isNClique_singleton : G.IsNClique n {a} ↔ n = 1 := by simp [is_n_clique_iff, eq_comm]
 #align simple_graph.is_n_clique_singleton SimpleGraph.isNClique_singleton
+-/
 
 #print SimpleGraph.IsNClique.mono /-
 theorem IsNClique.mono (h : G ≤ H) : G.IsNClique n s → H.IsNClique n s := by
@@ -181,10 +199,12 @@ theorem IsNClique.mono (h : G ≤ H) : G.IsNClique n s → H.IsNClique n s := by
 #align simple_graph.is_n_clique.mono SimpleGraph.IsNClique.mono
 -/
 
+#print SimpleGraph.IsNClique.map /-
 protected theorem IsNClique.map (h : G.IsNClique n s) {f : α ↪ β} :
     (G.map f).IsNClique n (s.map f) :=
   ⟨by rw [coe_map]; exact h.1.map, (card_map _).trans h.2⟩
 #align simple_graph.is_n_clique.map SimpleGraph.IsNClique.map
+-/
 
 #print SimpleGraph.isNClique_bot_iff /-
 @[simp]
@@ -197,18 +217,23 @@ theorem isNClique_bot_iff : (⊥ : SimpleGraph α).IsNClique n s ↔ n ≤ 1 ∧
 #align simple_graph.is_n_clique_bot_iff SimpleGraph.isNClique_bot_iff
 -/
 
+#print SimpleGraph.isNClique_zero /-
 @[simp]
 theorem isNClique_zero : G.IsNClique 0 s ↔ s = ∅ := by
   simp only [is_n_clique_iff, Finset.card_eq_zero, and_iff_right_iff_imp]; rintro rfl; simp
 #align simple_graph.is_n_clique_zero SimpleGraph.isNClique_zero
+-/
 
+#print SimpleGraph.isNClique_one /-
 @[simp]
 theorem isNClique_one : G.IsNClique 1 s ↔ ∃ a, s = {a} := by
   simp only [is_n_clique_iff, card_eq_one, and_iff_right_iff_imp]; rintro ⟨a, rfl⟩; simp
 #align simple_graph.is_n_clique_one SimpleGraph.isNClique_one
+-/
 
 variable [DecidableEq α]
 
+#print SimpleGraph.IsNClique.insert /-
 theorem IsNClique.insert (hs : G.IsNClique n s) (h : ∀ b ∈ s, G.Adj a b) :
     G.IsNClique (n + 1) (insert a s) := by
   constructor
@@ -216,6 +241,7 @@ theorem IsNClique.insert (hs : G.IsNClique n s) (h : ∀ b ∈ s, G.Adj a b) :
     exact hs.1.insert fun b hb _ => h _ hb
   · rw [card_insert_of_not_mem fun ha => (h _ ha).Ne rfl, hs.2]
 #align simple_graph.is_n_clique.insert SimpleGraph.IsNClique.insert
+-/
 
 #print SimpleGraph.is3Clique_triple_iff /-
 theorem is3Clique_triple_iff : G.IsNClique 3 {a, b, c} ↔ G.Adj a b ∧ G.Adj a c ∧ G.Adj b c :=
@@ -360,6 +386,7 @@ theorem cliqueFree_of_card_lt [Fintype α] (hc : card α < n) : G.CliqueFree n :
 #align simple_graph.clique_free_of_card_lt SimpleGraph.cliqueFree_of_card_lt
 -/
 
+#print SimpleGraph.cliqueFree_two /-
 @[simp]
 theorem cliqueFree_two : G.CliqueFree 2 ↔ G = ⊥ := by
   classical
@@ -369,6 +396,7 @@ theorem cliqueFree_two : G.CliqueFree 2 ↔ G = ⊥ := by
   · rintro rfl
     exact clique_free_bot le_rfl
 #align simple_graph.clique_free_two SimpleGraph.cliqueFree_two
+-/
 
 end CliqueFree
 
@@ -376,49 +404,68 @@ section CliqueFreeOn
 
 variable {s s₁ s₂ : Set α} {t : Finset α} {a b : α} {m n : ℕ}
 
+#print SimpleGraph.CliqueFreeOn /-
 /-- `G.clique_free_on s n` means that `G` has no `n`-cliques contained in `s`. -/
 def CliqueFreeOn (G : SimpleGraph α) (s : Set α) (n : ℕ) : Prop :=
   ∀ ⦃t⦄, ↑t ⊆ s → ¬G.IsNClique n t
 #align simple_graph.clique_free_on SimpleGraph.CliqueFreeOn
+-/
 
+#print SimpleGraph.CliqueFreeOn.subset /-
 theorem CliqueFreeOn.subset (hs : s₁ ⊆ s₂) (h₂ : G.CliqueFreeOn s₂ n) : G.CliqueFreeOn s₁ n :=
   fun t hts => h₂ <| hts.trans hs
 #align simple_graph.clique_free_on.subset SimpleGraph.CliqueFreeOn.subset
+-/
 
+#print SimpleGraph.CliqueFreeOn.mono /-
 theorem CliqueFreeOn.mono (hmn : m ≤ n) (hG : G.CliqueFreeOn s m) : G.CliqueFreeOn s n :=
   by
   rintro t hts ht
   obtain ⟨u, hut, hu⟩ := t.exists_smaller_set _ (hmn.trans ht.card_eq.ge)
   exact hG ((coe_subset.2 hut).trans hts) ⟨ht.clique.subset hut, hu⟩
 #align simple_graph.clique_free_on.mono SimpleGraph.CliqueFreeOn.mono
+-/
 
+#print SimpleGraph.CliqueFreeOn.anti /-
 theorem CliqueFreeOn.anti (hGH : G ≤ H) (hH : H.CliqueFreeOn s n) : G.CliqueFreeOn s n :=
   fun t hts ht => hH hts <| ht.mono hGH
 #align simple_graph.clique_free_on.anti SimpleGraph.CliqueFreeOn.anti
+-/
 
+#print SimpleGraph.cliqueFreeOn_empty /-
 @[simp]
 theorem cliqueFreeOn_empty : G.CliqueFreeOn ∅ n ↔ n ≠ 0 := by
   simp [clique_free_on, Set.subset_empty_iff]
 #align simple_graph.clique_free_on_empty SimpleGraph.cliqueFreeOn_empty
+-/
 
+#print SimpleGraph.cliqueFreeOn_singleton /-
 @[simp]
 theorem cliqueFreeOn_singleton : G.CliqueFreeOn {a} n ↔ 1 < n := by
   obtain _ | _ | n := n <;> simp [clique_free_on, Set.subset_singleton_iff_eq]
 #align simple_graph.clique_free_on_singleton SimpleGraph.cliqueFreeOn_singleton
+-/
 
+#print SimpleGraph.cliqueFreeOn_univ /-
 @[simp]
 theorem cliqueFreeOn_univ : G.CliqueFreeOn Set.univ n ↔ G.CliqueFree n := by
   simp [clique_free, clique_free_on]
 #align simple_graph.clique_free_on_univ SimpleGraph.cliqueFreeOn_univ
+-/
 
+#print SimpleGraph.CliqueFree.cliqueFreeOn /-
 protected theorem CliqueFree.cliqueFreeOn (hG : G.CliqueFree n) : G.CliqueFreeOn s n := fun t _ =>
   hG _
 #align simple_graph.clique_free.clique_free_on SimpleGraph.CliqueFree.cliqueFreeOn
+-/
 
+#print SimpleGraph.cliqueFreeOn_of_card_lt /-
 theorem cliqueFreeOn_of_card_lt {s : Finset α} (h : s.card < n) : G.CliqueFreeOn s n :=
   fun t hts ht => h.not_le <| ht.2.symm.trans_le <| card_mono hts
 #align simple_graph.clique_free_on_of_card_lt SimpleGraph.cliqueFreeOn_of_card_lt
+-/
 
+#print SimpleGraph.cliqueFreeOn_two /-
 --TOOD: Restate using `simple_graph.indep_set` once we have it
 @[simp]
 theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by
@@ -431,7 +478,9 @@ theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by
   simp only [coe_insert, coe_singleton, Set.insert_subset_iff, Set.singleton_subset_iff] at hst 
   refine' h hst.1 hst.2 hab (ht _ _ hab) <;> simp
 #align simple_graph.clique_free_on_two SimpleGraph.cliqueFreeOn_two
+-/
 
+#print SimpleGraph.CliqueFreeOn.of_succ /-
 theorem CliqueFreeOn.of_succ (hs : G.CliqueFreeOn s (n + 1)) (ha : a ∈ s) :
     G.CliqueFreeOn (s ∩ G.neighborSet a) n := by
   classical
@@ -439,6 +488,7 @@ theorem CliqueFreeOn.of_succ (hs : G.CliqueFreeOn s (n + 1)) (ha : a ∈ s) :
   push_cast
   exact Set.insert_subset_iff.2 ⟨ha, hts.trans <| Set.inter_subset_left _ _⟩
 #align simple_graph.clique_free_on.of_succ SimpleGraph.CliqueFreeOn.of_succ
+-/
 
 end CliqueFreeOn
 
@@ -489,21 +539,28 @@ theorem cliqueSet_mono' (h : G ≤ H) : G.cliqueSet ≤ H.cliqueSet := fun _ => 
 #align simple_graph.clique_set_mono' SimpleGraph.cliqueSet_mono'
 -/
 
+#print SimpleGraph.cliqueSet_zero /-
 @[simp]
 theorem cliqueSet_zero (G : SimpleGraph α) : G.cliqueSet 0 = {∅} :=
   Set.ext fun s => by simp
 #align simple_graph.clique_set_zero SimpleGraph.cliqueSet_zero
+-/
 
+#print SimpleGraph.cliqueSet_one /-
 @[simp]
 theorem cliqueSet_one (G : SimpleGraph α) : G.cliqueSet 1 = Set.range singleton :=
   Set.ext fun s => by simp [eq_comm]
 #align simple_graph.clique_set_one SimpleGraph.cliqueSet_one
+-/
 
+#print SimpleGraph.cliqueSet_bot /-
 @[simp]
 theorem cliqueSet_bot (hn : 1 < n) : (⊥ : SimpleGraph α).cliqueSet n = ∅ :=
   (cliqueFree_bot hn).cliqueSet
 #align simple_graph.clique_set_bot SimpleGraph.cliqueSet_bot
+-/
 
+#print SimpleGraph.cliqueSet_map /-
 @[simp]
 theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
     (G.map f).cliqueSet n = map f '' G.cliqueSet n :=
@@ -524,7 +581,9 @@ theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
   · rintro ⟨s, hs, rfl⟩
     exact is_n_clique.map hs
 #align simple_graph.clique_set_map SimpleGraph.cliqueSet_map
+-/
 
+#print SimpleGraph.cliqueSet_map_of_equiv /-
 @[simp]
 theorem cliqueSet_map_of_equiv (G : SimpleGraph α) (e : α ≃ β) (n : ℕ) :
     (G.map e.toEmbedding).cliqueSet n = map e.toEmbedding '' G.cliqueSet n :=
@@ -534,6 +593,7 @@ theorem cliqueSet_map_of_equiv (G : SimpleGraph α) (e : α ≃ β) (n : ℕ) :
     simp [e.exists_congr_left]
   · exact clique_set_map hn _ _
 #align simple_graph.clique_set_map_of_equiv SimpleGraph.cliqueSet_map_of_equiv
+-/
 
 end CliqueSet
 
@@ -579,12 +639,14 @@ attribute [protected] clique_free.clique_finset
 
 variable {G}
 
+#print SimpleGraph.card_cliqueFinset_le /-
 theorem card_cliqueFinset_le : (G.cliqueFinset n).card ≤ (card α).choose n :=
   by
   rw [← card_univ, ← card_powerset_len]
   refine' card_mono fun s => _
   simpa [mem_powerset_len_univ_iff] using is_n_clique.card_eq
 #align simple_graph.card_clique_finset_le SimpleGraph.card_cliqueFinset_le
+-/
 
 variable [DecidableRel H.Adj]
 
@@ -597,19 +659,23 @@ theorem cliqueFinset_mono (h : G ≤ H) : G.cliqueFinset n ⊆ H.cliqueFinset n 
 
 variable [Fintype β] [DecidableEq β] (G)
 
+#print SimpleGraph.cliqueFinset_map /-
 @[simp]
 theorem cliqueFinset_map (f : α ↪ β) (hn : n ≠ 1) :
     (G.map f).cliqueFinset n = (G.cliqueFinset n).map ⟨map f, Finset.map_injective _⟩ :=
   coe_injective <| by
     simp_rw [coe_clique_finset, clique_set_map hn, coe_map, coe_clique_finset, embedding.coe_fn_mk]
 #align simple_graph.clique_finset_map SimpleGraph.cliqueFinset_map
+-/
 
+#print SimpleGraph.cliqueFinset_map_of_equiv /-
 @[simp]
 theorem cliqueFinset_map_of_equiv (e : α ≃ β) (n : ℕ) :
     (G.map e.toEmbedding).cliqueFinset n =
       (G.cliqueFinset n).map ⟨map e.toEmbedding, Finset.map_injective _⟩ :=
   coe_injective <| by push_cast <;> exact clique_set_map_of_equiv _ _ _
 #align simple_graph.clique_finset_map_of_equiv SimpleGraph.cliqueFinset_map_of_equiv
+-/
 
 end CliqueFinset
 

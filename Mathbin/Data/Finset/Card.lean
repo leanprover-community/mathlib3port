@@ -711,12 +711,14 @@ theorem card_le_one_iff_subset_singleton [Nonempty α] : s.card ≤ 1 ↔ ∃ x 
 #align finset.card_le_one_iff_subset_singleton Finset.card_le_one_iff_subset_singleton
 -/
 
+#print Finset.exists_mem_ne /-
 theorem exists_mem_ne (hs : 1 < s.card) (a : α) : ∃ b ∈ s, b ≠ a :=
   by
   by_contra!
   haveI : Nonempty α := ⟨a⟩
   exact hs.not_le (card_le_one_iff_subset_singleton.2 ⟨a, subset_singleton_iff'.2 this⟩)
 #align finset.exists_mem_ne Finset.exists_mem_ne
+-/
 
 #print Finset.card_le_one_of_subsingleton /-
 /-- A `finset` of a subsingleton type has cardinality at most one. -/

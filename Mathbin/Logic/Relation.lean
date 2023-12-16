@@ -266,9 +266,11 @@ section Map
 
 variable {r : α → β → Prop} {f : α → γ} {g : β → δ} {c : γ} {d : δ}
 
+#print Relation.map_apply /-
 theorem map_apply : Relation.Map r f g c d ↔ ∃ a b, r a b ∧ f a = c ∧ g b = d :=
   Iff.rfl
 #align relation.map_apply Relation.map_apply
+-/
 
 #print Relation.map_id_id /-
 @[simp]

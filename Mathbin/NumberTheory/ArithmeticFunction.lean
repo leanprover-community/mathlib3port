@@ -628,7 +628,7 @@ theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.
   · simp [hf]
   rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs 
   rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
-  exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
+  exact Nat.Coprime.prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
 #align nat.arithmetic_function.is_multiplicative.map_prod Nat.ArithmeticFunction.IsMultiplicative.map_prod
 -/
 

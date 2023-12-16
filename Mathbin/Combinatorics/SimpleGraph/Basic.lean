@@ -600,22 +600,26 @@ theorem edgeSet_sdiff : (G₁ \ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding \
 
 variable {G G₁ G₂}
 
+#print SimpleGraph.disjoint_edgeSet /-
 @[simp]
-theorem disjoint_edgeSetEmbedding :
-    Disjoint G₁.edgeSetEmbedding G₂.edgeSetEmbedding ↔ Disjoint G₁ G₂ := by
+theorem disjoint_edgeSet : Disjoint G₁.edgeSetEmbedding G₂.edgeSetEmbedding ↔ Disjoint G₁ G₂ := by
   rw [Set.disjoint_iff, disjoint_iff_inf_le, ← edge_set_inf, ← edge_set_bot, ← Set.le_iff_subset,
     OrderEmbedding.le_iff_le]
-#align simple_graph.disjoint_edge_set SimpleGraph.disjoint_edgeSetEmbedding
+#align simple_graph.disjoint_edge_set SimpleGraph.disjoint_edgeSet
+-/
 
+#print SimpleGraph.edgeSet_eq_empty /-
 @[simp]
-theorem edgeSetEmbedding_eq_empty : G.edgeSetEmbedding = ∅ ↔ G = ⊥ := by
-  rwa [← edge_set_bot, edge_set_inj]
-#align simple_graph.edge_set_eq_empty SimpleGraph.edgeSetEmbedding_eq_empty
+theorem edgeSet_eq_empty : G.edgeSetEmbedding = ∅ ↔ G = ⊥ := by rwa [← edge_set_bot, edge_set_inj]
+#align simple_graph.edge_set_eq_empty SimpleGraph.edgeSet_eq_empty
+-/
 
+#print SimpleGraph.edgeSet_nonempty /-
 @[simp]
-theorem edgeSetEmbedding_nonempty : G.edgeSetEmbedding.Nonempty ↔ G ≠ ⊥ := by
+theorem edgeSet_nonempty : G.edgeSetEmbedding.Nonempty ↔ G ≠ ⊥ := by
   rw [Set.nonempty_iff_ne_empty, edge_set_eq_empty.ne]
-#align simple_graph.edge_set_nonempty SimpleGraph.edgeSetEmbedding_nonempty
+#align simple_graph.edge_set_nonempty SimpleGraph.edgeSet_nonempty
+-/
 
 #print SimpleGraph.edgeSet_sdiff_sdiff_isDiag /-
 /-- This lemma, combined with `edge_set_sdiff` and `edge_set_from_edge_set`,
@@ -1178,10 +1182,12 @@ theorem mem_neighborSet (v w : V) : w ∈ G.neighborSet v ↔ G.Adj v w :=
 #align simple_graph.mem_neighbor_set SimpleGraph.mem_neighborSet
 -/
 
+#print SimpleGraph.not_mem_neighborSet_self /-
 @[simp]
 theorem not_mem_neighborSet_self : a ∉ G.neighborSet a :=
   (mem_neighborSet _ _ _).Not.2 <| G.loopless _
 #align simple_graph.not_mem_neighbor_set_self SimpleGraph.not_mem_neighborSet_self
+-/
 
 #print SimpleGraph.mem_incidenceSet /-
 @[simp]
@@ -1399,11 +1405,12 @@ theorem deleteEdges_eq_sdiff_fromEdgeSet (s : Set (Sym2 V)) : G.deleteEdges s = 
 #align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSet
 -/
 
-#print SimpleGraph.deleteEdges_eq /-
+#print SimpleGraph.deleteEdges_eq_self /-
 @[simp]
-theorem deleteEdges_eq {s : Set (Sym2 V)} : G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s :=
-  by rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
-#align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq
+theorem deleteEdges_eq_self {s : Set (Sym2 V)} :
+    G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s := by
+  rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
+#align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq_self
 -/
 
 #print SimpleGraph.compl_eq_deleteEdges /-
@@ -1564,10 +1571,12 @@ theorem map_map (f : V ↪ W) (g : W ↪ X) : (G.map f).map g = G.map (f.trans g
 #align simple_graph.map_map SimpleGraph.map_map
 -/
 
-instance decidableMap (f : V ↪ W) (G : SimpleGraph V) [DecidableRel (Relation.Map G.Adj f f)] :
-    DecidableRel (G.map f).Adj :=
+#print SimpleGraph.instDecidableMapAdj /-
+instance instDecidableMapAdj (f : V ↪ W) (G : SimpleGraph V)
+    [DecidableRel (Relation.Map G.Adj f f)] : DecidableRel (G.map f).Adj :=
   ‹DecidableRel _›
-#align simple_graph.decidable_map SimpleGraph.decidableMap
+#align simple_graph.decidable_map SimpleGraph.instDecidableMapAdj
+-/
 
 #print SimpleGraph.comap /-
 /-- Given a function, there is a contravariant induced map on graphs by pulling back the
