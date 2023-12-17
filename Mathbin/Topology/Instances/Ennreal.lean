@@ -1396,7 +1396,7 @@ theorem tsum_mono_subtype (f : α → ℝ≥0∞) {s t : Set α} (h : s ⊆ t) :
 theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
     ∑' x : s ∪ t, f x ≤ ∑' x : s, f x + ∑' x : t, f x :=
   calc
-    ∑' x : s ∪ t, f x = ∑' x : s ∪ t \ s, f x := by apply tsum_congr_subtype; rw [union_diff_self]
+    ∑' x : s ∪ t, f x = ∑' x : s ∪ t \ s, f x := by apply tsum_congr_set_coe; rw [union_diff_self]
     _ = ∑' x : s, f x + ∑' x : t \ s, f x :=
       (tsum_union_disjoint disjoint_sdiff_self_right ENNReal.summable ENNReal.summable)
     _ ≤ ∑' x : s, f x + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
@@ -1410,7 +1410,7 @@ theorem tsum_biUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t
   induction' s using Finset.induction_on with i s hi ihs h
   · simp
   have : (⋃ j ∈ insert i s, t j) = t i ∪ ⋃ j ∈ s, t j := by simp
-  rw [tsum_congr_subtype f this]
+  rw [tsum_congr_set_coe f this]
   calc
     ∑' x : t i ∪ ⋃ j ∈ s, t j, f x ≤ ∑' x : t i, f x + ∑' x : ⋃ j ∈ s, t j, f x :=
       tsum_union_le _ _ _
@@ -1424,7 +1424,7 @@ theorem tsum_iUnion_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : �
     ∑' x : ⋃ i, t i, f x ≤ ∑ i, ∑' x : t i, f x := by
   classical
   have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
-  rw [tsum_congr_subtype f this]
+  rw [tsum_congr_set_coe f this]
   exact tsum_bUnion_le _ _ _
 #align ennreal.tsum_Union_le ENNReal.tsum_iUnion_le
 -/

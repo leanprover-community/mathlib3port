@@ -581,10 +581,10 @@ section tsum
 
 variable [AddCommMonoid α] [TopologicalSpace α]
 
-#print tsum_congr_subtype /-
-theorem tsum_congr_subtype (f : β → α) {s t : Set β} (h : s = t) : ∑' x : s, f x = ∑' x : t, f x :=
+#print tsum_congr_set_coe /-
+theorem tsum_congr_set_coe (f : β → α) {s t : Set β} (h : s = t) : ∑' x : s, f x = ∑' x : t, f x :=
   by rw [h]
-#align tsum_congr_subtype tsum_congr_subtype
+#align tsum_congr_subtype tsum_congr_set_coe
 -/
 
 /- warning: tsum_zero' clashes with tsum_zero -> tsum_zero

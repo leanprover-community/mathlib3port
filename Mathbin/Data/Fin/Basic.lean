@@ -937,11 +937,11 @@ theorem val_two {n : ℕ} : ((2 : Fin (n + 3)) : ℕ) = 2 :=
 
 section OfNatCoe
 
-#print Fin.ofNat_eq_val /-
+#print Fin.ofNat''_eq_cast /-
 @[simp]
-theorem ofNat_eq_val (n : ℕ) (a : ℕ) : (ofNat a : Fin (n + 1)) = a :=
+theorem ofNat''_eq_cast (n : ℕ) (a : ℕ) : (ofNat a : Fin (n + 1)) = a :=
   rfl
-#align fin.of_nat_eq_coe Fin.ofNat_eq_val
+#align fin.of_nat_eq_coe Fin.ofNat''_eq_cast
 -/
 
 @[simp]
@@ -992,7 +992,7 @@ theorem cast_val_eq_self {n : ℕ} [NeZero n] (a : Fin n) : ((a : ℕ) : Fin n) 
 
 #print Fin.cast_nat_eq_last /-
 theorem cast_nat_eq_last (n) : (n : Fin (n + 1)) = Fin.last n := by
-  rw [← Fin.ofNat_eq_val, Fin.ofNat, Fin.last]; simp only [Nat.mod_eq_of_lt n.lt_succ_self]
+  rw [← Fin.ofNat''_eq_cast, Fin.ofNat, Fin.last]; simp only [Nat.mod_eq_of_lt n.lt_succ_self]
 #align fin.coe_nat_eq_last Fin.cast_nat_eq_last
 -/
 

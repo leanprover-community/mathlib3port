@@ -892,10 +892,10 @@ theorem insert_nil (a : α) : insert a nil = [a] :=
 #align list.insert_nil List.insert_nil
 -/
 
-#print List.insert.def /-
-theorem insert.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
+#print List.insert_eq_ite /-
+theorem List.insert_eq_ite (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
   rfl
-#align list.insert.def List.insert.def
+#align list.insert.def List.insert_eq_ite
 -/
 
 #print List.insert_of_mem /-

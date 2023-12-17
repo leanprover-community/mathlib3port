@@ -103,7 +103,7 @@ theorem val_nat_cast {n : ℕ} (a : ℕ) : (a : ZMod n).val = a % n :=
   cases n
   · rw [Nat.mod_zero]
     exact Int.natAbs_ofNat a
-  rw [← Fin.ofNat_eq_val]
+  rw [← Fin.ofNat''_eq_cast]
   rfl
 #align zmod.val_nat_cast ZMod.val_nat_cast
 -/
