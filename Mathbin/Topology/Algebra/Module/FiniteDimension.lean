@@ -143,7 +143,7 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
   by
   -- `l` is either constant or surjective. If it is constant, the result is trivial.
   by_cases H : finrank 𝕜 l.range = 0
-  · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H 
+  · rw [Submodule.finrank_eq_zero, LinearMap.range_eq_bot] at H 
     rw [H]
     exact continuous_zero
   · -- In the case where `l` is surjective, we factor it as `φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜`. Note that
@@ -245,7 +245,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by
       intro f
       by_cases H : finrank 𝕜 f.range = 0
-      · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H 
+      · rw [Submodule.finrank_eq_zero, LinearMap.range_eq_bot] at H 
         rw [H]
         exact continuous_zero
       · have : finrank 𝕜 f.ker = n :=

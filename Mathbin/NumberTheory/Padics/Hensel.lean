@@ -200,7 +200,7 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
       (mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (pow_nonneg (norm_nonneg _) _))
     _ = ‖F.eval z‖ ^ 2 / ‖F.derivative.eval a‖ ^ 2 := by simp [hzeq, hz.1, div_pow]
     _ ≤ (‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ n) ^ 2 / ‖F.derivative.eval a‖ ^ 2 :=
-      ((div_le_div_right deriv_sq_norm_pos).2 (pow_le_pow_of_le_left (norm_nonneg _) hz.2 _))
+      ((div_le_div_right deriv_sq_norm_pos).2 (pow_le_pow_left (norm_nonneg _) hz.2 _))
     _ = (‖F.derivative.eval a‖ ^ 2) ^ 2 * (T ^ 2 ^ n) ^ 2 / ‖F.derivative.eval a‖ ^ 2 := by
       simp only [mul_pow]
     _ = ‖F.derivative.eval a‖ ^ 2 * (T ^ 2 ^ n) ^ 2 := (div_sq_cancel _ _)
@@ -271,7 +271,7 @@ private theorem newton_seq_succ_dist_weak (n : ℕ) :
     ‖newton_seq (n + 2) - newton_seq (n + 1)‖ < ‖F.eval a‖ / ‖F.derivative.eval a‖ :=
   have : 2 ≤ 2 ^ (n + 1) :=
     by
-    have := pow_le_pow (by norm_num : 1 ≤ 2) (Nat.le_add_left _ _ : 1 ≤ n + 1)
+    have := pow_le_pow_right (by norm_num : 1 ≤ 2) (Nat.le_add_left _ _ : 1 ≤ n + 1)
     simpa using this
   calc
     ‖newton_seq (n + 2) - newton_seq (n + 1)‖ ≤ ‖F.derivative.eval a‖ * T ^ 2 ^ (n + 1) :=
@@ -280,7 +280,8 @@ private theorem newton_seq_succ_dist_weak (n : ℕ) :
       (mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (norm_nonneg _) (le_of_lt T_lt_one) this)
         (norm_nonneg _))
     _ < ‖F.derivative.eval a‖ * T ^ 1 :=
-      (mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_one T_pos T_lt_one (by norm_num)) deriv_norm_pos)
+      (mul_lt_mul_of_pos_left (pow_lt_pow_right_of_lt_one T_pos T_lt_one (by norm_num))
+        deriv_norm_pos)
     _ = ‖F.eval a‖ / ‖F.derivative.eval a‖ :=
       by
       rw [T, sq, pow_one, norm_div, ← mul_div_assoc, padicNormE.mul]
@@ -291,7 +292,7 @@ private theorem newton_seq_dist_aux (n : ℕ) :
     ∀ k : ℕ, ‖newton_seq (n + k) - newton_seq n‖ ≤ ‖F.derivative.eval a‖ * T ^ 2 ^ n
   | 0 => by simp [T_pow_nonneg hnorm, mul_nonneg]
   | k + 1 =>
-    have : 2 ^ n ≤ 2 ^ (n + k) := by apply pow_le_pow; norm_num; apply Nat.le_add_right
+    have : 2 ^ n ≤ 2 ^ (n + k) := by apply pow_le_pow_right; norm_num; apply Nat.le_add_right
     calc
       ‖newton_seq (n + (k + 1)) - newton_seq n‖ = ‖newton_seq (n + k + 1) - newton_seq n‖ := by
         rw [add_assoc]

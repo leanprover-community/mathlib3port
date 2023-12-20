@@ -119,7 +119,7 @@ theorem isPrimePow_nat_iff_bounded (n : ℕ) :
   refine' Iff.symm ⟨fun ⟨p, _, k, _, hp, hk, hn⟩ => ⟨p, k, hp, hk, hn⟩, _⟩
   rintro ⟨p, k, hp, hk, rfl⟩
   refine' ⟨p, _, k, (Nat.lt_pow_self hp.one_lt _).le, hp, hk, rfl⟩
-  simpa using Nat.pow_le_pow_of_le_right hp.pos hk
+  simpa using Nat.pow_le_pow_right hp.pos hk
 #align is_prime_pow_nat_iff_bounded isPrimePow_nat_iff_bounded
 -/
 

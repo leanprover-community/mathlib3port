@@ -2801,13 +2801,13 @@ theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) 
   by
   induction' a with a a <;> induction' b with b b
   · simp only [Int.ofNat_eq_coe, zpow_ofNat]
-    exact pow_le_pow hx (Int.le_of_ofNat_le_ofNat h)
+    exact pow_le_pow_right hx (Int.le_of_ofNat_le_ofNat h)
   · apply absurd h (not_le_of_gt _)
     exact lt_of_lt_of_le (Int.negSucc_lt_zero _) (Int.ofNat_nonneg _)
   · simp only [zpow_negSucc, Int.ofNat_eq_coe, zpow_ofNat]
     refine' (ENNReal.inv_le_one.2 _).trans _ <;> exact one_le_pow_of_one_le' hx _
   · simp only [zpow_negSucc, ENNReal.inv_le_inv]
-    apply pow_le_pow hx
+    apply pow_le_pow_right hx
     simpa only [← Int.ofNat_le, neg_le_neg_iff, Int.ofNat_add, Int.ofNat_one, Int.negSucc_eq] using
       h
 #align ennreal.zpow_le_of_le ENNReal.zpow_le_of_le

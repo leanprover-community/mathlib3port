@@ -2048,7 +2048,7 @@ theorem IsCycle.isConj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.support.car
   refine'
     is_conj_of_support_equiv
       (hσ.zpowers_equiv_support.symm.trans <|
-        (zpowersEquivZpowers <| by rw [hσ.order_of, h, hτ.order_of]).trans hτ.zpowers_equiv_support)
+        (zpowersEquivZPowers <| by rw [hσ.order_of, h, hτ.order_of]).trans hτ.zpowers_equiv_support)
       _
   intro x hx
   simp only [perm.mul_apply, Equiv.trans_apply, Equiv.sumCongr_apply]
@@ -2058,7 +2058,7 @@ theorem IsCycle.isConj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.support.car
       (congr rfl (congr rfl (congr rfl (congr rfl (hσ.zpowers_equiv_support_symm_apply n).symm))))
   apply (congr rfl (congr rfl (congr rfl (hσ.zpowers_equiv_support_symm_apply (n + 1))))).trans _
   simp only [Ne.def, is_cycle.zpowers_equiv_support_apply, Subtype.coe_mk,
-    zpowersEquivZpowers_apply]
+    zpowersEquivZPowers_apply]
   rw [pow_succ, perm.mul_apply]
 #align equiv.perm.is_cycle.is_conj Equiv.Perm.IsCycle.isConj
 -/

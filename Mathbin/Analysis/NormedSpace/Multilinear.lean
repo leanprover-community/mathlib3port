@@ -259,7 +259,7 @@ theorem continuous_of_bound (C : ℝ) (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m 
       f.norm_image_sub_le_of_bound D_pos H m' m
     _ ≤ D * Fintype.card ι * (‖m‖ + 1) ^ (Fintype.card ι - 1) * ‖m' - m‖ := by
       apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg,
-        Nat.cast_nonneg, pow_le_pow_of_le_left]
+        Nat.cast_nonneg, pow_le_pow_left]
 #align multilinear_map.continuous_of_bound MultilinearMap.continuous_of_bound
 -/
 
@@ -771,7 +771,7 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
           ‖q - p‖ * ∏ i, ‖p.2 i‖ :=
       by
       apply_rules [add_le_add, mul_le_mul, le_refl, le_trans (norm_fst_le q) A, Nat.cast_nonneg,
-        mul_nonneg, pow_le_pow_of_le_left, pow_nonneg, norm_snd_le (q - p), norm_nonneg,
+        mul_nonneg, pow_le_pow_left, pow_nonneg, norm_snd_le (q - p), norm_nonneg,
         norm_fst_le (q - p), prod_nonneg]
     _ = ((‖p‖ + 1) * Fintype.card ι * (‖p‖ + 1) ^ (Fintype.card ι - 1) + ∏ i, ‖p.2 i‖) * dist q p :=
       by rw [dist_eq_norm]; ring

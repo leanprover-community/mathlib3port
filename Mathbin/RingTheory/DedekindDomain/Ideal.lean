@@ -878,12 +878,12 @@ theorem Ideal.isPrime_iff_bot_or_prime {P : Ideal A} : IsPrime P ↔ P = ⊥ ∨
 #align ideal.is_prime_iff_bot_or_prime Ideal.isPrime_iff_bot_or_prime
 -/
 
-#print Ideal.strictAnti_pow /-
-theorem Ideal.strictAnti_pow (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
+#print Ideal.pow_right_strictAnti /-
+theorem Ideal.pow_right_strictAnti (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
     StrictAnti ((· ^ ·) I : ℕ → Ideal A) :=
   strictAnti_nat_of_succ_lt fun e =>
     Ideal.dvdNotUnit_iff_lt.mp ⟨pow_ne_zero _ hI0, I, mt isUnit_iff.mp hI1, pow_succ' I e⟩
-#align ideal.strict_anti_pow Ideal.strictAnti_pow
+#align ideal.strict_anti_pow Ideal.pow_right_strictAnti
 -/
 
 #print Ideal.pow_lt_self /-
@@ -895,7 +895,7 @@ theorem Ideal.pow_lt_self (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) (e :
 #print Ideal.exists_mem_pow_not_mem_pow_succ /-
 theorem Ideal.exists_mem_pow_not_mem_pow_succ (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) (e : ℕ) :
     ∃ x ∈ I ^ e, x ∉ I ^ (e + 1) :=
-  SetLike.exists_of_lt (I.strictAnti_pow hI0 hI1 e.lt_succ_self)
+  SetLike.exists_of_lt (I.pow_right_strictAnti hI0 hI1 e.lt_succ_self)
 #align ideal.exists_mem_pow_not_mem_pow_succ Ideal.exists_mem_pow_not_mem_pow_succ
 -/
 

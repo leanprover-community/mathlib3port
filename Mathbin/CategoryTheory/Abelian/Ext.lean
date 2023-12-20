@@ -47,7 +47,7 @@ def Ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   Functor.flip
     { obj := fun Y => (((linearYoneda R C).obj Y).rightOp.leftDerived n).leftOp
       map := fun Y Y' f => (NatTrans.leftDerived ((linearYoneda R C).map f).rightOp n).leftOp
-      map_id' := by
+      map_id'' := by
         intro X
         ext Y : 2
         dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app,

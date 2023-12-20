@@ -1940,21 +1940,25 @@ theorem quadratic_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : 1 + x + x ^ 2 / 2 
 #align real.quadratic_le_exp_of_nonneg Real.quadratic_le_exp_of_nonneg
 -/
 
-#print Real.add_one_lt_exp_of_pos /-
-theorem add_one_lt_exp_of_pos {x : ℝ} (hx : 0 < x) : x + 1 < exp x :=
+/- warning: real.add_one_lt_exp_of_pos clashes with real.add_one_lt_exp_of_nonzero -> Real.add_one_lt_exp
+Case conversion may be inaccurate. Consider using '#align real.add_one_lt_exp_of_pos Real.add_one_lt_expₓ'. -/
+#print Real.add_one_lt_exp /-
+theorem add_one_lt_exp {x : ℝ} (hx : 0 < x) : x + 1 < exp x :=
   (by nlinarith : x + 1 < 1 + x + x ^ 2 / 2).trans_le (quadratic_le_exp_of_nonneg hx.le)
-#align real.add_one_lt_exp_of_pos Real.add_one_lt_exp_of_pos
+#align real.add_one_lt_exp_of_pos Real.add_one_lt_exp
 -/
 
-#print Real.add_one_le_exp_of_nonneg /-
+/- warning: real.add_one_le_exp_of_nonneg clashes with real.add_one_le_exp -> Real.add_one_le_exp
+Case conversion may be inaccurate. Consider using '#align real.add_one_le_exp_of_nonneg Real.add_one_le_expₓ'. -/
+#print Real.add_one_le_exp /-
 /-- This is an intermediate result that is later replaced by `real.add_one_le_exp`; use that lemma
 instead. -/
-theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x :=
+theorem add_one_le_exp {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x :=
   by
   rcases eq_or_lt_of_le hx with (rfl | h)
   · simp
   exact (add_one_lt_exp_of_pos h).le
-#align real.add_one_le_exp_of_nonneg Real.add_one_le_exp_of_nonneg
+#align real.add_one_le_exp_of_nonneg Real.add_one_le_exp
 -/
 
 #print Real.one_le_exp /-
@@ -2063,7 +2067,7 @@ theorem cosh_pos (x : ℝ) : 0 < Real.cosh x :=
 
 #print Real.sinh_lt_cosh /-
 theorem sinh_lt_cosh : sinh x < cosh x :=
-  lt_of_pow_lt_pow 2 (cosh_pos _).le <| (cosh_sq x).symm ▸ lt_add_one _
+  lt_of_pow_lt_pow_left 2 (cosh_pos _).le <| (cosh_sq x).symm ▸ lt_add_one _
 #align real.sinh_lt_cosh Real.sinh_lt_cosh
 -/
 
@@ -2533,9 +2537,6 @@ theorem exp_bound_div_one_sub_of_interval {x : ℝ} (h1 : 0 ≤ x) (h2 : x < 1) 
 #align real.exp_bound_div_one_sub_of_interval Real.exp_bound_div_one_sub_of_interval
 -/
 
-/- warning: real.one_sub_lt_exp_minus_of_pos clashes with real.one_sub_le_exp_minus_of_pos -> Real.one_sub_lt_exp_minus_of_pos
-Case conversion may be inaccurate. Consider using '#align real.one_sub_lt_exp_minus_of_pos Real.one_sub_lt_exp_minus_of_posₓ'. -/
-#print Real.one_sub_lt_exp_minus_of_pos /-
 theorem one_sub_lt_exp_minus_of_pos {y : ℝ} (h : 0 < y) : 1 - y < Real.exp (-y) :=
   by
   cases' le_or_lt 1 y with h' h'
@@ -2544,39 +2545,38 @@ theorem one_sub_lt_exp_minus_of_pos {y : ℝ} (h : 0 < y) : 1 - y < Real.exp (-y
   · exact exp_bound_div_one_sub_of_interval' h h'
   · linarith
 #align real.one_sub_lt_exp_minus_of_pos Real.one_sub_lt_exp_minus_of_pos
--/
 
-#print Real.one_sub_le_exp_minus_of_nonneg /-
-theorem one_sub_le_exp_minus_of_nonneg {y : ℝ} (h : 0 ≤ y) : 1 - y ≤ Real.exp (-y) :=
+/- warning: real.one_sub_le_exp_minus_of_nonneg clashes with real.one_sub_le_exp_minus_of_pos -> Real.one_sub_le_exp_neg
+Case conversion may be inaccurate. Consider using '#align real.one_sub_le_exp_minus_of_nonneg Real.one_sub_le_exp_negₓ'. -/
+#print Real.one_sub_le_exp_neg /-
+theorem one_sub_le_exp_neg {y : ℝ} (h : 0 ≤ y) : 1 - y ≤ Real.exp (-y) :=
   by
   rcases eq_or_lt_of_le h with (rfl | h)
   · simp
   · exact (one_sub_lt_exp_minus_of_pos h).le
-#align real.one_sub_le_exp_minus_of_nonneg Real.one_sub_le_exp_minus_of_nonneg
+#align real.one_sub_le_exp_minus_of_nonneg Real.one_sub_le_exp_neg
 -/
 
-#print Real.add_one_lt_exp_of_neg /-
 theorem add_one_lt_exp_of_neg {x : ℝ} (h : x < 0) : x + 1 < Real.exp x :=
   by
   have h1 : 0 < -x := by linarith
   simpa [add_comm] using one_sub_lt_exp_minus_of_pos h1
 #align real.add_one_lt_exp_of_neg Real.add_one_lt_exp_of_neg
--/
 
-#print Real.add_one_lt_exp_of_nonzero /-
-theorem add_one_lt_exp_of_nonzero {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x :=
+#print Real.add_one_lt_exp /-
+theorem add_one_lt_exp {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x :=
   by
   cases lt_or_gt_of_ne hx
   · exact Real.add_one_lt_exp_of_neg h
   exact add_one_lt_exp_of_pos h
-#align real.add_one_lt_exp_of_nonzero Real.add_one_lt_exp_of_nonzero
+#align real.add_one_lt_exp_of_nonzero Real.add_one_lt_exp
 -/
 
 #print Real.add_one_le_exp /-
 theorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x :=
   by
   cases le_or_lt 0 x
-  · exact Real.add_one_le_exp_of_nonneg h
+  · exact Real.add_one_le_exp h
   exact (add_one_lt_exp_of_neg h).le
 #align real.add_one_le_exp Real.add_one_le_exp
 -/
@@ -2586,7 +2586,7 @@ theorem one_sub_div_pow_le_exp_neg {n : ℕ} {t : ℝ} (ht' : t ≤ n) : (1 - t 
   by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp; rwa [Nat.cast_zero] at ht' 
-  convert pow_le_pow_of_le_left _ (add_one_le_exp (-(t / n))) n
+  convert pow_le_pow_left _ (add_one_le_exp (-(t / n))) n
   · abel
   · rw [← Real.exp_nat_mul]; congr 1
     field_simp [nat.cast_ne_zero.mpr hn]; ring

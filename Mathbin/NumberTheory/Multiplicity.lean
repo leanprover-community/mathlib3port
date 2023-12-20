@@ -256,14 +256,13 @@ theorem Nat.pow_sub_pow {x y : ℕ} (hxy : p ∣ x - y) (hx : ¬p ∣ x) (n : �
   by
   obtain hyx | hyx := le_total y x
   · iterate 2 rw [← int.coe_nat_multiplicity]
-    rw [Int.ofNat_sub (Nat.pow_le_pow_of_le_left hyx n)]
+    rw [Int.ofNat_sub (Nat.pow_le_pow_left hyx n)]
     rw [← Int.coe_nat_dvd] at hxy hx 
     push_cast at *
     exact int.pow_sub_pow hp hp1 hxy hx n
   ·
     simp only [nat.sub_eq_zero_iff_le.mpr hyx,
-      nat.sub_eq_zero_iff_le.mpr (Nat.pow_le_pow_of_le_left hyx n), multiplicity.zero,
-      PartENat.top_add]
+      nat.sub_eq_zero_iff_le.mpr (Nat.pow_le_pow_left hyx n), multiplicity.zero, PartENat.top_add]
 #align multiplicity.nat.pow_sub_pow multiplicity.Nat.pow_sub_pow
 -/
 
@@ -421,8 +420,8 @@ theorem Nat.two_pow_sub_pow {x y : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n 
   by
   obtain hyx | hyx := le_total y x
   · iterate 3 rw [← multiplicity.Int.coe_nat_multiplicity]
-    have hxyn : y ^ n ≤ x ^ n := pow_le_pow_of_le_left' hyx _
-    simp only [Int.ofNat_sub hyx, Int.ofNat_sub (pow_le_pow_of_le_left' hyx _), Int.ofNat_add,
+    have hxyn : y ^ n ≤ x ^ n := pow_le_pow_left' hyx _
+    simp only [Int.ofNat_sub hyx, Int.ofNat_sub (pow_le_pow_left' hyx _), Int.ofNat_add,
       Int.coe_nat_pow]
     rw [← Int.coe_nat_dvd] at hx 
     rw [← Int.coe_nat_dvd, Int.ofNat_sub hyx] at hxy 
@@ -430,9 +429,8 @@ theorem Nat.two_pow_sub_pow {x y : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n 
     rw [← multiplicity.Int.coe_nat_multiplicity]
     rfl
   ·
-    simp only [nat.sub_eq_zero_iff_le.mpr hyx,
-      nat.sub_eq_zero_iff_le.mpr (pow_le_pow_of_le_left' hyx n), multiplicity.zero,
-      PartENat.top_add, PartENat.add_top]
+    simp only [nat.sub_eq_zero_iff_le.mpr hyx, nat.sub_eq_zero_iff_le.mpr (pow_le_pow_left' hyx n),
+      multiplicity.zero, PartENat.top_add, PartENat.add_top]
 #align nat.two_pow_sub_pow Nat.two_pow_sub_pow
 -/
 
@@ -452,7 +450,7 @@ theorem pow_two_sub_pow (hyx : y < x) (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n : 
   · exact hn
   · exact Nat.sub_pos_of_lt hyx
   · linarith
-  · simp only [tsub_pos_iff_lt, pow_lt_pow_of_lt_left hyx (@zero_le' _ y _) hn]
+  · simp only [tsub_pos_iff_lt, pow_lt_pow_left hyx (@zero_le' _ y _) hn]
 #align padic_val_nat.pow_two_sub_pow padicValNat.pow_two_sub_pow
 -/
 
@@ -467,7 +465,7 @@ theorem pow_sub_pow (hyx : y < x) (hxy : p ∣ x - y) (hx : ¬p ∣ x) {n : ℕ}
   · exact multiplicity.Nat.pow_sub_pow hp.out hp1 hxy hx n
   · exact hn
   · exact Nat.sub_pos_of_lt hyx
-  · exact Nat.sub_pos_of_lt (Nat.pow_lt_pow_of_lt_left hyx hn)
+  · exact Nat.sub_pos_of_lt (Nat.pow_lt_pow_left hyx hn)
 #align padic_val_nat.pow_sub_pow padicValNat.pow_sub_pow
 -/
 

@@ -1213,7 +1213,7 @@ theorem castNum_shiftRight (m n) : (shiftr m n : ℕ) = Nat.shiftr m n :=
   induction' n with n IH generalizing m; · cases m <;> rfl
   cases' m with m m <;> dsimp only [PosNum.shiftr]
   · rw [Nat.shiftRight_eq_div_pow]; symm; apply Nat.div_eq_of_lt
-    exact @Nat.pow_lt_pow_of_lt_right 2 (by decide) 0 (n + 1) (Nat.succ_pos _)
+    exact @pow_lt_pow_right 2 (by decide) 0 (n + 1) (Nat.succ_pos _)
   · trans; apply IH
     change Nat.shiftr m n = Nat.shiftr (bit1 m) (n + 1)
     rw [add_comm n 1, Nat.shiftr_add]

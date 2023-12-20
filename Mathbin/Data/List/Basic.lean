@@ -2829,17 +2829,17 @@ theorem map_concat (f : α → β) (a : α) (l : List α) : map f (concat l a) =
 #align list.map_concat List.map_concat
 -/
 
-#print List.map_id'' /-
+#print List.map_id' /-
 @[simp]
-theorem map_id'' (l : List α) : map (fun x => x) l = l :=
+theorem map_id' (l : List α) : map (fun x => x) l = l :=
   map_id _
-#align list.map_id'' List.map_id''
+#align list.map_id'' List.map_id'
 -/
 
-#print List.map_id' /-
-theorem map_id' {f : α → α} (h : ∀ x, f x = x) (l : List α) : map f l = l := by
+#print List.map_id'' /-
+theorem map_id'' {f : α → α} (h : ∀ x, f x = x) (l : List α) : map f l = l := by
   simp [show f = id from funext h]
-#align list.map_id' List.map_id'
+#align list.map_id' List.map_id''
 -/
 
 #print List.eq_nil_of_map_eq_nil /-

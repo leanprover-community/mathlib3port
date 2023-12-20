@@ -251,8 +251,7 @@ theorem addSalemSpencer_image_sphere :
 theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : ∑ i : Fin n, x i ^ 2 ≤ n * (d - 1) ^ 2 :=
   by
   rw [mem_box] at hx 
-  have : ∀ i, x i ^ 2 ≤ (d - 1) ^ 2 := fun i =>
-    Nat.pow_le_pow_of_le_left (Nat.le_pred_of_lt (hx i)) _
+  have : ∀ i, x i ^ 2 ≤ (d - 1) ^ 2 := fun i => Nat.pow_le_pow_left (Nat.le_pred_of_lt (hx i)) _
   exact (sum_le_card_nsmul univ _ _ fun i _ => this i).trans (by rw [card_fin, smul_eq_mul])
 #align behrend.sum_sq_le_of_mem_box Behrend.sum_sq_le_of_mem_box
 -/
@@ -490,7 +489,6 @@ theorem nValue_pos (hN : 2 ≤ N) : 0 < nValue N :=
 #align behrend.n_value_pos Behrend.nValue_pos
 -/
 
-#print Behrend.two_le_nValue /-
 theorem two_le_nValue (hN : 3 ≤ N) : 2 ≤ nValue N :=
   by
   refine' succ_le_of_lt (lt_ceil.2 <| lt_sqrt_of_sq_lt _)
@@ -500,7 +498,6 @@ theorem two_le_nValue (hN : 3 ≤ N) : 2 ≤ nValue N :=
   rw [cast_pos]
   exact (zero_lt_succ _).trans_le hN
 #align behrend.two_le_n_value Behrend.two_le_nValue
--/
 
 #print Behrend.three_le_nValue /-
 theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
@@ -550,7 +547,7 @@ theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
 theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N :=
   by
   have : (2 * d_value N - 1) ^ n_value N ≤ (2 * d_value N) ^ n_value N :=
-    Nat.pow_le_pow_of_le_left (Nat.sub_le _ _) _
+    Nat.pow_le_pow_left (Nat.sub_le _ _) _
   apply this.trans
   suffices ((2 * d_value N) ^ n_value N : ℝ) ≤ N by exact_mod_cast this
   rw [← rpow_nat_cast]
@@ -617,7 +614,7 @@ theorem roth_lower_bound_explicit (hN : 4096 ≤ N) :
   have hn₂ : 2 ≤ n := two_le_n_value (hN.trans' <| by norm_num1)
   have : (2 * d_value N - 1) ^ n ≤ N := le_N (hN.trans' <| by norm_num1)
   refine' ((bound_aux hd.ne' hn₂).trans <| cast_le.2 <| roth_number_nat.mono this).trans_lt' _
-  refine' (div_lt_div_of_lt hn <| pow_lt_pow_of_lt_left (bound hN) _ _).trans_le' _
+  refine' (div_lt_div_of_lt hn <| pow_lt_pow_left (bound hN) _ _).trans_le' _
   · exact div_nonneg (rpow_nonneg_of_nonneg (cast_nonneg _) _) (exp_pos _).le
   · exact tsub_pos_of_lt (three_le_n_value <| hN.trans' <| by norm_num1)
   rw [← rpow_nat_cast, div_rpow (rpow_nonneg_of_nonneg hN₀.le _) (exp_pos _).le, ← rpow_mul hN₀.le,

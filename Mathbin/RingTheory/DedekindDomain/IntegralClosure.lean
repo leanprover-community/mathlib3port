@@ -66,10 +66,10 @@ variable [Algebra K L] [Algebra A L] [IsScalarTower A K L]
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
-#print IsIntegralClosure.isLocalization /-
+#print IsIntegralClosure.isLocalization_of_isSeparable /-
 /- If `L` is a separable extension of `K = Frac(A)` and `L` has no zero smul divisors by `A`,
 then `L` is the localization of the integral closure `C` of `A` in `L` at `A⁰`. -/
-theorem IsIntegralClosure.isLocalization [IsSeparable K L] [NoZeroSMulDivisors A L] :
+theorem IsIntegralClosure.isLocalization_of_isSeparable [IsSeparable K L] [NoZeroSMulDivisors A L] :
     IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
   by
   haveI : IsDomain C :=
@@ -91,7 +91,7 @@ theorem IsIntegralClosure.isLocalization [IsSeparable K L] [NoZeroSMulDivisors A
     refine' congr_arg (algebraMap C L) ((mul_right_inj' _).mp h)
     rw [Subtype.coe_mk, map_ne_zero_iff _ (NoZeroSMulDivisors.algebraMap_injective A C)]
     exact mem_non_zero_divisors_iff_ne_zero.mp hm
-#align is_integral_closure.is_localization IsIntegralClosure.isLocalization
+#align is_integral_closure.is_localization IsIntegralClosure.isLocalization_of_isSeparable
 -/
 
 variable [FiniteDimensional K L]
@@ -263,7 +263,7 @@ theorem IsIntegralClosure.rank [IsPrincipalIdealRing A] [NoZeroSMulDivisors A L]
   haveI : Module.Free A C := IsIntegralClosure.module_free A K L C
   haveI : IsNoetherian A C := IsIntegralClosure.isNoetherian A K L C
   haveI : IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
-    IsIntegralClosure.isLocalization A K L C
+    IsIntegralClosure.isLocalization_of_isSeparable A K L C
   let b := Basis.localizationLocalization K A⁰ L (Module.Free.chooseBasis A C)
   rw [FiniteDimensional.finrank_eq_card_chooseBasisIndex, FiniteDimensional.finrank_eq_card_basis b]
 #align is_integral_closure.rank IsIntegralClosure.rank

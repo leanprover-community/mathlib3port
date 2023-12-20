@@ -158,7 +158,7 @@ theorem fermatPsp_base_one {n : ℕ} (h₁ : 1 < n) (h₂ : ¬n.Prime) : Nat.Fer
 section HelperLemmas
 
 private theorem pow_gt_exponent {a : ℕ} (b : ℕ) (h : 2 ≤ a) : b < a ^ b :=
-  lt_of_lt_of_le (Nat.lt_two_pow b) <| Nat.pow_le_pow_of_le_left h _
+  lt_of_lt_of_le (Nat.lt_two_pow b) <| Nat.pow_le_pow_left h _
 
 private theorem a_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 ≤ b) : 2 ≤ (a ^ b - 1) / (a - 1) :=
   by
@@ -175,7 +175,7 @@ private theorem b_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 < b) : 2 ≤ (a ^
   calc
     2 * a + 1 ≤ a ^ 2 * a := by nlinarith
     _ = a ^ 3 := by rw [pow_succ' a 2]
-    _ ≤ a ^ b := pow_le_pow (Nat.le_of_succ_le ha) hb
+    _ ≤ a ^ b := pow_le_pow_right (Nat.le_of_succ_le ha) hb
 
 private theorem AB_id_helper (b p : ℕ) (hb : 2 ≤ b) (hp : Odd p) :
     (b ^ p - 1) / (b - 1) * ((b ^ p + 1) / (b + 1)) = (b ^ (2 * p) - 1) / (b ^ 2 - 1) :=
@@ -389,7 +389,7 @@ theorem exists_infinite_pseudoprimes {b : ℕ} (h : 1 ≤ b) (m : ℕ) :
     cases' h with p hp
     cases' hp with hp₁ hp₂
     have h₁ : 0 < b := pos_of_gt (nat.succ_le_iff.mp b_ge_two)
-    have h₂ : 4 ≤ b ^ 2 := pow_le_pow_of_le_left' b_ge_two 2
+    have h₂ : 4 ≤ b ^ 2 := pow_le_pow_left' b_ge_two 2
     have h₃ : 0 < b ^ 2 - 1 := tsub_pos_of_lt (gt_of_ge_of_gt h₂ (by norm_num))
     have h₄ : 0 < b * (b ^ 2 - 1) := mul_pos h₁ h₃
     have h₅ : b * (b ^ 2 - 1) < p := by linarith

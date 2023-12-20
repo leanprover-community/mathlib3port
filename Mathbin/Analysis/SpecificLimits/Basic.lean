@@ -99,7 +99,8 @@ theorem tendsto_coe_nat_div_add_atTop {𝕜 : Type _} [DivisionRing 𝕜] [Topol
 #print tendsto_add_one_pow_atTop_atTop_of_pos /-
 theorem tendsto_add_one_pow_atTop_atTop_of_pos [LinearOrderedSemiring α] [Archimedean α] {r : α}
     (h : 0 < r) : Tendsto (fun n : ℕ => (r + 1) ^ n) atTop atTop :=
-  (tendsto_atTop_atTop_of_monotone' fun n m => pow_le_pow (le_add_of_nonneg_left (le_of_lt h))) <|
+  (tendsto_atTop_atTop_of_monotone' fun n m =>
+      pow_le_pow_right (le_add_of_nonneg_left (le_of_lt h))) <|
     not_bddAbove_iff.2 fun x => Set.exists_range_iff.2 <| add_one_pow_unbounded_of_pos _ h
 #align tendsto_add_one_pow_at_top_at_top_of_pos tendsto_add_one_pow_atTop_atTop_of_pos
 -/
@@ -548,7 +549,7 @@ theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi 
       (summable_geometric_of_lt_1 (one_div_nonneg.mpr (zero_le_one.trans hm.le))
         ((one_div_lt (zero_lt_one.trans hm) zero_lt_one).mpr (one_div_one.le.trans_lt hm)))
   rw [div_pow, one_pow]
-  refine' (one_div_le_one_div _ _).mpr (pow_le_pow hm.le (fi a)) <;>
+  refine' (one_div_le_one_div _ _).mpr (pow_le_pow_right hm.le (fi a)) <;>
     exact pow_pos (zero_lt_one.trans hm) _
 #align summable_one_div_pow_of_le summable_one_div_pow_of_le
 -/

@@ -375,7 +375,7 @@ theorem Set.Finite.of_summable_const [LinearOrderedAddCommGroup α] [Topological
   obtain ⟨n, hn⟩ := Archimedean.arch (∑' i : ι, b) hb
   have : ∀ s : Finset ι, s.card ≤ n := by
     intro s
-    simpa [nsmul_le_nsmul_iff hb] using (H s).trans hn
+    simpa [nsmul_le_nsmul_iff_left hb] using (H s).trans hn
   haveI : Fintype ι := fintypeOfFinsetCardLe n this
   exact Set.finite_univ
 #align finite_of_summable_const Set.Finite.of_summable_const

@@ -96,10 +96,10 @@ theorem convexOn_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n :=
   have : 0 ≤ (b ^ k - a ^ k) * (b - a) * μ * ν :=
     by
     cases' le_or_lt a b with hab hab
-    · have : a ^ k ≤ b ^ k := pow_le_pow_of_le_left ha hab k
+    · have : a ^ k ≤ b ^ k := pow_le_pow_left ha hab k
       have : 0 ≤ (b ^ k - a ^ k) * (b - a) := by nlinarith
       positivity
-    · have : b ^ k ≤ a ^ k := pow_le_pow_of_le_left hb hab.le k
+    · have : b ^ k ≤ a ^ k := pow_le_pow_left hb hab.le k
       have : 0 ≤ (b ^ k - a ^ k) * (b - a) := by nlinarith
       positivity
   calc
@@ -124,7 +124,7 @@ theorem Even.convexOn_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.univ fun x 
   have : 0 ≤ (a - b) ^ 2 * μ * ν := by positivity
   calc
     (μ * a + ν * b) ^ (2 * k) = ((μ * a + ν * b) ^ 2) ^ k := by rw [pow_mul]
-    _ ≤ ((μ + ν) * (μ * a ^ 2 + ν * b ^ 2)) ^ k := (pow_le_pow_of_le_left (by positivity) _ k)
+    _ ≤ ((μ + ν) * (μ * a ^ 2 + ν * b ^ 2)) ^ k := (pow_le_pow_left (by positivity) _ k)
     _ = (μ * a ^ 2 + ν * b ^ 2) ^ k := by rw [h] <;> ring
     _ ≤ μ * (a ^ 2) ^ k + ν * (b ^ 2) ^ k := _
     _ ≤ μ * a ^ (2 * k) + ν * b ^ (2 * k) := by ring
@@ -152,7 +152,7 @@ theorem convexOn_zpow : ∀ m : ℤ, ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m
     rw [div_le_div_iff]
     · calc
         1 * (a ^ (n + 1) * b ^ (n + 1)) = ((μ + ν) ^ 2 * (a * b)) ^ (n + 1) := by rw [h] <;> ring
-        _ ≤ ((μ * b + ν * a) * (μ * a + ν * b)) ^ (n + 1) := (pow_le_pow_of_le_left _ _ _)
+        _ ≤ ((μ * b + ν * a) * (μ * a + ν * b)) ^ (n + 1) := (pow_le_pow_left _ _ _)
         _ = (μ * b + ν * a) ^ (n + 1) * (μ * a + ν * b) ^ (n + 1) := by rw [mul_pow]
         _ ≤ (μ * b ^ (n + 1) + ν * a ^ (n + 1)) * (μ * a + ν * b) ^ (n + 1) := _
       · positivity

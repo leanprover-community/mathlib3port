@@ -153,7 +153,7 @@ attribute [local semireducible] MulOpposite
 #print IsDedekindDomain.HeightOneSpectrum.valuationOfNeZeroMod /-
 /-- The multiplicative `v`-adic valuation on `Kˣ` modulo `n`-th powers. -/
 def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (ZMod n) :=
-  (Int.quotientZmultiplesNatEquivZMod n).toMultiplicative.toMonoidHom.comp <|
+  (Int.quotientZMultiplesNatEquivZMod n).toMultiplicative.toMonoidHom.comp <|
     QuotientGroup.map (powMonoidHom n : Kˣ →* Kˣ).range (AddSubgroup.zmultiples (n : ℤ)).toSubgroup
       v.valuationOfNeZero
       (by

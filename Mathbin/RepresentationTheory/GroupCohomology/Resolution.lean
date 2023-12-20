@@ -370,7 +370,7 @@ def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (Action (Type u
   map m n f :=
     { hom := fun x => x ∘ f.unop.toOrderHom
       comm' := fun g => rfl }
-  map_id' n := rfl
+  map_id'' n := rfl
   map_comp' i j k f g := rfl
 #align classifying_space_universal_cover classifyingSpaceUniversalCover
 -/

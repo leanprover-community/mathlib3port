@@ -192,10 +192,10 @@ theorem smul_top_eq_top_of_divisibleBy_int [DivisibleBy A ℤ] {n : ℤ} (hn : n
 #align add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisibleBy_int
 -/
 
-#print AddCommGroup.divisibleByIntOfSmulTopEqTop /-
+#print AddCommGroup.divisibleByIntOfSMulTopEqTop /-
 /-- If for all `n ≠ 0 ∈ ℤ`, `n • A = A`, then `A` is divisible.
 -/
-noncomputable def divisibleByIntOfSmulTopEqTop
+noncomputable def divisibleByIntOfSMulTopEqTop
     (H : ∀ {n : ℤ} (hn : n ≠ 0), n • (⊤ : AddSubgroup A) = ⊤) : DivisibleBy A ℤ
     where
   div a n :=
@@ -205,7 +205,7 @@ noncomputable def divisibleByIntOfSmulTopEqTop
     rw [dif_neg hn]
     generalize_proofs h1
     exact h1.some_spec.2
-#align add_comm_group.divisible_by_int_of_smul_top_eq_top AddCommGroup.divisibleByIntOfSmulTopEqTop
+#align add_comm_group.divisible_by_int_of_smul_top_eq_top AddCommGroup.divisibleByIntOfSMulTopEqTop
 -/
 
 end AddCommGroup

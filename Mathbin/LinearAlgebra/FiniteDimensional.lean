@@ -307,14 +307,14 @@ noncomputable def basisUnique (ι : Type _) [Unique ι] (h : finrank K V = 1) : 
 #align finite_dimensional.basis_unique FiniteDimensional.basisUnique
 -/
 
-#print FiniteDimensional.basisUnique.repr_eq_zero_iff /-
+#print FiniteDimensional.basisUnique_repr_eq_zero_iff /-
 @[simp]
-theorem basisUnique.repr_eq_zero_iff {ι : Type _} [Unique ι] {h : finrank K V = 1} {v : V} {i : ι} :
-    (basisUnique ι h).repr v i = 0 ↔ v = 0 :=
+theorem FiniteDimensional.basisUnique_repr_eq_zero_iff {ι : Type _} [Unique ι] {h : finrank K V = 1}
+    {v : V} {i : ι} : (basisUnique ι h).repr v i = 0 ↔ v = 0 :=
   ⟨fun hv =>
     (basisUnique ι h).repr.map_eq_zero_iff.mp (Finsupp.ext fun j => Subsingleton.elim i j ▸ hv),
     fun hv => by rw [hv, LinearEquiv.map_zero, Finsupp.zero_apply]⟩
-#align finite_dimensional.basis_unique.repr_eq_zero_iff FiniteDimensional.basisUnique.repr_eq_zero_iff
+#align finite_dimensional.basis_unique.repr_eq_zero_iff FiniteDimensional.basisUnique_repr_eq_zero_iff
 -/
 
 #print FiniteDimensional.cardinal_mk_le_finrank_of_linearIndependent /-
@@ -355,22 +355,22 @@ theorem lt_aleph0_of_linearIndependent {ι : Type w} [FiniteDimensional K V] {v 
 #align finite_dimensional.lt_aleph_0_of_linear_independent FiniteDimensional.lt_aleph0_of_linearIndependent
 -/
 
-#print LinearIndependent.finite /-
-theorem LinearIndependent.finite [FiniteDimensional K V] {b : Set V}
+#print LinearIndependent.setFinite /-
+theorem LinearIndependent.setFinite [FiniteDimensional K V] {b : Set V}
     (h : LinearIndependent K fun x : b => (x : V)) : b.Finite :=
   Cardinal.lt_aleph0_iff_set_finite.mp (FiniteDimensional.lt_aleph0_of_linearIndependent h)
-#align linear_independent.finite LinearIndependent.finite
+#align linear_independent.finite LinearIndependent.setFinite
 -/
 
-#print FiniteDimensional.not_linearIndependent_of_infinite /-
-theorem not_linearIndependent_of_infinite {ι : Type w} [inf : Infinite ι] [FiniteDimensional K V]
-    (v : ι → V) : ¬LinearIndependent K v :=
+#print Module.Finite.not_linearIndependent_of_infinite /-
+theorem Module.Finite.not_linearIndependent_of_infinite {ι : Type w} [inf : Infinite ι]
+    [FiniteDimensional K V] (v : ι → V) : ¬LinearIndependent K v :=
   by
   intro h_lin_indep
   have : ¬ℵ₀ ≤ (#ι) := not_le.mpr (lt_aleph_0_of_linear_independent h_lin_indep)
   have : ℵ₀ ≤ (#ι) := infinite_iff.mp inf
   contradiction
-#align finite_dimensional.not_linear_independent_of_infinite FiniteDimensional.not_linearIndependent_of_infinite
+#align finite_dimensional.not_linear_independent_of_infinite Module.Finite.not_linearIndependent_of_infinite
 -/
 
 #print FiniteDimensional.finrank_pos_iff_exists_ne_zero /-
@@ -517,11 +517,11 @@ open scoped BigOperators
 
 open Finset
 
-#print FiniteDimensional.exists_nontrivial_relation_of_rank_lt_card /-
+#print Module.exists_nontrivial_relation_of_finrank_lt_card /-
 /-- If a finset has cardinality larger than the dimension of the space,
 then there is a nontrivial linear relation amongst its elements.
 -/
-theorem exists_nontrivial_relation_of_rank_lt_card [FiniteDimensional K V] {t : Finset V}
+theorem exists_nontrivial_relation_of_finrank_lt_card [FiniteDimensional K V] {t : Finset V}
     (h : finrank K V < t.card) : ∃ f : V → K, ∑ e in t, f e • e = 0 ∧ ∃ x ∈ t, f x ≠ 0 :=
   by
   have := mt finset_card_le_finrank_of_linear_independent (by simpa using h)
@@ -547,15 +547,15 @@ theorem exists_nontrivial_relation_of_rank_lt_card [FiniteDimensional K V] {t : 
       intro h₂; rw [if_pos]; contrapose! h₂
       rw [if_neg h₂, zero_smul]
   · refine' ⟨z, z.2, _⟩; dsimp only [f]; erw [dif_pos z.2, if_pos] <;> rwa [Subtype.coe_eta]
-#align finite_dimensional.exists_nontrivial_relation_of_rank_lt_card FiniteDimensional.exists_nontrivial_relation_of_rank_lt_card
+#align finite_dimensional.exists_nontrivial_relation_of_rank_lt_card Module.exists_nontrivial_relation_of_finrank_lt_card
 -/
 
-#print FiniteDimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card /-
+#print Module.exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card /-
 /-- If a finset has cardinality larger than `finrank + 1`,
 then there is a nontrivial linear relation amongst its elements,
 such that the coefficients of the relation sum to zero.
 -/
-theorem exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card [FiniteDimensional K V]
+theorem exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card [FiniteDimensional K V]
     {t : Finset V} (h : finrank K V + 1 < t.card) :
     ∃ f : V → K, ∑ e in t, f e • e = 0 ∧ ∑ e in t, f e = 0 ∧ ∃ x ∈ t, f x ≠ 0 :=
   by
@@ -632,7 +632,7 @@ theorem exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card [FiniteDimensio
       rw [add_left_eq_self]; rintro rfl
       simpa only [sub_eq_zero, exists_prop, Finset.mem_map, embedding.coe_fn_mk, eq_self_iff_true,
         mem_erase, not_true, exists_eq_right, Ne.def, false_and_iff] using x₁_mem
-#align finite_dimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card FiniteDimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card
+#align finite_dimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card Module.exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card
 -/
 
 section
@@ -641,18 +641,18 @@ variable {L : Type _} [LinearOrderedField L]
 
 variable {W : Type v} [AddCommGroup W] [Module L W]
 
-#print FiniteDimensional.exists_relation_sum_zero_pos_coefficient_of_rank_succ_lt_card /-
+#print FiniteDimensional.exists_relation_sum_zero_pos_coefficient_of_finrank_succ_lt_card /-
 /-- A slight strengthening of `exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card`
 available when working over an ordered field:
 we can ensure a positive coefficient, not just a nonzero coefficient.
 -/
-theorem exists_relation_sum_zero_pos_coefficient_of_rank_succ_lt_card [FiniteDimensional L W]
+theorem exists_relation_sum_zero_pos_coefficient_of_finrank_succ_lt_card [FiniteDimensional L W]
     {t : Finset W} (h : finrank L W + 1 < t.card) :
     ∃ f : W → L, ∑ e in t, f e • e = 0 ∧ ∑ e in t, f e = 0 ∧ ∃ x ∈ t, 0 < f x :=
   by
   obtain ⟨f, sum, total, nonzero⟩ := exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card h
   exact ⟨f, Sum, Total, exists_pos_of_sum_zero_of_exists_nonzero f Total nonzero⟩
-#align finite_dimensional.exists_relation_sum_zero_pos_coefficient_of_rank_succ_lt_card FiniteDimensional.exists_relation_sum_zero_pos_coefficient_of_rank_succ_lt_card
+#align finite_dimensional.exists_relation_sum_zero_pos_coefficient_of_rank_succ_lt_card FiniteDimensional.exists_relation_sum_zero_pos_coefficient_of_finrank_succ_lt_card
 -/
 
 end
@@ -665,7 +665,7 @@ end
 noncomputable def basisSingleton (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V)
     (hv : v ≠ 0) : Basis ι K V :=
   let b := basisUnique ι h
-  let h : b.repr v default ≠ 0 := mt basisUnique.repr_eq_zero_iff.mp hv
+  let h : b.repr v default ≠ 0 := mt FiniteDimensional.basisUnique_repr_eq_zero_iff.mp hv
   Basis.ofRepr
     { toFun := fun w => Finsupp.single default (b.repr w default / b.repr v default)
       invFun := fun f => f default • v
@@ -734,12 +734,13 @@ theorem finiteDimensional_of_rank_eq_one (h : Module.rank K V = 1) : FiniteDimen
 #align finite_dimensional_of_rank_eq_one finiteDimensional_of_rank_eq_one
 -/
 
-#print finrank_eq_zero_of_rank_eq_zero /-
-theorem finrank_eq_zero_of_rank_eq_zero [FiniteDimensional K V] (h : Module.rank K V = 0) :
-    finrank K V = 0 := by
+#print FiniteDimensional.finrank_eq_zero_of_rank_eq_zero /-
+theorem FiniteDimensional.finrank_eq_zero_of_rank_eq_zero [FiniteDimensional K V]
+    (h : Module.rank K V = 0) : finrank K V = 0 :=
+  by
   convert finrank_eq_rank K V
   rw [h]; norm_cast
-#align finrank_eq_zero_of_rank_eq_zero finrank_eq_zero_of_rank_eq_zero
+#align finrank_eq_zero_of_rank_eq_zero FiniteDimensional.finrank_eq_zero_of_rank_eq_zero
 -/
 
 variable (K V)
@@ -752,32 +753,33 @@ instance finiteDimensional_bot : FiniteDimensional K (⊥ : Submodule K V) :=
 
 variable {K V}
 
-#print bot_eq_top_of_rank_eq_zero /-
-theorem bot_eq_top_of_rank_eq_zero (h : Module.rank K V = 0) : (⊥ : Submodule K V) = ⊤ :=
+#print Submodule.bot_eq_top_of_rank_eq_zero /-
+theorem Submodule.bot_eq_top_of_rank_eq_zero (h : Module.rank K V = 0) : (⊥ : Submodule K V) = ⊤ :=
   by
   haveI := finiteDimensional_of_rank_eq_zero h
   apply eq_top_of_finrank_eq
-  rw [finrank_bot, finrank_eq_zero_of_rank_eq_zero h]
-#align bot_eq_top_of_rank_eq_zero bot_eq_top_of_rank_eq_zero
+  rw [finrank_bot, FiniteDimensional.finrank_eq_zero_of_rank_eq_zero h]
+#align bot_eq_top_of_rank_eq_zero Submodule.bot_eq_top_of_rank_eq_zero
 -/
 
-#print rank_eq_zero /-
+#print Submodule.rank_eq_zero /-
 @[simp]
-theorem rank_eq_zero {S : Submodule K V} : Module.rank K S = 0 ↔ S = ⊥ :=
+theorem Submodule.rank_eq_zero {S : Submodule K V} : Module.rank K S = 0 ↔ S = ⊥ :=
   ⟨fun h =>
     (Submodule.eq_bot_iff _).2 fun x hx =>
       congr_arg Subtype.val <|
-        ((Submodule.eq_bot_iff _).1 <| Eq.symm <| bot_eq_top_of_rank_eq_zero h) ⟨x, hx⟩
+        ((Submodule.eq_bot_iff _).1 <| Eq.symm <| Submodule.bot_eq_top_of_rank_eq_zero h) ⟨x, hx⟩
           Submodule.mem_top,
     fun h => by rw [h, rank_bot]⟩
-#align rank_eq_zero rank_eq_zero
+#align rank_eq_zero Submodule.rank_eq_zero
 -/
 
-#print finrank_eq_zero /-
+#print Submodule.finrank_eq_zero /-
 @[simp]
-theorem finrank_eq_zero {S : Submodule K V} [FiniteDimensional K S] : finrank K S = 0 ↔ S = ⊥ := by
-  rw [← rank_eq_zero, ← finrank_eq_rank, ← @Nat.cast_zero Cardinal, Cardinal.natCast_inj]
-#align finrank_eq_zero finrank_eq_zero
+theorem Submodule.finrank_eq_zero {S : Submodule K V} [FiniteDimensional K S] :
+    finrank K S = 0 ↔ S = ⊥ := by
+  rw [← Submodule.rank_eq_zero, ← finrank_eq_rank, ← @Nat.cast_zero Cardinal, Cardinal.natCast_inj]
+#align finrank_eq_zero Submodule.finrank_eq_zero
 -/
 
 end ZeroRank
@@ -1226,7 +1228,7 @@ theorem injective_iff_surjective_of_finrank_eq_finrank [FiniteDimensional K V]
   have := finrank_range_add_finrank_ker f
   rw [← ker_eq_bot, ← range_eq_top]; refine' ⟨fun h => _, fun h => _⟩
   · rw [h, finrank_bot, add_zero, H] at this ; exact eq_top_of_finrank_eq this
-  · rw [h, finrank_top, H] at this ; exact finrank_eq_zero.1 (add_right_injective _ this)
+  · rw [h, finrank_top, H] at this ; exact Submodule.finrank_eq_zero.1 (add_right_injective _ this)
 #align linear_map.injective_iff_surjective_of_finrank_eq_finrank LinearMap.injective_iff_surjective_of_finrank_eq_finrank
 -/
 

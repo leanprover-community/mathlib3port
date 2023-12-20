@@ -512,11 +512,11 @@ theorem union : ∀ (d : Dioph S) (d' : Dioph S'), Dioph (S ∪ S')
 #align dioph.union Dioph.union
 -/
 
-#print Dioph.DiophPfun /-
+#print Dioph.DiophPFun /-
 /-- A partial function is Diophantine if its graph is Diophantine. -/
-def DiophPfun (f : (α → ℕ) →. ℕ) : Prop :=
+def DiophPFun (f : (α → ℕ) →. ℕ) : Prop :=
   Dioph {v : Option α → ℕ | f.graph (v ∘ some, v none)}
-#align dioph.dioph_pfun Dioph.DiophPfun
+#align dioph.dioph_pfun Dioph.DiophPFun
 -/
 
 #print Dioph.DiophFn /-
@@ -577,13 +577,13 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph {v | ∃ x, 
 -/
 
 #print Dioph.dom_dioph /-
-theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : DiophPfun f) : Dioph f.Dom :=
+theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : DiophPFun f) : Dioph f.Dom :=
   cast (congr_arg Dioph <| Set.ext fun v => (PFun.dom_iff_graph _ _).symm) (ex1_dioph d)
 #align dioph.dom_dioph Dioph.dom_dioph
 -/
 
 #print Dioph.diophFn_iff_pFun /-
-theorem diophFn_iff_pFun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α f := by
+theorem diophFn_iff_pFun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPFun α f := by
   refine' congr_arg Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
 #align dioph.dioph_fn_iff_pfun Dioph.diophFn_iff_pFun
 -/
@@ -601,8 +601,8 @@ theorem proj_dioph (i : α) : DiophFn fun v => v i :=
 #align dioph.proj_dioph Dioph.proj_dioph
 -/
 
-#print Dioph.diophPfun_comp1 /-
-theorem diophPfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : DiophPfun f) :
+#print Dioph.diophPFun_comp1 /-
+theorem diophPFun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : DiophPFun f) :
     Dioph {v : α → ℕ | ∃ h : f.Dom v, f.fn v h ::ₒ v ∈ S} :=
   ext (ex1_dioph (d.inter df)) fun v =>
     ⟨fun ⟨x, hS, (h : Exists _)⟩ => by
@@ -614,13 +614,13 @@ theorem diophPfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : Di
       ⟨f.fn v x, hS,
         show Exists _ by
           rw [show (f.fn v x ::ₒ v) ∘ some = v from funext fun s => rfl] <;> exact ⟨x, rfl⟩⟩⟩
-#align dioph.dioph_pfun_comp1 Dioph.diophPfun_comp1
+#align dioph.dioph_pfun_comp1 Dioph.diophPFun_comp1
 -/
 
 #print Dioph.diophFn_comp1 /-
 theorem diophFn_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f : (α → ℕ) → ℕ} (df : DiophFn f) :
     Dioph {v | f v ::ₒ v ∈ S} :=
-  ext (diophPfun_comp1 d <| cast (diophFn_iff_pFun f) df) fun v =>
+  ext (diophPFun_comp1 d <| cast (diophFn_iff_pFun f) df) fun v =>
     ⟨fun ⟨_, h⟩ => h, fun h => ⟨trivial, h⟩⟩
 #align dioph.dioph_fn_comp1 Dioph.diophFn_comp1
 -/
@@ -669,10 +669,10 @@ theorem diophFn_vec (f : Vector3 ℕ n → ℕ) : DiophFn f ↔ Dioph {v | f (v 
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Dioph.diophPfun_vec /-
-theorem diophPfun_vec (f : Vector3 ℕ n →. ℕ) : DiophPfun f ↔ Dioph {v | f.graph (v ∘ fs, v fz)} :=
+#print Dioph.diophPFun_vec /-
+theorem diophPFun_vec (f : Vector3 ℕ n →. ℕ) : DiophPFun f ↔ Dioph {v | f.graph (v ∘ fs, v fz)} :=
   ⟨reindex_dioph _ (fz ::ₒ fs), reindex_dioph _ (none::some)⟩
-#align dioph.dioph_pfun_vec Dioph.diophPfun_vec
+#align dioph.dioph_pfun_vec Dioph.diophPFun_vec
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -942,11 +942,11 @@ theorem pell_dioph :
 -/
 
 #print Dioph.xn_dioph /-
-theorem xn_dioph : DiophPfun fun v : Vector3 ℕ 2 => ⟨1 < v &0, fun h => xn h (v &1)⟩ :=
+theorem xn_dioph : DiophPFun fun v : Vector3 ℕ 2 => ⟨1 < v &0, fun h => xn h (v &1)⟩ :=
   have : Dioph fun v : Vector3 ℕ 3 => ∃ y, ∃ h : 1 < v &1, xn h (v &2) = v &0 ∧ yn h (v &2) = y :=
     let D_pell := pell_dioph.reindex_dioph (Fin2 4) [&2, &3, &1, &0]
     (D∃) 3 D_pell
-  (diophPfun_vec _).2 <|
+  (diophPFun_vec _).2 <|
     Dioph.ext this fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
 #align dioph.xn_dioph Dioph.xn_dioph
 -/

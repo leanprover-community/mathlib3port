@@ -94,7 +94,7 @@ def Measure : MeasCat ⥤ MeasCat
     where
   obj X := ⟨@MeasureTheory.Measure X.1 X.2⟩
   map X Y f := ⟨Measure.map (f : X → Y), Measure.measurable_map f f.2⟩
-  map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
+  map_id'' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
   map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ =>
     Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
 #align Meas.Measure MeasCat.Measure

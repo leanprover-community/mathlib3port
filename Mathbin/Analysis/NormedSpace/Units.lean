@@ -288,7 +288,7 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
       _ = ‖↑x⁻¹ * t‖ ^ n := by rw [norm_neg]
       _ ≤ (‖(↑x⁻¹ : R)‖ * ‖t‖) ^ n := _
       _ = ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := mul_pow _ _ n
-    exact pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_le (↑x⁻¹) t) n
+    exact pow_le_pow_left (norm_nonneg _) (norm_mul_le (↑x⁻¹) t) n
   have h'' : 0 ≤ ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := by
     refine' mul_nonneg _ _ <;> exact pow_nonneg (norm_nonneg _) n
   nlinarith [norm_nonneg (inverse (↑x + t))]

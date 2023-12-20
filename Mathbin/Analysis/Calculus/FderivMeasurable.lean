@@ -377,7 +377,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     have k_gt : n e < k :=
       by
       have : ((1 : ℝ) / 2) ^ (k + 1) < (1 / 2) ^ (n e + 1) := lt_trans hk y_lt
-      rw [pow_lt_pow_iff_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this 
+      rw [pow_lt_pow_iff_right_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this 
       linarith
     set m := k - 1 with hl
     have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt
@@ -800,7 +800,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     have k_gt : n e < k :=
       by
       have : ((1 : ℝ) / 2) ^ (k + 1) < (1 / 2) ^ (n e + 1) := lt_of_lt_of_le hk y_le
-      rw [pow_lt_pow_iff_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this 
+      rw [pow_lt_pow_iff_right_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this 
       linarith
     set m := k - 1 with hl
     have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt

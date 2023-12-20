@@ -817,10 +817,10 @@ theorem pow_sub_one_eq [IsDomain R] {ζ : R} (hζ : IsPrimitiveRoot ζ k) (hk : 
 #align is_primitive_root.pow_sub_one_eq IsPrimitiveRoot.pow_sub_one_eq
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers /-
+#print IsPrimitiveRoot.zmodEquivZPowers /-
 /-- The (additive) monoid equivalence between `zmod k`
 and the powers of a primitive root of unity `ζ`. -/
-def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup.zpowers ζ) :=
+def zmodEquivZPowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup.zpowers ζ) :=
   AddEquiv.ofBijective
     (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| ZMod k) _ ZMod.int_cast_rightInverse
       ⟨{  toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ)
@@ -844,56 +844,56 @@ def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup
         refine' ⟨Int.castAddHom _ i, _⟩
         rw [AddMonoidHom.liftOfRightInverse_comp_apply]
         rfl)
-#align is_primitive_root.zmod_equiv_zpowers IsPrimitiveRoot.zmodEquivZpowers
+#align is_primitive_root.zmod_equiv_zpowers IsPrimitiveRoot.zmodEquivZPowers
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers_apply_coe_int /-
+#print IsPrimitiveRoot.zmodEquivZPowers_apply_coe_int /-
 @[simp]
-theorem zmodEquivZpowers_apply_coe_int (i : ℤ) :
-    h.zmodEquivZpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
+theorem zmodEquivZPowers_apply_coe_int (i : ℤ) :
+    h.zmodEquivZPowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   AddMonoidHom.liftOfRightInverse_comp_apply _ _ ZMod.int_cast_rightInverse _ _
-#align is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmodEquivZpowers_apply_coe_int
+#align is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmodEquivZPowers_apply_coe_int
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers_apply_coe_nat /-
+#print IsPrimitiveRoot.zmodEquivZPowers_apply_coe_nat /-
 @[simp]
-theorem zmodEquivZpowers_apply_coe_nat (i : ℕ) :
-    h.zmodEquivZpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
+theorem zmodEquivZPowers_apply_coe_nat (i : ℕ) :
+    h.zmodEquivZPowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   by
   have : (i : ZMod k) = (i : ℤ) := by norm_cast
   simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_ofNat]
   rfl
-#align is_primitive_root.zmod_equiv_zpowers_apply_coe_nat IsPrimitiveRoot.zmodEquivZpowers_apply_coe_nat
+#align is_primitive_root.zmod_equiv_zpowers_apply_coe_nat IsPrimitiveRoot.zmodEquivZPowers_apply_coe_nat
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers_symm_apply_zpow /-
+#print IsPrimitiveRoot.zmodEquivZPowers_symm_apply_zpow /-
 @[simp]
-theorem zmodEquivZpowers_symm_apply_zpow (i : ℤ) :
-    h.zmodEquivZpowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
+theorem zmodEquivZPowers_symm_apply_zpow (i : ℤ) :
+    h.zmodEquivZPowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmod_equiv_zpowers.symm_apply_apply i, zmod_equiv_zpowers_apply_coe_int]
-#align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow IsPrimitiveRoot.zmodEquivZpowers_symm_apply_zpow
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow IsPrimitiveRoot.zmodEquivZPowers_symm_apply_zpow
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers_symm_apply_zpow' /-
+#print IsPrimitiveRoot.zmodEquivZPowers_symm_apply_zpow' /-
 @[simp]
-theorem zmodEquivZpowers_symm_apply_zpow' (i : ℤ) : h.zmodEquivZpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
-  h.zmodEquivZpowers_symm_apply_zpow i
-#align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow' IsPrimitiveRoot.zmodEquivZpowers_symm_apply_zpow'
+theorem zmodEquivZPowers_symm_apply_zpow' (i : ℤ) : h.zmodEquivZPowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
+  h.zmodEquivZPowers_symm_apply_zpow i
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow' IsPrimitiveRoot.zmodEquivZPowers_symm_apply_zpow'
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers_symm_apply_pow /-
+#print IsPrimitiveRoot.zmodEquivZPowers_symm_apply_pow /-
 @[simp]
-theorem zmodEquivZpowers_symm_apply_pow (i : ℕ) :
-    h.zmodEquivZpowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
+theorem zmodEquivZPowers_symm_apply_pow (i : ℕ) :
+    h.zmodEquivZPowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmod_equiv_zpowers.symm_apply_apply i, zmod_equiv_zpowers_apply_coe_nat]
-#align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow IsPrimitiveRoot.zmodEquivZpowers_symm_apply_pow
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow IsPrimitiveRoot.zmodEquivZPowers_symm_apply_pow
 -/
 
-#print IsPrimitiveRoot.zmodEquivZpowers_symm_apply_pow' /-
+#print IsPrimitiveRoot.zmodEquivZPowers_symm_apply_pow' /-
 @[simp]
-theorem zmodEquivZpowers_symm_apply_pow' (i : ℕ) : h.zmodEquivZpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
-  h.zmodEquivZpowers_symm_apply_pow i
-#align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow' IsPrimitiveRoot.zmodEquivZpowers_symm_apply_pow'
+theorem zmodEquivZPowers_symm_apply_pow' (i : ℕ) : h.zmodEquivZPowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
+  h.zmodEquivZPowers_symm_apply_pow i
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow' IsPrimitiveRoot.zmodEquivZPowers_symm_apply_pow'
 -/
 
 variable [IsDomain R]

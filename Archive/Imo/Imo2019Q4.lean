@@ -56,7 +56,7 @@ theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n
   suffices (∏ i in range n, 2 ^ n : ℤ) < ↑k !
     by
     apply lt_of_le_of_lt _ this; apply prod_le_prod
-    · intros; rw [sub_nonneg]; apply pow_le_pow; norm_num; apply le_of_lt; rwa [← mem_range]
+    · intros; rw [sub_nonneg]; apply pow_le_pow_right; norm_num; apply le_of_lt; rwa [← mem_range]
     · intros; apply sub_le_self; apply pow_nonneg; norm_num
   suffices 2 ^ (n * n) < (n * (n - 1) / 2)!
     by
@@ -76,7 +76,7 @@ theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n
   rw [triangle_succ]; apply lt_of_lt_of_le _ factorial_mul_pow_le_factorial
   refine'
     lt_of_le_of_lt _
-      (mul_lt_mul ih (Nat.pow_le_pow_of_le_left this _) (pow_pos (by norm_num) _) (zero_le _))
+      (mul_lt_mul ih (Nat.pow_le_pow_left this _) (pow_pos (by norm_num) _) (zero_le _))
   rw [← pow_mul, ← pow_add]; apply pow_le_pow_of_le_right; norm_num
   rw [add_mul 2 2]
   convert add_le_add_left (add_le_add_left h5 (2 * n')) (n' * n') using 1; ring

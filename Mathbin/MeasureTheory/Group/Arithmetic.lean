@@ -613,15 +613,15 @@ theorem MeasurableSet.inv {s : Set G} (hs : MeasurableSet s) : MeasurableSet s�
 
 end Inv
 
-#print DivInvMonoid.measurableZpow /-
+#print DivInvMonoid.measurableZPow /-
 /-- `div_inv_monoid.has_pow` is measurable. -/
-instance DivInvMonoid.measurableZpow (G : Type u) [DivInvMonoid G] [MeasurableSpace G]
+instance DivInvMonoid.measurableZPow (G : Type u) [DivInvMonoid G] [MeasurableSpace G]
     [MeasurableMul₂ G] [MeasurableInv G] : MeasurablePow G ℤ :=
   ⟨measurable_from_prod_countable fun n => by
       cases' n with n n
       · simp_rw [zpow_ofNat]; exact measurable_id.pow_const _
       · simp_rw [zpow_negSucc]; exact (measurable_id.pow_const (n + 1)).inv⟩
-#align div_inv_monoid.has_measurable_zpow DivInvMonoid.measurableZpow
+#align div_inv_monoid.has_measurable_zpow DivInvMonoid.measurableZPow
 -/
 
 #print measurableDiv₂_of_mul_inv /-

@@ -174,7 +174,7 @@ instance : Free ℤ (𝓞 K) :=
   IsIntegralClosure.module_free ℤ ℚ K (𝓞 K)
 
 instance : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K) ℤ⁰) K :=
-  IsIntegralClosure.isLocalization ℤ ℚ K (𝓞 K)
+  IsIntegralClosure.isLocalization_of_isSeparable ℤ ℚ K (𝓞 K)
 
 #print NumberField.RingOfIntegers.basis /-
 /-- A ℤ-basis of the ring of integers of `K`. -/

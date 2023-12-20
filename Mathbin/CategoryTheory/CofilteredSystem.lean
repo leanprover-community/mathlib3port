@@ -215,7 +215,7 @@ def toPreimages : J ⥤ Type v where
       rw [mem_Inter] at h ⊢; intro f
       rw [← mem_preimage, preimage_preimage]
       convert h (g ≫ f); rw [F.map_comp]; rfl
-  map_id' j := by simp_rw [F.map_id]; ext; rfl
+  map_id'' j := by simp_rw [F.map_id]; ext; rfl
   map_comp' j k l f g := by simp_rw [F.map_comp]; rfl
 #align category_theory.functor.to_preimages CategoryTheory.Functor.toPreimages
 -/
@@ -320,7 +320,7 @@ def toEventualRanges : J ⥤ Type v
     where
   obj j := F.eventualRange j
   map i j f := (F.eventualRange_mapsTo f).restrict _ _ _
-  map_id' i := by simp_rw [F.map_id]; ext; rfl
+  map_id'' i := by simp_rw [F.map_id]; ext; rfl
   map_comp' _ _ _ _ _ := by simp_rw [F.map_comp]; rfl
 #align category_theory.functor.to_eventual_ranges CategoryTheory.Functor.toEventualRanges
 -/

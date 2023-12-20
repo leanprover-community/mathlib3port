@@ -782,13 +782,13 @@ theorem linearIndependent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M)
 #align linear_independent_le_span_aux' linearIndependent_le_span_aux'
 -/
 
-#print linearIndependentFintypeOfLeSpanFintype /-
+#print LinearIndependent.finite_of_le_span_finite /-
 /-- If `R` satisfies the strong rank condition,
 then any linearly independent family `v : ι → M`
 contained in the span of some finite `w : set M`,
 is itself finite.
 -/
-def linearIndependentFintypeOfLeSpanFintype {ι : Type _} (v : ι → M) (i : LinearIndependent R v)
+def LinearIndependent.finite_of_le_span_finite {ι : Type _} (v : ι → M) (i : LinearIndependent R v)
     (w : Set M) [Fintype w] (s : range v ≤ span R w) : Fintype ι :=
   fintypeOfFinsetCardLe (Fintype.card w) fun t =>
     by
@@ -796,7 +796,7 @@ def linearIndependentFintypeOfLeSpanFintype {ι : Type _} (v : ι → M) (i : Li
     have i' : LinearIndependent R v' := i.comp _ Subtype.val_injective
     have s' : range v' ≤ span R w := (range_comp_subset_range _ _).trans s
     simpa using linearIndependent_le_span_aux' v' i' w s'
-#align linear_independent_fintype_of_le_span_fintype linearIndependentFintypeOfLeSpanFintype
+#align linear_independent_fintype_of_le_span_fintype LinearIndependent.finite_of_le_span_finite
 -/
 
 #print linearIndependent_le_span' /-
@@ -808,7 +808,7 @@ the cardinality of `ι` is bounded by the cardinality of `w`.
 theorem linearIndependent_le_span' {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M)
     [Fintype w] (s : range v ≤ span R w) : (#ι) ≤ Fintype.card w :=
   by
-  haveI : Fintype ι := linearIndependentFintypeOfLeSpanFintype v i w s
+  haveI : Fintype ι := LinearIndependent.finite_of_le_span_finite v i w s
   rw [Cardinal.mk_fintype]
   simp only [Cardinal.natCast_le]
   exact linearIndependent_le_span_aux' v i w s
@@ -853,7 +853,7 @@ theorem linearIndependent_le_infinite_basis {ι : Type _} (b : Basis ι R M) [In
   have i' : LinearIndependent R v' := i.comp _ Subtype.val_injective
   have w' : Fintype (Φ ⁻¹' {s}) :=
     by
-    apply linearIndependentFintypeOfLeSpanFintype v' i' (s.image b)
+    apply LinearIndependent.finite_of_le_span_finite v' i' (s.image b)
     rintro m ⟨⟨p, ⟨rfl⟩⟩, rfl⟩
     simp only [SetLike.mem_coe, Subtype.coe_mk, Finset.coe_image]
     apply Basis.mem_span_repr_support

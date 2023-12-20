@@ -379,7 +379,7 @@ protected def ihom (A : Rep k G) : Rep k G ⥤ Rep k G
       comm' := fun g =>
         LinearMap.ext fun x =>
           LinearMap.ext fun y => show f.hom (X.ρ g _) = _ by simpa only [hom_comm_apply] }
-  map_id' B := by ext <;> rfl
+  map_id'' B := by ext <;> rfl
   map_comp' B C D f g := by ext <;> rfl
 #align Rep.ihom Rep.ihom
 -/

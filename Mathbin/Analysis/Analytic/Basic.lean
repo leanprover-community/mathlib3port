@@ -844,7 +844,7 @@ theorem HasFPowerSeriesOnBall.uniform_geometric_approx {r' : ℝ≥0}
   exact hf.uniform_geometric_approx' h
   refine' ⟨a, ha, C, hC, fun y hy n => (hp y hy n).trans _⟩
   have yr' : ‖y‖ < r' := by rwa [ball_zero_eq] at hy 
-  refine' mul_le_mul_of_nonneg_left (pow_le_pow_of_le_left _ _ _) hC.lt.le
+  refine' mul_le_mul_of_nonneg_left (pow_le_pow_left _ _ _) hC.lt.le
   exacts [mul_nonneg ha.1.le (div_nonneg (norm_nonneg y) r'.coe_nonneg),
     mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg)]
 #align has_fpower_series_on_ball.uniform_geometric_approx HasFPowerSeriesOnBall.uniform_geometric_approx
@@ -914,7 +914,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
         _ = ‖p (n + 2)‖ * ‖y - (x, x)‖ ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
           rw [pow_succ ‖y - (x, x)‖]; ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
-          apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_of_le_left, hy'.le,
+          apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_left, hy'.le,
             norm_nonneg, pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg,
             ha.1.le]
         _ = B n := by field_simp [B, pow_succ, hr'0.ne'];

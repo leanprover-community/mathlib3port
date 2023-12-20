@@ -164,7 +164,7 @@ theorem lt_size_self (n : ℕ) : n < 2 ^ size n :=
 
 #print Nat.size_le /-
 theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
-  ⟨fun h => lt_of_lt_of_le (lt_size_self _) (pow_le_pow_of_le_right (by decide) h),
+  ⟨fun h => lt_of_lt_of_le (lt_size_self _) (pow_le_pow_right (by decide) h),
     by
     rw [← one_shiftl]; revert n
     apply binary_rec _ _ m
@@ -198,8 +198,7 @@ theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 := by
 
 #print Nat.size_pow /-
 theorem size_pow {n : ℕ} : size (2 ^ n) = n + 1 :=
-  le_antisymm (size_le.2 <| pow_lt_pow_of_lt_right (by decide) (lt_succ_self _))
-    (lt_size.2 <| le_rfl)
+  le_antisymm (size_le.2 <| pow_lt_pow_right (by decide) (lt_succ_self _)) (lt_size.2 <| le_rfl)
 #align nat.size_pow Nat.size_pow
 -/
 

@@ -44,7 +44,7 @@ theorem strictConvexOn_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (Ici 0)
   apply StrictMonoOn.strictConvexOn_of_deriv (convex_Ici _) (continuousOn_pow _)
   rw [deriv_pow', interior_Ici]
   exact fun x (hx : 0 < x) y hy hxy =>
-    mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le <| Nat.sub_pos_of_lt hn)
+    mul_lt_mul_of_pos_left (pow_lt_pow_left hxy hx.le <| Nat.sub_pos_of_lt hn)
       (Nat.cast_pos.2 <| zero_lt_two.trans_le hn)
 #align strict_convex_on_pow strictConvexOn_pow
 -/

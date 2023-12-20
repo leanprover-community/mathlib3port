@@ -1011,14 +1011,12 @@ theorem sup_mul : (I ⊔ J) * K = I * K ⊔ J * K :=
 
 variable {I J K}
 
-#print Ideal.pow_le_pow /-
 theorem pow_le_pow {m n : ℕ} (h : m ≤ n) : I ^ n ≤ I ^ m :=
   by
   cases' Nat.exists_eq_add_of_le h with k hk
   rw [hk, pow_add]
   exact le_trans mul_le_inf inf_le_left
 #align ideal.pow_le_pow Ideal.pow_le_pow
--/
 
 #print Ideal.pow_le_self /-
 theorem pow_le_self {n : ℕ} (hn : n ≠ 0) : I ^ n ≤ I :=
@@ -1028,14 +1026,12 @@ theorem pow_le_self {n : ℕ} (hn : n ≠ 0) : I ^ n ≤ I :=
 #align ideal.pow_le_self Ideal.pow_le_self
 -/
 
-#print Ideal.pow_mono /-
 theorem pow_mono {I J : Ideal R} (e : I ≤ J) (n : ℕ) : I ^ n ≤ J ^ n :=
   by
   induction n
   · rw [pow_zero, pow_zero]; exact rfl.le
   · rw [pow_succ, pow_succ]; exact Ideal.mul_mono e n_ih
 #align ideal.pow_mono Ideal.pow_mono
--/
 
 #print Ideal.mul_eq_bot /-
 theorem mul_eq_bot {R : Type _} [CommSemiring R] [NoZeroDivisors R] {I J : Ideal R} :

@@ -21,36 +21,38 @@ namespace Nat
 /-! ### `pow` -/
 
 
-#print Nat.pow_le_pow_of_le_left /-
+#print Nat.pow_le_pow_left /-
 -- This is redundant with `pow_le_pow_of_le_left'`,
 -- We leave a version in the `nat` namespace as well.
 -- (The global `pow_le_pow_of_le_left` needs an extra hypothesis `0 ≤ x`.)
-protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ, x ^ i ≤ y ^ i :=
-  pow_le_pow_of_le_left' H
-#align nat.pow_le_pow_of_le_left Nat.pow_le_pow_of_le_left
+protected theorem pow_le_pow_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ, x ^ i ≤ y ^ i :=
+  pow_le_pow_left' H
+#align nat.pow_le_pow_of_le_left Nat.pow_le_pow_left
 -/
 
-#print Nat.pow_le_pow_of_le_right /-
-theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
-  pow_le_pow' H h
-#align nat.pow_le_pow_of_le_right Nat.pow_le_pow_of_le_right
+#print Nat.pow_le_pow_right /-
+theorem pow_le_pow_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
+  pow_le_pow_right' H h
+#align nat.pow_le_pow_of_le_right Nat.pow_le_pow_right
 -/
 
-#print Nat.pow_lt_pow_of_lt_left /-
-theorem pow_lt_pow_of_lt_left {x y : ℕ} (H : x < y) {i} (h : 0 < i) : x ^ i < y ^ i :=
-  pow_lt_pow_of_lt_left H (zero_le _) h
-#align nat.pow_lt_pow_of_lt_left Nat.pow_lt_pow_of_lt_left
+#print Nat.pow_lt_pow_left /-
+theorem pow_lt_pow_left {x y : ℕ} (H : x < y) {i} (h : 0 < i) : x ^ i < y ^ i :=
+  pow_lt_pow_left H (zero_le _) h
+#align nat.pow_lt_pow_of_lt_left Nat.pow_lt_pow_left
 -/
 
-#print Nat.pow_lt_pow_of_lt_right /-
-theorem pow_lt_pow_of_lt_right {x : ℕ} (H : 1 < x) {i j : ℕ} (h : i < j) : x ^ i < x ^ j :=
+/- warning: nat.pow_lt_pow_of_lt_right clashes with pow_lt_pow_right -> pow_lt_pow_right
+Case conversion may be inaccurate. Consider using '#align nat.pow_lt_pow_of_lt_right pow_lt_pow_rightₓ'. -/
+#print pow_lt_pow_right /-
+theorem pow_lt_pow_right {x : ℕ} (H : 1 < x) {i j : ℕ} (h : i < j) : x ^ i < x ^ j :=
   pow_lt_pow H h
-#align nat.pow_lt_pow_of_lt_right Nat.pow_lt_pow_of_lt_right
+#align nat.pow_lt_pow_of_lt_right pow_lt_pow_right
 -/
 
 #print Nat.pow_lt_pow_succ /-
 theorem pow_lt_pow_succ {p : ℕ} (h : 1 < p) (n : ℕ) : p ^ n < p ^ (n + 1) :=
-  pow_lt_pow_of_lt_right h n.lt_succ_self
+  pow_lt_pow_right h n.lt_succ_self
 #align nat.pow_lt_pow_succ Nat.pow_lt_pow_succ
 -/
 
@@ -79,7 +81,7 @@ theorem lt_two_pow (n : ℕ) : n < 2 ^ n :=
 
 #print Nat.one_le_pow /-
 theorem one_le_pow (n m : ℕ) (h : 0 < m) : 1 ≤ m ^ n := by rw [← one_pow n];
-  exact Nat.pow_le_pow_of_le_left h n
+  exact Nat.pow_le_pow_left h n
 #align nat.one_le_pow Nat.one_le_pow
 -/
 
@@ -97,7 +99,7 @@ theorem one_le_two_pow (n : ℕ) : 1 ≤ 2 ^ n :=
 
 #print Nat.one_lt_pow /-
 theorem one_lt_pow (n m : ℕ) (h₀ : 0 < n) (h₁ : 1 < m) : 1 < m ^ n := by rw [← one_pow n];
-  exact pow_lt_pow_of_lt_left h₁ h₀
+  exact pow_lt_pow_left h₁ h₀
 #align nat.one_lt_pow Nat.one_lt_pow
 -/
 
@@ -136,22 +138,24 @@ theorem one_lt_two_pow' (n : ℕ) : 1 < 2 ^ (n + 1) :=
 #align nat.one_lt_two_pow' Nat.one_lt_two_pow'
 -/
 
-#print Nat.pow_right_strictMono /-
+/- warning: nat.pow_right_strict_mono clashes with pow_strict_mono_right -> pow_right_strictMono
+Case conversion may be inaccurate. Consider using '#align nat.pow_right_strict_mono pow_right_strictMonoₓ'. -/
+#print pow_right_strictMono /-
 theorem pow_right_strictMono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ =>
-  pow_lt_pow_of_lt_right k
-#align nat.pow_right_strict_mono Nat.pow_right_strictMono
+  pow_lt_pow_right k
+#align nat.pow_right_strict_mono pow_right_strictMono
 -/
 
-#print Nat.pow_le_iff_le_right /-
 theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m ≤ n :=
   StrictMono.le_iff_le (pow_right_strictMono k)
 #align nat.pow_le_iff_le_right Nat.pow_le_iff_le_right
--/
 
-#print Nat.pow_lt_iff_lt_right /-
-theorem pow_lt_iff_lt_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m < x ^ n ↔ m < n :=
+/- warning: nat.pow_lt_iff_lt_right clashes with pow_lt_pow_iff_ -> pow_lt_pow_iff_right
+Case conversion may be inaccurate. Consider using '#align nat.pow_lt_iff_lt_right pow_lt_pow_iff_rightₓ'. -/
+#print pow_lt_pow_iff_right /-
+theorem pow_lt_pow_iff_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m < x ^ n ↔ m < n :=
   StrictMono.lt_iff_lt (pow_right_strictMono k)
-#align nat.pow_lt_iff_lt_right Nat.pow_lt_iff_lt_right
+#align nat.pow_lt_iff_lt_right pow_lt_pow_iff_right
 -/
 
 #print Nat.pow_right_injective /-
@@ -162,7 +166,7 @@ theorem pow_right_injective {x : ℕ} (k : 2 ≤ x) : Function.Injective fun n :
 
 #print Nat.pow_left_strictMono /-
 theorem pow_left_strictMono {m : ℕ} (k : 1 ≤ m) : StrictMono fun x : ℕ => x ^ m := fun _ _ h =>
-  pow_lt_pow_of_lt_left h k
+  pow_lt_pow_left h k
 #align nat.pow_left_strict_mono Nat.pow_left_strictMono
 -/
 
@@ -185,16 +189,16 @@ theorem StrictMono.nat_pow {n : ℕ} (hn : 1 ≤ n) {f : ℕ → ℕ} (hf : Stri
 
 namespace Nat
 
-#print Nat.pow_le_iff_le_left /-
-theorem pow_le_iff_le_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m ≤ y ^ m ↔ x ≤ y :=
+#print Nat.pow_le_pow_iff_left /-
+theorem pow_le_pow_iff_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m ≤ y ^ m ↔ x ≤ y :=
   StrictMono.le_iff_le (pow_left_strictMono k)
-#align nat.pow_le_iff_le_left Nat.pow_le_iff_le_left
+#align nat.pow_le_iff_le_left Nat.pow_le_pow_iff_left
 -/
 
-#print Nat.pow_lt_iff_lt_left /-
-theorem pow_lt_iff_lt_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m < y ^ m ↔ x < y :=
+#print Nat.pow_lt_pow_iff_left /-
+theorem pow_lt_pow_iff_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m < y ^ m ↔ x < y :=
   StrictMono.lt_iff_lt (pow_left_strictMono k)
-#align nat.pow_lt_iff_lt_left Nat.pow_lt_iff_lt_left
+#align nat.pow_lt_iff_lt_left Nat.pow_lt_pow_iff_left
 -/
 
 #print Nat.pow_left_injective /-

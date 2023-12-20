@@ -38,7 +38,7 @@ variable {E : Type _} [NormedAddCommGroup E]
 #print sqrt_one_add_norm_sq_le /-
 theorem sqrt_one_add_norm_sq_le (x : E) : Real.sqrt (1 + ‖x‖ ^ 2) ≤ 1 + ‖x‖ :=
   by
-  refine' le_of_pow_le_pow 2 (by positivity) two_pos _
+  refine' le_of_pow_le_pow_left 2 (by positivity) two_pos _
   simp [sq_sqrt (zero_lt_one_add_norm_sq x).le, add_pow_two]
 #align sqrt_one_add_norm_sq_le sqrt_one_add_norm_sq_le
 -/
@@ -48,7 +48,7 @@ theorem one_add_norm_le_sqrt_two_mul_sqrt (x : E) : 1 + ‖x‖ ≤ Real.sqrt 2 
   by
   suffices (sqrt 2 * sqrt (1 + ‖x‖ ^ 2)) ^ 2 - (1 + ‖x‖) ^ 2 = (1 - ‖x‖) ^ 2
     by
-    refine' le_of_pow_le_pow 2 (by positivity) (by norm_num) _
+    refine' le_of_pow_le_pow_left 2 (by positivity) (by norm_num) _
     rw [← sub_nonneg, this]
     positivity
   rw [mul_pow, sq_sqrt (zero_lt_one_add_norm_sq x).le, add_pow_two, sub_pow_two]
@@ -111,7 +111,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
     have hxr : 0 ≤ x ^ (-r⁻¹) := rpow_nonneg_of_nonneg hx.1.le _
     apply ENNReal.ofReal_le_ofReal
     rw [← neg_mul, rpow_mul hx.1.le, rpow_nat_cast]
-    refine' pow_le_pow_of_le_left _ (by simp only [sub_le_self_iff, zero_le_one]) n
+    refine' pow_le_pow_left _ (by simp only [sub_le_self_iff, zero_le_one]) n
     rw [le_sub_iff_add_le', add_zero]
     refine' Real.one_le_rpow_of_pos_of_le_one_of_nonpos hx.1 hx.2 _
     rw [Right.neg_nonpos_iff, inv_nonneg]

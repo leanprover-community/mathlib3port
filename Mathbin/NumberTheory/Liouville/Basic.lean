@@ -227,7 +227,7 @@ protected theorem transcendental {x : ‚Ñù} (lx : Liouville x) : Transcendental ‚
     refine' lt_of_le_of_lt _ a1
     refine' mul_le_mul_of_nonneg_right _ (mul_nonneg (pow_nonneg b0.le _) (abs_nonneg _))
     refine' hn.le.trans _
-    refine' pow_le_pow_of_le_left zero_le_two _ _
+    refine' pow_le_pow_left zero_le_two _ _
     exact int.cast_two.symm.le.trans (int.cast_le.mpr (int.add_one_le_iff.mpr b1))
   -- this branch of the proof exploits the "integrality" of evaluations of polynomials
   -- at ratios of integers.

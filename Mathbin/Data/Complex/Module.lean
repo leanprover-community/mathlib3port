@@ -237,11 +237,11 @@ instance (priority := 900) Module.complexToReal (E : Type _) [AddCommGroup E] [M
 #align module.complex_to_real Module.complexToReal
 -/
 
-#print Module.real_complex_tower /-
-instance Module.real_complex_tower (E : Type _) [AddCommGroup E] [Module ℂ E] :
+#print IsScalarTower.complexToReal /-
+instance IsScalarTower.complexToReal (E : Type _) [AddCommGroup E] [Module ℂ E] :
     IsScalarTower ℝ ℂ E :=
   RestrictScalars.isScalarTower ℝ ℂ E
-#align module.real_complex_tower Module.real_complex_tower
+#align module.real_complex_tower IsScalarTower.complexToReal
 -/
 
 #print Complex.coe_smul /-

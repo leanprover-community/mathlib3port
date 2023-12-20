@@ -264,12 +264,12 @@ end Mul
 /-! ### Powers -/
 
 
-#print NonemptyInterval.hasNsmul /-
+#print NonemptyInterval.hasNSMul /-
 -- TODO: if `to_additive` gets improved sufficiently, derive this from `has_pow`
-instance NonemptyInterval.hasNsmul [AddMonoid α] [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)]
+instance NonemptyInterval.hasNSMul [AddMonoid α] [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)]
     [CovariantClass α α (swap (· + ·)) (· ≤ ·)] : SMul ℕ (NonemptyInterval α) :=
-  ⟨fun n s => ⟨(n • s.fst, n • s.snd), nsmul_le_nsmul_of_le_right s.fst_le_snd _⟩⟩
-#align nonempty_interval.has_nsmul NonemptyInterval.hasNsmul
+  ⟨fun n s => ⟨(n • s.fst, n • s.snd), nsmul_le_nsmul_right s.fst_le_snd _⟩⟩
+#align nonempty_interval.has_nsmul NonemptyInterval.hasNSMul
 -/
 
 section Pow
@@ -278,11 +278,11 @@ variable [Monoid α] [Preorder α] [CovariantClass α α (· * ·) (· ≤ ·)]
   [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
 
 #print NonemptyInterval.hasPow /-
-@[to_additive NonemptyInterval.hasNsmul]
+@[to_additive NonemptyInterval.hasNSMul]
 instance NonemptyInterval.hasPow : Pow (NonemptyInterval α) ℕ :=
-  ⟨fun s n => ⟨s.toProd ^ n, pow_le_pow_of_le_left' s.fst_le_snd _⟩⟩
+  ⟨fun s n => ⟨s.toProd ^ n, pow_le_pow_left' s.fst_le_snd _⟩⟩
 #align nonempty_interval.has_pow NonemptyInterval.hasPow
-#align nonempty_interval.has_nsmul NonemptyInterval.hasNsmul
+#align nonempty_interval.has_nsmul NonemptyInterval.hasNSMul
 -/
 
 namespace NonemptyInterval

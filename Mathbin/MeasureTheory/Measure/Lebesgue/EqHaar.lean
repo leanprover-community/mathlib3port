@@ -200,7 +200,7 @@ theorem addHaar_submodule {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E
     convert s.sub_mem hym hyn
     simp only [sub_smul, neg_sub_neg, add_sub_add_right_eq_sub]
   have H : c ^ n - c ^ m ≠ 0 := by
-    simpa only [sub_eq_zero, Ne.def] using (strictAnti_pow cpos cone).Injective.Ne hmn.symm
+    simpa only [sub_eq_zero, Ne.def] using (pow_right_strictAnti cpos cone).Injective.Ne hmn.symm
   have : x ∈ s := by
     convert s.smul_mem (c ^ n - c ^ m)⁻¹ A
     rw [smul_smul, inv_mul_cancel H, one_smul]

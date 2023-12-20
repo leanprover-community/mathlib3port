@@ -610,7 +610,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
         _ = I * a + 2 * I * C * (r * S n) ^ 2 := by ring
         _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by
           apply_rules [add_le_add, le_refl, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg,
-            Cpos.le, zero_le_two, pow_le_pow_of_le_left, rpos.le]
+            Cpos.le, zero_le_two, pow_le_pow_left, rpos.le]
         _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by ring
         _ ≤ (I + 1) * a := by apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_refl]
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.

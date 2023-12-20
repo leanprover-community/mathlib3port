@@ -124,7 +124,7 @@ theorem ack_three (n : ℕ) : ack 3 n = 2 ^ (n + 3) - 3 :=
   rw [cast_sub]
   · exact_mod_cast ack_three_aux n
   · have H : 3 ≤ 2 ^ 3 := by norm_num
-    exact H.trans (pow_mono one_le_two <| le_add_left le_rfl)
+    exact H.trans (pow_right_mono one_le_two <| le_add_left le_rfl)
 #align ack_three ack_three
 -/
 
@@ -361,7 +361,7 @@ theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m 
 theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (m + 4) n :=
   calc
     ack m ((n + 1) ^ 2) < ack m ((ack m n + 1) ^ 2) :=
-      ack_strictMono_right m <| pow_lt_pow_of_lt_left (succ_lt_succ <| lt_ack_right m n) zero_lt_two
+      ack_strictMono_right m <| pow_lt_pow_left (succ_lt_succ <| lt_ack_right m n) zero_lt_two
     _ ≤ ack m (ack (m + 3) n) := (ack_mono_right m <| ack_add_one_sq_lt_ack_add_three m n)
     _ ≤ ack (m + 2) (ack (m + 3) n) := (ack_mono_left _ <| by linarith)
     _ = ack (m + 3) (n + 1) := (ack_succ_succ _ n).symm
@@ -399,7 +399,7 @@ theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : �
   · refine'
       ⟨max a b + 3, fun n =>
         (mkpair_lt_max_add_one_sq _ _).trans_le <|
-          (Nat.pow_le_pow_of_le_left (add_le_add_right _ _) 2).trans <|
+          (Nat.pow_le_pow_left (add_le_add_right _ _) 2).trans <|
             ack_add_one_sq_lt_ack_add_three _ _⟩
     rw [max_ack_left]
     exact max_le_max (ha n).le (hb n).le

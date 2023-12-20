@@ -38,7 +38,7 @@ theorem arith_lemma (k n : ℕ) : 0 < 2 * n + 2 ^ k.succ :=
   calc
     0 < 2 := zero_lt_two
     _ = 2 ^ 1 := (pow_one 2).symm
-    _ ≤ 2 ^ k.succ := (Nat.pow_le_pow_of_le_right zero_lt_two (Nat.le_add_left 1 k))
+    _ ≤ 2 ^ k.succ := (Nat.pow_le_pow_right zero_lt_two (Nat.le_add_left 1 k))
     _ ≤ 2 * n + 2 ^ k.succ := Nat.le_add_left _ _
 #align imo2013_q1.arith_lemma Imo2013Q1.arith_lemma
 

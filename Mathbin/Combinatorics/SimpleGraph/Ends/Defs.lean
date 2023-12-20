@@ -313,7 +313,7 @@ def componentComplFunctor : (Finset V)ᵒᵖ ⥤ Type u
     where
   obj K := G.ComponentCompl K.unop
   map _ _ f := ComponentCompl.hom (le_of_op_hom f)
-  map_id' K := funext fun C => C.hom_refl
+  map_id'' K := funext fun C => C.hom_refl
   map_comp' K L M h h' := funext fun C => C.hom_trans (le_of_op_hom h) (le_of_op_hom h')
 #align simple_graph.component_compl_functor SimpleGraph.componentComplFunctor
 -/

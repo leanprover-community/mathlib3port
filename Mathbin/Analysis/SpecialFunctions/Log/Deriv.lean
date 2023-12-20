@@ -322,7 +322,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
         have : 0 < 1 - |x| := by linarith
         have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
-        apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
+        apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_left]
   -- third step: apply the mean value inequality
   have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ :=
     by

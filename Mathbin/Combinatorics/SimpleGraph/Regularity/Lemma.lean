@@ -116,7 +116,7 @@ theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
       ⟨P, hP₁, (le_initial_bound _ _).trans hP₂, hP₃.trans _,
         hP₄.resolve_right fun hPenergy => lt_irrefl (1 : ℝ) _⟩
     · rw [iterate_succ_apply']
-      exact mul_le_mul_left' (pow_le_pow_of_le_left (by norm_num) (by norm_num) _) _
+      exact mul_le_mul_left' (pow_le_pow_left (by norm_num) (by norm_num) _) _
     calc
       1 = ε ^ 5 / 4 * (4 / ε ^ 5) := by rw [mul_comm, div_mul_div_cancel 4 (pow_pos hε 5).ne'];
         norm_num
@@ -143,7 +143,7 @@ theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
   -- We gather a few numerical facts.
   have hεl' : 100 < 4 ^ P.parts.card * ε ^ 5 :=
     (hundred_lt_pow_initial_bound_mul hε l).trans_le
-      (mul_le_mul_of_nonneg_right (pow_le_pow (by norm_num) hP₂) <| by positivity)
+      (mul_le_mul_of_nonneg_right (pow_le_pow_right (by norm_num) hP₂) <| by positivity)
   have hi : (i : ℝ) ≤ 4 / ε ^ 5 :=
     by
     have hi : ε ^ 5 / 4 * ↑i ≤ 1 := hP₄.trans (by exact_mod_cast P.energy_le_one G)
@@ -153,7 +153,7 @@ theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
   have hsize : P.parts.card ≤ (step_bound^[⌊4 / ε ^ 5⌋₊]) t :=
     hP₃.trans (monotone_iterate_of_id_le le_step_bound (Nat.le_floor hi) _)
   have hPα : P.parts.card * 16 ^ P.parts.card ≤ card α :=
-    (Nat.mul_le_mul hsize (Nat.pow_le_pow_of_le_right (by norm_num) hsize)).trans hα
+    (Nat.mul_le_mul hsize (Nat.pow_le_pow_right (by norm_num) hsize)).trans hα
   -- We return the increment equipartition of `P`, which has energy `≥ ε ^ 5 / 4 * (i + 1)`.
   refine'
     ⟨increment hP₁ G ε, increment_is_equipartition hP₁ G ε, _, _,

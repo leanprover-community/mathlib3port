@@ -714,7 +714,7 @@ variable {G : Type u} [Group G] (H : Subgroup G) (g : G)
 noncomputable def quotientEquivSigmaZMod :
     G ⧸ H ≃ Σ q : orbitRel.Quotient (zpowers g) (G ⧸ H), ZMod (minimalPeriod ((· • ·) g) q.out') :=
   (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)).trans
-    (sigmaCongrRight fun q => orbitZpowersEquiv g q.out')
+    (sigmaCongrRight fun q => orbitZPowersEquiv g q.out')
 #align subgroup.quotient_equiv_sigma_zmod Subgroup.quotientEquivSigmaZMod
 -/
 

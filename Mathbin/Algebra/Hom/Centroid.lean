@@ -314,8 +314,8 @@ instance hasNsmul : SMul ℕ (CentroidHom α) :=
         rw [map_mul_right f, ← smul_mul_assoc] }⟩
 #align centroid_hom.has_nsmul CentroidHom.hasNsmul
 
-#print CentroidHom.hasNpowNat /-
-instance hasNpowNat : Pow (CentroidHom α) ℕ :=
+#print CentroidHom.hasNPowNat /-
+instance hasNPowNat : Pow (CentroidHom α) ℕ :=
   ⟨fun f n =>
     {
       (f.toEnd ^ n :
@@ -331,7 +331,7 @@ instance hasNpowNat : Pow (CentroidHom α) ℕ :=
         · simp
         · rw [pow_succ]
           exact (congr_arg f.to_End ih).trans (f.map_mul_right' _ _) }⟩
-#align centroid_hom.has_npow_nat CentroidHom.hasNpowNat
+#align centroid_hom.has_npow_nat CentroidHom.hasNPowNat
 -/
 
 #print CentroidHom.coe_zero /-

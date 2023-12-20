@@ -60,7 +60,7 @@ theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n •
   { inter := by
       suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
       intro i j
-      exact ⟨max i j, pow_le_pow (le_max_left i j), pow_le_pow (le_max_right i j)⟩
+      exact ⟨max i j, pow_le_pow_right (le_max_left i j), pow_le_pow_right (le_max_right i j)⟩
     leftMul := by
       suffices ∀ (a : R) (i : ℕ), ∃ j : ℕ, a • I ^ j ≤ I ^ i by simpa
       intro r n

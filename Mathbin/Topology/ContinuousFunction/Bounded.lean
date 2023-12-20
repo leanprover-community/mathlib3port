@@ -1724,15 +1724,15 @@ functions from `α` to `β` is naturally a module over the algebra of bounded co
 functions from `α` to `𝕜`. -/
 
 
-#print BoundedContinuousFunction.hasSmul' /-
-instance hasSmul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
+#print BoundedContinuousFunction.hasSMul' /-
+instance hasSMul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
   ⟨fun (f : α →ᵇ 𝕜) (g : α →ᵇ β) =>
     ofNormedAddCommGroup (fun x => f x • g x) (f.Continuous.smul g.Continuous) (‖f‖ * ‖g‖) fun x =>
       calc
         ‖f x • g x‖ ≤ ‖f x‖ * ‖g x‖ := norm_smul_le _ _
         _ ≤ ‖f‖ * ‖g‖ :=
           mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _)⟩
-#align bounded_continuous_function.has_smul' BoundedContinuousFunction.hasSmul'
+#align bounded_continuous_function.has_smul' BoundedContinuousFunction.hasSMul'
 -/
 
 #print BoundedContinuousFunction.module' /-

@@ -51,7 +51,7 @@ def completion : SemiNormedGroupCat.{u} ⥤ SemiNormedGroupCat.{u}
     where
   obj V := SemiNormedGroupCat.of (completion V)
   map V W f := f.Completion
-  map_id' V := completion_id
+  map_id'' V := completion_id
   map_comp' U V W f g := (completion_comp f g).symm
 #align SemiNormedGroup.Completion SemiNormedGroupCat.completion
 -/

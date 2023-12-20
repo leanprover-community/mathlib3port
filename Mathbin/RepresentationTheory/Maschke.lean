@@ -83,7 +83,7 @@ variable (π : W →ₗ[k] V)
 /-- We define the conjugate of `π` by `g`, as a `k`-linear map.
 -/
 def conjugate (g : G) : W →ₗ[k] V :=
-  ((GroupSmul.linearMap k V g⁻¹).comp π).comp (GroupSmul.linearMap k W g)
+  ((GroupSMul.linearMap k V g⁻¹).comp π).comp (GroupSMul.linearMap k W g)
 #align linear_map.conjugate LinearMap.conjugate
 -/
 

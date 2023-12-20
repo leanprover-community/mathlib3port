@@ -330,7 +330,7 @@ theorem tendsto_tsum_compl_atTop_zero {α : Type _} (f : α → ℝ≥0) :
 /-- `x ↦ x ^ n` as an order isomorphism of `ℝ≥0`. -/
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
   (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
-      strictMonoOn_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
+      pow_left_strictMonoOn hn.bot_lt (zero_le x) (zero_le y) h) <|
     (continuous_id.pow _).Surjective (tendsto_pow_atTop hn) <| by
       simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
 #align nnreal.pow_order_iso NNReal.powOrderIso

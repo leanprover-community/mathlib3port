@@ -257,12 +257,10 @@ theorem Surjective.of_comp_iff' (hf : Bijective f) (g : γ → α) :
 #align function.surjective.of_comp_iff' Function.Surjective.of_comp_iff'
 -/
 
-#print Function.decidableEqPfun /-
 instance decidableEqPfun (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, DecidableEq (α hp)] :
     DecidableEq (∀ hp, α hp)
   | f, g => decidable_of_iff (∀ hp, f hp = g hp) funext_iff.symm
 #align function.decidable_eq_pfun Function.decidableEqPfun
--/
 
 #print Function.Surjective.forall /-
 protected theorem Surjective.forall (hf : Surjective f) {p : β → Prop} :

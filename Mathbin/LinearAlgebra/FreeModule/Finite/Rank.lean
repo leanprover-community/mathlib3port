@@ -102,12 +102,12 @@ theorem finrank_eq_card_chooseBasisIndex :
 #align finite_dimensional.finrank_eq_card_choose_basis_index FiniteDimensional.finrank_eq_card_chooseBasisIndex
 -/
 
-#print FiniteDimensional.finrank_finsupp /-
+#print FiniteDimensional.finrank_finsupp_self /-
 /-- The finrank of `(ι →₀ R)` is `fintype.card ι`. -/
 @[simp]
-theorem finrank_finsupp {ι : Type v} [Fintype ι] : finrank R (ι →₀ R) = card ι := by
+theorem finrank_finsupp_self {ι : Type v} [Fintype ι] : finrank R (ι →₀ R) = card ι := by
   rw [finrank, rank_finsupp_self, ← mk_to_nat_eq_card, to_nat_lift]
-#align finite_dimensional.finrank_finsupp FiniteDimensional.finrank_finsupp
+#align finite_dimensional.finrank_finsupp FiniteDimensional.finrank_finsupp_self
 -/
 
 #print FiniteDimensional.finrank_pi /-

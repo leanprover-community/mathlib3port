@@ -84,9 +84,9 @@ theorem subst_wlog {x y z s : ℝ} (hxy : 0 ≤ x * y) (hxyz : x + y + z = 0) :
         le_trans (mul_le_mul_of_nonneg_left (lhs_ineq hxy) hs) mid_ineq
       _ ≤ (2 * (x ^ 2 + y ^ 2 + (x + y) ^ 2) + 2 * s ^ 2) ^ 4 / 4 ^ 4 :=
         div_le_div_of_le four_pow_four_pos.le <|
-          pow_le_pow_of_le_left (add_nonneg (mul_nonneg zero_lt_three.le (sq_nonneg _)) hs)
+          pow_le_pow_left (add_nonneg (mul_nonneg zero_lt_three.le (sq_nonneg _)) hs)
             (add_le_add_right rhs_ineq _) _
-  le_of_pow_le_pow _ (mul_nonneg (sqrt_nonneg _) (sq_nonneg _)) Nat.succ_pos' <|
+  le_of_pow_le_pow_left _ (mul_nonneg (sqrt_nonneg _) (sq_nonneg _)) Nat.succ_pos' <|
     calc
       (32 * |x * y * z * s|) ^ 2 = 32 * (2 * s ^ 2 * (16 * x ^ 2 * y ^ 2 * (x + y) ^ 2)) := by
         rw [mul_pow, sq_abs, hz] <;> ring

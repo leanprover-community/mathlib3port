@@ -270,8 +270,8 @@ theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
   rw [mul_mul_mul_comm, ← pow_add, ← mul_assoc]
   exact
     mul_le_mul_of_nonneg_right
-      (mul_le_mul (pow_le_pow_of_le_left (zero_le _) (hCA _ hA') _)
-          (cast_le.2 <| card_le_of_subset hC.2) (zero_le _) <|
+      (mul_le_mul (pow_le_pow_left (zero_le _) (hCA _ hA') _) (cast_le.2 <| card_le_of_subset hC.2)
+          (zero_le _) <|
         zero_le _)
       (zero_le _)
 #align finset.card_pow_div_pow_le Finset.card_pow_div_pow_le

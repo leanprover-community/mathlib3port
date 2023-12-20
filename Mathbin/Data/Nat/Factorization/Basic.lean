@@ -529,7 +529,7 @@ theorem factorization_lt {n : ℕ} (p : ℕ) (hn : n ≠ 0) : n.factorization p 
   by_cases pp : p.prime; swap; · simp [factorization_eq_zero_of_non_prime n pp]; exact hn.bot_lt
   rw [← pow_lt_iff_lt_right pp.two_le]
   apply lt_of_le_of_lt (ord_proj_le p hn)
-  exact lt_of_lt_of_le (lt_two_pow n) (pow_le_pow_of_le_left (by linarith) pp.two_le n)
+  exact lt_of_lt_of_le (lt_two_pow n) (pow_le_pow_left (by linarith) pp.two_le n)
 #align nat.factorization_lt Nat.factorization_lt
 -/
 

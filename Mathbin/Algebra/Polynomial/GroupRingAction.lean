@@ -103,40 +103,40 @@ open MulAction
 
 open scoped Classical
 
-#print prodXSubSmul /-
+#print prodXSubSMul /-
 /-- the product of `(X - g • x)` over distinct `g • x`. -/
-noncomputable def prodXSubSmul (x : R) : R[X] :=
+noncomputable def prodXSubSMul (x : R) : R[X] :=
   (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).Prod fun g =>
     Polynomial.X - Polynomial.C (ofQuotientStabilizer G x g)
-#align prod_X_sub_smul prodXSubSmul
+#align prod_X_sub_smul prodXSubSMul
 -/
 
-#print prodXSubSmul.monic /-
-theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
+#print prodXSubSMul.monic /-
+theorem prodXSubSMul.monic (x : R) : (prodXSubSMul G R x).Monic :=
   Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_X_sub_C _
-#align prod_X_sub_smul.monic prodXSubSmul.monic
+#align prod_X_sub_smul.monic prodXSubSMul.monic
 -/
 
-#print prodXSubSmul.eval /-
-theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
+#print prodXSubSMul.eval /-
+theorem prodXSubSMul.eval (x : R) : (prodXSubSMul G R x).eval x = 0 :=
   (map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : R[X] →* R) _ _).trans <|
     Finset.prod_eq_zero (Finset.mem_univ <| QuotientGroup.mk 1) <| by simp
-#align prod_X_sub_smul.eval prodXSubSmul.eval
+#align prod_X_sub_smul.eval prodXSubSMul.eval
 -/
 
-#print prodXSubSmul.smul /-
-theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubSmul G R x :=
+#print prodXSubSMul.smul /-
+theorem prodXSubSMul.smul (x : R) (g : G) : g • prodXSubSMul G R x = prodXSubSMul G R x :=
   Finset.smul_prod.trans <|
     Fintype.prod_bijective _ (MulAction.bijective g) _ _ fun g' => by
       rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_X, Polynomial.smul_C]
-#align prod_X_sub_smul.smul prodXSubSmul.smul
+#align prod_X_sub_smul.smul prodXSubSMul.smul
 -/
 
-#print prodXSubSmul.coeff /-
-theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) :
-    g • (prodXSubSmul G R x).coeff n = (prodXSubSmul G R x).coeff n := by
-  rw [← Polynomial.coeff_smul, prodXSubSmul.smul]
-#align prod_X_sub_smul.coeff prodXSubSmul.coeff
+#print prodXSubSMul.coeff /-
+theorem prodXSubSMul.coeff (x : R) (g : G) (n : ℕ) :
+    g • (prodXSubSMul G R x).coeff n = (prodXSubSMul G R x).coeff n := by
+  rw [← Polynomial.coeff_smul, prodXSubSMul.smul]
+#align prod_X_sub_smul.coeff prodXSubSMul.coeff
 -/
 
 end CommRing

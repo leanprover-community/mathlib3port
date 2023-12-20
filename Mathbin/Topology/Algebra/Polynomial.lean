@@ -234,10 +234,10 @@ theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1
   · apply (coeff_le_of_roots_le i h1 h2 h4).trans
     calc
       _ ≤ max B 1 ^ (p.nat_degree - i) * p.nat_degree.choose i :=
-        mul_le_mul_of_nonneg_right (pow_le_pow_of_le_left hB (le_max_left _ _) _) _
+        mul_le_mul_of_nonneg_right (pow_le_pow_left hB (le_max_left _ _) _) _
       _ ≤ max B 1 ^ d * p.nat_degree.choose i :=
-        (mul_le_mul_of_nonneg_right ((pow_mono (le_max_right _ _)) (le_trans (Nat.sub_le _ _) h3))
-          _)
+        (mul_le_mul_of_nonneg_right
+          ((pow_right_mono (le_max_right _ _)) (le_trans (Nat.sub_le _ _) h3)) _)
       _ ≤ max B 1 ^ d * d.choose (d / 2) :=
         mul_le_mul_of_nonneg_left
           (nat.cast_le.mpr ((i.choose_mono h3).trans (i.choose_le_middle d))) _

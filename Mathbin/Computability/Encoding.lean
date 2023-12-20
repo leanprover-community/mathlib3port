@@ -222,7 +222,7 @@ def encodingNatΓ' : Encoding ℕ where
   decode x := some (decodeNat (List.map sectionΓ'Bool x))
   decode_encode x :=
     congr_arg _ <| by
-      rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
+      rw [List.map_map, List.map_id'' left_inverse_section_inclusion, decode_encode_nat]
 #align computability.encoding_nat_Γ' Computability.encodingNatΓ'
 -/
 

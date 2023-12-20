@@ -239,9 +239,9 @@ theorem sub_dvd_pow_sub_pow [CommRing α] (x y : α) (n : ℕ) : x - y ∣ x ^ n
 theorem nat_sub_dvd_pow_sub_pow (x y n : ℕ) : x - y ∣ x ^ n - y ^ n :=
   by
   cases' le_or_lt y x with h
-  · have : y ^ n ≤ x ^ n := Nat.pow_le_pow_of_le_left h _
+  · have : y ^ n ≤ x ^ n := Nat.pow_le_pow_left h _
     exact_mod_cast sub_dvd_pow_sub_pow (x : ℤ) (↑y) n
-  · have : x ^ n ≤ y ^ n := Nat.pow_le_pow_of_le_left h.le _
+  · have : x ^ n ≤ y ^ n := Nat.pow_le_pow_left h.le _
     exact (Nat.sub_eq_zero_of_le this).symm ▸ dvd_zero (x - y)
 #align nat_sub_dvd_pow_sub_pow nat_sub_dvd_pow_sub_pow
 -/

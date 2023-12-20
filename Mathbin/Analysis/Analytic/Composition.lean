@@ -569,7 +569,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
         simp only [Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, c.sum_blocks_fun]
       _ ≤ ∏ i : Fin c.length, Cp := (Finset.prod_le_prod' fun i _ => hCp _)
       _ = Cp ^ c.length := by simp
-      _ ≤ Cp ^ n := pow_le_pow hCp1 c.length_le
+      _ ≤ Cp ^ n := pow_le_pow_right hCp1 c.length_le
     calc
       ‖q.comp_along_composition p c‖₊ * r ^ n ≤
           (‖q c.length‖₊ * ∏ i, ‖p (c.blocks_fun i)‖₊) * r ^ n :=
@@ -955,7 +955,7 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           by
           apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
           rw [Finset.prod_const, Finset.card_fin]
-          apply pow_le_pow_of_le_left (norm_nonneg _)
+          apply pow_le_pow_left (norm_nonneg _)
           rw [EMetric.mem_ball, edist_eq_coe_nnnorm] at hy 
           have := le_trans (le_of_lt hy) (min_le_right _ _)
           rwa [ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this 

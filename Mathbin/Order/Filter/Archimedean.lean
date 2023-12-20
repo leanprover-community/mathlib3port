@@ -259,7 +259,7 @@ theorem Tendsto.atTop_nsmul_const {f : α → ℕ} (hr : 0 < r) (hf : Tendsto f 
   by
   refine' tendsto_at_top.mpr fun s => _
   obtain ⟨n : ℕ, hn : s ≤ n • r⟩ := Archimedean.arch s hr
-  exact (tendsto_at_top.mp hf n).mono fun a ha => hn.trans (nsmul_le_nsmul hr.le ha)
+  exact (tendsto_at_top.mp hf n).mono fun a ha => hn.trans (nsmul_le_nsmul_left hr.le ha)
 #align filter.tendsto.at_top_nsmul_const Filter.Tendsto.atTop_nsmul_const
 -/
 

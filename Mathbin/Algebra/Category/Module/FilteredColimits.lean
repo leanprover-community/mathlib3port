@@ -94,16 +94,16 @@ theorem colimitSMulAux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
 #align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimitSMulAux_eq_of_rel
 -/
 
-#print ModuleCat.FilteredColimits.colimitHasSmul /-
+#print ModuleCat.FilteredColimits.colimitHasSMul /-
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/
-instance colimitHasSmul : SMul R M
+instance colimitHasSMul : SMul R M
     where smul r x := by
     refine' Quot.lift (colimit_smul_aux F r) _ x
     intro x y h
     apply colimit_smul_aux_eq_of_rel
     apply types.filtered_colimit.rel_of_quot_rel
     exact h
-#align Module.filtered_colimits.colimit_has_smul ModuleCat.FilteredColimits.colimitHasSmul
+#align Module.filtered_colimits.colimit_has_smul ModuleCat.FilteredColimits.colimitHasSMul
 -/
 
 #print ModuleCat.FilteredColimits.colimit_smul_mk_eq /-

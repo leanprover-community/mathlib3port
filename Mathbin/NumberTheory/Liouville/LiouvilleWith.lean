@@ -456,7 +456,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   · refine' (hN b h a hne).not_lt (hlt.trans_le _)
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
     have hb0 : (0 : ℝ) < b := zero_lt_one.trans hb
-    exact one_div_le_one_div_of_le (pow_pos hb0 _) (pow_le_pow hb.le hnm)
+    exact one_div_le_one_div_of_le (pow_pos hb0 _) (pow_le_pow_right hb.le hnm)
   · exact (hm b h hb _).not_lt hlt
 #align liouville.frequently_exists_num Liouville.frequently_exists_num
 -/

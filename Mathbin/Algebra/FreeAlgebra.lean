@@ -116,13 +116,13 @@ def hasOne : One (Pre R X) :=
 #align free_algebra.pre.has_one FreeAlgebra.Pre.hasOne
 -/
 
-#print FreeAlgebra.Pre.hasSmul /-
+#print FreeAlgebra.Pre.hasSMul /-
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
-def hasSmul : SMul R (Pre R X) :=
+def hasSMul : SMul R (Pre R X) :=
   ⟨fun r m => mul (ofScalar r) m⟩
-#align free_algebra.pre.has_smul FreeAlgebra.Pre.hasSmul
+#align free_algebra.pre.has_smul FreeAlgebra.Pre.hasSMul
 -/
 
 end Pre

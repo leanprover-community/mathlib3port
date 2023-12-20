@@ -354,16 +354,16 @@ theorem clog_mono_right {b : ℕ} {r₁ r₂ : R} (h₀ : 0 < r₁) (h : r₁ �
 
 variable (R)
 
-#print Int.clogZpowGi /-
+#print Int.clogZPowGi /-
 /-- Over suitable subtypes, `int.clog` and `zpow` form a galois insertion -/
-def clogZpowGi {b : ℕ} (hb : 1 < b) :
+def clogZPowGi {b : ℕ} (hb : 1 < b) :
     GaloisInsertion (fun r : Set.Ioi (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
       ⟨(b : R) ^ z, zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z⟩ :=
   GaloisInsertion.monotoneIntro
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strictMono <| by exact_mod_cast hb).Monotone hz)
     (fun r₁ r₂ => clog_mono_right r₁.Prop)
     (fun r => Subtype.coe_le_coe.mp <| self_le_zpow_clog hb _) fun _ => clog_zpow hb _
-#align int.clog_zpow_gi Int.clogZpowGi
+#align int.clog_zpow_gi Int.clogZPowGi
 -/
 
 variable {R}
@@ -372,7 +372,7 @@ variable {R}
 /-- `int.clog b` and `zpow b` (almost) form a Galois connection. -/
 theorem zpow_lt_iff_lt_clog {b : ℕ} (hb : 1 < b) {x : ℤ} {r : R} (hr : 0 < r) :
     (b : R) ^ x < r ↔ x < clog b r :=
-  (@GaloisConnection.lt_iff_lt _ _ _ _ _ _ (clogZpowGi R hb).gc ⟨r, hr⟩ x).symm
+  (@GaloisConnection.lt_iff_lt _ _ _ _ _ _ (clogZPowGi R hb).gc ⟨r, hr⟩ x).symm
 #align int.zpow_lt_iff_lt_clog Int.zpow_lt_iff_lt_clog
 -/
 
@@ -380,7 +380,7 @@ theorem zpow_lt_iff_lt_clog {b : ℕ} (hb : 1 < b) {x : ℤ} {r : R} (hr : 0 < r
 /-- `int.clog b` and `zpow b` (almost) form a Galois connection. -/
 theorem le_zpow_iff_clog_le {b : ℕ} (hb : 1 < b) {x : ℤ} {r : R} (hr : 0 < r) :
     r ≤ (b : R) ^ x ↔ clog b r ≤ x :=
-  (@GaloisConnection.le_iff_le _ _ _ _ _ _ (clogZpowGi R hb).gc ⟨r, hr⟩ x).symm
+  (@GaloisConnection.le_iff_le _ _ _ _ _ _ (clogZPowGi R hb).gc ⟨r, hr⟩ x).symm
 #align int.le_zpow_iff_clog_le Int.le_zpow_iff_clog_le
 -/
 

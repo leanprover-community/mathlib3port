@@ -268,7 +268,7 @@ theorem IsOpen.exists_iUnion_isClosed {U : Set α} (hU : IsOpen U) :
   show Monotone F
   · intro m n hmn x hx
     simp only [mem_Ici, mem_preimage] at hx ⊢
-    apply le_trans (pow_le_pow_of_le_one' a_lt_one.le hmn) hx
+    apply le_trans (pow_le_pow_right_of_le_one' a_lt_one.le hmn) hx
   show (⋃ n, F n) = U
   · refine' subset.antisymm (by simp only [Union_subset_iff, F_subset, forall_const]) fun x hx => _
     have : ¬x ∈ Uᶜ := by simpa using hx

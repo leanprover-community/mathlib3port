@@ -37,19 +37,19 @@ section Left
 
 variable [CovariantClass M M (· * ·) (· ≤ ·)] {x : M}
 
-#print pow_le_pow_of_le_left' /-
-@[to_additive nsmul_le_nsmul_of_le_right, mono]
-theorem pow_le_pow_of_le_left' [CovariantClass M M (swap (· * ·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
+#print pow_le_pow_left' /-
+@[to_additive nsmul_le_nsmul_right, mono]
+theorem pow_le_pow_left' [CovariantClass M M (swap (· * ·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
     ∀ i : ℕ, a ^ i ≤ b ^ i
   | 0 => by simp
   | k + 1 => by
     rw [pow_succ, pow_succ]
-    exact mul_le_mul' hab (pow_le_pow_of_le_left' k)
-#align pow_le_pow_of_le_left' pow_le_pow_of_le_left'
-#align nsmul_le_nsmul_of_le_right nsmul_le_nsmul_of_le_right
+    exact mul_le_mul' hab (pow_le_pow_left' k)
+#align pow_le_pow_of_le_left' pow_le_pow_left'
+#align nsmul_le_nsmul_of_le_right nsmul_le_nsmul_right
 -/
 
-attribute [mono] nsmul_le_nsmul_of_le_right
+attribute [mono] nsmul_le_nsmul_right
 
 #print one_le_pow_of_one_le' /-
 @[to_additive nsmul_nonneg]
@@ -68,23 +68,23 @@ theorem pow_le_one' {a : M} (H : a ≤ 1) (n : ℕ) : a ^ n ≤ 1 :=
 #align nsmul_nonpos nsmul_nonpos
 -/
 
-#print pow_le_pow' /-
-@[to_additive nsmul_le_nsmul]
-theorem pow_le_pow' {a : M} {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
+#print pow_le_pow_right' /-
+@[to_additive nsmul_le_nsmul_left]
+theorem pow_le_pow_right' {a : M} {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   let ⟨k, hk⟩ := Nat.le.dest h
   calc
     a ^ n ≤ a ^ n * a ^ k := le_mul_of_one_le_right' (one_le_pow_of_one_le' ha _)
     _ = a ^ m := by rw [← hk, pow_add]
-#align pow_le_pow' pow_le_pow'
-#align nsmul_le_nsmul nsmul_le_nsmul
+#align pow_le_pow' pow_le_pow_right'
+#align nsmul_le_nsmul nsmul_le_nsmul_left
 -/
 
-#print pow_le_pow_of_le_one' /-
-@[to_additive nsmul_le_nsmul_of_nonpos]
-theorem pow_le_pow_of_le_one' {a : M} {n m : ℕ} (ha : a ≤ 1) (h : n ≤ m) : a ^ m ≤ a ^ n :=
-  @pow_le_pow' Mᵒᵈ _ _ _ _ _ _ ha h
-#align pow_le_pow_of_le_one' pow_le_pow_of_le_one'
-#align nsmul_le_nsmul_of_nonpos nsmul_le_nsmul_of_nonpos
+#print pow_le_pow_right_of_le_one' /-
+@[to_additive nsmul_le_nsmul_left_of_nonpos]
+theorem pow_le_pow_right_of_le_one' {a : M} {n m : ℕ} (ha : a ≤ 1) (h : n ≤ m) : a ^ m ≤ a ^ n :=
+  @pow_le_pow_right' Mᵒᵈ _ _ _ _ _ _ ha h
+#align pow_le_pow_of_le_one' pow_le_pow_right_of_le_one'
+#align nsmul_le_nsmul_of_nonpos nsmul_le_nsmul_left_of_nonpos
 -/
 
 #print one_lt_pow' /-
@@ -109,7 +109,6 @@ theorem pow_lt_one' {a : M} (ha : a < 1) {k : ℕ} (hk : k ≠ 0) : a ^ k < 1 :=
 #align nsmul_neg nsmul_neg
 -/
 
-#print pow_lt_pow' /-
 @[to_additive nsmul_lt_nsmul]
 theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ} (ha : 1 < a)
     (h : n < m) : a ^ n < a ^ m :=
@@ -119,14 +118,13 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
   exact lt_mul_of_one_lt_right' _ (one_lt_pow' ha k.succ_ne_zero)
 #align pow_lt_pow' pow_lt_pow'
 #align nsmul_lt_nsmul nsmul_lt_nsmul
--/
 
-#print pow_strictMono_left /-
-@[to_additive nsmul_strictMono_right]
-theorem pow_strictMono_left [CovariantClass M M (· * ·) (· < ·)] {a : M} (ha : 1 < a) :
+#print pow_right_strictMono' /-
+@[to_additive nsmul_left_strictMono]
+theorem pow_right_strictMono' [CovariantClass M M (· * ·) (· < ·)] {a : M} (ha : 1 < a) :
     StrictMono ((· ^ ·) a : ℕ → M) := fun m n => pow_lt_pow' ha
-#align pow_strict_mono_left pow_strictMono_left
-#align nsmul_strict_mono_right nsmul_strictMono_right
+#align pow_strict_mono_left pow_right_strictMono'
+#align nsmul_strict_mono_right nsmul_left_strictMono
 -/
 
 #print Left.one_le_pow_of_le /-
@@ -178,7 +176,6 @@ section CovariantLtSwap
 variable [Preorder β] [CovariantClass M M (· * ·) (· < ·)]
   [CovariantClass M M (swap (· * ·)) (· < ·)] {f : β → M}
 
-#print StrictMono.pow_right' /-
 @[to_additive StrictMono.nsmul_left]
 theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → StrictMono fun a => f a ^ n
   | 0, hn => (hn rfl).elim
@@ -187,15 +184,14 @@ theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → S
     exact hf.mul' (StrictMono.pow_right' n.succ_ne_zero)
 #align strict_mono.pow_right' StrictMono.pow_right'
 #align strict_mono.nsmul_left StrictMono.nsmul_left
--/
 
-#print pow_strictMono_right' /-
+#print pow_left_strictMono /-
 /-- See also `pow_strict_mono_right` -/
-@[nolint to_additive_doc, to_additive nsmul_strictMono_left]
-theorem pow_strictMono_right' {n : ℕ} (hn : n ≠ 0) : StrictMono fun a : M => a ^ n :=
+@[nolint to_additive_doc, to_additive nsmul_right_strictMono]
+theorem pow_left_strictMono {n : ℕ} (hn : n ≠ 0) : StrictMono fun a : M => a ^ n :=
   strictMono_id.pow_right' hn
-#align pow_strict_mono_right' pow_strictMono_right'
-#align nsmul_strict_mono_left nsmul_strictMono_left
+#align pow_strict_mono_right' pow_left_strictMono
+#align nsmul_strict_mono_left nsmul_right_strictMono
 -/
 
 end CovariantLtSwap
@@ -211,7 +207,7 @@ theorem Monotone.pow_right {f : β → M} (hf : Monotone f) : ∀ n : ℕ, Monot
   | 0 => by simpa using monotone_const
   | n + 1 => by simp_rw [pow_succ]; exact hf.mul' (Monotone.pow_right _)
 #align monotone.pow_right Monotone.pow_right
-#align monotone.nsmul_left Monotone.nsmul_left
+#align monotone.const_nsmul Monotone.const_nsmul
 -/
 
 #print pow_mono_right /-
@@ -296,20 +292,20 @@ theorem pow_eq_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n = 1 ↔ x = 1 :=
 
 variable [CovariantClass M M (· * ·) (· < ·)] {a : M} {m n : ℕ}
 
-#print pow_le_pow_iff' /-
-@[to_additive nsmul_le_nsmul_iff]
-theorem pow_le_pow_iff' (ha : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
-  (pow_strictMono_left ha).le_iff_le
-#align pow_le_pow_iff' pow_le_pow_iff'
-#align nsmul_le_nsmul_iff nsmul_le_nsmul_iff
+#print pow_le_pow_iff_right' /-
+@[to_additive nsmul_le_nsmul_iff_left]
+theorem pow_le_pow_iff_right' (ha : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
+  (pow_right_strictMono' ha).le_iff_le
+#align pow_le_pow_iff' pow_le_pow_iff_right'
+#align nsmul_le_nsmul_iff nsmul_le_nsmul_iff_left
 -/
 
-#print pow_lt_pow_iff' /-
-@[to_additive nsmul_lt_nsmul_iff]
-theorem pow_lt_pow_iff' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
-  (pow_strictMono_left ha).lt_iff_lt
-#align pow_lt_pow_iff' pow_lt_pow_iff'
-#align nsmul_lt_nsmul_iff nsmul_lt_nsmul_iff
+#print pow_lt_pow_iff_right' /-
+@[to_additive nsmul_lt_nsmul_iff_left]
+theorem pow_lt_pow_iff_right' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
+  (pow_right_strictMono' ha).lt_iff_lt
+#align pow_lt_pow_iff' pow_lt_pow_iff_right'
+#align nsmul_lt_nsmul_iff nsmul_lt_nsmul_iff_left
 -/
 
 end CovariantLe
@@ -318,17 +314,17 @@ section CovariantLeSwap
 
 variable [CovariantClass M M (· * ·) (· ≤ ·)] [CovariantClass M M (swap (· * ·)) (· ≤ ·)]
 
-#print lt_of_pow_lt_pow' /-
-@[to_additive lt_of_nsmul_lt_nsmul]
-theorem lt_of_pow_lt_pow' {a b : M} (n : ℕ) : a ^ n < b ^ n → a < b :=
+#print lt_of_pow_lt_pow_left' /-
+@[to_additive lt_of_nsmul_lt_nsmul_right]
+theorem lt_of_pow_lt_pow_left' {a b : M} (n : ℕ) : a ^ n < b ^ n → a < b :=
   (pow_mono_right _).reflect_lt
-#align lt_of_pow_lt_pow' lt_of_pow_lt_pow'
-#align lt_of_nsmul_lt_nsmul lt_of_nsmul_lt_nsmul
+#align lt_of_pow_lt_pow' lt_of_pow_lt_pow_left'
+#align lt_of_nsmul_lt_nsmul lt_of_nsmul_lt_nsmul_right
 -/
 
 @[to_additive]
 theorem min_lt_max_of_mul_lt_mul {a b c d : M} (h : a * b < c * d) : min a b < max c d :=
-  lt_of_pow_lt_pow' 2 <| by simp_rw [pow_two];
+  lt_of_pow_lt_pow_left' 2 <| by simp_rw [pow_two];
     exact
       (mul_le_mul' inf_le_left inf_le_right).trans_lt
         (h.trans_le <| mul_le_mul' le_sup_left le_sup_right)
@@ -357,12 +353,12 @@ section CovariantLtSwap
 
 variable [CovariantClass M M (· * ·) (· < ·)] [CovariantClass M M (swap (· * ·)) (· < ·)]
 
-#print le_of_pow_le_pow' /-
-@[to_additive le_of_nsmul_le_nsmul]
-theorem le_of_pow_le_pow' {a b : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ b ^ n → a ≤ b :=
-  (pow_strictMono_right' hn).le_iff_le.1
-#align le_of_pow_le_pow' le_of_pow_le_pow'
-#align le_of_nsmul_le_nsmul le_of_nsmul_le_nsmul
+#print le_of_pow_le_pow_left' /-
+@[to_additive le_of_nsmul_le_nsmul_right']
+theorem le_of_pow_le_pow_left' {a b : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ b ^ n → a ≤ b :=
+  (pow_left_strictMono hn).le_iff_le.1
+#align le_of_pow_le_pow' le_of_pow_le_pow_left'
+#align le_of_nsmul_le_nsmul le_of_nsmul_le_nsmul_right'
 -/
 
 #print min_le_of_mul_le_sq /-
@@ -494,33 +490,35 @@ theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
 #align one_le_pow_of_one_le one_le_pow_of_one_le
 -/
 
-#print pow_mono /-
-theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
+#print pow_right_mono /-
+theorem pow_right_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
   monotone_nat_of_le_succ fun n => by rw [pow_succ];
     exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
-#align pow_mono pow_mono
+#align pow_mono pow_right_mono
 -/
 
-#print pow_le_pow /-
-theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
-  pow_mono ha h
-#align pow_le_pow pow_le_pow
+#print pow_le_pow_right /-
+theorem pow_le_pow_right (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
+  pow_right_mono ha h
+#align pow_le_pow pow_le_pow_right
 -/
 
+/- warning: le_self_pow clashes with self_le_pow -> le_self_pow
+Case conversion may be inaccurate. Consider using '#align le_self_pow le_self_powₓ'. -/
 #print le_self_pow /-
 theorem le_self_pow (ha : 1 ≤ a) (h : m ≠ 0) : a ≤ a ^ m :=
-  (pow_one a).symm.trans_le (pow_le_pow ha <| pos_iff_ne_zero.mpr h)
+  (pow_one a).symm.trans_le (pow_le_pow_right ha <| pos_iff_ne_zero.mpr h)
 #align le_self_pow le_self_pow
 -/
 
-#print pow_le_pow_of_le_left /-
+#print pow_le_pow_left /-
 @[mono]
-theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
+theorem pow_le_pow_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
   | 0 => by simp
   | k + 1 => by
     rw [pow_succ, pow_succ]
-    exact mul_le_mul hab (pow_le_pow_of_le_left _) (pow_nonneg ha _) (le_trans ha hab)
-#align pow_le_pow_of_le_left pow_le_pow_of_le_left
+    exact mul_le_mul hab (pow_le_pow_left _) (pow_nonneg ha _) (le_trans ha hab)
+#align pow_le_pow_of_le_left pow_le_pow_left
 -/
 
 #print one_lt_pow /-
@@ -536,70 +534,67 @@ section StrictOrderedSemiring
 
 variable [StrictOrderedSemiring R] {a x y : R} {n m : ℕ}
 
-#print pow_lt_pow_of_lt_left /-
-theorem pow_lt_pow_of_lt_left (h : x < y) (hx : 0 ≤ x) : ∀ {n : ℕ}, 0 < n → x ^ n < y ^ n
+#print pow_lt_pow_left /-
+theorem pow_lt_pow_left (h : x < y) (hx : 0 ≤ x) : ∀ {n : ℕ}, 0 < n → x ^ n < y ^ n
   | 0, hn => hn.False.elim
   | n + 1, _ => by
     simpa only [pow_succ'] using
-      mul_lt_mul_of_le_of_le' (pow_le_pow_of_le_left hx h.le _) h (pow_pos (hx.trans_lt h) _) hx
-#align pow_lt_pow_of_lt_left pow_lt_pow_of_lt_left
+      mul_lt_mul_of_le_of_le' (pow_le_pow_left hx h.le _) h (pow_pos (hx.trans_lt h) _) hx
+#align pow_lt_pow_of_lt_left pow_lt_pow_left
 -/
 
-#print strictMonoOn_pow /-
-theorem strictMonoOn_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.Ici 0) :=
-  fun x hx y hy h => pow_lt_pow_of_lt_left h hx hn
-#align strict_mono_on_pow strictMonoOn_pow
+#print pow_left_strictMonoOn /-
+theorem pow_left_strictMonoOn (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.Ici 0) :=
+  fun x hx y hy h => pow_lt_pow_left h hx hn
+#align strict_mono_on_pow pow_left_strictMonoOn
 -/
 
-#print pow_strictMono_right /-
-theorem pow_strictMono_right (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
+#print pow_right_strictMono /-
+theorem pow_right_strictMono (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
   strictMono_nat_of_lt_succ fun n => by
     simpa only [one_mul, pow_succ] using mul_lt_mul h (le_refl (a ^ n)) (pow_pos this _) this.le
-#align pow_strict_mono_right pow_strictMono_right
+#align pow_strict_mono_right pow_right_strictMono
 -/
 
-#print pow_lt_pow /-
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
-  pow_strictMono_right h h2
+  pow_right_strictMono h h2
 #align pow_lt_pow pow_lt_pow
--/
 
-#print pow_lt_pow_iff /-
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
-  (pow_strictMono_right h).lt_iff_lt
+  (pow_right_strictMono h).lt_iff_lt
 #align pow_lt_pow_iff pow_lt_pow_iff
+
+#print pow_le_pow_iff_right /-
+theorem pow_le_pow_iff_right (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
+  (pow_right_strictMono h).le_iff_le
+#align pow_le_pow_iff pow_le_pow_iff_right
 -/
 
-#print pow_le_pow_iff /-
-theorem pow_le_pow_iff (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
-  (pow_strictMono_right h).le_iff_le
-#align pow_le_pow_iff pow_le_pow_iff
--/
-
-#print strictAnti_pow /-
-theorem strictAnti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
+#print pow_right_strictAnti /-
+theorem pow_right_strictAnti (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
   strictAnti_nat_of_succ_lt fun n => by
     simpa only [pow_succ, one_mul] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
-#align strict_anti_pow strictAnti_pow
+#align strict_anti_pow pow_right_strictAnti
 -/
 
-#print pow_lt_pow_iff_of_lt_one /-
-theorem pow_lt_pow_iff_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) : a ^ m < a ^ n ↔ n < m :=
-  (strictAnti_pow h₀ h₁).lt_iff_lt
-#align pow_lt_pow_iff_of_lt_one pow_lt_pow_iff_of_lt_one
+#print pow_lt_pow_iff_right_of_lt_one /-
+theorem pow_lt_pow_iff_right_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) : a ^ m < a ^ n ↔ n < m :=
+  (pow_right_strictAnti h₀ h₁).lt_iff_lt
+#align pow_lt_pow_iff_of_lt_one pow_lt_pow_iff_right_of_lt_one
 -/
 
-#print pow_lt_pow_of_lt_one /-
-theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) : a ^ j < a ^ i :=
-  (pow_lt_pow_iff_of_lt_one h ha).2 hij
-#align pow_lt_pow_of_lt_one pow_lt_pow_of_lt_one
+#print pow_lt_pow_right_of_lt_one /-
+theorem pow_lt_pow_right_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) :
+    a ^ j < a ^ i :=
+  (pow_lt_pow_iff_right_of_lt_one h ha).2 hij
+#align pow_lt_pow_of_lt_one pow_lt_pow_right_of_lt_one
 -/
 
 #print pow_lt_self_of_lt_one /-
 theorem pow_lt_self_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) (hn : 1 < n) : a ^ n < a :=
   calc
-    a ^ n < a ^ 1 := pow_lt_pow_of_lt_one h₀ h₁ hn
+    a ^ n < a ^ 1 := pow_lt_pow_right_of_lt_one h₀ h₁ hn
     _ = a := pow_one _
 #align pow_lt_self_of_lt_one pow_lt_self_of_lt_one
 -/
@@ -701,20 +696,21 @@ theorem one_lt_sq_iff {a : R} (ha : 0 ≤ a) : 1 < a ^ 2 ↔ 1 < a :=
 @[simp]
 theorem pow_left_inj {x y : R} {n : ℕ} (Hxpos : 0 ≤ x) (Hypos : 0 ≤ y) (Hnpos : 0 < n) :
     x ^ n = y ^ n ↔ x = y :=
-  (@strictMonoOn_pow R _ _ Hnpos).eq_iff_eq Hxpos Hypos
+  (@pow_left_strictMonoOn R _ _ Hnpos).eq_iff_eq Hxpos Hypos
 #align pow_left_inj pow_left_inj
 -/
 
-#print lt_of_pow_lt_pow /-
-theorem lt_of_pow_lt_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (h : a ^ n < b ^ n) : a < b :=
-  lt_of_not_ge fun hn => not_lt_of_ge (pow_le_pow_of_le_left hb hn _) h
-#align lt_of_pow_lt_pow lt_of_pow_lt_pow
+#print lt_of_pow_lt_pow_left /-
+theorem lt_of_pow_lt_pow_left {a b : R} (n : ℕ) (hb : 0 ≤ b) (h : a ^ n < b ^ n) : a < b :=
+  lt_of_not_ge fun hn => not_lt_of_ge (pow_le_pow_left hb hn _) h
+#align lt_of_pow_lt_pow lt_of_pow_lt_pow_left
 -/
 
-#print le_of_pow_le_pow /-
-theorem le_of_pow_le_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (hn : 0 < n) (h : a ^ n ≤ b ^ n) : a ≤ b :=
-  le_of_not_lt fun h1 => not_le_of_lt (pow_lt_pow_of_lt_left h1 hb hn) h
-#align le_of_pow_le_pow le_of_pow_le_pow
+#print le_of_pow_le_pow_left /-
+theorem le_of_pow_le_pow_left {a b : R} (n : ℕ) (hb : 0 ≤ b) (hn : 0 < n) (h : a ^ n ≤ b ^ n) :
+    a ≤ b :=
+  le_of_not_lt fun h1 => not_le_of_lt (pow_lt_pow_left h1 hb hn) h
+#align le_of_pow_le_pow le_of_pow_le_pow_left
 -/
 
 #print sq_eq_sq /-
@@ -726,7 +722,7 @@ theorem sq_eq_sq {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) : a ^ 2 = b ^ 2 ↔ a =
 
 #print lt_of_mul_self_lt_mul_self /-
 theorem lt_of_mul_self_lt_mul_self (hb : 0 ≤ b) : a * a < b * b → a < b := by simp_rw [← sq];
-  exact lt_of_pow_lt_pow _ hb
+  exact lt_of_pow_lt_pow_left _ hb
 #align lt_of_mul_self_lt_mul_self lt_of_mul_self_lt_mul_self
 -/
 
@@ -816,7 +812,7 @@ theorem abs_sq (x : R) : |x ^ 2| = x ^ 2 := by simpa only [sq] using abs_mul_sel
 #print sq_lt_sq /-
 theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ |x| < |y| := by
   simpa only [sq_abs] using
-    (@strictMonoOn_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
+    (@pow_left_strictMonoOn R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
 #align sq_lt_sq sq_lt_sq
 -/
 
@@ -829,7 +825,7 @@ theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
 #print sq_le_sq /-
 theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ |x| ≤ |y| := by
   simpa only [sq_abs] using
-    (@strictMonoOn_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
+    (@pow_left_strictMonoOn R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
 #align sq_le_sq sq_le_sq
 -/
 
@@ -899,7 +895,7 @@ theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < |x| := by
 
 #print pow_four_le_pow_two_of_pow_two_le /-
 theorem pow_four_le_pow_two_of_pow_two_le {x y : R} (h : x ^ 2 ≤ y) : x ^ 4 ≤ y ^ 2 :=
-  (pow_mul x 2 2).symm ▸ pow_le_pow_of_le_left (sq_nonneg x) h 2
+  (pow_mul x 2 2).symm ▸ pow_le_pow_left (sq_nonneg x) h 2
 #align pow_four_le_pow_two_of_pow_two_le pow_four_le_pow_two_of_pow_two_le
 -/
 
@@ -944,10 +940,10 @@ theorem pow_lt_pow_succ (ha : 1 < a) : a ^ n < a ^ n.succ :=
 #align pow_lt_pow_succ pow_lt_pow_succ
 -/
 
-#print pow_lt_pow₀ /-
-theorem pow_lt_pow₀ (ha : 1 < a) (hmn : m < n) : a ^ m < a ^ n := by induction' hmn with n hmn ih;
-  exacts [pow_lt_pow_succ ha, lt_trans ih (pow_lt_pow_succ ha)]
-#align pow_lt_pow₀ pow_lt_pow₀
+#print pow_lt_pow_right₀ /-
+theorem pow_lt_pow_right₀ (ha : 1 < a) (hmn : m < n) : a ^ m < a ^ n := by
+  induction' hmn with n hmn ih; exacts [pow_lt_pow_succ ha, lt_trans ih (pow_lt_pow_succ ha)]
+#align pow_lt_pow₀ pow_lt_pow_right₀
 -/
 
 end LinearOrderedCommGroupWithZero

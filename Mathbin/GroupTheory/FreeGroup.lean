@@ -937,7 +937,7 @@ theorem map.mk : map f (mk L) = mk (L.map fun x => (f x.1, x.2)) :=
 
 #print FreeGroup.map.id /-
 @[simp, to_additive]
-theorem map.id (x : FreeGroup α) : map id x = x := by rcases x with ⟨L⟩ <;> simp [List.map_id']
+theorem map.id (x : FreeGroup α) : map id x = x := by rcases x with ⟨L⟩ <;> simp [List.map_id'']
 #align free_group.map.id FreeGroup.map.id
 #align free_add_group.map.id FreeAddGroup.map.id
 -/

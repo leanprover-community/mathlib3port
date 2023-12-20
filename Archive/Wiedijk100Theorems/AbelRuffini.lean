@@ -131,7 +131,7 @@ theorem real_roots_Phi_ge_aux (hab : b < a) :
   · have hf1 : f 1 < 0 := by norm_num [hf, hb]
     have hfa : 0 ≤ f a := by
       simp_rw [hf, ← sq]
-      refine' add_nonneg (sub_nonneg.mpr (pow_le_pow ha _)) _ <;> norm_num
+      refine' add_nonneg (sub_nonneg.mpr (pow_le_pow_right ha _)) _ <;> norm_num
     obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Ico' hle (hc _) (set.mem_Ioc.mpr ⟨hf1, hf0⟩)
     obtain ⟨y, ⟨hy1, -⟩, hy2⟩ := intermediate_value_Ioc ha (hc _) (set.mem_Ioc.mpr ⟨hf1, hfa⟩)
     exact ⟨x, y, (hx1.trans hy1).Ne, hx2, hy2⟩
@@ -141,7 +141,7 @@ theorem real_roots_Phi_ge_aux (hab : b < a) :
       calc
         f (-a) = a ^ 2 - a ^ 5 + b := by norm_num [hf, ← sq]
         _ ≤ a ^ 2 - a ^ 3 + (a - 1) := by
-          refine' add_le_add (sub_le_sub_left (pow_le_pow ha _) _) _ <;> linarith
+          refine' add_le_add (sub_le_sub_left (pow_le_pow_right ha _) _) _ <;> linarith
         _ = -(a - 1) ^ 2 * (a + 1) := by ring
         _ ≤ 0 := by nlinarith
     have ha' := neg_nonpos.mpr (hle.trans ha)

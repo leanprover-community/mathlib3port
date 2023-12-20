@@ -743,7 +743,7 @@ theorem Prime.not_prime_pow {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun 
     lt_irrefl x <|
       calc
         x = x ^ 1 := (pow_one _).symm
-        _ < x ^ n := (Nat.pow_right_strictMono (hxn.symm ▸ hp.two_le) hn)
+        _ < x ^ n := (pow_right_strictMono (hxn.symm ▸ hp.two_le) hn)
         _ = x := hxn.symm
 #align nat.prime.pow_not_prime Nat.Prime.not_prime_pow
 -/

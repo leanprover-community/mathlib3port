@@ -114,17 +114,17 @@ theorem toPGame_moveLeft {o : Ordinal} (i) :
 #align ordinal.to_pgame_move_left Ordinal.toPGame_moveLeft
 -/
 
-#print Ordinal.zeroToPgameRelabelling /-
+#print Ordinal.zeroToPGameRelabelling /-
 /-- `0.to_pgame` has the same moves as `0`. -/
-noncomputable def zeroToPgameRelabelling : toPGame 0 ≡r 0 :=
+noncomputable def zeroToPGameRelabelling : toPGame 0 ≡r 0 :=
   SetTheory.PGame.Relabelling.isEmpty _
-#align ordinal.zero_to_pgame_relabelling Ordinal.zeroToPgameRelabelling
+#align ordinal.zero_to_pgame_relabelling Ordinal.zeroToPGameRelabelling
 -/
 
-#print Ordinal.uniqueOneToPgameLeftMoves /-
-noncomputable instance uniqueOneToPgameLeftMoves : Unique (toPGame 1).LeftMoves :=
+#print Ordinal.uniqueOneToPGameLeftMoves /-
+noncomputable instance uniqueOneToPGameLeftMoves : Unique (toPGame 1).LeftMoves :=
   (Equiv.cast <| toPGame_leftMoves 1).unique
-#align ordinal.unique_one_to_pgame_left_moves Ordinal.uniqueOneToPgameLeftMoves
+#align ordinal.unique_one_to_pgame_left_moves Ordinal.uniqueOneToPGameLeftMoves
 -/
 
 #print Ordinal.one_toPGame_leftMoves_default_eq /-
@@ -178,7 +178,7 @@ theorem toPGame_lt {a b : Ordinal} (h : a < b) : a.toPGame < b.toPGame :=
 
 #print Ordinal.toPGame_nonneg /-
 theorem toPGame_nonneg (a : Ordinal) : 0 ≤ a.toPGame :=
-  zeroToPgameRelabelling.ge.trans <| toPGame_le <| Ordinal.zero_le a
+  zeroToPGameRelabelling.ge.trans <| toPGame_le <| Ordinal.zero_le a
 #align ordinal.to_pgame_nonneg Ordinal.toPGame_nonneg
 -/
 

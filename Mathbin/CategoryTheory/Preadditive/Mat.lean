@@ -306,7 +306,7 @@ variable (C)
 def embedding : C ⥤ Mat_ C where
   obj X := ⟨PUnit, fun _ => X⟩
   map X Y f _ _ := f
-  map_id' X := by ext ⟨⟩ ⟨⟩; simp
+  map_id'' X := by ext ⟨⟩ ⟨⟩; simp
   map_comp' X Y Z f g := by ext ⟨⟩ ⟨⟩; simp
 #align category_theory.Mat_.embedding CategoryTheory.Mat_.embedding
 -/
@@ -424,7 +424,7 @@ def lift (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ D
     where
   obj X := ⨁ fun i => F.obj (X.pt i)
   map X Y f := biproduct.matrix fun i j => F.map (f i j)
-  map_id' X := by
+  map_id'' X := by
     ext i j
     by_cases h : i = j
     · subst h; simp
@@ -625,7 +625,7 @@ def equivalenceSingleObjInverse : Mat_ (SingleObj Rᵐᵒᵖ) ⥤ Mat R
     where
   obj X := FintypeCat.of X.ι
   map X Y f i j := MulOpposite.unop (f i j)
-  map_id' X := by ext i j; simp [id_def, Mat_.id_def]; split_ifs <;> rfl
+  map_id'' X := by ext i j; simp [id_def, Mat_.id_def]; split_ifs <;> rfl
 #align category_theory.Mat.equivalence_single_obj_inverse CategoryTheory.Mat.equivalenceSingleObjInverse
 -/
 

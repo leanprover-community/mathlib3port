@@ -632,7 +632,7 @@ instance isScalarTower [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α 
     IsScalarTower α β (Set γ)
     where smul_assoc a b T := by simp only [← image_smul, image_image, smul_assoc]
 #align set.is_scalar_tower Set.isScalarTower
-#align set.vadd_assoc_class Set.vAddAssocClass
+#align set.vadd_assoc_class Set.vaddAssocClass
 -/
 
 #print Set.isScalarTower' /-
@@ -641,7 +641,7 @@ instance isScalarTower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α
     IsScalarTower α (Set β) (Set γ) :=
   ⟨fun _ _ _ => image2_image_left_comm <| smul_assoc _⟩
 #align set.is_scalar_tower' Set.isScalarTower'
-#align set.vadd_assoc_class' Set.vAddAssocClass'
+#align set.vadd_assoc_class' Set.vaddAssocClass'
 -/
 
 #print Set.isScalarTower'' /-
@@ -649,7 +649,7 @@ instance isScalarTower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α
 instance isScalarTower'' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Set α) (Set β) (Set γ) where smul_assoc T T' T'' := image2_assoc smul_assoc
 #align set.is_scalar_tower'' Set.isScalarTower''
-#align set.vadd_assoc_class'' Set.vAddAssocClass''
+#align set.vadd_assoc_class'' Set.vaddAssocClass''
 -/
 
 #print Set.isCentralScalar /-

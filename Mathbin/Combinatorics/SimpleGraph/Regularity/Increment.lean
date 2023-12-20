@@ -74,7 +74,7 @@ theorem card_increment (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hP
     (increment hP G ε).parts.card = stepBound P.parts.card :=
   by
   have hPα' : step_bound P.parts.card ≤ card α :=
-    (mul_le_mul_left' (pow_le_pow_of_le_left' (by norm_num) _) _).trans hPα
+    (mul_le_mul_left' (pow_le_pow_left' (by norm_num) _) _).trans hPα
   have hPpos : 0 < step_bound P.parts.card := step_bound_pos (nonempty_of_not_uniform hPG).card_pos
   rw [increment, card_bind]
   simp_rw [chunk, apply_dite Finpartition.parts, apply_dite card, sum_dite]

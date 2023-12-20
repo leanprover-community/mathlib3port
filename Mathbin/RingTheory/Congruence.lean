@@ -296,10 +296,10 @@ theorem coe_sub (x y : R) : (↑(x - y) : c.Quotient) = x - y :=
 #align ring_con.coe_sub RingCon.coe_sub
 -/
 
-#print RingCon.hasZsmul /-
-instance hasZsmul : SMul ℤ c.Quotient :=
+#print RingCon.hasZSMul /-
+instance hasZSMul : SMul ℤ c.Quotient :=
   c.toAddCon.Quotient.zsmul
-#align ring_con.has_zsmul RingCon.hasZsmul
+#align ring_con.has_zsmul RingCon.hasZSMul
 -/
 
 #print RingCon.coe_zsmul /-
@@ -315,10 +315,10 @@ section Nsmul
 
 variable [AddMonoid R] [Mul R] (c : RingCon R)
 
-#print RingCon.hasNsmul /-
-instance hasNsmul : SMul ℕ c.Quotient :=
+#print RingCon.hasNSMul /-
+instance hasNSMul : SMul ℕ c.Quotient :=
   c.toAddCon.Quotient.nSMul
-#align ring_con.has_nsmul RingCon.hasNsmul
+#align ring_con.has_nsmul RingCon.hasNSMul
 -/
 
 #print RingCon.coe_nsmul /-

@@ -279,7 +279,7 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
   have hx₀ : 0 < x := N.cast_nonneg.trans_lt hx
   rw [Set.mem_Ici, le_div_iff (pow_pos hx₀ _), ← le_div_iff' hC₀]
   calc
-    x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _
+    x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_left hx₀.le (Nat.le_ceil _) _
     _ ≤ NormedSpace.exp ⌈x⌉₊ / (NormedSpace.exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
     _ ≤ NormedSpace.exp (x + 1) / (NormedSpace.exp 1 * C) :=
       (div_le_div_of_le (mul_pos (exp_pos _) hC₀).le

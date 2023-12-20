@@ -44,19 +44,19 @@ variable (n : ℕ) {A R : Type _} [AddGroup A] [Ring R]
 
 namespace Int
 
-#print Int.quotientZmultiplesNatEquivZMod /-
+#print Int.quotientZMultiplesNatEquivZMod /-
 /-- `ℤ` modulo multiples of `n : ℕ` is `zmod n`. -/
-def quotientZmultiplesNatEquivZMod : ℤ ⧸ AddSubgroup.zmultiples (n : ℤ) ≃+ ZMod n :=
+def quotientZMultiplesNatEquivZMod : ℤ ⧸ AddSubgroup.zmultiples (n : ℤ) ≃+ ZMod n :=
   (quotientAddEquivOfEq (ZMod.ker_int_castAddHom _)).symm.trans <|
     quotientKerEquivOfRightInverse (Int.castAddHom (ZMod n)) coe int_cast_zmod_cast
-#align int.quotient_zmultiples_nat_equiv_zmod Int.quotientZmultiplesNatEquivZMod
+#align int.quotient_zmultiples_nat_equiv_zmod Int.quotientZMultiplesNatEquivZMod
 -/
 
-#print Int.quotientZmultiplesEquivZMod /-
+#print Int.quotientZMultiplesEquivZMod /-
 /-- `ℤ` modulo multiples of `a : ℤ` is `zmod a.nat_abs`. -/
-def quotientZmultiplesEquivZMod (a : ℤ) : ℤ ⧸ AddSubgroup.zmultiples a ≃+ ZMod a.natAbs :=
-  (quotientAddEquivOfEq (zmultiples_natAbs a)).symm.trans (quotientZmultiplesNatEquivZMod a.natAbs)
-#align int.quotient_zmultiples_equiv_zmod Int.quotientZmultiplesEquivZMod
+def quotientZMultiplesEquivZMod (a : ℤ) : ℤ ⧸ AddSubgroup.zmultiples a ≃+ ZMod a.natAbs :=
+  (quotientAddEquivOfEq (zmultiples_natAbs a)).symm.trans (quotientZMultiplesNatEquivZMod a.natAbs)
+#align int.quotient_zmultiples_equiv_zmod Int.quotientZMultiplesEquivZMod
 -/
 
 #print Int.quotientSpanNatEquivZMod /-
@@ -100,7 +100,7 @@ noncomputable def zmultiplesQuotientStabilizerEquiv :
               zsmul_vadd_eq_iff_minimal_period_dvd]
             exact (eq_zero_iff _).mp hn, fun q =>
             induction_on' q fun ⟨_, n, rfl⟩ => ⟨n, rfl⟩⟩).symm.trans
-    (Int.quotientZmultiplesNatEquivZMod (minimalPeriod ((· +ᵥ ·) a) b))
+    (Int.quotientZMultiplesNatEquivZMod (minimalPeriod ((· +ᵥ ·) a) b))
 #align add_action.zmultiples_quotient_stabilizer_equiv AddAction.zmultiplesQuotientStabilizerEquiv
 -/
 
@@ -138,52 +138,52 @@ theorem zpowersQuotientStabilizerEquiv_symm_apply (n : ZMod (minimalPeriod ((· 
 #align mul_action.zpowers_quotient_stabilizer_equiv_symm_apply MulAction.zpowersQuotientStabilizerEquiv_symm_apply
 -/
 
-#print MulAction.orbitZpowersEquiv /-
+#print MulAction.orbitZPowersEquiv /-
 /-- The orbit `(a ^ ℤ) • b` is a cycle of order `minimal_period ((•) a) b`. -/
-noncomputable def orbitZpowersEquiv : orbit (zpowers a) b ≃ ZMod (minimalPeriod ((· • ·) a) b) :=
+noncomputable def orbitZPowersEquiv : orbit (zpowers a) b ≃ ZMod (minimalPeriod ((· • ·) a) b) :=
   (orbitEquivQuotientStabilizer _ b).trans (zpowersQuotientStabilizerEquiv a b).toEquiv
-#align mul_action.orbit_zpowers_equiv MulAction.orbitZpowersEquiv
+#align mul_action.orbit_zpowers_equiv MulAction.orbitZPowersEquiv
 -/
 
-#print AddAction.orbitZmultiplesEquiv /-
+#print AddAction.orbitZMultiplesEquiv /-
 /-- The orbit `(ℤ • a) +ᵥ b` is a cycle of order `minimal_period ((+ᵥ) a) b`. -/
-noncomputable def AddAction.orbitZmultiplesEquiv {α β : Type _} [AddGroup α] (a : α) [AddAction α β]
+noncomputable def AddAction.orbitZMultiplesEquiv {α β : Type _} [AddGroup α] (a : α) [AddAction α β]
     (b : β) : AddAction.orbit (zmultiples a) b ≃ ZMod (minimalPeriod ((· +ᵥ ·) a) b) :=
   (AddAction.orbitEquivQuotientStabilizer (zmultiples a) b).trans
     (zmultiplesQuotientStabilizerEquiv a b).toEquiv
-#align add_action.orbit_zmultiples_equiv AddAction.orbitZmultiplesEquiv
+#align add_action.orbit_zmultiples_equiv AddAction.orbitZMultiplesEquiv
 -/
 
 attribute [to_additive orbit_zmultiples_equiv] orbit_zpowers_equiv
 
-#print MulAction.orbitZpowersEquiv_symm_apply /-
+#print MulAction.orbitZPowersEquiv_symm_apply /-
 @[to_additive orbit_zmultiples_equiv_symm_apply]
-theorem orbitZpowersEquiv_symm_apply (k : ZMod (minimalPeriod ((· • ·) a) b)) :
-    (orbitZpowersEquiv a b).symm k =
+theorem orbitZPowersEquiv_symm_apply (k : ZMod (minimalPeriod ((· • ·) a) b)) :
+    (orbitZPowersEquiv a b).symm k =
       (⟨a, mem_zpowers a⟩ : zpowers a) ^ (k : ℤ) • ⟨b, mem_orbit_self b⟩ :=
   rfl
-#align mul_action.orbit_zpowers_equiv_symm_apply MulAction.orbitZpowersEquiv_symm_apply
+#align mul_action.orbit_zpowers_equiv_symm_apply MulAction.orbitZPowersEquiv_symm_apply
 #align add_action.orbit_zmultiples_equiv_symm_apply AddAction.orbit_zmultiples_equiv_symm_apply
 -/
 
-#print MulAction.orbitZpowersEquiv_symm_apply' /-
-theorem orbitZpowersEquiv_symm_apply' (k : ℤ) :
-    (orbitZpowersEquiv a b).symm k = (⟨a, mem_zpowers a⟩ : zpowers a) ^ k • ⟨b, mem_orbit_self b⟩ :=
+#print MulAction.orbitZPowersEquiv_symm_apply' /-
+theorem orbitZPowersEquiv_symm_apply' (k : ℤ) :
+    (orbitZPowersEquiv a b).symm k = (⟨a, mem_zpowers a⟩ : zpowers a) ^ k • ⟨b, mem_orbit_self b⟩ :=
   by
   rw [orbit_zpowers_equiv_symm_apply, ZMod.coe_int_cast]
   exact Subtype.ext (zpow_smul_mod_minimal_period _ _ k)
-#align mul_action.orbit_zpowers_equiv_symm_apply' MulAction.orbitZpowersEquiv_symm_apply'
+#align mul_action.orbit_zpowers_equiv_symm_apply' MulAction.orbitZPowersEquiv_symm_apply'
 -/
 
-#print AddAction.orbitZmultiplesEquiv_symm_apply' /-
-theorem AddAction.orbitZmultiplesEquiv_symm_apply' {α β : Type _} [AddGroup α] (a : α)
+#print AddAction.orbitZMultiplesEquiv_symm_apply' /-
+theorem AddAction.orbitZMultiplesEquiv_symm_apply' {α β : Type _} [AddGroup α] (a : α)
     [AddAction α β] (b : β) (k : ℤ) :
-    (AddAction.orbitZmultiplesEquiv a b).symm k =
+    (AddAction.orbitZMultiplesEquiv a b).symm k =
       k • (⟨a, mem_zmultiples a⟩ : zmultiples a) +ᵥ ⟨b, AddAction.mem_orbit_self b⟩ :=
   by
   rw [AddAction.orbit_zmultiples_equiv_symm_apply, ZMod.coe_int_cast]
   exact Subtype.ext (zsmul_vadd_mod_minimal_period _ _ k)
-#align add_action.orbit_zmultiples_equiv_symm_apply' AddAction.orbitZmultiplesEquiv_symm_apply'
+#align add_action.orbit_zmultiples_equiv_symm_apply' AddAction.orbitZMultiplesEquiv_symm_apply'
 -/
 
 attribute [to_additive orbit_zmultiples_equiv_symm_apply'] orbit_zpowers_equiv_symm_apply'
@@ -222,7 +222,7 @@ variable {α : Type _} [Group α] (a : α)
 @[to_additive Nat.card_zmultiples "See also `add_order_eq_card_zmultiples`."]
 theorem Nat.card_zpowers : orderOf a = Nat.card (zpowers a) :=
   by
-  have := Nat.card_congr (MulAction.orbitZpowersEquiv a (1 : α))
+  have := Nat.card_congr (MulAction.orbitZPowersEquiv a (1 : α))
   rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this 
 #align order_eq_card_zpowers' Nat.card_zpowersₓ
 #align add_order_eq_card_zmultiples' Nat.card_zmultiplesₓ

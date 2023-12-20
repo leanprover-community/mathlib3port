@@ -66,7 +66,7 @@ theorem exists_summable_bound_exp_mul_sq {R : ℝ} (hR : 0 < R) :
   have h : y < 1 := exp_lt_one_iff.mpr (mul_neg_of_neg_of_pos (neg_lt_zero.mpr pi_pos) hR)
   refine' ⟨fun n => y ^ n.natAbs, summable_int_of_summable_nat _ _, fun τ hτ n => _⟩; pick_goal 3
   · refine' (norm_exp_mul_sq_le (hR.trans_le hτ) n).trans _
-    refine' pow_le_pow_of_le_left (exp_pos _).le (real.exp_le_exp.mpr _) _
+    refine' pow_le_pow_left (exp_pos _).le (real.exp_le_exp.mpr _) _
     rwa [mul_le_mul_left_of_neg (neg_lt_zero.mpr pi_pos)]
   all_goals
     simpa only [Int.natAbs_neg, Int.natAbs_ofNat] using

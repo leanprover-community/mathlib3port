@@ -54,7 +54,7 @@ theorem le_stepBound : id ≤ stepBound := fun n => Nat.le_mul_of_pos_right <| p
 
 #print SzemerediRegularity.stepBound_mono /-
 theorem stepBound_mono : Monotone stepBound := fun a b h =>
-  Nat.mul_le_mul h <| Nat.pow_le_pow_of_le_right (by norm_num) h
+  Nat.mul_le_mul h <| Nat.pow_le_pow_right (by norm_num) h
 #align szemeredi_regularity.step_bound_mono SzemerediRegularity.stepBound_mono
 -/
 
@@ -86,7 +86,7 @@ private theorem eps_pos {ε : ℝ} {n : ℕ} (h : 100 ≤ 4 ^ n * ε ^ 5) : 0 < 
   pow_bit1_pos_iff.1 <| pos_of_mul_pos_right (h.trans_lt' <| by norm_num) <| by positivity
 
 private theorem m_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : 0 < m :=
-  Nat.div_pos ((Nat.mul_le_mul_left _ <| Nat.pow_le_pow_of_le_left (by norm_num) _).trans hPα) <|
+  Nat.div_pos ((Nat.mul_le_mul_left _ <| Nat.pow_le_pow_left (by norm_num) _).trans hPα) <|
     stepBound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.

@@ -189,7 +189,7 @@ theorem log_eq_iff {b m n : ℕ} (h : m ≠ 0 ∨ 1 < b ∧ n ≠ 0) :
     rcases hbn with (hb | rfl)
     ·
       simpa only [log_of_left_le_one hb, hm.symm, false_iff_iff, not_and, not_lt] using
-        le_trans (pow_le_pow_of_le_one' hb m.le_succ)
+        le_trans (pow_le_pow_right_of_le_one' hb m.le_succ)
     ·
       simpa only [log_zero_right, hm.symm, false_iff_iff, not_and, not_lt, le_zero_iff,
         pow_succ] using mul_eq_zero_of_right _
@@ -264,7 +264,7 @@ theorem log_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b n ≤ lo
   rcases eq_or_ne n 0 with (rfl | hn); · rw [log_zero_right, log_zero_right]
   apply le_log_of_pow_le hc
   calc
-    c ^ log b n ≤ b ^ log b n := pow_le_pow_of_le_left' hb _
+    c ^ log b n ≤ b ^ log b n := pow_le_pow_left' hb _
     _ ≤ n := pow_log_le_self _ hn
 #align nat.log_anti_left Nat.log_anti_left
 -/
@@ -454,7 +454,7 @@ theorem clog_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ 
   rw [← le_pow_iff_clog_le (lt_of_lt_of_le hc hb)]
   calc
     n ≤ c ^ clog c n := le_pow_clog hc _
-    _ ≤ b ^ clog c n := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _
+    _ ≤ b ^ clog c n := pow_le_pow_left (zero_lt_one.trans hc).le hb _
 #align nat.clog_anti_left Nat.clog_anti_left
 -/
 

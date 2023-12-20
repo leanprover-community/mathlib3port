@@ -326,7 +326,7 @@ theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u :
         (suffices _ from mul_le_mul_of_nonneg_right this (zero_le M)
         calc
           ∑ i, ‖v.equiv_fun e i‖₊ ≤ Fintype.card ι • ‖φ e‖₊ := Pi.sum_nnnorm_apply_le_nnnorm _
-          _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) := nsmul_le_nsmul_of_le_right (φ.le_op_nnnorm e) _)
+          _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) := nsmul_le_nsmul_right (φ.le_op_nnnorm e) _)
       _ = Fintype.card ι • ‖φ‖₊ * M * ‖e‖₊ := by simp only [smul_mul_assoc, mul_right_comm]
 #align basis.op_nnnorm_le Basis.op_nnnorm_le
 -/

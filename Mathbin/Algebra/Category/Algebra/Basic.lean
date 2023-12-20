@@ -150,7 +150,7 @@ def free : Type u ⥤ AlgebraCat.{u} R
       isRing := Algebra.semiringToRing R }
   map S T f := FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
   -- obviously can fill the next two goals, but it is slow
-  map_id' := by intro X; ext1; simp only [FreeAlgebra.ι_comp_lift]; rfl
+  map_id'' := by intro X; ext1; simp only [FreeAlgebra.ι_comp_lift]; rfl
   map_comp' := by
     intros; ext1; simp only [FreeAlgebra.ι_comp_lift]; ext1
     simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_apply,

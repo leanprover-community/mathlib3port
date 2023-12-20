@@ -421,8 +421,8 @@ open Preadditive
 
 variable [Preadditive A] {P Q : Sheaf J A}
 
-#print CategoryTheory.sheafHomHasZsmul /-
-instance sheafHomHasZsmul : SMul ℤ (P ⟶ Q)
+#print CategoryTheory.sheafHomHasZSMul /-
+instance sheafHomHasZSMul : SMul ℤ (P ⟶ Q)
     where smul n f :=
     Sheaf.Hom.mk
       { app := fun U => n • f.1.app U
@@ -436,15 +436,15 @@ instance sheafHomHasZsmul : SMul ℤ (P ⟶ Q)
           ·
             simpa only [sub_smul, one_zsmul, comp_sub, nat_trans.naturality, sub_comp,
               sub_left_inj] using ih }
-#align category_theory.Sheaf_hom_has_zsmul CategoryTheory.sheafHomHasZsmul
+#align category_theory.Sheaf_hom_has_zsmul CategoryTheory.sheafHomHasZSMul
 -/
 
 instance : Sub (P ⟶ Q) where sub f g := Sheaf.Hom.mk <| f.1 - g.1
 
 instance : Neg (P ⟶ Q) where neg f := Sheaf.Hom.mk <| -f.1
 
-#print CategoryTheory.sheafHomHasNsmul /-
-instance sheafHomHasNsmul : SMul ℕ (P ⟶ Q)
+#print CategoryTheory.sheafHomHasNSMul /-
+instance sheafHomHasNSMul : SMul ℕ (P ⟶ Q)
     where smul n f :=
     Sheaf.Hom.mk
       { app := fun U => n • f.1.app U
@@ -454,7 +454,7 @@ instance sheafHomHasNsmul : SMul ℕ (P ⟶ Q)
           ·
             simp only [Nat.succ_eq_add_one, add_smul, ih, one_nsmul, comp_add, nat_trans.naturality,
               add_comp] }
-#align category_theory.Sheaf_hom_has_nsmul CategoryTheory.sheafHomHasNsmul
+#align category_theory.Sheaf_hom_has_nsmul CategoryTheory.sheafHomHasNSMul
 -/
 
 instance : Zero (P ⟶ Q) where zero := Sheaf.Hom.mk 0

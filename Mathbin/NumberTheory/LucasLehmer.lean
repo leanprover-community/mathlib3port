@@ -57,7 +57,7 @@ theorem mersenne_pos {p : ℕ} (h : 0 < p) : 0 < mersenne p :=
   dsimp [mersenne]
   calc
     0 < 2 ^ 1 - 1 := by norm_num
-    _ ≤ 2 ^ p - 1 := Nat.pred_le_pred (Nat.pow_le_pow_of_le_right (Nat.succ_pos 1) h)
+    _ ≤ 2 ^ p - 1 := Nat.pred_le_pred (Nat.pow_le_pow_right (Nat.succ_pos 1) h)
 #align mersenne_pos mersenne_pos
 -/
 

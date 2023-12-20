@@ -958,24 +958,24 @@ attribute [local reducible] MonoidAlgebra
 
 variable (k)
 
-#print MonoidAlgebra.GroupSmul.linearMap /-
+#print MonoidAlgebra.GroupSMul.linearMap /-
 /-- When `V` is a `k[G]`-module, multiplication by a group element `g` is a `k`-linear map. -/
-def GroupSmul.linearMap [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMonoid V] [Module k V]
+def GroupSMul.linearMap [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMonoid V] [Module k V]
     [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlgebra k G) V] (g : G) : V →ₗ[k] V
     where
   toFun v := (single g (1 : k) • v : V)
   map_add' x y := smul_add (single g (1 : k)) x y
   map_smul' c x := smul_algebra_smul_comm _ _ _
-#align monoid_algebra.group_smul.linear_map MonoidAlgebra.GroupSmul.linearMap
+#align monoid_algebra.group_smul.linear_map MonoidAlgebra.GroupSMul.linearMap
 -/
 
-#print MonoidAlgebra.GroupSmul.linearMap_apply /-
+#print MonoidAlgebra.GroupSMul.linearMap_apply /-
 @[simp]
-theorem GroupSmul.linearMap_apply [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMonoid V]
+theorem GroupSMul.linearMap_apply [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMonoid V]
     [Module k V] [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlgebra k G) V] (g : G)
-    (v : V) : (GroupSmul.linearMap k V g) v = (single g (1 : k) • v : V) :=
+    (v : V) : (GroupSMul.linearMap k V g) v = (single g (1 : k) • v : V) :=
   rfl
-#align monoid_algebra.group_smul.linear_map_apply MonoidAlgebra.GroupSmul.linearMap_apply
+#align monoid_algebra.group_smul.linear_map_apply MonoidAlgebra.GroupSMul.linearMap_apply
 -/
 
 section
@@ -1128,10 +1128,10 @@ variable {V : Type _} [AddCommMonoid V]
 
 variable [Module k V] [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlgebra k G) V]
 
-#print MonoidAlgebra.submoduleOfSmulMem /-
+#print MonoidAlgebra.submoduleOfSMulMem /-
 /-- A submodule over `k` which is stable under scalar multiplication by elements of `G` is a
 submodule over `monoid_algebra k G`  -/
-def submoduleOfSmulMem (W : Submodule k V) (h : ∀ (g : G) (v : V), v ∈ W → of k G g • v ∈ W) :
+def submoduleOfSMulMem (W : Submodule k V) (h : ∀ (g : G) (v : V), v ∈ W → of k G g • v ∈ W) :
     Submodule (MonoidAlgebra k G) V where
   carrier := W
   zero_mem' := W.zero_mem'
@@ -1141,7 +1141,7 @@ def submoduleOfSmulMem (W : Submodule k V) (h : ∀ (g : G) (v : V), v ∈ W →
     rw [← Finsupp.sum_single f, Finsupp.sum, Finset.sum_smul]
     simp_rw [← smul_of, smul_assoc]
     exact Submodule.sum_smul_mem W _ fun g _ => h g v hv
-#align monoid_algebra.submodule_of_smul_mem MonoidAlgebra.submoduleOfSmulMem
+#align monoid_algebra.submodule_of_smul_mem MonoidAlgebra.submoduleOfSMulMem
 -/
 
 end Submodule

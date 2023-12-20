@@ -1080,10 +1080,10 @@ theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
 #align lie_module_hom.neg_apply LieModuleHom.neg_apply
 -/
 
-#print LieModuleHom.hasNsmul /-
-instance hasNsmul : SMul ℕ (M →ₗ⁅R,L⁆ N)
+#print LieModuleHom.hasNSMul /-
+instance hasNSMul : SMul ℕ (M →ₗ⁅R,L⁆ N)
     where smul n f := { n • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
-#align lie_module_hom.has_nsmul LieModuleHom.hasNsmul
+#align lie_module_hom.has_nsmul LieModuleHom.hasNSMul
 -/
 
 #print LieModuleHom.coe_nsmul /-
@@ -1099,10 +1099,10 @@ theorem nsmul_apply (n : ℕ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (n • f) m = 
 #align lie_module_hom.nsmul_apply LieModuleHom.nsmul_apply
 -/
 
-#print LieModuleHom.hasZsmul /-
-instance hasZsmul : SMul ℤ (M →ₗ⁅R,L⁆ N)
+#print LieModuleHom.hasZSMul /-
+instance hasZSMul : SMul ℤ (M →ₗ⁅R,L⁆ N)
     where smul z f := { z • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
-#align lie_module_hom.has_zsmul LieModuleHom.hasZsmul
+#align lie_module_hom.has_zsmul LieModuleHom.hasZSMul
 -/
 
 #print LieModuleHom.coe_zsmul /-
