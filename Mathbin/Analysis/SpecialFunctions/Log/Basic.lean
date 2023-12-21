@@ -182,10 +182,10 @@ theorem log_inv (x : ℝ) : log x⁻¹ = -log x :=
 #align real.log_inv Real.log_inv
 -/
 
-#print Real.log_le_log /-
-theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : log x ≤ log y ↔ x ≤ y := by
+#print Real.log_le_log_iff /-
+theorem log_le_log_iff (h : 0 < x) (h₁ : 0 < y) : log x ≤ log y ↔ x ≤ y := by
   rw [← exp_le_exp, exp_log h, exp_log h₁]
-#align real.log_le_log Real.log_le_log
+#align real.log_le_log Real.log_le_log_iff
 -/
 
 #print Real.log_lt_log /-

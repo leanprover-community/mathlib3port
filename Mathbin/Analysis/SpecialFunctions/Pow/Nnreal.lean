@@ -364,16 +364,16 @@ theorem rpow_one_div_eq_iff {x y : ℝ≥0} {z : ℝ} (hz : z ≠ 0) : x ^ (1 / 
 #align nnreal.rpow_one_div_eq_iff NNReal.rpow_one_div_eq_iff
 -/
 
-#print NNReal.pow_nat_rpow_nat_inv /-
-theorem pow_nat_rpow_nat_inv (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
-  rw [← NNReal.coe_eq, coe_rpow, NNReal.coe_pow]; exact Real.pow_nat_rpow_nat_inv x.2 hn
-#align nnreal.pow_nat_rpow_nat_inv NNReal.pow_nat_rpow_nat_inv
+#print NNReal.pow_rpow_inv_natCast /-
+theorem pow_rpow_inv_natCast (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
+  rw [← NNReal.coe_eq, coe_rpow, NNReal.coe_pow]; exact Real.pow_rpow_inv_natCast x.2 hn
+#align nnreal.pow_nat_rpow_nat_inv NNReal.pow_rpow_inv_natCast
 -/
 
-#print NNReal.rpow_nat_inv_pow_nat /-
-theorem rpow_nat_inv_pow_nat (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
-  rw [← NNReal.coe_eq, NNReal.coe_pow, coe_rpow]; exact Real.rpow_nat_inv_pow_nat x.2 hn
-#align nnreal.rpow_nat_inv_pow_nat NNReal.rpow_nat_inv_pow_nat
+#print NNReal.rpow_inv_natCast_pow /-
+theorem rpow_inv_natCast_pow (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
+  rw [← NNReal.coe_eq, NNReal.coe_pow, coe_rpow]; exact Real.rpow_inv_natCast_pow x.2 hn
+#align nnreal.rpow_nat_inv_pow_nat NNReal.rpow_inv_natCast_pow
 -/
 
 #print Real.toNNReal_rpow_of_nonneg /-

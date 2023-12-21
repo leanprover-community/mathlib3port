@@ -760,7 +760,7 @@ theorem rpow_left_injOn {x : ℝ} (hx : x ≠ 0) : InjOn (fun y : ℝ => y ^ x) 
 
 #print Real.le_rpow_iff_log_le /-
 theorem le_rpow_iff_log_le (hx : 0 < x) (hy : 0 < y) : x ≤ y ^ z ↔ Real.log x ≤ z * Real.log y := by
-  rw [← Real.log_le_log hx (Real.rpow_pos_of_pos hy z), Real.log_rpow hy]
+  rw [← Real.log_le_log_iff hx (Real.rpow_pos_of_pos hy z), Real.log_rpow hy]
 #align real.le_rpow_iff_log_le Real.le_rpow_iff_log_le
 -/
 
@@ -804,20 +804,20 @@ theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0
 #align real.abs_log_mul_self_rpow_lt Real.abs_log_mul_self_rpow_lt
 -/
 
-#print Real.pow_nat_rpow_nat_inv /-
-theorem pow_nat_rpow_nat_inv {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x :=
+#print Real.pow_rpow_inv_natCast /-
+theorem pow_rpow_inv_natCast {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x :=
   by
   have hn0 : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hn
   rw [← rpow_nat_cast, ← rpow_mul hx, mul_inv_cancel hn0, rpow_one]
-#align real.pow_nat_rpow_nat_inv Real.pow_nat_rpow_nat_inv
+#align real.pow_nat_rpow_nat_inv Real.pow_rpow_inv_natCast
 -/
 
-#print Real.rpow_nat_inv_pow_nat /-
-theorem rpow_nat_inv_pow_nat {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x :=
+#print Real.rpow_inv_natCast_pow /-
+theorem rpow_inv_natCast_pow {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x :=
   by
   have hn0 : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hn
   rw [← rpow_nat_cast, ← rpow_mul hx, inv_mul_cancel hn0, rpow_one]
-#align real.rpow_nat_inv_pow_nat Real.rpow_nat_inv_pow_nat
+#align real.rpow_nat_inv_pow_nat Real.rpow_inv_natCast_pow
 -/
 
 end Real
