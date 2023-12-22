@@ -132,13 +132,13 @@ theorem intervalIntegrable_cpow {r : ℂ} (h : 0 ≤ r.re ∨ (0 : ℝ) ∉ [a, 
   rcases le_or_lt 0 c with (hc | hc)
   · -- case `0 ≤ c`: integrand is identically 1
     have : IntervalIntegrable (fun x => 1 : ℝ → ℝ) μ 0 c := intervalIntegrable_const
-    rw [intervalIntegrable_iff_integrable_Ioc_of_le hc] at this ⊢
+    rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hc] at this ⊢
     refine' integrable_on.congr_fun this (fun x hx => _) measurableSet_Ioc
     dsimp only
     rw [Complex.norm_eq_abs, Complex.abs_cpow_eq_rpow_re_of_pos hx.1, ← h', rpow_zero]
   · -- case `c < 0`: integrand is identically constant, *except* at `x = 0` if `r ≠ 0`.
     apply IntervalIntegrable.symm
-    rw [intervalIntegrable_iff_integrable_Ioc_of_le hc.le]
+    rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hc.le]
     have : Ioc c 0 = Ioo c 0 ∪ {(0 : ℝ)} :=
       by
       rw [← Ioo_union_Icc_eq_Ioc hc (le_refl 0), ← Icc_def]

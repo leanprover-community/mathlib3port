@@ -97,11 +97,11 @@ theorem IntervalIntegrable.def (h : IntervalIntegrable f μ a b) : IntegrableOn 
 #align interval_integrable.def IntervalIntegrable.def
 -/
 
-#print intervalIntegrable_iff_integrable_Ioc_of_le /-
-theorem intervalIntegrable_iff_integrable_Ioc_of_le (hab : a ≤ b) :
+#print intervalIntegrable_iff_integrableOn_Ioc_of_le /-
+theorem intervalIntegrable_iff_integrableOn_Ioc_of_le (hab : a ≤ b) :
     IntervalIntegrable f μ a b ↔ IntegrableOn f (Ioc a b) μ := by
   rw [intervalIntegrable_iff, uIoc_of_le hab]
-#align interval_integrable_iff_integrable_Ioc_of_le intervalIntegrable_iff_integrable_Ioc_of_le
+#align interval_integrable_iff_integrable_Ioc_of_le intervalIntegrable_iff_integrableOn_Ioc_of_le
 -/
 
 #print intervalIntegrable_iff' /-
@@ -111,11 +111,11 @@ theorem intervalIntegrable_iff' [NoAtoms μ] :
 #align interval_integrable_iff' intervalIntegrable_iff'
 -/
 
-#print intervalIntegrable_iff_integrable_Icc_of_le /-
-theorem intervalIntegrable_iff_integrable_Icc_of_le {f : ℝ → E} {a b : ℝ} (hab : a ≤ b)
+#print intervalIntegrable_iff_integrableOn_Icc_of_le /-
+theorem intervalIntegrable_iff_integrableOn_Icc_of_le {f : ℝ → E} {a b : ℝ} (hab : a ≤ b)
     {μ : Measure ℝ} [NoAtoms μ] : IntervalIntegrable f μ a b ↔ IntegrableOn f (Icc a b) μ := by
-  rw [intervalIntegrable_iff_integrable_Ioc_of_le hab, integrableOn_Icc_iff_integrableOn_Ioc]
-#align interval_integrable_iff_integrable_Icc_of_le intervalIntegrable_iff_integrable_Icc_of_le
+  rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hab, integrableOn_Icc_iff_integrableOn_Ioc]
+#align interval_integrable_iff_integrable_Icc_of_le intervalIntegrable_iff_integrableOn_Icc_of_le
 -/
 
 #print MeasureTheory.Integrable.intervalIntegrable /-
@@ -1505,7 +1505,7 @@ theorem continuousOn_primitive [NoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ
     rw [continuousOn_congr this]
     intro x₀ hx₀
     refine' continuous_within_at_primitive (measure_singleton x₀) _
-    simp only [intervalIntegrable_iff_integrable_Ioc_of_le, min_eq_left, max_eq_right, h]
+    simp only [intervalIntegrable_iff_integrableOn_Ioc_of_le, min_eq_left, max_eq_right, h]
     exact h_int.mono Ioc_subset_Icc_self le_rfl
   · rw [Icc_eq_empty h]
     exact continuousOn_empty _

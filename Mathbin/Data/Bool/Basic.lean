@@ -72,18 +72,18 @@ theorem of_decide_iff {p : Prop} [Decidable p] : decide p ↔ p :=
 #align bool.of_to_bool_iff Bool.of_decide_iff
 -/
 
-#print Bool.true_eq_decide_iff /-
+#print true_eq_decide_iff /-
 @[simp]
 theorem true_eq_decide_iff {p : Prop} [Decidable p] : true = decide p ↔ p :=
   eq_comm.trans of_decide_iff
-#align bool.tt_eq_to_bool_iff Bool.true_eq_decide_iff
+#align bool.tt_eq_to_bool_iff true_eq_decide_iff
 -/
 
-#print Bool.false_eq_decide_iff /-
+#print false_eq_decide_iff /-
 @[simp]
 theorem false_eq_decide_iff {p : Prop} [Decidable p] : false = decide p ↔ ¬p :=
   eq_comm.trans (Bool.decide_false_iff _)
-#align bool.ff_eq_to_bool_iff Bool.false_eq_decide_iff
+#align bool.ff_eq_to_bool_iff false_eq_decide_iff
 -/
 
 #print Bool.decide_not /-

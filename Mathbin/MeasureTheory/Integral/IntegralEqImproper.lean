@@ -830,7 +830,7 @@ theorem integral_Ioi_of_hasDerivAt_of_tendsto (hcont : ContinuousOn f (Ici a))
   apply
     intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le h'x (hcont.mono Icc_subset_Ici_self)
       fun y hy => hderiv y hy.1
-  rw [intervalIntegrable_iff_integrable_Ioc_of_le h'x]
+  rw [intervalIntegrable_iff_integrableOn_Ioc_of_le h'x]
   exact f'int.mono (fun y hy => hy.1) le_rfl
 #align measure_theory.integral_Ioi_of_has_deriv_at_of_tendsto MeasureTheory.integral_Ioi_of_hasDerivAt_of_tendsto
 -/
@@ -872,7 +872,7 @@ theorem integrableOn_Ioi_deriv_of_nonneg (hcont : ContinuousOn g (Ici a))
       apply
         intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le h'x (hcont.mono Icc_subset_Ici_self)
           fun y hy => hderiv y hy.1
-      rw [intervalIntegrable_iff_integrable_Ioc_of_le h'x]
+      rw [intervalIntegrable_iff_integrableOn_Ioc_of_le h'x]
       exact
         intervalIntegral.integrableOn_deriv_of_nonneg (hcont.mono Icc_subset_Ici_self)
           (fun y hy => hderiv y hy.1) fun y hy => g'pos y hy.1

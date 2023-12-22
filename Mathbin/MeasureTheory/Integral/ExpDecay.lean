@@ -55,7 +55,7 @@ theorem integrable_of_isBigO_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b)
   -- show integrable on `(a, v]` from continuity
   have int_left : integrable_on f (Ioc a v) :=
     by
-    rw [← intervalIntegrable_iff_integrable_Ioc_of_le (le_max_left a r)]
+    rw [← intervalIntegrable_iff_integrableOn_Ioc_of_le (le_max_left a r)]
     have u : Icc a v ⊆ Ici a := Icc_subset_Ici_self
     exact (h1.mono u).intervalIntegrable_of_Icc (le_max_left a r)
   suffices integrable_on f (Ioi v)

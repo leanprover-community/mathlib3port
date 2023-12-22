@@ -1017,8 +1017,8 @@ theorem iIndepFun.indepFun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
 #align probability_theory.Indep_fun.indep_fun_finset ProbabilityTheory.iIndepFun.indepFun_finset
 -/
 
-#print ProbabilityTheory.iIndepFun.indepFun_prod /-
-theorem iIndepFun.indepFun_prod [IsProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
+#print ProbabilityTheory.iIndepFun.indepFun_prod_mk /-
+theorem iIndepFun.indepFun_prod_mk [IsProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
     {m : ∀ i, MeasurableSpace (β i)} {f : ∀ i, Ω → β i} (hf_Indep : iIndepFun m f μ)
     (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
     IndepFun (fun a => (f i a, f j a)) (f k) μ := by
@@ -1053,22 +1053,22 @@ theorem iIndepFun.indepFun_prod [IsProbabilityMeasure μ] {ι : Type _} {β : ι
   rw [Finset.disjoint_singleton_right]
   simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
   exact ⟨hik.symm, hjk.symm⟩
-#align probability_theory.Indep_fun.indep_fun_prod ProbabilityTheory.iIndepFun.indepFun_prod
+#align probability_theory.Indep_fun.indep_fun_prod ProbabilityTheory.iIndepFun.indepFun_prod_mk
 -/
 
-#print ProbabilityTheory.iIndepFun.mul /-
+#print ProbabilityTheory.iIndepFun.indepFun_mul_left /-
 @[to_additive]
-theorem iIndepFun.mul [IsProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : MeasurableSpace β}
-    [Mul β] [MeasurableMul₂ β] {f : ι → Ω → β} (hf_Indep : iIndepFun (fun _ => m) f μ)
-    (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
-    IndepFun (f i * f j) (f k) μ :=
+theorem iIndepFun.indepFun_mul_left [IsProbabilityMeasure μ] {ι : Type _} {β : Type _}
+    {m : MeasurableSpace β} [Mul β] [MeasurableMul₂ β] {f : ι → Ω → β}
+    (hf_Indep : iIndepFun (fun _ => m) f μ) (hf_meas : ∀ i, Measurable (f i)) (i j k : ι)
+    (hik : i ≠ k) (hjk : j ≠ k) : IndepFun (f i * f j) (f k) μ :=
   by
   have : indep_fun (fun ω => (f i ω, f j ω)) (f k) μ :=
     hf_Indep.indep_fun_prod hf_meas i j k hik hjk
   change indep_fun ((fun p : β × β => p.fst * p.snd) ∘ fun ω => (f i ω, f j ω)) (id ∘ f k) μ
   exact indep_fun.comp this (measurable_fst.mul measurable_snd) measurable_id
-#align probability_theory.Indep_fun.mul ProbabilityTheory.iIndepFun.mul
-#align probability_theory.Indep_fun.add ProbabilityTheory.iIndepFun.add
+#align probability_theory.Indep_fun.mul ProbabilityTheory.iIndepFun.indepFun_mul_left
+#align probability_theory.Indep_fun.add ProbabilityTheory.iIndepFun.indepFun_add_left
 -/
 
 #print ProbabilityTheory.iIndepFun.indepFun_finset_prod_of_not_mem /-

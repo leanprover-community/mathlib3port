@@ -83,7 +83,7 @@ theorem GammaIntegral_convergent {s : ℝ} (h : 0 < s) :
   constructor
   · rw [← integrableOn_Icc_iff_integrableOn_Ioc]
     refine' integrable_on.continuous_on_mul continuous_on_id.neg.exp _ is_compact_Icc
-    refine' (intervalIntegrable_iff_integrable_Icc_of_le zero_le_one).mp _
+    refine' (intervalIntegrable_iff_integrableOn_Icc_of_le zero_le_one).mp _
     exact interval_integrable_rpow' (by linarith)
   · refine' integrable_of_isBigO_exp_neg one_half_pos _ (Gamma_integrand_is_o _).IsBigO
     refine' continuous_on_id.neg.exp.mul (continuous_on_id.rpow_const _)
@@ -192,7 +192,7 @@ theorem tendsto_partialGamma {s : ℂ} (hs : 0 < s.re) :
 private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 < s.re) (hX : 0 ≤ X) :
     IntervalIntegrable (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) volume 0 X :=
   by
-  rw [intervalIntegrable_iff_integrable_Ioc_of_le hX]
+  rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hX]
   exact integrable_on.mono_set (Gamma_integral_convergent hs) Ioc_subset_Ioi_self
 
 private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
@@ -209,7 +209,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
     (fun x => (-x).exp * (s * x ^ (s - 1)) : ℝ → ℂ) =
       (fun x => s * ((-x).exp * x ^ (s - 1)) : ℝ → ℂ) :=
     by ext1; ring
-  rw [this, intervalIntegrable_iff_integrable_Ioc_of_le hY]
+  rw [this, intervalIntegrable_iff_integrableOn_Ioc_of_le hY]
   constructor
   · refine' (continuous_on_const.mul _).AEStronglyMeasurable measurableSet_Ioc
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul

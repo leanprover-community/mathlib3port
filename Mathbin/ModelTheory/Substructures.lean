@@ -328,7 +328,7 @@ open Set
 /-- A substructure `S` includes `closure L s` if and only if it includes `s`. -/
 @[simp]
 theorem closure_le : closure L s ≤ S ↔ s ⊆ S :=
-  (closure L).closure_le_closed_iff_le s S.closed
+  (closure L).closure_le_iff s S.closed
 #align first_order.language.substructure.closure_le FirstOrder.Language.Substructure.closure_le
 -/
 

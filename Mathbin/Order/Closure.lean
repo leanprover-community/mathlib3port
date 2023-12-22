@@ -130,35 +130,31 @@ def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f
 #align closure_operator.mk₂ ClosureOperator.mk₂
 -/
 
-#print ClosureOperator.mk₃ /-
+#print ClosureOperator.ofPred /-
 /-- Expanded out version of `mk₂`. `p` implies being closed. This constructor should be used when
 you already know a sufficient condition for being closed and using `mem_mk₃_closed` will avoid you
 the (slight) hassle of having to prove it both inside and outside the constructor. -/
 @[simps]
-def mk₃ (f : α → α) (p : α → Prop) (hf : ∀ x, x ≤ f x) (hfp : ∀ x, p (f x))
+def ofPred (f : α → α) (p : α → Prop) (hf : ∀ x, x ≤ f x) (hfp : ∀ x, p (f x))
     (hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y) : ClosureOperator α :=
   mk₂ f hf fun x y hxy => hmin hxy (hfp y)
-#align closure_operator.mk₃ ClosureOperator.mk₃
+#align closure_operator.mk₃ ClosureOperator.ofPred
 -/
 
-#print ClosureOperator.closure_mem_mk₃ /-
 /-- This lemma shows that the image of `x` of a closure operator built from the `mk₃` constructor
 respects `p`, the property that was fed into it. -/
-theorem closure_mem_mk₃ {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
-    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} (x : α) : p (mk₃ f p hf hfp hmin x) :=
+theorem closure_mem_ofPred {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
+    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} (x : α) : p (ofPred f p hf hfp hmin x) :=
   hfp x
-#align closure_operator.closure_mem_mk₃ ClosureOperator.closure_mem_mk₃
--/
+#align closure_operator.closure_mem_mk₃ ClosureOperator.closure_mem_ofPred
 
-#print ClosureOperator.closure_le_mk₃_iff /-
 /-- Analogue of `closure_le_closed_iff_le` but with the `p` that was fed into the `mk₃` constructor.
 -/
-theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
+theorem closure_le_ofPred_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
     {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x y : α} (hxy : x ≤ y) (hy : p y) :
-    mk₃ f p hf hfp hmin x ≤ y :=
+    ofPred f p hf hfp hmin x ≤ y :=
   hmin hxy hy
-#align closure_operator.closure_le_mk₃_iff ClosureOperator.closure_le_mk₃_iff
--/
+#align closure_operator.closure_le_mk₃_iff ClosureOperator.closure_le_ofPred_iff
 
 #print ClosureOperator.monotone /-
 @[mono]
@@ -188,74 +184,77 @@ theorem le_closure_iff (x y : α) : x ≤ c y ↔ c x ≤ c y :=
 #align closure_operator.le_closure_iff ClosureOperator.le_closure_iff
 -/
 
-#print ClosureOperator.closed /-
+#print ClosureOperator.IsClosed /-
 /-- An element `x` is closed for the closure operator `c` if it is a fixed point for it. -/
-def closed : Set α := fun x => c x = x
-#align closure_operator.closed ClosureOperator.closed
+def IsClosed : Set α := fun x => c x = x
+#align closure_operator.closed ClosureOperator.IsClosed
 -/
 
-#print ClosureOperator.mem_closed_iff /-
-theorem mem_closed_iff (x : α) : x ∈ c.closed ↔ c x = x :=
+#print ClosureOperator.isClosed_iff /-
+theorem isClosed_iff (x : α) : x ∈ c.closed ↔ c x = x :=
   Iff.rfl
-#align closure_operator.mem_closed_iff ClosureOperator.mem_closed_iff
+#align closure_operator.mem_closed_iff ClosureOperator.isClosed_iff
 -/
 
-#print ClosureOperator.mem_closed_iff_closure_le /-
-theorem mem_closed_iff_closure_le (x : α) : x ∈ c.closed ↔ c x ≤ x :=
+#print ClosureOperator.isClosed_iff_closure_le /-
+theorem isClosed_iff_closure_le (x : α) : x ∈ c.closed ↔ c x ≤ x :=
   ⟨le_of_eq, fun h => h.antisymm (c.le_closure x)⟩
-#align closure_operator.mem_closed_iff_closure_le ClosureOperator.mem_closed_iff_closure_le
+#align closure_operator.mem_closed_iff_closure_le ClosureOperator.isClosed_iff_closure_le
 -/
 
-#print ClosureOperator.closure_eq_self_of_mem_closed /-
-theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.closed) : c x = x :=
+#print ClosureOperator.IsClosed.closure_eq /-
+theorem ClosureOperator.IsClosed.closure_eq {x : α} (h : x ∈ c.closed) : c x = x :=
   h
-#align closure_operator.closure_eq_self_of_mem_closed ClosureOperator.closure_eq_self_of_mem_closed
+#align closure_operator.closure_eq_self_of_mem_closed ClosureOperator.IsClosed.closure_eq
 -/
 
-#print ClosureOperator.closure_is_closed /-
+#print ClosureOperator.isClosed_closure /-
 @[simp]
-theorem closure_is_closed (x : α) : c x ∈ c.closed :=
+theorem isClosed_closure (x : α) : c x ∈ c.closed :=
   c.idempotent x
-#align closure_operator.closure_is_closed ClosureOperator.closure_is_closed
+#align closure_operator.closure_is_closed ClosureOperator.isClosed_closure
 -/
 
-#print ClosureOperator.closed_eq_range_close /-
+#print ClosureOperator.setOf_isClosed_eq_range_closure /-
 /-- The set of closed elements for `c` is exactly its range. -/
-theorem closed_eq_range_close : c.closed = Set.range c :=
+theorem setOf_isClosed_eq_range_closure : c.closed = Set.range c :=
   Set.ext fun x => ⟨fun h => ⟨x, h⟩, by rintro ⟨y, rfl⟩; apply c.idempotent⟩
-#align closure_operator.closed_eq_range_close ClosureOperator.closed_eq_range_close
+#align closure_operator.closed_eq_range_close ClosureOperator.setOf_isClosed_eq_range_closure
 -/
 
-#print ClosureOperator.toClosed /-
+#print ClosureOperator.toCloseds /-
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def toClosed (x : α) : c.closed :=
-  ⟨c x, c.closure_is_closed x⟩
-#align closure_operator.to_closed ClosureOperator.toClosed
+def toCloseds (x : α) : c.closed :=
+  ⟨c x, c.isClosed_closure x⟩
+#align closure_operator.to_closed ClosureOperator.toCloseds
 -/
 
-#print ClosureOperator.closure_le_closed_iff_le /-
+#print ClosureOperator.IsClosed.closure_le_iff /-
 @[simp]
-theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.closed y) : c x ≤ y ↔ x ≤ y := by
-  rw [← c.closure_eq_self_of_mem_closed hy, ← le_closure_iff]
-#align closure_operator.closure_le_closed_iff_le ClosureOperator.closure_le_closed_iff_le
+theorem ClosureOperator.IsClosed.closure_le_iff (x : α) {y : α} (hy : c.closed y) :
+    c x ≤ y ↔ x ≤ y := by rw [← c.closure_eq_self_of_mem_closed hy, ← le_closure_iff]
+#align closure_operator.closure_le_closed_iff_le ClosureOperator.IsClosed.closure_le_iff
 -/
 
-#print ClosureOperator.eq_mk₃_closed /-
+#print ClosureOperator.eq_ofPred_closed /-
 /-- A closure operator is equal to the closure operator obtained by feeding `c.closed` into the
 `mk₃` constructor. -/
-theorem eq_mk₃_closed (c : ClosureOperator α) :
+theorem eq_ofPred_closed (c : ClosureOperator α) :
     c =
-      mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy =>
-        (c.closure_le_closed_iff_le x hy).2 hxy :=
+      ofPred c c.closed c.le_closure c.isClosed_closure fun x y hxy hy =>
+        (c.closure_le_iff x hy).2 hxy :=
   by ext; rfl
-#align closure_operator.eq_mk₃_closed ClosureOperator.eq_mk₃_closed
+#align closure_operator.eq_mk₃_closed ClosureOperator.eq_ofPred_closed
 -/
 
+#print ClosureOperator.ofPred_isClosed /-
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
-theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
-    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).closed :=
+theorem ofPred_isClosed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
+    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) :
+    x ∈ (ofPred f p hf hfp hmin).closed :=
   (hmin le_rfl hx).antisymm (hf _)
-#align closure_operator.mem_mk₃_closed ClosureOperator.mem_mk₃_closedₓ
+#align closure_operator.mem_mk₃_closed ClosureOperator.ofPred_isClosed
+-/
 
 end PartialOrder
 
@@ -272,10 +271,10 @@ theorem closure_top : c ⊤ = ⊤ :=
 #align closure_operator.closure_top ClosureOperator.closure_top
 -/
 
-#print ClosureOperator.top_mem_closed /-
-theorem top_mem_closed : ⊤ ∈ c.closed :=
+#print ClosureOperator.isClosed_top /-
+theorem isClosed_top : ⊤ ∈ c.closed :=
   c.closure_top
-#align closure_operator.top_mem_closed ClosureOperator.top_mem_closed
+#align closure_operator.top_mem_closed ClosureOperator.isClosed_top
 -/
 
 end OrderTop
@@ -482,7 +481,7 @@ variable [PartialOrder α] [PartialOrder β] {u : β → α} (l : LowerAdjoint u
 
 #print LowerAdjoint.mem_closed_iff_closure_le /-
 theorem mem_closed_iff_closure_le (x : α) : x ∈ l.closed ↔ u (l x) ≤ x :=
-  l.ClosureOperator.mem_closed_iff_closure_le _
+  l.ClosureOperator.isClosed_iff_closure_le _
 #align lower_adjoint.mem_closed_iff_closure_le LowerAdjoint.mem_closed_iff_closure_le
 -/
 
@@ -496,21 +495,21 @@ theorem closure_is_closed (x : α) : u (l x) ∈ l.closed :=
 #print LowerAdjoint.closed_eq_range_close /-
 /-- The set of closed elements for `l` is the range of `u ∘ l`. -/
 theorem closed_eq_range_close : l.closed = Set.range (u ∘ l) :=
-  l.ClosureOperator.closed_eq_range_close
+  l.ClosureOperator.setOf_isClosed_eq_range_closure
 #align lower_adjoint.closed_eq_range_close LowerAdjoint.closed_eq_range_close
 -/
 
 #print LowerAdjoint.toClosed /-
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
 def toClosed (x : α) : l.closed :=
-  ⟨u (l x), l.closure_is_closed x⟩
+  ⟨u (l x), l.isClosed_closure x⟩
 #align lower_adjoint.to_closed LowerAdjoint.toClosed
 -/
 
 #print LowerAdjoint.closure_le_closed_iff_le /-
 @[simp]
 theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.closed y) : u (l x) ≤ y ↔ x ≤ y :=
-  l.ClosureOperator.closure_le_closed_iff_le x hy
+  l.ClosureOperator.closure_le_iff x hy
 #align lower_adjoint.closure_le_closed_iff_le LowerAdjoint.closure_le_closed_iff_le
 -/
 
@@ -693,10 +692,10 @@ def GaloisConnection.closureOperator [PartialOrder α] [Preorder β] {l : α →
 
 #print ClosureOperator.gi /-
 /-- The set of closed elements has a Galois insertion to the underlying type. -/
-def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) : GaloisInsertion c.toClosed coe
+def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) : GaloisInsertion c.toCloseds coe
     where
   choice x hx := ⟨x, hx.antisymm (c.le_closure x)⟩
-  gc x y := c.closure_le_closed_iff_le _ y.2
+  gc x y := c.closure_le_iff _ y.2
   le_l_u x := c.le_closure _
   choice_eq x hx := le_antisymm (c.le_closure x) hx
 #align closure_operator.gi ClosureOperator.gi

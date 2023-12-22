@@ -204,12 +204,12 @@ def closureOperator (X : C) : ClosureOperator (Sieve X) :=
 #align category_theory.grothendieck_topology.closure_operator CategoryTheory.GrothendieckTopology.closureOperator
 -/
 
-#print CategoryTheory.GrothendieckTopology.closed_iff_closed /-
+#print CategoryTheory.GrothendieckTopology.closureOperator_isClosed /-
 @[simp]
-theorem closed_iff_closed {X : C} (S : Sieve X) :
+theorem closureOperator_isClosed {X : C} (S : Sieve X) :
     S ∈ (J₁.ClosureOperator X).closed ↔ J₁.IsClosed S :=
   (J₁.isClosed_iff_close_eq_self S).symm
-#align category_theory.grothendieck_topology.closed_iff_closed CategoryTheory.GrothendieckTopology.closed_iff_closed
+#align category_theory.grothendieck_topology.closed_iff_closed CategoryTheory.GrothendieckTopology.closureOperator_isClosed
 -/
 
 end GrothendieckTopology

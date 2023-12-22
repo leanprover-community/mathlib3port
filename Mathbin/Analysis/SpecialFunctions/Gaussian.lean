@@ -85,7 +85,7 @@ theorem integrableOn_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (h
   constructor
   · rw [← integrableOn_Icc_iff_integrableOn_Ioc]
     refine' integrable_on.mul_continuous_on _ _ is_compact_Icc
-    · refine' (intervalIntegrable_iff_integrable_Icc_of_le zero_le_one).mp _
+    · refine' (intervalIntegrable_iff_integrableOn_Icc_of_le zero_le_one).mp _
       exact intervalIntegral.intervalIntegrable_rpow' hs
     · exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousOn
   · have B : (0 : ℝ) < 1 / 2 := by norm_num

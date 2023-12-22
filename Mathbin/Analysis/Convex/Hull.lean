@@ -44,7 +44,7 @@ variable (𝕜) [AddCommMonoid E] [AddCommMonoid F] [Module 𝕜 E] [Module 𝕜
 #print convexHull /-
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
-  ClosureOperator.mk₃ (fun s => ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t) (Convex 𝕜)
+  ClosureOperator.ofPred (fun s => ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t) (Convex 𝕜)
     (fun s =>
       Set.subset_iInter fun t => Set.subset_iInter fun hst => Set.subset_iInter fun ht => hst)
     (fun s => convex_iInter fun t => convex_iInter fun ht => convex_iInter id) fun s t hst ht =>
@@ -62,7 +62,7 @@ theorem subset_convexHull : s ⊆ convexHull 𝕜 s :=
 
 #print convex_convexHull /-
 theorem convex_convexHull : Convex 𝕜 (convexHull 𝕜 s) :=
-  ClosureOperator.closure_mem_mk₃ s
+  ClosureOperator.closure_mem_ofPred s
 #align convex_convex_hull convex_convexHull
 -/
 
@@ -82,7 +82,7 @@ theorem mem_convexHull_iff : x ∈ convexHull 𝕜 s ↔ ∀ t, s ⊆ t → Conv
 
 #print convexHull_min /-
 theorem convexHull_min (hst : s ⊆ t) (ht : Convex 𝕜 t) : convexHull 𝕜 s ⊆ t :=
-  ClosureOperator.closure_le_mk₃_iff (show s ≤ t from hst) ht
+  ClosureOperator.closure_le_ofPred_iff (show s ≤ t from hst) ht
 #align convex_hull_min convexHull_min
 -/
 
@@ -101,7 +101,7 @@ theorem convexHull_mono (hst : s ⊆ t) : convexHull 𝕜 s ⊆ convexHull 𝕜 
 
 #print Convex.convexHull_eq /-
 theorem Convex.convexHull_eq (hs : Convex 𝕜 s) : convexHull 𝕜 s = s :=
-  ClosureOperator.mem_mk₃_closed hs
+  ClosureOperator.ofPred_isClosed hs
 #align convex.convex_hull_eq Convex.convexHull_eq
 -/
 

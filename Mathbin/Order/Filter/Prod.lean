@@ -565,10 +565,11 @@ theorem NeBot.prod {f : Filter α} {g : Filter β} (hf : NeBot f) (hg : NeBot g)
 #align filter.ne_bot.prod Filter.NeBot.prod
 -/
 
-#print Filter.prod_neBot' /-
-instance prod_neBot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] : NeBot (f ×ᶠ g) :=
+#print Filter.prod.instNeBot /-
+instance Filter.prod.instNeBot {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] :
+    NeBot (f ×ᶠ g) :=
   hf.Prod hg
-#align filter.prod_ne_bot' Filter.prod_neBot'
+#align filter.prod_ne_bot' Filter.prod.instNeBot
 -/
 
 #print Filter.tendsto_prod_iff /-
