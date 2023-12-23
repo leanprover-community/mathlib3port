@@ -48,7 +48,7 @@ open MonoidalCategory
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
 #print CategoryTheory.EnrichedCategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:417:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/

@@ -73,8 +73,8 @@ open scoped FirstOrder
 
 open Structure Fin
 
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: var {} -/
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: func {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:380:30: infer kinds are unsupported in Lean 4: var {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:380:30: infer kinds are unsupported in Lean 4: func {} -/
 #print FirstOrder.Language.Term /-
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
@@ -368,7 +368,7 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
 
 variable (L) (α)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: falsum {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:380:30: infer kinds are unsupported in Lean 4: falsum {} -/
 #print FirstOrder.Language.BoundedFormula /-
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/

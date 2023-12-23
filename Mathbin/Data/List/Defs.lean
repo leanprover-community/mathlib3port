@@ -683,6 +683,7 @@ private def meas : (Σ' _ : List α, List α) → ℕ × ℕ
 
 local infixl:50 " ≺ " => InvImage (Prod.Lex (· < ·) (· < ·)) meas
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print List.permutationsAux.rec /-
 /-- A recursor for pairs of lists. To have `C l₁ l₂` for all `l₁`, `l₂`, it suffices to have it for
 `l₂ = []` and to be able to pour the elements of `l₁` into `l₂`. -/
@@ -698,7 +699,9 @@ def permutationsAux.rec {C : List α → List α → Sort v} (H0 : ∀ is, C [] 
         by rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
     have h2 : ⟨is, []⟩ ≺ ⟨t :: ts, is⟩ := Prod.Lex.left _ _ (Nat.lt_add_of_pos_left (succ_pos _))
     H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])
-termination_by' ⟨(· ≺ ·), @InvImage.wf _ _ _ meas (WellFounded.prod_lex lt_wf lt_wf)⟩
+termination_by
+  _ x =>
+  WellFounded.wrap (r := (· ≺ ·)) (@InvImage.wf _ _ _ meas (WellFounded.prod_lex lt_wf lt_wf)) x
 #align list.permutations_aux.rec List.permutationsAux.rec
 -/
 

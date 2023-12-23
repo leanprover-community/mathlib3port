@@ -124,6 +124,7 @@ theorem squarefree_and_prime_pow_iff_prime {n : ℕ} : Squarefree n ∧ IsPrimeP
 #align nat.squarefree_and_prime_pow_iff_prime Nat.squarefree_and_prime_pow_iff_prime
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.minSqFacAux /-
 /-- Assuming that `n` has no factors less than `k`, returns the smallest prime `p` such that
   `p^2 ∣ n`. -/
@@ -142,7 +143,8 @@ def minSqFacAux : ℕ → ℕ → Option ℕ
             this
         if k ∣ n' then some k else min_sq_fac_aux n' (k + 2)
       else min_sq_fac_aux n (k + 2)
-termination_by' ⟨_, measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k) x
 #align nat.min_sq_fac_aux Nat.minSqFacAux
 -/
 
@@ -183,6 +185,7 @@ theorem minSqFacProp_div (n) {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k �
 #align nat.min_sq_fac_prop_div Nat.minSqFacProp_div
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.minSqFacAux_has_prop /-
 theorem minSqFacAux_has_prop :
     ∀ {n : ℕ} (k),
@@ -220,7 +223,8 @@ theorem minSqFacAux_has_prop :
     · specialize IH (n / k) (div_dvd_of_dvd dk) dkk
       exact min_sq_fac_prop_div _ (pk dk) dk (mt (Nat.dvd_div_iff dk).2 dkk) IH
     · exact IH n (dvd_refl _) dk
-termination_by' ⟨_, measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k) x
 #align nat.min_sq_fac_aux_has_prop Nat.minSqFacAux_has_prop
 -/
 

@@ -46,7 +46,7 @@ class NoetherianObject (X : C) : Prop where
 -/
 
 #print CategoryTheory.ArtinianObject /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
 /-- An artinian object is an object
 which does not have infinite decreasing sequences of subobjects.
 

@@ -83,7 +83,7 @@ section
 
 variable (hfg : Exact f g) (hgh : Exact g h) (hf'g' : Exact f' g')
 
-#print CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono /-
+#print CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono' /-
 /-- The four lemma, mono version. For names of objects and morphisms, refer to the following
     diagram:
 
@@ -96,7 +96,7 @@ v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
-theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono δ) : Mono γ :=
+theorem mono_of_epi_of_mono_of_mono' (hα : Epi α) (hβ : Mono β) (hδ : Mono δ) : Mono γ :=
   mono_of_zero_of_map_zero _ fun c hc =>
     have : h c = 0 :=
       suffices δ (h c) = 0 from zero_of_map_zero _ (pseudo_injective_of_mono _) _ this
@@ -122,7 +122,7 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
             c = g b := hb.symm
             _ = g (f a) := by rw [this]
             _ = 0 := (pseudo_exact_of_exact hfg).1 _
-#align category_theory.abelian.mono_of_epi_of_mono_of_mono CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono
+#align category_theory.abelian.mono_of_epi_of_mono_of_mono CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono'
 -/
 
 end
@@ -131,7 +131,7 @@ section
 
 variable (hgh : Exact g h) (hf'g' : Exact f' g') (hg'h' : Exact g' h')
 
-#print CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono /-
+#print CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono' /-
 /-- The four lemma, epi version. For names of objects and morphisms, refer to the following
     diagram:
 
@@ -144,7 +144,7 @@ v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
-theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) : Epi β :=
+theorem epi_of_epi_of_epi_of_mono' (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) : Epi β :=
   Preadditive.epi_of_cancel_zero _ fun R r hβr =>
     have hf'r : f' ≫ r = 0 :=
       Limits.zero_of_epi_comp α <|
@@ -181,7 +181,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
       _ = g' ≫ h' ≫ w := by rw [hzv]
       _ = 0 ≫ w := (hg'h'.w_assoc _)
       _ = 0 := HasZeroMorphisms.zero_comp _ _
-#align category_theory.abelian.epi_of_epi_of_epi_of_mono CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono
+#align category_theory.abelian.epi_of_epi_of_epi_of_mono CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono'
 -/
 
 end

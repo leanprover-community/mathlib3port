@@ -965,7 +965,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (compl)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:477:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:487:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
 postfix:999 "ᶜ" => compl
 
 #print Prop.hasCompl /-

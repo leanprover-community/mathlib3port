@@ -1612,6 +1612,7 @@ def reverseRecOn {C : List α → Sort _} (l : List α) (H0 : C [])
 #align list.reverse_rec_on List.reverseRecOn
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 /-- Bidirectional induction principle for lists: if a property holds for the empty list, the
 singleton list, and `a :: (l ++ [b])` from `l`, then it holds for all lists. This can be used to
 prove statements about palindromes. The principle is given for a `Sort`-valued predicate, i.e., it
@@ -1627,7 +1628,8 @@ def bidirectionalRec {C : List α → Sort _} (H0 : C []) (H1 : ∀ a : α, C [a
     rw [← init_append_last (cons_ne_nil b l)]
     have : C l' := bidirectional_rec l'
     exact Hn a l' b' ‹C l'›
-termination_by' ⟨_, measure_wf List.length⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf List.length) x
 #align list.bidirectional_rec List.bidirectionalRecₓ
 
 #print List.bidirectionalRecOn /-

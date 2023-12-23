@@ -379,7 +379,7 @@ class HasBiproductsOfShape : Prop where
 attribute [instance 100] has_biproducts_of_shape.has_biproduct
 
 #print CategoryTheory.Limits.HasFiniteBiproducts /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type. -/
 class HasFiniteBiproducts : Prop where

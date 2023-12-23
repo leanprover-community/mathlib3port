@@ -84,7 +84,7 @@ class BoundedRandom (α : Type u) [Preorder α] where
   randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandG g (x .. y)
 #align bounded_random BoundedRandomₓ
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Randomₓ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`Randomₓ] [] -/
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Random (α : Type u) where
   Randomₓ : ∀ (g : Type) [RandomGen g], RandG g α

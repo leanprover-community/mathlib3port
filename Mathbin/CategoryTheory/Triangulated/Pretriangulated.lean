@@ -51,7 +51,7 @@ variable (D : Type u₂) [Category.{v₂} D] [HasZeroObject D] [HasShift D ℤ] 
   [∀ n : ℤ, Functor.Additive (shiftFunctor D n)]
 
 #print CategoryTheory.Pretriangulated /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:

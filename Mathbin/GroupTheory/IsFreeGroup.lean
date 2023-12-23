@@ -38,7 +38,7 @@ For the explicit construction of free groups, see `group_theory/free_group`.
 universe u
 
 #print IsFreeGroup /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
 /-- `is_free_group G` means that `G` isomorphic to a free group. -/
 class IsFreeGroup (G : Type u) [Group G] where
   Generators : Type u

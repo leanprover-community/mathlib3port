@@ -241,22 +241,22 @@ protected def traverse.{u, v} {F : Type u → Type v} [Applicative F] {α β : T
 #align option.traverse Option.traverse
 -/
 
-#print Option.maybe /-
+#print Option.sequence /-
 -- By analogy with `monad.sequence` in `init/category/combinators.lean`.
 /-- If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
 there is a naturally associated way to always perform a computation in `m` which maybe produces a
 result. -/
-def maybe.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α) → m (Option α)
+def sequence.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α) → m (Option α)
   | none => return none
   | some fn => some <$> fn
-#align option.maybe Option.maybe
+#align option.maybe Option.sequence
 -/
 
 #print Option.mapM /-
 /-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
 def mapM.{u, v, w} {m : Type u → Type v} [Monad m] {α : Type w} {β : Type u} (f : α → m β)
     (o : Option α) : m (Option β) :=
-  (o.map f).maybe
+  (o.map f).sequence
 #align option.mmap Option.mapM
 -/
 

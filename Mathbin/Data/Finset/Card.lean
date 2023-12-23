@@ -815,6 +815,7 @@ theorem card_eq_three [DecidableEq α] :
 /-! ### Inductions -/
 
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 #print Finset.strongInduction /-
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
@@ -826,7 +827,8 @@ def strongInduction {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s
     H s fun t h =>
       have : t.card < s.card := card_lt_card h
       strong_induction t
-termination_by' ⟨_, measure_wf card⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf card) x
 #align finset.strong_induction Finset.strongInduction
 -/
 
@@ -867,6 +869,7 @@ theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : 
 #align finset.case_strong_induction_on Finset.case_strong_induction_on
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Finset.strongDownwardInduction /-
 /-- Suppose that, given that `p t` can be defined on all supersets of `s` of cardinality less than
 `n`, one knows how to define `p s`. Then one can inductively define `p s` for all finsets `s` of
@@ -879,7 +882,8 @@ def strongDownwardInduction {p : Finset α → Sort _} {n : ℕ}
     H s fun t ht h =>
       have : n - t.card < n - s.card := (tsub_lt_tsub_iff_left_of_le ht).2 (Finset.card_lt_card h)
       strong_downward_induction t ht
-termination_by' ⟨_, measure_wf fun t : Finset α => n - t.card⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun t : Finset α => n - t.card) x
 #align finset.strong_downward_induction Finset.strongDownwardInduction
 -/
 

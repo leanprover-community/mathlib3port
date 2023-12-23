@@ -41,7 +41,7 @@ section Basic
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 #print Module.Free /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
   exists_basis : Nonempty (Σ I : Type v, Basis I R M)

@@ -414,10 +414,10 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
 -/
 
 #print CompleteLinearOrder /-
-/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure"
 #align complete_linear_order CompleteLinearOrder
 -/
 

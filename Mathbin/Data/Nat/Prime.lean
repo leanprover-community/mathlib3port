@@ -302,6 +302,7 @@ theorem minFac_lemma (n k : ℕ) (h : ¬n < k * k) : sqrt n - k < sqrt n + 2 - k
 #align nat.min_fac_lemma Nat.minFac_lemma
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.minFacAux /-
 /-- If `n < k * k`, then `min_fac_aux n k = n`, if `k | n`, then `min_fac_aux n k = k`.
   Otherwise, `min_fac_aux n k = min_fac_aux n (k+2)` using well-founded recursion.
@@ -314,7 +315,8 @@ def minFacAux (n : ℕ) : ℕ → ℕ
       else
         have := minFac_lemma n k h
         min_fac_aux (k + 2)
-termination_by' ⟨_, measure_wf fun k => sqrt n + 2 - k⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun k => sqrt n + 2 - k) x
 #align nat.min_fac_aux Nat.minFacAux
 -/
 
@@ -354,6 +356,7 @@ theorem minFac_eq : ∀ n, minFac n = if 2 ∣ n then 2 else minFacAux n 3
 private def min_fac_prop (n k : ℕ) :=
   2 ≤ k ∧ k ∣ n ∧ ∀ m, 2 ≤ m → m ∣ n → k ≤ m
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.minFacAux_has_prop /-
 theorem minFacAux_has_prop {n : ℕ} (n2 : 2 ≤ n) :
     ∀ k i, k = 2 * i + 3 → (∀ m, 2 ≤ m → m ∣ n → k ≤ m) → MinFacProp n (minFacAux n k)
@@ -376,7 +379,8 @@ theorem minFacAux_has_prop {n : ℕ} (n2 : 2 ≤ n) :
       rw [← me, e] at d ; change 2 * (i + 2) ∣ n at d 
       have := a _ le_rfl (dvd_of_mul_right_dvd d)
       rw [e] at this ; exact absurd this (by decide)
-termination_by' ⟨_, measure_wf fun k => sqrt n + 2 - k⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun k => sqrt n + 2 - k) x
 #align nat.min_fac_aux_has_prop Nat.minFacAux_has_prop
 -/
 

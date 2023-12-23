@@ -1210,6 +1210,7 @@ theorem fundamentalSequence_has_prop (o) : FundamentalSequenceProp o (fundamenta
 #align onote.fundamental_sequence_has_prop ONote.fundamentalSequence_has_prop
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print ONote.fastGrowing /-
 /-- The fast growing hierarchy for ordinal notations `< ε₀`. This is a sequence of
 functions `ℕ → ℕ` indexed by ordinals, with the definition:
@@ -1227,7 +1228,8 @@ def fastGrowing : ONote → ℕ → ℕ
     | Sum.inr f, h => fun i =>
       have : f i < o := (h.2.1 i).2.1
       fast_growing (f i) i
-termination_by' ⟨_, InvImage.wf repr Ordinal.lt_wf⟩
+termination_by
+  _ x => WellFounded.wrap (InvImage.wf repr Ordinal.lt_wf) x
 #align onote.fast_growing ONote.fastGrowing
 -/
 

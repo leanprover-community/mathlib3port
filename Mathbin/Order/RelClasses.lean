@@ -408,11 +408,13 @@ def toHasWellFounded : WellFoundedRelation α :=
 
 end IsWellFounded
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print WellFounded.asymmetric /-
 theorem WellFounded.asymmetric {α : Sort _} {r : α → α → Prop} (h : WellFounded r) :
     ∀ ⦃a b⦄, r a b → ¬r b a
   | a => fun b hab hba => WellFounded.asymmetric hba hab
-termination_by' ⟨_, h⟩
+termination_by
+  _ x => WellFounded.wrap h x
 #align well_founded.asymmetric WellFounded.asymmetric
 -/
 

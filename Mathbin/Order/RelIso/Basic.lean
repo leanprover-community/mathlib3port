@@ -278,13 +278,11 @@ instance : RelHomClass (r ↪r s) r s where
   coe_injective' f g h := by rcases f with ⟨⟨⟩⟩; rcases g with ⟨⟨⟩⟩; congr
   map_rel f a b := Iff.mpr (map_rel_iff' f)
 
-#print RelEmbedding.Simps.apply /-
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
 def Simps.apply (h : r ↪r s) : α → β :=
   h
 #align rel_embedding.simps.apply RelEmbedding.Simps.apply
--/
 
 initialize_simps_projections RelEmbedding (to_embedding_to_fun → apply, -toEmbedding)
 

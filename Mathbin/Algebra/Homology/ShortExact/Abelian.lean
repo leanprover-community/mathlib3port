@@ -32,7 +32,6 @@ variable [Abelian 𝒜]
 
 open scoped ZeroObject
 
-#print CategoryTheory.isIso_of_shortExact_of_isIso_of_isIso /-
 theorem isIso_of_shortExact_of_isIso_of_isIso (h : ShortExact f g) (h' : ShortExact f' g')
     (i₁ : A ⟶ A') (i₂ : B ⟶ B') (i₃ : C ⟶ C') (comm₁ : i₁ ≫ f' = f ≫ i₂) (comm₂ : i₂ ≫ g' = g ≫ i₃)
     [IsIso i₁] [IsIso i₃] : IsIso i₂ := by
@@ -47,9 +46,7 @@ theorem isIso_of_shortExact_of_isIso_of_isIso (h : ShortExact f g) (h' : ShortEx
       try assumption <;>
     rwa [← epi_iff_exact_zero_right]
 #align category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.isIso_of_shortExact_of_isIso_of_isIso
--/
 
-#print CategoryTheory.Splitting.mk' /-
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply
 a *morphism* `i : B ⟶ A ⊞ C` such that `f ≫ i` is the canonical map `biprod.inl : A ⟶ A ⊞ C` and
 `i ≫ q = g`, where `q` is the canonical map `biprod.snd : A ⊞ C ⟶ C`,
@@ -69,9 +66,7 @@ def Splitting.mk' (h : ShortExact f g) (i : B ⟶ A ⊞ C) (h1 : f ≫ i = bipro
   comp_iso_eq_inl := by rwa [as_iso_hom]
   iso_comp_snd_eq := h2
 #align category_theory.splitting.mk' CategoryTheory.Splitting.mk'
--/
 
-#print CategoryTheory.Splitting.mk'' /-
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply
 a *morphism* `i : A ⊞ C ⟶ B` such that `p ≫ i = f` where `p` is the canonical map
 `biprod.inl : A ⟶ A ⊞ C`, and `i ≫ g` is the canonical map `biprod.snd : A ⊞ C ⟶ C`,
@@ -91,9 +86,7 @@ def Splitting.mk'' (h : ShortExact f g) (i : A ⊞ C ⟶ B) (h1 : biprod.inl ≫
   comp_iso_eq_inl := by rw [iso.symm_hom, as_iso_inv, is_iso.comp_inv_eq, h1]
   iso_comp_snd_eq := by rw [iso.symm_hom, as_iso_inv, is_iso.inv_comp_eq, h2]
 #align category_theory.splitting.mk'' CategoryTheory.Splitting.mk''
--/
 
-#print CategoryTheory.LeftSplit.splitting /-
 /-- A short exact sequence that is left split admits a splitting. -/
 def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitting f g :=
   Splitting.mk' h.ShortExact (biprod.lift h.LeftSplit.some g)
@@ -103,9 +96,7 @@ def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitt
       · simp only [biprod.inl_snd, biprod.lift_snd, category.assoc, h.exact.w])
     (by simp only [biprod.lift_snd])
 #align category_theory.left_split.splitting CategoryTheory.LeftSplit.splitting
--/
 
-#print CategoryTheory.RightSplit.splitting /-
 /-- A short exact sequence that is right split admits a splitting. -/
 def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Splitting f g :=
   Splitting.mk'' h.ShortExact (biprod.desc f h.RightSplit.some) (biprod.inl_desc _ _)
@@ -114,7 +105,6 @@ def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Spli
       · rw [biprod.inl_snd, ← category.assoc, biprod.inl_desc, h.exact.w]
       · rw [biprod.inr_snd, ← category.assoc, biprod.inr_desc, h.right_split.some_spec])
 #align category_theory.right_split.splitting CategoryTheory.RightSplit.splitting
--/
 
 end CategoryTheory
 

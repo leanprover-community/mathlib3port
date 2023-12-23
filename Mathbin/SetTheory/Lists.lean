@@ -432,6 +432,7 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Lists.Equiv.decidable /-
 mutual
   @[instance]
@@ -501,7 +502,8 @@ mutual
       refine' decidable_of_iff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
       rw [← Lists'.mem_cons]; rfl
 end
-termination_by' ⟨_, measure_wf equiv.decidable_meas⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf equiv.decidable_meas) x
 #align lists.equiv.decidable Lists.Equiv.decidable
 #align lists.subset.decidable Lists.Subset.decidable
 #align lists.mem.decidable Lists.mem.decidable

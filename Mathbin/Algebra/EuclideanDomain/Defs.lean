@@ -177,6 +177,7 @@ section
 
 open scoped Classical
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print EuclideanDomain.GCD.induction /-
 @[elab_as_elim]
 theorem GCD.induction {P : R → R → Prop} :
@@ -186,7 +187,8 @@ theorem GCD.induction {P : R → R → Prop} :
     else
       have h := mod_lt b a0
       H1 _ _ a0 (gcd.induction (b % a) a H0 H1)
-termination_by' ⟨_, r_well_founded⟩
+termination_by
+  _ x => WellFounded.wrap r_well_founded x
 #align euclidean_domain.gcd.induction EuclideanDomain.GCD.induction
 -/
 
@@ -196,6 +198,7 @@ section Gcd
 
 variable [DecidableEq R]
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print EuclideanDomain.gcd /-
 /-- `gcd a b` is a (non-unique) element such that `gcd a b ∣ a` `gcd a b ∣ b`, and for
   any element `c` such that `c ∣ a` and `c ∣ b`, then `c ∣ gcd a b` -/
@@ -205,7 +208,8 @@ def gcd : R → R → R
     else
       have h := mod_lt b a0
       gcd (b % a) a
-termination_by' ⟨_, r_well_founded⟩
+termination_by
+  _ x => WellFounded.wrap r_well_founded x
 #align euclidean_domain.gcd EuclideanDomain.gcd
 -/
 
@@ -215,6 +219,7 @@ theorem gcd_zero_left (a : R) : gcd 0 a = a := by rw [gcd]; exact if_pos rfl
 #align euclidean_domain.gcd_zero_left EuclideanDomain.gcd_zero_left
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print EuclideanDomain.xgcdAux /-
 /-- An implementation of the extended GCD algorithm.
 At each step we are computing a triple `(r, s, t)`, where `r` is the next value of the GCD
@@ -232,7 +237,8 @@ def xgcdAux : R → R → R → R → R → R → R × R × R
       have : r' % r ≺ r := mod_lt _ hr
       let q := r' / r
       xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
-termination_by' ⟨_, r_well_founded⟩
+termination_by
+  _ x => WellFounded.wrap r_well_founded x
 #align euclidean_domain.xgcd_aux EuclideanDomain.xgcdAux
 -/
 

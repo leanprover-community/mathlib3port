@@ -36,7 +36,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 open scoped ENNReal NNReal Topology
 
 #print IsUnifLocDoublingMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_hMul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_hMul] [] -/
 /-- A measure `μ` is said to be a uniformly locally doubling measure if there exists a constant `C`
 such that for all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius
 `2 * ε` is bounded by `C` times the measure of the concentric ball of radius `ε`.

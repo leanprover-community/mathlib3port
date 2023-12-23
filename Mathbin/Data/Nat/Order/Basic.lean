@@ -440,6 +440,7 @@ proved above, and some of the results in later sections depend on the definition
 -/
 
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.diag_induction /-
 /-- Given a predicate on two naturals `P : ℕ → ℕ → Prop`, `P a b` is true for all `a < b` if
 `P (a + 1) (a + 1)` is true for all `a`, `P 0 (b + 1)` is true for all `b` and for all
@@ -456,7 +457,8 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
       apply diag_induction (a + 1) b this
     apply diag_induction a (b + 1)
     apply lt_of_le_of_lt (Nat.le_succ _) h
-termination_by' ⟨_, measure_wf fun p => p.1 + p.2.1⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun p => p.1 + p.2.1) x
 #align nat.diag_induction Nat.diag_induction
 -/
 

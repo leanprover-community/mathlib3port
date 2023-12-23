@@ -36,7 +36,7 @@ open Opposite
 namespace AlgebraicGeometry
 
 #print AlgebraicGeometry.Scheme /-
-/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
 /-- We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`
 so that that the restriction of `X` to `U` is isomorphic,
@@ -44,7 +44,7 @@ as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
 structure Scheme extends
-    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" where
+    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
       ∃ (U : OpenNhds x) (R : CommRingCat),

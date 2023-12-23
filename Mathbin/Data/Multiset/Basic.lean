@@ -1036,6 +1036,7 @@ theorem card_eq_three {s : Multiset α} : s.card = 3 ↔ ∃ x y z, s = {x, y, z
 /-! ### Induction principles -/
 
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 /-- A strong induction principle for multisets:
 If you construct a value for a particular multiset given values for all strictly smaller multisets,
 you can construct a value for any multiset.
@@ -1047,7 +1048,8 @@ def strongInductionOn {p : Multiset α → Sort _} :
     ih s fun t h =>
       have : card t < card s := card_lt_of_lt h
       strong_induction_on t ih
-termination_by' ⟨_, measure_wf card⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf card) x
 #align multiset.strong_induction_on Multiset.strongInductionOnₓ
 
 #print Multiset.strongInductionOn_eq /-
@@ -1067,6 +1069,7 @@ theorem case_strongInductionOn {p : Multiset α → Prop} (s : Multiset α) (h�
 #align multiset.case_strong_induction_on Multiset.case_strongInductionOn
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 /-- Suppose that, given that `p t` can be defined on all supersets of `s` of cardinality less than
 `n`, one knows how to define `p s`. Then one can inductively define `p s` for all multisets `s` of
 cardinality less than `n`, starting from multisets of card `n` and iterating. This
@@ -1078,7 +1081,8 @@ def strongDownwardInduction {p : Multiset α → Sort _} {n : ℕ}
     H s fun t ht h =>
       have : n - card t < n - card s := (tsub_lt_tsub_iff_left_of_le ht).2 (card_lt_of_lt h)
       strong_downward_induction t ht
-termination_by' ⟨_, measure_wf fun t : Multiset α => n - t.card⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun t : Multiset α => n - t.card) x
 #align multiset.strong_downward_induction Multiset.strongDownwardInductionₓ
 
 #print Multiset.strongDownwardInduction_eq /-

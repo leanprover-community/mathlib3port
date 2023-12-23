@@ -469,7 +469,7 @@ variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module
   [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
 
 #print VectorBundle /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`continuousOn_coord_change'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`continuousOn_coord_change'] [] -/
 /-- The space `total_space F E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `vector_bundle R F E`) if around every point there is a fiber bundle trivialization

@@ -35,7 +35,7 @@ open ContinuousMap
 open scoped ContinuousMap
 
 #print SimplyConnectedSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
 /-- A simply connected space is one whose fundamental groupoid is equivalent to `discrete unit` -/
 class SimplyConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
   equiv_unit : Nonempty (FundamentalGroupoid X ≌ Discrete Unit)

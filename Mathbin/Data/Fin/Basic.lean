@@ -2165,6 +2165,7 @@ theorem fin_two_eq_of_eq_zero_iff {a b : Fin 2} (h : a = 0 ↔ b = 0) : a = b :=
 #align fin.fin_two_eq_of_eq_zero_iff Fin.fin_two_eq_of_eq_zero_iff
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Fin.reverseInduction /-
 /--
 Define `C i` by reverse induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
@@ -2183,7 +2184,8 @@ def reverseInduction {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.last
         rw [tsub_lt_tsub_iff_left_of_le] <;> simp [*, Nat.succ_le_iff]
       have hi : i = Fin.castSuccEmb j := Fin.ext rfl
       cast (by rw [hi]) (hs _ (reverse_induction j.succ))
-termination_by' ⟨_, measure_wf fun i : Fin (n + 1) => n + 1 - i⟩
+termination_by
+  _ x => WellFounded.wrap (measure_wf fun i : Fin (n + 1) => n + 1 - i) x
 #align fin.reverse_induction Fin.reverseInduction
 -/
 

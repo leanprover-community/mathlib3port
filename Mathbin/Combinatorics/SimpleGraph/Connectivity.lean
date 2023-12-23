@@ -1068,32 +1068,32 @@ structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
 -/
 
 #print SimpleGraph.Walk.IsPath /-
-/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" :
+    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure" :
     Prop where
   support_nodup : p.support.Nodup
 #align simple_graph.walk.is_path SimpleGraph.Walk.IsPath
 -/
 
 #print SimpleGraph.Walk.IsCircuit /-
-/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" :
+    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure" :
     Prop where
   ne_nil : p ≠ nil
 #align simple_graph.walk.is_circuit SimpleGraph.Walk.IsCircuit
 -/
 
 #print SimpleGraph.Walk.IsCycle /-
-/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure" :
+    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure" :
     Prop where
   support_nodup : p.support.tail.Nodup
 #align simple_graph.walk.is_cycle SimpleGraph.Walk.IsCycle
