@@ -1192,21 +1192,21 @@ theorem Subgroup.pow_index_mem {G : Type _} [Group G] (H : Subgroup G) [Normal H
 #align add_subgroup.nsmul_index_mem AddSubgroup.nsmul_index_mem
 -/
 
-#print pow_eq_mod_card /-
+#print pow_mod_card /-
 @[to_additive]
-theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
+theorem pow_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
   rw [pow_mod_orderOf, ← Nat.mod_mod_of_dvd n orderOf_dvd_card, ← pow_mod_orderOf]
-#align pow_eq_mod_card pow_eq_mod_card
-#align nsmul_eq_mod_card nsmul_eq_mod_card
+#align pow_eq_mod_card pow_mod_card
+#align nsmul_eq_mod_card mod_card_nsmul
 -/
 
-#print zpow_eq_mod_card /-
+#print zpow_mod_card /-
 @[to_additive]
-theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
+theorem zpow_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
   rw [zpow_mod_orderOf, ← Int.emod_emod_of_dvd n (Int.coe_nat_dvd.2 orderOf_dvd_card), ←
     zpow_mod_orderOf]
-#align zpow_eq_mod_card zpow_eq_mod_card
-#align zsmul_eq_mod_card zsmul_eq_mod_card
+#align zpow_eq_mod_card zpow_mod_card
+#align zsmul_eq_mod_card mod_card_zsmul
 -/
 
 #print powCoprime /-

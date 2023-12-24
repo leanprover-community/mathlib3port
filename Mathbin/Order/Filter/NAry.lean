@@ -271,7 +271,6 @@ theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by rw [ma
 #align filter.map₂_right Filter.map₂_right
 -/
 
-#print Filter.map₃ /-
 /-- The image of a ternary function `m : α → β → γ → δ` as a function
 `filter α → filter β → filter γ → filter δ`. Mathematically this should be thought of as the image
 of the corresponding function `α × β × γ → δ`. -/
@@ -293,9 +292,7 @@ def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Fi
               inter_subset_right _ _).trans
           ht⟩
 #align filter.map₃ Filter.map₃
--/
 
-#print Filter.map₂_map₂_left /-
 theorem map₂_map₂_left (m : δ → γ → ε) (n : α → β → δ) :
     map₂ m (map₂ n f g) h = map₃ (fun a b c => m (n a b) c) f g h :=
   by
@@ -308,9 +305,7 @@ theorem map₂_map₂_left (m : δ → γ → ε) (n : α → β → δ) :
   · rintro ⟨s, t, u, hs, ht, hu, hw⟩
     exact ⟨_, u, image2_mem_map₂ hs ht, hu, by rwa [image2_image2_left]⟩
 #align filter.map₂_map₂_left Filter.map₂_map₂_left
--/
 
-#print Filter.map₂_map₂_right /-
 theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
     map₂ m f (map₂ n g h) = map₃ (fun a b c => m a (n b c)) f g h :=
   by
@@ -323,7 +318,6 @@ theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
   · rintro ⟨s, t, u, hs, ht, hu, hw⟩
     exact ⟨s, _, hs, image2_mem_map₂ ht hu, by rwa [image2_image2_right]⟩
 #align filter.map₂_map₂_right Filter.map₂_map₂_right
--/
 
 #print Filter.map_map₂ /-
 theorem map_map₂ (m : α → β → γ) (n : γ → δ) :
