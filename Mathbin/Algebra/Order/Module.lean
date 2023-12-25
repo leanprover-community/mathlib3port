@@ -46,7 +46,7 @@ where `distrib_mul_action_with_zero k M`is the conjunction of `distrib_mul_actio
 theorem smul_neg_iff_of_pos (hc : 0 < c) : c • a < 0 ↔ a < 0 :=
   by
   rw [← neg_neg a, smul_neg, neg_neg_iff_pos, neg_neg_iff_pos]
-  exact smul_pos_iff_of_pos hc
+  exact smul_pos_iff_of_pos_left hc
 #align smul_neg_iff_of_pos smul_neg_iff_of_pos
 -/
 
@@ -60,7 +60,7 @@ variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] 
 theorem smul_lt_smul_of_neg (h : a < b) (hc : c < 0) : c • b < c • a :=
   by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff]
-  exact smul_lt_smul_of_pos h (neg_pos_of_neg hc)
+  exact smul_lt_smul_of_pos_left h (neg_pos_of_neg hc)
 #align smul_lt_smul_of_neg smul_lt_smul_of_neg
 -/
 
@@ -68,23 +68,21 @@ theorem smul_lt_smul_of_neg (h : a < b) (hc : c < 0) : c • b < c • a :=
 theorem smul_le_smul_of_nonpos (h : a ≤ b) (hc : c ≤ 0) : c • b ≤ c • a :=
   by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_le_neg_iff]
-  exact smul_le_smul_of_nonneg h (neg_nonneg_of_nonpos hc)
+  exact smul_le_smul_of_nonneg_left h (neg_nonneg_of_nonpos hc)
 #align smul_le_smul_of_nonpos smul_le_smul_of_nonpos
 -/
 
-#print eq_of_smul_eq_smul_of_neg_of_le /-
 theorem eq_of_smul_eq_smul_of_neg_of_le (hab : c • a = c • b) (hc : c < 0) (h : a ≤ b) : a = b :=
   by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_inj] at hab 
   exact eq_of_smul_eq_smul_of_pos_of_le hab (neg_pos_of_neg hc) h
 #align eq_of_smul_eq_smul_of_neg_of_le eq_of_smul_eq_smul_of_neg_of_le
--/
 
 #print lt_of_smul_lt_smul_of_nonpos /-
 theorem lt_of_smul_lt_smul_of_nonpos (h : c • a < c • b) (hc : c ≤ 0) : b < a :=
   by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff] at h 
-  exact lt_of_smul_lt_smul_of_nonneg h (neg_nonneg_of_nonpos hc)
+  exact lt_of_smul_lt_smul_of_nonneg_left h (neg_nonneg_of_nonpos hc)
 #align lt_of_smul_lt_smul_of_nonpos lt_of_smul_lt_smul_of_nonpos
 -/
 
@@ -92,7 +90,7 @@ theorem lt_of_smul_lt_smul_of_nonpos (h : c • a < c • b) (hc : c ≤ 0) : b 
 theorem smul_lt_smul_iff_of_neg (hc : c < 0) : c • a < c • b ↔ b < a :=
   by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff]
-  exact smul_lt_smul_iff_of_pos (neg_pos_of_neg hc)
+  exact smul_lt_smul_iff_of_pos_left (neg_pos_of_neg hc)
 #align smul_lt_smul_iff_of_neg smul_lt_smul_iff_of_neg
 -/
 
@@ -100,7 +98,7 @@ theorem smul_lt_smul_iff_of_neg (hc : c < 0) : c • a < c • b ↔ b < a :=
 theorem smul_neg_iff_of_neg (hc : c < 0) : c • a < 0 ↔ 0 < a :=
   by
   rw [← neg_neg c, neg_smul, neg_neg_iff_pos]
-  exact smul_pos_iff_of_pos (neg_pos_of_neg hc)
+  exact smul_pos_iff_of_pos_left (neg_pos_of_neg hc)
 #align smul_neg_iff_of_neg smul_neg_iff_of_neg
 -/
 
@@ -202,7 +200,7 @@ variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSMu
 theorem smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a :=
   by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_le_neg_iff]
-  exact smul_le_smul_iff_of_pos (neg_pos_of_neg hc)
+  exact smul_le_smul_iff_of_pos_left (neg_pos_of_neg hc)
 #align smul_le_smul_iff_of_neg smul_le_smul_iff_of_neg
 -/
 

@@ -92,28 +92,28 @@ section OrderedSMul
 variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SMulWithZero R M] [OrderedSMul R M]
   {s : Set M} {a b : M} {c : R}
 
-#print smul_lt_smul_of_pos /-
-theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
+#print smul_lt_smul_of_pos_left /-
+theorem smul_lt_smul_of_pos_left : a < b → 0 < c → c • a < c • b :=
   OrderedSMul.smul_lt_smul_of_pos
-#align smul_lt_smul_of_pos smul_lt_smul_of_pos
+#align smul_lt_smul_of_pos smul_lt_smul_of_pos_left
 -/
 
-#print smul_le_smul_of_nonneg /-
-theorem smul_le_smul_of_nonneg (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c • b :=
+#print smul_le_smul_of_nonneg_left /-
+theorem smul_le_smul_of_nonneg_left (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c • b :=
   by
   rcases h₁.eq_or_lt with (rfl | hab)
   · rfl
   · rcases h₂.eq_or_lt with (rfl | hc)
     · rw [zero_smul, zero_smul]
-    · exact (smul_lt_smul_of_pos hab hc).le
-#align smul_le_smul_of_nonneg smul_le_smul_of_nonneg
+    · exact (smul_lt_smul_of_pos_left hab hc).le
+#align smul_le_smul_of_nonneg smul_le_smul_of_nonneg_left
 -/
 
 #print smul_nonneg /-
 theorem smul_nonneg (hc : 0 ≤ c) (ha : 0 ≤ a) : 0 ≤ c • a :=
   calc
     (0 : M) = c • (0 : M) := (smul_zero c).symm
-    _ ≤ c • a := smul_le_smul_of_nonneg ha hc
+    _ ≤ c • a := smul_le_smul_of_nonneg_left ha hc
 #align smul_nonneg smul_nonneg
 -/
 
@@ -123,72 +123,70 @@ theorem smul_nonpos_of_nonneg_of_nonpos (hc : 0 ≤ c) (ha : a ≤ 0) : c • a 
 #align smul_nonpos_of_nonneg_of_nonpos smul_nonpos_of_nonneg_of_nonpos
 -/
 
-#print eq_of_smul_eq_smul_of_pos_of_le /-
 theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) (hle : a ≤ b) : a = b :=
-  hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
+  hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos_left hlt hc).Ne h₁
 #align eq_of_smul_eq_smul_of_pos_of_le eq_of_smul_eq_smul_of_pos_of_le
--/
 
-#print lt_of_smul_lt_smul_of_nonneg /-
-theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
+#print lt_of_smul_lt_smul_of_nonneg_left /-
+theorem lt_of_smul_lt_smul_of_nonneg_left (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
   hc.eq_or_lt.elim
     (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h )
     (OrderedSMul.lt_of_smul_lt_smul_of_pos h)
-#align lt_of_smul_lt_smul_of_nonneg lt_of_smul_lt_smul_of_nonneg
+#align lt_of_smul_lt_smul_of_nonneg lt_of_smul_lt_smul_of_nonneg_left
 -/
 
-#print smul_lt_smul_iff_of_pos /-
-theorem smul_lt_smul_iff_of_pos (hc : 0 < c) : c • a < c • b ↔ a < b :=
-  ⟨fun h => lt_of_smul_lt_smul_of_nonneg h hc.le, fun h => smul_lt_smul_of_pos h hc⟩
-#align smul_lt_smul_iff_of_pos smul_lt_smul_iff_of_pos
+#print smul_lt_smul_iff_of_pos_left /-
+theorem smul_lt_smul_iff_of_pos_left (hc : 0 < c) : c • a < c • b ↔ a < b :=
+  ⟨fun h => lt_of_smul_lt_smul_of_nonneg_left h hc.le, fun h => smul_lt_smul_of_pos_left h hc⟩
+#align smul_lt_smul_iff_of_pos smul_lt_smul_iff_of_pos_left
 -/
 
-#print smul_pos_iff_of_pos /-
-theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
+#print smul_pos_iff_of_pos_left /-
+theorem smul_pos_iff_of_pos_left (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
   calc
     0 < c • a ↔ c • 0 < c • a := by rw [smul_zero]
-    _ ↔ 0 < a := smul_lt_smul_iff_of_pos hc
-#align smul_pos_iff_of_pos smul_pos_iff_of_pos
+    _ ↔ 0 < a := smul_lt_smul_iff_of_pos_left hc
+#align smul_pos_iff_of_pos smul_pos_iff_of_pos_left
 -/
 
-alias ⟨_, smul_pos⟩ := smul_pos_iff_of_pos
+alias ⟨_, smul_pos⟩ := smul_pos_iff_of_pos_left
 #align smul_pos smul_pos
 
-#print monotone_smul_left /-
-theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (SMul.smul c : M → M) := fun a b h =>
-  smul_le_smul_of_nonneg h hc
-#align monotone_smul_left monotone_smul_left
+#print monotone_smul_left_of_nonneg /-
+theorem monotone_smul_left_of_nonneg (hc : 0 ≤ c) : Monotone (SMul.smul c : M → M) := fun a b h =>
+  smul_le_smul_of_nonneg_left h hc
+#align monotone_smul_left monotone_smul_left_of_nonneg
 -/
 
-#print strictMono_smul_left /-
-theorem strictMono_smul_left (hc : 0 < c) : StrictMono (SMul.smul c : M → M) := fun a b h =>
-  smul_lt_smul_of_pos h hc
-#align strict_mono_smul_left strictMono_smul_left
+#print strictMono_smul_left_of_pos /-
+theorem strictMono_smul_left_of_pos (hc : 0 < c) : StrictMono (SMul.smul c : M → M) := fun a b h =>
+  smul_lt_smul_of_pos_left h hc
+#align strict_mono_smul_left strictMono_smul_left_of_pos
 -/
 
-#print smul_lowerBounds_subset_lowerBounds_smul /-
-theorem smul_lowerBounds_subset_lowerBounds_smul (hc : 0 ≤ c) :
+#print smul_lowerBounds_subset_lowerBounds_smul_of_nonneg /-
+theorem smul_lowerBounds_subset_lowerBounds_smul_of_nonneg (hc : 0 ≤ c) :
     c • lowerBounds s ⊆ lowerBounds (c • s) :=
-  (monotone_smul_left hc).image_lowerBounds_subset_lowerBounds_image
-#align smul_lower_bounds_subset_lower_bounds_smul smul_lowerBounds_subset_lowerBounds_smul
+  (monotone_smul_left_of_nonneg hc).image_lowerBounds_subset_lowerBounds_image
+#align smul_lower_bounds_subset_lower_bounds_smul smul_lowerBounds_subset_lowerBounds_smul_of_nonneg
 -/
 
-#print smul_upperBounds_subset_upperBounds_smul /-
-theorem smul_upperBounds_subset_upperBounds_smul (hc : 0 ≤ c) :
+#print smul_upperBounds_subset_upperBounds_smul_of_nonneg /-
+theorem smul_upperBounds_subset_upperBounds_smul_of_nonneg (hc : 0 ≤ c) :
     c • upperBounds s ⊆ upperBounds (c • s) :=
-  (monotone_smul_left hc).image_upperBounds_subset_upperBounds_image
-#align smul_upper_bounds_subset_upper_bounds_smul smul_upperBounds_subset_upperBounds_smul
+  (monotone_smul_left_of_nonneg hc).image_upperBounds_subset_upperBounds_image
+#align smul_upper_bounds_subset_upper_bounds_smul smul_upperBounds_subset_upperBounds_smul_of_nonneg
 -/
 
 #print BddBelow.smul_of_nonneg /-
 theorem BddBelow.smul_of_nonneg (hs : BddBelow s) (hc : 0 ≤ c) : BddBelow (c • s) :=
-  (monotone_smul_left hc).map_bddBelow hs
+  (monotone_smul_left_of_nonneg hc).map_bddBelow hs
 #align bdd_below.smul_of_nonneg BddBelow.smul_of_nonneg
 -/
 
 #print BddAbove.smul_of_nonneg /-
 theorem BddAbove.smul_of_nonneg (hs : BddAbove s) (hc : 0 ≤ c) : BddAbove (c • s) :=
-  (monotone_smul_left hc).map_bddAbove hs
+  (monotone_smul_left_of_nonneg hc).map_bddAbove hs
 #align bdd_above.smul_of_nonneg BddAbove.smul_of_nonneg
 -/
 
@@ -220,7 +218,7 @@ instance Int.orderedSMul [LinearOrderedAddCommGroup M] : OrderedSMul ℤ M :=
   OrderedSMul.mk'' fun n hn => by
     cases n
     · simp only [Int.ofNat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn ⊢
-      exact strictMono_smul_left hn
+      exact strictMono_smul_left_of_pos hn
     · cases (Int.negSucc_not_pos _).1 hn
 #align int.ordered_smul Int.orderedSMul
 -/
@@ -237,16 +235,16 @@ instance LinearOrderedSemiring.toOrderedSMul : OrderedSMul R R :=
 #align linear_ordered_semiring.to_ordered_smul LinearOrderedSemiring.toOrderedSMul
 -/
 
-#print smul_max /-
-theorem smul_max (ha : 0 ≤ a) (b₁ b₂ : M) : a • max b₁ b₂ = max (a • b₁) (a • b₂) :=
-  (monotone_smul_left ha : Monotone (_ : M → M)).map_max
-#align smul_max smul_max
+#print smul_max_of_nonneg /-
+theorem smul_max_of_nonneg (ha : 0 ≤ a) (b₁ b₂ : M) : a • max b₁ b₂ = max (a • b₁) (a • b₂) :=
+  (monotone_smul_left_of_nonneg ha : Monotone (_ : M → M)).map_max
+#align smul_max smul_max_of_nonneg
 -/
 
-#print smul_min /-
-theorem smul_min (ha : 0 ≤ a) (b₁ b₂ : M) : a • min b₁ b₂ = min (a • b₁) (a • b₂) :=
-  (monotone_smul_left ha : Monotone (_ : M → M)).map_min
-#align smul_min smul_min
+#print smul_min_of_nonneg /-
+theorem smul_min_of_nonneg (ha : 0 ≤ a) (b₁ b₂ : M) : a • min b₁ b₂ = min (a • b₁) (a • b₂) :=
+  (monotone_smul_left_of_nonneg ha : Monotone (_ : M → M)).map_min
+#align smul_min smul_min_of_nonneg
 -/
 
 end LinearOrderedSemiring
@@ -278,78 +276,74 @@ theorem OrderedSMul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c �
 
 instance [OrderedSMul 𝕜 M] [OrderedSMul 𝕜 N] : OrderedSMul 𝕜 (M × N) :=
   OrderedSMul.mk' fun a b c h hc =>
-    ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+    ⟨smul_le_smul_of_nonneg_left h.1.1 hc.le, smul_le_smul_of_nonneg_left h.1.2 hc.le⟩
 
 #print Pi.orderedSMul /-
 instance Pi.orderedSMul {M : ι → Type _} [∀ i, OrderedAddCommMonoid (M i)]
     [∀ i, MulActionWithZero 𝕜 (M i)] [∀ i, OrderedSMul 𝕜 (M i)] : OrderedSMul 𝕜 (∀ i, M i) :=
-  OrderedSMul.mk' fun v u c h hc i => smul_le_smul_of_nonneg (h.le i) hc.le
+  OrderedSMul.mk' fun v u c h hc i => smul_le_smul_of_nonneg_left (h.le i) hc.le
 #align pi.ordered_smul Pi.orderedSMul
 -/
 
-#print Pi.orderedSMul' /-
 /- Sometimes Lean fails to apply the dependent version to non-dependent functions, so we define
 another instance. -/
-instance Pi.orderedSMul' [OrderedSMul 𝕜 M] : OrderedSMul 𝕜 (ι → M) :=
+instance Pi.ordered_smul' [OrderedSMul 𝕜 M] : OrderedSMul 𝕜 (ι → M) :=
   Pi.orderedSMul
-#align pi.ordered_smul' Pi.orderedSMul'
--/
+#align pi.ordered_smul' Pi.ordered_smul'
 
-#print Pi.orderedSMul'' /-
 -- Sometimes Lean fails to unify the module with the scalars, so we define another instance.
-instance Pi.orderedSMul'' : OrderedSMul 𝕜 (ι → 𝕜) :=
-  @Pi.orderedSMul' ι 𝕜 𝕜 _ _ _ _
-#align pi.ordered_smul'' Pi.orderedSMul''
--/
+instance Pi.ordered_smul'' : OrderedSMul 𝕜 (ι → 𝕜) :=
+  @Pi.ordered_smul' ι 𝕜 𝕜 _ _ _ _
+#align pi.ordered_smul'' Pi.ordered_smul''
 
 variable [OrderedSMul 𝕜 M] {s : Set M} {a b : M} {c : 𝕜}
 
-#print smul_le_smul_iff_of_pos /-
-theorem smul_le_smul_iff_of_pos (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :=
+#print smul_le_smul_iff_of_pos_left /-
+theorem smul_le_smul_iff_of_pos_left (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :=
   ⟨fun h =>
     inv_smul_smul₀ hc.ne' a ▸
-      inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg h (inv_nonneg.2 hc.le),
-    fun h => smul_le_smul_of_nonneg h hc.le⟩
-#align smul_le_smul_iff_of_pos smul_le_smul_iff_of_pos
+      inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg_left h (inv_nonneg.2 hc.le),
+    fun h => smul_le_smul_of_nonneg_left h hc.le⟩
+#align smul_le_smul_iff_of_pos smul_le_smul_iff_of_pos_left
 -/
 
-#print inv_smul_le_iff /-
-theorem inv_smul_le_iff (h : 0 < c) : c⁻¹ • a ≤ b ↔ a ≤ c • b := by
-  rw [← smul_le_smul_iff_of_pos h, smul_inv_smul₀ h.ne']; infer_instance
-#align inv_smul_le_iff inv_smul_le_iff
+#print inv_smul_le_iff_of_pos /-
+theorem inv_smul_le_iff_of_pos (h : 0 < c) : c⁻¹ • a ≤ b ↔ a ≤ c • b := by
+  rw [← smul_le_smul_iff_of_pos_left h, smul_inv_smul₀ h.ne']; infer_instance
+#align inv_smul_le_iff inv_smul_le_iff_of_pos
 -/
 
-#print inv_smul_lt_iff /-
-theorem inv_smul_lt_iff (h : 0 < c) : c⁻¹ • a < b ↔ a < c • b := by
-  rw [← smul_lt_smul_iff_of_pos h, smul_inv_smul₀ h.ne']; infer_instance
-#align inv_smul_lt_iff inv_smul_lt_iff
+#print inv_smul_lt_iff_of_pos /-
+theorem inv_smul_lt_iff_of_pos (h : 0 < c) : c⁻¹ • a < b ↔ a < c • b := by
+  rw [← smul_lt_smul_iff_of_pos_left h, smul_inv_smul₀ h.ne']; infer_instance
+#align inv_smul_lt_iff inv_smul_lt_iff_of_pos
 -/
 
-#print le_inv_smul_iff /-
-theorem le_inv_smul_iff (h : 0 < c) : a ≤ c⁻¹ • b ↔ c • a ≤ b := by
-  rw [← smul_le_smul_iff_of_pos h, smul_inv_smul₀ h.ne']; infer_instance
-#align le_inv_smul_iff le_inv_smul_iff
+#print le_inv_smul_iff_of_pos /-
+theorem le_inv_smul_iff_of_pos (h : 0 < c) : a ≤ c⁻¹ • b ↔ c • a ≤ b := by
+  rw [← smul_le_smul_iff_of_pos_left h, smul_inv_smul₀ h.ne']; infer_instance
+#align le_inv_smul_iff le_inv_smul_iff_of_pos
 -/
 
-#print lt_inv_smul_iff /-
-theorem lt_inv_smul_iff (h : 0 < c) : a < c⁻¹ • b ↔ c • a < b := by
-  rw [← smul_lt_smul_iff_of_pos h, smul_inv_smul₀ h.ne']; infer_instance
-#align lt_inv_smul_iff lt_inv_smul_iff
+#print lt_inv_smul_iff_of_pos /-
+theorem lt_inv_smul_iff_of_pos (h : 0 < c) : a < c⁻¹ • b ↔ c • a < b := by
+  rw [← smul_lt_smul_iff_of_pos_left h, smul_inv_smul₀ h.ne']; infer_instance
+#align lt_inv_smul_iff lt_inv_smul_iff_of_pos
 -/
 
 variable (M)
 
-#print OrderIso.smulLeft /-
+#print OrderIso.smulRight /-
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeft (hc : 0 < c) : M ≃o M
+def OrderIso.smulRight (hc : 0 < c) : M ≃o M
     where
   toFun b := c • b
   invFun b := c⁻¹ • b
   left_inv := inv_smul_smul₀ hc.ne'
   right_inv := smul_inv_smul₀ hc.ne'
-  map_rel_iff' b₁ b₂ := smul_le_smul_iff_of_pos hc
-#align order_iso.smul_left OrderIso.smulLeft
+  map_rel_iff' b₁ b₂ := smul_le_smul_iff_of_pos_left hc
+#align order_iso.smul_left OrderIso.smulRight
 -/
 
 variable {M}
@@ -357,28 +351,28 @@ variable {M}
 #print lowerBounds_smul_of_pos /-
 @[simp]
 theorem lowerBounds_smul_of_pos (hc : 0 < c) : lowerBounds (c • s) = c • lowerBounds s :=
-  (OrderIso.smulLeft _ hc).lowerBounds_image
+  (OrderIso.smulRight _ hc).lowerBounds_image
 #align lower_bounds_smul_of_pos lowerBounds_smul_of_pos
 -/
 
 #print upperBounds_smul_of_pos /-
 @[simp]
 theorem upperBounds_smul_of_pos (hc : 0 < c) : upperBounds (c • s) = c • upperBounds s :=
-  (OrderIso.smulLeft _ hc).upperBounds_image
+  (OrderIso.smulRight _ hc).upperBounds_image
 #align upper_bounds_smul_of_pos upperBounds_smul_of_pos
 -/
 
 #print bddBelow_smul_iff_of_pos /-
 @[simp]
 theorem bddBelow_smul_iff_of_pos (hc : 0 < c) : BddBelow (c • s) ↔ BddBelow s :=
-  (OrderIso.smulLeft _ hc).bddBelow_image
+  (OrderIso.smulRight _ hc).bddBelow_image
 #align bdd_below_smul_iff_of_pos bddBelow_smul_iff_of_pos
 -/
 
 #print bddAbove_smul_iff_of_pos /-
 @[simp]
 theorem bddAbove_smul_iff_of_pos (hc : 0 < c) : BddAbove (c • s) ↔ BddAbove s :=
-  (OrderIso.smulLeft _ hc).bddAbove_image
+  (OrderIso.smulRight _ hc).bddAbove_image
 #align bdd_above_smul_iff_of_pos bddAbove_smul_iff_of_pos
 -/
 

@@ -50,7 +50,7 @@ protected theorem ConvexOn.iciExtend (hf : ConvexOn 𝕜 s f) (hf' : MonotoneOn 
               mem_image_of_mem _ <| convex_uIcc _ _ left_mem_uIcc right_mem_uIcc ha hb hab)
           (hf.1 hx hy ha hb hab) _).trans
       (hf.2 hx hy ha hb hab)
-  rw [smul_max ha z, smul_max hb z]
+  rw [smul_max_of_nonneg ha z, smul_max_of_nonneg hb z]
   refine' le_trans _ max_add_add_le_max_add_max
   rw [Convex.combo_self hab, smul_eq_mul, smul_eq_mul]
 #align convex_on.Ici_extend ConvexOn.iciExtend
@@ -68,7 +68,7 @@ protected theorem ConvexOn.iicExtend (hf : ConvexOn 𝕜 s f) (hf' : AntitoneOn 
               mem_image_of_mem _ <| convex_uIcc _ _ left_mem_uIcc right_mem_uIcc ha hb hab)
           _).trans
       (hf.2 hx hy ha hb hab)
-  rw [smul_min ha z, smul_min hb z]
+  rw [smul_min_of_nonneg ha z, smul_min_of_nonneg hb z]
   refine' min_add_min_le_min_add_add.trans _
   rw [Convex.combo_self hab, smul_eq_mul, smul_eq_mul]
 #align convex_on.Iic_extend ConvexOn.iicExtend

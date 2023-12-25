@@ -2436,19 +2436,15 @@ theorem mul_le_iff_le_inv {a b r : ℝ≥0∞} (hr₀ : r ≠ 0) (hr₁ : r ≠ 
 #align ennreal.mul_le_iff_le_inv ENNReal.mul_le_iff_le_inv
 -/
 
-#print ENNReal.le_inv_smul_iff /-
 /-- A variant of `le_inv_smul_iff` that holds for `ennreal`. -/
 protected theorem le_inv_smul_iff {a b : ℝ≥0∞} {r : ℝ≥0} (hr₀ : r ≠ 0) : a ≤ r⁻¹ • b ↔ r • a ≤ b :=
   by simpa [hr₀, ENNReal.smul_def] using (mul_le_iff_le_inv (coe_ne_zero.mpr hr₀) coe_ne_top).symm
 #align ennreal.le_inv_smul_iff ENNReal.le_inv_smul_iff
--/
 
-#print ENNReal.inv_smul_le_iff /-
 /-- A variant of `inv_smul_le_iff` that holds for `ennreal`. -/
 protected theorem inv_smul_le_iff {a b : ℝ≥0∞} {r : ℝ≥0} (hr₀ : r ≠ 0) : r⁻¹ • a ≤ b ↔ a ≤ r • b :=
   by simpa only [inv_inv] using (ENNReal.le_inv_smul_iff (inv_ne_zero hr₀)).symm
 #align ennreal.inv_smul_le_iff ENNReal.inv_smul_le_iff
--/
 
 #print ENNReal.le_of_forall_nnreal_lt /-
 theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r : ℝ≥0, ↑r < x → ↑r ≤ y) : x ≤ y :=

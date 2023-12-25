@@ -165,8 +165,8 @@ theorem centerMass_le_sup {s : Finset ι} {f : ι → α} {w : ι → R} (hw₀ 
     (hw₁ : 0 < ∑ i in s, w i) :
     s.centerMass w f ≤ s.sup' (nonempty_of_ne_empty <| by rintro rfl; simpa using hw₁) f :=
   by
-  rw [center_mass, inv_smul_le_iff hw₁, sum_smul]
-  exact sum_le_sum fun i hi => smul_le_smul_of_nonneg (le_sup' _ hi) <| hw₀ i hi
+  rw [center_mass, inv_smul_le_iff_of_pos hw₁, sum_smul]
+  exact sum_le_sum fun i hi => smul_le_smul_of_nonneg_left (le_sup' _ hi) <| hw₀ i hi
   infer_instance
 #align finset.center_mass_le_sup Finset.centerMass_le_sup
 -/

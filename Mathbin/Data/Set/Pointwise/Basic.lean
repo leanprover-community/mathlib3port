@@ -1637,17 +1637,17 @@ theorem preimage_div_preimage_subset {s t : Set β} : m ⁻¹' s / m ⁻¹' t �
 
 end Group
 
-#print Set.bddAbove_mul /-
+#print Set.BddAbove.mul /-
 @[to_additive]
-theorem bddAbove_mul [OrderedCommMonoid α] {A B : Set α} :
+theorem Set.BddAbove.mul [OrderedCommMonoid α] {A B : Set α} :
     BddAbove A → BddAbove B → BddAbove (A * B) :=
   by
   rintro ⟨bA, hbA⟩ ⟨bB, hbB⟩
   use bA * bB
   rintro x ⟨xa, xb, hxa, hxb, rfl⟩
   exact mul_le_mul' (hbA hxa) (hbB hxb)
-#align set.bdd_above_mul Set.bddAbove_mul
-#align set.bdd_above_add Set.bddAbove_add
+#align set.bdd_above_mul Set.BddAbove.mul
+#align set.bdd_above_add Set.BddAbove.add
 -/
 
 end Set
