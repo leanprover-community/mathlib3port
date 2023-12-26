@@ -685,12 +685,12 @@ theorem mapsTo_range (f : α → β) (s : Set α) : MapsTo f s (range f) :=
 #align set.maps_to_range Set.mapsTo_range
 -/
 
-#print Set.maps_image_to /-
+#print Set.mapsTo_image_iff /-
 @[simp]
-theorem maps_image_to (f : α → β) (g : γ → α) (s : Set γ) (t : Set β) :
+theorem mapsTo_image_iff (f : α → β) (g : γ → α) (s : Set γ) (t : Set β) :
     MapsTo f (g '' s) t ↔ MapsTo (f ∘ g) s t :=
   ⟨fun h c hc => h ⟨c, hc, rfl⟩, fun h d ⟨c, hc⟩ => hc.2 ▸ h hc.1⟩
-#align set.maps_image_to Set.maps_image_to
+#align set.maps_image_to Set.mapsTo_image_iff
 -/
 
 #print Set.MapsTo.comp_left /-

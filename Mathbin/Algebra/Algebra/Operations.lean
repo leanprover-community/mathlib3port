@@ -770,8 +770,8 @@ theorem smul_le_smul {s t : SetSemiring A} {M N : Submodule R A} (h₁ : s.down 
 #align submodule.smul_le_smul Submodule.smul_le_smul
 -/
 
-#print Submodule.smul_singleton /-
-theorem smul_singleton (a : A) (M : Submodule R A) :
+#print Submodule.singleton_smul /-
+theorem singleton_smul (a : A) (M : Submodule R A) :
     ({a} : Set A).up • M = M.map (LinearMap.mulLeft R a) :=
   by
   conv_lhs => rw [← span_eq M]
@@ -783,7 +783,7 @@ theorem smul_singleton (a : A) (M : Submodule R A) :
     rw [SetLike.mem_coe, mem_map, set.mem_singleton_iff.mp hb]
     exact ⟨m, hm, rfl⟩
   · rintro _ ⟨m, hm, rfl⟩; exact subset_span ⟨a, m, Set.mem_singleton a, hm, rfl⟩
-#align submodule.smul_singleton Submodule.smul_singleton
+#align submodule.smul_singleton Submodule.singleton_smul
 -/
 
 section Quotient
