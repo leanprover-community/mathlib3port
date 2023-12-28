@@ -125,7 +125,6 @@ private noncomputable def pair_contrib (G : SimpleGraph α) (ε : ℝ) (hP : P.I
   ∑ i in (chunk hP G ε (mem_offDiag.1 x.2).1).parts ×ˢ (chunk hP G ε (mem_offDiag.1 x.2).2.1).parts,
     G.edgeDensity i.fst i.snd ^ 2
 
-#print SzemerediRegularity.offDiag_pairs_le_increment_energy /-
 theorem offDiag_pairs_le_increment_energy :
     ∑ x in P.parts.offDiag.attach, pairContrib G ε hP x / (increment hP G ε).parts.card ^ 2 ≤
       (increment hP G ε).energy G :=
@@ -148,12 +147,12 @@ theorem offDiag_pairs_le_increment_energy :
               Finpartition.le _ huv₂.1 ha) <|
           P.disjoint.elim_finset hs.2.1 ht.2.1 b (Finpartition.le _ huv₁.2 hb) <|
             Finpartition.le _ huv₂.2 hb)
-#align szemeredi_regularity.off_diag_pairs_le_increment_energy SzemerediRegularity.offDiag_pairs_le_increment_energy
--/
+#align szemeredi_regularity.off_diag_pairs_le_increment_energy szemeredi_regularity.offDiag_pairs_le_increment_energy
 
-#print SzemerediRegularity.pairContrib_lower_bound /-
-theorem pairContrib_lower_bound [Nonempty α] (x : { i // i ∈ P.parts.offDiag }) (hε₁ : ε ≤ 1)
-    (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) :
+#print SzemerediRegularity.le_sum_distinctPairs_edgeDensity_sq /-
+theorem le_sum_distinctPairs_edgeDensity_sq [Nonempty α] (x : { i // i ∈ P.parts.offDiag })
+    (hε₁ : ε ≤ 1) (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
+    (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) :
     (↑(G.edgeDensity x.1.1 x.1.2) ^ 2 - ε ^ 5 / 25 +
         if G.IsUniform ε x.1.1 x.1.2 then 0 else ε ^ 4 / 3) ≤
       pairContrib G ε hP x / 16 ^ P.parts.card :=
@@ -164,10 +163,9 @@ theorem pairContrib_lower_bound [Nonempty α] (x : { i // i ∈ P.parts.offDiag 
   · rw [add_zero]
     exact edge_density_chunk_uniform hPα hPε _ _
   · exact edge_density_chunk_not_uniform hPα hPε hε₁ (mem_off_diag.1 x.2).2.2 h
-#align szemeredi_regularity.pair_contrib_lower_bound SzemerediRegularity.pairContrib_lower_bound
+#align szemeredi_regularity.pair_contrib_lower_bound SzemerediRegularity.le_sum_distinctPairs_edgeDensity_sq
 -/
 
-#print SzemerediRegularity.uniform_add_nonuniform_eq_offDiag_pairs /-
 theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1) (hP₇ : 7 ≤ P.parts.card)
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
     (hPG : ¬P.IsUniform G ε) :
@@ -221,8 +219,7 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
     Nat.cast_one, one_mul, le_sub_comm, ← mul_sub_left_distrib, ←
     div_le_iff (show (0 : ℝ) < 1 / 3 - 1 / 25 - 1 / 4 by norm_num)]
   exact le_trans (show _ ≤ (7 : ℝ) by norm_num) (by exact_mod_cast hP₇)
-#align szemeredi_regularity.uniform_add_nonuniform_eq_off_diag_pairs SzemerediRegularity.uniform_add_nonuniform_eq_offDiag_pairs
--/
+#align szemeredi_regularity.uniform_add_nonuniform_eq_off_diag_pairs szemeredi_regularity.uniform_add_nonuniform_eq_offDiag_pairs
 
 #print SzemerediRegularity.energy_increment /-
 /-- The increment partition has energy greater than the original one by a known fixed amount. -/

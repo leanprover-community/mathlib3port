@@ -266,7 +266,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
   calc
     (univ.filterₓ fun a : α => a ^ n = 1).card ≤
         (zpowers (g ^ (Fintype.card α / Nat.gcd n (Fintype.card α))) : Set α).toFinset.card :=
-      card_le_of_subset fun x hx =>
+      card_le_card fun x hx =>
         let ⟨m, hm⟩ := show x ∈ Submonoid.powers g from mem_powers_iff_mem_zpowers.2 <| hg x
         Set.mem_toFinset.2
           ⟨(m / (Fintype.card α / Nat.gcd n (Fintype.card α)) : ℕ),

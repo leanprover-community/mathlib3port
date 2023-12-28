@@ -487,7 +487,7 @@ theorem huang_degree_theorem (H : Set (Q (m + 1))) (hH : Card H ≥ 2 ^ m + 1) :
       by
       refine' (mul_le_mul_right H_q_pos).2 _
       norm_cast
-      apply Finset.card_le_of_subset
+      apply Finset.card_le_card
       rw [Set.toFinset_inter]
       convert Finset.inter_subset_inter_right coeffs_support
 #align sensitivity.huang_degree_theorem Sensitivity.huang_degree_theorem

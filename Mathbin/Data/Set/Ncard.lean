@@ -84,18 +84,18 @@ theorem ncard_eq_toFinset_card (s : Set α)
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
-#print Set.ncard_le_of_subset /-
-theorem ncard_le_of_subset (hst : s ⊆ t)
+#print Set.ncard_le_ncard /-
+theorem ncard_le_ncard (hst : s ⊆ t)
     (ht : t.Finite := by
       run_tac
         to_finite_tac) :
     s.ncard ≤ t.ncard :=
   @Finite.card_le_of_embedding _ _ (finite_coe_iff.mpr ht) (Set.embeddingOfSubset _ _ hst)
-#align set.ncard_le_of_subset Set.ncard_le_of_subset
+#align set.ncard_le_of_subset Set.ncard_le_ncard
 -/
 
 #print Set.ncard_mono /-
-theorem ncard_mono [Finite α] : @Monotone (Set α) _ _ _ ncard := fun _ _ => ncard_le_of_subset
+theorem ncard_mono [Finite α] : @Monotone (Set α) _ _ _ ncard := fun _ _ => ncard_le_ncard
 #align set.ncard_mono Set.ncard_mono
 -/
 
@@ -465,7 +465,7 @@ theorem ncard_inter_le_ncard_left (s t : Set α)
       run_tac
         to_finite_tac) :
     (s ∩ t).ncard ≤ s.ncard :=
-  ncard_le_of_subset (inter_subset_left _ _) hs
+  ncard_le_ncard (inter_subset_left _ _) hs
 #align set.ncard_inter_le_ncard_left Set.ncard_inter_le_ncard_left
 -/
 
@@ -476,7 +476,7 @@ theorem ncard_inter_le_ncard_right (s t : Set α)
       run_tac
         to_finite_tac) :
     (s ∩ t).ncard ≤ t.ncard :=
-  ncard_le_of_subset (inter_subset_right _ _) ht
+  ncard_le_ncard (inter_subset_right _ _) ht
 #align set.ncard_inter_le_ncard_right Set.ncard_inter_le_ncard_right
 -/
 

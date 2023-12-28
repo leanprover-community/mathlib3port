@@ -493,7 +493,7 @@ Kruskal-Katona. -/
 theorem card_shadow_compression_le (u v : Finset α)
     (huv : ∀ x ∈ u, ∃ y ∈ v, IsCompressed (u.eraseₓ x) (v.eraseₓ y) 𝒜) :
     ((∂ ) (𝓒 u v 𝒜)).card ≤ ((∂ ) 𝒜).card :=
-  (card_le_of_subset <| shadow_compression_subset_compression_shadow _ _ huv).trans
+  (card_le_card <| shadow_compression_subset_compression_shadow _ _ huv).trans
     (card_compression _ _ _).le
 #align uv.card_shadow_compression_le UV.card_shadow_compression_le
 -/

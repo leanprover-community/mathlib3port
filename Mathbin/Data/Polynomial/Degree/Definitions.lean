@@ -632,7 +632,7 @@ theorem card_support_C_mul_X_pow_le_one {c : R} {n : ℕ} : (C c * X ^ n).suppor
 theorem card_supp_le_succ_natDegree (p : R[X]) : p.support.card ≤ p.natDegree + 1 :=
   by
   rw [← Finset.card_range (p.nat_degree + 1)]
-  exact Finset.card_le_of_subset supp_subset_range_nat_degree_succ
+  exact Finset.card_le_card supp_subset_range_nat_degree_succ
 #align polynomial.card_supp_le_succ_nat_degree Polynomial.card_supp_le_succ_natDegree
 -/
 

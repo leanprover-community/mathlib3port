@@ -701,7 +701,7 @@ theorem totalDegree_eq (p : MvPolynomial σ R) :
 theorem totalDegree_le_degrees_card (p : MvPolynomial σ R) : p.totalDegree ≤ p.degrees.card := by
   classical
   rw [total_degree_eq]
-  exact Finset.sup_le fun s hs => Multiset.card_le_of_le <| Finset.le_sup hs
+  exact Finset.sup_le fun s hs => Multiset.card_le_card <| Finset.le_sup hs
 #align mv_polynomial.total_degree_le_degrees_card MvPolynomial.totalDegree_le_degrees_card
 -/
 

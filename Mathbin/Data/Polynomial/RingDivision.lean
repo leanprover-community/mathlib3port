@@ -704,7 +704,7 @@ theorem isRoot_of_mem_roots (h : a ∈ p.roots) : IsRoot p a :=
 #print Polynomial.card_le_degree_of_subset_roots /-
 theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ p.roots) :
     Z.card ≤ p.natDegree :=
-  (Multiset.card_le_of_le (Finset.val_le_iff_val_subset.2 h)).trans (Polynomial.card_roots' p)
+  (Multiset.card_le_card (Finset.val_le_iff_val_subset.2 h)).trans (Polynomial.card_roots' p)
 #align polynomial.card_le_degree_of_subset_roots Polynomial.card_le_degree_of_subset_roots
 -/
 
@@ -1448,7 +1448,7 @@ theorem map_roots_le_of_injective [IsDomain A] [IsDomain B] (p : A[X]) {f : A �
 #print Polynomial.card_roots_le_map /-
 theorem card_roots_le_map [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p.map f ≠ 0) :
     p.roots.card ≤ (p.map f).roots.card := by rw [← p.roots.card_map f];
-  exact Multiset.card_le_of_le (map_roots_le h)
+  exact Multiset.card_le_card (map_roots_le h)
 #align polynomial.card_roots_le_map Polynomial.card_roots_le_map
 -/
 

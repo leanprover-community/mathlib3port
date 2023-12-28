@@ -295,7 +295,7 @@ theorem pow_two_pow_sub_pow_two_pow [CommRing R] {x y : R} (n : ℕ) :
 #align pow_two_pow_sub_pow_two_pow pow_two_pow_sub_pow_two_pow
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:80:4: warning: unsupported fin_cases 'using hy' clause -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:76:4: warning: unsupported fin_cases 'using hy' clause -/
 #print Int.sq_mod_four_eq_one_of_odd /-
 theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
   by

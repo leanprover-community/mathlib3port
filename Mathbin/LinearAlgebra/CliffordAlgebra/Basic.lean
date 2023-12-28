@@ -244,11 +244,11 @@ theorem ι_mul_ι_add_swap (a b : M) :
 #align clifford_algebra.ι_mul_ι_add_swap CliffordAlgebra.ι_mul_ι_add_swap
 -/
 
-#print CliffordAlgebra.ι_mul_comm /-
-theorem ι_mul_comm (a b : M) :
+#print CliffordAlgebra.ι_mul_ι_comm /-
+theorem ι_mul_ι_comm (a b : M) :
     ι Q a * ι Q b = algebraMap R _ (QuadraticForm.polar Q a b) - ι Q b * ι Q a :=
   eq_sub_of_add_eq (ι_mul_ι_add_swap a b)
-#align clifford_algebra.ι_mul_comm CliffordAlgebra.ι_mul_comm
+#align clifford_algebra.ι_mul_comm CliffordAlgebra.ι_mul_ι_comm
 -/
 
 #print CliffordAlgebra.ι_mul_ι_mul_ι /-

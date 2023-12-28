@@ -145,7 +145,7 @@ theorem prop_y (a : Solution₁ d) : d * a.y ^ 2 = a.x ^ 2 - 1 := by rw [← a.p
 /-- Two solutions are equal if their `x` and `y` components are equal. -/
 @[ext]
 theorem ext {a b : Solution₁ d} (hx : a.x = b.x) (hy : a.y = b.y) : a = b :=
-  Subtype.ext <| ext.mpr ⟨hx, hy⟩
+  Subtype.ext <| ext_iff.mpr ⟨hx, hy⟩
 #align pell.solution₁.ext Pell.Solution₁.ext
 -/
 
@@ -175,7 +175,7 @@ theorem y_mk (x y : ℤ) (prop : x ^ 2 - d * y ^ 2 = 1) : (mk x y prop).y = y :=
 #print Pell.Solution₁.coe_mk /-
 @[simp]
 theorem coe_mk (x y : ℤ) (prop : x ^ 2 - d * y ^ 2 = 1) : (↑(mk x y prop) : ℤ√d) = ⟨x, y⟩ :=
-  Zsqrtd.ext.mpr ⟨x_mk x y prop, y_mk x y prop⟩
+  Zsqrtd.ext_iff.mpr ⟨x_mk x y prop, y_mk x y prop⟩
 #align pell.solution₁.coe_mk Pell.Solution₁.coe_mk
 -/
 

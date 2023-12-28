@@ -303,7 +303,7 @@ theorem Finset.card_eq_iff_eq_univ [Fintype α] (s : Finset α) :
 
 #print Finset.card_le_univ /-
 theorem Finset.card_le_univ [Fintype α] (s : Finset α) : s.card ≤ Fintype.card α :=
-  card_le_of_subset (subset_univ s)
+  card_le_card (subset_univ s)
 #align finset.card_le_univ Finset.card_le_univ
 -/
 

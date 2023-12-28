@@ -317,48 +317,48 @@ theorem FiniteDimensional.basisUnique_repr_eq_zero_iff {ι : Type _} [Unique ι]
 #align finite_dimensional.basis_unique.repr_eq_zero_iff FiniteDimensional.basisUnique_repr_eq_zero_iff
 -/
 
-#print FiniteDimensional.cardinal_mk_le_finrank_of_linearIndependent /-
-theorem cardinal_mk_le_finrank_of_linearIndependent [FiniteDimensional K V] {ι : Type w} {b : ι → V}
+#print LinearIndependent.cardinal_mk_le_finrank /-
+theorem cardinal_mk_le_finrank [FiniteDimensional K V] {ι : Type w} {b : ι → V}
     (h : LinearIndependent K b) : (#ι) ≤ finrank K V :=
   by
   rw [← lift_le.{_, max v w}]
   simpa [← finrank_eq_rank', -finrank_eq_rank] using
-    cardinal_lift_le_rank_of_linearIndependent.{_, _, _, max v w} h
-#align finite_dimensional.cardinal_mk_le_finrank_of_linear_independent FiniteDimensional.cardinal_mk_le_finrank_of_linearIndependent
+    LinearIndependent.cardinal_lift_le_rank.{_, _, _, max v w} h
+#align finite_dimensional.cardinal_mk_le_finrank_of_linear_independent LinearIndependent.cardinal_mk_le_finrank
 -/
 
-#print FiniteDimensional.fintype_card_le_finrank_of_linearIndependent /-
-theorem fintype_card_le_finrank_of_linearIndependent [FiniteDimensional K V] {ι : Type _}
-    [Fintype ι] {b : ι → V} (h : LinearIndependent K b) : Fintype.card ι ≤ finrank K V := by
+#print LinearIndependent.fintype_card_le_finrank /-
+theorem fintype_card_le_finrank [FiniteDimensional K V] {ι : Type _} [Fintype ι] {b : ι → V}
+    (h : LinearIndependent K b) : Fintype.card ι ≤ finrank K V := by
   simpa using cardinal_mk_le_finrank_of_linear_independent h
-#align finite_dimensional.fintype_card_le_finrank_of_linear_independent FiniteDimensional.fintype_card_le_finrank_of_linearIndependent
+#align finite_dimensional.fintype_card_le_finrank_of_linear_independent LinearIndependent.fintype_card_le_finrank
 -/
 
-#print FiniteDimensional.finset_card_le_finrank_of_linearIndependent /-
-theorem finset_card_le_finrank_of_linearIndependent [FiniteDimensional K V] {b : Finset V}
+#print LinearIndependent.finset_card_le_finrank /-
+theorem finset_card_le_finrank [FiniteDimensional K V] {b : Finset V}
     (h : LinearIndependent K (fun x => x : b → V)) : b.card ≤ finrank K V :=
   by
   rw [← Fintype.card_coe]
   exact fintype_card_le_finrank_of_linear_independent h
-#align finite_dimensional.finset_card_le_finrank_of_linear_independent FiniteDimensional.finset_card_le_finrank_of_linearIndependent
+#align finite_dimensional.finset_card_le_finrank_of_linear_independent LinearIndependent.finset_card_le_finrank
 -/
 
-#print FiniteDimensional.lt_aleph0_of_linearIndependent /-
-theorem lt_aleph0_of_linearIndependent {ι : Type w} [FiniteDimensional K V] {v : ι → V}
+#print LinearIndependent.lt_aleph0_of_finiteDimensional /-
+theorem lt_aleph0_of_finiteDimensional {ι : Type w} [FiniteDimensional K V] {v : ι → V}
     (h : LinearIndependent K v) : (#ι) < ℵ₀ :=
   by
   apply Cardinal.lift_lt.1
   apply lt_of_le_of_lt
-  apply cardinal_lift_le_rank_of_linearIndependent h
+  apply LinearIndependent.cardinal_lift_le_rank h
   rw [← finrank_eq_rank, Cardinal.lift_aleph0, Cardinal.lift_natCast]
   apply Cardinal.nat_lt_aleph0
-#align finite_dimensional.lt_aleph_0_of_linear_independent FiniteDimensional.lt_aleph0_of_linearIndependent
+#align finite_dimensional.lt_aleph_0_of_linear_independent LinearIndependent.lt_aleph0_of_finiteDimensional
 -/
 
 #print LinearIndependent.setFinite /-
 theorem LinearIndependent.setFinite [FiniteDimensional K V] {b : Set V}
     (h : LinearIndependent K fun x : b => (x : V)) : b.Finite :=
-  Cardinal.lt_aleph0_iff_set_finite.mp (FiniteDimensional.lt_aleph0_of_linearIndependent h)
+  Cardinal.lt_aleph0_iff_set_finite.mp (LinearIndependent.lt_aleph0_of_finiteDimensional h)
 #align linear_independent.finite LinearIndependent.setFinite
 -/
 

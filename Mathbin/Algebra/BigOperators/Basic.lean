@@ -174,14 +174,16 @@ protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β →* γ) (f :
 #align monoid_hom.map_prod map_prodₓ
 #align add_monoid_hom.map_sum map_sumₓ
 
-#print MulEquiv.map_prod /-
+/- warning: mul_equiv.map_prod clashes with monoid_hom.map_prod -> map_prodₓ
+Case conversion may be inaccurate. Consider using '#align mul_equiv.map_prod map_prodₓₓ'. -/
+#print map_prodₓ /-
 /-- Deprecated: use `_root_.map_prod` instead. -/
 @[to_additive "Deprecated: use `_root_.map_sum` instead."]
-protected theorem MulEquiv.map_prod [CommMonoid β] [CommMonoid γ] (g : β ≃* γ) (f : α → β)
-    (s : Finset α) : g (∏ x in s, f x) = ∏ x in s, g (f x) :=
+protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β ≃* γ) (f : α → β) (s : Finset α) :
+    g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
-#align mul_equiv.map_prod MulEquiv.map_prod
-#align add_equiv.map_sum AddEquiv.map_sum
+#align mul_equiv.map_prod map_prodₓ
+#align add_monoid_hom.map_sum map_sumₓ
 -/
 
 #print RingHom.map_list_prod /-

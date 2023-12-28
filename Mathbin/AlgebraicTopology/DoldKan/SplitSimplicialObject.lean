@@ -52,9 +52,9 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 -/
 
-#print SimplicialObject.Splitting.ι_πSummand_eq_id /-
+#print SimplicialObject.Splitting.cofan_inj_πSummand_eq_id /-
 @[simp, reassoc]
-theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
+theorem cofan_inj_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ s.πSummand A = 𝟙 _ :=
   by
   dsimp [ι_summand, π_summand]
@@ -62,12 +62,12 @@ theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A 
   erw [colimit.ι_desc, cofan.mk_ι_app]
   dsimp
   simp only [eq_self_iff_true, if_true]
-#align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_πSummand_eq_id
+#align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.cofan_inj_πSummand_eq_id
 -/
 
-#print SimplicialObject.Splitting.ι_πSummand_eq_zero /-
+#print SimplicialObject.Splitting.cofan_inj_πSummand_eq_zero /-
 @[simp, reassoc]
-theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
+theorem cofan_inj_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
     (h : B ≠ A) : s.ιSummand A ≫ s.πSummand B = 0 :=
   by
   dsimp [ι_summand, π_summand]
@@ -75,7 +75,7 @@ theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (
   erw [colimit.ι_desc, cofan.mk_ι_app]
   apply dif_neg
   exact h.symm
-#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_πSummand_eq_zero
+#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.cofan_inj_πSummand_eq_zero
 -/
 
 variable [Preadditive C]
@@ -111,17 +111,17 @@ theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
 #align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zero
 -/
 
-#print SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zero /-
+#print SimplicialObject.Splitting.cofan_inj_comp_PInfty_eq_zero /-
 /-- If a simplicial object `X` in an additive category is split,
 then `P_infty` vanishes on all the summands of `X _[n]` which do
 not correspond to the identity of `[n]`. -/
-theorem ιSummand_comp_PInfty_eq_zero {X : SimplicialObject C} (s : SimplicialObject.Splitting X)
+theorem cofan_inj_comp_PInfty_eq_zero {X : SimplicialObject C} (s : SimplicialObject.Splitting X)
     {n : ℕ} (A : SimplicialObject.Splitting.IndexSet (op [n])) (hA : ¬A.EqId) :
     s.ιSummand A ≫ PInfty.f n = 0 :=
   by
   rw [SimplicialObject.Splitting.IndexSet.eqId_iff_mono] at hA 
-  rw [SimplicialObject.Splitting.ιSummand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
-#align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zero
+  rw [SimplicialObject.Splitting.cofan_inj_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
+#align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.cofan_inj_comp_PInfty_eq_zero
 -/
 
 #print SimplicialObject.Splitting.comp_PInfty_eq_zero_iff /-
@@ -165,9 +165,9 @@ theorem PInfty_comp_πSummand_id (n : ℕ) :
 #align simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.PInfty_comp_πSummand_id
 -/
 
-#print SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_PInfty_eq_PInfty /-
+#print SimplicialObject.Splitting.πSummand_comp_cofan_inj_id_comp_PInfty_eq_PInfty /-
 @[simp, reassoc]
-theorem πSummand_comp_ιSummand_comp_PInfty_eq_PInfty (n : ℕ) :
+theorem πSummand_comp_cofan_inj_id_comp_PInfty_eq_PInfty (n : ℕ) :
     s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ PInfty.f n =
       PInfty.f n :=
   by
@@ -176,7 +176,7 @@ theorem πSummand_comp_ιSummand_comp_PInfty_eq_PInfty (n : ℕ) :
   rw [Fintype.sum_eq_single (index_set.id (op [n])), assoc]
   rintro A (hA : ¬A.eq_id)
   rw [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
-#align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_PInfty_eq_PInfty
+#align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.πSummand_comp_cofan_inj_id_comp_PInfty_eq_PInfty
 -/
 
 #print SimplicialObject.Splitting.d /-

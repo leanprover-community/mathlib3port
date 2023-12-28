@@ -72,7 +72,7 @@ def IsPell : ℤ√d → Prop
 
 #print Pell.isPell_norm /-
 theorem isPell_norm : ∀ {b : ℤ√d}, IsPell b ↔ b * star b = 1
-  | ⟨x, y⟩ => by simp [Zsqrtd.ext, is_pell, mul_comm] <;> ring_nf
+  | ⟨x, y⟩ => by simp [Zsqrtd.ext_iff, is_pell, mul_comm] <;> ring_nf
 #align pell.is_pell_norm Pell.isPell_norm
 -/
 
@@ -270,7 +270,7 @@ theorem isPell_nat {x y : ℕ} : IsPell (⟨x, y⟩ : ℤ√d) ↔ x * x - d * y
 
 #print Pell.pellZd_succ /-
 @[simp]
-theorem pellZd_succ (n : ℕ) : pell_zd (n + 1) = pell_zd n * ⟨a, 1⟩ := by simp [Zsqrtd.ext]
+theorem pellZd_succ (n : ℕ) : pell_zd (n + 1) = pell_zd n * ⟨a, 1⟩ := by simp [Zsqrtd.ext_iff]
 #align pell.pell_zd_succ Pell.pellZd_succ
 -/
 
@@ -620,7 +620,7 @@ theorem pellZd_succ_succ (n) : pell_zd (n + 2) + pell_zd n = (2 * a : ℕ) * pel
   have : (1 : ℤ√d) + ⟨a, 1⟩ * ⟨a, 1⟩ = ⟨a, 1⟩ * (2 * a) :=
     by
     rw [Zsqrtd.coe_nat_val]; change (⟨_, _⟩ : ℤ√d a1) = ⟨_, _⟩
-    rw [dz_val]; dsimp [az]; rw [Zsqrtd.ext]; dsimp; constructor <;> ring
+    rw [dz_val]; dsimp [az]; rw [Zsqrtd.ext_iff]; dsimp; constructor <;> ring
   simpa [mul_add, mul_comm, mul_left_comm, add_comm] using congr_arg (· * pell_zd a1 n) this
 #align pell.pell_zd_succ_succ Pell.pellZd_succ_succ
 -/

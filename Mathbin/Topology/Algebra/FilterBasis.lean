@@ -166,12 +166,12 @@ instance : Inhabited (GroupFilterBasis G) :=
       use{1}
       simp⟩
 
-#print GroupFilterBasis.prod_subset_self /-
+#print GroupFilterBasis.subset_mul_self /-
 @[to_additive]
-theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U :=
+theorem subset_mul_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U :=
   fun x x_in => ⟨1, x, one h, x_in, one_mul x⟩
-#align group_filter_basis.prod_subset_self GroupFilterBasis.prod_subset_self
-#align add_group_filter_basis.sum_subset_self AddGroupFilterBasis.sum_subset_self
+#align group_filter_basis.prod_subset_self GroupFilterBasis.subset_mul_self
+#align add_group_filter_basis.sum_subset_self AddGroupFilterBasis.subset_add_self
 -/
 
 #print GroupFilterBasis.N /-

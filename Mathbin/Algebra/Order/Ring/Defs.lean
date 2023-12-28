@@ -1046,16 +1046,18 @@ theorem nonpos_of_mul_nonpos_right (h : a * b ≤ 0) (ha : 0 < a) : b ≤ 0 :=
 #align nonpos_of_mul_nonpos_right nonpos_of_mul_nonpos_right
 -/
 
-#print zero_le_mul_left /-
+#print mul_nonneg_iff_of_pos_left /-
 @[simp]
-theorem zero_le_mul_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b := by convert mul_le_mul_left h; simp
-#align zero_le_mul_left zero_le_mul_left
+theorem mul_nonneg_iff_of_pos_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b := by convert mul_le_mul_left h;
+  simp
+#align zero_le_mul_left mul_nonneg_iff_of_pos_left
 -/
 
-#print zero_le_mul_right /-
+#print mul_nonneg_iff_of_pos_right /-
 @[simp]
-theorem zero_le_mul_right (h : 0 < c) : 0 ≤ b * c ↔ 0 ≤ b := by convert mul_le_mul_right h; simp
-#align zero_le_mul_right zero_le_mul_right
+theorem mul_nonneg_iff_of_pos_right (h : 0 < c) : 0 ≤ b * c ↔ 0 ≤ b := by
+  convert mul_le_mul_right h; simp
+#align zero_le_mul_right mul_nonneg_iff_of_pos_right
 -/
 
 #print add_le_mul_of_left_le_right /-
@@ -1132,28 +1134,30 @@ theorem bit1_lt_bit1 : bit1 a < bit1 b ↔ a < b :=
 #print one_le_bit1 /-
 @[simp]
 theorem one_le_bit1 : (1 : α) ≤ bit1 a ↔ 0 ≤ a := by
-  rw [bit1, le_add_iff_nonneg_left, bit0, ← two_mul, zero_le_mul_left (zero_lt_two : 0 < (2 : α))]
+  rw [bit1, le_add_iff_nonneg_left, bit0, ← two_mul,
+    mul_nonneg_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align one_le_bit1 one_le_bit1
 -/
 
 #print one_lt_bit1 /-
 @[simp]
 theorem one_lt_bit1 : (1 : α) < bit1 a ↔ 0 < a := by
-  rw [bit1, lt_add_iff_pos_left, bit0, ← two_mul, zero_lt_mul_left (zero_lt_two : 0 < (2 : α))]
+  rw [bit1, lt_add_iff_pos_left, bit0, ← two_mul,
+    mul_pos_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align one_lt_bit1 one_lt_bit1
 -/
 
 #print zero_le_bit0 /-
 @[simp]
 theorem zero_le_bit0 : (0 : α) ≤ bit0 a ↔ 0 ≤ a := by
-  rw [bit0, ← two_mul, zero_le_mul_left (zero_lt_two : 0 < (2 : α))]
+  rw [bit0, ← two_mul, mul_nonneg_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align zero_le_bit0 zero_le_bit0
 -/
 
 #print zero_lt_bit0 /-
 @[simp]
 theorem zero_lt_bit0 : (0 : α) < bit0 a ↔ 0 < a := by
-  rw [bit0, ← two_mul, zero_lt_mul_left (zero_lt_two : 0 < (2 : α))]
+  rw [bit0, ← two_mul, mul_pos_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align zero_lt_bit0 zero_lt_bit0
 -/
 
@@ -1187,7 +1191,7 @@ theorem nonpos_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : a < 0) : b ≤ 0 :=
 @[simp]
 theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
   have : ∀ {u : αˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h =>
-    (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
+    (mul_pos_iff_of_pos_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
   ⟨this, this⟩
 #align units.inv_pos Units.inv_pos
 -/

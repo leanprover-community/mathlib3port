@@ -74,7 +74,7 @@ theorem radical_inequality {n : ℕ} (h : 107 ≤ n) : sqrt (4 + 2 * n) ≤ 2 * 
   have h1n : 0 ≤ 1 + (n : ℝ) := by norm_cast; exact Nat.zero_le _
   rw [sqrt_le_iff]
   constructor
-  · simp only [sub_nonneg, zero_le_mul_left, zero_lt_two, le_sqrt zero_lt_three.le h1n]
+  · simp only [sub_nonneg, mul_nonneg_iff_of_pos_left, zero_lt_two, le_sqrt zero_lt_three.le h1n]
     norm_cast; linarith only [h]
   ring
   rw [pow_two, ← sqrt_mul h1n, sqrt_mul_self h1n]

@@ -109,6 +109,7 @@ theorem pow_lt_one' {a : M} (ha : a < 1) {k : ℕ} (hk : k ≠ 0) : a ^ k < 1 :=
 #align nsmul_neg nsmul_neg
 -/
 
+#print pow_lt_pow' /-
 @[to_additive nsmul_lt_nsmul]
 theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ} (ha : 1 < a)
     (h : n < m) : a ^ n < a ^ m :=
@@ -118,6 +119,7 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
   exact lt_mul_of_one_lt_right' _ (one_lt_pow' ha k.succ_ne_zero)
 #align pow_lt_pow' pow_lt_pow'
 #align nsmul_lt_nsmul nsmul_lt_nsmul
+-/
 
 #print pow_right_strictMono' /-
 @[to_additive nsmul_left_strictMono]
@@ -176,6 +178,7 @@ section CovariantLtSwap
 variable [Preorder β] [CovariantClass M M (· * ·) (· < ·)]
   [CovariantClass M M (swap (· * ·)) (· < ·)] {f : β → M}
 
+#print StrictMono.pow_right' /-
 @[to_additive StrictMono.nsmul_left]
 theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → StrictMono fun a => f a ^ n
   | 0, hn => (hn rfl).elim
@@ -184,6 +187,7 @@ theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → S
     exact hf.mul' (StrictMono.pow_right' n.succ_ne_zero)
 #align strict_mono.pow_right' StrictMono.pow_right'
 #align strict_mono.nsmul_left StrictMono.nsmul_left
+-/
 
 #print pow_left_strictMono /-
 /-- See also `pow_strict_mono_right` -/
@@ -201,21 +205,21 @@ section CovariantLeSwap
 variable [Preorder β] [CovariantClass M M (· * ·) (· ≤ ·)]
   [CovariantClass M M (swap (· * ·)) (· ≤ ·)]
 
-#print Monotone.pow_right /-
+#print Monotone.pow_const /-
 @[to_additive Monotone.nsmul_left]
-theorem Monotone.pow_right {f : β → M} (hf : Monotone f) : ∀ n : ℕ, Monotone fun a => f a ^ n
+theorem Monotone.pow_const {f : β → M} (hf : Monotone f) : ∀ n : ℕ, Monotone fun a => f a ^ n
   | 0 => by simpa using monotone_const
-  | n + 1 => by simp_rw [pow_succ]; exact hf.mul' (Monotone.pow_right _)
-#align monotone.pow_right Monotone.pow_right
+  | n + 1 => by simp_rw [pow_succ]; exact hf.mul' (Monotone.pow_const _)
+#align monotone.pow_right Monotone.pow_const
 #align monotone.const_nsmul Monotone.const_nsmul
 -/
 
-#print pow_mono_right /-
-@[to_additive nsmul_mono_left]
-theorem pow_mono_right (n : ℕ) : Monotone fun a : M => a ^ n :=
+#print pow_left_mono /-
+@[to_additive nsmul_right_mono]
+theorem pow_left_mono (n : ℕ) : Monotone fun a : M => a ^ n :=
   monotone_id.pow_right _
-#align pow_mono_right pow_mono_right
-#align nsmul_mono_left nsmul_mono_left
+#align pow_mono_right pow_left_mono
+#align nsmul_mono_left nsmul_right_mono
 -/
 
 end CovariantLeSwap
@@ -317,7 +321,7 @@ variable [CovariantClass M M (· * ·) (· ≤ ·)] [CovariantClass M M (swap (�
 #print lt_of_pow_lt_pow_left' /-
 @[to_additive lt_of_nsmul_lt_nsmul_right]
 theorem lt_of_pow_lt_pow_left' {a b : M} (n : ℕ) : a ^ n < b ^ n → a < b :=
-  (pow_mono_right _).reflect_lt
+  (pow_left_mono _).reflect_lt
 #align lt_of_pow_lt_pow' lt_of_pow_lt_pow_left'
 #align lt_of_nsmul_lt_nsmul lt_of_nsmul_lt_nsmul_right
 -/
@@ -354,11 +358,11 @@ section CovariantLtSwap
 variable [CovariantClass M M (· * ·) (· < ·)] [CovariantClass M M (swap (· * ·)) (· < ·)]
 
 #print le_of_pow_le_pow_left' /-
-@[to_additive le_of_nsmul_le_nsmul_right']
+@[to_additive le_of_nsmul_le_nsmul_right]
 theorem le_of_pow_le_pow_left' {a b : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ b ^ n → a ≤ b :=
   (pow_left_strictMono hn).le_iff_le.1
 #align le_of_pow_le_pow' le_of_pow_le_pow_left'
-#align le_of_nsmul_le_nsmul le_of_nsmul_le_nsmul_right'
+#align le_of_nsmul_le_nsmul le_of_nsmul_le_nsmul_right
 -/
 
 #print min_le_of_mul_le_sq /-
@@ -557,13 +561,17 @@ theorem pow_right_strictMono (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
 #align pow_strict_mono_right pow_right_strictMono
 -/
 
+#print pow_lt_pow /-
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
   pow_right_strictMono h h2
 #align pow_lt_pow pow_lt_pow
+-/
 
+#print pow_lt_pow_iff /-
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (pow_right_strictMono h).lt_iff_lt
 #align pow_lt_pow_iff pow_lt_pow_iff
+-/
 
 #print pow_le_pow_iff_right /-
 theorem pow_le_pow_iff_right (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=

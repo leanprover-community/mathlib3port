@@ -436,11 +436,11 @@ theorem mul_neg_of_pos_of_neg [PosMulStrictMono α] (ha : 0 < a) (hb : b < 0) : 
 #align mul_neg_of_pos_of_neg mul_neg_of_pos_of_neg
 -/
 
-#print zero_lt_mul_left /-
+#print mul_pos_iff_of_pos_left /-
 @[simp]
-theorem zero_lt_mul_left [PosMulStrictMono α] [PosMulReflectLT α] (h : 0 < c) : 0 < c * b ↔ 0 < b :=
-  by convert mul_lt_mul_left h; simp
-#align zero_lt_mul_left zero_lt_mul_left
+theorem mul_pos_iff_of_pos_left [PosMulStrictMono α] [PosMulReflectLT α] (h : 0 < c) :
+    0 < c * b ↔ 0 < b := by convert mul_lt_mul_left h; simp
+#align zero_lt_mul_left mul_pos_iff_of_pos_left
 -/
 
 #print Right.mul_pos /-
@@ -456,11 +456,11 @@ theorem mul_neg_of_neg_of_pos [MulPosStrictMono α] (ha : a < 0) (hb : 0 < b) : 
 #align mul_neg_of_neg_of_pos mul_neg_of_neg_of_pos
 -/
 
-#print zero_lt_mul_right /-
+#print mul_pos_iff_of_pos_right /-
 @[simp]
-theorem zero_lt_mul_right [MulPosStrictMono α] [MulPosReflectLT α] (h : 0 < c) :
+theorem mul_pos_iff_of_pos_right [MulPosStrictMono α] [MulPosReflectLT α] (h : 0 < c) :
     0 < b * c ↔ 0 < b := by convert mul_lt_mul_right h; simp
-#align zero_lt_mul_right zero_lt_mul_right
+#align zero_lt_mul_right mul_pos_iff_of_pos_right
 -/
 
 #print Left.mul_nonneg /-

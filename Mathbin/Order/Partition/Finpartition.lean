@@ -640,7 +640,7 @@ theorem atomise_empty (hs : s.Nonempty) : (atomise s ∅).parts = {s} :=
 
 #print Finpartition.card_atomise_le /-
 theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=
-  (card_le_of_subset <| erase_subset _ _).trans <| Finset.card_image_le.trans (card_powerset _).le
+  (card_le_card <| erase_subset _ _).trans <| Finset.card_image_le.trans (card_powerset _).le
 #align finpartition.card_atomise_le Finpartition.card_atomise_le
 -/
 

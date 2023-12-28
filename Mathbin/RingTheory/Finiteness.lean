@@ -411,7 +411,7 @@ theorem fg_iff_compact (s : Submodule R M) : s.FG ↔ CompleteLattice.IsCompactE
   constructor
   · rintro ⟨t, rfl⟩
     rw [span_eq_supr_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_iSup t sp]
-    apply CompleteLattice.finset_sup_compact_of_compact
+    apply CompleteLattice.isCompactElement_finsetSup
     exact fun n _ => singleton_span_is_compact_element n
   · intro h
     -- s is the Sup of the spans of its elements.

@@ -170,6 +170,8 @@ end
 instance [CompleteSpace β] : CompleteSpace C(α, β) :=
   (isometryEquivBoundedOfCompact α β).CompleteSpace
 
+/- warning: continuous_map.continuous_eval clashes with continuous_map.continuous_eval' -> ContinuousMap.continuous_eval
+Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_eval ContinuousMap.continuous_evalₓ'. -/
 #print ContinuousMap.continuous_eval /-
 /-- See also `continuous_map.continuous_eval'` -/
 @[continuity]

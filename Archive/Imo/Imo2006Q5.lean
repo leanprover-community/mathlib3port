@@ -154,7 +154,7 @@ theorem imo2006_q5' {P : Polynomial ℤ} (hP : 1 < P.natDegree) :
   by_cases H : (P.comp P - X).roots.toFinset ⊆ (P - X).roots.toFinset
   ·
     exact
-      (Finset.card_le_of_subset H).trans
+      (Finset.card_le_card H).trans
         ((Multiset.toFinset_card_le _).trans ((card_roots' _).trans_eq hPX))
   -- Otherwise, take a, b with P(a) = b, P(b) = a, a ≠ b.
   · rcases Finset.not_subset.1 H with ⟨a, ha, hab⟩
@@ -184,7 +184,7 @@ theorem imo2006_q5' {P : Polynomial ℤ} (hP : 1 < P.natDegree) :
     suffices H' : (P.comp P - X).roots.toFinset ⊆ (P + X - a - b).roots.toFinset
     ·
       exact
-        (Finset.card_le_of_subset H').trans
+        (Finset.card_le_card H').trans
           ((Multiset.toFinset_card_le _).trans <| (card_roots' _).trans_eq hPab)
     · -- Let t be a root of P(P(t)) - t, define u = P(t).
       intro t ht
@@ -212,7 +212,7 @@ open imo2006_q5
 theorem imo2006_q5 {P : Polynomial ℤ} (hP : 1 < P.natDegree) {k : ℕ} (hk : 0 < k) :
     ((P.comp^[k]) X - X).roots.toFinset.card ≤ P.natDegree :=
   by
-  apply (Finset.card_le_of_subset fun t ht => _).trans (imo2006_q5' hP)
+  apply (Finset.card_le_card fun t ht => _).trans (imo2006_q5' hP)
   have hP' : P.comp P - X ≠ 0 := by simpa using polynomial.iterate_comp_sub_X_ne hP zero_lt_two
   replace ht := is_root_of_mem_roots (Multiset.mem_toFinset.1 ht)
   simp only [sub_eq_zero, is_root.def, eval_sub, iterate_comp_eval, eval_X] at ht 

@@ -272,7 +272,6 @@ def obj (K : ChainComplex C ℕ) : SimplicialObject C
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
-#print AlgebraicTopology.DoldKan.Γ₀.splitting_map_eq_id /-
 theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
     SimplicialObject.Splitting.map (Γ₀.obj K)
         (fun n : ℕ => Sigma.ι (Γ₀.Obj.summand K (op [n])) (Splitting.IndexSet.id (op [n]))) Δ =
@@ -290,7 +289,6 @@ theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
     Γ₀.obj.termwise.map_mono_id, A.ext']
   apply id_comp
 #align algebraic_topology.dold_kan.Γ₀.splitting_map_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_map_eq_id
--/
 
 #print AlgebraicTopology.DoldKan.Γ₀.splitting /-
 /-- By construction, the simplicial `Γ₀.obj K` is equipped with a splitting. -/
@@ -304,12 +302,10 @@ def splitting (K : ChainComplex C ℕ) : SimplicialObject.Splitting (Γ₀.obj K
 #align algebraic_topology.dold_kan.Γ₀.splitting AlgebraicTopology.DoldKan.Γ₀.splitting
 -/
 
-#print AlgebraicTopology.DoldKan.Γ₀.splitting_iso_hom_eq_id /-
 @[simp]
 theorem splitting_iso_hom_eq_id (Δ : SimplexCategoryᵒᵖ) : ((splitting K).Iso Δ).Hom = 𝟙 _ :=
   splitting_map_eq_id K Δ
 #align algebraic_topology.dold_kan.Γ₀.splitting_iso_hom_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_iso_hom_eq_id
--/
 
 #print AlgebraicTopology.DoldKan.Γ₀.Obj.map_on_summand /-
 @[reassoc]

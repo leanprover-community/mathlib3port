@@ -49,12 +49,12 @@ instance : DecidableEq (ℤ√d) := by
   run_tac
     tactic.mk_dec_eq_instance
 
-#print Zsqrtd.ext /-
-theorem ext : ∀ {z w : ℤ√d}, z = w ↔ z.re = w.re ∧ z.im = w.im
+#print Zsqrtd.ext_iff /-
+theorem ext_iff : ∀ {z w : ℤ√d}, z = w ↔ z.re = w.re ∧ z.im = w.im
   | ⟨x, y⟩, ⟨x', y'⟩ =>
     ⟨fun h => by injection h <;> constructor <;> assumption, fun ⟨h₁, h₂⟩ => by
       congr <;> assumption⟩
-#align zsqrtd.ext Zsqrtd.ext
+#align zsqrtd.ext Zsqrtd.ext_iff
 -/
 
 #print Zsqrtd.ofInt /-
@@ -681,7 +681,7 @@ def normMonoidHom : ℤ√d →* ℤ where
 
 #print Zsqrtd.norm_eq_mul_conj /-
 theorem norm_eq_mul_conj (n : ℤ√d) : (norm n : ℤ√d) = n * star n := by
-  cases n <;> simp [norm, star, Zsqrtd.ext, mul_comm, sub_eq_add_neg]
+  cases n <;> simp [norm, star, Zsqrtd.ext_iff, mul_comm, sub_eq_add_neg]
 #align zsqrtd.norm_eq_mul_conj Zsqrtd.norm_eq_mul_conj
 -/
 

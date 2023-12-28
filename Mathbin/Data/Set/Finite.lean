@@ -1577,12 +1577,10 @@ theorem card_lt_card {s t : Set α} [Fintype s] [Fintype t] (h : s ⊂ t) :
 #align set.card_lt_card Set.card_lt_card
 -/
 
-#print Set.card_le_of_subset /-
 theorem card_le_of_subset {s t : Set α} [Fintype s] [Fintype t] (hsub : s ⊆ t) :
     Fintype.card s ≤ Fintype.card t :=
   Fintype.card_le_of_injective (Set.inclusion hsub) (Set.inclusion_injective hsub)
 #align set.card_le_of_subset Set.card_le_of_subset
--/
 
 #print Set.eq_of_subset_of_card_le /-
 theorem eq_of_subset_of_card_le {s t : Set α} [Fintype s] [Fintype t] (hsub : s ⊆ t)

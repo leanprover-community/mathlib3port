@@ -95,7 +95,7 @@ theorem Real.sInf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sInf (a • s) =
   · rw [zero_smul_set hs, zero_smul]
     exact csInf_singleton 0
   by_cases BddAbove s
-  · exact ((OrderIso.smulLeftDual ℝ ha').map_csSup' hs h).symm
+  · exact ((OrderIso.smulRightDual ℝ ha').map_csSup' hs h).symm
   ·
     rw [Real.sInf_of_not_bddBelow (mt (bddBelow_smul_iff_of_neg ha').1 h),
       Real.sSup_of_not_bddAbove h, smul_zero]
@@ -117,7 +117,7 @@ theorem Real.sSup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sSup (a • s) =
   · rw [zero_smul_set hs, zero_smul]
     exact csSup_singleton 0
   by_cases BddBelow s
-  · exact ((OrderIso.smulLeftDual ℝ ha').map_csInf' hs h).symm
+  · exact ((OrderIso.smulRightDual ℝ ha').map_csInf' hs h).symm
   ·
     rw [Real.sSup_of_not_bddAbove (mt (bddAbove_smul_iff_of_neg ha').1 h),
       Real.sInf_of_not_bddBelow h, smul_zero]

@@ -123,17 +123,17 @@ variable {F : Type _} [Field F]
 
 variable (q : ℕ) {f : F[X]} (hf : HasSeparableContraction q f)
 
-#print Polynomial.Irreducible.hasSeparableContraction /-
+#print Irreducible.hasSeparableContraction /-
 /-- Every irreducible polynomial can be contracted to a separable polynomial.
 https://stacks.math.columbia.edu/tag/09H0 -/
-theorem Polynomial.Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
+theorem Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
     (irred : Irreducible f) : HasSeparableContraction q f :=
   by
   cases hF
   · exact ⟨f, irred.separable, ⟨0, by rw [pow_zero, expand_one]⟩⟩
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
-#align irreducible.has_separable_contraction Polynomial.Irreducible.hasSeparableContraction
+#align irreducible.has_separable_contraction Irreducible.hasSeparableContraction
 -/
 
 #print Polynomial.contraction_degree_eq_or_insep /-

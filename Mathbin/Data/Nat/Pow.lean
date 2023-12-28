@@ -146,9 +146,11 @@ theorem pow_right_strictMono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ =>
 #align nat.pow_right_strict_mono pow_right_strictMono
 -/
 
+#print Nat.pow_le_iff_le_right /-
 theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m ≤ n :=
   StrictMono.le_iff_le (pow_right_strictMono k)
 #align nat.pow_le_iff_le_right Nat.pow_le_iff_le_right
+-/
 
 /- warning: nat.pow_lt_iff_lt_right clashes with pow_lt_pow_iff_ -> pow_lt_pow_iff_right
 Case conversion may be inaccurate. Consider using '#align nat.pow_lt_iff_lt_right pow_lt_pow_iff_rightₓ'. -/

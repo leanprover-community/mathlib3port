@@ -253,7 +253,7 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
   · intro hatg hatg_in
     rw [SeminormedAddCommGroup.mem_closure_iff]
     intro ε ε_pos
-    have hCf : 0 ≤ C' * ‖f‖ := (zero_le_mul_left C'_pos).mpr (norm_nonneg f)
+    have hCf : 0 ≤ C' * ‖f‖ := (mul_nonneg_iff_of_pos_left C'_pos).mpr (norm_nonneg f)
     have ineq : 0 < 1 + C' * ‖f‖ := by linarith
     set δ := ε / (1 + C' * ‖f‖)
     have δ_pos : δ > 0 := div_pos ε_pos ineq

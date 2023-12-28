@@ -1642,7 +1642,7 @@ theorem exists_finite_card_le_of_finite_of_linearIndependent_of_span (ht : t.Fin
   have : s ⊆ (span K ↑ht.toFinset : Submodule K V) := by simp <;> assumption
   let ⟨u, hust, hsu, Eq⟩ := exists_of_linearIndependent_of_finite_span hs this
   have : s.Finite := u.finite_toSet.Subset hsu
-  ⟨this, by rw [← Eq] <;> exact Finset.card_le_of_subset <| finset.coe_subset.mp <| by simp [hsu]⟩
+  ⟨this, by rw [← Eq] <;> exact Finset.card_le_card <| finset.coe_subset.mp <| by simp [hsu]⟩
 #align exists_finite_card_le_of_finite_of_linear_independent_of_span exists_finite_card_le_of_finite_of_linearIndependent_of_span
 -/
 

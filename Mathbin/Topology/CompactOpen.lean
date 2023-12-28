@@ -185,11 +185,11 @@ section Ev
 variable {α β}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ContinuousMap.continuous_eval' /-
+#print ContinuousMap.continuous_eval /-
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact.
 
 See also `continuous_map.continuous_eval` -/
-theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β) × α => p.1 p.2 :=
+theorem continuous_eval [LocallyCompactSpace α] : Continuous fun p : C(α, β) × α => p.1 p.2 :=
   continuous_iff_continuousAt.mpr fun ⟨f, x⟩ n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
@@ -206,13 +206,13 @@ theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β)
       have : IsOpen w := (ContinuousMap.isOpen_gen sc vo).Prod uo
       have : (f, x) ∈ w := ⟨image_subset_iff.mpr sv, xu⟩
       mem_nhds_iff.mpr ⟨w, by assumption, by assumption, by assumption⟩
-#align continuous_map.continuous_eval' ContinuousMap.continuous_eval'
+#align continuous_map.continuous_eval' ContinuousMap.continuous_eval
 -/
 
 #print ContinuousMap.continuous_eval_const /-
 /-- See also `continuous_map.continuous_eval_const` -/
 theorem continuous_eval_const [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
-  continuous_eval'.comp (continuous_id.prod_mk continuous_const)
+  continuous_eval.comp (continuous_id.prod_mk continuous_const)
 #align continuous_map.continuous_eval_const' ContinuousMap.continuous_eval_const
 -/
 
@@ -452,7 +452,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 /-- The uncurried form of a continuous map `α → C(β, γ)` is a continuous map `α × β → γ`. -/
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
-  continuous_eval'.comp <| f.Continuous.Prod_map continuous_id
+  continuous_eval.comp <| f.Continuous.Prod_map continuous_id
 #align continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
 -/
 
@@ -528,7 +528,7 @@ def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β)
   left_inv a := rfl
   right_inv f := by ext; rw [Unique.eq_default a]; rfl
   continuous_toFun := continuous_const'
-  continuous_invFun := continuous_eval'.comp (continuous_id.prod_mk continuous_const)
+  continuous_invFun := continuous_eval.comp (continuous_id.prod_mk continuous_const)
 #align homeomorph.continuous_map_of_unique Homeomorph.continuousMapOfUnique
 -/
 

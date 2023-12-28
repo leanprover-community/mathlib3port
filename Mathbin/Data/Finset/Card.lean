@@ -76,10 +76,10 @@ theorem card_empty : card (∅ : Finset α) = 0 :=
 #align finset.card_empty Finset.card_empty
 -/
 
-#print Finset.card_le_of_subset /-
-theorem card_le_of_subset : s ⊆ t → s.card ≤ t.card :=
-  Multiset.card_le_of_le ∘ val_le_iff.mpr
-#align finset.card_le_of_subset Finset.card_le_of_subset
+#print Finset.card_le_card /-
+theorem card_le_card : s ⊆ t → s.card ≤ t.card :=
+  Multiset.card_le_card ∘ val_le_iff.mpr
+#align finset.card_le_of_subset Finset.card_le_card
 -/
 
 #print Finset.card_mono /-
@@ -246,7 +246,7 @@ theorem Multiset.card_toFinset : m.toFinset.card = m.dedup.card :=
 
 #print Multiset.toFinset_card_le /-
 theorem Multiset.toFinset_card_le : m.toFinset.card ≤ m.card :=
-  card_le_of_le <| dedup_le _
+  card_le_card <| dedup_le _
 #align multiset.to_finset_card_le Multiset.toFinset_card_le
 -/
 
@@ -350,7 +350,7 @@ theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) :
 #print Finset.card_filter_le /-
 theorem card_filter_le (s : Finset α) (p : α → Prop) [DecidablePred p] :
     (s.filterₓ p).card ≤ s.card :=
-  card_le_of_subset <| filter_subset _ _
+  card_le_card <| filter_subset _ _
 #align finset.card_filter_le Finset.card_filter_le
 -/
 
@@ -567,7 +567,7 @@ theorem card_sdiff (h : s ⊆ t) : card (t \ s) = t.card - s.card :=
 
 #print Finset.card_sdiff_add_card_eq_card /-
 theorem card_sdiff_add_card_eq_card {s t : Finset α} (h : s ⊆ t) : card (t \ s) + card s = card t :=
-  ((Nat.sub_eq_iff_eq_add (card_le_of_subset h)).mp (card_sdiff h).symm).symm
+  ((Nat.sub_eq_iff_eq_add (card_le_card h)).mp (card_sdiff h).symm).symm
 #align finset.card_sdiff_add_card_eq_card Finset.card_sdiff_add_card_eq_card
 -/
 
@@ -575,7 +575,7 @@ theorem card_sdiff_add_card_eq_card {s t : Finset α} (h : s ⊆ t) : card (t \ 
 theorem le_card_sdiff (s t : Finset α) : t.card - s.card ≤ card (t \ s) :=
   calc
     card t - card s ≤ card t - card (s ∩ t) :=
-      tsub_le_tsub_left (card_le_of_subset (inter_subset_left s t)) _
+      tsub_le_tsub_left (card_le_card (inter_subset_left s t)) _
     _ = card (t \ (s ∩ t)) := (card_sdiff (inter_subset_right s t)).symm
     _ ≤ card (t \ s) := by rw [sdiff_inter_self_right t s]
 #align finset.le_card_sdiff Finset.le_card_sdiff

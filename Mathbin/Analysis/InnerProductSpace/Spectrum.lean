@@ -343,7 +343,7 @@ theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : Has
   have hpos : 0 < ‖v‖ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
   have : IsROrC.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
     exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
-  exact (zero_le_mul_right hpos).mp (this ▸ hnn v)
+  exact (mul_nonneg_iff_of_pos_right hpos).mp (this ▸ hnn v)
 #align eigenvalue_nonneg_of_nonneg eigenvalue_nonneg_of_nonneg
 -/
 
@@ -355,7 +355,7 @@ theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenv
   have hpos : 0 < ‖v‖ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
   have : IsROrC.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
     exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
-  exact (zero_lt_mul_right hpos).mp (this ▸ hnn v)
+  exact (mul_pos_iff_of_pos_right hpos).mp (this ▸ hnn v)
 #align eigenvalue_pos_of_pos eigenvalue_pos_of_pos
 -/
 

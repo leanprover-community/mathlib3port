@@ -221,7 +221,7 @@ instance : TopologicalSpace (Path x y) :=
 
 #print Path.continuous_eval /-
 theorem continuous_eval : Continuous fun p : Path x y × I => p.1 p.2 :=
-  continuous_eval'.comp <| continuous_induced_dom.Prod_map continuous_id
+  continuous_eval.comp <| continuous_induced_dom.Prod_map continuous_id
 #align path.continuous_eval Path.continuous_eval
 -/
 

@@ -424,7 +424,7 @@ variable {s t} {n : ℕ}
 @[to_additive]
 theorem MulSalemSpencer.le_mulRothNumber (hs : MulSalemSpencer (s : Set α)) (h : s ⊆ t) :
     s.card ≤ mulRothNumber t :=
-  le_findGreatest (card_le_of_subset h) ⟨s, h, rfl, hs⟩
+  le_findGreatest (card_le_card h) ⟨s, h, rfl, hs⟩
 #align mul_salem_spencer.le_mul_roth_number MulSalemSpencer.le_mulRothNumber
 #align add_salem_spencer.le_add_roth_number AddSalemSpencer.le_addRothNumber
 -/

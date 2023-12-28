@@ -284,8 +284,8 @@ theorem rank_quotient_le (p : Submodule R M) : Module.rank R (M ⧸ p) ≤ Modul
 
 variable [Nontrivial R]
 
-#print cardinal_lift_le_rank_of_linearIndependent /-
-theorem cardinal_lift_le_rank_of_linearIndependent.{m} {ι : Type w} {v : ι → M}
+#print LinearIndependent.cardinal_lift_le_rank /-
+theorem LinearIndependent.cardinal_lift_le_rank.{m} {ι : Type w} {v : ι → M}
     (hv : LinearIndependent R v) :
     Cardinal.lift.{max v m} (#ι) ≤ Cardinal.lift.{max w m} (Module.rank R M) :=
   by
@@ -296,28 +296,29 @@ theorem cardinal_lift_le_rank_of_linearIndependent.{m} {ι : Type w} {v : ι →
     swap
     exact le_ciSup (Cardinal.bddAbove_range.{v, v} _) ⟨range v, hv.coe_range⟩
     exact le_rfl
-#align cardinal_lift_le_rank_of_linear_independent cardinal_lift_le_rank_of_linearIndependent
+#align cardinal_lift_le_rank_of_linear_independent LinearIndependent.cardinal_lift_le_rank
 -/
 
-#print cardinal_lift_le_rank_of_linearIndependent' /-
-theorem cardinal_lift_le_rank_of_linearIndependent' {ι : Type w} {v : ι → M}
+/- warning: cardinal_lift_le_rank_of_linear_independent' clashes with cardinal_lift_le_rank_of_linear_independent -> LinearIndependent.cardinal_lift_le_rank
+Case conversion may be inaccurate. Consider using '#align cardinal_lift_le_rank_of_linear_independent' LinearIndependent.cardinal_lift_le_rankₓ'. -/
+#print LinearIndependent.cardinal_lift_le_rank /-
+theorem LinearIndependent.cardinal_lift_le_rank {ι : Type w} {v : ι → M}
     (hv : LinearIndependent R v) : Cardinal.lift.{v} (#ι) ≤ Cardinal.lift.{w} (Module.rank R M) :=
-  cardinal_lift_le_rank_of_linearIndependent.{u, v, w, 0} hv
-#align cardinal_lift_le_rank_of_linear_independent' cardinal_lift_le_rank_of_linearIndependent'
+  LinearIndependent.cardinal_lift_le_rank.{u, v, w, 0} hv
+#align cardinal_lift_le_rank_of_linear_independent' LinearIndependent.cardinal_lift_le_rank
 -/
 
-#print cardinal_le_rank_of_linearIndependent /-
-theorem cardinal_le_rank_of_linearIndependent {ι : Type v} {v : ι → M}
-    (hv : LinearIndependent R v) : (#ι) ≤ Module.rank R M := by
-  simpa using cardinal_lift_le_rank_of_linearIndependent hv
-#align cardinal_le_rank_of_linear_independent cardinal_le_rank_of_linearIndependent
+#print LinearIndependent.cardinal_le_rank /-
+theorem LinearIndependent.cardinal_le_rank {ι : Type v} {v : ι → M} (hv : LinearIndependent R v) :
+    (#ι) ≤ Module.rank R M := by simpa using LinearIndependent.cardinal_lift_le_rank hv
+#align cardinal_le_rank_of_linear_independent LinearIndependent.cardinal_le_rank
 -/
 
-#print cardinal_le_rank_of_linearIndependent' /-
-theorem cardinal_le_rank_of_linearIndependent' {s : Set M}
+#print LinearIndependent.cardinal_le_rank' /-
+theorem LinearIndependent.cardinal_le_rank' {s : Set M}
     (hs : LinearIndependent R (fun x => x : s → M)) : (#s) ≤ Module.rank R M :=
-  cardinal_le_rank_of_linearIndependent hs
-#align cardinal_le_rank_of_linear_independent' cardinal_le_rank_of_linearIndependent'
+  LinearIndependent.cardinal_le_rank hs
+#align cardinal_le_rank_of_linear_independent' LinearIndependent.cardinal_le_rank'
 -/
 
 variable (R M)
@@ -531,7 +532,7 @@ theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSMulDivisors R
     exact i.prop
   choose v hvV hv using hI
   have : LinearIndependent R v := (hV.comp Subtype.coe_injective).LinearIndependent _ hvV hv
-  exact cardinal_lift_le_rank_of_linearIndependent' this
+  exact LinearIndependent.cardinal_lift_le_rank this
 #align complete_lattice.independent.subtype_ne_bot_le_rank CompleteLattice.Independent.subtype_ne_bot_le_rank
 -/
 
@@ -572,7 +573,7 @@ theorem rank_pos [Nontrivial M] : 0 < Module.rank R M :=
   suffices 1 ≤ Module.rank R M by exact zero_lt_one.trans_le this
   letI := Module.nontrivial R M
   suffices LinearIndependent R fun y : ({x} : Set M) => ↑y by
-    simpa using cardinal_le_rank_of_linearIndependent this
+    simpa using LinearIndependent.cardinal_le_rank this
   exact linearIndependent_singleton hx
 #align rank_pos rank_pos
 -/
@@ -950,8 +951,7 @@ theorem Basis.card_le_card_of_linearIndependent {ι : Type _} [Fintype ι] (b : 
     Fintype.card ι' ≤ Fintype.card ι :=
   by
   letI := nontrivial_of_invariantBasisNumber R
-  simpa [rank_eq_card_basis b, Cardinal.mk_fintype] using
-    cardinal_lift_le_rank_of_linearIndependent' hv
+  simpa [rank_eq_card_basis b, Cardinal.mk_fintype] using LinearIndependent.cardinal_lift_le_rank hv
 #align basis.card_le_card_of_linear_independent Basis.card_le_card_of_linearIndependent
 -/
 
@@ -1427,7 +1427,7 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} :
     rcases h with ⟨s, hst, hsc⟩
     exact ⟨s, hsc, (of_vector_space_index.linear_independent K V).mono hst⟩
   · rintro ⟨s, rfl, si⟩
-    exact cardinal_le_rank_of_linearIndependent si
+    exact LinearIndependent.cardinal_le_rank si
 #align le_rank_iff_exists_linear_independent le_rank_iff_exists_linearIndependent
 -/
 
@@ -1681,7 +1681,7 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
   · rintro ⟨s, hsc, si⟩
     have : LinearIndependent K fun x : s => f.range_restrict x :=
       LinearIndependent.of_comp f.range.subtype (by convert si)
-    convert cardinal_le_rank_of_linearIndependent this.image
+    convert LinearIndependent.cardinal_le_rank this.image
     rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_injOn_lift]
     exact inj_on_iff_injective.2 this.injective
 #align linear_map.le_rank_iff_exists_linear_independent LinearMap.le_rank_iff_exists_linearIndependent

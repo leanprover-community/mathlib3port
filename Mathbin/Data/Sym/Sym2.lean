@@ -163,10 +163,10 @@ theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ := by rw [Quotient.eq']
 #align sym2.eq_swap Sym2.eq_swap
 -/
 
-#print Sym2.mk''_prod_swap_eq /-
+#print Sym2.mk_prod_swap_eq /-
 @[simp]
-theorem mk''_prod_swap_eq {p : α × α} : ⟦p.symm⟧ = ⟦p⟧ := by cases p; exact eq_swap
-#align sym2.mk_prod_swap_eq Sym2.mk''_prod_swap_eq
+theorem mk_prod_swap_eq {p : α × α} : ⟦p.symm⟧ = ⟦p⟧ := by cases p; exact eq_swap
+#align sym2.mk_prod_swap_eq Sym2.mk_prod_swap_eq
 -/
 
 #print Sym2.congr_right /-
@@ -186,10 +186,10 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 #align sym2.eq_iff Sym2.eq_iff
 -/
 
-#print Sym2.mk''_eq_mk''_iff /-
-theorem mk''_eq_mk''_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.symm := by cases p; cases q;
+#print Sym2.mk_eq_mk_iff /-
+theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.symm := by cases p; cases q;
   simp only [eq_iff, Prod.mk.inj_iff, Prod.swap_prod_mk]
-#align sym2.mk_eq_mk_iff Sym2.mk''_eq_mk''_iff
+#align sym2.mk_eq_mk_iff Sym2.mk_eq_mk_iff
 -/
 
 #print Sym2.lift /-
@@ -205,12 +205,12 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
 #align sym2.lift Sym2.lift
 -/
 
-#print Sym2.lift_mk'' /-
+#print Sym2.lift_mk /-
 @[simp]
-theorem lift_mk'' (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
+theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
     lift f ⟦(a₁, a₂)⟧ = (f : α → α → β) a₁ a₂ :=
   rfl
-#align sym2.lift_mk Sym2.lift_mk''
+#align sym2.lift_mk Sym2.lift_mk
 -/
 
 #print Sym2.coe_lift_symm_apply /-
@@ -241,15 +241,15 @@ def lift₂ :
 #align sym2.lift₂ Sym2.lift₂
 -/
 
-#print Sym2.lift₂_mk'' /-
+#print Sym2.lift₂_mk /-
 @[simp]
-theorem lift₂_mk''
+theorem lift₂_mk
     (f :
       { f : α → α → β → β → γ //
         ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ })
     (a₁ a₂ : α) (b₁ b₂ : β) : lift₂ f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ = (f : α → α → β → β → γ) a₁ a₂ b₁ b₂ :=
   rfl
-#align sym2.lift₂_mk Sym2.lift₂_mk''
+#align sym2.lift₂_mk Sym2.lift₂_mk
 -/
 
 #print Sym2.coe_lift₂_symm_apply /-
@@ -358,16 +358,16 @@ theorem ext {p q : Sym2 α} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 #align sym2.ext Sym2.ext
 -/
 
-#print Sym2.mem_mk''_left /-
-theorem mem_mk''_left (x y : α) : x ∈ ⟦(x, y)⟧ :=
+#print Sym2.mem_mk_left /-
+theorem mem_mk_left (x y : α) : x ∈ ⟦(x, y)⟧ :=
   ⟨y, rfl⟩
-#align sym2.mem_mk_left Sym2.mem_mk''_left
+#align sym2.mem_mk_left Sym2.mem_mk_left
 -/
 
-#print Sym2.mem_mk''_right /-
-theorem mem_mk''_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
-  eq_swap.subst <| mem_mk''_left y x
-#align sym2.mem_mk_right Sym2.mem_mk''_right
+#print Sym2.mem_mk_right /-
+theorem mem_mk_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
+  eq_swap.subst <| mem_mk_left y x
+#align sym2.mem_mk_right Sym2.mem_mk_right
 -/
 
 #print Sym2.mem_iff /-
@@ -505,16 +505,16 @@ def IsDiag : Sym2 α → Prop :=
 #align sym2.is_diag Sym2.IsDiag
 -/
 
-#print Sym2.mk''_isDiag_iff /-
-theorem mk''_isDiag_iff {x y : α} : IsDiag ⟦(x, y)⟧ ↔ x = y :=
+#print Sym2.mk_isDiag_iff /-
+theorem mk_isDiag_iff {x y : α} : IsDiag ⟦(x, y)⟧ ↔ x = y :=
   Iff.rfl
-#align sym2.mk_is_diag_iff Sym2.mk''_isDiag_iff
+#align sym2.mk_is_diag_iff Sym2.mk_isDiag_iff
 -/
 
 #print Sym2.isDiag_iff_proj_eq /-
 @[simp]
 theorem isDiag_iff_proj_eq (z : α × α) : IsDiag ⟦z⟧ ↔ z.1 = z.2 :=
-  Prod.recOn z fun _ _ => mk''_isDiag_iff
+  Prod.recOn z fun _ _ => mk_isDiag_iff
 #align sym2.is_diag_iff_proj_eq Sym2.isDiag_iff_proj_eq
 -/
 
@@ -840,8 +840,8 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Sym2.filter_image_quotient_mk''_isDiag /-
-theorem filter_image_quotient_mk''_isDiag [DecidableEq α] (s : Finset α) :
+#print Sym2.filter_image_mk_isDiag /-
+theorem filter_image_mk_isDiag [DecidableEq α] (s : Finset α) :
     ((s ×ˢ s).image Quotient.mk').filterₓ IsDiag = s.diag.image Quotient.mk' :=
   by
   ext z
@@ -850,17 +850,17 @@ theorem filter_image_quotient_mk''_isDiag [DecidableEq α] (s : Finset α) :
   simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-    rw [← h, Sym2.mk''_isDiag_iff] at hab 
+    rw [← h, Sym2.mk_isDiag_iff] at hab 
     exact ⟨a, b, ⟨ha, hab⟩, h⟩
   · rintro ⟨a, b, ⟨ha, rfl⟩, h⟩
     rw [← h]
     exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
-#align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_quotient_mk''_isDiag
+#align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_mk_isDiag
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Sym2.filter_image_quotient_mk''_not_isDiag /-
-theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
+#print Sym2.filter_image_mk_not_isDiag /-
+theorem filter_image_mk_not_isDiag [DecidableEq α] (s : Finset α) :
     (((s ×ˢ s).image Quotient.mk').filterₓ fun a : Sym2 α => ¬a.IsDiag) =
       s.offDiag.image Quotient.mk' :=
   by
@@ -870,12 +870,12 @@ theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
   simp only [mem_image, mem_off_diag, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-    rw [← h, Sym2.mk''_isDiag_iff] at hab 
+    rw [← h, Sym2.mk_isDiag_iff] at hab 
     exact ⟨a, b, ⟨ha, hb, hab⟩, h⟩
   · rintro ⟨a, b, ⟨ha, hb, hab⟩, h⟩
-    rw [Ne.def, ← Sym2.mk''_isDiag_iff, h] at hab 
+    rw [Ne.def, ← Sym2.mk_isDiag_iff, h] at hab 
     exact ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-#align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_quotient_mk''_not_isDiag
+#align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_mk_not_isDiag
 -/
 
 end Decidable

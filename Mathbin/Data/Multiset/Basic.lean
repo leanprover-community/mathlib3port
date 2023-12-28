@@ -965,15 +965,15 @@ theorem card_eq_one {s : Multiset α} : card s = 1 ↔ ∃ a, s = {a} :=
 #align multiset.card_eq_one Multiset.card_eq_one
 -/
 
-#print Multiset.card_le_of_le /-
-theorem card_le_of_le {s t : Multiset α} (h : s ≤ t) : card s ≤ card t :=
+#print Multiset.card_le_card /-
+theorem card_le_card {s t : Multiset α} (h : s ≤ t) : card s ≤ card t :=
   leInductionOn h fun l₁ l₂ => Sublist.length_le
-#align multiset.card_le_of_le Multiset.card_le_of_le
+#align multiset.card_le_of_le Multiset.card_le_card
 -/
 
 #print Multiset.card_mono /-
 @[mono]
-theorem card_mono : Monotone (@card α) := fun a b => card_le_of_le
+theorem card_mono : Monotone (@card α) := fun a b => card_le_card
 #align multiset.card_mono Multiset.card_mono
 -/
 
@@ -1473,7 +1473,7 @@ theorem card_erase_lt_of_mem {a : α} {s : Multiset α} : a ∈ s → card (s.er
 
 #print Multiset.card_erase_le /-
 theorem card_erase_le {a : α} {s : Multiset α} : card (s.eraseₓ a) ≤ card s :=
-  card_le_of_le (erase_le a s)
+  card_le_card (erase_le a s)
 #align multiset.card_erase_le Multiset.card_erase_le
 -/
 

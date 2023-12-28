@@ -1136,13 +1136,13 @@ abbrev ModSumCongr (α β : Type _) :=
 #align equiv.perm.mod_sum_congr Equiv.Perm.ModSumCongr
 -/
 
-#print Equiv.Perm.ModSumCongr.swap_smul_involutive /-
-theorem ModSumCongr.swap_smul_involutive {α β : Type _} [DecidableEq (Sum α β)] (i j : Sum α β) :
+#print Equiv.swap_smul_involutive /-
+theorem Equiv.swap_smul_involutive {α β : Type _} [DecidableEq (Sum α β)] (i j : Sum α β) :
     Function.Involutive (SMul.smul (Equiv.swap i j) : ModSumCongr α β → ModSumCongr α β) := fun σ =>
   by
   apply σ.induction_on' fun σ => _
   exact _root_.congr_arg Quotient.mk'' (Equiv.swap_mul_involutive i j σ)
-#align equiv.perm.mod_sum_congr.swap_smul_involutive Equiv.Perm.ModSumCongr.swap_smul_involutive
+#align equiv.perm.mod_sum_congr.swap_smul_involutive Equiv.swap_smul_involutive
 -/
 
 end Equiv.Perm
@@ -1279,8 +1279,7 @@ def domCoprod (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ 
         Finset.sum_involution (fun σ _ => Equiv.swap i j • σ)
           (fun σ _ => dom_coprod.summand_add_swap_smul_eq_zero a b σ hv hij)
           (fun σ _ => mt <| dom_coprod.summand_eq_zero_of_smul_invariant a b σ hv hij)
-          (fun σ _ => Finset.mem_univ _) fun σ _ =>
-          Equiv.Perm.ModSumCongr.swap_smul_involutive i j σ }
+          (fun σ _ => Finset.mem_univ _) fun σ _ => Equiv.swap_smul_involutive i j σ }
 #align alternating_map.dom_coprod AlternatingMap.domCoprod
 -/
 
@@ -1373,8 +1372,7 @@ theorem MultilinearMap.domCoprod_alternization [DecidableEq ιa] [DecidableEq ι
     Finset.sum_image (perm.sum_congr_hom_injective.inj_on _)]
   -- now we're ready to clean up the RHS, pulling out the summation
   rw [dom_coprod.summand_mk', MultilinearMap.domCoprod_alternization_coe, ← Finset.sum_product',
-    Finset.univ_product_univ, ← MultilinearMap.domDomCongrEquiv_apply, AddEquiv.map_sum,
-    Finset.smul_sum]
+    Finset.univ_product_univ, ← MultilinearMap.domDomCongrEquiv_apply, map_sum, Finset.smul_sum]
   congr 1
   ext1 ⟨al, ar⟩
   dsimp only

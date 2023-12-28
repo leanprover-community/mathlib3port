@@ -614,15 +614,15 @@ theorem coe_image_subset_range : ↑(s.image f) ⊆ Set.range f :=
 #align finset.coe_image_subset_range Finset.coe_image_subset_range
 -/
 
-#print Finset.image_filter /-
-theorem image_filter {p : β → Prop} [DecidablePred p] :
+#print Finset.filter_image /-
+theorem filter_image {p : β → Prop} [DecidablePred p] :
     (s.image f).filterₓ p = (s.filterₓ (p ∘ f)).image f :=
   ext fun b => by
     simp only [mem_filter, mem_image, exists_prop] <;>
       exact
         ⟨by rintro ⟨⟨x, h1, rfl⟩, h2⟩ <;> exact ⟨x, ⟨h1, h2⟩, rfl⟩, by
           rintro ⟨x, ⟨h1, h2⟩, rfl⟩ <;> exact ⟨⟨x, h1, rfl⟩, h2⟩⟩
-#align finset.image_filter Finset.image_filter
+#align finset.image_filter Finset.filter_image
 -/
 
 #print Finset.image_union /-

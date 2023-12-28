@@ -443,10 +443,12 @@ theorem not_isReal_iff_isComplex {w : InfinitePlace K} : ¬IsReal w ↔ IsComple
 #align number_field.infinite_place.not_is_real_iff_is_complex NumberField.InfinitePlace.not_isReal_iff_isComplex
 -/
 
+#print NumberField.InfinitePlace.not_isComplex_iff_isReal /-
 @[simp]
 theorem not_isComplex_iff_isReal {w : InfinitePlace K} : ¬IsComplex w ↔ IsReal w := by
   rw [← not_is_real_iff_is_complex, Classical.not_not]
 #align number_field.infinite_place.not_is_complex_iff_is_real NumberField.InfinitePlace.not_isComplex_iff_isReal
+-/
 
 #print NumberField.InfinitePlace.isReal_or_isComplex /-
 theorem isReal_or_isComplex (w : InfinitePlace K) : IsReal w ∨ IsComplex w := by

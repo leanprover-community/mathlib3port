@@ -486,7 +486,7 @@ private theorem aux₂ : 0 < u - ⌊ξ⌋ * v ∧ u - ⌊ξ⌋ * v < v :=
     sub_lt_iff_lt_add, mul_assoc] at h 
   have hu₀ : 0 ≤ u - ⌊ξ⌋ * v :=
     by
-    refine' (zero_le_mul_right hv₁).mp ((lt_iff_add_one_le (-1 : ℤ) _).mp _)
+    refine' (mul_nonneg_iff_of_pos_right hv₁).mp ((lt_iff_add_one_le (-1 : ℤ) _).mp _)
     replace h := h.1
     rw [← lt_sub_iff_add_lt, ← mul_assoc, ← sub_mul] at h 
     exact_mod_cast

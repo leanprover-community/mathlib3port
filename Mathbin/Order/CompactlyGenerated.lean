@@ -203,8 +203,8 @@ theorem IsCompactElement.directed_sSup_lt_of_lt {α : Type _} [CompleteLattice �
 #align complete_lattice.is_compact_element.directed_Sup_lt_of_lt CompleteLattice.IsCompactElement.directed_sSup_lt_of_lt
 -/
 
-#print CompleteLattice.finset_sup_compact_of_compact /-
-theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
+#print CompleteLattice.isCompactElement_finsetSup /-
+theorem isCompactElement_finsetSup {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
     (h : ∀ x ∈ s, IsCompactElement (f x)) : IsCompactElement (s.sup f) := by
   classical
   rw [is_compact_element_iff_le_of_directed_Sup_le]
@@ -218,7 +218,7 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
   rw [is_compact_element_iff_le_of_directed_Sup_le] at h 
   specialize h d hemp hdir (le_trans (Finset.le_sup hps) hsup)
   simpa only [exists_prop]
-#align complete_lattice.finset_sup_compact_of_compact CompleteLattice.finset_sup_compact_of_compact
+#align complete_lattice.finset_sup_compact_of_compact CompleteLattice.isCompactElement_finsetSup
 -/
 
 #print CompleteLattice.WellFounded.isSupFiniteCompact /-

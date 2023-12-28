@@ -316,7 +316,7 @@ variable {P G}
 
 #print Finpartition.IsUniform.mono /-
 theorem IsUniform.mono {ε ε' : 𝕜} (hP : P.IsUniform G ε) (h : ε ≤ ε') : P.IsUniform G ε' :=
-  ((Nat.cast_le.2 <| card_le_of_subset <| P.nonUniforms_mono G h).trans hP).trans <|
+  ((Nat.cast_le.2 <| card_le_card <| P.nonUniforms_mono G h).trans hP).trans <|
     mul_le_mul_of_nonneg_left h <| Nat.cast_nonneg _
 #align finpartition.is_uniform.mono Finpartition.IsUniform.mono
 -/

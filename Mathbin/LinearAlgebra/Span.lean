@@ -835,8 +835,7 @@ theorem finset_span_isCompactElement (S : Finset M) :
   rw [span_eq_supr_of_singleton_spans]
   simp only [Finset.mem_coe]
   rw [← Finset.sup_eq_iSup]
-  exact
-    CompleteLattice.finset_sup_compact_of_compact S fun x _ => singleton_span_is_compact_element x
+  exact CompleteLattice.isCompactElement_finsetSup S fun x _ => singleton_span_is_compact_element x
 #align submodule.finset_span_is_compact_element Submodule.finset_span_isCompactElement
 -/
 
