@@ -380,8 +380,8 @@ def signBijAux {n : ℕ} (f : Perm (Fin n)) (a : Σ a : Fin n, Fin n) : Σ a : F
 #align equiv.perm.sign_bij_aux Equiv.Perm.signBijAux
 -/
 
-#print Equiv.Perm.signBijAux_inj /-
-theorem signBijAux_inj {n : ℕ} {f : Perm (Fin n)} :
+#print Equiv.Perm.signBijAux_injOn /-
+theorem signBijAux_injOn {n : ℕ} {f : Perm (Fin n)} :
     ∀ a b : Σ a : Fin n, Fin n,
       a ∈ finPairsLT n → b ∈ finPairsLT n → signBijAux f a = signBijAux f b → a = b :=
   fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ha hb h => by
@@ -390,7 +390,7 @@ theorem signBijAux_inj {n : ℕ} {f : Perm (Fin n)} :
   have : ¬b₁ < b₂ := hb.le.not_lt
   split_ifs at h  <;>
     simp_all only [(Equiv.injective f).eq_iff, eq_self_iff_true, and_self_iff, heq_iff_eq]
-#align equiv.perm.sign_bij_aux_inj Equiv.Perm.signBijAux_inj
+#align equiv.perm.sign_bij_aux_inj Equiv.Perm.signBijAux_injOn
 -/
 
 #print Equiv.Perm.signBijAux_surj /-
@@ -437,7 +437,7 @@ theorem signAux_inv {n : ℕ} (f : Perm (Fin n)) : signAux f⁻¹ = signAux f :=
       else by
         rw [sign_bij_aux, if_pos (le_of_not_gt h), dif_neg h, apply_inv_self, apply_inv_self,
           if_pos (mem_fin_pairs_lt.1 hab).le])
-    signBijAux_inj signBijAux_surj
+    signBijAux_injOn signBijAux_surj
 #align equiv.perm.sign_aux_inv Equiv.Perm.signAux_inv
 -/
 

@@ -613,12 +613,12 @@ theorem prod_bij' {s : Finset α} {t : Finset γ} {f : α → β} {g : γ → β
 #align finset.sum_bij' Finset.sum_bij'
 -/
 
-#print Finset.Equiv.prod_comp_finset /-
+#print Finset.prod_equiv /-
 /-- Reindexing a product over a finset along an equivalence.
 See `equiv.prod_comp` for the version where `s` and `s'` are `univ`. -/
 @[to_additive
       " Reindexing a sum over a finset along an equivalence.\nSee `equiv.sum_comp` for the version where `s` and `s'` are `univ`. "]
-theorem Equiv.prod_comp_finset {ι'} [DecidableEq ι] (e : ι ≃ ι') (f : ι' → β) {s' : Finset ι'}
+theorem Finset.prod_equiv {ι'} [DecidableEq ι] (e : ι ≃ ι') (f : ι' → β) {s' : Finset ι'}
     {s : Finset ι} (h : s = s'.image e.symm) : ∏ i' in s', f i' = ∏ i in s, f (e i) :=
   by
   rw [h]
@@ -628,8 +628,8 @@ theorem Equiv.prod_comp_finset {ι'} [DecidableEq ι] (e : ι ≃ ι') (f : ι' 
       (fun a ha => e.apply_symm_apply a) fun a ha => e.symm_apply_apply a
   rcases finset.mem_image.mp ha with ⟨i', hi', rfl⟩
   rwa [e.apply_symm_apply]
-#align finset.equiv.prod_comp_finset Finset.Equiv.prod_comp_finset
-#align finset.equiv.sum_comp_finset Finset.Equiv.sum_comp_finset
+#align finset.equiv.prod_comp_finset Finset.prod_equiv
+#align finset.equiv.sum_comp_finset Finset.sum_equiv
 -/
 
 #print Finset.prod_finset_product /-

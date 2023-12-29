@@ -681,12 +681,12 @@ theorem div_def : s / t = (s ×ˢ t).image fun p : α × α => p.1 / p.2 :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Finset.image_div_prod /-
+#print Finset.image_div_product /-
 @[to_additive add_image_prod]
-theorem image_div_prod : ((s ×ˢ t).image fun x : α × α => x.fst / x.snd) = s / t :=
+theorem image_div_product : ((s ×ˢ t).image fun x : α × α => x.fst / x.snd) = s / t :=
   rfl
-#align finset.image_div_prod Finset.image_div_prod
-#align finset.add_image_prod Finset.add_image_prod
+#align finset.image_div_prod Finset.image_div_product
+#align finset.add_image_prod Finset.image_sub_product
 -/
 
 #print Finset.mem_div /-
