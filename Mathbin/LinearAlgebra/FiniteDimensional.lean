@@ -415,10 +415,11 @@ theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V}
       (by simpa using bS.linear_independent) (by simp)
   set b := Basis.extend this with b_eq
   letI : Fintype (this.extend _) :=
-    (finite_of_linearIndependent (by simpa using b.linear_independent)).Fintype
-  letI : Fintype (coe '' Basis.ofVectorSpaceIndex K S) := (finite_of_linearIndependent this).Fintype
+    (LinearIndependent.set_finite_of_isNoetherian (by simpa using b.linear_independent)).Fintype
+  letI : Fintype (coe '' Basis.ofVectorSpaceIndex K S) :=
+    (LinearIndependent.set_finite_of_isNoetherian this).Fintype
   letI : Fintype (Basis.ofVectorSpaceIndex K S) :=
-    (finite_of_linearIndependent (by simpa using bS.linear_independent)).Fintype
+    (LinearIndependent.set_finite_of_isNoetherian (by simpa using bS.linear_independent)).Fintype
   have : coe '' Basis.ofVectorSpaceIndex K S = this.extend (Set.subset_univ _) :=
     Set.eq_of_subset_of_card_le (this.subset_extend _)
       (by

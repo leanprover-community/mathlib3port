@@ -612,8 +612,8 @@ theorem Algebra.IsAlgebraic.range_eval_eq_rootSet_minpoly {F K} (A) [Field F] [F
   have hx : aeval x (minpoly F x) = 0 := minpoly.aeval F x
   letI : Algebra Fx A := (AdjoinRoot.lift (algebraMap F A) a ha).toAlgebra
   letI : Algebra Fx K := (AdjoinRoot.lift (algebraMap F K) x hx).toAlgebra
-  haveI : IsScalarTower F Fx A := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ a ha)
-  haveI : IsScalarTower F Fx K := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ x hx)
+  haveI : IsScalarTower F Fx A := IsScalarTower.of_algHom (AdjoinRoot.liftHom _ a ha)
+  haveI : IsScalarTower F Fx K := IsScalarTower.of_algHom (AdjoinRoot.liftHom _ x hx)
   haveI : Fact (Irreducible <| minpoly F x) := ⟨minpoly.irreducible <| this x⟩
   let ψ₀ : K →ₐ[Fx] A := IsAlgClosed.lift (Algebra.IsAlgebraic.tower_top F Fx hK)
   exact

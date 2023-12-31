@@ -392,8 +392,10 @@ universe w
 variable {R M P : Type _} {N : Type w} [Ring R] [AddCommGroup M] [Module R M] [AddCommGroup N]
   [Module R N] [AddCommGroup P] [Module R P]
 
-#print finite_of_linearIndependent /-
-theorem finite_of_linearIndependent [Nontrivial R] [IsNoetherian R M] {s : Set M}
+/- warning: finite_of_linear_independent clashes with linear_independent.set_finite_of_is_noetherian -> LinearIndependent.set_finite_of_isNoetherian
+Case conversion may be inaccurate. Consider using '#align finite_of_linear_independent LinearIndependent.set_finite_of_isNoetherianₓ'. -/
+#print LinearIndependent.set_finite_of_isNoetherian /-
+theorem LinearIndependent.set_finite_of_isNoetherian [Nontrivial R] [IsNoetherian R M] {s : Set M}
     (hs : LinearIndependent R (coe : s → M)) : s.Finite :=
   by
   refine'
@@ -411,7 +413,7 @@ theorem finite_of_linearIndependent [Nontrivial R] [IsNoetherian R M] {s : Set M
     ⟨⟨fun n => span R (coe ∘ f '' {m | m ≤ n}), fun x y => by
         simp (config := { contextual := true }) [le_antisymm_iff, (this _ _).symm]⟩,
       by dsimp [GT.gt] <;> simp only [lt_iff_le_not_le, (this _ _).symm] <;> tauto⟩
-#align finite_of_linear_independent finite_of_linearIndependent
+#align finite_of_linear_independent LinearIndependent.set_finite_of_isNoetherian
 -/
 
 #print isNoetherian_of_range_eq_ker /-

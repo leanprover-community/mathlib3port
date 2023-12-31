@@ -324,7 +324,7 @@ theorem equiv {C : Type _} [CommRing C] [Algebra A C] [h : IsCyclotomicExtension
   by
   letI : Algebra B C := f.to_alg_hom.to_ring_hom.to_algebra
   haveI : IsCyclotomicExtension {1} B C := singleton_one_of_algebra_map_bijective f.surjective
-  haveI : IsScalarTower A B C := IsScalarTower.of_ring_hom f.to_alg_hom
+  haveI : IsScalarTower A B C := IsScalarTower.of_algHom f.to_alg_hom
   exact (iff_union_singleton_one _ _ _).2 (trans S {1} A B C f.injective)
 #align is_cyclotomic_extension.equiv IsCyclotomicExtension.equiv
 -/

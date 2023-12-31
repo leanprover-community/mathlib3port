@@ -193,14 +193,13 @@ instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A
 #align is_scalar_tower.subsemiring IsScalarTower.subsemiring
 -/
 
-#print IsScalarTower.of_ring_hom /-
+#print IsScalarTower.of_algHom /-
 @[nolint instance_priority]
-instance of_ring_hom {R A B : Type _} [CommSemiring R] [CommSemiring A] [CommSemiring B]
-    [Algebra R A] [Algebra R B] (f : A →ₐ[R] B) :
-    @IsScalarTower R A B _ f.toRingHom.toAlgebra.toSMul _ :=
+instance of_algHom {R A B : Type _} [CommSemiring R] [CommSemiring A] [CommSemiring B] [Algebra R A]
+    [Algebra R B] (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toSMul _ :=
   letI := (f : A →+* B).toAlgebra
   of_algebra_map_eq fun x => (f.commutes x).symm
-#align is_scalar_tower.of_ring_hom IsScalarTower.of_ring_hom
+#align is_scalar_tower.of_ring_hom IsScalarTower.of_algHom
 -/
 
 end Semiring
