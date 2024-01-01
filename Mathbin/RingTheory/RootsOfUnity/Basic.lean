@@ -995,10 +995,11 @@ theorem card_rootsOfUnity {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
 #align is_primitive_root.card_roots_of_unity IsPrimitiveRoot.card_rootsOfUnity
 -/
 
-#print IsPrimitiveRoot.card_nthRoots /-
+#print IsPrimitiveRoot.card_nthRoots_one /-
 /-- The cardinality of the multiset `nth_roots ↑n (1 : R)` is `n`
 if there is a primitive root of unity in `R`. -/
-theorem card_nthRoots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoots n (1 : R)).card = n :=
+theorem card_nthRoots_one {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
+    (nthRoots n (1 : R)).card = n :=
   by
   cases' Nat.eq_zero_or_pos n with hzero hpos
   · simp only [hzero, Multiset.card_zero, nth_roots_zero]
@@ -1013,13 +1014,13 @@ theorem card_nthRoots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoots 
     set m := Nat.toPNat' n
     rw [← Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_rootsOfUnity h] at hcard 
     exact hcard
-#align is_primitive_root.card_nth_roots IsPrimitiveRoot.card_nthRoots
+#align is_primitive_root.card_nth_roots IsPrimitiveRoot.card_nthRoots_one
 -/
 
-#print IsPrimitiveRoot.nthRoots_nodup /-
+#print IsPrimitiveRoot.nthRoots_one_nodup /-
 /-- The multiset `nth_roots ↑n (1 : R)` has no repeated elements
 if there is a primitive root of unity in `R`. -/
-theorem nthRoots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoots n (1 : R)).Nodup :=
+theorem nthRoots_one_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoots n (1 : R)).Nodup :=
   by
   cases' Nat.eq_zero_or_pos n with hzero hpos
   · simp only [hzero, Multiset.nodup_zero, nth_roots_zero]
@@ -1040,7 +1041,7 @@ theorem nthRoots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoots
     set m := Nat.toPNat' n
     rw [hrw, ← Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_rootsOfUnity h] at ha 
     exact Nat.lt_asymm ha ha
-#align is_primitive_root.nth_roots_nodup IsPrimitiveRoot.nthRoots_nodup
+#align is_primitive_root.nth_roots_nodup IsPrimitiveRoot.nthRoots_one_nodup
 -/
 
 #print IsPrimitiveRoot.card_nthRootsFinset /-

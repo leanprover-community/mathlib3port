@@ -160,14 +160,14 @@ varies over the `n`-th roots of unity. -/
 theorem X_pow_sub_one_eq_prod {ζ : R} {n : ℕ} (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
     X ^ n - 1 = ∏ ζ in nthRootsFinset n R, (X - C ζ) :=
   by
-  rw [nth_roots_finset, ← Multiset.toFinset_eq (IsPrimitiveRoot.nthRoots_nodup h)]
+  rw [nth_roots_finset, ← Multiset.toFinset_eq (IsPrimitiveRoot.nthRoots_one_nodup h)]
   simp only [Finset.prod_mk, RingHom.map_one]
   rw [nth_roots]
   have hmonic : (X ^ n - C (1 : R)).Monic := monic_X_pow_sub_C (1 : R) (ne_of_lt hpos).symm
   symm
   apply prod_multiset_X_sub_C_of_monic_of_roots_card_eq hmonic
   rw [@nat_degree_X_pow_sub_C R _ _ n 1, ← nth_roots]
-  exact IsPrimitiveRoot.card_nthRoots h
+  exact IsPrimitiveRoot.card_nthRoots_one h
 #align polynomial.X_pow_sub_one_eq_prod Polynomial.X_pow_sub_one_eq_prod
 -/
 
@@ -191,7 +191,8 @@ theorem cyclotomic'_splits (n : ℕ) : Splits (RingHom.id K) (cyclotomic' n K) :
 /-- If there is a primitive `n`-th root of unity in `K`, then `X ^ n - 1`splits. -/
 theorem X_pow_sub_one_splits {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     Splits (RingHom.id K) (X ^ n - C (1 : K)) := by
-  rw [splits_iff_card_roots, ← nth_roots, IsPrimitiveRoot.card_nthRoots h, nat_degree_X_pow_sub_C]
+  rw [splits_iff_card_roots, ← nth_roots, IsPrimitiveRoot.card_nthRoots_one h,
+    nat_degree_X_pow_sub_C]
 #align polynomial.X_pow_sub_one_splits Polynomial.X_pow_sub_one_splits
 -/
 
