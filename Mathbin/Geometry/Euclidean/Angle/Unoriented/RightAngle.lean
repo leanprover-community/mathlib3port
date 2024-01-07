@@ -103,10 +103,10 @@ theorem angle_add_eq_arcsin_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 
     rcases h0 with (h0 | h0)
     ·
       exact
-        Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
+        Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (hMul_self_nonneg _)
     ·
       exact
-        Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
+        Left.add_pos_of_nonneg_of_pos (hMul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
   rw [angle_add_eq_arccos_of_inner_eq_zero h,
     Real.arccos_eq_arcsin (div_nonneg (norm_nonneg _) (norm_nonneg _)), div_pow, one_sub_div hxy]
   nth_rw 1 [pow_two]
@@ -139,7 +139,7 @@ theorem angle_add_pos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x = 
   rw [div_lt_one
       (Real.sqrt_pos.2
         (Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 hx))
-          (mul_self_nonneg _))),
+          (hMul_self_nonneg _))),
     Real.lt_sqrt (norm_nonneg _), pow_two]
   simpa [hx] using h0
 #align inner_product_geometry.angle_add_pos_of_inner_eq_zero InnerProductGeometry.angle_add_pos_of_inner_eq_zero
@@ -166,7 +166,7 @@ theorem angle_add_lt_pi_div_two_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) 
     div_pos (norm_pos_iff.2 h0)
       (Real.sqrt_pos.2
         (Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
-          (mul_self_nonneg _)))
+          (hMul_self_nonneg _)))
 #align inner_product_geometry.angle_add_lt_pi_div_two_of_inner_eq_zero InnerProductGeometry.angle_add_lt_pi_div_two_of_inner_eq_zero
 -/
 
@@ -180,7 +180,7 @@ theorem cos_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
       (div_le_one_of_le _ (norm_nonneg _))]
   rw [mul_self_le_mul_self_iff (norm_nonneg _) (norm_nonneg _),
     norm_add_sq_eq_norm_sq_add_norm_sq_real h]
-  exact le_add_of_nonneg_right (mul_self_nonneg _)
+  exact le_add_of_nonneg_right (hMul_self_nonneg _)
 #align inner_product_geometry.cos_angle_add_of_inner_eq_zero InnerProductGeometry.cos_angle_add_of_inner_eq_zero
 -/
 
@@ -194,7 +194,7 @@ theorem sin_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x �
       (div_le_one_of_le _ (norm_nonneg _))]
   rw [mul_self_le_mul_self_iff (norm_nonneg _) (norm_nonneg _),
     norm_add_sq_eq_norm_sq_add_norm_sq_real h]
-  exact le_add_of_nonneg_left (mul_self_nonneg _)
+  exact le_add_of_nonneg_left (hMul_self_nonneg _)
 #align inner_product_geometry.sin_angle_add_of_inner_eq_zero InnerProductGeometry.sin_angle_add_of_inner_eq_zero
 -/
 
@@ -218,7 +218,7 @@ theorem cos_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
   by_cases hxy : ‖x + y‖ = 0
   · have h' := norm_add_sq_eq_norm_sq_add_norm_sq_real h
     rw [hxy, MulZeroClass.zero_mul, eq_comm,
-      add_eq_zero_iff' (mul_self_nonneg ‖x‖) (mul_self_nonneg ‖y‖), mul_self_eq_zero] at h' 
+      add_eq_zero_iff' (hMul_self_nonneg ‖x‖) (hMul_self_nonneg ‖y‖), mul_self_eq_zero] at h' 
     simp [h'.1]
   · exact div_mul_cancel _ hxy
 #align inner_product_geometry.cos_angle_add_mul_norm_of_inner_eq_zero InnerProductGeometry.cos_angle_add_mul_norm_of_inner_eq_zero
@@ -236,8 +236,12 @@ theorem sin_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
   rw [← mul_self_ne_zero, norm_add_sq_eq_norm_sq_add_norm_sq_real h]
   refine' (ne_of_lt _).symm
   rcases h0 with (h0 | h0)
-  · exact Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
-  · exact Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
+  ·
+    exact
+      Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (hMul_self_nonneg _)
+  ·
+    exact
+      Left.add_pos_of_nonneg_of_pos (hMul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
 #align inner_product_geometry.sin_angle_add_mul_norm_of_inner_eq_zero InnerProductGeometry.sin_angle_add_mul_norm_of_inner_eq_zero
 -/
 

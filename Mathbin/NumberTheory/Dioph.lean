@@ -329,7 +329,7 @@ def sumsq : List (Poly α) → Poly α
 theorem sumsq_nonneg (x : α → ℕ) : ∀ l, 0 ≤ sumsq l x
   | [] => le_refl 0
   | p::ps => by
-    rw [sumsq] <;> simp [-add_comm] <;> exact add_nonneg (mul_self_nonneg _) (sumsq_nonneg ps)
+    rw [sumsq] <;> simp [-add_comm] <;> exact add_nonneg (hMul_self_nonneg _) (sumsq_nonneg ps)
 #align poly.sumsq_nonneg Poly.sumsq_nonneg
 -/
 
@@ -347,7 +347,7 @@ theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.Forall fun a : Poly α =>
                 (by
                   rw [← h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x * p x) <;>
                     rwa [add_zero] at t )
-                (mul_self_nonneg _)
+                (hMul_self_nonneg _)
           ⟨this, by simp [this] at h  <;> exact h⟩,
           fun ⟨h1, h2⟩ => by rw [h1, h2] <;> rfl⟩
 #align poly.sumsq_eq_zero Poly.sumsq_eq_zero

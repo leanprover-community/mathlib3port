@@ -867,7 +867,7 @@ theorem strictMono_pow_bit1 (n : ℕ) : StrictMono fun a : R => a ^ bit1 n :=
 #print one_add_mul_le_pow /-
 /-- Bernoulli's inequality for `n : ℕ`, `-2 ≤ a`. -/
 theorem one_add_mul_le_pow (H : -2 ≤ a) (n : ℕ) : 1 + (n : R) * a ≤ (1 + a) ^ n :=
-  one_add_mul_le_pow' (mul_self_nonneg _) (mul_self_nonneg _) (neg_le_iff_add_nonneg'.1 H) _
+  one_add_mul_le_pow' (hMul_self_nonneg _) (hMul_self_nonneg _) (neg_le_iff_add_nonneg'.1 H) _
 #align one_add_mul_le_pow one_add_mul_le_pow
 -/
 

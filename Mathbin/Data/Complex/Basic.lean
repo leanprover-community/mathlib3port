@@ -704,7 +704,7 @@ theorem normSq_I : normSq I = 1 := by simp [norm_sq]
 
 #print Complex.normSq_nonneg /-
 theorem normSq_nonneg (z : ℂ) : 0 ≤ normSq z :=
-  add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)
+  add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _)
 #align complex.norm_sq_nonneg Complex.normSq_nonneg
 -/
 
@@ -758,13 +758,13 @@ theorem normSq_add (z w : ℂ) : normSq (z + w) = normSq z + normSq w + 2 * (z *
 
 #print Complex.re_sq_le_normSq /-
 theorem re_sq_le_normSq (z : ℂ) : z.re * z.re ≤ normSq z :=
-  le_add_of_nonneg_right (mul_self_nonneg _)
+  le_add_of_nonneg_right (hMul_self_nonneg _)
 #align complex.re_sq_le_norm_sq Complex.re_sq_le_normSq
 -/
 
 #print Complex.im_sq_le_normSq /-
 theorem im_sq_le_normSq (z : ℂ) : z.im * z.im ≤ normSq z :=
-  le_add_of_nonneg_left (mul_self_nonneg _)
+  le_add_of_nonneg_left (hMul_self_nonneg _)
 #align complex.im_sq_le_norm_sq Complex.im_sq_le_normSq
 -/
 
@@ -1216,7 +1216,7 @@ theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
 
 #print Complex.abs_re_le_abs /-
 theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
-  Real.abs_le_sqrt <| by rw [norm_sq_apply, ← sq]; exact le_add_of_nonneg_right (mul_self_nonneg _)
+  Real.abs_le_sqrt <| by rw [norm_sq_apply, ← sq]; exact le_add_of_nonneg_right (hMul_self_nonneg _)
 #align complex.abs_re_le_abs Complex.abs_re_le_abs
 -/
 

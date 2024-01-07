@@ -47,7 +47,7 @@ theorem imo2020_q2 (a b c d : ℝ) (hd0 : 0 < d) (hdc : d ≤ c) (hcb : c ≤ b)
             (3 * a + 3 * b + c + 3 * d) * (c * c) +
           (3 * a + 3 * b + 3 * c + d) * (d * d) :=
       by
-      apply_rules [add_le_add] <;> refine' mul_le_mul_of_nonneg_right _ (mul_self_nonneg _) <;>
+      apply_rules [add_le_add] <;> refine' mul_le_mul_of_nonneg_right _ (hMul_self_nonneg _) <;>
         linarith
     _ <
         (a + 3 * b + 3 * c + 3 * d) * (a * a) + (3 * a + b + 3 * c + 3 * d) * (b * b) +

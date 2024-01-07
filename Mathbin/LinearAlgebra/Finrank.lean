@@ -197,12 +197,10 @@ section DivisionRing
 variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
   [Module K V₂]
 
-#print FiniteDimensional.Basis.subset_extend /-
 theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) :
     s ⊆ hs.extend (Set.subset_univ _) :=
   hs.subset_extend _
 #align finite_dimensional.basis.subset_extend FiniteDimensional.Basis.subset_extend
--/
 
 end DivisionRing
 

@@ -1349,19 +1349,15 @@ theorem Set.EqOn.restr_eqOn_source {e e' : PartialHomeomorph α β}
 #align local_homeomorph.set.eq_on.restr_eq_on_source PartialHomeomorph.Set.EqOn.restr_eqOn_source
 -/
 
-#print PartialHomeomorph.trans_self_symm /-
 /-- Composition of a local homeomorphism and its inverse is equivalent to the restriction of the
 identity to the source -/
 theorem trans_self_symm : e.trans e.symm ≈ PartialHomeomorph.ofSet e.source e.open_source :=
   PartialEquiv.trans_self_symm _
 #align local_homeomorph.trans_self_symm PartialHomeomorph.trans_self_symm
--/
 
-#print PartialHomeomorph.trans_symm_self /-
 theorem trans_symm_self : e.symm.trans e ≈ PartialHomeomorph.ofSet e.target e.open_target :=
   e.symm.trans_self_symm
 #align local_homeomorph.trans_symm_self PartialHomeomorph.trans_symm_self
--/
 
 #print PartialHomeomorph.eq_of_eqOnSource_univ /-
 theorem eq_of_eqOnSource_univ {e e' : PartialHomeomorph α β} (h : e ≈ e') (s : e.source = univ)

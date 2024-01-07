@@ -556,7 +556,7 @@ theorem mkComplex.filter_card (w : { w : InfinitePlace K // w.IsComplex }) :
   by
   rw [mk_complex.filter]
   exact
-    Finset.card_doubleton
+    Finset.card_pair
       (subtype.mk_eq_mk.not.2 <|
         ne_comm.1 <| complex_embedding.is_real_iff.not.1 <| is_complex_iff.1 w.2)
 #align number_field.infinite_place.mk_complex.filter_card NumberField.InfinitePlace.mkComplex.filter_card

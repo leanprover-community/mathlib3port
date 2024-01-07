@@ -244,7 +244,7 @@ theorem sin_angle_mul_norm_mul_norm (x y : V) :
   by
   unfold angle
   rw [Real.sin_arccos, ← Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)), ←
-    Real.sqrt_mul' _ (mul_self_nonneg _), sq,
+    Real.sqrt_mul' _ (hMul_self_nonneg _), sq,
     Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)),
     real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm]
   by_cases h : ‖x‖ * ‖y‖ = 0

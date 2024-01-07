@@ -131,7 +131,7 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
             (Set.mem_insert_of_mem _ (orthogonal_projection_mem _)))
     · intro p1 hp1
       rw [sphere.mem_coe, mem_sphere, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
-        Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))]
+        Real.mul_self_sqrt (add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _))]
       cases hp1
       · rw [hp1]
         rw [hpo,
@@ -167,7 +167,7 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
       have h' : ↑(⟨cc₃', hcc₃'⟩ : s) = cc₃' := rfl
       rw [← dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp0) hcr₃, hcc₃'', ←
         mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
-        Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)),
+        Real.mul_self_sqrt (add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _)),
         dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp0),
         orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h',
         dist_of_mem_subset_mk_sphere hp0 hcr, dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ←
@@ -179,7 +179,7 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
       dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonal_projection_mem p) hcc₃' _ _
         (vsub_orthogonal_projection_mem_direction_orthogonal s p),
       dist_comm, ← dist_eq_norm_vsub V p,
-      Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))] at hcr₃ 
+      Real.mul_self_sqrt (add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _))] at hcr₃ 
     change x * x + _ * (y * y) = _ at hcr₃ 
     rw [show
         x * x + (1 - t₃) * (1 - t₃) * (y * y) = x * x + y * y - 2 * y * (t₃ * y) + t₃ * y * (t₃ * y)

@@ -312,10 +312,10 @@ theorem joinM_eq_join : joinM = @join α :=
 #align option.join_eq_join Option.joinM_eq_join
 -/
 
-#print Option.bind_eq_bind /-
-theorem bind_eq_bind {α β : Type _} {f : α → Option β} {x : Option α} : x >>= f = x.bind f :=
+#print Option.bind_eq_bind' /-
+theorem bind_eq_bind' {α β : Type _} {f : α → Option β} {x : Option α} : x >>= f = x.bind f :=
   rfl
-#align option.bind_eq_bind Option.bind_eq_bind
+#align option.bind_eq_bind Option.bind_eq_bind'
 -/
 
 #print Option.map_eq_map /-

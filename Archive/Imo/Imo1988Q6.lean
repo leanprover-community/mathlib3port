@@ -251,7 +251,7 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
       have hpos : z * z + x * x > 0 :=
         by
         apply add_pos_of_nonneg_of_pos
-        · apply mul_self_nonneg
+        · apply hMul_self_nonneg
         · apply mul_pos <;> exact_mod_cast hx
       have hzx : z * z + x * x = (z * x + 1) * k :=
         by

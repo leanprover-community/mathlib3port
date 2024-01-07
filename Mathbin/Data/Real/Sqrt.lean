@@ -254,7 +254,7 @@ theorem mul_self_sqrt (h : 0 ≤ x) : sqrt x * sqrt x = x := by
 #print Real.sqrt_mul_self /-
 @[simp]
 theorem sqrt_mul_self (h : 0 ≤ x) : sqrt (x * x) = x :=
-  (mul_self_inj_of_nonneg (sqrt_nonneg _) h).1 (mul_self_sqrt (mul_self_nonneg _))
+  (mul_self_inj_of_nonneg (sqrt_nonneg _) h).1 (mul_self_sqrt (hMul_self_nonneg _))
 #align real.sqrt_mul_self Real.sqrt_mul_self
 -/
 
@@ -368,7 +368,7 @@ theorem sqrt_lt_sqrt (hx : 0 ≤ x) (h : x < y) : sqrt x < sqrt y :=
 #print Real.sqrt_le_left /-
 theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
   rw [sqrt, ← Real.le_toNNReal_iff_coe_le hy, NNReal.sqrt_le_iff, sq, ← Real.toNNReal_mul hy,
-    Real.toNNReal_le_toNNReal_iff (mul_self_nonneg y), sq]
+    Real.toNNReal_le_toNNReal_iff (hMul_self_nonneg y), sq]
 #align real.sqrt_le_left Real.sqrt_le_left
 -/
 
@@ -608,7 +608,7 @@ instance : StarOrderedRing ℝ :=
     refine'
       ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩
     rintro ⟨s, rfl⟩
-    exact mul_self_nonneg s
+    exact hMul_self_nonneg s
 
 end Real
 

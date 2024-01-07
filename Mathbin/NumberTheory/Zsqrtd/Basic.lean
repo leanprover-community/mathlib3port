@@ -701,9 +701,10 @@ theorem norm_conj (x : ℤ√d) : (star x).norm = x.norm :=
 
 #print Zsqrtd.norm_nonneg /-
 theorem norm_nonneg (hd : d ≤ 0) (n : ℤ√d) : 0 ≤ n.norm :=
-  add_nonneg (mul_self_nonneg _)
+  add_nonneg (hMul_self_nonneg _)
     (by
-      rw [mul_assoc, neg_mul_eq_neg_mul] <;> exact mul_nonneg (neg_nonneg.2 hd) (mul_self_nonneg _))
+      rw [mul_assoc, neg_mul_eq_neg_mul] <;>
+        exact mul_nonneg (neg_nonneg.2 hd) (hMul_self_nonneg _))
 #align zsqrtd.norm_nonneg Zsqrtd.norm_nonneg
 -/
 
@@ -750,8 +751,8 @@ theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z
   · intro h
     rw [ext, zero_re, zero_im]
     rw [norm_def, sub_eq_add_neg, mul_assoc] at h 
-    have left := mul_self_nonneg z.re
-    have right := neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (mul_self_nonneg z.im))
+    have left := hMul_self_nonneg z.re
+    have right := neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (hMul_self_nonneg z.im))
     obtain ⟨ha, hb⟩ := (add_eq_zero_iff' left right).mp h
     constructor <;> apply eq_zero_of_mul_self_eq_zero
     · exact ha
@@ -1194,9 +1195,9 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
       rw [eq_zero_of_mul_self_eq_zero this] at ha ⊢
       simpa only [true_and_iff, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul,
         MulZeroClass.mul_zero, mul_eq_zero, h.ne, false_or_iff, or_self_iff] using ha
-    apply _root_.le_antisymm _ (mul_self_nonneg _)
+    apply _root_.le_antisymm _ (hMul_self_nonneg _)
     rw [ha, mul_assoc]
-    exact mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)
+    exact mul_nonpos_of_nonpos_of_nonneg h.le (hMul_self_nonneg _)
 #align zsqrtd.norm_eq_zero Zsqrtd.norm_eq_zero
 -/
 

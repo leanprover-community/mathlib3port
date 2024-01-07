@@ -1073,7 +1073,6 @@ theorem EqOnSource.source_inter_preimage_eq {e e' : PartialEquiv α β} (he : e 
 #align local_equiv.eq_on_source.source_inter_preimage_eq PartialEquiv.EqOnSource.source_inter_preimage_eq
 -/
 
-#print PartialEquiv.trans_self_symm /-
 /-- Composition of a local equiv and its inverse is equivalent to the restriction of the identity
 to the source -/
 theorem trans_self_symm : e.trans e.symm ≈ PartialEquiv.ofSet e.source :=
@@ -1083,15 +1082,12 @@ theorem trans_self_symm : e.trans e.symm ≈ PartialEquiv.ofSet e.source :=
   rw [A] at hx 
   simp only [hx, mfld_simps]
 #align local_equiv.trans_self_symm PartialEquiv.trans_self_symm
--/
 
-#print PartialEquiv.trans_symm_self /-
 /-- Composition of the inverse of a local equiv and this local equiv is equivalent to the
 restriction of the identity to the target -/
 theorem trans_symm_self : e.symm.trans e ≈ PartialEquiv.ofSet e.target :=
   trans_self_symm e.symm
 #align local_equiv.trans_symm_self PartialEquiv.trans_symm_self
--/
 
 #print PartialEquiv.eq_of_eqOnSource_univ /-
 /-- Two equivalent local equivs are equal when the source and target are univ -/

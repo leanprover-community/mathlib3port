@@ -1302,9 +1302,9 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup :
 #align linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
 -/
 
-#print LinearOrderedRing.noZeroDivisors /-
+#print LinearOrderedSemiring.noZeroDivisors /-
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedRing.noZeroDivisors : NoZeroDivisors α :=
+instance (priority := 100) LinearOrderedSemiring.noZeroDivisors : NoZeroDivisors α :=
   { ‹LinearOrderedRing α› with
     eq_zero_or_eq_zero_of_mul_eq_zero := by
       intro a b hab
@@ -1312,7 +1312,7 @@ instance (priority := 100) LinearOrderedRing.noZeroDivisors : NoZeroDivisors α 
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
       exacts [(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
         (mul_neg_of_pos_of_neg ha hb).Ne, (mul_pos ha hb).Ne.symm] }
-#align linear_ordered_ring.no_zero_divisors LinearOrderedRing.noZeroDivisors
+#align linear_ordered_ring.no_zero_divisors LinearOrderedSemiring.noZeroDivisors
 -/
 
 #print LinearOrderedRing.isDomain /-
@@ -1369,11 +1369,9 @@ theorem mul_nonpos_iff : a * b ≤ 0 ↔ 0 ≤ a ∧ b ≤ 0 ∨ a ≤ 0 ∧ 0 �
 #align mul_nonpos_iff mul_nonpos_iff
 -/
 
-#print mul_self_nonneg /-
-theorem mul_self_nonneg (a : α) : 0 ≤ a * a :=
+theorem hMul_self_nonneg (a : α) : 0 ≤ a * a :=
   (le_total 0 a).elim (fun h => mul_nonneg h h) fun h => mul_nonneg_of_nonpos_of_nonpos h h
-#align mul_self_nonneg mul_self_nonneg
--/
+#align mul_self_nonneg hMul_self_nonneg
 
 #print neg_le_self_iff /-
 @[simp]
@@ -1532,7 +1530,7 @@ theorem pos_iff_neg_of_mul_neg (hab : a * b < 0) : 0 < a ↔ b < 0 :=
 #print mul_self_add_mul_self_eq_zero /-
 /-- The sum of two squares is zero iff both elements are zero. -/
 theorem mul_self_add_mul_self_eq_zero {x y : α} : x * x + y * y = 0 ↔ x = 0 ∧ y = 0 := by
-  rw [add_eq_zero_iff', mul_self_eq_zero, mul_self_eq_zero] <;> apply mul_self_nonneg
+  rw [add_eq_zero_iff', mul_self_eq_zero, mul_self_eq_zero] <;> apply hMul_self_nonneg
 #align mul_self_add_mul_self_eq_zero mul_self_add_mul_self_eq_zero
 -/
 

@@ -96,7 +96,7 @@ variable [Fintype n]
 #print Matrix.dotProduct_self_eq_zero /-
 @[simp]
 theorem dotProduct_self_eq_zero [LinearOrderedRing R] {v : n → R} : dotProduct v v = 0 ↔ v = 0 :=
-  (Finset.sum_eq_zero_iff_of_nonneg fun i _ => mul_self_nonneg (v i)).trans <| by
+  (Finset.sum_eq_zero_iff_of_nonneg fun i _ => hMul_self_nonneg (v i)).trans <| by
     simp [Function.funext_iff]
 #align matrix.dot_product_self_eq_zero Matrix.dotProduct_self_eq_zero
 -/

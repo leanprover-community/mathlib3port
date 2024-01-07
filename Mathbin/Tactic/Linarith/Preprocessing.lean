@@ -304,7 +304,7 @@ unsafe def nlinarith_extras : global_preprocessor
     let new_es ←
       s.mfold ([] : List expr) fun ⟨e, is_sq⟩ new_es =>
           (do
-              let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
+              let p ← mk_app (if is_sq then `` sq_nonneg else `` hMul_self_nonneg) [e]
               return <| p :: new_es) <|>
             return new_es
     let new_es ← make_comp_with_zero.globalize.transform new_es

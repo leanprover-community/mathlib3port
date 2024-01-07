@@ -156,7 +156,7 @@ variable [LinearOrderedField α] {a b c d : α} {n : ℤ}
 
 #print zpow_bit0_nonneg /-
 theorem zpow_bit0_nonneg (a : α) (n : ℤ) : 0 ≤ a ^ bit0 n :=
-  (mul_self_nonneg _).trans_eq <| (zpow_bit0 _ _).symm
+  (hMul_self_nonneg _).trans_eq <| (zpow_bit0 _ _).symm
 #align zpow_bit0_nonneg zpow_bit0_nonneg
 -/
 

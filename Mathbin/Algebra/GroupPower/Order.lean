@@ -761,7 +761,7 @@ theorem abs_pow_eq_one (a : R) {n : ℕ} (h : 0 < n) : |a ^ n| = 1 ↔ |a| = 1 :
 
 #print pow_bit0_nonneg /-
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by rw [pow_bit0];
-  exact mul_self_nonneg _
+  exact hMul_self_nonneg _
 #align pow_bit0_nonneg pow_bit0_nonneg
 -/
 

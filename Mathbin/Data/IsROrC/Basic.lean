@@ -609,7 +609,7 @@ theorem normSq_one : normSq (1 : K) = 1 :=
 
 #print IsROrC.normSq_nonneg /-
 theorem normSq_nonneg (z : K) : 0 ≤ normSq z :=
-  add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)
+  add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _)
 #align is_R_or_C.norm_sq_nonneg IsROrC.normSq_nonneg
 -/
 
@@ -654,13 +654,13 @@ theorem normSq_add (z w : K) : normSq (z + w) = normSq z + normSq w + 2 * re (z 
 
 #print IsROrC.re_sq_le_normSq /-
 theorem re_sq_le_normSq (z : K) : re z * re z ≤ normSq z :=
-  le_add_of_nonneg_right (mul_self_nonneg _)
+  le_add_of_nonneg_right (hMul_self_nonneg _)
 #align is_R_or_C.re_sq_le_norm_sq IsROrC.re_sq_le_normSq
 -/
 
 #print IsROrC.im_sq_le_normSq /-
 theorem im_sq_le_normSq (z : K) : im z * im z ≤ normSq z :=
-  le_add_of_nonneg_left (mul_self_nonneg _)
+  le_add_of_nonneg_left (hMul_self_nonneg _)
 #align is_R_or_C.im_sq_le_norm_sq IsROrC.im_sq_le_normSq
 -/
 
