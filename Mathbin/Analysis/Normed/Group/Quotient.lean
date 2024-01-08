@@ -122,7 +122,7 @@ theorem image_norm_nonempty {S : AddSubgroup M} :
     ∀ x : M ⧸ S, (norm '' {m | mk' S m = x}).Nonempty :=
   by
   rintro ⟨m⟩
-  rw [Set.nonempty_image_iff]
+  rw [Set.image_nonempty]
   use m
   change mk' S m = _
   rfl
@@ -240,7 +240,7 @@ theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) :
   · use 0
     rintro _ ⟨x, x_in, rfl⟩
     apply norm_nonneg
-  rw [Set.nonempty_image_iff]
+  rw [Set.image_nonempty]
   use 0, S.zero_mem
 #align quotient_norm_eq_zero_iff quotient_norm_eq_zero_iff
 -/
@@ -569,7 +569,7 @@ theorem IsQuotient.norm_lift {f : NormedAddGroupHom M N} (hquot : IsQuotient f) 
   obtain ⟨m, rfl⟩ := hquot.surjective n
   have nonemp : ((fun m' => ‖m + m'‖) '' f.ker).Nonempty :=
     by
-    rw [Set.nonempty_image_iff]
+    rw [Set.image_nonempty]
     exact ⟨0, f.ker.zero_mem⟩
   rcases Real.lt_sInf_add_pos nonemp hε with
     ⟨_, ⟨⟨x, hx, rfl⟩, H : ‖m + x‖ < Inf ((fun m' : M => ‖m + m'‖) '' f.ker) + ε⟩⟩

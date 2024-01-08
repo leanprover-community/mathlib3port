@@ -70,7 +70,7 @@ variable {𝕜}
 theorem Subsingleton.convexIndependent [Subsingleton ι] (p : ι → E) : ConvexIndependent 𝕜 p :=
   fun s x hx => by
   have : (convexHull 𝕜 (p '' s)).Nonempty := ⟨p x, hx⟩
-  rw [convexHull_nonempty_iff, Set.nonempty_image_iff] at this 
+  rw [convexHull_nonempty_iff, Set.image_nonempty] at this 
   rwa [Subsingleton.mem_iff_nonempty]
 #align subsingleton.convex_independent Subsingleton.convexIndependent
 -/

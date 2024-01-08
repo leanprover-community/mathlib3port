@@ -369,16 +369,16 @@ section Gwz
 
 variable [GroupWithZero α] [AddMonoid β] [DistribMulAction α β]
 
-#print smul_eq_zero_iff_eq' /-
-theorem smul_eq_zero_iff_eq' {a : α} (ha : a ≠ 0) {x : β} : a • x = 0 ↔ x = 0 :=
+#print smul_eq_zero_iff_right /-
+theorem smul_eq_zero_iff_right {a : α} (ha : a ≠ 0) {x : β} : a • x = 0 ↔ x = 0 :=
   show Units.mk0 a ha • x = 0 ↔ x = 0 from smul_eq_zero_iff_eq _
-#align smul_eq_zero_iff_eq' smul_eq_zero_iff_eq'
+#align smul_eq_zero_iff_eq' smul_eq_zero_iff_right
 -/
 
-#print smul_ne_zero_iff_ne' /-
-theorem smul_ne_zero_iff_ne' {a : α} (ha : a ≠ 0) {x : β} : a • x ≠ 0 ↔ x ≠ 0 :=
+#print smul_ne_zero_iff_right /-
+theorem smul_ne_zero_iff_right {a : α} (ha : a ≠ 0) {x : β} : a • x ≠ 0 ↔ x ≠ 0 :=
   show Units.mk0 a ha • x ≠ 0 ↔ x ≠ 0 from smul_ne_zero_iff_ne _
-#align smul_ne_zero_iff_ne' smul_ne_zero_iff_ne'
+#align smul_ne_zero_iff_ne' smul_ne_zero_iff_right
 -/
 
 end Gwz

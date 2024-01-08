@@ -171,7 +171,7 @@ dimension at most `n`. -/
 theorem finrank_vectorSpan_image_finset_le (p : ι → P) (s : Finset ι) {n : ℕ}
     (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.image p : Set P)) ≤ n :=
   by
-  have hn : (s.image p).Nonempty := by rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc];
+  have hn : (s.image p).Nonempty := by rw [Finset.image_nonempty, ← Finset.card_pos, hc];
     apply Nat.succ_pos
   rcases hn with ⟨p₁, hp₁⟩
   rw [vectorSpan_eq_span_vsub_finset_right_ne k hp₁]

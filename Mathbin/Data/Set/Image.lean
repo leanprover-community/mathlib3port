@@ -600,11 +600,11 @@ theorem Nonempty.of_image {f : α → β} {s : Set α} : (f '' s).Nonempty → s
 #align set.nonempty.of_image Set.Nonempty.of_image
 -/
 
-#print Set.nonempty_image_iff /-
+#print Set.image_nonempty /-
 @[simp]
-theorem nonempty_image_iff {f : α → β} {s : Set α} : (f '' s).Nonempty ↔ s.Nonempty :=
+theorem image_nonempty {f : α → β} {s : Set α} : (f '' s).Nonempty ↔ s.Nonempty :=
   ⟨Nonempty.of_image, fun h => h.image f⟩
-#align set.nonempty_image_iff Set.nonempty_image_iff
+#align set.nonempty_image_iff Set.image_nonempty
 -/
 
 #print Set.Nonempty.preimage /-

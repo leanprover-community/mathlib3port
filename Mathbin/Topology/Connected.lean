@@ -416,7 +416,7 @@ theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnec
 #print IsConnected.image /-
 theorem IsConnected.image [TopologicalSpace β] {s : Set α} (H : IsConnected s) (f : α → β)
     (hf : ContinuousOn f s) : IsConnected (f '' s) :=
-  ⟨nonempty_image_iff.mpr H.Nonempty, H.IsPreconnected.image f hf⟩
+  ⟨image_nonempty.mpr H.Nonempty, H.IsPreconnected.image f hf⟩
 #align is_connected.image IsConnected.image
 -/
 

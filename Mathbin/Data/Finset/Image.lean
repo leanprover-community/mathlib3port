@@ -518,14 +518,14 @@ protected theorem Nonempty.image (h : s.Nonempty) (f : α → β) : (s.image f).
 #align finset.nonempty.image Finset.Nonempty.image
 -/
 
-#print Finset.Nonempty.image_iff /-
+#print Finset.image_nonempty /-
 @[simp]
-theorem Nonempty.image_iff (f : α → β) : (s.image f).Nonempty ↔ s.Nonempty :=
+theorem Finset.image_nonempty (f : α → β) : (s.image f).Nonempty ↔ s.Nonempty :=
   ⟨fun ⟨y, hy⟩ =>
     let ⟨x, hx, _⟩ := mem_image.mp hy
     ⟨x, hx⟩,
     fun h => h.image f⟩
-#align finset.nonempty.image_iff Finset.Nonempty.image_iff
+#align finset.nonempty.image_iff Finset.image_nonempty
 -/
 
 #print Finset.image_toFinset /-

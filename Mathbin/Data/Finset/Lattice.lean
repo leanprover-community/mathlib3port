@@ -1170,7 +1170,7 @@ theorem map_finset_sup' [SemilatticeSup β] [SupHomClass F α β] (f : F) {s : F
 #print Finset.sup'_image /-
 @[simp]
 theorem sup'_image [DecidableEq β] {s : Finset γ} {f : γ → β} (hs : (s.image f).Nonempty)
-    (g : β → α) (hs' : s.Nonempty := (Nonempty.image_iff _).1 hs) :
+    (g : β → α) (hs' : s.Nonempty := (Finset.image_nonempty _).1 hs) :
     (s.image f).sup' hs g = s.sup' hs' (g ∘ f) := by rw [← WithBot.coe_eq_coe];
   simp only [coe_sup', sup_image, WithBot.coe_sup]
 #align finset.sup'_image Finset.sup'_image
@@ -1350,7 +1350,7 @@ theorem map_finset_inf' [SemilatticeInf β] [InfHomClass F α β] (f : F) {s : F
 #print Finset.inf'_image /-
 @[simp]
 theorem inf'_image [DecidableEq β] {s : Finset γ} {f : γ → β} (hs : (s.image f).Nonempty)
-    (g : β → α) (hs' : s.Nonempty := (Nonempty.image_iff _).1 hs) :
+    (g : β → α) (hs' : s.Nonempty := (Finset.image_nonempty _).1 hs) :
     (s.image f).inf' hs g = s.inf' hs' (g ∘ f) :=
   @sup'_image αᵒᵈ _ _ _ _ _ _ hs _ hs'
 #align finset.inf'_image Finset.inf'_image
@@ -2106,7 +2106,7 @@ theorem min'_lt_of_mem_erase_min' [DecidableEq α] {a : α} (ha : a ∈ s.erase�
 #print Finset.max'_image /-
 @[simp]
 theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
-    (h : (s.image f).Nonempty) : (s.image f).max' h = f (s.max' ((Nonempty.image_iff f).mp h)) :=
+    (h : (s.image f).Nonempty) : (s.image f).max' h = f (s.max' ((Finset.image_nonempty f).mp h)) :=
   by
   refine'
     le_antisymm (max'_le _ _ _ fun y hy => _) (le_max' _ _ (mem_image.mpr ⟨_, max'_mem _ _, rfl⟩))
@@ -2118,7 +2118,7 @@ theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finse
 #print Finset.min'_image /-
 @[simp]
 theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
-    (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) :=
+    (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Finset.image_nonempty f).mp h)) :=
   by
   convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
     convert h
