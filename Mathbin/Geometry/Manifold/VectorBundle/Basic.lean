@@ -351,7 +351,7 @@ instance : HasGroupoid (TotalSpace F E) (smoothFiberwiseLinear B F IB)
       · infer_instance
       · infer_instance
     ·
-      simp only [e.symm_trans_source_eq e', FiberwiseLinear.localHomeomorph, trans_to_local_equiv,
+      simp only [e.symm_trans_source_eq e', FiberwiseLinear.partialHomeomorph, trans_to_local_equiv,
         symm_to_local_equiv]
     · rintro ⟨b, v⟩ hb
       have hb' : b ∈ e.base_set ∩ e'.base_set := by

@@ -48,25 +48,34 @@ variable [SemilatticeSup α] [OrderTop α] [@DecidableRel α (· ≤ ·)] [Semil
 private theorem sup_aux : a ∈ lowerClosure (s : Set α) → (s.filterₓ fun b => a ≤ b).Nonempty :=
   fun ⟨b, hb, hab⟩ => ⟨b, mem_filter.2 ⟨hb, hab⟩⟩
 
+#print Finset.truncatedSup /-
 /-- The infimum of the elements of `s` less than `a` if there are some, otherwise `⊤`. -/
 def truncatedSup (s : Finset α) (a : α) : α :=
   if h : a ∈ lowerClosure (s : Set α) then (s.filterₓ fun b => a ≤ b).sup' (sup_aux h) id else ⊤
 #align finset.truncated_sup Finset.truncatedSup
+-/
 
+#print Finset.truncatedSup_of_mem /-
 theorem truncatedSup_of_mem (h : a ∈ lowerClosure (s : Set α)) :
     truncatedSup s a = (s.filterₓ fun b => a ≤ b).sup' (sup_aux h) id :=
   dif_pos h
 #align finset.truncated_sup_of_mem Finset.truncatedSup_of_mem
+-/
 
+#print Finset.truncatedSup_of_not_mem /-
 theorem truncatedSup_of_not_mem (h : a ∉ lowerClosure (s : Set α)) : truncatedSup s a = ⊤ :=
   dif_neg h
 #align finset.truncated_sup_of_not_mem Finset.truncatedSup_of_not_mem
+-/
 
+#print Finset.truncatedSup_empty /-
 @[simp]
 theorem truncatedSup_empty (a : α) : truncatedSup ∅ a = ⊤ :=
   truncatedSup_of_not_mem <| by simp
 #align finset.truncated_sup_empty Finset.truncatedSup_empty
+-/
 
+#print Finset.le_truncatedSup /-
 theorem le_truncatedSup : a ≤ truncatedSup s a :=
   by
   rw [truncated_sup]
@@ -75,7 +84,9 @@ theorem le_truncatedSup : a ≤ truncatedSup s a :=
     exact h.trans (le_sup' _ <| mem_filter.2 ⟨hb, h⟩)
   · exact le_top
 #align finset.le_truncated_sup Finset.le_truncatedSup
+-/
 
+#print Finset.map_truncatedSup /-
 theorem map_truncatedSup (e : α ≃o β) (s : Finset α) (a : α) :
     e (truncatedSup s a) = truncatedSup (s.map e.toEquiv.toEmbedding) (e a) :=
   by
@@ -90,6 +101,7 @@ theorem map_truncatedSup (e : α ≃o β) (s : Finset α) (a : α) :
   -- TODO: Why can't `simp` use `finset.sup'_map`?
   simp only [Equiv.coe_toEmbedding, RelIso.coe_fn_toEquiv]
 #align finset.map_truncated_sup Finset.map_truncatedSup
+-/
 
 variable [DecidableEq α]
 
@@ -98,12 +110,15 @@ private theorem lower_aux :
       a ∈ lowerClosure (s : Set α) ∨ a ∈ lowerClosure (t : Set α) :=
   by rw [coe_union, lowerClosure_union, LowerSet.mem_sup_iff]
 
+#print Finset.truncatedSup_union /-
 theorem truncatedSup_union (hs : a ∈ lowerClosure (s : Set α)) (ht : a ∈ lowerClosure (t : Set α)) :
     truncatedSup (s ∪ t) a = truncatedSup s a ⊔ truncatedSup t a := by
   simpa only [truncated_sup_of_mem, hs, ht, lower_aux.2 (Or.inl hs), filter_union] using
     sup'_union _ _ _
 #align finset.truncated_sup_union Finset.truncatedSup_union
+-/
 
+#print Finset.truncatedSup_union_left /-
 theorem truncatedSup_union_left (hs : a ∈ lowerClosure (s : Set α))
     (ht : a ∉ lowerClosure (t : Set α)) : truncatedSup (s ∪ t) a = truncatedSup s a :=
   by
@@ -111,16 +126,21 @@ theorem truncatedSup_union_left (hs : a ∈ lowerClosure (s : Set α))
   simp only [truncated_sup_of_mem, hs, filter_union, filter_false_of_mem ht, union_empty,
     lower_aux.2 (Or.inl hs), ht]
 #align finset.truncated_sup_union_left Finset.truncatedSup_union_left
+-/
 
+#print Finset.truncatedSup_union_right /-
 theorem truncatedSup_union_right (hs : a ∉ lowerClosure (s : Set α))
     (ht : a ∈ lowerClosure (t : Set α)) : truncatedSup (s ∪ t) a = truncatedSup t a := by
   rw [union_comm, truncated_sup_union_left ht hs]
 #align finset.truncated_sup_union_right Finset.truncatedSup_union_right
+-/
 
+#print Finset.truncatedSup_union_of_not_mem /-
 theorem truncatedSup_union_of_not_mem (hs : a ∉ lowerClosure (s : Set α))
     (ht : a ∉ lowerClosure (t : Set α)) : truncatedSup (s ∪ t) a = ⊤ :=
   truncatedSup_of_not_mem fun h => (lower_aux.1 h).elim hs ht
 #align finset.truncated_sup_union_of_not_mem Finset.truncatedSup_union_of_not_mem
+-/
 
 end SemilatticeSup
 
@@ -132,20 +152,27 @@ variable [SemilatticeInf α] [BoundedOrder α] [@DecidableRel α (· ≤ ·)] [S
 private theorem inf_aux : a ∈ upperClosure (s : Set α) → (s.filterₓ fun b => b ≤ a).Nonempty :=
   fun ⟨b, hb, hab⟩ => ⟨b, mem_filter.2 ⟨hb, hab⟩⟩
 
+#print Finset.truncatedInf /-
 /-- The infimum of the elements of `s` less than `a` if there are some, otherwise `⊥`. -/
 def truncatedInf (s : Finset α) (a : α) : α :=
   if h : a ∈ upperClosure (s : Set α) then (s.filterₓ fun b => b ≤ a).inf' (inf_aux h) id else ⊥
 #align finset.truncated_inf Finset.truncatedInf
+-/
 
+#print Finset.truncatedInf_of_mem /-
 theorem truncatedInf_of_mem (h : a ∈ upperClosure (s : Set α)) :
     truncatedInf s a = (s.filterₓ fun b => b ≤ a).inf' (inf_aux h) id :=
   dif_pos h
 #align finset.truncated_inf_of_mem Finset.truncatedInf_of_mem
+-/
 
+#print Finset.truncatedInf_of_not_mem /-
 theorem truncatedInf_of_not_mem (h : a ∉ upperClosure (s : Set α)) : truncatedInf s a = ⊥ :=
   dif_neg h
 #align finset.truncated_inf_of_not_mem Finset.truncatedInf_of_not_mem
+-/
 
+#print Finset.truncatedInf_le /-
 theorem truncatedInf_le (s : Finset α) (a : α) : truncatedInf s a ≤ a :=
   by
   unfold truncated_inf
@@ -154,12 +181,16 @@ theorem truncatedInf_le (s : Finset α) (a : α) : truncatedInf s a ≤ a :=
     exact (inf'_le _ <| mem_filter.2 ⟨hb, h⟩).trans h
   · exact bot_le
 #align finset.truncated_inf_le Finset.truncatedInf_le
+-/
 
+#print Finset.truncatedInf_empty /-
 @[simp]
 theorem truncatedInf_empty (a : α) : truncatedInf ∅ a = ⊥ :=
   truncatedInf_of_not_mem <| by simp
 #align finset.truncated_inf_empty Finset.truncatedInf_empty
+-/
 
+#print Finset.map_truncatedInf /-
 theorem map_truncatedInf (e : α ≃o β) (s : Finset α) (a : α) :
     e (truncatedInf s a) = truncatedInf (s.map e.toEquiv.toEmbedding) (e a) :=
   by
@@ -174,6 +205,7 @@ theorem map_truncatedInf (e : α ≃o β) (s : Finset α) (a : α) :
   -- TODO: Why can't `simp` use `finset.inf'_map`?
   simp only [Equiv.coe_toEmbedding, RelIso.coe_fn_toEquiv]
 #align finset.map_truncated_inf Finset.map_truncatedInf
+-/
 
 variable [DecidableEq α]
 
@@ -182,12 +214,15 @@ private theorem upper_aux :
       a ∈ upperClosure (s : Set α) ∨ a ∈ upperClosure (t : Set α) :=
   by rw [coe_union, upperClosure_union, UpperSet.mem_inf_iff]
 
+#print Finset.truncatedInf_union /-
 theorem truncatedInf_union (hs : a ∈ upperClosure (s : Set α)) (ht : a ∈ upperClosure (t : Set α)) :
     truncatedInf (s ∪ t) a = truncatedInf s a ⊓ truncatedInf t a := by
   simpa only [truncated_inf_of_mem, hs, ht, upper_aux.2 (Or.inl hs), filter_union] using
     inf'_union _ _ _
 #align finset.truncated_inf_union Finset.truncatedInf_union
+-/
 
+#print Finset.truncatedInf_union_left /-
 theorem truncatedInf_union_left (hs : a ∈ upperClosure (s : Set α))
     (ht : a ∉ upperClosure (t : Set α)) : truncatedInf (s ∪ t) a = truncatedInf s a :=
   by
@@ -195,16 +230,21 @@ theorem truncatedInf_union_left (hs : a ∈ upperClosure (s : Set α))
   simp only [truncated_inf_of_mem, hs, filter_union, filter_false_of_mem ht, union_empty,
     upper_aux.2 (Or.inl hs), ht]
 #align finset.truncated_inf_union_left Finset.truncatedInf_union_left
+-/
 
+#print Finset.truncatedInf_union_right /-
 theorem truncatedInf_union_right (hs : a ∉ upperClosure (s : Set α))
     (ht : a ∈ upperClosure (t : Set α)) : truncatedInf (s ∪ t) a = truncatedInf t a := by
   rw [union_comm, truncated_inf_union_left ht hs]
 #align finset.truncated_inf_union_right Finset.truncatedInf_union_right
+-/
 
+#print Finset.truncatedInf_union_of_not_mem /-
 theorem truncatedInf_union_of_not_mem (hs : a ∉ upperClosure (s : Set α))
     (ht : a ∉ upperClosure (t : Set α)) : truncatedInf (s ∪ t) a = ⊥ :=
   truncatedInf_of_not_mem <| by rw [coe_union, upperClosure_union]; exact fun h => h.elim hs ht
 #align finset.truncated_inf_union_of_not_mem Finset.truncatedInf_union_of_not_mem
+-/
 
 end SemilatticeInf
 
@@ -221,6 +261,7 @@ private theorem sups_aux :
     a ∈ upperClosure (↑(s ⊻ t) : Set α) ↔ a ∈ upperClosure (s : Set α) ⊔ upperClosure t := by
   rw [coe_sups, upperClosure_sups, UpperSet.mem_sup_iff]
 
+#print Finset.truncatedSup_infs /-
 theorem truncatedSup_infs (hs : a ∈ lowerClosure (s : Set α)) (ht : a ∈ lowerClosure (t : Set α)) :
     truncatedSup (s ⊼ t) a = truncatedSup s a ⊓ truncatedSup t a :=
   by
@@ -229,7 +270,9 @@ theorem truncatedSup_infs (hs : a ∈ lowerClosure (s : Set α)) (ht : a ∈ low
   rw [sup'_image]
   rfl
 #align finset.truncated_sup_infs Finset.truncatedSup_infs
+-/
 
+#print Finset.truncatedInf_sups /-
 theorem truncatedInf_sups (hs : a ∈ upperClosure (s : Set α)) (ht : a ∈ upperClosure (t : Set α)) :
     truncatedInf (s ⊻ t) a = truncatedInf s a ⊔ truncatedInf t a :=
   by
@@ -238,16 +281,21 @@ theorem truncatedInf_sups (hs : a ∈ upperClosure (s : Set α)) (ht : a ∈ upp
   rw [inf'_image]
   rfl
 #align finset.truncated_inf_sups Finset.truncatedInf_sups
+-/
 
+#print Finset.truncatedSup_infs_of_not_mem /-
 theorem truncatedSup_infs_of_not_mem (ha : a ∉ lowerClosure (s : Set α) ⊓ lowerClosure t) :
     truncatedSup (s ⊼ t) a = ⊤ :=
   truncatedSup_of_not_mem <| by rwa [coe_infs, lowerClosure_infs]
 #align finset.truncated_sup_infs_of_not_mem Finset.truncatedSup_infs_of_not_mem
+-/
 
+#print Finset.truncatedInf_sups_of_not_mem /-
 theorem truncatedInf_sups_of_not_mem (ha : a ∉ upperClosure (s : Set α) ⊔ upperClosure t) :
     truncatedInf (s ⊻ t) a = ⊥ :=
   truncatedInf_of_not_mem <| by rwa [coe_sups, upperClosure_sups]
 #align finset.truncated_inf_sups_of_not_mem Finset.truncatedInf_sups_of_not_mem
+-/
 
 end DistribLattice
 
@@ -255,22 +303,27 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra α] [@DecidableRel α (· ≤ ·)] {s : Finset α} {a : α}
 
+#print Finset.compl_truncatedSup /-
 @[simp]
 theorem compl_truncatedSup (s : Finset α) (a : α) :
     truncatedSup s aᶜ = truncatedInf (s.map ⟨compl, compl_injective⟩) (aᶜ) :=
   map_truncatedSup (OrderIso.compl α) _ _
 #align finset.compl_truncated_sup Finset.compl_truncatedSup
+-/
 
+#print Finset.compl_truncatedInf /-
 @[simp]
 theorem compl_truncatedInf (s : Finset α) (a : α) :
     truncatedInf s aᶜ = truncatedSup (s.map ⟨compl, compl_injective⟩) (aᶜ) :=
   map_truncatedInf (OrderIso.compl α) _ _
 #align finset.compl_truncated_inf Finset.compl_truncatedInf
+-/
 
 end BooleanAlgebra
 
 variable [DecidableEq α] [Fintype α]
 
+#print Finset.card_truncatedSup_union_add_card_truncatedSup_infs /-
 theorem card_truncatedSup_union_add_card_truncatedSup_infs (𝒜 ℬ : Finset (Finset α))
     (s : Finset α) :
     (truncatedSup (𝒜 ∪ ℬ) s).card + (truncatedSup (𝒜 ⊼ ℬ) s).card =
@@ -290,6 +343,7 @@ theorem card_truncatedSup_union_add_card_truncatedSup_infs (𝒜 ℬ : Finset (F
     rw [truncated_sup_of_not_mem h𝒜, truncated_sup_of_not_mem hℬ,
       truncated_sup_union_of_not_mem h𝒜 hℬ, truncated_sup_infs_of_not_mem fun h => h𝒜 h.1]
 #align finset.card_truncated_sup_union_add_card_truncated_sup_infs Finset.card_truncatedSup_union_add_card_truncatedSup_infs
+-/
 
 end Finset
 

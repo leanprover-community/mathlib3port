@@ -104,24 +104,23 @@ theorem inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : (a �
 #align inf_add inf_add
 -/
 
-#print inv_sup_eq_inv_inf_inv /-
+#print inv_sup /-
 -- Special case of Bourbaki A.VI.9 (2)
 -- -(a ⊔ b)=(-a) ⊓ (-b)
 @[to_additive]
-theorem inv_sup_eq_inv_inf_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) :
-    (a ⊔ b)⁻¹ = a⁻¹ ⊓ b⁻¹ :=
+theorem inv_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊔ b)⁻¹ = a⁻¹ ⊓ b⁻¹ :=
   (OrderIso.inv α).map_sup _ _
-#align inv_sup_eq_inv_inf_inv inv_sup_eq_inv_inf_inv
-#align neg_sup_eq_neg_inf_neg neg_sup_eq_neg_inf_neg
+#align inv_sup_eq_inv_inf_inv inv_sup
+#align neg_sup_eq_neg_inf_neg neg_sup
 -/
 
-#print inv_inf_eq_sup_inv /-
+#print inv_inf /-
 -- -(a ⊓ b) = -a ⊔ -b
 @[to_additive]
-theorem inv_inf_eq_sup_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊓ b)⁻¹ = a⁻¹ ⊔ b⁻¹ :=
+theorem inv_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊓ b)⁻¹ = a⁻¹ ⊔ b⁻¹ :=
   (OrderIso.inv α).map_inf _ _
-#align inv_inf_eq_sup_inv inv_inf_eq_sup_inv
-#align neg_inf_eq_sup_neg neg_inf_eq_sup_neg
+#align inv_inf_eq_sup_inv inv_inf
+#align neg_inf_eq_sup_neg neg_inf
 -/
 
 #print inf_mul_sup /-
@@ -132,7 +131,7 @@ theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a
   calc
     (a ⊓ b) * (a ⊔ b) = (a ⊓ b) * (a * b * (b⁻¹ ⊔ a⁻¹)) := by
       rw [mul_sup b⁻¹ a⁻¹ (a * b), mul_inv_cancel_right, mul_inv_cancel_comm]
-    _ = (a ⊓ b) * (a * b * (a ⊓ b)⁻¹) := by rw [inv_inf_eq_sup_inv, sup_comm]
+    _ = (a ⊓ b) * (a * b * (a ⊓ b)⁻¹) := by rw [inv_inf, sup_comm]
     _ = a * b := by rw [mul_comm, inv_mul_cancel_right]
 #align inf_mul_sup inf_mul_sup
 #align inf_add_sup inf_add_sup
@@ -203,7 +202,7 @@ theorem neg_one : (1 : α)⁻ = 1 := by rw [m_neg_part_def, inv_one, sup_idem]
 -- a⁻ = -(a ⊓ 0)
 @[to_additive]
 theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁻ = (a ⊓ 1)⁻¹ := by
-  rw [m_neg_part_def, ← inv_inj, inv_sup_eq_inv_inf_inv, inv_inv, inv_inv, inv_one]
+  rw [m_neg_part_def, ← inv_inj, inv_sup, inv_inv, inv_inv, inv_one]
 #align lattice_ordered_comm_group.neg_eq_inv_inf_one LatticeOrderedGroup.neg_eq_inv_inf_one
 #align lattice_ordered_comm_group.neg_eq_neg_inf_zero LatticeOrderedGroup.neg_eq_neg_inf_zero
 -/
@@ -372,7 +371,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
       rw [div_eq_mul_inv]; nth_rw 1 [← inv_inv b]
       rw [← mul_inv, mul_comm b⁻¹, ← div_eq_mul_inv]
     _ = a * ((a / b)⁻¹ ⊓ 1⁻¹) := by rw [inv_one]
-    _ = a / (a / b ⊔ 1) := by rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
+    _ = a / (a / b ⊔ 1) := by rw [← inv_sup, ← div_eq_mul_inv]
 #align lattice_ordered_comm_group.inf_eq_div_pos_div LatticeOrderedCommGroup.inf_eq_div_pos_div
 #align lattice_ordered_comm_group.inf_eq_sub_pos_sub LatticeOrderedCommGroup.inf_eq_sub_pos_sub
 -/
@@ -473,11 +472,11 @@ theorem inf_sq_eq_mul_div_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (
 #align lattice_ordered_comm_group.two_inf_eq_add_sub_abs_sub LatticeOrderedCommGroup.two_inf_eq_add_sub_abs_sub
 -/
 
-#print LatticeOrderedCommGroup.latticeOrderedCommGroupToDistribLattice /-
+#print CommGroup.toDistribLattice /-
 /-- Every lattice ordered commutative group is a distributive lattice
 -/
 @[to_additive "Every lattice ordered commutative additive group is a distributive lattice"]
-def latticeOrderedCommGroupToDistribLattice (α : Type u) [s : Lattice α] [CommGroup α]
+def toDistribLattice (α : Type u) [s : Lattice α] [CommGroup α]
     [CovariantClass α α (· * ·) (· ≤ ·)] : DistribLattice α :=
   { s with
     le_sup_inf := by
@@ -493,8 +492,8 @@ def latticeOrderedCommGroupToDistribLattice (α : Type u) [s : Lattice α] [Comm
         apply mul_le_mul'
         · apply inf_le_inf_left; apply inf_le_right
         · apply inf_le_right }
-#align lattice_ordered_comm_group.lattice_ordered_comm_group_to_distrib_lattice LatticeOrderedCommGroup.latticeOrderedCommGroupToDistribLattice
-#align lattice_ordered_comm_group.lattice_ordered_add_comm_group_to_distrib_lattice LatticeOrderedCommGroup.latticeOrderedAddCommGroupToDistribLattice
+#align lattice_ordered_comm_group.lattice_ordered_comm_group_to_distrib_lattice CommGroup.toDistribLattice
+#align lattice_ordered_comm_group.lattice_ordered_add_comm_group_to_distrib_lattice AddCommGroup.toDistribLattice
 -/
 
 #print LatticeOrderedCommGroup.abs_div_sup_mul_abs_div_inf /-

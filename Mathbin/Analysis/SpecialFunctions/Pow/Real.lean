@@ -179,17 +179,17 @@ theorem zero_rpow_nonneg (x : ℝ) : 0 ≤ (0 : ℝ) ^ x := by
 #align real.zero_rpow_nonneg Real.zero_rpow_nonneg
 -/
 
-#print Real.rpow_nonneg_of_nonneg /-
-theorem rpow_nonneg_of_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : 0 ≤ x ^ y := by
+#print Real.rpow_nonneg /-
+theorem rpow_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : 0 ≤ x ^ y := by
   rw [rpow_def_of_nonneg hx] <;> split_ifs <;>
     simp only [zero_le_one, le_refl, le_of_lt (exp_pos _)]
-#align real.rpow_nonneg_of_nonneg Real.rpow_nonneg_of_nonneg
+#align real.rpow_nonneg_of_nonneg Real.rpow_nonneg
 -/
 
 #print Real.abs_rpow_of_nonneg /-
 theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : |x ^ y| = |x| ^ y :=
   by
-  have h_rpow_nonneg : 0 ≤ x ^ y := Real.rpow_nonneg_of_nonneg hx_nonneg _
+  have h_rpow_nonneg : 0 ≤ x ^ y := Real.rpow_nonneg hx_nonneg _
   rw [abs_eq_self.mpr hx_nonneg, abs_eq_self.mpr h_rpow_nonneg]
 #align real.abs_rpow_of_nonneg Real.abs_rpow_of_nonneg
 -/
@@ -358,7 +358,7 @@ theorem abs_cpow_le (z w : ℂ) : abs (z ^ w) ≤ abs z ^ w.re / Real.exp (arg z
   rcases ne_or_eq z 0 with (hz | rfl) <;> [exact (abs_cpow_of_ne_zero hz w).le; rw [map_zero]]
   rcases eq_or_ne w 0 with (rfl | hw); · simp
   rw [zero_cpow hw, map_zero]
-  exact div_nonneg (Real.rpow_nonneg_of_nonneg le_rfl _) (Real.exp_pos _).le
+  exact div_nonneg (Real.rpow_nonneg le_rfl _) (Real.exp_pos _).le
 #align complex.abs_cpow_le Complex.abs_cpow_le
 -/
 
@@ -961,7 +961,7 @@ namespace Positivity
 unsafe def prove_rpow (a b : expr) : tactic strictness := do
   let strictness_a ← core a
   match strictness_a with
-    | nonnegative p => nonnegative <$> mk_app `` Real.rpow_nonneg_of_nonneg [p, b]
+    | nonnegative p => nonnegative <$> mk_app `` Real.rpow_nonneg [p, b]
     | positive p => positive <$> mk_app `` Real.rpow_pos_of_pos [p, b]
     | _ => failed
 #align tactic.positivity.prove_rpow tactic.positivity.prove_rpow

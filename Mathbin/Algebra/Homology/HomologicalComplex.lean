@@ -795,7 +795,6 @@ end OfHom
 
 section Mk
 
-#print ChainComplex.MkStruct /-
 /-- Auxiliary structure for setting up the recursion in `mk`.
 This is purely an implementation detail: for some reason just using the dependent 6-tuple directly
 results in `mk_aux` taking much longer (well over the `-T100000` limit) to elaborate.
@@ -807,16 +806,13 @@ structure MkStruct where
   d₁ : X₂ ⟶ X₁
   s : d₁ ≫ d₀ = 0
 #align chain_complex.mk_struct ChainComplex.MkStruct
--/
 
 variable {V}
 
-#print ChainComplex.MkStruct.flat /-
 /-- Flatten to a tuple. -/
 def MkStruct.flat (t : MkStruct V) : Σ' (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 #align chain_complex.mk_struct.flat ChainComplex.MkStruct.flat
--/
 
 variable (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁) (s : d₁ ≫ d₀ = 0)
   (succ :

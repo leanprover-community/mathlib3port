@@ -286,11 +286,11 @@ theorem powersetCard_zero (s : Finset α) : Finset.powersetCard 0 s = {∅} :=
 #align finset.powerset_len_zero Finset.powersetCard_zero
 -/
 
-#print Finset.powersetCard_empty /-
+#print Finset.powersetCard_eq_empty /-
 @[simp]
-theorem powersetCard_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powersetCard n s = ∅ :=
+theorem powersetCard_eq_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powersetCard n s = ∅ :=
   Finset.card_eq_zero.mp (by rw [card_powerset_len, Nat.choose_eq_zero_of_lt h])
-#align finset.powerset_len_empty Finset.powersetCard_empty
+#align finset.powerset_len_empty Finset.powersetCard_eq_empty
 -/
 
 #print Finset.powersetCard_eq_filter /-
@@ -403,7 +403,7 @@ theorem powersetCard_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
 @[simp]
 theorem powersetCard_card_add (s : Finset α) {i : ℕ} (hi : 0 < i) :
     s.powersetCard (s.card + i) = ∅ :=
-  Finset.powersetCard_empty _ (lt_add_of_pos_right (Finset.card s) hi)
+  Finset.powersetCard_eq_empty _ (lt_add_of_pos_right (Finset.card s) hi)
 #align finset.powerset_len_card_add Finset.powersetCard_card_add
 -/
 

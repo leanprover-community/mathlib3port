@@ -47,7 +47,6 @@ section Topology
 
 variable [TopologicalSpace R] [TopologicalSpace M]
 
-#print TrivSqZeroExt.hasSum_fst_expSeries /-
 /-- If `exp R x.fst` converges to `e` then `(exp R x).fst` converges to `e`. -/
 theorem hasSum_fst_expSeries [Field 𝕜] [Ring R] [AddCommGroup M] [Algebra 𝕜 R] [Module R M]
     [Module Rᵐᵒᵖ M] [SMulCommClass R Rᵐᵒᵖ M] [Module 𝕜 M] [IsScalarTower 𝕜 R M]
@@ -57,7 +56,6 @@ theorem hasSum_fst_expSeries [Field 𝕜] [Ring R] [AddCommGroup M] [Algebra �
     HasSum (fun n => fst (NormedSpace.expSeries 𝕜 (tsze R M) n fun _ => x)) e := by
   simpa [NormedSpace.expSeries_apply_eq] using h
 #align triv_sq_zero_ext.has_sum_fst_exp_series TrivSqZeroExt.hasSum_fst_expSeries
--/
 
 #print TrivSqZeroExt.hasSum_snd_expSeries_of_smul_comm /-
 /-- If `exp R x.fst` converges to `e` then `(exp R x).snd` converges to `e • x.snd`. -/

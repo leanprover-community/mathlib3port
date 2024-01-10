@@ -1754,33 +1754,33 @@ open TopologicalSpace
 
 variable (s : Opens α) [Nonempty s]
 
-#print TopologicalSpace.Opens.localHomeomorphSubtypeCoe /-
+#print TopologicalSpace.Opens.partialHomeomorphSubtypeCoe /-
 /-- The inclusion of an open subset `s` of a space `α` into `α` is a local homeomorphism from the
 subtype `s` to `α`. -/
-noncomputable def localHomeomorphSubtypeCoe : PartialHomeomorph s α :=
+noncomputable def partialHomeomorphSubtypeCoe : PartialHomeomorph s α :=
   OpenEmbedding.toPartialHomeomorph _ s.2.openEmbedding_subtype_val
-#align topological_space.opens.local_homeomorph_subtype_coe TopologicalSpace.Opens.localHomeomorphSubtypeCoe
+#align topological_space.opens.local_homeomorph_subtype_coe TopologicalSpace.Opens.partialHomeomorphSubtypeCoe
 -/
 
-#print TopologicalSpace.Opens.localHomeomorphSubtypeCoe_coe /-
+#print TopologicalSpace.Opens.partialHomeomorphSubtypeCoe_coe /-
 @[simp, mfld_simps]
-theorem localHomeomorphSubtypeCoe_coe : (s.localHomeomorphSubtypeCoe : s → α) = coe :=
+theorem partialHomeomorphSubtypeCoe_coe : (s.partialHomeomorphSubtypeCoe : s → α) = coe :=
   rfl
-#align topological_space.opens.local_homeomorph_subtype_coe_coe TopologicalSpace.Opens.localHomeomorphSubtypeCoe_coe
+#align topological_space.opens.local_homeomorph_subtype_coe_coe TopologicalSpace.Opens.partialHomeomorphSubtypeCoe_coe
 -/
 
-#print TopologicalSpace.Opens.localHomeomorphSubtypeCoe_source /-
+#print TopologicalSpace.Opens.partialHomeomorphSubtypeCoe_source /-
 @[simp, mfld_simps]
-theorem localHomeomorphSubtypeCoe_source : s.localHomeomorphSubtypeCoe.source = Set.univ :=
+theorem partialHomeomorphSubtypeCoe_source : s.partialHomeomorphSubtypeCoe.source = Set.univ :=
   rfl
-#align topological_space.opens.local_homeomorph_subtype_coe_source TopologicalSpace.Opens.localHomeomorphSubtypeCoe_source
+#align topological_space.opens.local_homeomorph_subtype_coe_source TopologicalSpace.Opens.partialHomeomorphSubtypeCoe_source
 -/
 
-#print TopologicalSpace.Opens.localHomeomorphSubtypeCoe_target /-
+#print TopologicalSpace.Opens.partialHomeomorphSubtypeCoe_target /-
 @[simp, mfld_simps]
-theorem localHomeomorphSubtypeCoe_target : s.localHomeomorphSubtypeCoe.target = s := by
+theorem partialHomeomorphSubtypeCoe_target : s.partialHomeomorphSubtypeCoe.target = s := by
   simp only [local_homeomorph_subtype_coe, Subtype.range_coe_subtype, mfld_simps]; rfl
-#align topological_space.opens.local_homeomorph_subtype_coe_target TopologicalSpace.Opens.localHomeomorphSubtypeCoe_target
+#align topological_space.opens.local_homeomorph_subtype_coe_target TopologicalSpace.Opens.partialHomeomorphSubtypeCoe_target
 -/
 
 end TopologicalSpace.Opens
@@ -1797,12 +1797,12 @@ variable (s : Opens α) [Nonempty s]
 /-- The restriction of a local homeomorphism `e` to an open subset `s` of the domain type produces a
 local homeomorphism whose domain is the subtype `s`.-/
 noncomputable def subtypeRestr : PartialHomeomorph s β :=
-  s.localHomeomorphSubtypeCoe.trans e
+  s.partialHomeomorphSubtypeCoe.trans e
 #align local_homeomorph.subtype_restr PartialHomeomorph.subtypeRestr
 -/
 
 #print PartialHomeomorph.subtypeRestr_def /-
-theorem subtypeRestr_def : e.subtypeRestr s = s.localHomeomorphSubtypeCoe.trans e :=
+theorem subtypeRestr_def : e.subtypeRestr s = s.partialHomeomorphSubtypeCoe.trans e :=
   rfl
 #align local_homeomorph.subtype_restr_def PartialHomeomorph.subtypeRestr_def
 -/

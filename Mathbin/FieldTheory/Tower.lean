@@ -82,10 +82,12 @@ theorem rank_mul_rank (F : Type u) (K A : Type v) [CommRing F] [Ring K] [AddComm
 #align rank_mul_rank rank_mul_rank
 -/
 
-#print FiniteDimensional.finrank_mul_finrank' /-
+/- warning: finite_dimensional.finrank_mul_finrank' clashes with finite_dimensional.finrank_mul_finrank -> FiniteDimensional.finrank_mul_finrank
+Case conversion may be inaccurate. Consider using '#align finite_dimensional.finrank_mul_finrank' FiniteDimensional.finrank_mul_finrankₓ'. -/
+#print FiniteDimensional.finrank_mul_finrank /-
 /-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
 $\operatorname{rank}_F(A) = \operatorname{rank}_F(K) * \operatorname{rank}_K(A)$. -/
-theorem FiniteDimensional.finrank_mul_finrank' [Nontrivial K] [Module.Finite F K]
+theorem FiniteDimensional.finrank_mul_finrank [Nontrivial K] [Module.Finite F K]
     [Module.Finite K A] : finrank F K * finrank K A = finrank F A :=
   by
   letI := nontrivial_of_invariantBasisNumber F
@@ -93,7 +95,7 @@ theorem FiniteDimensional.finrank_mul_finrank' [Nontrivial K] [Module.Finite F K
   let c := Module.Free.chooseBasis K A
   rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c),
     Fintype.card_prod]
-#align finite_dimensional.finrank_mul_finrank' FiniteDimensional.finrank_mul_finrank'
+#align finite_dimensional.finrank_mul_finrank' FiniteDimensional.finrank_mul_finrank
 -/
 
 end Ring

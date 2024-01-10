@@ -118,9 +118,9 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
     refine' Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast n2_pos) _
     exact_mod_cast Real.nat_sqrt_le_real_sqrt
   · exact Real.rpow_le_rpow_of_exponent_le (by norm_num1) (cast_div_le.trans (by norm_cast))
-  · exact Real.rpow_nonneg_of_nonneg (by norm_num1) _
+  · exact Real.rpow_nonneg (by norm_num1) _
   · refine' mul_nonneg (Nat.cast_nonneg _) _
-    exact Real.rpow_nonneg_of_nonneg (mul_nonneg zero_le_two (Nat.cast_nonneg _)) _
+    exact Real.rpow_nonneg (mul_nonneg zero_le_two (Nat.cast_nonneg _)) _
 #align bertrand_main_inequality bertrand_main_inequality
 -/
 

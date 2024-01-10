@@ -111,7 +111,7 @@ theorem isBigO_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
     rw [one_mul, Real.norm_eq_abs, Real.norm_eq_abs, Real.abs_exp, Real.abs_exp, Real.exp_le_exp]
     exact
       mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc)
-        (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₀
+        (Real.rpow_nonneg (complex.abs.nonneg _) _) hB₀
   rcases hBf with ⟨cf, hcf, Bf, hOf⟩; rcases hBg with ⟨cg, hcg, Bg, hOg⟩
   refine' ⟨max cf cg, max_lt hcf hcg, max 0 (max Bf Bg), _⟩
   refine' (hOf.trans <| this _ _ _).sub (hOg.trans <| this _ _ _)
@@ -988,7 +988,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
     ·
       exact
         mul_le_mul (le_max_left _ _) (Real.rpow_le_rpow_of_exponent_le hr (le_max_left _ _))
-          (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) (le_max_right _ _)
+          (Real.rpow_nonneg (complex.abs.nonneg _) _) (le_max_right _ _)
   · rw [tendsto_zero_iff_norm_tendsto_zero]; simp only [hg]
     exact hre n
   · rw [hg, of_real_mul_re, I_re, MulZeroClass.mul_zero, Real.exp_zero, one_pow, one_mul]
@@ -1038,7 +1038,7 @@ theorem eqOn_right_half_plane_of_superexponential_decay {g : ℂ → E}
     simp only [Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_le_exp, one_mul]
     exact
       mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc)
-        (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₂
+        (Real.rpow_nonneg (complex.abs.nonneg _) _) hB₂
   · rcases hfim with ⟨Cf, hCf⟩; rcases hgim with ⟨Cg, hCg⟩
     exact ⟨Cf + Cg, fun x => norm_sub_le_of_le (hCf x) (hCg x)⟩
 #align phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eqOn_right_half_plane_of_superexponential_decay

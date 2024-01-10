@@ -1422,14 +1422,14 @@ theorem local_compact_nhds [LocallyCompactSpace α] {x : α} {n : Set α} (h : n
 #align local_compact_nhds local_compact_nhds
 -/
 
-#print locallyCompactSpace_of_hasBasis /-
-theorem locallyCompactSpace_of_hasBasis {ι : α → Type _} {p : ∀ x, ι x → Prop}
+#print LocallyCompactSpace.of_hasBasis /-
+theorem LocallyCompactSpace.of_hasBasis {ι : α → Type _} {p : ∀ x, ι x → Prop}
     {s : ∀ x, ι x → Set α} (h : ∀ x, (𝓝 x).HasBasis (p x) (s x))
     (hc : ∀ x i, p x i → IsCompact (s x i)) : LocallyCompactSpace α :=
   ⟨fun x t ht =>
     let ⟨i, hp, ht⟩ := (h x).mem_iff.1 ht
     ⟨s x i, (h x).mem_of_mem hp, ht, hc x i hp⟩⟩
-#align locally_compact_space_of_has_basis locallyCompactSpace_of_hasBasis
+#align locally_compact_space_of_has_basis LocallyCompactSpace.of_hasBasis
 -/
 
 #print Prod.locallyCompactSpace /-
@@ -1437,7 +1437,7 @@ instance Prod.locallyCompactSpace (α : Type _) (β : Type _) [TopologicalSpace 
     [TopologicalSpace β] [LocallyCompactSpace α] [LocallyCompactSpace β] :
     LocallyCompactSpace (α × β) :=
   have := fun x : α × β => (compact_basis_nhds x.1).prod_nhds' (compact_basis_nhds x.2)
-  locallyCompactSpace_of_hasBasis this fun x s ⟨⟨_, h₁⟩, _, h₂⟩ => h₁.Prod h₂
+  LocallyCompactSpace.of_hasBasis this fun x s ⟨⟨_, h₁⟩, _, h₂⟩ => h₁.Prod h₂
 #align prod.locally_compact_space Prod.locallyCompactSpace
 -/
 
@@ -1549,7 +1549,7 @@ protected theorem ClosedEmbedding.locallyCompactSpace [LocallyCompactSpace β] {
     intro x
     rw [hf.to_embedding.to_inducing.nhds_eq_comap]
     exact (compact_basis_nhds _).comap _
-  locallyCompactSpace_of_hasBasis this fun x s hs => hf.is_compact_preimage hs.2
+  LocallyCompactSpace.of_hasBasis this fun x s hs => hf.is_compact_preimage hs.2
 #align closed_embedding.locally_compact_space ClosedEmbedding.locallyCompactSpace
 -/
 
@@ -1571,7 +1571,7 @@ protected theorem OpenEmbedding.locallyCompactSpace [LocallyCompactSpace β] {f 
     rw [hf.to_embedding.to_inducing.nhds_eq_comap]
     exact
       ((compact_basis_nhds _).restrict_subset <| hf.open_range.mem_nhds <| mem_range_self _).comap _
-  refine' locallyCompactSpace_of_hasBasis this fun x s hs => _
+  refine' LocallyCompactSpace.of_hasBasis this fun x s hs => _
   rw [← hf.to_inducing.is_compact_iff, image_preimage_eq_of_subset hs.2]
   exact hs.1.2
 #align open_embedding.locally_compact_space OpenEmbedding.locallyCompactSpace

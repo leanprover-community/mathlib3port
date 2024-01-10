@@ -28,11 +28,9 @@ section
 
 variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 
-#print ContinuousMap.abs /-
 /-- The pointwise absolute value of a continuous function as a continuous function. -/
 def abs (f : C(α, β)) : C(α, β) where toFun x := |f x|
 #align continuous_map.abs ContinuousMap.abs
--/
 
 -- see Note [lower instance priority]
 instance (priority := 100) : Abs C(α, β) :=
@@ -79,12 +77,12 @@ instance sup [LinearOrder β] [OrderClosedTopology β] : Sup C(α, β)
 #align continuous_map.has_sup ContinuousMap.sup
 -/
 
-#print ContinuousMap.sup_coe /-
+#print ContinuousMap.coe_sup /-
 @[simp, norm_cast]
-theorem sup_coe [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) :
+theorem coe_sup [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) :
     ((f ⊔ g : C(α, β)) : α → β) = (f ⊔ g : α → β) :=
   rfl
-#align continuous_map.sup_coe ContinuousMap.sup_coe
+#align continuous_map.sup_coe ContinuousMap.coe_sup
 -/
 
 #print ContinuousMap.sup_apply /-
@@ -108,12 +106,12 @@ instance inf [LinearOrder β] [OrderClosedTopology β] : Inf C(α, β)
 #align continuous_map.has_inf ContinuousMap.inf
 -/
 
-#print ContinuousMap.inf_coe /-
+#print ContinuousMap.coe_inf /-
 @[simp, norm_cast]
-theorem inf_coe [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) :
+theorem coe_inf [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) :
     ((f ⊓ g : C(α, β)) : α → β) = (f ⊓ g : α → β) :=
   rfl
-#align continuous_map.inf_coe ContinuousMap.inf_coe
+#align continuous_map.inf_coe ContinuousMap.coe_inf
 -/
 
 #print ContinuousMap.inf_apply /-
@@ -146,11 +144,11 @@ theorem sup'_apply {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(
 #align continuous_map.sup'_apply ContinuousMap.sup'_apply
 -/
 
-#print ContinuousMap.sup'_coe /-
+#print ContinuousMap.coe_sup' /-
 @[simp, norm_cast]
-theorem sup'_coe {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
+theorem coe_sup' {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
     ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) := by ext; simp [sup'_apply]
-#align continuous_map.sup'_coe ContinuousMap.sup'_coe
+#align continuous_map.sup'_coe ContinuousMap.coe_sup'
 -/
 
 end Sup'
@@ -166,12 +164,12 @@ theorem inf'_apply {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(
 #align continuous_map.inf'_apply ContinuousMap.inf'_apply
 -/
 
-#print ContinuousMap.inf'_coe /-
+#print ContinuousMap.coe_inf' /-
 @[simp, norm_cast]
-theorem inf'_coe {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
+theorem coe_inf' {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
     ((s.inf' H f : C(β, γ)) : ι → β) = s.inf' H fun a => (f a : β → γ) :=
-  @sup'_coe _ γᵒᵈ _ _ _ _ _ _ H f
-#align continuous_map.inf'_coe ContinuousMap.inf'_coe
+  @coe_sup' _ γᵒᵈ _ _ _ _ _ _ H f
+#align continuous_map.inf'_coe ContinuousMap.coe_inf'
 -/
 
 end Inf'

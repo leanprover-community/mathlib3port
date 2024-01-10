@@ -138,7 +138,7 @@ theorem memℓp_gen' {C : ℝ} {f : ∀ i, E i} (hf : ∀ s : Finset α, ∑ i i
   use⨆ s : Finset α, ∑ i in s, ‖f i‖ ^ p.to_real
   apply hasSum_of_isLUB_of_nonneg
   · intro b
-    exact Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    exact Real.rpow_nonneg (norm_nonneg _) _
   apply isLUB_ciSup
   use C
   rintro - ⟨s, rfl⟩
@@ -233,7 +233,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
     obtain ⟨A, hA⟩ := (hfq.summable hq).tendsto_cofinite_zero.bddAbove_range_of_cofinite
     use A ^ q.to_real⁻¹
     rintro x ⟨i, rfl⟩
-    have : 0 ≤ ‖f i‖ ^ q.to_real := Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    have : 0 ≤ ‖f i‖ ^ q.to_real := Real.rpow_nonneg (norm_nonneg _) _
     simpa [← Real.rpow_mul, mul_inv_cancel hq.ne'] using
       Real.rpow_le_rpow this (hA ⟨i, rfl⟩) (inv_nonneg.mpr hq.le)
   · apply memℓp_gen
@@ -245,7 +245,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
       exact H.subset fun i hi => Real.one_le_rpow hi hq.le
     · show ∀ i, ¬|‖f i‖ ^ p.to_real| ≤ ‖f i‖ ^ q.to_real → 1 ≤ ‖f i‖
       intro i hi
-      have : 0 ≤ ‖f i‖ ^ p.to_real := Real.rpow_nonneg_of_nonneg (norm_nonneg _) p.to_real
+      have : 0 ≤ ‖f i‖ ^ p.to_real := Real.rpow_nonneg (norm_nonneg _) p.to_real
       simp only [abs_of_nonneg, this] at hi 
       contrapose! hi
       exact Real.rpow_le_rpow_of_exponent_ge' (norm_nonneg _) hi.le hq.le hpq'
@@ -272,7 +272,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
   let C : ℝ := if p.to_real < 1 then 1 else 2 ^ (p.to_real - 1)
   refine'
     Summable.of_nonneg_of_le _ (fun i => _) (((hf.summable hp).add (hg.summable hp)).mul_left C)
-  · exact fun b => Real.rpow_nonneg_of_nonneg (norm_nonneg (f b + g b)) p.to_real
+  · exact fun b => Real.rpow_nonneg (norm_nonneg (f b + g b)) p.to_real
   · refine' (Real.rpow_le_rpow (norm_nonneg _) (norm_add_le _ _) hp.le).trans _
     dsimp [C]
     split_ifs with h h
@@ -535,8 +535,8 @@ theorem norm_nonneg' (f : lp E p) : 0 ≤ ‖f‖ :=
     inhabit α
     exact (norm_nonneg (f default)).trans ((lp.isLUB_norm f).1 ⟨default, rfl⟩)
   · rw [lp.norm_eq_tsum_rpow hp f]
-    refine' Real.rpow_nonneg_of_nonneg (tsum_nonneg _) _
-    exact fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    refine' Real.rpow_nonneg (tsum_nonneg _) _
+    exact fun i => Real.rpow_nonneg (norm_nonneg _) _
 #align lp.norm_nonneg' lp.norm_nonneg'
 -/
 
@@ -572,7 +572,7 @@ theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
       by
       have := lp.hasSum_norm hp f
       rwa [h, Real.zero_rpow hp.ne'] at this 
-    have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg (norm_nonneg _) _
     rw [hasSum_zero_iff_of_nonneg this] at hf 
     ext i
     have : f i = 0 ∧ p.to_real ≠ 0 := by
@@ -676,7 +676,7 @@ theorem norm_apply_le_norm (hp : p ≠ 0) (f : lp E p) (i : α) : ‖f i‖ ≤ 
   · haveI : Nonempty α := ⟨i⟩
     exact (is_lub_norm f).1 ⟨i, rfl⟩
   have hp'' : 0 < p.to_real := ENNReal.toReal_pos hp hp'
-  have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+  have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg (norm_nonneg _) _
   rw [← Real.rpow_le_rpow_iff (norm_nonneg _) (norm_nonneg' _) hp'']
   convert le_hasSum (has_sum_norm hp'' f) i fun i hi => this i
 #align lp.norm_apply_le_norm lp.norm_apply_le_norm
@@ -687,7 +687,7 @@ theorem sum_rpow_le_norm_rpow (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∑ i in s, ‖f i‖ ^ p.toReal ≤ ‖f‖ ^ p.toReal :=
   by
   rw [lp.norm_rpow_eq_tsum hp f]
-  have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+  have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg (norm_nonneg _) _
   refine' sum_le_tsum _ (fun i hi => this i) _
   exact (lp.memℓp f).Summable hp
 #align lp.sum_rpow_le_norm_rpow lp.sum_rpow_le_norm_rpow

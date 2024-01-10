@@ -461,10 +461,12 @@ def addHom [AddMonoid α] : α →+ WithTop α :=
 #align with_top.coe_add_hom WithTop.addHom
 -/
 
+#print WithTop.coe_addHom /-
 @[simp]
 theorem coe_addHom [AddMonoid α] : ⇑(addHom : α →+ WithTop α) = coe :=
   rfl
 #align with_top.coe_coe_add_hom WithTop.coe_addHom
+-/
 
 #print WithTop.zero_lt_top /-
 @[simp]

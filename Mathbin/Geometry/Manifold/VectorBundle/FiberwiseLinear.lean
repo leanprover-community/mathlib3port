@@ -38,10 +38,10 @@ variable {φ φ' : B → F ≃L[𝕜] F} {U U' : Set B}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print FiberwiseLinear.localHomeomorph /-
+#print FiberwiseLinear.partialHomeomorph /-
 /-- For `B` a topological space and `F` a `𝕜`-normed space, a map from `U : set B` to `F ≃L[𝕜] F`
 determines a local homeomorphism from `B × F` to itself by its action fiberwise. -/
-def localHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
+def partialHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
     (hφ : ContinuousOn (fun x => φ x : B → F →L[𝕜] F) U)
     (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) : PartialHomeomorph (B × F) (B × F)
     where
@@ -63,54 +63,55 @@ def localHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
     haveI : ContinuousOn (fun p : B × F => (((φ p.1).symm : F →L[𝕜] F), p.2)) (U ×ˢ univ) :=
       h2φ.prod_map continuousOn_id
     continuous_on_fst.prod (is_bounded_bilinear_map_apply.continuous.comp_continuous_on this)
-#align fiberwise_linear.local_homeomorph FiberwiseLinear.localHomeomorph
+#align fiberwise_linear.local_homeomorph FiberwiseLinear.partialHomeomorph
 -/
 
-#print FiberwiseLinear.trans_localHomeomorph_apply /-
+#print FiberwiseLinear.trans_partialHomeomorph_apply /-
 /-- Compute the composition of two local homeomorphisms induced by fiberwise linear
 equivalences. -/
-theorem trans_localHomeomorph_apply (hU : IsOpen U)
+theorem trans_partialHomeomorph_apply (hU : IsOpen U)
     (hφ : ContinuousOn (fun x => φ x : B → F →L[𝕜] F) U)
     (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) (hU' : IsOpen U')
     (hφ' : ContinuousOn (fun x => φ' x : B → F →L[𝕜] F) U')
     (h2φ' : ContinuousOn (fun x => (φ' x).symm : B → F →L[𝕜] F) U') (b : B) (v : F) :
-    (FiberwiseLinear.localHomeomorph φ hU hφ h2φ ≫ₕ FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ')
+    (FiberwiseLinear.partialHomeomorph φ hU hφ h2φ ≫ₕ
+          FiberwiseLinear.partialHomeomorph φ' hU' hφ' h2φ')
         ⟨b, v⟩ =
       ⟨b, φ' b (φ b v)⟩ :=
   rfl
-#align fiberwise_linear.trans_local_homeomorph_apply FiberwiseLinear.trans_localHomeomorph_apply
+#align fiberwise_linear.trans_local_homeomorph_apply FiberwiseLinear.trans_partialHomeomorph_apply
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print FiberwiseLinear.source_trans_localHomeomorph /-
+#print FiberwiseLinear.source_trans_partialHomeomorph /-
 /-- Compute the source of the composition of two local homeomorphisms induced by fiberwise linear
 equivalences. -/
-theorem source_trans_localHomeomorph (hU : IsOpen U)
+theorem source_trans_partialHomeomorph (hU : IsOpen U)
     (hφ : ContinuousOn (fun x => φ x : B → F →L[𝕜] F) U)
     (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) (hU' : IsOpen U')
     (hφ' : ContinuousOn (fun x => φ' x : B → F →L[𝕜] F) U')
     (h2φ' : ContinuousOn (fun x => (φ' x).symm : B → F →L[𝕜] F) U') :
-    (FiberwiseLinear.localHomeomorph φ hU hφ h2φ ≫ₕ
-          FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ').source =
+    (FiberwiseLinear.partialHomeomorph φ hU hφ h2φ ≫ₕ
+          FiberwiseLinear.partialHomeomorph φ' hU' hφ' h2φ').source =
       (U ∩ U') ×ˢ univ :=
-  by dsimp only [FiberwiseLinear.localHomeomorph]; mfld_set_tac
-#align fiberwise_linear.source_trans_local_homeomorph FiberwiseLinear.source_trans_localHomeomorph
+  by dsimp only [FiberwiseLinear.partialHomeomorph]; mfld_set_tac
+#align fiberwise_linear.source_trans_local_homeomorph FiberwiseLinear.source_trans_partialHomeomorph
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print FiberwiseLinear.target_trans_localHomeomorph /-
+#print FiberwiseLinear.target_trans_partialHomeomorph /-
 /-- Compute the target of the composition of two local homeomorphisms induced by fiberwise linear
 equivalences. -/
-theorem target_trans_localHomeomorph (hU : IsOpen U)
+theorem target_trans_partialHomeomorph (hU : IsOpen U)
     (hφ : ContinuousOn (fun x => φ x : B → F →L[𝕜] F) U)
     (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) (hU' : IsOpen U')
     (hφ' : ContinuousOn (fun x => φ' x : B → F →L[𝕜] F) U')
     (h2φ' : ContinuousOn (fun x => (φ' x).symm : B → F →L[𝕜] F) U') :
-    (FiberwiseLinear.localHomeomorph φ hU hφ h2φ ≫ₕ
-          FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ').target =
+    (FiberwiseLinear.partialHomeomorph φ hU hφ h2φ ≫ₕ
+          FiberwiseLinear.partialHomeomorph φ' hU' hφ' h2φ').target =
       (U ∩ U') ×ˢ univ :=
-  by dsimp only [FiberwiseLinear.localHomeomorph]; mfld_set_tac
-#align fiberwise_linear.target_trans_local_homeomorph FiberwiseLinear.target_trans_localHomeomorph
+  by dsimp only [FiberwiseLinear.partialHomeomorph]; mfld_set_tac
+#align fiberwise_linear.target_trans_local_homeomorph FiberwiseLinear.target_trans_partialHomeomorph
 -/
 
 end FiberwiseLinear
@@ -140,14 +141,14 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B
                 SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x : F →L[𝕜] F)) u) (h2φ :
                 SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => ((φ x).symm : F →L[𝕜] F)) u),
                 (e.restr s).EqOnSource
-                  (FiberwiseLinear.localHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn)) :
+                  (FiberwiseLinear.partialHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn)) :
     ∃ (U : Set B) (hU : e.source = U ×ˢ univ),
       ∀ x ∈ U,
         ∃ (φ : B → F ≃L[𝕜] F) (u : Set B) (hu : IsOpen u) (huU : u ⊆ U) (hux : x ∈ u) (hφ :
           SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x : F →L[𝕜] F)) u) (h2φ :
           SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => ((φ x).symm : F →L[𝕜] F)) u),
           (e.restr (u ×ˢ univ)).EqOnSource
-            (FiberwiseLinear.localHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn) :=
+            (FiberwiseLinear.partialHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn) :=
   by
   rw [SetCoe.forall'] at h 
   -- choose s hs hsp φ u hu hφ h2φ heφ using h,
@@ -211,11 +212,11 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B
           SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x : F →L[𝕜] F)) u) (h2φ :
           SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => ((φ x).symm : F →L[𝕜] F)) u),
           (e.restr (u ×ˢ univ)).EqOnSource
-            (FiberwiseLinear.localHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn)) :
+            (FiberwiseLinear.partialHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn)) :
     ∃ (Φ : B → F ≃L[𝕜] F) (U : Set B) (hU₀ : IsOpen U) (hΦ :
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (Φ x : F →L[𝕜] F)) U) (h2Φ :
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => ((Φ x).symm : F →L[𝕜] F)) U),
-      e.EqOnSource (FiberwiseLinear.localHomeomorph Φ hU₀ hΦ.ContinuousOn h2Φ.ContinuousOn) :=
+      e.EqOnSource (FiberwiseLinear.partialHomeomorph Φ hU₀ hΦ.ContinuousOn h2Φ.ContinuousOn) :=
   by
   classical
   rw [SetCoe.forall'] at h 
@@ -291,7 +292,7 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     ⋃ (φ : B → F ≃L[𝕜] F) (U : Set B) (hU : IsOpen U) (hφ :
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => φ x : B → F →L[𝕜] F) U) (h2φ :
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x).symm : B → F →L[𝕜] F) U),
-      {e | e.EqOnSource (FiberwiseLinear.localHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn)}
+      {e | e.EqOnSource (FiberwiseLinear.partialHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn)}
   trans' := by
     simp_rw [mem_Union]
     rintro e e' ⟨φ, U, hU, hφ, h2φ, heφ⟩ ⟨φ', U', hU', hφ', h2φ', heφ'⟩
@@ -306,8 +307,8 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
           (fun x : B => (φ x).symm.toContinuousLinearMap ∘L (φ' x).symm.toContinuousLinearMap)
           (U ∩ U')
       exact (h2φ.mono <| inter_subset_left _ _).clm_comp (h2φ'.mono <| inter_subset_right _ _)
-    · apply FiberwiseLinear.source_trans_localHomeomorph
-    · rintro ⟨b, v⟩ hb; apply FiberwiseLinear.trans_localHomeomorph_apply
+    · apply FiberwiseLinear.source_trans_partialHomeomorph
+    · rintro ⟨b, v⟩ hb; apply FiberwiseLinear.trans_partialHomeomorph_apply
   symm' := by
     simp_rw [mem_Union]
     rintro e ⟨φ, U, hU, hφ, h2φ, heφ⟩
@@ -320,11 +321,11 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     · apply contMDiffOn_const
     · apply contMDiffOn_const
     ·
-      simp only [FiberwiseLinear.localHomeomorph, PartialHomeomorph.refl_localEquiv,
+      simp only [FiberwiseLinear.partialHomeomorph, PartialHomeomorph.refl_localEquiv,
         PartialEquiv.refl_source, univ_prod_univ]
     ·
-      simp only [FiberwiseLinear.localHomeomorph, PartialHomeomorph.refl_apply, Prod.mk.eta, id.def,
-        ContinuousLinearEquiv.coe_refl', PartialHomeomorph.mk_coe, PartialEquiv.coe_mk]
+      simp only [FiberwiseLinear.partialHomeomorph, PartialHomeomorph.refl_apply, Prod.mk.eta,
+        id.def, ContinuousLinearEquiv.coe_refl', PartialHomeomorph.mk_coe, PartialEquiv.coe_mk]
   locality' :=
     by
     -- the hard work has been extracted to `locality_aux₁` and `locality_aux₂`
@@ -346,7 +347,7 @@ theorem mem_smoothFiberwiseLinear_iff (e : PartialHomeomorph (B × F) (B × F)) 
       ∃ (φ : B → F ≃L[𝕜] F) (U : Set B) (hU : IsOpen U) (hφ :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => φ x : B → F →L[𝕜] F) U) (h2φ :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x).symm : B → F →L[𝕜] F) U),
-        e.EqOnSource (FiberwiseLinear.localHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn) :=
+        e.EqOnSource (FiberwiseLinear.partialHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn) :=
   show e ∈ Set.iUnion _ ↔ _ by simp only [mem_Union]; rfl
 #align mem_smooth_fiberwise_linear_iff mem_smoothFiberwiseLinear_iff
 -/

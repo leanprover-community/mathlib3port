@@ -3024,7 +3024,7 @@ instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α 
 -- see Note [lower instance priority]
 /-- A proper space is locally compact -/
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
-  locallyCompactSpace_of_hasBasis (fun x => nhds_basis_closedBall) fun x ε ε0 =>
+  LocallyCompactSpace.of_hasBasis (fun x => nhds_basis_closedBall) fun x ε ε0 =>
     isCompact_closedBall _ _
 #align locally_compact_of_proper locally_compact_of_proper
 -/

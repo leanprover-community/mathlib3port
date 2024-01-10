@@ -672,7 +672,7 @@ theorem ChartedSpace.locallyCompactSpace [LocallyCompactSpace H] : LocallyCompac
     rw [← (chart_at H x).symm_map_nhds_eq (mem_chart_source H x)]
     exact
       ((compact_basis_nhds (chart_at H x x)).hasBasis_self_subset (chart_target_mem_nhds H x)).map _
-  refine' locallyCompactSpace_of_hasBasis this _
+  refine' LocallyCompactSpace.of_hasBasis this _
   rintro x s ⟨h₁, h₂, h₃⟩
   exact h₂.image_of_continuous_on ((chart_at H x).continuousOn_symm.mono h₃)
 #align charted_space.locally_compact ChartedSpace.locallyCompactSpace
@@ -900,11 +900,11 @@ theorem open_target (he : e ∈ c.atlas) : IsOpen e.target :=
 #align charted_space_core.open_target ChartedSpaceCore.open_target
 -/
 
-#print ChartedSpaceCore.localHomeomorph /-
+#print ChartedSpaceCore.partialHomeomorph /-
 /-- An element of the atlas in a charted space without topology becomes a local homeomorphism
 for the topology constructed from this atlas. The `local_homeomorph` version is given in this
 definition. -/
-protected def localHomeomorph (e : PartialEquiv M H) (he : e ∈ c.atlas) :
+protected def partialHomeomorph (e : PartialEquiv M H) (he : e ∈ c.atlas) :
     @PartialHomeomorph M H c.toTopologicalSpace _ :=
   { e with
     open_source := by convert c.open_source' he
@@ -934,7 +934,7 @@ protected def localHomeomorph (e : PartialEquiv M H) (he : e ∈ c.atlas) :
           e.target ∩ (e' ∘ e.symm ⁻¹' s ∩ e.symm ⁻¹' e'.source) :=
         by rw [← inter_assoc, ← inter_assoc]; congr 1; exact inter_comm _ _
       simpa [PartialEquiv.trans_source, preimage_inter, preimage_comp.symm, A] using this }
-#align charted_space_core.local_homeomorph ChartedSpaceCore.localHomeomorph
+#align charted_space_core.local_homeomorph ChartedSpaceCore.partialHomeomorph
 -/
 
 #print ChartedSpaceCore.toChartedSpace /-
