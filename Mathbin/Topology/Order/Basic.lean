@@ -817,7 +817,7 @@ theorem Filter.Tendsto.eventually_lt {l : Filter γ} {f g : γ → α} {y z : α
   · filter_upwards [hf (Iio_mem_nhds hyz), hg (Ioi_mem_nhds hyz)]
     rw [h.Iio_eq]
     exact fun x hfx hgx => lt_of_le_of_lt hfx hgx
-  · obtain ⟨w, hyw, hwz⟩ := (not_covby_iff hyz).mp h
+  · obtain ⟨w, hyw, hwz⟩ := (not_covBy_iff hyz).mp h
     filter_upwards [hf (Iio_mem_nhds hyw), hg (Ioi_mem_nhds hwz)]
     exact fun x => lt_trans
 #align tendsto.eventually_lt Filter.Tendsto.eventually_lt

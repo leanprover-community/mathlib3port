@@ -721,30 +721,30 @@ theorem GrothendieckTopology.sheafify_isSheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsS
 
 variable (D)
 
-#print CategoryTheory.presheafToSheaf /-
+#print CategoryTheory.plusPlusSheaf /-
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps]
-def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D
+def plusPlusSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D
     where
   obj P := ⟨J.sheafify P, J.sheafify_isSheaf P⟩
   map P Q η := ⟨J.sheafifyMap η⟩
   map_id' P := Sheaf.Hom.ext _ _ <| J.sheafifyMap_id _
   map_comp' P Q R f g := Sheaf.Hom.ext _ _ <| J.sheafifyMap_comp _ _
-#align category_theory.presheaf_to_Sheaf CategoryTheory.presheafToSheaf
+#align category_theory.presheaf_to_Sheaf CategoryTheory.plusPlusSheaf
 -/
 
-#print CategoryTheory.presheafToSheaf_preservesZeroMorphisms /-
-instance presheafToSheaf_preservesZeroMorphisms [Preadditive D] :
-    (presheafToSheaf J D).PreservesZeroMorphisms
+#print CategoryTheory.plusPlusSheaf_preservesZeroMorphisms /-
+instance plusPlusSheaf_preservesZeroMorphisms [Preadditive D] :
+    (plusPlusSheaf J D).PreservesZeroMorphisms
     where map_zero' F G := by ext;
     erw [colimit.ι_map, comp_zero, J.plus_map_zero, J.diagram_nat_trans_zero, zero_comp]
-#align category_theory.presheaf_to_Sheaf_preserves_zero_morphisms CategoryTheory.presheafToSheaf_preservesZeroMorphisms
+#align category_theory.presheaf_to_Sheaf_preserves_zero_morphisms CategoryTheory.plusPlusSheaf_preservesZeroMorphisms
 -/
 
-#print CategoryTheory.sheafificationAdjunction /-
+#print CategoryTheory.plusPlusAdjunction /-
 /-- The sheafification functor is left adjoint to the forgetful functor. -/
 @[simps unit_app counit_app_val]
-def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
+def plusPlusAdjunction : plusPlusSheaf J D ⊣ sheafToPresheaf J D :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun P Q =>
         { toFun := fun e => J.toSheafify P ≫ e.val
@@ -755,12 +755,12 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
         intro P Q R η γ; ext1; dsimp; symm
         apply J.sheafify_map_sheafify_lift
       homEquiv_naturality_right := fun P Q R η γ => by dsimp; rw [category.assoc] }
-#align category_theory.sheafification_adjunction CategoryTheory.sheafificationAdjunction
+#align category_theory.sheafification_adjunction CategoryTheory.plusPlusAdjunction
 -/
 
 #print CategoryTheory.sheafToPresheafIsRightAdjoint /-
 instance sheafToPresheafIsRightAdjoint : IsRightAdjoint (sheafToPresheaf J D) :=
-  ⟨_, sheafificationAdjunction J D⟩
+  ⟨_, plusPlusAdjunction J D⟩
 #align category_theory.Sheaf_to_presheaf_is_right_adjoint CategoryTheory.sheafToPresheafIsRightAdjoint
 -/
 
@@ -781,7 +781,7 @@ variable {J D}
 #print CategoryTheory.sheafificationIso /-
 /-- A sheaf `P` is isomorphic to its own sheafification. -/
 @[simps]
-def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val
+def sheafificationIso (P : Sheaf J D) : P ≅ (plusPlusSheaf J D).obj P.val
     where
   Hom := ⟨(J.isoSheafify P.2).Hom⟩
   inv := ⟨(J.isoSheafify P.2).inv⟩
@@ -792,13 +792,13 @@ def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val
 
 #print CategoryTheory.isIso_sheafificationAdjunction_counit /-
 instance isIso_sheafificationAdjunction_counit (P : Sheaf J D) :
-    IsIso ((sheafificationAdjunction J D).counit.app P) :=
+    IsIso ((plusPlusAdjunction J D).counit.app P) :=
   isIso_of_fully_faithful (sheafToPresheaf J D) _
 #align category_theory.is_iso_sheafification_adjunction_counit CategoryTheory.isIso_sheafificationAdjunction_counit
 -/
 
 #print CategoryTheory.sheafification_reflective /-
-instance sheafification_reflective : IsIso (sheafificationAdjunction J D).counit :=
+instance sheafification_reflective : IsIso (plusPlusAdjunction J D).counit :=
   NatIso.isIso_of_isIso_app _
 #align category_theory.sheafification_reflective CategoryTheory.sheafification_reflective
 -/

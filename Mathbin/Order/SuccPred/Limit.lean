@@ -47,15 +47,15 @@ def IsSuccLimit (a : α) : Prop :=
 #align order.is_succ_limit Order.IsSuccLimit
 -/
 
-#print Order.not_isSuccLimit_iff_exists_covby /-
-theorem not_isSuccLimit_iff_exists_covby (a : α) : ¬IsSuccLimit a ↔ ∃ b, b ⋖ a := by
+#print Order.not_isSuccLimit_iff_exists_covBy /-
+theorem not_isSuccLimit_iff_exists_covBy (a : α) : ¬IsSuccLimit a ↔ ∃ b, b ⋖ a := by
   simp [is_succ_limit]
-#align order.not_is_succ_limit_iff_exists_covby Order.not_isSuccLimit_iff_exists_covby
+#align order.not_is_succ_limit_iff_exists_covby Order.not_isSuccLimit_iff_exists_covBy
 -/
 
 #print Order.isSuccLimit_of_dense /-
 @[simp]
-theorem isSuccLimit_of_dense [DenselyOrdered α] (a : α) : IsSuccLimit a := fun b => not_covby
+theorem isSuccLimit_of_dense [DenselyOrdered α] (a : α) : IsSuccLimit a := fun b => not_covBy
 #align order.is_succ_limit_of_dense Order.isSuccLimit_of_dense
 -/
 
@@ -305,14 +305,14 @@ def IsPredLimit (a : α) : Prop :=
 #align order.is_pred_limit Order.IsPredLimit
 -/
 
-#print Order.not_isPredLimit_iff_exists_covby /-
-theorem not_isPredLimit_iff_exists_covby (a : α) : ¬IsPredLimit a ↔ ∃ b, a ⋖ b := by
+#print Order.not_isPredLimit_iff_exists_covBy /-
+theorem not_isPredLimit_iff_exists_covBy (a : α) : ¬IsPredLimit a ↔ ∃ b, a ⋖ b := by
   simp [is_pred_limit]
-#align order.not_is_pred_limit_iff_exists_covby Order.not_isPredLimit_iff_exists_covby
+#align order.not_is_pred_limit_iff_exists_covby Order.not_isPredLimit_iff_exists_covBy
 -/
 
 #print Order.isPredLimit_of_dense /-
-theorem isPredLimit_of_dense [DenselyOrdered α] (a : α) : IsPredLimit a := fun b => not_covby
+theorem isPredLimit_of_dense [DenselyOrdered α] (a : α) : IsPredLimit a := fun b => not_covBy
 #align order.is_pred_limit_of_dense Order.isPredLimit_of_dense
 -/
 

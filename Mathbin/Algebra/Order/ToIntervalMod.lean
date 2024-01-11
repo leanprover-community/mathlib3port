@@ -913,22 +913,22 @@ theorem Ico_eq_locus_Ioc_eq_iUnion_Ioo :
 #align Ico_eq_locus_Ioc_eq_Union_Ioo Ico_eq_locus_Ioc_eq_iUnion_Ioo
 -/
 
-#print toIocDiv_wcovby_toIcoDiv /-
-theorem toIocDiv_wcovby_toIcoDiv (a b : α) : toIocDiv hp a b ⩿ toIcoDiv hp a b :=
+#print toIocDiv_wcovBy_toIcoDiv /-
+theorem toIocDiv_wcovBy_toIcoDiv (a b : α) : toIocDiv hp a b ⩿ toIcoDiv hp a b :=
   by
   suffices toIocDiv hp a b = toIcoDiv hp a b ∨ toIocDiv hp a b + 1 = toIcoDiv hp a b by
-    rwa [wcovby_iff_eq_or_covby, ← Order.succ_eq_iff_covby]
+    rwa [wcovBy_iff_eq_or_covBy, ← Order.succ_eq_iff_covBy]
   rw [eq_comm, ← not_modeq_iff_to_Ico_div_eq_to_Ioc_div, eq_comm, ←
     modeq_iff_to_Ico_div_eq_to_Ioc_div_add_one]
   exact em' _
-#align to_Ioc_div_wcovby_to_Ico_div toIocDiv_wcovby_toIcoDiv
+#align to_Ioc_div_wcovby_to_Ico_div toIocDiv_wcovBy_toIcoDiv
 -/
 
 #print toIcoMod_le_toIocMod /-
 theorem toIcoMod_le_toIocMod (a b : α) : toIcoMod hp a b ≤ toIocMod hp a b :=
   by
   rw [toIcoMod, toIocMod, sub_le_sub_iff_left]
-  exact zsmul_mono_left hp.le (toIocDiv_wcovby_toIcoDiv _ _ _).le
+  exact zsmul_mono_left hp.le (toIocDiv_wcovBy_toIcoDiv _ _ _).le
 #align to_Ico_mod_le_to_Ioc_mod toIcoMod_le_toIocMod
 -/
 
@@ -937,7 +937,7 @@ theorem toIocMod_le_toIcoMod_add (a b : α) : toIocMod hp a b ≤ toIcoMod hp a 
   by
   rw [toIcoMod, toIocMod, sub_add, sub_le_sub_iff_left, sub_le_iff_le_add, ← add_one_zsmul,
     (zsmul_strictMono_left hp).le_iff_le]
-  apply (toIocDiv_wcovby_toIcoDiv _ _ _).le_succ
+  apply (toIocDiv_wcovBy_toIcoDiv _ _ _).le_succ
 #align to_Ioc_mod_le_to_Ico_mod_add toIocMod_le_toIcoMod_add
 -/
 

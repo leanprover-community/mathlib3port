@@ -110,17 +110,17 @@ theorem toConvexCone_eq_coe (K : ProperCone 𝕜 E) : K.toConvexCone = K :=
   rfl
 #align proper_cone.to_convex_cone_eq_coe ProperCone.toConvexCone_eq_coe
 
-#print ProperCone.ext' /-
-theorem ext' : Function.Injective (coe : ProperCone 𝕜 E → ConvexCone 𝕜 E) := fun S T h => by
-  cases S <;> cases T <;> congr
-#align proper_cone.ext' ProperCone.ext'
+#print ProperCone.toPointedCone_injective /-
+theorem toPointedCone_injective : Function.Injective (coe : ProperCone 𝕜 E → ConvexCone 𝕜 E) :=
+  fun S T h => by cases S <;> cases T <;> congr
+#align proper_cone.ext' ProperCone.toPointedCone_injective
 -/
 
 -- TODO: add convex_cone_class that extends set_like and replace the below instance
 instance : SetLike (ProperCone 𝕜 E) E
     where
   coe K := K.carrier
-  coe_injective' _ _ h := ProperCone.ext' (SetLike.coe_injective h)
+  coe_injective' _ _ h := ProperCone.toPointedCone_injective (SetLike.coe_injective h)
 
 #print ProperCone.ext /-
 @[ext]
@@ -230,7 +230,7 @@ theorem mem_map {f : E →L[ℝ] F} {K : ProperCone ℝ E} {y : F} :
 #print ProperCone.map_id /-
 @[simp]
 theorem map_id (K : ProperCone ℝ E) : K.map (ContinuousLinearMap.id ℝ E) = K :=
-  ProperCone.ext' <| by simpa using IsClosed.closure_eq K.is_closed
+  ProperCone.toPointedCone_injective <| by simpa using IsClosed.closure_eq K.is_closed
 #align proper_cone.map_id ProperCone.map_id
 -/
 
@@ -313,7 +313,7 @@ variable {F : Type _} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [Complete
 /-- The dual of the dual of a proper cone is itself. -/
 @[simp]
 theorem dual_dual (K : ProperCone ℝ E) : K.dual.dual = K :=
-  ProperCone.ext' <|
+  ProperCone.toPointedCone_injective <|
     (K : ConvexCone ℝ E).innerDualCone_of_innerDualCone_eq_self K.Nonempty K.IsClosed
 #align proper_cone.dual_dual ProperCone.dual_dual
 -/

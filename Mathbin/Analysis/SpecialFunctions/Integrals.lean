@@ -427,14 +427,14 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
     ∫ x in a..b, (x : ℂ) ^ (r : ℂ) = ((b : ℂ) ^ (r + 1 : ℂ) - (a : ℂ) ^ (r + 1 : ℂ)) / (r + 1) :=
     integral_cpow h'
   apply_fun Complex.re at this ; convert this
-  · simp_rw [interval_integral_eq_integral_uIoc, Complex.real_smul, Complex.ofReal_mul_re]
+  · simp_rw [interval_integral_eq_integral_uIoc, Complex.real_smul, Complex.re_ofReal_mul]
     · change Complex.re with IsROrC.re
       rw [← integral_re]; rfl
       refine' interval_integrable_iff.mp _
       cases h'
       · exact interval_integrable_cpow' h'; · exact interval_integrable_cpow (Or.inr h'.2)
   · rw [(by push_cast : (r : ℂ) + 1 = ((r + 1 : ℝ) : ℂ))]
-    simp_rw [div_eq_inv_mul, ← Complex.ofReal_inv, Complex.ofReal_mul_re, Complex.sub_re]
+    simp_rw [div_eq_inv_mul, ← Complex.ofReal_inv, Complex.re_ofReal_mul, Complex.sub_re]
     rfl
 #align integral_rpow integral_rpow
 -/

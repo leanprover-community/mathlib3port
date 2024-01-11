@@ -348,19 +348,19 @@ theorem ofReal_mul (r s : ℝ) : ((r * s : ℝ) : ℂ) = r * s :=
 #align complex.of_real_mul Complex.ofReal_mul
 -/
 
-#print Complex.ofReal_mul_re /-
-theorem ofReal_mul_re (r : ℝ) (z : ℂ) : (↑r * z).re = r * z.re := by simp
-#align complex.of_real_mul_re Complex.ofReal_mul_re
+#print Complex.re_ofReal_mul /-
+theorem re_ofReal_mul (r : ℝ) (z : ℂ) : (↑r * z).re = r * z.re := by simp
+#align complex.of_real_mul_re Complex.re_ofReal_mul
 -/
 
-#print Complex.ofReal_mul_im /-
-theorem ofReal_mul_im (r : ℝ) (z : ℂ) : (↑r * z).im = r * z.im := by simp
-#align complex.of_real_mul_im Complex.ofReal_mul_im
+#print Complex.im_ofReal_mul /-
+theorem im_ofReal_mul (r : ℝ) (z : ℂ) : (↑r * z).im = r * z.im := by simp
+#align complex.of_real_mul_im Complex.im_ofReal_mul
 -/
 
 #print Complex.ofReal_mul' /-
 theorem ofReal_mul' (r : ℝ) (z : ℂ) : ↑r * z = ⟨r * z.re, r * z.im⟩ :=
-  ext (ofReal_mul_re _ _) (ofReal_mul_im _ _)
+  ext (re_ofReal_mul _ _) (im_ofReal_mul _ _)
 #align complex.of_real_mul' Complex.ofReal_mul'
 -/
 

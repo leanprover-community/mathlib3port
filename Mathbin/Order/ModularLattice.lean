@@ -64,7 +64,7 @@ variable {α : Type _}
 /-- A weakly upper modular lattice is a lattice where `a ⊔ b` covers `a` and `b` if `a` and `b` both
 cover `a ⊓ b`. -/
 class IsWeakUpperModularLattice (α : Type _) [Lattice α] : Prop where
-  covby_sup_of_inf_covby_covby {a b : α} : a ⊓ b ⋖ a → a ⊓ b ⋖ b → a ⋖ a ⊔ b
+  covBy_sup_of_inf_covBy_covBy {a b : α} : a ⊓ b ⋖ a → a ⊓ b ⋖ b → a ⋖ a ⊔ b
 #align is_weak_upper_modular_lattice IsWeakUpperModularLattice
 -/
 
@@ -72,7 +72,7 @@ class IsWeakUpperModularLattice (α : Type _) [Lattice α] : Prop where
 /-- A weakly lower modular lattice is a lattice where `a` and `b` cover `a ⊓ b` if `a ⊔ b` covers
 both `a` and `b`. -/
 class IsWeakLowerModularLattice (α : Type _) [Lattice α] : Prop where
-  inf_covby_of_covby_covby_sup {a b : α} : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ a
+  inf_covBy_of_covBy_covBy_sup {a b : α} : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ a
 #align is_weak_lower_modular_lattice IsWeakLowerModularLattice
 -/
 
@@ -80,7 +80,7 @@ class IsWeakLowerModularLattice (α : Type _) [Lattice α] : Prop where
 /-- An upper modular lattice, aka semimodular lattice, is a lattice where `a ⊔ b` covers `a` and `b`
 if either `a` or `b` covers `a ⊓ b`. -/
 class IsUpperModularLattice (α : Type _) [Lattice α] : Prop where
-  covby_sup_of_inf_covby {a b : α} : a ⊓ b ⋖ a → b ⋖ a ⊔ b
+  covBy_sup_of_inf_covBy {a b : α} : a ⊓ b ⋖ a → b ⋖ a ⊔ b
 #align is_upper_modular_lattice IsUpperModularLattice
 -/
 
@@ -88,7 +88,7 @@ class IsUpperModularLattice (α : Type _) [Lattice α] : Prop where
 /-- A lower modular lattice is a lattice where `a` and `b` both cover `a ⊓ b` if `a ⊔ b` covers
 either `a` or `b`. -/
 class IsLowerModularLattice (α : Type _) [Lattice α] : Prop where
-  inf_covby_of_covby_sup {a b : α} : a ⋖ a ⊔ b → a ⊓ b ⋖ b
+  inf_covBy_of_covBy_sup {a b : α} : a ⋖ a ⊔ b → a ⊓ b ⋖ b
 #align is_lower_modular_lattice IsLowerModularLattice
 -/
 
@@ -103,23 +103,23 @@ section WeakUpperModular
 
 variable [Lattice α] [IsWeakUpperModularLattice α] {a b : α}
 
-#print covby_sup_of_inf_covby_of_inf_covby_left /-
-theorem covby_sup_of_inf_covby_of_inf_covby_left : a ⊓ b ⋖ a → a ⊓ b ⋖ b → a ⋖ a ⊔ b :=
-  IsWeakUpperModularLattice.covby_sup_of_inf_covby_covby
-#align covby_sup_of_inf_covby_of_inf_covby_left covby_sup_of_inf_covby_of_inf_covby_left
+#print covBy_sup_of_inf_covBy_of_inf_covBy_left /-
+theorem covBy_sup_of_inf_covBy_of_inf_covBy_left : a ⊓ b ⋖ a → a ⊓ b ⋖ b → a ⋖ a ⊔ b :=
+  IsWeakUpperModularLattice.covBy_sup_of_inf_covBy_covBy
+#align covby_sup_of_inf_covby_of_inf_covby_left covBy_sup_of_inf_covBy_of_inf_covBy_left
 -/
 
-#print covby_sup_of_inf_covby_of_inf_covby_right /-
-theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b ⋖ b → b ⋖ a ⊔ b := by
-  rw [inf_comm, sup_comm]; exact fun ha hb => covby_sup_of_inf_covby_of_inf_covby_left hb ha
-#align covby_sup_of_inf_covby_of_inf_covby_right covby_sup_of_inf_covby_of_inf_covby_right
+#print covBy_sup_of_inf_covBy_of_inf_covBy_right /-
+theorem covBy_sup_of_inf_covBy_of_inf_covBy_right : a ⊓ b ⋖ a → a ⊓ b ⋖ b → b ⋖ a ⊔ b := by
+  rw [inf_comm, sup_comm]; exact fun ha hb => covBy_sup_of_inf_covBy_of_inf_covBy_left hb ha
+#align covby_sup_of_inf_covby_of_inf_covby_right covBy_sup_of_inf_covBy_of_inf_covBy_right
 -/
 
-alias Covby.sup_of_inf_of_inf_left := covby_sup_of_inf_covby_of_inf_covby_left
-#align covby.sup_of_inf_of_inf_left Covby.sup_of_inf_of_inf_left
+alias CovBy.sup_of_inf_of_inf_left := covBy_sup_of_inf_covBy_of_inf_covBy_left
+#align covby.sup_of_inf_of_inf_left CovBy.sup_of_inf_of_inf_left
 
-alias Covby.sup_of_inf_of_inf_right := covby_sup_of_inf_covby_of_inf_covby_right
-#align covby.sup_of_inf_of_inf_right Covby.sup_of_inf_of_inf_right
+alias CovBy.sup_of_inf_of_inf_right := covBy_sup_of_inf_covBy_of_inf_covBy_right
+#align covby.sup_of_inf_of_inf_right CovBy.sup_of_inf_of_inf_right
 
 instance : IsWeakLowerModularLattice (OrderDual α) :=
   ⟨fun a b ha hb => (ha.ofDual.sup_of_inf_of_inf_left hb.ofDual).toDual⟩
@@ -130,23 +130,23 @@ section WeakLowerModular
 
 variable [Lattice α] [IsWeakLowerModularLattice α] {a b : α}
 
-#print inf_covby_of_covby_sup_of_covby_sup_left /-
-theorem inf_covby_of_covby_sup_of_covby_sup_left : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ a :=
-  IsWeakLowerModularLattice.inf_covby_of_covby_covby_sup
-#align inf_covby_of_covby_sup_of_covby_sup_left inf_covby_of_covby_sup_of_covby_sup_left
+#print inf_covBy_of_covBy_sup_of_covBy_sup_left /-
+theorem inf_covBy_of_covBy_sup_of_covBy_sup_left : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ a :=
+  IsWeakLowerModularLattice.inf_covBy_of_covBy_covBy_sup
+#align inf_covby_of_covby_sup_of_covby_sup_left inf_covBy_of_covBy_sup_of_covBy_sup_left
 -/
 
-#print inf_covby_of_covby_sup_of_covby_sup_right /-
-theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ b := by
-  rw [sup_comm, inf_comm]; exact fun ha hb => inf_covby_of_covby_sup_of_covby_sup_left hb ha
-#align inf_covby_of_covby_sup_of_covby_sup_right inf_covby_of_covby_sup_of_covby_sup_right
+#print inf_covBy_of_covBy_sup_of_covBy_sup_right /-
+theorem inf_covBy_of_covBy_sup_of_covBy_sup_right : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ b := by
+  rw [sup_comm, inf_comm]; exact fun ha hb => inf_covBy_of_covBy_sup_of_covBy_sup_left hb ha
+#align inf_covby_of_covby_sup_of_covby_sup_right inf_covBy_of_covBy_sup_of_covBy_sup_right
 -/
 
-alias Covby.inf_of_sup_of_sup_left := inf_covby_of_covby_sup_of_covby_sup_left
-#align covby.inf_of_sup_of_sup_left Covby.inf_of_sup_of_sup_left
+alias CovBy.inf_of_sup_of_sup_left := inf_covBy_of_covBy_sup_of_covBy_sup_left
+#align covby.inf_of_sup_of_sup_left CovBy.inf_of_sup_of_sup_left
 
-alias Covby.inf_of_sup_of_sup_right := inf_covby_of_covby_sup_of_covby_sup_right
-#align covby.inf_of_sup_of_sup_right Covby.inf_of_sup_of_sup_right
+alias CovBy.inf_of_sup_of_sup_right := inf_covBy_of_covBy_sup_of_covBy_sup_right
+#align covby.inf_of_sup_of_sup_right CovBy.inf_of_sup_of_sup_right
 
 instance : IsWeakUpperModularLattice (OrderDual α) :=
   ⟨fun a b ha hb => (ha.ofDual.inf_of_sup_of_sup_left hb.ofDual).toDual⟩
@@ -157,29 +157,29 @@ section UpperModular
 
 variable [Lattice α] [IsUpperModularLattice α] {a b : α}
 
-#print covby_sup_of_inf_covby_left /-
-theorem covby_sup_of_inf_covby_left : a ⊓ b ⋖ a → b ⋖ a ⊔ b :=
-  IsUpperModularLattice.covby_sup_of_inf_covby
-#align covby_sup_of_inf_covby_left covby_sup_of_inf_covby_left
+#print covBy_sup_of_inf_covBy_left /-
+theorem covBy_sup_of_inf_covBy_left : a ⊓ b ⋖ a → b ⋖ a ⊔ b :=
+  IsUpperModularLattice.covBy_sup_of_inf_covBy
+#align covby_sup_of_inf_covby_left covBy_sup_of_inf_covBy_left
 -/
 
-#print covby_sup_of_inf_covby_right /-
-theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b := by rw [sup_comm, inf_comm];
-  exact covby_sup_of_inf_covby_left
-#align covby_sup_of_inf_covby_right covby_sup_of_inf_covby_right
+#print covBy_sup_of_inf_covBy_right /-
+theorem covBy_sup_of_inf_covBy_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b := by rw [sup_comm, inf_comm];
+  exact covBy_sup_of_inf_covBy_left
+#align covby_sup_of_inf_covby_right covBy_sup_of_inf_covBy_right
 -/
 
-alias Covby.sup_of_inf_left := covby_sup_of_inf_covby_left
-#align covby.sup_of_inf_left Covby.sup_of_inf_left
+alias CovBy.sup_of_inf_left := covBy_sup_of_inf_covBy_left
+#align covby.sup_of_inf_left CovBy.sup_of_inf_left
 
-alias Covby.sup_of_inf_right := covby_sup_of_inf_covby_right
-#align covby.sup_of_inf_right Covby.sup_of_inf_right
+alias CovBy.sup_of_inf_right := covBy_sup_of_inf_covBy_right
+#align covby.sup_of_inf_right CovBy.sup_of_inf_right
 
 #print IsUpperModularLattice.to_isWeakUpperModularLattice /-
 -- See note [lower instance priority]
 instance (priority := 100) IsUpperModularLattice.to_isWeakUpperModularLattice :
     IsWeakUpperModularLattice α :=
-  ⟨fun a b _ => Covby.sup_of_inf_right⟩
+  ⟨fun a b _ => CovBy.sup_of_inf_right⟩
 #align is_upper_modular_lattice.to_is_weak_upper_modular_lattice IsUpperModularLattice.to_isWeakUpperModularLattice
 -/
 
@@ -192,29 +192,29 @@ section LowerModular
 
 variable [Lattice α] [IsLowerModularLattice α] {a b : α}
 
-#print inf_covby_of_covby_sup_left /-
-theorem inf_covby_of_covby_sup_left : a ⋖ a ⊔ b → a ⊓ b ⋖ b :=
-  IsLowerModularLattice.inf_covby_of_covby_sup
-#align inf_covby_of_covby_sup_left inf_covby_of_covby_sup_left
+#print inf_covBy_of_covBy_sup_left /-
+theorem inf_covBy_of_covBy_sup_left : a ⋖ a ⊔ b → a ⊓ b ⋖ b :=
+  IsLowerModularLattice.inf_covBy_of_covBy_sup
+#align inf_covby_of_covby_sup_left inf_covBy_of_covBy_sup_left
 -/
 
-#print inf_covby_of_covby_sup_right /-
-theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a := by rw [inf_comm, sup_comm];
-  exact inf_covby_of_covby_sup_left
-#align inf_covby_of_covby_sup_right inf_covby_of_covby_sup_right
+#print inf_covBy_of_covBy_sup_right /-
+theorem inf_covBy_of_covBy_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a := by rw [inf_comm, sup_comm];
+  exact inf_covBy_of_covBy_sup_left
+#align inf_covby_of_covby_sup_right inf_covBy_of_covBy_sup_right
 -/
 
-alias Covby.inf_of_sup_left := inf_covby_of_covby_sup_left
-#align covby.inf_of_sup_left Covby.inf_of_sup_left
+alias CovBy.inf_of_sup_left := inf_covBy_of_covBy_sup_left
+#align covby.inf_of_sup_left CovBy.inf_of_sup_left
 
-alias Covby.inf_of_sup_right := inf_covby_of_covby_sup_right
-#align covby.inf_of_sup_right Covby.inf_of_sup_right
+alias CovBy.inf_of_sup_right := inf_covBy_of_covBy_sup_right
+#align covby.inf_of_sup_right CovBy.inf_of_sup_right
 
 #print IsLowerModularLattice.to_isWeakLowerModularLattice /-
 -- See note [lower instance priority]
 instance (priority := 100) IsLowerModularLattice.to_isWeakLowerModularLattice :
     IsWeakLowerModularLattice α :=
-  ⟨fun a b _ => Covby.inf_of_sup_right⟩
+  ⟨fun a b _ => CovBy.inf_of_sup_right⟩
 #align is_lower_modular_lattice.to_is_weak_lower_modular_lattice IsLowerModularLattice.to_isWeakLowerModularLattice
 -/
 
@@ -395,7 +395,7 @@ def infIooOrderIsoIooSup (a b : α) : Ioo (a ⊓ b) a ≃o Ioo b (a ⊔ b)
 instance (priority := 100) IsModularLattice.to_isLowerModularLattice : IsLowerModularLattice α :=
   ⟨fun a b =>
     by
-    simp_rw [covby_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← is_empty_coe_sort, right_lt_sup,
+    simp_rw [covBy_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← is_empty_coe_sort, right_lt_sup,
       inf_lt_left, (infIooOrderIsoIooSup _ _).symm.toEquiv.isEmpty_congr]
     exact id⟩
 #align is_modular_lattice.to_is_lower_modular_lattice IsModularLattice.to_isLowerModularLattice
@@ -406,7 +406,7 @@ instance (priority := 100) IsModularLattice.to_isLowerModularLattice : IsLowerMo
 instance (priority := 100) IsModularLattice.to_isUpperModularLattice : IsUpperModularLattice α :=
   ⟨fun a b =>
     by
-    simp_rw [covby_iff_Ioo_eq, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
+    simp_rw [covBy_iff_Ioo_eq, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
       (infIooOrderIsoIooSup _ _).toEquiv.isEmpty_congr]
     exact id⟩
 #align is_modular_lattice.to_is_upper_modular_lattice IsModularLattice.to_isUpperModularLattice

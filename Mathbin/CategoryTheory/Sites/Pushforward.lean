@@ -54,7 +54,7 @@ instance {X : C} : IsCofiltered (J.cover X) :=
 same direction as `G`. -/
 @[simps]
 def Functor.sheafPullback (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
-  sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
+  sheafToPresheaf J A ⋙ lan G.op ⋙ plusPlusSheaf K A
 #align category_theory.sites.pushforward CategoryTheory.Functor.sheafPullback
 -/
 
@@ -65,7 +65,7 @@ instance (G : C ⥤ D) [RepresentablyFlat G] :
   · infer_instance
   apply (config := { instances := false }) comp_preserves_finite_limits
   · apply CategoryTheory.lanPreservesFiniteLimitsOfFlat
-  · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₁, v₁, v₁}
+  · apply CategoryTheory.plusPlusSheaf.Limits.preservesFiniteLimits.{u₁, v₁, v₁}
     infer_instance
 
 #print CategoryTheory.Functor.sheafAdjunctionContinuous /-
@@ -73,7 +73,7 @@ instance (G : C ⥤ D) [RepresentablyFlat G] :
 def Functor.sheafAdjunctionContinuous {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
     (hG₂ : CoverPreserving J K G) :
     Functor.sheafPullback A J K G ⊣ Functor.sheafPushforwardContinuous A hG₁ hG₂ :=
-  ((Lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful
+  ((Lan.adjunction A G.op).comp (plusPlusAdjunction K A)).restrictFullyFaithful
     (sheafToPresheaf J A) (𝟭 _)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)

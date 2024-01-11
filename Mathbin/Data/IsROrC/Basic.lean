@@ -336,18 +336,18 @@ theorem real_smul_ofReal (r x : ℝ) : r • (x : K) = (r : K) * (x : K) :=
 #align is_R_or_C.real_smul_of_real IsROrC.real_smul_ofReal
 -/
 
-#print IsROrC.ofReal_mul_re /-
+#print IsROrC.re_ofReal_mul /-
 @[is_R_or_C_simps]
-theorem ofReal_mul_re (r : ℝ) (z : K) : re (↑r * z) = r * re z := by
+theorem re_ofReal_mul (r : ℝ) (z : K) : re (↑r * z) = r * re z := by
   simp only [mul_re, of_real_im, MulZeroClass.zero_mul, of_real_re, sub_zero]
-#align is_R_or_C.of_real_mul_re IsROrC.ofReal_mul_re
+#align is_R_or_C.of_real_mul_re IsROrC.re_ofReal_mul
 -/
 
-#print IsROrC.ofReal_mul_im /-
+#print IsROrC.im_ofReal_mul /-
 @[is_R_or_C_simps]
-theorem ofReal_mul_im (r : ℝ) (z : K) : im (↑r * z) = r * im z := by
+theorem im_ofReal_mul (r : ℝ) (z : K) : im (↑r * z) = r * im z := by
   simp only [add_zero, of_real_im, MulZeroClass.zero_mul, of_real_re, mul_im]
-#align is_R_or_C.of_real_mul_im IsROrC.ofReal_mul_im
+#align is_R_or_C.of_real_mul_im IsROrC.im_ofReal_mul
 -/
 
 #print IsROrC.smul_re /-

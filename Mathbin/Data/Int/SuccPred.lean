@@ -86,34 +86,34 @@ instance : IsPredArchimedean ℤ :=
 /-! ### Covering relation -/
 
 
-#print Int.covby_iff_succ_eq /-
-protected theorem covby_iff_succ_eq {m n : ℤ} : m ⋖ n ↔ m + 1 = n :=
-  succ_eq_iff_covby.symm
-#align int.covby_iff_succ_eq Int.covby_iff_succ_eq
+#print Int.covBy_iff_succ_eq /-
+protected theorem covBy_iff_succ_eq {m n : ℤ} : m ⋖ n ↔ m + 1 = n :=
+  succ_eq_iff_covBy.symm
+#align int.covby_iff_succ_eq Int.covBy_iff_succ_eq
 -/
 
-#print Int.sub_one_covby /-
+#print Int.sub_one_covBy /-
 @[simp]
-theorem sub_one_covby (z : ℤ) : z - 1 ⋖ z := by rw [Int.covby_iff_succ_eq, sub_add_cancel]
-#align int.sub_one_covby Int.sub_one_covby
+theorem sub_one_covBy (z : ℤ) : z - 1 ⋖ z := by rw [Int.covBy_iff_succ_eq, sub_add_cancel]
+#align int.sub_one_covby Int.sub_one_covBy
 -/
 
-#print Int.covby_add_one /-
+#print Int.covBy_add_one /-
 @[simp]
-theorem covby_add_one (z : ℤ) : z ⋖ z + 1 :=
-  Int.covby_iff_succ_eq.mpr rfl
-#align int.covby_add_one Int.covby_add_one
+theorem covBy_add_one (z : ℤ) : z ⋖ z + 1 :=
+  Int.covBy_iff_succ_eq.mpr rfl
+#align int.covby_add_one Int.covBy_add_one
 -/
 
 end Int
 
-#print Nat.cast_int_covby_iff /-
+#print Nat.cast_int_covBy_iff /-
 @[simp, norm_cast]
-theorem Nat.cast_int_covby_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b := by
-  rw [Nat.covby_iff_succ_eq, Int.covby_iff_succ_eq]; exact Int.coe_nat_inj'
-#align nat.cast_int_covby_iff Nat.cast_int_covby_iff
+theorem Nat.cast_int_covBy_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b := by
+  rw [Nat.covBy_iff_succ_eq, Int.covBy_iff_succ_eq]; exact Int.coe_nat_inj'
+#align nat.cast_int_covby_iff Nat.cast_int_covBy_iff
 -/
 
-alias ⟨_, Covby.cast_int⟩ := Nat.cast_int_covby_iff
-#align covby.cast_int Covby.cast_int
+alias ⟨_, CovBy.cast_int⟩ := Nat.cast_int_covBy_iff
+#align covby.cast_int CovBy.cast_int
 

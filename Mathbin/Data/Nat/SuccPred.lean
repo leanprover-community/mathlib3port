@@ -82,21 +82,21 @@ instance : IsPredArchimedean ℕ :=
 /-! ### Covering relation -/
 
 
-#print Nat.covby_iff_succ_eq /-
-protected theorem covby_iff_succ_eq {m n : ℕ} : m ⋖ n ↔ m + 1 = n :=
-  succ_eq_iff_covby.symm
-#align nat.covby_iff_succ_eq Nat.covby_iff_succ_eq
+#print Nat.covBy_iff_succ_eq /-
+protected theorem covBy_iff_succ_eq {m n : ℕ} : m ⋖ n ↔ m + 1 = n :=
+  succ_eq_iff_covBy.symm
+#align nat.covby_iff_succ_eq Nat.covBy_iff_succ_eq
 -/
 
 end Nat
 
-#print Fin.coe_covby_iff /-
+#print Fin.coe_covBy_iff /-
 @[simp, norm_cast]
-theorem Fin.coe_covby_iff {n : ℕ} {a b : Fin n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
+theorem Fin.coe_covBy_iff {n : ℕ} {a b : Fin n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
   and_congr_right' ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
-#align fin.coe_covby_iff Fin.coe_covby_iff
+#align fin.coe_covby_iff Fin.coe_covBy_iff
 -/
 
-alias ⟨_, Covby.coe_fin⟩ := Fin.coe_covby_iff
-#align covby.coe_fin Covby.coe_fin
+alias ⟨_, CovBy.coe_fin⟩ := Fin.coe_covBy_iff
+#align covby.coe_fin CovBy.coe_fin
 

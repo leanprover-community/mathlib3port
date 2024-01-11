@@ -249,14 +249,14 @@ variable (K : Type max v u)
 
 variable [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
 
-instance : PreservesLimitsOfShape K (presheafToSheaf J D) :=
+instance : PreservesLimitsOfShape K (plusPlusSheaf J D) :=
   by
   constructor; intro F; constructor; intro S hS
   apply is_limit_of_reflects (Sheaf_to_presheaf J D)
   haveI : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
   apply is_limit_of_preserves (J.sheafification D) hS
 
-instance [HasFiniteLimits D] : PreservesFiniteLimits (presheafToSheaf J D) :=
+instance [HasFiniteLimits D] : PreservesFiniteLimits (plusPlusSheaf J D) :=
   by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{max v u}
   intros; skip; infer_instance

@@ -24,35 +24,35 @@ open scoped Pointwise
 
 variable {α : Type _} {s t : Set α}
 
-#print Set.IsPwo.mul /-
+#print Set.IsPWO.mul /-
 @[to_additive]
-theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) := by
+theorem IsPWO.mul [OrderedCancelCommMonoid α] (hs : s.IsPWO) (ht : t.IsPWO) : IsPWO (s * t) := by
   rw [← image_mul_prod]; exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
-#align set.is_pwo.mul Set.IsPwo.mul
-#align set.is_pwo.add Set.IsPwo.add
+#align set.is_pwo.mul Set.IsPWO.mul
+#align set.is_pwo.add Set.IsPWO.add
 -/
 
 variable [LinearOrderedCancelCommMonoid α]
 
-#print Set.IsWf.mul /-
+#print Set.IsWF.mul /-
 @[to_additive]
-theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
-  (hs.IsPwo.mul ht.IsPwo).IsWf
-#align set.is_wf.mul Set.IsWf.mul
-#align set.is_wf.add Set.IsWf.add
+theorem IsWF.mul (hs : s.IsWF) (ht : t.IsWF) : IsWF (s * t) :=
+  (hs.IsPWO.mul ht.IsPWO).IsWF
+#align set.is_wf.mul Set.IsWF.mul
+#align set.is_wf.add Set.IsWF.add
 -/
 
-#print Set.IsWf.min_mul /-
+#print Set.IsWF.min_mul /-
 @[to_additive]
-theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Nonempty) :
+theorem IsWF.min_mul (hs : s.IsWF) (ht : t.IsWF) (hsn : s.Nonempty) (htn : t.Nonempty) :
     (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn :=
   by
   refine' le_antisymm (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _
   rw [is_wf.le_min_iff]
   rintro _ ⟨x, y, hx, hy, rfl⟩
   exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy)
-#align set.is_wf.min_mul Set.IsWf.min_mul
-#align set.is_wf.min_add Set.IsWf.min_add
+#align set.is_wf.min_mul Set.IsWF.min_mul
+#align set.is_wf.min_add Set.IsWF.min_add
 -/
 
 end Set
@@ -63,7 +63,7 @@ open scoped Pointwise
 
 variable {α : Type _}
 
-variable [OrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsPwo) (ht : t.IsPwo) (a : α)
+variable [OrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsPWO) (ht : t.IsPWO) (a : α)
 
 #print Finset.mulAntidiagonal /-
 /-- `finset.mul_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in `s` and an
@@ -72,12 +72,12 @@ well-ordered. -/
 @[to_additive
       "`finset.add_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in\n`s` and an element in `t` that add to `a`, but its construction requires proofs that `s` and `t` are\nwell-ordered."]
 noncomputable def mulAntidiagonal : Finset (α × α) :=
-  (Set.MulAntidiagonal.finite_of_isPwo hs ht a).toFinset
+  (Set.MulAntidiagonal.finite_of_isPWO hs ht a).toFinset
 #align finset.mul_antidiagonal Finset.mulAntidiagonal
 #align finset.add_antidiagonal Finset.addAntidiagonal
 -/
 
-variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
+variable {hs ht a} {u : Set α} {hu : u.IsPWO} {x : α × α}
 
 #print Finset.mem_mulAntidiagonal /-
 @[simp, to_additive]
@@ -121,19 +121,19 @@ theorem support_mulAntidiagonal_subset_mul : {a | (mulAntidiagonal hs ht a).None
 #align finset.support_add_antidiagonal_subset_add Finset.support_addAntidiagonal_subset_add
 -/
 
-#print Finset.isPwo_support_mulAntidiagonal /-
+#print Finset.isPWO_support_mulAntidiagonal /-
 @[to_additive]
-theorem isPwo_support_mulAntidiagonal : {a | (mulAntidiagonal hs ht a).Nonempty}.IsPwo :=
+theorem isPWO_support_mulAntidiagonal : {a | (mulAntidiagonal hs ht a).Nonempty}.IsPWO :=
   (hs.mul ht).mono support_mulAntidiagonal_subset_mul
-#align finset.is_pwo_support_mul_antidiagonal Finset.isPwo_support_mulAntidiagonal
-#align finset.is_pwo_support_add_antidiagonal Finset.isPwo_support_addAntidiagonal
+#align finset.is_pwo_support_mul_antidiagonal Finset.isPWO_support_mulAntidiagonal
+#align finset.is_pwo_support_add_antidiagonal Finset.isPWO_support_addAntidiagonal
 -/
 
 #print Finset.mulAntidiagonal_min_mul_min /-
 @[to_additive]
 theorem mulAntidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t : Set α}
-    (hs : s.IsWf) (ht : t.IsWf) (hns : s.Nonempty) (hnt : t.Nonempty) :
-    mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} :=
+    (hs : s.IsWF) (ht : t.IsWF) (hns : s.Nonempty) (hnt : t.Nonempty) :
+    mulAntidiagonal hs.IsPWO ht.IsPWO (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} :=
   by
   ext ⟨a, b⟩
   simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]

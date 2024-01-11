@@ -86,15 +86,15 @@ theorem isSimpleModule_iff_isCoatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom m 
 #align is_simple_module_iff_is_coatom isSimpleModule_iff_isCoatom
 -/
 
-#print covby_iff_quot_is_simple /-
-theorem covby_iff_quot_is_simple {A B : Submodule R M} (hAB : A ≤ B) :
+#print covBy_iff_quot_is_simple /-
+theorem covBy_iff_quot_is_simple {A B : Submodule R M} (hAB : A ≤ B) :
     A ⋖ B ↔ IsSimpleModule R (B ⧸ Submodule.comap B.Subtype A) :=
   by
   set f : Submodule R B ≃o Set.Iic B := Submodule.MapSubtype.relIso B with hf
-  rw [covby_iff_coatom_Iic hAB, isSimpleModule_iff_isCoatom, ← OrderIso.isCoatom_iff f, hf]
+  rw [covBy_iff_coatom_Iic hAB, isSimpleModule_iff_isCoatom, ← OrderIso.isCoatom_iff f, hf]
   simp [-OrderIso.isCoatom_iff, Submodule.MapSubtype.relIso, Submodule.map_comap_subtype,
     inf_eq_right.2 hAB]
-#align covby_iff_quot_is_simple covby_iff_quot_is_simple
+#align covby_iff_quot_is_simple covBy_iff_quot_is_simple
 -/
 
 namespace IsSimpleModule
@@ -244,9 +244,9 @@ end LinearMap
 instance JordanHolderModule.instJordanHolderLattice : JordanHolderLattice (Submodule R M)
     where
   IsMaximal := (· ⋖ ·)
-  lt_of_isMaximal x y := Covby.lt
-  sup_eq_of_isMaximal x y z hxz hyz := Wcovby.sup_eq hxz.Wcovby hyz.Wcovby
-  isMaximal_inf_left_of_isMaximal_sup A B := inf_covby_of_covby_sup_of_covby_sup_left
+  lt_of_isMaximal x y := CovBy.lt
+  sup_eq_of_isMaximal x y z hxz hyz := WCovBy.sup_eq hxz.WCovBy hyz.WCovBy
+  isMaximal_inf_left_of_isMaximal_sup A B := inf_covBy_of_covBy_sup_of_covBy_sup_left
   Iso X Y := Nonempty <| (X.2 ⧸ X.1.comap X.2.Subtype) ≃ₗ[R] Y.2 ⧸ Y.1.comap Y.2.Subtype
   iso_symm := fun A B ⟨f⟩ => ⟨f.symm⟩
   iso_trans := fun A B C ⟨f⟩ ⟨g⟩ => ⟨f.trans g⟩

@@ -373,7 +373,7 @@ theorem Real.tendsto_euler_sin_prod (x : ℝ) :
   by
   convert (complex.continuous_re.tendsto _).comp (Complex.tendsto_euler_sin_prod x)
   · ext1 n
-    rw [Function.comp_apply, ← Complex.ofReal_mul, Complex.ofReal_mul_re]
+    rw [Function.comp_apply, ← Complex.ofReal_mul, Complex.re_ofReal_mul]
     suffices
       ∏ j : ℕ in Finset.range n, (1 - (x : ℂ) ^ 2 / (↑j + 1) ^ 2) =
         ↑(∏ j : ℕ in Finset.range n, (1 - x ^ 2 / (↑j + 1) ^ 2))

@@ -437,14 +437,14 @@ theorem integral_eq_of_hasDerivWithinAt_off_countable_of_le (f f' : ℝ → E) {
 #align measure_theory.integral_eq_of_has_deriv_within_at_off_countable_of_le MeasureTheory.integral_eq_of_hasDerivWithinAt_off_countable_of_le
 -/
 
-#print MeasureTheory.integral_eq_of_has_deriv_within_at_off_countable /-
+#print MeasureTheory.integral_eq_of_hasDerivWithinAt_off_countable /-
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
 See also `measure_theory.interval_integral.integral_eq_sub_of_has_deriv_right` for a version that
 only assumes right differentiability of `f`.
 -/
-theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b : ℝ} {s : Set ℝ}
+theorem integral_eq_of_hasDerivWithinAt_off_countable (f f' : ℝ → E) {a b : ℝ} {s : Set ℝ}
     (hs : s.Countable) (Hc : ContinuousOn f [a, b])
     (Hd : ∀ x ∈ Ioo (min a b) (max a b) \ s, HasDerivAt f (f' x) x)
     (Hi : IntervalIntegrable f' volume a b) : ∫ x in a..b, f' x = f b - f a :=
@@ -455,7 +455,7 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
   · simp only [uIcc_of_ge hab, min_eq_right hab, max_eq_left hab] at *
     rw [intervalIntegral.integral_symm, neg_eq_iff_eq_neg, neg_sub]
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
-#align measure_theory.integral_eq_of_has_deriv_within_at_off_countable MeasureTheory.integral_eq_of_has_deriv_within_at_off_countable
+#align measure_theory.integral_eq_of_has_deriv_within_at_off_countable MeasureTheory.integral_eq_of_hasDerivWithinAt_off_countable
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

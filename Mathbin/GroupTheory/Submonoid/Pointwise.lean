@@ -876,21 +876,21 @@ end Semiring
 
 end AddSubmonoid
 
-namespace Set.IsPwo
+namespace Set.IsPWO
 
 variable [OrderedCancelCommMonoid α] {s : Set α}
 
-#print Set.IsPwo.submonoid_closure /-
+#print Set.IsPWO.submonoid_closure /-
 @[to_additive]
-theorem submonoid_closure (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.IsPwo) :
-    IsPwo (Submonoid.closure s : Set α) :=
+theorem submonoid_closure (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.IsPWO) :
+    IsPWO (Submonoid.closure s : Set α) :=
   by
   rw [Submonoid.closure_eq_image_prod]
   refine' (h.partially_well_ordered_on_sublist_forall₂ (· ≤ ·)).image_of_monotone_on _
   exact fun l1 hl1 l2 hl2 h12 => h12.prod_le_prod' fun x hx => hpos x <| hl2 x hx
-#align set.is_pwo.submonoid_closure Set.IsPwo.submonoid_closure
-#align set.is_pwo.add_submonoid_closure Set.IsPwo.addSubmonoid_closure
+#align set.is_pwo.submonoid_closure Set.IsPWO.submonoid_closure
+#align set.is_pwo.add_submonoid_closure Set.IsPWO.addSubmonoid_closure
 -/
 
-end Set.IsPwo
+end Set.IsPWO
 

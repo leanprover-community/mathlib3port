@@ -418,7 +418,7 @@ theorem rpow_mul {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ 
 theorem rpow_add_int {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℤ) : x ^ (y + n) = x ^ y * x ^ n := by
   rw [rpow_def, Complex.ofReal_add, Complex.cpow_add _ _ (complex.of_real_ne_zero.mpr hx),
     Complex.ofReal_int_cast, Complex.cpow_int_cast, ← Complex.ofReal_zpow, mul_comm,
-    Complex.ofReal_mul_re, ← rpow_def, mul_comm]
+    Complex.re_ofReal_mul, ← rpow_def, mul_comm]
 #align real.rpow_add_int Real.rpow_add_int
 -/
 

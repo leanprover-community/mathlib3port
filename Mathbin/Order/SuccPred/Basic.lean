@@ -250,16 +250,16 @@ theorem lt_succ_iff_not_isMax : a < succ a ↔ ¬IsMax a :=
 alias ⟨_, lt_succ_of_not_is_max⟩ := lt_succ_iff_not_is_max
 #align order.lt_succ_of_not_is_max Order.lt_succ_of_not_isMax
 
-#print Order.wcovby_succ /-
-theorem wcovby_succ (a : α) : a ⩿ succ a :=
+#print Order.wcovBy_succ /-
+theorem wcovBy_succ (a : α) : a ⩿ succ a :=
   ⟨le_succ a, fun b hb => (succ_le_of_lt hb).not_lt⟩
-#align order.wcovby_succ Order.wcovby_succ
+#align order.wcovby_succ Order.wcovBy_succ
 -/
 
-#print Order.covby_succ_of_not_isMax /-
-theorem covby_succ_of_not_isMax (h : ¬IsMax a) : a ⋖ succ a :=
-  (wcovby_succ a).covby_of_lt <| lt_succ_of_not_isMax h
-#align order.covby_succ_of_not_is_max Order.covby_succ_of_not_isMax
+#print Order.covBy_succ_of_not_isMax /-
+theorem covBy_succ_of_not_isMax (h : ¬IsMax a) : a ⋖ succ a :=
+  (wcovBy_succ a).covBy_of_lt <| lt_succ_of_not_isMax h
+#align order.covby_succ_of_not_is_max Order.covBy_succ_of_not_isMax
 -/
 
 #print Order.lt_succ_iff_of_not_isMax /-
@@ -416,10 +416,10 @@ theorem succ_strictMono : StrictMono (succ : α → α) := fun a b => succ_lt_su
 #align order.succ_strict_mono Order.succ_strictMono
 -/
 
-#print Order.covby_succ /-
-theorem covby_succ (a : α) : a ⋖ succ a :=
-  covby_succ_of_not_isMax <| not_isMax a
-#align order.covby_succ Order.covby_succ
+#print Order.covBy_succ /-
+theorem covBy_succ (a : α) : a ⋖ succ a :=
+  covBy_succ_of_not_isMax <| not_isMax a
+#align order.covby_succ Order.covBy_succ
 -/
 
 #print Order.Iio_succ /-
@@ -504,19 +504,19 @@ theorem le_le_succ_iff : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a :=
 #align order.le_le_succ_iff Order.le_le_succ_iff
 -/
 
-#print Covby.succ_eq /-
-theorem Covby.succ_eq (h : a ⋖ b) : succ a = b :=
+#print CovBy.succ_eq /-
+theorem CovBy.succ_eq (h : a ⋖ b) : succ a = b :=
   (succ_le_of_lt h.lt).eq_of_not_lt fun h' => h.2 (lt_succ_of_not_isMax h.lt.not_isMax) h'
-#align covby.succ_eq Covby.succ_eq
+#align covby.succ_eq CovBy.succ_eq
 -/
 
-#print Wcovby.le_succ /-
-theorem Wcovby.le_succ (h : a ⩿ b) : b ≤ succ a :=
+#print WCovBy.le_succ /-
+theorem WCovBy.le_succ (h : a ⩿ b) : b ≤ succ a :=
   by
   obtain h | rfl := h.covby_or_eq
   · exact h.succ_eq.ge
   · exact le_succ _
-#align wcovby.le_succ Wcovby.le_succ
+#align wcovby.le_succ WCovBy.le_succ
 -/
 
 #print Order.le_succ_iff_eq_or_le /-
@@ -603,10 +603,10 @@ theorem lt_succ_iff_eq_or_lt : a < succ b ↔ a = b ∨ a < b :=
 #align order.lt_succ_iff_eq_or_lt Order.lt_succ_iff_eq_or_lt
 -/
 
-#print Order.succ_eq_iff_covby /-
-theorem succ_eq_iff_covby : succ a = b ↔ a ⋖ b :=
-  ⟨by rintro rfl; exact covby_succ _, Covby.succ_eq⟩
-#align order.succ_eq_iff_covby Order.succ_eq_iff_covby
+#print Order.succ_eq_iff_covBy /-
+theorem succ_eq_iff_covBy : succ a = b ↔ a ⋖ b :=
+  ⟨by rintro rfl; exact covby_succ _, CovBy.succ_eq⟩
+#align order.succ_eq_iff_covby Order.succ_eq_iff_covBy
 -/
 
 #print Order.Iio_succ_eq_insert /-
@@ -697,7 +697,7 @@ instance [PartialOrder α] : Subsingleton (SuccOrder α) :=
     ext a
     by_cases ha : IsMax a
     · exact (@IsMax.succ_eq _ _ h₀ _ ha).trans ha.succ_eq.symm
-    · exact @Covby.succ_eq _ _ h₀ _ _ (covby_succ_of_not_is_max ha)⟩
+    · exact @CovBy.succ_eq _ _ h₀ _ _ (covby_succ_of_not_is_max ha)⟩
 
 section CompleteLattice
 
@@ -772,16 +772,16 @@ theorem pred_lt_iff_not_isMin : pred a < a ↔ ¬IsMin a :=
 alias ⟨_, pred_lt_of_not_is_min⟩ := pred_lt_iff_not_is_min
 #align order.pred_lt_of_not_is_min Order.pred_lt_of_not_isMin
 
-#print Order.pred_wcovby /-
-theorem pred_wcovby (a : α) : pred a ⩿ a :=
+#print Order.pred_wcovBy /-
+theorem pred_wcovBy (a : α) : pred a ⩿ a :=
   ⟨pred_le a, fun b hb => (le_of_pred_lt hb).not_lt⟩
-#align order.pred_wcovby Order.pred_wcovby
+#align order.pred_wcovby Order.pred_wcovBy
 -/
 
-#print Order.pred_covby_of_not_isMin /-
-theorem pred_covby_of_not_isMin (h : ¬IsMin a) : pred a ⋖ a :=
-  (pred_wcovby a).covby_of_lt <| pred_lt_of_not_isMin h
-#align order.pred_covby_of_not_is_min Order.pred_covby_of_not_isMin
+#print Order.pred_covBy_of_not_isMin /-
+theorem pred_covBy_of_not_isMin (h : ¬IsMin a) : pred a ⋖ a :=
+  (pred_wcovBy a).covBy_of_lt <| pred_lt_of_not_isMin h
+#align order.pred_covby_of_not_is_min Order.pred_covBy_of_not_isMin
 -/
 
 #print Order.pred_lt_iff_of_not_isMin /-
@@ -912,10 +912,10 @@ theorem pred_strictMono : StrictMono (pred : α → α) := fun a b => pred_lt_pr
 #align order.pred_strict_mono Order.pred_strictMono
 -/
 
-#print Order.pred_covby /-
-theorem pred_covby (a : α) : pred a ⋖ a :=
-  pred_covby_of_not_isMin <| not_isMin a
-#align order.pred_covby Order.pred_covby
+#print Order.pred_covBy /-
+theorem pred_covBy (a : α) : pred a ⋖ a :=
+  pred_covBy_of_not_isMin <| not_isMin a
+#align order.pred_covby Order.pred_covBy
 -/
 
 #print Order.Ioi_pred /-
@@ -992,19 +992,19 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
 #align order.pred_le_le_iff Order.pred_le_le_iff
 -/
 
-#print Covby.pred_eq /-
-theorem Covby.pred_eq {a b : α} (h : a ⋖ b) : pred b = a :=
+#print CovBy.pred_eq /-
+theorem CovBy.pred_eq {a b : α} (h : a ⋖ b) : pred b = a :=
   (le_pred_of_lt h.lt).eq_of_not_gt fun h' => h.2 h' <| pred_lt_of_not_isMin h.lt.not_isMin
-#align covby.pred_eq Covby.pred_eq
+#align covby.pred_eq CovBy.pred_eq
 -/
 
-#print Wcovby.pred_le /-
-theorem Wcovby.pred_le (h : a ⩿ b) : pred b ≤ a :=
+#print WCovBy.pred_le /-
+theorem WCovBy.pred_le (h : a ⩿ b) : pred b ≤ a :=
   by
   obtain h | rfl := h.covby_or_eq
   · exact h.pred_eq.le
   · exact pred_le _
-#align wcovby.pred_le Wcovby.pred_le
+#align wcovby.pred_le WCovBy.pred_le
 -/
 
 #print Order.pred_le_iff_eq_or_le /-
@@ -1079,10 +1079,10 @@ theorem pred_lt_iff_eq_or_lt : pred a < b ↔ a = b ∨ a < b :=
 #align order.pred_lt_iff_eq_or_lt Order.pred_lt_iff_eq_or_lt
 -/
 
-#print Order.pred_eq_iff_covby /-
-theorem pred_eq_iff_covby : pred b = a ↔ a ⋖ b :=
-  ⟨by rintro rfl; exact pred_covby _, Covby.pred_eq⟩
-#align order.pred_eq_iff_covby Order.pred_eq_iff_covby
+#print Order.pred_eq_iff_covBy /-
+theorem pred_eq_iff_covBy : pred b = a ↔ a ⋖ b :=
+  ⟨by rintro rfl; exact pred_covby _, CovBy.pred_eq⟩
+#align order.pred_eq_iff_covby Order.pred_eq_iff_covBy
 -/
 
 #print Order.Ioi_pred_eq_insert /-
@@ -1174,7 +1174,7 @@ instance [PartialOrder α] : Subsingleton (PredOrder α) :=
     ext a
     by_cases ha : IsMin a
     · exact (@IsMin.pred_eq _ _ h₀ _ ha).trans ha.pred_eq.symm
-    · exact @Covby.pred_eq _ _ h₀ _ _ (pred_covby_of_not_is_min ha)⟩
+    · exact @CovBy.pred_eq _ _ h₀ _ _ (pred_covby_of_not_is_min ha)⟩
 
 section CompleteLattice
 
@@ -1203,28 +1203,28 @@ variable [PartialOrder α] [SuccOrder α] [PredOrder α] {a b : α}
 #print Order.succ_pred_of_not_isMin /-
 @[simp]
 theorem succ_pred_of_not_isMin (h : ¬IsMin a) : succ (pred a) = a :=
-  (pred_covby_of_not_isMin h).succ_eq
+  (pred_covBy_of_not_isMin h).succ_eq
 #align order.succ_pred_of_not_is_min Order.succ_pred_of_not_isMin
 -/
 
 #print Order.pred_succ_of_not_isMax /-
 @[simp]
 theorem pred_succ_of_not_isMax (h : ¬IsMax a) : pred (succ a) = a :=
-  (covby_succ_of_not_isMax h).pred_eq
+  (covBy_succ_of_not_isMax h).pred_eq
 #align order.pred_succ_of_not_is_max Order.pred_succ_of_not_isMax
 -/
 
 #print Order.succ_pred /-
 @[simp]
 theorem succ_pred [NoMinOrder α] (a : α) : succ (pred a) = a :=
-  (pred_covby _).succ_eq
+  (pred_covBy _).succ_eq
 #align order.succ_pred Order.succ_pred
 -/
 
 #print Order.pred_succ /-
 @[simp]
 theorem pred_succ [NoMaxOrder α] (a : α) : pred (succ a) = a :=
-  (covby_succ _).pred_eq
+  (covBy_succ _).pred_eq
 #align order.pred_succ Order.pred_succ
 -/
 

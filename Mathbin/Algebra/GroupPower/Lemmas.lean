@@ -589,15 +589,19 @@ theorem WithBot.coe_nsmul [AddMonoid A] (a : A) (n : ℕ) : ((n • a : A) : Wit
 #align with_bot.coe_nsmul WithBot.coe_nsmul
 -/
 
+#print nsmul_eq_mul' /-
 theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n := by
   induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, MulZeroClass.mul_zero];
     rw [succ_nsmul', ih, Nat.cast_succ, mul_add, mul_one]]
-#align nsmul_eq_mul' nsmul_eq_mul'ₓ
+#align nsmul_eq_mul' nsmul_eq_mul'
+-/
 
+#print nsmul_eq_mul /-
 @[simp]
 theorem nsmul_eq_mul [NonAssocSemiring R] (n : ℕ) (a : R) : n • a = n * a := by
   rw [nsmul_eq_mul', (n.cast_commute a).Eq]
-#align nsmul_eq_mul nsmul_eq_mulₓ
+#align nsmul_eq_mul nsmul_eq_mul
+-/
 
 #print NonUnitalNonAssocSemiring.nat_smulCommClass /-
 /-- Note that `add_comm_monoid.nat_smul_comm_class` requires stronger assumptions on `R`. -/
@@ -723,13 +727,15 @@ theorem zsmul_int_one (n : ℤ) : n • 1 = n := by simp
 #align zsmul_int_one zsmul_int_one
 -/
 
+#print Int.cast_pow /-
 @[simp, norm_cast]
 theorem Int.cast_pow [Ring R] (n : ℤ) (m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
   by
   induction' m with m ih
   · rw [pow_zero, pow_zero, Int.cast_one]
   · rw [pow_succ, pow_succ, Int.cast_mul, ih]
-#align int.cast_pow Int.cast_powₓ
+#align int.cast_pow Int.cast_pow
+-/
 
 #print neg_one_pow_eq_pow_mod_two /-
 theorem neg_one_pow_eq_pow_mod_two [Ring R] {n : ℕ} : (-1 : R) ^ n = (-1) ^ (n % 2) := by
