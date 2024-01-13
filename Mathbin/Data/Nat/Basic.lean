@@ -180,10 +180,10 @@ theorem succ_pos' {n : ℕ} : 0 < succ n :=
 #align nat.succ_pos' Nat.succ_pos'
 -/
 
-#print Nat.succ_inj' /-
-theorem succ_inj' {n m : ℕ} : succ n = succ m ↔ n = m :=
+#print Nat.succ_inj /-
+theorem succ_inj {n m : ℕ} : succ n = succ m ↔ n = m :=
   ⟨succ.inj, congr_arg _⟩
-#align nat.succ_inj' Nat.succ_inj'
+#align nat.succ_inj' Nat.succ_inj
 -/
 
 #print Nat.succ_injective /-

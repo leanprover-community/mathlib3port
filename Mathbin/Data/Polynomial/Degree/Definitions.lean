@@ -567,7 +567,7 @@ theorem eq_X_add_C_of_degree_le_one (h : degree p ≤ 1) : p = C (p.coeff 1) * X
       Nat.casesOn n (by simp [coeff_C]) fun m =>
         by
         have : degree p < m.succ.succ := lt_of_le_of_lt h (by decide)
-        simp [coeff_eq_zero_of_degree_lt this, coeff_C, Nat.succ_ne_zero, coeff_X, Nat.succ_inj',
+        simp [coeff_eq_zero_of_degree_lt this, coeff_C, Nat.succ_ne_zero, coeff_X, Nat.succ_inj,
           @eq_comm ℕ 0]
 #align polynomial.eq_X_add_C_of_degree_le_one Polynomial.eq_X_add_C_of_degree_le_one
 -/

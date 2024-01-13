@@ -232,7 +232,7 @@ theorem next_getLast_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
   cases' l with hd tl
   · simpa using hk
   · rw [nodup_iff_nth_le_inj] at hl 
-    rw [length, Nat.succ_inj']
+    rw [length, Nat.succ_inj]
     apply hl
     simpa [init_eq_take, nth_le_take', last_eq_nth_le] using hk'
 #align list.next_last_cons List.next_getLast_cons

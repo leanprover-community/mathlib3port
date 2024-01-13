@@ -128,7 +128,7 @@ theorem nodup_antidiagonalTuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n)
     · rw [List.mem_map] at hx₁ hx₂ 
       obtain ⟨⟨x₁, hx₁, rfl⟩, ⟨x₂, hx₂, h₁₂⟩⟩ := hx₁, hx₂
       dsimp at h₁₂ 
-      rw [Fin.cons_eq_cons, Nat.succ_inj'] at h₁₂ 
+      rw [Fin.cons_eq_cons, Nat.succ_inj] at h₁₂ 
       obtain ⟨h₁₂, rfl⟩ := h₁₂
       rw [h₁₂] at h 
       exact h (List.mem_map_of_mem _ hx₁) (List.mem_map_of_mem _ hx₂)
@@ -195,7 +195,7 @@ theorem antidiagonalTuple_pairwise_pi_lex :
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp
         exact Or.inl (Nat.zero_lt_succ _)
       dsimp
-      simp_rw [Nat.succ_inj', Nat.succ_lt_succ_iff]
+      simp_rw [Nat.succ_inj, Nat.succ_lt_succ_iff]
       exact n_ih
 #align list.nat.antidiagonal_tuple_pairwise_pi_lex List.Nat.antidiagonalTuple_pairwise_pi_lex
 -/

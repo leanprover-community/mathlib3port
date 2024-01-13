@@ -853,21 +853,22 @@ theorem isOpen_inter_preimage_symm {s : Set α} (hs : IsOpen s) : IsOpen (e.targ
 #align local_homeomorph.preimage_open_of_open_symm PartialHomeomorph.isOpen_inter_preimage_symm
 -/
 
-#print PartialHomeomorph.image_isOpen_of_isOpen /-
+#print PartialHomeomorph.isOpen_image_of_subset_source /-
 /-- The image of an open set in the source is open. -/
-theorem image_isOpen_of_isOpen {s : Set α} (hs : IsOpen s) (h : s ⊆ e.source) : IsOpen (e '' s) :=
+theorem isOpen_image_of_subset_source {s : Set α} (hs : IsOpen s) (h : s ⊆ e.source) :
+    IsOpen (e '' s) :=
   by
   have : e '' s = e.target ∩ e.symm ⁻¹' s := e.to_local_equiv.image_eq_target_inter_inv_preimage h
   rw [this]
   exact e.continuous_on_symm.preimage_open_of_open e.open_target hs
-#align local_homeomorph.image_open_of_open PartialHomeomorph.image_isOpen_of_isOpen
+#align local_homeomorph.image_open_of_open PartialHomeomorph.isOpen_image_of_subset_source
 -/
 
-#print PartialHomeomorph.image_isOpen_of_isOpen' /-
+#print PartialHomeomorph.isOpen_image_source_inter /-
 /-- The image of the restriction of an open set to the source is open. -/
-theorem image_isOpen_of_isOpen' {s : Set α} (hs : IsOpen s) : IsOpen (e '' (e.source ∩ s)) :=
-  image_isOpen_of_isOpen _ (IsOpen.inter e.open_source hs) (inter_subset_left _ _)
-#align local_homeomorph.image_open_of_open' PartialHomeomorph.image_isOpen_of_isOpen'
+theorem isOpen_image_source_inter {s : Set α} (hs : IsOpen s) : IsOpen (e '' (e.source ∩ s)) :=
+  isOpen_image_of_subset_source _ (IsOpen.inter e.open_source hs) (inter_subset_left _ _)
+#align local_homeomorph.image_open_of_open' PartialHomeomorph.isOpen_image_source_inter
 -/
 
 #print PartialHomeomorph.ofContinuousOpenRestrict /-

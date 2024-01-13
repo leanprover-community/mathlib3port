@@ -96,8 +96,8 @@ theorem LinearIndependent.localization_localization {ι : Type _} {v : ι → A}
 #align linear_independent.localization_localization LinearIndependent.localization_localization
 -/
 
-#print SpanEqTop.localization_localization /-
-theorem SpanEqTop.localization_localization {v : Set A} (hv : span R v = ⊤) :
+#print span_eq_top_localization_localization /-
+theorem span_eq_top_localization_localization {v : Set A} (hv : span R v = ⊤) :
     span Rₛ (algebraMap A Aₛ '' v) = ⊤ := by
   rw [eq_top_iff]
   rintro a' -
@@ -111,7 +111,7 @@ theorem SpanEqTop.localization_localization {v : Set A} (hv : span R v = ⊤) :
   rw [← Algebra.coe_linearMap, ← LinearMap.coe_restrictScalars R, ← LinearMap.map_span]
   exact mem_map_of_mem (hv.symm ▸ mem_top)
   · infer_instance
-#align span_eq_top.localization_localization SpanEqTop.localization_localization
+#align span_eq_top.localization_localization span_eq_top_localization_localization
 -/
 
 #print Basis.localizationLocalization /-
@@ -122,7 +122,7 @@ A suitable instance for `[algebra A Aₛ]` is `localization_algebra`.
 noncomputable def Basis.localizationLocalization {ι : Type _} (b : Basis ι R A) : Basis ι Rₛ Aₛ :=
   Basis.mk (b.LinearIndependent.localization_localization _ S _)
     (by
-      rw [Set.range_comp, SpanEqTop.localization_localization Rₛ S Aₛ b.span_eq]
+      rw [Set.range_comp, span_eq_top_localization_localization Rₛ S Aₛ b.span_eq]
       exact le_rfl)
 #align basis.localization_localization Basis.localizationLocalization
 -/

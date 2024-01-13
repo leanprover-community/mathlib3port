@@ -961,7 +961,7 @@ theorem jordan_holder (s₁ s₂ : CompositionSeries X) (hb : s₁.bot = s₂.bo
         (ht.symm ▸ is_maximal_erase_top_top h0s₂)
         (hb.symm ▸ s₂.bot_erase_top ▸ bot_le_of_mem (top_mem _)) with
       ⟨t, htb, htl, htt, hteq⟩
-    have := ih t s₂.erase_top (by simp [htb, ← hb]) htt (Nat.succ_inj'.1 (htl.trans hle))
+    have := ih t s₂.erase_top (by simp [htb, ← hb]) htt (Nat.succ_inj.1 (htl.trans hle))
     refine' hteq.trans _
     conv_rhs => rw [eq_snoc_erase_top h0s₂]
     simp only [ht]

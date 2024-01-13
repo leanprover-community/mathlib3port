@@ -1123,7 +1123,7 @@ theorem moebius_mul_coe_zeta : (μ * ζ : ArithmeticFunction ℤ) = 1 :=
   · intro p n hp hn
     rw [coe_mul_zeta_apply, sum_divisors_prime_pow hp, sum_range_succ']
     simp_rw [Function.Embedding.coeFn_mk, pow_zero, moebius_apply_one,
-      moebius_apply_prime_pow hp (Nat.succ_ne_zero _), Nat.succ_inj', sum_ite_eq', mem_range,
+      moebius_apply_prime_pow hp (Nat.succ_ne_zero _), Nat.succ_inj, sum_ite_eq', mem_range,
       if_pos hn, add_left_neg]
     rw [one_apply_ne]
     rw [Ne.def, pow_eq_one_iff]

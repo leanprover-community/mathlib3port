@@ -1664,7 +1664,7 @@ theorem count_permutations'Aux_self [DecidableEq α] (l : List α) (x : α) :
   · rw [permutations'_aux, count_cons_self]
     by_cases hx : x = y
     · subst hx
-      simpa [take_while, Nat.succ_inj'] using IH _
+      simpa [take_while, Nat.succ_inj] using IH _
     · rw [take_while]
       rw [if_neg hx]
       cases' permutations'_aux x l with a as

@@ -995,11 +995,13 @@ end Sub
 
 section Inv
 
-#print NNReal.sum_div /-
+/- warning: nnreal.sum_div clashes with finset.sum_div -> Finset.sum_div
+Case conversion may be inaccurate. Consider using '#align nnreal.sum_div Finset.sum_divₓ'. -/
+#print Finset.sum_div /-
 theorem sum_div {ι} (s : Finset ι) (f : ι → ℝ≥0) (b : ℝ≥0) :
     (∑ i in s, f i) / b = ∑ i in s, f i / b :=
   Finset.sum_div
-#align nnreal.sum_div NNReal.sum_div
+#align nnreal.sum_div Finset.sum_div
 -/
 
 #print NNReal.inv_le /-

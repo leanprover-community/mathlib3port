@@ -185,10 +185,10 @@ theorem closure_three_cycles_eq_alternating :
     · simp [List.length_eq_zero.1 hn, one_mem]
     rw [Nat.mul_succ] at hn 
     obtain ⟨a, l, rfl⟩ := l.exists_of_length_succ hn
-    rw [List.length_cons, Nat.succ_inj'] at hn 
+    rw [List.length_cons, Nat.succ_inj] at hn 
     obtain ⟨b, l, rfl⟩ := l.exists_of_length_succ hn
     rw [List.prod_cons, List.prod_cons, ← mul_assoc]
-    rw [List.length_cons, Nat.succ_inj'] at hn 
+    rw [List.length_cons, Nat.succ_inj] at hn 
     exact
       mul_mem
         (is_swap.mul_mem_closure_three_cycles (hl a (List.mem_cons_self a _))

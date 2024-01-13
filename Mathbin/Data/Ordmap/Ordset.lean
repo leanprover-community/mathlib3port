@@ -1475,7 +1475,7 @@ theorem Valid'.node4L {l x m y r o₁ o₂} (hl : Valid' o₁ l ↑x) (hm : Vali
       balanced_sz (size mr) (size r) ∧ balanced_sz (size l + size ml + 1) (size mr + size r + 1)
   exact valid'.node' (hl.node' hm.left this.1) (hm.right.node' hr this.2.1) this.2.2
   rcases H with (⟨l0, m1, r0⟩ | ⟨l0, mr₁, lr₁, lr₂, mr₂⟩)
-  · rw [hm.2.size_eq, Nat.succ_inj', add_eq_zero_iff] at m1 
+  · rw [hm.2.size_eq, Nat.succ_inj, add_eq_zero_iff] at m1 
     rw [l0, m1.1, m1.2]; rcases size r with (_ | _ | _) <;> exact by decide
   · cases' Nat.eq_zero_or_pos (size r) with r0 r0
     · rw [r0] at mr₂ ; cases not_le_of_lt Hm mr₂
