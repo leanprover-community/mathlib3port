@@ -173,7 +173,6 @@ theorem Subalgebra.isSimpleOrder_of_finrank_prime (A) [Ring A] [IsDomain A] [Alg
 #align finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.isSimpleOrder_of_finrank_prime
 -/
 
-#print LinearMap.finite_dimensional'' /-
 -- TODO: `intermediate_field` version 
 -- TODO: generalize by removing [finite_dimensional F K]
 -- V = ⊕F,
@@ -183,7 +182,6 @@ instance LinearMap.finite_dimensional'' (F : Type u) (K : Type v) (V : Type w) [
     FiniteDimensional K (V →ₗ[F] K) :=
   right F _ _
 #align linear_map.finite_dimensional'' LinearMap.finite_dimensional''
--/
 
 #print FiniteDimensional.finrank_linear_map' /-
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
