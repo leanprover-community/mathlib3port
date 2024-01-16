@@ -33,7 +33,7 @@ def abs (f : C(α, β)) : C(α, β) where toFun x := |f x|
 #align continuous_map.abs ContinuousMap.abs
 
 -- see Note [lower instance priority]
-instance (priority := 100) : Abs C(α, β) :=
+instance (priority := 100) : HasAbs C(α, β) :=
   ⟨fun f => abs f⟩
 
 #print ContinuousMap.abs_apply /-

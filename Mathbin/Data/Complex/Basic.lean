@@ -1442,7 +1442,7 @@ end ComplexOrder
 /-! ### Cauchy sequences -/
 
 
-local notation "abs'" => Abs.abs
+local notation "abs'" => abs
 
 #print Complex.isCauSeq_re /-
 theorem isCauSeq_re (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).re := fun ε ε0 =>

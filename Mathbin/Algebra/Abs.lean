@@ -35,16 +35,14 @@ absolute
 -/
 
 
-#print Abs /-
 /--
 Absolute value is a unary operator with properties similar to the absolute value of a real number.
 -/
-class Abs (α : Type _) where
+class HasAbs (α : Type _) where
   abs : α → α
-#align has_abs Abs
--/
+#align has_abs HasAbs
 
-export Abs (abs)
+export HasAbs (abs)
 
 #print PosPart /-
 /-- The positive part of an element admiting a decomposition into positive and negative parts.

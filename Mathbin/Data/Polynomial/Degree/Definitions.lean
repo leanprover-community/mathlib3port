@@ -732,10 +732,10 @@ theorem nextCoeff_C_eq_zero (c : R) : nextCoeff (C c) = 0 := by rw [next_coeff];
 #align polynomial.next_coeff_C_eq_zero Polynomial.nextCoeff_C_eq_zero
 -/
 
-#print Polynomial.nextCoeff_of_pos_natDegree /-
-theorem nextCoeff_of_pos_natDegree (p : R[X]) (hp : 0 < p.natDegree) :
+#print Polynomial.nextCoeff_of_natDegree_pos /-
+theorem nextCoeff_of_natDegree_pos (p : R[X]) (hp : 0 < p.natDegree) :
     nextCoeff p = p.coeff (p.natDegree - 1) := by rw [next_coeff, if_neg]; contrapose! hp; simpa
-#align polynomial.next_coeff_of_pos_nat_degree Polynomial.nextCoeff_of_pos_natDegree
+#align polynomial.next_coeff_of_pos_nat_degree Polynomial.nextCoeff_of_natDegree_pos
 -/
 
 variable {p q : R[X]} {ι : Type _}

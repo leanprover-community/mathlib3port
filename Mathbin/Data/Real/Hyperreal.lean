@@ -759,7 +759,7 @@ theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (|r| : 
   ⟨fun hI r => coe_abs r ▸ infinitePos_abs_iff_infinite.mp hI |r|, fun hR =>
     Or.cases_on (max_choice x (-x))
       (fun h => Or.inl fun r => lt_of_le_of_lt (le_abs_self _) (h ▸ hR r)) fun h =>
-      Or.inr fun r => neg_lt_neg_iff.mp <| lt_of_le_of_lt (neg_le_abs_self _) (h ▸ hR r)⟩
+      Or.inr fun r => neg_lt_neg_iff.mp <| lt_of_le_of_lt (neg_le_abs _) (h ▸ hR r)⟩
 #align hyperreal.infinite_iff_abs_lt_abs Hyperreal.infinite_iff_abs_lt_abs
 -/
 

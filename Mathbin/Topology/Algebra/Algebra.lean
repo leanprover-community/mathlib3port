@@ -99,11 +99,13 @@ variable {A : Type u} [TopologicalSpace A]
 
 variable [Semiring A] [Algebra R A]
 
-#print Subalgebra.continuousSMul /-
-instance Subalgebra.continuousSMul [TopologicalSpace R] [ContinuousSMul R A] (s : Subalgebra R A) :
-    ContinuousSMul R s :=
+/- warning: subalgebra.has_continuous_smul clashes with submodule.has_continuous_smul -> SMulMemClass.continuousSMul
+Case conversion may be inaccurate. Consider using '#align subalgebra.has_continuous_smul SMulMemClass.continuousSMulₓ'. -/
+#print SMulMemClass.continuousSMul /-
+instance SMulMemClass.continuousSMul [TopologicalSpace R] [ContinuousSMul R A]
+    (s : Subalgebra R A) : ContinuousSMul R s :=
   s.toSubmodule.ContinuousSMul
-#align subalgebra.has_continuous_smul Subalgebra.continuousSMul
+#align subalgebra.has_continuous_smul SMulMemClass.continuousSMul
 -/
 
 variable [TopologicalSemiring A]

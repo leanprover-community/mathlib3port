@@ -143,8 +143,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.re|)))
+          f =O[comap (abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.re|)))
     (hle_a : ∀ z : ℂ, im z = a → ‖f z‖ ≤ C) (hle_b : ∀ z, im z = b → ‖f z‖ ≤ C) (hza : a ≤ im z)
     (hzb : im z ≤ b) : ‖f z‖ ≤ C :=
   by
@@ -282,8 +281,7 @@ theorem eq_zero_on_horizontal_strip (hd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b)
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.re|)))
+          f =O[comap (abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.re|)))
     (ha : ∀ z : ℂ, z.im = a → f z = 0) (hb : ∀ z : ℂ, z.im = b → f z = 0) :
     EqOn f 0 (im ⁻¹' Icc a b) := fun z hz =>
   norm_le_zero_iff.1 <|
@@ -307,14 +305,12 @@ theorem eqOn_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻�
     (hBf :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.re|)))
+          f =O[comap (abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.re|)))
     (hdg : DiffContOnCl ℂ g (im ⁻¹' Ioo a b))
     (hBg :
       ∃ c < π / (b - a),
         ∃ B,
-          g =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.re|)))
+          g =O[comap (abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.re|)))
     (ha : ∀ z : ℂ, z.im = a → f z = g z) (hb : ∀ z : ℂ, z.im = b → f z = g z) :
     EqOn f g (im ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
@@ -344,8 +340,7 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.im|)))
+          f =O[comap (abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.im|)))
     (hle_a : ∀ z : ℂ, re z = a → ‖f z‖ ≤ C) (hle_b : ∀ z, re z = b → ‖f z‖ ≤ C) (hza : a ≤ re z)
     (hzb : re z ≤ b) : ‖f z‖ ≤ C :=
   by
@@ -357,8 +352,8 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
       (fun z hz => hle_a _ _) (fun z hz => hle_b _ _) _ _
   · refine' Exists₃.imp (fun c hc B hO => _) hB
     have :
-      tendsto (fun z => z * -I) (comap (Abs.abs ∘ re) at_top ⊓ 𝓟 (im ⁻¹' Ioo a b))
-        (comap (Abs.abs ∘ im) at_top ⊓ 𝓟 (re ⁻¹' Ioo a b)) :=
+      tendsto (fun z => z * -I) (comap (abs ∘ re) at_top ⊓ 𝓟 (im ⁻¹' Ioo a b))
+        (comap (abs ∘ im) at_top ⊓ 𝓟 (re ⁻¹' Ioo a b)) :=
       by
       refine' (tendsto_comap_iff.2 _).inf H.tendsto
       simpa [(· ∘ ·)] using tendsto_comap
@@ -381,8 +376,7 @@ theorem eq_zero_on_vertical_strip (hd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hB :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.im|)))
+          f =O[comap (abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.im|)))
     (ha : ∀ z : ℂ, re z = a → f z = 0) (hb : ∀ z : ℂ, re z = b → f z = 0) :
     EqOn f 0 (re ⁻¹' Icc a b) := fun z hz =>
   norm_le_zero_iff.1 <|
@@ -406,14 +400,12 @@ theorem eqOn_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹'
     (hBf :
       ∃ c < π / (b - a),
         ∃ B,
-          f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.im|)))
+          f =O[comap (abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.im|)))
     (hdg : DiffContOnCl ℂ g (re ⁻¹' Ioo a b))
     (hBg :
       ∃ c < π / (b - a),
         ∃ B,
-          g =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z =>
-            expR (B * expR (c * |z.im|)))
+          g =O[comap (abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z => expR (B * expR (c * |z.im|)))
     (ha : ∀ z : ℂ, re z = a → f z = g z) (hb : ∀ z : ℂ, re z = b → f z = g z) :
     EqOn f g (re ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1

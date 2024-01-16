@@ -110,10 +110,10 @@ open LatticeOrderedCommGroup HasSolidNorm
 theorem dual_solid (a b : α) (h : b ⊓ -b ≤ a ⊓ -a) : ‖a‖ ≤ ‖b‖ :=
   by
   apply solid
-  rw [abs_eq_sup_neg]
+  rw [abs]
   nth_rw 1 [← neg_neg a]
   rw [← neg_inf]
-  rw [abs_eq_sup_neg]
+  rw [abs]
   nth_rw 1 [← neg_neg b]
   rwa [← neg_inf, neg_le_neg_iff, @inf_comm _ _ _ b, @inf_comm _ _ _ a]
 #align dual_solid dual_solid
@@ -219,7 +219,7 @@ instance (priority := 100) NormedLatticeAddCommGroup.toTopologicalLattice : Topo
 
 #print norm_abs_sub_abs /-
 theorem norm_abs_sub_abs (a b : α) : ‖|a| - |b|‖ ≤ ‖a - b‖ :=
-  solid (LatticeOrderedCommGroup.abs_abs_sub_abs_le _ _)
+  solid (abs_abs_sub_abs_le _ _)
 #align norm_abs_sub_abs norm_abs_sub_abs
 -/
 

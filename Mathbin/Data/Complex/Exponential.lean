@@ -21,7 +21,7 @@ hyperbolic sine, hyperbolic cosine, and hyperbolic tangent functions.
 -/
 
 
-local notation "abs'" => Abs.abs
+local notation "abs'" => abs
 
 open IsAbsoluteValue
 
@@ -383,7 +383,7 @@ open CauSeq
 namespace Complex
 
 #print Complex.isCauSeq_abs_exp /-
-theorem isCauSeq_abs_exp (z : ℂ) : IsCauSeq Abs.abs fun n => ∑ m in range n, abs (z ^ m / m !) :=
+theorem isCauSeq_abs_exp (z : ℂ) : IsCauSeq abs fun n => ∑ m in range n, abs (z ^ m / m !) :=
   let ⟨n, hn⟩ := exists_nat_gt (abs z)
   have hn0 : (0 : ℝ) < n := lt_of_le_of_lt (abs.NonNeg _) hn
   series_ratio_test n (Complex.abs z / n) (div_nonneg (abs.NonNeg _) (le_of_lt hn0))
@@ -1920,7 +1920,7 @@ open IsAbsoluteValue
 #print Real.sum_le_exp_of_nonneg /-
 theorem sum_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : ∑ i in range n, x ^ i / i ! ≤ exp x :=
   calc
-    ∑ i in range n, x ^ i / i ! ≤ limUnder (⟨_, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
+    ∑ i in range n, x ^ i / i ! ≤ limUnder (⟨_, isCauSeq_re (exp' x)⟩ : CauSeq ℝ abs) :=
       by
       refine' le_lim (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
       simp only [exp', const_apply, mk_to_fun, re_sum]

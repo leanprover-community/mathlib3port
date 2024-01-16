@@ -333,7 +333,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
       simp [F, this]
     apply Convex.norm_image_sub_le_of_norm_deriv_le this B (convex_Icc _ _) _ _
     · simp
-    · simp [le_abs_self x, neg_le.mp (neg_le_abs_self x)]
+    · simp [le_abs_self x, neg_le.mp (neg_le_abs x)]
   -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'] using C
 #align real.abs_log_sub_add_sum_range_le Real.abs_log_sub_add_sum_range_le

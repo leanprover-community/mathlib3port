@@ -25,22 +25,20 @@ section CovariantAddLe
 
 section Neg
 
-#print Inv.toHasAbs /-
 -- see Note [lower instance priority]
 /-- `abs a` is the absolute value of `a`. -/
 @[to_additive "`abs a` is the absolute value of `a`"]
-instance (priority := 100) Inv.toHasAbs [Inv α] [Sup α] : Abs α :=
+instance (priority := 100) Inv.toHasAbs [Inv α] [Sup α] : HasAbs α :=
   ⟨fun a => a ⊔ a⁻¹⟩
 #align has_inv.to_has_abs Inv.toHasAbs
 #align has_neg.to_has_abs Neg.toHasAbs
--/
 
-#print abs_eq_sup_inv /-
+#print mabs /-
 @[to_additive]
-theorem abs_eq_sup_inv [Inv α] [Sup α] (a : α) : |a| = a ⊔ a⁻¹ :=
+theorem mabs [Inv α] [Sup α] (a : α) : |a| = a ⊔ a⁻¹ :=
   rfl
-#align abs_eq_sup_inv abs_eq_sup_inv
-#align abs_eq_sup_neg abs_eq_sup_neg
+#align abs_eq_sup_inv mabs
+#align has_abs.abs abs
 -/
 
 variable [Neg α] [LinearOrder α] {a b : α}
@@ -75,10 +73,10 @@ theorem le_abs_self (a : α) : a ≤ |a| :=
 #align le_abs_self le_abs_self
 -/
 
-#print neg_le_abs_self /-
-theorem neg_le_abs_self (a : α) : -a ≤ |a| :=
+#print neg_le_abs /-
+theorem neg_le_abs (a : α) : -a ≤ |a| :=
   le_max_right _ _
-#align neg_le_abs_self neg_le_abs_self
+#align neg_le_abs_self neg_le_abs
 -/
 
 #print lt_abs /-
@@ -198,8 +196,8 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < |a| :=
 #align abs_pos_of_neg abs_pos_of_neg
 -/
 
-#print neg_abs_le_self /-
-theorem neg_abs_le_self (a : α) : -|a| ≤ a :=
+#print neg_abs_le /-
+theorem neg_abs_le (a : α) : -|a| ≤ a :=
   by
   cases' le_total 0 a with h h
   ·
@@ -211,7 +209,7 @@ theorem neg_abs_le_self (a : α) : -|a| ≤ a :=
     calc
       -|a| = - -a := congr_arg Neg.neg (abs_of_nonpos h)
       _ ≤ a := (neg_neg a).le
-#align neg_abs_le_self neg_abs_le_self
+#align neg_abs_le_self neg_abs_le
 -/
 
 #print add_abs_nonneg /-
@@ -219,12 +217,12 @@ theorem add_abs_nonneg (a : α) : 0 ≤ a + |a| :=
   by
   rw [← add_right_neg a]
   apply add_le_add_left
-  exact neg_le_abs_self a
+  exact neg_le_abs a
 #align add_abs_nonneg add_abs_nonneg
 -/
 
 #print neg_abs_le_neg /-
-theorem neg_abs_le_neg (a : α) : -|a| ≤ -a := by simpa using neg_abs_le_self (-a)
+theorem neg_abs_le_neg (a : α) : -|a| ≤ -a := by simpa using neg_abs_le (-a)
 #align neg_abs_le_neg neg_abs_le_neg
 -/
 
@@ -232,7 +230,7 @@ theorem neg_abs_le_neg (a : α) : -|a| ≤ -a := by simpa using neg_abs_le_self 
 @[simp]
 theorem abs_nonneg (a : α) : 0 ≤ |a| :=
   (le_total 0 a).elim (fun h => h.trans (le_abs_self a)) fun h =>
-    (neg_nonneg.2 h).trans <| neg_le_abs_self a
+    (neg_nonneg.2 h).trans <| neg_le_abs a
 #align abs_nonneg abs_nonneg
 -/
 
@@ -354,8 +352,7 @@ theorem apply_abs_le_mul_of_one_le {β : Type _} [MulOneClass β] [Preorder β]
 -/
 theorem abs_add (a b : α) : |a + b| ≤ |a| + |b| :=
   abs_le.2
-    ⟨(neg_add |a| |b|).symm ▸
-        add_le_add (neg_le.2 <| neg_le_abs_self _) (neg_le.2 <| neg_le_abs_self _),
+    ⟨(neg_add |a| |b|).symm ▸ add_le_add (neg_le.2 <| neg_le_abs _) (neg_le.2 <| neg_le_abs _),
       add_le_add (le_abs_self _) (le_abs_self _)⟩
 #align abs_add abs_add
 -/
@@ -434,8 +431,7 @@ theorem abs_eq (hb : 0 ≤ b) : |a| = b ↔ a = b ∨ a = -b :=
 #print abs_le_max_abs_abs /-
 theorem abs_le_max_abs_abs (hab : a ≤ b) (hbc : b ≤ c) : |b| ≤ max |a| |c| :=
   abs_le'.2
-    ⟨by simp [hbc.trans (le_abs_self c)], by
-      simp [(neg_le_neg_iff.mpr hab).trans (neg_le_abs_self a)]⟩
+    ⟨by simp [hbc.trans (le_abs_self c)], by simp [(neg_le_neg_iff.mpr hab).trans (neg_le_abs a)]⟩
 #align abs_le_max_abs_abs abs_le_max_abs_abs
 -/
 

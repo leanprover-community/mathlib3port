@@ -86,7 +86,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
           (@ae_of_all _ m0 _ μ (fun x => le_abs_self (f x) : ∀ x, f x ≤ |f x|)),
         eventually_le.trans (condexp_neg f).symm.le
           (@condexp_mono _ m m0 _ _ _ _ _ _ _ _ hf.neg hf.abs
-            (@ae_of_all _ m0 _ μ (fun x => neg_le_abs_self (f x) : ∀ x, -f x ≤ |f x|)))] with
+            (@ae_of_all _ m0 _ μ (fun x => neg_le_abs (f x) : ∀ x, -f x ≤ |f x|)))] with
         x hx₁ hx₂
       exact abs_le_abs hx₁ hx₂
     _ = snorm f 1 μ :=

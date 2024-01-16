@@ -144,20 +144,18 @@ theorem eraseLead_support_card_lt (h : f ≠ 0) : (eraseLead f).support.card < f
 #align polynomial.erase_lead_support_card_lt Polynomial.eraseLead_support_card_lt
 -/
 
-#print Polynomial.eraseLead_card_support /-
 theorem eraseLead_card_support {c : ℕ} (fc : f.support.card = c) :
     f.eraseLead.support.card = c - 1 := by
   by_cases f0 : f = 0
   · rw [← fc, f0, erase_lead_zero, support_zero, card_empty]
   · rw [erase_lead_support, card_erase_of_mem (nat_degree_mem_support_of_nonzero f0), fc]
 #align polynomial.erase_lead_card_support Polynomial.eraseLead_card_support
--/
 
-#print Polynomial.eraseLead_card_support' /-
-theorem eraseLead_card_support' {c : ℕ} (fc : f.support.card = c + 1) :
+#print Polynomial.card_support_eraseLead' /-
+theorem card_support_eraseLead' {c : ℕ} (fc : f.support.card = c + 1) :
     f.eraseLead.support.card = c :=
   eraseLead_card_support fc
-#align polynomial.erase_lead_card_support' Polynomial.eraseLead_card_support'
+#align polynomial.erase_lead_card_support' Polynomial.card_support_eraseLead'
 -/
 
 #print Polynomial.eraseLead_monomial /-
