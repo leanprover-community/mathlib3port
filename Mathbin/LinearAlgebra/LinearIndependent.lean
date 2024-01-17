@@ -296,7 +296,7 @@ theorem linearIndependent_of_subsingleton [Subsingleton R] : LinearIndependent R
 #print linearIndependent_equiv /-
 theorem linearIndependent_equiv (e : ι ≃ ι') {f : ι' → M} :
     LinearIndependent R (f ∘ e) ↔ LinearIndependent R f :=
-  ⟨fun h => Function.comp.right_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.Injective, fun h =>
+  ⟨fun h => Function.comp_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.Injective, fun h =>
     h.comp _ e.Injective⟩
 #align linear_independent_equiv linearIndependent_equiv
 -/

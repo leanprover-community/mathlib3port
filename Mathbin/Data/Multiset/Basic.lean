@@ -3510,7 +3510,7 @@ for more discussion.
 @[simp]
 theorem map_count_True_eq_filter_card (s : Multiset α) (p : α → Prop) [DecidablePred p] :
     (s.map p).count True = (s.filterₓ p).card := by
-  simp only [count_eq_card_filter_eq, map_filter, card_map, Function.comp.left_id, eq_true_eq_id]
+  simp only [count_eq_card_filter_eq, map_filter, card_map, Function.id_comp, eq_true_eq_id]
 #align multiset.map_count_true_eq_filter_card Multiset.map_count_True_eq_filter_card
 -/
 

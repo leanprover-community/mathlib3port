@@ -751,7 +751,7 @@ theorem Basis.det_reindex' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : B
 #print Basis.det_reindex_symm /-
 theorem Basis.det_reindex_symm {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Basis ι R M)
     (v : ι → M) (e : ι' ≃ ι) : (b.reindex e.symm).det (v ∘ e) = b.det v := by
-  rw [Basis.det_reindex, Function.comp.assoc, e.self_comp_symm, Function.comp.right_id]
+  rw [Basis.det_reindex, Function.comp.assoc, e.self_comp_symm, Function.comp_id]
 #align basis.det_reindex_symm Basis.det_reindex_symm
 -/
 

@@ -202,30 +202,30 @@ noncomputable instance : CompleteBooleanAlgebra Bool :=
 
 variable {α : Type _}
 
-#print Directed.fintype_le /-
-theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
+#print Directed.finite_le /-
+theorem Directed.finite_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
     [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
   classical
   obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
   exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
-#align directed.fintype_le Directed.fintype_le
+#align directed.fintype_le Directed.finite_le
 -/
 
-#print Fintype.exists_le /-
-theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β]
+#print Finite.exists_le /-
+theorem Finite.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β]
     (f : β → α) : ∃ M, ∀ i, f i ≤ M :=
-  directed_id.fintype_le _
-#align fintype.exists_le Fintype.exists_le
+  directed_id.finite_le _
+#align fintype.exists_le Finite.exists_le
 -/
 
-#print Fintype.bddAbove_range /-
-theorem Fintype.bddAbove_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _}
+#print Finite.bddAbove_range /-
+theorem Finite.bddAbove_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _}
     [Fintype β] (f : β → α) : BddAbove (Set.range f) :=
   by
-  obtain ⟨M, hM⟩ := Fintype.exists_le f
+  obtain ⟨M, hM⟩ := Finite.exists_le f
   refine' ⟨M, fun a ha => _⟩
   obtain ⟨b, rfl⟩ := ha
   exact hM b
-#align fintype.bdd_above_range Fintype.bddAbove_range
+#align fintype.bdd_above_range Finite.bddAbove_range
 -/
 

@@ -219,7 +219,7 @@ theorem algebraicIndependent_of_subsingleton [Subsingleton R] : AlgebraicIndepen
 #print algebraicIndependent_equiv /-
 theorem algebraicIndependent_equiv (e : ι ≃ ι') {f : ι' → A} :
     AlgebraicIndependent R (f ∘ e) ↔ AlgebraicIndependent R f :=
-  ⟨fun h => Function.comp.right_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.Injective, fun h =>
+  ⟨fun h => Function.comp_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.Injective, fun h =>
     h.comp _ e.Injective⟩
 #align algebraic_independent_equiv algebraicIndependent_equiv
 -/

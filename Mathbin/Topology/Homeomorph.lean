@@ -600,7 +600,7 @@ theorem comp_isOpenMap_iff (h : α ≃ₜ β) {f : γ → α} : IsOpenMap (h ∘
   by
   refine' ⟨_, fun hf => h.is_open_map.comp hf⟩
   intro hf
-  rw [← Function.comp.left_id f, ← h.symm_comp_self, Function.comp.assoc]
+  rw [← Function.id_comp f, ← h.symm_comp_self, Function.comp.assoc]
   exact h.symm.is_open_map.comp hf
 #align homeomorph.comp_is_open_map_iff Homeomorph.comp_isOpenMap_iff
 -/
@@ -611,7 +611,7 @@ theorem comp_isOpenMap_iff' (h : α ≃ₜ β) {f : β → γ} : IsOpenMap (f �
   by
   refine' ⟨_, fun hf => hf.comp h.is_open_map⟩
   intro hf
-  rw [← Function.comp.right_id f, ← h.self_comp_symm, ← Function.comp.assoc]
+  rw [← Function.comp_id f, ← h.self_comp_symm, ← Function.comp.assoc]
   exact hf.comp h.symm.is_open_map
 #align homeomorph.comp_is_open_map_iff' Homeomorph.comp_isOpenMap_iff'
 -/

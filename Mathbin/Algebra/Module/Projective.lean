@@ -161,7 +161,7 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
     LinearEquiv.coe_toLinearMap, finsuppLequivDFinsupp_symm_apply, Function.comp_apply,
     DFinsupp.lsingle_apply, DFinsupp.mapRange.linearMap_apply, DFinsupp.mapRange_single,
     lmap_domain_apply, DFinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
-    Function.comp.left_id, DFinsupp.single_apply]
+    Function.id_comp, DFinsupp.single_apply]
   rw [← DFinsupp.lapply_apply j, apply_total R]
   obtain rfl | hij := eq_or_ne i j
   · convert (hs i) x

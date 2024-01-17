@@ -66,7 +66,7 @@ instance category : Category (Bundled c) := by
             comp_id' := _
             id_comp' := _
             assoc' := _ } <;> intros <;> apply 𝒞.hom_ext <;>
-    simp only [𝒞.id_to_fun, 𝒞.comp_to_fun, Function.left_id, Function.right_id]
+    simp only [𝒞.id_to_fun, 𝒞.comp_to_fun, Function.id_comp, Function.comp_id]
 #align category_theory.bundled_hom.category CategoryTheory.BundledHom.category
 -/
 

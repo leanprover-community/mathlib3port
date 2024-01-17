@@ -197,13 +197,13 @@ theorem mul_mem_cancel_left {x y : G} (h : x ∈ H) : x * y ∈ H ↔ y ∈ H :=
 
 namespace SubgroupClass
 
-#print SubgroupClass.inv /-
+#print InvMemClass.inv /-
 /-- A subgroup of a group inherits an inverse. -/
 @[to_additive "An additive subgroup of a `add_group` inherits an inverse."]
 instance inv : Inv H :=
   ⟨fun a => ⟨a⁻¹, inv_mem a.2⟩⟩
-#align subgroup_class.has_inv SubgroupClass.inv
-#align add_subgroup_class.has_neg AddSubgroupClass.neg
+#align subgroup_class.has_inv InvMemClass.inv
+#align add_subgroup_class.has_neg NegMemClass.neg
 -/
 
 #print SubgroupClass.div /-
@@ -232,12 +232,12 @@ instance zpow : Pow H ℤ :=
 #align add_subgroup_class.has_zsmul AddSubgroupClass.zsmul
 -/
 
-#print SubgroupClass.coe_inv /-
+#print InvMemClass.coe_inv /-
 @[simp, norm_cast, to_additive]
 theorem coe_inv (x : H) : ↑(x⁻¹ : H) = (x⁻¹ : M) :=
   rfl
-#align subgroup_class.coe_inv SubgroupClass.coe_inv
-#align add_subgroup_class.coe_neg AddSubgroupClass.coe_neg
+#align subgroup_class.coe_inv InvMemClass.coe_inv
+#align add_subgroup_class.coe_neg NegMemClass.coe_neg
 -/
 
 #print SubgroupClass.coe_div /-

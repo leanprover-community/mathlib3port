@@ -911,7 +911,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
       simpa only [Set.Nonempty, upperBounds, lowerBounds, ball_image_iff] using this
     refine' exists_between_of_forall_le (nonempty.image f _) (nonempty.image f (Dense y)) _
     · rcases Dense (-y) with ⟨x, hx⟩
-      rw [← neg_neg x, AddSubgroupClass.coe_neg, ← sub_eq_add_neg] at hx 
+      rw [← neg_neg x, NegMemClass.coe_neg, ← sub_eq_add_neg] at hx 
       exact ⟨_, hx⟩
     rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
     have := s.add_mem hxp hxn

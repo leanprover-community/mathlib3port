@@ -422,7 +422,7 @@ theorem realize_castLE_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.Boun
     (φ.castLEEmb h').realize v xs ↔ φ.realize v (xs ∘ Fin.castIso h) :=
   by
   subst h
-  simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]
+  simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp_id]
 #align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_castLE_of_eq
 -/
 
@@ -806,7 +806,7 @@ theorem realize_relabel {φ : L.Formula α} {g : α → β} {v : β → M} :
 theorem realize_relabel_sum_inr (φ : L.Formula (Fin n)) {v : Empty → M} {x : Fin n → M} :
     (BoundedFormula.relabel Sum.inr φ).realize v x ↔ φ.realize x := by
   rw [bounded_formula.realize_relabel, formula.realize, Sum.elim_comp_inr, Fin.castAdd_zero,
-    cast_refl, OrderIso.coe_refl, Function.comp.right_id,
+    cast_refl, OrderIso.coe_refl, Function.comp_id,
     Subsingleton.elim (x ∘ (nat_add n : Fin 0 → Fin n)) default]
 #align first_order.language.formula.realize_relabel_sum_inr FirstOrder.Language.Formula.realize_relabel_sum_inr
 -/

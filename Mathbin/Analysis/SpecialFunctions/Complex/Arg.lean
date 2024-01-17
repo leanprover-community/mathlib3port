@@ -747,7 +747,7 @@ theorem continuousAt_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : �
   by
   by_cases hs : 0 < x.re ∨ x.im ≠ 0
   · exact real.angle.continuous_coe.continuous_at.comp (continuous_at_arg hs)
-  · rw [← Function.comp.right_id (coe ∘ arg),
+  · rw [← Function.comp_id (coe ∘ arg),
       (Function.funext_iff.2 fun _ => (neg_neg _).symm : (id : ℂ → ℂ) = Neg.neg ∘ Neg.neg), ←
       Function.comp.assoc]
     refine' ContinuousAt.comp _ continuous_neg.continuous_at

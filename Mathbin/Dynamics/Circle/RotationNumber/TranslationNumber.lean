@@ -213,8 +213,8 @@ instance : Monoid CircleDeg1Lift
       monotone' := f.Monotone.comp g.Monotone
       map_add_one' := fun x => by simp [map_add_one] }
   one := ⟨id, monotone_id, fun _ => rfl⟩
-  mul_one f := coe_inj <| Function.comp.right_id f
-  one_mul f := coe_inj <| Function.comp.left_id f
+  mul_one f := coe_inj <| Function.comp_id f
+  one_mul f := coe_inj <| Function.id_comp f
   mul_assoc f₁ f₂ f₃ := coe_inj rfl
 
 instance : Inhabited CircleDeg1Lift :=

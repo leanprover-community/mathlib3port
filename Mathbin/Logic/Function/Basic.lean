@@ -70,6 +70,8 @@ theorem const_comp {f : α → β} {c : γ} : const β c ∘ f = const α c :=
 #align function.const_comp Function.const_comp
 -/
 
+/- warning: function.comp_const clashes with function.comp_const_right -> Function.comp_const
+Case conversion may be inaccurate. Consider using '#align function.comp_const Function.comp_constₓ'. -/
 #print Function.comp_const /-
 @[simp]
 theorem comp_const {f : β → γ} {b : β} : f ∘ const α b = const α (f b) :=

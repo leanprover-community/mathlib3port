@@ -93,8 +93,8 @@ def addCommMonoidHomOfHasBinaryBiproducts : AddCommMonoid (X ⟶ Y)
   add_assoc :=
     (EckmannHilton.mul_assoc (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).and_assoc
   zero := 0
-  zero_add := (isUnital_rightAdd X Y).left_id
-  add_zero := (isUnital_rightAdd X Y).right_id
+  zero_add := (isUnital_rightAdd X Y).id_comp
+  add_zero := (isUnital_rightAdd X Y).comp_id
   add_comm :=
     (EckmannHilton.mul_comm (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).comm
 #align category_theory.semiadditive_of_binary_biproducts.add_comm_monoid_hom_of_has_binary_biproducts CategoryTheory.SemiadditiveOfBinaryBiproducts.addCommMonoidHomOfHasBinaryBiproducts

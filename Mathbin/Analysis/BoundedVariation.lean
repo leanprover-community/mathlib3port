@@ -1153,7 +1153,7 @@ theorem ae_differentiableWithinAt_of_mem {f : ℝ → V} {s : Set ℝ}
   suffices H : ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ (A ∘ f) s x
   · filter_upwards [H] with x hx xs
     have : f = (A.symm ∘ A) ∘ f := by
-      simp only [ContinuousLinearEquiv.symm_comp_self, Function.comp.left_id]
+      simp only [ContinuousLinearEquiv.symm_comp_self, Function.id_comp]
     rw [this]
     exact A.symm.differentiable_at.comp_differentiable_within_at x (hx xs)
   apply ae_differentiable_within_at_of_mem_pi

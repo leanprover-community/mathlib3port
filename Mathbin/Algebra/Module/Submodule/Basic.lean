@@ -696,7 +696,7 @@ protected theorem add_mem_iff_right : x ∈ p → (x + y ∈ p ↔ y ∈ p) :=
 
 #print Submodule.coe_neg /-
 protected theorem coe_neg (x : p) : ((-x : p) : M) = -x :=
-  AddSubgroupClass.coe_neg _
+  NegMemClass.coe_neg _
 #align submodule.coe_neg Submodule.coe_neg
 -/
 

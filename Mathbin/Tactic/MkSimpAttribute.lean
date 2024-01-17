@@ -121,8 +121,8 @@ attribute [functor_norm] bind_assoc pure_bind bind_pure
   register_simp_attr
   mfld_simps
 
-attribute [mfld_simps] id.def Function.comp.left_id Set.mem_setOf_eq and_true_iff true_and_iff
-  Function.comp_apply and_self_iff eq_self_iff_true Function.comp.right_id not_false_iff true_or_iff
+attribute [mfld_simps] id.def Function.id_comp Set.mem_setOf_eq and_true_iff true_and_iff
+  Function.comp_apply and_self_iff eq_self_iff_true Function.comp_id not_false_iff true_or_iff
   or_true_iff
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/

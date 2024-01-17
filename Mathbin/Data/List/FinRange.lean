@@ -70,7 +70,7 @@ theorem ofFn_id (n) : ofFn id = finRange n :=
 
 #print List.ofFn_eq_map /-
 theorem ofFn_eq_map {α n} {f : Fin n → α} : ofFn f = (finRange n).map f := by
-  rw [← of_fn_id, map_of_fn, Function.right_id]
+  rw [← of_fn_id, map_of_fn, Function.comp_id]
 #align list.of_fn_eq_map List.ofFn_eq_map
 -/
 

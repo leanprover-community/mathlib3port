@@ -36,7 +36,7 @@ section Rat
 theorem Rat.RingOfIntegers.isUnit_iff {x : 𝓞 ℚ} : IsUnit x ↔ (x : ℚ) = 1 ∨ (x : ℚ) = -1 := by
   simp_rw [(isUnit_map_iff (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ) x).symm, Int.isUnit_iff,
     RingEquiv.coe_toRingHom, RingEquiv.map_eq_one_iff, RingEquiv.map_eq_neg_one_iff, ←
-    subtype.coe_injective.eq_iff, AddSubgroupClass.coe_neg, algebraMap.coe_one]
+    subtype.coe_injective.eq_iff, NegMemClass.coe_neg, algebraMap.coe_one]
 #align rat.ring_of_integers.is_unit_iff Rat.RingOfIntegers.isUnit_iff
 -/
 

@@ -132,10 +132,10 @@ def toColoring' : G.Coloring (Set V) :=
 #align simple_graph.partition.to_coloring' SimpleGraph.Partition.toColoring'
 -/
 
-#print SimpleGraph.Partition.to_colorable /-
-theorem to_colorable [Fintype P.parts] : G.Colorable (Fintype.card P.parts) :=
-  P.toColoring.to_colorable
-#align simple_graph.partition.to_colorable SimpleGraph.Partition.to_colorable
+#print SimpleGraph.Partition.colorable /-
+theorem colorable [Fintype P.parts] : G.Colorable (Fintype.card P.parts) :=
+  P.toColoring.colorable
+#align simple_graph.partition.to_colorable SimpleGraph.Partition.colorable
 -/
 
 end Partition

@@ -91,10 +91,10 @@ theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type _} {n : ℕ} (φ : L.B
   simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h 
   rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
     Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equiv.symm_comp_self,
-    Function.comp.right_id, Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr,
+    Function.comp_id, Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr,
     Sum.elim_comp_inr, ← Function.comp.assoc] at h 
   refine' h.trans _
-  rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp.right_id,
+  rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp_id,
     Sum.elim_comp_inl, Sum.elim_comp_inr, ← Set.inclusion_eq_id,
     bounded_formula.realize_restrict_free_var Set.Subset.rfl]
 #align first_order.language.elementary_embedding.map_bounded_formula FirstOrder.Language.ElementaryEmbedding.map_boundedFormula

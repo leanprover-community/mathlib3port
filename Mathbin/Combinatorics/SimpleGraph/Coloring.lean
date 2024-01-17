@@ -252,15 +252,15 @@ theorem Colorable.mono {n m : ℕ} (h : n ≤ m) (hc : G.Colorable n) : G.Colora
 #align simple_graph.colorable.mono SimpleGraph.Colorable.mono
 -/
 
-#print SimpleGraph.Coloring.to_colorable /-
-theorem Coloring.to_colorable [Fintype α] (C : G.Coloring α) : G.Colorable (Fintype.card α) :=
+#print SimpleGraph.Coloring.colorable /-
+theorem Coloring.colorable [Fintype α] (C : G.Coloring α) : G.Colorable (Fintype.card α) :=
   ⟨G.recolorOfCardLE (by simp) C⟩
-#align simple_graph.coloring.to_colorable SimpleGraph.Coloring.to_colorable
+#align simple_graph.coloring.to_colorable SimpleGraph.Coloring.colorable
 -/
 
 #print SimpleGraph.colorable_of_fintype /-
 theorem colorable_of_fintype (G : SimpleGraph V) [Fintype V] : G.Colorable (Fintype.card V) :=
-  G.selfColoring.to_colorable
+  G.selfColoring.colorable
 #align simple_graph.colorable_of_fintype SimpleGraph.colorable_of_fintype
 -/
 
@@ -315,20 +315,20 @@ theorem chromaticNumber_bddBelow : BddBelow {n : ℕ | G.Colorable n} :=
 #align simple_graph.chromatic_number_bdd_below SimpleGraph.chromaticNumber_bddBelow
 -/
 
-#print SimpleGraph.chromaticNumber_le_of_colorable /-
-theorem chromaticNumber_le_of_colorable {n : ℕ} (hc : G.Colorable n) : G.chromaticNumber ≤ n :=
-  by
+#print SimpleGraph.Colorable.chromaticNumber_le /-
+theorem SimpleGraph.Colorable.chromaticNumber_le {n : ℕ} (hc : G.Colorable n) :
+    G.chromaticNumber ≤ n := by
   rw [chromatic_number]
   apply csInf_le chromatic_number_bdd_below
   fconstructor
   exact Classical.choice hc
-#align simple_graph.chromatic_number_le_of_colorable SimpleGraph.chromaticNumber_le_of_colorable
+#align simple_graph.chromatic_number_le_of_colorable SimpleGraph.Colorable.chromaticNumber_le
 -/
 
 #print SimpleGraph.chromaticNumber_le_card /-
 theorem chromaticNumber_le_card [Fintype α] (C : G.Coloring α) :
     G.chromaticNumber ≤ Fintype.card α :=
-  csInf_le chromaticNumber_bddBelow C.to_colorable
+  csInf_le chromaticNumber_bddBelow C.colorable
 #align simple_graph.chromatic_number_le_card SimpleGraph.chromaticNumber_le_card
 -/
 
@@ -394,13 +394,13 @@ theorem chromaticNumber_pos [Nonempty V] {n : ℕ} (hc : G.Colorable n) : 0 < G.
 #align simple_graph.chromatic_number_pos SimpleGraph.chromaticNumber_pos
 -/
 
-#print SimpleGraph.colorable_of_chromaticNumber_pos /-
-theorem colorable_of_chromaticNumber_pos (h : 0 < G.chromaticNumber) :
+#print SimpleGraph.colorable_of_chromaticNumber_ne_top /-
+theorem colorable_of_chromaticNumber_ne_top (h : 0 < G.chromaticNumber) :
     G.Colorable G.chromaticNumber :=
   by
   obtain ⟨h, hn⟩ := Nat.nonempty_of_pos_sInf h
   exact colorable_chromatic_number hn
-#align simple_graph.colorable_of_chromatic_number_pos SimpleGraph.colorable_of_chromaticNumber_pos
+#align simple_graph.colorable_of_chromatic_number_pos SimpleGraph.colorable_of_chromaticNumber_ne_top
 -/
 
 #print SimpleGraph.Colorable.mono_left /-
@@ -410,29 +410,29 @@ theorem Colorable.mono_left {G' : SimpleGraph V} (h : G ≤ G') {n : ℕ} (hc : 
 #align simple_graph.colorable.mono_left SimpleGraph.Colorable.mono_left
 -/
 
-#print SimpleGraph.Colorable.chromaticNumber_le_of_forall_imp /-
-theorem Colorable.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGraph V'} {m : ℕ}
+#print SimpleGraph.chromaticNumber_le_of_forall_imp /-
+theorem SimpleGraph.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGraph V'} {m : ℕ}
     (hc : G'.Colorable m) (h : ∀ n, G'.Colorable n → G.Colorable n) :
     G.chromaticNumber ≤ G'.chromaticNumber :=
   by
   apply csInf_le chromatic_number_bdd_below
   apply h
   apply colorable_chromatic_number hc
-#align simple_graph.colorable.chromatic_number_le_of_forall_imp SimpleGraph.Colorable.chromaticNumber_le_of_forall_imp
+#align simple_graph.colorable.chromatic_number_le_of_forall_imp SimpleGraph.chromaticNumber_le_of_forall_imp
 -/
 
-#print SimpleGraph.Colorable.chromaticNumber_mono /-
-theorem Colorable.chromaticNumber_mono (G' : SimpleGraph V) {m : ℕ} (hc : G'.Colorable m)
+#print SimpleGraph.chromaticNumber_mono /-
+theorem SimpleGraph.chromaticNumber_mono (G' : SimpleGraph V) {m : ℕ} (hc : G'.Colorable m)
     (h : G ≤ G') : G.chromaticNumber ≤ G'.chromaticNumber :=
   hc.chromaticNumber_le_of_forall_imp fun n => Colorable.mono_left h
-#align simple_graph.colorable.chromatic_number_mono SimpleGraph.Colorable.chromaticNumber_mono
+#align simple_graph.colorable.chromatic_number_mono SimpleGraph.chromaticNumber_mono
 -/
 
-#print SimpleGraph.Colorable.chromaticNumber_mono_of_embedding /-
-theorem Colorable.chromaticNumber_mono_of_embedding {V' : Type _} {G' : SimpleGraph V'} {n : ℕ}
+#print SimpleGraph.chromaticNumber_mono_of_embedding /-
+theorem SimpleGraph.chromaticNumber_mono_of_embedding {V' : Type _} {G' : SimpleGraph V'} {n : ℕ}
     (h : G'.Colorable n) (f : G ↪g G') : G.chromaticNumber ≤ G'.chromaticNumber :=
   h.chromaticNumber_le_of_forall_imp fun _ => Colorable.of_embedding f
-#align simple_graph.colorable.chromatic_number_mono_of_embedding SimpleGraph.Colorable.chromaticNumber_mono_of_embedding
+#align simple_graph.colorable.chromatic_number_mono_of_embedding SimpleGraph.chromaticNumber_mono_of_embedding
 -/
 
 #print SimpleGraph.chromaticNumber_eq_card_of_forall_surj /-
@@ -480,8 +480,8 @@ theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber 
 #align simple_graph.chromatic_number_top SimpleGraph.chromaticNumber_top
 -/
 
-#print SimpleGraph.chromaticNumber_top_eq_zero_of_infinite /-
-theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
+#print SimpleGraph.chromaticNumber_top_eq_top_of_infinite /-
+theorem chromaticNumber_top_eq_top_of_infinite (V : Type _) [Infinite V] :
     (⊤ : SimpleGraph V).chromaticNumber = 0 :=
   by
   let n := (⊤ : SimpleGraph V).chromaticNumber
@@ -493,7 +493,7 @@ theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
   refine' (colorable_of_chromatic_number_pos hc).chromaticNumber_mono_of_embedding _
   apply embedding.complete_graph
   exact (Function.Embedding.subtype _).trans (Infinite.natEmbedding V)
-#align simple_graph.chromatic_number_top_eq_zero_of_infinite SimpleGraph.chromaticNumber_top_eq_zero_of_infinite
+#align simple_graph.chromatic_number_top_eq_zero_of_infinite SimpleGraph.chromaticNumber_top_eq_top_of_infinite
 -/
 
 #print SimpleGraph.CompleteBipartiteGraph.bicoloring /-
