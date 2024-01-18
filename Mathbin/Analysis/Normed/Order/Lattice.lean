@@ -242,29 +242,29 @@ theorem lipschitzWith_sup_right (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
 #align lipschitz_with_sup_right lipschitzWith_sup_right
 -/
 
-#print lipschitzWith_pos /-
-theorem lipschitzWith_pos : LipschitzWith 1 (PosPart.pos : α → α) :=
+#print lipschitzWith_posPart /-
+theorem lipschitzWith_posPart : LipschitzWith 1 (posPart : α → α) :=
   lipschitzWith_sup_right 0
-#align lipschitz_with_pos lipschitzWith_pos
+#align lipschitz_with_pos lipschitzWith_posPart
 -/
 
-#print continuous_pos /-
-theorem continuous_pos : Continuous (PosPart.pos : α → α) :=
-  LipschitzWith.continuous lipschitzWith_pos
-#align continuous_pos continuous_pos
+#print continuous_posPart /-
+theorem continuous_posPart : Continuous (posPart : α → α) :=
+  LipschitzWith.continuous lipschitzWith_posPart
+#align continuous_pos continuous_posPart
 -/
 
-#print continuous_neg' /-
-theorem continuous_neg' : Continuous (NegPart.neg : α → α) :=
-  continuous_pos.comp continuous_neg
-#align continuous_neg' continuous_neg'
+#print continuous_negPart /-
+theorem continuous_negPart : Continuous (negPart : α → α) :=
+  continuous_posPart.comp continuous_neg
+#align continuous_neg' continuous_negPart
 -/
 
 #print isClosed_nonneg /-
 theorem isClosed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed {x : E | 0 ≤ x} :=
   by
-  suffices {x : E | 0 ≤ x} = NegPart.neg ⁻¹' {(0 : E)} by rw [this];
-    exact IsClosed.preimage continuous_neg' isClosed_singleton
+  suffices {x : E | 0 ≤ x} = negPart ⁻¹' {(0 : E)} by rw [this];
+    exact IsClosed.preimage continuous_negPart isClosed_singleton
   ext1 x
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq, neg_eq_zero_iff]
 #align is_closed_nonneg isClosed_nonneg

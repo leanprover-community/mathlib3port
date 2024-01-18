@@ -60,7 +60,7 @@ class NegPart (α : Type _) where
 #align has_neg_part NegPart
 -/
 
-postfix:1000 "⁺" => PosPart.pos
+postfix:1000 "⁺" => posPart
 
-postfix:1000 "⁻" => NegPart.neg
+postfix:1000 "⁻" => negPart
 

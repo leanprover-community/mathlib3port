@@ -659,11 +659,11 @@ instance isStarNormal_one [Monoid R] [StarMul R] : IsStarNormal (1 : R) :=
 #align is_star_normal_one isStarNormal_one
 -/
 
-#print isStarNormal_star_self /-
-instance isStarNormal_star_self [Monoid R] [StarMul R] {x : R} [IsStarNormal x] :
+#print IsStarNormal.star /-
+instance IsStarNormal.star [Monoid R] [StarMul R] {x : R} [IsStarNormal x] :
     IsStarNormal (star x) :=
   ⟨show star (star x) * star x = star x * star (star x) by rw [star_star, star_comm_self']⟩
-#align is_star_normal_star_self isStarNormal_star_self
+#align is_star_normal_star_self IsStarNormal.star
 -/
 
 #print TrivialStar.isStarNormal /-

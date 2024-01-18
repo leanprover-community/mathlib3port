@@ -2861,12 +2861,10 @@ theorem predAbove_zero {i : Fin (n + 2)} (hi : i ≠ 0) : predAbove 0 i = i.pred
 #align fin.pred_above_zero Fin.predAbove_zero
 -/
 
-#print Fin.castPred_last /-
 @[simp]
 theorem castPred_last : castPred (last (n + 1)) = last n :=
   eq_of_veq (by simp [cast_pred, pred_above, cast_succ_lt_last])
 #align fin.cast_pred_last Fin.castPred_last
--/
 
 #print Fin.castPred_mk /-
 @[simp]
@@ -2896,12 +2894,10 @@ theorem predAbove_below (p : Fin (n + 1)) (i : Fin (n + 2)) (h : i ≤ p.cast_su
 #align fin.pred_above_below Fin.predAbove_below
 -/
 
-#print Fin.predAbove_last /-
 @[simp]
 theorem predAbove_last : predAbove (Fin.last n) = castPred :=
   rfl
 #align fin.pred_above_last Fin.predAbove_last
--/
 
 #print Fin.predAbove_last_apply /-
 theorem predAbove_last_apply (i : Fin n) : predAbove (Fin.last n) i = i.cast_pred := by
@@ -2915,11 +2911,9 @@ theorem predAbove_above (p : Fin n) (i : Fin (n + 1)) (h : p.cast_succ < i) :
 #align fin.pred_above_above Fin.predAbove_above
 -/
 
-#print Fin.castPred_monotone /-
 theorem castPred_monotone : Monotone (@castPred n) :=
   predAbove_right_monotone (last _)
 #align fin.cast_pred_monotone Fin.castPred_monotone
--/
 
 #print Fin.succAbove_predAbove /-
 /-- Sending `fin (n+1)` to `fin n` by subtracting one from anything above `p`
@@ -3038,7 +3032,6 @@ theorem castSucc_castPred {i : Fin (n + 2)} (h : i < last _) : castSuccEmb i.cas
 #align fin.cast_succ_cast_pred Fin.castSucc_castPred
 -/
 
-#print Fin.coe_castPred_le_self /-
 theorem coe_castPred_le_self (i : Fin (n + 2)) : (i.cast_pred : ℕ) ≤ i :=
   by
   rcases i.le_last.eq_or_lt with (rfl | h)
@@ -3047,9 +3040,7 @@ theorem coe_castPred_le_self (i : Fin (n + 2)) : (i.cast_pred : ℕ) ≤ i :=
     · simp
     · simpa [lt_iff_coe_lt_coe, le_iff_coe_le_coe, lt_succ_iff] using h
 #align fin.coe_cast_pred_le_self Fin.coe_castPred_le_self
--/
 
-#print Fin.coe_castPred_lt_iff /-
 theorem coe_castPred_lt_iff {i : Fin (n + 2)} : (i.cast_pred : ℕ) < i ↔ i = Fin.last _ :=
   by
   rcases i.le_last.eq_or_lt with (rfl | H)
@@ -3058,9 +3049,7 @@ theorem coe_castPred_lt_iff {i : Fin (n + 2)} : (i.cast_pred : ℕ) < i ↔ i = 
     rw [← cast_succ_cast_pred H]
     simp
 #align fin.coe_cast_pred_lt_iff Fin.coe_castPred_lt_iff
--/
 
-#print Fin.lt_last_iff_coe_castPred /-
 theorem lt_last_iff_coe_castPred {i : Fin (n + 2)} : i < Fin.last _ ↔ (i.cast_pred : ℕ) = i :=
   by
   rcases i.le_last.eq_or_lt with (rfl | H)
@@ -3069,7 +3058,6 @@ theorem lt_last_iff_coe_castPred {i : Fin (n + 2)} : i < Fin.last _ ↔ (i.cast_
     rw [← cast_succ_cast_pred H]
     simp
 #align fin.lt_last_iff_coe_cast_pred Fin.lt_last_iff_coe_castPred
--/
 
 end PredAbove
 

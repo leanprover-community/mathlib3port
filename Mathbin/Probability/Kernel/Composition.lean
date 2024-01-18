@@ -1091,13 +1091,13 @@ noncomputable def prod (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α 
 
 scoped[ProbabilityTheory] infixl:100 " ×ₖ " => ProbabilityTheory.kernel.prod
 
-#print ProbabilityTheory.kernel.prod_apply /-
-theorem prod_apply (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ) [IsSFiniteKernel η] (a : α)
-    {s : Set (β × γ)} (hs : MeasurableSet s) :
+#print ProbabilityTheory.kernel.prod_apply' /-
+theorem prod_apply' (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ) [IsSFiniteKernel η]
+    (a : α) {s : Set (β × γ)} (hs : MeasurableSet s) :
     (κ ×ₖ η) a s = ∫⁻ b : β, (η a) {c : γ | (b, c) ∈ s} ∂κ a := by
   simp_rw [Prod, comp_prod_apply _ _ _ hs, swap_left_apply _ _, prod_mk_left_apply,
     Prod.swap_prod_mk]
-#align probability_theory.kernel.prod_apply ProbabilityTheory.kernel.prod_apply
+#align probability_theory.kernel.prod_apply ProbabilityTheory.kernel.prod_apply'
 -/
 
 #print ProbabilityTheory.kernel.lintegral_prod /-

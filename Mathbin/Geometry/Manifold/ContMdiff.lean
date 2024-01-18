@@ -1679,15 +1679,15 @@ theorem smoothWithinAt_one [One M'] : SmoothWithinAt I I' (1 : M → M') s x :=
 
 end id
 
-#print contMDiff_of_support /-
-theorem contMDiff_of_support {f : M → F} (hf : ∀ x ∈ tsupport f, ContMDiffAt I 𝓘(𝕜, F) n f x) :
+#print contMDiff_of_tsupport /-
+theorem contMDiff_of_tsupport {f : M → F} (hf : ∀ x ∈ tsupport f, ContMDiffAt I 𝓘(𝕜, F) n f x) :
     ContMDiff I 𝓘(𝕜, F) n f := by
   intro x
   by_cases hx : x ∈ tsupport f
   · exact hf x hx
   · refine' ContMDiffAt.congr_of_eventuallyEq _ (eventuallyEq_zero_nhds.2 hx)
     exact contMDiffAt_const
-#align cont_mdiff_of_support contMDiff_of_support
+#align cont_mdiff_of_support contMDiff_of_tsupport
 -/
 
 /-! ### The inclusion map from one open set to another is smooth -/

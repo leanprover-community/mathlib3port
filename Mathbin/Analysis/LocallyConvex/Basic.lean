@@ -66,11 +66,11 @@ def Absorbs (A B : Set E) :=
 
 variable {𝕜} {s t u v A B : Set E}
 
-#print absorbs_empty /-
+#print Absorbs.empty /-
 @[simp]
-theorem absorbs_empty {s : Set E} : Absorbs 𝕜 s (∅ : Set E) :=
+theorem Absorbs.empty {s : Set E} : Absorbs 𝕜 s (∅ : Set E) :=
   ⟨1, one_pos, fun a ha => Set.empty_subset _⟩
-#align absorbs_empty absorbs_empty
+#align absorbs_empty Absorbs.empty
 -/
 
 #print Absorbs.mono /-
@@ -111,30 +111,30 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
 #align absorbs_union absorbs_union
 -/
 
-#print absorbs_iUnion_finset /-
-theorem absorbs_iUnion_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
+#print absorbs_biUnion_finset /-
+theorem absorbs_biUnion_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   classical
   induction' t using Finset.induction_on with i t ht hi
   ·
-    simp only [Finset.not_mem_empty, Set.iUnion_false, Set.iUnion_empty, absorbs_empty,
+    simp only [Finset.not_mem_empty, Set.iUnion_false, Set.iUnion_empty, Absorbs.empty,
       IsEmpty.forall_iff, imp_true_iff]
   rw [Finset.set_biUnion_insert, absorbs_union, hi]
   constructor <;> intro h
   · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
     exact fun hi'' => by rw [hi'']; exact h.1
   exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
-#align absorbs_Union_finset absorbs_iUnion_finset
+#align absorbs_Union_finset absorbs_biUnion_finset
 -/
 
-#print Set.Finite.absorbs_iUnion /-
-theorem Set.Finite.absorbs_iUnion {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
+#print Set.Finite.absorbs_biUnion /-
+theorem Set.Finite.absorbs_biUnion {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
     (hi : t.Finite) : Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) :=
   by
   lift t to Finset ι using hi
   simp only [Finset.mem_coe]
-  exact absorbs_iUnion_finset
-#align set.finite.absorbs_Union Set.Finite.absorbs_iUnion
+  exact absorbs_biUnion_finset
+#align set.finite.absorbs_Union Set.Finite.absorbs_biUnion
 -/
 
 variable (𝕜)
@@ -148,12 +148,12 @@ def Absorbent (A : Set E) :=
 
 variable {𝕜}
 
-#print Absorbent.subset /-
-theorem Absorbent.subset (hA : Absorbent 𝕜 A) (hAB : A ⊆ B) : Absorbent 𝕜 B :=
+#print Absorbent.mono /-
+theorem Absorbent.mono (hA : Absorbent 𝕜 A) (hAB : A ⊆ B) : Absorbent 𝕜 B :=
   by
   refine' forall_imp (fun x => _) hA
   exact Exists.imp fun r => And.imp_right <| forall₂_imp fun a ha hx => Set.smul_set_mono hAB hx
-#align absorbent.subset Absorbent.subset
+#align absorbent.subset Absorbent.mono
 -/
 
 #print absorbent_iff_forall_absorbs_singleton /-
@@ -168,7 +168,6 @@ theorem Absorbent.absorbs (hs : Absorbent 𝕜 s) {x : E} : Absorbs 𝕜 s {x} :
 #align absorbent.absorbs Absorbent.absorbs
 -/
 
-#print absorbent_iff_nonneg_lt /-
 theorem absorbent_iff_nonneg_lt :
     Absorbent 𝕜 A ↔ ∀ x, ∃ r, 0 ≤ r ∧ ∀ ⦃a : 𝕜⦄, r < ‖a‖ → x ∈ a • A :=
   forall_congr' fun x =>
@@ -176,7 +175,6 @@ theorem absorbent_iff_nonneg_lt :
       ⟨r + 1, add_pos_of_nonneg_of_pos hr zero_lt_one, fun a ha =>
         hx ((lt_add_of_pos_right r zero_lt_one).trans_le ha)⟩⟩
 #align absorbent_iff_nonneg_lt absorbent_iff_nonneg_lt
--/
 
 #print Absorbent.absorbs_finite /-
 theorem Absorbent.absorbs_finite {s : Set E} (hs : Absorbent 𝕜 s) {v : Set E} (hv : v.Finite) :
@@ -272,11 +270,11 @@ section Module
 
 variable [AddCommGroup E] [Module 𝕜 E] {s s₁ s₂ t t₁ t₂ : Set E}
 
-#print Absorbs.neg /-
-theorem Absorbs.neg : Absorbs 𝕜 s t → Absorbs 𝕜 (-s) (-t) :=
+#print Absorbs.neg_neg /-
+theorem Absorbs.neg_neg : Absorbs 𝕜 s t → Absorbs 𝕜 (-s) (-t) :=
   Exists.imp fun r =>
     And.imp_right <| forall₂_imp fun _ _ h => (neg_subset_neg.2 h).trans (smul_set_neg _ _).Superset
-#align absorbs.neg Absorbs.neg
+#align absorbs.neg Absorbs.neg_neg
 -/
 
 #print Balanced.neg /-

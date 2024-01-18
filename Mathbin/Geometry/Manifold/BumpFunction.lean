@@ -415,7 +415,7 @@ variable [SmoothManifoldWithCorners I M] {I}
 /-- A smooth bump function is infinitely smooth. -/
 protected theorem smooth : Smooth I 𝓘(ℝ) f :=
   by
-  refine' contMDiff_of_support fun x hx => _
+  refine' contMDiff_of_tsupport fun x hx => _
   have : x ∈ (chart_at H c).source := f.tsupport_subset_chart_at_source hx
   refine'
     ContMDiffAt.congr_of_eventuallyEq _
@@ -442,7 +442,7 @@ on the source of the chart at `c`, then `f • g` is smooth on the whole manifol
 theorem smooth_smul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
     (hg : SmoothOn I 𝓘(ℝ, G) g (chartAt H c).source) : Smooth I 𝓘(ℝ, G) fun x => f x • g x :=
   by
-  apply contMDiff_of_support fun x hx => _
+  apply contMDiff_of_tsupport fun x hx => _
   have : x ∈ (chart_at H c).source
   calc
     x ∈ tsupport fun x => f x • g x := hx

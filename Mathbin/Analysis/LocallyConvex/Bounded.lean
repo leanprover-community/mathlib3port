@@ -73,7 +73,7 @@ variable (E)
 
 #print Bornology.isVonNBounded_empty /-
 @[simp]
-theorem isVonNBounded_empty : IsVonNBounded 𝕜 (∅ : Set E) := fun _ _ => absorbs_empty
+theorem isVonNBounded_empty : IsVonNBounded 𝕜 (∅ : Set E) := fun _ _ => Absorbs.empty
 #align bornology.is_vonN_bounded_empty Bornology.isVonNBounded_empty
 -/
 

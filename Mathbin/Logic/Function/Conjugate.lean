@@ -58,10 +58,10 @@ theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') :
 #align function.semiconj.comp_right Function.Semiconj.comp_right
 -/
 
-#print Function.Semiconj.comp_left /-
-theorem comp_left (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) :
-    Semiconj (fbc ∘ fab) ga gc := fun x => by simp only [comp_app, hab.eq, hbc.eq]
-#align function.semiconj.comp_left Function.Semiconj.comp_left
+#print Function.Semiconj.trans /-
+theorem trans (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) : Semiconj (fbc ∘ fab) ga gc :=
+  fun x => by simp only [comp_app, hab.eq, hbc.eq]
+#align function.semiconj.comp_left Function.Semiconj.trans
 -/
 
 #print Function.Semiconj.id_right /-

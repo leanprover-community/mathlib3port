@@ -360,7 +360,7 @@ everywhere. We then introduce `probability_theory.cond_cdf_rat`, a function on `
 the properties of a cdf for all `a : α`. We finally extend to `ℝ`. -/
 
 
-#print ProbabilityTheory.preCdf /-
+#print ProbabilityTheory.preCDF /-
 /-- `pre_cdf` is the Radon-Nikodym derivative of `ρ.Iic_snd` with respect to `ρ.fst` at each
 `r : ℚ`. This function `ℚ → α → ℝ≥0∞` is such that for almost all `a : α`, the function `ℚ → ℝ≥0∞`
 satisfies the properties of a cdf (monotone with limit 0 at -∞ and 1 at +∞, right-continuous).
@@ -368,27 +368,27 @@ satisfies the properties of a cdf (monotone with limit 0 at -∞ and 1 at +∞, 
 We define this function on `ℚ` and not `ℝ` because `ℚ` is countable, which allows us to prove
 properties of the form `∀ᵐ a ∂ρ.fst, ∀ q, P (pre_cdf q a)`, instead of the weaker
 `∀ q, ∀ᵐ a ∂ρ.fst, P (pre_cdf q a)`. -/
-noncomputable def preCdf (ρ : Measure (α × ℝ)) (r : ℚ) : α → ℝ≥0∞ :=
+noncomputable def preCDF (ρ : Measure (α × ℝ)) (r : ℚ) : α → ℝ≥0∞ :=
   Measure.rnDeriv (ρ.IicSnd r) ρ.fst
-#align probability_theory.pre_cdf ProbabilityTheory.preCdf
+#align probability_theory.pre_cdf ProbabilityTheory.preCDF
 -/
 
-#print ProbabilityTheory.measurable_preCdf /-
-theorem measurable_preCdf {ρ : Measure (α × ℝ)} {r : ℚ} : Measurable (preCdf ρ r) :=
+#print ProbabilityTheory.measurable_preCDF /-
+theorem measurable_preCDF {ρ : Measure (α × ℝ)} {r : ℚ} : Measurable (preCDF ρ r) :=
   Measure.measurable_rnDeriv _ _
-#align probability_theory.measurable_pre_cdf ProbabilityTheory.measurable_preCdf
+#align probability_theory.measurable_pre_cdf ProbabilityTheory.measurable_preCDF
 -/
 
-#print ProbabilityTheory.withDensity_preCdf /-
-theorem withDensity_preCdf (ρ : Measure (α × ℝ)) (r : ℚ) [IsFiniteMeasure ρ] :
-    ρ.fst.withDensity (preCdf ρ r) = ρ.IicSnd r :=
+#print ProbabilityTheory.withDensity_preCDF /-
+theorem withDensity_preCDF (ρ : Measure (α × ℝ)) (r : ℚ) [IsFiniteMeasure ρ] :
+    ρ.fst.withDensity (preCDF ρ r) = ρ.IicSnd r :=
   Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq.mp (Measure.IicSnd_ac_fst ρ r)
-#align probability_theory.with_density_pre_cdf ProbabilityTheory.withDensity_preCdf
+#align probability_theory.with_density_pre_cdf ProbabilityTheory.withDensity_preCDF
 -/
 
-#print ProbabilityTheory.set_lintegral_preCdf_fst /-
-theorem set_lintegral_preCdf_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set α} (hs : MeasurableSet s)
-    [IsFiniteMeasure ρ] : ∫⁻ x in s, preCdf ρ r x ∂ρ.fst = ρ.IicSnd r s :=
+#print ProbabilityTheory.set_lintegral_preCDF_fst /-
+theorem set_lintegral_preCDF_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set α} (hs : MeasurableSet s)
+    [IsFiniteMeasure ρ] : ∫⁻ x in s, preCDF ρ r x ∂ρ.fst = ρ.IicSnd r s :=
   by
   have : ∀ r, ∫⁻ x in s, pre_cdf ρ r x ∂ρ.fst = ∫⁻ x in s, (pre_cdf ρ r * 1) x ∂ρ.fst := by
     simp only [mul_one, eq_self_iff_true, forall_const]
@@ -398,12 +398,12 @@ theorem set_lintegral_preCdf_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set �
       MeasurableSet.univ, univ_inter]
   · rw [(_ : (1 : α → ℝ≥0∞) = fun _ => 1)]
     exacts [measurable_const, rfl]
-#align probability_theory.set_lintegral_pre_cdf_fst ProbabilityTheory.set_lintegral_preCdf_fst
+#align probability_theory.set_lintegral_pre_cdf_fst ProbabilityTheory.set_lintegral_preCDF_fst
 -/
 
-#print ProbabilityTheory.monotone_preCdf /-
-theorem monotone_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    ∀ᵐ a ∂ρ.fst, Monotone fun r => preCdf ρ r a :=
+#print ProbabilityTheory.monotone_preCDF /-
+theorem monotone_preCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    ∀ᵐ a ∂ρ.fst, Monotone fun r => preCDF ρ r a :=
   by
   simp_rw [Monotone, ae_all_iff]
   refine' fun r r' hrr' =>
@@ -412,12 +412,12 @@ theorem monotone_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
   rw [set_lintegral_pre_cdf_fst ρ r hs, set_lintegral_pre_cdf_fst ρ r' hs]
   refine' measure.Iic_snd_mono ρ _ s hs
   exact_mod_cast hrr'
-#align probability_theory.monotone_pre_cdf ProbabilityTheory.monotone_preCdf
+#align probability_theory.monotone_pre_cdf ProbabilityTheory.monotone_preCDF
 -/
 
-#print ProbabilityTheory.set_lintegral_iInf_gt_preCdf /-
-theorem set_lintegral_iInf_gt_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (t : ℚ) {s : Set α}
-    (hs : MeasurableSet s) : ∫⁻ x in s, ⨅ r : Ioi t, preCdf ρ r x ∂ρ.fst = ρ.IicSnd t s :=
+#print ProbabilityTheory.set_lintegral_iInf_gt_preCDF /-
+theorem set_lintegral_iInf_gt_preCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (t : ℚ) {s : Set α}
+    (hs : MeasurableSet s) : ∫⁻ x in s, ⨅ r : Ioi t, preCDF ρ r x ∂ρ.fst = ρ.IicSnd t s :=
   by
   refine' le_antisymm _ _
   · have h : ∀ q : Ioi t, ∫⁻ x in s, ⨅ r : Ioi t, pre_cdf ρ r x ∂ρ.fst ≤ ρ.Iic_snd q s :=
@@ -436,12 +436,12 @@ theorem set_lintegral_iInf_gt_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure
     · exact measurable_iInf fun _ => measurable_pre_cdf
     · filter_upwards [monotone_pre_cdf] with a ha_mono
       exact fun _ => le_iInf fun r => ha_mono (le_of_lt r.Prop)
-#align probability_theory.set_lintegral_infi_gt_pre_cdf ProbabilityTheory.set_lintegral_iInf_gt_preCdf
+#align probability_theory.set_lintegral_infi_gt_pre_cdf ProbabilityTheory.set_lintegral_iInf_gt_preCDF
 -/
 
-#print ProbabilityTheory.preCdf_le_one /-
-theorem preCdf_le_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    ∀ᵐ a ∂ρ.fst, ∀ r, preCdf ρ r a ≤ 1 := by
+#print ProbabilityTheory.preCDF_le_one /-
+theorem preCDF_le_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    ∀ᵐ a ∂ρ.fst, ∀ r, preCDF ρ r a ≤ 1 := by
   rw [ae_all_iff]
   refine' fun r =>
     ae_le_of_forall_set_lintegral_le_of_sigma_finite measurable_pre_cdf measurable_const
@@ -449,33 +449,33 @@ theorem preCdf_le_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
   rw [set_lintegral_pre_cdf_fst ρ r hs]
   simp only [Pi.one_apply, lintegral_one, measure.restrict_apply, MeasurableSet.univ, univ_inter]
   exact measure.Iic_snd_le_fst ρ r s hs
-#align probability_theory.pre_cdf_le_one ProbabilityTheory.preCdf_le_one
+#align probability_theory.pre_cdf_le_one ProbabilityTheory.preCDF_le_one
 -/
 
-#print ProbabilityTheory.tendsto_lintegral_preCdf_atTop /-
-theorem tendsto_lintegral_preCdf_atTop (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    Tendsto (fun r => ∫⁻ a, preCdf ρ r a ∂ρ.fst) atTop (𝓝 (ρ univ)) :=
+#print ProbabilityTheory.tendsto_lintegral_preCDF_atTop /-
+theorem tendsto_lintegral_preCDF_atTop (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    Tendsto (fun r => ∫⁻ a, preCDF ρ r a ∂ρ.fst) atTop (𝓝 (ρ univ)) :=
   by
   convert ρ.tendsto_Iic_snd_at_top MeasurableSet.univ
   · ext1 r
     rw [← set_lintegral_univ, set_lintegral_pre_cdf_fst ρ _ MeasurableSet.univ]
   · exact measure.fst_univ.symm
-#align probability_theory.tendsto_lintegral_pre_cdf_at_top ProbabilityTheory.tendsto_lintegral_preCdf_atTop
+#align probability_theory.tendsto_lintegral_pre_cdf_at_top ProbabilityTheory.tendsto_lintegral_preCDF_atTop
 -/
 
-#print ProbabilityTheory.tendsto_lintegral_preCdf_atBot /-
-theorem tendsto_lintegral_preCdf_atBot (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    Tendsto (fun r => ∫⁻ a, preCdf ρ r a ∂ρ.fst) atBot (𝓝 0) :=
+#print ProbabilityTheory.tendsto_lintegral_preCDF_atBot /-
+theorem tendsto_lintegral_preCDF_atBot (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    Tendsto (fun r => ∫⁻ a, preCDF ρ r a ∂ρ.fst) atBot (𝓝 0) :=
   by
   convert ρ.tendsto_Iic_snd_at_bot MeasurableSet.univ
   ext1 r
   rw [← set_lintegral_univ, set_lintegral_pre_cdf_fst ρ _ MeasurableSet.univ]
-#align probability_theory.tendsto_lintegral_pre_cdf_at_bot ProbabilityTheory.tendsto_lintegral_preCdf_atBot
+#align probability_theory.tendsto_lintegral_pre_cdf_at_bot ProbabilityTheory.tendsto_lintegral_preCDF_atBot
 -/
 
-#print ProbabilityTheory.tendsto_preCdf_atTop_one /-
-theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    ∀ᵐ a ∂ρ.fst, Tendsto (fun r => preCdf ρ r a) atTop (𝓝 1) :=
+#print ProbabilityTheory.tendsto_preCDF_atTop_one /-
+theorem tendsto_preCDF_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    ∀ᵐ a ∂ρ.fst, Tendsto (fun r => preCDF ρ r a) atTop (𝓝 1) :=
   by
   -- We show first that `pre_cdf` has a limit almost everywhere. That limit has to be at most 1.
   -- We then show that the integral of `pre_cdf` tends to the integral of 1, and that it also tends
@@ -551,14 +551,14 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
   filter_upwards [this, hF_le_one] with ha h_one_sub_eq_zero h_le_one
   rw [Pi.zero_apply, tsub_eq_zero_iff_le] at h_one_sub_eq_zero 
   exact le_antisymm h_le_one h_one_sub_eq_zero
-#align probability_theory.tendsto_pre_cdf_at_top_one ProbabilityTheory.tendsto_preCdf_atTop_one
+#align probability_theory.tendsto_pre_cdf_at_top_one ProbabilityTheory.tendsto_preCDF_atTop_one
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.tendsto_preCdf_atBot_zero /-
-theorem tendsto_preCdf_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    ∀ᵐ a ∂ρ.fst, Tendsto (fun r => preCdf ρ r a) atBot (𝓝 0) :=
+#print ProbabilityTheory.tendsto_preCDF_atBot_zero /-
+theorem tendsto_preCDF_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    ∀ᵐ a ∂ρ.fst, Tendsto (fun r => preCDF ρ r a) atBot (𝓝 0) :=
   by
   -- We show first that `pre_cdf` has a limit in ℝ≥0∞ almost everywhere.
   -- We then show that the integral of `pre_cdf` tends to 0, and that it also tends
@@ -633,105 +633,105 @@ theorem tendsto_preCdf_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
     refine' fun hxj => hxj.trans (neg_le_neg _)
     exact_mod_cast hij
   exact tendsto_nhds_unique h_lintegral h_lintegral'
-#align probability_theory.tendsto_pre_cdf_at_bot_zero ProbabilityTheory.tendsto_preCdf_atBot_zero
+#align probability_theory.tendsto_pre_cdf_at_bot_zero ProbabilityTheory.tendsto_preCDF_atBot_zero
 -/
 
-#print ProbabilityTheory.inf_gt_preCdf /-
-theorem inf_gt_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    ∀ᵐ a ∂ρ.fst, ∀ t : ℚ, (⨅ r : Ioi t, preCdf ρ r a) = preCdf ρ t a :=
+#print ProbabilityTheory.inf_gt_preCDF /-
+theorem inf_gt_preCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    ∀ᵐ a ∂ρ.fst, ∀ t : ℚ, (⨅ r : Ioi t, preCDF ρ r a) = preCDF ρ t a :=
   by
   rw [ae_all_iff]
   refine' fun t => ae_eq_of_forall_set_lintegral_eq_of_sigma_finite _ measurable_pre_cdf _
   · exact measurable_iInf fun i => measurable_pre_cdf
   intro s hs hs_fin
   rw [set_lintegral_infi_gt_pre_cdf ρ t hs, set_lintegral_pre_cdf_fst ρ t hs]
-#align probability_theory.inf_gt_pre_cdf ProbabilityTheory.inf_gt_preCdf
+#align probability_theory.inf_gt_pre_cdf ProbabilityTheory.inf_gt_preCDF
 -/
 
 section HasCondCdf
 
-#print ProbabilityTheory.HasCondCdf /-
+#print ProbabilityTheory.HasCondCDF /-
 /-- A product measure on `α × ℝ` is said to have a conditional cdf at `a : α` if `pre_cdf` is
 monotone with limit 0 at -∞ and 1 at +∞, and is right continuous.
 This property holds almost everywhere (see `has_cond_cdf_ae`). -/
-structure HasCondCdf (ρ : Measure (α × ℝ)) (a : α) : Prop where
-  mono : Monotone fun r => preCdf ρ r a
-  le_one : ∀ r, preCdf ρ r a ≤ 1
-  tendsto_atTop_one : Tendsto (fun r => preCdf ρ r a) atTop (𝓝 1)
-  tendsto_atBot_zero : Tendsto (fun r => preCdf ρ r a) atBot (𝓝 0)
-  iInf_rat_gt_eq : ∀ t : ℚ, (⨅ r : Ioi t, preCdf ρ r a) = preCdf ρ t a
-#align probability_theory.has_cond_cdf ProbabilityTheory.HasCondCdf
+structure HasCondCDF (ρ : Measure (α × ℝ)) (a : α) : Prop where
+  mono : Monotone fun r => preCDF ρ r a
+  le_one : ∀ r, preCDF ρ r a ≤ 1
+  tendsto_atTop_one : Tendsto (fun r => preCDF ρ r a) atTop (𝓝 1)
+  tendsto_atBot_zero : Tendsto (fun r => preCDF ρ r a) atBot (𝓝 0)
+  iInf_rat_gt_eq : ∀ t : ℚ, (⨅ r : Ioi t, preCDF ρ r a) = preCDF ρ t a
+#align probability_theory.has_cond_cdf ProbabilityTheory.HasCondCDF
 -/
 
-#print ProbabilityTheory.hasCondCdf_ae /-
-theorem hasCondCdf_ae (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] : ∀ᵐ a ∂ρ.fst, HasCondCdf ρ a :=
+#print ProbabilityTheory.hasCondCDF_ae /-
+theorem hasCondCDF_ae (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] : ∀ᵐ a ∂ρ.fst, HasCondCDF ρ a :=
   by
   filter_upwards [monotone_pre_cdf ρ, pre_cdf_le_one ρ, tendsto_pre_cdf_at_top_one ρ,
     tendsto_pre_cdf_at_bot_zero ρ, inf_gt_pre_cdf ρ] with a h1 h2 h3 h4 h5
   exact ⟨h1, h2, h3, h4, h5⟩
-#align probability_theory.has_cond_cdf_ae ProbabilityTheory.hasCondCdf_ae
+#align probability_theory.has_cond_cdf_ae ProbabilityTheory.hasCondCDF_ae
 -/
 
-#print ProbabilityTheory.condCdfSet /-
+#print ProbabilityTheory.condCDFSet /-
 /-- A measurable set of elements of `α` such that `ρ` has a conditional cdf at all
 `a ∈ cond_cdf_set`. -/
-def condCdfSet (ρ : Measure (α × ℝ)) : Set α :=
-  toMeasurable ρ.fst {b | ¬HasCondCdf ρ b}ᶜ
-#align probability_theory.cond_cdf_set ProbabilityTheory.condCdfSet
+def condCDFSet (ρ : Measure (α × ℝ)) : Set α :=
+  toMeasurable ρ.fst {b | ¬HasCondCDF ρ b}ᶜ
+#align probability_theory.cond_cdf_set ProbabilityTheory.condCDFSet
 -/
 
-#print ProbabilityTheory.measurableSet_condCdfSet /-
-theorem measurableSet_condCdfSet (ρ : Measure (α × ℝ)) : MeasurableSet (condCdfSet ρ) :=
+#print ProbabilityTheory.measurableSet_condCDFSet /-
+theorem measurableSet_condCDFSet (ρ : Measure (α × ℝ)) : MeasurableSet (condCDFSet ρ) :=
   (measurableSet_toMeasurable _ _).compl
-#align probability_theory.measurable_set_cond_cdf_set ProbabilityTheory.measurableSet_condCdfSet
+#align probability_theory.measurable_set_cond_cdf_set ProbabilityTheory.measurableSet_condCDFSet
 -/
 
-#print ProbabilityTheory.hasCondCdf_of_mem_condCdfSet /-
-theorem hasCondCdf_of_mem_condCdfSet {ρ : Measure (α × ℝ)} {a : α} (h : a ∈ condCdfSet ρ) :
-    HasCondCdf ρ a := by
+#print ProbabilityTheory.hasCondCDF_of_mem_condCDFSet /-
+theorem hasCondCDF_of_mem_condCDFSet {ρ : Measure (α × ℝ)} {a : α} (h : a ∈ condCDFSet ρ) :
+    HasCondCDF ρ a := by
   rw [cond_cdf_set, mem_compl_iff] at h 
   have h_ss := subset_to_measurable ρ.fst {b | ¬has_cond_cdf ρ b}
   by_contra ha
   exact h (h_ss ha)
-#align probability_theory.has_cond_cdf_of_mem_cond_cdf_set ProbabilityTheory.hasCondCdf_of_mem_condCdfSet
+#align probability_theory.has_cond_cdf_of_mem_cond_cdf_set ProbabilityTheory.hasCondCDF_of_mem_condCDFSet
 -/
 
-#print ProbabilityTheory.mem_condCdfSet_ae /-
-theorem mem_condCdfSet_ae (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
-    ∀ᵐ a ∂ρ.fst, a ∈ condCdfSet ρ :=
+#print ProbabilityTheory.mem_condCDFSet_ae /-
+theorem mem_condCDFSet_ae (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
+    ∀ᵐ a ∂ρ.fst, a ∈ condCDFSet ρ :=
   by
   simp_rw [ae_iff, cond_cdf_set, not_mem_compl_iff, set_of_mem_eq, measure_to_measurable]
   exact has_cond_cdf_ae ρ
-#align probability_theory.mem_cond_cdf_set_ae ProbabilityTheory.mem_condCdfSet_ae
+#align probability_theory.mem_cond_cdf_set_ae ProbabilityTheory.mem_condCDFSet_ae
 -/
 
 end HasCondCdf
 
 open scoped Classical
 
-#print ProbabilityTheory.condCdfRat /-
+#print ProbabilityTheory.condCDFRat /-
 /-- Conditional cdf of the measure given the value on `α`, restricted to the rationals.
 It is defined to be `pre_cdf` if `a ∈ cond_cdf_set`, and a default cdf-like function
 otherwise. This is an auxiliary definition used to define `cond_cdf`. -/
-noncomputable def condCdfRat (ρ : Measure (α × ℝ)) : α → ℚ → ℝ := fun a =>
-  if a ∈ condCdfSet ρ then fun r => (preCdf ρ r a).toReal else fun r => if r < 0 then 0 else 1
-#align probability_theory.cond_cdf_rat ProbabilityTheory.condCdfRat
+noncomputable def condCDFRat (ρ : Measure (α × ℝ)) : α → ℚ → ℝ := fun a =>
+  if a ∈ condCDFSet ρ then fun r => (preCDF ρ r a).toReal else fun r => if r < 0 then 0 else 1
+#align probability_theory.cond_cdf_rat ProbabilityTheory.condCDFRat
 -/
 
-#print ProbabilityTheory.condCdfRat_of_not_mem /-
-theorem condCdfRat_of_not_mem (ρ : Measure (α × ℝ)) (a : α) (h : a ∉ condCdfSet ρ) {r : ℚ} :
-    condCdfRat ρ a r = if r < 0 then 0 else 1 := by simp only [cond_cdf_rat, h, if_false]
-#align probability_theory.cond_cdf_rat_of_not_mem ProbabilityTheory.condCdfRat_of_not_mem
+#print ProbabilityTheory.condCDFRat_of_not_mem /-
+theorem condCDFRat_of_not_mem (ρ : Measure (α × ℝ)) (a : α) (h : a ∉ condCDFSet ρ) {r : ℚ} :
+    condCDFRat ρ a r = if r < 0 then 0 else 1 := by simp only [cond_cdf_rat, h, if_false]
+#align probability_theory.cond_cdf_rat_of_not_mem ProbabilityTheory.condCDFRat_of_not_mem
 -/
 
-#print ProbabilityTheory.condCdfRat_of_mem /-
-theorem condCdfRat_of_mem (ρ : Measure (α × ℝ)) (a : α) (h : a ∈ condCdfSet ρ) (r : ℚ) :
-    condCdfRat ρ a r = (preCdf ρ r a).toReal := by simp only [cond_cdf_rat, h, if_true]
-#align probability_theory.cond_cdf_rat_of_mem ProbabilityTheory.condCdfRat_of_mem
+#print ProbabilityTheory.condCDFRat_of_mem /-
+theorem condCDFRat_of_mem (ρ : Measure (α × ℝ)) (a : α) (h : a ∈ condCDFSet ρ) (r : ℚ) :
+    condCDFRat ρ a r = (preCDF ρ r a).toReal := by simp only [cond_cdf_rat, h, if_true]
+#align probability_theory.cond_cdf_rat_of_mem ProbabilityTheory.condCDFRat_of_mem
 -/
 
-#print ProbabilityTheory.monotone_condCdfRat /-
-theorem monotone_condCdfRat (ρ : Measure (α × ℝ)) (a : α) : Monotone (condCdfRat ρ a) :=
+#print ProbabilityTheory.monotone_condCDFRat /-
+theorem monotone_condCDFRat (ρ : Measure (α × ℝ)) (a : α) : Monotone (condCDFRat ρ a) :=
   by
   by_cases h : a ∈ cond_cdf_set ρ
   · simp only [cond_cdf_rat, h, if_true, forall_const, and_self_iff]
@@ -746,28 +746,28 @@ theorem monotone_condCdfRat (ρ : Measure (α × ℝ)) (a : α) : Monotone (cond
     dsimp only
     split_ifs
     exacts [le_rfl, zero_le_one, absurd (hxy.trans_lt h_2) h_1, le_rfl]
-#align probability_theory.monotone_cond_cdf_rat ProbabilityTheory.monotone_condCdfRat
+#align probability_theory.monotone_cond_cdf_rat ProbabilityTheory.monotone_condCDFRat
 -/
 
-#print ProbabilityTheory.measurable_condCdfRat /-
-theorem measurable_condCdfRat (ρ : Measure (α × ℝ)) (q : ℚ) :
-    Measurable fun a => condCdfRat ρ a q :=
+#print ProbabilityTheory.measurable_condCDFRat /-
+theorem measurable_condCDFRat (ρ : Measure (α × ℝ)) (q : ℚ) :
+    Measurable fun a => condCDFRat ρ a q :=
   by
   simp_rw [cond_cdf_rat, ite_apply]
   exact
     Measurable.ite (measurable_set_cond_cdf_set ρ) measurable_pre_cdf.ennreal_to_real
       measurable_const
-#align probability_theory.measurable_cond_cdf_rat ProbabilityTheory.measurable_condCdfRat
+#align probability_theory.measurable_cond_cdf_rat ProbabilityTheory.measurable_condCDFRat
 -/
 
-#print ProbabilityTheory.condCdfRat_nonneg /-
-theorem condCdfRat_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : 0 ≤ condCdfRat ρ a r := by
+#print ProbabilityTheory.condCDFRat_nonneg /-
+theorem condCDFRat_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : 0 ≤ condCDFRat ρ a r := by
   unfold cond_cdf_rat; split_ifs; exacts [ENNReal.toReal_nonneg, le_rfl, zero_le_one]
-#align probability_theory.cond_cdf_rat_nonneg ProbabilityTheory.condCdfRat_nonneg
+#align probability_theory.cond_cdf_rat_nonneg ProbabilityTheory.condCDFRat_nonneg
 -/
 
-#print ProbabilityTheory.condCdfRat_le_one /-
-theorem condCdfRat_le_one (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : condCdfRat ρ a r ≤ 1 :=
+#print ProbabilityTheory.condCDFRat_le_one /-
+theorem condCDFRat_le_one (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : condCDFRat ρ a r ≤ 1 :=
   by
   unfold cond_cdf_rat
   split_ifs with h
@@ -775,12 +775,12 @@ theorem condCdfRat_le_one (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : condCd
     rw [ENNReal.ofReal_one]
     exact (has_cond_cdf_of_mem_cond_cdf_set h).le_one r
   exacts [zero_le_one, le_rfl]
-#align probability_theory.cond_cdf_rat_le_one ProbabilityTheory.condCdfRat_le_one
+#align probability_theory.cond_cdf_rat_le_one ProbabilityTheory.condCDFRat_le_one
 -/
 
-#print ProbabilityTheory.tendsto_condCdfRat_atBot /-
-theorem tendsto_condCdfRat_atBot (ρ : Measure (α × ℝ)) (a : α) :
-    Tendsto (condCdfRat ρ a) atBot (𝓝 0) :=
+#print ProbabilityTheory.tendsto_condCDFRat_atBot /-
+theorem tendsto_condCDFRat_atBot (ρ : Measure (α × ℝ)) (a : α) :
+    Tendsto (condCDFRat ρ a) atBot (𝓝 0) :=
   by
   unfold cond_cdf_rat
   split_ifs with h
@@ -793,12 +793,12 @@ theorem tendsto_condCdfRat_atBot (ρ : Measure (α × ℝ)) (a : α) :
     rw [eventually_eq, eventually_at_bot]
     refine' ⟨-1, fun q hq => (if_pos (hq.trans_lt _)).symm⟩
     linarith
-#align probability_theory.tendsto_cond_cdf_rat_at_bot ProbabilityTheory.tendsto_condCdfRat_atBot
+#align probability_theory.tendsto_cond_cdf_rat_at_bot ProbabilityTheory.tendsto_condCDFRat_atBot
 -/
 
-#print ProbabilityTheory.tendsto_condCdfRat_atTop /-
-theorem tendsto_condCdfRat_atTop (ρ : Measure (α × ℝ)) (a : α) :
-    Tendsto (condCdfRat ρ a) atTop (𝓝 1) :=
+#print ProbabilityTheory.tendsto_condCDFRat_atTop /-
+theorem tendsto_condCDFRat_atTop (ρ : Measure (α × ℝ)) (a : α) :
+    Tendsto (condCDFRat ρ a) atTop (𝓝 1) :=
   by
   unfold cond_cdf_rat
   split_ifs with h
@@ -810,29 +810,29 @@ theorem tendsto_condCdfRat_atTop (ρ : Measure (α × ℝ)) (a : α) :
   · refine' (tendsto_congr' _).mp tendsto_const_nhds
     rw [eventually_eq, eventually_at_top]
     exact ⟨0, fun q hq => (if_neg (not_lt.mpr hq)).symm⟩
-#align probability_theory.tendsto_cond_cdf_rat_at_top ProbabilityTheory.tendsto_condCdfRat_atTop
+#align probability_theory.tendsto_cond_cdf_rat_at_top ProbabilityTheory.tendsto_condCDFRat_atTop
 -/
 
-#print ProbabilityTheory.condCdfRat_ae_eq /-
-theorem condCdfRat_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
-    (fun a => condCdfRat ρ a r) =ᵐ[ρ.fst] fun a => (preCdf ρ r a).toReal := by
+#print ProbabilityTheory.condCDFRat_ae_eq /-
+theorem condCDFRat_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
+    (fun a => condCDFRat ρ a r) =ᵐ[ρ.fst] fun a => (preCDF ρ r a).toReal := by
   filter_upwards [mem_cond_cdf_set_ae ρ] with a ha using cond_cdf_rat_of_mem ρ a ha r
-#align probability_theory.cond_cdf_rat_ae_eq ProbabilityTheory.condCdfRat_ae_eq
+#align probability_theory.cond_cdf_rat_ae_eq ProbabilityTheory.condCDFRat_ae_eq
 -/
 
-#print ProbabilityTheory.ofReal_condCdfRat_ae_eq /-
-theorem ofReal_condCdfRat_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
-    (fun a => ENNReal.ofReal (condCdfRat ρ a r)) =ᵐ[ρ.fst] preCdf ρ r :=
+#print ProbabilityTheory.ofReal_condCDFRat_ae_eq /-
+theorem ofReal_condCDFRat_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
+    (fun a => ENNReal.ofReal (condCDFRat ρ a r)) =ᵐ[ρ.fst] preCDF ρ r :=
   by
   filter_upwards [cond_cdf_rat_ae_eq ρ r, pre_cdf_le_one ρ] with a ha ha_le_one
   rw [ha, ENNReal.ofReal_toReal]
   exact ((ha_le_one r).trans_lt ENNReal.one_lt_top).Ne
-#align probability_theory.of_real_cond_cdf_rat_ae_eq ProbabilityTheory.ofReal_condCdfRat_ae_eq
+#align probability_theory.of_real_cond_cdf_rat_ae_eq ProbabilityTheory.ofReal_condCDFRat_ae_eq
 -/
 
-#print ProbabilityTheory.inf_gt_condCdfRat /-
-theorem inf_gt_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (t : ℚ) :
-    (⨅ r : Ioi t, condCdfRat ρ a r) = condCdfRat ρ a t :=
+#print ProbabilityTheory.inf_gt_condCDFRat /-
+theorem inf_gt_condCDFRat (ρ : Measure (α × ℝ)) (a : α) (t : ℚ) :
+    (⨅ r : Ioi t, condCDFRat ρ a r) = condCDFRat ρ a t :=
   by
   by_cases ha : a ∈ cond_cdf_set ρ
   · simp_rw [cond_cdf_rat_of_mem ρ a ha]
@@ -869,26 +869,26 @@ theorem inf_gt_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (t : ℚ) :
         rw [if_neg]
         rw [not_lt] at h ⊢
         exact h.trans (mem_Ioi.mp x.prop).le
-#align probability_theory.inf_gt_cond_cdf_rat ProbabilityTheory.inf_gt_condCdfRat
+#align probability_theory.inf_gt_cond_cdf_rat ProbabilityTheory.inf_gt_condCDFRat
 -/
 
-#print ProbabilityTheory.condCdf' /-
+#print ProbabilityTheory.condCDF' /-
 /-- Conditional cdf of the measure given the value on `α`, as a plain function. This is an auxiliary
 definition used to define `cond_cdf`. -/
-noncomputable irreducible_def condCdf' (ρ : Measure (α × ℝ)) : α → ℝ → ℝ := fun a t =>
-  ⨅ r : { r' : ℚ // t < r' }, condCdfRat ρ a r
-#align probability_theory.cond_cdf' ProbabilityTheory.condCdf'
+noncomputable irreducible_def condCDF' (ρ : Measure (α × ℝ)) : α → ℝ → ℝ := fun a t =>
+  ⨅ r : { r' : ℚ // t < r' }, condCDFRat ρ a r
+#align probability_theory.cond_cdf' ProbabilityTheory.condCDF'
 -/
 
-#print ProbabilityTheory.condCdf'_def' /-
-theorem condCdf'_def' {ρ : Measure (α × ℝ)} {a : α} {x : ℝ} :
-    condCdf' ρ a x = ⨅ r : { r : ℚ // x < r }, condCdfRat ρ a r := by rw [cond_cdf']
-#align probability_theory.cond_cdf'_def ProbabilityTheory.condCdf'_def'
+#print ProbabilityTheory.condCDF'_def' /-
+theorem condCDF'_def' {ρ : Measure (α × ℝ)} {a : α} {x : ℝ} :
+    condCDF' ρ a x = ⨅ r : { r : ℚ // x < r }, condCDFRat ρ a r := by rw [cond_cdf']
+#align probability_theory.cond_cdf'_def ProbabilityTheory.condCDF'_def'
 -/
 
-#print ProbabilityTheory.condCdf'_eq_condCdfRat /-
-theorem condCdf'_eq_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) :
-    condCdf' ρ a r = condCdfRat ρ a r :=
+#print ProbabilityTheory.condCDF'_eq_condCDFRat /-
+theorem condCDF'_eq_condCDFRat (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) :
+    condCDF' ρ a r = condCDFRat ρ a r :=
   by
   rw [← inf_gt_cond_cdf_rat ρ a r, cond_cdf']
   refine' Equiv.iInf_congr _ _
@@ -900,11 +900,11 @@ theorem condCdf'_eq_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) :
         right_inv := fun t => by simp only [Subtype.val_eq_coe, Subtype.coe_eta] }
   · intro t
     simp only [Subtype.val_eq_coe, Equiv.coe_fn_mk, Subtype.coe_mk]
-#align probability_theory.cond_cdf'_eq_cond_cdf_rat ProbabilityTheory.condCdf'_eq_condCdfRat
+#align probability_theory.cond_cdf'_eq_cond_cdf_rat ProbabilityTheory.condCDF'_eq_condCDFRat
 -/
 
-#print ProbabilityTheory.condCdf'_nonneg /-
-theorem condCdf'_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℝ) : 0 ≤ condCdf' ρ a r :=
+#print ProbabilityTheory.condCDF'_nonneg /-
+theorem condCDF'_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℝ) : 0 ≤ condCDF' ρ a r :=
   by
   have : Nonempty { r' : ℚ // r < ↑r' } :=
     by
@@ -912,18 +912,18 @@ theorem condCdf'_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℝ) : 0 ≤ co
     exact ⟨⟨r, hrx⟩⟩
   rw [cond_cdf'_def]
   exact le_ciInf fun r' => cond_cdf_rat_nonneg ρ a _
-#align probability_theory.cond_cdf'_nonneg ProbabilityTheory.condCdf'_nonneg
+#align probability_theory.cond_cdf'_nonneg ProbabilityTheory.condCDF'_nonneg
 -/
 
-#print ProbabilityTheory.bddBelow_range_condCdfRat_gt /-
-theorem bddBelow_range_condCdfRat_gt (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
-    BddBelow (range fun r : { r' : ℚ // x < ↑r' } => condCdfRat ρ a r) := by
+#print ProbabilityTheory.bddBelow_range_condCDFRat_gt /-
+theorem bddBelow_range_condCDFRat_gt (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
+    BddBelow (range fun r : { r' : ℚ // x < ↑r' } => condCDFRat ρ a r) := by
   refine' ⟨0, fun z => _⟩; rintro ⟨u, rfl⟩; exact cond_cdf_rat_nonneg ρ a _
-#align probability_theory.bdd_below_range_cond_cdf_rat_gt ProbabilityTheory.bddBelow_range_condCdfRat_gt
+#align probability_theory.bdd_below_range_cond_cdf_rat_gt ProbabilityTheory.bddBelow_range_condCDFRat_gt
 -/
 
-#print ProbabilityTheory.monotone_condCdf' /-
-theorem monotone_condCdf' (ρ : Measure (α × ℝ)) (a : α) : Monotone (condCdf' ρ a) :=
+#print ProbabilityTheory.monotone_condCDF' /-
+theorem monotone_condCDF' (ρ : Measure (α × ℝ)) (a : α) : Monotone (condCDF' ρ a) :=
   by
   intro x y hxy
   have : Nonempty { r' : ℚ // y < ↑r' } :=
@@ -935,12 +935,12 @@ theorem monotone_condCdf' (ρ : Measure (α × ℝ)) (a : α) : Monotone (condCd
   · exact ⟨r.1, hxy.trans_lt r.prop⟩
   · exact bdd_below_range_cond_cdf_rat_gt ρ a x
   · rfl
-#align probability_theory.monotone_cond_cdf' ProbabilityTheory.monotone_condCdf'
+#align probability_theory.monotone_cond_cdf' ProbabilityTheory.monotone_condCDF'
 -/
 
-#print ProbabilityTheory.continuousWithinAt_condCdf'_Ici /-
-theorem continuousWithinAt_condCdf'_Ici (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
-    ContinuousWithinAt (condCdf' ρ a) (Ici x) x :=
+#print ProbabilityTheory.continuousWithinAt_condCDF'_Ici /-
+theorem continuousWithinAt_condCDF'_Ici (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
+    ContinuousWithinAt (condCDF' ρ a) (Ici x) x :=
   by
   rw [← continuousWithinAt_Ioi_iff_Ici]
   convert Monotone.tendsto_nhdsWithin_Ioi (monotone_cond_cdf' ρ a) x
@@ -960,51 +960,51 @@ theorem continuousWithinAt_condCdf'_Ici (ρ : Measure (α × ℝ)) (a : α) (x :
   rw [h', h'', ContinuousWithinAt]
   congr
   exact cond_cdf'_def
-#align probability_theory.continuous_within_at_cond_cdf'_Ici ProbabilityTheory.continuousWithinAt_condCdf'_Ici
+#align probability_theory.continuous_within_at_cond_cdf'_Ici ProbabilityTheory.continuousWithinAt_condCDF'_Ici
 -/
 
 /-! ### Conditional cdf -/
 
 
-#print ProbabilityTheory.condCdf /-
+#print ProbabilityTheory.condCDF /-
 /-- Conditional cdf of the measure given the value on `α`, as a Stieltjes function. -/
-noncomputable def condCdf (ρ : Measure (α × ℝ)) (a : α) : StieltjesFunction
+noncomputable def condCDF (ρ : Measure (α × ℝ)) (a : α) : StieltjesFunction
     where
-  toFun := condCdf' ρ a
-  mono' := monotone_condCdf' ρ a
-  right_continuous' x := continuousWithinAt_condCdf'_Ici ρ a x
-#align probability_theory.cond_cdf ProbabilityTheory.condCdf
+  toFun := condCDF' ρ a
+  mono' := monotone_condCDF' ρ a
+  right_continuous' x := continuousWithinAt_condCDF'_Ici ρ a x
+#align probability_theory.cond_cdf ProbabilityTheory.condCDF
 -/
 
-#print ProbabilityTheory.condCdf_eq_condCdfRat /-
-theorem condCdf_eq_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) :
-    condCdf ρ a r = condCdfRat ρ a r :=
-  condCdf'_eq_condCdfRat ρ a r
-#align probability_theory.cond_cdf_eq_cond_cdf_rat ProbabilityTheory.condCdf_eq_condCdfRat
+#print ProbabilityTheory.condCDF_eq_condCDFRat /-
+theorem condCDF_eq_condCDFRat (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) :
+    condCDF ρ a r = condCDFRat ρ a r :=
+  condCDF'_eq_condCDFRat ρ a r
+#align probability_theory.cond_cdf_eq_cond_cdf_rat ProbabilityTheory.condCDF_eq_condCDFRat
 -/
 
-#print ProbabilityTheory.condCdf_nonneg /-
+#print ProbabilityTheory.condCDF_nonneg /-
 /-- The conditional cdf is non-negative for all `a : α`. -/
-theorem condCdf_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℝ) : 0 ≤ condCdf ρ a r :=
-  condCdf'_nonneg ρ a r
-#align probability_theory.cond_cdf_nonneg ProbabilityTheory.condCdf_nonneg
+theorem condCDF_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℝ) : 0 ≤ condCDF ρ a r :=
+  condCDF'_nonneg ρ a r
+#align probability_theory.cond_cdf_nonneg ProbabilityTheory.condCDF_nonneg
 -/
 
-#print ProbabilityTheory.condCdf_le_one /-
+#print ProbabilityTheory.condCDF_le_one /-
 /-- The conditional cdf is lower or equal to 1 for all `a : α`. -/
-theorem condCdf_le_one (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) : condCdf ρ a x ≤ 1 :=
+theorem condCDF_le_one (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) : condCDF ρ a x ≤ 1 :=
   by
   obtain ⟨r, hrx⟩ := exists_rat_gt x
   rw [← StieltjesFunction.iInf_rat_gt_eq]
   simp_rw [coe_coe, cond_cdf_eq_cond_cdf_rat]
   refine' ciInf_le_of_le (bdd_below_range_cond_cdf_rat_gt ρ a x) _ (cond_cdf_rat_le_one _ _ _)
   exact ⟨r, hrx⟩
-#align probability_theory.cond_cdf_le_one ProbabilityTheory.condCdf_le_one
+#align probability_theory.cond_cdf_le_one ProbabilityTheory.condCDF_le_one
 -/
 
-#print ProbabilityTheory.tendsto_condCdf_atBot /-
+#print ProbabilityTheory.tendsto_condCDF_atBot /-
 /-- The conditional cdf tends to 0 at -∞ for all `a : α`. -/
-theorem tendsto_condCdf_atBot (ρ : Measure (α × ℝ)) (a : α) : Tendsto (condCdf ρ a) atBot (𝓝 0) :=
+theorem tendsto_condCDF_atBot (ρ : Measure (α × ℝ)) (a : α) : Tendsto (condCDF ρ a) atBot (𝓝 0) :=
   by
   have h_exists : ∀ x : ℝ, ∃ q : ℚ, x < q ∧ ↑q < x + 1 := fun x => exists_rat_btwn (lt_add_one x)
   let qs : ℝ → ℚ := fun x => (h_exists x).some
@@ -1021,12 +1021,12 @@ theorem tendsto_condCdf_atBot (ρ : Measure (α × ℝ)) (a : α) : Tendsto (con
       ((tendsto_cond_cdf_rat_at_bot ρ a).comp hqs_tendsto) (cond_cdf_nonneg ρ a) fun x => _
   rw [Function.comp_apply, ← cond_cdf_eq_cond_cdf_rat]
   exact (cond_cdf ρ a).mono (h_exists x).choose_spec.1.le
-#align probability_theory.tendsto_cond_cdf_at_bot ProbabilityTheory.tendsto_condCdf_atBot
+#align probability_theory.tendsto_cond_cdf_at_bot ProbabilityTheory.tendsto_condCDF_atBot
 -/
 
-#print ProbabilityTheory.tendsto_condCdf_atTop /-
+#print ProbabilityTheory.tendsto_condCDF_atTop /-
 /-- The conditional cdf tends to 1 at +∞ for all `a : α`. -/
-theorem tendsto_condCdf_atTop (ρ : Measure (α × ℝ)) (a : α) : Tendsto (condCdf ρ a) atTop (𝓝 1) :=
+theorem tendsto_condCDF_atTop (ρ : Measure (α × ℝ)) (a : α) : Tendsto (condCDF ρ a) atTop (𝓝 1) :=
   by
   have h_exists : ∀ x : ℝ, ∃ q : ℚ, x - 1 < q ∧ ↑q < x := fun x => exists_rat_btwn (sub_one_lt x)
   let qs : ℝ → ℚ := fun x => (h_exists x).some
@@ -1043,30 +1043,30 @@ theorem tendsto_condCdf_atTop (ρ : Measure (α × ℝ)) (a : α) : Tendsto (con
   intro x
   rw [Function.comp_apply, ← cond_cdf_eq_cond_cdf_rat]
   exact (cond_cdf ρ a).mono (le_of_lt (h_exists x).choose_spec.2)
-#align probability_theory.tendsto_cond_cdf_at_top ProbabilityTheory.tendsto_condCdf_atTop
+#align probability_theory.tendsto_cond_cdf_at_top ProbabilityTheory.tendsto_condCDF_atTop
 -/
 
-#print ProbabilityTheory.condCdf_ae_eq /-
-theorem condCdf_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
-    (fun a => condCdf ρ a r) =ᵐ[ρ.fst] fun a => (preCdf ρ r a).toReal := by
+#print ProbabilityTheory.condCDF_ae_eq /-
+theorem condCDF_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
+    (fun a => condCDF ρ a r) =ᵐ[ρ.fst] fun a => (preCDF ρ r a).toReal := by
   filter_upwards [mem_cond_cdf_set_ae ρ] with a ha using
     (cond_cdf_eq_cond_cdf_rat ρ a r).trans (cond_cdf_rat_of_mem ρ a ha r)
-#align probability_theory.cond_cdf_ae_eq ProbabilityTheory.condCdf_ae_eq
+#align probability_theory.cond_cdf_ae_eq ProbabilityTheory.condCDF_ae_eq
 -/
 
-#print ProbabilityTheory.ofReal_condCdf_ae_eq /-
-theorem ofReal_condCdf_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
-    (fun a => ENNReal.ofReal (condCdf ρ a r)) =ᵐ[ρ.fst] preCdf ρ r :=
+#print ProbabilityTheory.ofReal_condCDF_ae_eq /-
+theorem ofReal_condCDF_ae_eq (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) :
+    (fun a => ENNReal.ofReal (condCDF ρ a r)) =ᵐ[ρ.fst] preCDF ρ r :=
   by
   filter_upwards [cond_cdf_ae_eq ρ r, pre_cdf_le_one ρ] with a ha ha_le_one
   rw [ha, ENNReal.ofReal_toReal]
   exact ((ha_le_one r).trans_lt ENNReal.one_lt_top).Ne
-#align probability_theory.of_real_cond_cdf_ae_eq ProbabilityTheory.ofReal_condCdf_ae_eq
+#align probability_theory.of_real_cond_cdf_ae_eq ProbabilityTheory.ofReal_condCDF_ae_eq
 -/
 
-#print ProbabilityTheory.measurable_condCdf /-
+#print ProbabilityTheory.measurable_condCDF /-
 /-- The conditional cdf is a measurable function of `a : α` for all `x : ℝ`. -/
-theorem measurable_condCdf (ρ : Measure (α × ℝ)) (x : ℝ) : Measurable fun a => condCdf ρ a x :=
+theorem measurable_condCDF (ρ : Measure (α × ℝ)) (x : ℝ) : Measurable fun a => condCDF ρ a x :=
   by
   have : (fun a => cond_cdf ρ a x) = fun a => ⨅ r : { r' // x < ↑r' }, cond_cdf_rat ρ a ↑r :=
     by
@@ -1078,27 +1078,27 @@ theorem measurable_condCdf (ρ : Measure (α × ℝ)) (x : ℝ) : Measurable fun
   exact
     measurable_cinfi (fun q => measurable_cond_cdf_rat ρ q) fun a =>
       bdd_below_range_cond_cdf_rat_gt ρ a _
-#align probability_theory.measurable_cond_cdf ProbabilityTheory.measurable_condCdf
+#align probability_theory.measurable_cond_cdf ProbabilityTheory.measurable_condCDF
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.set_lintegral_condCdf_rat /-
+#print ProbabilityTheory.set_lintegral_condCDF_rat /-
 /-- Auxiliary lemma for `set_lintegral_cond_cdf`. -/
-theorem set_lintegral_condCdf_rat (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) {s : Set α}
-    (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCdf ρ a r) ∂ρ.fst = ρ (s ×ˢ Iic r) :=
+theorem set_lintegral_condCDF_rat (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) {s : Set α}
+    (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCDF ρ a r) ∂ρ.fst = ρ (s ×ˢ Iic r) :=
   by
   have : ∀ᵐ a ∂ρ.fst, a ∈ s → ENNReal.ofReal (cond_cdf ρ a r) = pre_cdf ρ r a := by
     filter_upwards [of_real_cond_cdf_ae_eq ρ r] with a ha using fun _ => ha
   rw [set_lintegral_congr_fun hs this, set_lintegral_pre_cdf_fst ρ r hs]
   exact ρ.Iic_snd_apply r hs
-#align probability_theory.set_lintegral_cond_cdf_rat ProbabilityTheory.set_lintegral_condCdf_rat
+#align probability_theory.set_lintegral_cond_cdf_rat ProbabilityTheory.set_lintegral_condCDF_rat
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.set_lintegral_condCdf /-
-theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
-    (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCdf ρ a x) ∂ρ.fst = ρ (s ×ˢ Iic x) :=
+#print ProbabilityTheory.set_lintegral_condCDF /-
+theorem set_lintegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
+    (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCDF ρ a x) ∂ρ.fst = ρ (s ×ˢ Iic x) :=
   by
   -- We have the result for `x : ℚ` thanks to `set_lintegral_cond_cdf_rat`. We use the equality
   -- `cond_cdf ρ a x = ⨅ r : {r' : ℚ // x < r'}, cond_cdf ρ a r` and a monotone convergence
@@ -1145,28 +1145,28 @@ theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
     refine' prod_subset_prod_iff.mpr (Or.inl ⟨subset_rfl, Iic_subset_Iic.mpr _⟩)
     exact_mod_cast hij
   · exact ⟨h_nonempty.some, measure_ne_top _ _⟩
-#align probability_theory.set_lintegral_cond_cdf ProbabilityTheory.set_lintegral_condCdf
+#align probability_theory.set_lintegral_cond_cdf ProbabilityTheory.set_lintegral_condCDF
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.lintegral_condCdf /-
-theorem lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
-    ∫⁻ a, ENNReal.ofReal (condCdf ρ a x) ∂ρ.fst = ρ (univ ×ˢ Iic x) := by
+#print ProbabilityTheory.lintegral_condCDF /-
+theorem lintegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
+    ∫⁻ a, ENNReal.ofReal (condCDF ρ a x) ∂ρ.fst = ρ (univ ×ˢ Iic x) := by
   rw [← set_lintegral_univ, set_lintegral_cond_cdf ρ _ MeasurableSet.univ]
-#align probability_theory.lintegral_cond_cdf ProbabilityTheory.lintegral_condCdf
+#align probability_theory.lintegral_cond_cdf ProbabilityTheory.lintegral_condCDF
 -/
 
-#print ProbabilityTheory.stronglyMeasurable_condCdf /-
+#print ProbabilityTheory.stronglyMeasurable_condCDF /-
 /-- The conditional cdf is a strongly measurable function of `a : α` for all `x : ℝ`. -/
-theorem stronglyMeasurable_condCdf (ρ : Measure (α × ℝ)) (x : ℝ) :
-    StronglyMeasurable fun a => condCdf ρ a x :=
-  (measurable_condCdf ρ x).StronglyMeasurable
-#align probability_theory.strongly_measurable_cond_cdf ProbabilityTheory.stronglyMeasurable_condCdf
+theorem stronglyMeasurable_condCDF (ρ : Measure (α × ℝ)) (x : ℝ) :
+    StronglyMeasurable fun a => condCDF ρ a x :=
+  (measurable_condCDF ρ x).StronglyMeasurable
+#align probability_theory.strongly_measurable_cond_cdf ProbabilityTheory.stronglyMeasurable_condCDF
 -/
 
-#print ProbabilityTheory.integrable_condCdf /-
-theorem integrable_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
-    Integrable (fun a => condCdf ρ a x) ρ.fst :=
+#print ProbabilityTheory.integrable_condCDF /-
+theorem integrable_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
+    Integrable (fun a => condCDF ρ a x) ρ.fst :=
   by
   refine' integrable_of_forall_fin_meas_le _ (measure_lt_top ρ.fst univ) _ fun t ht hρt => _
   · exact (strongly_measurable_cond_cdf ρ _).AEStronglyMeasurable
@@ -1180,13 +1180,13 @@ theorem integrable_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : 
         _
     simp only [Pi.one_apply, lintegral_one, measure.restrict_apply, MeasurableSet.univ, univ_inter]
     exact measure_mono (subset_univ _)
-#align probability_theory.integrable_cond_cdf ProbabilityTheory.integrable_condCdf
+#align probability_theory.integrable_cond_cdf ProbabilityTheory.integrable_condCDF
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.set_integral_condCdf /-
-theorem set_integral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
-    (hs : MeasurableSet s) : ∫ a in s, condCdf ρ a x ∂ρ.fst = (ρ (s ×ˢ Iic x)).toReal :=
+#print ProbabilityTheory.set_integral_condCDF /-
+theorem set_integral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
+    (hs : MeasurableSet s) : ∫ a in s, condCDF ρ a x ∂ρ.fst = (ρ (s ×ˢ Iic x)).toReal :=
   by
   have h := set_lintegral_cond_cdf ρ x hs
   rw [← of_real_integral_eq_lintegral_of_real] at h 
@@ -1194,43 +1194,43 @@ theorem set_integral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x 
     exact integral_nonneg fun _ => cond_cdf_nonneg _ _ _
   · exact (integrable_cond_cdf _ _).IntegrableOn
   · exact eventually_of_forall fun _ => cond_cdf_nonneg _ _ _
-#align probability_theory.set_integral_cond_cdf ProbabilityTheory.set_integral_condCdf
+#align probability_theory.set_integral_cond_cdf ProbabilityTheory.set_integral_condCDF
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.integral_condCdf /-
-theorem integral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
-    ∫ a, condCdf ρ a x ∂ρ.fst = (ρ (univ ×ˢ Iic x)).toReal := by
+#print ProbabilityTheory.integral_condCDF /-
+theorem integral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
+    ∫ a, condCDF ρ a x ∂ρ.fst = (ρ (univ ×ˢ Iic x)).toReal := by
   rw [← set_integral_cond_cdf ρ _ MeasurableSet.univ, measure.restrict_univ]
-#align probability_theory.integral_cond_cdf ProbabilityTheory.integral_condCdf
+#align probability_theory.integral_cond_cdf ProbabilityTheory.integral_condCDF
 -/
 
 section Measure
 
-#print ProbabilityTheory.measure_condCdf_Iic /-
-theorem measure_condCdf_Iic (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
-    (condCdf ρ a).Measure (Iic x) = ENNReal.ofReal (condCdf ρ a x) :=
+#print ProbabilityTheory.measure_condCDF_Iic /-
+theorem measure_condCDF_Iic (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
+    (condCDF ρ a).Measure (Iic x) = ENNReal.ofReal (condCDF ρ a x) :=
   by
   rw [← sub_zero (cond_cdf ρ a x)]
   exact (cond_cdf ρ a).measure_Iic (tendsto_cond_cdf_at_bot ρ a) _
-#align probability_theory.measure_cond_cdf_Iic ProbabilityTheory.measure_condCdf_Iic
+#align probability_theory.measure_cond_cdf_Iic ProbabilityTheory.measure_condCDF_Iic
 -/
 
-#print ProbabilityTheory.measure_condCdf_univ /-
-theorem measure_condCdf_univ (ρ : Measure (α × ℝ)) (a : α) : (condCdf ρ a).Measure univ = 1 :=
+#print ProbabilityTheory.measure_condCDF_univ /-
+theorem measure_condCDF_univ (ρ : Measure (α × ℝ)) (a : α) : (condCDF ρ a).Measure univ = 1 :=
   by
   rw [← ENNReal.ofReal_one, ← sub_zero (1 : ℝ)]
   exact StieltjesFunction.measure_univ _ (tendsto_cond_cdf_at_bot ρ a) (tendsto_cond_cdf_at_top ρ a)
-#align probability_theory.measure_cond_cdf_univ ProbabilityTheory.measure_condCdf_univ
+#align probability_theory.measure_cond_cdf_univ ProbabilityTheory.measure_condCDF_univ
 -/
 
-instance (ρ : Measure (α × ℝ)) (a : α) : IsProbabilityMeasure (condCdf ρ a).Measure :=
-  ⟨measure_condCdf_univ ρ a⟩
+instance (ρ : Measure (α × ℝ)) (a : α) : IsProbabilityMeasure (condCDF ρ a).Measure :=
+  ⟨measure_condCDF_univ ρ a⟩
 
-#print ProbabilityTheory.measurable_measure_condCdf /-
+#print ProbabilityTheory.measurable_measure_condCDF /-
 /-- The function `a ↦ (cond_cdf ρ a).measure` is measurable. -/
-theorem measurable_measure_condCdf (ρ : Measure (α × ℝ)) :
-    Measurable fun a => (condCdf ρ a).Measure :=
+theorem measurable_measure_condCDF (ρ : Measure (α × ℝ)) :
+    Measurable fun a => (condCDF ρ a).Measure :=
   by
   rw [measure.measurable_measure]
   refine' fun s hs =>
@@ -1251,7 +1251,7 @@ theorem measurable_measure_condCdf (ρ : Measure (α × ℝ)) :
   · intro f hf_disj hf_meas hf_cd_meas
     simp_rw [measure_Union hf_disj hf_meas]
     exact Measurable.ennreal_tsum hf_cd_meas
-#align probability_theory.measurable_measure_cond_cdf ProbabilityTheory.measurable_measure_condCdf
+#align probability_theory.measurable_measure_cond_cdf ProbabilityTheory.measurable_measure_condCDF
 -/
 
 end Measure
