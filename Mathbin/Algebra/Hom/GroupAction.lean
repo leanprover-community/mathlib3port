@@ -89,7 +89,7 @@ scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_action_hom`. -/
 class SMulHomClass (F : Type _) (M X Y : outParam <| Type _) [SMul M X] [SMul M Y] extends
-    FunLike F X fun _ => Y where
+    DFunLike F X fun _ => Y where
   map_smul : ∀ (f : F) (c : M) (x : X), f (c • x) = c • f x
 #align smul_hom_class SMulHomClass
 -/
@@ -123,19 +123,19 @@ protected theorem map_smul (f : X →[M'] Y) (m : M') (x : X) : f (m • x) = m 
 #print MulActionHom.ext /-
 @[ext]
 theorem ext : ∀ {f g : X →[M'] Y}, (∀ x, f x = g x) → f = g :=
-  FunLike.ext
+  DFunLike.ext
 #align mul_action_hom.ext MulActionHom.ext
 -/
 
 #print MulActionHom.ext_iff /-
 theorem ext_iff {f g : X →[M'] Y} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align mul_action_hom.ext_iff MulActionHom.ext_iff
 -/
 
 #print MulActionHom.congr_fun /-
 protected theorem congr_fun {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g x :=
-  FunLike.congr_fun h _
+  DFunLike.congr_fun h _
 #align mul_action_hom.congr_fun MulActionHom.congr_fun
 -/
 
@@ -282,19 +282,19 @@ theorem coe_fn_coe' (f : A →+[M] B) : ((f : A →[M] B) : A → B) = f :=
 #print DistribMulActionHom.ext /-
 @[ext]
 theorem ext : ∀ {f g : A →+[M] B}, (∀ x, f x = g x) → f = g :=
-  FunLike.ext
+  DFunLike.ext
 #align distrib_mul_action_hom.ext DistribMulActionHom.ext
 -/
 
 #print DistribMulActionHom.ext_iff /-
 theorem ext_iff {f g : A →+[M] B} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align distrib_mul_action_hom.ext_iff DistribMulActionHom.ext_iff
 -/
 
 #print DistribMulActionHom.congr_fun /-
 protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x :=
-  FunLike.congr_fun h _
+  DFunLike.congr_fun h _
 #align distrib_mul_action_hom.congr_fun DistribMulActionHom.congr_fun
 -/
 
@@ -523,13 +523,13 @@ theorem coe_fn_coe' (f : R →+*[M] S) : ((f : R →+[M] S) : R → S) = f :=
 #print MulSemiringActionHom.ext /-
 @[ext]
 theorem ext : ∀ {f g : R →+*[M] S}, (∀ x, f x = g x) → f = g :=
-  FunLike.ext
+  DFunLike.ext
 #align mul_semiring_action_hom.ext MulSemiringActionHom.ext
 -/
 
 #print MulSemiringActionHom.ext_iff /-
 theorem ext_iff {f g : R →+*[M] S} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align mul_semiring_action_hom.ext_iff MulSemiringActionHom.ext_iff
 -/
 

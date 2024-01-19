@@ -415,7 +415,7 @@ instance (priority := 100) [s : ContinuousSemilinearEquivClass F σ M M₂] :
     ContinuousSemilinearMapClass F σ M M₂ :=
   { s with
     coe := (coe : F → M → M₂)
-    coe_injective' := @FunLike.coe_injective F _ _ _ }
+    coe_injective' := @DFunLike.coe_injective F _ _ _ }
 
 end ContinuousSemilinearEquivClass
 
@@ -509,7 +509,7 @@ theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) �
 instance : ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M₁ M₂
     where
   coe f := f.toFun
-  coe_injective' f g h := coe_injective (FunLike.coe_injective h)
+  coe_injective' f g h := coe_injective (DFunLike.coe_injective h)
   map_add f := map_add f.toLinearMap
   map_continuous f := f.2
   map_smulₛₗ f := f.toLinearMap.map_smul'
@@ -558,7 +558,7 @@ theorem coe_inj {f g : M₁ →SL[σ₁₂] M₂} : (f : M₁ →ₛₗ[σ₁₂
 
 #print ContinuousLinearMap.coeFn_injective /-
 theorem coeFn_injective : @Function.Injective (M₁ →SL[σ₁₂] M₂) (M₁ → M₂) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align continuous_linear_map.coe_fn_injective ContinuousLinearMap.coeFn_injective
 -/
 
@@ -582,13 +582,13 @@ initialize_simps_projections ContinuousLinearMap (to_linear_map_to_fun → apply
 #print ContinuousLinearMap.ext /-
 @[ext]
 theorem ext {f g : M₁ →SL[σ₁₂] M₂} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align continuous_linear_map.ext ContinuousLinearMap.ext
 -/
 
 #print ContinuousLinearMap.ext_iff /-
 theorem ext_iff {f g : M₁ →SL[σ₁₂] M₂} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align continuous_linear_map.ext_iff ContinuousLinearMap.ext_iff
 -/
 
@@ -611,7 +611,7 @@ theorem coe_copy (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' = 
 
 #print ContinuousLinearMap.copy_eq /-
 theorem copy_eq (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' = ⇑f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align continuous_linear_map.copy_eq ContinuousLinearMap.copy_eq
 -/
 

@@ -203,7 +203,7 @@ See note [lower instance priority] -/
 noncomputable instance (priority := 100) : StarHomClass F A ℂ
     where
   coe φ := φ
-  coe_injective' := FunLike.coe_injective'
+  coe_injective' := DFunLike.coe_injective'
   map_star φ a := by
     suffices hsa : ∀ s : selfAdjoint A, (φ s)⋆ = φ s
     · rw [← realPart_add_I_smul_imaginaryPart a]

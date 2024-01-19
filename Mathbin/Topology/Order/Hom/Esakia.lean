@@ -136,7 +136,7 @@ instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (PseudoEpimorphism α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print PseudoEpimorphism.toFun_eq_coe /-
 @[simp]
@@ -148,7 +148,7 @@ theorem toFun_eq_coe {f : PseudoEpimorphism α β} : f.toFun = (f : α → β) :
 #print PseudoEpimorphism.ext /-
 @[ext]
 theorem ext {f g : PseudoEpimorphism α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align pseudo_epimorphism.ext PseudoEpimorphism.ext
 -/
 
@@ -169,7 +169,7 @@ theorem coe_copy (f : PseudoEpimorphism α β) (f' : α → β) (h : f' = f) : �
 
 #print PseudoEpimorphism.copy_eq /-
 theorem copy_eq (f : PseudoEpimorphism α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align pseudo_epimorphism.copy_eq PseudoEpimorphism.copy_eq
 -/
 
@@ -268,7 +268,7 @@ theorem id_comp (f : PseudoEpimorphism α β) : (PseudoEpimorphism.id β).comp f
 #print PseudoEpimorphism.cancel_right /-
 theorem cancel_right {g₁ g₂ : PseudoEpimorphism β γ} {f : PseudoEpimorphism α β}
     (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align pseudo_epimorphism.cancel_right PseudoEpimorphism.cancel_right
 -/
 
@@ -307,7 +307,7 @@ instance : EsakiaHomClass (EsakiaHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (EsakiaHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print EsakiaHom.toFun_eq_coe /-
 @[simp]
@@ -319,7 +319,7 @@ theorem toFun_eq_coe {f : EsakiaHom α β} : f.toFun = (f : α → β) :=
 #print EsakiaHom.ext /-
 @[ext]
 theorem ext {f g : EsakiaHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align esakia_hom.ext EsakiaHom.ext
 -/
 
@@ -341,7 +341,7 @@ theorem coe_copy (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : ⇑(f.cop
 
 #print EsakiaHom.copy_eq /-
 theorem copy_eq (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align esakia_hom.copy_eq EsakiaHom.copy_eq
 -/
 
@@ -454,7 +454,7 @@ theorem id_comp (f : EsakiaHom α β) : (EsakiaHom.id β).comp f = f :=
 #print EsakiaHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : EsakiaHom β γ} {f : EsakiaHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align esakia_hom.cancel_right EsakiaHom.cancel_right
 -/
 

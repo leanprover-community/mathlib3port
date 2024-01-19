@@ -275,7 +275,7 @@ instance : HeytingHomClass (HeytingHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (HeytingHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print HeytingHom.toFun_eq_coe /-
 @[simp]
@@ -287,7 +287,7 @@ theorem toFun_eq_coe {f : HeytingHom α β} : f.toFun = (f : α → β) :=
 #print HeytingHom.ext /-
 @[ext]
 theorem ext {f g : HeytingHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align heyting_hom.ext HeytingHom.ext
 -/
 
@@ -313,7 +313,7 @@ theorem coe_copy (f : HeytingHom α β) (f' : α → β) (h : f' = f) : ⇑(f.co
 
 #print HeytingHom.copy_eq /-
 theorem copy_eq (f : HeytingHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align heyting_hom.copy_eq HeytingHom.copy_eq
 -/
 
@@ -348,7 +348,7 @@ instance : Inhabited (HeytingHom α α) :=
   ⟨HeytingHom.id _⟩
 
 instance : PartialOrder (HeytingHom α β) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print HeytingHom.comp /-
 /-- Composition of `heyting_hom`s as a `heyting_hom`. -/
@@ -400,7 +400,7 @@ theorem id_comp (f : HeytingHom α β) : (HeytingHom.id β).comp f = f :=
 
 #print HeytingHom.cancel_right /-
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align heyting_hom.cancel_right HeytingHom.cancel_right
 -/
 
@@ -428,7 +428,7 @@ instance : CoheytingHomClass (CoheytingHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (CoheytingHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print CoheytingHom.toFun_eq_coe /-
 @[simp]
@@ -440,7 +440,7 @@ theorem toFun_eq_coe {f : CoheytingHom α β} : f.toFun = (f : α → β) :=
 #print CoheytingHom.ext /-
 @[ext]
 theorem ext {f g : CoheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align coheyting_hom.ext CoheytingHom.ext
 -/
 
@@ -466,7 +466,7 @@ theorem coe_copy (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : ⇑(f.
 
 #print CoheytingHom.copy_eq /-
 theorem copy_eq (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align coheyting_hom.copy_eq CoheytingHom.copy_eq
 -/
 
@@ -501,7 +501,7 @@ instance : Inhabited (CoheytingHom α α) :=
   ⟨CoheytingHom.id _⟩
 
 instance : PartialOrder (CoheytingHom α β) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print CoheytingHom.comp /-
 /-- Composition of `coheyting_hom`s as a `coheyting_hom`. -/
@@ -553,7 +553,7 @@ theorem id_comp (f : CoheytingHom α β) : (CoheytingHom.id β).comp f = f :=
 
 #print CoheytingHom.cancel_right /-
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align coheyting_hom.cancel_right CoheytingHom.cancel_right
 -/
 
@@ -581,7 +581,7 @@ instance : BiheytingHomClass (BiheytingHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (BiheytingHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print BiheytingHom.toFun_eq_coe /-
 @[simp]
@@ -593,7 +593,7 @@ theorem toFun_eq_coe {f : BiheytingHom α β} : f.toFun = (f : α → β) :=
 #print BiheytingHom.ext /-
 @[ext]
 theorem ext {f g : BiheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align biheyting_hom.ext BiheytingHom.ext
 -/
 
@@ -619,7 +619,7 @@ theorem coe_copy (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : ⇑(f.
 
 #print BiheytingHom.copy_eq /-
 theorem copy_eq (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align biheyting_hom.copy_eq BiheytingHom.copy_eq
 -/
 
@@ -652,7 +652,7 @@ instance : Inhabited (BiheytingHom α α) :=
   ⟨BiheytingHom.id _⟩
 
 instance : PartialOrder (BiheytingHom α β) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print BiheytingHom.comp /-
 /-- Composition of `biheyting_hom`s as a `biheyting_hom`. -/
@@ -704,7 +704,7 @@ theorem id_comp (f : BiheytingHom α β) : (BiheytingHom.id β).comp f = f :=
 
 #print BiheytingHom.cancel_right /-
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align biheyting_hom.cancel_right BiheytingHom.cancel_right
 -/
 

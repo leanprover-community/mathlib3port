@@ -234,7 +234,7 @@ theorem toFun_eq_coe {f : M →ₛₗ[σ] M₃} : f.toFun = (f : M → M₃) :=
 #print LinearMap.ext /-
 @[ext]
 theorem ext {f g : M →ₛₗ[σ] M₃} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align linear_map.ext LinearMap.ext
 -/
 
@@ -258,7 +258,7 @@ theorem coe_copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : 
 
 #print LinearMap.copy_eq /-
 theorem copy_eq (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align linear_map.copy_eq LinearMap.copy_eq
 -/
 
@@ -322,26 +322,26 @@ variable {fₗ gₗ f g σ}
 
 #print LinearMap.coe_injective /-
 theorem coe_injective : @Injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align linear_map.coe_injective LinearMap.coe_injective
 -/
 
 #print LinearMap.congr_arg /-
 protected theorem congr_arg {x x' : M} : x = x' → f x = f x' :=
-  FunLike.congr_arg f
+  DFunLike.congr_arg f
 #align linear_map.congr_arg LinearMap.congr_arg
 -/
 
 #print LinearMap.congr_fun /-
 /-- If two linear maps are equal, they are equal at each point. -/
 protected theorem congr_fun (h : f = g) (x : M) : f x = g x :=
-  FunLike.congr_fun h x
+  DFunLike.congr_fun h x
 #align linear_map.congr_fun LinearMap.congr_fun
 -/
 
 #print LinearMap.ext_iff /-
 theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align linear_map.ext_iff LinearMap.ext_iff
 -/
 
@@ -1051,7 +1051,7 @@ theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃
 
 /-- The type of linear maps is an additive monoid. -/
 instance : AddCommMonoid (M →ₛₗ[σ₁₂] M₂) :=
-  FunLike.coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  DFunLike.coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- The negation of a linear map is linear. -/
 instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
@@ -1111,7 +1111,7 @@ theorem comp_sub (f g : M →ₛₗ[σ₁₂] N₂) (h : N₂ →ₛₗ[σ₂₃
 
 /-- The type of linear maps is an additive group. -/
 instance : AddCommGroup (M →ₛₗ[σ₁₂] N₂) :=
-  FunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  DFunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 end Arithmetic

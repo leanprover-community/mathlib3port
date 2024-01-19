@@ -226,7 +226,7 @@ theorem continuous_coe [LocallyCompactSpace α] : @Continuous C(α, β) (α → 
 instance [T2Space β] : T2Space C(α, β) :=
   ⟨by
     intro f₁ f₂ h
-    obtain ⟨x, hx⟩ := not_forall.mp (mt (FunLike.ext f₁ f₂) h)
+    obtain ⟨x, hx⟩ := not_forall.mp (mt (DFunLike.ext f₁ f₂) h)
     obtain ⟨u, v, hu, hv, hxu, hxv, huv⟩ := t2_separation hx
     refine'
       ⟨compact_open.gen {x} u, compact_open.gen {x} v,

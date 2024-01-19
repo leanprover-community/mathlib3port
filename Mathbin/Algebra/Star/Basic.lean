@@ -586,7 +586,7 @@ section
 #print StarHomClass /-
 /-- `star_hom_class F R S` states that `F` is a type of `star`-preserving maps from `R` to `S`. -/
 class StarHomClass (F : Type _) (R S : outParam (Type _)) [Star R] [Star S] extends
-    FunLike F R fun _ => S where
+    DFunLike F R fun _ => S where
   map_star : ∀ (f : F) (r : R), f (star r) = star (f r)
 #align star_hom_class StarHomClass
 -/

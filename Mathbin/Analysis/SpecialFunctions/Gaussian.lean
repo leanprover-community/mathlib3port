@@ -605,8 +605,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
 #align gaussian_fourier.integral_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integral_cexp_neg_mul_sq_add_real_mul_I
 -/
 
-#print integral_cexp_neg_mul_sq_add_const /-
-theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
+theorem integral_cexp_neg_hMul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
     ∫ x : ℝ, cexp (-b * (x + c) ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
   rw [← re_add_im c]
@@ -614,8 +613,7 @@ theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
   rw [integral_add_right_eq_self fun x : ℝ => cexp (-b * (↑x + ↑c.im * I) ^ 2)]
   · apply integral_cexp_neg_mul_sq_add_real_mul_I hb
   · infer_instance
-#align integral_cexp_neg_mul_sq_add_const integral_cexp_neg_mul_sq_add_const
--/
+#align integral_cexp_neg_mul_sq_add_const integral_cexp_neg_hMul_sq_add_const
 
 #print fourier_transform_gaussian /-
 theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
@@ -630,7 +628,7 @@ theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
     ring_nf
     rw [I_sq]
     field_simp; ring
-  simp_rw [this, Complex.exp_add, integral_mul_left, integral_cexp_neg_mul_sq_add_const hb]
+  simp_rw [this, Complex.exp_add, integral_mul_left, integral_cexp_neg_hMul_sq_add_const hb]
 #align fourier_transform_gaussian fourier_transform_gaussian
 -/
 

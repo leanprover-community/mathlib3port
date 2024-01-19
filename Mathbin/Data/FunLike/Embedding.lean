@@ -139,7 +139,7 @@ instead of linearly increasing the work per `my_embedding`-related declaration.
 /-- The class `embedding_like F α β` expresses that terms of type `F` have an
 injective coercion to injective functions `α ↪ β`.
 -/
-class EmbeddingLike (F : Sort _) (α β : outParam (Sort _)) extends FunLike F α fun _ => β where
+class EmbeddingLike (F : Sort _) (α β : outParam (Sort _)) extends DFunLike F α fun _ => β where
   injective' : ∀ f : F, @Function.Injective α β (coe f)
 #align embedding_like EmbeddingLike
 -/

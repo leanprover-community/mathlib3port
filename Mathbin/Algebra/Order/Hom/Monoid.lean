@@ -308,13 +308,13 @@ directly. -/
 @[to_additive
       "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun` directly."]
 instance : CoeFun (α →*o β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print OrderMonoidHom.ext /-
 -- Other lemmas should be accessed through the `fun_like` API
 @[ext, to_additive]
 theorem ext (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align order_monoid_hom.ext OrderMonoidHom.ext
 #align order_add_monoid_hom.ext OrderAddMonoidHom.ext
 -/
@@ -370,7 +370,7 @@ theorem coe_orderHom (f : α →*o β) : ((f : α →o β) : α → β) = f :=
 #print OrderMonoidHom.toMonoidHom_injective /-
 @[to_additive]
 theorem toMonoidHom_injective : Injective (toMonoidHom : _ → α →* β) := fun f g h =>
-  ext <| by convert FunLike.ext_iff.1 h
+  ext <| by convert DFunLike.ext_iff.1 h
 #align order_monoid_hom.to_monoid_hom_injective OrderMonoidHom.toMonoidHom_injective
 #align order_add_monoid_hom.to_add_monoid_hom_injective OrderAddMonoidHom.toAddMonoidHom_injective
 -/
@@ -378,7 +378,7 @@ theorem toMonoidHom_injective : Injective (toMonoidHom : _ → α →* β) := fu
 #print OrderMonoidHom.toOrderHom_injective /-
 @[to_additive]
 theorem toOrderHom_injective : Injective (toOrderHom : _ → α →o β) := fun f g h =>
-  ext <| by convert FunLike.ext_iff.1 h
+  ext <| by convert DFunLike.ext_iff.1 h
 #align order_monoid_hom.to_order_hom_injective OrderMonoidHom.toOrderHom_injective
 #align order_add_monoid_hom.to_order_hom_injective OrderAddMonoidHom.toOrderHom_injective
 -/
@@ -407,7 +407,7 @@ theorem coe_copy (f : α →*o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f'
 #print OrderMonoidHom.copy_eq /-
 @[to_additive]
 theorem copy_eq (f : α →*o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align order_monoid_hom.copy_eq OrderMonoidHom.copy_eq
 #align order_add_monoid_hom.copy_eq OrderAddMonoidHom.copy_eq
 -/
@@ -508,7 +508,7 @@ theorem id_comp (f : α →*o β) : (OrderMonoidHom.id β).comp f = f :=
 @[to_additive]
 theorem cancel_right {g₁ g₂ : β →*o γ} {f : α →*o β} (hf : Function.Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align order_monoid_hom.cancel_right OrderMonoidHom.cancel_right
 #align order_add_monoid_hom.cancel_right OrderAddMonoidHom.cancel_right
 -/
@@ -664,13 +664,13 @@ instance : OrderMonoidWithZeroHomClass (α →*₀o β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (α →*₀o β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print OrderMonoidWithZeroHom.ext /-
 -- Other lemmas should be accessed through the `fun_like` API
 @[ext]
 theorem ext (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align order_monoid_with_zero_hom.ext OrderMonoidWithZeroHom.ext
 -/
 
@@ -716,13 +716,13 @@ theorem coe_orderMonoidHom (f : α →*₀o β) : ⇑(f : α →*o β) = f :=
 
 #print OrderMonoidWithZeroHom.toOrderMonoidHom_injective /-
 theorem toOrderMonoidHom_injective : Injective (toOrderMonoidHom : _ → α →*o β) := fun f g h =>
-  ext <| by convert FunLike.ext_iff.1 h
+  ext <| by convert DFunLike.ext_iff.1 h
 #align order_monoid_with_zero_hom.to_order_monoid_hom_injective OrderMonoidWithZeroHom.toOrderMonoidHom_injective
 -/
 
 #print OrderMonoidWithZeroHom.toMonoidWithZeroHom_injective /-
 theorem toMonoidWithZeroHom_injective : Injective (toMonoidWithZeroHom : _ → α →*₀ β) :=
-  fun f g h => ext <| by convert FunLike.ext_iff.1 h
+  fun f g h => ext <| by convert DFunLike.ext_iff.1 h
 #align order_monoid_with_zero_hom.to_monoid_with_zero_hom_injective OrderMonoidWithZeroHom.toMonoidWithZeroHom_injective
 -/
 
@@ -743,7 +743,7 @@ theorem coe_copy (f : α →*₀o β) (f' : α → β) (h : f' = f) : ⇑(f.copy
 
 #print OrderMonoidWithZeroHom.copy_eq /-
 theorem copy_eq (f : α →*₀o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align order_monoid_with_zero_hom.copy_eq OrderMonoidWithZeroHom.copy_eq
 -/
 
@@ -830,7 +830,7 @@ theorem id_comp (f : α →*₀o β) : (OrderMonoidWithZeroHom.id β).comp f = f
 #print OrderMonoidWithZeroHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : β →*₀o γ} {f : α →*₀o β} (hf : Function.Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align order_monoid_with_zero_hom.cancel_right OrderMonoidWithZeroHom.cancel_right
 -/
 

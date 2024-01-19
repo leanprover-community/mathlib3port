@@ -51,11 +51,11 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
           ext
           simp only [CategoryTheory.comp_apply, LinearMap.toAddMonoidHom_coe]
           simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_apply] using
-            FunLike.congr_fun eq1 x
+            DFunLike.congr_fun eq1 x
         rw [cancel_mono] at eq2 
-        ext; simpa only using FunLike.congr_fun eq2 x
+        ext; simpa only using DFunLike.congr_fun eq2 x
       refine' ⟨(injective.factor_thru G F).toAddMonoidHom, _⟩
-      ext; convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+      ext; convert DFunLike.congr_fun (injective.comp_factor_thru G F) x }
 #align AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
 
 theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGroupCat)] :
@@ -75,7 +75,7 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
           convert zero_smul _ x
         · simp only [add_smul, map_add, hn, one_smul]
         · simp only [sub_smul, map_sub, hn, one_smul]
-      ext; convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+      ext; convert DFunLike.congr_fun (injective.comp_factor_thru G F) x }
 #align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 #print AddCommGroupCat.injective_of_divisible /-

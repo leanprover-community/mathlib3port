@@ -46,7 +46,7 @@ section
 
 You should extend this class when you extend `continuous_map`. -/
 class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-    [TopologicalSpace β] extends FunLike F α fun _ => β where
+    [TopologicalSpace β] extends DFunLike F α fun _ => β where
   map_continuous (f : F) : Continuous f
 #align continuous_map_class ContinuousMapClass
 -/
@@ -97,7 +97,7 @@ instance : ContinuousMapClass C(α, β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun C(α, β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print ContinuousMap.toFun_eq_coe /-
 @[simp]
@@ -119,7 +119,7 @@ theorem coe_coe {F : Type _} [ContinuousMapClass F α β] (f : F) : ⇑(f : C(α
 #print ContinuousMap.ext /-
 @[ext]
 theorem ext {f g : C(α, β)} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align continuous_map.ext ContinuousMap.ext
 -/
 
@@ -142,7 +142,7 @@ theorem coe_copy (f : C(α, β)) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h
 
 #print ContinuousMap.copy_eq /-
 theorem copy_eq (f : C(α, β)) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align continuous_map.copy_eq ContinuousMap.copy_eq
 -/
 
@@ -328,7 +328,7 @@ theorem comp_const (f : C(β, γ)) (b : β) : f.comp (const α b) = const α (f 
 #print ContinuousMap.cancel_right /-
 theorem cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : Surjective g) :
     f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
-  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hg.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_map.cancel_right ContinuousMap.cancel_right
 -/
 
@@ -341,7 +341,7 @@ theorem cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : Injective f) :
 
 instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
   ⟨let ⟨b₁, b₂, hb⟩ := exists_pair_ne β
-    ⟨const _ b₁, const _ b₂, fun h => hb <| FunLike.congr_fun h <| Classical.arbitrary α⟩⟩
+    ⟨const _ b₁, const _ b₂, fun h => hb <| DFunLike.congr_fun h <| Classical.arbitrary α⟩⟩
 
 section Prod
 

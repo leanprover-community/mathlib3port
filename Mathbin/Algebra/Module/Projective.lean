@@ -97,7 +97,7 @@ theorem projective_def :
 
 #print Module.projective_def' /-
 theorem projective_def' : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Finsupp.total P P R id ∘ₗ s = id :=
-  by simp_rw [projective_def, FunLike.ext_iff, Function.LeftInverse, coe_comp, id_coe, id.def]
+  by simp_rw [projective_def, DFunLike.ext_iff, Function.LeftInverse, coe_comp, id_coe, id.def]
 #align module.projective_def' Module.projective_def'
 -/
 

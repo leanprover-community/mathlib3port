@@ -82,7 +82,7 @@ instance : CocompactMapClass (CocompactMap α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (CocompactMap α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print CocompactMap.coe_toContinuousMap /-
 @[simp]
@@ -94,7 +94,7 @@ theorem coe_toContinuousMap {f : CocompactMap α β} : (f.toContinuousMap : α �
 #print CocompactMap.ext /-
 @[ext]
 theorem ext {f g : CocompactMap α β} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align cocompact_map.ext CocompactMap.ext
 -/
 
@@ -118,7 +118,7 @@ theorem coe_copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : ⇑(f.
 
 #print CocompactMap.copy_eq /-
 theorem copy_eq (f : CocompactMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align cocompact_map.copy_eq CocompactMap.copy_eq
 -/
 

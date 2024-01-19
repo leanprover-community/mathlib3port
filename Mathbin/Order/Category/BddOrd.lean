@@ -74,7 +74,7 @@ instance largeCategory : LargeCategory.{u} BddOrd
 instance concreteCategory : ConcreteCategory BddOrd
     where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
-  forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
+  forget_faithful := ⟨fun X Y => by convert DFunLike.coe_injective⟩
 #align BddOrd.concrete_category BddOrd.concreteCategory
 -/
 

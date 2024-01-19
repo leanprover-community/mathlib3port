@@ -1183,7 +1183,7 @@ theorem eqOn_sclosure {f g : F} {s : Set R} (h : Set.EqOn (f : R → S) (g : R �
 #print NonUnitalRingHom.eq_of_eqOn_stop /-
 theorem eq_of_eqOn_stop {f g : F}
     (h : Set.EqOn (f : R → S) (g : R → S) (⊤ : NonUnitalSubsemiring R)) : f = g :=
-  FunLike.ext _ _ fun x => h trivial
+  DFunLike.ext _ _ fun x => h trivial
 #align non_unital_ring_hom.eq_of_eq_on_stop NonUnitalRingHom.eq_of_eqOn_stop
 -/
 

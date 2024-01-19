@@ -93,12 +93,12 @@ namespace SchwartzMap
 instance : Coe 𝓢(E, F) (E → F) :=
   ⟨toFun⟩
 
-#print SchwartzMap.instFunLike /-
-instance instFunLike : FunLike 𝓢(E, F) E fun _ => F
+#print SchwartzMap.instDFunLike /-
+instance instDFunLike : DFunLike 𝓢(E, F) E fun _ => F
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-#align schwartz_map.fun_like SchwartzMap.instFunLike
+#align schwartz_map.fun_like SchwartzMap.instDFunLike
 -/
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
@@ -149,7 +149,7 @@ theorem differentiableAt (f : 𝓢(E, F)) {x : E} : DifferentiableAt ℝ f x :=
 #print SchwartzMap.ext /-
 @[ext]
 theorem ext {f g : 𝓢(E, F)} (h : ∀ x, (f : E → F) x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align schwartz_map.ext SchwartzMap.ext
 -/
 
@@ -464,7 +464,7 @@ end Sub
 section AddCommGroup
 
 instance : AddCommGroup 𝓢(E, F) :=
-  FunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  DFunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 variable (E F)
@@ -488,7 +488,7 @@ theorem coe_coeHom : (coeHom E F : 𝓢(E, F) → E → F) = coeFn :=
 
 #print SchwartzMap.coeHom_injective /-
 theorem coeHom_injective : Function.Injective (coeHom E F) := by rw [coe_coe_hom];
-  exact FunLike.coe_injective
+  exact DFunLike.coe_injective
 #align schwartz_map.coe_hom_injective SchwartzMap.coeHom_injective
 -/
 

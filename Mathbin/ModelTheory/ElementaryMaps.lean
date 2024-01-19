@@ -61,8 +61,8 @@ variable {L} {M} {N}
 
 namespace ElementaryEmbedding
 
-#print FirstOrder.Language.ElementaryEmbedding.funLike /-
-instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N
+#print FirstOrder.Language.ElementaryEmbedding.instDFunLike /-
+instance instDFunLike : DFunLike (M ↪ₑ[L] N) M fun _ => N
     where
   coe f := f.toFun
   coe_injective' f g h := by
@@ -71,11 +71,11 @@ instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N
     simp only
     ext x
     exact Function.funext_iff.1 h x
-#align first_order.language.elementary_embedding.fun_like FirstOrder.Language.ElementaryEmbedding.funLike
+#align first_order.language.elementary_embedding.fun_like FirstOrder.Language.ElementaryEmbedding.instDFunLike
 -/
 
 instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print FirstOrder.Language.ElementaryEmbedding.map_boundedFormula /-
 @[simp]
@@ -146,7 +146,7 @@ theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ :=
 
 #print FirstOrder.Language.ElementaryEmbedding.embeddingLike /-
 instance embeddingLike : EmbeddingLike (M ↪ₑ[L] N) M N :=
-  { show FunLike (M ↪ₑ[L] N) M fun _ => N from inferInstance with injective' := injective }
+  { show DFunLike (M ↪ₑ[L] N) M fun _ => N from inferInstance with injective' := injective }
 #align first_order.language.elementary_embedding.embedding_like FirstOrder.Language.ElementaryEmbedding.embeddingLike
 -/
 
@@ -223,20 +223,20 @@ theorem coe_toEmbedding (f : M ↪ₑ[L] N) : (f.toEmbedding : M → N) = (f : M
 
 #print FirstOrder.Language.ElementaryEmbedding.coe_injective /-
 theorem coe_injective : @Function.Injective (M ↪ₑ[L] N) (M → N) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align first_order.language.elementary_embedding.coe_injective FirstOrder.Language.ElementaryEmbedding.coe_injective
 -/
 
 #print FirstOrder.Language.ElementaryEmbedding.ext /-
 @[ext]
 theorem ext ⦃f g : M ↪ₑ[L] N⦄ (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align first_order.language.elementary_embedding.ext FirstOrder.Language.ElementaryEmbedding.ext
 -/
 
 #print FirstOrder.Language.ElementaryEmbedding.ext_iff /-
 theorem ext_iff {f g : M ↪ₑ[L] N} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align first_order.language.elementary_embedding.ext_iff FirstOrder.Language.ElementaryEmbedding.ext_iff
 -/
 

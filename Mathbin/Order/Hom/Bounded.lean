@@ -69,7 +69,7 @@ section
 
 You should extend this class when you extend `top_hom`. -/
 class TopHomClass (F : Type _) (α β : outParam <| Type _) [Top α] [Top β] extends
-    FunLike F α fun _ => β where
+    DFunLike F α fun _ => β where
   map_top (f : F) : f ⊤ = ⊤
 #align top_hom_class TopHomClass
 -/
@@ -79,7 +79,7 @@ class TopHomClass (F : Type _) (α β : outParam <| Type _) [Top α] [Top β] ex
 
 You should extend this class when you extend `bot_hom`. -/
 class BotHomClass (F : Type _) (α β : outParam <| Type _) [Bot α] [Bot β] extends
-    FunLike F α fun _ => β where
+    DFunLike F α fun _ => β where
   map_bot (f : F) : f ⊥ = ⊥
 #align bot_hom_class BotHomClass
 -/
@@ -195,7 +195,7 @@ instance : TopHomClass (TopHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (TopHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 @[simp]
 theorem toFun_eq_coe {f : TopHom α β} : f.toFun = (f : α → β) :=
@@ -208,7 +208,7 @@ initialize_simps_projections TopHom (toFun → apply)
 #print TopHom.ext /-
 @[ext]
 theorem ext {f g : TopHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align top_hom.ext TopHom.ext
 -/
 
@@ -231,7 +231,7 @@ theorem coe_copy (f : TopHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f
 
 #print TopHom.copy_eq /-
 theorem copy_eq (f : TopHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align top_hom.copy_eq TopHom.copy_eq
 -/
 
@@ -311,7 +311,7 @@ theorem id_comp (f : TopHom α β) : (TopHom.id β).comp f = f :=
 #print TopHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : TopHom β γ} {f : TopHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => TopHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => TopHom.ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align top_hom.cancel_right TopHom.cancel_right
 -/
 
@@ -329,7 +329,7 @@ instance [Preorder β] [Top β] : Preorder (TopHom α β) :=
   Preorder.lift (coeFn : TopHom α β → α → β)
 
 instance [PartialOrder β] [Top β] : PartialOrder (TopHom α β) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 section OrderTop
 
@@ -362,7 +362,7 @@ instance : Inf (TopHom α β) :=
   ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_top, map_top, inf_top_eq]⟩⟩
 
 instance : SemilatticeInf (TopHom α β) :=
-  FunLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
+  DFunLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
 
 #print TopHom.coe_inf /-
 @[simp]
@@ -388,7 +388,7 @@ instance : Sup (TopHom α β) :=
   ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_top, map_top, sup_top_eq]⟩⟩
 
 instance : SemilatticeSup (TopHom α β) :=
-  FunLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
+  DFunLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
 
 #print TopHom.coe_sup /-
 @[simp]
@@ -407,10 +407,10 @@ theorem sup_apply (a : α) : (f ⊔ g) a = f a ⊔ g a :=
 end SemilatticeSup
 
 instance [Lattice β] [OrderTop β] : Lattice (TopHom α β) :=
-  FunLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl
+  DFunLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 instance [DistribLattice β] [OrderTop β] : DistribLattice (TopHom α β) :=
-  FunLike.coe_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl
+  DFunLike.coe_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 end TopHom
 
@@ -434,7 +434,7 @@ instance : BotHomClass (BotHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (BotHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 @[simp]
 theorem toFun_eq_coe {f : BotHom α β} : f.toFun = (f : α → β) :=
@@ -447,7 +447,7 @@ initialize_simps_projections BotHom (toFun → apply)
 #print BotHom.ext /-
 @[ext]
 theorem ext {f g : BotHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align bot_hom.ext BotHom.ext
 -/
 
@@ -470,7 +470,7 @@ theorem coe_copy (f : BotHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f
 
 #print BotHom.copy_eq /-
 theorem copy_eq (f : BotHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align bot_hom.copy_eq BotHom.copy_eq
 -/
 
@@ -550,7 +550,7 @@ theorem id_comp (f : BotHom α β) : (BotHom.id β).comp f = f :=
 #print BotHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : BotHom β γ} {f : BotHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => BotHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => BotHom.ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align bot_hom.cancel_right BotHom.cancel_right
 -/
 
@@ -568,7 +568,7 @@ instance [Preorder β] [Bot β] : Preorder (BotHom α β) :=
   Preorder.lift (coeFn : BotHom α β → α → β)
 
 instance [PartialOrder β] [Bot β] : PartialOrder (BotHom α β) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 section OrderBot
 
@@ -601,7 +601,7 @@ instance : Inf (BotHom α β) :=
   ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_bot, map_bot, inf_bot_eq]⟩⟩
 
 instance : SemilatticeInf (BotHom α β) :=
-  FunLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
+  DFunLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
 
 #print BotHom.coe_inf /-
 @[simp]
@@ -627,7 +627,7 @@ instance : Sup (BotHom α β) :=
   ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_bot, map_bot, sup_bot_eq]⟩⟩
 
 instance : SemilatticeSup (BotHom α β) :=
-  FunLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
+  DFunLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
 
 #print BotHom.coe_sup /-
 @[simp]
@@ -646,10 +646,10 @@ theorem sup_apply (a : α) : (f ⊔ g) a = f a ⊔ g a :=
 end SemilatticeSup
 
 instance [Lattice β] [OrderBot β] : Lattice (BotHom α β) :=
-  FunLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl
+  DFunLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 instance [DistribLattice β] [OrderBot β] : DistribLattice (BotHom α β) :=
-  FunLike.coe_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl
+  DFunLike.coe_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 end BotHom
 
@@ -686,7 +686,7 @@ instance : BoundedOrderHomClass (BoundedOrderHom α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (BoundedOrderHom α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 @[simp]
 theorem toFun_eq_coe {f : BoundedOrderHom α β} : f.toFun = (f : α → β) :=
@@ -696,7 +696,7 @@ theorem toFun_eq_coe {f : BoundedOrderHom α β} : f.toFun = (f : α → β) :=
 #print BoundedOrderHom.ext /-
 @[ext]
 theorem ext {f g : BoundedOrderHom α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align bounded_order_hom.ext BoundedOrderHom.ext
 -/
 
@@ -717,7 +717,7 @@ theorem coe_copy (f : BoundedOrderHom α β) (f' : α → β) (h : f' = f) : ⇑
 
 #print BoundedOrderHom.copy_eq /-
 theorem copy_eq (f : BoundedOrderHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align bounded_order_hom.copy_eq BoundedOrderHom.copy_eq
 -/
 
@@ -820,7 +820,7 @@ theorem id_comp (f : BoundedOrderHom α β) : (BoundedOrderHom.id β).comp f = f
 #print BoundedOrderHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : BoundedOrderHom β γ} {f : BoundedOrderHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => BoundedOrderHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => BoundedOrderHom.ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align bounded_order_hom.cancel_right BoundedOrderHom.cancel_right
 -/
 

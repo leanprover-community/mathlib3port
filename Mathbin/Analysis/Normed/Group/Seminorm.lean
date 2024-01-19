@@ -235,14 +235,14 @@ theorem toFun_eq_coe : p.toFun = p :=
 #print GroupSeminorm.ext /-
 @[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align group_seminorm.ext GroupSeminorm.ext
 #align add_group_seminorm.ext AddGroupSeminorm.ext
 -/
 
 @[to_additive]
 instance : PartialOrder (GroupSeminorm E) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print GroupSeminorm.le_def /-
 @[to_additive]
@@ -362,7 +362,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 
 @[to_additive]
 instance : SemilatticeSup (GroupSeminorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  DFunLike.coe_injective.SemilatticeSup _ coe_sup
 
 #print GroupSeminorm.comp /-
 /-- Composition of a group seminorm with a monoid homomorphism as a group seminorm. -/
@@ -605,12 +605,12 @@ theorem toZeroHom_eq_coe : p.toFun = p :=
 #print NonarchAddGroupSeminorm.ext /-
 @[ext]
 theorem ext : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align nonarch_add_group_seminorm.ext NonarchAddGroupSeminorm.ext
 -/
 
 noncomputable instance : PartialOrder (NonarchAddGroupSeminorm E) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print NonarchAddGroupSeminorm.le_def /-
 theorem le_def : p ≤ q ↔ (p : E → ℝ) ≤ q :=
@@ -689,7 +689,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 -/
 
 noncomputable instance : SemilatticeSup (NonarchAddGroupSeminorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  DFunLike.coe_injective.SemilatticeSup _ coe_sup
 
 end AddGroup
 
@@ -873,7 +873,7 @@ directly. -/
 @[to_additive
       "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun` directly. "]
 instance : CoeFun (GroupNorm E) fun _ => E → ℝ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print GroupNorm.toGroupSeminorm_eq_coe /-
 @[simp, to_additive]
@@ -886,14 +886,14 @@ theorem toGroupSeminorm_eq_coe : p.toFun = p :=
 #print GroupNorm.ext /-
 @[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align group_norm.ext GroupNorm.ext
 #align add_group_norm.ext AddGroupNorm.ext
 -/
 
 @[to_additive]
 instance : PartialOrder (GroupNorm E) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print GroupNorm.le_def /-
 @[to_additive]
@@ -978,7 +978,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 
 @[to_additive]
 instance : SemilatticeSup (GroupNorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  DFunLike.coe_injective.SemilatticeSup _ coe_sup
 
 end Group
 
@@ -1046,7 +1046,7 @@ instance nonarchAddGroupNormClass : NonarchAddGroupNormClass (NonarchAddGroupNor
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 noncomputable instance : CoeFun (NonarchAddGroupNorm E) fun _ => E → ℝ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print NonarchAddGroupNorm.toNonarchAddGroupSeminorm_eq_coe /-
 @[simp]
@@ -1058,12 +1058,12 @@ theorem toNonarchAddGroupSeminorm_eq_coe : p.toFun = p :=
 #print NonarchAddGroupNorm.ext /-
 @[ext]
 theorem ext : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align nonarch_add_group_norm.ext NonarchAddGroupNorm.ext
 -/
 
 noncomputable instance : PartialOrder (NonarchAddGroupNorm E) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print NonarchAddGroupNorm.le_def /-
 theorem le_def : p ≤ q ↔ (p : E → ℝ) ≤ q :=
@@ -1114,7 +1114,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 -/
 
 noncomputable instance : SemilatticeSup (NonarchAddGroupNorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  DFunLike.coe_injective.SemilatticeSup _ coe_sup
 
 instance [DecidableEq E] : One (NonarchAddGroupNorm E) :=
   ⟨{ (1 : NonarchAddGroupSeminorm E) with

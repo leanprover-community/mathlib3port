@@ -88,7 +88,7 @@ section
 
 You should extend this class when you extend `spectral_map`. -/
 class SpectralMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-    [TopologicalSpace β] extends FunLike F α fun _ => β where
+    [TopologicalSpace β] extends DFunLike F α fun _ => β where
   map_spectral (f : F) : IsSpectralMap f
 #align spectral_map_class SpectralMapClass
 -/
@@ -134,7 +134,7 @@ instance : SpectralMapClass (SpectralMap α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (SpectralMap α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print SpectralMap.toFun_eq_coe /-
 @[simp]
@@ -146,7 +146,7 @@ theorem toFun_eq_coe {f : SpectralMap α β} : f.toFun = (f : α → β) :=
 #print SpectralMap.ext /-
 @[ext]
 theorem ext {f g : SpectralMap α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align spectral_map.ext SpectralMap.ext
 -/
 
@@ -167,7 +167,7 @@ theorem coe_copy (f : SpectralMap α β) (f' : α → β) (h : f' = f) : ⇑(f.c
 
 #print SpectralMap.copy_eq /-
 theorem copy_eq (f : SpectralMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align spectral_map.copy_eq SpectralMap.copy_eq
 -/
 
@@ -253,7 +253,7 @@ theorem id_comp (f : SpectralMap α β) : (SpectralMap.id β).comp f = f :=
 #print SpectralMap.cancel_right /-
 theorem cancel_right {g₁ g₂ : SpectralMap β γ} {f : SpectralMap α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align spectral_map.cancel_right SpectralMap.cancel_right
 -/
 

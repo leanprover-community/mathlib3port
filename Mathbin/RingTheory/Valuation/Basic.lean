@@ -133,7 +133,7 @@ instance : ValuationClass (Valuation R Γ₀) R Γ₀
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (Valuation R Γ₀) fun _ => R → Γ₀ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print Valuation.toFun_eq_coe /-
 @[simp]
@@ -145,7 +145,7 @@ theorem toFun_eq_coe (v : Valuation R Γ₀) : v.toFun = v :=
 #print Valuation.ext /-
 @[ext]
 theorem ext {v₁ v₂ : Valuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v₁ = v₂ :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align valuation.ext Valuation.ext
 -/
 
@@ -239,7 +239,7 @@ theorem map_pow : ∀ (x) (n : ℕ), v (x ^ n) = v x ^ n :=
 #print Valuation.ext_iff /-
 /-- Deprecated. Use `fun_like.ext_iff`. -/
 theorem ext_iff {v₁ v₂ : Valuation R Γ₀} : v₁ = v₂ ↔ ∀ r, v₁ r = v₂ r :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align valuation.ext_iff Valuation.ext_iff
 -/
 

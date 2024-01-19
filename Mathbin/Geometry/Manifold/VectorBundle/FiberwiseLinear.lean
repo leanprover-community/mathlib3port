@@ -321,7 +321,7 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     · apply contMDiffOn_const
     · apply contMDiffOn_const
     ·
-      simp only [FiberwiseLinear.partialHomeomorph, PartialHomeomorph.refl_localEquiv,
+      simp only [FiberwiseLinear.partialHomeomorph, PartialHomeomorph.refl_partialEquiv,
         PartialEquiv.refl_source, univ_prod_univ]
     ·
       simp only [FiberwiseLinear.partialHomeomorph, PartialHomeomorph.refl_apply, Prod.mk.eta,

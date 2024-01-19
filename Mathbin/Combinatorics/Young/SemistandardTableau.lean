@@ -64,18 +64,18 @@ structure Ssyt (μ : YoungDiagram) where
 
 namespace Ssyt
 
-#print Ssyt.funLike /-
-instance funLike {μ : YoungDiagram} : FunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ
+#print Ssyt.instDFunLike /-
+instance instDFunLike {μ : YoungDiagram} : DFunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ
     where
   coe := Ssyt.entry
   coe_injective' T T' h := by cases T; cases T'; congr
-#align ssyt.fun_like Ssyt.funLike
+#align ssyt.fun_like Ssyt.instDFunLike
 -/
 
 /-- Helper instance for when there's too many metavariables to apply
 `fun_like.has_coe_to_fun` directly. -/
 instance {μ : YoungDiagram} : CoeFun (Ssyt μ) fun _ => ℕ → ℕ → ℕ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print Ssyt.to_fun_eq_coe /-
 @[simp]
@@ -87,7 +87,7 @@ theorem to_fun_eq_coe {μ : YoungDiagram} {T : Ssyt μ} : T.entry = (T : ℕ →
 #print Ssyt.ext /-
 @[ext]
 theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) : T = T' :=
-  FunLike.ext T T' fun x => by funext; apply h
+  DFunLike.ext T T' fun x => by funext; apply h
 #align ssyt.ext Ssyt.ext
 -/
 
@@ -114,7 +114,7 @@ theorem coe_copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ
 #print Ssyt.copy_eq /-
 theorem copy_eq {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) :
     T.copy entry' h = T :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align ssyt.copy_eq Ssyt.copy_eq
 -/
 

@@ -93,7 +93,7 @@ def ModuleCat.restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] 
 instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
     CategoryTheory.Faithful (ModuleCat.restrictScalars.{v} f)
     where map_injective' _ _ _ _ h :=
-    LinearMap.ext fun x => by simpa only using FunLike.congr_fun h x
+    LinearMap.ext fun x => by simpa only using DFunLike.congr_fun h x
 
 #print ModuleCat.restrictScalars.map_apply /-
 @[simp]

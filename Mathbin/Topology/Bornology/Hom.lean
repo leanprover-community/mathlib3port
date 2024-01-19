@@ -47,7 +47,7 @@ section
 
 You should extend this class when you extend `locally_bounded_map`. -/
 class LocallyBoundedMapClass (F : Type _) (α β : outParam <| Type _) [Bornology α]
-    [Bornology β] extends FunLike F α fun _ => β where
+    [Bornology β] extends DFunLike F α fun _ => β where
   comap_cobounded_le (f : F) : (cobounded β).comap f ≤ cobounded α
 #align locally_bounded_map_class LocallyBoundedMapClass
 -/
@@ -80,7 +80,7 @@ instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (LocallyBoundedMap α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 @[simp]
 theorem toFun_eq_coe {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) :=
@@ -90,7 +90,7 @@ theorem toFun_eq_coe {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) :
 #print LocallyBoundedMap.ext /-
 @[ext]
 theorem ext {f g : LocallyBoundedMap α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align locally_bounded_map.ext LocallyBoundedMap.ext
 -/
 
@@ -111,7 +111,7 @@ theorem coe_copy (f : LocallyBoundedMap α β) (f' : α → β) (h : f' = f) : �
 
 #print LocallyBoundedMap.copy_eq /-
 theorem copy_eq (f : LocallyBoundedMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align locally_bounded_map.copy_eq LocallyBoundedMap.copy_eq
 -/
 
@@ -215,7 +215,7 @@ theorem id_comp (f : LocallyBoundedMap α β) : (LocallyBoundedMap.id β).comp f
 #print LocallyBoundedMap.cancel_right /-
 theorem cancel_right {g₁ g₂ : LocallyBoundedMap β γ} {f : LocallyBoundedMap α β}
     (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align locally_bounded_map.cancel_right LocallyBoundedMap.cancel_right
 -/
 

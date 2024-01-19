@@ -110,16 +110,16 @@ namespace Poly
 
 section
 
-#print Poly.funLike /-
-instance funLike : FunLike (Poly α) (α → ℕ) fun _ => ℤ :=
+#print Poly.instDFunLike /-
+instance instDFunLike : DFunLike (Poly α) (α → ℕ) fun _ => ℤ :=
   ⟨Subtype.val, Subtype.val_injective⟩
-#align poly.fun_like Poly.funLike
+#align poly.fun_like Poly.instDFunLike
 -/
 
 /-- Helper instance for when there are too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (Poly α) fun _ => (α → ℕ) → ℤ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print Poly.isPoly /-
 /-- The underlying function of a `poly` is a polynomial -/
@@ -132,7 +132,7 @@ protected theorem isPoly (f : Poly α) : IsPoly f :=
 /-- Extensionality for `poly α` -/
 @[ext]
 theorem ext {f g : Poly α} : (∀ x, f x = g x) → f = g :=
-  FunLike.ext _ _
+  DFunLike.ext _ _
 #align poly.ext Poly.ext
 -/
 

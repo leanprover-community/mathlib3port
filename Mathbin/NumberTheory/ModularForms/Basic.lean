@@ -126,14 +126,14 @@ theorem CuspForm.toFun_eq_coe {f : CuspForm Γ k} : f.toFun = (f : ℍ → ℂ) 
 #print ModularForm.ext /-
 @[ext]
 theorem ModularForm.ext {f g : ModularForm Γ k} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align modular_form.ext ModularForm.ext
 -/
 
 #print CuspForm.ext /-
 @[ext]
 theorem CuspForm.ext {f g : CuspForm Γ k} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align cusp_form.ext CuspForm.ext
 -/
 
@@ -294,7 +294,7 @@ theorem sub_apply (f g : ModularForm Γ k) (z : ℍ) : (f - g) z = f z - g z :=
 -/
 
 instance : AddCommGroup (ModularForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
+  DFunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 #print ModularForm.coeHom /-
 /-- Additive coercion from `modular_form` to `ℍ → ℂ`. -/
@@ -307,7 +307,7 @@ def coeHom : ModularForm Γ k →+ ℍ → ℂ where
 -/
 
 instance : Module ℂ (ModularForm Γ k) :=
-  Function.Injective.module ℂ coeHom FunLike.coe_injective fun _ _ => rfl
+  Function.Injective.module ℂ coeHom DFunLike.coe_injective fun _ _ => rfl
 
 instance : Inhabited (ModularForm Γ k) :=
   ⟨0⟩
@@ -477,7 +477,7 @@ theorem sub_apply (f g : CuspForm Γ k) (z : ℍ) : (f - g) z = f z - g z :=
 -/
 
 instance : AddCommGroup (CuspForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
+  DFunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 #print CuspForm.coeHom /-
 /-- Additive coercion from `cusp_form` to `ℍ → ℂ`. -/
@@ -490,15 +490,15 @@ def coeHom : CuspForm Γ k →+ ℍ → ℂ where
 -/
 
 instance : Module ℂ (CuspForm Γ k) :=
-  Function.Injective.module ℂ coeHom FunLike.coe_injective fun _ _ => rfl
+  Function.Injective.module ℂ coeHom DFunLike.coe_injective fun _ _ => rfl
 
 instance : Inhabited (CuspForm Γ k) :=
   ⟨0⟩
 
 instance (priority := 99) [CuspFormClass F Γ k] : ModularFormClass F Γ k
     where
-  coe := FunLike.coe
-  coe_injective' := FunLike.coe_injective'
+  coe := DFunLike.coe
+  coe_injective' := DFunLike.coe_injective'
   slash_action_eq := CuspFormClass.slash_action_eq
   holo := CuspFormClass.holo
   bdd_at_infty _ _ := (CuspFormClass.zero_at_infty _ _).BoundedAtFilter

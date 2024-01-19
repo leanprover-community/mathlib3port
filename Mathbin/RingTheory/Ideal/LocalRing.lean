@@ -517,7 +517,7 @@ theorem map_residue (f : R →+* S) [IsLocalRingHom f] (r : R) :
 
 #print LocalRing.ResidueField.map_id_apply /-
 theorem map_id_apply (x : ResidueField R) : map (RingHom.id R) x = x :=
-  FunLike.congr_fun map_id x
+  DFunLike.congr_fun map_id x
 #align local_ring.residue_field.map_id_apply LocalRing.ResidueField.map_id_apply
 -/
 
@@ -525,7 +525,7 @@ theorem map_id_apply (x : ResidueField R) : map (RingHom.id R) x = x :=
 @[simp]
 theorem map_map (f : R →+* S) (g : S →+* T) (x : ResidueField R) [IsLocalRingHom f]
     [IsLocalRingHom g] : map g (map f x) = map (g.comp f) x :=
-  FunLike.congr_fun (map_comp f g).symm x
+  DFunLike.congr_fun (map_comp f g).symm x
 #align local_ring.residue_field.map_map LocalRing.ResidueField.map_map
 -/
 

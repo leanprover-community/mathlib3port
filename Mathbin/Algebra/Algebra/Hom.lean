@@ -177,13 +177,13 @@ variable (φ : A →ₐ[R] B)
 
 #print AlgHom.coe_fn_injective /-
 theorem coe_fn_injective : @Function.Injective (A →ₐ[R] B) (A → B) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align alg_hom.coe_fn_injective AlgHom.coe_fn_injective
 -/
 
 #print AlgHom.coe_fn_inj /-
 theorem coe_fn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔ φ₁ = φ₂ :=
-  FunLike.coe_fn_eq
+  DFunLike.coe_fn_eq
 #align alg_hom.coe_fn_inj AlgHom.coe_fn_inj
 -/
 
@@ -207,26 +207,26 @@ theorem coe_addMonoidHom_injective : Function.Injective (coe : (A →ₐ[R] B) �
 
 #print AlgHom.congr_fun /-
 protected theorem congr_fun {φ₁ φ₂ : A →ₐ[R] B} (H : φ₁ = φ₂) (x : A) : φ₁ x = φ₂ x :=
-  FunLike.congr_fun H x
+  DFunLike.congr_fun H x
 #align alg_hom.congr_fun AlgHom.congr_fun
 -/
 
 #print AlgHom.congr_arg /-
 protected theorem congr_arg (φ : A →ₐ[R] B) {x y : A} (h : x = y) : φ x = φ y :=
-  FunLike.congr_arg φ h
+  DFunLike.congr_arg φ h
 #align alg_hom.congr_arg AlgHom.congr_arg
 -/
 
 #print AlgHom.ext /-
 @[ext]
 theorem ext {φ₁ φ₂ : A →ₐ[R] B} (H : ∀ x, φ₁ x = φ₂ x) : φ₁ = φ₂ :=
-  FunLike.ext _ _ H
+  DFunLike.ext _ _ H
 #align alg_hom.ext AlgHom.ext
 -/
 
 #print AlgHom.ext_iff /-
 theorem ext_iff {φ₁ φ₂ : A →ₐ[R] B} : φ₁ = φ₂ ↔ ∀ x, φ₁ x = φ₂ x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align alg_hom.ext_iff AlgHom.ext_iff
 -/
 

@@ -51,7 +51,7 @@ structure SlashInvariantForm where
 #print SlashInvariantFormClass /-
 /-- `slash_invariant_form_class F Γ k` asserts `F` is a type of bundled functions that are invariant
 under the `slash_action`. -/
-class SlashInvariantFormClass extends FunLike F ℍ fun _ => ℂ where
+class SlashInvariantFormClass extends DFunLike F ℍ fun _ => ℂ where
   slash_action_eq : ∀ (f : F) (γ : Γ), (f : ℍ → ℂ) ∣[k] γ = f
 #align slash_invariant_form_class SlashInvariantFormClass
 -/
@@ -71,7 +71,7 @@ instance (priority := 100) SlashInvariantFormClass.slashInvariantForm :
 variable {F Γ k}
 
 instance : CoeFun (SlashInvariantForm Γ k) fun _ => ℍ → ℂ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print SlashInvariantForm.toFun_eq_coe /-
 @[simp]
@@ -83,7 +83,7 @@ theorem SlashInvariantForm.toFun_eq_coe {f : SlashInvariantForm Γ k} : f.toFun 
 #print SlashInvariantForm.ext /-
 @[ext]
 theorem SlashInvariantForm.ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align slash_invariant_form_ext SlashInvariantForm.ext
 -/
 
@@ -108,7 +108,7 @@ variable {F : Type _} {Γ : outParam <| Subgroup SL(2, ℤ)} {k : outParam ℤ}
 @[nolint dangerous_instance]
 instance (priority := 100) SlashInvariantFormClass.coeToFun [SlashInvariantFormClass F Γ k] :
     CoeFun F fun _ => ℍ → ℂ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 #align slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
 
 #print SlashInvariantForm.slash_action_eqn /-
@@ -248,7 +248,7 @@ theorem sub_apply (f g : SlashInvariantForm Γ k) (z : ℍ) : (f - g) z = f z - 
 -/
 
 instance : AddCommGroup (SlashInvariantForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
+  DFunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 #print SlashInvariantForm.coeHom /-
 /-- Additive coercion from `slash_invariant_form` to `ℍ → ℂ`.-/
@@ -262,7 +262,7 @@ def coeHom : SlashInvariantForm Γ k →+ ℍ → ℂ
 
 #print SlashInvariantForm.coeHom_injective /-
 theorem coeHom_injective : Function.Injective (@coeHom Γ k) :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align slash_invariant_form.coe_hom_injective SlashInvariantForm.coeHom_injective
 -/
 

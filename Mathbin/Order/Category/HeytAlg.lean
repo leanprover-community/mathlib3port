@@ -60,7 +60,7 @@ instance bundledHom : BundledHom HeytingHom
   toFun α β [HeytingAlgebra α] [HeytingAlgebra β] := (coeFn : HeytingHom α β → α → β)
   id := HeytingHom.id
   comp := @HeytingHom.comp
-  hom_ext α β [HeytingAlgebra α] [HeytingAlgebra β] := FunLike.coe_injective
+  hom_ext α β [HeytingAlgebra α] [HeytingAlgebra β] := DFunLike.coe_injective
 #align HeytAlg.bundled_hom HeytAlg.bundledHom
 -/
 

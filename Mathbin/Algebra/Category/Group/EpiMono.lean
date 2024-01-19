@@ -348,13 +348,13 @@ theorem agree : f.range.carrier = {x | h x = g x} :=
       (g b) (from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩) =
         from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ :=
       rfl
-    exact (from_coset_ne_of_nin_range _ r).symm (by rw [← eq1, ← eq2, FunLike.congr_fun hb])
+    exact (from_coset_ne_of_nin_range _ r).symm (by rw [← eq1, ← eq2, DFunLike.congr_fun hb])
 #align Group.surjective_of_epi_auxs.agree GroupCat.SurjectiveOfEpiAuxs.agree
 -/
 
 #print GroupCat.SurjectiveOfEpiAuxs.comp_eq /-
 theorem comp_eq : (f ≫ show B ⟶ GroupCat.of SX' from g) = f ≫ h :=
-  FunLike.ext _ _ fun a => by
+  DFunLike.ext _ _ fun a => by
     simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ {b | h b = g b})]
 #align Group.surjective_of_epi_auxs.comp_eq GroupCat.SurjectiveOfEpiAuxs.comp_eq
 -/
@@ -364,7 +364,7 @@ theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h :=
   by
   intro r
   replace r :=
-    FunLike.congr_fun (FunLike.congr_fun r x) (from_coset ⟨f.range, ⟨1, one_leftCoset _⟩⟩)
+    DFunLike.congr_fun (DFunLike.congr_fun r x) (from_coset ⟨f.range, ⟨1, one_leftCoset _⟩⟩)
   rw [H, g_apply_from_coset, MonoidHom.coe_mk, tau] at r 
   simp only [MonoidHom.coe_range, Subtype.coe_mk, Equiv.symm_swap, Equiv.toFun_as_coe,
     Equiv.coe_trans, Function.comp_apply] at r 

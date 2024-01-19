@@ -72,7 +72,7 @@ variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 instance : AddMonoidHomClass (Derivation R A M) A M
     where
   coe D := D.toFun
-  coe_injective' D1 D2 h := by cases D1; cases D2; congr; exact FunLike.coe_injective h
+  coe_injective' D1 D2 h := by cases D1; cases D2; congr; exact DFunLike.coe_injective h
   map_add D := D.toLinearMap.map_add'
   map_zero D := D.toLinearMap.map_zero
 
@@ -115,20 +115,20 @@ theorem coeFn_coe (f : Derivation R A M) : ⇑(f : A →ₗ[R] M) = f :=
 
 #print Derivation.coe_injective /-
 theorem coe_injective : @Function.Injective (Derivation R A M) (A → M) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align derivation.coe_injective Derivation.coe_injective
 -/
 
 #print Derivation.ext /-
 @[ext]
 theorem ext (H : ∀ a, D1 a = D2 a) : D1 = D2 :=
-  FunLike.ext _ _ H
+  DFunLike.ext _ _ H
 #align derivation.ext Derivation.ext
 -/
 
 #print Derivation.congr_fun /-
 theorem congr_fun (h : D1 = D2) (a : A) : D1 a = D2 a :=
-  FunLike.congr_fun h a
+  DFunLike.congr_fun h a
 #align derivation.congr_fun Derivation.congr_fun
 -/
 

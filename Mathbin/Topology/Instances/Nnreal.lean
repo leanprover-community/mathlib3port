@@ -105,7 +105,7 @@ def ContinuousMap.coeNNRealReal : C(ℝ≥0, ℝ) :=
 #print NNReal.ContinuousMap.canLift /-
 instance ContinuousMap.canLift {X : Type _} [TopologicalSpace X] :
     CanLift C(X, ℝ) C(X, ℝ≥0) ContinuousMap.coeNNRealReal.comp fun f => ∀ x, 0 ≤ f x
-    where prf f hf := ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, FunLike.ext' rfl⟩
+    where prf f hf := ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, DFunLike.ext' rfl⟩
 #align nnreal.continuous_map.can_lift NNReal.ContinuousMap.canLift
 -/
 

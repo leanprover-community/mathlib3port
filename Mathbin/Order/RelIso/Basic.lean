@@ -66,7 +66,7 @@ The relations `r` and `s` are `out_param`s since figuring them out from a goal i
 matching problem that Lean usually can't do unaided.
 -/
 class RelHomClass (F : Type _) {α β : outParam <| Type _} (r : outParam <| α → α → Prop)
-    (s : outParam <| β → β → Prop) extends FunLike F α fun _ => β where
+    (s : outParam <| β → β → Prop) extends DFunLike F α fun _ => β where
   map_rel : ∀ (f : F) {a b}, r a b → s (f a) (f b)
 #align rel_hom_class RelHomClass
 -/
@@ -145,20 +145,20 @@ theorem coe_fn_toFun (f : r →r s) : (f.toFun : α → β) = f :=
 #print RelHom.coe_fn_injective /-
 /-- The map `coe_fn : (r →r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r →r s) (α → β) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align rel_hom.coe_fn_injective RelHom.coe_fn_injective
 -/
 
 #print RelHom.ext /-
 @[ext]
 theorem ext ⦃f g : r →r s⦄ (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align rel_hom.ext RelHom.ext
 -/
 
 #print RelHom.ext_iff /-
 theorem ext_iff {f g : r →r s} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align rel_hom.ext_iff RelHom.ext_iff
 -/
 
@@ -332,20 +332,20 @@ theorem coe_toEmbedding (f : r ↪r s) : (f.toEmbedding : α → β) = f :=
 #print RelEmbedding.coe_fn_injective /-
 /-- The map `coe_fn : (r ↪r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r ↪r s) (α → β) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align rel_embedding.coe_fn_injective RelEmbedding.coe_fn_injective
 -/
 
 #print RelEmbedding.ext /-
 @[ext]
 theorem ext ⦃f g : r ↪r s⦄ (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align rel_embedding.ext RelEmbedding.ext
 -/
 
 #print RelEmbedding.ext_iff /-
 theorem ext_iff {f g : r ↪r s} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align rel_embedding.ext_iff RelEmbedding.ext_iff
 -/
 
@@ -834,20 +834,20 @@ theorem coe_fn_toEquiv (f : r ≃r s) : (f.toEquiv : α → β) = f :=
 /-- The map `coe_fn : (r ≃r s) → (α → β)` is injective. Lean fails to parse
 `function.injective (λ e : r ≃r s, (e : α → β))`, so we use a trick to say the same. -/
 theorem coe_fn_injective : @Function.Injective (r ≃r s) (α → β) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align rel_iso.coe_fn_injective RelIso.coe_fn_injective
 -/
 
 #print RelIso.ext /-
 @[ext]
 theorem ext ⦃f g : r ≃r s⦄ (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align rel_iso.ext RelIso.ext
 -/
 
 #print RelIso.ext_iff /-
 theorem ext_iff {f g : r ≃r s} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align rel_iso.ext_iff RelIso.ext_iff
 -/
 

@@ -103,7 +103,7 @@ instance : CentroidHomClass (CentroidHom α) α
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (CentroidHom α) fun _ => α → α :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print CentroidHom.toFun_eq_coe /-
 @[simp]
@@ -115,7 +115,7 @@ theorem toFun_eq_coe {f : CentroidHom α} : f.toFun = (f : α → α) :=
 #print CentroidHom.ext /-
 @[ext]
 theorem ext {f g : CentroidHom α} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align centroid_hom.ext CentroidHom.ext
 -/
 
@@ -136,7 +136,7 @@ theorem toAddMonoidHom_eq_coe (f : CentroidHom α) : f.toAddMonoidHom = f :=
 #print CentroidHom.coe_toAddMonoidHom_injective /-
 theorem coe_toAddMonoidHom_injective : Injective (coe : CentroidHom α → α →+ α) := fun f g h =>
   ext fun a =>
-    haveI := FunLike.congr_fun h a
+    haveI := DFunLike.congr_fun h a
     this
 #align centroid_hom.coe_to_add_monoid_hom_injective CentroidHom.coe_toAddMonoidHom_injective
 -/
@@ -174,7 +174,7 @@ theorem coe_copy (f : CentroidHom α) (f' : α → α) (h : f' = f) : ⇑(f.copy
 
 #print CentroidHom.copy_eq /-
 theorem copy_eq (f : CentroidHom α) (f' : α → α) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align centroid_hom.copy_eq CentroidHom.copy_eq
 -/
 
@@ -272,7 +272,7 @@ theorem id_comp (f : CentroidHom α) : (CentroidHom.id α).comp f = f :=
 #print CentroidHom.cancel_right /-
 theorem cancel_right {g₁ g₂ f : CentroidHom α} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align centroid_hom.cancel_right CentroidHom.cancel_right
 -/
 

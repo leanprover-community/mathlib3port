@@ -84,7 +84,7 @@ instance : BoundedContinuousMapClass (α →ᵇ β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (α →ᵇ β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 instance [BoundedContinuousMapClass F α β] : CoeTC F (α →ᵇ β) :=
   ⟨fun f =>
@@ -124,7 +124,7 @@ protected theorem continuous (f : α →ᵇ β) : Continuous f :=
 #print BoundedContinuousFunction.ext /-
 @[ext]
 theorem ext (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align bounded_continuous_function.ext BoundedContinuousFunction.ext
 -/
 
@@ -605,7 +605,7 @@ theorem extend_apply' {f : α ↪ δ} {x : δ} (hx : x ∉ range f) (g : α →�
 
 #print BoundedContinuousFunction.extend_of_empty /-
 theorem extend_of_empty [IsEmpty α] (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : extend f g h = h :=
-  FunLike.coe_injective <| Function.extend_of_isEmpty f g h
+  DFunLike.coe_injective <| Function.extend_of_isEmpty f g h
 #align bounded_continuous_function.extend_of_empty BoundedContinuousFunction.extend_of_empty
 -/
 
@@ -794,7 +794,7 @@ theorem mkOfCompact_one [CompactSpace α] : mkOfCompact (1 : C(α, β)) = 1 :=
 #print BoundedContinuousFunction.forall_coe_one_iff_one /-
 @[to_additive]
 theorem forall_coe_one_iff_one (f : α →ᵇ β) : (∀ x, f x = 1) ↔ f = 1 :=
-  (@FunLike.ext_iff _ _ _ _ f 1).symm
+  (@DFunLike.ext_iff _ _ _ _ f 1).symm
 #align bounded_continuous_function.forall_coe_one_iff_one BoundedContinuousFunction.forall_coe_one_iff_one
 #align bounded_continuous_function.forall_coe_zero_iff_zero BoundedContinuousFunction.forall_coe_zero_iff_zero
 -/
@@ -901,7 +901,7 @@ theorem nsmul_apply (r : ℕ) (f : α →ᵇ β) (v : α) : (r • f) v = r • 
 -/
 
 instance : AddMonoid (α →ᵇ β) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
+  DFunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
 
 instance : LipschitzAdd (α →ᵇ β)
     where lipschitz_add :=
@@ -1261,7 +1261,7 @@ theorem zsmul_apply (r : ℤ) (f : α →ᵇ β) (v : α) : (r • f) v = r • 
 -/
 
 instance : AddCommGroup (α →ᵇ β) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
+  DFunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
     fun _ _ => coe_zsmul _ _
 
 instance : SeminormedAddCommGroup (α →ᵇ β)
@@ -1404,7 +1404,7 @@ section MulAction
 variable [MonoidWithZero 𝕜] [Zero β] [MulAction 𝕜 β] [BoundedSMul 𝕜 β]
 
 instance : MulAction 𝕜 (α →ᵇ β) :=
-  FunLike.coe_injective.MulAction _ coe_smul
+  DFunLike.coe_injective.MulAction _ coe_smul
 
 end MulAction
 
@@ -1415,7 +1415,7 @@ variable [MonoidWithZero 𝕜] [AddMonoid β] [DistribMulAction 𝕜 β] [Bounde
 variable [LipschitzAdd β]
 
 instance : DistribMulAction 𝕜 (α →ᵇ β) :=
-  Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
+  Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ DFunLike.coe_injective coe_smul
 
 end DistribMulAction
 
@@ -1428,7 +1428,7 @@ variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 variable [LipschitzAdd β]
 
 instance : Module 𝕜 (α →ᵇ β) :=
-  Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
+  Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ DFunLike.coe_injective coe_smul
 
 variable (𝕜)
 
@@ -1562,7 +1562,7 @@ theorem mul_apply (f g : α →ᵇ R) (x : α) : (f * g) x = f x * g x :=
 -/
 
 instance : NonUnitalRing (α →ᵇ R) :=
-  FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  DFunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => coe_nsmul _ _) fun _ _ => coe_zsmul _ _
 
 instance : NonUnitalSeminormedRing (α →ᵇ R) :=
@@ -1633,7 +1633,7 @@ theorem coe_intCast (n : ℤ) : ((n : α →ᵇ R) : α → R) = n :=
 -/
 
 instance : Ring (α →ᵇ R) :=
-  FunLike.coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub
+  DFunLike.coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub
     (fun _ _ => coe_nsmul _ _) (fun _ _ => coe_zsmul _ _) (fun _ _ => coe_pow _ _) coe_natCast
     coe_intCast
 

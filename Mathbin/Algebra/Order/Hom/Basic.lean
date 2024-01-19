@@ -81,7 +81,7 @@ variable {ι F α β γ δ : Type _}
 #print NonnegHomClass /-
 /-- `nonneg_hom_class F α β` states that `F` is a type of nonnegative morphisms. -/
 class NonnegHomClass (F : Type _) (α β : outParam <| Type _) [Zero β] [LE β] extends
-    FunLike F α fun _ => β where
+    DFunLike F α fun _ => β where
   map_nonneg (f : F) : ∀ a, 0 ≤ f a
 #align nonneg_hom_class NonnegHomClass
 -/
@@ -89,7 +89,7 @@ class NonnegHomClass (F : Type _) (α β : outParam <| Type _) [Zero β] [LE β]
 #print SubadditiveHomClass /-
 /-- `subadditive_hom_class F α β` states that `F` is a type of subadditive morphisms. -/
 class SubadditiveHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [Add β] [LE β] extends
-    FunLike F α fun _ => β where
+    DFunLike F α fun _ => β where
   map_add_le_add (f : F) : ∀ a b, f (a + b) ≤ f a + f b
 #align subadditive_hom_class SubadditiveHomClass
 -/
@@ -98,7 +98,7 @@ class SubadditiveHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [Ad
 /-- `submultiplicative_hom_class F α β` states that `F` is a type of submultiplicative morphisms. -/
 @[to_additive SubadditiveHomClass]
 class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Mul β]
-    [LE β] extends FunLike F α fun _ => β where
+    [LE β] extends DFunLike F α fun _ => β where
   map_hMul_le_hMul (f : F) : ∀ a b, f (a * b) ≤ f a * f b
 #align submultiplicative_hom_class SubmultiplicativeHomClass
 #align subadditive_hom_class SubadditiveHomClass
@@ -108,7 +108,7 @@ class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul �
 /-- `mul_le_add_hom_class F α β` states that `F` is a type of subadditive morphisms. -/
 @[to_additive SubadditiveHomClass]
 class MulLEAddHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Add β] [LE β] extends
-    FunLike F α fun _ => β where
+    DFunLike F α fun _ => β where
   map_hMul_le_add (f : F) : ∀ a b, f (a * b) ≤ f a + f b
 #align mul_le_add_hom_class MulLEAddHomClass
 #align subadditive_hom_class SubadditiveHomClass
@@ -117,7 +117,7 @@ class MulLEAddHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Add �
 #print NonarchimedeanHomClass /-
 /-- `nonarchimedean_hom_class F α β` states that `F` is a type of non-archimedean morphisms. -/
 class NonarchimedeanHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [LinearOrder β] extends
-    FunLike F α fun _ => β where
+    DFunLike F α fun _ => β where
   map_add_le_max (f : F) : ∀ a b, f (a + b) ≤ max (f a) (f b)
 #align nonarchimedean_hom_class NonarchimedeanHomClass
 -/

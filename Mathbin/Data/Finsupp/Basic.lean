@@ -1088,14 +1088,14 @@ theorem filter_eq_indicator : ⇑(f.filterₓ p) = Set.indicator {x | p x} f :=
 
 #print Finsupp.filter_eq_zero_iff /-
 theorem filter_eq_zero_iff : f.filterₓ p = 0 ↔ ∀ x, p x → f x = 0 := by
-  simp only [FunLike.ext_iff, filter_eq_indicator, zero_apply, Set.indicator_apply_eq_zero,
+  simp only [DFunLike.ext_iff, filter_eq_indicator, zero_apply, Set.indicator_apply_eq_zero,
     Set.mem_setOf_eq]
 #align finsupp.filter_eq_zero_iff Finsupp.filter_eq_zero_iff
 -/
 
 #print Finsupp.filter_eq_self_iff /-
 theorem filter_eq_self_iff : f.filterₓ p = f ↔ ∀ x, f x ≠ 0 → p x := by
-  simp only [FunLike.ext_iff, filter_eq_indicator, Set.indicator_apply_eq_self, Set.mem_setOf_eq,
+  simp only [DFunLike.ext_iff, filter_eq_indicator, Set.indicator_apply_eq_self, Set.mem_setOf_eq,
     not_imp_comm]
 #align finsupp.filter_eq_self_iff Finsupp.filter_eq_self_iff
 -/
@@ -2021,14 +2021,14 @@ variable [Zero R]
 #print Finsupp.uniqueOfRight /-
 /-- The `finsupp` version of `pi.unique`. -/
 instance uniqueOfRight [Subsingleton R] : Unique (α →₀ R) :=
-  FunLike.coe_injective.unique
+  DFunLike.coe_injective.unique
 #align finsupp.unique_of_right Finsupp.uniqueOfRight
 -/
 
 #print Finsupp.uniqueOfLeft /-
 /-- The `finsupp` version of `pi.unique_of_is_empty`. -/
 instance uniqueOfLeft [IsEmpty α] : Unique (α →₀ R) :=
-  FunLike.coe_injective.unique
+  DFunLike.coe_injective.unique
 #align finsupp.unique_of_left Finsupp.uniqueOfLeft
 -/
 

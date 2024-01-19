@@ -125,7 +125,7 @@ variable {R M N}
 def dualProdIsometry (f : M ≃ₗ[R] N) : (dualProd R M).IsometryEquiv (dualProd R N)
     where
   toLinearEquiv := f.dualMap.symm.Prod f
-  map_app' x := FunLike.congr_arg x.fst <| f.symm_apply_apply _
+  map_app' x := DFunLike.congr_arg x.fst <| f.symm_apply_apply _
 #align quadratic_form.dual_prod_isometry QuadraticForm.dualProdIsometry
 -/
 
@@ -138,7 +138,7 @@ def dualProdProdIsometry : (dualProd R (M × N)).IsometryEquiv ((dualProd R M).P
     (Module.dualProdDualEquivDual R M N).symm.Prod (LinearEquiv.refl R (M × N)) ≪≫ₗ
       LinearEquiv.prodProdProdComm R _ _ M N
   map_app' m :=
-    (m.fst.map_add _ _).symm.trans <| FunLike.congr_arg m.fst <| Prod.ext (add_zero _) (zero_add _)
+    (m.fst.map_add _ _).symm.trans <| DFunLike.congr_arg m.fst <| Prod.ext (add_zero _) (zero_add _)
 #align quadratic_form.dual_prod_prod_isometry QuadraticForm.dualProdProdIsometry
 -/
 

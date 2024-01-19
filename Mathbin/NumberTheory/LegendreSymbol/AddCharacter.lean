@@ -192,7 +192,7 @@ def IsNontrivial (ψ : AddChar R R') : Prop :=
 theorem isNontrivial_iff_ne_trivial (ψ : AddChar R R') : IsNontrivial ψ ↔ ψ ≠ 1 :=
   by
   refine' not_forall.symm.trans (Iff.not _)
-  rw [FunLike.ext_iff]
+  rw [DFunLike.ext_iff]
   rfl
 #align add_char.is_nontrivial_iff_ne_trivial AddChar.isNontrivial_iff_ne_trivial
 -/

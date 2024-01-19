@@ -143,7 +143,7 @@ theorem snd_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : (snd R M₂ M�
 #print LinearMap.pair_fst_snd /-
 @[simp]
 theorem pair_fst_snd : prod (fst R M M₂) (snd R M M₂) = LinearMap.id :=
-  FunLike.coe_injective Pi.prod_fst_snd
+  DFunLike.coe_injective Pi.prod_fst_snd
 #align linear_map.pair_fst_snd LinearMap.pair_fst_snd
 -/
 

@@ -72,7 +72,7 @@ abbrev Hom (α β : Type _) [Frame α] [Frame β] : Type _ :=
 instance bundledHom : BundledHom Hom :=
   ⟨fun α β [Frame α] [Frame β] => (coeFn : FrameHom α β → α → β), fun α [Frame α] => FrameHom.id α,
     fun α β γ [Frame α] [Frame β] [Frame γ] => FrameHom.comp, fun α β [Frame α] [Frame β] =>
-    FunLike.coe_injective⟩
+    DFunLike.coe_injective⟩
 #align Frm.bundled_hom Frm.bundledHom
 -/
 

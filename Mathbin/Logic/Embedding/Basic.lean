@@ -122,20 +122,20 @@ namespace Embedding
 
 #print Function.Embedding.coe_injective /-
 theorem coe_injective {α β} : @Function.Injective (α ↪ β) (α → β) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align function.embedding.coe_injective Function.Embedding.coe_injective
 -/
 
 #print Function.Embedding.ext /-
 @[ext]
 theorem ext {α β} {f g : Embedding α β} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align function.embedding.ext Function.Embedding.ext
 -/
 
 #print Function.Embedding.ext_iff /-
 theorem ext_iff {α β} {f g : Embedding α β} : (∀ x, f x = g x) ↔ f = g :=
-  FunLike.ext_iff.symm
+  DFunLike.ext_iff.symm
 #align function.embedding.ext_iff Function.Embedding.ext_iff
 -/
 

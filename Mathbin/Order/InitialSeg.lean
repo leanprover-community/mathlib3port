@@ -76,7 +76,7 @@ instance : EmbeddingLike (r ≼i s) α β where
 #print InitialSeg.ext /-
 @[ext]
 theorem ext {f g : r ≼i s} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align initial_seg.ext InitialSeg.ext
 -/
 

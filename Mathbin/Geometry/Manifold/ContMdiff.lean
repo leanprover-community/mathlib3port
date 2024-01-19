@@ -671,7 +671,7 @@ theorem contMDiffOn_iff_target :
   by
   inhabit E'
   simp only [contMDiffOn_iff, ModelWithCorners.source_eq, chartAt_self_eq,
-    PartialHomeomorph.refl_localEquiv, PartialEquiv.refl_trans, extChartAt,
+    PartialHomeomorph.refl_partialEquiv, PartialEquiv.refl_trans, extChartAt,
     PartialHomeomorph.extend, Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
   intro h
   constructor

@@ -450,12 +450,12 @@ section
 
 variable (𝕜 E)
 
-#print modelWithCornersSelf_localEquiv /-
+#print modelWithCornersSelf_partialEquiv /-
 /-- In the trivial model with corners, the associated local equiv is the identity. -/
 @[simp, mfld_simps]
-theorem modelWithCornersSelf_localEquiv : 𝓘(𝕜, E).toPartialEquiv = PartialEquiv.refl E :=
+theorem modelWithCornersSelf_partialEquiv : 𝓘(𝕜, E).toPartialEquiv = PartialEquiv.refl E :=
   rfl
-#align model_with_corners_self_local_equiv modelWithCornersSelf_localEquiv
+#align model_with_corners_self_local_equiv modelWithCornersSelf_partialEquiv
 -/
 
 #print modelWithCornersSelf_coe /-

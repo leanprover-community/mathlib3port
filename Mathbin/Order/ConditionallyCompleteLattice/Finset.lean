@@ -25,18 +25,22 @@ section ConditionallyCompleteLattice
 
 variable [ConditionallyCompleteLattice α] {s t : Set α} {a b : α}
 
-#print Finset.Nonempty.sup'_eq_cSup_image /-
-theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) :
+/- warning: finset.nonempty.sup'_eq_cSup_image clashes with finset.sup'_eq_cSup_image -> Finset.sup'_eq_csSup_image
+Case conversion may be inaccurate. Consider using '#align finset.nonempty.sup'_eq_cSup_image Finset.sup'_eq_csSup_imageₓ'. -/
+#print Finset.sup'_eq_csSup_image /-
+theorem Finset.sup'_eq_csSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) :
     s.sup' hs f = sSup (f '' s) :=
   eq_of_forall_ge_iff fun a => by
     simp [csSup_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
-#align finset.nonempty.sup'_eq_cSup_image Finset.Nonempty.sup'_eq_cSup_image
+#align finset.nonempty.sup'_eq_cSup_image Finset.sup'_eq_csSup_image
 -/
 
-#print Finset.Nonempty.sup'_id_eq_cSup /-
-theorem Finset.Nonempty.sup'_id_eq_cSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = sSup s :=
-  by rw [hs.sup'_eq_cSup_image, image_id]
-#align finset.nonempty.sup'_id_eq_cSup Finset.Nonempty.sup'_id_eq_cSup
+/- warning: finset.nonempty.sup'_id_eq_cSup clashes with finset.sup'_id_eq_cSup -> Finset.sup'_id_eq_csSup
+Case conversion may be inaccurate. Consider using '#align finset.nonempty.sup'_id_eq_cSup Finset.sup'_id_eq_csSupₓ'. -/
+#print Finset.sup'_id_eq_csSup /-
+theorem Finset.sup'_id_eq_csSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = sSup s := by
+  rw [hs.sup'_eq_cSup_image, image_id]
+#align finset.nonempty.sup'_id_eq_cSup Finset.sup'_id_eq_csSup
 -/
 
 end ConditionallyCompleteLattice

@@ -100,7 +100,7 @@ instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R ℝ
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (RingSeminorm R) fun _ => R → ℝ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print RingSeminorm.toFun_eq_coe /-
 @[simp]
@@ -112,7 +112,7 @@ theorem toFun_eq_coe (p : RingSeminorm R) : p.toFun = p :=
 #print RingSeminorm.ext /-
 @[ext]
 theorem ext {p q : RingSeminorm R} : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align ring_seminorm.ext RingSeminorm.ext
 -/
 
@@ -121,7 +121,7 @@ instance : Zero (RingSeminorm R) :=
 
 #print RingSeminorm.eq_zero_iff /-
 theorem eq_zero_iff {p : RingSeminorm R} : p = 0 ↔ ∀ x, p x = 0 :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align ring_seminorm.eq_zero_iff RingSeminorm.eq_zero_iff
 -/
 
@@ -214,7 +214,7 @@ theorem toFun_eq_coe (p : RingNorm R) : p.toFun = p :=
 #print RingNorm.ext /-
 @[ext]
 theorem ext {p q : RingNorm R} : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align ring_norm.ext RingNorm.ext
 -/
 
@@ -256,7 +256,7 @@ instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R ℝ
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (MulRingSeminorm R) fun _ => R → ℝ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print MulRingSeminorm.toFun_eq_coe /-
 @[simp]
@@ -268,7 +268,7 @@ theorem toFun_eq_coe (p : MulRingSeminorm R) : p.toFun = p :=
 #print MulRingSeminorm.ext /-
 @[ext]
 theorem ext {p q : MulRingSeminorm R} : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align mul_ring_seminorm.ext MulRingSeminorm.ext
 -/
 
@@ -328,7 +328,7 @@ theorem toFun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
 #print MulRingNorm.ext /-
 @[ext]
 theorem ext {p q : MulRingNorm R} : (∀ x, p x = q x) → p = q :=
-  FunLike.ext p q
+  DFunLike.ext p q
 #align mul_ring_norm.ext MulRingNorm.ext
 -/
 

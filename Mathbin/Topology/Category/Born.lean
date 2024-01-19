@@ -52,7 +52,7 @@ instance : BundledHom @LocallyBoundedMap
   toFun _ _ _ _ := coeFn
   id := @LocallyBoundedMap.id
   comp := @LocallyBoundedMap.comp
-  hom_ext X Y _ _ := FunLike.coe_injective
+  hom_ext X Y _ _ := DFunLike.coe_injective
 
 instance : LargeCategory.{u} Born :=
   BundledHom.category LocallyBoundedMap

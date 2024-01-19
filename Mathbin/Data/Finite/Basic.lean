@@ -155,13 +155,13 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
   · infer_instance
   · refine' h.elim fun f => _
     haveI : Finite α := Finite.of_injective _ f.injective
-    exact Finite.of_injective _ FunLike.coe_injective
+    exact Finite.of_injective _ DFunLike.coe_injective
 #align function.embedding.finite Function.Embedding.finite
 -/
 
 #print Equiv.finite_right /-
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
-  Finite.of_injective Equiv.toEmbedding fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
+  Finite.of_injective Equiv.toEmbedding fun e₁ e₂ h => Equiv.ext <| by convert DFunLike.congr_fun h
 #align equiv.finite_right Equiv.finite_right
 -/
 

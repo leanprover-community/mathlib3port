@@ -108,38 +108,38 @@ theorem coe_fn_mk (f : α → β) (g l r) : (Equiv.mk f g l r : α → β) = f :
 #print Equiv.coe_fn_injective /-
 /-- The map `coe_fn : (r ≃ s) → (r → s)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (α ≃ β) (α → β) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align equiv.coe_fn_injective Equiv.coe_fn_injective
 -/
 
 #print Equiv.coe_inj /-
 protected theorem coe_inj {e₁ e₂ : α ≃ β} : (e₁ : α → β) = e₂ ↔ e₁ = e₂ :=
-  FunLike.coe_fn_eq
+  DFunLike.coe_fn_eq
 #align equiv.coe_inj Equiv.coe_inj
 -/
 
 #print Equiv.ext /-
 @[ext]
 theorem ext {f g : Equiv α β} (H : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g H
+  DFunLike.ext f g H
 #align equiv.ext Equiv.ext
 -/
 
 #print Equiv.congr_arg /-
 protected theorem congr_arg {f : Equiv α β} {x x' : α} : x = x' → f x = f x' :=
-  FunLike.congr_arg f
+  DFunLike.congr_arg f
 #align equiv.congr_arg Equiv.congr_arg
 -/
 
 #print Equiv.congr_fun /-
 protected theorem congr_fun {f g : Equiv α β} (h : f = g) (x : α) : f x = g x :=
-  FunLike.congr_fun h x
+  DFunLike.congr_fun h x
 #align equiv.congr_fun Equiv.congr_fun
 -/
 
 #print Equiv.ext_iff /-
 theorem ext_iff {f g : Equiv α β} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align equiv.ext_iff Equiv.ext_iff
 -/
 
@@ -259,7 +259,7 @@ theorem subsingleton_congr (e : α ≃ β) : Subsingleton α ↔ Subsingleton β
 
 #print Equiv.equiv_subsingleton_cod /-
 instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
-  FunLike.subsingleton_cod
+  DFunLike.subsingleton_cod
 #align equiv.equiv_subsingleton_cod Equiv.equiv_subsingleton_cod
 -/
 

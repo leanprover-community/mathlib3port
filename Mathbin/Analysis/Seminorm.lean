@@ -137,12 +137,12 @@ instance instSeminormClass : SeminormClass (Seminorm 𝕜 E) 𝕜 E
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print Seminorm.ext /-
 @[ext]
 theorem ext {p q : Seminorm 𝕜 E} (h : ∀ x, (p : E → ℝ) x = q x) : p = q :=
-  FunLike.ext p q h
+  DFunLike.ext p q h
 #align seminorm.ext Seminorm.ext
 -/
 
@@ -219,14 +219,14 @@ theorem add_apply (p q : Seminorm 𝕜 E) (x : E) : (p + q) x = p x + q x :=
 -/
 
 instance : AddMonoid (Seminorm 𝕜 E) :=
-  FunLike.coe_injective.AddMonoid _ rfl coe_add fun p n => coe_smul n p
+  DFunLike.coe_injective.AddMonoid _ rfl coe_add fun p n => coe_smul n p
 
 instance : OrderedCancelAddCommMonoid (Seminorm 𝕜 E) :=
-  FunLike.coe_injective.OrderedCancelAddCommMonoid _ rfl coe_add fun p n => coe_smul n p
+  DFunLike.coe_injective.OrderedCancelAddCommMonoid _ rfl coe_add fun p n => coe_smul n p
 
 instance [Monoid R] [MulAction R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
     MulAction R (Seminorm 𝕜 E) :=
-  FunLike.coe_injective.MulAction _ coe_smul
+  DFunLike.coe_injective.MulAction _ coe_smul
 
 variable (𝕜 E)
 
@@ -241,7 +241,7 @@ def coeFnAddMonoidHom : AddMonoidHom (Seminorm 𝕜 E) (E → ℝ) :=
 
 #print Seminorm.coeFnAddMonoidHom_injective /-
 theorem coeFnAddMonoidHom_injective : Function.Injective (coeFnAddMonoidHom 𝕜 E) :=
-  show @Function.Injective (Seminorm 𝕜 E) (E → ℝ) coeFn from FunLike.coe_injective
+  show @Function.Injective (Seminorm 𝕜 E) (E → ℝ) coeFn from DFunLike.coe_injective
 #align seminorm.coe_fn_add_monoid_hom_injective Seminorm.coeFnAddMonoidHom_injective
 -/
 
@@ -287,7 +287,7 @@ theorem smul_sup [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r 
 -/
 
 instance : PartialOrder (Seminorm 𝕜 E) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 #print Seminorm.coe_le_coe /-
 @[simp, norm_cast]
@@ -316,7 +316,7 @@ theorem lt_def {p q : Seminorm 𝕜 E} : p < q ↔ p ≤ q ∧ ∃ x, p x < q x 
 -/
 
 instance : SemilatticeSup (Seminorm 𝕜 E) :=
-  Function.Injective.semilatticeSup _ FunLike.coe_injective coe_sup
+  Function.Injective.semilatticeSup _ DFunLike.coe_injective coe_sup
 
 end SMul
 

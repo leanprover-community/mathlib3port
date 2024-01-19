@@ -187,7 +187,7 @@ theorem coe_copy (f : α →ₙ+* β) (f' : α → β) (h : f' = f) : ⇑(f.copy
 
 #print NonUnitalRingHom.copy_eq /-
 theorem copy_eq (f : α →ₙ+* β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align non_unital_ring_hom.copy_eq NonUnitalRingHom.copy_eq
 -/
 
@@ -202,13 +202,13 @@ variable (f : α →ₙ+* β) {x y : α} {rα rβ}
 #print NonUnitalRingHom.ext /-
 @[ext]
 theorem ext ⦃f g : α →ₙ+* β⦄ : (∀ x, f x = g x) → f = g :=
-  FunLike.ext _ _
+  DFunLike.ext _ _
 #align non_unital_ring_hom.ext NonUnitalRingHom.ext
 -/
 
 #print NonUnitalRingHom.ext_iff /-
 theorem ext_iff {f g : α →ₙ+* β} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align non_unital_ring_hom.ext_iff NonUnitalRingHom.ext_iff
 -/
 
@@ -598,7 +598,7 @@ theorem coe_copy (f : α →+* β) (f' : α → β) (h : f' = f) : ⇑(f.copy f'
 
 #print RingHom.copy_eq /-
 theorem copy_eq (f : α →+* β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align ring_hom.copy_eq RingHom.copy_eq
 -/
 
@@ -612,32 +612,32 @@ variable (f : α →+* β) {x y : α} {rα rβ}
 
 #print RingHom.congr_fun /-
 theorem congr_fun {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
-  FunLike.congr_fun h x
+  DFunLike.congr_fun h x
 #align ring_hom.congr_fun RingHom.congr_fun
 -/
 
 #print RingHom.congr_arg /-
 theorem congr_arg (f : α →+* β) {x y : α} (h : x = y) : f x = f y :=
-  FunLike.congr_arg f h
+  DFunLike.congr_arg f h
 #align ring_hom.congr_arg RingHom.congr_arg
 -/
 
 #print RingHom.coe_inj /-
 theorem coe_inj ⦃f g : α →+* β⦄ (h : (f : α → β) = g) : f = g :=
-  FunLike.coe_injective h
+  DFunLike.coe_injective h
 #align ring_hom.coe_inj RingHom.coe_inj
 -/
 
 #print RingHom.ext /-
 @[ext]
 theorem ext ⦃f g : α →+* β⦄ : (∀ x, f x = g x) → f = g :=
-  FunLike.ext _ _
+  DFunLike.ext _ _
 #align ring_hom.ext RingHom.ext
 -/
 
 #print RingHom.ext_iff /-
 theorem ext_iff {f g : α →+* β} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align ring_hom.ext_iff RingHom.ext_iff
 -/
 

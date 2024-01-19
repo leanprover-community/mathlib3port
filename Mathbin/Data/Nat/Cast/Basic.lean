@@ -240,7 +240,7 @@ variable {A B F : Type _} [AddMonoidWithOne B]
 
 #print ext_nat' /-
 theorem ext_nat' [AddMonoid A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
-  FunLike.ext f g <| by
+  DFunLike.ext f g <| by
     apply Nat.rec
     · simp only [Nat.zero_eq, map_zero]
     simp (config := { contextual := true }) [Nat.succ_eq_add_one, h]
@@ -283,7 +283,7 @@ variable {A F : Type _} [MulZeroOneClass A]
 /-- If two `monoid_with_zero_hom`s agree on the positive naturals they are equal. -/
 theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) :
     f = g := by
-  apply FunLike.ext
+  apply DFunLike.ext
   rintro (_ | n)
   · simp
   exact h_pos n.succ_pos

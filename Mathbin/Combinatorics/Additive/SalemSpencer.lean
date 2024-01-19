@@ -137,7 +137,7 @@ variable [CommMonoid α] [CommMonoid β] {s : Set α} {a : α}
 
 #print MulSalemSpencer.of_image /-
 @[to_additive]
-theorem MulSalemSpencer.of_image [FunLike F α fun _ => β] [FreimanHomClass F s β 2] (f : F)
+theorem MulSalemSpencer.of_image [DFunLike F α fun _ => β] [FreimanHomClass F s β 2] (f : F)
     (hf : s.InjOn f) (h : MulSalemSpencer (f '' s)) : MulSalemSpencer s :=
   fun a b c ha hb hc habc =>
   hf ha hb <|

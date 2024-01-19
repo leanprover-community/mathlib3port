@@ -153,18 +153,18 @@ theorem boundary (f : Ω^ N X x) : ∀ y ∈ Cube.boundary N, f y = x :=
 #align gen_loop.boundary GenLoop.boundary
 -/
 
-#print GenLoop.funLike /-
-instance funLike : FunLike (Ω^ N X x) (I^N) fun _ => X
+#print GenLoop.instDFunLike /-
+instance instDFunLike : DFunLike (Ω^ N X x) (I^N) fun _ => X
     where
   coe f := f.1
   coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by congr; exact h
-#align gen_loop.fun_like GenLoop.funLike
+#align gen_loop.fun_like GenLoop.instDFunLike
 -/
 
 #print GenLoop.ext /-
 @[ext]
 theorem ext (f g : Ω^ N X x) (H : ∀ y, f y = g y) : f = g :=
-  FunLike.coe_injective' (funext H)
+  DFunLike.coe_injective' (funext H)
 #align gen_loop.ext GenLoop.ext
 -/
 

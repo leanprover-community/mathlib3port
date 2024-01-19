@@ -65,13 +65,13 @@ theorem to_affineMap_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g
 instance : ContinuousMapClass (P →A[R] Q) P Q
     where
   coe f := f.toAffineMap
-  coe_injective' f g h := to_affineMap_injective <| FunLike.coe_injective h
+  coe_injective' f g h := to_affineMap_injective <| DFunLike.coe_injective h
   map_continuous := cont
 
 /-- Helper instance for when there's too many metavariables to apply
 `fun_like.has_coe_to_fun` directly. -/
 instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print ContinuousAffineMap.toFun_eq_coe /-
 theorem toFun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
@@ -81,26 +81,26 @@ theorem toFun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
 
 #print ContinuousAffineMap.coe_injective /-
 theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align continuous_affine_map.coe_injective ContinuousAffineMap.coe_injective
 -/
 
 #print ContinuousAffineMap.ext /-
 @[ext]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align continuous_affine_map.ext ContinuousAffineMap.ext
 -/
 
 #print ContinuousAffineMap.ext_iff /-
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align continuous_affine_map.ext_iff ContinuousAffineMap.ext_iff
 -/
 
 #print ContinuousAffineMap.congr_fun /-
 theorem congr_fun {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
-  FunLike.congr_fun h _
+  DFunLike.congr_fun h _
 #align continuous_affine_map.congr_fun ContinuousAffineMap.congr_fun
 -/
 

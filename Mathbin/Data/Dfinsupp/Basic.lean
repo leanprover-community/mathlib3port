@@ -81,16 +81,16 @@ section Basic
 
 variable [∀ i, Zero (β i)] [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
 
-#print DFinsupp.funLike /-
-instance funLike : FunLike (Π₀ i, β i) ι β :=
+#print DFinsupp.instDFunLike /-
+instance instDFunLike : DFunLike (Π₀ i, β i) ι β :=
   ⟨fun f => f.toFun, fun ⟨f₁, s₁⟩ ⟨f₂, s₁⟩ (h : f₁ = f₂) => by subst h; congr⟩
-#align dfinsupp.fun_like DFinsupp.funLike
+#align dfinsupp.fun_like DFinsupp.instDFunLike
 -/
 
 /-- Helper instance for when there are too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (Π₀ i, β i) fun _ => ∀ i, β i :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print DFinsupp.toFun_eq_coe /-
 @[simp]
@@ -102,21 +102,21 @@ theorem toFun_eq_coe (f : Π₀ i, β i) : f.toFun = f :=
 #print DFinsupp.ext /-
 @[ext]
 theorem ext {f g : Π₀ i, β i} (h : ∀ i, f i = g i) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align dfinsupp.ext DFinsupp.ext
 -/
 
 #print DFinsupp.ext_iff /-
 /-- Deprecated. Use `fun_like.ext_iff` instead. -/
 theorem ext_iff {f g : Π₀ i, β i} : f = g ↔ ∀ i, f i = g i :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align dfinsupp.ext_iff DFinsupp.ext_iff
 -/
 
 #print DFinsupp.coeFn_injective /-
 /-- Deprecated. Use `fun_like.coe_injective` instead. -/
 theorem coeFn_injective : @Function.Injective (Π₀ i, β i) (∀ i, β i) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align dfinsupp.coe_fn_injective DFinsupp.coeFn_injective
 -/
 
@@ -268,7 +268,7 @@ theorem coe_add [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g
 -/
 
 instance [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀ i, β i) :=
-  FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
+  DFunLike.coe_injective.AddZeroClass _ coe_zero coe_add
 
 #print DFinsupp.hasNatScalar /-
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℕ` is not distributive
@@ -292,7 +292,7 @@ theorem coe_nsmul [∀ i, AddMonoid (β i)] (b : ℕ) (v : Π₀ i, β i) : ⇑(
 -/
 
 instance [∀ i, AddMonoid (β i)] : AddMonoid (Π₀ i, β i) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
+  DFunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
 
 #print DFinsupp.coeFnAddMonoidHom /-
 /-- Coercion from a `dfinsupp` to a pi type is an `add_monoid_hom`. -/
@@ -313,7 +313,7 @@ def evalAddMonoidHom [∀ i, AddZeroClass (β i)] (i : ι) : (Π₀ i, β i) →
 -/
 
 instance [∀ i, AddCommMonoid (β i)] : AddCommMonoid (Π₀ i, β i) :=
-  FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
+  DFunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
 
 #print DFinsupp.coe_finset_sum /-
 @[simp]
@@ -385,11 +385,11 @@ theorem coe_zsmul [∀ i, AddGroup (β i)] (b : ℤ) (v : Π₀ i, β i) : ⇑(b
 -/
 
 instance [∀ i, AddGroup (β i)] : AddGroup (Π₀ i, β i) :=
-  FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
+  DFunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
     fun _ _ => coe_zsmul _ _
 
 instance [∀ i, AddCommGroup (β i)] : AddCommGroup (Π₀ i, β i) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
+  DFunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
     fun _ _ => coe_zsmul _ _
 
 /-- Dependent functions with finite support inherit a semiring action from an action on each
@@ -430,7 +430,7 @@ instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i
 structure on each coordinate. -/
 instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] :
     DistribMulAction γ (Π₀ i, β i) :=
-  Function.Injective.distribMulAction coeFnAddMonoidHom FunLike.coe_injective coe_smul
+  Function.Injective.distribMulAction coeFnAddMonoidHom DFunLike.coe_injective coe_smul
 
 /-- Dependent functions with finite support inherit a module structure from such a structure on
 each coordinate. -/
@@ -699,13 +699,13 @@ theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) :=
 
 #print DFinsupp.unique /-
 instance unique [∀ i, Subsingleton (β i)] : Unique (Π₀ i, β i) :=
-  FunLike.coe_injective.unique
+  DFunLike.coe_injective.unique
 #align dfinsupp.unique DFinsupp.unique
 -/
 
 #print DFinsupp.uniqueOfIsEmpty /-
 instance uniqueOfIsEmpty [IsEmpty ι] : Unique (Π₀ i, β i) :=
-  FunLike.coe_injective.unique
+  DFunLike.coe_injective.unique
 #align dfinsupp.unique_of_is_empty DFinsupp.uniqueOfIsEmpty
 -/
 
@@ -757,7 +757,7 @@ theorem single_apply {i i' b} :
 #print DFinsupp.single_zero /-
 @[simp]
 theorem single_zero (i) : (single i 0 : Π₀ i, β i) = 0 :=
-  FunLike.coe_injective <| Pi.single_zero _
+  DFunLike.coe_injective <| Pi.single_zero _
 #align dfinsupp.single_zero DFinsupp.single_zero
 -/
 

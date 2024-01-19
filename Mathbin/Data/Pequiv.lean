@@ -64,7 +64,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 open Function Option
 
-instance funLike : FunLike (α ≃. β) α fun _ => Option β
+instance funLike : DFunLike (α ≃. β) α fun _ => Option β
     where
   coe := toFun
   coe_injective' := by
@@ -84,13 +84,13 @@ theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) (h) (x 
 #print PEquiv.ext /-
 @[ext]
 theorem ext {f g : α ≃. β} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align pequiv.ext PEquiv.ext
 -/
 
 #print PEquiv.ext_iff /-
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align pequiv.ext_iff PEquiv.ext_iff
 -/
 

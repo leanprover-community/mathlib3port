@@ -76,7 +76,7 @@ instance : ContinuousLinearMapClass (characterSpace 𝕜 A) 𝕜 A 𝕜
 #print WeakDual.CharacterSpace.ext /-
 @[ext]
 theorem ext {φ ψ : characterSpace 𝕜 A} (h : ∀ x, φ x = ψ x) : φ = ψ :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align weak_dual.character_space.ext WeakDual.CharacterSpace.ext
 -/
 

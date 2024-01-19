@@ -109,7 +109,7 @@ theorem snd_prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : (snd R B C).comp (pro
 #print AlgHom.prod_fst_snd /-
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
-  FunLike.coe_injective Pi.prod_fst_snd
+  DFunLike.coe_injective Pi.prod_fst_snd
 #align alg_hom.prod_fst_snd AlgHom.prod_fst_snd
 -/
 

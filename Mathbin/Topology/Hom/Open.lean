@@ -79,7 +79,7 @@ instance : ContinuousOpenMapClass (α →CO β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (α →CO β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print ContinuousOpenMap.toFun_eq_coe /-
 @[simp]
@@ -91,7 +91,7 @@ theorem toFun_eq_coe {f : α →CO β} : f.toFun = (f : α → β) :=
 #print ContinuousOpenMap.ext /-
 @[ext]
 theorem ext {f g : α →CO β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align continuous_open_map.ext ContinuousOpenMap.ext
 -/
 
@@ -112,7 +112,7 @@ theorem coe_copy (f : α →CO β) (f' : α → β) (h : f' = f) : ⇑(f.copy f'
 
 #print ContinuousOpenMap.copy_eq /-
 theorem copy_eq (f : α →CO β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align continuous_open_map.copy_eq ContinuousOpenMap.copy_eq
 -/
 
@@ -190,7 +190,7 @@ theorem id_comp (f : α →CO β) : (ContinuousOpenMap.id β).comp f = f :=
 #print ContinuousOpenMap.cancel_right /-
 theorem cancel_right {g₁ g₂ : β →CO γ} {f : α →CO β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_open_map.cancel_right ContinuousOpenMap.cancel_right
 -/
 

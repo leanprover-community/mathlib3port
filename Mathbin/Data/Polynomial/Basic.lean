@@ -767,7 +767,7 @@ def coeff : R[X] → ℕ → R
 
 #print Polynomial.coeff_injective /-
 theorem coeff_injective : Injective (coeff : R[X] → ℕ → R) := by rintro ⟨p⟩ ⟨q⟩;
-  simp only [coeff, FunLike.coe_fn_eq, imp_self]
+  simp only [coeff, DFunLike.coe_fn_eq, imp_self]
 #align polynomial.coeff_injective Polynomial.coeff_injective
 -/
 

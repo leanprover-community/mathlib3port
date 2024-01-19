@@ -2564,12 +2564,12 @@ theorem succAbove_lt_ge (p : Fin (n + 1)) (i : Fin n) : i.cast_succ < p ∨ p �
 #align fin.succ_above_lt_ge Fin.succAbove_lt_ge
 -/
 
-#print Fin.succAbove_lt_gt /-
+#print Fin.castSucc_lt_or_lt_succ /-
 /-- Embedding `i : fin n` into `fin (n + 1)` is always about some hole `p`. -/
-theorem succAbove_lt_gt (p : Fin (n + 1)) (i : Fin n) : i.cast_succ < p ∨ p < i.succ :=
+theorem castSucc_lt_or_lt_succ (p : Fin (n + 1)) (i : Fin n) : i.cast_succ < p ∨ p < i.succ :=
   Or.cases_on (succAbove_lt_ge p i) (fun h => Or.inl h) fun h =>
     Or.inr (lt_of_le_of_lt h (castSucc_lt_succ i))
-#align fin.succ_above_lt_gt Fin.succAbove_lt_gt
+#align fin.succ_above_lt_gt Fin.castSucc_lt_or_lt_succ
 -/
 
 #print Fin.succAbove_lt_iff /-

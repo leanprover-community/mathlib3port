@@ -87,7 +87,7 @@ notation:25 A " →*[" n:25 "] " β:0 => FreimanHom A β n
 /-- `add_freiman_hom_class F s β n` states that `F` is a type of `n`-ary sums-preserving morphisms.
 You should extend this class when you extend `add_freiman_hom`. -/
 class AddFreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _)
-    [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
+    [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [DFunLike F α fun _ => β] : Prop where
   map_sum_eq_map_sum' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
     (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Sum = t.Sum) :
     (s.map f).Sum = (t.map f).Sum
@@ -100,7 +100,7 @@ You should extend this class when you extend `freiman_hom`. -/
 @[to_additive AddFreimanHomClass
       "`add_freiman_hom_class F A β n` states that `F` is a type of `n`-ary sums-preserving morphisms.\nYou should extend this class when you extend `add_freiman_hom`."]
 class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [CommMonoid α]
-    [CommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
+    [CommMonoid β] (n : ℕ) [DFunLike F α fun _ => β] : Prop where
   map_prod_eq_map_prod' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
     (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) :
     (s.map f).Prod = (t.map f).Prod
@@ -108,7 +108,7 @@ class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Ty
 #align add_freiman_hom_class AddFreimanHomClass
 -/
 
-variable [FunLike F α fun _ => β]
+variable [DFunLike F α fun _ => β]
 
 section CommMonoid
 
@@ -138,14 +138,14 @@ theorem map_mul_map_eq_map_mul_map [FreimanHomClass F A β 2] (f : F) (ha : a �
 
 namespace FreimanHom
 
-#print FreimanHom.funLike /-
+#print FreimanHom.instDFunLike /-
 @[to_additive]
-instance funLike : FunLike (A →*[n] β) α fun _ => β
+instance instDFunLike : DFunLike (A →*[n] β) α fun _ => β
     where
   coe := toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-#align freiman_hom.fun_like FreimanHom.funLike
-#align add_freiman_hom.fun_like AddFreimanHom.funLike
+#align freiman_hom.fun_like FreimanHom.instDFunLike
+#align add_freiman_hom.fun_like AddFreimanHom.instDFunLike
 -/
 
 #print FreimanHom.freimanHomClass /-
@@ -176,7 +176,7 @@ theorem toFun_eq_coe (f : A →*[n] β) : f.toFun = f :=
 #print FreimanHom.ext /-
 @[ext, to_additive]
 theorem ext ⦃f g : A →*[n] β⦄ (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align freiman_hom.ext FreimanHom.ext
 #align add_freiman_hom.ext AddFreimanHom.ext
 -/
@@ -261,7 +261,7 @@ theorem comp_assoc (f : A →*[n] β) (g : B →*[n] γ) (h : C →*[n] δ) {hf 
 @[to_additive]
 theorem cancel_right {g₁ g₂ : B →*[n] γ} {f : A →*[n] β} (hf : Function.Surjective f) {hg₁ hg₂} :
     g₁.comp f hg₁ = g₂.comp f hg₂ ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, fun h => h ▸ rfl⟩
+  ⟨fun h => ext <| hf.forall.2 <| DFunLike.ext_iff.1 h, fun h => h ▸ rfl⟩
 #align freiman_hom.cancel_right FreimanHom.cancel_right
 #align add_freiman_hom.cancel_right AddFreimanHom.cancel_right
 -/
@@ -514,7 +514,7 @@ theorem MonoidHom.toFreimanHom_coe (f : α →* β) : (f.toFreimanHom A n : α �
 @[to_additive]
 theorem MonoidHom.toFreimanHom_injective :
     Function.Injective (MonoidHom.toFreimanHom A n : (α →* β) → A →*[n] β) := fun f g h =>
-  MonoidHom.ext <| show _ from FunLike.ext_iff.mp h
+  MonoidHom.ext <| show _ from DFunLike.ext_iff.mp h
 #align monoid_hom.to_freiman_hom_injective MonoidHom.toFreimanHom_injective
 #align add_monoid_hom.to_freiman_hom_injective AddMonoidHom.toAddFreimanHom_injective
 -/
@@ -594,7 +594,7 @@ theorem FreimanHom.toFreimanHom_coe (h : m ≤ n) (f : A →*[n] β) : (f.toFrei
 @[to_additive]
 theorem FreimanHom.toFreimanHom_injective (h : m ≤ n) :
     Function.Injective (FreimanHom.toFreimanHom h : (A →*[n] β) → A →*[m] β) := fun f g hfg =>
-  FreimanHom.ext <| by convert FunLike.ext_iff.1 hfg
+  FreimanHom.ext <| by convert DFunLike.ext_iff.1 hfg
 #align freiman_hom.to_freiman_hom_injective FreimanHom.toFreimanHom_injective
 #align add_freiman_hom.to_freiman_hom_injective AddFreimanHom.toAddFreimanHom_injective
 -/

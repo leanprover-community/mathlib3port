@@ -59,7 +59,7 @@ instance : BundledHom @CompleteLatticeHom
   toFun _ _ _ _ := coeFn
   id := @CompleteLatticeHom.id
   comp := @CompleteLatticeHom.comp
-  hom_ext X Y _ _ := FunLike.coe_injective
+  hom_ext X Y _ _ := DFunLike.coe_injective
 
 instance : LargeCategory.{u} CompleteLat :=
   BundledHom.category CompleteLatticeHom

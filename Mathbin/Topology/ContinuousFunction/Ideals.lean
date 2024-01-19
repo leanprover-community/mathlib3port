@@ -177,7 +177,7 @@ theorem setOfTop_eq_univ [Nontrivial R] : setOfIdeal (⊤ : Ideal C(X, R)) = Set
 theorem idealOfEmpty_eq_bot : idealOfSet R (∅ : Set X) = ⊥ :=
   Ideal.ext fun f => by
     simpa only [mem_ideal_of_set, Set.compl_empty, Set.mem_univ, forall_true_left, Ideal.mem_bot,
-      FunLike.ext_iff] using Iff.rfl
+      DFunLike.ext_iff] using Iff.rfl
 #align continuous_map.ideal_of_empty_eq_bot ContinuousMap.idealOfEmpty_eq_bot
 -/
 
@@ -516,7 +516,7 @@ theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) :=
     rcases exists_continuous_zero_one_of_isClosed (isClosed_singleton : _root_.is_closed {x})
         (isClosed_singleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
       ⟨f, fx, fy, -⟩
-    rw [← Ne.def, FunLike.ne_iff]
+    rw [← Ne.def, DFunLike.ne_iff]
     use(⟨coe, IsROrC.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
     simpa only [continuous_map_eval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne.def,
       IsROrC.ofReal_inj] using

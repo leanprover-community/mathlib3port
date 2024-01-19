@@ -85,7 +85,7 @@ instance : ConcreteCategory SemilatSupCat
   forget :=
     { obj := SemilatSupCat.X
       map := fun X Y => coeFn }
-  forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
+  forget_faithful := ⟨fun X Y => DFunLike.coe_injective⟩
 
 #print SemilatSupCat.hasForgetToPartOrd /-
 instance hasForgetToPartOrd : HasForget₂ SemilatSupCat PartOrd
@@ -142,7 +142,7 @@ instance : ConcreteCategory SemilatInfCat
   forget :=
     { obj := SemilatInfCat.X
       map := fun X Y => coeFn }
-  forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
+  forget_faithful := ⟨fun X Y => DFunLike.coe_injective⟩
 
 #print SemilatInfCat.hasForgetToPartOrd /-
 instance hasForgetToPartOrd : HasForget₂ SemilatInfCat PartOrd

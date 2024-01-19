@@ -74,7 +74,7 @@ instance : LargeCategory.{u} BddLat
 instance : ConcreteCategory BddLat
     where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
-  forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
+  forget_faithful := ⟨fun X Y => by convert DFunLike.coe_injective⟩
 
 #print BddLat.hasForgetToBddOrd /-
 instance hasForgetToBddOrd : HasForget₂ BddLat BddOrd

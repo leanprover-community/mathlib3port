@@ -176,7 +176,7 @@ theorem toLinearMap_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} : f.toLinearMap = 
 instance : SemilinearIsometryClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂
     where
   coe f := f.toFun
-  coe_injective' f g h := toLinearMap_injective (FunLike.coe_injective h)
+  coe_injective' f g h := toLinearMap_injective (DFunLike.coe_injective h)
   map_add f := map_add f.toLinearMap
   map_smulₛₗ f := map_smulₛₗ f.toLinearMap
   norm_map f := f.norm_map'
@@ -203,7 +203,7 @@ theorem coe_mk (f : E →ₛₗ[σ₁₂] E₂) (hf) : ⇑(mk f hf) = f :=
 
 #print LinearIsometry.coe_injective /-
 theorem coe_injective : @Injective (E →ₛₗᵢ[σ₁₂] E₂) (E → E₂) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align linear_isometry.coe_injective LinearIsometry.coe_injective
 -/
 
@@ -677,7 +677,7 @@ instance (priority := 100) [s : SemilinearIsometryEquivClass 𝓕 σ₁₂ E E�
     SemilinearIsometryClass 𝓕 σ₁₂ E E₂ :=
   { s with
     coe := (coe : 𝓕 → E → E₂)
-    coe_injective' := @FunLike.coe_injective 𝓕 _ _ _ }
+    coe_injective' := @DFunLike.coe_injective 𝓕 _ _ _ }
 
 end SemilinearIsometryEquivClass
 
@@ -717,7 +717,7 @@ instance : CoeFun (E ≃ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
 
 #print LinearIsometryEquiv.coe_injective /-
 theorem coe_injective : @Function.Injective (E ≃ₛₗᵢ[σ₁₂] E₂) (E → E₂) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align linear_isometry_equiv.coe_injective LinearIsometryEquiv.coe_injective
 -/
 

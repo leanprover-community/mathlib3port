@@ -85,7 +85,7 @@ theorem coe_mk (f : R →ₙ* S) {h₁ h₂ h₃} : (AbsoluteValue.mk f h₁ h�
 #print AbsoluteValue.ext /-
 @[ext]
 theorem ext ⦃f g : AbsoluteValue R S⦄ : (∀ x, f x = g x) → f = g :=
-  FunLike.ext _ _
+  DFunLike.ext _ _
 #align absolute_value.ext AbsoluteValue.ext
 -/
 
@@ -101,7 +101,7 @@ initialize_simps_projections AbsoluteValue (to_mul_hom_to_fun → apply)
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print AbsoluteValue.coe_toMulHom /-
 @[simp]

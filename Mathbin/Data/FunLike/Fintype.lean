@@ -34,56 +34,56 @@ They can't be instances themselves since they can cause loops.
 
 section Type
 
-variable (F G : Type _) {α γ : Type _} {β : α → Type _} [FunLike F α β] [FunLike G α fun _ => γ]
+variable (F G : Type _) {α γ : Type _} {β : α → Type _} [DFunLike F α β] [DFunLike G α fun _ => γ]
 
-#print FunLike.fintype /-
+#print DFunLike.fintype /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 This is not an instance because specific `fun_like` types might have a better-suited definition.
 
 See also `fun_like.finite`.
 -/
-noncomputable def FunLike.fintype [DecidableEq α] [Fintype α] [∀ i, Fintype (β i)] : Fintype F :=
-  Fintype.ofInjective _ FunLike.coe_injective
-#align fun_like.fintype FunLike.fintype
+noncomputable def DFunLike.fintype [DecidableEq α] [Fintype α] [∀ i, Fintype (β i)] : Fintype F :=
+  Fintype.ofInjective _ DFunLike.coe_injective
+#align fun_like.fintype DFunLike.fintype
 -/
 
-#print FunLike.fintype' /-
+#print DFunLike.fintype' /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Non-dependent version of `fun_like.fintype` that might be easier to infer.
 This is not an instance because specific `fun_like` types might have a better-suited definition.
 -/
-noncomputable def FunLike.fintype' [DecidableEq α] [Fintype α] [Fintype γ] : Fintype G :=
-  FunLike.fintype G
-#align fun_like.fintype' FunLike.fintype'
+noncomputable def DFunLike.fintype' [DecidableEq α] [Fintype α] [Fintype γ] : Fintype G :=
+  DFunLike.fintype G
+#align fun_like.fintype' DFunLike.fintype'
 -/
 
 end Type
 
 section Sort
 
-variable (F G : Sort _) {α γ : Sort _} {β : α → Sort _} [FunLike F α β] [FunLike G α fun _ => γ]
+variable (F G : Sort _) {α γ : Sort _} {β : α → Sort _} [DFunLike F α β] [DFunLike G α fun _ => γ]
 
-#print FunLike.finite /-
+#print DFunLike.finite /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Can't be an instance because it can cause infinite loops.
 -/
-theorem FunLike.finite [Finite α] [∀ i, Finite (β i)] : Finite F :=
-  Finite.of_injective _ FunLike.coe_injective
-#align fun_like.finite FunLike.finite
+theorem DFunLike.finite [Finite α] [∀ i, Finite (β i)] : Finite F :=
+  Finite.of_injective _ DFunLike.coe_injective
+#align fun_like.finite DFunLike.finite
 -/
 
-#print FunLike.finite' /-
+#print DFunLike.finite' /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Non-dependent version of `fun_like.finite` that might be easier to infer.
 Can't be an instance because it can cause infinite loops.
 -/
-theorem FunLike.finite' [Finite α] [Finite γ] : Finite G :=
-  FunLike.finite G
-#align fun_like.finite' FunLike.finite'
+theorem DFunLike.finite' [Finite α] [Finite γ] : Finite G :=
+  DFunLike.finite G
+#align fun_like.finite' DFunLike.finite'
 -/
 
 end Sort

@@ -183,7 +183,7 @@ theorem toFun_eq_coe (f : α →+*o β) : f.toFun = ⇑f :=
 #print OrderRingHom.ext /-
 @[ext]
 theorem ext {f g : α →+*o β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align order_ring_hom.ext OrderRingHom.ext
 -/
 
@@ -269,7 +269,7 @@ theorem coe_copy (f : α →+*o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f
 
 #print OrderRingHom.copy_eq /-
 theorem copy_eq (f : α →+*o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align order_ring_hom.copy_eq OrderRingHom.copy_eq
 -/
 
@@ -368,7 +368,7 @@ theorem id_comp (f : α →+*o β) : (OrderRingHom.id β).comp f = f :=
 #print OrderRingHom.cancel_right /-
 theorem cancel_right {f₁ f₂ : β →+*o γ} {g : α →+*o β} (hg : Surjective g) :
     f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
-  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hg.forall.2 <| DFunLike.ext_iff.1 h, congr_arg _⟩
 #align order_ring_hom.cancel_right OrderRingHom.cancel_right
 -/
 
@@ -387,7 +387,7 @@ instance [Preorder β] : Preorder (OrderRingHom α β) :=
   Preorder.lift (coeFn : _ → α → β)
 
 instance [PartialOrder β] : PartialOrder (OrderRingHom α β) :=
-  PartialOrder.lift _ FunLike.coe_injective
+  PartialOrder.lift _ DFunLike.coe_injective
 
 end OrderRingHom
 
@@ -421,7 +421,7 @@ instance : OrderRingIsoClass (α ≃+*o β) α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (α ≃+*o β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print OrderRingIso.toFun_eq_coe /-
 theorem toFun_eq_coe (f : α ≃+*o β) : f.toFun = f :=
@@ -432,7 +432,7 @@ theorem toFun_eq_coe (f : α ≃+*o β) : f.toFun = f :=
 #print OrderRingIso.ext /-
 @[ext]
 theorem ext {f g : α ≃+*o β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align order_ring_iso.ext OrderRingIso.ext
 -/
 
@@ -610,7 +610,7 @@ theorem coe_toOrderRingHom_refl : (OrderRingIso.refl α : α →+*o α) = OrderR
 
 #print OrderRingIso.toOrderRingHom_injective /-
 theorem toOrderRingHom_injective : Injective (toOrderRingHom : α ≃+*o β → α →+*o β) := fun f g h =>
-  FunLike.coe_injective <| by convert FunLike.ext'_iff.1 h
+  DFunLike.coe_injective <| by convert DFunLike.ext'_iff.1 h
 #align order_ring_iso.to_order_ring_hom_injective OrderRingIso.toOrderRingHom_injective
 -/
 

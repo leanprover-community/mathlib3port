@@ -125,7 +125,7 @@ instance hasForgetToFinPartOrd : HasForget₂ FinBoolAlg FinPartOrd
 instance forgetToFinPartOrdFaithful : Faithful (forget₂ FinBoolAlg FinPartOrd) :=
   ⟨fun X Y f g h =>
     haveI := congr_arg (coeFn : _ → X → Y) h
-    FunLike.coe_injective this⟩
+    DFunLike.coe_injective this⟩
 #align FinBoolAlg.forget_to_FinPartOrd_faithful FinBoolAlg.forgetToFinPartOrdFaithful
 -/
 

@@ -124,7 +124,7 @@ instance : NonUnitalStarAlgHomClass (A →⋆ₙₐ[R] B) R A B
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (A →⋆ₙₐ[R] B) fun _ => A → B :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 initialize_simps_projections NonUnitalStarAlgHom (toFun → apply)
 
@@ -145,7 +145,7 @@ theorem coe_toNonUnitalAlgHom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgHom :
 #print NonUnitalStarAlgHom.ext /-
 @[ext]
 theorem ext {f g : A →⋆ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align non_unital_star_alg_hom.ext NonUnitalStarAlgHom.ext
 -/
 
@@ -172,7 +172,7 @@ theorem coe_copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : ⇑(f.c
 
 #print NonUnitalStarAlgHom.copy_eq /-
 theorem copy_eq (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align non_unital_star_alg_hom.copy_eq NonUnitalStarAlgHom.copy_eq
 -/
 
@@ -391,7 +391,7 @@ instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (A →⋆ₐ[R] B) fun _ => A → B :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print StarAlgHom.coe_coe /-
 @[simp, protected]
@@ -412,7 +412,7 @@ theorem coe_toAlgHom {f : A →⋆ₐ[R] B} : (f.toAlgHom : A → B) = f :=
 #print StarAlgHom.ext /-
 @[ext]
 theorem ext {f g : A →⋆ₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align star_alg_hom.ext StarAlgHom.ext
 -/
 
@@ -440,7 +440,7 @@ theorem coe_copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : ⇑(f.copy
 
 #print StarAlgHom.copy_eq /-
 theorem copy_eq (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align star_alg_hom.copy_eq StarAlgHom.copy_eq
 -/
 
@@ -612,7 +612,7 @@ theorem snd_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (snd R B 
 #print NonUnitalStarAlgHom.prod_fst_snd /-
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
-  FunLike.coe_injective Pi.prod_fst_snd
+  DFunLike.coe_injective Pi.prod_fst_snd
 #align non_unital_star_alg_hom.prod_fst_snd NonUnitalStarAlgHom.prod_fst_snd
 -/
 
@@ -737,7 +737,7 @@ theorem snd_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (snd R B C).com
 #print StarAlgHom.prod_fst_snd /-
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
-  FunLike.coe_injective Pi.prod_fst_snd
+  DFunLike.coe_injective Pi.prod_fst_snd
 #align star_alg_hom.prod_fst_snd StarAlgHom.prod_fst_snd
 -/
 
@@ -802,7 +802,7 @@ instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [SMul R A] [Star A]
     [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : StarHomClass F A B :=
   { hF with
     coe := fun f => f
-    coe_injective' := FunLike.coe_injective }
+    coe_injective' := DFunLike.coe_injective }
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
@@ -812,7 +812,7 @@ instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [Star A] [SMul R A]
     [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : SMulHomClass F R A B :=
   { hF with
     coe := fun f => f
-    coe_injective' := FunLike.coe_injective }
+    coe_injective' := DFunLike.coe_injective }
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgEquivClass.smulHomClass
@@ -823,7 +823,7 @@ instance (priority := 100) {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemir
     [hF : StarAlgEquivClass F R A B] : NonUnitalStarAlgHomClass F R A B :=
   { hF with
     coe := fun f => f
-    coe_injective' := FunLike.coe_injective
+    coe_injective' := DFunLike.coe_injective
     map_zero := map_zero }
 
 -- See note [lower instance priority]
@@ -832,7 +832,7 @@ instance (priority := 100) (F R A B : Type _) [CommSemiring R] [Semiring A] [Alg
     StarAlgHomClass F R A B :=
   { hF with
     coe := fun f => f
-    coe_injective' := FunLike.coe_injective
+    coe_injective' := DFunLike.coe_injective
     map_one := map_one
     map_zero := map_zero
     commutes := fun f r => by simp only [Algebra.algebraMap_eq_smul_one, map_smul, map_one] }
@@ -866,13 +866,13 @@ instance : CoeFun (A ≃⋆ₐ[R] B) fun _ => A → B :=
 #print StarAlgEquiv.ext /-
 @[ext]
 theorem ext {f g : A ≃⋆ₐ[R] B} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align star_alg_equiv.ext StarAlgEquiv.ext
 -/
 
 #print StarAlgEquiv.ext_iff /-
 theorem ext_iff {f g : A ≃⋆ₐ[R] B} : f = g ↔ ∀ a, f a = g a :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align star_alg_equiv.ext_iff StarAlgEquiv.ext_iff
 -/
 

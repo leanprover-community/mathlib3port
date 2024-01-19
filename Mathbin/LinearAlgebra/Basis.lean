@@ -125,9 +125,9 @@ theorem repr_injective : Injective (repr : Basis ι R M → M ≃ₗ[R] ι →�
 #align basis.repr_injective Basis.repr_injective
 -/
 
-#print Basis.funLike /-
+#print Basis.instDFunLike /-
 /-- `b i` is the `i`th basis vector. -/
-instance funLike : FunLike (Basis ι R M) ι fun _ => M
+instance instDFunLike : DFunLike (Basis ι R M) ι fun _ => M
     where
   coe b i := b.repr.symm (Finsupp.single i 1)
   coe_injective' f g h :=
@@ -141,7 +141,7 @@ instance funLike : FunLike (Basis ι R M) ι fun _ => M
           dsimp at this 
           rw [← mul_one r, ← Finsupp.smul_single', LinearEquiv.map_smul, LinearEquiv.map_smul,
             this])
-#align basis.fun_like Basis.funLike
+#align basis.fun_like Basis.instDFunLike
 -/
 
 #print Basis.coe_ofRepr /-
@@ -409,7 +409,7 @@ theorem eq_ofRepr_eq_repr {b₁ b₂ : Basis ι R M} (h : ∀ x i, b₁.repr x i
 /-- Two bases are equal if their basis vectors are the same. -/
 @[ext]
 theorem eq_of_apply_eq {b₁ b₂ : Basis ι R M} : (∀ i, b₁ i = b₂ i) → b₁ = b₂ :=
-  FunLike.ext _ _
+  DFunLike.ext _ _
 #align basis.eq_of_apply_eq Basis.eq_of_apply_eq
 -/
 
@@ -515,7 +515,7 @@ theorem repr_reindex_apply (i' : ι') : (b.reindex e).repr x i' = b.repr x (e.sy
 #print Basis.repr_reindex /-
 @[simp]
 theorem repr_reindex : (b.reindex e).repr x = (b.repr x).mapDomain e :=
-  FunLike.ext _ _ <| by simp [repr_reindex_apply]
+  DFunLike.ext _ _ <| by simp [repr_reindex_apply]
 #align basis.repr_reindex Basis.repr_reindex
 -/
 

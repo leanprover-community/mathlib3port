@@ -72,7 +72,7 @@ structure Dilation where
 You should extend this typeclass when you extend `dilation`.
 -/
 class DilationClass (F : Type _) (α β : outParam <| Type _) [PseudoEMetricSpace α]
-    [PseudoEMetricSpace β] extends FunLike F α fun _ => β where
+    [PseudoEMetricSpace β] extends DFunLike F α fun _ => β where
   edist_eq' : ∀ f : F, ∃ r : ℝ≥0, r ≠ 0 ∧ ∀ x y : α, edist (f x) (f y) = r * edist x y
 #align dilation_class DilationClass
 -/
@@ -97,7 +97,7 @@ instance toDilationClass : DilationClass (Dilation α β) α β
 -/
 
 instance : CoeFun (Dilation α β) fun _ => α → β :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print Dilation.toFun_eq_coe /-
 @[simp]
@@ -115,26 +115,26 @@ theorem coe_mk (f : α → β) (h) : ⇑(⟨f, h⟩ : Dilation α β) = f :=
 
 #print Dilation.congr_fun /-
 theorem congr_fun {f g : Dilation α β} (h : f = g) (x : α) : f x = g x :=
-  FunLike.congr_fun h x
+  DFunLike.congr_fun h x
 #align dilation.congr_fun Dilation.congr_fun
 -/
 
 #print Dilation.congr_arg /-
 theorem congr_arg (f : Dilation α β) {x y : α} (h : x = y) : f x = f y :=
-  FunLike.congr_arg f h
+  DFunLike.congr_arg f h
 #align dilation.congr_arg Dilation.congr_arg
 -/
 
 #print Dilation.ext /-
 @[ext]
 theorem ext {f g : Dilation α β} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align dilation.ext Dilation.ext
 -/
 
 #print Dilation.ext_iff /-
 theorem ext_iff {f g : Dilation α β} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align dilation.ext_iff Dilation.ext_iff
 -/
 
@@ -158,7 +158,7 @@ protected def copy (f : Dilation α β) (f' : α → β) (h : f' = ⇑f) : Dilat
 
 #print Dilation.copy_eq_self /-
 theorem copy_eq_self (f : Dilation α β) {f' : α → β} (h : f' = f) : f.copy f' h = f :=
-  FunLike.ext' h
+  DFunLike.ext' h
 #align dilation.copy_eq_self Dilation.copy_eq_self
 -/
 

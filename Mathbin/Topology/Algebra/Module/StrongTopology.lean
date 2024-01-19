@@ -107,7 +107,7 @@ theorem strongUniformity.uniformEmbedding_coeFn [UniformSpace F] [UniformAddGrou
     @UniformEmbedding (E →SL[σ] F) (E →ᵤ[𝔖] F) (strongUniformity σ F 𝔖)
       (UniformOnFun.uniformSpace E F 𝔖) coeFn :=
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
-  ⟨⟨rfl⟩, FunLike.coe_injective⟩
+  ⟨⟨rfl⟩, DFunLike.coe_injective⟩
 #align continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn ContinuousLinearMap.strongUniformity.uniformEmbedding_coeFn
 -/
 

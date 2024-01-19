@@ -64,10 +64,10 @@ structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 :
 
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
 
-#print AffineMap.funLike /-
-instance AffineMap.funLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
+#print AffineMap.instDFunLike /-
+instance AffineMap.instDFunLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
     [Ring k] [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
-    [affine_space V2 P2] : FunLike (P1 →ᵃ[k] P2) P1 fun _ => P2
+    [affine_space V2 P2] : DFunLike (P1 →ᵃ[k] P2) P1 fun _ => P2
     where
   coe := AffineMap.toFun
   coe_injective' := fun ⟨f, f_linear, f_add⟩ ⟨g, g_linear, g_add⟩ (h : f = g) =>
@@ -76,14 +76,14 @@ instance AffineMap.funLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _
     congr with v
     apply vadd_right_cancel (f p)
     erw [← f_add, h, ← g_add]
-#align affine_map.fun_like AffineMap.funLike
+#align affine_map.fun_like AffineMap.instDFunLike
 -/
 
 #print AffineMap.hasCoeToFun /-
 instance AffineMap.hasCoeToFun (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
     [Ring k] [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
     [affine_space V2 P2] : CoeFun (P1 →ᵃ[k] P2) fun _ => P1 → P2 :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 #align affine_map.has_coe_to_fun AffineMap.hasCoeToFun
 -/
 
@@ -165,7 +165,7 @@ theorem linearMap_vsub (f : P1 →ᵃ[k] P2) (p1 p2 : P1) : f.linear (p1 -ᵥ p2
 /-- Two affine maps are equal if they coerce to the same function. -/
 @[ext]
 theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align affine_map.ext AffineMap.ext
 -/
 
@@ -177,7 +177,7 @@ theorem ext_iff {f g : P1 →ᵃ[k] P2} : f = g ↔ ∀ p, f p = g p :=
 
 #print AffineMap.coeFn_injective /-
 theorem coeFn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align affine_map.coe_fn_injective AffineMap.coeFn_injective
 -/
 

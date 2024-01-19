@@ -59,7 +59,7 @@ instance : LargeCategory.{u} GroupWithZeroCat
 instance : ConcreteCategory GroupWithZeroCat
     where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
-  forget_faithful := ⟨fun X Y f g h => FunLike.coe_injective h⟩
+  forget_faithful := ⟨fun X Y f g h => DFunLike.coe_injective h⟩
 
 #print GroupWithZeroCat.hasForgetToBipointed /-
 instance hasForgetToBipointed : HasForget₂ GroupWithZeroCat Bipointed

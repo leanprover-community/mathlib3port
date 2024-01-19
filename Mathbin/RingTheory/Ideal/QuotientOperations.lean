@@ -933,7 +933,7 @@ theorem coe_quotQuotEquivCommₐ : ⇑(quotQuotEquivCommₐ R I J) = quotQuotEqu
 theorem quotQuotEquivComm_symmₐ : (quotQuotEquivCommₐ R I J).symm = quotQuotEquivCommₐ R J I :=
   -- TODO: should be `rfl` but times out
     AlgEquiv.ext
-    fun x => (FunLike.congr_fun (quotQuotEquivComm_symm I J) x : _)
+    fun x => (DFunLike.congr_fun (quotQuotEquivComm_symm I J) x : _)
 #align double_quot.quot_quot_equiv_comm_symmₐ DoubleQuot.quotQuotEquivComm_symmₐ
 -/
 

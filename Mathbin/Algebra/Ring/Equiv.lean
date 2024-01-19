@@ -87,7 +87,7 @@ instance (priority := 100) toRingHomClass (F R S : Type _) [NonAssocSemiring R] 
     [h : RingEquivClass F R S] : RingHomClass F R S :=
   { h with
     coe := coeFn
-    coe_injective' := FunLike.coe_injective
+    coe_injective' := DFunLike.coe_injective
     map_zero := map_zero
     map_one := map_one }
 #align ring_equiv_class.to_ring_hom_class RingEquivClass.toRingHomClass
@@ -99,7 +99,7 @@ instance (priority := 100) toNonUnitalRingHomClass (F R S : Type _) [NonUnitalNo
     [NonUnitalNonAssocSemiring S] [h : RingEquivClass F R S] : NonUnitalRingHomClass F R S :=
   { h with
     coe := coeFn
-    coe_injective' := FunLike.coe_injective
+    coe_injective' := DFunLike.coe_injective
     map_zero := map_zero }
 #align ring_equiv_class.to_non_unital_ring_hom_class RingEquivClass.toNonUnitalRingHomClass
 -/
@@ -171,7 +171,7 @@ protected theorem map_add (e : R ≃+* S) (x y : R) : e (x + y) = e x + e y :=
     same underlying function. -/
 @[ext]
 theorem ext {f g : R ≃+* S} (h : ∀ x, f x = g x) : f = g :=
-  FunLike.ext f g h
+  DFunLike.ext f g h
 #align ring_equiv.ext RingEquiv.ext
 -/
 
@@ -189,19 +189,19 @@ theorem mk_coe (e : R ≃+* S) (e' h₁ h₂ h₃ h₄) : (⟨e, e', h₁, h₂,
 
 #print RingEquiv.congr_arg /-
 protected theorem congr_arg {f : R ≃+* S} {x x' : R} : x = x' → f x = f x' :=
-  FunLike.congr_arg f
+  DFunLike.congr_arg f
 #align ring_equiv.congr_arg RingEquiv.congr_arg
 -/
 
 #print RingEquiv.congr_fun /-
 protected theorem congr_fun {f g : R ≃+* S} (h : f = g) (x : R) : f x = g x :=
-  FunLike.congr_fun h x
+  DFunLike.congr_fun h x
 #align ring_equiv.congr_fun RingEquiv.congr_fun
 -/
 
 #print RingEquiv.ext_iff /-
 protected theorem ext_iff {f g : R ≃+* S} : f = g ↔ ∀ x, f x = g x :=
-  FunLike.ext_iff
+  DFunLike.ext_iff
 #align ring_equiv.ext_iff RingEquiv.ext_iff
 -/
 
@@ -963,8 +963,8 @@ def ofHomInv' {R S F G : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAsso
     where
   toFun := hom
   invFun := inv
-  left_inv := FunLike.congr_fun hom_inv_id
-  right_inv := FunLike.congr_fun inv_hom_id
+  left_inv := DFunLike.congr_fun hom_inv_id
+  right_inv := DFunLike.congr_fun inv_hom_id
   map_mul' := map_mul hom
   map_add' := map_add hom
 #align ring_equiv.of_hom_inv' RingEquiv.ofHomInv'
@@ -982,8 +982,8 @@ def ofHomInv {R S F G : Type _} [NonAssocSemiring R] [NonAssocSemiring S] [RingH
     where
   toFun := hom
   invFun := inv
-  left_inv := FunLike.congr_fun hom_inv_id
-  right_inv := FunLike.congr_fun inv_hom_id
+  left_inv := DFunLike.congr_fun hom_inv_id
+  right_inv := DFunLike.congr_fun inv_hom_id
   map_mul' := map_mul hom
   map_add' := map_add hom
 #align ring_equiv.of_hom_inv RingEquiv.ofHomInv

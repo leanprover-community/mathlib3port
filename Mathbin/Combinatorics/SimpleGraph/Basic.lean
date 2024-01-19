@@ -2195,7 +2195,7 @@ theorem coe_id : ⇑(Hom.id : G →g G) = id :=
 -/
 
 instance [Subsingleton (V → W)] : Subsingleton (G →g H) :=
-  FunLike.coe_injective.Subsingleton
+  DFunLike.coe_injective.Subsingleton
 
 instance [IsEmpty V] : Unique (G →g H)
     where
@@ -2203,10 +2203,10 @@ instance [IsEmpty V] : Unique (G →g H)
   uniq _ := Subsingleton.elim _ _
 
 noncomputable instance [Fintype V] [Fintype W] : Fintype (G →g H) := by
-  classical exact FunLike.fintype _
+  classical exact DFunLike.fintype _
 
 instance [Finite V] [Finite W] : Finite (G →g H) :=
-  FunLike.finite _
+  DFunLike.finite _
 
 #print SimpleGraph.Hom.map_adj /-
 theorem map_adj {v w : V} (h : G.Adj v w) : G'.Adj (f v) (f w) :=

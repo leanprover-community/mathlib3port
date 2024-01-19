@@ -119,12 +119,12 @@ instance : HomotopyLike (Homotopy f₀ f₁) f₀ f₁
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (Homotopy f₀ f₁) fun _ => I × X → Y :=
-  FunLike.hasCoeToFun
+  DFunLike.hasCoeToFun
 
 #print ContinuousMap.Homotopy.ext /-
 @[ext]
 theorem ext {F G : Homotopy f₀ f₁} (h : ∀ x, F x = G x) : F = G :=
-  FunLike.ext _ _ h
+  DFunLike.ext _ _ h
 #align continuous_map.homotopy.ext ContinuousMap.Homotopy.ext
 -/
 

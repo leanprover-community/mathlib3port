@@ -99,17 +99,17 @@ open Function
 
 section Coercions
 
-#print AlternatingMap.funLike /-
-instance funLike : FunLike (AlternatingMap R M N ι) (ι → M) fun _ => N
+#print AlternatingMap.instDFunLike /-
+instance instDFunLike : DFunLike (AlternatingMap R M N ι) (ι → M) fun _ => N
     where
   coe := AlternatingMap.toFun
   coe_injective' f g h := by cases f; cases g; congr
-#align alternating_map.fun_like AlternatingMap.funLike
+#align alternating_map.fun_like AlternatingMap.instDFunLike
 -/
 
 -- shortcut instance
 instance : CoeFun (AlternatingMap R M N ι) fun _ => (ι → M) → N :=
-  ⟨FunLike.coe⟩
+  ⟨DFunLike.coe⟩
 
 initialize_simps_projections AlternatingMap (toFun → apply)
 
@@ -139,7 +139,7 @@ theorem congr_arg (f : AlternatingMap R M N ι) {x y : ι → M} (h : x = y) : f
 
 #print AlternatingMap.coe_injective /-
 theorem coe_injective : Injective (coeFn : AlternatingMap R M N ι → (ι → M) → N) :=
-  FunLike.coe_injective
+  DFunLike.coe_injective
 #align alternating_map.coe_injective AlternatingMap.coe_injective
 -/
 
@@ -153,7 +153,7 @@ theorem coe_inj {f g : AlternatingMap R M N ι} : (f : (ι → M) → N) = g ↔
 #print AlternatingMap.ext /-
 @[ext]
 theorem ext {f f' : AlternatingMap R M N ι} (H : ∀ x, f x = f' x) : f = f' :=
-  FunLike.ext _ _ H
+  DFunLike.ext _ _ H
 #align alternating_map.ext AlternatingMap.ext
 -/
 

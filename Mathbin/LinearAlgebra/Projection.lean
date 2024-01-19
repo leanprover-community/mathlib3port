@@ -484,7 +484,7 @@ of `E` to `p` and fixes every element of `p`.
 The definition allow more generally any `fun_like` type and not just linear maps, so that it can be
 used for example with `continuous_linear_map` or `matrix`.
 -/
-structure IsProj {F : Type _} [FunLike F M fun _ => M] (f : F) : Prop where
+structure IsProj {F : Type _} [DFunLike F M fun _ => M] (f : F) : Prop where
   map_mem : ∀ x, f x ∈ m
   map_id : ∀ x ∈ m, f x = x
 #align linear_map.is_proj LinearMap.IsProj
