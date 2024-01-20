@@ -329,30 +329,30 @@ theorem gcd_zero_right (i : ℤ) : gcd i 0 = natAbs i := by simp [gcd]
 #align int.gcd_zero_right Int.gcd_zero_right
 -/
 
-#print Int.gcd_one_left /-
+#print Int.one_gcd /-
 @[simp]
-theorem gcd_one_left (i : ℤ) : gcd 1 i = 1 :=
+theorem one_gcd (i : ℤ) : gcd 1 i = 1 :=
   Nat.gcd_one_left _
-#align int.gcd_one_left Int.gcd_one_left
+#align int.gcd_one_left Int.one_gcd
 -/
 
-#print Int.gcd_one_right /-
+#print Int.gcd_one /-
 @[simp]
-theorem gcd_one_right (i : ℤ) : gcd i 1 = 1 :=
+theorem gcd_one (i : ℤ) : gcd i 1 = 1 :=
   Nat.gcd_one_right _
-#align int.gcd_one_right Int.gcd_one_right
+#align int.gcd_one_right Int.gcd_one
 -/
 
-#print Int.gcd_neg_right /-
+#print Int.gcd_neg /-
 @[simp]
-theorem gcd_neg_right {x y : ℤ} : gcd x (-y) = gcd x y := by rw [Int.gcd, Int.gcd, nat_abs_neg]
-#align int.gcd_neg_right Int.gcd_neg_right
+theorem gcd_neg {x y : ℤ} : gcd x (-y) = gcd x y := by rw [Int.gcd, Int.gcd, nat_abs_neg]
+#align int.gcd_neg_right Int.gcd_neg
 -/
 
-#print Int.gcd_neg_left /-
+#print Int.neg_gcd /-
 @[simp]
-theorem gcd_neg_left {x y : ℤ} : gcd (-x) y = gcd x y := by rw [Int.gcd, Int.gcd, nat_abs_neg]
-#align int.gcd_neg_left Int.gcd_neg_left
+theorem neg_gcd {x y : ℤ} : gcd (-x) y = gcd x y := by rw [Int.gcd, Int.gcd, nat_abs_neg]
+#align int.gcd_neg_left Int.neg_gcd
 -/
 
 #print Int.gcd_mul_left /-

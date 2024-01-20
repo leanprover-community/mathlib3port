@@ -1238,8 +1238,8 @@ section Separated
 
 open SeparatedNhds Finset
 
-#print finset_disjoint_finset_opens_of_t2 /-
-theorem finset_disjoint_finset_opens_of_t2 [T2Space α] :
+#print separatedNhds_of_finset_finset /-
+theorem separatedNhds_of_finset_finset [T2Space α] :
     ∀ s t : Finset α, Disjoint s t → SeparatedNhds (s : Set α) t :=
   by
   refine'
@@ -1250,13 +1250,13 @@ theorem finset_disjoint_finset_opens_of_t2 [T2Space α] :
   · intro a b c ac bc d
     apply_mod_cast union_left (ac (disjoint_of_subset_left (a.subset_union_left b) d)) (bc _)
     exact disjoint_of_subset_left (a.subset_union_right b) d
-#align finset_disjoint_finset_opens_of_t2 finset_disjoint_finset_opens_of_t2
+#align finset_disjoint_finset_opens_of_t2 separatedNhds_of_finset_finset
 -/
 
 #print point_disjoint_finset_opens_of_t2 /-
 theorem point_disjoint_finset_opens_of_t2 [T2Space α] {x : α} {s : Finset α} (h : x ∉ s) :
     SeparatedNhds ({x} : Set α) s := by
-  exact_mod_cast finset_disjoint_finset_opens_of_t2 {x} s (finset.disjoint_singleton_left.mpr h)
+  exact_mod_cast separatedNhds_of_finset_finset {x} s (finset.disjoint_singleton_left.mpr h)
 #align point_disjoint_finset_opens_of_t2 point_disjoint_finset_opens_of_t2
 -/
 
@@ -1620,12 +1620,12 @@ theorem Function.LeftInverse.closedEmbedding [T2Space α] {f : α → β} {g : �
 #align function.left_inverse.closed_embedding Function.LeftInverse.closedEmbedding
 -/
 
-#print isCompact_isCompact_separated /-
-theorem isCompact_isCompact_separated [T2Space α] {s t : Set α} (hs : IsCompact s)
+#print separatedNhds_of_isCompact_isCompact /-
+theorem separatedNhds_of_isCompact_isCompact [T2Space α] {s t : Set α} (hs : IsCompact s)
     (ht : IsCompact t) (hst : Disjoint s t) : SeparatedNhds s t := by
   simp only [SeparatedNhds, prod_subset_compl_diagonal_iff_disjoint.symm] at hst ⊢ <;>
     exact generalized_tube_lemma hs ht is_closed_diagonal.is_open_compl hst
-#align is_compact_is_compact_separated isCompact_isCompact_separated
+#align is_compact_is_compact_separated separatedNhds_of_isCompact_isCompact
 -/
 
 #print IsCompact.isClosed /-
@@ -1634,7 +1634,7 @@ theorem IsCompact.isClosed [T2Space α] {s : Set α} (hs : IsCompact s) : IsClos
   isOpen_compl_iff.1 <|
     isOpen_iff_forall_mem_open.mpr fun x hx =>
       let ⟨u, v, uo, vo, su, xv, uv⟩ :=
-        isCompact_isCompact_separated hs isCompact_singleton (disjoint_singleton_right.2 hx)
+        separatedNhds_of_isCompact_isCompact hs isCompact_singleton (disjoint_singleton_right.2 hx)
       ⟨v, (uv.mono_left <| show s ≤ u from su).subset_compl_left, vo, by simpa using xv⟩
 #align is_compact.is_closed IsCompact.isClosed
 -/
@@ -1710,7 +1710,7 @@ theorem IsCompact.binary_compact_cover [T2Space α] {K U V : Set α} (hK : IsCom
     ∃ K₁ K₂ : Set α, IsCompact K₁ ∧ IsCompact K₂ ∧ K₁ ⊆ U ∧ K₂ ⊆ V ∧ K = K₁ ∪ K₂ :=
   by
   obtain ⟨O₁, O₂, h1O₁, h1O₂, h2O₁, h2O₂, hO⟩ :=
-    isCompact_isCompact_separated (hK.diff hU) (hK.diff hV)
+    separatedNhds_of_isCompact_isCompact (hK.diff hU) (hK.diff hV)
       (by rwa [disjoint_iff_inter_eq_empty, diff_inter_diff, diff_eq_empty])
   exact
     ⟨_, _, hK.diff h1O₁, hK.diff h1O₂, by rwa [diff_subset_comm], by rwa [diff_subset_comm], by
@@ -1784,7 +1784,7 @@ theorem WeaklyLocallyCompactSpace.locallyCompactSpace [T2Space α]
     -- we may find open sets V, W separating x from K \ U.
     -- Then K \ W is a compact neighborhood of x contained in U.
     let ⟨v, w, vo, wo, xv, kuw, vw⟩ :=
-      isCompact_isCompact_separated isCompact_singleton (kc.diffₓ uo)
+      separatedNhds_of_isCompact_isCompact isCompact_singleton (kc.diffₓ uo)
         (disjoint_singleton_left.2 fun h => h.2 xu)
     have wn : wᶜ ∈ 𝓝 x :=
       mem_nhds_iff.mpr ⟨v, vw.subset_compl_right, vo, singleton_subset_iff.mp xv⟩
@@ -2222,7 +2222,7 @@ instance (priority := 100) T4Space.t3Space [NormalSpace α] : T3Space α
 #print T4Space.of_compactSpace_t2Space /-
 -- We can't make this an instance because it could cause an instance loop.
 theorem T4Space.of_compactSpace_t2Space [CompactSpace α] [T2Space α] : NormalSpace α :=
-  ⟨fun s t hs ht => isCompact_isCompact_separated hs.IsCompact ht.IsCompact⟩
+  ⟨fun s t hs ht => separatedNhds_of_isCompact_isCompact hs.IsCompact ht.IsCompact⟩
 #align normal_of_compact_t2 T4Space.of_compactSpace_t2Space
 -/
 
