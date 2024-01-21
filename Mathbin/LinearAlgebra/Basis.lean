@@ -125,9 +125,9 @@ theorem repr_injective : Injective (repr : Basis ι R M → M ≃ₗ[R] ι →�
 #align basis.repr_injective Basis.repr_injective
 -/
 
-#print Basis.instDFunLike /-
+#print Basis.instFunLike /-
 /-- `b i` is the `i`th basis vector. -/
-instance instDFunLike : DFunLike (Basis ι R M) ι fun _ => M
+instance instFunLike : DFunLike (Basis ι R M) ι fun _ => M
     where
   coe b i := b.repr.symm (Finsupp.single i 1)
   coe_injective' f g h :=
@@ -141,7 +141,7 @@ instance instDFunLike : DFunLike (Basis ι R M) ι fun _ => M
           dsimp at this 
           rw [← mul_one r, ← Finsupp.smul_single', LinearEquiv.map_smul, LinearEquiv.map_smul,
             this])
-#align basis.fun_like Basis.instDFunLike
+#align basis.fun_like Basis.instFunLike
 -/
 
 #print Basis.coe_ofRepr /-

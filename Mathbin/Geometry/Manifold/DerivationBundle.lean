@@ -57,10 +57,10 @@ variable {𝕜 M}
 
 namespace PointedSmoothMap
 
-#print PointedSmoothMap.instDFunLike /-
-instance instDFunLike {x : M} : DFunLike C^∞⟮I, M; 𝕜⟯⟨x⟩ M fun _ => 𝕜 :=
-  ContMDiffMap.instDFunLike
-#align pointed_smooth_map.fun_like PointedSmoothMap.instDFunLike
+#print PointedSmoothMap.instFunLike /-
+instance instFunLike {x : M} : DFunLike C^∞⟮I, M; 𝕜⟯⟨x⟩ M fun _ => 𝕜 :=
+  ContMDiffMap.instFunLike
+#align pointed_smooth_map.fun_like PointedSmoothMap.instFunLike
 -/
 
 instance {x : M} : CommRing C^∞⟮I, M; 𝕜⟯⟨x⟩ :=

@@ -61,8 +61,8 @@ variable {L} {M} {N}
 
 namespace ElementaryEmbedding
 
-#print FirstOrder.Language.ElementaryEmbedding.instDFunLike /-
-instance instDFunLike : DFunLike (M ↪ₑ[L] N) M fun _ => N
+#print FirstOrder.Language.ElementaryEmbedding.instFunLike /-
+instance instFunLike : DFunLike (M ↪ₑ[L] N) M fun _ => N
     where
   coe f := f.toFun
   coe_injective' f g h := by
@@ -71,7 +71,7 @@ instance instDFunLike : DFunLike (M ↪ₑ[L] N) M fun _ => N
     simp only
     ext x
     exact Function.funext_iff.1 h x
-#align first_order.language.elementary_embedding.fun_like FirstOrder.Language.ElementaryEmbedding.instDFunLike
+#align first_order.language.elementary_embedding.fun_like FirstOrder.Language.ElementaryEmbedding.instFunLike
 -/
 
 instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=

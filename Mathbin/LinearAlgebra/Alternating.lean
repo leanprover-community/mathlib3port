@@ -99,12 +99,12 @@ open Function
 
 section Coercions
 
-#print AlternatingMap.instDFunLike /-
-instance instDFunLike : DFunLike (AlternatingMap R M N ι) (ι → M) fun _ => N
+#print AlternatingMap.instFunLike /-
+instance instFunLike : DFunLike (AlternatingMap R M N ι) (ι → M) fun _ => N
     where
   coe := AlternatingMap.toFun
   coe_injective' f g h := by cases f; cases g; congr
-#align alternating_map.fun_like AlternatingMap.instDFunLike
+#align alternating_map.fun_like AlternatingMap.instFunLike
 -/
 
 -- shortcut instance

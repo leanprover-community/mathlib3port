@@ -563,12 +563,12 @@ theorem HomClass.map_constants {F M N} [L.Structure M] [L.Structure N] [DFunLike
 
 namespace Hom
 
-#print FirstOrder.Language.Hom.instDFunLike /-
-instance instDFunLike : DFunLike (M →[L] N) M fun _ => N
+#print FirstOrder.Language.Hom.instFunLike /-
+instance instFunLike : DFunLike (M →[L] N) M fun _ => N
     where
   coe := Hom.toFun
   coe_injective' f g h := by cases f; cases g; cases h; rfl
-#align first_order.language.hom.fun_like FirstOrder.Language.Hom.instDFunLike
+#align first_order.language.hom.fun_like FirstOrder.Language.Hom.instFunLike
 -/
 
 #print FirstOrder.Language.Hom.homClass /-

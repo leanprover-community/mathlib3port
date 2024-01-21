@@ -744,21 +744,21 @@ theorem append_inj_left' {s₁ s₂ t₁ t₂ : List α} (h : s₁ ++ t₁ = s�
   (append_inj' h hl).left
 #align list.append_inj_left' List.append_inj_left'ₓ
 
-#print List.append_left_cancel /-
-theorem append_left_cancel {s t₁ t₂ : List α} (h : s ++ t₁ = s ++ t₂) : t₁ = t₂ :=
+#print List.append_cancel_left /-
+theorem append_cancel_left {s t₁ t₂ : List α} (h : s ++ t₁ = s ++ t₂) : t₁ = t₂ :=
   append_inj_right h rfl
-#align list.append_left_cancel List.append_left_cancel
+#align list.append_left_cancel List.append_cancel_left
 -/
 
-#print List.append_right_cancel /-
-theorem append_right_cancel {s₁ s₂ t : List α} (h : s₁ ++ t = s₂ ++ t) : s₁ = s₂ :=
+#print List.append_cancel_right /-
+theorem append_cancel_right {s₁ s₂ t : List α} (h : s₁ ++ t = s₂ ++ t) : s₁ = s₂ :=
   append_inj_left' h rfl
-#align list.append_right_cancel List.append_right_cancel
+#align list.append_right_cancel List.append_cancel_right
 -/
 
 #print List.append_right_injective /-
 theorem append_right_injective (s : List α) : Injective fun t => s ++ t := fun t₁ t₂ =>
-  append_left_cancel
+  append_cancel_left
 #align list.append_right_injective List.append_right_injective
 -/
 
@@ -770,7 +770,7 @@ theorem append_right_inj {t₁ t₂ : List α} (s) : s ++ t₁ = s ++ t₂ ↔ t
 
 #print List.append_left_injective /-
 theorem append_left_injective (t : List α) : Injective fun s => s ++ t := fun s₁ s₂ =>
-  append_right_cancel
+  append_cancel_right
 #align list.append_left_injective List.append_left_injective
 -/
 

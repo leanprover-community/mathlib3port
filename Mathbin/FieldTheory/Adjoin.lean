@@ -1438,8 +1438,8 @@ theorem le_sup_toSubalgebra : E1.toSubalgebra ⊔ E2.toSubalgebra ≤ (E1 ⊔ E2
 #align intermediate_field.le_sup_to_subalgebra IntermediateField.le_sup_toSubalgebra
 -/
 
-#print IntermediateField.sup_toSubalgebra /-
-theorem sup_toSubalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] :
+#print IntermediateField.sup_toSubalgebra_of_left /-
+theorem sup_toSubalgebra_of_left [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] :
     (E1 ⊔ E2).toSubalgebra = E1.toSubalgebra ⊔ E2.toSubalgebra :=
   by
   let S1 := E1.to_subalgebra
@@ -1460,7 +1460,7 @@ theorem sup_toSubalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K
     isField_of_isIntegral_of_isField'
       (is_integral_sup.mpr ⟨Algebra.isIntegral_of_finite K E1, Algebra.isIntegral_of_finite K E2⟩)
       (Field.toIsField K)
-#align intermediate_field.sup_to_subalgebra IntermediateField.sup_toSubalgebra
+#align intermediate_field.sup_to_subalgebra IntermediateField.sup_toSubalgebra_of_left
 -/
 
 #print IntermediateField.finiteDimensional_sup /-

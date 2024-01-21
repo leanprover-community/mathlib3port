@@ -93,12 +93,12 @@ namespace SchwartzMap
 instance : Coe 𝓢(E, F) (E → F) :=
   ⟨toFun⟩
 
-#print SchwartzMap.instDFunLike /-
-instance instDFunLike : DFunLike 𝓢(E, F) E fun _ => F
+#print SchwartzMap.instFunLike /-
+instance instFunLike : DFunLike 𝓢(E, F) E fun _ => F
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-#align schwartz_map.fun_like SchwartzMap.instDFunLike
+#align schwartz_map.fun_like SchwartzMap.instFunLike
 -/
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/

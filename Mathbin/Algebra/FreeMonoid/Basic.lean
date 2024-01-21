@@ -114,8 +114,8 @@ instance : CancelMonoid (FreeMonoid α)
   mul_one := List.append_nil
   one_mul := List.nil_append
   mul_assoc := List.append_assoc
-  hMul_left_cancel _ _ _ := List.append_left_cancel
-  hMul_right_cancel _ _ _ := List.append_right_cancel
+  hMul_left_cancel _ _ _ := List.append_cancel_left
+  hMul_right_cancel _ _ _ := List.append_cancel_right
 
 @[to_additive]
 instance : Inhabited (FreeMonoid α) :=

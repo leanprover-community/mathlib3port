@@ -73,12 +73,12 @@ variable [Ring k] [Module k V] (b : AffineBasis ι k P) {s : Finset ι} {i j : �
 instance : Inhabited (AffineBasis PUnit k PUnit) :=
   ⟨⟨id, affineIndependent_of_subsingleton k id, by simp⟩⟩
 
-#print AffineBasis.instDFunLike /-
-instance instDFunLike : DFunLike (AffineBasis ι k P) ι fun _ => P
+#print AffineBasis.instFunLike /-
+instance instFunLike : DFunLike (AffineBasis ι k P) ι fun _ => P
     where
   coe := AffineBasis.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-#align affine_basis.fun_like AffineBasis.instDFunLike
+#align affine_basis.fun_like AffineBasis.instFunLike
 -/
 
 #print AffineBasis.ext /-

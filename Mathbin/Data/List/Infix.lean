@@ -559,14 +559,14 @@ theorem suffix_iff_eq_append : l₁ <:+ l₂ ↔ take (length l₂ - length l₁
 
 #print List.prefix_iff_eq_take /-
 theorem prefix_iff_eq_take : l₁ <+: l₂ ↔ l₁ = take (length l₁) l₂ :=
-  ⟨fun h => append_right_cancel <| (prefix_iff_eq_append.1 h).trans (take_append_drop _ _).symm,
+  ⟨fun h => append_cancel_right <| (prefix_iff_eq_append.1 h).trans (take_append_drop _ _).symm,
     fun e => e.symm ▸ take_prefix _ _⟩
 #align list.prefix_iff_eq_take List.prefix_iff_eq_take
 -/
 
 #print List.suffix_iff_eq_drop /-
 theorem suffix_iff_eq_drop : l₁ <:+ l₂ ↔ l₁ = drop (length l₂ - length l₁) l₂ :=
-  ⟨fun h => append_left_cancel <| (suffix_iff_eq_append.1 h).trans (take_append_drop _ _).symm,
+  ⟨fun h => append_cancel_left <| (suffix_iff_eq_append.1 h).trans (take_append_drop _ _).symm,
     fun e => e.symm ▸ drop_suffix _ _⟩
 #align list.suffix_iff_eq_drop List.suffix_iff_eq_drop
 -/

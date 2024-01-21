@@ -51,12 +51,12 @@ def PMF.{u} (α : Type u) : Type u :=
 
 namespace PMF
 
-#print PMF.instDFunLike /-
-instance instDFunLike : DFunLike (PMF α) α fun p => ℝ≥0∞
+#print PMF.instFunLike /-
+instance instFunLike : DFunLike (PMF α) α fun p => ℝ≥0∞
     where
   coe p a := p.1 a
   coe_injective' p q h := Subtype.eq h
-#align pmf.fun_like PMF.instDFunLike
+#align pmf.fun_like PMF.instFunLike
 -/
 
 #print PMF.ext /-

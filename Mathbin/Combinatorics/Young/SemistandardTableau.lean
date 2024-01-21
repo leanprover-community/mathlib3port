@@ -64,12 +64,12 @@ structure Ssyt (μ : YoungDiagram) where
 
 namespace Ssyt
 
-#print Ssyt.instDFunLike /-
-instance instDFunLike {μ : YoungDiagram} : DFunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ
+#print Ssyt.instFunLike /-
+instance instFunLike {μ : YoungDiagram} : DFunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ
     where
   coe := Ssyt.entry
   coe_injective' T T' h := by cases T; cases T'; congr
-#align ssyt.fun_like Ssyt.instDFunLike
+#align ssyt.fun_like Ssyt.instFunLike
 -/
 
 /-- Helper instance for when there's too many metavariables to apply

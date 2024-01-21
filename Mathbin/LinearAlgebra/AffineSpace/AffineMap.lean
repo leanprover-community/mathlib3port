@@ -64,8 +64,8 @@ structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 :
 
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
 
-#print AffineMap.instDFunLike /-
-instance AffineMap.instDFunLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
+#print AffineMap.instFunLike /-
+instance AffineMap.instFunLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
     [Ring k] [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
     [affine_space V2 P2] : DFunLike (P1 →ᵃ[k] P2) P1 fun _ => P2
     where
@@ -76,7 +76,7 @@ instance AffineMap.instDFunLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : T
     congr with v
     apply vadd_right_cancel (f p)
     erw [← f_add, h, ← g_add]
-#align affine_map.fun_like AffineMap.instDFunLike
+#align affine_map.fun_like AffineMap.instFunLike
 -/
 
 #print AffineMap.hasCoeToFun /-

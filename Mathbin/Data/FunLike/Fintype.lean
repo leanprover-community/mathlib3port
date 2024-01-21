@@ -48,15 +48,15 @@ noncomputable def DFunLike.fintype [DecidableEq α] [Fintype α] [∀ i, Fintype
 #align fun_like.fintype DFunLike.fintype
 -/
 
-#print DFunLike.fintype' /-
+#print FunLike.fintype /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Non-dependent version of `fun_like.fintype` that might be easier to infer.
 This is not an instance because specific `fun_like` types might have a better-suited definition.
 -/
-noncomputable def DFunLike.fintype' [DecidableEq α] [Fintype α] [Fintype γ] : Fintype G :=
+noncomputable def FunLike.fintype [DecidableEq α] [Fintype α] [Fintype γ] : Fintype G :=
   DFunLike.fintype G
-#align fun_like.fintype' DFunLike.fintype'
+#align fun_like.fintype' FunLike.fintype
 -/
 
 end Type
@@ -75,15 +75,15 @@ theorem DFunLike.finite [Finite α] [∀ i, Finite (β i)] : Finite F :=
 #align fun_like.finite DFunLike.finite
 -/
 
-#print DFunLike.finite' /-
+#print FunLike.finite /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Non-dependent version of `fun_like.finite` that might be easier to infer.
 Can't be an instance because it can cause infinite loops.
 -/
-theorem DFunLike.finite' [Finite α] [Finite γ] : Finite G :=
+theorem FunLike.finite [Finite α] [Finite γ] : Finite G :=
   DFunLike.finite G
-#align fun_like.finite' DFunLike.finite'
+#align fun_like.finite' FunLike.finite
 -/
 
 end Sort
