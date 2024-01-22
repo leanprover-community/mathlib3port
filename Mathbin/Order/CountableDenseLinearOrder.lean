@@ -182,7 +182,7 @@ def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty
     · change (a, b) ∈ f'.val.image _
       rwa [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage]
     · change _ ⊆ f'.val.image _
-      rw [← Finset.coe_subset, Finset.coe_image, ← Equiv.subset_image]
+      rw [← Finset.coe_subset, Finset.coe_image, ← Equiv.symm_image_subset]
       change f.val.image _ ⊆ _ at hl 
       rwa [← Finset.coe_subset, Finset.coe_image] at hl 
 #align order.partial_iso.defined_at_right Order.PartialIso.definedAtRight

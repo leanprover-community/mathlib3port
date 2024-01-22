@@ -567,11 +567,11 @@ end SmoothBumpCovering
 
 variable (I)
 
-#print exists_smooth_zero_one_of_closed /-
+#print exists_smooth_zero_one_of_isClosed /-
 /-- Given two disjoint closed sets in a Hausdorff σ-compact finite dimensional manifold, there
 exists an infinitely smooth function that is equal to `0` on one of them and is equal to one on the
 other. -/
-theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M}
+theorem exists_smooth_zero_one_of_isClosed [T2Space M] [SigmaCompactSpace M] {s t : Set M}
     (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
     ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
   by
@@ -584,7 +584,7 @@ theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t 
   suffices ∀ i, g i x = 0 by simp only [this, ContMDiffMap.coeFn_mk, finsum_zero, Pi.zero_apply]
   refine' fun i => f.to_smooth_partition_of_unity_zero_of_zero _
   exact nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)
-#align exists_smooth_zero_one_of_closed exists_smooth_zero_one_of_closed
+#align exists_smooth_zero_one_of_closed exists_smooth_zero_one_of_isClosed
 -/
 
 namespace SmoothPartitionOfUnity
@@ -618,7 +618,7 @@ theorem exists_isSubordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (h
   rcases BumpCovering.exists_isSubordinate_of_prop (Smooth I 𝓘(ℝ)) _ hs U ho hU with ⟨f, hf, hfU⟩
   · exact ⟨f.to_smooth_partition_of_unity hf, hfU.to_smooth_partition_of_unity hf⟩
   · intro s t hs ht hd
-    rcases exists_smooth_zero_one_of_closed I hs ht hd with ⟨f, hf⟩
+    rcases exists_smooth_zero_one_of_isClosed I hs ht hd with ⟨f, hf⟩
     exact ⟨f, f.smooth, hf⟩
 #align smooth_partition_of_unity.exists_is_subordinate SmoothPartitionOfUnity.exists_isSubordinate
 -/

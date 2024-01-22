@@ -68,21 +68,21 @@ theorem Set.preimage_equiv_eq_image_symm {α β} (S : Set α) (f : β ≃ α) : 
 #align set.preimage_equiv_eq_image_symm Set.preimage_equiv_eq_image_symm
 -/
 
-#print Equiv.subset_image /-
+#print Equiv.symm_image_subset /-
 @[simp]
-protected theorem subset_image {α β} (e : α ≃ β) (s : Set α) (t : Set β) :
+protected theorem symm_image_subset {α β} (e : α ≃ β) (s : Set α) (t : Set β) :
     e.symm '' t ⊆ s ↔ t ⊆ e '' s := by rw [image_subset_iff, e.image_eq_preimage]
-#align equiv.subset_image Equiv.subset_image
+#align equiv.subset_image Equiv.symm_image_subset
 -/
 
-#print Equiv.subset_image' /-
+#print Equiv.subset_symm_image /-
 @[simp]
-protected theorem subset_image' {α β} (e : α ≃ β) (s : Set α) (t : Set β) :
+protected theorem subset_symm_image {α β} (e : α ≃ β) (s : Set α) (t : Set β) :
     s ⊆ e.symm '' t ↔ e '' s ⊆ t :=
   calc
     s ⊆ e.symm '' t ↔ e.symm.symm '' s ⊆ t := by rw [e.symm.subset_image]
     _ ↔ e '' s ⊆ t := by rw [e.symm_symm]
-#align equiv.subset_image' Equiv.subset_image'
+#align equiv.subset_image' Equiv.subset_symm_image
 -/
 
 #print Equiv.symm_image_image /-
