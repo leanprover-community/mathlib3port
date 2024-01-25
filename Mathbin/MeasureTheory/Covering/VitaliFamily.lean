@@ -298,13 +298,13 @@ theorem eventually_filterAt_iff {x : α} {P : Set α → Prop} :
 #align vitali_family.eventually_filter_at_iff VitaliFamily.eventually_filterAt_iff
 -/
 
-#print VitaliFamily.eventually_filterAt_mem_sets /-
-theorem eventually_filterAt_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.setsAt x :=
+#print VitaliFamily.eventually_filterAt_mem_setsAt /-
+theorem eventually_filterAt_mem_setsAt (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.setsAt x :=
   by
   simp (config := { contextual := true }) only [eventually_filter_at_iff, exists_prop, and_true_iff,
     gt_iff_lt, imp_true_iff]
   exact ⟨1, zero_lt_one⟩
-#align vitali_family.eventually_filter_at_mem_sets VitaliFamily.eventually_filterAt_mem_sets
+#align vitali_family.eventually_filter_at_mem_sets VitaliFamily.eventually_filterAt_mem_setsAt
 -/
 
 #print VitaliFamily.eventually_filterAt_subset_closedBall /-

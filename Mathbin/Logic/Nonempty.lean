@@ -27,17 +27,13 @@ variable {α β : Type _} {γ : α → Type _}
 
 attribute [simp] instNonempty
 
-#print Zero.nonempty /-
 instance (priority := 20) Zero.nonempty [Zero α] : Nonempty α :=
   ⟨0⟩
 #align has_zero.nonempty Zero.nonempty
--/
 
-#print One.nonempty /-
 instance (priority := 20) One.nonempty [One α] : Nonempty α :=
   ⟨1⟩
 #align has_one.nonempty One.nonempty
--/
 
 #print exists_true_iff_nonempty /-
 theorem exists_true_iff_nonempty {α : Sort _} : (∃ a : α, True) ↔ Nonempty α :=

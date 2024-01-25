@@ -243,18 +243,18 @@ section Norm
 
 variable [∀ i, Norm (β i)] [∀ i, Zero (β i)]
 
-#print PiLp.hasNorm /-
+#print PiLp.instNorm /-
 /-- Endowing the space `pi_Lp p β` with the `L^p` norm. We register this instance
 separate from `pi_Lp.seminormed_add_comm_group` since the latter requires the type class hypothesis
 `[fact (1 ≤ p)]` in order to prove the triangle inequality.
 
 Registering this separately allows for a future norm-like structure on `pi_Lp p β` for `p < 1`
 satisfying a relaxed triangle inequality. These are called *quasi-norms*. -/
-instance hasNorm : Norm (PiLp p β)
+instance instNorm : Norm (PiLp p β)
     where norm f :=
     if hp : p = 0 then {i | f i ≠ 0}.toFinite.toFinset.card
     else if p = ∞ then ⨆ i, ‖f i‖ else (∑ i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal)
-#align pi_Lp.has_norm PiLp.hasNorm
+#align pi_Lp.has_norm PiLp.instNorm
 -/
 
 variable {p β}

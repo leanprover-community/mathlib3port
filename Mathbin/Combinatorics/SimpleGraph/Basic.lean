@@ -2314,18 +2314,18 @@ theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑(f'.comp f) = f' ∘ f 
 #align simple_graph.hom.coe_comp SimpleGraph.Hom.coe_comp
 -/
 
-#print SimpleGraph.Hom.ofLe /-
+#print SimpleGraph.Hom.ofLE /-
 /-- The graph homomorphism from a smaller graph to a bigger one. -/
-def ofLe {H : SimpleGraph V} (h : G ≤ H) : G →g H :=
+def ofLE {H : SimpleGraph V} (h : G ≤ H) : G →g H :=
   ⟨id, h⟩
-#align simple_graph.hom.of_le SimpleGraph.Hom.ofLe
+#align simple_graph.hom.of_le SimpleGraph.Hom.ofLE
 -/
 
-#print SimpleGraph.Hom.coe_ofLe /-
+#print SimpleGraph.Hom.coe_ofLE /-
 @[simp, norm_cast]
-theorem coe_ofLe {H : SimpleGraph V} (h : G ≤ H) : ⇑(ofLe h) = id :=
+theorem coe_ofLE {H : SimpleGraph V} (h : G ≤ H) : ⇑(ofLE h) = id :=
   rfl
-#align simple_graph.hom.coe_of_le SimpleGraph.Hom.coe_ofLe
+#align simple_graph.hom.coe_of_le SimpleGraph.Hom.coe_ofLE
 -/
 
 end Hom
@@ -2585,10 +2585,10 @@ def mapNeighborSet (v : V) : G.neighborSet v ≃ G'.neighborSet (f v)
 #align simple_graph.iso.map_neighbor_set SimpleGraph.Iso.mapNeighborSet
 -/
 
-#print SimpleGraph.Iso.card_eq_of_iso /-
-theorem card_eq_of_iso [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V = Fintype.card W := by
+#print SimpleGraph.Iso.card_eq /-
+theorem card_eq [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V = Fintype.card W := by
   convert (Fintype.ofEquiv_card f.to_equiv).symm
-#align simple_graph.iso.card_eq_of_iso SimpleGraph.Iso.card_eq_of_iso
+#align simple_graph.iso.card_eq_of_iso SimpleGraph.Iso.card_eq
 -/
 
 #print SimpleGraph.Iso.comap /-

@@ -179,14 +179,14 @@ theorem norm_le_gronwallBound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
-#print dist_le_of_approx_trajectories_ODE_of_mem_set /-
+#print dist_le_of_approx_trajectories_ODE_of_mem /-
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
 
 This version assumes all inequalities to be true in some time-dependent set `s t`,
 and assumes that the solutions never leave this set. -/
-theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
+theorem dist_le_of_approx_trajectories_ODE_of_mem {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
     (hv : ∀ t, ∀ (x) (_ : x ∈ s t) (y) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
     {f g f' g' : ℝ → E} {a b : ℝ} {εf εg δ : ℝ} (hf : ContinuousOn f (Icc a b))
     (hf' : ∀ t ∈ Ico a b, HasDerivWithinAt f (f' t) (Ici t) t)
@@ -209,7 +209,7 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s :
             (hv t (f t) (hfs t ht) (g t) (hgs t ht))).trans
         _)
   rw [dist_eq_norm, add_comm]
-#align dist_le_of_approx_trajectories_ODE_of_mem_set dist_le_of_approx_trajectories_ODE_of_mem_set
+#align dist_le_of_approx_trajectories_ODE_of_mem_set dist_le_of_approx_trajectories_ODE_of_mem
 -/
 
 #print dist_le_of_approx_trajectories_ODE /-
@@ -226,20 +226,20 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0}
     (g_bound : ∀ t ∈ Ico a b, dist (g' t) (v t (g t)) ≤ εg) (ha : dist (f a) (g a) ≤ δ) :
     ∀ t ∈ Icc a b, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) :=
   have hfs : ∀ t ∈ Ico a b, f t ∈ @univ E := fun t ht => trivial
-  dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf'
+  dist_le_of_approx_trajectories_ODE_of_mem (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf'
     f_bound hfs hg hg' g_bound (fun t ht => trivial) ha
 #align dist_le_of_approx_trajectories_ODE dist_le_of_approx_trajectories_ODE
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
-#print dist_le_of_trajectories_ODE_of_mem_set /-
+#print dist_le_of_trajectories_ODE_of_mem /-
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
 
 This version assumes all inequalities to be true in some time-dependent set `s t`,
 and assumes that the solutions never leave this set. -/
-theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
+theorem dist_le_of_trajectories_ODE_of_mem {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
     (hv : ∀ t, ∀ (x) (_ : x ∈ s t) (y) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
     {f g : ℝ → E} {a b : ℝ} {δ : ℝ} (hf : ContinuousOn f (Icc a b))
     (hf' : ∀ t ∈ Ico a b, HasDerivWithinAt f (v t (f t)) (Ici t) t) (hfs : ∀ t ∈ Ico a b, f t ∈ s t)
@@ -250,10 +250,9 @@ theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ �
   have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0 := by intros; rw [dist_self]
   have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0 := by intros; rw [dist_self]
   intro t ht
-  have :=
-    dist_le_of_approx_trajectories_ODE_of_mem_set hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht
+  have := dist_le_of_approx_trajectories_ODE_of_mem hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht
   rwa [zero_add, gronwallBound_ε0] at this 
-#align dist_le_of_trajectories_ODE_of_mem_set dist_le_of_trajectories_ODE_of_mem_set
+#align dist_le_of_trajectories_ODE_of_mem_set dist_le_of_trajectories_ODE_of_mem
 -/
 
 #print dist_le_of_trajectories_ODE /-
@@ -268,17 +267,17 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : �
     (hg' : ∀ t ∈ Ico a b, HasDerivWithinAt g (v t (g t)) (Ici t) t) (ha : dist (f a) (g a) ≤ δ) :
     ∀ t ∈ Icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
   have hfs : ∀ t ∈ Ico a b, f t ∈ @univ E := fun t ht => trivial
-  dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg
-    hg' (fun t ht => trivial) ha
+  dist_le_of_trajectories_ODE_of_mem (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
+    (fun t ht => trivial) ha
 #align dist_le_of_trajectories_ODE dist_le_of_trajectories_ODE
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
-#print ODE_solution_unique_of_mem_set /-
+#print ODE_solution_unique_of_mem_Icc_right /-
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/
-theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
+theorem ODE_solution_unique_of_mem_Icc_right {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
     (hv : ∀ t, ∀ (x) (_ : x ∈ s t) (y) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y)
     {f g : ℝ → E} {a b : ℝ} (hf : ContinuousOn f (Icc a b))
     (hf' : ∀ t ∈ Ico a b, HasDerivWithinAt f (v t (f t)) (Ici t) t) (hfs : ∀ t ∈ Ico a b, f t ∈ s t)
@@ -286,9 +285,9 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
     (hgs : ∀ t ∈ Ico a b, g t ∈ s t) (ha : f a = g a) : ∀ t ∈ Icc a b, f t = g t :=
   by
   intro t ht
-  have := dist_le_of_trajectories_ODE_of_mem_set hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
+  have := dist_le_of_trajectories_ODE_of_mem hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
   rwa [MulZeroClass.zero_mul, dist_le_zero] at this 
-#align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_set
+#align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_Icc_right
 -/
 
 #print ODE_solution_unique /-
@@ -300,7 +299,7 @@ theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, Lip
     (hg' : ∀ t ∈ Ico a b, HasDerivWithinAt g (v t (g t)) (Ici t) t) (ha : f a = g a) :
     ∀ t ∈ Icc a b, f t = g t :=
   have hfs : ∀ t ∈ Ico a b, f t ∈ @univ E := fun t ht => trivial
-  ODE_solution_unique_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
+  ODE_solution_unique_of_mem_Icc_right (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivial) ha
 #align ODE_solution_unique ODE_solution_unique
 -/
