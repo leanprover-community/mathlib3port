@@ -596,7 +596,7 @@ variable [PartialOrder Γ] {V : Type _} [Monoid R] [AddMonoid V] [DistribMulActi
 instance : SMul R (HahnSeries Γ V) :=
   ⟨fun r x =>
     { coeff := r • x.coeff
-      isPWO_support' := x.isPWO_support.mono (Function.support_smul_subset_right r x.coeff) }⟩
+      isPWO_support' := x.isPWO_support.mono (Function.support_const_smul_subset r x.coeff) }⟩
 
 #print HahnSeries.smul_coeff /-
 @[simp]

@@ -210,11 +210,11 @@ theorem StructureGroupoid.locality (G : StructureGroupoid H) {e : PartialHomeomo
 #align structure_groupoid.locality StructureGroupoid.locality
 -/
 
-#print StructureGroupoid.eq_on_source /-
-theorem StructureGroupoid.eq_on_source (G : StructureGroupoid H) {e e' : PartialHomeomorph H H}
+#print StructureGroupoid.mem_of_eqOnSource /-
+theorem StructureGroupoid.mem_of_eqOnSource (G : StructureGroupoid H) {e e' : PartialHomeomorph H H}
     (he : e ∈ G) (h : e' ≈ e) : e' ∈ G :=
   G.eq_on_source' e e' he h
-#align structure_groupoid.eq_on_source StructureGroupoid.eq_on_source
+#align structure_groupoid.eq_on_source StructureGroupoid.mem_of_eqOnSource
 -/
 
 #print StructureGroupoid.partialOrder /-
@@ -379,13 +379,13 @@ theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
 #align groupoid_of_pregroupoid_le groupoid_of_pregroupoid_le
 -/
 
-#print mem_pregroupoid_of_eq_on_source /-
-theorem mem_pregroupoid_of_eq_on_source (PG : Pregroupoid H) {e e' : PartialHomeomorph H H}
+#print mem_pregroupoid_of_eqOnSource /-
+theorem mem_pregroupoid_of_eqOnSource (PG : Pregroupoid H) {e e' : PartialHomeomorph H H}
     (he' : e ≈ e') (he : PG.property e e.source) : PG.property e' e'.source :=
   by
   rw [← he'.1]
   exact PG.congr e.open_source he'.eq_on.symm he
-#align mem_pregroupoid_of_eq_on_source mem_pregroupoid_of_eq_on_source
+#align mem_pregroupoid_of_eq_on_source mem_pregroupoid_of_eqOnSource
 -/
 
 #print continuousPregroupoid /-

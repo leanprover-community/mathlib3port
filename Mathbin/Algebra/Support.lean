@@ -465,11 +465,11 @@ theorem support_mul_subset_right [MulZeroClass R] (f g : α → R) :
 #align function.support_mul_subset_right Function.support_mul_subset_right
 -/
 
-#print Function.support_smul_subset_right /-
-theorem support_smul_subset_right [AddMonoid A] [Monoid B] [DistribMulAction B A] (b : B)
+#print Function.support_const_smul_subset /-
+theorem support_const_smul_subset [AddMonoid A] [Monoid B] [DistribMulAction B A] (b : B)
     (f : α → A) : support (b • f) ⊆ support f := fun x hbf hf =>
   hbf <| by rw [Pi.smul_apply, hf, smul_zero]
-#align function.support_smul_subset_right Function.support_smul_subset_right
+#align function.support_smul_subset_right Function.support_const_smul_subset
 -/
 
 #print Function.support_smul_subset_left /-
