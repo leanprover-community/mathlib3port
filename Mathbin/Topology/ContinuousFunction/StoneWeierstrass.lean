@@ -386,17 +386,17 @@ namespace ContinuousMap
 
 /-- A real subalgebra of `C(X, 𝕜)` is `conj_invariant`, if it contains all its conjugates. -/
 def ConjInvariantSubalgebra (A : Subalgebra ℝ C(X, 𝕜)) : Prop :=
-  A.map (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) ≤ A
+  A.map (conjAe.toAlgHom.compLeftContinuous ℝ conjCLE.Continuous) ≤ A
 #align continuous_map.conj_invariant_subalgebra ContinuousMap.ConjInvariantSubalgebra
 
 theorem mem_conjInvariantSubalgebra {A : Subalgebra ℝ C(X, 𝕜)} (hA : ConjInvariantSubalgebra A)
-    {f : C(X, 𝕜)} (hf : f ∈ A) : (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ A :=
+    {f : C(X, 𝕜)} (hf : f ∈ A) : (conjAe.toAlgHom.compLeftContinuous ℝ conjCLE.Continuous) f ∈ A :=
   hA ⟨f, hf, rfl⟩
 #align continuous_map.mem_conj_invariant_subalgebra ContinuousMap.mem_conjInvariantSubalgebra
 
 /-- If a set `S` is conjugation-invariant, then its `𝕜`-span is conjugation-invariant. -/
 theorem subalgebraConjInvariant {S : Set C(X, 𝕜)}
-    (hS : ∀ f, f ∈ S → (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ S) :
+    (hS : ∀ f, f ∈ S → (conjAe.toAlgHom.compLeftContinuous ℝ conjCLE.Continuous) f ∈ S) :
     ConjInvariantSubalgebra ((Algebra.adjoin 𝕜 S).restrictScalars ℝ) :=
   by
   rintro _ ⟨f, hf, rfl⟩

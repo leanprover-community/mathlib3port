@@ -83,29 +83,29 @@ end FiniteDimensional
 
 namespace IsROrC
 
-#print IsROrC.reClm_norm /-
+#print IsROrC.reCLM_norm /-
 @[simp, is_R_or_C_simps]
-theorem reClm_norm : ‖(reClm : K →L[ℝ] ℝ)‖ = 1 :=
+theorem reCLM_norm : ‖(reCLM : K →L[ℝ] ℝ)‖ = 1 :=
   by
   apply le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _)
   convert ContinuousLinearMap.ratio_le_op_norm _ (1 : K)
   · simp
   · infer_instance
-#align is_R_or_C.re_clm_norm IsROrC.reClm_norm
+#align is_R_or_C.re_clm_norm IsROrC.reCLM_norm
 -/
 
-#print IsROrC.conjCle_norm /-
+#print IsROrC.conjCLE_norm /-
 @[simp, is_R_or_C_simps]
-theorem conjCle_norm : ‖(@conjCle K _ : K →L[ℝ] K)‖ = 1 :=
-  (@conjLie K _).toLinearIsometry.norm_toContinuousLinearMap
-#align is_R_or_C.conj_cle_norm IsROrC.conjCle_norm
+theorem conjCLE_norm : ‖(@conjCLE K _ : K →L[ℝ] K)‖ = 1 :=
+  (@conjLIE K _).toLinearIsometry.norm_toContinuousLinearMap
+#align is_R_or_C.conj_cle_norm IsROrC.conjCLE_norm
 -/
 
-#print IsROrC.ofRealClm_norm /-
+#print IsROrC.ofRealCLM_norm /-
 @[simp, is_R_or_C_simps]
-theorem ofRealClm_norm : ‖(ofRealClm : ℝ →L[ℝ] K)‖ = 1 :=
-  LinearIsometry.norm_toContinuousLinearMap ofRealLi
-#align is_R_or_C.of_real_clm_norm IsROrC.ofRealClm_norm
+theorem ofRealCLM_norm : ‖(ofRealCLM : ℝ →L[ℝ] K)‖ = 1 :=
+  LinearIsometry.norm_toContinuousLinearMap ofRealLI
+#align is_R_or_C.of_real_clm_norm IsROrC.ofRealCLM_norm
 -/
 
 end IsROrC

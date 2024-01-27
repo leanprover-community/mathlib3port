@@ -80,18 +80,18 @@ theorem ext {φ ψ : characterSpace 𝕜 A} (h : ∀ x, φ x = ψ x) : φ = ψ :
 #align weak_dual.character_space.ext WeakDual.CharacterSpace.ext
 -/
 
-#print WeakDual.CharacterSpace.toClm /-
+#print WeakDual.CharacterSpace.toCLM /-
 /-- An element of the character space, as a continuous linear map. -/
-def toClm (φ : characterSpace 𝕜 A) : A →L[𝕜] 𝕜 :=
+def toCLM (φ : characterSpace 𝕜 A) : A →L[𝕜] 𝕜 :=
   (φ : WeakDual 𝕜 A)
-#align weak_dual.character_space.to_clm WeakDual.CharacterSpace.toClm
+#align weak_dual.character_space.to_clm WeakDual.CharacterSpace.toCLM
 -/
 
-#print WeakDual.CharacterSpace.coe_toClm /-
+#print WeakDual.CharacterSpace.coe_toCLM /-
 @[simp]
-theorem coe_toClm (φ : characterSpace 𝕜 A) : ⇑(toClm φ) = φ :=
+theorem coe_toCLM (φ : characterSpace 𝕜 A) : ⇑(toCLM φ) = φ :=
   rfl
-#align weak_dual.character_space.coe_to_clm WeakDual.CharacterSpace.coe_toClm
+#align weak_dual.character_space.coe_to_clm WeakDual.CharacterSpace.coe_toCLM
 -/
 
 /-- Elements of the character space are non-unital algebra homomorphisms. -/

@@ -321,8 +321,8 @@ theorem int_cast_cast (i : ZMod n) : ((i : ℤ) : R) = i :=
 #align zmod.int_cast_cast ZMod.int_cast_cast
 -/
 
-#print ZMod.coe_add_eq_ite /-
-theorem coe_add_eq_ite {n : ℕ} (a b : ZMod n) :
+#print ZMod.cast_add_eq_ite /-
+theorem cast_add_eq_ite {n : ℕ} (a b : ZMod n) :
     (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b :=
   by
   cases n
@@ -331,7 +331,7 @@ theorem coe_add_eq_ite {n : ℕ} (a b : ZMod n) :
   split_ifs with h
   · exact Int.ofNat_sub h
   · rfl
-#align zmod.coe_add_eq_ite ZMod.coe_add_eq_ite
+#align zmod.coe_add_eq_ite ZMod.cast_add_eq_ite
 -/
 
 section CharDvd

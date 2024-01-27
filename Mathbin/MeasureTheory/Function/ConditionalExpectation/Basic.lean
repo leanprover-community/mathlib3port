@@ -169,13 +169,13 @@ theorem condexp_ae_eq_condexpL1 (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)
 #align measure_theory.condexp_ae_eq_condexp_L1 MeasureTheory.condexp_ae_eq_condexpL1
 -/
 
-#print MeasureTheory.condexp_ae_eq_condexpL1Clm /-
-theorem condexp_ae_eq_condexpL1Clm (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : Integrable f μ) :
-    μ[f|m] =ᵐ[μ] condexpL1Clm hm μ (hf.toL1 f) :=
+#print MeasureTheory.condexp_ae_eq_condexpL1CLM /-
+theorem condexp_ae_eq_condexpL1CLM (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : Integrable f μ) :
+    μ[f|m] =ᵐ[μ] condexpL1CLM hm μ (hf.toL1 f) :=
   by
   refine' (condexp_ae_eq_condexp_L1 hm f).trans (eventually_of_forall fun x => _)
   rw [condexp_L1_eq hf]
-#align measure_theory.condexp_ae_eq_condexp_L1_clm MeasureTheory.condexp_ae_eq_condexpL1Clm
+#align measure_theory.condexp_ae_eq_condexp_L1_clm MeasureTheory.condexp_ae_eq_condexpL1CLM
 -/
 
 #print MeasureTheory.condexp_undef /-

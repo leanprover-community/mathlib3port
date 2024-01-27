@@ -1432,20 +1432,20 @@ instance : Module 𝕜 (α →ᵇ β) :=
 
 variable (𝕜)
 
-#print BoundedContinuousFunction.evalClm /-
+#print BoundedContinuousFunction.evalCLM /-
 /-- The evaluation at a point, as a continuous linear map from `α →ᵇ β` to `β`. -/
-def evalClm (x : α) : (α →ᵇ β) →L[𝕜] β where
+def evalCLM (x : α) : (α →ᵇ β) →L[𝕜] β where
   toFun f := f x
   map_add' f g := add_apply _ _
   map_smul' c f := smul_apply _ _ _
-#align bounded_continuous_function.eval_clm BoundedContinuousFunction.evalClm
+#align bounded_continuous_function.eval_clm BoundedContinuousFunction.evalCLM
 -/
 
-#print BoundedContinuousFunction.evalClm_apply /-
+#print BoundedContinuousFunction.evalCLM_apply /-
 @[simp]
-theorem evalClm_apply (x : α) (f : α →ᵇ β) : evalClm 𝕜 x f = f x :=
+theorem evalCLM_apply (x : α) (f : α →ᵇ β) : evalCLM 𝕜 x f = f x :=
   rfl
-#align bounded_continuous_function.eval_clm_apply BoundedContinuousFunction.evalClm_apply
+#align bounded_continuous_function.eval_clm_apply BoundedContinuousFunction.evalCLM_apply
 -/
 
 variable (α β)

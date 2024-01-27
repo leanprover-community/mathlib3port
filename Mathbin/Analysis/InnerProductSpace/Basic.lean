@@ -2788,7 +2788,7 @@ theorem ContinuousLinearMap.reApplyInnerSelf_apply (T : E →L[𝕜] E) (x : E) 
 #print ContinuousLinearMap.reApplyInnerSelf_continuous /-
 theorem ContinuousLinearMap.reApplyInnerSelf_continuous (T : E →L[𝕜] E) :
     Continuous T.reApplyInnerSelf :=
-  reClm.Continuous.comp <| T.Continuous.inner continuous_id
+  reCLM.Continuous.comp <| T.Continuous.inner continuous_id
 #align continuous_linear_map.re_apply_inner_self_continuous ContinuousLinearMap.reApplyInnerSelf_continuous
 -/
 

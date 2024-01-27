@@ -445,10 +445,10 @@ theorem adjoint_toContinuousLinearMap (A : E →ₗ[𝕜] F) :
 #align linear_map.adjoint_to_continuous_linear_map LinearMap.adjoint_toContinuousLinearMap
 -/
 
-#print LinearMap.adjoint_eq_toClm_adjoint /-
-theorem adjoint_eq_toClm_adjoint (A : E →ₗ[𝕜] F) : A.adjoint = A.toContinuousLinearMap.adjoint :=
+#print LinearMap.adjoint_eq_toCLM_adjoint /-
+theorem adjoint_eq_toCLM_adjoint (A : E →ₗ[𝕜] F) : A.adjoint = A.toContinuousLinearMap.adjoint :=
   rfl
-#align linear_map.adjoint_eq_to_clm_adjoint LinearMap.adjoint_eq_toClm_adjoint
+#align linear_map.adjoint_eq_to_clm_adjoint LinearMap.adjoint_eq_toCLM_adjoint
 -/
 
 #print LinearMap.adjoint_inner_left /-

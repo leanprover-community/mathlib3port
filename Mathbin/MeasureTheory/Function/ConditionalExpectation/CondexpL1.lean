@@ -435,40 +435,40 @@ section CondexpL1
 variable {m m0 : MeasurableSpace α} {μ : Measure α} {hm : m ≤ m0} [SigmaFinite (μ.trim hm)]
   {f g : α → F'} {s : Set α}
 
-#print MeasureTheory.condexpL1Clm /-
+#print MeasureTheory.condexpL1CLM /-
 /-- Conditional expectation of a function as a linear map from `α →₁[μ] F'` to itself. -/
-def condexpL1Clm (hm : m ≤ m0) (μ : Measure α) [SigmaFinite (μ.trim hm)] :
+def condexpL1CLM (hm : m ≤ m0) (μ : Measure α) [SigmaFinite (μ.trim hm)] :
     (α →₁[μ] F') →L[ℝ] α →₁[μ] F' :=
   L1.setToL1 (dominatedFinMeasAdditive_condexpInd F' hm μ)
-#align measure_theory.condexp_L1_clm MeasureTheory.condexpL1Clm
+#align measure_theory.condexp_L1_clm MeasureTheory.condexpL1CLM
 -/
 
-#print MeasureTheory.condexpL1Clm_smul /-
-theorem condexpL1Clm_smul (c : 𝕜) (f : α →₁[μ] F') :
-    condexpL1Clm hm μ (c • f) = c • condexpL1Clm hm μ f :=
+#print MeasureTheory.condexpL1CLM_smul /-
+theorem condexpL1CLM_smul (c : 𝕜) (f : α →₁[μ] F') :
+    condexpL1CLM hm μ (c • f) = c • condexpL1CLM hm μ f :=
   L1.setToL1_smul (dominatedFinMeasAdditive_condexpInd F' hm μ) (fun c s x => condexpInd_smul' c x)
     c f
-#align measure_theory.condexp_L1_clm_smul MeasureTheory.condexpL1Clm_smul
+#align measure_theory.condexp_L1_clm_smul MeasureTheory.condexpL1CLM_smul
 -/
 
-#print MeasureTheory.condexpL1Clm_indicatorConstLp /-
-theorem condexpL1Clm_indicatorConstLp (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
-    (condexpL1Clm hm μ) (indicatorConstLp 1 hs hμs x) = condexpInd hm μ s x :=
+#print MeasureTheory.condexpL1CLM_indicatorConstLp /-
+theorem condexpL1CLM_indicatorConstLp (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
+    (condexpL1CLM hm μ) (indicatorConstLp 1 hs hμs x) = condexpInd hm μ s x :=
   L1.setToL1_indicatorConstLp (dominatedFinMeasAdditive_condexpInd F' hm μ) hs hμs x
-#align measure_theory.condexp_L1_clm_indicator_const_Lp MeasureTheory.condexpL1Clm_indicatorConstLp
+#align measure_theory.condexp_L1_clm_indicator_const_Lp MeasureTheory.condexpL1CLM_indicatorConstLp
 -/
 
-#print MeasureTheory.condexpL1Clm_indicatorConst /-
-theorem condexpL1Clm_indicatorConst (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
-    (condexpL1Clm hm μ) ↑(simpleFunc.indicatorConst 1 hs hμs x) = condexpInd hm μ s x := by
+#print MeasureTheory.condexpL1CLM_indicatorConst /-
+theorem condexpL1CLM_indicatorConst (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
+    (condexpL1CLM hm μ) ↑(simpleFunc.indicatorConst 1 hs hμs x) = condexpInd hm μ s x := by
   rw [Lp.simple_func.coe_indicator_const]; exact condexp_L1_clm_indicator_const_Lp hs hμs x
-#align measure_theory.condexp_L1_clm_indicator_const MeasureTheory.condexpL1Clm_indicatorConst
+#align measure_theory.condexp_L1_clm_indicator_const MeasureTheory.condexpL1CLM_indicatorConst
 -/
 
-#print MeasureTheory.set_integral_condexpL1Clm_of_measure_ne_top /-
+#print MeasureTheory.set_integral_condexpL1CLM_of_measure_ne_top /-
 /-- Auxiliary lemma used in the proof of `set_integral_condexp_L1_clm`. -/
-theorem set_integral_condexpL1Clm_of_measure_ne_top (f : α →₁[μ] F') (hs : measurable_set[m] s)
-    (hμs : μ s ≠ ∞) : ∫ x in s, condexpL1Clm hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
+theorem set_integral_condexpL1CLM_of_measure_ne_top (f : α →₁[μ] F') (hs : measurable_set[m] s)
+    (hμs : μ s ≠ ∞) : ∫ x in s, condexpL1CLM hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   refine'
     Lp.induction ENNReal.one_ne_top
@@ -492,15 +492,15 @@ theorem set_integral_condexpL1Clm_of_measure_ne_top (f : α →₁[μ] F') (hs :
       hg]
   · exact (continuous_set_integral s).comp (condexp_L1_clm hm μ).Continuous
   · exact continuous_set_integral s
-#align measure_theory.set_integral_condexp_L1_clm_of_measure_ne_top MeasureTheory.set_integral_condexpL1Clm_of_measure_ne_top
+#align measure_theory.set_integral_condexp_L1_clm_of_measure_ne_top MeasureTheory.set_integral_condexpL1CLM_of_measure_ne_top
 -/
 
-#print MeasureTheory.set_integral_condexpL1Clm /-
+#print MeasureTheory.set_integral_condexpL1CLM /-
 /-- The integral of the conditional expectation `condexp_L1_clm` over an `m`-measurable set is equal
 to the integral of `f` on that set. See also `set_integral_condexp`, the similar statement for
 `condexp`. -/
-theorem set_integral_condexpL1Clm (f : α →₁[μ] F') (hs : measurable_set[m] s) :
-    ∫ x in s, condexpL1Clm hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
+theorem set_integral_condexpL1CLM (f : α →₁[μ] F') (hs : measurable_set[m] s) :
+    ∫ x in s, condexpL1CLM hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   let S := spanning_sets (μ.trim hm)
   have hS_meas : ∀ i, measurable_set[m] (S i) := measurable_spanning_sets (μ.trim hm)
@@ -539,12 +539,12 @@ theorem set_integral_condexpL1Clm (f : α →₁[μ] F') (hs : measurable_set[m]
     rwa [← hs_eq] at h 
   rw [h_eq_forall] at h_left 
   exact tendsto_nhds_unique h_left h_right
-#align measure_theory.set_integral_condexp_L1_clm MeasureTheory.set_integral_condexpL1Clm
+#align measure_theory.set_integral_condexp_L1_clm MeasureTheory.set_integral_condexpL1CLM
 -/
 
-#print MeasureTheory.aestronglyMeasurable'_condexpL1Clm /-
-theorem aestronglyMeasurable'_condexpL1Clm (f : α →₁[μ] F') :
-    AEStronglyMeasurable' m (condexpL1Clm hm μ f) μ :=
+#print MeasureTheory.aestronglyMeasurable'_condexpL1CLM /-
+theorem aestronglyMeasurable'_condexpL1CLM (f : α →₁[μ] F') :
+    AEStronglyMeasurable' m (condexpL1CLM hm μ f) μ :=
   by
   refine'
     Lp.induction ENNReal.one_ne_top
@@ -563,11 +563,11 @@ theorem aestronglyMeasurable'_condexpL1Clm (f : α →₁[μ] F') :
     rw [this]
     refine' IsClosed.preimage (condexp_L1_clm hm μ).Continuous _
     exact is_closed_ae_strongly_measurable' hm
-#align measure_theory.ae_strongly_measurable'_condexp_L1_clm MeasureTheory.aestronglyMeasurable'_condexpL1Clm
+#align measure_theory.ae_strongly_measurable'_condexp_L1_clm MeasureTheory.aestronglyMeasurable'_condexpL1CLM
 -/
 
-#print MeasureTheory.condexpL1Clm_lpMeas /-
-theorem condexpL1Clm_lpMeas (f : lpMeas F' ℝ m 1 μ) : condexpL1Clm hm μ (f : α →₁[μ] F') = ↑f :=
+#print MeasureTheory.condexpL1CLM_lpMeas /-
+theorem condexpL1CLM_lpMeas (f : lpMeas F' ℝ m 1 μ) : condexpL1CLM hm μ (f : α →₁[μ] F') = ↑f :=
   by
   let g := Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm f
   have hfg : f = (Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g := by
@@ -592,14 +592,14 @@ theorem condexpL1Clm_lpMeas (f : lpMeas F' ℝ m 1 μ) : condexpL1Clm hm μ (f :
       exact LinearIsometryEquiv.continuous _
     · refine' continuous_induced_dom.comp _
       exact LinearIsometryEquiv.continuous _
-#align measure_theory.condexp_L1_clm_Lp_meas MeasureTheory.condexpL1Clm_lpMeas
+#align measure_theory.condexp_L1_clm_Lp_meas MeasureTheory.condexpL1CLM_lpMeas
 -/
 
-#print MeasureTheory.condexpL1Clm_of_aestronglyMeasurable' /-
-theorem condexpL1Clm_of_aestronglyMeasurable' (f : α →₁[μ] F') (hfm : AEStronglyMeasurable' m f μ) :
-    condexpL1Clm hm μ f = f :=
-  condexpL1Clm_lpMeas (⟨f, hfm⟩ : lpMeas F' ℝ m 1 μ)
-#align measure_theory.condexp_L1_clm_of_ae_strongly_measurable' MeasureTheory.condexpL1Clm_of_aestronglyMeasurable'
+#print MeasureTheory.condexpL1CLM_of_aestronglyMeasurable' /-
+theorem condexpL1CLM_of_aestronglyMeasurable' (f : α →₁[μ] F') (hfm : AEStronglyMeasurable' m f μ) :
+    condexpL1CLM hm μ f = f :=
+  condexpL1CLM_lpMeas (⟨f, hfm⟩ : lpMeas F' ℝ m 1 μ)
+#align measure_theory.condexp_L1_clm_of_ae_strongly_measurable' MeasureTheory.condexpL1CLM_of_aestronglyMeasurable'
 -/
 
 #print MeasureTheory.condexpL1 /-
@@ -617,7 +617,7 @@ theorem condexpL1_undef (hf : ¬Integrable f μ) : condexpL1 hm μ f = 0 :=
 -/
 
 #print MeasureTheory.condexpL1_eq /-
-theorem condexpL1_eq (hf : Integrable f μ) : condexpL1 hm μ f = condexpL1Clm hm μ (hf.toL1 f) :=
+theorem condexpL1_eq (hf : Integrable f μ) : condexpL1 hm μ f = condexpL1CLM hm μ (hf.toL1 f) :=
   setToFun_eq (dominatedFinMeasAdditive_condexpInd F' hm μ) hf
 #align measure_theory.condexp_L1_eq MeasureTheory.condexpL1_eq
 -/

@@ -105,39 +105,39 @@ def adjointDomain : Submodule 𝕜 F
 #align linear_pmap.adjoint_domain LinearPMap.adjointDomain
 -/
 
-#print LinearPMap.adjointDomainMkClm /-
+#print LinearPMap.adjointDomainMkCLM /-
 /-- The operator `λ x, ⟪y, T x⟫` considered as a continuous linear operator from `T.adjoint_domain`
 to `𝕜`. -/
-def adjointDomainMkClm (y : T.adjointDomain) : T.domain →L[𝕜] 𝕜 :=
+def adjointDomainMkCLM (y : T.adjointDomain) : T.domain →L[𝕜] 𝕜 :=
   ⟨(innerₛₗ 𝕜 (y : F)).comp T.toFun, y.Prop⟩
-#align linear_pmap.adjoint_domain_mk_clm LinearPMap.adjointDomainMkClm
+#align linear_pmap.adjoint_domain_mk_clm LinearPMap.adjointDomainMkCLM
 -/
 
-#print LinearPMap.adjointDomainMkClm_apply /-
-theorem adjointDomainMkClm_apply (y : T.adjointDomain) (x : T.domain) :
-    adjointDomainMkClm T y x = ⟪(y : F), T x⟫ :=
+#print LinearPMap.adjointDomainMkCLM_apply /-
+theorem adjointDomainMkCLM_apply (y : T.adjointDomain) (x : T.domain) :
+    adjointDomainMkCLM T y x = ⟪(y : F), T x⟫ :=
   rfl
-#align linear_pmap.adjoint_domain_mk_clm_apply LinearPMap.adjointDomainMkClm_apply
+#align linear_pmap.adjoint_domain_mk_clm_apply LinearPMap.adjointDomainMkCLM_apply
 -/
 
 variable {T}
 
 variable (hT : Dense (T.domain : Set E))
 
-#print LinearPMap.adjointDomainMkClmExtend /-
+#print LinearPMap.adjointDomainMkCLMExtend /-
 /-- The unique continuous extension of the operator `adjoint_domain_mk_clm` to `E`. -/
-def adjointDomainMkClmExtend (y : T.adjointDomain) : E →L[𝕜] 𝕜 :=
-  (T.adjointDomainMkClm y).extend (Submodule.subtypeL T.domain) hT.denseRange_val
+def adjointDomainMkCLMExtend (y : T.adjointDomain) : E →L[𝕜] 𝕜 :=
+  (T.adjointDomainMkCLM y).extend (Submodule.subtypeL T.domain) hT.denseRange_val
     uniformEmbedding_subtype_val.to_uniformInducing
-#align linear_pmap.adjoint_domain_mk_clm_extend LinearPMap.adjointDomainMkClmExtend
+#align linear_pmap.adjoint_domain_mk_clm_extend LinearPMap.adjointDomainMkCLMExtend
 -/
 
-#print LinearPMap.adjointDomainMkClmExtend_apply /-
+#print LinearPMap.adjointDomainMkCLMExtend_apply /-
 @[simp]
-theorem adjointDomainMkClmExtend_apply (y : T.adjointDomain) (x : T.domain) :
-    adjointDomainMkClmExtend hT y (x : E) = ⟪(y : F), T x⟫ :=
+theorem adjointDomainMkCLMExtend_apply (y : T.adjointDomain) (x : T.domain) :
+    adjointDomainMkCLMExtend hT y (x : E) = ⟪(y : F), T x⟫ :=
   ContinuousLinearMap.extend_eq _ _ _ _ _
-#align linear_pmap.adjoint_domain_mk_clm_extend_apply LinearPMap.adjointDomainMkClmExtend_apply
+#align linear_pmap.adjoint_domain_mk_clm_extend_apply LinearPMap.adjointDomainMkCLMExtend_apply
 -/
 
 variable [CompleteSpace E]
@@ -149,7 +149,7 @@ This is an auxiliary definition needed to define the adjoint operator as a `line
 the assumption that `T.domain` is dense. -/
 def adjointAux : T.adjointDomain →ₗ[𝕜] E
     where
-  toFun y := (InnerProductSpace.toDual 𝕜 E).symm (adjointDomainMkClmExtend hT y)
+  toFun y := (InnerProductSpace.toDual 𝕜 E).symm (adjointDomainMkCLMExtend hT y)
   map_add' x y :=
     hT.eq_of_inner_left fun _ => by
       simp only [inner_add_left, Submodule.coe_add, InnerProductSpace.toDual_symm_apply,

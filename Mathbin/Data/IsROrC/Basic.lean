@@ -1141,31 +1141,31 @@ theorem reLm_coe : (reLm : K → ℝ) = re :=
 #align is_R_or_C.re_lm_coe IsROrC.reLm_coe
 -/
 
-#print IsROrC.reClm /-
+#print IsROrC.reCLM /-
 /-- The real part in a `is_R_or_C` field, as a continuous linear map. -/
-noncomputable def reClm : K →L[ℝ] ℝ :=
+noncomputable def reCLM : K →L[ℝ] ℝ :=
   LinearMap.mkContinuous reLm 1 fun x => by rw [one_mul]; exact abs_re_le_norm x
-#align is_R_or_C.re_clm IsROrC.reClm
+#align is_R_or_C.re_clm IsROrC.reCLM
 -/
 
-#print IsROrC.reClm_coe /-
+#print IsROrC.reCLM_coe /-
 @[simp, is_R_or_C_simps, norm_cast]
-theorem reClm_coe : ((reClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = reLm :=
+theorem reCLM_coe : ((reCLM : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = reLm :=
   rfl
-#align is_R_or_C.re_clm_coe IsROrC.reClm_coe
+#align is_R_or_C.re_clm_coe IsROrC.reCLM_coe
 -/
 
-#print IsROrC.reClm_apply /-
+#print IsROrC.reCLM_apply /-
 @[simp, is_R_or_C_simps]
-theorem reClm_apply : ((reClm : K →L[ℝ] ℝ) : K → ℝ) = re :=
+theorem reCLM_apply : ((reCLM : K →L[ℝ] ℝ) : K → ℝ) = re :=
   rfl
-#align is_R_or_C.re_clm_apply IsROrC.reClm_apply
+#align is_R_or_C.re_clm_apply IsROrC.reCLM_apply
 -/
 
 #print IsROrC.continuous_re /-
 @[continuity]
 theorem continuous_re : Continuous (re : K → ℝ) :=
-  reClm.Continuous
+  reCLM.Continuous
 #align is_R_or_C.continuous_re IsROrC.continuous_re
 -/
 
@@ -1183,31 +1183,31 @@ theorem imLm_coe : (imLm : K → ℝ) = im :=
 #align is_R_or_C.im_lm_coe IsROrC.imLm_coe
 -/
 
-#print IsROrC.imClm /-
+#print IsROrC.imCLM /-
 /-- The imaginary part in a `is_R_or_C` field, as a continuous linear map. -/
-noncomputable def imClm : K →L[ℝ] ℝ :=
+noncomputable def imCLM : K →L[ℝ] ℝ :=
   LinearMap.mkContinuous imLm 1 fun x => by rw [one_mul]; exact abs_im_le_norm x
-#align is_R_or_C.im_clm IsROrC.imClm
+#align is_R_or_C.im_clm IsROrC.imCLM
 -/
 
-#print IsROrC.imClm_coe /-
+#print IsROrC.imCLM_coe /-
 @[simp, is_R_or_C_simps, norm_cast]
-theorem imClm_coe : ((imClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = imLm :=
+theorem imCLM_coe : ((imCLM : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = imLm :=
   rfl
-#align is_R_or_C.im_clm_coe IsROrC.imClm_coe
+#align is_R_or_C.im_clm_coe IsROrC.imCLM_coe
 -/
 
-#print IsROrC.imClm_apply /-
+#print IsROrC.imCLM_apply /-
 @[simp, is_R_or_C_simps]
-theorem imClm_apply : ((imClm : K →L[ℝ] ℝ) : K → ℝ) = im :=
+theorem imCLM_apply : ((imCLM : K →L[ℝ] ℝ) : K → ℝ) = im :=
   rfl
-#align is_R_or_C.im_clm_apply IsROrC.imClm_apply
+#align is_R_or_C.im_clm_apply IsROrC.imCLM_apply
 -/
 
 #print IsROrC.continuous_im /-
 @[continuity]
 theorem continuous_im : Continuous (im : K → ℝ) :=
-  imClm.Continuous
+  imCLM.Continuous
 #align is_R_or_C.continuous_im IsROrC.continuous_im
 -/
 
@@ -1229,43 +1229,43 @@ theorem conjAe_coe : (conjAe : K → K) = conj :=
 #align is_R_or_C.conj_ae_coe IsROrC.conjAe_coe
 -/
 
-#print IsROrC.conjLie /-
+#print IsROrC.conjLIE /-
 /-- Conjugate as a linear isometry -/
-noncomputable def conjLie : K ≃ₗᵢ[ℝ] K :=
+noncomputable def conjLIE : K ≃ₗᵢ[ℝ] K :=
   ⟨conjAe.toLinearEquiv, fun _ => norm_conj⟩
-#align is_R_or_C.conj_lie IsROrC.conjLie
+#align is_R_or_C.conj_lie IsROrC.conjLIE
 -/
 
-#print IsROrC.conjLie_apply /-
+#print IsROrC.conjLIE_apply /-
 @[simp, is_R_or_C_simps]
-theorem conjLie_apply : (conjLie : K → K) = conj :=
+theorem conjLIE_apply : (conjLIE : K → K) = conj :=
   rfl
-#align is_R_or_C.conj_lie_apply IsROrC.conjLie_apply
+#align is_R_or_C.conj_lie_apply IsROrC.conjLIE_apply
 -/
 
-#print IsROrC.conjCle /-
+#print IsROrC.conjCLE /-
 /-- Conjugate as a continuous linear equivalence -/
-noncomputable def conjCle : K ≃L[ℝ] K :=
-  @conjLie K _
-#align is_R_or_C.conj_cle IsROrC.conjCle
+noncomputable def conjCLE : K ≃L[ℝ] K :=
+  @conjLIE K _
+#align is_R_or_C.conj_cle IsROrC.conjCLE
 -/
 
-#print IsROrC.conjCle_coe /-
+#print IsROrC.conjCLE_coe /-
 @[simp, is_R_or_C_simps]
-theorem conjCle_coe : (@conjCle K _).toLinearEquiv = conjAe.toLinearEquiv :=
+theorem conjCLE_coe : (@conjCLE K _).toLinearEquiv = conjAe.toLinearEquiv :=
   rfl
-#align is_R_or_C.conj_cle_coe IsROrC.conjCle_coe
+#align is_R_or_C.conj_cle_coe IsROrC.conjCLE_coe
 -/
 
-#print IsROrC.conjCle_apply /-
+#print IsROrC.conjCLE_apply /-
 @[simp, is_R_or_C_simps]
-theorem conjCle_apply : (conjCle : K → K) = conj :=
+theorem conjCLE_apply : (conjCLE : K → K) = conj :=
   rfl
-#align is_R_or_C.conj_cle_apply IsROrC.conjCle_apply
+#align is_R_or_C.conj_cle_apply IsROrC.conjCLE_apply
 -/
 
 instance (priority := 100) : ContinuousStar K :=
-  ⟨conjLie.Continuous⟩
+  ⟨conjLIE.Continuous⟩
 
 #print IsROrC.continuous_conj /-
 @[continuity]
@@ -1288,47 +1288,47 @@ theorem ofRealAm_coe : (ofRealAm : ℝ → K) = coe :=
 #align is_R_or_C.of_real_am_coe IsROrC.ofRealAm_coe
 -/
 
-#print IsROrC.ofRealLi /-
+#print IsROrC.ofRealLI /-
 /-- The ℝ → K coercion, as a linear isometry -/
-noncomputable def ofRealLi : ℝ →ₗᵢ[ℝ] K
+noncomputable def ofRealLI : ℝ →ₗᵢ[ℝ] K
     where
   toLinearMap := ofRealAm.toLinearMap
   norm_map' := norm_ofReal
-#align is_R_or_C.of_real_li IsROrC.ofRealLi
+#align is_R_or_C.of_real_li IsROrC.ofRealLI
 -/
 
-#print IsROrC.ofRealLi_apply /-
+#print IsROrC.ofRealLI_apply /-
 @[simp, is_R_or_C_simps]
-theorem ofRealLi_apply : (ofRealLi : ℝ → K) = coe :=
+theorem ofRealLI_apply : (ofRealLI : ℝ → K) = coe :=
   rfl
-#align is_R_or_C.of_real_li_apply IsROrC.ofRealLi_apply
+#align is_R_or_C.of_real_li_apply IsROrC.ofRealLI_apply
 -/
 
-#print IsROrC.ofRealClm /-
+#print IsROrC.ofRealCLM /-
 /-- The `ℝ → K` coercion, as a continuous linear map -/
-noncomputable def ofRealClm : ℝ →L[ℝ] K :=
-  ofRealLi.toContinuousLinearMap
-#align is_R_or_C.of_real_clm IsROrC.ofRealClm
+noncomputable def ofRealCLM : ℝ →L[ℝ] K :=
+  ofRealLI.toContinuousLinearMap
+#align is_R_or_C.of_real_clm IsROrC.ofRealCLM
 -/
 
-#print IsROrC.ofRealClm_coe /-
+#print IsROrC.ofRealCLM_coe /-
 @[simp, is_R_or_C_simps]
-theorem ofRealClm_coe : (@ofRealClm K _ : ℝ →ₗ[ℝ] K) = ofRealAm.toLinearMap :=
+theorem ofRealCLM_coe : (@ofRealCLM K _ : ℝ →ₗ[ℝ] K) = ofRealAm.toLinearMap :=
   rfl
-#align is_R_or_C.of_real_clm_coe IsROrC.ofRealClm_coe
+#align is_R_or_C.of_real_clm_coe IsROrC.ofRealCLM_coe
 -/
 
-#print IsROrC.ofRealClm_apply /-
+#print IsROrC.ofRealCLM_apply /-
 @[simp, is_R_or_C_simps]
-theorem ofRealClm_apply : (ofRealClm : ℝ → K) = coe :=
+theorem ofRealCLM_apply : (ofRealCLM : ℝ → K) = coe :=
   rfl
-#align is_R_or_C.of_real_clm_apply IsROrC.ofRealClm_apply
+#align is_R_or_C.of_real_clm_apply IsROrC.ofRealCLM_apply
 -/
 
 #print IsROrC.continuous_ofReal /-
 @[continuity]
 theorem continuous_ofReal : Continuous (coe : ℝ → K) :=
-  ofRealLi.Continuous
+  ofRealLI.Continuous
 #align is_R_or_C.continuous_of_real IsROrC.continuous_ofReal
 -/
 

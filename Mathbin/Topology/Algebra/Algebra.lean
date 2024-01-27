@@ -67,26 +67,26 @@ theorem continuousSMul_of_algebraMap (h : Continuous (algebraMap R A)) : Continu
 
 variable [ContinuousSMul R A]
 
-#print algebraMapClm /-
+#print algebraMapCLM /-
 /-- The inclusion of the base ring in a topological algebra as a continuous linear map. -/
 @[simps]
-def algebraMapClm : R →L[R] A :=
+def algebraMapCLM : R →L[R] A :=
   { Algebra.linearMap R A with
     toFun := algebraMap R A
     cont := continuous_algebraMap R A }
-#align algebra_map_clm algebraMapClm
+#align algebra_map_clm algebraMapCLM
 -/
 
-#print algebraMapClm_coe /-
-theorem algebraMapClm_coe : ⇑(algebraMapClm R A) = algebraMap R A :=
+#print algebraMapCLM_coe /-
+theorem algebraMapCLM_coe : ⇑(algebraMapCLM R A) = algebraMap R A :=
   rfl
-#align algebra_map_clm_coe algebraMapClm_coe
+#align algebra_map_clm_coe algebraMapCLM_coe
 -/
 
-#print algebraMapClm_toLinearMap /-
-theorem algebraMapClm_toLinearMap : (algebraMapClm R A).toLinearMap = Algebra.linearMap R A :=
+#print algebraMapCLM_toLinearMap /-
+theorem algebraMapCLM_toLinearMap : (algebraMapCLM R A).toLinearMap = Algebra.linearMap R A :=
   rfl
-#align algebra_map_clm_to_linear_map algebraMapClm_toLinearMap
+#align algebra_map_clm_to_linear_map algebraMapCLM_toLinearMap
 -/
 
 end TopologicalAlgebra

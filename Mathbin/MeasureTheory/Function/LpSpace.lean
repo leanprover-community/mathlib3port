@@ -1186,7 +1186,7 @@ variable {K : Type _} [IsROrC K]
 #print MeasureTheory.Memℒp.ofReal /-
 theorem MeasureTheory.Memℒp.ofReal {f : α → ℝ} (hf : Memℒp f p μ) :
     Memℒp (fun x => (f x : K)) p μ :=
-  (@IsROrC.ofRealClm K _).comp_memℒp' hf
+  (@IsROrC.ofRealCLM K _).comp_memℒp' hf
 #align measure_theory.mem_ℒp.of_real MeasureTheory.Memℒp.ofReal
 -/
 

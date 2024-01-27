@@ -73,8 +73,8 @@ theorem rotation_trans (a b : circle) : (rotation a).trans (rotation b) = rotati
 #align rotation_trans rotation_trans
 -/
 
-#print rotation_ne_conjLie /-
-theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
+#print rotation_ne_conjLIE /-
+theorem rotation_ne_conjLIE (a : circle) : rotation a ≠ conjLIE :=
   by
   intro h
   have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
@@ -82,7 +82,7 @@ theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
   rw [rotation_apply, RingHom.map_one, mul_one] at h1 
   rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI 
   exact one_ne_zero hI
-#align rotation_ne_conj_lie rotation_ne_conjLie
+#align rotation_ne_conj_lie rotation_ne_conjLIE
 -/
 
 #print rotationOf /-
@@ -155,7 +155,7 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
 
 #print linear_isometry_complex_aux /-
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
-    f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conjLie :=
+    f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conjLIE :=
   by
   have h0 : f I = I ∨ f I = -I :=
     by
@@ -176,7 +176,7 @@ theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
 
 #print linear_isometry_complex /-
 theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) :
-    ∃ a : circle, f = rotation a ∨ f = conjLie.trans (rotation a) :=
+    ∃ a : circle, f = rotation a ∨ f = conjLIE.trans (rotation a) :=
   by
   let a : circle := ⟨f 1, by simpa using f.norm_map 1⟩
   use a

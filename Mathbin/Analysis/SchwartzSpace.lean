@@ -1180,7 +1180,7 @@ variable {E}
 #print SchwartzMap.delta /-
 /-- The Dirac delta distribution -/
 def delta (x : E) : 𝓢(E, F) →L[𝕜] F :=
-  (BoundedContinuousFunction.evalClm 𝕜 x).comp (toBoundedContinuousFunctionCLM 𝕜 E F)
+  (BoundedContinuousFunction.evalCLM 𝕜 x).comp (toBoundedContinuousFunctionCLM 𝕜 E F)
 #align schwartz_map.delta SchwartzMap.delta
 -/
 

@@ -44,7 +44,7 @@ def measurableEquivPi : ℂ ≃ᵐ (Fin 2 → ℝ) :=
 #print Complex.measurableEquivRealProd /-
 /-- Measurable equivalence between `ℂ` and `ℝ × ℝ`. -/
 def measurableEquivRealProd : ℂ ≃ᵐ ℝ × ℝ :=
-  equivRealProdClm.toHomeomorph.toMeasurableEquiv
+  equivRealProdCLM.toHomeomorph.toMeasurableEquiv
 #align complex.measurable_equiv_real_prod Complex.measurableEquivRealProd
 -/
 

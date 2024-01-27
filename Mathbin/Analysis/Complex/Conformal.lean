@@ -43,8 +43,8 @@ open Complex ContinuousLinearMap
 open scoped ComplexConjugate
 
 #print isConformalMap_conj /-
-theorem isConformalMap_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
-  conjLie.toLinearIsometry.IsConformalMap
+theorem isConformalMap_conj : IsConformalMap (conjLIE : ℂ →L[ℝ] ℂ) :=
+  conjLIE.toLinearIsometry.IsConformalMap
 #align is_conformal_map_conj isConformalMap_conj
 -/
 
@@ -76,7 +76,7 @@ theorem isConformalMap_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠
 
 #print isConformalMap_complex_linear_conj /-
 theorem isConformalMap_complex_linear_conj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-    IsConformalMap ((map.restrictScalars ℝ).comp (conjCle : ℂ →L[ℝ] ℂ)) :=
+    IsConformalMap ((map.restrictScalars ℝ).comp (conjCLE : ℂ →L[ℝ] ℂ)) :=
   (isConformalMap_complex_linear nonzero).comp isConformalMap_conj
 #align is_conformal_map_complex_linear_conj isConformalMap_complex_linear_conj
 -/
@@ -92,7 +92,7 @@ variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 #print IsConformalMap.is_complex_or_conj_linear /-
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
     (∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨
-      ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conjCle :=
+      ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conjCLE :=
   by
   rcases h with ⟨c, hc, li, rfl⟩
   obtain ⟨li, rfl⟩ : ∃ li' : ℂ ≃ₗᵢ[ℝ] ℂ, li'.toLinearIsometry = li
@@ -118,7 +118,7 @@ theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
 theorem isConformalMap_iff_is_complex_or_conj_linear :
     IsConformalMap g ↔
       ((∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨
-          ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conjCle) ∧
+          ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conjCLE) ∧
         g ≠ 0 :=
   by
   constructor

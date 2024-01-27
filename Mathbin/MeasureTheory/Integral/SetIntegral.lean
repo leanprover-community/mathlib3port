@@ -1404,27 +1404,27 @@ variable [CompleteSpace E] [NormedSpace ℝ E] [CompleteSpace F] [NormedSpace �
 #print integral_ofReal /-
 @[norm_cast]
 theorem integral_ofReal {f : α → ℝ} : ∫ a, (f a : 𝕜) ∂μ = ↑(∫ a, f a ∂μ) :=
-  (@IsROrC.ofRealLi 𝕜 _).integral_comp_comm f
+  (@IsROrC.ofRealLI 𝕜 _).integral_comp_comm f
 #align integral_of_real integral_ofReal
 -/
 
 #print integral_re /-
 theorem integral_re {f : α → 𝕜} (hf : Integrable f μ) :
     ∫ a, IsROrC.re (f a) ∂μ = IsROrC.re (∫ a, f a ∂μ) :=
-  (@IsROrC.reClm 𝕜 _).integral_comp_comm hf
+  (@IsROrC.reCLM 𝕜 _).integral_comp_comm hf
 #align integral_re integral_re
 -/
 
 #print integral_im /-
 theorem integral_im {f : α → 𝕜} (hf : Integrable f μ) :
     ∫ a, IsROrC.im (f a) ∂μ = IsROrC.im (∫ a, f a ∂μ) :=
-  (@IsROrC.imClm 𝕜 _).integral_comp_comm hf
+  (@IsROrC.imCLM 𝕜 _).integral_comp_comm hf
 #align integral_im integral_im
 -/
 
 #print integral_conj /-
 theorem integral_conj {f : α → 𝕜} : ∫ a, conj (f a) ∂μ = conj (∫ a, f a ∂μ) :=
-  (@IsROrC.conjLie 𝕜 _).toLinearIsometry.integral_comp_comm f
+  (@IsROrC.conjLIE 𝕜 _).toLinearIsometry.integral_comp_comm f
 #align integral_conj integral_conj
 -/
 
