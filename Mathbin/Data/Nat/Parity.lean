@@ -313,14 +313,14 @@ theorem even_mul_succ_self (n : ℕ) : Even (n * (n + 1)) :=
 #align nat.even_mul_succ_self Nat.even_mul_succ_self
 -/
 
-#print Nat.even_mul_self_pred /-
-theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) :=
+#print Nat.even_mul_pred_self /-
+theorem even_mul_pred_self (n : ℕ) : Even (n * (n - 1)) :=
   by
   cases n
   · exact even_zero
   · rw [mul_comm]
     apply even_mul_succ_self
-#align nat.even_mul_self_pred Nat.even_mul_self_pred
+#align nat.even_mul_self_pred Nat.even_mul_pred_self
 -/
 
 #print Nat.two_mul_div_two_of_even /-
