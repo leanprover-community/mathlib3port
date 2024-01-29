@@ -893,7 +893,7 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
     [DecidablePred fun a => a ∈ s] : Fintype.card α = Fintype.card (α ⧸ s) * Fintype.card s := by
   rw [← Fintype.card_prod] <;> exact Fintype.card_congr Subgroup.groupEquivQuotientProdSubgroup
 #align subgroup.card_eq_card_quotient_mul_card_subgroup Subgroup.card_eq_card_quotient_mul_card_subgroup
-#align add_subgroup.card_eq_card_quotient_add_card_add_subgroup AddSubgroup.card_eq_card_quotient_add_card_addSubgroup
+#align add_subgroup.card_eq_card_quotient_add_card_add_subgroup AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup
 -/
 
 #print Subgroup.card_subgroup_dvd_card /-

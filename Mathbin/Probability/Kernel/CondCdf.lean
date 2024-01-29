@@ -75,14 +75,14 @@ end Directed
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print prod_iInter /-
+#print Set.prod_iInter /-
 -- todo: move to data/set/lattice next to prod_Union or prod_sInter
-theorem prod_iInter {s : Set α} {t : ι → Set β} [hι : Nonempty ι] :
+theorem Set.prod_iInter {s : Set α} {t : ι → Set β} [hι : Nonempty ι] :
     (s ×ˢ ⋂ i, t i) = ⋂ i, s ×ˢ t i := by
   ext x
   simp only [mem_prod, mem_Inter]
   exact ⟨fun h i => ⟨h.1, h.2 i⟩, fun h => ⟨(h hι.some).1, fun i => (h i).2⟩⟩
-#align prod_Inter prod_iInter
+#align prod_Inter Set.prod_iInter
 -/
 
 #print Real.iUnion_Iic_rat /-
@@ -277,7 +277,7 @@ theorem iInf_IicSnd_gt (t : ℚ) {s : Set α} (hs : MeasurableSet s) [IsFiniteMe
   by
   simp_rw [ρ.Iic_snd_apply _ hs]
   rw [← measure_Inter_eq_infi]
-  · rw [← prod_iInter]
+  · rw [← Set.prod_iInter]
     congr with x : 1
     simp only [mem_Inter, mem_Iic, Subtype.forall, Subtype.coe_mk]
     refine' ⟨fun h => _, fun h a hta => h.trans _⟩
@@ -319,7 +319,7 @@ theorem tendsto_IicSnd_atBot [IsFiniteMeasure ρ] {s : Set α} (hs : MeasurableS
   by
   simp_rw [ρ.Iic_snd_apply _ hs]
   have h_empty : ρ (s ×ˢ ∅) = 0 := by simp only [prod_empty, measure_empty]
-  rw [← h_empty, ← Real.iInter_Iic_rat, prod_iInter]
+  rw [← h_empty, ← Real.iInter_Iic_rat, Set.prod_iInter]
   suffices h_neg :
     tendsto (fun r : ℚ => ρ (s ×ˢ Iic ↑(-r))) at_top (𝓝 (ρ (⋂ r : ℚ, s ×ˢ Iic ↑(-r))))
   · have h_inter_eq : (⋂ r : ℚ, s ×ˢ Iic ↑(-r)) = ⋂ r : ℚ, s ×ˢ Iic (r : ℝ) :=
@@ -619,7 +619,8 @@ theorem tendsto_preCDF_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
     rw [h_lintegral_eq]
     have h_zero_eq_measure_Inter : (0 : ℝ≥0∞) = ρ (⋂ r : ℚ, univ ×ˢ Iic (-r)) :=
       by
-      suffices (⋂ r : ℚ, Iic (-(r : ℝ))) = ∅ by rwa [← prod_iInter, this, prod_empty, measure_empty]
+      suffices (⋂ r : ℚ, Iic (-(r : ℝ))) = ∅ by
+        rwa [← Set.prod_iInter, this, prod_empty, measure_empty]
       ext1 x
       simp only [mem_Inter, mem_Iic, mem_empty_iff_false, iff_false_iff, Classical.not_forall,
         not_le]
@@ -1136,7 +1137,7 @@ theorem set_lintegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
     exact_mod_cast hij
   simp_rw [h_coe, set_lintegral_cond_cdf_rat ρ _ hs]
   rw [← measure_Inter_eq_infi]
-  · rw [← prod_iInter]
+  · rw [← Set.prod_iInter]
     congr with y
     simp only [mem_Inter, mem_Iic, Subtype.forall, Subtype.coe_mk]
     exact ⟨le_of_forall_lt_rat_imp_le, fun hyx q hq => hyx.trans hq.le⟩
