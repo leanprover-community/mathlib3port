@@ -625,7 +625,7 @@ theorem uniform_extend_subtype [CompleteSpace γ] {p : α → Prop} {e : α → 
     ⟨_, hb, fun x => by
       change e x ∈ closure (e '' s) → x ∈ range Subtype.val
       rw [← closure_induced, mem_closure_iff_clusterPt, ClusterPt, ne_bot_iff, nhds_induced, ←
-        de.to_dense_inducing.nhds_eq_comap, ← mem_closure_iff_nhds_neBot, hs.closure_eq]
+        de.to_dense_inducing.nhds_eq_comap, ← mem_closure_iff_nhds_ne_bot, hs.closure_eq]
       exact fun hxs => ⟨⟨x, hp x hxs⟩, rfl⟩⟩
 #align uniform_extend_subtype uniform_extend_subtype
 -/

@@ -1728,10 +1728,10 @@ theorem mem_closure_iff_clusterPt {s : Set α} {a : α} : a ∈ closure s ↔ Cl
 #align mem_closure_iff_cluster_pt mem_closure_iff_clusterPt
 -/
 
-#print mem_closure_iff_nhds_neBot /-
-theorem mem_closure_iff_nhds_neBot {s : Set α} : a ∈ closure s ↔ 𝓝 a ⊓ 𝓟 s ≠ ⊥ :=
+#print mem_closure_iff_nhds_ne_bot /-
+theorem mem_closure_iff_nhds_ne_bot {s : Set α} : a ∈ closure s ↔ 𝓝 a ⊓ 𝓟 s ≠ ⊥ :=
   mem_closure_iff_clusterPt.trans neBot_iff
-#align mem_closure_iff_nhds_ne_bot mem_closure_iff_nhds_neBot
+#align mem_closure_iff_nhds_ne_bot mem_closure_iff_nhds_ne_bot
 -/
 
 #print mem_closure_iff_nhdsWithin_neBot /-
@@ -1883,7 +1883,7 @@ theorem Dense.open_subset_closure_inter {s t : Set α} (hs : Dense s) (ht : IsOp
 theorem mem_closure_of_mem_closure_union {s₁ s₂ : Set α} {x : α} (h : x ∈ closure (s₁ ∪ s₂))
     (h₁ : s₁ᶜ ∈ 𝓝 x) : x ∈ closure s₂ :=
   by
-  rw [mem_closure_iff_nhds_neBot] at *
+  rw [mem_closure_iff_nhds_ne_bot] at *
   rwa [←
     calc
       𝓝 x ⊓ principal (s₁ ∪ s₂) = 𝓝 x ⊓ (principal s₁ ⊔ principal s₂) := by rw [sup_principal]
