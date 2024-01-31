@@ -214,12 +214,7 @@ variable [_i : Fact (finrank ℝ E = n)] (o : Orientation ℝ E (Fin n))
 /-- The volume form on an oriented real inner product space, a nonvanishing top-dimensional
 alternating form uniquely defined by compatibility with the orientation and inner product structure.
 -/
-irreducible_def volumeForm : AlternatingMap ℝ E ℝ (Fin n) := by
-  classical
-  cases n
-  · let opos : AlternatingMap ℝ E ℝ (Fin 0) := AlternatingMap.constOfIsEmpty ℝ E (Fin 0) (1 : ℝ)
-    exact o.eq_or_eq_neg_of_is_empty.by_cases (fun _ => opos) fun _ => -opos
-  · exact (o.fin_orthonormal_basis n.succ_pos _i.out).toBasis.det
+irreducible_def volumeForm : AlternatingMap ℝ E ℝ (Fin n) := by classical
 #align orientation.volume_form Orientation.volumeForm
 -/
 
@@ -252,10 +247,7 @@ respect to any orthonormal basis of the space compatible with the orientation. -
 theorem volumeForm_robust (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.Orientation = o) :
     o.volumeForm = b.toBasis.det := by
   cases n
-  ·
-    classical
-    have : o = positive_orientation := hb.symm.trans b.to_basis.orientation_is_empty
-    simp [volume_form, Or.by_cases, dif_pos this]
+  · classical
   · dsimp [volume_form]
     rw [same_orientation_iff_det_eq_det, hb]
     exact o.fin_orthonormal_basis_orientation _ _
@@ -268,10 +260,7 @@ respect to any orthonormal basis of the space compatible with the orientation. -
 theorem volumeForm_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.Orientation ≠ o) :
     o.volumeForm = -b.toBasis.det := by
   cases n
-  ·
-    classical
-    have : positive_orientation ≠ o := by rwa [b.to_basis.orientation_is_empty] at hb 
-    simp [volume_form, Or.by_cases, dif_neg this.symm]
+  · classical
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.fin_orthonormal_basis n.succ_pos (Fact.out _)
   dsimp [volume_form]
   apply e.det_eq_neg_det_of_opposite_orientation b

@@ -150,7 +150,7 @@ theorem Decidable.List.eq_or_ne_mem_of_mem [DecidableEq α] {a b : α} {l : List
 
 #print List.eq_or_ne_mem_of_mem /-
 theorem eq_or_ne_mem_of_mem {a b : α} {l : List α} : a ∈ b :: l → a = b ∨ a ≠ b ∧ a ∈ l := by
-  classical exact Decidable.List.eq_or_ne_mem_of_mem
+  classical
 #align list.eq_or_ne_mem_of_mem List.eq_or_ne_mem_of_mem
 -/
 
@@ -5106,10 +5106,7 @@ theorem filter_attach' (l : List α) (p : { a // a ∈ l } → Prop) [DecidableE
         (Subtype.map id fun x hx =>
           let ⟨h, _⟩ := of_mem_filter hx
           h) :=
-  by
-  classical
-  refine' map_injective_iff.2 Subtype.coe_injective _
-  simp [(· ∘ ·), map_filter' _ Subtype.coe_injective]
+  by classical
 #align list.filter_attach' List.filter_attach'
 -/
 

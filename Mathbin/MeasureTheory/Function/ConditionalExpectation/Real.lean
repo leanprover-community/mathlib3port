@@ -292,7 +292,7 @@ theorem condexp_stronglyMeasurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleFu
     rw [this, this]
     refine' (condexp_indicator (hg.smul c) hs).trans _
     filter_upwards [@condexp_smul α ℝ ℝ _ _ _ _ _ m m0 μ c g] with x hx
-    classical simp_rw [Set.indicator_apply, hx]
+    classical
   · have h_add := @simple_func.coe_add _ _ m _ g₁ g₂
     calc
       μ[⇑(g₁ + g₂) * g|m] =ᵐ[μ] μ[(⇑g₁ + ⇑g₂) * g|m] := by

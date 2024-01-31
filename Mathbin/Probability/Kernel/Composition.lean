@@ -357,11 +357,6 @@ theorem compProd_restrict {s : Set β} {t : Set γ} (hs : MeasurableSet s) (ht :
     by
     intro b
     classical
-    rw [Set.indicator_apply]
-    split_ifs with h
-    · simp only [h, true_and_iff]
-      rfl
-    · simp only [h, false_and_iff, and_false_iff, Set.setOf_false, measure_empty]
   simp_rw [this]
   rw [lintegral_indicator _ hs]
 #align probability_theory.kernel.comp_prod_restrict ProbabilityTheory.kernel.compProd_restrict

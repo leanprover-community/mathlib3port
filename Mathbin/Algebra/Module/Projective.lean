@@ -145,31 +145,7 @@ instance [hP : Projective R P] [hQ : Projective R Q] : Projective R (P × Q) :=
 
 variable {ι : Type _} (A : ι → Type _) [∀ i : ι, AddCommMonoid (A i)] [∀ i : ι, Module R (A i)]
 
-instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := by
-  classical
-  rw [Module.projective_def']
-  simp_rw [projective_def] at h 
-  choose s hs using h
-  letI : ∀ i : ι, AddCommMonoid (A i →₀ R) := fun i => by infer_instance
-  letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
-  letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @DFinsupp.addCommMonoid ι (fun i => A i →₀ R) _
-  letI : Module R (Π₀ i : ι, A i →₀ R) := @DFinsupp.module ι R (fun i => A i →₀ R) _ _ _
-  let f i := lmap_domain R R (DFinsupp.single i : A i → Π₀ i, A i)
-  use DFinsupp.coprodMap f ∘ₗ DFinsupp.mapRange.linearMap s
-  ext i x j
-  simp only [DFinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
-    LinearEquiv.coe_toLinearMap, finsuppLequivDFinsupp_symm_apply, Function.comp_apply,
-    DFinsupp.lsingle_apply, DFinsupp.mapRange.linearMap_apply, DFinsupp.mapRange_single,
-    lmap_domain_apply, DFinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
-    Function.id_comp, DFinsupp.single_apply]
-  rw [← DFinsupp.lapply_apply j, apply_total R]
-  obtain rfl | hij := eq_or_ne i j
-  · convert (hs i) x
-    · ext; simp
-    · simp
-  · convert Finsupp.total_zero_apply _ ((s i) x)
-    · ext; simp [hij]
-    · simp [hij]
+instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := by classical
 
 end Semiring
 

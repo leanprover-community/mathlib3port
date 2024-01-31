@@ -1429,12 +1429,7 @@ theorem isGLB_sInf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (Wi
     · rintro (⟨⟩ | a) ha
       · exfalso; apply h; intro b hb; exact Set.mem_singleton_iff.2 (top_le_iff.1 (ha hb))
       · refine' some_le_some.2 (le_csInf _ _)
-        ·
-          classical
-          contrapose! h
-          rintro (⟨⟩ | a) ha
-          · exact mem_singleton ⊤
-          · exact (h ⟨a, ha⟩).elim
+        · classical
         · intro b hb
           rw [← some_le_some]
           exact ha hb

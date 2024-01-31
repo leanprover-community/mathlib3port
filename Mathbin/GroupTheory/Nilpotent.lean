@@ -1022,18 +1022,6 @@ theorem IsPGroup.isNilpotent [Finite G] {p : ℕ} [hp : Fact (Nat.Prime p)] (h :
     IsNilpotent G := by
   cases nonempty_fintype G
   classical
-  revert hG
-  induction' val using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
-  · infer_instance
-  · intro; intro h
-    have hcq : Fintype.card (G ⧸ center G) < Fintype.card G :=
-      by
-      rw [card_eq_card_quotient_mul_card_subgroup (center G)]
-      apply lt_mul_of_one_lt_right
-      exact fintype.card_pos_iff.mpr One.nonempty
-      exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gt h.bot_lt_center)
-    have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
-    exact of_quotient_center_nilpotent hnq
 #align is_p_group.is_nilpotent IsPGroup.isNilpotent
 -/
 
@@ -1043,15 +1031,7 @@ variable [Fintype G]
 /-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
 theorem isNilpotent_of_product_of_sylow_group
     (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) :
-    IsNilpotent G := by
-  classical
-  let ps := (Fintype.card G).factorization.support
-  have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G) :=
-    by
-    intro p P
-    haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_primeFactors (Finset.coe_mem p))
-    exact P.is_p_group'.is_nilpotent
-  exact nilpotent_of_mulEquiv e
+    IsNilpotent G := by classical
 #align is_nilpotent_of_product_of_sylow_group isNilpotent_of_product_of_sylow_group
 -/
 

@@ -85,13 +85,6 @@ theorem submartingale_of_expected_stoppedValue_mono [IsFiniteMeasure μ] (hadp :
   by
   refine' submartingale_of_set_integral_le hadp hint fun i j hij s hs => _
   classical
-  specialize
-    hf (s.piecewise (fun _ => i) fun _ => j) _ (is_stopping_time_piecewise_const hij hs)
-      (is_stopping_time_const 𝒢 j) (fun x => (ite_le_sup _ _ _).trans (max_eq_right hij).le)
-      ⟨j, fun x => le_rfl⟩
-  rwa [stopped_value_const, stopped_value_piecewise_const,
-    integral_piecewise (𝒢.le _ _ hs) (hint _).IntegrableOn (hint _).IntegrableOn, ←
-    integral_add_compl (𝒢.le _ _ hs) (hint j), add_le_add_iff_right] at hf 
 #align measure_theory.submartingale_of_expected_stopped_value_mono MeasureTheory.submartingale_of_expected_stoppedValue_mono
 -/
 

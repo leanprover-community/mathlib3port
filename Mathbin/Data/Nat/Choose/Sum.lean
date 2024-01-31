@@ -202,11 +202,7 @@ theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset
 
 #print Finset.sum_powerset_neg_one_pow_card_of_nonempty /-
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
-    ∑ m in x.powerset, (-1 : ℤ) ^ m.card = 0 := by
-  classical
-  rw [sum_powerset_neg_one_pow_card, if_neg]
-  rw [← Ne.def, ← nonempty_iff_ne_empty]
-  apply h0
+    ∑ m in x.powerset, (-1 : ℤ) ^ m.card = 0 := by classical
 #align finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
 -/
 

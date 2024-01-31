@@ -61,7 +61,7 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
 -/
 
 #print exists_ne /-
-theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by classical exact Decidable.exists_ne x
+theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by classical
 #align exists_ne exists_ne
 -/
 
@@ -237,8 +237,7 @@ variable {I : Type _} {f : I → Type _}
 #print Pi.nontrivial_at /-
 /-- A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
 theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] :
-    Nontrivial (∀ i : I, f i) := by
-  classical exact (Function.update_injective (fun i => Classical.choice (inst i)) i').Nontrivial
+    Nontrivial (∀ i : I, f i) := by classical
 #align pi.nontrivial_at Pi.nontrivial_at
 -/
 

@@ -445,8 +445,7 @@ theorem ne_top_iff {x : PartENat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
 -/
 
 #print PartENat.ne_top_iff_dom /-
-theorem ne_top_iff_dom {x : PartENat} : x ≠ ⊤ ↔ x.Dom := by
-  classical exact not_iff_comm.1 part.eq_none_iff'.symm
+theorem ne_top_iff_dom {x : PartENat} : x ≠ ⊤ ↔ x.Dom := by classical
 #align part_enat.ne_top_iff_dom PartENat.ne_top_iff_dom
 -/
 
@@ -837,11 +836,7 @@ noncomputable def withTopAddEquiv : PartENat ≃+ ℕ∞ :=
 end WithTopEquiv
 
 #print PartENat.lt_wf /-
-theorem lt_wf : @WellFounded PartENat (· < ·) := by
-  classical
-  change WellFounded fun a b : PartENat => a < b
-  simp_rw [← to_with_top_lt]
-  exact InvImage.wf _ (WithTop.instWellFoundedLT Nat.lt_wfRel)
+theorem lt_wf : @WellFounded PartENat (· < ·) := by classical
 #align part_enat.lt_wf PartENat.lt_wf
 -/
 

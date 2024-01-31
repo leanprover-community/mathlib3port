@@ -228,12 +228,7 @@ theorem Std.RBNode.isSearchableIns [DecidableRel lt] {t x} [IsStrictWeakOrder α
 theorem Std.RBNode.isSearchableMkInsertResult {c t} :
     Std.RBNode.IsSearchable lt t none none →
       Std.RBNode.IsSearchable lt (Std.RBNode.mkInsertResult c t) none none :=
-  by
-  classical
-  cases c <;> cases t <;> simp [mk_insert_result]
-  · intro h;
-    run_tac
-      is_searchable_tactic
+  by classical
 #align rbnode.is_searchable_mk_insert_result Std.RBNode.isSearchableMkInsertResult
 
 theorem Std.RBNode.isSearchableInsert [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :

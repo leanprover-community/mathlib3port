@@ -864,14 +864,6 @@ theorem image_projection_prod {ι : Type _} {α : ι → Type _} {v : ∀ i : ι
     (hv : (pi univ v).Nonempty) (i : ι) :
     ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
   classical
-  apply subset.antisymm
-  · simp [Inter_subset]
-  · intro y y_in
-    simp only [mem_image, mem_Inter, mem_preimage]
-    rcases hv with ⟨z, hz⟩
-    refine' ⟨Function.update z i y, _, update_same i y z⟩
-    rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
-    exact ⟨y_in, fun j hj => by simpa using hz j⟩
 #align set.image_projection_prod Set.image_projection_prod
 -/
 

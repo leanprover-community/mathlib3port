@@ -113,17 +113,7 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
 
 #print absorbs_biUnion_finset /-
 theorem absorbs_biUnion_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
-    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
-  classical
-  induction' t using Finset.induction_on with i t ht hi
-  ·
-    simp only [Finset.not_mem_empty, Set.iUnion_false, Set.iUnion_empty, Absorbs.empty,
-      IsEmpty.forall_iff, imp_true_iff]
-  rw [Finset.set_biUnion_insert, absorbs_union, hi]
-  constructor <;> intro h
-  · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
-    exact fun hi'' => by rw [hi'']; exact h.1
-  exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
+    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by classical
 #align absorbs_Union_finset absorbs_biUnion_finset
 -/
 

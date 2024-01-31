@@ -833,9 +833,6 @@ theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb 
 #print Sym2.other_invol /-
 theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by
   classical
-  rw [other_eq_other'] at hb ⊢
-  convert other_invol' ha hb
-  rw [other_eq_other']
 #align sym2.other_invol Sym2.other_invol
 -/
 

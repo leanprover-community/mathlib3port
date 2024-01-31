@@ -154,15 +154,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
 #print DivisorChain.card_subset_divisors_le_length_of_chain /-
 theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ}
     {c : Fin (n + 1) → Associates M} (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i) {m : Finset (Associates M)}
-    (hm : ∀ r, r ∈ m → r ≤ q) : m.card ≤ n + 1 := by
-  classical
-  have mem_image : ∀ r : Associates M, r ≤ q → r ∈ finset.univ.image c :=
-    by
-    intro r hr
-    obtain ⟨i, hi⟩ := h₂.1 hr
-    exact Finset.mem_image.2 ⟨i, Finset.mem_univ _, hi.symm⟩
-  rw [← Finset.card_fin (n + 1)]
-  exact (Finset.card_le_card fun x hx => mem_image x <| hm x hx).trans Finset.card_image_le
+    (hm : ∀ r, r ∈ m → r ≤ q) : m.card ≤ n + 1 := by classical
 #align divisor_chain.card_subset_divisors_le_length_of_chain DivisorChain.card_subset_divisors_le_length_of_chain
 -/
 
@@ -171,66 +163,14 @@ variable [UniqueFactorizationMonoid M]
 #print DivisorChain.element_of_chain_eq_pow_second_of_chain /-
 theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (hn : n ≠ 0)
     {c : Fin (n + 1) → Associates M} (h₁ : StrictMono c) (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i)
-    (hr : r ∣ q) (hq : q ≠ 0) : ∃ i : Fin (n + 1), r = c 1 ^ (i : ℕ) := by
-  classical
-  let i := (normalized_factors r).card
-  have hi : normalized_factors r = Multiset.replicate i (c 1) :=
-    by
-    apply Multiset.eq_replicate_of_mem
-    intro b hb
-    refine'
-      eq_second_of_chain_of_prime_dvd hn h₁ (fun r' => h₂) (prime_of_normalized_factor b hb) hr
-        (dvd_of_mem_normalized_factors hb)
-  have H : r = c 1 ^ i :=
-    by
-    have := UniqueFactorizationMonoid.normalizedFactors_prod (ne_zero_of_dvd_ne_zero hq hr)
-    rw [associated_iff_eq, hi, Multiset.prod_replicate] at this 
-    rw [this]
-  refine' ⟨⟨i, _⟩, H⟩
-  have : (finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ)).card = i + 1 :=
-    by
-    conv_rhs => rw [← Finset.card_fin (i + 1)]
-    cases n; · contradiction
-    rw [Finset.card_image_iff]
-    refine' Set.injOn_of_injective (fun m m' h => Fin.ext _) _
-    refine'
-      pow_injective_of_not_unit (element_of_chain_not_is_unit_of_index_ne_zero (by simp) h₁) _ h
-    exact Irreducible.ne_zero (second_of_chain_is_irreducible hn h₁ (@h₂) hq)
-  suffices H' : ∀ r ∈ finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ), r ≤ q
-  · simp only [← Nat.succ_le_iff, Nat.succ_eq_add_one, ← this]
-    apply card_subset_divisors_le_length_of_chain (@h₂) H'
-  simp only [Finset.mem_image]
-  rintro r ⟨a, ha, rfl⟩
-  refine' dvd_trans _ hr
-  use c 1 ^ (i - a)
-  rw [pow_mul_pow_sub (c 1)]
-  · exact H
-  · exact nat.succ_le_succ_iff.mp a.2
+    (hr : r ∣ q) (hq : q ≠ 0) : ∃ i : Fin (n + 1), r = c 1 ^ (i : ℕ) := by classical
 #align divisor_chain.element_of_chain_eq_pow_second_of_chain DivisorChain.element_of_chain_eq_pow_second_of_chain
 -/
 
 #print DivisorChain.eq_pow_second_of_chain_of_has_chain /-
 theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n ≠ 0)
     {c : Fin (n + 1) → Associates M} (h₁ : StrictMono c)
-    (h₂ : ∀ {r : Associates M}, r ≤ q ↔ ∃ i, r = c i) (hq : q ≠ 0) : q = c 1 ^ n := by
-  classical
-  obtain ⟨i, hi'⟩ := element_of_chain_eq_pow_second_of_chain hn h₁ (fun r => h₂) (dvd_refl q) hq
-  convert hi'
-  refine' (Nat.lt_succ_iff.1 i.prop).antisymm' (Nat.le_of_succ_le_succ _)
-  calc
-    n + 1 = (Finset.univ : Finset (Fin (n + 1))).card := (Finset.card_fin _).symm
-    _ = (finset.univ.image c).card := (finset.card_image_iff.mpr (h₁.injective.inj_on _)).symm
-    _ ≤ (finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ)).card := (Finset.card_le_card _)
-    _ ≤ (Finset.univ : Finset (Fin (i + 1))).card := Finset.card_image_le
-    _ = i + 1 := Finset.card_fin _
-  intro r hr
-  obtain ⟨j, -, rfl⟩ := Finset.mem_image.1 hr
-  have := h₂.2 ⟨j, rfl⟩
-  rw [hi'] at this 
-  obtain ⟨u, hu, hu'⟩ := (dvd_prime_pow (show Prime (c 1) from _) i).1 this
-  refine' finset.mem_image.mpr ⟨u, Finset.mem_univ _, _⟩
-  · rw [associated_iff_eq] at hu' ; rw [Fin.val_cast_of_lt (Nat.lt_succ_of_le hu), hu']
-  · rw [← irreducible_iff_prime]; exact second_of_chain_is_irreducible hn h₁ (@h₂) hq
+    (h₂ : ∀ {r : Associates M}, r ≤ q ↔ ∃ i, r = c i) (hq : q ≠ 0) : q = c 1 ^ n := by classical
 #align divisor_chain.eq_pow_second_of_chain_of_has_chain DivisorChain.eq_pow_second_of_chain_of_has_chain
 -/
 

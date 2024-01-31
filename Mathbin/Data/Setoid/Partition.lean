@@ -100,8 +100,7 @@ theorem finite_classes_ker {α β : Type _} [Finite β] (f : α → β) : (Setoi
 #print Setoid.card_classes_ker_le /-
 theorem card_classes_ker_le {α β : Type _} [Fintype β] (f : α → β)
     [Fintype (Setoid.ker f).classes] : Fintype.card (Setoid.ker f).classes ≤ Fintype.card β := by
-  classical exact
-    le_trans (Set.card_le_of_subset (classes_ker_subset_fiber_set f)) (Fintype.card_range_le _)
+  classical
 #align setoid.card_classes_ker_le Setoid.card_classes_ker_le
 -/
 

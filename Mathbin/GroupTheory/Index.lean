@@ -459,8 +459,7 @@ theorem index_mul_card [Fintype G] [hH : Fintype H] : H.index * Fintype.card H =
 
 #print Subgroup.index_dvd_card /-
 @[to_additive]
-theorem index_dvd_card [Fintype G] : H.index ∣ Fintype.card G := by
-  classical exact ⟨Fintype.card H, H.index_mul_card.symm⟩
+theorem index_dvd_card [Fintype G] : H.index ∣ Fintype.card G := by classical
 #align subgroup.index_dvd_card Subgroup.index_dvd_card
 #align add_subgroup.index_dvd_card AddSubgroup.index_dvd_card
 -/

@@ -77,14 +77,7 @@ theorem pderiv_def [DecidableEq σ] (i : σ) : pderiv i = mkDerivation R (Pi.sin
 #print MvPolynomial.pderiv_monomial /-
 @[simp]
 theorem pderiv_monomial {i : σ} : pderiv i (monomial s a) = monomial (s - single i 1) (a * s i) :=
-  by
-  classical
-  simp only [pderiv_def, mk_derivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc, ←
-    (monomial _).map_smul]
-  refine' (Finset.sum_eq_single i (fun j hj hne => _) fun hi => _).trans _
-  · simp [Pi.single_eq_of_ne hne]
-  · rw [Finsupp.not_mem_support_iff] at hi ; simp [hi]
-  · simp
+  by classical
 #align mv_polynomial.pderiv_monomial MvPolynomial.pderiv_monomial
 -/
 
@@ -110,14 +103,13 @@ theorem pderiv_X [DecidableEq σ] (i j : σ) :
 
 #print MvPolynomial.pderiv_X_self /-
 @[simp]
-theorem pderiv_X_self (i : σ) : pderiv i (X i : MvPolynomial σ R) = 1 := by classical simp
+theorem pderiv_X_self (i : σ) : pderiv i (X i : MvPolynomial σ R) = 1 := by classical
 #align mv_polynomial.pderiv_X_self MvPolynomial.pderiv_X_self
 -/
 
 #print MvPolynomial.pderiv_X_of_ne /-
 @[simp]
-theorem pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ R) = 0 := by
-  classical simp [h]
+theorem pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ R) = 0 := by classical
 #align mv_polynomial.pderiv_X_of_ne MvPolynomial.pderiv_X_of_ne
 -/
 

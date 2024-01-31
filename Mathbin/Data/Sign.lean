@@ -316,9 +316,7 @@ def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] : SignType →*₀ α
 -/
 
 #print SignType.range_eq /-
-theorem range_eq {α} (f : SignType → α) : Set.range f = {f zero, f neg, f pos} := by
-  classical simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ,
-    Finset.coe_image, ← Set.image_insert_eq]
+theorem range_eq {α} (f : SignType → α) : Set.range f = {f zero, f neg, f pos} := by classical
 #align sign_type.range_eq SignType.range_eq
 -/
 

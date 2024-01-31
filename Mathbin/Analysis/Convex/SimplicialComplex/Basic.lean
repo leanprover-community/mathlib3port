@@ -119,17 +119,7 @@ on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
 theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     Disjoint (convexHull 𝕜 (s : Set E)) (convexHull 𝕜 ↑t) ∨
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
-  by
-  classical
-  by_contra! h
-  refine'
-    h.2 (s ∩ t)
-      (K.down_closed hs (inter_subset_left _ _) fun hst =>
-        h.1 <| disjoint_iff_inf_le.mpr <| (K.inter_subset_convex_hull hs ht).trans _)
-      _
-  · rw [← coe_inter, hst, coe_empty, convexHull_empty]
-    rfl
-  · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
+  by classical
 #align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull
 -/
 
@@ -204,10 +194,6 @@ theorem vertex_mem_convexHull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
   by
   refine' ⟨fun h => _, fun h => subset_convexHull _ _ h⟩
   classical
-  have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
-  by_contra H
-  rwa [← coe_inter, Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm,
-    coe_empty, convexHull_empty] at h 
 #align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convexHull_iff
 -/
 

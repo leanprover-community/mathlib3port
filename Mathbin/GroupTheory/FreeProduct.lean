@@ -200,7 +200,7 @@ theorem Monoid.CoprodI.of_leftInverse [DecidableEq ι] (i : ι) :
 
 #print Monoid.CoprodI.of_injective /-
 theorem Monoid.CoprodI.of_injective (i : ι) : Function.Injective ⇑(Monoid.CoprodI.of : M i →* _) :=
-  by classical exact (of_left_inverse i).Injective
+  by classical
 #align free_product.of_injective Monoid.CoprodI.of_injective
 -/
 
@@ -894,32 +894,7 @@ theorem Monoid.CoprodI.lift_word_prod_nontrivial_of_head_card {i j}
 
 #print Monoid.CoprodI.lift_word_prod_nontrivial_of_not_empty /-
 theorem Monoid.CoprodI.lift_word_prod_nontrivial_of_not_empty {i j}
-    (w : Monoid.CoprodI.NeWord H i j) : Monoid.CoprodI.lift f w.Prod ≠ 1 := by
-  classical
-  cases hcard
-  · obtain ⟨i, h1, h2⟩ := Cardinal.three_le hcard i j
-    exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w h1 h2
-  · cases' hcard with k hcard
-    by_cases hh : i = k <;> by_cases hl : j = k
-    · subst hh; subst hl
-      exact lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w
-    · subst hh
-      change j ≠ i at hl 
-      exact lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w hcard hl.symm
-    · subst hl
-      change i ≠ j at hh 
-      have : lift f w.inv.prod ≠ 1 :=
-        lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w.inv hcard hh.symm
-      intro heq; apply this; simpa using HEq
-    · change i ≠ k at hh 
-      change j ≠ k at hl 
-      obtain ⟨h, hn1, -⟩ := Cardinal.three_le hcard 1 1
-      let w' : neword H k k :=
-        neword.append (neword.append (neword.singleton h hn1) hh.symm w) hl
-          (neword.singleton h⁻¹ (inv_ne_one.mpr hn1))
-      have hw' : lift f w'.prod ≠ 1 :=
-        lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w'
-      intro heq1; apply hw'; simp [w', heq1]
+    (w : Monoid.CoprodI.NeWord H i j) : Monoid.CoprodI.lift f w.Prod ≠ 1 := by classical
 #align free_product.lift_word_prod_nontrivial_of_not_empty Monoid.CoprodI.lift_word_prod_nontrivial_of_not_empty
 -/
 
@@ -948,14 +923,7 @@ Usually the Ping-Pong-Lemma requires that one group `H i` has at least three ele
 condition is only needed if `# ι = 2`, and we accept `3 ≤ # ι` as an alternative.
 -/
 theorem Monoid.CoprodI.lift_injective_of_ping_pong : Function.Injective (Monoid.CoprodI.lift f) :=
-  by
-  classical
-  apply (injective_iff_map_eq_one (lift f)).mpr
-  rw [(Monoid.CoprodI.Word.equiv : _ ≃ word H).forall_congr_left']
-  · intro w Heq
-    dsimp [word.equiv] at *
-    · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]
-      rfl
+  by classical
 #align free_product.lift_injective_of_ping_pong Monoid.CoprodI.lift_injective_of_ping_pong
 -/
 

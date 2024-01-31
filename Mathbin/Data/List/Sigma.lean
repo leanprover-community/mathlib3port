@@ -217,26 +217,6 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁
     cases h
   simp at nd₀ nd₁ 
   classical
-  obtain rfl | h' := eq_or_ne x y
-  · constructor
-    refine' l₀_ih nd₀.2 nd₁.2 fun a => _
-    specialize h a; simp at h 
-    obtain rfl | h' := eq_or_ne a x
-    · exact iff_of_false nd₀.1 nd₁.1
-    · simpa [h'] using h
-  · trans x :: y :: ys.erase x
-    · constructor
-      refine' l₀_ih nd₀.2 ((nd₁.2.eraseₓ _).cons fun h => nd₁.1 <| mem_of_mem_erase h) fun a => _
-      · specialize h a; simp at h 
-        obtain rfl | h' := eq_or_ne a x
-        · exact iff_of_false nd₀.1 fun h => h.elim h' nd₁.2.not_mem_erase
-        · rw [or_iff_right h'] at h 
-          rw [h, mem_cons_iff]
-          exact or_congr_right (mem_erase_of_ne h').symm
-    trans y :: x :: ys.erase x
-    · constructor
-    · constructor; symm; apply perm_cons_erase
-      specialize h x; simp [h'] at h ; exact h
 #align list.mem_ext List.mem_ext
 -/
 

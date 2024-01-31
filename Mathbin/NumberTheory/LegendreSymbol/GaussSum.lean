@@ -125,14 +125,11 @@ theorem gaussSum_mul_gaussSum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial χ
   simp_rw [gauss_sum_mul_aux hχ ψ]
   rw [Finset.sum_comm]
   classical
-  -- to get `[decidable_eq R]` for `sum_mul_shift`
-  simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, MulZeroClass.mul_zero]
-  rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
-  simp only [Finset.mem_univ, map_one, one_mul, if_true]
 #align gauss_sum_mul_gauss_sum_eq_card gaussSum_mul_gaussSum_eq_card
 -/
 
 #print gaussSum_sq /-
+-- to get `[decidable_eq R]` for `sum_mul_shift`
 /-- When `χ` is a nontrivial quadratic character, then the square of `gauss_sum χ ψ`
 is `χ(-1)` times the cardinality of `R`. -/
 theorem gaussSum_sq {χ : MulChar R R'} (hχ₁ : IsNontrivial χ) (hχ₂ : IsQuadratic χ)

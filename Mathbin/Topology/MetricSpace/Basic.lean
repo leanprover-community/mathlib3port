@@ -2607,37 +2607,7 @@ theorem denseRange_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀ r > 0, ∃ 
 This is not obvious, as the countable set whose closure covers `s` does not need in general to
 be contained in `s`. -/
 theorem TopologicalSpace.IsSeparable.separableSpace {s : Set α} (hs : IsSeparable s) :
-    SeparableSpace s := by
-  classical
-  rcases eq_empty_or_nonempty s with (rfl | ⟨⟨x₀, x₀s⟩⟩)
-  · infer_instance
-  rcases hs with ⟨c, hc, h'c⟩
-  haveI : Encodable c := hc.to_encodable
-  obtain ⟨u, -, u_pos, u_lim⟩ :
-    ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
-    exists_seq_strictAnti_tendsto (0 : ℝ)
-  let f : c × ℕ → α := fun p =>
-    if h : (Metric.ball (p.1 : α) (u p.2) ∩ s).Nonempty then h.some else x₀
-  have fs : ∀ p, f p ∈ s := by
-    rintro ⟨y, n⟩
-    by_cases h : (ball (y : α) (u n) ∩ s).Nonempty
-    · simpa only [f, h, dif_pos] using h.some_spec.2
-    · simpa only [f, h, not_false_iff, dif_neg]
-  let g : c × ℕ → s := fun p => ⟨f p, fs p⟩
-  apply separable_space_of_dense_range g
-  apply Metric.denseRange_iff.2
-  rintro ⟨x, xs⟩ r (rpos : 0 < r)
-  obtain ⟨n, hn⟩ : ∃ n, u n < r / 2 := ((tendsto_order.1 u_lim).2 _ (half_pos rpos)).exists
-  obtain ⟨z, zc, hz⟩ : ∃ z ∈ c, dist x z < u n := Metric.mem_closure_iff.1 (h'c xs) _ (u_pos n)
-  refine' ⟨(⟨z, zc⟩, n), _⟩
-  change dist x (f (⟨z, zc⟩, n)) < r
-  have A : (Metric.ball z (u n) ∩ s).Nonempty := ⟨x, hz, xs⟩
-  dsimp [f]
-  simp only [A, dif_pos]
-  calc
-    dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _
-    _ < r / 2 + r / 2 := (add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn))
-    _ = r := add_halves _
+    SeparableSpace s := by classical
 #align topological_space.is_separable.separable_space TopologicalSpace.IsSeparable.separableSpace
 -/
 

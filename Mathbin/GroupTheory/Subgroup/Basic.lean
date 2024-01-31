@@ -1107,14 +1107,7 @@ theorem nontrivial_iff_exists_ne_one (H : Subgroup G) : Nontrivial H ↔ ∃ x �
 #print Subgroup.bot_or_nontrivial /-
 /-- A subgroup is either the trivial subgroup or nontrivial. -/
 @[to_additive "A subgroup is either the trivial subgroup or nontrivial."]
-theorem bot_or_nontrivial (H : Subgroup G) : H = ⊥ ∨ Nontrivial H := by
-  classical
-  by_cases h : ∀ x ∈ H, x = (1 : G)
-  · left
-    exact H.eq_bot_iff_forall.mpr h
-  · right
-    simp only [Classical.not_forall] at h 
-    simpa only [nontrivial_iff_exists_ne_one]
+theorem bot_or_nontrivial (H : Subgroup G) : H = ⊥ ∨ Nontrivial H := by classical
 #align subgroup.bot_or_nontrivial Subgroup.bot_or_nontrivial
 #align add_subgroup.bot_or_nontrivial AddSubgroup.bot_or_nontrivial
 -/
@@ -2263,15 +2256,7 @@ theorem mulSingle_mem_pi [DecidableEq η] {I : Set η} {H : ∀ i, Subgroup (f i
 
 #print Subgroup.pi_eq_bot_iff /-
 @[to_additive]
-theorem pi_eq_bot_iff (H : ∀ i, Subgroup (f i)) : pi Set.univ H = ⊥ ↔ ∀ i, H i = ⊥ := by
-  classical
-  simp only [eq_bot_iff_forall]
-  constructor
-  · intro h i x hx
-    have : MonoidHom.single f i x = 1 :=
-      h (MonoidHom.single f i x) ((mul_single_mem_pi i x).mpr fun _ => hx)
-    simpa using congr_fun this i
-  · exact fun h x hx => funext fun i => h _ _ (hx i trivial)
+theorem pi_eq_bot_iff (H : ∀ i, Subgroup (f i)) : pi Set.univ H = ⊥ ↔ ∀ i, H i = ⊥ := by classical
 #align subgroup.pi_eq_bot_iff Subgroup.pi_eq_bot_iff
 #align add_subgroup.pi_eq_bot_iff AddSubgroup.pi_eq_bot_iff
 -/

@@ -239,21 +239,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 
 #print ComputablePred.rice₂ /-
 theorem rice₂ (C : Set Code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C ↔ cg ∈ C)) :
-    (ComputablePred fun c => c ∈ C) ↔ C = ∅ ∨ C = Set.univ := by
-  classical exact
-    have hC : ∀ f, f ∈ C ↔ eval f ∈ eval '' C := fun f =>
-      ⟨Set.mem_image_of_mem _, fun ⟨g, hg, e⟩ => (H _ _ e).1 hg⟩
-    ⟨fun h =>
-      Classical.or_iff_not_imp_left.2 fun C0 =>
-        Set.eq_univ_of_forall fun cg =>
-          let ⟨cf, fC⟩ := Set.nonempty_iff_ne_empty.2 C0
-          (hC _).2 <|
-            rice (eval '' C) (h.of_eq hC)
-              (Partrec.nat_iff.1 <| eval_part.comp (const cf) Computable.id)
-              (Partrec.nat_iff.1 <| eval_part.comp (const cg) Computable.id) ((hC _).1 fC),
-      fun h => by
-      obtain rfl | rfl := h <;> simp [ComputablePred, Set.mem_empty_iff_false] <;>
-        exact ⟨by infer_instance, Computable.const _⟩⟩
+    (ComputablePred fun c => c ∈ C) ↔ C = ∅ ∨ C = Set.univ := by classical
 #align computable_pred.rice₂ ComputablePred.rice₂
 -/
 
@@ -289,8 +275,7 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
 
 #print ComputablePred.computable_iff_re_compl_re' /-
 theorem computable_iff_re_compl_re' {p : α → Prop} :
-    ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a := by
-  classical exact computable_iff_re_compl_re
+    ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a := by classical
 #align computable_pred.computable_iff_re_compl_re' ComputablePred.computable_iff_re_compl_re'
 -/
 

@@ -186,12 +186,7 @@ theorem ncard_singleton (a : α) : ({a} : Set α).ncard = 1 := by simp [ncard_eq
 -/
 
 #print Set.ncard_singleton_inter /-
-theorem ncard_singleton_inter : ({a} ∩ s).ncard ≤ 1 := by
-  classical
-  rw [← inter_self {a}, inter_assoc, ncard_eq_to_finset_card, finite.to_finset_inter,
-    finite.to_finset_singleton]
-  · apply Finset.card_singleton_inter
-  all_goals apply to_finite
+theorem ncard_singleton_inter : ({a} ∩ s).ncard ≤ 1 := by classical
 #align set.ncard_singleton_inter Set.ncard_singleton_inter
 -/
 
@@ -204,12 +199,7 @@ theorem ncard_insert_of_not_mem (h : a ∉ s)
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
-    (insert a s).ncard = s.ncard + 1 := by
-  classical
-  haveI := hs.fintype
-  rw [ncard_eq_to_finset_card, ncard_eq_to_finset_card, finite.to_finset_insert,
-    Finset.card_insert_of_not_mem]
-  rwa [finite.mem_to_finset]
+    (insert a s).ncard = s.ncard + 1 := by classical
 #align set.ncard_insert_of_not_mem Set.ncard_insert_of_not_mem
 -/
 
@@ -219,15 +209,7 @@ theorem ncard_insert_of_mem (h : a ∈ s) : ncard (insert a s) = s.ncard := by r
 -/
 
 #print Set.ncard_insert_le /-
-theorem ncard_insert_le (a : α) (s : Set α) : (insert a s).ncard ≤ s.ncard + 1 := by
-  classical
-  obtain hs | hs := s.finite_or_infinite
-  ·
-    exact
-      (em (a ∈ s)).elim (fun h => (ncard_insert_of_mem h).trans_le (Nat.le_succ _)) fun h => by
-        rw [ncard_insert_of_not_mem h hs]
-  rw [(hs.mono (subset_insert a s)).ncard]
-  exact Nat.zero_le _
+theorem ncard_insert_le (a : α) (s : Set α) : (insert a s).ncard ≤ s.ncard + 1 := by classical
 #align set.ncard_insert_le Set.ncard_insert_le
 -/
 
@@ -246,14 +228,7 @@ theorem ncard_insert_eq_ite [Decidable (a ∈ s)]
 -/
 
 #print Set.ncard_le_ncard_insert /-
-theorem ncard_le_ncard_insert (a : α) (s : Set α) : s.ncard ≤ (insert a s).ncard := by
-  classical
-  refine' s.finite_or_infinite.elim (fun h => _) fun h => by rw [h.ncard]; exact Nat.zero_le _
-  rw [ncard_insert_eq_ite h]
-  split_ifs
-  · rfl
-  · simp only [le_add_iff_nonneg_right, zero_le']
-  exact Classical.dec (a ∈ s)
+theorem ncard_le_ncard_insert (a : α) (s : Set α) : s.ncard ≤ (insert a s).ncard := by classical
 #align set.ncard_le_ncard_insert Set.ncard_le_ncard_insert
 -/
 
@@ -350,15 +325,7 @@ theorem ncard_image_le
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
-    (f '' s).ncard ≤ s.ncard := by
-  classical
-  rw [ncard_eq_to_finset_card s hs]
-  haveI := hs.fintype
-  convert @Finset.card_image_le _ _ s.to_finset f _
-  rw [ncard_eq_to_finset_card, finite.to_finset_image _ hs]
-  · congr; rw [← Finset.coe_inj, finite.coe_to_finset, coe_to_finset]
-  · infer_instance
-  rw [← Finset.coe_inj, finite.coe_to_finset, coe_to_finset]
+    (f '' s).ncard ≤ s.ncard := by classical
 #align set.ncard_image_le Set.ncard_image_le
 -/
 
@@ -379,16 +346,7 @@ theorem injOn_of_ncard_image_eq (h : (f '' s).ncard = s.ncard)
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
-    Set.InjOn f s := by
-  classical
-  haveI := hs.fintype
-  haveI := ((to_finite s).image f).Fintype
-  simp_rw [ncard_eq_to_finset_card] at h 
-  rw [← coe_to_finset s]
-  apply Finset.injOn_of_card_image_eq
-  convert h
-  ext
-  simp
+    Set.InjOn f s := by classical
 #align set.inj_on_of_ncard_image_eq Set.injOn_of_ncard_image_eq
 -/
 
@@ -668,21 +626,7 @@ theorem inj_on_of_surj_on_of_ncard_le {t : Set β} (f : ∀ a ∈ s, β) (hf : �
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
-    a₁ = a₂ := by
-  classical
-  set f' : s → t := fun x => ⟨f x.1 x.2, hf _ _⟩ with hf'
-  have hsurj : f'.surjective := by
-    rintro ⟨y, hy⟩
-    obtain ⟨a, ha, rfl⟩ := hsurj y hy
-    simp only [Subtype.val_eq_coe, Subtype.coe_mk, Subtype.mk_eq_mk, SetCoe.exists]
-    exact ⟨_, ha, rfl⟩
-  haveI := hs.fintype
-  haveI := Fintype.ofSurjective _ hsurj
-  simp_rw [ncard_eq_to_finset_card] at hst 
-  set f'' : ∀ a, a ∈ s.to_finset → β := fun a h => f a (by simpa using h) with hf''
-  exact
-    @Finset.inj_on_of_surj_on_of_card_le _ _ _ t.to_finset f'' (by simpa) (by simpa)
-      (by convert hst) a₁ a₂ (by simpa) (by simpa) (by simpa)
+    a₁ = a₂ := by classical
 #align set.inj_on_of_surj_on_of_ncard_le Set.inj_on_of_surj_on_of_ncard_le
 -/
 
@@ -698,13 +642,7 @@ theorem ncard_union_add_ncard_inter (s t : Set α)
     (ht : t.Finite := by
       run_tac
         to_finite_tac) :
-    (s ∪ t).ncard + (s ∩ t).ncard = s.ncard + t.ncard := by
-  classical
-  have hu := hs.union ht
-  have hi := hs.subset (inter_subset_left s t)
-  rw [ncard_eq_to_finset_card _ hs, ncard_eq_to_finset_card _ ht, ncard_eq_to_finset_card _ hu,
-    ncard_eq_to_finset_card _ hi, finite.to_finset_union, finite.to_finset_inter]
-  · exact Finset.card_union_add_card_inter _ _
+    (s ∪ t).ncard + (s ∩ t).ncard = s.ncard + t.ncard := by classical
 #align set.ncard_union_add_ncard_inter Set.ncard_union_add_ncard_inter
 -/
 
@@ -724,16 +662,7 @@ theorem ncard_inter_add_ncard_union (s t : Set α)
 -/
 
 #print Set.ncard_union_le /-
-theorem ncard_union_le (s t : Set α) : (s ∪ t).ncard ≤ s.ncard + t.ncard := by
-  classical
-  cases (s ∪ t).finite_or_infinite
-  · have hs := h.subset (subset_union_left s t)
-    have ht := h.subset (subset_union_right s t)
-    rw [ncard_eq_to_finset_card _ hs, ncard_eq_to_finset_card _ ht, ncard_eq_to_finset_card _ h,
-      finite.to_finset_union]
-    exact Finset.card_union_le _ _
-  convert Nat.zero_le _
-  rw [h.ncard]
+theorem ncard_union_le (s t : Set α) : (s ∪ t).ncard ≤ s.ncard + t.ncard := by classical
 #align set.ncard_union_le Set.ncard_union_le
 -/
 
@@ -747,12 +676,7 @@ theorem ncard_union_eq (h : Disjoint s t)
     (ht : t.Finite := by
       run_tac
         to_finite_tac) :
-    (s ∪ t).ncard = s.ncard + t.ncard := by
-  classical
-  rw [ncard_eq_to_finset_card _ hs, ncard_eq_to_finset_card _ ht,
-    ncard_eq_to_finset_card _ (hs.union ht), finite.to_finset_union]
-  refine' Finset.card_union_eq _
-  rwa [finite.disjoint_to_finset]
+    (s ∪ t).ncard = s.ncard + t.ncard := by classical
 #align set.ncard_union_eq Set.ncard_union_eq
 -/
 
@@ -762,12 +686,7 @@ theorem ncard_diff_add_ncard_of_subset (h : s ⊆ t)
     (ht : t.Finite := by
       run_tac
         to_finite_tac) :
-    (t \ s).ncard + s.ncard = t.ncard := by
-  classical
-  rw [ncard_eq_to_finset_card _ ht, ncard_eq_to_finset_card _ (ht.subset h),
-    ncard_eq_to_finset_card _ (ht.diff s), finite.to_finset_diff]
-  refine' Finset.card_sdiff_add_card_eq_card _
-  rwa [finite.to_finset_subset_to_finset]
+    (t \ s).ncard + s.ncard = t.ncard := by classical
 #align set.ncard_diff_add_ncard_eq_ncard Set.ncard_diff_add_ncard_of_subset
 -/
 
@@ -995,15 +914,7 @@ theorem Infinite.exists_superset_ncard_eq {s t : Set α} (ht : t.Infinite) (hst 
 
 #print Set.exists_subset_or_subset_of_two_mul_lt_ncard /-
 theorem exists_subset_or_subset_of_two_mul_lt_ncard {n : ℕ} (hst : 2 * n < (s ∪ t).ncard) :
-    ∃ r : Set α, n < r.ncard ∧ (r ⊆ s ∨ r ⊆ t) := by
-  classical
-  have hu := finite_of_ncard_ne_zero ((Nat.zero_le _).trans_lt hst).Ne.symm
-  rw [ncard_eq_to_finset_card _ hu,
-    finite.to_finset_union (hu.subset (subset_union_left _ _))
-      (hu.subset (subset_union_right _ _))] at
-    hst 
-  obtain ⟨r', hnr', hr'⟩ := Finset.exists_subset_or_subset_of_two_mul_lt_card hst
-  exact ⟨r', by simpa, by simpa using hr'⟩
+    ∃ r : Set α, n < r.ncard ∧ (r ⊆ s ∨ r ⊆ t) := by classical
 #align set.exists_subset_or_subset_of_two_mul_lt_ncard Set.exists_subset_or_subset_of_two_mul_lt_ncard
 -/
 
@@ -1028,22 +939,7 @@ theorem exists_eq_insert_iff_ncard
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
-    (∃ (a : _) (_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.ncard + 1 = t.ncard := by
-  classical
-  constructor
-  · rintro ⟨a, ha, rfl⟩
-    rw [ncard_eq_to_finset_card _ hs, ncard_eq_to_finset_card _ (hs.insert a),
-      finite.to_finset_insert, ← @finite.to_finset_subset_to_finset _ _ _ hs (hs.insert a),
-      finite.to_finset_insert]
-    refine' (@Finset.exists_eq_insert_iff _ _ hs.to_finset (insert a hs.to_finset)).mp _
-    exact ⟨a, by rwa [finite.mem_to_finset], rfl⟩
-  rintro ⟨hst, h⟩
-  have ht := @finite_of_ncard_pos _ t (by rw [← h]; apply Nat.zero_lt_succ)
-  rw [ncard_eq_to_finset_card _ hs, ncard_eq_to_finset_card _ ht] at h 
-  obtain ⟨a, has, ha⟩ := finset.exists_eq_insert_iff.mpr ⟨by simpa, h⟩
-  have hsa := hs.insert a
-  rw [← finite.to_finset_insert] at ha 
-  exact ⟨a, by rwa [finite.mem_to_finset] at has , by rwa [← @finite.to_finset_inj _ _ _ hsa ht]⟩
+    (∃ (a : _) (_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.ncard + 1 = t.ncard := by classical
 #align set.exists_eq_insert_iff_ncard Set.exists_eq_insert_iff_ncard
 -/
 
@@ -1163,15 +1059,7 @@ theorem exists_ne_of_one_lt_ncard (hs : 1 < s.ncard) (a : α) : ∃ b, b ∈ s �
 
 #print Set.eq_insert_of_ncard_eq_succ /-
 theorem eq_insert_of_ncard_eq_succ {n : ℕ} (h : s.ncard = n + 1) :
-    ∃ a t, a ∉ t ∧ insert a t = s ∧ t.ncard = n := by
-  classical
-  haveI := @Fintype.ofFinite _ (finite_of_ncard_pos (n.zero_lt_succ.trans_eq h.symm)).to_subtype
-  rw [ncard_eq_to_finset_card, Finset.card_eq_succ] at h 
-  obtain ⟨a, t, hat, hts, rfl⟩ := h
-  refine' ⟨a, t, hat, _, by rw [ncard_coe_finset]⟩
-  rw [← to_finset_inj]
-  convert hts
-  simp only [to_finset_insert, Finset.toFinset_coe]
+    ∃ a t, a ∉ t ∧ insert a t = s ∧ t.ncard = n := by classical
 #align set.eq_insert_of_ncard_eq_succ Set.eq_insert_of_ncard_eq_succ
 -/
 
@@ -1181,41 +1069,18 @@ theorem ncard_eq_succ {n : ℕ}
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
-    s.ncard = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.ncard = n := by
-  classical
-  refine' ⟨eq_insert_of_ncard_eq_succ, _⟩
-  rintro ⟨a, t, hat, h, rfl⟩
-  rw [← h, ncard_insert_of_not_mem hat (hs.subset ((subset_insert a t).trans_eq h))]
+    s.ncard = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.ncard = n := by classical
 #align set.ncard_eq_succ Set.ncard_eq_succ
 -/
 
 #print Set.ncard_eq_two /-
-theorem ncard_eq_two : s.ncard = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} := by
-  classical
-  refine' ⟨fun h => _, _⟩
-  · obtain ⟨x, t, hxt, rfl, ht⟩ := eq_insert_of_ncard_eq_succ h
-    obtain ⟨y, rfl⟩ := ncard_eq_one.mp ht
-    rw [mem_singleton_iff] at hxt 
-    exact ⟨_, _, hxt, rfl⟩
-  rintro ⟨x, y, hxy, rfl⟩
-  rw [ncard_eq_to_finset_card, Finset.card_eq_two]
-  exact ⟨x, y, hxy, by ext; simp⟩
+theorem ncard_eq_two : s.ncard = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} := by classical
 #align set.ncard_eq_two Set.ncard_eq_two
 -/
 
 #print Set.ncard_eq_three /-
 theorem ncard_eq_three : s.ncard = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} := by
   classical
-  refine' ⟨fun h => _, _⟩
-  · obtain ⟨x, t, hxt, rfl, ht⟩ := eq_insert_of_ncard_eq_succ h
-    obtain ⟨y, z, hyz, rfl⟩ := ncard_eq_two.mp ht
-    rw [mem_insert_iff, mem_singleton_iff, not_or] at hxt 
-    exact ⟨x, y, z, hxt.1, hxt.2, hyz, rfl⟩
-  rintro ⟨x, y, z, xy, xz, yz, rfl⟩
-  rw [ncard_insert_of_not_mem, ncard_insert_of_not_mem, ncard_singleton]
-  · rwa [mem_singleton_iff]
-  rw [mem_insert_iff, mem_singleton_iff]
-  tauto
 #align set.ncard_eq_three Set.ncard_eq_three
 -/
 

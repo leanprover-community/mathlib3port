@@ -87,15 +87,7 @@ theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [Is
 theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemiring R] [IsDomain R]
     [GCDMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
     (h : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → IsCoprime (f i) (f j))
-    (hprod : ∏ i in s, f i = c ^ n) : ∀ i ∈ s, ∃ d : R, f i = d ^ n := by
-  classical
-  intro i hi
-  rw [← insert_erase hi, prod_insert (not_mem_erase i s)] at hprod 
-  refine'
-    exists_eq_pow_of_mul_eq_pow_of_coprime
-      (IsCoprime.prod_right fun j hj => h i hi j (erase_subset i s hj) fun hij => _) hprod
-  rw [hij] at hj 
-  exact (s.not_mem_erase _) hj
+    (hprod : ∏ i in s, f i = c ^ n) : ∀ i ∈ s, ∃ d : R, f i = d ^ n := by classical
 #align finset.exists_eq_pow_of_mul_eq_pow_of_coprime Finset.exists_eq_pow_of_mul_eq_pow_of_coprime
 -/
 
@@ -158,10 +150,6 @@ theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective 
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem isCyclic_of_subgroup_isDomain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
-  cases nonempty_fintype G
-  apply isCyclic_of_card_pow_eq_one_le
-  intro n hn
-  convert le_trans (card_nthRoots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
 #align is_cyclic_of_subgroup_is_domain isCyclic_of_subgroup_isDomain
 -/
 
@@ -237,69 +225,15 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G
 #print sum_hom_units_eq_zero /-
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
-theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0 := by
-  classical
-  obtain ⟨x, hx⟩ :
-    ∃ x : MonoidHom.range f.to_hom_units,
-      ∀ y : MonoidHom.range f.to_hom_units, y ∈ Submonoid.powers x
-  exact IsCyclic.exists_monoid_generator
-  have hx1 : x ≠ 1 := by
-    rintro rfl
-    apply hf
-    ext g
-    rw [MonoidHom.one_apply]
-    cases' hx ⟨f.to_hom_units g, g, rfl⟩ with n hn
-    rwa [Subtype.ext_iff, Units.ext_iff, Subtype.coe_mk, MonoidHom.coe_toHomUnits, one_pow,
-      eq_comm] at hn 
-  replace hx1 : (x : R) - 1 ≠ 0
-  exact fun h => hx1 (Subtype.eq (Units.ext (sub_eq_zero.1 h)))
-  let c := (univ.filter fun g => f.to_hom_units g = 1).card
-  calc
-    ∑ g : G, f g = ∑ g : G, f.to_hom_units g := rfl
-    _ =
-        ∑ u : Rˣ in univ.image f.to_hom_units,
-          (univ.filter fun g => f.to_hom_units g = u).card • u :=
-      (sum_comp (coe : Rˣ → R) f.to_hom_units)
-    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u :=
-      (sum_congr rfl fun u hu => congr_arg₂ _ _ rfl)
-    -- remaining goal 1, proven below
-        _ =
-        ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
-      (Finset.sum_subtype _ (by simp) _)
-    _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) := smul_sum.symm
-    _ = c • 0 := (congr_arg₂ _ rfl _)
-    -- remaining goal 2, proven below
-        _ =
-        0 :=
-      smul_zero _
-  · -- remaining goal 1
-    show (univ.filter fun g : G => f.to_hom_units g = u).card = c
-    apply card_fiber_eq_of_mem_range f.to_hom_units
-    · simpa only [mem_image, mem_univ, exists_prop_of_true, Set.mem_range] using hu
-    · exact ⟨1, f.to_hom_units.map_one⟩
-  -- remaining goal 2
-  show ∑ b : MonoidHom.range f.to_hom_units, (b : R) = 0
-  calc
-    ∑ b : MonoidHom.range f.to_hom_units, (b : R) = ∑ n in range (orderOf x), x ^ n :=
-      Eq.symm <|
-        sum_bij (fun n _ => x ^ n) (by simp only [mem_univ, forall_true_iff])
-          (by
-            simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.val_pow_eq_pow_val,
-              coe_coe])
-          (fun m n hm hn =>
-            pow_injOn_Iio_orderOf _ (by simpa only [mem_range] using hm)
-              (by simpa only [mem_range] using hn))
-          fun b hb =>
-          let ⟨n, hn⟩ := hx b
-          ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (orderOf_pos _)), by rw [← pow_mod_orderOf, hn]⟩
-    _ = 0 := _
-  rw [← mul_left_inj' hx1, MulZeroClass.zero_mul, geom_sum_mul, coe_coe]
-  norm_cast
-  simp [pow_orderOf_eq_one]
+theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0 := by classical
 #align sum_hom_units_eq_zero sum_hom_units_eq_zero
 -/
 
 #print sum_hom_units /-
+-- remaining goal 1, proven below
+-- remaining goal 2, proven below
+-- remaining goal 1
+-- remaining goal 2
 /-- In an integral domain, a sum indexed by a homomorphism from a finite group is zero,
 unless the homomorphism is trivial, in which case the sum is equal to the cardinality of the group.
 -/

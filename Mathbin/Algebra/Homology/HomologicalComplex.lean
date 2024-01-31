@@ -141,12 +141,7 @@ theorem next (α : Type _) [AddGroup α] [One α] (i : α) : (ComplexShape.down 
 
 #print ChainComplex.next_nat_zero /-
 @[simp]
-theorem next_nat_zero : (ComplexShape.down ℕ).next 0 = 0 := by
-  classical
-  refine' dif_neg _
-  push_neg
-  intro
-  apply Nat.noConfusion
+theorem next_nat_zero : (ComplexShape.down ℕ).next 0 = 0 := by classical
 #align chain_complex.next_nat_zero ChainComplex.next_nat_zero
 -/
 
@@ -178,12 +173,7 @@ theorem next (α : Type _) [AddRightCancelSemigroup α] [One α] (i : α) :
 
 #print CochainComplex.prev_nat_zero /-
 @[simp]
-theorem prev_nat_zero : (ComplexShape.up ℕ).prev 0 = 0 := by
-  classical
-  refine' dif_neg _
-  push_neg
-  intro
-  apply Nat.noConfusion
+theorem prev_nat_zero : (ComplexShape.up ℕ).prev 0 = 0 := by classical
 #align cochain_complex.prev_nat_zero CochainComplex.prev_nat_zero
 -/
 

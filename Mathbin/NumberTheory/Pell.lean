@@ -620,22 +620,11 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     norm_cast at ha₁ 
     exact ⟨ax, ha₁, a.y, ha₂, hax⟩
   classical
-  -- to avoid having to show that the predicate is decidable
-  let x₁ := Nat.find P
-  obtain ⟨hx, y₁, hy₀, hy₁⟩ := Nat.find_spec P
-  refine' ⟨mk x₁ y₁ hy₁, by rw [x_mk]; exact_mod_cast hx, hy₀, fun b hb => _⟩
-  rw [x_mk]
-  have hb' := (Int.toNat_of_nonneg <| zero_le_one.trans hb.le).symm
-  have hb'' := hb
-  rw [hb'] at hb ⊢
-  norm_cast at hb ⊢
-  refine' Nat.find_min' P ⟨hb, |b.y|, abs_pos.mpr <| y_ne_zero_of_one_lt_x hb'', _⟩
-  rw [← hb', sq_abs]
-  exact b.prop
 #align pell.is_fundamental.exists_of_not_is_square Pell.IsFundamental.exists_of_not_isSquare
 -/
 
 #print Pell.IsFundamental.y_strictMono /-
+-- to avoid having to show that the predicate is decidable
 /-- The map sending an integer `n` to the `y`-coordinate of `a^n` for a fundamental
 solution `a` is stritcly increasing. -/
 theorem y_strictMono {a : Solution₁ d} (h : IsFundamental a) : StrictMono fun n : ℤ => (a ^ n).y :=

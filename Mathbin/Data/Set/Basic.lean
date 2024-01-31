@@ -2748,16 +2748,7 @@ theorem insert_diff_of_mem (s) (h : a ∈ t) : insert a s \ t = s \ t := by ext;
 -/
 
 #print Set.insert_diff_of_not_mem /-
-theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
-  classical
-  ext x
-  by_cases h' : x ∈ t
-  · have : x ≠ a := by
-      intro H
-      rw [H] at h' 
-      exact h h'
-    simp [h, h', this]
-  · simp [h, h']
+theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by classical
 #align set.insert_diff_of_not_mem Set.insert_diff_of_not_mem
 -/
 

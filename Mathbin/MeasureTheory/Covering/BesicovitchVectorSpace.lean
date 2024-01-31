@@ -233,87 +233,19 @@ theorem exists_goodδ :
           ∀ s : Finset E,
             (∀ c ∈ s, ‖c‖ ≤ 2) →
               (∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - δ ≤ ‖c - d‖) → s.card ≤ multiplicity E :=
-  by
-  classical
-  /- This follows from a compactness argument: otherwise, one could extract a converging
-    subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
-    `N = multiplicity E + 1`. To formalize this, we work with functions `fin N → E`.
-     -/
-  by_contra! h
-  set N := multiplicity E + 1 with hN
-  have :
-    ∀ δ : ℝ,
-      0 < δ → ∃ f : Fin N → E, (∀ i : Fin N, ‖f i‖ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ‖f i - f j‖ :=
-    by
-    intro δ hδ
-    rcases lt_or_le δ 1 with (hδ' | hδ')
-    · rcases h δ hδ hδ' with ⟨s, hs, h's, s_card⟩
-      obtain ⟨f, f_inj, hfs⟩ : ∃ f : Fin N → E, Function.Injective f ∧ range f ⊆ ↑s :=
-        by
-        have : Fintype.card (Fin N) ≤ s.card := by simp only [Fintype.card_fin]; exact s_card
-        rcases Function.Embedding.exists_of_card_le_finset this with ⟨f, hf⟩
-        exact ⟨f, f.injective, hf⟩
-      simp only [range_subset_iff, Finset.mem_coe] at hfs 
-      refine' ⟨f, fun i => hs _ (hfs i), fun i j hij => h's _ (hfs i) _ (hfs j) (f_inj.ne hij)⟩
-    ·
-      exact
-        ⟨fun i => 0, fun i => by simp, fun i j hij => by
-          simpa only [norm_zero, sub_nonpos, sub_self]⟩
-  -- For `δ > 0`, `F δ` is a function from `fin N` to the ball of radius `2` for which two points
-  -- in the image are separated by `1 - δ`.
-  choose! F hF using this
-  -- Choose a converging subsequence when `δ → 0`.
-  have : ∃ f : Fin N → E, (∀ i : Fin N, ‖f i‖ ≤ 2) ∧ ∀ i j, i ≠ j → 1 ≤ ‖f i - f j‖ :=
-    by
-    obtain ⟨u, u_mono, zero_lt_u, hu⟩ :
-      ∃ u : ℕ → ℝ,
-        (∀ m n : ℕ, m < n → u n < u m) ∧ (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
-      exists_seq_strictAnti_tendsto (0 : ℝ)
-    have A : ∀ n, F (u n) ∈ closed_ball (0 : Fin N → E) 2 :=
-      by
-      intro n
-      simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right,
-        (hF (u n) (zero_lt_u n)).left, forall_const]
-    obtain ⟨f, fmem, φ, φ_mono, hf⟩ :
-      ∃ f ∈ closed_ball (0 : Fin N → E) 2,
-        ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto ((F ∘ u) ∘ φ) at_top (𝓝 f) :=
-      IsCompact.tendsto_subseq (is_compact_closed_ball _ _) A
-    refine' ⟨f, fun i => _, fun i j hij => _⟩
-    · simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right] at fmem 
-      exact fmem i
-    · have A : tendsto (fun n => ‖F (u (φ n)) i - F (u (φ n)) j‖) at_top (𝓝 ‖f i - f j‖) :=
-        ((hf.apply i).sub (hf.apply j)).norm
-      have B : tendsto (fun n => 1 - u (φ n)) at_top (𝓝 (1 - 0)) :=
-        tendsto_const_nhds.sub (hu.comp φ_mono.tendsto_at_top)
-      rw [sub_zero] at B 
-      exact le_of_tendsto_of_tendsto' B A fun n => (hF (u (φ n)) (zero_lt_u _)).2 i j hij
-  rcases this with ⟨f, hf, h'f⟩
-  -- the range of `f` contradicts the definition of `multiplicity E`.
-  have finj : Function.Injective f := by
-    intro i j hij
-    by_contra
-    have : 1 ≤ ‖f i - f j‖ := h'f i j h
-    simp only [hij, norm_zero, sub_self] at this 
-    exact lt_irrefl _ (this.trans_lt zero_lt_one)
-  let s := Finset.image f Finset.univ
-  have s_card : s.card = N := by rw [Finset.card_image_of_injective _ finj]; exact Finset.card_fin N
-  have hs : ∀ c ∈ s, ‖c‖ ≤ 2 := by
-    simp only [hf, forall_apply_eq_imp_iff, forall_const, forall_exists_index, Finset.mem_univ,
-      Finset.mem_image]
-  have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ‖c - d‖ :=
-    by
-    simp only [s, forall_apply_eq_imp_iff, forall_exists_index, Finset.mem_univ, Finset.mem_image,
-      Ne.def, exists_true_left, forall_apply_eq_imp_iff, forall_true_left]
-    intro i j hij
-    have : i ≠ j := fun h => by rw [h] at hij ; exact hij rfl
-    exact h'f i j this
-  have : s.card ≤ multiplicity E := card_le_multiplicity hs h's
-  rw [s_card, hN] at this 
-  exact lt_irrefl _ ((Nat.lt_succ_self (multiplicity E)).trans_le this)
+  by classical
 #align besicovitch.exists_good_δ Besicovitch.exists_goodδ
 -/
 
 #print Besicovitch.goodδ /-
+/- This follows from a compactness argument: otherwise, one could extract a converging
+  subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
+  `N = multiplicity E + 1`. To formalize this, we work with functions `fin N → E`.
+   -/
+-- For `δ > 0`, `F δ` is a function from `fin N` to the ball of radius `2` for which two points
+-- in the image are separated by `1 - δ`.
+-- Choose a converging subsequence when `δ → 0`.
+-- the range of `f` contradicts the definition of `multiplicity E`.
 /-- A small positive number such that any `1 - δ`-separated set in the ball of radius `2` has
 cardinality at most `besicovitch.multiplicity E`. -/
 def goodδ : ℝ :=
@@ -353,28 +285,7 @@ theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤
 
 #print Besicovitch.le_multiplicity_of_δ_of_fin /-
 theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖f i‖ ≤ 2)
-    (h' : ∀ i j, i ≠ j → 1 - goodδ E ≤ ‖f i - f j‖) : n ≤ multiplicity E := by
-  classical
-  have finj : Function.Injective f := by
-    intro i j hij
-    by_contra
-    have : 1 - good_δ E ≤ ‖f i - f j‖ := h' i j h
-    simp only [hij, norm_zero, sub_self] at this 
-    linarith [good_δ_lt_one E]
-  let s := Finset.image f Finset.univ
-  have s_card : s.card = n := by rw [Finset.card_image_of_injective _ finj]; exact Finset.card_fin n
-  have hs : ∀ c ∈ s, ‖c‖ ≤ 2 := by
-    simp only [h, forall_apply_eq_imp_iff, forall_const, forall_exists_index, Finset.mem_univ,
-      Finset.mem_image, imp_true_iff]
-  have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - good_δ E ≤ ‖c - d‖ :=
-    by
-    simp only [s, forall_apply_eq_imp_iff, forall_exists_index, Finset.mem_univ, Finset.mem_image,
-      Ne.def, exists_true_left, forall_apply_eq_imp_iff, forall_true_left]
-    intro i j hij
-    have : i ≠ j := fun h => by rw [h] at hij ; exact hij rfl
-    exact h' i j this
-  have : s.card ≤ multiplicity E := card_le_multiplicity_of_δ hs h's
-  rwa [s_card] at this 
+    (h' : ∀ i j, i ≠ j → 1 - goodδ E ≤ ‖f i - f j‖) : n ≤ multiplicity E := by classical
 #align besicovitch.le_multiplicity_of_δ_of_fin Besicovitch.le_multiplicity_of_δ_of_fin
 -/
 

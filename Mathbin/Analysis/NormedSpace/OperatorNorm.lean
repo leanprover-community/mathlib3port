@@ -1862,7 +1862,7 @@ theorem isCompact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →S
     (hb : Bounded s) : IsCompact (closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
   have : ∀ x, IsCompact (closure (apply' F σ₁₂ x '' s)) := fun x =>
     ((apply' F σ₁₂ x).lipschitz.isBounded_image hb).isCompact_closure
-  isCompact_closure_of_subset_compact (isCompact_pi_infinite this)
+  IsCompact.closure_of_subset (isCompact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
 #align continuous_linear_map.is_compact_closure_image_coe_of_bounded ContinuousLinearMap.isCompact_closure_image_coe_of_bounded
 -/

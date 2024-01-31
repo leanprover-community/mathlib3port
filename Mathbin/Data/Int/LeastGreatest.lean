@@ -63,11 +63,7 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
 then this set has the least element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/
 theorem exists_least_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ, P z → b ≤ z)
-    (Hinh : ∃ z : ℤ, P z) : ∃ lb : ℤ, P lb ∧ ∀ z : ℤ, P z → lb ≤ z := by
-  classical exact
-    let ⟨b, Hb⟩ := Hbdd
-    let ⟨lb, H⟩ := least_of_bdd b Hb Hinh
-    ⟨lb, H⟩
+    (Hinh : ∃ z : ℤ, P z) : ∃ lb : ℤ, P lb ∧ ∀ z : ℤ, P z → lb ≤ z := by classical
 #align int.exists_least_of_bdd Int.exists_least_of_bdd
 -/
 
@@ -102,11 +98,7 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
 then this set has the greatest element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/
 theorem exists_greatest_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ, P z → z ≤ b)
-    (Hinh : ∃ z : ℤ, P z) : ∃ ub : ℤ, P ub ∧ ∀ z : ℤ, P z → z ≤ ub := by
-  classical exact
-    let ⟨b, Hb⟩ := Hbdd
-    let ⟨lb, H⟩ := greatest_of_bdd b Hb Hinh
-    ⟨lb, H⟩
+    (Hinh : ∃ z : ℤ, P z) : ∃ ub : ℤ, P ub ∧ ∀ z : ℤ, P z → z ≤ ub := by classical
 #align int.exists_greatest_of_bdd Int.exists_greatest_of_bdd
 -/
 

@@ -220,14 +220,6 @@ theorem multinomial_update (a : α) (f : α →₀ ℕ) :
   by
   simp only [multinomial_eq]
   classical
-  by_cases a ∈ f.support
-  · rw [← Finset.insert_erase h, Nat.multinomial_insert _ f (Finset.not_mem_erase a _),
-      Finset.add_sum_erase _ f h, support_update_zero]
-    congr 1
-    exact
-      Nat.multinomial_congr _ fun _ h => (Function.update_noteq (Finset.mem_erase.1 h).1 0 f).symm
-  rw [not_mem_support_iff] at h 
-  rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
 #align finsupp.multinomial_update Finsupp.multinomial_update
 -/
 

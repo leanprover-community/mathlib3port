@@ -156,7 +156,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       apply Quotient.sound'
       use this.unit, rfl
     le_total := ValuationRing.le_total _ _
-    decidableLe := by classical infer_instance
+    decidableLe := by classical
     mul_assoc := by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩; apply Quotient.sound'; rw [mul_assoc]; apply Setoid.refl'
     one_mul := by rintro ⟨a⟩; apply Quotient.sound'; rw [one_mul]; apply Setoid.refl'
     mul_one := by rintro ⟨a⟩; apply Quotient.sound'; rw [mul_one]; apply Setoid.refl'
@@ -310,21 +310,12 @@ variable {R : Type _} [CommRing R] [IsDomain R] {K : Type _}
 variable [Field K] [Algebra R K] [IsFractionRing R K]
 
 #print ValuationRing.iff_dvd_total /-
-theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
-  classical
-  refine' ⟨fun H => ⟨fun a b => _⟩, fun H => ⟨fun a b => _⟩⟩ <;> skip
-  · obtain ⟨c, rfl | rfl⟩ := @ValuationRing.cond _ _ H a b <;> simp
-  · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
+theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by classical
 #align valuation_ring.iff_dvd_total ValuationRing.iff_dvd_total
 -/
 
 #print ValuationRing.iff_ideal_total /-
-theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
-  classical
-  refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
-  have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
-  simp_rw [Ideal.span_singleton_le_span_singleton] at this 
-  exact this.symm
+theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by classical
 #align valuation_ring.iff_ideal_total ValuationRing.iff_ideal_total
 -/
 
@@ -389,40 +380,10 @@ theorem isInteger_or_isInteger [h : ValuationRing R] (x : K) :
 variable {R}
 
 -- This implies that valuation rings are integrally closed through typeclass search.
-instance (priority := 100) [ValuationRing R] : IsBezout R := by
-  classical
-  rw [IsBezout.iff_span_pair_isPrincipal]
-  intro x y
-  rw [Ideal.span_insert]
-  cases le_total (Ideal.span {x} : Ideal R) (Ideal.span {y})
-  · erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
-  · erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
+instance (priority := 100) [ValuationRing R] : IsBezout R := by classical
 
 #print ValuationRing.iff_local_bezout_domain /-
-theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R := by
-  classical
-  refine' ⟨fun H => ⟨inferInstance, inferInstance⟩, _⟩
-  rintro ⟨h₁, h₂⟩
-  skip
-  refine' iff_dvd_total.mpr ⟨fun a b => _⟩
-  obtain ⟨g, e : _ = Ideal.span _⟩ := IsBezout.span_pair_isPrincipal a b
-  obtain ⟨a, rfl⟩ :=
-    ideal.mem_span_singleton'.mp
-      (show a ∈ Ideal.span {g} by rw [← e]; exact Ideal.subset_span (by simp))
-  obtain ⟨b, rfl⟩ :=
-    ideal.mem_span_singleton'.mp
-      (show b ∈ Ideal.span {g} by rw [← e]; exact Ideal.subset_span (by simp))
-  obtain ⟨x, y, e'⟩ :=
-    ideal.mem_span_pair.mp
-      (show g ∈ Ideal.span {a * g, b * g} by rw [e]; exact Ideal.subset_span (by simp))
-  cases' eq_or_ne g 0 with h h
-  · simp [h]
-  have : x * a + y * b = 1 := by apply mul_left_injective₀ h; convert e' <;> ring_nf
-  cases' LocalRing.isUnit_or_isUnit_of_add_one this with h' h'
-  left
-  swap
-  right
-  all_goals exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (isUnit_of_mul_isUnit_right h') _) _
+theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R := by classical
 #align valuation_ring.iff_local_bezout_domain ValuationRing.iff_local_bezout_domain
 -/
 

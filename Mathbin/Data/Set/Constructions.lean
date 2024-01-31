@@ -59,15 +59,7 @@ variable {S}
 
 #print FiniteInter.finiteInter_mem /-
 theorem finiteInter_mem (cond : FiniteInter S) (F : Finset (Set α)) :
-    ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
-  classical
-  refine' Finset.induction_on F (fun _ => _) _
-  · simp [cond.univ_mem]
-  · intro a s h1 h2 h3
-    suffices a ∩ ⋂₀ ↑s ∈ S by simpa
-    exact
-      cond.inter_mem (h3 (Finset.mem_insert_self a s))
-        (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
+    ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by classical
 #align has_finite_inter.finite_inter_mem FiniteInter.finiteInter_mem
 -/
 

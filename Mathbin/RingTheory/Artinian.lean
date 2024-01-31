@@ -504,15 +504,8 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
       exact ⟨le_sup_left, ⟨x, mem_sup_right (mem_span_singleton_self x), hxJ⟩⟩
   have : J ⊔ Jac • Ideal.span {x} ≤ J ⊔ Ideal.span {x} :=
     sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
-  have : Jac * Ideal.span {x} ≤ J := by
-    classical
-    --Need version 4 of Nakayamas lemma on Stacks
-    by_contra H
-    refine'
-      H
-        (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl
-          (this.eq_of_not_lt (hJ' _ _)).ge)
-    exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
+  have : Jac * Ideal.span {x} ≤ J := by classical
+  --Need version 4 of Nakayamas lemma on Stacks
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc
     Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by rw [pow_succ, ← mul_assoc]

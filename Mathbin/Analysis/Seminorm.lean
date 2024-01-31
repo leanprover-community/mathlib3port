@@ -469,10 +469,6 @@ theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
 #print Seminorm.finset_sup_le_sum /-
 theorem finset_sup_le_sum (p : ι → Seminorm 𝕜 E) (s : Finset ι) : s.sup p ≤ ∑ i in s, p i := by
   classical
-  refine' finset.sup_le_iff.mpr _
-  intro i hi
-  rw [Finset.sum_eq_sum_diff_singleton_add hi, le_add_iff_nonneg_left]
-  exact bot_le
 #align seminorm.finset_sup_le_sum Seminorm.finset_sup_le_sum
 -/
 
@@ -845,7 +841,7 @@ theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.Non
     ball (s.sup' H p) e r = s.inf' H fun i => ball (p i) e r :=
   by
   induction' H using Finset.Nonempty.cons_induction with a a s ha hs ih
-  · classical simp
+  · classical
   · rw [Finset.sup'_cons hs, Finset.inf'_cons hs, ball_sup, inf_eq_inter, ih]
 #align seminorm.ball_finset_sup' Seminorm.ball_finset_sup'
 -/
@@ -855,7 +851,7 @@ theorem closedBall_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H :
     (r : ℝ) : closedBall (s.sup' H p) e r = s.inf' H fun i => closedBall (p i) e r :=
   by
   induction' H using Finset.Nonempty.cons_induction with a a s ha hs ih
-  · classical simp
+  · classical
   · rw [Finset.sup'_cons hs, Finset.inf'_cons hs, closed_ball_sup, inf_eq_inter, ih]
 #align seminorm.closed_ball_finset_sup' Seminorm.closedBall_finset_sup'
 -/

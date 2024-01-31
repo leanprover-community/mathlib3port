@@ -503,48 +503,6 @@ theorem valley_mi : Valley cs (cs (mi h v)).shiftUp :=
   · intro p; apply h.shift_up_bottom_subset_bottoms mi_xm_ne_one
   · rintro i' hi' ⟨p2, hp2, h2p2⟩; simp only [head_shift_up] at hi' 
     classical
-    by_contra h2i'
-    rw [tail_shift_up] at h2p2 
-    simp only [not_subset, tail_shift_up] at h2i' 
-    rcases h2i' with ⟨p1, hp1, h2p1⟩
-    have : ∃ p3, p3 ∈ (cs i').tail.to_set ∧ p3 ∉ (cs i).tail.to_set ∧ p3 ∈ c.tail.to_set :=
-      by
-      simp only [to_set, Classical.not_forall, mem_set_of_eq] at h2p1 ; cases' h2p1 with j hj
-      rcases Ico_lemma (mi_not_on_boundary' j).1 (by simp [hw]) (mi_not_on_boundary' j).2
-          (le_trans (hp2 j).1 <| le_of_lt (h2p2 j).2) (le_trans (h2p2 j).1 <| le_of_lt (hp2 j).2)
-          ⟨hj, hp1 j⟩ with
-        ⟨w, hw, h2w, h3w⟩
-      refine' ⟨fun j' => if j' = j then w else p2 j', _, _, _⟩
-      · intro j'; by_cases h : j' = j
-        · simp only [if_pos h]; convert h3w
-        · simp only [if_neg h]; exact hp2 j'
-      · simp only [to_set, Classical.not_forall, mem_set_of_eq]; use j; rw [if_pos rfl]; convert h2w
-      · intro j'; by_cases h : j' = j
-        · simp only [if_pos h, side_tail]; convert hw
-        · simp only [if_neg h]; apply hi.2; apply h2p2
-    rcases this with ⟨p3, h1p3, h2p3, h3p3⟩
-    let p := @cons n (fun _ => ℝ) (c.b 0) p3
-    have hp : p ∈ c.bottom := by refine' ⟨rfl, _⟩; rwa [tail_cons]
-    rcases v.1 hp with ⟨_, ⟨i'', rfl⟩, hi''⟩
-    have h2i'' : i'' ∈ bcubes cs c := by
-      use hi''.1.symm; apply v.2.1 i'' hi''.1.symm
-      use tail p; constructor; exact hi''.2; rw [tail_cons]; exact h3p3
-    have h3i'' : (cs i).w < (cs i'').w := by apply mi_strict_minimal _ h2i''; rintro rfl;
-      apply h2p3; convert hi''.2; rw [tail_cons]
-    let p' := @cons n (fun _ => ℝ) (cs i).xm p3
-    have hp' : p' ∈ (cs i').to_set := by simpa [to_set, forall_fin_succ, p', hi'.symm] using h1p3
-    have h2p' : p' ∈ (cs i'').to_set :=
-      by
-      simp only [to_set, forall_fin_succ, p', cons_succ, cons_zero, mem_set_of_eq]
-      refine' ⟨_, by simpa [to_set, p] using hi''.2⟩
-      have : (cs i).b 0 = (cs i'').b 0 := by rw [hi.1, h2i''.1]
-      simp [side, hw', xm, this, h3i'']
-    apply not_disjoint_iff.mpr ⟨p', hp', h2p'⟩
-    apply h.1
-    rintro rfl
-    apply (cs i).b_ne_xm
-    rw [← hi', ← hi''.1, hi.1]
-    rfl
   · intro i' hi' h2i'
     dsimp only [shift_up] at h2i' 
     replace h2i' := h.injective h2i'.symm

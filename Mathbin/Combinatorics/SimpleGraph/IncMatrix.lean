@@ -85,9 +85,7 @@ variable [MulZeroOneClass R] {a b : α} {e : Sym2 α}
 #print SimpleGraph.incMatrix_apply_mul_incMatrix_apply /-
 theorem incMatrix_apply_mul_incMatrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.incidenceSet a ∩ G.incidenceSet b).indicator 1 e :=
-  by
-  classical simp only [inc_matrix, Set.indicator_apply, ← ite_zero_mul_ite_zero, Pi.one_apply,
-    mul_one, Set.mem_inter_iff]
+  by classical
 #align simple_graph.inc_matrix_apply_mul_inc_matrix_apply SimpleGraph.incMatrix_apply_mul_incMatrix_apply
 -/
 
@@ -153,16 +151,7 @@ theorem incMatrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
 
 #print SimpleGraph.sum_incMatrix_apply_of_mem_edgeSet /-
 theorem sum_incMatrix_apply_of_mem_edgeSet : e ∈ G.edgeSetEmbedding → ∑ a, G.incMatrix R a e = 2 :=
-  by
-  classical
-  refine' e.ind _
-  intro a b h
-  rw [mem_edge_set] at h 
-  rw [← Nat.cast_two, ← card_doubleton h.ne]
-  simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_and_iff]
-  congr 2
-  ext e
-  simp only [mem_filter, mem_univ, true_and_iff, mem_insert, mem_singleton]
+  by classical
 #align simple_graph.sum_inc_matrix_apply_of_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_mem_edgeSet
 -/
 
@@ -175,23 +164,7 @@ theorem sum_incMatrix_apply_of_not_mem_edgeSet (h : e ∉ G.edgeSetEmbedding) :
 
 #print SimpleGraph.incMatrix_transpose_mul_diag /-
 theorem incMatrix_transpose_mul_diag [DecidableRel G.Adj] :
-    ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSetEmbedding then 2 else 0 := by
-  classical
-  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_zero_mul_ite_zero, one_mul,
-    sum_boole, and_self_iff]
-  split_ifs with h
-  · revert h
-    refine' e.ind _
-    intro v w h
-    rw [← Nat.cast_two, ← card_doubleton (G.ne_of_adj h)]
-    simp [mk_mem_incidence_set_iff, G.mem_edge_set.mp h]
-    congr 2
-    ext u
-    simp
-  · revert h
-    refine' e.ind _
-    intro v w h
-    simp [mk_mem_incidence_set_iff, G.mem_edge_set.not.mp h]
+    ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSetEmbedding then 2 else 0 := by classical
 #align simple_graph.inc_matrix_transpose_mul_diag SimpleGraph.incMatrix_transpose_mul_diag
 -/
 
@@ -203,14 +176,7 @@ variable [Fintype (Sym2 α)] [Semiring R] {a b : α} {e : Sym2 α}
 
 #print SimpleGraph.incMatrix_mul_transpose_apply_of_adj /-
 theorem incMatrix_mul_transpose_apply_of_adj (h : G.Adj a b) :
-    (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
-  classical
-  simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply,
-    Set.indicator_apply, Pi.one_apply, sum_boole]
-  convert Nat.cast_one
-  convert card_singleton ⟦(a, b)⟧
-  rw [← coe_eq_singleton, coe_filter_univ]
-  exact G.incidence_set_inter_incidence_set_of_adj h
+    (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by classical
 #align simple_graph.inc_matrix_mul_transpose_apply_of_adj SimpleGraph.incMatrix_mul_transpose_apply_of_adj
 -/
 

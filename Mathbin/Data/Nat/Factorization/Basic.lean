@@ -298,14 +298,7 @@ theorem prod_factorization_eq_prod_primeFactors {n : ℕ} {β : Type _} [CommMon
 the power of `p` in `S.prod g` equals the sum over `x ∈ S` of the powers of `p` in `g x`.
 Generalises `factorization_mul`, which is the special case where `S.card = 2` and `g = id`. -/
 theorem factorization_prod {α : Type _} {S : Finset α} {g : α → ℕ} (hS : ∀ x ∈ S, g x ≠ 0) :
-    (S.Prod g).factorization = S.Sum fun x => (g x).factorization := by
-  classical
-  ext p
-  apply Finset.induction_on' S
-  · simp
-  · intro x T hxS hTS hxT IH
-    have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
-    simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
+    (S.Prod g).factorization = S.Sum fun x => (g x).factorization := by classical
 #align nat.factorization_prod Nat.factorization_prod
 -/
 

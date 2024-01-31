@@ -177,8 +177,6 @@ theorem toFinsupp_eq_sum_map_enum_single {R : Type _} [AddMonoid R] (l : List R)
   · simp only [enum_append, map, enum_from_singleton, map_append, sum_append, sum_cons, sum_nil,
       add_zero]
     classical
-    convert to_finsupp_concat_eq_to_finsupp_add_single _ _
-    exact IH.symm
 #align list.to_finsupp_eq_sum_map_enum_single List.toFinsupp_eq_sum_map_enum_single
 -/
 

@@ -46,8 +46,7 @@ instance Module.Free.linearMap [Module.Finite R M] [Module.Finite R N] :
   by
   cases subsingleton_or_nontrivial R
   · apply Module.Free.of_subsingleton'
-  classical exact
-    Module.Free.of_equiv (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
+  classical
 #align module.free.linear_map Module.Free.linearMap
 -/
 
@@ -60,8 +59,6 @@ instance Module.Finite.linearMap [Module.Finite R M] [Module.Finite R N] :
   cases subsingleton_or_nontrivial R
   · infer_instance
   classical
-  have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
-  exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
 #align module.finite.linear_map Module.Finite.linearMap
 -/
 
@@ -99,12 +96,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 #print FiniteDimensional.finrank_linearMap /-
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 theorem FiniteDimensional.finrank_linearMap : finrank R (M →ₗ[R] N) = finrank R M * finrank R N :=
-  by
-  classical
-  letI := nontrivial_of_invariantBasisNumber R
-  have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
-  simp_rw [h.finrank_eq, FiniteDimensional.finrank_matrix,
-    FiniteDimensional.finrank_eq_card_chooseBasisIndex, mul_comm]
+  by classical
 #align finite_dimensional.finrank_linear_map FiniteDimensional.finrank_linearMap
 -/
 

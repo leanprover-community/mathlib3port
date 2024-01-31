@@ -143,11 +143,7 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
 #print TopologicalSpace.Compacts.coe_finset_sup /-
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} :
-    (↑(s.sup f) : Set α) = s.sup fun i => f i := by
-  classical
-  refine' Finset.induction_on s rfl fun a s _ h => _
-  simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
-  congr
+    (↑(s.sup f) : Set α) = s.sup fun i => f i := by classical
 #align topological_space.compacts.coe_finset_sup TopologicalSpace.Compacts.coe_finset_sup
 -/
 

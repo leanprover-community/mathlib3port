@@ -311,10 +311,7 @@ theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroup M] [Mod
       exact FiniteDimensional.of_fintype_basis hs
     simp only [← det_to_matrix (FiniteDimensional.finBasis 𝕜 M), LinearEquiv.map_smul,
       Fintype.card_fin, det_smul]
-  ·
-    classical
-    have : FiniteDimensional.finrank 𝕜 M = 0 := finrank_eq_zero_of_not_exists_basis H
-    simp [coe_det, H, this]
+  · classical
 #align linear_map.det_smul LinearMap.det_smul
 -/
 
@@ -350,14 +347,7 @@ theorem det_eq_one_of_subsingleton [Subsingleton M] (f : M →ₗ[R] M) : (f : M
 #print LinearMap.det_eq_one_of_finrank_eq_zero /-
 theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroup M]
     [Module 𝕜 M] (h : FiniteDimensional.finrank 𝕜 M = 0) (f : M →ₗ[𝕜] M) :
-    (f : M →ₗ[𝕜] M).det = 1 := by
-  classical
-  refine' @LinearMap.det_cases M _ 𝕜 _ _ _ (fun t => t = 1) f _ rfl
-  intro s b
-  have : IsEmpty s := by
-    rw [← Fintype.card_eq_zero_iff]
-    exact (FiniteDimensional.finrank_eq_card_basis b).symm.trans h
-  exact Matrix.det_isEmpty
+    (f : M →ₗ[𝕜] M).det = 1 := by classical
 #align linear_map.det_eq_one_of_finrank_eq_zero LinearMap.det_eq_one_of_finrank_eq_zero
 -/
 
@@ -365,24 +355,7 @@ theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type _} [Field 𝕜] {M : Type _} 
 /-- Conjugating a linear map by a linear equiv does not change its determinant. -/
 @[simp]
 theorem det_conj {N : Type _} [AddCommGroup N] [Module A N] (f : M →ₗ[A] M) (e : M ≃ₗ[A] N) :
-    LinearMap.det ((e : M →ₗ[A] N) ∘ₗ f ∘ₗ (e.symm : N →ₗ[A] M)) = LinearMap.det f := by
-  classical
-  by_cases H : ∃ s : Finset M, Nonempty (Basis s A M)
-  · rcases H with ⟨s, ⟨b⟩⟩
-    rw [← det_to_matrix b f, ← det_to_matrix (b.map e), to_matrix_comp (b.map e) b (b.map e),
-      to_matrix_comp (b.map e) b b, ← Matrix.mul_assoc, Matrix.det_conj_of_mul_eq_one]
-    ·
-      rw [← to_matrix_comp, LinearEquiv.comp_coe, e.symm_trans_self, LinearEquiv.refl_toLinearMap,
-        to_matrix_id]
-    ·
-      rw [← to_matrix_comp, LinearEquiv.comp_coe, e.self_trans_symm, LinearEquiv.refl_toLinearMap,
-        to_matrix_id]
-  · have H' : ¬∃ t : Finset N, Nonempty (Basis t A N) :=
-      by
-      contrapose! H
-      rcases H with ⟨s, ⟨b⟩⟩
-      exact ⟨_, ⟨(b.map e.symm).reindexFinsetRange⟩⟩
-    simp only [coe_det, H, H', Pi.one_apply, dif_neg, not_false_iff]
+    LinearMap.det ((e : M →ₗ[A] N) ∘ₗ f ∘ₗ (e.symm : N →ₗ[A] M)) = LinearMap.det f := by classical
 #align linear_map.det_conj LinearMap.det_conj
 -/
 
@@ -404,10 +377,7 @@ theorem finiteDimensional_of_det_ne_one {𝕜 : Type _} [Field 𝕜] [Module �
   by
   by_cases H : ∃ s : Finset M, Nonempty (Basis s 𝕜 M)
   · rcases H with ⟨s, ⟨hs⟩⟩; exact FiniteDimensional.of_fintype_basis hs
-  ·
-    classical
-    simp [LinearMap.coe_det, H] at hf 
-    exact hf.elim
+  · classical
 #align linear_map.finite_dimensional_of_det_ne_one LinearMap.finiteDimensional_of_det_ne_one
 -/
 

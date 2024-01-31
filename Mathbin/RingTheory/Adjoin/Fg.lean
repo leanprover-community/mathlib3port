@@ -187,14 +187,7 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).FG ↔ S.FG :=
 #print Subalgebra.induction_on_adjoin /-
 theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S)))
-    (S : Subalgebra R A) : P S := by
-  classical
-  obtain ⟨t, rfl⟩ := S.fg_of_noetherian
-  refine' Finset.induction_on t _ _
-  · simpa using base
-  intro x t hxt h
-  rw [Finset.coe_insert]
-  simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
+    (S : Subalgebra R A) : P S := by classical
 #align subalgebra.induction_on_adjoin Subalgebra.induction_on_adjoin
 -/
 

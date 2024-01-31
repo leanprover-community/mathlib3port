@@ -257,12 +257,7 @@ def skyscraperPresheafStalkOfNotSpecializesIsTerminal [HasColimits C] {y : X} (h
 -/
 
 #print skyscraperPresheaf_isSheaf /-
-theorem skyscraperPresheaf_isSheaf : (skyscraperPresheaf p₀ A).IsSheaf := by
-  classical exact
-    (presheaf.is_sheaf_iso_iff (eq_to_iso <| skyscraperPresheaf_eq_pushforward p₀ A)).mpr
-      (sheaf.pushforward_sheaf_of_sheaf _
-        (presheaf.is_sheaf_on_punit_of_is_terminal _
-          (by dsimp; rw [if_neg]; exact terminal_is_terminal; exact Set.not_mem_empty PUnit.unit)))
+theorem skyscraperPresheaf_isSheaf : (skyscraperPresheaf p₀ A).IsSheaf := by classical
 #align skyscraper_presheaf_is_sheaf skyscraperPresheaf_isSheaf
 -/
 

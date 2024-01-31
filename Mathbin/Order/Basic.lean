@@ -1552,14 +1552,7 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] : D
 
 instance {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] :
     DenselyOrdered (∀ i, α i) :=
-  ⟨fun a b => by
-    classical
-    simp_rw [Pi.lt_def]
-    rintro ⟨hab, i, hi⟩
-    obtain ⟨c, ha, hb⟩ := exists_between hi
-    exact
-      ⟨a.update i c, ⟨le_update_iff.2 ⟨ha.le, fun _ _ => le_rfl⟩, i, by rwa [update_same]⟩,
-        update_le_iff.2 ⟨hb.le, fun _ _ => hab _⟩, i, by rwa [update_same]⟩⟩
+  ⟨fun a b => by classical⟩
 
 #print le_of_forall_le_of_dense /-
 theorem le_of_forall_le_of_dense [LinearOrder α] [DenselyOrdered α] {a₁ a₂ : α}

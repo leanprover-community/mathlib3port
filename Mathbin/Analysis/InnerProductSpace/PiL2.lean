@@ -222,13 +222,7 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
 theorem DirectSum.IsInternal.isometryL2OfOrthogonalFamily_symm_apply [DecidableEq ι]
     {V : ι → Submodule 𝕜 E} (hV : DirectSum.IsInternal V)
     (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) (w : PiLp 2 fun i => V i) :
-    (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by
-  classical
-  let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
-  let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV
-  suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by exact this (e₁.symm w)
-  intro v
-  simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, DFinsupp.sumAddHom_apply]
+    (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by classical
 #align direct_sum.is_internal.isometry_L2_of_orthogonal_family_symm_apply DirectSum.IsInternal.isometryL2OfOrthogonalFamily_symm_apply
 -/
 
@@ -391,8 +385,7 @@ instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
   ⟨ofRepr (LinearIsometryEquiv.refl 𝕜 (EuclideanSpace 𝕜 ι))⟩
 
 /-- `b i` is the `i`th basis vector. -/
-instance : CoeFun (OrthonormalBasis ι 𝕜 E) fun _ => ι → E
-    where coe b i := by classical exact b.repr.symm (EuclideanSpace.single i (1 : 𝕜))
+instance : CoeFun (OrthonormalBasis ι 𝕜 E) fun _ => ι → E where coe b i := by classical
 
 #print OrthonormalBasis.coe_ofRepr /-
 @[simp]
@@ -410,10 +403,7 @@ theorem coe_ofRepr [DecidableEq ι] (e : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 �
 #print OrthonormalBasis.repr_symm_single /-
 @[simp]
 protected theorem repr_symm_single [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i : ι) :
-    b.repr.symm (EuclideanSpace.single i (1 : 𝕜)) = b i := by
-  classical
-  congr
-  simp
+    b.repr.symm (EuclideanSpace.single i (1 : 𝕜)) = b i := by classical
 #align orthonormal_basis.repr_symm_single OrthonormalBasis.repr_symm_single
 -/
 
@@ -427,21 +417,13 @@ protected theorem repr_self [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i
 
 #print OrthonormalBasis.repr_apply_apply /-
 protected theorem repr_apply_apply (b : OrthonormalBasis ι 𝕜 E) (v : E) (i : ι) :
-    b.repr v i = ⟪b i, v⟫ := by
-  classical
-  rw [← b.repr.inner_map_map (b i) v, b.repr_self i, EuclideanSpace.inner_single_left]
-  simp only [one_mul, eq_self_iff_true, map_one]
+    b.repr v i = ⟪b i, v⟫ := by classical
 #align orthonormal_basis.repr_apply_apply OrthonormalBasis.repr_apply_apply
 -/
 
 #print OrthonormalBasis.orthonormal /-
 @[simp]
-protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal 𝕜 b := by
-  classical
-  rw [orthonormal_iff_ite]
-  intro i j
-  rw [← b.repr.inner_map_map (b i) (b j), b.repr_self i, b.repr_self j,
-    EuclideanSpace.inner_single_left, EuclideanSpace.single_apply, map_one, one_mul]
+protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal 𝕜 b := by classical
 #align orthonormal_basis.orthonormal OrthonormalBasis.orthonormal
 -/
 
@@ -459,8 +441,6 @@ protected theorem coe_toBasis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis :
   change ⇑(Basis.ofEquivFun b.repr.to_linear_equiv) = b
   ext j
   classical
-  rw [Basis.coe_ofEquivFun]
-  congr
 #align orthonormal_basis.coe_to_basis OrthonormalBasis.coe_toBasis
 -/
 
@@ -586,8 +566,7 @@ theorem Basis.toBasis_toOrthonormalBasis (v : Basis ι 𝕜 E) (hv : Orthonormal
 theorem Basis.coe_toOrthonormalBasis (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
     (v.toOrthonormalBasis hv : ι → E) = (v : ι → E) :=
   calc
-    (v.toOrthonormalBasis hv : ι → E) = ((v.toOrthonormalBasis hv).toBasis : ι → E) := by
-      classical rw [OrthonormalBasis.coe_toBasis]
+    (v.toOrthonormalBasis hv : ι → E) = ((v.toOrthonormalBasis hv).toBasis : ι → E) := by classical
     _ = (v : ι → E) := by simp
 #align basis.coe_to_orthonormal_basis Basis.coe_toOrthonormalBasis
 -/
@@ -605,8 +584,7 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (
 #print OrthonormalBasis.coe_mk /-
 @[simp]
 protected theorem coe_mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (Set.range v)) :
-    ⇑(OrthonormalBasis.mk hon hsp) = v := by
-  classical rw [OrthonormalBasis.mk, _root_.basis.coe_to_orthonormal_basis, Basis.coe_mk]
+    ⇑(OrthonormalBasis.mk hon hsp) = v := by classical
 #align orthonormal_basis.coe_mk OrthonormalBasis.coe_mk
 -/
 
@@ -677,13 +655,7 @@ def reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') : OrthonormalBasis
 
 #print OrthonormalBasis.reindex_apply /-
 protected theorem reindex_apply (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') (i' : ι') :
-    (b.reindex e) i' = b (e.symm i') := by
-  classical
-  dsimp [reindex, OrthonormalBasis.hasCoeToFun]
-  rw [coe_of_repr]
-  dsimp
-  rw [← b.repr_symm_single, LinearIsometryEquiv.piLpCongrLeft_symm,
-    EuclideanSpace.piLpCongrLeft_single]
+    (b.reindex e) i' = b (e.symm i') := by classical
 #align orthonormal_basis.reindex_apply OrthonormalBasis.reindex_apply
 -/
 
@@ -698,8 +670,7 @@ protected theorem coe_reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') 
 #print OrthonormalBasis.repr_reindex /-
 @[simp]
 protected theorem repr_reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') (x : E) (i' : ι') :
-    (b.reindex e).repr x i' = b.repr x (e.symm i') := by
-  classical rw [OrthonormalBasis.repr_apply_apply, b.repr_apply_apply, OrthonormalBasis.coe_reindex]
+    (b.reindex e).repr x i' = b.repr x (e.symm i') := by classical
 #align orthonormal_basis.repr_reindex OrthonormalBasis.repr_reindex
 -/
 

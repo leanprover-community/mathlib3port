@@ -214,13 +214,6 @@ def nondegComplex : ChainComplex C ℕ where
       erw [id_comp, HomologicalComplex.d_comp_d_assoc, zero_comp]
     rw [s.decomposition_id] at eq 
     classical
-    rw [Fintype.sum_eq_add_sum_compl (index_set.id (op [j])), add_comp, comp_add, assoc,
-      preadditive.sum_comp, preadditive.comp_sum, Finset.sum_eq_zero, add_zero] at eq 
-    swap
-    · intro A hA
-      simp only [Finset.mem_compl, Finset.mem_singleton] at hA 
-      simp only [assoc, ι_summand_comp_d_comp_π_summand_eq_zero _ _ _ _ hA, comp_zero]
-    rw [Eq, comp_zero]
 #align simplicial_object.splitting.nondeg_complex SimplicialObject.Splitting.nondegComplex
 -/
 

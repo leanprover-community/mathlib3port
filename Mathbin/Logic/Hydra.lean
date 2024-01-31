@@ -67,15 +67,7 @@ variable {r : α → α → Prop}
 #print Relation.cutExpand_le_invImage_lex /-
 theorem cutExpand_le_invImage_lex [hi : IsIrrefl α r] :
     CutExpand r ≤ InvImage (Finsupp.Lex (rᶜ ⊓ (· ≠ ·)) (· < ·)) toFinsupp :=
-  fun s t ⟨u, a, hr, he⟩ => by
-  classical
-  refine' ⟨a, fun b h => _, _⟩ <;> simp_rw [to_finsupp_apply]
-  · apply_fun count b at he ; simp_rw [count_add] at he 
-    convert he <;> convert (add_zero _).symm <;> rw [count_eq_zero] <;> intro hb
-    exacts [h.2 (mem_singleton.1 hb), h.1 (hr b hb)]
-  · apply_fun count a at he ; simp_rw [count_add, count_singleton_self] at he 
-    apply Nat.lt_of_succ_le; convert he.le; convert (add_zero _).symm
-    exact count_eq_zero.2 fun ha => hi.irrefl a <| hr a ha
+  fun s t ⟨u, a, hr, he⟩ => by classical
 #align relation.cut_expand_le_inv_image_lex Relation.cutExpand_le_invImage_lex
 -/
 
@@ -113,10 +105,7 @@ theorem cutExpand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
 -/
 
 #print Relation.not_cutExpand_zero /-
-theorem not_cutExpand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
-  classical
-  rw [cut_expand_iff]
-  rintro ⟨_, _, _, ⟨⟩, _⟩
+theorem not_cutExpand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by classical
 #align relation.not_cut_expand_zero Relation.not_cutExpand_zero
 -/
 
@@ -128,15 +117,6 @@ theorem cutExpand_fibration (r : α → α → Prop) :
   by
   rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩; dsimp at he ⊢
   classical
-  obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
-  rw [add_assoc, mem_add] at ha 
-  obtain h | h := ha
-  · refine' ⟨(s₁.erase a + t, s₂), game_add.fst ⟨t, a, hr, _⟩, _⟩
-    · rw [add_comm, ← add_assoc, singleton_add, cons_erase h]
-    · rw [add_assoc s₁, erase_add_left_pos _ h, add_right_comm, add_assoc]
-  · refine' ⟨(s₁, (s₂ + t).eraseₓ a), game_add.snd ⟨t, a, hr, _⟩, _⟩
-    · rw [add_comm, singleton_add, cons_erase h]
-    · rw [add_assoc, erase_add_right_pos _ h]
 #align relation.cut_expand_fibration Relation.cutExpand_fibration
 -/
 
@@ -164,11 +144,6 @@ theorem Acc.cutExpand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (CutExpand
   induction' hacc with a h ih
   refine' Acc.intro _ fun s => _
   classical
-  rw [cut_expand_iff]
-  rintro ⟨t, a, hr, rfl | ⟨⟨⟩⟩, rfl⟩
-  refine' acc_of_singleton fun a' => _
-  rw [erase_singleton, zero_add]
-  exact ih a' ∘ hr a'
 #align acc.cut_expand Acc.cutExpand
 -/
 

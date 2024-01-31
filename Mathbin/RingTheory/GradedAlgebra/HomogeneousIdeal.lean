@@ -178,18 +178,7 @@ theorem Ideal.isHomogeneous_iff_subset_iInter :
 
 #print Ideal.mul_homogeneous_element_mem_of_mem /-
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : Homogeneous 𝒜 x)
-    (hx₂ : x ∈ I) (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
-  classical
-  rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
-  apply Ideal.sum_mem
-  intro k hk
-  obtain ⟨i, hi⟩ := hx₁
-  have mem₁ : (DirectSum.decompose 𝒜 r k : A) * x ∈ 𝒜 (k + i) :=
-    graded_monoid.mul_mem (SetLike.coe_mem _) hi
-  erw [GradedRing.proj_apply, DirectSum.decompose_of_mem 𝒜 mem₁, coe_of_apply, SetLike.coe_mk]
-  split_ifs
-  · exact I.mul_mem_left _ hx₂
-  · exact I.zero_mem
+    (hx₂ : x ∈ I) (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by classical
 #align ideal.mul_homogeneous_element_mem_of_mem Ideal.mul_homogeneous_element_mem_of_mem
 -/
 
@@ -249,8 +238,6 @@ theorem Ideal.IsHomogeneous.toIdeal_homogeneousCore_eq_self (h : I.Homogeneous �
   apply le_antisymm (I.homogeneous_core'_le 𝒜) _
   intro x hx
   classical
-  rw [← DirectSum.sum_support_decompose 𝒜 x]
-  exact Ideal.sum_mem _ fun j hj => Ideal.subset_span ⟨⟨_, is_homogeneous_coe _⟩, h _ hx, rfl⟩
 #align ideal.is_homogeneous.to_ideal_homogeneous_core_eq_self Ideal.IsHomogeneous.toIdeal_homogeneousCore_eq_self
 -/
 
@@ -670,13 +657,6 @@ theorem Ideal.le_toIdeal_homogeneousHull : I ≤ (Ideal.homogeneousHull 𝒜 I).
   by
   intro r hr
   classical
-  rw [← DirectSum.sum_support_decompose 𝒜 r]
-  refine' Ideal.sum_mem _ _
-  intro j hj
-  apply Ideal.subset_span
-  use j
-  use⟨r, hr⟩
-  rfl
 #align ideal.le_to_ideal_homogeneous_hull Ideal.le_toIdeal_homogeneousHull
 -/
 

@@ -1268,12 +1268,7 @@ theorem restrict_map_withDensity_abs_det_fderiv_eq_addHaar (hs : MeasurableSet s
     Measure.map (s.restrict f) (comap coe (μ.withDensity fun x => ENNReal.ofReal |(f' x).det|)) =
       μ.restrict (f '' s) :=
   by
-  obtain ⟨u, u_meas, uf⟩ : ∃ u, Measurable u ∧ eq_on u f s := by
-    classical
-    refine' ⟨piecewise s f 0, _, piecewise_eq_on _ _ _⟩
-    refine' ContinuousOn.measurable_piecewise _ continuous_zero.continuous_on hs
-    have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
-    exact this.continuous_on
+  obtain ⟨u, u_meas, uf⟩ : ∃ u, Measurable u ∧ eq_on u f s := by classical
   have u' : ∀ x ∈ s, HasFDerivWithinAt u (f' x) s x := fun x hx =>
     (hf' x hx).congr (fun y hy => uf hy) (uf hx)
   set F : s → E := u ∘ coe with hF

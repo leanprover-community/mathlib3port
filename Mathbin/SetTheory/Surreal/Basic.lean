@@ -468,7 +468,7 @@ noncomputable instance : LinearOrderedAddCommGroup Surreal :=
   {
     Surreal.orderedAddCommGroup with
     le_total := by
-      rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> classical skip <;>
+      rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> classical <;>
         exact Classical.or_iff_not_imp_left.2 fun h => (SetTheory.PGame.not_le.1 h).le oy ox
     decidableLe := Classical.decRel _ }
 

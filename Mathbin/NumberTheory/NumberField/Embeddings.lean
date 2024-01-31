@@ -100,9 +100,6 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x�
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)
       (minpoly.natDegree_le hx) (fun z hz => _) i
   classical
-  rw [← Multiset.mem_toFinset] at hz 
-  obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
-  exact h φ
 #align number_field.embeddings.coeff_bdd_of_norm_le NumberField.Embeddings.coeff_bdd_of_norm_le
 -/
 

@@ -683,8 +683,7 @@ protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a 
 -/
 
 #print mul_lt_mul'' /-
-theorem mul_lt_mul'' : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d := by
-  classical exact Decidable.mul_lt_mul''
+theorem mul_lt_mul'' : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d := by classical
 #align mul_lt_mul'' mul_lt_mul''
 -/
 

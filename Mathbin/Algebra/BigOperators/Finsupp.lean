@@ -129,10 +129,7 @@ theorem prod_ite_eq [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M �
 #print Finsupp.sum_ite_self_eq /-
 @[simp]
 theorem sum_ite_self_eq [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α →₀ N) (a : α) :
-    (f.Sum fun x v => ite (a = x) v 0) = f a := by
-  classical
-  convert f.sum_ite_eq a fun x => id
-  simp [ite_eq_right_iff.2 Eq.symm]
+    (f.Sum fun x v => ite (a = x) v 0) = f a := by classical
 #align finsupp.sum_ite_self_eq Finsupp.sum_ite_self_eq
 -/
 
@@ -149,10 +146,7 @@ theorem prod_ite_eq' [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M �
 #print Finsupp.sum_ite_self_eq' /-
 @[simp]
 theorem sum_ite_self_eq' [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α →₀ N) (a : α) :
-    (f.Sum fun x v => ite (x = a) v 0) = f a := by
-  classical
-  convert f.sum_ite_eq' a fun x => id
-  simp [ite_eq_right_iff.2 Eq.symm]
+    (f.Sum fun x v => ite (x = a) v 0) = f a := by classical
 #align finsupp.sum_ite_self_eq' Finsupp.sum_ite_self_eq'
 -/
 
@@ -183,12 +177,7 @@ theorem onFinset_prod {s : Finset α} {f : α → M} {g : α → M → N} (hf : 
 @[to_additive
       " Taking a sum over over `f : α →₀ M` is the same as adding the value on a\nsingle element `y ∈ f.support` to the sum over `erase y f`. "]
 theorem mul_prod_erase (f : α →₀ M) (y : α) (g : α → M → N) (hyf : y ∈ f.support) :
-    g y (f y) * (erase y f).Prod g = f.Prod g := by
-  classical
-  rw [Finsupp.prod, Finsupp.prod, ← Finset.mul_prod_erase _ _ hyf, Finsupp.support_erase,
-    Finset.prod_congr rfl]
-  intro h hx
-  rw [Finsupp.erase_ne (ne_of_mem_erase hx)]
+    g y (f y) * (erase y f).Prod g = f.Prod g := by classical
 #align finsupp.mul_prod_erase Finsupp.mul_prod_erase
 #align finsupp.add_sum_erase Finsupp.add_sum_erase
 -/
@@ -200,11 +189,7 @@ then its product over `f : α →₀ M` is the same as multiplying the value on 
 @[to_additive
       " Generalization of `finsupp.add_sum_erase`: if `g` maps a second argument of 0\nto 0, then its sum over `f : α →₀ M` is the same as adding the value on any element\n`y : α` to the sum over `erase y f`. "]
 theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : ∀ i : α, g i 0 = 1) :
-    g y (f y) * (erase y f).Prod g = f.Prod g := by
-  classical
-  by_cases hyf : y ∈ f.support
-  · exact Finsupp.mul_prod_erase f y g hyf
-  · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
+    g y (f y) * (erase y f).Prod g = f.Prod g := by classical
 #align finsupp.mul_prod_erase' Finsupp.mul_prod_erase'
 #align finsupp.add_sum_erase' Finsupp.add_sum_erase'
 -/
@@ -447,8 +432,7 @@ This is a more specialized version of `finsupp.prod_add_index` with simpler hypo
       "Taking the sum under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism.\nThis is a more specific version of `finsupp.sum_add_index` with simpler hypotheses."]
 theorem prod_add_index' [AddZeroClass M] [CommMonoid N] {f g : α →₀ M} {h : α → M → N}
     (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
-    (f + g).Prod h = f.Prod h * g.Prod h := by
-  classical exact prod_add_index (fun a ha => h_zero a) fun a ha => h_add a
+    (f + g).Prod h = f.Prod h * g.Prod h := by classical
 #align finsupp.prod_add_index' Finsupp.prod_add_index'
 #align finsupp.sum_add_index' Finsupp.sum_add_index'
 -/
@@ -619,17 +603,7 @@ theorem multiset_sum_sum_index [AddCommMonoid M] [AddCommMonoid N] (f : Multiset
 theorem support_sum_eq_biUnion {α : Type _} {ι : Type _} {M : Type _} [DecidableEq α]
     [AddCommMonoid M] {g : ι → α →₀ M} (s : Finset ι)
     (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).support (g i₂).support) :
-    (∑ i in s, g i).support = s.biUnion fun i => (g i).support := by
-  classical
-  apply Finset.induction_on s
-  · simp
-  · intro i s hi
-    simp only [hi, sum_insert, not_false_iff, bUnion_insert]
-    intro hs
-    rw [Finsupp.support_add_eq, hs]
-    rw [hs, Finset.disjoint_biUnion_right]
-    intro j hj
-    refine' h _ _ (ne_of_mem_of_not_mem hj hi).symm
+    (∑ i in s, g i).support = s.biUnion fun i => (g i).support := by classical
 #align finsupp.support_sum_eq_bUnion Finsupp.support_sum_eq_biUnion
 -/
 
@@ -662,8 +636,7 @@ theorem prod_add_index_of_disjoint [AddCommMonoid M] {f1 f2 : α →₀ M}
     fun f1 f2 hd =>
     Finset.prod_congr rfl fun x hx => by
       simp only [not_mem_support_iff.mp (disjoint_left.mp hd hx), add_zero]
-  classical simp_rw [← this hd, ← this hd.symm, add_comm (f2 _), Finsupp.prod, support_add_eq hd,
-    prod_union hd, add_apply]
+  classical
 #align finsupp.prod_add_index_of_disjoint Finsupp.prod_add_index_of_disjoint
 #align finsupp.sum_add_index_of_disjoint Finsupp.sum_add_index_of_disjoint
 -/
@@ -673,11 +646,6 @@ theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoid M] [CommMonoid N] {f1 f2 :
     {g1 g2 : α → M → N} (h1 : f1.support ⊆ f2.support)
     (h2 : ∀ a : α, a ∈ f1.support → g1 a (f1 a) ∣ g2 a (f2 a)) : f1.Prod g1 ∣ f2.Prod g2 := by
   classical
-  simp only [Finsupp.prod, Finsupp.prod_mul]
-  rw [← sdiff_union_of_subset h1, prod_union sdiff_disjoint]
-  apply dvd_mul_of_dvd_right
-  apply prod_dvd_prod_of_dvd
-  exact h2
 #align finsupp.prod_dvd_prod_of_subset_of_dvd Finsupp.prod_dvd_prod_of_subset_of_dvd
 -/
 

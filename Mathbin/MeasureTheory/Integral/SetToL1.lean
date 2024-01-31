@@ -1899,28 +1899,7 @@ theorem continuous_setToFun (hT : DominatedFinMeasAdditive μ T C) :
 theorem tendsto_setToFun_of_L1 (hT : DominatedFinMeasAdditive μ T C) {ι} (f : α → E)
     (hfi : Integrable f μ) {fs : ι → α → E} {l : Filter ι} (hfsi : ∀ᶠ i in l, Integrable (fs i) μ)
     (hfs : Tendsto (fun i => ∫⁻ x, ‖fs i x - f x‖₊ ∂μ) l (𝓝 0)) :
-    Tendsto (fun i => setToFun μ T hT (fs i)) l (𝓝 <| setToFun μ T hT f) := by
-  classical
-  let f_lp := hfi.to_L1 f
-  let F_lp i := if hFi : integrable (fs i) μ then hFi.toL1 (fs i) else 0
-  have tendsto_L1 : tendsto F_lp l (𝓝 f_lp) :=
-    by
-    rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
-    simp_rw [snorm_one_eq_lintegral_nnnorm, Pi.sub_apply]
-    refine' (tendsto_congr' _).mp hfs
-    filter_upwards [hfsi] with i hi
-    refine' lintegral_congr_ae _
-    filter_upwards [hi.coe_fn_to_L1, hfi.coe_fn_to_L1] with x hxi hxf
-    simp_rw [F_lp, dif_pos hi, hxi, hxf]
-  suffices tendsto (fun i => set_to_fun μ T hT (F_lp i)) l (𝓝 (set_to_fun μ T hT f))
-    by
-    refine' (tendsto_congr' _).mp this
-    filter_upwards [hfsi] with i hi
-    suffices h_ae_eq : F_lp i =ᵐ[μ] fs i; exact set_to_fun_congr_ae hT h_ae_eq
-    simp_rw [F_lp, dif_pos hi]
-    exact hi.coe_fn_to_L1
-  rw [set_to_fun_congr_ae hT hfi.coe_fn_to_L1.symm]
-  exact ((continuous_set_to_fun hT).Tendsto f_lp).comp tendsto_L1
+    Tendsto (fun i => setToFun μ T hT (fs i)) l (𝓝 <| setToFun μ T hT f) := by classical
 #align measure_theory.tendsto_set_to_fun_of_L1 MeasureTheory.tendsto_setToFun_of_L1
 -/
 

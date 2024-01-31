@@ -243,27 +243,7 @@ theorem duplicate_iff_exists_distinct_nthLe {l : List α} {x : α} :
     l.Duplicate x ↔
       ∃ (n : ℕ) (hn : n < l.length) (m : ℕ) (hm : m < l.length) (h : n < m),
         x = l.nthLe n hn ∧ x = l.nthLe m hm :=
-  by
-  classical
-  rw [duplicate_iff_two_le_count, le_count_iff_replicate_sublist,
-    sublist_iff_exists_fin_order_embedding_nth_le_eq]
-  constructor
-  · rintro ⟨f, hf⟩
-    refine' ⟨f ⟨0, by simp⟩, Fin.is_lt _, f ⟨1, by simp⟩, Fin.is_lt _, by simp, _, _⟩
-    · simpa using hf ⟨0, by simp⟩
-    · simpa using hf ⟨1, by simp⟩
-  · rintro ⟨n, hn, m, hm, hnm, h, h'⟩
-    refine' ⟨OrderEmbedding.ofStrictMono (fun i => if (i : ℕ) = 0 then ⟨n, hn⟩ else ⟨m, hm⟩) _, _⟩
-    · rintro ⟨⟨_ | i⟩, hi⟩ ⟨⟨_ | j⟩, hj⟩
-      · simp
-      · simp [hnm]
-      · simp
-      · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iff, replicate, length, nonpos_iff_eq_zero] at
-          hi hj 
-        simp [hi, hj]
-    · rintro ⟨⟨_ | i⟩, hi⟩
-      · simpa using h
-      · simpa using h'
+  by classical
 #align list.duplicate_iff_exists_distinct_nth_le List.duplicate_iff_exists_distinct_nthLe
 -/
 

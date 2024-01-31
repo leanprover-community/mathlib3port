@@ -840,13 +840,7 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
         · exfalso; apply H; rw [← hij, hi]; ext
           rw [coe_add, coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
         · exact MulZeroClass.zero_mul _
-      ·
-        classical
-        contrapose! H
-        ext t
-        by_cases hst : s = t
-        · subst t; simpa using tsub_add_cancel_of_le H
-        · simp [Finsupp.single_apply, hst]
+      · classical
 #align mv_power_series.X_pow_dvd_iff MvPowerSeries.X_pow_dvd_iff
 -/
 
@@ -1890,9 +1884,6 @@ theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} :
   by
   convert @MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ; apply propext
   classical
-  constructor <;> intro h m hm
-  · rw [Finsupp.unique_single m]; convert h _ hm
-  · apply h; simpa only [Finsupp.single_eq_same] using hm
 #align power_series.X_pow_dvd_iff PowerSeries.X_pow_dvd_iff
 -/
 

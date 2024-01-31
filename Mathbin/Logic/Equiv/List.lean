@@ -171,8 +171,7 @@ def Fintype.truncEncodable (α : Type _) [DecidableEq α] [Fintype α] : Trunc (
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
 It is not made into a global instance, since it involves an arbitrary choice.
 This can be locally made into an instance with `local attribute [instance] fintype.to_encodable`. -/
-noncomputable def Fintype.toEncodable (α : Type _) [Fintype α] : Encodable α := by
-  classical exact (Fintype.truncEncodable α).out
+noncomputable def Fintype.toEncodable (α : Type _) [Fintype α] : Encodable α := by classical
 #align fintype.to_encodable Fintype.toEncodable
 -/
 

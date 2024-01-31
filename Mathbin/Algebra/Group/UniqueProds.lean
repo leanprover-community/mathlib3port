@@ -160,10 +160,7 @@ See `unique_mul.mul_hom_image_iff` for a version with swapped bundling. -/
 @[to_additive
       "`unique_add` is preserved under embeddings that are additive.\n\nSee `unique_add.add_hom_image_iff` for a version with swapped bundling."]
 theorem mulHom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
-    UniqueMul (A.map f) (B.map f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
-  classical convert mul_hom_image_iff ⟨f, mul⟩ f.2 <;>
-    · ext
-      simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
+    UniqueMul (A.map f) (B.map f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by classical
 #align unique_mul.mul_hom_map_iff UniqueMul.mulHom_map_iff
 #align unique_add.add_hom_map_iff UniqueAdd.addHom_map_iff
 -/

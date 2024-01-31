@@ -204,11 +204,6 @@ theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
   rw [disjoint_iff_inf_le]
   refine' le_trans (le_iInf fun i => _) infi_ker_lapply_le_bot
   classical
-  by_cases his : i ∈ s
-  · by_cases hit : i ∈ t
-    · exact (hs.le_bot ⟨his, hit⟩).elim
-    exact inf_le_of_right_le (iInf_le_of_le i <| iInf_le _ hit)
-  exact inf_le_of_left_le (iInf_le_of_le i <| iInf_le _ his)
 #align finsupp.disjoint_lsingle_lsingle Finsupp.disjoint_lsingle_lsingle
 -/
 

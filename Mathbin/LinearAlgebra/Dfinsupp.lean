@@ -416,24 +416,7 @@ open scoped BigOperators
 
 #print Submodule.mem_iSup_finset_iff_exists_sum /-
 theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
-    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, ∑ i in s, (μ i : N) = a := by
-  classical
-  rw [Submodule.mem_iSup_iff_exists_dfinsupp']
-  constructor <;> rintro ⟨μ, hμ⟩
-  · use fun i => ⟨μ i, (iSup_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
-    rw [← hμ]; symm; apply Finset.sum_subset
-    · intro x; contrapose; intro hx
-      rw [mem_support_iff, not_ne_iff]
-      ext; rw [coe_zero, ← mem_bot R]; convert coe_mem (μ x)
-      symm; exact iSup_neg hx
-    · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx ; rw [hx]; rfl
-  · refine' ⟨DFinsupp.mk s _, _⟩
-    · rintro ⟨i, hi⟩; refine' ⟨μ i, _⟩
-      rw [iSup_pos]; · exact coe_mem _; · exact hi
-    simp only [DFinsupp.sum]
-    rw [Finset.sum_subset support_mk_subset, ← hμ]
-    exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
-    · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx ; rw [hx]; rfl
+    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, ∑ i in s, (μ i : N) = a := by classical
 #align submodule.mem_supr_finset_iff_exists_sum Submodule.mem_iSup_finset_iff_exists_sum
 -/
 
@@ -592,20 +575,7 @@ forms a linearly independent family.
 See also `complete_lattice.independent.linear_independent'`. -/
 theorem Independent.linearIndependent [NoZeroSMulDivisors R N] (p : ι → Submodule R N)
     (hp : Independent p) {v : ι → N} (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) :
-    LinearIndependent R v := by
-  classical
-  rw [linearIndependent_iff]
-  intro l hl
-  let a :=
-    DFinsupp.mapRange.linearMap (fun i => LinearMap.toSpanSingleton R (p i) ⟨v i, hv i⟩)
-      l.to_dfinsupp
-  have ha : a = 0 := by
-    apply hp.dfinsupp_lsum_injective
-    rwa [← lsum_comp_map_range_to_span_singleton _ hv] at hl 
-  ext i
-  apply smul_left_injective R (hv' i)
-  have : l i • v i = a i := rfl
-  simp [this, ha]
+    LinearIndependent R v := by classical
 #align complete_lattice.independent.linear_independent CompleteLattice.Independent.linearIndependent
 -/
 

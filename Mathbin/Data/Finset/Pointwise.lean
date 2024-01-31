@@ -1507,8 +1507,7 @@ variable [Group α] {s t : Finset α} {a b : α}
 #print Finset.preimage_mul_left_singleton /-
 @[simp, to_additive]
 theorem preimage_mul_left_singleton :
-    preimage {b} ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹ * b} := by
-  classical rw [← image_mul_left', image_singleton]
+    preimage {b} ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹ * b} := by classical
 #align finset.preimage_mul_left_singleton Finset.preimage_mul_left_singleton
 #align finset.preimage_add_left_singleton Finset.preimage_add_left_singleton
 -/
@@ -1516,8 +1515,7 @@ theorem preimage_mul_left_singleton :
 #print Finset.preimage_mul_right_singleton /-
 @[simp, to_additive]
 theorem preimage_mul_right_singleton :
-    preimage {b} (· * a) ((mul_left_injective _).InjOn _) = {b * a⁻¹} := by
-  classical rw [← image_mul_right', image_singleton]
+    preimage {b} (· * a) ((mul_left_injective _).InjOn _) = {b * a⁻¹} := by classical
 #align finset.preimage_mul_right_singleton Finset.preimage_mul_right_singleton
 #align finset.preimage_add_right_singleton Finset.preimage_add_right_singleton
 -/
@@ -1525,7 +1523,7 @@ theorem preimage_mul_right_singleton :
 #print Finset.preimage_mul_left_one /-
 @[simp, to_additive]
 theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹} :=
-  by classical rw [← image_mul_left', image_one, mul_one]
+  by classical
 #align finset.preimage_mul_left_one Finset.preimage_mul_left_one
 #align finset.preimage_add_left_zero Finset.preimage_add_left_zero
 -/
@@ -1533,7 +1531,7 @@ theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _
 #print Finset.preimage_mul_right_one /-
 @[simp, to_additive]
 theorem preimage_mul_right_one : preimage 1 (· * b) ((mul_left_injective _).InjOn _) = {b⁻¹} := by
-  classical rw [← image_mul_right', image_one, one_mul]
+  classical
 #align finset.preimage_mul_right_one Finset.preimage_mul_right_one
 #align finset.preimage_add_right_zero Finset.preimage_add_right_zero
 -/

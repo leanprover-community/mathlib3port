@@ -70,23 +70,6 @@ theorem image_finset_prod (f : F) (m : Finset ι) (s : ι → Set α) :
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
     a ∈ ∏ i in t, f i ↔ ∃ (g : ι → α) (hg : ∀ {i}, i ∈ t → g i ∈ f i), ∏ i in t, g i = a := by
   classical
-  induction' t using Finset.induction_on with i is hi ih generalizing a
-  · simp_rw [Finset.prod_empty, Set.mem_one]
-    exact ⟨fun h => ⟨fun i => a, fun i => False.elim, h.symm⟩, fun ⟨f, _, hf⟩ => hf.symm⟩
-  rw [Finset.prod_insert hi, Set.mem_mul]
-  simp_rw [Finset.prod_insert hi]
-  simp_rw [ih]
-  constructor
-  · rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
-    refine' ⟨Function.update g i x, fun j hj => _, _⟩
-    obtain rfl | hj := finset.mem_insert.mp hj
-    · rw [Function.update_same]; exact hx
-    · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]; exact hg hj
-    rw [Finset.prod_update_of_not_mem hi, Function.update_same]
-  · rintro ⟨g, hg, rfl⟩
-    exact
-      ⟨g i, is.prod g, hg (is.mem_insert_self _),
-        ⟨g, fun i hi => hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩
 #align set.mem_finset_prod Set.mem_finset_prod
 #align set.mem_finset_sum Set.mem_finset_sum
 -/

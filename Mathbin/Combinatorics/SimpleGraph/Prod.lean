@@ -213,21 +213,13 @@ protected theorem Preconnected.boxProd (hG : G.Preconnected) (hH : H.Preconnecte
 
 #print SimpleGraph.Preconnected.ofBoxProdLeft /-
 protected theorem Preconnected.ofBoxProdLeft [Nonempty β] (h : (G □ H).Preconnected) :
-    G.Preconnected := by
-  classical
-  rintro a₁ a₂
-  obtain ⟨w⟩ := h (a₁, Classical.arbitrary _) (a₂, Classical.arbitrary _)
-  exact ⟨w.of_box_prod_left⟩
+    G.Preconnected := by classical
 #align simple_graph.preconnected.of_box_prod_left SimpleGraph.Preconnected.ofBoxProdLeft
 -/
 
 #print SimpleGraph.Preconnected.ofBoxProdRight /-
 protected theorem Preconnected.ofBoxProdRight [Nonempty α] (h : (G □ H).Preconnected) :
-    H.Preconnected := by
-  classical
-  rintro b₁ b₂
-  obtain ⟨w⟩ := h (Classical.arbitrary _, b₁) (Classical.arbitrary _, b₂)
-  exact ⟨w.of_box_prod_right⟩
+    H.Preconnected := by classical
 #align simple_graph.preconnected.of_box_prod_right SimpleGraph.Preconnected.ofBoxProdRight
 -/
 

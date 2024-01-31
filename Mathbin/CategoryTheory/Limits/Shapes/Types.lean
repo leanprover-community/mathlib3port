@@ -312,47 +312,7 @@ open Function (Injective)
 theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) :=
-  by
-  classical
-  constructor
-  · rintro ⟨h⟩
-    rw [←
-      show _ = c.inl from
-        h.comp_cocone_point_unique_up_to_iso_inv (binary_coproduct_colimit X Y) ⟨walking_pair.left⟩,
-      ←
-      show _ = c.inr from
-        h.comp_cocone_point_unique_up_to_iso_inv (binary_coproduct_colimit X Y)
-          ⟨walking_pair.right⟩]
-    dsimp [binary_coproduct_cocone]
-    refine'
-      ⟨(h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Injective.comp
-          Sum.inl_injective,
-        (h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Injective.comp
-          Sum.inr_injective,
-        _⟩
-    erw [Set.range_comp, ← eq_compl_iff_isCompl, Set.range_comp _ Sum.inr, ←
-      Set.image_compl_eq
-        (h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Bijective]
-    congr 1
-    exact set.compl_range_inr.symm
-  · rintro ⟨h₁, h₂, h₃⟩
-    have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr := by
-      rw [eq_compl_iff_is_compl.mpr h₃.symm]; exact fun _ => or_not
-    refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
-    · intro T f g x
-      exact
-        if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
-        else g ((Equiv.ofInjective _ h₂).symm ⟨x, (this x).resolve_left h⟩)
-    · intro T f g; ext x; dsimp; simp [h₁.eq_iff]
-    · intro T f g; ext x; dsimp
-      simp only [forall_exists_index, Equiv.ofInjective_symm_apply, dif_ctx_congr,
-        dite_eq_right_iff]
-      intro y e
-      have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
-      rw [disjoint_iff.mp h₃.1] at this 
-      exact this.elim
-    · rintro T _ _ m rfl rfl; ext x; dsimp
-      split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
+  by classical
 #align category_theory.limits.types.binary_cofan_is_colimit_iff CategoryTheory.Limits.Types.binaryCofan_isColimit_iff
 -/
 

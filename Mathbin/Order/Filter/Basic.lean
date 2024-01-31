@@ -1892,15 +1892,7 @@ theorem frequently_iSup {p : α → Prop} {fs : β → Filter α} :
 
 #print Filter.Eventually.choice /-
 theorem Eventually.choice {r : α → β → Prop} {l : Filter α} [l.ne_bot] (h : ∀ᶠ x in l, ∃ y, r x y) :
-    ∃ f : α → β, ∀ᶠ x in l, r x (f x) := by
-  classical
-  use fun x =>
-    if hx : ∃ y, r x y then Classical.choose hx
-    else Classical.choose (Classical.choose_spec h.exists)
-  filter_upwards [h]
-  intro x hx
-  rw [dif_pos hx]
-  exact Classical.choose_spec hx
+    ∃ f : α → β, ∀ᶠ x in l, r x (f x) := by classical
 #align filter.eventually.choice Filter.Eventually.choice
 -/
 

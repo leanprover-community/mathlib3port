@@ -468,21 +468,13 @@ open scoped BigOperators
 
 #print TensorProduct.sum_tmul /-
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) :
-    (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
-  classical
-  induction' s using Finset.induction with a s has ih h
-  · simp
-  · simp [Finset.sum_insert has, add_tmul, ih]
+    (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by classical
 #align tensor_product.sum_tmul TensorProduct.sum_tmul
 -/
 
 #print TensorProduct.tmul_sum /-
 theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) :
-    m ⊗ₜ[R] ∑ a in s, n a = ∑ a in s, m ⊗ₜ[R] n a := by
-  classical
-  induction' s using Finset.induction with a s has ih h
-  · simp
-  · simp [Finset.sum_insert has, tmul_add, ih]
+    m ⊗ₜ[R] ∑ a in s, n a = ∑ a in s, m ⊗ₜ[R] n a := by classical
 #align tensor_product.tmul_sum TensorProduct.tmul_sum
 -/
 

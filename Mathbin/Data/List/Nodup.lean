@@ -510,12 +510,7 @@ theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α �
 
 #print List.Nodup.pairwise_of_forall_ne /-
 theorem Nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
-    (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by
-  classical
-  refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
-  intro x hx
-  rw [nodup_iff_count_le_one] at hl 
-  exact absurd (hl x) hx.not_le
+    (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by classical
 #align list.nodup.pairwise_of_forall_ne List.Nodup.pairwise_of_forall_ne
 -/
 

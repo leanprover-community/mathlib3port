@@ -253,8 +253,6 @@ theorem lintegral_nnnorm_condexpL2_indicator_le_real (hs : MeasurableSet s) (hμ
     refine' (@indicator_const_Lp_coe_fn _ _ _ 2 _ _ _ hs hμs (1 : ℝ)).mono fun x hx => _
     rw [hx]
     classical
-    simp_rw [Set.indicator_apply]
-    split_ifs <;> simp
   rw [h_eq, lintegral_indicator _ hs, lintegral_const, measure.restrict_restrict hs]
   simp only [one_mul, Set.univ_inter, MeasurableSet.univ, measure.restrict_apply]
 #align measure_theory.lintegral_nnnorm_condexp_L2_indicator_le_real MeasureTheory.lintegral_nnnorm_condexpL2_indicator_le_real

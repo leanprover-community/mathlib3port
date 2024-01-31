@@ -69,7 +69,7 @@ section Discr
 /-- Given an `A`-algebra `B` and `b`, an `ι`-indexed family of elements of `B`, we define
 `discr A ι b` as the determinant of `trace_matrix A ι b`. -/
 noncomputable def discr (A : Type u) {B : Type v} [CommRing A] [CommRing B] [Algebra A B]
-    [Fintype ι] (b : ι → B) := by classical exact (trace_matrix A b).det
+    [Fintype ι] (b : ι → B) := by classical
 #align algebra.discr Algebra.discr
 -/
 
@@ -86,25 +86,14 @@ section Basic
 #print Algebra.discr_reindex /-
 @[simp]
 theorem discr_reindex (b : Basis ι A B) (f : ι ≃ ι') : discr A (b ∘ ⇑f.symm) = discr A b := by
-  classical rw [← Basis.coe_reindex, discr_def, trace_matrix_reindex, det_reindex_self, ← discr_def]
+  classical
 #align algebra.discr_reindex Algebra.discr_reindex
 -/
 
 #print Algebra.discr_zero_of_not_linearIndependent /-
 /-- If `b` is not linear independent, then `algebra.discr A b = 0`. -/
 theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
-    (hli : ¬LinearIndependent A b) : discr A b = 0 := by
-  classical
-  obtain ⟨g, hg, i, hi⟩ := Fintype.not_linearIndependent_iff.1 hli
-  have : (trace_matrix A b).mulVec g = 0 := by
-    ext i
-    have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by intro j;
-      simp [mul_comm]
-    simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
-      this j, ← map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
-  by_contra h
-  rw [discr_def] at h 
-  simpa [Matrix.eq_zero_of_mulVec_eq_zero h this] using hi
+    (hli : ¬LinearIndependent A b) : discr A b = 0 := by classical
 #align algebra.discr_zero_of_not_linear_independent Algebra.discr_zero_of_not_linearIndependent
 -/
 
@@ -150,10 +139,6 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
       span_eq_top_of_linearIndependent_of_card_eq_finrank b.linear_independent
         (finrank_eq_card_basis b).symm
     classical
-    rw [discr_def, trace_matrix]
-    simp_rw [← Basis.mk_apply b.linear_independent this.ge]
-    rw [← trace_matrix, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
-    exact traceForm_nondegenerate _ _
 #align algebra.discr_not_zero_of_basis Algebra.discr_not_zero_of_basis
 -/
 
@@ -311,8 +296,6 @@ variable {R : Type z} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R 
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
 theorem discr_isIntegral {b : ι → L} (h : ∀ i, IsIntegral R (b i)) : IsIntegral R (discr K b) := by
   classical
-  rw [discr_def]
-  exact IsIntegral.det fun i j => is_integral_trace (IsIntegral.mul (h i) (h j))
 #align algebra.discr_is_integral Algebra.discr_isIntegral
 -/
 
@@ -329,27 +312,6 @@ theorem discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K] {b : Basis �
     convert h' i ((b.index_equiv b').symm j)
     simpa
   classical
-  rw [← (b.reindex (b.index_equiv b')).toMatrix_map_vecMul b', discr_of_matrix_vec_mul, ←
-    one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
-  congr
-  have hint : IsIntegral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det :=
-    IsIntegral.det fun i j => h _ _
-  obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
-  have hunit : IsUnit r :=
-    by
-    have : IsIntegral ℤ (b'.to_matrix (b.reindex (b.index_equiv b'))).det :=
-      IsIntegral.det fun i j => h' _ _
-    obtain ⟨r', hr'⟩ := IsIntegrallyClosed.isIntegral_iff.1 this
-    refine' isUnit_iff_exists_inv.2 ⟨r', _⟩
-    suffices algebraMap ℤ ℚ (r * r') = 1
-      by
-      rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this 
-      exact (IsFractionRing.injective ℤ ℚ) this
-    rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.toMatrix_mul_toMatrix_flip, det_one]
-  rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
-  cases' Int.isUnit_iff.1 hunit with hp hm
-  · simp [hp]
-  · simp [hm]
 #align algebra.discr_eq_discr_of_to_matrix_coeff_is_integral Algebra.discr_eq_discr_of_toMatrix_coeff_isIntegral
 -/
 

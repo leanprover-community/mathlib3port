@@ -372,10 +372,10 @@ theorem sigmaFinsuppEquivDFinsupp_single [DecidableEq ι] [Zero N] (a : Σ i, η
   ext j b
   by_cases h : i = j
   · subst h
-    classical simp [split_apply, Finsupp.single_apply]
+    classical
   suffices Finsupp.single (⟨i, a⟩ : Σ i, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
   have H : (⟨i, a⟩ : Σ i, η i) ≠ ⟨j, b⟩ := by simp [h]
-  classical rw [Finsupp.single_apply, if_neg H]
+  classical
 #align sigma_finsupp_equiv_dfinsupp_single sigmaFinsuppEquivDFinsupp_single
 -/
 

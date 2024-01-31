@@ -135,16 +135,10 @@ instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMin
 -/
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMaxOrder (π i)] : NoMaxOrder (∀ i, π i) :=
-  ⟨fun a => by
-    classical
-    obtain ⟨b, hb⟩ := exists_gt (a <| Classical.arbitrary _)
-    exact ⟨_, lt_update_self_iff.2 hb⟩⟩
+  ⟨fun a => by classical⟩
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMinOrder (π i)] : NoMinOrder (∀ i, π i) :=
-  ⟨fun a => by
-    classical
-    obtain ⟨b, hb⟩ := exists_lt (a <| Classical.arbitrary _)
-    exact ⟨_, update_lt_self_iff.2 hb⟩⟩
+  ⟨fun a => by classical⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) NoMinOrder.to_noBotOrder (α : Type _) [Preorder α] [NoMinOrder α] :

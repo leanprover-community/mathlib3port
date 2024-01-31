@@ -214,18 +214,12 @@ instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
   ⟨by
     rintro _ _ ⟨i, h, hi⟩
     obtain ⟨a, ha₁, ha₂⟩ := exists_between hi
-    classical
-    refine' ⟨a₂.update _ a, ⟨i, fun j hj => _, _⟩, i, fun j hj => _, _⟩
-    rw [h j hj]
-    iterate 2 · rw [a₂.update_noteq hj.ne a]; · rwa [a₂.update_same i a]⟩
+    classical⟩
 
 #print Pi.Lex.noMaxOrder' /-
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :
     NoMaxOrder (Lex (∀ i, β i)) :=
-  ⟨fun a => by
-    classical
-    obtain ⟨b, hb⟩ := exists_gt (a i)
-    exact ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
+  ⟨fun a => by classical⟩
 #align pi.lex.no_max_order' Pi.Lex.noMaxOrder'
 -/
 

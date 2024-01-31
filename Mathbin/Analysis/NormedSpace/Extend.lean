@@ -131,15 +131,6 @@ theorem norm_extendTo𝕜'_bound (fr : F →L[ℝ] ℝ) (x : F) :
   by
   set lm : F →ₗ[𝕜] 𝕜 := fr.to_linear_map.extend_to_𝕜'
   classical
-  by_cases h : lm x = 0
-  · rw [h, norm_zero]
-    apply mul_nonneg <;> exact norm_nonneg _
-  rw [← mul_le_mul_left (norm_pos_iff.2 h), ← sq]
-  calc
-    ‖lm x‖ ^ 2 = fr (conj (lm x : 𝕜) • x) := fr.to_linear_map.norm_extend_to_𝕜'_apply_sq x
-    _ ≤ ‖fr (conj (lm x : 𝕜) • x)‖ := (le_abs_self _)
-    _ ≤ ‖fr‖ * ‖conj (lm x : 𝕜) • x‖ := (le_op_norm _ _)
-    _ = ‖(lm x : 𝕜)‖ * (‖fr‖ * ‖x‖) := by rw [norm_smul, norm_conj, mul_left_comm]
 #align continuous_linear_map.norm_extend_to_𝕜'_bound ContinuousLinearMap.norm_extendTo𝕜'_bound
 -/
 

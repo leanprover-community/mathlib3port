@@ -291,18 +291,7 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs
 theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _} [∀ i, Group (Gs i)]
     (H K : ∀ i, Subgroup (Gs i)) :
     ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
-  by
-  classical
-  apply le_antisymm (commutator_pi_pi_le H K)
-  · rw [pi_le_iff]; intro i hi
-    rw [map_commutator]
-    apply commutator_mono <;>
-      · rw [le_pi_iff]
-        intro j hj
-        rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
-        by_cases h : j = i
-        · subst h; simpa using hx
-        · simp [h, one_mem]
+  by classical
 #align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finite
 -/
 

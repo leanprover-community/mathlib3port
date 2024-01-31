@@ -945,14 +945,14 @@ theorem SetTheory.PGame.inv'_one_equiv : SetTheory.PGame.inv' 1 ≈ 1 :=
 
 /-- The inverse of a pre-game in terms of the inverse on positive pre-games. -/
 noncomputable instance : Inv SetTheory.PGame :=
-  ⟨by classical exact fun x => if x ≈ 0 then 0 else if 0 < x then inv' x else -inv' (-x)⟩
+  ⟨by classical⟩
 
 noncomputable instance : Div SetTheory.PGame :=
   ⟨fun x y => x * y⁻¹⟩
 
 #print SetTheory.PGame.inv_eq_of_equiv_zero /-
 theorem SetTheory.PGame.inv_eq_of_equiv_zero {x : SetTheory.PGame} (h : x ≈ 0) : x⁻¹ = 0 := by
-  classical exact if_pos h
+  classical
 #align pgame.inv_eq_of_equiv_zero SetTheory.PGame.inv_eq_of_equiv_zero
 -/
 
@@ -965,14 +965,13 @@ theorem SetTheory.PGame.inv_zero : (0 : SetTheory.PGame)⁻¹ = 0 :=
 
 #print SetTheory.PGame.inv_eq_of_pos /-
 theorem SetTheory.PGame.inv_eq_of_pos {x : SetTheory.PGame} (h : 0 < x) :
-    x⁻¹ = SetTheory.PGame.inv' x := by classical exact (if_neg h.lf.not_equiv').trans (if_pos h)
+    x⁻¹ = SetTheory.PGame.inv' x := by classical
 #align pgame.inv_eq_of_pos SetTheory.PGame.inv_eq_of_pos
 -/
 
 #print SetTheory.PGame.inv_eq_of_lf_zero /-
 theorem SetTheory.PGame.inv_eq_of_lf_zero {x : SetTheory.PGame} (h : x ⧏ 0) :
-    x⁻¹ = -SetTheory.PGame.inv' (-x) := by
-  classical exact (if_neg h.not_equiv).trans (if_neg h.not_gt)
+    x⁻¹ = -SetTheory.PGame.inv' (-x) := by classical
 #align pgame.inv_eq_of_lf_zero SetTheory.PGame.inv_eq_of_lf_zero
 -/
 

@@ -1398,19 +1398,7 @@ theorem distinctConstantsTheory_eq_iUnion (s : Set α) :
     L.distinctConstantsTheory s =
       ⋃ t : Finset s,
         L.distinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
-  by
-  classical
-  simp only [distinct_constants_theory]
-  rw [← image_Union, ← Union_inter]
-  refine' congr rfl (congr (congr rfl _) rfl)
-  ext ⟨i, j⟩
-  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union,
-    mem_image, Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
-  refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
-  · simp
-  · simp
-  · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
-    exact ⟨is, js⟩
+  by classical
 #align first_order.language.distinct_constants_theory_eq_Union FirstOrder.Language.distinctConstantsTheory_eq_iUnion
 -/
 

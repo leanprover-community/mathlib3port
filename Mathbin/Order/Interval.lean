@@ -711,10 +711,7 @@ end Decidable
 
 #print Interval.disjoint_coe /-
 @[simp, norm_cast]
-theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by
-  classical
-  rw [disjoint_iff_inf_le, disjoint_iff_inf_le, le_eq_subset, ← coe_subset_coe, coe_inf]
-  rfl
+theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by classical
 #align interval.disjoint_coe Interval.disjoint_coe
 -/
 
@@ -774,66 +771,7 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
-noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interval α) := by
-  classical exact
-    { Interval.lattice,
-      Interval.boundedOrder with
-      sSup := fun S =>
-        if h : S ⊆ {⊥} then ⊥
-        else
-          some
-            ⟨⟨⨅ (s : NonemptyInterval α) (h : ↑s ∈ S), s.fst,
-                ⨆ (s : NonemptyInterval α) (h : ↑s ∈ S), s.snd⟩,
-              by
-              obtain ⟨s, hs, ha⟩ := not_subset.1 h
-              lift s to NonemptyInterval α using ha
-              exact iInf₂_le_of_le s hs (le_iSup₂_of_le s hs s.fst_le_snd)⟩
-      le_sup := fun s s ha => by
-        split_ifs
-        · exact (h ha).le
-        cases s
-        · exact bot_le
-        · exact WithBot.some_le_some.2 ⟨iInf₂_le _ ha, le_iSup₂_of_le _ ha le_rfl⟩
-      sup_le := fun s s ha => by
-        split_ifs
-        · exact bot_le
-        obtain ⟨b, hs, hb⟩ := not_subset.1 h
-        lift s to NonemptyInterval α using ne_bot_of_le_ne_bot hb (ha _ hs)
-        exact
-          WithBot.coe_le_coe.2
-            ⟨le_iInf₂ fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).1,
-              iSup₂_le fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).2⟩
-      sInf := fun S =>
-        if h :
-            ⊥ ∉ S ∧
-              ∀ ⦃s : NonemptyInterval α⦄,
-                ↑s ∈ S → ∀ ⦃t : NonemptyInterval α⦄, ↑t ∈ S → s.fst ≤ t.snd then
-          some
-            ⟨⟨⨆ (s : NonemptyInterval α) (h : ↑s ∈ S), s.fst,
-                ⨅ (s : NonemptyInterval α) (h : ↑s ∈ S), s.snd⟩,
-              iSup₂_le fun s hs => le_iInf₂ <| h.2 hs⟩
-        else ⊥
-      inf_le := fun s s ha => by
-        split_ifs
-        · lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h.1
-          exact WithBot.coe_le_coe.2 ⟨le_iSup₂ s ha, iInf₂_le s ha⟩
-        · exact bot_le
-      le_inf := fun S s ha => by
-        cases s
-        · exact bot_le
-        split_ifs
-        ·
-          exact
-            WithBot.some_le_some.2
-              ⟨iSup₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
-                le_iInf₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
-        rw [not_and_or, Classical.not_not] at h 
-        cases h
-        · exact ha _ h
-        cases
-          h fun t hb c hc =>
-            (WithBot.coe_le_coe.1 <| ha _ hb).1.trans <|
-              s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
+noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interval α) := by classical
 
 #print Interval.coe_sInf /-
 @[simp, norm_cast]

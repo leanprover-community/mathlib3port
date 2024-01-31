@@ -171,9 +171,7 @@ variable [CanonicallyOrderedAddCommMonoid α] [LocallyFiniteOrder α]
 variable (f : ι →₀ α)
 
 #print Finsupp.card_Iic /-
-theorem card_Iic : (Iic f).card = ∏ i in f.support, (Iic (f i)).card := by
-  classical simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union,
-    zero_apply, bot_eq_zero]
+theorem card_Iic : (Iic f).card = ∏ i in f.support, (Iic (f i)).card := by classical
 #align finsupp.card_Iic Finsupp.card_Iic
 -/
 

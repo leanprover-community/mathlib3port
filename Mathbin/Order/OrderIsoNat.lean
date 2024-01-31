@@ -140,12 +140,7 @@ def orderEmbeddingOfSet [DecidablePred (· ∈ s)] : ℕ ↪o ℕ :=
 #print Nat.Subtype.orderIsoOfNat /-
 /-- `nat.subtype.of_nat` as an order isomorphism between `ℕ` and an infinite subset. See also
 `nat.nth` for a version where the subset may be finite. -/
-noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
-  classical exact
-    RelIso.ofSurjective
-      (RelEmbedding.orderEmbeddingOfLTEmbedding
-        (RelEmbedding.natLT (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
-      Nat.Subtype.ofNat_surjective
+noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by classical
 #align nat.subtype.order_iso_of_nat Nat.Subtype.orderIsoOfNat
 -/
 
@@ -184,14 +179,7 @@ theorem orderEmbeddingOfSet_range [DecidablePred (· ∈ s)] :
 
 #print Nat.exists_subseq_of_forall_mem_union /-
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
-    ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
-  classical
-  have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
-    simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
-      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
-  cases this
-  exacts [⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
-    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
+    ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by classical
 #align nat.exists_subseq_of_forall_mem_union Nat.exists_subseq_of_forall_mem_union
 -/
 
@@ -201,40 +189,7 @@ end Nat
 theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ,
       (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
-  by
-  classical
-  let bad : Set ℕ := {m | ∀ n, m < n → ¬r (f m) (f n)}
-  by_cases hbad : Infinite bad
-  · haveI := hbad
-    refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
-    have h := Set.mem_range_self m
-    rw [Nat.orderEmbeddingOfSet_range bad] at h 
-    exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
-  · rw [Set.infinite_coe_iff, Set.Infinite, Classical.not_not] at hbad 
-    obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad :=
-      by
-      by_cases he : hbad.to_finset.nonempty
-      ·
-        refine'
-          ⟨(hbad.to_finset.max' he).succ, fun n hn nbad =>
-            Nat.not_succ_le_self _
-              (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
-      · exact ⟨0, fun n hn nbad => he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩
-    have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) :=
-      by
-      intro n
-      have h := hm _ (le_add_of_nonneg_left n.zero_le)
-      simp only [exists_prop, Classical.not_not, Set.mem_setOf_eq, Classical.not_forall] at h 
-      obtain ⟨n', hn1, hn2⟩ := h
-      obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
-      refine' ⟨n + x, add_lt_add_left hpos n, _⟩
-      rw [add_assoc, add_comm x m, ← add_assoc]
-      exact hn2
-    let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.find (h gn)
-    exact
-      ⟨(RelEmbedding.natLT (fun n => g' n + m) fun n =>
-            Nat.add_lt_add_right (Nat.find_spec (h (g' n))).1 m).orderEmbeddingOfLTEmbedding,
-        Or.intro_left _ fun n => (Nat.find_spec (h (g' n))).2⟩
+  by classical
 #align exists_increasing_or_nonincreasing_subseq' exists_increasing_or_nonincreasing_subseq'
 -/
 

@@ -113,12 +113,6 @@ theorem homogeneousSubmodule_mul [CommSemiring R] (m n : ℕ) :
   specialize hφ aux.1; specialize hψ aux.2
   rw [Finsupp.mem_antidiagonal] at hde 
   classical
-  have hd' : d.support ⊆ d.support ∪ e.support := Finset.subset_union_left _ _
-  have he' : e.support ⊆ d.support ∪ e.support := Finset.subset_union_right _ _
-  rw [← hde, ← hφ, ← hψ, Finset.sum_subset Finsupp.support_add, Finset.sum_subset hd',
-    Finset.sum_subset he', ← Finset.sum_add_distrib]
-  · congr
-  all_goals intro i hi; apply finsupp.not_mem_support_iff.mp
 #align mv_polynomial.homogeneous_submodule_mul MvPolynomial.homogeneousSubmodule_mul
 -/
 
@@ -133,10 +127,6 @@ theorem isHomogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : ∑ i
     IsHomogeneous (monomial d r) n := by
   intro c hc
   classical
-  rw [coeff_monomial] at hc 
-  split_ifs at hc  with h
-  · subst c; exact hn
-  · contradiction
 #align mv_polynomial.is_homogeneous_monomial MvPolynomial.isHomogeneous_monomial
 -/
 
@@ -195,7 +185,7 @@ variable [CommSemiring R] {φ ψ : MvPolynomial σ R} {m n : ℕ}
 theorem coeff_eq_zero (hφ : IsHomogeneous φ n) (d : σ →₀ ℕ) (hd : ∑ i in d.support, d i ≠ n) :
     coeff d φ = 0 := by
   have aux := mt (@hφ d) hd
-  classical rwa [Classical.not_not] at aux 
+  classical
 #align mv_polynomial.is_homogeneous.coeff_eq_zero MvPolynomial.IsHomogeneous.coeff_eq_zero
 -/
 
@@ -230,14 +220,6 @@ theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneou
 theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
     (h : ∀ i ∈ s, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
   classical
-  revert h
-  apply Finset.induction_on s
-  · intro; simp only [is_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
-  · intro i s his IH h
-    simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
-    apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
-    intro j hjs
-    exact h j (Finset.mem_insert_of_mem hjs)
 #align mv_polynomial.is_homogeneous.prod MvPolynomial.IsHomogeneous.prod
 -/
 
@@ -329,9 +311,7 @@ theorem homogeneousComponent_zero : homogeneousComponent 0 φ = C (coeff 0 φ) :
   by
   ext1 d
   rcases em (d = 0) with (rfl | hd)
-  ·
-    classical simp only [coeff_homogeneous_component, sum_eq_zero_iff, Finsupp.zero_apply, if_true,
-      coeff_C, eq_self_iff_true, forall_true_iff]
+  · classical
   · rw [coeff_homogeneous_component, if_neg, coeff_C, if_neg (Ne.symm hd)]
     simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd 
     simp [hd]

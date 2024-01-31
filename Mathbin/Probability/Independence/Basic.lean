@@ -325,30 +325,7 @@ section FromIndepToIndep
 
 #print ProbabilityTheory.iIndepSets.indepSets /-
 theorem iIndepSets.indepSets {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ : Measure Ω}
-    (h_indep : iIndepSets s μ) {i j : ι} (hij : i ≠ j) : IndepSets (s i) (s j) μ := by
-  classical
-  intro t₁ t₂ ht₁ ht₂
-  have hf_m : ∀ x : ι, x ∈ {i, j} → ite (x = i) t₁ t₂ ∈ s x :=
-    by
-    intro x hx
-    cases' finset.mem_insert.mp hx with hx hx
-    · simp [hx, ht₁]
-    · simp [finset.mem_singleton.mp hx, hij.symm, ht₂]
-  have h1 : t₁ = ite (i = i) t₁ t₂ := by simp only [if_true, eq_self_iff_true]
-  have h2 : t₂ = ite (j = i) t₁ t₂ := by simp only [hij.symm, if_false]
-  have h_inter :
-    (⋂ (t : ι) (H : t ∈ ({i, j} : Finset ι)), ite (t = i) t₁ t₂) =
-      ite (i = i) t₁ t₂ ∩ ite (j = i) t₁ t₂ :=
-    by simp only [Finset.set_biInter_singleton, Finset.set_biInter_insert]
-  have h_prod :
-    ∏ t : ι in ({i, j} : Finset ι), μ (ite (t = i) t₁ t₂) =
-      μ (ite (i = i) t₁ t₂) * μ (ite (j = i) t₁ t₂) :=
-    by
-    simp only [hij, Finset.prod_singleton, Finset.prod_insert, not_false_iff, Finset.mem_singleton]
-  rw [h1]
-  nth_rw 2 [h2]
-  nth_rw 4 [h2]
-  rw [← h_inter, ← h_prod, h_indep {i, j} hf_m]
+    (h_indep : iIndepSets s μ) {i j : ι} (hij : i ≠ j) : IndepSets (s i) (s j) μ := by classical
 #align probability_theory.Indep_sets.indep_sets ProbabilityTheory.iIndepSets.indepSets
 -/
 
@@ -467,41 +444,6 @@ theorem indepSets_piiUnionInter_of_disjoint [IsProbabilityMeasure μ] {s : ι �
   by
   rintro t1 t2 ⟨p1, hp1, f1, ht1_m, ht1_eq⟩ ⟨p2, hp2, f2, ht2_m, ht2_eq⟩
   classical
-  let g i := ite (i ∈ p1) (f1 i) Set.univ ∩ ite (i ∈ p2) (f2 i) Set.univ
-  have h_P_inter : μ (t1 ∩ t2) = ∏ n in p1 ∪ p2, μ (g n) :=
-    by
-    have hgm : ∀ i ∈ p1 ∪ p2, g i ∈ s i :=
-      by
-      intro i hi_mem_union
-      rw [Finset.mem_union] at hi_mem_union 
-      cases' hi_mem_union with hi1 hi2
-      · have hi2 : i ∉ p2 := fun hip2 => set.disjoint_left.mp hST (hp1 hi1) (hp2 hip2)
-        simp_rw [g, if_pos hi1, if_neg hi2, Set.inter_univ]
-        exact ht1_m i hi1
-      · have hi1 : i ∉ p1 := fun hip1 => set.disjoint_right.mp hST (hp2 hi2) (hp1 hip1)
-        simp_rw [g, if_neg hi1, if_pos hi2, Set.univ_inter]
-        exact ht2_m i hi2
-    have h_p1_inter_p2 :
-      ((⋂ x ∈ p1, f1 x) ∩ ⋂ x ∈ p2, f2 x) =
-        ⋂ i ∈ p1 ∪ p2, ite (i ∈ p1) (f1 i) Set.univ ∩ ite (i ∈ p2) (f2 i) Set.univ :=
-      by
-      ext1 x
-      simp only [Set.mem_ite_univ_right, Set.mem_inter_iff, Set.mem_iInter, Finset.mem_union]
-      exact
-        ⟨fun h i _ => ⟨h.1 i, h.2 i⟩, fun h =>
-          ⟨fun i hi => (h i (Or.inl hi)).1 hi, fun i hi => (h i (Or.inr hi)).2 hi⟩⟩
-    rw [ht1_eq, ht2_eq, h_p1_inter_p2, ← h_indep _ hgm]
-  have h_μg : ∀ n, μ (g n) = ite (n ∈ p1) (μ (f1 n)) 1 * ite (n ∈ p2) (μ (f2 n)) 1 :=
-    by
-    intro n
-    simp_rw [g]
-    split_ifs
-    · exact absurd rfl (set.disjoint_iff_forall_ne.mp hST _ (hp1 h) _ (hp2 h_1))
-    all_goals simp only [measure_univ, one_mul, mul_one, Set.inter_univ, Set.univ_inter]
-  simp_rw [h_P_inter, h_μg, Finset.prod_mul_distrib,
-    Finset.prod_ite_mem (p1 ∪ p2) p1 fun x => μ (f1 x), Finset.union_inter_cancel_left,
-    Finset.prod_ite_mem (p1 ∪ p2) p2 fun x => μ (f2 x), Finset.union_inter_cancel_right, ht1_eq, ←
-    h_indep p1 ht1_m, ht2_eq, ← h_indep p2 ht2_m]
 #align probability_theory.indep_sets_pi_Union_Inter_of_disjoint ProbabilityTheory.indepSets_piiUnionInter_of_disjoint
 -/
 
@@ -519,7 +461,7 @@ theorem iIndepSet.indep_generateFrom_of_disjoint [IsProbabilityMeasure μ] {s : 
   · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
   · exact isPiSystem_piiUnionInter _ (fun k => IsPiSystem.singleton _) _
   · exact isPiSystem_piiUnionInter _ (fun k => IsPiSystem.singleton _) _
-  · classical exact indep_sets_pi_Union_Inter_of_disjoint (Indep.Indep_sets (fun n => rfl) hs) hST
+  · classical
 #align probability_theory.Indep_set.indep_generate_from_of_disjoint ProbabilityTheory.iIndepSet.indep_generateFrom_of_disjoint
 -/
 
@@ -534,7 +476,7 @@ theorem indep_iSup_of_disjoint [IsProbabilityMeasure μ] {m : ι → MeasurableS
       (generateFrom_piiUnionInter_measurableSet m T).symm _
   · exact isPiSystem_piiUnionInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
   · exact isPiSystem_piiUnionInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
-  · classical exact indep_sets_pi_Union_Inter_of_disjoint h_indep hST
+  · classical
 #align probability_theory.indep_supr_of_disjoint ProbabilityTheory.indep_iSup_of_disjoint
 -/
 
@@ -620,35 +562,6 @@ theorem iIndepSets.piiUnionInter_of_not_mem {π : ι → Set (Set Ω)} {a : ι} 
   rintro t1 t2 ⟨s, hs_mem, ft1, hft1_mem, ht1_eq⟩ ht2_mem_pia
   rw [Finset.coe_subset] at hs_mem 
   classical
-  let f n := ite (n = a) t2 (ite (n ∈ s) (ft1 n) Set.univ)
-  have h_f_mem : ∀ n ∈ insert a s, f n ∈ π n :=
-    by
-    intro n hn_mem_insert
-    simp_rw [f]
-    cases' finset.mem_insert.mp hn_mem_insert with hn_mem hn_mem
-    · simp [hn_mem, ht2_mem_pia]
-    · have hn_ne_a : n ≠ a := by rintro rfl; exact haS (hs_mem hn_mem)
-      simp [hn_ne_a, hn_mem, hft1_mem n hn_mem]
-  have h_f_mem_pi : ∀ n ∈ s, f n ∈ π n := fun x hxS => h_f_mem x (by simp [hxS])
-  have h_t1 : t1 = ⋂ n ∈ s, f n :=
-    by
-    suffices h_forall : ∀ n ∈ s, f n = ft1 n
-    · rw [ht1_eq]
-      congr with (n x)
-      congr with (hns y)
-      simp only [(h_forall n hns).symm]
-    intro n hnS
-    have hn_ne_a : n ≠ a := by rintro rfl; exact haS (hs_mem hnS)
-    simp_rw [f, if_pos hnS, if_neg hn_ne_a]
-  have h_μ_t1 : μ t1 = ∏ n in s, μ (f n) := by rw [h_t1, ← hp_ind s h_f_mem_pi]
-  have h_t2 : t2 = f a := by simp_rw [f]; simp
-  have h_μ_inter : μ (t1 ∩ t2) = ∏ n in insert a s, μ (f n) :=
-    by
-    have h_t1_inter_t2 : t1 ∩ t2 = ⋂ n ∈ insert a s, f n := by
-      rw [h_t1, h_t2, Finset.set_biInter_insert, Set.inter_comm]
-    rw [h_t1_inter_t2, ← hp_ind (insert a s) h_f_mem]
-  have has : a ∉ s := fun has_mem => haS (hs_mem Membership)
-  rw [h_μ_inter, Finset.prod_insert has, h_t2, mul_comm, h_μ_t1]
 #align probability_theory.Indep_sets.pi_Union_Inter_of_not_mem ProbabilityTheory.iIndepSets.piiUnionInter_of_not_mem
 -/
 
@@ -658,30 +571,6 @@ theorem iIndepSets.iIndep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace 
     (h_le : ∀ i, m i ≤ m0) (π : ι → Set (Set Ω)) (h_pi : ∀ n, IsPiSystem (π n))
     (h_generate : ∀ i, m i = generateFrom (π i)) (h_ind : iIndepSets π μ) : iIndep m μ := by
   classical
-  refine' Finset.induction _ _
-  ·
-    simp only [measure_univ, imp_true_iff, Set.iInter_false, Set.iInter_univ, Finset.prod_empty,
-      eq_self_iff_true]
-  intro a S ha_notin_S h_rec f hf_m
-  have hf_m_S : ∀ x ∈ S, measurable_set[m x] (f x) := fun x hx => hf_m x (by simp [hx])
-  rw [Finset.set_biInter_insert, Finset.prod_insert ha_notin_S, ← h_rec hf_m_S]
-  let p := piiUnionInter π S
-  set m_p := generate_from p with hS_eq_generate
-  have h_indep : indep m_p (m a) μ :=
-    by
-    have hp : IsPiSystem p := isPiSystem_piiUnionInter π h_pi S
-    have h_le' : ∀ i, generate_from (π i) ≤ m0 := fun i => (h_generate i).symm.trans_le (h_le i)
-    have hm_p : m_p ≤ m0 := generateFrom_piiUnionInter_le π h_le' S
-    exact
-      indep_sets.indep hm_p (h_le a) hp (h_pi a) hS_eq_generate (h_generate a)
-        (h_ind.pi_Union_Inter_of_not_mem ha_notin_S)
-  refine' h_indep.symm (f a) (⋂ n ∈ S, f n) (hf_m a (Finset.mem_insert_self a S)) _
-  have h_le_p : ∀ i ∈ S, m i ≤ m_p := by
-    intro n hn
-    rw [hS_eq_generate, h_generate n]
-    exact le_generateFrom_piiUnionInter S hn
-  have h_S_f : ∀ i ∈ S, measurable_set[m_p] (f i) := fun i hi => (h_le_p i hi) (f i) (hf_m_S i hi)
-  exact S.measurable_set_bInter h_S_f
 #align probability_theory.Indep_sets.Indep ProbabilityTheory.iIndepSets.iIndep
 -/
 
@@ -844,31 +733,6 @@ theorem iIndepFun_iff_measure_inter_preimage_eq_mul {ι : Type _} {β : ι → T
   refine' ⟨fun h S sets h_meas => h _ fun i hi_mem => ⟨sets i, h_meas i hi_mem, rfl⟩, _⟩
   intro h S setsΩ h_meas
   classical
-  let setsβ : ∀ i : ι, Set (β i) := fun i =>
-    dite (i ∈ S) (fun hi_mem => (h_meas i hi_mem).some) fun _ => Set.univ
-  have h_measβ : ∀ i ∈ S, measurable_set[m i] (setsβ i) :=
-    by
-    intro i hi_mem
-    simp_rw [setsβ, dif_pos hi_mem]
-    exact (h_meas i hi_mem).choose_spec.1
-  have h_preim : ∀ i ∈ S, setsΩ i = f i ⁻¹' setsβ i :=
-    by
-    intro i hi_mem
-    simp_rw [setsβ, dif_pos hi_mem]
-    exact (h_meas i hi_mem).choose_spec.2.symm
-  have h_left_eq : μ (⋂ i ∈ S, setsΩ i) = μ (⋂ i ∈ S, f i ⁻¹' setsβ i) :=
-    by
-    congr with (i x)
-    simp only [Set.mem_iInter]
-    constructor <;> intro h hi_mem <;> specialize h hi_mem
-    · rwa [h_preim i hi_mem] at h 
-    · rwa [h_preim i hi_mem]
-  have h_right_eq : ∏ i in S, μ (setsΩ i) = ∏ i in S, μ (f i ⁻¹' setsβ i) :=
-    by
-    refine' Finset.prod_congr rfl fun i hi_mem => _
-    rw [h_preim i hi_mem]
-  rw [h_left_eq, h_right_eq]
-  exact h S h_measβ
 #align probability_theory.Indep_fun_iff_measure_inter_preimage_eq_mul ProbabilityTheory.iIndepFun_iff_measure_inter_preimage_eq_mul
 -/
 
@@ -957,63 +821,6 @@ theorem iIndepFun.indepFun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
   simp only [Set.mem_univ_pi, Set.mem_setOf_eq] at hs1 ht1 
   rw [← hs2, ← ht2]
   classical
-  let sets_s' : ∀ i : ι, Set (β i) := fun i =>
-    dite (i ∈ S) (fun hi => sets_s ⟨i, hi⟩) fun _ => Set.univ
-  have h_sets_s'_eq : ∀ {i} (hi : i ∈ S), sets_s' i = sets_s ⟨i, hi⟩ := by intro i hi;
-    simp_rw [sets_s', dif_pos hi]
-  have h_sets_s'_univ : ∀ {i} (hi : i ∈ T), sets_s' i = Set.univ := by intro i hi;
-    simp_rw [sets_s', dif_neg (finset.disjoint_right.mp hST hi)]
-  let sets_t' : ∀ i : ι, Set (β i) := fun i =>
-    dite (i ∈ T) (fun hi => sets_t ⟨i, hi⟩) fun _ => Set.univ
-  have h_sets_t'_univ : ∀ {i} (hi : i ∈ S), sets_t' i = Set.univ := by intro i hi;
-    simp_rw [sets_t', dif_neg (finset.disjoint_left.mp hST hi)]
-  have h_meas_s' : ∀ i ∈ S, MeasurableSet (sets_s' i) := by intro i hi; rw [h_sets_s'_eq hi];
-    exact hs1 _
-  have h_meas_t' : ∀ i ∈ T, MeasurableSet (sets_t' i) := by intro i hi;
-    simp_rw [sets_t', dif_pos hi]; exact ht1 _
-  have h_eq_inter_S :
-    (fun (ω : Ω) (i : ↥S) => f (↑i) ω) ⁻¹' Set.pi Set.univ sets_s = ⋂ i ∈ S, f i ⁻¹' sets_s' i :=
-    by
-    ext1 x
-    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_iInter]
-    constructor <;> intro h
-    · intro i hi; rw [h_sets_s'_eq hi]; exact h ⟨i, hi⟩
-    · rintro ⟨i, hi⟩; specialize h i hi; rw [h_sets_s'_eq hi] at h ; exact h
-  have h_eq_inter_T :
-    (fun (ω : Ω) (i : ↥T) => f (↑i) ω) ⁻¹' Set.pi Set.univ sets_t = ⋂ i ∈ T, f i ⁻¹' sets_t' i :=
-    by
-    ext1 x
-    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_iInter]
-    constructor <;> intro h
-    · intro i hi; simp_rw [sets_t', dif_pos hi]; exact h ⟨i, hi⟩
-    · rintro ⟨i, hi⟩; specialize h i hi; simp_rw [sets_t', dif_pos hi] at h ; exact h
-  rw [Indep_fun_iff_measure_inter_preimage_eq_mul] at hf_Indep 
-  rw [h_eq_inter_S, h_eq_inter_T, hf_Indep S h_meas_s', hf_Indep T h_meas_t']
-  have h_Inter_inter :
-    ((⋂ i ∈ S, f i ⁻¹' sets_s' i) ∩ ⋂ i ∈ T, f i ⁻¹' sets_t' i) =
-      ⋂ i ∈ S ∪ T, f i ⁻¹' (sets_s' i ∩ sets_t' i) :=
-    by
-    ext1 x
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Finset.mem_union]
-    constructor <;> intro h
-    · intro i hi
-      cases hi
-      · rw [h_sets_t'_univ hi]; exact ⟨h.1 i hi, Set.mem_univ _⟩
-      · rw [h_sets_s'_univ hi]; exact ⟨Set.mem_univ _, h.2 i hi⟩
-    · exact ⟨fun i hi => (h i (Or.inl hi)).1, fun i hi => (h i (Or.inr hi)).2⟩
-  rw [h_Inter_inter, hf_Indep (S ∪ T)]
-  swap
-  · intro i hi_mem
-    rw [Finset.mem_union] at hi_mem 
-    cases hi_mem
-    · rw [h_sets_t'_univ hi_mem, Set.inter_univ]; exact h_meas_s' i hi_mem
-    · rw [h_sets_s'_univ hi_mem, Set.univ_inter]; exact h_meas_t' i hi_mem
-  rw [Finset.prod_union hST]
-  congr 1
-  · refine' Finset.prod_congr rfl fun i hi => _
-    rw [h_sets_t'_univ hi, Set.inter_univ]
-  · refine' Finset.prod_congr rfl fun i hi => _
-    rw [h_sets_s'_univ hi, Set.univ_inter]
 #align probability_theory.Indep_fun.indep_fun_finset ProbabilityTheory.iIndepFun.indepFun_finset
 -/
 
@@ -1021,38 +828,7 @@ theorem iIndepFun.indepFun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
 theorem iIndepFun.indepFun_prod_mk [IsProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
     {m : ∀ i, MeasurableSpace (β i)} {f : ∀ i, Ω → β i} (hf_Indep : iIndepFun m f μ)
     (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
-    IndepFun (fun a => (f i a, f j a)) (f k) μ := by
-  classical
-  have h_right :
-    f k =
-      (fun p : ∀ j : ({k} : Finset ι), β j => p ⟨k, Finset.mem_singleton_self k⟩) ∘
-        fun a (j : ({k} : Finset ι)) => f j a :=
-    rfl
-  have h_meas_right :
-    Measurable fun p : ∀ j : ({k} : Finset ι), β j => p ⟨k, Finset.mem_singleton_self k⟩ :=
-    measurable_pi_apply ⟨k, Finset.mem_singleton_self k⟩
-  let s : Finset ι := {i, j}
-  have h_left :
-    (fun ω => (f i ω, f j ω)) =
-      (fun p : ∀ l : s, β l =>
-          (p ⟨i, Finset.mem_insert_self i _⟩,
-            p ⟨j, Finset.mem_insert_of_mem (Finset.mem_singleton_self _)⟩)) ∘
-        fun a (j : s) => f j a :=
-    by
-    ext1 a
-    simp only [Prod.mk.inj_iff]
-    constructor <;> rfl
-  have h_meas_left :
-    Measurable fun p : ∀ l : s, β l =>
-      (p ⟨i, Finset.mem_insert_self i _⟩,
-        p ⟨j, Finset.mem_insert_of_mem (Finset.mem_singleton_self _)⟩) :=
-    Measurable.prod (measurable_pi_apply ⟨i, Finset.mem_insert_self i {j}⟩)
-      (measurable_pi_apply ⟨j, Finset.mem_insert_of_mem (Finset.mem_singleton_self j)⟩)
-  rw [h_left, h_right]
-  refine' (hf_Indep.indep_fun_finset s {k} _ hf_meas).comp h_meas_left h_meas_right
-  rw [Finset.disjoint_singleton_right]
-  simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-  exact ⟨hik.symm, hjk.symm⟩
+    IndepFun (fun a => (f i a, f j a)) (f k) μ := by classical
 #align probability_theory.Indep_fun.indep_fun_prod ProbabilityTheory.iIndepFun.indepFun_prod_mk
 -/
 
@@ -1076,28 +852,7 @@ theorem iIndepFun.indepFun_mul_left [IsProbabilityMeasure μ] {ι : Type _} {β 
 theorem iIndepFun.indepFun_finset_prod_of_not_mem [IsProbabilityMeasure μ] {ι : Type _} {β : Type _}
     {m : MeasurableSpace β} [CommMonoid β] [MeasurableMul₂ β] {f : ι → Ω → β}
     (hf_Indep : iIndepFun (fun _ => m) f μ) (hf_meas : ∀ i, Measurable (f i)) {s : Finset ι} {i : ι}
-    (hi : i ∉ s) : IndepFun (∏ j in s, f j) (f i) μ := by
-  classical
-  have h_right :
-    f i =
-      (fun p : ∀ j : ({i} : Finset ι), β => p ⟨i, Finset.mem_singleton_self i⟩) ∘
-        fun a (j : ({i} : Finset ι)) => f j a :=
-    rfl
-  have h_meas_right :
-    Measurable fun p : ∀ j : ({i} : Finset ι), β => p ⟨i, Finset.mem_singleton_self i⟩ :=
-    measurable_pi_apply ⟨i, Finset.mem_singleton_self i⟩
-  have h_left : ∏ j in s, f j = (fun p : ∀ j : s, β => ∏ j, p j) ∘ fun a (j : s) => f j a :=
-    by
-    ext1 a
-    simp only [Function.comp_apply]
-    have : ∏ j : ↥s, f (↑j) a = (∏ j : ↥s, f ↑j) a := by rw [Finset.prod_apply]
-    rw [this, Finset.prod_coe_sort]
-  have h_meas_left : Measurable fun p : ∀ j : s, β => ∏ j, p j :=
-    finset.univ.measurable_prod fun (j : ↥s) (H : j ∈ Finset.univ) => measurable_pi_apply j
-  rw [h_left, h_right]
-  exact
-    (hf_Indep.indep_fun_finset s {i} (finset.disjoint_singleton_left.mpr hi).symm hf_meas).comp
-      h_meas_left h_meas_right
+    (hi : i ∉ s) : IndepFun (∏ j in s, f j) (f i) μ := by classical
 #align probability_theory.Indep_fun.indep_fun_finset_prod_of_not_mem ProbabilityTheory.iIndepFun.indepFun_finset_prod_of_not_mem
 #align probability_theory.Indep_fun.indep_fun_finset_sum_of_not_mem ProbabilityTheory.iIndepFun.indepFun_finset_sum_of_not_mem
 -/
@@ -1117,17 +872,6 @@ theorem iIndepFun.indepFun_prod_range_succ [IsProbabilityMeasure μ] {β : Type 
 theorem iIndepSet.iIndepFun_indicator [Zero β] [One β] {m : MeasurableSpace β} {s : ι → Set Ω}
     (hs : iIndepSet s μ) : iIndepFun (fun n => m) (fun n => (s n).indicator fun ω => 1) μ := by
   classical
-  rw [Indep_fun_iff_measure_inter_preimage_eq_mul]
-  rintro S π hπ
-  simp_rw [Set.indicator_const_preimage_eq_union]
-  refine' @hs S (fun i => ite (1 ∈ π i) (s i) ∅ ∪ ite ((0 : β) ∈ π i) (s iᶜ) ∅) fun i hi => _
-  have hsi : measurable_set[generate_from {s i}] (s i) :=
-    measurable_set_generate_from (Set.mem_singleton _)
-  refine'
-    MeasurableSet.union (MeasurableSet.ite' (fun _ => hsi) fun _ => _)
-      (MeasurableSet.ite' (fun _ => hsi.compl) fun _ => _)
-  · exact @MeasurableSet.empty _ (generate_from {s i})
-  · exact @MeasurableSet.empty _ (generate_from {s i})
 #align probability_theory.Indep_set.Indep_fun_indicator ProbabilityTheory.iIndepSet.iIndepFun_indicator
 -/
 

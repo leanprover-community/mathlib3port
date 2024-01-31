@@ -395,11 +395,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 #print MeasureTheory.SimpleFunc.integral_const /-
 @[simp]
 theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) :
-    (const α y).integral μ = (μ univ).toReal • y := by
-  classical calc
-    (const α y).integral μ = ∑ z in {y}, (μ (const α y ⁻¹' {z})).toReal • z :=
-      integral_eq_sum_of_subset <| (filter_subset _ _).trans (range_const_subset _ _)
-    _ = (μ univ).toReal • y := by simp
+    (const α y).integral μ = (μ univ).toReal • y := by classical
 #align measure_theory.simple_func.integral_const MeasureTheory.SimpleFunc.integral_const
 -/
 
@@ -408,18 +404,6 @@ theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) :
 theorem integral_piecewise_zero {m : MeasurableSpace α} (f : α →ₛ F) (μ : Measure α) {s : Set α}
     (hs : MeasurableSet s) : (piecewise s hs f 0).integral μ = f.integral (μ.restrict s) := by
   classical
-  refine'
-    (integral_eq_sum_of_subset _).trans
-      ((sum_congr rfl fun y hy => _).trans (integral_eq_sum_filter _ _).symm)
-  · intro y hy
-    simp only [mem_filter, mem_range, coe_piecewise, coe_zero, piecewise_eq_indicator,
-      mem_range_indicator] at *
-    rcases hy with ⟨⟨rfl, -⟩ | ⟨x, hxs, rfl⟩, h₀⟩
-    exacts [(h₀ rfl).elim, ⟨Set.mem_range_self _, h₀⟩]
-  · dsimp
-    rw [Set.piecewise_eq_indicator, indicator_preimage_of_not_mem,
-      measure.restrict_apply (f.measurable_set_preimage _)]
-    exact fun h₀ => (mem_filter.1 hy).2 (Eq.symm h₀)
 #align measure_theory.simple_func.integral_piecewise_zero MeasureTheory.SimpleFunc.integral_piecewise_zero
 -/
 
@@ -1777,18 +1761,12 @@ theorem integral_zero_measure {m : MeasurableSpace α} (f : α → E) : ∫ x, f
 #print MeasureTheory.integral_finset_sum_measure /-
 theorem integral_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : ι → Measure α}
     {s : Finset ι} (hf : ∀ i ∈ s, Integrable f (μ i)) :
-    ∫ a, f a ∂∑ i in s, μ i = ∑ i in s, ∫ a, f a ∂μ i := by
-  classical
-  refine' Finset.induction_on' s _ _
-  -- `induction s using finset.induction_on'` fails
-  · simp
-  · intro i t hi ht hit iht
-    simp only [Finset.sum_insert hit, ← iht]
-    exact integral_add_measure (hf _ hi) (integrable_finset_sum_measure.2 fun j hj => hf j (ht hj))
+    ∫ a, f a ∂∑ i in s, μ i = ∑ i in s, ∫ a, f a ∂μ i := by classical
 #align measure_theory.integral_finset_sum_measure MeasureTheory.integral_finset_sum_measure
 -/
 
 #print MeasureTheory.nndist_integral_add_measure_le_lintegral /-
+-- `induction s using finset.induction_on'` fails
 theorem nndist_integral_add_measure_le_lintegral (h₁ : Integrable f μ) (h₂ : Integrable f ν) :
     (nndist (∫ x, f x ∂μ) (∫ x, f x ∂(μ + ν)) : ℝ≥0∞) ≤ ∫⁻ x, ‖f x‖₊ ∂ν :=
   by

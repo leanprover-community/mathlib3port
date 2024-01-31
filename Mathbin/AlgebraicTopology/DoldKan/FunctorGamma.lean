@@ -132,9 +132,6 @@ theorem mapMono_δ₀' (hi : Isδ₀ i) : mapMono K i = K.d Δ.len Δ'.len :=
   by
   unfold map_mono
   classical
-  rw [dif_neg, dif_pos hi]
-  rintro rfl
-  simpa only [self_eq_add_right, Nat.one_ne_zero] using hi.1
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_δ₀' AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_δ₀'
 -/
 

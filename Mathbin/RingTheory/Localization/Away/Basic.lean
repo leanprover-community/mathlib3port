@@ -359,30 +359,7 @@ variable [IsDomain R] [NormalizationMonoid R] [UniqueFactorizationMonoid R]
 
 #print exists_reduced_fraction' /-
 theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
-    ∃ (a : R) (n : ℤ), ¬x ∣ a ∧ selfZPow x B n * algebraMap R B a = b := by
-  classical
-  obtain ⟨⟨a₀, y⟩, H⟩ := surj (Submonoid.powers x) b
-  obtain ⟨d, hy⟩ := (Submonoid.mem_powers_iff y.1 x).mp y.2
-  have ha₀ : a₀ ≠ 0 :=
-    by
-    haveI :=
-      @is_domain_of_le_non_zero_divisors B _ R _ _ _ (Submonoid.powers x) _
-        (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-    simp only [map_zero, ← Subtype.val_eq_coe, ← hy, map_pow] at H 
-    apply ((injective_iff_map_eq_zero' (algebraMap R B)).mp _ a₀).mpr.mt
-    rw [← H]
-    apply mul_ne_zero hb (pow_ne_zero _ _)
-    exact
-      IsLocalization.to_map_ne_zero_of_mem_nonZeroDivisors B
-        (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-        (mem_non_zero_divisors_iff_ne_zero.mpr hx.ne_zero)
-    exact IsLocalization.injective B (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-  simp only [← Subtype.val_eq_coe, ← hy] at H 
-  obtain ⟨m, a, hyp1, hyp2⟩ := max_power_factor ha₀ hx
-  refine' ⟨a, m - d, _⟩
-  rw [← mk'_one B, selfZPow_pow_sub, selfZPow_coe_nat, selfZPow_coe_nat, ← map_pow _ _ d,
-    mul_comm _ b, H, hyp2, map_mul, map_pow _ _ m]
-  exact ⟨hyp1, congr_arg _ (IsLocalization.mk'_one _ _)⟩
+    ∃ (a : R) (n : ℤ), ¬x ∣ a ∧ selfZPow x B n * algebraMap R B a = b := by classical
 #align exists_reduced_fraction' exists_reduced_fraction'
 -/
 

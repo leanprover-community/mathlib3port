@@ -219,21 +219,7 @@ theorem hasseDeriv_comp (k l : ℕ) :
 
 #print Polynomial.natDegree_hasseDeriv_le /-
 theorem natDegree_hasseDeriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n :=
-  by
-  classical
-  rw [hasse_deriv_apply, sum_def]
-  refine' (nat_degree_sum_le _ _).trans _
-  simp_rw [Function.comp, nat_degree_monomial]
-  rw [Finset.fold_ite, Finset.fold_const]
-  · simp only [if_t_t, max_eq_right, zero_le', Finset.fold_max_le, true_and_iff, and_imp,
-      tsub_le_iff_right, mem_support_iff, Ne.def, Finset.mem_filter]
-    intro x hx hx'
-    have hxp : x ≤ p.nat_degree := le_nat_degree_of_ne_zero hx
-    have hxn : n ≤ x := by
-      contrapose! hx'
-      simp [Nat.choose_eq_zero_of_lt hx']
-    rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
-  · simp
+  by classical
 #align polynomial.nat_degree_hasse_deriv_le Polynomial.natDegree_hasseDeriv_le
 -/
 
@@ -245,16 +231,11 @@ theorem natDegree_hasseDeriv [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
   · simpa [hasse_deriv_eq_zero_of_lt_nat_degree, hn] using (tsub_eq_zero_of_le hn.le).symm
   · refine' map_nat_degree_eq_sub _ _
     · exact fun h => hasse_deriv_eq_zero_of_lt_nat_degree _ _
-    ·
-      classical
-      simp only [ite_eq_right_iff, Ne.def, nat_degree_monomial, hasse_deriv_monomial]
-      intro k c c0 hh
-      -- this is where we use the `smul_eq_zero` from `no_zero_smul_divisors`
-      rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh 
-      exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
+    · classical
 #align polynomial.nat_degree_hasse_deriv Polynomial.natDegree_hasseDeriv
 -/
 
+-- this is where we use the `smul_eq_zero` from `no_zero_smul_divisors`
 section
 
 open AddMonoidHom Finset.Nat

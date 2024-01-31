@@ -302,18 +302,7 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
       "**Class formula** for a finite group acting on a finite type. See\n`add_action.card_eq_sum_card_add_group_div_card_stabilizer` for a specialized version using\n`quotient.out'`."]
 theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [Fintype Ω]
     [∀ b : β, Fintype <| stabilizer α b] {φ : Ω → β} (hφ : LeftInverse Quotient.mk'' φ) :
-    Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by
-  classical
-  have :
-    ∀ ω : Ω,
-      Fintype.card α / Fintype.card ↥(stabilizer α (φ ω)) = Fintype.card (α ⧸ stabilizer α (φ ω)) :=
-    by
-    intro ω
-    rw [Fintype.card_congr (@Subgroup.groupEquivQuotientProdSubgroup α _ (stabilizer α <| φ ω)),
-      Fintype.card_prod, Nat.mul_div_cancel]
-    exact fintype.card_pos_iff.mpr (by infer_instance)
-  simp_rw [this, ← Fintype.card_sigma,
-    Fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ)]
+    Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by classical
 #align mul_action.card_eq_sum_card_group_div_card_stabilizer' MulAction.card_eq_sum_card_group_div_card_stabilizer'
 #align add_action.card_eq_sum_card_add_group_sub_card_stabilizer' AddAction.card_eq_sum_card_addGroup_sub_card_stabilizer'
 -/

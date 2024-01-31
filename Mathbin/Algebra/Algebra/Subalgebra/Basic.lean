@@ -1865,30 +1865,7 @@ end Centralizer
 theorem mem_of_finset_sum_eq_one_of_pow_smul_mem {S : Type _} [CommRing S] [Algebra R S]
     (S' : Subalgebra R S) {ι : Type _} (ι' : Finset ι) (s : ι → S) (l : ι → S)
     (e : ∑ i in ι', l i * s i = 1) (hs : ∀ i, s i ∈ S') (hl : ∀ i, l i ∈ S') (x : S)
-    (H : ∀ i, ∃ n : ℕ, (s i ^ n : S) • x ∈ S') : x ∈ S' := by
-  classical
-  suffices x ∈ (Algebra.ofId S' S).range.toSubmodule by obtain ⟨x, rfl⟩ := this; exact x.2
-  choose n hn using H
-  let s' : ι → S' := fun x => ⟨s x, hs x⟩
-  have : Ideal.span (s' '' ι') = ⊤ :=
-    by
-    rw [Ideal.eq_top_iff_one, Ideal.span, Finsupp.mem_span_iff_total]
-    refine'
-      ⟨(Finsupp.ofSupportFinite (fun i : ι' => (⟨l i, hl i⟩ : S')) (Set.toFinite _)).mapDomain
-          fun i => ⟨s' i, i, i.2, rfl⟩,
-        S'.to_submodule.injective_subtype _⟩
-    rw [Finsupp.total_mapDomain, Finsupp.total_apply, Finsupp.sum_fintype, map_sum,
-      Submodule.subtype_apply, Subalgebra.coe_one]
-    · exact finset.sum_attach.trans e
-    · exact fun _ => zero_smul _ _
-  let N := ι'.sup n
-  have hs' := Ideal.span_pow_eq_top _ this N
-  apply (Algebra.ofId S' S).range.toSubmodule.mem_of_span_top_of_smul_mem _ hs'
-  rintro ⟨_, _, ⟨i, hi, rfl⟩, rfl⟩
-  change s i ^ N • x ∈ _
-  rw [← tsub_add_cancel_of_le (show n i ≤ N from Finset.le_sup hi), pow_add, mul_smul]
-  refine' Submodule.smul_mem _ (⟨_, pow_mem (hs i) _⟩ : S') _
-  exact ⟨⟨_, hn i⟩, rfl⟩
+    (H : ∀ i, ∃ n : ℕ, (s i ^ n : S) • x ∈ S') : x ∈ S' := by classical
 #align subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem
 -/
 

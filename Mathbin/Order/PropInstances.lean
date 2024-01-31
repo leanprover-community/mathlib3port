@@ -66,8 +66,7 @@ instance Prop.le_isTotal : IsTotal Prop (· ≤ ·) :=
 -/
 
 #print Prop.linearOrder /-
-noncomputable instance Prop.linearOrder : LinearOrder Prop := by
-  classical exact Lattice.toLinearOrder Prop
+noncomputable instance Prop.linearOrder : LinearOrder Prop := by classical
 #align Prop.linear_order Prop.linearOrder
 -/
 
@@ -96,13 +95,7 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
   constructor
   · intro h i x hf hg
     classical
-    refine'
-      (update_le_iff.mp <|-- this line doesn't work
-            h
-            (update_le_iff.mpr ⟨hf, fun _ _ => _⟩) (update_le_iff.mpr ⟨hg, fun _ _ => _⟩)).1
-    · exact ⊥
-    · exact bot_le
-    · exact bot_le
+  -- this line doesn't work
   · intro h x hf hg i
     apply h i (hf i) (hg i)
 #align pi.disjoint_iff Pi.disjoint_iff
@@ -143,7 +136,7 @@ theorem Prop.codisjoint_iff {P Q : Prop} : Codisjoint P Q ↔ P ∨ Q :=
 theorem Prop.isCompl_iff {P Q : Prop} : IsCompl P Q ↔ ¬(P ↔ Q) :=
   by
   rw [isCompl_iff, Prop.disjoint_iff, Prop.codisjoint_iff, not_iff]
-  classical tauto
+  classical
 #align Prop.is_compl_iff Prop.isCompl_iff
 -/
 

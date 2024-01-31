@@ -551,11 +551,7 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
 -/
 
 #print Basis.eval_range /-
-theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
-  classical
-  cases nonempty_fintype ι
-  rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, Submodule.map_top, to_dual_range _]
-  infer_instance
+theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by classical
 #align basis.eval_range Basis.eval_range
 -/
 
@@ -603,13 +599,7 @@ theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : 
 
 #print Basis.dual_rank_eq /-
 theorem dual_rank_eq [CommRing K] [AddCommGroup V] [Module K V] [Finite ι] (b : Basis ι K V) :
-    Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
-  classical
-  cases nonempty_fintype ι
-  have := LinearEquiv.lift_rank_eq b.to_dual_equiv
-  simp only [Cardinal.lift_umax] at this 
-  rw [this, ← Cardinal.lift_umax]
-  apply Cardinal.lift_id
+    Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by classical
 #align basis.dual_rank_eq Basis.dual_rank_eq
 -/
 
@@ -628,7 +618,7 @@ section
 variable (K) (V)
 
 #print Module.eval_ker /-
-theorem eval_ker : (eval K V).ker = ⊥ := by classical exact (Basis.ofVectorSpace K V).eval_ker
+theorem eval_ker : (eval K V).ker = ⊥ := by classical
 #align module.eval_ker Module.eval_ker
 -/
 

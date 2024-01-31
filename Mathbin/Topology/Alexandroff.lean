@@ -594,7 +594,7 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (OnePoint X) :=
     ∀ z : X, ∃ u v : Set (OnePoint X), IsOpen u ∧ IsOpen v ∧ ↑z ∈ u ∧ ∞ ∈ v ∧ Disjoint u v :=
     by
     intro z
-    rcases exists_open_with_compact_closure z with ⟨u, hu, huy', Hu⟩
+    rcases exists_isOpen_mem_isCompact_closure z with ⟨u, hu, huy', Hu⟩
     exact
       ⟨coe '' u, (coe '' closure u)ᶜ, is_open_image_coe.2 hu,
         is_open_compl_image_coe.2 ⟨isClosed_closure, Hu⟩, mem_image_of_mem _ huy',

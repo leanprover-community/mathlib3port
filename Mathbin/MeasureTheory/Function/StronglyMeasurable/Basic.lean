@@ -889,48 +889,7 @@ protected theorem ite {m : MeasurableSpace α} [TopologicalSpace β] {p : α →
 theorem stronglyMeasurable_of_stronglyMeasurable_union_cover {m : MeasurableSpace α}
     [TopologicalSpace β] {f : α → β} (s t : Set α) (hs : MeasurableSet s) (ht : MeasurableSet t)
     (h : univ ⊆ s ∪ t) (hc : StronglyMeasurable fun a : s => f a)
-    (hd : StronglyMeasurable fun a : t => f a) : StronglyMeasurable f := by
-  classical
-  let f : ℕ → α →ₛ β := fun n =>
-    { toFun := fun x =>
-        if hx : x ∈ s then hc.approx n ⟨x, hx⟩
-        else hd.approx n ⟨x, by simpa [hx] using h (mem_univ x)⟩
-      measurableSet_fiber' := by
-        intro x
-        convert
-          (hs.subtype_image ((hc.approx n).measurableSet_fiber x)).union
-            ((ht.subtype_image ((hd.approx n).measurableSet_fiber x)).diffₓ hs)
-        ext1 y
-        simp only [mem_union, mem_preimage, mem_singleton_iff, mem_image, SetCoe.exists,
-          Subtype.coe_mk, exists_and_right, exists_eq_right, mem_diff]
-        by_cases hy : y ∈ s
-        · rw [dif_pos hy]
-          simp only [hy, exists_true_left, not_true, and_false_iff, or_false_iff]
-        · rw [dif_neg hy]
-          have A : y ∈ t := by simpa [hy] using h (mem_univ y)
-          simp only [A, hy, false_or_iff, IsEmpty.exists_iff, not_false_iff, and_true_iff,
-            exists_true_left]
-      finite_range' :=
-        by
-        apply ((hc.approx n).finite_range.union (hd.approx n).finite_range).Subset
-        rintro - ⟨y, rfl⟩
-        dsimp
-        by_cases hy : y ∈ s
-        · left
-          rw [dif_pos hy]
-          exact mem_range_self _
-        · right
-          rw [dif_neg hy]
-          exact mem_range_self _ }
-  refine' ⟨f, fun y => _⟩
-  by_cases hy : y ∈ s
-  · convert hc.tendsto_approx ⟨y, hy⟩ using 1
-    ext1 n
-    simp only [dif_pos hy, simple_func.apply_mk]
-  · have A : y ∈ t := by simpa [hy] using h (mem_univ y)
-    convert hd.tendsto_approx ⟨y, A⟩ using 1
-    ext1 n
-    simp only [dif_neg hy, simple_func.apply_mk]
+    (hd : StronglyMeasurable fun a : t => f a) : StronglyMeasurable f := by classical
 #align strongly_measurable_of_strongly_measurable_union_cover stronglyMeasurable_of_stronglyMeasurable_union_cover
 -/
 

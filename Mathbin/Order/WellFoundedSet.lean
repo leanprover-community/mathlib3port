@@ -482,12 +482,7 @@ theorem PartiallyWellOrderedOn.exists_monotone_subseq (h : s.PartiallyWellOrdere
 theorem partiallyWellOrderedOn_iff_exists_monotone_subseq :
     s.PartiallyWellOrderedOn r ↔
       ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
-  by
-  classical
-  constructor <;> intro h f hf
-  · exact h.exists_monotone_subseq f hf
-  · obtain ⟨g, gmon⟩ := h f hf
-    exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
+  by classical
 #align set.partially_well_ordered_on_iff_exists_monotone_subseq Set.partiallyWellOrderedOn_iff_exists_monotone_subseq
 -/
 
@@ -954,12 +949,6 @@ noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (
     (hf : IsBadSeq r s f) :
     { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ IsBadSeq r s g ∧ IsMinBadSeq r rk s n g } := by
   classical
-  have h : ∃ (k : ℕ) (g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
-    ⟨_, f, fun _ _ => rfl, hf, rfl⟩
-  obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
-  refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
-  refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert Con, rfl⟩
-  rwa [← h3]
 #align set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
 -/
 

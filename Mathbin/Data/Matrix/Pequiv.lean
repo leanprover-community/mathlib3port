@@ -144,20 +144,7 @@ theorem toMatrix_bot [DecidableEq n] [Zero α] [One α] :
 
 #print PEquiv.toMatrix_injective /-
 theorem toMatrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
-    Function.Injective (@toMatrix m n α _ _ _) := by
-  classical
-  intro f g
-  refine' not_imp_not.1 _
-  simp only [matrix.ext_iff.symm, to_matrix_apply, PEquiv.ext_iff, Classical.not_forall, exists_imp]
-  intro i hi
-  use i
-  cases' hf : f i with fi
-  · cases' hg : g i with gi
-    · cc
-    · use gi
-      simp
-  · use fi
-    simp [hf.symm, Ne.symm hi]
+    Function.Injective (@toMatrix m n α _ _ _) := by classical
 #align pequiv.to_matrix_injective PEquiv.toMatrix_injective
 -/
 

@@ -101,13 +101,7 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
 
 #print Finset.prod_primes_dvd /-
 theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)
-    (h : ∀ a ∈ s, Prime a) (div : ∀ a ∈ s, a ∣ n) : ∏ p in s, p ∣ n := by
-  classical exact
-    Multiset.prod_primes_dvd n (by simpa only [Multiset.map_id', Finset.mem_def] using h)
-      (by simpa only [Multiset.map_id', Finset.mem_def] using div)
-      (by
-        simp only [Multiset.map_id', associated_eq_eq, Multiset.countP_eq_card_filter, ←
-          Multiset.count_eq_card_filter_eq, ← Multiset.nodup_iff_count_le_one, s.nodup])
+    (h : ∀ a ∈ s, Prime a) (div : ∀ a ∈ s, a ∣ n) : ∏ p in s, p ∣ n := by classical
 #align finset.prod_primes_dvd Finset.prod_primes_dvd
 -/
 

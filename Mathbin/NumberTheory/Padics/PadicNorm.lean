@@ -374,33 +374,13 @@ open scoped BigOperators
 
 #print padicNorm.sum_lt /-
 theorem sum_lt {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
-    s.Nonempty → (∀ i ∈ s, padicNorm p (F i) < t) → padicNorm p (∑ i in s, F i) < t := by
-  classical
-  refine' s.induction_on (by rintro ⟨-, ⟨⟩⟩) _
-  rintro a S haS IH - ht
-  by_cases hs : S.nonempty
-  · rw [Finset.sum_insert haS]
-    exact
-      lt_of_le_of_lt padicNorm.nonarchimedean
-        (max_lt (ht a (Finset.mem_insert_self a S))
-          (IH hs fun b hb => ht b (Finset.mem_insert_of_mem hb)))
-  · simp_all
+    s.Nonempty → (∀ i ∈ s, padicNorm p (F i) < t) → padicNorm p (∑ i in s, F i) < t := by classical
 #align padic_norm.sum_lt padicNorm.sum_lt
 -/
 
 #print padicNorm.sum_le /-
 theorem sum_le {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
-    s.Nonempty → (∀ i ∈ s, padicNorm p (F i) ≤ t) → padicNorm p (∑ i in s, F i) ≤ t := by
-  classical
-  refine' s.induction_on (by rintro ⟨-, ⟨⟩⟩) _
-  rintro a S haS IH - ht
-  by_cases hs : S.nonempty
-  · rw [Finset.sum_insert haS]
-    exact
-      padic_norm.nonarchimedean.trans
-        (max_le (ht a (Finset.mem_insert_self a S))
-          (IH hs fun b hb => ht b (Finset.mem_insert_of_mem hb)))
-  · simp_all
+    s.Nonempty → (∀ i ∈ s, padicNorm p (F i) ≤ t) → padicNorm p (∑ i in s, F i) ≤ t := by classical
 #align padic_norm.sum_le padicNorm.sum_le
 -/
 

@@ -119,14 +119,12 @@ the value `1` on units. -/
 @[simps]
 noncomputable def trivial : MulChar R R'
     where
-  toFun := by classical exact fun x => if IsUnit x then 1 else 0
+  toFun := by classical
   map_nonunit' := by intro a ha; simp only [ha, if_false]
   map_one' := by simp only [isUnit_one, if_true]
   map_mul' := by
     intro x y
     classical
-    simp only [IsUnit.mul_iff, boole_mul]
-    split_ifs <;> tauto
 #align mul_char.trivial MulChar.trivial
 -/
 
@@ -219,22 +217,11 @@ theorem coe_toUnitHom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ a
 /-- Turn a homomorphism between unit groups into a `mul_char`. -/
 noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
     where
-  toFun := by classical exact fun x => if hx : IsUnit x then f hx.Unit else 0
+  toFun := by classical
   map_one' := by
     have h1 : (is_unit_one.unit : Rˣ) = 1 := units.eq_iff.mp rfl
     simp only [h1, dif_pos, Units.val_eq_one, map_one, isUnit_one]
-  map_mul' := by
-    classical
-    intro x y
-    by_cases hx : IsUnit x
-    · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
-      by_cases hy : IsUnit y
-      · simp only [hy, dif_pos]
-        have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
-        rw [hm, map_mul]
-        norm_cast
-      · simp only [hy, not_false_iff, dif_neg, MulZeroClass.mul_zero]
-    · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, MulZeroClass.zero_mul]
+  map_mul' := by classical
   map_nonunit' := by intro a ha; simp only [ha, not_false_iff, dif_neg]
 #align mul_char.of_unit_hom MulChar.ofUnitHom
 -/
@@ -325,7 +312,7 @@ noncomputable instance inhabited : Inhabited (MulChar R R') :=
 #print MulChar.one_apply_coe /-
 /-- Evaluation of the trivial character -/
 @[simp]
-theorem one_apply_coe (a : Rˣ) : (1 : MulChar R R') a = 1 := by classical exact dif_pos a.is_unit
+theorem one_apply_coe (a : Rˣ) : (1 : MulChar R R') a = 1 := by classical
 #align mul_char.one_apply_coe MulChar.one_apply_coe
 -/
 

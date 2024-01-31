@@ -112,13 +112,7 @@ end Polynomial
 
 #print FiniteField.prod_univ_units_id_eq_neg_one /-
 theorem prod_univ_units_id_eq_neg_one [CommRing K] [IsDomain K] [Fintype Kˣ] :
-    ∏ x : Kˣ, x = (-1 : Kˣ) := by
-  classical
-  have : ∏ x in (@univ Kˣ _).eraseₓ (-1), x = 1 :=
-    prod_involution (fun x _ => x⁻¹) (by simp)
-      (fun a => by simp (config := { contextual := true }) [Units.inv_eq_self_iff])
-      (fun a => by simp [@inv_eq_iff_eq_inv _ _ a]) (by simp)
-  rw [← insert_erase (mem_univ (-1 : Kˣ)), prod_insert (not_mem_erase _ _), this, mul_one]
+    ∏ x : Kˣ, x = (-1 : Kˣ) := by classical
 #align finite_field.prod_univ_units_id_eq_neg_one FiniteField.prod_univ_units_id_eq_neg_one
 -/
 
@@ -131,10 +125,7 @@ theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : a ^ (q - 1) = 1 :=
   calc
     a ^ (Fintype.card K - 1) = (Units.mk0 a ha ^ (Fintype.card K - 1) : Kˣ) := by
       rw [Units.val_pow_eq_pow_val, Units.val_mk0]
-    _ = 1 := by
-      classical
-      rw [← Fintype.card_units, pow_card_eq_one]
-      rfl
+    _ = 1 := by classical
 #align finite_field.pow_card_sub_one_eq_one FiniteField.pow_card_sub_one_eq_one
 -/
 
@@ -200,16 +191,7 @@ theorem cast_card_eq_zero : (q : K) = 0 :=
 -/
 
 #print FiniteField.forall_pow_eq_one_iff /-
-theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣ i := by
-  classical
-  obtain ⟨x, hx⟩ := IsCyclic.exists_generator Kˣ
-  rw [← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hx, orderOf_dvd_iff_pow_eq_one]
-  constructor
-  · intro h; apply h
-  · intro h y
-    simp_rw [← mem_powers_iff_mem_zpowers] at hx 
-    rcases hx y with ⟨j, rfl⟩
-    rw [← pow_mul, mul_comm, pow_mul, h, one_pow]
+theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣ i := by classical
 #align finite_field.forall_pow_eq_one_iff FiniteField.forall_pow_eq_one_iff
 -/
 
@@ -222,7 +204,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : ∑ x : Kˣ, (x ^ i : K) = if q 
     { toFun := fun x => x ^ i
       map_one' := by rw [Units.val_one, one_pow]
       map_mul' := by intros; rw [Units.val_mul, mul_pow] }
-  have : Decidable (φ = 1) := by classical infer_instance
+  have : Decidable (φ = 1) := by classical
   calc
     ∑ x : Kˣ, φ x = if φ = 1 then Fintype.card Kˣ else 0 := sum_hom_units φ
     _ = if q - 1 ∣ i then -1 else 0 := _
@@ -246,18 +228,6 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : ∑ x : K, x ^ i = 0
   by_cases hi : i = 0
   · simp only [hi, nsmul_one, sum_const, pow_zero, card_univ, cast_card_eq_zero]
   classical
-  have hiq : ¬q - 1 ∣ i := by contrapose! h; exact Nat.le_of_dvd (Nat.pos_of_ne_zero hi) h
-  let φ : Kˣ ↪ K := ⟨coe, Units.ext⟩
-  have : univ.map φ = univ \ {0} := by
-    ext x
-    simp only [true_and_iff, embedding.coe_fn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ,
-      mem_map, exists_prop_of_true, mem_singleton]
-  calc
-    ∑ x : K, x ^ i = ∑ x in univ \ {(0 : K)}, x ^ i := by
-      rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow (Nat.pos_of_ne_zero hi),
-        add_zero]
-    _ = ∑ x : Kˣ, x ^ i := by rw [← this, univ.sum_map φ]; rfl
-    _ = 0 := by rw [sum_pow_units K i, if_neg]; exact hiq
 #align finite_field.sum_pow_lt_card_sub_one FiniteField.sum_pow_lt_card_sub_one
 -/
 
@@ -305,22 +275,7 @@ end
 variable (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K]
 
 #print FiniteField.roots_X_pow_card_sub_X /-
-theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
-  classical
-  have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
-  have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ :=
-    by
-    rw [eq_univ_iff_forall]
-    intro x
-    rw [Multiset.mem_toFinset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X, sub_eq_zero,
-      pow_card]
-  rw [← this, Multiset.toFinset_val, eq_comm, Multiset.dedup_eq_self]
-  apply nodup_roots
-  rw [separable_def]
-  convert is_coprime_one_right.neg_right using 1
-  ·
-    rw [derivative_sub, derivative_X, derivative_X_pow, CharP.cast_card_eq_zero K, C_0,
-      MulZeroClass.zero_mul, zero_sub]
+theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by classical
 #align finite_field.roots_X_pow_card_sub_X FiniteField.roots_X_pow_card_sub_X
 -/
 
@@ -609,27 +564,7 @@ theorem pow_dichotomy (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
 /-- A unit `a` of a finite field `F` of odd characteristic is a square
 if and only if `a ^ (#F / 2) = 1`. -/
 theorem unit_isSquare_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
-    IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by
-  classical
-  obtain ⟨g, hg⟩ := IsCyclic.exists_generator Fˣ
-  obtain ⟨n, hn⟩ : a ∈ Submonoid.powers g := by rw [mem_powers_iff_mem_zpowers]; apply hg
-  have hodd := Nat.two_mul_odd_div_two (FiniteField.odd_card_of_char_ne_two hF)
-  constructor
-  · rintro ⟨y, rfl⟩
-    rw [← pow_two, ← pow_mul, hodd]
-    apply_fun @coe Fˣ F _ using Units.ext
-    · push_cast
-      exact FiniteField.pow_card_sub_one_eq_one (y : F) (Units.ne_zero y)
-  · subst a; intro h
-    have key : 2 * (Fintype.card F / 2) ∣ n * (Fintype.card F / 2) :=
-      by
-      rw [← pow_mul] at h 
-      rw [hodd, ← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hg]
-      apply orderOf_dvd_of_pow_eq_one h
-    have : 0 < Fintype.card F / 2 := Nat.div_pos Fintype.one_lt_card (by norm_num)
-    obtain ⟨m, rfl⟩ := Nat.dvd_of_mul_dvd_mul_right this key
-    refine' ⟨g ^ m, _⟩
-    rw [mul_comm, pow_mul, pow_two]
+    IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by classical
 #align finite_field.unit_is_square_iff FiniteField.unit_isSquare_iff
 -/
 

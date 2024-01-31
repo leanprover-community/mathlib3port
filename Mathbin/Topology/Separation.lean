@@ -1238,8 +1238,8 @@ section Separated
 
 open SeparatedNhds Finset
 
-#print separatedNhds_of_finset_finset /-
-theorem separatedNhds_of_finset_finset [T2Space α] :
+#print SeparatedNhds.of_finset_finset /-
+theorem SeparatedNhds.of_finset_finset [T2Space α] :
     ∀ s t : Finset α, Disjoint s t → SeparatedNhds (s : Set α) t :=
   by
   refine'
@@ -1250,14 +1250,14 @@ theorem separatedNhds_of_finset_finset [T2Space α] :
   · intro a b c ac bc d
     apply_mod_cast union_left (ac (disjoint_of_subset_left (a.subset_union_left b) d)) (bc _)
     exact disjoint_of_subset_left (a.subset_union_right b) d
-#align finset_disjoint_finset_opens_of_t2 separatedNhds_of_finset_finset
+#align finset_disjoint_finset_opens_of_t2 SeparatedNhds.of_finset_finset
 -/
 
-#print point_disjoint_finset_opens_of_t2 /-
-theorem point_disjoint_finset_opens_of_t2 [T2Space α] {x : α} {s : Finset α} (h : x ∉ s) :
+#print SeparatedNhds.of_singleton_finset /-
+theorem SeparatedNhds.of_singleton_finset [T2Space α] {x : α} {s : Finset α} (h : x ∉ s) :
     SeparatedNhds ({x} : Set α) s := by
-  exact_mod_cast separatedNhds_of_finset_finset {x} s (finset.disjoint_singleton_left.mpr h)
-#align point_disjoint_finset_opens_of_t2 point_disjoint_finset_opens_of_t2
+  exact_mod_cast SeparatedNhds.of_finset_finset {x} s (finset.disjoint_singleton_left.mpr h)
+#align point_disjoint_finset_opens_of_t2 SeparatedNhds.of_singleton_finset
 -/
 
 end Separated
@@ -1620,12 +1620,12 @@ theorem Function.LeftInverse.closedEmbedding [T2Space α] {f : α → β} {g : �
 #align function.left_inverse.closed_embedding Function.LeftInverse.closedEmbedding
 -/
 
-#print separatedNhds_of_isCompact_isCompact /-
-theorem separatedNhds_of_isCompact_isCompact [T2Space α] {s t : Set α} (hs : IsCompact s)
+#print SeparatedNhds.of_isCompact_isCompact /-
+theorem SeparatedNhds.of_isCompact_isCompact [T2Space α] {s t : Set α} (hs : IsCompact s)
     (ht : IsCompact t) (hst : Disjoint s t) : SeparatedNhds s t := by
   simp only [SeparatedNhds, prod_subset_compl_diagonal_iff_disjoint.symm] at hst ⊢ <;>
     exact generalized_tube_lemma hs ht is_closed_diagonal.is_open_compl hst
-#align is_compact_is_compact_separated separatedNhds_of_isCompact_isCompact
+#align is_compact_is_compact_separated SeparatedNhds.of_isCompact_isCompact
 -/
 
 #print IsCompact.isClosed /-
@@ -1634,7 +1634,7 @@ theorem IsCompact.isClosed [T2Space α] {s : Set α} (hs : IsCompact s) : IsClos
   isOpen_compl_iff.1 <|
     isOpen_iff_forall_mem_open.mpr fun x hx =>
       let ⟨u, v, uo, vo, su, xv, uv⟩ :=
-        separatedNhds_of_isCompact_isCompact hs isCompact_singleton (disjoint_singleton_right.2 hx)
+        SeparatedNhds.of_isCompact_isCompact hs isCompact_singleton (disjoint_singleton_right.2 hx)
       ⟨v, (uv.mono_left <| show s ≤ u from su).subset_compl_left, vo, by simpa using xv⟩
 #align is_compact.is_closed IsCompact.isClosed
 -/
@@ -1679,20 +1679,19 @@ theorem IsCompact.inter [T2Space α] {s t : Set α} (hs : IsCompact s) (ht : IsC
 #align is_compact.inter IsCompact.inter
 -/
 
-#print isCompact_closure_of_subset_compact /-
-theorem isCompact_closure_of_subset_compact [T2Space α] {s t : Set α} (ht : IsCompact t)
-    (h : s ⊆ t) : IsCompact (closure s) :=
+#print IsCompact.closure_of_subset /-
+theorem IsCompact.closure_of_subset [T2Space α] {s t : Set α} (ht : IsCompact t) (h : s ⊆ t) :
+    IsCompact (closure s) :=
   IsCompact.of_isClosed_subset ht isClosed_closure (closure_minimal h ht.IsClosed)
-#align is_compact_closure_of_subset_compact isCompact_closure_of_subset_compact
+#align is_compact_closure_of_subset_compact IsCompact.closure_of_subset
 -/
 
-#print exists_compact_superset_iff /-
+#print exists_isCompact_superset_iff /-
 @[simp]
-theorem exists_compact_superset_iff [T2Space α] {s : Set α} :
+theorem exists_isCompact_superset_iff [T2Space α] {s : Set α} :
     (∃ K, IsCompact K ∧ s ⊆ K) ↔ IsCompact (closure s) :=
-  ⟨fun ⟨K, hK, hsK⟩ => isCompact_closure_of_subset_compact hK hsK, fun h =>
-    ⟨closure s, h, subset_closure⟩⟩
-#align exists_compact_superset_iff exists_compact_superset_iff
+  ⟨fun ⟨K, hK, hsK⟩ => IsCompact.closure_of_subset hK hsK, fun h => ⟨closure s, h, subset_closure⟩⟩
+#align exists_compact_superset_iff exists_isCompact_superset_iff
 -/
 
 #print image_closure_of_isCompact /-
@@ -1710,7 +1709,7 @@ theorem IsCompact.binary_compact_cover [T2Space α] {K U V : Set α} (hK : IsCom
     ∃ K₁ K₂ : Set α, IsCompact K₁ ∧ IsCompact K₂ ∧ K₁ ⊆ U ∧ K₂ ⊆ V ∧ K = K₁ ∪ K₂ :=
   by
   obtain ⟨O₁, O₂, h1O₁, h1O₂, h2O₁, h2O₂, hO⟩ :=
-    separatedNhds_of_isCompact_isCompact (hK.diff hU) (hK.diff hV)
+    SeparatedNhds.of_isCompact_isCompact (hK.diff hU) (hK.diff hV)
       (by rwa [disjoint_iff_inter_eq_empty, diff_inter_diff, diff_eq_empty])
   exact
     ⟨_, _, hK.diff h1O₁, hK.diff h1O₂, by rwa [diff_subset_comm], by rwa [diff_subset_comm], by
@@ -1749,25 +1748,7 @@ open Finset Function
 /-- For every finite open cover `Uᵢ` of a compact set, there exists a compact cover `Kᵢ ⊆ Uᵢ`. -/
 theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact s) {ι} (t : Finset ι)
     (U : ι → Set α) (hU : ∀ i ∈ t, IsOpen (U i)) (hsC : s ⊆ ⋃ i ∈ t, U i) :
-    ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by
-  classical
-  induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
-  · refine' ⟨fun _ => ∅, fun i => isCompact_empty, fun i => empty_subset _, _⟩
-    simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
-  simp only [Finset.set_biUnion_insert] at hsC 
-  simp only [Finset.mem_insert] at hU 
-  have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
-  rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (isOpen_biUnion hU') hsC with
-    ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
-  rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
-  refine' ⟨update K x K₁, _, _, _⟩
-  · intro i; by_cases hi : i = x
-    · simp only [update_same, hi, h1K₁]
-    · rw [← Ne.def] at hi ; simp only [update_noteq hi, h1K]
-  · intro i; by_cases hi : i = x
-    · simp only [update_same, hi, h2K₁]
-    · rw [← Ne.def] at hi ; simp only [update_noteq hi, h2K]
-  · simp only [set_bUnion_insert_update _ hx, hK, h3K]
+    ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by classical
 #align is_compact.finite_compact_cover IsCompact.finite_compact_cover
 -/
 
@@ -1784,7 +1765,7 @@ theorem WeaklyLocallyCompactSpace.locallyCompactSpace [T2Space α]
     -- we may find open sets V, W separating x from K \ U.
     -- Then K \ W is a compact neighborhood of x contained in U.
     let ⟨v, w, vo, wo, xv, kuw, vw⟩ :=
-      separatedNhds_of_isCompact_isCompact isCompact_singleton (kc.diffₓ uo)
+      SeparatedNhds.of_isCompact_isCompact isCompact_singleton (kc.diffₓ uo)
         (disjoint_singleton_left.2 fun h => h.2 xu)
     have wn : wᶜ ∈ 𝓝 x :=
       mem_nhds_iff.mpr ⟨v, vw.subset_compl_right, vo, singleton_subset_iff.mp xv⟩
@@ -1801,27 +1782,26 @@ instance (priority := 100) locally_compact_of_compact [T2Space α] [CompactSpace
 #align locally_compact_of_compact locally_compact_of_compact
 -/
 
-#print exists_open_with_compact_closure /-
+#print exists_isOpen_mem_isCompact_closure /-
 /-- In a locally compact T₂ space, every point has an open neighborhood with compact closure -/
-theorem exists_open_with_compact_closure [LocallyCompactSpace α] [T2Space α] (x : α) :
+theorem exists_isOpen_mem_isCompact_closure [LocallyCompactSpace α] [T2Space α] (x : α) :
     ∃ U : Set α, IsOpen U ∧ x ∈ U ∧ IsCompact (closure U) :=
   by
   rcases WeaklyLocallyCompactSpace.exists_compact_mem_nhds x with ⟨K, hKc, hxK⟩
   rcases mem_nhds_iff.1 hxK with ⟨t, h1t, h2t, h3t⟩
-  exact ⟨t, h2t, h3t, isCompact_closure_of_subset_compact hKc h1t⟩
-#align exists_open_with_compact_closure exists_open_with_compact_closure
+  exact ⟨t, h2t, h3t, IsCompact.closure_of_subset hKc h1t⟩
+#align exists_open_with_compact_closure exists_isOpen_mem_isCompact_closure
 -/
 
-#print exists_open_superset_and_isCompact_closure /-
+#print exists_isOpen_superset_and_isCompact_closure /-
 /-- In a locally compact T₂ space, every compact set has an open neighborhood with compact closure.
 -/
-theorem exists_open_superset_and_isCompact_closure [LocallyCompactSpace α] [T2Space α] {K : Set α}
+theorem exists_isOpen_superset_and_isCompact_closure [LocallyCompactSpace α] [T2Space α] {K : Set α}
     (hK : IsCompact K) : ∃ V, IsOpen V ∧ K ⊆ V ∧ IsCompact (closure V) :=
   by
   rcases exists_compact_superset hK with ⟨K', hK', hKK'⟩
-  refine'
-    ⟨interior K', isOpen_interior, hKK', isCompact_closure_of_subset_compact hK' interior_subset⟩
-#align exists_open_superset_and_is_compact_closure exists_open_superset_and_isCompact_closure
+  refine' ⟨interior K', isOpen_interior, hKK', IsCompact.closure_of_subset hK' interior_subset⟩
+#align exists_open_superset_and_is_compact_closure exists_isOpen_superset_and_isCompact_closure
 -/
 
 #print exists_open_between_and_isCompact_closure /-
@@ -1835,7 +1815,7 @@ theorem exists_open_between_and_isCompact_closure [LocallyCompactSpace α] [T2Sp
   rcases exists_compact_between hK hU hKU with ⟨V, hV, hKV, hVU⟩
   exact
     ⟨interior V, isOpen_interior, hKV, (closure_minimal interior_subset hV.is_closed).trans hVU,
-      isCompact_closure_of_subset_compact hV interior_subset⟩
+      IsCompact.closure_of_subset hV interior_subset⟩
 #align exists_open_between_and_is_compact_closure exists_open_between_and_isCompact_closure
 -/
 
@@ -2222,7 +2202,7 @@ instance (priority := 100) T4Space.t3Space [NormalSpace α] : T3Space α
 #print T4Space.of_compactSpace_t2Space /-
 -- We can't make this an instance because it could cause an instance loop.
 theorem T4Space.of_compactSpace_t2Space [CompactSpace α] [T2Space α] : NormalSpace α :=
-  ⟨fun s t hs ht => separatedNhds_of_isCompact_isCompact hs.IsCompact ht.IsCompact⟩
+  ⟨fun s t hs ht => SeparatedNhds.of_isCompact_isCompact hs.IsCompact ht.IsCompact⟩
 #align normal_of_compact_t2 T4Space.of_compactSpace_t2Space
 -/
 

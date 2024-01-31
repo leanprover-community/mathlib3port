@@ -1405,27 +1405,13 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
 
 #print ENNReal.tsum_biUnion_le /-
 theorem tsum_biUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t : ι → Set α) :
-    ∑' x : ⋃ i ∈ s, t i, f x ≤ ∑ i in s, ∑' x : t i, f x := by
-  classical
-  induction' s using Finset.induction_on with i s hi ihs h
-  · simp
-  have : (⋃ j ∈ insert i s, t j) = t i ∪ ⋃ j ∈ s, t j := by simp
-  rw [tsum_congr_set_coe f this]
-  calc
-    ∑' x : t i ∪ ⋃ j ∈ s, t j, f x ≤ ∑' x : t i, f x + ∑' x : ⋃ j ∈ s, t j, f x :=
-      tsum_union_le _ _ _
-    _ ≤ ∑' x : t i, f x + ∑ i in s, ∑' x : t i, f x := (add_le_add le_rfl ihs)
-    _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
+    ∑' x : ⋃ i ∈ s, t i, f x ≤ ∑ i in s, ∑' x : t i, f x := by classical
 #align ennreal.tsum_bUnion_le ENNReal.tsum_biUnion_le
 -/
 
 #print ENNReal.tsum_iUnion_le /-
 theorem tsum_iUnion_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι → Set α) :
-    ∑' x : ⋃ i, t i, f x ≤ ∑ i, ∑' x : t i, f x := by
-  classical
-  have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
-  rw [tsum_congr_set_coe f this]
-  exact tsum_bUnion_le _ _ _
+    ∑' x : ⋃ i, t i, f x ≤ ∑ i, ∑' x : t i, f x := by classical
 #align ennreal.tsum_Union_le ENNReal.tsum_iUnion_le
 -/
 

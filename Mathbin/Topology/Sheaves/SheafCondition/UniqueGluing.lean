@@ -325,14 +325,7 @@ theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : 
 #print TopCat.Sheaf.eq_of_locally_eq₂ /-
 theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : U₂ ⟶ V) (hcover : V ≤ U₁ ⊔ U₂)
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
-    (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
-  classical
-  fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
-  · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
-  · refine' le_trans hcover _; rw [sup_le_iff]; constructor
-    · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
-    · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
-  · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
+    (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by classical
 #align Top.sheaf.eq_of_locally_eq₂ TopCat.Sheaf.eq_of_locally_eq₂
 -/
 

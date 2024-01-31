@@ -55,14 +55,6 @@ theorem restrict_dirac' (hs : MeasurableSet s) [Decidable (a ∈ s)] :
   by
   ext1 t ht
   classical
-  simp only [measure.restrict_apply ht, measure.dirac_apply' _ (ht.inter hs), Set.indicator_apply,
-    Set.mem_inter_iff, Pi.one_apply]
-  by_cases has : a ∈ s
-  · simp only [has, and_true_iff, if_true]
-    split_ifs with hat
-    · rw [measure.dirac_apply_of_mem hat]
-    · simp only [measure.dirac_apply' _ ht, Set.indicator_apply, hat, if_false]
-  · simp only [has, and_false_iff, if_false, measure.coe_zero, Pi.zero_apply]
 #align measure_theory.restrict_dirac' MeasureTheory.restrict_dirac'
 -/
 
@@ -73,14 +65,6 @@ theorem restrict_dirac [MeasurableSingletonClass α] [Decidable (a ∈ s)] :
   by
   ext1 t ht
   classical
-  simp only [measure.restrict_apply ht, measure.dirac_apply _, Set.indicator_apply,
-    Set.mem_inter_iff, Pi.one_apply]
-  by_cases has : a ∈ s
-  · simp only [has, and_true_iff, if_true]
-    split_ifs with hat
-    · rw [measure.dirac_apply_of_mem hat]
-    · simp only [measure.dirac_apply' _ ht, Set.indicator_apply, hat, if_false]
-  · simp only [has, and_false_iff, if_false, measure.coe_zero, Pi.zero_apply]
 #align measure_theory.restrict_dirac MeasureTheory.restrict_dirac
 -/
 

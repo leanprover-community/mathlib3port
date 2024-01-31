@@ -293,25 +293,12 @@ alias ⟨_, same_cycle.extend_domain⟩ := same_cycle_extend_domain
 #print Equiv.Perm.SameCycle.exists_pow_eq' /-
 theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < orderOf f, (f ^ i) x = y := by
   classical
-  rintro ⟨k, rfl⟩
-  use(k % orderOf f).natAbs
-  have h₀ := int.coe_nat_pos.mpr (orderOf_pos f)
-  have h₁ := Int.emod_nonneg k h₀.ne'
-  rw [← zpow_ofNat, Int.natAbs_of_nonneg h₁, ← zpow_mod_orderOf]
-  refine' ⟨_, rfl⟩
-  rw [← Int.ofNat_lt, Int.natAbs_of_nonneg h₁]
-  exact Int.emod_lt_of_pos _ h₀
 #align equiv.perm.same_cycle.exists_pow_eq' Equiv.Perm.SameCycle.exists_pow_eq'
 -/
 
 #print Equiv.Perm.SameCycle.exists_pow_eq'' /-
 theorem SameCycle.exists_pow_eq'' [Finite α] (h : SameCycle f x y) :
-    ∃ (i : ℕ) (hpos : 0 < i) (h : i ≤ orderOf f), (f ^ i) x = y := by
-  classical
-  obtain ⟨_ | i, hi, rfl⟩ := h.exists_pow_eq'
-  · refine' ⟨orderOf f, orderOf_pos f, le_rfl, _⟩
-    rw [pow_orderOf_eq_one, pow_zero]
-  · exact ⟨i.succ, i.zero_lt_succ, hi.le, rfl⟩
+    ∃ (i : ℕ) (hpos : 0 < i) (h : i ≤ orderOf f), (f ^ i) x = y := by classical
 #align equiv.perm.same_cycle.exists_pow_eq'' Equiv.Perm.SameCycle.exists_pow_eq''
 -/
 
@@ -440,11 +427,7 @@ variable [Finite α]
 theorem IsCycle.exists_pow_eq (hf : IsCycle f) (hx : f x ≠ x) (hy : f y ≠ y) :
     ∃ i : ℕ, (f ^ i) x = y := by
   let ⟨n, hn⟩ := hf.exists_zpow_eq hx hy
-  classical exact
-    ⟨(n % orderOf f).toNat,
-      by
-      have := n.mod_nonneg (int.coe_nat_ne_zero.mpr (ne_of_gt (orderOf_pos f)))
-      rwa [← zpow_ofNat, Int.toNat_of_nonneg this, ← zpow_mod_orderOf]⟩
+  classical
 #align equiv.perm.is_cycle.exists_pow_eq Equiv.Perm.IsCycle.exists_pow_eq
 -/
 
@@ -474,16 +457,7 @@ theorem IsCycle.two_le_card_support (h : IsCycle f) : 2 ≤ f.support.card :=
 -/
 
 theorem IsCycle.exists_pow_eq_one [Finite β] {f : Perm β} (hf : IsCycle f) :
-    ∃ (k : ℕ) (hk : 1 < k), f ^ k = 1 := by
-  classical
-  have : IsOfFinOrder f := isOfFinOrder_of_finite f
-  rw [isOfFinOrder_iff_pow_eq_one] at this 
-  obtain ⟨x, hx, hx'⟩ := hf
-  obtain ⟨_ | _ | k, hk, hk'⟩ := this
-  · exact absurd hk (lt_asymm hk)
-  · rw [pow_one] at hk' 
-    simpa [hk'] using hx
-  · exact ⟨k + 2, by simp, hk'⟩
+    ∃ (k : ℕ) (hk : 1 < k), f ^ k = 1 := by classical
 #align equiv.perm.is_cycle.exists_pow_eq_one Equiv.Perm.IsCycle.exists_pow_eq_one
 
 #print Equiv.Perm.IsCycle.zpowersEquivSupport /-
@@ -770,48 +744,14 @@ theorem IsCycle.support_pow_of_pos_of_lt_orderOf (hf : IsCycle f) {n : ℕ} (npo
 
 #print Equiv.Perm.IsCycle.pow_iff /-
 theorem IsCycle.pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
-    IsCycle (f ^ n) ↔ n.Coprime (orderOf f) := by
-  classical
-  cases nonempty_fintype β
-  constructor
-  · intro h
-    have hr : support (f ^ n) = support f :=
-      by
-      rw [hf.support_pow_eq_iff]
-      rintro ⟨k, rfl⟩
-      refine' h.ne_one _
-      simp [pow_mul, pow_orderOf_eq_one]
-    have : orderOf (f ^ n) = orderOf f := by rw [h.order_of, hr, hf.order_of]
-    rw [orderOf_pow, Nat.div_eq_self] at this 
-    cases this
-    · exact absurd this (orderOf_pos _).ne'
-    · rwa [Nat.coprime_iff_gcd_eq_one, Nat.gcd_comm]
-  · intro h
-    obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
-    have hf' : is_cycle ((f ^ n) ^ m) := by rwa [hm]
-    refine' hf'.of_pow fun x hx => _
-    rw [hm]
-    exact support_pow_le _ n hx
+    IsCycle (f ^ n) ↔ n.Coprime (orderOf f) := by classical
 #align equiv.perm.is_cycle.pow_iff Equiv.Perm.IsCycle.pow_iff
 -/
 
 #print Equiv.Perm.IsCycle.pow_eq_one_iff /-
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_one_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
-    f ^ n = 1 ↔ ∃ x, f x ≠ x ∧ (f ^ n) x = x := by
-  classical
-  cases nonempty_fintype β
-  constructor
-  · intro h
-    obtain ⟨x, hx, -⟩ := id hf
-    exact ⟨x, hx, by simp [h]⟩
-  · rintro ⟨x, hx, hx'⟩
-    by_cases h : support (f ^ n) = support f
-    · rw [← mem_support, ← h, mem_support] at hx 
-      contradiction
-    · rw [hf.support_pow_eq_iff, Classical.not_not] at h 
-      obtain ⟨k, rfl⟩ := h
-      rw [pow_mul, pow_orderOf_eq_one, one_pow]
+    f ^ n = 1 ↔ ∃ x, f x ≠ x ∧ (f ^ n) x = x := by classical
 #align equiv.perm.is_cycle.pow_eq_one_iff Equiv.Perm.IsCycle.pow_eq_one_iff
 -/
 
@@ -836,27 +776,7 @@ theorem IsCycle.pow_eq_one_iff'' [Finite β] {f : Perm β} (hf : IsCycle f) {n :
 #print Equiv.Perm.IsCycle.pow_eq_pow_iff /-
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b : ℕ} :
-    f ^ a = f ^ b ↔ ∃ x, f x ≠ x ∧ (f ^ a) x = (f ^ b) x := by
-  classical
-  cases nonempty_fintype β
-  constructor
-  · intro h
-    obtain ⟨x, hx, -⟩ := id hf
-    exact ⟨x, hx, by simp [h]⟩
-  · rintro ⟨x, hx, hx'⟩
-    wlog hab : a ≤ b generalizing a b
-    · exact (this hx'.symm (le_of_not_le hab)).symm
-    suffices f ^ (b - a) = 1 by
-      rw [pow_sub _ hab, mul_inv_eq_one] at this 
-      rw [this]
-    rw [hf.pow_eq_one_iff]
-    by_cases hfa : (f ^ a) x ∈ f.support
-    · refine' ⟨(f ^ a) x, mem_support.mp hfa, _⟩
-      simp only [pow_sub _ hab, Equiv.Perm.coe_mul, Function.comp_apply, inv_apply_self, ← hx']
-    · have h := @Equiv.Perm.zpow_apply_comm _ f 1 a x
-      simp only [zpow_one, zpow_ofNat] at h 
-      rw [not_mem_support, h, Function.Injective.eq_iff (f ^ a).Injective] at hfa 
-      contradiction
+    f ^ a = f ^ b ↔ ∃ x, f x ≠ x ∧ (f ^ a) x = (f ^ b) x := by classical
 #align equiv.perm.is_cycle.pow_eq_pow_iff Equiv.Perm.IsCycle.pow_eq_pow_iff
 -/
 
@@ -864,17 +784,6 @@ theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b :
 theorem IsCycle.isCycle_pow_pos_of_lt_prime_order [Finite β] {f : Perm β} (hf : IsCycle f)
     (hf' : (orderOf f).Prime) (n : ℕ) (hn : 0 < n) (hn' : n < orderOf f) : IsCycle (f ^ n) := by
   classical
-  cases nonempty_fintype β
-  have : n.coprime (orderOf f) := by
-    refine' Nat.Coprime.symm _
-    rw [Nat.Prime.coprime_iff_not_dvd hf']
-    exact Nat.not_dvd_of_pos_of_lt hn hn'
-  obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime this
-  have hf'' := hf
-  rw [← hm] at hf'' 
-  refine' hf''.of_pow _
-  rw [hm]
-  exact support_pow_le f n
 #align equiv.perm.is_cycle.is_cycle_pow_pos_of_lt_prime_order Equiv.Perm.IsCycle.isCycle_pow_pos_of_lt_prime_order
 -/
 
@@ -1025,13 +934,6 @@ theorem IsCycleOn.pow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ 
   · rw [coe_singleton, is_cycle_on_singleton] at hf 
     simpa using is_fixed_pt.iterate hf n
   classical
-  have h : ∀ x ∈ s.attach, ¬f ↑x = ↑x := fun x hx => hf.apply_ne hs x.Prop
-  have := (hf.is_cycle_subtype_perm hs).orderOf
-  simp only [filter_true_of_mem h, support_subtype_perm, card_attach] at this 
-  rw [← this, orderOf_dvd_iff_pow_eq_one,
-    (hf.is_cycle_subtype_perm hs).pow_eq_one_iff'
-      (ne_of_apply_ne (coe : s → α) <| hf.apply_ne hs (⟨a, ha⟩ : s).Prop)]
-  simp only [Subtype.coe_mk, subtype_perm_pow, subtype_perm_apply]
 #align equiv.perm.is_cycle_on.pow_apply_eq Equiv.Perm.IsCycleOn.pow_apply_eq
 -/
 
@@ -1072,16 +974,7 @@ theorem IsCycleOn.pow_card_apply {s : Finset α} (hf : f.IsCycleOn s) (ha : a �
 
 #print Equiv.Perm.IsCycleOn.exists_pow_eq /-
 theorem IsCycleOn.exists_pow_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) (hb : b ∈ s) :
-    ∃ n < s.card, (f ^ n) a = b := by
-  classical
-  obtain ⟨n, rfl⟩ := hf.2 ha hb
-  obtain ⟨k, hk⟩ := (Int.mod_modEq n s.card).symm.Dvd
-  refine' ⟨n.nat_mod s.card, Int.natMod_lt (nonempty.card_pos ⟨a, ha⟩).ne', _⟩
-  rw [← zpow_ofNat, Int.natMod,
-    Int.toNat_of_nonneg (Int.emod_nonneg _ <| Nat.cast_ne_zero.2 (nonempty.card_pos ⟨a, ha⟩).ne'),
-    sub_eq_iff_eq_add'.1 hk, zpow_add, zpow_mul]
-  simp only [zpow_ofNat, coe_mul, EmbeddingLike.apply_eq_iff_eq]
-  exact is_fixed_pt.perm_zpow (hf.pow_card_apply ha) _
+    ∃ n < s.card, (f ^ n) a = b := by classical
 #align equiv.perm.is_cycle_on.exists_pow_eq Equiv.Perm.IsCycleOn.exists_pow_eq
 -/
 
@@ -1550,26 +1443,6 @@ theorem mem_list_cycles_iff {α : Type _} [Finite α] {l : List (Perm α)}
     exact ⟨fun hσ => ⟨h1 σ hσ, (this (h1 σ hσ)).mp hσ⟩, fun hσ => (this hσ.1).mpr hσ.2⟩
   intro h3
   classical
-  cases nonempty_fintype α
-  constructor
-  · intro h a ha
-    exact eq_on_support_mem_disjoint h h2 _ (mem_support.mpr ha)
-  · intro h
-    have hσl : σ.support ⊆ l.prod.support := by
-      intro x hx
-      rw [mem_support] at hx 
-      rwa [mem_support, ← h _ hx]
-    obtain ⟨a, ha, -⟩ := id h3
-    rw [← mem_support] at ha 
-    obtain ⟨τ, hτ, hτa⟩ := exists_mem_support_of_mem_support_prod (hσl ha)
-    have hτl : ∀ x ∈ τ.support, τ x = l.prod x := eq_on_support_mem_disjoint hτ h2
-    have key : ∀ x ∈ σ.support ∩ τ.support, σ x = τ x :=
-      by
-      intro x hx
-      rw [h x (mem_support.mp (mem_of_mem_inter_left hx)), hτl x (mem_of_mem_inter_right hx)]
-    convert hτ
-    refine' h3.eq_on_support_inter_nonempty_congr (h1 _ hτ) key _ ha
-    exact key a (mem_inter_of_mem ha hτa)
 #align equiv.perm.mem_list_cycles_iff Equiv.Perm.mem_list_cycles_iff
 -/
 
@@ -1577,16 +1450,7 @@ theorem mem_list_cycles_iff {α : Type _} [Finite α] {l : List (Perm α)}
 theorem list_cycles_perm_list_cycles {α : Type _} [Finite α] {l₁ l₂ : List (Perm α)}
     (h₀ : l₁.Prod = l₂.Prod) (h₁l₁ : ∀ σ : Perm α, σ ∈ l₁ → σ.IsCycle)
     (h₁l₂ : ∀ σ : Perm α, σ ∈ l₂ → σ.IsCycle) (h₂l₁ : l₁.Pairwise Disjoint)
-    (h₂l₂ : l₂.Pairwise Disjoint) : l₁ ~ l₂ := by
-  classical
-  refine'
-    (List.perm_ext_iff_of_nodup (nodup_of_pairwise_disjoint_cycles h₁l₁ h₂l₁)
-          (nodup_of_pairwise_disjoint_cycles h₁l₂ h₂l₂)).mpr
-      fun σ => _
-  by_cases hσ : σ.is_cycle
-  · obtain ⟨a, ha⟩ := not_forall.mp (mt ext hσ.ne_one)
-    rw [mem_list_cycles_iff h₁l₁ h₂l₁, mem_list_cycles_iff h₁l₂ h₂l₂, h₀]
-  · exact iff_of_false (mt (h₁l₁ σ) hσ) (mt (h₁l₂ σ) hσ)
+    (h₂l₂ : l₂.Pairwise Disjoint) : l₁ ~ l₂ := by classical
 #align equiv.perm.list_cycles_perm_list_cycles Equiv.Perm.list_cycles_perm_list_cycles
 -/
 
@@ -1853,10 +1717,7 @@ theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (ba
   by
   cases nonempty_fintype β
   suffices ∀ l : List (perm β), (∀ τ : perm β, τ ∈ l → τ.IsCycle) → l.Pairwise Disjoint → P l.Prod
-    by
-    classical
-    let x := σ.trunc_cycle_factors.out
-    exact (congr_arg P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
+    by classical
   intro l
   induction' l with σ l ih
   · exact fun _ _ => base_one
@@ -1921,10 +1782,7 @@ variable [Finite β]
 open Subgroup
 
 #print Equiv.Perm.closure_isCycle /-
-theorem closure_isCycle : closure {σ : Perm β | IsCycle σ} = ⊤ := by
-  classical
-  cases nonempty_fintype β
-  exact top_le_iff.mp (le_trans (ge_of_eq closure_is_swap) (closure_mono fun _ => is_swap.is_cycle))
+theorem closure_isCycle : closure {σ : Perm β | IsCycle σ} = ⊤ := by classical
 #align equiv.perm.closure_is_cycle Equiv.Perm.closure_isCycle
 -/
 
@@ -2104,52 +1962,6 @@ end
 theorem Disjoint.isConj_mul {α : Type _} [Finite α] {σ τ π ρ : Perm α} (hc1 : IsConj σ π)
     (hc2 : IsConj τ ρ) (hd1 : Disjoint σ τ) (hd2 : Disjoint π ρ) : IsConj (σ * τ) (π * ρ) := by
   classical
-  cases nonempty_fintype α
-  obtain ⟨f, rfl⟩ := isConj_iff.1 hc1
-  obtain ⟨g, rfl⟩ := isConj_iff.1 hc2
-  have hd1' := coe_inj.2 hd1.support_mul
-  have hd2' := coe_inj.2 hd2.support_mul
-  rw [coe_union] at *
-  have hd1'' := disjoint_coe.2 (disjoint_iff_disjoint_support.1 hd1)
-  have hd2'' := disjoint_coe.2 (disjoint_iff_disjoint_support.1 hd2)
-  refine' is_conj_of_support_equiv _ _
-  ·
-    refine'
-        ((Equiv.Set.ofEq hd1').trans (Equiv.Set.union hd1''.le_bot)).trans
-          ((Equiv.sumCongr (subtype_equiv f fun a => _) (subtype_equiv g fun a => _)).trans
-            ((Equiv.Set.ofEq hd2').trans (Equiv.Set.union hd2''.le_bot)).symm) <;>
-      ·
-        simp only [Set.mem_image, to_embedding_apply, exists_eq_right, support_conj, coe_map,
-          apply_eq_iff_eq]
-  · intro x hx
-    simp only [trans_apply, symm_trans_apply, set.of_eq_apply, set.of_eq_symm_apply,
-      Equiv.sumCongr_apply]
-    rw [hd1', Set.mem_union] at hx 
-    cases' hx with hxσ hxτ
-    · rw [mem_coe, mem_support] at hxσ 
-      rw [set.union_apply_left hd1''.le_bot _, set.union_apply_left hd1''.le_bot _]
-      simp only [subtype_equiv_apply, perm.coe_mul, Sum.map_inl, comp_app,
-        set.union_symm_apply_left, Subtype.coe_mk, apply_eq_iff_eq]
-      · have h := (hd2 (f x)).resolve_left _
-        · rw [mul_apply, mul_apply] at h 
-          rw [h, inv_apply_self, (hd1 x).resolve_left hxσ]
-        · rwa [mul_apply, mul_apply, inv_apply_self, apply_eq_iff_eq]
-      · rwa [Subtype.coe_mk, Subtype.coe_mk, mem_coe, mem_support]
-      ·
-        rwa [Subtype.coe_mk, Subtype.coe_mk, perm.mul_apply, (hd1 x).resolve_left hxσ, mem_coe,
-          apply_mem_support, mem_support]
-    · rw [mem_coe, ← apply_mem_support, mem_support] at hxτ 
-      rw [set.union_apply_right hd1''.le_bot _, set.union_apply_right hd1''.le_bot _]
-      simp only [subtype_equiv_apply, perm.coe_mul, Sum.map_inr, comp_app,
-        set.union_symm_apply_right, Subtype.coe_mk, apply_eq_iff_eq]
-      · have h := (hd2 (g (τ x))).resolve_right _
-        · rw [mul_apply, mul_apply] at h 
-          rw [inv_apply_self, h, (hd1 (τ x)).resolve_right hxτ]
-        · rwa [mul_apply, mul_apply, inv_apply_self, apply_eq_iff_eq]
-      · rwa [Subtype.coe_mk, Subtype.coe_mk, mem_coe, ← apply_mem_support, mem_support]
-      ·
-        rwa [Subtype.coe_mk, Subtype.coe_mk, perm.mul_apply, (hd1 (τ x)).resolve_right hxτ, mem_coe,
-          mem_support]
 #align equiv.perm.disjoint.is_conj_mul Equiv.Perm.Disjoint.isConj_mul
 -/
 
@@ -2235,24 +2047,7 @@ variable {f : Perm α} {s : Set α}
 
 #print Set.Countable.exists_cycleOn /-
 theorem Countable.exists_cycleOn (hs : s.Countable) :
-    ∃ f : Perm α, f.IsCycleOn s ∧ {x | f x ≠ x} ⊆ s := by
-  classical
-  obtain hs' | hs' := s.finite_or_infinite
-  · refine'
-      ⟨hs'.to_finset.to_list.form_perm, _, fun x hx => by
-        simpa using List.mem_of_formPerm_apply_ne _ _ hx⟩
-    convert hs'.to_finset.nodup_to_list.is_cycle_on_form_perm
-    simp
-  haveI := hs.to_subtype
-  haveI := hs'.to_subtype
-  obtain ⟨f⟩ : Nonempty (ℤ ≃ s) := inferInstance
-  refine'
-    ⟨(Equiv.addRight 1).extendDomain f, _, fun x hx =>
-      of_not_not fun h => hx <| perm.extend_domain_apply_not_subtype _ _ h⟩
-  convert int.add_right_one_is_cycle.is_cycle_on.extend_domain _
-  rw [image_comp, Equiv.image_eq_preimage]
-  ext
-  simp
+    ∃ f : Perm α, f.IsCycleOn s ∧ {x | f x ≠ x} ⊆ s := by classical
 #align set.countable.exists_cycle_on Set.Countable.exists_cycleOn
 -/
 
@@ -2287,13 +2082,6 @@ theorem product_self_eq_disjiUnion_perm_aux (hf : f.IsCycleOn s) :
     simp_rw [Set.Subsingleton, mem_coe, ← card_le_one] at hs ⊢
     rwa [card_range]
   classical
-  rintro m hm n hn hmn
-  simp only [disjoint_left, Function.onFun, mem_map, Function.Embedding.coeFn_mk, exists_prop,
-    not_exists, not_and, forall_exists_index, and_imp, Prod.forall, Prod.mk.inj_iff]
-  rintro _ _ _ - rfl rfl a ha rfl h
-  rw [hf.pow_apply_eq_pow_apply ha] at h 
-  rw [mem_coe, mem_range] at hm hn 
-  exact hmn.symm (h.eq_of_lt_of_lt hn hm)
 #align finset.product_self_eq_disj_Union_perm_aux Finset.product_self_eq_disjiUnion_perm_aux
 -/
 

@@ -237,12 +237,7 @@ theorem Std.RBSet.eq_leaf_of_max_eq_none {t : Std.RBSet α lt} :
 #align rbtree.eq_leaf_of_max_eq_none Std.RBSet.eq_leaf_of_max_eq_none
 
 theorem Std.RBSet.min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Std.RBSet α lt} :
-    t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by
-  classical
-  cases t
-  apply Std.RBNode.min_is_minimal
-  apply Std.RBNode.isSearchableOfWellFormed
-  assumption
+    t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by classical
 #align rbtree.min_is_minimal Std.RBSet.min_is_minimal
 
 theorem Std.RBSet.max_is_maximal [IsStrictWeakOrder α lt] {a : α} {t : Std.RBSet α lt} :

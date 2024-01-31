@@ -212,8 +212,7 @@ noncomputable def isSuccLimitRecOn (b : α) (hs : ∀ a, ¬IsMax a → C (succ a
 
 #print Order.isSuccLimitRecOn_limit /-
 theorem isSuccLimitRecOn_limit (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ a, IsSuccLimit a → C a)
-    (hb : IsSuccLimit b) : @isSuccLimitRecOn α _ _ C b hs hl = hl b hb := by
-  classical exact dif_pos hb
+    (hb : IsSuccLimit b) : @isSuccLimitRecOn α _ _ C b hs hl = hl b hb := by classical
 #align order.is_succ_limit_rec_on_limit Order.isSuccLimitRecOn_limit
 -/
 

@@ -35,13 +35,7 @@ theorem prod_factorial_pos : 0 < ∏ i in s, (f i)! :=
 -/
 
 #print Nat.prod_factorial_dvd_factorial_sum /-
-theorem prod_factorial_dvd_factorial_sum : ∏ i in s, (f i)! ∣ (∑ i in s, f i)! := by
-  classical
-  induction' s using Finset.induction with a' s' has ih
-  · simp only [Finset.sum_empty, Finset.prod_empty, factorial]
-  · simp only [Finset.prod_insert has, Finset.sum_insert has]
-    refine' dvd_trans (mul_dvd_mul_left (f a')! ih) _
-    apply Nat.factorial_mul_factorial_dvd_factorial_add
+theorem prod_factorial_dvd_factorial_sum : ∏ i in s, (f i)! ∣ (∑ i in s, f i)! := by classical
 #align nat.prod_factorial_dvd_factorial_sum Nat.prod_factorial_dvd_factorial_sum
 -/
 

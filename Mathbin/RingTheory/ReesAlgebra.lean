@@ -124,16 +124,7 @@ theorem adjoin_monomial_eq_reesAlgebra :
 variable {I}
 
 #print reesAlgebra.fg /-
-theorem reesAlgebra.fg (hI : I.FG) : (reesAlgebra I).FG := by
-  classical
-  obtain ⟨s, hs⟩ := hI
-  rw [← adjoin_monomial_eq_reesAlgebra, ← hs]
-  use s.image (monomial 1)
-  rw [Finset.coe_image]
-  change
-    _ =
-      Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
-  rw [Submodule.map_span, Algebra.adjoin_span]
+theorem reesAlgebra.fg (hI : I.FG) : (reesAlgebra I).FG := by classical
 #align rees_algebra.fg reesAlgebra.fg
 -/
 

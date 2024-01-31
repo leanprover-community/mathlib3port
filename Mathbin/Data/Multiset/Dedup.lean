@@ -190,10 +190,7 @@ end Multiset
 
 #print Multiset.Nodup.le_nsmul_iff_le /-
 theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup)
-    (hn : n ≠ 0) : s ≤ n • t ↔ s ≤ t := by
-  classical
-  rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
-  simp [hn]
+    (hn : n ≠ 0) : s ≤ n • t ↔ s ≤ t := by classical
 #align multiset.nodup.le_nsmul_iff_le Multiset.Nodup.le_nsmul_iff_le
 -/
 

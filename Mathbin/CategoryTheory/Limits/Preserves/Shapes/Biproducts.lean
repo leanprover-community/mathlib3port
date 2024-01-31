@@ -286,10 +286,7 @@ variable [PreservesZeroMorphisms F]
     the biproduct, see `preserves_biproduct_of_mono_biproduct_comparison`.  -/
 @[simp, reassoc]
 theorem biproductComparison'_comp_biproductComparison :
-    biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by
-  classical
-  ext
-  simp [biproduct.ι_π, ← functor.map_comp, eq_to_hom_map]
+    biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by classical
 #align category_theory.functor.biproduct_comparison'_comp_biproduct_comparison CategoryTheory.Functor.biproductComparison'_comp_biproductComparison
 -/
 

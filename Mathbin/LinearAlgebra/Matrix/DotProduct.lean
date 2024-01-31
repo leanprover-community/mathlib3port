@@ -65,7 +65,7 @@ theorem dotProduct_stdBasis_one [DecidableEq n] (v : n → R) (i : n) :
 theorem dotProduct_eq (v w : n → R) (h : ∀ u, dotProduct v u = dotProduct w u) : v = w :=
   by
   funext x
-  classical rw [← dot_product_std_basis_one v x, ← dot_product_std_basis_one w x, h]
+  classical
 #align matrix.dot_product_eq Matrix.dotProduct_eq
 -/
 

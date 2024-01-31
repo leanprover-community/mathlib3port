@@ -250,31 +250,7 @@ theorem Submartingale.exists_ae_trim_tendsto_of_bdd [IsFiniteMeasure μ] (hf : S
 almost everywhere to a `⨆ n, ℱ n`-measurable function. -/
 theorem Submartingale.ae_tendsto_limitProcess [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) :
-    ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (ℱ.limitProcess f μ ω)) := by
-  classical
-  suffices ∃ g, strongly_measurable[⨆ n, ℱ n] g ∧ ∀ᵐ ω ∂μ, tendsto (fun n => f n ω) at_top (𝓝 (g ω))
-    by
-    rw [limit_process, dif_pos this]
-    exact (Classical.choose_spec this).2
-  set g' : Ω → ℝ := fun ω => if h : ∃ c, tendsto (fun n => f n ω) at_top (𝓝 c) then h.some else 0
-  have hle : (⨆ n, ℱ n) ≤ m0 := sSup_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _
-  have hg' : ∀ᵐ ω ∂μ.trim hle, tendsto (fun n => f n ω) at_top (𝓝 (g' ω)) :=
-    by
-    filter_upwards [hf.exists_ae_trim_tendsto_of_bdd hbdd] with ω hω
-    simp_rw [g', dif_pos hω]
-    exact hω.some_spec
-  have hg'm : @ae_strongly_measurable _ _ _ (⨆ n, ℱ n) g' (μ.trim hle) :=
-    (@aemeasurable_of_tendsto_metrizable_ae' _ _ (⨆ n, ℱ n) _ _ _ _ _ _ _
-        (fun n =>
-          ((hf.strongly_measurable n).Measurable.mono (le_sSup ⟨n, rfl⟩ : ℱ n ≤ ⨆ n, ℱ n)
-              le_rfl).AEMeasurable)
-        hg').AEStronglyMeasurable
-  obtain ⟨g, hgm, hae⟩ := hg'm
-  have hg : ∀ᵐ ω ∂μ.trim hle, tendsto (fun n => f n ω) at_top (𝓝 (g ω)) :=
-    by
-    filter_upwards [hae, hg'] with ω hω hg'ω
-    exact hω ▸ hg'ω
-  exact ⟨g, hgm, measure_eq_zero_of_trim_eq_zero hle hg⟩
+    ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (ℱ.limitProcess f μ ω)) := by classical
 #align measure_theory.submartingale.ae_tendsto_limit_process MeasureTheory.Submartingale.ae_tendsto_limitProcess
 -/
 

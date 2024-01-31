@@ -280,11 +280,6 @@ theorem monomial_dvd_monomial {r s : R} {i j : σ →₀ ℕ} :
     have hj := hx j
     have hi := hx i
     classical
-    simp_rw [coeff_monomial, if_pos] at hj hi 
-    simp_rw [coeff_monomial_mul', if_pos] at hi hj 
-    split_ifs at hi hj  with hi hi
-    · exact ⟨Or.inr hi, _, hj⟩
-    · exact ⟨Or.inl hj, hj.symm ▸ dvd_zero _⟩
   · rintro ⟨h | hij, d, rfl⟩
     · simp_rw [h, monomial_zero, dvd_zero]
     · refine' ⟨monomial (j - i) d, _⟩
