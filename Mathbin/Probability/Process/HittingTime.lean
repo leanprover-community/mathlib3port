@@ -91,7 +91,14 @@ theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m :=
 
 #print MeasureTheory.not_mem_of_lt_hitting /-
 theorem not_mem_of_lt_hitting {m k : ι} (hk₁ : k < hitting u s n m ω) (hk₂ : n ≤ k) : u k ω ∉ s :=
-  by classical
+  by
+  classical
+  intro h
+  have hexists : ∃ j ∈ Set.Icc n m, u j ω ∈ s
+  refine' ⟨k, ⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
+  refine' not_le.2 hk₁ _
+  simp_rw [hitting, if_pos hexists]
+  exact csInf_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
 #align measure_theory.not_mem_of_lt_hitting MeasureTheory.not_mem_of_lt_hitting
 -/
 

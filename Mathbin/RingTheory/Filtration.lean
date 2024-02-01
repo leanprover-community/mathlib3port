@@ -420,7 +420,41 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
 #print Ideal.Filtration.submodule_fg_iff_stable /-
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated.  -/
-theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).FG) : F.Submodule.FG ↔ F.Stable := by classical
+theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).FG) : F.Submodule.FG ↔ F.Stable := by
+  classical
+  delta Ideal.Filtration.Stable
+  simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
+  constructor
+  · rintro H
+    apply
+      H.stablizes_of_supr_eq
+        ⟨fun n₀ => Submodule.span _ (⋃ (i : ℕ) (H : i ≤ n₀), single R i '' ↑(F.N i)), _⟩
+    · dsimp
+      rw [← Submodule.span_iUnion, ← submodule_span_single]
+      congr 1
+      ext
+      simp only [Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
+      constructor
+      · rintro ⟨-, i, -, e⟩; exact ⟨i, e⟩
+      · rintro ⟨i, e⟩; exact ⟨i, i, le_refl i, e⟩
+    · intro n m e
+      rw [Submodule.span_le, Set.iUnion₂_subset_iff]
+      intro i hi
+      refine'
+        (Set.Subset.trans _ (Set.subset_iUnion₂ i (hi.trans e : _))).trans Submodule.subset_span
+      rfl
+  · rintro ⟨n, hn⟩
+    rw [hn]
+    simp_rw [Submodule.span_iUnion₂, ← Finset.mem_range_succ_iff, iSup_subtype']
+    apply Submodule.fg_iSup
+    rintro ⟨i, hi⟩
+    obtain ⟨s, hs⟩ := hF' i
+    have :
+      Submodule.span (reesAlgebra I) (s.image (lsingle R i) : Set (PolynomialModule R M)) =
+        Submodule.span _ (single R i '' (F.N i : Set M)) :=
+      by rw [Finset.coe_image, ← Submodule.span_span_of_tower R, ← Submodule.map_span, hs]; rfl
+    rw [Subtype.coe_mk, ← this]
+    exact ⟨_, rfl⟩
 #align ideal.filtration.submodule_fg_iff_stable Ideal.Filtration.submodule_fg_iff_stable
 -/
 

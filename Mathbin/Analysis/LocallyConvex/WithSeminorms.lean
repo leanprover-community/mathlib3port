@@ -113,7 +113,20 @@ theorem basisSets_nonempty [Nonempty ι] : p.basis_sets.Nonempty :=
 
 #print SeminormFamily.basisSets_intersect /-
 theorem basisSets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
-    ∃ (z : Set E) (H : z ∈ p.basis_sets), z ⊆ U ∩ V := by classical
+    ∃ (z : Set E) (H : z ∈ p.basis_sets), z ⊆ U ∩ V := by
+  classical
+  rcases p.basis_sets_iff.mp hU with ⟨s, r₁, hr₁, hU⟩
+  rcases p.basis_sets_iff.mp hV with ⟨t, r₂, hr₂, hV⟩
+  use((s ∪ t).sup p).ball 0 (min r₁ r₂)
+  refine' ⟨p.basis_sets_mem (s ∪ t) (lt_min_iff.mpr ⟨hr₁, hr₂⟩), _⟩
+  rw [hU, hV, ball_finset_sup_eq_Inter _ _ _ (lt_min_iff.mpr ⟨hr₁, hr₂⟩),
+    ball_finset_sup_eq_Inter _ _ _ hr₁, ball_finset_sup_eq_Inter _ _ _ hr₂]
+  exact
+    Set.subset_inter
+      (Set.iInter₂_mono' fun i hi =>
+        ⟨i, Finset.subset_union_left _ _ hi, ball_mono <| min_le_left _ _⟩)
+      (Set.iInter₂_mono' fun i hi =>
+        ⟨i, Finset.subset_union_right _ _ hi, ball_mono <| min_le_right _ _⟩)
 #align seminorm_family.basis_sets_intersect SeminormFamily.basisSets_intersect
 -/
 
@@ -281,7 +294,22 @@ theorem const_isBounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : �
 #print Seminorm.isBounded_sup /-
 theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F} {f : E →ₛₗ[σ₁₂] F}
     (hf : IsBounded p q f) (s' : Finset ι') :
-    ∃ (C : ℝ≥0) (s : Finset ι), (s'.sup q).comp f ≤ C • s.sup p := by classical
+    ∃ (C : ℝ≥0) (s : Finset ι), (s'.sup q).comp f ≤ C • s.sup p := by
+  classical
+  obtain rfl | hs' := s'.eq_empty_or_nonempty
+  · exact ⟨1, ∅, by simp [Seminorm.bot_eq_zero]⟩
+  choose fₛ fC hf using hf
+  use s'.card • s'.sup fC, Finset.biUnion s' fₛ
+  have hs : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.biUnion s' fₛ).sup p :=
+    by
+    intro i hi
+    refine' (hf i).trans (smul_le_smul _ (Finset.le_sup hi))
+    exact Finset.sup_mono (Finset.subset_biUnion_of_mem fₛ hi)
+  refine' (comp_mono f (finset_sup_le_sum q s')).trans _
+  simp_rw [← pullback_apply, map_sum, pullback_apply]
+  refine' (Finset.sum_le_sum hs).trans _
+  rw [Finset.sum_const, smul_assoc]
+  exact le_rfl
 #align seminorm.is_bounded_sup Seminorm.isBounded_sup
 -/
 

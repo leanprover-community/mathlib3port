@@ -1854,7 +1854,10 @@ variable {I I' I''}
 theorem MDifferentiableAt.mfderiv_prod {f : M → M'} {g : M → M''} {x : M}
     (hf : MDifferentiableAt I I' f x) (hg : MDifferentiableAt I I'' g x) :
     mfderiv I (I'.Prod I'') (fun x => (f x, g x)) x = (mfderiv I I' f x).Prod (mfderiv I I'' g x) :=
-  by classical
+  by
+  classical
+  simp_rw [mfderiv, if_pos (hf.prod_mk hg), if_pos hf, if_pos hg]
+  exact hf.2.fderivWithin_prod hg.2 (I.unique_diff _ (mem_range_self _))
 #align mdifferentiable_at.mfderiv_prod MDifferentiableAt.mfderiv_prod
 -/
 

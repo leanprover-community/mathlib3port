@@ -767,7 +767,56 @@ the determinants of the diagonal blocks. For the generalization to any number of
 `matrix.det_of_upper_triangular`. -/
 @[simp]
 theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
-    (Matrix.fromBlocks A B 0 D).det = A.det * D.det := by classical
+    (Matrix.fromBlocks A B 0 D).det = A.det * D.det := by
+  classical
+  simp_rw [det_apply']
+  convert
+    (sum_subset (subset_univ ((sum_congr_hom m n).range : Set (perm (Sum m n))).toFinset) _).symm
+  rw [sum_mul_sum]
+  simp_rw [univ_product_univ]
+  rw [(sum_bij (fun (σ : perm m × perm n) _ => Equiv.sumCongr σ.fst σ.snd) _ _ _ _).symm]
+  · intro σ₁₂ h
+    simp only
+    erw [Set.mem_toFinset, MonoidHom.mem_range]
+    use σ₁₂
+    simp only [sum_congr_hom_apply]
+  · simp only [forall_prop_of_true, Prod.forall, mem_univ]
+    intro σ₁ σ₂
+    rw [Fintype.prod_sum_type]
+    simp_rw [Equiv.sumCongr_apply, Sum.map_inr, Sum.map_inl, from_blocks_apply₁₁,
+      from_blocks_apply₂₂]
+    rw [mul_mul_mul_comm]
+    congr
+    rw [sign_sum_congr, Units.val_mul, Int.cast_mul]
+  · intro σ₁ σ₂ h₁ h₂
+    dsimp only
+    intro h
+    have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x := by intro x;
+      exact congr_fun (congr_arg to_fun h) x
+    simp only [Sum.map_inr, Sum.map_inl, perm.sum_congr_apply, Sum.forall] at h2 
+    ext
+    · exact h2.left x
+    · exact h2.right x
+  · intro σ hσ
+    erw [Set.mem_toFinset, MonoidHom.mem_range] at hσ 
+    obtain ⟨σ₁₂, hσ₁₂⟩ := hσ
+    use σ₁₂
+    rw [← hσ₁₂]
+    simp
+  · intro σ hσ hσn
+    have h1 : ¬∀ x, ∃ y, Sum.inl y = σ (Sum.inl x) :=
+      by
+      by_contra
+      rw [Set.mem_toFinset] at hσn 
+      apply absurd (mem_sum_congr_hom_range_of_perm_maps_to_inl _) hσn
+      rintro x ⟨a, ha⟩
+      rw [← ha]; exact h a
+    obtain ⟨a, ha⟩ := not_forall.mp h1
+    cases' hx : σ (Sum.inl a) with a2 b
+    · have hn := (not_exists.mp ha) a2
+      exact absurd hx.symm hn
+    · rw [Finset.prod_eq_zero (Finset.mem_univ (Sum.inl a)), MulZeroClass.mul_zero]
+      rw [hx, from_blocks_apply₂₁]; rfl
 #align matrix.det_from_blocks_zero₂₁ Matrix.det_fromBlocks_zero₂₁
 -/
 

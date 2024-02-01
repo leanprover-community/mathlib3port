@@ -356,7 +356,10 @@ theorem mulIndicator_preimage (s : Set α) (f : α → M) (B : Set M) :
 #print Set.mulIndicator_one_preimage /-
 @[to_additive]
 theorem mulIndicator_one_preimage (s : Set M) :
-    t.mulIndicator 1 ⁻¹' s ∈ ({Set.univ, ∅} : Set (Set α)) := by classical
+    t.mulIndicator 1 ⁻¹' s ∈ ({Set.univ, ∅} : Set (Set α)) := by
+  classical
+  rw [mul_indicator_one', preimage_one]
+  split_ifs <;> simp
 #align set.mul_indicator_one_preimage Set.mulIndicator_one_preimage
 #align set.indicator_zero_preimage Set.indicator_zero_preimage
 -/
@@ -376,7 +379,10 @@ theorem mulIndicator_const_preimage_eq_union (U : Set α) (s : Set M) (a : M) [D
 #print Set.mulIndicator_const_preimage /-
 @[to_additive]
 theorem mulIndicator_const_preimage (U : Set α) (s : Set M) (a : M) :
-    (U.mulIndicator fun x => a) ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) := by classical
+    (U.mulIndicator fun x => a) ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) := by
+  classical
+  rw [mul_indicator_const_preimage_eq_union]
+  split_ifs <;> simp
 #align set.mul_indicator_const_preimage Set.mulIndicator_const_preimage
 #align set.indicator_const_preimage Set.indicator_const_preimage
 -/
@@ -755,7 +761,19 @@ theorem mulIndicator_prod (I : Finset ι) (s : Set α) (f : ι → α → M) :
 theorem mulIndicator_biUnion {ι} (I : Finset ι) (s : ι → Set α) {f : α → M} :
     (∀ i ∈ I, ∀ j ∈ I, i ≠ j → Disjoint (s i) (s j)) →
       mulIndicator (⋃ i ∈ I, s i) f = fun a => ∏ i in I, mulIndicator (s i) f a :=
-  by classical
+  by
+  classical
+  refine' Finset.induction_on I _ _
+  · intro h; funext; simp
+  intro a I haI ih hI
+  funext
+  rw [Finset.prod_insert haI, Finset.set_biUnion_insert, mul_indicator_union_of_not_mem_inter, ih _]
+  · intro i hi j hj hij
+    exact hI i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj) hij
+  simp only [not_exists, exists_prop, mem_Union, mem_inter_iff, not_and]
+  intro hx a' ha'
+  refine' disjoint_left.1 (hI a (Finset.mem_insert_self _ _) a' (Finset.mem_insert_of_mem ha') _) hx
+  exact (ne_of_mem_of_not_mem ha' haI).symm
 #align set.mul_indicator_finset_bUnion Finset.mulIndicator_biUnion
 #align set.indicator_finset_bUnion Finset.indicator_biUnion
 -/
@@ -820,7 +838,8 @@ theorem inter_indicator_one {s t : Set α} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.indicator_prod_one /-
 theorem indicator_prod_one {s : Set α} {t : Set β} {x : α} {y : β} :
-    (s ×ˢ t).indicator (1 : _ → M) (x, y) = s.indicator 1 x * t.indicator 1 y := by classical
+    (s ×ˢ t).indicator (1 : _ → M) (x, y) = s.indicator 1 x * t.indicator 1 y := by
+  classical simp [indicator_apply, ← ite_and]
 #align set.indicator_prod_one Set.indicator_prod_one
 -/
 
@@ -828,13 +847,13 @@ variable (M) [Nontrivial M]
 
 #print Set.indicator_eq_zero_iff_not_mem /-
 theorem indicator_eq_zero_iff_not_mem {U : Set α} {x : α} : indicator U 1 x = (0 : M) ↔ x ∉ U := by
-  classical
+  classical simp [indicator_apply, imp_false]
 #align set.indicator_eq_zero_iff_not_mem Set.indicator_eq_zero_iff_not_mem
 -/
 
 #print Set.indicator_eq_one_iff_mem /-
 theorem indicator_eq_one_iff_mem {U : Set α} {x : α} : indicator U 1 x = (1 : M) ↔ x ∈ U := by
-  classical
+  classical simp [indicator_apply, imp_false]
 #align set.indicator_eq_one_iff_mem Set.indicator_eq_one_iff_mem
 -/
 
@@ -1017,6 +1036,12 @@ theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set �
   by
   intro x
   classical
+  simp_rw [indicator_apply]
+  split_ifs
+  · exact le_rfl
+  · exact (not_le.mp h_1).le
+  · exact h_1
+  · exact le_rfl
 #align set.indicator_le_indicator_nonneg Set.indicator_le_indicator_nonneg
 -/
 

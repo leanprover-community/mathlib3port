@@ -129,13 +129,21 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
 
 #print Set.definable_finset_inf /-
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
-    (s : Finset ι) : A.Definable L (s.inf f) := by classical
+    (s : Finset ι) : A.Definable L (s.inf f) := by
+  classical
+  refine' Finset.induction definable_univ (fun i s is h => _) s
+  rw [Finset.inf_insert]
+  exact (hf i).inter h
 #align set.definable_finset_inf Set.definable_finset_inf
 -/
 
 #print Set.definable_finset_sup /-
 theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
-    (s : Finset ι) : A.Definable L (s.sup f) := by classical
+    (s : Finset ι) : A.Definable L (s.sup f) := by
+  classical
+  refine' Finset.induction definable_empty (fun i s is h => _) s
+  rw [Finset.sup_insert]
+  exact (hf i).union h
 #align set.definable_finset_sup Set.definable_finset_sup
 -/
 
@@ -224,14 +232,60 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
 #print Set.Definable.image_comp_embedding /-
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β)
-    [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by classical
+    [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
+  classical
+  cases nonempty_fintype β
+  refine'
+    (congr rfl (ext fun x => _)).mp
+      (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
+            (Equiv.sumCongr (Equiv.ofInjective f f.injective)
+              (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
+        _)
+  simp only [mem_preimage, mem_image, exists_exists_and_eq_and]
+  refine' exists_congr fun y => and_congr_right fun ys => Eq.congr_left (funext fun a => _)
+  simp
 #align set.definable.image_comp_embedding Set.Definable.image_comp_embedding
 -/
 
 #print Set.Definable.image_comp /-
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Finite α]
-    [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by classical
+    [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
+  classical
+  cases nonempty_fintype α
+  cases nonempty_fintype β
+  have h :=
+    (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
+              (Equiv.sumCongr (_root_.equiv.refl _)
+                (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
+          _).preimage_comp
+      (range_splitting f)
+  have h' :
+    A.definable L {x : α → M | ∀ a, x a = x (range_splitting f (range_factorization f a))} :=
+    by
+    have h' :
+      ∀ a, A.definable L {x : α → M | x a = x (range_splitting f (range_factorization f a))} :=
+      by
+      refine' fun a => ⟨(var a).equal (var (range_splitting f (range_factorization f a))), ext _⟩
+      simp
+    refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finset.univ)
+    simp
+  refine' (congr rfl (ext fun x => _)).mp (h.inter h')
+  simp only [Equiv.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and,
+    mem_set_of_eq]
+  constructor
+  · rintro ⟨⟨y, ys, hy⟩, hx⟩
+    refine' ⟨y, ys, _⟩
+    ext a
+    rw [hx a, ← Function.comp_apply x, ← hy]
+    simp
+  · rintro ⟨y, ys, rfl⟩
+    refine' ⟨⟨y, ys, _⟩, fun a => _⟩
+    · ext
+      simp [Set.apply_rangeSplitting f]
+    ·
+      rw [Function.comp_apply, Function.comp_apply, apply_range_splitting f,
+        range_factorization_coe]
 #align set.definable.image_comp Set.Definable.image_comp
 -/
 

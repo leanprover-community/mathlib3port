@@ -132,7 +132,10 @@ theorem perm_mapsTo_inl_iff_mapsTo_inr {m n : Type _} [Finite m] [Finite n] (σ 
   cases nonempty_fintype n
   constructor <;>
     ( intro h
-      classical)
+      classical
+      rw [← perm_inv_maps_to_iff_maps_to] at h 
+      intro x
+      cases' hx : σ x with l r)
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨l, rfl⟩
     rw [← hx, σ.inv_apply_self] at hy 
@@ -153,6 +156,30 @@ theorem mem_sumCongrHom_range_of_perm_mapsTo_inl {m n : Type _} [Finite m] [Fini
   cases nonempty_fintype m
   cases nonempty_fintype n
   classical
+  have h1 : ∀ x : Sum m n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x := by
+    rintro x ⟨a, ha⟩; apply h; rw [← ha]; exact ⟨a, rfl⟩
+  have h3 : ∀ x : Sum m n, (∃ b : n, Sum.inr b = x) → ∃ b : n, Sum.inr b = σ x :=
+    by
+    rintro x ⟨b, hb⟩
+    apply (perm_maps_to_inl_iff_maps_to_inr σ).mp h
+    rw [← hb]; exact ⟨b, rfl⟩
+  let σ₁' := subtype_perm_of_fintype σ h1
+  let σ₂' := subtype_perm_of_fintype σ h3
+  let σ₁ := perm_congr (Equiv.ofInjective _ Sum.inl_injective).symm σ₁'
+  let σ₂ := perm_congr (Equiv.ofInjective _ Sum.inr_injective).symm σ₂'
+  rw [MonoidHom.mem_range, Prod.exists]
+  use σ₁, σ₂
+  rw [perm.sum_congr_hom_apply]
+  ext
+  cases' x with a b
+  · rw [Equiv.sumCongr_apply, Sum.map_inl, perm_congr_apply, Equiv.symm_symm,
+      apply_of_injective_symm Sum.inl_injective]
+    erw [subtype_perm_apply]
+    rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
+  · rw [Equiv.sumCongr_apply, Sum.map_inr, perm_congr_apply, Equiv.symm_symm,
+      apply_of_injective_symm Sum.inr_injective]
+    erw [subtype_perm_apply]
+    rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
 #align equiv.perm.mem_sum_congr_hom_range_of_perm_maps_to_inl Equiv.Perm.mem_sumCongrHom_range_of_perm_mapsTo_inl
 -/
 

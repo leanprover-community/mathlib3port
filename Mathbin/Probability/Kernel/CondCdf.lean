@@ -497,17 +497,66 @@ theorem tendsto_preCDF_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
       exact absurd (hr.trans (ha_le_one r)) ennreal.one_lt_two.not_le
     · exact h_tendsto
   classical
+  -- let `F` be the pointwise limit of `pre_cdf` where it exists, and 0 elsewhere.
+  let F : α → ℝ≥0∞ := fun a =>
+    if h : ∃ l, tendsto (fun r => pre_cdf ρ r a) at_top (𝓝 l) then h.some else 0
+  have h_tendsto_ℚ : ∀ᵐ a ∂ρ.fst, tendsto (fun r => pre_cdf ρ r a) at_top (𝓝 (F a)) :=
+    by
+    filter_upwards [h_exists] with a ha
+    simp_rw [F, dif_pos ha]
+    exact ha.some_spec
+  have h_tendsto_ℕ : ∀ᵐ a ∂ρ.fst, tendsto (fun n : ℕ => pre_cdf ρ n a) at_top (𝓝 (F a)) := by
+    filter_upwards [h_tendsto_ℚ] with a ha using ha.comp tendsto_nat_cast_atTop_atTop
+  have hF_ae_meas : AEMeasurable F ρ.fst :=
+    by
+    refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto_ℚ
+    exact measurable_pre_cdf.ae_measurable
+  have hF_le_one : ∀ᵐ a ∂ρ.fst, F a ≤ 1 := by
+    filter_upwards [h_tendsto_ℚ, h_le_one] with a ha ha_le using le_of_tendsto' ha ha_le
+  -- it suffices to show that the limit `F` is 1 a.e.
+  suffices ∀ᵐ a ∂ρ.fst, F a = 1
+    by
+    filter_upwards [h_tendsto_ℚ, this] with a ha_tendsto ha_eq
+    rwa [ha_eq] at ha_tendsto 
+  -- since `F` is at most 1, proving that its integral is the same as the integral of 1 will tell
+  -- us that `F` is 1 a.e.
+  have h_lintegral_eq : ∫⁻ a, F a ∂ρ.fst = ∫⁻ a, 1 ∂ρ.fst :=
+    by
+    have h_lintegral :
+      tendsto (fun r : ℕ => ∫⁻ a, pre_cdf ρ r a ∂ρ.fst) at_top (𝓝 (∫⁻ a, F a ∂ρ.fst)) :=
+      by
+      refine'
+        lintegral_tendsto_of_tendsto_of_monotone
+          (-- does this exist only for ℕ?
+          fun _ => measurable_pre_cdf.ae_measurable)
+          _ h_tendsto_ℕ
+      filter_upwards [h_mono] with a ha
+      refine' fun n m hnm => ha _
+      exact_mod_cast hnm
+    have h_lintegral' :
+      tendsto (fun r : ℕ => ∫⁻ a, pre_cdf ρ r a ∂ρ.fst) at_top (𝓝 (∫⁻ a, 1 ∂ρ.fst)) :=
+      by
+      rw [lintegral_one, measure.fst_univ]
+      exact (tendsto_lintegral_pre_cdf_at_top ρ).comp tendsto_nat_cast_atTop_atTop
+    exact tendsto_nhds_unique h_lintegral h_lintegral'
+  have : ∫⁻ a, 1 - F a ∂ρ.fst = 0 :=
+    by
+    rw [lintegral_sub' hF_ae_meas _ hF_le_one, h_lintegral_eq, tsub_self]
+    calc
+      ∫⁻ a, F a ∂ρ.fst = ∫⁻ a, 1 ∂ρ.fst := h_lintegral_eq
+      _ = ρ.fst univ := lintegral_one
+      _ = ρ univ := measure.fst_univ
+      _ ≠ ∞ := measure_ne_top ρ _
+  rw [lintegral_eq_zero_iff' (ae_measurable_const.sub hF_ae_meas)] at this 
+  filter_upwards [this, hF_le_one] with ha h_one_sub_eq_zero h_le_one
+  rw [Pi.zero_apply, tsub_eq_zero_iff_le] at h_one_sub_eq_zero 
+  exact le_antisymm h_le_one h_one_sub_eq_zero
 #align probability_theory.tendsto_pre_cdf_at_top_one ProbabilityTheory.tendsto_preCDF_atTop_one
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ProbabilityTheory.tendsto_preCDF_atBot_zero /-
--- let `F` be the pointwise limit of `pre_cdf` where it exists, and 0 elsewhere.
--- it suffices to show that the limit `F` is 1 a.e.
--- since `F` is at most 1, proving that its integral is the same as the integral of 1 will tell
--- us that `F` is 1 a.e.
--- does this exist only for ℕ?
 theorem tendsto_preCDF_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
     ∀ᵐ a ∂ρ.fst, Tendsto (fun r => preCDF ρ r a) atBot (𝓝 0) :=
   by
@@ -533,6 +582,58 @@ theorem tendsto_preCDF_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
     · exact ⟨0, tendsto.mono_right h_bot atBot_le_nhds_bot⟩
     · exact h_tendsto
   classical
+  let F : α → ℝ≥0∞ := fun a =>
+    if h : ∃ l, tendsto (fun r => pre_cdf ρ (-r) a) at_top (𝓝 l) then h.some else 0
+  have h_tendsto : ∀ᵐ a ∂ρ.fst, tendsto (fun r => pre_cdf ρ (-r) a) at_top (𝓝 (F a)) :=
+    by
+    filter_upwards [h_exists] with a ha
+    simp_rw [F, dif_pos ha]
+    exact ha.some_spec
+  suffices h_lintegral_eq : ∫⁻ a, F a ∂ρ.fst = 0
+  · have hF_ae_meas : AEMeasurable F ρ.fst :=
+      by
+      refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto
+      exact measurable_pre_cdf.ae_measurable
+    rw [lintegral_eq_zero_iff' hF_ae_meas] at h_lintegral_eq 
+    filter_upwards [h_tendsto, h_lintegral_eq] with a ha_tendsto ha_eq
+    rwa [ha_eq] at ha_tendsto 
+  have h_lintegral :
+    tendsto (fun r => ∫⁻ a, pre_cdf ρ (-r) a ∂ρ.fst) at_top (𝓝 (∫⁻ a, F a ∂ρ.fst)) :=
+    by
+    refine'
+      tendsto_lintegral_filter_of_dominated_convergence (fun _ => 1)
+        (eventually_of_forall fun _ => measurable_pre_cdf) (eventually_of_forall fun _ => _) _
+        h_tendsto
+    · filter_upwards [pre_cdf_le_one ρ] with a ha using ha _
+    · rw [lintegral_one]
+      exact measure_ne_top _ _
+  have h_lintegral' : tendsto (fun r => ∫⁻ a, pre_cdf ρ (-r) a ∂ρ.fst) at_top (𝓝 0) :=
+    by
+    have h_lintegral_eq :
+      (fun r => ∫⁻ a, pre_cdf ρ (-r) a ∂ρ.fst) = fun r => ρ (univ ×ˢ Iic (-r)) :=
+      by
+      ext1 n
+      rw [← set_lintegral_univ, set_lintegral_pre_cdf_fst ρ _ MeasurableSet.univ,
+        measure.Iic_snd_univ]
+      norm_cast
+    rw [h_lintegral_eq]
+    have h_zero_eq_measure_Inter : (0 : ℝ≥0∞) = ρ (⋂ r : ℚ, univ ×ˢ Iic (-r)) :=
+      by
+      suffices (⋂ r : ℚ, Iic (-(r : ℝ))) = ∅ by
+        rwa [← Set.prod_iInter, this, prod_empty, measure_empty]
+      ext1 x
+      simp only [mem_Inter, mem_Iic, mem_empty_iff_false, iff_false_iff, Classical.not_forall,
+        not_le]
+      simp_rw [neg_lt]
+      exact exists_rat_gt _
+    rw [h_zero_eq_measure_Inter]
+    refine'
+      tendsto_measure_Inter (fun n => measurable_set.univ.prod measurableSet_Iic)
+        (fun i j hij x => _) ⟨0, measure_ne_top ρ _⟩
+    simp only [mem_prod, mem_univ, mem_Iic, true_and_iff]
+    refine' fun hxj => hxj.trans (neg_le_neg _)
+    exact_mod_cast hij
+  exact tendsto_nhds_unique h_lintegral h_lintegral'
 #align probability_theory.tendsto_pre_cdf_at_bot_zero ProbabilityTheory.tendsto_preCDF_atBot_zero
 -/
 

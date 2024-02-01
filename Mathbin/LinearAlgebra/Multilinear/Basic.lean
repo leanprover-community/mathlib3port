@@ -189,7 +189,10 @@ protected theorem map_smul [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (c : R)
 -/
 
 #print MultilinearMap.map_coord_zero /-
-theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by classical
+theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by
+  classical
+  have : (0 : R) • (0 : M₁ i) = 0 := by simp
+  rw [← update_eq_self i m, h, ← this, f.map_smul, zero_smul]
 #align multilinear_map.map_coord_zero MultilinearMap.map_coord_zero
 -/
 
@@ -265,7 +268,11 @@ instance : AddCommMonoid (MultilinearMap R M₁ M₂) :=
 #print MultilinearMap.sum_apply /-
 @[simp]
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
-    ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m := by classical
+    ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m := by
+  classical
+  apply Finset.induction
+  · rw [Finset.sum_empty]; simp
+  · intro a s has H; rw [Finset.sum_insert has]; simp [H, has]
 #align multilinear_map.sum_apply MultilinearMap.sum_apply
 -/
 
@@ -721,6 +728,9 @@ theorem map_sum [DecidableEq ι] [Fintype ι] [∀ i, Fintype (α i)] :
 theorem map_update_sum {α : Type _} [DecidableEq ι] (t : Finset α) (i : ι) (g : α → M₁ i)
     (m : ∀ i, M₁ i) : f (update m i (∑ a in t, g a)) = ∑ a in t, f (update m i (g a)) := by
   classical
+  induction' t using Finset.induction with a t has ih h
+  · simp
+  · simp [Finset.sum_insert has, ih]
 #align multilinear_map.map_update_sum MultilinearMap.map_update_sum
 -/
 
@@ -932,7 +942,8 @@ theorem map_piecewise_smul [DecidableEq ι] (c : ι → R) (m : ∀ i, M₁ i) (
 /-- Multiplicativity of a multilinear map along all coordinates at the same time,
 writing `f (λi, c i • m i)` as `(∏ i, c i) • f m`. -/
 theorem map_smul_univ [Fintype ι] (c : ι → R) (m : ∀ i, M₁ i) :
-    (f fun i => c i • m i) = (∏ i, c i) • f m := by classical
+    (f fun i => c i • m i) = (∏ i, c i) • f m := by
+  classical simpa using map_piecewise_smul f c m Finset.univ
 #align multilinear_map.map_smul_univ MultilinearMap.map_smul_univ
 -/
 

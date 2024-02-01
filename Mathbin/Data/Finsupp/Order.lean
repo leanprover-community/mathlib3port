@@ -180,7 +180,9 @@ theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := 
 
 #print Finsupp.le_iff' /-
 theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
-  ⟨fun h s hs => h s, fun h s => by classical⟩
+  ⟨fun h s hs => h s, fun h s => by
+    classical exact
+      if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 #align finsupp.le_iff' Finsupp.le_iff'
 -/
 
@@ -288,7 +290,11 @@ theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).support = 
 -/
 
 #print Finsupp.disjoint_iff /-
-theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support := by classical
+theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support := by
+  classical
+  rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty,
+    Finsupp.support_inf]
+  rfl
 #align finsupp.disjoint_iff Finsupp.disjoint_iff
 -/
 

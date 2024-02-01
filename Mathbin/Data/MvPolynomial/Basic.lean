@@ -664,13 +664,15 @@ theorem support_add [DecidableEq σ] : (p + q).support ⊆ p.support ∪ q.suppo
 -/
 
 #print MvPolynomial.support_X /-
-theorem support_X [Nontrivial R] : (X n : MvPolynomial σ R).support = {single n 1} := by classical
+theorem support_X [Nontrivial R] : (X n : MvPolynomial σ R).support = {single n 1} := by
+  classical rw [X, support_monomial, if_neg] <;> exact one_ne_zero
 #align mv_polynomial.support_X MvPolynomial.support_X
 -/
 
 #print MvPolynomial.support_X_pow /-
 theorem support_X_pow [Nontrivial R] (s : σ) (n : ℕ) :
-    (X s ^ n : MvPolynomial σ R).support = {Finsupp.single s n} := by classical
+    (X s ^ n : MvPolynomial σ R).support = {Finsupp.single s n} := by
+  classical rw [X_pow_eq_monomial, support_monomial, if_neg (one_ne_zero' R)]
 #align mv_polynomial.support_X_pow MvPolynomial.support_X_pow
 -/
 
@@ -854,7 +856,8 @@ theorem coeff_X' [DecidableEq σ] (i : σ) (m) :
 
 #print MvPolynomial.coeff_X /-
 @[simp]
-theorem coeff_X (i : σ) : coeff (single i 1) (X i : MvPolynomial σ R) = 1 := by classical
+theorem coeff_X (i : σ) : coeff (single i 1) (X i : MvPolynomial σ R) = 1 := by
+  classical rw [coeff_X', if_pos rfl]
 #align mv_polynomial.coeff_X MvPolynomial.coeff_X
 -/
 
@@ -862,6 +865,9 @@ theorem coeff_X (i : σ) : coeff (single i 1) (X i : MvPolynomial σ R) = 1 := b
 @[simp]
 theorem coeff_C_mul (m) (a : R) (p : MvPolynomial σ R) : coeff m (C a * p) = a * coeff m p := by
   classical
+  rw [mul_def, sum_C]
+  · simp (config := { contextual := true }) [sum_def, coeff_sum]
+  simp
 #align mv_polynomial.coeff_C_mul MvPolynomial.coeff_C_mul
 -/
 
@@ -952,7 +958,21 @@ theorem support_symmDiff_support_subset_support_add [DecidableEq σ] (p q : MvPo
 
 #print MvPolynomial.coeff_mul_monomial' /-
 theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
-    coeff m (p * monomial s r) = if s ≤ m then coeff (m - s) p * r else 0 := by classical
+    coeff m (p * monomial s r) = if s ≤ m then coeff (m - s) p * r else 0 := by
+  classical
+  obtain rfl | hr := eq_or_ne r 0
+  · simp only [monomial_zero, coeff_zero, MulZeroClass.mul_zero, if_t_t]
+  haveI : Nontrivial R := nontrivial_of_ne _ _ hr
+  split_ifs with h h
+  · conv_rhs => rw [← coeff_mul_monomial _ s]
+    congr with t
+    rw [tsub_add_cancel_of_le h]
+  · rw [← not_mem_support_iff]; intro hm; apply h
+    have H := support_mul _ _ hm; simp only [Finset.mem_biUnion] at H 
+    rcases H with ⟨j, hj, i', hi', H⟩
+    rw [support_monomial, if_neg hr, Finset.mem_singleton] at hi' ; subst i'
+    rw [Finset.mem_singleton] at H ; subst m
+    exact le_add_left le_rfl
 #align mv_polynomial.coeff_mul_monomial' MvPolynomial.coeff_mul_monomial'
 -/
 
@@ -1019,6 +1039,15 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : C r ∣ φ ↔ �
   · intro h
     choose c hc using h
     classical
+    let c' : (σ →₀ ℕ) → R := fun i => if i ∈ φ.support then c i else 0
+    let ψ : MvPolynomial σ R := ∑ i in φ.support, monomial i (c' i)
+    use ψ
+    apply MvPolynomial.ext
+    intro i
+    simp only [coeff_C_mul, coeff_sum, coeff_monomial, Finset.sum_ite_eq', c']
+    split_ifs with hi hi
+    · rw [hc]
+    · rw [not_mem_support_iff] at hi ; rwa [MulZeroClass.mul_zero]
 #align mv_polynomial.C_dvd_iff_dvd_coeff MvPolynomial.C_dvd_iff_dvd_coeff
 -/
 
@@ -1157,7 +1186,8 @@ section
 
 #print MvPolynomial.eval₂_add /-
 @[simp]
-theorem eval₂_add : (p + q).eval₂ f g = p.eval₂ f g + q.eval₂ f g := by classical
+theorem eval₂_add : (p + q).eval₂ f g = p.eval₂ f g + q.eval₂ f g := by
+  classical exact Finsupp.sum_add_index (by simp [f.map_zero]) (by simp [add_mul, f.map_add])
 #align mv_polynomial.eval₂_add MvPolynomial.eval₂_add
 -/
 
@@ -1193,6 +1223,18 @@ theorem eval₂_X (n) : (X n).eval₂ f g = g n := by
 theorem eval₂_mul_monomial :
     ∀ {s a}, (p * monomial s a).eval₂ f g = p.eval₂ f g * f a * s.Prod fun n e => g n ^ e := by
   classical
+  apply MvPolynomial.induction_on p
+  · intro a' s a
+    simp [C_mul_monomial, eval₂_monomial, f.map_mul]
+  · intro p q ih_p ih_q; simp [add_mul, eval₂_add, ih_p, ih_q]
+  · intro p n ih s a
+    exact
+      calc
+        (p * X n * monomial s a).eval₂ f g = (p * monomial (single n 1 + s) a).eval₂ f g := by
+          rw [monomial_single_add, pow_one, mul_assoc]
+        _ = (p * monomial (single n 1) 1).eval₂ f g * f a * s.prod fun n e => g n ^ e := by
+          simp [ih, prod_single_index, prod_add_index, pow_one, pow_add, mul_assoc, mul_left_comm,
+            f.map_one, -add_comm]
 #align mv_polynomial.eval₂_mul_monomial MvPolynomial.eval₂_mul_monomial
 -/
 
@@ -1541,6 +1583,13 @@ theorem map_eval₂ (f : R →+* S₁) (g : S₂ → MvPolynomial S₃ R) (p : M
 #print MvPolynomial.coeff_map /-
 theorem coeff_map (p : MvPolynomial σ R) : ∀ m : σ →₀ ℕ, coeff m (map f p) = f (coeff m p) := by
   classical
+  apply MvPolynomial.induction_on p <;> clear p
+  · intro r m; rw [map_C]; simp only [coeff_C]; split_ifs; · rfl; rw [f.map_zero]
+  · intro p q hp hq m; simp only [hp, hq, (map f).map_add, coeff_add]; rw [f.map_add]
+  · intro p i hp m; simp only [hp, (map f).map_hMul, map_X]
+    simp only [hp, mem_support_iff, coeff_mul_X']
+    split_ifs; · rfl
+    rw [f.map_zero]
 #align mv_polynomial.coeff_map MvPolynomial.coeff_map
 -/
 
@@ -2017,7 +2066,28 @@ variable {S subS : Type _} [CommSemiring S] [SetLike subS S] [SubsemiringClass s
 #print MvPolynomial.eval₂_mem /-
 theorem eval₂_mem {f : R →+* S} {p : MvPolynomial σ R} {s : subS}
     (hs : ∀ i ∈ p.support, f (p.coeff i) ∈ s) {v : σ → S} (hv : ∀ i, v i ∈ s) :
-    MvPolynomial.eval₂ f v p ∈ s := by classical
+    MvPolynomial.eval₂ f v p ∈ s := by
+  classical
+  replace hs : ∀ i, f (p.coeff i) ∈ s
+  · intro i
+    by_cases hi : i ∈ p.support
+    · exact hs i hi
+    · rw [MvPolynomial.not_mem_support_iff.1 hi, f.map_zero]
+      exact zero_mem s
+  induction' p using MvPolynomial.induction_on''' with a a b f ha hb0 ih generalizing hs
+  · simpa using hs 0
+  rw [eval₂_add, eval₂_monomial]
+  refine' add_mem (mul_mem _ <| prod_mem fun i hi => pow_mem (hv _) _) (ih fun i => _)
+  ·
+    simpa only [coeff_add, coeff_monomial, if_pos rfl, MvPolynomial.not_mem_support_iff.1 ha,
+      add_zero] using hs a
+  have := hs i
+  rw [coeff_add, coeff_monomial] at this 
+  split_ifs at this  with h h
+  · subst h
+    rw [MvPolynomial.not_mem_support_iff.1 ha, map_zero]
+    exact zero_mem _
+  · rwa [zero_add] at this 
 #align mv_polynomial.eval₂_mem MvPolynomial.eval₂_mem
 -/
 

@@ -88,13 +88,19 @@ def ceil (m : E) : span ℤ (Set.range b) :=
 
 #print Zspan.repr_floor_apply /-
 @[simp]
-theorem repr_floor_apply (m : E) (i : ι) : b.repr (floor b m) i = ⌊b.repr m i⌋ := by classical
+theorem repr_floor_apply (m : E) (i : ι) : b.repr (floor b m) i = ⌊b.repr m i⌋ := by
+  classical simp only [floor, zsmul_eq_smul_cast K, b.repr.map_smul, Finsupp.single_apply,
+    Finset.sum_apply', Basis.repr_self, Finsupp.smul_single', mul_one, Finset.sum_ite_eq', coe_sum,
+    Finset.mem_univ, if_true, coe_smul_of_tower, Basis.restrictScalars_apply, map_sum]
 #align zspan.repr_floor_apply Zspan.repr_floor_apply
 -/
 
 #print Zspan.repr_ceil_apply /-
 @[simp]
-theorem repr_ceil_apply (m : E) (i : ι) : b.repr (ceil b m) i = ⌈b.repr m i⌉ := by classical
+theorem repr_ceil_apply (m : E) (i : ι) : b.repr (ceil b m) i = ⌈b.repr m i⌉ := by
+  classical simp only [ceil, zsmul_eq_smul_cast K, b.repr.map_smul, Finsupp.single_apply,
+    Finset.sum_apply', Basis.repr_self, Finsupp.smul_single', mul_one, Finset.sum_ite_eq', coe_sum,
+    Finset.mem_univ, if_true, coe_smul_of_tower, Basis.restrictScalars_apply, map_sum]
 #align zspan.repr_ceil_apply Zspan.repr_ceil_apply
 -/
 
@@ -148,14 +154,20 @@ theorem repr_fract_apply (m : E) (i : ι) : b.repr (fract b m) i = Int.fract (b.
 #print Zspan.fract_fract /-
 @[simp]
 theorem fract_fract (m : E) : fract b (fract b m) = fract b m :=
-  Basis.ext_elem b fun _ => by classical
+  Basis.ext_elem b fun _ => by classical simp only [repr_fract_apply, Int.fract_fract]
 #align zspan.fract_fract Zspan.fract_fract
 -/
 
 #print Zspan.fract_zspan_add /-
 @[simp]
 theorem fract_zspan_add (m : E) {v : E} (h : v ∈ span ℤ (Set.range b)) :
-    fract b (v + m) = fract b m := by classical
+    fract b (v + m) = fract b m := by
+  classical
+  refine' (Basis.ext_elem_iff b).mpr fun i => _
+  simp_rw [repr_fract_apply, Int.fract_eq_fract]
+  use(b.restrict_scalars ℤ).repr ⟨v, h⟩ i
+  rw [map_add, Finsupp.coe_add, Pi.add_apply, add_tsub_cancel_right, ←
+    eq_intCast (algebraMap ℤ K) _, Basis.restrictScalars_repr_apply, coe_mk]
 #align zspan.fract_zspan_add Zspan.fract_zspan_add
 -/
 
@@ -169,7 +181,9 @@ theorem fract_add_zspan (m : E) {v : E} (h : v ∈ span ℤ (Set.range b)) :
 variable {b}
 
 #print Zspan.fract_eq_self /-
-theorem fract_eq_self {x : E} : fract b x = x ↔ x ∈ fundamentalDomain b := by classical
+theorem fract_eq_self {x : E} : fract b x = x ↔ x ∈ fundamentalDomain b := by
+  classical simp only [Basis.ext_elem_iff b, repr_fract_apply, Int.fract_eq_self,
+    mem_fundamental_domain, Set.mem_Ico]
 #align zspan.fract_eq_self Zspan.fract_eq_self
 -/
 
@@ -184,11 +198,30 @@ theorem fract_mem_fundamentalDomain (x : E) : fract b x ∈ fundamentalDomain b 
 #print Zspan.fract_eq_fract /-
 theorem fract_eq_fract (m n : E) : fract b m = fract b n ↔ -m + n ∈ span ℤ (Set.range b) := by
   classical
+  rw [eq_comm, Basis.ext_elem_iff b]
+  simp_rw [repr_fract_apply, Int.fract_eq_fract, eq_comm, Basis.mem_span_iff_repr_mem,
+    sub_eq_neg_add, map_add, LinearEquiv.map_neg, Finsupp.coe_add, Finsupp.coe_neg, Pi.add_apply,
+    Pi.neg_apply, ← eq_intCast (algebraMap ℤ K) _, Set.mem_range]
 #align zspan.fract_eq_fract Zspan.fract_eq_fract
 -/
 
 #print Zspan.norm_fract_le /-
-theorem norm_fract_le [HasSolidNorm K] (m : E) : ‖fract b m‖ ≤ ∑ i, ‖b i‖ := by classical
+theorem norm_fract_le [HasSolidNorm K] (m : E) : ‖fract b m‖ ≤ ∑ i, ‖b i‖ := by
+  classical
+  calc
+    ‖fract b m‖ = ‖∑ i, b.repr (fract b m) i • b i‖ := by rw [b.sum_repr]
+    _ = ‖∑ i, Int.fract (b.repr m i) • b i‖ := by simp_rw [repr_fract_apply]
+    _ ≤ ∑ i, ‖Int.fract (b.repr m i) • b i‖ := (norm_sum_le _ _)
+    _ ≤ ∑ i, ‖Int.fract (b.repr m i)‖ * ‖b i‖ := by simp_rw [norm_smul]
+    _ ≤ ∑ i, ‖b i‖ := Finset.sum_le_sum fun i _ => _
+  suffices ‖Int.fract ((b.repr m) i)‖ ≤ 1
+    by
+    convert mul_le_mul_of_nonneg_right this (norm_nonneg _ : 0 ≤ ‖b i‖)
+    exact (one_mul _).symm
+  rw [(norm_one.symm : 1 = ‖(1 : K)‖)]
+  apply norm_le_norm_of_abs_le_abs
+  rw [abs_one, Int.abs_fract]
+  exact le_of_lt (Int.fract_lt_one _)
 #align zspan.norm_fract_le Zspan.norm_fract_le
 -/
 

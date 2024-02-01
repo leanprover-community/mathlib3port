@@ -467,7 +467,9 @@ end
 
 #print MvPolynomial.mem_vars_bind₁ /-
 theorem mem_vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) {j : τ}
-    (h : j ∈ (bind₁ f φ).vars) : ∃ i : σ, i ∈ φ.vars ∧ j ∈ (f i).vars := by classical
+    (h : j ∈ (bind₁ f φ).vars) : ∃ i : σ, i ∈ φ.vars ∧ j ∈ (f i).vars := by
+  classical simpa only [exists_prop, Finset.mem_biUnion, mem_support_iff, Ne.def] using
+    vars_bind₁ f φ h
 #align mv_polynomial.mem_vars_bind₁ MvPolynomial.mem_vars_bind₁
 -/
 

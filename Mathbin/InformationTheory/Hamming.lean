@@ -71,7 +71,15 @@ theorem hammingDist_comm (x y : ∀ i, β i) : hammingDist x y = hammingDist y x
 #print hammingDist_triangle /-
 /-- Corresponds to `dist_triangle`. -/
 theorem hammingDist_triangle (x y z : ∀ i, β i) :
-    hammingDist x z ≤ hammingDist x y + hammingDist y z := by classical
+    hammingDist x z ≤ hammingDist x y + hammingDist y z := by
+  classical
+  simp_rw [hammingDist]
+  refine' le_trans (card_mono _) (card_union_le _ _)
+  rw [← filter_or]
+  refine' monotone_filter_right _ _
+  intro i h
+  by_contra! H
+  exact h (Eq.trans H.1 H.2)
 #align hamming_dist_triangle hammingDist_triangle
 -/
 

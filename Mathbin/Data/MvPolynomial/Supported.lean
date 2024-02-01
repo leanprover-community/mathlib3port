@@ -84,7 +84,15 @@ theorem supportedEquivMvPolynomial_symm_X (s : Set σ) (i : s) :
 variable {s t : Set σ}
 
 #print MvPolynomial.mem_supported /-
-theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by classical
+theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
+  classical
+  rw [supported_eq_range_rename, AlgHom.mem_range]
+  constructor
+  · rintro ⟨p, rfl⟩
+    refine' trans (Finset.coe_subset.2 (vars_rename _ _)) _
+    simp
+  · intro hs
+    exact exists_rename_eq_of_vars_subset_range p (coe : s → σ) Subtype.val_injective (by simpa)
 #align mv_polynomial.mem_supported MvPolynomial.mem_supported
 -/
 
@@ -159,6 +167,11 @@ theorem supported_strictMono [Nontrivial R] :
 theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ}
     (hF : ↑F.vars ⊆ s) : ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
   classical
+  rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF 
+  cases' hF with F' hF'
+  use fun z => aeval z F'
+  intro x
+  simp only [← hF', aeval_rename]
 #align mv_polynomial.exists_restrict_to_vars MvPolynomial.exists_restrict_to_vars
 -/
 

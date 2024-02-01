@@ -1301,8 +1301,8 @@ noncomputable instance : CompleteLinearOrder (UpperSet α) :=
     decidableLe := Classical.decRel _
     DecidableEq := Classical.decRel _
     decidableLt := Classical.decRel _
-    max_def := by classical
-    min_def := by classical }
+    max_def := by classical exact sup_eq_maxDefault
+    min_def := by classical exact inf_eq_minDefault }
 
 noncomputable instance : CompleteLinearOrder (LowerSet α) :=
   { LowerSet.completeDistribLattice with
@@ -1310,8 +1310,8 @@ noncomputable instance : CompleteLinearOrder (LowerSet α) :=
     decidableLe := Classical.decRel _
     DecidableEq := Classical.decRel _
     decidableLt := Classical.decRel _
-    max_def := by classical
-    min_def := by classical }
+    max_def := by classical exact sup_eq_maxDefault
+    min_def := by classical exact inf_eq_minDefault }
 
 end LinearOrder
 

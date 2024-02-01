@@ -444,7 +444,14 @@ theorem algebraMap_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔
 #print FreeAlgebra.ι_injective /-
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) :=
-  fun x y hoxy => by_contradiction <| by classical
+  fun x y hoxy =>
+  by_contradiction <| by
+    classical exact fun hxy : x ≠ y =>
+      let f : FreeAlgebra R X →ₐ[R] R := lift R fun z => if x = z then (1 : R) else 0
+      have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
+      have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
+      have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
+      one_ne_zero <| hfy1.symm.trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
 -/
 

@@ -901,7 +901,8 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
 @[to_additive
       "**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\nambient group."]
 theorem card_subgroup_dvd_card [Fintype α] (s : Subgroup α) [Fintype s] :
-    Fintype.card s ∣ Fintype.card α := by classical
+    Fintype.card s ∣ Fintype.card α := by
+  classical simp [card_eq_card_quotient_mul_card_subgroup s, @dvd_mul_left ℕ]
 #align subgroup.card_subgroup_dvd_card Subgroup.card_subgroup_dvd_card
 #align add_subgroup.card_add_subgroup_dvd_card AddSubgroup.card_addSubgroup_dvd_card
 -/
@@ -922,7 +923,10 @@ variable {H : Type _} [Group H]
 #print Subgroup.card_dvd_of_injective /-
 @[to_additive]
 theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Function.Injective f) :
-    card α ∣ card H := by classical
+    card α ∣ card H := by
+  classical calc
+    card α = card (f.range : Subgroup H) := card_congr (Equiv.ofInjective f hf)
+    _ ∣ card H := card_subgroup_dvd_card _
 #align subgroup.card_dvd_of_injective Subgroup.card_dvd_of_injective
 #align add_subgroup.card_dvd_of_injective AddSubgroup.card_dvd_of_injective
 -/

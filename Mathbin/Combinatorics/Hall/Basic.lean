@@ -85,7 +85,14 @@ def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
     (h : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (ι' : Finset ι) :
-    Nonempty (hallMatchingsOn t ι') := by classical
+    Nonempty (hallMatchingsOn t ι') := by
+  classical
+  refine' ⟨Classical.indefiniteDescription _ _⟩
+  apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp
+  intro s'
+  convert h (s'.image coe) using 1
+  simp only [card_image_of_injective s' Subtype.coe_injective]
+  rw [image_bUnion]
 #align hall_matchings_on.nonempty hallMatchingsOn.nonempty
 -/
 
@@ -102,7 +109,20 @@ def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (F
 
 #print hallMatchingsOn.finite /-
 instance hallMatchingsOn.finite {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
-    Finite (hallMatchingsOn t ι') := by classical
+    Finite (hallMatchingsOn t ι') := by
+  classical
+  rw [hallMatchingsOn]
+  let g : hallMatchingsOn t ι' → ι' → ι'.bUnion t :=
+    by
+    rintro f i
+    refine' ⟨f.val i, _⟩
+    rw [mem_bUnion]
+    exact ⟨i, i.property, f.property.2 i⟩
+  apply Finite.of_injective g
+  intro f f' h
+  simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h 
+  ext a
+  exact h a
 #align hall_matchings_on.finite hallMatchingsOn.finite
 -/
 
@@ -128,11 +148,29 @@ theorem Finset.all_card_le_biUnion_card_iff_exists_injective {ι : Type u} {α :
     haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       hallMatchingsOn.nonempty t h ι'.unop
     classical
-  -- Apply the compactness argument 
-  -- Interpret the resulting section of the inverse limit 
-  -- Build the matching function from the section 
-  -- Show that it is injective 
-  -- Show that it maps each index to the corresponding finite set
+    haveI : ∀ ι' : (Finset ι)ᵒᵖ, Finite ((hallMatchingsFunctor t).obj ι') :=
+      by
+      intro ι'
+      rw [hallMatchingsFunctor]
+      infer_instance
+    -- Apply the compactness argument
+    obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (hallMatchingsFunctor t)
+    -- Interpret the resulting section of the inverse limit
+    refine' ⟨_, _, _⟩
+    ·-- Build the matching function from the section
+      exact fun i =>
+        (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
+    · -- Show that it is injective
+      intro i i'
+      have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
+      have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
+      have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h
+      rw [← hu (CategoryTheory.homOfLE (le subi)).op, ← hu (CategoryTheory.homOfLE (le subi')).op]
+      let uii' := u (Opposite.op ({i, i'} : Finset ι))
+      exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
+    · -- Show that it maps each index to the corresponding finite set
+      intro i
+      apply (u (Opposite.op ({i} : Finset ι))).property.2
   · -- The reverse direction is a straightforward cardinality argument
     rintro ⟨f, hf₁, hf₂⟩ s
     rw [← Finset.card_image_of_injective s hf₁]

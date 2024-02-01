@@ -416,7 +416,8 @@ theorem image₂_mk_eq_product [DecidableEq α] [DecidableEq β] (s : Finset α)
 #print Finset.image₂_curry /-
 @[simp]
 theorem image₂_curry (f : α × β → γ) (s : Finset α) (t : Finset β) :
-    image₂ (curry f) s t = (s ×ˢ t).image f := by classical
+    image₂ (curry f) s t = (s ×ˢ t).image f := by
+  classical rw [← image₂_mk_eq_product, image_image₂, curry]
 #align finset.image₂_curry Finset.image₂_curry
 -/
 
@@ -621,6 +622,22 @@ applications are disjoint (but not necessarily distinct!), then the size of `t` 
 theorem card_dvd_card_image₂_right (hf : ∀ a ∈ s, Injective (f a))
     (hs : ((fun a => t.image <| f a) '' s).PairwiseDisjoint id) : t.card ∣ (image₂ f s t).card := by
   classical
+  induction' s using Finset.induction with a s ha ih
+  · simp
+  specialize
+    ih (forall_of_forall_insert hf)
+      (hs.subset <| Set.image_subset _ <| coe_subset.2 <| subset_insert _ _)
+  rw [image₂_insert_left]
+  by_cases h : Disjoint (image (f a) t) (image₂ f s t)
+  · rw [card_union_eq h]
+    exact (card_image_of_injective _ <| hf _ <| mem_insert_self _ _).symm.Dvd.add ih
+  simp_rw [← bUnion_image_left, disjoint_bUnion_right, Classical.not_forall] at h 
+  obtain ⟨b, hb, h⟩ := h
+  rwa [union_eq_right_iff_subset.2]
+  exact
+    (hs.eq (Set.mem_image_of_mem _ <| mem_insert_self _ _)
+          (Set.mem_image_of_mem _ <| mem_insert_of_mem hb) h).trans_subset
+      (image_subset_image₂_right hb)
 #align finset.card_dvd_card_image₂_right Finset.card_dvd_card_image₂_right
 -/
 

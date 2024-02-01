@@ -120,7 +120,10 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
 instance (X : Type u₁) [Nonempty X] : Injective X
     where Factors Y Z g f mono :=
-    ⟨fun z => by classical, by
+    ⟨fun z => by
+      classical exact
+        if h : z ∈ Set.range f then g (Classical.choose h) else Nonempty.some inferInstance,
+      by
       ext y
       change dite _ _ _ = _
       split_ifs

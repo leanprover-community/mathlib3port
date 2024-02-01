@@ -1334,13 +1334,13 @@ theorem map_smul (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) (h : a ≠ 0
 
 #print Submodule.comap_smul' /-
 theorem comap_smul' (f : V →ₗ[K] V₂) (p : Submodule K V₂) (a : K) :
-    p.comap (a • f) = ⨅ h : a ≠ 0, p.comap f := by classical
+    p.comap (a • f) = ⨅ h : a ≠ 0, p.comap f := by classical by_cases a = 0 <;> simp [h, comap_smul]
 #align submodule.comap_smul' Submodule.comap_smul'
 -/
 
 #print Submodule.map_smul' /-
 theorem map_smul' (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) :
-    p.map (a • f) = ⨆ h : a ≠ 0, p.map f := by classical
+    p.map (a • f) = ⨆ h : a ≠ 0, p.map f := by classical by_cases a = 0 <;> simp [h, map_smul]
 #align submodule.map_smul' Submodule.map_smul'
 -/
 
@@ -3204,7 +3204,16 @@ theorem funLeft_comp (f₁ : n → p) (f₂ : m → n) :
 
 #print LinearMap.funLeft_surjective_of_injective /-
 theorem funLeft_surjective_of_injective (f : m → n) (hf : Injective f) :
-    Surjective (funLeft R M f) := by classical
+    Surjective (funLeft R M f) := by
+  classical
+  intro g
+  refine' ⟨fun x => if h : ∃ y, f y = x then g h.some else 0, _⟩
+  · ext
+    dsimp only [fun_left_apply]
+    split_ifs with w
+    · congr
+      exact hf w.some_spec
+    · simpa only [not_true, exists_apply_eq_apply] using w
 #align linear_map.fun_left_surjective_of_injective LinearMap.funLeft_surjective_of_injective
 -/
 

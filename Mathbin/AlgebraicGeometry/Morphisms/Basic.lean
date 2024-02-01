@@ -192,7 +192,43 @@ structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty
 theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
     {X Y : Scheme} (f : X ⟶ Y) (𝒰 : Y.OpenCover) [∀ i, IsAffine (𝒰.obj i)]
     (h𝒰 : ∀ i, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) : targetAffineLocally P f :=
-  by classical
+  by
+  classical
+  let S i :=
+    (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
+        range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
+      Y.affine_opens)
+  intro U
+  apply of_affine_open_cover U (Set.range S)
+  · intro U r h
+    haveI : is_affine _ := U.2
+    have := hP.2 (f ∣_ U.1)
+    replace this := this (Y.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top).op r) h
+    rw [← P.to_property_apply] at this ⊢
+    exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mp this
+  · intro U s hs H
+    haveI : is_affine _ := U.2
+    apply hP.3 (f ∣_ U.1) (s.image (Y.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top).op))
+    · apply_fun Ideal.comap (Y.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top.symm).op) at hs 
+      rw [Ideal.comap_top] at hs 
+      rw [← hs]
+      simp only [eq_to_hom_op, eq_to_hom_map, Finset.coe_image]
+      have :
+        ∀ {R S : CommRingCat} (e : S = R) (s : Set S),
+          Ideal.span (eq_to_hom e '' s) = Ideal.comap (eq_to_hom e.symm) (Ideal.span s) :=
+        by intros; subst e; simpa
+      apply this
+    · rintro ⟨r, hr⟩
+      obtain ⟨r, hr', rfl⟩ := finset.mem_image.mp hr
+      simp_rw [← P.to_property_apply] at H ⊢
+      exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mpr (H ⟨r, hr'⟩)
+  · rw [Set.eq_univ_iff_forall]
+    simp only [Set.mem_iUnion]
+    intro x
+    exact ⟨⟨_, ⟨𝒰.f x, rfl⟩⟩, 𝒰.covers x⟩
+  · rintro ⟨_, i, rfl⟩
+    simp_rw [← P.to_property_apply] at h𝒰 ⊢
+    exact (hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)).mpr (h𝒰 i)
 #align algebraic_geometry.target_affine_locally_of_open_cover AlgebraicGeometry.targetAffineLocallyOfOpenCover
 -/
 

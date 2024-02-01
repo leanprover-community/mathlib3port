@@ -1134,7 +1134,25 @@ open QuotientGroup
 
 #print orderOf_dvd_card /-
 @[to_additive addOrderOf_dvd_card]
-theorem orderOf_dvd_card : orderOf x ∣ Fintype.card G := by classical
+theorem orderOf_dvd_card : orderOf x ∣ Fintype.card G := by
+  classical
+  have ft_prod : Fintype ((G ⧸ zpowers x) × zpowers x) :=
+    Fintype.ofEquiv G group_equiv_quotient_times_subgroup
+  have ft_s : Fintype (zpowers x) := @Fintype.prodRight _ _ _ ft_prod _
+  have ft_cosets : Fintype (G ⧸ zpowers x) :=
+    @Fintype.prodLeft _ _ _ ft_prod ⟨⟨1, (zpowers x).one_mem⟩⟩
+  have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
+    calc
+      Fintype.card G = @Fintype.card _ ft_prod :=
+        @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
+      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) :=
+        (congr_arg (@Fintype.card _) <| Subsingleton.elim _ _)
+      _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
+  have eq₂ : orderOf x = @Fintype.card _ ft_s :=
+    calc
+      orderOf x = _ := Fintype.card_zpowers
+      _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
+  exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
 #align order_of_dvd_card_univ orderOf_dvd_card
 #align add_order_of_dvd_card_univ addOrderOf_dvd_card
 -/

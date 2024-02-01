@@ -72,7 +72,51 @@ theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
 -/
 
 #print Ordinal.isOpen_iff /-
-theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by classical
+theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
+  classical
+  refine' ⟨_, fun h => _⟩
+  · rw [isOpen_iff_generate_intervals]
+    intro h o hos ho
+    have ho₀ := Ordinal.pos_iff_ne_zero.2 ho.1
+    induction' h with t ht t u ht hu ht' hu' t ht H
+    · rcases ht with ⟨a, rfl | rfl⟩
+      · exact ⟨a, hos, fun b hb => hb.1⟩
+      · exact ⟨0, ho₀, fun b hb => hb.2.trans hos⟩
+    · exact ⟨0, ho₀, fun b _ => Set.mem_univ b⟩
+    · rcases ht' hos.1 with ⟨a, ha, ha'⟩
+      rcases hu' hos.2 with ⟨b, hb, hb'⟩
+      exact
+        ⟨_, max_lt ha hb, fun c hc =>
+          ⟨ha' ⟨(le_max_left a b).trans_lt hc.1, hc.2⟩,
+            hb' ⟨(le_max_right a b).trans_lt hc.1, hc.2⟩⟩⟩
+    · rcases hos with ⟨u, hu, hu'⟩
+      rcases H u hu hu' with ⟨a, ha, ha'⟩
+      exact ⟨a, ha, fun b hb => ⟨u, hu, ha' hb⟩⟩
+  · let f : s → Set Ordinal := fun o =>
+      if ho : is_limit o.val then Set.Ioo (Classical.choose (h o.val o.Prop ho)) (o + 1)
+      else {o.val}
+    have : ∀ a, IsOpen (f a) := fun a =>
+      by
+      change IsOpen (dite _ _ _)
+      split_ifs
+      · exact isOpen_Ioo
+      · rwa [is_open_singleton_iff]
+    convert isOpen_iUnion this
+    ext o
+    refine' ⟨fun ho => Set.mem_iUnion.2 ⟨⟨o, ho⟩, _⟩, _⟩
+    · split_ifs with ho'
+      · refine' ⟨_, lt_succ o⟩
+        cases' Classical.choose_spec (h o ho ho') with H
+        exact H
+      · exact Set.mem_singleton o
+    · rintro ⟨t, ⟨a, ht⟩, hoa⟩
+      change dite _ _ _ = t at ht 
+      split_ifs at ht  with ha <;> subst ht
+      · cases' Classical.choose_spec (h a.val a.prop ha) with H has
+        rcases lt_or_eq_of_le (le_of_lt_succ hoa.2) with (hoa' | rfl)
+        · exact has ⟨hoa.1, hoa'⟩
+        · exact a.prop
+      · convert a.prop
 #align ordinal.is_open_iff Ordinal.isOpen_iff
 -/
 

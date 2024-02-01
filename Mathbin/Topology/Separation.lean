@@ -1748,7 +1748,25 @@ open Finset Function
 /-- For every finite open cover `Uᵢ` of a compact set, there exists a compact cover `Kᵢ ⊆ Uᵢ`. -/
 theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact s) {ι} (t : Finset ι)
     (U : ι → Set α) (hU : ∀ i ∈ t, IsOpen (U i)) (hsC : s ⊆ ⋃ i ∈ t, U i) :
-    ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by classical
+    ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by
+  classical
+  induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
+  · refine' ⟨fun _ => ∅, fun i => isCompact_empty, fun i => empty_subset _, _⟩
+    simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
+  simp only [Finset.set_biUnion_insert] at hsC 
+  simp only [Finset.mem_insert] at hU 
+  have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
+  rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (isOpen_biUnion hU') hsC with
+    ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
+  rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
+  refine' ⟨update K x K₁, _, _, _⟩
+  · intro i; by_cases hi : i = x
+    · simp only [update_same, hi, h1K₁]
+    · rw [← Ne.def] at hi ; simp only [update_noteq hi, h1K]
+  · intro i; by_cases hi : i = x
+    · simp only [update_same, hi, h2K₁]
+    · rw [← Ne.def] at hi ; simp only [update_noteq hi, h2K]
+  · simp only [set_bUnion_insert_update _ hx, hK, h3K]
 #align is_compact.finite_compact_cover IsCompact.finite_compact_cover
 -/
 

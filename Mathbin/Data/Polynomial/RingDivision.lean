@@ -172,12 +172,24 @@ theorem trailingDegree_mul : (p * q).trailingDegree = p.trailingDegree + q.trail
 
 #print Polynomial.natDegree_pow /-
 @[simp]
-theorem natDegree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree p := by classical
+theorem natDegree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree p := by
+  classical exact
+    if hp0 : p = 0 then
+      if hn0 : n = 0 then by simp [hp0, hn0]
+      else by rw [hp0, zero_pow (Nat.pos_of_ne_zero hn0)] <;> simp
+    else
+      nat_degree_pow'
+        (by rw [← leading_coeff_pow, Ne.def, leading_coeff_eq_zero] <;> exact pow_ne_zero _ hp0)
 #align polynomial.nat_degree_pow Polynomial.natDegree_pow
 -/
 
 #print Polynomial.degree_le_mul_left /-
-theorem degree_le_mul_left (p : R[X]) (hq : q ≠ 0) : degree p ≤ degree (p * q) := by classical
+theorem degree_le_mul_left (p : R[X]) (hq : q ≠ 0) : degree p ≤ degree (p * q) := by
+  classical exact
+    if hp : p = 0 then by simp only [hp, MulZeroClass.zero_mul, le_refl]
+    else by
+      rw [degree_mul, degree_eq_nat_degree hp, degree_eq_nat_degree hq] <;>
+        exact WithBot.coe_le_coe.2 (Nat.le_add_right _ _)
 #align polynomial.degree_le_mul_left Polynomial.degree_le_mul_left
 -/
 
@@ -416,7 +428,13 @@ variable [CommRing R]
 /-- The multiplicity of `a` as root of a nonzero polynomial `p` is at least `n` iff
   `(X - a) ^ n` divides `p`. -/
 theorem le_rootMultiplicity_iff {p : R[X]} (p0 : p ≠ 0) {a : R} {n : ℕ} :
-    n ≤ rootMultiplicity a p ↔ (X - C a) ^ n ∣ p := by classical
+    n ≤ rootMultiplicity a p ↔ (X - C a) ^ n ∣ p := by
+  classical
+  simp_rw [root_multiplicity, dif_neg p0, Nat.le_find_iff, Classical.not_not]
+  refine' ⟨fun h => _, fun h m hm => (pow_dvd_pow _ hm).trans h⟩
+  cases n
+  · rw [pow_zero]; apply one_dvd
+  · exact h n n.lt_succ_self
 #align polynomial.le_root_multiplicity_iff Polynomial.le_rootMultiplicity_iff
 -/
 
@@ -502,12 +520,20 @@ theorem eq_of_monic_of_associated (hp : p.Monic) (hq : q.Monic) (hpq : Associate
 
 #print Polynomial.rootMultiplicity_mul /-
 theorem rootMultiplicity_mul {p q : R[X]} {x : R} (hpq : p * q ≠ 0) :
-    rootMultiplicity x (p * q) = rootMultiplicity x p + rootMultiplicity x q := by classical
+    rootMultiplicity x (p * q) = rootMultiplicity x p + rootMultiplicity x q := by
+  classical
+  have hp : p ≠ 0 := left_ne_zero_of_mul hpq
+  have hq : q ≠ 0 := right_ne_zero_of_mul hpq
+  rw [root_multiplicity_eq_multiplicity (p * q), dif_neg hpq, root_multiplicity_eq_multiplicity p,
+    dif_neg hp, root_multiplicity_eq_multiplicity q, dif_neg hq,
+    multiplicity.mul' (prime_X_sub_C x)]
 #align polynomial.root_multiplicity_mul Polynomial.rootMultiplicity_mul
 -/
 
 #print Polynomial.rootMultiplicity_X_sub_C_self /-
-theorem rootMultiplicity_X_sub_C_self {x : R} : rootMultiplicity x (X - C x) = 1 := by classical
+theorem rootMultiplicity_X_sub_C_self {x : R} : rootMultiplicity x (X - C x) = 1 := by
+  classical rw [root_multiplicity_eq_multiplicity, dif_neg (X_sub_C_ne_zero x),
+    multiplicity.get_multiplicity_self]
 #align polynomial.root_multiplicity_X_sub_C_self Polynomial.rootMultiplicity_X_sub_C_self
 -/
 
@@ -603,7 +629,11 @@ theorem roots_zero : (0 : R[X]).roots = 0 := by apply dif_pos rfl
 -/
 
 #print Polynomial.card_roots /-
-theorem card_roots (hp0 : p ≠ 0) : ((roots p).card : WithBot ℕ) ≤ degree p := by classical
+theorem card_roots (hp0 : p ≠ 0) : ((roots p).card : WithBot ℕ) ≤ degree p := by
+  classical
+  unfold roots
+  rw [dif_neg hp0]
+  exact (Classical.choose_spec (exists_multiset_roots hp0)).1
 #align polynomial.card_roots Polynomial.card_roots
 -/
 
@@ -639,12 +669,17 @@ theorem card_roots_sub_C' {p : R[X]} {a : R} (hp0 : 0 < degree p) :
 @[simp]
 theorem count_roots [DecidableEq R] (p : R[X]) : p.roots.count a = rootMultiplicity a p := by
   classical
+  by_cases hp : p = 0
+  · simp [hp]
+  rw [roots_def, dif_neg hp]
+  exact (Classical.choose_spec (exists_multiset_roots hp)).2 a
 #align polynomial.count_roots Polynomial.count_roots
 -/
 
 #print Polynomial.mem_roots' /-
 @[simp]
-theorem mem_roots' : a ∈ p.roots ↔ p ≠ 0 ∧ IsRoot p a := by classical
+theorem mem_roots' : a ∈ p.roots ↔ p ≠ 0 ∧ IsRoot p a := by
+  classical rw [← count_pos, count_roots p, root_multiplicity_pos']
 #align polynomial.mem_roots' Polynomial.mem_roots'
 -/
 
@@ -674,7 +709,9 @@ theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ 
 -/
 
 #print Polynomial.finite_setOf_isRoot /-
-theorem finite_setOf_isRoot {p : R[X]} (hp : p ≠ 0) : Set.Finite {x | IsRoot p x} := by classical
+theorem finite_setOf_isRoot {p : R[X]} (hp : p ≠ 0) : Set.Finite {x | IsRoot p x} := by
+  classical simpa only [← Finset.setOf_mem, mem_to_finset, mem_roots hp] using
+    p.roots.to_finset.finite_to_set
 #align polynomial.finite_set_of_is_root Polynomial.finite_setOf_isRoot
 -/
 
@@ -706,7 +743,10 @@ theorem eq_of_infinite_eval_eq (p q : R[X]) (h : Set.Infinite {x | eval x p = ev
 -/
 
 #print Polynomial.roots_mul /-
-theorem roots_mul {p q : R[X]} (hpq : p * q ≠ 0) : (p * q).roots = p.roots + q.roots := by classical
+theorem roots_mul {p q : R[X]} (hpq : p * q ≠ 0) : (p * q).roots = p.roots + q.roots := by
+  classical exact
+    multiset.ext.mpr fun r => by
+      rw [count_add, count_roots, count_roots, count_roots, root_multiplicity_mul hpq]
 #align polynomial.roots_mul Polynomial.roots_mul
 -/
 
@@ -733,7 +773,10 @@ theorem mem_roots_sub_C {p : R[X]} {a x : R} (hp0 : 0 < degree p) :
 
 #print Polynomial.roots_X_sub_C /-
 @[simp]
-theorem roots_X_sub_C (r : R) : roots (X - C r) = {r} := by classical
+theorem roots_X_sub_C (r : R) : roots (X - C r) = {r} := by
+  classical
+  ext s
+  rw [count_roots, root_multiplicity_X_sub_C, count_singleton]
 #align polynomial.roots_X_sub_C Polynomial.roots_X_sub_C
 -/
 
@@ -745,7 +788,12 @@ theorem roots_X : roots (X : R[X]) = {0} := by rw [← roots_X_sub_C, C_0, sub_z
 
 #print Polynomial.roots_C /-
 @[simp]
-theorem roots_C (x : R) : (C x).roots = 0 := by classical
+theorem roots_C (x : R) : (C x).roots = 0 := by
+  classical exact
+    if H : x = 0 then by rw [H, C_0, roots_zero]
+    else
+      multiset.ext.mpr fun r => by
+        rw [count_roots, count_zero, root_multiplicity_eq_zero (not_is_root_C _ _ H)]
 #align polynomial.roots_C Polynomial.roots_C
 -/
 
@@ -896,7 +944,20 @@ theorem nthRoots_zero (r : R) : nthRoots 0 r = 0 := by
 -/
 
 #print Polynomial.card_nthRoots /-
-theorem card_nthRoots (n : ℕ) (a : R) : (nthRoots n a).card ≤ n := by classical
+theorem card_nthRoots (n : ℕ) (a : R) : (nthRoots n a).card ≤ n := by
+  classical exact
+    if hn : n = 0 then
+      if h : (X : R[X]) ^ n - C a = 0 then by
+        simp only [Nat.zero_le, nth_roots, roots, h, dif_pos rfl, empty_eq_zero, Multiset.card_zero]
+      else
+        WithBot.coe_le_coe.1
+          (le_trans (card_roots h)
+            (by
+              rw [hn, pow_zero, ← C_1, ← RingHom.map_sub]
+              exact degree_C_le))
+    else by
+      rw [← WithBot.coe_le_coe, ← degree_X_pow_sub_C (Nat.pos_of_ne_zero hn) a] <;>
+        exact card_roots (X_pow_sub_C_ne_zero (Nat.pos_of_ne_zero hn) a)
 #align polynomial.card_nth_roots Polynomial.card_nthRoots
 -/
 
@@ -985,7 +1046,11 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
 -/
 
 #print Polynomial.zero_of_eval_zero /-
-theorem zero_of_eval_zero [Infinite R] (p : R[X]) (h : ∀ x, p.eval x = 0) : p = 0 := by classical
+theorem zero_of_eval_zero [Infinite R] (p : R[X]) (h : ∀ x, p.eval x = 0) : p = 0 := by
+  classical by_contra hp <;>
+    exact
+      Fintype.false
+        ⟨p.roots.to_finset, fun x => multiset.mem_to_finset.mpr ((mem_roots hp).mpr (h _))⟩
 #align polynomial.zero_of_eval_zero Polynomial.zero_of_eval_zero
 -/
 
@@ -1021,7 +1086,7 @@ theorem rootSet_def (p : T[X]) (S) [CommRing S] [IsDomain S] [Algebra T S] [Deci
 #print Polynomial.rootSet_C /-
 @[simp]
 theorem rootSet_C [CommRing S] [IsDomain S] [Algebra T S] (a : T) : (C a).rootSet S = ∅ := by
-  classical
+  classical rw [root_set_def, map_C, roots_C, Multiset.toFinset_zero, Finset.coe_empty]
 #align polynomial.root_set_C Polynomial.rootSet_C
 -/
 
@@ -1245,13 +1310,28 @@ theorem prod_multiset_root_eq_finset_root [DecidableEq R] :
 /-- The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/
 theorem prod_multiset_X_sub_C_dvd (p : R[X]) : (p.roots.map fun a => X - C a).Prod ∣ p := by
   classical
+  rw [← map_dvd_map _ (IsFractionRing.injective R <| FractionRing R) monic_prod_multiset_X_sub_C]
+  rw [prod_multiset_root_eq_finset_root, Polynomial.map_prod]
+  refine' Finset.prod_dvd_of_coprime (fun a _ b _ h => _) fun a _ => _
+  · simp_rw [Polynomial.map_pow, Polynomial.map_sub, map_C, map_X]
+    exact (pairwise_coprime_X_sub_C (IsFractionRing.injective R <| FractionRing R) h).pow
+  · exact Polynomial.map_dvd _ (pow_root_multiplicity_dvd p a)
 #align polynomial.prod_multiset_X_sub_C_dvd Polynomial.prod_multiset_X_sub_C_dvd
 -/
 
 #print Multiset.prod_X_sub_C_dvd_iff_le_roots /-
 /-- A Galois connection. -/
 theorem Multiset.prod_X_sub_C_dvd_iff_le_roots {p : R[X]} (hp : p ≠ 0) (s : Multiset R) :
-    (s.map fun a => X - C a).Prod ∣ p ↔ s ≤ p.roots := by classical
+    (s.map fun a => X - C a).Prod ∣ p ↔ s ≤ p.roots := by
+  classical exact
+    ⟨fun h =>
+      Multiset.le_iff_count.2 fun r =>
+        by
+        rw [count_roots, le_root_multiplicity_iff hp, ← Multiset.prod_replicate, ←
+          Multiset.map_replicate fun a => X - C a, ← Multiset.filter_eq]
+        exact (Multiset.prod_dvd_prod_of_le <| Multiset.map_le_map <| s.filter_le _).trans h,
+      fun h =>
+      (Multiset.prod_dvd_prod_of_le <| Multiset.map_le_map h).trans p.prod_multiset_X_sub_C_dvd⟩
 #align multiset.prod_X_sub_C_dvd_iff_le_roots Multiset.prod_X_sub_C_dvd_iff_le_roots
 -/
 
@@ -1351,7 +1431,8 @@ theorem count_map_roots_of_injective [IsDomain A] [DecidableEq B] (p : A[X]) {f 
 
 #print Polynomial.map_roots_le /-
 theorem map_roots_le [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p.map f ≠ 0) :
-    p.roots.map f ≤ (p.map f).roots := by classical
+    p.roots.map f ≤ (p.map f).roots := by
+  classical exact Multiset.le_iff_count.2 fun b => by rw [count_roots]; apply count_map_roots h
 #align polynomial.map_roots_le Polynomial.map_roots_le
 -/
 

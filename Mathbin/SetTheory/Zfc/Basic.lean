@@ -1318,7 +1318,8 @@ prefix:110 "⋃₀ " => ZFSet.sUnion
 #print ZFSet.sInter /-
 /-- The intersection operator, the collection of elements in all of the elements of a ZFC set. We
 special-case `⋂₀ ∅ = ∅`. -/
-noncomputable def sInter (x : ZFSet) : ZFSet := by classical
+noncomputable def sInter (x : ZFSet) : ZFSet := by
+  classical exact dite x.nonempty (fun h => {y ∈ h.some | ∀ z ∈ x, y ∈ z}) fun _ => ∅
 #align Set.sInter ZFSet.sInter
 -/
 

@@ -618,7 +618,30 @@ theorem exists_subset_nhds_of_isCompact' {ι : Type _} [Nonempty ι] {V : ι →
   it is a finite union of some elements in the basis -/
 theorem isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis (b : ι → Set α)
     (hb : IsTopologicalBasis (Set.range b)) (hb' : ∀ i, IsCompact (b i)) (U : Set α) :
-    IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i := by classical
+    IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i := by
+  classical
+  constructor
+  · rintro ⟨h₁, h₂⟩
+    obtain ⟨β, f, e, hf⟩ := hb.open_eq_Union h₂
+    choose f' hf' using hf
+    have : b ∘ f' = f := funext hf'; subst this
+    obtain ⟨t, ht⟩ :=
+      h₁.elim_finite_subcover (b ∘ f') (fun i => hb.is_open (Set.mem_range_self _)) (by rw [e])
+    refine' ⟨t.image f', Set.Finite.intro inferInstance, le_antisymm _ _⟩
+    · refine' Set.Subset.trans ht _
+      simp only [Set.iUnion_subset_iff, coe_coe]
+      intro i hi
+      erw [← Set.iUnion_subtype (fun x : ι => x ∈ t.image f') fun i => b i.1]
+      exact Set.subset_iUnion (fun i : t.image f' => b i) ⟨_, Finset.mem_image_of_mem _ hi⟩
+    · apply Set.iUnion₂_subset
+      rintro i hi
+      obtain ⟨j, hj, rfl⟩ := finset.mem_image.mp hi
+      rw [e]
+      exact Set.subset_iUnion (b ∘ f') j
+  · rintro ⟨s, hs, rfl⟩
+    constructor
+    · exact hs.is_compact_bUnion fun i _ => hb' i
+    · apply isOpen_biUnion; intro i hi; exact hb.is_open (Set.mem_range_self _)
 #align is_compact_open_iff_eq_finite_Union_of_is_topological_basis isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis
 -/
 
@@ -2542,7 +2565,19 @@ theorem subset_closure_inter_of_isPreirreducible_of_isOpen {S U : Set α} (hS : 
 #print IsPreirreducible.subset_irreducible /-
 /-- If `∅ ≠ U ⊆ S ⊆ Z` such that `U` is open and `Z` is preirreducible, then `S` is irreducible. -/
 theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreducible Z)
-    (hU : U.Nonempty) (hU' : IsOpen U) (h₁ : U ⊆ S) (h₂ : S ⊆ Z) : IsIrreducible S := by classical
+    (hU : U.Nonempty) (hU' : IsOpen U) (h₁ : U ⊆ S) (h₂ : S ⊆ Z) : IsIrreducible S := by
+  classical
+  obtain ⟨z, hz⟩ := hU
+  replace hZ : IsIrreducible Z := ⟨⟨z, h₂ (h₁ hz)⟩, hZ⟩
+  refine' ⟨⟨z, h₁ hz⟩, _⟩
+  rintro u v hu hv ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
+  obtain ⟨a, -, ha'⟩ := is_irreducible_iff_sInter.mp hZ {U, u, v} (by tidy) _
+  replace ha' : a ∈ U ∧ a ∈ u ∧ a ∈ v := by simpa using ha'
+  exact ⟨a, h₁ ha'.1, ha'.2⟩
+  · intro U H
+    simp only [Finset.mem_insert, Finset.mem_singleton] at H 
+    rcases H with (rfl | rfl | rfl)
+    exacts [⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
 #align is_preirreducible.subset_irreducible IsPreirreducible.subset_irreducible
 -/
 

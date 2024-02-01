@@ -42,6 +42,8 @@ theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· �
     Acc (Finsupp.Lex r s) x := by
   rw [lex_eq_inv_image_dfinsupp_lex]
   classical
+  refine' InvImage.accessible to_dfinsupp (DFinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
+  simpa only [toDFinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc
 -/
 

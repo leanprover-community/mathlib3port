@@ -1364,6 +1364,9 @@ theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.eraseₓ n 
 theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
     support (p.update n a) = if a = 0 then p.support.eraseₓ n else insert n p.support := by
   classical
+  cases p
+  simp only [support, update, support_update]
+  congr
 #align polynomial.support_update Polynomial.support_update
 -/
 
@@ -1375,7 +1378,7 @@ theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.su
 
 #print Polynomial.support_update_ne_zero /-
 theorem support_update_ne_zero (p : R[X]) (n : ℕ) {a : R} (ha : a ≠ 0) :
-    support (p.update n a) = insert n p.support := by classical
+    support (p.update n a) = insert n p.support := by classical rw [support_update, if_neg ha]
 #align polynomial.support_update_ne_zero Polynomial.support_update_ne_zero
 -/
 

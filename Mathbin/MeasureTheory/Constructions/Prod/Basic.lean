@@ -720,13 +720,34 @@ theorem skew_product [SigmaFinite μb] [SigmaFinite μd] {f : α → β} (hf : M
     {g : α → γ → δ} (hgm : Measurable (uncurry g)) (hg : ∀ᵐ x ∂μa, map (g x) μc = μd) :
     MeasurePreserving (fun p : α × γ => (f p.1, g p.1 p.2)) (μa.Prod μc) (μb.Prod μd) := by
   classical
+  have : Measurable fun p : α × γ => (f p.1, g p.1 p.2) := (hf.1.comp measurable_fst).prod_mk hgm
+  /- if `μa = 0`, then the lemma is trivial, otherwise we can use `hg`
+    to deduce `sigma_finite μc`. -/
+  rcases eq_or_ne μa 0 with (rfl | ha)
+  · rw [← hf.map_eq, zero_prod, measure.map_zero, zero_prod]
+    exact ⟨this, by simp only [measure.map_zero]⟩
+  have : sigma_finite μc :=
+    by
+    rcases(ae_ne_bot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
+    exact sigma_finite.of_map _ hgm.of_uncurry_left.ae_measurable (by rwa [hx])
+  -- Thus we can apply `measure.prod_eq` to prove equality of measures.
+  refine' ⟨this, (prod_eq fun s t hs ht => _).symm⟩
+  rw [map_apply this (hs.prod ht)]
+  refine' (prod_apply (this <| hs.prod ht)).trans _
+  have :
+    ∀ᵐ x ∂μa, μc ((fun y => (f x, g x y)) ⁻¹' s ×ˢ t) = indicator (f ⁻¹' s) (fun y => μd t) x :=
+    by
+    refine' hg.mono fun x hx => _; subst hx
+    simp only [mk_preimage_prod_right_fn_eq_if, indicator_apply, mem_preimage]
+    split_ifs
+    exacts [(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
+  simp only [preimage_preimage]
+  rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const,
+    hf.measure_preimage hs, mul_comm]
 #align measure_theory.measure_preserving.skew_product MeasureTheory.MeasurePreserving.skew_product
 -/
 
 #print MeasureTheory.MeasurePreserving.prod /-
-/- if `μa = 0`, then the lemma is trivial, otherwise we can use `hg`
-  to deduce `sigma_finite μc`. -/
--- Thus we can apply `measure.prod_eq` to prove equality of measures.
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
 then `prod.map f g` sends `μa.prod μc` to `μb.prod μd`. -/
 protected theorem prod [SigmaFinite μb] [SigmaFinite μd] {f : α → β} {g : γ → δ}

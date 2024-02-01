@@ -61,7 +61,8 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : Eucl
     Quotient := (· / ·)
     remainder := fun a b => a - a * b / b
     quotient_zero := div_zero
-    quotient_mul_add_remainder_eq := fun a b => by classical
+    quotient_mul_add_remainder_eq := fun a b => by
+      classical by_cases b = 0 <;> simp [h, mul_div_cancel']
     R := fun a b => a = 0 ∧ b ≠ 0
     r_wellFounded :=
       WellFounded.intro fun a =>

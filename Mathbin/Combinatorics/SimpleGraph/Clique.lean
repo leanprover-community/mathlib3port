@@ -388,7 +388,13 @@ theorem cliqueFree_of_card_lt [Fintype α] (hc : card α < n) : G.CliqueFree n :
 
 #print SimpleGraph.cliqueFree_two /-
 @[simp]
-theorem cliqueFree_two : G.CliqueFree 2 ↔ G = ⊥ := by classical
+theorem cliqueFree_two : G.CliqueFree 2 ↔ G = ⊥ := by
+  classical
+  constructor
+  · simp_rw [← edge_set_eq_empty, Set.eq_empty_iff_forall_not_mem, Sym2.forall, mem_edge_set]
+    exact fun h a b hab => h _ ⟨by simpa [hab.ne], card_doubleton hab.Ne⟩
+  · rintro rfl
+    exact clique_free_bot le_rfl
 #align simple_graph.clique_free_two SimpleGraph.cliqueFree_two
 -/
 
@@ -462,13 +468,25 @@ theorem cliqueFreeOn_of_card_lt {s : Finset α} (h : s.card < n) : G.CliqueFreeO
 #print SimpleGraph.cliqueFreeOn_two /-
 --TOOD: Restate using `simple_graph.indep_set` once we have it
 @[simp]
-theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by classical
+theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by
+  classical
+  refine' ⟨fun h a ha b hb _ hab => h _ ⟨by simpa [hab.ne], card_doubleton hab.Ne⟩, _⟩
+  · push_cast
+    exact Set.insert_subset_iff.2 ⟨ha, Set.singleton_subset_iff.2 hb⟩
+  simp only [clique_free_on, is_n_clique_iff, card_eq_two, coe_subset, not_and, not_exists]
+  rintro h t hst ht a b hab rfl
+  simp only [coe_insert, coe_singleton, Set.insert_subset_iff, Set.singleton_subset_iff] at hst 
+  refine' h hst.1 hst.2 hab (ht _ _ hab) <;> simp
 #align simple_graph.clique_free_on_two SimpleGraph.cliqueFreeOn_two
 -/
 
 #print SimpleGraph.CliqueFreeOn.of_succ /-
 theorem CliqueFreeOn.of_succ (hs : G.CliqueFreeOn s (n + 1)) (ha : a ∈ s) :
-    G.CliqueFreeOn (s ∩ G.neighborSet a) n := by classical
+    G.CliqueFreeOn (s ∩ G.neighborSet a) n := by
+  classical
+  refine' fun t hts ht => hs _ (ht.insert fun b hb => (hts hb).2)
+  push_cast
+  exact Set.insert_subset_iff.2 ⟨ha, hts.trans <| Set.inter_subset_left _ _⟩
 #align simple_graph.clique_free_on.of_succ SimpleGraph.CliqueFreeOn.of_succ
 -/
 
@@ -550,7 +568,13 @@ theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
   ext s
   constructor
   · rintro ⟨hs, rfl⟩
-    have hs' : (s.preimage f <| f.injective.inj_on _).map f = s := by classical
+    have hs' : (s.preimage f <| f.injective.inj_on _).map f = s := by
+      classical
+      rw [map_eq_image, image_preimage, filter_true_of_mem]
+      rintro a ha
+      obtain ⟨b, hb, hba⟩ := exists_mem_ne (hn.lt_of_le' <| Finset.card_pos.2 ⟨a, ha⟩) a
+      obtain ⟨c, _, _, hc, _⟩ := hs ha hb hba.symm
+      exact ⟨c, hc⟩
     refine' ⟨s.preimage f <| f.injective.inj_on _, ⟨_, by rw [← card_map f, hs']⟩, hs'⟩
     rw [coe_preimage]
     exact fun a ha b hb hab => map_adj_apply.1 (hs ha hb <| f.injective.ne hab)

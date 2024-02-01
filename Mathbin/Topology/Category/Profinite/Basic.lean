@@ -400,6 +400,19 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
+    let Z := of (ULift.{u} <| Fin 2)
+    let g : Y ⟶ Z := ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
+    let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+    have H : h = g := by
+      rw [← cancel_epi f]
+      ext x; dsimp [LocallyConstant.ofIsClopen]
+      rw [if_neg]; · rfl
+      refine' mt (fun α => hVU α) _
+      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
+    apply_fun fun e => (e y).down at H 
+    dsimp [LocallyConstant.ofIsClopen] at H 
+    rw [if_pos hyV] at H 
+    exact top_ne_bot H
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget Profinite).epi_of_epi_map
 #align Profinite.epi_iff_surjective Profinite.epi_iff_surjective

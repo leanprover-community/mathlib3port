@@ -204,7 +204,10 @@ variable {α : Type _}
 
 #print Directed.finite_le /-
 theorem Directed.finite_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
-    [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by classical
+    [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
+  classical
+  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 #align directed.fintype_le Directed.finite_le
 -/
 

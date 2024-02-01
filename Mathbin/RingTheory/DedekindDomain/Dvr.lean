@@ -151,7 +151,15 @@ theorem IsLocalization.AtPrime.not_isField {P : Ideal A} (hP : P ≠ ⊥) [pP : 
 /-- In a Dedekind domain, the localization at every nonzero prime ideal is a DVR. -/
 theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedekindDomain A]
     {P : Ideal A} (hP : P ≠ ⊥) [pP : P.IsPrime] (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ]
-    [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] : DiscreteValuationRing Aₘ := by classical
+    [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] : DiscreteValuationRing Aₘ := by
+  classical
+  letI : IsNoetherianRing Aₘ :=
+    IsLocalization.isNoetherianRing P.prime_compl _ IsDedekindDomain.isNoetherianRing
+  letI : LocalRing Aₘ := IsLocalization.AtPrime.localRing Aₘ P
+  have hnf := IsLocalization.AtPrime.not_isField A hP Aₘ
+  exact
+    ((DiscreteValuationRing.TFAE Aₘ hnf).out 0 2).mpr
+      (IsLocalization.AtPrime.isDedekindDomain A P _)
 #align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain
 -/
 

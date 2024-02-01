@@ -622,7 +622,13 @@ end MonoidWithZero
 #print Nat.ArithmeticFunction.IsMultiplicative.map_prod /-
 theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.ArithmeticFunction R}
     (hf : f.IsMultiplicative) (s : Finset ι) (hs : (s : Set ι).Pairwise (Coprime on g)) :
-    f (∏ i in s, g i) = ∏ i in s, f (g i) := by classical
+    f (∏ i in s, g i) = ∏ i in s, f (g i) := by
+  classical
+  induction' s using Finset.induction_on with a s has ih hs
+  · simp [hf]
+  rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs 
+  rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
+  exact Nat.Coprime.prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
 #align nat.arithmetic_function.is_multiplicative.map_prod Nat.ArithmeticFunction.IsMultiplicative.map_prod
 -/
 

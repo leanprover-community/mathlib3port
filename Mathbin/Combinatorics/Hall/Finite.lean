@@ -131,7 +131,13 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
 #print HallMarriageTheorem.hall_cond_of_restrict /-
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (s' : Finset (s : Set ι)) :
-    s'.card ≤ (s'.biUnion fun a' => t a').card := by classical
+    s'.card ≤ (s'.biUnion fun a' => t a').card := by
+  classical
+  rw [← card_image_of_injective s' Subtype.coe_injective]
+  convert ht (s'.image coe) using 1
+  apply congr_arg
+  ext y
+  simp
 #align hall_marriage_theorem.hall_cond_of_restrict HallMarriageTheorem.hall_cond_of_restrict
 -/
 

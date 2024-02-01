@@ -174,7 +174,8 @@ theorem ssubset_univ_iff {s : Finset α} : s ⊂ univ ↔ s ≠ univ :=
 -/
 
 #print Finset.codisjoint_left /-
-theorem codisjoint_left : Codisjoint s t ↔ ∀ ⦃a⦄, a ∉ s → a ∈ t := by classical
+theorem codisjoint_left : Codisjoint s t ↔ ∀ ⦃a⦄, a ∉ s → a ∈ t := by
+  classical simp [codisjoint_iff, eq_univ_iff_forall, Classical.or_iff_not_imp_left]
 #align finset.codisjoint_left Finset.codisjoint_left
 -/
 
@@ -1316,9 +1317,9 @@ sets on a finite type are finite.) -/
 noncomputable def finsetEquivSet [Fintype α] : Finset α ≃ Set α
     where
   toFun := coe
-  invFun := by classical
+  invFun := by classical exact fun s => s.toFinset
   left_inv s := by convert Finset.toFinset_coe s
-  right_inv s := by classical
+  right_inv s := by classical exact s.coe_to_finset
 #align fintype.finset_equiv_set Fintype.finsetEquivSet
 -/
 
@@ -1534,7 +1535,30 @@ function `f : ℕ → α` such that `r (f m) (f n)` holds whenever `m < n`.
 We also ensure that all constructed points satisfy a given predicate `P`. -/
 theorem exists_seq_of_forall_finset_exists {α : Type _} (P : α → Prop) (r : α → α → Prop)
     (h : ∀ s : Finset α, (∀ x ∈ s, P x) → ∃ y, P y ∧ ∀ x ∈ s, r x y) :
-    ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by classical
+    ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by
+  classical
+  have : Nonempty α := by
+    rcases h ∅ (by simp) with ⟨y, hy⟩
+    exact ⟨y⟩
+  choose! F hF using h
+  have h' : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y := fun s => ⟨F s, hF s⟩
+  set f := seqOfForallFinsetExistsAux P r h' with hf
+  have A : ∀ n : ℕ, P (f n) := by
+    intro n
+    induction' n using Nat.strong_induction_on with n IH
+    have IH' : ∀ x : Fin n, P (f x) := fun n => IH n.1 n.2
+    rw [hf, seqOfForallFinsetExistsAux]
+    exact
+      (Classical.choose_spec
+          (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
+          (by simp [IH'])).1
+  refine' ⟨f, A, fun m n hmn => _⟩
+  nth_rw 2 [hf]
+  rw [seqOfForallFinsetExistsAux]
+  apply
+    (Classical.choose_spec (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
+        (by simp [A])).2
+  exact Finset.mem_image.2 ⟨⟨m, hmn⟩, Finset.mem_univ _, rfl⟩
 #align exists_seq_of_forall_finset_exists exists_seq_of_forall_finset_exists
 -/
 

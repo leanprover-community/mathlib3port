@@ -98,7 +98,7 @@ theorem toFunLinear_tmul_apply (a : A) (p : R[X]) :
 -- in order to successfully rewrite by this lemma.
 theorem toFunLinear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p.coeff k = 0) (a : A) :
     ite (¬coeff p k = 0) (a * (algebraMap R A) (coeff p k)) 0 = a * (algebraMap R A) (coeff p k) :=
-  by classical
+  by classical split_ifs <;> simp [*]
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_1 PolyEquivTensor.toFunLinear_mul_tmul_mul_aux_1
 -/
 
@@ -118,7 +118,17 @@ theorem toFunLinear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : R[
 theorem toFunLinear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) =
       (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
-  by classical
+  by
+  classical
+  simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+  ext k
+  simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
+  conv_rhs => rw [coeff_mul]
+  simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite,
+    MulZeroClass.mul_zero, ite_mul, MulZeroClass.zero_mul]
+  simp_rw [ite_zero_mul (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
+  simp_rw [mul_ite_zero (¬coeff p₂ _ = 0) _ (_ * _)]
+  simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul PolyEquivTensor.toFunLinear_mul_tmul_mul
 -/
 

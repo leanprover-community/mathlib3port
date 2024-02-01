@@ -58,7 +58,27 @@ variable [CommRing R] [AddCommGroup M] [Module R M]
 
 #print BilinForm.nondenerate_dualProd /-
 theorem nondenerate_dualProd :
-    (dualProd R M).Nondegenerate ↔ Function.Injective (Module.Dual.eval R M) := by classical
+    (dualProd R M).Nondegenerate ↔ Function.Injective (Module.Dual.eval R M) := by
+  classical
+  rw [nondegenerate_iff_ker_eq_bot]
+  rw [LinearMap.ker_eq_bot]
+  let e := LinearEquiv.prodComm R _ _ ≪≫ₗ Module.dualProdDualEquivDual R (Module.Dual R M) M
+  let h_d := e.symm.to_linear_map.comp (dual_prod R M).toLin
+  refine' (Function.Injective.of_comp_iff e.symm.injective (dual_prod R M).toLin).symm.trans _
+  rw [← LinearEquiv.coe_toLinearMap, ← LinearMap.coe_comp]
+  change Function.Injective h_d ↔ _
+  have : h_d = LinearMap.prodMap LinearMap.id (Module.Dual.eval R M) :=
+    by
+    refine' LinearMap.ext fun x => Prod.ext _ _
+    · ext
+      dsimp [h_d, Module.Dual.eval, LinearEquiv.prodComm]
+      simp
+    · ext
+      dsimp [h_d, Module.Dual.eval, LinearEquiv.prodComm]
+      simp
+  rw [this, LinearMap.coe_prodMap]
+  refine' prod.map_injective.trans _
+  exact and_iff_right Function.injective_id
 #align bilin_form.nondenerate_dual_prod BilinForm.nondenerate_dualProd
 -/
 

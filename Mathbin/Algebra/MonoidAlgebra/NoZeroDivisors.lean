@@ -55,7 +55,17 @@ variable {R A : Type _} [Semiring R]
 as a product of monomials in the supports of `f` and `g` is a product. -/
 theorem hMul_apply_add_eq_hMul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {a0 b0 : A}
     (h : ∀ {a b : A}, a ∈ f.support → b ∈ g.support → a ≠ a0 ∨ b ≠ b0 → a + b ≠ a0 + b0) :
-    (f * g) (a0 + b0) = f a0 * g b0 := by classical
+    (f * g) (a0 + b0) = f a0 * g b0 := by
+  classical
+  rw [mul_apply]
+  refine' (Finset.sum_eq_single a0 _ _).trans _
+  · exact fun b H hb => Finset.sum_eq_zero fun x H1 => if_neg (h H H1 (Or.inl hb))
+  · exact fun af0 => by simp [not_mem_support_iff.mp af0]
+  · refine' (Finset.sum_eq_single b0 (fun b bg b0 => _) _).trans (if_pos rfl)
+    · by_cases af : a0 ∈ f.support
+      · exact if_neg (h af bg (Or.inr b0))
+      · simp only [not_mem_support_iff.mp af, MulZeroClass.zero_mul, if_t_t]
+    · exact fun bf0 => by simp [not_mem_support_iff.mp bf0]
 #align add_monoid_algebra.mul_apply_add_eq_mul_of_forall_ne AddMonoidAlgebra.hMul_apply_add_eq_hMul_of_forall_ne
 
 section LeftOrRightOrderability

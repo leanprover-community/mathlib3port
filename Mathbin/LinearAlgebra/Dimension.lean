@@ -1296,7 +1296,10 @@ theorem rank_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V
 
 #print rank_quotient_add_rank /-
 theorem rank_quotient_add_rank (p : Submodule K V) :
-    Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by classical
+    Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
+  classical exact
+    let ⟨f⟩ := quotient_prod_linearEquiv p
+    rank_prod'.symm.trans f.rank_eq
 #align rank_quotient_add_rank rank_quotient_add_rank
 -/
 

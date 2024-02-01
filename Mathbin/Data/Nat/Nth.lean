@@ -49,7 +49,10 @@ variable (p : ℕ → Prop)
 /-- Find the `n`-th natural number satisfying `p` (indexed from `0`, so `nth p 0` is the first
 natural number satisfying `p`), or `0` if there is no such number. See also
 `subtype.order_iso_of_nat` for the order isomorphism with ℕ when `p` is infinitely often true. -/
-noncomputable def nth (p : ℕ → Prop) (n : ℕ) : ℕ := by classical
+noncomputable def nth (p : ℕ → Prop) (n : ℕ) : ℕ := by
+  classical exact
+    if h : Set.Finite (setOf p) then (h.to_finset.sort (· ≤ ·)).getD n 0
+    else @Nat.Subtype.orderIsoOfNat (setOf p) (Set.Infinite.to_subtype h) n
 #align nat.nth Nat.nth
 -/
 

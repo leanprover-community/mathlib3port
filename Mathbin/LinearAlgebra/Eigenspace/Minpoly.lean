@@ -120,7 +120,8 @@ noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
       have h : minpoly K f ≠ 0 := minpoly.ne_zero f.is_integral
       convert (minpoly K f).rootSet_finite K using 1
       ext μ
-      classical
+      classical simp [Polynomial.rootSet_def, Polynomial.mem_roots h, ← has_eigenvalue_iff_is_root,
+        has_eigenvalue]
 
 end End
 

@@ -134,7 +134,58 @@ theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ p` are the same. -/
 theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
-    minpoly ℤ μ = minpoly ℤ (μ ^ p) := by classical
+    minpoly ℤ μ = minpoly ℤ (μ ^ p) := by
+  classical
+  by_cases hn : n = 0
+  · simp_all
+  have hpos := Nat.pos_of_ne_zero hn
+  by_contra hdiff
+  set P := minpoly ℤ μ
+  set Q := minpoly ℤ (μ ^ p)
+  have Pmonic : P.monic := minpoly.monic (h.is_integral hpos)
+  have Qmonic : Q.monic := minpoly.monic ((h.pow_of_prime hprime.1 hdiv).IsIntegral hpos)
+  have Pirr : Irreducible P := minpoly.irreducible (h.is_integral hpos)
+  have Qirr : Irreducible Q := minpoly.irreducible ((h.pow_of_prime hprime.1 hdiv).IsIntegral hpos)
+  have PQprim : is_primitive (P * Q) := Pmonic.is_primitive.mul Qmonic.is_primitive
+  have prod : P * Q ∣ X ^ n - 1 :=
+    by
+    rw [is_primitive.int.dvd_iff_map_cast_dvd_map_cast (P * Q) (X ^ n - 1) PQprim
+        (monic_X_pow_sub_C (1 : ℤ) (ne_of_gt hpos)).IsPrimitive,
+      Polynomial.map_mul]
+    refine' IsCoprime.mul_dvd _ _ _
+    · have aux := is_primitive.int.irreducible_iff_irreducible_map_cast Pmonic.is_primitive
+      refine' (dvd_or_coprime _ _ (aux.1 Pirr)).resolve_left _
+      rw [map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic]
+      intro hdiv
+      refine' hdiff (eq_of_monic_of_associated Pmonic Qmonic _)
+      exact associated_of_dvd_dvd hdiv (Pirr.dvd_symm Qirr hdiv)
+    · apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic).2
+      exact minpoly_dvd_X_pow_sub_one h
+    · apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Qmonic).2
+      exact minpoly_dvd_X_pow_sub_one (pow_of_prime h hprime.1 hdiv)
+  replace prod := RingHom.map_dvd (map_ring_hom (Int.castRingHom (ZMod p))) Prod
+  rw [coe_map_ring_hom, Polynomial.map_mul, Polynomial.map_sub, Polynomial.map_one,
+    Polynomial.map_pow, map_X] at prod 
+  obtain ⟨R, hR⟩ := minpoly_dvd_mod_p h hdiv
+  rw [hR, ← mul_assoc, ← Polynomial.map_mul, ← sq, Polynomial.map_pow] at prod 
+  have habs : map (Int.castRingHom (ZMod p)) P ^ 2 ∣ map (Int.castRingHom (ZMod p)) P ^ 2 * R := by
+    use R
+  replace habs :=
+    lt_of_lt_of_le (PartENat.coe_lt_coe.2 one_lt_two)
+      (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
+  have hfree : Squarefree (X ^ n - 1 : (ZMod p)[X]) :=
+    (separable_X_pow_sub_C 1 (fun h => hdiv <| (ZMod.nat_cast_zmod_eq_zero_iff_dvd n p).1 h)
+        one_ne_zero).Squarefree
+  cases'
+    (multiplicity.squarefree_iff_multiplicity_le_one (X ^ n - 1)).1 hfree
+      (map (Int.castRingHom (ZMod p)) P) with
+    hle hunit
+  · rw [Nat.cast_one] at habs ; exact hle.not_lt habs
+  · replace hunit := degree_eq_zero_of_is_unit hunit
+    rw [degree_map_eq_of_leading_coeff_ne_zero (Int.castRingHom (ZMod p)) _] at hunit 
+    · exact (minpoly.degree_pos (IsIntegral h hpos)).ne' hunit
+    simp only [Pmonic, eq_intCast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff,
+      one_ne_zero]
 #align is_primitive_root.minpoly_eq_pow IsPrimitiveRoot.minpoly_eq_pow
 -/
 
@@ -191,12 +242,21 @@ theorem is_roots_of_minpoly [DecidableEq K] :
 
 #print IsPrimitiveRoot.totient_le_degree_minpoly /-
 /-- The degree of the minimal polynomial of `μ` is at least `totient n`. -/
-theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree := by classical
+theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree := by
+  classical
+  let P : ℤ[X] := minpoly ℤ μ
+  -- minimal polynomial of `μ`
+  let P_K : K[X] := map (Int.castRingHom K) P
+  -- minimal polynomial of `μ` sent to `K[X]`
+  calc
+    n.totient = (primitiveRoots n K).card := h.card_primitive_roots.symm
+    _ ≤ P_K.roots.to_finset.card := (Finset.card_le_card (is_roots_of_minpoly h))
+    _ ≤ P_K.roots.card := (Multiset.toFinset_card_le _)
+    _ ≤ P_K.nat_degree := (card_roots' _)
+    _ ≤ P.nat_degree := nat_degree_map_le _ _
 #align is_primitive_root.totient_le_degree_minpoly IsPrimitiveRoot.totient_le_degree_minpoly
 -/
 
--- minimal polynomial of `μ`
--- minimal polynomial of `μ` sent to `K[X]`
 end IsDomain
 
 end CommRing

@@ -384,7 +384,11 @@ theorem noncommProd_commute (s : Finset α) (f : α → β) (comm) (y : β)
 #print Finset.noncommProd_eq_prod /-
 @[to_additive]
 theorem noncommProd_eq_prod {β : Type _} [CommMonoid β] (s : Finset α) (f : α → β) :
-    (noncommProd s f fun _ _ _ _ _ => Commute.all _ _) = s.Prod f := by classical
+    (noncommProd s f fun _ _ _ _ _ => Commute.all _ _) = s.Prod f := by
+  classical
+  induction' s using Finset.induction_on with a s ha IH
+  · simp
+  · simp [ha, IH]
 #align finset.noncomm_prod_eq_prod Finset.noncommProd_eq_prod
 #align finset.noncomm_sum_eq_sum Finset.noncommSum_eq_sum
 -/
@@ -431,7 +435,21 @@ theorem noncommProd_mul_distrib_aux {s : Finset α} {f : α → β} {g : α → 
 theorem noncommProd_mul_distrib {s : Finset α} (f : α → β) (g : α → β) (comm_ff comm_gg comm_gf) :
     noncommProd s (f * g) (noncommProd_mul_distrib_aux comm_ff comm_gg comm_gf) =
       noncommProd s f comm_ff * noncommProd s g comm_gg :=
-  by classical
+  by
+  classical
+  induction' s using Finset.induction_on with x s hnmem ih
+  · simp
+  simp only [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem]
+  specialize
+    ih (comm_ff.mono fun _ => mem_insert_of_mem) (comm_gg.mono fun _ => mem_insert_of_mem)
+      (comm_gf.mono fun _ => mem_insert_of_mem)
+  rw [ih, Pi.mul_apply]
+  simp only [mul_assoc]
+  congr 1
+  simp only [← mul_assoc]
+  congr 1
+  refine' noncomm_prod_commute _ _ _ _ fun y hy => _
+  exact comm_gf (mem_insert_self x s) (mem_insert_of_mem hy) (ne_of_mem_of_not_mem hy hnmem).symm
 #align finset.noncomm_prod_mul_distrib Finset.noncommProd_mul_distrib
 #align finset.noncomm_sum_add_distrib Finset.noncommSum_add_distrib
 -/

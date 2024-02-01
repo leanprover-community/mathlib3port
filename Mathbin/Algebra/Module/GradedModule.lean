@@ -259,7 +259,16 @@ def linearEquiv [DecidableEq ι] [GradedRing 𝓐] [DirectSum.Decomposition 𝓜
     DirectSum.decomposeAddEquiv
       𝓜 with
     toFun := DirectSum.decomposeAddEquiv 𝓜
-    map_smul' := fun x y => by classical }
+    map_smul' := fun x y => by
+      classical
+      rw [← DirectSum.sum_support_decompose 𝓐 x, map_sum, Finset.sum_smul, map_sum, Finset.sum_smul,
+        Finset.sum_congr rfl fun i hi => _]
+      rw [RingHom.id_apply, ← DirectSum.sum_support_decompose 𝓜 y, map_sum, Finset.smul_sum,
+        map_sum, Finset.smul_sum, Finset.sum_congr rfl fun j hj => _]
+      simp only [(· • ·), DirectSum.decomposeAddEquiv_apply, DirectSum.decompose_coe,
+        DirectSum.Gmodule.smulAddMonoidHom_apply_of_of]
+      convert DirectSum.decompose_coe 𝓜 _
+      rfl }
 #align graded_module.linear_equiv GradedModule.linearEquiv
 -/
 

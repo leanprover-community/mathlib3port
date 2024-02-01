@@ -249,7 +249,16 @@ theorem isClosed_separationRel : IsClosed (𝓢 α) :=
 -/
 
 #print separated_iff_t2 /-
-theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by classical
+theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
+  classical
+  constructor <;> intro h
+  · rw [t2_iff_isClosed_diagonal, ← show 𝓢 α = diagonal α from h.1]
+    exact isClosed_separationRel
+  · rw [separated_def']
+    intro x y hxy
+    rcases t2_separation hxy with ⟨u, v, uo, vo, hx, hy, h⟩
+    rcases isOpen_iff_ball_subset.1 uo x hx with ⟨r, hrU, hr⟩
+    exact ⟨r, hrU, fun H => h.le_bot ⟨hr H, hy⟩⟩
 #align separated_iff_t2 separated_iff_t2
 -/
 

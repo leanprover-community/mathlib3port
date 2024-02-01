@@ -338,27 +338,72 @@ variable (F E)
 then it is trivial over any closed interval. -/
 theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
     [OrderTopology B] [FiberBundle F E] (a b : B) :
-    ∃ e : Trivialization F (π F E), Icc a b ⊆ e.baseSet := by classical
+    ∃ e : Trivialization F (π F E), Icc a b ⊆ e.baseSet := by
+  classical
+  obtain ⟨ea, hea⟩ : ∃ ea : Trivialization F (π F E), a ∈ ea.baseSet :=
+    ⟨trivialization_at F E a, mem_base_set_trivialization_at F E a⟩
+  -- If `a < b`, then `[a, b] = ∅`, and the statement is trivial
+    cases' le_or_lt a b with hab hab <;>
+    [skip; exact ⟨ea, by simp [*]⟩]
+  /- Let `s` be the set of points `x ∈ [a, b]` such that `E` is trivializable over `[a, x]`.
+    We need to show that `b ∈ s`. Let `c = Sup s`. We will show that `c ∈ s` and `c = b`. -/
+  set s : Set B := {x ∈ Icc a b | ∃ e : Trivialization F (π F E), Icc a x ⊆ e.baseSet}
+  have ha : a ∈ s := ⟨left_mem_Icc.2 hab, ea, by simp [hea]⟩
+  have sne : s.nonempty := ⟨a, ha⟩
+  have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
+  have sbd : BddAbove s := ⟨b, hsb⟩
+  set c := Sup s
+  have hsc : IsLUB s c := isLUB_csSup sne sbd
+  have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
+  obtain ⟨-, ec : Trivialization F (π F E), hec : Icc a c ⊆ ec.base_set⟩ : c ∈ s :=
+    by
+    cases' hc.1.eq_or_lt with heq hlt; · rwa [← HEq]
+    refine' ⟨hc, _⟩
+    /- In order to show that `c ∈ s`, consider a trivialization `ec` of `proj` over a neighborhood
+        of `c`. Its base set includes `(c', c]` for some `c' ∈ [a, c)`. -/
+    obtain ⟨ec, hc⟩ : ∃ ec : Trivialization F (π F E), c ∈ ec.baseSet :=
+      ⟨trivialization_at F E c, mem_base_set_trivialization_at F E c⟩
+    obtain ⟨c', hc', hc'e⟩ : ∃ c' ∈ Ico a c, Ioc c' c ⊆ ec.base_set :=
+      (mem_nhdsWithin_Iic_iff_exists_mem_Ico_Ioc_subset hlt).1
+        (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set hc)
+    /- Since `c' < c = Sup s`, there exists `d ∈ s ∩ (c', c]`. Let `ead` be a trivialization of
+        `proj` over `[a, d]`. Then we can glue `ead` and `ec` into a trivialization over `[a, c]`. -/
+    obtain ⟨d, ⟨hdab, ead, had⟩, hd⟩ : ∃ d ∈ s, d ∈ Ioc c' c := hsc.exists_between hc'.2
+    refine' ⟨ead.piecewise_le ec d (had ⟨hdab.1, le_rfl⟩) (hc'e hd), subset_ite.2 _⟩
+    refine' ⟨fun x hx => had ⟨hx.1.1, hx.2⟩, fun x hx => hc'e ⟨hd.1.trans (not_le.1 hx.2), hx.1.2⟩⟩
+  /- So, `c ∈ s`. Let `ec` be a trivialization of `proj` over `[a, c]`.  If `c = b`, then we are
+    done. Otherwise we show that `proj` can be trivialized over a larger interval `[a, d]`,
+    `d ∈ (c, b]`, hence `c` is not an upper bound of `s`. -/
+  cases' hc.2.eq_or_lt with heq hlt
+  · exact ⟨ec, HEq ▸ hec⟩
+  rsuffices ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, ∃ e : Trivialization F (π F E), Icc a d ⊆ e.baseSet
+  · exact ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim
+  /- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some
+    `d ∈ (c, b]`. -/
+  obtain ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, Ico c d ⊆ ec.base_set :=
+    (mem_nhdsWithin_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
+      (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
+  have had : Ico a d ⊆ ec.base_set := Ico_subset_Icc_union_Ico.trans (union_subset hec hd)
+  by_cases he : Disjoint (Iio d) (Ioi c)
+  · /- If `(c, d) = ∅`, then let `ed` be a trivialization of `proj` over a neighborhood of `d`.
+        Then the disjoint union of `ec` restricted to `(-∞, d)` and `ed` restricted to `(c, ∞)` is
+        a trivialization over `[a, d]`. -/
+    obtain ⟨ed, hed⟩ : ∃ ed : Trivialization F (π F E), d ∈ ed.baseSet :=
+      ⟨trivialization_at F E d, mem_base_set_trivialization_at F E d⟩
+    refine'
+      ⟨d, hdcb,
+        (ec.restr_open (Iio d) isOpen_Iio).disjointUnion (ed.restr_open (Ioi c) isOpen_Ioi)
+          (he.mono (inter_subset_right _ _) (inter_subset_right _ _)),
+        fun x hx => _⟩
+    rcases hx.2.eq_or_lt with (rfl | hxd)
+    exacts [Or.inr ⟨hed, hdcb.1⟩, Or.inl ⟨had ⟨hx.1, hxd⟩, hxd⟩]
+  · /- If `(c, d)` is nonempty, then take `d' ∈ (c, d)`. Since the base set of `ec` includes
+        `[a, d)`, it includes `[a, d'] ⊆ [a, d)` as well. -/
+    rw [disjoint_left] at he ; push_neg at he ; rcases he with ⟨d', hdd' : d' < d, hd'c⟩
+    exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
 #align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_Icc_subset
 -/
 
--- If `a < b`, then `[a, b] = ∅`, and the statement is trivial
-/- Let `s` be the set of points `x ∈ [a, b]` such that `E` is trivializable over `[a, x]`.
-  We need to show that `b ∈ s`. Let `c = Sup s`. We will show that `c ∈ s` and `c = b`. -/
-/- In order to show that `c ∈ s`, consider a trivialization `ec` of `proj` over a neighborhood
-    of `c`. Its base set includes `(c', c]` for some `c' ∈ [a, c)`. -/
-/- Since `c' < c = Sup s`, there exists `d ∈ s ∩ (c', c]`. Let `ead` be a trivialization of
-    `proj` over `[a, d]`. Then we can glue `ead` and `ec` into a trivialization over `[a, c]`. -/
-/- So, `c ∈ s`. Let `ec` be a trivialization of `proj` over `[a, c]`.  If `c = b`, then we are
-  done. Otherwise we show that `proj` can be trivialized over a larger interval `[a, d]`,
-  `d ∈ (c, b]`, hence `c` is not an upper bound of `s`. -/
-/- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some
-  `d ∈ (c, b]`. -/
-/- If `(c, d) = ∅`, then let `ed` be a trivialization of `proj` over a neighborhood of `d`.
-    Then the disjoint union of `ec` restricted to `(-∞, d)` and `ed` restricted to `(c, ∞)` is
-    a trivialization over `[a, d]`. -/
-/- If `(c, d)` is nonempty, then take `d' ∈ (c, d)`. Since the base set of `ec` includes
-    `[a, d)`, it includes `[a, d'] ⊆ [a, d)` as well. -/
 end FiberBundle
 
 /-! ### Core construction for constructing fiber bundles -/

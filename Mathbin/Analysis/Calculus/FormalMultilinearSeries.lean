@@ -260,7 +260,10 @@ theorem order_eq_find' [DecidablePred fun n => p n ≠ 0] (hp : p ≠ 0) :
 -/
 
 #print FormalMultilinearSeries.order_eq_zero_iff /-
-theorem order_eq_zero_iff (hp : p ≠ 0) : p.order = 0 ↔ p 0 ≠ 0 := by classical
+theorem order_eq_zero_iff (hp : p ≠ 0) : p.order = 0 ↔ p 0 ≠ 0 := by
+  classical
+  have : ∃ n, p n ≠ 0 := formal_multilinear_series.ne_iff.mp hp
+  simp [order_eq_find this, hp]
 #align formal_multilinear_series.order_eq_zero_iff FormalMultilinearSeries.order_eq_zero_iff
 -/
 
@@ -271,7 +274,10 @@ theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by
 -/
 
 #print FormalMultilinearSeries.apply_order_ne_zero /-
-theorem apply_order_ne_zero (hp : p ≠ 0) : p p.order ≠ 0 := by classical
+theorem apply_order_ne_zero (hp : p ≠ 0) : p p.order ≠ 0 := by
+  classical
+  let h := formal_multilinear_series.ne_iff.mp hp
+  exact (order_eq_find h).symm ▸ Nat.find_spec h
 #align formal_multilinear_series.apply_order_ne_zero FormalMultilinearSeries.apply_order_ne_zero
 -/
 
@@ -286,7 +292,10 @@ theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 :=
   by
   by_cases p = 0
   · simp [h]
-  · classical
+  ·
+    classical
+    rw [order_eq_find' h] at hp 
+    simpa using Nat.find_min _ hp
 #align formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
 -/
 

@@ -51,7 +51,8 @@ theorem toAList_keys_toFinset [DecidableEq α] (f : α →₀ M) : f.toAList.key
 
 #print Finsupp.mem_toAlist /-
 @[simp]
-theorem mem_toAlist {f : α →₀ M} {x : α} : x ∈ f.toAList ↔ f x ≠ 0 := by classical
+theorem mem_toAlist {f : α →₀ M} {x : α} : x ∈ f.toAList ↔ f x ≠ 0 := by
+  classical rw [AList.mem_keys, ← List.mem_toFinset, to_alist_keys_to_finset, mem_support_iff]
 #align finsupp.mem_to_alist Finsupp.mem_toAlist
 -/
 
@@ -74,7 +75,10 @@ noncomputable def lookupFinsupp (l : AList fun x : α => M) : α →₀ M
   toFun a :=
     haveI := Classical.decEq α
     (l.lookup a).getD 0
-  mem_support_toFun a := by classical
+  mem_support_toFun a := by
+    classical
+    simp_rw [mem_to_finset, List.mem_keys, List.mem_filter, ← mem_lookup_iff]
+    cases lookup a l <;> simp
 #align alist.lookup_finsupp AList.lookupFinsupp
 -/
 
@@ -108,7 +112,10 @@ theorem lookupFinsupp_eq_zero_iff [DecidableEq α] {l : AList fun x : α => M} {
 
 #print AList.empty_lookupFinsupp /-
 @[simp]
-theorem empty_lookupFinsupp : lookupFinsupp (∅ : AList fun x : α => M) = 0 := by classical
+theorem empty_lookupFinsupp : lookupFinsupp (∅ : AList fun x : α => M) = 0 := by
+  classical
+  ext
+  simp
 #align alist.empty_lookup_finsupp AList.empty_lookupFinsupp
 -/
 
@@ -123,7 +130,7 @@ theorem insert_lookupFinsupp [DecidableEq α] (l : AList fun x : α => M) (a : �
 #print AList.singleton_lookupFinsupp /-
 @[simp]
 theorem singleton_lookupFinsupp (a : α) (m : M) :
-    (singleton a m).lookupFinsupp = Finsupp.single a m := by classical
+    (singleton a m).lookupFinsupp = Finsupp.single a m := by classical simp [← AList.insert_empty]
 #align alist.singleton_lookup_finsupp AList.singleton_lookupFinsupp
 -/
 
@@ -133,6 +140,12 @@ theorem Finsupp.toAList_lookupFinsupp (f : α →₀ M) : f.toAList.lookupFinsup
   by
   ext
   classical
+  by_cases h : f a = 0
+  · suffices f.to_alist.lookup a = none by simp [h, this]
+    · simp [lookup_eq_none, h]
+  · suffices f.to_alist.lookup a = some (f a) by simp [h, this]
+    · apply mem_lookup_iff.2
+      simpa using h
 #align finsupp.to_alist_lookup_finsupp Finsupp.toAList_lookupFinsupp
 -/
 

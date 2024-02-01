@@ -570,7 +570,10 @@ theorem basicOpen_eq_union_of_projection (f : A) :
       · rcases show ∃ i, GradedAlgebra.proj 𝒜 i f ∉ z.as_homogeneous_ideal
             by
             contrapose! hz with H
-            classical with ⟨i, hi⟩
+            classical
+            rw [← DirectSum.sum_support_decompose 𝒜 f]
+            apply Ideal.sum_mem _ fun i hi => H i with
+          ⟨i, hi⟩
         exact ⟨basic_open 𝒜 (GradedAlgebra.proj 𝒜 i f), ⟨i, rfl⟩, by rwa [mem_basic_open]⟩
       · obtain ⟨_, ⟨i, rfl⟩, hz⟩ := hz
         exact fun rid => hz (z.1.2 i rid)

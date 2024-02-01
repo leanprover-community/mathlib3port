@@ -96,7 +96,11 @@ theorem Simple.iff_of_iso {X Y : C} (i : X ≅ Y) : Simple X ↔ Simple Y :=
 
 #print CategoryTheory.kernel_zero_of_nonzero_from_simple /-
 theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f]
-    (w : f ≠ 0) : kernel.ι f = 0 := by classical
+    (w : f ≠ 0) : kernel.ι f = 0 := by
+  classical
+  by_contra
+  haveI := is_iso_of_mono_of_nonzero h
+  exact w (eq_zero_of_epi_kernel f)
 #align category_theory.kernel_zero_of_nonzero_from_simple CategoryTheory.kernel_zero_of_nonzero_from_simple
 -/
 
@@ -115,7 +119,10 @@ theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X �
 
 #print CategoryTheory.mono_to_simple_zero_of_not_iso /-
 theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f]
-    (w : IsIso f → False) : f = 0 := by classical
+    (w : IsIso f → False) : f = 0 := by
+  classical
+  by_contra
+  exact w (is_iso_of_mono_of_nonzero h)
 #align category_theory.mono_to_simple_zero_of_not_iso CategoryTheory.mono_to_simple_zero_of_not_iso
 -/
 
@@ -163,7 +170,19 @@ variable [Abelian C]
     simple. -/
 theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso f ↔ f ≠ 0) :
     Simple X :=
-  ⟨fun Y f I => by classical⟩
+  ⟨fun Y f I => by
+    classical
+    fconstructor
+    · intros
+      have hx := cokernel.π_of_epi f
+      by_contra
+      subst h
+      exact (h _).mp (cokernel.π_of_zero _ _) hx
+    · intro hf
+      suffices epi f by exact is_iso_of_mono_of_epi _
+      apply preadditive.epi_of_cokernel_zero
+      by_contra h'
+      exact cokernel_not_iso_of_nonzero hf ((h _).mpr h')⟩
 #align category_theory.simple_of_cosimple CategoryTheory.simple_of_cosimple
 -/
 
@@ -178,13 +197,20 @@ theorem isIso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : 
 
 #print CategoryTheory.cokernel_zero_of_nonzero_to_simple /-
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
-    cokernel.π f = 0 := by classical
+    cokernel.π f = 0 := by
+  classical
+  by_contra h
+  haveI := is_iso_of_epi_of_nonzero h
+  exact w (eq_zero_of_mono_cokernel f)
 #align category_theory.cokernel_zero_of_nonzero_to_simple CategoryTheory.cokernel_zero_of_nonzero_to_simple
 -/
 
 #print CategoryTheory.epi_from_simple_zero_of_not_iso /-
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f]
-    (w : IsIso f → False) : f = 0 := by classical
+    (w : IsIso f → False) : f = 0 := by
+  classical
+  by_contra
+  exact w (is_iso_of_epi_of_nonzero h)
 #align category_theory.epi_from_simple_zero_of_not_iso CategoryTheory.epi_from_simple_zero_of_not_iso
 -/
 

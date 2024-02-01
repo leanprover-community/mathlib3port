@@ -132,8 +132,11 @@ noncomputable def rootableByOfPowLeftSurj
     (H : ∀ {n : α}, n ≠ 0 → Function.Surjective (fun a => a ^ n : A → A)) : RootableBy A α
     where
   root a n := @dite _ (n = 0) (Classical.dec _) (fun _ => (1 : A)) fun hn => (H hn a).some
-  root_zero _ := by classical
-  root_cancel n a hn := by classical
+  root_zero _ := by classical exact dif_pos rfl
+  root_cancel n a hn := by
+    classical
+    rw [dif_neg hn]
+    exact (H hn a).choose_spec
 #align rootable_by_of_pow_left_surj rootableByOfPowLeftSurj
 #align divisible_by_of_smul_right_surj divisibleByOfSMulRightSurj
 -/

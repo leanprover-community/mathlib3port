@@ -190,6 +190,11 @@ theorem disjoint_stdBasis_stdBasis (I J : Set ι) (h : Disjoint I J) :
     funext_iff]
   rintro b ⟨hI, hJ⟩ i
   classical
+  by_cases hiI : i ∈ I
+  · by_cases hiJ : i ∈ J
+    · exact (h.le_bot ⟨hiI, hiJ⟩).elim
+    · exact hJ i hiJ
+  · exact hI i hiI
 #align linear_map.disjoint_std_basis_std_basis LinearMap.disjoint_stdBasis_stdBasis
 -/
 

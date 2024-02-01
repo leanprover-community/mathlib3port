@@ -274,7 +274,13 @@ theorem FG.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.FG) (hsc : s
 #print Submodule.fg_pi /-
 theorem fg_pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoid (M i)]
     [∀ i, Module R (M i)] {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).FG) :
-    (Submodule.pi Set.univ p).FG := by classical
+    (Submodule.pi Set.univ p).FG := by
+  classical
+  simp_rw [fg_def] at hsb ⊢
+  choose t htf hts using hsb
+  refine'
+    ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_iUnion fun i => (htf i).image _, _⟩
+  simp_rw [span_Union, span_image, hts, Submodule.iSup_map_single]
 #align submodule.fg_pi Submodule.fg_pi
 -/
 
@@ -342,7 +348,12 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
 #print Submodule.fg_induction /-
 theorem fg_induction (R M : Type _) [Semiring R] [AddCommMonoid M] [Module R M]
     (P : Submodule R M → Prop) (h₁ : ∀ x, P (Submodule.span R {x}))
-    (h₂ : ∀ M₁ M₂, P M₁ → P M₂ → P (M₁ ⊔ M₂)) (N : Submodule R M) (hN : N.FG) : P N := by classical
+    (h₂ : ∀ M₁ M₂, P M₁ → P M₂ → P (M₁ ⊔ M₂)) (N : Submodule R M) (hN : N.FG) : P N := by
+  classical
+  obtain ⟨s, rfl⟩ := hN
+  induction s using Finset.induction
+  · rw [Finset.coe_empty, Submodule.span_empty, ← Submodule.span_zero_singleton]; apply h₁
+  · rw [Finset.coe_insert, Submodule.span_insert]; apply h₂ <;> apply_assumption
 #align submodule.fg_induction Submodule.fg_induction
 -/
 
@@ -393,13 +404,31 @@ theorem FG.stablizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →o
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.FG ↔ CompleteLattice.IsCompactElement s := by
   classical
+  -- Introduce shorthand for span of an element
+  let sp : M → Submodule R M := fun a => span R {a}
+  -- Trivial rewrite lemma; a small hack since simp (only) & rw can't accomplish this smoothly.
+  have supr_rw : ∀ t : Finset M, (⨆ x ∈ t, sp x) = ⨆ x ∈ (↑t : Set M), sp x := fun t => by rfl
+  constructor
+  · rintro ⟨t, rfl⟩
+    rw [span_eq_supr_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_iSup t sp]
+    apply CompleteLattice.isCompactElement_finsetSup
+    exact fun n _ => singleton_span_is_compact_element n
+  · intro h
+    -- s is the Sup of the spans of its elements.
+    have sSup : s = Sup (sp '' ↑s) := by
+      rw [sSup_eq_iSup, iSup_image, ← span_eq_supr_of_singleton_spans, eq_comm, span_eq]
+    -- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
+    obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' ↑s) (le_of_eq sSup)
+    have ssup : s = u.sup id := by
+      suffices : u.sup id ≤ s; exact le_antisymm husup this
+      rw [sSup, Finset.sup_id_eq_sSup]; exact sSup_le_sSup huspan
+    obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan
+    rw [Finset.sup_image, Function.id_comp, Finset.sup_eq_iSup, supr_rw, ←
+      span_eq_supr_of_singleton_spans, eq_comm] at ssup 
+    exact ⟨t, ssup⟩
 #align submodule.fg_iff_compact Submodule.fg_iff_compact
 -/
 
--- Introduce shorthand for span of an element
--- Trivial rewrite lemma; a small hack since simp (only) & rw can't accomplish this smoothly.
--- s is the Sup of the spans of its elements.
--- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
 end Submodule
 
 namespace Submodule
@@ -465,7 +494,11 @@ def FG (I : Ideal R) : Prop :=
 
 This is the `ideal` version of `submodule.fg.map`. -/
 theorem FG.map {R S : Type _} [Semiring R] [Semiring S] {I : Ideal R} (h : I.FG) (f : R →+* S) :
-    (I.map f).FG := by classical
+    (I.map f).FG := by
+  classical
+  obtain ⟨s, hs⟩ := h
+  refine' ⟨s.image f, _⟩
+  rw [Finset.coe_image, ← Ideal.map_span, hs]
 #align ideal.fg.map Ideal.FG.map
 -/
 
@@ -647,7 +680,19 @@ end Module
 
 #print Module.Finite.base_change /-
 instance Module.Finite.base_change [CommSemiring R] [Semiring A] [Algebra R A] [AddCommMonoid M]
-    [Module R M] [h : Module.Finite R M] : Module.Finite A (TensorProduct R A M) := by classical
+    [Module R M] [h : Module.Finite R M] : Module.Finite A (TensorProduct R A M) := by
+  classical
+  obtain ⟨s, hs⟩ := h.out
+  refine' ⟨⟨s.image (TensorProduct.mk R A M 1), eq_top_iff.mpr fun x _ => _⟩⟩
+  apply TensorProduct.induction_on x
+  · exact zero_mem _
+  · intro x y
+    rw [Finset.coe_image, ← Submodule.span_span_of_tower R, Submodule.span_image, hs,
+      Submodule.map_top, LinearMap.range_coe]
+    change _ ∈ Submodule.span A (Set.range <| TensorProduct.mk R A M 1)
+    rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul']
+    exact Submodule.smul_mem _ x (Submodule.subset_span <| Set.mem_range_self y)
+  · exact fun _ _ => Submodule.add_mem _
 #align module.finite.base_change Module.Finite.base_change
 -/
 

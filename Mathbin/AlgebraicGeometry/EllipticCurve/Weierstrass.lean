@@ -774,7 +774,7 @@ instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
 
 #print WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field /-
 instance WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field {F : Type u}
-    [Field F] (W : WeierstrassCurve F) : IsDomain W.CoordinateRing := by classical
+    [Field F] (W : WeierstrassCurve F) : IsDomain W.CoordinateRing := by classical infer_instance
 #align weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field
 -/
 
@@ -889,6 +889,9 @@ protected noncomputable def WeierstrassCurve.Affine.CoordinateRing.basis :
 theorem WeierstrassCurve.Affine.CoordinateRing.basis_apply (n : Fin 2) :
     W.CoordinateRing.Basis n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) := by
   classical
+  nontriviality R
+  simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R), Basis.reindex_apply,
+    PowerBasis.basis_eq_pow]
 #align weierstrass_curve.coordinate_ring.basis_apply WeierstrassCurve.Affine.CoordinateRing.basis_apply
 -/
 

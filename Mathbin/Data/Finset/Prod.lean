@@ -187,7 +187,8 @@ theorem product_eq_biUnion_right [DecidableEq α] [DecidableEq β] (s : Finset �
 /-- See also `finset.sup_product_left`. -/
 @[simp]
 theorem product_biUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
-    (s ×ˢ t).biUnion f = s.biUnion fun a => t.biUnion fun b => f (a, b) := by classical
+    (s ×ˢ t).biUnion f = s.biUnion fun a => t.biUnion fun b => f (a, b) := by
+  classical simp_rw [product_eq_bUnion, bUnion_bUnion, image_bUnion]
 #align finset.product_bUnion Finset.product_biUnion
 -/
 
@@ -235,7 +236,15 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
     ((s ×ˢ t).filterₓ fun x : α × β => p x.1 ↔ q x.2).card =
       (s.filterₓ p).card * (t.filterₓ q).card +
         (s.filterₓ (Not ∘ p)).card * (t.filterₓ (Not ∘ q)).card :=
-  by classical
+  by
+  classical
+  rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
+  · apply congr_arg; ext ⟨a, b⟩; simp only [filter_union_right, mem_filter, mem_product]
+    constructor <;> intro h <;> use h.1
+    simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
+    cases h.2 <;> · try simp at h_1 ; simp [h_1]
+  · apply Finset.disjoint_filter_filter'
+    exact (disjoint_compl_right.inf_left _).inf_right _
 #align finset.filter_product_card Finset.filter_product_card
 -/
 

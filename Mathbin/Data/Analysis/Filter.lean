@@ -431,6 +431,12 @@ theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ 
 #print Filter.Realizer.ne_bot_iff /-
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
   classical
+  rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, Classical.not_forall]
+  simp only [Set.not_nonempty_iff_eq_empty]
+  exact
+    ⟨fun ⟨x, e⟩ _ => ⟨x, le_of_eq e⟩, fun h =>
+      let ⟨x, h⟩ := h ()
+      ⟨x, le_bot_iff.1 h⟩⟩
 #align filter.realizer.ne_bot_iff Filter.Realizer.ne_bot_iff
 -/
 

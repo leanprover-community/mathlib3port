@@ -81,6 +81,8 @@ noncomputable def quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI : I �
   refine' (Submodule.Quotient.equiv (I.restrict_scalars R) I' b'.equiv_fun this).trans _
   any_goals apply RingHom.id; any_goals infer_instance
   classical
+  let this.1 := Submodule.quotientPi (show ∀ i, Submodule R R from fun i => span ({a i} : Set R))
+  exact this
 #align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpan
 -/
 
@@ -111,7 +113,7 @@ noncomputable def fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module.Finit
   let e := I.quotientEquivPiZMod b hI
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
         ⟨Int.natAbs_ne_zero_of_ne_zero (smith_coeffs_ne_zero b I hI i)⟩ <;>
-      classical <;>
+      classical skip <;>
     exact Fintype.ofEquiv (∀ i, ZMod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot
 -/

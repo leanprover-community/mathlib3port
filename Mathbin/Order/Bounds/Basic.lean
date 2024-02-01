@@ -2115,7 +2115,16 @@ theorem IsLUB.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x 
 
 #print isLUB_pi /-
 theorem isLUB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
-    IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by classical
+    IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by
+  classical
+  refine'
+    ⟨fun H a => ⟨(Function.monotone_eval a).mem_upperBounds_image H.1, fun b hb => _⟩, fun H =>
+      ⟨_, _⟩⟩
+  · suffices : Function.update f a b ∈ upperBounds s
+    exact Function.update_same a b f ▸ H.2 this a
+    refine' fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
+  · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
+  · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
 #align is_lub_pi isLUB_pi
 -/
 

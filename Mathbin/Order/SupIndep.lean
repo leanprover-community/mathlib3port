@@ -138,7 +138,10 @@ theorem supIndep_map {s : Finset ι'} {g : ι' ↪ ι} : (s.map g).SupIndep f �
   refine' ⟨fun hs t ht i hi hit => _, fun hs => _⟩
   · rw [← sup_map]
     exact hs (map_subset_map.2 ht) ((mem_map' _).2 hi) (by rwa [mem_map'])
-  · classical
+  ·
+    classical
+    rw [map_eq_image]
+    exact hs.image
 #align finset.sup_indep_map Finset.supIndep_map
 -/
 
@@ -188,6 +191,11 @@ theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep fun a => f a :=
   by
   intro t ht i _ hi
   classical
+  rw [← Finset.sup_image]
+  refine' hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi _
+  rw [mem_image] at hi' 
+  obtain ⟨j, hj, hji⟩ := hi'
+  rwa [Subtype.ext hji] at hj 
 #align finset.sup_indep.attach Finset.SupIndep.attach
 -/
 
@@ -197,6 +205,14 @@ theorem supIndep_attach : (s.attach.SupIndep fun a => f a) ↔ s.SupIndep f :=
   by
   refine' ⟨fun h t ht i his hit => _, sup_indep.attach⟩
   classical
+  convert
+    h (filter_subset (fun i => (i : ι) ∈ t) _) (mem_attach _ ⟨i, ‹_›⟩) fun hi =>
+      hit <| by simpa using hi using
+    1
+  refine' eq_of_forall_ge_iff _
+  simp only [Finset.sup_le_iff, mem_filter, mem_attach, true_and_iff, Function.comp_apply,
+    Subtype.forall, Subtype.coe_mk]
+  exact fun a => forall_congr' fun j => ⟨fun h _ => h, fun h hj => h (ht hj) hj⟩
 #align finset.sup_indep_attach Finset.supIndep_attach
 -/
 
@@ -536,7 +552,15 @@ end CompleteLattice
 
 #print CompleteLattice.independent_iff_supIndep /-
 theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
-    CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by classical
+    CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by
+  classical
+  rw [Finset.supIndep_iff_disjoint_erase]
+  refine' subtype.forall.trans (forall₂_congr fun a b => _)
+  rw [Finset.sup_eq_iSup]
+  congr 2
+  refine' supr_subtype.trans _
+  congr 1 with x
+  simp [iSup_and, @iSup_comm _ (x ∈ s)]
 #align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndep
 -/
 
@@ -548,7 +572,9 @@ alias ⟨CompleteLattice.Independent.supIndep, Finset.SupIndep.independent⟩ :=
 #print CompleteLattice.independent_iff_supIndep_univ /-
 /-- A variant of `complete_lattice.independent_iff_sup_indep` for `fintype`s. -/
 theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
-    CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by classical
+    CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by
+  classical simp [Finset.supIndep_iff_disjoint_erase, CompleteLattice.Independent,
+    Finset.sup_eq_iSup]
 #align complete_lattice.independent_iff_sup_indep_univ CompleteLattice.independent_iff_supIndep_univ
 -/
 

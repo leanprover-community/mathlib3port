@@ -768,14 +768,12 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a * a) (Hsq' : 0 ≤ (1 + a) * (1 + a))
 #align one_add_mul_le_pow' one_add_mul_le_pow'
 -/
 
-#print pow_le_pow_of_le_one_aux /-
 private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) :
     ∀ k : ℕ, a ^ (i + k) ≤ a ^ i
   | 0 => by simp
   | k + 1 => by
     rw [← add_assoc, ← one_mul (a ^ i), pow_succ]
     exact mul_le_mul ha (pow_le_pow_of_le_one_aux _) (pow_nonneg h _) zero_le_one
--/
 
 #print pow_le_pow_of_le_one /-
 theorem pow_le_pow_of_le_one (h : 0 ≤ a) (ha : a ≤ 1) {i j : ℕ} (hij : i ≤ j) : a ^ j ≤ a ^ i :=

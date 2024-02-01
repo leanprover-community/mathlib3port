@@ -401,6 +401,45 @@ theorem ballot_neg (p q : ℕ) (qp : q < p) :
 theorem ballot_problem' :
     ∀ q p, q < p → (condCount (countedSequence p q) staysPositive).toReal = (p - q) / (p + q) := by
   classical
+  apply Nat.diag_induction
+  · intro p
+    rw [ballot_same]
+    simp
+  · intro p
+    rw [ballot_edge]
+    simp only [ENNReal.one_toReal, Nat.cast_add, Nat.cast_one, Nat.cast_zero, sub_zero, add_zero]
+    rw [div_self]
+    exact Nat.cast_add_one_ne_zero p
+  · intro q p qp h₁ h₂
+    haveI :=
+      cond_count_is_probability_measure (counted_sequence_finite p (q + 1))
+        (counted_sequence_nonempty _ _)
+    haveI :=
+      cond_count_is_probability_measure (counted_sequence_finite (p + 1) q)
+        (counted_sequence_nonempty _ _)
+    have h₃ : p + 1 + (q + 1) > 0 := Nat.add_pos_left (Nat.succ_pos _) _
+    rw [← cond_count_add_compl_eq {l : List ℤ | l.headI = 1} _ (counted_sequence_finite _ _),
+      first_vote_pos _ _ h₃, first_vote_neg _ _ h₃, ballot_pos, ballot_neg _ _ qp]
+    rw [ENNReal.toReal_add, ENNReal.toReal_mul, ENNReal.toReal_mul, ← Nat.cast_add,
+      ENNReal.toReal_div, ENNReal.toReal_div, ENNReal.toReal_nat, ENNReal.toReal_nat,
+      ENNReal.toReal_nat, h₁, h₂]
+    · have h₄ : ↑(p + 1) + ↑(q + 1) ≠ (0 : ℝ) :=
+        by
+        apply ne_of_gt
+        assumption_mod_cast
+      have h₅ : ↑(p + 1) + ↑q ≠ (0 : ℝ) := by
+        apply ne_of_gt
+        norm_cast
+        linarith
+      have h₆ : ↑p + ↑(q + 1) ≠ (0 : ℝ) := by
+        apply ne_of_gt
+        norm_cast
+        linarith
+      field_simp [h₄, h₅, h₆] at *
+      ring
+    all_goals
+      refine' (ENNReal.mul_lt_top (measure_lt_top _ _).Ne _).Ne
+      simp [Ne.def, ENNReal.div_eq_top]
 #align ballot.ballot_problem' Ballot.ballot_problem'
 
 /-- The ballot problem. -/

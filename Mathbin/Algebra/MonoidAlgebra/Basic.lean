@@ -373,7 +373,22 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 #print MonoidAlgebra.mul_apply_antidiagonal /-
 theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Finset (G × G))
     (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 * p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 := by
-  classical
+  classical exact
+    let F : G × G → k := fun p => if p.1 * p.2 = x then f p.1 * g p.2 else 0
+    calc
+      (f * g) x = ∑ a₁ in f.support, ∑ a₂ in g.support, F (a₁, a₂) := mul_apply f g x
+      _ = ∑ p in f.support ×ˢ g.support, F p := finset.sum_product.symm
+      _ = ∑ p in (f.support ×ˢ g.support).filterₓ fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
+        (Finset.sum_filter _ _).symm
+      _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1 * g p.2 :=
+        (sum_congr (by ext; simp only [mem_filter, mem_product, hs, and_comm']) fun _ _ => rfl)
+      _ = ∑ p in s, f p.1 * g p.2 :=
+        sum_subset (filter_subset _ _) fun p hps hp =>
+          by
+          simp only [mem_filter, mem_support_iff, not_and, Classical.not_not] at hp ⊢
+          by_cases h1 : f p.1 = 0
+          · rw [h1, MulZeroClass.zero_mul]
+          · rw [hp hps h1, MulZeroClass.mul_zero]
 #align monoid_algebra.mul_apply_antidiagonal MonoidAlgebra.mul_apply_antidiagonal
 -/
 
@@ -479,7 +494,18 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G
 
 #print MonoidAlgebra.mul_single_apply_aux /-
 theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
-    (H : ∀ a, a * x = z ↔ a = y) : (f * single x r) z = f y * r := by classical
+    (H : ∀ a, a * x = z ↔ a = y) : (f * single x r) z = f y * r := by
+  classical exact
+    have A :
+      ∀ a₁ b₁,
+        ((single x r).Sum fun a₂ b₂ => ite (a₁ * a₂ = z) (b₁ * b₂) 0) =
+          ite (a₁ * x = z) (b₁ * r) 0 :=
+      fun a₁ b₁ => sum_single_index <| by simp
+    calc
+      (f * single x r) z = Sum f fun a b => if a = y then b * r else 0 := by
+        simp only [mul_apply, A, H]
+      _ = if y ∈ f.support then f y * r else 0 := (f.support.sum_ite_eq' _ _)
+      _ = f y * r := by split_ifs with h <;> simp at h  <;> simp [h]
 #align monoid_algebra.mul_single_apply_aux MonoidAlgebra.mul_single_apply_aux
 -/
 
@@ -492,13 +518,30 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 
 #print MonoidAlgebra.mul_single_apply_of_not_exists_mul /-
 theorem mul_single_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : MonoidAlgebra k G)
-    (h : ¬∃ d, g' = d * g) : (x * Finsupp.single g r : MonoidAlgebra k G) g' = 0 := by classical
+    (h : ¬∃ d, g' = d * g) : (x * Finsupp.single g r : MonoidAlgebra k G) g' = 0 := by
+  classical
+  rw [mul_apply, Finsupp.sum_comm, Finsupp.sum_single_index]
+  swap
+  · simp_rw [Finsupp.sum, MulZeroClass.mul_zero, if_t_t, Finset.sum_const_zero]
+  · apply Finset.sum_eq_zero
+    simp_rw [ite_eq_right_iff]
+    rintro g'' hg'' rfl
+    exfalso
+    exact h ⟨_, rfl⟩
 #align monoid_algebra.mul_single_apply_of_not_exists_mul MonoidAlgebra.mul_single_apply_of_not_exists_mul
 -/
 
 #print MonoidAlgebra.single_mul_apply_aux /-
 theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
-    (H : ∀ a, x * a = y ↔ a = z) : (single x r * f) y = r * f z := by classical
+    (H : ∀ a, x * a = y ↔ a = z) : (single x r * f) y = r * f z := by
+  classical exact
+    have : (f.sum fun a b => ite (x * a = y) (0 * b) 0) = 0 := by simp
+    calc
+      (single x r * f) y = Sum f fun a b => ite (x * a = y) (r * b) 0 :=
+        (mul_apply _ _ _).trans <| sum_single_index this
+      _ = f.sum fun a b => ite (a = z) (r * b) 0 := by simp only [H]
+      _ = if z ∈ f.support then r * f z else 0 := (f.support.sum_ite_eq' _ _)
+      _ = _ := by split_ifs with h <;> simp at h  <;> simp [h]
 #align monoid_algebra.single_mul_apply_aux MonoidAlgebra.single_mul_apply_aux
 -/
 
@@ -511,7 +554,16 @@ theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 
 #print MonoidAlgebra.single_mul_apply_of_not_exists_mul /-
 theorem single_mul_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : MonoidAlgebra k G)
-    (h : ¬∃ d, g' = g * d) : (Finsupp.single g r * x : MonoidAlgebra k G) g' = 0 := by classical
+    (h : ¬∃ d, g' = g * d) : (Finsupp.single g r * x : MonoidAlgebra k G) g' = 0 := by
+  classical
+  rw [mul_apply, Finsupp.sum_single_index]
+  swap
+  · simp_rw [Finsupp.sum, MulZeroClass.zero_mul, if_t_t, Finset.sum_const_zero]
+  · apply Finset.sum_eq_zero
+    simp_rw [ite_eq_right_iff]
+    rintro g'' hg'' rfl
+    exfalso
+    exact h ⟨_, rfl⟩
 #align monoid_algebra.single_mul_apply_of_not_exists_mul MonoidAlgebra.single_mul_apply_of_not_exists_mul
 -/
 
@@ -541,7 +593,9 @@ instance isScalarTower_self [IsScalarTower R k k] :
     IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     ext m
-    classical⟩
+    classical simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc, sum_smul_index',
+      MulZeroClass.zero_mul, if_t_t, imp_true_iff, eq_self_iff_true, sum_zero, coe_smul,
+      smul_eq_mul, Pi.smul_apply, smul_zero]⟩
 #align monoid_algebra.is_scalar_tower_self MonoidAlgebra.isScalarTower_self
 -/
 
@@ -551,7 +605,12 @@ instance isScalarTower_self [IsScalarTower R k k] :
 also commute with the algebra multiplication. -/
 instance smulCommClass_self [SMulCommClass R k k] :
     SMulCommClass R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
-  ⟨fun t a b => by classical⟩
+  ⟨fun t a b => by
+    classical
+    ext m
+    simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index',
+      imp_true_iff, eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply,
+      MulZeroClass.mul_zero, smul_zero]⟩
 #align monoid_algebra.smul_comm_class_self MonoidAlgebra.smulCommClass_self
 -/
 

@@ -162,6 +162,17 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
 theorem linearIndependent_of_isOrthoᵢ {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁}
     (hv₁ : B.IsOrthoᵢ v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by
   classical
+  rw [linearIndependent_iff']
+  intro s w hs i hi
+  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
+  have hsum : (s.sum fun j : n => I₁ (w j) * B (v j) (v i)) = I₁ (w i) * B (v i) (v i) :=
+    by
+    apply Finset.sum_eq_single_of_mem i hi
+    intro j hj hij
+    rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
+  simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this 
+  apply (map_eq_zero I₁).mp
+  exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 #align linear_map.linear_independent_of_is_Ortho LinearMap.linearIndependent_of_isOrthoᵢ
 -/
 

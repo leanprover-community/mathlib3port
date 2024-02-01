@@ -43,6 +43,12 @@ theorem finite_stableUnderBaseChange : StableUnderBaseChange @Finite :=
   by
   refine' stable_under_base_change.mk _ finite_respects_iso _
   classical
+  introv h
+  skip
+  replace h : Module.Finite R T := by convert h; ext; rw [Algebra.smul_def]; rfl
+  suffices Module.Finite S (S ⊗[R] T) by change Module.Finite _ _; convert this; ext;
+    rw [Algebra.smul_def]; rfl
+  exact inferInstance
 #align ring_hom.finite_stable_under_base_change RingHom.finite_stableUnderBaseChange
 -/
 

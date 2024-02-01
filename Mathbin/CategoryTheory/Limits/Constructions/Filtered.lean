@@ -83,7 +83,8 @@ open CoproductsFromFiniteFiltered
 
 #print CategoryTheory.Limits.hasCoproducts_of_finite_and_filtered /-
 theorem hasCoproducts_of_finite_and_filtered [HasFiniteCoproducts C]
-    [HasFilteredColimitsOfSize.{w, w} C] : HasCoproducts.{w} C := fun α => by classical
+    [HasFilteredColimitsOfSize.{w, w} C] : HasCoproducts.{w} C := fun α => by
+  classical exact ⟨fun F => has_colimit.mk (lift_to_finset_colimit_cocone F)⟩
 #align category_theory.limits.has_coproducts_of_finite_and_filtered CategoryTheory.Limits.hasCoproducts_of_finite_and_filtered
 -/
 

@@ -93,7 +93,13 @@ variable {ι : Type _} {v : ι → R} (s : Finset ι)
 
 #print Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero /-
 theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s)
-    (degree_f_lt : f.degree < s.card) (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by classical
+    (degree_f_lt : f.degree < s.card) (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by
+  classical
+  rw [← card_image_of_inj_on hvs] at degree_f_lt 
+  refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
+  intro x hx
+  rcases mem_image.mp hx with ⟨_, hj, rfl⟩
+  exact eval_f _ hj
 #align polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero
 -/
 
@@ -338,7 +344,11 @@ theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : ∑ j in s, Lagrange
 
 #print Lagrange.basisDivisor_add_symm /-
 theorem basisDivisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 :=
-  by classical
+  by
+  classical rw [←
+    sum_basis (Set.injOn_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
+    sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
+    basis_pair_right hxy, id, id]
 #align lagrange.basis_divisor_add_symm Lagrange.basisDivisor_add_symm
 -/
 
@@ -626,7 +636,7 @@ theorem nodal_eq_mul_nodal_erase [DecidableEq ι] (hi : i ∈ s) :
 
 #print Lagrange.X_sub_C_dvd_nodal /-
 theorem X_sub_C_dvd_nodal (v : ι → F) (hi : i ∈ s) : X - C (v i) ∣ nodal s v :=
-  ⟨_, by classical⟩
+  ⟨_, by classical exact nodal_eq_mul_nodal_erase hi⟩
 #align lagrange.X_sub_C_dvd_nodal Lagrange.X_sub_C_dvd_nodal
 -/
 

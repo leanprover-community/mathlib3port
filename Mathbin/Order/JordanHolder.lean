@@ -376,7 +376,13 @@ theorem toList_ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l
 /-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/
 @[ext]
 theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=
-  toList_injective <| List.eq_of_perm_of_sorted (by classical) s₁.toList_sorted s₂.toList_sorted
+  toList_injective <|
+    List.eq_of_perm_of_sorted
+      (by
+        classical exact
+          List.perm_of_nodup_nodup_toFinset_eq s₁.to_list_nodup s₂.to_list_nodup
+            (Finset.ext <| by simp [*]))
+      s₁.toList_sorted s₂.toList_sorted
 #align composition_series.ext CompositionSeries.ext
 -/
 

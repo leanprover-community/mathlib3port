@@ -848,7 +848,31 @@ theorem of_affine_open_cover {X : Scheme} (V : X.affineOpens) (S : Set X.affineO
       ∀ (U : X.affineOpens) (s : Finset (X.Presheaf.obj <| op U))
         (hs : Ideal.span (s : Set (X.Presheaf.obj <| op U)) = ⊤),
         (∀ f : s, P (X.affineBasicOpen f.1)) → P U)
-    (hS : (⋃ i : S, i : Set X.carrier) = Set.univ) (hS' : ∀ U : S, P U) : P V := by classical
+    (hS : (⋃ i : S, i : Set X.carrier) = Set.univ) (hS' : ∀ U : S, P U) : P V := by
+  classical
+  have : ∀ x : V, ∃ f : X.presheaf.obj <| op V.1, ↑x ∈ X.basic_open f ∧ P (X.affine_basic_open f) :=
+    by
+    intro x
+    have : ↑x ∈ (Set.univ : Set X.carrier) := trivial
+    rw [← hS] at this 
+    obtain ⟨W, hW⟩ := set.mem_Union.mp this
+    obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
+    refine' ⟨f, hf, _⟩
+    convert hP₁ _ g (hS' W) using 1
+    ext1
+    exact e
+  choose f hf₁ hf₂ using this
+  suffices Ideal.span (Set.range f) = ⊤
+    by
+    obtain ⟨t, ht₁, ht₂⟩ := (Ideal.span_eq_top_iff_finite _).mp this
+    apply hP₂ V t ht₂
+    rintro ⟨i, hi⟩
+    obtain ⟨x, rfl⟩ := ht₁ hi
+    exact hf₂ x
+  rw [← V.prop.self_le_basic_open_union_iff]
+  intro x hx
+  rw [iSup_range', opens.mem_supr]
+  exact ⟨_, hf₁ ⟨x, hx⟩⟩
 #align algebraic_geometry.of_affine_open_cover AlgebraicGeometry.of_affine_open_cover
 -/
 

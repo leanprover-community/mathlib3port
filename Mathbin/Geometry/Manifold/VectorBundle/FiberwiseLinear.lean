@@ -217,11 +217,68 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (Φ x : F →L[𝕜] F)) U) (h2Φ :
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => ((Φ x).symm : F →L[𝕜] F)) U),
       e.EqOnSource (FiberwiseLinear.partialHomeomorph Φ hU₀ hΦ.ContinuousOn h2Φ.ContinuousOn) :=
-  by classical
+  by
+  classical
+  rw [SetCoe.forall'] at h 
+  choose! φ u hu hUu hux hφ h2φ heφ using h
+  have heuφ : ∀ x : U, eq_on e (fun q => (q.1, φ x q.1 q.2)) (u x ×ˢ univ) :=
+    by
+    intro x p hp
+    refine' (heφ x).2 _
+    rw [(heφ x).1]
+    exact hp
+  have huφ : ∀ (x x' : U) (y : B) (hyx : y ∈ u x) (hyx' : y ∈ u x'), φ x y = φ x' y :=
+    by
+    intro p p' y hyp hyp'
+    ext v
+    have h1 : e (y, v) = (y, φ p y v) := heuφ _ ⟨(id hyp : (y, v).fst ∈ u p), trivial⟩
+    have h2 : e (y, v) = (y, φ p' y v) := heuφ _ ⟨(id hyp' : (y, v).fst ∈ u p'), trivial⟩
+    exact congr_arg Prod.snd (h1.symm.trans h2)
+  have hUu' : U = ⋃ i, u i := by
+    ext x
+    rw [mem_Union]
+    refine' ⟨fun h => ⟨⟨x, h⟩, hux _⟩, _⟩
+    rintro ⟨x, hx⟩
+    exact hUu x hx
+  have hU' : IsOpen U := by
+    rw [hUu']
+    apply isOpen_iUnion hu
+  let Φ₀ : U → F ≃L[𝕜] F := Union_lift u (fun x => φ x ∘ coe) huφ U hUu'.le
+  let Φ : B → F ≃L[𝕜] F := fun y =>
+    if hy : y ∈ U then Φ₀ ⟨y, hy⟩ else ContinuousLinearEquiv.refl 𝕜 F
+  have hΦ : ∀ (y) (hy : y ∈ U), Φ y = Φ₀ ⟨y, hy⟩ := fun y hy => dif_pos hy
+  have hΦφ : ∀ x : U, ∀ y ∈ u x, Φ y = φ x y :=
+    by
+    intro x y hyu
+    refine' (hΦ y (hUu x hyu)).trans _
+    exact Union_lift_mk ⟨y, hyu⟩ _
+  have hΦ : SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun y => (Φ y : F →L[𝕜] F)) U :=
+    by
+    apply contMDiffOn_of_locally_contMDiffOn
+    intro x hx
+    refine' ⟨u ⟨x, hx⟩, hu ⟨x, hx⟩, hux _, _⟩
+    refine' (ContMDiffOn.congr (hφ ⟨x, hx⟩) _).mono (inter_subset_right _ _)
+    intro y hy
+    rw [hΦφ ⟨x, hx⟩ y hy]
+  have h2Φ : SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun y => ((Φ y).symm : F →L[𝕜] F)) U :=
+    by
+    apply contMDiffOn_of_locally_contMDiffOn
+    intro x hx
+    refine' ⟨u ⟨x, hx⟩, hu ⟨x, hx⟩, hux _, _⟩
+    refine' (ContMDiffOn.congr (h2φ ⟨x, hx⟩) _).mono (inter_subset_right _ _)
+    intro y hy
+    rw [hΦφ ⟨x, hx⟩ y hy]
+  refine' ⟨Φ, U, hU', hΦ, h2Φ, hU, fun p hp => _⟩
+  rw [hU] at hp 
+  -- using rw on the next line seems to cause a timeout in kernel type-checking
+  refine' (heuφ ⟨p.fst, hp.1⟩ ⟨hux _, hp.2⟩).trans _
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr (_, _)]]"
+  rw [hΦφ]
+  apply hux
 #align smooth_fiberwise_linear.locality_aux₂ SmoothFiberwiseLinear.locality_aux₂
 -/
 
--- using rw on the next line seems to cause a timeout in kernel type-checking
 variable (F B IB)
 
 #print smoothFiberwiseLinear /-

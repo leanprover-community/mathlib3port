@@ -299,7 +299,7 @@ theorem restrictDvd_def [Decidable (q = 0)] (hpq : p ∣ q) :
 
 #print Polynomial.Gal.restrictDvd_surjective /-
 theorem restrictDvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjective (restrictDvd hpq) :=
-  by classical
+  by classical simp only [restrict_dvd_def, dif_neg hq, restrict_surjective]
 #align polynomial.gal.restrict_dvd_surjective Polynomial.Gal.restrictDvd_surjective
 -/
 
@@ -321,6 +321,32 @@ theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
     exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
   intro f g hfg
   classical
+  simp only [restrict_prod, restrict_dvd_def] at hfg 
+  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg 
+  ext x hx
+  rw [root_set_def, Polynomial.map_mul, Polynomial.roots_mul] at hx 
+  cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
+  · haveI : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=
+      ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_right p q)⟩
+    have key :
+      x =
+        algebraMap p.splitting_field (p * q).SplittingField
+          ((roots_equiv_roots p _).invFun
+            ⟨x, (@Multiset.mem_toFinset _ (Classical.decEq _) _ _).mpr h⟩) :=
+      subtype.ext_iff.mp (Equiv.apply_symm_apply (roots_equiv_roots p _) ⟨x, _⟩).symm
+    rw [key, ← AlgEquiv.restrictNormal_commutes, ← AlgEquiv.restrictNormal_commutes]
+    exact congr_arg _ (alg_equiv.ext_iff.mp hfg.1 _)
+  · haveI : Fact (q.splits (algebraMap F (p * q).SplittingField)) :=
+      ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_left q p)⟩
+    have key :
+      x =
+        algebraMap q.splitting_field (p * q).SplittingField
+          ((roots_equiv_roots q _).invFun
+            ⟨x, (@Multiset.mem_toFinset _ (Classical.decEq _) _ _).mpr h⟩) :=
+      subtype.ext_iff.mp (Equiv.apply_symm_apply (roots_equiv_roots q _) ⟨x, _⟩).symm
+    rw [key, ← AlgEquiv.restrictNormal_commutes, ← AlgEquiv.restrictNormal_commutes]
+    exact congr_arg _ (alg_equiv.ext_iff.mp hfg.2 _)
+  · rwa [Ne.def, mul_eq_zero, map_eq_zero, map_eq_zero, ← mul_eq_zero]
 #align polynomial.gal.restrict_prod_injective Polynomial.Gal.restrictProd_injective
 -/
 
@@ -515,7 +541,31 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
 theorem galActionHom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible p)
     (p_deg : p.natDegree.Prime)
     (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) :
-    Function.Bijective (galActionHom p ℂ) := by classical
+    Function.Bijective (galActionHom p ℂ) := by
+  classical
+  have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree :=
+    by
+    simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
+    rw [Multiset.toFinset_card_of_nodup, ← nat_degree_eq_card_roots]
+    · exact IsAlgClosed.splits_codomain p
+    · exact nodup_roots ((separable_map (algebraMap ℚ ℂ)).mpr p_irr.separable)
+  have h2 : Fintype.card p.gal = Fintype.card (gal_action_hom p ℂ).range :=
+    Fintype.card_congr (MonoidHom.ofInjective (gal_action_hom_injective p ℂ)).toEquiv
+  let conj := restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)
+  refine'
+    ⟨gal_action_hom_injective p ℂ, fun x =>
+      (congr_arg (Membership.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr
+        (Subgroup.mem_top x)⟩
+  apply Equiv.Perm.subgroup_eq_top_of_swap_mem
+  · rwa [h1]
+  · rw [h1]
+    convert prime_degree_dvd_card p_irr p_deg using 1
+    convert h2.symm
+  · exact ⟨conj, rfl⟩
+  · rw [← Equiv.Perm.card_support_eq_two]
+    apply Nat.add_left_cancel
+    rw [← p_roots, ← Set.toFinset_card (root_set p ℝ), ← Set.toFinset_card (root_set p ℂ)]
+    exact (card_complex_roots_eq_card_real_add_card_not_gal_inv p).symm
 #align polynomial.gal.gal_action_hom_bijective_of_prime_degree Polynomial.Gal.galActionHom_bijective_of_prime_degree
 -/
 

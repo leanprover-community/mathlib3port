@@ -389,7 +389,7 @@ theorem BddBelow.finite_of_bddAbove {s : Set α} (h₀ : BddBelow s) (h₁ : Bdd
   by
   let ⟨a, ha⟩ := h₀
   let ⟨b, hb⟩ := h₁
-  classical
+  classical exact ⟨Set.fintypeOfMemBounds ha hb⟩
 #align bdd_below.finite_of_bdd_above BddBelow.finite_of_bddAbove
 -/
 
@@ -786,25 +786,29 @@ end DecidableEq
 #print Finset.Icc_eq_cons_Ico /-
 -- Those lemmas are purposefully the other way around
 /-- `finset.cons` version of `finset.Ico_insert_right`. -/
-theorem Icc_eq_cons_Ico (h : a ≤ b) : Icc a b = (Ico a b).cons b right_not_mem_Ico := by classical
+theorem Icc_eq_cons_Ico (h : a ≤ b) : Icc a b = (Ico a b).cons b right_not_mem_Ico := by
+  classical rw [cons_eq_insert, Ico_insert_right h]
 #align finset.Icc_eq_cons_Ico Finset.Icc_eq_cons_Ico
 -/
 
 #print Finset.Icc_eq_cons_Ioc /-
 /-- `finset.cons` version of `finset.Ioc_insert_left`. -/
-theorem Icc_eq_cons_Ioc (h : a ≤ b) : Icc a b = (Ioc a b).cons a left_not_mem_Ioc := by classical
+theorem Icc_eq_cons_Ioc (h : a ≤ b) : Icc a b = (Ioc a b).cons a left_not_mem_Ioc := by
+  classical rw [cons_eq_insert, Ioc_insert_left h]
 #align finset.Icc_eq_cons_Ioc Finset.Icc_eq_cons_Ioc
 -/
 
 #print Finset.Ioc_eq_cons_Ioo /-
 /-- `finset.cons` version of `finset.Ioo_insert_right`. -/
-theorem Ioc_eq_cons_Ioo (h : a < b) : Ioc a b = (Ioo a b).cons b right_not_mem_Ioo := by classical
+theorem Ioc_eq_cons_Ioo (h : a < b) : Ioc a b = (Ioo a b).cons b right_not_mem_Ioo := by
+  classical rw [cons_eq_insert, Ioo_insert_right h]
 #align finset.Ioc_eq_cons_Ioo Finset.Ioc_eq_cons_Ioo
 -/
 
 #print Finset.Ico_eq_cons_Ioo /-
 /-- `finset.cons` version of `finset.Ioo_insert_left`. -/
-theorem Ico_eq_cons_Ioo (h : a < b) : Ico a b = (Ioo a b).cons a left_not_mem_Ioo := by classical
+theorem Ico_eq_cons_Ioo (h : a < b) : Ico a b = (Ioo a b).cons a left_not_mem_Ioo := by
+  classical rw [cons_eq_insert, Ioo_insert_left h]
 #align finset.Ico_eq_cons_Ioo Finset.Ico_eq_cons_Ioo
 -/
 
@@ -819,7 +823,12 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
 -/
 
 #print Finset.card_Ico_eq_card_Icc_sub_one /-
-theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 := by classical
+theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 := by
+  classical
+  by_cases h : a ≤ b
+  · rw [Icc_eq_cons_Ico h, card_cons]
+    exact (Nat.add_sub_cancel _ _).symm
+  · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
 #align finset.card_Ico_eq_card_Icc_sub_one Finset.card_Ico_eq_card_Icc_sub_one
 -/
 
@@ -830,7 +839,12 @@ theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).car
 -/
 
 #print Finset.card_Ioo_eq_card_Ico_sub_one /-
-theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 := by classical
+theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 := by
+  classical
+  by_cases h : a < b
+  · rw [Ico_eq_cons_Ioo h, card_cons]
+    exact (Nat.add_sub_cancel _ _).symm
+  · rw [Ioo_eq_empty h, Ico_eq_empty h, card_empty, zero_tsub]
 #align finset.card_Ioo_eq_card_Ico_sub_one Finset.card_Ioo_eq_card_Ico_sub_one
 -/
 
@@ -879,7 +893,8 @@ theorem not_mem_Ioi_self {b : α} : b ∉ Ioi b := fun h => lt_irrefl _ (mem_Ioi
 #print Finset.Ici_eq_cons_Ioi /-
 -- Purposefully written the other way around
 /-- `finset.cons` version of `finset.Ioi_insert`. -/
-theorem Ici_eq_cons_Ioi (a : α) : Ici a = (Ioi a).cons a not_mem_Ioi_self := by classical
+theorem Ici_eq_cons_Ioi (a : α) : Ici a = (Ioi a).cons a not_mem_Ioi_self := by
+  classical rw [cons_eq_insert, Ioi_insert]
 #align finset.Ici_eq_cons_Ioi Finset.Ici_eq_cons_Ioi
 -/
 
@@ -918,7 +933,8 @@ theorem not_mem_Iio_self {b : α} : b ∉ Iio b := fun h => lt_irrefl _ (mem_Iio
 #print Finset.Iic_eq_cons_Iio /-
 -- Purposefully written the other way around
 /-- `finset.cons` version of `finset.Iio_insert`. -/
-theorem Iic_eq_cons_Iio (b : α) : Iic b = (Iio b).cons b not_mem_Iio_self := by classical
+theorem Iic_eq_cons_Iio (b : α) : Iic b = (Iio b).cons b not_mem_Iio_self := by
+  classical rw [cons_eq_insert, Iio_insert]
 #align finset.Iic_eq_cons_Iio Finset.Iic_eq_cons_Iio
 -/
 

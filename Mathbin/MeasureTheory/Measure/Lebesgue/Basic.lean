@@ -556,11 +556,18 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
 /-- Any invertible linear map rescales Lebesgue measure through the absolute value of its
 determinant. -/
 theorem map_linearMap_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0) :
-    Measure.map f volume = ENNReal.ofReal (abs f.det⁻¹) • volume := by classical
+    Measure.map f volume = ENNReal.ofReal (abs f.det⁻¹) • volume := by
+  classical
+  -- this is deduced from the matrix case
+  let M := f.to_matrix'
+  have A : f.det = det M := by simp only [LinearMap.det_toMatrix']
+  have B : f = M.to_lin' := by simp only [to_lin'_to_matrix']
+  rw [A, B]
+  apply map_matrix_volume_pi_eq_smul_volume_pi
+  rwa [A] at hf 
 #align real.map_linear_map_volume_pi_eq_smul_volume_pi Real.map_linearMap_volume_pi_eq_smul_volume_pi
 -/
 
--- this is deduced from the matrix case
 end Real
 
 section regionBetween
@@ -655,7 +662,23 @@ theorem measurableSet_graph (hf : Measurable f) : MeasurableSet {p : α × ℝ |
 #print volume_regionBetween_eq_lintegral' /-
 theorem volume_regionBetween_eq_lintegral' (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
-    μ.Prod volume (regionBetween f g s) = ∫⁻ y in s, ENNReal.ofReal ((g - f) y) ∂μ := by classical
+    μ.Prod volume (regionBetween f g s) = ∫⁻ y in s, ENNReal.ofReal ((g - f) y) ∂μ := by
+  classical
+  rw [measure.prod_apply]
+  · have h :
+      (fun x => volume {a | x ∈ s ∧ a ∈ Ioo (f x) (g x)}) =
+        s.indicator fun x => ENNReal.ofReal (g x - f x) :=
+      by
+      funext x
+      rw [indicator_apply]
+      split_ifs
+      · have hx : {a | x ∈ s ∧ a ∈ Ioo (f x) (g x)} = Ioo (f x) (g x) := by simp [h, Ioo]
+        simp only [hx, Real.volume_Ioo, sub_zero]
+      · have hx : {a | x ∈ s ∧ a ∈ Ioo (f x) (g x)} = ∅ := by simp [h]
+        simp only [hx, measure_empty]
+    dsimp only [regionBetween, preimage_set_of_eq]
+    rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
+  · exact measurableSet_regionBetween hf hg hs
 #align volume_region_between_eq_lintegral' volume_regionBetween_eq_lintegral'
 -/
 

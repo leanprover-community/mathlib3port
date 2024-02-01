@@ -118,7 +118,8 @@ theorem image_subset_iff_subset_preimage [DecidableEq β] {f : α → β} {s : F
 
 #print Finset.map_subset_iff_subset_preimage /-
 theorem map_subset_iff_subset_preimage {f : α ↪ β} {s : Finset α} {t : Finset β} :
-    s.map f ⊆ t ↔ s ⊆ t.Preimage f (f.Injective.InjOn _) := by classical
+    s.map f ⊆ t ↔ s ⊆ t.Preimage f (f.Injective.InjOn _) := by
+  classical rw [map_eq_image, image_subset_iff_subset_preimage]
 #align finset.map_subset_iff_subset_preimage Finset.map_subset_iff_subset_preimage
 -/
 
@@ -148,7 +149,13 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 #print Finset.subset_map_iff /-
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
-    s ⊆ t.map f ↔ ∃ (u : _) (_ : u ⊆ t), s = u.map f := by classical
+    s ⊆ t.map f ↔ ∃ (u : _) (_ : u ⊆ t), s = u.map f := by
+  classical
+  refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
+  · rw [map_eq_image, image_preimage, filter_true_of_mem fun x hx => _]
+    exact coe_map_subset_range _ _ (h hx)
+  · rintro ⟨u, hut, rfl⟩
+    exact map_subset_map.2 hut
 #align finset.subset_map_iff Finset.subset_map_iff
 -/
 
@@ -196,7 +203,10 @@ theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x
 @[to_additive]
 theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s))
     (g : γ → β) (hg : ∀ x ∈ s, x ∉ Set.range f → g x = 1) :
-    ∏ x in s.Preimage f hf, g (f x) = ∏ x in s, g x := by classical
+    ∏ x in s.Preimage f hf, g (f x) = ∏ x in s, g x := by
+  classical
+  rw [prod_preimage', prod_filter_of_ne]
+  exact fun x hx => Not.imp_symm (hg x hx)
 #align finset.prod_preimage Finset.prod_preimage
 #align finset.sum_preimage Finset.sum_preimage
 -/

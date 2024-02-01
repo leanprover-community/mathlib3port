@@ -184,7 +184,7 @@ theorem Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : le
 
 #print List.Lex.ne_iff /-
 theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
-  classical
+  classical exact Decidable.List.Lex.ne_iff H
 #align list.lex.ne_iff List.Lex.ne_iff
 -/
 

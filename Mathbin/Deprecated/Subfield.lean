@@ -128,6 +128,17 @@ theorem closure.isSubfield : IsSubfield (closure S) :=
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
       classical
+      by_cases hq0 : q = 0
+      · simp [hb, hq0]
+      by_cases hs0 : s = 0
+      · simp [ha, hs0]
+      exact
+        ⟨p * s + q * r,
+          IsAddSubmonoid.add_mem ring.closure.is_subring.to_is_add_subgroup.to_is_add_submonoid
+            (ring.closure.is_subring.to_is_submonoid.mul_mem hp hs)
+            (ring.closure.is_subring.to_is_submonoid.mul_mem hq hr),
+          q * s, ring.closure.is_subring.to_is_submonoid.mul_mem hq hs,
+          (div_add_div p r hq0 hs0).symm⟩
     zero_mem := h0
     neg_mem := by
       rintro _ ⟨p, hp, q, hq, rfl⟩

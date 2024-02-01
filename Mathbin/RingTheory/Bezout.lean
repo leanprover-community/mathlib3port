@@ -43,13 +43,21 @@ variable {R}
 
 #print IsBezout.span_pair_isPrincipal /-
 instance span_pair_isPrincipal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal R).IsPrincipal :=
-  by classical
+  by classical exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
 #align is_bezout.span_pair_is_principal IsBezout.span_pair_isPrincipal
 -/
 
 #print IsBezout.iff_span_pair_isPrincipal /-
 theorem iff_span_pair_isPrincipal :
-    IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by classical
+    IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
+  classical
+  constructor
+  · intro H x y; infer_instance
+  · intro H
+    constructor
+    apply Submodule.fg_induction
+    · exact fun _ => ⟨⟨_, rfl⟩⟩
+    · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩; rw [← Submodule.span_insert]; exact H _ _
 #align is_bezout.iff_span_pair_is_principal IsBezout.iff_span_pair_isPrincipal
 -/
 
@@ -113,7 +121,8 @@ attribute [local instance] to_gcd_domain
 
 -- Note that the proof, despite being `infer_instance`, depends on the `local attribute [instance]`
 -- lemma above, and is thus necessary to be restated.
-instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R := by classical
+instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R := by
+  classical exact GCDMonoid.toIsIntegrallyClosed
 
 #print Function.Surjective.isBezout /-
 theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
@@ -138,7 +147,27 @@ instance (priority := 100) of_isPrincipalIdealRing [IsPrincipalIdealRing R] : Is
 #print IsBezout.TFAE /-
 theorem TFAE [IsBezout R] [IsDomain R] :
     TFAE [IsNoetherianRing R, IsPrincipalIdealRing R, UniqueFactorizationMonoid R, WfDvdMonoid R] :=
-  by classical
+  by
+  classical
+  tfae_have 1 → 2
+  · intro H; exact ⟨fun I => is_principal_of_fg _ (IsNoetherian.noetherian _)⟩
+  tfae_have 2 → 3
+  · intro; infer_instance
+  tfae_have 3 → 4
+  · intro; infer_instance
+  tfae_have 4 → 1
+  · rintro ⟨h⟩
+    rw [isNoetherianRing_iff, isNoetherian_iff_fg_wellFounded]
+    apply RelEmbedding.wellFounded _ h
+    have : ∀ I : { J : Ideal R // J.FG }, ∃ x : R, (I : Ideal R) = Ideal.span {x} := fun ⟨I, hI⟩ =>
+      (IsBezout.isPrincipal_of_fG I hI).1
+    choose f hf
+    exact
+      { toFun := f
+        inj' := fun x y e => by ext1; rw [hf, hf, e]
+        map_rel_iff' := fun x y => by dsimp;
+          rw [← Ideal.span_singleton_lt_span_singleton, ← hf, ← hf]; rfl }
+  tfae_finish
 #align is_bezout.tfae IsBezout.TFAE
 -/
 

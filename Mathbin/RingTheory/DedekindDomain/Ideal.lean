@@ -463,11 +463,22 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
   -- Then in fact there is a `P ∈ Z` with `P ≤ M`.
   obtain ⟨P, hPZ, rfl⟩ := multiset.mem_map.mp hPZ'
   classical
+  have := Multiset.map_erase PrimeSpectrum.asIdeal PrimeSpectrum.ext P Z
+  obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
+    rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ←
+      this] at hprodZ 
+  -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
+  have hPM' := (IsDedekindDomain.dimensionLEOne _ hP0 P.is_prime).eq_of_le hM.ne_top hPM
+  subst hPM'
+  -- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
+  refine' ⟨Z.erase P, _, _⟩
+  · convert hZI
+    rw [this, Multiset.cons_erase hPZ']
+  · refine' fun h => h_eraseZ (Z.erase P) ⟨h, _⟩ (multiset.erase_lt.mpr hPZ)
+    exact hZP0
 #align exists_multiset_prod_cons_le_and_prod_not_le exists_multiset_prod_cons_le_and_prod_not_le
 -/
 
--- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
--- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
 namespace FractionalIdeal
 
 open Ideal

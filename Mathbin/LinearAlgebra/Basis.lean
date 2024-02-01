@@ -1087,7 +1087,11 @@ def Module.fintypeOfFintype (b : Basis ι R M) [Fintype R] : Fintype M :=
 
 #print Module.card_fintype /-
 theorem Module.card_fintype (b : Basis ι R M) [Fintype R] [Fintype M] : card M = card R ^ card ι :=
-  by classical
+  by
+  classical exact
+    calc
+      card M = card (ι → R) := card_congr b.equiv_fun.to_equiv
+      _ = card R ^ card ι := card_fun
 #align module.card_fintype Module.card_fintype
 -/
 
@@ -1178,6 +1182,10 @@ theorem Basis.coe_ofEquivFun [DecidableEq ι] (e : M ≃ₗ[R] ι → R) :
 @[simp]
 theorem Basis.ofEquivFun_equivFun (v : Basis ι R M) : Basis.ofEquivFun v.equivFun = v := by
   classical
+  ext j
+  simp only [Basis.equivFun_symm_apply, Basis.coe_ofEquivFun]
+  simp_rw [Function.update_apply, ite_smul]
+  simp only [Finset.mem_univ, if_true, Pi.zero_apply, one_smul, Finset.sum_ite_eq', zero_smul]
 #align basis.of_equiv_fun_equiv_fun Basis.ofEquivFun_equivFun
 -/
 
@@ -1505,7 +1513,18 @@ theorem unitsSMul_apply {v : Basis ι R M} {w : ι → Rˣ} (i : ι) : v.units_s
 #print Basis.coord_unitsSMul /-
 @[simp]
 theorem coord_unitsSMul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
-    (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i := by classical
+    (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i := by
+  classical
+  apply e.ext
+  intro j
+  trans ((e.units_smul w).Coord i) ((w j)⁻¹ • (e.units_smul w) j)
+  · congr
+    simp [Basis.unitsSMul, ← mul_smul]
+  simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
+    SMulHomClass.map_smul, Finsupp.single_apply]
+  split_ifs with h h
+  · simp [h]
+  · simp
 #align basis.coord_units_smul Basis.coord_unitsSMul
 -/
 
@@ -1784,7 +1803,8 @@ variable (K V)
 
 #print VectorSpace.card_fintype /-
 theorem VectorSpace.card_fintype [Fintype K] [Fintype V] : ∃ n : ℕ, card V = card K ^ n := by
-  classical
+  classical exact
+    ⟨card (Basis.ofVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
 #align vector_space.card_fintype VectorSpace.card_fintype
 -/
 

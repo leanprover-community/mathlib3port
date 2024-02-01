@@ -122,7 +122,12 @@ theorem isMatching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.nei
 
 #print SimpleGraph.Subgraph.IsMatching.even_card /-
 theorem IsMatching.even_card {M : Subgraph G} [Fintype M.verts] (h : M.IsMatching) :
-    Even M.verts.toFinset.card := by classical
+    Even M.verts.toFinset.card := by
+  classical
+  rw [is_matching_iff_forall_degree] at h 
+  use M.coe.edge_finset.card
+  rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
+  simp [h, Finset.card_univ]
 #align simple_graph.subgraph.is_matching.even_card SimpleGraph.Subgraph.IsMatching.even_card
 -/
 
@@ -146,7 +151,7 @@ theorem isPerfectMatching_iff_forall_degree {M : Subgraph G} [∀ v, Fintype (M.
 
 #print SimpleGraph.Subgraph.IsPerfectMatching.even_card /-
 theorem IsPerfectMatching.even_card {M : Subgraph G} [Fintype V] (h : M.IsPerfectMatching) :
-    Even (Fintype.card V) := by classical
+    Even (Fintype.card V) := by classical simpa [h.2.card_verts] using is_matching.even_card h.1
 #align simple_graph.subgraph.is_perfect_matching.even_card SimpleGraph.Subgraph.IsPerfectMatching.even_card
 -/
 

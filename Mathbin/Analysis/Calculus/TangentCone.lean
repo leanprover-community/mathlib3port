@@ -426,6 +426,12 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.pi univ s) x := by
   classical
+  simp only [uniqueDiffWithinAt_iff, closure_pi_set] at h ⊢
+  refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
+  norm_cast
+  simp only [← Submodule.iSup_map_single, iSup_le_iff, LinearMap.map_span, Submodule.span_le, ←
+    maps_to']
+  exact fun i => (mapsTo_tangentCone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
 #align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univ_pi
 -/
 
@@ -433,7 +439,11 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (I : Set ι) (h : ∀ i ∈ I, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
-    UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by classical
+    UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by
+  classical
+  rw [← Set.univ_pi_piecewise_univ]
+  refine' UniqueDiffWithinAt.univ_pi _ _ _ _ fun i => _
+  by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAt_univ]
 #align unique_diff_within_at.pi UniqueDiffWithinAt.pi
 -/
 

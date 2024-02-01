@@ -353,7 +353,17 @@ section Fintype
 
 #print IsCyclotomicExtension.finite_of_singleton /-
 theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Module.Finite A B :=
-  by classical
+  by
+  classical
+  rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
+  refine' fg_adjoin_of_finite _ fun b hb => _
+  · simp only [mem_singleton_iff, exists_eq_left]
+    have : {b : B | b ^ (n : ℕ) = 1} = (nth_roots n (1 : B)).toFinset :=
+      Set.ext fun x => ⟨fun h => by simpa using h, fun h => by simpa using h⟩
+    rw [this]
+    exact (nth_roots (↑n) 1).toFinset.finite_toSet
+  · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hb 
+    refine' ⟨X ^ (n : ℕ) - 1, ⟨monic_X_pow_sub_C _ n.pos.ne.symm, by simp [hb]⟩⟩
 #align is_cyclotomic_extension.finite_of_singleton IsCyclotomicExtension.finite_of_singleton
 -/
 
@@ -461,7 +471,11 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [IsDomain B
 
 #print IsCyclotomicExtension.adjoin_primitive_root_eq_top /-
 theorem adjoin_primitive_root_eq_top {n : ℕ+} [IsDomain B] [h : IsCyclotomicExtension {n} A B]
-    {ζ : B} (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by classical
+    {ζ : B} (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by
+  classical
+  rw [← adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic hζ]
+  rw [adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ]
+  exact ((iff_adjoin_eq_top {n} A B).mp h).2
 #align is_cyclotomic_extension.adjoin_primitive_root_eq_top IsCyclotomicExtension.adjoin_primitive_root_eq_top
 -/
 

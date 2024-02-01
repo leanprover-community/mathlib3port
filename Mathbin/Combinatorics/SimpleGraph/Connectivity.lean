@@ -1356,6 +1356,10 @@ theorem take_spec {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) :
 theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : V}
     {p : G.Walk u v} : w ∈ p.support ↔ ∃ (q : G.Walk u w) (r : G.Walk w v), p = q.append r := by
   classical
+  constructor
+  · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
+  · rintro ⟨q, r, rfl⟩
+    simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_self_iff]
 #align simple_graph.walk.mem_support_iff_exists_append SimpleGraph.Walk.mem_support_iff_exists_append
 -/
 
@@ -2308,7 +2312,7 @@ protected theorem Reachable.elim {p : Prop} {u v : V} (h : G.Reachable u v) (hp 
 
 #print SimpleGraph.Reachable.elim_path /-
 protected theorem Reachable.elim_path {p : Prop} {u v : V} (h : G.Reachable u v)
-    (hp : G.Path u v → p) : p := by classical
+    (hp : G.Path u v → p) : p := by classical exact h.elim fun q => hp q.toPath
 #align simple_graph.reachable.elim_path SimpleGraph.Reachable.elim_path
 -/
 
@@ -3124,7 +3128,38 @@ theorem reachable_deleteEdges_iff_exists_cycle.aux [DecidableEq V] {u v w : V}
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
     G.Adj v w ∧ (G \ fromEdgeSet {⟦(v, w)⟧}).Reachable v w ↔
       ∃ (u : V) (p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
-  by classical
+  by
+  classical
+  rw [reachable_delete_edges_iff_exists_walk]
+  constructor
+  · rintro ⟨h, p, hp⟩
+    refine' ⟨w, walk.cons h.symm p.to_path, _, _⟩
+    · apply path.cons_is_cycle
+      rw [Sym2.eq_swap]
+      intro h
+      exact absurd (walk.edges_to_path_subset p h) hp
+    simp only [Sym2.eq_swap, walk.edges_cons, List.mem_cons, eq_self_iff_true, true_or_iff]
+  · rintro ⟨u, c, hc, he⟩
+    have hvc : v ∈ c.support := walk.fst_mem_support_of_mem_edges c he
+    have hwc : w ∈ c.support := walk.snd_mem_support_of_mem_edges c he
+    let puv := c.take_until v hvc
+    let pvu := c.drop_until v hvc
+    obtain hw | hw' : w ∈ puv.support ∨ w ∈ pvu.support := by
+      rwa [← walk.mem_support_append_iff, walk.take_spec]
+    · by_contra! h
+      specialize h (c.adj_of_mem_edges he)
+      exact reachable_delete_edges_iff_exists_cycle.aux h c hc.to_trail he hw
+    · by_contra! hb
+      specialize hb (c.adj_of_mem_edges he)
+      have hb' : ∀ p : G.walk w v, ⟦(w, v)⟧ ∈ p.edges :=
+        by
+        intro p
+        simpa [Sym2.eq_swap] using hb p.reverse
+      apply
+        reachable_delete_edges_iff_exists_cycle.aux hb' (pvu.append puv) (hc.to_trail.rotate hvc) _
+          (walk.start_mem_support _)
+      rwa [walk.edges_append, List.mem_append, or_comm', ← List.mem_append, ← walk.edges_append,
+        walk.take_spec, Sym2.eq_swap]
 #align simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle
 -/
 

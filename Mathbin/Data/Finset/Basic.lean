@@ -2034,7 +2034,19 @@ theorem induction_on_union (P : Finset α → Finset α → Prop) (symm : ∀ {a
 #print Directed.exists_mem_subset_of_finset_subset_biUnion /-
 theorem Directed.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} [hn : Nonempty ι]
     {f : ι → Set α} (h : Directed (· ⊆ ·) f) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i, f i) :
-    ∃ i, (s : Set α) ⊆ f i := by classical
+    ∃ i, (s : Set α) ⊆ f i := by
+  classical
+  revert hs
+  apply s.induction_on
+  · refine' fun _ => ⟨hn.some, _⟩
+    simp only [coe_empty, Set.empty_subset]
+  · intro b t hbt htc hbtc
+    obtain ⟨i : ι, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
+    obtain ⟨j, hbj⟩ : ∃ j, b ∈ f j := by simpa [Set.mem_iUnion₂] using hbtc (t.mem_insert_self b)
+    rcases h j i with ⟨k, hk, hk'⟩
+    use k
+    rw [coe_insert, Set.insert_subset_iff]
+    exact ⟨hk hbj, trans hti hk'⟩
 #align directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_biUnion
 -/
 
@@ -3360,7 +3372,8 @@ theorem piecewise_insert_of_ne [DecidableEq α] {i j : α} [∀ i, Decidable (i 
 
 #print Finset.piecewise_insert /-
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
-    (insert j s).piecewise f g = update (s.piecewise f g) j (f j) := by classical
+    (insert j s).piecewise f g = update (s.piecewise f g) j (f j) := by
+  classical simp only [← piecewise_coe, coe_insert, ← Set.piecewise_insert]
 #align finset.piecewise_insert Finset.piecewise_insert
 -/
 
@@ -3372,7 +3385,10 @@ theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) :
 
 #print Finset.piecewise_mem_set_pi /-
 theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g}
-    (hf : f ∈ Set.pi t t') (hg : g ∈ Set.pi t t') : s.piecewise f g ∈ Set.pi t t' := by classical
+    (hf : f ∈ Set.pi t t') (hg : g ∈ Set.pi t t') : s.piecewise f g ∈ Set.pi t t' := by
+  classical
+  rw [← piecewise_coe]
+  exact Set.piecewise_mem_pi (↑s) hf hg
 #align finset.piecewise_mem_set_pi Finset.piecewise_mem_set_pi
 -/
 
@@ -3705,6 +3721,9 @@ theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : 
 #print Finset.filter_singleton /-
 theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singleton a else ∅ := by
   classical
+  ext x
+  simp
+  split_ifs with h <;> by_cases h' : x = a <;> simp [h, h']
 #align finset.filter_singleton Finset.filter_singleton
 -/
 
@@ -3874,7 +3893,12 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
 
 #print Finset.subset_union_elim /-
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
-    ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by classical
+    ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
+  classical
+  refine' ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), _, _, _⟩
+  · simp [filter_union_right, em]
+  · intro x; simp
+  · intro x; simp; intro hx hx₂; refine' ⟨Or.resolve_left (h hx) hx₂, hx₂⟩
 #align finset.subset_union_elim Finset.subset_union_elim
 -/
 
@@ -4311,7 +4335,7 @@ theorem toFinset_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multi
 
 #print Multiset.isWellFounded_ssubset /-
 instance isWellFounded_ssubset : IsWellFounded (Multiset β) (· ⊂ ·) :=
-  Subrelation.isWellFounded (InvImage _ _) fun _ _ => by classical
+  Subrelation.isWellFounded (InvImage _ _) fun _ _ => by classical exact to_finset_ssubset.2
 #align multiset.is_well_founded_ssubset Multiset.isWellFounded_ssubset
 -/
 
@@ -4790,7 +4814,8 @@ theorem biUnion_subset {s' : Finset β} : s.biUnion t ⊆ s' ↔ ∀ x ∈ s, t 
 
 #print Finset.singleton_biUnion /-
 @[simp]
-theorem singleton_biUnion {a : α} : Finset.biUnion {a} t = t a := by classical
+theorem singleton_biUnion {a : α} : Finset.biUnion {a} t = t a := by
+  classical rw [← insert_emptyc_eq, bUnion_insert, bUnion_empty, union_empty]
 #align finset.singleton_bUnion Finset.singleton_biUnion
 -/
 
@@ -4915,7 +4940,12 @@ theorem Nonempty.biUnion (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) :
 
 #print Finset.disjoint_biUnion_left /-
 theorem disjoint_biUnion_left (s : Finset α) (f : α → Finset β) (t : Finset β) :
-    Disjoint (s.biUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by classical
+    Disjoint (s.biUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
+  classical
+  refine' s.induction _ _
+  · simp only [forall_mem_empty_iff, bUnion_empty, disjoint_empty_left]
+  · intro i s his ih
+    simp only [disjoint_union_left, bUnion_insert, his, forall_mem_insert, ih]
 #align finset.disjoint_bUnion_left Finset.disjoint_biUnion_left
 -/
 

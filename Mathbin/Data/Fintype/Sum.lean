@@ -50,7 +50,7 @@ theorem Fintype.card_sum [Fintype α] [Fintype β] :
 /-- If the subtype of all-but-one elements is a `fintype` then the type itself is a `fintype`. -/
 def fintypeOfFintypeNe (a : α) (h : Fintype { b // b ≠ a }) : Fintype α :=
   Fintype.ofBijective (Sum.elim (coe : { b // b = a } → α) (coe : { b // b ≠ a } → α)) <| by
-    classical
+    classical exact (Equiv.sumCompl (· = a)).Bijective
 #align fintype_of_fintype_ne fintypeOfFintypeNe
 -/
 
@@ -94,7 +94,27 @@ theorem image_subtype_univ_ssubset_image_univ [Fintype α] [DecidableEq β] (k :
 can be extended to a bijection between `α` and `t`. -/
 theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t : Finset β}
     (hαt : Fintype.card α = t.card) {s : Finset α} {f : α → β} (hfst : s.image f ⊆ t)
-    (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by classical
+    (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
+  classical
+  induction' s using Finset.induction with a s has H generalizing f
+  · obtain ⟨e⟩ : Nonempty (α ≃ ↥t) := by rwa [← Fintype.card_eq, Fintype.card_coe]
+    use e
+    simp
+  have hfst' : Finset.image f s ⊆ t := (Finset.image_mono _ (s.subset_insert a)).trans hfst
+  have hfs' : Set.InjOn f s := hfs.mono (s.subset_insert a)
+  obtain ⟨g', hg'⟩ := H hfst' hfs'
+  have hfat : f a ∈ t := hfst (mem_image_of_mem _ (s.mem_insert_self a))
+  use g'.trans (Equiv.swap (⟨f a, hfat⟩ : t) (g' a))
+  simp_rw [mem_insert]
+  rintro i (rfl | hi)
+  · simp
+  rw [Equiv.trans_apply, Equiv.swap_apply_of_ne_of_ne, hg' _ hi]
+  ·
+    exact
+      ne_of_apply_ne Subtype.val
+        (ne_of_eq_of_ne (hg' _ hi) <|
+          hfs.ne (subset_insert _ _ hi) (mem_insert_self _ _) <| ne_of_mem_of_not_mem hi has)
+  · exact g'.injective.ne (ne_of_mem_of_not_mem hi has)
 #align finset.exists_equiv_extend_of_card_eq Finset.exists_equiv_extend_of_card_eq
 -/
 
@@ -103,7 +123,15 @@ theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t :
 can be extended to a bijection between `α` and `t`. -/
 theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
     (hαt : Fintype.card α = t.card) {s : Set α} {f : α → β} (hfst : s.MapsTo f t)
-    (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by classical
+    (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
+  classical
+  let s' : Finset α := s.to_finset
+  have hfst' : s'.image f ⊆ t := by simpa [← Finset.coe_subset] using hfst
+  have hfs' : Set.InjOn f s' := by simpa using hfs
+  obtain ⟨g, hg⟩ := Finset.exists_equiv_extend_of_card_eq hαt hfst' hfs'
+  refine' ⟨g, fun i hi => _⟩
+  apply hg
+  simpa using hi
 #align set.maps_to.exists_equiv_extend_of_card_eq Set.MapsTo.exists_equiv_extend_of_card_eq
 -/
 
@@ -112,6 +140,8 @@ theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fint
     [Fintype { x // p x ∨ q x }] :
     Fintype.card { x // p x ∨ q x } ≤ Fintype.card { x // p x } + Fintype.card { x // q x } := by
   classical
+  convert Fintype.card_le_of_embedding (subtypeOrLeftEmbedding p q)
+  rw [Fintype.card_sum]
 #align fintype.card_subtype_or Fintype.card_subtype_or
 -/
 
@@ -120,6 +150,8 @@ theorem Fintype.card_subtype_or_disjoint (p q : α → Prop) (h : Disjoint p q) 
     [Fintype { x // q x }] [Fintype { x // p x ∨ q x }] :
     Fintype.card { x // p x ∨ q x } = Fintype.card { x // p x } + Fintype.card { x // q x } := by
   classical
+  convert Fintype.card_congr (subtypeOrEquiv p q h)
+  simp
 #align fintype.card_subtype_or_disjoint Fintype.card_subtype_or_disjoint
 -/
 

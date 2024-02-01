@@ -590,7 +590,19 @@ theorem tsum_congr_set_coe (f : β → α) {s t : Set β} (h : s = t) : ∑' x :
 /- warning: tsum_zero' clashes with tsum_zero -> tsum_zero
 Case conversion may be inaccurate. Consider using '#align tsum_zero' tsum_zeroₓ'. -/
 #print tsum_zero /-
-theorem tsum_zero (hz : IsClosed ({0} : Set α)) : ∑' b : β, (0 : α) = 0 := by classical
+theorem tsum_zero (hz : IsClosed ({0} : Set α)) : ∑' b : β, (0 : α) = 0 := by
+  classical
+  rw [tsum, dif_pos summable_zero]
+  suffices ∀ x : α, HasSum (fun b : β => (0 : α)) x → x = 0 by
+    exact this _ (Classical.choose_spec _)
+  intro x hx
+  contrapose! hx
+  simp only [HasSum, tendsto_nhds, Finset.sum_const_zero, Filter.mem_atTop_sets, ge_iff_le,
+    Finset.le_eq_subset, Set.mem_preimage, Classical.not_forall, not_exists, exists_prop,
+    exists_and_right]
+  refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
+  · simpa using hx
+  · simp
 #align tsum_zero' tsum_zero
 -/
 

@@ -72,14 +72,26 @@ theorem Std.RBNode.lo_lt_hi {t : Std.RBNode α} {lt} [IsTrans α lt] :
 theorem Std.RBNode.isSearchableOfIsSearchableOfIncomp [IsStrictWeakOrder α lt] {t} :
     ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : Std.RBNode.IsSearchable lt t lo (some hi)),
       Std.RBNode.IsSearchable lt t lo (some hi') :=
-  by classical
+  by
+  classical
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
+  · cases lo <;> simp_all [lift]; apply lt_of_lt_of_incomp; assumption; exact ⟨hc.2, hc.1⟩
+  all_goals apply t_ih_rchild hc hs_hs₂
 #align rbnode.is_searchable_of_is_searchable_of_incomp Std.RBNode.isSearchableOfIsSearchableOfIncomp
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem Std.RBNode.isSearchableOfIncompOfIsSearchable [IsStrictWeakOrder α lt] {t} :
     ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : Std.RBNode.IsSearchable lt t (some lo) hi),
       Std.RBNode.IsSearchable lt t (some lo') hi :=
-  by classical
+  by
+  classical
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
+  · cases hi <;> simp_all [lift]; apply lt_of_incomp_of_lt; assumption; assumption
+  all_goals apply t_ih_lchild hc hs_hs₁
 #align rbnode.is_searchable_of_incomp_of_is_searchable Std.RBNode.isSearchableOfIncompOfIsSearchable
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
@@ -134,10 +146,44 @@ theorem Std.RBNode.range [IsStrictWeakOrder α lt] {t : Std.RBNode α} {x} :
     ∀ {lo hi},
       Std.RBNode.IsSearchable lt t lo hi →
         Std.RBNode.Mem lt x t → Std.RBNode.Lift lt lo (some x) ∧ Std.RBNode.Lift lt (some x) hi :=
-  by classical
+  by
+  classical
+  induction t
+  case leaf => simp [mem]
+  all_goals
+    -- red_node and black_node are identical
+    intro lo hi h₁ h₂;
+    cases h₁
+    simp only [mem] at h₂ 
+    have val_hi : lift lt (some t_val) hi := by apply lo_lt_hi; assumption
+    have lo_val : lift lt lo (some t_val) := by apply lo_lt_hi; assumption
+    cases_type* or.1
+    · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) := by apply t_ih_lchild;
+        assumption; assumption
+      cases' h₃ with lo_x x_val
+      constructor
+      show lift lt lo (some x); · assumption
+      show lift lt (some x) hi
+      · cases' hi with hi <;> simp [lift] at *
+        apply trans_of lt x_val val_hi
+    · cases h₂
+      cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
+      · apply lt_of_incomp_of_lt _ val_hi; simp [*]
+      · apply lt_of_lt_of_incomp lo_val; simp [*]
+      constructor
+      · apply lt_of_lt_of_incomp lo_val; simp [*]
+      · apply lt_of_incomp_of_lt _ val_hi; simp [*]
+    · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi := by apply t_ih_rchild;
+        assumption; assumption
+      cases' h₃ with val_x x_hi
+      cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
+      · assumption
+      · apply trans_of lt lo_val val_x
+      constructor
+      · apply trans_of lt lo_val val_x
+      · assumption
 #align rbnode.range Std.RBNode.range
 
--- red_node and black_node are identical
 theorem Std.RBNode.ltOfMemLeft [IsStrictWeakOrder α lt] {y : α} {t l r : Std.RBNode α} :
     ∀ {lo hi},
       Std.RBNode.IsSearchable lt t lo hi →

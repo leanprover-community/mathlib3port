@@ -448,7 +448,12 @@ theorem coeFn_add (f g : lp E p) : ⇑(f + g) = f + g :=
 #print lp.coeFn_sum /-
 @[simp]
 theorem coeFn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) :
-    ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by classical
+    ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
+  classical
+  refine' Finset.induction _ _ s
+  · simp
+  intro i s his
+  simp [Finset.sum_insert his]
 #align lp.coe_fn_sum lp.coeFn_sum
 -/
 
@@ -549,7 +554,30 @@ theorem norm_zero : ‖(0 : lp E p)‖ = 0 :=
 -/
 
 #print lp.norm_eq_zero_iff /-
-theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by classical
+theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
+  classical
+  refine' ⟨fun h => _, by rintro rfl; exact norm_zero⟩
+  rcases p.trichotomy with (rfl | rfl | hp)
+  · ext i
+    have : {i : α | ¬f i = 0} = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
+    have : (¬f i = 0) = False := congr_fun this i
+    tauto
+  · cases' isEmpty_or_nonempty α with _i _i <;> skip
+    · simp
+    have H : IsLUB (Set.range fun i => ‖f i‖) 0 := by simpa [h] using lp.isLUB_norm f
+    ext i
+    have : ‖f i‖ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
+    simpa using this
+  · have hf : HasSum (fun i : α => ‖f i‖ ^ p.to_real) 0 :=
+      by
+      have := lp.hasSum_norm hp f
+      rwa [h, Real.zero_rpow hp.ne'] at this 
+    have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg (norm_nonneg _) _
+    rw [hasSum_zero_iff_of_nonneg this] at hf 
+    ext i
+    have : f i = 0 ∧ p.to_real ≠ 0 := by
+      simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
+    exact this.1
 #align lp.norm_eq_zero_iff lp.norm_eq_zero_iff
 -/
 

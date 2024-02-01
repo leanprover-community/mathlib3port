@@ -364,11 +364,53 @@ theorem exists_cond_kernel (γ : Type _) [MeasurableSpace γ] :
     simp only [mem_compl_iff, mem_range, preimage_set_of_eq, Prod_map, mem_set_of_eq,
       mem_empty_iff_false, iff_false_iff, Classical.not_not, exists_apply_eq_apply]
   classical
+  obtain ⟨x₀, hx₀⟩ : ∃ x, x ∈ range f := range_nonempty _
+  let η' :=
+    kernel.piecewise hm (cond_kernel_real ρ') (kernel.deterministic (fun _ => x₀) measurable_const)
+  -- We show that `kernel.comap_right η' hf` is a suitable Markov kernel.
+  refine' ⟨kernel.comap_right η' hf, _, _⟩
+  · refine' kernel.is_markov_kernel.comap_right _ _ fun a => _
+    rw [kernel.piecewise_apply']
+    split_ifs with h_mem h_not_mem
+    · exact h_eq_one_of_mem _ h_mem
+    · rw [kernel.deterministic_apply' _ _ hf.measurable_set_range, Set.indicator_apply, if_pos hx₀]
+  have : kernel.const γ ρ = kernel.comap_right (kernel.const γ ρ') h_prod_embed :=
+    by
+    ext c t ht : 2
+    rw [kernel.const_apply, kernel.comap_right_apply' _ _ _ ht, kernel.const_apply,
+      measure.map_apply h_prod_embed.measurable (h_prod_embed.measurable_set_image.mpr ht)]
+    congr with x : 1
+    rw [← @Prod.mk.eta _ _ x]
+    simp only [id.def, mem_preimage, Prod.map_mk, mem_image, Prod.mk.inj_iff, Prod.exists]
+    refine' ⟨fun h => ⟨x.1, x.2, h, rfl, rfl⟩, _⟩
+    rintro ⟨a, b, h_mem, rfl, hf_eq⟩
+    rwa [hf.injective hf_eq] at h_mem 
+  rw [this, kernel.const_eq_comp_prod_real _ ρ']
+  ext c t ht : 2
+  rw [kernel.comap_right_apply' _ _ _ ht,
+    kernel.comp_prod_apply _ _ _ (h_prod_embed.measurable_set_image.mpr ht), kernel.const_apply,
+    h_fst, kernel.comp_prod_apply _ _ _ ht, kernel.const_apply]
+  refine' lintegral_congr_ae _
+  filter_upwards [h_ae] with a ha
+  rw [kernel.prod_mk_left_apply', kernel.prod_mk_left_apply', kernel.comap_right_apply']
+  swap
+  · exact measurable_prod_mk_left ht
+  have h1 : {c : ℝ | (a, c) ∈ Prod.map id f '' t} = f '' {c : Ω | (a, c) ∈ t} :=
+    by
+    ext1 x
+    simp only [Prod_map, id.def, mem_image, Prod.mk.inj_iff, Prod.exists, mem_set_of_eq]
+    constructor
+    · rintro ⟨a', b, h_mem, rfl, hf_eq⟩
+      exact ⟨b, h_mem, hf_eq⟩
+    · rintro ⟨b, h_mem, hf_eq⟩
+      exact ⟨a, b, h_mem, rfl, hf_eq⟩
+  have h2 : cond_kernel_real ρ' (c, a).snd = η' (c, a).snd := by
+    rw [kernel.piecewise_apply, if_pos ha]
+  rw [h1, h2]
 #align probability_theory.exists_cond_kernel ProbabilityTheory.exists_cond_kernel
 -/
 
 #print MeasureTheory.Measure.condKernel /-
--- We show that `kernel.comap_right η' hf` is a suitable Markov kernel.
 /-- Conditional kernel of a measure on a product space: a Markov kernel such that
 `ρ = ((kernel.const unit ρ.fst) ⊗ₖ (kernel.prod_mk_left unit ρ.cond_kernel)) ()`
 (see `probability_theory.measure_eq_comp_prod`). -/
@@ -445,6 +487,10 @@ theorem set_lintegral_condKernel_eq_measure_prod {s : Set α} (hs : MeasurableSe
   congr
   ext1 x
   classical
+  rw [indicator_apply]
+  split_ifs with hx
+  · simp only [hx, if_true, true_and_iff, set_of_mem_eq]
+  · simp only [hx, if_false, false_and_iff, set_of_false, measure_empty]
 #align probability_theory.set_lintegral_cond_kernel_eq_measure_prod ProbabilityTheory.set_lintegral_condKernel_eq_measure_prod
 -/
 

@@ -313,15 +313,28 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → 
 #print Finset.sup_le_of_le_directed /-
 theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s : Set α)
     (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
-    (∀ x ∈ t, ∃ y ∈ s, x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x := by classical
+    (∀ x ∈ t, ∃ y ∈ s, x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x := by
+  classical
+  apply Finset.induction_on t
+  ·
+    simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
+      sup_empty, forall_true_iff, not_mem_empty]
+  · intro a r har ih h
+    have incs : ↑r ⊆ ↑(insert a r) := by rw [Finset.coe_subset]; apply Finset.subset_insert
+    -- x ∈ s is above the sup of r
+    obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
+    -- y ∈ s is above a
+    obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
+    -- z ∈ s is above x and y
+    obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys
+    use z, hzs
+    rw [sup_insert, id.def, sup_le_iff]
+    exact ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩
 #align finset.sup_le_of_le_directed Finset.sup_le_of_le_directed
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Finset.sup_mem /-
--- x ∈ s is above the sup of r
--- y ∈ s is above a
--- z ∈ s is above x and y
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : subsemilattice_sup_bot`
 theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊔ y ∈ s)
@@ -333,7 +346,7 @@ theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ (x) (_ : x ∈ s) (y
 #print Finset.sup_eq_bot_iff /-
 @[simp]
 protected theorem sup_eq_bot_iff (f : β → α) (S : Finset β) : S.sup f = ⊥ ↔ ∀ s ∈ S, f s = ⊥ := by
-  classical
+  classical induction' S using Finset.induction with a S haS hi <;> simp [*]
 #align finset.sup_eq_bot_iff Finset.sup_eq_bot_iff
 -/
 
@@ -367,7 +380,8 @@ theorem sup_set_eq_biUnion (s : Finset α) (f : α → Set β) : s.sup f = ⋃ x
 
 #print Finset.sup_eq_sSup_image /-
 theorem sup_eq_sSup_image [CompleteLattice β] (s : Finset α) (f : α → β) :
-    s.sup f = sSup (f '' s) := by classical
+    s.sup f = sSup (f '' s) := by
+  classical rw [← Finset.coe_image, ← sup_id_eq_Sup, sup_image, Function.id_comp]
 #align finset.sup_eq_Sup_image Finset.sup_eq_sSup_image
 -/
 
@@ -2407,7 +2421,25 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
 
 #print Multiset.mem_sup /-
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} :
-    x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by classical
+    x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
+  classical
+  apply s.induction_on
+  · simp
+  · intro a s has hxs
+    rw [Finset.sup_insert, Multiset.sup_eq_union, Multiset.mem_union]
+    constructor
+    · intro hxi
+      cases' hxi with hf hf
+      · refine' ⟨a, _, hf⟩
+        simp only [true_or_iff, eq_self_iff_true, Finset.mem_insert]
+      · rcases hxs.mp hf with ⟨v, hv, hfv⟩
+        refine' ⟨v, _, hfv⟩
+        simp only [hv, or_true_iff, Finset.mem_insert]
+    · rintro ⟨v, hv, hfv⟩
+      rw [Finset.mem_insert] at hv 
+      rcases hv with (rfl | hv)
+      · exact Or.inl hfv
+      · refine' Or.inr (hxs.mpr ⟨v, hv, hfv⟩)
 #align multiset.mem_sup Multiset.mem_sup
 -/
 
@@ -2456,7 +2488,11 @@ variable {ι' : Sort _} [CompleteLattice α]
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : finset ι` of suprema
 `⨆ i ∈ t, s i`. This version assumes `ι` is a `Type*`. See `supr_eq_supr_finset'` for a version
 that works for `ι : Sort*`. -/
-theorem iSup_eq_iSup_finset (s : ι → α) : (⨆ i, s i) = ⨆ t : Finset ι, ⨆ i ∈ t, s i := by classical
+theorem iSup_eq_iSup_finset (s : ι → α) : (⨆ i, s i) = ⨆ t : Finset ι, ⨆ i ∈ t, s i := by
+  classical exact
+    le_antisymm
+      (iSup_le fun b => le_iSup_of_le {b} <| le_iSup_of_le b <| le_iSup_of_le (by simp) <| le_rfl)
+      (iSup_le fun t => iSup_le fun b => iSup_le fun hb => le_iSup _ _)
 #align supr_eq_supr_finset iSup_eq_iSup_finset
 -/
 

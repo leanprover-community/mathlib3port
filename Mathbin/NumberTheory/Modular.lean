@@ -322,7 +322,20 @@ attribute [local simp] coe_smul re_smul
 
 #print ModularGroup.exists_max_im /-
 /-- For `z : ℍ`, there is a `g : SL(2,ℤ)` maximizing `(g•z).im` -/
-theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by classical
+theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
+  classical
+  let s : Set (Fin 2 → ℤ) := {cd | IsCoprime (cd 0) (cd 1)}
+  have hs : s.nonempty := ⟨![1, 1], isCoprime_one_left⟩
+  obtain ⟨p, hp_coprime, hp⟩ :=
+    Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
+  obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime
+  refine' ⟨g, fun g' => _⟩
+  rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq,
+    div_le_div_left]
+  · simpa [← hg] using hp (↑ₘg' 1) (bottom_row_coprime g')
+  · exact z.im_pos
+  · exact norm_sq_denom_pos g' z
+  · exact norm_sq_denom_pos g z
 #align modular_group.exists_max_im ModularGroup.exists_max_im
 -/
 

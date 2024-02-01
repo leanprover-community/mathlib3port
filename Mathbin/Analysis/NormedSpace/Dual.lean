@@ -143,7 +143,16 @@ variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [Norm
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ‖f x‖ ≤ M * ‖f‖) :
-    ‖x‖ ≤ M := by classical
+    ‖x‖ ≤ M := by
+  classical
+  by_cases h : x = 0
+  · simp only [h, hMp, norm_zero]
+  · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ‖f‖ = 1 ∧ f x = ‖x‖ := exists_dual_vector 𝕜 x h
+    calc
+      ‖x‖ = ‖(‖x‖ : 𝕜)‖ := is_R_or_C.norm_coe_norm.symm
+      _ = ‖f x‖ := by rw [hfx]
+      _ ≤ M * ‖f‖ := (hM f)
+      _ = M := by rw [hf₁, mul_one]
 #align normed_space.norm_le_dual_bound NormedSpace.norm_le_dual_bound
 -/
 

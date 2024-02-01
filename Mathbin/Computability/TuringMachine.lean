@@ -1967,6 +1967,8 @@ theorem exists_enc_dec [Fintype Γ] :
       Bool.of_decide_true <| (congr_fun h b).trans <| Bool.decide_true rfl⟩
   let H := (F.to_embedding.trans G).trans (Equiv.vectorEquivFin _ _).symm.toEmbedding
   classical
+  let enc := H.set_value default (Vector.replicate n ff)
+  exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.leftInverse_invFun enc.2⟩
 #align turing.TM1to1.exists_enc_dec Turing.TM1to1.exists_enc_dec
 -/
 

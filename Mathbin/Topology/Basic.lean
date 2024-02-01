@@ -470,7 +470,11 @@ theorem interior_inter {s t : Set α} : interior (s ∩ t) = interior s ∩ inte
 #print Finset.interior_iInter /-
 @[simp]
 theorem Finset.interior_iInter {ι : Type _} (s : Finset ι) (f : ι → Set α) :
-    interior (⋂ i ∈ s, f i) = ⋂ i ∈ s, interior (f i) := by classical
+    interior (⋂ i ∈ s, f i) = ⋂ i ∈ s, interior (f i) := by
+  classical
+  refine' s.induction_on (by simp) _
+  intro i s h₁ h₂
+  simp [h₂]
 #align finset.interior_Inter Finset.interior_iInter
 -/
 
@@ -697,7 +701,11 @@ theorem closure_union {s t : Set α} : closure (s ∪ t) = closure s ∪ closure
 #print Finset.closure_biUnion /-
 @[simp]
 theorem Finset.closure_biUnion {ι : Type _} (s : Finset ι) (f : ι → Set α) :
-    closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, closure (f i) := by classical
+    closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, closure (f i) := by
+  classical
+  refine' s.induction_on (by simp) _
+  intro i s h₁ h₂
+  simp [h₂]
 #align finset.closure_bUnion Finset.closure_biUnion
 -/
 

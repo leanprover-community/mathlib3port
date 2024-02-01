@@ -102,7 +102,7 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
       have : μ[s.indicator f + sᶜ.indicator f|m] =ᵐ[μ] μ[s.indicator f|m] + μ[sᶜ.indicator f|m] :=
         condexp_add (hf_int.indicator (hm _ hs)) (hf_int.indicator (hm _ hs.compl))
       filter_upwards [this] with x hx
-      classical
+      classical rw [Set.indicator_apply, Set.indicator_apply, hx]
     _ = s.indicator (μ[s.indicator f|m]) + s.indicator (μ[sᶜ.indicator f|m]) :=
       (s.indicator_add' _ _)
     _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) + s.indicator (sᶜ.indicator (μ[sᶜ.indicator f|m])) :=

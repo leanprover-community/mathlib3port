@@ -694,7 +694,8 @@ namespace Multiset
 
 #print Multiset.finite_toSet /-
 @[simp]
-theorem finite_toSet (s : Multiset α) : {x | x ∈ s}.Finite := by classical
+theorem finite_toSet (s : Multiset α) : {x | x ∈ s}.Finite := by
+  classical simpa only [← Multiset.mem_toFinset] using s.to_finset.finite_to_set
 #align multiset.finite_to_set Multiset.finite_toSet
 -/
 
@@ -988,7 +989,11 @@ theorem Finite.sUnion {s : Set (Set α)} (hs : s.Finite) (H : ∀ t ∈ s, Set.F
 
 #print Set.Finite.biUnion /-
 theorem Finite.biUnion {ι} {s : Set ι} (hs : s.Finite) {t : ι → Set α}
-    (ht : ∀ i ∈ s, (t i).Finite) : (⋃ i ∈ s, t i).Finite := by classical
+    (ht : ∀ i ∈ s, (t i).Finite) : (⋃ i ∈ s, t i).Finite := by
+  classical
+  cases hs
+  haveI := fintype_bUnion s t fun i hi => (ht i hi).Fintype
+  apply to_finite
 #align set.finite.bUnion Set.Finite.biUnion
 -/
 
@@ -1198,7 +1203,10 @@ theorem finite_prod : (s ×ˢ t).Finite ↔ (s.Finite ∨ t = ∅) ∧ (t.Finite
 -/
 
 #print Set.Finite.offDiag /-
-protected theorem Finite.offDiag (hs : s.Finite) : s.offDiag.Finite := by classical
+protected theorem Finite.offDiag (hs : s.Finite) : s.offDiag.Finite := by
+  classical
+  cases hs
+  apply Set.toFinite
 #align set.finite.off_diag Set.Finite.offDiag
 -/
 
@@ -1212,7 +1220,11 @@ end Prod
 
 #print Set.Finite.seq /-
 theorem Finite.seq {f : Set (α → β)} {s : Set α} (hf : f.Finite) (hs : s.Finite) :
-    (f.seq s).Finite := by classical
+    (f.seq s).Finite := by
+  classical
+  cases hf
+  cases hs
+  apply to_finite
 #align set.finite.seq Set.Finite.seq
 -/
 
@@ -1268,6 +1280,8 @@ theorem Finite.pi {δ : Type _} [Finite δ] {κ : δ → Type _} {t : ∀ d, Set
   cases nonempty_fintype δ
   lift t to ∀ d, Finset (κ d) using ht
   classical
+  rw [← Fintype.coe_piFinset]
+  apply Finset.finite_toSet
 #align set.finite.pi Set.Finite.pi
 -/
 
@@ -1483,7 +1497,15 @@ theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop}
   ⟨fun n =>
     @Nat.strongRecOn' (fun _ => γ) n fun n ih =>
       Classical.choose <| h (range fun m : Iio n => ih m.1 m.2) (finite_range _),
-    fun n => by classical⟩
+    fun n => by
+    classical
+    refine' Nat.strongRecOn' n fun n ih => _
+    rw [Nat.strongRecOn'_beta]
+    convert Classical.choose_spec (h _ _)
+    ext x
+    constructor
+    · rintro ⟨m, hmn, rfl⟩; exact ⟨⟨m, hmn⟩, rfl⟩
+    · rintro ⟨⟨m, hmn⟩, rfl⟩; exact ⟨m, hmn, rfl⟩⟩
 #align set.seq_of_forall_finite_exists Set.seq_of_forall_finite_exists
 -/
 

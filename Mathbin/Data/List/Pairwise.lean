@@ -391,13 +391,18 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
 
 #print List.pairwise_of_forall_mem_list /-
 theorem pairwise_of_forall_mem_list {l : List α} {r : α → α → Prop} (h : ∀ a ∈ l, ∀ b ∈ l, r a b) :
-    l.Pairwise r := by classical
+    l.Pairwise r := by
+  classical
+  refine' pairwise_of_reflexive_on_dupl_of_forall_ne (fun a ha' => _) fun a ha b hb _ => h a ha b hb
+  have ha := List.count_pos_iff_mem.1 ha'.le
+  exact h a ha a ha
 #align list.pairwise_of_forall_mem_list List.pairwise_of_forall_mem_list
 -/
 
 #print List.pairwise_of_reflexive_of_forall_ne /-
 theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop} (hr : Reflexive r)
-    (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by classical
+    (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by
+  classical exact pairwise_of_reflexive_on_dupl_of_forall_ne (fun _ _ => hr _) h
 #align list.pairwise_of_reflexive_of_forall_ne List.pairwise_of_reflexive_of_forall_ne
 -/
 

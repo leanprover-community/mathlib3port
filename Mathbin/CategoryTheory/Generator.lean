@@ -722,7 +722,7 @@ theorem isSeparator_sigma {β : Type w} (f : β → C) [HasCoproduct f] :
   · refine' h.def _ _ fun g => colimit.hom_ext fun b => _
     simpa using huv (f b.as) (by simp) (colimit.ι (discrete.functor f) _ ≫ g)
   · obtain ⟨b, rfl⟩ := Set.mem_range.1 hZ
-    classical
+    classical simpa using sigma.ι f b ≫= huv (sigma.desc (Pi.single b g))
 #align category_theory.is_separator_sigma CategoryTheory.isSeparator_sigma
 -/
 
@@ -774,7 +774,7 @@ theorem isCoseparator_pi {β : Type w} (f : β → C) [HasProduct f] :
   · refine' h.def _ _ fun g => limit.hom_ext fun b => _
     simpa using huv (f b.as) (by simp) (g ≫ limit.π (discrete.functor f) _)
   · obtain ⟨b, rfl⟩ := Set.mem_range.1 hZ
-    classical
+    classical simpa using huv (pi.lift (Pi.single b g)) =≫ pi.π f b
 #align category_theory.is_coseparator_pi CategoryTheory.isCoseparator_pi
 -/
 

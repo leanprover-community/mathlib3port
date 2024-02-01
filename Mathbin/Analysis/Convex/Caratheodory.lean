@@ -154,6 +154,17 @@ theorem affineIndependent_minCardFinsetOfMemConvexHull :
     (Nat.succ_pred_eq_of_pos
         (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
   classical
+  by_contra
+  obtain ⟨p, hp⟩ := mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)
+  have contra :=
+    min_card_finset_of_mem_convex_hull_card_le_card hx
+      (Set.Subset.trans (Finset.erase_subset (↑p) (min_card_finset_of_mem_convex_hull hx))
+        (min_card_finset_of_mem_convex_hull_subseteq hx))
+      hp
+  rw [← not_lt] at contra 
+  apply contra
+  erw [card_erase_of_mem p.2, hk]
+  exact lt_add_one _
 #align caratheodory.affine_independent_min_card_finset_of_mem_convex_hull Caratheodory.affineIndependent_minCardFinsetOfMemConvexHull
 -/
 

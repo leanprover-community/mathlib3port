@@ -176,7 +176,10 @@ end Monoid
 #print Submonoid.FG.map /-
 @[to_additive]
 theorem Submonoid.FG.map {M' : Type _} [Monoid M'] {P : Submonoid M} (h : P.FG) (e : M →* M') :
-    (P.map e).FG := by classical
+    (P.map e).FG := by
+  classical
+  obtain ⟨s, rfl⟩ := h
+  exact ⟨s.image e, by rw [Finset.coe_image, MonoidHom.map_mclosure]⟩
 #align submonoid.fg.map Submonoid.FG.map
 #align add_submonoid.fg.map AddSubmonoid.FG.map
 -/
@@ -210,7 +213,12 @@ theorem Monoid.fg_iff_submonoid_fg (N : Submonoid M) : Monoid.FG N ↔ N.FG :=
 #print Monoid.fg_of_surjective /-
 @[to_additive]
 theorem Monoid.fg_of_surjective {M' : Type _} [Monoid M'] [Monoid.FG M] (f : M →* M')
-    (hf : Function.Surjective f) : Monoid.FG M' := by classical
+    (hf : Function.Surjective f) : Monoid.FG M' := by
+  classical
+  obtain ⟨s, hs⟩ := monoid.fg_def.mp ‹_›
+  use s.image f
+  rwa [Finset.coe_image, ← MonoidHom.map_mclosure, hs, ← MonoidHom.mrange_eq_map,
+    MonoidHom.mrange_top_iff_surjective]
 #align monoid.fg_of_surjective Monoid.fg_of_surjective
 #align add_monoid.fg_of_surjective AddMonoid.fg_of_surjective
 -/
@@ -501,7 +509,13 @@ variable {G} {G' : Type _} [Group G']
 #print Group.rank_le_of_surjective /-
 @[to_additive]
 theorem Group.rank_le_of_surjective [Group.FG G] [Group.FG G'] (f : G →* G')
-    (hf : Function.Surjective f) : Group.rank G' ≤ Group.rank G := by classical
+    (hf : Function.Surjective f) : Group.rank G' ≤ Group.rank G := by
+  classical
+  obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
+  trans (S.image f).card
+  · apply Group.rank_le
+    rw [Finset.coe_image, ← MonoidHom.map_closure, hS2, Subgroup.map_top_of_surjective f hf]
+  · exact finset.card_image_le.trans_eq hS1
 #align group.rank_le_of_surjective Group.rank_le_of_surjective
 #align add_group.rank_le_of_surjective AddGroup.rank_le_of_surjective
 -/
@@ -539,6 +553,15 @@ theorem rank_congr {H K : Subgroup G} [Group.FG H] [Group.FG K] (h : H = K) :
 @[to_additive]
 theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Set G)) ≤ s.card := by
   classical
+  let t : Finset (closure (s : Set G)) := s.preimage coe (subtype.coe_injective.inj_on _)
+  have ht : closure (t : Set (closure (s : Set G))) = ⊤ :=
+    by
+    rw [Finset.coe_preimage]
+    exact closure_preimage_eq_top s
+  apply (Group.rank_le (closure (s : Set G)) ht).trans
+  rw [← Finset.card_image_of_injOn, Finset.image_preimage]
+  · apply Finset.card_filter_le
+  · apply subtype.coe_injective.inj_on
 #align subgroup.rank_closure_finset_le_card Subgroup.rank_closure_finset_le_card
 #align add_subgroup.rank_closure_finset_le_card AddSubgroup.rank_closure_finset_le_card
 -/

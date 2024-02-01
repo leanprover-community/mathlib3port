@@ -227,7 +227,38 @@ variable (α) [Fintype α]
 /-- If `G` is a `p`-group acting on a finite set `α`, then the number of fixed points
   of the action is congruent mod `p` to the cardinality of `α` -/
 theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
-    card α ≡ card (fixedPoints G α) [MOD p] := by classical
+    card α ≡ card (fixedPoints G α) [MOD p] := by
+  classical
+  calc
+    card α = card (Σ y : Quotient (orbit_rel G α), { x // Quotient.mk'' x = y }) :=
+      card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk'' _ (orbit_rel G α))).symm
+    _ = ∑ a : Quotient (orbit_rel G α), card { x // Quotient.mk'' x = a } := (card_sigma _)
+    _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _
+    _ = _ := by simp <;> rfl
+  rw [← ZMod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
+  have key :
+    ∀ x,
+      card { y // (Quotient.mk'' y : Quotient (orbit_rel G α)) = Quotient.mk'' x } =
+        card (orbit G x) :=
+    fun x => by simp only [Quotient.eq''] <;> congr
+  refine'
+    Eq.symm
+      (Finset.sum_bij_ne_zero (fun a _ _ => Quotient.mk'' a.1) (fun _ _ _ => Finset.mem_univ _)
+        (fun a₁ a₂ _ _ _ _ h => Subtype.eq ((mem_fixed_points' α).mp a₂.2 a₁.1 (Quotient.exact' h)))
+        (fun b => Quotient.inductionOn' b fun b _ hb => _) fun a ha _ => by
+        rw [key, mem_fixed_points_iff_card_orbit_eq_one.mp a.2])
+  obtain ⟨k, hk⟩ := hG.card_orbit b
+  have : k = 0 :=
+    le_zero_iff.1
+      (Nat.le_of_lt_succ
+        (lt_of_not_ge
+          (mt (pow_dvd_pow p)
+            (by
+              rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← ZMod.eq_iff_modEq_nat, ← key,
+                Nat.cast_zero]))))
+  exact
+    ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩, Finset.mem_univ _,
+      ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
 #align is_p_group.card_modeq_card_fixed_points IsPGroup.card_modEq_card_fixedPoints
 -/
 
@@ -264,7 +295,15 @@ theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card �
 -/
 
 #print IsPGroup.center_nontrivial /-
-theorem center_nontrivial [Nontrivial G] [Finite G] : Nontrivial (Subgroup.center G) := by classical
+theorem center_nontrivial [Nontrivial G] [Finite G] : Nontrivial (Subgroup.center G) := by
+  classical
+  cases nonempty_fintype G
+  have := (hG.of_equiv ConjAct.toConjAct).exists_fixed_point_of_prime_dvd_card_of_fixed_point G
+  rw [ConjAct.fixedPoints_eq_center] at this 
+  obtain ⟨g, hg⟩ := this _ (Subgroup.center G).one_mem
+  · exact ⟨⟨1, ⟨g, hg.1⟩, mt subtype.ext_iff.mp hg.2⟩⟩
+  · obtain ⟨n, hn0, hn⟩ := hG.nontrivial_iff_card.mp inferInstance
+    exact hn.symm ▸ dvd_pow_self _ (ne_of_gt hn0)
 #align is_p_group.center_nontrivial IsPGroup.center_nontrivial
 -/
 
@@ -273,7 +312,8 @@ theorem bot_lt_center [Nontrivial G] [Finite G] : ⊥ < Subgroup.center G :=
   by
   haveI := center_nontrivial hG
   cases nonempty_fintype G
-  classical
+  classical exact
+    bot_lt_iff_ne_bot.mpr ((Subgroup.center G).one_lt_card_iff_ne_bot.mp Fintype.one_lt_card)
 #align is_p_group.bot_lt_center IsPGroup.bot_lt_center
 -/
 
@@ -428,7 +468,20 @@ theorem card_center_eq_prime_pow (hn : 0 < n) [Fintype (center G)] :
 #print IsPGroup.cyclic_center_quotient_of_card_eq_prime_sq /-
 /-- The quotient by the center of a group of cardinality `p ^ 2` is cyclic. -/
 theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) :
-    IsCyclic (G ⧸ center G) := by classical
+    IsCyclic (G ⧸ center G) := by
+  classical
+  rcases card_center_eq_prime_pow hG zero_lt_two with ⟨k, hk0, hk⟩
+  rw [card_eq_card_quotient_mul_card_subgroup (center G), mul_comm, hk] at hG 
+  have hk2 := (Nat.pow_dvd_pow_iff_le_right (Fact.out p.prime).one_lt).1 ⟨_, hG.symm⟩
+  interval_cases
+  · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).NeZero] at hG 
+    exact isCyclic_of_prime_card hG
+  ·
+    exact
+      @isCyclic_of_subsingleton _ _
+        ⟨Fintype.card_le_one_iff.1
+            (mul_right_injective₀ (pow_ne_zero 2 (NeZero.ne p))
+                (hG.trans (mul_one (p ^ 2)).symm)).le⟩
 #align is_p_group.cyclic_center_quotient_of_card_eq_prime_sq IsPGroup.cyclic_center_quotient_of_card_eq_prime_sq
 -/
 

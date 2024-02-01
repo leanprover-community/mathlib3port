@@ -264,7 +264,14 @@ theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} :
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial.einfsep_exists_of_finite /-
 theorem Nontrivial.einfsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
-    ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s) (hxy : x ≠ y), s.einfsep = edist x y := by classical
+    ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s) (hxy : x ≠ y), s.einfsep = edist x y := by
+  classical
+  cases nonempty_fintype s
+  simp_rw [einfsep_of_fintype]
+  rcases@Finset.exists_mem_eq_inf _ _ _ _ s.off_diag.to_finset (by simpa) (uncurry edist) with
+    ⟨_, hxy, hed⟩
+  simp_rw [mem_to_finset] at hxy 
+  refine' ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 #align set.nontrivial.einfsep_exists_of_finite Set.Nontrivial.einfsep_exists_of_finite
 -/
 
@@ -602,7 +609,8 @@ theorem infsep_eq_iInf [Decidable s.Nontrivial] :
 
 #print Set.Nontrivial.infsep_eq_iInf /-
 theorem Nontrivial.infsep_eq_iInf (hs : s.Nontrivial) :
-    s.infsep = ⨅ d : s.offDiag, (uncurry dist) (d : α × α) := by classical
+    s.infsep = ⨅ d : s.offDiag, (uncurry dist) (d : α × α) := by
+  classical rw [infsep_eq_infi, if_pos hs]
 #align set.nontrivial.infsep_eq_infi Set.Nontrivial.infsep_eq_iInf
 -/
 
@@ -620,7 +628,8 @@ theorem infsep_of_fintype [Decidable s.Nontrivial] [DecidableEq α] [Fintype s] 
 
 #print Set.Nontrivial.infsep_of_fintype /-
 theorem Nontrivial.infsep_of_fintype [DecidableEq α] [Fintype s] (hs : s.Nontrivial) :
-    s.infsep = s.offDiag.toFinset.inf' (by simpa) (uncurry dist) := by classical
+    s.infsep = s.offDiag.toFinset.inf' (by simpa) (uncurry dist) := by
+  classical rw [infsep_of_fintype, dif_pos hs]
 #align set.nontrivial.infsep_of_fintype Set.Nontrivial.infsep_of_fintype
 -/
 
@@ -639,7 +648,8 @@ theorem Finite.infsep [Decidable s.Nontrivial] (hsf : s.Finite) :
 
 #print Set.Finite.infsep_of_nontrivial /-
 theorem Finite.infsep_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
-    s.infsep = hsf.offDiag.toFinset.inf' (by simpa) (uncurry dist) := by classical
+    s.infsep = hsf.offDiag.toFinset.inf' (by simpa) (uncurry dist) := by
+  classical simp_rw [hsf.infsep, dif_pos hs]
 #align set.finite.infsep_of_nontrivial Set.Finite.infsep_of_nontrivial
 -/
 
@@ -672,7 +682,14 @@ theorem Finset.coe_infsep_of_offDiag_empty [DecidableEq α] {s : Finset α} (hs 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial.infsep_exists_of_finite /-
 theorem Nontrivial.infsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
-    ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s) (hxy : x ≠ y), s.infsep = dist x y := by classical
+    ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s) (hxy : x ≠ y), s.infsep = dist x y := by
+  classical
+  cases nonempty_fintype s
+  simp_rw [hs.infsep_of_fintype]
+  rcases@Finset.exists_mem_eq_inf' _ _ _ s.off_diag.to_finset (by simpa) (uncurry dist) with
+    ⟨_, hxy, hed⟩
+  simp_rw [mem_to_finset] at hxy 
+  exact ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 #align set.nontrivial.infsep_exists_of_finite Set.Nontrivial.infsep_exists_of_finite
 -/
 

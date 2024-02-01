@@ -162,7 +162,12 @@ theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β →
 
 #print Set.range_extend_subset /-
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
-    range (extend f g g') ⊆ range g ∪ g' '' range fᶜ := by classical
+    range (extend f g g') ⊆ range g ∪ g' '' range fᶜ := by
+  classical
+  rintro _ ⟨y, rfl⟩
+  rw [extend_def]
+  split_ifs
+  exacts [Or.inl (mem_range_self _), Or.inr (mem_image_of_mem _ h)]
 #align set.range_extend_subset Set.range_extend_subset
 -/
 

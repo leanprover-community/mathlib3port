@@ -81,7 +81,21 @@ theorem leastGE_mono {n m : ℕ} (hnm : n ≤ m) (r : ℝ) (ω : Ω) : leastGE f
 
 #print MeasureTheory.leastGE_eq_min /-
 theorem leastGE_eq_min (π : Ω → ℕ) (r : ℝ) (ω : Ω) {n : ℕ} (hπn : ∀ ω, π ω ≤ n) :
-    leastGE f r (π ω) ω = min (π ω) (leastGE f r n ω) := by classical
+    leastGE f r (π ω) ω = min (π ω) (leastGE f r n ω) := by
+  classical
+  refine' le_antisymm (le_min (least_ge_le _) (least_ge_mono (hπn ω) r ω)) _
+  by_cases hle : π ω ≤ least_ge f r n ω
+  · rw [min_eq_left hle, least_ge]
+    by_cases h : ∃ j ∈ Set.Icc 0 (π ω), f j ω ∈ Set.Ici r
+    · refine' hle.trans (Eq.le _)
+      rw [least_ge, ← hitting_eq_hitting_of_exists (hπn ω) h]
+    · simp only [hitting, if_neg h]
+  · rw [min_eq_right (not_le.1 hle).le, least_ge, least_ge, ←
+      hitting_eq_hitting_of_exists (hπn ω) _]
+    rw [not_le, least_ge, hitting_lt_iff _ (hπn ω)] at hle 
+    exact
+      let ⟨j, hj₁, hj₂⟩ := hle
+      ⟨j, ⟨hj₁.1, hj₁.2.le⟩, hj₂⟩
 #align measure_theory.least_ge_eq_min MeasureTheory.leastGE_eq_min
 -/
 

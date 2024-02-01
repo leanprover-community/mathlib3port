@@ -185,6 +185,14 @@ theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (M�
   simp_rw [anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h 
   intro i x hx
   classical
+  have := h (Pi.single i x) _ i
+  · rw [Pi.single_eq_same] at this 
+    exact this
+  apply Finset.sum_eq_zero
+  intro j _
+  by_cases hji : j = i
+  · subst hji; rw [Pi.single_eq_same, hx]
+  · rw [Pi.single_eq_of_ne hji, map_zero]
 #align quadratic_form.anisotropic_of_pi QuadraticForm.anisotropic_of_pi
 -/
 
@@ -198,6 +206,9 @@ theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)
   -- TODO: does this generalize to a useful lemma independent of `quadratic_form`?
   · intro h i x
     classical
+    convert h (Pi.single i x) using 1
+    rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ _) fun j _ hji => _, Pi.single_eq_same]
+    rw [Pi.single_eq_of_ne hji, map_zero]
   · rintro h x
     exact Finset.sum_nonneg fun i hi => h i (x i)
 #align quadratic_form.nonneg_pi_iff QuadraticForm.nonneg_pi_iff

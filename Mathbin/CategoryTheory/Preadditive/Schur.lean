@@ -70,7 +70,24 @@ theorem isIso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X 
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
 -/
-noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) := by classical
+noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) := by
+  classical exact
+    {
+      (inferInstance :
+        Ring
+          (End
+            X)) with
+      inv := fun f =>
+        if h : f = 0 then 0
+        else
+          haveI := is_iso_of_hom_simple h
+          inv f
+      exists_pair_ne := ⟨𝟙 X, 0, id_nonzero _⟩
+      inv_zero := dif_pos rfl
+      mul_inv_cancel := fun f h => by
+        haveI := is_iso_of_hom_simple h
+        convert is_iso.inv_hom_id f
+        exact dif_neg h }
 
 open FiniteDimensional
 
@@ -155,7 +172,14 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 This can't be an instance as `𝕜` would be undetermined.
 -/
 noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
-    Field (End X) := by classical
+    Field (End X) := by
+  classical exact
+    { (inferInstance : DivisionRing (End X)) with
+      mul_comm := fun f g =>
+        by
+        obtain ⟨c, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 f
+        obtain ⟨d, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 g
+        simp [← mul_smul, mul_comm c d] }
 #align category_theory.field_End_of_finite_dimensional CategoryTheory.fieldEndOfFiniteDimensional
 -/
 

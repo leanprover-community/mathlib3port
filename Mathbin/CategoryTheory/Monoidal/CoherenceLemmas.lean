@@ -33,12 +33,12 @@ variable {C : Type _} [Category C] [MonoidalCategory C]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print CategoryTheory.MonoidalCategory.leftUnitor_tensor' /-
+#print CategoryTheory.MonoidalCategory.leftUnitor_tensor'' /-
 -- See Proposition 2.2.4 of <http://www-math.mit.edu/~etingof/egnobookfinal.pdf>
 @[reassoc]
-theorem leftUnitor_tensor' (X Y : C) : (α_ (𝟙_ C) X Y).Hom ≫ (λ_ (X ⊗ Y)).Hom = (λ_ X).Hom ⊗ 𝟙 Y :=
+theorem leftUnitor_tensor'' (X Y : C) : (α_ (𝟙_ C) X Y).Hom ≫ (λ_ (X ⊗ Y)).Hom = (λ_ X).Hom ⊗ 𝟙 Y :=
   by coherence
-#align category_theory.monoidal_category.left_unitor_tensor' CategoryTheory.MonoidalCategory.leftUnitor_tensor'
+#align category_theory.monoidal_category.left_unitor_tensor' CategoryTheory.MonoidalCategory.leftUnitor_tensor''
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

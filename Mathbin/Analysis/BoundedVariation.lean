@@ -605,7 +605,48 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
 /-- If a set `s` is to the left of a set `t`, and both contain the boundary point `x`, then
 the variation of `f` along `s ∪ t` is the sum of the variations. -/
 theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht : IsLeast t x) :
-    eVariationOn f (s ∪ t) = eVariationOn f s + eVariationOn f t := by classical
+    eVariationOn f (s ∪ t) = eVariationOn f s + eVariationOn f t := by
+  classical
+  apply le_antisymm _ (eVariationOn.add_le_union f fun a ha b hb => le_trans (hs.2 ha) (ht.2 hb))
+  apply iSup_le _
+  rintro ⟨n, ⟨u, hu, ust⟩⟩
+  obtain ⟨v, m, hv, vst, xv, huv⟩ :
+    ∃ (v : ℕ → α) (m : ℕ),
+      Monotone v ∧
+        (∀ i, v i ∈ s ∪ t) ∧
+          x ∈ v '' Iio m ∧
+            ∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i)) ≤
+              ∑ j in Finset.range m, edist (f (v (j + 1))) (f (v j))
+  exact eVariationOn.add_point f (mem_union_left t hs.1) u hu ust n
+  obtain ⟨N, hN, Nx⟩ : ∃ N, N < m ∧ v N = x
+  exact xv
+  calc
+    ∑ j in Finset.range n, edist (f (u (j + 1))) (f (u j)) ≤
+        ∑ j in Finset.range m, edist (f (v (j + 1))) (f (v j)) :=
+      huv
+    _ =
+        ∑ j in Finset.Ico 0 N, edist (f (v (j + 1))) (f (v j)) +
+          ∑ j in Finset.Ico N m, edist (f (v (j + 1))) (f (v j)) :=
+      by rw [Finset.range_eq_Ico, Finset.sum_Ico_consecutive _ (zero_le _) hN.le]
+    _ ≤ eVariationOn f s + eVariationOn f t :=
+      by
+      refine' add_le_add _ _
+      · apply sum_le_of_monotone_on_Icc _ (hv.monotone_on _) fun i hi => _
+        rcases vst i with (h | h); · exact h
+        have : v i = x := by
+          apply le_antisymm
+          · rw [← Nx]; exact hv hi.2
+          · exact ht.2 h
+        rw [this]
+        exact hs.1
+      · apply sum_le_of_monotone_on_Icc _ (hv.monotone_on _) fun i hi => _
+        rcases vst i with (h | h); swap; · exact h
+        have : v i = x := by
+          apply le_antisymm
+          · exact hs.2 h
+          · rw [← Nx]; exact hv hi.1
+        rw [this]
+        exact ht.1
 #align evariation_on.union eVariationOn.union
 -/
 

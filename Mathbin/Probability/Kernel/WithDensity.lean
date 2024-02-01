@@ -64,14 +64,17 @@ noncomputable def withDensity (κ : kernel α β) [IsSFiniteKernel κ] (f : α �
 
 #print ProbabilityTheory.kernel.withDensity_of_not_measurable /-
 theorem withDensity_of_not_measurable (κ : kernel α β) [IsSFiniteKernel κ]
-    (hf : ¬Measurable (Function.uncurry f)) : withDensity κ f = 0 := by classical
+    (hf : ¬Measurable (Function.uncurry f)) : withDensity κ f = 0 := by classical exact dif_neg hf
 #align probability_theory.kernel.with_density_of_not_measurable ProbabilityTheory.kernel.withDensity_of_not_measurable
 -/
 
 #print ProbabilityTheory.kernel.withDensity_apply /-
 protected theorem withDensity_apply (κ : kernel α β) [IsSFiniteKernel κ]
     (hf : Measurable (Function.uncurry f)) (a : α) : withDensity κ f a = (κ a).withDensity (f a) :=
-  by classical
+  by
+  classical
+  rw [with_density, dif_pos hf]
+  rfl
 #align probability_theory.kernel.with_density_apply ProbabilityTheory.kernel.withDensity_apply
 -/
 

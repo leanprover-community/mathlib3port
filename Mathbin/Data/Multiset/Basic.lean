@@ -3474,7 +3474,10 @@ section Embedding
 #print Multiset.map_le_map_iff /-
 @[simp]
 theorem map_le_map_iff {f : α → β} (hf : Function.Injective f) {s t : Multiset α} :
-    s.map f ≤ t.map f ↔ s ≤ t := by classical
+    s.map f ≤ t.map f ↔ s ≤ t := by
+  classical
+  refine' ⟨fun h => le_iff_count.mpr fun a => _, map_le_map⟩
+  simpa [count_map_eq_count' f _ hf] using le_iff_count.mp h (f a)
 #align multiset.map_le_map_iff Multiset.map_le_map_iff
 -/
 
@@ -3785,7 +3788,12 @@ theorem filter_attach' (s : Multiset α) (p : { a // a ∈ s } → Prop) [Decida
         (Subtype.map id fun x hx =>
           let ⟨h, _⟩ := of_mem_filter hx
           h) :=
-  by classical
+  by
+  classical
+  refine' Multiset.map_injective Subtype.coe_injective _
+  simp only [Function.comp, map_filter' _ Subtype.coe_injective, Subtype.exists, coe_mk,
+    exists_and_right, exists_eq_right, attach_map_coe, map_map, map_coe, id.def]
+  rw [attach_map_coe]
 #align multiset.filter_attach' Multiset.filter_attach'
 -/
 

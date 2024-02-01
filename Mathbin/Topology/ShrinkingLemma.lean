@@ -262,7 +262,21 @@ to a new open cover so that the closure of each new open set is contained in the
 original open set. -/
 theorem exists_subset_iUnion_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
     (uf : ∀ x ∈ s, {i | x ∈ u i}.Finite) (us : s ⊆ ⋃ i, u i) :
-    ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by classical
+    ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by
+  classical
+  haveI : Nonempty (partial_refinement u s) := ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
+  have :
+    ∀ c : Set (partial_refinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀ v ∈ c, v ≤ ub :=
+    fun c hc ne =>
+    ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv =>
+      partial_refinement.le_chain_Sup _ _ _ _ hv⟩
+  rcases zorn_nonempty_partialOrder this with ⟨v, hv⟩
+  suffices : ∀ i, i ∈ v.carrier
+  exact ⟨v, v.subset_Union, fun i => v.is_open _, fun i => v.closure_subset (this i)⟩
+  contrapose! hv
+  rcases hv with ⟨i, hi⟩
+  rcases v.exists_gt hs i hi with ⟨v', hlt⟩
+  exact ⟨v', hlt.le, hlt.ne'⟩
 #align exists_subset_Union_closure_subset exists_subset_iUnion_closure_subset
 -/
 

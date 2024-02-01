@@ -622,7 +622,14 @@ theorem LowerSemicontinuous.add {f g : α → γ} (hf : LowerSemicontinuous f)
 #print lowerSemicontinuousWithinAt_sum /-
 theorem lowerSemicontinuousWithinAt_sum {f : ι → α → γ} {a : Finset ι}
     (ha : ∀ i ∈ a, LowerSemicontinuousWithinAt (f i) s x) :
-    LowerSemicontinuousWithinAt (fun z => ∑ i in a, f i z) s x := by classical
+    LowerSemicontinuousWithinAt (fun z => ∑ i in a, f i z) s x := by
+  classical
+  induction' a using Finset.induction_on with i a ia IH generalizing ha
+  · exact lowerSemicontinuousWithinAt_const
+  · simp only [ia, Finset.sum_insert, not_false_iff]
+    exact
+      LowerSemicontinuousWithinAt.add (ha _ (Finset.mem_insert_self i a))
+        (IH fun j ja => ha j (Finset.mem_insert_of_mem ja))
 #align lower_semicontinuous_within_at_sum lowerSemicontinuousWithinAt_sum
 -/
 

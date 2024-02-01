@@ -123,7 +123,12 @@ not an instance as `i` cannot be inferred. -/
       "If `f i` has a faithful additive action for a given `i`, then\nso does `Π i, f i`. This is not an instance as `i` cannot be inferred"]
 theorem faithfulSMul_at {α : Type _} [∀ i, SMul α <| f i] [∀ i, Nonempty (f i)] (i : I)
     [FaithfulSMul α (f i)] : FaithfulSMul α (∀ i, f i) :=
-  ⟨fun x y h => eq_of_smul_eq_smul fun a : f i => by classical⟩
+  ⟨fun x y h =>
+    eq_of_smul_eq_smul fun a : f i => by
+      classical
+      have :=
+        congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
+      simpa using this⟩
 #align pi.has_faithful_smul_at Pi.faithfulSMul_at
 #align pi.has_faithful_vadd_at Pi.faithfulVAdd_at
 -/

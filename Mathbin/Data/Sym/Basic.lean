@@ -355,7 +355,7 @@ theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
 theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α) (s' : Sym α n), s = a ::ₛ s' :=
   by
   obtain ⟨a, ha⟩ := exists_mem s
-  classical
+  classical exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
 #align sym.exists_eq_cons_of_succ Sym.exists_eq_cons_of_succ
 -/
 
