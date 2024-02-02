@@ -206,7 +206,7 @@ notation3"∯ "(...)" in ""T("c", "R")"", "r:60:(scoped f => torusIntegral f c R
 #print torusIntegral_radius_zero /-
 theorem torusIntegral_radius_zero (hn : n ≠ 0) (f : ℂⁿ → E) (c : ℂⁿ) : ∯ x in T(c, 0), f x = 0 := by
   simp only [torusIntegral, Pi.zero_apply, of_real_zero, MulZeroClass.mul_zero,
-    MulZeroClass.zero_mul, Fin.prod_const, zero_pow' n hn, zero_smul, integral_zero]
+    MulZeroClass.zero_mul, Fin.prod_const, zero_pow n hn, zero_smul, integral_zero]
 #align torus_integral_radius_zero torusIntegral_radius_zero
 -/
 

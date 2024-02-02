@@ -185,7 +185,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   · congr 1
     dsimp only [g]
     simp only [Nat.one_ne_zero, add_zero, one_mul, zero_div, MulZeroClass.zero_mul, sub_zero,
-      zero_smul, Ne.def, not_false_iff, bit0_eq_zero, zero_pow']
+      zero_smul, Ne.def, not_false_iff, bit0_eq_zero, zero_pow]
     abel
   ·
     simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg,

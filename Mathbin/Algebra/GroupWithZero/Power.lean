@@ -75,7 +75,7 @@ attribute [local ematch] le_of_lt
 
 #print zero_zpow /-
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
-  | (n : ℕ), h => by rw [zpow_ofNat, zero_pow']; simpa using h
+  | (n : ℕ), h => by rw [zpow_ofNat, zero_pow]; simpa using h
   | -[n+1], h => by simp
 #align zero_zpow zero_zpow
 -/

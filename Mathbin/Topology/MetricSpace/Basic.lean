@@ -2993,10 +2993,10 @@ theorem tendsto_dist_left_cocompact_atTop [ProperSpace α] (x : α) :
 #align tendsto_dist_left_cocompact_at_top tendsto_dist_left_cocompact_atTop
 -/
 
-#print properSpace_of_compact_closedBall_of_le /-
+#print ProperSpace.of_isCompact_closedBall_of_le /-
 /-- If all closed balls of large enough radius are compact, then the space is proper. Especially
 useful when the lower bound for the radius is 0. -/
-theorem properSpace_of_compact_closedBall_of_le (R : ℝ)
+theorem ProperSpace.of_isCompact_closedBall_of_le (R : ℝ)
     (h : ∀ x : α, ∀ r, R ≤ r → IsCompact (closedBall x r)) : ProperSpace α :=
   ⟨by
     intro x r
@@ -3009,7 +3009,7 @@ theorem properSpace_of_compact_closedBall_of_le (R : ℝ)
         exact closed_ball_subset_closed_ball (le_of_lt (not_le.1 hr))
       rw [this]
       exact (h x R le_rfl).inter_right is_closed_ball⟩
-#align proper_space_of_compact_closed_ball_of_le properSpace_of_compact_closedBall_of_le
+#align proper_space_of_compact_closed_ball_of_le ProperSpace.of_isCompact_closedBall_of_le
 -/
 
 #print proper_of_compact /-
@@ -3065,7 +3065,7 @@ instance prod_properSpace {α : Type _} {β : Type _} [PseudoMetricSpace α] [Ps
 instance pi_properSpace {π : β → Type _} [Fintype β] [∀ b, PseudoMetricSpace (π b)]
     [h : ∀ b, ProperSpace (π b)] : ProperSpace (∀ b, π b) :=
   by
-  refine' properSpace_of_compact_closedBall_of_le 0 fun x r hr => _
+  refine' ProperSpace.of_isCompact_closedBall_of_le 0 fun x r hr => _
   rw [closedBall_pi _ hr]
   apply isCompact_univ_pi fun b => _
   apply (h b).isCompact_closedBall

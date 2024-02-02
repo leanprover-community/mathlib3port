@@ -70,7 +70,7 @@ theorem exists_summable_bound_exp_mul_sq {R : ℝ} (hR : 0 < R) :
     rwa [mul_le_mul_left_of_neg (neg_lt_zero.mpr pi_pos)]
   all_goals
     simpa only [Int.natAbs_neg, Int.natAbs_ofNat] using
-      summable_geometric_of_lt_1 (Real.exp_pos _).le h
+      summable_geometric_of_lt_one (Real.exp_pos _).le h
 #align exists_summable_bound_exp_mul_sq exists_summable_bound_exp_mul_sq
 -/
 
@@ -181,7 +181,7 @@ theorem norm_jacobiTheta_sub_one_le {z : ℂ} (hz : 0 < im z) :
     by
     simp_rw [pow_succ, div_eq_mul_inv, hasSum_mul_left_iff (Real.exp_ne_zero _)]
     exact
-      hasSum_geometric_of_lt_1 (exp_pos (-π * z.im)).le
+      hasSum_geometric_of_lt_one (exp_pos (-π * z.im)).le
         (exp_lt_one_iff.mpr <| mul_neg_of_neg_of_pos (neg_lt_zero.mpr pi_pos) hz)
   have aux : Summable fun n : ℕ => ‖cexp (↑π * I * (↑n + 1) ^ 2 * z)‖ :=
     Summable.of_nonneg_of_le (fun n => norm_nonneg _) this s.summable

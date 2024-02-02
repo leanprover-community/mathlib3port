@@ -297,7 +297,7 @@ theorem gt_of_tendsto_zero_of_neg {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 
 
 #print Hyperreal.epsilon_lt_pos /-
 theorem epsilon_lt_pos (x : ℝ) : 0 < x → ε < x :=
-  lt_of_tendsto_zero_of_pos tendsto_inverse_atTop_nhds_0_nat
+  lt_of_tendsto_zero_of_pos tendsto_inverse_atTop_nhds_zero_nat
 #align hyperreal.epsilon_lt_pos Hyperreal.epsilon_lt_pos
 -/
 
@@ -1095,7 +1095,7 @@ theorem infinitesimal_of_tendsto_zero {f : ℕ → ℝ} :
 
 #print Hyperreal.infinitesimal_epsilon /-
 theorem infinitesimal_epsilon : Infinitesimal ε :=
-  infinitesimal_of_tendsto_zero tendsto_inverse_atTop_nhds_0_nat
+  infinitesimal_of_tendsto_zero tendsto_inverse_atTop_nhds_zero_nat
 #align hyperreal.infinitesimal_epsilon Hyperreal.infinitesimal_epsilon
 -/
 

@@ -37,12 +37,14 @@ theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
 #align zero_pow zero_pow
 -/
 
-#print zero_pow' /-
+/- warning: zero_pow' clashes with zero_pow -> zero_pow
+Case conversion may be inaccurate. Consider using '#align zero_pow' zero_powₓ'. -/
+#print zero_pow /-
 @[simp]
-theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
+theorem zero_pow : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
   | k + 1, h => by rw [pow_succ]; exact MulZeroClass.zero_mul _
-#align zero_pow' zero_pow'
+#align zero_pow' zero_pow
 -/
 
 #print zero_pow_eq /-
@@ -95,7 +97,7 @@ theorem pow_ne_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ 
 
 #print ne_zero_pow /-
 theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 := by contrapose!; rintro rfl;
-  exact zero_pow' n hn
+  exact zero_pow n hn
 #align ne_zero_pow ne_zero_pow
 -/
 
@@ -124,7 +126,7 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   by
   constructor <;> intro h
   · rw [pos_iff_ne_zero]; rintro rfl; simpa using h
-  · exact zero_pow' n h.ne.symm
+  · exact zero_pow n h.ne.symm
 #align zero_pow_eq_zero zero_pow_eq_zero
 -/
 

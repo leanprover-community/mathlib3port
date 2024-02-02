@@ -110,7 +110,7 @@ theorem le_W (k : ℕ) : ((2 : ℝ) * k + 1) / (2 * k + 2) * (π / 2) ≤ W k :=
   rw [W_eq_integral_sin_pow_div_integral_sin_pow, le_div_iff (integral_sin_pow_pos _)]
   convert integral_sin_pow_succ_le (2 * k + 1)
   rw [integral_sin_pow (2 * k)]
-  simp only [sin_zero, zero_pow', Ne.def, Nat.succ_ne_zero, not_false_iff, MulZeroClass.zero_mul,
+  simp only [sin_zero, zero_pow, Ne.def, Nat.succ_ne_zero, not_false_iff, MulZeroClass.zero_mul,
     sin_pi, tsub_zero, Nat.cast_mul, Nat.cast_bit0, algebraMap.coe_one, zero_div, zero_add]
 #align real.wallis.le_W Real.Wallis.le_W
 -/

@@ -296,7 +296,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
         (𝓝 ((μ (v ∩ s)).toReal⁻¹ * 0)) :=
       by
       apply tendsto.mul tendsto_const_nhds _; · infer_instance
-      apply tendsto_pow_atTop_nhds_0_of_lt_1 (div_nonneg t_pos t'_pos.le)
+      apply tendsto_pow_atTop_nhds_zero_of_lt_one (div_nonneg t_pos t'_pos.le)
       exact (div_lt_one t'_pos).2 tt'
     rw [MulZeroClass.mul_zero] at N 
     refine' tendsto_uniformly_on_iff.2 fun ε εpos => _

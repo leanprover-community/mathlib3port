@@ -219,24 +219,24 @@ theorem tendsto_exp_atTop : Tendsto exp atTop atTop :=
 #align real.tendsto_exp_at_top Real.tendsto_exp_atTop
 -/
 
-#print Real.tendsto_exp_neg_atTop_nhds_0 /-
+#print Real.tendsto_exp_neg_atTop_nhds_zero /-
 /-- The real exponential function tends to `0` at `-∞` or, equivalently, `exp(-x)` tends to `0`
 at `+∞` -/
-theorem tendsto_exp_neg_atTop_nhds_0 : Tendsto (fun x => exp (-x)) atTop (𝓝 0) :=
+theorem tendsto_exp_neg_atTop_nhds_zero : Tendsto (fun x => exp (-x)) atTop (𝓝 0) :=
   (tendsto_inv_atTop_zero.comp tendsto_exp_atTop).congr fun x => (exp_neg x).symm
-#align real.tendsto_exp_neg_at_top_nhds_0 Real.tendsto_exp_neg_atTop_nhds_0
+#align real.tendsto_exp_neg_at_top_nhds_0 Real.tendsto_exp_neg_atTop_nhds_zero
 -/
 
-#print Real.tendsto_exp_nhds_0_nhds_1 /-
+#print Real.tendsto_exp_nhds_zero_nhds_one /-
 /-- The real exponential function tends to `1` at `0`. -/
-theorem tendsto_exp_nhds_0_nhds_1 : Tendsto exp (𝓝 0) (𝓝 1) := by convert continuous_exp.tendsto 0;
-  simp
-#align real.tendsto_exp_nhds_0_nhds_1 Real.tendsto_exp_nhds_0_nhds_1
+theorem tendsto_exp_nhds_zero_nhds_one : Tendsto exp (𝓝 0) (𝓝 1) := by
+  convert continuous_exp.tendsto 0; simp
+#align real.tendsto_exp_nhds_0_nhds_1 Real.tendsto_exp_nhds_zero_nhds_one
 -/
 
 #print Real.tendsto_exp_atBot /-
 theorem tendsto_exp_atBot : Tendsto exp atBot (𝓝 0) :=
-  (tendsto_exp_neg_atTop_nhds_0.comp tendsto_neg_atBot_atTop).congr fun x =>
+  (tendsto_exp_neg_atTop_nhds_zero.comp tendsto_neg_atBot_atTop).congr fun x =>
     congr_arg exp <| neg_neg x
 #align real.tendsto_exp_at_bot Real.tendsto_exp_atBot
 -/
@@ -289,13 +289,13 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
 #align real.tendsto_exp_div_pow_at_top Real.tendsto_exp_div_pow_atTop
 -/
 
-#print Real.tendsto_pow_mul_exp_neg_atTop_nhds_0 /-
+#print Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero /-
 /-- The function `x^n * exp(-x)` tends to `0` at `+∞`, for any natural number `n`. -/
-theorem tendsto_pow_mul_exp_neg_atTop_nhds_0 (n : ℕ) :
+theorem tendsto_pow_mul_exp_neg_atTop_nhds_zero (n : ℕ) :
     Tendsto (fun x => x ^ n * exp (-x)) atTop (𝓝 0) :=
   (tendsto_inv_atTop_zero.comp (tendsto_exp_div_pow_atTop n)).congr fun x => by
     rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mul, div_eq_mul_inv, NormedSpace.exp_neg]
-#align real.tendsto_pow_mul_exp_neg_at_top_nhds_0 Real.tendsto_pow_mul_exp_neg_atTop_nhds_0
+#align real.tendsto_pow_mul_exp_neg_at_top_nhds_0 Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero
 -/
 
 #print Real.tendsto_mul_exp_add_div_pow_atTop /-

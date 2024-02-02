@@ -133,7 +133,7 @@ theorem log_stirlingSeq_diff_le_geo_sum (n : ℕ) :
     HasSum (fun k : ℕ => ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2) ^ k.succ)
       ((1 / (2 * n.succ + 1)) ^ 2 / (1 - (1 / (2 * n.succ + 1)) ^ 2)) :=
     by
-    have := (hasSum_geometric_of_lt_1 h_nonneg _).hMul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
+    have := (hasSum_geometric_of_lt_one h_nonneg _).hMul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
     · simp_rw [← pow_succ] at this 
       exact this
     rw [one_div, inv_pow]
@@ -262,7 +262,7 @@ theorem tendsto_self_div_two_mul_self_add_one :
     skip
     rw [one_div, ← add_zero (2 : ℝ)]
   refine'
-    (((tendsto_const_div_atTop_nhds_0_nat 1).const_add (2 : ℝ)).inv₀
+    (((tendsto_const_div_atTop_nhds_zero_nat 1).const_add (2 : ℝ)).inv₀
           ((add_zero (2 : ℝ)).symm ▸ two_ne_zero)).congr'
       (eventually_at_top.mpr ⟨1, fun n hn => _⟩)
   rw [add_div' (1 : ℝ) 2 n (cast_ne_zero.mpr (one_le_iff_ne_zero.mp hn)), inv_div]

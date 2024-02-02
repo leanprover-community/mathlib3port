@@ -169,7 +169,7 @@ theorem bernoulliFourierCoeff_eq {k : ℕ} (hk : k ≠ 0) (n : ℤ) :
   by
   rcases eq_or_ne n 0 with (rfl | hn)
   ·
-    rw [bernoulliFourierCoeff_zero hk, Int.cast_zero, MulZeroClass.mul_zero, zero_pow' _ hk,
+    rw [bernoulliFourierCoeff_zero hk, Int.cast_zero, MulZeroClass.mul_zero, zero_pow _ hk,
       div_zero]
   refine' Nat.le_induction _ (fun k hk h'k => _) k (nat.one_le_iff_ne_zero.mpr hk)
   · rw [bernoulliFourierCoeff_recurrence 1 hn]

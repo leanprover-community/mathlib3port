@@ -367,8 +367,8 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     rw [tendsto_iff_dist_tendsto_zero]
     refine' squeeze_zero (fun n => dist_nonneg) (fun n => (D n).1) _
     simpa using
-      (tendsto_pow_atTop_nhds_0_of_lt_1 (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _))
-            Icf').mul
+      (tendsto_pow_atTop_nhds_zero_of_lt_one
+            (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)) Icf').mul
         tendsto_const_nhds
   exact tendsto_nhds_unique T1 T2
 #align approximates_linear_on.surj_on_closed_ball_of_nonlinear_right_inverse ApproximatesLinearOn.surjOn_closedBall_of_nonlinearRightInverse

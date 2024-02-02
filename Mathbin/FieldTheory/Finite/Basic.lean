@@ -573,7 +573,7 @@ theorem even_card_iff_char_two : ringChar F = 2 ↔ Fintype.card F % 2 = 0 :=
   constructor
   · intro hF
     rw [hF]
-    simp only [Nat.bit0_mod_two, zero_pow', Ne.def, PNat.ne_zero, not_false_iff, Nat.zero_mod]
+    simp only [Nat.bit0_mod_two, zero_pow, Ne.def, PNat.ne_zero, not_false_iff, Nat.zero_mod]
   · rw [← Nat.even_iff, Nat.even_pow]
     rintro ⟨hev, hnz⟩
     rw [Nat.even_iff, Nat.mod_mod] at hev 

@@ -191,7 +191,7 @@ theorem subset_tangentCone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t) 
     simp [hn, (hd' n).1]
   · apply tendsto.prod_mk_nhds hy _
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
-    exact tendsto_pow_atTop_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
+    exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
 #align subset_tangent_cone_prod_left subset_tangentCone_prod_left
 -/
 
@@ -217,7 +217,7 @@ theorem subset_tangentCone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s)
     simp [hn, (hd' n).1]
   · apply tendsto.prod_mk_nhds _ hy
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
-    exact tendsto_pow_atTop_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
+    exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
 #align subset_tangent_cone_prod_right subset_tangentCone_prod_right
 -/
 
@@ -248,7 +248,7 @@ theorem mapsTo_tangentCone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _}
     · simp [hy]
     · suffices tendsto (fun n => c n • d' n j) at_top (𝓝 0) by simpa [hj]
       refine' squeeze_zero_norm (fun n => (hcd' n j hj).le) _
-      exact tendsto_pow_atTop_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
+      exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
 #align maps_to_tangent_cone_pi mapsTo_tangentCone_pi
 -/
 

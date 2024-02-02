@@ -326,7 +326,7 @@ theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ≥
   obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h
   exact
     Summable.of_nonneg_of_le (fun n => mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp
-      ((summable_geometric_of_lt_1 ha.1.le ha.2).hMul_left _)
+      ((summable_geometric_of_lt_one ha.1.le ha.2).hMul_left _)
 #align formal_multilinear_series.summable_norm_mul_pow FormalMultilinearSeries.summable_norm_mul_pow
 -/
 
@@ -374,7 +374,7 @@ theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
         (show (r : ℝ≥0∞) < p.radius from h.symm ▸ ENNReal.coe_lt_top)
     refine'
       Summable.of_norm_bounded (fun n => (C : ℝ) * a ^ n)
-        ((summable_geometric_of_lt_1 ha.1.le ha.2).hMul_left _) fun n => _
+        ((summable_geometric_of_lt_one ha.1.le ha.2).hMul_left _) fun n => _
     specialize hp n
     rwa [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg n))]
   · exact p.radius_eq_top_of_summable_norm
@@ -924,8 +924,8 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
       simp only [add_mul]
       have : ‖a‖ < 1 := by simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
       convert
-        (hasSum_coe_mul_geometric_of_norm_lt_1 this).add
-          ((hasSum_geometric_of_norm_lt_1 this).hMul_left 2)
+        (hasSum_coe_mul_geometric_of_norm_lt_one this).add
+          ((hasSum_geometric_of_norm_lt_one this).hMul_left 2)
     exact hA.norm_le_of_bounded hBL hAB
   suffices L =O[𝓟 (EMetric.ball (x, x) r')] fun y => ‖y - (x, x)‖ * ‖y.1 - y.2‖
     by
@@ -984,7 +984,7 @@ theorem HasFPowerSeriesOnBall.tendstoUniformlyOn {r' : ℝ≥0} (hf : HasFPowerS
   exact hf.uniform_geometric_approx h
   refine' Metric.tendstoUniformlyOn_iff.2 fun ε εpos => _
   have L : tendsto (fun n => (C : ℝ) * a ^ n) at_top (𝓝 ((C : ℝ) * 0)) :=
-    tendsto_const_nhds.mul (tendsto_pow_atTop_nhds_0_of_lt_1 ha.1.le ha.2)
+    tendsto_const_nhds.mul (tendsto_pow_atTop_nhds_zero_of_lt_one ha.1.le ha.2)
   rw [MulZeroClass.mul_zero] at L 
   refine' (L.eventually (gt_mem_nhds εpos)).mono fun n hn y hy => _
   rw [dist_eq_norm]
@@ -1130,7 +1130,7 @@ theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p :
     exact
       norm_eq_zero.mp
         (by
-          simpa only [fin0_apply_norm, norm_eq_zero, norm_zero, zero_pow', Ne.def, Nat.one_ne_zero,
+          simpa only [fin0_apply_norm, norm_eq_zero, norm_zero, zero_pow, Ne.def, Nat.one_ne_zero,
             not_false_iff, MulZeroClass.mul_zero, norm_le_zero_iff] using
             ht 0 (δε (Metric.mem_ball_self δ_pos)))
   · refine' Or.elim (em (y = 0)) (fun hy => by simpa only [hy] using p.map_zero) fun hy => _

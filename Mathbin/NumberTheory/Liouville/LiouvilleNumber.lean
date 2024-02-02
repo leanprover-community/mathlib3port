@@ -162,7 +162,7 @@ theorem remainder_lt' (n : ℕ) {m : ℝ} (m1 : 1 < m) :
         (∑' i, (1 / m) ^ i) * (1 / m ^ (n + 1)!) :=
       tsum_mul_right
     _ = (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) :=-- the series if the geometric series
-    by rw [tsum_geometric_of_lt_1 (by positivity) mi]
+    by rw [tsum_geometric_of_lt_one (by positivity) mi]
 #align liouville_number.remainder_lt' LiouvilleNumber.remainder_lt'
 -/
 

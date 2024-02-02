@@ -200,7 +200,8 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   refine' tendsto_at_top.2 fun ε εpos => _
   have : tendsto (fun n => 2 * B n) at_top (𝓝 (2 * 0)) :=
     ENNReal.Tendsto.const_mul
-      (ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1 <| by simp [ENNReal.one_lt_two]) (Or.inr <| by simp)
+      (ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one <| by simp [ENNReal.one_lt_two])
+      (Or.inr <| by simp)
   rw [MulZeroClass.mul_zero] at this 
   obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_atTop

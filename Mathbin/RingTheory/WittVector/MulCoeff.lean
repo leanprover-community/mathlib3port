@@ -294,7 +294,7 @@ theorem peval_polyOfInterest' (n : ℕ) (x y : 𝕎 k) :
   rw [peval_poly_of_interest]
   have : (p : k) = 0 := CharP.cast_eq_zero k p
   simp only [this, add_zero, MulZeroClass.zero_mul, Nat.succ_ne_zero, Ne.def, not_false_iff,
-    zero_pow']
+    zero_pow]
   have sum_zero_pow_mul_pow_p :
     ∀ y : 𝕎 k,
       ∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x) = y.coeff 0 ^ p ^ (n + 1) :=

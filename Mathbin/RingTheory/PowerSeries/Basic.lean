@@ -1951,7 +1951,7 @@ theorem rescale_zero : rescale 0 = (C R).comp (constantCoeff R) :=
     PowerSeries.coeff_mk _ _, coeff_C]
   split_ifs
   · simp only [h, one_mul, coeff_zero_eq_constant_coeff, pow_zero]
-  · rw [zero_pow' n h, MulZeroClass.zero_mul]
+  · rw [zero_pow n h, MulZeroClass.zero_mul]
 #align power_series.rescale_zero PowerSeries.rescale_zero
 -/
 

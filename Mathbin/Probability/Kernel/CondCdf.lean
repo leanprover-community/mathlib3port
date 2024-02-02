@@ -159,10 +159,10 @@ theorem ENNReal.ofReal_cinfi (f : α → ℝ) [Nonempty α] :
 #align ennreal.of_real_cinfi ENNReal.ofReal_cinfi
 -/
 
-#print lintegral_iInf_directed_of_measurable /-
+#print MeasureTheory.lintegral_iInf_directed_of_measurable /-
 -- todo: move to measure_theory/measurable_space
 /-- Monotone convergence for an infimum over a directed family and indexed by a countable type -/
-theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Countable β]
+theorem MeasureTheory.lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Countable β]
     {f : β → α → ℝ≥0∞} {μ : Measure α} (hμ : μ ≠ 0) (hf : ∀ b, Measurable (f b))
     (hf_int : ∀ b, ∫⁻ a, f b a ∂μ ≠ ∞) (h_directed : Directed (· ≥ ·) f) :
     ∫⁻ a, ⨅ b, f b a ∂μ = ⨅ b, ∫⁻ a, f b a ∂μ :=
@@ -191,7 +191,7 @@ theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Counta
       refine' le_antisymm (le_iInf fun b => _) (le_iInf fun n => _)
       · exact iInf_le_of_le (Encodable.encode b + 1) (lintegral_mono <| h_directed.sequence_le b)
       · exact iInf_le (fun b => ∫⁻ a, f b a ∂μ) _
-#align lintegral_infi_directed_of_measurable lintegral_iInf_directed_of_measurable
+#align lintegral_infi_directed_of_measurable MeasureTheory.lintegral_iInf_directed_of_measurable
 -/
 
 #print isPiSystem_Iic /-
@@ -1125,7 +1125,7 @@ theorem set_lintegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
   rw [h]
   simp_rw [ENNReal.ofReal_cinfi]
   have h_coe : ∀ b : { r' : ℚ // x < ↑r' }, (b : ℝ) = ((b : ℚ) : ℝ) := fun _ => by congr
-  rw [lintegral_iInf_directed_of_measurable hρ_zero fun q : { r' : ℚ // x < ↑r' } =>
+  rw [MeasureTheory.lintegral_iInf_directed_of_measurable hρ_zero fun q : { r' : ℚ // x < ↑r' } =>
       (measurable_cond_cdf ρ q).ennreal_ofReal]
   rotate_left
   · intro b

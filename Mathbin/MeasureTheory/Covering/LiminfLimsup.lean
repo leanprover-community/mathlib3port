@@ -240,7 +240,7 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     by
     refine'
       tendsto_nhds_within_iff.mpr
-        ⟨tendsto.if' hr tendsto_one_div_add_atTop_nhds_0_nat, eventually_of_forall fun i => _⟩
+        ⟨tendsto.if' hr tendsto_one_div_add_atTop_nhds_zero_nat, eventually_of_forall fun i => _⟩
     by_cases hi : 0 < r i
     · simp [hi, r']
     · simp only [hi, r', one_div, mem_Ioi, if_false, inv_pos]; positivity

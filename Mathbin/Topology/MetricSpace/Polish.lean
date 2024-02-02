@@ -400,7 +400,7 @@ theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α]
     by
     apply cauchySeq_of_le_tendsto_0 (fun n : ℕ => (1 / 2) ^ n) (fun n m N hNn hNm => _) _
     · exact (dist_le_dist_complete_copy (u n) (u m)).trans (hu N n m hNn hNm).le
-    · exact tendsto_pow_atTop_nhds_0_of_lt_1 (by norm_num) (by norm_num)
+    · exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
   obtain ⟨x, xlim⟩ : ∃ x, tendsto (fun n => (u n).1) at_top (𝓝 x) :=
     haveI : Nonempty α := ⟨(u 0).1⟩
     ⟨_, A.tendsto_lim⟩

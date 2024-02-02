@@ -187,7 +187,7 @@ theorem addHaar_submodule {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E
   obtain ⟨c, cpos, cone⟩ : ∃ c : ℝ, 0 < c ∧ c < 1 := ⟨1 / 2, by norm_num, by norm_num⟩
   have A : bounded (range fun n : ℕ => c ^ n • x) :=
     haveI : tendsto (fun n : ℕ => c ^ n • x) at_top (𝓝 ((0 : ℝ) • x)) :=
-      (tendsto_pow_atTop_nhds_0_of_lt_1 cpos.le cone).smul_const x
+      (tendsto_pow_atTop_nhds_zero_of_lt_one cpos.le cone).smul_const x
     bounded_range_of_tendsto _ this
   apply
     add_haar_eq_zero_of_disjoint_translates μ _ A _
@@ -422,7 +422,7 @@ theorem addHaar_smul (r : ℝ) (s : Set E) :
       pow_zero, Subsingleton.eq_univ_of_nonempty (singleton_nonempty (0 : E))]
   · haveI : Nontrivial E := nontrivial_of_finrank_pos (bot_lt_iff_ne_bot.2 h)
     simp only [h, MulZeroClass.zero_mul, ENNReal.ofReal_zero, abs_zero, Ne.def, not_false_iff,
-      zero_pow', measure_singleton]
+      zero_pow, measure_singleton]
 #align measure_theory.measure.add_haar_smul MeasureTheory.Measure.addHaar_smul
 -/
 

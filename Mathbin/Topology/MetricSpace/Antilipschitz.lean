@@ -303,7 +303,7 @@ protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : 
     (hK : AntilipschitzWith K f) (f_cont : Continuous f) (hf : Function.Surjective f) :
     ProperSpace β :=
   by
-  apply properSpace_of_compact_closedBall_of_le 0 fun x₀ r hr => _
+  apply ProperSpace.of_isCompact_closedBall_of_le 0 fun x₀ r hr => _
   let K := f ⁻¹' closed_ball x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont
   have B : bounded K := hK.bounded_preimage bounded_closed_ball

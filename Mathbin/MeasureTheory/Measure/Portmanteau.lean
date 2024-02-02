@@ -386,7 +386,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
   intro ε ε_pos μ_F_finite
   set δs := fun n : ℕ => (1 : ℝ) / (n + 1) with def_δs
   have δs_pos : ∀ n, 0 < δs n := fun n => Nat.one_div_pos_of_nat
-  have δs_lim : tendsto δs at_top (𝓝 0) := tendsto_one_div_add_atTop_nhds_0_nat
+  have δs_lim : tendsto δs at_top (𝓝 0) := tendsto_one_div_add_atTop_nhds_zero_nat
   have key₁ :=
     tendsto_lintegral_thickened_indicator_of_is_closed (μ : Measure Ω) F_closed δs_pos δs_lim
   have room₁ : (μ : Measure Ω) F < (μ : Measure Ω) F + ε / 2 := by
