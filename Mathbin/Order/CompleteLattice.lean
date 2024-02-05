@@ -414,10 +414,10 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
 -/
 
 #print CompleteLinearOrder /-
-/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure"
 #align complete_linear_order CompleteLinearOrder
 -/
 
@@ -1968,10 +1968,10 @@ theorem iSup_of_empty' {α ι} [SupSet α] [IsEmpty ι] (f : ι → α) : iSup f
 #align supr_of_empty' iSup_of_empty'
 -/
 
-#print iInf_of_empty' /-
-theorem iInf_of_empty' {α ι} [InfSet α] [IsEmpty ι] (f : ι → α) : iInf f = sInf (∅ : Set α) :=
+#print iInf_of_isEmpty /-
+theorem iInf_of_isEmpty {α ι} [InfSet α] [IsEmpty ι] (f : ι → α) : iInf f = sInf (∅ : Set α) :=
   congr_arg sInf (range_eq_empty f)
-#align infi_of_empty' iInf_of_empty'
+#align infi_of_empty' iInf_of_isEmpty
 -/
 
 #print iSup_of_empty /-

@@ -1066,37 +1066,37 @@ theorem succ_pos (a : Fin n) : (0 : Fin (n + 1)) < a.succ := by simp [lt_iff_coe
 #align fin.succ_pos Fin.succ_pos
 -/
 
-#print Fin.succEmbedding /-
+#print Fin.succEmb /-
 /-- `fin.succ` as an `order_embedding` -/
-def succEmbedding (n : ℕ) : Fin n ↪o Fin (n + 1) :=
+def succEmb (n : ℕ) : Fin n ↪o Fin (n + 1) :=
   OrderEmbedding.ofStrictMono Fin.succ fun ⟨i, hi⟩ ⟨j, hj⟩ h => succ_lt_succ h
-#align fin.succ_embedding Fin.succEmbedding
+#align fin.succ_embedding Fin.succEmb
 -/
 
-#print Fin.val_succEmbedding /-
+#print Fin.val_succEmb /-
 @[simp]
-theorem val_succEmbedding : ⇑(succEmbedding n) = Fin.succ :=
+theorem val_succEmb : ⇑(succEmb n) = Fin.succ :=
   rfl
-#align fin.coe_succ_embedding Fin.val_succEmbedding
+#align fin.coe_succ_embedding Fin.val_succEmb
 -/
 
 #print Fin.succ_le_succ_iff /-
 @[simp]
 theorem succ_le_succ_iff : a.succ ≤ b.succ ↔ a ≤ b :=
-  (succEmbedding n).le_iff_le
+  (succEmb n).le_iff_le
 #align fin.succ_le_succ_iff Fin.succ_le_succ_iff
 -/
 
 #print Fin.succ_lt_succ_iff /-
 @[simp]
 theorem succ_lt_succ_iff : a.succ < b.succ ↔ a < b :=
-  (succEmbedding n).lt_iff_lt
+  (succEmb n).lt_iff_lt
 #align fin.succ_lt_succ_iff Fin.succ_lt_succ_iff
 -/
 
 #print Fin.succ_injective /-
 theorem succ_injective (n : ℕ) : Injective (@Fin.succ n) :=
-  (succEmbedding n).Injective
+  (succEmb n).Injective
 #align fin.succ_injective Fin.succ_injective
 -/
 
@@ -2165,7 +2165,7 @@ theorem fin_two_eq_of_eq_zero_iff {a b : Fin 2} (h : a = 0 ↔ b = 0) : a = b :=
 #align fin.fin_two_eq_of_eq_zero_iff Fin.fin_two_eq_of_eq_zero_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Fin.reverseInduction /-
 /--
 Define `C i` by reverse induction on `i : fin (n + 1)` via induction on the underlying `nat` value.
@@ -2184,8 +2184,7 @@ def reverseInduction {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.last
         rw [tsub_lt_tsub_iff_left_of_le] <;> simp [*, Nat.succ_le_iff]
       have hi : i = Fin.castSuccEmb j := Fin.ext rfl
       cast (by rw [hi]) (hs _ (reverse_induction j.succ))
-termination_by
-  _ x => WellFounded.wrap (measure_wf fun i : Fin (n + 1) => n + 1 - i) x
+termination_by x => WellFounded.wrap (measure_wf fun i : Fin (n + 1) => n + 1 - i) x
 #align fin.reverse_induction Fin.reverseInduction
 -/
 
@@ -2482,7 +2481,7 @@ section SuccAbove
 #print Fin.strictMono_succAbove /-
 theorem strictMono_succAbove (p : Fin (n + 1)) :
     StrictMono fun i : Fin n => if i.cast_succ < p then i.cast_succ else i.succ :=
-  (castSuccEmb : Fin n ↪o _).StrictMono.ite (succEmbedding n).StrictMono
+  (castSuccEmb : Fin n ↪o _).StrictMono.ite (succEmb n).StrictMono
     (fun i j hij hj => lt_trans ((castSuccEmb : Fin n ↪o _).lt_iff_lt.2 hij) hj) fun i =>
     (castSucc_lt_succ i).le
 #align fin.succ_above_aux Fin.strictMono_succAbove

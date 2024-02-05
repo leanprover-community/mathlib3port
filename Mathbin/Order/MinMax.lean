@@ -273,14 +273,14 @@ theorem max_lt_max_right_iff : max a b < max a c ↔ b < c ∧ a < c :=
 
 #print max_idem /-
 /-- An instance asserting that `max a a = a` -/
-instance max_idem : IsIdempotent α max := by infer_instance
+instance max_idem : Std.IdempotentOp α max := by infer_instance
 #align max_idem max_idem
 -/
 
 #print min_idem /-
 -- short-circuit type class inference
 /-- An instance asserting that `min a a = a` -/
-instance min_idem : IsIdempotent α min := by infer_instance
+instance min_idem : Std.IdempotentOp α min := by infer_instance
 #align min_idem min_idem
 -/
 

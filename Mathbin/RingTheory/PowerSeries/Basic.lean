@@ -867,7 +867,7 @@ section Ring
 
 variable [Ring R]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print MvPowerSeries.inv.aux /-
 /-
 The inverse of a multivariate formal power series is defined by
@@ -881,8 +881,7 @@ protected noncomputable def inv.aux (a : R) (φ : MvPowerSeries σ R) : MvPowerS
   | n =>
     if n = 0 then a
     else -a * ∑ x in n.antidiagonal, if h : x.2 < n then coeff R x.1 φ * inv.aux x.2 else 0
-termination_by
-  _ x => WellFounded.wrap (Finsupp.lt_wf σ) x
+termination_by x => WellFounded.wrap (Finsupp.lt_wf σ) x
 #align mv_power_series.inv.aux MvPowerSeries.inv.aux
 -/
 

@@ -187,7 +187,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
-/- ./././Mathport/Syntax/Translate/Command.lean:380:30: infer kinds are unsupported in Lean 4: gave_up {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:377:30: infer kinds are unsupported in Lean 4: gave_up {} -/
 #print SlimCheck.TestResult /-
 /-- Result of trying to disprove `p`
 
@@ -267,7 +267,7 @@ instance (priority := 100) defaultPrintableProp {p} : PrintableProp p :=
 #align slim_check.default_printable_prop SlimCheck.defaultPrintableProp
 
 #print SlimCheck.Testable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testable (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Gen (TestResult p)

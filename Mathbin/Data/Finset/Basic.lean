@@ -1870,7 +1870,7 @@ theorem union_idempotent (s : Finset α) : s ∪ s = s :=
 #align finset.union_idempotent Finset.union_idempotent
 -/
 
-instance : IsIdempotent (Finset α) (· ∪ ·) :=
+instance : Std.IdempotentOp (Finset α) (· ∪ ·) :=
   ⟨union_idempotent⟩
 
 #print Finset.union_subset_left /-

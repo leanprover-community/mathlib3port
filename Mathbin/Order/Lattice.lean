@@ -287,9 +287,9 @@ theorem sup_idem : a ⊔ a = a := by apply le_antisymm <;> simp
 #align sup_idem sup_idem
 -/
 
-instance sup_isIdempotent : IsIdempotent α (· ⊔ ·) :=
+instance sup_idempotentOp : Std.IdempotentOp α (· ⊔ ·) :=
   ⟨@sup_idem _ _⟩
-#align sup_is_idempotent sup_isIdempotent
+#align sup_is_idempotent sup_idempotentOp
 
 #print sup_comm /-
 theorem sup_comm : a ⊔ b = b ⊔ a := by apply le_antisymm <;> simp
@@ -298,7 +298,7 @@ theorem sup_comm : a ⊔ b = b ⊔ a := by apply le_antisymm <;> simp
 
 instance sup_isCommutative : IsCommutative α (· ⊔ ·) :=
   ⟨@sup_comm _ _⟩
-#align sup_is_commutative sup_isCommutative
+#align sup_is_commutative sup_isCommutativeₓ
 
 #print sup_assoc /-
 theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
@@ -308,7 +308,7 @@ theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
 
 instance sup_isAssociative : IsAssociative α (· ⊔ ·) :=
   ⟨@sup_assoc _ _⟩
-#align sup_is_associative sup_isAssociative
+#align sup_is_associative sup_isAssociativeₓ
 
 #print sup_left_right_swap /-
 theorem sup_left_right_swap (a b c : α) : a ⊔ b ⊔ c = c ⊔ b ⊔ a := by
@@ -626,9 +626,9 @@ theorem inf_idem : a ⊓ a = a :=
 #align inf_idem inf_idem
 -/
 
-instance inf_isIdempotent : IsIdempotent α (· ⊓ ·) :=
+instance inf_idempotentOp : Std.IdempotentOp α (· ⊓ ·) :=
   ⟨@inf_idem _ _⟩
-#align inf_is_idempotent inf_isIdempotent
+#align inf_is_idempotent inf_idempotentOp
 
 #print inf_comm /-
 theorem inf_comm : a ⊓ b = b ⊓ a :=
@@ -638,7 +638,7 @@ theorem inf_comm : a ⊓ b = b ⊓ a :=
 
 instance inf_isCommutative : IsCommutative α (· ⊓ ·) :=
   ⟨@inf_comm _ _⟩
-#align inf_is_commutative inf_isCommutative
+#align inf_is_commutative inf_isCommutativeₓ
 
 #print inf_assoc /-
 theorem inf_assoc : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
@@ -648,7 +648,7 @@ theorem inf_assoc : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
 
 instance inf_isAssociative : IsAssociative α (· ⊓ ·) :=
   ⟨@inf_assoc _ _⟩
-#align inf_is_associative inf_isAssociative
+#align inf_is_associative inf_isAssociativeₓ
 
 #print inf_left_right_swap /-
 theorem inf_left_right_swap (a b c : α) : a ⊓ b ⊓ c = c ⊓ b ⊓ a :=

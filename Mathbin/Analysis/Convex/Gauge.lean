@@ -378,7 +378,7 @@ theorem gauge_norm_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (‖
   unfold gauge
   congr with θ
   rw [@IsROrC.real_smul_eq_coe_smul 𝕜]
-  refine' and_congr_right fun hθ => (hs.smul _).mem_smul_iff _
+  refine' and_congr_right fun hθ => (hs.smul _).smul_mem_iff _
   rw [IsROrC.norm_ofReal, abs_norm]
 #align gauge_norm_smul gauge_norm_smul
 -/

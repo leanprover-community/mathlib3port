@@ -204,16 +204,16 @@ theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_in
 -/
 
 #print Function.Semiconj₂.isIdempotent_right /-
-theorem isIdempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
-    IsIdempotent β gb :=
-  ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
+theorem isIdempotent_right [Std.IdempotentOp α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
+    Std.IdempotentOp β gb :=
+  ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @Std.IdempotentOp.idempotent _ ga]⟩
 #align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_right
 -/
 
 #print Function.Semiconj₂.isIdempotent_left /-
-theorem isIdempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
-    IsIdempotent α ga :=
-  ⟨fun x => h_inj <| by rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
+theorem isIdempotent_left [Std.IdempotentOp β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
+    Std.IdempotentOp α ga :=
+  ⟨fun x => h_inj <| by rw [h.eq, @Std.IdempotentOp.idempotent _ gb]⟩
 #align function.semiconj₂.is_idempotent_left Function.Semiconj₂.isIdempotent_left
 -/
 

@@ -70,7 +70,7 @@ end Cmd
 
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to
     simplify applications of equivalences and their inverses. -/
@@ -78,7 +78,7 @@ end Cmd
   equiv_rw_simp
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The simpset `field_simps` is used by the tactic `field_simp` to
     reduce an expression in a field to an expression of the form `n / d` where `n` and `d` are
@@ -87,25 +87,25 @@ end Cmd
   field_simps
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp set for functor_norm -/ register_simp_attr functor_norm
 
 attribute [functor_norm] bind_assoc pure_bind bind_pure
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simplification rules for ghost equations -/ register_simp_attr ghost_simps
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp set for integral rules. -/ register_simp_attr integral_simps
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp attribute for lemmas about `is_R_or_C` -/ register_simp_attr is_R_or_C_simps
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The simpset `mfld_simps` records several simp lemmas that are
     especially useful in manifolds. It is a subset of the whole set of simp lemmas, but it makes it
@@ -127,7 +127,7 @@ attribute [mfld_simps] id.def Function.id_comp Set.mem_setOf_eq and_true_iff tru
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
   register_simp_attr
   monad_norm
@@ -136,15 +136,15 @@ attribute [mfld_simps] id.def Function.id_comp Set.mem_setOf_eq and_true_iff tru
 attribute [monad_norm] functor_norm
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp lemmas for `nontriviality` tactic -/ register_simp_attr nontriviality
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp attribute for lemmas about `even` -/ register_simp_attr parity_simps
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The `push_cast` simp attribute uses `norm_cast` lemmas
     to move casts toward the leaf nodes of the expression. -/
@@ -152,7 +152,7 @@ attribute [monad_norm] functor_norm
   push_cast
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp set for if-then-else statements, used in the `split_ifs` tactic -/
   register_simp_attr
   split_if_reduction
@@ -160,7 +160,7 @@ attribute [monad_norm] functor_norm
 attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg if_congr
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The simpset `transport_simps` is used by the tactic `transport`
     to simplify certain expressions involving application of equivalences,
@@ -172,6 +172,6 @@ attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg if_congr
 attribute [transport_simps] cast_eq
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
 /-- simp set for the manipulation of typevec and arrow expressions -/ register_simp_attr typevec
 

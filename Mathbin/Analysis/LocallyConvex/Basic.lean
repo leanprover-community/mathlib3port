@@ -373,8 +373,8 @@ theorem Balanced.smul_eq (hA : Balanced 𝕜 A) (ha : ‖a‖ = 1) : a • A = A
 #align balanced.smul_eq Balanced.smul_eq
 -/
 
-#print Balanced.mem_smul_iff /-
-theorem Balanced.mem_smul_iff (hs : Balanced 𝕜 s) (h : ‖a‖ = ‖b‖) : a • x ∈ s ↔ b • x ∈ s :=
+#print Balanced.smul_mem_iff /-
+theorem Balanced.smul_mem_iff (hs : Balanced 𝕜 s) (h : ‖a‖ = ‖b‖) : a • x ∈ s ↔ b • x ∈ s :=
   by
   obtain rfl | hb := eq_or_ne b 0
   · rw [norm_zero, norm_eq_zero] at h 
@@ -385,7 +385,7 @@ theorem Balanced.mem_smul_iff (hs : Balanced 𝕜 s) (h : ‖a‖ = ‖b‖) : a
     · rw [← smul_eq_mul, smul_assoc]
       refine' hs.smul_mem _ h'
       simp [← h, ha]
-#align balanced.mem_smul_iff Balanced.mem_smul_iff
+#align balanced.mem_smul_iff Balanced.smul_mem_iff
 -/
 
 #print Balanced.neg_mem_iff /-
@@ -445,9 +445,9 @@ theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A :=
 #align absorbent_nhds_zero absorbent_nhds_zero
 -/
 
-#print balanced_zero_union_interior /-
+#print Balanced.zero_insert_interior /-
 /-- The union of `{0}` with the interior of a balanced set is balanced. -/
-theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ interior A) :=
+theorem Balanced.zero_insert_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ interior A) :=
   by
   intro a ha
   obtain rfl | h := eq_or_ne a 0
@@ -461,7 +461,7 @@ theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 
       calc
         a • interior A ⊆ interior (a • A) := (isOpenMap_smul₀ h).image_interior_subset A
         _ ⊆ interior A := interior_mono (hA _ ha)
-#align balanced_zero_union_interior balanced_zero_union_interior
+#align balanced_zero_union_interior Balanced.zero_insert_interior
 -/
 
 #print Balanced.interior /-
@@ -470,7 +470,7 @@ theorem Balanced.interior (hA : Balanced 𝕜 A) (h : (0 : E) ∈ interior A) :
     Balanced 𝕜 (interior A) :=
   by
   rw [← union_eq_self_of_subset_left (singleton_subset_iff.2 h)]
-  exact balanced_zero_union_interior hA
+  exact Balanced.zero_insert_interior hA
 #align balanced.interior Balanced.interior
 -/
 
@@ -507,8 +507,8 @@ theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
 
 variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
-#print balanced_convexHull_of_balanced /-
-theorem balanced_convexHull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
+#print Balanced.convexHull /-
+theorem Balanced.convexHull (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
   by
   suffices Convex ℝ {x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s}
     by
@@ -518,7 +518,7 @@ theorem balanced_convexHull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (
   intro x hx y hy u v hu hv huv a ha
   simp only [smul_add, ← smul_comm]
   exact convex_convexHull ℝ s (hx a ha) (hy a ha) hu hv huv
-#align balanced_convex_hull_of_balanced balanced_convexHull_of_balanced
+#align balanced_convex_hull_of_balanced Balanced.convexHull
 -/
 
 end NontriviallyNormedField

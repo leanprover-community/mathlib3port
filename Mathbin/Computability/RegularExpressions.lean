@@ -335,7 +335,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
 #align regular_expression.mul_rmatch_iff RegularExpression.mul_rmatch_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print RegularExpression.star_rmatch_iff /-
 theorem star_rmatch_iff (P : RegularExpression α) :
     ∀ x : List α, (star P).rmatch x ↔ ∃ S : List (List α), x = S.join ∧ ∀ t ∈ S, t ≠ [] ∧ P.rmatch t
@@ -394,8 +394,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
             refine' ⟨U, rfl, fun t h => helem t _⟩
             right
             assumption
-termination_by
-  _ x =>
+termination_by x =>
   WellFounded.wrap (r := fun L₁ L₂ : List _ => L₁.length < L₂.length) (InvImage.wf _ Nat.lt_wfRel) x
 #align regular_expression.star_rmatch_iff RegularExpression.star_rmatch_iff
 -/

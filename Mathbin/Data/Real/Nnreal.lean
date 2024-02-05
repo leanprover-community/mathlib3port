@@ -1246,7 +1246,7 @@ theorem iSup_of_not_bddAbove (hf : ¬BddAbove (range f)) : (⨆ i, f i) = 0 :=
 
 #print NNReal.iInf_empty /-
 theorem iInf_empty [IsEmpty ι] (f : ι → ℝ≥0) : (⨅ i, f i) = 0 := by rw [← NNReal.coe_eq, coe_infi];
-  exact Real.ciInf_empty _
+  exact Real.iInf_of_isEmpty _
 #align nnreal.infi_empty NNReal.iInf_empty
 -/
 

@@ -113,7 +113,7 @@ end CommSemiring
 variable (R)
 
 #print CharP /-
-/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -616,7 +616,7 @@ section CommRing
 
 variable [CommRing R] [IsReduced R] {R}
 
-#print CharP.pow_prime_pow_mul_eq_one_iff /-
+#print ExpChar.pow_prime_pow_mul_eq_one_iff /-
 @[simp]
 theorem pow_prime_pow_mul_eq_one_iff (p k m : ℕ) [Fact p.Prime] [CharP R p] (x : R) :
     x ^ (p ^ k * m) = 1 ↔ x ^ m = 1 :=
@@ -627,7 +627,7 @@ theorem pow_prime_pow_mul_eq_one_iff (p k m : ℕ) [Fact p.Prime] [CharP R p] (x
     · rw [pow_succ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at h 
       exact hk.1 (frobenius_inj R p h)
     · rw [pow_mul', h, one_pow]
-#align char_p.pow_prime_pow_mul_eq_one_iff CharP.pow_prime_pow_mul_eq_one_iff
+#align char_p.pow_prime_pow_mul_eq_one_iff ExpChar.pow_prime_pow_mul_eq_one_iff
 -/
 
 end CommRing

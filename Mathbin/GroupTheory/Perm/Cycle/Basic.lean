@@ -630,7 +630,7 @@ theorem IsCycle.swap_mul {α : Type _} [DecidableEq α] {f : Perm α} (hf : IsCy
 #align equiv.perm.is_cycle.swap_mul Equiv.Perm.IsCycle.swap_mul
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Equiv.Perm.IsCycle.sign /-
 theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.support.card
   | f => fun hf =>
@@ -658,8 +658,7 @@ theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.su
           rw [sign_mul, sign_swap hx.1.symm, (hf.swap_mul hx.1 h1).sign, ← h]
           simp only [pow_add, mul_one, neg_neg, one_mul, mul_neg, eq_self_iff_true, pow_one,
             neg_mul_neg]
-termination_by
-  _ x => WellFounded.wrap (measure_wf fun f => f.support.card) x
+termination_by x => WellFounded.wrap (measure_wf fun f => f.support.card) x
 #align equiv.perm.is_cycle.sign Equiv.Perm.IsCycle.sign
 -/
 

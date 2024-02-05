@@ -1669,7 +1669,7 @@ theorem dualAnnihilator_iInf_eq {ι : Type _} [Finite ι] (W : ι → Subspace K
   · intro α β h hyp W
     rw [← h.infi_comp, hyp (W ∘ h), ← h.supr_comp]
   · intro W
-    rw [iSup_of_empty', iInf_of_empty', sInf_empty, sSup_empty, dual_annihilator_top]
+    rw [iSup_of_empty', iInf_of_isEmpty, sInf_empty, sSup_empty, dual_annihilator_top]
   · intro α _ h W
     rw [iInf_option, iSup_option, dual_annihilator_inf_eq, h]
 #align subspace.dual_annihilator_infi_eq Subspace.dualAnnihilator_iInf_eq

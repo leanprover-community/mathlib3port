@@ -625,7 +625,7 @@ noncomputable instance : SupSet (Seminorm 𝕜 E)
         add_le' := fun x y => by
           rcases h with ⟨q, hq⟩
           obtain rfl | h := s.eq_empty_or_nonempty
-          · simp [Real.ciSup_empty]
+          · simp [Real.iSup_of_isEmpty]
           haveI : Nonempty ↥s := h.coe_sort
           simp only [iSup_apply]
           refine'

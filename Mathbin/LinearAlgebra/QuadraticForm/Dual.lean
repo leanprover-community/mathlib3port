@@ -32,7 +32,7 @@ section Semiring
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-#print BilinForm.dualProd /-
+#print LinearMap.dualProd /-
 /-- The symmetric bilinear form on `module.dual R M × M` defined as
 `B (f, x) (g, y) = f y + g x`. -/
 @[simps]
@@ -42,12 +42,12 @@ def dualProd : BilinForm R (Module.Dual R M × M) :=
         (LinearMap.fst R (Module.Dual R M) M) +
       ((LinearMap.applyₗ.comp (LinearMap.snd R (Module.Dual R M) M)).compl₂
           (LinearMap.fst R (Module.Dual R M) M)).flip
-#align bilin_form.dual_prod BilinForm.dualProd
+#align bilin_form.dual_prod LinearMap.dualProd
 -/
 
-#print BilinForm.isSymm_dualProd /-
+#print LinearMap.isSymm_dualProd /-
 theorem isSymm_dualProd : (dualProd R M).IsSymm := fun x y => add_comm _ _
-#align bilin_form.is_symm_dual_prod BilinForm.isSymm_dualProd
+#align bilin_form.is_symm_dual_prod LinearMap.isSymm_dualProd
 -/
 
 end Semiring
@@ -56,8 +56,8 @@ section Ring
 
 variable [CommRing R] [AddCommGroup M] [Module R M]
 
-#print BilinForm.nondenerate_dualProd /-
-theorem nondenerate_dualProd :
+#print LinearMap.separatingLeft_dualProd /-
+theorem separatingLeft_dualProd :
     (dualProd R M).Nondegenerate ↔ Function.Injective (Module.Dual.eval R M) := by
   classical
   rw [nondegenerate_iff_ker_eq_bot]
@@ -79,7 +79,7 @@ theorem nondenerate_dualProd :
   rw [this, LinearMap.coe_prodMap]
   refine' prod.map_injective.trans _
   exact and_iff_right Function.injective_id
-#align bilin_form.nondenerate_dual_prod BilinForm.nondenerate_dualProd
+#align bilin_form.nondenerate_dual_prod LinearMap.separatingLeft_dualProd
 -/
 
 end Ring
@@ -102,19 +102,19 @@ def dualProd : QuadraticForm R (Module.Dual R M × M)
     rw [Prod.smul_fst, Prod.smul_snd, LinearMap.smul_apply, LinearMap.map_smul, smul_eq_mul,
       smul_eq_mul, mul_assoc]
   exists_companion' :=
-    ⟨BilinForm.dualProd R M, fun p q => by
+    ⟨LinearMap.dualProd R M, fun p q => by
       rw [BilinForm.dualProd_apply, Prod.fst_add, Prod.snd_add, LinearMap.add_apply, map_add,
         map_add, add_right_comm _ (q.1 q.2), add_comm (q.1 p.2) (p.1 q.2), ← add_assoc, ←
         add_assoc]⟩
 #align quadratic_form.dual_prod QuadraticForm.dualProd
 -/
 
-#print BilinForm.dualProd.toQuadraticForm /-
+#print LinearMap.dualProd.toQuadraticForm /-
 @[simp]
-theorem BilinForm.dualProd.toQuadraticForm :
-    (BilinForm.dualProd R M).toQuadraticForm = 2 • dualProd R M :=
+theorem LinearMap.dualProd.toQuadraticForm :
+    (LinearMap.dualProd R M).toQuadraticForm = 2 • dualProd R M :=
   ext fun a => (two_nsmul _).symm
-#align bilin_form.dual_prod.to_quadratic_form BilinForm.dualProd.toQuadraticForm
+#align bilin_form.dual_prod.to_quadratic_form LinearMap.dualProd.toQuadraticForm
 -/
 
 variable {R M N}

@@ -390,7 +390,7 @@ def merge : List α → List α → List α
 #align list.merge List.merge
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print List.mergeSort /-
 /-- Implementation of a merge sort algorithm to sort a list. -/
 def mergeSort : List α → List α
@@ -400,8 +400,7 @@ def mergeSort : List α → List α
     cases' e : split (a :: b :: l) with l₁ l₂
     cases' length_split_lt e with h₁ h₂
     exact merge r (merge_sort l₁) (merge_sort l₂)
-termination_by
-  _ x => WellFounded.wrap (InvImage.wf length Nat.lt_wfRel) x
+termination_by x => WellFounded.wrap (InvImage.wf length Nat.lt_wfRel) x
 #align list.merge_sort List.mergeSort
 -/
 
@@ -434,7 +433,7 @@ theorem perm_merge : ∀ l l' : List α, merge r l l' ~ l ++ l'
 #align list.perm_merge List.perm_merge
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print List.perm_mergeSort /-
 theorem perm_mergeSort : ∀ l : List α, mergeSort r l ~ l
   | [] => by simp [merge_sort]
@@ -445,8 +444,7 @@ theorem perm_mergeSort : ∀ l : List α, mergeSort r l ~ l
     rw [merge_sort_cons_cons r e]
     apply (perm_merge r _ _).trans
     exact ((perm_merge_sort l₁).append (perm_merge_sort l₂)).trans (perm_split e).symm
-termination_by
-  _ x => WellFounded.wrap (InvImage.wf length Nat.lt_wfRel) x
+termination_by x => WellFounded.wrap (InvImage.wf length Nat.lt_wfRel) x
 #align list.perm_merge_sort List.perm_mergeSort
 -/
 
@@ -491,7 +489,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
 
 variable (r)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print List.sorted_mergeSort /-
 theorem sorted_mergeSort : ∀ l : List α, Sorted r (mergeSort r l)
   | [] => by simp [merge_sort]
@@ -501,8 +499,7 @@ theorem sorted_mergeSort : ∀ l : List α, Sorted r (mergeSort r l)
     cases' length_split_lt e with h₁ h₂
     rw [merge_sort_cons_cons r e]
     exact (sorted_merge_sort l₁).merge (sorted_merge_sort l₂)
-termination_by
-  _ x => WellFounded.wrap (InvImage.wf length Nat.lt_wfRel) x
+termination_by x => WellFounded.wrap (InvImage.wf length Nat.lt_wfRel) x
 #align list.sorted_merge_sort List.sorted_mergeSort
 -/
 

@@ -57,12 +57,12 @@ open Function Rat Real Set
 open scoped Classical Pointwise
 
 #print ConditionallyCompleteLinearOrderedField /-
-/- ./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
 @[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-    "./././Mathport/Syntax/Translate/Command.lean:433:11: unsupported: advanced extends in structure",
+    "./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure",
     ConditionallyCompleteLinearOrder α
 #align conditionally_complete_linear_ordered_field ConditionallyCompleteLinearOrderedField
 -/

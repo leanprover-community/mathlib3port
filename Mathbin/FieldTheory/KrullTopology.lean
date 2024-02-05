@@ -108,7 +108,7 @@ def fixedByFinite (K L : Type _) [Field K] [Field L] [Algebra K L] : Set (Subgro
 /-- For an field extension `L/K`, the intermediate field `K` is finite-dimensional over `K` -/
 theorem IntermediateField.finiteDimensional_bot (K L : Type _) [Field K] [Field L] [Algebra K L] :
     FiniteDimensional K (⊥ : IntermediateField K L) :=
-  finiteDimensional_of_rank_eq_one IntermediateField.rank_bot
+  FiniteDimensional.of_rank_eq_one IntermediateField.rank_bot
 #align intermediate_field.finite_dimensional_bot IntermediateField.finiteDimensional_bot
 -/
 

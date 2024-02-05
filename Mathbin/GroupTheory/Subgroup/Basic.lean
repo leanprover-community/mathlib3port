@@ -2292,7 +2292,7 @@ end Subgroup
 namespace AddSubgroup
 
 #print AddSubgroup.Normal /-
-/- ./././Mathport/Syntax/Translate/Command.lean:404:30: infer kinds are unsupported in Lean 4: #[`conj_mem] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`conj_mem] [] -/
 /-- An add_subgroup is normal if whenever `n ∈ H`, then `g + n - g ∈ H` for every `g : G` -/
 structure Normal (H : AddSubgroup A) : Prop where
   conj_mem : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H
@@ -2820,21 +2820,21 @@ attribute [class] AddSubgroup.IsCommutative
 #print Subgroup.IsCommutative.commGroup /-
 /-- A commutative subgroup is commutative. -/
 @[to_additive "A commutative subgroup is commutative."]
-instance IsCommutative.commGroup [h : H.IsCommutative] : CommGroup H :=
+instance IsCommutative.commGroup [h : H.IsCommutativeₓ] : CommGroup H :=
   { H.toGroup with mul_comm := h.is_comm.comm }
 #align subgroup.is_commutative.comm_group Subgroup.IsCommutative.commGroup
 #align add_subgroup.is_commutative.add_comm_group AddSubgroup.IsCommutative.addCommGroup
 -/
 
 #print Subgroup.center.isCommutative /-
-instance center.isCommutative : (center G).IsCommutative :=
+instance center.isCommutative : (center G).IsCommutativeₓ :=
   ⟨⟨fun a b => Subtype.ext (b.2 a)⟩⟩
 #align subgroup.center.is_commutative Subgroup.center.isCommutative
 -/
 
 #print Subgroup.map_isCommutative /-
 @[to_additive]
-instance map_isCommutative (f : G →* G') [H.IsCommutative] : (H.map f).IsCommutative :=
+instance map_isCommutative (f : G →* G') [H.IsCommutativeₓ] : (H.map f).IsCommutativeₓ :=
   ⟨⟨by
       rintro ⟨-, a, ha, rfl⟩ ⟨-, b, hb, rfl⟩
       rw [Subtype.ext_iff, coe_mul, coe_mul, Subtype.coe_mk, Subtype.coe_mk, ← map_mul, ← map_mul]
@@ -2845,8 +2845,8 @@ instance map_isCommutative (f : G →* G') [H.IsCommutative] : (H.map f).IsCommu
 
 #print Subgroup.comap_injective_isCommutative /-
 @[to_additive]
-theorem comap_injective_isCommutative {f : G' →* G} (hf : Injective f) [H.IsCommutative] :
-    (H.comap f).IsCommutative :=
+theorem comap_injective_isCommutative {f : G' →* G} (hf : Injective f) [H.IsCommutativeₓ] :
+    (H.comap f).IsCommutativeₓ :=
   ⟨⟨fun a b =>
       Subtype.ext
         (by
@@ -2859,7 +2859,7 @@ theorem comap_injective_isCommutative {f : G' →* G} (hf : Injective f) [H.IsCo
 
 #print Subgroup.subgroupOf_isCommutative /-
 @[to_additive]
-instance subgroupOf_isCommutative [H.IsCommutative] : (H.subgroupOf K).IsCommutative :=
+instance subgroupOf_isCommutative [H.IsCommutativeₓ] : (H.subgroupOf K).IsCommutativeₓ :=
   H.comap_injective_isCommutative Subtype.coe_injective
 #align subgroup.subgroup_of_is_commutative Subgroup.subgroupOf_isCommutative
 #align add_subgroup.add_subgroup_of_is_commutative AddSubgroup.addSubgroupOf_isCommutative
@@ -2867,7 +2867,7 @@ instance subgroupOf_isCommutative [H.IsCommutative] : (H.subgroupOf K).IsCommuta
 
 #print Subgroup.le_centralizer_iff_isCommutative /-
 @[to_additive]
-theorem le_centralizer_iff_isCommutative : K ≤ centralizer K ↔ K.IsCommutative :=
+theorem le_centralizer_iff_isCommutative : K ≤ centralizer K ↔ K.IsCommutativeₓ :=
   ⟨fun h => ⟨⟨fun x y => Subtype.ext (h y.2 x x.2)⟩⟩, fun h x hx y hy =>
     congr_arg coe (h.1.1 ⟨y, hy⟩ ⟨x, hx⟩)⟩
 #align subgroup.le_centralizer_iff_is_commutative Subgroup.le_centralizer_iff_isCommutative
@@ -2876,7 +2876,7 @@ theorem le_centralizer_iff_isCommutative : K ≤ centralizer K ↔ K.IsCommutati
 
 #print Subgroup.le_centralizer /-
 @[to_additive]
-theorem le_centralizer [h : H.IsCommutative] : H ≤ centralizer H :=
+theorem le_centralizer [h : H.IsCommutativeₓ] : H ≤ centralizer H :=
   le_centralizer_iff_isCommutative.mpr h
 #align subgroup.le_centralizer Subgroup.le_centralizer
 #align add_subgroup.le_centralizer AddSubgroup.le_centralizer

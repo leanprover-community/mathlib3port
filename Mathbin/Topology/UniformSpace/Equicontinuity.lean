@@ -277,14 +277,14 @@ theorem equicontinuous_iff_range {F : ι → X → α} :
 #align equicontinuous_iff_range equicontinuous_iff_range
 -/
 
-#print uniformEquicontinuous_at_iff_range /-
+#print uniformEquicontinuous_iff_range /-
 /-- A family `𝓕 : ι → β → α` is uniformly equicontinuous iff `range 𝓕` is uniformly equicontinuous,
 i.e the family `coe : range F → β → α` is uniformly equicontinuous. -/
-theorem uniformEquicontinuous_at_iff_range {F : ι → β → α} :
+theorem uniformEquicontinuous_iff_range {F : ι → β → α} :
     UniformEquicontinuous F ↔ UniformEquicontinuous (coe : range F → β → α) :=
   ⟨fun h => by rw [← comp_range_splitting F] <;> exact h.comp _, fun h =>
     h.comp (rangeFactorization F)⟩
-#align uniform_equicontinuous_at_iff_range uniformEquicontinuous_at_iff_range
+#align uniform_equicontinuous_at_iff_range uniformEquicontinuous_iff_range
 -/
 
 section
@@ -456,13 +456,13 @@ theorem EquicontinuousAt.closure' {A : Set Y} {u : Y → X → α} {x₀ : X}
 #align equicontinuous_at.closure' EquicontinuousAt.closure'
 -/
 
-#print EquicontinuousAt.closure /-
+#print Set.EquicontinuousAt.closure /-
 /-- If a set of functions is equicontinuous at some `x₀`, its closure for the product topology is
 also equicontinuous at `x₀`. -/
-theorem EquicontinuousAt.closure {A : Set <| X → α} {x₀ : X} (hA : A.EquicontinuousAt x₀) :
+theorem Set.EquicontinuousAt.closure {A : Set <| X → α} {x₀ : X} (hA : A.EquicontinuousAt x₀) :
     (closure A).EquicontinuousAt x₀ :=
   @EquicontinuousAt.closure' _ _ _ _ _ _ _ id _ hA continuous_id
-#align equicontinuous_at.closure EquicontinuousAt.closure
+#align equicontinuous_at.closure Set.EquicontinuousAt.closure
 -/
 
 #print Filter.Tendsto.continuousAt_of_equicontinuousAt /-
@@ -487,21 +487,21 @@ theorem Equicontinuous.closure' {A : Set Y} {u : Y → X → α}
 #align equicontinuous.closure' Equicontinuous.closure'
 -/
 
-#print Equicontinuous.closure /-
+#print Set.Equicontinuous.closure /-
 /-- If a set of functions is equicontinuous, its closure for the product topology is also
 equicontinuous. -/
-theorem Equicontinuous.closure {A : Set <| X → α} (hA : A.Equicontinuous) :
+theorem Set.Equicontinuous.closure {A : Set <| X → α} (hA : A.Equicontinuous) :
     (closure A).Equicontinuous := fun x => (hA x).closure
-#align equicontinuous.closure Equicontinuous.closure
+#align equicontinuous.closure Set.Equicontinuous.closure
 -/
 
-#print Filter.Tendsto.continuous_of_equicontinuousAt /-
+#print Filter.Tendsto.continuous_of_equicontinuous /-
 /-- If `𝓕 : ι → X → α` tends to `f : X → α` *pointwise* along some nontrivial filter, and if the
 family `𝓕` is equicontinuous, then the limit is continuous. -/
-theorem Filter.Tendsto.continuous_of_equicontinuousAt {l : Filter ι} [l.ne_bot] {F : ι → X → α}
+theorem Filter.Tendsto.continuous_of_equicontinuous {l : Filter ι} [l.ne_bot] {F : ι → X → α}
     {f : X → α} (h₁ : Tendsto F l (𝓝 f)) (h₂ : Equicontinuous F) : Continuous f :=
   continuous_iff_continuousAt.mpr fun x => h₁.continuousAt_of_equicontinuousAt (h₂ x)
-#align filter.tendsto.continuous_of_equicontinuous_at Filter.Tendsto.continuous_of_equicontinuousAt
+#align filter.tendsto.continuous_of_equicontinuous_at Filter.Tendsto.continuous_of_equicontinuous
 -/
 
 #print UniformEquicontinuous.closure' /-
@@ -524,13 +524,13 @@ theorem UniformEquicontinuous.closure' {A : Set Y} {u : Y → β → α}
 #align uniform_equicontinuous.closure' UniformEquicontinuous.closure'
 -/
 
-#print UniformEquicontinuous.closure /-
+#print Set.UniformEquicontinuous.closure /-
 /-- If a set of functions is uniformly equicontinuous, its closure for the product topology is also
 uniformly equicontinuous. -/
-theorem UniformEquicontinuous.closure {A : Set <| β → α} (hA : A.UniformEquicontinuous) :
+theorem Set.UniformEquicontinuous.closure {A : Set <| β → α} (hA : A.UniformEquicontinuous) :
     (closure A).UniformEquicontinuous :=
   @UniformEquicontinuous.closure' _ _ _ _ _ _ _ id hA continuous_id
-#align uniform_equicontinuous.closure UniformEquicontinuous.closure
+#align uniform_equicontinuous.closure Set.UniformEquicontinuous.closure
 -/
 
 #print Filter.Tendsto.uniformContinuous_of_uniformEquicontinuous /-
@@ -539,7 +539,7 @@ family `𝓕` is uniformly equicontinuous, then the limit is uniformly continuou
 theorem Filter.Tendsto.uniformContinuous_of_uniformEquicontinuous {l : Filter ι} [l.ne_bot]
     {F : ι → β → α} {f : β → α} (h₁ : Tendsto F l (𝓝 f)) (h₂ : UniformEquicontinuous F) :
     UniformContinuous f :=
-  (uniformEquicontinuous_at_iff_range.mp h₂).closure.UniformContinuous
+  (uniformEquicontinuous_iff_range.mp h₂).closure.UniformContinuous
     ⟨f, mem_closure_of_tendsto h₁ <| eventually_of_forall mem_range_self⟩
 #align filter.tendsto.uniform_continuous_of_uniform_equicontinuous Filter.Tendsto.uniformContinuous_of_uniformEquicontinuous
 -/

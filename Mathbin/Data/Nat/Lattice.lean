@@ -75,7 +75,7 @@ theorem sInf_empty : sInf ∅ = 0 := by rw [Inf_eq_zero]; right; rfl
 #print Nat.iInf_of_empty /-
 @[simp]
 theorem iInf_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : iInf f = 0 := by
-  rw [iInf_of_empty', sInf_empty]
+  rw [iInf_of_isEmpty, sInf_empty]
 #align nat.infi_of_empty Nat.iInf_of_empty
 -/
 

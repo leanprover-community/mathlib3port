@@ -428,11 +428,13 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
 #align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
 -/
 
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
 #print Lists.Equiv.decidable /-
 mutual
   @[instance]
@@ -460,6 +462,7 @@ mutual
             default_dec_tac
         subset.decidable l₂ l₁
       exact decidable_of_iff' _ equiv.antisymm_iff
+  termination_by x => WellFounded.wrap (measure_wf equiv.decidable_meas) x
   @[instance]
   def Subset.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists' α true, Decidable (l₁ ⊆ l₂)
     | Lists'.nil, l₂ => isTrue Subset.nil
@@ -480,6 +483,7 @@ mutual
             default_dec_tac
         subset.decidable l₁ l₂
       exact decidable_of_iff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
+  termination_by x => WellFounded.wrap (measure_wf equiv.decidable_meas) x
   @[instance]
   def mem.decidable [DecidableEq α] : ∀ (a : Lists α) (l : Lists' α true), Decidable (a ∈ l)
     | a, Lists'.nil => isFalse <| by rintro ⟨_, ⟨⟩, _⟩
@@ -501,9 +505,8 @@ mutual
         mem.decidable a l₂
       refine' decidable_of_iff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
       rw [← Lists'.mem_cons]; rfl
+  termination_by x => WellFounded.wrap (measure_wf equiv.decidable_meas) x
 end
-termination_by
-  _ x => WellFounded.wrap (measure_wf equiv.decidable_meas) x
 #align lists.equiv.decidable Lists.Equiv.decidable
 #align lists.subset.decidable Lists.Subset.decidable
 #align lists.mem.decidable Lists.mem.decidable

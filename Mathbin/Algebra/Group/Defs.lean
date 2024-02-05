@@ -507,16 +507,16 @@ theorem mul_one : ∀ a : M, a * 1 = a :=
 -/
 
 @[to_additive]
-instance MulOneClass.to_isLeftId : IsLeftId M (· * ·) 1 :=
+instance MulOneClass.to_lawfulLeftIdentity : Std.LawfulLeftIdentity M (· * ·) 1 :=
   ⟨MulOneClass.one_hMul⟩
-#align mul_one_class.to_is_left_id MulOneClass.to_isLeftId
-#align add_zero_class.to_is_left_id AddZeroClass.to_isLeftId
+#align mul_one_class.to_is_left_id MulOneClass.to_lawfulLeftIdentityₓ
+#align add_zero_class.to_is_left_id AddZeroClass.to_lawfulLeftIdentityₓ
 
 @[to_additive]
-instance MulOneClass.to_isRightId : IsRightId M (· * ·) 1 :=
+instance MulOneClass.to_lawfulRightIdentity : Std.LawfulRightIdentity M (· * ·) 1 :=
   ⟨MulOneClass.hMul_one⟩
-#align mul_one_class.to_is_right_id MulOneClass.to_isRightId
-#align add_zero_class.to_is_right_id AddZeroClass.to_isRightId
+#align mul_one_class.to_is_right_id MulOneClass.to_lawfulRightIdentityₓ
+#align add_zero_class.to_is_right_id AddZeroClass.to_lawfulRightIdentityₓ
 
 end MulOneClass
 

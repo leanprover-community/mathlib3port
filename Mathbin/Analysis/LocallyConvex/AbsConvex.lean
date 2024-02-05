@@ -64,7 +64,7 @@ theorem nhds_basis_abs_convex :
       ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
   refine' ⟨convexHull ℝ (balancedCore 𝕜 s), _, convexHull_min (balancedCore_subset s) hs.2⟩
   refine' ⟨Filter.mem_of_superset (balancedCore_mem_nhds_zero hs.1) (subset_convexHull ℝ _), _⟩
-  refine' ⟨balanced_convexHull_of_balanced (balancedCore_balanced s), _⟩
+  refine' ⟨Balanced.convexHull (balancedCore_balanced s), _⟩
   exact convex_convexHull ℝ (balancedCore 𝕜 s)
 #align nhds_basis_abs_convex nhds_basis_abs_convex
 -/

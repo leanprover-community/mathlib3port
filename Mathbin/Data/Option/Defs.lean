@@ -173,22 +173,24 @@ instance liftOrGet_isAssociative (f : α → α → α) [h : IsAssociative α f]
 -/
 
 #print Option.liftOrGet_isIdempotent /-
-instance liftOrGet_isIdempotent (f : α → α → α) [h : IsIdempotent α f] :
-    IsIdempotent (Option α) (liftOrGet f) :=
+instance liftOrGet_isIdempotent (f : α → α → α) [h : Std.IdempotentOp α f] :
+    Std.IdempotentOp (Option α) (liftOrGet f) :=
   ⟨fun a => by cases a <;> simp [lift_or_get, h.idempotent]⟩
 #align option.lift_or_get_idem Option.liftOrGet_isIdempotent
 -/
 
-#print Option.liftOrGet_isLeftId /-
-instance liftOrGet_isLeftId (f : α → α → α) : IsLeftId (Option α) (liftOrGet f) none :=
+#print Option.liftOrGet_isId /-
+instance liftOrGet_isId (f : α → α → α) : Std.LawfulLeftIdentity (Option α) (liftOrGet f) none :=
   ⟨fun a => by cases a <;> simp [lift_or_get]⟩
-#align option.lift_or_get_is_left_id Option.liftOrGet_isLeftId
+#align option.lift_or_get_is_left_id Option.liftOrGet_isId
 -/
 
-#print Option.liftOrGet_isRightId /-
-instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (liftOrGet f) none :=
+/- warning: option.lift_or_get_is_right_id clashes with option.lift_or_get_is_left_id -> Option.liftOrGet_isId
+Case conversion may be inaccurate. Consider using '#align option.lift_or_get_is_right_id Option.liftOrGet_isIdₓ'. -/
+#print Option.liftOrGet_isId /-
+instance liftOrGet_isId (f : α → α → α) : Std.LawfulRightIdentity (Option α) (liftOrGet f) none :=
   ⟨fun a => by cases a <;> simp [lift_or_get]⟩
-#align option.lift_or_get_is_right_id Option.liftOrGet_isRightId
+#align option.lift_or_get_is_right_id Option.liftOrGet_isId
 -/
 
 #print Option.Rel /-

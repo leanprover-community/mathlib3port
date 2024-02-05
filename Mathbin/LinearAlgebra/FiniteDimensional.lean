@@ -224,26 +224,24 @@ theorem finrank_of_infinite_dimensional (h : ¬FiniteDimensional K V) : finrank 
 #align finite_dimensional.finrank_of_infinite_dimensional FiniteDimensional.finrank_of_infinite_dimensional
 -/
 
-#print FiniteDimensional.finiteDimensional_of_finrank /-
-theorem finiteDimensional_of_finrank (h : 0 < finrank K V) : FiniteDimensional K V := by
-  contrapose h; simp [finrank_of_infinite_dimensional h]
-#align finite_dimensional.finite_dimensional_of_finrank FiniteDimensional.finiteDimensional_of_finrank
+#print FiniteDimensional.of_finrank_pos /-
+theorem of_finrank_pos (h : 0 < finrank K V) : FiniteDimensional K V := by contrapose h;
+  simp [finrank_of_infinite_dimensional h]
+#align finite_dimensional.finite_dimensional_of_finrank FiniteDimensional.of_finrank_pos
 -/
 
-#print FiniteDimensional.finiteDimensional_of_finrank_eq_succ /-
-theorem finiteDimensional_of_finrank_eq_succ {n : ℕ} (hn : finrank K V = n.succ) :
-    FiniteDimensional K V :=
-  finiteDimensional_of_finrank <| by rw [hn] <;> exact n.succ_pos
-#align finite_dimensional.finite_dimensional_of_finrank_eq_succ FiniteDimensional.finiteDimensional_of_finrank_eq_succ
+#print FiniteDimensional.of_finrank_eq_succ /-
+theorem of_finrank_eq_succ {n : ℕ} (hn : finrank K V = n.succ) : FiniteDimensional K V :=
+  of_finrank_pos <| by rw [hn] <;> exact n.succ_pos
+#align finite_dimensional.finite_dimensional_of_finrank_eq_succ FiniteDimensional.of_finrank_eq_succ
 -/
 
-#print FiniteDimensional.fact_finiteDimensional_of_finrank_eq_succ /-
+#print FiniteDimensional.of_fact_finrank_eq_succ /-
 /-- We can infer `finite_dimensional K V` in the presence of `[fact (finrank K V = n + 1)]`. Declare
 this as a local instance where needed. -/
-theorem fact_finiteDimensional_of_finrank_eq_succ (n : ℕ) [Fact (finrank K V = n + 1)] :
-    FiniteDimensional K V :=
-  finiteDimensional_of_finrank <| by convert Nat.succ_pos n <;> apply Fact.out
-#align finite_dimensional.fact_finite_dimensional_of_finrank_eq_succ FiniteDimensional.fact_finiteDimensional_of_finrank_eq_succ
+theorem of_fact_finrank_eq_succ (n : ℕ) [Fact (finrank K V = n + 1)] : FiniteDimensional K V :=
+  of_finrank_pos <| by convert Nat.succ_pos n <;> apply Fact.out
+#align finite_dimensional.fact_finite_dimensional_of_finrank_eq_succ FiniteDimensional.of_fact_finrank_eq_succ
 -/
 
 #print FiniteDimensional.finiteDimensional_iff_of_rank_eq_nsmul /-
@@ -713,26 +711,26 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 open FiniteDimensional
 
-#print finiteDimensional_of_rank_eq_nat /-
-theorem finiteDimensional_of_rank_eq_nat {n : ℕ} (h : Module.rank K V = n) :
+#print FiniteDimensional.of_rank_eq_nat /-
+theorem FiniteDimensional.of_rank_eq_nat {n : ℕ} (h : Module.rank K V = n) :
     FiniteDimensional K V :=
   by
   rw [FiniteDimensional, ← IsNoetherian.iff_fg, IsNoetherian.iff_rank_lt_aleph0, h]
   exact nat_lt_aleph_0 n
-#align finite_dimensional_of_rank_eq_nat finiteDimensional_of_rank_eq_nat
+#align finite_dimensional_of_rank_eq_nat FiniteDimensional.of_rank_eq_nat
 -/
 
-#print finiteDimensional_of_rank_eq_zero /-
+#print FiniteDimensional.of_rank_eq_zero /-
 -- TODO: generalize to free modules over general rings.
-theorem finiteDimensional_of_rank_eq_zero (h : Module.rank K V = 0) : FiniteDimensional K V :=
-  finiteDimensional_of_rank_eq_nat <| h.trans Nat.cast_zero.symm
-#align finite_dimensional_of_rank_eq_zero finiteDimensional_of_rank_eq_zero
+theorem FiniteDimensional.of_rank_eq_zero (h : Module.rank K V = 0) : FiniteDimensional K V :=
+  FiniteDimensional.of_rank_eq_nat <| h.trans Nat.cast_zero.symm
+#align finite_dimensional_of_rank_eq_zero FiniteDimensional.of_rank_eq_zero
 -/
 
-#print finiteDimensional_of_rank_eq_one /-
-theorem finiteDimensional_of_rank_eq_one (h : Module.rank K V = 1) : FiniteDimensional K V :=
-  finiteDimensional_of_rank_eq_nat <| h.trans Nat.cast_one.symm
-#align finite_dimensional_of_rank_eq_one finiteDimensional_of_rank_eq_one
+#print FiniteDimensional.of_rank_eq_one /-
+theorem FiniteDimensional.of_rank_eq_one (h : Module.rank K V = 1) : FiniteDimensional K V :=
+  FiniteDimensional.of_rank_eq_nat <| h.trans Nat.cast_one.symm
+#align finite_dimensional_of_rank_eq_one FiniteDimensional.of_rank_eq_one
 -/
 
 #print FiniteDimensional.finrank_eq_zero_of_rank_eq_zero /-
@@ -748,7 +746,7 @@ variable (K V)
 
 #print finiteDimensional_bot /-
 instance finiteDimensional_bot : FiniteDimensional K (⊥ : Submodule K V) :=
-  finiteDimensional_of_rank_eq_zero <| by simp
+  FiniteDimensional.of_rank_eq_zero <| by simp
 #align finite_dimensional_bot finiteDimensional_bot
 -/
 
@@ -757,7 +755,7 @@ variable {K V}
 #print Submodule.bot_eq_top_of_rank_eq_zero /-
 theorem Submodule.bot_eq_top_of_rank_eq_zero (h : Module.rank K V = 0) : (⊥ : Submodule K V) = ⊤ :=
   by
-  haveI := finiteDimensional_of_rank_eq_zero h
+  haveI := FiniteDimensional.of_rank_eq_zero h
   apply eq_top_of_finrank_eq
   rw [finrank_bot, FiniteDimensional.finrank_eq_zero_of_rank_eq_zero h]
 #align bot_eq_top_of_rank_eq_zero Submodule.bot_eq_top_of_rank_eq_zero
@@ -1614,7 +1612,7 @@ instance FiniteDimensional.finiteDimensional_subalgebra [FiniteDimensional F E]
 
 #print Subalgebra.finiteDimensional_bot /-
 instance Subalgebra.finiteDimensional_bot : FiniteDimensional F (⊥ : Subalgebra F E) := by
-  nontriviality E; exact finiteDimensional_of_rank_eq_one Subalgebra.rank_bot
+  nontriviality E; exact FiniteDimensional.of_rank_eq_one Subalgebra.rank_bot
 #align subalgebra.finite_dimensional_bot Subalgebra.finiteDimensional_bot
 -/
 
@@ -1623,7 +1621,7 @@ theorem Subalgebra.eq_bot_of_rank_le_one {S : Subalgebra F E} (h : Module.rank F
   by
   nontriviality E
   obtain ⟨m, hm, he⟩ := Cardinal.exists_nat_eq_of_le_nat (h.trans_eq nat.cast_one.symm)
-  haveI := finiteDimensional_of_rank_eq_nat he
+  haveI := FiniteDimensional.of_rank_eq_nat he
   rw [← not_bot_lt_iff, ← subalgebra.to_submodule.lt_iff_lt]
   haveI := S.to_submodule_equiv.symm.FiniteDimensional
   refine' fun hl => (Submodule.finrank_lt_finrank_of_lt hl).not_le (nat_cast_le.1 _)

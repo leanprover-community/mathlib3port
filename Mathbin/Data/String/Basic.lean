@@ -20,7 +20,7 @@ Supplementary theorems about the `string` type.
 
 namespace String
 
-/- ./././Mathport/Syntax/Translate/Command.lean:298:8: warning: using_well_founded used, estimated equivalent -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print String.ltb /-
 /-- `<` on string iterators. This coincides with `<` on strings as lists. -/
 def ltb : Iterator → Iterator → Bool
@@ -34,8 +34,7 @@ def ltb : Iterator → Iterator → Bool
           | ⟨_, a :: l⟩, h => Nat.lt_succ_self _
         ltb s₁.next s₂.next
       else s₁.curr < s₂.curr
-termination_by
-  _ x => WellFounded.wrap (measure_wf fun s => s.1.2.length) x
+termination_by x => WellFounded.wrap (measure_wf fun s => s.1.2.length) x
 #align string.ltb String.ltb
 -/
 

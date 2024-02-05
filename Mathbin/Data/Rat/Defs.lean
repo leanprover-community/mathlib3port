@@ -844,16 +844,16 @@ theorem coe_nat_eq_divInt (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_ofNat
 #align rat.coe_nat_eq_mk Rat.coe_nat_eq_divInt
 -/
 
-#print Rat.coe_nat_num /-
+#print Rat.num_natCast /-
 @[simp, norm_cast]
-theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_ofNat, coe_int_num]
-#align rat.coe_nat_num Rat.coe_nat_num
+theorem num_natCast (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_ofNat, coe_int_num]
+#align rat.coe_nat_num Rat.num_natCast
 -/
 
-#print Rat.coe_nat_den /-
+#print Rat.den_natCast /-
 @[simp, norm_cast]
-theorem coe_nat_den (n : ℕ) : (n : ℚ).den = 1 := by rw [← Int.cast_ofNat, coe_int_denom]
-#align rat.coe_nat_denom Rat.coe_nat_den
+theorem den_natCast (n : ℕ) : (n : ℚ).den = 1 := by rw [← Int.cast_ofNat, coe_int_denom]
+#align rat.coe_nat_denom Rat.den_natCast
 -/
 
 #print Rat.coe_int_inj /-

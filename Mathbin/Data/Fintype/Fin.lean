@@ -37,7 +37,7 @@ theorem map_valEmbedding_univ : (Finset.univ : Finset (Fin n)).map Fin.valEmbedd
 
 #print Fin.Ioi_zero_eq_map /-
 @[simp]
-theorem Ioi_zero_eq_map : Ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).toEmbedding :=
+theorem Ioi_zero_eq_map : Ioi (0 : Fin n.succ) = univ.map (Fin.succEmb _).toEmbedding :=
   by
   ext i
   simp only [mem_Ioi, mem_map, mem_univ, Function.Embedding.coeFn_mk, exists_true_left]
@@ -62,7 +62,7 @@ theorem Iio_last_eq_map : Iio (Fin.last n) = Finset.univ.map Fin.castSuccEmb.toE
 
 #print Fin.Ioi_succ /-
 @[simp]
-theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmbedding _).toEmbedding :=
+theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmb _).toEmbedding :=
   by
   ext i
   simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coeFn_mk,

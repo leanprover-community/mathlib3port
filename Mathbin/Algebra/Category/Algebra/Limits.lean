@@ -132,7 +132,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:332:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:335:38: unsupported irreducible non-definition -/
 #print AlgebraCat.hasLimitsOfSize /-
 /-- The category of R-algebras has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=

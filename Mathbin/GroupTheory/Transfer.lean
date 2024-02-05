@@ -254,7 +254,7 @@ variable [Fact p.Prime] [Finite (Sylow p G)]
 theorem transferSylow_eq_pow_aux (g : G) (hg : g ∈ P) (k : ℕ) (g₀ : G) (h : g₀⁻¹ * g ^ k * g₀ ∈ P) :
     g₀⁻¹ * g ^ k * g₀ = g ^ k :=
   by
-  haveI : (P : Subgroup G).IsCommutative :=
+  haveI : (P : Subgroup G).IsCommutativeₓ :=
     ⟨⟨fun a b => Subtype.ext (hP (le_normalizer b.2) a a.2)⟩⟩
   replace hg := (P : Subgroup G).pow_mem hg k
   obtain ⟨n, hn, h⟩ := P.conj_eq_normalizer_conj_of_mem (g ^ k) g₀ hg h

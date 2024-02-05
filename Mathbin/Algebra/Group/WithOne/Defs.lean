@@ -189,8 +189,8 @@ instance [Mul α] : MulOneClass (WithOne α)
     where
   mul := (· * ·)
   one := 1
-  one_mul := id <| (Option.liftOrGet_isLeftId _).1
-  mul_one := id <| (Option.liftOrGet_isRightId _).1
+  one_mul := id <| (Option.liftOrGet_isId _).1
+  mul_one := id <| (Option.liftOrGet_isId _).1
 
 @[to_additive]
 instance [Semigroup α] : Monoid (WithOne α) :=

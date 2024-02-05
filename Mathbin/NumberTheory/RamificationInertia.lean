@@ -871,7 +871,7 @@ instance Factors.finiteDimensional_quotient_pow [IsNoetherian R S] [p.IsMaximal]
     (P : (factors (map (algebraMap R S) p)).toFinset) :
     FiniteDimensional (R ⧸ p) (S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P) :=
   by
-  refine' FiniteDimensional.finiteDimensional_of_finrank _
+  refine' FiniteDimensional.of_finrank_pos _
   rw [pos_iff_ne_zero, factors.finrank_pow_ramification_idx]
   exact mul_ne_zero (factors.ramification_idx_ne_zero p P) (factors.inertia_deg_ne_zero p P)
 #align ideal.factors.finite_dimensional_quotient_pow Ideal.Factors.finiteDimensional_quotient_pow

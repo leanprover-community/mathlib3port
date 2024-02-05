@@ -19,18 +19,18 @@ are defined.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:698:29: warning: unsupported: precedence command -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:698:29: warning: unsupported: precedence command -/
-/- ./././Mathport/Syntax/Translate/Command.lean:698:29: warning: unsupported: precedence command -/
-/- ./././Mathport/Syntax/Translate/Command.lean:594:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:694:29: warning: unsupported: precedence command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
+/- ./././Mathport/Syntax/Translate/Command.lean:694:29: warning: unsupported: precedence command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:694:29: warning: unsupported: precedence command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:590:11: warning: suppressing unsupported reserve notation -/
 -- used in `logic/relator.lean`
 -- used in `tactic/core.lean`
 -- used in `tactic/localized.lean`

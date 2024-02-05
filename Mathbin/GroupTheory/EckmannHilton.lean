@@ -38,7 +38,8 @@ local notation a " <" m "> " b => m a b
 #print EckmannHilton.IsUnital /-
 /-- `is_unital m e` expresses that `e : X` is a left and right unit
 for the binary operation `m : X → X → X`. -/
-structure IsUnital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
+structure IsUnital (m : X → X → X) (e : X) extends Std.LawfulLeftIdentity _ m e,
+    Std.LawfulRightIdentity _ m e : Prop
 #align eckmann_hilton.is_unital EckmannHilton.IsUnital
 -/
 

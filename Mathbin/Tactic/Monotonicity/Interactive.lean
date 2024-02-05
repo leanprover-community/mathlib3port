@@ -185,8 +185,8 @@ unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × e
     let i ←
       try_core do
           let v ← mk_meta_var t
-          let l_inst_p ← to_expr ``(IsLeftId $(t) $(f) $(v))
-          let r_inst_p ← to_expr ``(IsRightId $(t) $(f) $(v))
+          let l_inst_p ← to_expr ``(Std.LawfulLeftIdentity $(t) $(f) $(v))
+          let r_inst_p ← to_expr ``(Std.LawfulRightIdentity $(t) $(f) $(v))
           let l_v ← mk_meta_var l_inst_p
           let r_v ← mk_meta_var r_inst_p
           let l_id ← mk_mapp `is_left_id.left_id [some t, f, v, some l_v]

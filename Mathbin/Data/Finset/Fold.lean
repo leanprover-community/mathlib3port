@@ -145,7 +145,7 @@ theorem fold_union_inter [DecidableEq α] {s₁ s₂ : Finset α} {b₁ b₂ : �
 
 #print Finset.fold_insert_idem /-
 @[simp]
-theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] :
+theorem fold_insert_idem [DecidableEq α] [hi : Std.IdempotentOp β op] :
     (insert a s).fold op b f = f a * s.fold op b f :=
   by
   by_cases a ∈ s
@@ -155,7 +155,7 @@ theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] :
 -/
 
 #print Finset.fold_image_idem /-
-theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : IsIdempotent β op] :
+theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : Std.IdempotentOp β op] :
     (image g s).fold op b f = s.fold op b (f ∘ g) :=
   by
   induction' s using Finset.cons_induction with x xs hx ih
@@ -190,10 +190,10 @@ theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [Decidable
 relying on typeclass idempotency over the whole type,
 instead of solely on the seed element.
 However, this is easier to use because it does not generate side goals. -/
-theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [DecidablePred p] :
+theorem fold_ite [Std.IdempotentOp β op] {g : α → β} (p : α → Prop) [DecidablePred p] :
     Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
       op (Finset.fold op b f (s.filterₓ p)) (Finset.fold op b g (s.filterₓ fun i => ¬p i)) :=
-  fold_ite' (IsIdempotent.idempotent _) _
+  fold_ite' (Std.IdempotentOp.idempotent _) _
 #align finset.fold_ite Finset.fold_ite
 -/
 

@@ -415,28 +415,28 @@ section AddCommGroupWithOne
 
 variable [AddCommGroupWithOne α] [CharZero α]
 
-#print AddCommGroup.int_cast_modEq_int_cast /-
+#print AddCommGroup.intCast_modEq_intCast /-
 @[simp, norm_cast]
-theorem int_cast_modEq_int_cast {a b z : ℤ} : a ≡ b [PMOD (z : α)] ↔ a ≡ b [PMOD z] := by
+theorem intCast_modEq_intCast {a b z : ℤ} : a ≡ b [PMOD (z : α)] ↔ a ≡ b [PMOD z] := by
   simp_rw [modeq, ← Int.cast_mul_eq_zsmul_cast] <;> norm_cast
-#align add_comm_group.int_cast_modeq_int_cast AddCommGroup.int_cast_modEq_int_cast
+#align add_comm_group.int_cast_modeq_int_cast AddCommGroup.intCast_modEq_intCast
 -/
 
-#print AddCommGroup.nat_cast_modEq_nat_cast /-
+#print AddCommGroup.natCast_modEq_natCast /-
 @[simp, norm_cast]
-theorem nat_cast_modEq_nat_cast {a b n : ℕ} : a ≡ b [PMOD (n : α)] ↔ a ≡ b [MOD n] := by
+theorem natCast_modEq_natCast {a b n : ℕ} : a ≡ b [PMOD (n : α)] ↔ a ≡ b [MOD n] := by
   simp_rw [← Int.coe_nat_modEq_iff, ← modeq_iff_int_modeq, ← @int_cast_modeq_int_cast α,
     Int.cast_ofNat]
-#align add_comm_group.nat_cast_modeq_nat_cast AddCommGroup.nat_cast_modEq_nat_cast
+#align add_comm_group.nat_cast_modeq_nat_cast AddCommGroup.natCast_modEq_natCast
 -/
 
 alias ⟨modeq.of_int_cast, modeq.int_cast⟩ := int_cast_modeq_int_cast
-#align add_comm_group.modeq.of_int_cast AddCommGroup.ModEq.of_int_cast
-#align add_comm_group.modeq.int_cast AddCommGroup.ModEq.int_cast
+#align add_comm_group.modeq.of_int_cast AddCommGroup.ModEq.of_intCast
+#align add_comm_group.modeq.int_cast AddCommGroup.ModEq.intCast
 
 alias ⟨_root_.nat.modeq.of_nat_cast, modeq.nat_cast⟩ := nat_cast_modeq_nat_cast
-#align nat.modeq.of_nat_cast Nat.ModEq.of_nat_cast
-#align add_comm_group.modeq.nat_cast AddCommGroup.ModEq.nat_cast
+#align nat.modeq.of_nat_cast Nat.ModEq.of_natCast
+#align add_comm_group.modeq.nat_cast AddCommGroup.ModEq.natCast
 
 end AddCommGroupWithOne
 
