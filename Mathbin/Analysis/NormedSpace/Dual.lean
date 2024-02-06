@@ -95,7 +95,7 @@ theorem dual_def (x : E) (f : Dual 𝕜 E) : inclusionInDoubleDual 𝕜 E x f = 
 #print NormedSpace.inclusionInDoubleDual_norm_eq /-
 theorem inclusionInDoubleDual_norm_eq :
     ‖inclusionInDoubleDual 𝕜 E‖ = ‖ContinuousLinearMap.id 𝕜 (Dual 𝕜 E)‖ :=
-  ContinuousLinearMap.op_norm_flip _
+  ContinuousLinearMap.opNorm_flip _
 #align normed_space.inclusion_in_double_dual_norm_eq NormedSpace.inclusionInDoubleDual_norm_eq
 -/
 
@@ -107,7 +107,7 @@ theorem inclusionInDoubleDual_norm_le : ‖inclusionInDoubleDual 𝕜 E‖ ≤ 1
 
 #print NormedSpace.double_dual_bound /-
 theorem double_dual_bound (x : E) : ‖(inclusionInDoubleDual 𝕜 E) x‖ ≤ ‖x‖ := by
-  simpa using ContinuousLinearMap.le_of_op_norm_le _ (inclusion_in_double_dual_norm_le 𝕜 E) x
+  simpa using ContinuousLinearMap.le_of_opNorm_le _ (inclusion_in_double_dual_norm_le 𝕜 E) x
 #align normed_space.double_dual_bound NormedSpace.double_dual_bound
 -/
 
@@ -277,7 +277,7 @@ theorem polar_ball_subset_closedBall_div {c : 𝕜} (hc : 1 < ‖c‖) {r : ℝ}
   rw [mem_polar_iff] at hx' 
   simp only [polar, mem_set_of_eq, mem_closedBall_zero_iff, mem_ball_zero_iff] at *
   have hcr : 0 < ‖c‖ / r := div_pos (zero_lt_one.trans hc) hr
-  refine' ContinuousLinearMap.op_norm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _
+  refine' ContinuousLinearMap.opNorm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _
   calc
     ‖x' x‖ ≤ 1 := hx' _ h₂
     _ ≤ ‖c‖ / r * ‖x‖ := (inv_pos_le_iff_one_le_mul' hcr).1 (by rwa [inv_div])
@@ -308,7 +308,7 @@ theorem polar_closedBall {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] 
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)
   intro x' h
   simp only [mem_closedBall_zero_iff]
-  refine' ContinuousLinearMap.op_norm_le_of_ball hr (inv_nonneg.mpr hr.le) fun z hz => _
+  refine' ContinuousLinearMap.opNorm_le_of_ball hr (inv_nonneg.mpr hr.le) fun z hz => _
   simpa only [one_div] using LinearMap.bound_of_ball_bound' hr 1 x'.to_linear_map h z
 #align normed_space.polar_closed_ball NormedSpace.polar_closedBall
 -/

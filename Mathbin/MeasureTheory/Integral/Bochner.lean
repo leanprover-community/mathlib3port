@@ -891,7 +891,7 @@ theorem norm_Integral_le_one : ‖Integral‖ ≤ 1 :=
 theorem norm_integral_le (f : α →₁[μ] E) : ‖integral f‖ ≤ ‖f‖ :=
   calc
     ‖integral f‖ = ‖Integral f‖ := by simp only [integral]
-    _ ≤ ‖Integral‖ * ‖f‖ := (le_op_norm _ _)
+    _ ≤ ‖Integral‖ * ‖f‖ := (le_opNorm _ _)
     _ ≤ 1 * ‖f‖ := (mul_le_mul_of_nonneg_right norm_Integral_le_one <| norm_nonneg _)
     _ = ‖f‖ := one_mul _
 #align measure_theory.L1.norm_integral_le MeasureTheory.L1.norm_integral_le

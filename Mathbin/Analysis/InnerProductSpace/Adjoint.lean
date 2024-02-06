@@ -114,11 +114,11 @@ theorem adjointAux_adjointAux (A : E →L[𝕜] F) : adjointAux (adjointAux A) =
 theorem adjointAux_norm (A : E →L[𝕜] F) : ‖adjointAux A‖ = ‖A‖ :=
   by
   refine' le_antisymm _ _
-  · refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
+  · refine' ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
   · nth_rw_lhs 1 [← adjoint_aux_adjoint_aux A]
-    refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
+    refine' ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
 #align continuous_linear_map.adjoint_aux_norm ContinuousLinearMap.adjointAux_norm

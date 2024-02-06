@@ -62,7 +62,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     replace hz := mem_Inter.mp (interior_iInter_subset _ (hε hz)) i
     apply interior_subset hz
   have εk_pos : 0 < ε / ‖k‖ := div_pos ε_pos (zero_lt_one.trans hk)
-  refine' ⟨(m + m : ℕ) / (ε / ‖k‖), fun i => ContinuousLinearMap.op_norm_le_of_shell ε_pos _ hk _⟩
+  refine' ⟨(m + m : ℕ) / (ε / ‖k‖), fun i => ContinuousLinearMap.opNorm_le_of_shell ε_pos _ hk _⟩
   · exact div_nonneg (Nat.cast_nonneg _) εk_pos.le
   intro y le_y y_lt
   calc
@@ -141,7 +141,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
     have lt_ε : ‖g n x - f x‖ < ε := by rw [← dist_eq_norm]; exact hn n (le_refl n)
     calc
       ‖f x‖ ≤ ‖g n x‖ + ‖g n x - f x‖ := norm_le_insert _ _
-      _ < ‖g n‖ * ‖x‖ + ε := by linarith [lt_ε, (g n).le_op_norm x]
+      _ < ‖g n‖ * ‖x‖ + ε := by linarith [lt_ε, (g n).le_opNorm x]
       _ ≤ C' * ‖x‖ + ε := by nlinarith [hC' n, norm_nonneg x]
 #align continuous_linear_map_of_tendsto continuousLinearMapOfTendsto
 -/

@@ -1077,7 +1077,7 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε
       rw [mem_ball_zero_iff] at h2t 
       specialize hg (x₀ - t)
       rw [sub_eq_add_neg, add_mem_ball_iff_norm, norm_neg, ← sub_eq_add_neg] at hg 
-      refine' ((L (f t)).dist_le_op_norm _ _).trans _
+      refine' ((L (f t)).dist_le_opNorm _ _).trans _
       exact mul_le_mul_of_nonneg_left (hg h2t) (norm_nonneg _)
     · rw [nmem_support] at ht 
       simp_rw [ht, L.map_zero₂, L.map_zero, norm_zero, MulZeroClass.zero_mul, dist_self]

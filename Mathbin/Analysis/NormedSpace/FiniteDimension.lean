@@ -308,10 +308,10 @@ theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen {f : E →L[𝕜] F | ↑n �
 #align is_open_set_of_nat_le_rank isOpen_setOf_nat_le_rank
 -/
 
-#print Basis.op_nnnorm_le /-
-theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0)
+#print Basis.opNNNorm_le /-
+theorem Basis.opNNNorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0)
     (hu : ∀ i, ‖u (v i)‖₊ ≤ M) : ‖u‖₊ ≤ Fintype.card ι • ‖v.equivFunL.toContinuousLinearMap‖₊ * M :=
-  u.op_nnnorm_le_bound _ fun e =>
+  u.opNNNorm_le_bound _ fun e =>
     by
     set φ := v.equiv_funL.to_continuous_linear_map
     calc
@@ -328,36 +328,36 @@ theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u :
           ∑ i, ‖v.equiv_fun e i‖₊ ≤ Fintype.card ι • ‖φ e‖₊ := Pi.sum_nnnorm_apply_le_nnnorm _
           _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) := nsmul_le_nsmul_right (φ.le_op_nnnorm e) _)
       _ = Fintype.card ι • ‖φ‖₊ * M * ‖e‖₊ := by simp only [smul_mul_assoc, mul_right_comm]
-#align basis.op_nnnorm_le Basis.op_nnnorm_le
+#align basis.op_nnnorm_le Basis.opNNNorm_le
 -/
 
-#print Basis.op_norm_le /-
-theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} {M : ℝ}
+#print Basis.opNorm_le /-
+theorem Basis.opNorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} {M : ℝ}
     (hM : 0 ≤ M) (hu : ∀ i, ‖u (v i)‖ ≤ M) :
     ‖u‖ ≤ Fintype.card ι • ‖v.equivFunL.toContinuousLinearMap‖ * M := by
   simpa using nnreal.coe_le_coe.mpr (v.op_nnnorm_le ⟨M, hM⟩ hu)
-#align basis.op_norm_le Basis.op_norm_le
+#align basis.op_norm_le Basis.opNorm_le
 -/
 
-#print Basis.exists_op_nnnorm_le /-
+#print Basis.exists_opNNNorm_le /-
 /-- A weaker version of `basis.op_nnnorm_le` that abstracts away the value of `C`. -/
-theorem Basis.exists_op_nnnorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
+theorem Basis.exists_opNNNorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
     ∃ C > (0 : ℝ≥0), ∀ {u : E →L[𝕜] F} (M : ℝ≥0), (∀ i, ‖u (v i)‖₊ ≤ M) → ‖u‖₊ ≤ C * M := by
   cases nonempty_fintype ι <;>
     exact
       ⟨max (Fintype.card ι • ‖v.equiv_funL.to_continuous_linear_map‖₊) 1,
         zero_lt_one.trans_le (le_max_right _ _), fun u M hu =>
         (v.op_nnnorm_le M hu).trans <| mul_le_mul_of_nonneg_right (le_max_left _ _) (zero_le M)⟩
-#align basis.exists_op_nnnorm_le Basis.exists_op_nnnorm_le
+#align basis.exists_op_nnnorm_le Basis.exists_opNNNorm_le
 -/
 
-#print Basis.exists_op_norm_le /-
+#print Basis.exists_opNorm_le /-
 /-- A weaker version of `basis.op_norm_le` that abstracts away the value of `C`. -/
-theorem Basis.exists_op_norm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
+theorem Basis.exists_opNorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
     ∃ C > (0 : ℝ), ∀ {u : E →L[𝕜] F} {M : ℝ}, 0 ≤ M → (∀ i, ‖u (v i)‖ ≤ M) → ‖u‖ ≤ C * M :=
-  let ⟨C, hC, h⟩ := v.exists_op_nnnorm_le
+  let ⟨C, hC, h⟩ := v.exists_opNNNorm_le
   ⟨C, hC, fun u => Subtype.forall'.mpr h⟩
-#align basis.exists_op_norm_le Basis.exists_op_norm_le
+#align basis.exists_op_norm_le Basis.exists_opNorm_le
 -/
 
 instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
@@ -765,7 +765,7 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
     refine'
       Summable.of_norm_bounded _ (this.mul_left ↑‖(e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E)‖₊)
         fun i => _
-    simpa using (e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e <| f i)
+    simpa using (e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E).le_opNorm (e <| f i)
   clear! E
   -- Now we deal with `g : α → fin N → ℝ`
   intro N g hg

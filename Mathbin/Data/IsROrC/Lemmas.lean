@@ -88,7 +88,7 @@ namespace IsROrC
 theorem reCLM_norm : ‖(reCLM : K →L[ℝ] ℝ)‖ = 1 :=
   by
   apply le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _)
-  convert ContinuousLinearMap.ratio_le_op_norm _ (1 : K)
+  convert ContinuousLinearMap.ratio_le_opNorm _ (1 : K)
   · simp
   · infer_instance
 #align is_R_or_C.re_clm_norm IsROrC.reCLM_norm

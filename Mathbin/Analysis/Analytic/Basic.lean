@@ -336,7 +336,7 @@ theorem summable_norm_apply (p : FormalMultilinearSeries 𝕜 E F) {x : E}
   by
   rw [mem_emetric_ball_zero_iff] at hx 
   refine'
-    Summable.of_nonneg_of_le (fun _ => norm_nonneg _) (fun n => ((p n).le_op_norm _).trans_eq _)
+    Summable.of_nonneg_of_le (fun _ => norm_nonneg _) (fun n => ((p n).le_opNorm _).trans_eq _)
       (p.summable_norm_mul_pow hx)
   simp
 #align formal_multilinear_series.summable_norm_apply FormalMultilinearSeries.summable_norm_apply
@@ -820,7 +820,7 @@ theorem HasFPowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
   apply norm_sub_le_of_geometric_bound_of_hasSum (ya.trans_lt ha.2) _ (hf.has_sum this)
   intro n
   calc
-    ‖(p n) fun i : Fin n => y‖ ≤ ‖p n‖ * ∏ i : Fin n, ‖y‖ := ContinuousMultilinearMap.le_op_norm _ _
+    ‖(p n) fun i : Fin n => y‖ ≤ ‖p n‖ * ∏ i : Fin n, ‖y‖ := ContinuousMultilinearMap.le_opNorm _ _
     _ = ‖p n‖ * r' ^ n * (‖y‖ / r') ^ n := by field_simp [hr'0.ne', mul_right_comm]
     _ ≤ C * a ^ n * (‖y‖ / r') ^ n :=
       (mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _))
@@ -1331,8 +1331,8 @@ theorem nnnorm_changeOriginSeriesTerm_apply_le (k l : ℕ) (s : Finset (Fin (k +
       ‖p (k + l)‖₊ * ‖x‖₊ ^ l * ‖y‖₊ ^ k :=
   by
   rw [← p.nnnorm_change_origin_series_term k l s hs, ← Fin.prod_const, ← Fin.prod_const]
-  apply ContinuousMultilinearMap.le_of_op_nnnorm_le
-  apply ContinuousMultilinearMap.le_op_nnnorm
+  apply ContinuousMultilinearMap.le_of_opNNNorm_le
+  apply ContinuousMultilinearMap.le_opNNNorm
 #align formal_multilinear_series.nnnorm_change_origin_series_term_apply_le FormalMultilinearSeries.nnnorm_changeOriginSeriesTerm_apply_le
 -/
 
@@ -1361,8 +1361,7 @@ theorem nnnorm_changeOriginSeries_apply_le_tsum (k l : ℕ) (x : E) :
       ∑' s : { s : Finset (Fin (k + l)) // s.card = l }, ‖p (k + l)‖₊ * ‖x‖₊ ^ l :=
   by
   rw [NNReal.tsum_mul_right, ← Fin.prod_const]
-  exact
-    (p.change_origin_series k l).le_of_op_nnnorm_le _ (p.nnnorm_change_origin_series_le_tsum _ _)
+  exact (p.change_origin_series k l).le_of_opNNNorm_le _ (p.nnnorm_change_origin_series_le_tsum _ _)
 #align formal_multilinear_series.nnnorm_change_origin_series_apply_le_tsum FormalMultilinearSeries.nnnorm_changeOriginSeries_apply_le_tsum
 -/
 
@@ -1557,7 +1556,7 @@ theorem changeOrigin_eval (h : (‖x‖₊ + ‖y‖₊ : ℝ≥0∞) < p.radius
           Summable.of_nnnorm_bounded _
             (p.change_origin_series_summable_aux₂ (mem_emetric_ball_zero_iff.1 x_mem_ball) k)
             fun s => _
-        refine' (ContinuousMultilinearMap.le_op_nnnorm _ _).trans_eq _
+        refine' (ContinuousMultilinearMap.le_opNNNorm _ _).trans_eq _
         simp
   refine' hf.unique (change_origin_index_equiv.symm.has_sum_iff.1 _)
   refine'

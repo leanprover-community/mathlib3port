@@ -177,7 +177,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
       _ ≤ ‖f y - f x - (f' x) (y - x)‖ + ‖(f' x - f' z) (y - x)‖ := (norm_add_le _ _)
       _ ≤ ε * ‖y - x‖ + ‖f' x - f' z‖ * ‖y - x‖ :=
         by
-        refine' add_le_add (hδ _) (ContinuousLinearMap.le_op_norm _ _)
+        refine' add_le_add (hδ _) (ContinuousLinearMap.le_opNorm _ _)
         rw [inter_comm]
         exact inter_subset_inter_right _ (ball_subset_ball hn.le) hy
       _ ≤ r (f' z) * ‖y - x‖ := by
@@ -519,7 +519,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
   -- start from a Lebesgue density point `x`, belonging to `s`.
   intro x hx xs
   -- consider an arbitrary vector `z`.
-  apply ContinuousLinearMap.op_norm_le_bound _ δ.2 fun z => _
+  apply ContinuousLinearMap.opNorm_le_bound _ δ.2 fun z => _
   -- to show that `‖(f' x - A) z‖ ≤ δ ‖z‖`, it suffices to do it up to some error that vanishes
   -- asymptotically in terms of `ε > 0`.
   suffices H : ∀ ε, 0 < ε → ‖(f' x - A) z‖ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε
@@ -594,7 +594,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
         by
         apply add_le_add
         · rw [mul_assoc] at I ; exact (mul_le_mul_left rpos).1 I
-        · apply ContinuousLinearMap.le_op_norm
+        · apply ContinuousLinearMap.le_opNorm
       _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε :=
         add_le_add le_rfl
           (mul_le_mul_of_nonneg_left (mem_closedBall_iff_norm'.1 az) (norm_nonneg _))

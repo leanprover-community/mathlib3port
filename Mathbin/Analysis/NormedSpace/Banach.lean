@@ -72,7 +72,7 @@ noncomputable def ContinuousLinearEquiv.toNonlinearRightInverse (f : E ≃L[𝕜
     where
   toFun := f.invFun
   nnnorm := ‖(f.symm : F →L[𝕜] E)‖₊
-  bound' y := ContinuousLinearMap.le_op_norm (f.symm : F →L[𝕜] E) _
+  bound' y := ContinuousLinearMap.le_opNorm (f.symm : F →L[𝕜] E) _
   right_inv' := f.apply_symm_apply
 #align continuous_linear_equiv.to_nonlinear_right_inverse ContinuousLinearEquiv.toNonlinearRightInverse
 -/

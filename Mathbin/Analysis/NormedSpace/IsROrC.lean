@@ -96,18 +96,18 @@ theorem LinearMap.bound_of_ball_bound' {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : 
 #align linear_map.bound_of_ball_bound' LinearMap.bound_of_ball_bound'
 -/
 
-#print ContinuousLinearMap.op_norm_bound_of_ball_bound /-
-theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ)
+#print ContinuousLinearMap.opNorm_bound_of_ball_bound /-
+theorem ContinuousLinearMap.opNorm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ)
     (f : E →L[𝕜] 𝕜) (h : ∀ z ∈ closedBall (0 : E) r, ‖f z‖ ≤ c) : ‖f‖ ≤ c / r :=
   by
-  apply ContinuousLinearMap.op_norm_le_bound
+  apply ContinuousLinearMap.opNorm_le_bound
   · apply div_nonneg _ r_pos.le
     exact
       (norm_nonneg _).trans
         (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
-#align continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.op_norm_bound_of_ball_bound
+#align continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.opNorm_bound_of_ball_bound
 -/
 
 variable (𝕜)

@@ -109,7 +109,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     calc
       ‖g.extend_to_𝕜‖ = ‖g‖ := g.norm_extend_to_𝕜
       _ = ‖fr‖ := hnormeq
-      _ ≤ ‖re_clm‖ * ‖f‖ := (ContinuousLinearMap.op_norm_comp_le _ _)
+      _ ≤ ‖re_clm‖ * ‖f‖ := (ContinuousLinearMap.opNorm_comp_le _ _)
       _ = ‖f‖ := by rw [re_clm_norm, one_mul]
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
 #align exists_extension_norm_eq exists_extension_norm_eq

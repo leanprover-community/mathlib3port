@@ -261,17 +261,17 @@ theorem isBoundedLinearMap_prod_multilinear {E : ι → Type _} [∀ i, NormedAd
     bound :=
       ⟨1, zero_lt_one, fun p => by
         rw [one_mul]
-        apply ContinuousMultilinearMap.op_norm_le_bound _ (norm_nonneg _) fun m => _
+        apply ContinuousMultilinearMap.opNorm_le_bound _ (norm_nonneg _) fun m => _
         rw [ContinuousMultilinearMap.prod_apply, norm_prod_le_iff]
         constructor
         ·
           exact
-            (p.1.le_op_norm m).trans
+            (p.1.le_opNorm m).trans
               (mul_le_mul_of_nonneg_right (norm_fst_le p)
                 (Finset.prod_nonneg fun i hi => norm_nonneg _))
         ·
           exact
-            (p.2.le_op_norm m).trans
+            (p.2.le_opNorm m).trans
               (mul_le_mul_of_nonneg_right (norm_snd_le p)
                 (Finset.prod_nonneg fun i hi => norm_nonneg _))⟩ }
 #align is_bounded_linear_map_prod_multilinear isBoundedLinearMap_prod_multilinear
@@ -287,7 +287,7 @@ theorem isBoundedLinearMap_continuousMultilinearMap_comp_linear (g : G →L[𝕜
   refine'
     IsLinearMap.with_bound ⟨fun f₁ f₂ => by ext m; rfl, fun c f => by ext m; rfl⟩
       (‖g‖ ^ Fintype.card ι) fun f => _
-  apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
+  apply ContinuousMultilinearMap.opNorm_le_bound _ _ fun m => _
   · apply_rules [mul_nonneg, pow_nonneg, norm_nonneg]
   calc
     ‖f (g ∘ m)‖ ≤ ‖f‖ * ∏ i, ‖g (m i)‖ := f.le_op_norm _
@@ -405,7 +405,7 @@ theorem ContinuousLinearMap.isBoundedBilinearMap (f : E →L[𝕜] F →L[𝕜] 
     smul_right := fun c x => (f x).map_smul c
     bound :=
       ⟨max ‖f‖ 1, zero_lt_one.trans_le (le_max_right _ _), fun x y =>
-        (f.le_op_norm₂ x y).trans <| by
+        (f.le_opNorm₂ x y).trans <| by
           apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, le_max_left]⟩ }
 #align continuous_linear_map.is_bounded_bilinear_map ContinuousLinearMap.isBoundedBilinearMap
 -/
@@ -695,7 +695,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMap_deriv (h : IsBoundedBilinearMap 
       simp only [h.smul_left, h.smul_right, smul_add, coe_comp', Function.comp_apply,
         IsBoundedBilinearMap.deriv_apply, Prod.smul_fst, Prod.smul_snd, coe_smul', Pi.smul_apply]
   · refine'
-      ContinuousLinearMap.op_norm_le_bound _
+      ContinuousLinearMap.opNorm_le_bound _
         (mul_nonneg (add_nonneg Cpos.le Cpos.le) (norm_nonneg _)) fun q => _
     calc
       ‖f (p.1, q.2) + f (q.1, p.2)‖ ≤ C * ‖p.1‖ * ‖q.2‖ + C * ‖q.1‖ * ‖p.2‖ :=

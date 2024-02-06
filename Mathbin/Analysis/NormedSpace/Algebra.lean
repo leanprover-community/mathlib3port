@@ -42,7 +42,7 @@ variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [C
 
 #print WeakDual.CharacterSpace.norm_le_norm_one /-
 theorem norm_le_norm_one (φ : characterSpace 𝕜 A) : ‖toNormedDual (φ : WeakDual 𝕜 A)‖ ≤ ‖(1 : A)‖ :=
-  ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg (1 : A)) fun a =>
+  ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg (1 : A)) fun a =>
     mul_comm ‖a‖ ‖(1 : A)‖ ▸ spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ a)
 #align weak_dual.character_space.norm_le_norm_one WeakDual.CharacterSpace.norm_le_norm_one
 -/

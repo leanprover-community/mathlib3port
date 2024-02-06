@@ -359,7 +359,7 @@ theorem norm_condexpInd_apply_le (x : G) : ‖condexpInd hm μ s x‖ ≤ (μ s)
 
 #print MeasureTheory.norm_condexpInd_le /-
 theorem norm_condexpInd_le : ‖(condexpInd hm μ s : G →L[ℝ] α →₁[μ] G)‖ ≤ (μ s).toReal :=
-  ContinuousLinearMap.op_norm_le_bound _ ENNReal.toReal_nonneg norm_condexpInd_apply_le
+  ContinuousLinearMap.opNorm_le_bound _ ENNReal.toReal_nonneg norm_condexpInd_apply_le
 #align measure_theory.norm_condexp_ind_le MeasureTheory.norm_condexpInd_le
 -/
 

@@ -370,12 +370,12 @@ theorem compAlongComposition_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜 E
     ‖f.compAlongComposition p c v‖ ≤ (‖f‖ * ∏ i, ‖p (c.blocksFun i)‖) * ∏ i : Fin n, ‖v i‖ :=
   calc
     ‖f.compAlongComposition p c v‖ = ‖f (p.applyComposition c v)‖ := rfl
-    _ ≤ ‖f‖ * ∏ i, ‖p.applyComposition c v i‖ := (ContinuousMultilinearMap.le_op_norm _ _)
+    _ ≤ ‖f‖ * ∏ i, ‖p.applyComposition c v i‖ := (ContinuousMultilinearMap.le_opNorm _ _)
     _ ≤ ‖f‖ * ∏ i, ‖p (c.blocksFun i)‖ * ∏ j : Fin (c.blocksFun i), ‖(v ∘ c.Embedding i) j‖ :=
       by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       refine' Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => _
-      apply ContinuousMultilinearMap.le_op_norm
+      apply ContinuousMultilinearMap.le_opNorm
     _ =
         (‖f‖ * ∏ i, ‖p (c.blocksFun i)‖) *
           ∏ (i) (j : Fin (c.blocksFun i)), ‖(v ∘ c.Embedding i) j‖ :=
@@ -393,7 +393,7 @@ the norms of the relevant bits of `q` and `p`. -/
 theorem compAlongComposition_norm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n) :
     ‖q.compAlongComposition p c‖ ≤ ‖q c.length‖ * ∏ i, ‖p (c.blocksFun i)‖ :=
-  ContinuousMultilinearMap.op_norm_le_bound _
+  ContinuousMultilinearMap.opNorm_le_bound _
     (mul_nonneg (norm_nonneg _) (Finset.prod_nonneg fun i hi => norm_nonneg _))
     (compAlongComposition_bound _ _ _)
 #align formal_multilinear_series.comp_along_composition_norm FormalMultilinearSeries.compAlongComposition_norm
@@ -950,7 +950,7 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       calc
         ‖(comp_along_composition q p c) fun j : Fin n => y‖ ≤
             ‖comp_along_composition q p c‖ * ∏ j : Fin n, ‖y‖ :=
-          by apply ContinuousMultilinearMap.le_op_norm
+          by apply ContinuousMultilinearMap.le_opNorm
         _ ≤ ‖comp_along_composition q p c‖ * (r : ℝ) ^ n :=
           by
           apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)

@@ -161,11 +161,11 @@ theorem extendTo𝕜'_apply (fr : F →L[ℝ] ℝ) (x : F) :
 @[simp]
 theorem norm_extendTo𝕜' (fr : F →L[ℝ] ℝ) : ‖(fr.extendTo𝕜' : F →L[𝕜] 𝕜)‖ = ‖fr‖ :=
   le_antisymm (LinearMap.mkContinuous_norm_le _ (norm_nonneg _) _) <|
-    op_norm_le_bound _ (norm_nonneg _) fun x =>
+    opNorm_le_bound _ (norm_nonneg _) fun x =>
       calc
         ‖fr x‖ = ‖re (fr.extendTo𝕜' x : 𝕜)‖ := congr_arg norm (fr.extendTo𝕜'_apply_re x).symm
         _ ≤ ‖(fr.extendTo𝕜' x : 𝕜)‖ := (abs_re_le_norm _)
-        _ ≤ ‖(fr.extendTo𝕜' : F →L[𝕜] 𝕜)‖ * ‖x‖ := le_op_norm _ _
+        _ ≤ ‖(fr.extendTo𝕜' : F →L[𝕜] 𝕜)‖ * ‖x‖ := le_opNorm _ _
 #align continuous_linear_map.norm_extend_to_𝕜' ContinuousLinearMap.norm_extendTo𝕜'
 -/
 

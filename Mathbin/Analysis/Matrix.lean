@@ -289,66 +289,66 @@ section SeminormedAddCommGroup
 
 variable [SeminormedAddCommGroup α]
 
-#print Matrix.linfty_op_norm_def /-
-theorem linfty_op_norm_def (A : Matrix m n α) :
+#print Matrix.linfty_opNorm_def /-
+theorem linfty_opNorm_def (A : Matrix m n α) :
     ‖A‖ = ((Finset.univ : Finset m).sup fun i : m => ∑ j : n, ‖A i j‖₊ : ℝ≥0) := by
   simp [Pi.norm_def, PiLp.nnnorm_eq_sum ENNReal.one_ne_top]
-#align matrix.linfty_op_norm_def Matrix.linfty_op_norm_def
+#align matrix.linfty_op_norm_def Matrix.linfty_opNorm_def
 -/
 
-#print Matrix.linfty_op_nnnorm_def /-
-theorem linfty_op_nnnorm_def (A : Matrix m n α) :
+#print Matrix.linfty_opNNNorm_def /-
+theorem linfty_opNNNorm_def (A : Matrix m n α) :
     ‖A‖₊ = (Finset.univ : Finset m).sup fun i : m => ∑ j : n, ‖A i j‖₊ :=
-  Subtype.ext <| linfty_op_norm_def A
-#align matrix.linfty_op_nnnorm_def Matrix.linfty_op_nnnorm_def
+  Subtype.ext <| linfty_opNorm_def A
+#align matrix.linfty_op_nnnorm_def Matrix.linfty_opNNNorm_def
 -/
 
-#print Matrix.linfty_op_nnnorm_col /-
+#print Matrix.linfty_opNNNorm_col /-
 @[simp]
-theorem linfty_op_nnnorm_col (v : m → α) : ‖col v‖₊ = ‖v‖₊ :=
+theorem linfty_opNNNorm_col (v : m → α) : ‖col v‖₊ = ‖v‖₊ :=
   by
   rw [linfty_op_nnnorm_def, Pi.nnnorm_def]
   simp
-#align matrix.linfty_op_nnnorm_col Matrix.linfty_op_nnnorm_col
+#align matrix.linfty_op_nnnorm_col Matrix.linfty_opNNNorm_col
 -/
 
-#print Matrix.linfty_op_norm_col /-
+#print Matrix.linfty_opNorm_col /-
 @[simp]
-theorem linfty_op_norm_col (v : m → α) : ‖col v‖ = ‖v‖ :=
-  congr_arg coe <| linfty_op_nnnorm_col v
-#align matrix.linfty_op_norm_col Matrix.linfty_op_norm_col
+theorem linfty_opNorm_col (v : m → α) : ‖col v‖ = ‖v‖ :=
+  congr_arg coe <| linfty_opNNNorm_col v
+#align matrix.linfty_op_norm_col Matrix.linfty_opNorm_col
 -/
 
-#print Matrix.linfty_op_nnnorm_row /-
+#print Matrix.linfty_opNNNorm_row /-
 @[simp]
-theorem linfty_op_nnnorm_row (v : n → α) : ‖row v‖₊ = ∑ i, ‖v i‖₊ := by simp [linfty_op_nnnorm_def]
-#align matrix.linfty_op_nnnorm_row Matrix.linfty_op_nnnorm_row
+theorem linfty_opNNNorm_row (v : n → α) : ‖row v‖₊ = ∑ i, ‖v i‖₊ := by simp [linfty_op_nnnorm_def]
+#align matrix.linfty_op_nnnorm_row Matrix.linfty_opNNNorm_row
 -/
 
-#print Matrix.linfty_op_norm_row /-
+#print Matrix.linfty_opNorm_row /-
 @[simp]
-theorem linfty_op_norm_row (v : n → α) : ‖row v‖ = ∑ i, ‖v i‖ :=
-  (congr_arg coe <| linfty_op_nnnorm_row v).trans <| by simp [NNReal.coe_sum]
-#align matrix.linfty_op_norm_row Matrix.linfty_op_norm_row
+theorem linfty_opNorm_row (v : n → α) : ‖row v‖ = ∑ i, ‖v i‖ :=
+  (congr_arg coe <| linfty_opNNNorm_row v).trans <| by simp [NNReal.coe_sum]
+#align matrix.linfty_op_norm_row Matrix.linfty_opNorm_row
 -/
 
-#print Matrix.linfty_op_nnnorm_diagonal /-
+#print Matrix.linfty_opNNNorm_diagonal /-
 @[simp]
-theorem linfty_op_nnnorm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v‖₊ = ‖v‖₊ :=
+theorem linfty_opNNNorm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v‖₊ = ‖v‖₊ :=
   by
   rw [linfty_op_nnnorm_def, Pi.nnnorm_def]
   congr 1 with i : 1
   refine' (Finset.sum_eq_single_of_mem _ (Finset.mem_univ i) fun j hj hij => _).trans _
   · rw [diagonal_apply_ne' _ hij, nnnorm_zero]
   · rw [diagonal_apply_eq]
-#align matrix.linfty_op_nnnorm_diagonal Matrix.linfty_op_nnnorm_diagonal
+#align matrix.linfty_op_nnnorm_diagonal Matrix.linfty_opNNNorm_diagonal
 -/
 
-#print Matrix.linfty_op_norm_diagonal /-
+#print Matrix.linfty_opNorm_diagonal /-
 @[simp]
-theorem linfty_op_norm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v‖ = ‖v‖ :=
-  congr_arg coe <| linfty_op_nnnorm_diagonal v
-#align matrix.linfty_op_norm_diagonal Matrix.linfty_op_norm_diagonal
+theorem linfty_opNorm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v‖ = ‖v‖ :=
+  congr_arg coe <| linfty_opNNNorm_diagonal v
+#align matrix.linfty_op_norm_diagonal Matrix.linfty_opNorm_diagonal
 -/
 
 end SeminormedAddCommGroup
@@ -358,8 +358,8 @@ section NonUnitalSeminormedRing
 variable [NonUnitalSeminormedRing α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k j) -/
-#print Matrix.linfty_op_nnnorm_mul /-
-theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
+#print Matrix.linfty_opNNNorm_mul /-
+theorem linfty_opNNNorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
   by
   simp_rw [linfty_op_nnnorm_def, Matrix.mul_apply]
   calc
@@ -374,27 +374,27 @@ theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
         Finset.sum_le_sum fun j hj => mul_le_mul_of_nonneg_left (Finset.le_sup hj) (zero_le _))
     _ ≤ (finset.univ.sup fun i => ∑ j, ‖A i j‖₊) * finset.univ.sup fun i => ∑ j, ‖B i j‖₊ := by
       simp_rw [← Finset.sum_mul, ← NNReal.finset_sup_mul]
-#align matrix.linfty_op_nnnorm_mul Matrix.linfty_op_nnnorm_mul
+#align matrix.linfty_op_nnnorm_mul Matrix.linfty_opNNNorm_mul
 -/
 
-#print Matrix.linfty_op_norm_mul /-
-theorem linfty_op_norm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖ ≤ ‖A‖ * ‖B‖ :=
-  linfty_op_nnnorm_mul _ _
-#align matrix.linfty_op_norm_mul Matrix.linfty_op_norm_mul
+#print Matrix.linfty_opNorm_mul /-
+theorem linfty_opNorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖ ≤ ‖A‖ * ‖B‖ :=
+  linfty_opNNNorm_mul _ _
+#align matrix.linfty_op_norm_mul Matrix.linfty_opNorm_mul
 -/
 
-#print Matrix.linfty_op_nnnorm_mulVec /-
-theorem linfty_op_nnnorm_mulVec (A : Matrix l m α) (v : m → α) : ‖A.mulVec v‖₊ ≤ ‖A‖₊ * ‖v‖₊ :=
+#print Matrix.linfty_opNNNorm_mulVec /-
+theorem linfty_opNNNorm_mulVec (A : Matrix l m α) (v : m → α) : ‖A.mulVec v‖₊ ≤ ‖A‖₊ * ‖v‖₊ :=
   by
   rw [← linfty_op_nnnorm_col (A.mul_vec v), ← linfty_op_nnnorm_col v]
   exact linfty_op_nnnorm_mul A (col v)
-#align matrix.linfty_op_nnnorm_mul_vec Matrix.linfty_op_nnnorm_mulVec
+#align matrix.linfty_op_nnnorm_mul_vec Matrix.linfty_opNNNorm_mulVec
 -/
 
-#print Matrix.linfty_op_norm_mulVec /-
-theorem linfty_op_norm_mulVec (A : Matrix l m α) (v : m → α) : ‖Matrix.mulVec A v‖ ≤ ‖A‖ * ‖v‖ :=
-  linfty_op_nnnorm_mulVec _ _
-#align matrix.linfty_op_norm_mul_vec Matrix.linfty_op_norm_mulVec
+#print Matrix.linfty_opNorm_mulVec /-
+theorem linfty_opNorm_mulVec (A : Matrix l m α) (v : m → α) : ‖Matrix.mulVec A v‖ ≤ ‖A‖ * ‖v‖ :=
+  linfty_opNNNorm_mulVec _ _
+#align matrix.linfty_op_norm_mul_vec Matrix.linfty_opNorm_mulVec
 -/
 
 end NonUnitalSeminormedRing
@@ -407,16 +407,16 @@ the norm of a matrix. -/
 protected def linftyOpNonUnitalSemiNormedRing [NonUnitalSeminormedRing α] :
     NonUnitalSeminormedRing (Matrix n n α) :=
   { Matrix.linftyOpSeminormedAddCommGroup, Matrix.instNonUnitalRing with
-    norm_hMul := linfty_op_norm_mul }
+    norm_hMul := linfty_opNorm_mul }
 #align matrix.linfty_op_non_unital_semi_normed_ring Matrix.linftyOpNonUnitalSemiNormedRing
 -/
 
-#print Matrix.linfty_op_normOneClass /-
+#print Matrix.linfty_opNormOneClass /-
 /-- The `L₁-L∞` norm preserves one on non-empty matrices. Note this is safe as an instance, as it
 carries no data. -/
-instance linfty_op_normOneClass [SeminormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
-    NormOneClass (Matrix n n α) where norm_one := (linfty_op_norm_diagonal _).trans norm_one
-#align matrix.linfty_op_norm_one_class Matrix.linfty_op_normOneClass
+instance linfty_opNormOneClass [SeminormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
+    NormOneClass (Matrix n n α) where norm_one := (linfty_opNorm_diagonal _).trans norm_one
+#align matrix.linfty_op_norm_one_class Matrix.linfty_opNormOneClass
 -/
 
 #print Matrix.linftyOpSemiNormedRing /-
