@@ -67,11 +67,11 @@ matching problem that Lean usually can't do unaided.
 -/
 class RelHomClass (F : Type _) {α β : outParam <| Type _} (r : outParam <| α → α → Prop)
     (s : outParam <| β → β → Prop) extends DFunLike F α fun _ => β where
-  map_rel : ∀ (f : F) {a b}, r a b → s (f a) (f b)
+  mapRel : ∀ (f : F) {a b}, r a b → s (f a) (f b)
 #align rel_hom_class RelHomClass
 -/
 
-export RelHomClass (map_rel)
+export RelHomClass (mapRel)
 
 -- The free parameters `r` and `s` are `out_param`s so this is not dangerous.
 attribute [nolint dangerous_instance] RelHomClass.toFunLike
@@ -84,13 +84,13 @@ variable {F : Type _}
 
 #print RelHomClass.isIrrefl /-
 protected theorem isIrrefl [RelHomClass F r s] (f : F) : ∀ [IsIrrefl β s], IsIrrefl α r
-  | ⟨H⟩ => ⟨fun a h => H _ (map_rel f h)⟩
+  | ⟨H⟩ => ⟨fun a h => H _ (mapRel f h)⟩
 #align rel_hom_class.is_irrefl RelHomClass.isIrrefl
 -/
 
 #print RelHomClass.isAsymm /-
 protected theorem isAsymm [RelHomClass F r s] (f : F) : ∀ [IsAsymm β s], IsAsymm α r
-  | ⟨H⟩ => ⟨fun a b h₁ h₂ => H _ _ (map_rel f h₁) (map_rel f h₂)⟩
+  | ⟨H⟩ => ⟨fun a b h₁ h₂ => H _ _ (mapRel f h₁) (mapRel f h₂)⟩
 #align rel_hom_class.is_asymm RelHomClass.isAsymm
 -/
 
@@ -116,7 +116,7 @@ namespace RelHom
 instance : RelHomClass (r →r s) r s where
   coe o := o.toFun
   coe_injective' f g h := by cases f; cases g; congr
-  map_rel := map_rel'
+  mapRel := map_rel'
 
 /-- Auxiliary instance if `rel_hom_class.to_fun_like.to_has_coe_to_fun` isn't found -/
 instance : CoeFun (r →r s) fun _ => α → β :=
@@ -181,7 +181,7 @@ protected def comp (g : s →r t) (f : r →r s) : r →r t :=
 #print RelHom.swap /-
 /-- A relation homomorphism is also a relation homomorphism between dual relations. -/
 protected def swap (f : r →r s) : swap r →r swap s :=
-  ⟨f, fun a b => f.map_rel⟩
+  ⟨f, fun a b => f.mapRel⟩
 #align rel_hom.swap RelHom.swap
 -/
 
@@ -211,7 +211,7 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
 /-- An increasing function is injective -/
 theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f : r →r s) :
     Injective f :=
-  injective_of_increasing r s f fun x y => f.map_rel
+  injective_of_increasing r s f fun x y => f.mapRel
 #align rel_hom.injective_of_increasing RelHom.injective_of_increasing
 -/
 
@@ -276,7 +276,7 @@ instance : CoeFun (r ↪r s) fun _ => α → β :=
 instance : RelHomClass (r ↪r s) r s where
   coe := coeFn
   coe_injective' f g h := by rcases f with ⟨⟨⟩⟩; rcases g with ⟨⟨⟩⟩; congr
-  map_rel f a b := Iff.mpr (map_rel_iff' f)
+  mapRel f a b := Iff.mpr (map_rel_iff' f)
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
@@ -798,7 +798,7 @@ instance : CoeFun (r ≃r s) fun _ => α → β :=
 instance : RelHomClass (r ≃r s) r s where
   coe := coeFn
   coe_injective' := Equiv.coe_fn_injective.comp toEquiv_injective
-  map_rel f a b := Iff.mpr (map_rel_iff' f)
+  mapRel f a b := Iff.mpr (map_rel_iff' f)
 
 @[simp]
 theorem toRelEmbedding_eq_coe (f : r ≃r s) : f.toRelEmbedding = f :=

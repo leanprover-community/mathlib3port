@@ -98,7 +98,7 @@ instance : ContinuousOrderHomClass (α →Co β) α β
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
-  map_rel f := f.monotone'
+  mapRel f := f.monotone'
   map_continuous f := f.continuous_toFun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`

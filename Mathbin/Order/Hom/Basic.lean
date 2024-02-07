@@ -140,7 +140,7 @@ instance [LE α] [LE β] [OrderIsoClass F α β] : CoeTC F (α ≃o β) :=
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toOrderHomClass [LE α] [LE β] [OrderIsoClass F α β] :
     OrderHomClass F α β :=
-  { EquivLike.toEmbeddingLike with map_rel := fun f a b => (map_le_map_iff f).2 }
+  { EquivLike.toEmbeddingLike with mapRel := fun f a b => (map_le_map_iff f).2 }
 #align order_iso_class.to_order_hom_class OrderIsoClass.toOrderHomClass
 -/
 
@@ -149,12 +149,12 @@ namespace OrderHomClass
 variable [Preorder α] [Preorder β] [OrderHomClass F α β]
 
 #print OrderHomClass.monotone /-
-protected theorem monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
+protected theorem monotone (f : F) : Monotone (f : α → β) := fun _ _ => mapRel f
 #align order_hom_class.monotone OrderHomClass.monotone
 -/
 
 #print OrderHomClass.mono /-
-protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
+protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => mapRel f
 #align order_hom_class.mono OrderHomClass.mono
 -/
 
@@ -237,7 +237,7 @@ protected theorem mono (f : α →o β) : Monotone f :=
 instance : OrderHomClass (α →o β) α β where
   coe := toFun
   coe_injective' f g h := by cases f; cases g; congr
-  map_rel f := f.Monotone
+  mapRel f := f.Monotone
 
 #print OrderHom.toFun_eq_coe /-
 @[simp]
@@ -851,7 +851,7 @@ is weakly monotone. -/
 @[simps (config := { fullyApplied := false })]
 def toOrderHom : α →o β where
   toFun := f
-  monotone' := StrictMono.monotone fun x y => f.map_rel
+  monotone' := StrictMono.monotone fun x y => f.mapRel
 #align rel_hom.to_order_hom RelHom.toOrderHom
 -/
 

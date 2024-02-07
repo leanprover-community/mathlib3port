@@ -174,7 +174,7 @@ theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n �
 instance strongHomClass : StrongHomClass L (M ↪ₑ[L] N) M N
     where
   map_fun := map_fun
-  map_rel := map_rel
+  mapRel := map_rel
 #align first_order.language.elementary_embedding.strong_hom_class FirstOrder.Language.ElementaryEmbedding.strongHomClass
 -/
 

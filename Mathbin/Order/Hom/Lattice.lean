@@ -169,7 +169,7 @@ attribute [simp] map_top map_bot map_sup map_inf
 instance (priority := 100) SupHomClass.toOrderHomClass [SemilatticeSup α] [SemilatticeSup β]
     [SupHomClass F α β] : OrderHomClass F α β :=
   { ‹SupHomClass F α β› with
-    map_rel := fun f a b h => by rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h] }
+    mapRel := fun f a b h => by rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h] }
 #align sup_hom_class.to_order_hom_class SupHomClass.toOrderHomClass
 -/
 
@@ -178,7 +178,7 @@ instance (priority := 100) SupHomClass.toOrderHomClass [SemilatticeSup α] [Semi
 instance (priority := 100) InfHomClass.toOrderHomClass [SemilatticeInf α] [SemilatticeInf β]
     [InfHomClass F α β] : OrderHomClass F α β :=
   { ‹InfHomClass F α β› with
-    map_rel := fun f a b h => by rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h] }
+    mapRel := fun f a b h => by rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h] }
 #align inf_hom_class.to_order_hom_class InfHomClass.toOrderHomClass
 -/
 

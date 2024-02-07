@@ -391,16 +391,16 @@ class MonoidHomClass (F : Type _) (M N : outParam <| Type _) [MulOneClass M] [Mu
 #align add_monoid_hom_class AddMonoidHomClass
 -/
 
-#print MonoidHom.monoidHomClass /-
+#print MonoidHom.instMonoidHomClass /-
 @[to_additive]
-instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N
+instance MonoidHom.instMonoidHomClass : MonoidHomClass (M →* N) M N
     where
   coe := MonoidHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_hMul := MonoidHom.map_mul'
   map_one := MonoidHom.map_one'
-#align monoid_hom.monoid_hom_class MonoidHom.monoidHomClass
-#align add_monoid_hom.add_monoid_hom_class AddMonoidHom.addMonoidHomClass
+#align monoid_hom.monoid_hom_class MonoidHom.instMonoidHomClass
+#align add_monoid_hom.add_monoid_hom_class AddMonoidHom.instAddMonoidHomClass
 -/
 
 @[to_additive]
@@ -1667,7 +1667,7 @@ instance : Inhabited (Monoid.End M) :=
   ⟨1⟩
 
 instance : MonoidHomClass (Monoid.End M) M M :=
-  MonoidHom.monoidHomClass
+  MonoidHom.instMonoidHomClass
 
 end End
 
@@ -1712,7 +1712,7 @@ instance : Inhabited (AddMonoid.End A) :=
   ⟨1⟩
 
 instance : AddMonoidHomClass (AddMonoid.End A) A A :=
-  AddMonoidHom.addMonoidHomClass
+  AddMonoidHom.instAddMonoidHomClass
 
 end End
 

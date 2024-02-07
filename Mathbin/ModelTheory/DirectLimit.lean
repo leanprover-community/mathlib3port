@@ -216,7 +216,7 @@ theorem relMap_unify_equiv {n : ℕ} (R : L.Relations n) (x : Fin n → Σ i, G 
     RelMap R (unify f x i hi) = RelMap R (unify f x j hj) :=
   by
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i j
-  rw [← (f i k ik).map_rel, comp_unify, ← (f j k jk).map_rel, comp_unify]
+  rw [← (f i k ik).mapRel, comp_unify, ← (f j k jk).mapRel, comp_unify]
 #align first_order.language.direct_limit.rel_map_unify_equiv FirstOrder.Language.DirectLimit.relMap_unify_equiv
 -/
 
@@ -398,7 +398,7 @@ def lift : DirectLimit G f ↪[L] P
     simp only [Quotient.lift_mk, embedding.map_fun]
   map_rel' n R x := by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
-    rw [rel_map_quotient_mk_sigma_mk G f, ← (g i).map_rel R y, ← Function.comp.assoc,
+    rw [rel_map_quotient_mk_sigma_mk G f, ← (g i).mapRel R y, ← Function.comp.assoc,
       Quotient.lift_comp_mk]
 #align first_order.language.direct_limit.lift FirstOrder.Language.DirectLimit.lift
 -/

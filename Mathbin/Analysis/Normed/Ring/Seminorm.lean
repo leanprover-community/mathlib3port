@@ -206,10 +206,12 @@ instance ringNormClass : RingNormClass (RingNorm R) R ℝ
 instance : CoeFun (RingNorm R) fun _ => R → ℝ :=
   ⟨fun p => p.toFun⟩
 
+#print RingNorm.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (p : RingNorm R) : p.toFun = p :=
   rfl
 #align ring_norm.to_fun_eq_coe RingNorm.toFun_eq_coe
+-/
 
 #print RingNorm.ext /-
 @[ext]
@@ -320,10 +322,12 @@ instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R ℝ
 instance : CoeFun (MulRingNorm R) fun _ => R → ℝ :=
   ⟨fun p => p.toFun⟩
 
+#print MulRingNorm.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
   rfl
 #align mul_ring_norm.to_fun_eq_coe MulRingNorm.toFun_eq_coe
+-/
 
 #print MulRingNorm.ext /-
 @[ext]

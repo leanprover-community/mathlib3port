@@ -104,7 +104,7 @@ theorem coe_to_fun_apply (ψ : AddChar R R') (a : R) : ψ a = ψ.toMonoidHom (of
 -/
 
 instance monoidHomClass : MonoidHomClass (AddChar R R') (Multiplicative R) R' :=
-  MonoidHom.monoidHomClass
+  MonoidHom.instMonoidHomClass
 #align add_char.monoid_hom_class AddChar.monoidHomClass
 
 #print AddChar.map_zero_one /-

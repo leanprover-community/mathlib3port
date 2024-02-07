@@ -521,7 +521,7 @@ end Structure
 class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
     [DFunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
-  map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
+  mapRel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
 #align first_order.language.hom_class FirstOrder.Language.HomClass
 -/
 
@@ -531,7 +531,7 @@ class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
 class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
     [DFunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
-  map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
+  mapRel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
 #align first_order.language.strong_hom_class FirstOrder.Language.StrongHomClass
 -/
 
@@ -540,7 +540,7 @@ instance (priority := 100) StrongHomClass.homClass {F M N} [L.Structure M] [L.St
     [DFunLike F M fun _ => N] [StrongHomClass L F M N] : HomClass L F M N
     where
   map_fun := StrongHomClass.map_fun
-  map_rel φ n R x := (StrongHomClass.map_rel φ R x).2
+  mapRel φ n R x := (StrongHomClass.map_rel φ R x).2
 #align first_order.language.strong_hom_class.hom_class FirstOrder.Language.StrongHomClass.homClass
 -/
 
@@ -550,7 +550,7 @@ def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.Structure M]
     [DFunLike F M fun _ => N] [HomClass L F M N] : StrongHomClass L F M N
     where
   map_fun := HomClass.map_fun
-  map_rel φ n R x := (IsAlgebraic.empty_relations n).elim R
+  mapRel φ n R x := (IsAlgebraic.empty_relations n).elim R
 #align first_order.language.hom_class.strong_hom_class_of_is_algebraic FirstOrder.Language.HomClass.strongHomClassOfIsAlgebraic
 -/
 
@@ -575,7 +575,7 @@ instance instFunLike : DFunLike (M →[L] N) M fun _ => N
 instance homClass : HomClass L (M →[L] N) M N
     where
   map_fun := map_fun'
-  map_rel := map_rel'
+  mapRel := map_rel'
 #align first_order.language.hom.hom_class FirstOrder.Language.Hom.homClass
 -/
 
@@ -707,15 +707,13 @@ instance embeddingLike : EmbeddingLike (M ↪[L] N) M N
 instance strongHomClass : StrongHomClass L (M ↪[L] N) M N
     where
   map_fun := map_fun'
-  map_rel := map_rel'
+  mapRel := map_rel'
 #align first_order.language.embedding.strong_hom_class FirstOrder.Language.Embedding.strongHomClass
 -/
 
-#print FirstOrder.Language.Embedding.hasCoeToFun /-
 instance hasCoeToFun : CoeFun (M ↪[L] N) fun _ => M → N :=
   DFunLike.hasCoeToFun
 #align first_order.language.embedding.has_coe_to_fun FirstOrder.Language.Embedding.hasCoeToFun
--/
 
 #print FirstOrder.Language.Embedding.map_fun /-
 @[simp]
@@ -891,7 +889,7 @@ instance : EquivLike (M ≃[L] N) M N where
 instance : StrongHomClass L (M ≃[L] N) M N
     where
   map_fun := map_fun'
-  map_rel := map_rel'
+  mapRel := map_rel'
 
 #print FirstOrder.Language.Equiv.symm /-
 /-- The inverse of a first-order equivalence is a first-order equivalence. -/

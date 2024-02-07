@@ -679,7 +679,7 @@ instance : BoundedOrderHomClass (BoundedOrderHom α β) α β
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
-  map_rel f := f.monotone'
+  mapRel f := f.monotone'
   map_top f := f.map_top'
   map_bot f := f.map_bot'
 

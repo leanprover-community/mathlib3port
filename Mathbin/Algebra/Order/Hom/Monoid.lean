@@ -142,7 +142,7 @@ end
 @[to_additive]
 instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] :
     OrderHomClass F α β :=
-  { ‹OrderMonoidHomClass F α β› with map_rel := OrderMonoidHomClass.monotone }
+  { ‹OrderMonoidHomClass F α β› with mapRel := OrderMonoidHomClass.monotone }
 #align order_monoid_hom_class.to_order_hom_class OrderMonoidHomClass.toOrderHomClass
 #align order_add_monoid_hom_class.to_order_hom_class OrderAddMonoidHomClass.toOrderHomClass
 -/

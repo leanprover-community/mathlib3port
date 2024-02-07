@@ -76,7 +76,7 @@ variable {G} {α : Type v} (C : G.Coloring α)
 
 #print SimpleGraph.Coloring.valid /-
 theorem Coloring.valid {v w : V} (h : G.Adj v w) : C v ≠ C w :=
-  C.map_rel h
+  C.mapRel h
 #align simple_graph.coloring.valid SimpleGraph.Coloring.valid
 -/
 

@@ -1022,7 +1022,7 @@ hom `M → p`. -/
 def codRestrict (p : L.Substructure N) (f : M →[L] N) (h : ∀ c, f c ∈ p) : M →[L] p
     where
   toFun c := ⟨f c, h c⟩
-  map_rel' n R x h := f.map_rel R x h
+  map_rel' n R x h := f.mapRel R x h
 #align first_order.language.hom.cod_restrict FirstOrder.Language.Hom.codRestrict
 -/
 
