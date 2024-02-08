@@ -95,7 +95,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
     simp only [map_map, comp_app]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
-    simp [Fin.predAbove_zero (ne_of_mem_of_not_mem hv hs)]
+    simp [Fin.predAbove_zero_of_ne_zero (ne_of_mem_of_not_mem hv hs)]
   right_inv s := by
     simp only [Fin.zero_succAbove, map_map, comp_app]
     nth_rw_rhs 1 [← map_id' s]

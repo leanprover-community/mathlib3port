@@ -169,11 +169,11 @@ theorem SimpleFunc.stronglyMeasurable {α β} {m : MeasurableSpace α} [Topologi
 #align measure_theory.simple_func.strongly_measurable MeasureTheory.SimpleFunc.stronglyMeasurable
 -/
 
-#print MeasureTheory.stronglyMeasurable_of_isEmpty /-
-theorem stronglyMeasurable_of_isEmpty [IsEmpty α] {m : MeasurableSpace α} [TopologicalSpace β]
-    (f : α → β) : StronglyMeasurable f :=
+#print MeasureTheory.StronglyMeasurable.of_finite /-
+theorem MeasureTheory.StronglyMeasurable.of_finite [IsEmpty α] {m : MeasurableSpace α}
+    [TopologicalSpace β] (f : α → β) : StronglyMeasurable f :=
   ⟨fun n => SimpleFunc.ofIsEmpty, isEmptyElim⟩
-#align measure_theory.strongly_measurable_of_is_empty MeasureTheory.stronglyMeasurable_of_isEmpty
+#align measure_theory.strongly_measurable_of_is_empty MeasureTheory.StronglyMeasurable.of_finite
 -/
 
 #print MeasureTheory.stronglyMeasurable_const /-

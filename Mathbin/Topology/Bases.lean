@@ -474,14 +474,14 @@ theorem IsSeparable.closure {s : Set α} (hs : IsSeparable s) : IsSeparable (clo
 #align topological_space.is_separable.closure TopologicalSpace.IsSeparable.closure
 -/
 
-#print TopologicalSpace.isSeparable_iUnion /-
-theorem isSeparable_iUnion {ι : Type _} [Countable ι] {s : ι → Set α}
+#print TopologicalSpace.IsSeparable.iUnion /-
+theorem TopologicalSpace.IsSeparable.iUnion {ι : Type _} [Countable ι] {s : ι → Set α}
     (hs : ∀ i, IsSeparable (s i)) : IsSeparable (⋃ i, s i) :=
   by
   choose c hc h'c using hs
   refine' ⟨⋃ i, c i, countable_Union hc, Union_subset_iff.2 fun i => _⟩
   exact (h'c i).trans (closure_mono (subset_Union _ i))
-#align topological_space.is_separable_Union TopologicalSpace.isSeparable_iUnion
+#align topological_space.is_separable_Union TopologicalSpace.IsSeparable.iUnion
 -/
 
 #print Set.Countable.isSeparable /-
@@ -508,10 +508,11 @@ theorem isSeparable_univ_iff : IsSeparable (univ : Set α) ↔ SeparableSpace α
 #align topological_space.is_separable_univ_iff TopologicalSpace.isSeparable_univ_iff
 -/
 
-#print TopologicalSpace.isSeparable_of_separableSpace /-
-theorem isSeparable_of_separableSpace [h : SeparableSpace α] (s : Set α) : IsSeparable s :=
+#print TopologicalSpace.IsSeparable.of_separableSpace /-
+theorem TopologicalSpace.IsSeparable.of_separableSpace [h : SeparableSpace α] (s : Set α) :
+    IsSeparable s :=
   IsSeparable.mono (isSeparable_univ_iff.2 h) (subset_univ _)
-#align topological_space.is_separable_of_separable_space TopologicalSpace.isSeparable_of_separableSpace
+#align topological_space.is_separable_of_separable_space TopologicalSpace.IsSeparable.of_separableSpace
 -/
 
 #print TopologicalSpace.IsSeparable.image /-
@@ -525,13 +526,13 @@ theorem IsSeparable.image {β : Type _} [TopologicalSpace β] {s : Set α} (hs :
 #align topological_space.is_separable.image TopologicalSpace.IsSeparable.image
 -/
 
-#print TopologicalSpace.isSeparable_of_separableSpace_subtype /-
-theorem isSeparable_of_separableSpace_subtype (s : Set α) [SeparableSpace s] : IsSeparable s :=
+#print TopologicalSpace.IsSeparable.of_subtype /-
+theorem TopologicalSpace.IsSeparable.of_subtype (s : Set α) [SeparableSpace s] : IsSeparable s :=
   by
   have : IsSeparable ((coe : s → α) '' (univ : Set s)) :=
     (is_separable_of_separable_space _).image continuous_subtype_val
   simpa only [image_univ, Subtype.range_coe_subtype]
-#align topological_space.is_separable_of_separable_space_subtype TopologicalSpace.isSeparable_of_separableSpace_subtype
+#align topological_space.is_separable_of_separable_space_subtype TopologicalSpace.IsSeparable.of_subtype
 -/
 
 end TopologicalSpace

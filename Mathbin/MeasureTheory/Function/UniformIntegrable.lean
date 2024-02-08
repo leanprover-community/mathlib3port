@@ -262,7 +262,7 @@ theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε :
   refine' ⟨M, hM_pos, (le_of_eq _).trans hfM⟩
   refine' lintegral_congr_ae _
   filter_upwards [hf.1.ae_eq_mk] with x hx
-  simp only [indicator_apply, coe_nnnorm, mem_set_of_eq, ENNReal.coe_eq_coe, hx.symm]
+  simp only [indicator_apply, coe_nnnorm, mem_set_of_eq, ENNReal.coe_inj, hx.symm]
 #align measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le
 -/
 

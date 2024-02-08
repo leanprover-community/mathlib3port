@@ -474,11 +474,11 @@ theorem top_ne_one : ∞ ≠ 1 :=
 #align ennreal.top_ne_one ENNReal.top_ne_one
 -/
 
-#print ENNReal.coe_eq_coe /-
+#print ENNReal.coe_inj /-
 @[simp, norm_cast]
-theorem coe_eq_coe : (↑r : ℝ≥0∞) = ↑q ↔ r = q :=
+theorem coe_inj : (↑r : ℝ≥0∞) = ↑q ↔ r = q :=
   WithTop.coe_eq_coe
-#align ennreal.coe_eq_coe ENNReal.coe_eq_coe
+#align ennreal.coe_eq_coe ENNReal.coe_inj
 -/
 
 #print ENNReal.coe_le_coe /-
@@ -503,28 +503,28 @@ theorem coe_mono : Monotone (coe : ℝ≥0 → ℝ≥0∞) := fun _ _ => coe_le_
 #print ENNReal.coe_eq_zero /-
 @[simp, norm_cast]
 theorem coe_eq_zero : (↑r : ℝ≥0∞) = 0 ↔ r = 0 :=
-  coe_eq_coe
+  coe_inj
 #align ennreal.coe_eq_zero ENNReal.coe_eq_zero
 -/
 
 #print ENNReal.zero_eq_coe /-
 @[simp, norm_cast]
 theorem zero_eq_coe : 0 = (↑r : ℝ≥0∞) ↔ 0 = r :=
-  coe_eq_coe
+  coe_inj
 #align ennreal.zero_eq_coe ENNReal.zero_eq_coe
 -/
 
 #print ENNReal.coe_eq_one /-
 @[simp, norm_cast]
 theorem coe_eq_one : (↑r : ℝ≥0∞) = 1 ↔ r = 1 :=
-  coe_eq_coe
+  coe_inj
 #align ennreal.coe_eq_one ENNReal.coe_eq_one
 -/
 
 #print ENNReal.one_eq_coe /-
 @[simp, norm_cast]
 theorem one_eq_coe : 1 = (↑r : ℝ≥0∞) ↔ 1 = r :=
-  coe_eq_coe
+  coe_inj
 #align ennreal.one_eq_coe ENNReal.one_eq_coe
 -/
 
@@ -537,7 +537,7 @@ theorem coe_pos : 0 < (↑r : ℝ≥0∞) ↔ 0 < r :=
 
 #print ENNReal.coe_ne_zero /-
 theorem coe_ne_zero : (r : ℝ≥0∞) ≠ 0 ↔ r ≠ 0 :=
-  not_congr coe_eq_coe
+  not_congr coe_inj
 #align ennreal.coe_ne_zero ENNReal.coe_ne_zero
 -/
 

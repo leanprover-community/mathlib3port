@@ -693,10 +693,10 @@ instance {n : ℕ} {i : Fin (n + 1)} : Epi (σ i) :=
   simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_mk]
   by_cases b ≤ i
   · use b
-    rw [Fin.predAbove_below i b (by simpa only [Fin.coe_eq_castSucc] using h)]
+    rw [Fin.predAbove_of_le_castSucc i b (by simpa only [Fin.coe_eq_castSucc] using h)]
     simp only [Fin.coe_eq_castSucc, Fin.castPred_castSucc]
   · use b.succ
-    rw [Fin.predAbove_above i b.succ _, Fin.pred_succ]
+    rw [Fin.predAbove_of_castSucc_lt i b.succ _, Fin.pred_succ]
     rw [not_le] at h 
     rw [Fin.lt_iff_val_lt_val] at h ⊢
     simpa only [Fin.val_succ, Fin.coe_castSucc] using Nat.lt.step h
@@ -775,9 +775,9 @@ theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk 
   simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
     small_category_comp, σ, mk_hom, OrderHom.coe_mk]
   by_cases h' : x ≤ i.cast_succ
-  · rw [Fin.predAbove_below i x h']
+  · rw [Fin.predAbove_of_le_castSucc i x h']
     have eq := Fin.castSucc_castPred (gt_of_gt_of_ge (Fin.castSucc_lt_last i) h')
-    erw [Fin.succAbove_below i.succ x.cast_pred _]; swap
+    erw [Fin.succAbove_of_castSucc_lt i.succ x.cast_pred _]; swap
     · rwa [Eq, ← Fin.le_castSucc_iff]
     rw [Eq]
   · simp only [not_le] at h' 
@@ -788,13 +788,13 @@ theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk 
           rw [h] at h' 
           simpa only [Fin.lt_iff_val_lt_val, Nat.not_lt_zero, Fin.val_zero] using h')
     simp only [show x = y.succ by rw [Fin.succ_pred]] at h' ⊢
-    rw [Fin.predAbove_above i y.succ h', Fin.pred_succ]
+    rw [Fin.predAbove_of_castSucc_lt i y.succ h', Fin.pred_succ]
     by_cases h'' : y = i
     · rw [h'']
       convert hi.symm
-      erw [Fin.succAbove_below i.succ _]
+      erw [Fin.succAbove_of_castSucc_lt i.succ _]
       exact Fin.lt_succ
-    · erw [Fin.succAbove_above i.succ _]
+    · erw [Fin.succAbove_of_le_castSucc i.succ _]
       simp only [Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val, Fin.val_succ, Fin.coe_castSucc,
         Nat.lt_succ_iff, Fin.ext_iff] at h' h'' ⊢
       cases' Nat.le.dest h' with c hc
@@ -850,9 +850,9 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
       small_category_comp]
     by_cases h' : θ.to_order_hom x ≤ i
     · simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_mk]
-      rw [Fin.predAbove_below (Fin.castPred i) (θ.to_order_hom x)
+      rw [Fin.predAbove_of_le_castSucc (Fin.castPred i) (θ.to_order_hom x)
           (by simpa [Fin.castSucc_castPred h] using h')]
-      erw [Fin.succAbove_below i]; swap
+      erw [Fin.succAbove_of_castSucc_lt i]; swap
       · simp only [Fin.lt_iff_val_lt_val, Fin.coe_castSucc]
         exact
           lt_of_le_of_lt (Fin.coe_castPred_le_self _)
@@ -861,9 +861,9 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
       apply lt_of_le_of_lt h' h
     · simp only [not_le] at h' 
       simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_mk,
-        Fin.predAbove_above (Fin.castPred i) (θ.to_order_hom x)
+        Fin.predAbove_of_castSucc_lt (Fin.castPred i) (θ.to_order_hom x)
           (by simpa only [Fin.castSucc_castPred h] using h')]
-      erw [Fin.succAbove_above i _, Fin.succ_pred]
+      erw [Fin.succAbove_of_le_castSucc i _, Fin.succ_pred]
       simpa only [Fin.le_iff_val_le_val, Fin.coe_castSucc, Fin.coe_pred] using
         Nat.le_pred_of_lt (fin.lt_iff_coe_lt_coe.mp h')
   · obtain rfl := le_antisymm (Fin.le_last i) (not_lt.mp h)

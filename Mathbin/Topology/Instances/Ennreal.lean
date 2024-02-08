@@ -71,7 +71,7 @@ theorem embedding_coe : Embedding (coe : ℝ≥0 → ℝ≥0∞) :=
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
         exact ⟨Ioi a, isOpen_Ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => coe_eq_coe.1⟩
+        exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => coe_inj.1⟩
 #align ennreal.embedding_coe ENNReal.embedding_coe
 -/
 

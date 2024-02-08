@@ -770,8 +770,8 @@ def succAboveCases {α : Fin (n + 1) → Sort u} (i : Fin (n + 1)) (x : α i)
     (p : ∀ j : Fin n, α (i.succAboveEmb j)) (j : Fin (n + 1)) : α j :=
   if hj : j = i then Eq.ndrec x hj.symm
   else
-    if hlt : j < i then Eq.recOn (succAbove_castLT hlt) (p _)
-    else Eq.recOn (succAbove_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
+    if hlt : j < i then Eq.recOn (succAboveEmb_castLT hlt) (p _)
+    else Eq.recOn (succAboveEmb_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
 #align fin.succ_above_cases Fin.succAboveCases
 -/
 
@@ -847,7 +847,7 @@ theorem eq_insertNth_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbov
 #print Fin.insertNth_apply_below /-
 theorem insertNth_apply_below {i j : Fin (n + 1)} (h : j < i) (x : α i)
     (p : ∀ k, α (i.succAboveEmb k)) :
-    i.insertNth x p j = Eq.recOn (succAbove_castLT h) (p <| j.castLT _) := by
+    i.insertNth x p j = Eq.recOn (succAboveEmb_castLT h) (p <| j.castLT _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
 #align fin.insert_nth_apply_below Fin.insertNth_apply_below
 -/
@@ -855,7 +855,7 @@ theorem insertNth_apply_below {i j : Fin (n + 1)} (h : j < i) (x : α i)
 #print Fin.insertNth_apply_above /-
 theorem insertNth_apply_above {i j : Fin (n + 1)} (h : i < j) (x : α i)
     (p : ∀ k, α (i.succAboveEmb k)) :
-    i.insertNth x p j = Eq.recOn (succAbove_pred h) (p <| j.pred _) := by
+    i.insertNth x p j = Eq.recOn (succAboveEmb_pred h) (p <| j.pred _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 #align fin.insert_nth_apply_above Fin.insertNth_apply_above
 -/

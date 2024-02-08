@@ -117,12 +117,13 @@ theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
 #align with_top.coe_mul WithTop.coe_mul
 -/
 
-#print WithTop.mul_coe /-
-theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind fun a : α => ↑(a * b)
+#print WithTop.mul_coe_eq_bind /-
+theorem mul_coe_eq_bind {b : α} (hb : b ≠ 0) :
+    ∀ {a : WithTop α}, a * b = a.bind fun a : α => ↑(a * b)
   | none =>
     show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by simp [hb]
   | some a => show ↑a * ↑b = ↑(a * b) from coe_mul.symm
-#align with_top.mul_coe WithTop.mul_coe
+#align with_top.mul_coe WithTop.mul_coe_eq_bind
 -/
 
 #print WithTop.untop'_zero_mul /-
@@ -310,10 +311,11 @@ theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
 #align with_bot.coe_mul WithBot.coe_mul
 -/
 
-#print WithBot.mul_coe /-
-theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : a * b = a.bind fun a : α => ↑(a * b) :=
-  WithTop.mul_coe hb
-#align with_bot.mul_coe WithBot.mul_coe
+#print WithBot.mul_coe_eq_bind /-
+theorem mul_coe_eq_bind {b : α} (hb : b ≠ 0) {a : WithBot α} :
+    a * b = a.bind fun a : α => ↑(a * b) :=
+  WithTop.mul_coe_eq_bind hb
+#align with_bot.mul_coe WithBot.mul_coe_eq_bind
 -/
 
 end MulZeroClass

@@ -414,8 +414,8 @@ instance : CommRing (PerfectClosure K p) :=
                 simp only [RingHom.iterate_map_hMul, RingHom.iterate_map_add, ← iterate_add_apply,
                   add_mul, add_comm, add_left_comm] }
 
-#print PerfectClosure.eq_iff' /-
-theorem eq_iff' (x y : ℕ × K) :
+#print PerfectClosure.mk_eq_iff /-
+theorem mk_eq_iff (x y : ℕ × K) :
     mk K p x = mk K p y ↔ ∃ z, (frobenius K p^[y.1 + z]) x.2 = (frobenius K p^[x.1 + z]) y.2 :=
   by
   constructor
@@ -439,7 +439,7 @@ theorem eq_iff' (x y : ℕ × K) :
   cases' H with z H; dsimp only at H 
   rw [r.sound K p (n + z) m x _ rfl, r.sound K p (m + z) n y _ rfl, H]
   rw [add_assoc, add_comm, add_comm z]
-#align perfect_closure.eq_iff' PerfectClosure.eq_iff'
+#align perfect_closure.eq_iff' PerfectClosure.mk_eq_iff
 -/
 
 #print PerfectClosure.nat_cast /-
@@ -518,7 +518,7 @@ end Ring
 #print PerfectClosure.eq_iff /-
 theorem eq_iff [CommRing K] [IsDomain K] (p : ℕ) [Fact p.Prime] [CharP K p] (x y : ℕ × K) :
     Quot.mk (R K p) x = Quot.mk (R K p) y ↔ (frobenius K p^[y.1]) x.2 = (frobenius K p^[x.1]) y.2 :=
-  (eq_iff' K p x y).trans
+  (mk_eq_iff K p x y).trans
     ⟨fun ⟨z, H⟩ => (frobenius_inj K p).iterate z <| by simpa only [add_comm, iterate_add] using H,
       fun H => ⟨0, H⟩⟩
 #align perfect_closure.eq_iff PerfectClosure.eq_iff

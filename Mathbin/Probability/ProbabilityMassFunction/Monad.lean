@@ -358,7 +358,7 @@ theorem bindOnSupport_bindOnSupport (p : PMF α) (f : ∀ a ∈ p.support, PMF �
   refine' PMF.ext fun a => _
   simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
-  simp only [ENNReal.tsum_eq_zero, ENNReal.coe_eq_coe, ENNReal.coe_eq_zero, ENNReal.coe_zero,
+  simp only [ENNReal.tsum_eq_zero, ENNReal.coe_inj, ENNReal.coe_eq_zero, ENNReal.coe_zero,
     dite_eq_left_iff, mul_eq_zero]
   refine' ennreal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => _)
   split_ifs
