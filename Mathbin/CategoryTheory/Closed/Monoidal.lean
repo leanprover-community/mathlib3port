@@ -429,7 +429,7 @@ theorem ofEquiv_curry_def (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
       (F.1.1.Adjunction.homEquiv Y ((ihom _).obj _))
         (MonoidalClosed.curry
           (F.1.1.inv.Adjunction.homEquiv (F.1.1.obj X ⊗ F.1.1.obj Y) Z
-            ((compInvIso (F.commTensorLeft X)).Hom.app Y ≫ f))) :=
+            ((CategoryTheory.Iso.compInvIso (F.commTensorLeft X)).Hom.app Y ≫ f))) :=
   rfl
 #align category_theory.monoidal_closed.of_equiv_curry_def CategoryTheory.MonoidalClosed.ofEquiv_curry_def
 -/
@@ -445,7 +445,7 @@ theorem ofEquiv_uncurry_def (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor
     [h : MonoidalClosed D] {X Y Z : C}
     (f : Y ⟶ (@ihom _ _ _ X <| (MonoidalClosed.ofEquiv F).1 X).obj Z) :
     @MonoidalClosed.uncurry _ _ _ _ _ _ ((MonoidalClosed.ofEquiv F).1 _) f =
-      (compInvIso (F.commTensorLeft X)).inv.app Y ≫
+      (CategoryTheory.Iso.compInvIso (F.commTensorLeft X)).inv.app Y ≫
         (F.1.1.inv.Adjunction.homEquiv (F.1.1.obj X ⊗ F.1.1.obj Y) Z).symm
           (MonoidalClosed.uncurry
             ((F.1.1.Adjunction.homEquiv Y ((ihom (F.1.1.obj X)).obj (F.1.1.obj Z))).symm f)) :=

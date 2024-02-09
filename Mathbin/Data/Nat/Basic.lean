@@ -1183,12 +1183,12 @@ instance decidableForallFin {n : ℕ} (P : Fin n → Prop) [H : DecidablePred P]
 #align nat.decidable_forall_fin Nat.decidableForallFin
 -/
 
-#print Nat.decidableBallLe /-
-instance decidableBallLe (n : ℕ) (P : ∀ k ≤ n, Prop) [H : ∀ n h, Decidable (P n h)] :
+#print Nat.decidableBallLE /-
+instance decidableBallLE (n : ℕ) (P : ∀ k ≤ n, Prop) [H : ∀ n h, Decidable (P n h)] :
     Decidable (∀ n h, P n h) :=
   decidable_of_iff (∀ (k) (h : k < succ n), P k (le_of_lt_succ h))
     ⟨fun a k h => a k (lt_succ_of_le h), fun a k h => a k _⟩
-#align nat.decidable_ball_le Nat.decidableBallLe
+#align nat.decidable_ball_le Nat.decidableBallLE
 -/
 
 #print Nat.decidableExistsLT /-
@@ -1201,11 +1201,11 @@ instance decidableExistsLT {P : ℕ → Prop} [h : DecidablePred P] :
 #align nat.decidable_exists_lt Nat.decidableExistsLT
 -/
 
-#print Nat.decidableExistsLe /-
-instance decidableExistsLe {P : ℕ → Prop} [h : DecidablePred P] :
+#print Nat.decidableExistsLE /-
+instance decidableExistsLE {P : ℕ → Prop} [h : DecidablePred P] :
     DecidablePred fun n => ∃ m : ℕ, m ≤ n ∧ P m := fun n =>
   decidable_of_iff (∃ m, m < n + 1 ∧ P m) (exists_congr fun x => and_congr_left' lt_succ_iff)
-#align nat.decidable_exists_le Nat.decidableExistsLe
+#align nat.decidable_exists_le Nat.decidableExistsLE
 -/
 
 end Nat

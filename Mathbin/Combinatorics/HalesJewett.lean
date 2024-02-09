@@ -312,6 +312,7 @@ private theorem exists_mono_in_high_dimension' :
       -- By choice of `ι`, `C'` either has `r` color-focused lines or a monochromatic line.
       specialize hι C'
       rcases hι with (⟨s, sr⟩ | _)
+      -- By above, we are done if `C'` has a monochromatic line.
       on_goal 2 => exact Or.inr (mono_of_mono hι)
       -- Here we assume `C'` has `r` color focused lines. We split into cases depending on whether one of
       -- these `r` lines has the same color as the focus point.
