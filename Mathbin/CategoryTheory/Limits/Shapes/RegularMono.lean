@@ -133,7 +133,7 @@ See also `pullback.fst_of_mono` for the basic monomorphism version, and
 def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
     [hr : RegularMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
     RegularMono f :=
-  regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
+  regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.isLimitOfFlip t)
 #align category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
 -/
 
@@ -286,7 +286,7 @@ See also `pushout.fst_of_epi` for the basic epimorphism version, and
 def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
     [fr : RegularEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
     RegularEpi k :=
-  regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
+  regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.isColimitOfFlip t)
 #align category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
 -/
 

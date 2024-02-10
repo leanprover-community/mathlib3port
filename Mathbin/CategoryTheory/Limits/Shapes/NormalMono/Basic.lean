@@ -131,7 +131,7 @@ See also `pullback.fst_of_mono` for the basic monomorphism version, and
 def normalOfIsPullbackFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
     [hn : NormalMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
     NormalMono f :=
-  normalOfIsPullbackSndOfNormal comm.symm (PullbackCone.flipIsLimit t)
+  normalOfIsPullbackSndOfNormal comm.symm (PullbackCone.isLimitOfFlip t)
 #align category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
 -/
 
@@ -255,7 +255,7 @@ See also `pushout.fst_of_epi` for the basic epimorphism version, and
 def normalOfIsPushoutFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
     [hn : NormalEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
     NormalEpi k :=
-  normalOfIsPushoutSndOfNormal comm.symm (PushoutCocone.flipIsColimit t)
+  normalOfIsPushoutSndOfNormal comm.symm (PushoutCocone.isColimitOfFlip t)
 #align category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
 -/
 

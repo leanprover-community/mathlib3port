@@ -279,10 +279,10 @@ section Seminormed
 
 variable [NormedDivisionRing 𝕜] [SeminormedAddCommGroup E] [Module 𝕜 E] [BoundedSMul 𝕜 E]
 
-#print ContinuousLinearMap.toSpanSingleton_homothety /-
+#print LinearMap.toSpanSingleton_homothety /-
 theorem toSpanSingleton_homothety (x : E) (c : 𝕜) :
     ‖LinearMap.toSpanSingleton 𝕜 E x c‖ = ‖x‖ * ‖c‖ := by rw [mul_comm]; exact norm_smul _ _
-#align continuous_linear_map.to_span_singleton_homothety ContinuousLinearMap.toSpanSingleton_homothety
+#align continuous_linear_map.to_span_singleton_homothety LinearMap.toSpanSingleton_homothety
 -/
 
 end Seminormed
@@ -297,11 +297,11 @@ section Seminormed
 
 variable [NormedDivisionRing 𝕜] [SeminormedAddCommGroup E] [Module 𝕜 E] [BoundedSMul 𝕜 E]
 
-#print ContinuousLinearEquiv.toSpanNonzeroSingleton_homothety /-
+#print LinearEquiv.toSpanNonzeroSingleton_homothety /-
 theorem toSpanNonzeroSingleton_homothety (x : E) (h : x ≠ 0) (c : 𝕜) :
     ‖LinearEquiv.toSpanNonzeroSingleton 𝕜 E x h c‖ = ‖x‖ * ‖c‖ :=
-  ContinuousLinearMap.toSpanSingleton_homothety _ _ _
-#align continuous_linear_equiv.to_span_nonzero_singleton_homothety ContinuousLinearEquiv.toSpanNonzeroSingleton_homothety
+  LinearMap.toSpanSingleton_homothety _ _ _
+#align continuous_linear_equiv.to_span_nonzero_singleton_homothety LinearEquiv.toSpanNonzeroSingleton_homothety
 -/
 
 end Seminormed

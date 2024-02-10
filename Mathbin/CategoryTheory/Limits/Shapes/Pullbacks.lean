@@ -875,9 +875,9 @@ def IsLimit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫
 #align category_theory.limits.pullback_cone.is_limit.mk CategoryTheory.Limits.PullbackCone.IsLimit.mk
 -/
 
-#print CategoryTheory.Limits.PullbackCone.flipIsLimit /-
+#print CategoryTheory.Limits.PullbackCone.isLimitOfFlip /-
 /-- The flip of a pullback square is a pullback square. -/
-def flipIsLimit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g}
+def isLimitOfFlip {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g}
     (t : IsLimit (mk _ _ comm.symm)) : IsLimit (mk _ _ comm) :=
   isLimitAux' _ fun s =>
     by
@@ -887,7 +887,7 @@ def flipIsLimit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g}
     apply (mk k h _).equalizer_ext
     · rwa [(is_limit.lift' t _ _ _).2.1]
     · rwa [(is_limit.lift' t _ _ _).2.2]
-#align category_theory.limits.pullback_cone.flip_is_limit CategoryTheory.Limits.PullbackCone.flipIsLimit
+#align category_theory.limits.pullback_cone.flip_is_limit CategoryTheory.Limits.PullbackCone.isLimitOfFlip
 -/
 
 #print CategoryTheory.Limits.PullbackCone.isLimitMkIdId /-
@@ -1169,9 +1169,9 @@ def IsColimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫
 #align category_theory.limits.pushout_cocone.is_colimit.mk CategoryTheory.Limits.PushoutCocone.IsColimit.mk
 -/
 
-#print CategoryTheory.Limits.PushoutCocone.flipIsColimit /-
+#print CategoryTheory.Limits.PushoutCocone.isColimitOfFlip /-
 /-- The flip of a pushout square is a pushout square. -/
-def flipIsColimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k}
+def isColimitOfFlip {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k}
     (t : IsColimit (mk _ _ comm.symm)) : IsColimit (mk _ _ comm) :=
   isColimitAux' _ fun s =>
     by
@@ -1181,7 +1181,7 @@ def flipIsColimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k}
     apply (mk k h _).coequalizer_ext
     · rwa [(is_colimit.desc' t _ _ _).2.1]
     · rwa [(is_colimit.desc' t _ _ _).2.2]
-#align category_theory.limits.pushout_cocone.flip_is_colimit CategoryTheory.Limits.PushoutCocone.flipIsColimit
+#align category_theory.limits.pushout_cocone.flip_is_colimit CategoryTheory.Limits.PushoutCocone.isColimitOfFlip
 -/
 
 #print CategoryTheory.Limits.PushoutCocone.isColimitMkIdId /-
@@ -1858,7 +1858,7 @@ variable (f : X ⟶ Z) (g : Y ⟶ Z)
 /-- Making this a global instance would make the typeclass seach go in an infinite loop. -/
 theorem hasPullback_symmetry [HasPullback f g] : HasPullback g f :=
   ⟨⟨⟨PullbackCone.mk _ _ pullback.condition.symm,
-        PullbackCone.flipIsLimit (pullbackIsPullback _ _)⟩⟩⟩
+        PullbackCone.isLimitOfFlip (pullbackIsPullback _ _)⟩⟩⟩
 #align category_theory.limits.has_pullback_symmetry CategoryTheory.Limits.hasPullback_symmetry
 -/
 
@@ -1868,7 +1868,7 @@ attribute [local instance] has_pullback_symmetry
 /-- The isomorphism `X ×[Z] Y ≅ Y ×[Z] X`. -/
 def pullbackSymmetry [HasPullback f g] : pullback f g ≅ pullback g f :=
   IsLimit.conePointUniqueUpToIso
-    (PullbackCone.flipIsLimit (pullbackIsPullback f g) :
+    (PullbackCone.isLimitOfFlip (pullbackIsPullback f g) :
       IsLimit (PullbackCone.mk _ _ pullback.condition.symm))
     (limit.isLimit _)
 #align category_theory.limits.pullback_symmetry CategoryTheory.Limits.pullbackSymmetry
@@ -1914,7 +1914,7 @@ variable (f : X ⟶ Y) (g : X ⟶ Z)
 /-- Making this a global instance would make the typeclass seach go in an infinite loop. -/
 theorem hasPushout_symmetry [HasPushout f g] : HasPushout g f :=
   ⟨⟨⟨PushoutCocone.mk _ _ pushout.condition.symm,
-        PushoutCocone.flipIsColimit (pushoutIsPushout _ _)⟩⟩⟩
+        PushoutCocone.isColimitOfFlip (pushoutIsPushout _ _)⟩⟩⟩
 #align category_theory.limits.has_pushout_symmetry CategoryTheory.Limits.hasPushout_symmetry
 -/
 
@@ -1924,7 +1924,7 @@ attribute [local instance] has_pushout_symmetry
 /-- The isomorphism `Y ⨿[X] Z ≅ Z ⨿[X] Y`. -/
 def pushoutSymmetry [HasPushout f g] : pushout f g ≅ pushout g f :=
   IsColimit.coconePointUniqueUpToIso
-    (PushoutCocone.flipIsColimit (pushoutIsPushout f g) :
+    (PushoutCocone.isColimitOfFlip (pushoutIsPushout f g) :
       IsColimit (PushoutCocone.mk _ _ pushout.condition.symm))
     (colimit.isColimit _)
 #align category_theory.limits.pushout_symmetry CategoryTheory.Limits.pushoutSymmetry
@@ -1935,7 +1935,7 @@ def pushoutSymmetry [HasPushout f g] : pushout f g ≅ pushout g f :=
 theorem inl_comp_pushoutSymmetry_hom [HasPushout f g] :
     pushout.inl ≫ (pushoutSymmetry f g).Hom = pushout.inr :=
   (colimit.isColimit (span f g)).comp_coconePointUniqueUpToIso_hom
-    (PushoutCocone.flipIsColimit (pushoutIsPushout g f)) _
+    (PushoutCocone.isColimitOfFlip (pushoutIsPushout g f)) _
 #align category_theory.limits.inl_comp_pushout_symmetry_hom CategoryTheory.Limits.inl_comp_pushoutSymmetry_hom
 -/
 
@@ -1944,7 +1944,7 @@ theorem inl_comp_pushoutSymmetry_hom [HasPushout f g] :
 theorem inr_comp_pushoutSymmetry_hom [HasPushout f g] :
     pushout.inr ≫ (pushoutSymmetry f g).Hom = pushout.inl :=
   (colimit.isColimit (span f g)).comp_coconePointUniqueUpToIso_hom
-    (PushoutCocone.flipIsColimit (pushoutIsPushout g f)) _
+    (PushoutCocone.isColimitOfFlip (pushoutIsPushout g f)) _
 #align category_theory.limits.inr_comp_pushout_symmetry_hom CategoryTheory.Limits.inr_comp_pushoutSymmetry_hom
 -/
 

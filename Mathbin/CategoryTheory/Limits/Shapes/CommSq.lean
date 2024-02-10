@@ -528,7 +528,7 @@ variable {P X Y Z : C} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ 
 
 #print CategoryTheory.IsPullback.flip /-
 theorem flip (h : IsPullback fst snd f g) : IsPullback snd fst g f :=
-  of_isLimit (@PullbackCone.flipIsLimit _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsLimit)
+  of_isLimit (@PullbackCone.isLimitOfFlip _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsLimit)
 #align category_theory.is_pullback.flip CategoryTheory.IsPullback.flip
 -/
 
@@ -784,7 +784,7 @@ variable {Z X Y P : C} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ 
 
 #print CategoryTheory.IsPushout.flip /-
 theorem flip (h : IsPushout f g inl inr) : IsPushout g f inr inl :=
-  of_isColimit (@PushoutCocone.flipIsColimit _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsColimit)
+  of_isColimit (@PushoutCocone.isColimitOfFlip _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsColimit)
 #align category_theory.is_pushout.flip CategoryTheory.IsPushout.flip
 -/
 
