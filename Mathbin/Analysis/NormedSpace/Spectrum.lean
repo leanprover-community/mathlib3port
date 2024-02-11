@@ -328,7 +328,7 @@ power series with coefficients `a ^ n` represents the function `(1 - z • a)⁻
 radius `‖a‖₊⁻¹`. -/
 theorem hasFPowerSeriesOnBall_inverse_one_sub_smul [CompleteSpace A] (a : A) :
     HasFPowerSeriesOnBall (fun z : 𝕜 => Ring.inverse (1 - z • a))
-      (fun n => ContinuousMultilinearMap.mkPiField 𝕜 (Fin n) (a ^ n)) 0 ‖a‖₊⁻¹ :=
+      (fun n => ContinuousMultilinearMap.mkPiRing 𝕜 (Fin n) (a ^ n)) 0 ‖a‖₊⁻¹ :=
   { r_le :=
       by
       refine'
@@ -412,7 +412,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectralRadius (a : A) :
   refine' ennreal.inv_le_inv.mp (le_of_forall_pos_nnreal_lt fun r r_pos r_lt => _)
   simp_rw [inv_limsup, ← one_div]
   let p : FormalMultilinearSeries ℂ ℂ A := fun n =>
-    ContinuousMultilinearMap.mkPiField ℂ (Fin n) (a ^ n)
+    ContinuousMultilinearMap.mkPiRing ℂ (Fin n) (a ^ n)
   suffices h : (r : ℝ≥0∞) ≤ p.radius
   · convert h
     simp only [p.radius_eq_liminf, ← norm_toNNReal, norm_mk_pi_field]

@@ -198,15 +198,15 @@ section Preorder
 
 variable [Preorder α] [TopologicalSpace α] [Topology.IsLower α] {s : Set α}
 
-#print Topology.IsLower.WithLowerHomeomorph /-
+#print Topology.IsLower.withLowerHomeomorph /-
 /-- If `α` is equipped with the lower topology, then it is homeomorphic to `with_lower_topology α`.
 -/
-def Topology.IsLower.WithLowerHomeomorph : Topology.WithLower α ≃ₜ α :=
+def Topology.IsLower.withLowerHomeomorph : Topology.WithLower α ≃ₜ α :=
   {
     Topology.WithLower.ofLower with
     continuous_toFun := by convert continuous_id; apply topology_eq_lower_topology
     continuous_invFun := by convert ← continuous_id; apply topology_eq_lower_topology }
-#align lower_topology.with_lower_topology_homeomorph Topology.IsLower.WithLowerHomeomorph
+#align lower_topology.with_lower_topology_homeomorph Topology.IsLower.withLowerHomeomorph
 -/
 
 #print Topology.IsLower.isOpen_iff_generate_Ici_compl /-

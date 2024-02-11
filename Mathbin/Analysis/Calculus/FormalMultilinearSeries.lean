@@ -315,11 +315,11 @@ def coeff (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ) : E :=
 #align formal_multilinear_series.coeff FormalMultilinearSeries.coeff
 -/
 
-#print FormalMultilinearSeries.mkPiField_coeff_eq /-
-theorem mkPiField_coeff_eq (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ) :
-    ContinuousMultilinearMap.mkPiField 𝕜 (Fin n) (p.coeff n) = p n :=
-  (p n).mkPiField_apply_one_eq_self
-#align formal_multilinear_series.mk_pi_field_coeff_eq FormalMultilinearSeries.mkPiField_coeff_eq
+#print FormalMultilinearSeries.mkPiRing_coeff_eq /-
+theorem mkPiRing_coeff_eq (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ) :
+    ContinuousMultilinearMap.mkPiRing 𝕜 (Fin n) (p.coeff n) = p n :=
+  (p n).mkPiRing_apply_one_eq_self
+#align formal_multilinear_series.mk_pi_field_coeff_eq FormalMultilinearSeries.mkPiRing_coeff_eq
 -/
 
 #print FormalMultilinearSeries.apply_eq_prod_smul_coeff /-
@@ -333,7 +333,7 @@ theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n :=
 
 #print FormalMultilinearSeries.coeff_eq_zero /-
 theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
-  rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.mkPiField_eq_zero_iff]
+  rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.mkPiRing_eq_zero_iff]
 #align formal_multilinear_series.coeff_eq_zero FormalMultilinearSeries.coeff_eq_zero
 -/
 
@@ -346,7 +346,7 @@ theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by s
 #print FormalMultilinearSeries.norm_apply_eq_norm_coef /-
 @[simp]
 theorem norm_apply_eq_norm_coef : ‖p n‖ = ‖coeff p n‖ := by
-  rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.norm_mkPiField]
+  rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.norm_mkPiRing]
 #align formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
 -/
 
