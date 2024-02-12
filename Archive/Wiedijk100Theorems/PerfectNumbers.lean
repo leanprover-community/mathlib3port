@@ -39,7 +39,7 @@ theorem odd_mersenne_succ (k : ℕ) : ¬2 ∣ mersenne (k + 1) := by
 
 namespace Nat
 
-open Nat.ArithmeticFunction Finset
+open ArithmeticFunction Finset
 
 open scoped ArithmeticFunction
 

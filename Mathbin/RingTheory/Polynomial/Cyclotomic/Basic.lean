@@ -562,7 +562,7 @@ theorem X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd (R) [CommRing R] {
 
 section ArithmeticFunction
 
-open Nat.ArithmeticFunction
+open ArithmeticFunction
 
 open scoped ArithmeticFunction
 

@@ -28,11 +28,9 @@ instance IsSquare.decidablePred [Mul α] [Fintype α] [DecidableEq α] :
 
 end Fintype
 
-#print Fintype.card_fin_even /-
 /-- The cardinality of `fin (bit0 n)` is even, `fact` version.
 This `fact` is needed as an instance by `matrix.special_linear_group.has_neg`. -/
 theorem Fintype.card_fin_even {n : ℕ} : Fact (Even (Fintype.card (Fin (bit0 n)))) :=
   ⟨by rw [Fintype.card_fin]; exact even_bit0 _⟩
 #align fintype.card_fin_even Fintype.card_fin_even
--/
 
