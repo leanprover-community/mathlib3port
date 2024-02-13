@@ -524,7 +524,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
       exact ⟨(mem_root_set.mp w.2).2, mt (hc0 w).mpr (equiv.perm.mem_support.mp hw)⟩
     · rintro ⟨hz1, hz2⟩
       exact ⟨⟨z, mem_root_set.mpr ⟨hp, hz1⟩⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
-  rw [← Finset.card_disjoint_union]
+  rw [← Finset.card_union_of_disjoint]
   · apply congr_arg Finset.card
     simp_rw [Finset.ext_iff, Finset.mem_union, ha, hb, hc]
     tauto

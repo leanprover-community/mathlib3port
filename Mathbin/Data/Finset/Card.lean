@@ -544,17 +544,19 @@ theorem card_union_le (s t : Finset α) : (s ∪ t).card ≤ s.card + t.card :=
 #align finset.card_union_le Finset.card_union_le
 -/
 
-#print Finset.card_union_eq /-
-theorem card_union_eq (h : Disjoint s t) : (s ∪ t).card = s.card + t.card := by
+#print Finset.card_union_of_disjoint /-
+theorem card_union_of_disjoint (h : Disjoint s t) : (s ∪ t).card = s.card + t.card := by
   rw [← disj_union_eq_union s t h, card_disj_union _ _ _]
-#align finset.card_union_eq Finset.card_union_eq
+#align finset.card_union_eq Finset.card_union_of_disjoint
 -/
 
-#print Finset.card_disjoint_union /-
+/- warning: finset.card_disjoint_union clashes with finset.card_union_eq -> Finset.card_union_of_disjoint
+Case conversion may be inaccurate. Consider using '#align finset.card_disjoint_union Finset.card_union_of_disjointₓ'. -/
+#print Finset.card_union_of_disjoint /-
 @[simp]
-theorem card_disjoint_union (h : Disjoint s t) : card (s ∪ t) = s.card + t.card :=
-  card_union_eq h
-#align finset.card_disjoint_union Finset.card_disjoint_union
+theorem card_union_of_disjoint (h : Disjoint s t) : card (s ∪ t) = s.card + t.card :=
+  card_union_of_disjoint h
+#align finset.card_disjoint_union Finset.card_union_of_disjoint
 -/
 
 #print Finset.card_sdiff /-

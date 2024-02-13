@@ -751,7 +751,7 @@ theorem ncard_union_eq (h : Disjoint s t)
   classical
   rw [ncard_eq_to_finset_card _ hs, ncard_eq_to_finset_card _ ht,
     ncard_eq_to_finset_card _ (hs.union ht), finite.to_finset_union]
-  refine' Finset.card_union_eq _
+  refine' Finset.card_union_of_disjoint _
   rwa [finite.disjoint_to_finset]
 #align set.ncard_union_eq Set.ncard_union_eq
 -/
