@@ -131,7 +131,7 @@ theorem exists_irreducible : ∃ ϖ : R, Irreducible ϖ :=
 #print DiscreteValuationRing.exists_prime /-
 /-- Uniformisers exist in a DVR -/
 theorem exists_prime : ∃ ϖ : R, Prime ϖ :=
-  (exists_irreducible R).imp fun _ => PrincipalIdealRing.irreducible_iff_prime.1
+  (exists_irreducible R).imp fun _ => irreducible_iff_prime.1
 #align discrete_valuation_ring.exists_prime DiscreteValuationRing.exists_prime
 -/
 
@@ -454,7 +454,7 @@ theorem addVal_def (r : R) (u : Rˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (
     eq_of_associated_left
       (associated_of_irreducible R hϖ (Classical.choose_spec (exists_prime R)).Irreducible),
     eq_of_associated_right (Associated.symm ⟨u, mul_comm _ _⟩),
-    multiplicity_pow_self_of_prime (PrincipalIdealRing.irreducible_iff_prime.1 hϖ)]
+    multiplicity_pow_self_of_prime (irreducible_iff_prime.1 hϖ)]
 #align discrete_valuation_ring.add_val_def DiscreteValuationRing.addVal_def
 -/
 

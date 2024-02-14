@@ -300,17 +300,19 @@ theorem isMaximal_of_irreducible [CommRing R] [IsPrincipalIdealRing R] {p : R}
 
 variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 
-#print PrincipalIdealRing.irreducible_iff_prime /-
+/- warning: principal_ideal_ring.irreducible_iff_prime clashes with gcd_monoid.irreducible_iff_prime -> irreducible_iff_prime
+Case conversion may be inaccurate. Consider using '#align principal_ideal_ring.irreducible_iff_prime irreducible_iff_primeₓ'. -/
+#print irreducible_iff_prime /-
 theorem irreducible_iff_prime {p : R} : Irreducible p ↔ Prime p :=
   ⟨fun hp => (Ideal.span_singleton_prime hp.NeZero).1 <| (isMaximal_of_irreducible hp).IsPrime,
     Prime.irreducible⟩
-#align principal_ideal_ring.irreducible_iff_prime PrincipalIdealRing.irreducible_iff_prime
+#align principal_ideal_ring.irreducible_iff_prime irreducible_iff_prime
 -/
 
-#print PrincipalIdealRing.associates_irreducible_iff_prime /-
+#print associates_irreducible_iff_prime /-
 theorem associates_irreducible_iff_prime : ∀ {p : Associates R}, Irreducible p ↔ Prime p :=
   Associates.irreducible_iff_prime_iff.1 fun _ => irreducible_iff_prime
-#align principal_ideal_ring.associates_irreducible_iff_prime PrincipalIdealRing.associates_irreducible_iff_prime
+#align principal_ideal_ring.associates_irreducible_iff_prime associates_irreducible_iff_prime
 -/
 
 section
@@ -365,7 +367,7 @@ theorem ringHom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [
 /-- A principal ideal domain has unique factorization -/
 instance (priority := 100) to_uniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
   { (IsNoetherianRing.wfDvdMonoid : WfDvdMonoid R) with
-    irreducible_iff_prime := fun _ => PrincipalIdealRing.irreducible_iff_prime }
+    irreducible_iff_prime := fun _ => irreducible_iff_prime }
 #align principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.to_uniqueFactorizationMonoid
 -/
 
@@ -498,7 +500,7 @@ theorem isCoprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
 #print isCoprime_of_prime_dvd /-
 theorem isCoprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀ z : R, Prime z → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
-  isCoprime_of_irreducible_dvd nonzero fun z zi => H z <| GCDMonoid.prime_of_irreducible zi
+  isCoprime_of_irreducible_dvd nonzero fun z zi => H z <| Irreducible.prime zi
 #align is_coprime_of_prime_dvd isCoprime_of_prime_dvd
 -/
 

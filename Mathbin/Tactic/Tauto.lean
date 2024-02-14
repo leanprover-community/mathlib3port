@@ -46,16 +46,16 @@ open Tactic.Interactive (casesm constructor_matching)
                               |
                                 q( ¬ ( _ ∧ _ ) )
                                 =>
-                                replace h ` `( Decidable.not_and' . mp $ ( h ) )
+                                replace h ` `( Decidable.not_and_iff_or_not_not' . mp $ ( h ) )
                                   <|>
-                                  replace h ` `( Decidable.not_and . mp $ ( h ) )
+                                  replace h ` `( Decidable.not_and_iff_or_not_not . mp $ ( h ) )
                               | q( ¬ ( _ ∨ _ ) ) => replace h ` `( not_or . mp $ ( h ) )
                               | q( ¬ _ ≠ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
                               | q( ¬ ¬ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
                               |
                                 q( ¬ ( _ → ( _ : Prop ) ) )
                                 =>
-                                replace h ` `( Decidable.not_imp . mp $ ( h ) )
+                                replace h ` `( Decidable.not_imp_iff_and_not . mp $ ( h ) )
                               | q( ¬ ( _ ↔ _ ) ) => replace h ` `( Decidable.not_iff . mp $ ( h ) )
                               |
                                 q( _ ↔ _ )

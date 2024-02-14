@@ -1059,8 +1059,8 @@ end Lcm
 
 namespace GCDMonoid
 
-#print GCDMonoid.prime_of_irreducible /-
-theorem prime_of_irreducible [GCDMonoid α] {x : α} (hi : Irreducible x) : Prime x :=
+#print Irreducible.prime /-
+theorem prime [GCDMonoid α] {x : α} (hi : Irreducible x) : Prime x :=
   ⟨hi.NeZero,
     ⟨hi.1, fun a b h => by
       cases' gcd_dvd_left x a with y hy
@@ -1071,13 +1071,13 @@ theorem prime_of_irreducible [GCDMonoid α] {x : α} (hi : Irreducible x) : Prim
       · left
         rw [hy]
         exact dvd_trans (associated_mul_unit_left _ _ hu).Dvd (gcd_dvd_right x a)⟩⟩
-#align gcd_monoid.prime_of_irreducible GCDMonoid.prime_of_irreducible
+#align gcd_monoid.prime_of_irreducible Irreducible.prime
 -/
 
-#print GCDMonoid.irreducible_iff_prime /-
+#print irreducible_iff_prime /-
 theorem irreducible_iff_prime [GCDMonoid α] {p : α} : Irreducible p ↔ Prime p :=
-  ⟨prime_of_irreducible, Prime.irreducible⟩
-#align gcd_monoid.irreducible_iff_prime GCDMonoid.irreducible_iff_prime
+  ⟨prime, Prime.irreducible⟩
+#align gcd_monoid.irreducible_iff_prime irreducible_iff_prime
 -/
 
 end GCDMonoid

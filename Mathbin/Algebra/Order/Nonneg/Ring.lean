@@ -86,11 +86,11 @@ instance distribLattice [DistribLattice α] {a : α} : DistribLattice { x : α /
 #align nonneg.distrib_lattice Nonneg.distribLattice
 -/
 
-#print Nonneg.densely_ordered /-
-instance densely_ordered [Preorder α] [DenselyOrdered α] {a : α} :
+#print Nonneg.instDenselyOrdered /-
+instance instDenselyOrdered [Preorder α] [DenselyOrdered α] {a : α} :
     DenselyOrdered { x : α // a ≤ x } :=
   show DenselyOrdered (Ici a) from Set.denselyOrdered
-#align nonneg.densely_ordered Nonneg.densely_ordered
+#align nonneg.densely_ordered Nonneg.instDenselyOrdered
 -/
 
 #print Nonneg.conditionallyCompleteLinearOrder /-

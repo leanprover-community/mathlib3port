@@ -133,7 +133,7 @@ theorem splits_mul {f g : K[X]} (hf : Splits i f) (hg : Splits i g) : Splits i (
   if h : (f * g).map i = 0 then Or.inl h
   else
     Or.inr fun p hp hpf =>
-      ((PrincipalIdealRing.irreducible_iff_prime.1 hp).2.2 _ _
+      ((irreducible_iff_prime.1 hp).2.2 _ _
             (show p ∣ map i f * map i g by convert hpf <;> rw [Polynomial.map_mul])).elim
         (hf.resolve_left (fun hf => by simpa [hf] using h) hp)
         (hg.resolve_left (fun hg => by simpa [hg] using h) hp)

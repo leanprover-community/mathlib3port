@@ -1428,7 +1428,7 @@ theorem abs_eq_zero_iff {x : EReal} : x.abs = 0 ↔ x = 0 :=
   by
   induction x using EReal.rec
   · simp only [abs_bot, ENNReal.top_ne_zero, bot_ne_zero]
-  · simp only [EReal.abs, coe_eq_zero, ENNReal.ofReal_eq_zero, abs_nonpos_iff]
+  · simp only [EReal.abs, NNReal.coe_eq_zero, ENNReal.ofReal_eq_zero, abs_nonpos_iff]
   · simp only [abs_top, ENNReal.top_ne_zero, top_ne_zero]
 #align ereal.abs_eq_zero_iff EReal.abs_eq_zero_iff
 -/
@@ -1460,28 +1460,28 @@ theorem abs_mul (x y : EReal) : (x * y).abs = x.abs * y.abs :=
   case coe_coe x y => simp only [← coe_mul, EReal.abs, abs_mul, ENNReal.ofReal_mul (abs_nonneg _)]
   case pos_bot x hx =>
     simp only [coe_mul_bot_of_pos hx, hx.ne', abs_bot, WithTop.mul_top, Ne.def, abs_eq_zero_iff,
-      coe_eq_zero, not_false_iff]
+      NNReal.coe_eq_zero, not_false_iff]
   case neg_bot x hx =>
     simp only [coe_mul_bot_of_neg hx, hx.ne, abs_bot, WithTop.mul_top, Ne.def, abs_eq_zero_iff,
-      coe_eq_zero, not_false_iff, abs_top]
+      NNReal.coe_eq_zero, not_false_iff, abs_top]
   case pos_top x hx =>
-    simp only [coe_mul_top_of_pos hx, hx.ne', WithTop.mul_top, Ne.def, abs_eq_zero_iff, coe_eq_zero,
-      not_false_iff, abs_top]
+    simp only [coe_mul_top_of_pos hx, hx.ne', WithTop.mul_top, Ne.def, abs_eq_zero_iff,
+      NNReal.coe_eq_zero, not_false_iff, abs_top]
   case neg_top x hx =>
     simp only [coe_mul_top_of_neg hx, hx.ne, abs_bot, WithTop.mul_top, Ne.def, abs_eq_zero_iff,
-      coe_eq_zero, not_false_iff, abs_top]
+      NNReal.coe_eq_zero, not_false_iff, abs_top]
   case top_pos y hy =>
-    simp only [top_mul_coe_of_pos hy, hy.ne', WithTop.top_mul, Ne.def, abs_eq_zero_iff, coe_eq_zero,
-      not_false_iff, abs_top]
+    simp only [top_mul_coe_of_pos hy, hy.ne', WithTop.top_mul, Ne.def, abs_eq_zero_iff,
+      NNReal.coe_eq_zero, not_false_iff, abs_top]
   case top_neg y hy =>
     simp only [top_mul_coe_of_neg hy, hy.ne, abs_bot, WithTop.top_mul, Ne.def, abs_eq_zero_iff,
-      coe_eq_zero, not_false_iff, abs_top]
+      NNReal.coe_eq_zero, not_false_iff, abs_top]
   case bot_pos y hy =>
     simp only [bot_mul_coe_of_pos hy, hy.ne', abs_bot, WithTop.top_mul, Ne.def, abs_eq_zero_iff,
-      coe_eq_zero, not_false_iff]
+      NNReal.coe_eq_zero, not_false_iff]
   case bot_neg y hy =>
     simp only [bot_mul_coe_of_neg hy, hy.ne, abs_bot, WithTop.top_mul, Ne.def, abs_eq_zero_iff,
-      coe_eq_zero, not_false_iff, abs_top]
+      NNReal.coe_eq_zero, not_false_iff, abs_top]
 #align ereal.abs_mul EReal.abs_mul
 -/
 

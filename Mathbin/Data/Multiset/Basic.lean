@@ -577,7 +577,8 @@ theorem coe_toList (s : Multiset α) : (s.toList : Multiset α) = s :=
 
 #print Multiset.toList_eq_nil /-
 @[simp]
-theorem toList_eq_nil {s : Multiset α} : s.toList = [] ↔ s = 0 := by rw [← coe_eq_zero, coe_to_list]
+theorem toList_eq_nil {s : Multiset α} : s.toList = [] ↔ s = 0 := by
+  rw [← NNReal.coe_eq_zero, coe_to_list]
 #align multiset.to_list_eq_nil Multiset.toList_eq_nil
 -/
 

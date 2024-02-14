@@ -585,7 +585,7 @@ theorem toNNReal_eq_toNNReal_iff (x y : ℝ≥0∞) :
 #print ENNReal.toReal_eq_toReal_iff /-
 theorem toReal_eq_toReal_iff (x y : ℝ≥0∞) :
     x.toReal = y.toReal ↔ x = y ∨ x = 0 ∧ y = ⊤ ∨ x = ⊤ ∧ y = 0 := by
-  simp only [ENNReal.toReal, NNReal.coe_eq, to_nnreal_eq_to_nnreal_iff]
+  simp only [ENNReal.toReal, NNReal.coe_inj, to_nnreal_eq_to_nnreal_iff]
 #align ennreal.to_real_eq_to_real_iff ENNReal.toReal_eq_toReal_iff
 -/
 
@@ -600,7 +600,7 @@ theorem toNNReal_eq_toNNReal_iff' {x y : ℝ≥0∞} (hx : x ≠ ⊤) (hy : y �
 #print ENNReal.toReal_eq_toReal_iff' /-
 theorem toReal_eq_toReal_iff' {x y : ℝ≥0∞} (hx : x ≠ ⊤) (hy : y ≠ ⊤) :
     x.toReal = y.toReal ↔ x = y := by
-  simp only [ENNReal.toReal, NNReal.coe_eq, to_nnreal_eq_to_nnreal_iff' hx hy]
+  simp only [ENNReal.toReal, NNReal.coe_inj, to_nnreal_eq_to_nnreal_iff' hx hy]
 #align ennreal.to_real_eq_to_real_iff' ENNReal.toReal_eq_toReal_iff'
 -/
 
@@ -1258,7 +1258,7 @@ theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r : ℝ≥0, 0 < r ∧ a + r < 
   refine' ⟨d - a, tsub_pos_iff_lt.2 ad, _⟩
   rw [some_eq_coe, ← coe_add]
   convert cb
-  have : Real.toNNReal c = d := by rw [← NNReal.coe_eq, Real.coe_toNNReal _ c_nonneg]; rfl
+  have : Real.toNNReal c = d := by rw [← NNReal.coe_inj, Real.coe_toNNReal _ c_nonneg]; rfl
   rw [add_comm, this]
   exact tsub_add_cancel_of_le ad.le
 #align ennreal.lt_iff_exists_add_pos_lt ENNReal.lt_iff_exists_add_pos_lt
@@ -2746,11 +2746,11 @@ theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
   by
   lift x to ℝ≥0 using h'x
   lift y to ℝ≥0 using h'y
-  have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
+  have A : y ≠ 0 := by simpa only [Ne.def, NNReal.coe_eq_zero] using (zero_lt_one.trans hy).ne'
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n ≤ x ∧ x < y ^ (n + 1) :=
     by
     refine' NNReal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)
-    simpa only [Ne.def, coe_eq_zero] using hx
+    simpa only [Ne.def, NNReal.coe_eq_zero] using hx
   refine' ⟨n, _, _⟩
   · rwa [← ENNReal.coe_zpow A, ENNReal.coe_le_coe]
   · rwa [← ENNReal.coe_zpow A, ENNReal.coe_lt_coe]
@@ -2763,11 +2763,11 @@ theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
   by
   lift x to ℝ≥0 using h'x
   lift y to ℝ≥0 using h'y
-  have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
+  have A : y ≠ 0 := by simpa only [Ne.def, NNReal.coe_eq_zero] using (zero_lt_one.trans hy).ne'
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n < x ∧ x ≤ y ^ (n + 1) :=
     by
     refine' NNReal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)
-    simpa only [Ne.def, coe_eq_zero] using hx
+    simpa only [Ne.def, NNReal.coe_eq_zero] using hx
   refine' ⟨n, _, _⟩
   · rwa [← ENNReal.coe_zpow A, ENNReal.coe_lt_coe]
   · rwa [← ENNReal.coe_zpow A, ENNReal.coe_le_coe]
@@ -2819,7 +2819,7 @@ theorem monotone_zpow {x : ℝ≥0∞} (hx : 1 ≤ x) : Monotone ((· ^ ·) x : 
 protected theorem zpow_add {x : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (m n : ℤ) :
     x ^ (m + n) = x ^ m * x ^ n := by
   lift x to ℝ≥0 using h'x
-  replace hx : x ≠ 0; · simpa only [Ne.def, coe_eq_zero] using hx
+  replace hx : x ≠ 0; · simpa only [Ne.def, NNReal.coe_eq_zero] using hx
   simp only [← coe_zpow hx, zpow_add₀ hx, coe_mul]
 #align ennreal.zpow_add ENNReal.zpow_add
 -/
@@ -3254,7 +3254,7 @@ theorem toReal_eq_toReal (ha : a ≠ ∞) (hb : b ≠ ∞) : ENNReal.toReal a = 
   by
   lift a to ℝ≥0 using ha
   lift b to ℝ≥0 using hb
-  simp only [coe_eq_coe, NNReal.coe_eq, coe_to_real]
+  simp only [coe_eq_coe, NNReal.coe_inj, coe_to_real]
 #align ennreal.to_real_eq_to_real ENNReal.toReal_eq_toReal
 -/
 

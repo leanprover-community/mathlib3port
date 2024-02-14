@@ -1320,7 +1320,7 @@ instance (priority := 100) uniqueFactorizationMonoid : UniqueFactorizationMonoid
   by
   haveI := Inhabited.default (NormalizationMonoid D)
   haveI := to_normalized_gcd_monoid D
-  exact ufm_of_gcd_of_wfDvdMonoid
+  exact ufm_of_decomposition_of_wfDvdMonoid
 #align polynomial.unique_factorization_monoid Polynomial.uniqueFactorizationMonoid
 -/
 

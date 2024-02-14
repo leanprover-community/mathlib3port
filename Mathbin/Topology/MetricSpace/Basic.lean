@@ -497,7 +497,7 @@ theorem nndist_dist (x y : α) : nndist x y = Real.toNNReal (dist x y) := by
 
 #print nndist_comm /-
 theorem nndist_comm (x y : α) : nndist x y = nndist y x := by
-  simpa only [dist_nndist, NNReal.coe_eq] using dist_comm x y
+  simpa only [dist_nndist, NNReal.coe_inj] using dist_comm x y
 #align nndist_comm nndist_comm
 -/
 
@@ -2254,7 +2254,7 @@ theorem NNReal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) :=
   by
   wlog h : b ≤ a
   · rw [nndist_comm, max_comm]; exact this b a (le_of_not_le h)
-  rw [← NNReal.coe_eq, ← dist_nndist, NNReal.dist_eq, tsub_eq_zero_iff_le.2 h,
+  rw [← NNReal.coe_inj, ← dist_nndist, NNReal.dist_eq, tsub_eq_zero_iff_le.2 h,
     max_eq_left (zero_le <| a - b), ← NNReal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
 #align nnreal.nndist_eq NNReal.nndist_eq
 -/
@@ -2772,7 +2772,7 @@ theorem dist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) :
     dist f g = r ↔ (∃ i, dist (f i) (g i) = r) ∧ ∀ b, dist (f b) (g b) ≤ r :=
   by
   lift r to ℝ≥0 using hr.le
-  simp_rw [← coe_nndist, NNReal.coe_eq, nndist_pi_eq_iff hr, NNReal.coe_le_coe]
+  simp_rw [← coe_nndist, NNReal.coe_inj, nndist_pi_eq_iff hr, NNReal.coe_le_coe]
 #align dist_pi_eq_iff dist_pi_eq_iff
 -/
 

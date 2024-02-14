@@ -182,7 +182,7 @@ theorem DiscreteValuationRing.TFAE [IsNoetherianRing R] [LocalRing R] [IsDomain 
   tfae_have 2 → 1
   · intro
     haveI := IsBezout.toGCDDomain R
-    haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wfDvdMonoid
+    haveI : UniqueFactorizationMonoid R := ufm_of_decomposition_of_wfDvdMonoid
     apply DiscreteValuationRing.of_ufd_of_unique_irreducible
     · obtain ⟨x, hx₁, hx₂⟩ := Ring.exists_not_isUnit_of_not_isField h
       obtain ⟨p, hp₁, hp₂⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁

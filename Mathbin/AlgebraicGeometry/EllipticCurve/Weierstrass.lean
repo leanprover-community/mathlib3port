@@ -769,7 +769,7 @@ open Ideal
 
 instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
   (Quotient.isDomain_iff_prime _).mpr <| by
-    simpa only [span_singleton_prime W.polynomial_ne_zero, ← GCDMonoid.irreducible_iff_prime] using
+    simpa only [span_singleton_prime W.polynomial_ne_zero, ← irreducible_iff_prime] using
       W.irreducible_polynomial
 
 #print WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field /-

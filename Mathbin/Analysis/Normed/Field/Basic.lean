@@ -730,8 +730,8 @@ theorem dist_inv_inv₀ {z w : α} (hz : z ≠ 0) (hw : w ≠ 0) : dist z⁻¹ w
 
 #print nndist_inv_inv₀ /-
 theorem nndist_inv_inv₀ {z w : α} (hz : z ≠ 0) (hw : w ≠ 0) :
-    nndist z⁻¹ w⁻¹ = nndist z w / (‖z‖₊ * ‖w‖₊) := by rw [← NNReal.coe_eq];
-  simp [-NNReal.coe_eq, dist_inv_inv₀ hz hw]
+    nndist z⁻¹ w⁻¹ = nndist z w / (‖z‖₊ * ‖w‖₊) := by rw [← NNReal.coe_inj];
+  simp [-NNReal.coe_inj, dist_inv_inv₀ hz hw]
 #align nndist_inv_inv₀ nndist_inv_inv₀
 -/
 

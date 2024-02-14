@@ -285,7 +285,7 @@ theorem hasSum_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) {a : ℝ≥0} :
 #print NNReal.sum_add_tsum_nat_add /-
 theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0} (k : ℕ) (hf : Summable f) :
     ∑' i, f i = ∑ i in range k, f i + ∑' i, f (i + k) := by
-  rw [← NNReal.coe_eq, coe_tsum, NNReal.coe_add, coe_sum, coe_tsum,
+  rw [← NNReal.coe_inj, coe_tsum, NNReal.coe_add, coe_sum, coe_tsum,
     sum_add_tsum_nat_add k (NNReal.summable_coe.2 hf)]
 #align nnreal.sum_add_tsum_nat_add NNReal.sum_add_tsum_nat_add
 -/

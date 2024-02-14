@@ -679,7 +679,7 @@ theorem sSup_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E]
     [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
     sSup ((fun x => ‖f x‖) '' ball 0 1) = ‖f‖ := by
-  simpa only [NNReal.coe_sSup, Set.image_image] using NNReal.coe_eq.2 f.Sup_unit_ball_eq_nnnorm
+  simpa only [NNReal.coe_sSup, Set.image_image] using NNReal.coe_inj.2 f.Sup_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_unit_ball_eq_norm ContinuousLinearMap.sSup_unit_ball_eq_norm
 -/
 
@@ -705,7 +705,7 @@ theorem sSup_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddComm
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
     sSup ((fun x => ‖f x‖) '' closedBall 0 1) = ‖f‖ := by
   simpa only [NNReal.coe_sSup, Set.image_image] using
-    NNReal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
+    NNReal.coe_inj.2 f.Sup_closed_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_closed_unit_ball_eq_norm ContinuousLinearMap.sSup_closed_unit_ball_eq_norm
 -/
 

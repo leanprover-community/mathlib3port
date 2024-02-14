@@ -196,13 +196,13 @@ class UniqueFactorizationMonoid (α : Type _) [CancelCommMonoidWithZero α] exte
 #align unique_factorization_monoid UniqueFactorizationMonoid
 -/
 
-#print ufm_of_gcd_of_wfDvdMonoid /-
+#print ufm_of_decomposition_of_wfDvdMonoid /-
 /-- Can't be an instance because it would cause a loop `ufm → wf_dvd_monoid → ufm → ...`. -/
 @[reducible]
-theorem ufm_of_gcd_of_wfDvdMonoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GCDMonoid α] :
-    UniqueFactorizationMonoid α :=
-  { ‹WfDvdMonoid α› with irreducible_iff_prime := fun _ => GCDMonoid.irreducible_iff_prime }
-#align ufm_of_gcd_of_wf_dvd_monoid ufm_of_gcd_of_wfDvdMonoid
+theorem ufm_of_decomposition_of_wfDvdMonoid [CancelCommMonoidWithZero α] [WfDvdMonoid α]
+    [GCDMonoid α] : UniqueFactorizationMonoid α :=
+  { ‹WfDvdMonoid α› with irreducible_iff_prime := fun _ => irreducible_iff_prime }
+#align ufm_of_gcd_of_wf_dvd_monoid ufm_of_decomposition_of_wfDvdMonoid
 -/
 
 #print Associates.ufm /-
@@ -988,13 +988,13 @@ namespace UniqueFactorizationMonoid
 
 variable {R : Type _} [CancelCommMonoidWithZero R] [UniqueFactorizationMonoid R]
 
-#print UniqueFactorizationMonoid.no_factors_of_no_prime_factors /-
-theorem no_factors_of_no_prime_factors {a b : R} (ha : a ≠ 0)
+#print UniqueFactorizationMonoid.isRelPrime_iff_no_prime_factors /-
+theorem isRelPrime_iff_no_prime_factors {a b : R} (ha : a ≠ 0)
     (h : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) : ∀ {d}, d ∣ a → d ∣ b → IsUnit d := fun d =>
   induction_on_prime d (by simp only [zero_dvd_iff]; intros; contradiction) (fun x hx _ _ => hx)
     fun d q hp hq ih dvd_a dvd_b =>
     absurd hq (h (dvd_of_mul_right_dvd dvd_a) (dvd_of_mul_right_dvd dvd_b))
-#align unique_factorization_monoid.no_factors_of_no_prime_factors UniqueFactorizationMonoid.no_factors_of_no_prime_factors
+#align unique_factorization_monoid.no_factors_of_no_prime_factors UniqueFactorizationMonoid.isRelPrime_iff_no_prime_factors
 -/
 
 #print UniqueFactorizationMonoid.dvd_of_dvd_mul_left_of_no_prime_factors /-
