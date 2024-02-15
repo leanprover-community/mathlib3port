@@ -69,12 +69,12 @@ theorem one_def [∀ i, One <| f i] : (1 : ∀ i, f i) = fun i => 1 :=
 #align pi.zero_def Pi.zero_def
 -/
 
-#print Pi.const_one /-
+#print Function.const_one /-
 @[simp, to_additive]
 theorem const_one [One β] : const α (1 : β) = 1 :=
   rfl
-#align pi.const_one Pi.const_one
-#align pi.const_zero Pi.const_zero
+#align pi.const_one Function.const_one
+#align pi.const_zero Function.const_zero
 -/
 
 #print Pi.one_comp /-
@@ -117,12 +117,12 @@ theorem mul_def [∀ i, Mul <| f i] : x * y = fun i => x i * y i :=
 #align pi.add_def Pi.add_def
 -/
 
-#print Pi.const_mul /-
+#print Function.const_mul /-
 @[simp, to_additive]
 theorem const_mul [Mul β] (a b : β) : const α a * const α b = const α (a * b) :=
   rfl
-#align pi.const_mul Pi.const_mul
-#align pi.const_add Pi.const_add
+#align pi.const_mul Function.const_mul
+#align pi.const_add Function.const_add
 -/
 
 #print Pi.mul_comp /-
@@ -157,12 +157,12 @@ theorem smul_def [∀ i, SMul α <| f i] (s : α) (x : ∀ i, f i) : s • x = f
 #align pi.vadd_def Pi.vadd_def
 -/
 
-#print Pi.smul_const /-
+#print Function.smul_const /-
 @[simp, to_additive]
 theorem smul_const [SMul α β] (a : α) (b : β) : a • const I b = const I (a • b) :=
   rfl
-#align pi.smul_const Pi.smul_const
-#align pi.vadd_const Pi.vadd_const
+#align pi.smul_const Function.smul_const
+#align pi.vadd_const Function.vadd_const
 -/
 
 #print Pi.smul_comp /-
@@ -195,13 +195,13 @@ theorem pow_def [∀ i, Pow (f i) β] (x : ∀ i, f i) (b : β) : x ^ b = fun i 
 #align pi.smul_def Pi.smul_def
 -/
 
-#print Pi.const_pow /-
+#print Function.const_pow /-
 -- `to_additive` generates bad output if we take `has_pow α β`.
 @[simp, to_additive smul_const, to_additive_reorder 5]
 theorem const_pow [Pow β α] (b : β) (a : α) : const I b ^ a = const I (b ^ a) :=
   rfl
-#align pi.const_pow Pi.const_pow
-#align pi.smul_const Pi.smul_const
+#align pi.const_pow Function.const_pow
+#align pi.smul_const Function.smul_const
 -/
 
 #print Pi.pow_comp /-
@@ -250,12 +250,12 @@ theorem inv_def [∀ i, Inv <| f i] : x⁻¹ = fun i => (x i)⁻¹ :=
 #align pi.neg_def Pi.neg_def
 -/
 
-#print Pi.const_inv /-
+#print Function.const_inv /-
 @[to_additive]
 theorem const_inv [Inv β] (a : β) : (const α a)⁻¹ = const α a⁻¹ :=
   rfl
-#align pi.const_inv Pi.const_inv
-#align pi.const_neg Pi.const_neg
+#align pi.const_inv Function.const_inv
+#align pi.const_neg Function.const_neg
 -/
 
 #print Pi.inv_comp /-
@@ -298,12 +298,12 @@ theorem div_comp [Div γ] (x y : β → γ) (z : α → β) : (x / y) ∘ z = x 
 #align pi.sub_comp Pi.sub_comp
 -/
 
-#print Pi.const_div /-
+#print Function.const_div /-
 @[simp, to_additive]
 theorem const_div [Div β] (a b : β) : const α a / const α b = const α (a / b) :=
   rfl
-#align pi.const_div Pi.const_div
-#align pi.const_sub Pi.const_sub
+#align pi.const_div Function.const_div
+#align pi.const_sub Function.const_sub
 -/
 
 section

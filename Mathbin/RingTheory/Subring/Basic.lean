@@ -1892,7 +1892,7 @@ end Actions
 /-- The subgroup of positive units of a linear ordered semiring. -/
 def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
   {
-    (posSubmonoid R).comap
+    (Submonoid.pos R).comap
       (Units.coeHom R) with
     carrier := {x | (0 : R) < x}
     inv_mem' := fun x => Units.inv_pos.mpr }

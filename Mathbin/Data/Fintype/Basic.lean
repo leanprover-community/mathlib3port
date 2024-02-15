@@ -757,14 +757,14 @@ instance (priority := 100) ofIsEmpty [IsEmpty α] : Fintype α :=
 #align fintype.of_is_empty Fintype.ofIsEmpty
 -/
 
-#print Fintype.univ_of_isEmpty /-
+#print Fintype.univ_ofIsEmpty /-
 -- no-lint since while `finset.univ_eq_empty` can prove this, it isn't applicable for `dsimp`.
 /-- Note: this lemma is specifically about `fintype.of_is_empty`. For a statement about
 arbitrary `fintype` instances, use `finset.univ_eq_empty`. -/
 @[simp, nolint simp_nf]
-theorem univ_of_isEmpty [IsEmpty α] : @univ α _ = ∅ :=
+theorem univ_ofIsEmpty [IsEmpty α] : @univ α _ = ∅ :=
   rfl
-#align fintype.univ_of_is_empty Fintype.univ_of_isEmpty
+#align fintype.univ_of_is_empty Fintype.univ_ofIsEmpty
 -/
 
 end Fintype

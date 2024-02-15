@@ -255,13 +255,13 @@ theorem card_unique [Unique α] [h : Fintype α] : Fintype.card α = 1 :=
 #align fintype.card_unique Fintype.card_unique
 -/
 
-#print Fintype.card_of_isEmpty /-
+#print Fintype.card_ofIsEmpty /-
 /-- Note: this lemma is specifically about `fintype.of_is_empty`. For a statement about
 arbitrary `fintype` instances, use `fintype.card_eq_zero_iff`. -/
 @[simp]
-theorem card_of_isEmpty [IsEmpty α] : Fintype.card α = 0 :=
+theorem card_ofIsEmpty [IsEmpty α] : Fintype.card α = 0 :=
   rfl
-#align fintype.card_of_is_empty Fintype.card_of_isEmpty
+#align fintype.card_of_is_empty Fintype.card_ofIsEmpty
 -/
 
 end Fintype

@@ -821,9 +821,9 @@ theorem regular_of_isMulLeftInvariant {μ : Measure G} [SigmaFinite μ] [IsMulLe
 #align measure_theory.measure.regular_of_is_add_left_invariant MeasureTheory.Measure.regular_of_isAddLeftInvariant
 -/
 
-#print MeasureTheory.Measure.isHaarMeasure_eq_smul /-
+#print MeasureTheory.Measure.isMulLeftInvariant_eq_smul /-
 @[to_additive is_add_haar_measure_eq_smul_is_add_haar_measure]
-theorem isHaarMeasure_eq_smul [LocallyCompactSpace G] (μ ν : Measure G) [IsHaarMeasure μ]
+theorem isMulLeftInvariant_eq_smul [LocallyCompactSpace G] (μ ν : Measure G) [IsHaarMeasure μ]
     [IsHaarMeasure ν] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • ν :=
   by
   have K : positive_compacts G := Classical.arbitrary _
@@ -843,8 +843,8 @@ theorem isHaarMeasure_eq_smul [LocallyCompactSpace G] (μ ν : Measure G) [IsHaa
       _ = (μ K / ν K) • ν K • haar_measure K := by
         rw [smul_smul, div_eq_mul_inv, mul_assoc, ENNReal.inv_mul_cancel νpos.ne' νne, mul_one]
       _ = (μ K / ν K) • ν := by rw [← haar_measure_unique ν K]
-#align measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.isHaarMeasure_eq_smul
-#align measure_theory.measure.is_add_haar_measure_eq_smul_is_add_haar_measure MeasureTheory.Measure.isAddHaarMeasure_eq_smul
+#align measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.isMulLeftInvariant_eq_smul
+#align measure_theory.measure.is_add_haar_measure_eq_smul_is_add_haar_measure MeasureTheory.Measure.isAddLeftInvariant_eq_smul
 -/
 
 -- see Note [lower instance priority]

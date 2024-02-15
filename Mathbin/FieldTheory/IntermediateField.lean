@@ -474,12 +474,10 @@ theorem coe_smul {R} [Semiring R] [SMul R K] [Module R L] [IsScalarTower R K L] 
 #align intermediate_field.coe_smul IntermediateField.coe_smul
 -/
 
-#print IntermediateField.algebra' /-
 instance algebra' {K'} [CommSemiring K'] [SMul K' K] [Algebra K' L] [IsScalarTower K' K L] :
     Algebra K' S :=
   S.toSubalgebra.algebra'
 #align intermediate_field.algebra' IntermediateField.algebra'
--/
 
 #print IntermediateField.algebra /-
 instance algebra : Algebra K S :=
@@ -487,11 +485,9 @@ instance algebra : Algebra K S :=
 #align intermediate_field.algebra IntermediateField.algebra
 -/
 
-#print IntermediateField.toAlgebra /-
 instance toAlgebra {R : Type _} [Semiring R] [Algebra L R] : Algebra S R :=
   S.toSubalgebra.toAlgebra
 #align intermediate_field.to_algebra IntermediateField.toAlgebra
--/
 
 #print IntermediateField.isScalarTower_bot /-
 instance isScalarTower_bot {R : Type _} [Semiring R] [Algebra L R] : IsScalarTower S L R :=

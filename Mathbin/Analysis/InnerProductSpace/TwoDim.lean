@@ -554,7 +554,7 @@ theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
       by
       rw [← (o.basis_right_angle_rotation x hx).sum_repr y]
       simp only [Fin.sum_univ_succ, coe_basis_right_angle_rotation, Matrix.cons_val_zero,
-        Fin.succ_zero_eq_one, Fintype.univ_of_isEmpty, Finset.sum_empty, o.area_form_apply_self,
+        Fin.succ_zero_eq_one, Fintype.univ_ofIsEmpty, Finset.sum_empty, o.area_form_apply_self,
         map_smul, map_add, map_zero, inner_smul_left, inner_smul_right, inner_add_left,
         inner_add_right, inner_zero_right, LinearMap.add_apply, Matrix.cons_val_one,
         Matrix.head_cons, Algebra.id.smul_eq_mul, o.area_form_right_angle_rotation_right,

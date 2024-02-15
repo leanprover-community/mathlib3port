@@ -1053,20 +1053,20 @@ theorem image_sub_le_mul_sub_of_deriv_le {f : ℝ → ℝ} (hf : Differentiable 
 #align image_sub_le_mul_sub_of_deriv_le image_sub_le_mul_sub_of_deriv_le
 -/
 
-#print Convex.strictMonoOn_of_deriv_pos /-
+#print strictMonoOn_of_deriv_pos /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is positive, then
 `f` is a strictly monotone function on `D`.
 Note that we don't require differentiability explicitly as it already implied by the derivative
 being strictly positive. -/
-theorem Convex.strictMonoOn_of_deriv_pos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
-    (hf : ContinuousOn f D) (hf' : ∀ x ∈ interior D, 0 < deriv f x) : StrictMonoOn f D :=
+theorem strictMonoOn_of_deriv_pos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
+    (hf' : ∀ x ∈ interior D, 0 < deriv f x) : StrictMonoOn f D :=
   by
   rintro x hx y hy
   simpa only [MulZeroClass.zero_mul, sub_pos] using
     hD.mul_sub_lt_image_sub_of_lt_deriv hf _ hf' x hx y hy
   exact fun z hz => (differentiableAt_of_deriv_ne_zero (hf' z hz).ne').DifferentiableWithinAt
-#align convex.strict_mono_on_of_deriv_pos Convex.strictMonoOn_of_deriv_pos
+#align convex.strict_mono_on_of_deriv_pos strictMonoOn_of_deriv_pos
 -/
 
 #print strictMono_of_deriv_pos /-
@@ -1083,16 +1083,16 @@ theorem strictMono_of_deriv_pos {f : ℝ → ℝ} (hf' : ∀ x, 0 < deriv f x) :
 #align strict_mono_of_deriv_pos strictMono_of_deriv_pos
 -/
 
-#print Convex.monotoneOn_of_deriv_nonneg /-
+#print monotoneOn_of_deriv_nonneg /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is nonnegative, then
 `f` is a monotone function on `D`. -/
-theorem Convex.monotoneOn_of_deriv_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
-    (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D))
-    (hf'_nonneg : ∀ x ∈ interior D, 0 ≤ deriv f x) : MonotoneOn f D := fun x hx y hy hxy => by
+theorem monotoneOn_of_deriv_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
+    (hf' : DifferentiableOn ℝ f (interior D)) (hf'_nonneg : ∀ x ∈ interior D, 0 ≤ deriv f x) :
+    MonotoneOn f D := fun x hx y hy hxy => by
   simpa only [MulZeroClass.zero_mul, sub_nonneg] using
     hD.mul_sub_le_image_sub_of_le_deriv hf hf' hf'_nonneg x hx y hy hxy
-#align convex.monotone_on_of_deriv_nonneg Convex.monotoneOn_of_deriv_nonneg
+#align convex.monotone_on_of_deriv_nonneg monotoneOn_of_deriv_nonneg
 -/
 
 #print monotone_of_deriv_nonneg /-
@@ -1106,18 +1106,17 @@ theorem monotone_of_deriv_nonneg {f : ℝ → ℝ} (hf : Differentiable ℝ f) (
 #align monotone_of_deriv_nonneg monotone_of_deriv_nonneg
 -/
 
-#print Convex.strictAntiOn_of_deriv_neg /-
+#print strictAntiOn_of_deriv_neg /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is negative, then
 `f` is a strictly antitone function on `D`. -/
-theorem Convex.strictAntiOn_of_deriv_neg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
-    (hf : ContinuousOn f D) (hf' : ∀ x ∈ interior D, deriv f x < 0) : StrictAntiOn f D :=
-  fun x hx y => by
+theorem strictAntiOn_of_deriv_neg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
+    (hf' : ∀ x ∈ interior D, deriv f x < 0) : StrictAntiOn f D := fun x hx y => by
   simpa only [MulZeroClass.zero_mul, sub_lt_zero] using
     hD.image_sub_lt_mul_sub_of_deriv_lt hf
       (fun z hz => (differentiableAt_of_deriv_ne_zero (hf' z hz).Ne).DifferentiableWithinAt) hf' x
       hx y
-#align convex.strict_anti_on_of_deriv_neg Convex.strictAntiOn_of_deriv_neg
+#align convex.strict_anti_on_of_deriv_neg strictAntiOn_of_deriv_neg
 -/
 
 #print strictAnti_of_deriv_neg /-
@@ -1134,16 +1133,16 @@ theorem strictAnti_of_deriv_neg {f : ℝ → ℝ} (hf' : ∀ x, deriv f x < 0) :
 #align strict_anti_of_deriv_neg strictAnti_of_deriv_neg
 -/
 
-#print Convex.antitoneOn_of_deriv_nonpos /-
+#print antitoneOn_of_deriv_nonpos /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is nonpositive, then
 `f` is an antitone function on `D`. -/
-theorem Convex.antitoneOn_of_deriv_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
-    (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D))
-    (hf'_nonpos : ∀ x ∈ interior D, deriv f x ≤ 0) : AntitoneOn f D := fun x hx y hy hxy => by
+theorem antitoneOn_of_deriv_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
+    (hf' : DifferentiableOn ℝ f (interior D)) (hf'_nonpos : ∀ x ∈ interior D, deriv f x ≤ 0) :
+    AntitoneOn f D := fun x hx y hy hxy => by
   simpa only [MulZeroClass.zero_mul, sub_nonpos] using
     hD.image_sub_le_mul_sub_of_deriv_le hf hf' hf'_nonpos x hx y hy hxy
-#align convex.antitone_on_of_deriv_nonpos Convex.antitoneOn_of_deriv_nonpos
+#align convex.antitone_on_of_deriv_nonpos antitoneOn_of_deriv_nonpos
 -/
 
 #print antitone_of_deriv_nonpos /-

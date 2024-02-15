@@ -157,7 +157,7 @@ theorem const_le_one : const β a ≤ 1 ↔ a ≤ 1 :=
 theorem const_lt_one : const β a < 1 ↔ a < 1 :=
   @const_lt_const _ _ _ _ _ 1
 #align function.const_lt_one Function.const_lt_one
-#align function.const_neg Function.const_neg
+#align function.const_neg Function.const_neg'
 -/
 
 end Function
