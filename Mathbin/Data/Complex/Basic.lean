@@ -1303,10 +1303,10 @@ theorem abs_natCast (n : ℕ) : abs (n : ℂ) = n := by
 #align complex.abs_cast_nat Complex.abs_natCast
 -/
 
-#print Complex.int_cast_abs /-
+#print Complex.abs_intCast /-
 @[simp, norm_cast]
-theorem int_cast_abs (n : ℤ) : ↑|n| = abs n := by rw [← of_real_int_cast, abs_of_real, Int.cast_abs]
-#align complex.int_cast_abs Complex.int_cast_abs
+theorem abs_intCast (n : ℤ) : ↑|n| = abs n := by rw [← of_real_int_cast, abs_of_real, Int.cast_abs]
+#align complex.int_cast_abs Complex.abs_intCast
 -/
 
 #print Complex.normSq_eq_abs /-

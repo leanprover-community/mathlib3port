@@ -38,10 +38,10 @@ open Set Filter Metric
 
 open scoped Filter Topology
 
-#print isGδ_irrational /-
-theorem isGδ_irrational : IsGδ {x | Irrational x} :=
+#print IsGδ.setOf_irrational /-
+theorem IsGδ.setOf_irrational : IsGδ {x | Irrational x} :=
   (countable_range _).isGδ_compl
-#align is_Gδ_irrational isGδ_irrational
+#align is_Gδ_irrational IsGδ.setOf_irrational
 -/
 
 #print dense_irrational /-
@@ -56,7 +56,7 @@ theorem dense_irrational : Dense {x : ℝ | Irrational x} :=
 
 #print eventually_residual_irrational /-
 theorem eventually_residual_irrational : ∀ᶠ x in residual ℝ, Irrational x :=
-  eventually_residual.2 ⟨_, isGδ_irrational, dense_irrational, fun _ => id⟩
+  eventually_residual.2 ⟨_, IsGδ.setOf_irrational, dense_irrational, fun _ => id⟩
 #align eventually_residual_irrational eventually_residual_irrational
 -/
 

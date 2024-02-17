@@ -290,7 +290,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
       (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
   refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
   · rw [A.1.charpoly_natDegree_eq_dim]
-    exact coeff_charpoly_mem_ideal_pow h
+    exact Matrix.coeff_charpoly_mem_ideal_pow h
   · rw [Polynomial.aeval_algHom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
     congr 1
     ext1

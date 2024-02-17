@@ -391,7 +391,7 @@ theorem IsGδ.measurableSet (h : IsGδ s) : MeasurableSet s :=
 #print measurableSet_of_continuousAt /-
 theorem measurableSet_of_continuousAt {β} [EMetricSpace β] (f : α → β) :
     MeasurableSet {x | ContinuousAt f x} :=
-  (isGδ_setOf_continuousAt f).MeasurableSet
+  (IsGδ.setOf_continuousAt f).MeasurableSet
 #align measurable_set_of_continuous_at measurableSet_of_continuousAt
 -/
 

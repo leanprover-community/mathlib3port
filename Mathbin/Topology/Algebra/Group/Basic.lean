@@ -1760,7 +1760,7 @@ it is discrete in the sense that `S ∩ K` is finite for all compact `K`. (See a
 theorem Subgroup.properlyDiscontinuousSMul_of_tendsto_cofinite (S : Subgroup G)
     (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSMul S G :=
   {
-    finite_disjoint_inter_image := by
+    finiteₓ_disjoint_inter_image := by
       intro K L hK hL
       have H : Set.Finite _ := hS ((hL.prod hK).image continuous_div').compl_mem_cocompact
       rw [preimage_compl, compl_compl] at H 
@@ -1785,7 +1785,7 @@ to show that the quotient group `G ⧸ S` is Hausdorff. -/
 theorem Subgroup.properlyDiscontinuousSMul_opposite_of_tendsto_cofinite (S : Subgroup G)
     (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSMul S.opEquiv G :=
   {
-    finite_disjoint_inter_image := by
+    finiteₓ_disjoint_inter_image := by
       intro K L hK hL
       have : Continuous fun p : G × G => (p.1⁻¹, p.2) := continuous_inv.prod_map continuous_id
       have H : Set.Finite _ :=

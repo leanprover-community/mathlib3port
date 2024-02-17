@@ -1154,16 +1154,16 @@ theorem leftInverse_inv_mul_mul_right (c : G) :
 #align left_inverse_neg_add_add_right leftInverse_neg_add_add_right
 -/
 
-#print exists_npow_eq_one_of_zpow_eq_one /-
+#print exists_pow_eq_one_of_zpow_eq_one /-
 @[to_additive]
-theorem exists_npow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : x ^ n = 1) :
+theorem exists_pow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : x ^ n = 1) :
     ∃ n : ℕ, 0 < n ∧ x ^ n = 1 := by
   cases' n with n n
   · rw [zpow_ofNat] at h 
     refine' ⟨n, Nat.pos_of_ne_zero fun n0 => hn _, h⟩; rw [n0]; rfl
   · rw [zpow_negSucc, inv_eq_one] at h 
     refine' ⟨n + 1, n.succ_pos, h⟩
-#align exists_npow_eq_one_of_zpow_eq_one exists_npow_eq_one_of_zpow_eq_one
+#align exists_npow_eq_one_of_zpow_eq_one exists_pow_eq_one_of_zpow_eq_one
 #align exists_nsmul_eq_zero_of_zsmul_eq_zero exists_nsmul_eq_zero_of_zsmul_eq_zero
 -/
 

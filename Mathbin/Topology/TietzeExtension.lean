@@ -408,16 +408,16 @@ theorem exists_extension_forall_mem_of_closedEmbedding (f : C(X, ℝ)) {t : Set 
 #align continuous_map.exists_extension_forall_mem_of_closed_embedding ContinuousMap.exists_extension_forall_mem_of_closedEmbedding
 -/
 
-#print ContinuousMap.exists_extension_of_closedEmbedding /-
+#print ContinuousMap.exists_extension' /-
 /-- **Tietze extension theorem** for real-valued continuous maps, a version for a closed
 embedding. Let `e` be a closed embedding of a nonempty topological space `X` into a normal
 topological space `Y`. Let `f` be a continuous real-valued function on `X`. Then there exists a
 continuous real-valued function `g : C(Y, ℝ)` such that `g ∘ e = f`. -/
-theorem exists_extension_of_closedEmbedding (f : C(X, ℝ)) (e : X → Y) (he : ClosedEmbedding e) :
+theorem exists_extension' (f : C(X, ℝ)) (e : X → Y) (he : ClosedEmbedding e) :
     ∃ g : C(Y, ℝ), g ∘ e = f :=
   (exists_extension_forall_mem_of_closedEmbedding f (fun x => mem_univ _) univ_nonempty he).imp
     fun g => And.right
-#align continuous_map.exists_extension_of_closed_embedding ContinuousMap.exists_extension_of_closedEmbedding
+#align continuous_map.exists_extension_of_closed_embedding ContinuousMap.exists_extension'
 -/
 
 #print ContinuousMap.exists_restrict_eq_forall_mem_of_closed /-
@@ -436,17 +436,17 @@ theorem exists_restrict_eq_forall_mem_of_closed {s : Set Y} (f : C(s, ℝ)) {t :
 #align continuous_map.exists_restrict_eq_forall_mem_of_closed ContinuousMap.exists_restrict_eq_forall_mem_of_closed
 -/
 
-#print ContinuousMap.exists_restrict_eq_of_closed /-
+#print ContinuousMap.exists_restrict_eq /-
 /-- **Tietze extension theorem** for real-valued continuous maps, a version for a closed set. Let
 `s` be a closed set in a normal topological space `Y`. Let `f` be a continuous real-valued function
 on `s`. Then there exists a continuous real-valued function `g : C(Y, ℝ)` such that
 `g.restrict s = f`. -/
-theorem exists_restrict_eq_of_closed {s : Set Y} (f : C(s, ℝ)) (hs : IsClosed s) :
+theorem exists_restrict_eq {s : Set Y} (f : C(s, ℝ)) (hs : IsClosed s) :
     ∃ g : C(Y, ℝ), g.restrict s = f :=
   let ⟨g, hg, hgf⟩ :=
     exists_restrict_eq_forall_mem_of_closed f (fun _ => mem_univ _) univ_nonempty hs
   ⟨g, hgf⟩
-#align continuous_map.exists_restrict_eq_of_closed ContinuousMap.exists_restrict_eq_of_closed
+#align continuous_map.exists_restrict_eq_of_closed ContinuousMap.exists_restrict_eq
 -/
 
 end ContinuousMap

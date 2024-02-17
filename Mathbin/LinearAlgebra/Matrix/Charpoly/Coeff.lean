@@ -47,17 +47,18 @@ open Finset
 
 variable {M : Matrix n n R}
 
-#print charmatrix_apply_natDegree /-
-theorem charmatrix_apply_natDegree [Nontrivial R] (i j : n) :
-    (charmatrix M i j).natDegree = ite (i = j) 1 0 := by
+#print Matrix.charmatrix_apply_natDegree /-
+theorem Matrix.charmatrix_apply_natDegree [Nontrivial R] (i j : n) :
+    (Matrix.charmatrix M i j).natDegree = ite (i = j) 1 0 := by
   by_cases i = j <;> simp [h, ← degree_eq_iff_nat_degree_eq_of_pos (Nat.succ_pos 0)]
-#align charmatrix_apply_nat_degree charmatrix_apply_natDegree
+#align charmatrix_apply_nat_degree Matrix.charmatrix_apply_natDegree
 -/
 
-#print charmatrix_apply_natDegree_le /-
-theorem charmatrix_apply_natDegree_le (i j : n) : (charmatrix M i j).natDegree ≤ ite (i = j) 1 0 :=
-  by split_ifs <;> simp [h, nat_degree_X_sub_C_le]
-#align charmatrix_apply_nat_degree_le charmatrix_apply_natDegree_le
+#print Matrix.charmatrix_apply_natDegree_le /-
+theorem Matrix.charmatrix_apply_natDegree_le (i j : n) :
+    (Matrix.charmatrix M i j).natDegree ≤ ite (i = j) 1 0 := by
+  split_ifs <;> simp [h, nat_degree_X_sub_C_le]
+#align charmatrix_apply_nat_degree_le Matrix.charmatrix_apply_natDegree_le
 -/
 
 namespace Matrix
@@ -70,16 +71,16 @@ theorem charpoly_sub_diagonal_degree_lt :
   by
   rw [charpoly, det_apply', ← insert_erase (mem_univ (Equiv.refl n)),
     sum_insert (not_mem_erase (Equiv.refl n) univ), add_comm]
-  simp only [charmatrix_apply_eq, one_mul, Equiv.Perm.sign_refl, id.def, Int.cast_one,
+  simp only [Matrix.charmatrix_apply_eq, one_mul, Equiv.Perm.sign_refl, id.def, Int.cast_one,
     Units.val_one, add_sub_cancel, Equiv.coe_refl]
   rw [← mem_degree_lt]; apply Submodule.sum_mem (degree_lt R (Fintype.card n - 1))
   intro c hc; rw [← C_eq_int_cast, C_mul']
   apply Submodule.smul_mem (degree_lt R (Fintype.card n - 1)) ↑↑(Equiv.Perm.sign c)
   rw [mem_degree_lt]; apply lt_of_le_of_lt degree_le_nat_degree _; rw [WithBot.coe_lt_coe]
   apply lt_of_le_of_lt _ (Equiv.Perm.fixed_point_card_lt_of_ne_one (ne_of_mem_erase hc))
-  apply le_trans (Polynomial.natDegree_prod_le univ fun i : n => charmatrix M (c i) i) _
+  apply le_trans (Polynomial.natDegree_prod_le univ fun i : n => Matrix.charmatrix M (c i) i) _
   rw [card_eq_sum_ones]; rw [sum_filter]; apply sum_le_sum
-  intros; apply charmatrix_apply_natDegree_le
+  intros; apply Matrix.charmatrix_apply_natDegree_le
 #align matrix.charpoly_sub_diagonal_degree_lt Matrix.charpoly_sub_diagonal_degree_lt
 -/
 
@@ -182,7 +183,7 @@ theorem eval_det (M : Matrix n n R[X]) (r : R) :
 theorem det_eq_sign_charpoly_coeff (M : Matrix n n R) :
     M.det = (-1) ^ Fintype.card n * M.charpoly.coeff 0 :=
   by
-  rw [coeff_zero_eq_eval_zero, charpoly, eval_det, matPolyEquiv_charmatrix, ← det_smul]
+  rw [coeff_zero_eq_eval_zero, charpoly, eval_det, Matrix.matPolyEquiv_charmatrix, ← det_smul]
   simp
 #align matrix.det_eq_sign_charpoly_coeff Matrix.det_eq_sign_charpoly_coeff
 -/
@@ -191,23 +192,23 @@ end Matrix
 
 variable {p : ℕ} [Fact p.Prime]
 
-#print matPolyEquiv_eq_x_pow_sub_c /-
-theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
-    matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (charmatrix (M ^ k))) =
+#print matPolyEquiv_eq_X_pow_sub_C /-
+theorem matPolyEquiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
+    matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (Matrix.charmatrix (M ^ k))) =
       X ^ k - C (M ^ k) :=
   by
   ext m
   rw [coeff_sub, coeff_C, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
     AlgHom.coe_toRingHom, DMatrix.sub_apply, coeff_X_pow]
   by_cases hij : i = j
-  · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
+  · rw [hij, Matrix.charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
       coeff_C]
     split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, DMatrix.zero_apply]
-  · rw [charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_C, coeff_neg, coeff_C]
+  · rw [Matrix.charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_C, coeff_neg, coeff_C]
     split_ifs with m0 mp <;>
       simp only [hij, zero_sub, DMatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def,
         not_false_iff]
-#align mat_poly_equiv_eq_X_pow_sub_C matPolyEquiv_eq_x_pow_sub_c
+#align mat_poly_equiv_eq_X_pow_sub_C matPolyEquiv_eq_X_pow_sub_C
 -/
 
 namespace Matrix
@@ -234,8 +235,8 @@ end Matrix
 
 section Ideal
 
-#print coeff_charpoly_mem_ideal_pow /-
-theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k : ℕ) :
+#print Matrix.coeff_charpoly_mem_ideal_pow /-
+theorem Matrix.coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k : ℕ) :
     M.charpoly.coeff k ∈ I ^ (Fintype.card n - k) :=
   by
   delta charpoly
@@ -247,12 +248,12 @@ theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k
   rw [← this]
   apply coeff_prod_mem_ideal_pow_tsub
   rintro i - (_ | k)
-  · rw [tsub_zero, pow_one, charmatrix_apply, coeff_sub, coeff_X_mul_zero, coeff_C_zero, zero_sub,
-      neg_mem_iff]
+  · rw [tsub_zero, pow_one, Matrix.charmatrix_apply, coeff_sub, coeff_X_mul_zero, coeff_C_zero,
+      zero_sub, neg_mem_iff]
     exact h (c i) i
   · rw [Nat.succ_eq_one_add, tsub_self_add, pow_zero, Ideal.one_eq_top]
     exact Submodule.mem_top
-#align coeff_charpoly_mem_ideal_pow coeff_charpoly_mem_ideal_pow
+#align coeff_charpoly_mem_ideal_pow Matrix.coeff_charpoly_mem_ideal_pow
 -/
 
 end Ideal

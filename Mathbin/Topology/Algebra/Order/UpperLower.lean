@@ -68,25 +68,33 @@ section OrderClosedTopology
 
 variable [OrderClosedTopology α] {s : Set α}
 
+#print upperBounds_closure /-
 @[simp]
 theorem upperBounds_closure (s : Set α) : upperBounds (closure s : Set α) = upperBounds s :=
   ext fun a => by simp_rw [mem_upperBounds_iff_subset_Iic, is_closed_Iic.closure_subset_iff]
 #align upper_bounds_closure upperBounds_closure
+-/
 
+#print lowerBounds_closure /-
 @[simp]
 theorem lowerBounds_closure (s : Set α) : lowerBounds (closure s : Set α) = lowerBounds s :=
   ext fun a => by simp_rw [mem_lowerBounds_iff_subset_Ici, is_closed_Ici.closure_subset_iff]
 #align lower_bounds_closure lowerBounds_closure
+-/
 
+#print bddAbove_closure /-
 @[simp]
 theorem bddAbove_closure : BddAbove (closure s) ↔ BddAbove s := by
   simp_rw [BddAbove, upperBounds_closure]
 #align bdd_above_closure bddAbove_closure
+-/
 
+#print bddBelow_closure /-
 @[simp]
 theorem bddBelow_closure : BddBelow (closure s) ↔ BddBelow s := by
   simp_rw [BddBelow, lowerBounds_closure]
 #align bdd_below_closure bddBelow_closure
+-/
 
 alias ⟨BddAbove.of_closure, BddAbove.closure⟩ := bddAbove_closure
 #align bdd_above.of_closure BddAbove.of_closure

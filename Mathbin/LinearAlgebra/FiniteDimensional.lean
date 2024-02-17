@@ -1379,10 +1379,10 @@ end Span
 
 section Basis
 
-#print span_eq_top_of_linearIndependent_of_card_eq_finrank /-
-theorem span_eq_top_of_linearIndependent_of_card_eq_finrank {ι : Type _} [hι : Nonempty ι]
-    [Fintype ι] {b : ι → V} (lin_ind : LinearIndependent K b)
-    (card_eq : Fintype.card ι = finrank K V) : span K (Set.range b) = ⊤ :=
+#print LinearIndependent.span_eq_top_of_card_eq_finrank /-
+theorem LinearIndependent.span_eq_top_of_card_eq_finrank {ι : Type _} [hι : Nonempty ι] [Fintype ι]
+    {b : ι → V} (lin_ind : LinearIndependent K b) (card_eq : Fintype.card ι = finrank K V) :
+    span K (Set.range b) = ⊤ :=
   by
   by_cases fin : FiniteDimensional K V
   · haveI := Fin
@@ -1396,7 +1396,7 @@ theorem span_eq_top_of_linearIndependent_of_card_eq_finrank {ι : Type _} [hι :
     calc
       Fintype.card ι = finrank K V := card_eq
       _ = 0 := dif_neg (mt is_noetherian.iff_rank_lt_aleph_0.mpr Fin)
-#align span_eq_top_of_linear_independent_of_card_eq_finrank span_eq_top_of_linearIndependent_of_card_eq_finrank
+#align span_eq_top_of_linear_independent_of_card_eq_finrank LinearIndependent.span_eq_top_of_card_eq_finrank
 -/
 
 #print basisOfLinearIndependentOfCardEqFinrank /-
@@ -1405,7 +1405,7 @@ theorem span_eq_top_of_linearIndependent_of_card_eq_finrank {ι : Type _} [hι :
 noncomputable def basisOfLinearIndependentOfCardEqFinrank {ι : Type _} [Nonempty ι] [Fintype ι]
     {b : ι → V} (lin_ind : LinearIndependent K b) (card_eq : Fintype.card ι = finrank K V) :
     Basis ι K V :=
-  Basis.mk lin_ind <| (span_eq_top_of_linearIndependent_of_card_eq_finrank lin_ind card_eq).ge
+  Basis.mk lin_ind <| (LinearIndependent.span_eq_top_of_card_eq_finrank lin_ind card_eq).ge
 #align basis_of_linear_independent_of_card_eq_finrank basisOfLinearIndependentOfCardEqFinrank
 -/
 

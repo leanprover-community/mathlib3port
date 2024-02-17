@@ -542,7 +542,7 @@ is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, 
 -/
 class ProperlyDiscontinuousSMul (Γ : Type _) (T : Type _) [TopologicalSpace T] [SMul Γ T] :
     Prop where
-  finite_disjoint_inter_image :
+  finiteₓ_disjoint_inter_image :
     ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite {γ : Γ | (· • ·) γ '' K ∩ L ≠ ∅}
 #align properly_discontinuous_smul ProperlyDiscontinuousSMul
 -/
@@ -554,7 +554,7 @@ is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, 
 -/
 class ProperlyDiscontinuousVAdd (Γ : Type _) (T : Type _) [TopologicalSpace T] [VAdd Γ T] :
     Prop where
-  finite_disjoint_inter_image :
+  finiteₓ_disjoint_inter_image :
     ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite {γ : Γ | (· +ᵥ ·) γ '' K ∩ L ≠ ∅}
 #align properly_discontinuous_vadd ProperlyDiscontinuousVAdd
 -/
@@ -567,14 +567,14 @@ variable {Γ : Type _} [Group Γ] {T : Type _} [TopologicalSpace T] [MulAction �
 /-- A finite group action is always properly discontinuous. -/
 @[to_additive "A finite group action is always properly discontinuous."]
 instance (priority := 100) Finite.to_properlyDiscontinuousSMul [Finite Γ] :
-    ProperlyDiscontinuousSMul Γ T where finite_disjoint_inter_image _ _ _ _ := Set.toFinite _
+    ProperlyDiscontinuousSMul Γ T where finiteₓ_disjoint_inter_image _ _ _ _ := Set.toFinite _
 #align finite.to_properly_discontinuous_smul Finite.to_properlyDiscontinuousSMul
 #align finite.to_properly_discontinuous_vadd Finite.to_properlyDiscontinuousVAdd
 -/
 
-export ProperlyDiscontinuousSMul (finite_disjoint_inter_image)
+export ProperlyDiscontinuousSMul (finiteₓ_disjoint_inter_image)
 
-export ProperlyDiscontinuousVAdd (finite_disjoint_inter_image)
+export ProperlyDiscontinuousVAdd (finiteₓ_disjoint_inter_image)
 
 #print isOpenMap_quotient_mk'_mul /-
 /-- The quotient map by a group action is open, i.e. the quotient by a group action is an open

@@ -87,7 +87,7 @@ theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (F
 theorem rank_mul_le_left [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ A.rank := by
   rw [rank, rank, mul_vec_lin_mul]
-  exact Cardinal.toNat_le_of_le_of_lt_aleph0 (rank_lt_aleph_0 _ _) (LinearMap.rank_comp_le_left _ _)
+  exact Cardinal.toNat_le_toNat (rank_lt_aleph_0 _ _) (LinearMap.rank_comp_le_left _ _)
 #align matrix.rank_mul_le_left Matrix.rank_mul_le_left
 -/
 

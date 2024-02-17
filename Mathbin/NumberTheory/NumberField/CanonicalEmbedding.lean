@@ -163,7 +163,6 @@ def equivIntegerLattice [NumberField K] : 𝓞 K ≃ₗ[ℤ] integerLattice K :=
       exact IsFractionRing.injective (𝓞 K) K (canonical_embedding_injective K h))
 #align number_field.canonical_embedding.equiv_integer_lattice NumberField.canonicalEmbedding.equivIntegerLattice
 
-#print NumberField.canonicalEmbedding.integerLattice.inter_ball_finite /-
 theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
     ((integerLattice K : Set E) ∩ closedBall 0 r).Finite :=
   by
@@ -179,8 +178,7 @@ theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
     exact ⟨x, ⟨SetLike.coe_mem x, (HEq x).mp hx2⟩, rfl⟩
   · rintro ⟨x, ⟨hx1, hx2⟩, rfl⟩
     exact ⟨⟨x, ⟨⟨x, hx1⟩, rfl⟩, rfl⟩, (HEq x).mpr hx2⟩
-#align number_field.canonical_embedding.integer_lattice.inter_ball_finite NumberField.canonicalEmbedding.integerLattice.inter_ball_finite
--/
+#align number_field.canonical_embedding.integer_lattice.inter_ball_finite NumberField.canonicalEmbedding.integerLattice.inter_ball_finiteₓ
 
 instance [NumberField K] : Countable (integerLattice K) :=
   by

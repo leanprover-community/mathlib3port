@@ -75,10 +75,10 @@ theorem equiv_free_prod_directSum_zmod [hG : AddGroup.FG G] :
 #align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zmod
 -/
 
-#print AddCommGroup.equiv_directSum_zmod_of_fintype /-
+#print AddCommGroup.equiv_directSum_zmod_of_finite /-
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
-theorem equiv_directSum_zmod_of_fintype [Finite G] :
+theorem equiv_directSum_zmod_of_finite [Finite G] :
     ∃ (ι : Type) (_ : Fintype ι) (p : ι → ℕ) (_ : ∀ i, Nat.Prime <| p i) (e : ι → ℕ),
       Nonempty <| G ≃+ ⨁ i : ι, ZMod (p i ^ e i) :=
   by
@@ -90,7 +90,7 @@ theorem equiv_directSum_zmod_of_fintype [Finite G] :
     exact
       (Fintype.ofSurjective (fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
-#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zmod_of_fintype
+#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zmod_of_finite
 -/
 
 #print AddCommGroup.finite_of_fg_torsion /-

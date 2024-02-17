@@ -73,57 +73,45 @@ structure OrderRingIso (α β : Type _) [Mul α] [Add α] [LE α] [Mul β] [Add 
 
 infixl:25 " ≃+*o " => OrderRingIso
 
-#print OrderRingHomClass /-
 /-- `order_ring_hom_class F α β` states that `F` is a type of ordered semiring homomorphisms.
 You should extend this typeclass when you extend `order_ring_hom`. -/
 class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [NonAssocSemiring α] [Preorder α]
     [NonAssocSemiring β] [Preorder β] extends RingHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_ring_hom_class OrderRingHomClass
--/
 
-#print OrderRingIsoClass /-
 /-- `order_ring_iso_class F α β` states that `F` is a type of ordered semiring isomorphisms.
 You should extend this class when you extend `order_ring_iso`. -/
 class OrderRingIsoClass (F : Type _) (α β : outParam (Type _)) [Mul α] [Add α] [LE α] [Mul β]
     [Add β] [LE β] extends RingEquivClass F α β where
   map_le_map_iff (f : F) {a b : α} : f a ≤ f b ↔ a ≤ b
 #align order_ring_iso_class OrderRingIsoClass
--/
 
-#print OrderRingHomClass.toOrderAddMonoidHomClass /-
 -- See note [lower priority instance]
 instance (priority := 100) OrderRingHomClass.toOrderAddMonoidHomClass [NonAssocSemiring α]
     [Preorder α] [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] :
     OrderAddMonoidHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
 #align order_ring_hom_class.to_order_add_monoid_hom_class OrderRingHomClass.toOrderAddMonoidHomClass
--/
 
-#print OrderRingHomClass.toOrderMonoidWithZeroHomClass /-
 -- See note [lower priority instance]
 instance (priority := 100) OrderRingHomClass.toOrderMonoidWithZeroHomClass [NonAssocSemiring α]
     [Preorder α] [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] :
     OrderMonoidWithZeroHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
 #align order_ring_hom_class.to_order_monoid_with_zero_hom_class OrderRingHomClass.toOrderMonoidWithZeroHomClass
--/
 
-#print OrderRingIsoClass.toOrderIsoClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderRingIsoClass.toOrderIsoClass [Mul α] [Add α] [LE α] [Mul β] [Add β]
     [LE β] [OrderRingIsoClass F α β] : OrderIsoClass F α β :=
   { ‹OrderRingIsoClass F α β› with }
 #align order_ring_iso_class.to_order_iso_class OrderRingIsoClass.toOrderIsoClass
--/
 
-#print OrderRingIsoClass.toOrderRingHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderRingIsoClass.toOrderRingHomClass [NonAssocSemiring α] [Preorder α]
     [NonAssocSemiring β] [Preorder β] [OrderRingIsoClass F α β] : OrderRingHomClass F α β :=
   { ‹OrderRingIsoClass F α β› with Monotone := fun f => OrderHomClass.mono f }
 #align order_ring_iso_class.to_order_ring_hom_class OrderRingIsoClass.toOrderRingHomClass
--/
 
 instance [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β] [Preorder β]
     [OrderRingHomClass F α β] : CoeTC F (α →+*o β) :=

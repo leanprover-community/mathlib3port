@@ -144,27 +144,31 @@ theorem isClosed_le [TopologicalSpace β] {f g : β → α} (hf : Continuous f) 
 #align is_closed_le isClosed_le
 -/
 
-#print ClosedIicTopology.isClosed_le' /-
-theorem ClosedIicTopology.isClosed_le' (a : α) : IsClosed {b | b ≤ a} :=
+/- warning: is_closed_le' clashes with is_closed_Iic -> isClosed_Iic
+Case conversion may be inaccurate. Consider using '#align is_closed_le' isClosed_Iicₓ'. -/
+#print isClosed_Iic /-
+theorem isClosed_Iic (a : α) : IsClosed {b | b ≤ a} :=
   isClosed_le continuous_id continuous_const
-#align is_closed_le' ClosedIicTopology.isClosed_le'
+#align is_closed_le' isClosed_Iic
 -/
 
 #print isClosed_Iic /-
 theorem isClosed_Iic {a : α} : IsClosed (Iic a) :=
-  ClosedIicTopology.isClosed_le' a
+  isClosed_Iic a
 #align is_closed_Iic isClosed_Iic
 -/
 
-#print ClosedIciTopology.isClosed_ge' /-
-theorem ClosedIciTopology.isClosed_ge' (a : α) : IsClosed {b | a ≤ b} :=
+/- warning: is_closed_ge' clashes with is_closed_Ici -> isClosed_Ici
+Case conversion may be inaccurate. Consider using '#align is_closed_ge' isClosed_Iciₓ'. -/
+#print isClosed_Ici /-
+theorem isClosed_Ici (a : α) : IsClosed {b | a ≤ b} :=
   isClosed_le continuous_const continuous_id
-#align is_closed_ge' ClosedIciTopology.isClosed_ge'
+#align is_closed_ge' isClosed_Ici
 -/
 
 #print isClosed_Ici /-
 theorem isClosed_Ici {a : α} : IsClosed (Ici a) :=
-  ClosedIciTopology.isClosed_ge' a
+  isClosed_Ici a
 #align is_closed_Ici isClosed_Ici
 -/
 
@@ -3649,17 +3653,13 @@ section LinearOrderedAddCommGroup
 
 variable [LinearOrder α] [Zero α] [TopologicalSpace α] [OrderTopology α]
 
-#print eventually_nhdsWithin_pos_mem_Ioo /-
 theorem eventually_nhdsWithin_pos_mem_Ioo {ε : α} (h : 0 < ε) : ∀ᶠ x in 𝓝[>] 0, x ∈ Ioo 0 ε :=
   Ioo_mem_nhdsWithin_Ioi (left_mem_Ico.2 h)
 #align eventually_nhds_within_pos_mem_Ioo eventually_nhdsWithin_pos_mem_Ioo
--/
 
-#print eventually_nhdsWithin_pos_mem_Ioc /-
 theorem eventually_nhdsWithin_pos_mem_Ioc {ε : α} (h : 0 < ε) : ∀ᶠ x in 𝓝[>] 0, x ∈ Ioc 0 ε :=
   Ioc_mem_nhdsWithin_Ioi (left_mem_Ico.2 h)
 #align eventually_nhds_within_pos_mem_Ioc eventually_nhdsWithin_pos_mem_Ioc
--/
 
 end LinearOrderedAddCommGroup
 

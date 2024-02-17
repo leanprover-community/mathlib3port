@@ -55,7 +55,6 @@ variable {α : Type u} {β : Type v} {ι : Sort w} {γ : Type x}
 
 namespace Set
 
-#print Set.Finite /-
 /-- A set is finite if there is a `finset` with the same elements.
 This is represented as there being a `fintype` instance for the set
 coerced to a type.
@@ -65,8 +64,7 @@ so that it won't be frozen as a local instance. -/
 @[protected]
 inductive Finite (s : Set α) : Prop
   | intro : Fintype s → Finite
-#align set.finite Set.Finite
--/
+#align set.finite Set.Finiteₓ
 
 -- The `protected` attribute does not take effect within the same namespace block.
 end Set

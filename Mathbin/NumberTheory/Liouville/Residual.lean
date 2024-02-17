@@ -36,14 +36,14 @@ theorem setOf_liouville_eq_iInter_iUnion :
 #align set_of_liouville_eq_Inter_Union setOf_liouville_eq_iInter_iUnion
 -/
 
-#print isGδ_setOf_liouville /-
-theorem isGδ_setOf_liouville : IsGδ {x | Liouville x} :=
+#print IsGδ.setOf_liouville /-
+theorem IsGδ.setOf_liouville : IsGδ {x | Liouville x} :=
   by
   rw [setOf_liouville_eq_iInter_iUnion]
-  refine' isGδ_iInter fun n => IsOpen.isGδ _
+  refine' IsGδ.iInter fun n => IsOpen.isGδ _
   refine' isOpen_iUnion fun a => isOpen_iUnion fun b => isOpen_iUnion fun hb => _
   exact is_open_ball.inter is_closed_singleton.is_open_compl
-#align is_Gδ_set_of_liouville isGδ_setOf_liouville
+#align is_Gδ_set_of_liouville IsGδ.setOf_liouville
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
@@ -73,7 +73,7 @@ theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
   refine' eventually_residual.2 ⟨_, _, rat.dense_embedding_coe_real.dense.mono _, subset.rfl⟩
   ·
     exact
-      isGδ_iInter fun n =>
+      IsGδ.iInter fun n =>
         IsOpen.isGδ <|
           isOpen_iUnion fun a => isOpen_iUnion fun b => isOpen_iUnion fun hb => is_open_ball
   · rintro _ ⟨r, rfl⟩

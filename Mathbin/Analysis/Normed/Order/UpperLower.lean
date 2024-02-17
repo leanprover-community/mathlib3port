@@ -275,6 +275,7 @@ section Finite
 
 variable [Finite ι] {s t : Set (ι → ℝ)} {a₁ a₂ b₁ b₂ x y : ι → ℝ} {δ : ℝ}
 
+#print IsAntichain.interior_eq_empty /-
 theorem IsAntichain.interior_eq_empty [Nonempty ι] (hs : IsAntichain (· ≤ ·) s) : interior s = ∅ :=
   by
   cases nonempty_fintype ι
@@ -285,6 +286,7 @@ theorem IsAntichain.interior_eq_empty [Nonempty ι] (hs : IsAntichain (· ≤ ·
   refine' hs.not_lt hx' (hx _) (lt_add_of_pos_right _ (by positivity : 0 < const ι (ε / 2)))
   simpa [const, @pi_norm_const ι ℝ _ _ _ (ε / 2), abs_of_nonneg hε.lt.le]
 #align is_antichain.interior_eq_empty IsAntichain.interior_eq_empty
+-/
 
 /-!
 #### Note

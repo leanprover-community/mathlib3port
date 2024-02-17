@@ -336,7 +336,7 @@ theorem IsGδ.dense_iUnion_interior_of_closed [Encodable ι] {s : Set α} (hs : 
     refine' dense_iInter_of_isOpen hgo fun i x => _
     rw [closure_compl, interior_frontier (hc _)]
     exact id
-  refine' (hd.inter_of_Gδ hs (isGδ_iInter_of_isOpen fun i => hgo i) hgd).mono _
+  refine' (hd.inter_of_Gδ hs (IsGδ.iInter_of_isOpen fun i => hgo i) hgd).mono _
   rintro x ⟨hxs, hxg⟩
   rw [mem_Inter] at hxg 
   rcases mem_Union.1 (hU hxs) with ⟨i, hi⟩
@@ -372,7 +372,7 @@ theorem IsGδ.dense_sUnion_interior_of_closed {T : Set (Set α)} {s : Set α} (h
 are dense. Formulated here with an index set which is a countable set in any type. -/
 theorem dense_biUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : ∀ s ∈ S, IsClosed (f s))
     (hS : S.Countable) (hU : (⋃ s ∈ S, f s) = univ) : Dense (⋃ s ∈ S, interior (f s)) :=
-  isGδ_univ.dense_biUnion_interior_of_closed dense_univ hS hc hU.ge
+  IsGδ.univ.dense_biUnion_interior_of_closed dense_univ hS hc hU.ge
 #align dense_bUnion_interior_of_closed dense_biUnion_interior_of_closed
 -/
 
@@ -381,7 +381,7 @@ theorem dense_biUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : 
 are dense. Formulated here with `⋃₀`. -/
 theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s ∈ S, IsClosed s)
     (hS : S.Countable) (hU : ⋃₀ S = univ) : Dense (⋃ s ∈ S, interior s) :=
-  isGδ_univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.ge
+  IsGδ.univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.ge
 #align dense_sUnion_interior_of_closed dense_sUnion_interior_of_closed
 -/
 
@@ -390,7 +390,7 @@ theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s ∈ S, Is
 are dense. Formulated here with an index set which is an encodable type. -/
 theorem dense_iUnion_interior_of_closed [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
     (hU : (⋃ s, f s) = univ) : Dense (⋃ s, interior (f s)) :=
-  isGδ_univ.dense_iUnion_interior_of_closed dense_univ hc hU.ge
+  IsGδ.univ.dense_iUnion_interior_of_closed dense_univ hc hU.ge
 #align dense_Union_interior_of_closed dense_iUnion_interior_of_closed
 -/
 

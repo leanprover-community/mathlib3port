@@ -32,12 +32,12 @@ def toUnits [Group G] : G ≃* Gˣ
 #align to_add_units toAddUnits
 -/
 
-#print coe_toUnits /-
+#print val_toUnits_apply /-
 @[simp, to_additive]
-theorem coe_toUnits [Group G] (g : G) : (toUnits g : G) = g :=
+theorem val_toUnits_apply [Group G] (g : G) : (toUnits g : G) = g :=
   rfl
-#align coe_to_units coe_toUnits
-#align coe_to_add_units coe_toAddUnits
+#align coe_to_units val_toUnits_apply
+#align coe_to_add_units val_toAddUnits_apply
 -/
 
 namespace Units

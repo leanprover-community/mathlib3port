@@ -638,7 +638,7 @@ theorem rank_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 
 theorem finrank_eq_four [StrongRankCondition R] : FiniteDimensional.finrank R ℍ[R,c₁,c₂] = 4 :=
   by
   have : Cardinal.toNat 4 = 4 := by
-    rw [← Cardinal.toNat_cast 4, Nat.cast_bit0, Nat.cast_bit0, Nat.cast_one]
+    rw [← Cardinal.toNat_natCast 4, Nat.cast_bit0, Nat.cast_bit0, Nat.cast_one]
   rw [FiniteDimensional.finrank, rank_eq_four, this]
 #align quaternion_algebra.finrank_eq_four QuaternionAlgebra.finrank_eq_four
 -/

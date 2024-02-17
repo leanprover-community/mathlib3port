@@ -323,63 +323,63 @@ instance SLAction {R : Type _} [CommRing R] [Algebra R ℝ] : MulAction SL(2, R)
 instance : Coe SL(2, ℤ) GL(2, ℝ)⁺ :=
   ⟨fun g => ((g : SL(2, ℝ)) : GL(2, ℝ)⁺)⟩
 
-#print UpperHalfPlane.SLOnGLPos /-
-instance SLOnGLPos : SMul SL(2, ℤ) GL(2, ℝ)⁺ :=
+#print UpperHalfPlane.ModularGroup.SLOnGLPos /-
+instance UpperHalfPlane.ModularGroup.SLOnGLPos : SMul SL(2, ℤ) GL(2, ℝ)⁺ :=
   ⟨fun s g => s * g⟩
-#align upper_half_plane.SL_on_GL_pos UpperHalfPlane.SLOnGLPos
+#align upper_half_plane.SL_on_GL_pos UpperHalfPlane.ModularGroup.SLOnGLPos
 -/
 
-#print UpperHalfPlane.SLOnGLPos_smul_apply /-
-theorem SLOnGLPos_smul_apply (s : SL(2, ℤ)) (g : GL(2, ℝ)⁺) (z : ℍ) :
+#print UpperHalfPlane.ModularGroup.SLOnGLPos_smul_apply /-
+theorem UpperHalfPlane.ModularGroup.SLOnGLPos_smul_apply (s : SL(2, ℤ)) (g : GL(2, ℝ)⁺) (z : ℍ) :
     (s • g) • z = ((s : GL(2, ℝ)⁺) * g) • z :=
   rfl
-#align upper_half_plane.SL_on_GL_pos_smul_apply UpperHalfPlane.SLOnGLPos_smul_apply
+#align upper_half_plane.SL_on_GL_pos_smul_apply UpperHalfPlane.ModularGroup.SLOnGLPos_smul_apply
 -/
 
-#print UpperHalfPlane.SL_to_GL_tower /-
-instance SL_to_GL_tower : IsScalarTower SL(2, ℤ) GL(2, ℝ)⁺ ℍ
+#print UpperHalfPlane.ModularGroup.SL_to_GL_tower /-
+instance UpperHalfPlane.ModularGroup.SL_to_GL_tower : IsScalarTower SL(2, ℤ) GL(2, ℝ)⁺ ℍ
     where smul_assoc := by intro s g z; simp only [SL_on_GL_pos_smul_apply, coe_coe];
     apply mul_smul'
-#align upper_half_plane.SL_to_GL_tower UpperHalfPlane.SL_to_GL_tower
+#align upper_half_plane.SL_to_GL_tower UpperHalfPlane.ModularGroup.SL_to_GL_tower
 -/
 
-#print UpperHalfPlane.subgroupGLPos /-
-instance subgroupGLPos : SMul Γ GL(2, ℝ)⁺ :=
+#print UpperHalfPlane.ModularGroup.subgroupGLPos /-
+instance UpperHalfPlane.ModularGroup.subgroupGLPos : SMul Γ GL(2, ℝ)⁺ :=
   ⟨fun s g => s * g⟩
-#align upper_half_plane.subgroup_GL_pos UpperHalfPlane.subgroupGLPos
+#align upper_half_plane.subgroup_GL_pos UpperHalfPlane.ModularGroup.subgroupGLPos
 -/
 
-#print UpperHalfPlane.subgroup_on_glpos_smul_apply /-
-theorem subgroup_on_glpos_smul_apply (s : Γ) (g : GL(2, ℝ)⁺) (z : ℍ) :
+#print UpperHalfPlane.ModularGroup.subgroup_on_glpos_smul_apply /-
+theorem UpperHalfPlane.ModularGroup.subgroup_on_glpos_smul_apply (s : Γ) (g : GL(2, ℝ)⁺) (z : ℍ) :
     (s • g) • z = ((s : GL(2, ℝ)⁺) * g) • z :=
   rfl
-#align upper_half_plane.subgroup_on_GL_pos_smul_apply UpperHalfPlane.subgroup_on_glpos_smul_apply
+#align upper_half_plane.subgroup_on_GL_pos_smul_apply UpperHalfPlane.ModularGroup.subgroup_on_glpos_smul_apply
 -/
 
-#print UpperHalfPlane.subgroup_on_glpos /-
-instance subgroup_on_glpos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
+#print UpperHalfPlane.ModularGroup.subgroup_on_glpos /-
+instance UpperHalfPlane.ModularGroup.subgroup_on_glpos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
     where smul_assoc := by intro s g z; simp only [subgroup_on_GL_pos_smul_apply, coe_coe];
     apply mul_smul'
-#align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.subgroup_on_glpos
+#align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.ModularGroup.subgroup_on_glpos
 -/
 
-#print UpperHalfPlane.subgroupSL /-
-instance subgroupSL : SMul Γ SL(2, ℤ) :=
+#print UpperHalfPlane.ModularGroup.subgroupSL /-
+instance UpperHalfPlane.ModularGroup.subgroupSL : SMul Γ SL(2, ℤ) :=
   ⟨fun s g => s * g⟩
-#align upper_half_plane.subgroup_SL UpperHalfPlane.subgroupSL
+#align upper_half_plane.subgroup_SL UpperHalfPlane.ModularGroup.subgroupSL
 -/
 
-#print UpperHalfPlane.subgroup_on_SL_apply /-
-theorem subgroup_on_SL_apply (s : Γ) (g : SL(2, ℤ)) (z : ℍ) :
+#print UpperHalfPlane.ModularGroup.subgroup_on_SL_apply /-
+theorem UpperHalfPlane.ModularGroup.subgroup_on_SL_apply (s : Γ) (g : SL(2, ℤ)) (z : ℍ) :
     (s • g) • z = ((s : SL(2, ℤ)) * g) • z :=
   rfl
-#align upper_half_plane.subgroup_on_SL_apply UpperHalfPlane.subgroup_on_SL_apply
+#align upper_half_plane.subgroup_on_SL_apply UpperHalfPlane.ModularGroup.subgroup_on_SL_apply
 -/
 
-#print UpperHalfPlane.subgroup_to_SL_tower /-
-instance subgroup_to_SL_tower : IsScalarTower Γ SL(2, ℤ) ℍ
+#print UpperHalfPlane.ModularGroup.subgroup_to_SL_tower /-
+instance UpperHalfPlane.ModularGroup.subgroup_to_SL_tower : IsScalarTower Γ SL(2, ℤ) ℍ
     where smul_assoc s g z := by rw [subgroup_on_SL_apply]; apply MulAction.hMul_smul
-#align upper_half_plane.subgroup_to_SL_tower UpperHalfPlane.subgroup_to_SL_tower
+#align upper_half_plane.subgroup_to_SL_tower UpperHalfPlane.ModularGroup.subgroup_to_SL_tower
 -/
 
 end ModularScalarTowers
@@ -439,31 +439,32 @@ section SLModularAction
 
 variable (g : SL(2, ℤ)) (z : ℍ) (Γ : Subgroup SL(2, ℤ))
 
-#print UpperHalfPlane.sl_moeb /-
+#print UpperHalfPlane.ModularGroup.sl_moeb /-
 @[simp]
-theorem sl_moeb (A : SL(2, ℤ)) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
+theorem UpperHalfPlane.ModularGroup.sl_moeb (A : SL(2, ℤ)) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
   rfl
-#align upper_half_plane.sl_moeb UpperHalfPlane.sl_moeb
+#align upper_half_plane.sl_moeb UpperHalfPlane.ModularGroup.sl_moeb
 -/
 
-#print UpperHalfPlane.subgroup_moeb /-
-theorem subgroup_moeb (A : Γ) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
+#print UpperHalfPlane.ModularGroup.subgroup_moeb /-
+theorem UpperHalfPlane.ModularGroup.subgroup_moeb (A : Γ) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
   rfl
-#align upper_half_plane.subgroup_moeb UpperHalfPlane.subgroup_moeb
+#align upper_half_plane.subgroup_moeb UpperHalfPlane.ModularGroup.subgroup_moeb
 -/
 
-#print UpperHalfPlane.subgroup_to_sl_moeb /-
+#print UpperHalfPlane.ModularGroup.subgroup_to_sl_moeb /-
 @[simp]
-theorem subgroup_to_sl_moeb (A : Γ) (z : ℍ) : A • z = (A : SL(2, ℤ)) • z :=
+theorem UpperHalfPlane.ModularGroup.subgroup_to_sl_moeb (A : Γ) (z : ℍ) :
+    A • z = (A : SL(2, ℤ)) • z :=
   rfl
-#align upper_half_plane.subgroup_to_sl_moeb UpperHalfPlane.subgroup_to_sl_moeb
+#align upper_half_plane.subgroup_to_sl_moeb UpperHalfPlane.ModularGroup.subgroup_to_sl_moeb
 -/
 
-#print UpperHalfPlane.SL_neg_smul /-
+#print UpperHalfPlane.ModularGroup.SL_neg_smul /-
 @[simp]
-theorem SL_neg_smul (g : SL(2, ℤ)) (z : ℍ) : -g • z = g • z := by
+theorem UpperHalfPlane.ModularGroup.SL_neg_smul (g : SL(2, ℤ)) (z : ℍ) : -g • z = g • z := by
   simp only [coe_GL_pos_neg, sl_moeb, coe_coe, coe_int_neg, neg_smul]
-#align upper_half_plane.SL_neg_smul UpperHalfPlane.SL_neg_smul
+#align upper_half_plane.SL_neg_smul UpperHalfPlane.ModularGroup.SL_neg_smul
 -/
 
 #print UpperHalfPlane.c_mul_im_sq_le_normSq_denom /-
@@ -478,20 +479,20 @@ theorem c_mul_im_sq_le_normSq_denom (z : ℍ) (g : SL(2, ℝ)) :
 #align upper_half_plane.c_mul_im_sq_le_norm_sq_denom UpperHalfPlane.c_mul_im_sq_le_normSq_denom
 -/
 
-#print UpperHalfPlane.SpecialLinearGroup.im_smul_eq_div_normSq /-
-theorem SpecialLinearGroup.im_smul_eq_div_normSq : (g • z).im = z.im / Complex.normSq (denom g z) :=
+#print UpperHalfPlane.ModularGroup.im_smul_eq_div_normSq /-
+theorem ModularGroup.im_smul_eq_div_normSq : (g • z).im = z.im / Complex.normSq (denom g z) :=
   by
   convert im_smul_eq_div_norm_sq g z
   simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix,
     Int.coe_castRingHom, (g : SL(2, ℝ)).Prop, one_mul]
-#align upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.SpecialLinearGroup.im_smul_eq_div_normSq
+#align upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.ModularGroup.im_smul_eq_div_normSq
 -/
 
-#print UpperHalfPlane.denom_apply /-
-theorem denom_apply (g : SL(2, ℤ)) (z : ℍ) :
+#print UpperHalfPlane.ModularGroup.denom_apply /-
+theorem UpperHalfPlane.ModularGroup.denom_apply (g : SL(2, ℤ)) (z : ℍ) :
     denom g z = (↑g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 * z + (↑g : Matrix (Fin 2) (Fin 2) ℤ) 1 1 := by
   simp
-#align upper_half_plane.denom_apply UpperHalfPlane.denom_apply
+#align upper_half_plane.denom_apply UpperHalfPlane.ModularGroup.denom_apply
 -/
 
 end SLModularAction

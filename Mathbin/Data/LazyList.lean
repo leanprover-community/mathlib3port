@@ -65,15 +65,13 @@ def toList : LazyList α → List α
 #align lazy_list.to_list LazyList.toList
 -/
 
-#print LazyList.headI /-
 /-- Returns the first element of the lazy list,
 or `default` if the lazy list is empty.
 -/
-def headI [Inhabited α] : LazyList α → α
+def head [Inhabited α] : LazyList α → α
   | nil => default
   | cons h t => h
-#align lazy_list.head LazyList.headI
--/
+#align lazy_list.head LazyList.head
 
 #print LazyList.tail /-
 /-- Removes the first element of the lazy list.
@@ -126,23 +124,19 @@ def join : LazyList (LazyList α) → LazyList α
 #align lazy_list.join LazyList.join
 -/
 
-#print LazyList.for /-
 /-- Maps a function over a lazy list.
 Same as `lazy_list.map`, but with swapped arguments.
 -/
 def for (l : LazyList α) (f : α → β) : LazyList β :=
   map f l
 #align lazy_list.for LazyList.for
--/
 
-#print LazyList.approx /-
 /-- The list containing the first `n` elements of a lazy list.  -/
 def approx : Nat → LazyList α → List α
   | 0, l => []
   | _, nil => []
   | a + 1, cons h t => h :: approx a (t ())
 #align lazy_list.approx LazyList.approx
--/
 
 #print LazyList.filter /-
 /-- The lazy list of all elements satisfying the predicate.
@@ -155,30 +149,24 @@ def filter (p : α → Prop) [DecidablePred p] : LazyList α → LazyList α
 #align lazy_list.filter LazyList.filter
 -/
 
-#print LazyList.nth /-
 /-- The nth element of a lazy list as an option (like `list.nth`). -/
 def nth : LazyList α → Nat → Option α
   | nil, n => none
   | cons a l, 0 => some a
   | cons a l, n + 1 => nth (l ()) n
 #align lazy_list.nth LazyList.nth
--/
 
-#print LazyList.iterates /-
 /-- The infinite lazy list `[x, f x, f (f x), ...]` of iterates of a function.
 This definition is meta because it creates an infinite list.
 -/
 unsafe def iterates (f : α → α) : α → LazyList α
   | x => cons x (iterates (f x))
-#align lazy_list.iterates LazyList.iterates
--/
+#align lazy_list.iterates lazy_list.iterates
 
-#print LazyList.iota /-
 /-- The infinite lazy list `[i, i+1, i+2, ...]` -/
 unsafe def iota (i : Nat) : LazyList Nat :=
   iterates Nat.succ i
-#align lazy_list.iota LazyList.iota
--/
+#align lazy_list.iota lazy_list.iota
 
 end LazyList
 

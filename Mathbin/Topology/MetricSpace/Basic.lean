@@ -3275,8 +3275,7 @@ theorem IsBounded.subset_closedBall_lt (h : IsBounded s) (a : ℝ) (c : α) :
 #print Metric.isBounded_closure_of_isBounded /-
 theorem isBounded_closure_of_isBounded (h : IsBounded s) : IsBounded (closure s) :=
   let ⟨C, h⟩ := h
-  ⟨C, fun a ha b hb =>
-    (ClosedIicTopology.isClosed_le' C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
+  ⟨C, fun a ha b hb => (isClosed_Iic C).closure_subset <| map_mem_closure₂ continuous_dist ha hb h⟩
 #align metric.bounded_closure_of_bounded Metric.isBounded_closure_of_isBounded
 -/
 

@@ -83,7 +83,6 @@ infixr:25 " →+o " => OrderAddMonoidHom
 
 section
 
-#print OrderAddMonoidHomClass /-
 /-- `order_add_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
 
 You should also extend this typeclass when you extend `order_add_monoid_hom`. -/
@@ -91,7 +90,6 @@ class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder
     [AddZeroClass α] [AddZeroClass β] extends AddMonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_add_monoid_hom_class OrderAddMonoidHomClass
--/
 
 end
 
@@ -123,7 +121,6 @@ infixr:25 " →*o " => OrderMonoidHom
 
 section
 
-#print OrderMonoidHomClass /-
 /-- `order_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
 
 You should also extend this typeclass when you extend `order_monoid_hom`. -/
@@ -133,19 +130,16 @@ class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α
   Monotone (f : F) : Monotone f
 #align order_monoid_hom_class OrderMonoidHomClass
 #align order_add_monoid_hom_class OrderAddMonoidHomClass
--/
 
 end
 
-#print OrderMonoidHomClass.toOrderHomClass /-
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] :
     OrderHomClass F α β :=
   { ‹OrderMonoidHomClass F α β› with mapRel := OrderMonoidHomClass.monotone }
 #align order_monoid_hom_class.to_order_hom_class OrderMonoidHomClass.toOrderHomClass
-#align order_add_monoid_hom_class.to_order_hom_class OrderAddMonoidHomClass.toOrderHomClass
--/
+#align order_add_monoid_hom_class.to_order_hom_class OrderAddMonoidHomClass.to_order_hom_class
 
 @[to_additive]
 instance [OrderMonoidHomClass F α β] : CoeTC F (α →*o β) :=
@@ -181,7 +175,6 @@ infixr:25 " →*₀o " => OrderMonoidWithZeroHom
 
 section
 
-#print OrderMonoidWithZeroHomClass /-
 /-- `order_monoid_with_zero_hom_class F α β` states that `F` is a type of
 ordered monoid with zero homomorphisms.
 
@@ -190,17 +183,14 @@ class OrderMonoidWithZeroHomClass (F : Type _) (α β : outParam <| Type _) [Pre
     [MulZeroOneClass α] [MulZeroOneClass β] extends MonoidWithZeroHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_monoid_with_zero_hom_class OrderMonoidWithZeroHomClass
--/
 
 end
 
-#print OrderMonoidWithZeroHomClass.toOrderMonoidHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass
     [OrderMonoidWithZeroHomClass F α β] : OrderMonoidHomClass F α β :=
   { ‹OrderMonoidWithZeroHomClass F α β› with }
 #align order_monoid_with_zero_hom_class.to_order_monoid_hom_class OrderMonoidWithZeroHomClass.toOrderMonoidHomClass
--/
 
 instance [OrderMonoidWithZeroHomClass F α β] : CoeTC F (α →*₀o β) :=
   ⟨fun f =>

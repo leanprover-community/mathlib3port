@@ -172,7 +172,7 @@ theorem countedSequence_finite : ∀ p q : ℕ, (countedSequence p q).Finite
     rw [counted_succ_succ, Set.finite_union, Set.finite_image_iff (list.cons_injective.inj_on _),
       Set.finite_image_iff (list.cons_injective.inj_on _)]
     exact ⟨counted_sequence_finite _ _, counted_sequence_finite _ _⟩
-#align ballot.counted_sequence_finite Ballot.countedSequence_finite
+#align ballot.counted_sequence_finite Ballot.countedSequence_finiteₓ
 
 theorem countedSequence_nonempty : ∀ p q : ℕ, (countedSequence p q).Nonempty
   | 0, q => by simp

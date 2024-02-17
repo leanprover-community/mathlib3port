@@ -1481,11 +1481,11 @@ theorem mono_measure {ν : Measure α} (hf : AEStronglyMeasurable f μ) (h : ν 
 #align measure_theory.ae_strongly_measurable.mono_measure MeasureTheory.AEStronglyMeasurable.mono_measure
 -/
 
-#print MeasureTheory.AEStronglyMeasurable.mono' /-
-protected theorem mono' {ν : Measure α} (h : AEStronglyMeasurable f μ) (h' : ν ≪ μ) :
+#print MeasureTheory.AEStronglyMeasurable.mono_ac /-
+protected theorem mono_ac {ν : Measure α} (h : AEStronglyMeasurable f μ) (h' : ν ≪ μ) :
     AEStronglyMeasurable f ν :=
   ⟨h.mk f, h.stronglyMeasurable_mk, h' h.ae_eq_mk⟩
-#align measure_theory.ae_strongly_measurable.mono' MeasureTheory.AEStronglyMeasurable.mono'
+#align measure_theory.ae_strongly_measurable.mono' MeasureTheory.AEStronglyMeasurable.mono_ac
 -/
 
 #print MeasureTheory.AEStronglyMeasurable.mono_set /-
@@ -2219,12 +2219,16 @@ theorem aestronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
 
 end AeStronglyMeasurable
 
-theorem aEStronglyMeasurable_of_absolutelyContinuous {α β : Type _} [MeasurableSpace α]
+/- warning: measure_theory.ae_strongly_measurable_of_absolutely_continuous clashes with measure_theory.ae_strongly_measurable.mono' -> MeasureTheory.AEStronglyMeasurable.mono_ac
+Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable_of_absolutely_continuous MeasureTheory.AEStronglyMeasurable.mono_acₓ'. -/
+#print MeasureTheory.AEStronglyMeasurable.mono_ac /-
+theorem MeasureTheory.AEStronglyMeasurable.mono_ac {α β : Type _} [MeasurableSpace α]
     [TopologicalSpace β] {μ ν : Measure α} (h : ν ≪ μ) (g : α → β) (hμ : AEStronglyMeasurable g μ) :
     AEStronglyMeasurable g ν := by
   obtain ⟨g₁, hg₁, hg₁'⟩ := hμ
   refine' ⟨g₁, hg₁, h.ae_eq hg₁'⟩
-#align measure_theory.ae_strongly_measurable_of_absolutely_continuous MeasureTheory.aEStronglyMeasurable_of_absolutelyContinuous
+#align measure_theory.ae_strongly_measurable_of_absolutely_continuous MeasureTheory.AEStronglyMeasurable.mono_ac
+-/
 
 /-! ## Almost everywhere finitely strongly measurable functions -/
 

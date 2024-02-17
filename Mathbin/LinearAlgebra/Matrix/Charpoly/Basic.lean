@@ -45,69 +45,70 @@ variable {n : Type w} [DecidableEq n] [Fintype n]
 
 open Finset
 
-#print charmatrix /-
+#print Matrix.charmatrix /-
 /-- The "characteristic matrix" of `M : matrix n n R` is the matrix of polynomials $t I - M$.
 The determinant of this matrix is the characteristic polynomial.
 -/
-def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
+def Matrix.charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
   Matrix.scalar n (X : R[X]) - (C : R →+* R[X]).mapMatrix M
-#align charmatrix charmatrix
+#align charmatrix Matrix.charmatrix
 -/
 
-#print charmatrix_apply /-
-theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
-    charmatrix M i j = X * (1 : Matrix n n R[X]) i j - C (M i j) :=
+#print Matrix.charmatrix_apply /-
+theorem Matrix.charmatrix_apply (M : Matrix n n R) (i j : n) :
+    Matrix.charmatrix M i j = X * (1 : Matrix n n R[X]) i j - C (M i j) :=
   rfl
-#align charmatrix_apply charmatrix_apply
+#align charmatrix_apply Matrix.charmatrix_apply
 -/
 
-#print charmatrix_apply_eq /-
+#print Matrix.charmatrix_apply_eq /-
 @[simp]
-theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) :
-    charmatrix M i i = (X : R[X]) - C (M i i) := by
-  simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.mapMatrix_apply,
-    map_apply, DMatrix.sub_apply]
-#align charmatrix_apply_eq charmatrix_apply_eq
+theorem Matrix.charmatrix_apply_eq (M : Matrix n n R) (i : n) :
+    Matrix.charmatrix M i i = (X : R[X]) - C (M i i) := by
+  simp only [Matrix.charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq,
+    RingHom.mapMatrix_apply, map_apply, DMatrix.sub_apply]
+#align charmatrix_apply_eq Matrix.charmatrix_apply_eq
 -/
 
-#print charmatrix_apply_ne /-
+#print Matrix.charmatrix_apply_ne /-
 @[simp]
-theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
-    charmatrix M i j = -C (M i j) := by
-  simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.mapMatrix_apply,
-    map_apply, DMatrix.sub_apply]
-#align charmatrix_apply_ne charmatrix_apply_ne
+theorem Matrix.charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
+    Matrix.charmatrix M i j = -C (M i j) := by
+  simp only [Matrix.charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub,
+    RingHom.mapMatrix_apply, map_apply, DMatrix.sub_apply]
+#align charmatrix_apply_ne Matrix.charmatrix_apply_ne
 -/
 
-#print matPolyEquiv_charmatrix /-
-theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - C M :=
+#print Matrix.matPolyEquiv_charmatrix /-
+theorem Matrix.matPolyEquiv_charmatrix (M : Matrix n n R) :
+    matPolyEquiv (Matrix.charmatrix M) = X - C M :=
   by
   ext k i j
   simp only [matPolyEquiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases h : i = j
-  · subst h; rw [charmatrix_apply_eq, coeff_sub]
+  · subst h; rw [Matrix.charmatrix_apply_eq, coeff_sub]
     simp only [coeff_X, coeff_C]
     split_ifs <;> simp
-  · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
+  · rw [Matrix.charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
     split_ifs <;> simp [h]
-#align mat_poly_equiv_charmatrix matPolyEquiv_charmatrix
+#align mat_poly_equiv_charmatrix Matrix.matPolyEquiv_charmatrix
 -/
 
-#print charmatrix_reindex /-
-theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
-    charmatrix (reindex e e M) = reindex e e (charmatrix M) :=
+#print Matrix.charmatrix_reindex /-
+theorem Matrix.charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m)
+    (M : Matrix n n R) : Matrix.charmatrix (reindex e e M) = reindex e e (Matrix.charmatrix M) :=
   by
   ext i j x
   by_cases h : i = j
   all_goals simp [h]
-#align charmatrix_reindex charmatrix_reindex
+#align charmatrix_reindex Matrix.charmatrix_reindex
 -/
 
 #print Matrix.charpoly /-
 /-- The characteristic polynomial of a matrix `M` is given by $\det (t I - M)$.
 -/
 def Matrix.charpoly (M : Matrix n n R) : R[X] :=
-  (charmatrix M).det
+  (Matrix.charmatrix M).det
 #align matrix.charpoly Matrix.charpoly
 -/
 
@@ -116,7 +117,7 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
     (M : Matrix n n R) : (reindex e e M).charpoly = M.charpoly :=
   by
   unfold Matrix.charpoly
-  rw [charmatrix_reindex, Matrix.det_reindex_self]
+  rw [Matrix.charmatrix_reindex, Matrix.det_reindex_self]
 #align matrix.charpoly_reindex Matrix.charpoly_reindex
 -/
 
@@ -133,12 +134,13 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   by
   -- We begin with the fact $χ_M(t) I = adjugate (t I - M) * (t I - M)$,
   -- as an identity in `matrix n n R[X]`.
-  have h : M.charpoly • (1 : Matrix n n R[X]) = adjugate (charmatrix M) * charmatrix M :=
+  have h :
+    M.charpoly • (1 : Matrix n n R[X]) = adjugate (Matrix.charmatrix M) * Matrix.charmatrix M :=
     (adjugate_mul _).symm
   -- Using the algebra isomorphism `matrix n n R[X] ≃ₐ[R] polynomial (matrix n n R)`,
   -- we have the same identity in `polynomial (matrix n n R)`.
   apply_fun matPolyEquiv at h 
-  simp only [mat_poly_equiv.map_mul, matPolyEquiv_charmatrix] at h 
+  simp only [mat_poly_equiv.map_mul, Matrix.matPolyEquiv_charmatrix] at h 
   -- Because the coefficient ring `matrix n n R` is non-commutative,
   -- evaluation at `M` is not multiplicative.
   -- However, any polynomial which is a product of the form $N * (t I - M)$

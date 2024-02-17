@@ -147,7 +147,7 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
   cases isEmpty_or_nonempty ι
   · simp [discr]
   · have :=
-      span_eq_top_of_linearIndependent_of_card_eq_finrank b.linear_independent
+      LinearIndependent.span_eq_top_of_card_eq_finrank b.linear_independent
         (finrank_eq_card_basis b).symm
     classical
     rw [discr_def, trace_matrix]
