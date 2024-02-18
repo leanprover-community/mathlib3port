@@ -79,17 +79,17 @@ noncomputable def exponent :=
 
 variable {G}
 
-#print Monoid.exponentExists_iff_ne_zero /-
+#print Monoid.exponent_ne_zero /-
 @[to_additive]
-theorem exponentExists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 :=
+theorem exponent_ne_zero : ExponentExists G ↔ exponent G ≠ 0 :=
   by
   rw [exponent]
   split_ifs
   · simp [h, @not_lt_zero' ℕ]
   --if this isn't done this way, `to_additive` freaks
   · tauto
-#align monoid.exponent_exists_iff_ne_zero Monoid.exponentExists_iff_ne_zero
-#align add_monoid.exponent_exists_iff_ne_zero AddMonoid.exponentExists_iff_ne_zero
+#align monoid.exponent_exists_iff_ne_zero Monoid.exponent_ne_zero
+#align add_monoid.exponent_exists_iff_ne_zero AddMonoid.exponent_ne_zero
 -/
 
 #print Monoid.exponent_eq_zero_iff /-
@@ -293,16 +293,16 @@ theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf 
 #align add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_addOrderOf_infinite
 -/
 
-#print Monoid.lcm_order_eq_exponent /-
+#print Monoid.lcm_orderOf_eq_exponent /-
 @[to_additive lcm_add_order_eq_exponent]
-theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G :=
+theorem lcm_orderOf_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G :=
   by
   apply Nat.dvd_antisymm (lcm_order_of_dvd_exponent G)
   refine' exponent_dvd_of_forall_pow_eq_one G _ fun g => _
   obtain ⟨m, hm⟩ : orderOf g ∣ finset.univ.lcm orderOf := Finset.dvd_lcm (Finset.mem_univ g)
   rw [hm, pow_mul, pow_orderOf_eq_one, one_pow]
-#align monoid.lcm_order_eq_exponent Monoid.lcm_order_eq_exponent
-#align add_monoid.lcm_add_order_eq_exponent AddMonoid.lcm_addOrder_eq_exponent
+#align monoid.lcm_order_eq_exponent Monoid.lcm_orderOf_eq_exponent
+#align add_monoid.lcm_add_order_eq_exponent AddMonoid.lcm_addOrderOf_eq_exponent
 -/
 
 end Monoid

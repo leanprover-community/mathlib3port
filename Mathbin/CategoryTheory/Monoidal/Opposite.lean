@@ -53,28 +53,28 @@ def unmop (X : Cᴹᵒᵖ) : C :=
 #align category_theory.monoidal_opposite.unmop CategoryTheory.MonoidalOpposite.unmop
 -/
 
-#print CategoryTheory.MonoidalOpposite.op_injective /-
-theorem op_injective : Function.Injective (mop : C → Cᴹᵒᵖ) := fun _ _ => id
-#align category_theory.monoidal_opposite.op_injective CategoryTheory.MonoidalOpposite.op_injective
+#print CategoryTheory.MonoidalOpposite.mop_injective /-
+theorem mop_injective : Function.Injective (mop : C → Cᴹᵒᵖ) := fun _ _ => id
+#align category_theory.monoidal_opposite.op_injective CategoryTheory.MonoidalOpposite.mop_injective
 -/
 
-#print CategoryTheory.MonoidalOpposite.unop_injective /-
-theorem unop_injective : Function.Injective (unmop : Cᴹᵒᵖ → C) := fun _ _ => id
-#align category_theory.monoidal_opposite.unop_injective CategoryTheory.MonoidalOpposite.unop_injective
+#print CategoryTheory.MonoidalOpposite.unmop_injective /-
+theorem unmop_injective : Function.Injective (unmop : Cᴹᵒᵖ → C) := fun _ _ => id
+#align category_theory.monoidal_opposite.unop_injective CategoryTheory.MonoidalOpposite.unmop_injective
 -/
 
-#print CategoryTheory.MonoidalOpposite.op_inj_iff /-
+#print CategoryTheory.MonoidalOpposite.mop_inj_iff /-
 @[simp]
-theorem op_inj_iff (x y : C) : mop x = mop y ↔ x = y :=
+theorem mop_inj_iff (x y : C) : mop x = mop y ↔ x = y :=
   Iff.rfl
-#align category_theory.monoidal_opposite.op_inj_iff CategoryTheory.MonoidalOpposite.op_inj_iff
+#align category_theory.monoidal_opposite.op_inj_iff CategoryTheory.MonoidalOpposite.mop_inj_iff
 -/
 
-#print CategoryTheory.MonoidalOpposite.unop_inj_iff /-
+#print CategoryTheory.MonoidalOpposite.unmop_inj_iff /-
 @[simp]
-theorem unop_inj_iff (x y : Cᴹᵒᵖ) : unmop x = unmop y ↔ x = y :=
+theorem unmop_inj_iff (x y : Cᴹᵒᵖ) : unmop x = unmop y ↔ x = y :=
   Iff.rfl
-#align category_theory.monoidal_opposite.unop_inj_iff CategoryTheory.MonoidalOpposite.unop_inj_iff
+#align category_theory.monoidal_opposite.unop_inj_iff CategoryTheory.MonoidalOpposite.unmop_inj_iff
 -/
 
 #print CategoryTheory.MonoidalOpposite.mop_unmop /-
@@ -126,31 +126,32 @@ def Quiver.Hom.unmop {X Y : Cᴹᵒᵖ} (f : X ⟶ Y) : unmop X ⟶ unmop Y :=
 
 namespace CategoryTheory
 
-#print CategoryTheory.mop_inj /-
-theorem mop_inj {X Y : C} : Function.Injective (Quiver.Hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) :=
-  fun _ _ H => congr_arg Quiver.Hom.unmop H
-#align category_theory.mop_inj CategoryTheory.mop_inj
+#print Quiver.Hom.mop_inj /-
+theorem Quiver.Hom.mop_inj {X Y : C} :
+    Function.Injective (Quiver.Hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) := fun _ _ H =>
+  congr_arg Quiver.Hom.unmop H
+#align category_theory.mop_inj Quiver.Hom.mop_inj
 -/
 
-#print CategoryTheory.unmop_inj /-
-theorem unmop_inj {X Y : Cᴹᵒᵖ} :
+#print Quiver.Hom.unmop_inj /-
+theorem Quiver.Hom.unmop_inj {X Y : Cᴹᵒᵖ} :
     Function.Injective (Quiver.Hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) := fun _ _ H =>
   congr_arg Quiver.Hom.mop H
-#align category_theory.unmop_inj CategoryTheory.unmop_inj
+#align category_theory.unmop_inj Quiver.Hom.unmop_inj
 -/
 
-#print CategoryTheory.unmop_mop /-
+#print Quiver.Hom.unmop_mop /-
 @[simp]
-theorem unmop_mop {X Y : C} {f : X ⟶ Y} : f.mop.unmop = f :=
+theorem Quiver.Hom.unmop_mop {X Y : C} {f : X ⟶ Y} : f.mop.unmop = f :=
   rfl
-#align category_theory.unmop_mop CategoryTheory.unmop_mop
+#align category_theory.unmop_mop Quiver.Hom.unmop_mop
 -/
 
-#print CategoryTheory.mop_unmop /-
+#print Quiver.Hom.mop_unmop /-
 @[simp]
-theorem mop_unmop {X Y : Cᴹᵒᵖ} {f : X ⟶ Y} : f.unmop.mop = f :=
+theorem Quiver.Hom.mop_unmop {X Y : Cᴹᵒᵖ} {f : X ⟶ Y} : f.unmop.mop = f :=
   rfl
-#align category_theory.mop_unmop CategoryTheory.mop_unmop
+#align category_theory.mop_unmop Quiver.Hom.mop_unmop
 -/
 
 #print CategoryTheory.mop_comp /-
@@ -205,8 +206,8 @@ variable {X Y : C}
 def mop (f : X ≅ Y) : mop X ≅ mop Y where
   Hom := f.Hom.mop
   inv := f.inv.mop
-  hom_inv_id' := unmop_inj f.hom_inv_id
-  inv_hom_id' := unmop_inj f.inv_hom_id
+  hom_inv_id' := Quiver.Hom.unmop_inj f.hom_inv_id
+  inv_hom_id' := Quiver.Hom.unmop_inj f.inv_hom_id
 #align category_theory.iso.mop CategoryTheory.Iso.mop
 -/
 
