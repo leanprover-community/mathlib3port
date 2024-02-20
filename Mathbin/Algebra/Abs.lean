@@ -44,21 +44,17 @@ class HasAbs (α : Type _) where
 
 export HasAbs (abs)
 
-#print PosPart /-
 /-- The positive part of an element admiting a decomposition into positive and negative parts.
 -/
-class PosPart (α : Type _) where
+class HasPosPart (α : Type _) where
   Pos : α → α
-#align has_pos_part PosPart
--/
+#align has_pos_part HasPosPart
 
-#print NegPart /-
 /-- The negative part of an element admiting a decomposition into positive and negative parts.
 -/
-class NegPart (α : Type _) where
+class HasNegPart (α : Type _) where
   neg : α → α
-#align has_neg_part NegPart
--/
+#align has_neg_part HasNegPart
 
 postfix:1000 "⁺" => posPart
 

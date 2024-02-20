@@ -146,7 +146,7 @@ the element `a ⊔ 1` is said to be the *positive component* of `a`, denoted `a�
 -/
 @[to_additive
       "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `a ⊔ 0` is said to be the *positive component* of `a`, denoted `a⁺`.\n"]
-instance (priority := 100) hasOneLatticeHasPosPart : PosPart α :=
+instance (priority := 100) hasOneLatticeHasPosPart : HasPosPart α :=
   ⟨fun a => a ⊔ 1⟩
 #align lattice_ordered_comm_group.has_one_lattice_has_pos_part LatticeOrderedCommGroup.hasOneLatticeHasPosPart
 #align lattice_ordered_comm_group.has_zero_lattice_has_pos_part LatticeOrderedCommGroup.hasZeroLatticeHasPosPart
@@ -166,7 +166,7 @@ the element `(-a) ⊔ 1` is said to be the *negative component* of `a`, denoted 
 -/
 @[to_additive
       "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `(-a) ⊔ 0` is said to be the *negative component* of `a`, denoted `a⁻`.\n"]
-instance (priority := 100) hasOneLatticeHasNegPart : NegPart α :=
+instance (priority := 100) hasOneLatticeHasNegPart : HasNegPart α :=
   ⟨fun a => a⁻¹ ⊔ 1⟩
 #align lattice_ordered_comm_group.has_one_lattice_has_neg_part LatticeOrderedCommGroup.hasOneLatticeHasNegPart
 #align lattice_ordered_comm_group.has_zero_lattice_has_neg_part LatticeOrderedCommGroup.hasZeroLatticeHasNegPart
