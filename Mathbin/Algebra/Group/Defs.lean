@@ -301,7 +301,7 @@ theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
 
 #print Semigroup.to_isAssociative /-
 @[to_additive]
-instance Semigroup.to_isAssociative : IsAssociative G (· * ·) :=
+instance Semigroup.to_isAssociative : Std.Associative G (· * ·) :=
   ⟨mul_assoc⟩
 #align semigroup.to_is_associative Semigroup.to_isAssociative
 #align add_semigroup.to_is_associative AddSemigroup.to_isAssociative
@@ -341,7 +341,7 @@ theorem mul_comm : ∀ a b : G, a * b = b * a :=
 
 #print CommMagma.to_isCommutative /-
 @[to_additive]
-instance CommMagma.to_isCommutative : IsCommutative G (· * ·) :=
+instance CommMagma.to_isCommutative : Std.Commutative G (· * ·) :=
   ⟨mul_comm⟩
 #align comm_semigroup.to_is_commutative CommMagma.to_isCommutative
 #align add_comm_semigroup.to_is_commutative AddCommMagma.to_isCommutative

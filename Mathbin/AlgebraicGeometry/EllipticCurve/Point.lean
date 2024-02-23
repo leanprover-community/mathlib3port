@@ -129,23 +129,23 @@ theorem WeierstrassCurve.Affine.negY_negY : W.negY x₁ (W.negY x₁ y₁) = y�
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3610613541.map_simp -/
-#print WeierstrassCurve.Affine.baseChange_negY /-
-theorem WeierstrassCurve.Affine.baseChange_negY :
+#print WeierstrassCurve.Affine.map_negY /-
+theorem WeierstrassCurve.Affine.map_negY :
     (W.base_change A).negY (algebraMap R A x₁) (algebraMap R A y₁) =
       algebraMap R A (W.negY x₁ y₁) :=
   by simp only [neg_Y];
   run_tac
     map_simp;
   rfl
-#align weierstrass_curve.base_change_neg_Y WeierstrassCurve.Affine.baseChange_negY
+#align weierstrass_curve.base_change_neg_Y WeierstrassCurve.Affine.map_negY
 -/
 
-#print WeierstrassCurve.Affine.baseChange_negY_of_baseChange /-
-theorem WeierstrassCurve.Affine.baseChange_negY_of_baseChange (x₁ y₁ : A) :
+#print WeierstrassCurve.Affine.baseChange_negY /-
+theorem WeierstrassCurve.Affine.baseChange_negY (x₁ y₁ : A) :
     (W.base_change B).negY (algebraMap A B x₁) (algebraMap A B y₁) =
       algebraMap A B ((W.base_change A).negY x₁ y₁) :=
   by rw [← base_change_neg_Y, base_change_base_change]
-#align weierstrass_curve.base_change_neg_Y_of_base_change WeierstrassCurve.Affine.baseChange_negY_of_baseChange
+#align weierstrass_curve.base_change_neg_Y_of_base_change WeierstrassCurve.Affine.baseChange_negY
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.721409751.eval_simp -/
@@ -255,23 +255,23 @@ def WeierstrassCurve.Affine.addX : R :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3610613541.map_simp -/
-#print WeierstrassCurve.Affine.baseChange_addX /-
-theorem WeierstrassCurve.Affine.baseChange_addX :
+#print WeierstrassCurve.Affine.map_addX /-
+theorem WeierstrassCurve.Affine.map_addX :
     (W.base_change A).addX (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A L) =
       algebraMap R A (W.addX x₁ x₂ L) :=
   by simp only [add_X];
   run_tac
     map_simp;
   rfl
-#align weierstrass_curve.base_change_add_X WeierstrassCurve.Affine.baseChange_addX
+#align weierstrass_curve.base_change_add_X WeierstrassCurve.Affine.map_addX
 -/
 
-#print WeierstrassCurve.Affine.baseChange_addX_of_baseChange /-
-theorem WeierstrassCurve.Affine.baseChange_addX_of_baseChange (x₁ x₂ L : A) :
+#print WeierstrassCurve.Affine.baseChange_addX /-
+theorem WeierstrassCurve.Affine.baseChange_addX (x₁ x₂ L : A) :
     (W.base_change B).addX (algebraMap A B x₁) (algebraMap A B x₂) (algebraMap A B L) =
       algebraMap A B ((W.base_change A).addX x₁ x₂ L) :=
   by rw [← base_change_add_X, base_change_base_change]
-#align weierstrass_curve.base_change_add_X_of_base_change WeierstrassCurve.Affine.baseChange_addX_of_baseChange
+#align weierstrass_curve.base_change_add_X_of_base_change WeierstrassCurve.Affine.baseChange_addX
 -/
 
 #print WeierstrassCurve.Affine.addY' /-
@@ -286,24 +286,24 @@ def WeierstrassCurve.Affine.addY' : R :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3610613541.map_simp -/
-#print WeierstrassCurve.Affine.baseChange_addY' /-
-theorem WeierstrassCurve.Affine.baseChange_addY' :
+#print WeierstrassCurve.Affine.map_addY' /-
+theorem WeierstrassCurve.Affine.map_addY' :
     (W.base_change A).addY' (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A y₁)
         (algebraMap R A L) =
       algebraMap R A (W.addY' x₁ x₂ y₁ L) :=
   by simp only [add_Y', base_change_add_X];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_add_Y' WeierstrassCurve.Affine.baseChange_addY'
+#align weierstrass_curve.base_change_add_Y' WeierstrassCurve.Affine.map_addY'
 -/
 
-#print WeierstrassCurve.Affine.baseChange_addY'_of_baseChange /-
-theorem WeierstrassCurve.Affine.baseChange_addY'_of_baseChange (x₁ x₂ y₁ L : A) :
+#print WeierstrassCurve.Affine.baseChange_addY' /-
+theorem WeierstrassCurve.Affine.baseChange_addY' (x₁ x₂ y₁ L : A) :
     (W.base_change B).addY' (algebraMap A B x₁) (algebraMap A B x₂) (algebraMap A B y₁)
         (algebraMap A B L) =
       algebraMap A B ((W.base_change A).addY' x₁ x₂ y₁ L) :=
   by rw [← base_change_add_Y', base_change_base_change]
-#align weierstrass_curve.base_change_add_Y'_of_base_change WeierstrassCurve.Affine.baseChange_addY'_of_baseChange
+#align weierstrass_curve.base_change_add_Y'_of_base_change WeierstrassCurve.Affine.baseChange_addY'
 -/
 
 #print WeierstrassCurve.Affine.addY /-
@@ -317,22 +317,22 @@ def WeierstrassCurve.Affine.addY : R :=
 #align weierstrass_curve.add_Y WeierstrassCurve.Affine.addY
 -/
 
-#print WeierstrassCurve.Affine.baseChange_addY /-
-theorem WeierstrassCurve.Affine.baseChange_addY :
+#print WeierstrassCurve.Affine.map_addY /-
+theorem WeierstrassCurve.Affine.map_addY :
     (W.base_change A).addY (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A y₁)
         (algebraMap R A L) =
       algebraMap R A (W.addY x₁ x₂ y₁ L) :=
   by simp only [add_Y, base_change_add_Y', base_change_add_X, base_change_neg_Y]
-#align weierstrass_curve.base_change_add_Y WeierstrassCurve.Affine.baseChange_addY
+#align weierstrass_curve.base_change_add_Y WeierstrassCurve.Affine.map_addY
 -/
 
-#print WeierstrassCurve.Affine.baseChange_addY_of_baseChange /-
-theorem WeierstrassCurve.Affine.baseChange_addY_of_baseChange (x₁ x₂ y₁ L : A) :
+#print WeierstrassCurve.Affine.baseChange_addY /-
+theorem WeierstrassCurve.Affine.baseChange_addY (x₁ x₂ y₁ L : A) :
     (W.base_change B).addY (algebraMap A B x₁) (algebraMap A B x₂) (algebraMap A B y₁)
         (algebraMap A B L) =
       algebraMap A B ((W.base_change A).addY x₁ x₂ y₁ L) :=
   by rw [← base_change_add_Y, base_change_base_change]
-#align weierstrass_curve.base_change_add_Y_of_base_change WeierstrassCurve.Affine.baseChange_addY_of_baseChange
+#align weierstrass_curve.base_change_add_Y_of_base_change WeierstrassCurve.Affine.baseChange_addY
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3423248015.C_simp -/
@@ -580,8 +580,8 @@ theorem slope_of_Y_ne_eq_eval (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3610613541.map_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3610613541.map_simp -/
-#print WeierstrassCurve.Affine.baseChange_slope /-
-theorem WeierstrassCurve.Affine.baseChange_slope :
+#print WeierstrassCurve.Affine.map_slope /-
+theorem WeierstrassCurve.Affine.map_slope :
     (W.base_change K).slope (algebraMap F K x₁) (algebraMap F K x₂) (algebraMap F K y₁)
         (algebraMap F K y₂) =
       algebraMap F K (W.slope x₁ x₂ y₁ y₂) :=
@@ -603,18 +603,18 @@ theorem WeierstrassCurve.Affine.baseChange_slope :
         map_simp
     · contrapose! hx
       exact NoZeroSMulDivisors.algebraMap_injective F K hx
-#align weierstrass_curve.base_change_slope WeierstrassCurve.Affine.baseChange_slope
+#align weierstrass_curve.base_change_slope WeierstrassCurve.Affine.map_slope
 -/
 
-#print WeierstrassCurve.Affine.baseChange_slope_of_baseChange /-
-theorem WeierstrassCurve.Affine.baseChange_slope_of_baseChange {R : Type u} [CommRing R]
-    (W : WeierstrassCurve R) (F : Type v) [Field F] [Algebra R F] (K : Type w) [Field K]
-    [Algebra R K] [Algebra F K] [IsScalarTower R F K] (x₁ x₂ y₁ y₂ : F) :
+#print WeierstrassCurve.Affine.baseChange_slope /-
+theorem WeierstrassCurve.Affine.baseChange_slope {R : Type u} [CommRing R] (W : WeierstrassCurve R)
+    (F : Type v) [Field F] [Algebra R F] (K : Type w) [Field K] [Algebra R K] [Algebra F K]
+    [IsScalarTower R F K] (x₁ x₂ y₁ y₂ : F) :
     (W.base_change K).slope (algebraMap F K x₁) (algebraMap F K x₂) (algebraMap F K y₁)
         (algebraMap F K y₂) =
       algebraMap F K ((W.base_change F).slope x₁ x₂ y₁ y₂) :=
   by rw [← base_change_slope, base_change_base_change]
-#align weierstrass_curve.base_change_slope_of_base_change WeierstrassCurve.Affine.baseChange_slope_of_baseChange
+#align weierstrass_curve.base_change_slope_of_base_change WeierstrassCurve.Affine.baseChange_slope
 -/
 
 theorem Y_eq_of_X_eq (hx : x₁ = x₂) : y₁ = y₂ ∨ y₁ = W.negY x₂ y₂ :=
@@ -1201,22 +1201,22 @@ namespace Point
 
 open scoped WeierstrassCurve
 
-#print WeierstrassCurve.Affine.Point.ofBaseChangeFun /-
+#print WeierstrassCurve.Affine.Point.mapFun /-
 /-- The function from `W⟮F⟯` to `W⟮K⟯` induced by a base change from `F` to `K`. -/
-def WeierstrassCurve.Affine.Point.ofBaseChangeFun : W⟮F⟯ → W⟮K⟯
+def WeierstrassCurve.Affine.Point.mapFun : W⟮F⟯ → W⟮K⟯
   | 0 => 0
   | some h =>
     WeierstrassCurve.Affine.Point.some <|
-      (WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange W F K _ _).mp h
-#align weierstrass_curve.point.of_base_change_fun WeierstrassCurve.Affine.Point.ofBaseChangeFun
+      (WeierstrassCurve.Affine.baseChange_nonsingular W F K _ _).mp h
+#align weierstrass_curve.point.of_base_change_fun WeierstrassCurve.Affine.Point.mapFun
 -/
 
-#print WeierstrassCurve.Affine.Point.ofBaseChange /-
+#print WeierstrassCurve.Affine.Point.map /-
 /-- The group homomorphism from `W⟮F⟯` to `W⟮K⟯` induced by a base change from `F` to `K`. -/
 @[simps]
-def WeierstrassCurve.Affine.Point.ofBaseChange : W⟮F⟯ →+ W⟮K⟯
+def WeierstrassCurve.Affine.Point.map : W⟮F⟯ →+ W⟮K⟯
     where
-  toFun := WeierstrassCurve.Affine.Point.ofBaseChangeFun W F K
+  toFun := WeierstrassCurve.Affine.Point.mapFun W F K
   map_zero' := rfl
   map_add' := by
     rintro (_ | @⟨x₁, y₁, _⟩) (_ | @⟨x₂, y₂, _⟩)
@@ -1241,12 +1241,12 @@ def WeierstrassCurve.Affine.Point.ofBaseChange : W⟮F⟯ →+ W⟮K⟯
         exact ⟨rfl, rfl⟩
       · contrapose! hx
         exact NoZeroSMulDivisors.algebraMap_injective F K hx
-#align weierstrass_curve.point.of_base_change WeierstrassCurve.Affine.Point.ofBaseChange
+#align weierstrass_curve.point.of_base_change WeierstrassCurve.Affine.Point.map
 -/
 
-#print WeierstrassCurve.Affine.Point.ofBaseChange_injective /-
-theorem WeierstrassCurve.Affine.Point.ofBaseChange_injective :
-    Function.Injective <| WeierstrassCurve.Affine.Point.ofBaseChange W F K :=
+#print WeierstrassCurve.Affine.Point.map_injective /-
+theorem WeierstrassCurve.Affine.Point.map_injective :
+    Function.Injective <| WeierstrassCurve.Affine.Point.map W F K :=
   by
   rintro (_ | _) (_ | _) h
   · rfl
@@ -1255,7 +1255,7 @@ theorem WeierstrassCurve.Affine.Point.ofBaseChange_injective :
   exact
     ⟨NoZeroSMulDivisors.algebraMap_injective F K (some.inj h).left,
       NoZeroSMulDivisors.algebraMap_injective F K (some.inj h).right⟩
-#align weierstrass_curve.point.of_base_change_injective WeierstrassCurve.Affine.Point.ofBaseChange_injective
+#align weierstrass_curve.point.of_base_change_injective WeierstrassCurve.Affine.Point.map_injective
 -/
 
 end Point

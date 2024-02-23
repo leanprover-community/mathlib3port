@@ -296,9 +296,9 @@ theorem sup_comm : a ⊔ b = b ⊔ a := by apply le_antisymm <;> simp
 #align sup_comm sup_comm
 -/
 
-instance sup_isCommutative : IsCommutative α (· ⊔ ·) :=
+instance sup_commutative : Std.Commutative α (· ⊔ ·) :=
   ⟨@sup_comm _ _⟩
-#align sup_is_commutative sup_isCommutativeₓ
+#align sup_is_commutative sup_commutative
 
 #print sup_assoc /-
 theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
@@ -306,9 +306,9 @@ theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
 #align sup_assoc sup_assoc
 -/
 
-instance sup_isAssociative : IsAssociative α (· ⊔ ·) :=
+instance sup_associative : Std.Associative α (· ⊔ ·) :=
   ⟨@sup_assoc _ _⟩
-#align sup_is_associative sup_isAssociativeₓ
+#align sup_is_associative sup_associative
 
 #print sup_left_right_swap /-
 theorem sup_left_right_swap (a b c : α) : a ⊔ b ⊔ c = c ⊔ b ⊔ a := by
@@ -636,9 +636,9 @@ theorem inf_comm : a ⊓ b = b ⊓ a :=
 #align inf_comm inf_comm
 -/
 
-instance inf_isCommutative : IsCommutative α (· ⊓ ·) :=
+instance inf_commutative : Std.Commutative α (· ⊓ ·) :=
   ⟨@inf_comm _ _⟩
-#align inf_is_commutative inf_isCommutativeₓ
+#align inf_is_commutative inf_commutative
 
 #print inf_assoc /-
 theorem inf_assoc : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
@@ -646,9 +646,9 @@ theorem inf_assoc : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
 #align inf_assoc inf_assoc
 -/
 
-instance inf_isAssociative : IsAssociative α (· ⊓ ·) :=
+instance inf_associative : Std.Associative α (· ⊓ ·) :=
   ⟨@inf_assoc _ _⟩
-#align inf_is_associative inf_isAssociativeₓ
+#align inf_is_associative inf_associative
 
 #print inf_left_right_swap /-
 theorem inf_left_right_swap (a b c : α) : a ⊓ b ⊓ c = c ⊓ b ⊓ a :=

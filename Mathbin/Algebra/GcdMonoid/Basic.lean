@@ -421,10 +421,10 @@ theorem gcd_assoc' [GCDMonoid α] (m n k : α) : Associated (gcd (gcd m n) k) (g
 #align gcd_assoc' gcd_assoc'
 -/
 
-instance [NormalizedGCDMonoid α] : IsCommutative α gcd :=
+instance [NormalizedGCDMonoid α] : Std.Commutative α gcd :=
   ⟨gcd_comm⟩
 
-instance [NormalizedGCDMonoid α] : IsAssociative α gcd :=
+instance [NormalizedGCDMonoid α] : Std.Associative α gcd :=
   ⟨gcd_assoc⟩
 
 #print gcd_eq_normalize /-
@@ -912,10 +912,10 @@ theorem lcm_assoc' [GCDMonoid α] (m n k : α) : Associated (lcm (lcm m n) k) (l
 #align lcm_assoc' lcm_assoc'
 -/
 
-instance [NormalizedGCDMonoid α] : IsCommutative α lcm :=
+instance [NormalizedGCDMonoid α] : Std.Commutative α lcm :=
   ⟨lcm_comm⟩
 
-instance [NormalizedGCDMonoid α] : IsAssociative α lcm :=
+instance [NormalizedGCDMonoid α] : Std.Associative α lcm :=
   ⟨lcm_assoc⟩
 
 #print lcm_eq_normalize /-

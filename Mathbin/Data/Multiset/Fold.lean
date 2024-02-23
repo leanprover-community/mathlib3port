@@ -25,7 +25,7 @@ variable {α β : Type _}
 
 section Fold
 
-variable (op : α → α → α) [hc : IsCommutative α op] [ha : IsAssociative α op]
+variable (op : α → α → α) [hc : Std.Commutative α op] [ha : Std.Associative α op]
 
 local notation a " * " b => op a b
 
@@ -128,7 +128,7 @@ theorem fold_distrib {f g : β → α} (u₁ u₂ : α) (s : Multiset β) :
 -/
 
 #print Multiset.fold_hom /-
-theorem fold_hom {op' : β → β → β} [IsCommutative β op'] [IsAssociative β op'] {m : α → β}
+theorem fold_hom {op' : β → β → β} [Std.Commutative β op'] [Std.Associative β op'] {m : α → β}
     (hm : ∀ x y, m (op x y) = op' (m x) (m y)) (b : α) (s : Multiset α) :
     (s.map m).fold op' (m b) = m (s.fold op b) :=
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [hm])

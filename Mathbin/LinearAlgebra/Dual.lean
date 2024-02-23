@@ -1842,7 +1842,7 @@ noncomputable def dualDistribEquivOfBasis (b : Basis ι R M) (c : Basis κ R N) 
   by
   refine' LinearEquiv.ofLinear (dual_distrib R M N) (dual_distrib_inv_of_basis b c) _ _
   · ext f m n
-    have h : ∀ r s : R, r • s = s • r := IsCommutative.comm
+    have h : ∀ r s : R, r • s = s • r := Std.Commutative.comm
     simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply,
       map_sum, map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ← f.map_smul, ←
       f.map_sum, ← smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dualBasis, Basis.coord_apply,

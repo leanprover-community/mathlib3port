@@ -2246,7 +2246,6 @@ variable [UniformSpace α] [UniformSpace β]
 
 open Sum
 
-#print UniformSpace.Core.sum /-
 /-- Uniformity on a disjoint union. Entourages of the diagonal in the union are obtained
 by taking independently an entourage of the diagonal in the first part, and an entourage of
 the diagonal in the second part. -/
@@ -2271,7 +2270,6 @@ def UniformSpace.Core.sum : UniformSpace.Core (Sum α β) :=
     · have A : (a, c) ∈ tβ ○ tβ := ⟨b, hab, hbc⟩
       exact Htβ A
 #align uniform_space.core.sum UniformSpace.Core.sum
--/
 
 #print union_mem_uniformity_sum /-
 /-- The union of an entourage of the diagonal in each set of a disjoint union is again an entourage
@@ -2284,12 +2282,10 @@ theorem union_mem_uniformity_sum {a : Set (α × α)} (ha : a ∈ 𝓤 α) {b : 
 #align union_mem_uniformity_sum union_mem_uniformity_sum
 -/
 
-#print uniformity_sum_of_isOpen_aux /-
 /- To prove that the topology defined by the uniform structure on the disjoint union coincides with
 the disjoint union topology, we need two lemmas saying that open sets can be characterized by
 the uniform structure -/
-theorem uniformity_sum_of_isOpen_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Sum α β}
-    (xs : x ∈ s) :
+theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Sum α β} (xs : x ∈ s) :
     {p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s} ∈ (@UniformSpace.Core.sum α β _ _).uniformity :=
   by
   cases x
@@ -2307,11 +2303,9 @@ theorem uniformity_sum_of_isOpen_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : 
           (union_subset _ _) <;>
       rintro _ ⟨⟨a, _⟩, h, ⟨⟩⟩ ⟨⟩
     exact h rfl
-#align uniformity_sum_of_open_aux uniformity_sum_of_isOpen_aux
--/
+#align uniformity_sum_of_open_aux uniformity_sum_of_open_aux
 
-#print isOpen_of_uniformity_sum_aux /-
-theorem isOpen_of_uniformity_sum_aux {s : Set (Sum α β)}
+theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
     (hs :
       ∀ x ∈ s,
         {p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s} ∈ (@UniformSpace.Core.sum α β _ _).uniformity) :
@@ -2325,16 +2319,15 @@ theorem isOpen_of_uniformity_sum_aux {s : Set (Sum α β)}
     rcases mem_map_iff_exists_image.1 (hs _ hb).2 with ⟨t, ht, st⟩
     refine' mem_of_superset ht _
     rintro p pt rfl; exact st ⟨_, pt, rfl⟩ rfl
-#align open_of_uniformity_sum_aux isOpen_of_uniformity_sum_aux
--/
+#align open_of_uniformity_sum_aux open_of_uniformity_sum_aux
 
-#print Sum.uniformSpace /-
+#print Sum.instUniformSpace /-
 -- We can now define the uniform structure on the disjoint union
-instance Sum.uniformSpace : UniformSpace (Sum α β)
+instance Sum.instUniformSpace : UniformSpace (Sum α β)
     where
   toCore := UniformSpace.Core.sum
-  isOpen_uniformity s := ⟨uniformity_sum_of_isOpen_aux, isOpen_of_uniformity_sum_aux⟩
-#align sum.uniform_space Sum.uniformSpace
+  isOpen_uniformity s := ⟨uniformity_sum_of_open_aux, open_of_uniformity_sum_aux⟩
+#align sum.uniform_space Sum.instUniformSpace
 -/
 
 #print Sum.uniformity /-

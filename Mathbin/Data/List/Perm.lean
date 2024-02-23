@@ -659,7 +659,7 @@ theorem Perm.rec_heq {β : List α → Sort _} {f : ∀ a l, β l → β (a :: l
 
 section
 
-variable {op : α → α → α} [IsAssociative α op] [IsCommutative α op]
+variable {op : α → α → α} [Std.Associative α op] [Std.Commutative α op]
 
 local notation a " * " b => op a b
 
@@ -667,7 +667,7 @@ local notation l " <*> " a => foldl op a l
 
 #print List.Perm.fold_op_eq /-
 theorem Perm.fold_op_eq {l₁ l₂ : List α} {a : α} (h : l₁ ~ l₂) : (l₁ <*> a) = l₂ <*> a :=
-  h.foldl_eq (right_comm _ IsCommutative.comm IsAssociative.assoc) _
+  h.foldl_eq (right_comm _ Std.Commutative.comm Std.Associative.assoc) _
 #align list.perm.fold_op_eq List.Perm.fold_op_eq
 -/
 

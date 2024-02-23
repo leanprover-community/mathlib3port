@@ -136,7 +136,7 @@ theorem symmDiff_comm : a ∆ b = b ∆ a := by simp only [(· ∆ ·), sup_comm
 -/
 
 #print symmDiff_isCommutative /-
-instance symmDiff_isCommutative : IsCommutative α (· ∆ ·) :=
+instance symmDiff_isCommutative : Std.Commutative α (· ∆ ·) :=
   ⟨symmDiff_comm⟩
 #align symm_diff_is_comm symmDiff_isCommutative
 -/
@@ -306,7 +306,7 @@ theorem bihimp_comm : a ⇔ b = b ⇔ a := by simp only [(· ⇔ ·), inf_comm]
 -/
 
 #print bihimp_isCommutative /-
-instance bihimp_isCommutative : IsCommutative α (· ⇔ ·) :=
+instance bihimp_isCommutative : Std.Commutative α (· ⇔ ·) :=
   ⟨bihimp_comm⟩
 #align bihimp_is_comm bihimp_isCommutative
 -/
@@ -641,7 +641,7 @@ theorem symmDiff_assoc : a ∆ b ∆ c = a ∆ (b ∆ c) := by
 -/
 
 #print symmDiff_isAssociative /-
-instance symmDiff_isAssociative : IsAssociative α (· ∆ ·) :=
+instance symmDiff_isAssociative : Std.Associative α (· ∆ ·) :=
   ⟨symmDiff_assoc⟩
 #align symm_diff_is_assoc symmDiff_isAssociative
 -/
@@ -850,7 +850,7 @@ theorem bihimp_assoc : a ⇔ b ⇔ c = a ⇔ (b ⇔ c) :=
 -/
 
 #print bihimp_isAssociative /-
-instance bihimp_isAssociative : IsAssociative α (· ⇔ ·) :=
+instance bihimp_isAssociative : Std.Associative α (· ⇔ ·) :=
   ⟨bihimp_assoc⟩
 #align bihimp_is_assoc bihimp_isAssociative
 -/

@@ -190,16 +190,16 @@ theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb g
 -/
 
 #print Function.Semiconj₂.isAssociative_right /-
-theorem isAssociative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
-    IsAssociative β gb :=
-  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
+theorem isAssociative_right [Std.Associative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
+    Std.Associative β gb :=
+  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @Std.Associative.assoc _ ga]⟩
 #align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_right
 -/
 
 #print Function.Semiconj₂.isAssociative_left /-
-theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
-    IsAssociative α ga :=
-  ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @IsAssociative.assoc _ gb]⟩
+theorem isAssociative_left [Std.Associative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
+    Std.Associative α ga :=
+  ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @Std.Associative.assoc _ gb]⟩
 #align function.semiconj₂.is_associative_left Function.Semiconj₂.isAssociative_left
 -/
 

@@ -791,7 +791,7 @@ theorem xor_comm (a b) : Xor' a b ↔ Xor' b a :=
 #align xor_comm xor_comm
 -/
 
-instance : IsCommutative Prop Xor' :=
+instance : Std.Commutative Prop Xor' :=
   ⟨fun a b => propext <| xor_comm a b⟩
 
 #print xor_self /-

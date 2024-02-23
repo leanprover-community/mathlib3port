@@ -119,7 +119,8 @@ unsafe def assoc_refl' (fn assoc : expr) : expr → expr → tactic expr
 
 unsafe def assoc_refl (fn : expr) : tactic Unit := do
   let (l, r) ← target >>= match_eq
-  let assoc ← mk_mapp `` IsAssociative.assoc [none, fn, none] <|> fail f! "{fn} is not associative"
+  let assoc ←
+    mk_mapp `` Std.Associative.assoc [none, fn, none] <|> fail f! "{fn} is not associative"
   assoc_refl' fn assoc l r >>= tactic.exact
 #align tactic.assoc_refl tactic.assoc_refl
 
@@ -155,11 +156,11 @@ unsafe def enum_assoc_subexpr (fn e : expr) : tactic (List expr) :=
 #align tactic.enum_assoc_subexpr tactic.enum_assoc_subexpr
 
 unsafe def mk_assoc_instance (fn : expr) : tactic expr := do
-  let t ← mk_mapp `` IsAssociative [none, fn]
+  let t ← mk_mapp `` Std.Associative [none, fn]
   let inst ←
     Prod.snd <$> solve_aux t assumption <|>
         mk_instance t >>= assertv `_inst t <|> fail f! "{fn} is not associative"
-  mk_mapp `` IsAssociative.assoc [none, fn, inst]
+  mk_mapp `` Std.Associative.assoc [none, fn, inst]
 #align tactic.mk_assoc_instance tactic.mk_assoc_instance
 
 unsafe def assoc_rewrite (h e : expr) (opt_assoc : Option expr := none) :

@@ -382,7 +382,7 @@ def metricSpaceSum : MetricSpace (Sum X Y)
       simp only [dist, sum.dist_eq_glue_dist q p] at h 
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
     · simp only [sum.dist, dist_eq_zero, imp_self]
-  toUniformSpace := Sum.uniformSpace
+  toUniformSpace := Sum.instUniformSpace
   uniformity_dist := uniformity_dist_of_mem_uniformity _ _ Sum.mem_uniformity
 #align metric.metric_space_sum Metric.metricSpaceSum
 -/

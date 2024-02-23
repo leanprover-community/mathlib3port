@@ -1013,13 +1013,13 @@ theorem union_assoc (a b c : Set α) : a ∪ b ∪ c = a ∪ (b ∪ c) :=
 -/
 
 #print Set.union_isAssoc /-
-instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
+instance union_isAssoc : Std.Associative (Set α) (· ∪ ·) :=
   ⟨union_assoc⟩
 #align set.union_is_assoc Set.union_isAssoc
 -/
 
 #print Set.union_isComm /-
-instance union_isComm : IsCommutative (Set α) (· ∪ ·) :=
+instance union_isComm : Std.Commutative (Set α) (· ∪ ·) :=
   ⟨union_comm⟩
 #align set.union_is_comm Set.union_isComm
 -/
@@ -1230,13 +1230,13 @@ theorem inter_assoc (a b c : Set α) : a ∩ b ∩ c = a ∩ (b ∩ c) :=
 -/
 
 #print Set.inter_isAssoc /-
-instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
+instance inter_isAssoc : Std.Associative (Set α) (· ∩ ·) :=
   ⟨inter_assoc⟩
 #align set.inter_is_assoc Set.inter_isAssoc
 -/
 
 #print Set.inter_isComm /-
-instance inter_isComm : IsCommutative (Set α) (· ∩ ·) :=
+instance inter_isComm : Std.Commutative (Set α) (· ∩ ·) :=
   ⟨inter_comm⟩
 #align set.inter_is_comm Set.inter_isComm
 -/

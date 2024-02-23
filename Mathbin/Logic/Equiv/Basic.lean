@@ -2168,7 +2168,7 @@ theorem semiconj₂_conj : Semiconj₂ e f (e.arrowCongr e.conj f) := fun x y =>
 #align equiv.semiconj₂_conj Equiv.semiconj₂_conj
 -/
 
-instance [IsAssociative α₁ f] : IsAssociative β₁ (e.arrowCongr (e.arrowCongr e) f) :=
+instance [Std.Associative α₁ f] : Std.Associative β₁ (e.arrowCongr (e.arrowCongr e) f) :=
   (e.semiconj₂_conj f).isAssociative_right e.Surjective
 
 instance [Std.IdempotentOp α₁ f] : Std.IdempotentOp β₁ (e.arrowCongr (e.arrowCongr e) f) :=

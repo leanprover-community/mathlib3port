@@ -609,7 +609,7 @@ theorem geom_sum_alternating_of_lt_neg_one [StrictOrderedRing α] (hx : x + 1 < 
   by
   have hx0 : x < 0 := ((le_add_iff_nonneg_right _).2 zero_le_one).trans_lt hx
   refine' Nat.le_induction _ _ n (show 2 ≤ n from hn)
-  · simp only [geom_sum_two, hx, true_or_iff, even_bit0, if_true_left_eq_or]
+  · simp only [geom_sum_two, hx, true_or_iff, even_bit0, if_true_left]
   clear hn n
   intro n hn ihn
   simp only [Nat.even_add_one, geom_sum_succ]

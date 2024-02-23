@@ -27,20 +27,20 @@ variable {α β G : Type _}
 
 section Associative
 
-variable (f : α → α → α) [IsAssociative α f] (x y : α)
+variable (f : α → α → α) [Std.Associative α f] (x y : α)
 
 /-- Composing two associative operations of `f : α → α → α` on the left
 is equal to an associative operation on the left.
 -/
 theorem comp_assoc_left : f x ∘ f y = f (f x y) := by ext z;
-  rw [Function.comp_apply, @IsAssociative.assoc _ f]
+  rw [Function.comp_apply, @Std.Associative.assoc _ f]
 #align comp_assoc_left comp_assoc_left
 
 /-- Composing two associative operations of `f : α → α → α` on the right
 is equal to an associative operation on the right.
 -/
 theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) := by ext z;
-  rw [Function.comp_apply, @IsAssociative.assoc _ f]
+  rw [Function.comp_apply, @Std.Associative.assoc _ f]
 #align comp_assoc_right comp_assoc_right
 
 end Associative

@@ -354,12 +354,12 @@ theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalence 
 #align category_theory.equiv_relation CategoryTheory.equiv_relation
 -/
 
-#print CategoryTheory.isConnected_zigzag /-
+#print CategoryTheory.isPreconnected_zigzag /-
 /-- In a connected category, any two objects are related by `zigzag`. -/
-theorem isConnected_zigzag [IsConnected J] (j₁ j₂ : J) : Zigzag j₁ j₂ :=
+theorem isPreconnected_zigzag [IsConnected J] (j₁ j₂ : J) : Zigzag j₁ j₂ :=
   equiv_relation _ zigzag_equivalence
     (fun _ _ f => Relation.ReflTransGen.single (Or.inl (Nonempty.intro f))) _ _
-#align category_theory.is_connected_zigzag CategoryTheory.isConnected_zigzag
+#align category_theory.is_connected_zigzag CategoryTheory.isPreconnected_zigzag
 -/
 
 #print CategoryTheory.zigzag_isConnected /-
@@ -385,7 +385,7 @@ theorem zigzag_isConnected [Nonempty J] (h : ∀ j₁ j₂ : J, Zigzag j₁ j₂
 #print CategoryTheory.exists_zigzag' /-
 theorem exists_zigzag' [IsConnected J] (j₁ j₂ : J) :
     ∃ l, List.Chain Zag j₁ l ∧ List.getLast (j₁ :: l) (List.cons_ne_nil _ _) = j₂ :=
-  List.exists_chain_of_relationReflTransGen (isConnected_zigzag _ _)
+  List.exists_chain_of_relationReflTransGen (isPreconnected_zigzag _ _)
 #align category_theory.exists_zigzag' CategoryTheory.exists_zigzag'
 -/
 
@@ -439,14 +439,14 @@ instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C)
     ext j
     apply nat_trans_from_is_connected f (Classical.arbitrary J) j
 
-#print CategoryTheory.nonempty_hom_of_connected_groupoid /-
-instance nonempty_hom_of_connected_groupoid {G} [Groupoid G] [IsConnected G] :
+#print CategoryTheory.nonempty_hom_of_preconnected_groupoid /-
+instance nonempty_hom_of_preconnected_groupoid {G} [Groupoid G] [IsConnected G] :
     ∀ x y : G, Nonempty (x ⟶ y) :=
   by
   refine' equiv_relation _ _ fun j₁ j₂ => Nonempty.intro
   exact
     ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.map fun f => inv f, fun _ _ _ => Nonempty.map2 (· ≫ ·)⟩
-#align category_theory.nonempty_hom_of_connected_groupoid CategoryTheory.nonempty_hom_of_connected_groupoid
+#align category_theory.nonempty_hom_of_connected_groupoid CategoryTheory.nonempty_hom_of_preconnected_groupoid
 -/
 
 end CategoryTheory

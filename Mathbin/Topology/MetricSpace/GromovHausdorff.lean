@@ -637,7 +637,7 @@ variable {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
   [CompactSpace Y] [Nonempty Y]
 
 -- we want to ignore these instances in the following theorem
-attribute [local instance 10] Sum.topologicalSpace Sum.uniformSpace
+attribute [local instance 10] Sum.topologicalSpace Sum.instUniformSpace
 
 #print GromovHausdorff.ghDist_le_of_approx_subsets /-
 /-- If there are subsets which are `ε₁`-dense and `ε₃`-dense in two spaces, and

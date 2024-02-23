@@ -180,8 +180,8 @@ unsafe def match_assoc (l : List expr) (r : List expr) :
 unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × expr) × expr)
   | expr.app (expr.app f x) y => do
     let t ← infer_type x
-    let a ← try_core <| to_expr ``(IsAssociative $(t) $(f)) >>= mk_instance
-    let c ← try_core <| to_expr ``(IsCommutative $(t) $(f)) >>= mk_instance
+    let a ← try_core <| to_expr ``(Std.Associative $(t) $(f)) >>= mk_instance
+    let c ← try_core <| to_expr ``(Std.Commutative $(t) $(f)) >>= mk_instance
     let i ←
       try_core do
           let v ← mk_meta_var t

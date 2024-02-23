@@ -1850,7 +1850,7 @@ theorem union_comm (s₁ s₂ : Finset α) : s₁ ∪ s₂ = s₂ ∪ s₁ :=
 #align finset.union_comm Finset.union_comm
 -/
 
-instance : IsCommutative (Finset α) (· ∪ ·) :=
+instance : Std.Commutative (Finset α) (· ∪ ·) :=
   ⟨union_comm⟩
 
 #print Finset.union_assoc /-
@@ -1860,7 +1860,7 @@ theorem union_assoc (s₁ s₂ s₃ : Finset α) : s₁ ∪ s₂ ∪ s₃ = s₁
 #align finset.union_assoc Finset.union_assoc
 -/
 
-instance : IsAssociative (Finset α) (· ∪ ·) :=
+instance : Std.Associative (Finset α) (· ∪ ·) :=
   ⟨union_assoc⟩
 
 #print Finset.union_idempotent /-

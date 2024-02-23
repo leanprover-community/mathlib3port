@@ -87,7 +87,7 @@ theorem noncommFoldr_eq_foldr (s : Multiset α) (h : LeftCommutative f) (b : β)
 #align multiset.noncomm_foldr_eq_foldr Multiset.noncommFoldr_eq_foldr
 -/
 
-variable [assoc : IsAssociative α op]
+variable [assoc : Std.Associative α op]
 
 #print Multiset.noncommFold /-
 /-- Fold of a `s : multiset α` with an associative `op : α → α → α`, given a proofs that `op`
@@ -121,8 +121,8 @@ theorem noncommFold_cons (s : Multiset α) (a : α) (h h') (x : α) :
 -/
 
 #print Multiset.noncommFold_eq_fold /-
-theorem noncommFold_eq_fold (s : Multiset α) [IsCommutative α op] (a : α) :
-    noncommFold op s (fun x _ y _ _ => IsCommutative.comm x y) a = fold op a s :=
+theorem noncommFold_eq_fold (s : Multiset α) [Std.Commutative α op] (a : α) :
+    noncommFold op s (fun x _ y _ _ => Std.Commutative.comm x y) a = fold op a s :=
   by
   induction s using Quotient.inductionOn
   simp

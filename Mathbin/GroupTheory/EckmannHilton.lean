@@ -87,7 +87,7 @@ theorem mul : m₁ = m₂ := by
 then these operations are commutative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul_comm : IsCommutative _ m₂ :=
+theorem mul_comm : Std.Commutative _ m₂ :=
   ⟨fun a b => by simpa [mul h₁ h₂ Distrib, h₂.left_id, h₂.right_id] using Distrib e₂ a b e₂⟩
 #align eckmann_hilton.mul_comm EckmannHilton.mul_comm
 -/
@@ -97,7 +97,7 @@ theorem mul_comm : IsCommutative _ m₂ :=
 then these operations are associative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul_assoc : IsAssociative _ m₂ :=
+theorem mul_assoc : Std.Associative _ m₂ :=
   ⟨fun a b c => by simpa [mul h₁ h₂ Distrib, h₂.left_id, h₂.right_id] using Distrib a b e₂ c⟩
 #align eckmann_hilton.mul_assoc EckmannHilton.mul_assoc
 -/

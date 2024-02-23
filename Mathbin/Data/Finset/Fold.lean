@@ -28,7 +28,7 @@ variable {α β γ : Type _}
 
 section Fold
 
-variable (op : β → β → β) [hc : IsCommutative β op] [ha : IsAssociative β op]
+variable (op : β → β → β) [hc : Std.Commutative β op] [ha : Std.Associative β op]
 
 local notation a " * " b => op a b
 
@@ -113,7 +113,7 @@ theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
 -/
 
 #print Finset.fold_hom /-
-theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative γ op'] {m : β → γ}
+theorem fold_hom {op' : γ → γ → γ} [Std.Commutative γ op'] [Std.Associative γ op'] {m : β → γ}
     (hm : ∀ x y, m (op x y) = op' (m x) (m y)) :
     (s.fold op' (m b) fun x => m (f x)) = m (s.fold op b f) := by
   rw [fold, fold, ← fold_hom op hm, Multiset.map_map]

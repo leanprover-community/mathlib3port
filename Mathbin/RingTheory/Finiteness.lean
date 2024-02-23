@@ -382,8 +382,8 @@ theorem fg_restrictScalars {R S M : Type _} [CommSemiring R] [Semiring S] [Algeb
 #align submodule.fg_restrict_scalars Submodule.fg_restrictScalars
 -/
 
-#print Submodule.FG.stablizes_of_iSup_eq /-
-theorem FG.stablizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →o Submodule R M)
+#print Submodule.FG.stabilizes_of_iSup_eq /-
+theorem FG.stabilizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →o Submodule R M)
     (H : iSup N = M') : ∃ n, M' = N n :=
   by
   obtain ⟨S, hS⟩ := hM'
@@ -397,7 +397,7 @@ theorem FG.stablizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →o
     intro s hs
     exact N.2 (Finset.le_sup <| S.mem_attach ⟨s, hs⟩) (hf _)
   · rw [← H]; exact le_iSup _ _
-#align submodule.fg.stablizes_of_supr_eq Submodule.FG.stablizes_of_iSup_eq
+#align submodule.fg.stablizes_of_supr_eq Submodule.FG.stabilizes_of_iSup_eq
 -/
 
 #print Submodule.fg_iff_compact /-

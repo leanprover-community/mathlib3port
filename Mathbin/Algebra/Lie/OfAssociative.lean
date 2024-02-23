@@ -171,16 +171,16 @@ def LieModule.ofAssociativeModule : LieModule R A M
 #align lie_module.of_associative_module LieModule.ofAssociativeModule
 -/
 
-#print Module.End.lieRingModule /-
-instance Module.End.lieRingModule : LieRingModule (Module.End R M) M :=
+#print Module.End.instLieRingModule /-
+instance Module.End.instLieRingModule : LieRingModule (Module.End R M) M :=
   LieRingModule.ofAssociativeModule
-#align module.End.lie_ring_module Module.End.lieRingModule
+#align module.End.lie_ring_module Module.End.instLieRingModule
 -/
 
-#print Module.End.lieModule /-
-instance Module.End.lieModule : LieModule R (Module.End R M) M :=
+#print Module.End.instLieModule /-
+instance Module.End.instLieModule : LieModule R (Module.End R M) M :=
   LieModule.ofAssociativeModule
-#align module.End.lie_module Module.End.lieModule
+#align module.End.lie_module Module.End.instLieModule
 -/
 
 end AssociativeRepresentation

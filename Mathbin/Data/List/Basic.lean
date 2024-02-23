@@ -46,7 +46,7 @@ instance : Std.LawfulLeftIdentity (List α) Append.append [] :=
 instance : Std.LawfulRightIdentity (List α) Append.append [] :=
   ⟨append_nil⟩
 
-instance : IsAssociative (List α) Append.append :=
+instance : Std.Associative (List α) Append.append :=
   ⟨append_assoc⟩
 
 #print List.cons_ne_nil /-
@@ -3988,7 +3988,7 @@ end FoldlEqFoldlr'
 
 section
 
-variable {op : α → α → α} [ha : IsAssociative α op] [hc : IsCommutative α op]
+variable {op : α → α → α} [ha : Std.Associative α op] [hc : Std.Commutative α op]
 
 local notation a " * " b => op a b
 

@@ -431,16 +431,12 @@ theorem not_xor_not : ∀ a b, xor (!a) (!b) = xor a b := by decide
 #align bool.bxor_bnot_bnot Bool.not_xor_not
 -/
 
-/- warning: bool.bxor_ff_left clashes with ff_bxor -> Bool.false_xor
-Case conversion may be inaccurate. Consider using '#align bool.bxor_ff_left Bool.false_xorₓ'. -/
 #print Bool.false_xor /-
 @[simp]
 theorem false_xor : ∀ a, xor false a = a := by decide
 #align bool.bxor_ff_left Bool.false_xor
 -/
 
-/- warning: bool.bxor_ff_right clashes with bxor_ff -> Bool.xor_false
-Case conversion may be inaccurate. Consider using '#align bool.bxor_ff_right Bool.xor_falseₓ'. -/
 #print Bool.xor_false /-
 @[simp]
 theorem xor_false : ∀ a, xor a false = a := by decide

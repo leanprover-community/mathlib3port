@@ -469,7 +469,7 @@ theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite 
 
 #print Sylow.conj_eq_normalizer_conj_of_mem /-
 theorem Sylow.conj_eq_normalizer_conj_of_mem [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
-    [hP : (P : Subgroup G).IsCommutativeₓ] (x g : G) (hx : x ∈ P) (hy : g⁻¹ * x * g ∈ P) :
+    [hP : (P : Subgroup G).Commutative] (x g : G) (hx : x ∈ P) (hy : g⁻¹ * x * g ∈ P) :
     ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n :=
   P.conj_eq_normalizer_conj_of_mem_centralizer x g (le_centralizer (P : Subgroup G) hx : _)
     (le_centralizer (P : Subgroup G) hy : _)

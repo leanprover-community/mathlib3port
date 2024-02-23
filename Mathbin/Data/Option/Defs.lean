@@ -159,15 +159,15 @@ def liftOrGet (f : α → α → α) : Option α → Option α → Option α
 
 #print Option.liftOrGet_isCommutative /-
 -- lift f
-instance liftOrGet_isCommutative (f : α → α → α) [h : IsCommutative α f] :
-    IsCommutative (Option α) (liftOrGet f) :=
+instance liftOrGet_isCommutative (f : α → α → α) [h : Std.Commutative α f] :
+    Std.Commutative (Option α) (liftOrGet f) :=
   ⟨fun a b => by cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
 #align option.lift_or_get_comm Option.liftOrGet_isCommutative
 -/
 
 #print Option.liftOrGet_isAssociative /-
-instance liftOrGet_isAssociative (f : α → α → α) [h : IsAssociative α f] :
-    IsAssociative (Option α) (liftOrGet f) :=
+instance liftOrGet_isAssociative (f : α → α → α) [h : Std.Associative α f] :
+    Std.Associative (Option α) (liftOrGet f) :=
   ⟨fun a b c => by cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
 #align option.lift_or_get_assoc Option.liftOrGet_isAssociative
 -/

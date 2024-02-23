@@ -122,11 +122,11 @@ theorem disjointedRec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃
 #align disjointed_rec_zero disjointedRec_zero
 -/
 
-#print Monotone.disjointed_eq /-
+#print Monotone.disjointed_succ /-
 -- TODO: Find a useful statement of `disjointed_rec_succ`.
-theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
+theorem Monotone.disjointed_succ {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
     disjointed f (n + 1) = f (n + 1) \ f n := by rw [disjointed_succ, hf.partial_sups_eq]
-#align monotone.disjointed_eq Monotone.disjointed_eq
+#align monotone.disjointed_eq Monotone.disjointed_succ
 -/
 
 #print partialSups_disjointed /-

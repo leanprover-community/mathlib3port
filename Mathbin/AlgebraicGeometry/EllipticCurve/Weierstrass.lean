@@ -279,95 +279,95 @@ section BaseChange
 /-! ### Base changes -/
 
 
-#print WeierstrassCurve.baseChange /-
+#print WeierstrassCurve.map /-
 /-- The Weierstrass curve over `R` base changed to `A`. -/
 @[simps]
-def baseChange : WeierstrassCurve A :=
+def map : WeierstrassCurve A :=
   ⟨algebraMap R A W.a₁, algebraMap R A W.a₂, algebraMap R A W.a₃, algebraMap R A W.a₄,
     algebraMap R A W.a₆⟩
-#align weierstrass_curve.base_change WeierstrassCurve.baseChange
+#align weierstrass_curve.base_change WeierstrassCurve.map
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_b₂ /-
+#print WeierstrassCurve.map_b₂ /-
 @[simp]
-theorem baseChange_b₂ : (W.base_change A).b₂ = algebraMap R A W.b₂ := by
+theorem map_b₂ : (W.base_change A).b₂ = algebraMap R A W.b₂ := by
   simp only [b₂, base_change_a₁, base_change_a₂];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_b₂ WeierstrassCurve.baseChange_b₂
+#align weierstrass_curve.base_change_b₂ WeierstrassCurve.map_b₂
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_b₄ /-
+#print WeierstrassCurve.map_b₄ /-
 @[simp]
-theorem baseChange_b₄ : (W.base_change A).b₄ = algebraMap R A W.b₄ := by
+theorem map_b₄ : (W.base_change A).b₄ = algebraMap R A W.b₄ := by
   simp only [b₄, base_change_a₁, base_change_a₃, base_change_a₄];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_b₄ WeierstrassCurve.baseChange_b₄
+#align weierstrass_curve.base_change_b₄ WeierstrassCurve.map_b₄
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_b₆ /-
+#print WeierstrassCurve.map_b₆ /-
 @[simp]
-theorem baseChange_b₆ : (W.base_change A).b₆ = algebraMap R A W.b₆ := by
+theorem map_b₆ : (W.base_change A).b₆ = algebraMap R A W.b₆ := by
   simp only [b₆, base_change_a₃, base_change_a₆];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_b₆ WeierstrassCurve.baseChange_b₆
+#align weierstrass_curve.base_change_b₆ WeierstrassCurve.map_b₆
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_b₈ /-
+#print WeierstrassCurve.map_b₈ /-
 @[simp]
-theorem baseChange_b₈ : (W.base_change A).b₈ = algebraMap R A W.b₈ :=
+theorem map_b₈ : (W.base_change A).b₈ = algebraMap R A W.b₈ :=
   by
   simp only [b₈, base_change_a₁, base_change_a₂, base_change_a₃, base_change_a₄, base_change_a₆]
   run_tac
     map_simp
-#align weierstrass_curve.base_change_b₈ WeierstrassCurve.baseChange_b₈
+#align weierstrass_curve.base_change_b₈ WeierstrassCurve.map_b₈
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_c₄ /-
+#print WeierstrassCurve.map_c₄ /-
 @[simp]
-theorem baseChange_c₄ : (W.base_change A).c₄ = algebraMap R A W.c₄ := by
+theorem map_c₄ : (W.base_change A).c₄ = algebraMap R A W.c₄ := by
   simp only [c₄, base_change_b₂, base_change_b₄];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_c₄ WeierstrassCurve.baseChange_c₄
+#align weierstrass_curve.base_change_c₄ WeierstrassCurve.map_c₄
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_c₆ /-
+#print WeierstrassCurve.map_c₆ /-
 @[simp]
-theorem baseChange_c₆ : (W.base_change A).c₆ = algebraMap R A W.c₆ := by
+theorem map_c₆ : (W.base_change A).c₆ = algebraMap R A W.c₆ := by
   simp only [c₆, base_change_b₂, base_change_b₄, base_change_b₆];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_c₆ WeierstrassCurve.baseChange_c₆
+#align weierstrass_curve.base_change_c₆ WeierstrassCurve.map_c₆
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.baseChange_Δ /-
+#print WeierstrassCurve.map_Δ /-
 @[simp, nolint simp_nf]
-theorem baseChange_Δ : (W.base_change A).Δ = algebraMap R A W.Δ := by
+theorem map_Δ : (W.base_change A).Δ = algebraMap R A W.Δ := by
   simp only [Δ, base_change_b₂, base_change_b₄, base_change_b₆, base_change_b₈];
   run_tac
     map_simp
-#align weierstrass_curve.base_change_Δ WeierstrassCurve.baseChange_Δ
+#align weierstrass_curve.base_change_Δ WeierstrassCurve.map_Δ
 -/
 
-#print WeierstrassCurve.baseChange_self /-
-theorem baseChange_self : W.base_change R = W := by ext <;> rfl
-#align weierstrass_curve.base_change_self WeierstrassCurve.baseChange_self
+#print WeierstrassCurve.map_id /-
+theorem map_id : W.base_change R = W := by ext <;> rfl
+#align weierstrass_curve.base_change_self WeierstrassCurve.map_id
 -/
 
-#print WeierstrassCurve.baseChange_baseChange /-
-theorem baseChange_baseChange : (W.base_change A).base_change B = W.base_change B := by
+#print WeierstrassCurve.map_baseChange /-
+theorem map_baseChange : (W.base_change A).base_change B = W.base_change B := by
   ext <;> exact (IsScalarTower.algebraMap_apply R A B _).symm
-#align weierstrass_curve.base_change_base_change WeierstrassCurve.baseChange_baseChange
+#align weierstrass_curve.base_change_base_change WeierstrassCurve.map_baseChange
 -/
 
 end BaseChange
@@ -553,9 +553,9 @@ theorem WeierstrassCurve.Affine.equation_iff_variableChange (x y : R) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.Affine.equation_iff_baseChange /-
-theorem WeierstrassCurve.Affine.equation_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A]
-    (x y : R) : W.equation x y ↔ (W.base_change A).equation (algebraMap R A x) (algebraMap R A y) :=
+#print WeierstrassCurve.Affine.map_equation /-
+theorem WeierstrassCurve.Affine.map_equation [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R) :
+    W.equation x y ↔ (W.base_change A).equation (algebraMap R A x) (algebraMap R A y) :=
   by
   simp only [equation_iff]
   refine' ⟨fun h => _, fun h => _⟩
@@ -569,16 +569,16 @@ theorem WeierstrassCurve.Affine.equation_iff_baseChange [Nontrivial A] [NoZeroSM
     run_tac
       map_simp;
     exact h
-#align weierstrass_curve.equation_iff_base_change WeierstrassCurve.Affine.equation_iff_baseChange
+#align weierstrass_curve.equation_iff_base_change WeierstrassCurve.Affine.map_equation
 -/
 
-#print WeierstrassCurve.Affine.equation_iff_baseChange_of_baseChange /-
-theorem WeierstrassCurve.Affine.equation_iff_baseChange_of_baseChange [Nontrivial B]
-    [NoZeroSMulDivisors A B] (x y : A) :
+#print WeierstrassCurve.Affine.baseChange_equation /-
+theorem WeierstrassCurve.Affine.baseChange_equation [Nontrivial B] [NoZeroSMulDivisors A B]
+    (x y : A) :
     (W.base_change A).equation x y ↔
       (W.base_change B).equation (algebraMap A B x) (algebraMap A B y) :=
   by rw [equation_iff_base_change (W.base_change A) B, base_change_base_change]
-#align weierstrass_curve.equation_iff_base_change_of_base_change WeierstrassCurve.Affine.equation_iff_baseChange_of_baseChange
+#align weierstrass_curve.equation_iff_base_change_of_base_change WeierstrassCurve.Affine.baseChange_equation
 -/
 
 /-! ### Nonsingularity of Weierstrass curves -/
@@ -686,9 +686,8 @@ theorem WeierstrassCurve.Affine.nonsingular_iff_variableChange (x y : R) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print WeierstrassCurve.Affine.nonsingular_iff_baseChange /-
-theorem WeierstrassCurve.Affine.nonsingular_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A]
-    (x y : R) :
+#print WeierstrassCurve.Affine.map_nonsingular /-
+theorem WeierstrassCurve.Affine.map_nonsingular [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R) :
     W.nonsingular x y ↔ (W.base_change A).nonsingular (algebraMap R A x) (algebraMap R A y) :=
   by
   rw [nonsingular_iff, nonsingular_iff, and_congr <| W.equation_iff_base_change A x y]
@@ -705,16 +704,16 @@ theorem WeierstrassCurve.Affine.nonsingular_iff_baseChange [Nontrivial A] [NoZer
         run_tac
           map_simp;
         rfl
-#align weierstrass_curve.nonsingular_iff_base_change WeierstrassCurve.Affine.nonsingular_iff_baseChange
+#align weierstrass_curve.nonsingular_iff_base_change WeierstrassCurve.Affine.map_nonsingular
 -/
 
-#print WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange /-
-theorem WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange [Nontrivial B]
-    [NoZeroSMulDivisors A B] (x y : A) :
+#print WeierstrassCurve.Affine.baseChange_nonsingular /-
+theorem WeierstrassCurve.Affine.baseChange_nonsingular [Nontrivial B] [NoZeroSMulDivisors A B]
+    (x y : A) :
     (W.base_change A).nonsingular x y ↔
       (W.base_change B).nonsingular (algebraMap A B x) (algebraMap A B y) :=
   by rw [nonsingular_iff_base_change (W.base_change A) B, base_change_base_change]
-#align weierstrass_curve.nonsingular_iff_base_change_of_base_change WeierstrassCurve.Affine.nonsingular_iff_baseChange_of_baseChange
+#align weierstrass_curve.nonsingular_iff_base_change_of_base_change WeierstrassCurve.Affine.baseChange_nonsingular
 -/
 
 #print WeierstrassCurve.Affine.nonsingular_zero_of_Δ_ne_zero /-
@@ -1162,36 +1161,36 @@ section BaseChange
 
 variable (A : Type v) [CommRing A] [Algebra R A]
 
-#print EllipticCurve.baseChange /-
+#print EllipticCurve.map /-
 /-- The elliptic curve over `R` base changed to `A`. -/
 @[simps]
-def baseChange : EllipticCurve A :=
+def map : EllipticCurve A :=
   ⟨E.base_change A, Units.map (↑(algebraMap R A)) E.Δ', by
     rw [Units.coe_map, RingHom.coe_monoidHom, coe_Δ', E.base_change_Δ]⟩
-#align elliptic_curve.base_change EllipticCurve.baseChange
+#align elliptic_curve.base_change EllipticCurve.map
 -/
 
-#print EllipticCurve.coeBaseChange_Δ' /-
-theorem coeBaseChange_Δ' : ↑(E.base_change A).Δ' = algebraMap R A E.Δ' :=
+#print EllipticCurve.coe_map_Δ' /-
+theorem coe_map_Δ' : ↑(E.base_change A).Δ' = algebraMap R A E.Δ' :=
   rfl
-#align elliptic_curve.coe_base_change_Δ' EllipticCurve.coeBaseChange_Δ'
+#align elliptic_curve.coe_base_change_Δ' EllipticCurve.coe_map_Δ'
 -/
 
-#print EllipticCurve.coe_inv_baseChange_Δ' /-
-theorem coe_inv_baseChange_Δ' : ↑(E.base_change A).Δ'⁻¹ = algebraMap R A ↑E.Δ'⁻¹ :=
+#print EllipticCurve.coe_inv_map_Δ' /-
+theorem coe_inv_map_Δ' : ↑(E.base_change A).Δ'⁻¹ = algebraMap R A ↑E.Δ'⁻¹ :=
   rfl
-#align elliptic_curve.coe_inv_base_change_Δ' EllipticCurve.coe_inv_baseChange_Δ'
+#align elliptic_curve.coe_inv_base_change_Δ' EllipticCurve.coe_inv_map_Δ'
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1062024125.map_simp -/
-#print EllipticCurve.baseChange_j /-
+#print EllipticCurve.map_j /-
 @[simp]
-theorem baseChange_j : (E.base_change A).j = algebraMap R A E.j :=
+theorem map_j : (E.base_change A).j = algebraMap R A E.j :=
   by
   simp only [j, coe_inv_base_change_Δ', base_change_to_weierstrass_curve, E.base_change_c₄]
   run_tac
     map_simp
-#align elliptic_curve.base_change_j EllipticCurve.baseChange_j
+#align elliptic_curve.base_change_j EllipticCurve.map_j
 -/
 
 end BaseChange
