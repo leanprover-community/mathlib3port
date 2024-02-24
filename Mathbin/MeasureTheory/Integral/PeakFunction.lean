@@ -52,10 +52,10 @@ variable {α E ι : Type _} {hm : MeasurableSpace α} {μ : Measure α} [Topolog
   [BorelSpace α] [NormedAddCommGroup E] [NormedSpace ℝ E] {g : α → E} {l : Filter ι} {x₀ : α}
   {s : Set α} {φ : ι → α → ℝ}
 
-#print integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt /-
+#print integrableOn_peak_smul_of_integrableOn_of_tendsto /-
 /-- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
 `g` is integrable and continuous at `x₀`, then `φᵢ • g` is eventually integrable. -/
-theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : MeasurableSet s)
+theorem integrableOn_peak_smul_of_integrableOn_of_tendsto (hs : MeasurableSet s)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
     (hiφ : ∀ᶠ i in l, ∫ x in s, φ i x ∂μ = 1) (hmg : IntegrableOn g s μ)
     (hcg : ContinuousWithinAt g s x₀) : ∀ᶠ i in l, IntegrableOn (fun x => φ i x • g x) s μ :=
@@ -82,17 +82,17 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
       exact (norm_lt_of_mem_ball (hu x hx)).le
   convert A.union B
   simp only [diff_union_inter]
-#align integrable_on_peak_smul_of_integrable_on_of_continuous_within_at integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt
+#align integrable_on_peak_smul_of_integrable_on_of_continuous_within_at integrableOn_peak_smul_of_integrableOn_of_tendsto
 -/
 
 variable [CompleteSpace E]
 
-#print tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux /-
+#print tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux /-
 /-- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
 `g` is integrable and continuous at `x₀`, then `∫ φᵢ • g` converges to `x₀`. Auxiliary lemma
 where one assumes additionally `g x₀ = 0`. -/
-theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
-    (hs : MeasurableSet s) (hnφ : ∀ᶠ i in l, ∀ x ∈ s, 0 ≤ φ i x)
+theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux (hs : MeasurableSet s)
+    (hnφ : ∀ᶠ i in l, ∀ x ∈ s, 0 ≤ φ i x)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
     (hiφ : ∀ᶠ i in l, ∫ x in s, φ i x ∂μ = 1) (hmg : IntegrableOn g s μ) (h'g : g x₀ = 0)
     (hcg : ContinuousWithinAt g s x₀) : Tendsto (fun i : ι => ∫ x in s, φ i x • g x ∂μ) l (𝓝 0) :=
@@ -115,8 +115,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
   obtain ⟨u, u_open, x₀u, hu⟩ : ∃ u, IsOpen u ∧ x₀ ∈ u ∧ ∀ x ∈ u ∩ s, g x ∈ ball (g x₀) δ
   exact mem_nhdsWithin.1 (hcg (ball_mem_nhds _ δpos))
   filter_upwards [tendsto_uniformly_on_iff.1 (hlφ u u_open x₀u) δ δpos, hiφ, hnφ,
-    integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt hs hlφ hiφ hmg hcg] with i hi h'i
-    hφpos h''i
+    integrableOn_peak_smul_of_integrableOn_of_tendsto hs hlφ hiφ hmg hcg] with i hi h'i hφpos h''i
   have B : ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ ≤ δ :=
     calc
       ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ ≤ ∫ x in s ∩ u, ‖φ i x • g x‖ ∂μ :=
@@ -168,13 +167,13 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
           (h''i.mono_set (diff_subset _ _)) (h''i.mono_set (inter_subset_left _ _))]
     _ ≤ ‖∫ x in s \ u, φ i x • g x ∂μ‖ + ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ := (norm_add_le _ _)
     _ ≤ δ * ∫ x in s, ‖g x‖ ∂μ + δ := add_le_add C B
-#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
+#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux
 -/
 
-#print tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt /-
+#print tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto /-
 /- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
 `g` is integrable and continuous at `x₀`, then `∫ φᵢ • g` converges to `x₀`. -/
-theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt (hs : MeasurableSet s)
+theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto (hs : MeasurableSet s)
     (h's : μ s ≠ ∞) (hnφ : ∀ᶠ i in l, ∀ x ∈ s, 0 ≤ φ i x)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
     (hiφ : (fun i => ∫ x in s, φ i x ∂μ) =ᶠ[l] 1) (hmg : IntegrableOn g s μ)
@@ -187,7 +186,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt (hs
       (𝓝 (0 + (1 : ℝ) • g x₀)) :=
     by
     refine' tendsto.add _ (tendsto.smul (tendsto_const_nhds.congr' hiφ.symm) tendsto_const_nhds)
-    apply tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux hs hnφ hlφ hiφ
+    apply tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux hs hnφ hlφ hiφ
     · apply integrable.sub hmg
       apply integrable_on_const.2
       simp only [h's.lt_top, or_true_iff]
@@ -195,12 +194,12 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt (hs
     · exact hcg.sub continuousWithinAt_const
   simp only [one_smul, zero_add] at A 
   refine' tendsto.congr' _ A
-  filter_upwards [integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt hs hlφ hiφ hmg hcg,
-    hiφ] with i hi h'i
+  filter_upwards [integrableOn_peak_smul_of_integrableOn_of_tendsto hs hlφ hiφ hmg hcg, hiφ] with i
+    hi h'i
   simp only [h, Pi.sub_apply, smul_sub]
   rw [integral_sub hi, integral_smul_const, sub_add_cancel]
   exact integrable.smul_const (integrable_of_integral_eq_one h'i) _
-#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt
+#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto
 -/
 
 #print tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos /-
@@ -304,8 +303,8 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
     simp only [Pi.zero_apply, dist_zero_left, Real.norm_of_nonneg (hnφ n x hx.1)]
     exact (M n x hx).trans_lt hn
   have : tendsto (fun i : ℕ => ∫ x : α in s, φ i x • g x ∂μ) at_top (𝓝 (g x₀)) :=
-    tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt hs.measurable_set
-      hs.measure_lt_top.ne (eventually_of_forall hnφ) A (eventually_of_forall hiφ) hmg hcg
+    tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto hs.measurable_set hs.measure_lt_top.ne
+      (eventually_of_forall hnφ) A (eventually_of_forall hiφ) hmg hcg
   convert this
   simp_rw [← smul_smul, integral_smul]
 #align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_measure_nhds_within_pos tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos

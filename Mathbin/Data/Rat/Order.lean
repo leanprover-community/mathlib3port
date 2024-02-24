@@ -218,10 +218,10 @@ theorem nonneg_iff_zero_le {a} : Rat.Nonneg a ↔ 0 ≤ a :=
 #align rat.nonneg_iff_zero_le Rat.nonneg_iff_zero_le
 -/
 
-#print Rat.num_nonneg_iff_zero_le /-
-theorem num_nonneg_iff_zero_le : ∀ {a : ℚ}, 0 ≤ a.num ↔ 0 ≤ a
+#print Rat.num_nonneg /-
+theorem num_nonneg : ∀ {a : ℚ}, 0 ≤ a.num ↔ 0 ≤ a
   | ⟨n, d, h, c⟩ => @nonneg_iff_zero_le ⟨n, d, h, c⟩
-#align rat.num_nonneg_iff_zero_le Rat.num_nonneg_iff_zero_le
+#align rat.num_nonneg_iff_zero_le Rat.num_nonneg
 -/
 
 #print Rat.add_le_add_left /-
@@ -264,11 +264,11 @@ instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 
 instance : OrderedAddCommMonoid ℚ := by infer_instance
 
-#print Rat.num_pos_iff_pos /-
-theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
+#print Rat.num_pos /-
+theorem num_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le <| by
     simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
-#align rat.num_pos_iff_pos Rat.num_pos_iff_pos
+#align rat.num_pos_iff_pos Rat.num_pos
 -/
 
 #print Rat.div_lt_div_iff_mul_lt_mul /-

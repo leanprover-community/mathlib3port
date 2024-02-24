@@ -164,10 +164,10 @@ def toUnits : unitary R →* Rˣ
 #align unitary.to_units unitary.toUnits
 -/
 
-#print unitary.to_units_injective /-
-theorem to_units_injective : Function.Injective (toUnits : unitary R → Rˣ) := fun x y h =>
+#print unitary.toUnits_injective /-
+theorem toUnits_injective : Function.Injective (toUnits : unitary R → Rˣ) := fun x y h =>
   Subtype.ext <| Units.ext_iff.mp h
-#align unitary.to_units_injective unitary.to_units_injective
+#align unitary.to_units_injective unitary.toUnits_injective
 -/
 
 end Monoid

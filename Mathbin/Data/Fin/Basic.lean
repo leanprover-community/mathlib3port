@@ -94,11 +94,11 @@ def finZeroElim {α : Fin 0 → Sort u} (x : Fin 0) : α x :=
 
 namespace Fin
 
-#print Fin.elim0' /-
+#print Fin.elim0 /-
 /-- A non-dependent variant of `elim0`. -/
-def elim0' {α : Sort _} (x : Fin 0) : α :=
+def elim0 {α : Sort _} (x : Fin 0) : α :=
   x.elim0ₓ
-#align fin.elim0' Fin.elim0'
+#align fin.elim0' Fin.elim0
 -/
 
 variable {n m : ℕ} {a b : Fin n}

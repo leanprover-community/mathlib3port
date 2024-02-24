@@ -54,7 +54,7 @@ section MatrixNotation
 #print Matrix.vecEmpty /-
 /-- `![]` is the vector with no entries. -/
 def vecEmpty : Fin 0 → α :=
-  Fin.elim0'
+  Fin.elim0
 #align matrix.vec_empty Matrix.vecEmpty
 -/
 

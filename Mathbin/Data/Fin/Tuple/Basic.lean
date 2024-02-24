@@ -378,16 +378,18 @@ theorem append_right_nil {α : Type _} (u : Fin m → α) (v : Fin n → α) (hv
   · rw [append_left, Function.comp_apply]
     refine' congr_arg u (Fin.ext _)
     simp
-  · exact (Fin.castIso hv r).elim0'
+  · exact (Fin.castIso hv r).elim0
 #align fin.append_right_nil Fin.append_right_nil
 -/
 
-#print Fin.append_elim0' /-
+/- warning: fin.append_elim0' clashes with fin.append_elim0 -> Fin.append_elim0
+Case conversion may be inaccurate. Consider using '#align fin.append_elim0' Fin.append_elim0ₓ'. -/
+#print Fin.append_elim0 /-
 @[simp]
-theorem append_elim0' {α : Type _} (u : Fin m → α) :
-    append u Fin.elim0' = u ∘ Fin.castIso (add_zero _) :=
+theorem append_elim0 {α : Type _} (u : Fin m → α) :
+    append u Fin.elim0 = u ∘ Fin.castIso (add_zero _) :=
   append_right_nil _ _ rfl
-#align fin.append_elim0' Fin.append_elim0'
+#align fin.append_elim0' Fin.append_elim0
 -/
 
 #print Fin.append_left_nil /-
@@ -395,19 +397,21 @@ theorem append_left_nil {α : Type _} (u : Fin m → α) (v : Fin n → α) (hu 
     append u v = v ∘ Fin.castIso (by rw [hu, zero_add]) :=
   by
   refine' funext (Fin.addCases (fun l => _) fun r => _)
-  · exact (Fin.castIso hu l).elim0'
+  · exact (Fin.castIso hu l).elim0
   · rw [append_right, Function.comp_apply]
     refine' congr_arg v (Fin.ext _)
     simp [hu]
 #align fin.append_left_nil Fin.append_left_nil
 -/
 
-#print Fin.elim0'_append /-
+/- warning: fin.elim0'_append clashes with fin.elim0_append -> Fin.elim0_append
+Case conversion may be inaccurate. Consider using '#align fin.elim0'_append Fin.elim0_appendₓ'. -/
+#print Fin.elim0_append /-
 @[simp]
-theorem elim0'_append {α : Type _} (v : Fin n → α) :
-    append Fin.elim0' v = v ∘ Fin.castIso (zero_add _) :=
+theorem elim0_append {α : Type _} (v : Fin n → α) :
+    append Fin.elim0 v = v ∘ Fin.castIso (zero_add _) :=
   append_left_nil _ _ rfl
-#align fin.elim0'_append Fin.elim0'_append
+#align fin.elim0'_append Fin.elim0_append
 -/
 
 #print Fin.append_assoc /-
@@ -459,8 +463,8 @@ def repeat {α : Type _} (m : ℕ) (a : Fin n → α) : Fin (m * n) → α
 #print Fin.repeat_zero /-
 @[simp]
 theorem repeat_zero {α : Type _} (a : Fin n → α) :
-    repeat 0 a = Fin.elim0' ∘ castIso (MulZeroClass.zero_mul _) :=
-  funext fun x => (castIso (MulZeroClass.zero_mul _) x).elim0'
+    repeat 0 a = Fin.elim0 ∘ castIso (MulZeroClass.zero_mul _) :=
+  funext fun x => (castIso (MulZeroClass.zero_mul _) x).elim0
 #align fin.repeat_zero Fin.repeat_zero
 -/
 

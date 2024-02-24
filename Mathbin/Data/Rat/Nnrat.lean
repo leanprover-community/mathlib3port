@@ -623,10 +623,7 @@ theorem den_coe : (q : ℚ).den = q.den :=
 theorem ext_num_den (hn : p.num = q.num) (hd : p.den = q.den) : p = q :=
   ext <|
     Rat.ext
-      ((Int.natAbs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) <|
-            Rat.num_nonneg_iff_zero_le.2 q.2).1
-        hn)
-      hd
+      ((Int.natAbs_inj_of_nonneg_of_nonneg (Rat.num_nonneg.2 p.2) <| Rat.num_nonneg.2 q.2).1 hn) hd
 #align nnrat.ext_num_denom NNRat.ext_num_den
 -/
 
@@ -642,7 +639,7 @@ theorem num_div_den (q : ℚ≥0) : (q.num : ℚ≥0) / q.den = q :=
   by
   ext1
   rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
-    Int.natAbs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
+    Int.natAbs_of_nonneg (Rat.num_nonneg.2 q.prop)]
   exact Rat.num_div_den q
 #align nnrat.num_div_denom NNRat.num_div_den
 -/
