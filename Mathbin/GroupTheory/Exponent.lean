@@ -175,7 +175,7 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 :=
     apply exponent_pos_of_exists 1 Nat.one_pos
     simp
 #align monoid.exp_eq_one_of_subsingleton Monoid.exp_eq_one_of_subsingleton
-#align add_monoid.exp_eq_zero_of_subsingleton AddMonoid.exp_eq_zero_of_subsingleton
+#align add_monoid.exp_eq_zero_of_subsingleton AddMonoid.exp_eq_one_of_subsingleton
 -/
 
 #print Monoid.order_dvd_exponent /-
