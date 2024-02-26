@@ -185,32 +185,32 @@ theorem restrictRootsOfUnity_coe_apply [RingHomClass F R S] (σ : F) (ζ : roots
 #align restrict_roots_of_unity_coe_apply restrictRootsOfUnity_coe_apply
 -/
 
-#print RingEquiv.restrictRootsOfUnity /-
+#print MulEquiv.restrictRootsOfUnity /-
 /-- Restrict a ring isomorphism to the nth roots of unity -/
-def RingEquiv.restrictRootsOfUnity (σ : R ≃+* S) (n : ℕ+) : rootsOfUnity n R ≃* rootsOfUnity n S
+def MulEquiv.restrictRootsOfUnity (σ : R ≃+* S) (n : ℕ+) : rootsOfUnity n R ≃* rootsOfUnity n S
     where
   toFun := restrictRootsOfUnity σ.toRingHom n
   invFun := restrictRootsOfUnity σ.symm.toRingHom n
   left_inv ξ := by ext; exact σ.symm_apply_apply ξ
   right_inv ξ := by ext; exact σ.apply_symm_apply ξ
   map_mul' := (restrictRootsOfUnity _ n).map_hMul
-#align ring_equiv.restrict_roots_of_unity RingEquiv.restrictRootsOfUnity
+#align ring_equiv.restrict_roots_of_unity MulEquiv.restrictRootsOfUnity
 -/
 
-#print RingEquiv.restrictRootsOfUnity_coe_apply /-
+#print MulEquiv.restrictRootsOfUnity_coe_apply /-
 @[simp]
-theorem RingEquiv.restrictRootsOfUnity_coe_apply (σ : R ≃+* S) (ζ : rootsOfUnity k R) :
+theorem MulEquiv.restrictRootsOfUnity_coe_apply (σ : R ≃+* S) (ζ : rootsOfUnity k R) :
     ↑(σ.restrictRootsOfUnity k ζ) = σ ↑ζ :=
   rfl
-#align ring_equiv.restrict_roots_of_unity_coe_apply RingEquiv.restrictRootsOfUnity_coe_apply
+#align ring_equiv.restrict_roots_of_unity_coe_apply MulEquiv.restrictRootsOfUnity_coe_apply
 -/
 
-#print RingEquiv.restrictRootsOfUnity_symm /-
+#print MulEquiv.restrictRootsOfUnity_symm /-
 @[simp]
-theorem RingEquiv.restrictRootsOfUnity_symm (σ : R ≃+* S) :
+theorem MulEquiv.restrictRootsOfUnity_symm (σ : R ≃+* S) :
     (σ.restrictRootsOfUnity k).symm = σ.symm.restrictRootsOfUnity k :=
   rfl
-#align ring_equiv.restrict_roots_of_unity_symm RingEquiv.restrictRootsOfUnity_symm
+#align ring_equiv.restrict_roots_of_unity_symm MulEquiv.restrictRootsOfUnity_symm
 -/
 
 end CommSemiring
