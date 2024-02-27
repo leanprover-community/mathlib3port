@@ -313,7 +313,7 @@ def changeForm (h : B.toQuadraticForm = Q' - Q) : CliffordAlgebra Q →ₗ[R] Cl
     (fun m x =>
       (changeFormAux_changeFormAux Q' B m x).trans <|
         by
-        dsimp [← BilinForm.toQuadraticForm_apply]
+        dsimp [← LinearMap.BilinForm.toQuadraticForm_apply]
         rw [h, QuadraticForm.sub_apply, sub_sub_cancel])
     1
 #align clifford_algebra.change_form CliffordAlgebra.changeForm

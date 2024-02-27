@@ -104,7 +104,7 @@ theorem Matrix.PosDef.of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
   by
   refine' ⟨hM, fun x hx => _⟩
-  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
+  simp only [to_quadratic_form', QuadraticForm.PosDef, LinearMap.BilinForm.toQuadraticForm_apply,
     Matrix.toBilin'_apply'] at hMq 
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.PosDef.of_toQuadraticForm'
@@ -114,7 +114,7 @@ theorem Matrix.PosDef.of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (
 theorem Matrix.PosDef.toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
   intro x hx
-  simp only [to_quadratic_form', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
+  simp only [to_quadratic_form', LinearMap.BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
 #align matrix.pos_def_to_quadratic_form' Matrix.PosDef.toQuadraticForm'
 -/

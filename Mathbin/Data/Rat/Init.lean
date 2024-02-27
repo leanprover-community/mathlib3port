@@ -77,10 +77,8 @@ instance : ToString ℚ :=
 unsafe instance : has_to_format ℚ :=
   ⟨coe ∘ Rat.repr⟩
 
-#print Rat.ext_iff /-
 theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.den = q.den := by cases p; cases q; simp
 #align rat.ext_iff Rat.ext_iff
--/
 
 #print Rat.ext /-
 @[ext]

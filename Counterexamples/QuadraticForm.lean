@@ -60,7 +60,7 @@ theorem BilinForm.not_injOn_toQuadraticForm_isSymm.{u} :
   let F := ULift.{u} (ZMod 2)
   apply B_ne_zero F
   apply h (is_symm_B F) is_symm_zero
-  rw [BilinForm.toQuadraticForm_zero, BilinForm.toQuadraticForm_eq_zero]
+  rw [LinearMap.BilinForm.toQuadraticForm_zero, LinearMap.BilinForm.toQuadraticForm_eq_zero]
   exact is_alt_B F
 #align counterexample.bilin_form.not_inj_on_to_quadratic_form_is_symm Counterexample.BilinForm.not_injOn_toQuadraticForm_isSymm
 

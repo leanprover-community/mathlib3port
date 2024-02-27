@@ -182,7 +182,7 @@ open BilinForm
 #print QuadraticForm.equivalent_weightedSumSquares /-
 theorem equivalent_weightedSumSquares (Q : QuadraticForm K V) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → K, Equivalent Q (weightedSumSquares K w) :=
-  let ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_isSymm _ Q)
+  let ⟨v, hv₁⟩ := LinearMap.BilinForm.exists_orthogonal_basis (associated_isSymm _ Q)
   ⟨_, ⟨Q.isometryEquivWeightedSumSquares v hv₁⟩⟩
 #align quadratic_form.equivalent_weighted_sum_squares QuadraticForm.equivalent_weightedSumSquares
 -/

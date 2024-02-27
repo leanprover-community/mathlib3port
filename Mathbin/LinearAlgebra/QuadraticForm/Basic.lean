@@ -772,98 +772,101 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 variable {B : BilinForm R M}
 
-#print BilinForm.toQuadraticForm /-
+#print LinearMap.BilinForm.toQuadraticForm /-
 /-- A bilinear form gives a quadratic form by applying the argument twice. -/
-def toQuadraticForm (B : BilinForm R M) : QuadraticForm R M
+def LinearMap.BilinForm.toQuadraticForm (B : BilinForm R M) : QuadraticForm R M
     where
   toFun x := B x x
   toFun_smul a x := by simp only [mul_assoc, smul_right, smul_left]
   exists_companion' := ⟨B + BilinForm.flipHom ℕ B, fun x y => by simp [add_add_add_comm, add_comm]⟩
-#align bilin_form.to_quadratic_form BilinForm.toQuadraticForm
+#align bilin_form.to_quadratic_form LinearMap.BilinForm.toQuadraticForm
 -/
 
-#print BilinForm.toQuadraticForm_apply /-
+#print LinearMap.BilinForm.toQuadraticForm_apply /-
 @[simp]
-theorem toQuadraticForm_apply (B : BilinForm R M) (x : M) : B.toQuadraticForm x = B x x :=
+theorem LinearMap.BilinForm.toQuadraticForm_apply (B : BilinForm R M) (x : M) :
+    B.toQuadraticForm x = B x x :=
   rfl
-#align bilin_form.to_quadratic_form_apply BilinForm.toQuadraticForm_apply
+#align bilin_form.to_quadratic_form_apply LinearMap.BilinForm.toQuadraticForm_apply
 -/
 
 section
 
 variable (R M)
 
-#print BilinForm.toQuadraticForm_zero /-
+#print LinearMap.BilinForm.toQuadraticForm_zero /-
 @[simp]
-theorem toQuadraticForm_zero : (0 : BilinForm R M).toQuadraticForm = 0 :=
+theorem LinearMap.BilinForm.toQuadraticForm_zero : (0 : BilinForm R M).toQuadraticForm = 0 :=
   rfl
-#align bilin_form.to_quadratic_form_zero BilinForm.toQuadraticForm_zero
+#align bilin_form.to_quadratic_form_zero LinearMap.BilinForm.toQuadraticForm_zero
 -/
 
 end
 
-#print BilinForm.toQuadraticForm_add /-
+#print LinearMap.BilinForm.toQuadraticForm_add /-
 @[simp]
-theorem toQuadraticForm_add (B₁ B₂ : BilinForm R M) :
+theorem LinearMap.BilinForm.toQuadraticForm_add (B₁ B₂ : BilinForm R M) :
     (B₁ + B₂).toQuadraticForm = B₁.toQuadraticForm + B₂.toQuadraticForm :=
   rfl
-#align bilin_form.to_quadratic_form_add BilinForm.toQuadraticForm_add
+#align bilin_form.to_quadratic_form_add LinearMap.BilinForm.toQuadraticForm_add
 -/
 
-#print BilinForm.toQuadraticForm_smul /-
+#print LinearMap.BilinForm.toQuadraticForm_smul /-
 @[simp]
-theorem toQuadraticForm_smul [Monoid S] [DistribMulAction S R] [SMulCommClass S R R] (a : S)
-    (B : BilinForm R M) : (a • B).toQuadraticForm = a • B.toQuadraticForm :=
+theorem LinearMap.BilinForm.toQuadraticForm_smul [Monoid S] [DistribMulAction S R]
+    [SMulCommClass S R R] (a : S) (B : BilinForm R M) :
+    (a • B).toQuadraticForm = a • B.toQuadraticForm :=
   rfl
-#align bilin_form.to_quadratic_form_smul BilinForm.toQuadraticForm_smul
+#align bilin_form.to_quadratic_form_smul LinearMap.BilinForm.toQuadraticForm_smul
 -/
 
 section
 
 variable (R M)
 
-#print BilinForm.toQuadraticFormAddMonoidHom /-
+#print LinearMap.BilinForm.toQuadraticFormAddMonoidHom /-
 /-- `bilin_form.to_quadratic_form` as an additive homomorphism -/
 @[simps]
-def toQuadraticFormAddMonoidHom : BilinForm R M →+ QuadraticForm R M
+def LinearMap.BilinForm.toQuadraticFormAddMonoidHom : BilinForm R M →+ QuadraticForm R M
     where
-  toFun := toQuadraticForm
-  map_zero' := toQuadraticForm_zero _ _
-  map_add' := toQuadraticForm_add
-#align bilin_form.to_quadratic_form_add_monoid_hom BilinForm.toQuadraticFormAddMonoidHom
+  toFun := LinearMap.BilinForm.toQuadraticForm
+  map_zero' := LinearMap.BilinForm.toQuadraticForm_zero _ _
+  map_add' := LinearMap.BilinForm.toQuadraticForm_add
+#align bilin_form.to_quadratic_form_add_monoid_hom LinearMap.BilinForm.toQuadraticFormAddMonoidHom
 -/
 
 end
 
-#print BilinForm.toQuadraticForm_list_sum /-
+#print LinearMap.BilinForm.toQuadraticForm_list_sum /-
 @[simp]
-theorem toQuadraticForm_list_sum (B : List (BilinForm R M)) :
-    B.Sum.toQuadraticForm = (B.map toQuadraticForm).Sum :=
-  map_list_sum (toQuadraticFormAddMonoidHom R M) B
-#align bilin_form.to_quadratic_form_list_sum BilinForm.toQuadraticForm_list_sum
+theorem LinearMap.BilinForm.toQuadraticForm_list_sum (B : List (BilinForm R M)) :
+    B.Sum.toQuadraticForm = (B.map LinearMap.BilinForm.toQuadraticForm).Sum :=
+  map_list_sum (LinearMap.BilinForm.toQuadraticFormAddMonoidHom R M) B
+#align bilin_form.to_quadratic_form_list_sum LinearMap.BilinForm.toQuadraticForm_list_sum
 -/
 
-#print BilinForm.toQuadraticForm_multiset_sum /-
+#print LinearMap.BilinForm.toQuadraticForm_multiset_sum /-
 @[simp]
-theorem toQuadraticForm_multiset_sum (B : Multiset (BilinForm R M)) :
-    B.Sum.toQuadraticForm = (B.map toQuadraticForm).Sum :=
-  map_multiset_sum (toQuadraticFormAddMonoidHom R M) B
-#align bilin_form.to_quadratic_form_multiset_sum BilinForm.toQuadraticForm_multiset_sum
+theorem LinearMap.BilinForm.toQuadraticForm_multiset_sum (B : Multiset (BilinForm R M)) :
+    B.Sum.toQuadraticForm = (B.map LinearMap.BilinForm.toQuadraticForm).Sum :=
+  map_multiset_sum (LinearMap.BilinForm.toQuadraticFormAddMonoidHom R M) B
+#align bilin_form.to_quadratic_form_multiset_sum LinearMap.BilinForm.toQuadraticForm_multiset_sum
 -/
 
-#print BilinForm.toQuadraticForm_sum /-
+#print LinearMap.BilinForm.toQuadraticForm_sum /-
 @[simp]
-theorem toQuadraticForm_sum {ι : Type _} (s : Finset ι) (B : ι → BilinForm R M) :
-    (∑ i in s, B i).toQuadraticForm = ∑ i in s, (B i).toQuadraticForm :=
-  map_sum (toQuadraticFormAddMonoidHom R M) B s
-#align bilin_form.to_quadratic_form_sum BilinForm.toQuadraticForm_sum
+theorem LinearMap.BilinForm.toQuadraticForm_sum {ι : Type _} (s : Finset ι)
+    (B : ι → BilinForm R M) : (∑ i in s, B i).toQuadraticForm = ∑ i in s, (B i).toQuadraticForm :=
+  map_sum (LinearMap.BilinForm.toQuadraticFormAddMonoidHom R M) B s
+#align bilin_form.to_quadratic_form_sum LinearMap.BilinForm.toQuadraticForm_sum
 -/
 
-#print BilinForm.toQuadraticForm_eq_zero /-
+#print LinearMap.BilinForm.toQuadraticForm_eq_zero /-
 @[simp]
-theorem toQuadraticForm_eq_zero {B : BilinForm R M} : B.toQuadraticForm = 0 ↔ B.IsAlt :=
+theorem LinearMap.BilinForm.toQuadraticForm_eq_zero {B : BilinForm R M} :
+    B.toQuadraticForm = 0 ↔ B.IsAlt :=
   QuadraticForm.ext_iff
-#align bilin_form.to_quadratic_form_eq_zero BilinForm.toQuadraticForm_eq_zero
+#align bilin_form.to_quadratic_form_eq_zero LinearMap.BilinForm.toQuadraticForm_eq_zero
 -/
 
 end Semiring
@@ -874,26 +877,28 @@ variable [Ring R] [AddCommGroup M] [Module R M]
 
 variable {B : BilinForm R M}
 
-#print BilinForm.polar_toQuadraticForm /-
-theorem polar_toQuadraticForm (x y : M) : polar (fun x => B x x) x y = B x y + B y x := by
+#print LinearMap.BilinForm.polar_toQuadraticForm /-
+theorem LinearMap.BilinForm.polar_toQuadraticForm (x y : M) :
+    polar (fun x => B x x) x y = B x y + B y x := by
   simp only [add_assoc, add_sub_cancel', add_right, polar, add_left_inj, add_neg_cancel_left,
     add_left, sub_eq_add_neg _ (B y y), add_comm (B y x) _]
-#align bilin_form.polar_to_quadratic_form BilinForm.polar_toQuadraticForm
+#align bilin_form.polar_to_quadratic_form LinearMap.BilinForm.polar_toQuadraticForm
 -/
 
-#print BilinForm.toQuadraticForm_neg /-
+#print LinearMap.BilinForm.toQuadraticForm_neg /-
 @[simp]
-theorem toQuadraticForm_neg (B : BilinForm R M) : (-B).toQuadraticForm = -B.toQuadraticForm :=
+theorem LinearMap.BilinForm.toQuadraticForm_neg (B : BilinForm R M) :
+    (-B).toQuadraticForm = -B.toQuadraticForm :=
   rfl
-#align bilin_form.to_quadratic_form_neg BilinForm.toQuadraticForm_neg
+#align bilin_form.to_quadratic_form_neg LinearMap.BilinForm.toQuadraticForm_neg
 -/
 
-#print BilinForm.toQuadraticForm_sub /-
+#print LinearMap.BilinForm.toQuadraticForm_sub /-
 @[simp]
-theorem toQuadraticForm_sub (B₁ B₂ : BilinForm R M) :
+theorem LinearMap.BilinForm.toQuadraticForm_sub (B₁ B₂ : BilinForm R M) :
     (B₁ - B₂).toQuadraticForm = B₁.toQuadraticForm - B₂.toQuadraticForm :=
   rfl
-#align bilin_form.to_quadratic_form_sub BilinForm.toQuadraticForm_sub
+#align bilin_form.to_quadratic_form_sub LinearMap.BilinForm.toQuadraticForm_sub
 -/
 
 end Ring
@@ -987,7 +992,8 @@ theorem toQuadraticForm_associated : (associatedHom S Q).toQuadraticForm = Q :=
 -- note: usually `right_inverse` lemmas are named the other way around, but this is consistent
 -- with historical naming in this file.
 theorem associated_rightInverse :
-    Function.RightInverse (associatedHom S) (BilinForm.toQuadraticForm : _ → QuadraticForm R M) :=
+    Function.RightInverse (associatedHom S)
+      (LinearMap.BilinForm.toQuadraticForm : _ → QuadraticForm R M) :=
   fun Q => toQuadraticForm_associated S Q
 #align quadratic_form.associated_right_inverse QuadraticForm.associated_rightInverse
 -/
@@ -1099,16 +1105,16 @@ section Ring
 
 variable [Ring R] [AddCommGroup M] [Module R M]
 
-#print QuadraticForm.nondegenerate_of_anisotropic /-
+#print QuadraticForm.separatingLeft_of_anisotropic /-
 /-- The associated bilinear form of an anisotropic quadratic form is nondegenerate. -/
-theorem nondegenerate_of_anisotropic [Invertible (2 : R)] (Q : QuadraticForm R M)
+theorem separatingLeft_of_anisotropic [Invertible (2 : R)] (Q : QuadraticForm R M)
     (hB : Q.Anisotropic) : Q.associated'.Nondegenerate :=
   by
   intro x hx
   refine' hB _ _
   rw [← hx x]
   exact (associated_eq_self_apply _ _ x).symm
-#align quadratic_form.nondegenerate_of_anisotropic QuadraticForm.nondegenerate_of_anisotropic
+#align quadratic_form.nondegenerate_of_anisotropic QuadraticForm.separatingLeft_of_anisotropic
 -/
 
 end Ring
@@ -1290,28 +1296,28 @@ section Semiring
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-#print BilinForm.nondegenerate_of_anisotropic /-
+#print LinearMap.BilinForm.separatingLeft_of_anisotropic /-
 /-- A bilinear form is nondegenerate if the quadratic form it is associated with is anisotropic. -/
-theorem nondegenerate_of_anisotropic {B : BilinForm R M} (hB : B.toQuadraticForm.Anisotropic) :
-    B.Nondegenerate := fun x hx => hB _ (hx x)
-#align bilin_form.nondegenerate_of_anisotropic BilinForm.nondegenerate_of_anisotropic
+theorem LinearMap.BilinForm.separatingLeft_of_anisotropic {B : BilinForm R M}
+    (hB : B.toQuadraticForm.Anisotropic) : B.Nondegenerate := fun x hx => hB _ (hx x)
+#align bilin_form.nondegenerate_of_anisotropic LinearMap.BilinForm.separatingLeft_of_anisotropic
 -/
 
 end Semiring
 
 variable [Ring R] [AddCommGroup M] [Module R M]
 
-#print BilinForm.exists_bilinForm_self_ne_zero /-
+#print LinearMap.BilinForm.exists_bilinForm_self_ne_zero /-
 /-- There exists a non-null vector with respect to any symmetric, nonzero bilinear form `B`
 on a module `M` over a ring `R` with invertible `2`, i.e. there exists some
 `x : M` such that `B x x ≠ 0`. -/
-theorem exists_bilinForm_self_ne_zero [htwo : Invertible (2 : R)] {B : BilinForm R M} (hB₁ : B ≠ 0)
-    (hB₂ : B.IsSymm) : ∃ x, ¬B.IsOrtho x x :=
+theorem LinearMap.BilinForm.exists_bilinForm_self_ne_zero [htwo : Invertible (2 : R)]
+    {B : BilinForm R M} (hB₁ : B ≠ 0) (hB₂ : B.IsSymm) : ∃ x, ¬B.IsOrtho x x :=
   by
   lift B to QuadraticForm R M using hB₂ with Q
   obtain ⟨x, hx⟩ := QuadraticForm.exists_quadraticForm_ne_zero hB₁
   exact ⟨x, fun h => hx (Q.associated_eq_self_apply ℕ x ▸ h)⟩
-#align bilin_form.exists_bilin_form_self_ne_zero BilinForm.exists_bilinForm_self_ne_zero
+#align bilin_form.exists_bilin_form_self_ne_zero LinearMap.BilinForm.exists_bilinForm_self_ne_zero
 -/
 
 open FiniteDimensional
@@ -1320,11 +1326,11 @@ variable {V : Type u} {K : Type v} [Field K] [AddCommGroup V] [Module K V]
 
 variable [FiniteDimensional K V]
 
-#print BilinForm.exists_orthogonal_basis /-
+#print LinearMap.BilinForm.exists_orthogonal_basis /-
 /-- Given a symmetric bilinear form `B` on some vector space `V` over a field `K`
 in which `2` is invertible, there exists an orthogonal basis with respect to `B`. -/
-theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (hB₂ : B.IsSymm) :
-    ∃ v : Basis (Fin (finrank K V)) K V, B.IsOrthoᵢ v :=
+theorem LinearMap.BilinForm.exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V}
+    (hB₂ : B.IsSymm) : ∃ v : Basis (Fin (finrank K V)) K V, B.IsOrthoᵢ v :=
   by
   induction' hd : finrank K V with d ih generalizing V
   · exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
@@ -1366,7 +1372,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
       exact (v' j).Prop _ (Submodule.mem_span_singleton_self x)
     · exact (v' i).Prop _ (Submodule.mem_span_singleton_self x)
     · exact hv₁ (ne_of_apply_ne _ hij)
-#align bilin_form.exists_orthogonal_basis BilinForm.exists_orthogonal_basis
+#align bilin_form.exists_orthogonal_basis LinearMap.BilinForm.exists_orthogonal_basis
 -/
 
 end BilinForm

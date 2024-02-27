@@ -493,18 +493,19 @@ theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of _ 0 (a ^ n) = of _ 0 a ^ n
 instance : NatCast (A 0) :=
   ⟨GSemiring.natCast⟩
 
-#print DirectSum.ofNatCast /-
+#print DirectSum.of_natCast /-
 @[simp]
-theorem ofNatCast (n : ℕ) : of A 0 n = n :=
+theorem of_natCast (n : ℕ) : of A 0 n = n :=
   rfl
-#align direct_sum.of_nat_cast DirectSum.ofNatCast
+#align direct_sum.of_nat_cast DirectSum.of_natCast
 -/
 
 #print DirectSum.GradeZero.semiring /-
 /-- The `semiring` structure derived from `gsemiring A`. -/
 instance GradeZero.semiring : Semiring (A 0) :=
   Function.Injective.semiring (of A 0) DFinsupp.single_injective (of A 0).map_zero (of_zero_one A)
-    (of A 0).map_add (of_zero_mul A) (of A 0).map_nsmul (fun x n => of_zero_pow _ _ _) (ofNatCast A)
+    (of A 0).map_add (of_zero_mul A) (of A 0).map_nsmul (fun x n => of_zero_pow _ _ _)
+    (of_natCast A)
 #align direct_sum.grade_zero.semiring DirectSum.GradeZero.semiring
 -/
 
@@ -538,7 +539,7 @@ variable [∀ i, AddCommMonoid (A i)] [AddCommMonoid ι] [GCommSemiring A]
 instance GradeZero.commSemiring : CommSemiring (A 0) :=
   Function.Injective.commSemiring (of A 0) DFinsupp.single_injective (of A 0).map_zero
     (of_zero_one A) (of A 0).map_add (of_zero_mul A) (fun x n => DFinsupp.single_smul n x)
-    (fun x n => of_zero_pow _ _ _) (ofNatCast A)
+    (fun x n => of_zero_pow _ _ _) (of_natCast A)
 #align direct_sum.grade_zero.comm_semiring DirectSum.GradeZero.commSemiring
 -/
 
@@ -571,11 +572,11 @@ variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [GRing A]
 instance : IntCast (A 0) :=
   ⟨GRing.intCast⟩
 
-#print DirectSum.ofIntCast /-
+#print DirectSum.of_intCast /-
 @[simp]
-theorem ofIntCast (n : ℤ) : of A 0 n = n :=
+theorem of_intCast (n : ℤ) : of A 0 n = n :=
   rfl
-#align direct_sum.of_int_cast DirectSum.ofIntCast
+#align direct_sum.of_int_cast DirectSum.of_intCast
 -/
 
 #print DirectSum.GradeZero.ring /-
@@ -589,7 +590,7 @@ instance GradeZero.ring : Ring (A 0) :=
     (fun x n =>
       letI : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
       DFinsupp.single_smul n x)
-    (fun x n => of_zero_pow _ _ _) (ofNatCast A) (ofIntCast A)
+    (fun x n => of_zero_pow _ _ _) (of_natCast A) (of_intCast A)
 #align direct_sum.grade_zero.ring DirectSum.GradeZero.ring
 -/
 
@@ -610,7 +611,7 @@ instance GradeZero.commRing : CommRing (A 0) :=
     (fun x n =>
       letI : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
       DFinsupp.single_smul n x)
-    (fun x n => of_zero_pow _ _ _) (ofNatCast A) (ofIntCast A)
+    (fun x n => of_zero_pow _ _ _) (of_natCast A) (of_intCast A)
 #align direct_sum.grade_zero.comm_ring DirectSum.GradeZero.commRing
 -/
 

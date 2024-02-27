@@ -50,14 +50,14 @@ theorem join_concat (L : List (List α)) (l : List α) : join (L.push l) = join 
 #align list.join_concat List.join_concat
 -/
 
-#print List.join_filter_isEmpty_eq_false /-
+#print List.join_filter_not_isEmpty /-
 @[simp]
-theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty = false] :
+theorem join_filter_not_isEmpty [DecidablePred fun l : List α => l.Empty = false] :
     ∀ {L : List (List α)}, join (L.filterₓ fun l => l.Empty = false) = L.join
   | [] => rfl
   | [] :: L => by simp [@join_filter_empty_eq_ff L]
   | (a :: l) :: L => by simp [@join_filter_empty_eq_ff L]
-#align list.join_filter_empty_eq_ff List.join_filter_isEmpty_eq_false
+#align list.join_filter_empty_eq_ff List.join_filter_not_isEmpty
 -/
 
 #print List.join_filter_ne_nil /-
