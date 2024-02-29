@@ -450,7 +450,7 @@ theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ (-(k :
   obtain ⟨k, hk⟩ := exists_nat_gt ε⁻¹
   use k
   rw [← inv_lt_inv hε (_root_.zpow_pos_of_pos _ _)]
-  · rw [zpow_neg, inv_inv, zpow_ofNat]
+  · rw [zpow_neg, inv_inv, zpow_coe_nat]
     apply lt_of_lt_of_le hk
     norm_cast
     apply le_of_lt
@@ -667,7 +667,7 @@ theorem unitCoeff_spec {x : ℤ_[p]} (hx : x ≠ 0) :
     · simp
     · exact_mod_cast hp.1.NeZero
   convert repr using 2
-  rw [← zpow_ofNat, Int.natAbs_of_nonneg (valuation_nonneg x)]
+  rw [← zpow_coe_nat, Int.natAbs_of_nonneg (valuation_nonneg x)]
 #align padic_int.unit_coeff_spec PadicInt.unitCoeff_spec
 -/
 
@@ -684,7 +684,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
   by
   rw [norm_eq_pow_val hx]
   lift x.valuation to ℕ using x.valuation_nonneg with k hk
-  simp only [Int.ofNat_le, zpow_neg, zpow_ofNat]
+  simp only [Int.ofNat_le, zpow_neg, zpow_coe_nat]
   have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by apply pow_pos; exact_mod_cast hp.1.Pos
   rw [inv_le_inv (aux _) (aux _)]
   have : p ^ n ≤ p ^ k ↔ n ≤ k := (pow_right_strictMono hp.1.one_lt).le_iff_le
@@ -719,7 +719,7 @@ theorem norm_le_pow_iff_mem_span_pow (x : ℤ_[p]) (n : ℕ) :
   by
   by_cases hx : x = 0
   · subst hx
-    simp only [norm_zero, zpow_neg, zpow_ofNat, inv_nonneg, iff_true_iff, Submodule.zero_mem]
+    simp only [norm_zero, zpow_neg, zpow_coe_nat, inv_nonneg, iff_true_iff, Submodule.zero_mem]
     exact_mod_cast Nat.zero_le _
   rw [norm_le_pow_iff_le_valuation x hx, mem_span_pow_iff_le_valuation x hx]
 #align padic_int.norm_le_pow_iff_mem_span_pow PadicInt.norm_le_pow_iff_mem_span_pow

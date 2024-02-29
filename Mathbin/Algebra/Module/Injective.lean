@@ -113,15 +113,13 @@ variable {R Q} {M N : Type max u v} [AddCommGroup M] [AddCommGroup N]
 
 variable [Module R M] [Module R N] (i : M →ₗ[R] N) (f : M →ₗ[R] Q)
 
-#print Module.Baer.ExtensionOf /-
 /-- If we view `M` as a submodule of `N` via the injective linear map `i : M ↪ N`, then a submodule
 between `M` and `N` is a submodule `N'` of `N`. To prove Baer's criterion, we need to consider
 pairs of `(N', f')` such that `M ≤ N' ≤ N` and `f'` extends `f`. -/
 structure ExtensionOf extends LinearPMap R N Q where
   le : i.range ≤ domain
   is_extension : ∀ m : M, f m = to_linear_pmap ⟨i m, le ⟨m, rfl⟩⟩
-#align module.Baer.extension_of Module.Baer.ExtensionOf
--/
+#align module.Baer.extension_of Module.Baer.ExtensionOfₓ
 
 section Ext
 

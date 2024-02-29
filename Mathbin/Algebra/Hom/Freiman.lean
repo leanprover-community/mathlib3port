@@ -466,8 +466,8 @@ instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
         map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
           rw [prod_map_zpow, prod_map_zpow, map_prod_eq_map_prod f hsA htA hs ht h] }
     zpow_zero' := fun f => by ext x; exact zpow_zero _
-    zpow_succ' := fun n f => by ext x; simp_rw [zpow_ofNat, pow_succ, mul_apply, coe_mk]
-    zpow_neg' := fun n f => by ext x; simp_rw [zpow_negSucc, zpow_ofNat]; rfl }
+    zpow_succ' := fun n f => by ext x; simp_rw [zpow_coe_nat, pow_succ, mul_apply, coe_mk]
+    zpow_neg' := fun n f => by ext x; simp_rw [zpow_negSucc, zpow_coe_nat]; rfl }
 
 end FreimanHom
 

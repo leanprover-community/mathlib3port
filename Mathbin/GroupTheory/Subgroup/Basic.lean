@@ -155,7 +155,7 @@ theorem div_mem {x y : M} (hx : x ∈ H) (hy : y ∈ H) : x / y ∈ H := by
 #print zpow_mem /-
 @[to_additive]
 theorem zpow_mem {x : M} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
-  | (n : ℕ) => by rw [zpow_ofNat]; exact pow_mem hx n
+  | (n : ℕ) => by rw [zpow_coe_nat]; exact pow_mem hx n
   | -[n+1] => by rw [zpow_negSucc]; exact inv_mem (pow_mem hx n.succ)
 #align zpow_mem zpow_mem
 #align zsmul_mem zsmul_mem

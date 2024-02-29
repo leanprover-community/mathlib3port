@@ -1019,32 +1019,32 @@ theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
 #align zero_zsmul zero_zsmul
 -/
 
-#print zpow_ofNat /-
+#print zpow_coe_nat /-
 @[simp, norm_cast, to_additive coe_nat_zsmul]
-theorem zpow_ofNat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
+theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
   | 0 => (zpow_zero _).trans (pow_zero _).symm
   | n + 1 =>
     calc
       a ^ (↑(n + 1) : ℤ) = a * a ^ (n : ℤ) := DivInvMonoid.zpow_succ' _ _
-      _ = a * a ^ n := (congr_arg ((· * ·) a) (zpow_ofNat n))
+      _ = a * a ^ n := (congr_arg ((· * ·) a) (zpow_coe_nat n))
       _ = a ^ (n + 1) := (pow_succ _ _).symm
-#align zpow_coe_nat zpow_ofNat
-#align of_nat_zsmul ofNat_zsmul
+#align zpow_coe_nat zpow_coe_nat
+#align coe_nat_zsmul coe_nat_zsmul
 -/
 
-/- warning: zpow_of_nat clashes with zpow_coe_nat -> zpow_ofNat
-Case conversion may be inaccurate. Consider using '#align zpow_of_nat zpow_ofNatₓ'. -/
-#print zpow_ofNat /-
-@[to_additive ofNat_zsmul]
-theorem zpow_ofNat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
-  zpow_ofNat a n
-#align zpow_of_nat zpow_ofNat
-#align of_nat_zsmul ofNat_zsmul
+/- warning: zpow_of_nat clashes with zpow_coe_nat -> zpow_coe_nat
+Case conversion may be inaccurate. Consider using '#align zpow_of_nat zpow_coe_natₓ'. -/
+#print zpow_coe_nat /-
+@[to_additive coe_nat_zsmul]
+theorem zpow_coe_nat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
+  zpow_coe_nat a n
+#align zpow_of_nat zpow_coe_nat
+#align coe_nat_zsmul coe_nat_zsmul
 -/
 
 #print zpow_negSucc /-
 @[simp, to_additive]
-theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by rw [← zpow_ofNat];
+theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by rw [← zpow_coe_nat];
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_negSucc
 #align zsmul_neg_succ_of_nat negSucc_zsmul

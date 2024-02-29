@@ -832,8 +832,8 @@ theorem NormedSpace.exp_zsmul (z : ℤ) (x : 𝔸) :
     NormedSpace.exp 𝕂 (z • x) = NormedSpace.exp 𝕂 x ^ z :=
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_ofNat, coe_nat_zsmul, NormedSpace.exp_nsmul]
-  · rw [zpow_neg, zpow_ofNat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul, NormedSpace.exp_nsmul]
+  · rw [zpow_coe_nat, coe_nat_zsmul, NormedSpace.exp_nsmul]
+  · rw [zpow_neg, zpow_coe_nat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul, NormedSpace.exp_nsmul]
 #align exp_zsmul NormedSpace.exp_zsmul
 -/
 

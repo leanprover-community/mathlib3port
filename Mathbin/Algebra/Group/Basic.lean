@@ -1159,7 +1159,7 @@ theorem leftInverse_inv_mul_mul_right (c : G) :
 theorem exists_pow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : x ^ n = 1) :
     ∃ n : ℕ, 0 < n ∧ x ^ n = 1 := by
   cases' n with n n
-  · rw [zpow_ofNat] at h 
+  · rw [zpow_coe_nat] at h 
     refine' ⟨n, Nat.pos_of_ne_zero fun n0 => hn _, h⟩; rw [n0]; rfl
   · rw [zpow_negSucc, inv_eq_one] at h 
     refine' ⟨n + 1, n.succ_pos, h⟩

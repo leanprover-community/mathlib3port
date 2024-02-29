@@ -263,10 +263,10 @@ theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) :
     NormedSpace.exp 𝕂 (z • A) = NormedSpace.exp 𝕂 A ^ z :=
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_ofNat, coe_nat_zsmul, NormedSpace.exp_nsmul]
+  · rw [zpow_coe_nat, coe_nat_zsmul, NormedSpace.exp_nsmul]
   · have : IsUnit (NormedSpace.exp 𝕂 A).det :=
       (Matrix.isUnit_iff_isUnit_det _).mp (NormedSpace.isUnit_exp _ _)
-    rw [Matrix.zpow_neg this, zpow_ofNat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul,
+    rw [Matrix.zpow_neg this, zpow_coe_nat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul,
       NormedSpace.exp_nsmul]
 #align matrix.exp_zsmul Matrix.exp_zsmul
 -/

@@ -676,8 +676,8 @@ theorem isOfFinOrder_inv_iff {x : G} : IsOfFinOrder x⁻¹ ↔ IsOfFinOrder x :=
 theorem orderOf_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 :=
   by
   rcases Int.eq_nat_or_neg i with ⟨i, rfl | rfl⟩
-  · rw [Int.coe_nat_dvd, orderOf_dvd_iff_pow_eq_one, zpow_ofNat]
-  · rw [dvd_neg, Int.coe_nat_dvd, zpow_neg, inv_eq_one, zpow_ofNat, orderOf_dvd_iff_pow_eq_one]
+  · rw [Int.coe_nat_dvd, orderOf_dvd_iff_pow_eq_one, zpow_coe_nat]
+  · rw [dvd_neg, Int.coe_nat_dvd, zpow_neg, inv_eq_one, zpow_coe_nat, orderOf_dvd_iff_pow_eq_one]
 #align order_of_dvd_iff_zpow_eq_one orderOf_dvd_iff_zpow_eq_one
 #align add_order_of_dvd_iff_zsmul_eq_zero addOrderOf_dvd_iff_zsmul_eq_zero
 -/
@@ -741,7 +741,7 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
 theorem zpow_pow_orderOf : (x ^ i) ^ orderOf x = 1 :=
   by
   by_cases h : IsOfFinOrder x
-  · rw [← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat, pow_orderOf_eq_one, one_zpow]
+  · rw [← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat, pow_orderOf_eq_one, one_zpow]
   · rw [orderOf_eq_zero h, pow_zero]
 #align zpow_pow_order_of zpow_pow_orderOf
 #align zsmul_smul_order_of zsmul_smul_addOrderOf
@@ -989,7 +989,7 @@ theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ) (H : i ≠ 0), x ^
   by
   rcases isOfFinOrder_of_finite x with ⟨w, hw1, hw2⟩
   refine' ⟨w, int.coe_nat_ne_zero.mpr (ne_of_gt hw1), _⟩
-  rw [zpow_ofNat]
+  rw [zpow_coe_nat]
   exact (isPeriodicPt_mul_iff_pow_eq_one _).mp hw2
 #align exists_zpow_eq_one exists_zpow_eq_one
 #align exists_zsmul_eq_zero exists_zsmul_eq_zero
@@ -1002,7 +1002,7 @@ open Subgroup
 theorem mem_powers_iff_mem_zpowers [Finite G] : y ∈ Submonoid.powers x ↔ y ∈ zpowers x :=
   ⟨fun ⟨n, hn⟩ => ⟨n, by simp_all⟩, fun ⟨i, hi⟩ =>
     ⟨(i % orderOf x).natAbs, by
-      rwa [← zpow_ofNat,
+      rwa [← zpow_coe_nat,
         Int.natAbs_of_nonneg (Int.emod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (orderOf_pos x))), ←
         zpow_mod_orderOf]⟩⟩
 #align mem_powers_iff_mem_zpowers mem_powers_iff_mem_zpowers
@@ -1078,7 +1078,7 @@ noncomputable def finEquivZPowers [Finite G] (x : G) :
 #print finEquivZPowers_apply /-
 @[simp, to_additive finEquivZMultiples_apply]
 theorem finEquivZPowers_apply [Finite G] {n : Fin (orderOf x)} :
-    finEquivZPowers x n = ⟨x ^ (n : ℕ), n, zpow_ofNat x n⟩ :=
+    finEquivZPowers x n = ⟨x ^ (n : ℕ), n, zpow_coe_nat x n⟩ :=
   rfl
 #align fin_equiv_zpowers_apply finEquivZPowers_apply
 #align fin_equiv_zmultiples_apply finEquivZMultiples_apply
@@ -1110,7 +1110,7 @@ noncomputable def zpowersEquivZPowers [Finite G] (h : orderOf x = orderOf y) :
 #print zpowersEquivZPowers_apply /-
 @[simp, to_additive zmultiples_equiv_zmultiples_apply]
 theorem zpowersEquivZPowers_apply [Finite G] (h : orderOf x = orderOf y) (n : ℕ) :
-    zpowersEquivZPowers h ⟨x ^ n, n, zpow_ofNat x n⟩ = ⟨y ^ n, n, zpow_ofNat y n⟩ :=
+    zpowersEquivZPowers h ⟨x ^ n, n, zpow_coe_nat x n⟩ = ⟨y ^ n, n, zpow_coe_nat y n⟩ :=
   by
   rw [zpowersEquivZPowers, Equiv.trans_apply, Equiv.trans_apply, finEquivZPowers_symm_apply, ←
     Equiv.eq_symm_apply, finEquivZPowers_symm_apply]
@@ -1218,12 +1218,12 @@ noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).Coprime n)
   invFun g := g ^ (Nat.card G).gcdB n
   left_inv g := by
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
-    rwa [zpow_add, zpow_mul, zpow_mul, zpow_ofNat, zpow_ofNat, zpow_ofNat, h.gcd_eq_one, pow_one,
-      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key 
+    rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one,
+      pow_one, pow_card_eq_one', one_zpow, one_mul, eq_comm] at key 
   right_inv g := by
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
-    rwa [zpow_add, zpow_mul, zpow_mul', zpow_ofNat, zpow_ofNat, zpow_ofNat, h.gcd_eq_one, pow_one,
-      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key 
+    rwa [zpow_add, zpow_mul, zpow_mul', zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one,
+      pow_one, pow_card_eq_one', one_zpow, one_mul, eq_comm] at key 
 #align pow_coprime powCoprime
 #align nsmul_coprime nsmulCoprime
 -/

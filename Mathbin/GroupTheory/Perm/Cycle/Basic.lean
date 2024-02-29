@@ -212,14 +212,14 @@ theorem sameCycle_zpow_right {n : ℤ} : SameCycle f x ((f ^ n) y) ↔ SameCycle
 #print Equiv.Perm.sameCycle_pow_left /-
 @[simp]
 theorem sameCycle_pow_left {n : ℕ} : SameCycle f ((f ^ n) x) y ↔ SameCycle f x y := by
-  rw [← zpow_ofNat, same_cycle_zpow_left]
+  rw [← zpow_coe_nat, same_cycle_zpow_left]
 #align equiv.perm.same_cycle_pow_left Equiv.Perm.sameCycle_pow_left
 -/
 
 #print Equiv.Perm.sameCycle_pow_right /-
 @[simp]
 theorem sameCycle_pow_right {n : ℕ} : SameCycle f x ((f ^ n) y) ↔ SameCycle f x y := by
-  rw [← zpow_ofNat, same_cycle_zpow_right]
+  rw [← zpow_coe_nat, same_cycle_zpow_right]
 #align equiv.perm.same_cycle_pow_right Equiv.Perm.sameCycle_pow_right
 -/
 
@@ -297,7 +297,7 @@ theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < order
   use(k % orderOf f).natAbs
   have h₀ := int.coe_nat_pos.mpr (orderOf_pos f)
   have h₁ := Int.emod_nonneg k h₀.ne'
-  rw [← zpow_ofNat, Int.natAbs_of_nonneg h₁, ← zpow_mod_orderOf]
+  rw [← zpow_coe_nat, Int.natAbs_of_nonneg h₁, ← zpow_mod_orderOf]
   refine' ⟨_, rfl⟩
   rw [← Int.ofNat_lt, Int.natAbs_of_nonneg h₁]
   exact Int.emod_lt_of_pos _ h₀
@@ -328,7 +328,7 @@ instance [Fintype α] [DecidableEq α] (f : Perm α) : DecidableRel (SameCycle f
               simp [orderOf_le_card_univ]
             infer_instance),
         by
-        rw [← zpow_ofNat,
+        rw [← zpow_coe_nat,
           Int.natAbs_of_nonneg
             (Int.emod_nonneg _ <| Int.coe_nat_ne_zero_iff_pos.2 <| orderOf_pos _),
           ← zpow_mod_orderOf, hi]
@@ -444,7 +444,7 @@ theorem IsCycle.exists_pow_eq (hf : IsCycle f) (hx : f x ≠ x) (hy : f y ≠ y)
     ⟨(n % orderOf f).toNat,
       by
       have := n.mod_nonneg (int.coe_nat_ne_zero.mpr (ne_of_gt (orderOf_pos f)))
-      rwa [← zpow_ofNat, Int.toNat_of_nonneg this, ← zpow_mod_orderOf]⟩
+      rwa [← zpow_coe_nat, Int.toNat_of_nonneg this, ← zpow_mod_orderOf]⟩
 #align equiv.perm.is_cycle.exists_pow_eq Equiv.Perm.IsCycle.exists_pow_eq
 -/
 
@@ -583,8 +583,8 @@ theorem isCycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
       let ⟨i, hi⟩ :=
         isCycle_swap_mul_aux₁ n hb
           (show (f⁻¹ ^ n) (f⁻¹ x) = f⁻¹ b by
-            rw [← zpow_ofNat, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_negSucc, ← inv_pow,
-              pow_succ', mul_assoc, mul_assoc, inv_mul_self, mul_one, zpow_ofNat, ← pow_succ', ←
+            rw [← zpow_coe_nat, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_negSucc, ← inv_pow,
+              pow_succ', mul_assoc, mul_assoc, inv_mul_self, mul_one, zpow_coe_nat, ← pow_succ', ←
               pow_succ])
       have h : (swap x (f⁻¹ x) * f⁻¹) (f x) = f⁻¹ x := by
         rw [mul_apply, inv_apply_self, swap_apply_left]
@@ -853,7 +853,7 @@ theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b :
     · refine' ⟨(f ^ a) x, mem_support.mp hfa, _⟩
       simp only [pow_sub _ hab, Equiv.Perm.coe_mul, Function.comp_apply, inv_apply_self, ← hx']
     · have h := @Equiv.Perm.zpow_apply_comm _ f 1 a x
-      simp only [zpow_one, zpow_ofNat] at h 
+      simp only [zpow_one, zpow_coe_nat] at h 
       rw [not_mem_support, h, Function.Injective.eq_iff (f ^ a).Injective] at hfa 
       contradiction
 #align equiv.perm.is_cycle.pow_eq_pow_iff Equiv.Perm.IsCycle.pow_eq_pow_iff
@@ -1076,10 +1076,10 @@ theorem IsCycleOn.exists_pow_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈
   obtain ⟨n, rfl⟩ := hf.2 ha hb
   obtain ⟨k, hk⟩ := (Int.mod_modEq n s.card).symm.Dvd
   refine' ⟨n.nat_mod s.card, Int.natMod_lt (nonempty.card_pos ⟨a, ha⟩).ne', _⟩
-  rw [← zpow_ofNat, Int.natMod,
+  rw [← zpow_coe_nat, Int.natMod,
     Int.toNat_of_nonneg (Int.emod_nonneg _ <| Nat.cast_ne_zero.2 (nonempty.card_pos ⟨a, ha⟩).ne'),
     sub_eq_iff_eq_add'.1 hk, zpow_add, zpow_mul]
-  simp only [zpow_ofNat, coe_mul, EmbeddingLike.apply_eq_iff_eq]
+  simp only [zpow_coe_nat, coe_mul, EmbeddingLike.apply_eq_iff_eq]
   exact is_fixed_pt.perm_zpow (hf.pow_card_apply ha) _
 #align equiv.perm.is_cycle_on.exists_pow_eq Equiv.Perm.IsCycleOn.exists_pow_eq
 -/
@@ -2185,7 +2185,7 @@ theorem Nodup.isCycleOn_formPerm (h : l.Nodup) : l.formPerm.IsCycleOn {a | a ∈
   rw [Set.mem_setOf, ← index_of_lt_length] at ha hb 
   rw [← index_of_nth_le ha, ← index_of_nth_le hb]
   refine' ⟨l.index_of b - l.index_of a, _⟩
-  simp only [sub_eq_neg_add, zpow_add, zpow_neg, Equiv.Perm.inv_eq_iff_eq, zpow_ofNat,
+  simp only [sub_eq_neg_add, zpow_add, zpow_neg, Equiv.Perm.inv_eq_iff_eq, zpow_coe_nat,
     Equiv.Perm.coe_mul, form_perm_pow_apply_nth_le _ h]
   rw [add_comm]
 #align list.nodup.is_cycle_on_form_perm List.Nodup.isCycleOn_formPerm

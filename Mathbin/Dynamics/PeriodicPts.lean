@@ -823,9 +823,9 @@ theorem zpow_smul_eq_iff_minimalPeriod_dvd {n : ℤ} :
     a ^ n • b = b ↔ (Function.minimalPeriod ((· • ·) a) b : ℤ) ∣ n :=
   by
   cases n
-  · rw [Int.ofNat_eq_coe, zpow_ofNat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
+  · rw [Int.ofNat_eq_coe, zpow_coe_nat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
   ·
-    rw [Int.negSucc_coe, zpow_neg, zpow_ofNat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
+    rw [Int.negSucc_coe, zpow_neg, zpow_coe_nat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
       pow_smul_eq_iff_minimal_period_dvd]
 #align mul_action.zpow_smul_eq_iff_minimal_period_dvd MulAction.zpow_smul_eq_iff_minimalPeriod_dvd
 #align add_action.zsmul_vadd_eq_iff_minimal_period_dvd AddAction.zsmul_vadd_eq_iff_minimalPeriod_dvd

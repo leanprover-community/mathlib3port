@@ -1367,7 +1367,7 @@ unsafe def prove_pow (a : expr) (na : ℚ) :
 end
 
 theorem zpow_pos {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c : α) (hb : b = b')
-    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_ofNat]
+    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_coe_nat]
 #align norm_num.zpow_pos NormNum.zpow_pos
 
 theorem zpow_neg {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b')

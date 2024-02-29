@@ -168,20 +168,21 @@ variable [DivisionMonoid α]
 -- and therefore the more "natural" choice of lemma, is reversed.
 @[to_additive mul_zsmul']
 theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
-  | (m : ℕ), (n : ℕ) => by rw [zpow_ofNat, zpow_ofNat, ← pow_mul, ← zpow_ofNat]; rfl
+  | (m : ℕ), (n : ℕ) => by rw [zpow_coe_nat, zpow_coe_nat, ← pow_mul, ← zpow_coe_nat]; rfl
   | (m : ℕ), -[n+1] =>
     by
-    rw [zpow_ofNat, zpow_negSucc, ← pow_mul, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ← zpow_ofNat]
+    rw [zpow_coe_nat, zpow_negSucc, ← pow_mul, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ←
+      zpow_coe_nat]
     rfl
   | -[m+1], (n : ℕ) =>
     by
-    rw [zpow_ofNat, zpow_negSucc, ← inv_pow, ← pow_mul, neg_succ_mul_coe_nat, zpow_neg, inv_pow,
-      inv_inj, ← zpow_ofNat]
+    rw [zpow_coe_nat, zpow_negSucc, ← inv_pow, ← pow_mul, neg_succ_mul_coe_nat, zpow_neg, inv_pow,
+      inv_inj, ← zpow_coe_nat]
     rfl
   | -[m+1], -[n+1] =>
     by
     rw [zpow_negSucc, zpow_negSucc, neg_succ_mul_neg_succ, inv_pow, inv_inv, ← pow_mul, ←
-      zpow_ofNat]
+      zpow_coe_nat]
     rfl
 #align zpow_mul zpow_mul
 #align mul_zsmul' mul_zsmul'
@@ -197,7 +198,7 @@ theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by rw [mul
 #print zpow_bit0 /-
 @[to_additive bit0_zsmul]
 theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
-  | (n : ℕ) => by simp only [zpow_ofNat, ← Int.ofNat_bit0, pow_bit0]
+  | (n : ℕ) => by simp only [zpow_coe_nat, ← Int.ofNat_bit0, pow_bit0]
   | -[n+1] => by
     simp [← mul_inv_rev, ← pow_bit0]; rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
     norm_cast
@@ -229,7 +230,7 @@ variable [Group G]
 #print zpow_add_one /-
 @[to_additive add_one_zsmul]
 theorem zpow_add_one (a : G) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
-  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_ofNat, pow_succ']
+  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
   | -[0+1] => by erw [zpow_zero, zpow_negSucc, pow_one, mul_left_inv]
   | -[n + 1+1] => by
     rw [zpow_negSucc, pow_succ, mul_inv_rev, inv_mul_cancel_right]
@@ -372,7 +373,7 @@ variable [OrderedCommGroup α] {m n : ℤ} {a b : α}
 theorem one_lt_zpow' (ha : 1 < a) {k : ℤ} (hk : (0 : ℤ) < k) : 1 < a ^ k :=
   by
   lift k to ℕ using Int.le_of_lt hk
-  rw [zpow_ofNat]
+  rw [zpow_coe_nat]
   exact one_lt_pow' ha (coe_nat_pos.mp hk).ne'
 #align one_lt_zpow' one_lt_zpow'
 #align zsmul_pos zsmul_pos
@@ -1229,7 +1230,7 @@ variable [Monoid M] [Group G] [Ring R]
 @[simp, to_additive]
 theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) :
     ∀ m : ℤ, SemiconjBy a ↑(x ^ m) ↑(y ^ m)
-  | (n : ℕ) => by simp only [zpow_ofNat, Units.val_pow_eq_pow_val, h, pow_right]
+  | (n : ℕ) => by simp only [zpow_coe_nat, Units.val_pow_eq_pow_val, h, pow_right]
   | -[n+1] => by simp only [zpow_negSucc, Units.val_pow_eq_pow_val, units_inv_right, h, pow_right]
 #align semiconj_by.units_zpow_right SemiconjBy.units_zpow_right
 #align add_semiconj_by.add_units_zsmul_right AddSemiconjBy.addUnits_zsmul_right

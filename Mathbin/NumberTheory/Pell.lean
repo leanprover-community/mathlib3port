@@ -378,7 +378,7 @@ theorem y_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) {n : ℤ}
 theorem x_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (n : ℤ) : 0 < (a ^ n).x :=
   by
   cases n
-  · rw [zpow_ofNat]
+  · rw [zpow_coe_nat]
     exact x_pow_pos hax n
   · rw [zpow_negSucc]
     exact x_pow_pos hax (n + 1)
@@ -393,7 +393,7 @@ theorem sign_y_zpow_eq_sign_of_x_pos_of_y_pos {a : Solution₁ d} (hax : 0 < a.x
   by
   rcases n with ((_ | _) | _)
   · rfl
-  · rw [zpow_ofNat]
+  · rw [zpow_coe_nat]
     exact Int.sign_eq_one_of_pos (y_pow_succ_pos hax hay n)
   · rw [zpow_negSucc]
     exact Int.sign_eq_neg_one_of_neg (neg_neg_of_pos (y_pow_succ_pos hax hay n))

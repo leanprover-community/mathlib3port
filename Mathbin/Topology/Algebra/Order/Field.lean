@@ -300,7 +300,7 @@ theorem Filter.Tendsto.inv_tendsto_zero (h : Tendsto f l (𝓝[>] 0)) : Tendsto 
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
 theorem tendsto_pow_neg_atTop {n : ℕ} (hn : n ≠ 0) :
     Tendsto (fun x : α => x ^ (-(n : ℤ))) atTop (𝓝 0) := by
-  simpa only [zpow_neg, zpow_ofNat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_atTop
+  simpa only [zpow_neg, zpow_coe_nat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_atTop
 #align tendsto_pow_neg_at_top tendsto_pow_neg_atTop
 -/
 
@@ -349,7 +349,7 @@ theorem tendsto_const_mul_zpow_atTop_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 0
   refine' ⟨fun h => _, fun h => _⟩
   · by_cases hn : 0 ≤ n
     · lift n to ℕ using hn
-      simp only [zpow_ofNat] at h 
+      simp only [zpow_coe_nat] at h 
       rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h 
       exact Or.inl h
     · rw [not_le] at hn 

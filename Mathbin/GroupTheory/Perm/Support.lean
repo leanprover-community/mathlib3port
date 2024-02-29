@@ -461,7 +461,7 @@ theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.support ↔ x
 theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.support ↔ x ∈ f.support :=
   by
   cases n
-  · rw [Int.ofNat_eq_coe, zpow_ofNat, pow_apply_mem_support]
+  · rw [Int.ofNat_eq_coe, zpow_coe_nat, pow_apply_mem_support]
   · rw [zpow_negSucc, ← support_inv, ← inv_pow, pow_apply_mem_support]
 #align equiv.perm.zpow_apply_mem_support Equiv.Perm.zpow_apply_mem_support
 -/

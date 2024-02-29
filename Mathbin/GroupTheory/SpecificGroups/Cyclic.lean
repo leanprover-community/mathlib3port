@@ -188,7 +188,7 @@ theorem Infinite.orderOf_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
   rw [zpow_mod_orderOf] at hk 
   have : 0 ≤ t := Int.emod_nonneg (-k) (by exact_mod_cast ho.ne')
   refine' ⟨t.to_nat, _⟩
-  rwa [← zpow_ofNat, Int.toNat_of_nonneg this]
+  rwa [← zpow_coe_nat, Int.toNat_of_nonneg this]
 #align infinite.order_of_eq_zero_of_forall_mem_zpowers Infinite.orderOf_eq_zero_of_forall_mem_zpowers
 #align infinite.add_order_of_eq_zero_of_forall_mem_zmultiples Infinite.addOrderOf_eq_zero_of_forall_mem_zmultiples
 -/
@@ -213,12 +213,12 @@ instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup 
       ⟨k.natAbs,
         Nat.pos_of_ne_zero fun h => hx₂ <| by rw [← hk, Int.eq_zero_of_natAbs_eq_zero h, zpow_zero],
         match k, hk with
-        | (k : ℕ), hk => by rw [Int.natAbs_ofNat, ← zpow_ofNat, hk] <;> exact hx₁
+        | (k : ℕ), hk => by rw [Int.natAbs_ofNat, ← zpow_coe_nat, hk] <;> exact hx₁
         | -[k+1], hk => by rw [Int.natAbs_of_negSucc, ← Subgroup.inv_mem_iff H] <;> simp_all⟩
     ⟨⟨⟨g ^ Nat.find hex, (Nat.find_spec hex).2⟩, fun ⟨x, hx⟩ =>
         let ⟨k, hk⟩ := hg x
         have hk₁ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ zpowers (g ^ Nat.find hex) :=
-          ⟨k / Nat.find hex, by rw [← zpow_ofNat, zpow_mul]⟩
+          ⟨k / Nat.find hex, by rw [← zpow_coe_nat, zpow_mul]⟩
         have hk₂ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ H := by rw [zpow_mul];
           apply H.zpow_mem; exact_mod_cast (Nat.find_spec hex).2
         have hk₃ : g ^ (k % Nat.find hex) ∈ H :=
@@ -227,7 +227,7 @@ instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup 
         have hk₄ : k % Nat.find hex = (k % Nat.find hex).natAbs := by
           rw [Int.natAbs_of_nonneg
               (Int.emod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_spec hex).1))]
-        have hk₅ : g ^ (k % Nat.find hex).natAbs ∈ H := by rwa [← zpow_ofNat, ← hk₄]
+        have hk₅ : g ^ (k % Nat.find hex).natAbs ∈ H := by rwa [← zpow_coe_nat, ← hk₄]
         have hk₆ : (k % (Nat.find hex : ℤ)).natAbs = 0 :=
           by_contradiction fun h =>
             Nat.find_min hex
@@ -273,7 +273,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
             by
             have hgmn : g ^ (m * Nat.gcd n (Fintype.card α)) = 1 := by
               rw [pow_mul, hm, ← pow_gcd_card_eq_one_iff] <;> exact (mem_filter.1 hx).2
-            rw [zpow_ofNat, ← pow_mul, Nat.mul_div_cancel_left', hm]
+            rw [zpow_coe_nat, ← pow_mul, Nat.mul_div_cancel_left', hm]
             refine' dvd_of_mul_dvd_mul_right (gcd_pos_of_pos_left (Fintype.card α) hn0) _
             conv_lhs =>
               rw [Nat.div_mul_cancel (Nat.gcd_dvd_right _ _), ←
@@ -351,7 +351,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
               mem_filter.2
                 ⟨mem_univ _, by
                   let ⟨i, hi⟩ := b.2
-                  rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
+                  rw [← hi, ← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat,
                     pow_orderOf_eq_one, one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.inj h))
       _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _)

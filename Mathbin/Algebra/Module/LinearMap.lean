@@ -1272,7 +1272,7 @@ instance Module.End.ring : Ring (Module.End R N₁) :=
   { Module.End.semiring,
     LinearMap.addCommGroup with
     intCast := fun z => z • 1
-    intCast_ofNat := ofNat_zsmul _
+    intCast_ofNat := coe_nat_zsmul _
     intCast_negSucc := negSucc_zsmul _ }
 #align module.End.ring Module.End.ring
 -/

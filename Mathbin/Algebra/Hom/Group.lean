@@ -490,7 +490,7 @@ attribute [to_additive_reorder 8, to_additive] map_pow
 @[to_additive]
 theorem map_zpow' [DivInvMonoid G] [DivInvMonoid H] [MonoidHomClass F G H] (f : F)
     (hf : ∀ x : G, f x⁻¹ = (f x)⁻¹) (a : G) : ∀ n : ℤ, f (a ^ n) = f a ^ n
-  | (n : ℕ) => by rw [zpow_ofNat, map_pow, zpow_ofNat]
+  | (n : ℕ) => by rw [zpow_coe_nat, map_pow, zpow_coe_nat]
   | -[n+1] => by rw [zpow_negSucc, hf, map_pow, ← zpow_negSucc]
 #align map_zpow' map_zpow'
 #align map_zsmul' map_zsmul'

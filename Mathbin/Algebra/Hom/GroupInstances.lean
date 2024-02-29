@@ -61,7 +61,7 @@ instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
         map_one' := by simp
         map_mul' := fun x y => by simp [mul_zpow] }
     zpow_zero' := fun f => by ext x; simp
-    zpow_succ' := fun n f => by ext x; simp [zpow_ofNat, pow_succ]
+    zpow_succ' := fun n f => by ext x; simp [zpow_coe_nat, pow_succ]
     zpow_neg' := fun n f => by ext x; simp }
 
 instance [AddCommMonoid M] : AddCommMonoid (AddMonoid.End M) :=
@@ -94,7 +94,7 @@ instance [AddCommGroup M] : Ring (AddMonoid.End M) :=
   { AddMonoid.End.semiring,
     AddMonoidHom.addCommGroup with
     intCast := fun z => z • 1
-    intCast_ofNat := ofNat_zsmul _
+    intCast_ofNat := coe_nat_zsmul _
     intCast_negSucc := negSucc_zsmul _ }
 
 #print AddMonoid.End.int_cast_apply /-

@@ -67,7 +67,7 @@ theorem Filter.tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) :
     Tendsto (fun x : 𝕜 => x ^ n) atTop atTop :=
   by
   lift n to ℕ using hn.le
-  simp only [zpow_ofNat]
+  simp only [zpow_coe_nat]
   exact tendsto_pow_at_top (nat.cast_pos.mp hn).ne'
 #align tendsto_zpow_at_top_at_top Filter.tendsto_zpow_atTop_atTop
 -/

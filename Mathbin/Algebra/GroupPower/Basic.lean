@@ -313,14 +313,15 @@ open Int
 
 #print zpow_one /-
 @[simp, to_additive one_zsmul]
-theorem zpow_one (a : G) : a ^ (1 : ℤ) = a := by convert pow_one a using 1; exact zpow_ofNat a 1
+theorem zpow_one (a : G) : a ^ (1 : ℤ) = a := by convert pow_one a using 1; exact zpow_coe_nat a 1
 #align zpow_one zpow_one
 #align one_zsmul one_zsmul
 -/
 
 #print zpow_two /-
 @[to_additive two_zsmul]
-theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by convert pow_two a using 1; exact zpow_ofNat a 2
+theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by convert pow_two a using 1;
+  exact zpow_coe_nat a 2
 #align zpow_two zpow_two
 #align two_zsmul two_zsmul
 -/
@@ -360,7 +361,7 @@ theorem inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
 -- the attributes are intentionally out of order. `smul_zero` proves `zsmul_zero`.
 @[to_additive zsmul_zero, simp]
 theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
-  | (n : ℕ) => by rw [zpow_ofNat, one_pow]
+  | (n : ℕ) => by rw [zpow_coe_nat, one_pow]
   | -[n+1] => by rw [zpow_negSucc, one_pow, inv_one]
 #align one_zpow one_zpow
 #align zsmul_zero zsmul_zero
@@ -371,7 +372,7 @@ theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
 theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ (-n) = (a ^ n)⁻¹
   | (n + 1 : ℕ) => DivInvMonoid.zpow_neg' _ _
   | 0 => by change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹; simp
-  | -[n+1] => by rw [zpow_negSucc, inv_inv, ← zpow_ofNat]; rfl
+  | -[n+1] => by rw [zpow_negSucc, inv_inv, ← zpow_coe_nat]; rfl
 #align zpow_neg zpow_neg
 #align neg_zsmul neg_zsmul
 -/
@@ -387,7 +388,7 @@ theorem mul_zpow_neg_one (a b : α) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ) * a 
 #print inv_zpow /-
 @[to_additive zsmul_neg]
 theorem inv_zpow (a : α) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
-  | (n : ℕ) => by rw [zpow_ofNat, zpow_ofNat, inv_pow]
+  | (n : ℕ) => by rw [zpow_coe_nat, zpow_coe_nat, inv_pow]
   | -[n+1] => by rw [zpow_negSucc, zpow_negSucc, inv_pow]
 #align inv_zpow inv_zpow
 #align zsmul_neg zsmul_neg
@@ -536,7 +537,7 @@ theorem ofMul_zpow [DivInvMonoid G] (x : G) (n : ℤ) :
 @[simp, to_additive]
 theorem SemiconjBy.zpow_right [Group G] {a x y : G} (h : SemiconjBy a x y) :
     ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
-  | (n : ℕ) => by simp [zpow_ofNat, h.pow_right n]
+  | (n : ℕ) => by simp [zpow_coe_nat, h.pow_right n]
   | -[n+1] => by simp [(h.pow_right n.succ).inv_right]
 #align semiconj_by.zpow_right SemiconjBy.zpow_right
 #align add_semiconj_by.zsmul_right AddSemiconjBy.zsmul_right

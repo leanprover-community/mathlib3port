@@ -77,7 +77,7 @@ theorem zpow_mem_zpowers (g : G) (k : ℤ) : g ^ k ∈ zpowers g :=
 #print Subgroup.npow_mem_zpowers /-
 @[simp]
 theorem npow_mem_zpowers (g : G) (k : ℕ) : g ^ k ∈ zpowers g :=
-  zpow_ofNat g k ▸ zpow_mem_zpowers g k
+  zpow_coe_nat g k ▸ zpow_mem_zpowers g k
 #align subgroup.npow_mem_zpowers Subgroup.npow_mem_zpowers
 -/
 

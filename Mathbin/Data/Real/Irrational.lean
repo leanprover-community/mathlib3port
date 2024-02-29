@@ -614,7 +614,7 @@ theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
 
 #print Irrational.of_zpow /-
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
-  | (n : ℕ) => fun h => by rw [zpow_ofNat] at h ; exact h.of_pow _
+  | (n : ℕ) => fun h => by rw [zpow_coe_nat] at h ; exact h.of_pow _
   | -[n+1] => fun h => by rw [zpow_negSucc] at h ; exact h.of_inv.of_pow _
 #align irrational.of_zpow Irrational.of_zpow
 -/

@@ -986,7 +986,7 @@ theorem norm_p_zpow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
 
 #print padicNormE.norm_p_pow /-
 @[simp]
-theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_ofNat]
+theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_coe_nat]
 #align padic_norm_e.norm_p_pow padicNormE.norm_p_pow
 -/
 
@@ -1049,7 +1049,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])�
       rw [padicNorm.eq_zpow_of_nonzero hnz', padicValRat, neg_sub,
         padicValNat.eq_zero_of_not_dvd hq]
       norm_cast
-      rw [zero_sub, zpow_neg, zpow_ofNat]
+      rw [zero_sub, zpow_neg, zpow_coe_nat]
       apply inv_le_one
       · norm_cast
         apply one_le_pow

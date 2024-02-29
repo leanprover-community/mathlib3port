@@ -155,7 +155,7 @@ theorem isCycle_finRotate {n : ℕ} : IsCycle (finRotate (n + 2)) :=
   refine' ⟨0, by decide, fun x hx' => ⟨x, _⟩⟩
   clear hx'
   cases' x with x hx
-  rw [coe_coe, zpow_ofNat, Fin.ext_iff, Fin.val_mk]
+  rw [coe_coe, zpow_coe_nat, Fin.ext_iff, Fin.val_mk]
   induction' x with x ih; · rfl
   rw [pow_succ, perm.mul_apply, coe_finRotate_of_ne_last, ih (lt_trans x.lt_succ_self hx)]
   rw [Ne.def, Fin.ext_iff, ih (lt_trans x.lt_succ_self hx), Fin.val_last]

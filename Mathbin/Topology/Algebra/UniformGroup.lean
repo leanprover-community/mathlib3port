@@ -157,7 +157,7 @@ theorem uniformContinuous_pow_const (n : ℕ) : UniformContinuous fun x : α => 
 @[to_additive UniformContinuous.const_zsmul]
 theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
     ∀ n : ℤ, UniformContinuous fun x => f x ^ n
-  | (n : ℕ) => by simp_rw [zpow_ofNat]; exact hf.pow_const _
+  | (n : ℕ) => by simp_rw [zpow_coe_nat]; exact hf.pow_const _
   | -[n+1] => by simp_rw [zpow_negSucc]; exact (hf.pow_const _).inv
 #align uniform_continuous.zpow_const UniformContinuous.zpow_const
 #align uniform_continuous.const_zsmul UniformContinuous.const_zsmul

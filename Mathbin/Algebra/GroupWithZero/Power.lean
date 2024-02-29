@@ -75,7 +75,7 @@ attribute [local ematch] le_of_lt
 
 #print zero_zpow /-
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
-  | (n : ℕ), h => by rw [zpow_ofNat, zero_pow]; simpa using h
+  | (n : ℕ), h => by rw [zpow_coe_nat, zero_pow]; simpa using h
   | -[n+1], h => by simp
 #align zero_zpow zero_zpow
 -/
@@ -91,11 +91,11 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 :=
 
 #print zpow_add_one₀ /-
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
-  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_ofNat, pow_succ']
+  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
   | -[0+1] => by erw [zpow_zero, zpow_negSucc, pow_one, inv_mul_cancel ha]
   | -[n + 1+1] => by
     rw [Int.negSucc_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.ofNat_succ,
-      zpow_ofNat, zpow_ofNat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha,
+      zpow_coe_nat, zpow_coe_nat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha,
       mul_one]
 #align zpow_add_one₀ zpow_add_one₀
 -/
@@ -193,7 +193,7 @@ theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a :=
 
 #print zpow_ne_zero_of_ne_zero /-
 theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
-  | (n : ℕ) => by rw [zpow_ofNat]; exact pow_ne_zero _ ha
+  | (n : ℕ) => by rw [zpow_coe_nat]; exact pow_ne_zero _ ha
   | -[n+1] => by rw [zpow_negSucc]; exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
 -/

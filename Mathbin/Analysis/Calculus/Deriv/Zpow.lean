@@ -52,9 +52,9 @@ theorem hasStrictDerivAt_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
     by
     intro m hm
     lift m to ℕ using le_of_lt hm
-    simp only [zpow_ofNat, Int.cast_ofNat]
+    simp only [zpow_coe_nat, Int.cast_ofNat]
     convert hasStrictDerivAt_pow _ _ using 2
-    rw [← Int.ofNat_one, ← Int.ofNat_sub, zpow_ofNat]
+    rw [← Int.ofNat_one, ← Int.ofNat_sub, zpow_coe_nat]
     norm_cast at hm 
     exact Nat.succ_le_of_lt hm
   rcases lt_trichotomy m 0 with (hm | hm | hm)
@@ -155,7 +155,7 @@ theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
 theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
     (deriv^[k]) (fun x : 𝕜 => x ^ n) x = (∏ i in Finset.range k, (n - i)) * x ^ (n - k) :=
   by
-  simp only [← zpow_ofNat, iter_deriv_zpow, Int.cast_ofNat]
+  simp only [← zpow_coe_nat, iter_deriv_zpow, Int.cast_ofNat]
   cases' le_or_lt k n with hkn hnk
   · rw [Int.ofNat_sub hkn]
   · have : ∏ i in Finset.range k, (n - i : 𝕜) = 0 :=
