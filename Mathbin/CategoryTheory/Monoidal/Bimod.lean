@@ -303,14 +303,14 @@ noncomputable def actLeft : R.pt ⊗ X P Q ⟶ X P Q :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bimod.TensorBimod.id_tensor_π_actLeft /-
-theorem id_tensor_π_actLeft :
+#print Bimod.TensorBimod.whiskerLeft_π_actLeft /-
+theorem whiskerLeft_π_actLeft :
     (𝟙 R.pt ⊗ coequalizer.π _ _) ≫ actLeft P Q =
       (α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 Q.pt) ≫ coequalizer.π _ _ :=
   by
   erw [map_π_preserves_coequalizer_inv_colim_map (tensor_left _)]
   simp only [category.assoc]
-#align Bimod.tensor_Bimod.id_tensor_π_act_left Bimod.TensorBimod.id_tensor_π_actLeft
+#align Bimod.tensor_Bimod.id_tensor_π_act_left Bimod.TensorBimod.whiskerLeft_π_actLeft
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -490,7 +490,6 @@ noncomputable def tensorBimod {X Y Z : Mon_ C} (M : Bimod X Y) (N : Bimod Y Z) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bimod.tensorHom /-
 /-- Tensor product of two morphisms of bimodule objects. -/
 @[simps]
 noncomputable def tensorHom {X Y Z : Mon_ C} {M₁ M₂ : Bimod X Y} {N₁ N₂ : Bimod Y Z} (f : M₁ ⟶ M₂)
@@ -528,9 +527,7 @@ noncomputable def tensorHom {X Y Z : Mon_ C} {M₁ M₂ : Bimod X Y} {N₁ N₂ 
     slice_rhs 1 2 => rw [associator_naturality]
     slice_rhs 2 3 => rw [← tensor_comp, category.comp_id]
 #align Bimod.tensor_hom Bimod.tensorHom
--/
 
-#print Bimod.tensor_id /-
 theorem tensor_id {X Y Z : Mon_ C} {M : Bimod X Y} {N : Bimod Y Z} :
     tensorHom (𝟙 M) (𝟙 N) = 𝟙 (M.tensorBimod N) :=
   by
@@ -539,9 +536,7 @@ theorem tensor_id {X Y Z : Mon_ C} {M : Bimod X Y} {N : Bimod Y Z} :
   dsimp; dsimp only [tensor_Bimod.X]
   simp only [category.id_comp, category.comp_id]
 #align Bimod.tensor_id Bimod.tensor_id
--/
 
-#print Bimod.tensor_comp /-
 theorem tensor_comp {X Y Z : Mon_ C} {M₁ M₂ M₃ : Bimod X Y} {N₁ N₂ N₃ : Bimod Y Z} (f₁ : M₁ ⟶ M₂)
     (f₂ : M₂ ⟶ M₃) (g₁ : N₁ ⟶ N₂) (g₂ : N₂ ⟶ N₃) :
     tensorHom (f₁ ≫ f₂) (g₁ ≫ g₂) = tensorHom f₁ g₁ ≫ tensorHom f₂ g₂ :=
@@ -550,7 +545,6 @@ theorem tensor_comp {X Y Z : Mon_ C} {M₁ M₂ M₃ : Bimod X Y} {N₁ N₂ N�
   simp only [comp_hom', tensor_comp, tensor_hom_hom, ι_colim_map, parallel_pair_hom_app_one,
     category.assoc, ι_colim_map_assoc]
 #align Bimod.tensor_comp Bimod.tensor_comp
--/
 
 end
 
@@ -958,18 +952,18 @@ noncomputable def rightUnitorBimod {X Y : Mon_ C} (M : Bimod X Y) : M.tensorBimo
 #align Bimod.right_unitor_Bimod Bimod.rightUnitorBimod
 -/
 
-#print Bimod.whisker_left_comp_bimod /-
-theorem whisker_left_comp_bimod {X Y Z : Mon_ C} (M : Bimod X Y) {N P Q : Bimod Y Z} (f : N ⟶ P)
+#print Bimod.whiskerLeft_comp_bimod /-
+theorem whiskerLeft_comp_bimod {X Y Z : Mon_ C} (M : Bimod X Y) {N P Q : Bimod Y Z} (f : N ⟶ P)
     (g : P ⟶ Q) : tensorHom (𝟙 M) (f ≫ g) = tensorHom (𝟙 M) f ≫ tensorHom (𝟙 M) g := by
   rw [← tensor_comp, category.comp_id]
-#align Bimod.whisker_left_comp_Bimod Bimod.whisker_left_comp_bimod
+#align Bimod.whisker_left_comp_Bimod Bimod.whiskerLeft_comp_bimod
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bimod.id_whisker_left_bimod /-
-theorem id_whisker_left_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
+#print Bimod.id_whiskerLeft_bimod /-
+theorem id_whiskerLeft_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
     tensorHom (𝟙 (regular X)) f = (leftUnitorBimod M).Hom ≫ f ≫ (leftUnitorBimod N).inv :=
   by
   dsimp [tensor_hom, regular, left_unitor_Bimod]
@@ -989,12 +983,12 @@ theorem id_whisker_left_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
     pure_coherence
   slice_rhs 2 4 => rw [this]
   slice_rhs 1 2 => rw [category.comp_id]
-#align Bimod.id_whisker_left_Bimod Bimod.id_whisker_left_bimod
+#align Bimod.id_whisker_left_Bimod Bimod.id_whiskerLeft_bimod
 -/
 
-#print Bimod.comp_whisker_left_bimod /-
-theorem comp_whisker_left_bimod {W X Y Z : Mon_ C} (M : Bimod W X) (N : Bimod X Y)
-    {P P' : Bimod Y Z} (f : P ⟶ P') :
+#print Bimod.comp_whiskerLeft_bimod /-
+theorem comp_whiskerLeft_bimod {W X Y Z : Mon_ C} (M : Bimod W X) (N : Bimod X Y) {P P' : Bimod Y Z}
+    (f : P ⟶ P') :
     tensorHom (𝟙 (M.tensorBimod N)) f =
       (associatorBimod M N P).Hom ≫
         tensorHom (𝟙 M) (tensorHom (𝟙 N) f) ≫ (associatorBimod M N P').inv :=
@@ -1019,20 +1013,20 @@ theorem comp_whisker_left_bimod {W X Y Z : Mon_ C} (M : Bimod W X) (N : Bimod X 
   slice_lhs 1 2 => rw [tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
   dsimp only [tensor_Bimod.X]
   simp only [category.assoc]
-#align Bimod.comp_whisker_left_Bimod Bimod.comp_whisker_left_bimod
+#align Bimod.comp_whisker_left_Bimod Bimod.comp_whiskerLeft_bimod
 -/
 
-#print Bimod.comp_whisker_right_bimod /-
-theorem comp_whisker_right_bimod {X Y Z : Mon_ C} {M N P : Bimod X Y} (f : M ⟶ N) (g : N ⟶ P)
+#print Bimod.comp_whiskerRight_bimod /-
+theorem comp_whiskerRight_bimod {X Y Z : Mon_ C} {M N P : Bimod X Y} (f : M ⟶ N) (g : N ⟶ P)
     (Q : Bimod Y Z) : tensorHom (f ≫ g) (𝟙 Q) = tensorHom f (𝟙 Q) ≫ tensorHom g (𝟙 Q) := by
   rw [← tensor_comp, category.comp_id]
-#align Bimod.comp_whisker_right_Bimod Bimod.comp_whisker_right_bimod
+#align Bimod.comp_whisker_right_Bimod Bimod.comp_whiskerRight_bimod
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bimod.whisker_right_id_bimod /-
-theorem whisker_right_id_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
+#print Bimod.whiskerRight_id_bimod /-
+theorem whiskerRight_id_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
     tensorHom f (𝟙 (regular Y)) = (rightUnitorBimod M).Hom ≫ f ≫ (rightUnitorBimod N).inv :=
   by
   dsimp [tensor_hom, regular, right_unitor_Bimod]
@@ -1051,11 +1045,11 @@ theorem whisker_right_id_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
     pure_coherence
   slice_rhs 2 4 => rw [this]
   slice_rhs 1 2 => rw [category.comp_id]
-#align Bimod.whisker_right_id_Bimod Bimod.whisker_right_id_bimod
+#align Bimod.whisker_right_id_Bimod Bimod.whiskerRight_id_bimod
 -/
 
-#print Bimod.whisker_right_comp_bimod /-
-theorem whisker_right_comp_bimod {W X Y Z : Mon_ C} {M M' : Bimod W X} (f : M ⟶ M') (N : Bimod X Y)
+#print Bimod.whiskerRight_comp_bimod /-
+theorem whiskerRight_comp_bimod {W X Y Z : Mon_ C} {M M' : Bimod W X} (f : M ⟶ M') (N : Bimod X Y)
     (P : Bimod Y Z) :
     tensorHom f (𝟙 (N.tensorBimod P)) =
       (associatorBimod M N P).inv ≫
@@ -1081,7 +1075,7 @@ theorem whisker_right_comp_bimod {W X Y Z : Mon_ C} {M M' : Bimod W X} (f : M �
   slice_lhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
   dsimp only [tensor_Bimod.X]
   simp only [category.assoc]
-#align Bimod.whisker_right_comp_Bimod Bimod.whisker_right_comp_bimod
+#align Bimod.whisker_right_comp_Bimod Bimod.whiskerRight_comp_bimod
 -/
 
 #print Bimod.whisker_assoc_bimod /-
@@ -1206,13 +1200,13 @@ noncomputable def monBicategory : Bicategory (Mon_ C)
   leftUnitor _ _ M := leftUnitorBimod M
   rightUnitor _ _ M := rightUnitorBimod M
   whiskerLeft_id _ _ _ _ _ := tensor_id
-  whiskerLeft_comp _ _ _ M _ _ _ f g := whisker_left_comp_bimod M f g
-  id_whiskerLeft _ _ _ _ f := id_whisker_left_bimod f
-  comp_whiskerLeft _ _ _ _ M N _ _ f := comp_whisker_left_bimod M N f
+  whiskerLeft_comp _ _ _ M _ _ _ f g := whiskerLeft_comp_bimod M f g
+  id_whiskerLeft _ _ _ _ f := id_whiskerLeft_bimod f
+  comp_whiskerLeft _ _ _ _ M N _ _ f := comp_whiskerLeft_bimod M N f
   id_whiskerRight _ _ _ _ _ := tensor_id
-  comp_whiskerRight _ _ _ _ _ _ f g Q := comp_whisker_right_bimod f g Q
-  whiskerRight_id _ _ _ _ f := whisker_right_id_bimod f
-  whiskerRight_comp _ _ _ _ _ _ f N P := whisker_right_comp_bimod f N P
+  comp_whiskerRight _ _ _ _ _ _ f g Q := comp_whiskerRight_bimod f g Q
+  whiskerRight_id _ _ _ _ f := whiskerRight_id_bimod f
+  whiskerRight_comp _ _ _ _ _ _ f N P := whiskerRight_comp_bimod f N P
   whisker_assoc _ _ _ _ M _ _ f P := whisker_assoc_bimod M f P
   whisker_exchange _ _ _ _ _ _ _ f g := whisker_exchange_bimod f g
   pentagon _ _ _ _ _ M N P Q := pentagon_bimod M N P Q

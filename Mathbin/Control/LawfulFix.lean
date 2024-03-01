@@ -308,7 +308,7 @@ theorem uncurry_curry_continuous :
 
 end Curry
 
-#print Pi.Pi.lawfulFix' /-
+#print Pi.lawfulFix' /-
 instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y)
     where fix_eq f hc := by
     dsimp [fix]
@@ -316,7 +316,7 @@ instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (
       lhs
       erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
     rfl
-#align pi.pi.lawful_fix' Pi.Pi.lawfulFix'
+#align pi.pi.lawful_fix' Pi.lawfulFix'
 -/
 
 end Pi

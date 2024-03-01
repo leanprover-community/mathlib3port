@@ -136,8 +136,9 @@ theorem nonempty_limitCone_of_compact_t2_cofiltered_system [IsCofilteredOrEmpty 
     Nonempty (TopCat.limitCone.{u} F).pt := by
   classical
   obtain ⟨u, hu⟩ :=
-    IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed (fun G => partial_sections F _)
-      (partial_sections.directed F) (fun G => partial_sections.nonempty F _)
+    IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
+      (fun G => partial_sections F _) (partial_sections.directed F)
+      (fun G => partial_sections.nonempty F _)
       (fun G => IsClosed.isCompact (partial_sections.closed F _)) fun G =>
       partial_sections.closed F _
   use u

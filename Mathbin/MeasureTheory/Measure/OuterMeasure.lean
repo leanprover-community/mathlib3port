@@ -415,11 +415,11 @@ instance MeasureTheory.OuterMeasure.instPartialOrder : PartialOrder (OuterMeasur
 #align measure_theory.outer_measure.outer_measure.partial_order MeasureTheory.OuterMeasure.instPartialOrder
 -/
 
-#print MeasureTheory.OuterMeasure.OuterMeasure.orderBot /-
-instance OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
+#print MeasureTheory.OuterMeasure.orderBot /-
+instance MeasureTheory.OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
   { OuterMeasure.instBot with
     bot_le := fun a s => by simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
-#align measure_theory.outer_measure.outer_measure.order_bot MeasureTheory.OuterMeasure.OuterMeasure.orderBot
+#align measure_theory.outer_measure.outer_measure.order_bot MeasureTheory.OuterMeasure.orderBot
 -/
 
 #print MeasureTheory.OuterMeasure.univ_eq_zero_iff /-
@@ -443,7 +443,7 @@ instance : SupSet (OuterMeasure α) :=
               ENNReal.tsum_le_tsum fun i => le_iSup₂ m hm }⟩
 
 instance : CompleteLattice (OuterMeasure α) :=
-  { OuterMeasure.orderBot,
+  { MeasureTheory.OuterMeasure.orderBot,
     completeLatticeOfSup (OuterMeasure α) fun ms =>
       ⟨fun m hm s => le_iSup₂ m hm, fun m hm s => iSup₂_le fun m' hm' => hm hm' s⟩ with }
 

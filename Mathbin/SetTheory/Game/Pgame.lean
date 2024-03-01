@@ -908,11 +908,13 @@ theorem SetTheory.PGame.upperBound_mem_upperBounds (s : Set SetTheory.PGame.{u})
   by simpa using le_upper_bound (Subtype.val ∘ (equivShrink s).symm) (equivShrink s ⟨i, hi⟩)
 #align pgame.upper_bound_mem_upper_bounds SetTheory.PGame.upperBound_mem_upperBounds
 
+#print SetTheory.PGame.bddAbove_of_small /-
 /-- A small set `s` of pre-games is bounded above. -/
 theorem SetTheory.PGame.bddAbove_of_small (s : Set SetTheory.PGame.{u}) [Small.{u} s] :
     BddAbove s :=
   ⟨_, SetTheory.PGame.upperBound_mem_upperBounds s⟩
 #align pgame.bdd_above_of_small SetTheory.PGame.bddAbove_of_small
+-/
 
 /-- An explicit lower bound for a family of pre-games, whose right moves are the union of the right
 moves of all the pre-games in the family. -/
@@ -939,11 +941,13 @@ theorem SetTheory.PGame.lowerBound_mem_lowerBounds (s : Set SetTheory.PGame.{u})
   by simpa using lower_bound_le (Subtype.val ∘ (equivShrink s).symm) (equivShrink s ⟨i, hi⟩)
 #align pgame.lower_bound_mem_lower_bounds SetTheory.PGame.lowerBound_mem_lowerBounds
 
+#print SetTheory.PGame.bddBelow_of_small /-
 /-- A small set `s` of pre-games is bounded below. -/
 theorem SetTheory.PGame.bddBelow_of_small (s : Set SetTheory.PGame.{u}) [Small.{u} s] :
     BddBelow s :=
   ⟨_, SetTheory.PGame.lowerBound_mem_lowerBounds s⟩
 #align pgame.bdd_below_of_small SetTheory.PGame.bddBelow_of_small
+-/
 
 #print SetTheory.PGame.Equiv /-
 /-- The equivalence relation on pre-games. Two pre-games `x`, `y` are equivalent if `x ≤ y` and

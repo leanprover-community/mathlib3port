@@ -374,7 +374,7 @@ theorem nonempty_omegaLimit_of_isCompact_absorbing [NeBot f] {c : Set β} (hc₁
   by
   rcases hc₂ with ⟨v, hv₁, hv₂⟩
   rw [omegaLimit_eq_iInter_inter _ _ _ hv₁]
-  apply IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
+  apply IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
   · rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
     use⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩; constructor
     all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) subset.rfl)

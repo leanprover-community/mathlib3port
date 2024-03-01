@@ -121,11 +121,10 @@ theorem Function.OfArity.const_succ_apply {α : Type u} (a : α) (n : ℕ) (x : 
 #align arity.const_succ_apply Function.OfArity.const_succ_apply
 -/
 
-#print Function.OfArity.OfArity.inhabited /-
-instance Function.OfArity.OfArity.inhabited {α n} [Inhabited α] :
-    Inhabited (Function.OfArity α n) :=
+#print Function.OfArity.inhabited /-
+instance OfArity.inhabited {α n} [Inhabited α] : Inhabited (Function.OfArity α n) :=
   ⟨Function.OfArity.const default _⟩
-#align arity.arity.inhabited Function.OfArity.OfArity.inhabited
+#align arity.arity.inhabited Function.OfArity.inhabited
 -/
 
 end Function.OfArity

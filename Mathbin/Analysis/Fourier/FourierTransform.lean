@@ -303,21 +303,21 @@ def fourierIntegral (f : ℝ → E) (w : ℝ) :=
 #align real.fourier_integral Real.fourierIntegral
 -/
 
-#print Real.fourierIntegral_def /-
-theorem fourierIntegral_def (f : ℝ → E) (w : ℝ) :
+#print Real.fourierIntegral_real_eq /-
+theorem fourierIntegral_real_eq (f : ℝ → E) (w : ℝ) :
     fourierIntegral f w = ∫ v : ℝ, fourierChar[-(v * w)] • f v :=
   rfl
-#align real.fourier_integral_def Real.fourierIntegral_def
+#align real.fourier_integral_def Real.fourierIntegral_real_eq
 -/
 
 scoped[FourierTransform] notation "𝓕" => Real.fourierIntegral
 
-#print Real.fourierIntegral_eq_integral_exp_smul /-
-theorem fourierIntegral_eq_integral_exp_smul {E : Type _} [NormedAddCommGroup E] [CompleteSpace E]
-    [NormedSpace ℂ E] (f : ℝ → E) (w : ℝ) :
+#print Real.fourierIntegral_real_eq_integral_exp_smul /-
+theorem fourierIntegral_real_eq_integral_exp_smul {E : Type _} [NormedAddCommGroup E]
+    [CompleteSpace E] [NormedSpace ℂ E] (f : ℝ → E) (w : ℝ) :
     𝓕 f w = ∫ v : ℝ, Complex.exp (↑(-2 * π * v * w) * Complex.I) • f v := by
   simp_rw [fourier_integral_def, Real.fourierChar_apply, mul_neg, neg_mul, mul_assoc]
-#align real.fourier_integral_eq_integral_exp_smul Real.fourierIntegral_eq_integral_exp_smul
+#align real.fourier_integral_eq_integral_exp_smul Real.fourierIntegral_real_eq_integral_exp_smul
 -/
 
 end Real

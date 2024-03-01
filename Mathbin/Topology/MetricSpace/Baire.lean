@@ -189,7 +189,7 @@ instance (priority := 100) BaireSpace.of_t2Space_locallyCompactSpace [Topologica
   /- Prove that `⋂ n : ℕ, K n` is not empty, as an intersection of a decreasing sequence
     of nonempty compact subsets.-/
   have hK_nonempty : (⋂ n, K n : Set α).Nonempty :=
-    IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed _
+    IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed _
       (fun n => (hK_decreasing n).trans (inter_subset_right _ _)) (fun n => (K n).Nonempty)
       (K 0).IsCompact fun n => (K n).IsCompact.IsClosed
   exact hK_nonempty.mono hK_subset

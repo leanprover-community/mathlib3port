@@ -342,11 +342,11 @@ theorem IsCompact.inter_iInter_nonempty {s : Set α} {ι : Type v} (hs : IsCompa
 #align is_compact.inter_Inter_nonempty IsCompact.inter_iInter_nonempty
 -/
 
-#print IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed /-
+#print IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed /-
 /-- Cantor's intersection theorem:
 the intersection of a directed family of nonempty compact closed sets is nonempty. -/
-theorem IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed {ι : Type v} [hι : Nonempty ι]
-    (Z : ι → Set α) (hZd : Directed (· ⊇ ·) Z) (hZn : ∀ i, (Z i).Nonempty)
+theorem IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed {ι : Type v}
+    [hι : Nonempty ι] (Z : ι → Set α) (hZd : Directed (· ⊇ ·) Z) (hZn : ∀ i, (Z i).Nonempty)
     (hZc : ∀ i, IsCompact (Z i)) (hZcl : ∀ i, IsClosed (Z i)) : (⋂ i, Z i).Nonempty :=
   by
   let i₀ := hι.some
@@ -359,21 +359,21 @@ theorem IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed {ι : Type
   refine' ⟨hZd, fun i => _⟩
   rcases hZd i₀ i with ⟨j, hji₀, hji⟩
   exact (hZn j).mono (subset_inter hji₀ hji)
-#align is_compact.nonempty_Inter_of_directed_nonempty_compact_closed IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
+#align is_compact.nonempty_Inter_of_directed_nonempty_compact_closed IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
 -/
 
-#print IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed /-
+#print IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed /-
 /-- Cantor's intersection theorem for sequences indexed by `ℕ`:
 the intersection of a decreasing sequence of nonempty compact closed sets is nonempty. -/
-theorem IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed (Z : ℕ → Set α)
+theorem IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed (Z : ℕ → Set α)
     (hZd : ∀ i, Z (i + 1) ⊆ Z i) (hZn : ∀ i, (Z i).Nonempty) (hZ0 : IsCompact (Z 0))
     (hZcl : ∀ i, IsClosed (Z i)) : (⋂ i, Z i).Nonempty :=
   have Zmono : Antitone Z := antitone_nat_of_succ_le hZd
   have hZd : Directed (· ⊇ ·) Z := directed_of_isDirected_le Zmono
   have : ∀ i, Z i ⊆ Z 0 := fun i => Zmono <| zero_le i
   have hZc : ∀ i, IsCompact (Z i) := fun i => IsCompact.of_isClosed_subset hZ0 (hZcl i) (this i)
-  IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
-#align is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed
+  IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed Z hZd hZn hZc hZcl
+#align is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
@@ -602,7 +602,7 @@ theorem exists_subset_nhds_of_isCompact' {ι : Type _} [Nonempty ι] {V : ι →
   have : (⋂ i, V i ∩ Wᶜ).Nonempty :=
     by
     refine'
-      IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed _ (fun i j => _) H
+      IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed _ (fun i j => _) H
         (fun i => (hV_cpct i).inter_right W_op.is_closed_compl) fun i =>
         (hV_closed i).inter W_op.is_closed_compl
     rcases hV i j with ⟨k, hki, hkj⟩
@@ -1614,7 +1614,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
           · ext
             simp only [not_exists, exists_prop, not_and, Set.mem_iInter, Subtype.forall,
               mem_set_of_eq, mem_compl_iff, mem_sUnion]
-          apply IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
+          apply IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
           · rintro ⟨U, hU⟩ ⟨U', hU'⟩
             obtain ⟨V, hVc, hVU, hVU'⟩ := hz.directed_on U hU U' hU'
             exact ⟨⟨V, hVc⟩, set.compl_subset_compl.mpr hVU, set.compl_subset_compl.mpr hVU'⟩

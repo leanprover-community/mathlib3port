@@ -374,7 +374,6 @@ variable {B : Type v₂} [Semiring B] [Algebra R B]
 -/
 
 
-#print Algebra.TensorProduct.mulAux /-
 /-- (Implementation detail)
 The multiplication map on `A ⊗[R] B`,
 for a fixed pure tensor in the first argument,
@@ -383,15 +382,12 @@ as an `R`-linear map.
 def mulAux (a₁ : A) (b₁ : B) : A ⊗[R] B →ₗ[R] A ⊗[R] B :=
   TensorProduct.map (LinearMap.mulLeft R a₁) (LinearMap.mulLeft R b₁)
 #align algebra.tensor_product.mul_aux Algebra.TensorProduct.mulAux
--/
 
-#print Algebra.TensorProduct.mulAux_apply /-
 @[simp]
 theorem mulAux_apply (a₁ a₂ : A) (b₁ b₂ : B) :
     (mulAux a₁ b₁) (a₂ ⊗ₜ[R] b₂) = (a₁ * a₂) ⊗ₜ[R] (b₁ * b₂) :=
   rfl
 #align algebra.tensor_product.mul_aux_apply Algebra.TensorProduct.mulAux_apply
--/
 
 #print Algebra.TensorProduct.mul /-
 /-- (Implementation detail)

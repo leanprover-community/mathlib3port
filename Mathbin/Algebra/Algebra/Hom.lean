@@ -119,11 +119,9 @@ instance : AlgHomClass (A →ₐ[R] B) R A B
   map_one := map_one'
   commutes f := f.commutes'
 
-#print AlgHom.coeOutRingHom /-
-instance coeOutRingHom : Coe (A →ₐ[R] B) (A →+* B) :=
+instance coeRingHom : Coe (A →ₐ[R] B) (A →+* B) :=
   ⟨AlgHom.toRingHom⟩
-#align alg_hom.coe_ring_hom AlgHom.coeOutRingHom
--/
+#align alg_hom.coe_ring_hom AlgHom.coeRingHom
 
 #print AlgHom.coeOutMonoidHom /-
 instance coeOutMonoidHom : Coe (A →ₐ[R] B) (A →* B) :=

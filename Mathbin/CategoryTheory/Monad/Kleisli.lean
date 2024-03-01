@@ -47,10 +47,10 @@ variable (T : Monad C)
 instance [Inhabited C] (T : Monad C) : Inhabited (Kleisli T) :=
   ⟨(default : C)⟩
 
-#print CategoryTheory.Kleisli.Kleisli.category /-
+#print CategoryTheory.Kleisli.category /-
 /-- The Kleisli category on a monad `T`.
     cf Definition 5.2.9 in [Riehl][riehl2017]. -/
-instance Kleisli.category : Category (Kleisli T)
+instance CategoryTheory.Kleisli.category : Category (Kleisli T)
     where
   Hom := fun X Y : C => X ⟶ (T : C ⥤ C).obj Y
   id X := T.η.app X
@@ -62,7 +62,7 @@ instance Kleisli.category : Category (Kleisli T)
     by
     simp only [functor.map_comp, category.assoc, monad.assoc]
     erw [T.μ.naturality_assoc]
-#align category_theory.kleisli.kleisli.category CategoryTheory.Kleisli.Kleisli.category
+#align category_theory.kleisli.kleisli.category CategoryTheory.Kleisli.category
 -/
 
 namespace Adjunction
@@ -136,9 +136,9 @@ variable (U : Comonad C)
 instance [Inhabited C] (U : Comonad C) : Inhabited (Cokleisli U) :=
   ⟨(default : C)⟩
 
-#print CategoryTheory.Cokleisli.Cokleisli.category /-
+#print CategoryTheory.Cokleisli.category /-
 /-- The co-Kleisli category on a comonad `U`.-/
-instance Cokleisli.category : Category (Cokleisli U)
+instance CategoryTheory.Cokleisli.category : Category (Cokleisli U)
     where
   Hom := fun X Y : C => (U : C ⥤ C).obj X ⟶ Y
   id X := U.ε.app X
@@ -148,7 +148,7 @@ instance Cokleisli.category : Category (Cokleisli U)
     unfold_projs
     simp only [functor.map_comp, ← category.assoc, U.δ.naturality_assoc, functor.comp_map,
       U.coassoc]
-#align category_theory.cokleisli.cokleisli.category CategoryTheory.Cokleisli.Cokleisli.category
+#align category_theory.cokleisli.cokleisli.category CategoryTheory.Cokleisli.category
 -/
 
 namespace Adjunction

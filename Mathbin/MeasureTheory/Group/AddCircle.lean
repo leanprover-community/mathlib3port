@@ -74,7 +74,7 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
     exact measurable_set_ball.null_measurable_set.congr hI.symm
   · -- `∀ (g : G), g ≠ 0 → ae_disjoint volume (g +ᵥ I) I`
     rintro ⟨g, hg⟩ hg'
-    replace hg' : g ≠ 0; · simpa only [Ne.def, AddSubgroup.mk_eq_zero_iff] using hg'
+    replace hg' : g ≠ 0; · simpa only [Ne.def, AddSubgroup.mk_eq_zero] using hg'
     change ae_disjoint volume (g +ᵥ I) I
     refine'
       ae_disjoint.congr (Disjoint.aedisjoint _)
