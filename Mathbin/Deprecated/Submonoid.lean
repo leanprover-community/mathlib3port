@@ -239,13 +239,13 @@ theorem IsSubmonoid.pow_mem {a : M} (hs : IsSubmonoid s) (h : a ∈ s) : ∀ {n 
 #align is_submonoid.pow_mem IsSubmonoid.pow_mem
 -/
 
-#print IsSubmonoid.power_subset /-
+#print IsSubmonoid.powers_subset /-
 /-- The set of natural number powers of an element of a submonoid is a subset of the submonoid. -/
 @[to_additive IsAddSubmonoid.multiples_subset
       "The set of natural number multiples of an element\nof an `add_submonoid` is a subset of the `add_submonoid`."]
-theorem IsSubmonoid.power_subset {a : M} (hs : IsSubmonoid s) (h : a ∈ s) : powers a ⊆ s :=
+theorem IsSubmonoid.powers_subset {a : M} (hs : IsSubmonoid s) (h : a ∈ s) : powers a ⊆ s :=
   fun x ⟨n, hx⟩ => hx ▸ hs.pow_mem h
-#align is_submonoid.power_subset IsSubmonoid.power_subset
+#align is_submonoid.power_subset IsSubmonoid.powers_subset
 #align is_add_submonoid.multiples_subset IsAddSubmonoid.multiples_subset
 -/
 
@@ -379,7 +379,8 @@ theorem closure_mono {s t : Set M} (h : s ⊆ t) : Closure s ⊆ Closure t :=
 theorem closure_singleton {x : M} : Closure ({x} : Set M) = powers x :=
   Set.eq_of_subset_of_subset
       (closure_subset (powers.isSubmonoid x) <| Set.singleton_subset_iff.2 <| powers.self_mem) <|
-    IsSubmonoid.power_subset (closure.isSubmonoid _) <| Set.singleton_subset_iff.1 <| subset_closure
+    IsSubmonoid.powers_subset (closure.isSubmonoid _) <|
+      Set.singleton_subset_iff.1 <| subset_closure
 #align monoid.closure_singleton Monoid.closure_singleton
 #align add_monoid.closure_singleton AddMonoid.closure_singleton
 -/

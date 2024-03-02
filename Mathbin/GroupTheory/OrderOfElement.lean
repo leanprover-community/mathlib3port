@@ -1376,27 +1376,27 @@ section Prod
 variable [Monoid α] [Monoid β] {x : α × β} {a : α} {b : β}
 
 #print Prod.orderOf /-
-@[to_additive Prod.add_orderOf]
+@[to_additive Prod.addOrderOf]
 protected theorem Prod.orderOf (x : α × β) : orderOf x = (orderOf x.1).lcm (orderOf x.2) :=
   minimalPeriod_prod_map _ _ _
 #align prod.order_of Prod.orderOf
-#align prod.add_order_of Prod.add_orderOf
+#align prod.add_order_of Prod.addOrderOf
 -/
 
 #print orderOf_fst_dvd_orderOf /-
-@[to_additive add_orderOf_fst_dvd_add_orderOf]
+@[to_additive addOrderOf_fst_dvd_addOrderOf]
 theorem orderOf_fst_dvd_orderOf : orderOf x.1 ∣ orderOf x :=
   minimalPeriod_fst_dvd
 #align order_of_fst_dvd_order_of orderOf_fst_dvd_orderOf
-#align add_order_of_fst_dvd_add_order_of add_orderOf_fst_dvd_add_orderOf
+#align add_order_of_fst_dvd_add_order_of addOrderOf_fst_dvd_addOrderOf
 -/
 
 #print orderOf_snd_dvd_orderOf /-
-@[to_additive add_orderOf_snd_dvd_add_orderOf]
+@[to_additive addOrderOf_snd_dvd_addOrderOf]
 theorem orderOf_snd_dvd_orderOf : orderOf x.2 ∣ orderOf x :=
   minimalPeriod_snd_dvd
 #align order_of_snd_dvd_order_of orderOf_snd_dvd_orderOf
-#align add_order_of_snd_dvd_add_order_of add_orderOf_snd_dvd_add_orderOf
+#align add_order_of_snd_dvd_add_order_of addOrderOf_snd_dvd_addOrderOf
 -/
 
 #print IsOfFinOrder.fst /-

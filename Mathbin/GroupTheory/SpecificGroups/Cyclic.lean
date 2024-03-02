@@ -100,7 +100,7 @@ def IsCyclic.commGroup [hg : Group α] [IsCyclic α] : CommGroup α :=
 variable [Group α]
 
 #print MonoidHom.map_cyclic /-
-@[to_additive MonoidAddHom.map_add_cyclic]
+@[to_additive AddMonoidHom.map_addCyclic]
 theorem MonoidHom.map_cyclic {G : Type _} [Group G] [h : IsCyclic G] (σ : G →* G) :
     ∃ m : ℤ, ∀ g : G, σ g = g ^ m :=
   by
@@ -110,11 +110,11 @@ theorem MonoidHom.map_cyclic {G : Type _} [Group G] [h : IsCyclic G] (σ : G →
   obtain ⟨n, rfl⟩ := hG g
   rw [MonoidHom.map_zpow, ← hm, ← zpow_mul, ← zpow_mul']
 #align monoid_hom.map_cyclic MonoidHom.map_cyclic
-#align monoid_add_hom.map_add_cyclic MonoidAddHom.map_add_cyclic
+#align monoid_add_hom.map_add_cyclic AddMonoidHom.map_addCyclic
 -/
 
 #print isCyclic_of_orderOf_eq_card /-
-@[to_additive isAddCyclic_of_orderOf_eq_card]
+@[to_additive isAddCyclic_of_addOrderOf_eq_card]
 theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fintype.card α) :
     IsCyclic α := by
   classical
@@ -123,7 +123,7 @@ theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fint
   rw [← Fintype.card_congr (Equiv.Set.univ α), Fintype.card_zpowers] at hx 
   exact Set.eq_of_subset_of_card_le (Set.subset_univ _) (ge_of_eq hx)
 #align is_cyclic_of_order_of_eq_card isCyclic_of_orderOf_eq_card
-#align is_add_cyclic_of_order_of_eq_card isAddCyclic_of_orderOf_eq_card
+#align is_add_cyclic_of_order_of_eq_card isAddCyclic_of_addOrderOf_eq_card
 -/
 
 #print isCyclic_of_prime_card /-
@@ -259,7 +259,7 @@ open scoped Classical
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 #print IsCyclic.card_pow_eq_one_le /-
-@[to_additive IsAddCyclic.card_pow_eq_one_le]
+@[to_additive IsAddCyclic.card_nsmul_eq_zero_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
     (univ.filterₓ fun a : α => a ^ n = 1).card ≤ n :=
   let ⟨g, hg⟩ := IsCyclic.exists_generator α
@@ -291,7 +291,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
         Nat.mul_div_cancel _ hm0]
       exact le_of_dvd hn0 (Nat.gcd_dvd_left _ _)
 #align is_cyclic.card_pow_eq_one_le IsCyclic.card_pow_eq_one_le
-#align is_add_cyclic.card_pow_eq_one_le IsAddCyclic.card_pow_eq_one_le
+#align is_add_cyclic.card_pow_eq_one_le IsAddCyclic.card_nsmul_eq_zero_le
 -/
 
 end Classical
@@ -451,16 +451,14 @@ theorem IsCyclic.card_orderOf_eq_totient [IsCyclic α] [Fintype α] {d : ℕ}
 #align is_cyclic.card_order_of_eq_totient IsCyclic.card_orderOf_eq_totient
 -/
 
-#print IsAddCyclic.card_orderOf_eq_totient /-
-theorem IsAddCyclic.card_orderOf_eq_totient {α} [AddGroup α] [IsAddCyclic α] [Fintype α] {d : ℕ}
+theorem IsAddCyclic.card_order_of_eq_totient {α} [AddGroup α] [IsAddCyclic α] [Fintype α] {d : ℕ}
     (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => addOrderOf a = d).card = totient d :=
   by
   obtain ⟨g, hg⟩ := id ‹IsAddCyclic α›
   exact @IsCyclic.card_orderOf_eq_totient (Multiplicative α) _ ⟨⟨g, hg⟩⟩ _ _ hd
-#align is_add_cyclic.card_order_of_eq_totient IsAddCyclic.card_orderOf_eq_totient
--/
+#align is_add_cyclic.card_order_of_eq_totient IsAddCyclic.card_order_of_eq_totient
 
-attribute [to_additive IsCyclic.card_orderOf_eq_totient] IsAddCyclic.card_orderOf_eq_totient
+attribute [to_additive IsCyclic.card_orderOf_eq_totient] IsAddCyclic.card_order_of_eq_totient
 
 #print isSimpleGroup_of_prime_card /-
 /-- A finite group of prime order is simple. -/
@@ -494,7 +492,7 @@ variable {G : Type _} {H : Type _} [Group G] [Group H]
 #print commutative_of_cyclic_center_quotient /-
 /-- A group is commutative if the quotient by the center is cyclic.
   Also see `comm_group_of_cycle_center_quotient` for the `comm_group` instance. -/
-@[to_additive commutative_of_add_cyclic_center_quotient
+@[to_additive commutative_of_addCyclic_center_quotient
       "A group is commutative if the quotient by\n  the center is cyclic. Also see `add_comm_group_of_cycle_center_quotient`\n  for the `add_comm_group` instance."]
 theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : f.ker ≤ center G)
     (a b : G) : a * b = b * a :=
@@ -514,7 +512,7 @@ theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : 
     _ = y ^ m * y ^ n * y ^ (-m) * (y ^ (-n) * b * a) := by rw [mem_center_iff.1 hb]
     _ = b * a := by group
 #align commutative_of_cyclic_center_quotient commutative_of_cyclic_center_quotient
-#align commutative_of_add_cyclic_center_quotient commutative_of_add_cyclic_center_quotient
+#align commutative_of_add_cyclic_center_quotient commutative_of_addCyclic_center_quotient
 -/
 
 #print commGroupOfCycleCenterQuotient /-

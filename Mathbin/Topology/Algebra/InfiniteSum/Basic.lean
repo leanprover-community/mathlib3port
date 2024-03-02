@@ -487,12 +487,10 @@ theorem Summable.compl_add {s : Set β} (hs : Summable (f ∘ coe : sᶜ → α)
 #align summable.compl_add Summable.compl_add
 -/
 
-#print Summable.even_add_odd /-
 theorem Summable.even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k))
     (ho : Summable fun k => f (2 * k + 1)) : Summable f :=
   (he.HasSum.even_add_odd ho.HasSum).Summable
 #align summable.even_add_odd Summable.even_add_odd
--/
 
 #print HasSum.sigma /-
 theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α}
