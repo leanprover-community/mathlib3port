@@ -92,7 +92,7 @@ variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 
 #print UniformSpace.to_regularSpace /-
 instance (priority := 100) UniformSpace.to_regularSpace : RegularSpace α :=
-  RegularSpace.ofBasis
+  RegularSpace.of_hasBasis
     (fun a => by rw [nhds_eq_comap_uniformity]; exact uniformity_has_basis_closed.comap _)
     fun a V hV => hV.2.Preimage <| continuous_const.prod_mk continuous_id
 #align uniform_space.to_regular_space UniformSpace.to_regularSpace

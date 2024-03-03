@@ -103,7 +103,7 @@ section Instances
 #print MvPolynomial.decidableEqMvPolynomial /-
 instance decidableEqMvPolynomial [CommSemiring R] [DecidableEq σ] [DecidableEq R] :
     DecidableEq (MvPolynomial σ R) :=
-  Finsupp.decidableEq
+  Finsupp.instDecidableEq
 #align mv_polynomial.decidable_eq_mv_polynomial MvPolynomial.decidableEqMvPolynomial
 -/
 

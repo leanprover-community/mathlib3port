@@ -229,7 +229,7 @@ attribute [scoped instance] WithZeroTopology.orderClosedTopology
 theorem t3Space : T3Space Γ₀ :=
   {
     to_regularSpace :=
-      RegularSpace.ofLift'_closure fun γ =>
+      RegularSpace.of_lift'_closure fun γ =>
         by
         rcases ne_or_eq γ 0 with (h₀ | rfl)
         ·

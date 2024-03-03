@@ -79,7 +79,7 @@ deriving Inhabited, AddCommMonoid
 -/
 
 instance : CoeFun (MonoidAlgebra k G) fun _ => G → k :=
-  Finsupp.coeFun
+  Finsupp.instCoeFun
 
 end
 
@@ -131,7 +131,7 @@ theorem mul_def {f g : MonoidAlgebra k G} :
 -/
 
 instance : NonUnitalNonAssocSemiring (MonoidAlgebra k G) :=
-  { Finsupp.addCommMonoid with
+  { Finsupp.instAddCommMonoid with
     zero := 0
     mul := (· * ·)
     add := (· + ·)
@@ -269,7 +269,7 @@ instance [CommSemiring k] [CommSemigroup G] : NonUnitalCommSemiring (MonoidAlgeb
       simp only [mul_comm] }
 
 instance [Semiring k] [Nontrivial k] [Nonempty G] : Nontrivial (MonoidAlgebra k G) :=
-  Finsupp.nontrivial
+  Finsupp.instNontrivial
 
 /-! #### Derived instances -/
 
@@ -283,7 +283,7 @@ instance [Semiring k] [Subsingleton k] : Unique (MonoidAlgebra k G) :=
   Finsupp.uniqueOfRight
 
 instance [Ring k] : AddCommGroup (MonoidAlgebra k G) :=
-  Finsupp.addCommGroup
+  Finsupp.instAddCommGroup
 
 instance [Ring k] [Mul G] : NonUnitalNonAssocRing (MonoidAlgebra k G) :=
   { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonUnitalNonAssocSemiring with }
@@ -1167,7 +1167,7 @@ deriving Inhabited, AddCommMonoid
 -/
 
 instance : CoeFun (AddMonoidAlgebra k G) fun _ => G → k :=
-  Finsupp.coeFun
+  Finsupp.instCoeFun
 
 end
 
@@ -1220,7 +1220,7 @@ theorem mul_def {f g : AddMonoidAlgebra k G} :
 -/
 
 instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
-  { Finsupp.addCommMonoid with
+  { Finsupp.instAddCommMonoid with
     zero := 0
     mul := (· * ·)
     add := (· + ·)
@@ -1362,7 +1362,7 @@ instance [CommSemiring k] [AddCommSemigroup G] : NonUnitalCommSemiring (AddMonoi
     mul_comm := @mul_comm (MonoidAlgebra k <| Multiplicative G) _ }
 
 instance [Semiring k] [Nontrivial k] [Nonempty G] : Nontrivial (AddMonoidAlgebra k G) :=
-  Finsupp.nontrivial
+  Finsupp.instNontrivial
 
 /-! #### Derived instances -/
 
@@ -1376,7 +1376,7 @@ instance [Semiring k] [Subsingleton k] : Unique (AddMonoidAlgebra k G) :=
   Finsupp.uniqueOfRight
 
 instance [Ring k] : AddCommGroup (AddMonoidAlgebra k G) :=
-  Finsupp.addCommGroup
+  Finsupp.instAddCommGroup
 
 instance [Ring k] [Add G] : NonUnitalNonAssocRing (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonUnitalNonAssocSemiring with }

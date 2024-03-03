@@ -874,10 +874,10 @@ theorem ofSupportFinite_coe {f : α → M} {hf : (Function.support f).Finite} :
 #align finsupp.of_support_finite_coe Finsupp.ofSupportFinite_coe
 -/
 
-#print Finsupp.canLift /-
-instance canLift : CanLift (α → M) (α →₀ M) coeFn fun f => (Function.support f).Finite
+#print Finsupp.instCanLift /-
+instance instCanLift : CanLift (α → M) (α →₀ M) coeFn fun f => (Function.support f).Finite
     where prf f hf := ⟨ofSupportFinite f hf, rfl⟩
-#align finsupp.can_lift Finsupp.canLift
+#align finsupp.can_lift Finsupp.instCanLift
 -/
 
 end OfSupportFinite
@@ -1430,12 +1430,12 @@ section AddMonoid
 
 variable [AddMonoid M]
 
-#print Finsupp.hasNatScalar /-
+#print Finsupp.instNatSMul /-
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℕ` is not distributive
 unless `β i`'s addition is commutative. -/
-instance hasNatScalar : SMul ℕ (α →₀ M) :=
+instance instNatSMul : SMul ℕ (α →₀ M) :=
   ⟨fun n v => v.mapRange ((· • ·) n) (nsmul_zero _)⟩
-#align finsupp.has_nat_scalar Finsupp.hasNatScalar
+#align finsupp.has_nat_scalar Finsupp.instNatSMul
 -/
 
 instance : AddMonoid (α →₀ M) :=
@@ -1508,12 +1508,12 @@ theorem mapRange_sub' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G
 #align finsupp.map_range_sub' Finsupp.mapRange_sub'
 -/
 
-#print Finsupp.hasIntScalar /-
+#print Finsupp.instIntSMul /-
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/
-instance hasIntScalar [AddGroup G] : SMul ℤ (α →₀ G) :=
+instance instIntSMul [AddGroup G] : SMul ℤ (α →₀ G) :=
   ⟨fun n v => v.mapRange ((· • ·) n) (zsmul_zero _)⟩
-#align finsupp.has_int_scalar Finsupp.hasIntScalar
+#align finsupp.has_int_scalar Finsupp.instIntSMul
 -/
 
 instance [AddGroup G] : AddGroup (α →₀ G) :=

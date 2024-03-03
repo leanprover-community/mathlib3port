@@ -310,20 +310,19 @@ theorem tensor_id_comp_id_tensor (f : W ⟶ X) (g : Y ⟶ Z) : (g ⊗ 𝟙 W) �
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print CategoryTheory.MonoidalCategory.rightUnitor_conjugation /-
+#print CategoryTheory.MonoidalCategory.whiskerRight_id /-
 @[simp]
-theorem rightUnitor_conjugation {X Y : C} (f : X ⟶ Y) :
-    f ⊗ 𝟙 (𝟙_ C) = (ρ_ X).Hom ≫ f ≫ (ρ_ Y).inv := by
+theorem whiskerRight_id {X Y : C} (f : X ⟶ Y) : f ⊗ 𝟙 (𝟙_ C) = (ρ_ X).Hom ≫ f ≫ (ρ_ Y).inv := by
   rw [← right_unitor_naturality_assoc, iso.hom_inv_id, category.comp_id]
-#align category_theory.monoidal_category.right_unitor_conjugation CategoryTheory.MonoidalCategory.rightUnitor_conjugation
+#align category_theory.monoidal_category.right_unitor_conjugation CategoryTheory.MonoidalCategory.whiskerRight_id
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print CategoryTheory.MonoidalCategory.leftUnitor_conjugation /-
+#print CategoryTheory.MonoidalCategory.id_whiskerLeft /-
 @[simp]
-theorem leftUnitor_conjugation {X Y : C} (f : X ⟶ Y) : 𝟙 (𝟙_ C) ⊗ f = (λ_ X).Hom ≫ f ≫ (λ_ Y).inv :=
-  by rw [← left_unitor_naturality_assoc, iso.hom_inv_id, category.comp_id]
-#align category_theory.monoidal_category.left_unitor_conjugation CategoryTheory.MonoidalCategory.leftUnitor_conjugation
+theorem id_whiskerLeft {X Y : C} (f : X ⟶ Y) : 𝟙 (𝟙_ C) ⊗ f = (λ_ X).Hom ≫ f ≫ (λ_ Y).inv := by
+  rw [← left_unitor_naturality_assoc, iso.hom_inv_id, category.comp_id]
+#align category_theory.monoidal_category.left_unitor_conjugation CategoryTheory.MonoidalCategory.id_whiskerLeft
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

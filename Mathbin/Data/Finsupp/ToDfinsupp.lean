@@ -380,7 +380,7 @@ theorem sigmaFinsuppEquivDFinsupp_single [DecidableEq ι] [Zero N] (a : Σ i, η
 -/
 
 -- Without this Lean fails to find the `add_zero_class` instance on `Π₀ i, (η i →₀ N)`.
-attribute [-instance] Finsupp.zero
+attribute [-instance] Finsupp.instZero
 
 #print sigmaFinsuppEquivDFinsupp_add /-
 @[simp]
@@ -402,7 +402,7 @@ def sigmaFinsuppAddEquivDFinsupp [AddZeroClass N] : ((Σ i, η i) →₀ N) ≃+
 #align sigma_finsupp_add_equiv_dfinsupp sigmaFinsuppAddEquivDFinsupp
 -/
 
-attribute [-instance] Finsupp.addZeroClass
+attribute [-instance] Finsupp.instAddZeroClass
 
 #print sigmaFinsuppEquivDFinsupp_smul /-
 --tofix: r • (sigma_finsupp_equiv_dfinsupp f) doesn't work.
@@ -415,7 +415,7 @@ theorem sigmaFinsuppEquivDFinsupp_smul {R} [Monoid R] [AddMonoid N] [DistribMulA
 #align sigma_finsupp_equiv_dfinsupp_smul sigmaFinsuppEquivDFinsupp_smul
 -/
 
-attribute [-instance] Finsupp.addMonoid
+attribute [-instance] Finsupp.instAddMonoid
 
 #print sigmaFinsuppLequivDFinsupp /-
 /-- `finsupp.split` is a linear equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/

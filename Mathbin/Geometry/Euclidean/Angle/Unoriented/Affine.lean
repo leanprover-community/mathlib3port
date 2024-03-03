@@ -178,27 +178,27 @@ theorem angle_le_pi (p1 p2 p3 : P) : ∠ p1 p2 p3 ≤ π :=
 #align euclidean_geometry.angle_le_pi EuclideanGeometry.angle_le_pi
 -/
 
-#print EuclideanGeometry.angle_eq_left /-
+#print EuclideanGeometry.angle_self_left /-
 /-- The angle ∠AAB at a point. -/
-theorem angle_eq_left (p1 p2 : P) : ∠ p1 p1 p2 = π / 2 :=
+theorem angle_self_left (p1 p2 : P) : ∠ p1 p1 p2 = π / 2 :=
   by
   unfold angle
   rw [vsub_self]
   exact angle_zero_left _
-#align euclidean_geometry.angle_eq_left EuclideanGeometry.angle_eq_left
+#align euclidean_geometry.angle_eq_left EuclideanGeometry.angle_self_left
 -/
 
-#print EuclideanGeometry.angle_eq_right /-
+#print EuclideanGeometry.angle_self_right /-
 /-- The angle ∠ABB at a point. -/
-theorem angle_eq_right (p1 p2 : P) : ∠ p1 p2 p2 = π / 2 := by rw [angle_comm, angle_eq_left]
-#align euclidean_geometry.angle_eq_right EuclideanGeometry.angle_eq_right
+theorem angle_self_right (p1 p2 : P) : ∠ p1 p2 p2 = π / 2 := by rw [angle_comm, angle_eq_left]
+#align euclidean_geometry.angle_eq_right EuclideanGeometry.angle_self_right
 -/
 
-#print EuclideanGeometry.angle_eq_of_ne /-
+#print EuclideanGeometry.angle_self_of_ne /-
 /-- The angle ∠ABA at a point. -/
-theorem angle_eq_of_ne {p1 p2 : P} (h : p1 ≠ p2) : ∠ p1 p2 p1 = 0 :=
+theorem angle_self_of_ne {p1 p2 : P} (h : p1 ≠ p2) : ∠ p1 p2 p1 = 0 :=
   angle_self fun he => h (vsub_eq_zero_iff_eq.1 he)
-#align euclidean_geometry.angle_eq_of_ne EuclideanGeometry.angle_eq_of_ne
+#align euclidean_geometry.angle_eq_of_ne EuclideanGeometry.angle_self_of_ne
 -/
 
 #print EuclideanGeometry.angle_eq_zero_of_angle_eq_pi_left /-

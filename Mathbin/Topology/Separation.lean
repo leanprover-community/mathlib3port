@@ -1917,25 +1917,25 @@ theorem regularSpace_TFAE (X : Type u) [TopologicalSpace X] :
 #align regular_space_tfae regularSpace_TFAE
 -/
 
-#print RegularSpace.ofLift'_closure /-
-theorem RegularSpace.ofLift'_closure (h : ∀ a : α, (𝓝 a).lift' closure = 𝓝 a) : RegularSpace α :=
+#print RegularSpace.of_lift'_closure /-
+theorem RegularSpace.of_lift'_closure (h : ∀ a : α, (𝓝 a).lift' closure = 𝓝 a) : RegularSpace α :=
   Iff.mpr ((regularSpace_TFAE α).out 0 5) h
-#align regular_space.of_lift'_closure RegularSpace.ofLift'_closure
+#align regular_space.of_lift'_closure RegularSpace.of_lift'_closure
 -/
 
-#print RegularSpace.ofBasis /-
-theorem RegularSpace.ofBasis {ι : α → Sort _} {p : ∀ a, ι a → Prop} {s : ∀ a, ι a → Set α}
+#print RegularSpace.of_hasBasis /-
+theorem RegularSpace.of_hasBasis {ι : α → Sort _} {p : ∀ a, ι a → Prop} {s : ∀ a, ι a → Set α}
     (h₁ : ∀ a, (𝓝 a).HasBasis (p a) (s a)) (h₂ : ∀ a i, p a i → IsClosed (s a i)) :
     RegularSpace α :=
-  RegularSpace.ofLift'_closure fun a => (h₁ a).lift'_closure_eq_self (h₂ a)
-#align regular_space.of_basis RegularSpace.ofBasis
+  RegularSpace.of_lift'_closure fun a => (h₁ a).lift'_closure_eq_self (h₂ a)
+#align regular_space.of_basis RegularSpace.of_hasBasis
 -/
 
-#print RegularSpace.ofExistsMemNhdsIsClosedSubset /-
-theorem RegularSpace.ofExistsMemNhdsIsClosedSubset
+#print RegularSpace.of_exists_mem_nhds_isClosed_subset /-
+theorem RegularSpace.of_exists_mem_nhds_isClosed_subset
     (h : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 a, IsClosed t ∧ t ⊆ s) : RegularSpace α :=
   Iff.mpr ((regularSpace_TFAE α).out 0 3) h
-#align regular_space.of_exists_mem_nhds_is_closed_subset RegularSpace.ofExistsMemNhdsIsClosedSubset
+#align regular_space.of_exists_mem_nhds_is_closed_subset RegularSpace.of_exists_mem_nhds_isClosed_subset
 -/
 
 variable [RegularSpace α] {a : α} {s : Set α}
@@ -2043,8 +2043,9 @@ theorem isClosed_setOf_inseparable : IsClosed {p : α × α | Inseparable p.1 p.
 #print Inducing.regularSpace /-
 protected theorem Inducing.regularSpace [TopologicalSpace β] {f : β → α} (hf : Inducing f) :
     RegularSpace β :=
-  RegularSpace.ofBasis (fun b => by rw [hf.nhds_eq_comap b]; exact (closed_nhds_basis _).comap _)
-    fun b s hs => hs.2.Preimage hf.Continuous
+  RegularSpace.of_hasBasis
+    (fun b => by rw [hf.nhds_eq_comap b]; exact (closed_nhds_basis _).comap _) fun b s hs =>
+    hs.2.Preimage hf.Continuous
 #align inducing.regular_space Inducing.regularSpace
 -/
 
@@ -2069,7 +2070,7 @@ theorem regularSpace_sInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @
     intro a
     rw [nhds_sInf, ← iInf_subtype'']
     exact has_basis_infi fun t : T => @closed_nhds_basis X t (h t t.2) a
-  refine' RegularSpace.ofBasis this fun a If hIf => isClosed_iInter fun i => _
+  refine' RegularSpace.of_hasBasis this fun a If hIf => isClosed_iInter fun i => _
   exact (hIf.2 i).2.mono (sInf_le (i : T).2)
 #align regular_space_Inf regularSpace_sInf
 -/
