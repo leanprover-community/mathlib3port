@@ -266,7 +266,7 @@ theorem forall₂_take_append (l : List α) (l₁ : List β) (l₂ : List β) (h
   by
   have h' : Forall₂ R (take (length l₁) l) (take (length l₁) (l₁ ++ l₂)) :=
     forall₂_take (length l₁) h
-  rwa [take_left] at h' 
+  rwa [take_left] at h'
 #align list.forall₂_take_append List.forall₂_take_append
 -/
 
@@ -276,7 +276,7 @@ theorem forall₂_drop_append (l : List α) (l₁ : List β) (l₂ : List β) (h
   by
   have h' : Forall₂ R (drop (length l₁) l) (drop (length l₁) (l₁ ++ l₂)) :=
     forall₂_drop (length l₁) h
-  rwa [drop_left] at h' 
+  rwa [drop_left] at h'
 #align list.forall₂_drop_append List.forall₂_drop_append
 -/
 

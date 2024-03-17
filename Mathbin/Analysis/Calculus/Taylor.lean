@@ -156,10 +156,10 @@ theorem continuousOn_taylorWithinEval {f : ℝ → E} {x : ℝ} {n : ℕ} {s : S
   simp_rw [taylor_within_apply]
   refine' continuousOn_finset_sum (Finset.range (n + 1)) fun i hi => _
   refine' (continuous_on_const.mul ((continuous_on_const.sub continuousOn_id).pow _)).smul _
-  rw [contDiffOn_iff_continuousOn_differentiableOn_deriv hs] at hf 
+  rw [contDiffOn_iff_continuousOn_differentiableOn_deriv hs] at hf
   cases hf
   specialize hf_left i
-  simp only [Finset.mem_range] at hi 
+  simp only [Finset.mem_range] at hi
   refine' hf_left _
   simp only [WithTop.coe_le_coe]
   exact nat.lt_succ_iff.mp hi
@@ -223,7 +223,7 @@ theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} 
   induction' n with k hk
   · simp only [taylor_within_zero_eval, Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero,
       mul_one, zero_add, one_smul]
-    simp only [iteratedDerivWithin_zero] at hf' 
+    simp only [iteratedDerivWithin_zero] at hf'
     rw [iteratedDerivWithin_one (hs_unique _ (h hy))]
     exact hf'.has_deriv_within_at.mono h
   simp_rw [Nat.add_succ, taylorWithinEval_succ]
@@ -303,8 +303,8 @@ theorem taylor_mean_remainder {f : ℝ → ℝ} {g g' : ℝ → ℝ} {x x₀ : �
     ⟨y, hy, h⟩
   use y, hy
   -- The rest is simplifications and trivial calculations
-  simp only [taylorWithinEval_self] at h 
-  rw [mul_comm, ← div_left_inj' (g'_ne y hy), mul_div_cancel _ (g'_ne y hy)] at h 
+  simp only [taylorWithinEval_self] at h
+  rw [mul_comm, ← div_left_inj' (g'_ne y hy), mul_div_cancel _ (g'_ne y hy)] at h
   rw [← h]
   field_simp [g'_ne y hy, n.factorial_ne_zero]
   ring
@@ -332,7 +332,7 @@ theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ
     by
     intro y hy
     refine' pow_ne_zero _ _
-    rw [mem_Ioo] at hy 
+    rw [mem_Ioo] at hy
     rw [sub_ne_zero]
     exact hy.2.Ne.symm
   have hg' : ∀ y : ℝ, y ∈ Ioo x₀ x → -(↑n + 1) * (x - y) ^ n ≠ 0 := fun y hy =>
@@ -341,7 +341,7 @@ theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ
   rcases taylor_mean_remainder hx hf hf' gcont (fun y _ => monomial_has_deriv_aux y x _) hg' with
     ⟨y, hy, h⟩
   use y, hy
-  simp only [sub_self, zero_pow, Ne.def, Nat.succ_ne_zero, not_false_iff, zero_sub, mul_neg] at h 
+  simp only [sub_self, zero_pow, Ne.def, Nat.succ_ne_zero, not_false_iff, zero_sub, mul_neg] at h
   rw [h, neg_div, ← div_neg, neg_mul, neg_neg]
   field_simp [n.cast_add_one_ne_zero, n.factorial_ne_zero, xy_ne y hy]
   ring
@@ -387,7 +387,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
     ‖f x - taylorWithinEval f n (Icc a b) a x‖ ≤ C * (x - a) ^ (n + 1) / n ! :=
   by
   rcases eq_or_lt_of_le hab with (rfl | h)
-  · rw [Icc_self, mem_singleton_iff] at hx 
+  · rw [Icc_self, mem_singleton_iff] at hx
     simp [hx]
   -- The nth iterated derivative is differentiable
   have hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (Icc a b)) (Icc a b) :=
@@ -418,7 +418,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
     have I : Icc a x ⊆ Icc a b := Icc_subset_Icc_right hx.2
     exact (hasDerivWithinAt_taylorWithinEval_at_Icc x h (I ht) hf.of_succ hf').mono I
   have := norm_image_sub_le_of_norm_deriv_le_segment' A h' x (right_mem_Icc.2 hx.1)
-  simp only [taylorWithinEval_self] at this 
+  simp only [taylorWithinEval_self] at this
   refine' this.trans_eq _
   -- The rest is a trivial calculation
   rw [abs_of_nonneg (sub_nonneg.mpr hx.1)]

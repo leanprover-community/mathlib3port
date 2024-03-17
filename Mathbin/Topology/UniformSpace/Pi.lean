@@ -76,13 +76,15 @@ instance Pi.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i)
 #align Pi.complete Pi.complete
 -/
 
-#print Pi.separated /-
-instance Pi.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
-  separated_def.2 fun x y H => by
+/- warning: Pi.separated clashes with pi.t0_space -> Pi.instT0Space
+Case conversion may be inaccurate. Consider using '#align Pi.separated Pi.instT0Spaceₓ'. -/
+#print Pi.instT0Space /-
+instance Pi.instT0Space [∀ i, T0Space (α i)] : T0Space (∀ i, α i) :=
+  t0Space_iff_uniformity.2 fun x y H => by
     ext i
     apply eq_of_separated_of_uniform_continuous (Pi.uniformContinuous_proj α i)
     apply H
-#align Pi.separated Pi.separated
+#align Pi.separated Pi.instT0Space
 -/
 
 end

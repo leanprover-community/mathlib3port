@@ -156,7 +156,7 @@ theorem nth_mem_of_lt_card {n : ℕ} (hf : (setOf p).Finite) (hlt : n < hf.toFin
 #print Nat.exists_lt_card_finite_nth_eq /-
 theorem exists_lt_card_finite_nth_eq (hf : (setOf p).Finite) {x} (h : p x) :
     ∃ n, n < hf.toFinset.card ∧ nth p n = x := by
-  rwa [← @Set.mem_setOf_eq _ _ p, ← image_nth_Iio_card hf] at h 
+  rwa [← @Set.mem_setOf_eq _ _ p, ← image_nth_Iio_card hf] at h
 #align nat.exists_lt_card_finite_nth_eq Nat.exists_lt_card_finite_nth_eq
 -/
 
@@ -239,7 +239,7 @@ theorem exists_lt_card_nth_eq {x} (h : p x) :
   refine' (setOf p).finite_or_infinite.elim (fun hf => _) fun hf => _
   · rcases exists_lt_card_finite_nth_eq hf h with ⟨n, hn, hx⟩
     exact ⟨n, fun hf' => hn, hx⟩
-  · rw [← @Set.mem_setOf_eq _ _ p, ← range_nth_of_infinite hf] at h 
+  · rw [← @Set.mem_setOf_eq _ _ p, ← range_nth_of_infinite hf] at h
     rcases h with ⟨n, hx⟩
     exact ⟨n, fun hf' => absurd hf' hf, hx⟩
 #align nat.exists_lt_card_nth_eq Nat.exists_lt_card_nth_eq
@@ -322,7 +322,7 @@ theorem nth_eq_sInf (p : ℕ → Prop) (n : ℕ) : nth p n = sInf {x | p x ∧ �
   by
   by_cases hn : ∀ hf : (setOf p).Finite, n < hf.to_finset.card
   · exact (is_least_nth hn).csInf_eq.symm
-  · push_neg at hn 
+  · push_neg at hn
     rcases hn with ⟨hf, hn⟩
     rw [nth_of_card_le _ hn]
     refine' ((congr_arg Inf <| Set.eq_empty_of_forall_not_mem fun k hk => _).trans sInf_empty).symm
@@ -376,11 +376,11 @@ theorem le_nth_of_lt_nth_succ {k a : ℕ} (h : a < nth p (k + 1)) (ha : p a) : a
     cases' lt_or_le (k + 1) hf.to_finset.card with hk hk
     ·
       rwa [(nth_strict_mono_on hf).lt_iff_lt hn hk, lt_succ_iff, ←
-        (nth_strict_mono_on hf).le_iff_le hn (k.lt_succ_self.trans hk)] at h 
-    · rw [nth_of_card_le _ hk] at h 
+        (nth_strict_mono_on hf).le_iff_le hn (k.lt_succ_self.trans hk)] at h
+    · rw [nth_of_card_le _ hk] at h
       exact absurd h (zero_le _).not_lt
   · rcases subset_range_nth ha with ⟨n, rfl⟩
-    rwa [nth_lt_nth hf, lt_succ_iff, ← nth_le_nth hf] at h 
+    rwa [nth_lt_nth hf, lt_succ_iff, ← nth_le_nth hf] at h
 #align nat.le_nth_of_lt_nth_succ Nat.le_nth_of_lt_nth_succ
 -/
 
@@ -500,7 +500,7 @@ theorem nth_count_eq_sInf (n : ℕ) : nth p (count p n) = sInf {i : ℕ | p i �
   refine' Set.ext fun a => and_congr_right fun hpa => _
   refine' ⟨fun h => not_lt.1 fun ha => _, fun hn k hk => lt_of_lt_of_le (nth_lt_of_lt_count hk) hn⟩
   have hn : nth p (count p a) < a := h _ (count_strict_mono hpa ha)
-  rwa [nth_count hpa, lt_self_iff_false] at hn 
+  rwa [nth_count hpa, lt_self_iff_false] at hn
 #align nat.nth_count_eq_Inf Nat.nth_count_eq_sInf
 -/
 

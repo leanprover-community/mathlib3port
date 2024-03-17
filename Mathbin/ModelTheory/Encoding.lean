@@ -131,7 +131,7 @@ protected def encoding : Encoding (L.term α)
   decode l := (listDecode l).head?.join
   decode_encode t := by
     have h := list_decode_encode_list [t]
-    rw [bind_singleton] at h 
+    rw [bind_singleton] at h
     simp only [h, Option.join, head', List.map, Option.some_bind, id.def]
 #align first_order.language.term.encoding FirstOrder.Language.Term.encoding
 -/
@@ -175,13 +175,13 @@ theorem card_sigma : (#Σ n, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σ 
         ⟨⟨Sum.elim (fun i => ⟨0, var (Sum.inl i)⟩) fun F => ⟨1, func F.2 fun _ => var (Sum.inr 0)⟩,
             _⟩⟩
       · rintro (a | a) (b | b) h
-        · simp only [Sum.elim_inl, eq_self_iff_true, heq_iff_eq, true_and_iff] at h 
+        · simp only [Sum.elim_inl, eq_self_iff_true, heq_iff_eq, true_and_iff] at h
           rw [h]
-        · simp only [Sum.elim_inl, Sum.elim_inr, Nat.zero_ne_one, false_and_iff] at h 
+        · simp only [Sum.elim_inl, Sum.elim_inr, Nat.zero_ne_one, false_and_iff] at h
           exact h.elim
-        · simp only [Sum.elim_inr, Sum.elim_inl, Nat.one_ne_zero, false_and_iff] at h 
+        · simp only [Sum.elim_inr, Sum.elim_inl, Nat.one_ne_zero, false_and_iff] at h
           exact h.elim
-        · simp only [Sum.elim_inr, eq_self_iff_true, heq_iff_eq, true_and_iff] at h 
+        · simp only [Sum.elim_inr, eq_self_iff_true, heq_iff_eq, true_and_iff] at h
           rw [Sigma.ext_iff.2 ⟨h.1, h.2.1⟩]
 #align first_order.language.term.card_sigma FirstOrder.Language.Term.card_sigma
 -/
@@ -372,7 +372,7 @@ protected def encoding : Encoding (Σ n, L.BoundedFormula α n)
   decode l := (listDecode l).1
   decode_encode φ := by
     have h := list_decode_encode_list [φ]
-    rw [bind_singleton] at h 
+    rw [bind_singleton] at h
     rw [h]
     rfl
 #align first_order.language.bounded_formula.encoding FirstOrder.Language.BoundedFormula.encoding

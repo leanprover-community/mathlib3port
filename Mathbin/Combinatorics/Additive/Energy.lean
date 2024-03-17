@@ -129,7 +129,7 @@ variable {s t}
 theorem multiplicativeEnergy_pos_iff : 0 < multiplicativeEnergy s t ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun h =>
     of_not_not fun H => by
-      simp_rw [not_and_or, not_nonempty_iff_eq_empty] at H 
+      simp_rw [not_and_or, not_nonempty_iff_eq_empty] at H
       obtain rfl | rfl := H <;> simpa [Nat.not_lt_zero] using h,
     fun h => multiplicativeEnergy_pos h.1 h.2⟩
 #align finset.multiplicative_energy_pos_iff Finset.multiplicativeEnergy_pos_iff
@@ -179,7 +179,7 @@ theorem multiplicativeEnergy_univ_left :
   have : (↑((univ : Finset α) ×ˢ t ×ˢ t) : Set (α × α × α)).InjOn f :=
     by
     rintro ⟨a₁, b₁, c₁⟩ h₁ ⟨a₂, b₂, c₂⟩ h₂ h
-    simp_rw [Prod.ext_iff] at h 
+    simp_rw [Prod.ext_iff] at h
     obtain ⟨h, rfl, rfl⟩ := h
     rw [mul_right_cancel h.1]
   rw [← card_image_of_inj_on this]

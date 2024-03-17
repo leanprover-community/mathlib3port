@@ -244,7 +244,7 @@ theorem IsSimpleGroup.comm_iff_isSolvable : (∀ a b : G, a * b = b * a) ↔ IsS
       refine' (mem_bot.1 _).trans (mem_bot.1 _).symm <;>
         · rw [← hn]
           exact mem_top _
-    · rw [IsSimpleGroup.derivedSeries_succ] at hn 
+    · rw [IsSimpleGroup.derivedSeries_succ] at hn
       intro a b
       rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
       exact subset_closure ⟨a, b, rfl⟩⟩

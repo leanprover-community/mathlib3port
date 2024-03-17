@@ -30,7 +30,7 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
   by
   suffices range (coe : ℝ → ℂ) ⊆ K
     by
-    rw [range_subset_iff, ← coe_algebra_map] at this 
+    rw [range_subset_iff, ← coe_algebra_map] at this
     have :=
       (Subalgebra.isSimpleOrder_of_finrank finrank_real_complex).eq_bot_or_eq_top
         (Subfield.toIntermediateField K this).toSubalgebra
@@ -80,7 +80,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       rsuffices ⟨r, hr⟩ : ∃ r : ℝ, of_real.range_restrict r = j (ι x)
       · have :=
           RingHom.congr_fun (ring_hom_eq_of_real_of_continuous (by continuity : Continuous ψ₁)) r
-        rw [RingHom.comp_apply, RingHom.comp_apply, hr, RingEquiv.toRingHom_eq_coe] at this 
+        rw [RingHom.comp_apply, RingHom.comp_apply, hr, RingEquiv.toRingHom_eq_coe] at this
         convert this using 1
         · exact (DenseInducing.extend_eq di hc.continuous _).symm
         · rw [← of_real.coe_range_restrict, hr]; rfl

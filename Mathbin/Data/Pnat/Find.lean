@@ -156,7 +156,7 @@ theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
   refine' (find_eq_iff _).2 ⟨PNat.find_spec h₂, fun n => PNat.recOn n _ _⟩
   · simp [h1]
   intro m IH hm
-  simp only [add_lt_add_iff_right, lt_find_iff] at hm 
+  simp only [add_lt_add_iff_right, lt_find_iff] at hm
   exact hm _ le_rfl
 #align pnat.find_comp_succ PNat.find_comp_succ
 -/

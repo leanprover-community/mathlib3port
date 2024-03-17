@@ -337,7 +337,7 @@ theorem union_symm_apply_right {α} {s t : Set α} [DecidablePred fun x => x ∈
 #print Equiv.Set.singleton /-
 /-- A singleton set is equivalent to a `punit` type. -/
 protected def singleton {α} (a : α) : ({a} : Set α) ≃ PUnit.{u} :=
-  ⟨fun _ => PUnit.unit, fun _ => ⟨a, mem_singleton _⟩, fun ⟨x, h⟩ => by simp at h ; subst x,
+  ⟨fun _ => PUnit.unit, fun _ => ⟨a, mem_singleton _⟩, fun ⟨x, h⟩ => by simp at h; subst x,
     fun ⟨⟩ => rfl⟩
 #align equiv.set.singleton Equiv.Set.singleton
 -/
@@ -835,7 +835,7 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
       Function.update_apply, Function.update_apply, dif_pos h]
     have h_coe : (⟨i, h⟩ : s) = e j ↔ i = e j := subtype.ext_iff.trans (by rw [Subtype.coe_mk])
     simp_rw [h_coe]
-  · have : i ≠ e j := by contrapose! h; have : (e j : α) ∈ s := (e j).2; rwa [← h] at this 
+  · have : i ≠ e j := by contrapose! h; have : (e j : α) ∈ s := (e j).2; rwa [← h] at this
     simp [h, this]
 #align dite_comp_equiv_update dite_comp_equiv_updateₓ
 

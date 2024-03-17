@@ -85,9 +85,9 @@ theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R
   obtain ⟨⟨x, y, h1, h2⟩, rfl : x = _⟩ := this
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
   rw [← (Ideal.Quotient.mk _).map_hMul, ← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq,
-    Ideal.mem_jacobson_bot] at h1 h2 
+    Ideal.mem_jacobson_bot] at h1 h2
   specialize h1 1
-  simp at h1 
+  simp at h1
   exact h1.1
 #align is_local_ring_hom_of_le_jacobson_bot isLocalRingHom_of_le_jacobson_bot
 -/
@@ -152,21 +152,21 @@ theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
     specialize H f hf (residue R a₀)
     have aux := flip mem_nonunits_iff.mp h₂
     simp only [aeval_def, residue_field.algebra_map_eq, eval₂_at_apply, ←
-      Ideal.Quotient.eq_zero_iff_mem, ← LocalRing.mem_maximalIdeal] at H h₁ aux 
+      Ideal.Quotient.eq_zero_iff_mem, ← LocalRing.mem_maximalIdeal] at H h₁ aux
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ aux
     refine' ⟨a, ha₁, _⟩
     rw [← Ideal.Quotient.eq_zero_iff_mem]
-    rwa [← sub_eq_zero, ← RingHom.map_sub] at ha₂ 
+    rwa [← sub_eq_zero, ← RingHom.map_sub] at ha₂
   tfae_have _1_3 : 1 → 3
   · intro hR K _K φ hφ f hf a₀ h₁ h₂
     obtain ⟨a₀, rfl⟩ := hφ a₀
     have H := HenselianLocalRing.is_henselian f hf a₀
-    simp only [← ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂ 
+    simp only [← ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ _
-    · refine' ⟨a, ha₁, _⟩; rwa [φ.map_sub, sub_eq_zero] at ha₂ 
+    · refine' ⟨a, ha₁, _⟩; rwa [φ.map_sub, sub_eq_zero] at ha₂
     · contrapose! h₂
       rwa [← mem_nonunits_iff, ← LocalRing.mem_maximalIdeal, ← LocalRing.ker_eq_maximalIdeal φ hφ,
-        φ.mem_ker] at h₂ 
+        φ.mem_ker] at h₂
   tfae_finish
 #align henselian_local_ring.tfae HenselianLocalRing.TFAE
 -/
@@ -178,7 +178,7 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
     intro f hf a₀ h₁ h₂
     refine' HenselianLocalRing.is_henselian f hf a₀ h₁ _
     contrapose! h₂
-    rw [← mem_nonunits_iff, ← LocalRing.mem_maximalIdeal, ← Ideal.Quotient.eq_zero_iff_mem] at h₂ 
+    rw [← mem_nonunits_iff, ← LocalRing.mem_maximalIdeal, ← Ideal.Quotient.eq_zero_iff_mem] at h₂
     rw [h₂]
     exact not_isUnit_zero
 
@@ -262,7 +262,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
       exact Ideal.pow_le_pow le_self_add (hfcI _)
     · show a - a₀ ∈ I
       specialize ha 1
-      rw [hc, pow_one, ← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one, sub_eq_add_neg] at ha 
+      rw [hc, pow_one, ← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one, sub_eq_add_neg] at ha
       rw [← SModEq.sub_mem, ← add_zero a₀]
       refine' ha.symm.trans (smodeq.rfl.add _)
       rw [SModEq.zero, Ideal.neg_mem_iff]

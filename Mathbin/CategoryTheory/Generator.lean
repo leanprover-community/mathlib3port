@@ -691,7 +691,7 @@ theorem isSeparator_coprod (G H : C) [HasBinaryCoproduct G H] :
   · refine' h.def _ _ fun g => coprod.hom_ext _ _
     · simpa using huv G (by simp) (coprod.inl ≫ g)
     · simpa using huv H (by simp) (coprod.inr ≫ g)
-  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ 
+  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ
     rcases hZ with (rfl | rfl)
     · simpa using coprod.inl ≫= huv (coprod.desc g 0)
     · simpa using coprod.inr ≫= huv (coprod.desc 0 g)
@@ -743,7 +743,7 @@ theorem isCoseparator_prod (G H : C) [HasBinaryProduct G H] :
   · refine' h.def _ _ fun g => prod.hom_ext _ _
     · simpa using huv G (by simp) (g ≫ limits.prod.fst)
     · simpa using huv H (by simp) (g ≫ limits.prod.snd)
-  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ 
+  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ
     rcases hZ with (rfl | rfl)
     · simpa using huv (prod.lift g 0) =≫ limits.prod.fst
     · simpa using huv (prod.lift 0 g) =≫ limits.prod.snd
@@ -794,7 +794,7 @@ theorem isDetector_iff_reflectsIsomorphisms_coyoneda_obj (G : C) :
   refine'
     ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h =>
       (is_detector_def _).2 fun X Y f hf => _⟩
-  · rw [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf 
+  · rw [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf
     exact hf h
   · suffices is_iso ((coyoneda.obj (op G)).map f) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (coyoneda.obj (op G)) _ h
@@ -808,7 +808,7 @@ theorem isCodetector_iff_reflectsIsomorphisms_yoneda_obj (G : C) :
   by
   refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => (is_codetector_def _).2 fun X Y f hf => _⟩
   · refine' (is_iso_unop_iff _).1 (hG.def _ _)
-    rwa [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf 
+    rwa [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf
   · rw [← is_iso_op_iff]
     suffices is_iso ((yoneda.obj G).map f.op) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (yoneda.obj G) _ h

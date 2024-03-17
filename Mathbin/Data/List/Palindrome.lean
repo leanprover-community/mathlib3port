@@ -63,7 +63,7 @@ theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l :=
   by
   refine' bidirectional_rec_on l (fun _ => palindrome.nil) (fun a _ => palindrome.singleton a) _
   intro x l y hp hr
-  rw [reverse_cons, reverse_append] at hr 
+  rw [reverse_cons, reverse_append] at hr
   rw [head_eq_of_cons_eq hr]
   have : palindrome l := hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl)
   exact palindrome.cons_concat x this

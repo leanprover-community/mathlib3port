@@ -321,7 +321,7 @@ theorem IsBaseChange.of_lift_unique
           TensorProduct.induction_on x _ (fun s' y => smul_assoc s s' _) fun x y hx hy => _ }
     · rw [map_zero, smul_zero, map_zero, smul_zero]
     · rw [smul_add, map_add, map_add, smul_add, hx, hy]
-  simp_rw [DFunLike.ext_iff, LinearMap.comp_apply, LinearMap.restrictScalars_apply] at hg 
+  simp_rw [DFunLike.ext_iff, LinearMap.comp_apply, LinearMap.restrictScalars_apply] at hg
   let fe : S ⊗[R] M ≃ₗ[S] N :=
     LinearEquiv.ofLinear f'' (ulift.module_equiv.to_linear_map.comp g) _ _
   · exact fe.bijective

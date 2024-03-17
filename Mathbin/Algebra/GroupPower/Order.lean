@@ -794,7 +794,7 @@ theorem pow_bit0_pos_iff (a : R) {n : ℕ} (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a
   by
   refine' ⟨fun h => _, fun h => pow_bit0_pos h n⟩
   rintro rfl
-  rw [zero_pow (Nat.zero_lt_bit0 hn)] at h 
+  rw [zero_pow (Nat.zero_lt_bit0 hn)] at h
   exact lt_irrefl _ h
 #align pow_bit0_pos_iff pow_bit0_pos_iff
 -/

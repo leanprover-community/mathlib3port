@@ -118,7 +118,7 @@ theorem eraseLead_ne_zero (f0 : 2 ≤ f.support.card) : eraseLead f ≠ 0 :=
 #print Polynomial.lt_natDegree_of_mem_eraseLead_support /-
 theorem lt_natDegree_of_mem_eraseLead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
     a < f.natDegree := by
-  rw [erase_lead_support, mem_erase] at h 
+  rw [erase_lead_support, mem_erase] at h
   exact (le_nat_degree_of_mem_supp a h.2).lt_of_ne h.1
 #align polynomial.lt_nat_degree_of_mem_erase_lead_support Polynomial.lt_natDegree_of_mem_eraseLead_support
 -/

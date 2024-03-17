@@ -56,13 +56,13 @@ theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : 
       by
       apply tendsto.mono_left _ (hl.trans nhdsWithin_le_nhds)
       exact ((tendsto_id.sub_const x).const_mul c).const_add 1
-    simp only [_root_.sub_self, add_zero, MulZeroClass.mul_zero] at this 
+    simp only [_root_.sub_self, add_zero, MulZeroClass.mul_zero] at this
     apply tendsto.congr' (eventually.filter_mono hl _) this
     filter_upwards [self_mem_nhdsWithin] with y hy
     field_simp [sub_ne_zero.2 hy]
     ring
   have Z := (hf.comp h').mul L
-  rw [mul_one] at Z 
+  rw [mul_one] at Z
   apply tendsto.congr' _ Z
   have : ∀ᶠ y in l, y + c * (y - x) ^ 2 ≠ x := by apply tendsto.mono_right h' hl self_mem_nhdsWithin
   filter_upwards [this] with y hy
@@ -164,12 +164,12 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
     hf.countable_not_continuous_at.ae_not_mem volume] with x hx h'x
   have A : hf.stieltjes_function x = f x :=
     by
-    rw [Classical.not_not, hf.continuous_at_iff_left_lim_eq_right_lim] at h'x 
+    rw [Classical.not_not, hf.continuous_at_iff_left_lim_eq_right_lim] at h'x
     apply le_antisymm _ (hf.le_right_lim (le_refl _))
     rw [← h'x]
     exact hf.left_lim_le (le_refl _)
   rw [hasDerivAt_iff_tendsto_slope, (nhds_left'_sup_nhds_right' x).symm, tendsto_sup,
-    slope_fun_def_field, A] at hx 
+    slope_fun_def_field, A] at hx
   -- prove differentiability on the right, by sandwiching with values of `g`
   have L1 :
     tendsto (fun y => (f y - f x) / (y - x)) (𝓝[>] x)
@@ -197,11 +197,11 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
     · filter_upwards [self_mem_nhdsWithin]
       rintro y (hy : x < y)
       have : 0 < (y - x) ^ 2 := sq_pos_of_pos (sub_pos.2 hy)
-      apply div_le_div_of_le_of_nonneg _ (sub_pos.2 hy).le
+      apply div_le_div_of_nonneg_right _ (sub_pos.2 hy).le
       exact (sub_le_sub_iff_right _).2 (hf.right_lim_le (by linarith))
     · filter_upwards [self_mem_nhdsWithin]
       rintro y (hy : x < y)
-      apply div_le_div_of_le_of_nonneg _ (sub_pos.2 hy).le
+      apply div_le_div_of_nonneg_right _ (sub_pos.2 hy).le
       exact (sub_le_sub_iff_right _).2 (hf.le_right_lim (le_refl y))
   -- prove differentiability on the left, by sandwiching with values of `g`
   have L2 :

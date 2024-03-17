@@ -1102,7 +1102,7 @@ theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
     by_cases h : (f (n, k)).2.succ = k <;> simp [h]
     · have := congr_arg Nat.succ IH.1
       refine' ⟨_, fun k0 => Nat.noConfusion (h.trans k0)⟩
-      rwa [← Nat.succ_add, h, add_comm, ← Nat.mul_succ] at this 
+      rwa [← Nat.succ_add, h, add_comm, ← Nat.mul_succ] at this
     · exact ⟨by rw [Nat.succ_add, IH.1], fun k0 => lt_of_le_of_ne (IH.2.1 k0) h, IH.2.2⟩
   revert this; cases' f (n, k) with D M
   simp; intro h₁ h₂ h₃

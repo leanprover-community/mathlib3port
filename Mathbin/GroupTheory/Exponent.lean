@@ -228,9 +228,9 @@ theorem Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} (hp : p
   rcases eq_or_ne ((exponent G).factorization p) 0 with (h | h)
   · refine' ⟨1, by rw [h, pow_zero, orderOf_one]⟩
   have he : 0 < exponent G :=
-    Ne.bot_lt fun ht => by rw [ht] at h ; apply h;
+    Ne.bot_lt fun ht => by rw [ht] at h; apply h;
       rw [bot_eq_zero, Nat.factorization_zero, Finsupp.zero_apply]
-  rw [← Finsupp.mem_support_iff] at h 
+  rw [← Finsupp.mem_support_iff] at h
   obtain ⟨g, hg⟩ : ∃ g : G, g ^ (exponent G / p) ≠ 1 :=
     by
     suffices key : ¬exponent G ∣ exponent G / p
@@ -244,7 +244,7 @@ theorem Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} (hp : p
   refine' ⟨g ^ k, _⟩
   rw [ht]
   apply orderOf_eq_prime_pow
-  · rwa [hk, mul_comm, ht, pow_succ', ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg 
+  · rwa [hk, mul_comm, ht, pow_succ', ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
   · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
     exact pow_exponent_eq_one g
 #align nat.prime.exists_order_of_eq_pow_factorization_exponent Nat.Prime.exists_orderOf_eq_pow_factorization_exponent
@@ -266,12 +266,12 @@ theorem exponent_ne_zero_iff_range_orderOf_finite (h : ∀ g : G, 0 < orderOf g)
     have htpos : 0 < t.prod id :=
       by
       refine' Finset.prod_pos fun a ha => _
-      rw [← Finset.mem_coe, ht] at ha 
+      rw [← Finset.mem_coe, ht] at ha
       obtain ⟨k, rfl⟩ := ha
       exact h k
     suffices exponent G ∣ t.prod id by
       intro h
-      rw [h, zero_dvd_iff] at this 
+      rw [h, zero_dvd_iff] at this
       exact htpos.ne' this
     refine' exponent_dvd_of_forall_pow_eq_one _ _ fun g => _
     rw [pow_mod_orderOf, Nat.mod_eq_zero_of_dvd, pow_zero g]
@@ -288,7 +288,7 @@ theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf 
     exponent G = 0 ↔ (Set.range (orderOf : G → ℕ)).Infinite :=
   by
   have := exponent_ne_zero_iff_range_orderOf_finite h
-  rwa [Ne.def, not_iff_comm, Iff.comm] at this 
+  rwa [Ne.def, not_iff_comm, Iff.comm] at this
 #align monoid.exponent_eq_zero_iff_range_order_of_infinite Monoid.exponent_eq_zero_iff_range_orderOf_infinite
 #align add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_addOrderOf_infinite
 -/
@@ -346,12 +346,12 @@ theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = �
   by_contra! h
   obtain ⟨p, hp, hpe⟩ := h
   replace hp := Nat.prime_of_mem_factors hp
-  simp only [Nat.factors_count_eq] at hpe 
+  simp only [Nat.factors_count_eq] at hpe
   set k := (orderOf t).factorization p with hk
   obtain ⟨g, hg⟩ := hp.exists_order_of_eq_pow_factorization_exponent G
   suffices orderOf t < orderOf (t ^ p ^ k * g)
     by
-    rw [ht] at this 
+    rw [ht] at this
     exact this.not_le (le_csSup hfin.bdd_above <| Set.mem_range_self _)
   have hpk : p ^ k ∣ orderOf t := Nat.ord_proj_dvd _ _
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
@@ -399,7 +399,7 @@ variable [CancelCommMonoid G]
 theorem exponent_eq_max'_orderOf [Fintype G] :
     exponent G = ((@Finset.univ G _).image orderOf).max' ⟨1, by simp⟩ :=
   by
-  rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← iSup]
+  rw [← Finset.Nonempty.csSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← iSup]
   exact exponent_eq_supr_order_of orderOf_pos
 #align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_orderOf
 #align add_monoid.exponent_eq_max'_order_of AddMonoid.exponent_eq_max'_addOrderOf
@@ -429,7 +429,7 @@ theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoid.exponent G ^ Group.ra
     rw [← MonoidHom.range_top_iff_surjective, eq_top_iff, ← hS2, closure_le]
     exact fun g hg => ⟨Pi.mulSingle ⟨g, hg⟩ ⟨g, mem_zpowers g⟩, noncomm_pi_coprod_mul_single _ _⟩
   replace hf := nat_card_dvd_of_surjective f hf
-  rw [Nat.card_pi] at hf 
+  rw [Nat.card_pi] at hf
   refine' hf.trans (Finset.prod_dvd_prod_of_dvd _ _ fun g hg => _)
   rw [← Nat.card_zpowers]
   exact Monoid.order_dvd_exponent (g : G)

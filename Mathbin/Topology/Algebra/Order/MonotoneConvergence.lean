@@ -222,7 +222,7 @@ instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
   by
   constructor
   rintro ⟨a, b⟩ s h
-  rw [isLUB_prod, ← range_restrict, ← range_restrict] at h 
+  rw [isLUB_prod, ← range_restrict, ← range_restrict] at h
   have A : tendsto (fun x : s => (x : α × β).1) at_top (𝓝 a) :=
     tendsto_atTop_isLUB (monotone_fst.restrict s) h.1
   have B : tendsto (fun x : s => (x : α × β).2) at_top (𝓝 b) :=
@@ -238,7 +238,7 @@ instance {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, Top
     [∀ i, SupConvergenceClass (α i)] : SupConvergenceClass (∀ i, α i) :=
   by
   refine' ⟨fun f s h => _⟩
-  simp only [isLUB_pi, ← range_restrict] at h 
+  simp only [isLUB_pi, ← range_restrict] at h
   exact tendsto_pi_nhds.2 fun i => tendsto_atTop_isLUB ((monotone_eval _).restrict _) (h i)
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, TopologicalSpace (α i)]

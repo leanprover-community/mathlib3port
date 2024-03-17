@@ -163,7 +163,7 @@ theorem isUnit_toMatrix_iff [Nontrivial k] (p : ι → P) :
   by
   constructor
   · rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.to_matrix p⟩
-    rw [Matrix.hMul_eq_hMul] at hA hA' 
+    rw [Matrix.hMul_eq_hMul] at hA hA'
     exact
       ⟨b.affine_independent_of_to_matrix_right_inv p hA,
         b.affine_span_eq_top_of_to_matrix_left_inv p hA'⟩
@@ -191,7 +191,7 @@ theorem toMatrix_inv_vecMul_toMatrix (x : P) :
     (b.toMatrix b₂)⁻¹.vecMul (b.coords x) = b₂.coords x :=
   by
   have hu := b.is_unit_to_matrix b₂
-  rw [Matrix.isUnit_iff_isUnit_det] at hu 
+  rw [Matrix.isUnit_iff_isUnit_det] at hu
   rw [← b.to_matrix_vec_mul_coords b₂, Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv _ hu,
     Matrix.vecMul_one]
 #align affine_basis.to_matrix_inv_vec_mul_to_matrix AffineBasis.toMatrix_inv_vecMul_toMatrix
@@ -204,7 +204,7 @@ theorem det_smul_coords_eq_cramer_coords (x : P) :
     (b.toMatrix b₂).det • b₂.coords x = (b.toMatrix b₂)ᵀ.cramer (b.coords x) :=
   by
   have hu := b.is_unit_to_matrix b₂
-  rw [Matrix.isUnit_iff_isUnit_det] at hu 
+  rw [Matrix.isUnit_iff_isUnit_det] at hu
   rw [← b.to_matrix_inv_vec_mul_to_matrix, Matrix.det_smul_inv_vecMul_eq_cramer_transpose _ _ hu]
 #align affine_basis.det_smul_coords_eq_cramer_coords AffineBasis.det_smul_coords_eq_cramer_coords
 -/

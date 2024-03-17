@@ -366,7 +366,7 @@ theorem init_iff [IsTrans β s] (f : r ≺i s) {a : α} {b : β} : s b (f a) ↔
 theorem irrefl {r : α → α → Prop} [IsWellOrder α r] (f : r ≺i r) : False :=
   by
   have := f.lt_top f.top
-  rw [show f f.top = f.top from InitialSeg.eq (↑f) (InitialSeg.refl r) f.top] at this 
+  rw [show f f.top = f.top from InitialSeg.eq (↑f) (InitialSeg.refl r) f.top] at this
   exact irrefl _ this
 #align principal_seg.irrefl PrincipalSeg.irrefl
 -/

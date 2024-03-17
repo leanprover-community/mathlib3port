@@ -392,9 +392,9 @@ theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) :=
   by
   have h₁ := congr_arg bit1 (Nat.div_add_mod n m)
   -- `∀ m n : ℕ, bit0 m * n = bit0 (m * n)` seems to be missing...
-  rw [bit1_add, bit0_eq_two_mul, ← mul_assoc, ← bit0_eq_two_mul] at h₁ 
+  rw [bit1_add, bit0_eq_two_mul, ← mul_assoc, ← bit0_eq_two_mul] at h₁
   have h₂ := Nat.div_add_mod (bit1 n) (bit0 m)
-  rw [bit1_div_bit0] at h₂ 
+  rw [bit1_div_bit0] at h₂
   exact add_left_cancel (h₂.trans h₁.symm)
 #align nat.bit1_mod_bit0 Nat.bit1_mod_bit0
 -/
@@ -443,14 +443,14 @@ theorem iterate_odd (hf : Involutive f) (hn : Odd n) : f^[n] = f :=
 
 #print Function.Involutive.iterate_eq_self /-
 theorem iterate_eq_self (hf : Involutive f) (hne : f ≠ id) : f^[n] = f ↔ Odd n :=
-  ⟨fun H => odd_iff_not_even.2 fun hn => hne <| by rwa [hf.iterate_even hn, eq_comm] at H ,
+  ⟨fun H => odd_iff_not_even.2 fun hn => hne <| by rwa [hf.iterate_even hn, eq_comm] at H,
     hf.iterate_odd⟩
 #align function.involutive.iterate_eq_self Function.Involutive.iterate_eq_self
 -/
 
 #print Function.Involutive.iterate_eq_id /-
 theorem iterate_eq_id (hf : Involutive f) (hne : f ≠ id) : f^[n] = id ↔ Even n :=
-  ⟨fun H => even_iff_not_odd.2 fun hn => hne <| by rwa [hf.iterate_odd hn] at H , hf.iterate_even⟩
+  ⟨fun H => even_iff_not_odd.2 fun hn => hne <| by rwa [hf.iterate_odd hn] at H, hf.iterate_even⟩
 #align function.involutive.iterate_eq_id Function.Involutive.iterate_eq_id
 -/
 

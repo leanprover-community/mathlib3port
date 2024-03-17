@@ -313,11 +313,11 @@ theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encode
   | succ v => by
     cases' e : unpair v with v₁ v₂
     have h := unpair_right_le v
-    rw [e] at h 
+    rw [e] at h
     rcases have : v₂ < succ v := lt_succ_of_le h
       denumerable_list_aux v₂ with
       ⟨a, h₁, h₂⟩
-    rw [Option.mem_def] at h₁ 
+    rw [Option.mem_def] at h₁
     use of_nat α v₁ :: a
     simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
 #align denumerable.denumerable_list_aux Denumerable.denumerable_list_aux
@@ -411,9 +411,9 @@ instance multiset : Denumerable (Multiset α) :=
       Multiset.map (ofNat α) (raise (ofNat (List ℕ) n) 0), fun s => by
       have :=
           raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
-        simp [-Multiset.coe_map, this],
+        simp [-Multiset.map_coe, this],
       fun n => by
-      simp [-Multiset.coe_map, List.mergeSort_eq_self _ (raise_sorted _ _), lower_raise]⟩
+      simp [-Multiset.map_coe, List.mergeSort_eq_self _ (raise_sorted _ _), lower_raise]⟩
 #align denumerable.multiset Denumerable.multiset
 -/
 
@@ -488,10 +488,10 @@ instance finset : Denumerable (Finset α) :=
     ⟨fun s : Finset α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
       Finset.map (eqv α).symm.toEmbedding (raise'Finset (ofNat (List ℕ) n) 0), fun s =>
       Finset.eq_of_veq <| by
-        simp [-Multiset.coe_map, raise'_finset,
+        simp [-Multiset.map_coe, raise'_finset,
           raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
       fun n => by
-      simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,
+      simp [-Multiset.map_coe, Finset.map, raise'_finset, Finset.sort,
         List.mergeSort_eq_self (· ≤ ·) ((raise'_sorted _ _).imp (@le_of_lt _ _)), lower_raise']⟩
 #align denumerable.finset Denumerable.finset
 -/

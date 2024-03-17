@@ -40,7 +40,7 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
       ⟨le_add_of_nonneg_right (ofNat_zero_le s),
         add_lt_of_lt_sub_left <|
           match n - m, h1 with
-          | (k : ℕ), h1 => by rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1 ⟩,
+          | (k : ℕ), h1 => by rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1⟩,
     fun ⟨h1, h2⟩ =>
     List.mem_map.2
       ⟨toNat (r - m),

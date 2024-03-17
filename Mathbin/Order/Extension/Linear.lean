@@ -62,7 +62,7 @@ theorem extend_partialOrder {α : Type u} (r : α → α → Prop) [IsPartialOrd
   intro x y
   by_contra! h
   let s' x' y' := s x' y' ∨ s x' x ∧ s y y'
-  rw [← hs₂ s' _ fun _ _ => Or.inl] at h 
+  rw [← hs₂ s' _ fun _ _ => Or.inl] at h
   · apply h.1 (Or.inr ⟨refl _, refl _⟩)
   · refine'
       { refl := fun x => Or.inl (refl _)

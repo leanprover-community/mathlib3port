@@ -180,7 +180,7 @@ theorem wittPolynomial_zmod_self (n : ℕ) :
   intro k hk
   rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mul, ← pow_succ]
   congr
-  rw [mem_range] at hk 
+  rw [mem_range] at hk
   rw [add_comm, add_tsub_assoc_of_le (nat.lt_succ_iff.mp hk), ← add_comm]
 #align witt_polynomial_zmod_self wittPolynomial_zmod_self
 -/
@@ -261,7 +261,7 @@ theorem constantCoeff_xInTermsOfW [hp : Fact p.Prime] [Invertible (p : R)] (n : 
     sum_eq_zero]
   · simp only [constant_coeff_X, sub_zero, MulZeroClass.mul_zero]
   · intro m H
-    rw [mem_range] at H 
+    rw [mem_range] at H
     simp only [RingHom.map_mul, RingHom.map_pow, constant_coeff_C, IH m H]
     rw [zero_pow, MulZeroClass.mul_zero]
     apply pow_pos hp.1.Pos
@@ -297,14 +297,14 @@ theorem xInTermsOfW_vars_aux (n : ℕ) :
   all_goals
     intro H
     replace H := vars_sum_subset _ _ H
-    rw [mem_bUnion] at H 
+    rw [mem_bUnion] at H
     rcases H with ⟨j, hj, H⟩
-    rw [vars_C_mul] at H 
+    rw [vars_C_mul] at H
     swap
     · apply pow_ne_zero; exact_mod_cast hp.1.NeZero
-    rw [mem_range] at hj 
+    rw [mem_range] at hj
     replace H := (ih j hj).2 (vars_pow _ _ H)
-    rw [mem_range] at H 
+    rw [mem_range] at H
   · rw [mem_range]
     exact lt_of_lt_of_le H hj
   · exact lt_irrefl n (lt_of_lt_of_le H hj)
@@ -355,7 +355,7 @@ theorem bind₁_wittPolynomial_xInTermsOfW [Invertible (p : R)] (n : ℕ) :
   ·-- this is really slow for some reason
     rw [mul_right_comm, ← C_mul, ← mul_pow, mul_invOf_self, one_pow, C_1, one_mul]
   · intro i h
-    rw [mem_range] at h 
+    rw [mem_range] at h
     simp only [AlgHom.map_mul, AlgHom.map_pow, alg_hom_C, H i h]
 #align bind₁_witt_polynomial_X_in_terms_of_W bind₁_wittPolynomial_xInTermsOfW
 -/

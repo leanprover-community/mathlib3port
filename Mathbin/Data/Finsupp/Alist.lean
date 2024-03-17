@@ -35,8 +35,8 @@ noncomputable def toAList (f : α →₀ M) : AList fun x : α => M :=
     by
     rw [List.NodupKeys, List.keys, List.map_map, Prod.fst_comp_toSigma, List.nodup_map_iff_inj_on]
     · rintro ⟨b, m⟩ hb ⟨c, n⟩ hc (rfl : b = c)
-      rw [Finset.mem_toList, Finsupp.mem_graph_iff] at hb hc 
-      dsimp at hb hc 
+      rw [Finset.mem_toList, Finsupp.mem_graph_iff] at hb hc
+      dsimp at hb hc
       rw [← hc.1, hb.1]
     · apply Finset.nodup_toList⟩
 #align finsupp.to_alist Finsupp.toAList

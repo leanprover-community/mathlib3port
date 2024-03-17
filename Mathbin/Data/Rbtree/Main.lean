@@ -146,7 +146,7 @@ theorem Std.RBSet.not_mem_of_find?_none [IsStrictWeakOrder α lt] {a : α} {t : 
     by
     intro h
     cases' h with _ h; cases' h with h₁ h₂
-    rw [h] at h₁ ; contradiction
+    rw [h] at h₁; contradiction
 #align rbtree.not_mem_of_find_none Std.RBSet.not_mem_of_find?_none
 
 theorem Std.RBSet.eqv_of_find?_some [IsStrictWeakOrder α lt] {a b : α} {t : Std.RBSet α lt} :
@@ -177,7 +177,7 @@ theorem Std.RBSet.contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Std.R
   simp [h, contains]; apply Iff.intro
   · intro h'; cases' h' with _ h'; cases h'; simp [*]; simp [Option.isSome]
   · intro h'
-    cases' heq : find t a with v; simp [HEq, Option.isSome] at h' ; contradiction
+    cases' heq : find t a with v; simp [HEq, Option.isSome] at h'; contradiction
     exists v; simp; apply eqv_of_find_some HEq
 #align rbtree.contains_correct Std.RBSet.contains_correct
 
@@ -212,7 +212,7 @@ theorem Std.RBSet.incomp_or_mem_of_mem_ins {a b : α} {t : Std.RBSet α lt} :
 
 theorem Std.RBSet.eq_or_mem_of_mem_ins [IsStrictTotalOrder α lt] {a b : α} {t : Std.RBSet α lt} :
     a ∈ t.insert b → a = b ∨ a ∈ t := fun h =>
-  suffices a ≈[lt]b ∨ a ∈ t by simp [eqv_lt_iff_eq] at this  <;> assumption
+  suffices a ≈[lt]b ∨ a ∈ t by simp [eqv_lt_iff_eq] at this <;> assumption
   Std.RBSet.incomp_or_mem_of_mem_ins h
 #align rbtree.eq_or_mem_of_mem_ins Std.RBSet.eq_or_mem_of_mem_ins
 

@@ -179,7 +179,7 @@ theorem mulSalemSpencer_insert :
         fun b c hb hc => hs (Or.inr hb) (Or.inr hc) (Or.inl rfl)⟩,
       _⟩
   rintro ⟨hs, ha, ha'⟩ b c d hb hc hd h
-  rw [mem_insert_iff] at hb hc hd 
+  rw [mem_insert_iff] at hb hc hd
   obtain rfl | hb := hb <;> obtain rfl | hc := hc
   · rfl
   all_goals obtain rfl | hd := hd
@@ -212,7 +212,7 @@ theorem mulSalemSpencer_pair (a b : α) : MulSalemSpencer ({a, b} : Set α) :=
 theorem MulSalemSpencer.mul_left (hs : MulSalemSpencer s) : MulSalemSpencer ((· * ·) a '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h 
+  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h
   rw [hs hb hc hd (mul_left_cancel h)]
 #align mul_salem_spencer.mul_left MulSalemSpencer.mul_left
 #align add_salem_spencer.add_left AddSalemSpencer.add_left
@@ -223,7 +223,7 @@ theorem MulSalemSpencer.mul_left (hs : MulSalemSpencer s) : MulSalemSpencer ((·
 theorem MulSalemSpencer.mul_right (hs : MulSalemSpencer s) : MulSalemSpencer ((· * a) '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h 
+  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h
   rw [hs hb hc hd (mul_right_cancel h)]
 #align mul_salem_spencer.mul_right MulSalemSpencer.mul_right
 #align add_salem_spencer.add_right AddSalemSpencer.add_right
@@ -283,7 +283,7 @@ theorem MulSalemSpencer.mul_left₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
     MulSalemSpencer ((· * ·) a '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h 
+  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h
   rw [hs hb hc hd (mul_left_cancel₀ (mul_ne_zero ha ha) h)]
 #align mul_salem_spencer.mul_left₀ MulSalemSpencer.mul_left₀
 -/
@@ -293,7 +293,7 @@ theorem MulSalemSpencer.mul_right₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
     MulSalemSpencer ((· * a) '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h 
+  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h
   rw [hs hb hc hd (mul_right_cancel₀ (mul_ne_zero ha ha) h)]
 #align mul_salem_spencer.mul_right₀ MulSalemSpencer.mul_right₀
 -/
@@ -330,7 +330,7 @@ theorem addSalemSpencer_iff_eq_right {s : Set ℕ} :
   by
   refine' forall₄_congr fun a b c _ => forall₃_congr fun _ _ habc => ⟨_, _⟩
   · rintro rfl
-    simp_rw [← two_mul] at habc 
+    simp_rw [← two_mul] at habc
     exact mul_left_cancel₀ two_ne_zero habc
   · rintro rfl
     exact (add_left_cancel habc).symm
@@ -516,9 +516,9 @@ theorem mulRothNumber_map_mul_left :
   by
   refine' le_antisymm _ _
   · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec (s.map <| mulLeftEmbedding a)
-    rw [subset_map_iff] at hus 
+    rw [subset_map_iff] at hus
     obtain ⟨u, hus, rfl⟩ := hus
-    rw [coe_map] at hu 
+    rw [coe_map] at hu
     rw [← hcard, card_map]
     exact (mulSalemSpencer_mul_left_iff.1 hu).le_mulRothNumber hus
   · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec s

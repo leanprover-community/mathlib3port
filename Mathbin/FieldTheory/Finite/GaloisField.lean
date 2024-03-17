@@ -62,7 +62,7 @@ instance FiniteField.isSplittingField_sub (K F : Type _) [Field K] [Fintype K] [
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
     Separable (X ^ q - X : K[X]) := by
   use 1, X ^ q - X - 1
-  rw [← CharP.cast_eq_zero_iff K[X] p] at h 
+  rw [← CharP.cast_eq_zero_iff K[X] p] at h
   rw [derivative_sub, derivative_X_pow, derivative_X, C_eq_nat_cast, h]
   ring
 #align galois_poly_separable galois_poly_separable
@@ -110,11 +110,11 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (ZMod p) (GaloisFi
       (splitting_field.splits g_poly)
   have nat_degree_eq : g_poly.natDegree = p ^ n :=
     FiniteField.X_pow_card_pow_sub_X_natDegree_eq _ h hp
-  rw [nat_degree_eq] at key 
+  rw [nat_degree_eq] at key
   suffices g_poly.rootSet (GaloisField p n) = Set.univ
     by
-    simp_rw [this, ← Fintype.ofEquiv_card (Equiv.Set.univ _)] at key 
-    rw [@card_eq_pow_finrank (ZMod p), ZMod.card] at key 
+    simp_rw [this, ← Fintype.ofEquiv_card (Equiv.Set.univ _)] at key
+    rw [@card_eq_pow_finrank (ZMod p), ZMod.card] at key
     exact Nat.pow_right_injective (Nat.Prime.one_lt' p).out key
   rw [Set.eq_univ_iff_forall]
   suffices
@@ -131,8 +131,8 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (ZMod p) (GaloisFi
   · rintro x (⟨r, rfl⟩ | hx)
     · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
       rw [← map_pow, ZMod.pow_card_pow, sub_self]
-    · dsimp only [GaloisField] at hx 
-      rwa [mem_root_set_of_ne aux] at hx ; infer_instance
+    · dsimp only [GaloisField] at hx
+      rwa [mem_root_set_of_ne aux] at hx; infer_instance
   · dsimp only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
     simp only [coeff_X_pow, coeff_X_zero, sub_zero, _root_.map_eq_zero, ite_eq_right_iff,
@@ -237,7 +237,7 @@ def algEquivOfCardEq (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K] [Algebra (ZMo
   have : CharP K' p := by rw [← Algebra.charP_iff (ZMod p) K' p]; exact ZMod.charP p
   choose n a hK using FiniteField.card K p
   choose n' a' hK' using FiniteField.card K' p
-  rw [hK, hK'] at hKK' 
+  rw [hK, hK'] at hKK'
   have hGalK := GaloisField.algEquivGaloisField p n hK
   have hK'Gal := (GaloisField.algEquivGaloisField p n' hK').symm
   rw [Nat.pow_right_injective (Fact.out (Nat.Prime p)).one_lt hKK'] at *
@@ -260,7 +260,7 @@ def ringEquivOfCardEq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' :=
     -- := eq_prime_of_eq_prime_pow
     by_contra hne
     have h2 := Nat.coprime_pow_primes n n' hp hp' hne
-    rw [(Eq.congr hK hK').mp hKK', Nat.coprime_self, pow_eq_one_iff (PNat.ne_zero n')] at h2 
+    rw [(Eq.congr hK hK').mp hKK', Nat.coprime_self, pow_eq_one_iff (PNat.ne_zero n')] at h2
     exact Nat.Prime.ne_one hp' h2
     all_goals infer_instance
   rw [← hpp'] at *

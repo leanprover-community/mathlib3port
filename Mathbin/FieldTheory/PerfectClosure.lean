@@ -348,7 +348,7 @@ theorem mk_zero_zero : mk K p (0, 0) = 0 :=
 theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 := by
   induction' n with n ih <;> [rfl; rw [← ih]] <;> symm <;> apply Quot.sound <;>
       have := r.intro n (0 : K) <;>
-    rwa [frobenius_zero K p] at this 
+    rwa [frobenius_zero K p] at this
 #align perfect_closure.mk_zero PerfectClosure.mk_zero
 -/
 
@@ -436,7 +436,7 @@ theorem mk_eq_iff (x y : ℕ × K) :
   intro H
   cases' x with m x
   cases' y with n y
-  cases' H with z H; dsimp only at H 
+  cases' H with z H; dsimp only at H
   rw [r.sound K p (n + z) m x _ rfl, r.sound K p (m + z) n y _ rfl, H]
   rw [add_assoc, add_comm, add_comm z]
 #align perfect_closure.eq_iff' PerfectClosure.mk_eq_iff
@@ -468,7 +468,7 @@ theorem int_cast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
 theorem nat_cast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y :=
   by
   constructor <;> intro H
-  · rw [nat_cast K p 0, nat_cast K p 0, eq_iff'] at H 
+  · rw [nat_cast K p 0, nat_cast K p 0, eq_iff'] at H
     cases' H with z H
     simpa only [zero_add, iterate_fixed (frobenius_nat_cast K p _)] using H
   rw [nat_cast K p 0, nat_cast K p 0, H]

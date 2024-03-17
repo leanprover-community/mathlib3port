@@ -218,7 +218,7 @@ theorem uniq (G₁ G₂ : W.Localization ⥤ D) (h : W.Q ⋙ G₁ = W.Q ⋙ G₂
       · simpa only using functor.congr_hom h f
       · have hw : W.Q.map w = (Wiso w hw).Hom := rfl
         have hw' := functor.congr_hom h w
-        simp only [functor.comp_map, hw] at hw' 
+        simp only [functor.comp_map, hw] at hw'
         refine' functor.congr_inv_of_congr_hom _ _ _ _ _ hw'
         all_goals apply functor.congr_obj h
 #align category_theory.localization.construction.uniq CategoryTheory.Localization.Construction.uniq
@@ -350,7 +350,7 @@ theorem natTrans_hcomp_injective {F G : W.Localization ⥤ D} {τ₁ τ₂ : F �
     (h : 𝟙 W.Q ◫ τ₁ = 𝟙 W.Q ◫ τ₂) : τ₁ = τ₂ := by
   ext X
   have eq := (obj_equiv W).right_inv X
-  simp only [obj_equiv] at eq 
+  simp only [obj_equiv] at eq
   rw [← Eq, ← nat_trans.id_hcomp_app, ← nat_trans.id_hcomp_app, h]
 #align category_theory.localization.construction.nat_trans_hcomp_injective CategoryTheory.Localization.Construction.natTrans_hcomp_injective
 -/

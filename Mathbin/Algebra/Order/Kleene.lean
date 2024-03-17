@@ -470,9 +470,9 @@ protected def kleeneAlgebra [KleeneAlgebra α] [Zero β] [One β] [Add β] [Mul 
     mul_kstar_le_kstar := fun a => by change f _ ≤ _; erw [mul, kstar]; exact mul_kstar_le_kstar
     kstar_mul_le_kstar := fun a => by change f _ ≤ _; erw [mul, kstar]; exact kstar_mul_le_kstar
     mul_kstar_le_self := fun a b (h : f _ ≤ _) => by change f _ ≤ _; erw [mul, kstar];
-      erw [mul] at h ; exact mul_kstar_le_self h
+      erw [mul] at h; exact mul_kstar_le_self h
     kstar_mul_le_self := fun a b (h : f _ ≤ _) => by change f _ ≤ _; erw [mul, kstar];
-      erw [mul] at h ; exact kstar_mul_le_self h }
+      erw [mul] at h; exact kstar_mul_le_self h }
 #align function.injective.kleene_algebra Function.Injective.kleeneAlgebra
 -/
 

@@ -794,7 +794,7 @@ instance : CstarRing 𝓜(𝕜, A)
           exact key x y (mem_closedBall_zero_iff.1 hx) (mem_closedBall_zero_iff.1 hy)
         · simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop, exists_exists_and_eq_and]
           have hr' : r.sqrt < ‖a‖₊ := ‖a‖₊.sqrt_mul_self ▸ NNReal.sqrt_lt_sqrt.2 hr
-          simp_rw [← nnnorm_fst, ← Sup_closed_unit_ball_eq_nnnorm] at hr' 
+          simp_rw [← nnnorm_fst, ← Sup_closed_unit_ball_eq_nnnorm] at hr'
           obtain ⟨_, ⟨x, hx, rfl⟩, hxr⟩ := exists_lt_of_lt_csSup (hball.image _) hr'
           have hx' : ‖x‖₊ ≤ 1 := mem_closedBall_zero_iff.1 hx
           refine' ⟨star x, mem_closedBall_zero_iff.2 ((nnnorm_star x).trans_le hx'), _⟩

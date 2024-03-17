@@ -66,7 +66,7 @@ theorem char_eq_expChar_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p 
     · rintro rfl
       exact one_ne_zero (hp.eq R (CharP.ofCharZero R))
     · intro pprime
-      rw [(CharP.eq R hp inferInstance : p = 0)] at pprime 
+      rw [(CharP.eq R hp inferInstance : p = 0)] at pprime
       exact Nat.not_prime_zero pprime
   · exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
 #align char_eq_exp_char_iff char_eq_expChar_iff
@@ -136,7 +136,7 @@ theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q
       contradiction
     have p_eq_q : p = q := (char_eq_expChar_iff R p q).mpr (char_prime_of_ne_zero R p_ne_zero)
     cases' CharP.char_is_prime_or_zero R p with pprime
-    · rwa [p_eq_q] at pprime 
+    · rwa [p_eq_q] at pprime
     · contradiction
 #align exp_char_is_prime_or_one expChar_is_prime_or_one
 -/

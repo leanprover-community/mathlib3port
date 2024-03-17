@@ -94,7 +94,7 @@ theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {
   intro h
   rw [tendsto_def]
   simp only [curry, Filter.mem_mk, Set.mem_setOf_eq, Set.mem_preimage]
-  simp_rw [tendsto_def] at h 
+  simp_rw [tendsto_def] at h
   refine' fun s hs => h.mono fun a ha => eventually_iff.mpr _
   simpa [Function.HasUncurry.uncurry, Set.preimage] using ha s hs
 #align filter.tendsto.curry Filter.Tendsto.curry

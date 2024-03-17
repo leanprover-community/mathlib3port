@@ -86,13 +86,13 @@ theorem essInf_const' [μ.ae.ne_bot] (c : β) : essInf (fun x : α => c) μ = c 
 
 #print essSup_const /-
 theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c := by
-  rw [← ae_ne_bot] at hμ ; exact essSup_const' _
+  rw [← ae_ne_bot] at hμ; exact essSup_const' _
 #align ess_sup_const essSup_const
 -/
 
 #print essInf_const /-
 theorem essInf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c := by
-  rw [← ae_ne_bot] at hμ ; exact essInf_const' _
+  rw [← ae_ne_bot] at hμ; exact essInf_const' _
 #align ess_inf_const essInf_const
 -/
 
@@ -380,7 +380,7 @@ theorem essSup_map_measure (hg : AEMeasurable g (Measure.map f μ)) (hf : AEMeas
   rw [essSup_congr_ae hg.ae_eq_mk, essSup_map_measure_of_measurable hg.measurable_mk hf]
   refine' essSup_congr_ae _
   have h_eq := ae_of_ae_map hf hg.ae_eq_mk
-  rw [← eventually_eq] at h_eq 
+  rw [← eventually_eq] at h_eq
   exact h_eq.symm
 #align ess_sup_map_measure essSup_map_measure
 -/
@@ -420,19 +420,19 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
           is_bounded_default)
       fun c h_restrict_le => _
   rw [eventually_map] at h_restrict_le ⊢
-  rw [ae_restrict_iff' hs] at h_restrict_le 
+  rw [ae_restrict_iff' hs] at h_restrict_le
   have hc : 0 ≤ c := by
     rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c; exact hx.1.trans hx.2
     refine' frequently.exists _
     · exact μ.ae
-    rw [eventually_le, ae_restrict_iff' hs] at hf 
+    rw [eventually_le, ae_restrict_iff' hs] at hf
     have hs' : ∃ᵐ x ∂μ, x ∈ s := by
       contrapose! hs_not_null
-      rw [not_frequently, ae_iff] at hs_not_null 
+      rw [not_frequently, ae_iff] at hs_not_null
       suffices {a : α | ¬a ∉ s} = s by rwa [← this]
       simp
     refine' hs'.mp (hf.mp (h_restrict_le.mono fun x hxs_imp_c hxf_nonneg hxs => _))
-    rw [Pi.zero_apply] at hxf_nonneg 
+    rw [Pi.zero_apply] at hxf_nonneg
     exact ⟨hxf_nonneg hxs, hxs_imp_c hxs⟩
   refine' h_restrict_le.mono fun x hxc => _
   by_cases hxs : x ∈ s

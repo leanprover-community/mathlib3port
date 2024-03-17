@@ -138,7 +138,7 @@ theorem cardinal_generateMeasurableRec_le (s : Set (Set α)) (i : ω₁) :
   · apply mk_range_le.trans
     simp only [mk_pi, Subtype.val_eq_coe, prod_const, lift_uzero, mk_denumerable, lift_aleph_0]
     have := @power_le_power_right _ _ ℵ₀ J
-    rwa [← power_mul, aleph_0_mul_aleph_0] at this 
+    rwa [← power_mul, aleph_0_mul_aleph_0] at this
 #align measurable_space.cardinal_generate_measurable_rec_le MeasurableSpace.cardinal_generateMeasurableRec_le
 -/
 
@@ -171,7 +171,7 @@ theorem generateMeasurable_eq_rec (s : Set (Set α)) :
     revert t
     apply (aleph 1).ord.out.wo.wf.induction i
     intro j H t ht
-    unfold generate_measurable_rec at ht 
+    unfold generate_measurable_rec at ht
     rcases ht with (((h | h) | ⟨u, ⟨-, ⟨⟨k, hk⟩, rfl⟩, hu⟩, rfl⟩) | ⟨f, rfl⟩)
     · exact generate_measurable.basic t h
     · convert generate_measurable.empty

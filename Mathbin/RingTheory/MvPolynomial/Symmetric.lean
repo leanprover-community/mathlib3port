@@ -271,8 +271,8 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   simp only [Finsupp.support_single_ne_zero _ one_ne_zero, mem_singleton]
   rintro a h rfl
   have := congr_arg Finsupp.support h
-  rw [Finsupp.support_sum_eq_biUnion, Finsupp.support_sum_eq_biUnion] at this 
-  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this 
+  rw [Finsupp.support_sum_eq_biUnion, Finsupp.support_sum_eq_biUnion] at this
+  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
     exact absurd this hst.symm
   all_goals intro x y; simp [Finsupp.support_single_disjoint]
 #align mv_polynomial.support_esymm'' MvPolynomial.support_esymm''

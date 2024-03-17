@@ -74,7 +74,7 @@ theorem disc_eq_regionBetween :
   simp only [disc, regionBetween, mem_set_of_eq, mem_Ioo, mem_Ioc, Pi.neg_apply]
   constructor <;> intro h
   · cases abs_lt_of_sq_lt_sq' (lt_of_add_lt_of_nonneg_left h (sq_nonneg p.2)) r.2
-    rw [add_comm, ← lt_sub_iff_add_lt] at h 
+    rw [add_comm, ← lt_sub_iff_add_lt] at h
     exact ⟨⟨left, right.le⟩, sq_lt.mp h⟩
   · rw [add_comm, ← lt_sub_iff_add_lt]
     exact sq_lt.mpr h.2

@@ -228,10 +228,10 @@ theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (
 -/
 
 instance {P Q : C} {f : P ⟶ Q} [Epi f] : Epi (-f) :=
-  ⟨fun R g g' H => by rwa [neg_comp, neg_comp, ← comp_neg, ← comp_neg, cancel_epi, neg_inj] at H ⟩
+  ⟨fun R g g' H => by rwa [neg_comp, neg_comp, ← comp_neg, ← comp_neg, cancel_epi, neg_inj] at H⟩
 
 instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
-  ⟨fun R g g' H => by rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H ⟩
+  ⟨fun R g g' H => by rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
 
 #print CategoryTheory.Preadditive.preadditiveHasZeroMorphisms /-
 instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C

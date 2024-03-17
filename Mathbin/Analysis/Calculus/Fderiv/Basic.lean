@@ -296,7 +296,7 @@ theorem HasFDerivWithinAt.lim (h : HasFDerivWithinAt f f' s x) {α : Type _} (l 
     (fun n => c n • (f (x + d n) - f x - f' (d n)) + f' (c n • d n)) = fun n =>
       c n • (f (x + d n) - f x) :=
     by ext n; simp [smul_add, smul_sub]
-  rwa [this, zero_add] at L3 
+  rwa [this, zero_add] at L3
 #align has_fderiv_within_at.lim HasFDerivWithinAt.lim
 -/
 
@@ -378,9 +378,9 @@ theorem HasFDerivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
   by
   refine' le_of_forall_pos_le_add fun ε ε0 => op_norm_le_of_nhds_zero _ _
   exact add_nonneg hC₀ ε0.le
-  rw [← map_add_left_nhds_zero x₀, eventually_map] at hlip 
+  rw [← map_add_left_nhds_zero x₀, eventually_map] at hlip
   filter_upwards [is_o_iff.1 (hasFDerivAt_iff_isLittleO_nhds_zero.1 hf) ε0, hlip] with y hy hyC
-  rw [add_sub_cancel'] at hyC 
+  rw [add_sub_cancel'] at hyC
   calc
     ‖f' y‖ ≤ ‖f (x₀ + y) - f x₀‖ + ‖f (x₀ + y) - f x₀ - f' y‖ := norm_le_insert _ _
     _ ≤ C * ‖y‖ + ε * ‖y‖ := (add_le_add hyC hy)
@@ -524,7 +524,7 @@ theorem HasStrictFDerivAt.exists_lipschitzOnWith_of_nnnorm_lt (hf : HasStrictFDe
     (K : ℝ≥0) (hK : ‖f'‖₊ < K) : ∃ s ∈ 𝓝 x, LipschitzOnWith K f s :=
   by
   have := hf.add_is_O_with (f'.is_O_with_comp _ _) hK
-  simp only [sub_add_cancel, is_O_with] at this 
+  simp only [sub_add_cancel, is_O_with] at this
   rcases exists_nhds_square this with ⟨U, Uo, xU, hU⟩
   exact
     ⟨U, Uo.mem_nhds xU, lipschitzOnWith_iff_norm_sub_le.2 fun x hx y hy => hU (mk_mem_prod hx hy)⟩
@@ -559,7 +559,7 @@ theorem HasFDerivAt.lim (hf : HasFDerivAt f f' x) (v : E) {α : Type _} {c : α 
 #print HasFDerivAt.unique /-
 theorem HasFDerivAt.unique (h₀ : HasFDerivAt f f₀' x) (h₁ : HasFDerivAt f f₁' x) : f₀' = f₁' :=
   by
-  rw [← hasFDerivWithinAt_univ] at h₀ h₁ 
+  rw [← hasFDerivWithinAt_univ] at h₀ h₁
   exact unique_diff_within_at_univ.eq h₀ h₁
 #align has_fderiv_at.unique HasFDerivAt.unique
 -/
@@ -599,7 +599,7 @@ theorem HasFDerivWithinAt.mono_of_mem (h : HasFDerivWithinAt f f' s x) (ht : s �
 #print HasFDerivWithinAt.hasFDerivAt /-
 theorem HasFDerivWithinAt.hasFDerivAt (h : HasFDerivWithinAt f f' s x) (hs : s ∈ 𝓝 x) :
     HasFDerivAt f f' x := by
-  rwa [← univ_inter s, hasFDerivWithinAt_inter hs, hasFDerivWithinAt_univ] at h 
+  rwa [← univ_inter s, hasFDerivWithinAt_inter hs, hasFDerivWithinAt_univ] at h
 #align has_fderiv_within_at.has_fderiv_at HasFDerivWithinAt.hasFDerivAt
 -/
 
@@ -615,7 +615,7 @@ theorem DifferentiableWithinAt.hasFDerivWithinAt (h : DifferentiableWithinAt �
     HasFDerivWithinAt f (fderivWithin 𝕜 f s x) s x :=
   by
   dsimp only [fderivWithin]
-  dsimp only [DifferentiableWithinAt] at h 
+  dsimp only [DifferentiableWithinAt] at h
   rw [dif_pos h]
   exact Classical.choose_spec h
 #align differentiable_within_at.has_fderiv_within_at DifferentiableWithinAt.hasFDerivWithinAt
@@ -625,7 +625,7 @@ theorem DifferentiableWithinAt.hasFDerivWithinAt (h : DifferentiableWithinAt �
 theorem DifferentiableAt.hasFDerivAt (h : DifferentiableAt 𝕜 f x) :
     HasFDerivAt f (fderiv 𝕜 f x) x := by
   dsimp only [fderiv]
-  dsimp only [DifferentiableAt] at h 
+  dsimp only [DifferentiableAt] at h
   rw [dif_pos h]
   exact Classical.choose_spec h
 #align differentiable_at.has_fderiv_at DifferentiableAt.hasFDerivAt
@@ -686,7 +686,7 @@ theorem HasFDerivWithinAt.fderivWithin (h : HasFDerivWithinAt f f' s x)
 as this statement is empty. -/
 theorem hasFDerivWithinAt_of_nmem_closure (h : x ∉ closure s) : HasFDerivWithinAt f f' s x :=
   by
-  simp only [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Ne.def, Classical.not_not] at h 
+  simp only [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Ne.def, Classical.not_not] at h
   simp [HasFDerivWithinAt, HasFDerivAtFilter, h, is_o, is_O_with]
 #align has_fderiv_within_at_of_not_mem_closure hasFDerivWithinAt_of_nmem_closure
 -/
@@ -856,7 +856,7 @@ theorem Asymptotics.IsBigO.hasFDerivWithinAt {s : Set E} {x₀ : E} {n : ℕ}
 theorem Asymptotics.IsBigO.hasFDerivAt {x₀ : E} {n : ℕ} (h : f =O[𝓝 x₀] fun x => ‖x - x₀‖ ^ n)
     (hn : 1 < n) : HasFDerivAt f (0 : E →L[𝕜] F) x₀ :=
   by
-  rw [← nhdsWithin_univ] at h 
+  rw [← nhdsWithin_univ] at h
   exact (h.has_fderiv_within_at (mem_univ _) hn).hasFDerivAt_of_univ
 #align asymptotics.is_O.has_fderiv_at Asymptotics.IsBigO.hasFDerivAt
 -/
@@ -891,7 +891,7 @@ theorem HasFDerivAtFilter.tendsto_nhds (hL : L ≤ 𝓝 x) (h : HasFDerivAtFilte
     refine' h.is_O_sub.trans_tendsto (tendsto.mono_left _ hL)
     rw [← sub_self x]; exact tendsto_id.sub tendsto_const_nhds
   have := tendsto.add this tendsto_const_nhds
-  rw [zero_add (f x)] at this 
+  rw [zero_add (f x)] at this
   exact this.congr (by simp only [sub_add_cancel, eq_self_iff_true, forall_const])
 #align has_fderiv_at_filter.tendsto_nhds HasFDerivAtFilter.tendsto_nhds
 -/

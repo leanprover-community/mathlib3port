@@ -32,7 +32,7 @@ section nonZeroDivisors
 def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R
     where
   carrier := {x | ∀ z, z * x = 0 → z = 0}
-  one_mem' z hz := by rwa [mul_one] at hz 
+  one_mem' z hz := by rwa [mul_one] at hz
   hMul_mem' x₁ x₂ hx₁ hx₂ z hz :=
     have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this

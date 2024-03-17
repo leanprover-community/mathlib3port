@@ -343,7 +343,7 @@ theorem subsingleton_quotient_iff_eq_top : Subsingleton (M ⧸ p) ↔ p = ⊤ :=
   · rintro h
     refine' eq_top_iff.mpr fun x _ => _
     have : x - 0 ∈ p := (Submodule.Quotient.eq p).mp (Subsingleton.elim _ _)
-    rwa [sub_zero] at this 
+    rwa [sub_zero] at this
   · rintro rfl
     infer_instance
 #align submodule.subsingleton_quotient_iff_eq_top Submodule.subsingleton_quotient_iff_eq_top
@@ -630,9 +630,9 @@ theorem span_preimage_eq [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂]
   have hk : ker f ≤ span R (f ⁻¹' s) :=
     by
     let y := Classical.choose h₀; have hy : y ∈ s := Classical.choose_spec h₀
-    rw [ker_le_iff]; use y, h₁ hy; rw [← Set.singleton_subset_iff] at hy 
+    rw [ker_le_iff]; use y, h₁ hy; rw [← Set.singleton_subset_iff] at hy
     exact Set.Subset.trans subset_span (span_mono (Set.preimage_mono hy))
-  rw [← left_eq_sup] at hk ; rw [f.range_coe] at h₁ 
+  rw [← left_eq_sup] at hk; rw [f.range_coe] at h₁
   rw [hk, ← LinearMap.map_le_map_iff, map_span, map_comap_eq, Set.image_preimage_eq_of_subset h₁]
   exact inf_le_right
 #align submodule.span_preimage_eq Submodule.span_preimage_eq
@@ -653,7 +653,7 @@ def Quotient.equiv {N : Type _} [AddCommGroup N] [Module R N] (P : Submodule R M
     invFun :=
       Q.mapQ P (f.symm : N →ₗ[R] M) fun x hx =>
         by
-        rw [← hf, Submodule.mem_map] at hx 
+        rw [← hf, Submodule.mem_map] at hx
         obtain ⟨y, hy, rfl⟩ := hx
         simpa
     left_inv := fun x => Quotient.inductionOn' x (by simp)

@@ -78,7 +78,7 @@ theorem Squarefree.ne_zero [MonoidWithZero R] [Nontrivial R] {m : R} (hm : Squar
 theorem Irreducible.squarefree [CommMonoid R] {x : R} (h : Irreducible x) : Squarefree x :=
   by
   rintro y ⟨z, hz⟩
-  rw [mul_assoc] at hz 
+  rw [mul_assoc] at hz
   rcases h.is_unit_or_is_unit hz with (hu | hu)
   · exact hu
   · apply isUnit_of_mul_isUnit_left hu
@@ -231,8 +231,8 @@ theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefr
   by
   rintro z ⟨w, rfl⟩
   specialize h 2 (z * w) ⟨w, by simp_rw [pow_two, mul_left_comm, ← mul_assoc]⟩
-  rwa [← one_mul (z * w), mul_assoc, mul_dvd_mul_iff_right, ← isUnit_iff_dvd_one] at h 
-  rw [mul_assoc, mul_ne_zero_iff] at h0 ; exact h0.2
+  rwa [← one_mul (z * w), mul_assoc, mul_dvd_mul_iff_right, ← isUnit_iff_dvd_one] at h
+  rw [mul_assoc, mul_ne_zero_iff] at h0; exact h0.2
 #align is_radical.squarefree IsRadical.squarefree
 -/
 
@@ -248,7 +248,7 @@ theorem Squarefree.isRadical {x : R} (hx : Squarefree x) : IsRadical x :=
           replace hy := ((dvd_gcd_iff x x _).2 ⟨dvd_rfl, hy⟩).trans gcd_pow_right_dvd_pow_gcd
           obtain ⟨z, hz⟩ := gcd_dvd_left x y
           nth_rw 1 [hz] at hy ⊢
-          rw [pow_two, mul_dvd_mul_iff_left h] at hy 
+          rw [pow_two, mul_dvd_mul_iff_left h] at hy
           obtain ⟨w, hw⟩ := hy
           exact (hx z ⟨w, by rwa [mul_right_comm, ← hw]⟩).mul_right_dvd.2 dvd_rfl)
 #align squarefree.is_radical Squarefree.isRadical
@@ -286,7 +286,7 @@ theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [Decidabl
     · have ha := irreducible_of_normalized_factor _ hmem
       rcases h a with (h | h)
       · rw [← normalize_normalized_factor _ hmem]
-        rw [multiplicity_eq_count_normalized_factors ha x0] at h 
+        rw [multiplicity_eq_count_normalized_factors ha x0] at h
         assumption_mod_cast
       · have := ha.1; contradiction
     · simp [Multiset.count_eq_zero_of_not_mem hmem]

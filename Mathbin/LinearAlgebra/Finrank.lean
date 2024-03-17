@@ -67,8 +67,8 @@ noncomputable def finrank (R V : Type _) [Semiring R] [AddCommGroup V] [Module R
 #print FiniteDimensional.finrank_eq_of_rank_eq /-
 theorem finrank_eq_of_rank_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
   by
-  apply_fun toNat at h 
-  rw [to_nat_cast] at h 
+  apply_fun toNat at h
+  rw [to_nat_cast] at h
   exact_mod_cast h
 #align finite_dimensional.finrank_eq_of_rank_eq FiniteDimensional.finrank_eq_of_rank_eq
 -/
@@ -76,7 +76,7 @@ theorem finrank_eq_of_rank_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K
 #print FiniteDimensional.finrank_le_of_rank_le /-
 theorem finrank_le_of_rank_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank K V ≤ n :=
   by
-  rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, to_nat_cast] at h 
+  rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, to_nat_cast] at h
   · exact h.trans_lt (nat_lt_aleph_0 n)
   · exact nat_lt_aleph_0 n
 #align finite_dimensional.finrank_le_of_rank_le FiniteDimensional.finrank_le_of_rank_le
@@ -85,7 +85,7 @@ theorem finrank_le_of_rank_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank
 #print FiniteDimensional.finrank_lt_of_rank_lt /-
 theorem finrank_lt_of_rank_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K V < n :=
   by
-  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast] at h 
+  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast] at h
   · exact h.trans (nat_lt_aleph_0 n)
   · exact nat_lt_aleph_0 n
 #align finite_dimensional.finrank_lt_of_rank_lt FiniteDimensional.finrank_lt_of_rank_lt
@@ -339,7 +339,7 @@ theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t)
 #print Submodule.lt_top_of_finrank_lt_finrank /-
 theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ :=
   by
-  rw [← finrank_top K V] at lt 
+  rw [← finrank_top K V] at lt
   exact lt_of_le_of_finrank_lt_finrank le_top lt
 #align submodule.lt_top_of_finrank_lt_finrank Submodule.lt_top_of_finrank_lt_finrank
 -/
@@ -395,7 +395,7 @@ theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : Lin
     (by
       have : Module.rank K (span K (Set.range b)) = (#Set.range b) := rank_span hb
       rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
-        lift_eq_nat_iff] at this )
+        lift_eq_nat_iff] at this)
 #align finrank_span_eq_card finrank_span_eq_card
 -/
 
@@ -405,7 +405,7 @@ theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent
   finrank_eq_of_rank_eq
     (by
       have : Module.rank K (span K s) = (#s) := rank_span_set hs
-      rwa [Cardinal.mk_fintype, ← Set.toFinset_card] at this )
+      rwa [Cardinal.mk_fintype, ← Set.toFinset_card] at this)
 #align finrank_span_set_eq_card finrank_span_set_eq_card
 -/
 
@@ -491,8 +491,7 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Finty
         by rw [smul_add, ← mul_smul, inv_mul_cancel gx_ne_zero, one_smul]
       _ = (g i)⁻¹ • 0 := (congr_arg _ _)
       _ = 0 := smul_zero _
-    -- And then it's just a bit of manipulation with finite sums.
-    rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent 
+    rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent
 #align linear_independent_of_top_le_span_of_card_eq_finrank linearIndependent_of_top_le_span_of_card_eq_finrank
 -/
 
@@ -513,7 +512,7 @@ theorem linearIndependent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b
       intro x
       have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
       have hf : f '' Set.range b' = Set.range b := by ext x; simp [Set.mem_image, Set.mem_range]
-      rw [hf] at h 
+      rw [hf] at h
       have hx : (x : V) ∈ span K (Set.range b) := x.property
       conv at hx =>
         congr

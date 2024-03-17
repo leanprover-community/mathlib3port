@@ -565,7 +565,7 @@ theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → 
   · rintro _ ⟨⟩
   · intro i s nm ih j m
     rw [Finset.inf_insert]
-    simp only [Finset.mem_insert] at m ; rcases m with (rfl | m)
+    simp only [Finset.mem_insert] at m; rcases m with (rfl | m)
     · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
       exact factors_comp_arrow _
     · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
@@ -680,7 +680,7 @@ theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
   · rintro ⟨_, ⟨⟨⟩, _⟩⟩
   · rintro i s nm ih ⟨j, ⟨m, h⟩⟩
     simp only [Finset.sup_insert]
-    simp at m ; rcases m with (rfl | m)
+    simp at m; rcases m with (rfl | m)
     · exact sup_factors_of_factors_left h
     · exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
 #align category_theory.subobject.finset_sup_factors CategoryTheory.Subobject.finset_sup_factors

@@ -257,7 +257,7 @@ def trivial : GrothendieckTopology C where
     simp [hf]
   transitive' X S hS R hR :=
     by
-    rw [Set.mem_singleton_iff, ← sieve.id_mem_iff_eq_top] at hS 
+    rw [Set.mem_singleton_iff, ← sieve.id_mem_iff_eq_top] at hS
     simpa using hR hS
 #align category_theory.grothendieck_topology.trivial CategoryTheory.GrothendieckTopology.trivial
 -/
@@ -341,7 +341,7 @@ instance : CompleteLattice (GrothendieckTopology C) :=
     (by
       apply le_antisymm
       · intro X S hS
-        rw [trivial_covering] at hS 
+        rw [trivial_covering] at hS
         apply covering_of_eq_top _ hS
       · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_sInf) (trivial C))
     _ rfl _ rfl _ rfl sInf rfl

@@ -115,7 +115,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   prop' t x hx := by
     cases hx
     · rw [hx]; simp [refl_trans_symm_aux]
-    · rw [Set.mem_singleton_iff] at hx 
+    · rw [Set.mem_singleton_iff] at hx
       rw [hx]
       norm_num [refl_trans_symm_aux]
 #align path.homotopy.refl_trans_symm Path.Homotopy.reflTransSymm

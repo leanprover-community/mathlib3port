@@ -334,7 +334,7 @@ theorem NormedSpace.analyticAt_exp_of_mem_ball (x : 𝔸)
     AnalyticAt 𝕂 (NormedSpace.exp 𝕂) x :=
   by
   by_cases h : (NormedSpace.expSeries 𝕂 𝔸).radius = 0
-  · rw [h] at hx ; exact (ENNReal.not_lt_zero hx).elim
+  · rw [h] at hx; exact (ENNReal.not_lt_zero hx).elim
   · have h := pos_iff_ne_zero.mpr h
     exact (NormedSpace.hasFPowerSeriesOnBall_exp_of_radius_pos h).analyticAt_of_mem hx
 #align analytic_at_exp_of_mem_ball NormedSpace.analyticAt_exp_of_mem_ball

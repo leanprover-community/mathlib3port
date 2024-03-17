@@ -217,8 +217,8 @@ variable [Ring R] (h_comm : Commute x y)
 #print Commute.isNilpotent_sub /-
 theorem isNilpotent_sub (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent (x - y) :=
   by
-  rw [← neg_right_iff] at h_comm 
-  rw [← isNilpotent_neg_iff] at hy 
+  rw [← neg_right_iff] at h_comm
+  rw [← isNilpotent_neg_iff] at hy
   rw [sub_eq_add_neg]
   exact h_comm.is_nilpotent_add hx hy
 #align commute.is_nilpotent_sub Commute.isNilpotent_sub

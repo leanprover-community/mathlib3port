@@ -122,8 +122,8 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
     intro f
     apply Polynomial.induction_on' f
     · intro p q hp hq
-      simp only [coe_eval₂_ring_hom] at hp 
-      simp only [coe_eval₂_ring_hom] at hq 
+      simp only [coe_eval₂_ring_hom] at hp
+      simp only [coe_eval₂_ring_hom] at hq
       simp only [coe_eval₂_ring_hom, hp, hq, RingHom.map_add]
     · rintro n ⟨x⟩
       simp only [← smul_X_eq_monomial, C_mul', Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk,
@@ -183,10 +183,10 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
     by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
     rw [mem_comap, ← quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
-    rw [RingHom.mem_ker, coe_map_ring_hom] at hf 
+    rw [RingHom.mem_ker, coe_map_ring_hom] at hf
     replace hf := congr_arg (fun f : Polynomial _ => f.coeff n) hf
-    simp only [coeff_map, coeff_zero] at hf 
-    rwa [Subtype.ext_iff, RingHom.coe_rangeRestrict] at hf 
+    simp only [coeff_map, coeff_zero] at hf
+    rwa [Subtype.ext_iff, RingHom.coe_rangeRestrict] at hf
   obtain ⟨x, hx'⟩ := x
   obtain ⟨y, rfl⟩ := RingHom.mem_range.1 hx'
   refine' Subtype.eq _
@@ -230,9 +230,8 @@ theorem eval₂_C_mk_eq_zero {I : Ideal R} {a : MvPolynomial σ R}
   refine' Finset.sum_eq_zero fun n hn => _
   simp only [eval₂_monomial, Function.comp_apply, RingHom.coe_comp]
   refine' mul_eq_zero_of_left _ _
-  suffices coeff n a ∈ I
-    by
-    rw [← @Ideal.mk_ker R _ I, RingHom.mem_ker] at this 
+  suffices coeff n a ∈ I by
+    rw [← @Ideal.mk_ker R _ I, RingHom.mem_ker] at this
     simp only [this, C_0]
   exact mem_map_C_iff.1 ha n
 #align mv_polynomial.eval₂_C_mk_eq_zero MvPolynomial.eval₂_C_mk_eq_zero

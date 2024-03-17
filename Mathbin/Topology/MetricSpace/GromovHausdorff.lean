@@ -324,7 +324,7 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
               p.is_compact.bounded q.is_compact.bounded)
       rcases this with ⟨y, hy, dy⟩
       rcases mem_range.1 hy with ⟨z, hzy⟩
-      rw [← hzy] at dy 
+      rw [← hzy] at dy
       have DΦ : diam (range Φ) = diam (univ : Set X) := Φisom.diam_range
       have DΨ : diam (range Ψ) = diam (univ : Set Y) := Ψisom.diam_range
       calc
@@ -385,7 +385,7 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
           (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.nonempty q.nonempty p.is_compact.bounded
             q.is_compact.bounded) with
         ⟨z, zq, hz⟩
-      have : z ∈ range Ψ := by rwa [← Ψrange] at zq 
+      have : z ∈ range Ψ := by rwa [← Ψrange] at zq
       rcases mem_range.1 this with ⟨y, hy⟩
       calc
         (⨅ y, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
@@ -401,7 +401,7 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
           (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.nonempty q.nonempty p.is_compact.bounded
             q.is_compact.bounded) with
         ⟨z, zq, hz⟩
-      have : z ∈ range Φ := by rwa [← Φrange] at zq 
+      have : z ∈ range Φ := by rwa [← Φrange] at zq
       rcases mem_range.1 this with ⟨x, hx⟩
       calc
         (⨅ x, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
@@ -494,7 +494,7 @@ instance : MetricSpace GHSpace where
         is realized by some coupling. In this coupling, the two spaces are at zero Hausdorff distance,
         i.e., they coincide. Therefore, the original spaces are isometric. -/
     rcases GH_dist_eq_Hausdorff_dist x.rep y.rep with ⟨Φ, Ψ, Φisom, Ψisom, DΦΨ⟩
-    rw [← dist_GH_dist, hxy] at DΦΨ 
+    rw [← dist_GH_dist, hxy] at DΦΨ
     have : range Φ = range Ψ :=
       by
       have hΦ : IsCompact (range Φ) := isCompact_range Φisom.continuous
@@ -785,7 +785,7 @@ instance : SecondCountableTopology GHSpace :=
       let hi := ((E q) ⟨y, ys⟩).is_lt
       have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
       have hiq : i < N q := hi
-      have hip : i < N p := by rwa [Npq.symm] at hiq 
+      have hip : i < N p := by rwa [Npq.symm] at hiq
       let z := (E p).symm ⟨i, hip⟩
       use z
       have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
@@ -804,12 +804,12 @@ instance : SecondCountableTopology GHSpace :=
       -- introduce `i`, that codes both `x` and `Φ x` in `fin (N p) = fin (N q)`
       let i : ℕ := E p x
       have hip : i < N p := ((E p) x).2
-      have hiq : i < N q := by rwa [Npq] at hip 
+      have hiq : i < N q := by rwa [Npq] at hip
       have i' : i = (E q) (Ψ x) := by simp only [Equiv.apply_symm_apply, Fin.coe_cast]
       -- introduce `j`, that codes both `y` and `Φ y` in `fin (N p) = fin (N q)`
       let j : ℕ := E p y
       have hjp : j < N p := ((E p) y).2
-      have hjq : j < N q := by rwa [Npq] at hjp 
+      have hjq : j < N q := by rwa [Npq] at hjp
       have j' : j = ((E q) (Ψ y)).1 := by
         simp only [Equiv.apply_symm_apply, Fin.val_eq_coe, Fin.coe_cast]
       -- Express `dist x y` in terms of `F p`
@@ -835,7 +835,7 @@ instance : SecondCountableTopology GHSpace :=
         subst hpq
         intros
         rfl
-      rw [Ap, Aq] at this 
+      rw [Ap, Aq] at this
       -- deduce that the distances coincide up to `ε`, by a straightforward computation
       -- that should be automated
       have I :=
@@ -879,7 +879,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   rcases Metric.tendsto_atTop.1 ulim ε εpos with ⟨n, hn⟩
   have u_le_ε : u n ≤ ε := by
     have := hn n le_rfl
-    simp only [Real.dist_eq, add_zero, sub_eq_add_neg, neg_zero] at this 
+    simp only [Real.dist_eq, add_zero, sub_eq_add_neg, neg_zero] at this
     exact le_of_lt (lt_of_le_of_lt (le_abs_self _) this)
   -- construct a finite subset `s p` of `p` which is `ε`-dense and has cardinal `≤ K n`
   have :
@@ -893,7 +893,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       use∅, 0, bot_le, choice this
     · rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
       rcases Cardinal.lt_aleph0.1 (lt_of_le_of_lt scard (Cardinal.nat_lt_aleph0 _)) with ⟨N, hN⟩
-      rw [hN, Cardinal.natCast_le] at scard 
+      rw [hN, Cardinal.natCast_le] at scard
       have : Cardinal.mk s = Cardinal.mk (Fin N) := by rw [hN, Cardinal.mk_fin]
       cases' Quotient.exact this with E
       use s, N, scard, E
@@ -933,7 +933,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       let hi := ((E q) ⟨y, ys⟩).2
       have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
       have hiq : i < N q := hi
-      have hip : i < N p := by rwa [Npq.symm] at hiq 
+      have hip : i < N p := by rwa [Npq.symm] at hiq
       let z := (E p).symm ⟨i, hip⟩
       use z
       have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
@@ -952,12 +952,12 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       -- introduce `i`, that codes both `x` and `Φ x` in `fin (N p) = fin (N q)`
       let i : ℕ := E p x
       have hip : i < N p := ((E p) x).2
-      have hiq : i < N q := by rwa [Npq] at hip 
+      have hiq : i < N q := by rwa [Npq] at hip
       have i' : i = (E q) (Ψ x) := by simp only [Equiv.apply_symm_apply, Fin.coe_cast]
       -- introduce `j`, that codes both `y` and `Φ y` in `fin (N p) = fin (N q)`
       let j : ℕ := E p y
       have hjp : j < N p := ((E p) y).2
-      have hjq : j < N q := by rwa [Npq] at hjp 
+      have hjq : j < N q := by rwa [Npq] at hjp
       have j' : j = (E q) (Ψ y) := by simp only [Equiv.apply_symm_apply, Fin.coe_cast]
       -- Express `dist x y` in terms of `F p`
       have Ap : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ⌊ε⁻¹ * dist x y⌋₊ :=
@@ -1001,7 +1001,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
         rfl
       have : ⌊ε⁻¹ * dist x y⌋ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ :=
         by
-        rw [Ap, Aq] at this 
+        rw [Ap, Aq] at this
         have D : 0 ≤ ⌊ε⁻¹ * dist x y⌋ :=
           floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
         have D' : 0 ≤ ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ :=
@@ -1140,7 +1140,7 @@ instance : CompleteSpace GHSpace :=
       rw [← to_inductive_limit_commute I]
       simp only [f]
       rw [← to_glue_commute]
-    rw [range_comp] at X2n 
+    rw [range_comp] at X2n
     have X2nsucc :
       X2 n.succ =
         range
@@ -1148,7 +1148,7 @@ instance : CompleteSpace GHSpace :=
               Φ n.succ ∘ c n ∘ to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ))) ∘
             optimal_GH_injr (X n) (X n.succ)) :=
       by rfl
-    rw [range_comp] at X2nsucc 
+    rw [range_comp] at X2nsucc
     rw [X2n, X2nsucc, Hausdorff_dist_image, Hausdorff_dist_optimal, ← dist_GH_dist]
     · exact hu n n n.succ (le_refl n) (le_succ n)
     · apply uniform_space.completion.coe_isometry.comp _

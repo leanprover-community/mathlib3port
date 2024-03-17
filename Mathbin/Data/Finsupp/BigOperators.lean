@@ -105,7 +105,7 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
   by
   induction' l with hd tl IH
   · simp
-  · simp only [List.pairwise_cons] at hl 
+  · simp only [List.pairwise_cons] at hl
     simp only [List.sum_cons, List.foldr_cons, Function.comp_apply]
     rw [Finsupp.support_add_eq, IH hl.right, Finset.sup_eq_union]
     suffices Disjoint hd.support (tl.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅) by
@@ -113,7 +113,7 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
     · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_toFinset]
       rw [Finset.disjoint_sup_right]
       intro f hf
-      simp only [List.mem_toFinset, List.mem_map] at hf 
+      simp only [List.mem_toFinset, List.mem_map] at hf
       obtain ⟨f, hf, rfl⟩ := hf
       exact hl.left _ hf
 #align list.support_sum_eq List.support_sum_eq
@@ -128,7 +128,7 @@ theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
   convert List.support_sum_eq _ _
   · simp
   · simp
-  · simp only [Multiset.quot_mk_to_coe'', Multiset.coe_map, Multiset.coe_eq_coe] at hl 
+  · simp only [Multiset.quot_mk_to_coe'', Multiset.map_coe, Multiset.coe_eq_coe] at hl
     exact hl.symm.pairwise hd fun _ _ h => Disjoint.symm h
 #align multiset.support_sum_eq Multiset.support_sum_eq
 -/

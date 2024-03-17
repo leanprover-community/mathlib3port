@@ -157,7 +157,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
         rw [hT]
         refine' mem_Union.2 ⟨⟨x, xs⟩, _⟩
         simpa only [mem_ball, Subtype.coe_mk, dist_self] using (rpos (f' x)).bot_lt
-      rwa [mem_Union₂] at this 
+      rwa [mem_Union₂] at this
     obtain ⟨ε, εpos, hε⟩ : ∃ ε : ℝ, 0 < ε ∧ ‖f' x - f' z‖ + ε ≤ r (f' z) :=
       by
       refine' ⟨r (f' z) - ‖f' x - f' z‖, _, le_of_eq (by abel)⟩
@@ -372,7 +372,7 @@ theorem addHaar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : E
       rw [smul_add, ← add_assoc, add_comm {f x}, add_assoc, smul_closedBall _ _ εpos.le, smul_zero,
         singleton_add_closedBall_zero, ← image_smul_set ℝ E E A, smul_closedBall _ _ zero_le_one,
         smul_zero, Real.norm_eq_abs, abs_of_nonneg r0, mul_one, mul_comm]
-    rw [this] at K 
+    rw [this] at K
     calc
       μ (f '' (s ∩ closed_ball x r)) ≤ μ ({f x} + r • (A '' closed_ball 0 1 + closed_ball 0 ε)) :=
         measure_mono K
@@ -387,7 +387,7 @@ theorem addHaar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : E
   have J : ∀ᶠ a in 𝓝[>] (0 : ℝ≥0∞), μ (f '' s) ≤ m * (μ s + a) :=
     by
     filter_upwards [self_mem_nhdsWithin] with a ha
-    change 0 < a at ha 
+    change 0 < a at ha
     obtain ⟨t, r, t_count, ts, rpos, st, μt⟩ :
       ∃ (t : Set E) (r : E → ℝ),
         t.Countable ∧
@@ -401,7 +401,7 @@ theorem addHaar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : E
     calc
       μ (f '' s) ≤ μ (⋃ x : t, f '' (s ∩ closed_ball x (r x))) :=
         by
-        rw [bUnion_eq_Union] at st 
+        rw [bUnion_eq_Union] at st
         apply measure_mono
         rw [← image_Union, ← inter_Union]
         exact image_subset _ (subset_inter (subset.refl _) st)
@@ -415,7 +415,7 @@ theorem addHaar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : E
     apply tendsto.mono_left _ nhdsWithin_le_nhds
     apply ENNReal.Tendsto.const_mul (tendsto_const_nhds.add tendsto_id)
     simp only [ENNReal.coe_ne_top, Ne.def, or_true_iff, not_false_iff]
-  rw [add_zero] at L 
+  rw [add_zero] at L
   exact ge_of_tendsto L J
 #align measure_theory.add_haar_image_le_mul_of_det_lt MeasureTheory.addHaar_image_le_mul_of_det_lt
 -/
@@ -481,7 +481,7 @@ theorem mul_le_addHaar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
       refine' tendsto.mul (tendsto_const_nhds.mul _) tendsto_id
       refine' (tendsto.sub tendsto_const_nhds tendsto_id).inv₀ _
       simpa only [tsub_zero, inv_eq_zero, Ne.def] using H
-    simp only [MulZeroClass.mul_zero] at this 
+    simp only [MulZeroClass.mul_zero] at this
     exact (tendsto_order.1 this).2 δ₀ δ₀pos
   -- let `δ` be small enough, and `f` approximated by `B` up to `δ`.
   filter_upwards [L1, L2]
@@ -527,7 +527,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
       tendsto (fun ε : ℝ => ((δ : ℝ) + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε) (𝓝[>] 0)
         (𝓝 ((δ + 0) * (‖z‖ + 0) + ‖f' x - A‖ * 0)) :=
       tendsto.mono_left (Continuous.tendsto (by continuity) 0) nhdsWithin_le_nhds
-    simp only [add_zero, MulZeroClass.mul_zero] at this 
+    simp only [add_zero, MulZeroClass.mul_zero] at this
     apply le_of_tendsto_of_tendsto tendsto_const_nhds this
     filter_upwards [self_mem_nhdsWithin]
     exact H
@@ -554,7 +554,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
   -- write `y = x + r a` with `a ∈ closed_ball z ε`.
   obtain ⟨a, az, ya⟩ : ∃ a, a ∈ closed_ball z ε ∧ y = x + r • a :=
     by
-    simp only [mem_smul_set, image_add_left, mem_preimage, singleton_add] at hy 
+    simp only [mem_smul_set, image_add_left, mem_preimage, singleton_add] at hy
     rcases hy with ⟨a, az, ha⟩
     exact ⟨a, az, by simp only [ha, add_neg_cancel_left]⟩
   have norm_a : ‖a‖ ≤ ‖z‖ + ε :=
@@ -593,7 +593,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
       _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ‖z - a‖ :=
         by
         apply add_le_add
-        · rw [mul_assoc] at I ; exact (mul_le_mul_left rpos).1 I
+        · rw [mul_assoc] at I; exact (mul_le_mul_left rpos).1 I
         · apply ContinuousLinearMap.le_opNorm
       _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε :=
         add_le_add le_rfl
@@ -750,7 +750,7 @@ theorem addHaar_image_eq_zero_of_det_fderivWithin_eq_zero
         (𝓝 (((0 : ℝ≥0) : ℝ≥0∞) * μ (closed_ball 0 R))) :=
       ENNReal.Tendsto.mul_const (ENNReal.tendsto_coe.2 tendsto_id)
         (Or.inr measure_closed_ball_lt_top.Ne)
-    simp only [MulZeroClass.zero_mul, ENNReal.coe_zero] at this 
+    simp only [MulZeroClass.zero_mul, ENNReal.coe_zero] at this
     exact tendsto.mono_left this nhdsWithin_le_nhds
   apply le_antisymm _ (zero_le _)
   apply ge_of_tendsto B
@@ -826,7 +826,7 @@ theorem aemeasurable_fderivWithin (hs : MeasurableSet s)
     exact hg n
   -- putting these two properties together gives the conclusion.
   filter_upwards [E₁, E₂] with x hx1 hx2
-  rw [← nndist_eq_nnnorm] at hx1 
+  rw [← nndist_eq_nnnorm] at hx1
   rw [hx2, dist_comm]
   exact hx1
 #align measure_theory.ae_measurable_fderiv_within MeasureTheory.aemeasurable_fderivWithin
@@ -992,7 +992,7 @@ theorem addHaar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (h
     refine' tendsto_const_nhds.add _
     refine' ENNReal.Tendsto.mul_const _ (Or.inr h's)
     exact ENNReal.Tendsto.const_mul (ENNReal.tendsto_coe.2 tendsto_id) (Or.inr ENNReal.coe_ne_top)
-  simp only [add_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, ENNReal.coe_zero] at this 
+  simp only [add_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, ENNReal.coe_zero] at this
   apply ge_of_tendsto this
   filter_upwards [self_mem_nhdsWithin]
   rintro ε (εpos : 0 < ε)
@@ -1086,7 +1086,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux1 (hs : MeasurableSet s)
         simp only [ht, εpos.ne', WithTop.mul_top, ENNReal.coe_eq_zero, le_top, Ne.def,
           not_false_iff, _root_.add_top]
       have := h t g (htg.mono_num (min_le_left _ _))
-      rwa [WithTop.coe_sub, ENNReal.sub_mul, tsub_le_iff_right] at this 
+      rwa [WithTop.coe_sub, ENNReal.sub_mul, tsub_le_iff_right] at this
       simp only [ht, imp_true_iff, Ne.def, not_false_iff]
   choose δ hδ using this
   obtain ⟨t, A, t_disj, t_meas, t_cover, ht, -⟩ :
@@ -1165,7 +1165,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux2 (hs : MeasurableSet s) (h
     refine' tendsto_const_nhds.add _
     refine' ENNReal.Tendsto.mul_const _ (Or.inr h's)
     exact ENNReal.Tendsto.const_mul (ENNReal.tendsto_coe.2 tendsto_id) (Or.inr ENNReal.coe_ne_top)
-  simp only [add_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, ENNReal.coe_zero] at this 
+  simp only [add_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, ENNReal.coe_zero] at this
   apply ge_of_tendsto this
   filter_upwards [self_mem_nhdsWithin]
   rintro ε (εpos : 0 < ε)
@@ -1284,11 +1284,11 @@ theorem restrict_map_withDensity_abs_det_fderiv_eq_addHaar (hs : MeasurableSet s
     rw [hF, ← measure.map_map u_meas measurable_subtype_coe, map_comap_subtype_coe hs,
       restrict_with_density hs]
     exact map_with_density_abs_det_fderiv_eq_add_haar μ hs u' (hf.congr uf.symm) u_meas
-  rw [uf.image_eq] at A 
+  rw [uf.image_eq] at A
   have : F = s.restrict f := by
     ext x
     exact uf x.2
-  rwa [this] at A 
+  rwa [this] at A
 #align measure_theory.restrict_map_with_density_abs_det_fderiv_eq_add_haar MeasureTheory.restrict_map_withDensity_abs_det_fderiv_eq_addHaar
 -/
 

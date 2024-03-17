@@ -119,16 +119,16 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
     simpa only [constant_coeff_apply, coeff_p_zero, not_isUnit_zero] using
       (constant_coeff : WittVector p k →+* _).isUnit_map hp
   refine' ⟨hp, fun a b hab => _⟩
-  obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by rw [← mul_ne_zero_iff]; intro h; rw [h] at hab ;
+  obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by rw [← mul_ne_zero_iff]; intro h; rw [h] at hab;
     exact p_nonzero p k hab
   obtain ⟨m, a, ha, rfl⟩ := verschiebung_nonzero ha0
   obtain ⟨n, b, hb, rfl⟩ := verschiebung_nonzero hb0
   cases m; · exact Or.inl (is_unit_of_coeff_zero_ne_zero a ha)
   cases n; · exact Or.inr (is_unit_of_coeff_zero_ne_zero b hb)
-  rw [iterate_verschiebung_mul] at hab 
-  apply_fun fun x => coeff x 1 at hab 
+  rw [iterate_verschiebung_mul] at hab
+  apply_fun fun x => coeff x 1 at hab
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
-    verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab 
+    verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
   exact (one_ne_zero hab).elim
 #align witt_vector.irreducible WittVector.irreducible
 -/
@@ -145,10 +145,10 @@ theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) :
   by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
-  rw [WittVector.iterate_frobenius_coeff] at hc 
+  rw [WittVector.iterate_frobenius_coeff] at hc
   have := congr_fun (witt_vector.verschiebung_frobenius_comm.comp_iterate m) b
-  simp only [Function.comp_apply] at this 
-  rw [← this] at hcm 
+  simp only [Function.comp_apply] at this
+  rw [← this] at hcm
   refine' ⟨m, b, _, _⟩
   · contrapose! hc
     have : 0 < p ^ m := pow_pos (Nat.Prime.pos (Fact.out _)) _

@@ -626,8 +626,8 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
     wlog h : f x < g x
     · exact this g f x (Ne.symm h') (h'.lt_or_lt.resolve_left h)
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h
-    rw [← map_ratCast f] at hf 
-    rw [← map_ratCast g] at hg 
+    rw [← map_ratCast f] at hf
+    rw [← map_ratCast g] at hg
     exact
       (lt_asymm ((OrderHomClass.mono g).reflect_lt hg) <|
           (OrderHomClass.mono f).reflect_lt hf).elim⟩

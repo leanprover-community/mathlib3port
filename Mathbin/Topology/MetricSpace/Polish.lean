@@ -453,7 +453,7 @@ theorem IsOpen.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] 
     (hs : IsOpen s) : PolishSpace s :=
   by
   rcases eq_empty_or_nonempty (sᶜ) with (h's | h's)
-  · simp at h's 
+  · simp at h's
     apply IsClosed.polishSpace
     rw [h's]
     exact isClosed_univ

@@ -88,7 +88,7 @@ theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p :=
   have := degree_le_of_ne_zero A x hnz _
   · contrapose! this
     exact degree_mod_by_monic_lt _ (monic hx)
-  · rw [← mod_by_monic_add_div p (monic hx)] at hp 
+  · rw [← mod_by_monic_add_div p (monic hx)] at hp
     simpa using hp
 #align minpoly.dvd minpoly.dvd
 -/
@@ -183,7 +183,7 @@ theorem add_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsI
       nat_degree_comp, nat_degree_X_sub_C, mul_one]
     rwa [degree_eq_nat_degree (minpoly.ne_zero hx),
       degree_eq_nat_degree (qmo.comp_X_add_C _).NeZero, WithBot.coe_le_coe, nat_degree_comp,
-      nat_degree_X_add_C, mul_one] at H 
+      nat_degree_X_add_C, mul_one] at H
 #align minpoly.add_algebra_map minpoly.add_algebraMap
 -/
 
@@ -226,7 +226,7 @@ theorem aux_inj_roots_of_min_poly : Injective (rootsOfMinPolyPiType F E K) :=
   by
   intro f g h
   suffices (f : E →ₗ[F] K) = g by rwa [DFunLike.ext'_iff] at this ⊢
-  rw [funext_iff] at h 
+  rw [funext_iff] at h
   exact
     LinearMap.ext_on (FiniteDimensional.finBasis F E).span_eq fun e he =>
       subtype.ext_iff.mp (h ⟨e, he⟩)
@@ -312,7 +312,7 @@ theorem root {x : B} (hx : IsIntegral A x) {y : A} (h : IsRoot (minpoly A x) y) 
         ((irreducible_X_sub_C y).dvd_symm (irreducible hx) (dvd_iff_isRoot.2 h))
         (dvd_iff_isRoot.2 h))
   have := aeval A x
-  rwa [key, AlgHom.map_sub, aeval_X, aeval_C, sub_eq_zero, eq_comm] at this 
+  rwa [key, AlgHom.map_sub, aeval_X, aeval_C, sub_eq_zero, eq_comm] at this
 #align minpoly.root minpoly.root
 -/
 

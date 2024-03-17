@@ -652,7 +652,7 @@ theorem oangle_add_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ
         sub_eq_zero, add_comm, sub_neg_eq_add, ← Real.Angle.coe_add, ← Real.Angle.coe_add,
         add_assoc, add_halves, ← two_mul, Real.Angle.coe_two_pi]
       simpa using h
-    rw [← neg_inj, ← oangle_neg_orientation_eq_neg, neg_neg] at ha 
+    rw [← neg_inj, ← oangle_neg_orientation_eq_neg, neg_neg] at ha
     rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj, oangle_rev,
       (-o).oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
       LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,

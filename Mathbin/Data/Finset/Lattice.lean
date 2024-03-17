@@ -1713,7 +1713,7 @@ theorem max_eq_bot {s : Finset α} : s.max = ⊥ ↔ s = ∅ :=
     s.eq_empty_or_nonempty.elim id fun H =>
       by
       let ⟨a, ha⟩ := max_of_nonempty H
-      rw [h] at ha  <;> cases ha,
+      rw [h] at ha <;> cases ha,
     fun h => h.symm ▸ max_empty⟩
 #align finset.max_eq_bot Finset.max_eq_bot
 -/
@@ -1725,7 +1725,7 @@ theorem mem_of_max {s : Finset α} : ∀ {a : α}, s.max = a → a ∈ s :=
     by
     by_cases p : b = a
     · induction p; exact mem_insert_self b s
-    · cases' max_choice (↑b) s.max with q q <;> rw [max_insert, q] at h 
+    · cases' max_choice (↑b) s.max with q q <;> rw [max_insert, q] at h
       · cases h; cases p rfl
       · exact mem_insert_of_mem (ih h)
 #align finset.mem_of_max Finset.mem_of_max
@@ -1823,7 +1823,7 @@ theorem min_eq_top {s : Finset α} : s.min = ⊤ ↔ s = ∅ :=
     s.eq_empty_or_nonempty.elim id fun H =>
       by
       let ⟨a, ha⟩ := min_of_nonempty H
-      rw [h] at ha  <;> cases ha,
+      rw [h] at ha <;> cases ha,
     fun h => h.symm ▸ min_empty⟩
 #align finset.min_eq_top Finset.min_eq_top
 -/
@@ -2313,10 +2313,10 @@ theorem induction_on_max_value [DecidableEq ι] (f : ι → α) {p : Finset ι �
   by
   induction' s using Finset.strongInductionOn with s ihs
   rcases(s.image f).eq_empty_or_nonempty with (hne | hne)
-  · simp only [image_eq_empty] at hne 
+  · simp only [image_eq_empty] at hne
     simp only [hne, h0]
   · have H : (s.image f).max' hne ∈ s.image f := max'_mem (s.image f) hne
-    simp only [mem_image, exists_prop] at H 
+    simp only [mem_image, exists_prop] at H
     rcases H with ⟨a, has, hfa⟩
     rw [← insert_erase has]
     refine' step _ _ (not_mem_erase a s) (fun x hx => _) (ihs _ <| erase_ssubset has)
@@ -2370,7 +2370,7 @@ theorem isGLB_iff_isLeast [LinearOrder α] (i : α) (s : Finset α) (hs : s.None
   by
   refine' ⟨fun his => _, IsLeast.isGLB⟩
   suffices i = min' s hs by rw [this]; exact is_least_min' s hs
-  rw [IsGLB, IsGreatest, mem_lowerBounds, mem_upperBounds] at his 
+  rw [IsGLB, IsGreatest, mem_lowerBounds, mem_upperBounds] at his
   exact le_antisymm (his.1 (Finset.min' s hs) (Finset.min'_mem s hs)) (his.2 _ (Finset.min'_le s))
 #align finset.is_glb_iff_is_least Finset.isGLB_iff_isLeast
 -/
@@ -2436,7 +2436,7 @@ theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β
         refine' ⟨v, _, hfv⟩
         simp only [hv, or_true_iff, Finset.mem_insert]
     · rintro ⟨v, hv, hfv⟩
-      rw [Finset.mem_insert] at hv 
+      rw [Finset.mem_insert] at hv
       rcases hv with (rfl | hv)
       · exact Or.inl hfv
       · refine' Or.inr (hxs.mpr ⟨v, hv, hfv⟩)

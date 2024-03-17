@@ -181,7 +181,7 @@ def mkIso {M N : Action V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.H
       comm' := comm }
   inv :=
     { Hom := f.inv
-      comm' := fun g => by have w := comm g =≫ f.inv; simp at w ; simp [w] }
+      comm' := fun g => by have w := comm g =≫ f.inv; simp at w; simp [w] }
 #align Action.mk_iso Action.mkIso
 -/
 

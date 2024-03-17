@@ -357,7 +357,7 @@ theorem prime_two_or_dvd_of_dvd_two_mul_pow_self_two {m : ℤ} {p : ℕ} (hp : N
   · apply Or.intro_left
     exact le_antisymm (Nat.le_of_dvd zero_lt_two hp2) (Nat.Prime.two_le hp)
   · apply Or.intro_right
-    rw [sq, Int.natAbs_mul] at hpp 
+    rw [sq, Int.natAbs_mul] at hpp
     exact (or_self_iff _).mp ((Nat.Prime.dvd_mul hp).mp hpp)
 #align prime_two_or_dvd_of_dvd_two_mul_pow_self_two prime_two_or_dvd_of_dvd_two_mul_pow_self_two
 -/
@@ -378,7 +378,7 @@ theorem Nat.factors_eq {n : ℕ} : normalizedFactors n = n.factors :=
   cases n; · simp
   rw [← Multiset.rel_eq, ← associated_eq_eq]
   apply factors_unique irreducible_of_normalized_factor _
-  · rw [Multiset.coe_prod, Nat.prod_factors n.succ_ne_zero]
+  · rw [Multiset.prod_coe, Nat.prod_factors n.succ_ne_zero]
     apply normalized_factors_prod (Nat.succ_ne_zero _)
   · infer_instance
   · intro x hx
@@ -495,7 +495,7 @@ theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : 
   by
   obtain ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow' hab h
   replace hd := hd.symm
-  rw [associated_iff_nat_abs, nat_abs_eq_nat_abs_iff, ← neg_pow_bit1] at hd 
+  rw [associated_iff_nat_abs, nat_abs_eq_nat_abs_iff, ← neg_pow_bit1] at hd
   obtain rfl | rfl := hd <;> exact ⟨_, rfl⟩
 #align int.eq_pow_of_mul_eq_pow_bit1_left Int.eq_pow_of_mul_eq_pow_bit1_left
 -/
@@ -503,7 +503,7 @@ theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : 
 #print Int.eq_pow_of_mul_eq_pow_bit1_right /-
 theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ bit1 k) : ∃ d, b = d ^ bit1 k :=
-  eq_pow_of_mul_eq_pow_bit1_left hab.symm (by rwa [mul_comm] at h )
+  eq_pow_of_mul_eq_pow_bit1_left hab.symm (by rwa [mul_comm] at h)
 #align int.eq_pow_of_mul_eq_pow_bit1_right Int.eq_pow_of_mul_eq_pow_bit1_right
 -/
 

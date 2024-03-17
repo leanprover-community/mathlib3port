@@ -1916,7 +1916,7 @@ theorem mapsTo_sUnion {S : Set (Set α)} {t : Set β} {f : α → β} (H : ∀ s
 #print Set.mapsTo_iUnion /-
 theorem mapsTo_iUnion {s : ι → Set α} {t : Set β} {f : α → β} (H : ∀ i, MapsTo f (s i) t) :
     MapsTo f (⋃ i, s i) t :=
-  mapsTo_sUnion <| forall_range_iff.2 H
+  mapsTo_sUnion <| forall_mem_range.2 H
 #align set.maps_to_Union Set.mapsTo_iUnion
 -/
 
@@ -2048,7 +2048,7 @@ theorem InjOn.image_iInter_eq [Nonempty ι] {s : ι → Set α} {f : α → β} 
     (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
   inhabit ι
   refine' subset.antisymm (image_Inter_subset s f) fun y hy => _
-  simp only [mem_Inter, mem_image_iff_bex] at hy 
+  simp only [mem_Inter, mem_image_iff_bex] at hy
   choose x hx hy using hy
   refine' ⟨x default, mem_Inter.2 fun i => _, hy _⟩
   suffices x default = x i by rw [this]; apply hx
@@ -2115,7 +2115,7 @@ theorem surjOn_sUnion {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀ t
 #print Set.surjOn_iUnion /-
 theorem surjOn_iUnion {s : Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, SurjOn f s (t i)) :
     SurjOn f s (⋃ i, t i) :=
-  surjOn_sUnion <| forall_range_iff.2 H
+  surjOn_sUnion <| forall_mem_range.2 H
 #align set.surj_on_Union Set.surjOn_iUnion
 -/
 
@@ -2437,7 +2437,7 @@ theorem sInter_prod_sInter {S : Set (Set α)} {T : Set (Set β)} (hS : S.Nonempt
   obtain ⟨s₁, h₁⟩ := hS
   obtain ⟨s₂, h₂⟩ := hT
   refine' Set.Subset.antisymm (sInter_prod_sInter_subset S T) fun x hx => _
-  rw [mem_Inter₂] at hx 
+  rw [mem_Inter₂] at hx
   exact ⟨fun s₀ h₀ => (hx (s₀, s₂) ⟨h₀, h₂⟩).1, fun s₀ h₀ => (hx (s₁, s₀) ⟨h₁, h₀⟩).2⟩
 #align set.sInter_prod_sInter Set.sInter_prod_sInter
 -/
@@ -2683,7 +2683,7 @@ theorem pi_diff_pi_subset (i : Set α) (s t : ∀ a, Set (π a)) :
   by
   refine' diff_subset_comm.2 fun x hx a ha => _
   simp only [mem_diff, mem_pi, mem_Union, not_exists, mem_preimage, not_and, Classical.not_not,
-    eval_apply] at hx 
+    eval_apply] at hx
   exact hx.2 _ ha (hx.1 _ ha)
 #align set.pi_diff_pi_subset Set.pi_diff_pi_subset
 -/

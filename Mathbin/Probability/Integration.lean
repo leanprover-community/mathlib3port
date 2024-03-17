@@ -196,8 +196,8 @@ theorem IndepFun.integrable_left_of_integrable_mul {β : Type _} [MeasurableSpac
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
   have A : ∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ < ∞ := h'XY.2
-  simp only [nnnorm_mul, ENNReal.coe_mul] at A 
-  rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A 
+  simp only [nnnorm_mul, ENNReal.coe_mul] at A
+  rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
   simpa [ENNReal.top_mul', I] using A
 #align probability_theory.indep_fun.integrable_left_of_integrable_mul ProbabilityTheory.IndepFun.integrable_left_of_integrable_mul
 -/
@@ -222,8 +222,8 @@ theorem IndepFun.integrable_right_of_integrable_mul {β : Type _} [MeasurableSpa
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
   have A : ∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ < ∞ := h'XY.2
-  simp only [nnnorm_mul, ENNReal.coe_mul] at A 
-  rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A 
+  simp only [nnnorm_mul, ENNReal.coe_mul] at A
+  rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
   simpa [ENNReal.top_mul', I] using A
 #align probability_theory.indep_fun.integrable_right_of_integrable_mul ProbabilityTheory.IndepFun.integrable_right_of_integrable_mul
 -/
@@ -328,7 +328,7 @@ theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AEStronglyMeasurable
       by
       rintro ⟨HX, HY⟩
       exact h (hXY.integrable_mul HX HY)
-    rw [not_and_or] at I 
+    rw [not_and_or] at I
     cases I <;> simp [integral_undef, I, h]
 #align probability_theory.indep_fun.integral_mul ProbabilityTheory.IndepFun.integral_mul
 -/

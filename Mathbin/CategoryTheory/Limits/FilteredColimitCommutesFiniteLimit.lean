@@ -74,13 +74,13 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
   -- These elements of the colimit have representatives somewhere:
   obtain ⟨kx, x, rfl⟩ := jointly_surjective'.{v, v} x
   obtain ⟨ky, y, rfl⟩ := jointly_surjective'.{v, v} y
-  dsimp at x y 
+  dsimp at x y
   -- Since the images of `x` and `y` are equal in a limit, they are equal componentwise
   -- (indexed by `j : J`),
   replace h := fun j => congr_arg (limit.π (curry.obj F ⋙ colim) j) h
   -- and they are equations in a filtered colimit,
   -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
-  simp [colimit_eq_iff.{v, v}] at h 
+  simp [colimit_eq_iff.{v, v}] at h
   let k j := (h j).some
   let f : ∀ j, kx ⟶ k j := fun j => (h j).choose_spec.some
   let g : ∀ j, ky ⟶ k j := fun j => (h j).choose_spec.choose_spec.some
@@ -187,7 +187,7 @@ theorem colimitLimitToLimitColimit_surjective :
   -- Because `K` is filtered, we can restate this as saying that
   -- for each such `f`, there is some place to the right of `k'`
   -- where these images of `y j` and `y j'` become equal.
-  simp_rw [colimit_eq_iff.{v, v}] at w 
+  simp_rw [colimit_eq_iff.{v, v}] at w
   -- We take a moment to restate `w` more conveniently.
   let kf : ∀ {j j'} (f : j ⟶ j'), K := fun _ _ f => (w f).some
   let gf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).choose_spec.some
@@ -202,8 +202,8 @@ theorem colimitLimitToLimitColimit_surjective :
       ((curry.obj F).obj j').map (gf f) (F.map _ (y j')) =
         ((curry.obj F).obj j').map (hf f) (F.map _ (y j)) :=
       (w f).choose_spec.choose_spec.choose_spec
-    dsimp at q 
-    simp_rw [← functor_to_types.map_comp_apply] at q 
+    dsimp at q
+    simp_rw [← functor_to_types.map_comp_apply] at q
     convert q <;> simp only [comp_id]
   clear_value kf gf hf
   -- and clean up some things that are no longer needed.

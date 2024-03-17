@@ -74,7 +74,7 @@ theorem iff {j : ℕ} {i : Fin (j + 2)} : Isδ₀ (SimplexCategory.δ i) ↔ i =
 theorem eq_δ₀ {n : ℕ} {i : [n] ⟶ [n + 1]} [Mono i] (hi : Isδ₀ i) : i = SimplexCategory.δ 0 :=
   by
   obtain ⟨j, rfl⟩ := SimplexCategory.eq_δ_of_mono i
-  rw [Iff] at hi 
+  rw [Iff] at hi
   rw [hi]
 #align algebraic_topology.dold_kan.is_δ₀.eq_δ₀ AlgebraicTopology.DoldKan.Isδ₀.eq_δ₀
 -/
@@ -147,7 +147,7 @@ theorem mapMono_δ₀ {n : ℕ} : mapMono K (δ (0 : Fin (n + 2))) = K.d (n + 1)
 
 #print AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_eq_zero /-
 theorem mapMono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i = 0 := by unfold map_mono;
-  rw [Ne.def] at h₁ ; split_ifs; rfl
+  rw [Ne.def] at h₁; split_ifs; rfl
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_eq_zero AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_eq_zero
 -/
 
@@ -188,7 +188,7 @@ theorem mapMono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
   · by_contra
     simpa only [self_eq_add_right, h] using Eq
   · by_contra
-    simp only [h.1, add_right_inj] at eq 
+    simp only [h.1, add_right_inj] at eq
     linarith
   -- in all cases, the LHS is also zero, either by definition, or because d ≫ d = 0
   by_cases h₃ : is_δ₀ i
@@ -265,7 +265,7 @@ def obj (K : ChainComplex C ℕ) : SimplicialObject C
     cases A
     have fac : θ.unop ≫ θ'.unop ≫ A.e = (θ' ≫ θ).unop ≫ A.e := by rw [unop_comp, assoc]
     rw [← image.fac (θ'.unop ≫ A.e), ← assoc, ←
-      image.fac (θ.unop ≫ factor_thru_image (θ'.unop ≫ A.e)), assoc] at fac 
+      image.fac (θ.unop ≫ factor_thru_image (θ'.unop ≫ A.e)), assoc] at fac
     simpa only [obj.map_on_summand₀'_assoc K A θ', obj.map_on_summand₀' K _ θ,
       obj.termwise.map_mono_comp_assoc, obj.map_on_summand₀ K A fac]
 #align algebraic_topology.dold_kan.Γ₀.obj AlgebraicTopology.DoldKan.Γ₀.obj
@@ -412,7 +412,7 @@ theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ)
   by
   intro j hj
   have eq := Γ₀.obj.map_mono_on_summand_id K (SimplexCategory.δ j.succ)
-  rw [Γ₀.obj.termwise.map_mono_eq_zero K, zero_comp] at eq ; rotate_left
+  rw [Γ₀.obj.termwise.map_mono_eq_zero K, zero_comp] at eq; rotate_left
   · intro h
     exact (Nat.succ_ne_self n) (congr_arg SimplexCategory.len h)
   · exact fun h => Fin.succ_ne_zero j (by simpa only [is_δ₀.iff] using h)

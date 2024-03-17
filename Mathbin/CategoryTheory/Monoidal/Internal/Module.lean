@@ -66,7 +66,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.pt :=
     map_mul' := fun x y =>
       by
       have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
-      rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h 
+      rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h
     commutes' := fun r a => by
       dsimp
       have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)

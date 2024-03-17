@@ -80,7 +80,7 @@ theorem IsCompact.extremePoints_nonempty (hscomp : IsCompact s) (hsnemp : s.None
     rw [←
       hBmin ({z ∈ t | ∀ w ∈ t, l w ≤ l z})
         ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩ (t.sep_subset _)] at
-      hyB 
+      hyB
     exact hl.not_le (hyB.2 x hxt)
   refine' zorn_superset _ fun F hFS hF => _
   obtain rfl | hFnemp := F.eq_empty_or_nonempty

@@ -93,7 +93,7 @@ protected theorem isLocallyConstant {f : M → F} (hf : MDifferentiable 𝓘(ℂ
     have H₁ : (chart_at E p).symm z ∈ (chart_at E p).source := (chart_at E p).map_target hz
     have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).source := trivial
     have H := (mdifferentiableAt_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
-    simp only [differentiableWithinAt_univ, mfld_simps] at H 
+    simp only [differentiableWithinAt_univ, mfld_simps] at H
     simpa [PartialHomeomorph.right_inv _ hz] using H.2
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
   have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) :=

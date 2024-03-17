@@ -67,7 +67,7 @@ def gcd (n m : ℕ+) : ℕ+ :=
 def lcm (n m : ℕ+) : ℕ+ :=
   ⟨Nat.lcm (n : ℕ) (m : ℕ), by
     let h := mul_pos n.pos m.pos
-    rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_comm] at h 
+    rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_comm] at h
     exact pos_of_dvd_of_pos (Dvd.intro (Nat.gcd (n : ℕ) (m : ℕ)) rfl) h⟩
 #align pnat.lcm PNat.lcm
 -/
@@ -132,7 +132,7 @@ theorem gcd_mul_lcm (n m : ℕ+) : gcd n m * lcm n m = n * m :=
 theorem eq_one_of_lt_two {n : ℕ+} : n < 2 → n = 1 :=
   by
   intro h; apply le_antisymm; swap; apply PNat.one_le
-  change n < 1 + 1 at h ; rw [PNat.lt_add_one_iff] at h ; apply h
+  change n < 1 + 1 at h; rw [PNat.lt_add_one_iff] at h; apply h
 #align pnat.eq_one_of_lt_two PNat.eq_one_of_lt_two
 -/
 
@@ -314,7 +314,7 @@ theorem Coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.Coprime n → m.
 #print PNat.Coprime.factor_eq_gcd_left /-
 theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
     a = (a * b).gcd m := by
-  rw [gcd_eq_left_iff_dvd] at am 
+  rw [gcd_eq_left_iff_dvd] at am
   conv_lhs => rw [← am]; symm
   apply coprime.gcd_mul_right_cancel a
   apply coprime.coprime_dvd_left bn cop.symm
@@ -343,7 +343,7 @@ theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (
 #print PNat.Coprime.gcd_mul /-
 theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n :=
   by
-  rw [← coprime_coe] at h ; apply Eq
+  rw [← coprime_coe] at h; apply Eq
   simp only [gcd_coe, mul_coe]; apply Nat.Coprime.gcd_mul k h
 #align pnat.coprime.gcd_mul PNat.Coprime.gcd_mul
 -/

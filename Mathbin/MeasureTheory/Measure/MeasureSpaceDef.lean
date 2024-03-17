@@ -549,7 +549,7 @@ theorem ae_eq_trans {f g h : α → δ} (h₁ : f =ᵐ[μ] g) (h₂ : g =ᵐ[μ]
 theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x) : f ≤ᵐ[μ] g :=
   by
   rw [Filter.EventuallyLE, ae_iff]
-  rw [ae_iff] at h 
+  rw [ae_iff] at h
   refine' measure_mono_null (fun x hx => _) h
   exact not_lt.2 (le_of_lt (not_le.1 hx))
 #align measure_theory.ae_le_of_ae_lt MeasureTheory.ae_le_of_ae_lt

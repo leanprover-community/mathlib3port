@@ -131,7 +131,7 @@ theorem uniformContinuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.
 #print Rat.uniformContinuous_neg /-
 theorem uniformContinuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
-    ⟨_, ε0, fun a b h => by rw [dist_comm] at h  <;> simpa [Rat.dist_eq] using h⟩
+    ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Rat.dist_eq] using h⟩
 #align rat.uniform_continuous_neg Rat.uniformContinuous_neg
 -/
 

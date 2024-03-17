@@ -406,10 +406,10 @@ theorem exists_finset_nhd_mulSupport_subset {f : ι → X → R}
           (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
   · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
   · have hzn : z ∈ n := by
-      rw [inter_assoc] at hz 
+      rw [inter_assoc] at hz
       exact mem_of_mem_inter_left hz
     replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-    simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz 
+    simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
     suffices (mul_support fun i => f i z) ⊆ hnf.to_finset
       by
       refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _

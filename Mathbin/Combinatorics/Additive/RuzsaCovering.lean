@@ -38,7 +38,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) :
   set C := s.powerset.filter fun u => (u : Set α).PairwiseDisjoint (· • t)
   obtain ⟨u, hu, hCmax⟩ :=
     C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwiseDisjoint_empty⟩)
-  rw [mem_filter, mem_powerset] at hu 
+  rw [mem_filter, mem_powerset] at hu
   refine'
     ⟨u,
       (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).ge.trans
@@ -51,8 +51,8 @@ theorem exists_subset_mul_div (ht : t.Nonempty) :
   · refine' (hCmax _ _ <| ssubset_insert hau).elim
     rw [mem_filter, mem_powerset, insert_subset, coe_insert]
     exact ⟨⟨ha, hu.1⟩, hu.2.insert fun b hb _ => H _ hb⟩
-  push_neg at H 
-  simp_rw [not_disjoint_iff, ← inv_smul_mem_iff] at H 
+  push_neg at H
+  simp_rw [not_disjoint_iff, ← inv_smul_mem_iff] at H
   obtain ⟨b, hb, c, hc₁, hc₂⟩ := H
   exact mem_mul.2 ⟨_, _, hb, mem_div.2 ⟨_, _, hc₂, hc₁, by simp [div_eq_mul_inv a b]⟩, by simp⟩
 #align finset.exists_subset_mul_div Finset.exists_subset_mul_div

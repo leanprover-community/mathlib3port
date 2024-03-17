@@ -127,7 +127,7 @@ theorem measure_compl_aeSeqSet_eq_zero [Countable ι] (hf : ∀ i, AEMeasurable 
   by
   rw [aeSeqSet, compl_compl, measure_to_measurable]
   have hf_eq := fun i => (hf i).ae_eq_mk
-  simp_rw [Filter.EventuallyEq, ← ae_all_iff] at hf_eq 
+  simp_rw [Filter.EventuallyEq, ← ae_all_iff] at hf_eq
   exact Filter.Eventually.and hf_eq hp
 #align ae_seq.measure_compl_ae_seq_set_eq_zero aeSeq.measure_compl_aeSeqSet_eq_zero
 -/

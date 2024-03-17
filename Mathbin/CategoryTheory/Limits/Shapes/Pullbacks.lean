@@ -191,9 +191,9 @@ def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.pt ≅ t.p
   apply cones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.π.naturality walking_cospan.hom.inl
-    dsimp at h₁ ; simp only [category.id_comp] at h₁ 
+    dsimp at h₁; simp only [category.id_comp] at h₁
     have h₂ := t.π.naturality walking_cospan.hom.inl
-    dsimp at h₂ ; simp only [category.id_comp] at h₂ 
+    dsimp at h₂; simp only [category.id_comp] at h₂
     simp_rw [h₂, ← category.assoc, ← w₁, ← h₁]
   · exact w₁
   · exact w₂
@@ -211,9 +211,9 @@ def WalkingSpan.ext {F : WalkingSpan ⥤ C} {s t : Cocone F} (i : s.pt ≅ t.pt)
   apply cocones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.ι.naturality walking_span.hom.fst
-    dsimp at h₁ ; simp only [category.comp_id] at h₁ 
+    dsimp at h₁; simp only [category.comp_id] at h₁
     have h₂ := t.ι.naturality walking_span.hom.fst
-    dsimp at h₂ ; simp only [category.comp_id] at h₂ 
+    dsimp at h₂; simp only [category.comp_id] at h₂
     simp_rw [← h₁, category.assoc, w₁, h₂]
   · exact w₁
   · exact w₂
@@ -710,7 +710,7 @@ theorem π_app_right (c : PullbackCone f g) : c.π.app WalkingCospan.right = c.s
 theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fst ≫ f :=
   by
   have w := t.π.naturality walking_cospan.hom.inl
-  dsimp at w ; simpa using w
+  dsimp at w; simpa using w
 #align category_theory.limits.pullback_cone.condition_one CategoryTheory.Limits.PullbackCone.condition_one
 -/
 
@@ -1004,7 +1004,7 @@ theorem ι_app_right (c : PushoutCocone f g) : c.ι.app WalkingSpan.right = c.in
 theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f ≫ t.inl :=
   by
   have w := t.ι.naturality walking_span.hom.fst
-  dsimp at w ; simpa using w.symm
+  dsimp at w; simpa using w.symm
 #align category_theory.limits.pushout_cocone.condition_zero CategoryTheory.Limits.PushoutCocone.condition_zero
 -/
 

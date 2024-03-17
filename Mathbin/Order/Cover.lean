@@ -158,7 +158,7 @@ theorem WCovBy.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnecte
   by
   refine' ⟨f.monotone hab.le, fun c ha hb => _⟩
   obtain ⟨c, rfl⟩ := h.out (mem_range_self _) (mem_range_self _) ⟨ha.le, hb.le⟩
-  rw [f.lt_iff_lt] at ha hb 
+  rw [f.lt_iff_lt] at ha hb
   exact hab.2 ha hb
 #align wcovby.image WCovBy.image
 -/
@@ -659,7 +659,7 @@ theorem swap_covBy_swap : x.symm ⋖ y.symm ↔ x ⋖ y :=
 theorem fst_eq_or_snd_eq_of_wcovBy : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 :=
   by
   refine' fun h => of_not_not fun hab => _
-  push_neg at hab 
+  push_neg at hab
   exact
     h.2 (mk_lt_mk.2 <| Or.inl ⟨hab.1.lt_of_le h.1.1, le_rfl⟩)
       (mk_lt_mk.2 <| Or.inr ⟨le_rfl, hab.2.lt_of_le h.1.2⟩)
@@ -683,7 +683,7 @@ theorem mk_wcovBy_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
   by
   refine' ⟨WCovBy.fst, And.imp mk_le_mk_iff_left.2 fun h c h₁ h₂ => _⟩
   have : c.2 = b := h₂.le.2.antisymm h₁.le.2
-  rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂ 
+  rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
   exact h h₁ h₂
 #align prod.mk_wcovby_mk_iff_left Prod.mk_wcovBy_mk_iff_left
 -/

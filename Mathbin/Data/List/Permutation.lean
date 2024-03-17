@@ -187,7 +187,7 @@ theorem mem_permutationsAux2 {t : α} {ts : List α} {ys : List α} {l l' : List
     · exact ⟨y :: l₁, l₂, l0, by simp⟩
   · rintro ⟨_ | ⟨y', l₁⟩, l₂, l0, ye, rfl⟩
     · simp [ye]
-    · simp only [cons_append] at ye ; rcases ye with ⟨rfl, rfl⟩
+    · simp only [cons_append] at ye; rcases ye with ⟨rfl, rfl⟩
       exact Or.inr ⟨l₁, l₂, l0, by simp⟩
 #align list.mem_permutations_aux2 List.mem_permutationsAux2
 -/
@@ -282,7 +282,7 @@ theorem map_permutationsAux (f : α → β) :
     ∀ ts is : List α, map (map f) (permutationsAux ts is) = permutationsAux (map f ts) (map f is) :=
   by
   refine' permutations_aux.rec (by simp) _
-  introv IH1 IH2; rw [map] at IH2 
+  introv IH1 IH2; rw [map] at IH2
   simp only [foldr_permutations_aux2, map_append, map, map_map_permutations_aux2, permutations,
     bind_map, IH1, append_assoc, permutations_aux_cons, cons_bind, ← IH2, map_bind]
 #align list.map_permutations_aux List.map_permutationsAux

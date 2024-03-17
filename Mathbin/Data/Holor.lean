@@ -378,7 +378,7 @@ inductive CPRankMax [Mul α] [AddMonoid α] : ℕ → ∀ {ds}, Holor α ds → 
 theorem cprankMax_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CPRankMax 1 x :=
   by
   have h := CPRankMax.succ 0 x 0 (CPRankMax1.nil x) CPRankMax.zero
-  rwa [add_zero x, zero_add] at h 
+  rwa [add_zero x, zero_add] at h
 #align holor.cprank_max_nil Holor.cprankMax_nil
 -/
 
@@ -386,7 +386,7 @@ theorem cprankMax_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CPRankMax 
 theorem cprankMax_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CPRankMax1 x) : CPRankMax 1 x :=
   by
   have h' := CPRankMax.succ 0 x 0 h CPRankMax.zero
-  rwa [zero_add, add_zero] at h' 
+  rwa [zero_add, add_zero] at h'
 #align holor.cprank_max_1 Holor.cprankMax_1
 -/
 
@@ -457,7 +457,7 @@ theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankM
       CPRankMax (Finset.card (Finset.range d) * Prod ds)
         (∑ i in Finset.attach (Finset.range d),
           unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
-      by rwa [Finset.card_attach] at this 
+      by rwa [Finset.card_attach] at this
     rw [← sum_unit_vec_mul_slice x]
     rw [h_dds_prod]
     exact h_cprank_max_sum

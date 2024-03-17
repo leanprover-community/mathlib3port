@@ -160,7 +160,7 @@ theorem ENNReal.tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) :
   by_cases ha' : a = ⊤
   · simp [ha', hy]
   lift a to ℝ≥0 using ha'
-  change ↑c < ↑a at ha 
+  change ↑c < ↑a at ha
   rw [ENNReal.coe_rpow_of_nonneg _ hy.le]
   exact_mod_cast hc a (by exact_mod_cast ha)
 #align ennreal.tendsto_rpow_at_top ENNReal.tendsto_rpow_at_top
@@ -312,7 +312,7 @@ theorem isLittleO_exp_neg_mul_rpow_atTop {a : ℝ} (ha : 0 < a) (b : ℝ) :
   by
   apply is_o_of_tendsto'
   · refine' (eventually_gt_at_top 0).mp (eventually_of_forall fun t ht h => _)
-    rw [rpow_eq_zero_iff_of_nonneg ht.le] at h 
+    rw [rpow_eq_zero_iff_of_nonneg ht.le] at h
     exact (ht.ne' h.1).elim
   · refine' (tendsto_exp_mul_div_rpow_atTop (-b) a ha).inv_tendsto_atTop.congr' _
     refine' (eventually_ge_at_top 0).mp (eventually_of_forall fun t ht => _)

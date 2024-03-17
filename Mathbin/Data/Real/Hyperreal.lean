@@ -284,7 +284,7 @@ theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 
 theorem neg_lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) :
     ∀ {r : ℝ}, 0 < r → (-r : ℝ*) < ofSeq f := fun r hr =>
   have hg := hf.neg
-  neg_lt_of_neg_lt (by rw [neg_zero] at hg  <;> exact lt_of_tendsto_zero_of_pos hg hr)
+  neg_lt_of_neg_lt (by rw [neg_zero] at hg <;> exact lt_of_tendsto_zero_of_pos hg hr)
 #align hyperreal.neg_lt_of_tendsto_zero_of_pos Hyperreal.neg_lt_of_tendsto_zero_of_pos
 -/
 
@@ -354,7 +354,7 @@ private theorem is_st_unique' (x : ℝ*) (r s : ℝ) (hr : IsSt x r) (hs : IsSt 
   have hs' := (hs _ hrs').1
   have h : s - (s - r) / 2 = r + (s - r) / 2 := by linarith
   norm_cast at *
-  rw [h] at hs' 
+  rw [h] at hs'
   exact not_lt_of_lt hs' hr'
 
 #print Hyperreal.IsSt.unique /-
@@ -559,8 +559,8 @@ theorem Hyperreal.IsSt.lt {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt 
   have H1 : r + (s - r) / 2 = (r + s) / 2 := by linarith
   have H2 : s - (s - r) / 2 = (r + s) / 2 := by linarith
   norm_cast at *
-  rw [H1] at hxr' 
-  rw [H2] at hys' 
+  rw [H1] at hxr'
+  rw [H2] at hys'
   exact lt_trans hxr' hys'
 #align hyperreal.lt_of_is_st_lt Hyperreal.IsSt.lt
 -/
@@ -745,9 +745,9 @@ theorem infinitePos_abs_iff_infinite {x : ℝ*} : Infinite x ↔ InfinitePos |x|
       rw [abs_of_neg (hin 0)] <;> exact lt_neg.mp (hin (-d)),
     fun hipa => by
     rcases lt_trichotomy x 0 with (h | h | h)
-    · exact Or.inr (infinite_neg_iff_infinite_pos_neg.mpr (by rwa [abs_of_neg h] at hipa ))
-    · exact False.elim (ne_zero_of_infinite (Or.inl (by rw [h] <;> rwa [h, abs_zero] at hipa )) h)
-    · exact Or.inl (by rwa [abs_of_pos h] at hipa )⟩
+    · exact Or.inr (infinite_neg_iff_infinite_pos_neg.mpr (by rwa [abs_of_neg h] at hipa))
+    · exact False.elim (ne_zero_of_infinite (Or.inl (by rw [h] <;> rwa [h, abs_zero] at hipa)) h)
+    · exact Or.inl (by rwa [abs_of_pos h] at hipa)⟩
 #align hyperreal.infinite_iff_infinite_pos_abs Hyperreal.infinitePos_abs_iff_infiniteₓ
 
 theorem infinite_abs_iff {x : ℝ*} : Infinite x ↔ Infinite |x| := by
@@ -874,7 +874,7 @@ theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ
   ⟨fun hni =>
     Exists.dcases_on (Classical.not_forall.mp (not_or.mp hni).1) <|
       Exists.dcases_on (Classical.not_forall.mp (not_or.mp hni).2) fun r hr s hs => by
-        rw [not_lt] at hr hs  <;>
+        rw [not_lt] at hr hs <;>
           exact
             ⟨r - 1, s + 1,
               ⟨lt_of_lt_of_le (by rw [sub_eq_add_neg] <;> norm_num) hr,
@@ -958,7 +958,7 @@ theorem Hyperreal.IsSt.mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
         have hys' : _ :=
           is_st_iff_abs_sub_lt_delta.mp hys (d / t)
             (div_pos hd (coe_pos.1 (lt_of_le_of_lt (abs_nonneg x) ht)))
-        rw [hs, coe_zero, sub_zero] at hys' 
+        rw [hs, coe_zero, sub_zero] at hys'
         rw [hs, MulZeroClass.mul_zero, coe_zero, sub_zero, abs_mul, mul_comm, ←
           div_mul_cancel (d : ℝ*) (ne_of_gt (lt_of_le_of_lt (abs_nonneg x) ht)), ← coe_div]
         exact mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)
@@ -1145,7 +1145,7 @@ theorem infiniteNeg_iff_infinitesimal_inv_neg {x : ℝ*} :
     have hin' := infinitePos_iff_infinitesimal_inv_pos.mp (Hyperreal.InfiniteNeg.neg hin)
     rwa [infinitesimal_neg_iff, ← neg_pos, neg_inv], fun hin => by
     rwa [← neg_pos, infinitesimal_neg_iff, neg_inv, ← infinite_pos_iff_infinitesimal_inv_pos, ←
-      infinite_neg_iff_infinite_pos_neg] at hin ⟩
+      infinite_neg_iff_infinite_pos_neg] at hin⟩
 #align hyperreal.infinite_neg_iff_infinitesimal_inv_neg Hyperreal.infiniteNeg_iff_infinitesimal_inv_neg
 -/
 
@@ -1250,10 +1250,10 @@ theorem infinite_omega : Infinite ω :=
 #print Hyperreal.infinitePos_mul_of_infinitePos_not_infinitesimal_pos /-
 theorem infinitePos_mul_of_infinitePos_not_infinitesimal_pos {x y : ℝ*} :
     InfinitePos x → ¬Infinitesimal y → 0 < y → InfinitePos (x * y) := fun hx hy₁ hy₂ r =>
-  have hy₁' := Classical.not_forall.mp (by rw [infinitesimal_def] at hy₁  <;> exact hy₁)
+  have hy₁' := Classical.not_forall.mp (by rw [infinitesimal_def] at hy₁ <;> exact hy₁)
   Exists.dcases_on hy₁' fun r₁ hy₁'' =>
     by
-    have hyr := by rw [not_imp, ← abs_lt, not_lt, abs_of_pos hy₂] at hy₁''  <;> exact hy₁''
+    have hyr := by rw [not_imp, ← abs_lt, not_lt, abs_of_pos hy₂] at hy₁'' <;> exact hy₁''
     rw [← div_mul_cancel r (ne_of_gt hyr.1), coe_mul] <;>
       exact mul_lt_mul (hx (r / r₁)) hyr.2 (coe_lt_coe.2 hyr.1) (le_of_lt (hx 0))
 #align hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos Hyperreal.infinitePos_mul_of_infinitePos_not_infinitesimal_pos

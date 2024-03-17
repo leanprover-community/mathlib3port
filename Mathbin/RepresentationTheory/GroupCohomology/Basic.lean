@@ -173,7 +173,7 @@ noncomputable abbrev inhomogeneousCochains : CochainComplex (ModuleCat k) ℕ :=
     by
     ext x y
     have := LinearMap.ext_iff.1 ((linear_yoneda_obj_resolution A).d_comp_d n (n + 1) (n + 2))
-    simp only [ModuleCat.coe_comp, Function.comp_apply] at this 
+    simp only [ModuleCat.coe_comp, Function.comp_apply] at this
     simp only [ModuleCat.coe_comp, Function.comp_apply, d_eq, LinearEquiv.toModuleIso_hom,
       LinearEquiv.toModuleIso_inv, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, this,
       LinearMap.zero_apply, map_zero, Pi.zero_apply]

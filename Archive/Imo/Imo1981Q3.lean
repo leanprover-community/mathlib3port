@@ -174,7 +174,7 @@ theorem m_n_bounds {m n : ℕ} (h1 : NatPredicate N m n) : m ≤ fib K ∧ n ≤
         _ ≤ fib (K + 1) := fib_mono h6
   · have h7 : N < n := by
       have h8 : K + 2 ≤ k + 1 := succ_le_succ (not_lt.mp h2)
-      rw [← fib_add_two] at HK 
+      rw [← fib_add_two] at HK
       calc
         N < fib (K + 2) := HK
         _ ≤ fib (k + 1) := (fib_mono h8)
@@ -192,7 +192,7 @@ theorem k_bound {m n : ℤ} (h1 : ProblemPredicate N m n) : m ^ 2 + n ^ 2 ≤ M 
   by
   have h2 : 0 ≤ m := h1.m_range.left.le
   have h3 : 0 ≤ n := h1.n_range.left.le
-  rw [← nat_abs_of_nonneg h2, ← nat_abs_of_nonneg h3] at h1 ; clear h2 h3
+  rw [← nat_abs_of_nonneg h2, ← nat_abs_of_nonneg h3] at h1; clear h2 h3
   obtain ⟨h4 : m.nat_abs ≤ fib K, h5 : n.nat_abs ≤ fib (K + 1)⟩ := m_n_bounds HK h1
   have h6 : m ^ 2 ≤ fib K ^ 2 := nat_abs_le_iff_sq_le.mp h4
   have h7 : n ^ 2 ≤ fib (K + 1) ^ 2 := nat_abs_le_iff_sq_le.mp h5
@@ -219,7 +219,7 @@ numbers in this range, and thus provide the maximum of `specified_set`.
 theorem imo1981_q3 : IsGreatest (specifiedSet 1981) 3524578 :=
   by
   have := fun h => @solution_greatest 1981 16 h 3524578
-  simp only [show fib (16 : ℕ) = 987 ∧ fib (16 + 1 : ℕ) = 1597 by norm_num [fib_add_two]] at this 
+  simp only [show fib (16 : ℕ) = 987 ∧ fib (16 + 1 : ℕ) = 1597 by norm_num [fib_add_two]] at this
   apply_mod_cast this <;> norm_num [problem_predicate_iff]
 #align imo1981_q3 imo1981_q3
 

@@ -282,10 +282,10 @@ theorem expand_contract [NoZeroDivisors R] {f : R[X]} (hf : f.derivative = 0) (h
   · cases n
     · exact absurd (dvd_zero p) h
     have := coeff_derivative f n
-    rw [hf, coeff_zero, zero_eq_mul] at this 
+    rw [hf, coeff_zero, zero_eq_mul] at this
     cases this
     · rw [this]
-    rw [← Nat.cast_succ, CharP.cast_eq_zero_iff R p] at this 
+    rw [← Nat.cast_succ, CharP.cast_eq_zero_iff R p] at this
     exact absurd this h
 #align polynomial.expand_contract Polynomial.expand_contract
 -/
@@ -327,10 +327,10 @@ variable (R : Type u) [CommRing R] [IsDomain R]
 theorem isLocalRingHom_expand {p : ℕ} (hp : 0 < p) :
     IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) :=
   by
-  refine' ⟨fun f hf1 => _⟩; rw [← coeFn_coeBase] at hf1 
+  refine' ⟨fun f hf1 => _⟩; rw [← coeFn_coeBase] at hf1
   have hf2 := eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)
-  rw [coeff_expand hp, if_pos (dvd_zero _), p.zero_div] at hf2 
-  rw [hf2, is_unit_C] at hf1 ; rw [expand_eq_C hp] at hf2 ; rwa [hf2, is_unit_C]
+  rw [coeff_expand hp, if_pos (dvd_zero _), p.zero_div] at hf2
+  rw [hf2, is_unit_C] at hf1; rw [expand_eq_C hp] at hf2; rwa [hf2, is_unit_C]
 #align polynomial.is_local_ring_hom_expand Polynomial.isLocalRingHom_expand
 -/
 
@@ -347,8 +347,8 @@ theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreduci
 #print Polynomial.of_irreducible_expand_pow /-
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
-  Nat.recOn n (fun hf => by rwa [pow_zero, expand_one] at hf ) fun n ih hf =>
-    ih <| of_irreducible_expand hp <| by rw [pow_succ] at hf ; rwa [expand_expand]
+  Nat.recOn n (fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>
+    ih <| of_irreducible_expand hp <| by rw [pow_succ] at hf; rwa [expand_expand]
 #align polynomial.of_irreducible_expand_pow Polynomial.of_irreducible_expand_pow
 -/
 

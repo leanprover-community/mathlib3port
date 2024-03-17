@@ -82,9 +82,9 @@ theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom :=
   by
   have eq₁ := D.t_fac i i j
   have eq₂ := (is_iso.eq_comp_inv (D.f i i)).mpr (@pullback.condition _ _ _ _ _ _ (D.f i j) _)
-  rw [D.t_id, category.comp_id, eq₂] at eq₁ 
+  rw [D.t_id, category.comp_id, eq₂] at eq₁
   have eq₃ := (is_iso.eq_comp_inv (D.f i i)).mp eq₁
-  rw [category.assoc, ← pullback.condition, ← category.assoc] at eq₃ 
+  rw [category.assoc, ← pullback.condition, ← category.assoc] at eq₃
   exact
     mono.right_cancellation _ _
       ((mono.right_cancellation _ _ eq₃).trans (pullback_symmetry_hom_comp_fst _ _).symm)
@@ -109,9 +109,9 @@ theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ :=
   by
   have eq : (pullback_symmetry (D.f i i) (D.f i j)).Hom = pullback.snd ≫ inv pullback.fst := by simp
   have := D.cocycle i j i
-  rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this 
-  simp only [category.assoc, is_iso.inv_hom_id_assoc] at this 
-  rw [← is_iso.eq_inv_comp, ← category.assoc, is_iso.comp_inv_eq] at this 
+  rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this
+  simp only [category.assoc, is_iso.inv_hom_id_assoc] at this
+  rw [← is_iso.eq_inv_comp, ← category.assoc, is_iso.comp_inv_eq] at this
   simpa using this
 #align category_theory.glue_data.t_inv CategoryTheory.GlueData.t_inv
 -/
@@ -467,8 +467,8 @@ theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.mul
   let e := D.glued_iso F
   obtain ⟨i, y, eq⟩ := (D.map_glue_data F).types_ι_jointly_surjective (e.hom x)
   replace eq := congr_arg e.inv Eq
-  change ((D.map_glue_data F).ι i ≫ e.inv) y = (e.hom ≫ e.inv) x at eq 
-  rw [e.hom_inv_id, D.ι_glued_iso_inv] at eq 
+  change ((D.map_glue_data F).ι i ≫ e.inv) y = (e.hom ≫ e.inv) x at eq
+  rw [e.hom_inv_id, D.ι_glued_iso_inv] at eq
   exact ⟨i, y, Eq⟩
 #align category_theory.glue_data.ι_jointly_surjective CategoryTheory.GlueData.ι_jointly_surjective
 -/

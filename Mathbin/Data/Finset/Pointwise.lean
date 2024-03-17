@@ -2276,7 +2276,7 @@ instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     by_contra! H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset,
-      mem_zero] at H 
+      mem_zero] at H
     obtain ⟨⟨a, hs, ha⟩, b, ht, hb⟩ := H
     have := subset_of_eq h
     exact
@@ -2641,7 +2641,7 @@ theorem smul_finset_symmDiff₀ (ha : a ≠ 0) : a • s ∆ t = (a • s) ∆ (
 
 #print Finset.smul_univ₀ /-
 theorem smul_univ₀ [Fintype β] {s : Finset α} (hs : ¬s ⊆ 0) : s • (univ : Finset β) = univ :=
-  coe_injective <| by rw [← coe_subset] at hs ; push_cast at hs ⊢; exact Set.smul_univ₀ hs
+  coe_injective <| by rw [← coe_subset] at hs; push_cast at hs ⊢; exact Set.smul_univ₀ hs
 #align finset.smul_univ₀ Finset.smul_univ₀
 -/
 

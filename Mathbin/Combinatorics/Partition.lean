@@ -71,7 +71,7 @@ def ofComposition (n : ℕ) (c : Composition n) : Partition n
     where
   parts := c.blocks
   parts_pos i hi := c.blocks_pos hi
-  parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
+  parts_sum := by rw [Multiset.sum_coe, c.blocks_sum]
 #align nat.partition.of_composition Nat.Partition.ofComposition
 -/
 
@@ -97,7 +97,7 @@ def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n
   parts_pos i hi := Nat.pos_of_ne_zero <| by apply of_mem_filter hi
   parts_sum := by
     have lt : l.filter (· = 0) + l.filter (· ≠ 0) = l := filter_add_not _ l
-    apply_fun Multiset.sum at lt 
+    apply_fun Multiset.sum at lt
     have lz : (l.filter (· = 0)).Sum = 0 :=
       by
       rw [Multiset.sum_eq_zero_iff]

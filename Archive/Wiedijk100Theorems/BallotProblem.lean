@@ -59,7 +59,7 @@ theorem staysPositive_cons_pos (x : ℤ) (hx : 0 < x) (l : List ℤ) :
   · intro hl l₁ hl₁ hl₂
     apply hl l₁ hl₁ (hl₂.trans (List.suffix_cons _ _))
   · intro hl l₁ hl₁ hl₂
-    rw [List.suffix_cons_iff] at hl₂ 
+    rw [List.suffix_cons_iff] at hl₂
     rcases hl₂ with (rfl | hl₂)
     · rw [List.sum_cons]
       apply add_pos_of_pos_of_nonneg hx
@@ -278,14 +278,14 @@ theorem first_vote_neg (p q : ℕ) (h : 0 < p + q) :
   have :=
     cond_count_compl ({l : List ℤ | l.headI = 1}ᶜ) (counted_sequence_finite p q)
       (counted_sequence_nonempty p q)
-  rw [compl_compl, first_vote_pos _ _ h] at this 
+  rw [compl_compl, first_vote_pos _ _ h] at this
   rw [(_ : (q / (p + q) : ENNReal) = 1 - p / (p + q)), ← this, ENNReal.add_sub_cancel_right]
   · simp only [Ne.def, ENNReal.div_eq_top, Nat.cast_eq_zero, add_eq_zero_iff, ENNReal.nat_ne_top,
       false_and_iff, or_false_iff, not_and]
     intros
     contradiction
   rw [eq_comm, ENNReal.eq_div_iff, ENNReal.mul_sub, ENNReal.mul_div_cancel']
-  all_goals simp; try rintro rfl; rw [zero_add] at h ; exact h.ne.symm
+  all_goals simp; try rintro rfl; rw [zero_add] at h; exact h.ne.symm
 #align ballot.first_vote_neg Ballot.first_vote_neg
 
 theorem ballot_same (p : ℕ) : condCount (countedSequence (p + 1) (p + 1)) staysPositive = 0 :=
@@ -304,7 +304,7 @@ theorem ballot_edge (p : ℕ) : condCount (countedSequence (p + 1) 0) staysPosit
   rw [counted_right_zero]
   refine' cond_count_eq_one_of (finite_singleton _) (singleton_nonempty _) _
   · intro l hl
-    rw [mem_singleton_iff] at hl 
+    rw [mem_singleton_iff] at hl
     subst hl
     refine' fun l hl₁ hl₂ => List.sum_pos _ (fun x hx => _) hl₁
     rw [List.eq_of_mem_replicate (List.mem_of_mem_suffix hx hl₂)]
@@ -343,7 +343,7 @@ theorem ballot_pos (p q : ℕ) :
     · simp only [and_imp, exists_imp]
       rintro l hl rfl t
       refine' ⟨l, ⟨hl, _⟩, rfl⟩
-      rwa [stays_positive_cons_pos] at t 
+      rwa [stays_positive_cons_pos] at t
       norm_num
     · simp only [and_imp, exists_imp]
       rintro l hl₁ hl₂ rfl
@@ -390,7 +390,7 @@ theorem ballot_neg (p q : ℕ) (qp : q < p) :
     · simp only [and_imp, exists_imp]
       rintro l hl₁ hl₂ rfl
       refine' ⟨⟨l, hl₁, rfl⟩, fun l₁ hl₃ hl₄ => _⟩
-      rw [List.suffix_cons_iff] at hl₄ 
+      rw [List.suffix_cons_iff] at hl₄
       rcases hl₄ with (rfl | hl₄)
       · simp [List.sum_cons, sum_of_mem_counted_sequence hl₁, sub_eq_add_neg, ← add_assoc, qp]
       exact hl₂ _ hl₃ hl₄
@@ -457,7 +457,7 @@ theorem ballot_problem :
     rw [ENNReal.toReal_div, ← Nat.cast_add, ← Nat.cast_add, ENNReal.toReal_nat,
       ENNReal.toReal_sub_of_le, ENNReal.toReal_nat, ENNReal.toReal_nat]
     exacts [Nat.cast_le.2 qp.le, ENNReal.nat_ne_top _]
-  rwa [ENNReal.toReal_eq_toReal (measure_lt_top _ _).Ne] at this 
+  rwa [ENNReal.toReal_eq_toReal (measure_lt_top _ _).Ne] at this
   · simp only [Ne.def, ENNReal.div_eq_top, tsub_eq_zero_iff_le, Nat.cast_le, not_le,
       add_eq_zero_iff, Nat.cast_eq_zero, ENNReal.add_eq_top, ENNReal.nat_ne_top, or_self_iff,
       not_false_iff, and_true_iff]

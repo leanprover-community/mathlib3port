@@ -505,7 +505,7 @@ theorem eq_zero_of_sameRay_neg_smul_right [NoZeroSMulDivisors R M] {r : R} (hr :
   rcases h with (rfl | h₀ | ⟨r₁, r₂, hr₁, hr₂, h⟩)
   · rfl
   · simpa [hr.ne] using h₀
-  · rw [← sub_eq_zero, smul_smul, ← sub_smul, smul_eq_zero] at h 
+  · rw [← sub_eq_zero, smul_smul, ← sub_smul, smul_eq_zero] at h
     refine' h.resolve_left (ne_of_gt <| sub_pos.2 _)
     exact (mul_neg_of_pos_of_neg hr₂ hr).trans hr₁
 #align eq_zero_of_same_ray_neg_smul_right eq_zero_of_sameRay_neg_smul_right
@@ -746,8 +746,8 @@ theorem sameRay_or_sameRay_neg_iff_not_linearIndependent {x y : M} :
     · exact False.elim (hy (neg_eq_zero.1 hy0))
     · refine' ⟨![r₁, r₂], _⟩; simp [h, hr₁.ne.symm]
   · rcases h with ⟨m, hm, hmne⟩
-    change m 0 • x + m 1 • y = 0 at hm 
-    rw [add_eq_zero_iff_eq_neg] at hm 
+    change m 0 • x + m 1 • y = 0 at hm
+    rw [add_eq_zero_iff_eq_neg] at hm
     rcases lt_trichotomy (m 0) 0 with (hm0 | hm0 | hm0) <;>
       rcases lt_trichotomy (m 1) 0 with (hm1 | hm1 | hm1)
     · refine'

@@ -373,7 +373,7 @@ theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Inj
 #print CategoryTheory.Abelian.Pseudoelement.zero_of_map_zero /-
 /-- A morphism that is injective on pseudoelements only maps the zero element to zero. -/
 theorem zero_of_map_zero {P Q : C} (f : P ⟶ Q) : Function.Injective f → ∀ a, f a = 0 → a = 0 :=
-  fun h a ha => by rw [← apply_zero f] at ha ; exact h ha
+  fun h a ha => by rw [← apply_zero f] at ha; exact h ha
 #align category_theory.abelian.pseudoelement.zero_of_map_zero CategoryTheory.Abelian.Pseudoelement.zero_of_map_zero
 -/
 
@@ -409,11 +409,11 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
   | ⟨pbar, hpbar⟩ =>
     match Quotient.exists_rep pbar with
     | ⟨p, hp⟩ =>
-      have : ⟦(p.Hom ≫ f : Over Q)⟧ = ⟦𝟙 Q⟧ := by rw [← hp] at hpbar ; exact hpbar
+      have : ⟦(p.Hom ≫ f : Over Q)⟧ = ⟦𝟙 Q⟧ := by rw [← hp] at hpbar; exact hpbar
       match Quotient.exact this with
       | ⟨R, x, y, ex, ey, comm⟩ =>
-        @epi_of_epi_fac _ _ _ _ _ (x ≫ p.Hom) f y ey <| by dsimp at comm ;
-          rw [category.assoc, comm]; apply category.comp_id
+        @epi_of_epi_fac _ _ _ _ _ (x ≫ p.Hom) f y ey <| by dsimp at comm; rw [category.assoc, comm];
+          apply category.comp_id
 #align category_theory.abelian.pseudoelement.epi_of_pseudo_surjective CategoryTheory.Abelian.Pseudoelement.epi_of_pseudo_surjective
 -/
 
@@ -472,7 +472,7 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       -- By pseudo-exactness, we get a preimage.
       obtain ⟨a', ha⟩ := h₂ _ this
       obtain ⟨a, ha'⟩ := Quotient.exists_rep a'
-      rw [← ha'] at ha 
+      rw [← ha'] at ha
       obtain ⟨Z, r, q, er, eq, comm⟩ := Quotient.exact ha
       -- Consider the pullback of kernel.ι (cokernel.π f) and kernel.ι g.
       -- The commutative diagram given by the pseudo-equality f a = b induces
@@ -509,7 +509,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
     | ⟨R, p, q, ep, Eq, comm⟩ =>
       let a'' : R ⟶ P := p ≫ a.Hom - q ≫ a'.Hom
       ⟨a'',
-        ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by dsimp at comm ;
+        ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by dsimp at comm;
             simp [sub_eq_zero.2 comm],
           fun Z g hh => by
           obtain ⟨X, p', q', ep', eq', comm'⟩ := Quotient.exact hh

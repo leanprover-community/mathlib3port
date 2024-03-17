@@ -57,7 +57,7 @@ theorem saturated_iff_zpow {H : Subgroup G} :
       simpa only [inv_mem_iff, zpow_negSucc] using hgn
   · intro h n g hgn
     specialize h n g
-    simp only [Int.coe_nat_eq_zero, zpow_coe_nat] at h 
+    simp only [Int.coe_nat_eq_zero, zpow_coe_nat] at h
     apply h hgn
 #align subgroup.saturated_iff_zpow Subgroup.saturated_iff_zpow
 #align add_subgroup.saturated_iff_zsmul AddSubgroup.saturated_iff_zsmul

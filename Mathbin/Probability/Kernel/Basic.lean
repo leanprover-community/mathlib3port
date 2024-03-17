@@ -239,7 +239,7 @@ theorem ext_fun {η : kernel α β} (h : ∀ a f, Measurable f → ∫⁻ b, f b
     κ = η := by
   ext a s hs
   specialize h a (s.indicator fun _ => 1) (Measurable.indicator measurable_const hs)
-  simp_rw [lintegral_indicator_const hs, one_mul] at h 
+  simp_rw [lintegral_indicator_const hs, one_mul] at h
   rw [h]
 #align probability_theory.kernel.ext_fun ProbabilityTheory.kernel.ext_fun
 -/

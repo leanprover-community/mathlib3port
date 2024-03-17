@@ -146,8 +146,8 @@ theorem not_forall_coeff_cyclotomic_neg_one_zero_one :
   by
   intro h
   specialize h 105 7
-  rw [coeff_cyclotomic_105] at h 
-  norm_num at h 
+  rw [coeff_cyclotomic_105] at h
+  norm_num at h
 #align counterexample.not_forall_coeff_cyclotomic_neg_one_zero_one Counterexample.not_forall_coeff_cyclotomic_neg_one_zero_one
 
 end Counterexample

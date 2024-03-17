@@ -103,7 +103,7 @@ theorem nonempty_sections_of_finite_cofiltered_system {J : Type u} [Category.{w}
   use fun j => (u ⟨j⟩).down
   intro j j' f
   have h := @hu (⟨j⟩ : J') (⟨j'⟩ : J') (ULift.up f)
-  simp only [as_small.down, functor.comp_map, ulift_functor_map, functor.op_map] at h 
+  simp only [as_small.down, functor.comp_map, ulift_functor_map, functor.op_map] at h
   simp_rw [← h]
   rfl
 #align nonempty_sections_of_finite_cofiltered_system nonempty_sections_of_finite_cofiltered_system
@@ -283,7 +283,7 @@ theorem IsMittagLeffler.toPreimages (h : F.IsMittagLeffler) : (F.toPreimages s).
     refine' ⟨⟨y, mem_Inter.2 fun g₂ => _⟩, Subtype.ext _⟩
     · obtain ⟨j₄, f₄, h₄⟩ := cone_maps g₂ ((f₃ ≫ f₂) ≫ g₁)
       obtain ⟨y, rfl⟩ := F.mem_eventual_range_iff.1 hy f₄
-      rw [← map_comp_apply] at h₃ 
+      rw [← map_comp_apply] at h₃
       rw [mem_preimage, ← map_comp_apply, h₄, ← category.assoc, map_comp_apply, h₃, ←
         map_comp_apply]
       apply mem_Inter.1 hx
@@ -308,7 +308,7 @@ theorem isMittagLeffler_of_exists_finite_range
   rintro _ ⟨⟨k', g'⟩, rfl⟩ hl
   refine' (eq_of_le_of_not_lt hl _).ge
   have := hmin _ ⟨k', g', (m.finite_to_set.subset <| hm.substr hl).coe_toFinset⟩
-  rwa [Finset.lt_iff_ssubset, ← Finset.coe_ssubset, Set.Finite.coe_toFinset, hm] at this 
+  rwa [Finset.lt_iff_ssubset, ← Finset.coe_ssubset, Set.Finite.coe_toFinset, hm] at this
 #align category_theory.functor.is_mittag_leffler_of_exists_finite_range CategoryTheory.Functor.isMittagLeffler_of_exists_finite_range
 -/
 
@@ -396,8 +396,8 @@ theorem eval_section_injective_of_eventually_injective {j}
   by
   refine' fun s₀ s₁ h => Subtype.ext <| funext fun k => _
   obtain ⟨m, mi, mk, _⟩ := cone_objs i k
-  dsimp at h 
-  rw [← s₀.prop (mi ≫ f), ← s₁.prop (mi ≫ f)] at h 
+  dsimp at h
+  rw [← s₀.prop (mi ≫ f), ← s₁.prop (mi ≫ f)] at h
   rw [← s₀.prop mk, ← s₁.prop mk]
   refine' congr_arg _ (Finj m (mi ≫ f) h)
 #align category_theory.functor.eval_section_injective_of_eventually_injective CategoryTheory.Functor.eval_section_injective_of_eventually_injective
@@ -417,8 +417,8 @@ theorem eval_section_surjective_of_surjective (i : J) :
   obtain ⟨sec, h⟩ := nonempty_sections_of_finite_cofiltered_system (F.to_preimages s)
   refine' ⟨⟨fun j => (sec j).val, fun j k jk => by simpa [Subtype.ext_iff] using h jk⟩, _⟩
   · have := (sec i).Prop
-    simp only [mem_Inter, mem_preimage, mem_singleton_iff] at this 
-    replace this := this (𝟙 i); rwa [map_id_apply] at this 
+    simp only [mem_Inter, mem_preimage, mem_singleton_iff] at this
+    replace this := this (𝟙 i); rwa [map_id_apply] at this
 #align category_theory.functor.eval_section_surjective_of_surjective CategoryTheory.Functor.eval_section_surjective_of_surjective
 -/
 

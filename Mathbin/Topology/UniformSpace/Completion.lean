@@ -272,9 +272,9 @@ def extend (f : α → β) : CauchyFilter α → β :=
 #align Cauchy.extend CauchyFilter.extend
 -/
 
-section SeparatedSpace
+section T0Space
 
-variable [SeparatedSpace β]
+variable [T0Space β]
 
 #print CauchyFilter.extend_pureCauchy /-
 theorem extend_pureCauchy {f : α → β} (hf : UniformContinuous f) (a : α) :
@@ -284,7 +284,7 @@ theorem extend_pureCauchy {f : α → β} (hf : UniformContinuous f) (a : α) :
 #align Cauchy.extend_pure_cauchy CauchyFilter.extend_pureCauchy
 -/
 
-end SeparatedSpace
+end T0Space
 
 variable [CompleteSpace β]
 
@@ -304,9 +304,8 @@ end Extend
 end
 
 #print CauchyFilter.cauchyFilter_eq /-
-theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α]
-    [SeparatedSpace α] {f g : CauchyFilter α} :
-    lim f.1 = lim g.1 ↔ (f, g) ∈ separationRel (CauchyFilter α) :=
+theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α] [T0Space α]
+    {f g : CauchyFilter α} : lim f.1 = lim g.1 ↔ (f, g) ∈ Inseparable (CauchyFilter α) :=
   by
   constructor
   · intro e s hs
@@ -318,10 +317,10 @@ theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [Complete
         ⟨_, f.2.le_nhds_lim (mem_nhds_right (lim f.1) du), _,
           g.2.le_nhds_lim (mem_nhds_left (lim g.1) du), fun x h => _⟩
     cases' x with a b; cases' h with h₁ h₂
-    rw [← e] at h₂ 
+    rw [← e] at h₂
     exact dt ⟨_, h₁, h₂⟩
   · intro H
-    refine' separated_def.1 (by infer_instance) _ _ fun t tu => _
+    refine' t0Space_iff_uniformity.1 (by infer_instance) _ _ fun t tu => _
     rcases mem_uniformity_isClosed tu with ⟨d, du, dc, dt⟩
     refine'
       H {p | (lim p.1.1, lim p.2.1) ∈ t} (CauchyFilter.mem_uniformity'.2 ⟨d, du, fun f g h => _⟩)
@@ -332,22 +331,22 @@ theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [Complete
       rw [closure_eq_cluster_pts]
       exact f.2.1.mono (le_inf f.2.le_nhds_lim (le_principal_iff.2 xf))
     have := dc.closure_subset_iff.2 h
-    rw [closure_prod_eq] at this 
+    rw [closure_prod_eq] at this
     refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
 #align Cauchy.Cauchy_eq CauchyFilter.cauchyFilter_eq
 -/
 
 section
 
-attribute [local instance] UniformSpace.separationSetoid
+attribute [local instance] inseparableSetoid
 
 #print CauchyFilter.separated_pureCauchy_injective /-
-theorem separated_pureCauchy_injective {α : Type _} [UniformSpace α] [s : SeparatedSpace α] :
+theorem separated_pureCauchy_injective {α : Type _} [UniformSpace α] [s : T0Space α] :
     Function.Injective fun a : α => ⟦pureCauchy a⟧
   | a, b, h =>
-    separated_def.1 s _ _ fun s hs =>
+    t0Space_iff_uniformity.1 s _ _ fun s hs =>
       let ⟨t, ht, hts⟩ := by
-        rw [← (@uniform_embedding_pure_cauchy α _).comap_uniformity, Filter.mem_comap] at hs  <;>
+        rw [← (@uniform_embedding_pure_cauchy α _).comap_uniformity, Filter.mem_comap] at hs <;>
           exact hs
       have : (pureCauchy a, pureCauchy b) ∈ t := Quotient.exact h t ht
       @hts (a, b) this
@@ -358,7 +357,7 @@ end
 
 end CauchyFilter
 
-attribute [local instance] UniformSpace.separationSetoid
+attribute [local instance] inseparableSetoid
 
 open CauchyFilter Set
 
@@ -370,9 +369,8 @@ variable {β : Type _} [UniformSpace β]
 
 variable {γ : Type _} [UniformSpace γ]
 
-#print UniformSpace.completeSpace_separation /-
-instance completeSpace_separation [h : CompleteSpace α] :
-    CompleteSpace (Quotient (separationSetoid α)) :=
+#print SeparationQuotient.instCompleteSpace /-
+instance instCompleteSpace [h : CompleteSpace α] : CompleteSpace (Quotient (inseparableSetoid α)) :=
   ⟨fun f => fun hf : Cauchy f =>
     have : Cauchy (f.comap fun x => ⟦x⟧) :=
       hf.comap' comap_quotient_le_uniformity <| hf.left.comap_of_surj (surjective_quotient_mk' _)
@@ -380,32 +378,32 @@ instance completeSpace_separation [h : CompleteSpace α] :
     ⟨⟦x⟧,
       (comap_le_comap_iff <| by simp).1
         (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk'.ContinuousAt)⟩⟩
-#align uniform_space.complete_space_separation UniformSpace.completeSpace_separation
+#align uniform_space.complete_space_separation SeparationQuotient.instCompleteSpace
 -/
 
 #print UniformSpace.Completion /-
 /-- Hausdorff completion of `α` -/
 def Completion :=
-  Quotient (separationSetoid <| CauchyFilter α)
+  Quotient (inseparableSetoid <| CauchyFilter α)
 #align uniform_space.completion UniformSpace.Completion
 -/
 
 namespace Completion
 
 instance [Inhabited α] : Inhabited (Completion α) :=
-  Quotient.inhabited (separationSetoid (CauchyFilter α))
+  Quotient.inhabited (inseparableSetoid (CauchyFilter α))
 
 instance (priority := 50) : UniformSpace (Completion α) :=
-  separationSetoid.uniformSpace
+  inseparableSetoid.uniformSpace
 
 instance : CompleteSpace (Completion α) :=
-  UniformSpace.completeSpace_separation (CauchyFilter α)
+  SeparationQuotient.instCompleteSpace (CauchyFilter α)
 
-instance : SeparatedSpace (Completion α) :=
-  UniformSpace.separated_separation
+instance : T0Space (Completion α) :=
+  SeparationQuotient.instT0Space
 
 instance : T3Space (Completion α) :=
-  separated_t3
+  RegularSpace.t3Space_iff_t0Space
 
 /-- Automatic coercion from `α` to its completion. Not always injective. -/
 instance : CoeTC α (Completion α) :=
@@ -492,14 +490,14 @@ theorem continuous_coe : Continuous (coe : α → Completion α) :=
 -/
 
 #print UniformSpace.Completion.uniformEmbedding_coe /-
-theorem uniformEmbedding_coe [SeparatedSpace α] : UniformEmbedding (coe : α → Completion α) :=
+theorem uniformEmbedding_coe [T0Space α] : UniformEmbedding (coe : α → Completion α) :=
   { comap_uniformity := comap_coe_eq_uniformity α
     inj := separated_pureCauchy_injective }
 #align uniform_space.completion.uniform_embedding_coe UniformSpace.Completion.uniformEmbedding_coe
 -/
 
 #print UniformSpace.Completion.coe_injective /-
-theorem coe_injective [SeparatedSpace α] : Function.Injective (coe : α → Completion α) :=
+theorem coe_injective [T0Space α] : Function.Injective (coe : α → Completion α) :=
   UniformEmbedding.inj (uniformEmbedding_coe _)
 #align uniform_space.completion.coe_injective UniformSpace.Completion.coe_injective
 -/
@@ -514,7 +512,7 @@ theorem denseInducing_coe : DenseInducing (coe : α → Completion α) :=
 
 #print UniformSpace.Completion.UniformCompletion.completeEquivSelf /-
 /-- The uniform bijection between a complete space and its uniform completion. -/
-def UniformCompletion.completeEquivSelf [CompleteSpace α] [SeparatedSpace α] : Completion α ≃ᵤ α :=
+def UniformCompletion.completeEquivSelf [CompleteSpace α] [T0Space α] : Completion α ≃ᵤ α :=
   AbstractCompletion.compareEquiv Completion.cPkg AbstractCompletion.ofComplete
 #align uniform_space.completion.uniform_completion.complete_equiv_self UniformSpace.Completion.UniformCompletion.completeEquivSelf
 -/
@@ -528,7 +526,7 @@ instance separableSpace_completion [SeparableSpace α] : SeparableSpace (Complet
 -/
 
 #print UniformSpace.Completion.denseEmbedding_coe /-
-theorem denseEmbedding_coe [SeparatedSpace α] : DenseEmbedding (coe : α → Completion α) :=
+theorem denseEmbedding_coe [T0Space α] : DenseEmbedding (coe : α → Completion α) :=
   { denseInducing_coe with inj := separated_pureCauchy_injective }
 #align uniform_space.completion.dense_embedding_coe UniformSpace.Completion.denseEmbedding_coe
 -/
@@ -626,13 +624,13 @@ end CompleteSpace
 
 #print UniformSpace.Completion.extension_coe /-
 @[simp]
-theorem extension_coe [SeparatedSpace β] (hf : UniformContinuous f) (a : α) :
+theorem extension_coe [T0Space β] (hf : UniformContinuous f) (a : α) :
     (Completion.extension f) a = f a :=
   cPkg.extend_coe hf a
 #align uniform_space.completion.extension_coe UniformSpace.Completion.extension_coe
 -/
 
-variable [SeparatedSpace β] [CompleteSpace β]
+variable [T0Space β] [CompleteSpace β]
 
 #print UniformSpace.Completion.extension_unique /-
 theorem extension_unique (hf : UniformContinuous f) {g : Completion α → β}
@@ -697,7 +695,7 @@ theorem map_id : Completion.map (@id α) = id :=
 -/
 
 #print UniformSpace.Completion.extension_map /-
-theorem extension_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β}
+theorem extension_map [CompleteSpace γ] [T0Space γ] {f : β → γ} {g : α → β}
     (hf : UniformContinuous f) (hg : UniformContinuous g) :
     Completion.extension f ∘ Completion.map g = Completion.extension (f ∘ g) :=
   Completion.ext (continuous_extension.comp continuous_map) continuous_extension <| by
@@ -777,9 +775,9 @@ protected def extension₂ (f : α → β → γ) : Completion α → Completion
 #align uniform_space.completion.extension₂ UniformSpace.Completion.extension₂
 -/
 
-section SeparatedSpace
+section T0Space
 
-variable [SeparatedSpace γ] {f}
+variable [T0Space γ] {f}
 
 #print UniformSpace.Completion.extension₂_coe_coe /-
 @[simp]
@@ -789,7 +787,7 @@ theorem extension₂_coe_coe (hf : UniformContinuous₂ f) (a : α) (b : β) :
 #align uniform_space.completion.extension₂_coe_coe UniformSpace.Completion.extension₂_coe_coe
 -/
 
-end SeparatedSpace
+end T0Space
 
 variable [CompleteSpace γ] (f)
 

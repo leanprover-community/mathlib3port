@@ -111,7 +111,7 @@ theorem partOfVertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ≠ 
   by
   intro hn
   have hw := P.mem_part_of_vertex w
-  rw [← hn] at hw 
+  rw [← hn] at hw
   exact P.independent _ (P.part_of_vertex_mem v) (P.mem_part_of_vertex v) hw (G.ne_of_adj h) h
 #align simple_graph.partition.part_of_vertex_ne_of_adj SimpleGraph.Partition.partOfVertex_ne_of_adj
 -/
@@ -166,7 +166,7 @@ theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorabl
   constructor
   · rintro ⟨P, hf, h⟩
     haveI : Fintype P.parts := hf.fintype
-    rw [Set.Finite.card_toFinset] at h 
+    rw [Set.Finite.card_toFinset] at h
     apply P.to_colorable.mono h
   · rintro ⟨C⟩
     refine' ⟨C.to_partition, C.color_classes_finite, le_trans _ (Fintype.card_fin n).le⟩

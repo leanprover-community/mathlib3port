@@ -77,10 +77,10 @@ theorem erdos_szekeres {r s n : ℕ} {f : Fin n → α} (hn : r * s < n) (hf : I
     on_goal 2 => have : (ab i).2 ∈ _ := max'_mem _ _
     all_goals
       intro hi
-      rw [mem_image] at this 
+      rw [mem_image] at this
       obtain ⟨t, ht₁, ht₂⟩ := this
       refine' ⟨t, by rwa [ht₂], _⟩
-      rw [mem_filter] at ht₁ 
+      rw [mem_filter] at ht₁
       apply ht₁.2.2
   -- Show first that the pair of labels is unique.
   have : injective ab := by
@@ -100,7 +100,7 @@ theorem erdos_szekeres {r s n : ℕ} {f : Fin n → α} (hn : r * s < n) (hf : I
       -- In particular we take the subsequence `t` of length `a_i` which ends at `i`, by definition
       -- of `a_i`
       rcases this with ⟨t, ht₁, ht₂⟩
-      rw [mem_filter] at ht₁ 
+      rw [mem_filter] at ht₁
       -- Ensure `t` ends at `i`.
       have : t.max = i
       simp [ht₁.2.1]
@@ -137,7 +137,7 @@ theorem erdos_szekeres {r s n : ℕ} {f : Fin n → α} (hn : r * s < n) (hf : I
   -- Now that we have uniqueness of each label, it remains to do some counting to finish off.
   -- Suppose all the labels are small.
   by_contra q
-  push_neg at q 
+  push_neg at q
   -- Then the labels `(a_i, b_i)` all fit in the following set: `{ (x,y) | 1 ≤ x ≤ r, 1 ≤ y ≤ s }`
   let ran : Finset (ℕ × ℕ) := (range r).image Nat.succ ×ˢ (range s).image Nat.succ
   -- which we prove here.

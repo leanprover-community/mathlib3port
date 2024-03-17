@@ -177,8 +177,8 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
   have int_A : ∫ v : V, ‖f v - f (v + i w)‖ = ∫ v in A, ‖f v - f (v + i w)‖ :=
     by
     refine' (set_integral_eq_integral_of_forall_compl_eq_zero fun v hv => _).symm
-    dsimp only [A] at hv 
-    simp only [A, mem_set_of_eq, not_le] at hv 
+    dsimp only [A] at hv
+    simp only [A, mem_set_of_eq, not_le] at hv
     rw [hR_bd v _, hR_bd (v + i w) _, sub_zero, norm_zero]
     · rw [← sub_neg_eq_add]
       refine' le_trans _ (norm_sub_norm_le _ _)
@@ -194,7 +194,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
   have bdA : ∀ v : V, v ∈ A → ‖‖f v - f (v + i w)‖‖ ≤ ε / B :=
     by
     simp_rw [norm_norm]
-    simp_rw [dist_eq_norm] at hδ2 
+    simp_rw [dist_eq_norm] at hδ2
     refine' fun x _ => (hδ2 _).le
     rw [sub_add_cancel', norm_neg, hw'_nm, ← div_div, div_lt_iff (norm_pos_iff.mpr hw_ne), ←
       div_lt_iff' hδ1, div_div]
@@ -208,11 +208,11 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
         Continuous.sub hf1 <| Continuous.comp hf1 <| continuous_id'.add continuous_const
   have : ‖_‖ = ∫ v : V in A, ‖f v - f (v + i w)‖ :=
     Real.norm_of_nonneg (set_integral_nonneg mA fun x hx => norm_nonneg _)
-  rw [this] at bdA2 
+  rw [this] at bdA2
   refine' bdA2.trans_lt _
   rw [div_mul_eq_mul_div, div_lt_iff (nnreal.coe_pos.mpr hB_pos), mul_comm (2 : ℝ), mul_assoc,
     mul_lt_mul_left hε]
-  rw [← ENNReal.toReal_le_toReal] at hB_vol 
+  rw [← ENNReal.toReal_le_toReal] at hB_vol
   · refine' hB_vol.trans_lt _
     rw [(by rfl : (↑B : ENNReal).toReal = ↑B), two_mul]
     exact lt_add_of_pos_left _ hB_pos
@@ -254,7 +254,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact :
       VectorFourier.norm_fourierIntegral_le_integral_norm e volume bilin_form_of_real_inner.to_lin
         (f - g) w
   replace := add_lt_add_of_le_of_lt this hI
-  rw [add_halves] at this 
+  rw [add_halves] at this
   refine' ((le_of_eq _).trans (norm_add_le _ _)).trans_lt this
   simp only [sub_zero, sub_add_cancel]
 #align tendsto_integral_exp_inner_smul_cocompact tendsto_integral_exp_inner_smul_cocompact

@@ -696,7 +696,7 @@ theorem mapDomain_support_of_injOn [DecidableEq β] {f : α → β} (s : α →�
   Finset.Subset.antisymm mapDomain_support <|
     by
     intro x hx
-    simp only [mem_image, exists_prop, mem_support_iff, Ne.def] at hx 
+    simp only [mem_image, exists_prop, mem_support_iff, Ne.def] at hx
     rcases hx with ⟨hx_w, hx_h_left, rfl⟩
     simp only [mem_support_iff, Ne.def]
     rw [map_domain_apply' (↑s.support : Set _) _ _ hf]
@@ -764,7 +764,7 @@ theorem mapDomain_injective {f : α → β} (hf : Function.Injective f) :
   by
   intro v₁ v₂ eq; ext a
   have : map_domain f v₁ (f a) = map_domain f v₂ (f a) := by rw [Eq]
-  rwa [map_domain_apply hf, map_domain_apply hf] at this 
+  rwa [map_domain_apply hf, map_domain_apply hf] at this
 #align finsupp.map_domain_injective Finsupp.mapDomain_injective
 -/
 
@@ -823,7 +823,7 @@ theorem mapDomain_injOn (S : Set α) {f : α → β} (hf : Set.InjOn f S) :
     rw [← map_domain_apply' S _ hv₁ hf _, ← map_domain_apply' S _ hv₂ hf _, Eq] <;>
       · apply Set.union_subset hv₁ hv₂
         exact_mod_cast h
-  · simp only [Decidable.not_or_iff_and_not, mem_union, Classical.not_not, mem_support_iff] at h 
+  · simp only [Decidable.not_or_iff_and_not, mem_union, Classical.not_not, mem_support_iff] at h
     simp [h]
 #align finsupp.map_domain_inj_on Finsupp.mapDomain_injOn
 -/
@@ -912,7 +912,7 @@ theorem comapDomain_single (f : α → β) (a : α) (m : M)
   · simp only [single_zero, comap_domain_zero]
   · rw [eq_single_iff, comap_domain_apply, comap_domain_support, ← Finset.coe_subset, coe_preimage,
       support_single_ne_zero _ hm, coe_singleton, coe_singleton, single_eq_same]
-    rw [support_single_ne_zero _ hm, coe_singleton] at hif 
+    rw [support_single_ne_zero _ hm, coe_singleton] at hif
     exact ⟨fun x hx => hif hx rfl hx, rfl⟩
 #align finsupp.comap_domain_single Finsupp.comapDomain_single
 -/
@@ -1146,7 +1146,7 @@ theorem prod_filter_index [CommMonoid N] (g : α → M → N) :
     (f.filterₓ p).Prod g = ∏ x in (f.filterₓ p).support, g x (f x) := by
   classical
   refine' Finset.prod_congr rfl fun x hx => _
-  rw [support_filter, Finset.mem_filter] at hx 
+  rw [support_filter, Finset.mem_filter] at hx
   rw [filter_apply_pos _ _ hx.2]
 #align finsupp.prod_filter_index Finsupp.prod_filter_index
 #align finsupp.sum_filter_index Finsupp.sum_filter_index
@@ -1449,7 +1449,7 @@ theorem mem_support_multiset_sum [AddCommMonoid M] {s : Multiset (α →₀ M)} 
       by_cases a ∈ f.support
       · exact ⟨f, Multiset.mem_cons_self _ _, h⟩
       · simp only [Multiset.sum_cons, mem_support_iff, add_apply, not_mem_support_iff.1 h,
-          zero_add] at ha 
+          zero_add] at ha
         rcases ih (mem_support_iff.2 ha) with ⟨f', h₀, h₁⟩
         exact ⟨f', Multiset.mem_cons_of_mem h₀, h₁⟩)
 #align finsupp.mem_support_multiset_sum Finsupp.mem_support_multiset_sum
@@ -1581,7 +1581,7 @@ def sumElim {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →₀ γ) 
       haveI := Classical.decEq α <;> haveI := Classical.decEq β <;>
         exact f.support.map ⟨_, Sum.inl_injective⟩ ∪ g.support.map ⟨_, Sum.inr_injective⟩)
     (Sum.elim f g) fun ab h => by
-    cases' ab with a b <;> simp only [Sum.elim_inl, Sum.elim_inr] at h  <;> simpa
+    cases' ab with a b <;> simp only [Sum.elim_inl, Sum.elim_inr] at h <;> simpa
 #align finsupp.sum_elim Finsupp.sumElim
 -/
 

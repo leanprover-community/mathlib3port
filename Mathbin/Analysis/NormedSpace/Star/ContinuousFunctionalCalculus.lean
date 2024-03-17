@@ -162,20 +162,20 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
   have h₂ : ∀ z ∈ spectrum ℂ (algebraMap ℂ A ‖star a * a‖ - star a * a), ‖z‖₊ < ‖star a * a‖₊ :=
     by
     intro z hz
-    rw [← spectrum.singleton_sub_eq, Set.singleton_sub] at hz 
+    rw [← spectrum.singleton_sub_eq, Set.singleton_sub] at hz
     have h₃ : z ∈ Set.Icc (0 : ℂ) ‖star a * a‖ :=
       by
       replace hz := Set.image_subset _ (spectrum_star_mul_self_of_isStarNormal a) hz
-      rwa [Set.image_const_sub_Icc, sub_self, sub_zero] at hz 
+      rwa [Set.image_const_sub_Icc, sub_self, sub_zero] at hz
     refine' lt_of_le_of_ne (Complex.real_le_real.1 <| Complex.eq_coe_norm_of_nonneg h₃.1 ▸ h₃.2) _
     · intro hz'
       replace hz' := congr_arg (fun x : ℝ≥0 => ((x : ℝ) : ℂ)) hz'
-      simp only [coe_nnnorm] at hz' 
-      rw [← Complex.eq_coe_norm_of_nonneg h₃.1] at hz' 
+      simp only [coe_nnnorm] at hz'
+      rw [← Complex.eq_coe_norm_of_nonneg h₃.1] at hz'
       obtain ⟨w, hw₁, hw₂⟩ := hz
       refine' (spectrum.zero_not_mem_iff ℂ).mpr h _
-      rw [hz', sub_eq_self] at hw₂ 
-      rwa [hw₂] at hw₁ 
+      rw [hz', sub_eq_self] at hw₂
+      rwa [hw₂] at hw₁
   /- The norm of `‖star a * a‖ • 1 - star a * a` in the subalgebra and in `A` coincide. In `A`,
     because this element is selfadjoint, by `is_self_adjoint.spectral_radius_eq_nnnorm`, its norm is
     the supremum of the norms of the elements of the spectrum, which is strictly less than
@@ -284,7 +284,7 @@ theorem elementalStarAlgebra.bijective_characterSpaceToSpectrum :
   rintro ⟨z, hz⟩
   have hz' :=
     (StarSubalgebra.spectrum_eq (elementalStarAlgebra.isClosed ℂ a) ⟨a, self_mem ℂ a⟩).symm.subst hz
-  rw [character_space.mem_spectrum_iff_exists] at hz' 
+  rw [character_space.mem_spectrum_iff_exists] at hz'
   obtain ⟨φ, rfl⟩ := hz'
   exact ⟨φ, rfl⟩
 #align elemental_star_algebra.bijective_character_space_to_spectrum elementalStarAlgebra.bijective_characterSpaceToSpectrum

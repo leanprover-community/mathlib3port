@@ -54,16 +54,16 @@ theorem lower_bound (n l : ℕ) (hl : 2 + sqrt (4 + 2 * n) ≤ 2 * l) : n + 4 * 
   by
   suffices 2 * ((n : ℝ) + 4 * l) - 8 * l + 4 ≤ 2 * (2 * l * l) - 8 * l + 4
     by
-    simp only [mul_le_mul_left, sub_le_sub_iff_right, add_le_add_iff_right, zero_lt_two] at this 
+    simp only [mul_le_mul_left, sub_le_sub_iff_right, add_le_add_iff_right, zero_lt_two] at this
     exact_mod_cast this
-  rw [← le_sub_iff_add_le', sqrt_le_iff, pow_two] at hl 
+  rw [← le_sub_iff_add_le', sqrt_le_iff, pow_two] at hl
   convert hl.2 using 1 <;> ring
 #align imo2021_q1.lower_bound Imo2021Q1.lower_bound
 
 theorem upper_bound (n l : ℕ) (hl : (l : ℝ) ≤ sqrt (1 + n) - 1) : 2 * l * l + 4 * l ≤ 2 * n :=
   by
   have h1 : ∀ n : ℕ, 0 ≤ 1 + (n : ℝ) := by intro n; exact_mod_cast Nat.zero_le (1 + n)
-  rw [le_sub_iff_add_le', le_sqrt (h1 l) (h1 n), pow_two] at hl 
+  rw [le_sub_iff_add_le', le_sqrt (h1 l) (h1 n), pow_two] at hl
   rw [← add_le_add_iff_right 2, ← @Nat.cast_le ℝ]
   simp only [Nat.cast_bit0, Nat.cast_add, Nat.cast_one, Nat.cast_mul]
   convert (mul_le_mul_left zero_lt_two).mpr hl using 1 <;> ring
@@ -154,7 +154,7 @@ theorem exists_finset_3_le_card_with_pairs_summing_to_squares (n : ℕ) (hn : 10
       push_neg
       exact ⟨⟨hab.ne, (hab.trans hbc).Ne⟩, hbc.ne⟩
   · intro x hx y hy hxy
-    simp only [Finset.mem_insert, Finset.mem_singleton] at hx hy 
+    simp only [Finset.mem_insert, Finset.mem_singleton] at hx hy
     rcases hx with (rfl | rfl | rfl) <;> rcases hy with (rfl | rfl | rfl)
     all_goals
       first
@@ -198,9 +198,9 @@ theorem imo2021_q1 :
   -- for any A ⊆ [n, 2n], either C ⊆ A or C ⊆ [n, 2n] \ A and C has cardinality greater
   -- or equal to 2.
   obtain ⟨C, hC, hCA⟩ := Finset.exists_subset_or_subset_of_two_mul_lt_card hB'
-  rw [Finset.one_lt_card] at hC 
+  rw [Finset.one_lt_card] at hC
   rcases hC with ⟨a, ha, b, hb, hab⟩
-  simp only [Finset.subset_iff, Finset.mem_inter] at hCA 
+  simp only [Finset.subset_iff, Finset.mem_inter] at hCA
   -- Now we split into the two cases C ⊆ [n, 2n] \ A and C ⊆ A, which can be dealt with identically.
       cases hCA <;>
       [right; left] <;>

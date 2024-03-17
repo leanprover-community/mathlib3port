@@ -143,7 +143,7 @@ theorem adj_iff_proj_adj {p q : Q (n + 1)} (h₀ : p 0 = q 0) : p.adjacent q ↔
   by
   constructor
   · rintro ⟨i, h_eq, h_uni⟩
-    have h_i : i ≠ 0 := fun h_i => absurd h₀ (by rwa [h_i] at h_eq )
+    have h_i : i ≠ 0 := fun h_i => absurd h₀ (by rwa [h_i] at h_eq)
     use i.pred h_i,
       show p (Fin.succ (Fin.pred i _)) ≠ q (Fin.succ (Fin.pred i _)) by rwa [Fin.succ_pred]
     intro y hy
@@ -225,7 +225,7 @@ theorem duality (p q : Q n) : ε p (e q) = if p = q then 1 else 0 :=
       try congr 1; rw [Q.succ_n_eq]; finish
       try
         erw [(ε _).map_zero]
-        have : p ≠ q := by intro h; rw [p.succ_n_eq q] at h ; finish
+        have : p ≠ q := by intro h; rw [p.succ_n_eq q] at h; finish
         simp [this]
 #align sensitivity.duality Sensitivity.duality
 
@@ -233,7 +233,7 @@ theorem duality (p q : Q n) : ε p (e q) = if p = q then 1 else 0 :=
 theorem epsilon_total {v : V n} (h : ∀ p : Q n, (ε p) v = 0) : v = 0 :=
   by
   induction' n with n ih
-  · dsimp [ε] at h ; exact h fun _ => tt
+  · dsimp [ε] at h; exact h fun _ => tt
   · cases' v with v₁ v₂
     ext <;> change _ = (0 : V n) <;> simp only <;> apply ih <;> intro p <;>
       [let q : Q (n + 1) := fun i => if h : i = 0 then tt else p (i.pred h);
@@ -241,8 +241,8 @@ theorem epsilon_total {v : V n} (h : ∀ p : Q n, (ε p) v = 0) : v = 0 :=
     all_goals
       specialize h q
       first
-      | rw [ε, show q 0 = tt from rfl, cond_tt] at h 
-      | rw [ε, show q 0 = ff from rfl, cond_ff] at h 
+      | rw [ε, show q 0 = tt from rfl, cond_tt] at h
+      | rw [ε, show q 0 = ff from rfl, cond_ff] at h
       rwa [show p = π q by ext; simp [q, Fin.succ_ne_zero, π]]
 #align sensitivity.epsilon_total Sensitivity.epsilon_total
 
@@ -273,7 +273,7 @@ instance : FiniteDimensional ℝ (V n) :=
 theorem finrank_v : finrank ℝ (V n) = 2 ^ n :=
   by
   have := @dim_v n
-  rw [← finrank_eq_rank] at this  <;> assumption_mod_cast
+  rw [← finrank_eq_rank] at this <;> assumption_mod_cast
 #align sensitivity.finrank_V Sensitivity.finrank_v
 
 /-! ### The linear map -/
@@ -357,7 +357,7 @@ theorem g_apply : ∀ v, g m v = (f m v + √ (m + 1) • v, v) := by delta g <;
 theorem g_injective : Injective (g m) := by
   rw [g]
   intro x₁ x₂ h
-  simp only [LinearMap.prod_apply, LinearMap.id_apply, Prod.mk.inj_iff, Pi.prod] at h 
+  simp only [LinearMap.prod_apply, LinearMap.id_apply, Prod.mk.inj_iff, Pi.prod] at h
   exact h.right
 #align sensitivity.g_injective Sensitivity.g_injective
 
@@ -429,15 +429,15 @@ theorem exists_eigenvalue (H : Set (Q (m + 1))) (hH : Card H ≥ 2 ^ m + 1) :
       convert (dual_bases_e_ε _).Basis.LinearIndependent.comp _ Subtype.val_injective
       rw [(dual_bases_e_ε _).coe_basis]
     have hdW := rank_span li
-    rw [Set.range_restrict] at hdW 
+    rw [Set.range_restrict] at hdW
     convert hdW
     rw [← (dual_bases_e_ε _).coe_basis, Cardinal.mk_image_eq (dual_bases_e_ε _).Basis.Injective,
       Cardinal.mk_fintype]
   rw [← finrank_eq_rank ℝ] at dim_le dim_add dimW ⊢
-  rw [← finrank_eq_rank ℝ, ← finrank_eq_rank ℝ] at dim_add 
+  rw [← finrank_eq_rank ℝ, ← finrank_eq_rank ℝ] at dim_add
   norm_cast at dim_le dim_add dimW ⊢
-  rw [pow_succ'] at dim_le 
-  rw [Set.toFinset_card] at hH 
+  rw [pow_succ'] at dim_le
+  rw [Set.toFinset_card] at hH
   linarith
 #align sensitivity.exists_eigenvalue Sensitivity.exists_eigenvalue
 
@@ -449,7 +449,7 @@ theorem huang_degree_theorem (H : Set (Q (m + 1))) (hH : Card H ≥ 2 ^ m + 1) :
   have coeffs_support : ((dual_bases_e_ε (m + 1)).coeffs y).support ⊆ H.to_finset :=
     by
     intro p p_in
-    rw [Finsupp.mem_support_iff] at p_in 
+    rw [Finsupp.mem_support_iff] at p_in
     rw [Set.mem_toFinset]
     exact (dual_bases_e_ε _).mem_of_mem_span y_mem_H p p_in
   obtain ⟨q, H_max⟩ : ∃ q : Q (m + 1), ∀ q' : Q (m + 1), |(ε q' : _) y| ≤ |ε q y|

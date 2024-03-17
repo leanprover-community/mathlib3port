@@ -116,7 +116,7 @@ theorem Nat.Prime.mod_four_ne_three_of_dvd_isSquare_neg_one {p n : ℕ} (hpp : p
     (hs : IsSquare (-1 : ZMod n)) : p % 4 ≠ 3 :=
   by
   obtain ⟨y, h⟩ := ZMod.isSquare_neg_one_of_dvd hp hs
-  rw [← sq, eq_comm, show (-1 : ZMod p) = -1 ^ 2 by ring] at h 
+  rw [← sq, eq_comm, show (-1 : ZMod p) = -1 ^ 2 by ring] at h
   haveI : Fact p.prime := ⟨hpp⟩
   exact ZMod.mod_four_ne_three_of_sq_eq_neg_sq' one_ne_zero h
 #align nat.prime.mod_four_ne_three_of_dvd_is_square_neg_one Nat.Prime.mod_four_ne_three_of_dvd_isSquare_neg_one
@@ -192,7 +192,7 @@ theorem ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_isCoprime {n x y : ℤ} (h : n 
   obtain ⟨u, v, huv⟩ : IsCoprime x n :=
     by
     have hc2 : IsCoprime (x ^ 2) (y ^ 2) := hc.pow
-    rw [show y ^ 2 = n + -1 * x ^ 2 by rw [h]; ring] at hc2 
+    rw [show y ^ 2 = n + -1 * x ^ 2 by rw [h]; ring] at hc2
     exact (IsCoprime.pow_left_iff zero_lt_two).mp hc2.of_add_mul_right_right
   have H : u * y * (u * y) - -1 = n * (-v ^ 2 * n + u ^ 2 + 2 * v) := by
     linear_combination -u ^ 2 * h + (n * v - u * x - 1) * huv

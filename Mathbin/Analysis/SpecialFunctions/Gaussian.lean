@@ -355,10 +355,10 @@ theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
   by
   have full_integral := integral_gaussian_complex hb
   have : MeasurableSet (Ioi (0 : ℝ)) := measurableSet_Ioi
-  rw [← integral_add_compl this (integrable_cexp_neg_mul_sq hb), compl_Ioi] at full_integral 
+  rw [← integral_add_compl this (integrable_cexp_neg_mul_sq hb), compl_Ioi] at full_integral
   suffices ∫ x : ℝ in Iic 0, cexp (-b * x ^ 2) = ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2)
     by
-    rw [this, ← mul_two] at full_integral 
+    rw [this, ← mul_two] at full_integral
     rwa [eq_div_iff]; exact two_ne_zero
   have : ∀ c : ℝ, ∫ x in 0 ..c, cexp (-b * x ^ 2) = ∫ x in -c..0, cexp (-b * x ^ 2) :=
     by
@@ -507,15 +507,15 @@ theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤
   · intro y hy
     have absy : |y| ≤ |c| := by
       rcases le_or_lt 0 c with ⟨⟩
-      · rw [uIoc_of_le h] at hy 
+      · rw [uIoc_of_le h] at hy
         rw [abs_of_nonneg h, abs_of_pos hy.1]
         exact hy.2
-      · rw [uIoc_of_lt h] at hy 
+      · rw [uIoc_of_lt h] at hy
         rw [abs_of_neg h, abs_of_nonpos hy.2, neg_le_neg_iff]
         exact hy.1.le
     rw [norm_mul, Complex.norm_eq_abs, abs_I, one_mul, two_mul]
     refine' (norm_sub_le _ _).trans (add_le_add (vert_norm_bound hT absy) _)
-    rw [← abs_neg y] at absy 
+    rw [← abs_neg y] at absy
     simpa only [neg_mul, of_real_neg] using vert_norm_bound hT absy
 #align gaussian_fourier.vertical_integral_norm_le GaussianFourier.verticalIntegral_norm_le
 -/
@@ -589,7 +589,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
     by
     ext1 T
     specialize C T
-    rw [sub_eq_zero] at C 
+    rw [sub_eq_zero] at C
     unfold vertical_integral
     rw [integral_const_mul, intervalIntegral.integral_sub]
     · simp_rw [(fun a b => by rw [sq]; ring_nf : ∀ a b : ℂ, (a - b * I) ^ 2 = (-a + b * I) ^ 2)]
@@ -615,8 +615,8 @@ theorem integral_cexp_neg_hMul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
   · infer_instance
 #align integral_cexp_neg_mul_sq_add_const integral_cexp_neg_hMul_sq_add_const
 
-#print fourier_transform_gaussian /-
-theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
+#print fourierIntegral_gaussian /-
+theorem fourierIntegral_gaussian (hb : 0 < b.re) (t : ℂ) :
     ∫ x : ℝ, cexp (I * t * x) * cexp (-b * x ^ 2) =
       cexp (-t ^ 2 / (4 * b)) * (π / b) ^ (1 / 2 : ℂ) :=
   by
@@ -629,11 +629,11 @@ theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
     rw [I_sq]
     field_simp; ring
   simp_rw [this, Complex.exp_add, integral_mul_left, integral_cexp_neg_hMul_sq_add_const hb]
-#align fourier_transform_gaussian fourier_transform_gaussian
+#align fourier_transform_gaussian fourierIntegral_gaussian
 -/
 
-#print fourier_transform_gaussian_pi /-
-theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
+#print fourierIntegral_gaussian_pi /-
+theorem fourierIntegral_gaussian_pi (hb : 0 < b.re) :
     (𝓕 fun x : ℝ => cexp (-π * b * x ^ 2)) = fun t : ℝ =>
       1 / b ^ (1 / 2 : ℂ) * cexp (-π / b * t ^ 2) :=
   by
@@ -651,7 +651,7 @@ theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
     · rw [← div_div, div_self (of_real_ne_zero.mpr pi_ne_zero), one_div, one_div b, inv_cpow]
       rw [Ne.def, arg_eq_pi_iff, not_and_or, not_lt]
       exact Or.inl hb.le
-#align fourier_transform_gaussian_pi fourier_transform_gaussian_pi
+#align fourier_transform_gaussian_pi fourierIntegral_gaussian_pi
 -/
 
 end GaussianFourier
@@ -720,12 +720,12 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
     ring
   have Ff_bd : 𝓕 f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
     by
-    rw [fourier_transform_gaussian_pi ha]
+    rw [fourierIntegral_gaussian_pi ha]
     convert (isLittleO_exp_neg_mul_sq_cocompact h2 _).IsBigO.const_mul_left _
     ext1 x
     congr 1
     ring_nf
-  simpa only [fourier_transform_gaussian_pi ha, tsum_mul_left] using
+  simpa only [fourierIntegral_gaussian_pi ha, tsum_mul_left] using
     Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay
       (complex.continuous_exp.comp (continuous_const.mul (continuous_of_real.pow 2)) : Continuous f)
       one_lt_two f_bd Ff_bd

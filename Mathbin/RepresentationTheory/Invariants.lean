@@ -134,7 +134,7 @@ theorem averageMap_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun 
 -/
 theorem averageMap_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v :=
   by
-  rw [mem_invariants] at hv 
+  rw [mem_invariants] at hv
   simp [average, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
 #align representation.average_map_id Representation.averageMap_id
 -/

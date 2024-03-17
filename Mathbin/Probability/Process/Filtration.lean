@@ -142,7 +142,7 @@ instance : SupSet (Filtration ι m) :=
     { seq := fun i => sSup ((fun f : Filtration ι m => f i) '' s)
       mono' := fun i j hij => by
         refine' sSup_le fun m' hm' => _
-        rw [Set.mem_image] at hm' 
+        rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
         rw [← hfm']
         refine' (f.mono hij).trans _
@@ -150,7 +150,7 @@ instance : SupSet (Filtration ι m) :=
         exact le_sSup hfj_mem
       le' := fun i => by
         refine' sSup_le fun m' hm' => _
-        rw [Set.mem_image] at hm' 
+        rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
         rw [← hfm']
         exact f.le i }⟩
@@ -348,8 +348,8 @@ theorem filtrationOfSet_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι 
     refine' generate_from_le _
     rintro t ⟨hn, u, hu, hu'⟩
     obtain heq | heq | heq | heq := Set.indicator_const_preimage (s n) u (1 : β)
-    pick_goal 4; rw [Set.mem_singleton_iff] at heq 
-    all_goals rw [HEq] at hu' ; rw [← hu']
+    pick_goal 4; rw [Set.mem_singleton_iff] at heq
+    all_goals rw [HEq] at hu'; rw [← hu']
     exacts [measurable_set_empty _, MeasurableSet.univ, measurable_set_generate_from ⟨n, hn, rfl⟩,
       MeasurableSet.compl (measurable_set_generate_from ⟨n, hn, rfl⟩)]
 #align measure_theory.filtration.filtration_of_set_eq_natural MeasureTheory.Filtration.filtrationOfSet_eq_natural

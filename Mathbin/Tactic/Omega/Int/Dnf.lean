@@ -138,7 +138,7 @@ theorem implies_negElim : ∀ {p : Preform}, Preform.Implies p (negElim p) :=
   run_tac
     preform.induce sorry
   · cases' p with t s t s <;> try apply h
-    · simp only [le_and_le_iff_eq.symm, not_and_or, not_le, preterm.val, preform.holds] at h 
+    · simp only [le_and_le_iff_eq.symm, not_and_or, not_le, preterm.val, preform.holds] at h
       simp only [Int.add_one_le_iff, preterm.add_one, preterm.val, preform.holds, neg_elim]
       rw [or_comm']; assumption
     · simp only [not_le, Int.add_one_le_iff, preterm.add_one, not_le, preterm.val, preform.holds,
@@ -170,13 +170,13 @@ theorem exists_clause_holds {v : Nat → Int} :
   run_tac
     preform.induce sorry
   · apply List.exists_mem_cons_of; constructor
-    · simp only [preterm.val, preform.holds] at h2 
+    · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [h2, Omega.Int.val_canonize, Omega.Term.val_sub, sub_self]
     · apply List.forall_mem_nil
   · apply List.exists_mem_cons_of; constructor
     · apply List.forall_mem_nil
-    · simp only [preterm.val, preform.holds] at h2 
+    · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [val_canonize, preterm.val, term.val_sub]
       rw [le_sub_comm, sub_zero]; assumption

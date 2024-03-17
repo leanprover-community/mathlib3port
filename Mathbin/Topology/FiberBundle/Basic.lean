@@ -399,7 +399,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     exacts [Or.inr ⟨hed, hdcb.1⟩, Or.inl ⟨had ⟨hx.1, hxd⟩, hxd⟩]
   · /- If `(c, d)` is nonempty, then take `d' ∈ (c, d)`. Since the base set of `ec` includes
         `[a, d)`, it includes `[a, d'] ⊆ [a, d)` as well. -/
-    rw [disjoint_left] at he ; push_neg at he ; rcases he with ⟨d', hdd' : d' < d, hd'c⟩
+    rw [disjoint_left] at he; push_neg at he; rcases he with ⟨d', hdd' : d' < d, hd'c⟩
     exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
 #align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_Icc_subset
 -/
@@ -504,13 +504,13 @@ def trivChange (i j : ι) : PartialHomeomorph (B × F) (B × F)
   map_target' p hp := by simpa using hp
   left_inv' := by
     rintro ⟨x, v⟩ hx
-    simp only [prod_mk_mem_set_prod_eq, mem_inter_iff, and_true_iff, mem_univ] at hx 
+    simp only [prod_mk_mem_set_prod_eq, mem_inter_iff, and_true_iff, mem_univ] at hx
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx.1
     · simp [hx]
   right_inv' := by
     rintro ⟨x, v⟩ hx
-    simp only [prod_mk_mem_set_prod_eq, mem_inter_iff, and_true_iff, mem_univ] at hx 
+    simp only [prod_mk_mem_set_prod_eq, mem_inter_iff, and_true_iff, mem_univ] at hx
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx.2
     · simp [hx]
@@ -552,14 +552,14 @@ def localTrivAsPartialEquiv (i : ι) : PartialEquiv Z.TotalSpace (B × F)
     simpa only [Set.mem_preimage, and_true_iff, Set.mem_univ, Set.mem_prod] using hp
   left_inv' := by
     rintro ⟨x, v⟩ hx
-    change x ∈ Z.base_set i at hx 
+    change x ∈ Z.base_set i at hx
     dsimp only
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact Z.mem_base_set_at _
     · simp only [hx, mem_inter_iff, and_self_iff, mem_base_set_at]
   right_inv' := by
     rintro ⟨x, v⟩ hx
-    simp only [prod_mk_mem_set_prod_eq, and_true_iff, mem_univ] at hx 
+    simp only [prod_mk_mem_set_prod_eq, and_true_iff, mem_univ] at hx
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx
     · simp only [hx, mem_inter_iff, and_self_iff, mem_base_set_at]
@@ -652,7 +652,7 @@ def localTriv (i : ι) : Trivialization F Z.proj
     by
     apply continuousOn_isOpen_of_generateFrom ((Z.is_open_base_set i).Prod isOpen_univ)
     intro t ht
-    simp only [exists_prop, mem_Union, mem_singleton_iff] at ht 
+    simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
     obtain ⟨j, s, s_open, ts⟩ :
       ∃ j s,
         IsOpen s ∧
@@ -879,7 +879,7 @@ instance fiberBundle : FiberBundle F Z.Fiber
               _⟩
         rw [preimage_inter, ← preimage_comp, Function.comp]
         refine' ext_iff.mpr fun a => ⟨fun ha => _, fun ha => ⟨Z.mem_base_set_at b, _⟩⟩
-        · simp only [mem_prod, mem_preimage, mem_inter_iff, local_triv_at_apply_mk] at ha 
+        · simp only [mem_prod, mem_preimage, mem_inter_iff, local_triv_at_apply_mk] at ha
           exact ha.2.2
         · simp only [mem_prod, mem_preimage, mem_inter_iff, local_triv_at_apply_mk]
           exact ⟨Z.mem_base_set_at b, ha⟩⟩
@@ -997,7 +997,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
       rw [isOpen_coinduced, isOpen_induced_iff]
       obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
       have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
-      simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3 
+      simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
       refine'
         ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by
           simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]; rfl⟩
@@ -1048,7 +1048,7 @@ theorem inducing_totalSpaceMk_of_inducing_comp (b : B)
     @Inducing _ _ _ a.totalSpaceTopology (TotalSpace.mk b) :=
   by
   letI := a.total_space_topology
-  rw [← restrict_comp_cod_restrict (a.mem_trivialization_at_source b)] at h 
+  rw [← restrict_comp_cod_restrict (a.mem_trivialization_at_source b)] at h
   apply Inducing.of_codRestrict (a.mem_trivialization_at_source b)
   refine'
     inducing_of_inducing_compose _

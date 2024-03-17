@@ -226,12 +226,12 @@ theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a 
     (im_disj : ∀ {x x' : α} {hx : p x} {hx' : ¬p x'}, f ⟨x, hx⟩ ≠ f' ⟨x', hx'⟩) :
     Function.Injective fun x => if h : p x then f ⟨x, h⟩ else f' ⟨x, h⟩ := fun x₁ x₂ h =>
   by
-  dsimp only at h 
+  dsimp only at h
   by_cases h₁ : p x₁ <;> by_cases h₂ : p x₂
-  · rw [dif_pos h₁, dif_pos h₂] at h ; injection hf h
-  · rw [dif_pos h₁, dif_neg h₂] at h ; exact (im_disj h).elim
-  · rw [dif_neg h₁, dif_pos h₂] at h ; exact (im_disj h.symm).elim
-  · rw [dif_neg h₁, dif_neg h₂] at h ; injection hf' h
+  · rw [dif_pos h₁, dif_pos h₂] at h; injection hf h
+  · rw [dif_pos h₁, dif_neg h₂] at h; exact (im_disj h).elim
+  · rw [dif_neg h₁, dif_pos h₂] at h; exact (im_disj h.symm).elim
+  · rw [dif_neg h₁, dif_neg h₂] at h; injection hf' h
 #align function.injective.dite Function.Injective.dite
 -/
 
@@ -413,8 +413,7 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   let g : Set T → T := fun s => ⟨U, cast hU.symm s⟩
   have hg : injective g := by
     intro s t h
-    suffices cast hU (g s).2 = cast hU (g t).2 by simp only [cast_cast, cast_eq] at this ;
-      assumption
+    suffices cast hU (g s).2 = cast hU (g t).2 by simp only [cast_cast, cast_eq] at this; assumption
     · congr; assumption
   exact cantor_injective g hg
 #align function.not_surjective_Type Function.not_surjective_Type
@@ -562,10 +561,10 @@ theorem partialInv_of_injective {α β} {f : α → β} (I : Injective f) : IsPa
   | a, b =>
     ⟨fun h =>
       if h' : ∃ a, f a = b then by
-        rw [partial_inv, dif_pos h'] at h 
+        rw [partial_inv, dif_pos h'] at h
         injection h with h; subst h
         apply Classical.choose_spec h'
-      else by rw [partial_inv, dif_neg h'] at h  <;> contradiction,
+      else by rw [partial_inv, dif_neg h'] at h <;> contradiction,
       fun e =>
       e ▸
         have h : ∃ a', f a' = f a := ⟨_, rfl⟩
@@ -776,7 +775,7 @@ theorem surjective_eval {α : Sort u} {β : α → Sort v} [h : ∀ a, Nonempty 
 theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') := fun v v' h =>
   by
   have := congr_fun h a'
-  rwa [update_same, update_same] at this 
+  rwa [update_same, update_same] at this
 #align function.update_injective Function.update_injective
 -/
 
@@ -1030,7 +1029,7 @@ theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g =
   intro g₁ g₂ hg
   refine' funext fun x => _
   have H := congr_fun hg (f x)
-  simp only [hf.extend_apply] at H 
+  simp only [hf.extend_apply] at H
   exact H
 #align function.extend_injective Function.extend_injective
 -/

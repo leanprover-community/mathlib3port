@@ -110,7 +110,7 @@ theorem c_mk (i j : ℕ) (h : j + 1 = i) : c.Rel i j :=
 theorem cs_down_0_not_rel_left (j : ℕ) : ¬c.Rel 0 j :=
   by
   intro hj
-  dsimp at hj 
+  dsimp at hj
   apply Nat.not_succ_le_zero j
   rw [Nat.succ_eq_add_one, hj]
 #align algebraic_topology.dold_kan.cs_down_0_not_rel_left AlgebraicTopology.DoldKan.cs_down_0_not_rel_left
@@ -245,7 +245,7 @@ theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addit
   by
   unfold Hσ
   have eq := HomologicalComplex.congr_hom (map_null_homotopic_map' G (hσ' q)) n
-  simp only [functor.map_homological_complex_map_f, ← map_hσ'] at eq 
+  simp only [functor.map_homological_complex_map_f, ← map_hσ'] at eq
   rw [Eq]
   let h := (functor.congr_obj (map_alternating_face_map_complex G) X).symm
   congr

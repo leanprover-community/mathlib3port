@@ -45,7 +45,7 @@ protected theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
   -- By contradiction, `x = a / b`, with `a ∈ ℤ`, `0 < b ∈ ℕ` is a Liouville number,
   rintro ⟨⟨a, b, bN0, cop⟩, rfl⟩
   -- clear up the mess of constructions of rationals
-  rw [Rat.cast_mk', ← div_eq_mul_inv] at h 
+  rw [Rat.cast_mk', ← div_eq_mul_inv] at h
   -- Since `a / b` is a Liouville number, there are `p, q ∈ ℤ`, with `q1 : 1 < q`,
   -- `a0 : a / b ≠ p / q` and `a1 : |a / b - p / q| < 1 / q ^ (b + 1)`
   rcases h (b + 1) with ⟨p, q, q1, a0, a1⟩
@@ -57,18 +57,14 @@ protected theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
   replace a1 : |a * q - b * p| * q ^ (b + 1) < b * q;
   ·
     rwa [div_sub_div _ _ b0 (ne_of_gt qR0), abs_div,
-      div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _), abs_of_pos bq0, one_mul,
-      ←-- ... and revert to integers
-      Int.cast_pow,
-      ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ←
-      Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1 
+      div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _), abs_of_pos bq0, one_mul, ←
+      Int.cast_pow, ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ←
+      Int.cast_sub, ← Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1
   -- At a0, clear denominators...
   replace a0 : ¬a * q - ↑b * p = 0;
   ·
-    rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero,
-      ←-- ... and revert to integers
-      Int.cast_ofNat,
-      ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0 
+    rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero, ← Int.cast_ofNat, ←
+      Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0
   -- Actually, `q` is a natural number
   lift q to ℕ using (zero_lt_one.trans q1).le
   -- Looks innocuous, but we now have an integer with non-zero absolute value: this is at
@@ -77,7 +73,7 @@ protected theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
   -- Actually, the absolute value of an integer is a natural number
   lift |a * ↑q - ↑b * p| to ℕ using abs_nonneg (a * ↑q - ↑b * p)
   -- At a1, revert to natural numbers
-  rw [← Int.ofNat_mul, ← Int.coe_nat_pow, ← Int.ofNat_mul, Int.ofNat_lt] at a1 
+  rw [← Int.ofNat_mul, ← Int.coe_nat_pow, ← Int.ofNat_mul, Int.ofNat_lt] at a1
   -- Recall this is by contradiction: we obtained the inequality `b * q ≤ x * q ^ (b + 1)`, so
   -- we are done.
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le
@@ -170,7 +166,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
   -- 2: the polynomial `fR` is Lipschitz at `α` -- as its derivative continuous;
   · rw [mul_comm]
-    rw [Real.closedBall_eq_Icc] at hy 
+    rw [Real.closedBall_eq_Icc] at hy
     -- apply the Mean Value Theorem: the bound on the derivative comes from differentiability.
     refine'
       Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
@@ -202,7 +198,7 @@ protected theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental �
   rintro ⟨f : ℤ[X], f0, ef0⟩
   -- Change `aeval x f = 0` to `eval (map _ f) = 0`, who knew.
   replace ef0 : (f.map (algebraMap ℤ ℝ)).eval x = 0;
-  · rwa [aeval_def, ← eval_map] at ef0 
+  · rwa [aeval_def, ← eval_map] at ef0
   -- There is a "large" real number `A` such that `(b + 1) ^ (deg f) * |f (x - a / (b + 1))| * A`
   -- is at least one.  This is obtained from lemma `exists_pos_real_of_irrational_root`.
   obtain ⟨A, hA, h⟩ :
@@ -219,7 +215,7 @@ protected theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental �
   -- recall, this is a proof by contradiction!
   refine' lt_irrefl ((b : ℝ) ^ f.nat_degree * |x - ↑a / ↑b|) _
   -- clear denominators at `a1`
-  rw [lt_div_iff' (pow_pos b0 _), pow_add, mul_assoc] at a1 
+  rw [lt_div_iff' (pow_pos b0 _), pow_add, mul_assoc] at a1
   -- split the inequality via `1 / A`.
   refine' (_ : (b : ℝ) ^ f.nat_degree * |x - a / b| < 1 / A).trans_le _
   -- This branch of the proof uses the Liouville condition and the Archimedean property
@@ -234,7 +230,7 @@ protected theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental �
   · lift b to ℕ using zero_le_one.trans b1.le
     specialize h a b.pred
     rwa [← Nat.cast_succ, Nat.succ_pred_eq_of_pos (zero_lt_one.trans _), ← mul_assoc, ←
-      div_le_iff hA] at h 
+      div_le_iff hA] at h
     exact int.coe_nat_lt.mp b1
 #align liouville.transcendental Liouville.transcendental
 -/

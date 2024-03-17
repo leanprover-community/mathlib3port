@@ -208,7 +208,7 @@ theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective �
   {
     is_surjective := by
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective
-      rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this  }
+      rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }
 #align ring_hom_surjective.comp RingHomSurjective.comp
 -/
 

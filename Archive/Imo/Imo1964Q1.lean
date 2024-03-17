@@ -74,18 +74,18 @@ theorem imo1964_q1a (n : ℕ) (hn : 0 < n) : ProblemPredicate n ↔ 3 ∣ n :=
   constructor
   · intro h
     let t := n % 3
-    rw [show n = 3 * (n / 3) + t from (Nat.div_add_mod n 3).symm] at h 
+    rw [show n = 3 * (n / 3) + t from (Nat.div_add_mod n 3).symm] at h
     have ht : t < 3 := Nat.mod_lt _ (by decide)
-    interval_cases hr : t <;> rw [hr] at h 
+    interval_cases hr : t <;> rw [hr] at h
     · exact Nat.dvd_of_mod_eq_zero hr
     · exfalso
       have nonsense := (two_pow_three_mul_add_one_mod_seven _).symm.trans h
-      rw [modeq_iff_dvd] at nonsense 
-      norm_num at nonsense 
+      rw [modeq_iff_dvd] at nonsense
+      norm_num at nonsense
     · exfalso
       have nonsense := (two_pow_three_mul_add_two_mod_seven _).symm.trans h
-      rw [modeq_iff_dvd] at nonsense 
-      norm_num at nonsense 
+      rw [modeq_iff_dvd] at nonsense
+      norm_num at nonsense
   · rintro ⟨m, rfl⟩
     apply two_pow_three_mul_mod_seven
 #align imo1964_q1.imo1964_q1a Imo1964Q1.imo1964_q1a
@@ -103,15 +103,15 @@ theorem imo1964_q1b (n : ℕ) : ¬7 ∣ 2 ^ n + 1 :=
   · rw [add_zero]
     intro h
     have := h.symm.trans ((two_pow_three_mul_mod_seven _).addRight _)
-    rw [modeq_iff_dvd] at this 
-    norm_num at this 
+    rw [modeq_iff_dvd] at this
+    norm_num at this
   · intro h
     have := h.symm.trans ((two_pow_three_mul_add_one_mod_seven _).addRight _)
-    rw [modeq_iff_dvd] at this 
-    norm_num at this 
+    rw [modeq_iff_dvd] at this
+    norm_num at this
   · intro h
     have := h.symm.trans ((two_pow_three_mul_add_two_mod_seven _).addRight _)
-    rw [modeq_iff_dvd] at this 
-    norm_num at this 
+    rw [modeq_iff_dvd] at this
+    norm_num at this
 #align imo1964_q1b imo1964_q1b
 

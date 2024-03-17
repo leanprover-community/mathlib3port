@@ -156,7 +156,7 @@ theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Id
   by
   constructor
   · rcases h with ⟨h, -⟩; contrapose! h
-    rw [← prod_top_top, Prod.ext_iff] at h 
+    rw [← prod_top_top, Prod.ext_iff] at h
     exact h.1
   rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, h₂⟩
   cases' h.mem_or_mem h₁ with h h

@@ -514,7 +514,7 @@ theorem IsNormal.generatedNormal_le {S : Subgroupoid C} (Sn : S.IsNormal) :
   constructor
   · rintro h c d
     let h' := generated_le_generated_normal X
-    rw [le_iff] at h h' 
+    rw [le_iff] at h h'
     exact ((subset_generated X c d).trans (@h' c d)).trans (@h c d)
   · rintro h
     apply @sInf_le (subgroupoid C) _
@@ -681,7 +681,7 @@ theorem mem_map_objs_iff (hφ : Function.Injective φ.obj) (d : D) :
   dsimp [objs, map]
   constructor
   · rintro ⟨f, hf⟩
-    change map.arrows φ hφ S d d f at hf ; rw [map.arrows_iff] at hf 
+    change map.arrows φ hφ S d d f at hf; rw [map.arrows_iff] at hf
     obtain ⟨c, d, g, ec, ed, eg, gS, eg⟩ := hf
     exact ⟨c, ⟨mem_objs_of_src S eg, ec⟩⟩
   · rintro ⟨c, ⟨γ, γS⟩, rfl⟩
@@ -736,18 +736,18 @@ theorem isNormal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤) 
       change map.arrows φ hφ S _ _ (𝟙 _); rw [← Functor.map_id]
       constructor; exact Sn.wide c
     conj := fun d d' g δ hδ => by
-      rw [mem_map_iff] at hδ 
+      rw [mem_map_iff] at hδ
       obtain ⟨c, c', γ, cd, cd', γS, hγ⟩ := hδ; subst_vars; cases hφ cd'
       have : d' ∈ (im φ hφ).objs := by rw [hφ']; apply mem_top_objs
-      rw [mem_im_objs_iff] at this 
+      rw [mem_im_objs_iff] at this
       obtain ⟨c', rfl⟩ := this
       have : g ∈ (im φ hφ).arrows (φ.obj c) (φ.obj c') := by rw [hφ']; trivial
-      rw [mem_im_iff] at this 
+      rw [mem_im_iff] at this
       obtain ⟨b, b', f, hb, hb', _, hf⟩ := this; subst_vars; cases hφ hb; cases hφ hb'
       change map.arrows φ hφ S (φ.obj c') (φ.obj c') _
       simp only [eq_to_hom_refl, category.comp_id, category.id_comp, inv_eq_inv]
       suffices map.arrows φ hφ S (φ.obj c') (φ.obj c') (φ.map <| inv f ≫ γ ≫ f) by
-        simp only [inv_eq_inv, functor.map_comp, functor.map_inv] at this ; exact this
+        simp only [inv_eq_inv, functor.map_comp, functor.map_inv] at this; exact this
       · constructor; apply Sn.conj f γS }
 #align category_theory.subgroupoid.is_normal_map CategoryTheory.Subgroupoid.isNormal_map
 -/

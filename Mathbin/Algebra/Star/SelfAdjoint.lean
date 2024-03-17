@@ -586,7 +586,7 @@ theorem conjugate' {x : R} (hx : x ∈ skewAdjoint R) (z : R) : star z * x * z �
 
 #print skewAdjoint.isStarNormal_of_mem /-
 theorem isStarNormal_of_mem {x : R} (hx : x ∈ skewAdjoint R) : IsStarNormal x :=
-  ⟨by simp only [mem_iff] at hx ; simp only [hx, Commute.neg_left]⟩
+  ⟨by simp only [mem_iff] at hx; simp only [hx, Commute.neg_left]⟩
 #align skew_adjoint.is_star_normal_of_mem skewAdjoint.isStarNormal_of_mem
 -/
 

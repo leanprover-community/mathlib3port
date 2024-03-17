@@ -201,9 +201,9 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
   by
   intro x y hxy
   rcases trichotomous_of r x y with (h | h | h)
-  have := hf h; rw [hxy] at this ; exfalso; exact irrefl_of s (f y) this
+  have := hf h; rw [hxy] at this; exfalso; exact irrefl_of s (f y) this
   exact h
-  have := hf h; rw [hxy] at this ; exfalso; exact irrefl_of s (f y) this
+  have := hf h; rw [hxy] at this; exfalso; exact irrefl_of s (f y) this
 #align injective_of_increasing injective_of_increasing
 -/
 
@@ -562,7 +562,7 @@ theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop} {H} {a} :
   constructor
   · exact RelHomClass.acc (Quotient.mkRelHom H) a
   · intro ac
-    induction' ac with _ H IH; dsimp at IH 
+    induction' ac with _ H IH; dsimp at IH
     refine' ⟨_, fun q h => _⟩
     obtain ⟨a', rfl⟩ := q.exists_rep
     exact IH a' h

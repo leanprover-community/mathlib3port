@@ -210,8 +210,8 @@ convergence.
 
 The topology of compact convergence is thus at least as fine as the compact-open topology. -/
 theorem compactConvNhd_subset_compact_open (hK : IsCompact K) {U : Set β} (hU : IsOpen U)
-    (hf : f ∈ CompactOpen.gen K U) :
-    ∃ V ∈ 𝓤 β, IsOpen V ∧ compactConvNhd K V f ⊆ CompactOpen.gen K U :=
+    (hf : f ∈ compactOpen.gen K U) :
+    ∃ V ∈ 𝓤 β, IsOpen V ∧ compactConvNhd K V f ⊆ compactOpen.gen K U :=
   by
   obtain ⟨V, hV₁, hV₂, hV₃⟩ := lebesgue_number_of_compact_open (hK.image f.continuous) hU hf
   refine' ⟨V, hV₁, hV₂, _⟩
@@ -227,8 +227,8 @@ the compact-open topology is at least as fine as the topology of compact converg
 theorem iInter_compact_open_gen_subset_compactConvNhd (hK : IsCompact K) (hV : V ∈ 𝓤 β) :
     ∃ (ι : Sort (u₁ + 1)) (_ : Fintype ι) (C : ι → Set α) (hC : ∀ i, IsCompact (C i)) (U :
       ι → Set β) (hU : ∀ i, IsOpen (U i)),
-      (f ∈ ⋂ i, CompactOpen.gen (C i) (U i)) ∧
-        (⋂ i, CompactOpen.gen (C i) (U i)) ⊆ compactConvNhd K V f :=
+      (f ∈ ⋂ i, compactOpen.gen (C i) (U i)) ∧
+        (⋂ i, compactOpen.gen (C i) (U i)) ⊆ compactConvNhd K V f :=
   by
   obtain ⟨W, hW₁, hW₄, hW₂, hW₃⟩ := comp_open_symm_mem_uniformity_sets hV
   obtain ⟨Z, hZ₁, hZ₄, hZ₂, hZ₃⟩ := comp_open_symm_mem_uniformity_sets hW₁
@@ -263,7 +263,7 @@ theorem iInter_compact_open_gen_subset_compactConvNhd (hK : IsCompact K) (hV : V
     ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right isClosed_closure, fun i =>
       ball (f ((i : K) : α)) W, fun i => is_open_ball _ hW₄, by simp [compact_open.gen, hfC],
       fun g hg x hx => hW₃ (mem_comp_rel.mpr _)⟩
-  simp only [mem_Inter, compact_open.gen, mem_set_of_eq, image_subset_iff] at hg 
+  simp only [mem_Inter, compact_open.gen, mem_set_of_eq, image_subset_iff] at hg
   obtain ⟨y, hy⟩ := mem_Union.mp (hC hx)
   exact ⟨f y, (mem_ball_symmetry hW₂).mp (hfC y hy), mem_preimage.mp (hg y hy)⟩
 #align continuous_map.Inter_compact_open_gen_subset_compact_conv_nhd ContinuousMap.iInter_compact_open_gen_subset_compactConvNhd
@@ -284,7 +284,7 @@ theorem compactOpen_eq_compact_convergence :
     haveI := hι
     exact
       ⟨⋂ i, compact_open.gen (C i) (U i), h₂.trans hXf,
-        isOpen_iInter_of_finite fun i => ContinuousMap.isOpen_gen (hC i) (hU i), h₁⟩
+        isOpen_iInter_of_finite fun i => ContinuousMap.isOpen_setOf_mapsTo (hC i) (hU i), h₁⟩
   · simp only [TopologicalSpace.le_generateFrom_iff_subset_isOpen, and_imp, exists_prop,
       forall_exists_index, set_of_subset_set_of]
     rintro - K hK U hU rfl f hf
@@ -428,7 +428,7 @@ See also `tendsto_iff_tendsto_locally_uniformly`, especially for T2 spaces. -/
 theorem tendstoLocallyUniformly_of_tendsto (hα : ∀ x : α, ∃ n, IsCompact n ∧ n ∈ 𝓝 x)
     (h : Tendsto F p (𝓝 f)) : TendstoLocallyUniformly (fun i a => F i a) f p :=
   by
-  rw [tendsto_iff_forall_compact_tendsto_uniformly_on] at h 
+  rw [tendsto_iff_forall_compact_tendsto_uniformly_on] at h
   intro V hV x
   obtain ⟨n, hn₁, hn₂⟩ := hα x
   exact ⟨n, hn₂, h n hn₁ V hV⟩

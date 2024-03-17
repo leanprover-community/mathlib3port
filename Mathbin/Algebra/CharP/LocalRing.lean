@@ -43,15 +43,15 @@ theorem charP_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : �
     have q_eq_a_mul_rn : q = r ^ n * a := by rw [Nat.mul_div_cancel' (Nat.ord_proj_dvd q r)]
     have r_ne_dvd_a := Nat.not_dvd_ord_compl r_prime q_pos
     have rn_dvd_q : r ^ n ∣ q := ⟨a, q_eq_a_mul_rn⟩
-    rw [mul_comm] at q_eq_a_mul_rn 
+    rw [mul_comm] at q_eq_a_mul_rn
     have a_dvd_q : a ∣ q := ⟨r ^ n, q_eq_a_mul_rn⟩
     -- ... where `a` is a unit.
     have a_unit : IsUnit (a : R) := by
       by_contra g
-      rw [← mem_nonunits_iff] at g 
-      rw [← LocalRing.mem_maximalIdeal] at g 
+      rw [← mem_nonunits_iff] at g
+      rw [← LocalRing.mem_maximalIdeal] at g
       have a_cast_zero := Ideal.Quotient.eq_zero_iff_mem.2 g
-      rw [map_natCast] at a_cast_zero 
+      rw [map_natCast] at a_cast_zero
       have r_dvd_a := (ringChar.spec K a).1 a_cast_zero
       exact absurd r_dvd_a r_ne_dvd_a
     -- Let `b` be the inverse of `a`.

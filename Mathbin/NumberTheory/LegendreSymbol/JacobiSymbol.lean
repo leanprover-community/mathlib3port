@@ -196,9 +196,9 @@ protected theorem ne_zero {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) ≠ 0
 theorem eq_zero_iff {a : ℤ} {b : ℕ} : J(a | b) = 0 ↔ b ≠ 0 ∧ a.gcd b ≠ 1 :=
   ⟨fun h => by
     cases' eq_or_ne b 0 with hb hb
-    · rw [hb, zero_right] at h ; cases h
+    · rw [hb, zero_right] at h; cases h
     exact ⟨hb, mt jacobiSym.ne_zero <| Classical.not_not.2 h⟩, fun ⟨hb, h⟩ => by
-    rw [← neZero_iff] at hb ; exact eq_zero_iff_not_coprime.2 h⟩
+    rw [← neZero_iff] at hb; exact eq_zero_iff_not_coprime.2 h⟩
 #align jacobi_sym.eq_zero_iff jacobiSym.eq_zero_iff
 -/
 
@@ -276,7 +276,7 @@ theorem mod_left' {a₁ a₂ : ℤ} {b : ℕ} (h : a₁ % b = a₂ % b) : J(a₁
 theorem prime_dvd_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : J(a | p) = -1) {x y : ℤ}
     (hxy : ↑p ∣ x ^ 2 - a * y ^ 2) : ↑p ∣ x ∧ ↑p ∣ y :=
   by
-  rw [← jacobiSym.legendreSym.to_jacobiSym] at h 
+  rw [← jacobiSym.legendreSym.to_jacobiSym] at h
   exact legendreSym.prime_dvd_of_eq_neg_one h hxy
 #align jacobi_sym.prime_dvd_of_eq_neg_one jacobiSym.prime_dvd_of_eq_neg_one
 -/
@@ -315,10 +315,10 @@ theorem eq_neg_one_at_prime_divisor_of_eq_neg_one {a : ℤ} {n : ℕ} (h : J(a |
   by
   have hn₀ : n ≠ 0 := by
     rintro rfl
-    rw [zero_right, eq_neg_self_iff] at h 
+    rw [zero_right, eq_neg_self_iff] at h
     exact one_ne_zero h
   have hf₀ : ∀ p ∈ n.factors, p ≠ 0 := fun p hp => (Nat.pos_of_mem_factors hp).Ne.symm
-  rw [← Nat.prod_factors hn₀, list_prod_right hf₀] at h 
+  rw [← Nat.prod_factors hn₀, list_prod_right hf₀] at h
   obtain ⟨p, hmem, hj⟩ := list.mem_map.mp (List.neg_one_mem_of_prod_eq_neg_one h)
   exact ⟨p, Nat.prime_of_mem_factors hmem, Nat.dvd_of_mem_factors hmem, hj⟩
 #align jacobi_sym.eq_neg_one_at_prime_divisor_of_eq_neg_one jacobiSym.eq_neg_one_at_prime_divisor_of_eq_neg_one
@@ -335,7 +335,7 @@ open jacobiSym
 theorem nonsquare_of_jacobiSym_eq_neg_one {a : ℤ} {b : ℕ} (h : J(a | b) = -1) :
     ¬IsSquare (a : ZMod b) := fun ⟨r, ha⟩ =>
   by
-  rw [← r.coe_val_min_abs, ← Int.cast_mul, int_coe_eq_int_coe_iff', ← sq] at ha 
+  rw [← r.coe_val_min_abs, ← Int.cast_mul, int_coe_eq_int_coe_iff', ← sq] at ha
   apply (by norm_num : ¬(0 : ℤ) ≤ -1)
   rw [← h, mod_left, ha, ← mod_left, pow_left]
   apply sq_nonneg

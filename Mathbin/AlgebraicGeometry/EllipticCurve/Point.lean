@@ -619,7 +619,7 @@ theorem WeierstrassCurve.Affine.baseChange_slope {R : Type u} [CommRing R] (W : 
 
 theorem Y_eq_of_X_eq (hx : x₁ = x₂) : y₁ = y₂ ∨ y₁ = W.negY x₂ y₂ :=
   by
-  rw [equation_iff] at h₁' h₂' 
+  rw [equation_iff] at h₁' h₂'
   rw [← sub_eq_zero, ← @sub_eq_zero _ _ y₁, ← mul_eq_zero, neg_Y]
   linear_combination (norm := (rw [hx]; ring1)) h₁' - h₂'
 #align weierstrass_curve.Y_eq_of_X_eq WeierstrassCurve.Y_eq_of_X_eq
@@ -664,9 +664,9 @@ theorem WeierstrassCurve.Affine.addPolynomial_slope (hxy : x₁ = x₂ → y₁ 
   rw [add_polynomial_eq, neg_inj, Cubic.prod_X_sub_C_eq, Cubic.toPoly_injective]
   by_cases hx : x₁ = x₂
   · rcases hx, Y_eq_of_Y_ne h₁' h₂' hx (hxy hx) with ⟨rfl, rfl⟩
-    rw [equation_iff] at h₁' h₂' 
+    rw [equation_iff] at h₁' h₂'
     rw [slope_of_Y_ne rfl <| hxy rfl]
-    rw [neg_Y, ← sub_ne_zero] at hxy 
+    rw [neg_Y, ← sub_ne_zero] at hxy
     ext
     · rfl
     · simp only [add_X]
@@ -674,9 +674,9 @@ theorem WeierstrassCurve.Affine.addPolynomial_slope (hxy : x₁ = x₂ → y₁ 
     · field_simp [hxy rfl]
       ring1
     · linear_combination (norm := (field_simp [hxy rfl]; ring1)) -h₁'
-  · rw [equation_iff] at h₁' h₂' 
+  · rw [equation_iff] at h₁' h₂'
     rw [slope_of_X_ne hx]
-    rw [← sub_eq_zero] at hx 
+    rw [← sub_eq_zero] at hx
     ext
     · rfl
     · simp only [add_X]
@@ -1114,9 +1114,9 @@ theorem WeierstrassCurve.Affine.Point.add_eq_zero (P Q : W.Point) : P + Q = 0 �
       by_cases hx : x₁ = x₂
       · by_cases hy : y₁ = W.neg_Y x₂ y₂
         · exact ⟨hx, hy⟩
-        · rw [some_add_some_of_Y_ne hx hy] at h 
+        · rw [some_add_some_of_Y_ne hx hy] at h
           contradiction
-      · rw [some_add_some_of_X_ne hx] at h 
+      · rw [some_add_some_of_X_ne hx] at h
         contradiction
     · exact fun ⟨hx, hy⟩ => some_add_some_of_Y_eq hx hy
 #align weierstrass_curve.point.add_eq_zero WeierstrassCurve.Affine.Point.add_eq_zero

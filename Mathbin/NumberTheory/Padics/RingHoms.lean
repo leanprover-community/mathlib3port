@@ -99,7 +99,7 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : �
   intro norm_denom_lt
   have hr : ‖(r * r.denom : ℚ_[p])‖ = ‖(r.num : ℚ_[p])‖ := by rw_mod_cast [@Rat.mul_den_eq_num r];
     rfl
-  rw [padicNormE.mul] at hr 
+  rw [padicNormE.mul] at hr
   have key : ‖(r.num : ℚ_[p])‖ < 1 := by
     calc
       _ = _ := hr.symm
@@ -122,7 +122,7 @@ theorem norm_sub_modPart_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
   simp only [Int.cast_ofNat, ZMod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
   have := congr_arg (coe : ℤ → ZMod p) (gcd_eq_gcd_ab r.denom p)
   simp only [Int.cast_ofNat, add_zero, Int.cast_add, ZMod.nat_cast_self, Int.cast_mul,
-    MulZeroClass.zero_mul] at this 
+    MulZeroClass.zero_mul] at this
   push_cast
   rw [mul_right_comm, mul_assoc, ← this]
   suffices rdcp : r.denom.coprime p
@@ -164,12 +164,12 @@ theorem zmod_congr_of_sub_mem_span_aux (n : ℕ) (x : ℤ_[p]) (a b : ℤ)
     (ha : x - a ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]))
     (hb : x - b ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p])) : (a : ZMod (p ^ n)) = b :=
   by
-  rw [Ideal.mem_span_singleton] at ha hb 
+  rw [Ideal.mem_span_singleton] at ha hb
   rw [← sub_eq_zero, ← Int.cast_sub, ZMod.int_cast_zmod_eq_zero_iff_dvd, Int.coe_nat_pow]
-  rw [← dvd_neg, neg_sub] at ha 
+  rw [← dvd_neg, neg_sub] at ha
   have := dvd_add ha hb
   rwa [sub_eq_add_neg, sub_eq_add_neg, add_assoc, neg_add_cancel_left, ← sub_eq_add_neg, ←
-    Int.cast_sub, pow_p_dvd_int_iff] at this 
+    Int.cast_sub, pow_p_dvd_int_iff] at this
 #align padic_int.zmod_congr_of_sub_mem_span_aux PadicInt.zmod_congr_of_sub_mem_span_aux
 -/
 
@@ -185,12 +185,12 @@ theorem zmod_congr_of_sub_mem_span (n : ℕ) (x : ℤ_[p]) (a b : ℕ)
 theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m ∈ maximalIdeal ℤ_[p])
     (hn : x - n ∈ maximalIdeal ℤ_[p]) : (m : ZMod p) = n :=
   by
-  rw [maximal_ideal_eq_span_p] at hm hn 
+  rw [maximal_ideal_eq_span_p] at hm hn
   have := zmod_congr_of_sub_mem_span_aux 1 x m n
-  simp only [pow_one] at this 
+  simp only [pow_one] at this
   specialize this hm hn
-  apply_fun ZMod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (ZMod p) at this 
-  simp only [map_intCast] at this 
+  apply_fun ZMod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (ZMod p) at this
+  simp only [map_intCast] at this
   simpa only [Int.cast_ofNat] using this
 #align padic_int.zmod_congr_of_sub_mem_max_ideal PadicInt.zmod_congr_of_sub_mem_max_ideal
 -/
@@ -203,7 +203,7 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
   simp only [maximal_ideal_eq_span_p, Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
   obtain ⟨r, hr⟩ := rat_dense p (x : ℚ_[p]) zero_lt_one
   have H : ‖(r : ℚ_[p])‖ ≤ 1 := by
-    rw [norm_sub_rev] at hr 
+    rw [norm_sub_rev] at hr
     calc
       _ = ‖(r : ℚ_[p]) - x + x‖ := by ring_nf
       _ ≤ _ := (padicNormE.nonarchimedean _ _)
@@ -324,7 +324,7 @@ theorem ker_toZMod : (toZMod : ℤ_[p] →+* ZMod p).ker = maximalIdeal ℤ_[p] 
   · intro h
     simpa only [h, ZMod.cast_zero, sub_zero] using to_zmod_spec x
   · intro h
-    rw [← sub_zero x] at h 
+    rw [← sub_zero x] at h
     dsimp [to_zmod, to_zmod_hom]
     convert zmod_congr_of_sub_mem_max_ideal x _ 0 _ h
     norm_cast; apply sub_zmod_repr_mem
@@ -407,7 +407,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   push_cast; rw [sub_add_eq_sub_sub]
   obtain ⟨c, hc⟩ := ih x
   simp only [map_natCast, ZMod.nat_cast_self, RingHom.map_pow, RingHom.map_mul, ZMod.nat_cast_val]
-  have hc' : c ≠ 0 := by rintro rfl; simp only [MulZeroClass.mul_zero] at hc ; contradiction
+  have hc' : c ≠ 0 := by rintro rfl; simp only [MulZeroClass.mul_zero] at hc; contradiction
   conv_rhs =>
     congr
     simp only [hc]
@@ -416,7 +416,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   apply mul_dvd_mul_left
   obtain hc0 | hc0 := c.valuation.nat_abs.eq_zero_or_pos
   · simp only [hc0, mul_one, pow_zero]
-    rw [mul_comm, unit_coeff_spec h] at hc 
+    rw [mul_comm, unit_coeff_spec h] at hc
     suffices c = unit_coeff h
       by
       rw [← this, ← Ideal.mem_span_singleton, ← maximal_ideal_eq_span_p]
@@ -424,7 +424,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
     obtain ⟨c, rfl⟩ : IsUnit c :=
       by
       -- TODO: write a can_lift instance for units
-      rw [Int.natAbs_eq_zero] at hc0 
+      rw [Int.natAbs_eq_zero] at hc0
       rw [is_unit_iff, norm_eq_pow_val hc', hc0, neg_zero, zpow_zero]
     rw [DiscreteValuationRing.unit_mul_pow_congr_unit _ _ _ _ _ hc]
     exact irreducible_p
@@ -455,11 +455,11 @@ theorem ker_toZModPow (n : ℕ) : (toZModPow n : ℤ_[p] →+* ZMod (p ^ n)).ker
   constructor
   · intro h
     suffices x.appr n = 0 by convert appr_spec n x; simp only [this, sub_zero, cast_zero]
-    dsimp [to_zmod_pow, to_zmod_hom] at h 
-    rw [ZMod.nat_cast_zmod_eq_zero_iff_dvd] at h 
+    dsimp [to_zmod_pow, to_zmod_hom] at h
+    rw [ZMod.nat_cast_zmod_eq_zero_iff_dvd] at h
     apply eq_zero_of_dvd_of_lt h (appr_lt _ _)
   · intro h
-    rw [← sub_zero x] at h 
+    rw [← sub_zero x] at h
     dsimp [to_zmod_pow, to_zmod_hom]
     rw [zmod_congr_of_sub_mem_span n x _ 0 _ h, cast_zero]
     apply appr_spec
@@ -592,7 +592,7 @@ def nthHomSeq (r : R) : PadicSeq p :=
 theorem nthHomSeq_one : nthHomSeq f_compat 1 ≈ 1 :=
   by
   intro ε hε
-  change _ < _ at hε 
+  change _ < _ at hε
   use 1
   intro j hj
   haveI : Fact (1 < p ^ j) := ⟨Nat.one_lt_pow _ _ (by linarith) hp_prime.1.one_lt⟩
@@ -655,7 +655,7 @@ theorem limNthHom_spec (r : R) :
   by
   intro ε hε
   obtain ⟨ε', hε'0, hε'⟩ : ∃ v : ℚ, (0 : ℝ) < v ∧ ↑v < ε := exists_rat_btwn hε
-  norm_cast at hε'0 
+  norm_cast at hε'0
   obtain ⟨N, hN⟩ := padicNormE.defn (nth_hom_seq f_compat r) hε'0
   use N
   intro n hn
@@ -713,7 +713,7 @@ theorem lift_sub_val_mem_span (r : R) (n : ℕ) :
     lim_nth_hom_spec f_compat r _
       (show (0 : ℝ) < p ^ (-n : ℤ) from Nat.zpow_pos_of_pos hp_prime.1.Pos _)
   have := le_of_lt (hk (max n k) (le_max_right _ _))
-  rw [norm_le_pow_iff_mem_span_pow] at this 
+  rw [norm_le_pow_iff_mem_span_pow] at this
   dsimp [lift]
   rw [sub_eq_sub_add_sub (lim_nth_hom f_compat r) _ ↑(nth_hom f r (max n k))]
   apply Ideal.add_mem _ _ this

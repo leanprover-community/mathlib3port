@@ -78,7 +78,7 @@ theorem continuousOn_tan : ContinuousOn tan {x | cos x ≠ 0} :=
   suffices ContinuousOn (fun x => sin x / cos x) {x | cos x ≠ 0}
     by
     have h_eq : (fun x => sin x / cos x) = tan := by ext1 x; rw [tan_eq_sin_div_cos]
-    rwa [h_eq] at this 
+    rwa [h_eq] at this
   exact continuous_on_sin.div continuous_on_cos fun x => id
 #align real.continuous_on_tan Real.continuousOn_tan
 -/
@@ -98,15 +98,15 @@ theorem continuousOn_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) :=
   rw [cos_eq_zero_iff]
   rintro hx_gt hx_lt ⟨r, hxr_eq⟩
   cases le_or_lt 0 r
-  · rw [lt_iff_not_ge] at hx_lt 
+  · rw [lt_iff_not_ge] at hx_lt
     refine' hx_lt _
     rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
     simp [h]
-  · rw [lt_iff_not_ge] at hx_gt 
+  · rw [lt_iff_not_ge] at hx_gt
     refine' hx_gt _
     rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul,
       mul_le_mul_right (half_pos pi_pos)]
-    have hr_le : r ≤ -1 := by rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h 
+    have hr_le : r ≤ -1 := by rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
     rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
     · norm_num; rw [← Int.cast_one, ← Int.cast_neg]; norm_cast; exact hr_le
     · exact zero_lt_two

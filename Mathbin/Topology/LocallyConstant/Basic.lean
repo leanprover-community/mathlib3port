@@ -222,7 +222,7 @@ theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f �
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
     (Set.range f).Finite := by
   letI : TopologicalSpace Y := ⊥; haveI := discreteTopology_bot Y
-  rw [@iff_continuous X Y ‹_› ‹_›] at hf 
+  rw [@iff_continuous X Y ‹_› ‹_›] at hf
   exact (isCompact_range hf).finite_of_discrete
 #align is_locally_constant.range_finite IsLocallyConstant.range_finite
 -/
@@ -479,7 +479,7 @@ theorem ofIsClopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ 
 theorem locallyConstant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X]
     (f g : LocallyConstant X (Fin 2)) (h : f ⁻¹' ({0} : Set (Fin 2)) = g ⁻¹' {0}) : f = g :=
   by
-  simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h 
+  simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h
   ext1 x
   exact Fin.fin_two_eq_of_eq_zero_iff (h x)
 #align locally_constant.locally_constant_eq_of_fiber_zero_eq LocallyConstant.locallyConstant_eq_of_fiber_zero_eq
@@ -689,10 +689,10 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R
     obtain ⟨V, hV, hx, h'⟩ := (IsLocallyConstant.iff_exists_open _).1 f.is_locally_constant x
     by_cases x ∈ U
     · refine' ⟨U ∩ V, IsOpen.inter hU.1 hV, Set.mem_inter h hx, _⟩; rintro y hy
-      rw [Set.mem_inter_iff] at hy ; rw [Set.mulIndicator_of_mem hy.1, Set.mulIndicator_of_mem h]
+      rw [Set.mem_inter_iff] at hy; rw [Set.mulIndicator_of_mem hy.1, Set.mulIndicator_of_mem h]
       apply h' y hy.2
-    · rw [← Set.mem_compl_iff] at h ; refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
-      rintro y hy; rw [Set.mem_compl_iff] at h ; rw [Set.mem_compl_iff] at hy 
+    · rw [← Set.mem_compl_iff] at h; refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
+      rintro y hy; rw [Set.mem_compl_iff] at h; rw [Set.mem_compl_iff] at hy
       simp [h, hy]
 #align locally_constant.mul_indicator LocallyConstant.mulIndicator
 #align locally_constant.indicator LocallyConstant.indicator

@@ -397,14 +397,14 @@ theorem epi_iff_exact_zero_right [HasEqualizers V] {A B : V} (f : A ⟶ B) :
     Epi f ↔ Exact f (0 : B ⟶ 0) :=
   ⟨fun h => exact_epi_zero _, fun h => by
     have e₁ := h.epi
-    rw [imageToKernel_zero_right] at e₁ 
+    rw [imageToKernel_zero_right] at e₁
     have e₂ :
       epi
         (((image_subobject f).arrow ≫ inv (kernel_subobject 0).arrow) ≫
           (kernel_subobject 0).arrow) :=
       @epi_comp _ _ _ _ _ _ e₁ _ _
-    rw [category.assoc, is_iso.inv_hom_id, category.comp_id] at e₂ 
-    rw [← image_subobject_arrow] at e₂ 
+    rw [category.assoc, is_iso.inv_hom_id, category.comp_id] at e₂
+    rw [← image_subobject_arrow] at e₂
     skip
     haveI : epi (image.ι f) := epi_of_epi (image_subobject_iso f).Hom (image.ι f)
     apply epi_of_epi_image⟩

@@ -186,7 +186,7 @@ theorem poly_eq_of_wittPolynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × �
   by
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  rw [← Function.funext_iff] at h 
+  rw [← Function.funext_iff] at h
   replace h :=
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
@@ -200,7 +200,7 @@ theorem poly_eq_of_wittPolynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
   by
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  rw [← Function.funext_iff] at h 
+  rw [← Function.funext_iff] at h
   replace h :=
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
@@ -266,7 +266,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   intro x
   simp only [hom_bind₁]
   specialize h (ULift ℤ) (mk p fun i => ⟨x i⟩) k
-  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h 
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_toRingHom, map_eval₂_hom]
   convert h using 1
@@ -628,7 +628,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   intro x
   simp only [hom_bind₁]
   specialize h (ULift ℤ) (mk p fun i => ⟨x (0, i)⟩) (mk p fun i => ⟨x (1, i)⟩) k
-  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h 
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_toRingHom, map_eval₂_hom]
   convert h using 1

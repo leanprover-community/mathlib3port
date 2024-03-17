@@ -215,11 +215,11 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
   by
   rw [TopologicalSpace.nhds_mkOfNhds]
   · intro x U U_in
-    rw [(B.has_basis x).mem_iff] at U_in 
+    rw [(B.has_basis x).mem_iff] at U_in
     rcases U_in with ⟨V, V_in, H⟩
     simpa [mem_pure] using H (mem_image_of_mem _ (GroupFilterBasis.one V_in))
   · intro x U U_in
-    rw [(B.has_basis x).mem_iff] at U_in 
+    rw [(B.has_basis x).mem_iff] at U_in
     rcases U_in with ⟨V, V_in, H⟩
     rcases GroupFilterBasis.mul V_in with ⟨W, W_in, hW⟩
     use(fun y => x * y) '' W, image_mem_map (FilterBasis.mem_filter_of_mem _ W_in)
@@ -435,18 +435,18 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
         default with
       smul' := by
         rintro U (h : U ∈ {{(0 : M)}})
-        rw [mem_singleton_iff] at h 
+        rw [mem_singleton_iff] at h
         use univ, univ_mem, {0}, rfl
         rintro a ⟨x, m, -, hm, rfl⟩
         simp [mem_singleton_iff.1 hm, h]
       smul_left' := by
         rintro x₀ U (h : U ∈ {{(0 : M)}})
-        rw [mem_singleton_iff] at h 
+        rw [mem_singleton_iff] at h
         use{0}, rfl
         simp [h]
       smul_right' := by
         rintro m₀ U (h : U ∈ (0 : Set (Set M)))
-        rw [Set.mem_zero] at h 
+        rw [Set.mem_zero] at h
         simp [h, nhds_discrete] }⟩
 
 #print ModuleFilterBasis.topology /-

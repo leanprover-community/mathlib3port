@@ -150,7 +150,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
   · rintro c ⟨hc0, hc1⟩
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
       mul_comm, ← mul_one r]
-    rw [mem_closed_ball, dist_eq_norm] at hy 
+    rw [mem_closed_ball, dist_eq_norm] at hy
     replace hr : 0 < r; exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
     apply mul_lt_mul' <;> assumption
 #align closure_ball closure_ball
@@ -407,7 +407,7 @@ variable (E) [NormedSpace ℝ E] [Nontrivial E]
 theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ‖x‖ = c :=
   by
   rcases exists_ne (0 : E) with ⟨x, hx⟩
-  rw [← norm_ne_zero_iff] at hx 
+  rw [← norm_ne_zero_iff] at hx
   use c • ‖x‖⁻¹ • x
   simp [norm_smul, Real.norm_of_nonneg hc, hx]
 #align exists_norm_eq exists_norm_eq

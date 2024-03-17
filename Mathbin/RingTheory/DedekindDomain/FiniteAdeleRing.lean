@@ -182,9 +182,9 @@ theorem add {x y : K_hat R K} (hx : x.IsFiniteAdele) (hy : y.IsFiniteAdele) :
     by
     intro v hv
     rw [mem_union, mem_set_of_eq, mem_set_of_eq]
-    rw [mem_set_of_eq] at hv 
+    rw [mem_set_of_eq] at hv
     contrapose! hv
-    rw [mem_adic_completion_integers, mem_adic_completion_integers, ← max_le_iff] at hv 
+    rw [mem_adic_completion_integers, mem_adic_completion_integers, ← max_le_iff] at hv
     rw [mem_adic_completion_integers, Pi.add_apply]
     exact le_trans (valued.v.map_add_le_max' (x v) (y v)) hv
   exact (hx.union hy).Subset h_subset
@@ -200,7 +200,7 @@ theorem zero : (0 : K_hat R K).IsFiniteAdele :=
     {v : height_one_spectrum R | ¬(0 : v.adicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
     by
     ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
-    rw [mem_set_of_eq] at hv ; apply hv; rw [mem_adic_completion_integers]
+    rw [mem_set_of_eq] at hv; apply hv; rw [mem_adic_completion_integers]
     have h_zero : (Valued.v (0 : v.adic_completion K) : WithZero (Multiplicative ℤ)) = 0 :=
       valued.v.map_zero'
     rw [h_zero]; exact zero_le_one' _
@@ -237,9 +237,9 @@ theorem mul {x y : K_hat R K} (hx : x.IsFiniteAdele) (hy : y.IsFiniteAdele) :
     by
     intro v hv
     rw [mem_union, mem_set_of_eq, mem_set_of_eq]
-    rw [mem_set_of_eq] at hv 
+    rw [mem_set_of_eq] at hv
     contrapose! hv
-    rw [mem_adic_completion_integers, mem_adic_completion_integers] at hv 
+    rw [mem_adic_completion_integers, mem_adic_completion_integers] at hv
     have h_mul : Valued.v (x v * y v) = Valued.v (x v) * Valued.v (y v) :=
       Valued.v.map_mul' (x v) (y v)
     rw [mem_adic_completion_integers, Pi.mul_apply, h_mul]
@@ -259,7 +259,7 @@ theorem one : (1 : K_hat R K).IsFiniteAdele :=
     {v : height_one_spectrum R | ¬(1 : v.adicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
     by
     ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
-    rw [mem_set_of_eq] at hv ; apply hv; rw [mem_adic_completion_integers]
+    rw [mem_set_of_eq] at hv; apply hv; rw [mem_adic_completion_integers]
     exact le_of_eq valued.v.map_one'
   simp_rw [Pi.one_apply, h_empty]
   exact finite_empty

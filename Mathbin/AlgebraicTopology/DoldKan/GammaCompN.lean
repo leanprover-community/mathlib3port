@@ -56,7 +56,7 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
           zsmul_zero]
         · intro h
           replace h := congr_arg SimplexCategory.len h
-          change n + 1 = n at h 
+          change n + 1 = n at h
           linarith
         · simpa only [is_δ₀.iff] using hi)
 #align algebraic_topology.dold_kan.Γ₀_nondeg_complex_iso AlgebraicTopology.DoldKan.Γ₀NondegComplexIso

@@ -1154,7 +1154,7 @@ theorem PosDef.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.PosDef) : Q.Anisot
   by_contradiction fun hx =>
     lt_irrefl (0 : R₂) <| by
       have := hQ _ hx
-      rw [hQx] at this 
+      rw [hQx] at this
       exact this
 #align quadratic_form.pos_def.anisotropic QuadraticForm.PosDef.anisotropic
 -/
@@ -1338,11 +1338,11 @@ theorem LinearMap.BilinForm.exists_orthogonal_basis [hK : Invertible (2 : K)] {B
   -- either the bilinear form is trivial or we can pick a non-null `x`
   obtain rfl | hB₁ := eq_or_ne B 0
   · let b := FiniteDimensional.finBasis K V
-    rw [hd] at b 
+    rw [hd] at b
     refine' ⟨b, fun i j hij => rfl⟩
   obtain ⟨x, hx⟩ := exists_bilin_form_self_ne_zero hB₁ hB₂
   rw [← Submodule.finrank_add_eq_of_isCompl (is_compl_span_singleton_orthogonal hx).symm,
-    finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd 
+    finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd
   let B' := B.restrict (B.orthogonal <| K ∙ x)
   obtain ⟨v', hv₁⟩ := ih (B.restrict_symm hB₂ _ : B'.is_symm) (Nat.succ.inj hd)
   -- concatenate `x` with the basis obtained by induction
@@ -1350,10 +1350,10 @@ theorem LinearMap.BilinForm.exists_orthogonal_basis [hK : Invertible (2 : K)] {B
     Basis.mkFinCons x v'
       (by
         rintro c y hy hc
-        rw [add_eq_zero_iff_neg_eq] at hc 
-        rw [← hc, Submodule.neg_mem_iff] at hy 
+        rw [add_eq_zero_iff_neg_eq] at hc
+        rw [← hc, Submodule.neg_mem_iff] at hy
         have := (is_compl_span_singleton_orthogonal hx).Disjoint
-        rw [Submodule.disjoint_def] at this 
+        rw [Submodule.disjoint_def] at this
         have := this (c • x) (Submodule.smul_mem _ _ <| Submodule.mem_span_singleton_self _) hy
         exact (smul_eq_zero.1 this).resolve_right fun h => hx <| h.symm ▸ zero_left _)
       (by

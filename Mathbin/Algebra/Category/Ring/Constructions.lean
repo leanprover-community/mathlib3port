@@ -149,7 +149,7 @@ instance commRingCat_hasStrictTerminalObjects : HasStrictTerminalObjects CommRin
   ext
   have e : (0 : X) = 1 := by rw [← f.map_one, ← f.map_zero]; congr
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
-  rw [one_mul, MulZeroClass.zero_mul, ← f.map_zero] at e 
+  rw [one_mul, MulZeroClass.zero_mul, ← f.map_zero] at e
   exact e
 #align CommRing.CommRing_has_strict_terminal_objects CommRingCat.commRingCat_hasStrictTerminalObjects
 -/
@@ -241,7 +241,7 @@ instance equalizer_ι_isLocalRingHom (F : WalkingParallelPair ⥤ CommRingCat.{u
     IsLocalRingHom (limit.π F WalkingParallelPair.zero) :=
   by
   have := lim_map_π (diagram_iso_parallel_pair F).Hom walking_parallel_pair.zero
-  rw [← is_iso.comp_inv_eq] at this 
+  rw [← is_iso.comp_inv_eq] at this
   rw [← this]
   rw [←
     limit.iso_limit_cone_hom_π

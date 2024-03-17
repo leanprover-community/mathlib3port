@@ -77,25 +77,25 @@ theorem x_not_pseudo_eq : ¬PseudoEqual _ x y :=
   by
   intro h
   replace h := Module.eq_range_of_pseudoequal h
-  dsimp [x, y] at h 
+  dsimp [x, y] at h
   let φ := biprod.lift (of_hom (id : ℚ →ₗ[ℤ] ℚ)) (of_hom (2 * id))
   have mem_range := mem_range_self φ (1 : ℚ)
-  rw [h] at mem_range 
+  rw [h] at mem_range
   obtain ⟨a, ha⟩ := mem_range
   rw [← ModuleCat.id_apply (φ (1 : ℚ)), ← biprod.total, ← LinearMap.comp_apply, ← comp_def,
-    preadditive.comp_add] at ha 
+    preadditive.comp_add] at ha
   let π₁ := (biprod.fst : of ℤ ℚ ⊞ of ℤ ℚ ⟶ _)
   have ha₁ := congr_arg π₁ ha
-  simp only [← LinearMap.comp_apply, ← comp_def] at ha₁ 
+  simp only [← LinearMap.comp_apply, ← comp_def] at ha₁
   simp only [biprod.lift_fst, of_hom_apply, id_coe, id.def, preadditive.add_comp, category.assoc,
-    biprod.inl_fst, category.comp_id, biprod.inr_fst, limits.comp_zero, add_zero] at ha₁ 
+    biprod.inl_fst, category.comp_id, biprod.inr_fst, limits.comp_zero, add_zero] at ha₁
   let π₂ := (biprod.snd : of ℤ ℚ ⊞ of ℤ ℚ ⟶ _)
   have ha₂ := congr_arg π₂ ha
-  simp only [← LinearMap.comp_apply, ← comp_def] at ha₂ 
+  simp only [← LinearMap.comp_apply, ← comp_def] at ha₂
   have : (2 : ℚ →ₗ[ℤ] ℚ) 1 = 1 + 1 := rfl
   simp only [ha₁, this, biprod.lift_snd, of_hom_apply, id_coe, id.def, preadditive.add_comp,
     category.assoc, biprod.inl_snd, limits.comp_zero, biprod.inr_snd, category.comp_id, zero_add,
-    mul_apply, self_eq_add_left] at ha₂ 
+    mul_apply, self_eq_add_left] at ha₂
   exact one_ne_zero' ℚ ha₂
 #align counterexample.x_not_pseudo_eq Counterexample.x_not_pseudo_eq
 

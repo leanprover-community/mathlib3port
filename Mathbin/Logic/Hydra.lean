@@ -70,10 +70,10 @@ theorem cutExpand_le_invImage_lex [hi : IsIrrefl α r] :
   fun s t ⟨u, a, hr, he⟩ => by
   classical
   refine' ⟨a, fun b h => _, _⟩ <;> simp_rw [to_finsupp_apply]
-  · apply_fun count b at he ; simp_rw [count_add] at he 
+  · apply_fun count b at he; simp_rw [count_add] at he
     convert he <;> convert (add_zero _).symm <;> rw [count_eq_zero] <;> intro hb
     exacts [h.2 (mem_singleton.1 hb), h.1 (hr b hb)]
-  · apply_fun count a at he ; simp_rw [count_add, count_singleton_self] at he 
+  · apply_fun count a at he; simp_rw [count_add, count_singleton_self] at he
     apply Nat.lt_of_succ_le; convert he.le; convert (add_zero _).symm
     exact count_eq_zero.2 fun ha => hi.irrefl a <| hr a ha
 #align relation.cut_expand_le_inv_image_lex Relation.cutExpand_le_invImage_lex
@@ -129,7 +129,7 @@ theorem cutExpand_fibration (r : α → α → Prop) :
   rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩; dsimp at he ⊢
   classical
   obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
-  rw [add_assoc, mem_add] at ha 
+  rw [add_assoc, mem_add] at ha
   obtain h | h := ha
   · refine' ⟨(s₁.erase a + t, s₂), game_add.fst ⟨t, a, hr, _⟩, _⟩
     · rw [add_comm, ← add_assoc, singleton_add, cons_erase h]

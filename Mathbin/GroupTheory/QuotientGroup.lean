@@ -228,7 +228,7 @@ group homomorphism `G/N →* H`. -/
 def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
   (QuotientGroup.con N).lift φ fun x y h =>
     by
-    simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h 
+    simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h
     calc
       φ x = φ (y * (x⁻¹ * y)⁻¹) := by rw [mul_inv_rev, inv_inv, mul_inv_cancel_left]
       _ = φ y := by rw [φ.map_mul, HN _ (N.inv_mem h), mul_one]
@@ -695,7 +695,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
     (mk' <| N.subgroupOf (H ⊔ N)).comp (inclusion le_sup_left)
   have φ_surjective : Surjective φ := fun x =>
     x.inductionOn' <| by
-      rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩; rw [mul_normal H N] at hy 
+      rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩; rw [mul_normal H N] at hy
       rcases hy with ⟨h, n, hh, hn, rfl⟩
       use h, hh; apply quotient.eq.mpr
       change Setoid.r _ _
@@ -789,7 +789,7 @@ theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G �
   top_unique fun x _ =>
     by
     have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elim _ _)
-    rwa [inv_one, one_mul] at this 
+    rwa [inv_one, one_mul] at this
 #align quotient_group.subgroup_eq_top_of_subsingleton QuotientGroup.subgroup_eq_top_of_subsingleton
 #align quotient_add_group.add_subgroup_eq_top_of_subsingleton QuotientAddGroup.addSubgroup_eq_top_of_subsingleton
 -/

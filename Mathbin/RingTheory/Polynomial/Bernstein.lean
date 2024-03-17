@@ -222,11 +222,11 @@ theorem iterate_derivative_at_0 (n ν : ℕ) :
       · simp
       · have : n - 1 - (ν - 1) = n - ν :=
           by
-          rw [← Nat.succ_le_iff] at h'' 
+          rw [← Nat.succ_le_iff] at h''
           rw [← tsub_add_eq_tsub_tsub, add_comm, tsub_add_cancel_of_le h'']
         rw [this, ascPochhammer_eval_succ]
         rw_mod_cast [tsub_add_cancel_of_le (h'.trans n.pred_le)]
-  · simp only [not_le] at h 
+  · simp only [not_le] at h
     rw [tsub_eq_zero_iff_le.mpr (Nat.le_pred_of_lt h), eq_zero_of_lt R h]
     simp [pos_iff_ne_zero.mp (pos_of_gt h)]
 #align bernstein_polynomial.iterate_derivative_at_0 bernsteinPolynomial.iterate_derivative_at_0
@@ -243,7 +243,7 @@ theorem iterate_derivative_at_0_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n)
   apply ne_of_gt
   obtain rfl | h' := Nat.eq_zero_or_pos ν
   · simp
-  · rw [← Nat.succ_pred_eq_of_pos h'] at h 
+  · rw [← Nat.succ_pred_eq_of_pos h'] at h
     exact ascPochhammer_pos _ _ (tsub_pos_of_lt (Nat.lt_of_succ_le h))
 #align bernstein_polynomial.iterate_derivative_at_0_ne_zero bernsteinPolynomial.iterate_derivative_at_0_ne_zero
 -/
@@ -305,7 +305,7 @@ theorem linearIndependent_aux (n k : ℕ) (h : k ≤ n + 1) :
       -- We show that the (n-k)-th derivative at 1 doesn't vanish,
       -- but vanishes for everything in the span.
       clear ih
-      simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h 
+      simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h
       simp only [Fin.val_last, Fin.init_def]
       dsimp
       apply not_mem_span_of_apply_not_mem_span_image (@Polynomial.derivative ℚ _ ^ (n - k))

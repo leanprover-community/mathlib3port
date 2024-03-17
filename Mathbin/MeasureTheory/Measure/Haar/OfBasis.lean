@@ -140,7 +140,7 @@ theorem parallelepiped_eq_sum_segment (v : ι → E) : parallelepiped v = ∑ i,
   · rintro ⟨t, ht, rfl⟩
     exact ⟨t • v, fun i => ⟨t i, ht _, by simp⟩, rfl⟩
   rintro ⟨g, hg, rfl⟩
-  change ∀ i, _ at hg 
+  change ∀ i, _ at hg
   choose t ht hg using hg
   refine' ⟨t, ht, _⟩
   simp_rw [hg]
@@ -185,14 +185,14 @@ theorem parallelepiped_single [DecidableEq ι] (a : ι → ℝ) :
     refine' ⟨fun i => x i / a i, fun i => _, funext fun i => _⟩
     · specialize h i
       cases' le_total (a i) 0 with hai hai
-      · rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai] at h 
+      · rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai] at h
         exact ⟨div_nonneg_of_nonpos h.2 hai, div_le_one_of_ge h.1 hai⟩
-      · rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai] at h 
+      · rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai] at h
         exact ⟨div_nonneg h.1 hai, div_le_one_of_le h.2 hai⟩
     · specialize h i
       simp only [smul_eq_mul, Pi.mul_apply]
       cases' eq_or_ne (a i) 0 with hai hai
-      · rw [hai, inf_idem, sup_idem, ← le_antisymm_iff] at h 
+      · rw [hai, inf_idem, sup_idem, ← le_antisymm_iff] at h
         rw [hai, ← h, zero_div, MulZeroClass.zero_mul]
       · rw [div_mul_cancel _ hai]
 #align parallelepiped_single parallelepiped_single

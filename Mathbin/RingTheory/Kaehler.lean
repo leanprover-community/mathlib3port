@@ -267,7 +267,7 @@ theorem KaehlerDifferential.span_range_derivation :
   rintro x -
   obtain ⟨⟨x, hx⟩, rfl⟩ := Ideal.toCotangent_surjective _ x
   have : x ∈ (KaehlerDifferential.ideal R S).restrictScalars S := hx
-  rw [← KaehlerDifferential.submodule_span_range_eq_ideal] at this 
+  rw [← KaehlerDifferential.submodule_span_range_eq_ideal] at this
   suffices
     ∃ hx,
       (KaehlerDifferential.ideal R S).toCotangent ⟨x, hx⟩ ∈

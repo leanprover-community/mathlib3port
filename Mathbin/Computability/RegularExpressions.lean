@@ -296,12 +296,12 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
     · intro h
       refine' ⟨[], [], rfl, _⟩
       rw [rmatch, rmatch]
-      rwa [Bool.coe_and_iff] at h 
+      rwa [Bool.coe_and_iff] at h
     · rintro ⟨t, u, h₁, h₂⟩
       cases' List.append_eq_nil.1 h₁.symm with ht hu
       subst ht
       subst hu
-      repeat' rw [rmatch] at h₂ 
+      repeat' rw [rmatch] at h₂
       simp [h₂]
   · rw [rmatch, deriv]
     split_ifs with hepsilon
@@ -313,13 +313,13 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
       · rintro ⟨t, u, h, hP, hQ⟩
         cases' t with b t
         · right
-          rw [List.nil_append] at h 
-          rw [← h] at hQ 
+          rw [List.nil_append] at h
+          rw [← h] at hQ
           exact hQ
         · left
-          simp only [List.cons_append] at h 
+          simp only [List.cons_append] at h
           refine' ⟨t, u, h.2, _, hQ⟩
-          rw [rmatch] at hP 
+          rw [rmatch] at hP
           convert hP
           exact h.1
     · rw [ih]
@@ -327,9 +327,9 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
       · exact ⟨a :: t, u, by tauto⟩
       · cases' t with b t
         · contradiction
-        · simp only [List.cons_append] at h 
+        · simp only [List.cons_append] at h
           refine' ⟨t, u, h.2, _, hQ⟩
-          rw [rmatch] at hP 
+          rw [rmatch] at hP
           convert hP
           exact h.1
 #align regular_expression.mul_rmatch_iff RegularExpression.mul_rmatch_iff
@@ -359,7 +359,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
           by
           rw [hs, List.length_cons, List.length_append]
           apply A
-        rw [IH _ hwf] at hu 
+        rw [IH _ hwf] at hu
         rcases hu with ⟨S', hsum, helem⟩
         use(a :: t) :: S'
         constructor
@@ -376,13 +376,13 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         cases' S with t' U
         · exact ⟨[], [], by tauto⟩
         · cases' t' with b t
-          · simp only [forall_eq_or_imp, List.mem_cons] at helem 
-            simp only [eq_self_iff_true, not_true, Ne.def, false_and_iff] at helem 
+          · simp only [forall_eq_or_imp, List.mem_cons] at helem
+            simp only [eq_self_iff_true, not_true, Ne.def, false_and_iff] at helem
             cases helem
-          simp only [List.join, List.cons_append] at hsum 
+          simp only [List.join, List.cons_append] at hsum
           refine' ⟨t, U.join, hsum.2, _, _⟩
           · specialize helem (b :: t) (by simp)
-            rw [rmatch] at helem 
+            rw [rmatch] at helem
             convert helem.2
             exact hsum.1
           · have hwf : U.join.length < (List.cons a x).length :=
@@ -429,12 +429,12 @@ theorem rmatch_iff_matches' (P : RegularExpression α) : ∀ x : List α, P.rmat
       Set.image_prod]
     constructor
     · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
-      rw [ih₁] at hmatch₁ 
-      rw [ih₂] at hmatch₂ 
+      rw [ih₁] at hmatch₁
+      rw [ih₂] at hmatch₂
       exact ⟨x, hmatch₁, y, hmatch₂, hsum.symm⟩
     · rintro ⟨x, hmatch₁, y, hmatch₂, hsum⟩
-      rw [← ih₁] at hmatch₁ 
-      rw [← ih₂] at hmatch₂ 
+      rw [← ih₁] at hmatch₁
+      rw [← ih₂] at hmatch₂
       exact ⟨x, y, hsum.symm, hmatch₁, hmatch₂⟩
   case star _ ih =>
     rw [star_rmatch_iff, Language.kstar_def_nonempty]

@@ -61,9 +61,9 @@ theorem charZero_of_injective_algebraMap {R A : Type _} [CommSemiring R] [Semiri
   {
     cast_injective := fun x y hxy =>
       by
-      change algebraMap ℕ A x = algebraMap ℕ A y at hxy 
-      rw [IsScalarTower.algebraMap_apply ℕ R A x] at hxy 
-      rw [IsScalarTower.algebraMap_apply ℕ R A y] at hxy 
+      change algebraMap ℕ A x = algebraMap ℕ A y at hxy
+      rw [IsScalarTower.algebraMap_apply ℕ R A x] at hxy
+      rw [IsScalarTower.algebraMap_apply ℕ R A y] at hxy
       exact CharZero.cast_injective (h hxy) }
 #align char_zero_of_injective_algebra_map charZero_of_injective_algebraMap
 -/

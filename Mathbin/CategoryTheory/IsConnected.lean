@@ -183,7 +183,7 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
   IsConnected.of_constant_of_preserves_morphisms fun α F a =>
     by
     have w := h {j | F j = F j₀} rfl fun _ _ f => by simp [a f]
-    dsimp at w 
+    dsimp at w
     intro j j'
     rw [w j, w j']
 #align category_theory.is_connected.of_induct CategoryTheory.IsConnected.of_induct
@@ -428,7 +428,7 @@ theorem nat_trans_from_is_connected [IsPreconnected J] {X Y : C}
     (α : (Functor.const J).obj X ⟶ (Functor.const J).obj Y) :
     ∀ j j' : J, α.app j = (α.app j' : X ⟶ Y) :=
   @constant_of_preserves_morphisms _ _ _ (X ⟶ Y) (fun j => α.app j) fun _ _ f => by
-    have := α.naturality f; erw [id_comp, comp_id] at this ; exact this.symm
+    have := α.naturality f; erw [id_comp, comp_id] at this; exact this.symm
 #align category_theory.nat_trans_from_is_connected CategoryTheory.nat_trans_from_is_connected
 -/
 

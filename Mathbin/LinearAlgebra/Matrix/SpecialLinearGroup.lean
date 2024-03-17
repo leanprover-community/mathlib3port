@@ -328,7 +328,7 @@ theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0
   rw [Matrix.det_fin_two, mul_comm]
   simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_neg]
   have := A.2
-  rw [Matrix.det_fin_two] at this 
+  rw [Matrix.det_fin_two] at this
   convert this
 #align matrix.special_linear_group.SL2_inv_expl_det Matrix.SpecialLinearGroup.SL2_inv_expl_det
 -/
@@ -339,7 +339,7 @@ theorem SL2_inv_expl (A : SL(2, R)) :
   by
   ext
   have := Matrix.adjugate_fin_two A.1
-  simp only [Subtype.val_eq_coe] at this 
+  simp only [Subtype.val_eq_coe] at this
   rw [coe_inv, this]
   rfl
 #align matrix.special_linear_group.SL2_inv_expl Matrix.SpecialLinearGroup.SL2_inv_expl
@@ -350,7 +350,7 @@ theorem fin_two_induction (P : SL(2, R) → Prop)
     (h : ∀ (a b c d : R) (hdet : a * d - b * c = 1), P ⟨!![a, b; c, d], by rwa [det_fin_two_of]⟩)
     (g : SL(2, R)) : P g := by
   obtain ⟨m, hm⟩ := g
-  convert h (m 0 0) (m 0 1) (m 1 0) (m 1 1) (by rwa [det_fin_two] at hm )
+  convert h (m 0 0) (m 0 1) (m 1 0) (m 1 1) (by rwa [det_fin_two] at hm)
   ext i j; fin_cases i <;> fin_cases j <;> rfl
 #align matrix.special_linear_group.fin_two_induction Matrix.SpecialLinearGroup.fin_two_induction
 -/
@@ -362,7 +362,7 @@ theorem fin_two_exists_eq_mk_of_apply_zero_one_eq_zero {R : Type _} [Field R] (g
   by
   induction' g using Matrix.SpecialLinearGroup.fin_two_induction with a b c d h_det
   replace hg : c = 0 := by simpa using hg
-  have had : a * d = 1 := by rwa [hg, MulZeroClass.mul_zero, sub_zero] at h_det 
+  have had : a * d = 1 := by rwa [hg, MulZeroClass.mul_zero, sub_zero] at h_det
   refine' ⟨a, b, left_ne_zero_of_mul_eq_one had, _⟩
   simp_rw [eq_inv_of_mul_eq_one_right had, hg]
 #align matrix.special_linear_group.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero Matrix.SpecialLinearGroup.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero

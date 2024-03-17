@@ -177,7 +177,7 @@ theorem rfindOpt_mono {α} {f : ℕ → Option α} (H : ∀ {a m n}, m ≤ n →
     have h' := rfind_opt_dom.2 ⟨_, _, h⟩
     cases' rfind_opt_spec ⟨h', rfl⟩ with k hk
     have := (H (le_max_left _ _) h).symm.trans (H (le_max_right _ _) hk)
-    simp at this ; simp [this, get_mem]⟩
+    simp at this; simp [this, get_mem]⟩
 #align nat.rfind_opt_mono Nat.rfindOpt_mono
 -/
 
@@ -1041,11 +1041,11 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
     have : ∀ (m a') (_ : Sum.inr a' ∈ F a m) (_ : b ∈ PFun.fix f a'), b ∈ PFun.fix f a :=
       by
       intro m a' am ba
-      induction' m with m IH generalizing a' <;> simp [F] at am 
+      induction' m with m IH generalizing a' <;> simp [F] at am
       · rwa [← am]
       rcases am with ⟨a₂, am₂, fa₂⟩
       exact IH _ am₂ (PFun.mem_fix_iff.2 (Or.inr ⟨_, fa₂, ba⟩))
-    cases n <;> simp [F] at h₂ ; · cases h₂
+    cases n <;> simp [F] at h₂; · cases h₂
     rcases h₂ with (h₂ | ⟨a', am', fa'⟩)
     · cases' h₁ (Nat.lt_succ_self _) with a' h
       injection mem_unique h h₂

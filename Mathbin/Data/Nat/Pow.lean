@@ -252,7 +252,7 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
     rw [mod_eq_sub_mod h₁, IH _ h₂]
     -- Normalize goal and h1
     simp only [pow_succ]
-    simp only [GE.ge, pow_succ] at h₁ 
+    simp only [GE.ge, pow_succ] at h₁
     -- Pull subtraction outside mod and div
     rw [sub_mul_mod _ _ _ h₁, sub_mul_div _ _ _ h₁]
     -- Cancel subtraction inside mod b^w
@@ -297,9 +297,9 @@ theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣
     have : succ p ^ k ∣ 1 := dvd_of_mul_dvd_mul_left (succ_pos _) this
     have he : succ p ^ k = 1 := eq_one_of_dvd_one this
     have : k < succ p ^ k := lt_pow_self hp k
-    have : k < 1 := by rwa [he] at this 
+    have : k < 1 := by rwa [he] at this
     have : k = 0 := Nat.eq_zero_of_le_zero <| le_of_lt_succ this
-    have : 1 < 1 := by rwa [this] at hk 
+    have : 1 < 1 := by rwa [this] at hk
     absurd this (by decide)
 #align nat.not_pos_pow_dvd Nat.not_pos_pow_dvd
 -/

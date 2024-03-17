@@ -330,7 +330,7 @@ theorem preimage_basicOpen {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens Y
     exact (PresheafedSpace.stalk_map f.1 _).isUnit_map hy
   · rintro ⟨y, hy : IsUnit _, rfl⟩
     erw [RingedSpace.mem_basic_open _ _ ⟨f.1.base y.1, y.2⟩]
-    rw [← PresheafedSpace.stalk_map_germ_apply] at hy 
+    rw [← PresheafedSpace.stalk_map_germ_apply] at hy
     exact (isUnit_map_iff (PresheafedSpace.stalk_map f.1 _) _).mp hy
 #align algebraic_geometry.LocallyRingedSpace.preimage_basic_open AlgebraicGeometry.LocallyRingedSpace.preimage_basicOpen
 -/

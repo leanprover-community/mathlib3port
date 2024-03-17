@@ -432,7 +432,7 @@ theorem mod_add_div (m k : ℕ+) : (mod m k + k * div m k : ℕ) = m :=
   let h₀ := Nat.mod_add_div (m : ℕ) (k : ℕ)
   have : ¬((m : ℕ) % (k : ℕ) = 0 ∧ (m : ℕ) / (k : ℕ) = 0) :=
     by
-    rintro ⟨hr, hq⟩; rw [hr, hq, MulZeroClass.mul_zero, zero_add] at h₀ 
+    rintro ⟨hr, hq⟩; rw [hr, hq, MulZeroClass.mul_zero, zero_add] at h₀
     exact (m.ne_zero h₀.symm).elim
   have := mod_div_aux_spec k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ)) this
   exact this.trans h₀
@@ -465,9 +465,9 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
   · have hm : (m : ℕ) > 0 := m.pos
     rw [← Nat.mod_add_div (m : ℕ) (k : ℕ), h, zero_add] at hm ⊢
     by_cases h' : (m : ℕ) / (k : ℕ) = 0
-    · rw [h', MulZeroClass.mul_zero] at hm ; exact (lt_irrefl _ hm).elim
+    · rw [h', MulZeroClass.mul_zero] at hm; exact (lt_irrefl _ hm).elim
     · let h' := Nat.mul_le_mul_left (k : ℕ) (Nat.succ_le_of_lt (Nat.pos_of_ne_zero h'))
-      rw [mul_one] at h' ; exact ⟨h', le_refl (k : ℕ)⟩
+      rw [mul_one] at h'; exact ⟨h', le_refl (k : ℕ)⟩
   · exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
 #align pnat.mod_le PNat.mod_le
 -/
@@ -490,7 +490,7 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k :=
   · intro h; by_cases h' : (m : ℕ) % (k : ℕ) = 0
     · exact h'
     · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
-      rw [mod_coe, if_neg h'] at h 
+      rw [mod_coe, if_neg h'] at h
       exact ((Nat.mod_lt (m : ℕ) k.pos).Ne h).elim
 #align pnat.dvd_iff' PNat.dvd_iff'
 -/
@@ -527,7 +527,7 @@ theorem pos_of_div_pos {n : ℕ+} {a : ℕ} (h : a ∣ n) : 0 < a :=
   by
   apply pos_iff_ne_zero.2
   intro hzero
-  rw [hzero] at h 
+  rw [hzero] at h
   exact PNat.ne_zero n (eq_zero_of_zero_dvd h)
 #align pnat.pos_of_div_pos PNat.pos_of_div_pos
 -/

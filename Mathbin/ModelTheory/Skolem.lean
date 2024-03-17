@@ -151,13 +151,13 @@ theorem exists_elementarySubstructure_card_eq (s : Set M) (κ : Cardinal.{w'}) (
     ∃ S : L.ElementarySubstructure M, s ⊆ S ∧ Cardinal.lift.{w'} (#S) = Cardinal.lift.{w} κ :=
   by
   obtain ⟨s', hs'⟩ := Cardinal.le_mk_iff_exists_set.1 h4
-  rw [← aleph_0_le_lift] at h1 
+  rw [← aleph_0_le_lift] at h1
   rw [← hs'] at *
   refine'
     ⟨elementary_skolem₁_reduct (closure (L.sum L.skolem₁) (s ∪ Equiv.ulift '' s')),
       (s.subset_union_left _).trans subset_closure, _⟩
   have h := mk_image_eq_lift _ s' equiv.ulift.injective
-  rw [lift_umax, lift_id'] at h 
+  rw [lift_umax, lift_id'] at h
   rw [coe_sort_elementary_skolem₁_reduct, ← h, lift_inj]
   refine'
     le_antisymm (lift_le.1 (lift_card_closure_le.trans _))

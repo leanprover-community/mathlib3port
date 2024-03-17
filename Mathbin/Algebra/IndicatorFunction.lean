@@ -985,12 +985,12 @@ theorem mulIndicator_iUnion_apply {ι M} [CompleteLattice M] [One M] (h1 : (⊥ 
   by
   by_cases hx : x ∈ ⋃ i, s i
   · rw [mul_indicator_of_mem hx]
-    rw [mem_Union] at hx 
+    rw [mem_Union] at hx
     refine' le_antisymm _ (iSup_le fun i => mul_indicator_le_self' (fun x hx => h1 ▸ bot_le) x)
     rcases hx with ⟨i, hi⟩
     exact le_iSup_of_le i (ge_of_eq <| mul_indicator_of_mem hi _)
   · rw [mul_indicator_of_not_mem hx]
-    simp only [mem_Union, not_exists] at hx 
+    simp only [mem_Union, not_exists] at hx
     simp [hx, ← h1]
 #align set.mul_indicator_Union_apply Set.mulIndicator_iUnion_apply
 #align set.indicator_Union_apply Set.indicator_iUnion_apply

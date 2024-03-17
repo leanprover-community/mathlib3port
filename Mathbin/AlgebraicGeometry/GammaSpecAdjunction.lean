@@ -266,7 +266,7 @@ def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X))
     let S := (structure_sheaf _).Presheaf.stalk p
     rintro (t : S) ht
     obtain ⟨⟨r, s⟩, he⟩ := IsLocalization.surj p.as_ideal.prime_compl t
-    dsimp at he 
+    dsimp at he
     apply isUnit_of_mul_isUnit_left
     rw [he]
     refine' IsLocalization.map_units S (⟨r, _⟩ : p.as_ideal.prime_compl)
@@ -466,11 +466,11 @@ theorem adjunction_unit_app_app_top (X : Scheme) :
       (SpecΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
   by
   have := congr_app Γ_Spec.adjunction.left_triangle X
-  dsimp at this 
-  rw [← is_iso.eq_comp_inv] at this 
+  dsimp at this
+  rw [← is_iso.eq_comp_inv] at this
   simp only [Γ_Spec.LocallyRingedSpace_adjunction_counit, nat_trans.op_app, category.id_comp,
-    Γ_Spec.adjunction_counit_app] at this 
-  rw [← op_inv, nat_iso.inv_inv_app, quiver.hom.op_inj.eq_iff] at this 
+    Γ_Spec.adjunction_counit_app] at this
+  rw [← op_inv, nat_iso.inv_inv_app, quiver.hom.op_inj.eq_iff] at this
   exact this
 #align algebraic_geometry.Γ_Spec.adjunction_unit_app_app_top AlgebraicGeometry.ΓSpec.adjunction_unit_app_app_top
 -/

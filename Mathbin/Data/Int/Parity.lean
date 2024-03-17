@@ -296,7 +296,7 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
   obtain ⟨n, rfl⟩ := hb
   obtain h | h := Int.even_or_odd (m + n)
   · right
-    rw [Int.even_add, ← Int.even_sub] at h 
+    rw [Int.even_add, ← Int.even_sub] at h
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 k
     rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel, ← two_mul, ← mul_assoc]

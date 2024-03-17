@@ -242,7 +242,7 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
   · apply congr_arg; ext ⟨a, b⟩; simp only [filter_union_right, mem_filter, mem_product]
     constructor <;> intro h <;> use h.1
     simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
-    cases h.2 <;> · try simp at h_1 ; simp [h_1]
+    cases h.2 <;> · try simp at h_1; simp [h_1]
   · apply Finset.disjoint_filter_filter'
     exact (disjoint_compl_right.inf_left _).inf_right _
 #align finset.filter_product_card Finset.filter_product_card

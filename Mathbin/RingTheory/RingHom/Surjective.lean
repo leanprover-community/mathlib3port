@@ -78,11 +78,11 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
   · intro r
     obtain ⟨y, hy⟩ := H r (IsLocalization.mk' _ x (1 : Submonoid.powers (f r)))
     obtain ⟨z, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers (r : R)) y
-    erw [IsLocalization.map_mk', IsLocalization.eq] at hy 
+    erw [IsLocalization.map_mk', IsLocalization.eq] at hy
     obtain ⟨⟨_, m, rfl⟩, hm⟩ := hy
     refine' ⟨m + n, _⟩
     dsimp at hm ⊢
-    simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm 
+    simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm
     exact ⟨_, hm⟩
 #align ring_hom.surjective_of_localization_span RingHom.surjective_ofLocalizationSpan
 -/

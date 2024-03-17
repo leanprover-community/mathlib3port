@@ -123,7 +123,7 @@ theorem mulHom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G
   by
   intro a b ha hb ab
   rw [← hf.eq_iff, ← hf.eq_iff]
-  rw [← hf.eq_iff, map_mul, map_mul] at ab 
+  rw [← hf.eq_iff, map_mul, map_mul] at ab
   exact u (finset.mem_preimage.mp ha) (finset.mem_preimage.mp hb) ab
 #align unique_mul.mul_hom_preimage UniqueMul.mulHom_preimage
 #align unique_add.add_hom_preimage UniqueAdd.addHom_preimage
@@ -141,13 +141,13 @@ theorem mulHom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Inject
   refine' ⟨fun h => _, fun h => _⟩
   · intro a b ha hb ab
     rw [← hf.eq_iff, ← hf.eq_iff]
-    rw [← hf.eq_iff, map_mul, map_mul] at ab 
+    rw [← hf.eq_iff, map_mul, map_mul] at ab
     exact h (finset.mem_image.mpr ⟨_, ha, rfl⟩) (finset.mem_image.mpr ⟨_, hb, rfl⟩) ab
   · intro a b aA bB ab
     obtain ⟨a, ha, rfl⟩ : ∃ a' ∈ A, f a' = a := finset.mem_image.mp aA
     obtain ⟨b, hb, rfl⟩ : ∃ b' ∈ B, f b' = b := finset.mem_image.mp bB
     rw [hf.eq_iff, hf.eq_iff]
-    rw [← map_mul, ← map_mul, hf.eq_iff] at ab 
+    rw [← map_mul, ← map_mul, hf.eq_iff] at ab
     exact h ha hb ab
 #align unique_mul.mul_hom_image_iff UniqueMul.mulHom_image_iff
 #align unique_add.add_hom_image_iff UniqueAdd.addHom_image_iff
@@ -225,7 +225,7 @@ theorem eq_and_eq_of_le_of_le_of_hMul_le {A} [Mul A] [LinearOrder A]
   haveI := Mul.to_covariantClass_right A
   have ha' : ¬a0 * b0 < a * b → ¬a0 < a := mt fun h => mul_lt_mul_of_lt_of_le h hb
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
-  push_neg at ha' hb' 
+  push_neg at ha' hb'
   exact ⟨ha.antisymm' (ha' ab), hb.antisymm' (hb' ab)⟩
 #align eq_and_eq_of_le_of_le_of_mul_le eq_and_eq_of_le_of_le_of_hMul_le
 #align eq_and_eq_of_le_of_le_of_add_le eq_and_eq_of_le_of_le_of_add_le

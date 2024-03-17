@@ -65,7 +65,7 @@ theorem hasStrictDerivAt_inv (hx : x ≠ 0) : HasStrictDerivAt Inv.inv (-(x ^ 2)
     refine' this.congr' _ (eventually_of_forall fun _ => mul_one _)
     refine' eventually.mono ((is_open_ne.prod isOpen_ne).mem_nhds ⟨hx, hx⟩) _
     rintro ⟨y, z⟩ ⟨hy, hz⟩
-    simp only [mem_set_of_eq] at hy hz 
+    simp only [mem_set_of_eq] at hy hz
     -- hy : y ≠ 0, hz : z ≠ 0
     field_simp [hx, hy, hz];
     ring

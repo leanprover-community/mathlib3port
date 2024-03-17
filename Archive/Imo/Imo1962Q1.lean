@@ -50,7 +50,7 @@ theorem without_digits {n : ℕ} (h1 : ProblemPredicate n) : ∃ c : ℕ, Proble
   · have h2 : ¬problem_predicate 0 := by norm_num [problem_predicate]
     contradiction
   · rw [problem_predicate, digits_def' (by decide : 2 ≤ 10) n.succ_pos, List.headI, List.tail_cons,
-      List.concat_eq_append'] at h1 
+      List.concat_eq_append'] at h1
     constructor
     · rw [← h1.left, div_add_mod (n + 1) 10]
     · rw [← h1.right, of_digits_append, of_digits_digits, of_digits_singleton, add_comm, mul_comm]
@@ -160,7 +160,7 @@ theorem no_smaller_solutions (n : ℕ) (h1 : ProblemPredicate n) : n ≥ 153846 
     · exfalso; exact case_4_digit h h2
     · have h4 : c = 15384 := case_5_digit h h2
       have h5 : n = 10 * 15384 + 6 := h4 ▸ h2.left
-      norm_num at h5 
+      norm_num at h5
       exact h5.ge
 #align imo1962_q1.no_smaller_solutions Imo1962Q1.no_smaller_solutions
 

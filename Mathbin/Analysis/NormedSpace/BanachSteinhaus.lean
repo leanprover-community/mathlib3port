@@ -127,7 +127,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       intro x
       rcases cauchySeq_bdd (tendsto_pi_nhds.mp h x).CauchySeq with ⟨C, C_pos, hC⟩
       refine' ⟨C + ‖g 0 x‖, fun n => _⟩
-      simp_rw [dist_eq_norm] at hC 
+      simp_rw [dist_eq_norm] at hC
       calc
         ‖g n x‖ ≤ ‖g 0 x‖ + ‖g n x - g 0 x‖ := norm_le_insert' _ _
         _ ≤ C + ‖g 0 x‖ := by linarith [hC n 0]

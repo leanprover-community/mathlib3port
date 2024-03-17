@@ -92,11 +92,11 @@ theorem withSign.not_injective :
     DirectSum.lof ℕ _ (fun i => with_sign i) 1 p1 + DirectSum.lof ℕ _ (fun i => with_sign i) (-1) n1
   have : z ≠ 0 := by
     intro h
-    dsimp [z, DirectSum.lof_eq_of, DirectSum.of] at h 
+    dsimp [z, DirectSum.lof_eq_of, DirectSum.of] at h
     replace h := dfinsupp.ext_iff.mp h 1
     rw [DFinsupp.zero_apply, DFinsupp.add_apply, DFinsupp.single_eq_same,
       DFinsupp.single_eq_of_ne units_int.one_ne_neg_one.symm, add_zero, Subtype.ext_iff,
-      Submodule.coe_zero] at h 
+      Submodule.coe_zero] at h
     apply zero_ne_one h.symm
   apply hinj.ne this
   rw [LinearMap.map_zero, LinearMap.map_add, DirectSum.toModule_lof, DirectSum.toModule_lof]

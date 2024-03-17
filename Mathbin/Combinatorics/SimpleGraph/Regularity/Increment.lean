@@ -93,7 +93,7 @@ theorem increment_isEquipartition (hP : P.IsEquipartition) (G : SimpleGraph α) 
   by
   simp_rw [is_equipartition, Set.equitableOn_iff_exists_eq_eq_add_one]
   refine' ⟨m, fun A hA => _⟩
-  rw [mem_coe, increment, mem_bind] at hA 
+  rw [mem_coe, increment, mem_bind] at hA
   obtain ⟨U, hU, hA⟩ := hA
   exact card_eq_of_mem_parts_chunk hA
 #align szemeredi_regularity.increment_is_equipartition SzemerediRegularity.increment_isEquipartition
@@ -130,13 +130,13 @@ theorem offDiag_pairs_le_increment_energy :
       (increment hP G ε).energy G :=
   by
   simp_rw [pair_contrib, ← sum_div]
-  refine' div_le_div_of_le_of_nonneg _ (sq_nonneg _)
+  refine' div_le_div_of_nonneg_right _ (sq_nonneg _)
   rw [← sum_bUnion]
   · exact sum_le_sum_of_subset_of_nonneg distinct_pairs_increment fun i _ _ => sq_nonneg _
   simp only [Set.PairwiseDisjoint, Function.onFun, disjoint_left, inf_eq_inter, mem_inter,
     mem_product]
   rintro ⟨⟨s₁, s₂⟩, hs⟩ _ ⟨⟨t₁, t₂⟩, ht⟩ _ hst ⟨u, v⟩ huv₁ huv₂
-  rw [mem_off_diag] at hs ht 
+  rw [mem_off_diag] at hs ht
   obtain ⟨a, ha⟩ := Finpartition.nonempty_of_mem_parts _ huv₁.1
   obtain ⟨b, hb⟩ := Finpartition.nonempty_of_mem_parts _ huv₁.2
   exact
@@ -177,7 +177,7 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
     rw [← sum_div, card_increment hPα hPG, step_bound, ← Nat.cast_pow, mul_pow, pow_right_comm,
       Nat.cast_mul, mul_comm, ← div_div, show 4 ^ 2 = 16 by norm_num, sum_div]
   rw [← Nat.cast_pow, Nat.cast_pow 16]
-  refine' div_le_div_of_le_of_nonneg _ (Nat.cast_nonneg _)
+  refine' div_le_div_of_nonneg_right _ (Nat.cast_nonneg _)
   norm_num
   trans
     ∑ x in P.parts.off_diag.attach,
@@ -197,7 +197,7 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
     by convert sum_attach; rfl
   rw [this, sum_add_distrib, sum_sub_distrib, sum_const, nsmul_eq_mul, sum_ite, sum_const_zero,
     zero_add, sum_const, nsmul_eq_mul, ← Finpartition.nonUniforms]
-  rw [Finpartition.IsUniform, not_le] at hPG 
+  rw [Finpartition.IsUniform, not_le] at hPG
   refine' le_trans _ (add_le_add_left (mul_le_mul_of_nonneg_right hPG.le <| by positivity) _)
   conv_rhs =>
     congr
@@ -230,7 +230,7 @@ theorem energy_increment [Nonempty α] (hP : P.IsEquipartition) (hP₇ : 7 ≤ P
   by
   rw [coe_energy]
   have h := uniform_add_nonuniform_eq_off_diag_pairs hε₁ hP₇ hPα hε.le hPG
-  rw [add_div, mul_div_cancel_left] at h 
+  rw [add_div, mul_div_cancel_left] at h
   exact h.trans (by exact_mod_cast off_diag_pairs_le_increment_energy)
   positivity
 #align szemeredi_regularity.energy_increment SzemerediRegularity.energy_increment

@@ -152,7 +152,7 @@ theorem HasStrictDerivAt.comp_hasStrictFDerivAt {f : E → 𝕜'} {f' : E →L[�
     (hh : HasStrictDerivAt h₂ h₂' (f x)) (hf : HasStrictFDerivAt f f' x) :
     HasStrictFDerivAt (h₂ ∘ f) (h₂' • f') x :=
   by
-  rw [HasStrictDerivAt] at hh 
+  rw [HasStrictDerivAt] at hh
   convert (hh.restrict_scalars 𝕜).comp x hf
   ext x
   simp [mul_comm]
@@ -240,7 +240,7 @@ protected theorem HasDerivAtFilter.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf :
     (hL : Tendsto f L L) (hx : f x = x) (n : ℕ) : HasDerivAtFilter (f^[n]) (f' ^ n) x L :=
   by
   have := hf.iterate hL hx n
-  rwa [ContinuousLinearMap.smulRight_one_pow] at this 
+  rwa [ContinuousLinearMap.smulRight_one_pow] at this
 #align has_deriv_at_filter.iterate HasDerivAtFilter.iterate
 -/
 
@@ -249,7 +249,7 @@ protected theorem HasDerivAt.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf : HasDe
     (n : ℕ) : HasDerivAt (f^[n]) (f' ^ n) x :=
   by
   have := HasFDerivAt.iterate hf hx n
-  rwa [ContinuousLinearMap.smulRight_one_pow] at this 
+  rwa [ContinuousLinearMap.smulRight_one_pow] at this
 #align has_deriv_at.iterate HasDerivAt.iterate
 -/
 
@@ -258,7 +258,7 @@ protected theorem HasDerivWithinAt.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf :
     (hx : f x = x) (hs : MapsTo f s s) (n : ℕ) : HasDerivWithinAt (f^[n]) (f' ^ n) s x :=
   by
   have := HasFDerivWithinAt.iterate hf hx hs n
-  rwa [ContinuousLinearMap.smulRight_one_pow] at this 
+  rwa [ContinuousLinearMap.smulRight_one_pow] at this
 #align has_deriv_within_at.iterate HasDerivWithinAt.iterate
 -/
 
@@ -267,7 +267,7 @@ protected theorem HasStrictDerivAt.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf :
     (hx : f x = x) (n : ℕ) : HasStrictDerivAt (f^[n]) (f' ^ n) x :=
   by
   have := hf.iterate hx n
-  rwa [ContinuousLinearMap.smulRight_one_pow] at this 
+  rwa [ContinuousLinearMap.smulRight_one_pow] at this
 #align has_strict_deriv_at.iterate HasStrictDerivAt.iterate
 -/
 

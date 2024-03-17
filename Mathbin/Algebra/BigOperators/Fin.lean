@@ -376,7 +376,7 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
         cases n
         · exact b.elim0
         cases m
-        · rw [zero_pow n.succ_pos] at a 
+        · rw [zero_pow n.succ_pos] at a
           exact a.elim0
         · exact Nat.mod_lt _ m.succ_pos⟩)
     fun a => by
@@ -384,7 +384,7 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
     induction' n with n ih generalizing a
     · haveI : Subsingleton (Fin (m ^ 0)) := (Fin.castIso <| pow_zero _).toEquiv.Subsingleton
       exact Subsingleton.elim _ _
-    simp_rw [Fin.forall_iff, Fin.ext_iff, Fin.val_mk] at ih 
+    simp_rw [Fin.forall_iff, Fin.ext_iff, Fin.val_mk] at ih
     ext
     simp_rw [Fin.val_mk, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ, pow_zero, Nat.div_one,
       mul_one, pow_succ, ← Nat.div_div_eq_div_mul, mul_left_comm _ m, ← mul_sum]
@@ -440,7 +440,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         cases m
         · exact b.elim0
         cases' h : n b with nb
-        · rw [prod_eq_zero (Finset.mem_univ _) h] at a 
+        · rw [prod_eq_zero (Finset.mem_univ _) h] at a
           exact isEmptyElim a
         exact Nat.mod_lt _ nb.succ_pos⟩)
     (by
@@ -451,7 +451,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
           (Fin.castIso <| prod_empty).toEquiv.Subsingleton
         exact Subsingleton.elim _ _
       · intro n x xs ih a
-        simp_rw [Fin.forall_iff, Fin.ext_iff, Fin.val_mk] at ih 
+        simp_rw [Fin.forall_iff, Fin.ext_iff, Fin.val_mk] at ih
         ext
         simp_rw [Fin.val_mk, Fin.sum_univ_succ, Fin.cons_succ]
         have := fun i : Fin n =>
@@ -523,7 +523,7 @@ theorem prod_take_ofFn {n : ℕ} (f : Fin n → α) (i : ℕ) :
     simp
   · have A : (of_fn f).take i = (of_fn f).take i.succ :=
       by
-      rw [← length_of_fn f] at h 
+      rw [← length_of_fn f] at h
       have : length (of_fn f) ≤ i := not_lt.mp h
       rw [take_all_of_le this, take_all_of_le (le_trans this (Nat.le_succ _))]
     have B : ∀ j : Fin n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) :=

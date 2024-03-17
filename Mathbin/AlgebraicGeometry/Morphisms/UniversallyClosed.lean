@@ -111,7 +111,7 @@ theorem universallyClosed_is_local_at_target : PropertyIsLocalAtTarget @Universa
       stable_under_composition.respects_iso (fun X Y Z f g hf hg => IsClosedMap.comp hg hf)
         fun X Y f => (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso f)).IsClosedMap
   · intro X Y f ι U hU H
-    simp_rw [topologically, morphism_restrict_base] at H 
+    simp_rw [topologically, morphism_restrict_base] at H
     exact (isClosedMap_iff_isClosedMap_of_iSup_eq_top hU).mpr H
 #align algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universallyClosed_is_local_at_target
 -/

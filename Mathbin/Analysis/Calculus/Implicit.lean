@@ -238,7 +238,7 @@ theorem implicitFunction_hasStrictFDerivAt (g'inv : G →L[𝕜] E)
     HasStrictFDerivAt (φ.implicitFunction (φ.leftFun φ.pt)) g'inv (φ.rightFun φ.pt) :=
   by
   have := φ.has_strict_fderiv_at.to_local_inverse
-  simp only [prod_fun] at this 
+  simp only [prod_fun] at this
   convert this.comp (φ.right_fun φ.pt) ((hasStrictFDerivAt_const _ _).Prod (hasStrictFDerivAt_id _))
   simp only [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_comp', Function.comp_apply] at
     hg'inv hg'invf ⊢

@@ -145,8 +145,8 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0
   by
   refine' jacobi_sym.eq_zero_iff.mpr ⟨Nat.bit0_ne_zero hb₀, fun hf => _⟩
   have h : 2 ∣ (bit0 a).gcd (bit0 b) := Nat.dvd_gcd two_dvd_bit0 two_dvd_bit0
-  change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h 
-  rw [← Nat.cast_bit0, ← Nat.cast_bit0, hf, ← even_iff_two_dvd] at h 
+  change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h
+  rw [← Nat.cast_bit0, ← Nat.cast_bit0, hf, ← even_iff_two_dvd] at h
   exact Nat.not_even_one h
 #align norm_num.jacobi_sym_nat.even_even Mathlib.Meta.NormNum.jacobiSymNat.even_even
 -/
@@ -163,7 +163,6 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.odd_even (a b : ℕ) (r : ℤ)
   cases' eq_or_ne b 0 with hb hb
   · rw [← hr, hb, jacobi_sym_nat.zero_right]
   · haveI : NeZero b := ⟨hb⟩
-    -- for `jacobi_sym.mul_right`
     rwa [bit0_eq_two_mul b, jacobi_sym_nat, jacobiSym.mul_right, ←
       _root_.legendre_sym.to_jacobi_sym, Nat.cast_bit1, ha, one_mul]
 #align norm_num.jacobi_sym_nat.odd_even Mathlib.Meta.NormNum.jacobiSymNat.odd_even

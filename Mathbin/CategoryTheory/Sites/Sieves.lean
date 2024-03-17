@@ -656,7 +656,7 @@ def galoisCoinsertionOfMono (f : Y ⟶ X) [Mono f] :
   by
   apply (GaloisConnection f).toGaloisCoinsertion
   rintro S Z g ⟨g₁, hf, hg₁⟩
-  rw [cancel_mono f] at hf 
+  rw [cancel_mono f] at hf
   rwa [← hf]
 #align category_theory.sieve.galois_coinsertion_of_mono CategoryTheory.Sieve.galoisCoinsertionOfMono
 -/
@@ -896,7 +896,7 @@ def fullyFaithfulFunctorGaloisCoinsertion [Full F] [Faithful F] (X : C) :
   by
   apply (functor_galois_connection F X).toGaloisCoinsertion
   rintro S Y f ⟨Z, g, h, h₁, h₂⟩
-  rw [← F.image_preimage h, ← F.map_comp] at h₂ 
+  rw [← F.image_preimage h, ← F.map_comp] at h₂
   rw [F.map_injective h₂]
   exact S.downward_closed h₁ _
 #align category_theory.sieve.fully_faithful_functor_galois_coinsertion CategoryTheory.Sieve.fullyFaithfulFunctorGaloisCoinsertion

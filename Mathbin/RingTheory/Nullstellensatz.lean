@@ -146,7 +146,7 @@ instance vanishingIdeal_singleton_isMaximal {x : σ → k} :
             ⟨(Ideal.Quotient.mk (vanishing_ideal {x} : Ideal (MvPolynomial σ k))) (C z), by simp⟩⟩
         obtain ⟨q, rfl⟩ := quotient.mk_surjective p
         rwa [Ideal.Quotient.lift_mk, ← mem_vanishing_ideal_singleton_iff, ←
-          quotient.eq_zero_iff_mem] at hp )
+          quotient.eq_zero_iff_mem] at hp)
   rw [← bot_quotient_is_maximal_iff, ring_equiv.bot_maximal_iff this]
   exact bot_is_maximal
 #align mv_polynomial.vanishing_ideal_singleton_is_maximal MvPolynomial.vanishingIdeal_singleton_isMaximal
@@ -158,7 +158,7 @@ theorem radical_le_vanishingIdeal_zeroLocus (I : Ideal (MvPolynomial σ k)) :
   by
   intro p hp x hx
   rw [← mem_vanishing_ideal_singleton_iff]
-  rw [radical_eq_Inf] at hp 
+  rw [radical_eq_Inf] at hp
   refine'
     (mem_Inf.mp hp)
       ⟨le_trans (le_vanishing_ideal_zero_locus I)
@@ -225,7 +225,7 @@ theorem isMaximal_iff_eq_vanishingIdeal_singleton (I : Ideal (MvPolynomial σ k)
   refine' ⟨x, (is_maximal.eq_of_le (by infer_instance) hI.ne_top _).symm⟩
   intro p hp
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
-  rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp 
+  rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp
   simpa only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, ϕ.map_zero, hx] using congr_arg ϕ hp
 #align mv_polynomial.is_maximal_iff_eq_vanishing_ideal_singleton MvPolynomial.isMaximal_iff_eq_vanishingIdeal_singleton
 -/

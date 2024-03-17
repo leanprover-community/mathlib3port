@@ -535,7 +535,7 @@ theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : 
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
   · rw [h]; left; apply OrderBot.bot_le _
   right; intro b' h₁
-  rw [Part.eq_some_iff] at h₀ 
+  rw [Part.eq_some_iff] at h₀
   replace hx := hx _ h₀; replace hy := hy _ h₁
   replace hx := Part.mem_unique hx hy; subst hx
   exact h₀
@@ -794,10 +794,10 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
   by
   constructor <;> intro h
   · intro a h' b; replace h := h b
-    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h 
+    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
     apply h _ h'
   · intro b h'
-    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h' 
+    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
     rcases h' with ⟨a, h₀, h₁⟩; apply h _ h₀ _ h₁
 #align part.bind_le Part.bind_le
 -/

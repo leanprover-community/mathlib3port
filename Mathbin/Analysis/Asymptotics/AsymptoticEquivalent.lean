@@ -162,7 +162,7 @@ theorem isEquivalent_zero_iff_isBigO_zero : u ~[l] 0 ↔ u =O[l] (0 : α → β)
 theorem isEquivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ c ↔ Tendsto u l (𝓝 c) :=
   by
   rw [is_equivalent, is_o_const_iff h]
-  constructor <;> intro h <;> [· have := h.sub tendsto_const_nhds; rw [zero_sub (-c)] at this ;
+  constructor <;> intro h <;> [· have := h.sub tendsto_const_nhds; rw [zero_sub (-c)] at this;
           · have := h.sub tendsto_const_nhds; rw [← sub_self c]] <;>
         convert this <;>
       try ext <;>
@@ -283,7 +283,7 @@ theorem isEquivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) :
   constructor
   · intro hequiv
     have := hequiv.is_o.tendsto_div_nhds_zero
-    simp only [Pi.sub_apply, sub_div] at this 
+    simp only [Pi.sub_apply, sub_div] at this
     have key : tendsto (fun x => v x / v x) l (𝓝 1) :=
       (tendsto_congr' <| hz.mono fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
     convert this.add key
@@ -314,8 +314,8 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
   rcases huv.is_O.exists_pos with ⟨C, hC, hCuv⟩
   rw [is_equivalent] at *
   rw [is_o_iff] at *
-  rw [is_O_with] at hCuv 
-  simp only [Metric.tendsto_nhds, dist_eq_norm] at hφ 
+  rw [is_O_with] at hCuv
+  simp only [Metric.tendsto_nhds, dist_eq_norm] at hφ
   intro c hc
   specialize hφ (c / 2 / C) (div_pos (by linarith) hC)
   specialize huv (show 0 < c / 2 by linarith)

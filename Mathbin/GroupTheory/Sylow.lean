@@ -458,10 +458,10 @@ theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite 
     rintro - ⟨z, hz, rfl⟩
     specialize hy z hz
     rwa [← mul_assoc, ← eq_mul_inv_iff_mul_eq, mul_assoc, mul_assoc, mul_assoc, ← mul_assoc,
-      eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_assoc] at hy 
+      eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_assoc] at hy
   obtain ⟨h, hh⟩ :=
     exists_smul_eq (centralizer (zpowers x : Set G)) ((g • P).Subtype h2) (P.subtype h1)
-  simp_rw [Sylow.smul_subtype, smul_def, smul_smul] at hh 
+  simp_rw [Sylow.smul_subtype, smul_def, smul_smul] at hh
   refine' ⟨h * g, sylow.smul_eq_iff_mem_normalizer.mp (Sylow.subtype_injective hh), _⟩
   rw [← mul_assoc, Commute.right_comm (h.prop x (mem_zpowers x)), mul_inv_rev, inv_mul_cancel_right]
 #align sylow.conj_eq_normalizer_conj_of_mem_centralizer Sylow.conj_eq_normalizer_conj_of_mem_centralizer
@@ -520,7 +520,7 @@ theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup 
   by
   intro h
   haveI := (P : Subgroup G).fintypeQuotientOfFiniteIndex
-  rw [index_eq_card] at h 
+  rw [index_eq_card] at h
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card p h
   have h := IsPGroup.of_card ((order_eq_card_zpowers.symm.trans hx).trans (pow_one p).symm)
   let Q := (zpowers x).comap (QuotientGroup.mk' (P : Subgroup G))
@@ -531,7 +531,7 @@ theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup 
   replace hp := mt order_of_eq_one_iff.mpr (ne_of_eq_of_ne hx hp.1.ne_one)
   rw [← zpowers_eq_bot, ← Ne, ← bot_lt_iff_ne_bot, ←
     comap_lt_comap_of_surjective (QuotientGroup.mk'_surjective _), MonoidHom.comap_bot,
-    QuotientGroup.ker_mk'] at hp 
+    QuotientGroup.ker_mk'] at hp
   exact hp.ne' (P.3 hQ hp.le)
 #align not_dvd_index_sylow' not_dvd_index_sylow'
 -/
@@ -561,7 +561,7 @@ theorem Sylow.normalizer_sup_eq_top {p : ℕ} [Fact p.Prime] {N : Subgroup G} [N
   rw [← inv_mul_cancel_left (↑n) g, sup_comm]
   apply mul_mem_sup (N.inv_mem n.2)
   rw [Sylow.smul_def, ← mul_smul, ← MulAut.conjNormal_val, ← mul_aut.conj_normal.map_mul,
-    Sylow.ext_iff, Sylow.pointwise_smul_def, pointwise_smul_def] at hn 
+    Sylow.ext_iff, Sylow.pointwise_smul_def, pointwise_smul_def] at hn
   refine' fun x =>
     (mem_map_iff_mem
             (show Function.Injective (MulAut.conj (↑n * g)).toMonoidHom from
@@ -613,7 +613,7 @@ theorem mem_fixedPoints_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fin
     inv_mem_iff.1
       (mem_normalizer_fintype fun n (hn : n ∈ H) =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
-        show _ ∈ H by rw [mul_inv_rev, inv_inv] at this ; convert this; rw [inv_inv]),
+        show _ ∈ H by rw [mul_inv_rev, inv_inv] at this; convert this; rw [inv_inv]),
     fun hx : ∀ n : G, n ∈ H ↔ x * n * x⁻¹ ∈ H =>
     (mem_fixedPoints' _).2 fun y =>
       Quotient.inductionOn' y fun y hy =>
@@ -623,7 +623,7 @@ theorem mem_fixedPoints_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fin
           inv_mem_iff.1 <|
             (hx _).2 <|
               (mul_mem_cancel_left (inv_mem hb₁)).1 <| by
-                rw [hx] at hb₂  <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
+                rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 #align sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer Sylow.mem_fixedPoints_mul_left_cosets_iff_mem_normalizer
 -/
 
@@ -680,7 +680,7 @@ theorem prime_dvd_card_quotient_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp :
     s * p % p =
       card (normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H) % p :=
     hcard ▸ (card_quotient_normalizer_modEq_card_quotient hH).symm
-  Nat.dvd_of_mod_eq_zero (by rwa [Nat.mod_eq_zero_of_dvd (dvd_mul_left _ _), eq_comm] at hm )
+  Nat.dvd_of_mod_eq_zero (by rwa [Nat.mod_eq_zero_of_dvd (dvd_mul_left _ _), eq_comm] at hm)
 #align sylow.prime_dvd_card_quotient_normalizer Sylow.prime_dvd_card_quotient_normalizer
 -/
 
@@ -710,7 +710,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
     card_congr (fixedPointsMulLeftCosetsEquivQuotient H) ▸
       hcard ▸ (IsPGroup.of_card hH).card_modEq_card_fixedPoints _
   have hm' : p ∣ card (normalizer H ⧸ H.subgroupOf H.normalizer) :=
-    Nat.dvd_of_mod_eq_zero (by rwa [Nat.mod_eq_zero_of_dvd (dvd_mul_left _ _), eq_comm] at hm )
+    Nat.dvd_of_mod_eq_zero (by rwa [Nat.mod_eq_zero_of_dvd (dvd_mul_left _ _), eq_comm] at hm)
   let ⟨x, hx⟩ := @exists_prime_orderOf_dvd_card _ (QuotientGroup.Quotient.group _) _ _ hp hm'
   have hequiv : H ≃ H.subgroupOf H.normalizer := (subgroupOfEquivOfLe le_normalizer).symm.toEquiv
   ⟨Subgroup.map (normalizer H).Subtype
@@ -787,9 +787,9 @@ theorem pow_dvd_card_of_pow_dvd_card [Fintype G] {p n : ℕ} [hp : Fact p.Prime]
 theorem dvd_card_of_dvd_card [Fintype G] {p : ℕ} [Fact p.Prime] (P : Sylow p G)
     (hdvd : p ∣ card G) : p ∣ card P :=
   by
-  rw [← pow_one p] at hdvd 
+  rw [← pow_one p] at hdvd
   have key := P.pow_dvd_card_of_pow_dvd_card hdvd
-  rwa [pow_one] at key 
+  rwa [pow_one] at key
 #align sylow.dvd_card_of_dvd_card Sylow.dvd_card_of_dvd_card
 -/
 
@@ -808,7 +808,7 @@ theorem ne_bot_of_dvd_card [Fintype G] {p : ℕ} [hp : Fact p.Prime] (P : Sylow 
   by
   refine' fun h => hp.out.not_dvd_one _
   have key : p ∣ card (P : Subgroup G) := P.dvd_card_of_dvd_card hdvd
-  rwa [h, card_bot] at key 
+  rwa [h, card_bot] at key
 #align sylow.ne_bot_of_dvd_card Sylow.ne_bot_of_dvd_card
 -/
 
@@ -858,7 +858,7 @@ theorem unique_of_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylo
   intro Q R
   obtain ⟨x, h1⟩ := exists_smul_eq G P Q
   obtain ⟨x, h2⟩ := exists_smul_eq G P R
-  rw [Sylow.smul_eq_of_normal] at h1 h2 
+  rw [Sylow.smul_eq_of_normal] at h1 h2
   rw [← h1, ← h2]
 #align sylow.subsingleton_of_normal Sylow.unique_of_normal
 -/
@@ -895,7 +895,7 @@ theorem normalizer_normalizer {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P :
   by
   have := normal_of_normalizer_normal (P.subtype (le_normalizer.trans le_normalizer))
   simp_rw [← normalizer_eq_top, coeSubtype, ← subgroup_of_normalizer_eq le_normalizer, ←
-    subgroup_of_normalizer_eq le_rfl, subgroup_of_self] at this 
+    subgroup_of_normalizer_eq le_rfl, subgroup_of_self] at this
   rw [← subtype_range (P : Subgroup G).normalizer.normalizer, MonoidHom.range_eq_map, ← this rfl]
   exact map_comap_eq_self (le_normalizer.trans (ge_of_eq (subtype_range _)))
 #align sylow.normalizer_normalizer Sylow.normalizer_normalizer

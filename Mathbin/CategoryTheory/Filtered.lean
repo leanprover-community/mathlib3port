@@ -261,7 +261,7 @@ theorem sup_exists :
       apply Finset.mem_of_mem_insert_of_ne mf'
       contrapose! h
       obtain ⟨rfl, h⟩ := h
-      rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
+      rw [heq_iff_eq, PSigma.mk.inj_iff] at h
       exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_filtered.sup_exists CategoryTheory.IsFiltered.sup_exists
 -/
@@ -476,7 +476,7 @@ theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶
   by
   obtain ⟨t, k₁t, k₂t, ht⟩ := span f₁ g₁
   obtain ⟨s, ts, hs⟩ := cocone_maps (f₂ ≫ k₁t) (g₂ ≫ k₂t)
-  simp_rw [category.assoc] at hs 
+  simp_rw [category.assoc] at hs
   exact ⟨s, k₁t ≫ ts, k₂t ≫ ts, by rw [reassoc_of ht], hs⟩
 #align category_theory.is_filtered.bowtie CategoryTheory.IsFiltered.bowtie
 -/
@@ -733,7 +733,7 @@ theorem inf_exists :
       apply Finset.mem_of_mem_insert_of_ne mf'
       contrapose! h
       obtain ⟨rfl, h⟩ := h
-      rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
+      rw [heq_iff_eq, PSigma.mk.inj_iff] at h
       exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_cofiltered.inf_exists CategoryTheory.IsCofiltered.inf_exists
 -/

@@ -251,7 +251,7 @@ theorem natAbs_dvd_natAbs {a b : ℤ} : a.natAbs ∣ b.natAbs ↔ a ∣ b :=
   by
   refine' ⟨_, fun ⟨k, hk⟩ => ⟨k.natAbs, hk.symm ▸ nat_abs_mul a k⟩⟩
   rintro ⟨k, hk⟩
-  rw [← nat_abs_of_nat k, ← nat_abs_mul, nat_abs_eq_nat_abs_iff, neg_mul_eq_mul_neg] at hk 
+  rw [← nat_abs_of_nat k, ← nat_abs_mul, nat_abs_eq_nat_abs_iff, neg_mul_eq_mul_neg] at hk
   cases hk <;> exact ⟨_, hk⟩
 #align int.nat_abs_dvd_iff_dvd Int.natAbs_dvd_natAbs
 -/
@@ -316,7 +316,7 @@ protected theorem add_mul_ediv_left (a : ℤ) {b : ℤ} (c : ℤ) (H : b ≠ 0) 
 #print Int.mul_ediv_cancel /-
 @[simp]
 protected theorem mul_ediv_cancel (a : ℤ) {b : ℤ} (H : b ≠ 0) : a * b / b = a := by
-  have := Int.add_mul_ediv_right 0 a H <;> rwa [zero_add, Int.zero_div, zero_add] at this 
+  have := Int.add_mul_ediv_right 0 a H <;> rwa [zero_add, Int.zero_div, zero_add] at this
 #align int.mul_div_cancel Int.mul_ediv_cancel
 -/
 
@@ -330,7 +330,7 @@ protected theorem mul_ediv_cancel_left {a : ℤ} (b : ℤ) (H : a ≠ 0) : a * b
 #print Int.ediv_self /-
 @[simp]
 protected theorem ediv_self {a : ℤ} (H : a ≠ 0) : a / a = 1 := by
-  have := Int.mul_ediv_cancel 1 H <;> rwa [one_mul] at this 
+  have := Int.mul_ediv_cancel 1 H <;> rwa [one_mul] at this
 #align int.div_self Int.ediv_self
 -/
 
@@ -343,7 +343,7 @@ protected theorem add_ediv_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / 
   · simp [h1]
   cases' H with k hk
   rw [hk]
-  change c ≠ 0 at h1 
+  change c ≠ 0 at h1
   rw [mul_comm c k, Int.add_mul_ediv_right _ _ h1, ← zero_add (k * c),
     Int.add_mul_ediv_right _ _ h1, Int.zero_div, zero_add]
 #align int.add_div_of_dvd_right Int.add_ediv_of_dvd_right
@@ -407,7 +407,7 @@ theorem add_mul_emod_self_left (a b c : ℤ) : (a + b * c) % b = a % b := by
 #print Int.add_emod_self /-
 @[simp]
 theorem add_emod_self {a b : ℤ} : (a + b) % b = a % b := by
-  have := add_mul_mod_self_left a b 1 <;> rwa [mul_one] at this 
+  have := add_mul_mod_self_left a b 1 <;> rwa [mul_one] at this
 #align int.add_mod_self Int.add_emod_self
 -/
 
@@ -421,7 +421,7 @@ theorem add_emod_self_left {a b : ℤ} : (a + b) % a = b % a := by rw [add_comm,
 @[simp]
 theorem emod_add_emod (m n k : ℤ) : (m % n + k) % n = (m + k) % n := by
   have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;>
-    rwa [add_right_comm, mod_add_div] at this 
+    rwa [add_right_comm, mod_add_div] at this
 #align int.mod_add_mod Int.emod_add_emod
 -/
 
@@ -453,7 +453,7 @@ theorem add_emod_eq_add_emod_left {m n k : ℤ} (i : ℤ) (H : m % n = k % n) :
 theorem emod_add_cancel_right {m n k : ℤ} (i) : (m + i) % n = (k + i) % n ↔ m % n = k % n :=
   ⟨fun H => by
     have := add_mod_eq_add_mod_right (-i) H <;>
-      rwa [add_neg_cancel_right, add_neg_cancel_right] at this ,
+      rwa [add_neg_cancel_right, add_neg_cancel_right] at this,
     add_emod_eq_add_emod_right _⟩
 #align int.mod_add_cancel_right Int.emod_add_cancel_right
 -/
@@ -494,7 +494,7 @@ theorem mul_emod (a b n : ℤ) : a * b % n = a % n * (b % n) % n := by
 #print Int.emod_self /-
 -- Will be generalized to Euclidean domains.
 @[local simp]
-theorem emod_self {a : ℤ} : a % a = 0 := by have := mul_mod_left 1 a <;> rwa [one_mul] at this 
+theorem emod_self {a : ℤ} : a % a = 0 := by have := mul_mod_left 1 a <;> rwa [one_mul] at this
 #align int.mod_self Int.emod_self
 -/
 
@@ -590,7 +590,7 @@ theorem abs_ediv_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
 
 #print Int.ediv_le_self /-
 theorem ediv_le_self {a : ℤ} (b : ℤ) (Ha : 0 ≤ a) : a / b ≤ a := by
-  have := le_trans (le_abs_self _) (abs_div_le_abs a b) <;> rwa [abs_of_nonneg Ha] at this 
+  have := le_trans (le_abs_self _) (abs_div_le_abs a b) <;> rwa [abs_of_nonneg Ha] at this
 #align int.div_le_self Int.ediv_le_self
 -/
 
@@ -632,7 +632,7 @@ theorem dvd_iff_emod_eq_zero (a b : ℤ) : a ∣ b ↔ b % a = 0 :=
 theorem dvd_sub_of_emod_eq {a b c : ℤ} (h : a % b = c) : b ∣ a - c :=
   by
   have hx : a % b % b = c % b := by rw [h]
-  rw [mod_mod, ← mod_sub_cancel_right c, sub_self, zero_mod] at hx 
+  rw [mod_mod, ← mod_sub_cancel_right c, sub_self, zero_mod] at hx
   exact dvd_of_mod_eq_zero hx
 #align int.dvd_sub_of_mod_eq Int.dvd_sub_of_emod_eq
 -/
@@ -748,9 +748,9 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
     (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m :=
   by
   constructor
-  · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩; rw [mul_lt_mul_left hn] at h1k h2k 
-    rw [lt_add_one_iff, ← not_lt] at h2k ; exact h2k h1k
-  · intro h; rw [dvd_iff_mod_eq_zero, ← Ne.def] at h 
+  · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩; rw [mul_lt_mul_left hn] at h1k h2k
+    rw [lt_add_one_iff, ← not_lt] at h2k; exact h2k h1k
+  · intro h; rw [dvd_iff_mod_eq_zero, ← Ne.def] at h
     have := (mod_nonneg m hn.ne.symm).lt_of_ne h.symm
     simp (config := { singlePass := true }) only [← mod_add_div m n]
     refine' ⟨m / n, lt_add_of_pos_left _ this, _⟩

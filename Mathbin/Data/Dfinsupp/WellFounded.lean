@@ -72,8 +72,8 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
       fun x => piecewise x.2.1 x.2.2 x.1 :=
   by
   rintro ⟨p, x₁, x₂⟩ x ⟨i, hr, hs⟩
-  simp_rw [piecewise_apply] at hs hr 
-  split_ifs at hs 
+  simp_rw [piecewise_apply] at hs hr
+  split_ifs at hs
   classical
   on_goal 1 =>
     refine' ⟨⟨{j | r j i → j ∈ p}, piecewise x₁ x {j | r j i}, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
@@ -91,7 +91,7 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
   all_goals ext j; simp_rw [piecewise_apply]; split_ifs with h₁ h₂
   · rw [hr j h₂, if_pos (h₁ h₂)]
   · rfl
-  · rw [Set.mem_setOf, not_imp] at h₁ ; rw [hr j h₁.1, if_neg h₁.2]
+  · rw [Set.mem_setOf, not_imp] at h₁; rw [hr j h₁.1, if_neg h₁.2]
   · rw [hr j h₁.1, if_pos h₁.2]
   · rw [hr j h₂, if_neg fun h' => h₁ ⟨h₂, h'⟩]
   · rfl
@@ -146,8 +146,8 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
   refine' Acc.intro _ fun x => _
   rintro ⟨k, hr, hs⟩
   classical
-  rw [single_apply] at hs 
-  split_ifs at hs  with hik
+  rw [single_apply] at hs
+  split_ifs at hs with hik
   swap
   · exact (hbot hs).elim
   subst hik

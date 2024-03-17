@@ -119,7 +119,7 @@ theorem eqOn_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : I
     (hf : ContinuousOn f U) (hg : ContinuousOn g U) : EqOn f g U :=
   by
   replace h := ae_imp_of_ae_restrict h
-  simp only [eventually_eq, ae_iff, not_imp] at h 
+  simp only [eventually_eq, ae_iff, not_imp] at h
   have : IsOpen (U ∩ {a | f a ≠ g a}) :=
     by
     refine' is_open_iff_mem_nhds.mpr fun a ha => inter_mem (hU.mem_nhds ha.1) _

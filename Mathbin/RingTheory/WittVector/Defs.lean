@@ -84,7 +84,7 @@ theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y :=
   by
   cases x
   cases y
-  simp only at h 
+  simp only at h
   simp [Function.funext_iff, h]
 #align witt_vector.ext WittVector.ext
 -/
@@ -298,7 +298,7 @@ theorem wittOne_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 :=
   · simp only [invOf_eq_inv, one_mul, inv_pow, tsub_zero, RingHom.map_one, pow_zero]
     simp only [one_pow, one_mul, xInTermsOfW_zero, sub_self, bind₁_X_right]
   · intro i hin hi0
-    rw [Finset.mem_range] at hin 
+    rw [Finset.mem_range] at hin
     rw [IH _ hin (Nat.pos_of_ne_zero hi0), zero_pow (pow_pos hp.1.Pos _), MulZeroClass.mul_zero]
   · rw [Finset.mem_range]; intro; contradiction
 #align witt_vector.witt_one_pos_eq_zero WittVector.wittOne_pos_eq_zero

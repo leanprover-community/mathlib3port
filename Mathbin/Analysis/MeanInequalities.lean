@@ -124,9 +124,9 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀ i ∈ s, 0
     · rw [hzi]; exact zero_rpow hwi
   -- If all numbers `z i` with non-zero weight are positive, then we apply Jensen's inequality
   -- for `exp` and numbers `log (z i)` with weights `w i`.
-  · simp only [not_exists, not_and, Ne.def, Classical.not_not] at A 
+  · simp only [not_exists, not_and, Ne.def, Classical.not_not] at A
     have := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ <| log (z i)
-    simp only [NormedSpace.exp_sum, (· ∘ ·), smul_eq_mul, mul_comm (w _) (log _)] at this 
+    simp only [NormedSpace.exp_sum, (· ∘ ·), smul_eq_mul, mul_comm (w _) (log _)] at this
     convert this using 1 <;> [apply prod_congr rfl; apply sum_congr rfl] <;> intro i hi
     · cases' eq_or_lt_of_le (hz i hi) with hz hz
       · simp [A i hi hz.symm]
@@ -331,7 +331,7 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjExponent 
   · refine' le_trans le_top (le_of_eq _)
     repeat' rw [div_eq_mul_inv]
     cases h <;> rw [h] <;> simp [h, hpq.pos, hpq.symm.pos]
-  push_neg at h 
+  push_neg at h
   -- if a ≠ ⊤ and b ≠ ⊤, use the nnreal version: nnreal.young_inequality_real
   rw [← coe_to_nnreal h.left, ← coe_to_nnreal h.right, ← coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
     coe_rpow_of_nonneg _ hpq.symm.nonneg, ENNReal.ofReal, ENNReal.ofReal, ←
@@ -378,7 +378,7 @@ private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0) {p q :
     inv_eq_zero, Ne.def, not_false_iff, le_zero_iff, mul_eq_zero]
   intro i his
   left
-  rw [sum_eq_zero_iff] at hf 
+  rw [sum_eq_zero_iff] at hf
   exact (rpow_eq_zero_iff.mp (hf i his)).left
 
 #print NNReal.inner_le_Lp_mul_Lq /-
@@ -401,8 +401,8 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjExp
   let g' i := g i / (∑ i in s, g i ^ q) ^ (1 / q)
   suffices ∑ i in s, f' i * g' i ≤ 1
     by
-    simp_rw [f', g', div_mul_div_comm, ← sum_div] at this 
-    rwa [div_le_iff, one_mul] at this 
+    simp_rw [f', g', div_mul_div_comm, ← sum_div] at this
+    rwa [div_le_iff, one_mul] at this
     refine' mul_ne_zero _ _
     · rw [Ne.def, rpow_eq_zero_iff, not_and_or]; exact Or.inl hF_zero
     · rw [Ne.def, rpow_eq_zero_iff, not_and_or]; exact Or.inl hG_zero
@@ -541,7 +541,7 @@ theorem Lp_add_le (f g : ι → ℝ≥0) {p : ℝ} (hp : 1 ≤ p) :
   · simp [Finset.sum_add_distrib]
   have hpq := Real.IsConjExponent.conjExponent hp
   have := is_greatest_Lp s (f + g) hpq
-  simp only [Pi.add_apply, add_mul, sum_add_distrib] at this 
+  simp only [Pi.add_apply, add_mul, sum_add_distrib] at this
   rcases this.1 with ⟨φ, hφ, H⟩
   rw [← H]
   exact
@@ -633,7 +633,7 @@ theorem inner_le_Lp_mul_Lq (hpq : IsConjExponent p q) :
     NNReal.coe_le_coe.2
       (NNReal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩)
         hpq)
-  push_cast at this 
+  push_cast at this
   refine' le_trans (sum_le_sum fun i hi => _) this
   simp only [← abs_mul, le_abs_self]
 #align real.inner_le_Lp_mul_Lq Real.inner_le_Lp_mul_Lq
@@ -648,7 +648,7 @@ theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
   have :=
     NNReal.coe_le_coe.2
       (NNReal.rpow_sum_le_const_mul_sum_rpow s (fun i => ⟨_, abs_nonneg (f i)⟩) hp)
-  push_cast at this 
+  push_cast at this
   exact this
 #align real.rpow_sum_le_const_mul_sum_rpow Real.rpow_sum_le_const_mul_sum_rpow
 -/
@@ -664,7 +664,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
   have :=
     NNReal.coe_le_coe.2
       (NNReal.Lp_add_le s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hp)
-  push_cast at this 
+  push_cast at this
   refine' le_trans (rpow_le_rpow _ (sum_le_sum fun i hi => _) _) this <;>
     simp [sum_nonneg, rpow_nonneg_of_nonneg, abs_nonneg, le_trans zero_le_one hp, abs_add,
       rpow_le_rpow]
@@ -732,7 +732,7 @@ theorem inner_le_Lp_mul_Lq_hasSum_of_nonneg (hpq : p.IsConjExponent q) {A B : �
   lift g to ι → ℝ≥0 using hg
   lift A to ℝ≥0 using hA
   lift B to ℝ≥0 using hB
-  norm_cast at hf_sum hg_sum 
+  norm_cast at hf_sum hg_sum
   obtain ⟨C, hC, H⟩ := NNReal.inner_le_Lp_mul_Lq_hasSum hpq hf_sum hg_sum
   refine' ⟨C, C.prop, hC, _⟩
   norm_cast
@@ -812,7 +812,7 @@ theorem Lp_add_le_hasSum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : 
   lift g to ι → ℝ≥0 using hg
   lift A to ℝ≥0 using hA
   lift B to ℝ≥0 using hB
-  norm_cast at hfA hgB 
+  norm_cast at hfA hgB
   obtain ⟨C, hC₁, hC₂⟩ := NNReal.Lp_add_le_hasSum hp hfA hgB
   use C
   norm_cast
@@ -841,7 +841,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjExponent q) :
     have : ∀ i ∈ s, f i * g i = 0 := fun i hi => by cases H <;> simp [H i hi]
     have : ∑ i in s, f i * g i = ∑ i in s, 0 := sum_congr rfl this
     simp [this]
-  push_neg at H 
+  push_neg at H
   by_cases H' : (∑ i in s, f i ^ p) ^ (1 / p) = ⊤ ∨ (∑ i in s, g i ^ q) ^ (1 / q) = ⊤
   · cases H' <;> simp [H', -one_div, H]
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤
@@ -853,7 +853,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjExponent q) :
       (@NNReal.inner_le_Lp_mul_Lq _ s (fun i => ENNReal.toNNReal (f i))
         (fun i => ENNReal.toNNReal (g i)) _ _ hpq)
   simp [← ENNReal.coe_rpow_of_nonneg, le_of_lt hpq.pos, le_of_lt hpq.one_div_pos,
-    le_of_lt hpq.symm.pos, le_of_lt hpq.symm.one_div_pos] at this 
+    le_of_lt hpq.symm.pos, le_of_lt hpq.symm.one_div_pos] at this
   convert this using 1 <;> [skip; congr 2] <;> [skip; skip; simp; skip; simp] <;>
     · apply Finset.sum_congr rfl fun i hi => _;
       simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul, with_top.coe_mul.symm]
@@ -898,7 +898,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
     ENNReal.coe_le_coe.2
       (@NNReal.Lp_add_le _ s (fun i => ENNReal.toNNReal (f i)) (fun i => ENNReal.toNNReal (g i)) _
         hp)
-  push_cast [← ENNReal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this 
+  push_cast [← ENNReal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this
   convert this using 2 <;> [skip; congr 1; congr 1] <;>
     · apply Finset.sum_congr rfl fun i hi => _; simp [H'.1 i hi, H'.2 i hi]
 #align ennreal.Lp_add_le ENNReal.Lp_add_le

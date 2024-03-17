@@ -215,7 +215,7 @@ def recolorOfEmbedding {α β : Type _} (f : α ↪ β) : G.Coloring α ↪ G.Co
     by
     -- this was strangely painful; seems like missing lemmas about embeddings
     intro C C' h
-    dsimp only at h 
+    dsimp only at h
     ext v
     apply (embedding.complete_graph f).inj'
     change ((embedding.complete_graph f).toHom.comp C) v = _
@@ -269,7 +269,7 @@ theorem colorable_of_fintype (G : SimpleGraph V) [Fintype V] : G.Colorable (Fint
 noncomputable def Colorable.toColoring [Fintype α] {n : ℕ} (hc : G.Colorable n)
     (hn : n ≤ Fintype.card α) : G.Coloring α :=
   by
-  rw [← Fintype.card_fin n] at hn 
+  rw [← Fintype.card_fin n] at hn
   exact G.recolor_of_card_le hn hc.some
 #align simple_graph.colorable.to_coloring SimpleGraph.Colorable.toColoring
 -/
@@ -376,7 +376,7 @@ theorem isEmpty_of_chromaticNumber_eq_zero (G : SimpleGraph V) [Finite V]
     (h : G.chromaticNumber = 0) : IsEmpty V :=
   by
   have h' := G.colorable_chromatic_number_of_fintype
-  rw [h] at h' 
+  rw [h] at h'
   exact G.is_empty_of_colorable_zero h'
 #align simple_graph.is_empty_of_chromatic_number_eq_zero SimpleGraph.isEmpty_of_chromaticNumber_eq_zero
 -/
@@ -387,7 +387,7 @@ theorem chromaticNumber_pos [Nonempty V] {n : ℕ} (hc : G.Colorable n) : 0 < G.
   apply le_csInf (colorable_set_nonempty_of_colorable hc)
   intro m hm
   by_contra h'
-  simp only [not_le, Nat.lt_one_iff] at h' 
+  simp only [not_le, Nat.lt_one_iff] at h'
   subst h'
   obtain ⟨i, hi⟩ := hm.some (Classical.arbitrary V)
   exact Nat.not_lt_zero _ hi
@@ -442,14 +442,14 @@ theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
   apply le_antisymm
   · apply chromatic_number_le_card C
   · by_contra hc
-    rw [not_le] at hc 
+    rw [not_le] at hc
     obtain ⟨n, cn, hc⟩ :=
       exists_lt_of_csInf_lt (colorable_set_nonempty_of_colorable C.to_colorable) hc
-    rw [← Fintype.card_fin n] at hc 
+    rw [← Fintype.card_fin n] at hc
     have f := (Function.Embedding.nonempty_of_card_le (le_of_lt hc)).some
     have C' := cn.some
     specialize h (G.recolor_of_embedding f C')
-    change Function.Surjective (f ∘ C') at h 
+    change Function.Surjective (f ∘ C') at h
     have h1 : Function.Surjective f := Function.Surjective.of_comp h
     have h2 := Fintype.card_le_of_surjective _ h1
     exact Nat.lt_le_asymm hc h2
@@ -522,8 +522,8 @@ theorem CompleteBipartiteGraph.chromaticNumber {V W : Type _} [Nonempty V] [None
   · by_cases he' : C (Sum.inr w) = b
     · exact ⟨_, he'⟩
     · exfalso
-      cases b <;> simp only [eq_true_eq_not_eq_false, Bool.eq_false_eq_not_eq_true] at he he'  <;>
-          rw [he, he'] at hn  <;>
+      cases b <;> simp only [eq_true_eq_not_eq_false, Bool.eq_false_eq_not_eq_true] at he he' <;>
+          rw [he, he'] at hn <;>
         contradiction
 #align simple_graph.complete_bipartite_graph.chromatic_number SimpleGraph.CompleteBipartiteGraph.chromaticNumber
 -/
@@ -535,9 +535,9 @@ theorem CompleteBipartiteGraph.chromaticNumber {V W : Type _} [Nonempty V] [None
 theorem IsClique.card_le_of_coloring {s : Finset V} (h : G.IsClique s) [Fintype α]
     (C : G.Coloring α) : s.card ≤ Fintype.card α :=
   by
-  rw [is_clique_iff_induce_eq] at h 
+  rw [is_clique_iff_induce_eq] at h
   have f : G.induce ↑s ↪g G := embedding.induce ↑s
-  rw [h] at f 
+  rw [h] at f
   convert Fintype.card_le_of_injective _ (C.comp f.to_hom).injective_of_top_hom using 1
   simp
 #align simple_graph.is_clique.card_le_of_coloring SimpleGraph.IsClique.card_le_of_coloring
@@ -566,7 +566,7 @@ theorem IsClique.card_le_chromaticNumber [Finite V] {s : Finset V} (h : G.IsCliq
 protected theorem Colorable.cliqueFree {n m : ℕ} (hc : G.Colorable n) (hm : n < m) :
     G.CliqueFree m := by
   by_contra h
-  simp only [clique_free, is_n_clique_iff, Classical.not_forall, Classical.not_not] at h 
+  simp only [clique_free, is_n_clique_iff, Classical.not_forall, Classical.not_not] at h
   obtain ⟨s, h, rfl⟩ := h
   exact Nat.lt_le_asymm hm (h.card_le_of_colorable hc)
 #align simple_graph.colorable.clique_free SimpleGraph.Colorable.cliqueFree

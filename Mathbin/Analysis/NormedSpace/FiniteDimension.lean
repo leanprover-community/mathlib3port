@@ -260,7 +260,7 @@ theorem LinearMap.exists_antilipschitzWith [FiniteDimensional 𝕜 E] (f : E →
   by
   cases subsingleton_or_nontrivial E
   · exact ⟨1, zero_lt_one, AntilipschitzWith.of_subsingleton⟩
-  · rw [LinearMap.ker_eq_bot] at hf 
+  · rw [LinearMap.ker_eq_bot] at hf
     let e : E ≃L[𝕜] f.range := (LinearEquiv.ofInjective f hf).toContinuousLinearEquiv
     exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
 #align linear_map.exists_antilipschitz_with LinearMap.exists_antilipschitzWith
@@ -276,7 +276,7 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
   have : tendsto (fun g : ι → E => ∑ i, ‖g i - f i‖) (𝓝 f) (𝓝 <| ∑ i, ‖f i - f i‖) :=
     tendsto_finset_sum _ fun i hi =>
       tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
-  simp only [sub_self, norm_zero, Finset.sum_const_zero] at this 
+  simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
   refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
   replace hg : ∑ i, ‖g i - f i‖₊ < K⁻¹; · rw [← NNReal.coe_lt_coe]; push_cast; exact hg
   rw [LinearMap.ker_eq_bot]
@@ -388,7 +388,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
       have : φ (v i) ∈ closure (range u) := hu _
       obtain ⟨n, hn⟩ : ∃ n, ‖u n - φ (v i)‖ < ε / (2 * C) :=
         by
-        rw [mem_closure_iff_nhds_basis Metric.nhds_basis_ball] at this 
+        rw [mem_closure_iff_nhds_basis Metric.nhds_basis_ball] at this
         specialize this (ε / (2 * C)) hε2C
         simpa [dist_eq_norm]
       exact ⟨n, le_of_lt hn⟩
@@ -399,10 +399,10 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
       rw [eq_div_iff (two_ne_zero : (2 : ℝ) ≠ 0), mul_comm, ← mul_assoc,
         mul_div_cancel' _ (ne_of_gt h_2C)]
     specialize hC (le_of_lt hε2C) hn
-    rwa [this] at hC 
+    rwa [this] at hC
   choose n hn using this
   set Φ := fun φ : E →L[𝕜] F => v.constrL <| u ∘ n φ
-  change ∀ z, dist z (Φ z) ≤ ε / 2 at hn 
+  change ∀ z, dist z (Φ z) ≤ ε / 2 at hn
   use n
   intro x y hxy
   calc
@@ -567,7 +567,7 @@ theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [Topologic
   by
   by_cases h : ∀ x, f x = 1; · apply Or.inl; ext x; exact h x
   apply Or.inr
-  push_neg at h 
+  push_neg at h
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1; exact h
   have : Function.mulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ) (hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
@@ -716,7 +716,7 @@ theorem exists_mem_frontier_infDist_compl_eq_dist {E : Type _} [NormedAddCommGro
     ∃ y ∈ frontier s, Metric.infDist x (sᶜ) = dist x y :=
   by
   rcases Metric.exists_mem_closure_infDist_eq_dist (nonempty_compl.2 hs) x with ⟨y, hys, hyd⟩
-  rw [closure_compl] at hys 
+  rw [closure_compl] at hys
   refine'
     ⟨y,
       ⟨Metric.closedBall_infDist_compl_subset_closure hx <| Metric.mem_closedBall.2 <| ge_of_eq _,
@@ -736,14 +736,14 @@ theorem IsCompact.exists_mem_frontier_infDist_compl_eq_dist {E : Type _} [Normed
   by
   obtain hx' | hx' : x ∈ interior K ∪ frontier K := by rw [← closure_eq_interior_union_frontier];
     exact subset_closure hx
-  · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx' 
+  · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'
     rcases hx' with ⟨r, hr₀, hrK⟩
     have : FiniteDimensional ℝ E :=
       FiniteDimensional.of_isCompact_closedBall ℝ hr₀
         (IsCompact.of_isClosed_subset hK Metric.isClosed_ball hrK)
     exact exists_mem_frontier_infDist_compl_eq_dist hx hK.ne_univ
   · refine' ⟨x, hx', _⟩
-    rw [frontier_eq_closure_inter_closure] at hx' 
+    rw [frontier_eq_closure_inter_closure] at hx'
     rw [Metric.infDist_zero_of_mem_closure hx'.2, dist_self]
 #align is_compact.exists_mem_frontier_inf_dist_compl_eq_dist IsCompact.exists_mem_frontier_infDist_compl_eq_dist
 -/

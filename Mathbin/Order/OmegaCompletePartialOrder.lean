@@ -378,7 +378,7 @@ theorem eq_of_chain {c : Chain (Part α)} {a b : α} (ha : some a ∈ c) (hb : s
   cases' ha with i ha; replace ha := ha.symm
   cases' hb with j hb; replace hb := hb.symm
   wlog h : i ≤ j; · exact (this j hb i ha (le_of_not_le h)).symm
-  rw [eq_some_iff] at ha hb 
+  rw [eq_some_iff] at ha hb
   have := c.monotone h _ ha; apply mem_unique this hb
 #align part.eq_of_chain Part.eq_of_chain
 -/
@@ -409,9 +409,9 @@ theorem ωSup_eq_none {c : Chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.�
 #print Part.mem_chain_of_mem_ωSup /-
 theorem mem_chain_of_mem_ωSup {c : Chain (Part α)} {a : α} (h : a ∈ Part.ωSup c) : some a ∈ c :=
   by
-  simp [Part.ωSup] at h ; split_ifs at h 
+  simp [Part.ωSup] at h; split_ifs at h
   · have h' := Classical.choose_spec h_1
-    rw [← eq_some_iff] at h ; rw [← h]; exact h'
+    rw [← eq_some_iff] at h; rw [← h]; exact h'
   · rcases h with ⟨⟨⟩⟩
 #align part.mem_chain_of_mem_ωSup Part.mem_chain_of_mem_ωSup
 -/
@@ -438,7 +438,7 @@ theorem mem_ωSup (x : α) (c : Chain (Part α)) : x ∈ ωSup c ↔ some x ∈ 
   constructor
   · split_ifs; swap; rintro ⟨⟨⟩⟩
     intro h'; have hh := Classical.choose_spec h
-    simp at h' ; subst x; exact hh
+    simp at h'; subst x; exact hh
   · intro h
     have h' : ∃ a : α, some a ∈ c := ⟨_, h⟩
     rw [dif_pos h']; have hh := Classical.choose_spec h'
@@ -555,7 +555,7 @@ theorem sSup_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f)
 #print CompleteLattice.iSup_continuous /-
 theorem iSup_continuous {ι : Sort _} {f : ι → α →o β} (h : ∀ i, Continuous (f i)) :
     Continuous (⨆ i, f i) :=
-  sSup_continuous _ <| Set.forall_range_iff.2 h
+  sSup_continuous _ <| Set.forall_mem_range.2 h
 #align complete_lattice.supr_continuous CompleteLattice.iSup_continuous
 -/
 
@@ -563,7 +563,7 @@ theorem iSup_continuous {ι : Sort _} {f : ι → α →o β} (h : ∀ i, Contin
 theorem sSup_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' f) : Continuous' (sSup s) :=
   by
   lift s to Set (α →o β) using fun f hf => (hc f hf).to_monotone
-  simp only [Set.ball_image_iff, continuous'_coe] at hc 
+  simp only [Set.forall_mem_image, continuous'_coe] at hc
   rw [sSup_image]
   norm_cast
   exact supr_continuous fun f => supr_continuous fun hf => hc f hf
@@ -733,9 +733,9 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
   simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp]
   constructor <;> intro h'''
   · intro b hb; apply ωSup_le _ _ _
-    rintro i y hy; simp only [Part.mem_ωSup] at hb 
+    rintro i y hy; simp only [Part.mem_ωSup] at hb
     rcases hb with ⟨j, hb⟩; replace hb := hb.symm
-    simp only [Part.eq_some_iff, chain.map_coe, Function.comp_apply, OrderHom.apply_coe] at hy hb 
+    simp only [Part.eq_some_iff, chain.map_coe, Function.comp_apply, OrderHom.apply_coe] at hy hb
     replace hb : b ∈ f (c (max i j)) := f.mono (c.mono (le_max_right i j)) _ hb
     replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_left i j)) _ _ hy
     apply h''' (max i j)
@@ -744,7 +744,7 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     exact ⟨_, hb, hy⟩
   · intro i; intro y hy
     simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
-      Function.comp_apply, OrderHom.bind_coe] at hy 
+      Function.comp_apply, OrderHom.bind_coe] at hy
     rcases hy with ⟨b, hb₀, hb₁⟩
     apply h''' b _
     · apply le_ωSup (c.map g) _ _ _ hb₁

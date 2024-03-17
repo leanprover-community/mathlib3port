@@ -568,28 +568,28 @@ theorem isGLB_ciInf_set {f : β → α} {s : Set β} (H : BddBelow (f '' s)) (Hn
 #print ciSup_le_iff /-
 theorem ciSup_le_iff [Nonempty ι] {f : ι → α} {a : α} (hf : BddAbove (range f)) :
     iSup f ≤ a ↔ ∀ i, f i ≤ a :=
-  (isLUB_le_iff <| isLUB_ciSup hf).trans forall_range_iff
+  (isLUB_le_iff <| isLUB_ciSup hf).trans forall_mem_range
 #align csupr_le_iff ciSup_le_iff
 -/
 
 #print le_ciInf_iff /-
 theorem le_ciInf_iff [Nonempty ι] {f : ι → α} {a : α} (hf : BddBelow (range f)) :
     a ≤ iInf f ↔ ∀ i, a ≤ f i :=
-  (le_isGLB_iff <| isGLB_ciInf hf).trans forall_range_iff
+  (le_isGLB_iff <| isGLB_ciInf hf).trans forall_mem_range
 #align le_cinfi_iff le_ciInf_iff
 -/
 
 #print ciSup_set_le_iff /-
 theorem ciSup_set_le_iff {ι : Type _} {s : Set ι} {f : ι → α} {a : α} (hs : s.Nonempty)
     (hf : BddAbove (f '' s)) : (⨆ i : s, f i) ≤ a ↔ ∀ i ∈ s, f i ≤ a :=
-  (isLUB_le_iff <| isLUB_ciSup_set hf hs).trans ball_image_iff
+  (isLUB_le_iff <| isLUB_ciSup_set hf hs).trans forall_mem_image
 #align csupr_set_le_iff ciSup_set_le_iff
 -/
 
 #print le_ciInf_set_iff /-
 theorem le_ciInf_set_iff {ι : Type _} {s : Set ι} {f : ι → α} {a : α} (hs : s.Nonempty)
     (hf : BddBelow (f '' s)) : (a ≤ ⨅ i : s, f i) ↔ ∀ i ∈ s, a ≤ f i :=
-  (le_isGLB_iff <| isGLB_ciInf_set hf hs).trans ball_image_iff
+  (le_isGLB_iff <| isGLB_ciInf_set hf hs).trans forall_mem_image
 #align le_cinfi_set_iff le_ciInf_set_iff
 -/
 
@@ -1052,7 +1052,7 @@ is larger than `f i` for all `i`, and that this is not the case of any `w<b`.
 See `supr_eq_of_forall_le_of_forall_lt_exists_gt` for a version in complete lattices. -/
 theorem ciSup_eq_of_forall_le_of_forall_lt_exists_gt [Nonempty ι] {f : ι → α} (h₁ : ∀ i, f i ≤ b)
     (h₂ : ∀ w, w < b → ∃ i, w < f i) : (⨆ i : ι, f i) = b :=
-  csSup_eq_of_forall_le_of_forall_lt_exists_gt (range_nonempty f) (forall_range_iff.mpr h₁)
+  csSup_eq_of_forall_le_of_forall_lt_exists_gt (range_nonempty f) (forall_mem_range.mpr h₁)
     fun w hw => exists_range_iff.mpr <| h₂ w hw
 #align csupr_eq_of_forall_le_of_forall_lt_exists_gt ciSup_eq_of_forall_le_of_forall_lt_exists_gt
 -/
@@ -1110,12 +1110,12 @@ instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _}
   { Pi.lattice, Pi.supSet,
     Pi.infSet with
     le_cSup := fun s f ⟨g, hg⟩ hf i =>
-      le_csSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩
+      le_csSup ⟨g i, Set.forall_mem_range.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩
     cSup_le := fun s f hs hf i =>
       csSup_le (by haveI := hs.to_subtype <;> apply range_nonempty) fun b ⟨⟨g, hg⟩, hb⟩ =>
         hb ▸ hf hg i
     cInf_le := fun s f ⟨g, hg⟩ hf i =>
-      csInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩
+      csInf_le ⟨g i, Set.forall_mem_range.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩
     le_cInf := fun s f hs hf i =>
       le_csInf (by haveI := hs.to_subtype <;> apply range_nonempty) fun b ⟨⟨g, hg⟩, hb⟩ =>
         hb ▸ hf hg i }
@@ -1319,13 +1319,13 @@ theorem exists_lt_of_lt_csSup' {s : Set α} {a : α} (h : a < sSup s) : ∃ b �
 #print ciSup_le_iff' /-
 theorem ciSup_le_iff' {f : ι → α} (h : BddAbove (range f)) {a : α} :
     (⨆ i, f i) ≤ a ↔ ∀ i, f i ≤ a :=
-  (csSup_le_iff' h).trans forall_range_iff
+  (csSup_le_iff' h).trans forall_mem_range
 #align csupr_le_iff' ciSup_le_iff'
 -/
 
 #print ciSup_le' /-
 theorem ciSup_le' {f : ι → α} {a : α} (h : ∀ i, f i ≤ a) : (⨆ i, f i) ≤ a :=
-  csSup_le' <| forall_range_iff.2 h
+  csSup_le' <| forall_mem_range.2 h
 #align csupr_le' ciSup_le'
 -/
 
@@ -1543,7 +1543,7 @@ theorem l_ciSup (gc : GaloisConnection l u) {f : ι → α} (hf : BddAbove (rang
 #print GaloisConnection.l_ciSup_set /-
 theorem l_ciSup_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s))
     (hne : s.Nonempty) : l (⨆ i : s, f i) = ⨆ i : s, l (f i) := by haveI := hne.to_subtype;
-  rw [image_eq_range] at hf ; exact gc.l_csupr hf
+  rw [image_eq_range] at hf; exact gc.l_csupr hf
 #align galois_connection.l_csupr_set GaloisConnection.l_ciSup_set
 -/
 
@@ -1783,7 +1783,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
       cases' S.eq_empty_or_nonempty with h
       · show ite _ _ _ ≤ a
         split_ifs
-        · rw [h] at h_1 ; cases h_1
+        · rw [h] at h_1; cases h_1
         · convert bot_le; convert WithBot.csSup_empty; rw [h]; rfl
         · exfalso; apply h_2; use⊥; rw [h]; rintro b ⟨⟩
       · refine' (WithTop.isLUB_sSup' h).2 ha

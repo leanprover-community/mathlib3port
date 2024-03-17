@@ -78,7 +78,7 @@ protected def ringCon (I : Ideal R) : RingCon R :=
       have F := I.add_mem (I.mul_mem_left a₂ h₁) (I.mul_mem_right b₁ h₂)
       have : a₁ * a₂ - b₁ * b₂ = a₂ * (a₁ - b₁) + (a₂ - b₂) * b₁ := by
         rw [mul_sub, sub_mul, sub_add_sub_cancel, mul_comm, mul_comm b₁]
-      rw [← this] at F 
+      rw [← this] at F
       change _ ∈ _; convert F }
 #align ideal.quotient.ring_con Ideal.Quotient.ringCon
 -/
@@ -243,11 +243,11 @@ theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] :
   by
   rintro ⟨a⟩ h
   rcases hI.exists_inv (mt eq_zero_iff_mem.2 h) with ⟨b, c, hc, abc⟩
-  rw [mul_comm] at abc 
+  rw [mul_comm] at abc
   refine' ⟨mk _ b, Quot.sound _⟩
   --quot.sound hb
-  rw [← eq_sub_iff_add_eq'] at abc 
-  rw [abc, ← neg_mem_iff, neg_sub] at hc 
+  rw [← eq_sub_iff_add_eq'] at abc
+  rw [abc, ← neg_mem_iff, neg_sub] at hc
   rw [Submodule.quotientRel_r_def]
   convert hc
 #align ideal.quotient.exists_inv Ideal.Quotient.exists_inv
@@ -408,7 +408,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι)
       (by
         intro c₁ m₁ c₂ m₂ hc hm
         apply Ideal.Quotient.eq.2
-        rw [Submodule.quotientRel_r_def] at hc hm 
+        rw [Submodule.quotientRel_r_def] at hc hm
         intro i
         exact I.mul_sub_mul_mem hc (hm i))
   one_smul := by
@@ -487,7 +487,7 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
   have : ∀ j ∈ s, j ≠ i → ∃ r : R, ∃ H : r - 1 ∈ f i, r ∈ f j :=
     by
     intro j hjs hji; specialize hf i his j hjs hji.symm
-    rw [eq_top_iff_one, Submodule.mem_sup] at hf 
+    rw [eq_top_iff_one, Submodule.mem_sup] at hf
     rcases hf with ⟨r, hri, s, hsj, hrs⟩; refine' ⟨1 - r, _, _⟩
     · rw [sub_right_comm, sub_self, zero_sub]; exact (f i).neg_mem hri
     · rw [← hrs, add_sub_cancel']; exact hsj
@@ -527,7 +527,7 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   refine' Eq.trans (Finset.sum_eq_single i _ _) _
   · intro j _ hji; rw [quotient.eq_zero_iff_mem]; exact (f i).mul_mem_left _ (hφ2 j i hji)
   · intro hi; exact (hi <| Finset.mem_univ i).elim
-  specialize hφ1 i; rw [← Quotient.eq', RingHom.map_one] at hφ1 
+  specialize hφ1 i; rw [← Quotient.eq', RingHom.map_one] at hφ1
   rw [RingHom.map_mul, hφ1, mul_one]
 #align ideal.exists_sub_mem Ideal.exists_sub_mem
 
@@ -537,7 +537,7 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
 def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ i, R ⧸ f i :=
   Quotient.lift (⨅ i, f i) (Pi.ringHom fun i : ι => (Quotient.mk (f i) : _)) fun r hr =>
     by
-    rw [Submodule.mem_iInf] at hr 
+    rw [Submodule.mem_iInf] at hr
     ext i
     exact quotient.eq_zero_iff_mem.2 (hr i)
 #align ideal.quotient_inf_to_pi_quotient Ideal.quotientInfToPiQuotient

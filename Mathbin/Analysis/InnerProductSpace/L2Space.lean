@@ -526,7 +526,7 @@ protected theorem hasSum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, �
   apply b.repr.injective
   letI : NormedSpace 𝕜 ↥(lp (fun i : ι => 𝕜) 2) := by infer_instance
   have : lp.single 2 i (f i * 1) = f i • lp.single 2 i 1 := lp.single_smul 2 i (1 : 𝕜) (f i)
-  rw [mul_one] at this 
+  rw [mul_one] at this
   rw [LinearIsometryEquiv.map_smul, b.repr_self, ← this,
     LinearIsometryEquiv.coe_toContinuousLinearEquiv]
   exact (b.repr.apply_symm_apply (lp.single 2 i (f i))).symm

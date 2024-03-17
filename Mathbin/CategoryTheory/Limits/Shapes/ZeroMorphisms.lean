@@ -144,13 +144,13 @@ variable {C} [HasZeroMorphisms C]
 
 #print CategoryTheory.Limits.zero_of_comp_mono /-
 theorem zero_of_comp_mono {X Y Z : C} {f : X ⟶ Y} (g : Y ⟶ Z) [Mono g] (h : f ≫ g = 0) : f = 0 := by
-  rw [← zero_comp, cancel_mono] at h ; exact h
+  rw [← zero_comp, cancel_mono] at h; exact h
 #align category_theory.limits.zero_of_comp_mono CategoryTheory.Limits.zero_of_comp_mono
 -/
 
 #print CategoryTheory.Limits.zero_of_epi_comp /-
 theorem zero_of_epi_comp {X Y Z : C} (f : X ⟶ Y) {g : Y ⟶ Z} [Epi f] (h : f ≫ g = 0) : g = 0 := by
-  rw [← comp_zero, cancel_epi] at h ; exact h
+  rw [← comp_zero, cancel_epi] at h; exact h
 #align category_theory.limits.zero_of_epi_comp CategoryTheory.Limits.zero_of_epi_comp
 -/
 

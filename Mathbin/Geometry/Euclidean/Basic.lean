@@ -143,7 +143,7 @@ theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ :
       skip
       rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₁]
     rw [dist_comm p₁, dist_comm p₂, dist_eq_norm_vsub V _ p₁, dist_eq_norm_vsub V _ p₂, ←
-      real_inner_add_sub_eq_zero_iff] at hc₁ hc₂ 
+      real_inner_add_sub_eq_zero_iff] at hc₁ hc₂
     simp_rw [← neg_vsub_eq_vsub_rev c₁, ← neg_vsub_eq_vsub_rev c₂, sub_neg_eq_add, neg_add_eq_sub,
       hc₁, hc₂, sub_zero]
   simpa [inner_add_left, ← mul_two, (by norm_num : (2 : ℝ) ≠ 0)] using h
@@ -228,21 +228,21 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       rw [← Fintype.coe_image_univ, hu]
       simp
       rfl
-    rw [← hbs, hr, Submodule.mem_span_insert] at hv 
+    rw [← hbs, hr, Submodule.mem_span_insert] at hv
     rcases hv with ⟨t₁, v', hv', hv⟩
-    rw [Submodule.mem_span_singleton] at hv' 
+    rw [Submodule.mem_span_singleton] at hv'
     rcases hv' with ⟨t₂, rfl⟩
     exact ⟨t₁, t₂, hv⟩
   rcases hv (p -ᵥ p₁) (vsub_mem_direction hps hp₁s) with ⟨t₁, t₂, hpt⟩
   simp only [hpt, inner_add_right, inner_smul_right, ho, MulZeroClass.mul_zero, add_zero,
-    mul_eq_zero, inner_self_eq_zero, vsub_eq_zero_iff_eq, hc.symm, or_false_iff] at hop 
-  rw [hop, zero_smul, zero_add, ← eq_vadd_iff_vsub_eq] at hpt 
+    mul_eq_zero, inner_self_eq_zero, vsub_eq_zero_iff_eq, hc.symm, or_false_iff] at hop
+  rw [hop, zero_smul, zero_add, ← eq_vadd_iff_vsub_eq] at hpt
   subst hpt
   have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by simp [hp.symm]
   have hp₂ : dist ((1 : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁) c₁ = r₁ := by simp [hp₂c₁]
-  rw [← hp₁c₁, dist_smul_vadd_eq_dist _ _ hp'] at hpc₁ hp₂ 
-  simp only [one_ne_zero, false_or_iff] at hp₂ 
-  rw [hp₂.symm] at hpc₁ 
+  rw [← hp₁c₁, dist_smul_vadd_eq_dist _ _ hp'] at hpc₁ hp₂
+  simp only [one_ne_zero, false_or_iff] at hp₂
+  rw [hp₂.symm] at hpc₁
   cases hpc₁ <;> simp [hpc₁]
 #align euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two
 -/
@@ -372,7 +372,7 @@ def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
       by
       rw [← inter_eq_singleton_orthogonal_projection_fn (v +ᵥ p)]
       exact Set.mem_inter hs ho
-    rw [Set.mem_singleton_iff] at hm 
+    rw [Set.mem_singleton_iff] at hm
     ext
     exact hm.symm
 #align euclidean_geometry.orthogonal_projection EuclideanGeometry.orthogonalProjection
@@ -456,7 +456,7 @@ theorem orthogonalProjection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
   · exact fun h => h ▸ orthogonal_projection_mem p
   · intro h
     have hp : p ∈ (s : Set P) ∩ mk' p s.directionᗮ := ⟨h, self_mem_mk' p _⟩
-    rw [inter_eq_singleton_orthogonal_projection p] at hp 
+    rw [inter_eq_singleton_orthogonal_projection p] at hp
     symm
     exact hp
 #align euclidean_geometry.orthogonal_projection_eq_self_iff EuclideanGeometry.orthogonalProjection_eq_self_iff
@@ -556,7 +556,7 @@ theorem orthogonalProjection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty s
     orthogonalProjection s (v +ᵥ p) = ⟨p, hp⟩ :=
   by
   have h := vsub_orthogonal_projection_mem_direction_orthogonal s (v +ᵥ p)
-  rw [vadd_vsub_assoc, Submodule.add_mem_iff_right _ hv] at h 
+  rw [vadd_vsub_assoc, Submodule.add_mem_iff_right _ hv] at h
   refine' (eq_of_vsub_eq_zero _).symm
   ext
   refine' Submodule.disjoint_def.1 s.direction.orthogonal_disjoint _ _ h
@@ -710,8 +710,8 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
   constructor
   · intro h
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑(orthogonalProjection s p) -ᵥ p),
-      smul_eq_zero] at h 
-    norm_num at h 
+      smul_eq_zero] at h
+    norm_num at h
     exact h
   · intro h
     simp [h]
@@ -732,8 +732,8 @@ theorem reflection_eq_iff_orthogonalProjection_eq (s₁ s₂ : AffineSubspace �
   · intro h
     rw [← @vsub_eq_zero_iff_eq V, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_comm, add_sub_assoc,
       vsub_sub_vsub_cancel_right, ←
-      two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p), smul_eq_zero] at h 
-    norm_num at h 
+      two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p), smul_eq_zero] at h
+    norm_num at h
     exact h
   · intro h
     rw [h]
@@ -757,7 +757,7 @@ reflection. -/
 theorem dist_reflection_eq_of_mem (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
     {p₁ : P} (hp₁ : p₁ ∈ s) (p₂ : P) : dist p₁ (reflection s p₂) = dist p₁ p₂ :=
   by
-  rw [← reflection_eq_self_iff p₁] at hp₁ 
+  rw [← reflection_eq_self_iff p₁] at hp₁
   convert (reflection s).dist_map p₁ p₂
   rw [hp₁]
 #align euclidean_geometry.dist_reflection_eq_of_mem EuclideanGeometry.dist_reflection_eq_of_mem

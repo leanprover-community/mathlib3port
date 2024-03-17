@@ -83,7 +83,7 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G
       comm := by
         have h := φ.naturality P.p
         have h' := F.congr_map P.idem
-        simp only [hom_ext, karoubi.comp_f, F.map_comp] at h h' 
+        simp only [hom_ext, karoubi.comp_f, F.map_comp] at h h'
         simp only [obj_obj_p, assoc, ← h]
         slice_rhs 1 3 => rw [h', h'] }
   naturality' P Q f := by
@@ -116,7 +116,7 @@ def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D
     simp only [comp_f, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
     have h := φ.naturality P.p
     have h' := F.congr_map P.idem
-    simp only [hom_ext, comp_f, F.map_comp] at h h' 
+    simp only [hom_ext, comp_f, F.map_comp] at h h'
     slice_rhs 2 3 => rw [← h]
     slice_rhs 1 2 => rw [h']
     simp only [assoc]

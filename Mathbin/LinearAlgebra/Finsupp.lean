@@ -353,7 +353,7 @@ theorem supported_iUnion {δ : Type _} (s : δ → Set α) :
   haveI := Classical.decPred fun x => x ∈ ⋃ i, s i
   suffices
     ((Submodule.subtype _).comp (restrict_dom M R (⋃ i, s i))).range ≤ ⨆ i, supported M R (s i) by
-    rwa [LinearMap.range_comp, range_restrict_dom, Submodule.map_top, range_subtype] at this 
+    rwa [LinearMap.range_comp, range_restrict_dom, Submodule.map_top, range_subtype] at this
   rw [range_le_iff_comap, eq_top_iff]
   rintro l ⟨⟩
   apply Finsupp.induction l; · exact zero_mem _
@@ -397,7 +397,7 @@ theorem disjoint_supported_supported_iff [Nontrivial M] {s t : Set α} :
   refine' ⟨fun h => set.disjoint_left.mpr fun x hx1 hx2 => _, disjoint_supported_supported⟩
   rcases exists_ne (0 : M) with ⟨y, hy⟩
   have := h.le_bot ⟨single_mem_supported R y hx1, single_mem_supported R y hx2⟩
-  rw [mem_bot, single_eq_zero] at this 
+  rw [mem_bot, single_eq_zero] at this
   exact hy this
 #align finsupp.disjoint_supported_supported_iff Finsupp.disjoint_supported_supported_iff
 -/
@@ -572,7 +572,7 @@ theorem supported_comap_lmapDomain (f : α → α') (s : Set α') :
   fun l (hl : ↑l.support ⊆ f ⁻¹' s) =>
   show ↑(mapDomain f l).support ⊆ s
     by
-    rw [← Set.image_subset_iff, ← Finset.coe_image] at hl 
+    rw [← Set.image_subset_iff, ← Finset.coe_image] at hl
     exact Set.Subset.trans map_domain_support hl
 #align finsupp.supported_comap_lmap_domain Finsupp.supported_comap_lmapDomain
 -/
@@ -606,12 +606,12 @@ theorem lmapDomain_disjoint_ker (f : α → α') {s : Set α}
   by
   rw [disjoint_iff_inf_le]
   rintro l ⟨h₁, h₂⟩
-  rw [SetLike.mem_coe, mem_ker, lmap_domain_apply, map_domain] at h₂ 
+  rw [SetLike.mem_coe, mem_ker, lmap_domain_apply, map_domain] at h₂
   simp; ext x
   haveI := Classical.decPred fun x => x ∈ s
   by_cases xs : x ∈ s
   · have : Finsupp.sum l (fun a => Finsupp.single (f a)) (f x) = 0 := by rw [h₂]; rfl
-    rw [Finsupp.sum_apply, Finsupp.sum, Finset.sum_eq_single x] at this 
+    rw [Finsupp.sum_apply, Finsupp.sum, Finset.sum_eq_single x] at this
     · simpa [Finsupp.single_apply]
     · intro y hy xy; simp [mt (H _ (h₁ hy) _ xs) xy]
     · simp (config := { contextual := true })
@@ -738,7 +738,7 @@ theorem range_total : (Finsupp.total α M R v).range = span R (range v) :=
   ext x
   constructor
   · intro hx
-    rw [LinearMap.mem_range] at hx 
+    rw [LinearMap.mem_range] at hx
     rcases hx with ⟨l, hl⟩
     rw [← hl]
     rw [Finsupp.total_apply]
@@ -821,7 +821,7 @@ theorem span_image_eq_map_total (s : Set α) :
   by
   apply span_eq_of_le
   · intro x hx
-    rw [Set.mem_image] at hx 
+    rw [Set.mem_image] at hx
     apply Exists.elim hx
     intro i hi
     exact ⟨_, Finsupp.single_mem_supported R 1 hi.1, by simp [hi.2]⟩
@@ -1394,7 +1394,7 @@ theorem Submodule.exists_finset_of_mem_iSup {ι : Sort _} (p : ι → Submodule 
   have :=
     CompleteLattice.IsCompactElement.exists_finset_of_le_iSup (Submodule R M)
       (Submodule.singleton_span_isCompactElement m) p
-  simp only [Submodule.span_singleton_le_iff_mem] at this 
+  simp only [Submodule.span_singleton_le_iff_mem] at this
   exact this hm
 #align submodule.exists_finset_of_mem_supr Submodule.exists_finset_of_mem_iSup
 -/

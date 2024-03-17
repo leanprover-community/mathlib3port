@@ -869,9 +869,9 @@ theorem mem_add {a : α} {s t : Multiset α} : a ∈ s + t ↔ a ∈ s ∨ a ∈
 theorem mem_of_mem_nsmul {a : α} {s : Multiset α} {n : ℕ} (h : a ∈ n • s) : a ∈ s :=
   by
   induction' n with n ih
-  · rw [zero_nsmul] at h 
+  · rw [zero_nsmul] at h
     exact absurd h (not_mem_zero _)
-  · rw [succ_nsmul, mem_add] at h 
+  · rw [succ_nsmul, mem_add] at h
     exact h.elim id ih
 #align multiset.mem_of_mem_nsmul Multiset.mem_of_mem_nsmul
 -/
@@ -1284,7 +1284,7 @@ theorem lt_replicate_succ {m : Multiset α} {x : α} {n : ℕ} :
   constructor
   · rintro ⟨x', hx'⟩
     have := eq_of_mem_replicate (mem_of_le hx' (mem_cons_self _ _))
-    rwa [this, replicate_succ, cons_le_cons_iff] at hx' 
+    rwa [this, replicate_succ, cons_le_cons_iff] at hx'
   · intro h
     rw [replicate_succ]
     exact ⟨x, cons_le_cons _ h⟩
@@ -1445,7 +1445,7 @@ theorem erase_le_erase {s t : Multiset α} (a : α) (h : s ≤ t) : s.eraseₓ a
 #print Multiset.erase_le_iff_le_cons /-
 theorem erase_le_iff_le_cons {s t : Multiset α} {a : α} : s.eraseₓ a ≤ t ↔ s ≤ a ::ₘ t :=
   ⟨fun h => le_trans (le_cons_erase _ _) (cons_le_cons _ h), fun h =>
-    if m : a ∈ s then by rw [← cons_erase m] at h  <;> exact (cons_le_cons_iff _).1 h
+    if m : a ∈ s then by rw [← cons_erase m] at h <;> exact (cons_le_cons_iff _).1 h
     else le_trans (erase_le _ _) ((le_cons_of_not_mem m).1 h)⟩
 #align multiset.erase_le_iff_le_cons Multiset.erase_le_iff_le_cons
 -/
@@ -1520,7 +1520,7 @@ theorem map_congr {f g : α → β} {s t : Multiset α} :
 
 #print Multiset.map_hcongr /-
 theorem map_hcongr {β' : Type _} {m : Multiset α} {f : α → β} {f' : α → β'} (h : β = β')
-    (hf : ∀ a ∈ m, HEq (f a) (f' a)) : HEq (map f m) (map f' m) := by subst h; simp at hf ;
+    (hf : ∀ a ∈ m, HEq (f a) (f' a)) : HEq (map f m) (map f' m) := by subst h; simp at hf;
   simp [map_congr rfl hf]
 #align multiset.map_hcongr Multiset.map_hcongr
 -/
@@ -1532,11 +1532,11 @@ theorem forall_mem_map_iff {f : α → β} {p : β → Prop} {s : Multiset α} :
 #align multiset.forall_mem_map_iff Multiset.forall_mem_map_iff
 -/
 
-#print Multiset.coe_map /-
+#print Multiset.map_coe /-
 @[simp]
-theorem coe_map (f : α → β) (l : List α) : map f ↑l = l.map f :=
+theorem map_coe (f : α → β) (l : List α) : map f ↑l = l.map f :=
   rfl
-#align multiset.coe_map Multiset.coe_map
+#align multiset.coe_map Multiset.map_coe
 -/
 
 #print Multiset.map_zero /-
@@ -1663,7 +1663,7 @@ theorem map_eq_cons [DecidableEq α] (f : α → β) (s : Multiset α) (t : Mult
     have : b ∈ s.map f := by rw [h]; exact mem_cons_self _ _
     obtain ⟨a, h1, rfl⟩ := mem_map.mp this
     obtain ⟨u, rfl⟩ := exists_cons_of_mem h1
-    rw [map_cons, cons_inj_right] at h 
+    rw [map_cons, cons_inj_right] at h
     refine' ⟨a, mem_cons_self _ _, rfl, _⟩
     rw [Multiset.erase_cons_head, h]
 #align multiset.map_eq_cons Multiset.map_eq_cons
@@ -1713,7 +1713,7 @@ theorem map_const' (s : Multiset α) (b : β) : map (fun _ => b) s = replicate s
 #print Multiset.eq_of_mem_map_const /-
 theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) :
     b₁ = b₂ :=
-  eq_of_mem_replicate <| by rwa [map_const] at h 
+  eq_of_mem_replicate <| by rwa [map_const] at h
 #align multiset.eq_of_mem_map_const Multiset.eq_of_mem_map_const
 -/
 
@@ -2466,7 +2466,7 @@ theorem inter_add_distrib (s t u : Multiset α) : s ∩ t + u = (s + u) ∩ (t +
           (add_le_add_right (inter_le_right s t) u))
         h) with
     a hl
-  rw [← cons_add] at hl 
+  rw [← cons_add] at hl
   exact
     not_le_of_lt (lt_cons_self (s ∩ t) a)
       (le_inter (le_of_add_le_add_right (le_trans hl (inter_le_left _ _)))
@@ -2533,11 +2533,11 @@ def filter (s : Multiset α) : Multiset α :=
 #align multiset.filter Multiset.filter
 -/
 
-#print Multiset.coe_filter /-
+#print Multiset.filter_coe /-
 @[simp]
-theorem coe_filter (l : List α) : filter p ↑l = l.filterₓ p :=
+theorem filter_coe (l : List α) : filter p ↑l = l.filterₓ p :=
   rfl
-#align multiset.coe_filter Multiset.coe_filter
+#align multiset.coe_filter Multiset.filter_coe
 -/
 
 #print Multiset.filter_zero /-
@@ -2788,11 +2788,11 @@ def filterMap (f : α → Option β) (s : Multiset α) : Multiset β :=
 #align multiset.filter_map Multiset.filterMap
 -/
 
-#print Multiset.coe_filterMap /-
+#print Multiset.filterMap_coe /-
 @[simp]
-theorem coe_filterMap (f : α → Option β) (l : List α) : filterMap f l = l.filterMap f :=
+theorem filterMap_coe (f : α → Option β) (l : List α) : filterMap f l = l.filterMap f :=
   rfl
-#align multiset.coe_filter_map Multiset.coe_filterMap
+#align multiset.coe_filter_map Multiset.filterMap_coe
 -/
 
 #print Multiset.filterMap_zero /-
@@ -3100,7 +3100,7 @@ theorem countP_congr {s s' : Multiset α} (hs : s = s') {p p' : α → Prop} [De
     [DecidablePred p'] (hp : ∀ x ∈ s, p x ↔ p' x) : s.countP p = s'.countP p' :=
   Quot.induction_on₂ s s'
     (fun l l' hs hp => by
-      simp only [quot_mk_to_coe'', coe_eq_coe] at hs 
+      simp only [quot_mk_to_coe'', coe_eq_coe] at hs
       exact hs.countp_congr hp)
     hs hp
 #align multiset.countp_congr Multiset.countP_congr
@@ -3612,7 +3612,7 @@ theorem rel_cons_left {a as bs} :
   · generalize hm : a ::ₘ as = m
     intro h
     induction h generalizing as
-    case zero => simp at hm ; contradiction
+    case zero => simp at hm; contradiction
     case cons a' b as' bs ha'b h
       ih =>
       rcases cons_eq_cons.1 hm with (⟨eq₁, eq₂⟩ | ⟨h, cs, eq₁, eq₂⟩)
@@ -3709,7 +3709,7 @@ theorem rel_of_forall {m1 m2 : Multiset α} {r : α → α → Prop} (h : ∀ a 
   · intro m h hc
     rw [rel_zero_right, ← card_eq_zero, hc, card_zero]
   · intro a t ih m h hc
-    rw [card_cons] at hc 
+    rw [card_cons] at hc
     obtain ⟨b, hb⟩ := card_pos_iff_exists_mem.1 (show 0 < card m from hc.symm ▸ Nat.succ_pos _)
     obtain ⟨m', rfl⟩ := exists_cons_of_mem hb
     refine' rel_cons_right.mpr ⟨b, m', h _ _ hb (mem_cons_self _ _), ih _ _, rfl⟩
@@ -3725,7 +3725,7 @@ theorem rel_replicate_left {m : Multiset α} {a : α} {r : α → α → Prop} {
     ⟨(card_eq_card_of_rel h).symm.trans (card_replicate _ _), fun x hx =>
       by
       obtain ⟨b, hb1, hb2⟩ := exists_mem_of_rel_of_mem (rel_flip.2 h) hx
-      rwa [eq_of_mem_replicate hb1] at hb2 ⟩,
+      rwa [eq_of_mem_replicate hb1] at hb2⟩,
     fun h =>
     rel_of_forall (fun x y hx hy => (eq_of_mem_replicate hx).symm ▸ h.2 _ hy)
       (Eq.trans (card_replicate _ _) h.1.symm)⟩

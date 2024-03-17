@@ -864,7 +864,7 @@ theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ :=
   refine' top_le_iff.1 fun s => _
   simp only [mem_mul, mem_top, exists_and_left, exists_eq_left]
   rintro ⟨t, ht, hs⟩
-  rwa [mul_univ_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs 
+  rwa [mul_univ_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs
 #align filter.mul_top_of_one_le Filter.mul_top_of_one_le
 #align filter.add_top_of_nonneg Filter.add_top_of_nonneg
 -/
@@ -876,7 +876,7 @@ theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ :=
   refine' top_le_iff.1 fun s => _
   simp only [mem_mul, mem_top, exists_and_left, exists_eq_left]
   rintro ⟨t, ht, hs⟩
-  rwa [univ_mul_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs 
+  rwa [univ_mul_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs
 #align filter.top_mul_of_one_le Filter.top_mul_of_one_le
 #align filter.top_add_of_nonneg Filter.top_add_of_nonneg
 -/
@@ -940,7 +940,7 @@ protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pur
   refine' ⟨fun hfg => _, _⟩
   · obtain ⟨t₁, t₂, h₁, h₂, h⟩ : (1 : Set α) ∈ f * g := hfg.symm.subst one_mem_one
     have hfg : (f * g).ne_bot := hfg.symm.subst one_ne_bot
-    rw [(hfg.nonempty_of_mem <| mul_mem_mul h₁ h₂).subset_one_iff, Set.mul_eq_one_iff] at h 
+    rw [(hfg.nonempty_of_mem <| mul_mem_mul h₁ h₂).subset_one_iff, Set.mul_eq_one_iff] at h
     obtain ⟨a, b, rfl, rfl, h⟩ := h
     refine' ⟨a, b, _, _, h⟩
     · rwa [← hfg.of_mul_left.le_pure_iff, le_pure_iff]

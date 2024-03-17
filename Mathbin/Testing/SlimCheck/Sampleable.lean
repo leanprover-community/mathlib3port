@@ -533,9 +533,9 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
         match (motive := ∀ ys, ys = List.splitAt k xs → _) List.splitAt k xs, rfl with
         | ⟨xs₁, xs₂⟩, h =>
           have h₄ : xs₁ = xs.take k := by
-            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h  <;> tauto
+            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h <;> tauto
           have h₃ : xs₂ = xs.drop k := by
-            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h  <;> tauto
+            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h <;> tauto
           have : SizeOf.sizeOf xs₂ < SizeOf.sizeOf xs := by
             rw [h₃] <;> solve_by_elim [list.sizeof_drop_lt_sizeof_of_lt_length]
           have h₁ : n - k = xs₂.length := by simp only [h₃, ← hn, List.length_drop]

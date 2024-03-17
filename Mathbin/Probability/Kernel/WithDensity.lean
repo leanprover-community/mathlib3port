@@ -204,7 +204,7 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : kernel α β) [IsFin
     by
     intro a b n hn
     have : (f a b).toReal ≤ n := Nat.le_of_ceil_le hn
-    rw [← ENNReal.le_ofReal_iff_toReal_le (hf_ne_top a b) _] at this 
+    rw [← ENNReal.le_ofReal_iff_toReal_le (hf_ne_top a b) _] at this
     · refine' this.trans (le_of_eq _)
       rw [ENNReal.ofReal_coe_nat]
     · norm_cast
@@ -225,7 +225,7 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : kernel α β) [IsFin
       suffices : ∀ n, n ∉ Finset.range ⌈(f a b).toReal⌉₊ → fs n a b = 0
       exact summable_of_ne_finset_zero this
       intro n hn_not_mem
-      rw [Finset.mem_range, not_lt] at hn_not_mem 
+      rw [Finset.mem_range, not_lt] at hn_not_mem
       exact h_zero a b n hn_not_mem
     ext a b : 2
     rw [tsum_apply (pi.summable.mpr h_sum_a), tsum_apply (h_sum_a a),

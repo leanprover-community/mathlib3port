@@ -148,7 +148,7 @@ theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| Fractio
   constructor
   · rintro ⟨x, rfl⟩
     rw [Units.val_mul, hI, coe_toPrincipalIdeal, mul_comm,
-      span_singleton_mul_coe_ideal_eq_coe_ideal] at hJ 
+      span_singleton_mul_coe_ideal_eq_coe_ideal] at hJ
     exact ⟨_, _, sec_fst_ne_zero le_rfl x.ne_zero, sec_snd_ne_zero le_rfl ↑x, hJ⟩
   · rintro ⟨x, y, hx, hy, h⟩
     constructor; rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
@@ -168,10 +168,10 @@ theorem ClassGroup.mk_eq_one_of_coe_ideal {I : (FractionalIdeal R⁰ <| Fraction
   any_goals rfl
   constructor
   · rintro ⟨x, y, hx, hy, h⟩
-    rw [Ideal.mul_top] at h 
+    rw [Ideal.mul_top] at h
     rcases ideal.mem_span_singleton_mul.mp ((Ideal.span_singleton_le_iff_mem _).mp h.ge) with
       ⟨i, hi, rfl⟩
-    rw [← Ideal.span_singleton_mul_span_singleton, Ideal.span_singleton_mul_right_inj hx] at h 
+    rw [← Ideal.span_singleton_mul_span_singleton, Ideal.span_singleton_mul_right_inj hx] at h
     exact ⟨i, right_ne_zero_of_mul hy, h⟩
   · rintro ⟨x, hx, rfl⟩
     exact ⟨1, x, one_ne_zero, hx, by rw [Ideal.span_singleton_one, Ideal.top_mul, Ideal.mul_top]⟩
@@ -353,7 +353,7 @@ theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     refine' ⟨IsLocalization.mk' _ x ⟨y, hy'⟩, _, _⟩
     · contrapose! hx
       rwa [mk'_eq_iff_eq_mul, MulZeroClass.zero_mul, ← (algebraMap R (FractionRing R)).map_zero,
-        (IsFractionRing.injective R (FractionRing R)).eq_iff] at hx 
+        (IsFractionRing.injective R (FractionRing R)).eq_iff] at hx
     · exact (FractionalIdeal.mk'_mul_coeIdeal_eq_coeIdeal _ hy').mpr h
 #align class_group.mk0_eq_mk0_iff ClassGroup.mk0_eq_mk0_iff
 -/

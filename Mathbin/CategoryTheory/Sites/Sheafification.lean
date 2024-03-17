@@ -290,7 +290,7 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
     obtain ⟨W, h1, h2, hh⟩ := concrete.colimit_exists_of_rep_eq _ _ _ h
     use W.unop, h1.unop, h2.unop
     ext I
-    apply_fun multiequalizer.ι (W.unop.index P) I at hh 
+    apply_fun multiequalizer.ι (W.unop.index P) I at hh
     convert hh
     all_goals
       dsimp [diagram]
@@ -301,7 +301,7 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
     use op S, h1.op, h2.op
     apply concrete.multiequalizer_ext
     intro i
-    apply_fun fun ee => ee i at e 
+    apply_fun fun ee => ee i at e
     convert e
     all_goals
       dsimp [diagram]
@@ -318,7 +318,7 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
   -- First, we choose representatives for x and y.
   obtain ⟨Sx, x, rfl⟩ := exists_rep x
   obtain ⟨Sy, y, rfl⟩ := exists_rep y
-  simp only [res_mk_eq_mk_pullback] at h 
+  simp only [res_mk_eq_mk_pullback] at h
   -- Next, using our assumption,
   -- choose covers over which the pullbacks of these representatives become equal.
   choose W h1 h2 hh using fun I : S.arrow => (eq_mk_iff_exists _ _).mp (h I)
@@ -353,7 +353,7 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
   let IS : S.arrow := I.from_middle
   specialize hh IS
   let IW : (W IS).arrow := I.to_middle
-  apply_fun fun e => e IW at hh 
+  apply_fun fun e => e IW at hh
   convert hh
   · let Rx : Sx.relation :=
       ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
@@ -376,12 +376,12 @@ theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
     (X : C) : Function.Injective ((J.toPlus P).app (op X)) :=
   by
   intro x y h
-  simp only [to_plus_eq_mk] at h 
-  rw [eq_mk_iff_exists] at h 
+  simp only [to_plus_eq_mk] at h
+  rw [eq_mk_iff_exists] at h
   obtain ⟨W, h1, h2, hh⟩ := h
   apply hsep X W
   intro I
-  apply_fun fun e => e I at hh 
+  apply_fun fun e => e I at hh
   exact hh
 #align category_theory.grothendieck_topology.plus.inj_of_sep CategoryTheory.GrothendieckTopology.Plus.inj_of_sep
 -/
@@ -495,8 +495,8 @@ theorem isSheaf_of_sep (P : Cᵒᵖ ⥤ D)
   · intro x y h
     apply sep P S _ _
     intro I
-    apply_fun meq.equiv _ _ at h 
-    apply_fun fun e => e I at h 
+    apply_fun meq.equiv _ _ at h
+    apply_fun fun e => e I at h
     convert h
     · erw [meq.equiv_apply, ← comp_apply, multiequalizer.lift_ι]
     · erw [meq.equiv_apply, ← comp_apply, multiequalizer.lift_ι]

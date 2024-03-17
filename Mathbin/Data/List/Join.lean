@@ -127,10 +127,10 @@ theorem drop_take_succ_eq_cons_nthLe (L : List α) {i : ℕ} (hi : i < L.length)
     (L.take (i + 1)).drop i = [nthLe L i hi] :=
   by
   induction L generalizing i
-  · simp only [length] at hi ; exact (Nat.not_succ_le_zero i hi).elim
+  · simp only [length] at hi; exact (Nat.not_succ_le_zero i hi).elim
   cases i; · simp
   have : i < L_tl.length := by
-    simp at hi 
+    simp at hi
     exact Nat.lt_of_succ_lt_succ hi
   simp [L_ih this]
   rfl

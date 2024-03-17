@@ -1233,7 +1233,7 @@ theorem pred_succ_iterate_of_not_isMax (i : α) (n : ℕ) (hin : ¬IsMax ((succ^
     (pred^[n]) ((succ^[n]) i) = i := by
   induction' n with n hn
   · simp only [Function.iterate_zero, id.def]
-  rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hin 
+  rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hin
   have h_not_max : ¬IsMax ((succ^[n - 1]) i) :=
     by
     cases n
@@ -1305,20 +1305,20 @@ instance : SuccOrder (WithTop α)
   max_of_succ_le a ha := by
     cases a
     · exact isMax_top
-    change ite _ _ _ ≤ _ at ha 
-    split_ifs at ha  with ha'
+    change ite _ _ _ ≤ _ at ha
+    split_ifs at ha with ha'
     · exact (not_top_le_coe _ ha).elim
-    · rw [some_le_some, succ_le_iff_eq_top] at ha 
+    · rw [some_le_some, succ_le_iff_eq_top] at ha
       exact (ha' ha).elim
   succ_le_of_lt a b h := by
     cases b
     · exact le_top
     cases a
     · exact (not_top_lt h).elim
-    rw [some_lt_some] at h 
+    rw [some_lt_some] at h
     change ite _ _ _ ≤ _
     split_ifs with ha
-    · rw [ha] at h 
+    · rw [ha] at h
       exact (not_top_lt h).elim
     · exact some_le_some.2 (succ_le_of_lt h)
   le_of_lt_succ a b h := by
@@ -1326,9 +1326,9 @@ instance : SuccOrder (WithTop α)
     · exact (not_top_lt h).elim
     cases b
     · exact le_top
-    change _ < ite _ _ _ at h 
+    change _ < ite _ _ _ at h
     rw [some_le_some]
-    split_ifs at h  with hb
+    split_ifs at h with hb
     · rw [hb]
       exact le_top
     · exact le_of_lt_succ (some_lt_some.1 h)
@@ -1461,7 +1461,7 @@ instance [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
     cases' h : pred (⊤ : WithTop α) with a ha
     · exact hα.elim fun a => (min_of_le_pred h.ge).not_lt <| coe_lt_top a
     · obtain ⟨c, hc⟩ := exists_gt a
-      rw [← some_lt_some, ← h] at hc 
+      rw [← some_lt_some, ← h] at hc
       exact (le_of_pred_lt hc).not_lt (some_lt_none _)⟩
 
 end Pred
@@ -1550,20 +1550,20 @@ instance : PredOrder (WithBot α)
   min_of_le_pred a ha := by
     cases a
     · exact isMin_bot
-    change _ ≤ ite _ _ _ at ha 
-    split_ifs at ha  with ha'
+    change _ ≤ ite _ _ _ at ha
+    split_ifs at ha with ha'
     · exact (not_coe_le_bot _ ha).elim
-    · rw [some_le_some, le_pred_iff_eq_bot] at ha 
+    · rw [some_le_some, le_pred_iff_eq_bot] at ha
       exact (ha' ha).elim
   le_pred_of_lt a b h := by
     cases a
     · exact bot_le
     cases b
     · exact (not_lt_bot h).elim
-    rw [some_lt_some] at h 
+    rw [some_lt_some] at h
     change _ ≤ ite _ _ _
     split_ifs with hb
-    · rw [hb] at h 
+    · rw [hb] at h
       exact (not_lt_bot h).elim
     · exact some_le_some.2 (le_pred_of_lt h)
   le_of_pred_lt a b h := by
@@ -1571,9 +1571,9 @@ instance : PredOrder (WithBot α)
     · exact (not_lt_bot h).elim
     cases a
     · exact bot_le
-    change ite _ _ _ < _ at h 
+    change ite _ _ _ < _ at h
     rw [some_le_some]
-    split_ifs at h  with ha
+    split_ifs at h with ha
     · rw [ha]
       exact bot_le
     · exact le_of_pred_lt (some_lt_some.1 h)
@@ -1606,7 +1606,7 @@ instance [hα : Nonempty α] : IsEmpty (SuccOrder (WithBot α)) :=
     cases' h : succ (⊥ : WithBot α) with a ha
     · exact hα.elim fun a => (max_of_succ_le h.le).not_lt <| bot_lt_coe a
     · obtain ⟨c, hc⟩ := exists_lt a
-      rw [← some_lt_some, ← h] at hc 
+      rw [← some_lt_some, ← h] at hc
       exact (le_of_lt_succ hc).not_lt (none_lt_some _)⟩
 
 end Succ

@@ -172,18 +172,18 @@ theorem PseudoMetricSpace.ext {α : Type _} {m m' : PseudoMetricSpace α}
     (h : m.toHasDist = m'.toHasDist) : m = m' :=
   by
   rcases m with ⟨⟩; rcases m' with ⟨⟩
-  dsimp at h 
+  dsimp at h
   subst h
   congr
   · ext x y : 2
-    dsimp at m_edist_dist m'_edist_dist 
+    dsimp at m_edist_dist m'_edist_dist
     simp [m_edist_dist, m'_edist_dist]
-  · dsimp at m_uniformity_dist m'_uniformity_dist 
-    rw [← m'_uniformity_dist] at m_uniformity_dist 
+  · dsimp at m_uniformity_dist m'_uniformity_dist
+    rw [← m'_uniformity_dist] at m_uniformity_dist
     exact UniformSpace.ext m_uniformity_dist
   · ext1
-    dsimp at m_cobounded_sets m'_cobounded_sets 
-    rw [← m'_cobounded_sets] at m_cobounded_sets 
+    dsimp at m_cobounded_sets m'_cobounded_sets
+    rw [← m'_cobounded_sets] at m_cobounded_sets
     exact filter_eq m_cobounded_sets
 #align pseudo_metric_space.ext PseudoMetricSpace.ext
 -/
@@ -882,7 +882,7 @@ theorem dist_lt_add_of_nonempty_closedBall_inter_ball (h : (closedBall x ε₁ �
 #print Metric.dist_lt_add_of_nonempty_ball_inter_closedBall /-
 theorem dist_lt_add_of_nonempty_ball_inter_closedBall (h : (ball x ε₁ ∩ closedBall y ε₂).Nonempty) :
     dist x y < ε₁ + ε₂ := by
-  rw [inter_comm] at h 
+  rw [inter_comm] at h
   rw [add_comm, dist_comm]
   exact dist_lt_add_of_nonempty_closed_ball_inter_ball h
 #align metric.dist_lt_add_of_nonempty_ball_inter_closed_ball Metric.dist_lt_add_of_nonempty_ball_inter_closedBall
@@ -1207,7 +1207,7 @@ theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   by
   intro ε ε_pos
-  rw [totallyBounded_iff_subset] at hs 
+  rw [totallyBounded_iff_subset] at hs
   exact hs _ (dist_mem_uniformity ε_pos)
 #align metric.finite_approx_of_totally_bounded Metric.finite_approx_of_totallyBounded
 -/
@@ -1580,7 +1580,7 @@ protected theorem Metric.uniformity_basis_edist :
       simp only [edist_dist, ENNReal.ofReal_lt_ofReal_iff ε0]
       exact Hε
     · rcases ENNReal.lt_iff_exists_real_btwn.1 ε0 with ⟨ε', _, ε0', hε⟩
-      rw [ENNReal.ofReal_pos] at ε0' 
+      rw [ENNReal.ofReal_pos] at ε0'
       refine' ⟨ε', ε0', fun a b h => Hε (lt_trans _ hε)⟩
       rwa [edist_dist, ENNReal.ofReal_lt_ofReal_iff ε0']⟩
 #align pseudo_metric.uniformity_basis_edist Metric.uniformity_basis_edist
@@ -2041,7 +2041,7 @@ theorem Metric.uniformCauchySeqOn_iff {γ : Type _} {F : β → γ → α} {s : 
       @Filter.eventually_atTop_prod_self' _ _ _ fun m =>
         ∀ x : γ, x ∈ s → dist (F m.fst x) (F m.snd x) < ε]
     specialize h u hu
-    rw [prod_at_top_at_top_eq] at h 
+    rw [prod_at_top_at_top_eq] at h
     exact h.mono fun n h x hx => set.mem_set_of_eq.mp (h x hx)
   · intro h u hu
     rcases metric.mem_uniformity_dist.mp hu with ⟨ε, hε, hab⟩
@@ -2407,7 +2407,7 @@ theorem uniformContinuous_dist : UniformContinuous fun p : α × α => dist p.1 
       have :=
         add_lt_add (abs_sub_lt_iff.1 (lt_of_le_of_lt (abs_dist_sub_le p₁ q₁ p₂) h₁)).1
           (abs_sub_lt_iff.1 (lt_of_le_of_lt (abs_dist_sub_le p₂ q₂ q₁) h₂)).1
-      rwa [add_halves, dist_comm p₂, sub_add_sub_cancel, dist_comm q₂] at this ⟩
+      rwa [add_halves, dist_comm p₂, sub_add_sub_cancel, dist_comm q₂] at this⟩
 #align uniform_continuous_dist uniformContinuous_dist
 -/
 
@@ -2876,7 +2876,7 @@ theorem sphere_pi (x : ∀ b, π b) {r : ℝ} (h : 0 < r ∨ Nonempty β) :
     refine' subset_Union_of_subset default _
     intro x hx
     replace hx := hx.le
-    rw [dist_pi_le_iff le_rfl] at hx 
+    rw [dist_pi_le_iff le_rfl] at hx
     exact le_antisymm (hx default) dist_nonneg
   · ext
     simp [dist_pi_eq_iff hr, dist_pi_le_iff hr.le]
@@ -3099,7 +3099,7 @@ center and a strictly smaller radius that includes `s`. -/
 theorem exists_lt_subset_ball (hs : IsClosed s) (h : s ⊆ ball x r) : ∃ r' < r, s ⊆ ball x r' :=
   by
   cases' le_or_lt r 0 with hr hr
-  · rw [ball_eq_empty.2 hr, subset_empty_iff] at h ; subst s
+  · rw [ball_eq_empty.2 hr, subset_empty_iff] at h; subst s
     exact (exists_lt r).imp fun r' hr' => ⟨hr', empty_subset _⟩
   · exact (exists_pos_lt_subset_ball hr hs h).imp fun r' hr' => ⟨hr'.fst.2, hr'.snd⟩
 #align exists_lt_subset_ball exists_lt_subset_ball
@@ -3153,7 +3153,7 @@ theorem lebesgue_number_lemma_of_metric {s : Set α} {ι} {c : ι → Set α} (h
 #print lebesgue_number_lemma_of_metric_sUnion /-
 theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (hs : IsCompact s)
     (hc₁ : ∀ t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀ c) : ∃ δ > 0, ∀ x ∈ s, ∃ t ∈ c, ball x δ ⊆ t := by
-  rw [sUnion_eq_Union] at hc₂  <;> simpa using lebesgue_number_lemma_of_metric hs (by simpa) hc₂
+  rw [sUnion_eq_Union] at hc₂ <;> simpa using lebesgue_number_lemma_of_metric hs (by simpa) hc₂
 #align lebesgue_number_lemma_of_metric_sUnion lebesgue_number_lemma_of_metric_sUnion
 -/
 
@@ -3478,7 +3478,7 @@ theorem exists_isOpen_isBounded_image_of_isCompact_of_forall_continuousAt [Topol
     {k : Set β} {f : β → α} (hk : IsCompact k) (hf : ∀ x ∈ k, ContinuousAt f x) :
     ∃ t, k ⊆ t ∧ IsOpen t ∧ IsBounded (f '' t) :=
   by
-  simp_rw [← continuousWithinAt_univ] at hf 
+  simp_rw [← continuousWithinAt_univ] at hf
   simpa only [inter_univ] using
     exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at hk hf
 #align metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_isOpen_isBounded_image_of_isCompact_of_forall_continuousAt
@@ -3736,7 +3736,7 @@ theorem dist_le_diam_of_mem (h : IsBounded s) (hx : x ∈ s) (hy : y ∈ s) : di
 
 #print Metric.ediam_of_unbounded /-
 theorem ediam_of_unbounded (h : ¬IsBounded s) : EMetric.diam s = ∞ := by
-  rwa [bounded_iff_ediam_ne_top, Classical.not_not] at h 
+  rwa [bounded_iff_ediam_ne_top, Classical.not_not] at h
 #align metric.ediam_of_unbounded Metric.ediam_of_unbounded
 -/
 
@@ -3768,7 +3768,7 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
   by_cases H : bounded (s ∪ t)
   · have hs : bounded s := H.mono (subset_union_left _ _)
     have ht : bounded t := H.mono (subset_union_right _ _)
-    rw [bounded_iff_ediam_ne_top] at H hs ht 
+    rw [bounded_iff_ediam_ne_top] at H hs ht
     rw [dist_edist, diam, diam, diam, ← ENNReal.toReal_add, ← ENNReal.toReal_add,
             ENNReal.toReal_le_toReal] <;>
           repeat' apply ENNReal.add_ne_top.2 <;> constructor <;>
@@ -3826,7 +3826,7 @@ theorem IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set α} (h0 
     intro n N hn
     apply mem_of_subset_of_mem _ (h N).choose_spec
     intro x hx
-    simp only [mem_Inter] at hx 
+    simp only [mem_Inter] at hx
     exact hx n hn
   have : ∀ n, u n ∈ s 0 := fun n => I 0 n (zero_le _)
   have : CauchySeq u := by
@@ -3860,7 +3860,7 @@ theorem exists_isLocalMin_mem_ball [ProperSpace α] [TopologicalSpace β]
     (hf : ContinuousOn f (closedBall a r)) (hz : z ∈ closedBall a r)
     (hf1 : ∀ z' ∈ sphere a r, f z < f z') : ∃ z ∈ ball a r, IsLocalMin f z :=
   by
-  simp_rw [← closed_ball_diff_ball] at hf1 
+  simp_rw [← closed_ball_diff_ball] at hf1
   exact
     (is_compact_closed_ball a r).exists_isLocalMin_mem_open ball_subset_closed_ball hf hz hf1
       is_open_ball
@@ -3933,7 +3933,7 @@ theorem MetricSpace.ext {α : Type _} {m m' : MetricSpace α} (h : m.toHasDist =
   by
   have h' : m.to_pseudo_metric_space = m'.to_pseudo_metric_space := PseudoMetricSpace.ext h
   rcases m with ⟨⟩; rcases m' with ⟨⟩
-  dsimp at h' 
+  dsimp at h'
   subst h'
 #align metric_space.ext MetricSpace.ext
 -/
@@ -4054,12 +4054,12 @@ theorem subsingleton_sphere (x : γ) {r : ℝ} (hr : r ≤ 0) : (sphere x r).Sub
 #align metric.subsingleton_sphere Metric.subsingleton_sphere
 -/
 
-#print MetricSpace.to_separated /-
+#print MetricSpace.instT0Space /-
 -- see Note [lower instance priority]
-instance (priority := 100) MetricSpace.to_separated : SeparatedSpace γ :=
-  separated_def.2 fun x y h =>
+instance (priority := 100) MetricSpace.instT0Space : T0Space γ :=
+  t0Space_iff_uniformity.2 fun x y h =>
     eq_of_forall_dist_le fun ε ε0 => le_of_lt (h _ (dist_mem_uniformity ε0))
-#align metric_space.to_separated MetricSpace.to_separated
+#align metric_space.to_separated MetricSpace.instT0Space
 -/
 
 #print Metric.uniformEmbedding_iff' /-
@@ -4321,7 +4321,7 @@ instance metricSpacePi : MetricSpace (∀ b, π b) :=
       by
       have eq1 : edist f g = 0 := by simp only [edist_dist, eq0, ENNReal.ofReal_zero]
       have eq2 : (sup univ fun b : β => edist (f b) (g b)) ≤ 0 := le_of_eq eq1
-      simp only [Finset.sup_le_iff] at eq2 
+      simp only [Finset.sup_le_iff] at eq2
       exact funext fun b => edist_le_zero.1 <| eq2 b <| mem_univ b }
 #align metric_space_pi metricSpacePi
 -/
@@ -4364,20 +4364,20 @@ end Metric
 
 section EqRel
 
-instance {α : Type u} [PseudoMetricSpace α] : Dist (UniformSpace.SeparationQuotient α)
+instance {α : Type u} [PseudoMetricSpace α] : Dist (SeparationQuotient α)
     where dist p q :=
     Quotient.liftOn₂' p q dist fun x y x' y' hx hy => by
-      rw [dist_edist, dist_edist, ← UniformSpace.SeparationQuotient.edist_mk x, ←
-        UniformSpace.SeparationQuotient.edist_mk x', Quot.sound hx, Quot.sound hy]
+      rw [dist_edist, dist_edist, ← SeparationQuotient.edist_mk x, ← SeparationQuotient.edist_mk x',
+        Quot.sound hx, Quot.sound hy]
 
-#print UniformSpace.SeparationQuotient.dist_mk /-
-theorem UniformSpace.SeparationQuotient.dist_mk {α : Type u} [PseudoMetricSpace α] (p q : α) :
-    @dist (UniformSpace.SeparationQuotient α) _ (Quot.mk _ p) (Quot.mk _ q) = dist p q :=
+#print SeparationQuotient.dist_mk /-
+theorem SeparationQuotient.dist_mk {α : Type u} [PseudoMetricSpace α] (p q : α) :
+    @dist (SeparationQuotient α) _ (Quot.mk _ p) (Quot.mk _ q) = dist p q :=
   rfl
-#align uniform_space.separation_quotient.dist_mk UniformSpace.SeparationQuotient.dist_mk
+#align uniform_space.separation_quotient.dist_mk SeparationQuotient.dist_mk
 -/
 
-instance {α : Type u} [PseudoMetricSpace α] : MetricSpace (UniformSpace.SeparationQuotient α) :=
+instance {α : Type u} [PseudoMetricSpace α] : MetricSpace (SeparationQuotient α) :=
   EMetricSpace.toMetricSpaceOfDist dist (fun x y => Quotient.inductionOn₂' x y edist_ne_top)
     fun x y => Quotient.inductionOn₂' x y dist_edist
 

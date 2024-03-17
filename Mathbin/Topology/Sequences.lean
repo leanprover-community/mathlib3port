@@ -193,9 +193,9 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
   specialize h (· ∉ s) x
   by_cases hx : x ∈ s; · exact subset_seqClosure hx
   simp_rw [(· ∘ ·), ContinuousAt, hx, not_false_iff, nhds_true, tendsto_pure, eq_true_iff, ←
-    mem_compl_iff, eventually_mem_set, ← mem_interior_iff_mem_nhds, interior_compl] at h 
-  rw [mem_compl_iff, imp_not_comm] at h 
-  simp only [Classical.not_forall, not_eventually, mem_compl_iff, Classical.not_not] at h 
+    mem_compl_iff, eventually_mem_set, ← mem_interior_iff_mem_nhds, interior_compl] at h
+  rw [mem_compl_iff, imp_not_comm] at h
+  simp only [Classical.not_forall, not_eventually, mem_compl_iff, Classical.not_not] at h
   rcases h hcx with ⟨u, hux, hus⟩
   rcases extraction_of_frequently_at_top hus with ⟨φ, φ_mono, hφ⟩
   exact ⟨u ∘ φ, hφ, hux.comp φ_mono.tendsto_at_top⟩
@@ -415,11 +415,11 @@ theorem IsSeqCompact.exists_tendsto (hs : IsSeqCompact s) {u : ℕ → X} (hu : 
 protected theorem IsSeqCompact.totallyBounded (h : IsSeqCompact s) : TotallyBounded s :=
   by
   intro V V_in
-  unfold IsSeqCompact at h 
+  unfold IsSeqCompact at h
   contrapose! h
   obtain ⟨u, u_in, hu⟩ : ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ ∀ n m, m < n → u m ∉ ball (u n) V :=
     by
-    simp only [not_subset, mem_Union₂, not_exists, exists_prop] at h 
+    simp only [not_subset, mem_Union₂, not_exists, exists_prop] at h
     simpa only [forall_and, ball_image_iff, not_and] using seq_of_forall_finite_exists h
   refine' ⟨u, u_in, fun x x_in φ hφ huφ => _⟩
   obtain ⟨N, hN⟩ : ∃ N, ∀ p q, p ≥ N → q ≥ N → (u (φ p), u (φ q)) ∈ V
@@ -449,7 +449,7 @@ protected theorem IsSeqCompact.isComplete (hs : IsSeqCompact s) : IsComplete s :
     by
     have : ∀ n, ∃ t ∈ l, t ×ˢ t ⊆ W n ∧ t ⊆ s :=
       by
-      rw [le_principal_iff] at hls 
+      rw [le_principal_iff] at hls
       have : ∀ n, W n ∩ s ×ˢ s ∈ l ×ᶠ l := fun n => inter_mem (hl.2 (hW n)) (prod_mem_prod hls hls)
       simpa only [l.basis_sets.prod_self.mem_iff, true_imp_iff, subset_inter_iff,
         prod_self_subset_prod_self, and_assoc] using this

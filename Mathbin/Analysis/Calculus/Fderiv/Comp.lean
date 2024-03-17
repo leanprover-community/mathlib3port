@@ -78,7 +78,7 @@ theorem HasFDerivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} {L' : Filter 
 example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFDerivAtFilter g g' (f x) (L.map f))
     (hf : HasFDerivAtFilter f f' x L) : HasFDerivAtFilter (g ∘ f) (g'.comp f') x L :=
   by
-  unfold HasFDerivAtFilter at hg 
+  unfold HasFDerivAtFilter at hg
   have :=
     calc
       (fun x' => g (f x') - g (f x) - g' (f x' - f x)) =o[L] fun x' => f x' - f x :=
@@ -261,7 +261,7 @@ protected theorem HasFDerivAtFilter.iterate {f : E → E} {f' : E →L[𝕜] E}
   induction' n with n ihn
   · exact hasFDerivAtFilter_id x L
   · rw [Function.iterate_succ, pow_succ']
-    rw [← hx] at ihn 
+    rw [← hx] at ihn
     exact ihn.comp x hf hL
 #align has_fderiv_at_filter.iterate HasFDerivAtFilter.iterate
 -/
@@ -294,7 +294,7 @@ protected theorem HasStrictFDerivAt.iterate {f : E → E} {f' : E →L[𝕜] E}
   induction' n with n ihn
   · exact hasStrictFDerivAt_id x
   · rw [Function.iterate_succ, pow_succ']
-    rw [← hx] at ihn 
+    rw [← hx] at ihn
     exact ihn.comp x hf
 #align has_strict_fderiv_at.iterate HasStrictFDerivAt.iterate
 -/

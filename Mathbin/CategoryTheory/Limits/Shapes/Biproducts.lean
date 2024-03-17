@@ -235,7 +235,7 @@ def whisker {f : J → C} (c : Bicone f) (g : K ≃ J) : Bicone (f ∘ g)
   ι k := c.ι (g k)
   ι_π k k' := by
     simp only [c.ι_π]
-    split_ifs with h h' h' <;> simp [Equiv.apply_eq_iff_eq g] at h h'  <;> tauto
+    split_ifs with h h' h' <;> simp [Equiv.apply_eq_iff_eq g] at h h' <;> tauto
 #align category_theory.limits.bicone.whisker CategoryTheory.Limits.Bicone.whisker
 -/
 
@@ -1937,7 +1937,7 @@ theorem biprod.isIso_inl_iff_id_eq_fst_comp_inl (X Y : C) [HasBinaryBiproduct X 
   constructor
   · intro h
     have := (cancel_epi (inv biprod.inl : X ⊞ Y ⟶ X)).2 biprod.inl_fst
-    rw [is_iso.inv_hom_id_assoc, category.comp_id] at this 
+    rw [is_iso.inv_hom_id_assoc, category.comp_id] at this
     rw [this, is_iso.inv_hom_id]
   · intro h; exact ⟨⟨biprod.fst, biprod.inl_fst, h.symm⟩⟩
 #align category_theory.limits.biprod.is_iso_inl_iff_id_eq_fst_comp_inl CategoryTheory.Limits.biprod.isIso_inl_iff_id_eq_fst_comp_inl
@@ -2322,13 +2322,13 @@ theorem isIso_left_of_isIso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z)
         have t :=
           congr_arg (fun p : W ⊞ X ⟶ W ⊞ X => biprod.inl ≫ p ≫ biprod.fst)
             (is_iso.hom_inv_id (biprod.map f g))
-        simp only [category.id_comp, category.assoc, biprod.inl_map_assoc] at t 
+        simp only [category.id_comp, category.assoc, biprod.inl_map_assoc] at t
         simp [t],
         by
         have t :=
           congr_arg (fun p : Y ⊞ Z ⟶ Y ⊞ Z => biprod.inl ≫ p ≫ biprod.fst)
             (is_iso.inv_hom_id (biprod.map f g))
-        simp only [category.id_comp, category.assoc, biprod.map_fst] at t 
+        simp only [category.id_comp, category.assoc, biprod.map_fst] at t
         simp only [category.assoc]
         simp [t]⟩⟩⟩
 #align category_theory.is_iso_left_of_is_iso_biprod_map CategoryTheory.isIso_left_of_isIso_biprod_map

@@ -145,7 +145,7 @@ theorem mem_target {x : B × F} : x ∈ e.target ↔ x.1 ∈ e.baseSet := by
 theorem proj_symm_apply {x : B × F} (hx : x ∈ e.target) : proj (e.toPartialEquiv.symm x) = x.1 :=
   by
   have := (e.coe_fst (e.to_local_equiv.map_target hx)).symm
-  rwa [← e.coe_coe, e.to_local_equiv.right_inv hx] at this 
+  rwa [← e.coe_coe, e.to_local_equiv.right_inv hx] at this
 #align pretrivialization.proj_symm_apply Pretrivialization.proj_symm_apply
 -/
 

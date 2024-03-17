@@ -45,8 +45,8 @@ theorem uniformContinuous {β : Type _} [UniformSpace β] {f : β → Matrix m n
 instance [CompleteSpace 𝕜] : CompleteSpace (Matrix m n 𝕜) :=
   (by infer_instance : CompleteSpace (m → n → 𝕜))
 
-instance [SeparatedSpace 𝕜] : SeparatedSpace (Matrix m n 𝕜) :=
-  (by infer_instance : SeparatedSpace (m → n → 𝕜))
+instance [T0Space 𝕜] : T0Space (Matrix m n 𝕜) :=
+  (by infer_instance : T0Space (m → n → 𝕜))
 
 end Matrix
 

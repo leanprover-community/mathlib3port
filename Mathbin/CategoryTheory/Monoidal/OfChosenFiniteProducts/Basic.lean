@@ -181,10 +181,10 @@ def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : Bin
     rintro ⟨⟨⟩⟩ <;> simp
     · exact w ⟨walking_pair.left⟩
     · specialize w ⟨walking_pair.right⟩
-      simp at w 
+      simp at w
       rw [← w]; simp
     · specialize w ⟨walking_pair.right⟩
-      simp at w 
+      simp at w
       rw [← w]; simp
 #align category_theory.limits.is_limit.assoc CategoryTheory.Limits.IsLimit.assoc
 -/

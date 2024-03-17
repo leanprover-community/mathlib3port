@@ -92,7 +92,7 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.pt = C₂.pt)
     C₁ = C₂ := by
   cases C₁
   cases C₂
-  dsimp at h_X 
+  dsimp at h_X
   subst h_X
   simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
   ext i j
@@ -428,7 +428,7 @@ def xPrevIsoSelf {j : ι} (h : ¬c.Rel (c.prev j) j) : C.xPrev j ≅ C.pt j :=
         dsimp [ComplexShape.prev]
         rw [dif_neg]; push_neg; intro i hi
         have : c.prev j = i := c.prev_eq' hi
-        rw [this] at h ; contradiction)
+        rw [this] at h; contradiction)
 #align homological_complex.X_prev_iso_self HomologicalComplex.xPrevIsoSelf
 -/
 
@@ -455,7 +455,7 @@ def xNextIsoSelf {i : ι} (h : ¬c.Rel i (c.next i)) : C.xNext i ≅ C.pt i :=
         dsimp [ComplexShape.next]
         rw [dif_neg]; rintro ⟨j, hj⟩
         have : c.next i = j := c.next_eq' hj
-        rw [this] at h ; contradiction)
+        rw [this] at h; contradiction)
 #align homological_complex.X_next_iso_self HomologicalComplex.xNextIsoSelf
 -/
 
@@ -739,7 +739,7 @@ def of (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ 
     d := fun i j => if h : i = j + 1 then eqToHom (by subst h) ≫ d j else 0
     shape' := fun i j w => by rw [dif_neg (Ne.symm w)]
     d_comp_d' := fun i j k hij hjk => by
-      dsimp at hij hjk ; substs hij hjk
+      dsimp at hij hjk; substs hij hjk
       simp only [category.id_comp, dif_pos rfl, eq_to_hom_refl]
       exact sq k }
 #align chain_complex.of ChainComplex.of
@@ -1072,7 +1072,6 @@ end OfHom
 
 section Mk
 
-#print CochainComplex.MkStruct /-
 /-- Auxiliary structure for setting up the recursion in `mk`.
 This is purely an implementation detail: for some reason just using the dependent 6-tuple directly
 results in `mk_aux` taking much longer (well over the `-T100000` limit) to elaborate.
@@ -1084,16 +1083,13 @@ structure MkStruct where
   d₁ : X₁ ⟶ X₂
   s : d₀ ≫ d₁ = 0
 #align cochain_complex.mk_struct CochainComplex.MkStruct
--/
 
 variable {V}
 
-#print CochainComplex.MkStruct.flat /-
 /-- Flatten to a tuple. -/
 def MkStruct.flat (t : MkStruct V) : Σ' (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 #align cochain_complex.mk_struct.flat CochainComplex.MkStruct.flat
--/
 
 variable (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂) (s : d₀ ≫ d₁ = 0)
   (succ :

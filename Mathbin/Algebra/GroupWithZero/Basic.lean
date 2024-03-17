@@ -503,7 +503,7 @@ theorem div_div_self (a : G₀) : a / (a / a) = a :=
 
 #print ne_zero_of_one_div_ne_zero /-
 theorem ne_zero_of_one_div_ne_zero {a : G₀} (h : 1 / a ≠ 0) : a ≠ 0 := fun ha : a = 0 => by
-  rw [ha, div_zero] at h ; contradiction
+  rw [ha, div_zero] at h; contradiction
 #align ne_zero_of_one_div_ne_zero ne_zero_of_one_div_ne_zero
 -/
 

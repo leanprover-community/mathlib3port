@@ -157,16 +157,16 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
   suffices s.bUnion tᶜ.card ≤ sᶜ.card
     by
     -- Rephrase in terms of complements (uses `h`)
-    rw [Finset.card_compl, Finset.card_compl, tsub_le_iff_left] at this 
+    rw [Finset.card_compl, Finset.card_compl, tsub_le_iff_left] at this
     replace := h.trans this
     rwa [← add_tsub_assoc_of_le s.card_le_univ, le_tsub_iff_left (le_add_left s.card_le_univ),
-      add_le_add_iff_right] at this 
+      add_le_add_iff_right] at this
   have hs₂ : s.bUnion tᶜ.card ≤ 1 :=
     by
     -- At most one line through two points of `s`
     refine' finset.card_le_one_iff.mpr fun p₁ p₂ hp₁ hp₂ => _
     simp_rw [Finset.mem_compl, Finset.mem_biUnion, exists_prop, not_exists, not_and,
-      Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂ 
+      Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂
     obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ :=
       finset.one_lt_card_iff.mp (nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
     exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
@@ -335,8 +335,8 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
       exact ⟨l, Finset.mem_univ l, hl.symm⟩
     all_goals simp_rw [Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
   have step3 : ∑ i in sᶜ, line_count L i.1 = ∑ i in sᶜ, point_count P i.2 := by
-    rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1 
-  rw [← Set.toFinset_compl] at step3 
+    rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1
+  rw [← Set.toFinset_compl] at step3
   exact
     ((Finset.sum_eq_sum_iff_of_le fun i hi =>
             has_lines.point_count_le_line_count (set.mem_to_finset.mp hi)).mp

@@ -113,7 +113,7 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
       · apply @sInf_le (Measure α) measure.complete_semilattice_Inf
         simp [le_refl, add_comm, h_measure_sub_add]
       apply @le_sInf (Measure α) measure.complete_semilattice_Inf
-      intro d h_d; rw [← h_measure_sub_add, mem_set_of_eq, add_comm d] at h_d 
+      intro d h_d; rw [← h_measure_sub_add, mem_set_of_eq, add_comm d] at h_d
       apply measure.le_of_add_le_add_left h_d
     rw [h_measure_sub_eq]
     apply measure.of_measurable_apply _ h₁
@@ -137,7 +137,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
   rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]
   apply le_antisymm
   · refine' sInf_le_sInf_of_forall_exists_le _
-    intro ν' h_ν'_in; rw [mem_set_of_eq] at h_ν'_in 
+    intro ν' h_ν'_in; rw [mem_set_of_eq] at h_ν'_in
     refine' ⟨ν'.restrict s, _, restrict_le_self⟩
     refine' ⟨ν' + (⊤ : Measure α).restrict (sᶜ), _, _⟩
     · rw [mem_set_of_eq, add_right_comm, measure.le_iff]

@@ -126,7 +126,7 @@ theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 
   by_cases ha : a = 0
   · subst a
     simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff,
-      or_false_iff] at h 
+      or_false_iff] at h
     rw [zero_zpow _ h, zero_zpow _ hm, MulZeroClass.zero_mul]
   · exact zpow_add₀ ha m n
 #align zpow_add' zpow_add'

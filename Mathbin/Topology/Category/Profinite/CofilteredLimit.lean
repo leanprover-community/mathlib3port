@@ -107,13 +107,13 @@ theorem exists_isClopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
       dsimp only [W] at hh ⊢
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w]
     · intro hx
-      simp_rw [Set.preimage_iUnion, Set.mem_iUnion] at hx 
+      simp_rw [Set.preimage_iUnion, Set.mem_iUnion] at hx
       obtain ⟨s, hs, hx⟩ := hx
       rw [h]
       refine' ⟨s.1, s.2, _⟩
       rw [(hV s).2]
-      dsimp only [W] at hx 
-      rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx 
+      dsimp only [W] at hx
+      rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx
 #align Profinite.exists_clopen_of_cofiltered Profinite.exists_isClopen_of_cofiltered
 -/
 
@@ -197,10 +197,10 @@ theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonemp
   · rw [h2.some_spec]
     exact h1
   · intro a b hh
-    apply_fun fun e => e a at hh 
-    dsimp [ι] at hh 
-    rw [if_pos rfl] at hh 
-    split_ifs at hh  with hh1 hh1
+    apply_fun fun e => e a at hh
+    dsimp [ι] at hh
+    rw [if_pos rfl] at hh
+    split_ifs at hh with hh1 hh1
     · exact hh1.symm
     · exact False.elim (bot_ne_top hh)
 #align Profinite.exists_locally_constant_finite_nonempty Profinite.exists_locallyConstant_finite_nonempty
@@ -239,7 +239,7 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
     obtain ⟨j, g', hj⟩ := exists_locally_constant_finite_nonempty _ hC f'
     refine' ⟨j, ⟨ff ∘ g', g'.is_locally_constant.comp _⟩, _⟩
     ext1 t
-    apply_fun fun e => e t at hj 
+    apply_fun fun e => e t at hj
     rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous] at hj ⊢
     dsimp at hj ⊢
     rw [← hj]

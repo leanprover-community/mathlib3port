@@ -140,7 +140,7 @@ theorem iInf_ker_proj_le_iSup_range_stdBasis {I : Finset ι} {J : Set ι} (hu : 
   SetLike.le_def.2
     (by
       intro b hb
-      simp only [mem_infi, mem_ker, proj_apply] at hb 
+      simp only [mem_infi, mem_ker, proj_apply] at hb
       rw [←
         show ∑ i in I, std_basis R φ i (b i) = b by
           ext i

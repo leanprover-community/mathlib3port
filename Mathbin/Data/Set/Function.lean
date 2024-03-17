@@ -313,7 +313,7 @@ theorem EqOn.comp_left (h : s.EqOn f₁ f₂) : s.EqOn (g ∘ f₁) (g ∘ f₂)
 @[simp]
 theorem eqOn_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} :
     EqOn g₁ g₂ (range f) ↔ g₁ ∘ f = g₂ ∘ f :=
-  forall_range_iff.trans <| funext_iff.symm
+  forall_mem_range.trans <| funext_iff.symm
 #align set.eq_on_range Set.eqOn_range
 -/
 
@@ -993,8 +993,8 @@ theorem InjOn.image_inter {s t u : Set α} (hf : u.InjOn f) (hs : s ⊆ u) (ht :
   rintro x ⟨⟨y, ys, hy⟩, ⟨z, zt, hz⟩⟩
   have : y = z := by
     apply hf (hs ys) (ht zt)
-    rwa [← hz] at hy 
-  rw [← this] at zt 
+    rwa [← hz] at hy
+  rw [← this] at zt
   exact ⟨y, ⟨ys, zt⟩, hy⟩
 #align set.inj_on.image_inter Set.InjOn.image_inter
 -/
@@ -1697,7 +1697,7 @@ noncomputable def invFunOn (f : α → β) (s : Set α) (b : β) : α :=
 
 #print Function.invFunOn_pos /-
 theorem invFunOn_pos (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s ∧ f (invFunOn f s b) = b := by
-  rw [bex_def] at h  <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.choose_spec h
+  rw [bex_def] at h <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.choose_spec h
 #align function.inv_fun_on_pos Function.invFunOn_pos
 -/
 
@@ -1715,7 +1715,7 @@ theorem invFunOn_eq (h : ∃ a ∈ s, f a = b) : f (invFunOn f s b) = b :=
 
 #print Function.invFunOn_neg /-
 theorem invFunOn_neg (h : ¬∃ a ∈ s, f a = b) : invFunOn f s b = Classical.choice ‹Nonempty α› := by
-  rw [bex_def] at h  <;> rw [inv_fun_on, dif_neg h]
+  rw [bex_def] at h <;> rw [inv_fun_on, dif_neg h]
 #align function.inv_fun_on_neg Function.invFunOn_neg
 -/
 
@@ -2209,7 +2209,7 @@ theorem RightInverse.rightInvOn {g : β → α} (h : RightInverse f g) (s : Set 
 
 #print Function.LeftInverse.rightInvOn_range /-
 theorem LeftInverse.rightInvOn_range {g : β → α} (h : LeftInverse f g) : RightInvOn f g (range g) :=
-  forall_range_iff.2 fun i => congr_arg g (h i)
+  forall_mem_range.2 fun i => congr_arg g (h i)
 #align function.left_inverse.right_inv_on_range Function.LeftInverse.rightInvOn_range
 -/
 
@@ -2247,7 +2247,7 @@ theorem surjOn_range (h : Semiconj f fa fb) (ha : Surjective fa) : SurjOn fb (ra
 theorem injOn_image (h : Semiconj f fa fb) (ha : InjOn fa s) (hf : InjOn f (fa '' s)) :
     InjOn fb (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ H
-  simp only [← h.eq] at H 
+  simp only [← h.eq] at H
   exact congr_arg f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
 #align function.semiconj.inj_on_image Function.Semiconj.injOn_image
 -/
@@ -2286,7 +2286,7 @@ theorem injOn_preimage (h : Semiconj f fa fb) {s : Set β} (hb : InjOn fb s)
   by
   intro x hx y hy H
   have := congr_arg f H
-  rw [h.eq, h.eq] at this 
+  rw [h.eq, h.eq] at this
   exact hf hx hy (hb hx hy this)
 #align function.semiconj.inj_on_preimage Function.Semiconj.injOn_preimage
 -/

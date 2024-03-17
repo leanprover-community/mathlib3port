@@ -43,7 +43,7 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
   refine' ⟨_, this, fun n => _⟩
   suffices; refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
   · intro h; rw [Nat.rfindOpt_dom]
-    simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h 
+    simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h
     obtain ⟨x, k, e⟩ | ⟨x, k, e⟩ := h
     · refine' ⟨k, x, _⟩; simp only [e, Option.some_orElse, Option.mem_def]
     · refine' ⟨k, _⟩
@@ -90,14 +90,14 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     have hk : (k (encode a)).Dom :=
       (H _).2.2 (by simpa only [encodek₂, bind_some, coe_some] using h)
     exists hk
-    simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H 
+    simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
     obtain ⟨a', ha', y, hy, e⟩ | ⟨a', ha', y, hy, e⟩ := (H _).1 _ ⟨hk, rfl⟩ <;>
       · simp only [e.symm, encodek]
-  intro x h'; simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h' 
+  intro x h'; simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
   obtain ⟨n, hn, hx⟩ := h'
   have := (H _).1 _ hn
-  simp [mem_decode₂, encode_injective.eq_iff] at this 
-  obtain ⟨a', ha, rfl⟩ | ⟨a', ha, rfl⟩ := this <;> simp only [encodek] at hx  <;> rw [hx] at ha 
+  simp [mem_decode₂, encode_injective.eq_iff] at this
+  obtain ⟨a', ha, rfl⟩ | ⟨a', ha, rfl⟩ := this <;> simp only [encodek] at hx <;> rw [hx] at ha
   · exact Or.inl ha
   exact Or.inr ha
 #align partrec.merge' Partrec.merge'
@@ -229,11 +229,11 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
     fixed_point₂
       (Partrec.cond (h.comp fst) ((Partrec.nat_iff.2 hg).comp snd).to₂
           ((Partrec.nat_iff.2 hf).comp snd).to₂).to₂
-  simp at e 
+  simp at e
   by_cases H : eval c ∈ C
-  · simp only [H, if_true] at e ; rwa [← e]
-  · simp only [H, if_false] at e 
-    rw [e] at H ; contradiction
+  · simp only [H, if_true] at e; rwa [← e]
+  · simp only [H, if_false] at e
+    rw [e] at H; contradiction
 #align computable_pred.rice ComputablePred.rice
 -/
 
@@ -283,7 +283,7 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
         Partrec.merge (h₁.map (Computable.const tt).to₂) (h₂.map (Computable.const ff).to₂) _
       · refine' Partrec.of_eq pk fun n => Part.eq_some_iff.2 _
         rw [hk]; simp; apply Decidable.em
-      · intro a x hx y hy; simp at hx hy ; cases hy.1 hx.1⟩⟩
+      · intro a x hx y hy; simp at hx hy; cases hy.1 hx.1⟩⟩
 #align computable_pred.computable_iff_re_compl_re ComputablePred.computable_iff_re_compl_re
 -/
 
@@ -451,7 +451,7 @@ theorem rfindOpt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f)
         simp only [Part.some_inj, PFun.coe_val];
         cases f (n ::ᵥ v) <;> simp [Nat.succ_le_succ] <;> rfl
       · have := Nat.rfind_spec h
-        simp only [PFun.coe_val, Part.mem_some_iff] at this 
+        simp only [PFun.coe_val, Part.mem_some_iff] at this
         cases' f (a ::ᵥ v) with c; · cases this
         rw [← Option.some_inj, eq_comm]; rfl
 #align nat.partrec'.rfind_opt Nat.Partrec'.rfindOpt

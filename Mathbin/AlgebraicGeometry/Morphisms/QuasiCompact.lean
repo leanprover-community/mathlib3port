@@ -193,11 +193,11 @@ theorem QuasiCompact.affineProperty_isLocal : (QuasiCompact.affineProperty : _).
     change CompactSpace ((opens.map f.val.base).obj (Y.basic_open r))
     rw [Scheme.preimage_basic_open f r]
     erw [← isCompact_iff_compactSpace]
-    rw [← isCompact_univ_iff] at H 
+    rw [← isCompact_univ_iff] at H
     exact is_compact_basic_open X H _
   · rintro X Y H f S hS hS'
     skip
-    rw [← is_affine_open.basic_open_union_eq_self_iff] at hS 
+    rw [← is_affine_open.basic_open_union_eq_self_iff] at hS
     delta quasi_compact.affine_property
     rw [← isCompact_univ_iff]
     change IsCompact ((opens.map f.val.base).obj ⊤).1
@@ -354,7 +354,7 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen (X : Sch
     {U : Opens X.carrier} (hU : IsAffineOpen U) (x f : X.Presheaf.obj (op U))
     (H : x |_ X.basicOpen f = 0) : ∃ n : ℕ, f ^ n * x = 0 :=
   by
-  rw [← map_zero (X.presheaf.map (hom_of_le <| X.basic_open_le f : X.basic_open f ⟶ U).op)] at H 
+  rw [← map_zero (X.presheaf.map (hom_of_le <| X.basic_open_le f : X.basic_open f ⟶ U).op)] at H
   have := (is_localization_basic_open hU f).3
   obtain ⟨⟨_, n, rfl⟩, e⟩ := this.mp H
   exact ⟨n, by simpa [mul_comm x] using e⟩
@@ -397,9 +397,9 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   replace hn :=
     congr_arg (fun x => X.presheaf.map (hom_of_le (h₁ i)).op (f ^ (finset.univ.sup n - n i)) * x)
       (hn i)
-  dsimp at hn 
-  simp only [← map_mul, ← map_pow] at hn 
-  rwa [MulZeroClass.mul_zero, ← mul_assoc, ← pow_add, tsub_add_cancel_of_le] at hn 
+  dsimp at hn
+  simp only [← map_mul, ← map_pow] at hn
+  rwa [MulZeroClass.mul_zero, ← mul_assoc, ← pow_add, tsub_add_cancel_of_le] at hn
   apply Finset.le_sup (Finset.mem_univ i)
 #align algebraic_geometry.exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_compact AlgebraicGeometry.exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact
 -/

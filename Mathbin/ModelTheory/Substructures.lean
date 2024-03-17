@@ -256,7 +256,7 @@ theorem mem_sInf {S : Set (L.Substructure M)} {x : M} : x ∈ sInf S ↔ ∀ p �
 
 #print FirstOrder.Language.Substructure.mem_iInf /-
 theorem mem_iInf {ι : Sort _} {S : ι → L.Substructure M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i :=
-  by simp only [iInf, mem_Inf, Set.forall_range_iff]
+  by simp only [iInf, mem_Inf, Set.forall_mem_range]
 #align first_order.language.substructure.mem_infi FirstOrder.Language.Substructure.mem_iInf
 -/
 
@@ -911,10 +911,10 @@ def substructureReduct : L'.Substructure M ↪o L.Substructure M
       fun_mem := fun n f x hx =>
         by
         have h := S.fun_mem (φ.on_function f) x hx
-        simp only [Lhom.map_on_function, substructure.mem_carrier] at h 
+        simp only [Lhom.map_on_function, substructure.mem_carrier] at h
         exact h }
   inj' S T h := by
-    simp only [SetLike.coe_set_eq] at h 
+    simp only [SetLike.coe_set_eq] at h
     exact h
   map_rel_iff' S T := Iff.rfl
 #align first_order.language.Lhom.substructure_reduct FirstOrder.Language.LHom.substructureReduct

@@ -64,7 +64,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (x * y) : Γ₀) < γ
         rw [Valuation.map_mul, Hx, mul_comm]
-        rw [Units.val_mul, mul_comm] at vy_lt 
+        rw [Units.val_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
     rightMul := by
       rintro x γ
@@ -78,7 +78,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (y * x) : Γ₀) < γ
         rw [Valuation.map_mul, Hx]
-        rw [Units.val_mul, mul_comm] at vy_lt 
+        rw [Units.val_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt }
 #align valuation.subgroups_basis Valuation.subgroups_basis
 -/

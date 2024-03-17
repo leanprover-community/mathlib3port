@@ -69,13 +69,13 @@ alias ⟨DirectedOn.directed_val, _⟩ := directedOn_iff_directed
 
 #print directedOn_range /-
 theorem directedOn_range {f : ι → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
-  simp_rw [Directed, DirectedOn, Set.forall_range_iff, Set.exists_range_iff]
+  simp_rw [Directed, DirectedOn, Set.forall_mem_range, Set.exists_range_iff]
 #align directed_on_range directedOn_range
 -/
 
 #print directedOn_image /-
 theorem directedOn_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
-  simp only [DirectedOn, Set.ball_image_iff, Set.bex_image_iff, Order.Preimage]
+  simp only [DirectedOn, Set.forall_mem_image, Set.exists_mem_image, Order.Preimage]
 #align directed_on_image directedOn_image
 -/
 

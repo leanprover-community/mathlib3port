@@ -230,7 +230,7 @@ theorem map_eval_pi (f : ∀ i, Filter (α i)) [∀ i, NeBot (f i)] (i : ι) :
   by
   refine' le_antisymm (tendsto_eval_pi f i) fun s hs => _
   rcases mem_pi.1 (mem_map.1 hs) with ⟨I, hIf, t, htf, hI⟩
-  rw [← image_subset_iff] at hI 
+  rw [← image_subset_iff] at hI
   refine' mem_of_superset (htf i) ((subset_eval_image_pi _ _).trans hI)
   exact nonempty_of_mem (pi_mem_pi hIf fun i hi => htf i)
 #align filter.map_eval_pi Filter.map_eval_pi

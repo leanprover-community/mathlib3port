@@ -134,7 +134,7 @@ theorem log_stirlingSeq_diff_le_geo_sum (n : ℕ) :
       ((1 / (2 * n.succ + 1)) ^ 2 / (1 - (1 / (2 * n.succ + 1)) ^ 2)) :=
     by
     have := (hasSum_geometric_of_lt_one h_nonneg _).hMul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
-    · simp_rw [← pow_succ] at this 
+    · simp_rw [← pow_succ] at this
       exact this
     rw [one_div, inv_pow]
     exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_ne_zero)

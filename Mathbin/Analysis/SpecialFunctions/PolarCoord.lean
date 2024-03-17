@@ -42,7 +42,7 @@ def polarCoord : PartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)
   target := Ioi (0 : ℝ) ×ˢ Ioo (-π) π
   map_target' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
-    dsimp at hr hθ 
+    dsimp at hr hθ
     rcases eq_or_ne θ 0 with (rfl | h'θ)
     · simpa using hr
     · right
@@ -54,14 +54,14 @@ def polarCoord : PartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)
       true_and_iff, Complex.arg_lt_pi_iff]
     constructor
     · cases hxy
-      · dsimp at hxy ; linarith [sq_pos_of_ne_zero _ hxy.ne', sq_nonneg y]
+      · dsimp at hxy; linarith [sq_pos_of_ne_zero _ hxy.ne', sq_nonneg y]
       · linarith [sq_nonneg x, sq_pos_of_ne_zero _ hxy]
     · cases hxy
       · exact Or.inl (le_of_lt hxy)
       · exact Or.inr hxy
   right_inv' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
-    dsimp at hr hθ 
+    dsimp at hr hθ
     simp only [Prod.mk.inj_iff]
     constructor
     · conv_rhs => rw [← sqrt_sq (le_of_lt hr), ← one_mul (r ^ 2), ← sin_sq_add_cos_sq θ]
@@ -79,7 +79,7 @@ def polarCoord : PartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)
         Complex.I_im, sub_self, add_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add]
     have Z := Complex.abs_mul_cos_add_sin_mul_I (x + y * Complex.I)
     simp only [← Complex.ofReal_cos, ← Complex.ofReal_sin, mul_add, ← Complex.ofReal_mul, ←
-      mul_assoc] at Z 
+      mul_assoc] at Z
     simpa [A, -Complex.ofReal_cos, -Complex.ofReal_sin] using Complex.ext_iff.1 Z
   open_target := isOpen_Ioi.Prod isOpen_Ioo
   open_source :=
@@ -125,7 +125,7 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
     by
     intro x hx
     simp only [polarCoord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_lt,
-      Classical.not_not] at hx 
+      Classical.not_not] at hx
     exact hx.2
   have B : volume ((LinearMap.snd ℝ ℝ ℝ).ker : Set (ℝ × ℝ)) = 0 :=
     by

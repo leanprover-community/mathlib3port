@@ -198,6 +198,7 @@ instance SetTheory.Game.orderedAddCommGroup : OrderedAddCommGroup SetTheory.Game
 #align game.ordered_add_comm_group SetTheory.Game.orderedAddCommGroup
 -/
 
+#print SetTheory.Game.bddAbove_of_small /-
 /-- A small set `s` of games is bounded above. -/
 theorem SetTheory.Game.bddAbove_of_small (s : Set SetTheory.Game.{u}) [Small.{u} s] : BddAbove s :=
   ⟨_, fun i hi => by
@@ -205,7 +206,9 @@ theorem SetTheory.Game.bddAbove_of_small (s : Set SetTheory.Game.{u}) [Small.{u}
       SetTheory.PGame.le_iff_game_le.1
         (upper_bound_mem_upper_bounds _ (Set.mem_image_of_mem Quotient.out hi))⟩
 #align game.bdd_above_of_small SetTheory.Game.bddAbove_of_small
+-/
 
+#print SetTheory.Game.bddBelow_of_small /-
 /-- A small set `s` of games is bounded below. -/
 theorem SetTheory.Game.bddBelow_of_small (s : Set SetTheory.Game.{u}) [Small.{u} s] : BddBelow s :=
   ⟨_, fun i hi => by
@@ -213,6 +216,7 @@ theorem SetTheory.Game.bddBelow_of_small (s : Set SetTheory.Game.{u}) [Small.{u}
       SetTheory.PGame.le_iff_game_le.1
         (lower_bound_mem_lower_bounds _ (Set.mem_image_of_mem Quotient.out hi))⟩
 #align game.bdd_below_of_small SetTheory.Game.bddBelow_of_small
+-/
 
 end SetTheory.Game
 
@@ -244,7 +248,7 @@ theorem SetTheory.PGame.quot_eq_of_mk'_quot_eq {x y : SetTheory.PGame}
     (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
     (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
     (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ := by
-  simp_rw [Quotient.eq'] at hl hr ; exact Quot.sound (equiv_of_mk_equiv L R hl hr)
+  simp_rw [Quotient.eq'] at hl hr; exact Quot.sound (equiv_of_mk_equiv L R hl hr)
 #align pgame.quot_eq_of_mk_quot_eq SetTheory.PGame.quot_eq_of_mk'_quot_eq
 -/
 

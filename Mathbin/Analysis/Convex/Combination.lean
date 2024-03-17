@@ -193,12 +193,12 @@ theorem Convex.centerMass_mem (hs : Convex R s) :
   intro h₀ hpos hmem
   have zi : z i ∈ s := hmem _ (mem_insert_self _ _)
   have hs₀ : ∀ j ∈ t, 0 ≤ w j := fun j hj => h₀ j <| mem_insert_of_mem hj
-  rw [sum_insert hi] at hpos 
+  rw [sum_insert hi] at hpos
   by_cases hsum_t : ∑ j in t, w j = 0
   · have ws : ∀ j ∈ t, w j = 0 := (sum_eq_zero_iff_of_nonneg hs₀).1 hsum_t
     have wz : ∑ j in t, w j • z j = 0 := sum_eq_zero fun i hi => by simp [ws i hi]
     simp only [center_mass, sum_insert hi, wz, hsum_t, add_zero]
-    simp only [hsum_t, add_zero] at hpos 
+    simp only [hsum_t, add_zero] at hpos
     rw [← mul_smul, inv_mul_cancel (ne_of_gt hpos), one_smul]
     exact zi
   · rw [Finset.centerMass_insert _ _ _ hi hsum_t]
@@ -228,14 +228,14 @@ theorem Convex.finsum_mem {ι : Sort _} {w : ι → R} {z : ι → E} {s : Set E
   have hfin_w : (support (w ∘ PLift.down)).Finite :=
     by
     by_contra H
-    rw [finsum, dif_neg H] at h₁ 
+    rw [finsum, dif_neg H] at h₁
     exact zero_ne_one h₁
   have hsub : support ((fun i => w i • z i) ∘ PLift.down) ⊆ hfin_w.to_finset :=
     (support_smul_subset_left _ _).trans hfin_w.coe_to_finset.ge
   rw [finsum_eq_sum_plift_of_support_subset hsub]
   refine' hs.sum_mem (fun _ _ => h₀ _) _ fun i hi => hz _ _
-  · rwa [finsum, dif_pos hfin_w] at h₁ 
-  · rwa [hfin_w.mem_to_finset] at hi 
+  · rwa [finsum, dif_pos hfin_w] at h₁
+  · rwa [hfin_w.mem_to_finset] at hi
 #align convex.finsum_mem Convex.finsum_mem
 -/
 
@@ -375,12 +375,12 @@ theorem convexHull_eq (s : Set E) :
     rw [Finset.centerMass_segment' _ _ _ _ _ _ hwx₁ hwy₁ _ _ hab]
     refine' ⟨_, _, _, _, _, _, _, rfl⟩
     · rintro i hi
-      rw [Finset.mem_disjSum] at hi 
+      rw [Finset.mem_disjSum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;> simp only [Sum.elim_inl, Sum.elim_inr] <;>
         apply_rules [mul_nonneg, hwx₀, hwy₀]
     · simp [Finset.sum_sum_elim, finset.mul_sum.symm, *]
     · intro i hi
-      rw [Finset.mem_disjSum] at hi 
+      rw [Finset.mem_disjSum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;> apply_rules [hzx, hzy]
   · rintro _ ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩
     exact t.center_mass_mem_convex_hull hw₀ (hw₁.symm ▸ zero_lt_one) hz
@@ -395,7 +395,7 @@ theorem Finset.convexHull_eq (s : Finset E) :
   by
   refine' subset.antisymm (convexHull_min _ _) _
   · intro x hx
-    rw [Finset.mem_coe] at hx 
+    rw [Finset.mem_coe] at hx
     refine' ⟨_, _, _, Finset.centerMass_ite_eq _ _ _ hx⟩
     · intros; split_ifs; exacts [zero_le_one, le_refl 0]
     · rw [Finset.sum_ite_eq, if_pos hx]
@@ -471,9 +471,9 @@ theorem mk_mem_convexHull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHul
   refine'
     ⟨ι × κ, a ×ˢ b, fun p => w p.1 * v p.2, fun p => (S p.1, T p.2), fun p hp => _, h_sum,
       fun p hp => _, _⟩
-  · rw [mem_product] at hp 
+  · rw [mem_product] at hp
     exact mul_nonneg (hw p.1 hp.1) (hv p.2 hp.2)
-  · rw [mem_product] at hp 
+  · rw [mem_product] at hp
     exact ⟨hS p.1 hp.1, hT p.2 hp.2⟩
   ext
   · rw [← hSp, Finset.centerMass_eq_of_sum_1 _ _ hw', Finset.centerMass_eq_of_sum_1 _ _ h_sum]
@@ -590,7 +590,7 @@ theorem Set.Finite.convexHull_eq_image {s : Set E} (hs : s.Finite) :
       haveI := hs.fintype
       ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' stdSimplex R s :=
   by
-  rw [← convexHull_basis_eq_stdSimplex, ← LinearMap.convexHull_image, ← Set.range_comp, (· ∘ ·)]
+  rw [← convexHull_basis_eq_stdSimplex, ← LinearMap.image_convexHull, ← Set.range_comp, (· ∘ ·)]
   apply congr_arg
   convert subtype.range_coe.symm
   ext x
@@ -624,7 +624,7 @@ theorem AffineBasis.convexHull_eq_nonneg_coord {ι : Type _} (b : AffineBasis ι
     refine' ⟨s, w, _, hw₁, rfl⟩
     intro i hi
     specialize hx i
-    rw [b.coord_apply_combination_of_mem hi hw₁] at hx 
+    rw [b.coord_apply_combination_of_mem hi hw₁] at hx
     exact hx
 #align affine_basis.convex_hull_eq_nonneg_coord AffineBasis.convexHull_eq_nonneg_coord
 -/

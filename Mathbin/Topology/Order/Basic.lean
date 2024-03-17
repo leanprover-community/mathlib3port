@@ -964,7 +964,7 @@ theorem Dense.exists_le' {s : Set α} (hs : Dense s) (hbot : ∀ x, IsBot x → 
     ∃ y ∈ s, y ≤ x := by
   by_cases hx : IsBot x
   · exact ⟨x, hbot x hx, le_rfl⟩
-  · simp only [IsBot, Classical.not_forall, not_le] at hx 
+  · simp only [IsBot, Classical.not_forall, not_le] at hx
     rcases hs.exists_mem_open isOpen_Iio hx with ⟨y, hys, hy : y < x⟩
     exact ⟨y, hys, hy.le⟩
 #align dense.exists_le' Dense.exists_le'
@@ -2341,8 +2341,8 @@ theorem nhds_basis_Ioo_pos [NoMinOrder α] [NoMaxOrder α] (a : α) :
       refine' ⟨min (a - l) (u - a), by apply lt_min <;> rwa [sub_pos], _⟩
       rintro x ⟨hx, hx'⟩
       apply h'
-      rw [sub_lt_comm, lt_min_iff, sub_lt_sub_iff_left] at hx 
-      rw [← sub_lt_iff_lt_add', lt_min_iff, sub_lt_sub_iff_right] at hx' 
+      rw [sub_lt_comm, lt_min_iff, sub_lt_sub_iff_left] at hx
+      rw [← sub_lt_iff_lt_add', lt_min_iff, sub_lt_sub_iff_right] at hx'
       exact ⟨hx.1, hx'.2⟩
     · rintro ⟨ε, ε_pos, h⟩
       exact ⟨(a - ε, a + ε), by simp [ε_pos], h⟩⟩
@@ -2484,7 +2484,7 @@ theorem isLUB_of_mem_nhds {s : Set α} {a : α} {f : Filter α} (hsa : a ∈ upp
 #print isLUB_of_mem_closure /-
 theorem isLUB_of_mem_closure {s : Set α} {a : α} (hsa : a ∈ upperBounds s) (hsf : a ∈ closure s) :
     IsLUB s a := by
-  rw [mem_closure_iff_clusterPt, ClusterPt, inf_comm] at hsf 
+  rw [mem_closure_iff_clusterPt, ClusterPt, inf_comm] at hsf
   haveI : (𝓟 s ⊓ 𝓝 a).ne_bot := hsf
   exact isLUB_of_mem_nhds hsa (mem_principal_self s)
 #align is_lub_of_mem_closure isLUB_of_mem_closure

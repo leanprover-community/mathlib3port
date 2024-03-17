@@ -68,7 +68,7 @@ theorem isCoprime_self : IsCoprime x x ↔ IsUnit x :=
 #print isCoprime_zero_left /-
 theorem isCoprime_zero_left : IsCoprime 0 x ↔ IsUnit x :=
   ⟨fun ⟨a, b, H⟩ =>
-    isUnit_of_mul_eq_one x b <| by rwa [MulZeroClass.mul_zero, zero_add, mul_comm] at H , fun H =>
+    isUnit_of_mul_eq_one x b <| by rwa [MulZeroClass.mul_zero, zero_add, mul_comm] at H, fun H =>
     let ⟨b, hb⟩ := isUnit_iff_exists_inv'.1 H
     ⟨1, b, by rwa [one_mul, zero_add]⟩⟩
 #align is_coprime_zero_left isCoprime_zero_left
@@ -164,7 +164,7 @@ theorem IsCoprime.of_mul_left_left (H : IsCoprime (x * y) z) : IsCoprime x z :=
 
 #print IsCoprime.of_mul_left_right /-
 theorem IsCoprime.of_mul_left_right (H : IsCoprime (x * y) z) : IsCoprime y z := by
-  rw [mul_comm] at H ; exact H.of_mul_left_left
+  rw [mul_comm] at H; exact H.of_mul_left_left
 #align is_coprime.of_mul_left_right IsCoprime.of_mul_left_right
 -/
 
@@ -176,7 +176,7 @@ theorem IsCoprime.of_mul_right_left (H : IsCoprime x (y * z)) : IsCoprime x y :=
 
 #print IsCoprime.of_mul_right_right /-
 theorem IsCoprime.of_mul_right_right (H : IsCoprime x (y * z)) : IsCoprime x z := by
-  rw [mul_comm] at H ; exact H.of_mul_right_left
+  rw [mul_comm] at H; exact H.of_mul_right_left
 #align is_coprime.of_mul_right_right IsCoprime.of_mul_right_right
 -/
 
@@ -241,7 +241,7 @@ theorem IsCoprime.of_add_mul_left_left (h : IsCoprime (x + y * z) y) : IsCoprime
 
 #print IsCoprime.of_add_mul_right_left /-
 theorem IsCoprime.of_add_mul_right_left (h : IsCoprime (x + z * y) y) : IsCoprime x y := by
-  rw [mul_comm] at h ; exact h.of_add_mul_left_left
+  rw [mul_comm] at h; exact h.of_add_mul_left_left
 #align is_coprime.of_add_mul_right_left IsCoprime.of_add_mul_right_left
 -/
 
@@ -253,31 +253,31 @@ theorem IsCoprime.of_add_mul_left_right (h : IsCoprime x (y + x * z)) : IsCoprim
 
 #print IsCoprime.of_add_mul_right_right /-
 theorem IsCoprime.of_add_mul_right_right (h : IsCoprime x (y + z * x)) : IsCoprime x y := by
-  rw [mul_comm] at h ; exact h.of_add_mul_left_right
+  rw [mul_comm] at h; exact h.of_add_mul_left_right
 #align is_coprime.of_add_mul_right_right IsCoprime.of_add_mul_right_right
 -/
 
 #print IsCoprime.of_mul_add_left_left /-
 theorem IsCoprime.of_mul_add_left_left (h : IsCoprime (y * z + x) y) : IsCoprime x y := by
-  rw [add_comm] at h ; exact h.of_add_mul_left_left
+  rw [add_comm] at h; exact h.of_add_mul_left_left
 #align is_coprime.of_mul_add_left_left IsCoprime.of_mul_add_left_left
 -/
 
 #print IsCoprime.of_mul_add_right_left /-
 theorem IsCoprime.of_mul_add_right_left (h : IsCoprime (z * y + x) y) : IsCoprime x y := by
-  rw [add_comm] at h ; exact h.of_add_mul_right_left
+  rw [add_comm] at h; exact h.of_add_mul_right_left
 #align is_coprime.of_mul_add_right_left IsCoprime.of_mul_add_right_left
 -/
 
 #print IsCoprime.of_mul_add_left_right /-
 theorem IsCoprime.of_mul_add_left_right (h : IsCoprime x (x * z + y)) : IsCoprime x y := by
-  rw [add_comm] at h ; exact h.of_add_mul_left_right
+  rw [add_comm] at h; exact h.of_add_mul_left_right
 #align is_coprime.of_mul_add_left_right IsCoprime.of_mul_add_left_right
 -/
 
 #print IsCoprime.of_mul_add_right_right /-
 theorem IsCoprime.of_mul_add_right_right (h : IsCoprime x (z * x + y)) : IsCoprime x y := by
-  rw [add_comm] at h ; exact h.of_add_mul_right_right
+  rw [add_comm] at h; exact h.of_add_mul_right_right
 #align is_coprime.of_mul_add_right_right IsCoprime.of_mul_add_right_right
 -/
 

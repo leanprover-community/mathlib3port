@@ -57,7 +57,7 @@ theorem ediam_smul₀ (c : 𝕜) (s : Set E) : EMetric.diam (c • s) = ‖c‖�
     simp [zero_smul_set hs, ← Set.singleton_zero]
   · have := (lipschitzWith_smul c⁻¹).ediam_image_le (c • s)
     rwa [← smul_eq_mul, ← ENNReal.smul_def, Set.image_smul, inv_smul_smul₀ hc s, nnnorm_inv,
-      ENNReal.le_inv_smul_iff (nnnorm_ne_zero_iff.mpr hc)] at this 
+      ENNReal.le_inv_smul_iff (nnnorm_ne_zero_iff.mpr hc)] at this
 #align ediam_smul₀ ediam_smul₀
 -/
 
@@ -199,14 +199,14 @@ theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε
     ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε :=
   by
   obtain rfl | hε' := hε.eq_or_lt
-  · exact ⟨z, by rwa [zero_add] at h , (dist_self _).le⟩
+  · exact ⟨z, by rwa [zero_add] at h, (dist_self _).le⟩
   have hεδ := add_pos_of_pos_of_nonneg hε' hδ
   refine'
     (exists_dist_eq x z (div_nonneg hε <| add_nonneg hε hδ) (div_nonneg hδ <| add_nonneg hε hδ) <|
           by rw [← add_div, div_self hεδ.ne']).imp
       fun y hy => _
   rw [hy.1, hy.2, div_mul_comm, div_mul_comm ε]
-  rw [← div_le_one hεδ] at h 
+  rw [← div_le_one hεδ] at h
   exact ⟨mul_le_of_le_one_left hδ h, mul_le_of_le_one_left hε h⟩
 #align exists_dist_le_le exists_dist_le_le
 -/
@@ -222,7 +222,7 @@ theorem exists_dist_le_lt (hδ : 0 ≤ δ) (hε : 0 < ε) (h : dist x z < ε + �
           by rw [← add_div, div_self (add_pos_of_pos_of_nonneg hε hδ).ne']).imp
       fun y hy => _
   rw [hy.1, hy.2, div_mul_comm, div_mul_comm ε]
-  rw [← div_lt_one (add_pos_of_pos_of_nonneg hε hδ)] at h 
+  rw [← div_lt_one (add_pos_of_pos_of_nonneg hε hδ)] at h
   exact ⟨mul_le_of_le_one_left hδ h.le, mul_lt_of_lt_one_left hε h⟩
 #align exists_dist_le_lt exists_dist_le_lt
 -/
@@ -249,7 +249,7 @@ theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ)
           by rw [← add_div, div_self (add_pos hε hδ).ne']).imp
       fun y hy => _
   rw [hy.1, hy.2, div_mul_comm, div_mul_comm ε]
-  rw [← div_lt_one (add_pos hε hδ)] at h 
+  rw [← div_lt_one (add_pos hε hδ)] at h
   exact ⟨mul_lt_of_lt_one_left hδ h, mul_lt_of_lt_one_left hε h⟩
 #align exists_dist_lt_lt exists_dist_lt_lt
 -/
@@ -260,9 +260,9 @@ theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) :
     Disjoint (ball x δ) (ball y ε) ↔ δ + ε ≤ dist x y :=
   by
   refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_ball⟩
-  rw [add_comm] at hxy 
+  rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_lt hδ hε hxy
-  rw [dist_comm] at hxz 
+  rw [dist_comm] at hxz
   exact h.le_bot ⟨hxz, hzy⟩
 #align disjoint_ball_ball_iff disjoint_ball_ball_iff
 -/
@@ -273,9 +273,9 @@ theorem disjoint_ball_closedBall_iff (hδ : 0 < δ) (hε : 0 ≤ ε) :
     Disjoint (ball x δ) (closedBall y ε) ↔ δ + ε ≤ dist x y :=
   by
   refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_closed_ball⟩
-  rw [add_comm] at hxy 
+  rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_le hδ hε hxy
-  rw [dist_comm] at hxz 
+  rw [dist_comm] at hxz
   exact h.le_bot ⟨hxz, hzy⟩
 #align disjoint_ball_closed_ball_iff disjoint_ball_closedBall_iff
 -/
@@ -293,9 +293,9 @@ theorem disjoint_closedBall_closedBall_iff (hδ : 0 ≤ δ) (hε : 0 ≤ ε) :
     Disjoint (closedBall x δ) (closedBall y ε) ↔ δ + ε < dist x y :=
   by
   refine' ⟨fun h => lt_of_not_ge fun hxy => _, closed_ball_disjoint_closed_ball⟩
-  rw [add_comm] at hxy 
+  rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_le_le hδ hε hxy
-  rw [dist_comm] at hxz 
+  rw [dist_comm] at hxz
   exact h.le_bot ⟨hxz, hzy⟩
 #align disjoint_closed_ball_closed_ball_iff disjoint_closedBall_closedBall_iff
 -/
@@ -321,9 +321,9 @@ theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
   have hr : 0 < ↑r - δ := by
     refine' sub_pos_of_lt _
     have := hs.trans_lt ((inf_edist_le_edist_of_mem hz).trans_lt h)
-    rw [of_real_eq_coe_nnreal hδ.le, some_eq_coe] at this 
+    rw [of_real_eq_coe_nnreal hδ.le, some_eq_coe] at this
     exact_mod_cast this
-  rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h 
+  rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h
   obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
   refine'
     (ENNReal.add_lt_add_right of_real_ne_top <|
@@ -342,7 +342,7 @@ theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
     by
     simp_rw [mem_thickening_iff]
     rintro ⟨z, hz, hxz⟩
-    rw [add_comm] at hxz 
+    rw [add_comm] at hxz
     obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hε hδ hxz
     exact ⟨y, ⟨_, hz, hyz⟩, hxy⟩
 #align thickening_thickening thickening_thickening

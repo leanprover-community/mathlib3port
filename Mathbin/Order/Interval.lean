@@ -827,7 +827,7 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
             WithBot.some_le_some.2
               ⟨iSup₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
                 le_iInf₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
-        rw [not_and_or, Classical.not_not] at h 
+        rw [not_and_or, Classical.not_not] at h
         cases h
         · exact ha _ h
         cases
@@ -844,13 +844,13 @@ theorem coe_sInf [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
   split_ifs
   · ext
     simp [WithBot.some_eq_coe, Interval.forall, h.1, ← forall_and, ← NonemptyInterval.mem_def]
-  simp_rw [not_and_or, Classical.not_not] at h 
+  simp_rw [not_and_or, Classical.not_not] at h
   cases h
   · refine' (eq_empty_of_subset_empty _).symm
     exact Inter₂_subset_of_subset _ h subset.rfl
   · refine' (not_nonempty_iff_eq_empty.1 _).symm
     rintro ⟨x, hx⟩
-    rw [mem_Inter₂] at hx 
+    rw [mem_Inter₂] at hx
     exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
 #align interval.coe_Inf Interval.coe_sInf
 -/

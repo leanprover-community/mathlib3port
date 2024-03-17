@@ -47,7 +47,7 @@ theorem homology'_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f
     h = k := by
   refine' cokernel_funext fun n => _
   -- Gosh it would be nice if `equiv_rw` could directly use an isomorphism, or an enriched `≃`.
-  equiv_rw (kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv at n 
+  equiv_rw (kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv at n
   convert w n <;> simp [to_kernel_subobject]
 #align Module.homology_ext ModuleCat.homology'_ext
 -/

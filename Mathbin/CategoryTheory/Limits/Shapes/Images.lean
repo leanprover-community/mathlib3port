@@ -114,8 +114,8 @@ theorem ext {F F' : MonoFactorisation f} (hI : F.i = F'.i) (hm : F.m = eqToHom h
     F = F' := by
   cases F; cases F'
   cases hI
-  simp at hm 
-  dsimp at F_fac' F'_fac' 
+  simp at hm
+  dsimp at F_fac' F'_fac'
   congr
   · assumption
   · skip; apply (cancel_mono F_m).1
@@ -552,7 +552,7 @@ instance [HasImage f] [∀ {Z : C} (g h : image f ⟶ Z), HasLimit (parallelPair
 #print CategoryTheory.Limits.epi_image_of_epi /-
 theorem epi_image_of_epi {X Y : C} (f : X ⟶ Y) [HasImage f] [E : Epi f] : Epi (image.ι f) :=
   by
-  rw [← image.fac f] at E 
+  rw [← image.fac f] at E
   skip
   exact epi_of_epi (factor_thru_image f) (image.ι f)
 #align category_theory.limits.epi_image_of_epi CategoryTheory.Limits.epi_image_of_epi

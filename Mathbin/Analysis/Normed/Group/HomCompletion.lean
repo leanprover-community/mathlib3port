@@ -237,7 +237,7 @@ theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
   intro a h
   replace h : ∃ y : f.ker, to_compl (y : G) = a; · simpa using h
   rcases h with ⟨⟨g, g_in : g ∈ f.ker⟩, rfl⟩
-  rw [f.mem_ker] at g_in 
+  rw [f.mem_ker] at g_in
   change f.completion (g : completion G) = 0
   simp [NormedAddGroupHom.mem_ker, f.completion_coe g, g_in, completion.coe_zero]
 #align normed_add_group_hom.ker_le_ker_completion NormedAddGroupHom.ker_le_ker_completion
@@ -301,7 +301,7 @@ section Extension
 
 variable {G : Type _} [SeminormedAddCommGroup G]
 
-variable {H : Type _} [SeminormedAddCommGroup H] [SeparatedSpace H] [CompleteSpace H]
+variable {H : Type _} [SeminormedAddCommGroup H] [T0Space H] [CompleteSpace H]
 
 #print NormedAddGroupHom.extension /-
 /-- If `H` is complete, the extension of `f : normed_add_group_hom G H` to a

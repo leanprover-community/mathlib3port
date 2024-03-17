@@ -54,7 +54,7 @@ which does not have a cluster point at 0 is a Cauchy filter
 (with respect to the additive uniform structure). This ensures the completion is
 a field.
 -/
-class CompletableTopField extends SeparatedSpace K : Prop where
+class CompletableTopField extends T0Space K : Prop where
   nice : ∀ F : Filter K, Cauchy F → 𝓝 0 ⊓ F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
 #align completable_top_field CompletableTopField
 -/
@@ -63,7 +63,7 @@ namespace UniformSpace
 
 namespace Completion
 
-instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
+instance (priority := 100) [T0Space K] : Nontrivial (hat K) :=
   ⟨⟨0, 1, fun h => zero_ne_one <| (uniformEmbedding_coe K).inj h⟩⟩
 
 variable {K}
@@ -82,7 +82,7 @@ theorem continuous_hatInv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : Co
   refine' dense_inducing_coe.continuous_at_extend _
   apply mem_of_superset (compl_singleton_mem_nhds h)
   intro y y_ne
-  rw [mem_compl_singleton_iff] at y_ne 
+  rw [mem_compl_singleton_iff] at y_ne
   apply CompleteSpace.complete
   rw [← Filter.map_map]
   apply Cauchy.map _ (completion.uniform_continuous_coe K)
@@ -151,7 +151,7 @@ theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
     by
     have := dense_inducing_coe.dense x
     rw [← image_univ, show (univ : Set K) = {0} ∪ {0}ᶜ from (union_compl_self _).symm,
-      image_union] at this 
+      image_union] at this
     apply mem_closure_of_mem_closure_union this
     rw [image_singleton]
     exact compl_singleton_mem_nhds x_ne
@@ -160,13 +160,13 @@ theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
     rw [image_image]
     rintro _ ⟨z, z_ne, rfl⟩
     rw [mem_singleton_iff]
-    rw [mem_compl_singleton_iff] at z_ne 
+    rw [mem_compl_singleton_iff] at z_ne
     dsimp [c, f]
     rw [hat_inv_extends z_ne]
     norm_cast
     rw [mul_inv_cancel z_ne]
   replace fxclo := closure_mono this fxclo
-  rwa [closure_singleton, mem_singleton_iff] at fxclo 
+  rwa [closure_singleton, mem_singleton_iff] at fxclo
 #align uniform_space.completion.mul_hat_inv_cancel UniformSpace.Completion.mul_hatInv_cancel
 -/
 
@@ -190,7 +190,7 @@ instance : TopologicalDivisionRing (hat K) :=
         haveI : {(0 : hat K)}ᶜ ⊆ {y : hat K | hat_inv y = y⁻¹} :=
           by
           intro y y_ne
-          rw [mem_compl_singleton_iff] at y_ne 
+          rw [mem_compl_singleton_iff] at y_ne
           dsimp [Inv.inv]
           rw [if_neg y_ne]
         mem_of_superset (compl_singleton_mem_nhds x_ne) this
@@ -204,7 +204,7 @@ variable (L : Type _) [Field L] [UniformSpace L] [CompletableTopField L]
 
 #print Subfield.completableTopField /-
 instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :=
-  { Subtype.separatedSpace (K : Set L) with
+  { Subtype.t0Space (K : Set L) with
     nice := by
       intro F F_cau inf_F
       let i : K →+* L := K.subtype
@@ -218,14 +218,14 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
 
 #print completableTopField_of_complete /-
 instance (priority := 100) completableTopField_of_complete (L : Type _) [Field L] [UniformSpace L]
-    [TopologicalDivisionRing L] [SeparatedSpace L] [CompleteSpace L] : CompletableTopField L :=
-  { ‹SeparatedSpace L› with
+    [TopologicalDivisionRing L] [T0Space L] [CompleteSpace L] : CompletableTopField L :=
+  { ‹T0Space L› with
     nice := fun F cau_F hF => by
       haveI : ne_bot F := cau_F.1
       rcases CompleteSpace.complete cau_F with ⟨x, hx⟩
       have hx' : x ≠ 0 := by
         rintro rfl
-        rw [inf_eq_right.mpr hx] at hF 
+        rw [inf_eq_right.mpr hx] at hF
         exact cau_F.1.Ne hF
       exact
         Filter.Tendsto.cauchy_map

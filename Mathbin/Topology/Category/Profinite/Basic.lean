@@ -409,9 +409,9 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
       rw [if_neg]; · rfl
       refine' mt (fun α => hVU α) _
       simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
-    apply_fun fun e => (e y).down at H 
-    dsimp [LocallyConstant.ofIsClopen] at H 
-    rw [if_pos hyV] at H 
+    apply_fun fun e => (e y).down at H
+    dsimp [LocallyConstant.ofIsClopen] at H
+    rw [if_pos hyV] at H
     exact top_ne_bot H
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget Profinite).epi_of_epi_map

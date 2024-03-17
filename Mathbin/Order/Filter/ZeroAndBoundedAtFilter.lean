@@ -101,7 +101,7 @@ def BoundedAtFilter [Norm β] (l : Filter α) (f : α → β) : Prop :=
 theorem ZeroAtFilter.boundedAtFilter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
     (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
   by
-  rw [zero_at_filter, ← Asymptotics.isLittleO_const_iff (one_ne_zero' ℝ)] at hf 
+  rw [zero_at_filter, ← Asymptotics.isLittleO_const_iff (one_ne_zero' ℝ)] at hf
   exact hf.is_O
 #align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.boundedAtFilter
 -/

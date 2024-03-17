@@ -301,7 +301,7 @@ theorem isLittleO_iff_nat_mul_le_aux (h₀ : (∀ x, 0 ≤ ‖f x‖) ∨ ∀ x,
     · refine' (H.def one_pos).mono fun x h₀' => _
       rw [Nat.cast_zero, MulZeroClass.zero_mul]
       refine' h₀.elim (fun hf => (hf x).trans _) fun hg => hg x
-      rwa [one_mul] at h₀' 
+      rwa [one_mul] at h₀'
     · have : (0 : ℝ) < n.succ := Nat.cast_pos.2 n.succ_pos
       exact (is_O_with_inv this).1 (H.def' <| inv_pos.2 this)
   · refine' fun H => is_o_iff.2 fun ε ε0 => _
@@ -704,7 +704,7 @@ theorem isLittleO_irrefl' (h : ∃ᶠ x in l, ‖f' x‖ ≠ 0) : ¬f' =o[l] f' 
   by
   intro ho
   rcases((ho.bound one_half_pos).and_frequently h).exists with ⟨x, hle, hne⟩
-  rw [one_div, ← div_eq_inv_mul] at hle 
+  rw [one_div, ← div_eq_inv_mul] at hle
   exact (half_lt_self (lt_of_le_of_ne (norm_nonneg _) hne.symm)).not_le hle
 #align asymptotics.is_o_irrefl' Asymptotics.isLittleO_irrefl'
 -/
@@ -2493,7 +2493,7 @@ theorem isLittleO_iff_exists_eq_mul :
   constructor
   · exact fun h => ⟨fun x => u x / v x, h.tendsto_div_nhds_zero, h.eventually_mul_div_cancel.symm⟩
   · unfold is_o; rintro ⟨φ, hφ, huvφ⟩ c hpos
-    rw [NormedAddCommGroup.tendsto_nhds_zero] at hφ 
+    rw [NormedAddCommGroup.tendsto_nhds_zero] at hφ
     exact is_O_with_of_eq_mul _ ((hφ c hpos).mono fun x => le_of_lt) huvφ
 #align asymptotics.is_o_iff_exists_eq_mul Asymptotics.isLittleO_iff_exists_eq_mul
 -/
@@ -2524,7 +2524,7 @@ theorem isBigO_iff_div_isBoundedUnder {α : Type _} {l : Filter α} {f g : α �
   by
   refine' ⟨div_is_bounded_under_of_is_O, fun h => _⟩
   obtain ⟨c, hc⟩ := h
-  simp only [eventually_map, norm_div] at hc 
+  simp only [eventually_map, norm_div] at hc
   refine' is_O.of_bound c (hc.mp <| hgf.mono fun x hx₁ hx₂ => _)
   by_cases hgx : g x = 0
   · simp [hx₁ hgx, hgx]
@@ -2544,7 +2544,7 @@ theorem IsLittleO.tendsto_zero_of_tendsto {α E 𝕜 : Type _} [NormedAddCommGro
     {u : α → E} {v : α → 𝕜} {l : Filter α} {y : 𝕜} (huv : u =o[l] v) (hv : Tendsto v l (𝓝 y)) :
     Tendsto u l (𝓝 0) := by
   suffices h : u =o[l] fun x => (1 : 𝕜)
-  · rwa [is_o_one_iff] at h 
+  · rwa [is_o_one_iff] at h
   exact huv.trans_is_O (hv.is_O_one 𝕜)
 #align asymptotics.is_o.tendsto_zero_of_tendsto Asymptotics.IsLittleO.tendsto_zero_of_tendsto
 -/
@@ -2588,7 +2588,7 @@ theorem IsBigO.eq_zero_of_norm_pow_within {f : E'' → F''} {s : Set E''} {x₀ 
 #print Asymptotics.IsBigO.eq_zero_of_norm_pow /-
 theorem IsBigO.eq_zero_of_norm_pow {f : E'' → F''} {x₀ : E''} {n : ℕ}
     (h : f =O[𝓝 x₀] fun x => ‖x - x₀‖ ^ n) (hn : 0 < n) : f x₀ = 0 := by
-  rw [← nhdsWithin_univ] at h ; exact h.eq_zero_of_norm_pow_within (mem_univ _) hn
+  rw [← nhdsWithin_univ] at h; exact h.eq_zero_of_norm_pow_within (mem_univ _) hn
 #align asymptotics.is_O.eq_zero_of_norm_pow Asymptotics.IsBigO.eq_zero_of_norm_pow
 -/
 
@@ -2653,7 +2653,7 @@ theorem bound_of_isBigO_cofinite (h : f =O[cofinite] g'') :
     ∃ C > 0, ∀ ⦃x⦄, g'' x ≠ 0 → ‖f x‖ ≤ C * ‖g'' x‖ :=
   by
   rcases h.exists_pos with ⟨C, C₀, hC⟩
-  rw [is_O_with, eventually_cofinite] at hC 
+  rw [is_O_with, eventually_cofinite] at hC
   rcases(hC.to_finset.image fun x => ‖f x‖ / ‖g'' x‖).exists_le with ⟨C', hC'⟩
   have : ∀ x, C * ‖g'' x‖ < ‖f x‖ → ‖f x‖ / ‖g'' x‖ ≤ C' := by simpa using hC'
   refine' ⟨max C C', lt_max_iff.2 (Or.inl C₀), fun x h₀ => _⟩

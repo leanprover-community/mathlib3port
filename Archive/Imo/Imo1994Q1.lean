@@ -43,7 +43,7 @@ namespace imo1994_q1
 theorem tedious (m : ℕ) (k : Fin (m + 1)) : m - (m + (m + 1 - ↑k)) % (m + 1) = ↑k :=
   by
   cases' k with k hk
-  rw [Nat.lt_succ_iff, le_iff_exists_add] at hk 
+  rw [Nat.lt_succ_iff, le_iff_exists_add] at hk
   rcases hk with ⟨c, rfl⟩
   have : k + c + (k + c + 1 - k) = c + (k + c + 1) := by
     simp only [add_assoc, add_tsub_cancel_left, add_left_comm]
@@ -88,18 +88,18 @@ theorem imo1994_q1 (n : ℕ) (m : ℕ) (A : Finset ℕ) (hm : A.card = m + 1)
     ⟨fun i => a i + a (rev k), by
       apply injective_of_le_imp_le
       intro i j hij
-      rwa [add_le_add_iff_right, a.map_rel_iff] at hij ⟩
+      rwa [add_le_add_iff_right, a.map_rel_iff] at hij⟩
   -- Proof that the `f i` are greater than `a (rev k)` for `i ≤ k`
   have hf : map f (Icc 0 k) ⊆ map a.to_embedding (Ioc (rev k) (Fin.last m)) :=
     by
     intro x hx
-    simp only [Equiv.subLeft_apply] at h 
+    simp only [Equiv.subLeft_apply] at h
     simp only [mem_map, f, mem_Icc, mem_Ioc, Fin.zero_le', true_and_iff, Equiv.subLeft_apply,
       Function.Embedding.coeFn_mk, exists_prop, RelEmbedding.coe_toEmbedding] at hx ⊢
     rcases hx with ⟨i, ⟨hi, rfl⟩⟩
     have h1 : a i + a (Fin.last m - k) ≤ n := by linarith only [h, a.monotone hi]
     have h2 : a i + a (Fin.last m - k) ∈ A := hadd _ (ha _) _ (ha _) h1
-    rw [← mem_coe, ← range_order_emb_of_fin A hm, Set.mem_range] at h2 
+    rw [← mem_coe, ← range_order_emb_of_fin A hm, Set.mem_range] at h2
     cases' h2 with j hj
     refine' ⟨j, ⟨_, Fin.le_last j⟩, hj⟩
     rw [← a.strict_mono.lt_iff_lt, hj]

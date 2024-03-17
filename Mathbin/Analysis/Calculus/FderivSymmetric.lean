@@ -81,7 +81,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   apply is_o.trans_is_O (is_o_iff.2 fun ε εpos => _) (is_O_const_mul_self ((‖v‖ + ‖w‖) * ‖w‖) _ _)
   -- consider a ball of radius `δ` around `x` in which the Taylor approximation for `f''` is
   -- good up to `δ`.
-  rw [HasFDerivWithinAt, HasFDerivAtFilter, is_o_iff] at hx 
+  rw [HasFDerivWithinAt, HasFDerivAtFilter, is_o_iff] at hx
   rcases Metric.mem_nhdsWithin_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
   have E1 : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (‖v‖ + ‖w‖) < δ :=
     by
@@ -102,7 +102,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     have : x + h • v ∈ interior s := s_conv.add_smul_mem_interior xs hv ⟨hpos, h_lt_1.le⟩
     rw [← smul_smul]
     apply s_conv.interior.add_smul_mem this _ ht
-    rw [add_assoc] at hw 
+    rw [add_assoc] at hw
     rw [add_assoc, ← smul_add]
     exact s_conv.add_smul_mem_interior xs hw ⟨hpos, h_lt_1.le⟩
   -- define a function `g` on `[0,1]` (identified with `[v, v + w]`) such that `g 1 - g 0` is the
@@ -322,7 +322,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     intro m
     apply nhdsWithin_le_nhds
     apply A m
-    rw [mem_interior_iff_mem_nhds] at hy 
+    rw [mem_interior_iff_mem_nhds] at hy
     exact interior_mem_nhds.2 hy
   -- we choose `t m > 0` such that `x + 4 (z + (t m) m)` belongs to the interior of `s`, for any
   -- vector `m`.
@@ -335,7 +335,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
       s_conv.second_derivative_within_at_symmetric_of_mem_interior hf xs hx (ts 0) (ts m)
     simp only [ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, add_right_inj,
       ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul', add_zero,
-      ContinuousLinearMap.zero_apply, smul_zero, ContinuousLinearMap.map_zero] at this 
+      ContinuousLinearMap.zero_apply, smul_zero, ContinuousLinearMap.map_zero] at this
     exact smul_right_injective F (tpos m).ne' this
   -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z + (t v) v`
   -- and `z + (t w) w`, we deduce that `f'' v w = f'' w v`. Cross terms involving `z` can be
@@ -343,10 +343,10 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
   have : f'' (z + t v • v) (z + t w • w) = f'' (z + t w • w) (z + t v • v) :=
     s_conv.second_derivative_within_at_symmetric_of_mem_interior hf xs hx (ts w) (ts v)
   simp only [ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, smul_add, smul_smul,
-    ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul', C] at this 
-  rw [← sub_eq_zero] at this 
-  abel at this 
-  simp only [one_zsmul, neg_smul, sub_eq_zero, mul_comm, ← sub_eq_add_neg] at this 
+    ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul', C] at this
+  rw [← sub_eq_zero] at this
+  abel at this
+  simp only [one_zsmul, neg_smul, sub_eq_zero, mul_comm, ← sub_eq_add_neg] at this
   apply smul_right_injective F _ this
   simp [(tpos v).ne', (tpos w).ne']
 #align convex.second_derivative_within_at_symmetric Convex.second_derivative_within_at_symmetric

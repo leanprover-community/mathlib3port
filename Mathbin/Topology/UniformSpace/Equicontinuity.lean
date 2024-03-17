@@ -173,7 +173,7 @@ theorem UniformEquicontinuous.equicontinuous {F : ι → β → α} (h : Uniform
 theorem EquicontinuousAt.continuousAt {F : ι → X → α} {x₀ : X} (h : EquicontinuousAt F x₀) (i : ι) :
     ContinuousAt (F i) x₀ := by
   intro U hU
-  rw [UniformSpace.mem_nhds_iff] at hU 
+  rw [UniformSpace.mem_nhds_iff] at hU
   rcases hU with ⟨V, hV₁, hV₂⟩
   exact mem_map.mpr (mem_of_superset (h V hV₁) fun x hx => hV₂ (hx i))
 #align equicontinuous_at.continuous_at EquicontinuousAt.continuousAt
@@ -450,7 +450,7 @@ theorem EquicontinuousAt.closure' {A : Set Y} {u : Y → X → α} {x₀ : X}
   rcases mem_uniformity_isClosed hU with ⟨V, hV, hVclosed, hVU⟩
   filter_upwards [hA V hV] with x hx
   rw [SetCoe.forall] at *
-  change A ⊆ (fun f => (u f x₀, u f x)) ⁻¹' V at hx 
+  change A ⊆ (fun f => (u f x₀, u f x)) ⁻¹' V at hx
   refine' (closure_minimal hx <| hVclosed.preimage <| _).trans (preimage_mono hVU)
   exact Continuous.prod_mk ((continuous_apply x₀).comp hu) ((continuous_apply x).comp hu)
 #align equicontinuous_at.closure' EquicontinuousAt.closure'
@@ -518,7 +518,7 @@ theorem UniformEquicontinuous.closure' {A : Set Y} {u : Y → β → α}
   filter_upwards [hA V hV]
   rintro ⟨x, y⟩ hxy
   rw [SetCoe.forall] at *
-  change A ⊆ (fun f => (u f x, u f y)) ⁻¹' V at hxy 
+  change A ⊆ (fun f => (u f x, u f y)) ⁻¹' V at hxy
   refine' (closure_minimal hxy <| hVclosed.preimage <| _).trans (preimage_mono hVU)
   exact Continuous.prod_mk ((continuous_apply x).comp hu) ((continuous_apply y).comp hu)
 #align uniform_equicontinuous.closure' UniformEquicontinuous.closure'

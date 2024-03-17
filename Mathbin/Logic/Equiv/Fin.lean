@@ -573,7 +573,7 @@ theorem Fin.snoc_eq_cons_rotate {α : Type _} (v : Fin n → α) (a : α) :
   by_cases h' : i < n
   · rw [finRotate_of_lt h', Fin.snoc, Fin.cons, dif_pos h']
     rfl
-  · have h'' : n = i := by simp only [not_lt] at h' ; exact (Nat.eq_of_le_of_lt_succ h' h).symm
+  · have h'' : n = i := by simp only [not_lt] at h'; exact (Nat.eq_of_le_of_lt_succ h' h).symm
     subst h''
     rw [finRotate_last', Fin.snoc, Fin.cons, dif_neg (lt_irrefl _)]
     rfl
@@ -603,7 +603,7 @@ theorem finRotate_succ_apply {n : ℕ} (i : Fin n.succ) : finRotate n.succ i = i
   rcases i.le_last.eq_or_lt with (rfl | h)
   · simp [finRotate_last]
   · cases i
-    simp only [Fin.lt_iff_val_lt_val, Fin.val_last, Fin.val_mk] at h 
+    simp only [Fin.lt_iff_val_lt_val, Fin.val_last, Fin.val_mk] at h
     simp [finRotate_of_lt h, Fin.eq_iff_veq, Fin.add_def, Nat.mod_eq_of_lt (Nat.succ_lt_succ h)]
 #align fin_rotate_succ_apply finRotate_succ_apply
 -/

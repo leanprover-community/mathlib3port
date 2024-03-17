@@ -536,7 +536,7 @@ noncomputable def Fintype.ofFinite (α : Type _) [Finite α] : Fintype α :=
 theorem Finite.of_injective {α β : Sort _} [Finite β] (f : α → β) (H : Injective f) : Finite α :=
   by
   cases nonempty_fintype (PLift β)
-  rw [← Equiv.injective_comp Equiv.plift f, ← Equiv.comp_injective _ equiv.plift.symm] at H 
+  rw [← Equiv.injective_comp Equiv.plift f, ← Equiv.comp_injective _ equiv.plift.symm] at H
   haveI := Fintype.ofInjective _ H
   exact Finite.of_equiv _ Equiv.plift
 #align finite.of_injective Finite.of_injective
@@ -552,7 +552,7 @@ theorem Finite.of_surjective {α β : Sort _} [Finite α] (f : α → β) (H : S
 theorem Finite.exists_univ_list (α) [Finite α] : ∃ l : List α, l.Nodup ∧ ∀ x : α, x ∈ l :=
   by
   cases nonempty_fintype α; obtain ⟨l, e⟩ := Quotient.exists_rep (@univ α _).1
-  have := And.intro univ.2 mem_univ_val; exact ⟨_, by rwa [← e] at this ⟩
+  have := And.intro univ.2 mem_univ_val; exact ⟨_, by rwa [← e] at this⟩
 #align finite.exists_univ_list Finite.exists_univ_list
 -/
 
@@ -697,7 +697,7 @@ theorem card_le_one_iff : card α ≤ 1 ↔ ∀ a b : α, a = b :=
       let ⟨x, hx⟩ := card_eq_one_iff.1 ha.symm
       rw [hx a, hx b], fun _ => ha ▸ le_rfl⟩
   | n + 2 => fun ha =>
-    ⟨fun h => by rw [← ha] at h  <;> exact absurd h (by decide), fun h =>
+    ⟨fun h => by rw [← ha] at h <;> exact absurd h (by decide), fun h =>
       card_unit ▸ card_le_of_injective (fun _ => ()) fun _ _ _ => h _ _⟩
 #align fintype.card_le_one_iff Fintype.card_le_one_iff
 -/
@@ -1000,7 +1000,7 @@ theorem nonempty_iff_card_le [Fintype α] [Fintype β] :
 theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card α ≤ s.card) :
     ∃ f : α ↪ β, Set.range f ⊆ s :=
   by
-  rw [← Fintype.card_coe] at h 
+  rw [← Fintype.card_coe] at h
   rcases nonempty_of_card_le h with ⟨f⟩
   exact ⟨f.trans (embedding.subtype _), by simp [Set.range_subset_iff]⟩
 #align function.embedding.exists_of_card_le_finset Function.Embedding.exists_of_card_le_finset
@@ -1391,7 +1391,7 @@ noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Fin
   intro i
   obtain ⟨s, c⟩ := Infinite.exists_subset_card_eq ι (n + 1)
   specialize w s
-  rw [c] at w 
+  rw [c] at w
   exact Nat.not_succ_le_self n w
 #align fintype_of_finset_card_le fintypeOfFinsetCardLe
 -/
@@ -1483,7 +1483,7 @@ theorem Fintype.induction_subsingleton_or_nontrivial {P : ∀ (α) [Fintype α],
   · apply hbase
   · apply hstep
     intro β _ hlt
-    rw [hn] at hlt 
+    rw [hn] at hlt
     exact ih (Fintype.card β) hlt _ rfl
 #align fintype.induction_subsingleton_or_nontrivial Fintype.induction_subsingleton_or_nontrivial
 -/

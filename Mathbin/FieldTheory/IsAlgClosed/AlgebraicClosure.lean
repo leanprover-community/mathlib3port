@@ -102,7 +102,7 @@ theorem spanEval_ne_top : spanEval k ≠ ⊤ :=
     Finsupp.mem_span_image_iff_total]
   rintro ⟨v, _, hv⟩
   replace hv := congr_arg (to_splitting_field k v.support) hv
-  rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv 
+  rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
   · exact zero_ne_one hv
   intro j hj
   rw [smul_eq_mul, AlgHom.map_mul, to_splitting_field_eval_X_self k hj, MulZeroClass.mul_zero]
@@ -348,7 +348,7 @@ theorem exists_root {f : Polynomial (AlgebraicClosureAux k)} (hfm : f.Monic) (hf
   have : ∃ n p, Polynomial.map (of_step k n) p = f := by
     convert Ring.DirectLimit.Polynomial.exists_of f
   obtain ⟨n, p, rfl⟩ := this
-  rw [monic_map_iff] at hfm 
+  rw [monic_map_iff] at hfm
   have := hfm.irreducible_of_irreducible_map (of_step k n) p hfi
   obtain ⟨x, hx⟩ := to_step_succ.exists_root k hfm this
   refine' ⟨of_step k (n + 1) x, _⟩

@@ -480,9 +480,9 @@ theorem WeierstrassCurve.Affine.irreducible_polynomial [IsDomain R] : Irreducibl
   rcases(W.monic_polynomial.not_irreducible_iff_exists_add_mul_eq_coeff W.nat_degree_polynomial).mp
       h with
     ⟨f, g, h0, h1⟩
-  simp only [polynomial_eq, Cubic.coeff_eq_c, Cubic.coeff_eq_d] at h0 h1 
-  apply_fun degree at h0 h1 
-  rw [Cubic.degree_of_a_ne_zero' <| neg_ne_zero.mpr <| one_ne_zero' R, degree_mul] at h0 
+  simp only [polynomial_eq, Cubic.coeff_eq_c, Cubic.coeff_eq_d] at h0 h1
+  apply_fun degree at h0 h1
+  rw [Cubic.degree_of_a_ne_zero' <| neg_ne_zero.mpr <| one_ne_zero' R, degree_mul] at h0
   apply (h1.symm.le.trans Cubic.degree_of_b_eq_zero').not_lt
   rcases nat.with_bot.add_eq_three_iff.mp h0.symm with (h | h | h | h)
   any_goals rw [degree_add_eq_left_of_degree_lt] <;> simp only [h] <;> decide
@@ -929,7 +929,7 @@ theorem WeierstrassCurve.Affine.CoordinateRing.smul_basis_eq_zero {p q : R[X]}
     (hpq : p • 1 + q • AdjoinRoot.mk W.Polynomial Y = 0) : p = 0 ∧ q = 0 :=
   by
   have h := fintype.linear_independent_iff.mp (coordinate_ring.basis W).LinearIndependent ![p, q]
-  erw [Fin.sum_univ_succ, basis_zero, Fin.sum_univ_one, basis_one] at h 
+  erw [Fin.sum_univ_succ, basis_zero, Fin.sum_univ_one, basis_one] at h
   exact ⟨h hpq 0, h hpq 1⟩
 #align weierstrass_curve.coordinate_ring.smul_basis_eq_zero WeierstrassCurve.Affine.CoordinateRing.smul_basis_eq_zero
 -/
@@ -939,7 +939,7 @@ theorem WeierstrassCurve.Affine.CoordinateRing.exists_smul_basis_eq (x : W.Coord
     ∃ p q : R[X], p • 1 + q • AdjoinRoot.mk W.Polynomial Y = x :=
   by
   have h := (coordinate_ring.basis W).sum_equivFun x
-  erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h 
+  erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h
   exact ⟨_, _, h⟩
 #align weierstrass_curve.coordinate_ring.exists_smul_basis_eq WeierstrassCurve.Affine.CoordinateRing.exists_smul_basis_eq
 -/
@@ -1019,7 +1019,7 @@ theorem WeierstrassCurve.Affine.CoordinateRing.degree_norm_smul_basis [IsDomain 
   ·
     simpa only [hq, hdp, sub_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero,
       zero_pow zero_lt_two] using (max_bot_right _).symm
-  rw [← not_congr degree_eq_bot] at hp hq 
+  rw [← not_congr degree_eq_bot] at hp hq
   cases' p.degree with dp; · exact (hp rfl).elim
   cases' q.degree with dq; · exact (hq rfl).elim
   cases' le_or_lt dp (dq + 1) with hpq hpq

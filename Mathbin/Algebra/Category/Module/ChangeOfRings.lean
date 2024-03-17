@@ -563,7 +563,7 @@ def ModuleCat.ExtendRestrictScalarsAdj.homEquiv {X Y} :
     · simp only [map_zero]
     · erw [TensorProduct.lift.tmul]
       simp only [LinearMap.coe_mk]
-      change S at x 
+      change S at x
       erw [← LinearMap.map_smul, extend_scalars.smul_tmul, mul_one x]
     · rw [map_add, map_add, ih1, ih2]
   right_inv g := by

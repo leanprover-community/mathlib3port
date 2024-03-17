@@ -80,10 +80,10 @@ instance : Mono (homologyCToK f g w) :=
   apply pseudoelement.mono_of_zero_of_map_zero
   intro a ha
   obtain ⟨a, rfl⟩ := pseudoelement.pseudo_surjective_of_epi (cokernel.π (kernel.lift g f w)) a
-  apply_fun kernel.ι (cokernel.desc f g w) at ha 
+  apply_fun kernel.ι (cokernel.desc f g w) at ha
   simp only [← pseudoelement.comp_apply, cokernel.π_desc, kernel.lift_ι,
-    pseudoelement.apply_zero] at ha 
-  simp only [pseudoelement.comp_apply] at ha 
+    pseudoelement.apply_zero] at ha
+  simp only [pseudoelement.comp_apply] at ha
   obtain ⟨b, hb⟩ : ∃ b, f b = _ := (pseudoelement.pseudo_exact_of_exact (exact_cokernel f)).2 _ ha
   rsuffices ⟨c, rfl⟩ : ∃ c, kernel.lift g f w c = a
   · simp [← pseudoelement.comp_apply]
@@ -100,7 +100,7 @@ instance : Epi (homologyCToK f g w) :=
   obtain ⟨c, hc⟩ : ∃ c, cokernel.π f c = b
   apply pseudoelement.pseudo_surjective_of_epi (cokernel.π f)
   have : g c = 0 := by
-    dsimp [b] at hc 
+    dsimp [b] at hc
     rw [show g = cokernel.π f ≫ cokernel.desc f g w by simp, pseudoelement.comp_apply, hc]
     simp [← pseudoelement.comp_apply]
   obtain ⟨d, hd⟩ : ∃ d, kernel.ι g d = c := by
@@ -184,13 +184,13 @@ theorem condition_ι : ι f g w ≫ cokernel.desc f g w = 0 := by dsimp [ι]; si
 @[ext]
 theorem hom_from_ext {W : A} (a b : homology' f g w ⟶ W) (h : π' f g w ≫ a = π' f g w ≫ b) :
     a = b := by
-  dsimp [π'] at h 
+  dsimp [π'] at h
   apply_fun fun e => (homology'IsoCokernelLift f g w).inv ≫ e
   swap
   · intro i j hh
-    apply_fun fun e => (homology'IsoCokernelLift f g w).Hom ≫ e at hh 
+    apply_fun fun e => (homology'IsoCokernelLift f g w).Hom ≫ e at hh
     simpa using hh
-  simp only [category.assoc] at h 
+  simp only [category.assoc] at h
   exact coequalizer.hom_ext h
 #align homology.hom_from_ext homology'.hom_from_ext
 -/
@@ -199,13 +199,13 @@ theorem hom_from_ext {W : A} (a b : homology' f g w ⟶ W) (h : π' f g w ≫ a 
 @[ext]
 theorem hom_to_ext {W : A} (a b : W ⟶ homology' f g w) (h : a ≫ ι f g w = b ≫ ι f g w) : a = b :=
   by
-  dsimp [ι] at h 
+  dsimp [ι] at h
   apply_fun fun e => e ≫ (homology'IsoKernelDesc f g w).Hom
   swap
   · intro i j hh
-    apply_fun fun e => e ≫ (homology'IsoKernelDesc f g w).inv at hh 
+    apply_fun fun e => e ≫ (homology'IsoKernelDesc f g w).inv at hh
     simpa using hh
-  simp only [← category.assoc] at h 
+  simp only [← category.assoc] at h
   exact equalizer.hom_ext h
 #align homology.hom_to_ext homology'.hom_to_ext
 -/
@@ -241,7 +241,7 @@ theorem π'_map (α β h) :
   apply_fun fun e => (kernel_subobject_iso _).Hom ≫ e
   swap
   · intro i j hh
-    apply_fun fun e => (kernel_subobject_iso _).inv ≫ e at hh 
+    apply_fun fun e => (kernel_subobject_iso _).inv ≫ e at hh
     simpa using hh
   dsimp [map]
   simp only [π'_eq_π_assoc]

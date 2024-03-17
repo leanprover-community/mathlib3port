@@ -617,7 +617,7 @@ theorem isOpenPosMeasure_of_mulLeftInvariant_of_compact (K : Set G) (hK : IsComp
   refine' ⟨fun U hU hne => _⟩
   contrapose! h
   rw [← nonpos_iff_eq_zero]
-  rw [← hU.interior_eq] at hne 
+  rw [← hU.interior_eq] at hne
   obtain ⟨t, hKt⟩ : ∃ t : Finset G, K ⊆ ⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U :=
     compact_covered_by_mul_left_translates hK hne
   calc
@@ -676,7 +676,7 @@ to any compact set. -/
 theorem measure_lt_top_of_isCompact_of_isMulLeftInvariant (U : Set G) (hU : IsOpen U)
     (h'U : U.Nonempty) (h : μ U ≠ ∞) {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
   by
-  rw [← hU.interior_eq] at h'U 
+  rw [← hU.interior_eq] at h'U
   obtain ⟨t, hKt⟩ : ∃ t : Finset G, K ⊆ ⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U :=
     compact_covered_by_mul_left_translates hK h'U
   calc
@@ -753,7 +753,7 @@ theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSp
     simp_rw [M]
     apply ENNReal.Tendsto.mul_const _ (Or.inl ENNReal.top_ne_zero)
     exact ennreal.tendsto_nat_nhds_top.comp (tendsto_add_at_top_nat _)
-  simp only [ENNReal.top_mul', K_pos.ne', if_false] at N 
+  simp only [ENNReal.top_mul', K_pos.ne', if_false] at N
   apply top_le_iff.1
   exact le_of_tendsto' N fun n => measure_mono (subset_univ _)
 #align measure_theory.measure_univ_of_is_mul_left_invariant MeasureTheory.measure_univ_of_isMulLeftInvariant
@@ -940,13 +940,13 @@ instance (priority := 100) IsHaarMeasure.noAtoms [TopologicalGroup G] [BorelSpac
       · intro x hx y hy xy
         simp only [on_fun, xy.symm, mem_singleton_iff, not_false_iff, disjoint_singleton_right]
       · intro b hb; exact measurable_set_singleton b
-    rw [B] at A 
+    rw [B] at A
     rwa [ENNReal.le_div_iff_mul_le _ (Or.inr μKlt), mul_comm]
     right
     apply (measure_pos_of_nonempty_interior μ ⟨_, K_int⟩).ne'
   have J : tendsto (fun n : ℕ => μ K / n) at_top (𝓝 (μ K / ∞)) :=
     ENNReal.Tendsto.const_div ENNReal.tendsto_nat_nhds_top (Or.inr μKlt)
-  simp only [ENNReal.div_top] at J 
+  simp only [ENNReal.div_top] at J
   exact ge_of_tendsto' J I
 #align measure_theory.measure.is_haar_measure.has_no_atoms MeasureTheory.Measure.IsHaarMeasure.noAtoms
 #align measure_theory.measure.is_add_haar_measure.has_no_atoms MeasureTheory.Measure.IsAddHaarMeasure.noAtoms

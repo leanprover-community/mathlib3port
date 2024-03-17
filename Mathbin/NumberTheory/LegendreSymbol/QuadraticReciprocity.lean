@@ -88,7 +88,7 @@ theorem exists_sq_eq_two_iff : IsSquare (2 : ZMod p) ↔ p % 8 = 1 ∨ p % 8 = 7
   by
   rw [FiniteField.isSquare_two_iff, card p]
   have h₁ := prime.mod_two_eq_one_iff_ne_two.mpr hp
-  rw [← mod_mod_of_dvd p (by norm_num : 2 ∣ 8)] at h₁ 
+  rw [← mod_mod_of_dvd p (by norm_num : 2 ∣ 8)] at h₁
   have h₂ := mod_lt p (by norm_num : 0 < 8)
   revert h₂ h₁
   generalize hm : p % 8 = m; clear! p
@@ -102,7 +102,7 @@ theorem exists_sq_eq_neg_two_iff : IsSquare (-2 : ZMod p) ↔ p % 8 = 1 ∨ p % 
   by
   rw [FiniteField.isSquare_neg_two_iff, card p]
   have h₁ := prime.mod_two_eq_one_iff_ne_two.mpr hp
-  rw [← mod_mod_of_dvd p (by norm_num : 2 ∣ 8)] at h₁ 
+  rw [← mod_mod_of_dvd p (by norm_num : 2 ∣ 8)] at h₁
   have h₂ := mod_lt p (by norm_num : 0 < 8)
   revert h₂ h₁
   generalize hm : p % 8 = m; clear! p
@@ -141,7 +141,7 @@ theorem quadratic_reciprocity (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) :
   have hq₂ := (ring_char_zmod_n q).substr hq
   have h :=
     quadraticChar_odd_prime ((ring_char_zmod_n p).substr hp) hq ((ring_char_zmod_n p).substr hpq)
-  rw [card p] at h 
+  rw [card p] at h
   have nc : ∀ n r : ℕ, ((n : ℤ) : ZMod r) = n := fun n r => by norm_cast
   have nc' : (((-1) ^ (p / 2) : ℤ) : ZMod q) = (-1) ^ (p / 2) := by norm_cast
   rw [legendreSym, legendreSym, nc, nc, h, map_mul, mul_rotate', mul_comm (p / 2), ← pow_two,

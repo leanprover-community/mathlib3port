@@ -164,11 +164,11 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
       Function.comp_apply, coe_smul] using h3 (↑‖z - z₀‖) h4
   · right
     -- Otherwise, it is open along at least one direction and that implies the result
-    push_neg at h 
+    push_neg at h
     obtain ⟨z, hz, hrz⟩ := h
     specialize h1 z hz 0 (mem_ball_self hr)
     have h7 := h1.eventually_constant_or_nhds_le_map_nhds_aux.resolve_left hrz
-    rw [show gray z 0 = g z₀ by simp [gray, ray], ← map_compose] at h7 
+    rw [show gray z 0 = g z₀ by simp [gray, ray], ← map_compose] at h7
     refine' h7.trans (map_mono _)
     have h10 : Continuous fun t : ℂ => z₀ + t • z :=
       continuous_const.add (continuous_id'.smul continuous_const)
@@ -187,7 +187,7 @@ theorem AnalyticOn.is_constant_or_isOpen (hg : AnalyticOn ℂ g U) (hU : IsPreco
   by_cases ∃ z₀ ∈ U, ∀ᶠ z in 𝓝 z₀, g z = g z₀
   · obtain ⟨z₀, hz₀, h⟩ := h
     exact Or.inl ⟨g z₀, hg.eq_on_of_preconnected_of_eventually_eq analyticOn_const hU hz₀ h⟩
-  · push_neg at h 
+  · push_neg at h
     refine' Or.inr fun s hs1 hs2 => is_open_iff_mem_nhds.mpr _
     rintro z ⟨w, hw1, rfl⟩
     exact

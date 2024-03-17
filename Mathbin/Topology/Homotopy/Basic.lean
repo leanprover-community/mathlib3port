@@ -305,8 +305,8 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
   ext x
   simp only [symm_apply, trans_apply]
   split_ifs with h₁ h₂
-  · change (x.1 : ℝ) ≤ _ at h₂ 
-    change (1 : ℝ) - x.1 ≤ _ at h₁ 
+  · change (x.1 : ℝ) ≤ _ at h₂
+    change (1 : ℝ) - x.1 ≤ _ at h₁
     have ht : (x.1 : ℝ) = 1 / 2 := by linarith
     norm_num [ht]
   · congr 2
@@ -317,8 +317,8 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
     apply Subtype.ext
     simp only [unitInterval.coe_symm_eq, Subtype.coe_mk]
     linarith
-  · change ¬(x.1 : ℝ) ≤ _ at h 
-    change ¬(1 : ℝ) - x.1 ≤ _ at h₁ 
+  · change ¬(x.1 : ℝ) ≤ _ at h
+    change ¬(1 : ℝ) - x.1 ≤ _ at h₁
     exfalso; linarith
 #align continuous_map.homotopy.symm_trans ContinuousMap.Homotopy.symm_trans
 -/

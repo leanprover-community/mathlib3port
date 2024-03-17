@@ -115,13 +115,13 @@ theorem exists_chain_of_le_chainHeight {n : ℕ} (hn : ↑n ≤ s.chainHeight) :
     ∃ l ∈ s.subchain, length l = n :=
   by
   cases' (le_top : s.chain_height ≤ ⊤).eq_or_lt with ha ha <;>
-    rw [chain_height_eq_supr_subtype] at ha 
+    rw [chain_height_eq_supr_subtype] at ha
   · obtain ⟨_, ⟨⟨l, h₁, h₂⟩, rfl⟩, h₃⟩ :=
       not_bdd_above_iff'.mp ((WithTop.iSup_coe_eq_top _).mp ha) n
     exact
       ⟨l.take n, ⟨h₁.take _, fun x h => h₂ _ <| take_subset _ _ h⟩,
         (l.length_take n).trans <| min_eq_left <| le_of_not_ge h₃⟩
-  · rw [WithTop.iSup_coe_lt_top] at ha 
+  · rw [WithTop.iSup_coe_lt_top] at ha
     obtain ⟨⟨l, h₁, h₂⟩, e : l.length = _⟩ := Nat.sSup_mem (Set.range_nonempty _) ha
     refine'
       ⟨l.take n, ⟨h₁.take _, fun x h => h₂ _ <| take_subset _ _ h⟩,
@@ -281,7 +281,7 @@ theorem chainHeight_image (f : α → β) (hf : ∀ {x y}, x < y ↔ f x < f y) 
     induction' l with x xs hx
     · exact fun _ => ⟨nil, ⟨trivial, fun _ h => h.elim⟩, rfl⟩
     · intro h
-      rw [cons_mem_subchain_iff] at h 
+      rw [cons_mem_subchain_iff] at h
       obtain ⟨⟨x, hx', rfl⟩, h₁, h₂⟩ := h
       obtain ⟨l', h₃, rfl⟩ := hx h₁
       refine' ⟨x::l', set.cons_mem_subchain_iff.mpr ⟨hx', h₃, _⟩, rfl⟩
@@ -386,7 +386,7 @@ theorem chainHeight_union_le : (s ∪ t).chainHeight ≤ s.chainHeight + t.chain
     exact ⟨hl.1.Sublist (filter_sublist _), fun i h => (of_mem_filter h : _)⟩
   refine' le_trans _ (add_le_add hl₁ hl₂)
   simp_rw [← WithTop.coe_add, WithTop.coe_le_coe, ← Multiset.coe_card, ← Multiset.card_add, ←
-    Multiset.coe_filter]
+    Multiset.filter_coe]
   rw [Multiset.filter_add_filter, multiset.filter_eq_self.mpr, Multiset.card_add]
   exacts [le_add_right rfl.le, hl.2]
 #align set.chain_height_union_le Set.chainHeight_union_le
@@ -408,7 +408,7 @@ theorem chainHeight_union_eq (s t : Set α) (H : ∀ a ∈ s, ∀ b ∈ t, a < b
   obtain ⟨l', hl', rfl⟩ := exists_chain_of_le_chain_height t h.symm.le
   refine' ⟨l ++ l', ⟨chain'.append hl.1 hl'.1 fun x hx y hy => _, fun i hi => _⟩, by simp⟩
   · exact H x (hl.2 _ <| mem_of_mem_last' hx) y (hl'.2 _ <| mem_of_mem_head' hy)
-  · rw [mem_append] at hi ; cases hi; exacts [Or.inl (hl.2 _ hi), Or.inr (hl'.2 _ hi)]
+  · rw [mem_append] at hi; cases hi; exacts [Or.inl (hl.2 _ hi), Or.inr (hl'.2 _ hi)]
 #align set.chain_height_union_eq Set.chainHeight_union_eq
 -/
 

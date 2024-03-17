@@ -113,7 +113,7 @@ instance : NoetherianSpace (PrimeSpectrum R) :=
   by
   rw [(noetherian_space_tfae <| PrimeSpectrum R).out 0 1]
   have H := ‹IsNoetherianRing R›
-  rw [isNoetherianRing_iff, isNoetherian_iff_wellFounded] at H 
+  rw [isNoetherianRing_iff, isNoetherian_iff_wellFounded] at H
   exact (closeds_embedding R).dual.WellFounded H
 
 end PrimeSpectrum

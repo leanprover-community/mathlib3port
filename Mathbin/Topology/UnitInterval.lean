@@ -223,7 +223,7 @@ theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc
   · exact nonneg_of_mul_nonneg_right h₁ ha
   · rwa [le_div_iff ha, mul_comm]
   · exact mul_nonneg ha.le h₁
-  · rwa [le_div_iff ha, mul_comm] at h₂ 
+  · rwa [le_div_iff ha, mul_comm] at h₂
 #align unit_interval.mul_pos_mem_iff unitInterval.mul_pos_mem_iff
 -/
 

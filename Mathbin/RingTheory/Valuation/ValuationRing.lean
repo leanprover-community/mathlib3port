@@ -74,7 +74,7 @@ instance : LE (ValueGroup A K) :=
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩; ext
         constructor
         · rintro ⟨e, he⟩; use(c⁻¹ : Aˣ) * e * d
-          apply_fun fun t => c⁻¹ • t at he 
+          apply_fun fun t => c⁻¹ • t at he
           simpa [mul_smul] using he
         · rintro ⟨e, he⟩; dsimp
           use(d⁻¹ : Aˣ) * c * e
@@ -149,9 +149,9 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       have : IsUnit e := by
         apply isUnit_of_dvd_one
         use f; rw [mul_comm]
-        rw [← mul_smul, Algebra.smul_def] at hf 
-        nth_rw 2 [← one_mul b] at hf 
-        rw [← (algebraMap A K).map_one] at hf 
+        rw [← mul_smul, Algebra.smul_def] at hf
+        nth_rw 2 [← one_mul b] at hf
+        rw [← (algebraMap A K).map_one] at hf
         exact IsFractionRing.injective _ _ (mul_right_cancel₀ hb hf).symm
       apply Quotient.sound'
       use this.unit, rfl
@@ -170,7 +170,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
     exists_pair_ne := by
       use 0, 1
       intro c; obtain ⟨d, hd⟩ := Quotient.exact' c
-      apply_fun fun t => d⁻¹ • t at hd 
+      apply_fun fun t => d⁻¹ • t at hd
       simpa using hd
     inv_zero := by apply Quotient.sound'; rw [inv_zero]; apply Setoid.refl'
     mul_inv_cancel := by
@@ -239,11 +239,11 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
     (by
       constructor
       · intro x y h
-        apply_fun (coe : _ → K) at h 
-        dsimp at h 
+        apply_fun (coe : _ → K) at h
+        dsimp at h
         exact IsFractionRing.injective _ _ h
       · rintro ⟨a, ha : a ∈ (Valuation A K).integer⟩
-        rw [mem_integer_iff] at ha 
+        rw [mem_integer_iff] at ha
         obtain ⟨a, rfl⟩ := ha
         use a, rfl)
 #align valuation_ring.equiv_integer ValuationRing.equivInteger
@@ -289,8 +289,8 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
     le_total := by
       intro α β
       by_cases h : α ≤ β; · exact Or.inl h
-      erw [Classical.not_forall] at h 
-      push_neg at h 
+      erw [Classical.not_forall] at h
+      push_neg at h
       obtain ⟨a, h₁, h₂⟩ := h
       right
       intro b hb
@@ -323,7 +323,7 @@ theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := b
   classical
   refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
   have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
-  simp_rw [Ideal.span_singleton_le_span_singleton] at this 
+  simp_rw [Ideal.span_singleton_le_span_singleton] at this
   exact this.symm
 #align valuation_ring.iff_ideal_total ValuationRing.iff_ideal_total
 -/
@@ -340,7 +340,7 @@ theorem dvd_total [h : ValuationRing R] (x y : R) : x ∣ y ∨ y ∣ x :=
 theorem unique_irreducible [ValuationRing R] ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible q) :
     Associated p q := by
   have := dvd_total p q
-  rw [Irreducible.dvd_comm hp hq, or_self_iff] at this 
+  rw [Irreducible.dvd_comm hp hq, or_self_iff] at this
   exact associated_of_dvd_dvd (Irreducible.dvd_symm hq hp this) this
 #align valuation_ring.unique_irreducible ValuationRing.unique_irreducible
 -/
@@ -370,9 +370,9 @@ theorem iff_isInteger_or_isInteger :
     replace ha := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr ha
     replace hb := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr hb
     obtain ⟨c, e⟩ | ⟨c, e⟩ := H (algebraMap R K a / algebraMap R K b)
-    · rw [eq_div_iff hb, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm] at e 
+    · rw [eq_div_iff hb, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm] at e
       exact ⟨c, Or.inr e⟩
-    · rw [inv_div, eq_div_iff ha, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm c] at e 
+    · rw [inv_div, eq_div_iff ha, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm c] at e
       exact ⟨c, Or.inl e⟩
 #align valuation_ring.iff_is_integer_or_is_integer ValuationRing.iff_isInteger_or_isInteger
 -/

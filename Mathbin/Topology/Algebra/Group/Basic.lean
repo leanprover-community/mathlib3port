@@ -768,7 +768,7 @@ theorem nhds_one_symm' : map Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
 #print inv_mem_nhds_one /-
 @[to_additive]
 theorem inv_mem_nhds_one {S : Set G} (hS : S ∈ (𝓝 1 : Filter G)) : S⁻¹ ∈ 𝓝 (1 : G) := by
-  rwa [← nhds_one_symm'] at hS 
+  rwa [← nhds_one_symm'] at hS
 #align inv_mem_nhds_one inv_mem_nhds_one
 #align neg_mem_nhds_zero neg_mem_nhds_zero
 -/
@@ -1213,7 +1213,7 @@ theorem TopologicalGroup.exists_antitone_basis_nhds_one :
     ((hu.prod_nhds hu).tendsto_iffₓ hu).mp
       (by simpa only [mul_one] using continuous_mul.tendsto ((1, 1) : G × G))
   simp only [and_self_iff, mem_prod, and_imp, Prod.forall, exists_true_left, Prod.exists,
-    forall_true_left] at this 
+    forall_true_left] at this
   have event_mul : ∀ n : ℕ, ∀ᶠ m in at_top, u m * u m ⊆ u n :=
     by
     intro n
@@ -1521,7 +1521,7 @@ theorem subset_interior_mul : interior s * interior t ⊆ interior (s * t) :=
 #print singleton_mul_mem_nhds /-
 @[to_additive]
 theorem singleton_mul_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : {a} * s ∈ 𝓝 (a * b) := by
-  have := smul_mem_nhds a h; rwa [← singleton_smul] at this 
+  have := smul_mem_nhds a h; rwa [← singleton_smul] at this
 #align singleton_mul_mem_nhds singleton_mul_mem_nhds
 #align singleton_add_mem_nhds singleton_add_mem_nhds
 -/
@@ -1633,7 +1633,7 @@ theorem subset_interior_div : interior s / interior t ⊆ interior (s / t) :=
 theorem IsOpen.mul_closure (hs : IsOpen s) (t : Set α) : s * closure t = s * t :=
   by
   refine' (mul_subset_iff.2 fun a ha b hb => _).antisymm (mul_subset_mul_left subset_closure)
-  rw [mem_closure_iff] at hb 
+  rw [mem_closure_iff] at hb
   have hbU : b ∈ s⁻¹ * {a * b} := ⟨a⁻¹, a * b, Set.inv_mem_inv.2 ha, rfl, inv_mul_cancel_left _ _⟩
   obtain ⟨_, ⟨c, d, hc, rfl : d = _, rfl⟩, hcs⟩ := hb _ hs.inv.mul_right hbU
   exact ⟨c⁻¹, _, hc, hcs, inv_mul_cancel_left _ _⟩
@@ -1709,7 +1709,7 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G :=
   have : tendsto (fun p : G × G => p.1 * p.2) (𝓝 (a, 1)) (𝓝 a) :=
     continuous_mul.tendsto' _ _ (mul_one a)
   rcases mem_nhds_prod_iff.mp (this hs) with ⟨U, hU, V, hV, hUV⟩
-  rw [← image_subset_iff, image_prod] at hUV 
+  rw [← image_subset_iff, image_prod] at hUV
   refine' ⟨closure U, mem_of_superset hU subset_closure, isClosed_closure, _⟩
   calc
     closure U ⊆ closure U * interior V := subset_mul_left _ (mem_interior_iff_mem_nhds.2 hV)
@@ -1744,7 +1744,7 @@ variable {G} (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)]
 instance Subgroup.t3_quotient_of_isClosed (S : Subgroup G) [Subgroup.Normal S]
     [hS : IsClosed (S : Set G)] : T3Space (G ⧸ S) :=
   by
-  rw [← QuotientGroup.ker_mk' S] at hS 
+  rw [← QuotientGroup.ker_mk' S] at hS
   haveI := TopologicalGroup.t1Space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)
   exact inferInstance _
 #align subgroup.t3_quotient_of_is_closed Subgroup.t3_quotient_of_isClosed
@@ -1763,7 +1763,7 @@ theorem Subgroup.properlyDiscontinuousSMul_of_tendsto_cofinite (S : Subgroup G)
     finiteₓ_disjoint_inter_image := by
       intro K L hK hL
       have H : Set.Finite _ := hS ((hL.prod hK).image continuous_div').compl_mem_cocompact
-      rw [preimage_compl, compl_compl] at H 
+      rw [preimage_compl, compl_compl] at H
       convert H
       ext x
       simpa only [image_smul, mem_image, Prod.exists] using Set.smul_inter_ne_empty_iff' }
@@ -1790,7 +1790,7 @@ theorem Subgroup.properlyDiscontinuousSMul_opposite_of_tendsto_cofinite (S : Sub
       have : Continuous fun p : G × G => (p.1⁻¹, p.2) := continuous_inv.prod_map continuous_id
       have H : Set.Finite _ :=
         hS ((hK.prod hL).image (continuous_mul.comp this)).compl_mem_cocompact
-      rw [preimage_compl, compl_compl] at H 
+      rw [preimage_compl, compl_compl] at H
       convert H
       ext x
       simpa only [image_smul, mem_image, Prod.exists] using Set.op_smul_inter_ne_empty_iff }
@@ -1827,9 +1827,9 @@ theorem compact_open_separated_mul_right {K U : Set G} (hK : IsCompact K) (hU : 
         ((mul_subset_mul_left (V.inter_subset_right W)).trans hW')
   · intro x hx
     have := tendsto_mul (show U ∈ 𝓝 (x * 1) by simpa using hU.mem_nhds (hKU hx))
-    rw [nhds_prod_eq, mem_map, mem_prod_iff] at this 
+    rw [nhds_prod_eq, mem_map, mem_prod_iff] at this
     rcases this with ⟨t, ht, s, hs, h⟩
-    rw [← image_subset_iff, image_mul_prod] at h 
+    rw [← image_subset_iff, image_mul_prod] at h
     exact ⟨t, mem_nhdsWithin_of_mem_nhds ht, s, hs, h⟩
 #align compact_open_separated_mul_right compact_open_separated_mul_right
 #align compact_open_separated_add_right compact_open_separated_add_right
@@ -1850,7 +1850,7 @@ theorem compact_open_separated_mul_left {K U : Set G} (hK : IsCompact K) (hU : I
     ⟨V, hV : V ∈ 𝓝 (op (1 : G)), hV' : op '' K * V ⊆ op '' U⟩
   refine' ⟨op ⁻¹' V, continuous_op.continuous_at hV, _⟩
   rwa [← image_preimage_eq V op_surjective, ← image_op_mul, image_subset_iff,
-    preimage_image_eq _ op_injective] at hV' 
+    preimage_image_eq _ op_injective] at hV'
 #align compact_open_separated_mul_left compact_open_separated_mul_left
 #align compact_open_separated_add_left compact_open_separated_add_left
 -/
@@ -1896,7 +1896,7 @@ instance (priority := 100) SeparableWeaklyLocallyCompactGroup.sigmaCompactSpace 
   · refine' Union_eq_univ_iff.2 fun x => _
     obtain ⟨_, ⟨n, rfl⟩, hn⟩ : (range (dense_seq G) ∩ (fun y => x * y) ⁻¹' L).Nonempty :=
       by
-      rw [← (Homeomorph.mulLeft x).apply_symm_apply 1] at hL1 
+      rw [← (Homeomorph.mulLeft x).apply_symm_apply 1] at hL1
       exact
         (dense_range_dense_seq G).inter_nhds_nonempty
           ((Homeomorph.mulLeft x).Continuous.ContinuousAt <| hL1)
@@ -2275,7 +2275,7 @@ local notation "cont" => @Continuous _ _
 @[to_additive "Infimum of a collection of additive group topologies"]
 instance : InfSet (GroupTopology α)
     where sInf S :=
-    ⟨sInf (toTopologicalSpace '' S), topologicalGroup_sInf <| ball_image_iff.2 fun t ht => t.2⟩
+    ⟨sInf (toTopologicalSpace '' S), topologicalGroup_sInf <| forall_mem_image.2 fun t ht => t.2⟩
 
 #print GroupTopology.toTopologicalSpace_sInf /-
 @[simp, to_additive]

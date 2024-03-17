@@ -116,7 +116,7 @@ theorem swap_mem_mulAntidiagonal :
 #print Finset.support_mulAntidiagonal_subset_mul /-
 @[to_additive]
 theorem support_mulAntidiagonal_subset_mul : {a | (mulAntidiagonal hs ht a).Nonempty} ⊆ s * t :=
-  fun a ⟨b, hb⟩ => by rw [mem_mul_antidiagonal] at hb ; exact ⟨b.1, b.2, hb⟩
+  fun a ⟨b, hb⟩ => by rw [mem_mul_antidiagonal] at hb; exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mulAntidiagonal_subset_mul
 #align finset.support_add_antidiagonal_subset_add Finset.support_addAntidiagonal_subset_add
 -/

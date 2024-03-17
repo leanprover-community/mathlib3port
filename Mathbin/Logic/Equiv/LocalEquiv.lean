@@ -526,7 +526,7 @@ theorem symm_eq_on_of_inter_eq_of_eqOn {e' : PartialEquiv α β} (h : e.IsImage 
   by
   rw [← h.image_eq]
   rintro y ⟨x, hx, rfl⟩
-  have hx' := hx; rw [hs] at hx' 
+  have hx' := hx; rw [hs] at hx'
   rw [e.left_inv hx.1, Heq hx, e'.left_inv hx'.1]
 #align local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on PartialEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn
 -/
@@ -646,7 +646,7 @@ protected theorem ext {e e' : PartialEquiv α β} (h : ∀ x, e x = e' x)
   have B : (e.symm : β → α) = e'.symm := by ext x; exact hsymm x
   have I : e '' e.source = e.target := e.image_source_eq_target
   have I' : e' '' e'.source = e'.target := e'.image_source_eq_target
-  rw [A, hs, I'] at I 
+  rw [A, hs, I'] at I
   cases e <;> cases e'
   simp_all
 #align local_equiv.ext PartialEquiv.ext
@@ -1049,7 +1049,7 @@ theorem EqOnSource.trans' {e e' : PartialEquiv α β} {f f' : PartialEquiv β γ
   · rw [trans_source'', trans_source'', ← he.target_eq, ← hf.1]
     exact (he.symm'.eq_on.mono <| inter_subset_left _ _).image_eq
   · intro x hx
-    rw [trans_source] at hx 
+    rw [trans_source] at hx
     simp [(he.2 hx.1).symm, hf.2 hx.2]
 #align local_equiv.eq_on_source.trans' PartialEquiv.EqOnSource.trans'
 -/
@@ -1061,7 +1061,7 @@ theorem EqOnSource.restr {e e' : PartialEquiv α β} (he : e ≈ e') (s : Set α
   constructor
   · simp [he.1]
   · intro x hx
-    simp only [mem_inter_iff, restr_source] at hx 
+    simp only [mem_inter_iff, restr_source] at hx
     exact he.2 hx.1
 #align local_equiv.eq_on_source.restr PartialEquiv.EqOnSource.restr
 -/
@@ -1079,7 +1079,7 @@ theorem trans_self_symm : e.trans e.symm ≈ PartialEquiv.ofSet e.source :=
   by
   have A : (e.trans e.symm).source = e.source := by mfld_set_tac
   refine' ⟨by simp [A], fun x hx => _⟩
-  rw [A] at hx 
+  rw [A] at hx
   simp only [hx, mfld_simps]
 #align local_equiv.trans_self_symm PartialEquiv.trans_self_symm
 
@@ -1116,10 +1116,10 @@ def prod (e : PartialEquiv α β) (e' : PartialEquiv γ δ) : PartialEquiv (α �
   target := e.target ×ˢ e'.target
   toFun p := (e p.1, e' p.2)
   invFun p := (e.symm p.1, e'.symm p.2)
-  map_source' p hp := by simp at hp ; simp [hp]
-  map_target' p hp := by simp at hp ; simp [map_target, hp]
-  left_inv' p hp := by simp at hp ; simp [hp]
-  right_inv' p hp := by simp at hp ; simp [hp]
+  map_source' p hp := by simp at hp; simp [hp]
+  map_target' p hp := by simp at hp; simp [map_target, hp]
+  left_inv' p hp := by simp at hp; simp [hp]
+  right_inv' p hp := by simp at hp; simp [hp]
 #align local_equiv.prod PartialEquiv.prod
 -/
 

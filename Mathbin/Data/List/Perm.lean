@@ -440,7 +440,7 @@ theorem rel_perm_imp (hr : RightUnique r) : (Forall₂ r ⇒ Forall₂ r ⇒ Imp
   fun a b h₁ c d h₂ h =>
   have : (flip (Forall₂ r) ∘r Perm ∘r Forall₂ r) b d := ⟨a, h₁, c, h, h₂⟩
   have : ((flip (Forall₂ r) ∘r Forall₂ r) ∘r Perm) b d := by
-    rwa [← forall₂_comp_perm_eq_perm_comp_forall₂, ← Relation.comp_assoc] at this 
+    rwa [← forall₂_comp_perm_eq_perm_comp_forall₂, ← Relation.comp_assoc] at this
   let ⟨b', ⟨c', hbc, hcb⟩, hbd⟩ := this
   have : b' = b := right_unique_forall₂' hr hcb hbc
   this ▸ hbd
@@ -587,7 +587,7 @@ theorem Perm.countP_congr (s : l₁ ~ l₂) {p p' : α → Prop} [DecidablePred 
   clear s
   induction' l₁ with y s hs
   · rfl
-  · simp only [mem_cons_iff, forall_eq_or_imp] at hp 
+  · simp only [mem_cons_iff, forall_eq_or_imp] at hp
     simp only [countp_cons, hs hp.2, hp.1]
 #align list.perm.countp_congr List.Perm.countP_congr
 -/
@@ -721,13 +721,13 @@ theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} :
         fun t₁ t₂ t₃ p₁ p₂ IH₁ IH₂ => _ <;>
     intro l₁ l₂ r₁ r₂ e₁ e₂
   · apply (not_mem_nil a).elim; rw [← e₁]; simp
-  · cases' l₁ with y l₁ <;> cases' l₂ with z l₂ <;> dsimp at e₁ e₂  <;> injections <;> subst x
+  · cases' l₁ with y l₁ <;> cases' l₂ with z l₂ <;> dsimp at e₁ e₂ <;> injections <;> subst x
     · substs t₁ t₂; exact p
     · substs z t₁ t₂; exact p.trans perm_middle
     · substs y t₁ t₂; exact perm_middle.symm.trans p
     · substs z t₁ t₂; exact (IH rfl rfl).cons y
   · rcases l₁ with (_ | ⟨y, _ | ⟨z, l₁⟩⟩) <;> rcases l₂ with (_ | ⟨u, _ | ⟨v, l₂⟩⟩) <;>
-          dsimp at e₁ e₂  <;> injections <;> substs x y
+          dsimp at e₁ e₂ <;> injections <;> substs x y
     · substs r₁ r₂; exact p.cons a
     · substs r₁ r₂; exact p.cons u
     · substs r₁ v t₂; exact (p.trans perm_middle).cons u
@@ -805,7 +805,7 @@ theorem cons_subperm_of_mem {a : α} {l₁ l₂ : List α} (d₁ : Nodup l₁) (
   induction s generalizing l₁
   case slnil => cases h₂
   case cons r₁ r₂ b s' ih =>
-    simp at h₂ 
+    simp at h₂
     cases' h₂ with e m
     · subst b; exact ⟨a :: r₁, p.cons a, s'.cons2 _ _ _⟩
     · rcases ih m d₁ h₁ p with ⟨t, p', s'⟩; exact ⟨t, p', s'.cons _ _ _⟩
@@ -862,7 +862,7 @@ protected theorem Nodup.subperm (d : Nodup l₁) (H : l₁ ⊆ l₂) : l₁ <+~ 
   induction' d with a l₁' h d IH
   · exact ⟨nil, perm.nil, nil_sublist _⟩
   · cases' forall_mem_cons.1 H with H₁ H₂
-    simp at h 
+    simp at h
     exact cons_subperm_of_mem d h H₁ (IH H₂)
 #align list.nodup.subperm List.Nodup.subperm
 -/
@@ -881,12 +881,12 @@ theorem Nodup.perm_iff_eq_of_sublist {l₁ l₂ l : List α} (d : Nodup l) (s₁
   ⟨fun h => by
     induction' s₂ with l₂ l a s₂ IH l₂ l a s₂ IH generalizing l₁
     · exact h.eq_nil
-    · simp at d 
+    · simp at d
       cases' s₁ with _ _ _ s₁ l₁ _ _ s₁
       · exact IH d.2 s₁ h
       · apply d.1.elim
         exact subperm.subset ⟨_, h.symm, s₂⟩ (mem_cons_self _ _)
-    · simp at d 
+    · simp at d
       cases' s₁ with _ _ _ s₁ l₁ _ _ s₁
       · apply d.1.elim
         exact subperm.subset ⟨_, h, s₁⟩ (mem_cons_self _ _)
@@ -1038,11 +1038,11 @@ theorem perm_iff_count {l₁ l₂ : List α} : l₁ ~ l₂ ↔ ∀ a, count a l�
   ⟨Perm.count_eq, fun H => by
     induction' l₁ with a l₁ IH generalizing l₂
     · cases' l₂ with b l₂; · rfl
-      specialize H b; simp at H ; contradiction
+      specialize H b; simp at H; contradiction
     · have : a ∈ l₂ := count_pos.1 (by rw [← H] <;> simp <;> apply Nat.succ_pos)
       refine' ((IH fun b => _).cons a).trans (perm_cons_erase this).symm
       specialize H b
-      rw [(perm_cons_erase this).count_eq] at H 
+      rw [(perm_cons_erase this).count_eq] at H
       by_cases b = a <;> simp [h] at H ⊢ <;> assumption⟩
 #align list.perm_iff_count List.perm_iff_count
 -/
@@ -1080,7 +1080,7 @@ theorem subperm_append_diff_self_of_count_le {l₁ l₂ : List α}
     rw [cons_append, diff_cons, perm_cons]
     refine' IH fun x hx => _
     specialize h x (mem_cons_of_mem _ hx)
-    rw [perm_iff_count.mp this] at h 
+    rw [perm_iff_count.mp this] at h
     by_cases hx : x = hd
     · subst hd
       simpa [Nat.succ_le_succ_iff] using h
@@ -1110,7 +1110,7 @@ instance decidableSubperm : DecidableRel ((· <+~ ·) : List α → List α → 
 #print List.singleton_subperm_iff /-
 @[simp]
 theorem singleton_subperm_iff {α} {l : List α} {a : α} : [a] <+~ l ↔ a ∈ l :=
-  ⟨fun ⟨s, hla, h⟩ => by rwa [perm_singleton.mp hla, singleton_sublist] at h , fun h =>
+  ⟨fun ⟨s, hla, h⟩ => by rwa [perm_singleton.mp hla, singleton_sublist] at h, fun h =>
     ⟨[a], Perm.refl _, singleton_sublist.mpr h⟩⟩
 #align list.subperm_singleton_iff List.singleton_subperm_iff
 -/
@@ -1357,7 +1357,7 @@ theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
     lookmap f l₁ ~ lookmap f l₂ :=
   by
   let F a b := ∀ c ∈ f a, ∀ d ∈ f b, a = b ∧ c = d
-  change Pairwise F l₁ at H 
+  change Pairwise F l₁ at H
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · simp
   · cases h : f a
     · simp [h]; exact IH (pairwise_cons.1 H).2
@@ -1379,7 +1379,7 @@ theorem Perm.eraseP (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α}
     (H : Pairwise (fun a b => f a → f b → False) l₁) (p : l₁ ~ l₂) : eraseP f l₁ ~ eraseP f l₂ :=
   by
   let F a b := f a → f b → False
-  change Pairwise F l₁ at H 
+  change Pairwise F l₁ at H
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · simp
   · by_cases h : f a
     · simp [h, p]
@@ -1479,12 +1479,12 @@ theorem perm_of_mem_permutationsAux :
   by
   refine' permutations_aux.rec (by simp) _
   introv IH1 IH2 m
-  rw [permutations_aux_cons, permutations, mem_foldr_permutations_aux2] at m 
+  rw [permutations_aux_cons, permutations, mem_foldr_permutations_aux2] at m
   rcases m with (m | ⟨l₁, l₂, m, _, e⟩)
   · exact (IH1 m).trans perm_middle
   · subst e
     have p : l₁ ++ l₂ ~ is := by
-      simp [permutations] at m 
+      simp [permutations] at m
       cases' m with e m; · simp [e]
       exact is.append_nil ▸ IH2 m
     exact ((perm_middle.trans (p.cons _)).append_right _).trans (perm_append_comm.cons _)
@@ -1505,7 +1505,7 @@ theorem length_permutationsAux :
   refine' permutations_aux.rec (by simp) _
   intro t ts is IH1 IH2
   have IH2 : length (permutations_aux is nil) + 1 = is.length ! := by simpa using IH2
-  simp [-add_comm, Nat.factorial, Nat.add_succ, mul_comm] at IH1 
+  simp [-add_comm, Nat.factorial, Nat.add_succ, mul_comm] at IH1
   rw [permutations_aux_cons,
     length_foldr_permutations_aux2' _ _ _ _ _ fun l m => (perm_of_mem_permutations m).length_eq,
     permutations, length, length, IH2, Nat.succ_add, Nat.factorial_succ, mul_comm (Nat.succ _), ←
@@ -1598,7 +1598,7 @@ theorem permutations_perm_permutations' (ts : List α) : ts.permutations ~ ts.pe
   obtain ⟨n, h⟩ : ∃ n, length ts < n := ⟨_, Nat.lt_succ_self _⟩
   induction' n with n IH generalizing ts; · cases h
   refine' List.reverseRecOn ts (fun h => _) (fun ts t _ h => _) h; · simp [permutations]
-  rw [← concat_eq_append, length_concat, Nat.succ_lt_succ_iff] at h 
+  rw [← concat_eq_append, length_concat, Nat.succ_lt_succ_iff] at h
   have IH₂ := (IH ts.reverse (by rwa [length_reverse])).trans (reverse_perm _).permutations'
   simp only [permutations_append, foldr_permutations_aux2, permutations_aux_nil,
     permutations_aux_cons, append_nil]
@@ -1647,7 +1647,7 @@ theorem nthLe_permutations'Aux (s : List α) (x : α) (n : ℕ)
     (permutations'Aux x s).nthLe n hn = s.insertNth n x :=
   by
   induction' s with y s IH generalizing n
-  · simp only [length, permutations'_aux, Nat.lt_one_iff] at hn 
+  · simp only [length, permutations'_aux, Nat.lt_one_iff] at hn
     simp [hn]
   · cases n
     · simp
@@ -1711,7 +1711,7 @@ theorem nodup_permutations'Aux_of_not_mem (s : List α) (x : α) (hx : x ∉ s) 
     Nodup (permutations'Aux x s) := by
   induction' s with y s IH
   · simp
-  · simp only [not_or, mem_cons_iff] at hx 
+  · simp only [not_or, mem_cons_iff] at hx
     simp only [not_and, exists_eq_right_right, mem_map, permutations'_aux, nodup_cons]
     refine' ⟨fun _ => Ne.symm hx.left, _⟩
     rw [nodup_map_iff]
@@ -1726,7 +1726,7 @@ theorem nodup_permutations'Aux_iff {s : List α} {x : α} : Nodup (permutations'
   refine' ⟨fun h => _, nodup_permutations'_aux_of_not_mem _ _⟩
   intro H
   obtain ⟨k, hk, hk'⟩ := nth_le_of_mem H
-  rw [nodup_iff_nth_le_inj] at h 
+  rw [nodup_iff_nth_le_inj] at h
   suffices k = k + 1 by simpa using this
   refine' h k (k + 1) _ _ _
   · simpa [Nat.lt_succ_iff] using hk.le
@@ -1748,7 +1748,7 @@ theorem nodup_permutations'Aux_iff {s : List α} {x : α} : Nodup (permutations'
       convert nth_le_insert_nth_add_succ _ _ _ 0 _
       simpa using hk
     · obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_lt H'
-      rw [length_insert_nth _ _ hk.le, Nat.succ_lt_succ_iff, Nat.succ_add] at hn 
+      rw [length_insert_nth _ _ hk.le, Nat.succ_lt_succ_iff, Nat.succ_add] at hn
       rw [nth_le_insert_nth_add_succ]
       convert nth_le_insert_nth_add_succ s x k m.succ _ using 2
       · simp [Nat.add_succ, Nat.succ_add]
@@ -1768,7 +1768,7 @@ theorem nodup_permutations (s : List α) (hs : Nodup s) : Nodup s.permutations :
     rw [nodup_bind]
     constructor
     · intro ys hy
-      rw [mem_permutations'] at hy 
+      rw [mem_permutations'] at hy
       rw [nodup_permutations'_aux_iff, hy.mem_iff]
       exact fun H => h x H rfl
     · refine' IH.pairwise_of_forall_ne fun as ha bs hb H => _
@@ -1776,10 +1776,10 @@ theorem nodup_permutations (s : List α) (hs : Nodup s) : Nodup s.permutations :
       rintro a ha' b hb' rfl
       obtain ⟨n, hn, hn'⟩ := nth_le_of_mem ha'
       obtain ⟨m, hm, hm'⟩ := nth_le_of_mem hb'
-      rw [mem_permutations'] at ha hb 
+      rw [mem_permutations'] at ha hb
       have hl : as.length = bs.length := (ha.trans hb.symm).length_eq
-      simp only [Nat.lt_succ_iff, length_permutations'_aux] at hn hm 
-      rw [nth_le_permutations'_aux] at hn' hm' 
+      simp only [Nat.lt_succ_iff, length_permutations'_aux] at hn hm
+      rw [nth_le_permutations'_aux] at hn' hm'
       have hx :
         nth_le (insert_nth n x as) m (by rwa [length_insert_nth _ _ hn, Nat.lt_succ_iff, hl]) = x :=
         by simp [hn', ← hm', hm]
@@ -1791,8 +1791,8 @@ theorem nodup_permutations (s : List α) (hs : Nodup s) : Nodup s.permutations :
       · suffices x ∈ bs by exact h x (hb.subset this) rfl
         rw [← hx', nth_le_insert_nth_of_lt _ _ _ _ ht (ht.trans_le hm)]
         exact nth_le_mem _ _ _
-      · simp only [ht] at hm' hn' 
-        rw [← hm'] at hn' 
+      · simp only [ht] at hm' hn'
+        rw [← hm'] at hn'
         exact H (insert_nth_injective _ _ hn')
       · suffices x ∈ as by exact h x (ha.subset this) rfl
         rw [← hx, nth_le_insert_nth_of_lt _ _ _ _ ht (ht.trans_le hn)]

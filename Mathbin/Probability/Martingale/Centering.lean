@@ -190,7 +190,7 @@ theorem martingalePart_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → �
         (hf.integrable n).add <| hgint n)
   refine' (eventually_eq_iff_sub.2 _).symm
   filter_upwards [hhmgle.eq_zero_of_predictable hhpred n] with ω hω
-  rw [hhdef, Pi.sub_apply] at hω 
+  rw [hhdef, Pi.sub_apply] at hω
   rw [hω, Pi.sub_apply, martingale_part]
   simp [hg0]
 #align measure_theory.martingale_part_add_ae_eq MeasureTheory.martingalePart_add_ae_eq

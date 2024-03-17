@@ -126,13 +126,13 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
       by_cases htriv : Y = ⊤
       · have hℓ : ℓ = 0 := by
           have h' := linear_map.ker_eq_top.mp htriv
-          rw [← coe_zero] at h' 
+          rw [← coe_zero] at h'
           apply coe_injective
           exact h'
         exact ⟨0, by simp [hℓ]⟩
-      · rw [← Submodule.orthogonal_eq_bot_iff] at htriv 
-        change Yᗮ ≠ ⊥ at htriv 
-        rw [Submodule.ne_bot_iff] at htriv 
+      · rw [← Submodule.orthogonal_eq_bot_iff] at htriv
+        change Yᗮ ≠ ⊥ at htriv
+        rw [Submodule.ne_bot_iff] at htriv
         obtain ⟨z : E, hz : z ∈ Yᗮ, z_ne_0 : z ≠ 0⟩ := htriv
         refine' ⟨(ℓ z† / ⟪z, z⟫) • z, _⟩
         ext x

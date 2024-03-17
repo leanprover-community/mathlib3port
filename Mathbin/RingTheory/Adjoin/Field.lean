@@ -68,7 +68,7 @@ theorem Polynomial.lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L]
   refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
   · rw [coe_empty, Algebra.adjoin_empty]
     exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
-  rw [forall_mem_insert] at H 
+  rw [forall_mem_insert] at H
   rcases H with ⟨⟨H1, H2⟩, H3⟩
   cases' ih H3 with f
   choose H3 H4 using H3

@@ -66,10 +66,10 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
   intro n
   obtain ⟨t, ht : ↑n = t + t⟩ | ⟨t, ht : ↑n = 2 * t + 1⟩ := (n : ℕ).even_or_odd
   · -- even case
-    rw [← two_mul] at ht 
+    rw [← two_mul] at ht
     cases t
     -- Eliminate the zero case to simplify later calculations.
-    · exfalso; rw [MulZeroClass.mul_zero] at ht ; exact PNat.ne_zero n ht
+    · exfalso; rw [MulZeroClass.mul_zero] at ht; exact PNat.ne_zero n ht
     -- Now we have ht : ↑n = 2 * (t + 1).
     let t_succ : ℕ+ := ⟨t + 1, t.succ_pos⟩
     obtain ⟨pm, hpm⟩ := hpk t_succ

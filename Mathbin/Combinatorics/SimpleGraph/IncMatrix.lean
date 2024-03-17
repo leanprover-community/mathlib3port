@@ -157,7 +157,7 @@ theorem sum_incMatrix_apply_of_mem_edgeSet : e ∈ G.edgeSetEmbedding → ∑ a,
   classical
   refine' e.ind _
   intro a b h
-  rw [mem_edge_set] at h 
+  rw [mem_edge_set] at h
   rw [← Nat.cast_two, ← card_doubleton h.ne]
   simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_and_iff]
   congr 2

@@ -189,7 +189,7 @@ theorem mem_shadow_iterate_iff_exists_mem_card_add :
   · rintro ⟨t, ht, hst, hcard⟩
     obtain ⟨u, hsu, hut, hu⟩ :=
       Finset.exists_intermediate_set k (by rw [add_comm, hcard]; exact le_succ _) hst
-    rw [add_comm] at hu 
+    rw [add_comm] at hu
     refine' ⟨u, mem_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, hut, _⟩, hsu, hu⟩
     rw [hcard, hu]
     rfl
@@ -319,7 +319,7 @@ theorem mem_upShadow_iff_exists_mem_card_add :
     obtain ⟨u, htu, hus, hu⟩ :=
       Finset.exists_intermediate_set 1
         (by rw [add_comm, ← hcard]; exact add_le_add_left (zero_lt_succ _) _) hts
-    rw [add_comm] at hu 
+    rw [add_comm] at hu
     refine' ⟨u, mem_up_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, htu, hu.symm⟩, hus, _⟩
     rw [hu, ← hcard, add_right_comm]
     rfl

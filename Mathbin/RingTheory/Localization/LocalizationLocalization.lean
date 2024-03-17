@@ -93,7 +93,7 @@ theorem localization_localization_surj [IsLocalization N T] (x : T) :
   -- y = z / t
   rcases IsLocalization.surj M (s : S) with ⟨⟨z', t'⟩, eq₃⟩
   -- s = z' / t'
-  dsimp only at eq₁ eq₂ eq₃ 
+  dsimp only at eq₁ eq₂ eq₃
   use z * t'; use z' * t
   -- x = y / s = (z * t') / (z' * t)
   · rw [mem_localization_localization_submodule]
@@ -114,7 +114,7 @@ theorem localization_localization_exists_of_eq [IsLocalization N T] (x y : R) :
   constructor
   · rintro ⟨z, eq₁⟩
     rcases IsLocalization.surj M (z : S) with ⟨⟨z', s⟩, eq₂⟩
-    dsimp only at eq₂ 
+    dsimp only at eq₂
     obtain ⟨c, eq₃ : ↑c * (x * z') = ↑c * (y * z')⟩ := (IsLocalization.eq_iff_exists M S).mp _
     swap
     · rw [map_mul, map_mul, ← eq₂, ← mul_assoc, ← mul_assoc, mul_comm _ ↑z, eq₁, mul_comm _ ↑z]
@@ -122,9 +122,9 @@ theorem localization_localization_exists_of_eq [IsLocalization N T] (x y : R) :
     · rw [mem_localization_localization_submodule]
       refine' ⟨z, c * s, _⟩
       rw [map_mul, ← eq₂, Submonoid.coe_mul, map_mul, mul_left_comm]
-    · rwa [mul_comm _ z', mul_comm _ z', ← mul_assoc, ← mul_assoc] at eq₃ 
+    · rwa [mul_comm _ z', mul_comm _ z', ← mul_assoc, ← mul_assoc] at eq₃
   · rintro ⟨⟨c, hc⟩, eq₁ : c * x = c * y⟩
-    rw [mem_localization_localization_submodule] at hc 
+    rw [mem_localization_localization_submodule] at hc
     rcases hc with ⟨z₁, z, eq₂⟩
     use z₁
     refine' (IsLocalization.map_units S z).mul_right_inj.mp _
@@ -253,13 +253,13 @@ theorem isLocalization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoca
         by
         have h₁ := (IsLocalization.map_units T ⟨_, h s₁.prop⟩).mul_left_inj
         have h₂ := (IsLocalization.map_units T ⟨_, h s₂.prop⟩).mul_left_inj
-        simp only [IsScalarTower.algebraMap_apply R S T, Subtype.coe_mk] at h₁ h₂ 
+        simp only [IsScalarTower.algebraMap_apply R S T, Subtype.coe_mk] at h₁ h₂
         simp only [IsScalarTower.algebraMap_apply R S T, map_mul, ← e₁, ← e₂, ← mul_assoc,
           mul_right_comm _ (algebraMap R S s₂),
           mul_right_comm _ (algebraMap S T (algebraMap R S s₂)),
           (IsLocalization.map_units S s₁).mul_left_inj,
-          (IsLocalization.map_units S s₂).mul_left_inj] at this 
-        rw [h₂, h₁] at this 
+          (IsLocalization.map_units S s₂).mul_left_inj] at this
+        rw [h₂, h₁] at this
         simpa only [mul_comm] using this
       simp_rw [IsLocalization.eq_iff_exists N T, IsLocalization.eq_iff_exists M S]
       constructor
@@ -276,7 +276,7 @@ theorem isLocalization_of_is_exists_mul_mem (M N : Submonoid R) [IsLocalization 
   { map_units := fun y => by
       obtain ⟨m, hm⟩ := h' y
       have := IsLocalization.map_units S ⟨_, hm⟩
-      erw [map_mul] at this 
+      erw [map_mul] at this
       exact (is_unit.mul_iff.mp this).2
     surj := fun z => by obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M z; exact ⟨⟨y, _, h s.prop⟩, e⟩
     eq_iff_exists := fun x₁ x₂ => by

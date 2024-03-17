@@ -172,19 +172,18 @@ theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s �
   · use 0
     simp only [hzero, degree_zero, eq_self_iff_true, and_self_iff, monomial_zero_right,
       Polynomial.map_zero]
-  rw [lifts_iff_set_range] at hl 
+  rw [lifts_iff_set_range] at hl
   obtain ⟨q, hq⟩ := hl
   replace hq := (ext_iff.1 hq) n
-  have hcoeff : f (q.coeff n) = s :=
-    by
-    simp [coeff_monomial] at hq 
+  have hcoeff : f (q.coeff n) = s := by
+    simp [coeff_monomial] at hq
     exact hq
   use monomial n (q.coeff n)
   constructor
   · simp only [hcoeff, map_monomial]
   have hqzero : q.coeff n ≠ 0 := by
     intro habs
-    simp only [habs, RingHom.map_zero] at hcoeff 
+    simp only [habs, RingHom.map_zero] at hcoeff
     exact hzero hcoeff.symm
   repeat' rw [← C_mul_X_pow_eq_monomial]
   simp only [hzero, hqzero, Ne.def, not_false_iff, degree_C_mul_X_pow]
@@ -209,7 +208,7 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
   have pzero : p ≠ 0 := by
     intro habs
     exfalso
-    rw [habs, erase_lead_zero, eq_self_iff_true, not_true] at erase_zero 
+    rw [habs, erase_lead_zero, eq_self_iff_true, not_true] at erase_zero
     exact erase_zero
   have lead_zero : p.coeff p.nat_degree ≠ 0 := by
     rw [← leading_coeff, Ne.def, leading_coeff_eq_zero] <;> exact pzero
@@ -218,7 +217,7 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
       (monomial_mem_lifts p.nat_degree ((lifts_iff_coeff_lifts p).1 hlifts p.nat_degree))
   have deg_lead : lead.degree = p.nat_degree := by
     rw [hlead.2, ← C_mul_X_pow_eq_monomial, degree_C_mul_X_pow p.nat_degree lead_zero]
-  rw [hdeg] at deg_erase 
+  rw [hdeg] at deg_erase
   obtain ⟨erase, herase⟩ :=
     hn p.erase_lead.nat_degree deg_erase (erase_mem_lifts p.nat_degree hlifts)
       (refl p.erase_lead.nat_degree)
@@ -226,9 +225,9 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
   constructor
   · simp only [hlead, herase, Polynomial.map_add]
     nth_rw 1 [erase_lead_add_monomial_nat_degree_leading_coeff p]
-  rw [← hdeg, erase_lead] at deg_erase 
+  rw [← hdeg, erase_lead] at deg_erase
   replace deg_erase := lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 deg_erase)
-  rw [← deg_lead, ← herase.2] at deg_erase 
+  rw [← deg_lead, ← herase.2] at deg_erase
   rw [degree_add_eq_right_of_degree_lt deg_erase, deg_lead, degree_eq_nat_degree pzero]
 #align polynomial.mem_lifts_and_degree_eq Polynomial.mem_lifts_and_degree_eq
 -/

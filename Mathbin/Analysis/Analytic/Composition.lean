@@ -543,7 +543,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
     fact that there are `2^(n-1)` compositions of `n`, giving at most a geometric loss. -/
   rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
   rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
-  simp only [lt_min_iff, ENNReal.coe_lt_one_iff, ENNReal.coe_pos] at hrp hrq rp_pos rq_pos 
+  simp only [lt_min_iff, ENNReal.coe_lt_one_iff, ENNReal.coe_pos] at hrp hrq rp_pos rq_pos
   obtain ⟨Cq, hCq0, hCq⟩ : ∃ Cq > 0, ∀ n, ‖q n‖₊ * rq ^ n ≤ Cq :=
     q.nnnorm_mul_pow_le_of_lt_radius hrq.2
   obtain ⟨Cp, hCp1, hCp⟩ : ∃ Cp ≥ 1, ∀ n, ‖p n‖₊ * rp ^ n ≤ Cp :=
@@ -661,9 +661,9 @@ power series -/
 def compChangeOfVariables (m M N : ℕ) (i : Σ n, Fin n → ℕ) (hi : i ∈ compPartialSumSource m M N) :
     Σ n, Composition n := by
   rcases i with ⟨n, f⟩
-  rw [mem_comp_partial_sum_source_iff] at hi 
+  rw [mem_comp_partial_sum_source_iff] at hi
   refine' ⟨∑ j, f j, of_fn fun a => f a, fun i hi' => _, by simp [sum_of_fn]⟩
-  obtain ⟨j, rfl⟩ : ∃ j : Fin n, f j = i := by rwa [mem_of_fn, Set.mem_range] at hi' 
+  obtain ⟨j, rfl⟩ : ∃ j : Fin n, f j = i := by rwa [mem_of_fn, Set.mem_range] at hi'
   exact (hi.2 j).1
 #align formal_multilinear_series.comp_change_of_variables FormalMultilinearSeries.compChangeOfVariables
 -/
@@ -710,7 +710,7 @@ theorem compPartialSumTargetSet_image_compPartialSumSource (m M N : ℕ) (i : Σ
   by
   rcases i with ⟨n, c⟩
   refine' ⟨⟨c.length, c.blocks_fun⟩, _, _⟩
-  · simp only [comp_partial_sum_target_set, Set.mem_setOf_eq] at hi 
+  · simp only [comp_partial_sum_target_set, Set.mem_setOf_eq] at hi
     simp only [mem_comp_partial_sum_source_iff, hi.left, hi.right, true_and_iff, and_true_iff]
     exact fun a => c.one_le_blocks' _
   · dsimp [comp_change_of_variables]
@@ -756,7 +756,7 @@ theorem compChangeOfVariables_sum {α : Type _} [AddCommMonoid α] (m M N : ℕ)
   -- between the index sets of the two sums.
   -- 1 - show that the image belongs to `comp_partial_sum_target m N N`
   · rintro ⟨k, blocks_fun⟩ H
-    rw [mem_comp_partial_sum_source_iff] at H 
+    rw [mem_comp_partial_sum_source_iff] at H
     simp only [mem_comp_partial_sum_target_iff, Composition.length, Composition.blocks, H.left,
       map_of_fn, length_of_fn, true_and_iff, comp_change_of_variables]
     intro j
@@ -769,7 +769,7 @@ theorem compChangeOfVariables_sum {α : Type _} [AddCommMonoid α] (m M N : ℕ)
     obtain rfl : k = k' :=
       by
       have := (comp_change_of_variables_length m M N H).symm
-      rwa [HEq, comp_change_of_variables_length] at this 
+      rwa [HEq, comp_change_of_variables_length] at this
     congr
     funext i
     calc
@@ -923,7 +923,7 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds EMetric.isOpen_ball fy_mem)
     have B₂ : f (x + y) - f x ∈ EMetric.ball (0 : F) rg := by
       simpa [edist_eq_coe_nnnorm, edist_eq_coe_nnnorm_sub] using fy_mem
-    rw [← emetric.is_open_ball.nhds_within_eq B₂] at A 
+    rw [← emetric.is_open_ball.nhds_within_eq B₂] at A
     convert Hg.tendsto_locally_uniformly_on.tendsto_comp B₁.continuous_within_at B₂ A
     simp only [add_sub_cancel'_right]
   -- Third step: the sum over all compositions in `comp_partial_sum_target 0 n n` converges to
@@ -956,9 +956,9 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
           rw [Finset.prod_const, Finset.card_fin]
           apply pow_le_pow_left (norm_nonneg _)
-          rw [EMetric.mem_ball, edist_eq_coe_nnnorm] at hy 
+          rw [EMetric.mem_ball, edist_eq_coe_nnnorm] at hy
           have := le_trans (le_of_lt hy) (min_le_right _ _)
-          rwa [ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this 
+          rwa [ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this
     tendsto_nhds_of_cauchySeq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
   -- Fifth step: the sum over `n` of `q.comp p n` can be expressed as a particular resummation of
   -- the sum over all compositions, by grouping together the compositions of the same
@@ -1073,18 +1073,18 @@ theorem sigma_pi_composition_eq_iff
   refine' ⟨fun H => by rw [H], fun H => _⟩
   rcases u with ⟨a, b⟩
   rcases v with ⟨a', b'⟩
-  dsimp at H 
+  dsimp at H
   have h : a = a' := by
     ext1
     have :
       map List.sum (of_fn fun i : Fin (Composition.length a) => (b i).blocks) =
         map List.sum (of_fn fun i : Fin (Composition.length a') => (b' i).blocks) :=
       by rw [H]
-    simp only [map_of_fn] at this 
+    simp only [map_of_fn] at this
     change
       (of_fn fun i : Fin (Composition.length a) => (b i).blocks.Sum) =
         of_fn fun i : Fin (Composition.length a') => (b' i).blocks.Sum at
-      this 
+      this
     simpa [Composition.blocks_sum, Composition.ofFn_blocksFun] using this
   induction h
   simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
@@ -1093,7 +1093,7 @@ theorem sigma_pi_composition_eq_iff
     nth_le (of_fn fun i : Fin (Composition.length a) => (b i).blocks) i (by simp [i.is_lt]) =
       nth_le (of_fn fun i : Fin (Composition.length a) => (b' i).blocks) i (by simp [i.is_lt]) :=
     nth_le_of_eq H _
-  rwa [nth_le_of_fn, nth_le_of_fn] at this 
+  rwa [nth_le_of_fn, nth_le_of_fn] at this
 #align composition.sigma_pi_composition_eq_iff Composition.sigma_pi_composition_eq_iff
 -/
 

@@ -419,8 +419,8 @@ theorem fromGlued_injective : Function.Injective 𝒰.fromGlued.1.base :=
   intro x y h
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
   obtain ⟨j, y, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective y
-  simp_rw [← comp_apply, ← SheafedSpace.comp_base, ← LocallyRingedSpace.comp_val] at h 
-  erw [ι_from_glued, ι_from_glued] at h 
+  simp_rw [← comp_apply, ← SheafedSpace.comp_base, ← LocallyRingedSpace.comp_val] at h
+  erw [ι_from_glued, ι_from_glued] at h
   let e :=
     (TopCat.pullbackConeIsLimit _ _).conePointUniqueUpToIso
       (is_limit_of_has_pullback_of_preserves_limit Scheme.forget_to_Top (𝒰.map i) (𝒰.map j))
@@ -444,8 +444,8 @@ instance fromGlued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
   have :=
     PresheafedSpace.stalk_map.congr_hom _ _
       (congr_arg LocallyRingedSpace.hom.val <| 𝒰.ι_from_glued i) x
-  erw [PresheafedSpace.stalk_map.comp] at this 
-  rw [← is_iso.eq_comp_inv] at this 
+  erw [PresheafedSpace.stalk_map.comp] at this
+  rw [← is_iso.eq_comp_inv] at this
   rw [this]
   infer_instance
 #align algebraic_geometry.Scheme.open_cover.from_glued_stalk_iso AlgebraicGeometry.Scheme.OpenCover.fromGlued_stalk_iso
@@ -457,7 +457,7 @@ theorem fromGlued_open_map : IsOpenMap 𝒰.fromGlued.1.base :=
   intro U hU
   rw [isOpen_iff_forall_mem_open]
   intro x hx
-  rw [𝒰.glued_cover.is_open_iff] at hU 
+  rw [𝒰.glued_cover.is_open_iff] at hU
   use 𝒰.from_glued.val.base '' U ∩ Set.range (𝒰.map (𝒰.f x)).1.base
   use Set.inter_subset_left _ _
   constructor
@@ -485,7 +485,7 @@ instance : Epi 𝒰.fromGlued.val.base :=
   obtain ⟨y, h⟩ := 𝒰.covers x
   use(𝒰.glued_cover.ι (𝒰.f x)).1.base y
   rw [← comp_apply]
-  rw [← 𝒰.ι_from_glued (𝒰.f x)] at h 
+  rw [← 𝒰.ι_from_glued (𝒰.f x)] at h
   exact h
 
 #print AlgebraicGeometry.Scheme.OpenCover.fromGlued_open_immersion /-

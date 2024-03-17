@@ -122,7 +122,7 @@ theorem mem_resolventSet_of_norm_lt_mul {a : A} {k : 𝕜} (h : ‖a‖ * ‖(1 
     ne_zero_of_norm_ne_zero ((mul_nonneg (norm_nonneg _) (norm_nonneg _)).trans_lt h).ne'
   let ku := Units.map ↑ₐ.toMonoidHom (Units.mk0 k hk)
   rw [← inv_inv ‖(1 : A)‖,
-    mul_inv_lt_iff (inv_pos.2 <| norm_pos_iff.2 (one_ne_zero : (1 : A) ≠ 0))] at h 
+    mul_inv_lt_iff (inv_pos.2 <| norm_pos_iff.2 (one_ne_zero : (1 : A) ≠ 0))] at h
   have hku : ‖-a‖ < ‖(↑ku⁻¹ : A)‖⁻¹ := by simpa [ku, norm_algebraMap] using h
   simpa [ku, sub_eq_add_neg, Algebra.algebraMap_eq_smul_one] using (ku.add (-a) hku).IsUnit
 #align spectrum.mem_resolvent_set_of_norm_lt_mul spectrum.mem_resolventSet_of_norm_lt_mul
@@ -231,7 +231,7 @@ theorem spectralRadius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
     h (by simpa only [inv_inv, inv_top] using congr_arg (fun x : ℝ≥0∞ => x⁻¹) h')
   simp only [ENNReal.mul_le_iff_le_inv h (hε.trans_le le_top).Ne, mul_comm ε⁻¹,
     liminf_eq_supr_infi_of_nat', ENNReal.iSup_mul, ENNReal.iInf_mul hε']
-  rw [← ENNReal.inv_lt_inv, inv_one] at hε 
+  rw [← ENNReal.inv_lt_inv, inv_one] at hε
   obtain ⟨N, hN⟩ :=
     eventually_at_top.mp
       (ENNReal.eventually_pow_one_div_le (ENNReal.coe_ne_top : ↑‖(1 : A)‖₊ ≠ ∞) hε)
@@ -274,9 +274,9 @@ theorem norm_resolvent_le_forall (a : A) :
     ∀ ε > 0, ∃ R > 0, ∀ z : 𝕜, R ≤ ‖z‖ → ‖resolvent a z‖ ≤ ε :=
   by
   obtain ⟨c, c_pos, hc⟩ := (@NormedRing.inverse_one_sub_norm A _ _).exists_pos
-  rw [is_O_with_iff, eventually_iff, Metric.mem_nhds_iff] at hc 
+  rw [is_O_with_iff, eventually_iff, Metric.mem_nhds_iff] at hc
   rcases hc with ⟨δ, δ_pos, hδ⟩
-  simp only [CstarRing.norm_one, mul_one] at hδ 
+  simp only [CstarRing.norm_one, mul_one] at hδ
   intro ε hε
   have ha₁ : 0 < ‖a‖ + 1 := lt_of_le_of_lt (norm_nonneg a) (lt_add_one _)
   have min_pos : 0 < min (δ * (‖a‖ + 1)⁻¹) (ε * c⁻¹) :=
@@ -341,7 +341,7 @@ theorem hasFPowerSeriesOnBall_inverse_one_sub_smul [CompleteSpace A] (a : A) :
             (le_max_left _ _)
         · by_cases ‖a‖₊ = 0
           · simp only [h, MulZeroClass.zero_mul, zero_le', pow_succ]
-          · rw [← coe_inv h, coe_lt_coe, NNReal.lt_inv_iff_mul_lt h] at hr 
+          · rw [← coe_inv h, coe_lt_coe, NNReal.lt_inv_iff_mul_lt h] at hr
             simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
     r_pos := ENNReal.inv_pos.mpr coe_ne_top
     HasSum := fun y hy =>
@@ -367,7 +367,7 @@ theorem isUnit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑‖z‖�
   · simp only [hz, isUnit_one, sub_zero, zero_smul]
   · let u := Units.mk0 z hz
     suffices hu : IsUnit (u⁻¹ • 1 - a)
-    · rwa [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv u] at hu 
+    · rwa [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv u] at hu
     · rw [Units.smul_def, ← Algebra.algebraMap_eq_smul_one, ← mem_resolvent_set_iff]
       refine' mem_resolvent_set_of_spectral_radius_lt _
       rwa [Units.val_inv_eq_inv_val, nnnorm_inv,
@@ -464,7 +464,7 @@ protected theorem nonempty : (spectrum ℂ a).Nonempty :=
     is differentiable on `ℂ`. -/
   rw [Set.nonempty_iff_ne_empty]
   by_contra h
-  have H₀ : resolventSet ℂ a = Set.univ := by rwa [spectrum, Set.compl_empty_iff] at h 
+  have H₀ : resolventSet ℂ a = Set.univ := by rwa [spectrum, Set.compl_empty_iff] at h
   have H₁ : Differentiable ℂ fun z : ℂ => resolvent a z := fun z =>
     (has_deriv_at_resolvent (H₀.symm ▸ Set.mem_univ z : z ∈ resolventSet ℂ a)).DifferentiableAt
   /- The norm of the resolvent is small for all sufficently large `z`, and by compactness and
@@ -544,7 +544,7 @@ local notation "σ" => spectrum ℂ
 
 #print spectrum.algebraMap_eq_of_mem /-
 theorem algebraMap_eq_of_mem {a : A} {z : ℂ} (h : z ∈ σ a) : algebraMap ℂ A z = a := by
-  rwa [mem_iff, hA, Classical.not_not, sub_eq_zero] at h 
+  rwa [mem_iff, hA, Classical.not_not, sub_eq_zero] at h
 #align spectrum.algebra_map_eq_of_mem spectrum.algebraMap_eq_of_mem
 -/
 

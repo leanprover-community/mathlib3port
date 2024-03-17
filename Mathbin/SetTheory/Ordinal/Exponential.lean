@@ -202,7 +202,7 @@ theorem left_le_opow (a : Ordinal) {b : Ordinal} (b1 : 0 < b) : a ≤ (a^b) :=
   nth_rw 1 [← opow_one a]
   cases' le_or_gt a 1 with a1 a1
   · cases' lt_or_eq_of_le a1 with a0 a1
-    · rw [lt_one_iff_zero] at a0 
+    · rw [lt_one_iff_zero] at a0
       rw [a0, zero_opow Ordinal.one_ne_zero]
       exact Ordinal.zero_le _
     rw [a1, one_opow, one_opow]
@@ -396,7 +396,7 @@ theorem opow_log_le_self (b) {x : Ordinal} (hx : x ≠ 0) : (b^log b x) ≤ x :=
   rcases lt_or_eq_of_le (one_le_iff_ne_zero.2 b0) with (hb | rfl)
   · refine' le_of_not_lt fun h => (lt_succ (log b x)).not_le _
     have := @csInf_le' _ _ {o | x < (b^o)} _ h
-    rwa [← succ_log_def hb hx] at this 
+    rwa [← succ_log_def hb hx] at this
   · rwa [one_opow, one_le_iff_ne_zero]
 #align ordinal.opow_log_le_self Ordinal.opow_log_le_self
 -/
@@ -518,10 +518,10 @@ theorem log_opow_mul_add {b u v w : Ordinal} (hb : 1 < b) (hv : v ≠ 0) (hvb : 
   have hne' := (opow_mul_add_pos (zero_lt_one.trans hb).ne' u hv w).ne'
   by_contra! hne
   cases' lt_or_gt_of_ne hne with h h
-  · rw [← lt_opow_iff_log_lt hb hne'] at h 
+  · rw [← lt_opow_iff_log_lt hb hne'] at h
     exact h.not_le ((le_mul_left _ (Ordinal.pos_iff_ne_zero.2 hv)).trans (le_add_right _ _))
-  · change _ < _ at h 
-    rw [← succ_le_iff, ← opow_le_iff_le_log hb hne'] at h 
+  · change _ < _ at h
+    rw [← succ_le_iff, ← opow_le_iff_le_log hb hne'] at h
     exact (not_lt_of_le h) (opow_mul_add_lt_opow_succ hvb hw)
 #align ordinal.log_opow_mul_add Ordinal.log_opow_mul_add
 -/

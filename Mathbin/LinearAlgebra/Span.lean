@@ -435,7 +435,7 @@ variable {p p'}
 #print Submodule.mem_sup /-
 theorem mem_sup : x ∈ p ⊔ p' ↔ ∃ y ∈ p, ∃ z ∈ p', y + z = x :=
   ⟨fun h => by
-    rw [← span_eq p, ← span_eq p', ← span_union] at h 
+    rw [← span_eq p, ← span_eq p', ← span_union] at h
     apply span_induction h
     · rintro y (h | h)
       · exact ⟨y, h, 0, by simp, by simp⟩
@@ -496,7 +496,7 @@ theorem nontrivial_span_singleton {x : M} (h : x ≠ 0) : Nontrivial (R ∙ x) :
   ⟨by
     use 0, x, Submodule.mem_span_singleton_self x
     intro H
-    rw [eq_comm, Submodule.mk_eq_zero] at H 
+    rw [eq_comm, Submodule.mk_eq_zero] at H
     exact h H⟩
 #align submodule.nontrivial_span_singleton Submodule.nontrivial_span_singleton
 -/
@@ -580,7 +580,7 @@ theorem disjoint_span_singleton {K E : Type _} [DivisionRing K] [AddCommGroup E]
   obtain ⟨c, rfl⟩ := mem_span_singleton.1 hyx
   by_cases hc : c = 0
   · rw [hc, zero_smul]
-  · rw [s.smul_mem_iff hc] at hy 
+  · rw [s.smul_mem_iff hc] at hy
     rw [H hy, smul_zero]
 #align submodule.disjoint_span_singleton Submodule.disjoint_span_singleton
 -/
@@ -699,9 +699,9 @@ theorem span_singleton_eq_span_singleton {R M : Type _} [Ring R] [AddCommGroup M
   · intro hxy
     cases' mem_span_singleton.mp (by rw [hxy]; apply mem_span_singleton_self) with v hv
     cases' mem_span_singleton.mp (by rw [← hxy]; apply mem_span_singleton_self) with i hi
-    have vi : v * i = 1 := by rw [← one_smul R y, ← hi, smul_smul] at hv ;
+    have vi : v * i = 1 := by rw [← one_smul R y, ← hi, smul_smul] at hv;
       exact smul_left_injective R hy hv
-    have iv : i * v = 1 := by rw [← one_smul R x, ← hv, smul_smul] at hi ;
+    have iv : i * v = 1 := by rw [← one_smul R x, ← hv, smul_smul] at hi;
       exact smul_left_injective R hx hi
     exact ⟨⟨v, i, vi, iv⟩, hv⟩
   · rintro ⟨v, rfl⟩
@@ -786,7 +786,7 @@ theorem iSup_induction {ι : Sort _} (p : ι → Submodule R M) {C : M → Prop}
     (hx : x ∈ ⨆ i, p i) (hp : ∀ (i), ∀ x ∈ p i, C x) (h0 : C 0)
     (hadd : ∀ x y, C x → C y → C (x + y)) : C x :=
   by
-  rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx 
+  rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx
   exact AddSubmonoid.iSup_induction _ hx hp h0 hadd
 #align submodule.supr_induction Submodule.iSup_induction
 -/
@@ -1033,7 +1033,7 @@ theorem mem_span_insert' {x y} {s : Set M} :
 
 instance : IsModularLattice (Submodule R M) :=
   ⟨fun x y z xz a ha => by
-    rw [mem_inf, mem_sup] at ha 
+    rw [mem_inf, mem_sup] at ha
     rcases ha with ⟨⟨b, hb, c, hc, rfl⟩, haz⟩
     rw [mem_sup]
     refine' ⟨b, hb, c, mem_inf.2 ⟨hc, _⟩, rfl⟩
@@ -1190,7 +1190,7 @@ theorem ext_on {s : Set M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : span R s = �
 each `v i`, then they are equal. -/
 theorem ext_on_range {ι : Type _} {v : ι → M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : span R (Set.range v) = ⊤)
     (h : ∀ i, f (v i) = g (v i)) : f = g :=
-  ext_on hv (Set.forall_range_iff.2 h)
+  ext_on hv (Set.forall_mem_range.2 h)
 #align linear_map.ext_on_range LinearMap.ext_on_range
 -/
 

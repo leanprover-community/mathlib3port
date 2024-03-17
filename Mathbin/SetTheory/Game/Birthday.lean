@@ -81,9 +81,9 @@ theorem SetTheory.PGame.lt_birthday_iff {x : SetTheory.PGame} {o : Ordinal} :
     intro h
     cases' lt_max_iff.1 h with h' h'
     · left
-      rwa [lt_lsub_iff] at h' 
+      rwa [lt_lsub_iff] at h'
     · right
-      rwa [lt_lsub_iff] at h' 
+      rwa [lt_lsub_iff] at h'
   · rintro (⟨i, hi⟩ | ⟨i, hi⟩)
     · exact hi.trans_lt (birthday_move_left_lt i)
     · exact hi.trans_lt (birthday_move_right_lt i)

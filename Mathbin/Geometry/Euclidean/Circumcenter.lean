@@ -89,7 +89,7 @@ theorem exists_dist_eq_iff_exists_dist_orthogonalProjection_eq {s : AffineSubspa
     (∃ r, ∀ p1 ∈ ps, dist p1 p = r) ↔ ∃ r, ∀ p1 ∈ ps, dist p1 ↑(orthogonalProjection s p) = r :=
   by
   have h := dist_set_eq_iff_dist_orthogonal_projection_eq hps p
-  simp_rw [Set.pairwise_eq_iff_exists_eq] at h 
+  simp_rw [Set.pairwise_eq_iff_exists_eq] at h
   exact h
 #align euclidean_geometry.exists_dist_eq_iff_exists_dist_orthogonal_projection_eq EuclideanGeometry.exists_dist_eq_iff_exists_dist_orthogonalProjection_eq
 -/
@@ -110,7 +110,7 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
   by
   haveI : Nonempty s := Set.Nonempty.to_subtype (hnps.mono hps)
   rcases hu with ⟨⟨cc, cr⟩, ⟨hcc, hcr⟩, hcccru⟩
-  simp only at hcc hcr hcccru 
+  simp only at hcc hcr hcccru
   let x := dist cc (orthogonalProjection s p)
   let y := dist p (orthogonalProjection s p)
   have hy0 : y ≠ 0 := dist_orthogonal_projection_ne_zero_of_not_mem hp
@@ -147,17 +147,17 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
           dist_eq_norm_vsub V, Real.norm_eq_abs, abs_div, abs_of_nonneg dist_nonneg,
           div_mul_cancel _ hy0, abs_mul_abs_self]
   · rintro ⟨cc₃, cr₃⟩ ⟨hcc₃, hcr₃⟩
-    simp only at hcc₃ hcr₃ 
+    simp only at hcc₃ hcr₃
     obtain ⟨t₃, cc₃', hcc₃', hcc₃''⟩ :
       ∃ (r : ℝ) (p0 : P) (hp0 : p0 ∈ s), cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
-      rwa [mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hcc₃ 
+      rwa [mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hcc₃
     have hcr₃' : ∃ r, ∀ p1 ∈ ps, dist p1 cc₃ = r :=
       ⟨cr₃, fun p1 hp1 => dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp1) hcr₃⟩
     rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq hps cc₃, hcc₃'',
-      orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃'] at hcr₃' 
+      orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃'] at hcr₃'
     cases' hcr₃' with cr₃' hcr₃'
     have hu := hcccru ⟨cc₃', cr₃'⟩
-    simp only at hu 
+    simp only at hu
     replace hu := hu ⟨hcc₃', hcr₃'⟩
     cases' hu with hucc hucr
     substs hucc hucr
@@ -179,17 +179,17 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace
       dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonal_projection_mem p) hcc₃' _ _
         (vsub_orthogonal_projection_mem_direction_orthogonal s p),
       dist_comm, ← dist_eq_norm_vsub V p,
-      Real.mul_self_sqrt (add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _))] at hcr₃ 
-    change x * x + _ * (y * y) = _ at hcr₃ 
+      Real.mul_self_sqrt (add_nonneg (hMul_self_nonneg _) (hMul_self_nonneg _))] at hcr₃
+    change x * x + _ * (y * y) = _ at hcr₃
     rw [show
         x * x + (1 - t₃) * (1 - t₃) * (y * y) = x * x + y * y - 2 * y * (t₃ * y) + t₃ * y * (t₃ * y)
         by ring,
-      add_left_inj] at hcr₃ 
+      add_left_inj] at hcr₃
     have ht₃ : t₃ = ycc₂ / y := by
       field_simp [← hcr₃, hy0]
       ring
     subst ht₃
-    change cc₃ = cc₂ at hcc₃'' 
+    change cc₃ = cc₂ at hcc₃''
     congr
     rw [hcr₃val]
     congr 2
@@ -210,10 +210,10 @@ theorem AffineIndependent.existsUnique_dist_eq {ι : Type _} [hne : Nonempty ι]
   induction' hn : Fintype.card ι with m hm generalizing ι
   · exfalso
     have h := Fintype.card_pos_iff.2 hne
-    rw [hn] at h 
+    rw [hn] at h
     exact lt_irrefl 0 h
   · cases m
-    · rw [Fintype.card_eq_one_iff] at hn 
+    · rw [Fintype.card_eq_one_iff] at hn
       cases' hn with i hi
       haveI : Unique ι := ⟨⟨i⟩, hi⟩
       use⟨p i, 0⟩
@@ -224,7 +224,7 @@ theorem AffineIndependent.existsUnique_dist_eq {ι : Type _} [hne : Nonempty ι]
       · rintro ⟨cc, cr⟩
         simp only
         rintro ⟨rfl, hdist⟩
-        simp_rw [Set.singleton_subset_iff, sphere.mem_coe, mem_sphere, dist_self] at hdist 
+        simp_rw [Set.singleton_subset_iff, sphere.mem_coe, mem_sphere, dist_self] at hdist
         rw [hi default, hdist]
         exact ⟨rfl, rfl⟩
     · have i := hne.some
@@ -364,7 +364,7 @@ theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P}
   by
   have h := s.circumsphere_unique_dist_eq.2 ⟨p, r⟩
   simp only [hp, hr, forall_const, eq_self_iff_true, subset_sphere, sphere.ext_iff,
-    Set.forall_range_iff, mem_sphere, true_and_iff] at h 
+    Set.forall_mem_range, mem_sphere, true_and_iff] at h
   exact h.1
 #align affine.simplex.eq_circumcenter_of_dist_eq Affine.Simplex.eq_circumcenter_of_dist_eq
 -/
@@ -378,7 +378,7 @@ theorem eq_circumradius_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P}
   by
   have h := s.circumsphere_unique_dist_eq.2 ⟨p, r⟩
   simp only [hp, hr, forall_const, eq_self_iff_true, subset_sphere, sphere.ext_iff,
-    Set.forall_range_iff, mem_sphere, true_and_iff] at h 
+    Set.forall_mem_range, mem_sphere, true_and_iff] at h
   exact h.2
 #align affine.simplex.eq_circumradius_of_dist_eq Affine.Simplex.eq_circumradius_of_dist_eq
 -/
@@ -398,7 +398,7 @@ theorem circumradius_pos {n : ℕ} (s : Simplex ℝ P (n + 1)) : 0 < s.circumrad
   refine' lt_of_le_of_ne s.circumradius_nonneg _
   intro h
   have hr := s.dist_circumcenter_eq_circumradius
-  simp_rw [← h, dist_eq_zero] at hr 
+  simp_rw [← h, dist_eq_zero] at hr
   have h01 := s.independent.injective.ne (by decide : (0 : Fin (n + 2)) ≠ 1)
   simpa [hr] using h01
 #align affine.simplex.circumradius_pos Affine.Simplex.circumradius_pos
@@ -409,7 +409,7 @@ theorem circumradius_pos {n : ℕ} (s : Simplex ℝ P (n + 1)) : 0 < s.circumrad
 theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Fin 1) : s.circumcenter = s.points i :=
   by
   have h := s.circumcenter_mem_affine_span
-  rw [Set.range_unique, mem_affine_span_singleton] at h 
+  rw [Set.range_unique, mem_affine_span_singleton] at h
   rw [h]
   congr
 #align affine.simplex.circumcenter_eq_point Affine.Simplex.circumcenter_eq_point
@@ -430,7 +430,7 @@ theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) :
       dist_eq_norm_vsub V (s.points j), vsub_vadd_eq_vsub_sub, vsub_vadd_eq_vsub_sub, ←
       one_smul ℝ (s.points i -ᵥ s.points 0), ← one_smul ℝ (s.points j -ᵥ s.points 0)]
     fin_cases i <;> fin_cases j <;> simp [-one_smul, ← sub_smul] <;> norm_num
-  rw [Set.pairwise_eq_iff_exists_eq] at hr 
+  rw [Set.pairwise_eq_iff_exists_eq] at hr
   cases' hr with r hr
   exact
     (s.eq_circumcenter_of_dist_eq
@@ -533,12 +533,12 @@ spanned by that simplex is its circumcenter.  -/
 theorem orthogonalProjection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P}
     (hr : ∃ r, ∀ i, dist (s.points i) p = r) : ↑(s.orthogonalProjectionSpan p) = s.circumcenter :=
   by
-  change ∃ r : ℝ, ∀ i, (fun x => dist x p = r) (s.points i) at hr 
+  change ∃ r : ℝ, ∀ i, (fun x => dist x p = r) (s.points i) at hr
   conv at hr =>
     congr
     ext
-    rw [← Set.forall_range_iff]
-  rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq (subset_affineSpan ℝ _) p] at hr 
+    rw [← Set.forall_mem_range]
+  rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq (subset_affineSpan ℝ _) p] at hr
   cases' hr with r hr
   exact
     s.eq_circumcenter_of_dist_eq (orthogonal_projection_mem p) fun i => hr _ (Set.mem_range_self i)
@@ -580,7 +580,7 @@ theorem circumcenter_eq_of_range_eq {n : ℕ} {s₁ s₂ : Simplex ℝ P n}
     by
     intro i
     have hi : s₂.points i ∈ Set.range s₂.points := Set.mem_range_self _
-    rw [← h, Set.mem_range] at hi 
+    rw [← h, Set.mem_range] at hi
     rcases hi with ⟨j, hj⟩
     rw [← hj, s₁.dist_circumcenter_eq_circumradius j]
   exact s₂.eq_circumcenter_of_dist_eq hs hr
@@ -864,7 +864,7 @@ theorem cospherical_iff_exists_mem_of_complete {s : AffineSubspace ℝ P} {ps : 
   by
   constructor
   · rintro ⟨c, hcr⟩
-    rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq h c] at hcr 
+    rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq h c] at hcr
     exact ⟨orthogonalProjection s c, orthogonal_projection_mem _, hcr⟩
   · exact fun ⟨c, hc, hd⟩ => ⟨c, hd⟩
 #align euclidean_geometry.cospherical_iff_exists_mem_of_complete EuclideanGeometry.cospherical_iff_exists_mem_of_complete
@@ -890,7 +890,7 @@ theorem exists_circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
     (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) :
     ∃ r : ℝ, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumradius = r :=
   by
-  rw [cospherical_iff_exists_mem_of_finite_dimensional h] at hc 
+  rw [cospherical_iff_exists_mem_of_finite_dimensional h] at hc
   rcases hc with ⟨c, hc, r, hcr⟩
   use r
   intro sx hsxps
@@ -928,7 +928,7 @@ theorem exists_circumradius_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDime
     ∃ r : ℝ, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumradius = r :=
   by
   haveI : Nonempty (⊤ : AffineSubspace ℝ P) := Set.univ.nonempty
-  rw [← finrank_top, ← direction_top ℝ V P] at hd 
+  rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumradius_eq_of_cospherical_subset _ hd hc
   exact Set.subset_univ _
 #align euclidean_geometry.exists_circumradius_eq_of_cospherical EuclideanGeometry.exists_circumradius_eq_of_cospherical
@@ -955,7 +955,7 @@ theorem exists_circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
     (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) :
     ∃ c : P, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumcenter = c :=
   by
-  rw [cospherical_iff_exists_mem_of_finite_dimensional h] at hc 
+  rw [cospherical_iff_exists_mem_of_finite_dimensional h] at hc
   rcases hc with ⟨c, hc, r, hcr⟩
   use c
   intro sx hsxps
@@ -993,7 +993,7 @@ theorem exists_circumcenter_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDime
     ∃ c : P, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumcenter = c :=
   by
   haveI : Nonempty (⊤ : AffineSubspace ℝ P) := Set.univ.nonempty
-  rw [← finrank_top, ← direction_top ℝ V P] at hd 
+  rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumcenter_eq_of_cospherical_subset _ hd hc
   exact Set.subset_univ _
 #align euclidean_geometry.exists_circumcenter_eq_of_cospherical EuclideanGeometry.exists_circumcenter_eq_of_cospherical
@@ -1047,7 +1047,7 @@ theorem exists_circumsphere_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDime
     ∃ c : Sphere P, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumsphere = c :=
   by
   haveI : Nonempty (⊤ : AffineSubspace ℝ P) := Set.univ.nonempty
-  rw [← finrank_top, ← direction_top ℝ V P] at hd 
+  rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumsphere_eq_of_cospherical_subset _ hd hc
   exact Set.subset_univ _
 #align euclidean_geometry.exists_circumsphere_eq_of_cospherical EuclideanGeometry.exists_circumsphere_eq_of_cospherical
@@ -1082,15 +1082,15 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p
   have h₁' := s.orthogonal_projection_eq_circumcenter_of_dist_eq h₁
   have h₂' := s.orthogonal_projection_eq_circumcenter_of_dist_eq h₂
   rw [← affineSpan_insert_affineSpan, mem_affine_span_insert_iff (orthogonal_projection_mem p)] at
-    hp₁ hp₂ 
+    hp₁ hp₂
   obtain ⟨r₁, p₁o, hp₁o, hp₁⟩ := hp₁
   obtain ⟨r₂, p₂o, hp₂o, hp₂⟩ := hp₂
   obtain rfl : ↑(s.orthogonal_projection_span p₁) = p₁o := by subst hp₁;
     exact s.coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection hp₁o
-  rw [h₁'] at hp₁ 
+  rw [h₁'] at hp₁
   obtain rfl : ↑(s.orthogonal_projection_span p₂) = p₂o := by subst hp₂;
     exact s.coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection hp₂o
-  rw [h₂'] at hp₂ 
+  rw [h₂'] at hp₂
   have h : s.points 0 ∈ span_s := mem_affineSpan ℝ (Set.mem_range_self _)
   have hd₁ :
     dist p₁ s.circumcenter * dist p₁ s.circumcenter = r * r - s.circumradius * s.circumradius :=
@@ -1101,14 +1101,14 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p
   rw [← hd₂, hp₁, hp₂, dist_eq_norm_vsub V _ s.circumcenter, dist_eq_norm_vsub V _ s.circumcenter,
     vadd_vsub, vadd_vsub, ← real_inner_self_eq_norm_mul_norm, ← real_inner_self_eq_norm_mul_norm,
     real_inner_smul_left, real_inner_smul_left, real_inner_smul_right, real_inner_smul_right, ←
-    mul_assoc, ← mul_assoc] at hd₁ 
+    mul_assoc, ← mul_assoc] at hd₁
   by_cases hp : p = s.orthogonal_projection_span p
-  · rw [simplex.orthogonal_projection_span] at hp 
+  · rw [simplex.orthogonal_projection_span] at hp
     rw [hp₁, hp₂, ← hp]
     simp only [true_or_iff, eq_self_iff_true, smul_zero, vsub_self]
   · have hz : ⟪p -ᵥ orthogonalProjection span_s p, p -ᵥ orthogonalProjection span_s p⟫ ≠ 0 := by
       simpa only [Ne.def, vsub_eq_zero_iff_eq, inner_self_eq_zero] using hp
-    rw [mul_left_inj' hz, mul_self_eq_mul_self_iff] at hd₁ 
+    rw [mul_left_inj' hz, mul_self_eq_mul_self_iff] at hd₁
     rw [hp₁, hp₂]
     cases hd₁
     · left

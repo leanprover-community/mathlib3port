@@ -135,7 +135,7 @@ theorem ae_eq_of_forall_set_integral_eq_of_sigmaFinite' (hm : m ≤ m0) [SigmaFi
     ∀ s, measurable_set[m] s → μ.trim hm s < ∞ → @integrable_on _ _ m _ (hfm.mk f) s (μ.trim hm) :=
     by
     intro s hs hμs
-    rw [trim_measurable_set_eq hm hs] at hμs 
+    rw [trim_measurable_set_eq hm hs] at hμs
     rw [integrable_on, restrict_trim hm _ hs]
     refine' integrable.trim hm _ hfm.strongly_measurable_mk
     exact integrable.congr (hf_int_finite s hs hμs) (ae_restrict_of_ae hfm.ae_eq_mk)
@@ -143,7 +143,7 @@ theorem ae_eq_of_forall_set_integral_eq_of_sigmaFinite' (hm : m ≤ m0) [SigmaFi
     ∀ s, measurable_set[m] s → μ.trim hm s < ∞ → @integrable_on _ _ m _ (hgm.mk g) s (μ.trim hm) :=
     by
     intro s hs hμs
-    rw [trim_measurable_set_eq hm hs] at hμs 
+    rw [trim_measurable_set_eq hm hs] at hμs
     rw [integrable_on, restrict_trim hm _ hs]
     refine' integrable.trim hm _ hgm.strongly_measurable_mk
     exact integrable.congr (hg_int_finite s hs hμs) (ae_restrict_of_ae hgm.ae_eq_mk)
@@ -153,7 +153,7 @@ theorem ae_eq_of_forall_set_integral_eq_of_sigmaFinite' (hm : m ≤ m0) [SigmaFi
         μ.trim hm s < ∞ → ∫ x in s, hfm.mk f x ∂μ.trim hm = ∫ x in s, hgm.mk g x ∂μ.trim hm :=
     by
     intro s hs hμs
-    rw [trim_measurable_set_eq hm hs] at hμs 
+    rw [trim_measurable_set_eq hm hs] at hμs
     rw [restrict_trim hm _ hs, ← integral_trim hm hfm.strongly_measurable_mk, ←
       integral_trim hm hgm.strongly_measurable_mk,
       integral_congr_ae (ae_restrict_of_ae hfm.ae_eq_mk.symm),

@@ -382,7 +382,7 @@ theorem length_of_sublistsLen {α : Type _} :
   | 0, l, l', Or.inl rfl => rfl
   | n + 1, a :: l, l', h =>
     by
-    rw [sublists_len_succ_cons, mem_append, mem_map] at h 
+    rw [sublists_len_succ_cons, mem_append, mem_map] at h
     rcases h with (h | ⟨l', h, rfl⟩)
     · exact length_of_sublists_len h
     · exact congr_arg (· + 1) (length_of_sublists_len h)
@@ -451,7 +451,7 @@ theorem Pairwise.sublists' {R} :
 #print List.pairwise_sublists /-
 theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
     Pairwise (fun l₁ l₂ => Lex R (reverse l₁) (reverse l₂)) (sublists l) := by
-  have := (pairwise_reverse.2 H).sublists'; rwa [sublists'_reverse, pairwise_map] at this 
+  have := (pairwise_reverse.2 H).sublists'; rwa [sublists'_reverse, pairwise_map] at this
 #align list.pairwise_sublists List.pairwise_sublists
 -/
 
@@ -511,12 +511,12 @@ theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l
   by
   rw [revzip]
   apply List.reverseRecOn l
-  · intro l₁ l₂ h; simp at h ; simp [h]
+  · intro l₁ l₂ h; simp at h; simp [h]
   · intro l a IH l₁ l₂ h
     rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at
-        h  <;>
+        h <;>
       [skip; · simp]
-    simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mk, Prod.exists] at h 
+    simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mk, Prod.exists] at h
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', l₂, h, rfl, rfl⟩)
     · rw [← append_assoc]
       exact (IH _ _ h).append_right _
@@ -532,9 +532,9 @@ theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip 
   by
   rw [revzip]
   induction' l with a l IH <;> intro l₁ l₂ h
-  · simp at h ; simp [h]
-  · rw [sublists'_cons, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h
-         <;> [simp at h ; simp]
+  · simp at h; simp [h]
+  · rw [sublists'_cons, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at
+        h <;> [simp at h; simp]
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', h, rfl⟩)
     · exact perm_middle.trans ((IH _ _ h).cons _)
     · exact (IH _ _ h).cons _

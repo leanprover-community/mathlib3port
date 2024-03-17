@@ -222,7 +222,7 @@ theorem erase_mem_compression_of_mem_compression : s ∈ 𝓓 a 𝒜 → s.erase
 theorem mem_compression_of_insert_mem_compression (h : insert a s ∈ 𝓓 a 𝒜) : s ∈ 𝓓 a 𝒜 :=
   by
   by_cases ha : a ∈ s
-  · rwa [insert_eq_of_mem ha] at h 
+  · rwa [insert_eq_of_mem ha] at h
   · rw [← erase_insert ha]
     exact erase_mem_compression_of_mem_compression h
 #align down.mem_compression_of_insert_mem_compression Down.mem_compression_of_insert_mem_compression
@@ -250,7 +250,7 @@ theorem card_compression (a : α) (𝒜 : Finset (Finset α)) : (𝓓 a 𝒜).ca
     card_image_of_inj_on ((erase_inj_on' _).mono fun s hs => _), ← card_disjoint_union,
     filter_union_filter_neg_eq]
   · exact disjoint_filter_filter_neg _ _ _
-  rw [mem_coe, mem_filter] at hs 
+  rw [mem_coe, mem_filter] at hs
   exact not_imp_comm.1 erase_eq_of_not_mem (ne_of_mem_of_not_mem hs.1 hs.2).symm
 #align down.card_compression Down.card_compression
 -/

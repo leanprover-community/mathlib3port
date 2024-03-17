@@ -113,7 +113,7 @@ theorem lt_def : a < b ↔ a.1 < b.1 :=
     · exact (not_or_distrib.mp h1).1.elim rfl
     · exact a1
   refine' ⟨Or.inr h, not_or_distrib.mpr ⟨fun k => _, not_lt.mpr h.le⟩⟩
-  rw [k] at h 
+  rw [k] at h
   exact Nat.lt_asymm h h
 #align counterexample.Nxzmod_2.lt_def Counterexample.Nxzmod2.lt_def
 
@@ -259,7 +259,7 @@ theorem eq_zero_or_eq_zero_of_hMul_eq_zero : ∀ a b : L, a * b = 0 → a = 0 �
   rintro ⟨⟨a, a2⟩, ha⟩ ⟨⟨b, b2⟩, hb⟩ ab1
   injection ab1 with ab
   injection ab with abn ab2
-  rw [mul_eq_zero] at abn 
+  rw [mul_eq_zero] at abn
   rcases abn with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
   · refine' Or.inl _
     rcases mem_zmod_2 a2 with (rfl | rfl)

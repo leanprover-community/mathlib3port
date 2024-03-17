@@ -76,7 +76,7 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq [NeZero (2 : R)] [NoZeroDivisors R] 
     {x : R} : a * x * x + b * x + c = 0 ↔ discrim a b c = (2 * a * x + b) ^ 2 :=
   by
   refine' ⟨discrim_eq_sq_of_quadratic_eq_zero, fun h => _⟩
-  rw [discrim] at h 
+  rw [discrim] at h
   have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero (NeZero.ne _) (NeZero.ne _)) ha
   apply mul_left_cancel₀ ha
   linear_combination -h
@@ -153,7 +153,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
   -- if a = 0
   · rcases eq_or_ne b 0 with (rfl | hb)
     · simp
-    · have := h ((-c - 1) / b); rw [mul_div_cancel' _ hb] at this ; linarith
+    · have := h ((-c - 1) / b); rw [mul_div_cancel' _ hb] at this; linarith
   -- if a > 0
   · have ha' : 0 ≤ 4 * a := mul_nonneg zero_le_four ha.le
     have := h (-b / (2 * a))

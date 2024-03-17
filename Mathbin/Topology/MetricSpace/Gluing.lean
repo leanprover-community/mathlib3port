@@ -376,10 +376,10 @@ def metricSpaceSum : MetricSpace (Sum X Y)
     cases p <;> cases q
     · simp only [sum.dist, dist_eq_zero, imp_self]
     · intro h
-      simp only [dist, sum.dist_eq_glue_dist p q] at h 
+      simp only [dist, sum.dist_eq_glue_dist p q] at h
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
     · intro h
-      simp only [dist, sum.dist_eq_glue_dist q p] at h 
+      simp only [dist, sum.dist_eq_glue_dist q p] at h
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
     · simp only [sum.dist, dist_eq_zero, imp_self]
   toUniformSpace := Sum.instUniformSpace
@@ -529,7 +529,7 @@ protected theorem isOpen_iff (s : Set (Σ i, E i)) :
     refine' ⟨min ε 1, lt_min εpos zero_lt_one, _⟩
     rintro ⟨j, y⟩ hy
     rcases eq_or_ne i j with (rfl | hij)
-    · simp only [sigma.dist_same, lt_min_iff] at hy 
+    · simp only [sigma.dist_same, lt_min_iff] at hy
       exact hε (mem_ball'.2 hy.1)
     · apply (lt_irrefl (1 : ℝ) _).elim
       calc
@@ -615,7 +615,7 @@ variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z �
 
 open _Root_.Sum (inl inr)
 
-attribute [local instance] UniformSpace.separationSetoid
+attribute [local instance] inseparableSetoid
 
 #print Metric.gluePremetric /-
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a pseudo metric space
@@ -633,7 +633,7 @@ def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (S
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
 space  `glue_space hΦ hΨ` by identifying in `X ⊕ Y` the points `Φ x` and `Ψ x`. -/
 def GlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
-  @UniformSpace.SeparationQuotient _ (gluePremetric hΦ hΨ).toUniformSpace
+  @SeparationQuotient _ (gluePremetric hΦ hΨ).toUniformSpace
 deriving MetricSpace
 #align metric.glue_space Metric.GlueSpace
 -/
@@ -674,7 +674,7 @@ theorem toGlue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
   letI := i.to_uniform_space
   funext
   simp only [comp, to_glue_l, to_glue_r]
-  refine' UniformSpace.SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
+  refine' SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
   exact glue_dist_glued_points Φ Ψ 0 x
 #align metric.to_glue_commute Metric.toGlue_commute
 -/
@@ -772,12 +772,12 @@ def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X 
 #align metric.inductive_premetric Metric.inductivePremetric
 -/
 
-attribute [local instance] inductive_premetric UniformSpace.separationSetoid
+attribute [local instance] inductive_premetric inseparableSetoid
 
 #print Metric.InductiveLimit /-
 /-- The type giving the inductive limit in a metric space context. -/
 def InductiveLimit (I : ∀ n, Isometry (f n)) : Type _ :=
-  @UniformSpace.SeparationQuotient _ (inductivePremetric I).toUniformSpace
+  @SeparationQuotient _ (inductivePremetric I).toUniformSpace
 deriving MetricSpace
 #align metric.inductive_limit Metric.InductiveLimit
 -/
@@ -812,7 +812,7 @@ theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
   letI := inductive_premetric I
   funext
   simp only [comp, to_inductive_limit]
-  refine' UniformSpace.SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
+  refine' SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
   show inductive_limit_dist f ⟨n.succ, f n x⟩ ⟨n, x⟩ = 0
   · rw [inductive_limit_dist_eq_dist I ⟨n.succ, f n x⟩ ⟨n, x⟩ n.succ, le_rec_on_self,
       le_rec_on_succ, le_rec_on_self, dist_self]

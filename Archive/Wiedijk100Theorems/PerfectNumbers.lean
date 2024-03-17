@@ -92,29 +92,29 @@ theorem eq_two_pow_hMul_prime_mersenne_of_even_perfect {n : ℕ} (ev : Even n)
   have hpos := perf.2
   rcases eq_two_pow_mul_odd hpos with ⟨k, m, rfl, hm⟩
   use k
-  rw [even_iff_two_dvd] at hm 
+  rw [even_iff_two_dvd] at hm
   rw [Nat.perfect_iff_sum_divisors_eq_two_mul hpos, ← sigma_one_apply,
     is_multiplicative_sigma.map_mul_of_coprime (nat.prime_two.coprime_pow_of_not_dvd hm).symm,
-    sigma_two_pow_eq_mersenne_succ, ← mul_assoc, ← pow_succ] at perf 
+    sigma_two_pow_eq_mersenne_succ, ← mul_assoc, ← pow_succ] at perf
   rcases Nat.Coprime.dvd_of_dvd_mul_left
       (nat.prime_two.coprime_pow_of_not_dvd (odd_mersenne_succ _)) (Dvd.intro _ perf) with
     ⟨j, rfl⟩
-  rw [← mul_assoc, mul_comm _ (mersenne _), mul_assoc] at perf 
+  rw [← mul_assoc, mul_comm _ (mersenne _), mul_assoc] at perf
   have h := mul_left_cancel₀ (ne_of_gt (mersenne_pos (Nat.succ_pos _))) perf
   rw [sigma_one_apply, Nat.sum_divisors_eq_sum_properDivisors_add_self, ← succ_mersenne, add_mul,
-    one_mul, add_comm] at h 
+    one_mul, add_comm] at h
   have hj := add_left_cancel h
   cases Nat.sum_properDivisors_dvd (by rw [hj]; apply Dvd.intro_left (mersenne (k + 1)) rfl)
   · have j1 : j = 1 := Eq.trans hj.symm h_1
-    rw [j1, mul_one, Nat.sum_properDivisors_eq_one_iff_prime] at h_1 
+    rw [j1, mul_one, Nat.sum_properDivisors_eq_one_iff_prime] at h_1
     simp [h_1, j1]
   · have jcon := Eq.trans hj.symm h_1
-    rw [← one_mul j, ← mul_assoc, mul_one] at jcon 
+    rw [← one_mul j, ← mul_assoc, mul_one] at jcon
     have jcon2 := mul_right_cancel₀ _ jcon
     · exfalso
       cases k
       · apply hm
-        rw [← jcon2, pow_zero, one_mul, one_mul] at ev 
+        rw [← jcon2, pow_zero, one_mul, one_mul] at ev
         rw [← jcon2, one_mul]
         exact even_iff_two_dvd.mp ev
       apply ne_of_lt _ jcon2

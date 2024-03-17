@@ -251,9 +251,9 @@ theorem sin_angle_mul_norm_mul_norm (x y : V) :
   · rw [show ‖x‖ * ‖x‖ * (‖y‖ * ‖y‖) = ‖x‖ * ‖y‖ * (‖x‖ * ‖y‖) by ring, h, MulZeroClass.mul_zero,
       MulZeroClass.mul_zero, zero_sub]
     cases' eq_zero_or_eq_zero_of_mul_eq_zero h with hx hy
-    · rw [norm_eq_zero] at hx 
+    · rw [norm_eq_zero] at hx
       rw [hx, inner_zero_left, MulZeroClass.zero_mul, neg_zero]
-    · rw [norm_eq_zero] at hy 
+    · rw [norm_eq_zero] at hy
       rw [hy, inner_zero_right, MulZeroClass.zero_mul, neg_zero]
   · field_simp [h]; ring_nf
 #align inner_product_geometry.sin_angle_mul_norm_mul_norm InnerProductGeometry.sin_angle_mul_norm_mul_norm
@@ -381,7 +381,7 @@ theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y �
   refine' ⟨fun h => _, norm_sub_eq_add_norm_of_angle_eq_pi⟩
   rw [← inner_eq_neg_mul_norm_iff_angle_eq_pi hx hy]
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x - y), add_nonneg (norm_nonneg x) (norm_nonneg y)
-  rw [← sq_eq_sq hxy₁ hxy₂, norm_sub_pow_two_real] at h 
+  rw [← sq_eq_sq hxy₁ hxy₂, norm_sub_pow_two_real] at h
   calc
     ⟪x, y⟫ = (‖x‖ ^ 2 + ‖y‖ ^ 2 - (‖x‖ + ‖y‖) ^ 2) / 2 := by linarith
     _ = -(‖x‖ * ‖y‖) := by ring
@@ -397,7 +397,7 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
   refine' ⟨fun h => _, norm_add_eq_add_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x + y), add_nonneg (norm_nonneg x) (norm_nonneg y)
-  rw [← sq_eq_sq hxy₁ hxy₂, norm_add_pow_two_real] at h 
+  rw [← sq_eq_sq hxy₁ hxy₂, norm_add_pow_two_real] at h
   calc
     ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith
     _ = ‖x‖ * ‖y‖ := by ring
@@ -413,7 +413,7 @@ theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy 
   refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
   have h1 : ‖x - y‖ ^ 2 = (‖x‖ - ‖y‖) ^ 2 := by rw [h]; exact sq_abs (‖x‖ - ‖y‖)
-  rw [norm_sub_pow_two_real] at h1 
+  rw [norm_sub_pow_two_real] at h1
   calc
     ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith
     _ = ‖x‖ * ‖y‖ := by ring

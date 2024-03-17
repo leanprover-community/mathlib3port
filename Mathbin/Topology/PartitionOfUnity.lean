@@ -298,7 +298,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s
     refine' ⟨univ, univ_mem, (finite_singleton i).Subset _⟩
     rintro j ⟨x, hx, -⟩
     contrapose! hx
-    rw [mem_singleton_iff] at hx 
+    rw [mem_singleton_iff] at hx
     simp [hx]
   nonneg' := le_update_iff.2 ⟨fun x => zero_le_one, fun _ _ => le_rfl⟩
   le_one' := update_le_iff.2 ⟨le_rfl, fun _ _ _ => zero_le_one⟩
@@ -467,7 +467,7 @@ theorem toPOUFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     f.toPOUFun i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j x) :=
   by
   refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
-  rw [Ne.def, sub_eq_self] at hj 
+  rw [Ne.def, sub_eq_self] at hj
   rw [Finset.mem_filter, Iff.comm, and_iff_right_iff_imp]
   exact flip (ht j) hj
 #align bump_covering.to_pou_fun_eq_mul_prod BumpCovering.toPOUFun_eq_mul_prod

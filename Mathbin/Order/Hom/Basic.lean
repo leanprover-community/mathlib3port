@@ -1270,7 +1270,7 @@ def ofHomInv {F G : Type _} [OrderHomClass F α β] [OrderHomClass G β α] (f :
   map_rel_iff' a b :=
     ⟨fun h => by replace h := map_rel g h;
       rwa [Equiv.coe_fn_mk, show g (f a) = (g : β →o α).comp (f : α →o β) a from rfl,
-        show g (f b) = (g : β →o α).comp (f : α →o β) b from rfl, h₂] at h ,
+        show g (f b) = (g : β →o α).comp (f : α →o β) b from rfl, h₂] at h,
       fun h => (f : α →o β).Monotone h⟩
 #align order_iso.of_hom_inv OrderIso.ofHomInv
 -/
@@ -1630,7 +1630,7 @@ theorem OrderIso.isCompl_iff {x y : α} : IsCompl x y ↔ IsCompl (f x) (f y) :=
 theorem OrderIso.complementedLattice [ComplementedLattice α] : ComplementedLattice β :=
   ⟨fun x => by
     obtain ⟨y, hy⟩ := exists_is_compl (f.symm x)
-    rw [← f.symm_apply_apply y] at hy 
+    rw [← f.symm_apply_apply y] at hy
     refine' ⟨f y, f.symm.is_compl_iff.2 hy⟩⟩
 #align order_iso.complemented_lattice OrderIso.complementedLattice
 -/

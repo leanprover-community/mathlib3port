@@ -23,7 +23,7 @@ instance : Inhabited (Buffer α) :=
 @[ext]
 theorem ext : ∀ {b₁ b₂ : Buffer α}, toList b₁ = toList b₂ → b₁ = b₂
   | ⟨n₁, a₁⟩, ⟨n₂, a₂⟩, h => by
-    simp [to_list, to_array] at h 
+    simp [to_list, to_array] at h
     have e : n₁ = n₂ := by rw [← Array'.toList_length a₁, ← Array'.toList_length a₂, h]
     subst e
     have h : HEq a₁ a₂.to_list.to_array := h ▸ a₁.to_list_to_array.symm
@@ -175,7 +175,7 @@ theorem read_appendList_right (b : Buffer α) (l : List α) {i : ℕ} (h : i < l
   · convert_to ((b.push_back hd).appendList tl).read _ = _
     cases i
     · convert read_append_list_left _ _ _ <;> simp
-    · rw [List.length, Nat.succ_lt_succ_iff] at h 
+    · rw [List.length, Nat.succ_lt_succ_iff] at h
       have : b.size + i.succ = (b.push_back hd).size + i := by
         simp [add_comm, add_left_comm, Nat.succ_eq_add_one]
       convert hl (b.push_back hd) h using 1

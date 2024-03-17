@@ -717,7 +717,7 @@ instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     by_contra! H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset,
-      mem_zero] at H 
+      mem_zero] at H
     obtain ⟨⟨a, hs, ha⟩, b, ht, hb⟩ := H
     exact (eq_zero_or_eq_zero_of_smul_eq_zero <| h.subset <| smul_mem_smul hs ht).elim ha hb⟩
 
@@ -727,7 +727,7 @@ instance noZeroSMulDivisors_set [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivi
   ⟨fun a s h => by
     by_contra! H
     have hst : (a • s).Nonempty := h.symm.subst zero_nonempty
-    simp_rw [← hst.of_image.subset_zero_iff, not_subset, mem_zero] at H 
+    simp_rw [← hst.of_image.subset_zero_iff, not_subset, mem_zero] at H
     obtain ⟨ha, b, ht, hb⟩ := H
     exact (eq_zero_or_eq_zero_of_smul_eq_zero <| h.subset <| smul_mem_smul_set ht).elim ha hb⟩
 #align set.no_zero_smul_divisors_set Set.noZeroSMulDivisors_set
@@ -1097,7 +1097,7 @@ theorem zero_mem_smul_set_iff (ha : a ≠ 0) : (0 : β) ∈ a • t ↔ (0 : β)
   by
   refine' ⟨_, zero_mem_smul_set⟩
   rintro ⟨b, hb, h⟩
-  rwa [(eq_zero_or_eq_zero_of_smul_eq_zero h).resolve_left ha] at hb 
+  rwa [(eq_zero_or_eq_zero_of_smul_eq_zero h).resolve_left ha] at hb
 #align set.zero_mem_smul_set_iff Set.zero_mem_smul_set_iff
 -/
 

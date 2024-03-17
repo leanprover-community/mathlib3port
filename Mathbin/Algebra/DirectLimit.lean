@@ -246,9 +246,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
           constructor
           · intro i0 hi0
             rw [DFinsupp.mem_support_iff, DirectSum.sub_apply, ← DirectSum.single_eq_lof, ←
-              DirectSum.single_eq_lof, DFinsupp.single_apply, DFinsupp.single_apply] at hi0 
-            split_ifs at hi0  with hi hj hj; · rwa [hi] at hik ; · rwa [hi] at hik ;
-            · rwa [hj] at hjk 
+              DirectSum.single_eq_lof, DFinsupp.single_apply, DFinsupp.single_apply] at hi0
+            split_ifs at hi0 with hi hj hj; · rwa [hi] at hik; · rwa [hi] at hik; · rwa [hj] at hjk
             exfalso; apply hi0; rw [sub_zero]
           simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map,
             DirectSum.apply_eq_component, DirectSum.component.of]⟩)
@@ -532,7 +531,7 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : IsSupport
       lift_of, restriction_of, dif_pos (hst hps), lift_of]
     dsimp only
     have := DirectedSystem.map_map fun i j h => f' i j h
-    dsimp only at this 
+    dsimp only at this
     rw [this]; rfl
   · rintro x y ihx ihy
     rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
@@ -560,7 +559,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
           restriction_of, dif_pos, lift_of, lift_of]
         dsimp only
         have := DirectedSystem.map_map fun i j h => f' i j h
-        dsimp only at this 
+        dsimp only at this
         rw [this]; exact sub_self _
         exacts [Or.inr rfl, Or.inl rfl]
     · refine' ⟨i, {⟨i, 1⟩}, _, is_supported_sub (is_supported_of.2 rfl) is_supported_one, _⟩
@@ -637,7 +636,7 @@ theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (hix : of G (fun i j h =
   haveI : Nonempty ι := ⟨i⟩
   let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix
   have hixs : (⟨i, x⟩ : Σ i, G i) ∈ s := is_supported_of.1 hxs
-  ⟨j, H ⟨i, x⟩ hixs, by rw [restriction_of, dif_pos hixs, lift_of] at hx  <;> exact hx⟩
+  ⟨j, H ⟨i, x⟩ hixs, by rw [restriction_of, dif_pos hixs, lift_of] at hx <;> exact hx⟩
 #align ring.direct_limit.of.zero_exact Ring.DirectLimit.of.zero_exact
 -/
 
@@ -731,7 +730,7 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
         change (0 : Ring.DirectLimit G fun i j h => f' i j h) ≠ 1
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
         intro H; rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
-        rw [(f' i j hij).map_one] at hf 
+        rw [(f' i j hij).map_one] at hf
         exact one_ne_zero hf⟩⟩
 #align field.direct_limit.nontrivial Field.DirectLimit.nontrivial
 -/

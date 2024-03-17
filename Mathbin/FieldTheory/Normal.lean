@@ -121,7 +121,7 @@ variable (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E
 theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
   normal_iff.2 fun x => by
     cases' h.out x with hx hhx
-    rw [algebra_map_eq F K E] at hhx 
+    rw [algebra_map_eq F K E] at hhx
     exact
       ⟨IsIntegral.tower_top hx,
         Polynomial.splits_of_splits_of_dvd (algebraMap K E)
@@ -159,7 +159,7 @@ theorem Normal.of_algEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :
   normal_iff.2 fun x => by
     cases' h.out (f.symm x) with hx hhx
     have H := IsIntegral.map f.to_alg_hom hx
-    rw [AlgEquiv.toAlgHom_eq_coe, AlgEquiv.coe_algHom, AlgEquiv.apply_symm_apply] at H 
+    rw [AlgEquiv.toAlgHom_eq_coe, AlgEquiv.coe_algHom, AlgEquiv.apply_symm_apply] at H
     use H
     apply Polynomial.splits_of_splits_of_dvd (algebraMap F E') (minpoly.ne_zero hx)
     · rw [← AlgHom.comp_algebraMap f.to_alg_hom]
@@ -191,7 +191,7 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
   by
   rcases eq_or_ne p 0 with (rfl | hp)
   · have := hFEp.adjoin_root_set
-    simp only [root_set_zero, Algebra.adjoin_empty] at this 
+    simp only [root_set_zero, Algebra.adjoin_empty] at this
     exact
       Normal.of_algEquiv
         (AlgEquiv.ofBijective (Algebra.ofId F E) (Algebra.bijective_algebraMap_iff.2 this.symm))
@@ -203,7 +203,7 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
   let D := AdjoinRoot q
   haveI := Fact.mk q_irred
   let pbED := AdjoinRoot.powerBasis q_irred.ne_zero
-  haveI : FiniteDimensional E D := PowerBasis.finiteDimensional pbED
+  haveI : FiniteDimensional E D := PowerBasis.finite pbED
   have finrankED : FiniteDimensional.finrank E D = q.nat_degree := by
     rw [PowerBasis.finrank pbED, AdjoinRoot.powerBasis_dim]
   haveI : FiniteDimensional F D := FiniteDimensional.trans F E D
@@ -251,7 +251,7 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
       (Algebra.adjoin E {AdjoinRoot.root q}).restrictScalars F
     by
     rw [AdjoinRoot.adjoinRoot_eq_top, Subalgebra.restrictScalars_top, ←
-      @Subalgebra.restrictScalars_top F C] at this 
+      @Subalgebra.restrictScalars_top F C] at this
     exact top_le_iff.mpr (Subalgebra.restrictScalars_injective F this)
   dsimp only [S]
   rw [← Finset.image_toFinset, Finset.coe_image]
@@ -286,7 +286,7 @@ instance normal_iSup {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i
     rw [adjoin_le_iff, ← image_root_set ((h i.1).Splits i.2) (t i.1).val]
     exact fun _ ⟨a, _, h⟩ => h ▸ a.2
   have := hF.splits ⟨x, hx⟩
-  rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this 
+  rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
   exact Polynomial.splits_comp_of_splits _ (inclusion hE).toRingHom this
 #align intermediate_field.normal_supr IntermediateField.normal_iSup
 -/
@@ -561,7 +561,7 @@ theorem normalClosure_eq_iSup_adjoin [h : Normal F L] :
       minpoly.ne_zero
         ((isIntegral_algebraMap_iff (algebraMap K L).Injective).mp
           (h.is_integral (algebraMap K L x)))
-  · rw [Polynomial.rootSet, Finset.mem_coe, Multiset.mem_toFinset] at hy 
+  · rw [Polynomial.rootSet, Finset.mem_coe, Multiset.mem_toFinset] at hy
     let g :=
       (alg_hom_adjoin_integral_equiv F
             ((isIntegral_algebraMap_iff (algebraMap K L).Injective).mp

@@ -235,7 +235,7 @@ theorem FormallySmooth.liftOfSurjective_apply [FormallySmooth R A] (f : A →ₐ
     formally_smooth.mk_lift _ hg' ((Ideal.quotientKerAlgEquivOfSurjective hg).symm.toAlgHom.comp f)]
   apply (Ideal.quotientKerAlgEquivOfSurjective hg).Injective
   rw [AlgEquiv.apply_symm_apply, Ideal.quotientKerAlgEquivOfSurjective,
-    Ideal.quotientKerAlgEquivOfRightInverse.apply]
+    Ideal.quotientKerAlgEquivOfRightInverse_apply]
   exact (Ideal.kerLiftAlg_mk _ _).symm
 #align algebra.formally_smooth.lift_of_surjective_apply Algebra.FormallySmooth.liftOfSurjective_apply
 -/
@@ -336,7 +336,7 @@ theorem FormallySmooth.comp [FormallySmooth R A] [FormallySmooth A B] : Formally
   letI := f'.to_ring_hom.to_algebra
   obtain ⟨f'', e'⟩ :=
     formally_smooth.comp_surjective I hI { f.to_ring_hom with commutes' := AlgHom.congr_fun e.symm }
-  apply_fun AlgHom.restrictScalars R at e' 
+  apply_fun AlgHom.restrictScalars R at e'
   exact ⟨f''.restrict_scalars _, e'.trans (AlgHom.ext fun _ => rfl)⟩
 #align algebra.formally_smooth.comp Algebra.FormallySmooth.comp
 -/
@@ -403,10 +403,10 @@ theorem FormallySmooth.of_split [FormallySmooth R P] (g : A →ₐ[R] P ⧸ f.to
       by
       rintro x (hx : f x = 0)
       have : _ = i (f x) := (formally_smooth.mk_lift I ⟨2, hI⟩ (i.comp f) x : _)
-      rwa [hx, map_zero, ← Ideal.Quotient.mk_eq_mk, Submodule.Quotient.mk_eq_zero] at this 
+      rwa [hx, map_zero, ← Ideal.Quotient.mk_eq_mk, Submodule.Quotient.mk_eq_zero] at this
     intro x hx
     have := (Ideal.pow_mono this 2).trans (Ideal.le_comap_pow _ 2) hx
-    rwa [hI] at this 
+    rwa [hI] at this
   have : i.comp f.ker_square_lift = (Ideal.Quotient.mkₐ R _).comp l :=
     by
     apply AlgHom.coe_ringHom_injective
@@ -440,8 +440,8 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
       (Ideal.quotientKerAlgEquivOfSurjective surj).toAlgHom.congr_arg
         (formally_smooth.mk_lift _ ⟨2, sqz⟩
           (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom x)
-    dsimp at this 
-    rw [AlgEquiv.apply_symm_apply] at this 
+    dsimp at this
+    rw [AlgEquiv.apply_symm_apply] at this
     conv_rhs => rw [← this, AlgHom.id_apply]
     obtain ⟨y, e⟩ :=
       Ideal.Quotient.mk_surjective

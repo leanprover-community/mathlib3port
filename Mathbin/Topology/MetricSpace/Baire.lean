@@ -71,7 +71,7 @@ instance (priority := 100) BaireSpace.of_pseudoEMetricSpace_completeSpace [Pseud
     intro n x δ δpos
     have : x ∈ closure (f n) := hd n x
     rcases EMetric.mem_closure_iff.1 this (δ / 2) (ENNReal.half_pos δpos) with ⟨y, ys, xy⟩
-    rw [edist_comm] at xy 
+    rw [edist_comm] at xy
     obtain ⟨r, rpos, hr⟩ : ∃ r > 0, closed_ball y r ⊆ f n :=
       nhds_basis_closed_eball.mem_iff.1 (isOpen_iff_mem_nhds.1 (ho n) y ys)
     refine' ⟨y, min (min (δ / 2) r) (B (n + 1)), _, _, fun z hz => ⟨_, _⟩⟩
@@ -338,7 +338,7 @@ theorem IsGδ.dense_iUnion_interior_of_closed [Encodable ι] {s : Set α} (hs : 
     exact id
   refine' (hd.inter_of_Gδ hs (IsGδ.iInter_of_isOpen fun i => hgo i) hgd).mono _
   rintro x ⟨hxs, hxg⟩
-  rw [mem_Inter] at hxg 
+  rw [mem_Inter] at hxg
   rcases mem_Union.1 (hU hxs) with ⟨i, hi⟩
   exact mem_Union.2 ⟨i, self_diff_frontier (f i) ▸ ⟨hi, hxg _⟩⟩
 #align is_Gδ.dense_Union_interior_of_closed IsGδ.dense_iUnion_interior_of_closed

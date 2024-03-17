@@ -83,8 +83,8 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
   letI := Classical.decEq R
   suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g))
     by
-    simp only [disjoint_left, mem_image] at this 
-    push_neg at this 
+    simp only [disjoint_left, mem_image] at this
+    push_neg at this
     rcases this with ⟨x, ⟨a, _, ha⟩, ⟨b, _, hb⟩⟩
     exact ⟨a, b, by rw [ha, ← hb, eval_neg, neg_add_self]⟩
   fun hd : Disjoint _ _ =>
@@ -167,11 +167,11 @@ theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : 
   haveI hp : Fact p.prime := ⟨CharP.char_is_prime K p⟩
   letI : Module (ZMod p) K := { (ZMod.castHom dvd_rfl K : ZMod p →+* _).toModule with }
   obtain ⟨n, h⟩ := VectorSpace.card_fintype (ZMod p) K
-  rw [ZMod.card] at h 
+  rw [ZMod.card] at h
   refine' ⟨⟨n, _⟩, hp.1, h⟩
   apply Or.resolve_left (Nat.eq_zero_or_pos n)
   rintro rfl
-  rw [pow_zero] at h 
+  rw [pow_zero] at h
   have : (0 : K) = 1 := by apply fintype.card_le_one_iff.mp (le_of_eq h)
   exact absurd this zero_ne_one
 #align finite_field.card FiniteField.card
@@ -207,7 +207,7 @@ theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣
   constructor
   · intro h; apply h
   · intro h y
-    simp_rw [← mem_powers_iff_mem_zpowers] at hx 
+    simp_rw [← mem_powers_iff_mem_zpowers] at hx
     rcases hx y with ⟨j, rfl⟩
     rw [← pow_mul, mul_comm, pow_mul, h, one_pow]
 #align finite_field.forall_pow_eq_one_iff FiniteField.forall_pow_eq_one_iff
@@ -344,7 +344,7 @@ theorem expand_card (f : K[X]) : expand K q f = f ^ q :=
   letI := hp
   rcases FiniteField.card K p with ⟨⟨n, npos⟩, ⟨hp, hn⟩⟩
   haveI : Fact p.prime := ⟨hp⟩
-  dsimp at hn 
+  dsimp at hn
   rw [hn, ← map_expand_pow_char, frobenius_pow hn, RingHom.one_def, map_id]
 #align finite_field.expand_card FiniteField.expand_card
 -/
@@ -359,7 +359,7 @@ open FiniteField Polynomial
 theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : ZMod p) : ∃ a b : ZMod p, a ^ 2 + b ^ 2 = x :=
   by
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
-  · subst p; change Fin 2 at x ; fin_cases x; · use 0; simp; · use 0, 1; simp
+  · subst p; change Fin 2 at x; fin_cases x; · use 0; simp; · use 0, 1; simp
   let f : (ZMod p)[X] := X ^ 2
   let g : (ZMod p)[X] := X ^ 2 - C x
   obtain ⟨a, b, hab⟩ : ∃ a b, f.eval a + g.eval b = 0 :=
@@ -412,7 +412,7 @@ theorem Nat.ModEq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1
   rw [← ZMod.eq_iff_modEq_nat]
   let x' : Units (ZMod n) := ZMod.unitOfCoprime _ h
   have := ZMod.pow_totient x'
-  apply_fun (coe : Units (ZMod n) → ZMod n) at this 
+  apply_fun (coe : Units (ZMod n) → ZMod n) at this
   simpa only [-ZMod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.val_one, Nat.cast_one,
     coe_unit_of_coprime, Units.val_pow_eq_pow_val]
 #align nat.modeq.pow_totient Nat.ModEq.pow_totient
@@ -443,7 +443,7 @@ namespace ZMod
 /-- A variation on Fermat's little theorem. See `zmod.pow_card_sub_one_eq_one` -/
 @[simp]
 theorem pow_card {p : ℕ} [Fact p.Prime] (x : ZMod p) : x ^ p = x := by
-  have h := FiniteField.pow_card x; rwa [ZMod.card p] at h 
+  have h := FiniteField.pow_card x; rwa [ZMod.card p] at h
 #align zmod.pow_card ZMod.pow_card
 -/
 
@@ -481,7 +481,7 @@ theorem units_pow_card_sub_one_eq_one (p : ℕ) [Fact p.Prime] (a : (ZMod p)ˣ) 
 #print ZMod.pow_card_sub_one_eq_one /-
 /-- **Fermat's Little Theorem**: for all nonzero `a : zmod p`, we have `a ^ (p - 1) = 1`. -/
 theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.Prime] {a : ZMod p} (ha : a ≠ 0) :
-    a ^ (p - 1) = 1 := by have h := pow_card_sub_one_eq_one a ha; rwa [ZMod.card p] at h 
+    a ^ (p - 1) = 1 := by have h := pow_card_sub_one_eq_one a ha; rwa [ZMod.card p] at h
 #align zmod.pow_card_sub_one_eq_one ZMod.pow_card_sub_one_eq_one
 -/
 
@@ -502,7 +502,7 @@ open Polynomial
 
 #print ZMod.expand_card /-
 theorem expand_card {p : ℕ} [Fact p.Prime] (f : Polynomial (ZMod p)) :
-    expand (ZMod p) p f = f ^ p := by have h := FiniteField.expand_card f; rwa [ZMod.card p] at h 
+    expand (ZMod p) p f = f ^ p := by have h := FiniteField.expand_card f; rwa [ZMod.card p] at h
 #align zmod.expand_card ZMod.expand_card
 -/
 
@@ -552,7 +552,7 @@ theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a :=
     simp only [injective, Classical.not_forall, exists_prop]
     refine' ⟨-1, 1, _, Ring.neg_one_ne_one_of_char_ne_two hF⟩
     simp only [sq, one_pow, neg_one_sq]
-  rw [Finite.injective_iff_surjective] at h 
+  rw [Finite.injective_iff_surjective] at h
   -- sq not surjective
   simp_rw [IsSquare, ← pow_two, @eq_comm _ _ (_ ^ 2)]
   push_neg at h ⊢
@@ -576,7 +576,7 @@ theorem even_card_iff_char_two : ringChar F = 2 ↔ Fintype.card F % 2 = 0 :=
     simp only [Nat.bit0_mod_two, zero_pow, Ne.def, PNat.ne_zero, not_false_iff, Nat.zero_mod]
   · rw [← Nat.even_iff, Nat.even_pow]
     rintro ⟨hev, hnz⟩
-    rw [Nat.even_iff, Nat.mod_mod] at hev 
+    rw [Nat.even_iff, Nat.mod_mod] at hev
     exact (Nat.Prime.eq_two_or_odd hp).resolve_right (ne_of_eq_of_ne hev zero_ne_one)
 #align finite_field.even_card_iff_char_two FiniteField.even_card_iff_char_two
 -/
@@ -600,7 +600,7 @@ theorem pow_dichotomy (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
   by
   have h₁ := FiniteField.pow_card_sub_one_eq_one a ha
   rw [← Nat.two_mul_odd_div_two (FiniteField.odd_card_of_char_ne_two hF), mul_comm, pow_mul,
-    pow_two] at h₁ 
+    pow_two] at h₁
   exact mul_self_eq_one_iff.mp h₁
 #align finite_field.pow_dichotomy FiniteField.pow_dichotomy
 -/
@@ -623,7 +623,7 @@ theorem unit_isSquare_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
   · subst a; intro h
     have key : 2 * (Fintype.card F / 2) ∣ n * (Fintype.card F / 2) :=
       by
-      rw [← pow_mul] at h 
+      rw [← pow_mul] at h
       rw [hodd, ← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hg]
       apply orderOf_dvd_of_pow_eq_one h
     have : 0 < Fintype.card F / 2 := Nat.div_pos Fintype.one_lt_card (by norm_num)

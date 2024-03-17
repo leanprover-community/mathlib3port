@@ -349,10 +349,10 @@ theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ �
   rw [rename_eq, ← not_mem_support_iff]
   intro H
   replace H := map_domain_support H
-  rw [Finset.mem_image] at H 
+  rw [Finset.mem_image] at H
   obtain ⟨u, hu, rfl⟩ := H
   specialize h u rfl
-  simp at h hu 
+  simp at h hu
   contradiction
 #align mv_polynomial.coeff_rename_eq_zero MvPolynomial.coeff_rename_eq_zero
 -/

@@ -346,12 +346,12 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
         c.left.left.lim_of_nmem_U _ hxl, c.left.left.lim_of_nmem_U _ hyl]
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
       refine'
-        (div_le_div_of_le_of_nonneg (add_le_add_right (dist_midpoint_midpoint_le _ _ _ _) _)
+        (div_le_div_of_nonneg_right (add_le_add_right (dist_midpoint_midpoint_le _ _ _ _) _)
               zero_le_two).trans
           _
       rw [dist_self, zero_add]
       refine'
-        (div_le_div_of_le_of_nonneg (add_le_add (div_le_div_of_le_of_nonneg hydl zero_le_two) hydr)
+        (div_le_div_of_nonneg_right (add_le_add (div_le_div_of_nonneg_right hydl zero_le_two) hydr)
               zero_le_two).trans_eq
           _
       generalize (3 / 4 : ℝ) ^ n = r

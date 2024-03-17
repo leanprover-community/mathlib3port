@@ -194,7 +194,7 @@ theorem exists_mem_forall_mem_nhds_within_pos [TopologicalSpace α] [SecondCount
     (m : OuterMeasure α) {s : Set α} (hs : m s ≠ 0) : ∃ x ∈ s, ∀ t ∈ 𝓝[s] x, 0 < m t :=
   by
   contrapose! hs
-  simp only [nonpos_iff_eq_zero, ← exists_prop] at hs 
+  simp only [nonpos_iff_eq_zero, ← exists_prop] at hs
   exact m.null_of_locally_null s hs
 #align measure_theory.outer_measure.exists_mem_forall_mem_nhds_within_pos MeasureTheory.OuterMeasure.exists_mem_forall_mem_nhds_within_pos
 -/
@@ -215,7 +215,7 @@ theorem iUnion_of_tendsto_zero {ι} (m : OuterMeasure α) {s : ι → Set α} (l
       _ ≤ m (s k) + m (S \ s k) := (m.union _ _)
       _ ≤ M + m (S \ s k) := add_le_add_right (le_iSup _ k) _
   have B : tendsto (fun k => M + m (S \ s k)) l (𝓝 (M + 0)) := tendsto_const_nhds.add h0
-  rw [add_zero] at B 
+  rw [add_zero] at B
   exact ge_of_tendsto' B A
 #align measure_theory.outer_measure.Union_of_tendsto_zero MeasureTheory.OuterMeasure.iUnion_of_tendsto_zero
 -/
@@ -472,7 +472,7 @@ theorem coe_iSup {ι} (f : ι → OuterMeasure α) : ⇑(⨆ i, f i) = ⨆ i, f 
 #print MeasureTheory.OuterMeasure.sup_apply /-
 @[simp]
 theorem sup_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁ ⊔ m₂) s = m₁ s ⊔ m₂ s := by
-  have := iSup_apply (fun b => cond b m₁ m₂) s <;> rwa [iSup_bool_eq, iSup_bool_eq] at this 
+  have := iSup_apply (fun b => cond b m₁ m₂) s <;> rwa [iSup_bool_eq, iSup_bool_eq] at this
 #align measure_theory.outer_measure.sup_apply MeasureTheory.OuterMeasure.sup_apply
 -/
 
@@ -915,7 +915,7 @@ theorem comap_ofFunction {β} (f : β → α) (h : Monotone m ∨ Surjective f) 
   · rw [comap_apply, of_function_apply, of_function_apply]
     refine' iInf_mono' fun t => ⟨fun k => f ⁻¹' t k, _⟩
     refine' iInf_mono' fun ht => _
-    rw [Set.image_subset_iff, preimage_Union] at ht 
+    rw [Set.image_subset_iff, preimage_Union] at ht
     refine' ⟨ht, ENNReal.tsum_le_tsum fun n => _⟩
     cases h
     exacts [h (image_preimage_subset _ _), (congr_arg m (h.image_preimage (t n))).le]
@@ -1222,7 +1222,7 @@ theorem f_iUnion {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : P
   rw [ENNReal.tsum_eq_iSup_nat]
   refine' iSup_le fun n => _
   have := @is_caratheodory_sum _ m _ h hd univ n
-  simp at this ; simp [this]
+  simp at this; simp [this]
   exact m.mono (Union₂_subset fun i _ => subset_Union _ i)
 #align measure_theory.outer_measure.f_Union MeasureTheory.OuterMeasure.f_iUnion
 -/
@@ -1787,7 +1787,7 @@ theorem inducedOuterMeasure_exists_set {s : Set α} (hs : inducedOuterMeasure m 
   conv at this =>
     lhs
     rw [induced_outer_measure_eq_infi _ msU m_mono]
-  simp only [iInf_lt_iff] at this 
+  simp only [iInf_lt_iff] at this
   rcases this with ⟨t, h1t, h2t, h3t⟩
   exact
     ⟨t, h1t, h2t, le_trans (le_of_eq <| induced_outer_measure_eq' _ msU m_mono h1t) (le_of_lt h3t)⟩
@@ -1844,7 +1844,7 @@ theorem extend_mono {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (hs : s₁ 
   have :=
     extend_union MeasurableSet.empty m0 MeasurableSet.iUnion mU disjoint_sdiff_self_right h₁
       (h₂.diff h₁)
-  rw [union_diff_cancel hs] at this 
+  rw [union_diff_cancel hs] at this
   rw [← extend_eq m]
   exact le_iff_exists_add.2 ⟨_, this⟩
 #align measure_theory.extend_mono MeasureTheory.extend_mono
@@ -1990,7 +1990,7 @@ theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :
   simp only [trim_eq_infi]; set ms := ⨅ (t : Set α) (st : s ⊆ t) (ht : MeasurableSet t), m t
   by_cases hs : ms = ∞
   · simp only [hs]
-    simp only [iInf_eq_top] at hs 
+    simp only [iInf_eq_top] at hs
     exact ⟨univ, subset_univ s, MeasurableSet.univ, hs _ (subset_univ s) MeasurableSet.univ⟩
   · have : ∀ r > ms, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < r :=
       by
@@ -2005,7 +2005,7 @@ theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :
     refine' ⟨⋂ n, t n, subset_Inter hsub, MeasurableSet.iInter hm, _⟩
     have : tendsto (fun n : ℕ => ms + n⁻¹) at_top (𝓝 (ms + 0)) :=
       tendsto_const_nhds.add ENNReal.tendsto_inv_nat_nhds_zero
-    rw [add_zero] at this 
+    rw [add_zero] at this
     refine' le_antisymm (ge_of_tendsto' this fun n => _) _
     · exact le_trans (m.mono' <| Inter_subset t n) (hm' n).le
     · refine' iInf_le_of_le (⋂ n, t n) _
@@ -2044,7 +2044,7 @@ theorem trim_binop {m₁ m₂ m₃ : OuterMeasure α} {op : ℝ≥0∞ → ℝ�
     (h : ∀ s, m₁ s = op (m₂ s) (m₃ s)) (s : Set α) : m₁.trim s = op (m₂.trim s) (m₃.trim s) :=
   by
   rcases exists_measurable_superset_forall_eq_trim ![m₁, m₂, m₃] s with ⟨t, hst, ht, htm⟩
-  simp only [Fin.forall_fin_succ, Matrix.cons_val_zero, Matrix.cons_val_succ] at htm 
+  simp only [Fin.forall_fin_succ, Matrix.cons_val_zero, Matrix.cons_val_succ] at htm
   rw [← htm.1, ← htm.2.1, ← htm.2.2.1, h]
 #align measure_theory.outer_measure.trim_binop MeasureTheory.OuterMeasure.trim_binop
 -/
@@ -2090,7 +2090,7 @@ theorem trim_iSup {ι} [Countable ι] (μ : ι → OuterMeasure α) : trim (⨆ 
   obtain ⟨t, hst, ht, hμt⟩ :=
     exists_measurable_superset_forall_eq_trim
       (Option.elim' (⨆ i, μ (PLift.down i)) (μ ∘ PLift.down)) s
-  simp only [Option.forall, Option.elim'] at hμt 
+  simp only [Option.forall, Option.elim'] at hμt
   simp only [iSup_apply, ← hμt.1, ← hμt.2]
 #align measure_theory.outer_measure.trim_supr MeasureTheory.OuterMeasure.trim_iSup
 -/
@@ -2104,7 +2104,7 @@ theorem restrict_trim {μ : OuterMeasure α} {s : Set α} (hs : MeasurableSet s)
   refine' le_antisymm (fun t => _) (le_trim_iff.2 fun t ht => _)
   · rw [restrict_apply]
     rcases μ.exists_measurable_superset_eq_trim (t ∩ s) with ⟨t', htt', ht', hμt'⟩
-    rw [← hμt']; rw [inter_subset] at htt' 
+    rw [← hμt']; rw [inter_subset] at htt'
     refine' (mono' _ htt').trans _
     rw [trim_eq _ (hs.compl.union ht'), restrict_apply, union_inter_distrib_right, compl_inter_self,
       Set.empty_union]

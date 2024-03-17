@@ -92,7 +92,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
       (IsUnifLocDoublingMeasure.ae_tendsto_measure_inter_div μ W 2)
   replace hd : d ∈ blimsup Y₁ at_top p := ((mem_diff _).mp hd).1
   obtain ⟨f : ℕ → ℕ, hf⟩ := exists_forall_mem_of_has_basis_mem_blimsup' at_top_basis hd
-  simp only [forall_and] at hf 
+  simp only [forall_and] at hf
   obtain ⟨hf₀ : ∀ j, d ∈ cthickening (r₁ (f j)) (s (f j)), hf₁, hf₂ : ∀ j, j ≤ f j⟩ := hf
   have hf₃ : tendsto f at_top at_top :=
     tendsto_at_top_at_top.mpr fun j => ⟨f j, fun i hi => (hf₂ j).trans (hi.trans <| hf₂ i)⟩
@@ -101,10 +101,10 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   replace hf₀ : ∀ j, ∃ w ∈ s (f j), d ∈ closed_ball w (2 * r₁ (f j))
   · intro j
     specialize hrp (f j)
-    rw [Pi.zero_apply] at hrp 
+    rw [Pi.zero_apply] at hrp
     rcases eq_or_lt_of_le hrp with (hr0 | hrp')
     · specialize hf₀ j
-      rw [← hr0, cthickening_zero, (hs (f j)).closure_eq] at hf₀ 
+      rw [← hr0, cthickening_zero, (hs (f j)).closure_eq] at hf₀
       exact ⟨d, hf₀, by simp [← hr0]⟩
     ·
       exact
@@ -166,7 +166,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
     rw [← measure_union' hj₁ measurableSet_closedBall]
     exact measure_mono (union_subset (h₁ j) (h₂ j))
   replace hj₃ := tsub_le_tsub_right hj₃ (↑C⁻¹ * μ (B j))
-  rwa [ENNReal.add_sub_cancel_left hB] at hj₃ 
+  rwa [ENNReal.add_sub_cancel_left hB] at hj₃
 #align blimsup_cthickening_ae_le_of_eventually_mul_le_aux blimsup_cthickening_ae_le_of_eventually_mul_le_aux
 -/
 

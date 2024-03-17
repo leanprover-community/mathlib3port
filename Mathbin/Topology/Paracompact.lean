@@ -85,7 +85,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
     ParacompactSpace.locallyFinite_refinement (range u) coe
       (SetCoe.forall.2 <| forall_range_iff.2 uo) (by rwa [← sUnion_range, Subtype.range_coe])
   simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_prop] at
-    this 
+    this
   choose α t hto hXt htf ind hind; choose t_inv ht_inv using hXt; choose U hxU hU using htf
   -- Send each `i` to the union of `t a` over `a ∈ ind ⁻¹' {i}`
   refine' ⟨fun i => ⋃ (a : α) (ha : ind a = i), t a, _, _, _, _⟩
@@ -113,7 +113,7 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
       _ with
     ⟨v, vo, vc, vf, vu⟩
   refine' ⟨v ∘ some, fun i => vo _, _, vf.comp_injective (Option.some_injective _), fun i => vu _⟩
-  · simp only [Union_option, ← compl_subset_iff_union] at vc 
+  · simp only [Union_option, ← compl_subset_iff_union] at vc
     exact subset.trans (subset_compl_comm.1 <| vu Option.none) vc
   · simpa only [Union_option, Option.elim', ← compl_subset_iff_union, compl_compl]
 #align precise_refinement_set precise_refinement_set
@@ -127,7 +127,7 @@ instance (priority := 100) paracompact_of_compact [CompactSpace X] : Paracompact
   -- the proof is trivial: we choose a finite subcover using compactness, and use it
   refine' ⟨fun ι s ho hu => _⟩
   rcases is_compact_univ.elim_finite_subcover _ ho hu.ge with ⟨T, hT⟩
-  have := hT; simp only [subset_def, mem_Union] at this 
+  have := hT; simp only [subset_def, mem_Union] at this
   choose i hiT hi using fun x => this x (mem_univ x)
   refine'
     ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locallyFinite_of_finite _, fun t =>

@@ -311,7 +311,7 @@ theorem digits_ofDigits (b : ℕ) (h : 1 < b) (L : List ℕ) (w₁ : ∀ l ∈ L
     · rw [ih]
       · intro l m; apply w₁; exact List.mem_cons_of_mem _ m
       · intro h
-        · rw [List.getLast_cons h] at w₂ 
+        · rw [List.getLast_cons h] at w₂
           convert w₂
     · exact w₁ d (List.mem_cons_self _ _)
     · by_cases h' : L = []
@@ -392,9 +392,9 @@ theorem digits_eq_cons_digits_div {b n : ℕ} (h : 1 < b) (w : n ≠ 0) :
   by
   rcases b with (_ | _ | b)
   · rw [digits_zero_succ' w, Nat.mod_zero, Nat.div_zero, Nat.digits_zero_zero]
-  · norm_num at h 
+  · norm_num at h
   rcases n with (_ | n)
-  · norm_num at w 
+  · norm_num at w
   simp
 #align nat.digits_eq_cons_digits_div Nat.digits_eq_cons_digits_div
 -/
@@ -469,9 +469,9 @@ theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b 
   apply Nat.strong_induction_on m
   intro n IH d hd
   cases' n with n
-  · rw [digits_zero] at hd ; cases hd
+  · rw [digits_zero] at hd; cases hd
   -- base b+2 expansion of 0 has no digits
-  rw [digits_add_two_add_one] at hd 
+  rw [digits_add_two_add_one] at hd
   cases hd
   · rw [hd]; exact n.succ.mod_lt (by linarith)
   · exact IH _ (Nat.div_lt_self (Nat.succ_pos _) (by linarith)) hd
@@ -735,7 +735,7 @@ theorem modEq_eleven_digits_sum (n : ℕ) :
     n ≡ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum [ZMOD 11] :=
   by
   have t := zmodeq_of_digits_digits 11 10 (-1 : ℤ) (by unfold Int.ModEq <;> norm_num) n
-  rwa [of_digits_neg_one] at t 
+  rwa [of_digits_neg_one] at t
 #align nat.modeq_eleven_digits_sum Nat.modEq_eleven_digits_sum
 -/
 
@@ -779,7 +779,7 @@ theorem eleven_dvd_iff :
     11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum :=
   by
   have t := dvd_iff_dvd_of_digits 11 10 (-1 : ℤ) (by norm_num) n
-  rw [of_digits_neg_one] at t 
+  rw [of_digits_neg_one] at t
   exact t
 #align nat.eleven_dvd_iff Nat.eleven_dvd_iff
 -/
@@ -791,7 +791,7 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
   replace h : Even dig.length := by rwa [List.length_map]
   refine' eleven_dvd_iff.2 ⟨0, (_ : dig.alternating_sum = 0)⟩
   have := dig.alternating_sum_reverse
-  rw [(p.map _).reverse_eq, pow_succ, h.neg_one_pow, mul_one, neg_one_zsmul] at this 
+  rw [(p.map _).reverse_eq, pow_succ, h.neg_one_pow, mul_one, neg_one_zsmul] at this
   exact eq_zero_of_neg_eq this.symm
 #align nat.eleven_dvd_of_palindrome Nat.eleven_dvd_of_palindrome
 -/

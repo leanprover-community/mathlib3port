@@ -43,7 +43,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
       2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 :=
         by
-        rw [even_iff_two_dvd] at hxsuby hxaddy 
+        rw [even_iff_two_dvd] at hxsuby hxaddy
         rw [Int.mul_ediv_cancel' hxsuby, Int.mul_ediv_cancel' hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
         simp [mul_add, pow_succ, mul_comm, mul_assoc, mul_left_comm]
@@ -136,7 +136,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
     ⟨k, hk.2,
       Nat.pos_of_ne_zero fun hk0 =>
         by
-        rw [hk0, Int.ofNat_zero, MulZeroClass.zero_mul] at hk 
+        rw [hk0, Int.ofNat_zero, MulZeroClass.zero_mul] at hk
         exact
           ne_of_gt
             (show a ^ 2 + b ^ 2 + 1 > 0 from
@@ -151,7 +151,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
     (fun hm2 : m % 2 = 0 =>
       let ⟨k, hk⟩ := Nat.dvd_iff_mod_eq_zero.2 hm2
       have hk0 : 0 < k :=
-        Nat.pos_of_ne_zero <| by rintro rfl; rw [MulZeroClass.mul_zero] at hk ; exact NeZero.ne m hk
+        Nat.pos_of_ne_zero <| by rintro rfl; rw [MulZeroClass.mul_zero] at hk; exact NeZero.ne m hk
       have hkm : k < m := by rw [hk, two_mul]; exact (lt_add_iff_pos_left _).2 hk0
       False.elim <|
         Nat.find_min hm hkm
@@ -204,7 +204,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hn0 : 0 < n.natAbs :=
         Int.natAbs_pos_of_ne_zero fun hn0 =>
           have hwxyz0 : (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) = 0 := by
-            rw [← Int.coe_nat_eq_zero, ← hnat_abs]; rwa [hn0, MulZeroClass.mul_zero] at hn 
+            rw [← Int.coe_nat_eq_zero, ← hnat_abs]; rwa [hn0, MulZeroClass.mul_zero] at hn
           have habcd0 : (m : ℤ) ∣ a ∧ (m : ℤ) ∣ b ∧ (m : ℤ) ∣ c ∧ (m : ℤ) ∣ d := by
             simpa only [add_eq_zero_iff, Int.natAbs_eq_zero, ZMod.valMinAbs_eq_zero, and_assoc,
               pow_eq_zero_iff two_pos, CharP.int_cast_eq_zero_iff _ m _] using hwxyz0

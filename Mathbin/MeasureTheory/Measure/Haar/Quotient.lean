@@ -213,7 +213,7 @@ theorem MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map [μ.IsMulRigh
   apply absolutely_continuous.mk
   intro s s_meas hs
   rw [map_apply meas_π s_meas] at hs ⊢
-  rw [measure.restrict_apply] at hs 
+  rw [measure.restrict_apply] at hs
   apply h𝓕.measure_zero_of_invariant _ _ hs
   · intro γ
     ext g

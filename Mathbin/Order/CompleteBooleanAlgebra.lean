@@ -85,10 +85,10 @@ section Frame
 
 variable [Frame α] {s t : Set α} {a b : α}
 
-#print OrderDual.coframe /-
-instance OrderDual.coframe : Coframe αᵒᵈ :=
+#print OrderDual.instCoframe /-
+instance OrderDual.instCoframe : Coframe αᵒᵈ :=
   { OrderDual.completeLattice α with iInf_sup_le_sup_inf := Frame.inf_sup_le_iSup_inf }
-#align order_dual.coframe OrderDual.coframe
+#align order_dual.coframe OrderDual.instCoframe
 -/
 
 #print inf_sSup_eq /-
@@ -212,13 +212,13 @@ theorem iSup_inf_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (swap (�
 #align supr_inf_of_antitone iSup_inf_of_antitone
 -/
 
-#print Pi.frame /-
-instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
-  { Pi.completeLattice with
+#print Pi.instFrame /-
+instance Pi.instFrame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
+  { Pi.instCompleteLattice with
     inf_sup_le_iSup_inf := fun a s i => by
       simp only [CompleteLattice.sup, sSup_apply, iSup_apply, Pi.inf_apply, inf_iSup_eq, ←
         iSup_subtype''] }
-#align pi.frame Pi.frame
+#align pi.frame Pi.instFrame
 -/
 
 #print Frame.toDistribLattice /-
@@ -235,10 +235,10 @@ section Coframe
 
 variable [Coframe α] {s t : Set α} {a b : α}
 
-#print OrderDual.frame /-
-instance OrderDual.frame : Frame αᵒᵈ :=
+#print OrderDual.instFrame /-
+instance OrderDual.instFrame : Frame αᵒᵈ :=
   { OrderDual.completeLattice α with inf_sup_le_iSup_inf := Coframe.iInf_sup_le_sup_inf }
-#align order_dual.frame OrderDual.frame
+#align order_dual.frame OrderDual.instFrame
 -/
 
 #print sup_sInf_eq /-
@@ -317,13 +317,13 @@ theorem iInf_sup_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (· ≤ 
 #align infi_sup_of_antitone iInf_sup_of_antitone
 -/
 
-#print Pi.coframe /-
-instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
-  { Pi.completeLattice with
+#print Pi.instCoframe /-
+instance Pi.instCoframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
+  { Pi.instCompleteLattice with
     sInf := sInf
     iInf_sup_le_sup_inf := fun a s i => by
       simp only [← sup_iInf_eq, sInf_apply, ← iInf_subtype'', iInf_apply, Pi.sup_apply] }
-#align pi.coframe Pi.coframe
+#align pi.coframe Pi.instCoframe
 -/
 
 #print Coframe.toDistribLattice /-
@@ -342,13 +342,13 @@ section CompleteDistribLattice
 variable [CompleteDistribLattice α] {a b : α} {s t : Set α}
 
 instance : CompleteDistribLattice αᵒᵈ :=
-  { OrderDual.frame, OrderDual.coframe with }
+  { OrderDual.instFrame, OrderDual.instCoframe with }
 
-#print Pi.completeDistribLattice /-
-instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _}
+#print Pi.instCompleteDistribLattice /-
+instance Pi.instCompleteDistribLattice {ι : Type _} {π : ι → Type _}
     [∀ i, CompleteDistribLattice (π i)] : CompleteDistribLattice (∀ i, π i) :=
-  { Pi.frame, Pi.coframe with }
-#align pi.complete_distrib_lattice Pi.completeDistribLattice
+  { Pi.instFrame, Pi.instCoframe with }
+#align pi.complete_distrib_lattice Pi.instCompleteDistribLattice
 -/
 
 end CompleteDistribLattice
@@ -359,22 +359,22 @@ class CompleteBooleanAlgebra (α) extends BooleanAlgebra α, CompleteDistribLatt
 #align complete_boolean_algebra CompleteBooleanAlgebra
 -/
 
-#print Pi.completeBooleanAlgebra /-
-instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _}
+#print Pi.instCompleteBooleanAlgebra /-
+instance Pi.instCompleteBooleanAlgebra {ι : Type _} {π : ι → Type _}
     [∀ i, CompleteBooleanAlgebra (π i)] : CompleteBooleanAlgebra (∀ i, π i) :=
-  { Pi.booleanAlgebra, Pi.completeDistribLattice with }
-#align pi.complete_boolean_algebra Pi.completeBooleanAlgebra
+  { Pi.instBooleanAlgebra, Pi.instCompleteDistribLattice with }
+#align pi.complete_boolean_algebra Pi.instCompleteBooleanAlgebra
 -/
 
-#print Prop.completeBooleanAlgebra /-
-instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
-  { Prop.booleanAlgebra,
-    Prop.completeLattice with
+#print Prop.instCompleteBooleanAlgebra /-
+instance Prop.instCompleteBooleanAlgebra : CompleteBooleanAlgebra Prop :=
+  { Prop.instBooleanAlgebra,
+    Prop.instCompleteLattice with
     iInf_sup_le_sup_inf := fun p s =>
       Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, iInf_Prop_eq, sup_Prop_eq]
     inf_sup_le_iSup_inf := fun p s =>
       Iff.mp <| by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, iSup_Prop_eq] }
-#align Prop.complete_boolean_algebra Prop.completeBooleanAlgebra
+#align Prop.complete_boolean_algebra Prop.instCompleteBooleanAlgebra
 -/
 
 section CompleteBooleanAlgebra

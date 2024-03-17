@@ -441,14 +441,14 @@ theorem LinearMap.eventually_disjoint_ker_pow_range_pow [I : IsNoetherian R M] (
     monotone_stabilizes_iff_noetherian.mpr I
       (f.iterate_ker.comp ⟨fun n => n + 1, fun n m w => by linarith⟩)
   specialize w (2 * n + 1) (by linarith only)
-  dsimp at w 
+  dsimp at w
   refine' ⟨n + 1, Nat.succ_ne_zero _, _⟩
   rw [eq_bot_iff]
   rintro - ⟨h, ⟨y, rfl⟩⟩
   rw [mem_bot, ← LinearMap.mem_ker, w]
   erw [LinearMap.mem_ker] at h ⊢
-  change (f ^ (n + 1) * f ^ (n + 1)) y = 0 at h 
-  rw [← pow_add] at h 
+  change (f ^ (n + 1) * f ^ (n + 1)) y = 0 at h
+  rw [← pow_add] at h
   convert h using 3
   ring
 #align is_noetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot LinearMap.eventually_disjoint_ker_pow_range_pow
@@ -461,7 +461,7 @@ theorem IsNoetherian.injective_of_surjective_endomorphism [IsNoetherian R M] (f 
   by
   obtain ⟨n, ne, w⟩ := LinearMap.eventually_disjoint_ker_pow_range_pow f
   rw [linear_map.range_eq_top.mpr (LinearMap.iterate_surjective s n), inf_top_eq,
-    LinearMap.ker_eq_bot] at w 
+    LinearMap.ker_eq_bot] at w
   exact LinearMap.injective_of_iterate_injective Ne w
 #align is_noetherian.injective_of_surjective_endomorphism IsNoetherian.injective_of_surjective_endomorphism
 -/
@@ -609,8 +609,8 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
   rw [LinearMap.range_eq_top]
-  rintro ⟨n, hn⟩; change n ∈ N at hn 
-  rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn 
+  rintro ⟨n, hn⟩; change n ∈ N at hn
+  rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
   change ∑ i in s.attach, l i • (i : M) = n

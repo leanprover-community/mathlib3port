@@ -248,15 +248,15 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
             (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩
       eq_zero_of_map_eq_zero' := fun f h₀ =>
         by
-        rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂ 
-        · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂ 
+        rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
+        · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂
           obtain ⟨q, rfl⟩ := h₂
-          simp only [Function.const_apply, coe_const, norm_eq_zero] at h₁ 
+          simp only [Function.const_apply, coe_const, norm_eq_zero] at h₁
           rw [h₁]
           rfl
-        · rw [norm_eq_zero', cont_linear_eq_zero_iff_exists_const] at h₁ 
+        · rw [norm_eq_zero', cont_linear_eq_zero_iff_exists_const] at h₁
           obtain ⟨q, rfl⟩ := h₁
-          simp only [Function.const_apply, coe_const, norm_le_zero_iff] at h₂ 
+          simp only [Function.const_apply, coe_const, norm_le_zero_iff] at h₂
           rw [h₂]
           rfl }
 

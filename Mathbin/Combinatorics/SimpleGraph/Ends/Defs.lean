@@ -291,7 +291,7 @@ theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
     obtain ⟨v, vD⟩ := D.nonempty
     let Ddis := D.disjoint_right
     simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
-      Set.disjoint_iff] at Ddis 
+      Set.disjoint_iff] at Ddis
     exact Ddis.right ⟨(component_compl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
 #align simple_graph.component_compl.infinite_iff_in_all_ranges SimpleGraph.ComponentCompl.infinite_iff_in_all_ranges
 -/

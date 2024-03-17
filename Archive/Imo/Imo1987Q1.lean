@@ -90,7 +90,7 @@ def fixedPointsEquiv' :
       ⟨p.1.1, p.2⟩⟩
   left_inv := fun ⟨⟨k, hk⟩, ⟨σ, hσ⟩, ⟨x, hx⟩⟩ =>
     by
-    simp only [mem_fiber, Fin.val_mk] at hσ 
+    simp only [mem_fiber, Fin.val_mk] at hσ
     subst k; rfl
   right_inv := fun ⟨⟨x, σ⟩, h⟩ => rfl
 #align imo1987_q1.fixed_points_equiv' Imo1987Q1.fixedPointsEquiv'

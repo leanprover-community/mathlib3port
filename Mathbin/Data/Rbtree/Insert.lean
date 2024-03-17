@@ -491,12 +491,12 @@ theorem Std.RBNode.find?_ins_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] 
       (hlt₂ : Std.RBNode.Lift lt (some x) hi),
       Std.RBNode.find? lt (Std.RBNode.ins lt t x) y = some x :=
   by
-  simp [StrictWeakOrder.Equiv] at he 
+  simp [StrictWeakOrder.Equiv] at he
   apply ins.induction lt t x <;> intros
   ·
     run_tac
       simp_fi
-  all_goals simp at hc ; cases hs
+  all_goals simp at hc; cases hs
   · have := lt_of_incomp_of_lt he.swap hc
     have := ih hs_hs₁ hlt₁ hc
     run_tac
@@ -817,7 +817,7 @@ theorem Std.RBNode.find?_ins_of_disj {x y : α} {t : Std.RBNode α} (hn : lt x y
   apply ins.induction lt t x <;> intros
   · cases hn
     all_goals simp [find, ins, cmpUsing, *]
-  all_goals simp at hc ; cases hs
+  all_goals simp at hc; cases hs
   · have := ih hs_hs₁ hlt₁ hc;
     run_tac
       simp_fi
@@ -833,7 +833,7 @@ theorem Std.RBNode.find?_ins_of_disj {x y : α} {t : Std.RBNode α} (hn : lt x y
       simp_fi
   · have ih := ih hs_hs₁ hlt₁ hc
     cases hn
-    · cases hc' : cmpUsing lt y y_1 <;> simp at hc' 
+    · cases hc' : cmpUsing lt y y_1 <;> simp at hc'
       · have hsi := is_searchable_ins lt hs_hs₁ hlt₁ (trans_of lt hn hc')
         have := find_balance1_node_lt lt hc' hsi hs_hs₂
         run_tac
@@ -874,7 +874,7 @@ theorem Std.RBNode.find?_ins_of_disj {x y : α} {t : Std.RBNode α} (hn : lt x y
         simp_fi
     · run_tac
         simp_fi
-      cases hc' : cmpUsing lt y y_1 <;> simp at hc' 
+      cases hc' : cmpUsing lt y y_1 <;> simp at hc'
       · have hsi := is_searchable_ins lt hs_hs₂ hc hlt₂
         have := find_balance2_node_lt lt hc' hsi hs_hs₁
         run_tac
@@ -914,7 +914,7 @@ theorem Std.RBNode.find?_insert_of_not_eqv [DecidableRel lt] [IsStrictWeakOrder 
   simp [insert, find_mk_insert_result]
   have he : lt x y ∨ lt y x :=
     by
-    simp [StrictWeakOrder.Equiv, Decidable.not_and_iff_or_not, Decidable.not_not_iff] at hn 
+    simp [StrictWeakOrder.Equiv, Decidable.not_and_iff_or_not, Decidable.not_not_iff] at hn
     assumption
   apply find_ins_of_disj lt he hs <;> simp
 #align rbnode.find_insert_of_not_eqv Std.RBNode.find?_insert_of_not_eqv
@@ -982,12 +982,12 @@ variable {lt : α → α → Prop} [DecidableRel lt]
 
 theorem Std.RBNode.of_getColor_eq_red {t : Std.RBNode α} {c n} :
     Std.RBNode.getColor t = red → Std.RBNode.IsRedBlack t c n → c = red := by intro h₁ h₂;
-  cases h₂ <;> simp only [get_color] at h₁  <;> contradiction
+  cases h₂ <;> simp only [get_color] at h₁ <;> contradiction
 #align rbnode.of_get_color_eq_red Std.RBNode.of_getColor_eq_red
 
 theorem Std.RBNode.of_getColor_ne_red {t : Std.RBNode α} {c n} :
     Std.RBNode.getColor t ≠ red → Std.RBNode.IsRedBlack t c n → c = black := by intro h₁ h₂;
-  cases h₂ <;> simp only [get_color] at h₁  <;> contradiction
+  cases h₂ <;> simp only [get_color] at h₁ <;> contradiction
 #align rbnode.of_get_color_ne_red Std.RBNode.of_getColor_ne_red
 
 variable (lt)
@@ -1028,7 +1028,7 @@ theorem Std.RBNode.insert_rb {t : Std.RBNode α} (x) {c n} (h : Std.RBNode.IsRed
   simp [insert]
   have hi := ins_rb lt x h
   generalize he : ins lt t x = r
-  simp [he] at hi 
+  simp [he] at hi
   cases h <;> simp [get_color, ins_rb_result, insert_rb_result, mk_insert_result] at *
   assumption'
   · cases hi; simp [mk_insert_result]; constructor <;> assumption
@@ -1039,7 +1039,7 @@ theorem Std.RBNode.insert_isRedBlack {t : Std.RBNode α} {c n} (x) :
   by
   intro h
   have := insert_rb lt x h
-  cases c <;> simp [insert_rb_result] at this 
+  cases c <;> simp [insert_rb_result] at this
   · constructor; constructor; assumption
   · cases this; constructor; constructor; assumption
 #align rbnode.insert_is_red_black Std.RBNode.insert_isRedBlack

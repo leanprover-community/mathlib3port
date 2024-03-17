@@ -211,7 +211,7 @@ def trivial : Pretopology C
     ext W k
     constructor
     · rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩
-      rw [hTi] at hh 
+      rw [hTi] at hh
       cases hh
       apply singleton.mk
     · rintro ⟨_⟩

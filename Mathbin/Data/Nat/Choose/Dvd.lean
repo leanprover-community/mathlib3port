@@ -28,7 +28,7 @@ theorem dvd_choose_add {p a b : ℕ} (hp : Prime p) (hap : a < p) (hbp : b < p) 
   by
   have h₁ : p ∣ (a + b)! := hp.dvd_factorial.2 h
   rw [← add_choose_mul_factorial_mul_factorial, ← choose_symm_add, hp.dvd_mul, hp.dvd_mul,
-    hp.dvd_factorial, hp.dvd_factorial] at h₁ 
+    hp.dvd_factorial, hp.dvd_factorial] at h₁
   exact (h₁.resolve_right hbp.not_le).resolve_right hap.not_le
 #align nat.prime.dvd_choose_add Nat.Prime.dvd_choose_add
 -/

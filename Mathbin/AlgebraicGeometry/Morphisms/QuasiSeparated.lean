@@ -104,8 +104,8 @@ theorem quasi_compact_affineProperty_iff_quasiSeparatedSpace {X Y : Scheme} [IsA
       pullback.fst ≫ X.of_restrict _
     have : is_open_immersion g := inferInstance
     have e := Homeomorph.ofEmbedding _ this.base_open.to_embedding
-    rw [is_open_immersion.range_pullback_to_base_of_left] at e 
-    erw [Subtype.range_coe, Subtype.range_coe] at e 
+    rw [is_open_immersion.range_pullback_to_base_of_left] at e
+    erw [Subtype.range_coe, Subtype.range_coe] at e
     rw [isCompact_iff_compactSpace]
     exact @Homeomorph.compactSpace _ _ (H _ _) e
   · introv H h₁ h₂
@@ -113,8 +113,8 @@ theorem quasi_compact_affineProperty_iff_quasiSeparatedSpace {X Y : Scheme} [IsA
     let g : pullback f₁ f₂ ⟶ X := pullback.fst ≫ f₁
     have : is_open_immersion g := inferInstance
     have e := Homeomorph.ofEmbedding _ this.base_open.to_embedding
-    rw [is_open_immersion.range_pullback_to_base_of_left] at e 
-    simp_rw [isCompact_iff_compactSpace] at H 
+    rw [is_open_immersion.range_pullback_to_base_of_left] at e
+    simp_rw [isCompact_iff_compactSpace] at H
     exact
       @Homeomorph.compactSpace _ _
         (H ⟨⟨_, h₁.base_open.open_range⟩, range_is_affine_open_of_open_immersion _⟩
@@ -214,7 +214,7 @@ theorem QuasiSeparated.affine_openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
   by
   have := quasi_compact.affine_property_is_local.diagonal_affine_open_cover_tfae f
   simp_rw [← quasi_compact_eq_affine_property, ← quasi_separated_eq_diagonal_is_quasi_compact,
-    quasi_compact_affine_property_diagonal_eq] at this 
+    quasi_compact_affine_property_diagonal_eq] at this
   exact this
 #align algebraic_geometry.quasi_separated.affine_open_cover_tfae AlgebraicGeometry.QuasiSeparated.affine_openCover_TFAE
 -/
@@ -332,7 +332,7 @@ theorem quasiSeparatedOfComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [H : Q
     QuasiSeparated f :=
   by
   rw [(quasi_separated.affine_open_cover_tfae f).out 0 1]
-  rw [(quasi_separated.affine_open_cover_tfae (f ≫ g)).out 0 2] at H 
+  rw [(quasi_separated.affine_open_cover_tfae (f ≫ g)).out 0 2] at H
   use(Z.affine_cover.pullback_cover g).bind fun x => Scheme.affine_cover _
   constructor; · intro i; dsimp; infer_instance
   rintro ⟨i, j⟩; dsimp at *
@@ -447,7 +447,7 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
     obtain ⟨n₂, y₂, hy₂⟩ :=
       exists_eq_pow_mul_of_is_affine_open X _ U.2 (X.presheaf.map (hom_of_le le_sup_right).op f)
         (X.presheaf.map (hom_of_le _).op x)
-    delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at hy₂ 
+    delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at hy₂
     swap; · rw [X.basic_open_res]; exact inf_le_right
     -- Since `S ∪ U` is quasi-separated, `S ∩ U` can be covered by finite affine opens.
     obtain ⟨s, hs', hs⟩ :=
@@ -498,12 +498,12 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
                   (finset.univ.sup n - n i) *
                 x)
             (hn i)
-        dsimp only at hn 
+        dsimp only at hn
         delta Scheme.sheaf SheafedSpace.sheaf
         simp only [← map_pow, map_mul, ← comp_apply, ← functor.map_comp, ← op_comp, ← mul_assoc] at
           hn ⊢
-        erw [← map_mul, ← map_mul] at hn 
-        rw [← pow_add, ← pow_add, ← add_assoc, ← add_assoc, tsub_add_cancel_of_le] at hn 
+        erw [← map_mul, ← map_mul] at hn
+        rw [← pow_add, ← pow_add, ← add_assoc, ← add_assoc, tsub_add_cancel_of_le] at hn
         convert hn
         exact Finset.le_sup (Finset.mem_univ _)
     use finset.univ.sup n + n₁ + n₂

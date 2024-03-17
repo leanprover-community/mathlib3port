@@ -58,9 +58,9 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f 
   let q := p.change_origin (y - x)
   have has_series : HasFPowerSeriesOnBall f q y (r / 2) :=
     by
-    have A : (‖y - x‖₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy 
+    have A : (‖y - x‖₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy
     have := hp.change_origin (A.trans_le ENNReal.half_le_self)
-    simp only [add_sub_cancel'_right] at this 
+    simp only [add_sub_cancel'_right] at this
     apply this.mono (ENNReal.half_pos hp.r_pos.ne')
     apply ENNReal.le_sub_of_add_le_left ENNReal.coe_ne_top
     apply (add_le_add A.le (le_refl (r / 2))).trans (le_of_eq _)

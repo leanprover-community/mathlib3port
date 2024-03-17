@@ -682,7 +682,7 @@ theorem coe_orderIso_apply (e : Fin n ≃o Fin m) (i : Fin n) : (e i : ℕ) = i 
   induction' i using Nat.strong_induction_on with i h
   refine' le_antisymm (forall_lt_iff_le.1 fun j hj => _) (forall_lt_iff_le.1 fun j hj => _)
   · have := e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)
-    rw [e.symm_apply_apply] at this 
+    rw [e.symm_apply_apply] at this
     convert this
     simpa using h _ this (e.symm _).is_lt
   · rwa [← h j hj (hj.trans hi), ← lt_iff_coe_lt_coe, e.lt_iff_lt]
@@ -912,7 +912,7 @@ theorem mk_bit1 {m n : ℕ} [NeZero n] (h : bit1 m < n) :
       (bit1 ⟨m, (Nat.le_add_right m m).trans_lt ((m + m).lt_succ_self.trans h)⟩ : Fin _) :=
   by
   ext
-  simp only [bit1, bit0] at h 
+  simp only [bit1, bit0] at h
   simp only [bit1, bit0, coe_add, coe_one', coe_mk, ← Nat.add_mod, Nat.mod_eq_of_lt h]
 #align fin.mk_bit1 Fin.mk_bit1
 -/
@@ -1008,7 +1008,7 @@ theorem add_one_pos (i : Fin (n + 1)) (h : i < Fin.last n) : (0 : Fin (n + 1)) <
   by
   cases n
   · exact absurd h (Nat.not_lt_zero _)
-  · rw [lt_iff_coe_lt_coe, coe_last, ← add_lt_add_iff_right 1] at h 
+  · rw [lt_iff_coe_lt_coe, coe_last, ← add_lt_add_iff_right 1] at h
     rw [lt_iff_coe_lt_coe, coe_add, coe_zero, coe_one, Nat.mod_eq_of_lt h]
     exact Nat.zero_lt_succ _
 #align fin.add_one_pos Fin.add_one_pos
@@ -1033,7 +1033,7 @@ theorem zero_eq_one_iff [NeZero n] : (0 : Fin n) = 1 ↔ n = 1 :=
   constructor
   · intro h
     have := congr_arg (coe : Fin n → ℕ) h
-    simp only [Fin.val_zero, ← Nat.dvd_iff_mod_eq_zero, Fin.val_one', @eq_comm _ 0] at this 
+    simp only [Fin.val_zero, ← Nat.dvd_iff_mod_eq_zero, Fin.val_one', @eq_comm _ 0] at this
     exact eq_one_of_dvd_one this
   · rintro rfl; rfl
 #align fin.zero_eq_one_iff Fin.zero_eq_one_iff
@@ -2285,7 +2285,7 @@ theorem liftFun_iff_succ {α : Type _} (r : α → α → Prop) [IsTrans α r] {
   · refine' fun H i => Fin.induction _ _
     · exact fun h => (h.not_le (zero_le i)).elim
     · intro j ihj hij
-      rw [← le_cast_succ_iff] at hij 
+      rw [← le_cast_succ_iff] at hij
       rcases hij.eq_or_lt with (rfl | hlt)
       exacts [H j, trans (ihj hlt) (H j)]
 #align fin.lift_fun_iff_succ Fin.liftFun_iff_succ
@@ -2404,7 +2404,7 @@ theorem coe_sub_one {n} (a : Fin (n + 1)) : ↑(a - 1) = if a = 0 then n else a 
   · simp [h]
   rw [sub_eq_add_neg, coe_add_eq_ite, coe_neg_one, if_pos, add_comm, add_tsub_add_eq_tsub_left]
   rw [add_comm ↑a, add_le_add_iff_left, Nat.one_le_iff_ne_zero]
-  rwa [Fin.ext_iff] at h 
+  rwa [Fin.ext_iff] at h
 #align fin.coe_sub_one Fin.coe_sub_one
 -/
 
@@ -2582,7 +2582,7 @@ theorem succAbove_lt_iff_castSucc_lt (p : Fin (n + 1)) (i : Fin n) :
   · intro h
     cases' succ_above_lt_ge p i with H H
     · exact H
-    · rw [succ_above_above _ _ H] at h 
+    · rw [succ_above_above _ _ H] at h
       exact lt_trans (cast_succ_lt_succ i) h
   · intro h
     rw [succ_above_below _ _ h]
@@ -2599,7 +2599,7 @@ theorem lt_succAbove_iff_le_castSucc (p : Fin (n + 1)) (i : Fin n) :
   refine' Iff.intro _ _
   · intro h
     cases' succ_above_lt_ge p i with H H
-    · rw [succ_above_below _ _ H] at h 
+    · rw [succ_above_below _ _ H] at h
       exact le_of_lt h
     · exact H
   · intro h
@@ -2812,7 +2812,7 @@ theorem predAbove_right_monotone (p : Fin n) : Monotone p.predAbove := fun a b H
     calc
       _ ≤ _ := Nat.pred_le _
       _ ≤ _ := H
-  · simp at ha ; exact le_pred_of_lt (lt_of_le_of_lt ha hb)
+  · simp at ha; exact le_pred_of_lt (lt_of_le_of_lt ha hb)
   · exact H
 #align fin.pred_above_right_monotone Fin.predAbove_right_monotone
 -/
@@ -2931,7 +2931,7 @@ theorem succAbove_predAbove {p : Fin n} {i : Fin (n + 1)} (h : i ≠ p.cast_succ
     -- For some reason `simp` doesn't fire fully unless we discharge the third goal.
     · exact lt_of_le_of_ne H (Ne.symm h)
     · simp
-    · simp only [Fin.mk_eq_mk, Ne.def, Fin.castSucc_mk] at h 
+    · simp only [Fin.mk_eq_mk, Ne.def, Fin.castSucc_mk] at h
       simp only [pred, Fin.mk_lt_mk, not_lt]
       exact Nat.le_pred_of_lt (Nat.lt_of_le_of_ne H (Ne.symm h))
 #align fin.succ_above_pred_above Fin.succAbove_predAbove
@@ -3006,11 +3006,11 @@ theorem succ_predAbove_succ (a : Fin n) (b : Fin (n + 1)) :
       ext
       have h₀ : (b : ℕ) < n + 1 :=
         by
-        simp only [le_iff_coe_le_coe, coe_cast_succ] at h₂ 
+        simp only [le_iff_coe_le_coe, coe_cast_succ] at h₂
         simpa only [lt_succ_iff] using h₂.trans a.is_le
       have h₁ : (b.succ : ℕ) < n + 2 :=
         by
-        rw [← Nat.succ_lt_succ_iff] at h₀ 
+        rw [← Nat.succ_lt_succ_iff] at h₀
         simpa only [coe_succ] using h₀
       simp only [coe_cast_pred b h₀, coe_cast_pred b.succ h₁, coe_succ]
 #align fin.succ_pred_above_succ Fin.succ_predAbove_succ

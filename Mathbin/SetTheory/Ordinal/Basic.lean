@@ -511,7 +511,7 @@ def initialSegOut {α β : Ordinal} (h : α ≤ β) :
     InitialSeg ((· < ·) : α.out.α → α.out.α → Prop) ((· < ·) : β.out.α → β.out.α → Prop) :=
   by
   change α.out.r ≼i β.out.r
-  rw [← Quotient.out_eq α, ← Quotient.out_eq β] at h ; revert h
+  rw [← Quotient.out_eq α, ← Quotient.out_eq β] at h; revert h
   cases Quotient.out α; cases Quotient.out β; exact Classical.choice
 #align ordinal.initial_seg_out Ordinal.initialSegOut
 -/
@@ -523,7 +523,7 @@ def principalSegOut {α β : Ordinal} (h : α < β) :
     PrincipalSeg ((· < ·) : α.out.α → α.out.α → Prop) ((· < ·) : β.out.α → β.out.α → Prop) :=
   by
   change α.out.r ≺i β.out.r
-  rw [← Quotient.out_eq α, ← Quotient.out_eq β] at h ; revert h
+  rw [← Quotient.out_eq α, ← Quotient.out_eq β] at h; revert h
   cases Quotient.out α; cases Quotient.out β; exact Classical.choice
 #align ordinal.principal_seg_out Ordinal.principalSegOut
 -/
@@ -944,12 +944,12 @@ theorem lift_down' {a : Cardinal.{u}} {b : Ordinal.{max u v}} (h : card b ≤ a.
       inductionOn b fun β s _ e' => by
         skip
         rw [card_type, ← Cardinal.lift_id'.{max u v, u} (#β), ← Cardinal.lift_umax.{u, v},
-          lift_mk_eq.{u, max u v, max u v}] at e' 
+          lift_mk_eq.{u, max u v, max u v}] at e'
         cases' e' with f
         have g := RelIso.preimage f s
         haveI := (g : ⇑f ⁻¹'o s ↪r s).IsWellOrder
         have := lift_type_eq.{u, max u v, max u v}.2 ⟨g⟩
-        rw [lift_id, lift_umax.{u, v}] at this 
+        rw [lift_id, lift_umax.{u, v}] at this
         exact ⟨_, this⟩)
     e
 #align ordinal.lift_down' Ordinal.lift_down'
@@ -1578,7 +1578,7 @@ theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
     Ordinal.inductionOn o fun β s _ => by
       let ⟨r, _, e⟩ := ord_eq α
       skip; simp only [card_type]; constructor <;> intro h
-      · rw [e] at h ;
+      · rw [e] at h;
         exact
           let ⟨f⟩ := h
           ⟨f.toEmbedding⟩
@@ -1792,10 +1792,10 @@ theorem ord_univ : ord univ.{u, v} = Ordinal.univ.{u, v} :=
 theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
   ⟨fun h => by
     have := ord_lt_ord.2 h
-    rw [ord_univ] at this 
+    rw [ord_univ] at this
     cases' lift.principalSeg.{u, u + 1}.down.1 (by simpa only [lift.principal_seg_top]) with o e
     have := card_ord c
-    rw [← e, lift.principal_seg_coe, ← lift_card] at this 
+    rw [← e, lift.principal_seg_coe, ← lift_card] at this
     exact ⟨_, this.symm⟩, fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ _⟩
 #align cardinal.lt_univ Cardinal.lt_univ
 -/
@@ -1804,7 +1804,7 @@ theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
 theorem lt_univ' {c} : c < univ.{u, v} ↔ ∃ c', c = lift.{max (u + 1) v, u} c' :=
   ⟨fun h => by
     let ⟨a, e, h'⟩ := lt_lift_iff.1 h
-    rw [← univ_id] at h' 
+    rw [← univ_id] at h'
     rcases lt_univ.{u}.1 h' with ⟨c', rfl⟩
     exact ⟨c', by simp only [e.symm, lift_lift]⟩, fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ' _⟩
 #align cardinal.lt_univ' Cardinal.lt_univ'

@@ -380,7 +380,7 @@ def forget : MonoidalFunctor (Center C) C
 -/
 
 instance : ReflectsIsomorphisms (forget C).toFunctor
-    where reflects A B f i := by dsimp at i ; skip; change is_iso (iso_mk f).Hom; infer_instance
+    where reflects A B f i := by dsimp at i; skip; change is_iso (iso_mk f).Hom; infer_instance
 
 end
 

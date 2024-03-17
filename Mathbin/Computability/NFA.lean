@@ -203,7 +203,7 @@ theorem toNFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
   rw [to_NFA_eval_from_match]
   constructor
   · rintro ⟨S, hS₁, hS₂⟩
-    rwa [set.mem_singleton_iff.mp hS₂] at hS₁ 
+    rwa [set.mem_singleton_iff.mp hS₂] at hS₁
   · exact fun h => ⟨M.eval x, h, rfl⟩
 #align DFA.to_NFA_correct DFA.toNFA_correct
 -/

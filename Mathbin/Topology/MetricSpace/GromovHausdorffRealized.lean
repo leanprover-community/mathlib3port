@@ -341,7 +341,7 @@ technical lemmas -/
 theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} :
     BddBelow (range fun y : Y => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.isBounded_iff_bddBelow_bddAbove.1 f.isBounded_range).1
-  ⟨cf + C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
+  ⟨cf + C, forall_mem_range.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
 #align Gromov_Hausdorff.HD_below_aux1 GromovHausdorff.HD_below_aux1
 -/
 
@@ -358,7 +358,7 @@ private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) :
 theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} :
     BddBelow (range fun x : X => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.isBounded_iff_bddBelow_bddAbove.1 f.isBounded_range).1
-  ⟨cf + C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
+  ⟨cf + C, forall_mem_range.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
 #align Gromov_Hausdorff.HD_below_aux2 GromovHausdorff.HD_below_aux2
 -/
 
@@ -521,7 +521,7 @@ attribute [local instance] premetric_optimal_GH_dist
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
 @[nolint has_nonempty_instance]
 def OptimalGHCoupling : Type _ :=
-  @UniformSpace.SeparationQuotient (Sum X Y) (premetricOptimalGHDist X Y).toUniformSpace
+  @SeparationQuotient (Sum X Y) (premetricOptimalGHDist X Y).toUniformSpace
 deriving MetricSpace
 #align Gromov_Hausdorff.optimal_GH_coupling GromovHausdorff.OptimalGHCoupling
 -/

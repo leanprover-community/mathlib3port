@@ -251,7 +251,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
   -- Now we need to show that the set of such `x` is infinite.
   -- If the set is finite, then we will show that `K` is also finite.
   · intro h
-    rw [← Set.infinite_univ_iff] at H 
+    rw [← Set.infinite_univ_iff] at H
     apply H
     -- To each `x` of the form `x = y + y⁻¹`
     -- we `bind` the set of `y` that solve the equation `x = y + y⁻¹`.

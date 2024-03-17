@@ -150,7 +150,7 @@ theorem sum_le_of_monotoneOn_Iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ 
       simp [A, B]
   convert sum_le f n hv vs using 1
   apply Finset.sum_congr rfl fun i hi => _
-  simp only [Finset.mem_range] at hi 
+  simp only [Finset.mem_range] at hi
   have : i + 1 ≤ n := by linarith
   simp only [v]
   simp [this, hi.le]
@@ -168,11 +168,11 @@ theorem sum_le_of_monotoneOn_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
   have hv : MonotoneOn v (Iic (n - m)) :=
     by
     intro a ha b hb hab
-    simp only [le_tsub_iff_left hmn.le, mem_Iic] at ha hb 
+    simp only [le_tsub_iff_left hmn.le, mem_Iic] at ha hb
     exact hu ⟨le_add_right le_rfl, ha⟩ ⟨le_add_right le_rfl, hb⟩ (add_le_add le_rfl hab)
   have vs : ∀ i ∈ Iic (n - m), v i ∈ s := by
     intro i hi
-    simp only [le_tsub_iff_left hmn.le, mem_Iic] at hi 
+    simp only [le_tsub_iff_left hmn.le, mem_Iic] at hi
     exact us _ ⟨le_add_right le_rfl, hi⟩
   calc
     ∑ i in Finset.Ico m n, edist (f (u (i + 1))) (f (u i)) =
@@ -315,7 +315,7 @@ theorem lowerSemicontinuous_uniformOn (s : Set α) :
   intro f
   apply @lower_continuous_aux _ _ _ _ (UniformOnFun α E {s}) id (𝓝 f) f s _
   have := @tendsto_id _ (𝓝 f)
-  rw [UniformOnFun.tendsto_iff_tendstoUniformlyOn] at this 
+  rw [UniformOnFun.tendsto_iff_tendstoUniformlyOn] at this
   simp_rw [← tendstoUniformlyOn_singleton_iff_tendsto]
   exact fun x xs => (this s rfl).mono (singleton_subset_iff.mpr xs)
 #align evariation_on.lower_semicontinuous_uniform_on eVariationOn.lowerSemicontinuous_uniformOn
@@ -385,7 +385,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
             ∑ i in Finset.range n, edist (f (v (i + 1))) (f (v i)) :=
           by
           apply Finset.sum_congr rfl fun i hi => _
-          simp only [Finset.mem_range] at hi 
+          simp only [Finset.mem_range] at hi
           have : i + 1 ≤ n := Nat.succ_le_of_lt hi
           dsimp only [v]
           simp only [hi.le, this, if_true]
@@ -411,7 +411,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
       have B : ¬i + 1 < N := by rw [← hi]; exact fun h => h.Ne rfl
       rw [if_pos A, if_neg B, if_pos hi]
       have T := Nat.find_min exists_N A
-      push_neg at T 
+      push_neg at T
       exact T (A.le.trans hN.1)
     · have A : ¬i < N := (nat.lt_succ_iff.mp hi).not_lt
       have B : ¬i + 1 < N := hi.not_lt
@@ -462,7 +462,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         by
         congr 1; congr 1
         · apply Finset.sum_congr rfl fun i hi => _
-          simp only [Finset.mem_Ico, zero_le', true_and_iff] at hi 
+          simp only [Finset.mem_Ico, zero_le', true_and_iff] at hi
           dsimp only [w]
           have A : i + 1 < N := Nat.lt_pred_iff.1 hi
           have B : i < N := Nat.lt_of_succ_lt A
@@ -471,19 +471,19 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
           have : Finset.Ico (N - 1) N = {N - 1} := by rw [← Nat.Ico_succ_singleton, A]
           simp only [this, A, Finset.sum_singleton]
         · apply Finset.sum_congr rfl fun i hi => _
-          simp only [Finset.mem_Ico] at hi 
+          simp only [Finset.mem_Ico] at hi
           dsimp only [w]
           have A : ¬1 + i + 1 < N := fun h =>
             by
-            rw [add_assoc, add_comm] at h 
+            rw [add_assoc, add_comm] at h
             exact hi.left.not_lt (i.lt_succ_self.trans (i.succ.lt_succ_self.trans h))
           have B : ¬1 + i + 1 = N := fun h =>
             by
-            rw [← h, add_assoc, add_comm] at hi 
+            rw [← h, add_assoc, add_comm] at hi
             exact Nat.not_succ_le_self i (i.succ.le_succ.trans hi.left)
-          have C : ¬1 + i < N := fun h => by rw [add_comm] at h ;
+          have C : ¬1 + i < N := fun h => by rw [add_comm] at h;
             exact hi.left.not_lt (i.lt_succ_self.trans h)
-          have D : ¬1 + i = N := fun h => by rw [← h, add_comm, Nat.succ_le_iff] at hi ;
+          have D : ¬1 + i = N := fun h => by rw [← h, add_comm, Nat.succ_le_iff] at hi;
             exact hi.left.ne rfl
           rw [if_neg A, if_neg B, if_neg C, if_neg D]
           congr 3 <;> · rw [add_comm, Nat.sub_one]; apply Nat.pred_succ
@@ -563,11 +563,11 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
       dsimp only [w]
       congr 1
       · apply Finset.sum_congr rfl fun i hi => _
-        simp only [Finset.mem_range] at hi 
+        simp only [Finset.mem_range] at hi
         have : i + 1 ≤ n := Nat.succ_le_of_lt hi
         simp [hi.le, this]
       · apply Finset.sum_congr rfl fun i hi => _
-        simp only [Finset.mem_range] at hi 
+        simp only [Finset.mem_range] at hi
         have B : ¬n + 1 + i ≤ n := by linarith
         have A : ¬n + 1 + i + 1 ≤ n := fun h => B ((n + 1 + i).le_succ.trans h)
         have C : n + 1 + i - n = i + 1 :=
@@ -595,7 +595,7 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
         · exact lt_of_lt_of_le hi (n.le_succ.trans (n.succ.le_add_right m))
         · exact hi.2
       · apply Finset.disjoint_left.2 fun i hi h'i => _
-        simp only [Finset.mem_Ico, Finset.mem_range] at hi h'i 
+        simp only [Finset.mem_Ico, Finset.mem_range] at hi h'i
         exact hi.not_lt (Nat.lt_of_succ_le h'i.left)
     _ ≤ eVariationOn f (s ∪ t) := sum_le f _ hw wst
 #align evariation_on.add_le_union eVariationOn.add_le_union
@@ -791,7 +791,7 @@ theorem MonotoneOn.eVariationOn_le {f : α → ℝ} {s : Set α} (hf : MonotoneO
         ∑ i in Finset.range n, ENNReal.ofReal (f (u (i + 1)) - f (u i)) :=
       by
       apply Finset.sum_congr rfl fun i hi => _
-      simp only [Finset.mem_range] at hi 
+      simp only [Finset.mem_range] at hi
       rw [edist_dist, Real.dist_eq, abs_of_nonneg]
       exact sub_nonneg_of_le (hf (us i).1 (us (i + 1)).1 (hu (Nat.le_succ _)))
     _ = ENNReal.ofReal (∑ i in Finset.range n, (f (u (i + 1)) - f (u i))) :=
@@ -1179,7 +1179,7 @@ theorem ae_differentiableAt {f : ℝ → V} (h : LocallyBoundedVariationOn f uni
     ∀ᵐ x, DifferentiableAt ℝ f x :=
   by
   filter_upwards [h.ae_differentiable_within_at_of_mem] with x hx
-  rw [differentiableWithinAt_univ] at hx 
+  rw [differentiableWithinAt_univ] at hx
   exact hx (mem_univ _)
 #align has_locally_bounded_variation_on.ae_differentiable_at LocallyBoundedVariationOn.ae_differentiableAt
 -/

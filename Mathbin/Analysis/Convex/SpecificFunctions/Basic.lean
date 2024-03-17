@@ -182,7 +182,7 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log :=
     have hyz' : 0 < z / y := by positivity
     have hyz'' : z / y ≠ 1 := by
       contrapose! h
-      rw [div_eq_one_iff_eq hy.ne'] at h 
+      rw [div_eq_one_iff_eq hy.ne'] at h
       simp [h]
     calc
       log z - log y = log (z / y) := by rw [← log_div hz.ne' hy.ne']
@@ -193,7 +193,7 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log :=
     have hxy' : 0 < x / y := by positivity
     have hxy'' : x / y ≠ 1 := by
       contrapose! h
-      rw [div_eq_one_iff_eq hy.ne'] at h 
+      rw [div_eq_one_iff_eq hy.ne'] at h
       simp [h]
     calc
       y⁻¹ * (y - x) = 1 - x / y := by field_simp [hy.ne']
@@ -260,7 +260,7 @@ theorem strictConvexOn_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) 
   have hy : 0 < y := by linarith
   have hy' : 0 < y ^ p := rpow_pos_of_pos hy _
   have H1 : y ^ (p - 1 + 1) = y ^ (p - 1) * y := rpow_add_one hy.ne' _
-  ring_nf at H1 
+  ring_nf at H1
   trans p * y ^ (p - 1)
   · have hyx' : x - y < 0 := by linarith only [hxy]
     have h3 : 0 < y - x := by linarith only [hxy]

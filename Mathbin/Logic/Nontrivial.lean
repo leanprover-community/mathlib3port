@@ -54,7 +54,7 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
   by
   rcases exists_pair_ne α with ⟨y, y', h⟩
   by_cases hx : x = y
-  · rw [← hx] at h 
+  · rw [← hx] at h
     exact ⟨y', h.symm⟩
   · exact ⟨y, Ne.symm hx⟩
 #align decidable.exists_ne Decidable.exists_ne

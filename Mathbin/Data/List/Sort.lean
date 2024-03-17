@@ -148,7 +148,7 @@ theorem Sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {
   obtain ⟨iy, hiy, rfl⟩ := nth_le_of_mem hy
   obtain ⟨ix, hix, rfl⟩ := nth_le_of_mem hx
   rw [nth_le_take', nth_le_drop']
-  rw [length_take] at hix 
+  rw [length_take] at hix
   exact h.rel_nth_le_of_lt _ _ (ix.lt_add_right _ _ (lt_min_iff.mp hix).left)
 #align list.sorted.rel_of_mem_take_of_mem_drop List.Sorted.rel_of_mem_take_of_mem_drop
 -/

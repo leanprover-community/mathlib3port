@@ -124,8 +124,8 @@ theorem IsPiSystem.comap {α β} {S : Set (Set β)} (h_pi : IsPiSystem S) (f : �
   rw [← Set.preimage_inter] at hst ⊢
   refine' ⟨s ∩ t, h_pi s hs_mem t ht_mem _, rfl⟩
   by_contra
-  rw [Set.not_nonempty_iff_eq_empty] at h 
-  rw [h] at hst 
+  rw [Set.not_nonempty_iff_eq_empty] at h
+  rw [h] at hst
   simpa using hst
 #align is_pi_system.comap IsPiSystem.comap
 -/
@@ -370,7 +370,7 @@ theorem mem_generatePiSystem_iUnion_elim {α β} {g : β → Set (Set α)} (h_pi
       exact Set.inter_subset_inter (Set.biInter_subset_of_mem hbs) (Set.biInter_subset_of_mem hbt)
     · exact h_s b hbs
     · exact h_t' b hbt
-    · rw [Finset.mem_union] at h_b 
+    · rw [Finset.mem_union] at h_b
       apply False.elim (h_b.elim hbs hbt)
 #align mem_generate_pi_system_Union_elim mem_generatePiSystem_iUnion_elim
 -/
@@ -404,7 +404,7 @@ theorem mem_generatePiSystem_iUnion_elim' {α β} {g : β → Set (Set α)} {s :
         apply id
   · intro b h_b
     simp_rw [Finset.mem_image, exists_prop, Subtype.exists, exists_and_right, exists_eq_right] at
-      h_b 
+      h_b
     cases h_b
     have h_b_alt : b = (Subtype.mk b h_b_w).val := rfl
     rw [h_b_alt, subtype.val_injective.extend_apply]
@@ -437,7 +437,7 @@ theorem piiUnionInter_singleton (π : ι → Set (Set α)) (i : ι) :
   simp only [piiUnionInter, exists_prop, mem_union]
   refine' ⟨_, fun h => _⟩
   · rintro ⟨t, hti, f, hfπ, rfl⟩
-    simp only [subset_singleton_iff, Finset.mem_coe] at hti 
+    simp only [subset_singleton_iff, Finset.mem_coe] at hti
     by_cases hi : i ∈ t
     · have ht_eq_i : t = {i} := by ext1 x; rw [Finset.mem_singleton];
         exact ⟨fun h => hti x h, fun h => h.symm ▸ hi⟩
@@ -451,7 +451,7 @@ theorem piiUnionInter_singleton (π : ι → Set (Set α)) (i : ι) :
   · cases' h with hs hs
     · refine' ⟨{i}, _, fun _ => s, ⟨fun x hx => _, _⟩⟩
       · rw [Finset.coe_singleton]
-      · rw [Finset.mem_singleton] at hx 
+      · rw [Finset.mem_singleton] at hx
         rwa [hx]
       · simp only [Finset.mem_singleton, Inter_Inter_eq_left]
     · refine' ⟨∅, _⟩
@@ -489,7 +489,7 @@ theorem generateFrom_piiUnionInter_singleton_left (s : ι → Set α) (S : Set �
     exact ⟨m, hI hm, (hf m hm).symm⟩
   · rintro _ ⟨k, hk, rfl⟩
     refine' ⟨{k}, fun m hm => _, s, fun i hi => _, _⟩
-    · rw [Finset.mem_coe, Finset.mem_singleton] at hm 
+    · rw [Finset.mem_coe, Finset.mem_singleton] at hm
       rwa [hm]
     · exact Set.mem_singleton _
     · simp only [Finset.mem_singleton, Set.iInter_iInter_eq_left]
@@ -518,16 +518,16 @@ theorem isPiSystem_piiUnionInter (π : ι → Set (Set α)) (hpi : ∀ x, IsPiSy
       exacts [⟨h.1 i h_1, h.2 i h_2⟩, ⟨h.1 i h_1, Set.mem_univ _⟩, ⟨Set.mem_univ _, h.2 i h_2⟩,
         ⟨Set.mem_univ _, Set.mem_univ _⟩]
     · specialize h i (Or.inl hi1)
-      rw [if_pos hi1] at h 
+      rw [if_pos hi1] at h
       exact h.1
     · specialize h i (Or.inr hi2)
-      rw [if_pos hi2] at h 
+      rw [if_pos hi2] at h
       exact h.2
   refine' ⟨fun n hn => _, h_inter_eq⟩
   simp_rw [g]
   split_ifs with hn1 hn2
   · refine' hpi n (f1 n) (hf1m n hn1) (f2 n) (hf2m n hn2) (Set.nonempty_iff_ne_empty.2 fun h => _)
-    rw [h_inter_eq] at h_nonempty 
+    rw [h_inter_eq] at h_nonempty
     suffices h_empty : (⋂ i ∈ p1 ∪ p2, g i) = ∅
     exact (set.not_nonempty_iff_eq_empty.mpr h_empty) h_nonempty
     refine' le_antisymm (Set.iInter_subset_of_subset n _) (Set.empty_subset _)
@@ -569,7 +569,7 @@ theorem generateFrom_piiUnionInter_le {m : MeasurableSpace α} (π : ι → Set 
 theorem subset_piiUnionInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (his : i ∈ S) :
     π i ⊆ piiUnionInter π S :=
   by
-  have h_ss : {i} ⊆ S := by intro j hj; rw [mem_singleton_iff] at hj ; rwa [hj]
+  have h_ss : {i} ⊆ S := by intro j hj; rw [mem_singleton_iff] at hj; rwa [hj]
   refine' subset.trans _ (piiUnionInter_mono_right h_ss)
   rw [piiUnionInter_singleton]
   exact subset_union_left _ _
@@ -871,7 +871,7 @@ theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : Measura
   have eq : MeasurableSet = DynkinSystem.GenerateHas s := by
     rw [h_eq, dynkin_system.generate_from_eq h_inter]; rfl
   fun t ht =>
-  have : DynkinSystem.GenerateHas s t := by rwa [Eq] at ht 
+  have : DynkinSystem.GenerateHas s t := by rwa [Eq] at ht
   this.recOn h_basic h_empty (fun t ht => h_compl t <| by rw [Eq]; exact ht) fun f hf ht =>
     h_union f hf fun i => by rw [Eq]; exact ht _
 #align measurable_space.induction_on_inter MeasurableSpace.induction_on_inter

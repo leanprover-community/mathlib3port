@@ -46,7 +46,7 @@ def expPartialHomeomorph : PartialHomeomorph ℂ ℂ :=
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
         refine' (not_or_of_imp fun hz => _).symm
         obtain rfl : y = 0 := by
-          rw [exp_im] at hz 
+          rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
         rw [mem_set_of_eq, ← of_real_def, exp_of_real_re]
         exact Real.exp_pos x

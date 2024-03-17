@@ -163,7 +163,7 @@ theorem isBigO_norm_Icc_restrict_atTop {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
     ∀ x : ℝ, max 0 (-2 * R) < x → ∀ y : ℝ, x + R ≤ y → y ^ (-b) ≤ (1 / 2) ^ (-b) * x ^ (-b) :=
     by
     intro x hx y hy
-    rw [max_lt_iff] at hx 
+    rw [max_lt_iff] at hx
     have hxR : 0 < x + R := by
       rcases le_or_lt 0 R with (h | h)
       · exact add_pos_of_pos_of_nonneg hx.1 h
@@ -186,9 +186,9 @@ theorem isBigO_norm_Icc_restrict_atTop {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
   simp only [is_O, is_O_with, eventually_at_top] at hc' ⊢
   obtain ⟨d, hd⟩ := hc'
   refine' ⟨c * (1 / 2) ^ (-b), ⟨max (1 + max 0 (-2 * R)) (d - R), fun x hx => _⟩⟩
-  rw [ge_iff_le, max_le_iff] at hx 
+  rw [ge_iff_le, max_le_iff] at hx
   have hx' : max 0 (-2 * R) < x := by linarith
-  rw [max_lt_iff] at hx' 
+  rw [max_lt_iff] at hx'
   rw [norm_norm,
     ContinuousMap.norm_le _
       (mul_nonneg (mul_nonneg hc.le <| rpow_nonneg_of_nonneg one_half_pos.le _) (norm_nonneg _))]
@@ -213,7 +213,7 @@ theorem isBigO_norm_Icc_restrict_atBot {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
   have h2 := (isBigO_norm_Icc_restrict_atTop hb h1 (-S) (-R)).comp_tendsto tendsto_neg_at_bot_at_top
   have : (fun x : ℝ => |x| ^ (-b)) ∘ Neg.neg = fun x : ℝ => |x| ^ (-b) := by ext1 x;
     simp only [Function.comp_apply, abs_neg]
-  rw [this] at h2 
+  rw [this] at h2
   refine' (is_O_of_le _ fun x => _).trans h2
   -- equality holds, but less work to prove `≤` alone
   rw [norm_norm, Function.comp_apply, norm_norm, ContinuousMap.norm_le _ (norm_nonneg _)]
@@ -232,7 +232,7 @@ theorem isBigO_norm_restrict_cocompact (f : C(ℝ, E)) {b : ℝ} (hb : 0 < b)
       |x| ^ (-b) :=
   by
   obtain ⟨r, hr⟩ := K.is_compact.bounded.subset_ball 0
-  rw [closed_ball_eq_Icc, zero_add, zero_sub] at hr 
+  rw [closed_ball_eq_Icc, zero_add, zero_sub] at hr
   have :
     ∀ x : ℝ,
       ‖(f.comp (ContinuousMap.addRight x)).restrict K‖ ≤ ‖f.restrict (Icc (x - r) (x + r))‖ :=

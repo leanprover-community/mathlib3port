@@ -181,7 +181,7 @@ theorem of_part_num_eq_one_and_exists_int_part_denom_eq {gp : GeneralizedContinu
     by
     have : (of v).s.get? n = some ⟨1, ifp.b⟩ :=
       nth_of_eq_some_of_succ_nth_int_fract_pair_stream stream_succ_nth_eq
-    have : some gp = some ⟨1, ifp.b⟩ := by rwa [nth_s_eq] at this 
+    have : some gp = some ⟨1, ifp.b⟩ := by rwa [nth_s_eq] at this
     injection this
   simp [this]
 #align generalized_continued_fraction.of_part_num_eq_one_and_exists_int_part_denom_eq GeneralizedContinuedFraction.of_part_num_eq_one_and_exists_int_part_denom_eq
@@ -195,7 +195,7 @@ theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.g
   obtain ⟨gp, nth_s_eq, gp_a_eq_a_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.a = a;
   exact exists_s_a_of_part_num nth_part_num_eq
   have : gp.a = 1 := (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).left
-  rwa [gp_a_eq_a_n] at this 
+  rwa [gp_a_eq_a_n] at this
 #align generalized_continued_fraction.of_part_num_eq_one GeneralizedContinuedFraction.of_part_num_eq_one
 -/
 
@@ -207,7 +207,7 @@ theorem exists_int_eq_of_part_denom {b : K}
   obtain ⟨gp, nth_s_eq, gp_b_eq_b_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.b = b;
   exact exists_s_b_of_part_denom nth_part_denom_eq
   have : ∃ z : ℤ, gp.b = (z : K) := (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).right
-  rwa [gp_b_eq_b_n] at this 
+  rwa [gp_b_eq_b_n] at this
 #align generalized_continued_fraction.exists_int_eq_of_part_denom GeneralizedContinuedFraction.exists_int_eq_of_part_denom
 -/
 
@@ -260,7 +260,7 @@ theorem fib_le_of_continuantsAux_b :
         suffices : (fib (n + 1) : K) ≤ gp.b * pconts.b
         solve_by_elim [add_le_add ppred_nth_fib_le_ppconts_B]
         -- finally use the fact that 1 ≤ gp.b to solve the goal
-        suffices 1 * (fib (n + 1) : K) ≤ gp.b * pconts.b by rwa [one_mul] at this 
+        suffices 1 * (fib (n + 1) : K) ≤ gp.b * pconts.b by rwa [one_mul] at this
         have one_le_gp_b : (1 : K) ≤ gp.b :=
           of_one_le_nth_part_denom (part_denom_eq_s_b s_ppred_nth_eq)
         have : (0 : K) ≤ fib (n + 1) := by exact_mod_cast (fib (n + 1)).zero_le
@@ -349,10 +349,9 @@ theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) :=
   by
   let g := of v
   cases' Decidable.em <| g.partial_denominators.terminated_at n with terminated not_terminated
-  · have : g.partial_denominators.nth n = none := by rwa [Stream'.Seq.TerminatedAt] at terminated 
+  · have : g.partial_denominators.nth n = none := by rwa [Stream'.Seq.TerminatedAt] at terminated
     have : g.terminated_at n :=
-      terminated_at_iff_part_denom_none.elim_right
-        (by rwa [Stream'.Seq.TerminatedAt] at terminated )
+      terminated_at_iff_part_denom_none.elim_right (by rwa [Stream'.Seq.TerminatedAt] at terminated)
     have : g.denominators (n + 1) = g.denominators n :=
       denominators_stable_of_terminated n.le_succ this
     rw [this]
@@ -524,7 +523,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K}
       have : 0 < ifp.fr⁻¹ := by
         suffices 0 < ifp.fr by rwa [inv_pos]
         have : 0 ≤ ifp.fr := int_fract_pair.nth_stream_fr_nonneg stream_nth_eq
-        change ifp.fr ≠ 0 at ifp_fr_ne_zero 
+        change ifp.fr ≠ 0 at ifp_fr_ne_zero
         exact lt_of_le_of_ne this ifp_fr_ne_zero.symm
       have : 0 < ifp.fr⁻¹ * B := mul_pos this zero_lt_B
       have : 0 < pB + ifp.fr⁻¹ * B := add_pos_of_nonneg_of_pos zero_le_pB this
@@ -578,8 +577,8 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
       by
       -- apply `sub_convergens_eq` and simplify the result
       have tmp := sub_convergents_eq stream_nth_eq
-      delta at tmp 
-      simp only [stream_nth_fr_ne_zero, conts_eq.symm, pred_conts_eq.symm] at tmp 
+      delta at tmp
+      simp only [stream_nth_fr_ne_zero, conts_eq.symm, pred_conts_eq.symm] at tmp
       rw [tmp]
       simp only [denom']
       ring_nf
@@ -589,7 +588,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     by
     have : (fib (n + 2) : K) ≤ nextConts.b :=
       fib_le_of_continuants_aux_b (Or.inr not_terminated_at_n)
-    rwa [nextConts_b_eq] at this 
+    rwa [nextConts_b_eq] at this
   have conts_b_ineq : (fib (n + 1) : K) ≤ conts.b :=
     haveI : ¬g.terminated_at (n - 1) := mt (terminated_stable n.pred_le) not_terminated_at_n
     fib_le_of_continuants_aux_b <| Or.inr this
@@ -624,7 +623,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
       rwa [abs_of_pos this]
     rwa [this]
   suffices : 0 < denom ∧ denom ≤ denom';
-  exact div_le_div_of_le_left zero_le_one this.left this.right
+  exact div_le_div_of_nonneg_left zero_le_one this.left this.right
   constructor
   · have : 0 < pred_conts.b + gp.b * conts.b :=
       lt_of_lt_of_le

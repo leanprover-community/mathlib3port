@@ -429,7 +429,7 @@ variable [PseudoEMetricSpace α] (C : ℝ≥0∞) (hC : C ≠ ⊤) {f : ℕ → 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then `f` is a Cauchy sequence.-/
 theorem cauchySeq_of_edist_le_geometric_two : CauchySeq f :=
   by
-  simp only [div_eq_mul_inv, ENNReal.inv_pow] at hu 
+  simp only [div_eq_mul_inv, ENNReal.inv_pow] at hu
   refine' cauchySeq_of_edist_le_geometric 2⁻¹ C _ hC hu
   simp [ENNReal.one_lt_two]
 #align cauchy_seq_of_edist_le_geometric_two cauchySeq_of_edist_le_geometric_two
@@ -686,7 +686,7 @@ theorem tendsto_factorial_div_pow_self_atTop : Tendsto (fun n => n ! / n ^ n : �
       refine'
             mul_le_of_le_one_left (inv_nonneg.mpr <| by exact_mod_cast hn.le) (prod_le_one _ _) <;>
           intro x hx <;>
-        rw [Finset.mem_range] at hx 
+        rw [Finset.mem_range] at hx
       · refine' mul_nonneg _ (inv_nonneg.mpr _) <;> norm_cast <;> linarith
       · refine' (div_le_one <| by exact_mod_cast hn).mpr _; norm_cast; linarith)
 #align tendsto_factorial_div_pow_self_at_top tendsto_factorial_div_pow_self_atTop
@@ -714,7 +714,7 @@ theorem tendsto_nat_floor_mul_div_atTop {a : R} (ha : 0 ≤ a) :
   by
   have A : tendsto (fun x : R => a - x⁻¹) at_top (𝓝 (a - 0)) :=
     tendsto_const_nhds.sub tendsto_inv_atTop_zero
-  rw [sub_zero] at A 
+  rw [sub_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' A tendsto_const_nhds
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     simp only [le_div_iff (zero_lt_one.trans_le hx), sub_mul,
@@ -739,7 +739,7 @@ theorem tendsto_nat_ceil_mul_div_atTop {a : R} (ha : 0 ≤ a) :
   by
   have A : tendsto (fun x : R => a + x⁻¹) at_top (𝓝 (a + 0)) :=
     tendsto_const_nhds.add tendsto_inv_atTop_zero
-  rw [add_zero] at A 
+  rw [add_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds A
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     rw [le_div_iff (zero_lt_one.trans_le hx)]

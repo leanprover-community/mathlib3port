@@ -105,8 +105,8 @@ theorem nhds_basis_Ico_inv_pNat (a : ℝₗ) :
     (nhds_basis_Ico a).to_hasBasis (fun b hb => _) fun n hn =>
       ⟨_, lt_add_of_pos_right _ (inv_pos.2 <| Nat.cast_pos.2 n.Pos), subset.rfl⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hb) with ⟨k, hk⟩
-  rw [one_div] at hk 
-  rw [← Nat.cast_add_one] at hk 
+  rw [one_div] at hk
+  rw [← Nat.cast_add_one] at hk
   exact ⟨k.succ_pnat, trivial, Ico_subset_Ico_right (le_sub_iff_add_le'.1 hk.le)⟩
 #align counterexample.sorgenfrey_line.nhds_basis_Ico_inv_pnat Counterexample.SorgenfreyLine.nhds_basis_Ico_inv_pNat
 

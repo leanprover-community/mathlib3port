@@ -193,7 +193,7 @@ theorem BinaryCofan.isVanKampen_iff (c : BinaryCofan X Y) :
     let X' := F'.obj ⟨walking_pair.left⟩; let Y' := F'.obj ⟨walking_pair.right⟩
     have : F' = pair X' Y' := by apply functor.hext; · rintro ⟨⟨⟩⟩ <;> rfl;
       · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simpa
-    clear_value X' Y'; subst this; change binary_cofan X' Y' at c' 
+    clear_value X' Y'; subst this; change binary_cofan X' Y' at c'
     rw [H c' _ _ _ (nat_trans.congr_app hα ⟨walking_pair.left⟩)
         (nat_trans.congr_app hα ⟨walking_pair.right⟩)]
     constructor; · rintro H ⟨⟨⟩⟩; exacts [H.1, H.2]; · intro H; exact ⟨H _, H _⟩
@@ -365,9 +365,9 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]; exact exists_unique_eq'
-        · apply_fun f at h 
+        · apply_fun f at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαY val : _).symm
-      delta ExistsUnique at this 
+      delta ExistsUnique at this
       choose l hl hl'
       exact
         ⟨l, (funext hl).symm, types.is_terminal_punit.hom_ext _ _, fun l' h₁ h₂ =>
@@ -377,10 +377,10 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
       have : ∀ x, ∃! y, s.fst x = Sum.inr y := by
         intro x
         cases h : s.fst x
-        · apply_fun f at h 
+        · apply_fun f at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαX val : _).symm
         · simp_rw [sum.inr_injective.eq_iff]; exact exists_unique_eq'
-      delta ExistsUnique at this 
+      delta ExistsUnique at this
       choose l hl hl'
       exact
         ⟨l, (funext hl).symm, types.is_terminal_punit.hom_ext _ _, fun l' h₁ h₂ =>
@@ -486,11 +486,11 @@ instance : FinitaryExtensive TopCat.{u} :=
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]; exact exists_unique_eq'
-        · apply_fun f at h 
+        · apply_fun f at h
           cases
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
               (concrete_category.congr_hom hαY val : _).symm
-      delta ExistsUnique at this 
+      delta ExistsUnique at this
       choose l hl hl'
       refine'
         ⟨⟨l, _⟩, ContinuousMap.ext fun a => (hl a).symm, Top.is_terminal_punit.hom_ext _ _,
@@ -503,12 +503,12 @@ instance : FinitaryExtensive TopCat.{u} :=
       have : ∀ x, ∃! y, s.fst x = Sum.inr y := by
         intro x
         cases h : s.fst x
-        · apply_fun f at h 
+        · apply_fun f at h
           cases
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
               (concrete_category.congr_hom hαX val : _).symm
         · simp_rw [sum.inr_injective.eq_iff]; exact exists_unique_eq'
-      delta ExistsUnique at this 
+      delta ExistsUnique at this
       choose l hl hl'
       refine'
         ⟨⟨l, _⟩, ContinuousMap.ext fun a => (hl a).symm, Top.is_terminal_punit.hom_ext _ _,

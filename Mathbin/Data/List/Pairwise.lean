@@ -157,7 +157,7 @@ theorem Pairwise.forall_of_forall_of_flip (h₁ : ∀ x ∈ l, R x x) (h₂ : l.
   by
   induction' l with a l ih
   · exact forall_mem_nil _
-  rw [pairwise_cons] at h₂ h₃ 
+  rw [pairwise_cons] at h₂ h₃
   rintro x (rfl | hx) y (rfl | hy)
   · exact h₁ _ (l.mem_cons_self _)
   · exact h₂.1 _ hy
@@ -478,7 +478,7 @@ theorem pwFilter_map (f : β → α) :
       have h' : ¬∀ b : β, b ∈ pwFilter (fun x y : β => R (f x) (f y)) xs → R (f x) (f b) :=
         fun hh =>
         h fun a ha => by
-          rw [pw_filter_map, mem_map] at ha ; rcases ha with ⟨b, hb₀, hb₁⟩
+          rw [pw_filter_map, mem_map] at ha; rcases ha with ⟨b, hb₀, hb₁⟩
           subst a; exact hh _ hb₀
       rw [map, pw_filter_cons_of_neg h, pw_filter_cons_of_neg h', pw_filter_map]
 #align list.pw_filter_map List.pwFilter_map
@@ -542,7 +542,7 @@ theorem forall_mem_pwFilter (neg_trans : ∀ {x y z}, R x z → R x y ∨ R y z)
   ⟨by
     induction' l with x l IH; · exact fun _ _ => False.elim
     simp only [forall_mem_cons]
-    by_cases ∀ y ∈ pw_filter R l, R x y <;> dsimp at h 
+    by_cases ∀ y ∈ pw_filter R l, R x y <;> dsimp at h
     · simp only [pw_filter_cons_of_pos h, forall_mem_cons, and_imp]
       exact fun r H => ⟨r, IH H⟩
     · rw [pw_filter_cons_of_neg h]

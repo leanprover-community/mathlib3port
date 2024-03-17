@@ -86,7 +86,7 @@ namespace IsLocalization
 theorem AtPrime.Nontrivial [IsLocalization.AtPrime S I] : Nontrivial S :=
   nontrivial_of_ne (0 : S) 1 fun hze =>
     by
-    rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze 
+    rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze
     obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze
     have htz : (t : R) = 0 := by simpa using ht.symm
     exact t.2 (htz.symm ▸ I.zero_mem : ↑t ∈ I)
@@ -108,10 +108,10 @@ theorem AtPrime.localRing [IsLocalization.AtPrime S I] : LocalRing S :=
       rcases mk'_surjective I.prime_compl x with ⟨rx, sx, hrx⟩
       rcases mk'_surjective I.prime_compl y with ⟨ry, sy, hry⟩
       rcases mk'_surjective I.prime_compl z with ⟨rz, sz, hrz⟩
-      rw [← hrx, ← hry, ← hrz, ← mk'_add, ← mk'_mul, ← mk'_self S I.prime_compl.one_mem] at hxyz 
-      rw [← hrx] at hx ; rw [← hry] at hy 
+      rw [← hrx, ← hry, ← hrz, ← mk'_add, ← mk'_mul, ← mk'_self S I.prime_compl.one_mem] at hxyz
+      rw [← hrx] at hx; rw [← hry] at hy
       obtain ⟨t, ht⟩ := IsLocalization.eq.1 hxyz
-      simp only [mul_one, one_mul, Submonoid.coe_mul, Subtype.coe_mk] at ht 
+      simp only [mul_one, one_mul, Submonoid.coe_mul, Subtype.coe_mk] at ht
       suffices : ↑t * (↑sx * ↑sy * ↑sz) ∈ I;
       exact
         not_or_of_not (mt hp.mem_or_mem <| not_or_of_not sx.2 sy.2) sz.2
@@ -280,7 +280,7 @@ instance isLocalRingHom_localRingHom (J : Ideal P) [hJ : J.IsPrime] (f : R →+*
   IsLocalRingHom.mk fun x hx =>
     by
     rcases IsLocalization.mk'_surjective I.prime_compl x with ⟨r, s, rfl⟩
-    rw [local_ring_hom_mk'] at hx 
+    rw [local_ring_hom_mk'] at hx
     rw [at_prime.is_unit_mk'_iff] at hx ⊢
     exact fun hr => hx ((set_like.ext_iff.mp hIJ r).mp hr)
 #align localization.is_local_ring_hom_local_ring_hom Localization.isLocalRingHom_localRingHom

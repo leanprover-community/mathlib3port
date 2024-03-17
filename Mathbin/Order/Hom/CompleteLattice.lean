@@ -223,7 +223,7 @@ instance (priority := 100) OrderIsoClass.tosSupHomClass [CompleteLattice α] [Co
   { show OrderHomClass F α β from inferInstance with
     map_sSup := fun f s =>
       eq_of_forall_ge_iff fun c => by
-        simp only [← le_map_inv_iff, sSup_le_iff, Set.ball_image_iff] }
+        simp only [← le_map_inv_iff, sSup_le_iff, Set.forall_mem_image] }
 #align order_iso_class.to_Sup_hom_class OrderIsoClass.tosSupHomClass
 -/
 
@@ -234,7 +234,7 @@ instance (priority := 100) OrderIsoClass.tosInfHomClass [CompleteLattice α] [Co
   { show OrderHomClass F α β from inferInstance with
     map_sInf := fun f s =>
       eq_of_forall_le_iff fun c => by
-        simp only [← map_inv_le_iff, le_sInf_iff, Set.ball_image_iff] }
+        simp only [← map_inv_le_iff, le_sInf_iff, Set.forall_mem_image] }
 #align order_iso_class.to_Inf_hom_class OrderIsoClass.tosInfHomClass
 -/
 

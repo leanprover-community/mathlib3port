@@ -65,7 +65,7 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
       intro e he
       apply h
       simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter,
-        Finset.mem_inter] at he 
+        Finset.mem_inter] at he
       rw [← he.1, ← he.2]⟩
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
 -/
@@ -113,7 +113,7 @@ def toTop : SimplexCategory ⥤ TopCat
       intro e he
       apply h
       simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter,
-        Finset.mem_inter] at he 
+        Finset.mem_inter] at he
       rw [← he.1, ← he.2]
 #align simplex_category.to_Top SimplexCategory.toTop
 -/

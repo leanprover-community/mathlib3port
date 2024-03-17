@@ -62,7 +62,7 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             { f := P.p.1
               comm := by
                 have h := P.idem
-                simp only [hom_ext, comp_f] at h 
+                simp only [hom_ext, comp_f] at h
                 erw [← assoc, h, comp_p] }
           comm := by
             have h := P.idem
@@ -75,7 +75,7 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             { f := P.p.1
               comm := by
                 have h := P.idem
-                simp only [hom_ext, comp_f] at h 
+                simp only [hom_ext, comp_f] at h
                 erw [h, p_comp] }
           comm := by
             have h := P.idem

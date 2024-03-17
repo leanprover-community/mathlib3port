@@ -92,7 +92,7 @@ theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {
   set J := Submodule.comap (Algebra.linearMap R A) (I * Submodule.span R {v})
   have hJ : IsLocalization.coeSubmodule A J = I * Submodule.span R {v} :=
     by
-    rw [Subtype.ext_iff, FractionalIdeal.coe_mul, FractionalIdeal.coe_one] at hinv 
+    rw [Subtype.ext_iff, FractionalIdeal.coe_mul, FractionalIdeal.coe_one] at hinv
     apply Submodule.map_comap_eq_self
     rw [← Submodule.one_eq_range, ← hinv]
     exact Submodule.mul_le_mul_right ((Submodule.span_singleton_le_iff_mem _ _).2 hv)
@@ -123,7 +123,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
     Submodule.IsPrincipal (I : Submodule R A) :=
   by
   have hinv' := hinv
-  rw [Subtype.ext_iff, FractionalIdeal.coe_mul] at hinv 
+  rw [Subtype.ext_iff, FractionalIdeal.coe_mul] at hinv
   let s := hf.to_finset
   haveI := Classical.decEq (Ideal R)
   have coprime : ∀ M ∈ s, ∀ M' ∈ s.erase M, M ⊔ M' = ⊤ :=
@@ -161,24 +161,24 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
     obtain ⟨c, hc⟩ := this _ (ha M hM) v hv
     refine' IsLocalization.coeSubmodule_mono _ hJM ⟨c, _, hc⟩
     have := Submodule.mul_mem_mul (ha M hM) (Submodule.mem_span_singleton_self v)
-    rwa [← hc] at this 
-  simp_rw [Finset.mul_sum, mul_smul_comm] at hmem 
-  rw [← s.add_sum_erase _ hM, Submodule.add_mem_iff_left] at hmem 
+    rwa [← hc] at this
+  simp_rw [Finset.mul_sum, mul_smul_comm] at hmem
+  rw [← s.add_sum_erase _ hM, Submodule.add_mem_iff_left] at hmem
   · refine' hm M hM _
     obtain ⟨c, hc : algebraMap R A c = a M * b M⟩ := this _ (ha M hM) _ (hb M hM)
     rw [← hc] at hmem ⊢
-    rw [Algebra.smul_def, ← _root_.map_mul] at hmem 
+    rw [Algebra.smul_def, ← _root_.map_mul] at hmem
     obtain ⟨d, hdM, he⟩ := hmem
-    rw [IsLocalization.injective _ hS he] at hdM 
+    rw [IsLocalization.injective _ hS he] at hdM
     exact
       Submodule.mem_map_of_mem
         (((hf.mem_to_finset.1 hM).IsPrime.mem_or_mem hdM).resolve_left <| hum M hM)
   · refine' Submodule.sum_mem _ fun M' hM' => _
-    rw [Finset.mem_erase] at hM' 
+    rw [Finset.mem_erase] at hM'
     obtain ⟨c, hc⟩ := this _ (ha M hM) _ (hb M' hM'.2)
     rw [← hc, Algebra.smul_def, ← _root_.map_mul]
     specialize hu M' hM'.2
-    simp_rw [Ideal.mem_iInf, Finset.mem_erase] at hu 
+    simp_rw [Ideal.mem_iInf, Finset.mem_erase] at hu
     exact Submodule.mem_map_of_mem (M.mul_mem_right _ <| hu M ⟨hM'.1.symm, hM⟩)
 #align fractional_ideal.is_principal.of_finite_maximals_of_inv FractionalIdeal.isPrincipal.of_finite_maximals_of_inv
 -/

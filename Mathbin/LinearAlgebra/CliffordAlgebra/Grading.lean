@@ -127,7 +127,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine' Submodule.iSup_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
   · obtain ⟨i, rfl⟩ := i
-    dsimp only [Subtype.coe_mk] at hx 
+    dsimp only [Subtype.coe_mk] at hx
     refine'
       Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx

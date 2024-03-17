@@ -81,10 +81,10 @@ theorem hasSum_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
     by
     refine'
       (hasSum_iff_hasSum_of_ne_zero_bij (e ∘ coe) (fun c₁ c₂ hc => he hc) (fun c hc => _) _).2 hf
-    · rw [mem_support] at hc 
-      cases' eq : partial_inv e c with i <;> rw [Eq] at hc 
+    · rw [mem_support] at hc
+      cases' eq : partial_inv e c with i <;> rw [Eq] at hc
       · contradiction
-      · rw [partial_inv_of_injective he] at eq 
+      · rw [partial_inv_of_injective he] at eq
         exact ⟨⟨i, hc⟩, Eq⟩
     · rintro c
       simp [partial_inv_left he, Option.casesOn']

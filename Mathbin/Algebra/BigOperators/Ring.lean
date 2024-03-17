@@ -123,7 +123,7 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
       rintro _ ⟨p₂, hp, eq₂⟩ _ ⟨p₃, hp₃, eq₃⟩ eq
       have : pi.cons s a x p₂ a (mem_insert_self _ _) = pi.cons s a y p₃ a (mem_insert_self _ _) :=
         by rw [eq₂, eq₃, Eq]
-      rw [pi.cons_same, pi.cons_same] at this 
+      rw [pi.cons_same, pi.cons_same] at this
       exact h this
     rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_bUnion h₁]
     refine' sum_congr rfl fun b _ => _
@@ -173,7 +173,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
                   (prod_bij (fun (a : α) (ha : a ∈ s \ t) => ⟨a, by simp_all⟩) _ _ _ fun b hb =>
                     ⟨b, by
                       cases b <;>
-                        · simp only [true_and_iff, mem_filter, mem_attach, Subtype.coe_mk] at hb 
+                        · simp only [true_and_iff, mem_filter, mem_attach, Subtype.coe_mk] at hb
                           simpa only [true_and_iff, exists_prop, and_true_iff, mem_sdiff,
                             eq_self_iff_true, Subtype.coe_mk, b_property]⟩) <;>
               intros <;>
@@ -181,7 +181,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
           simp_all
       · intro a₁ a₂ h₁ h₂ H
         ext x
-        simp only [Function.funext_iff, subset_iff, mem_powerset, eq_iff_iff] at h₁ h₂ H 
+        simp only [Function.funext_iff, subset_iff, mem_powerset, eq_iff_iff] at h₁ h₂ H
         exact ⟨fun hx => (H x (h₁ hx)).1 hx, fun hx => (H x (h₂ hx)).2 hx⟩
       · intro f hf
         exact ⟨s.filter fun a : α => ∃ h : a ∈ s, f a h, by simp, by funext <;> intros <;> simp [*]⟩
@@ -274,7 +274,7 @@ theorem prod_range_cast_nat_sub (n k : ℕ) :
   rw [prod_nat_cast]
   cases' le_or_lt k n with hkn hnk
   · exact prod_congr rfl fun i hi => (Nat.cast_sub <| (mem_range.1 hi).le.trans hkn).symm
-  · rw [← mem_range] at hnk 
+  · rw [← mem_range] at hnk
     rw [prod_eq_zero hnk, prod_eq_zero hnk] <;> simp
 #align finset.prod_range_cast_nat_sub Finset.prod_range_cast_nat_sub
 -/

@@ -60,7 +60,7 @@ theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n
     · intros; apply sub_le_self; apply pow_nonneg; norm_num
   suffices 2 ^ (n * n) < (n * (n - 1) / 2)!
     by
-    rw [prod_const, card_range, ← pow_mul]; rw [← Int.ofNat_lt] at this 
+    rw [prod_const, card_range, ← pow_mul]; rw [← Int.ofNat_lt] at this
     clear h; convert this.trans _; norm_cast; rwa [Int.ofNat_lt, factorial_lt]
     refine' Nat.div_pos _ (by norm_num)
     refine' le_trans _ (mul_le_mul hn (pred_le_pred hn) (zero_le _) (zero_le _))
@@ -91,19 +91,19 @@ theorem imo2019_q4 {k n : ℕ} (hk : k > 0) (hn : n > 0) :
   constructor;
   swap
   ·
-    rintro (h | h) <;> simp [Prod.ext_iff] at h  <;> rcases h with ⟨rfl, rfl⟩ <;>
+    rintro (h | h) <;> simp [Prod.ext_iff] at h <;> rcases h with ⟨rfl, rfl⟩ <;>
       norm_num [prod_range_succ, succ_mul]
   intro h
   -- We know that n < 6.
   have := Imo2019Q4.upper_bound hk h
   interval_cases
   -- n = 1
-  · left; congr; norm_num at h ; rw [factorial_eq_one] at h ; apply antisymm h
+  · left; congr; norm_num at h; rw [factorial_eq_one] at h; apply antisymm h
     apply succ_le_of_lt hk
   -- n = 2
-  · right; congr; norm_num [prod_range_succ] at h ; norm_cast at h ; rw [← factorial_inj]
+  · right; congr; norm_num [prod_range_succ] at h; norm_cast at h; rw [← factorial_inj]
     exact h; rw [h]; norm_num
-  all_goals exfalso; norm_num [prod_range_succ] at h ; norm_cast at h 
+  all_goals exfalso; norm_num [prod_range_succ] at h; norm_cast at h
   -- n = 3
   · refine' monotone_factorial.ne_of_lt_of_lt_nat 5 _ _ _ h <;> norm_num
   -- n = 4

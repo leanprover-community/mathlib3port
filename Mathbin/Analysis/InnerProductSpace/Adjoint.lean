@@ -368,7 +368,7 @@ theorem ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric {A : E →L[𝕜] E} :
 
 #print LinearMap.IsSymmetric.isSelfAdjoint /-
 theorem LinearMap.IsSymmetric.isSelfAdjoint {A : E →L[𝕜] E} (hA : (A : E →ₗ[𝕜] E).IsSymmetric) :
-    IsSelfAdjoint A := by rwa [← ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric] at hA 
+    IsSelfAdjoint A := by rwa [← ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric] at hA
 #align linear_map.is_symmetric.is_self_adjoint LinearMap.IsSymmetric.isSelfAdjoint
 -/
 

@@ -777,7 +777,7 @@ theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
   · rw [infi_eq_generate, mem_generate_iff]
     rintro ⟨t, tsub, tfin, tinter⟩
     rcases eq_finite_Union_of_finite_subset_Union tfin tsub with ⟨I, Ifin, σ, σfin, σsub, rfl⟩
-    rw [sInter_Union] at tinter 
+    rw [sInter_Union] at tinter
     set V := fun i => U ∪ ⋂₀ σ i with hV
     have V_in : ∀ i, V i ∈ s i := by
       rintro i
@@ -969,7 +969,7 @@ theorem Pairwise.exists_mem_filter_of_disjoint {ι : Type _} [Finite ι] {l : ι
     (hd : Pairwise (Disjoint on l)) :
     ∃ s : ι → Set α, (∀ i, s i ∈ l i) ∧ Pairwise (Disjoint on s) :=
   by
-  simp only [Pairwise, Function.onFun, Filter.disjoint_iff, Subtype.exists'] at hd 
+  simp only [Pairwise, Function.onFun, Filter.disjoint_iff, Subtype.exists'] at hd
   choose! s t hst using hd
   refine' ⟨fun i => ⋂ j, @s i j ∩ @t j i, fun i => _, fun i j hij => _⟩
   exacts [Inter_mem.2 fun j => inter_mem (@s i j).2 (@t j i).2,
@@ -1168,8 +1168,8 @@ instance : Coframe (Filter α) :=
       by
       rw [sInf_eq_iInf', iInf_subtype']
       rintro t ⟨h₁, h₂⟩
-      rw [infi_sets_eq_finite'] at h₂ 
-      simp only [mem_Union, (Finset.inf_eq_iInf _ _).symm] at h₂ 
+      rw [infi_sets_eq_finite'] at h₂
+      simp only [mem_Union, (Finset.inf_eq_iInf _ _).symm] at h₂
       obtain ⟨u, hu⟩ := h₂
       suffices (⨅ i, f ⊔ ↑i) ≤ f ⊔ u.inf fun i => ↑i.down by exact this ⟨h₁, hu⟩
       refine' Finset.induction_on u (le_sup_of_le_right le_top) _
@@ -1255,14 +1255,14 @@ theorem iInf_neBot_iff_of_directed {f : ι → Filter α} [Nonempty α] (hd : Di
 theorem iInf_sets_induct {f : ι → Filter α} {s : Set α} (hs : s ∈ iInf f) {p : Set α → Prop}
     (uni : p univ) (ins : ∀ {i s₁ s₂}, s₁ ∈ f i → p s₂ → p (s₁ ∩ s₂)) : p s :=
   by
-  rw [mem_infi_finite'] at hs 
-  simp only [← Finset.inf_eq_iInf] at hs 
+  rw [mem_infi_finite'] at hs
+  simp only [← Finset.inf_eq_iInf] at hs
   rcases hs with ⟨is, his⟩
   revert s
   refine' Finset.induction_on is _ _
   · intro s hs; rwa [mem_top.1 hs]
   · rintro ⟨i⟩ js his ih s hs
-    rw [Finset.inf_insert, mem_inf_iff] at hs 
+    rw [Finset.inf_insert, mem_inf_iff] at hs
     rcases hs with ⟨s₁, hs₁, s₂, hs₂, rfl⟩
     exact ins hs₁ (ih hs₂)
 #align filter.infi_sets_induct Filter.iInf_sets_induct
@@ -1345,7 +1345,7 @@ theorem inf_principal_eq_bot {f : Filter α} {s : Set α} : f ⊓ 𝓟 s = ⊥ �
 
 #print Filter.mem_of_eq_bot /-
 theorem mem_of_eq_bot {f : Filter α} {s : Set α} (h : f ⊓ 𝓟 (sᶜ) = ⊥) : s ∈ f := by
-  rwa [inf_principal_eq_bot, compl_compl] at h 
+  rwa [inf_principal_eq_bot, compl_compl] at h
 #align filter.mem_of_eq_bot Filter.mem_of_eq_bot
 -/
 
@@ -2184,7 +2184,7 @@ notation:50 f " ≤ᶠ[" l:50 "] " g:50 => EventuallyLE l f g
 #print Filter.EventuallyLE.congr /-
 theorem EventuallyLE.congr {f f' g g' : α → β} (H : f ≤ᶠ[l] g) (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') :
     f' ≤ᶠ[l] g' :=
-  H.mp <| hg.mp <| hf.mono fun x hf hg H => by rwa [hf, hg] at H 
+  H.mp <| hg.mp <| hf.mono fun x hf hg H => by rwa [hf, hg] at H
 #align filter.eventually_le.congr Filter.EventuallyLE.congr
 -/
 

@@ -69,7 +69,7 @@ theorem cauchySeq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → �
   have : ∀ i ∈ t, ‖f i‖ ≤ g i := by
     intro i hi
     simp only [disjoint_left, mem_union, not_or, h.mem_to_finset, Set.mem_compl_iff,
-      Classical.not_not] at ht 
+      Classical.not_not] at ht
     exact (ht hi).2
   calc
     ‖∑ i in t, f i‖ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this

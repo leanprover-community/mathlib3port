@@ -57,7 +57,7 @@ theorem hall_cond_of_erase {x : ι} (a : α)
   by
   haveI := Classical.decEq ι
   specialize ha (s'.image coe)
-  rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha 
+  rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
   by_cases he : s'.nonempty
   · have ha' : s'.card < (s'.bUnion fun x => t x).card :=
       by
@@ -71,7 +71,7 @@ theorem hall_cond_of_erase {x : ι} (a : α)
       exact Nat.le_pred_of_lt ha'
     · rw [erase_eq_of_not_mem hb]
       exact Nat.le_of_lt ha'
-  · rw [nonempty_iff_ne_empty, Classical.not_not] at he 
+  · rw [nonempty_iff_ne_empty, Classical.not_not] at he
     subst s'
     simp
 #align hall_marriage_theorem.hall_cond_of_erase HallMarriageTheorem.hall_cond_of_erase
@@ -123,7 +123,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     split_ifs with hz
     · rwa [hz]
     · specialize hfr ⟨z, hz⟩
-      rw [mem_erase] at hfr 
+      rw [mem_erase] at hfr
       exact hfr.2
 #align hall_marriage_theorem.hall_hard_inductive_step_A HallMarriageTheorem.hall_hard_inductive_step_A
 -/
@@ -189,7 +189,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
   haveI := Classical.decEq ι
   -- Restrict to `s`
   let t' : s → Finset α := fun x' => t x'
-  rw [Nat.add_one] at hn 
+  rw [Nat.add_one] at hn
   have card_ι'_le : Fintype.card s ≤ n :=
     by
     apply Nat.le_of_lt_succ
@@ -216,7 +216,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     by
     intro x'' hx''
     have h := hsf'' ⟨x'', hx''⟩
-    rw [mem_sdiff] at h 
+    rw [mem_sdiff] at h
     exact h.2
   have im_disj : ∀ (x' x'' : ι) (hx' : x' ∈ s) (hx'' : ¬x'' ∈ s), f' ⟨x', hx'⟩ ≠ f'' ⟨x'', hx''⟩ :=
     by
@@ -247,7 +247,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).ca
   cases nonempty_fintype ι
   induction' hn : Fintype.card ι using Nat.strong_induction_on with n ih generalizing ι
   rcases n with (_ | _)
-  · rw [Fintype.card_eq_zero_iff] at hn 
+  · rw [Fintype.card_eq_zero_iff] at hn
     exact ⟨isEmptyElim, isEmptyElim, isEmptyElim⟩
   · have ih' :
       ∀ (ι' : Type u) [Fintype ι'] (t' : ι' → Finset α),
@@ -259,7 +259,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).ca
       exact ih _ (Nat.lt_succ_of_le hι') ht' _ rfl
     by_cases h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.biUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
-    · push_neg at h 
+    · push_neg at h
       rcases h with ⟨s, sne, snu, sle⟩
       exact hall_hard_inductive_step_B hn ht ih' s sne snu (Nat.le_antisymm (ht _) sle)
 #align hall_marriage_theorem.hall_hard_inductive HallMarriageTheorem.hall_hard_inductive

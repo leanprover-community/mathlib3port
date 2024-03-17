@@ -95,8 +95,8 @@ theorem der_of_der_append_replicate_u_even {z : Miustr} {m : ℕ}
   · revert h
     simp only [List.replicate, MulZeroClass.zero_mul, append_nil, imp_self]
   · apply hk
-    simp only [succ_mul, replicate_add] at h 
-    change replicate 2 U with [U, U] at h 
+    simp only [succ_mul, replicate_add] at h
+    change replicate 2 U with [U, U] at h
     rw [← append_nil (z ++ replicate (k * 2) U)]
     apply derivable.r4
     simp only [append_nil, append_assoc, h]
@@ -230,9 +230,9 @@ theorem der_replicate_i_of_mod3 (c : ℕ) (h : c % 3 = 1 ∨ c % 3 = 2) :
     rw [Nat.mul_div_cancel']
     · exact add_tsub_cancel_of_le hm.1
     · exact (modeq_iff_dvd' hm.1).mp hm.2.symm
-  rw [append_assoc, ← replicate_add _ _] at hw₃ 
+  rw [append_assoc, ← replicate_add _ _] at hw₃
   cases' add_mod2 ((2 ^ m - c) / 3) with t ht
-  rw [ht] at hw₃ 
+  rw [ht] at hw₃
   exact der_of_der_append_replicate_U_even hw₃
 #align miu.der_replicate_I_of_mod3 Miu.der_replicate_i_of_mod3
 
@@ -262,9 +262,9 @@ example (c : ℕ) (h : c % 3 = 1 ∨ c % 3 = 2) : Derivable (M :: replicate c I)
     rw [Nat.mul_div_cancel']
     · exact add_tsub_cancel_of_le hm.1
     · exact (modeq_iff_dvd' hm.1).mp hm.2.symm
-  rw [append_assoc, ← replicate_add _ _] at hw₃ 
+  rw [append_assoc, ← replicate_add _ _] at hw₃
   cases' add_mod2 ((2 ^ m - c) / 3) with t ht
-  rw [ht] at hw₃ 
+  rw [ht] at hw₃
   exact der_of_der_append_replicate_U_even hw₃
 
 /-!
@@ -294,8 +294,8 @@ theorem count_i_eq_length_of_count_u_zero_and_neg_mem {ys : Miustr} (hu : count 
       -- case `x = I`
       apply hxs
       · simpa only [count]
-      · simp only [mem_cons_iff, false_or_iff] at hm ; exact hm
-    · exfalso; simp only [count, countp_cons_of_pos] at hu 
+      · simp only [mem_cons_iff, false_or_iff] at hm; exact hm
+    · exfalso; simp only [count, countp_cons_of_pos] at hu
       -- case `x = U` gives a contradiction.
       exact succ_ne_zero _ hu
 #align miu.count_I_eq_length_of_count_U_zero_and_neg_mem Miu.count_i_eq_length_of_count_u_zero_and_neg_mem
@@ -306,10 +306,10 @@ theorem base_case_suf (en : Miustr) (h : Decstr en) (hu : count U en = 0) : Deri
   by
   rcases h with ⟨⟨mhead, nmtail⟩, hi⟩
   have : en ≠ nil := by
-    intro k; simp only [k, count, countp, if_false, zero_mod, zero_ne_one, false_or_iff] at hi 
+    intro k; simp only [k, count, countp, if_false, zero_mod, zero_ne_one, false_or_iff] at hi
     contradiction
   rcases exists_cons_of_ne_nil this with ⟨y, ys, rfl⟩
-  rw [head] at mhead 
+  rw [head] at mhead
   rw [mhead] at *
   rsuffices ⟨c, rfl, hc⟩ : ∃ c, replicate c I = ys ∧ (c % 3 = 1 ∨ c % 3 = 2)
   · exact der_replicate_I_of_mod3 c hc
@@ -329,12 +329,12 @@ relate to `count U`.
 theorem mem_of_count_u_eq_succ {xs : Miustr} {k : ℕ} (h : count U xs = succ k) : U ∈ xs :=
   by
   induction' xs with z zs hzs
-  · exfalso; rw [count] at h ; contradiction
+  · exfalso; rw [count] at h; contradiction
   · simp only [mem_cons_iff]
     cases z
     repeat'-- cases `z = M` and `z=I`
       right;
-      apply hzs; simp only [count, countp, if_false] at h ; rw [← h]; rfl
+      apply hzs; simp only [count, countp, if_false] at h; rw [← h]; rfl
     · left; rfl
 #align miu.mem_of_count_U_eq_succ Miu.mem_of_count_u_eq_succ
 
@@ -353,9 +353,9 @@ theorem ind_hyp_suf (k : ℕ) (ys : Miustr) (hu : count U ys = succ k) (hdec : D
   by
   rcases hdec with ⟨⟨mhead, nmtail⟩, hic⟩
   have : ys ≠ nil := by intro k;
-    simp only [k, count, countp, zero_mod, false_or_iff, zero_ne_one] at hic ; contradiction
+    simp only [k, count, countp, zero_mod, false_or_iff, zero_ne_one] at hic; contradiction
   rcases exists_cons_of_ne_nil this with ⟨z, zs, rfl⟩
-  rw [head] at mhead 
+  rw [head] at mhead
   rw [mhead] at *
   simp only [count, countp, cons_append, if_false, countp_append] at *
   rcases eq_append_cons_U_of_count_U_pos hu with ⟨as, bs, hab⟩

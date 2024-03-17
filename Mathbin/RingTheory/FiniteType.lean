@@ -475,7 +475,7 @@ theorem of'_mem_span [Nontrivial R] {m : M} {S : Set M} :
   by
   refine' ⟨fun h => _, fun h => Submodule.subset_span <| Set.mem_image_of_mem (of R M) h⟩
   rw [of', ← Finsupp.supported_eq_span_single, Finsupp.mem_supported,
-    Finsupp.support_single_ne_zero _ (one_ne_zero' R)] at h 
+    Finsupp.support_single_ne_zero _ (one_ne_zero' R)] at h
   simpa using h
 #align add_monoid_algebra.of'_mem_span AddMonoidAlgebra.of'_mem_span
 -/
@@ -493,7 +493,7 @@ theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
   let S' := @Submonoid.closure M Multiplicative.mulOneClass S
   have h' : Submonoid.map (of R M) S' = Submonoid.closure ((fun x : M => (of R M) x) '' S) :=
     MonoidHom.map_mclosure _ _
-  rw [Set.image_congr' (show ∀ x, of' R M x = of R M x from fun x => of'_eq_of x), ← h'] at h 
+  rw [Set.image_congr' (show ∀ x, of' R M x = of R M x from fun x => of'_eq_of x), ← h'] at h
   simpa using of'_mem_span.1 h
 #align add_monoid_algebra.mem_closure_of_mem_span_closure AddMonoidAlgebra.mem_closure_of_mem_span_closure
 -/
@@ -558,7 +558,7 @@ theorem finiteType_iff_fg [CommRing R] [Nontrivial R] :
   refine' AddMonoid.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => _⟩
   have hm : of' R M m ∈ (adjoin R (of' R M '' ↑S)).toSubmodule := by
     simp only [hS, top_to_submodule, Submodule.mem_top]
-  rw [adjoin_eq_span] at hm 
+  rw [adjoin_eq_span] at hm
   exact mem_closure_of_mem_span_closure hm
 #align add_monoid_algebra.finite_type_iff_fg AddMonoidAlgebra.finiteType_iff_fg
 -/
@@ -664,7 +664,7 @@ theorem of_mem_span_of_iff [Nontrivial R] {m : M} {S : Set M} :
   by
   refine' ⟨fun h => _, fun h => Submodule.subset_span <| Set.mem_image_of_mem (of R M) h⟩
   rw [of, MonoidHom.coe_mk, ← Finsupp.supported_eq_span_single, Finsupp.mem_supported,
-    Finsupp.support_single_ne_zero _ (one_ne_zero' R)] at h 
+    Finsupp.support_single_ne_zero _ (one_ne_zero' R)] at h
   simpa using h
 #align monoid_algebra.of_mem_span_of_iff MonoidAlgebra.of_mem_span_of_iff
 -/
@@ -676,7 +676,7 @@ closure of some `S : set M` then `m ∈ closure S`. -/
 theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     (h : of R M m ∈ span R (Submonoid.closure (of R M '' S) : Set (MonoidAlgebra R M))) :
     m ∈ closure S := by
-  rw [← MonoidHom.map_mclosure] at h 
+  rw [← MonoidHom.map_mclosure] at h
   simpa using of_mem_span_of_iff.1 h
 #align monoid_algebra.mem_closure_of_mem_span_closure MonoidAlgebra.mem_closure_of_mem_span_closure
 -/
@@ -806,11 +806,11 @@ theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M]
       (finite_def.mp hfgpoly) this
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro m hm
-  rw [Ideal.mem_span_singleton'] at hFa 
+  rw [Ideal.mem_span_singleton'] at hFa
   obtain ⟨G, hG⟩ := hFa
   suffices (F - 1) • m = 0 by
     have Fmzero := hFb m (by simp)
-    rwa [← sub_add_cancel F 1, add_smul, one_smul, this, zero_add] at Fmzero 
+    rwa [← sub_add_cancel F 1, add_smul, one_smul, this, zero_add] at Fmzero
   rw [← hG, mul_smul, X_mul m, hm, smul_zero]
 #align module.finite.injective_of_surjective_endomorphism Module.Finite.injective_of_surjective_endomorphism
 -/

@@ -126,7 +126,7 @@ We'll show, for each `i` from 1 to 4, that if `en` follows by Rule `i` from `st`
 theorem goodm_of_rule1 (xs : Miustr) (h₁ : Derivable (xs ++ [I])) (h₂ : Goodm (xs ++ [I])) :
     Goodm (xs ++ [I, U]) := by
   cases' h₂ with mhead nmtail
-  have : xs ≠ nil := by intro h; rw [h] at *; rw [nil_append, head] at mhead ; contradiction
+  have : xs ≠ nil := by intro h; rw [h] at *; rw [nil_append, head] at mhead; contradiction
   constructor
   · rwa [head_append] at * <;> exact this
   · change [I, U] with [I] ++ [U]
@@ -141,7 +141,7 @@ theorem goodm_of_rule2 (xs : Miustr) (h₁ : Derivable (M :: xs)) (h₂ : Goodm 
   · rfl
   · cases' h₂ with mhead mtail
     contrapose! mtail
-    rw [cons_append] at mtail 
+    rw [cons_append] at mtail
     rw [tail] at *
     exact (or_self_iff _).mp (mem_append.mp mtail)
 #align miu.goodm_of_rule2 Miu.goodm_of_rule2
@@ -150,7 +150,7 @@ theorem goodm_of_rule3 (as bs : Miustr) (h₁ : Derivable (as ++ [I, I, I] ++ bs
     (h₂ : Goodm (as ++ [I, I, I] ++ bs)) : Goodm (as ++ U :: bs) :=
   by
   cases' h₂ with mhead nmtail
-  have k : as ≠ nil := by intro h; rw [h] at mhead ; rw [nil_append] at mhead ; contradiction
+  have k : as ≠ nil := by intro h; rw [h] at mhead; rw [nil_append] at mhead; contradiction
   constructor
   · revert mhead; simp only [append_assoc, head_append _ k]; exact id
   · contrapose! nmtail
@@ -169,7 +169,7 @@ theorem goodm_of_rule4 (as bs : Miustr) (h₁ : Derivable (as ++ [U, U] ++ bs))
     (h₂ : Goodm (as ++ [U, U] ++ bs)) : Goodm (as ++ bs) :=
   by
   cases' h₂ with mhead nmtail
-  have k : as ≠ nil := by intro h; rw [h] at mhead ; rw [nil_append] at mhead ; contradiction
+  have k : as ≠ nil := by intro h; rw [h] at mhead; rw [nil_append] at mhead; contradiction
   constructor
   · revert mhead; simp only [append_assoc, head_append _ k]; exact id
   · contrapose! nmtail

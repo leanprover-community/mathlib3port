@@ -120,7 +120,7 @@ instance hallMatchingsOn.finite {ι : Type u} {α : Type v} (t : ι → Finset �
     exact ⟨i, i.property, f.property.2 i⟩
   apply Finite.of_injective g
   intro f f' h
-  simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h 
+  simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h
   ext a
   exact h a
 #align hall_matchings_on.finite hallMatchingsOn.finite

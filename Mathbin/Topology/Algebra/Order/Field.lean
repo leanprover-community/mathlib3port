@@ -88,10 +88,10 @@ theorem nhds_eq_map_hMul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       |x / x₀ - 1| = |x / x₀ - x₀ / x₀| := by rw [div_self hx₀]
       _ = |(x - x₀) / x₀| := (congr_arg abs (sub_div x x₀ x₀).symm)
       _ = |x - x₀| / |x₀| := (abs_div (x - x₀) x₀)
-      _ < i * |x₀| / |x₀| := (div_lt_div_of_lt (abs_pos.2 hx₀) hx)
+      _ < i * |x₀| / |x₀| := (div_lt_div_of_pos_right (abs_pos.2 hx₀) hx)
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
     specialize hit (x / x₀) this
-    rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit 
+    rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit
 #align nhds_eq_map_mul_left_nhds_one nhds_eq_map_hMul_left_nhds_one
 
 theorem nhds_eq_map_hMul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
@@ -308,7 +308,7 @@ theorem tendsto_pow_neg_atTop {n : ℕ} (hn : n ≠ 0) :
 theorem tendsto_zpow_atTop_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) :=
   by
   lift -n to ℕ using le_of_lt (neg_pos.mpr hn) with N
-  rw [← neg_pos, ← h, Nat.cast_pos] at hn 
+  rw [← neg_pos, ← h, Nat.cast_pos] at hn
   simpa only [h, neg_neg] using tendsto_pow_neg_atTop hn.ne'
 #align tendsto_zpow_at_top_zero tendsto_zpow_atTop_zero
 -/
@@ -349,10 +349,10 @@ theorem tendsto_const_mul_zpow_atTop_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 0
   refine' ⟨fun h => _, fun h => _⟩
   · by_cases hn : 0 ≤ n
     · lift n to ℕ using hn
-      simp only [zpow_coe_nat] at h 
-      rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h 
+      simp only [zpow_coe_nat] at h
+      rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h
       exact Or.inl h
-    · rw [not_le] at hn 
+    · rw [not_le] at hn
       refine' Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_atTop_zero hn)⟩
   · cases h
     · simp only [h.left, h.right, zpow_zero, mul_one]
@@ -383,7 +383,7 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing : Topolo
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by
-      rw [Set.mem_Ioo, sub_lt_comm, lt_min_iff] at h 
+      rw [Set.mem_Ioo, sub_lt_comm, lt_min_iff] at h
       nlinarith
     have hx' : 0 < x := (half_pos ht).trans hx
     have aux : 0 < 2 / t ^ 2 := by positivity

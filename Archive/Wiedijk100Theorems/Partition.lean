@@ -160,7 +160,7 @@ theorem cut_empty_succ {ι : Type _} (n : ℕ) : cut (∅ : Finset ι) (n + 1) =
   by
   apply eq_empty_of_forall_not_mem
   intro x hx
-  rw [mem_cut, sum_empty] at hx 
+  rw [mem_cut, sum_empty] at hx
   cases hx.1
 #align theorems_100.cut_empty_succ Theorems100.cut_empty_succ
 
@@ -221,7 +221,7 @@ theorem coeff_prod_range [CommSemiring α] {ι : Type _} (s : Finset ι) (f : ι
       mul_sum]
     apply sum_congr rfl _
     intro x hx
-    rw [mem_cut] at hx 
+    rw [mem_cut] at hx
     rw [hx.2 a hi, zero_add]
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr * »(_, _)]]"
@@ -303,7 +303,7 @@ theorem num_series' [Field α] (i : ℕ) :
           rw [Nat.mul_sub_left_distrib, ← hp, ← a_left, mul_one, Nat.add_sub_cancel]
         · rintro ⟨rfl, rfl⟩
           cases p
-          · rw [MulZeroClass.mul_zero] at hp ; cases hp
+          · rw [MulZeroClass.mul_zero] at hp; cases hp
           rw [hp]
           simp [Nat.succ_eq_add_one, mul_add]
       · suffices
@@ -350,21 +350,21 @@ theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset �
     · exact fun i hi => ⟨_, hp₃ i, rfl⟩
   · intro p₁ p₂ hp₁ hp₂ h
     apply Nat.Partition.ext
-    simp only [true_and_iff, mem_univ, mem_filter] at hp₁ hp₂ 
+    simp only [true_and_iff, mem_univ, mem_filter] at hp₁ hp₂
     ext i
-    rw [Function.funext_iff] at h 
+    rw [Function.funext_iff] at h
     specialize h i
     cases i
     · rw [Multiset.count_eq_zero_of_not_mem]
       rw [Multiset.count_eq_zero_of_not_mem]
       intro a; exact Nat.lt_irrefl 0 (hs 0 (hp₂.2 0 a))
       intro a; exact Nat.lt_irrefl 0 (hs 0 (hp₁.2 0 a))
-    · rwa [Nat.nsmul_eq_mul, Nat.nsmul_eq_mul, mul_left_inj' i.succ_ne_zero] at h 
+    · rwa [Nat.nsmul_eq_mul, Nat.nsmul_eq_mul, mul_left_inj' i.succ_ne_zero] at h
   · simp only [mem_filter, mem_cut, mem_univ, exists_prop, true_and_iff, and_assoc']
     rintro f ⟨hf₁, hf₂, hf₃⟩
     refine' ⟨⟨∑ i in s, Multiset.replicate (f i / i) i, _, _⟩, _, _, _⟩
     · intro i hi
-      simp only [exists_prop, mem_sum, mem_map, Function.Embedding.coeFn_mk] at hi 
+      simp only [exists_prop, mem_sum, mem_map, Function.Embedding.coeFn_mk] at hi
       rcases hi with ⟨t, ht, z⟩
       apply hs
       rwa [Multiset.eq_of_mem_replicate z]
@@ -380,7 +380,7 @@ theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset �
         rwa [← hw₂, Nat.mul_div_cancel _ (hs i h)]
       · exact hc _ h
     · intro i hi
-      rw [mem_sum] at hi 
+      rw [mem_sum] at hi
       rcases hi with ⟨j, hj₁, hj₂⟩
       rwa [Multiset.eq_of_mem_replicate hj₂]
     · ext i
@@ -440,8 +440,8 @@ theorem odd_gf_prop [Field α] (n m : ℕ) (h : n < m * 2) :
   constructor
   · intro hi₂
     have := Nat.mod_add_div i 2
-    rw [Nat.not_even_iff] at hi₂ 
-    rw [hi₂, add_comm] at this 
+    rw [Nat.not_even_iff] at hi₂
+    rw [hi₂, add_comm] at this
     refine' ⟨i / 2, _, this⟩
     rw [Nat.div_lt_iff_lt_mul zero_lt_two]
     exact lt_of_le_of_lt hin h
@@ -515,7 +515,7 @@ theorem same_gf [Field α] (m : ℕ) :
   set π₁ : PowerSeries α := ∏ i in range m, (1 - X ^ (2 * i + 1))⁻¹ with hπ₁
   set π₂ : PowerSeries α := ∏ i in range m, (1 - X ^ (m + i + 1)) with hπ₂
   set π₃ : PowerSeries α := ∏ i in range m, (1 + X ^ (i + 1)) with hπ₃
-  rw [← hπ₃] at ih 
+  rw [← hπ₃] at ih
   have h : constant_coeff α (1 - X ^ (2 * m + 1)) ≠ 0 :=
     by
     rw [RingHom.map_sub, RingHom.map_pow, constant_coeff_one, constant_coeff_X,

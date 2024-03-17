@@ -630,7 +630,7 @@ variable [OrderedCommGroup α] {s t : NonemptyInterval α}
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
   by
   refine' ⟨fun h => _, _⟩
-  · rw [ext_iff, Prod.ext_iff] at h 
+  · rw [ext_iff, Prod.ext_iff] at h
     have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le
     refine' ⟨s.fst, t.fst, _, _, h.1⟩ <;> ext <;> try rfl
     exacts [this.1.symm, this.2.symm]

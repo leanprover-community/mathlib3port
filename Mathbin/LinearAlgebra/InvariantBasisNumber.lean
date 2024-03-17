@@ -260,7 +260,7 @@ instance (priority := 100) IsNoetherianRing.strongRankCondition : StrongRankCond
   fconstructor
   intro m n f i
   by_contra h
-  rw [not_le, ← Nat.add_one_le_iff, le_iff_exists_add] at h 
+  rw [not_le, ← Nat.add_one_le_iff, le_iff_exists_add] at h
   obtain ⟨m, rfl⟩ := h
   let e : Fin (n + 1 + m) ≃ Sum (Fin n) (Fin (1 + m)) :=
     (finCongr (add_assoc _ _ _)).trans fin_sum_fin_equiv.symm
@@ -302,7 +302,7 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
   Quotient.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
     (by
       refine' fun a b hab => Ideal.Quotient.eq.2 fun h => _
-      rw [Submodule.quotientRel_r_def] at hab 
+      rw [Submodule.quotientRel_r_def] at hab
       rw [← LinearMap.map_sub]
       exact Ideal.map_pi _ _ hab e h)
 

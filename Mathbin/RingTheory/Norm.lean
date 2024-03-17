@@ -193,7 +193,7 @@ theorem norm_eq_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Fin
     rw [norm_eq_matrix_det b, ← Matrix.exists_mulVec_eq_zero_iff]
     rintro ⟨v, v_ne, hv⟩
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
-      left_mul_matrix_mul_vec_repr] at hv 
+      left_mul_matrix_mul_vec_repr] at hv
     refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show ∑ i, v i • b i ≠ 0 from _)
     · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
     · contrapose! v_ne with sum_eq
@@ -396,7 +396,7 @@ theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSep
   rw [← isIntegral_algebraMap_iff (algebraMap K (AlgebraicClosureAux L)).Injective,
     norm_eq_prod_roots]
   · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
-    rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
+    rw [mem_roots_map (minpoly.ne_zero hx')] at hy
     use minpoly R x, minpoly.monic hx
     rw [← aeval_def] at hy ⊢
     exact minpoly.aeval_of_isScalarTower R x y hy

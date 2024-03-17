@@ -390,7 +390,7 @@ theorem eventually_le_limsup
   · obtain ⟨x, hx, xa⟩ : ∃ x, (∀ ⦃b⦄, f.limsup u < b → x ≤ b) ∧ f.limsup u < x :=
       by
       simp only [IsGLB, IsGreatest, lowerBounds, upperBounds, Set.mem_Ioi, Set.mem_setOf_eq,
-        not_and, Classical.not_forall, not_le, exists_prop] at H 
+        not_and, Classical.not_forall, not_le, exists_prop] at H
       exact H fun x hx => le_of_lt hx
     filter_upwards [eventually_lt_of_limsup_lt xa hf] with y hy
     contrapose! hy
@@ -488,7 +488,7 @@ theorem Antitone.map_limsSup_of_continuousAt {F : Filter R} [NeBot F] {f : R →
     obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.Limsup).Nonempty :=
       by
       contrapose! h'
-      refine' ⟨l, l_lt, by rwa [Set.not_nonempty_iff_eq_empty] at h' ⟩
+      refine' ⟨l, l_lt, by rwa [Set.not_nonempty_iff_eq_empty] at h'⟩
     have B : F.liminf f ≤ f m := by
       apply liminf_le_of_frequently_le
       apply
@@ -641,7 +641,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
             (Finset.range_mono hnm))
         _
     rintro ⟨i, h⟩
-    simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] at h 
+    simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] at h
     induction' i with k hk
     · obtain ⟨j, hj₁, hj₂⟩ := hω 1
       refine'
@@ -652,8 +652,8 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
           ⟨j - 1, Finset.mem_range.2 (lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self), _⟩
       rw [Nat.sub_add_cancel hj₁, Set.indicator_of_mem hj₂]
       exact zero_lt_one
-    · rw [imp_false] at hk 
-      push_neg at hk 
+    · rw [imp_false] at hk
+      push_neg at hk
       obtain ⟨i, hi⟩ := hk
       obtain ⟨j, hj₁, hj₂⟩ := hω (i + 1)
       replace hi : ∑ k in Finset.range i, (s (k + 1)).indicator 1 ω = k + 1 := le_antisymm (h i) hi
@@ -672,9 +672,9 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
         Set.indicator_of_mem hj₂]
       exact zero_lt_one
   · rintro hω i
-    rw [Set.mem_setOf_eq, tendsto_at_top_at_top] at hω 
+    rw [Set.mem_setOf_eq, tendsto_at_top_at_top] at hω
     by_contra hcon
-    push_neg at hcon 
+    push_neg at hcon
     obtain ⟨j, h⟩ := hω (i + 1)
     have : ∑ k in Finset.range j, (s (k + 1)).indicator 1 ω ≤ i :=
       by

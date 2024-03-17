@@ -245,21 +245,21 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
   · rw [← comap_top (QuotientGroup.mk' K)]
     intro hH'
     rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff,
-      QuotientGroup.ker_mk'] at hH 
+      QuotientGroup.ker_mk'] at hH
     · exact h4.2 (le_antisymm hK hH)
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step3 (K : Subgroup N) [(K.map N.Subtype).Normal] : K = ⊥ ∨ K = ⊤ :=
   by
   have key := step2 h1 h2 h3 (K.map N.subtype) K.map_subtype_le
-  rw [← map_bot N.subtype] at key 
+  rw [← map_bot N.subtype] at key
   conv at key =>
     congr
     skip
     rhs
     rw [← N.subtype_range, N.subtype.range_eq_map]
   have inj := map_injective N.subtype_injective
-  rwa [inj.eq_iff, inj.eq_iff] at key 
+  rwa [inj.eq_iff, inj.eq_iff] at key
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step4 : (Fintype.card N).minFac.Prime :=
@@ -306,7 +306,7 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
   rintro n ih G _ _ rfl N _ hN
   refine' not_forall_not.mp fun h3 => _
   haveI := schur_zassenhaus_induction.step7 hN (fun G' _ _ hG' => by apply ih _ hG'; rfl) h3
-  rw [← Nat.card_eq_fintype_card] at hN 
+  rw [← Nat.card_eq_fintype_card] at hN
   exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
 
 #print Subgroup.exists_right_complement'_of_coprime_of_fintype /-
@@ -327,11 +327,11 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
     (hN : Nat.Coprime (Nat.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H :=
   by
   by_cases hN1 : Nat.card N = 0
-  · rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN 
+  · rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN
     rw [hN]
     exact ⟨⊥, is_complement'_top_bot⟩
   by_cases hN2 : N.index = 0
-  · rw [hN2, Nat.coprime_zero_right] at hN 
+  · rw [hN2, Nat.coprime_zero_right] at hN
     haveI := (cardinal.to_nat_eq_one_iff_unique.mp hN).1
     rw [N.eq_bot_of_subsingleton]
     exact ⟨⊤, is_complement'_bot_top⟩
@@ -341,7 +341,7 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
   haveI :=
     (cardinal.lt_aleph_0_iff_fintype.mp
         (lt_of_not_ge (mt Cardinal.toNat_apply_of_aleph0_le hN3))).some
-  rw [Nat.card_eq_fintype_card] at hN 
+  rw [Nat.card_eq_fintype_card] at hN
   exact exists_right_complement'_of_coprime_of_fintype hN
 #align subgroup.exists_right_complement'_of_coprime Subgroup.exists_right_complement'_of_coprime
 -/

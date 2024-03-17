@@ -326,7 +326,7 @@ theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 :=
   · intro h
     rcases lt_trichotomy x 0 with (x_lt_zero | rfl | x_gt_zero)
     · refine' Or.inr (Or.inr (neg_eq_iff_eq_neg.mp _))
-      rw [← log_neg_eq_log x] at h 
+      rw [← log_neg_eq_log x] at h
       exact eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h
     · exact Or.inl rfl
     · exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
@@ -384,11 +384,11 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| 
   have : 0 < 1 / x := by simpa only [one_div, inv_pos] using h1
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by linarith
-  rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this 
+  rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
   have aux : 0 ≤ -log x * x := by
     refine' mul_nonneg _ h1.le; rw [← log_inv]; apply log_nonneg
     rw [← le_inv h1 zero_lt_one, inv_one]; exact h2
-  rw [← abs_of_nonneg aux, neg_mul, abs_neg] at this ; exact this
+  rw [← abs_of_nonneg aux, neg_mul, abs_neg] at this; exact this
 #align real.abs_log_mul_self_lt Real.abs_log_mul_self_lt
 -/
 
@@ -457,7 +457,7 @@ theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ 
   by
   induction' s using Finset.cons_induction_on with a s ha ih
   · simp
-  · rw [Finset.forall_mem_cons] at hf 
+  · rw [Finset.forall_mem_cons] at hf
     simp [ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 #align real.log_prod Real.log_prod
 -/

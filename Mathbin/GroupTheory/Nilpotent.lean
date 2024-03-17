@@ -271,13 +271,13 @@ theorem is_decending_rev_series_of_is_ascending {H : ℕ → Subgroup G} {n : �
   by
   cases' hasc with h0 hH
   refine' ⟨hn, fun x m hx g => _⟩
-  dsimp at hx 
+  dsimp at hx
   by_cases hm : n ≤ m
-  · rw [tsub_eq_zero_of_le hm, h0, Subgroup.mem_bot] at hx 
+  · rw [tsub_eq_zero_of_le hm, h0, Subgroup.mem_bot] at hx
     subst hx
     convert Subgroup.one_mem _
     group
-  · push_neg at hm 
+  · push_neg at hm
     apply hH
     convert hx
     rw [tsub_add_eq_add_tsub (Nat.succ_le_of_lt hm), Nat.succ_sub_succ]
@@ -295,7 +295,7 @@ theorem is_ascending_rev_series_of_is_descending {H : ℕ → Subgroup G} {n : �
   · have hnm : n - m = 0 := tsub_eq_zero_iff_le.mpr hm
     rw [hnm, h0]
     exact mem_top _
-  · push_neg at hm 
+  · push_neg at hm
     convert hH x _ hx g
     rw [tsub_add_eq_add_tsub (Nat.succ_le_of_lt hm), Nat.succ_sub_succ]
 #align is_ascending_rev_series_of_is_descending is_ascending_rev_series_of_is_descending
@@ -373,7 +373,7 @@ theorem lowerCentralSeries_antitone : Antitone (lowerCentralSeries G) :=
   by
   refine' antitone_nat_of_succ_le fun n x hx => _
   simp only [mem_lowerCentralSeries_succ_iff, exists_prop, mem_top, exists_true_left,
-    true_and_iff] at hx 
+    true_and_iff] at hx
   refine'
     closure_induction hx _ (Subgroup.one_mem _) (@Subgroup.mul_mem _ _ _) (@Subgroup.inv_mem _ _ _)
   rintro y ⟨z, hz, a, ha⟩
@@ -553,7 +553,7 @@ instance Subgroup.isNilpotent (H : Subgroup G) [hG : IsNilpotent G] : IsNilpoten
   rcases hG with ⟨n, hG⟩
   use n
   have := lowerCentralSeries_map_subtype_le H n
-  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp] at this 
+  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp] at this
   exact eq_bot_iff.mpr fun x hx => Subtype.ext (this x hx)
 #align subgroup.is_nilpotent Subgroup.isNilpotent
 -/
@@ -567,7 +567,7 @@ theorem Subgroup.nilpotencyClass_le (H : Subgroup G) [hG : IsNilpotent G] :
   apply Nat.find_mono
   intro n hG
   have := lowerCentralSeries_map_subtype_le H n
-  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp] at this 
+  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp] at this
   exact eq_bot_iff.mpr fun x hx => Subtype.ext (this x hx)
 #align subgroup.nilpotency_class_le Subgroup.nilpotencyClass_le
 -/
@@ -769,7 +769,7 @@ theorem nilpotencyClass_eq_quotient_center_plus_one [hH : IsNilpotent G] [Nontri
   rw [nilpotencyClass_quotient_center]
   rcases h : Group.nilpotencyClass G with ⟨⟩
   · exfalso
-    rw [nilpotencyClass_zero_iff_subsingleton] at h ; skip
+    rw [nilpotencyClass_zero_iff_subsingleton] at h; skip
     apply false_of_nontrivial_of_subsingleton G
   · simp
 #align nilpotency_class_eq_quotient_center_plus_one nilpotencyClass_eq_quotient_center_plus_one

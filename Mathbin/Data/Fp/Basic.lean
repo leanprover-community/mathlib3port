@@ -106,7 +106,7 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
     apply Int.ofNat_le_ofNat_of_le
     exact C.prec_pos,
     suffices prec ≤ 2 * emax by
-      rw [← Int.ofNat_le] at this 
+      rw [← Int.ofNat_le] at this
       rw [← sub_nonneg] at *
       simp only [emin, emax] at *
       ring_nf

@@ -362,6 +362,10 @@ attribute [ext] Array'.ext propext Function.hfunext
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:18:19: unsupported: attribute [ext id] -/
 attribute [ext] _root_.funext
 
+-- This line is equivalent to:
+--   attribute [ext (→)] _root_.funext
+-- but (→) is not actually a binary relation with a constant at the head,
+-- so we use the special name [anon].0 to represent (→).
 run_cmd
   add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext true
 

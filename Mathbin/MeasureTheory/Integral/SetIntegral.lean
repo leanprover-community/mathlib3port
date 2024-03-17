@@ -270,7 +270,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
   set S := ⋃ i, s i
   have hSm : MeasurableSet S := MeasurableSet.iUnion hsm
   have hsub : ∀ {i}, s i ⊆ S := subset_Union s
-  rw [← with_density_apply _ hSm] at hfi' 
+  rw [← with_density_apply _ hSm] at hfi'
   set ν := μ.with_density fun x => ‖f x‖₊ with hν
   refine' metric.nhds_basis_closed_ball.tendsto_right_iff.2 fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
@@ -533,7 +533,7 @@ theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hfi : Integrable f μ) :
       refine' set_integral_congr₀ h_meas.compl fun x hx => _
       dsimp only
       rw [Real.norm_eq_abs, abs_eq_neg_self.mpr _]
-      rw [Set.mem_compl_iff, Set.nmem_setOf_iff] at hx 
+      rw [Set.mem_compl_iff, Set.nmem_setOf_iff] at hx
       linarith
     _ = ∫ x in {x | 0 ≤ f x}, f x ∂μ - ∫ x in {x | f x ≤ 0}, f x ∂μ := by
       rw [← set_integral_neg_eq_set_integral_nonpos hfi.1]; congr; ext1 x; simp
@@ -717,7 +717,7 @@ theorem set_integral_gt_gt {R : ℝ} {f : α → ℝ} (hR : 0 ≤ R) (hfm : Meas
       exact le_of_lt hx
   rw [← sub_pos, ← smul_eq_mul, ← set_integral_const, ← integral_sub hfint this,
     set_integral_pos_iff_support_of_nonneg_ae]
-  · rw [← zero_lt_iff] at hμ 
+  · rw [← zero_lt_iff] at hμ
     rwa [Set.inter_eq_self_of_subset_right]
     exact fun x hx => Ne.symm (ne_of_lt <| sub_pos.2 hx)
   · change ∀ᵐ x ∂μ.restrict _, _
@@ -1004,7 +1004,7 @@ theorem integrableOn_iUnion_of_summable_integral_norm {f : α → E} {s : β →
         NNReal) :=
     by rw [← NNReal.summable_coe]; exact h
   have S'' := ENNReal.tsum_coe_eq S'.has_sum
-  simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S'' 
+  simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S''
   convert ENNReal.ofReal_lt_top
 #align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOn_iUnion_of_summable_integral_norm
 -/
@@ -1505,7 +1505,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
     · rfl
     · exact integral_nonneg fun x => NNReal.coe_nonneg _
     · refine' ⟨f_meas.coe_nnreal_real.AEMeasurable.AEStronglyMeasurable, _⟩
-      rw [with_density_apply _ s_meas] at hs 
+      rw [with_density_apply _ s_meas] at hs
       rw [has_finite_integral]
       convert hs
       ext1 x

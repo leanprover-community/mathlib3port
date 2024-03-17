@@ -103,7 +103,7 @@ theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubm
           exact le_refl _
         self_normalizing := by
           have hk' := hk (k + 1) k.le_succ
-          rw [LieSubmodule.ucs_succ, hk k (le_refl k)] at hk' 
+          rw [LieSubmodule.ucs_succ, hk k (le_refl k)] at hk'
           rw [← LieSubalgebra.coe_to_submodule_eq_iff, ← LieSubalgebra.coe_normalizer_eq_normalizer,
             hk', LieSubalgebra.coe_toLieSubmodule] }
 #align lie_subalgebra.is_cartan_subalgebra_iff_is_ucs_limit LieSubalgebra.isCartanSubalgebra_iff_isUcsLimit

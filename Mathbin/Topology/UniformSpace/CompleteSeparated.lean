@@ -27,7 +27,7 @@ variable {α : Type _}
 
 #print IsComplete.isClosed /-
 --In a separated space, a complete set is closed
-theorem IsComplete.isClosed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) :
+theorem IsComplete.isClosed [UniformSpace α] [T0Space α] {s : Set α} (h : IsComplete s) :
     IsClosed s :=
   isClosed_iff_clusterPt.2 fun a ha => by
     let f := 𝓝[s] a
@@ -43,7 +43,7 @@ open Filter
 
 variable [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
 
-variable {γ : Type _} [UniformSpace γ] [CompleteSpace γ] [SeparatedSpace γ]
+variable {γ : Type _} [UniformSpace γ] [CompleteSpace γ] [T0Space γ]
 
 #print DenseInducing.continuous_extend_of_cauchy /-
 theorem continuous_extend_of_cauchy {e : α → β} {f : α → γ} (de : DenseInducing e)

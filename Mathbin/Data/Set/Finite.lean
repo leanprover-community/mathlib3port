@@ -1021,7 +1021,7 @@ theorem Finite.iUnion {ι : Type _} {s : ι → Set α} {t : Set ι} (ht : t.Fin
   refine' Union_subset fun i x hx => _
   by_cases hi : i ∈ t
   · exact mem_bUnion hi hx
-  · rw [he i hi, mem_empty_iff_false] at hx 
+  · rw [he i hi, mem_empty_iff_false] at hx
     contradiction
 #align set.finite.Union Set.Finite.iUnion
 -/
@@ -1461,7 +1461,7 @@ theorem Finite.induction_on' {C : Set α → Prop} {S : Set α} (h : S.Finite) (
   by
   refine' @Set.Finite.induction_on α (fun s => s ⊆ S → C s) S h (fun _ => H0) _ subset.rfl
   intro a s has hsf hCs haS
-  rw [insert_subset] at haS 
+  rw [insert_subset] at haS
   exact H1 haS.1 haS.2 has (hCs haS.2)
 #align set.finite.induction_on' Set.Finite.induction_on'
 -/
@@ -1727,7 +1727,7 @@ theorem infinite_image2 (hfs : ∀ b ∈ t, InjOn (fun a => f a b) s) (hft : ∀
     (image2 f s t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
   by
   refine' ⟨fun h => Set.infinite_prod.1 _, _⟩
-  · rw [← image_uncurry_prod] at h 
+  · rw [← image_uncurry_prod] at h
     exact h.of_image _
   · rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
     · exact hs.image2_left hb (hfs _ hb)
@@ -1762,7 +1762,7 @@ theorem infinite_range_of_injective [Infinite α] {f : α → β} (hi : Injectiv
 
 #print Set.infinite_of_injective_forall_mem /-
 theorem infinite_of_injective_forall_mem [Infinite α] {s : Set β} {f : α → β} (hi : Injective f)
-    (hf : ∀ x : α, f x ∈ s) : s.Infinite := by rw [← range_subset_iff] at hf ;
+    (hf : ∀ x : α, f x ∈ s) : s.Infinite := by rw [← range_subset_iff] at hf;
   exact (infinite_range_of_injective hi).mono hf
 #align set.infinite_of_injective_forall_mem Set.infinite_of_injective_forall_mem
 -/
@@ -1839,7 +1839,7 @@ theorem Infinite.exists_lt_map_eq_of_mapsTo [LinearOrder α] {s : Set α} {t : S
 theorem Finite.exists_lt_map_eq_of_forall_mem [LinearOrder α] [Infinite α] {t : Set β} {f : α → β}
     (hf : ∀ a, f a ∈ t) (ht : t.Finite) : ∃ a b, a < b ∧ f a = f b :=
   by
-  rw [← maps_univ_to] at hf 
+  rw [← maps_univ_to] at hf
   obtain ⟨a, -, b, -, h⟩ := (@infinite_univ α _).exists_lt_map_eq_of_mapsTo hf ht
   exact ⟨a, b, h⟩
 #align set.finite.exists_lt_map_eq_of_forall_mem Set.Finite.exists_lt_map_eq_of_forall_mem
@@ -1898,7 +1898,7 @@ theorem Finite.iSup_biInf_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonem
   refine' hs.induction_on _ _
   · intro hf; simp [iSup_const]
   · intro a s has hs ihs hf
-    rw [ball_insert_iff] at hf 
+    rw [ball_insert_iff] at hf
     simp only [iInf_insert, ← ihs hf.2]
     exact iSup_inf_of_monotone hf.1 fun j₁ j₂ hj => iInf₂_mono fun i hi => hf.2 i hi hj
 #align set.finite.supr_binfi_of_monotone Set.Finite.iSup_biInf_of_monotone

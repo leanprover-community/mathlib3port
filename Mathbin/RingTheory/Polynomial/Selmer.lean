@@ -46,9 +46,9 @@ theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^
   have z_ne_zero : z ≠ 0 := fun h =>
     zero_ne_one ((zero_pow zero_lt_three).symm.trans (show (0 : ℂ) ^ 3 = 1 from h ▸ h3))
   rcases key with (key | key | key)
-  · exact z_ne_zero (by rwa [key, self_eq_add_left] at h1 )
-  · exact one_ne_zero (by rwa [key, self_eq_add_right] at h1 )
-  · exact z_ne_zero (pow_eq_zero (by rwa [key, add_self_eq_zero] at h2 ))
+  · exact z_ne_zero (by rwa [key, self_eq_add_left] at h1)
+  · exact one_ne_zero (by rwa [key, self_eq_add_right] at h1)
+  · exact z_ne_zero (pow_eq_zero (by rwa [key, add_self_eq_zero] at h2))
 #align polynomial.X_pow_sub_X_sub_one_irreducible_aux Polynomial.X_pow_sub_X_sub_one_irreducible_aux
 -/
 
@@ -65,12 +65,12 @@ theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X
   apply is_unit_trinomial.irreducible_of_coprime' ⟨0, 1, n, zero_lt_one, hn, -1, -1, 1, rfl⟩
   rintro z ⟨h1, h2⟩
   apply X_pow_sub_X_sub_one_irreducible_aux z
-  rw [trinomial_mirror zero_lt_one hn (-1 : ℤˣ).NeZero (1 : ℤˣ).NeZero] at h2 
-  simp_rw [trinomial, aeval_add, aeval_mul, aeval_X_pow, aeval_C] at h1 h2 
-  simp_rw [Units.val_neg, Units.val_one, map_neg, map_one] at h1 h2 
+  rw [trinomial_mirror zero_lt_one hn (-1 : ℤˣ).NeZero (1 : ℤˣ).NeZero] at h2
+  simp_rw [trinomial, aeval_add, aeval_mul, aeval_X_pow, aeval_C] at h1 h2
+  simp_rw [Units.val_neg, Units.val_one, map_neg, map_one] at h1 h2
   replace h1 : z ^ n = z + 1 := by linear_combination h1
   replace h2 := mul_eq_zero_of_left h2 z
-  rw [add_mul, add_mul, add_zero, mul_assoc (-1 : ℂ), ← pow_succ', Nat.sub_add_cancel hn.le] at h2 
+  rw [add_mul, add_mul, add_zero, mul_assoc (-1 : ℂ), ← pow_succ', Nat.sub_add_cancel hn.le] at h2
   rw [h1] at h2 ⊢
   exact ⟨rfl, by linear_combination -h2⟩
 #align polynomial.X_pow_sub_X_sub_one_irreducible Polynomial.X_pow_sub_X_sub_one_irreducible
@@ -90,7 +90,7 @@ theorem X_pow_sub_X_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n
       (X_pow_sub_X_sub_one_irreducible hn1)
   ·
     rwa [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_one,
-      Polynomial.map_X] at h 
+      Polynomial.map_X] at h
   · exact hp.symm ▸ (trinomial_monic zero_lt_one hn).IsPrimitive
 #align polynomial.X_pow_sub_X_sub_one_irreducible_rat Polynomial.X_pow_sub_X_sub_one_irreducible_rat
 -/

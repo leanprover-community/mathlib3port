@@ -532,22 +532,22 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
     (hst : s.Prod = t.Prod) (h : m ≤ n) : (s.map f).Prod = (t.map f).Prod :=
   by
   obtain rfl | hm := m.eq_zero_or_pos
-  · rw [card_eq_zero] at hs ht 
+  · rw [card_eq_zero] at hs ht
     rw [hs, ht]
-  rw [← hs, card_pos_iff_exists_mem] at hm 
+  rw [← hs, card_pos_iff_exists_mem] at hm
   obtain ⟨a, ha⟩ := hm
   suffices ((s + replicate (n - m) a).map f).Prod = ((t + replicate (n - m) a).map f).Prod
     by
-    simp_rw [Multiset.map_add, prod_add] at this 
+    simp_rw [Multiset.map_add, prod_add] at this
     exact mul_right_cancel this
   replace ha := hsA _ ha
   refine' map_prod_eq_map_prod f (fun x hx => _) (fun x hx => _) _ _ _
   rotate_left 2; assumption
   -- Can't infer `A` and `n` from the context, so do it manually.
-  · rw [mem_add] at hx 
+  · rw [mem_add] at hx
     refine' hx.elim (hsA _) fun h => _
     rwa [eq_of_mem_replicate h]
-  · rw [mem_add] at hx 
+  · rw [mem_add] at hx
     refine' hx.elim (htA _) fun h => _
     rwa [eq_of_mem_replicate h]
   · rw [card_add, hs, card_replicate, add_tsub_cancel_of_le h]

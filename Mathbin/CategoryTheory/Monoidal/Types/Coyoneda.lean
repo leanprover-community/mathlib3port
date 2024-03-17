@@ -40,7 +40,7 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :
     μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2)
     μ_natural' := by tidy
     associativity' := fun X Y Z => by
-      ext ⟨⟨f, g⟩, h⟩; dsimp at f g h 
+      ext ⟨⟨f, g⟩, h⟩; dsimp at f g h
       dsimp; simp only [iso.cancel_iso_inv_left, category.assoc]
       conv_lhs =>
         rw [← category.id_comp h, tensor_comp, category.assoc, associator_naturality, ←
@@ -48,7 +48,7 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :
       conv_rhs => rw [← category.id_comp f, tensor_comp]
     left_unitality' := by tidy
     right_unitality' := fun X => by
-      ext ⟨f, ⟨⟩⟩; dsimp at f 
+      ext ⟨f, ⟨⟩⟩; dsimp at f
       dsimp; simp only [category.assoc]
       rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }
 #align category_theory.coyoneda_tensor_unit CategoryTheory.coyonedaTensorUnit

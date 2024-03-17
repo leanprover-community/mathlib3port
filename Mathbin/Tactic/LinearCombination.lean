@@ -61,7 +61,7 @@ theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) 
 #align linear_combo.replace_eq_expr LinearCombo.replace_eq_expr
 
 theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x - y = 0) : x = 0 := by
-  rwa [h, sub_zero] at h2 
+  rwa [h, sub_zero] at h2
 #align linear_combo.eq_zero_of_sub_eq_zero LinearCombo.eq_zero_of_sub_eq_zero
 
 /-! ### Configuration -/

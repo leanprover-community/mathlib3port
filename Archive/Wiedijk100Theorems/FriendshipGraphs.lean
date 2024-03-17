@@ -102,7 +102,7 @@ theorem adjMatrix_pow_three_of_not_adj {v w : V} (non_adj : ¬G.Adj v w) :
   intro x hx
   rw [adj_matrix_sq_of_ne _ hG, Nat.cast_one]
   rintro ⟨rfl⟩
-  rw [mem_neighbor_finset] at hx 
+  rw [mem_neighbor_finset] at hx
   exact non_adj hx
 #align theorems_100.friendship.adj_matrix_pow_three_of_not_adj Theorems100.Friendship.adjMatrix_pow_three_of_not_adj
 
@@ -155,8 +155,8 @@ theorem is_regular_of_not_existsPolitician (hG' : ¬ExistsPolitician G) :
   use G.degree v
   intro x
   by_cases hvx : G.adj v x; swap; · exact (degree_eq_of_not_adj hG hvx).symm
-  dsimp only [Theorems100.ExistsPolitician] at hG' 
-  push_neg at hG' 
+  dsimp only [Theorems100.ExistsPolitician] at hG'
+  push_neg at hG'
   rcases hG' v with ⟨w, hvw', hvw⟩
   rcases hG' x with ⟨y, hxy', hxy⟩
   by_cases hxw : G.adj x w
@@ -172,7 +172,7 @@ theorem is_regular_of_not_existsPolitician (hG' : ¬ExistsPolitician G) :
     by
     intro x hx
     have h' := mem_univ (Subtype.mk x hx)
-    rw [h, mem_singleton] at h' 
+    rw [h, mem_singleton] at h'
     injection h'
   apply hxy'
   rw [key ((mem_common_neighbors G).mpr ⟨hvx, G.symm hxw⟩),
@@ -262,7 +262,7 @@ theorem false_of_three_le_degree (hd : G.IsRegularOfDegree d) (h : 3 ≤ d) : Fa
   rw [trace_adj_matrix, zero_pow (Fact.out p.prime).Pos]
   -- but the trace is 1 mod p when computed the other way
   rw [adj_matrix_pow_mod_p_of_regular hG dmod hd hp2]
-  dsimp only [Fintype.card] at Vmod 
+  dsimp only [Fintype.card] at Vmod
   simp only [Matrix.trace, Matrix.diag, mul_one, nsmul_eq_mul, LinearMap.coe_mk, sum_const]
   rw [Vmod, ← Nat.cast_one, ZMod.nat_cast_zmod_eq_zero_iff_dvd, Nat.dvd_one, Nat.minFac_eq_one_iff]
   linarith
@@ -275,12 +275,12 @@ theorem existsPolitician_of_degree_le_one (hd : G.IsRegularOfDegree d) (hd1 : d 
   by
   have sq : d * d = d := by interval_cases <;> norm_num
   have h := card_of_regular hG hd
-  rw [sq] at h 
+  rw [sq] at h
   have : Fintype.card V ≤ 1 := by
     cases' Fintype.card V with n
     · exact zero_le _
     · have : n = 0 := by
-        rw [Nat.succ_sub_succ_eq_sub, tsub_zero] at h 
+        rw [Nat.succ_sub_succ_eq_sub, tsub_zero] at h
         linarith
       subst n
   use Classical.arbitrary V
@@ -304,7 +304,7 @@ theorem neighborFinset_eq_of_degree_eq_two (hd : G.IsRegularOfDegree 2) (v : V) 
     · have hfr := card_of_regular hG hd
       linarith
     · exact Finset.card_erase_of_mem (Finset.mem_univ _)
-  · dsimp [is_regular_of_degree, degree] at hd 
+  · dsimp [is_regular_of_degree, degree] at hd
     rw [hd]
 #align theorems_100.friendship.neighbor_finset_eq_of_degree_eq_two Theorems100.Friendship.neighborFinset_eq_of_degree_eq_two
 

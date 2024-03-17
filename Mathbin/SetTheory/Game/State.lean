@@ -58,7 +58,7 @@ theorem SetTheory.PGame.turnBound_ne_zero_of_left_move {s t : S}
   by
   intro h
   have t := state.left_bound m
-  rw [h] at t 
+  rw [h] at t
   exact Nat.not_succ_le_zero _ t
 #align pgame.turn_bound_ne_zero_of_left_move SetTheory.PGame.turnBound_ne_zero_of_left_move
 -/
@@ -69,7 +69,7 @@ theorem SetTheory.PGame.turnBound_ne_zero_of_right_move {s t : S}
   by
   intro h
   have t := state.right_bound m
-  rw [h] at t 
+  rw [h] at t
   exact Nat.not_succ_le_zero _ t
 #align pgame.turn_bound_ne_zero_of_right_move SetTheory.PGame.turnBound_ne_zero_of_right_move
 -/
@@ -115,23 +115,23 @@ def SetTheory.PGame.ofStateAuxRelabelling :
   | s, 0, 0, hn, hm => by
     dsimp [SetTheory.PGame.ofStateAux]
     fconstructor; rfl; rfl
-    · intro i; dsimp at i ; exfalso
+    · intro i; dsimp at i; exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
-    · intro j; dsimp at j ; exfalso
+    · intro j; dsimp at j; exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
   | s, 0, m + 1, hn, hm => by
     dsimp [SetTheory.PGame.ofStateAux]
     fconstructor; rfl; rfl
-    · intro i; dsimp at i ; exfalso
+    · intro i; dsimp at i; exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
-    · intro j; dsimp at j ; exfalso
+    · intro j; dsimp at j; exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hn)
   | s, n + 1, 0, hn, hm => by
     dsimp [SetTheory.PGame.ofStateAux]
     fconstructor; rfl; rfl
-    · intro i; dsimp at i ; exfalso
+    · intro i; dsimp at i; exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hm)
-    · intro j; dsimp at j ; exfalso
+    · intro j; dsimp at j; exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
   | s, n + 1, m + 1, hn, hm => by
     dsimp [SetTheory.PGame.ofStateAux]

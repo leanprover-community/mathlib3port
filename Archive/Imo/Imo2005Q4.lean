@@ -99,7 +99,7 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
   -- So `3 ≤ p`
   have hp₃ : 3 ≤ p :=
     by
-    have : 2 ≠ p := by rwa [Nat.coprime_primes Nat.prime_two hp] at hp₂ 
+    have : 2 ≠ p := by rwa [Nat.coprime_primes Nat.prime_two hp] at hp₂
     apply Nat.lt_of_le_of_ne hp.two_le this
   -- Testing the special property of `k` for the `p - 2`th term of the sequence, we see that `p` is
   -- coprime to `a (p - 2)`.
@@ -107,7 +107,7 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
     by
     refine' ((h (p - 2) _).of_isCoprime_of_dvd_right (int.coe_nat_dvd.mpr k.min_fac_dvd)).symm
     exact le_tsub_of_add_le_right hp₃
-  rw [(nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd] at this 
+  rw [(nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd] at this
   -- But also, by our previous lemma, `p` divides `a (p - 2)`.
   have : ↑p ∣ a (p - 2) := find_specified_factor hp hp₆
   -- Contradiction!

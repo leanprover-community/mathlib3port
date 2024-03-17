@@ -144,7 +144,7 @@ instance : Full (decomposedTo J)
     where
   Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
-    dsimp at f 
+    dsimp at f
     have : j' = k'
     rw [← hX, ← hY, Quotient.eq'']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
@@ -161,7 +161,7 @@ instance : Full (decomposedTo J)
 instance : Faithful (decomposedTo J)
     where map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨f⟩ ⟨g⟩ e
-    change f = g at e 
+    change f = g at e
     subst e
 
 instance : EssSurj (decomposedTo J) where mem_essImage j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩

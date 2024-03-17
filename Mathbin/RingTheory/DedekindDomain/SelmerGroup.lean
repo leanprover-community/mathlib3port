@@ -140,8 +140,8 @@ theorem valuation_of_unit_eq (x : Rˣ) :
   · exact v.valuation_le_one x
   · cases' x with x _ hx _
     change ¬v.valuation (algebraMap R K x) < 1
-    apply_fun v.int_valuation at hx 
-    rw [map_one, map_mul] at hx 
+    apply_fun v.int_valuation at hx
+    rw [map_one, map_mul] at hx
     rw [not_lt, ← hx, ← mul_one <| v.valuation _, valuation_of_algebra_map,
       mul_le_mul_left₀ <| left_ne_zero_of_mul_eq_one hx]
     exact v.int_valuation_le_one _
@@ -246,17 +246,17 @@ theorem fromUnit_ker [hn : Fact <| 0 < n] :
     rcases(QuotientGroup.eq_one_iff _).mp (Subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩
     have hv : ↑(_ ^ n : Kˣ) = algebraMap R K _ := congr_arg Units.val hx
     have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebraMap R K _ := congr_arg Units.inv hx
-    rw [Units.val_pow_eq_pow_val] at hv 
-    rw [← inv_pow, Units.inv_mk, Units.val_pow_eq_pow_val] at hi 
+    rw [Units.val_pow_eq_pow_val] at hv
+    rw [← inv_pow, Units.inv_mk, Units.val_pow_eq_pow_val] at hi
     rcases@IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow R _ _ _ _ _ _ _ v _ hn.out
         (hv.symm ▸ isIntegral_algebraMap) with
       ⟨v', rfl⟩
     rcases@IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow R _ _ _ _ _ _ _ i _ hn.out
         (hi.symm ▸ isIntegral_algebraMap) with
       ⟨i', rfl⟩
-    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at vi 
-    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at iv 
-    rw [Units.val_mk, ← map_pow] at hv 
+    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at vi
+    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at iv
+    rw [Units.val_mk, ← map_pow] at hv
     exact
       ⟨⟨v', i', vi, iv⟩, by
         simpa only [Units.ext_iff, powMonoidHom_apply, Units.val_pow_eq_pow_val] using

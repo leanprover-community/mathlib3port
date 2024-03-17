@@ -254,13 +254,13 @@ def coneEquivFunctorObj (c : Cone ((diagram U).op ⋙ F)) :
           simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app,
             category.assoc]
           have h := c.π.naturality (Quiver.Hom.op (hom.left i j))
-          dsimp at h 
+          dsimp at h
           simpa using h
         · ext ⟨i, j⟩; dsimp [sheaf_condition_equalizer_products.right_res]
           simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app,
             category.assoc]
           have h := c.π.naturality (Quiver.Hom.op (hom.right i j))
-          dsimp at h 
+          dsimp at h
           simpa using h
         · ext i; dsimp
           simp only [limit.lift_π, category.id_comp, fan.mk_π_app, CategoryTheory.Functor.map_id,
@@ -318,16 +318,16 @@ def coneEquivInverseObj (c : Limits.Cone (SheafConditionEqualizerProducts.diagra
         · dsimp; erw [F.map_id]; simp
         · dsimp; simp only [category.id_comp, category.assoc]
           have h := c.π.naturality walking_parallel_pair_hom.left
-          dsimp [sheaf_condition_equalizer_products.left_res] at h 
-          simp only [category.id_comp] at h 
+          dsimp [sheaf_condition_equalizer_products.left_res] at h
+          simp only [category.id_comp] at h
           have h' := h =≫ pi.π _ (i, j)
           rw [h']
           simp only [category.assoc, limit.lift_π, fan.mk_π_app]
           rfl
         · dsimp; simp only [category.id_comp, category.assoc]
           have h := c.π.naturality walking_parallel_pair_hom.right
-          dsimp [sheaf_condition_equalizer_products.right_res] at h 
-          simp only [category.id_comp] at h 
+          dsimp [sheaf_condition_equalizer_products.right_res] at h
+          simp only [category.id_comp] at h
           have h' := h =≫ pi.π _ (j, i)
           rw [h']
           simp

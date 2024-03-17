@@ -85,7 +85,7 @@ theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
       adjoin_rootSet L f ▸
         Algebra.adjoin_le_iff.2 fun y hy =>
           let ⟨x, hxs, hxy⟩ :=
-            Finset.mem_image.1 (by rwa [root_set, roots_map _ h, Multiset.toFinset_map] at hy )
+            Finset.mem_image.1 (by rwa [root_set, roots_map _ h, Multiset.toFinset_map] at hy)
           hxy ▸ SetLike.mem_coe.2 <| Subalgebra.algebraMap_mem _ _,
     fun h =>
     @RingEquiv.toRingHom_refl K _ ▸
@@ -146,7 +146,7 @@ theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensiona
   ⟨@Algebra.top_toSubmodule K L _ _ _ ▸
       adjoin_rootSet L f ▸
         fg_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
-          if hf : f = 0 then by rw [hf, root_set_zero] at hy ; cases hy
+          if hf : f = 0 then by rw [hf, root_set_zero] at hy; cases hy
           else
             isAlgebraic_iff_isIntegral.1
               ⟨f, hf,
@@ -181,7 +181,7 @@ variable {K L} [Field K] [Field L] [Algebra K L] {p : K[X]}
 theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
     (hF : ∀ x ∈ p.rootSet L, x ∈ F) : p.Splits (algebraMap K F) :=
   by
-  simp_rw [root_set, Finset.mem_coe, Multiset.mem_toFinset] at hF 
+  simp_rw [root_set, Finset.mem_coe, Multiset.mem_toFinset] at hF
   rw [splits_iff_exists_multiset]
   refine' ⟨Multiset.pmap Subtype.mk _ hF, map_injective _ (algebraMap F L).Injective _⟩
   conv_lhs =>

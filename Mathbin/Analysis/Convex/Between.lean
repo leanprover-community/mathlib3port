@@ -201,7 +201,7 @@ theorem Function.Injective.wbtw_map_iff {x y z : P} {f : P →ᵃ[R] P'} (hf : F
     Wbtw R (f x) (f y) (f z) ↔ Wbtw R x y z :=
   by
   refine' ⟨fun h => _, fun h => h.map _⟩
-  rwa [Wbtw, ← affineSegment_image, hf.mem_set_image] at h 
+  rwa [Wbtw, ← affineSegment_image, hf.mem_set_image] at h
 #align function.injective.wbtw_map_iff Function.Injective.wbtw_map_iff
 -/
 
@@ -407,7 +407,7 @@ variable {R}
 theorem Wbtw.left_ne_right_of_ne_left {x y z : P} (h : Wbtw R x y z) (hne : y ≠ x) : x ≠ z :=
   by
   rintro rfl
-  rw [wbtw_self_iff] at h 
+  rw [wbtw_self_iff] at h
   exact hne h
 #align wbtw.left_ne_right_of_ne_left Wbtw.left_ne_right_of_ne_left
 -/
@@ -416,7 +416,7 @@ theorem Wbtw.left_ne_right_of_ne_left {x y z : P} (h : Wbtw R x y z) (hne : y �
 theorem Wbtw.left_ne_right_of_ne_right {x y z : P} (h : Wbtw R x y z) (hne : y ≠ z) : x ≠ z :=
   by
   rintro rfl
-  rw [wbtw_self_iff] at h 
+  rw [wbtw_self_iff] at h
   exact hne h
 #align wbtw.left_ne_right_of_ne_right Wbtw.left_ne_right_of_ne_right
 -/
@@ -455,18 +455,18 @@ theorem wbtw_swap_left_iff [NoZeroSMulDivisors R V] {x y : P} (z : P) :
   · rintro ⟨hxyz, hyxz⟩
     rcases hxyz with ⟨ty, hty, rfl⟩
     rcases hyxz with ⟨tx, htx, hx⟩
-    simp_rw [line_map_apply, ← add_vadd] at hx 
+    simp_rw [line_map_apply, ← add_vadd] at hx
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub, vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul,
-      ← add_smul, smul_eq_zero] at hx 
+      ← add_smul, smul_eq_zero] at hx
     rcases hx with (h | h)
-    · nth_rw 1 [← mul_one tx] at h 
-      rw [← mul_sub, add_eq_zero_iff_neg_eq] at h 
+    · nth_rw 1 [← mul_one tx] at h
+      rw [← mul_sub, add_eq_zero_iff_neg_eq] at h
       have h' : ty = 0 := by
         refine' le_antisymm _ hty.1
         rw [← h, Left.neg_nonpos_iff]
         exact mul_nonneg htx.1 (sub_nonneg.2 hty.2)
       simp [h']
-    · rw [vsub_eq_zero_iff_eq] at h 
+    · rw [vsub_eq_zero_iff_eq] at h
       simp [h]
   · rintro rfl
     exact ⟨wbtw_self_left _ _ _, wbtw_self_left _ _ _⟩
@@ -692,11 +692,11 @@ theorem Sbtw.affineCombination_of_mem_affineSpan_pair [NoZeroDivisors R] [NoZero
     {i : ι} (his : i ∈ s) (hs : Sbtw R (w₁ i) (w i) (w₂ i)) :
     Sbtw R (s.affineCombination R p w₁) (s.affineCombination R p w) (s.affineCombination R p w₂) :=
   by
-  rw [affineCombination_mem_affineSpan_pair ha hw hw₁ hw₂] at h 
+  rw [affineCombination_mem_affineSpan_pair ha hw hw₁ hw₂] at h
   rcases h with ⟨r, hr⟩
-  dsimp only at hr 
-  rw [hr i his, sbtw_mul_sub_add_iff] at hs 
-  change ∀ i ∈ s, w i = (r • (w₂ - w₁) + w₁) i at hr 
+  dsimp only at hr
+  rw [hr i his, sbtw_mul_sub_add_iff] at hs
+  change ∀ i ∈ s, w i = (r • (w₂ - w₁) + w₁) i at hr
   rw [s.affine_combination_congr hr fun _ _ => rfl]
   dsimp only
   rw [← s.weighted_vsub_vadd_affine_combination, s.weighted_vsub_const_smul, ←
@@ -707,7 +707,7 @@ theorem Sbtw.affineCombination_of_mem_affineSpan_pair [NoZeroDivisors R] [NoZero
     simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, hw₁, hw₂, sub_self]
   refine' hs.1 _
   have ha' := ha s (w₁ - w₂) hw₁w₂ hz i his
-  rwa [Pi.sub_apply, sub_eq_zero] at ha' 
+  rwa [Pi.sub_apply, sub_eq_zero] at ha'
 #align sbtw.affine_combination_of_mem_affine_span_pair Sbtw.affineCombination_of_mem_affineSpan_pair
 -/
 
@@ -780,13 +780,13 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
       refine' affineSpan_pair_le_of_mem_of_mem (mem_affineSpan _ (Set.mem_range_self _)) _
       have hle : line[R, t.points i₂, t.points i₃] ≤ affineSpan R (Set.range t.points) := by
         refine' affineSpan_mono _ _; simp [Set.insert_subset_iff]
-      rw [AffineSubspace.le_def'] at hle 
+      rw [AffineSubspace.le_def'] at hle
       exact hle _ h₁.wbtw.mem_affine_span
-    rw [AffineSubspace.le_def'] at hle 
+    rw [AffineSubspace.le_def'] at hle
     exact hle _ h₁'
   have h₁i := h₁.mem_image_Ioo
   have h₂i := h₂.mem_image_Ioo
-  rw [Set.mem_image] at h₁i h₂i 
+  rw [Set.mem_image] at h₁i h₂i
   rcases h₁i with ⟨r₁, ⟨hr₁0, hr₁1⟩, rfl⟩
   rcases h₂i with ⟨r₂, ⟨hr₂0, hr₂1⟩, rfl⟩
   rcases eq_affineCombination_of_mem_affineSpan_of_fintype hp with ⟨w, hw, rfl⟩
@@ -796,7 +796,7 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
   have h₂s :=
     sign_eq_of_affineCombination_mem_affineSpan_single_lineMap t.independent hw (Finset.mem_univ _)
       (Finset.mem_univ _) (Finset.mem_univ _) h₁₂.symm h₂₃ h₁₃ hr₂0 hr₂1 h₂'
-  dsimp only at h₁s h₂s 
+  dsimp only at h₁s h₂s
   rw [←
     finset.univ.affine_combination_affine_combination_single_weights R t.points
       (Finset.mem_univ i₁),
@@ -821,13 +821,13 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
     · rfl
   have hss : SignType.sign (∑ i, w i) = 1 := by simp [hw]
   have hs' := sign_sum Finset.univ_nonempty (SignType.sign (w i₃)) fun i _ => hs i
-  rw [hs'] at hss 
-  simp_rw [hss, sign_eq_one_iff] at hs 
+  rw [hs'] at hss
+  simp_rw [hss, sign_eq_one_iff] at hs
   refine' ⟨hs i₁, _⟩
-  rw [hu] at hw 
-  rw [Finset.sum_insert, Finset.sum_insert, Finset.sum_singleton] at hw 
+  rw [hu] at hw
+  rw [Finset.sum_insert, Finset.sum_insert, Finset.sum_singleton] at hw
   · by_contra hle
-    rw [not_lt] at hle 
+    rw [not_lt] at hle
     exact (hle.trans_lt (lt_add_of_pos_right _ (Left.add_pos (hs i₂) (hs i₃)))).ne' hw
   · simp [h₂₃]
   · simp [h₁₂, h₁₃]
@@ -856,7 +856,7 @@ theorem wbtw_iff_left_eq_or_right_mem_image_Ici {x y z : P} :
     · simp
   · rcases h with (rfl | ⟨r, ⟨hr, rfl⟩⟩)
     · exact wbtw_self_left _ _ _
-    · rw [Set.mem_Ici] at hr 
+    · rw [Set.mem_Ici] at hr
       refine' ⟨r⁻¹, ⟨inv_nonneg.2 (zero_le_one.trans hr), inv_le_one hr⟩, _⟩
       simp only [line_map_apply, smul_smul, vadd_vsub]
       rw [inv_mul_cancel (one_pos.trans_le hr).ne', one_smul, vsub_vadd]
@@ -885,12 +885,12 @@ theorem sbtw_iff_left_ne_and_right_mem_image_Ioi {x y z : P} :
   by
   refine' ⟨fun h => ⟨h.left_ne, _⟩, fun h => _⟩
   · obtain ⟨r, ⟨hr, rfl⟩⟩ := h.wbtw.right_mem_image_Ici_of_left_ne h.left_ne
-    rw [Set.mem_Ici] at hr 
+    rw [Set.mem_Ici] at hr
     rcases hr.lt_or_eq with (hrlt | rfl)
     · exact Set.mem_image_of_mem _ hrlt
     · exfalso; simpa using h
   · rcases h with ⟨hne, r, hr, rfl⟩
-    rw [Set.mem_Ioi] at hr 
+    rw [Set.mem_Ioi] at hr
     refine'
       ⟨wbtw_iff_left_eq_or_right_mem_image_Ici.2
           (Or.inr (Set.mem_image_of_mem _ (Set.mem_of_mem_of_subset hr Set.Ioi_subset_Ici_self))),
@@ -1033,7 +1033,7 @@ theorem Wbtw.trans_left_right {w x y z : P} (h₁ : Wbtw R w y z) (h₂ : Wbtw R
   nth_rw 1 [← mul_one (t₁ - t₂ * t₁)]
   rw [← mul_sub, mul_div_assoc]
   by_cases h : 1 - t₂ * t₁ = 0
-  · rw [sub_eq_zero, eq_comm] at h 
+  · rw [sub_eq_zero, eq_comm] at h
     rw [h]
     suffices t₁ = 1 by simp [this]
     exact
@@ -1072,7 +1072,7 @@ theorem Wbtw.collinear {x y z : P} (h : Wbtw R x y z) : Collinear R ({x, y, z} :
   rw [collinear_iff_exists_forall_eq_smul_vadd]
   refine' ⟨x, z -ᵥ x, _⟩
   intro p hp
-  simp_rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hp 
+  simp_rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
   rcases hp with (rfl | rfl | rfl)
   · refine' ⟨0, _⟩; simp
   · rcases h with ⟨t, -, rfl⟩
@@ -1085,9 +1085,9 @@ theorem Wbtw.collinear {x y z : P} (h : Wbtw R x y z) : Collinear R ({x, y, z} :
 theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} : Set P)) :
     Wbtw R x y z ∨ Wbtw R y z x ∨ Wbtw R z x y :=
   by
-  rw [collinear_iff_of_mem (Set.mem_insert _ _)] at h 
+  rw [collinear_iff_of_mem (Set.mem_insert _ _)] at h
   rcases h with ⟨v, h⟩
-  simp_rw [Set.mem_insert_iff, Set.mem_singleton_iff] at h 
+  simp_rw [Set.mem_insert_iff, Set.mem_singleton_iff] at h
   have hy := h y (Or.inr (Or.inl rfl))
   have hz := h z (Or.inr (Or.inr rfl))
   rcases hy with ⟨ty, rfl⟩
@@ -1114,8 +1114,8 @@ theorem wbtw_iff_sameRay_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x
   by
   refine' ⟨Wbtw.sameRay_vsub, fun h => _⟩
   rcases h with (h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩)
-  · rw [vsub_eq_zero_iff_eq] at h ; simp [h]
-  · rw [vsub_eq_zero_iff_eq] at h ; simp [h]
+  · rw [vsub_eq_zero_iff_eq] at h; simp [h]
+  · rw [vsub_eq_zero_iff_eq] at h; simp [h]
   · refine'
       ⟨r₂ / (r₁ + r₂),
         ⟨div_nonneg hr₂.le (add_nonneg hr₁.le hr₂.le),

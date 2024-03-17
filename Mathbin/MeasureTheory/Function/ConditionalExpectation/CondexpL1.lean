@@ -512,7 +512,7 @@ theorem set_integral_condexpL1CLM (f : α →₁[μ] F') (hs : measurable_set[m]
     by
     refine' fun i => (measure_mono (Set.inter_subset_left _ _)).trans_lt _
     have hS_finite_trim := measure_spanning_sets_lt_top (μ.trim hm) i
-    rwa [trim_measurable_set_eq hm (hS_meas i)] at hS_finite_trim 
+    rwa [trim_measurable_set_eq hm (hS_meas i)] at hS_finite_trim
   have h_mono : Monotone fun i => S i ∩ s :=
     by
     intro i j hij x
@@ -528,7 +528,7 @@ theorem set_integral_condexpL1CLM (f : α →₁[μ] F') (hs : measurable_set[m]
     have h :=
       tendsto_set_integral_of_monotone (fun i => (hS_meas0 i).inter (hm s hs)) h_mono
         (L1.integrable_coe_fn f).IntegrableOn
-    rwa [← hs_eq] at h 
+    rwa [← hs_eq] at h
   have h_left :
     tendsto (fun i => ∫ x in S i ∩ s, condexp_L1_clm hm μ f x ∂μ) at_top
       (𝓝 (∫ x in s, condexp_L1_clm hm μ f x ∂μ)) :=
@@ -536,8 +536,8 @@ theorem set_integral_condexpL1CLM (f : α →₁[μ] F') (hs : measurable_set[m]
     have h :=
       tendsto_set_integral_of_monotone (fun i => (hS_meas0 i).inter (hm s hs)) h_mono
         (L1.integrable_coe_fn (condexp_L1_clm hm μ f)).IntegrableOn
-    rwa [← hs_eq] at h 
-  rw [h_eq_forall] at h_left 
+    rwa [← hs_eq] at h
+  rw [h_eq_forall] at h_left
   exact tendsto_nhds_unique h_left h_right
 #align measure_theory.set_integral_condexp_L1_clm MeasureTheory.set_integral_condexpL1CLM
 -/

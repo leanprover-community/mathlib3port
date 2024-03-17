@@ -463,7 +463,7 @@ theorem liftR_map_last' [LawfulMvFunctor F] {α : TypeVec n} {ι} (R : ι → ι
     (f : ι → ι) (hh : ∀ x : ι, R (f x) x) : LiftR' (RelLast' _ R) ((id ::: f) <$$> x) x :=
   by
   have := liftr_map_last R x f id hh
-  rwa [append_fun_id_id, MvFunctor.id_map] at this 
+  rwa [append_fun_id_id, MvFunctor.id_map] at this
 #align mvqpf.liftr_map_last' MvQPF.liftR_map_last'
 -/
 
@@ -475,7 +475,7 @@ theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x :=
   by
   let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x
   refine' cofix.bisim₂ R _ _ _ rfl
-  clear x; rintro x y h; dsimp [R] at h ; subst h
+  clear x; rintro x y h; dsimp [R] at h; subst h
   dsimp [cofix.dest, cofix.abs]
   induction y using Quot.ind
   simp only [cofix.repr, M.dest_corec, abs_map, abs_repr]

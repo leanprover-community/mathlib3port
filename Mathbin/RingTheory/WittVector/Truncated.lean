@@ -142,7 +142,7 @@ theorem out_injective : Injective (@out p n R _) :=
   by
   intro x y h
   ext i
-  rw [WittVector.ext_iff] at h 
+  rw [WittVector.ext_iff] at h
   simpa only [coeff_out] using h ↑i
 #align truncated_witt_vector.out_injective TruncatedWittVector.out_injective
 -/

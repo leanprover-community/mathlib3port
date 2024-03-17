@@ -222,7 +222,7 @@ theorem succ_max_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
   by
   by_cases h1 : m ≤ n
   rw [max_eq_right h1, max_eq_right (succ_le_succ h1)]
-  · rw [not_le] at h1 ; have h2 := le_of_lt h1
+  · rw [not_le] at h1; have h2 := le_of_lt h1
     rw [max_eq_left h2, max_eq_left (succ_le_succ h2)]
 #align nat.max_succ_succ Nat.succ_max_succ
 -/
@@ -440,7 +440,7 @@ theorem mul_ne_mul_right {a b c : ℕ} (ha : 0 < a) : a * b ≠ a * c ↔ b ≠ 
 
 #print Nat.mul_right_eq_self_iff /-
 theorem mul_right_eq_self_iff {a b : ℕ} (ha : 0 < a) : a * b = a ↔ b = 1 :=
-  suffices a * b = a * 1 ↔ b = 1 by rwa [mul_one] at this 
+  suffices a * b = a * 1 ↔ b = 1 by rwa [mul_one] at this
   mul_right_inj' ha.ne'
 #align nat.mul_right_eq_self_iff Nat.mul_right_eq_self_iff
 -/
@@ -538,8 +538,8 @@ theorem leRecOn_succ_left {C : ℕ → Sort u} {n m} (h1 : n ≤ m) (h2 : n + 1 
 theorem leRecOn_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
     (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (leRecOn hnm next) :=
   by
-  induction' hnm with m hnm ih; · intro x y H; rwa [le_rec_on_self, le_rec_on_self] at H 
-  intro x y H; rw [le_rec_on_succ hnm, le_rec_on_succ hnm] at H ; exact ih (Hnext _ H)
+  induction' hnm with m hnm ih; · intro x y H; rwa [le_rec_on_self, le_rec_on_self] at H
+  intro x y H; rw [le_rec_on_succ hnm, le_rec_on_succ hnm] at H; exact ih (Hnext _ H)
 #align nat.le_rec_on_injective Nat.leRecOn_injective
 -/
 
@@ -925,7 +925,7 @@ theorem mod_mod (a n : ℕ) : a % n % n = a % n :=
 @[simp]
 theorem mod_add_mod (m n k : ℕ) : (m % n + k) % n = (m + k) % n := by
   have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;>
-    rwa [add_right_comm, mod_add_div] at this 
+    rwa [add_right_comm, mod_add_div] at this
 #align nat.mod_add_mod Nat.mod_add_mod
 -/
 

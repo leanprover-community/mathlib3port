@@ -60,18 +60,18 @@ field extension. -/
 theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
   by
   intro f g hfg
-  apply_fun Units.val at hfg 
-  simp only [IsPrimitiveRoot.coe_autToPow_apply, Units.val_eq_coe] at hfg 
-  generalize_proofs hf' hg' at hfg 
+  apply_fun Units.val at hfg
+  simp only [IsPrimitiveRoot.coe_autToPow_apply, Units.val_eq_coe] at hfg
+  generalize_proofs hf' hg' at hfg
   have hf := hf'.some_spec
   have hg := hg'.some_spec
-  generalize_proofs hζ at hf hg 
+  generalize_proofs hζ at hf hg
   suffices f hμ.to_roots_of_unity = g hμ.to_roots_of_unity
     by
     apply AlgEquiv.coe_algHom_injective
     apply (hμ.power_basis K).algHom_ext
     exact this
-  rw [ZMod.eq_iff_modEq_nat] at hfg 
+  rw [ZMod.eq_iff_modEq_nat] at hfg
   refine' (hf.trans _).trans hg.symm
   rw [← rootsOfUnity.coe_pow _ hf'.some, ← rootsOfUnity.coe_pow _ hg'.some]
   congr 1
@@ -132,15 +132,15 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
       generalize_proofs _ h
       have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
       have := (hζ.power_basis K).equivOfMinpoly_gen ((hμ x).PowerBasis K) h
-      rw [hζ.power_basis_gen K] at this 
-      rw [this, IsPrimitiveRoot.powerBasis_gen] at key 
-      rw [← hζ.coe_to_roots_of_unity_coe] at key 
-      simp only [← coe_coe, ← rootsOfUnity.coe_pow] at key 
+      rw [hζ.power_basis_gen K] at this
+      rw [this, IsPrimitiveRoot.powerBasis_gen] at key
+      rw [← hζ.coe_to_roots_of_unity_coe] at key
+      simp only [← coe_coe, ← rootsOfUnity.coe_pow] at key
       replace key := rootsOfUnity.coe_injective key
       rw [pow_eq_pow_iff_modEq, ← Subgroup.orderOf_coe, ← orderOf_units,
         hζ.coe_to_roots_of_unity_coe, ← (zeta_spec n K L).eq_orderOf, ← ZMod.eq_iff_modEq_nat] at
-        key 
-      simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key 
+        key
+      simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
 -/

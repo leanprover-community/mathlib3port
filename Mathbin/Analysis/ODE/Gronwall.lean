@@ -202,7 +202,7 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem {v : ℝ → E → E} {s : ℝ
   apply norm_le_gronwallBound_of_norm_deriv_right_le (hf.sub hg) h_deriv ha
   intro t ht
   have := dist_triangle4_right (f' t) (g' t) (v t (f t)) (v t (g t))
-  rw [dist_eq_norm] at this 
+  rw [dist_eq_norm] at this
   refine'
     this.trans
       ((add_le_add (add_le_add (f_bound t ht) (g_bound t ht))
@@ -251,7 +251,7 @@ theorem dist_le_of_trajectories_ODE_of_mem {v : ℝ → E → E} {s : ℝ → Se
   have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0 := by intros; rw [dist_self]
   intro t ht
   have := dist_le_of_approx_trajectories_ODE_of_mem hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht
-  rwa [zero_add, gronwallBound_ε0] at this 
+  rwa [zero_add, gronwallBound_ε0] at this
 #align dist_le_of_trajectories_ODE_of_mem_set dist_le_of_trajectories_ODE_of_mem
 -/
 
@@ -286,7 +286,7 @@ theorem ODE_solution_unique_of_mem_Icc_right {v : ℝ → E → E} {s : ℝ → 
   by
   intro t ht
   have := dist_le_of_trajectories_ODE_of_mem hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
-  rwa [MulZeroClass.zero_mul, dist_le_zero] at this 
+  rwa [MulZeroClass.zero_mul, dist_le_zero] at this
 #align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_Icc_right
 -/
 

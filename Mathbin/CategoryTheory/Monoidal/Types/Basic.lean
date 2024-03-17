@@ -28,11 +28,9 @@ universe v u
 
 namespace CategoryTheory
 
-#print CategoryTheory.typesMonoidal /-
 instance typesMonoidal : MonoidalCategory.{u} (Type u) :=
   monoidalOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 #align category_theory.types_monoidal CategoryTheory.typesMonoidal
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

@@ -157,7 +157,7 @@ theorem μ_naturality₂ {m n m' n' : M} (f : m ⟶ m') (g : n ⟶ n') (X : C) :
       (F.μ m n).app X ≫ (F.map (f ⊗ g)).app X :=
   by
   have := congr_app (F.to_lax_monoidal_functor.μ_natural f g) X
-  dsimp at this 
+  dsimp at this
   simpa using this
 #align category_theory.μ_naturality₂ CategoryTheory.μ_naturality₂
 -/
@@ -216,7 +216,7 @@ theorem left_unitality_app (n : M) (X : C) :
     (F.obj n).map (F.ε.app X) ≫ (F.μ (𝟙_ M) n).app X ≫ (F.map (λ_ n).Hom).app X = 𝟙 _ :=
   by
   have := congr_app (F.to_lax_monoidal_functor.left_unitality n) X
-  dsimp at this 
+  dsimp at this
   simpa using this.symm
 #align category_theory.left_unitality_app CategoryTheory.left_unitality_app
 -/
@@ -250,7 +250,7 @@ theorem right_unitality_app (n : M) (X : C) :
     F.ε.app ((F.obj n).obj X) ≫ (F.μ n (𝟙_ M)).app X ≫ (F.map (ρ_ n).Hom).app X = 𝟙 _ :=
   by
   have := congr_app (F.to_lax_monoidal_functor.right_unitality n) X
-  dsimp at this 
+  dsimp at this
   simpa using this.symm
 #align category_theory.right_unitality_app CategoryTheory.right_unitality_app
 -/
@@ -288,7 +288,7 @@ theorem associativity_app (m₁ m₂ m₃ : M) (X : C) :
       (F.μ m₂ m₃).app ((F.obj m₁).obj X) ≫ (F.μ m₁ (m₂ ⊗ m₃)).app X :=
   by
   have := congr_app (F.to_lax_monoidal_functor.associativity m₁ m₂ m₃) X
-  dsimp at this 
+  dsimp at this
   simpa using this
 #align category_theory.associativity_app CategoryTheory.associativity_app
 -/

@@ -78,11 +78,11 @@ theorem PairwiseDisjoint.biUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f
     (hg : ∀ i ∈ s, (g i : Set ι).PairwiseDisjoint f) : (⋃ i ∈ s, ↑(g i)).PairwiseDisjoint f :=
   by
   rintro a ha b hb hab
-  simp_rw [Set.mem_iUnion] at ha hb 
+  simp_rw [Set.mem_iUnion] at ha hb
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
-  · exact hg d hd (by rwa [hcd] at ha ) hb hab
+  · exact hg d hd (by rwa [hcd] at ha) hb hab
   · exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
 #align set.pairwise_disjoint.bUnion_finset Set.PairwiseDisjoint.biUnion_finset
 -/
@@ -95,7 +95,7 @@ variable {β : Type _} [DecidableEq α] {r : α → α → Prop} {l : List α}
 
 #print List.pairwise_of_coe_toFinset_pairwise /-
 theorem pairwise_of_coe_toFinset_pairwise (hl : (l.toFinset : Set α).Pairwise r) (hn : l.Nodup) :
-    l.Pairwise r := by rw [coe_to_finset] at hl ; exact hn.pairwise_of_set_pairwise hl
+    l.Pairwise r := by rw [coe_to_finset] at hl; exact hn.pairwise_of_set_pairwise hl
 #align list.pairwise_of_coe_to_finset_pairwise List.pairwise_of_coe_toFinset_pairwise
 -/
 

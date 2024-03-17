@@ -1031,7 +1031,7 @@ theorem rat_cast_im (q : ℚ) : (q : ℂ).im = 0 := by rw [← of_real_rat_cast,
 #print Complex.charZero /-
 instance charZero : CharZero ℂ :=
   charZero_of_inj_zero fun n h => by
-    rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h 
+    rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 #align complex.char_zero_complex Complex.charZero
 -/
 
@@ -1422,8 +1422,8 @@ protected def starOrderedRing : StarOrderedRing ℂ :=
   StarOrderedRing.ofNonnegIff' (fun _ _ => add_le_add_left) fun r =>
     by
     refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
-    · have h₁ : 0 ≤ r.re := by rw [le_def] at hr ; exact hr.1
-      have h₂ : r.im = 0 := by rw [le_def] at hr ; exact hr.2.symm
+    · have h₁ : 0 ≤ r.re := by rw [le_def] at hr; exact hr.1
+      have h₂ : r.im = 0 := by rw [le_def] at hr; exact hr.2.symm
       ext
       ·
         simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re,
@@ -1495,7 +1495,7 @@ theorem equiv_limAux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) :=
     apply lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)
     dsimp [lim_aux] at *
     have := add_lt_add H₁ H₂
-    rwa [add_halves] at this 
+    rwa [add_halves] at this
 #align complex.equiv_lim_aux Complex.equiv_limAux
 -/
 

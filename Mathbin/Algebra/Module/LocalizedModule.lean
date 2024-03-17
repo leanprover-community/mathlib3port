@@ -862,10 +862,10 @@ theorem fromLocalizedModule.inj : Function.Injective <| fromLocalizedModule S f 
   by
   induction' x using LocalizedModule.induction_on with a b
   induction' y using LocalizedModule.induction_on with a' b'
-  simp only [from_localized_module_mk] at eq1 
-  generalize_proofs h1 h2 at eq1 
+  simp only [from_localized_module_mk] at eq1
+  generalize_proofs h1 h2 at eq1
   erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← LinearMap.map_smul,
-    Module.End_algebraMap_isUnit_inv_apply_eq_iff'] at eq1 
+    Module.End_algebraMap_isUnit_inv_apply_eq_iff'] at eq1
   erw [LocalizedModule.mk_eq, ← IsLocalizedModule.eq_iff_exists S f, f.map_smul, f.map_smul, eq1]
   rfl
 #align is_localized_module.from_localized_module.inj IsLocalizedModule.fromLocalizedModule.inj
@@ -1216,7 +1216,7 @@ theorem mkOfAlgebra {R S S' : Type _} [CommRing R] [CommRing S] [CommRing S'] [A
   · intro x
     rw [Module.End_isUnit_iff]
     constructor
-    · rintro a b (e : x • a = x • b); simp_rw [Submonoid.smul_def, Algebra.smul_def] at e 
+    · rintro a b (e : x • a = x • b); simp_rw [Submonoid.smul_def, Algebra.smul_def] at e
       exact (h₁ x x.2).hMul_left_cancel e
     · intro a; refine' ⟨((h₁ x x.2).Unit⁻¹ : _) * a, _⟩; change (x : R) • (_ * a) = _
       rw [Algebra.smul_def, ← mul_assoc, IsUnit.mul_val_inv, one_mul]

@@ -358,7 +358,7 @@ theorem ratio_id : ratio (Dilation.id α) = 1 :=
   by
   by_cases h : ∀ x y : α, edist x y = 0 ∨ edist x y = ∞
   · rw [ratio, if_pos h]
-  · push_neg at h 
+  · push_neg at h
     rcases h with ⟨x, y, hne⟩
     refine' (ratio_unique hne.1 hne.2 _).symm
     simp
@@ -406,8 +406,8 @@ theorem ratio_comp' {g : Dilation β γ} {f : Dilation α β}
   by
   rcases hne with ⟨x, y, hα⟩
   have hgf := (edist_eq (g.comp f) x y).symm
-  simp only [dist_eq, coe_comp, ← mul_assoc, mul_eq_mul_right_iff] at hgf 
-  rw [edist_eq, edist_eq, ← mul_assoc, ENNReal.mul_eq_mul_right hα.1 hα.2] at hgf 
+  simp only [dist_eq, coe_comp, ← mul_assoc, mul_eq_mul_right_iff] at hgf
+  rw [edist_eq, edist_eq, ← mul_assoc, ENNReal.mul_eq_mul_right hα.1 hα.2] at hgf
   rwa [← ENNReal.coe_inj, ENNReal.coe_mul]
 #align dilation.comp_ratio Dilation.ratio_comp'
 -/

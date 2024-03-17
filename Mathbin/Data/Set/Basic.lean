@@ -2754,7 +2754,7 @@ theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s 
   by_cases h' : x ∈ t
   · have : x ≠ a := by
       intro H
-      rw [H] at h' 
+      rw [H] at h'
       exact h h'
     simp [h, h', this]
   · simp [h, h']
@@ -3452,9 +3452,9 @@ theorem nontrivial_of_exists_ne {x} (hx : x ∈ s) (h : ∃ y ∈ s, y ≠ x) : 
 #print Set.Nontrivial.exists_ne /-
 theorem Nontrivial.exists_ne (hs : s.Nontrivial) (z) : ∃ x ∈ s, x ≠ z :=
   by
-  by_contra H; push_neg at H 
+  by_contra H; push_neg at H
   rcases hs with ⟨x, hx, y, hy, hxy⟩
-  rw [H x hx, H y hy] at hxy 
+  rw [H x hx, H y hy] at hxy
   exact hxy rfl
 #align set.nontrivial.exists_ne Set.Nontrivial.exists_ne
 -/
@@ -3527,7 +3527,7 @@ theorem not_nontrivial_empty : ¬(∅ : Set α).Nontrivial := fun h => h.ne_empt
 @[simp]
 theorem not_nontrivial_singleton {x} : ¬({x} : Set α).Nontrivial := fun H =>
   by
-  rw [nontrivial_iff_exists_ne (mem_singleton x)] at H 
+  rw [nontrivial_iff_exists_ne (mem_singleton x)] at H
   exact
     let ⟨y, hy, hya⟩ := H
     hya (mem_singleton_iff.1 hy)
@@ -3535,7 +3535,7 @@ theorem not_nontrivial_singleton {x} : ¬({x} : Set α).Nontrivial := fun H =>
 -/
 
 #print Set.Nontrivial.ne_singleton /-
-theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H => by rw [H] at hs ;
+theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H => by rw [H] at hs;
   exact not_nontrivial_singleton hs
 #align set.nontrivial.ne_singleton Set.Nontrivial.ne_singleton
 -/

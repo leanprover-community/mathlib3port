@@ -124,16 +124,16 @@ theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R
     by
     rw [hP, mul_comm]
     refine' degree_lt_degree_mul_X fun h => _
-    rw [h, MulZeroClass.mul_zero] at hP 
+    rw [h, MulZeroClass.mul_zero] at hP
     exact minpoly.ne_zero (IsIntegral f) hP
   have hPmonic : P.monic :=
     by
     suffices (minpoly R f).Monic by
-      rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this 
+      rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
     exact minpoly.monic (IsIntegral f)
   have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _
   simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, AlgHom.map_mul,
-    zero_apply] at hzero 
+    zero_apply] at hzero
   exact not_le.2 hdegP (minpoly.min _ _ hPmonic (ext hzero))
 #align linear_map.minpoly_coeff_zero_of_injective LinearMap.minpoly_coeff_zero_of_injective
 -/

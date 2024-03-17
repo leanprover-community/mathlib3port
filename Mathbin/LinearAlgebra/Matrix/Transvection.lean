@@ -478,7 +478,7 @@ theorem listTransvecCol_mul_last_col (hM : M (inr unit) (inr unit) ≠ 0) (i : F
       by simp [list_transvec_col]
     simp only [Matrix.mul_assoc, A, Matrix.hMul_eq_hMul, List.prod_cons]
     by_cases h : n' = i
-    · have hni : n = i := by cases i; simp only [Fin.mk_eq_mk] at h ; simp [h]
+    · have hni : n = i := by cases i; simp only [Fin.mk_eq_mk] at h; simp [h]
       rw [h, transvection_mul_apply_same, IH, list_transvec_col_mul_last_row_drop _ _ hn, ← hni]
       field_simp [hM]
     · have hni : n ≠ i := by rintro rfl; cases i; simpa using h
@@ -552,7 +552,7 @@ theorem mul_listTransvecRow_last_row (hM : M (inr unit) (inr unit) ≠ 0) (i : F
     simp only [List.take_succ, A, ← Matrix.mul_assoc, List.prod_append, Matrix.mul_one,
       Matrix.hMul_eq_hMul, List.prod_cons, List.prod_nil, Option.to_list_some]
     by_cases h : n' = i
-    · have hni : n = i := by cases i; simp only [Fin.mk_eq_mk] at h ; simp only [h, coe_mk]
+    · have hni : n = i := by cases i; simp only [Fin.mk_eq_mk] at h; simp only [h, coe_mk]
       have : ¬n.succ ≤ i := by simp only [← hni, n.lt_succ_self, not_le]
       simp only [h, mul_transvection_apply_same, List.take, if_false,
         mul_list_transvec_row_last_col_take _ _ hnr.le, hni.le, this, if_true, IH hnr.le]
@@ -651,8 +651,8 @@ theorem exists_isTwoBlockDiagonal_list_transvec_mul_mul_list_transvec
   -- when the last coefficient is zero but there is a nonzero coefficient on the last row or the
   -- last column, we will first put this nonzero coefficient in last position, and then argue as
   -- above.
-  push_neg at hM 
-  simp [not_and_or, is_two_block_diagonal, to_blocks₁₂, to_blocks₂₁, ← Matrix.ext_iff] at H 
+  push_neg at hM
+  simp [not_and_or, is_two_block_diagonal, to_blocks₁₂, to_blocks₂₁, ← Matrix.ext_iff] at H
   have : ∃ i : Fin r, M (inl i) (inr star) ≠ 0 ∨ M (inr star) (inl i) ≠ 0 :=
     by
     cases H
@@ -666,7 +666,7 @@ theorem exists_isTwoBlockDiagonal_list_transvec_mul_mul_list_transvec
   · let M' := transvection (inr Unit.unit) (inl i) 1 ⬝ M
     have hM' : M' (inr star) (inr star) ≠ 0 := by simpa [M', hM]
     rcases exists_is_two_block_diagonal_of_ne_zero M' hM' with ⟨L, L', hLL'⟩
-    rw [Matrix.mul_assoc] at hLL' 
+    rw [Matrix.mul_assoc] at hLL'
     refine' ⟨L ++ [⟨inr star, inl i, by simp, 1⟩], L', _⟩
     simp only [List.map_append, List.prod_append, Matrix.mul_one, to_matrix_mk, List.prod_cons,
       List.prod_nil, mul_eq_mul, List.map, Matrix.mul_assoc (L.map to_matrix).Prod]
@@ -755,7 +755,7 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [F
   induction' hn : Fintype.card n with r IH generalizing n M
   · refine' ⟨List.nil, List.nil, fun _ => 1, _⟩
     ext i j
-    rw [Fintype.card_eq_zero_iff] at hn 
+    rw [Fintype.card_eq_zero_iff] at hn
     exact hn.elim' i
   · have e : n ≃ Sum (Fin r) Unit :=
       by

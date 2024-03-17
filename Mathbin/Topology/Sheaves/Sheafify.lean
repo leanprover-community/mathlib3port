@@ -123,11 +123,11 @@ theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :
   rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩
   rcases hV ⟨x, V.2⟩ with ⟨V', mV, iV, gV, wV⟩
   have wUx := wU ⟨x, mU⟩
-  dsimp at wUx ; erw [wUx] at e ; clear wUx
+  dsimp at wUx; erw [wUx] at e; clear wUx
   have wVx := wV ⟨x, mV⟩
-  dsimp at wVx ; erw [wVx] at e ; clear wVx
+  dsimp at wVx; erw [wVx] at e; clear wVx
   rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', e'⟩
-  dsimp at e' 
+  dsimp at e'
   use⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩
   refine' ⟨_, _, _⟩
   · change W ⊓ (U' ⊓ V') ⟶ U.obj
@@ -137,9 +137,9 @@ theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :
   · intro w
     dsimp
     specialize wU ⟨w.1, w.2.2.1⟩
-    dsimp at wU 
+    dsimp at wU
     specialize wV ⟨w.1, w.2.2.2⟩
-    dsimp at wV 
+    dsimp at wV
     erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩,
       CategoryTheory.types_comp_apply, CategoryTheory.types_comp_apply, e']
 #align Top.presheaf.stalk_to_fiber_injective TopCat.Presheaf.stalkToFiber_injective

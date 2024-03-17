@@ -331,7 +331,7 @@ theorem plusMap_toPlus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) :=
 #print CategoryTheory.GrothendieckTopology.isIso_toPlus_of_isSheaf /-
 theorem isIso_toPlus_of_isSheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P) :=
   by
-  rw [presheaf.is_sheaf_iff_multiequalizer] at hP 
+  rw [presheaf.is_sheaf_iff_multiequalizer] at hP
   rsuffices : ∀ X, is_iso ((J.to_plus P).app X)
   · apply nat_iso.is_iso_of_is_iso_app
   intro X; dsimp

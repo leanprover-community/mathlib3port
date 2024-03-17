@@ -433,7 +433,7 @@ theorem mem_of_lookup_eq_some {a : α} {b : β a} {s : Finmap β} (h : s.dlookup
 theorem ext_lookup {s₁ s₂ : Finmap β} : (∀ x, s₁.dlookup x = s₂.dlookup x) → s₁ = s₂ :=
   induction_on₂ s₁ s₂ fun s₁ s₂ h =>
     by
-    simp only [AList.lookup, lookup_to_finmap] at h 
+    simp only [AList.lookup, lookup_to_finmap] at h
     rw [AList.toFinmap_eq]
     apply lookup_ext s₁.nodupkeys s₂.nodupkeys
     intro x y
@@ -918,9 +918,9 @@ theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' :
     apply ext_lookup; intro x
     have : (s₁ ∪ s₃).dlookup x = (s₂ ∪ s₃).dlookup x := h'' ▸ rfl
     by_cases hs₁ : x ∈ s₁
-    · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this 
+    · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
     · by_cases hs₂ : x ∈ s₂
-      · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this 
+      · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
       · rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂], fun h => h ▸ rfl⟩
 #align finmap.union_cancel Finmap.union_cancel
 -/

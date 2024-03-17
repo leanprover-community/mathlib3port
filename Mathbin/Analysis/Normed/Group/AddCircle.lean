@@ -102,7 +102,7 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
     rcases eq_or_ne p 0 with (rfl | hp); · simp
     intros
     have hx := norm_coe_mul p x p⁻¹
-    rw [abs_inv, eq_inv_mul_iff_mul_eq₀ ((not_congr abs_eq_zero).mpr hp)] at hx 
+    rw [abs_inv, eq_inv_mul_iff_mul_eq₀ ((not_congr abs_eq_zero).mpr hp)] at hx
     rw [← hx, inv_mul_cancel hp, this, ← abs_mul, mul_sub, mul_inv_cancel_left₀ hp, mul_comm p]
   clear x p
   intros
@@ -126,7 +126,7 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
   · simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_csInf_iff h₁ h₂]
     rintro b' ⟨b, hb, rfl⟩
     simp only [mem_set_of_eq, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
-      smul_one_eq_coe] at hb 
+      smul_one_eq_coe] at hb
     obtain ⟨z, hz⟩ := hb
     rw [(by rw [hz]; abel : x = b - z), fract_sub_int, ← abs_sub_round_eq_min]
     convert round_le b 0
@@ -172,11 +172,11 @@ theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ‖(x : AddCircle p)‖ =
   suffices ∀ p : ℝ, 0 < p → |x| ≤ p / 2 → ‖(x : AddCircle p)‖ = |x|
     by
     rcases lt_trichotomy 0 p with (hp | rfl | hp)
-    · rw [abs_eq_self.mpr hp.le] at hx 
+    · rw [abs_eq_self.mpr hp.le] at hx
       exact this p hp hx
     · contradiction
     · rw [← norm_neg_period]
-      rw [abs_eq_neg_self.mpr hp.le] at hx 
+      rw [abs_eq_neg_self.mpr hp.le] at hx
       exact this (-p) (neg_pos.mpr hp) hx
   clear hx
   intro p hp hx
@@ -236,7 +236,7 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
   by
   cases' le_or_lt (|p| / 2) ε with hε hε
   · rcases eq_or_ne p 0 with (rfl | hp)
-    · simp only [abs_zero, zero_div] at hε 
+    · simp only [abs_zero, zero_div] at hε
       simp only [not_lt.mpr hε, coe_real_preimage_closed_ball_period_zero, abs_zero, zero_div,
         if_false, inter_eq_right_iff_subset]
       exact hs.trans (closed_ball_subset_closed_ball <| by simp [hε])
@@ -256,7 +256,7 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
         linarith [abs_eq_self.mpr hp.le]
       · have : p ≤ ↑z * p; nlinarith
         linarith [abs_eq_self.mpr hp.le]
-    · simp only [MulZeroClass.mul_zero, add_zero, abs_zero, zero_div] at hy₁ hy₂ hε 
+    · simp only [MulZeroClass.mul_zero, add_zero, abs_zero, zero_div] at hy₁ hy₂ hε
       linarith
     · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
       · have : -p ≤ ↑z * p; nlinarith

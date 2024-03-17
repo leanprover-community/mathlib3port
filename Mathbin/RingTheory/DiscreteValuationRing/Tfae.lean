@@ -73,7 +73,7 @@ theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing 
       exact Associated.mul_mul (this _ (Multiset.mem_cons_self _ _)) hn
   have : ∃ n : ℕ, x ^ n ∈ I :=
     by
-    obtain ⟨r, hr₁, hr₂⟩ : ∃ r : R, r ∈ I ∧ r ≠ 0 := by by_contra h; push_neg at h ; apply hI;
+    obtain ⟨r, hr₁, hr₂⟩ : ∃ r : R, r ∈ I ∧ r ≠ 0 := by by_contra h; push_neg at h; apply hI;
       rw [eq_bot_iff]; exact h
     obtain ⟨n, u, rfl⟩ := H' r hr₂ (le_maximal_ideal hI' hr₁)
     use n
@@ -82,7 +82,7 @@ theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing 
   apply le_antisymm
   · change ∀ s ∈ I, s ∈ _
     by_contra hI''
-    push_neg at hI'' 
+    push_neg at hI''
     obtain ⟨s, hs₁, hs₂⟩ := hI''
     apply hs₂
     by_cases hs₃ : s = 0; · rw [hs₃]; exact zero_mem _
@@ -102,7 +102,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
   classical
   by_cases ne_bot : maximal_ideal R = ⊥
   · rw [ne_bot]; infer_instance
-  obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximal_ideal R, a ≠ (0 : R) := by by_contra h'; push_neg at h' ;
+  obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximal_ideal R, a ≠ (0 : R) := by by_contra h'; push_neg at h';
     apply ne_bot; rwa [eq_bot_iff]
   have hle : Ideal.span {a} ≤ maximal_ideal R := by rwa [Ideal.span_le, Set.singleton_subset_iff]
   have : (Ideal.span {a}).radical = maximal_ideal R :=
@@ -118,11 +118,11 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
     apply Ideal.exists_radical_pow_le_of_fg; exact IsNoetherian.noetherian _
   cases hn : Nat.find this
   · have := Nat.find_spec this
-    rw [hn, pow_zero, Ideal.one_eq_top] at this 
+    rw [hn, pow_zero, Ideal.one_eq_top] at this
     exact (Ideal.IsMaximal.ne_top inferInstance (eq_top_iff.mpr <| this.trans hle)).elim
   obtain ⟨b, hb₁, hb₂⟩ : ∃ b ∈ maximal_ideal R ^ n, ¬b ∈ Ideal.span {a} :=
     by
-    by_contra h'; push_neg at h' ; rw [Nat.find_eq_iff] at hn 
+    by_contra h'; push_neg at h'; rw [Nat.find_eq_iff] at hn
     exact hn.2 n n.lt_succ_self fun x hx => not_not.mp (h' x hx)
   have hb₃ : ∀ m ∈ maximal_ideal R, ∃ k : R, k * a = b * m :=
     by
@@ -152,13 +152,13 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
       exact ⟨k, le_maximal_ideal h ⟨_, ⟨_, hm, rfl⟩, hk'⟩, hk'.symm⟩
     obtain ⟨y, hy₁, hy₂⟩ : ∃ y ∈ maximal_ideal R, b * y = a :=
       by
-      rw [Ideal.eq_top_iff_one, Submodule.mem_comap] at this 
+      rw [Ideal.eq_top_iff_one, Submodule.mem_comap] at this
       obtain ⟨_, ⟨y, hy, rfl⟩, hy' : x * algebraMap R K y = algebraMap R K 1⟩ := this
-      rw [map_one, ← mul_div_right_comm, div_eq_one_iff_eq ha₃, ← map_mul] at hy' 
+      rw [map_one, ← mul_div_right_comm, div_eq_one_iff_eq ha₃, ← map_mul] at hy'
       exact ⟨y, hy, IsFractionRing.injective R K hy'⟩
     refine' ⟨⟨y, _⟩⟩
     apply le_antisymm
-    · intro m hm; obtain ⟨k, hk⟩ := hb₃ m hm; rw [← hy₂, mul_comm, mul_assoc] at hk 
+    · intro m hm; obtain ⟨k, hk⟩ := hb₃ m hm; rw [← hy₂, mul_comm, mul_assoc] at hk
       rw [← mul_left_cancel₀ hb₄ hk, mul_comm]; exact ideal.mem_span_singleton'.mpr ⟨_, rfl⟩
     · rwa [Submodule.span_le, Set.singleton_subset_iff]
 #align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdeal_isPrincipal_of_isDedekindDomain
@@ -205,17 +205,17 @@ theorem DiscreteValuationRing.TFAE [IsNoetherianRing R] [LocalRing R] [IsDomain 
     use Submodule.Quotient.mk x'
     constructor
     · intro e
-      rw [Submodule.Quotient.mk_eq_zero] at e 
+      rw [Submodule.Quotient.mk_eq_zero] at e
       apply Ring.ne_bot_of_isMaximal_of_not_isField (maximal_ideal.is_maximal R) h
       apply Submodule.eq_bot_of_le_smul_of_le_jacobson_bot (maximal_ideal R)
       · exact ⟨{x}, (Finset.coe_singleton x).symm ▸ hx.symm⟩
       · conv_lhs => rw [hx]
-        rw [Submodule.mem_smul_top_iff] at e 
+        rw [Submodule.mem_smul_top_iff] at e
         rwa [Submodule.span_le, Set.singleton_subset_iff]
       · rw [LocalRing.jacobson_eq_maximalIdeal (⊥ : Ideal R) bot_ne_top]; exact le_refl _
     · refine' fun w => Quotient.inductionOn' w fun y => _
       obtain ⟨y, hy⟩ := y
-      rw [hx, Submodule.mem_span_singleton] at hy 
+      rw [hx, Submodule.mem_span_singleton] at hy
       obtain ⟨a, rfl⟩ := hy
       exact ⟨Ideal.Quotient.mk _ a, rfl⟩
   tfae_have 6 → 5
@@ -237,13 +237,13 @@ theorem DiscreteValuationRing.TFAE [IsNoetherianRing R] [LocalRing R] [IsDomain 
       · infer_instance
       · refine' Ideal.mem_sup_left (ideal.mem_span_singleton'.mpr ⟨c, rfl⟩)
       · have := (Submodule.Quotient.eq _).mp hc
-        rw [Submodule.mem_smul_top_iff] at this 
+        rw [Submodule.mem_smul_top_iff] at this
         exact Ideal.mem_sup_right this
     have h₂ : maximal_ideal R ≤ (⊥ : Ideal R).jacobson := by
       rw [LocalRing.jacobson_eq_maximalIdeal]; exacts [le_refl _, bot_ne_top]
     have :=
       Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson (IsNoetherian.noetherian _) h₂ h₁
-    rw [Submodule.bot_smul, sup_bot_eq] at this 
+    rw [Submodule.bot_smul, sup_bot_eq] at this
     rw [← sup_eq_left, eq_comm]
     exact le_sup_left.antisymm (h₁.trans <| le_of_eq this)
   tfae_have 5 → 7

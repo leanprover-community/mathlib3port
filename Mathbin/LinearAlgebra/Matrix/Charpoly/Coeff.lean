@@ -95,7 +95,7 @@ theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤
 
 #print Matrix.det_of_card_zero /-
 theorem det_of_card_zero (h : Fintype.card n = 0) (M : Matrix n n R) : M.det = 1 := by
-  rw [Fintype.card_eq_zero_iff] at h ; suffices M = 1 by simp [this]; ext i; exact h.elim i
+  rw [Fintype.card_eq_zero_iff] at h; suffices M = 1 by simp [this]; ext i; exact h.elim i
 #align matrix.det_of_card_zero Matrix.det_of_card_zero
 -/
 
@@ -131,8 +131,8 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic :=
   by_cases Fintype.card n = 0; · rw [charpoly, det_of_card_zero h]; apply monic_one
   have mon : (∏ i : n, (X - C (M i i))).Monic := by
     apply monic_prod_of_monic univ fun i : n => X - C (M i i); simp [monic_X_sub_C]
-  rw [← sub_add_cancel (∏ i : n, (X - C (M i i))) M.charpoly] at mon 
-  rw [monic] at *; rw [leading_coeff_add_of_degree_lt] at mon ; rw [← mon]
+  rw [← sub_add_cancel (∏ i : n, (X - C (M i i))) M.charpoly] at mon
+  rw [monic] at *; rw [leading_coeff_add_of_degree_lt] at mon; rw [← mon]
   rw [charpoly_degree_eq_dim]; rw [← neg_sub]; rw [degree_neg]
   apply lt_trans (charpoly_sub_diagonal_degree_lt M); rw [WithBot.coe_lt_coe]
   rw [← Nat.pred_eq_sub_one]; apply Nat.pred_lt; apply h
@@ -165,7 +165,7 @@ theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     simp only [Polynomial.sum, matPolyEquiv_coeff_apply, mul_comm]
     apply (Finset.sum_subset (support_subset_support_matPolyEquiv _ _ _) _).symm
     intro n hn h'n
-    rw [not_mem_support_iff] at h'n 
+    rw [not_mem_support_iff] at h'n
     simp only [h'n, MulZeroClass.zero_mul]
 #align matrix.mat_poly_equiv_eval Matrix.matPolyEquiv_eval
 -/

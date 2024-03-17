@@ -128,7 +128,7 @@ theorem analyticSet_iff_exists_polishSpace_range {s : Set α} :
   by
   constructor
   · intro h
-    rw [analytic_set] at h 
+    rw [analytic_set] at h
     cases h
     · refine' ⟨Empty, by infer_instance, by infer_instance, Empty.elim, continuous_bot, _⟩
       rw [h]
@@ -472,14 +472,14 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α]
     · rw [image_subset_iff]
       apply subset.trans _ hεx
       intro z hz
-      rw [mem_cylinder_iff_dist_le] at hz 
+      rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_left _ _))
     · refine' Disjoint.mono_left _ huv.symm
       change g '' cylinder y n ⊆ v
       rw [image_subset_iff]
       apply subset.trans _ hεy
       intro z hz
-      rw [mem_cylinder_iff_dist_le] at hz 
+      rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_right _ _))
   -- this is a contradiction.
   exact M n B
@@ -492,7 +492,7 @@ disjoint Borel sets. -/
 theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [OpensMeasurableSpace α]
     {s t : Set α} (hs : AnalyticSet s) (ht : AnalyticSet t) (h : Disjoint s t) :
     MeasurablySeparable s t := by
-  rw [analytic_set] at hs ht 
+  rw [analytic_set] at hs ht
   rcases hs with (rfl | ⟨f, f_cont, rfl⟩)
   · refine' ⟨∅, subset.refl _, by simp, MeasurableSet.empty⟩
   rcases ht with (rfl | ⟨g, g_cont, rfl⟩)
@@ -762,7 +762,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       rw [nonempty_iff_ne_empty]
       intro hn
       have := (s n).2
-      rw [hn] at this 
+      rw [hn] at this
       exact b_nonempty this
     -- choose a point `y n ∈ s n`.
     choose y hy using C2
@@ -834,8 +834,8 @@ theorem IsClosed.measurableSet_image_of_continuousOn_injOn {β : Type _} [Topolo
   rw [image_eq_range]
   haveI : PolishSpace s := IsClosed.polishSpace hs
   apply measurable_set_range_of_continuous_injective
-  · rwa [continuousOn_iff_continuous_restrict] at f_cont 
-  · rwa [inj_on_iff_injective] at f_inj 
+  · rwa [continuousOn_iff_continuous_restrict] at f_cont
+  · rwa [inj_on_iff_injective] at f_inj
 #align is_closed.measurable_set_image_of_continuous_on_inj_on IsClosed.measurableSet_image_of_continuousOn_injOn
 -/
 
@@ -904,7 +904,7 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
       have B : MeasurableSet (f '' ((coe : s → γ) '' u)) :=
         A.image_of_continuous_on_inj_on (f_cont.mono (Subtype.coe_image_subset s u))
           (f_inj.mono (Subtype.coe_image_subset s u))
-      rwa [← image_comp] at B  }
+      rwa [← image_comp] at B }
 #align continuous_on.measurable_embedding ContinuousOn.measurableEmbedding
 -/
 
@@ -953,7 +953,7 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
     MeasurableSet {x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c)} :=
   by
   by_cases hl : l.ne_bot
-  swap; · rw [not_ne_bot] at hl ; simp [hl]
+  swap; · rw [not_ne_bot] at hl; simp [hl]
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩
   simp_rw [← cauchy_map_iff_exists_tendsto]
@@ -1050,7 +1050,7 @@ noncomputable def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
     letI := Countable.of_equiv α e
     use e <;> apply measurable_of_countable
   refine' measurable_equiv_of_not_countable h _
-  rwa [e.countable_iff] at h 
+  rwa [e.countable_iff] at h
 #align polish_space.equiv.measurable_equiv PolishSpace.Equiv.measurableEquiv
 -/
 

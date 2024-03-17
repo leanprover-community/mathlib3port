@@ -38,11 +38,13 @@ open scoped MeasureTheory BigOperators ENNReal
 
 open TopologicalSpace
 
+/- warning: discrete_topology.second_countable_topology_of_countable clashes with discrete_topology.second_countable_topology_of_encodable -> DiscreteTopology.secondCountableTopology_of_countable
+Case conversion may be inaccurate. Consider using '#align discrete_topology.second_countable_topology_of_countable DiscreteTopology.secondCountableTopology_of_countableₓ'. -/
 #print DiscreteTopology.secondCountableTopology_of_countable /-
 -- TODO after the port: move to topology/instances/discrete
 instance (priority := 100) DiscreteTopology.secondCountableTopology_of_countable {α : Type _}
     [TopologicalSpace α] [DiscreteTopology α] [Countable α] : SecondCountableTopology α :=
-  @DiscreteTopology.secondCountableTopology_of_encodable _ _ _ (Encodable.ofCountable _)
+  @DiscreteTopology.secondCountableTopology_of_countable _ _ _ (Encodable.ofCountable _)
 #align discrete_topology.second_countable_topology_of_countable DiscreteTopology.secondCountableTopology_of_countable
 -/
 
@@ -103,7 +105,7 @@ theorem stoppedValue_ae_eq_restrict_eq (h : Martingale f ℱ μ) (hτ : IsStoppi
       (condexp_stopping_time_ae_eq_restrict_eq_const_of_le_const h hτ hτ_le i).symm
   rw [Filter.EventuallyEq, ae_restrict_iff' (ℱ.le _ _ (hτ.measurable_set_eq i))]
   refine' Filter.eventually_of_forall fun x hx => _
-  rw [Set.mem_setOf_eq] at hx 
+  rw [Set.mem_setOf_eq] at hx
   simp_rw [stopped_value, hx]
 #align measure_theory.martingale.stopped_value_ae_eq_restrict_eq MeasureTheory.Martingale.stoppedValue_ae_eq_restrict_eq
 -/
@@ -221,7 +223,7 @@ theorem condexp_stoppedValue_stopping_time_ae_eq_restrict_le (h : Martingale f �
         (hτ.measurable_set_le_stopping_time hσ) _ _ _
     · intro t ht
       rw [Set.inter_comm _ t] at ht ⊢
-      rw [hτ.measurable_set_inter_le_iff, is_stopping_time.measurable_set_min_iff hτ hσ] at ht 
+      rw [hτ.measurable_set_inter_le_iff, is_stopping_time.measurable_set_min_iff hτ hσ] at ht
       exact ht.2
     · refine' strongly_measurable.indicator _ (hτ.measurable_set_le_stopping_time hσ)
       refine' Measurable.stronglyMeasurable _
@@ -251,10 +253,10 @@ theorem stoppedValue_min_ae_eq_condexp [SigmaFiniteFiltration μ ℱ] (h : Marti
         μ[stopped_value f τ|hσ.measurable_space]
       by
       rw [ae_restrict_iff' (hσ.measurable_space_le _ (hσ.measurable_set_le_stopping_time hτ).compl)]
-      rw [Filter.EventuallyEq, ae_restrict_iff'] at this 
+      rw [Filter.EventuallyEq, ae_restrict_iff'] at this
       swap; · exact hτ.measurable_space_le _ (hτ.measurable_set_le_stopping_time hσ)
       filter_upwards [this] with x hx hx_mem
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx_mem 
+      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx_mem
       exact hx hx_mem.le
     refine'
       Filter.EventuallyEq.trans _ ((condexp_min_stopping_time_ae_eq_restrict_le hτ hσ).trans _)

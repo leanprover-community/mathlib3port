@@ -111,7 +111,7 @@ alias ⟨Disjoint.eq_bot_of_self, _⟩ := disjoint_self
 
 #print Disjoint.ne /-
 theorem Disjoint.ne (ha : a ≠ ⊥) (hab : Disjoint a b) : a ≠ b := fun h =>
-  ha <| disjoint_self.1 <| by rwa [← h] at hab 
+  ha <| disjoint_self.1 <| by rwa [← h] at hab
 #align disjoint.ne Disjoint.ne
 -/
 
@@ -363,7 +363,7 @@ alias ⟨Codisjoint.eq_top_of_self, _⟩ := codisjoint_self
 
 #print Codisjoint.ne /-
 theorem Codisjoint.ne (ha : a ≠ ⊤) (hab : Codisjoint a b) : a ≠ b := fun h =>
-  ha <| codisjoint_self.1 <| by rwa [← h] at hab 
+  ha <| codisjoint_self.1 <| by rwa [← h] at hab
 #align codisjoint.ne Codisjoint.ne
 -/
 

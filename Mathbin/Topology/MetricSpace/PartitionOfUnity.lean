@@ -54,7 +54,7 @@ theorem eventually_nhds_zero_forall_closedBall_subset (hK : ∀ i, IsClosed (K i
     filter_upwards [tendsto_snd (hfin.Inter_compl_mem_nhds hK x),
       (eventually_all_finite (hfin.point_finite x)).2 this]
     rintro ⟨r, y⟩ hxy hyU i hi
-    simp only [mem_Inter₂, mem_compl_iff, not_imp_not, mem_preimage] at hxy 
+    simp only [mem_Inter₂, mem_compl_iff, not_imp_not, mem_preimage] at hxy
     exact hyU _ (hxy _ hi)
   intro i hi
   rcases nhds_basis_closed_eball.mem_iff.1 ((hU i).mem_nhds <| hKU i hi) with ⟨R, hR₀, hR⟩

@@ -125,7 +125,7 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
     refine' ⟨z, _, hz⟩
     have := (hfz.trans hzB).le
     rwa [slope_def_field, slope_def_field, div_le_div_right (sub_pos.2 hz.1), hxB,
-      sub_le_sub_iff_right] at this 
+      sub_le_sub_iff_right] at this
 #align image_le_of_liminf_slope_right_lt_deriv_boundary' image_le_of_liminf_slope_right_lt_deriv_boundary'
 -/
 
@@ -570,7 +570,7 @@ theorem exists_nhdsWithin_lipschitzOnWith_of_hasFDerivWithinAt_of_nnnorm_lt (hs 
   by
   obtain ⟨ε, ε0, hε⟩ : ∃ ε > 0, ball x ε ∩ s ⊆ {y | HasFDerivWithinAt f (f' y) s y ∧ ‖f' y‖₊ < K}
   exact mem_nhds_within_iff.1 (hder.and <| hcont.nnnorm.eventually (gt_mem_nhds hK))
-  rw [inter_comm] at hε 
+  rw [inter_comm] at hε
   refine' ⟨s ∩ ball x ε, inter_mem_nhdsWithin _ (ball_mem_nhds _ ε0), _⟩
   exact
     (hs.inter (convex_ball _ _)).lipschitzOnWith_of_nnnorm_hasFDerivWithin_le
@@ -705,7 +705,7 @@ theorem eqOn_of_fderivWithin_eq (hs : Convex ℝ s) (hf : DifferentiableOn 𝕜 
     (hf' : ∀ x ∈ s, fderivWithin 𝕜 f s x = fderivWithin 𝕜 g s x) (hx : x ∈ s) (hfgx : f x = g x) :
     s.EqOn f g := by
   intro y hy
-  suffices f x - g x = f y - g y by rwa [hfgx, sub_self, eq_comm, sub_eq_zero] at this 
+  suffices f x - g x = f y - g y by rwa [hfgx, sub_self, eq_comm, sub_eq_zero] at this
   refine' hs.is_const_of_fderiv_within_eq_zero (hf.sub hg) _ hx hy
   intro z hz
   rw [fderivWithin_sub (hs' _ hz) (hf _ hz) (hg _ hz), sub_eq_zero, hf' _ hz]
@@ -884,7 +884,7 @@ theorem exists_hasDerivAt_eq_slope : ∃ c ∈ Ioo a b, f' c = (f b - f a) / (b 
       fun x hx => hasDerivAt_id x with
     ⟨c, cmem, hc⟩
   use c, cmem
-  simp only [_root_.id, Pi.one_apply, mul_one] at hc 
+  simp only [_root_.id, Pi.one_apply, mul_one] at hc
   rw [← hc, mul_div_cancel_left]
   exact ne_of_gt (sub_pos.2 hab)
 #align exists_has_deriv_at_eq_slope exists_hasDerivAt_eq_slope
@@ -1220,7 +1220,7 @@ theorem StrictMonoOn.exists_slope_lt_deriv {x y : ℝ} {f : ℝ → ℝ} (hf : C
   by
   by_cases h : ∀ w ∈ Ioo x y, deriv f w ≠ 0
   · apply StrictMonoOn.exists_slope_lt_deriv_aux hf hxy hf'_mono h
-  · push_neg at h 
+  · push_neg at h
     rcases h with ⟨w, ⟨hxw, hwy⟩, hw⟩
     obtain ⟨a, ⟨hxa, haw⟩, ha⟩ : ∃ (a : ℝ) (H : a ∈ Ioo x w), (f w - f x) / (w - x) < deriv f a :=
       by
@@ -1275,7 +1275,7 @@ theorem StrictMonoOn.exists_deriv_lt_slope {x y : ℝ} {f : ℝ → ℝ} (hf : C
   by
   by_cases h : ∀ w ∈ Ioo x y, deriv f w ≠ 0
   · apply StrictMonoOn.exists_deriv_lt_slope_aux hf hxy hf'_mono h
-  · push_neg at h 
+  · push_neg at h
     rcases h with ⟨w, ⟨hxw, hwy⟩, hw⟩
     obtain ⟨a, ⟨hxa, haw⟩, ha⟩ : ∃ (a : ℝ) (H : a ∈ Ioo x w), deriv f a < (f w - f x) / (w - x) :=
       by
@@ -1553,7 +1553,7 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
     intro t ht; exact ⟨t, ht, rfl⟩
   have hseg' : Icc 0 1 ⊆ g ⁻¹' s := by
     rw [← image_subset_iff]; unfold image; change ∀ _, _
-    intro z Hz; rw [mem_set_of_eq] at Hz ; rcases Hz with ⟨t, Ht, hgt⟩
+    intro z Hz; rw [mem_set_of_eq] at Hz; rcases Hz with ⟨t, Ht, hgt⟩
     rw [← hgt]; exact hs.segment_subset xs ys (hseg t Ht)
   -- derivative of pullback of f under parametrization
   have hfg :
@@ -1563,7 +1563,7 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
     have hg : HasDerivAt g (y - x) t :=
       by
       have := ((hasDerivAt_id t).smul_const (y - x)).const_add x
-      rwa [one_smul] at this 
+      rwa [one_smul] at this
     exact (hf (g t) <| hseg' Ht).comp_hasDerivWithinAt _ hg.has_deriv_within_at hseg'
   -- apply 1-variable mean value theorem to pullback
   have hMVT : ∃ t ∈ Ioo (0 : ℝ) 1, (f' (g t) : E → ℝ) (y - x) = (f (g 1) - f (g 0)) / (1 - 0) :=
@@ -1608,7 +1608,7 @@ theorem hasStrictFDerivAt_of_hasFDerivAt_of_continuousAt
   refine' ⟨ε, ε0, _⟩
   -- simplify formulas involving the product E × E
   rintro ⟨a, b⟩ h
-  rw [← ball_prod_same, prod_mk_mem_set_prod_eq] at h 
+  rw [← ball_prod_same, prod_mk_mem_set_prod_eq] at h
   -- exploit the choice of ε as the modulus of continuity of f'
   have hf' : ∀ x' ∈ ball x ε, ‖f' x' - f' x‖ ≤ c := by intro x' H'; rw [← dist_eq_norm];
     exact le_of_lt (hε H').2

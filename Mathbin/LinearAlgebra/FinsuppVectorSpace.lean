@@ -167,12 +167,12 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
       Finsupp.single i a]
   · simp
   · intro x hx
-    rw [Set.mem_singleton_iff] at hx 
+    rw [Set.mem_singleton_iff] at hx
     simp [hx]
   intro x hx
   have hx' : ¬i = x := by
     refine' ne_comm.mp _
-    rwa [mem_singleton_iff] at hx 
+    rwa [mem_singleton_iff] at hx
   simp [hx']
 #align finset.sum_single_ite Finset.sum_single_ite
 -/

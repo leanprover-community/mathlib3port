@@ -380,7 +380,7 @@ theorem WithSeminorms.hasBasis_ball (hp : WithSeminorms p) {x : E} :
   ext sr : 1
   have : (sr.fst.sup p).ball (x +ᵥ 0) sr.snd = x +ᵥ (sr.fst.sup p).ball 0 sr.snd :=
     Eq.symm (Seminorm.vadd_ball (sr.fst.sup p))
-  rwa [vadd_eq_add, add_zero] at this 
+  rwa [vadd_eq_add, add_zero] at this
 #align with_seminorms.has_basis_ball WithSeminorms.hasBasis_ball
 -/
 
@@ -622,12 +622,12 @@ theorem WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded {s : Set E} (hp 
   rw [hp.has_basis.isVonNBounded_iff]
   constructor
   · intro h I
-    simp only [id.def] at h 
+    simp only [id.def] at h
     specialize h ((I.sup p).ball 0 1) (p.basis_sets_mem I zero_lt_one)
     rcases h with ⟨r, hr, h⟩
     cases' NormedField.exists_lt_norm 𝕜 r with a ha
     specialize h a (le_of_lt ha)
-    rw [Seminorm.smul_ball_zero (norm_pos_iff.1 <| hr.trans ha), mul_one] at h 
+    rw [Seminorm.smul_ball_zero (norm_pos_iff.1 <| hr.trans ha), mul_one] at h
     refine' ⟨‖a‖, lt_trans hr ha, _⟩
     intro x hx
     specialize h hx
@@ -636,7 +636,7 @@ theorem WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded {s : Set E} (hp 
   rcases p.basis_sets_iff.mp hs' with ⟨I, r, hr, hs'⟩
   rw [id.def, hs']
   rcases h I with ⟨r', hr', h'⟩
-  simp_rw [← (I.sup p).mem_ball_zero] at h' 
+  simp_rw [← (I.sup p).mem_ball_zero] at h'
   refine' Absorbs.mono_right _ h'
   exact (Finset.sup I p).ball_zero_absorbs_ball_zero hr
 #align with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded
@@ -647,7 +647,7 @@ theorem WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded (f : G →
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔
       ∀ I : Finset ι, ∃ (r : _) (hr : 0 < r), ∀ x ∈ s, I.sup p (f x) < r :=
-  by simp_rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded, Set.ball_image_iff]
+  by simp_rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded, Set.forall_mem_image]
 #align with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded
 -/
 
@@ -679,7 +679,7 @@ theorem WithSeminorms.isVonNBounded_iff_seminorm_bounded {s : Set E} (hp : WithS
 theorem WithSeminorms.image_isVonNBounded_iff_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∀ i : ι, ∃ (r : _) (hr : 0 < r), ∀ x ∈ s, p i (f x) < r :=
-  by simp_rw [hp.is_vonN_bounded_iff_seminorm_bounded, Set.ball_image_iff]
+  by simp_rw [hp.is_vonN_bounded_iff_seminorm_bounded, Set.forall_mem_image]
 #align with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_seminorm_bounded
 -/
 
@@ -752,7 +752,7 @@ theorem cont_withSeminorms_normedSpace (F) [SeminormedAddCommGroup F] [NormedSpa
     [UniformSpace E] [UniformAddGroup E] {p : ι → Seminorm 𝕝 E} (hp : WithSeminorms p)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∃ (s : Finset ι) (C : ℝ≥0), (normSeminorm 𝕝₂ F).comp f ≤ C • s.sup p) :
     Continuous f := by
-  rw [← Seminorm.isBounded_const (Fin 1)] at hf 
+  rw [← Seminorm.isBounded_const (Fin 1)] at hf
   exact continuous_from_bounded hp (norm_withSeminorms 𝕝₂ F) f hf
 #align seminorm.cont_with_seminorms_normed_space Seminorm.cont_withSeminorms_normedSpace
 -/
@@ -762,7 +762,7 @@ theorem cont_normedSpace_to_withSeminorms (E) [SeminormedAddCommGroup E] [Normed
     [UniformSpace F] [UniformAddGroup F] {q : ι → Seminorm 𝕝₂ F} (hq : WithSeminorms q)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, (q i).comp f ≤ C • normSeminorm 𝕝 E) :
     Continuous f := by
-  rw [← Seminorm.const_isBounded (Fin 1)] at hf 
+  rw [← Seminorm.const_isBounded (Fin 1)] at hf
   exact continuous_from_bounded (norm_withSeminorms 𝕝 E) hq f hf
 #align seminorm.cont_normed_space_to_with_seminorms Seminorm.cont_normedSpace_to_withSeminorms
 -/
@@ -786,8 +786,8 @@ theorem WithSeminorms.toLocallyConvexSpace {p : SeminormFamily 𝕜 E ι} (hp : 
   · rw [hp.1, AddGroupFilterBasis.nhds_eq _, AddGroupFilterBasis.N_zero]
     exact FilterBasis.hasBasis _
   · intro s hs
-    change s ∈ Set.iUnion _ at hs 
-    simp_rw [Set.mem_iUnion, Set.mem_singleton_iff] at hs 
+    change s ∈ Set.iUnion _ at hs
+    simp_rw [Set.mem_iUnion, Set.mem_singleton_iff] at hs
     rcases hs with ⟨I, r, hr, rfl⟩
     exact convex_ball _ _ _
 #align with_seminorms.to_locally_convex_space WithSeminorms.toLocallyConvexSpace

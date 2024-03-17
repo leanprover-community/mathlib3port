@@ -145,13 +145,13 @@ theorem IsLowerSet.inter (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s
 
 #print isUpperSet_iUnion /-
 theorem isUpperSet_iUnion {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋃ i, f i) :=
-  fun a b h => Exists₂.imp <| forall_range_iff.2 fun i => hf i h
+  fun a b h => Exists₂.imp <| forall_mem_range.2 fun i => hf i h
 #align is_upper_set_Union isUpperSet_iUnion
 -/
 
 #print isLowerSet_iUnion /-
 theorem isLowerSet_iUnion {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋃ i, f i) :=
-  fun a b h => Exists₂.imp <| forall_range_iff.2 fun i => hf i h
+  fun a b h => Exists₂.imp <| forall_mem_range.2 fun i => hf i h
 #align is_lower_set_Union isLowerSet_iUnion
 -/
 
@@ -185,13 +185,13 @@ theorem isLowerSet_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : 
 
 #print isUpperSet_iInter /-
 theorem isUpperSet_iInter {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋂ i, f i) :=
-  fun a b h => forall₂_imp <| forall_range_iff.2 fun i => hf i h
+  fun a b h => forall₂_imp <| forall_mem_range.2 fun i => hf i h
 #align is_upper_set_Inter isUpperSet_iInter
 -/
 
 #print isLowerSet_iInter /-
 theorem isLowerSet_iInter {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋂ i, f i) :=
-  fun a b h => forall₂_imp <| forall_range_iff.2 fun i => hf i h
+  fun a b h => forall₂_imp <| forall_mem_range.2 fun i => hf i h
 #align is_lower_set_Inter isLowerSet_iInter
 -/
 
@@ -523,7 +523,7 @@ variable [LinearOrder α] {s t : Set α}
 theorem IsUpperSet.total (hs : IsUpperSet s) (ht : IsUpperSet t) : s ⊆ t ∨ t ⊆ s :=
   by
   by_contra! h
-  simp_rw [Set.not_subset] at h 
+  simp_rw [Set.not_subset] at h
   obtain ⟨⟨a, has, hat⟩, b, hbt, hbs⟩ := h
   obtain hab | hba := le_total a b
   · exact hbs (hs hab has)

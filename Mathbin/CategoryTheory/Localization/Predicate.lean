@@ -447,7 +447,7 @@ open Localization
 theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W] : L₂.IsLocalization W :=
   by
   have h := localization.inverts L₁ W
-  rw [morphism_property.is_inverted_by.iff_of_iso W e] at h 
+  rw [morphism_property.is_inverted_by.iff_of_iso W e] at h
   let F₁ := localization.construction.lift L₁ (localization.inverts L₁ W)
   let F₂ := localization.construction.lift L₂ h
   exact

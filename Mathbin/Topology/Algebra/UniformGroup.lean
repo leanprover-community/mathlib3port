@@ -413,16 +413,16 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → 
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add_swapped Filter.HasBasis.uniformity_of_nhds_zero_neg_add_swapped
 -/
 
-#print group_separationRel /-
+#print group_inseparable_iff /-
 @[to_additive]
-theorem group_separationRel (x y : α) : (x, y) ∈ separationRel α ↔ x / y ∈ closure ({1} : Set α) :=
+theorem group_inseparable_iff (x y : α) : (x, y) ∈ Inseparable α ↔ x / y ∈ closure ({1} : Set α) :=
   have : Embedding fun a => a * (y / x) := (uniformEmbedding_translate_mul (y / x)).Embedding
   show (x, y) ∈ ⋂₀ (𝓤 α).sets ↔ x / y ∈ closure ({1} : Set α)
     by
     rw [this.closure_eq_preimage_closure_image, uniformity_eq_comap_nhds_one α, sInter_comap_sets]
     simp [mem_closure_iff_nhds, inter_singleton_nonempty, sub_eq_add_neg, add_assoc]
-#align group_separation_rel group_separationRel
-#align add_group_separation_rel addGroup_separationRel
+#align group_separation_rel group_inseparable_iff
+#align add_group_separation_rel addGroup_inseparable_iff
 -/
 
 #print uniformContinuous_of_tendsto_one /-
@@ -487,7 +487,7 @@ theorem UniformGroup.uniformContinuous_iff_open_ker {hom : Type _} [UniformSpace
 theorem uniformContinuous_monoidHom_of_continuous {hom : Type _} [UniformSpace β] [Group β]
     [UniformGroup β] [MonoidHomClass hom α β] {f : hom} (h : Continuous f) : UniformContinuous f :=
   uniformContinuous_of_tendsto_one <|
-    suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by rwa [map_one] at this 
+    suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by rwa [map_one] at this
     h.Tendsto 1
 #align uniform_continuous_monoid_hom_of_continuous uniformContinuous_monoidHom_of_continuous
 #align uniform_continuous_add_monoid_hom_of_continuous uniformContinuous_addMonoidHom_of_continuous
@@ -712,7 +712,7 @@ instance Subgroup.isClosed_of_discrete [T2Space G] {H : Subgroup G} [DiscreteTop
   by
   obtain ⟨V, V_in, VH⟩ : ∃ (V : Set G) (hV : V ∈ 𝓝 (1 : G)), V ∩ (H : Set G) = {1}
   exact nhds_inter_eq_singleton_of_mem_discrete H.one_mem
-  haveI : SeparatedSpace G := separated_iff_t2.mpr ‹_›
+  haveI : T0Space G := separated_iff_t2.mpr ‹_›
   have : (fun p : G × G => p.2 / p.1) ⁻¹' V ∈ 𝓤 G := preimage_mem_comap V_in
   apply isClosed_of_spaced_out this
   intro h h_in h' h'_in
@@ -815,19 +815,19 @@ open Set
 theorem TopologicalGroup.t2Space_iff_one_closed : T2Space G ↔ IsClosed ({1} : Set G) :=
   by
   haveI : UniformGroup G := comm_topologicalGroup_is_uniform
-  rw [← separated_iff_t2, separatedSpace_iff, ← closure_eq_iff_isClosed]
+  rw [← R1Space.t2Space_iff_t0Space, t0Space_iff_ker_uniformity, ← closure_eq_iff_isClosed]
   constructor <;> intro h
   · apply subset.antisymm
     · intro x x_in
-      have := group_separationRel x 1
-      rw [div_one] at this 
-      rw [← this, h] at x_in 
-      change x = 1 at x_in 
+      have := group_inseparable_iff x 1
+      rw [div_one] at this
+      rw [← this, h] at x_in
+      change x = 1 at x_in
       simp [x_in]
     · exact subset_closure
   · ext p
     cases' p with x y
-    rw [group_separationRel x, h, mem_singleton_iff, div_eq_one]
+    rw [group_inseparable_iff x, h, mem_singleton_iff, div_eq_one]
     rfl
 #align topological_group.t2_space_iff_one_closed TopologicalGroup.t2Space_iff_one_closed
 #align topological_add_group.t2_space_iff_zero_closed TopologicalAddGroup.t2Space_iff_zero_closed
@@ -842,7 +842,7 @@ theorem TopologicalGroup.t2Space_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U �
   intro x x_not
   have : x ≠ 1 := mem_compl_singleton_iff.mp x_not
   rcases H x this with ⟨U, U_in, xU⟩
-  rw [← nhds_one_symm G] at U_in 
+  rw [← nhds_one_symm G] at U_in
   rcases U_in with ⟨W, W_in, UW⟩
   rw [← nhds_translation_mul_inv]
   use W, W_in
@@ -919,7 +919,7 @@ variable [TopologicalSpace γ] [AddCommGroup γ] [TopologicalAddGroup γ]
 
 variable [TopologicalSpace δ] [AddCommGroup δ] [TopologicalAddGroup δ]
 
-variable [UniformSpace G] [AddCommGroup G] [UniformAddGroup G] [SeparatedSpace G] [CompleteSpace G]
+variable [UniformSpace G] [AddCommGroup G] [UniformAddGroup G] [T0Space G] [CompleteSpace G]
 
 variable {e : β →+ α} (de : DenseInducing e)
 
@@ -948,7 +948,7 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     exact (this : _)
   have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0) := by simpa using hφ.tendsto (0, y₁)
   have lim := lim2.comp lim1
-  rw [tendsto_prod_self_iff] at lim 
+  rw [tendsto_prod_self_iff] at lim
   simp_rw [ball_mem_comm]
   exact limUnder W' W'_nhd
 
@@ -977,8 +977,8 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
         (comap ee (𝓝 (x₀, x₀)) ×ᶠ comap ff (𝓝 (y₀, y₀))) (𝓝 0 ×ᶠ 𝓝 0) :=
       by
       have := Filter.prod_mono (tendsto_sub_comap_self de x₀) (tendsto_sub_comap_self df y₀)
-      rwa [prod_map_map_eq] at this 
-    rw [← nhds_prod_eq] at lim_sub_sub 
+      rwa [prod_map_map_eq] at this
+    rw [← nhds_prod_eq] at lim_sub_sub
     exact tendsto.comp lim_φ lim_sub_sub
   rcases exists_nhds_zero_quarter W'_nhd with ⟨W, W_nhd, W4⟩
   have :
@@ -988,9 +988,9 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
           ∀ (y) (_ : y ∈ V₁) (y') (_ : y' ∈ V₁), Φ (x' - x, y' - y) ∈ W :=
     by
     have := tendsto_prod_iff.1 lim_φ_sub_sub W W_nhd
-    repeat' rw [nhds_prod_eq, ← prod_comap_comap_eq] at this 
+    repeat' rw [nhds_prod_eq, ← prod_comap_comap_eq] at this
     rcases this with ⟨U, U_in, V, V_in, H⟩
-    rw [mem_prod_same_iff] at U_in V_in 
+    rw [mem_prod_same_iff] at U_in V_in
     rcases U_in with ⟨U₁, U₁_in, HU₁⟩
     rcases V_in with ⟨V₁, V₁_in, HV₁⟩
     exists U₁, U₁_in, V₁, V₁_in
@@ -1046,21 +1046,21 @@ theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) :=
     intro W' W'_nhd
     have key := extend_Z_bilin_key de df hφ W'_nhd x₀ y₀
     rcases key with ⟨U, U_nhd, V, V_nhd, h⟩
-    rw [mem_comap] at U_nhd 
+    rw [mem_comap] at U_nhd
     rcases U_nhd with ⟨U', U'_nhd, U'_sub⟩
-    rw [mem_comap] at V_nhd 
+    rw [mem_comap] at V_nhd
     rcases V_nhd with ⟨V', V'_nhd, V'_sub⟩
     rw [mem_map, mem_comap, nhds_prod_eq]
     exists (U' ×ˢ V') ×ˢ U' ×ˢ V'
     rw [mem_prod_same_iff]
     simp only [exists_prop]
     constructor
-    · change U' ∈ 𝓝 x₀ at U'_nhd 
-      change V' ∈ 𝓝 y₀ at V'_nhd 
+    · change U' ∈ 𝓝 x₀ at U'_nhd
+      change V' ∈ 𝓝 y₀ at V'_nhd
       have := prod_mem_prod U'_nhd V'_nhd
       tauto
     · intro p h'
-      simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h' 
+      simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h'
       rcases p with ⟨⟨x, y⟩, ⟨x', y'⟩⟩
       apply h <;> tauto
 #align dense_inducing.extend_Z_bilin DenseInducing.extend_Z_bilin
@@ -1098,7 +1098,7 @@ instance QuotientGroup.completeSpace' (G : Type u) [Group G] [TopologicalSpace G
   haveI : (𝓤 (G ⧸ N)).IsCountablyGenerated := comap.is_countably_generated _ _
   obtain ⟨u, hu, u_mul⟩ := TopologicalGroup.exists_antitone_basis_nhds_one G
   obtain ⟨hv, v_anti⟩ := @has_antitone_basis.map _ _ _ _ _ _ (coe : G → G ⧸ N) hu
-  rw [← QuotientGroup.nhds_eq N 1, QuotientGroup.mk_one] at hv 
+  rw [← QuotientGroup.nhds_eq N 1, QuotientGroup.mk_one] at hv
   refine' UniformSpace.complete_of_cauchySeq_tendsto fun x hx => _
   /- Given `n : ℕ`, for sufficiently large `a b : ℕ`, given any lift of `x b`, we can find a lift
     of `x a` such that the quotient of the lifts lies in `u n`. -/
@@ -1109,7 +1109,7 @@ instance QuotientGroup.completeSpace' (G : Type u) [Group G] [TopologicalSpace G
     by
     have h𝓤GN : (𝓤 (G ⧸ N)).HasBasis (fun _ => True) fun i => {x | x.snd / x.fst ∈ coe '' u i} := by
       simpa [uniformity_eq_comap_nhds_one'] using hv.comap _
-    simp only [h𝓤GN.cauchy_seq_iff, ge_iff_le, mem_set_of_eq, forall_true_left, mem_image] at hx 
+    simp only [h𝓤GN.cauchy_seq_iff, ge_iff_le, mem_set_of_eq, forall_true_left, mem_image] at hx
     intro i j
     rcases hx i with ⟨M, hM⟩
     refine' ⟨max j M + 1, (le_max_left _ _).trans_lt (lt_add_one _), fun a b ha hb g hg => _⟩
@@ -1183,7 +1183,7 @@ quotient obtained via other means.  -/
 instance QuotientGroup.completeSpace (G : Type u) [Group G] [us : UniformSpace G] [UniformGroup G]
     [FirstCountableTopology G] (N : Subgroup G) [N.normal] [hG : CompleteSpace G] :
     @CompleteSpace (G ⧸ N) (TopologicalGroup.toUniformSpace (G ⧸ N)) := by
-  rw [← @UniformGroup.toUniformSpace_eq _ us _ _] at hG ; infer_instance
+  rw [← @UniformGroup.toUniformSpace_eq _ us _ _] at hG; infer_instance
 #align quotient_group.complete_space QuotientGroup.completeSpace
 #align quotient_add_group.complete_space QuotientAddGroup.completeSpace
 -/

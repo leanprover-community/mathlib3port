@@ -86,7 +86,7 @@ theorem piIsoPi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) 
     (piIsoPi α).Hom x i = (Pi.π α i : _) x :=
   by
   have := pi_iso_pi_inv_π α i
-  rw [iso.inv_comp_eq] at this 
+  rw [iso.inv_comp_eq] at this
   exact concrete_category.congr_hom this x
 #align Top.pi_iso_pi_hom_apply TopCat.piIsoPi_hom_apply
 -/
@@ -202,10 +202,10 @@ def prodBinaryFanIsLimit (X Y : TopCat.{u}) : IsLimit (prodBinaryFan X Y)
     intro S m h
     ext x
     · specialize h ⟨walking_pair.left⟩
-      apply_fun fun e => e x at h 
+      apply_fun fun e => e x at h
       exact h
     · specialize h ⟨walking_pair.right⟩
-      apply_fun fun e => e x at h 
+      apply_fun fun e => e x at h
       exact h
 #align Top.prod_binary_fan_is_limit TopCat.prodBinaryFanIsLimit
 -/
@@ -404,7 +404,7 @@ theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
       · rw [Equiv.ofInjective_symm_apply]
     · intro T f g; ext x; refine' (dif_neg _).trans _
       · rintro ⟨y, e⟩; have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
-        rwa [disjoint_iff.mp h₃.1] at this 
+        rwa [disjoint_iff.mp h₃.1] at this
       · exact congr_arg g (Equiv.ofInjective_symm_apply _ _)
     · rintro T _ _ m rfl rfl; ext x; change m x = dite _ _ _
       split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm

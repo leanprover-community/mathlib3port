@@ -316,7 +316,7 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
   ⟨fun h => by cases h <;> simp [*], fun h =>
     match p, q, h with
     | (a, b), (c, d), Or.inl h => Lex.left _ _ h
-    | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e  <;> subst e <;> exact lex.right _ h⟩
+    | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact lex.right _ h⟩
 #align prod.lex_def Prod.lex_def
 -/
 

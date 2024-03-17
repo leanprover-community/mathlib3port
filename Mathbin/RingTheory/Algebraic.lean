@@ -452,7 +452,7 @@ theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]}
 theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (x⁻¹ : L) ∈ A :=
   by
   obtain ⟨p, ne_zero, aeval_eq⟩ := hx
-  rw [Subalgebra.aeval_coe, Subalgebra.coe_eq_zero] at aeval_eq 
+  rw [Subalgebra.aeval_coe, Subalgebra.coe_eq_zero] at aeval_eq
   revert ne_zero aeval_eq
   refine' p.rec_on_horner _ _ _
   · intro h
@@ -461,7 +461,7 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (
     refine' A.inv_mem_of_root_of_coeff_zero_ne_zero aeval_eq _
     rwa [coeff_add, hp, zero_add, coeff_C, if_pos rfl]
   · intro p hp ih ne_zero aeval_eq
-    rw [AlgHom.map_mul, aeval_X, mul_eq_zero] at aeval_eq 
+    rw [AlgHom.map_mul, aeval_X, mul_eq_zero] at aeval_eq
     cases' aeval_eq with aeval_eq x_eq
     · exact ih hp aeval_eq
     · rw [x_eq, Subalgebra.coe_zero, inv_zero]

@@ -470,7 +470,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   by
   have h : IsIntegral K x :=
     IsIntegral.tower_top (isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
-  have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx 
+  have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx
   have h2 : minpoly K x ∣ p.map (algebraMap F K) :=
     by
     apply minpoly.dvd
@@ -514,7 +514,7 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   let P : IntermediateField F E → Prop := fun K => Fintype.card (K →ₐ[F] E) = finrank F K
   suffices P (IntermediateField.adjoin F ↑s)
     by
-    rw [AdjoinRoot] at this 
+    rw [AdjoinRoot] at this
     apply of_card_aut_eq_finrank
     rw [← Eq.trans this (LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv)]
     exact
@@ -525,9 +525,9 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   · have key :=
       IntermediateField.card_algHom_adjoin_integral F
         (show IsIntegral F (0 : E) from isIntegral_zero)
-    rw [minpoly.zero, Polynomial.natDegree_X] at key 
+    rw [minpoly.zero, Polynomial.natDegree_X] at key
     specialize key Polynomial.separable_X (Polynomial.splits_X (algebraMap F E))
-    rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_toSubalgebra] at key 
+    rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_toSubalgebra] at key
     refine' Eq.trans _ key
     apply Fintype.card_congr
     rw [IntermediateField.adjoin_zero]

@@ -716,14 +716,14 @@ theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : EReal) =
     rw [ENNReal.top_mul']; split_ifs
     · simp only [h, coe_ennreal_zero, MulZeroClass.mul_zero]
     · have A : (0 : ℝ) < y := by
-        simp only [ENNReal.coe_eq_zero] at h 
+        simp only [ENNReal.coe_eq_zero] at h
         exact NNReal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
       simp only [coe_nnreal_eq_coe_real, coe_ennreal_top, (· * ·), EReal.mul, A, if_true]
   | (x : ℝ≥0), ⊤ => by
     rw [ENNReal.mul_top']; split_ifs
     · simp only [h, coe_ennreal_zero, MulZeroClass.zero_mul]
     · have A : (0 : ℝ) < x := by
-        simp only [ENNReal.coe_eq_zero] at h 
+        simp only [ENNReal.coe_eq_zero] at h
         exact NNReal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
       simp only [coe_nnreal_eq_coe_real, coe_ennreal_top, (· * ·), EReal.mul, A, if_true]
   | (x : ℝ≥0), (y : ℝ≥0) => by
@@ -1068,7 +1068,7 @@ theorem neg_lt_of_neg_lt {a b : EReal} (h : -a < b) : -b < a :=
   by
   apply lt_of_le_of_ne (EReal.neg_le_of_neg_le h.le)
   intro H
-  rw [← H, neg_neg] at h 
+  rw [← H, neg_neg] at h
   exact lt_irrefl _ h
 #align ereal.neg_lt_of_neg_lt EReal.neg_lt_of_neg_lt
 -/
@@ -1220,7 +1220,7 @@ theorem mul_top_of_neg {x : EReal} (h : x < 0) : x * ⊤ = ⊥ :=
   by
   induction x using EReal.rec
   · rfl
-  · simp only [EReal.coe_neg'] at h 
+  · simp only [EReal.coe_neg'] at h
     simp only [Mul.mul, EReal.mul, not_lt.2 h.le, h.ne, if_false]
   · simpa only [not_top_lt] using h
 #align ereal.mul_top_of_neg EReal.mul_top_of_neg
@@ -1277,7 +1277,7 @@ theorem mul_bot_of_neg {x : EReal} (h : x < 0) : x * ⊥ = ⊤ :=
   by
   induction x using EReal.rec
   · rfl
-  · simp only [EReal.coe_neg'] at h 
+  · simp only [EReal.coe_neg'] at h
     simp only [Mul.mul, EReal.mul, not_lt.2 h.le, h.ne, if_false]
   · simpa only [not_top_lt] using h
 #align ereal.mul_bot_of_neg EReal.mul_bot_of_neg
@@ -1571,7 +1571,7 @@ theorem le_iff_sign {x y : EReal} :
   · intro h
     rcases(sign.monotone h).lt_or_eq with (hs | hs)
     · exact Or.inl hs
-    · rw [← x.sign_mul_abs, ← y.sign_mul_abs] at h 
+    · rw [← x.sign_mul_abs, ← y.sign_mul_abs] at h
       cases SignType.sign y <;> rw [hs] at *
       · simp
       · simp at h ⊢; exact Or.inl h

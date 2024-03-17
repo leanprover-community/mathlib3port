@@ -2055,7 +2055,7 @@ theorem DirectedOn.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} {
     {c : Set ι} (hn : c.Nonempty) (hc : DirectedOn (fun i j => f i ⊆ f j) c) {s : Finset α}
     (hs : (s : Set α) ⊆ ⋃ i ∈ c, f i) : ∃ i ∈ c, (s : Set α) ⊆ f i :=
   by
-  rw [Set.biUnion_eq_iUnion] at hs 
+  rw [Set.biUnion_eq_iUnion] at hs
   haveI := hn.coe_sort
   obtain ⟨⟨i, hic⟩, hi⟩ :=
     (directed_comp.2 hc.directed_coe).exists_mem_subset_of_finset_subset_biUnion hs
@@ -2542,7 +2542,7 @@ theorem mem_erase_of_ne_of_mem : a ≠ b → a ∈ s → a ∈ erase s b := by
 `a`. -/
 theorem eq_of_mem_of_not_mem_erase (hs : b ∈ s) (hsa : b ∉ s.eraseₓ a) : b = a :=
   by
-  rw [mem_erase, not_and] at hsa 
+  rw [mem_erase, not_and] at hsa
   exact not_imp_not.mp hsa hs
 #align finset.eq_of_mem_of_not_mem_erase Finset.eq_of_mem_of_not_mem_erase
 -/
@@ -3714,7 +3714,7 @@ theorem coe_filter (s : Finset α) : ↑(s.filterₓ p) = ({x ∈ ↑s | p x} : 
 
 #print Finset.subset_coe_filter_of_subset_forall /-
 theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : t ⊆ s)
-    (h₂ : ∀ x ∈ t, p x) : t ⊆ s.filterₓ p := fun x hx => (s.coe_filter p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
+    (h₂ : ∀ x ∈ t, p x) : t ⊆ s.filterₓ p := fun x hx => (s.filter_coe p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
 #align finset.subset_coe_filter_of_subset_forall Finset.subset_coe_filter_of_subset_forall
 -/
 
@@ -5076,10 +5076,10 @@ theorem disjoint_toFinset {m1 m2 : Multiset α} :
   by
   rw [Finset.disjoint_iff_ne]
   refine' ⟨fun h a ha1 ha2 => _, _⟩
-  · rw [← Multiset.mem_toFinset] at ha1 ha2 
+  · rw [← Multiset.mem_toFinset] at ha1 ha2
     exact h _ ha1 _ ha2 rfl
   · rintro h a ha b hb rfl
-    rw [Multiset.mem_toFinset] at ha hb 
+    rw [Multiset.mem_toFinset] at ha hb
     exact h ha hb
 #align multiset.disjoint_to_finset Multiset.disjoint_toFinset
 -/

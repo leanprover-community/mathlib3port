@@ -28,7 +28,7 @@ theorem equicontinuous_of_equicontinuousAt_one {ι G M hom : Type _} [Topologica
   by
   letI : CoeFun hom fun _ => G → M := DFunLike.hasCoeToFun
   rw [equicontinuous_iff_continuous]
-  rw [equicontinuousAt_iff_continuousAt] at hf 
+  rw [equicontinuousAt_iff_continuousAt] at hf
   let φ : G →* ι → M :=
     { toFun := swap (coeFn ∘ F)
       map_one' := by ext <;> exact map_one _
@@ -46,7 +46,7 @@ theorem uniformEquicontinuous_of_equicontinuousAt_one {ι G M hom : Type _} [Uni
   by
   letI : CoeFun hom fun _ => G → M := DFunLike.hasCoeToFun
   rw [uniformEquicontinuous_iff_uniformContinuous]
-  rw [equicontinuousAt_iff_continuousAt] at hf 
+  rw [equicontinuousAt_iff_continuousAt] at hf
   let φ : G →* ι → M :=
     { toFun := swap (coeFn ∘ F)
       map_one' := by ext <;> exact map_one _

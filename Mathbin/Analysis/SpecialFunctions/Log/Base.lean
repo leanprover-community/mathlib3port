@@ -565,7 +565,7 @@ theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈
   classical
   induction' s using Finset.induction_on with a s ha ih
   · simp
-  simp only [Finset.mem_insert, forall_eq_or_imp] at hf 
+  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
   simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 #align real.logb_prod Real.logb_prod
 -/

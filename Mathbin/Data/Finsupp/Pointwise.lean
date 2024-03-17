@@ -61,7 +61,7 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
     (g₁ * g₂).support ⊆ g₁.support ∩ g₂.support :=
   by
   intro a h
-  simp only [mul_apply, mem_support_iff] at h 
+  simp only [mul_apply, mem_support_iff] at h
   simp only [mem_support_iff, mem_inter, Ne.def]
   rw [← not_or]
   intro w

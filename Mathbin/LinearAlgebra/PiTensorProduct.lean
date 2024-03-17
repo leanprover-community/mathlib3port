@@ -241,7 +241,7 @@ protected theorem induction_on' {C : ⨂[R] i, s i → Prop} (z : ⨂[R] i, s i)
   by
   have C0 : C 0 := by
     have h₁ := @C1 0 0
-    rwa [zero_tprod_coeff] at h₁ 
+    rwa [zero_tprod_coeff] at h₁
   refine' AddCon.induction_on z fun x => FreeAddMonoid.recOn x C0 _
   simp_rw [AddCon.coe_add]
   refine' fun f y ih => Cp _ ih
@@ -380,7 +380,7 @@ theorem tprodCoeff_eq_smul_tprod (z : R) (f : ∀ i, s i) : tprodCoeff R z f = z
 protected theorem induction_on {C : ⨂[R] i, s i → Prop} (z : ⨂[R] i, s i)
     (C1 : ∀ {r : R} {f : ∀ i, s i}, C (r • tprod R f)) (Cp : ∀ {x y}, C x → C y → C (x + y)) :
     C z := by
-  simp_rw [← tprod_coeff_eq_smul_tprod] at C1 
+  simp_rw [← tprod_coeff_eq_smul_tprod] at C1
   exact PiTensorProduct.induction_on' z @C1 @Cp
 #align pi_tensor_product.induction_on PiTensorProduct.induction_on
 -/

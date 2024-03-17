@@ -133,7 +133,7 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.End R M} :
   constructor
   · intro h i
     have := LinearMap.congr_fun h (Pi.single i 1)
-    rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this 
+    rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this
   · intro h
     ext
     simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.fromEnd_apply_single_one,
@@ -250,7 +250,7 @@ theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I :
     dsimp [A]
     intro j
     specialize hbM' (b j)
-    rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM' 
+    rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM'
   exact
     ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_toEnd_of_represents R b hb ⟨A, f, this⟩ this,
       fun i j => (bM' (b j) i).Prop⟩

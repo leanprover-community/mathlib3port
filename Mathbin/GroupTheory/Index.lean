@@ -76,7 +76,7 @@ theorem index_comap_of_surjective {G' : Type _} [Group G'] {f : G' →* G}
     simp only [QuotientGroup.leftRel_apply]
     exact fun x y => iff_of_eq (congr_arg (· ∈ H) (by rw [f.map_mul, f.map_inv]))
   refine' Cardinal.toNat_congr (Equiv.ofBijective (Quotient.map' f fun x y => (key x y).mp) ⟨_, _⟩)
-  · simp_rw [← Quotient.eq''] at key 
+  · simp_rw [← Quotient.eq''] at key
     refine' Quotient.ind' fun x => _
     refine' Quotient.ind' fun y => _
     exact (key x y).mpr

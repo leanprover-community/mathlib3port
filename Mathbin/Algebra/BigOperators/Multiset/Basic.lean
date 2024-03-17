@@ -68,12 +68,12 @@ theorem prod_eq_foldl (s : Multiset α) :
 #align multiset.sum_eq_foldl Multiset.sum_eq_foldl
 -/
 
-#print Multiset.coe_prod /-
+#print Multiset.prod_coe /-
 @[simp, norm_cast, to_additive]
-theorem coe_prod (l : List α) : prod ↑l = l.Prod :=
+theorem prod_coe (l : List α) : prod ↑l = l.Prod :=
   prod_eq_foldl _
-#align multiset.coe_prod Multiset.coe_prod
-#align multiset.coe_sum Multiset.coe_sum
+#align multiset.coe_prod Multiset.prod_coe
+#align multiset.coe_sum Multiset.sum_coe
 -/
 
 #print Multiset.prod_toList /-

@@ -323,7 +323,7 @@ instance : Bracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G)
       have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
       have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
       rw [apply_hfdifferential, apply_fdifferential, Derivation.evalAt_apply] at hX hY ⊢
-      rw [comp_L] at hX hY 
+      rw [comp_L] at hX hY
       rw [Derivation.commutator_apply, SmoothMap.coe_sub, Pi.sub_apply, coe_derivation]
       rw [coe_derivation] at hX hY ⊢
       rw [hX, hY]

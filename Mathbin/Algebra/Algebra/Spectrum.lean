@@ -180,7 +180,7 @@ theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} :
     r • resolvent a (s : R) = resolvent (r⁻¹ • a) (r⁻¹ • s : R) :=
   by
   by_cases h : s ∈ spectrum R a
-  · rw [mem_iff] at h 
+  · rw [mem_iff] at h
     simp only [resolvent, Algebra.algebraMap_eq_smul_one] at *
     rw [smul_assoc, ← smul_sub]
     have h' : ¬IsUnit (r⁻¹ • (s • 1 - a)) := fun hu =>
@@ -220,7 +220,7 @@ theorem inv_mem_resolventSet {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ resolventSet R
     rw [mul_sub, mul_smul_comm, a.mul_inv, mul_one]
   have h₂ : (r • (↑a⁻¹ : A) - 1) * a = r • 1 - a := by
     rw [sub_mul, smul_mul_assoc, a.inv_mul, one_mul]
-  have hcomm : Commute (a : A) (r • (↑a⁻¹ : A) - 1) := by rwa [← h₂] at h₁ 
+  have hcomm : Commute (a : A) (r • (↑a⁻¹ : A) - 1) := by rwa [← h₂] at h₁
   exact (hcomm.is_unit_mul_iff.mp (h₁.symm ▸ h)).2
 #align spectrum.inv_mem_resolvent_set spectrum.inv_mem_resolventSet
 -/
@@ -411,7 +411,7 @@ theorem zero_eq [Nontrivial A] : σ (0 : A) = {0} :=
   refine' Set.Subset.antisymm _ (by simp [Algebra.algebraMap_eq_smul_one, mem_iff])
   rw [spectrum, Set.compl_subset_comm]
   intro k hk
-  rw [Set.mem_compl_singleton_iff] at hk 
+  rw [Set.mem_compl_singleton_iff] at hk
   have : IsUnit (Units.mk0 k hk • (1 : A)) := IsUnit.smul (Units.mk0 k hk) isUnit_one
   simpa [mem_resolvent_set_iff, Algebra.algebraMap_eq_smul_one]
 #align spectrum.zero_eq spectrum.zero_eq
@@ -450,7 +450,7 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
   suffices h : ∀ x y : A, σ (x * y) \ {0} ⊆ σ (y * x) \ {0}
   · exact Set.eq_of_subset_of_subset (h a b) (h b a)
   · rintro _ _ k ⟨k_mem, k_neq⟩
-    change k with ↑(Units.mk0 k k_neq) at k_mem 
+    change k with ↑(Units.mk0 k k_neq) at k_mem
     exact ⟨unit_mem_mul_iff_mem_swap_mul.mp k_mem, k_neq⟩
 #align spectrum.nonzero_mul_eq_swap_mul spectrum.nonzero_mul_eq_swap_mul
 -/
@@ -459,10 +459,10 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
 protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) :=
   by
   refine' Set.eq_of_subset_of_subset (fun k hk => _) fun k hk => _
-  · rw [Set.mem_inv] at hk 
+  · rw [Set.mem_inv] at hk
     have : k ≠ 0 := by simpa only [inv_inv] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
     lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr this
-    rw [← Units.val_inv_eq_inv_val k] at hk 
+    rw [← Units.val_inv_eq_inv_val k] at hk
     exact inv_mem_iff.mp hk
   · lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr (ne_zero_of_mem_of_unit hk)
     simpa only [Units.val_inv_eq_inv_val] using inv_mem_iff.mp hk

@@ -97,10 +97,10 @@ theorem testBit_eq_inth (n i : ℕ) : n.testBit i = n.bits.getI i :=
 theorem eq_of_testBit_eq {n m : ℕ} (h : ∀ i, testBit n i = testBit m i) : n = m :=
   by
   induction' n using Nat.binaryRec with b n hn generalizing m
-  · simp only [zero_test_bit] at h 
+  · simp only [zero_test_bit] at h
     exact (zero_of_test_bit_eq_ff fun i => (h i).symm).symm
   induction' m using Nat.binaryRec with b' m hm
-  · simp only [zero_test_bit] at h 
+  · simp only [zero_test_bit] at h
     exact zero_of_test_bit_eq_ff h
   suffices h' : n = m
   · rw [h', show b = b' by simpa using h 0]
@@ -133,19 +133,19 @@ theorem lt_of_testBit {n m : ℕ} (i : ℕ) (hn : testBit n i = false) (hm : tes
   by
   induction' n using Nat.binaryRec with b n hn' generalizing i m
   · contrapose! hm
-    rw [le_zero_iff] at hm 
+    rw [le_zero_iff] at hm
     simp [hm]
   induction' m using Nat.binaryRec with b' m hm' generalizing i
   · exact False.elim (Bool.false_ne_true ((zero_test_bit i).symm.trans hm))
   by_cases hi : i = 0
   · subst hi
-    simp only [test_bit_zero] at hn hm 
+    simp only [test_bit_zero] at hn hm
     have : n = m :=
       eq_of_test_bit_eq fun i => by convert hnm (i + 1) (by decide) using 1 <;> rw [test_bit_succ]
     rw [hn, hm, this, bit_ff, bit_tt, bit0_val, bit1_val]
     exact lt_add_one _
   · obtain ⟨i', rfl⟩ := exists_eq_succ_of_ne_zero hi
-    simp only [test_bit_succ] at hn hm 
+    simp only [test_bit_succ] at hn hm
     have :=
       hn' _ hn hm fun j hj => by convert hnm j.succ (succ_lt_succ hj) using 1 <;> rw [test_bit_succ]
     cases b <;> cases b' <;>

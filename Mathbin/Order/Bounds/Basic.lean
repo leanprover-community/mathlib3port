@@ -790,7 +790,7 @@ theorem exists_lub_Iio (i : γ) : ∃ j, IsLUB (Set.Iio i) j :=
     rw [mem_lowerBounds]
     by_contra
     refine' h_exists_lt _
-    push_neg at h 
+    push_neg at h
     exact h
 #align exists_lub_Iio exists_lub_Iio
 -/

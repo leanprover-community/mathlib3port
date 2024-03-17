@@ -157,7 +157,7 @@ theorem stereoInvFunAux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)�
     by
     have h₃ : 0 ≤ ‖stereoInvFunAux v w‖ := norm_nonneg _
     simpa [h₁, h₃, -one_pow] using this
-  rw [Submodule.mem_orthogonal_singleton_iff_inner_left] at hw 
+  rw [Submodule.mem_orthogonal_singleton_iff_inner_left] at hw
   simp [norm_add_sq_real, norm_smul, inner_smul_left, inner_smul_right, hw, mul_pow,
     Real.norm_eq_abs, hv]
   ring

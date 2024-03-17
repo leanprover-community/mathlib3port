@@ -50,7 +50,7 @@ theorem Real.iInf_Ioi_eq_iInf_rat_gt {f : ℝ → ℝ} (x : ℝ) (hf : BddBelow 
     exact_mod_cast hyr
   · refine' le_ciInf fun q => _
     have hq := q.prop
-    rw [mem_Ioi] at hq 
+    rw [mem_Ioi] at hq
     obtain ⟨y, hxy, hyq⟩ := exists_rat_btwn hq
     refine' (ciInf_le _ _).trans _
     · exact ⟨y, hxy⟩
@@ -102,7 +102,7 @@ theorem Filter.exists_seq_monotone_tendsto_atTop_atTop (α : Type _) [Semilattic
   · refine' tendsto_at_top_at_top_of_monotone h_mono _
     have : ∀ a : α, ∃ n : ℕ, a ≤ ys n :=
       by
-      rw [tendsto_at_top_at_top] at h 
+      rw [tendsto_at_top_at_top] at h
       intro a
       obtain ⟨i, hi⟩ := h a
       exact ⟨i, hi i le_rfl⟩
@@ -428,10 +428,10 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
   refine' fun s => Finset.strongInductionOn s fun s IH b cv => _
   cases' le_total b a with ab ab
   · rw [ENNReal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]; exact zero_le _
-  have := cv ⟨ab, le_rfl⟩; simp at this 
+  have := cv ⟨ab, le_rfl⟩; simp at this
   rcases this with ⟨i, is, cb, bd⟩
   rw [← Finset.insert_erase is] at cv ⊢
-  rw [Finset.coe_insert, bUnion_insert] at cv 
+  rw [Finset.coe_insert, bUnion_insert] at cv
   rw [Finset.sum_insert (Finset.not_mem_erase _ _)]
   refine' le_trans _ (add_le_add_left (IH _ (Finset.erase_ssubset is) (c i) _) _)
   · refine' le_trans (ENNReal.ofReal_le_ofReal _) ENNReal.ofReal_add_le
@@ -481,7 +481,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
     conv at this =>
       lhs
       rw [length]
-    simp only [iInf_lt_iff, exists_prop] at this 
+    simp only [iInf_lt_iff, exists_prop] at this
     rcases this with ⟨p, q', spq, hq'⟩
     have : ContinuousWithinAt (fun r => of_real (f r - f p)) (Ioi q') q' :=
       by
@@ -555,11 +555,11 @@ theorem outer_trim : f.outer.trim = f.outer :=
       conv at this =>
         lhs
         rw [length]
-      simp only [iInf_lt_iff] at this 
+      simp only [iInf_lt_iff] at this
       rcases this with ⟨a, b, h₁, h₂⟩
-      rw [← f.outer_Ioc] at h₂ 
+      rw [← f.outer_Ioc] at h₂
       exact ⟨_, h₁, measurableSet_Ioc, le_of_lt <| by simpa using h₂⟩
-  simp at hg 
+  simp at hg
   apply iInf_le_of_le (Union g) _
   apply iInf_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
   apply iInf_le_of_le (MeasurableSet.iUnion fun i => (hg i).2.1) _
@@ -607,7 +607,7 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
   have A : {a} = ⋂ n, Ioc (u n) a :=
     by
     refine' subset.antisymm (fun x hx => by simp [mem_singleton_iff.1 hx, u_lt_a]) fun x hx => _
-    simp at hx 
+    simp at hx
     have : a ≤ x := le_of_tendsto' u_lim fun n => (hx n).1.le
     simp [le_antisymm this (hx 0).2]
   have L1 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (f.measure {a})) :=
@@ -656,8 +656,8 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (Ioo a b) = ofReal (leftLim f b - f 
     have D : f b - f a = f b - left_lim f b + (left_lim f b - f a) := by abel
     have := f.measure_Ioc a b
     simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,
-      measure_union A (measurable_set_singleton b), Icc_self] at this 
-    rw [D, ENNReal.ofReal_add, add_comm] at this 
+      measure_union A (measurable_set_singleton b), Icc_self] at this
+    rw [D, ENNReal.ofReal_add, add_comm] at this
     · simpa only [ENNReal.add_right_inj ENNReal.ofReal_ne_top]
     · simp only [f.mono.left_lim_le, sub_nonneg]
     · simp only [f.mono.le_left_lim hab, sub_nonneg]

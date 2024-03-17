@@ -765,7 +765,7 @@ theorem toBasicOpen_injective (f : R) : Function.Injective (toBasicOpen R f) :=
   intro s t h_eq
   obtain ⟨a, ⟨b, hb⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) s
   obtain ⟨c, ⟨d, hd⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) t
-  simp only [to_basic_open_mk'] at h_eq 
+  simp only [to_basic_open_mk'] at h_eq
   rw [IsLocalization.eq]
   -- We know that the fractions `a/b` and `c/d` are equal as sections of the structure sheaf on
   -- `basic_open f`. We need to show that they agree as elements in the localization of `R` at `f`.
@@ -785,7 +785,7 @@ theorem toBasicOpen_injective (f : R) : Function.Injective (toBasicOpen R f) :=
   contrapose hfp
   rw [mem_zero_locus, Set.not_subset]
   have := congr_fun (congr_arg Subtype.val h_eq) ⟨p, hfp⟩
-  rw [const_apply, const_apply, IsLocalization.eq] at this 
+  rw [const_apply, const_apply, IsLocalization.eq] at this
   cases' this with r hr
   exact ⟨r.1, hr, r.2⟩
 #align algebraic_geometry.structure_sheaf.to_basic_open_injective AlgebraicGeometry.StructureSheaf.toBasicOpen_injective
@@ -815,7 +815,7 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
   -- This is because we will need the equality `basic_open (h ^ n) = basic_open h`, which only
   -- holds for a nonzero power `n`. We therefore artificially increase `n` by one.
   replace hn := Ideal.mul_mem_left (Ideal.span {g}) h hn
-  rw [← pow_succ, Ideal.mem_span_singleton'] at hn 
+  rw [← pow_succ, Ideal.mem_span_singleton'] at hn
   cases' hn with c hc
   have basic_opens_eq := basic_open_pow h (n + 1) (by linarith)
   have i_basic_open := eq_to_hom basic_opens_eq ≫ hom_of_le hDhV
@@ -826,7 +826,7 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
   -- of `res_const`. We prove this goal first
   swap
   · intro y hy
-    rw [basic_opens_eq] at hy 
+    rw [basic_opens_eq] at hy
     exact (Set.Subset.trans hDhV hVDg : _) hy
   -- All that is left is a simple calculation
   apply const_ext
@@ -888,7 +888,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.Top R
     obtain ⟨⟨c, n, rfl⟩, hc⟩ := is_localization.eq.mp (fractions_eq i j)
     use n + 1
     rw [pow_succ]
-    dsimp at hc 
+    dsimp at hc
     convert hc using 1 <;> ring
   let n := fun p : ι × ι => (exists_power p.1 p.2).some
   have n_spec := fun p : ι × ι => (exists_power p.fst p.snd).choose_spec
@@ -949,28 +949,28 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
   · -- Here, we need to show that our basic opens actually form a cover of `basic_open f`
     rw [Set.mem_iUnion]
     exact ⟨⟨x, hx⟩, hxDh' ⟨x, hx⟩⟩
-  simp only [← opens.coe_supr, SetLike.coe_subset_coe] at ht_cover' 
+  simp only [← opens.coe_supr, SetLike.coe_subset_coe] at ht_cover'
   -- We use the normalization lemma from above to obtain the relation `a i * h j = h i * a j`
   obtain ⟨a, h, iDh, ht_cover, ah_ha, s_eq⟩ :=
     normalize_finite_fraction_representation R (basic_open f) s t a' h' iDh' ht_cover' s_eq'
   clear s_eq' iDh' hxDh' ht_cover' a' h'
-  simp only [← SetLike.coe_subset_coe, opens.coe_supr] at ht_cover 
+  simp only [← SetLike.coe_subset_coe, opens.coe_supr] at ht_cover
   -- Next we show that some power of `f` is a linear combination of the `h i`
   obtain ⟨n, hn⟩ : f ∈ (Ideal.span (h '' ↑t)).radical :=
     by
     rw [← vanishing_ideal_zero_locus_eq_radical, zero_locus_span]
-    simp only [basic_open_eq_zero_locus_compl] at ht_cover 
-    rw [Set.compl_subset_comm] at ht_cover 
+    simp only [basic_open_eq_zero_locus_compl] at ht_cover
+    rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
     simp_rw [Set.compl_iUnion, compl_compl, ← zero_locus_Union, ← Finset.set_biUnion_coe, ←
-      Set.image_eq_iUnion] at ht_cover 
+      Set.image_eq_iUnion] at ht_cover
     apply vanishing_ideal_anti_mono ht_cover
     exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
   replace hn := Ideal.mul_mem_left _ f hn
-  erw [← pow_succ, Finsupp.mem_span_image_iff_total] at hn 
+  erw [← pow_succ, Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨b, b_supp, hb⟩
-  rw [Finsupp.total_apply_of_mem_supported R b_supp] at hb 
-  dsimp at hb 
+  rw [Finsupp.total_apply_of_mem_supported R b_supp] at hb
+  dsimp at hb
   -- Finally, we have all the ingredients.
   -- We claim that our preimage is given by `(∑ (i : ι) in t, b i * a i) / f ^ (n+1)`
   use IsLocalization.mk' (Localization.Away f) (∑ i : ι in t, b i * a i)
@@ -989,7 +989,7 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
     intro x hx
     erw [TopologicalSpace.Opens.mem_iSup]
     have := ht_cover hx
-    rw [← Finset.set_biUnion_coe, Set.mem_iUnion₂] at this 
+    rw [← Finset.set_biUnion_coe, Set.mem_iUnion₂] at this
     rcases this with ⟨i, i_mem, x_mem⟩
     use i, i_mem
   rintro ⟨i, hi⟩
@@ -1321,7 +1321,7 @@ theorem comap_id_eq_map (U V : Opens (PrimeSpectrum.Top R)) (iVU : V ⟶ U) :
         obtain ⟨hb₁, s_eq₁⟩ := h' ⟨p, hpW⟩
         obtain ⟨hb₂, s_eq₂⟩ :=
           h' ⟨PrimeSpectrum.comap (RingHom.id _) p.1, by rwa [PrimeSpectrum.comap_id]⟩
-        dsimp only at s_eq₁ s_eq₂ 
+        dsimp only at s_eq₁ s_eq₂
         erw [s_eq₂, Localization.localRingHom_mk', ← s_eq₁, ← res_apply]
 #align algebraic_geometry.structure_sheaf.comap_id_eq_map AlgebraicGeometry.StructureSheaf.comap_id_eq_map
 -/

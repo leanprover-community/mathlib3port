@@ -1180,7 +1180,7 @@ theorem coe_iInf {ι : Sort _} {S : ι → Subalgebra R A} : (↑(⨅ i, S i) : 
 
 #print Algebra.mem_iInf /-
 theorem mem_iInf {ι : Sort _} {S : ι → Subalgebra R A} {x : A} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [iInf, mem_Inf, Set.forall_range_iff]
+  simp only [iInf, mem_Inf, Set.forall_mem_range]
 #align algebra.mem_infi Algebra.mem_iInf
 -/
 

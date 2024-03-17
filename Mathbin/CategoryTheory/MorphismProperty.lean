@@ -682,13 +682,13 @@ theorem universally_respectsIso (P : MorphismProperty C) : P.universally.Respect
       is_pullback.of_horiz_is_iso
         ⟨by rw [category.id_comp, category.assoc, e.hom_inv_id, category.comp_id]⟩
     replace this := this.paste_horiz H
-    rw [iso.inv_hom_id_assoc, category.id_comp] at this 
+    rw [iso.inv_hom_id_assoc, category.id_comp] at this
     exact hf _ _ _ this
   · intro X Y Z e f hf X' Z' i₁ i₂ f' H
     have : is_pullback (𝟙 _) i₂ (i₂ ≫ e.inv) e.inv :=
       is_pullback.of_horiz_is_iso ⟨category.id_comp _⟩
     replace this := H.paste_horiz this
-    rw [category.assoc, iso.hom_inv_id, category.comp_id, category.comp_id] at this 
+    rw [category.assoc, iso.hom_inv_id, category.comp_id, category.comp_id] at this
     exact hf _ _ _ this
 #align category_theory.morphism_property.universally_respects_iso CategoryTheory.MorphismProperty.universally_respectsIso
 -/

@@ -147,10 +147,10 @@ theorem condCount_eq_one_of (hs : s.Finite) (hs' : s.Nonempty) (ht : s ⊆ t) : 
 theorem pred_true_of_condCount_eq_one (h : condCount s t = 1) : s ⊆ t :=
   by
   have hsf := finite_of_cond_count_ne_zero (by rw [h]; exact one_ne_zero)
-  rw [cond_count, cond_apply _ hsf.measurable_set, mul_comm] at h 
+  rw [cond_count, cond_apply _ hsf.measurable_set, mul_comm] at h
   replace h := ENNReal.eq_inv_of_mul_eq_one_left h
   rw [inv_inv, measure.count_apply_finite _ hsf, measure.count_apply_finite _ (hsf.inter_of_left _),
-    Nat.cast_inj] at h 
+    Nat.cast_inj] at h
   suffices s ∩ t = s by exact this ▸ fun x hx => hx.2
   rw [← @Set.Finite.toFinset_inj _ _ _ (hsf.inter_of_left _) hsf]
   exact Finset.eq_of_subset_of_card_le (Set.Finite.toFinset_mono <| s.inter_subset_left t) h.ge
@@ -182,7 +182,7 @@ theorem condCount_inter (hs : s.Finite) :
     cond_apply _ (hs.inter_of_left _).MeasurableSet, mul_comm _ (measure.count (s ∩ t)), ←
     mul_assoc, mul_comm _ (measure.count (s ∩ t)), ← mul_assoc, ENNReal.mul_inv_cancel, one_mul,
     mul_comm, Set.inter_assoc]
-  · rwa [← measure.count_eq_zero_iff] at hst 
+  · rwa [← measure.count_eq_zero_iff] at hst
   · exact (measure.count_apply_lt_top.2 <| hs.inter_of_left _).Ne
 #align probability_theory.cond_count_inter ProbabilityTheory.condCount_inter
 -/

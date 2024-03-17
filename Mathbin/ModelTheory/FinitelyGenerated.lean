@@ -120,7 +120,7 @@ theorem FG.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L
   rw [← h, map_closure, embedding.coe_to_hom, image_preimage_eq_of_subset]
   intro x hx
   have h' := subset_closure hx
-  rw [h] at h' 
+  rw [h] at h'
   exact hom.map_le_range h'
 #align first_order.language.substructure.fg.of_map_embedding FirstOrder.Language.Substructure.FG.of_map_embedding
 -/
@@ -218,7 +218,7 @@ theorem CG.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L
   rw [← h2, map_closure, embedding.coe_to_hom, image_preimage_eq_of_subset]
   intro x hx
   have h' := subset_closure hx
-  rw [h2] at h' 
+  rw [h2] at h'
   exact hom.map_le_range h'
 #align first_order.language.substructure.cg.of_map_embedding FirstOrder.Language.Substructure.CG.of_map_embedding
 -/
@@ -282,7 +282,7 @@ theorem FG.range {N : Type _} [L.Structure N] (h : FG L M) (f : M →[L] N) : f.
 theorem FG.map_of_surjective {N : Type _} [L.Structure N] (h : FG L M) (f : M →[L] N)
     (hs : Function.Surjective f) : FG L N :=
   by
-  rw [← hom.range_eq_top] at hs 
+  rw [← hom.range_eq_top] at hs
   rw [fg_def, ← hs]
   exact h.range f
 #align first_order.language.Structure.fg.map_of_surjective FirstOrder.Language.Structure.FG.map_of_surjective
@@ -313,7 +313,7 @@ theorem CG.range {N : Type _} [L.Structure N] (h : CG L M) (f : M →[L] N) : f.
 theorem CG.map_of_surjective {N : Type _} [L.Structure N] (h : CG L M) (f : M →[L] N)
     (hs : Function.Surjective f) : CG L N :=
   by
-  rw [← hom.range_eq_top] at hs 
+  rw [← hom.range_eq_top] at hs
   rw [cg_def, ← hs]
   exact h.range f
 #align first_order.language.Structure.cg.map_of_surjective FirstOrder.Language.Structure.CG.map_of_surjective
@@ -355,7 +355,7 @@ theorem Substructure.fg_iff_structure_fg (S : L.Substructure M) : S.FG ↔ Struc
   · rw [← hom.range_eq_map, range_subtype]
     exact h
   · have h := h.map S.subtype.to_hom
-    rw [← hom.range_eq_map, range_subtype] at h 
+    rw [← hom.range_eq_map, range_subtype] at h
     exact h
 #align first_order.language.substructure.fg_iff_Structure_fg FirstOrder.Language.Substructure.fg_iff_structure_fg
 -/
@@ -376,7 +376,7 @@ theorem Substructure.cg_iff_structure_cg (S : L.Substructure M) : S.CG ↔ Struc
   · rw [← hom.range_eq_map, range_subtype]
     exact h
   · have h := h.map S.subtype.to_hom
-    rw [← hom.range_eq_map, range_subtype] at h 
+    rw [← hom.range_eq_map, range_subtype] at h
     exact h
 #align first_order.language.substructure.cg_iff_Structure_cg FirstOrder.Language.Substructure.cg_iff_structure_cg
 -/

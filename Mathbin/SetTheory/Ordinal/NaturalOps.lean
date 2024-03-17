@@ -693,11 +693,11 @@ theorem nmul_nadd_le {a' b' : Ordinal} (ha : a' ≤ a) (hb : b' ≤ b) :
 theorem lt_nmul_iff : c < a ⨳ b ↔ ∃ a' < a, ∃ b' < b, c ♯ a' ⨳ b' ≤ a' ⨳ b ♯ a ⨳ b' :=
   by
   refine' ⟨fun h => _, _⟩
-  · rw [nmul] at h 
+  · rw [nmul] at h
     simpa using not_mem_of_lt_csInf h ⟨0, fun _ _ => bot_le⟩
   · rintro ⟨a', ha, b', hb, h⟩
     have := h.trans_lt (nmul_nadd_lt ha hb)
-    rwa [nadd_lt_nadd_iff_right] at this 
+    rwa [nadd_lt_nadd_iff_right] at this
 #align ordinal.lt_nmul_iff Ordinal.lt_nmul_iff
 -/
 
@@ -791,34 +791,34 @@ theorem nmul_nadd : ∀ a b c, a ⨳ (b ♯ c) = a ⨳ b ♯ a ⨳ c
     · rw [nmul_nadd]
       rcases lt_nadd_iff.1 hd with (⟨b', hb, hd⟩ | ⟨c', hc, hd⟩)
       · have := nadd_lt_nadd_of_lt_of_le (nmul_nadd_lt ha hb) (nmul_nadd_le ha.le hd)
-        rw [nmul_nadd, nmul_nadd] at this 
-        simp only [nadd_assoc] at this 
+        rw [nmul_nadd, nmul_nadd] at this
+        simp only [nadd_assoc] at this
         rwa [nadd_left_comm, nadd_left_comm _ (a ⨳ b'), nadd_left_comm (a ⨳ b),
           nadd_lt_nadd_iff_left, nadd_left_comm (a' ⨳ b), nadd_left_comm (a ⨳ b),
-          nadd_lt_nadd_iff_left, ← nadd_assoc, ← nadd_assoc] at this 
+          nadd_lt_nadd_iff_left, ← nadd_assoc, ← nadd_assoc] at this
       · have := nadd_lt_nadd_of_le_of_lt (nmul_nadd_le ha.le hd) (nmul_nadd_lt ha hc)
-        rw [nmul_nadd, nmul_nadd] at this 
-        simp only [nadd_assoc] at this 
+        rw [nmul_nadd, nmul_nadd] at this
+        simp only [nadd_assoc] at this
         rwa [nadd_left_comm, nadd_comm (a ⨳ c), nadd_left_comm (a' ⨳ d), nadd_left_comm (a ⨳ c'),
           nadd_left_comm (a ⨳ b), nadd_lt_nadd_iff_left, nadd_comm (a' ⨳ c), nadd_left_comm (a ⨳ d),
           nadd_left_comm (a' ⨳ b), nadd_left_comm (a ⨳ b), nadd_lt_nadd_iff_left, nadd_comm (a ⨳ d),
-          nadd_comm (a' ⨳ d), ← nadd_assoc, ← nadd_assoc] at this 
+          nadd_comm (a' ⨳ d), ← nadd_assoc, ← nadd_assoc] at this
     · rcases lt_nmul_iff.1 hd with ⟨a', ha, b', hb, hd⟩
       have := nadd_lt_nadd_of_le_of_lt hd (nmul_nadd_lt ha (nadd_lt_nadd_right hb c))
-      rw [nmul_nadd, nmul_nadd, nmul_nadd a'] at this 
-      simp only [nadd_assoc] at this 
+      rw [nmul_nadd, nmul_nadd, nmul_nadd a'] at this
+      simp only [nadd_assoc] at this
       rwa [nadd_left_comm (a' ⨳ b'), nadd_left_comm, nadd_lt_nadd_iff_left, nadd_left_comm,
         nadd_left_comm _ (a' ⨳ b'), nadd_left_comm (a ⨳ b'), nadd_lt_nadd_iff_left,
         nadd_left_comm (a' ⨳ c), nadd_left_comm, nadd_lt_nadd_iff_left, nadd_left_comm,
-        nadd_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left] at this 
+        nadd_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left] at this
     · rcases lt_nmul_iff.1 hd with ⟨a', ha, c', hc, hd⟩
       have := nadd_lt_nadd_of_lt_of_le (nmul_nadd_lt ha (nadd_lt_nadd_left hc b)) hd
-      rw [nmul_nadd, nmul_nadd, nmul_nadd a'] at this 
-      simp only [nadd_assoc] at this 
+      rw [nmul_nadd, nmul_nadd, nmul_nadd a'] at this
+      simp only [nadd_assoc] at this
       rwa [nadd_left_comm _ (a' ⨳ b), nadd_lt_nadd_iff_left, nadd_left_comm (a' ⨳ c'),
         nadd_left_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left, nadd_left_comm, nadd_comm (a' ⨳ c'),
         nadd_left_comm _ (a ⨳ c'), nadd_lt_nadd_iff_left, nadd_comm _ (a' ⨳ c'),
-        nadd_comm _ (a' ⨳ c'), nadd_left_comm, nadd_lt_nadd_iff_left] at this 
+        nadd_comm _ (a' ⨳ c'), nadd_left_comm, nadd_lt_nadd_iff_left] at this
 decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nmul_nadd Ordinal.nmul_nadd
 -/
@@ -881,14 +881,14 @@ theorem lt_nmul_iff₃ :
     rcases lt_nmul_iff.1 he with ⟨a', ha, b', hb, H₂⟩
     refine' ⟨a', ha, b', hb, c', hc, _⟩
     have := nadd_le_nadd H₁ (nmul_nadd_le H₂ hc.le)
-    simp only [nadd_nmul, nadd_assoc] at this 
+    simp only [nadd_nmul, nadd_assoc] at this
     rw [nadd_left_comm, nadd_left_comm d, nadd_left_comm, nadd_le_nadd_iff_left,
       nadd_left_comm (a ⨳ b' ⨳ c), nadd_left_comm (a' ⨳ b ⨳ c), nadd_left_comm (a ⨳ b ⨳ c'),
-      nadd_le_nadd_iff_left, nadd_left_comm (a ⨳ b ⨳ c'), nadd_left_comm (a ⨳ b ⨳ c')] at this 
+      nadd_le_nadd_iff_left, nadd_left_comm (a ⨳ b ⨳ c'), nadd_left_comm (a ⨳ b ⨳ c')] at this
     simpa only [nadd_assoc]
   · rintro ⟨a', ha, b', hb, c', hc, h⟩
     have := h.trans_lt (nmul_nadd_lt₃ ha hb hc)
-    repeat' rwa [nadd_lt_nadd_iff_right] at this 
+    repeat' rwa [nadd_lt_nadd_iff_right] at this
 #align ordinal.lt_nmul_iff₃ Ordinal.lt_nmul_iff₃
 -/
 

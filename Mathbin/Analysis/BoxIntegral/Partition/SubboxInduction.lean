@@ -152,7 +152,7 @@ theorem exists_taggedPartition_isHenstock_isSubordinate_homothetic (I : Box ι)
       ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhdsWithin _ (closed_ball_mem_nhds _ (r z).coe_prop),
         _⟩
     intro J Hle n Hmem HIcc Hsub
-    rw [Set.subset_inter_iff] at HIcc 
+    rw [Set.subset_inter_iff] at HIcc
     refine'
       ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _,
         (is_subordinate_single _ _).2 HIcc.2, _, distortion_single _ _⟩

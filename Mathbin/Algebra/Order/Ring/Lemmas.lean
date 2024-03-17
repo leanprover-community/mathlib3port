@@ -702,7 +702,7 @@ theorem pos_and_pos_or_neg_and_neg_of_mul_pos [PosMulMono α] [MulPosMono α] (h
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
   · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
     exact mul_nonpos_of_nonneg_of_nonpos ha.le hb
-  · rw [MulZeroClass.zero_mul] at hab ; exact hab.false.elim
+  · rw [MulZeroClass.zero_mul] at hab; exact hab.false.elim
   · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
     exact mul_nonpos_of_nonpos_of_nonneg ha.le hb
 #align pos_and_pos_or_neg_and_neg_of_mul_pos pos_and_pos_or_neg_and_neg_of_mul_pos

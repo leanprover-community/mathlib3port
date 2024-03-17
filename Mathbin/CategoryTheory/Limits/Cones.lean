@@ -466,10 +466,10 @@ instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G)
 #align category_theory.limits.cones.functoriality_full CategoryTheory.Limits.Cones.functorialityFull
 -/
 
-#print CategoryTheory.Limits.Cones.functorialityFaithful /-
-instance functorialityFaithful [Faithful G] : Faithful (Cones.functoriality F G)
+#print CategoryTheory.Limits.Cones.functoriality_faithful /-
+instance functoriality_faithful [Faithful G] : Faithful (Cones.functoriality F G)
     where map_injective' X Y f g e := by ext1; injection e; apply G.map_injective h_1
-#align category_theory.limits.cones.functoriality_faithful CategoryTheory.Limits.Cones.functorialityFaithful
+#align category_theory.limits.cones.functoriality_faithful CategoryTheory.Limits.Cones.functoriality_faithful
 -/
 
 #print CategoryTheory.Limits.Cones.functorialityEquivalence /-

@@ -516,6 +516,7 @@ theorem lowerBound_numeric {ι : Type u} {f : ι → SetTheory.PGame.{u}} (H : �
   SetTheory.PGame.numeric_of_isEmpty_leftMoves _ fun i => (H _).moveRight _
 #align surreal.lower_bound_numeric Surreal.lowerBound_numeric
 
+#print Surreal.bddAbove_of_small /-
 /-- A small set `s` of surreals is bounded above. -/
 theorem bddAbove_of_small (s : Set Surreal.{u}) [Small.{u} s] : BddAbove s :=
   by
@@ -525,7 +526,9 @@ theorem bddAbove_of_small (s : Set Surreal.{u}) [Small.{u} s] : BddAbove s :=
   show i.out.1 ≤ _
   simpa [g] using le_upper_bound g (equivShrink s ⟨i, hi⟩)
 #align surreal.bdd_above_of_small Surreal.bddAbove_of_small
+-/
 
+#print Surreal.bddBelow_of_small /-
 /-- A small set `s` of surreals is bounded below. -/
 theorem bddBelow_of_small (s : Set Surreal.{u}) [Small.{u} s] : BddBelow s :=
   by
@@ -535,6 +538,7 @@ theorem bddBelow_of_small (s : Set Surreal.{u}) [Small.{u} s] : BddBelow s :=
   show _ ≤ i.out.1
   simpa [g] using lower_bound_le g (equivShrink s ⟨i, hi⟩)
 #align surreal.bdd_below_of_small Surreal.bddBelow_of_small
+-/
 
 end Surreal
 

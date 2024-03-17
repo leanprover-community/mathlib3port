@@ -321,12 +321,12 @@ theorem powersetCard_nonempty {n : ℕ} {s : Finset α} (h : n ≤ s.card) :
     (powersetCard n s).Nonempty := by
   classical
   induction' s using Finset.induction_on with x s hx IH generalizing n
-  · rw [card_empty, le_zero_iff] at h 
+  · rw [card_empty, le_zero_iff] at h
     rw [h, powerset_len_zero]
     exact Finset.singleton_nonempty _
   · cases n
     · simp
-    · rw [card_insert_of_not_mem hx, Nat.succ_le_succ_iff] at h 
+    · rw [card_insert_of_not_mem hx, Nat.succ_le_succ_iff] at h
       rw [powerset_len_succ_insert hx]
       refine' nonempty.mono _ ((IH h).image (insert x))
       convert subset_union_right _ _

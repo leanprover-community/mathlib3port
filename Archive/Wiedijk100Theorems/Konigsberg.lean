@@ -106,8 +106,8 @@ theorem not_isEulerian {u v : Verts} (p : graph.Walk u v) (h : p.IsEulerian) : F
       Set.mem_singleton_iff]
     cases w <;> simp
   have h := h.card_odd_degree
-  simp_rw [this] at h 
-  norm_num at h 
+  simp_rw [this] at h
+  norm_num at h
 #align konigsberg.not_is_eulerian Konigsberg.not_isEulerian
 
 end Konigsberg

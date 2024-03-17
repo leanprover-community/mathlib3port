@@ -164,8 +164,8 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
     smul_ball'', smul_eq_mul, mem_set_of_eq]
   replace han : ∀ {b : A}, orderOf b = n → orderOf (a * b) = n
   · intro b hb
-    rw [← hb] at han hn 
-    rw [sq] at han 
+    rw [← hb] at han hn
+    rw [sq] at han
     rwa [(Commute.all a b).orderOf_mul_eq_right_of_forall_prime_mul_dvd (order_of_pos_iff.mp hn)
         fun p hp hp' => dvd_trans (mul_dvd_mul_right hp' <| orderOf a) han]
   let f : {b : A | orderOf b = n} → {b : A | orderOf b = n} := fun b => ⟨a * b, han b.property⟩
@@ -357,7 +357,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       rw [hC]
     exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hE₀ h hu
   · right
-    simp only [Classical.not_forall, not_and_or] at h 
+    simp only [Classical.not_forall, not_and_or] at h
     obtain ⟨p, hp⟩ := h
     rw [hE₁ p]
     cases hp

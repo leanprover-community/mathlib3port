@@ -553,7 +553,7 @@ theorem sin_pos_of_mem_Ioo {x : ℝ} (hx : x ∈ Ioo 0 π) : 0 < sin x :=
 #print Real.sin_nonneg_of_mem_Icc /-
 theorem sin_nonneg_of_mem_Icc {x : ℝ} (hx : x ∈ Icc 0 π) : 0 ≤ sin x :=
   by
-  rw [← closure_Ioo pi_ne_zero.symm] at hx 
+  rw [← closure_Ioo pi_ne_zero.symm] at hx
   exact
     closure_lt_subset_le continuous_const continuous_sin
       (closure_mono (fun y => sin_pos_of_mem_Ioo) hx)
@@ -722,8 +722,8 @@ theorem cos_eq_one_iff (x : ℝ) : cos x = 1 ↔ ∃ n : ℤ, (n : ℝ) * (2 * �
             Int.ediv_mul_cancel ((Int.dvd_iff_emod_eq_zero _ _).2 hn0)])
         fun hn1 => by
         rw [← Int.emod_add_ediv n 2, hn1, Int.cast_add, Int.cast_one, add_mul, one_mul, add_comm,
-              mul_comm (2 : ℤ), Int.cast_mul, mul_assoc, Int.cast_two] at hn  <;>
-            rw [← hn, cos_int_mul_two_pi_add_pi] at h  <;>
+              mul_comm (2 : ℤ), Int.cast_mul, mul_assoc, Int.cast_two] at hn <;>
+            rw [← hn, cos_int_mul_two_pi_add_pi] at h <;>
           exact absurd h (by norm_num)⟩,
     fun ⟨n, hn⟩ => hn ▸ cos_int_mul_two_pi _⟩
 #align real.cos_eq_one_iff Real.cos_eq_one_iff
@@ -734,9 +734,9 @@ theorem cos_eq_one_iff_of_lt_of_lt {x : ℝ} (hx₁ : -(2 * π) < x) (hx₂ : x 
     cos x = 1 ↔ x = 0 :=
   ⟨fun h => by
     rcases(cos_eq_one_iff _).1 h with ⟨n, rfl⟩
-    rw [mul_lt_iff_lt_one_left two_pi_pos] at hx₂ 
-    rw [neg_lt, neg_mul_eq_neg_mul, mul_lt_iff_lt_one_left two_pi_pos] at hx₁ 
-    norm_cast at hx₁ hx₂ 
+    rw [mul_lt_iff_lt_one_left two_pi_pos] at hx₂
+    rw [neg_lt, neg_mul_eq_neg_mul, mul_lt_iff_lt_one_left two_pi_pos] at hx₁
+    norm_cast at hx₁ hx₂
     obtain rfl : n = 0 := le_antisymm (by linarith) (by linarith)
     simp, fun h => by simp [h]⟩
 #align real.cos_eq_one_iff_of_lt_of_lt Real.cos_eq_one_iff_of_lt_of_lt

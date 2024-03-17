@@ -143,7 +143,7 @@ theorem proof₂ (M : ℝ)
     by intro; ring
   have h₂ : ∀ x : ℝ, (2 - 3 * x) ^ 2 + 2 ^ 2 + (2 + 3 * x) ^ 2 = 18 * x ^ 2 + 12 := by intro; ring
   have := h (2 - 3 * sqrt 2) 2 (2 + 3 * sqrt 2)
-  rw [lhs_identity, h₁, h₂, sq_sqrt zero_le_two, abs_neg, abs_eq_self.mpr, ← div_le_iff] at this 
+  rw [lhs_identity, h₁, h₂, sq_sqrt zero_le_two, abs_neg, abs_eq_self.mpr, ← div_le_iff] at this
   · convert this using 1; ring
   · apply pow_pos; norm_num
   · exact mul_nonneg (mul_nonneg (sq_nonneg _) zero_le_two) (sqrt_nonneg _)

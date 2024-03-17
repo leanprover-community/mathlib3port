@@ -1105,8 +1105,8 @@ theorem sup_ind (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a ⊔ b)
 @[simp]
 theorem le_sup_iff : a ≤ b ⊔ c ↔ a ≤ b ∨ a ≤ c :=
   ⟨fun h =>
-    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h ) fun bc => by
-      rwa [sup_eq_right.2 bc] at h ,
+    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h) fun bc => by
+      rwa [sup_eq_right.2 bc] at h,
     fun h => h.elim le_sup_of_le_left le_sup_of_le_right⟩
 #align le_sup_iff le_sup_iff
 -/
@@ -1115,8 +1115,8 @@ theorem le_sup_iff : a ≤ b ⊔ c ↔ a ≤ b ∨ a ≤ c :=
 @[simp]
 theorem lt_sup_iff : a < b ⊔ c ↔ a < b ∨ a < c :=
   ⟨fun h =>
-    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h ) fun bc => by
-      rwa [sup_eq_right.2 bc] at h ,
+    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h) fun bc => by
+      rwa [sup_eq_right.2 bc] at h,
     fun h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩
 #align lt_sup_iff lt_sup_iff
 -/

@@ -162,7 +162,7 @@ protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l :=
   by
   cases' pairwise_cons.1 p with r p'; clear p
   induction' p' with b l r' p IH generalizing a; · exact chain.nil
-  simp only [chain_cons, forall_mem_cons] at r 
+  simp only [chain_cons, forall_mem_cons] at r
   exact chain_cons.2 ⟨r.1, IH r'⟩
 #align list.pairwise.chain List.Pairwise.chain
 -/
@@ -193,7 +193,7 @@ protected theorem Chain.sublist [IsTrans α R] (hl : l₂.Chain R a) (h : l₁ <
 
 #print List.Chain.rel /-
 protected theorem Chain.rel [IsTrans α R] (hl : l.Chain R a) (hb : b ∈ l) : R a b := by
-  rw [chain_iff_pairwise] at hl ; exact rel_of_pairwise_cons hl hb
+  rw [chain_iff_pairwise] at hl; exact rel_of_pairwise_cons hl hb
 #align list.chain.rel List.Chain.rel
 -/
 
@@ -215,7 +215,7 @@ theorem chain_iff_nthLe {R} :
       cases i
       · apply h0
       convert h i _ using 1
-      simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w 
+      simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w
       exact lt_pred_iff.mpr w
     rintro ⟨h0, h⟩; constructor
     · apply h0; simp
@@ -358,7 +358,7 @@ theorem Chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
 
 #print List.Chain'.rel_head? /-
 theorem Chain'.rel_head? {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head? l) : R x y := by
-  rw [← cons_head'_tail hy] at h ; exact h.rel_head
+  rw [← cons_head'_tail hy] at h; exact h.rel_head
 #align list.chain'.rel_head' List.Chain'.rel_head?
 -/
 
@@ -520,7 +520,7 @@ theorem Chain.induction (p : α → Prop) (l : List α) (h : Chain r a l)
   induction l generalizing a
   · cases hb
     simp [final]
-  · rw [chain_cons] at h 
+  · rw [chain_cons] at h
     rintro _ (rfl | _)
     apply carries h.1 (l_ih h.2 hb _ (Or.inl rfl))
     apply l_ih h.2 hb _ H

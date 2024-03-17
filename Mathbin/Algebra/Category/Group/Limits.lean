@@ -57,7 +57,7 @@ def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
     inv_mem' := fun a ah j j' f =>
       by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
-      dsimp [functor.sections] at ah 
+      dsimp [functor.sections] at ah
       rw [ah f] }
 #align Group.sections_subgroup GroupCat.sectionsSubgroup
 #align AddGroup.sections_add_subgroup AddGroupCat.sectionsAddSubgroup

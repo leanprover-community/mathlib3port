@@ -363,7 +363,7 @@ theorem bindOnSupport_bindOnSupport (p : PMF α) (f : ∀ a ∈ p.support, PMF �
   refine' ennreal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => _)
   split_ifs
   any_goals ring1
-  · have := h_1 a'; simp [h] at this ; contradiction
+  · have := h_1 a'; simp [h] at this; contradiction
   · simp [h_2]
 #align pmf.bind_on_support_bind_on_support PMF.bindOnSupport_bindOnSupport
 -/

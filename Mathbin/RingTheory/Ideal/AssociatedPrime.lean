@@ -95,7 +95,7 @@ theorem not_isAssociatedPrime_of_subsingleton [Subsingleton M] : ¬IsAssociatedP
   rintro ⟨hI, x, hx⟩
   apply hI.ne_top
   rwa [Subsingleton.elim x 0, submodule.span_singleton_eq_bot.mpr rfl, Submodule.annihilator_bot] at
-    hx 
+    hx
 #align not_is_associated_prime_of_subsingleton not_isAssociatedPrime_of_subsingleton
 -/
 
@@ -115,7 +115,7 @@ theorem exists_le_isAssociatedPrime_of_isNoetherianRing [H : IsNoetherianRing R]
   intro a b hab
   rw [Classical.or_iff_not_imp_left]
   intro ha
-  rw [Submodule.mem_annihilator_span_singleton] at ha hab 
+  rw [Submodule.mem_annihilator_span_singleton] at ha hab
   have H₁ : (R ∙ y).annihilator ≤ (R ∙ a • y).annihilator :=
     by
     intro c hc
@@ -180,7 +180,7 @@ theorem IsAssociatedPrime.eq_radical (hI : I.IsPrimary) (h : IsAssociatedPrime J
   obtain ⟨hJ, x, e⟩ := h
   have : x ≠ 0 := by
     rintro rfl; apply hJ.1
-    rwa [submodule.span_singleton_eq_bot.mpr rfl, Submodule.annihilator_bot] at e 
+    rwa [submodule.span_singleton_eq_bot.mpr rfl, Submodule.annihilator_bot] at e
   obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective R _ x
   replace e : ∀ {y}, y ∈ J ↔ x * y ∈ I
   · intro y;

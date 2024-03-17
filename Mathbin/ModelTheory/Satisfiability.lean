@@ -167,7 +167,7 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s
     ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable :=
   by
   haveI : Inhabited M := Classical.inhabited_of_nonempty inferInstance
-  rw [Cardinal.lift_mk_le'] at h 
+  rw [Cardinal.lift_mk_le'] at h
   letI : (constants_on α).Structure M := constants_on.Structure (Function.extend coe h.some default)
   have : M ⊨ (L.Lhom_with_constants α).onTheory T ∪ L.distinct_constants_theory s :=
     by
@@ -230,7 +230,7 @@ theorem isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset {ι : Type _} (T : 
       _⟩
   rw [is_satisfiable_iff_is_finitely_satisfiable]
   intro s hs
-  rw [Set.iUnion_eq_iUnion_finset] at hs 
+  rw [Set.iUnion_eq_iUnion_finset] at hs
   obtain ⟨t, ht⟩ := Directed.exists_mem_subset_of_finset_subset_biUnion _ hs
   · exact (h t).mono ht
   ·
@@ -257,7 +257,7 @@ theorem exists_elementaryEmbedding_card_eq_of_le (M : Type w') [L.Structure M] [
   obtain ⟨S, _, hS⟩ := exists_elementary_substructure_card_eq L ∅ κ h1 (by simp) h2 h3
   have : Small.{w} S :=
     by
-    rw [← lift_inj.{_, w + 1}, lift_lift, lift_lift] at hS 
+    rw [← lift_inj.{_, w + 1}, lift_lift, lift_lift] at hS
     exact small_iff_lift_mk_lt_univ.2 (lt_of_eq_of_lt hS κ.lift_lt_univ')
   refine'
     ⟨(equivShrink S).bundledInduced L,
@@ -278,7 +278,7 @@ theorem exists_elementaryEmbedding_card_eq_of_ge (M : Type w') [L.Structure M] [
   by
   obtain ⟨N0, hN0⟩ := (L.elementary_diagram M).exists_large_model_of_infinite_model κ M
   let f0 := elementary_embedding.of_models_elementary_diagram L M N0
-  rw [← lift_le.{max w w', max u v}, lift_lift, lift_lift] at h2 
+  rw [← lift_le.{max w w', max u v}, lift_lift, lift_lift] at h2
   obtain ⟨N, ⟨NN0⟩, hN⟩ :=
     exists_elementary_embedding_card_eq_of_le (L[[M]]) N0 κ
       (aleph_0_le_lift.1 ((aleph_0_le_lift.2 (aleph_0_le_mk M)).trans h2)) _ (hN0.trans _)
@@ -289,7 +289,7 @@ theorem exists_elementaryEmbedding_card_eq_of_ge (M : Type w') [L.Structure M] [
     apply elementary_embedding.of_models_elementary_diagram L M N
   · simp only [card_with_constants, lift_add, lift_lift]
     rw [add_comm, add_eq_max (aleph_0_le_lift.2 (infinite_iff.1 iM)), max_le_iff]
-    rw [← lift_le.{_, w'}, lift_lift, lift_lift] at h1 
+    rw [← lift_le.{_, w'}, lift_lift, lift_lift] at h1
     exact ⟨h2, h1⟩
   · rw [← lift_umax', lift_id]
 #align first_order.language.exists_elementary_embedding_card_eq_of_ge FirstOrder.Language.exists_elementaryEmbedding_card_eq_of_ge
@@ -393,7 +393,7 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
         (h1 (h2.some.subtheory_Model (Set.subset_union_left _ _))),
       fun h M => _⟩
   contrapose! h
-  rw [← sentence.realize_not] at h 
+  rw [← sentence.realize_not] at h
   refine'
     ⟨{  carrier := M
         is_model := ⟨fun ψ hψ => hψ.elim (realize_sentence_of_mem _) fun h' => _⟩ }⟩
@@ -410,7 +410,7 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
 theorem ModelsBoundedFormula.realize_sentence {φ : L.Sentence} (h : T ⊨ φ) (M : Type _)
     [L.Structure M] [M ⊨ T] [Nonempty M] : M ⊨ φ :=
   by
-  rw [models_iff_not_satisfiable] at h 
+  rw [models_iff_not_satisfiable] at h
   contrapose! h
   have : M ⊨ T ∪ {formula.not φ} :=
     by
@@ -494,7 +494,7 @@ theorem IsMaximal.mem_or_not_mem (h : T.IsMaximal) (φ : L.Sentence) : φ ∈ T 
 theorem IsMaximal.mem_of_models (h : T.IsMaximal) {φ : L.Sentence} (hφ : T ⊨ φ) : φ ∈ T :=
   by
   refine' (h.mem_or_not_mem φ).resolve_right fun con => _
-  rw [models_iff_not_satisfiable, Set.union_singleton, Set.insert_eq_of_mem Con] at hφ 
+  rw [models_iff_not_satisfiable, Set.union_singleton, Set.insert_eq_of_mem Con] at hφ
   exact hφ h.1
 #align first_order.language.Theory.is_maximal.mem_of_models FirstOrder.Language.Theory.IsMaximal.mem_of_models
 -/
@@ -828,9 +828,9 @@ theorem Categorical.isComplete (h : κ.Categorical T) (h1 : ℵ₀ ≤ κ)
     obtain ⟨N, hN⟩ := Theory.exists_model_card_eq ⟨hS.some, hT hS.some⟩ κ h1 h2
     rw [Theory.models_sentence_iff, Theory.models_sentence_iff]
     by_contra con
-    push_neg at con 
+    push_neg at con
     obtain ⟨⟨MF, hMF⟩, MT, hMT⟩ := Con
-    rw [sentence.realize_not, Classical.not_not] at hMT 
+    rw [sentence.realize_not, Classical.not_not] at hMT
     refine' hMF _
     haveI := hT MT
     haveI := hT MF

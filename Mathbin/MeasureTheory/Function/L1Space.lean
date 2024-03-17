@@ -370,7 +370,7 @@ theorem all_ae_ofReal_f_le_bound (h_bound : ∀ n, ∀ᵐ a ∂μ, ‖F n a‖ �
     ∀ᵐ a ∂μ, ENNReal.ofReal ‖f a‖ ≤ ENNReal.ofReal (bound a) :=
   by
   have F_le_bound := all_ae_of_real_F_le_bound h_bound
-  rw [← ae_all_iff] at F_le_bound 
+  rw [← ae_all_iff] at F_le_bound
   apply F_le_bound.mp ((all_ae_tendsto_of_real_norm h_lim).mono _)
   intro a tendsto_norm F_le_bound
   exact le_of_tendsto' tendsto_norm F_le_bound
@@ -431,7 +431,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
   /- Therefore, by the dominated convergence theorem for nonnegative integration, have
     ` ∫ ‖f a - F n a‖ --> 0 ` -/
   suffices h : tendsto (fun n => ∫⁻ a, ENNReal.ofReal ‖F n a - f a‖ ∂μ) at_top (𝓝 (∫⁻ a : α, 0 ∂μ))
-  · rwa [lintegral_zero] at h 
+  · rwa [lintegral_zero] at h
   -- Using the dominated convergence theorem.
   refine' tendsto_lintegral_of_dominated_convergence' _ _ hb _ _
   -- Show `λa, ‖f a - F n a‖` is almost everywhere measurable for all `n`
@@ -439,7 +439,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
     exact fun n =>
       measurable_of_real.comp_ae_measurable ((F_measurable n).sub f_measurable).norm.AEMeasurable
   -- Show `2 * bound` is has_finite_integral
-  · rw [has_finite_integral_iff_of_real] at bound_has_finite_integral 
+  · rw [has_finite_integral_iff_of_real] at bound_has_finite_integral
     ·
       calc
         ∫⁻ a, b a ∂μ = 2 * ∫⁻ a, ENNReal.ofReal (bound a) ∂μ := by rw [lintegral_const_mul'];
@@ -1444,7 +1444,7 @@ theorem integrable_of_integrable_trim (hm : m ≤ m0) (hf_int : Integrable f (μ
   obtain ⟨hf_meas_ae, hf⟩ := hf_int
   refine' ⟨aestronglyMeasurable_of_aestronglyMeasurable_trim hm hf_meas_ae, _⟩
   rw [has_finite_integral] at hf ⊢
-  rwa [lintegral_trim_ae hm _] at hf 
+  rwa [lintegral_trim_ae hm _] at hf
   exact ae_strongly_measurable.ennnorm hf_meas_ae
 #align measure_theory.integrable_of_integrable_trim MeasureTheory.integrable_of_integrable_trim
 -/

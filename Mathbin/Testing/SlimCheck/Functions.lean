@@ -387,7 +387,7 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
     case cons x' xs xs_ih ys h₃ h₂ h₁ =>
       cases' ys with y ys
       · cases h₃
-      dsimp [lookup] at h₃ ; split_ifs at h₃ 
+      dsimp [lookup] at h₃; split_ifs at h₃
       · subst x'; subst val
         simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
       · cases' h₀ with _ _ h₀ h₅
@@ -396,8 +396,8 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
         specialize xs_ih h₅ ys h₃ h₄ h₆
         simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
         suffices : val ∈ ys; tauto
-        erw [← Option.mem_def, mem_lookup_iff] at h₃ 
-        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃ 
+        erw [← Option.mem_def, mem_lookup_iff] at h₃
+        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
         subst a; subst b
         apply (mem_zip h₃).2
@@ -426,27 +426,27 @@ theorem applyId_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup 
   by
   intro x y h
   by_cases hx : x ∈ xs <;> by_cases hy : y ∈ xs
-  · rw [mem_iff_nth] at hx hy 
+  · rw [mem_iff_nth] at hx hy
     cases' hx with i hx
     cases' hy with j hy
     suffices some x = some y by injection this
     have h₂ := h₁.length_eq
-    rw [list.apply_id_zip_eq h₀ h₂ _ _ _ hx] at h 
+    rw [list.apply_id_zip_eq h₀ h₂ _ _ _ hx] at h
     rw [← hx, ← hy]; congr
     apply nth_injective _ (h₁.nodup_iff.1 h₀)
     · symm; rw [h]
       rw [← list.apply_id_zip_eq] <;> assumption
     · rw [← h₁.length_eq]
-      rw [nth_eq_some] at hx 
+      rw [nth_eq_some] at hx
       cases' hx with hx hx'
       exact hx
-  · rw [← apply_id_mem_iff h₀ h₁] at hx hy 
-    rw [h] at hx 
+  · rw [← apply_id_mem_iff h₀ h₁] at hx hy
+    rw [h] at hx
     contradiction
-  · rw [← apply_id_mem_iff h₀ h₁] at hx hy 
-    rw [h] at hx 
+  · rw [← apply_id_mem_iff h₀ h₁] at hx hy
+    rw [h] at hx
     contradiction
-  · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h  <;> assumption
+  · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
 #align slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.applyId_injective
 -/
 
@@ -553,7 +553,7 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
   generalize h₁ : xs.map (@id ((Σ _ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
-  dsimp [id] at h₁ 
+  dsimp [id] at h₁
   have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) :=
     by
     rw [← h₀, ← h₁, list.to_finmap']; clear h₀ h₁ xs₀ xs₁ hperm hnodup
@@ -567,7 +567,7 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   rw [hxs]; intros
   apply apply_id_injective
   · rwa [← h₀, hxs, hperm.nodup_iff]
-  · rwa [← hxs, h₀, h₁] at hperm 
+  · rwa [← hxs, h₀, h₁] at hperm
 #align slim_check.injective_function.injective SlimCheck.InjectiveFunction.injective
 -/
 

@@ -50,7 +50,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
     simp [pow_succ, ← mul_assoc, ENNReal.mul_inv_cancel]
   -- Consider an open covering `S : set (set α)`
   refine' ⟨fun ι s ho hcov => _⟩
-  simp only [Union_eq_univ_iff] at hcov 
+  simp only [Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
   letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
   have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellFounded.wf ι WellOrderingRel _

@@ -662,7 +662,7 @@ and several useful variations around it. -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (H : Equicontinuous (coeFn : A → α → β)) : IsCompact A :=
   by
-  simp_rw [Equicontinuous, Metric.equicontinuousAt_iff_pair] at H 
+  simp_rw [Equicontinuous, Metric.equicontinuousAt_iff_pair] at H
   refine' isCompact_of_totallyBounded_isClosed _ closed
   refine' totally_bounded_of_finite_discretization fun ε ε0 => _
   rcases exists_between ε0 with ⟨ε₁, ε₁0, εε₁⟩
@@ -1764,8 +1764,8 @@ theorem NNReal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ �
     f x ≤ nndist f 0 :=
   by
   have key : nndist (f x) ((0 : α →ᵇ ℝ≥0) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
-  simp only [coe_zero, Pi.zero_apply] at key 
-  rwa [NNReal.nndist_zero_eq_val' (f x)] at key 
+  simp only [coe_zero, Pi.zero_apply] at key
+  rwa [NNReal.nndist_zero_eq_val' (f x)] at key
 #align bounded_continuous_function.nnreal.upper_bound BoundedContinuousFunction.NNReal.upper_bound
 -/
 

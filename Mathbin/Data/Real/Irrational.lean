@@ -60,14 +60,14 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
     (hv : ¬∃ y : ℤ, x = y) (hnpos : 0 < n) : Irrational x :=
   by
   rintro ⟨⟨N, D, P, C⟩, rfl⟩
-  rw [← cast_pow] at hxr 
+  rw [← cast_pow] at hxr
   have c1 : ((D : ℤ) : ℝ) ≠ 0 := by rw [Int.cast_ne_zero, Int.coe_nat_ne_zero]; exact ne_of_gt P
   have c2 : ((D : ℤ) : ℝ) ^ n ≠ 0 := pow_ne_zero _ c1
   rw [num_denom', cast_pow, cast_mk, div_pow, div_eq_iff_mul_eq c2, ← Int.cast_pow, ← Int.cast_pow,
-    ← Int.cast_mul, Int.cast_inj] at hxr 
+    ← Int.cast_mul, Int.cast_inj] at hxr
   have hdivn : ↑D ^ n ∣ N ^ n := Dvd.intro_left m hxr
   rw [← Int.dvd_natAbs, ← Int.coe_nat_pow, Int.coe_nat_dvd, Int.natAbs_pow,
-    Nat.pow_dvd_pow_iff hnpos] at hdivn 
+    Nat.pow_dvd_pow_iff hnpos] at hdivn
   obtain rfl : D = 1 := by rw [← Nat.gcd_eq_right hdivn, C.gcd_eq_one]
   refine' hv ⟨N, _⟩
   rw [num_denom', Int.ofNat_one, mk_eq_div, Int.cast_one, div_one, cast_coe_int]
@@ -82,16 +82,16 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
     (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) :
     Irrational x := by
   rcases Nat.eq_zero_or_pos n with (rfl | hnpos)
-  · rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr 
+  · rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr
     simpa [hxr,
       multiplicity.one_right (mt isUnit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.1.not_dvd_one)),
       Nat.zero_mod] using hv
   refine' irrational_nrt_of_notint_nrt _ _ hxr _ hnpos
   rintro ⟨y, rfl⟩
-  rw [← Int.cast_pow, Int.cast_inj] at hxr ; subst m
-  have : y ≠ 0 := by rintro rfl; rw [zero_pow hnpos] at hm ; exact hm rfl
+  rw [← Int.cast_pow, Int.cast_inj] at hxr; subst m
+  have : y ≠ 0 := by rintro rfl; rw [zero_pow hnpos] at hm; exact hm rfl
   erw [multiplicity.pow' (Nat.prime_iff_prime_int.1 hp.1) (finite_int_iff.2 ⟨hp.1.ne_one, this⟩),
-    Nat.mul_mod_right] at hv 
+    Nat.mul_mod_right] at hv
   exact hv rfl
 #align irrational_nrt_of_n_not_dvd_multiplicity irrational_nrt_of_n_not_dvd_multiplicity
 -/
@@ -138,7 +138,7 @@ theorem irrational_sqrt_rat_iff (q : ℚ) :
             (exists_mul_self _).1
               ⟨r, by
                 rwa [eq_comm, sqrt_eq_iff_mul_self_eq (cast_nonneg.2 H2), ← cast_mul,
-                      Rat.cast_inj] at hr  <;>
+                      Rat.cast_inj] at hr <;>
                     rw [← hr] <;>
                   exact Real.sqrt_nonneg _⟩)
         ⟨H1, H2⟩
@@ -262,7 +262,7 @@ theorem add_rat (h : Irrational x) : Irrational (x + q) :=
 -/
 
 #print Irrational.of_int_add /-
-theorem of_int_add (m : ℤ) (h : Irrational (m + x)) : Irrational x := by rw [← cast_coe_int] at h ;
+theorem of_int_add (m : ℤ) (h : Irrational (m + x)) : Irrational x := by rw [← cast_coe_int] at h;
   exact h.of_rat_add m
 #align irrational.of_int_add Irrational.of_int_add
 -/
@@ -607,15 +607,15 @@ theorem of_mul_self (h : Irrational (x * x)) : Irrational x :=
 
 #print Irrational.of_pow /-
 theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
-  | 0 => fun h => by rw [pow_zero] at h ; exact (h ⟨1, cast_one⟩).elim
-  | n + 1 => fun h => by rw [pow_succ] at h ; exact h.mul_cases.elim id (of_pow n)
+  | 0 => fun h => by rw [pow_zero] at h; exact (h ⟨1, cast_one⟩).elim
+  | n + 1 => fun h => by rw [pow_succ] at h; exact h.mul_cases.elim id (of_pow n)
 #align irrational.of_pow Irrational.of_pow
 -/
 
 #print Irrational.of_zpow /-
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
-  | (n : ℕ) => fun h => by rw [zpow_coe_nat] at h ; exact h.of_pow _
-  | -[n+1] => fun h => by rw [zpow_negSucc] at h ; exact h.of_inv.of_pow _
+  | (n : ℕ) => fun h => by rw [zpow_coe_nat] at h; exact h.of_pow _
+  | -[n+1] => fun h => by rw [zpow_negSucc] at h; exact h.of_inv.of_pow _
 #align irrational.of_zpow Irrational.of_zpow
 -/
 
@@ -639,7 +639,7 @@ theorem one_lt_natDegree_of_irrational_root (hx : Irrational x) (p_nonzero : p �
   rcases em (a = 0) with (rfl | ha)
   · obtain rfl : b = 0 := by simpa
     simpa using p_nonzero
-  · rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this 
+  · rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this
     refine' hx ⟨-b / a, _⟩
     assumption_mod_cast; assumption_mod_cast
 #align one_lt_nat_degree_of_irrational_root one_lt_natDegree_of_irrational_root

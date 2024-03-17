@@ -581,7 +581,7 @@ theorem Odd.pow_neg_iff (hn : Odd n) : a ^ n < 0 ↔ a < 0 :=
 
 #print Even.pow_pos_iff /-
 theorem Even.pow_pos_iff (hn : Even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=
-  ⟨fun h ha => by rw [ha, zero_pow h₀] at h ; exact lt_irrefl 0 h, hn.pow_pos⟩
+  ⟨fun h ha => by rw [ha, zero_pow h₀] at h; exact lt_irrefl 0 h, hn.pow_pos⟩
 #align even.pow_pos_iff Even.pow_pos_iff
 -/
 

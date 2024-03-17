@@ -120,7 +120,7 @@ theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
 theorem SupIndep.image [DecidableEq ι] {s : Finset ι'} {g : ι' → ι} (hs : s.SupIndep (f ∘ g)) :
     (s.image g).SupIndep f := by
   intro t ht i hi hit
-  rw [mem_image] at hi 
+  rw [mem_image] at hi
   obtain ⟨i, hi, rfl⟩ := hi
   haveI : DecidableEq ι' := Classical.decEq _
   suffices hts : t ⊆ (s.erase i).image g
@@ -153,7 +153,7 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     by
     rw [sup_indep_iff_disjoint_erase]
     intro k hk
-    rw [Finset.mem_insert, Finset.mem_singleton] at hk 
+    rw [Finset.mem_insert, Finset.mem_singleton] at hk
     obtain rfl | rfl := hk
     · convert h using 1
       rw [Finset.erase_insert, Finset.sup_singleton]
@@ -193,9 +193,9 @@ theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep fun a => f a :=
   classical
   rw [← Finset.sup_image]
   refine' hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi _
-  rw [mem_image] at hi' 
+  rw [mem_image] at hi'
   obtain ⟨j, hj, hji⟩ := hi'
-  rwa [Subtype.ext hji] at hj 
+  rwa [Subtype.ext hji] at hj
 #align finset.sup_indep.attach Finset.SupIndep.attach
 -/
 
@@ -265,7 +265,7 @@ theorem SupIndep.sigma {β : ι → Type _} {s : Finset ι} {g : ∀ i, Finset (
   rintro ⟨j, c⟩ hj
   have hbc := (ne_of_mem_of_not_mem hj hit).symm
   replace hj := ht hj
-  rw [mem_sigma] at hi hj 
+  rw [mem_sigma] at hi hj
   obtain rfl | hij := eq_or_ne i j
   · exact (hg _ hj.1).PairwiseDisjoint hi.2 hj.2 (sigma_mk_injective.ne_iff.1 hbc)
   · refine' (hs.pairwise_disjoint hi.1 hj.1 hij).mono _ _
@@ -284,7 +284,7 @@ theorem SupIndep.product {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α}
   rintro ⟨j, j'⟩ hj
   have hij := (ne_of_mem_of_not_mem hj hiu).symm
   replace hj := hu hj
-  rw [mem_product] at hi hj 
+  rw [mem_product] at hi hj
   obtain rfl | hij := eq_or_ne i j
   · refine' (ht.pairwise_disjoint hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 hij).mono _ _
     · convert le_sup hi.1
@@ -376,7 +376,7 @@ theorem SetIndependent.disjoint_sSup {x : α} {y : Set α} (hx : x ∈ s) (hy : 
     Disjoint x (sSup y) :=
   by
   have := (hs.mono <| insert_subset.mpr ⟨hx, hy⟩) (mem_insert x _)
-  rw [insert_diff_of_mem _ (mem_singleton _), diff_singleton_eq_self hxy] at this 
+  rw [insert_diff_of_mem _ (mem_singleton _), diff_singleton_eq_self hxy] at this
   exact this
 #align complete_lattice.set_independent.disjoint_Sup CompleteLattice.SetIndependent.disjoint_sSup
 -/
@@ -485,7 +485,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
 theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <| range t :=
   by
   rw [set_independent_iff]
-  rw [← coe_comp_range_factorization t] at ht 
+  rw [← coe_comp_range_factorization t] at ht
   exact ht.comp' surjective_onto_range
 #align complete_lattice.independent.set_independent_range CompleteLattice.Independent.setIndependent_range
 -/
@@ -499,7 +499,7 @@ theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ �
   suffices t j ≤ ⨆ (k) (hk : k ≠ i), t k
     by
     replace ht := (ht i).mono_right this
-    rwa [h, disjoint_self] at ht 
+    rwa [h, disjoint_self] at ht
   replace contra : j ≠ i; · exact Ne.symm contra
   exact le_iSup₂ j contra
 #align complete_lattice.independent.injective CompleteLattice.Independent.injective

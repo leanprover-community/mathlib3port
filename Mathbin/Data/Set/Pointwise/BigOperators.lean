@@ -49,7 +49,7 @@ variable [CommMonoid α] [CommMonoid β] [MonoidHomClass F α β]
 theorem image_multiset_prod (f : F) :
     ∀ m : Multiset (Set α), (f : α → β) '' m.Prod = (m.map fun s => f '' s).Prod :=
   Quotient.ind <| by
-    simpa only [Multiset.quot_mk_to_coe, Multiset.coe_prod, Multiset.coe_map] using
+    simpa only [Multiset.quot_mk_to_coe, Multiset.prod_coe, Multiset.map_coe] using
       image_list_prod f
 #align set.image_multiset_prod Set.image_multiset_prod
 #align set.image_multiset_sum Set.image_multiset_sum
@@ -149,7 +149,7 @@ theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g
     (hg : ∀ i ∈ t, g i ∈ f i) : (t.map g).Prod ∈ (t.map f).Prod :=
   by
   induction t using Quotient.inductionOn
-  simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
+  simp_rw [Multiset.quot_mk_to_coe, Multiset.map_coe, Multiset.prod_coe]
   exact list_prod_mem_list_prod _ _ _ hg
 #align set.multiset_prod_mem_multiset_prod Set.multiset_prod_mem_multiset_prod
 #align set.multiset_sum_mem_multiset_sum Set.multiset_sum_mem_multiset_sum
@@ -162,7 +162,7 @@ theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι →
     (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) : (t.map f₁).Prod ⊆ (t.map f₂).Prod :=
   by
   induction t using Quotient.inductionOn
-  simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
+  simp_rw [Multiset.quot_mk_to_coe, Multiset.map_coe, Multiset.prod_coe]
   exact list_prod_subset_list_prod _ _ _ hf
 #align set.multiset_prod_subset_multiset_prod Set.multiset_prod_subset_multiset_prod
 #align set.multiset_sum_subset_multiset_sum Set.multiset_sum_subset_multiset_sum

@@ -207,7 +207,7 @@ theorem exists_seq_iSup_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
     refine' ⟨range s, countable_range s, forall_range_iff.2 hps, _⟩; rwa [sSup_range]
   · rintro ⟨S, hSc, hps, hS⟩
     rcases eq_empty_or_nonempty S with (rfl | hne)
-    · rw [sSup_empty] at hS ; haveI := subsingleton_of_bot_eq_top hS
+    · rw [sSup_empty] at hS; haveI := subsingleton_of_bot_eq_top hS
       rcases h with ⟨x, hx⟩; exact ⟨fun n => x, fun n => hx, Subsingleton.elim _ _⟩
     · rcases(Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩

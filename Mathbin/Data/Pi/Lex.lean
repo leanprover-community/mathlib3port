@@ -89,7 +89,7 @@ theorem isTrichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r)
     trichotomous := fun a b => by
       cases' eq_or_ne a b with hab hab
       · exact Or.inr (Or.inl hab)
-      · rw [Function.ne_iff] at hab 
+      · rw [Function.ne_iff] at hab
         let i := wf.min _ hab
         have hri : ∀ j, r j i → a j = b j := by
           intro j; rw [← not_imp_not]
@@ -155,12 +155,12 @@ theorem lt_toLex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a :=
   by
   refine' ⟨_, fun h => to_lex_strict_mono <| lt_update_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
-  dsimp at h 
+  dsimp at h
   obtain rfl : j = i := by
     by_contra H
-    rw [update_noteq H] at h 
+    rw [update_noteq H] at h
     exact h.false
-  · rwa [update_same] at h 
+  · rwa [update_same] at h
 #align pi.lt_to_lex_update_self_iff Pi.lt_toLex_update_self_iff
 -/
 
@@ -170,12 +170,12 @@ theorem toLex_update_lt_self_iff : toLex (update x i a) < toLex x ↔ a < x i :=
   by
   refine' ⟨_, fun h => to_lex_strict_mono <| update_lt_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
-  dsimp at h 
+  dsimp at h
   obtain rfl : j = i := by
     by_contra H
-    rw [update_noteq H] at h 
+    rw [update_noteq H] at h
     exact h.false
-  · rwa [update_same] at h 
+  · rwa [update_same] at h
 #align pi.to_lex_update_lt_self_iff Pi.toLex_update_lt_self_iff
 -/
 

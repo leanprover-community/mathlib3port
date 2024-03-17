@@ -224,8 +224,8 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
 theorem mono_of_isIso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f :=
   by
   obtain ⟨l, h₁, h₂⟩ := limits.pullback_cone.is_limit.lift' h.is_limit (𝟙 _) (𝟙 _) (by simp [h.w])
-  rw [is_pullback.cone_fst, ← is_iso.eq_comp_inv, category.id_comp] at h₁ 
-  rw [h₁, is_iso.inv_comp_eq, category.comp_id] at h₂ 
+  rw [is_pullback.cone_fst, ← is_iso.eq_comp_inv, category.id_comp] at h₁
+  rw [h₁, is_iso.inv_comp_eq, category.comp_id] at h₂
   constructor
   intro Z g₁ g₂ e
   obtain ⟨l', rfl, rfl⟩ := limits.pullback_cone.is_limit.lift' h.is_limit _ _ e

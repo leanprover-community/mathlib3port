@@ -462,7 +462,7 @@ theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [Lattice α] [OrderBot 
     Disjoint (a ⊔ b) c := by
   rw [disjoint_comm, sup_comm]
   apply Disjoint.disjoint_sup_right_of_disjoint_sup_left h.symm
-  rwa [sup_comm, disjoint_comm] at hsup 
+  rwa [sup_comm, disjoint_comm] at hsup
 #align disjoint.disjoint_sup_left_of_disjoint_sup_right Disjoint.disjoint_sup_left_of_disjoint_sup_right
 -/
 

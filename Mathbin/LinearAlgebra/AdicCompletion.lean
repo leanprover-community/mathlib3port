@@ -186,7 +186,7 @@ instance : IsHausdorff I (Hausdorffification I M) :=
         (mem_iInf _).2 fun n =>
           by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
-          simp only [sup_of_le_right (iInf_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this 
+          simp only [sup_of_le_right (iInf_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
           rw [← this, map_smul'', mem_comap, Submodule.map_top, range_mkq, ← SModEq.zero];
           exact hx n⟩
 
@@ -234,7 +234,7 @@ instance bot : IsPrecomplete (⊥ : Ideal R) M :=
   refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩; cases n
   · rw [pow_zero, Ideal.one_eq_top, top_smul]; exact SModEq.top
   specialize hf (Nat.le_add_left 1 n)
-  rw [pow_one, bot_smul, SModEq.bot] at hf ; rw [hf]
+  rw [pow_one, bot_smul, SModEq.bot] at hf; rw [hf]
 #align is_precomplete.bot IsPrecomplete.bot
 -/
 

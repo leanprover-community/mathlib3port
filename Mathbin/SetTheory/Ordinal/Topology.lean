@@ -110,8 +110,8 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
         exact H
       · exact Set.mem_singleton o
     · rintro ⟨t, ⟨a, ht⟩, hoa⟩
-      change dite _ _ _ = t at ht 
-      split_ifs at ht  with ha <;> subst ht
+      change dite _ _ _ = t at ht
+      split_ifs at ht with ha <;> subst ht
       · cases' Classical.choose_spec (h a.val a.prop ha) with H has
         rcases lt_or_eq_of_le (le_of_lt_succ hoa.2) with (hoa' | rfl)
         · exact has ⟨hoa.1, hoa'⟩
@@ -147,12 +147,12 @@ theorem mem_closure_iff_sup :
       · have : b < f (enum (· < ·) b (by rwa [type_lt])) :=
           by
           have := (hf (enum (· < ·) b (by rwa [type_lt]))).1.1
-          rwa [typein_enum] at this 
+          rwa [typein_enum] at this
         have : b ≤ sup.{u, u} f := this.le.trans (le_sup f _)
         exact this.not_lt hb.1.1
   · rintro ⟨ι, ⟨i⟩, f, hf, rfl⟩ t ht hat
     cases' eq_zero_or_pos (sup.{u, u} f) with ha₀ ha₀
-    · rw [ha₀] at hat 
+    · rw [ha₀] at hat
       use 0, hat
       convert hf i
       exact (sup_eq_zero_iff.1 ha₀ i).symm
@@ -225,9 +225,9 @@ theorem isClosed_iff_bsup :
 #print Ordinal.isLimit_of_mem_frontier /-
 theorem isLimit_of_mem_frontier (ha : a ∈ frontier s) : IsLimit a :=
   by
-  simp only [frontier_eq_closure_inter_closure, Set.mem_inter_iff, mem_closure_iff] at ha 
+  simp only [frontier_eq_closure_inter_closure, Set.mem_inter_iff, mem_closure_iff] at ha
   by_contra h
-  rw [← is_open_singleton_iff] at h 
+  rw [← is_open_singleton_iff] at h
   rcases ha.1 _ h rfl with ⟨b, hb, hb'⟩
   rcases ha.2 _ h rfl with ⟨c, hc, hc'⟩
   rw [Set.mem_singleton_iff] at *
@@ -246,7 +246,7 @@ theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u})
     rw [is_open_iff] at *
     intro o ho ho'
     rcases hs _ ho (h.is_limit ho') with ⟨a, ha, has⟩
-    rw [← IsNormal.bsup_eq.{u, u} h ho', lt_bsup] at ha 
+    rw [← IsNormal.bsup_eq.{u, u} h ho', lt_bsup] at ha
     rcases ha with ⟨b, hb, hab⟩
     exact
       ⟨b, hb, fun c hc =>
@@ -277,7 +277,7 @@ theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
     congr; ext
     change ((enum_ord_order_iso hs) _).val = f x
     rw [OrderIso.apply_symm_apply]
-  · rw [is_closed_iff_bsup] at h 
+  · rw [is_closed_iff_bsup] at h
     suffices : enum_ord s a ≤ bsup.{u, u} a fun b (_ : b < a) => enum_ord s b;
     exact this.trans (bsup_le H)
     cases'

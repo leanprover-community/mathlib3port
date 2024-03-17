@@ -69,7 +69,7 @@ theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s :=
       ⟨_, fun h => ⟨m.out, mem_product.2 ⟨h _ m.out_fst_mem, h _ m.out_snd_mem⟩, m.out_eq⟩⟩
   rintro ⟨⟨a, b⟩, h, rfl⟩
   rw [Sym2.ball]
-  rwa [mem_product] at h 
+  rwa [mem_product] at h
 #align finset.mem_sym2_iff Finset.mem_sym2_iff
 -/
 
@@ -178,9 +178,9 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s :=
     exact fun a ha => ha.elim
   refine' mem_sup.trans ⟨_, fun h => _⟩
   · rintro ⟨a, ha, he⟩ b hb
-    rw [mem_image] at he 
+    rw [mem_image] at he
     obtain ⟨m, he, rfl⟩ := he
-    rw [Sym.mem_cons] at hb 
+    rw [Sym.mem_cons] at hb
     obtain rfl | hb := hb
     · exact ha
     · exact ih.1 he _ hb

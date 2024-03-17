@@ -85,7 +85,7 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
   · simp only [Part.fix_def f h₀]
     constructor <;> intro hh; exact ⟨_, hh⟩
     have h₁ := Nat.find_spec h₀
-    rw [dom_iff_mem] at h₁ 
+    rw [dom_iff_mem] at h₁
     cases' h₁ with y h₁
     replace h₁ := approx_mono' f _ _ h₁
     suffices : y = b; subst this; exact h₁
@@ -96,7 +96,7 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
     replace hh := approx_mono f case _ _ hh
     apply Part.mem_unique h₁ hh
   · simp only [fix_def' (⇑f) h₀, not_exists, false_iff_iff, not_mem_none]
-    simp only [dom_iff_mem, not_exists] at h₀ 
+    simp only [dom_iff_mem, not_exists] at h₀
     intro; apply h₀
 #align part.fix.mem_iff Part.Fix.mem_iff
 -/
@@ -116,9 +116,9 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x :=
     have hb' := approx_le_fix f i _ _ hb
     obtain rfl := Part.mem_unique h' hb'
     exact hb
-  · simp only [not_exists] at hh ; exists 0
+  · simp only [not_exists] at hh; exists 0
     intro b' h'
-    simp only [mem_iff f] at h' 
+    simp only [mem_iff f] at h'
     cases' h' with i h'
     cases hh _ _ h'
 #align part.fix.exists_fix_le_approx Part.Fix.exists_fix_le_approx

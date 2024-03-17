@@ -101,9 +101,9 @@ theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midp
   have hx : e x = x := by simp
   have hy : e y = y := by simp
   have hm := e.midpoint_fixed hx hy
-  simp only [e, trans_apply] at hm 
+  simp only [e, trans_apply] at hm
   rwa [← eq_symm_apply, to_isometry_equiv_symm, point_reflection_symm, coe_to_isometry_equiv,
-    coe_to_isometry_equiv, point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm 
+    coe_to_isometry_equiv, point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm
 #align isometry_equiv.map_midpoint IsometryEquiv.map_midpoint
 -/
 

@@ -412,9 +412,9 @@ theorem symm_continuousWithinAt_comp_right_iff {X} [TopologicalSpace X] {f : H �
   refine' ⟨fun h => _, fun h => _⟩
   · have := h.comp I.continuous_within_at (maps_to_preimage _ _)
     simp_rw [preimage_inter, preimage_preimage, I.left_inv, preimage_id', preimage_range,
-      inter_univ] at this 
-    rwa [Function.comp.assoc, I.symm_comp_self] at this 
-  · rw [← I.left_inv x] at h ; exact h.comp I.continuous_within_at_symm (inter_subset_left _ _)
+      inter_univ] at this
+    rwa [Function.comp.assoc, I.symm_comp_self] at this
+  · rw [← I.left_inv x] at h; exact h.comp I.continuous_within_at_symm (inter_subset_left _ _)
 #align model_with_corners.symm_continuous_within_at_comp_right_iff ModelWithCorners.symm_continuousWithinAt_comp_right_iff
 -/
 
@@ -660,7 +660,7 @@ def contDiffGroupoid : StructureGroupoid H :=
           rw [preimage_inter, inter_assoc, inter_assoc]
           congr 1
           rw [inter_comm]
-        rw [this] at hv 
+        rw [this] at hv
         exact ⟨I.symm ⁻¹' v, v_open.preimage I.continuous_symm, by simpa, hv⟩
       congr := fun f g u hu fg hf => by
         apply hf.congr
@@ -742,14 +742,14 @@ theorem contDiffGroupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCor
   by
   cases' he with he he_symm
   cases' he' with he' he'_symm
-  simp only at he he_symm he' he'_symm 
+  simp only at he he_symm he' he'_symm
   constructor <;> simp only [PartialEquiv.prod_source, PartialHomeomorph.prod_toLocalEquiv]
   · have h3 := ContDiffOn.prod_map he he'
-    rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3 
+    rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
     exact h3
   · have h3 := ContDiffOn.prod_map he_symm he'_symm
-    rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3 
+    rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
     exact h3
 #align cont_diff_groupoid_prod contDiffGroupoid_prod
@@ -1134,7 +1134,7 @@ theorem map_extend_symm_nhdsWithin_range {y : M} (hy : y ∈ f.source) :
 in the source is a neighborhood of the preimage, within a set. -/
 theorem extend_preimage_mem_nhdsWithin {x : M} (h : x ∈ f.source) (ht : t ∈ 𝓝[s] x) :
     (f.extend I).symm ⁻¹' t ∈ 𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I x := by
-  rwa [← map_extend_symm_nhds_within f I h, mem_map] at ht 
+  rwa [← map_extend_symm_nhds_within f I h, mem_map] at ht
 #align local_homeomorph.extend_preimage_mem_nhds_within PartialHomeomorph.extend_preimage_mem_nhdsWithin
 -/
 
@@ -1179,7 +1179,7 @@ theorem extend_symm_preimage_inter_range_eventuallyEq {s : Set M} {x : M} (hs : 
     (hx : x ∈ f.source) :
     ((f.extend I).symm ⁻¹' s ∩ range I : Set _) =ᶠ[𝓝 (f.extend I x)] f.extend I '' s :=
   by
-  rw [← f.extend_source I] at hs 
+  rw [← f.extend_source I] at hs
   rw [(f.extend I).image_eq_target_inter_inv_preimage hs]
   exact f.extend_symm_preimage_inter_range_eventually_eq_aux I hx
 #align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq PartialHomeomorph.extend_symm_preimage_inter_range_eventuallyEq
@@ -1527,7 +1527,7 @@ in the source is a neighborhood of the preimage, within a set. -/
 theorem extChartAt_preimage_mem_nhdsWithin' {x' : M} (h : x' ∈ (extChartAt I x).source)
     (ht : t ∈ 𝓝[s] x') :
     (extChartAt I x).symm ⁻¹' t ∈ 𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x' := by
-  rwa [← map_extChartAt_symm_nhdsWithin' I x h, mem_map] at ht 
+  rwa [← map_extChartAt_symm_nhdsWithin' I x h, mem_map] at ht
 #align ext_chart_at_preimage_mem_nhds_within' extChartAt_preimage_mem_nhdsWithin'
 -/
 

@@ -49,7 +49,7 @@ theorem iIndepFun.indep_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f i
   suffices
     indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
       (⨆ k ∈ {k | k ≤ i}, MeasurableSpace.comap (f k) mβ) μ
-    by rwa [iSup_singleton] at this 
+    by rwa [iSup_singleton] at this
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
 #align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.iIndepFun.indep_comap_natural_of_lt
 -/
@@ -109,14 +109,14 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
     by
     rw [← ENNReal.tsum_add_one_eq_top hs' (measure_ne_top _ _)]
     exact ENNReal.tendsto_nat_tsum _
-  rw [ENNReal.tendsto_nhds_top_iff_nnreal] at htends 
+  rw [ENNReal.tendsto_nhds_top_iff_nnreal] at htends
   refine' tendsto_at_top_at_top_of_monotone' _ _
   · refine' monotone_nat_of_le_succ fun n => _
     rw [← sub_nonneg, Finset.sum_range_succ_sub_sum]
     exact ENNReal.toReal_nonneg
   · rintro ⟨B, hB⟩
     refine' not_eventually.2 (frequently_of_forall fun n => _) (htends B.to_nnreal)
-    rw [mem_upperBounds] at hB 
+    rw [mem_upperBounds] at hB
     specialize hB (∑ k : ℕ in Finset.range n, μ (s (k + 1))).toReal _
     · refine' ⟨n, _⟩
       rw [ENNReal.toReal_sum]

@@ -51,7 +51,7 @@ theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.get
     (nth_conts_eq : g.continuants n = ppred) (succ_nth_conts_eq : g.continuants (n + 1) = pred) :
     g.continuants (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ :=
   by
-  rw [nth_cont_eq_succ_nth_cont_aux] at nth_conts_eq succ_nth_conts_eq 
+  rw [nth_cont_eq_succ_nth_cont_aux] at nth_conts_eq succ_nth_conts_eq
   exact continuants_recurrence_aux succ_nth_s_eq nth_conts_eq succ_nth_conts_eq
 #align generalized_continued_fraction.continuants_recurrence GeneralizedContinuedFraction.continuants_recurrence
 -/

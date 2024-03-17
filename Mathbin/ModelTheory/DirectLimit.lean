@@ -228,8 +228,8 @@ theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σ i, G i} (xy 
       i ∈ upperBounds (range (Sigma.fst ∘ y))), unify f x i hx = unify f y i hy :=
   by
   obtain ⟨i, hi⟩ := Finite.bddAbove_range (Sum.elim (fun a => (x a).1) fun a => (y a).1)
-  rw [sum.elim_range, upperBounds_union] at hi 
-  simp_rw [← Function.comp_apply Sigma.fst _] at hi 
+  rw [sum.elim_range, upperBounds_union] at hi
+  simp_rw [← Function.comp_apply Sigma.fst _] at hi
   exact ⟨i, hi.1, hi.2, funext fun a => (equiv_iff G f _ _).1 (xy a)⟩
 #align first_order.language.direct_limit.exists_unify_eq FirstOrder.Language.DirectLimit.exists_unify_eq
 -/
@@ -324,7 +324,7 @@ def of (i : ι) : G i ↪[L] DirectLimit G f
     where
   toFun := Quotient.mk' ∘ Sigma.mk i
   inj' x y h := by
-    simp only [Quotient.eq'] at h 
+    simp only [Quotient.eq'] at h
     obtain ⟨j, h1, h2, h3⟩ := h
     exact (f i j h1).Injective h3
 #align first_order.language.direct_limit.of FirstOrder.Language.DirectLimit.of
@@ -387,9 +387,9 @@ def lift : DirectLimit G f ↪[L] P
       exact congr_arg _ ((equiv_iff _ _ _ _).1 xy)
   inj' x y xy :=
     by
-    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.lift_mk, Quotient.lift_mk] at xy 
+    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.lift_mk, Quotient.lift_mk] at xy
     obtain ⟨i, hx, hy⟩ := directed_of (· ≤ ·) x.out.1 y.out.1
-    rw [← Hg x.out.1 i hx, ← Hg y.out.1 i hy] at xy 
+    rw [← Hg x.out.1 i hx, ← Hg y.out.1 i hy] at xy
     rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.eq', equiv_iff G f hx hy]
     exact (g i).Injective xy
   map_fun' n F x := by

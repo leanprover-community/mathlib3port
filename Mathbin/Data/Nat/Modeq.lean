@@ -194,7 +194,7 @@ protected theorem add_right (c : ℕ) (h : a ≡ b [MOD n]) : a + c ≡ b + c [M
 protected theorem add_left_cancel (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) :
     c ≡ d [MOD n] := by
   simp only [modeq_iff_dvd, Int.ofNat_add] at *
-  rw [add_sub_add_comm] at h₂ 
+  rw [add_sub_add_comm] at h₂
   convert _root_.dvd_sub h₂ h₁ using 1
   rw [add_sub_cancel']
 #align nat.modeq.add_left_cancel Nat.ModEq.add_left_cancel
@@ -208,7 +208,7 @@ protected theorem add_left_cancel' (c : ℕ) (h : c + a ≡ c + b [MOD n]) : a �
 
 #print Nat.ModEq.add_right_cancel /-
 protected theorem add_right_cancel (h₁ : c ≡ d [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) :
-    a ≡ b [MOD n] := by rw [add_comm a, add_comm b] at h₂ ; exact h₁.add_left_cancel h₂
+    a ≡ b [MOD n] := by rw [add_comm a, add_comm b] at h₂; exact h₁.add_left_cancel h₂
 #align nat.modeq.add_right_cancel Nat.ModEq.add_right_cancel
 -/
 
@@ -408,8 +408,8 @@ theorem cancel_right_div_gcd' (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : a * c �
 theorem cancel_left_of_coprime (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m] :=
   by
   rcases m.eq_zero_or_pos with (rfl | hm)
-  · simp only [gcd_zero_left] at hmc 
-    simp only [gcd_zero_left, hmc, one_mul, modeq_zero_iff] at h 
+  · simp only [gcd_zero_left] at hmc
+    simp only [gcd_zero_left, hmc, one_mul, modeq_zero_iff] at h
     subst h
   simpa [hmc] using h.cancel_left_div_gcd hm
 #align nat.modeq.cancel_left_of_coprime Nat.ModEq.cancel_left_of_coprime
@@ -427,9 +427,9 @@ end Modeq
 #print Nat.chineseRemainder' /-
 /-- The natural number less than `lcm n m` congruent to `a` mod `n` and `b` mod `m` -/
 def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
-  if hn : n = 0 then ⟨a, by rw [hn, gcd_zero_left] at h ; constructor; rfl; exact h⟩
+  if hn : n = 0 then ⟨a, by rw [hn, gcd_zero_left] at h; constructor; rfl; exact h⟩
   else
-    if hm : m = 0 then ⟨b, by rw [hm, gcd_zero_right] at h ; constructor; exact h.symm; rfl⟩
+    if hm : m = 0 then ⟨b, by rw [hm, gcd_zero_right] at h; constructor; exact h.symm; rfl⟩
     else
       ⟨let (c, d) := xgcd n m
         Int.toNat ((n * c * b + m * d * a) / gcd n m % lcm n m),
@@ -447,14 +447,14 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
         constructor <;> rw [Int.mod_def, ← sub_add] <;>
             refine' dvd_add _ (dvd_mul_of_dvd_left _ _) <;>
           try norm_cast
-        · rw [← sub_eq_iff_eq_add'] at this 
+        · rw [← sub_eq_iff_eq_add'] at this
           rw [← this, sub_mul, ← add_sub_assoc, add_comm, add_sub_assoc, ← mul_sub,
             Int.add_ediv_of_dvd_left, Int.mul_ediv_cancel_left _ hnonzero,
             Int.mul_ediv_assoc _ h.dvd, ← sub_sub, sub_self, zero_sub, dvd_neg, mul_assoc]
           exact dvd_mul_right _ _
           norm_cast; exact dvd_mul_right _ _
         · exact dvd_lcm_left n m
-        · rw [← sub_eq_iff_eq_add] at this 
+        · rw [← sub_eq_iff_eq_add] at this
           rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_ediv_of_dvd,
             Int.mul_ediv_cancel_left _ hnonzero, Int.mul_ediv_assoc _ h.dvd, ← sub_add, sub_self,
             zero_add, mul_assoc]
@@ -495,7 +495,7 @@ theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℕ} (hmn : Coprime m n) :
   ⟨fun h =>
     by
     rw [Nat.modEq_iff_dvd, Nat.modEq_iff_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd, ← Int.dvd_natAbs,
-      Int.coe_nat_dvd] at h 
+      Int.coe_nat_dvd] at h
     rw [Nat.modEq_iff_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd]
     exact hmn.mul_dvd_of_dvd_of_dvd h.1 h.2, fun h => ⟨h.of_mul_right _, h.of_mul_left _⟩⟩
 #align nat.modeq_and_modeq_iff_modeq_mul Nat.modEq_and_modEq_iff_modEq_mul

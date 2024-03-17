@@ -220,11 +220,11 @@ theorem condexpL2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : μ
     (hf : f =ᵐ[μ.restrict s] 0) : condexpL2 ℝ hm f =ᵐ[μ.restrict s] 0 :=
   by
   suffices h_nnnorm_eq_zero : ∫⁻ x in s, ‖condexp_L2 ℝ hm f x‖₊ ∂μ = 0
-  · rw [lintegral_eq_zero_iff] at h_nnnorm_eq_zero 
+  · rw [lintegral_eq_zero_iff] at h_nnnorm_eq_zero
     refine' h_nnnorm_eq_zero.mono fun x hx => _
-    dsimp only at hx 
+    dsimp only at hx
     rw [Pi.zero_apply] at hx ⊢
-    · rwa [ENNReal.coe_eq_zero, nnnorm_eq_zero] at hx 
+    · rwa [ENNReal.coe_eq_zero, nnnorm_eq_zero] at hx
     · refine' Measurable.coe_nnreal_ennreal (Measurable.nnnorm _)
       rw [Lp_meas_coe]
       exact (Lp.strongly_measurable _).Measurable
@@ -343,7 +343,7 @@ theorem condexpL2_comp_continuousLinearMap (hm : m ≤ m0) (T : E' →L[ℝ] E''
         (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs.ne)]
   · rw [← Lp_meas_coe]; exact Lp_meas.ae_strongly_measurable' _
   · have h_coe := T.coe_fn_comp_Lp (condexp_L2 𝕜 hm f : α →₂[μ] E')
-    rw [← eventually_eq] at h_coe 
+    rw [← eventually_eq] at h_coe
     refine' ae_strongly_measurable'.congr _ h_coe.symm
     exact (Lp_meas.ae_strongly_measurable' (condexp_L2 𝕜 hm f)).continuous_comp T.continuous
 #align measure_theory.condexp_L2_comp_continuous_linear_map MeasureTheory.condexpL2_comp_continuousLinearMap
@@ -365,7 +365,7 @@ theorem condexpL2_indicator_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (h
   have h_comp :=
     condexp_L2_comp_continuous_linear_map ℝ 𝕜 hm (to_span_singleton ℝ x)
       (indicator_const_Lp 2 hs hμs (1 : ℝ))
-  rw [← Lp_meas_coe] at h_comp 
+  rw [← Lp_meas_coe] at h_comp
   refine' h_comp.trans _
   exact (to_span_singleton ℝ x).coeFn_compLp _
 #align measure_theory.condexp_L2_indicator_ae_eq_smul MeasureTheory.condexpL2_indicator_ae_eq_smul
@@ -383,7 +383,7 @@ theorem condexpL2_indicator_eq_toSpanSingleton_comp (hm : m ≤ m0) (hs : Measur
   have h_comp :=
     (to_span_singleton ℝ x).coeFn_compLp
       (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) : α →₂[μ] ℝ)
-  rw [← eventually_eq] at h_comp 
+  rw [← eventually_eq] at h_comp
   refine' eventually_eq.trans _ h_comp.symm
   refine' eventually_of_forall fun y => _
   rfl

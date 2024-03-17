@@ -87,7 +87,7 @@ theorem wellFoundedOn_iff : s.WellFoundedOn r ↔ WellFounded fun a b : α => r 
   rw [WellFounded.wellFounded_iff_has_min]
   intro t ht
   by_cases hst : (s ∩ t).Nonempty
-  · rw [← Subtype.preimage_coe_nonempty] at hst 
+  · rw [← Subtype.preimage_coe_nonempty] at hst
     rcases h.has_min (coe ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
     exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hm ⟨x, xs⟩ xt xm⟩
   · rcases ht with ⟨m, mt⟩
@@ -178,7 +178,7 @@ theorem acc_iff_wellFoundedOn {α} {r : α → α → Prop} {a : α} :
   · refine' fun h => ⟨fun b => _⟩; apply InvImage.accessible
     rw [← acc_transGen_iff] at h ⊢
     obtain h' | h' := refl_trans_gen_iff_eq_or_trans_gen.1 b.2
-    · rwa [h'] at h ; · exact h.inv h'
+    · rwa [h'] at h; · exact h.inv h'
   tfae_have 2 → 3
   · exact fun h => h.Subset fun _ => trans_gen.to_refl
   tfae_have 3 → 1
@@ -514,7 +514,7 @@ theorem PartiallyWellOrderedOn.wellFoundedOn [IsPreorder α r] (h : s.PartiallyW
     { le := r
       le_refl := refl_of r
       le_trans := fun _ _ _ => trans_of r }
-  change s.well_founded_on (· < ·); change s.partially_well_ordered_on (· ≤ ·) at h 
+  change s.well_founded_on (· < ·); change s.partially_well_ordered_on (· ≤ ·) at h
   rw [well_founded_on_iff_no_descending_seq]
   intro f hf
   obtain ⟨m, n, hlt, hle⟩ := h f hf
@@ -725,7 +725,7 @@ protected theorem IsWF.isPWO (hs : s.IsWF) : s.IsPWO :=
   lift f to ℕ → s using hf
   have hrange : (range f).Nonempty := range_nonempty _
   rcases hs.has_min (range f) (range_nonempty _) with ⟨_, ⟨m, rfl⟩, hm⟩
-  simp only [forall_range_iff, not_lt] at hm 
+  simp only [forall_range_iff, not_lt] at hm
   exact ⟨m, m + 1, lt_add_one m, hm _⟩
 #align set.is_wf.is_pwo Set.IsWF.isPWO
 -/
@@ -1041,23 +1041,23 @@ theorem partiallyWellOrderedOn_sublistForall₂ (r : α → α → Prop) [IsRefl
   · simp only [if_neg (lt_irrefl (g 0)), tsub_self]
     rw [List.length_tail, ← Nat.pred_eq_sub_one]
     exact Nat.pred_lt fun con => hnil _ (List.length_eq_zero.1 Con)
-  rw [is_bad_seq] at hf' 
-  push_neg at hf' 
+  rw [is_bad_seq] at hf'
+  push_neg at hf'
   obtain ⟨m, n, mn, hmn⟩ := hf' _
   swap
   · rintro n x hx
-    split_ifs at hx  with hn hn
+    split_ifs at hx with hn hn
     · exact hf1.1 _ _ hx
     · refine' hf1.1 _ _ (List.tail_subset _ hx)
   by_cases hn : n < g 0
   · apply hf1.2 m n mn
-    rwa [if_pos hn, if_pos (mn.trans hn)] at hmn 
+    rwa [if_pos hn, if_pos (mn.trans hn)] at hmn
   · obtain ⟨n', rfl⟩ := exists_add_of_le (not_lt.1 hn)
-    rw [if_neg hn, add_comm (g 0) n', add_tsub_cancel_right] at hmn 
-    split_ifs at hmn  with hm hm
+    rw [if_neg hn, add_comm (g 0) n', add_tsub_cancel_right] at hmn
+    split_ifs at hmn with hm hm
     · apply hf1.2 m (g n') (lt_of_lt_of_le hm (g.monotone n'.zero_le))
       exact trans hmn (List.tail_sublistForall₂_self _)
-    · rw [← tsub_lt_iff_left (le_of_not_lt hm)] at mn 
+    · rw [← tsub_lt_iff_left (le_of_not_lt hm)] at mn
       apply hf1.2 _ _ (g.lt_iff_lt.2 mn)
       rw [← List.cons_head!_tail (hnil (g (m - g 0))), ← List.cons_head!_tail (hnil (g n'))]
       exact List.SublistForall₂.cons (hg _ _ (le_of_lt mn)) hmn

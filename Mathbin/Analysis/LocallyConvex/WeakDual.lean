@@ -137,7 +137,7 @@ theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
             (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy,
           fun x hx y hy => _⟩
       simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
-      rw [Seminorm.mem_ball_zero] at hx 
+      rw [Seminorm.mem_ball_zero] at hx
       rw [← LinearMap.toSeminormFamily_apply]
       have hyU' : y ∈ U' := (Set.Finite.mem_toFinset hU₁).mpr hy
       have hp : p y ≤ U'.sup p := Finset.le_sup hyU'
@@ -147,11 +147,11 @@ theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_true_iff]
     exact Exists.intro ((p 0).ball 0 1) (p.basis_sets_singleton_mem 0 one_pos)
   rintro U (hU : U ∈ p.basis_sets)
-  rw [SeminormFamily.basisSets_iff] at hU 
+  rw [SeminormFamily.basisSets_iff] at hU
   rcases hU with ⟨s, r, hr, hU⟩
   rw [hU]
   refine' ⟨(s, fun _ => r), ⟨by simp only [s.finite_to_set], fun y hy => hr⟩, fun x hx => _⟩
-  simp only [Set.mem_preimage, Set.mem_pi, Finset.mem_coe, mem_ball_zero_iff] at hx 
+  simp only [Set.mem_preimage, Set.mem_pi, Finset.mem_coe, mem_ball_zero_iff] at hx
   simp only [id.def, Seminorm.mem_ball, sub_zero]
   refine' Seminorm.finset_sup_apply_lt hr fun y hy => _
   rw [LinearMap.toSeminormFamily_apply]

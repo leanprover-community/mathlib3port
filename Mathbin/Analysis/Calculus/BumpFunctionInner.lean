@@ -142,7 +142,7 @@ theorem fAux_deriv_zero (n : ℕ) : HasDerivAt (fAux n) 0 0 :=
     by
     apply (hasDerivAt_const (0 : ℝ) (0 : ℝ)).HasDerivWithinAt.congr
     · intro y hy
-      simp at hy 
+      simp at hy
       simp [f_aux, hy]
     · simp [f_aux, le_refl]
   have B : HasDerivWithinAt (f_aux n) (0 : ℝ) (Ici 0) 0 :=
@@ -444,13 +444,13 @@ instance (priority := 100) hasContDiffBump_of_innerProductSpace (E : Type _) [No
       support := fun R hR => by
         apply subset.antisymm
         · intro x hx
-          simp only [mem_support] at hx 
+          simp only [mem_support] at hx
           contrapose! hx
-          simp only [mem_ball_zero_iff, not_lt] at hx 
+          simp only [mem_ball_zero_iff, not_lt] at hx
           apply Real.smoothTransition.zero_of_nonpos
           apply div_nonpos_of_nonpos_of_nonneg <;> linarith
         · intro x hx
-          simp only [mem_ball_zero_iff] at hx 
+          simp only [mem_ball_zero_iff] at hx
           apply (Real.smoothTransition.pos_of_pos _).ne'
           apply div_pos <;> linarith }
   ⟨⟨e⟩⟩
@@ -544,7 +544,7 @@ theorem pos_of_mem_ball (hx : x ∈ ball c f.rOut) : 0 < f x :=
   refine' lt_iff_le_and_ne.2 ⟨f.nonneg, Ne.symm _⟩
   change f.r⁻¹ • (x - c) ∈ support ((someContDiffBumpBase E).toFun (f.R / f.r))
   rw [ContDiffBumpBase.support _ _ f.one_lt_R_div_r]
-  simp only [dist_eq_norm, mem_ball] at hx 
+  simp only [dist_eq_norm, mem_ball] at hx
   simpa only [norm_smul, mem_ball_zero_iff, norm_eq_abs, abs_inv, abs_of_nonneg f.r_pos.le, ←
     div_eq_inv_mul] using (div_lt_div_right f.r_pos).2 hx
 #align cont_diff_bump.pos_of_mem_ball ContDiffBump.pos_of_mem_ball
@@ -553,7 +553,7 @@ theorem pos_of_mem_ball (hx : x ∈ ball c f.rOut) : 0 < f x :=
 #print ContDiffBump.zero_of_le_dist /-
 theorem zero_of_le_dist (hx : f.rOut ≤ dist x c) : f x = 0 :=
   by
-  rw [dist_eq_norm] at hx 
+  rw [dist_eq_norm] at hx
   suffices H : f.r⁻¹ • (x - c) ∉ support ((someContDiffBumpBase E).toFun (f.R / f.r))
   · simpa only [mem_support, Classical.not_not] using H
   rw [ContDiffBumpBase.support _ _ f.one_lt_R_div_r]
@@ -766,7 +766,7 @@ theorem tendsto_support_normed_smallSets {ι} {φ : ι → ContDiffBump c} {l : 
     Tendsto (fun i => support fun x => (φ i).normed μ x) l (𝓝 c).smallSets :=
   by
   simp_rw [NormedAddCommGroup.tendsto_nhds_zero, Real.norm_eq_abs,
-    abs_eq_self.mpr (φ _).rOut_pos.le] at hφ 
+    abs_eq_self.mpr (φ _).rOut_pos.le] at hφ
   rw [tendsto_small_sets_iff]
   intro t ht
   rcases metric.mem_nhds_iff.mp ht with ⟨ε, hε, ht⟩

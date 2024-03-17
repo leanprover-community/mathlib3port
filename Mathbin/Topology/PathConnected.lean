@@ -391,7 +391,7 @@ theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.
   by
   ext t
   simp only [trans_apply, ← one_div, symm_apply, not_le, comp_app]
-  split_ifs with h h₁ h₂ h₃ h₄ <;> rw [coe_symm_eq] at h 
+  split_ifs with h h₁ h₂ h₃ h₄ <;> rw [coe_symm_eq] at h
   · have ht : (t : ℝ) = 1 / 2 := by linarith [unitInterval.nonneg t, unitInterval.le_one t]
     norm_num [ht]
   · refine' congr_arg _ (Subtype.ext _)
@@ -425,14 +425,14 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
     · left
       use 2 * t, ⟨by linarith, by linarith⟩
       rw [← γ₁.extend_extends]
-      unfold_coes at hxt 
-      simp only [h, comp_app, if_true] at hxt 
+      unfold_coes at hxt
+      simp only [h, comp_app, if_true] at hxt
       exact hxt
     · right
       use 2 * t - 1, ⟨by linarith, by linarith⟩
       rw [← γ₂.extend_extends]
-      unfold_coes at hxt 
-      simp only [h, comp_app, if_false] at hxt 
+      unfold_coes at hxt
+      simp only [h, comp_app, if_false] at hxt
       exact hxt
   · rintro x (⟨⟨t, ht0, ht1⟩, hxt⟩ | ⟨⟨t, ht0, ht1⟩, hxt⟩)
     · use⟨t / 2, ⟨by linarith, by linarith⟩⟩
@@ -446,10 +446,10 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
         unfold_coes
         simp only [h, comp_app, if_true, le_refl, mul_one_div_cancel (two_ne_zero' ℝ)]
         rw [γ₁.extend_one]
-        rwa [← γ₂.extend_extends, h, γ₂.extend_zero] at hxt 
+        rwa [← γ₂.extend_extends, h, γ₂.extend_zero] at hxt
       · use⟨(t + 1) / 2, ⟨by linarith, by linarith⟩⟩
         unfold_coes
-        change t ≠ 0 at h 
+        change t ≠ 0 at h
         have ht0 := lt_of_le_of_ne ht0 h.symm
         have : ¬(t + 1) / 2 ≤ 1 / 2 := by rw [not_le]; linarith
         simp only [comp_app, if_false, this]
@@ -867,11 +867,11 @@ theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf�
     intro t
     have h₁ : Continuous (Icc_extend (zero_le_one' ℝ) f) := by continuity
     have := intermediate_value_Icc (zero_le_one' ℝ) h₁.continuous_on
-    · rw [Icc_extend_left, Icc_extend_right] at this 
-      change Icc (f 0) (f 1) ⊆ _ at this 
-      rw [hf₀, hf₁] at this 
+    · rw [Icc_extend_left, Icc_extend_right] at this
+      change Icc (f 0) (f 1) ⊆ _ at this
+      rw [hf₀, hf₁] at this
       rcases this t.2 with ⟨w, hw₁, hw₂⟩
-      rw [Icc_extend_of_mem _ _ hw₁] at hw₂ 
+      rw [Icc_extend_of_mem _ _ hw₁] at hw₂
       use⟨w, hw₁⟩, hw₂
   rw [range_comp, this, image_univ]
 #align path.range_reparam Path.range_reparam
@@ -1160,7 +1160,7 @@ theorem isPathConnected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathComponen
   · ext y
     exact ⟨fun hy => hy.Mem.2, h⟩
   · intro y y_in
-    rwa [← h] at y_in 
+    rwa [← h] at y_in
 #align is_path_connected_iff_eq isPathConnected_iff_eq
 -/
 
@@ -1264,7 +1264,7 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
         · rw [range_eq]
           left
           exact hγ₀.1 i hi'
-        · rw [not_le, ← Nat.succ_le_iff] at hi' 
+        · rw [not_le, ← Nat.succ_le_iff] at hi'
           have : i = n.succ := by linarith
           rw [this]
           use 1
@@ -1293,8 +1293,8 @@ theorem IsPathConnected.exists_path_through_family' {X : Type _} [TopologicalSpa
   by
   rcases h.exists_path_through_family p hp with ⟨γ, hγ⟩
   rcases hγ with ⟨h₁, h₂⟩
-  simp only [range, mem_set_of_eq] at h₂ 
-  rw [range_subset_iff] at h₁ 
+  simp only [range, mem_set_of_eq] at h₂
+  rw [range_subset_iff] at h₁
   choose! t ht using h₂
   exact ⟨γ, t, h₁, ht⟩
 #align is_path_connected.exists_path_through_family' IsPathConnected.exists_path_through_family'
@@ -1351,7 +1351,7 @@ theorem isPathConnected_iff_pathConnectedSpace : IsPathConnected F ↔ PathConne
     refine' ⟨⟨⟨x, x_in⟩⟩, _⟩
     rintro ⟨y, y_in⟩ ⟨z, z_in⟩
     have H := h y y_in z z_in
-    rwa [joinedIn_iff_joined y_in z_in] at H 
+    rwa [joinedIn_iff_joined y_in z_in] at H
   · rintro ⟨⟨x, x_in⟩, H⟩
     refine' ⟨⟨x, x_in⟩, fun y y_in z z_in => _⟩
     rw [joinedIn_iff_joined y_in z_in]
@@ -1397,7 +1397,7 @@ instance (priority := 100) PathConnectedSpace.connectedSpace [PathConnectedSpace
 theorem IsPathConnected.isConnected (hF : IsPathConnected F) : IsConnected F :=
   by
   rw [isConnected_iff_connectedSpace]
-  rw [isPathConnected_iff_pathConnectedSpace] at hF 
+  rw [isPathConnected_iff_pathConnectedSpace] at hF
   exact @PathConnectedSpace.connectedSpace _ _ hF
 #align is_path_connected.is_connected IsPathConnected.isConnected
 -/

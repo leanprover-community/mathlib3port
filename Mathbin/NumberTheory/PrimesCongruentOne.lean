@@ -59,7 +59,7 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
     haveI : NeZero (k : ZMod p) :=
       NeZero.of_not_dvd (ZMod p) fun hpk => hpb (dvd_mul_of_dvd_left hpk _)
     have : k = orderOf (b : ZMod p) := (is_root_cyclotomic_iff.mp hroot).eq_orderOf
-    rw [← this] at hdiv 
+    rw [← this] at hdiv
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm
 #align nat.exists_prime_gt_modeq_one Nat.exists_prime_gt_modEq_one
 -/

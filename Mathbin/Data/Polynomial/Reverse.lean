@@ -188,7 +188,7 @@ theorem reflect_C_mul_X_pow (N n : ℕ) {c : R} : reflect N (C c * X ^ n) = C c 
   · rw [h, rev_at_invol, coeff_X_pow_self]
   · rw [not_mem_support_iff.mp]
     intro a
-    rw [← one_mul (X ^ n), ← C_1] at a 
+    rw [← one_mul (X ^ n), ← C_1] at a
     apply h
     rw [← mem_support_C_mul_X_pow a, rev_at_invol]
 #align polynomial.reflect_C_mul_X_pow Polynomial.reflect_C_mul_X_pow
@@ -332,7 +332,7 @@ theorem reverse_natDegree_le (f : R[X]) : f.reverse.natDegree ≤ f.natDegree :=
   by
   rw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero]
   intro n hn
-  rw [WithBot.coe_lt_coe] at hn 
+  rw [WithBot.coe_lt_coe] at hn
   rw [coeff_reverse, rev_at, Function.Embedding.coeFn_mk, if_neg (not_le_of_gt hn),
     coeff_eq_zero_of_nat_degree_lt hn]
 #align polynomial.reverse_nat_degree_le Polynomial.reverse_natDegree_le
@@ -352,7 +352,7 @@ theorem natDegree_eq_reverse_natDegree_add_natTrailingDegree (f : R[X]) :
   · rw [← le_tsub_iff_left f.reverse_nat_degree_le]
     apply nat_trailing_degree_le_of_ne_zero
     have key := mt leading_coeff_eq_zero.mp (mt reverse_eq_zero.mp hf)
-    rwa [leading_coeff, coeff_reverse, rev_at_le f.reverse_nat_degree_le] at key 
+    rwa [leading_coeff, coeff_reverse, rev_at_le f.reverse_nat_degree_le] at key
 #align polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree Polynomial.natDegree_eq_reverse_natDegree_add_natTrailingDegree
 -/
 

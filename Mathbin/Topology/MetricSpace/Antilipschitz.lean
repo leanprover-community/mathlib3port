@@ -196,7 +196,7 @@ theorem to_rightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Funct
     LipschitzWith K g := by
   intro x y
   have := hf (g x) (g y)
-  rwa [hg x, hg y] at this 
+  rwa [hg x, hg y] at this
 #align antilipschitz_with.to_right_inverse AntilipschitzWith.to_rightInverse
 -/
 
@@ -206,7 +206,7 @@ theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod
   refine' ((uniformity_basis_edist.comap _).le_basis_iffₓ uniformity_basis_edist).2 fun ε h₀ => _
   refine' ⟨K⁻¹ * ε, ENNReal.mul_pos (ENNReal.inv_ne_zero.2 ENNReal.coe_ne_top) h₀.ne', _⟩
   refine' fun x hx => (hf x.1 x.2).trans_lt _
-  rw [mul_comm, ← div_eq_mul_inv] at hx 
+  rw [mul_comm, ← div_eq_mul_inv] at hx
   rw [mul_comm]
   exact ENNReal.mul_lt_of_lt_div hx
 #align antilipschitz_with.comap_uniformity_le AntilipschitzWith.comap_uniformity_le
@@ -323,7 +323,7 @@ theorem isBounded_of_image2_left (f : α → β → γ) {K₁ : ℝ≥0}
   have : ¬bounded (Set.image2 f s {b}) := by
     intro h
     apply hst.1
-    rw [Set.image2_singleton_right] at h 
+    rw [Set.image2_singleton_right] at h
     replace h := (hf b).isBounded_preimage h
     refine' h.mono (subset_preimage_image _ _)
   exact mt (bounded.mono (image2_subset subset.rfl (singleton_subset_iff.mpr hb))) this

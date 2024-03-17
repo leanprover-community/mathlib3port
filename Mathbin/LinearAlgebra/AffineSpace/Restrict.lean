@@ -103,7 +103,7 @@ theorem AffineMap.restrict.surjective (φ : P₁ →ᵃ[k] P₂) {E : AffineSubs
     Function.Surjective (AffineMap.restrict φ (le_of_eq h)) :=
   by
   rintro ⟨x, hx : x ∈ F⟩
-  rw [← h, AffineSubspace.mem_map] at hx 
+  rw [← h, AffineSubspace.mem_map] at hx
   obtain ⟨y, hy, rfl⟩ := hx
   exact ⟨⟨y, hy⟩, rfl⟩
 #align affine_map.restrict.surjective AffineMap.restrict.surjective

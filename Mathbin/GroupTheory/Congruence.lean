@@ -781,7 +781,7 @@ def correspondence : { d // c ≤ d } ≃o Con c.Quotient
     let Hm :
       (mulKer (coe : M → c.Quotient) fun x y => rfl) ≤
         comap (coe : M → c.Quotient) (fun x y => rfl) d :=
-      fun x y h => show d _ _ by rw [mul_ker_mk_eq] at h  <;> exact c.eq.2 h ▸ d.refl _
+      fun x y h => show d _ _ by rw [mul_ker_mk_eq] at h <;> exact c.eq.2 h ▸ d.refl _
     ext fun x y =>
       ⟨fun h =>
         let ⟨a, b, hx, hy, H⟩ := h

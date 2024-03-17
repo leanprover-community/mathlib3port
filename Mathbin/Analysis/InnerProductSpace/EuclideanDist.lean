@@ -132,7 +132,7 @@ theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = clos
 theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s)
     (h : s ⊆ ball x R) : ∃ r ∈ Ioo 0 R, s ⊆ ball x r :=
   by
-  rw [ball_eq_preimage, ← image_subset_iff] at h 
+  rw [ball_eq_preimage, ← image_subset_iff] at h
   rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
   exact ⟨r, hr, image_subset_iff.1 hsr⟩
 #align euclidean.exists_pos_lt_subset_ball Euclidean.exists_pos_lt_subset_ball

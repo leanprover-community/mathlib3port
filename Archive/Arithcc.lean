@@ -296,7 +296,7 @@ theorem write_eq_implies_stateEq {t : Register} {v : Word} {ζ₁ ζ₂ : State}
   intro r hr
   cases' h with _ h
   specialize h r (lt_trans hr (register.lt_succ_self _))
-  rwa [if_neg (ne_of_lt hr)] at h 
+  rwa [if_neg (ne_of_lt hr)] at h
 #align arithcc.write_eq_implies_state_eq Arithcc.write_eq_implies_stateEq
 
 /-- The main **compiler correctness theorem**.
@@ -352,7 +352,7 @@ theorem compiler_correctness :
       intros
       calc
         read (loc x map) ζ₂ = read (loc x map) (write t ν₁ η) := hζ₂ _ (ht' _)
-        _ = read (loc x map) η := by simp only [loc] at ht ; simp [(ht _).Ne]
+        _ = read (loc x map) η := by simp only [loc] at ht; simp [(ht _).Ne]
         _ = ξ x := hmap x
     have hζ₃ : ζ₃ ≃[t + 1] { write t ν₁ η with ac := ν₂ }
     calc

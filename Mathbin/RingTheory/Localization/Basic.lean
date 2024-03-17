@@ -229,7 +229,7 @@ theorem map_left_cancel {x y} {c : M} (h : algebraMap R S (x * c) = algebraMap R
 #print IsLocalization.eq_zero_of_fst_eq_zero /-
 theorem eq_zero_of_fst_eq_zero {z x} {y : M} (h : z * algebraMap R S y = algebraMap R S x)
     (hx : x = 0) : z = 0 := by
-  rw [hx, (algebraMap R S).map_zero] at h 
+  rw [hx, (algebraMap R S).map_zero] at h
   exact (IsUnit.mul_left_eq_zero (IsLocalization.map_units S y)).1 h
 #align is_localization.eq_zero_of_fst_eq_zero IsLocalization.eq_zero_of_fst_eq_zero
 -/
@@ -380,10 +380,10 @@ theorem mk'_mem_iff {x} {y : M} {I : Ideal S} : mk' S x y ∈ I ↔ algebraMap R
   constructor <;> intro h
   · rw [← mk'_spec S x y, mul_comm]
     exact I.mul_mem_left ((algebraMap R S) y) h
-  · rw [← mk'_spec S x y] at h 
+  · rw [← mk'_spec S x y] at h
     obtain ⟨b, hb⟩ := isUnit_iff_exists_inv.1 (map_units S y)
     have := I.mul_mem_left b h
-    rwa [mul_comm, mul_assoc, hb, mul_one] at this 
+    rwa [mul_comm, mul_assoc, hb, mul_one] at this
 #align is_localization.mk'_mem_iff IsLocalization.mk'_mem_iff
 -/
 
@@ -900,8 +900,8 @@ theorem isLocalization_of_algEquiv [Algebra R P] [IsLocalization M S] (h : S ≃
     exact (h.commutes y).symm
   · intro y
     obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj M (h.symm y)
-    apply_fun h at e 
-    simp only [h.map_mul, h.apply_symm_apply, h.commutes] at e 
+    apply_fun h at e
+    simp only [h.map_mul, h.apply_symm_apply, h.commutes] at e
     exact ⟨⟨x, s⟩, e⟩
   · intro x y
     rw [← h.symm.to_equiv.injective.eq_iff, ← IsLocalization.eq_iff_exists M S, ← h.symm.commutes, ←
@@ -984,9 +984,9 @@ theorem nonZeroDivisors_le_comap [IsLocalization M S] :
   rintro a ha b (e : b * algebraMap R S a = 0)
   obtain ⟨x, s, rfl⟩ := mk'_surjective M b
   rw [← @mk'_one R _ M, ← mk'_mul, ← (algebraMap R S).map_zero, ← @mk'_one R _ M,
-    IsLocalization.eq] at e 
+    IsLocalization.eq] at e
   obtain ⟨c, e⟩ := e
-  rw [MulZeroClass.mul_zero, MulZeroClass.mul_zero, Submonoid.coe_one, one_mul, ← mul_assoc] at e 
+  rw [MulZeroClass.mul_zero, MulZeroClass.mul_zero, Submonoid.coe_one, one_mul, ← mul_assoc] at e
   rw [mk'_eq_zero_iff]
   exact ⟨c, ha _ e⟩
 #align is_localization.non_zero_divisors_le_comap IsLocalization.nonZeroDivisors_le_comap
@@ -1381,7 +1381,7 @@ theorem to_map_eq_zero_iff {x : R} (hM : M ≤ nonZeroDivisors R) : algebraMap R
   rw [← (algebraMap R S).map_zero]
   constructor <;> intro h
   · cases' (eq_iff_exists M S).mp h with c hc
-    rw [MulZeroClass.mul_zero, mul_comm] at hc 
+    rw [MulZeroClass.mul_zero, mul_comm] at hc
     exact hM c.2 x hc
   · rw [h]
 #align is_localization.to_map_eq_zero_iff IsLocalization.to_map_eq_zero_iff
@@ -1392,7 +1392,7 @@ protected theorem injective (hM : M ≤ nonZeroDivisors R) : Injective (algebraM
   by
   rw [injective_iff_map_eq_zero (algebraMap R S)]
   intro a ha
-  rwa [to_map_eq_zero_iff S hM] at ha 
+  rwa [to_map_eq_zero_iff S hM] at ha
 #align is_localization.injective IsLocalization.injective
 -/
 
@@ -1419,7 +1419,7 @@ theorem sec_fst_ne_zero [Nontrivial R] [NoZeroDivisors S] (hM : M ≤ nonZeroDiv
   by
   have hsec := sec_spec M x
   intro hfst
-  rw [hfst, map_zero, mul_eq_zero, _root_.map_eq_zero_iff] at hsec 
+  rw [hfst, map_zero, mul_eq_zero, _root_.map_eq_zero_iff] at hsec
   · exact Or.elim hsec hx (sec_snd_ne_zero hM x)
   · exact IsLocalization.injective S hM
 #align is_localization.sec_fst_ne_zero IsLocalization.sec_fst_ne_zero
@@ -1436,11 +1436,11 @@ theorem map_injective_of_injective (hg : Function.Injective g)
   rw [injective_iff_map_eq_zero]
   intro z hz
   obtain ⟨a, b, rfl⟩ := mk'_surjective M z
-  rw [map_mk', mk'_eq_zero_iff] at hz 
+  rw [map_mk', mk'_eq_zero_iff] at hz
   obtain ⟨⟨m', hm'⟩, hm⟩ := hz
-  rw [Submonoid.mem_map] at hm' 
+  rw [Submonoid.mem_map] at hm'
   obtain ⟨n, hn, hnm⟩ := hm'
-  rw [Subtype.coe_mk, ← hnm, ← map_mul, ← map_zero g] at hm 
+  rw [Subtype.coe_mk, ← hnm, ← map_mul, ← map_zero g] at hm
   rw [mk'_eq_zero_iff]
   exact ⟨⟨n, hn⟩, hg hm⟩
 #align is_localization.map_injective_of_injective IsLocalization.map_injective_of_injective
@@ -1465,7 +1465,7 @@ theorem noZeroDivisors_of_le_nonZeroDivisors [Algebra A S] {M : Submonoid A} [Is
       have :
         z * w * algebraMap A S y.2 * algebraMap A S x.2 = algebraMap A S x.1 * algebraMap A S y.1 :=
         by rw [mul_assoc z, hy, ← hx] <;> ring
-      rw [h, MulZeroClass.zero_mul, MulZeroClass.zero_mul, ← (algebraMap A S).map_hMul] at this 
+      rw [h, MulZeroClass.zero_mul, MulZeroClass.zero_mul, ← (algebraMap A S).map_hMul] at this
       cases' eq_zero_or_eq_zero_of_mul_eq_zero ((to_map_eq_zero_iff S hM).mp this.symm) with H H
       · exact Or.inl (eq_zero_of_fst_eq_zero hx H)
       · exact Or.inr (eq_zero_of_fst_eq_zero hy H) }

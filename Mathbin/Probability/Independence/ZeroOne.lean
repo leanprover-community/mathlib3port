@@ -43,7 +43,7 @@ theorem measure_eq_zero_or_one_or_top_of_indepSet_self {t : Set Ω} (h_indep : I
   · exact Or.inl h0
   by_cases h_top : μ t = ∞
   · exact Or.inr (Or.inr h_top)
-  rw [← one_mul (μ (t ∩ t)), Set.inter_self, ENNReal.mul_eq_mul_right h0 h_top] at h_indep 
+  rw [← one_mul (μ (t ∩ t)), Set.inter_self, ENNReal.mul_eq_mul_right h0 h_top] at h_indep
   exact Or.inr (Or.inl h_indep.symm)
 #align probability_theory.measure_eq_zero_or_one_or_top_of_indep_set_self ProbabilityTheory.measure_eq_zero_or_one_or_top_of_indepSet_self
 -/

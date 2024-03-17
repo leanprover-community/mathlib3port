@@ -201,7 +201,7 @@ theorem coe_stream_nth_rat_eq :
   induction' n with n IH
   case zero => simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
   case succ =>
-    rw [v_eq_q] at IH 
+    rw [v_eq_q] at IH
     cases' stream_q_nth_eq : int_fract_pair.stream q n with ifp_n
     case none => simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq]
     case some =>
@@ -209,7 +209,7 @@ theorem coe_stream_nth_rat_eq :
       cases' Decidable.em (fr = 0) with fr_zero fr_ne_zero
       · simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
       · replace IH : some (int_fract_pair.mk b ↑fr) = int_fract_pair.stream (↑q) n;
-        · rwa [stream_q_nth_eq] at IH 
+        · rwa [stream_q_nth_eq] at IH
         have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by norm_cast
         have coe_of_fr := coe_of_rat_eq this
         simpa [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
@@ -367,7 +367,7 @@ theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.s
       by
       have : 0 ≤ fract_q_num := rat.num_nonneg_iff_zero_le.elim_right (Int.fract_nonneg q)
       simp [Int.natAbs_of_nonneg this, sub_add_eq_sub_sub_swap, sub_right_comm]
-    have : ifp.fr.num ≤ -1 := by rwa [this] at ifp_fr_num_le_q_fr_num_sub_n 
+    have : ifp.fr.num ≤ -1 := by rwa [this] at ifp_fr_num_le_q_fr_num_sub_n
     have : 0 ≤ ifp.fr := (nth_stream_fr_nonneg_lt_one stream_nth_eq).left
     have : 0 ≤ ifp.fr.num := rat.num_nonneg_iff_zero_le.elim_right this
     linarith

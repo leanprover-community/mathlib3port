@@ -195,8 +195,8 @@ class IsProper (I : Ideal P) : Prop where
 #print Order.Ideal.isProper_of_not_mem /-
 theorem isProper_of_not_mem {I : Ideal P} {p : P} (nmem : p ∉ I) : IsProper I :=
   ⟨fun hp => by
-    change p ∉ ↑I at nmem 
-    rw [hp] at nmem 
+    change p ∉ ↑I at nmem
+    rw [hp] at nmem
     exact nmem (mem_univ p)⟩
 #align order.ideal.is_proper_of_not_mem Order.Ideal.isProper_of_not_mem
 -/
@@ -580,7 +580,7 @@ theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x �
   intro hx
   apply hI.top_not_mem
   have ht : x ⊔ xᶜ ∈ I := sup_mem ‹_› ‹_›
-  rwa [sup_compl_eq_top] at ht 
+  rwa [sup_compl_eq_top] at ht
 #align order.ideal.is_proper.not_mem_of_compl_mem Order.Ideal.IsProper.not_mem_of_compl_mem
 -/
 

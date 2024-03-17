@@ -337,7 +337,7 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
   · rintro ⟨sU, hU⟩ x hx
     rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
     refine' ⟨V, H₁, _⟩
-    cases V; dsimp at H₂ ; subst H₂; exact hsV
+    cases V; dsimp at H₂; subst H₂; exact hsV
   · refine' is_topological_basis_of_open_of_nhds _ _
     · rintro sU ⟨U, ⟨H₁, rfl⟩⟩; exact U.2
     · intro x sU hx hsU

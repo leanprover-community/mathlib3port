@@ -298,9 +298,9 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
       ext x; dsimp
       simp only [comp_apply, ContinuousMap.coe_mk, Subtype.coe_mk, hφ0 (Set.mem_range_self x),
         Pi.zero_apply]
-    apply_fun fun e => (e y).down at H 
-    dsimp at H 
-    simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H 
+    apply_fun fun e => (e y).down at H
+    dsimp at H
+    simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H
     exact zero_ne_one H
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget CompHaus).epi_of_epi_map
@@ -315,8 +315,8 @@ theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Funct
     let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_const⟩
     let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_const⟩
     have : g₁ ≫ f = g₂ ≫ f := by ext; exact h
-    rw [cancel_mono] at this 
-    apply_fun fun e => e PUnit.unit at this 
+    rw [cancel_mono] at this
+    apply_fun fun e => e PUnit.unit at this
     exact this
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget CompHaus).mono_of_mono_map

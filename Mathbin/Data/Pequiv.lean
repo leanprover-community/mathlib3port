@@ -479,7 +479,7 @@ theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = 
 theorem trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b = none) :
     f.trans (single b c) = ⊥ := by
   ext
-  simp only [eq_none_iff_forall_not_mem, Option.mem_def, f.eq_some_iff] at h 
+  simp only [eq_none_iff_forall_not_mem, Option.mem_def, f.eq_some_iff] at h
   dsimp [PEquiv.trans, single]
   simp
   intros
@@ -539,13 +539,13 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
           split_ifs with h1 h2 h2 <;> try simp [hf]
           · contrapose! h2
             rw [h2]
-            rw [← h1, hf, h2] at hg 
-            simp only [mem_def, true_iff_iff, eq_self_iff_true] at hg 
+            rw [← h1, hf, h2] at hg
+            simp only [mem_def, true_iff_iff, eq_self_iff_true] at hg
             rw [hg]
           · contrapose! h1
             rw [h1] at *
-            rw [← h2] at hg 
-            simp only [mem_def, eq_self_iff_true, iff_true_iff] at hf hg 
+            rw [← h2] at hg
+            simp only [mem_def, eq_self_iff_true, iff_true_iff] at hf hg
             rw [hf, hg] }
     inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc
     inf_le_right := fun _ _ _ _ => by simp <;> split_ifs <;> cc

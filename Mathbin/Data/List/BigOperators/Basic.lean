@@ -187,7 +187,7 @@ theorem prod_isUnit_iff {α : Type _} [CommMonoid α] {L : List α} :
   refine' ⟨fun h => _, prod_is_unit⟩
   induction' L with m L ih
   · exact fun m' h' => False.elim (not_mem_nil m' h')
-  rw [prod_cons, IsUnit.mul_iff] at h 
+  rw [prod_cons, IsUnit.mul_iff] at h
   exact fun m' h' => Or.elim (eq_or_mem_of_mem_cons h') (fun H => H.substr h.1) fun H => ih h.2 _ H
 #align list.prod_is_unit_iff List.prod_isUnit_iff
 #align list.sum_is_add_unit_iff List.sum_isAddUnit_iff
@@ -285,7 +285,7 @@ theorem Commute.list_prod_right (l : List M) (y : M) (h : ∀ x ∈ l, Commute y
     Commute y l.Prod := by
   induction' l with z l IH
   · simp
-  · rw [List.forall_mem_cons] at h 
+  · rw [List.forall_mem_cons] at h
     rw [List.prod_cons]
     exact Commute.mul_right h.1 (IH h.2)
 #align commute.list_prod_right Commute.list_prod_right
@@ -549,7 +549,7 @@ theorem eq_of_prod_take_eq [LeftCancelMonoid M] {L L' : List M} (h : L.length = 
   by
   apply ext_le h fun i h₁ h₂ => _
   have : (L.take (i + 1)).Prod = (L'.take (i + 1)).Prod := h' _ (Nat.succ_le_of_lt h₁)
-  rw [prod_take_succ L i h₁, prod_take_succ L' i h₂, h' i (le_of_lt h₁)] at this 
+  rw [prod_take_succ L i h₁, prod_take_succ L' i h₂, h' i (le_of_lt h₁)] at this
   convert mul_left_cancel this
 #align list.eq_of_prod_take_eq List.eq_of_prod_take_eq
 #align list.eq_of_sum_take_eq List.eq_of_sum_take_eq
@@ -577,7 +577,7 @@ theorem one_lt_prod_of_one_lt [OrderedCommMonoid M] :
   | [b], h, _ => by simpa using h
   | a :: b :: l, hl₁, hl₂ =>
     by
-    simp only [forall_eq_or_imp, List.mem_cons _ a] at hl₁ 
+    simp only [forall_eq_or_imp, List.mem_cons _ a] at hl₁
     rw [List.prod_cons]
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_lt ((b :: l).one_lt_prod_of_one_lt hl₁.2 (l.cons_ne_nil b))

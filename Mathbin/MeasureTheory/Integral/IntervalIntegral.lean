@@ -402,7 +402,7 @@ theorem comp_add_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     (Homeomorph.addRight c).ClosedEmbedding.MeasurableEmbedding
   have Am : measure.map (fun x => x + c) volume = volume :=
     is_add_left_invariant.is_add_right_invariant.map_add_right_eq_self _
-  rw [← Am] at hf 
+  rw [← Am] at hf
   convert (MeasurableEmbedding.integrableOn_map_iff A).mp hf
   rw [preimage_add_const_uIcc]
 #align interval_integrable.comp_add_right IntervalIntegrable.comp_add_right
@@ -1238,7 +1238,7 @@ theorem integral_eq_integral_of_support_subset {a b} (h : support f ⊆ Ioc a b)
   ·
     rw [integral_of_le hab, ← integral_indicator measurableSet_Ioc, indicator_eq_self.2 h] <;>
       infer_instance
-  · rw [Ioc_eq_empty hab.not_lt, subset_empty_iff, support_eq_empty_iff] at h 
+  · rw [Ioc_eq_empty hab.not_lt, subset_empty_iff, support_eq_empty_iff] at h
     simp [h]
 #align interval_integral.integral_eq_integral_of_support_subset intervalIntegral.integral_eq_integral_of_support_subset
 -/
@@ -1607,12 +1607,12 @@ theorem integral_pos_iff_support_of_nonneg_ae' (hf : 0 ≤ᵐ[μ.restrict (Ι a 
     0 < ∫ x in a..b, f x ∂μ ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
   by
   cases' lt_or_le a b with hab hba
-  · rw [uIoc_of_le hab.le] at hf 
+  · rw [uIoc_of_le hab.le] at hf
     simp only [hab, true_and_iff, integral_of_le hab.le,
       set_integral_pos_iff_support_of_nonneg_ae hf hfi.1]
   · suffices ∫ x in a..b, f x ∂μ ≤ 0 by simp only [this.not_lt, hba.not_lt, false_and_iff]
     rw [integral_of_ge hba, neg_nonpos]
-    rw [uIoc_swap, uIoc_of_le hba] at hf 
+    rw [uIoc_swap, uIoc_of_le hba] at hf
     exact integral_nonneg_of_ae hf
 #align interval_integral.integral_pos_iff_support_of_nonneg_ae' intervalIntegral.integral_pos_iff_support_of_nonneg_ae'
 -/
@@ -1688,11 +1688,11 @@ theorem integral_lt_integral_of_continuousOn_of_le_of_exists_lt {f g : ℝ → �
   contrapose! hlt
   have h_eq : f =ᵐ[volume.restrict (Ioc a b)] g :=
     by
-    simp only [← not_le, ← ae_iff] at hlt 
+    simp only [← not_le, ← ae_iff] at hlt
     exact
       eventually_le.antisymm ((ae_restrict_iff' measurableSet_Ioc).2 <| eventually_of_forall hle)
         hlt
-  simp only [measure.restrict_congr_set Ioc_ae_eq_Icc] at h_eq 
+  simp only [measure.restrict_congr_set Ioc_ae_eq_Icc] at h_eq
   exact fun c hc => (measure.eq_on_Icc_of_ae_eq volume hab.ne h_eq hfc hgc hc).ge
 #align interval_integral.integral_lt_integral_of_continuous_on_of_le_of_exists_lt intervalIntegral.integral_lt_integral_of_continuousOn_of_le_of_exists_lt
 -/

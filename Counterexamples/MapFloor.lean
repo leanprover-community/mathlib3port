@@ -98,7 +98,7 @@ instance : FloorRing ℤ[ε] :=
       · rintro ⟨_ | n, hn⟩
         · refine' (sub_one_lt _).trans _
           simpa using hn
-        · dsimp at hn 
+        · dsimp at hn
           simp [hn.1 _ n.zero_lt_succ]
       · exact fun h' => cast_lt.1 ((not_lt.1 h).trans_lt h')
     · split_ifs

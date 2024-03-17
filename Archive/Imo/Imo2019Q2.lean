@@ -222,7 +222,7 @@ theorem QP_parallel_BA : line[ℝ, cfg.q, cfg.P] ∥ line[ℝ, cfg.b, cfg.A] := 
 theorem a_ne_a₁ : cfg.A ≠ cfg.a₁ := by
   intro h
   have h' := cfg.not_collinear_ABC
-  rw [h, Set.insert_comm] at h' 
+  rw [h, Set.insert_comm] at h'
   exact h' cfg.wbtw_B_A₁_C.collinear
 #align imo2019_q2.imo2019q2_cfg.A_ne_A₁ Imo2019Q2.Imo2019q2Cfg.a_ne_a₁
 
@@ -238,9 +238,9 @@ theorem collinear_PAA₁A₂ : Collinear ℝ ({cfg.P, cfg.A, cfg.a₁, cfg.a₂}
 theorem a₁_ne_c : cfg.a₁ ≠ cfg.C := by
   intro h
   have hsbtw := cfg.sbtw_Q_A₁_Q₁
-  rw [h] at hsbtw 
+  rw [h] at hsbtw
   have ha := hsbtw.angle₂₃₁_eq_zero
-  rw [angle_CQ₁Q_eq_angle_CBA, angle_comm] at ha 
+  rw [angle_CQ₁Q_eq_angle_CBA, angle_comm] at ha
   exact (angle_ne_zero_of_not_collinear cfg.not_collinear_ABC) ha
 #align imo2019_q2.imo2019q2_cfg.A₁_ne_C Imo2019Q2.Imo2019q2Cfg.a₁_ne_c
 
@@ -255,7 +255,7 @@ theorem q_not_mem_CB : cfg.q ∉ line[ℝ, cfg.C, cfg.b] :=
     affineSpan_pair_le_of_mem_of_mem hQ cfg.wbtw_B_A₁_C.symm.mem_affine_span
   have hQ₁ : cfg.Q₁ ∈ line[ℝ, cfg.C, cfg.B] :=
     by
-    rw [AffineSubspace.le_def'] at hQA₁ 
+    rw [AffineSubspace.le_def'] at hQA₁
     exact hQA₁ _ cfg.sbtw_Q_A₁_Q₁.right_mem_affine_span
   have hc : Collinear ℝ ({cfg.C, cfg.Q₁, cfg.Q} : Set Pt) :=
     haveI hc' : Collinear ℝ ({cfg.B, cfg.C, cfg.Q₁, cfg.Q} : Set Pt) :=
@@ -265,14 +265,14 @@ theorem q_not_mem_CB : cfg.q ∉ line[ℝ, cfg.C, cfg.b] :=
       exact collinear_insert_insert_of_mem_affineSpan_pair hQ₁ hQ
     hc'.subset (Set.subset_insert _ _)
   rw [collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi, cfg.angle_CQ₁Q_eq_angle_CBA,
-    or_iff_right cfg.C_ne_Q₁, or_iff_right cfg.sbtw_Q_A₁_Q₁.left_ne_right, angle_comm] at hc 
+    or_iff_right cfg.C_ne_Q₁, or_iff_right cfg.sbtw_Q_A₁_Q₁.left_ne_right, angle_comm] at hc
   exact cfg.not_collinear_ABC (hc.elim collinear_of_angle_eq_zero collinear_of_angle_eq_pi)
 #align imo2019_q2.imo2019q2_cfg.Q_not_mem_CB Imo2019Q2.Imo2019q2Cfg.q_not_mem_CB
 
 theorem q_ne_b : cfg.q ≠ cfg.b := by
   intro h
   have h' := cfg.Q_not_mem_CB
-  rw [h] at h' 
+  rw [h] at h'
   exact h' (right_mem_affineSpan_pair _ _ _)
 #align imo2019_q2.imo2019q2_cfg.Q_ne_B Imo2019Q2.Imo2019q2Cfg.q_ne_b
 
@@ -311,7 +311,7 @@ end Oriented
 theorem a₁_ne_b : cfg.a₁ ≠ cfg.b := by
   intro h
   have hwbtw := cfg.wbtw_A_P_A₁
-  rw [h] at hwbtw 
+  rw [h] at hwbtw
   have hPQ : line[ℝ, cfg.P, cfg.Q] = line[ℝ, cfg.A, cfg.B] :=
     by
     rw [AffineSubspace.eq_iff_direction_eq_of_mem (left_mem_affineSpan_pair _ _ _)
@@ -340,7 +340,7 @@ theorem a₁_ne_b : cfg.a₁ ≠ cfg.b := by
       (Set.mem_insert_of_mem _
         (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))))
       hBQ₁ cfg.Q_ne_B.symm hQQ₁.symm
-  rw [affineIndependent_iff_not_collinear_set] at hBQ₁Q 
+  rw [affineIndependent_iff_not_collinear_set] at hBQ₁Q
   refine' hBQ₁Q _
   rw [← h, Set.pair_comm, Set.insert_comm]
   exact cfg.sbtw_Q_A₁_Q₁.wbtw.collinear
@@ -377,7 +377,7 @@ theorem a₂_ne_p : cfg.a₂ ≠ cfg.P :=
 theorem a₂_ne_b : cfg.a₂ ≠ cfg.b := by
   intro h
   have h₁ := cfg.sbtw_A_A₁_A₂
-  rw [h] at h₁ 
+  rw [h] at h₁
   refine' cfg.not_collinear_ABC _
   have hc : Collinear ℝ ({cfg.A, cfg.C, cfg.B, cfg.A₁} : Set Pt) :=
     collinear_insert_insert_of_mem_affineSpan_pair h₁.left_mem_affine_span
@@ -390,7 +390,7 @@ theorem a₂_ne_b : cfg.a₂ ≠ cfg.b := by
 theorem a₂_ne_c : cfg.a₂ ≠ cfg.C := by
   intro h
   have h₁ := cfg.sbtw_A_A₁_A₂
-  rw [h] at h₁ 
+  rw [h] at h₁
   refine' cfg.not_collinear_ABC _
   have hc : Collinear ℝ ({cfg.A, cfg.B, cfg.C, cfg.A₁} : Set Pt) :=
     collinear_insert_insert_of_mem_affineSpan_pair h₁.left_mem_affine_span
@@ -466,14 +466,14 @@ theorem not_collinear_QPA₂ : ¬Collinear ℝ ({cfg.q, cfg.P, cfg.a₂} : Set P
 theorem q₁_ne_a₂ : cfg.q₁ ≠ cfg.a₂ := by
   intro h
   have h₁ := cfg.sbtw_Q_A₁_Q₁
-  rw [h] at h₁ 
+  rw [h] at h₁
   refine' cfg.not_collinear_QPA₂ _
   have hA₂ := cfg.sbtw_A_A₁_A₂.right_mem_affine_span
   have hA₂A₁ : line[ℝ, cfg.A₂, cfg.A₁] ≤ line[ℝ, cfg.A, cfg.A₁] :=
     affineSpan_pair_le_of_left_mem hA₂
   have hQ : cfg.Q ∈ line[ℝ, cfg.A, cfg.A₁] :=
     by
-    rw [AffineSubspace.le_def'] at hA₂A₁ 
+    rw [AffineSubspace.le_def'] at hA₂A₁
     exact hA₂A₁ _ h₁.left_mem_affine_span
   exact collinear_triple_of_mem_affineSpan_pair hQ cfg.wbtw_A_P_A₁.mem_affine_span hA₂
 #align imo2019_q2.imo2019q2_cfg.Q₁_ne_A₂ Imo2019Q2.Imo2019q2Cfg.q₁_ne_a₂

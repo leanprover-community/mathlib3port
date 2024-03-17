@@ -74,14 +74,14 @@ theorem Left.exists_add_of_mem_support_single_hMul [AddLeftCancelSemigroup A]
     {g : AddMonoidAlgebra R A} (a x : A)
     (hx : x ∈ (single a 1 * g : AddMonoidAlgebra R A).support) : ∃ b ∈ g.support, a + b = x := by
   rwa [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _),
-    Finset.mem_map] at hx 
+    Finset.mem_map] at hx
 #align add_monoid_algebra.left.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Left.exists_add_of_mem_support_single_hMul
 
 theorem Right.exists_add_of_mem_support_single_hMul [AddRightCancelSemigroup A]
     {f : AddMonoidAlgebra R A} (b x : A)
     (hx : x ∈ (f * single b 1 : AddMonoidAlgebra R A).support) : ∃ a ∈ f.support, a + b = x := by
   rwa [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _),
-    Finset.mem_map] at hx 
+    Finset.mem_map] at hx
 #align add_monoid_algebra.right.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Right.exists_add_of_mem_support_single_hMul
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a left-ordered add right

@@ -59,7 +59,7 @@ theorem le_def {f g : ι →₀ α} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α)
     where
   toFun f := f
-  inj' f g h := Finsupp.ext fun i => by dsimp at h ; rw [h]
+  inj' f g h := Finsupp.ext fun i => by dsimp at h; rw [h]
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
 #align finsupp.order_embedding_to_fun Finsupp.orderEmbeddingToFun
 -/

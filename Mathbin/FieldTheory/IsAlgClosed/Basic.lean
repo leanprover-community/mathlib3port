@@ -97,7 +97,7 @@ theorem exists_pow_nat_eq [IsAlgClosed k] (x : k) {n : ℕ} (hn : 0 < n) : ∃ z
   · rw [degree_X_pow_sub_C hn x]
     exact ne_of_gt (WithBot.coe_lt_coe.2 hn)
   use z
-  simp only [eval_C, eval_X, eval_pow, eval_sub, is_root.def] at hz 
+  simp only [eval_C, eval_X, eval_pow, eval_sub, is_root.def] at hz
   exact sub_eq_zero.1 hz
 #align is_alg_closed.exists_pow_nat_eq IsAlgClosed.exists_pow_nat_eq
 -/
@@ -117,7 +117,7 @@ theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} : p.roots = 0 ↔ p = Polyn
   cases' le_or_lt (degree p) 0 with hd hd
   · exact eq_C_of_degree_le_zero hd
   · obtain ⟨z, hz⟩ := IsAlgClosed.exists_root p hd.ne'
-    rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz 
+    rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz
     simpa using hz
 #align is_alg_closed.roots_eq_zero_iff IsAlgClosed.roots_eq_zero_iff
 -/
@@ -185,7 +185,7 @@ theorem algebraMap_surjective_of_isIntegral {k K : Type _} [Field k] [Ring K] [I
   have h : (minpoly k x).degree = 1 := degree_eq_one_of_irreducible k (minpoly.irreducible (hf x))
   have : aeval x (minpoly k x) = 0 := minpoly.aeval k x
   rw [eq_X_add_C_of_degree_eq_one h, hq, C_1, one_mul, aeval_add, aeval_X, aeval_C,
-    add_eq_zero_iff_eq_neg] at this 
+    add_eq_zero_iff_eq_neg] at this
   exact (RingHom.map_neg (algebraMap k K) ((minpoly k x).coeff 0)).symm ▸ this.symm
 #align is_alg_closed.algebra_map_surjective_of_is_integral IsAlgClosed.algebraMap_surjective_of_isIntegral
 -/
@@ -275,7 +275,7 @@ theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x,
   Iff.rfl
 #align lift.subfield_with_hom.le_def lift.SubfieldWithHom.le_def
 
-theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.emb x := by rw [le_def] at h ;
+theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.emb x := by rw [le_def] at h;
   cases h; assumption
 #align lift.subfield_with_hom.compat lift.SubfieldWithHom.compat
 
@@ -316,7 +316,7 @@ theorem maximal_subfieldWithHom_chain_bounded (c : Set (SubfieldWithHom K L M hL
         intro x
         simp [ub]
         rfl⟩⟩
-  else by rw [Set.not_nonempty_iff_eq_empty] at hcn ; simp [hcn]
+  else by rw [Set.not_nonempty_iff_eq_empty] at hcn; simp [hcn]
 #align lift.subfield_with_hom.maximal_subfield_with_hom_chain_bounded lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded
 
 variable (hL M)

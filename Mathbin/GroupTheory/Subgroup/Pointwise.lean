@@ -129,7 +129,7 @@ then it holds for all elements of the supremum of `S`. -/
 theorem iSup_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x : G} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
-  rw [supr_eq_closure] at hx 
+  rw [supr_eq_closure] at hx
   refine' closure_induction'' hx (fun x hx => _) (fun x hx => _) h1 hmul
   · obtain ⟨i, hi⟩ := set.mem_Union.mp hx
     exact hp _ _ hi
@@ -267,7 +267,7 @@ theorem inf_mul_assoc (A B C : Subgroup G) (h : C ≤ A) :
 #print Subgroup.sup_normal /-
 instance sup_normal (H K : Subgroup G) [hH : H.Normal] [hK : K.Normal] : (H ⊔ K).Normal
     where conj_mem n hmem g := by
-    change n ∈ ↑(H ⊔ K) at hmem 
+    change n ∈ ↑(H ⊔ K) at hmem
     change g * n * g⁻¹ ∈ ↑(H ⊔ K)
     rw [normal_mul, Set.mem_mul] at *
     rcases hmem with ⟨h, k, hh, hk, rfl⟩
@@ -481,13 +481,13 @@ theorem Normal.conjAct {G : Type _} [Group G] {H : Subgroup G} (hH : H.Normal) (
   constructor
   · intro h
     have := hH.conj_mem (g⁻¹ • x) _ (ConjAct.ofConjAct g)
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h 
+    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
     dsimp at *
     rw [ConjAct.smul_def] at *
     simp only [ConjAct.ofConjAct_inv, ConjAct.ofConjAct_toConjAct, inv_inv] at *
     convert this
     simp only [← mul_assoc, mul_right_inv, one_mul, mul_inv_cancel_right]
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h 
+    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
     exact h
   · intro h
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def]

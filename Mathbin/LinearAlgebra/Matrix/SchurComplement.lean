@@ -141,7 +141,7 @@ def invertibleOfFromBlocksZero₂₁Invertible (A : Matrix m m α) (B : Matrix m
     invertibleOfLeftInverse _ (⅟ (fromBlocks A B 0 D)).toBlocks₁₁ <|
       by
       have := invOf_mul_self (from_blocks A B 0 D)
-      rw [← from_blocks_to_blocks (⅟ (from_blocks A B 0 D)), from_blocks_multiply] at this 
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A B 0 D)), from_blocks_multiply] at this
       replace := congr_arg Matrix.toBlocks₁₁ this
       simpa only [Matrix.toBlocks_fromBlocks₁₁, Matrix.mul_zero, add_zero, ← from_blocks_one] using
         this
@@ -149,7 +149,7 @@ def invertibleOfFromBlocksZero₂₁Invertible (A : Matrix m m α) (B : Matrix m
     invertibleOfRightInverse _ (⅟ (fromBlocks A B 0 D)).toBlocks₂₂ <|
       by
       have := mul_invOf_self (from_blocks A B 0 D)
-      rw [← from_blocks_to_blocks (⅟ (from_blocks A B 0 D)), from_blocks_multiply] at this 
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A B 0 D)), from_blocks_multiply] at this
       replace := congr_arg Matrix.toBlocks₂₂ this
       simpa only [Matrix.toBlocks_fromBlocks₂₂, Matrix.zero_mul, zero_add, ← from_blocks_one] using
         this
@@ -166,7 +166,7 @@ def invertibleOfFromBlocksZero₁₂Invertible (A : Matrix m m α) (C : Matrix n
     invertibleOfRightInverse _ (⅟ (fromBlocks A 0 C D)).toBlocks₁₁ <|
       by
       have := mul_invOf_self (from_blocks A 0 C D)
-      rw [← from_blocks_to_blocks (⅟ (from_blocks A 0 C D)), from_blocks_multiply] at this 
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A 0 C D)), from_blocks_multiply] at this
       replace := congr_arg Matrix.toBlocks₁₁ this
       simpa only [Matrix.toBlocks_fromBlocks₁₁, Matrix.zero_mul, add_zero, ← from_blocks_one] using
         this
@@ -174,7 +174,7 @@ def invertibleOfFromBlocksZero₁₂Invertible (A : Matrix m m α) (C : Matrix n
     invertibleOfLeftInverse _ (⅟ (fromBlocks A 0 C D)).toBlocks₂₂ <|
       by
       have := invOf_mul_self (from_blocks A 0 C D)
-      rw [← from_blocks_to_blocks (⅟ (from_blocks A 0 C D)), from_blocks_multiply] at this 
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A 0 C D)), from_blocks_multiply] at this
       replace := congr_arg Matrix.toBlocks₂₂ this
       simpa only [Matrix.toBlocks_fromBlocks₂₂, Matrix.mul_zero, zero_add, ← from_blocks_one] using
         this
@@ -620,7 +620,7 @@ theorem PosSemidef.fromBlocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A :
   · refine' fun h => ⟨h.1, fun x => _⟩
     have := h.2 (-(A⁻¹ ⬝ B).mulVec x ⊕ᵥ x)
     rw [dot_product_mul_vec, schur_complement_eq₁₁ B D _ _ hA.1, neg_add_self, dot_product_zero,
-      zero_add] at this 
+      zero_add] at this
     rw [dot_product_mul_vec]; exact this
   · refine' fun h => ⟨h.1, fun x => _⟩
     rw [dot_product_mul_vec, ← Sum.elim_comp_inl_inr x, schur_complement_eq₁₁ B D _ _ hA.1, map_add]

@@ -327,7 +327,7 @@ def sigmaFinsuppEquivDFinsupp [Zero N] : ((Σ i, η i) →₀ N) ≃ Π₀ i, η
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
     simp only [Ne.def, DFinsupp.mem_support_toFun]
     intro h
-    rw [h] at hg 
+    rw [h] at hg
     simpa using hg
   left_inv f := by ext; simp [split]
   right_inv f := by ext; simp [split]

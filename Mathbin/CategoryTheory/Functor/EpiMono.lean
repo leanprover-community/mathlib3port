@@ -228,7 +228,7 @@ theorem preservesEpimorphsisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj : 
         intro Z g h H
         replace H := congr_arg (adj.hom_equiv X Z) H
         rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi,
-          Equiv.apply_eq_iff_eq] at H ⟩ }
+          Equiv.apply_eq_iff_eq] at H⟩ }
 #align category_theory.functor.preserves_epimorphsisms_of_adjunction CategoryTheory.Functor.preservesEpimorphsisms_of_adjunction
 -/
 
@@ -248,7 +248,7 @@ theorem preservesMonomorphisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj : 
         intro Z g h H
         replace H := congr_arg (adj.hom_equiv Z Y).symm H
         rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono,
-          Equiv.apply_eq_iff_eq] at H ⟩ }
+          Equiv.apply_eq_iff_eq] at H⟩ }
 #align category_theory.functor.preserves_monomorphisms_of_adjunction CategoryTheory.Functor.preservesMonomorphisms_of_adjunction
 -/
 

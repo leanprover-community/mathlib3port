@@ -148,7 +148,7 @@ theorem to_single₀_epi_at_zero [hf : QuasiIso' f] : Epi (f.f 0) :=
   constructor
   intro Z g h Hgh
   rw [← cokernel.π_desc (X.d 1 0) (f.f 0) (by rw [← f.2 1 0 rfl] <;> exact comp_zero), ←
-    to_single₀_cokernel_at_zero_iso_hom_eq] at Hgh 
+    to_single₀_cokernel_at_zero_iso_hom_eq] at Hgh
   rw [(@cancel_epi _ _ _ _ _ _ (epi_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.to_single₀_epi_at_zero HomologicalComplex.Hom.to_single₀_epi_at_zero
 -/
@@ -215,7 +215,7 @@ theorem from_single₀_mono_at_zero [hf : QuasiIso' f] : Mono (f.f 0) :=
   constructor
   intro Z g h Hgh
   rw [← kernel.lift_ι (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp), ←
-    from_single₀_kernel_at_zero_iso_inv_eq] at Hgh 
+    from_single₀_kernel_at_zero_iso_inv_eq] at Hgh
   rw [(@cancel_mono _ _ _ _ _ _ (mono_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zero
 -/

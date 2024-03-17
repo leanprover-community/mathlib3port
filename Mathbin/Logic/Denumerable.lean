@@ -390,7 +390,7 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
   | 0 => by
     rw [to_fun_aux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
     rintro n hn
-    rw [mem_filter, of_nat, mem_range] at hn 
+    rw [mem_filter, of_nat, mem_range] at hn
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
   | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n

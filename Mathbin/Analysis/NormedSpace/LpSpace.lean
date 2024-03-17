@@ -111,7 +111,7 @@ theorem memℓp_infty {f : ∀ i, E i} (hf : BddAbove (Set.range fun i => ‖f i
 theorem memℓp_gen_iff (hp : 0 < p.toReal) {f : ∀ i, E i} :
     Memℓp f p ↔ Summable fun i => ‖f i‖ ^ p.toReal :=
   by
-  rw [ENNReal.toReal_pos_iff] at hp 
+  rw [ENNReal.toReal_pos_iff] at hp
   dsimp [Memℓp]
   rw [if_neg hp.1.ne', if_neg hp.2.Ne]
 #align mem_ℓp_gen_iff memℓp_gen_iff
@@ -246,7 +246,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
     · show ∀ i, ¬|‖f i‖ ^ p.to_real| ≤ ‖f i‖ ^ q.to_real → 1 ≤ ‖f i‖
       intro i hi
       have : 0 ≤ ‖f i‖ ^ p.to_real := Real.rpow_nonneg (norm_nonneg _) p.to_real
-      simp only [abs_of_nonneg, this] at hi 
+      simp only [abs_of_nonneg, this] at hi
       contrapose! hi
       exact Real.rpow_le_rpow_of_exponent_ge' (norm_nonneg _) hi.le hq.le hpq'
 #align mem_ℓp.of_exponent_ge Memℓp.of_exponent_ge
@@ -279,7 +279,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
     · simpa using NNReal.coe_le_coe.2 (NNReal.rpow_add_le_add_rpow ‖f i‖₊ ‖g i‖₊ hp.le h.le)
     · let F : Fin 2 → ℝ≥0 := ![‖f i‖₊, ‖g i‖₊]
       have : ∀ i, (0 : ℝ) ≤ F i := fun i => (F i).coe_nonneg
-      simp only [not_lt] at h 
+      simp only [not_lt] at h
       simpa [F, Fin.sum_univ_succ] using
         Real.rpow_sum_le_const_mul_sum_rpow_of_nonneg (Finset.univ : Finset (Fin 2)) h fun i _ =>
           (F i).coe_nonneg
@@ -496,7 +496,7 @@ theorem norm_eq_tsum_rpow (hp : 0 < p.toReal) (f : lp E p) :
     ‖f‖ = (∑' i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal) :=
   by
   dsimp [norm]
-  rw [ENNReal.toReal_pos_iff] at hp 
+  rw [ENNReal.toReal_pos_iff] at hp
   rw [dif_neg hp.1.ne', if_neg hp.2.Ne]
 #align lp.norm_eq_tsum_rpow lp.norm_eq_tsum_rpow
 -/
@@ -571,9 +571,9 @@ theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
   · have hf : HasSum (fun i : α => ‖f i‖ ^ p.to_real) 0 :=
       by
       have := lp.hasSum_norm hp f
-      rwa [h, Real.zero_rpow hp.ne'] at this 
+      rwa [h, Real.zero_rpow hp.ne'] at this
     have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg (norm_nonneg _) _
-    rw [hasSum_zero_iff_of_nonneg this] at hf 
+    rw [hasSum_zero_iff_of_nonneg this] at hf
     ext i
     have : f i = 0 ∧ p.to_real ≠ 0 := by
       simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
@@ -648,7 +648,7 @@ protected theorem tsum_mul_le_mul_norm {p q : ℝ≥0∞} (hpq : p.toReal.IsConj
   have hg₂ := lp.hasSum_norm hpq.symm.pos g
   obtain ⟨C, -, hC', hC⟩ :=
     Real.inner_le_Lp_mul_Lq_hasSum_of_nonneg hpq (norm_nonneg' _) (norm_nonneg' _) hf₁ hg₁ hf₂ hg₂
-  rw [← hC.tsum_eq] at hC' 
+  rw [← hC.tsum_eq] at hC'
   exact ⟨hC.summable, hC'⟩
 #align lp.tsum_mul_le_mul_norm lp.tsum_mul_le_mul_norm
 -/
@@ -803,7 +803,7 @@ theorem norm_const_smul_le (hp : p ≠ 0) (c : 𝕜) (f : lp E p) : ‖c • f�
     · simp [lp.eq_zero' f]
     have hcf := lp.isLUB_norm (c • f)
     have hfc := (lp.isLUB_norm f).mul_left (norm_nonneg c)
-    simp_rw [← Set.range_comp, Function.comp] at hfc 
+    simp_rw [← Set.range_comp, Function.comp] at hfc
     -- TODO: some `is_lub` API should make it a one-liner from here.
     refine' hcf.right _
     have := hfc.left
@@ -813,13 +813,13 @@ theorem norm_const_smul_le (hp : p ≠ 0) (c : 𝕜) (f : lp E p) : ‖c • f�
   · letI inst : NNNorm (lp E p) := ⟨fun f => ⟨‖f‖, norm_nonneg' _⟩⟩
     have coe_nnnorm : ∀ f : lp E p, ↑‖f‖₊ = ‖f‖ := fun _ => rfl
     suffices ‖c • f‖₊ ^ p.to_real ≤ (‖c‖₊ * ‖f‖₊) ^ p.to_real by
-      rwa [NNReal.rpow_le_rpow_iff hp] at this 
+      rwa [NNReal.rpow_le_rpow_iff hp] at this
     clear_value inst
     rw [NNReal.mul_rpow]
     have hLHS := lp.hasSum_norm hp (c • f)
     have hRHS := (lp.hasSum_norm hp f).mul_left (‖c‖ ^ p.to_real)
     simp_rw [← coe_nnnorm, ← _root_.coe_nnnorm, ← NNReal.coe_rpow, ← NNReal.coe_mul,
-      NNReal.hasSum_coe] at hRHS hLHS 
+      NNReal.hasSum_coe] at hRHS hLHS
     refine' hasSum_mono hLHS hRHS fun i => _
     dsimp only
     rw [← NNReal.mul_rpow]
@@ -845,7 +845,7 @@ theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ‖c • f‖ =
   · simp
   refine' le_antisymm (norm_const_smul_le hp c f) _
   have := mul_le_mul_of_nonneg_left (norm_const_smul_le hp c⁻¹ (c • f)) (norm_nonneg c)
-  rwa [inv_smul_smul₀ hc, norm_inv, mul_inv_cancel_left₀ (norm_ne_zero_iff.mpr hc)] at this 
+  rwa [inv_smul_smul₀ hc, norm_inv, mul_inv_cancel_left₀ (norm_ne_zero_iff.mpr hc)] at this
 #align lp.norm_const_smul lp.norm_const_smul
 -/
 
@@ -908,7 +908,7 @@ instance [hp : Fact (1 ≤ p)] : NormedStarGroup (lp E p)
     rcases p.trichotomy with (rfl | rfl | h)
     · exfalso
       have := ENNReal.toReal_mono ENNReal.zero_ne_top hp.elim
-      norm_num at this 
+      norm_num at this
     · simp only [lp.norm_eq_ciSup, lp.star_apply, norm_star]
     · simp only [lp.norm_eq_tsum_rpow h, lp.star_apply, norm_star]
 
@@ -1290,7 +1290,7 @@ protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p
       Pi.sub_apply, Finset.sum_apply, Finset.sum_dite_eq, sub_eq_self]
     simp [Real.zero_rpow hp.ne']
   have : HasSum F (∑ i in s, F i) := hasSum_sum_of_ne_finset_zero hF
-  rwa [Finset.sum_congr rfl hF'] at this 
+  rwa [Finset.sum_congr rfl hF'] at this
 #align lp.norm_sub_norm_compl_sub_single lp.norm_sub_norm_compl_sub_single
 -/
 
@@ -1315,7 +1315,7 @@ protected theorem hasSum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) :
   refine' (this _ (Real.rpow_pos_of_pos hε p.to_real)).mono _
   intro s hs
   rw [← Real.rpow_lt_rpow_iff dist_nonneg (le_of_lt hε) hp']
-  rw [dist_comm] at hs 
+  rw [dist_comm] at hs
   simp only [dist_eq_norm, Real.norm_eq_abs] at hs ⊢
   have H :
     ‖∑ i in s, lp.single p i (f i : E i) - f‖ ^ p.to_real =
@@ -1323,7 +1323,7 @@ protected theorem hasSum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) :
     by
     simpa only [coe_fn_neg, Pi.neg_apply, lp.single_neg, Finset.sum_neg_distrib, neg_sub_neg,
       norm_neg, _root_.norm_neg] using lp.norm_compl_sum_single hp' (-f) s
-  rw [← H] at hs 
+  rw [← H] at hs
   have :
     |‖∑ i in s, lp.single p i (f i : E i) - f‖ ^ p.to_real| =
       ‖∑ i in s, lp.single p i (f i : E i) - f‖ ^ p.to_real :=

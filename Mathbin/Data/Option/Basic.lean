@@ -192,7 +192,7 @@ theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) �
 
 #print Option.eq_none_iff_forall_not_mem /-
 theorem eq_none_iff_forall_not_mem {o : Option α} : o = none ↔ ∀ a, a ∉ o :=
-  ⟨fun e a h => by rw [e] at h  <;> cases h, fun h => ext <| by simpa⟩
+  ⟨fun e a h => by rw [e] at h <;> cases h, fun h => ext <| by simpa⟩
 #align option.eq_none_iff_forall_not_mem Option.eq_none_iff_forall_not_mem
 -/
 
@@ -614,7 +614,7 @@ theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
       use x
       simpa only [mem_def, exists_prop_of_true] using h
     · rintro ⟨z, H, hz⟩
-      simp only [mem_def] at H 
+      simp only [mem_def] at H
       simpa only [H] using hz
 #align option.pbind_eq_some Option.pbind_eq_some
 -/
@@ -634,10 +634,10 @@ theorem pmap_eq_some_iff {hf} {y : β} :
   · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
   · constructor
     · intro h
-      simp only [pmap] at h 
+      simp only [pmap] at h
       exact ⟨x, rfl, h⟩
     · rintro ⟨a, H, rfl⟩
-      simp only [mem_def] at H 
+      simp only [mem_def] at H
       simp only [H, pmap]
 #align option.pmap_eq_some_iff Option.pmap_eq_some_iff
 -/

@@ -297,7 +297,7 @@ theorem affineBasisCover_is_basis (X : Scheme) :
   · rintro a U haU hU
     rcases X.affine_cover.covers a with ⟨x, e⟩
     let U' := (X.affine_cover.map (X.affine_cover.f a)).1.base ⁻¹' U
-    have hxU' : x ∈ U' := by rw [← e] at haU ; exact haU
+    have hxU' : x ∈ U' := by rw [← e] at haU; exact haU
     rcases prime_spectrum.is_basis_basic_opens.exists_subset_of_mem_open hxU'
         ((X.affine_cover.map (X.affine_cover.f a)).1.base.continuous_toFun.isOpen_preimage _
           hU) with
@@ -323,7 +323,7 @@ def OpenCover.finiteSubcover {X : Scheme} (𝒰 : OpenCover X) [H : CompactSpace
     by
     intro x
     have h' : x ∈ (⊤ : Set X.carrier) := trivial
-    rw [← Classical.choose_spec this, Set.mem_iUnion] at h' 
+    rw [← Classical.choose_spec this, Set.mem_iUnion] at h'
     rcases h' with ⟨y, _, ⟨hy, rfl⟩, hy'⟩
     exact ⟨⟨y, hy⟩, hy'⟩
   exact
@@ -581,7 +581,7 @@ instance hasPullback_of_right : HasPullback g f :=
 instance pullback_snd_of_left : IsOpenImmersionCat (pullback.snd : pullback f g ⟶ _) :=
   by
   have := preserves_pullback.iso_hom_snd forget f g
-  dsimp only [Scheme.forget_to_LocallyRingedSpace, induced_functor_map] at this 
+  dsimp only [Scheme.forget_to_LocallyRingedSpace, induced_functor_map] at this
   rw [← this]
   change LocallyRingedSpace.is_open_immersion _
   infer_instance
@@ -756,7 +756,7 @@ theorem image_basicOpen {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersionCat f] 
   by
   have e := Scheme.preimage_basic_open f (f.inv_app U r)
   rw [Scheme.hom.inv_app, PresheafedSpace.is_open_immersion.inv_app_app_apply,
-    Scheme.basic_open_res, inf_eq_right.mpr _] at e 
+    Scheme.basic_open_res, inf_eq_right.mpr _] at e
   rw [← e]
   ext1
   refine' set.image_preimage_eq_inter_range.trans _
@@ -848,14 +848,14 @@ theorem Scheme.restrictFunctor_map_app {U V : Opens X.carrier} (i : U ⟶ V) (W 
   have e₁ :=
     Scheme.congr_app (X.restrict_functor_map_of_restrict i)
       (op <| V.open_embedding.is_open_map.functor.obj W)
-  rw [Scheme.comp_val_c_app] at e₁ 
+  rw [Scheme.comp_val_c_app] at e₁
   have e₂ := (X.restrict_functor.map i).1.val.c.naturality (eq_to_hom W.map_functor_eq).op
-  rw [← is_iso.eq_inv_comp] at e₂ 
+  rw [← is_iso.eq_inv_comp] at e₂
   dsimp at e₁ e₂ ⊢
   rw [e₂, W.adjunction_counit_map_functor, ← is_iso.eq_inv_comp, is_iso.inv_comp_eq, ←
-    is_iso.eq_comp_inv] at e₁ 
+    is_iso.eq_comp_inv] at e₁
   simp_rw [eq_to_hom_map (opens.map _), eq_to_hom_map (IsOpenMap.functor _), ← functor.map_inv, ←
-    functor.map_comp] at e₁ 
+    functor.map_comp] at e₁
   rw [e₁]
   congr 1
 #align algebraic_geometry.Scheme.restrict_functor_map_app AlgebraicGeometry.Scheme.restrictFunctor_map_app
@@ -1128,13 +1128,13 @@ theorem morphismRestrict_c_app {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier
   by
   have :=
     Scheme.congr_app (morphism_restrict_ι f U) (op (U.open_embedding.is_open_map.functor.obj V))
-  rw [Scheme.comp_val_c_app, Scheme.comp_val_c_app_assoc] at this 
+  rw [Scheme.comp_val_c_app, Scheme.comp_val_c_app_assoc] at this
   have e : (opens.map U.inclusion).obj (U.open_embedding.is_open_map.functor.obj V) = V := by ext1;
     exact Set.preimage_image_eq _ Subtype.coe_injective
   have : _ ≫ X.presheaf.map _ = _ :=
     (((f ∣_ U).1.c.naturality (eq_to_hom e).op).symm.trans _).trans this
   swap; · change Y.presheaf.map _ ≫ _ = Y.presheaf.map _ ≫ _; congr
-  rw [← is_iso.eq_comp_inv, ← functor.map_inv, category.assoc] at this 
+  rw [← is_iso.eq_comp_inv, ← functor.map_inv, category.assoc] at this
   rw [this]
   congr 1
   erw [← X.presheaf.map_comp, ← X.presheaf.map_comp]
@@ -1227,7 +1227,7 @@ def morphismRestrictRestrictBasicOpen {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.
   by
   refine' morphism_restrict_restrict _ _ _ ≪≫ morphism_restrict_eq _ _
   have e := Scheme.preimage_basic_open (Y.of_restrict U.open_embedding) r
-  erw [Scheme.of_restrict_val_c_app, opens.adjunction_counit_app_self, eq_to_hom_op] at e 
+  erw [Scheme.of_restrict_val_c_app, opens.adjunction_counit_app_self, eq_to_hom_op] at e
   rw [← (Y.restrict U.open_embedding).basicOpen_res_eq _ (eq_to_hom U.inclusion_map_eq_top).op, ←
     comp_apply]
   erw [← Y.presheaf.map_comp]

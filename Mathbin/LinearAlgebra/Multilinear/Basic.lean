@@ -568,9 +568,9 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (
       by
       apply Finset.eq_empty_of_forall_not_mem fun r hr => _
       have : r i ∈ A i := mem_pi_finset.mp hr i
-      rwa [hi] at this 
+      rwa [hi] at this
     rw [this, Finset.sum_empty]
-  push_neg at Ai_empty 
+  push_neg at Ai_empty
   -- Otherwise, if all sets are at most singletons, then they are exactly singletons and the result
   -- is again straightforward
   by_cases Ai_singleton : ∀ i, (A i).card ≤ 1
@@ -597,7 +597,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (
   -- We will split into two parts `B i₀` and `C i₀` of smaller cardinality, let `B i = C i = A i`
   -- for `i ≠ i₀`, apply the inductive assumption to `B` and `C`, and add up the corresponding
   -- parts to get the sum for `A`.
-  push_neg at Ai_singleton 
+  push_neg at Ai_singleton
   obtain ⟨i₀, hi₀⟩ : ∃ i, 1 < (A i).card := Ai_singleton
   obtain ⟨j₁, j₂, hj₁, hj₂, j₁_ne_j₂⟩ : ∃ j₁ j₂, j₁ ∈ A i₀ ∧ j₂ ∈ A i₀ ∧ j₁ ≠ j₂ :=
     Finset.one_lt_card_iff.1 hi₀
@@ -630,7 +630,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (
       rw [this]
       apply Finset.sum_union
       apply Finset.disjoint_right.2 fun j hj => _
-      have : j = j₂ := by dsimp [C] at hj ; simpa using hj
+      have : j = j₂ := by dsimp [C] at hj; simpa using hj
       rw [this]
       dsimp [B]
       simp only [mem_sdiff, eq_self_iff_true, not_true, not_false_iff, Finset.mem_singleton,
@@ -663,7 +663,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (
       have : {j₂} ⊆ A i₀ := by simp [hj₂]
       simp only [B, Finset.card_sdiff this, Function.update_same, Finset.card_singleton]
       exact Nat.pred_lt (ne_of_gt (lt_trans Nat.zero_lt_one hi₀))
-    rw [h] at this 
+    rw [h] at this
     exact IH _ this B rfl
   -- Express the inductive assumption for `C`
   have Crec : (f fun i => ∑ j in C i, g i j) = ∑ r in pi_finset C, f fun i => g i (r i) :=
@@ -671,7 +671,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (
     have : ∑ i, Finset.card (C i) < ∑ i, Finset.card (A i) :=
       Finset.sum_lt_sum (fun i hi => Finset.card_le_card (C_subset_A i))
         ⟨i₀, Finset.mem_univ _, by simp [C, hi₀]⟩
-    rw [h] at this 
+    rw [h] at this
     exact IH _ this C rfl
   have D : Disjoint (pi_finset B) (pi_finset C) :=
     haveI : Disjoint (B i₀) (C i₀) := by simp [B, C]

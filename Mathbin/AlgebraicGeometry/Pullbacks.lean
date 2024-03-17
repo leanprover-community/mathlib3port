@@ -608,8 +608,8 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) :=
   intro s
   refine' ⟨glued_lift 𝒰 f g s, glued_lift_p1 𝒰 f g s, glued_lift_p2 𝒰 f g s, _⟩
   intro m h₁ h₂
-  change m ≫ p1 𝒰 f g = _ at h₁ 
-  change m ≫ p2 𝒰 f g = _ at h₂ 
+  change m ≫ p1 𝒰 f g = _ at h₁
+  change m ≫ p2 𝒰 f g = _ at h₂
   apply (𝒰.pullback_cover s.fst).hom_ext
   intro i
   rw [open_cover.pullback_cover_map]
@@ -684,7 +684,7 @@ instance left_affine_comp_pullback_hasPullback {X Y Z : Scheme} (f : X ⟶ Z) (g
       pullback.condition.symm (pullback_cone.flip_is_limit <| pullback_is_pullback _ _)
       (pullback_cone.flip_is_limit <| pullback_is_pullback _ _)
   have : has_pullback (pullback.snd ≫ Z.affine_cover.map i : Xᵢ ⟶ _) g := ⟨⟨⟨_, this⟩⟩⟩
-  rw [← pullback.condition] at this 
+  rw [← pullback.condition] at this
   exact this
 #align algebraic_geometry.Scheme.pullback.left_affine_comp_pullback_has_pullback AlgebraicGeometry.Scheme.Pullback.left_affine_comp_pullback_hasPullback
 -/

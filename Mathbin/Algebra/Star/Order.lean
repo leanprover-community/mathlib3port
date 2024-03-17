@@ -181,7 +181,7 @@ theorem mul_star_self_nonneg (r : R) : 0 ≤ r * star r := by nth_rw_rhs 1 [← 
 #print conjugate_nonneg /-
 theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c :=
   by
-  rw [StarOrderedRing.nonneg_iff] at ha 
+  rw [StarOrderedRing.nonneg_iff] at ha
   refine'
     AddSubmonoid.closure_induction ha (fun x hx => _)
       (by rw [MulZeroClass.mul_zero, MulZeroClass.zero_mul]) fun x y hx hy => _

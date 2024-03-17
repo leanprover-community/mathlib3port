@@ -119,7 +119,7 @@ theorem jacobiTheta_S_smul (τ : ℍ) :
     rw [ha.1, zero_re]
   have hτ : (τ : ℂ) ≠ 0 := τ.ne_zero
   have := Complex.tsum_exp_neg_mul_int_sq ha
-  rw [mul_comm ((1 : ℂ) / _) _, mul_one_div, eq_div_iff ha', mul_comm _ (_ ^ _), eq_comm] at this 
+  rw [mul_comm ((1 : ℂ) / _) _, mul_one_div, eq_div_iff ha', mul_comm _ (_ ^ _), eq_comm] at this
   convert this using 3
   · ext1 n
     congr 1
@@ -137,11 +137,11 @@ theorem hasSum_nat_jacobiTheta {z : ℂ} (hz : 0 < im z) :
     HasSum (fun n : ℕ => cexp (π * I * (n + 1) ^ 2 * z)) ((jacobiTheta z - 1) / 2) :=
   by
   have := (summable_exp_mul_sq hz).HasSum.sum_nat_of_sum_int
-  rw [← @hasSum_nat_add_iff' ℂ _ _ _ _ 1] at this 
+  rw [← @hasSum_nat_add_iff' ℂ _ _ _ _ 1] at this
   simp_rw [Finset.sum_range_one, Int.cast_neg, Int.cast_ofNat, Nat.cast_zero, neg_zero,
     Int.cast_zero, sq (0 : ℂ), MulZeroClass.mul_zero, MulZeroClass.zero_mul, neg_sq, ← mul_two,
     Complex.exp_zero, add_sub_assoc, (by norm_num : (1 : ℂ) - 1 * 2 = -1), ← sub_eq_add_neg,
-    Nat.cast_add, Nat.cast_one] at this 
+    Nat.cast_add, Nat.cast_one] at this
   convert this.div_const 2
   simp_rw [mul_div_cancel _ two_ne_zero]
 #align has_sum_nat_jacobi_theta hasSum_nat_jacobiTheta

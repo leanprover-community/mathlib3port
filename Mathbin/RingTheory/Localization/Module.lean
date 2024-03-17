@@ -81,15 +81,15 @@ theorem LinearIndependent.localization_localization {ι : Type _} {v : ι → A}
   choose! a g' hg' using IsLocalization.exist_integer_multiples S s g
   have h0 : algebraMap A Aₛ (∑ i in s, g' i • v i) = 0 :=
     by
-    apply_fun (· • ·) (a : R) at hg 
-    rw [smul_zero, Finset.smul_sum] at hg 
+    apply_fun (· • ·) (a : R) at hg
+    rw [smul_zero, Finset.smul_sum] at hg
     rw [map_sum, ← hg]
     refine' Finset.sum_congr rfl fun i hi => _
     rw [← smul_assoc, ← hg' i hi, Algebra.smul_def, map_mul, ← IsScalarTower.algebraMap_apply, ←
       Algebra.smul_def, algebraMap_smul]
   obtain ⟨⟨_, r, hrS, rfl⟩, hr : algebraMap R A r * _ = 0⟩ :=
     (IsLocalization.map_eq_zero_iff (Algebra.algebraMapSubmonoid A S) _ _).1 h0
-  simp_rw [Finset.mul_sum, ← Algebra.smul_def, smul_smul] at hr 
+  simp_rw [Finset.mul_sum, ← Algebra.smul_def, smul_smul] at hr
   specialize hv s _ hr i hi
   rw [← (IsLocalization.map_units Rₛ a).mul_right_eq_zero, ← Algebra.smul_def, ← hg' i hi]
   exact (IsLocalization.map_eq_zero_iff S _ _).2 ⟨⟨r, hrS⟩, hv⟩

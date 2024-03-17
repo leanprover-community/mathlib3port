@@ -168,7 +168,7 @@ theorem eq_or_mem_of_mem_cons {a b : α} {s : Stream' α} : (a ∈ b::s) → a =
   fun ⟨n, h⟩ => by
   cases' n with n'
   · left; exact h
-  · right; rw [nth_succ, tail_cons] at h ; exact ⟨n', h⟩
+  · right; rw [nth_succ, tail_cons] at h; exact ⟨n', h⟩
 #align stream.eq_or_mem_of_mem_cons Stream'.eq_or_mem_of_mem_cons
 -/
 
@@ -325,7 +325,7 @@ theorem const_eq (a : α) : const a = a::const a :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.tail_const /-
 theorem tail_const (a : α) : tail (const a) = const a :=
-  suffices tail (a::const a) = const a by rwa [← const_eq] at this 
+  suffices tail (a::const a) = const a by rwa [← const_eq] at this
   rfl
 #align stream.tail_const Stream'.tail_const
 -/
@@ -361,8 +361,8 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
   induction' n with n' ih
   · rfl
   · unfold tail iterate
-    unfold tail iterate at ih 
-    rw [add_one] at ih ; dsimp at ih 
+    unfold tail iterate at ih
+    rw [add_one] at ih; dsimp at ih
     rw [add_one]; dsimp; rw [ih]
 #align stream.tail_iterate Stream'.tail_iterate
 -/
@@ -466,7 +466,7 @@ theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate 
   induction' n with n' ih
   · rfl
   · unfold map iterate nth; dsimp
-    unfold map iterate nth at ih ; dsimp at ih 
+    unfold map iterate nth at ih; dsimp at ih
     rw [ih]
 #align stream.map_iterate Stream'.map_iterate
 -/
@@ -782,7 +782,7 @@ theorem take_theorem (s₁ s₂ : Stream' α) : (∀ n : Nat, take n s₁ = take
   by
   intro h; apply Stream'.ext; intro n
   induction' n with n ih
-  · have aux := h 1; simp [take] at aux ; exact aux
+  · have aux := h 1; simp [take] at aux; exact aux
   · have h₁ : some (nth s₁ (succ n)) = some (nth s₂ (succ n)) := by
       rw [← nth_take_succ, ← nth_take_succ, h (succ (succ n))]
     injection h₁

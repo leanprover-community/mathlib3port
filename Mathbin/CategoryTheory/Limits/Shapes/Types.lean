@@ -349,7 +349,7 @@ theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
         dite_eq_right_iff]
       intro y e
       have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
-      rw [disjoint_iff.mp h₃.1] at this 
+      rw [disjoint_iff.mp h₃.1] at this
       exact this.elim
     · rintro T _ _ m rfl rfl; ext x; dsimp
       split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
@@ -574,7 +574,7 @@ theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ �
         h.comp_cocone_point_unique_up_to_iso_inv (coequalizer_colimit f g).2
           walking_parallel_pair.one]
     rintro ⟨y, hy, e'⟩
-    dsimp at e' 
+    dsimp at e'
     replace e' :=
       (mono_iff_injective
             (h.cocone_point_unique_up_to_iso (coequalizer_colimit f g).IsColimit).inv).mp

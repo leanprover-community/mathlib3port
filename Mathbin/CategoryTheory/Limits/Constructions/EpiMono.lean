@@ -38,7 +38,7 @@ theorem preserves_mono_of_preservesLimit {X Y : C} (f : X ⟶ Y) [PreservesLimit
     [Mono f] : Mono (F.map f) :=
   by
   have := is_limit_pullback_cone_map_of_is_limit F _ (pullback_cone.is_limit_mk_id_id f)
-  simp_rw [F.map_id] at this 
+  simp_rw [F.map_id] at this
   apply pullback_cone.mono_of_is_limit_mk_id_id _ this
 #align category_theory.preserves_mono_of_preserves_limit CategoryTheory.preserves_mono_of_preservesLimit
 -/
@@ -56,7 +56,7 @@ theorem reflects_mono_of_reflectsLimit {X Y : C} (f : X ⟶ Y) [ReflectsLimit (c
     [Mono (F.map f)] : Mono f :=
   by
   have := pullback_cone.is_limit_mk_id_id (F.map f)
-  simp_rw [← F.map_id] at this 
+  simp_rw [← F.map_id] at this
   apply pullback_cone.mono_of_is_limit_mk_id_id _ (is_limit_of_is_limit_pullback_cone_map F _ this)
 #align category_theory.reflects_mono_of_reflects_limit CategoryTheory.reflects_mono_of_reflectsLimit
 -/
@@ -74,7 +74,7 @@ theorem preserves_epi_of_preservesColimit {X Y : C} (f : X ⟶ Y) [PreservesColi
     [Epi f] : Epi (F.map f) :=
   by
   have := is_colimit_pushout_cocone_map_of_is_colimit F _ (pushout_cocone.is_colimit_mk_id_id f)
-  simp_rw [F.map_id] at this 
+  simp_rw [F.map_id] at this
   apply pushout_cocone.epi_of_is_colimit_mk_id_id _ this
 #align category_theory.preserves_epi_of_preserves_colimit CategoryTheory.preserves_epi_of_preservesColimit
 -/
@@ -92,7 +92,7 @@ theorem reflects_epi_of_reflectsColimit {X Y : C} (f : X ⟶ Y) [ReflectsColimit
     [Epi (F.map f)] : Epi f :=
   by
   have := pushout_cocone.is_colimit_mk_id_id (F.map f)
-  simp_rw [← F.map_id] at this 
+  simp_rw [← F.map_id] at this
   apply
     pushout_cocone.epi_of_is_colimit_mk_id_id _
       (is_colimit_of_is_colimit_pushout_cocone_map F _ this)

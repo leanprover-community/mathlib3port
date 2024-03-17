@@ -265,7 +265,7 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
     apply mul_le_mul (le_of_eq rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
   have cancel : ‖c⁻¹‖ * ‖c‖ = 1 := by
     simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
-  rwa [cancel] at le 
+  rwa [cancel] at le
 #align normed_space.smul_mem_polar NormedSpace.smul_mem_polar
 -/
 
@@ -274,7 +274,7 @@ theorem polar_ball_subset_closedBall_div {c : 𝕜} (hc : 1 < ‖c‖) {r : ℝ}
     polar 𝕜 (ball (0 : E) r) ⊆ closedBall (0 : Dual 𝕜 E) (‖c‖ / r) :=
   by
   intro x' hx'
-  rw [mem_polar_iff] at hx' 
+  rw [mem_polar_iff] at hx'
   simp only [polar, mem_set_of_eq, mem_closedBall_zero_iff, mem_ball_zero_iff] at *
   have hcr : 0 < ‖c‖ / r := div_pos (zero_lt_one.trans hc) hr
   refine' ContinuousLinearMap.opNorm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _

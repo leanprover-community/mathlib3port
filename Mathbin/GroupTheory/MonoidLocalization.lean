@@ -754,9 +754,9 @@ variable (f : LocalizationMap S N)
 theorem map_right_cancel {x y} {c : S} (h : f.toMap (c * x) = f.toMap (c * y)) :
     f.toMap x = f.toMap y :=
   by
-  rw [f.to_map.map_mul, f.to_map.map_mul] at h 
+  rw [f.to_map.map_mul, f.to_map.map_mul] at h
   cases' f.map_units c with u hu
-  rw [← hu] at h 
+  rw [← hu] at h
   exact (Units.mul_right_inj u).1 h
 #align submonoid.localization_map.map_right_cancel Submonoid.LocalizationMap.map_right_cancel
 #align add_submonoid.localization_map.map_right_cancel AddSubmonoid.LocalizationMap.map_right_cancel
@@ -1268,7 +1268,7 @@ theorem lift_injective_iff :
     constructor
     · exact f.eq_of_eq hg
     · intro h
-      rw [← f.lift_eq hg, ← f.lift_eq hg] at h 
+      rw [← f.lift_eq hg, ← f.lift_eq hg] at h
       exact H h
   · intro H z w h
     obtain ⟨x, hx⟩ := f.surj z
@@ -1725,7 +1725,7 @@ def ofMulEquivOfDom {k : P ≃* M} (H : T.map k.toMonoidHom = S) : LocalizationM
           ⟨fun ⟨c, hc⟩ =>
             let ⟨d, hd⟩ := k.to_equiv.surjective c
             ⟨⟨d, H' ▸ show k d ∈ S from hd.symm ▸ c.2⟩, by
-              erw [← hd, ← k.map_mul, ← k.map_mul] at hc  <;> exact k.to_equiv.injective hc⟩,
+              erw [← hd, ← k.map_mul, ← k.map_mul] at hc <;> exact k.to_equiv.injective hc⟩,
             fun ⟨c, hc⟩ =>
             ⟨⟨k c, H ▸ Set.mem_image_of_mem k c.2⟩, by
               erw [← k.map_mul] <;> rw [hc, k.map_mul] <;> rfl⟩⟩
@@ -2236,7 +2236,7 @@ instance : LE (Localization s) :=
         (by
           obtain ⟨e, he⟩ := r_iff_exists.1 hab
           obtain ⟨f, hf⟩ := r_iff_exists.1 hcd
-          simp only [mul_right_inj] at he hf 
+          simp only [mul_right_inj] at he hf
           dsimp
           rw [← mul_le_mul_iff_right, mul_right_comm, ← hf, mul_right_comm, mul_right_comm ↑a₂,
             mul_le_mul_iff_right, ← mul_le_mul_iff_left, mul_left_comm, he, mul_left_comm,
@@ -2251,7 +2251,7 @@ instance : LT (Localization s) :=
         (by
           obtain ⟨e, he⟩ := r_iff_exists.1 hab
           obtain ⟨f, hf⟩ := r_iff_exists.1 hcd
-          simp only [mul_right_inj] at he hf 
+          simp only [mul_right_inj] at he hf
           dsimp
           rw [← mul_lt_mul_iff_right, mul_right_comm, ← hf, mul_right_comm, mul_right_comm ↑a₂,
             mul_lt_mul_iff_right, ← mul_lt_mul_iff_left, mul_left_comm, he, mul_left_comm,

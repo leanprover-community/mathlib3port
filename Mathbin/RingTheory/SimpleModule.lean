@@ -110,11 +110,11 @@ theorem isAtom : IsAtom m :=
 
 end IsSimpleModule
 
-#print is_semisimple_of_sSup_simples_eq_top /-
-theorem is_semisimple_of_sSup_simples_eq_top
+#print IsSemisimpleModule.of_sSup_simples_eq_top /-
+theorem IsSemisimpleModule.of_sSup_simples_eq_top
     (h : sSup {m : Submodule R M | IsSimpleModule R m} = ⊤) : IsSemisimpleModule R M :=
   complementedLattice_of_sSup_atoms_eq_top (by simp_rw [← h, isSimpleModule_iff_isAtom])
-#align is_semisimple_of_Sup_simples_eq_top is_semisimple_of_sSup_simples_eq_top
+#align is_semisimple_of_Sup_simples_eq_top IsSemisimpleModule.of_sSup_simples_eq_top
 -/
 
 namespace IsSemisimpleModule
@@ -129,20 +129,21 @@ theorem sSup_simples_eq_top : sSup {m : Submodule R M | IsSimpleModule R m} = �
 #align is_semisimple_module.Sup_simples_eq_top IsSemisimpleModule.sSup_simples_eq_top
 -/
 
-#print IsSemisimpleModule.is_semisimple_submodule /-
-instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
+#print IsSemisimpleModule.submodule /-
+instance submodule {m : Submodule R M} : IsSemisimpleModule R m :=
   haveI f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
   f.complemented_lattice_iff.2 IsModularLattice.complementedLattice_Iic
-#align is_semisimple_module.is_semisimple_submodule IsSemisimpleModule.is_semisimple_submodule
+#align is_semisimple_module.is_semisimple_submodule IsSemisimpleModule.submodule
 -/
 
 end IsSemisimpleModule
 
-#print is_semisimple_iff_top_eq_sSup_simples /-
-theorem is_semisimple_iff_top_eq_sSup_simples :
+#print sSup_simples_eq_top_iff_isSemisimpleModule /-
+theorem sSup_simples_eq_top_iff_isSemisimpleModule :
     sSup {m : Submodule R M | IsSimpleModule R m} = ⊤ ↔ IsSemisimpleModule R M :=
-  ⟨is_semisimple_of_sSup_simples_eq_top, by intro; exact IsSemisimpleModule.sSup_simples_eq_top⟩
-#align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_sSup_simples
+  ⟨IsSemisimpleModule.of_sSup_simples_eq_top, by intro;
+    exact IsSemisimpleModule.sSup_simples_eq_top⟩
+#align is_semisimple_iff_top_eq_Sup_simples sSup_simples_eq_top_iff_isSemisimpleModule
 -/
 
 namespace LinearMap
@@ -226,7 +227,7 @@ noncomputable instance Module.End.divisionRing [DecidableEq (Module.End R M)] [I
         have h := exists_pair_ne M
         contrapose! h
         intro x y
-        simp_rw [ext_iff, one_apply, zero_apply] at h 
+        simp_rw [ext_iff, one_apply, zero_apply] at h
         rw [← h x, h y]⟩
     mul_inv_cancel := by
       intro a a0

@@ -321,7 +321,7 @@ theorem TopologicalSpace.isOpen_top_iff {α} (U : Set α) : is_open[⊤] U ↔ U
     · cases h; · exact Or.inr rfl
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
     · rw [sUnion_eq_empty, Classical.or_iff_not_imp_left]
-      intro h; push_neg at h ; obtain ⟨U, hU, hne⟩ := h
+      intro h; push_neg at h; obtain ⟨U, hU, hne⟩ := h
       have := (ih U hU).resolve_left hne; subst this
       refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩, by rintro (rfl | rfl);
     exacts [@isOpen_empty _ ⊤, @isOpen_univ _ ⊤]⟩
@@ -456,7 +456,7 @@ def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : To
     rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;>
       exact ⟨s'₁ ∩ s'₂, hs₁.inter hs₂, preimage_inter⟩
   isOpen_sUnion s h := by
-    simp only [Classical.skolem] at h 
+    simp only [Classical.skolem] at h
     cases' h with f hf
     apply Exists.intro (⋃ (x : Set α) (h : x ∈ s), f x h)
     simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
@@ -750,7 +750,7 @@ theorem le_generateFrom {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀ s 
 #print induced_generateFrom_eq /-
 theorem induced_generateFrom_eq {α β} {b : Set (Set β)} {f : α → β} :
     (generateFrom b).induced f = TopologicalSpace.generateFrom (preimage f '' b) :=
-  le_antisymm (le_generateFrom <| ball_image_iff.2 fun s hs => ⟨s, GenerateOpen.basic _ hs, rfl⟩)
+  le_antisymm (le_generateFrom <| forall_mem_image.2 fun s hs => ⟨s, GenerateOpen.basic _ hs, rfl⟩)
     (coinduced_le_iff_le_induced.1 <|
       le_generateFrom fun s hs => GenerateOpen.basic _ <| mem_image_of_mem _ hs)
 #align induced_generate_from_eq induced_generateFrom_eq
@@ -846,11 +846,11 @@ theorem le_nhdsAdjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : Topologi
   · intro h
     constructor
     · specialize h a
-      rwa [nhdsAdjoint_nhds] at h 
+      rwa [nhdsAdjoint_nhds] at h
     · intro b hb
       apply le_antisymm _ (pure_le_nhds b)
       specialize h b
-      rwa [nhdsAdjoint_nhds_of_ne a f hb] at h 
+      rwa [nhdsAdjoint_nhds_of_ne a f hb] at h
   · rintro ⟨h, h'⟩ b
     by_cases hb : b = a
     · rwa [hb, nhdsAdjoint_nhds]
@@ -1109,7 +1109,7 @@ theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s :
   simp only [mem_nhds_iff, isOpen_induced_iff, exists_prop, Set.mem_setOf_eq]
   constructor
   · rintro ⟨u, usub, ⟨v, openv, ueq⟩, au⟩
-    exact ⟨v, ⟨v, Set.Subset.refl v, openv, by rwa [← ueq] at au ⟩, by rw [ueq] <;> exact usub⟩
+    exact ⟨v, ⟨v, Set.Subset.refl v, openv, by rwa [← ueq] at au⟩, by rw [ueq] <;> exact usub⟩
   rintro ⟨u, ⟨v, vsubu, openv, amem⟩, finvsub⟩
   exact ⟨f ⁻¹' v, Set.Subset.trans (Set.preimage_mono vsubu) finvsub, ⟨⟨v, openv, rfl⟩, amem⟩⟩
 #align mem_nhds_induced mem_nhds_induced

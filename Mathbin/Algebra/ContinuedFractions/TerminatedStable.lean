@@ -38,7 +38,7 @@ variable [DivisionRing K]
 theorem continuantsAux_stable_step_of_terminated (terminated_at_n : g.TerminatedAt n) :
     g.continuantsAux (n + 2) = g.continuantsAux (n + 1) :=
   by
-  rw [terminated_at_iff_s_none] at terminated_at_n 
+  rw [terminated_at_iff_s_none] at terminated_at_n
   simp only [terminated_at_n, continuants_aux]
 #align generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_step_of_terminated
 -/
@@ -58,7 +58,7 @@ theorem continuantsAux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : 
 theorem convergents'Aux_stable_step_of_terminated {s : Seq <| Pair K}
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n :=
   by
-  change s.nth n = none at terminated_at_n 
+  change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
   case zero => simp only [convergents'_aux, terminated_at_n, seq.head]
   case succ =>

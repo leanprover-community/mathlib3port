@@ -1190,13 +1190,13 @@ theorem mem_uIcc_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
 
 #print Finset.uIcc_subset_uIcc /-
 theorem uIcc_subset_uIcc (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] := by
-  rw [mem_uIcc] at h₁ h₂ ; exact Icc_subset_Icc (le_inf h₁.1 h₂.1) (sup_le h₁.2 h₂.2)
+  rw [mem_uIcc] at h₁ h₂; exact Icc_subset_Icc (le_inf h₁.1 h₂.1) (sup_le h₁.2 h₂.2)
 #align finset.uIcc_subset_uIcc Finset.uIcc_subset_uIcc
 -/
 
 #print Finset.uIcc_subset_Icc /-
 theorem uIcc_subset_Icc (ha : a₁ ∈ Icc a₂ b₂) (hb : b₁ ∈ Icc a₂ b₂) : [a₁, b₁] ⊆ Icc a₂ b₂ := by
-  rw [mem_Icc] at ha hb ; exact Icc_subset_Icc (le_inf ha.1 hb.1) (sup_le ha.2 hb.2)
+  rw [mem_Icc] at ha hb; exact Icc_subset_Icc (le_inf ha.1 hb.1) (sup_le ha.2 hb.2)
 #align finset.uIcc_subset_Icc Finset.uIcc_subset_Icc
 -/
 
@@ -1245,7 +1245,7 @@ theorem eq_of_mem_uIcc_of_mem_uIcc' : b ∈ [a, c] → c ∈ [a, b] → b = c :=
 #print Finset.uIcc_injective_right /-
 theorem uIcc_injective_right (a : α) : Injective fun b => [b, a] := fun b c h =>
   by
-  rw [ext_iff] at h 
+  rw [ext_iff] at h
   exact eq_of_mem_uIcc_of_mem_uIcc ((h _).1 left_mem_uIcc) ((h _).2 left_mem_uIcc)
 #align finset.uIcc_injective_right Finset.uIcc_injective_right
 -/

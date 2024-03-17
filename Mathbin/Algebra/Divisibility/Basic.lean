@@ -175,7 +175,7 @@ variable [CommSemigroup α] {a b c : α}
 
 #print Dvd.intro_left /-
 theorem Dvd.intro_left (c : α) (h : c * a = b) : a ∣ b :=
-  Dvd.intro _ (by rw [mul_comm] at h ; apply h)
+  Dvd.intro _ (by rw [mul_comm] at h; apply h)
 #align dvd.intro_left Dvd.intro_left
 -/
 

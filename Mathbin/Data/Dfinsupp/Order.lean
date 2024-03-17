@@ -161,12 +161,12 @@ instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] :
     le_of_add_le_add_left := fun f g h H i =>
       by
       specialize H i
-      rw [add_apply, add_apply] at H 
+      rw [add_apply, add_apply] at H
       exact le_of_add_le_add_left H }
 
 instance [∀ i, OrderedAddCommMonoid (α i)] [∀ i, ContravariantClass (α i) (α i) (· + ·) (· ≤ ·)] :
     ContravariantClass (Π₀ i, α i) (Π₀ i, α i) (· + ·) (· ≤ ·) :=
-  ⟨fun f g h H i => by specialize H i; rw [add_apply, add_apply] at H ;
+  ⟨fun f g h H i => by specialize H i; rw [add_apply, add_apply] at H;
     exact le_of_add_le_add_left H⟩
 
 section CanonicallyOrderedAddCommMonoid

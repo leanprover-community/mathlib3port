@@ -169,9 +169,9 @@ theorem MemCarrier.clear_denominator' [DecidableEq (Away f)] {z : Localization.A
           (∑ i in c.support.attach,
             acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
   by
-  rw [← submodule_span_eq, Finsupp.span_eq_range_total, LinearMap.mem_range] at hz 
+  rw [← submodule_span_eq, Finsupp.span_eq_range_total, LinearMap.mem_range] at hz
   rcases hz with ⟨c, eq1⟩
-  rw [Finsupp.total_apply, Finsupp.sum] at eq1 
+  rw [Finsupp.total_apply, Finsupp.sum] at eq1
   obtain ⟨⟨_, N, rfl⟩, hN⟩ :=
     IsLocalization.exist_integer_multiples_of_finset (Submonoid.powers f) (c.support.image c)
   choose acd hacd using hN
@@ -200,13 +200,13 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f} (hz : 
 theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.powers f : Set A) :=
   by
   by_contra rid
-  rw [Set.not_disjoint_iff] at rid 
+  rw [Set.not_disjoint_iff] at rid
   choose g hg using rid
   obtain ⟨hg1, ⟨k, rfl⟩⟩ := hg
   by_cases k_ineq : 0 < k
-  · erw [x.1.IsPrime.pow_mem_iff_mem _ k_ineq] at hg1 
+  · erw [x.1.IsPrime.pow_mem_iff_mem _ k_ineq] at hg1
     exact x.2 hg1
-  · erw [show k = 0 by linarith, pow_zero, ← Ideal.eq_top_iff_one] at hg1 
+  · erw [show k = 0 by linarith, pow_zero, ← Ideal.eq_top_iff_one] at hg1
     apply x.1.IsPrime.1
     exact hg1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.disjoint AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.disjoint
@@ -219,12 +219,12 @@ theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ :=
   classical
   contrapose! eq_top
   obtain ⟨c, N, acd, eq1⟩ := mem_carrier.clear_denominator _ x ((Ideal.eq_top_iff_one _).mp eq_top)
-  rw [Algebra.smul_def, HomogeneousLocalization.one_val, mul_one] at eq1 
-  change Localization.mk (f ^ N) 1 = mk (∑ _, _) 1 at eq1 
-  simp only [mk_eq_mk', IsLocalization.eq] at eq1 
+  rw [Algebra.smul_def, HomogeneousLocalization.one_val, mul_one] at eq1
+  change Localization.mk (f ^ N) 1 = mk (∑ _, _) 1 at eq1
+  simp only [mk_eq_mk', IsLocalization.eq] at eq1
   rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
-  erw [one_mul, one_mul] at eq1 
-  change f ^ _ * f ^ _ = f ^ _ * _ at eq1 
+  erw [one_mul, one_mul] at eq1
+  change f ^ _ * f ^ _ = f ^ _ * _ at eq1
   rw [Set.not_disjoint_iff_nonempty_inter]
   refine'
     ⟨f ^ M * f ^ N, eq1.symm ▸ mul_mem_left _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _),
@@ -246,20 +246,20 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
     simp only [mem_carrier_iff] at hx12 ⊢
     let J := span (⇑(algebraMap A (away f)) '' x.val.as_homogeneous_ideal)
     suffices h : ∀ x y : Localization.Away f, x * y ∈ J → x ∈ J ∨ y ∈ J
-    · rw [HomogeneousLocalization.mul_val] at hx12 ; exact h x1.val x2.val hx12
+    · rw [HomogeneousLocalization.mul_val] at hx12; exact h x1.val x2.val hx12
     clear x1 x2 hx12
     intro x1 x2 hx12
     induction' x1 using Localization.induction_on with data_x1
     induction' x2 using Localization.induction_on with data_x2
     rcases data_x1, data_x2 with ⟨⟨a1, _, ⟨n1, rfl⟩⟩, ⟨a2, _, ⟨n2, rfl⟩⟩⟩
     rcases mem_carrier.clear_denominator' x hx12 with ⟨c, N, acd, eq1⟩
-    simp only [Algebra.smul_def] at eq1 
-    change Localization.mk (f ^ N) 1 * (mk _ _ * mk _ _) = mk (∑ _, _) _ at eq1 
-    simp only [Localization.mk_mul, one_mul] at eq1 
-    simp only [mk_eq_mk', IsLocalization.eq] at eq1 
+    simp only [Algebra.smul_def] at eq1
+    change Localization.mk (f ^ N) 1 * (mk _ _ * mk _ _) = mk (∑ _, _) _ at eq1
+    simp only [Localization.mk_mul, one_mul] at eq1
+    simp only [mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
-    rw [Submonoid.coe_one, one_mul] at eq1 
-    change f ^ _ * (_ * _) = f ^ _ * (f ^ _ * f ^ _ * _) at eq1 
+    rw [Submonoid.coe_one, one_mul] at eq1
+    change f ^ _ * (_ * _) = f ^ _ * (f ^ _ * f ^ _ * _) at eq1
     rcases x.1.IsPrime.mem_or_mem (show a1 * a2 * f ^ N * f ^ M ∈ _ from _) with (h1 | rid2)
     rcases x.1.IsPrime.mem_or_mem h1 with (h1 | rid1)
     rcases x.1.IsPrime.mem_or_mem h1 with (h1 | h2)
@@ -296,7 +296,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
   ext1 y
   constructor <;> intro hy
   · refine' ⟨y.2, _⟩
-    rw [Set.mem_preimage, SetLike.mem_coe, PrimeSpectrum.mem_basicOpen] at hy 
+    rw [Set.mem_preimage, SetLike.mem_coe, PrimeSpectrum.mem_basicOpen] at hy
     rw [ProjectiveSpectrum.mem_coe_basicOpen]
     intro a_mem_y
     apply hy
@@ -305,18 +305,18 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
     simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1 by
         rw [mk_mul, one_mul, mul_one]; congr; rw [hk]]
     exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨_, a_mem_y, rfl⟩)
-  · change y.1 ∈ _ at hy 
+  · change y.1 ∈ _ at hy
     rcases hy with ⟨hy1, hy2⟩
-    rw [ProjectiveSpectrum.mem_coe_basicOpen] at hy1 hy2 
+    rw [ProjectiveSpectrum.mem_coe_basicOpen] at hy1 hy2
     rw [Set.mem_preimage, to_fun, SetLike.mem_coe, PrimeSpectrum.mem_basicOpen]
-    intro rid; dsimp at rid 
+    intro rid; dsimp at rid
     rcases mem_carrier.clear_denominator 𝒜 _ rid with ⟨c, N, acd, eq1⟩
-    rw [Algebra.smul_def] at eq1 
-    change Localization.mk (f ^ N) 1 * mk _ _ = mk (∑ _, _) _ at eq1 
-    rw [mk_mul, one_mul, mk_eq_mk', IsLocalization.eq] at eq1 
+    rw [Algebra.smul_def] at eq1
+    change Localization.mk (f ^ N) 1 * mk _ _ = mk (∑ _, _) _ at eq1
+    rw [mk_mul, one_mul, mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
-    rw [Submonoid.coe_one, one_mul] at eq1 
-    simp only [Subtype.coe_mk] at eq1 
+    rw [Submonoid.coe_one, one_mul] at eq1
+    simp only [Subtype.coe_mk] at eq1
     rcases y.1.IsPrime.mem_or_mem (show a * f ^ N * f ^ M ∈ _ from _) with (H1 | H3)
     rcases y.1.IsPrime.mem_or_mem H1 with (H1 | H2)
     · exact hy2 H1
@@ -434,7 +434,7 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
     (by
       constructor <;> intro h i <;> specialize h i
       · rw [Set.mem_image]; refine' ⟨_, h, rfl⟩
-      · rw [Set.mem_image] at h ; rcases h with ⟨x, h, hx⟩
+      · rw [Set.mem_image] at h; rcases h with ⟨x, h, hx⟩
         convert h; rw [ext_iff_val, val_mk']; dsimp only [Subtype.coe_mk]; rw [← hx]; rfl)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_carrier_iff' AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff'
 -/

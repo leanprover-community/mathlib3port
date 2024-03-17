@@ -102,9 +102,9 @@ def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j))
                 naturality' := fun k k' f => by
                   dsimp; simp only [category.id_comp]
                   have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j, k') (𝟙 j, f)
-                  dsimp at this 
+                  dsimp at this
                   simp only [category.id_comp, CategoryTheory.Functor.map_id, nat_trans.id_app] at
-                    this 
+                    this
                   exact this } }
       naturality' := fun j j' f =>
         (Q j').hom_ext
@@ -115,9 +115,9 @@ def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j))
               limits.is_limit.fac_assoc, limits.is_limit.fac, nat_trans.comp_app, category.id_comp,
               category.assoc]
             have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j', k) (f, 𝟙 k)
-            dsimp at this 
+            dsimp at this
             simp only [category.id_comp, category.comp_id, CategoryTheory.Functor.map_id,
-              nat_trans.id_app] at this 
+              nat_trans.id_app] at this
             exact this) }
 #align category_theory.limits.cone_of_cone_uncurry CategoryTheory.Limits.coneOfConeUncurry
 -/
@@ -143,11 +143,11 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
               slice_rhs 2 3 => rw [← (D.obj j).π.naturality]
               simp only [functor.const_obj_map, category.id_comp, category.assoc]
               have w := (D.map fj).w k'
-              dsimp at w 
+              dsimp at w
               rw [← w]
               have n := s.π.naturality fj
-              dsimp at n 
-              simp only [category.id_comp] at n 
+              dsimp at n
+              simp only [category.id_comp] at n
               rw [n]
               simp } }
   fac s j := by

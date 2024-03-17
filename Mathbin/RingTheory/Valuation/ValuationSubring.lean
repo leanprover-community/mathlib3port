@@ -151,7 +151,7 @@ instance : ValuationRing A
     by_cases (a : K) = 0; · use 0; right; ext; simp [h]
     cases' A.mem_or_inv_mem (a / b) with hh hh
     · use⟨a / b, hh⟩; right; ext; field_simp; ring
-    · rw [show (a / b : K)⁻¹ = b / a by field_simp] at hh 
+    · rw [show (a / b : K)⁻¹ = b / a by field_simp] at hh
       use⟨b / a, hh⟩; left; ext; field_simp; ring
 
 instance : Algebra A K :=
@@ -246,7 +246,7 @@ theorem valuation_unit (a : Aˣ) : A.Valuation a = 1 := by
 theorem valuation_eq_one_iff (a : A) : IsUnit a ↔ A.Valuation a = 1 :=
   ⟨fun h => A.valuation_unit h.Unit, fun h =>
     by
-    have ha : (a : K) ≠ 0 := by intro c; rw [c, A.valuation.map_zero] at h ; exact zero_ne_one h
+    have ha : (a : K) ≠ 0 := by intro c; rw [c, A.valuation.map_zero] at h; exact zero_ne_one h
     have ha' : (a : K)⁻¹ ∈ A := by rw [← valuation_le_one_iff, map_inv₀, h, inv_one]
     apply isUnit_of_mul_eq_one a ⟨a⁻¹, ha'⟩; ext; field_simp⟩
 #align valuation_subring.valuation_eq_one_iff ValuationSubring.valuation_eq_one_iff
@@ -423,7 +423,7 @@ theorem ofPrime_idealOfLE (R S : ValuationSubring K) (h : R ≤ S) :
   · rintro ⟨a, r, hr, rfl⟩; apply mul_mem; · exact h a.2
     · rw [← valuation_le_one_iff, map_inv₀, ← inv_one, inv_le_inv₀]
       · exact not_lt.1 ((not_iff_not.2 <| valuation_lt_one_iff S _).1 hr)
-      · intro hh; erw [Valuation.zero_iff, Subring.coe_eq_zero_iff] at hh 
+      · intro hh; erw [Valuation.zero_iff, Subring.coe_eq_zero_iff] at hh
         apply hr; rw [hh]; apply Ideal.zero_mem (R.ideal_of_le S h)
       · exact one_ne_zero
   · intro hx; by_cases hr : x ∈ R; · exact R.le_of_prime _ hr
@@ -449,8 +449,8 @@ theorem idealOfLE_le_of_le (R S : ValuationSubring K) (hR : A ≤ R) (hS : A ≤
     idealOfLE A S hS ≤ idealOfLE A R hR := fun x hx =>
   (valuation_lt_one_iff R _).2
     (by
-      by_contra c; push_neg at c ; replace c := monotone_map_of_le R S h c
-      rw [(map_of_le _ _ _).map_one, map_of_le_valuation_apply] at c 
+      by_contra c; push_neg at c; replace c := monotone_map_of_le R S h c
+      rw [(map_of_le _ _ _).map_one, map_of_le_valuation_apply] at c
       apply not_le_of_lt ((valuation_lt_one_iff S _).1 hx) c)
 #align valuation_subring.ideal_of_le_le_of_le ValuationSubring.idealOfLE_le_of_le
 -/
@@ -475,7 +475,7 @@ def primeSpectrumOrderEquiv : (PrimeSpectrum A)ᵒᵈ ≃o {S | A ≤ S} :=
     map_rel_iff' := fun P Q =>
       ⟨fun h => by
         have := ideal_of_le_le_of_le A _ _ _ _ h
-        iterate 2 erw [ideal_of_le_of_prime] at this 
+        iterate 2 erw [ideal_of_le_of_prime] at this
         exact this, fun h => by apply of_prime_le_of_le; exact h⟩ }
 #align valuation_subring.prime_spectrum_order_equiv ValuationSubring.primeSpectrumOrderEquiv
 -/
@@ -612,7 +612,7 @@ theorem unitGroup_le_unitGroup {A B : ValuationSubring K} : A.unitGroup ≤ B.un
   by
   constructor
   · intro h x hx
-    rw [← A.valuation_le_one_iff x, le_iff_lt_or_eq] at hx 
+    rw [← A.valuation_le_one_iff x, le_iff_lt_or_eq] at hx
     by_cases h_1 : x = 0; · simp only [h_1, zero_mem]
     by_cases h_2 : 1 + x = 0
     · simp only [← add_eq_zero_iff_neg_eq.1 h_2, neg_mem _ _ (one_mem _)]
@@ -624,7 +624,7 @@ theorem unitGroup_le_unitGroup {A B : ValuationSubring K} : A.unitGroup ≤ B.un
     · have := h (show Units.mk0 x h_1 ∈ A.unit_group from hx)
       refine' SetLike.coe_mem (B.unit_group_mul_equiv ⟨_, this⟩ : B)
   · rintro h x (hx : A.valuation x = 1)
-    apply_fun A.map_of_le B h at hx 
+    apply_fun A.map_of_le B h at hx
     simpa using hx
 #align valuation_subring.unit_group_le_unit_group ValuationSubring.unitGroup_le_unitGroup
 -/
@@ -808,7 +808,7 @@ theorem principalUnitGroup_le_principalUnitGroup {A B : ValuationSubring K} :
   · intro h x hx
     by_cases h_1 : x = 0; · simp only [h_1, zero_mem]
     by_cases h_2 : x⁻¹ + 1 = 0
-    · rw [add_eq_zero_iff_eq_neg, inv_eq_iff_eq_inv, inv_neg, inv_one] at h_2 
+    · rw [add_eq_zero_iff_eq_neg, inv_eq_iff_eq_inv, inv_neg, inv_one] at h_2
       simpa only [h_2] using B.neg_mem _ B.one_mem
     · rw [← valuation_le_one_iff, ← not_lt, Valuation.one_lt_val_iff _ h_1, ← add_sub_cancel x⁻¹, ←
         Units.val_mk0 h_2, ← mem_principal_unit_group_iff] at hx ⊢

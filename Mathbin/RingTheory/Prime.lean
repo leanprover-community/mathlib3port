@@ -36,7 +36,7 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
   by
   induction' s using Finset.induction with i s his ih generalizing x y a
   · exact ⟨∅, ∅, x, y, by simp [hx]⟩
-  · rw [prod_insert his, ← mul_assoc] at hx 
+  · rw [prod_insert his, ← mul_assoc] at hx
     have hpi : Prime (p i) := hp i (mem_insert_self _ _)
     rcases ih (fun i hi => hp i (mem_insert_of_mem hi)) hx with
       ⟨t, u, b, c, htus, htu, hbc, rfl, rfl⟩
@@ -44,11 +44,11 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
     have hiu : i ∉ u := fun hiu => his (htus ▸ mem_union_right _ hiu)
     obtain ⟨d, rfl⟩ | ⟨d, rfl⟩ : p i ∣ b ∨ p i ∣ c
     exact hpi.dvd_or_dvd ⟨a, by rw [← hbc, mul_comm]⟩
-    · rw [mul_assoc, mul_comm a, mul_right_inj' hpi.ne_zero] at hbc 
+    · rw [mul_assoc, mul_comm a, mul_right_inj' hpi.ne_zero] at hbc
       exact
         ⟨insert i t, u, d, c, by rw [insert_union, htus], disjoint_insert_left.2 ⟨hiu, htu⟩, by
           simp [hbc, prod_insert hit, mul_assoc, mul_comm, mul_left_comm]⟩
-    · rw [← mul_assoc, mul_right_comm b, mul_left_inj' hpi.ne_zero] at hbc 
+    · rw [← mul_assoc, mul_right_comm b, mul_left_inj' hpi.ne_zero] at hbc
       exact
         ⟨t, insert i u, b, d, by rw [union_insert, htus], disjoint_insert_right.2 ⟨hit, htu⟩, by
           simp [← hbc, prod_insert hiu, mul_assoc, mul_comm, mul_left_comm]⟩

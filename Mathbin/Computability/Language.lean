@@ -222,7 +222,7 @@ theorem kstar_def_nonempty (l : Language α) :
   constructor
   · rintro ⟨S, rfl, h⟩
     refine' ⟨S.filter fun l => ¬List.isEmpty l, by simp, fun y hy => _⟩
-    rw [mem_filter, empty_iff_eq_nil] at hy 
+    rw [mem_filter, empty_iff_eq_nil] at hy
     exact ⟨h y hy.1, hy.2⟩
   · rintro ⟨S, hx, h⟩
     exact ⟨S, hx, fun y hy => (h y hy).1⟩
@@ -298,7 +298,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     · rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
       exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
     · rintro ⟨_ | ⟨a, S⟩, rfl, hn, hS⟩ <;> cases hn
-      rw [forall_mem_cons] at hS 
+      rw [forall_mem_cons] at hS
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 -/

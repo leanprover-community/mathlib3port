@@ -32,7 +32,7 @@ theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
     have A : MeasurableSet {x : α | f x ≠ 0} := (hf (measurable_set_singleton 0)).compl
     refine' ⟨fun x => (f x : ℝ) • g' x, hf.coe_nnreal_real.smul g'meas, _⟩
     apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ {x | f x ≠ 0}
-    · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg' 
+    · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg'
       rw [ae_restrict_iff' A]
       filter_upwards [hg']
       intro a ha h'a
@@ -40,7 +40,7 @@ theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
       rw [ha this]
     · filter_upwards [ae_restrict_mem A.compl]
       intro x hx
-      simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx 
+      simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
       simp [hx]
   · rintro ⟨g', g'meas, hg'⟩
     refine' ⟨fun x => (f x : ℝ)⁻¹ • g' x, hf.coe_nnreal_real.inv.smul g'meas, _⟩
@@ -48,7 +48,7 @@ theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
     filter_upwards [hg']
     intro x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
-    simp only [Ne.def, NNReal.coe_eq_zero] at h'x 
+    simp only [Ne.def, NNReal.coe_eq_zero] at h'x
     simpa only [NNReal.coe_eq_zero, Ne.def] using h'x
 #align ae_measurable_with_density_iff aemeasurable_withDensity_iff
 -/

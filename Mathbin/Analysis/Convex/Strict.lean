@@ -102,7 +102,7 @@ theorem Directed.strictConvex_iUnion {ι : Sort _} {s : ι → Set E} (hdir : Di
     (hs : ∀ ⦃i : ι⦄, StrictConvex 𝕜 (s i)) : StrictConvex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy hxy a b ha hb hab
-  rw [mem_Union] at hx hy 
+  rw [mem_Union] at hx hy
   obtain ⟨i, hx⟩ := hx
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
@@ -290,7 +290,7 @@ theorem StrictConvex.preimage_add_right (hs : StrictConvex 𝕜 s) (z : E) :
   intro x hx y hy hxy a b ha hb hab
   refine' preimage_interior_subset_interior_preimage (continuous_add_left _) _
   have h := hs hx hy ((add_right_injective _).Ne hxy) ha hb hab
-  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h 
+  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h
 #align strict_convex.preimage_add_right StrictConvex.preimage_add_right
 -/
 

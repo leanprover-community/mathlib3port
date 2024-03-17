@@ -163,7 +163,7 @@ instance : MonoidalCategory (F C)
     where
   tensorObj X Y := FreeMonoidalCategory.tensor X Y
   tensorHom X₁ Y₁ X₂ Y₂ :=
-    Quotient.map₂ Hom.tensor <| by intro _ _ h _ _ h'; exact hom_equiv.tensor h h'
+    Quotient.map₂ Hom.whiskerLeft <| by intro _ _ h _ _ h'; exact hom_equiv.tensor h h'
   tensor_id' X Y := Quotient.sound tensor_id
   tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩;
     exact Quotient.sound (tensor_comp _ _ _ _)

@@ -106,7 +106,7 @@ theorem SetTheory.PGame.Domineering.fst_pred_mem_erase_of_mem_right
     {b : SetTheory.PGame.Domineering.Board} {m : ℤ × ℤ}
     (h : m ∈ SetTheory.PGame.Domineering.right b) : (m.1 - 1, m.2) ∈ b.eraseₓ m :=
   by
-  rw [mem_right] at h 
+  rw [mem_right] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
 #align pgame.domineering.fst_pred_mem_erase_of_mem_right SetTheory.PGame.Domineering.fst_pred_mem_erase_of_mem_right
@@ -117,7 +117,7 @@ theorem SetTheory.PGame.Domineering.snd_pred_mem_erase_of_mem_left
     {b : SetTheory.PGame.Domineering.Board} {m : ℤ × ℤ}
     (h : m ∈ SetTheory.PGame.Domineering.left b) : (m.1, m.2 - 1) ∈ b.eraseₓ m :=
   by
-  rw [mem_left] at h 
+  rw [mem_left] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
 #align pgame.domineering.snd_pred_mem_erase_of_mem_left SetTheory.PGame.Domineering.snd_pred_mem_erase_of_mem_left
@@ -195,11 +195,11 @@ instance SetTheory.PGame.Domineering.state : SetTheory.PGame.State SetTheory.PGa
   l s := (SetTheory.PGame.Domineering.left s).image (SetTheory.PGame.Domineering.moveLeft s)
   r s := (SetTheory.PGame.Domineering.right s).image (SetTheory.PGame.Domineering.moveRight s)
   left_bound s t m := by
-    simp only [Finset.mem_image, Prod.exists] at m 
+    simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_left_smaller h
   right_bound s t m := by
-    simp only [Finset.mem_image, Prod.exists] at m 
+    simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
 #align pgame.domineering.state SetTheory.PGame.Domineering.state

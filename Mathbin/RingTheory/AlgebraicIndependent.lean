@@ -177,8 +177,8 @@ theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (range x))) :
     refine' ⟨MvPolynomial.rename (cod_restrict x (range x) mem_range_self) p, _⟩
     simp [Function.comp, aeval_rename]
   intro x y hxy
-  rw [this] at hxy 
-  rw [adjoin_eq_range] at hf_inj 
+  rw [this] at hxy
+  rw [adjoin_eq_range] at hf_inj
   exact hx (hf_inj (h x) (h y) hxy)
 #align algebraic_independent.map AlgebraicIndependent.map
 -/
@@ -194,7 +194,7 @@ theorem of_comp (f : A →ₐ[R] A') (hfv : AlgebraicIndependent R (f ∘ x)) :
     AlgebraicIndependent R x :=
   by
   have : aeval (f ∘ x) = f.comp (aeval x) := by ext <;> simp
-  rw [AlgebraicIndependent, this] at hfv  <;> exact hfv.of_comp
+  rw [AlgebraicIndependent, this] at hfv <;> exact hfv.of_comp
 #align algebraic_independent.of_comp AlgebraicIndependent.of_comp
 -/
 
@@ -282,12 +282,12 @@ theorem algebraicIndependent_finset_map_embedding_subtype (s : Set A)
   let f : t.map (embedding.subtype s) → s := fun x =>
     ⟨x.1, by
       obtain ⟨x, h⟩ := x
-      rw [Finset.mem_map] at h 
+      rw [Finset.mem_map] at h
       obtain ⟨a, ha, rfl⟩ := h
       simp only [Subtype.coe_prop, embedding.coe_subtype]⟩
   convert AlgebraicIndependent.comp li f _
   rintro ⟨x, hx⟩ ⟨y, hy⟩
-  rw [Finset.mem_map] at hx hy 
+  rw [Finset.mem_map] at hx hy
   obtain ⟨a, ha, rfl⟩ := hx
   obtain ⟨b, hb, rfl⟩ := hy
   simp only [imp_self, Subtype.mk_eq_mk]
@@ -476,7 +476,7 @@ def AlgebraicIndependent.aevalEquiv (hx : AlgebraicIndependent R x) :
   · constructor
     · exact (AlgHom.injective_codRestrict _ _ _).2 hx
     · rintro ⟨x, hx⟩
-      rw [adjoin_range_eq_range_aeval] at hx 
+      rw [adjoin_range_eq_range_aeval] at hx
       rcases hx with ⟨y, rfl⟩
       use y
       ext
@@ -653,15 +653,15 @@ theorem AlgebraicIndependent.isTranscendenceBasis_iff {ι : Type w} {R : Type u}
   fconstructor
   · rintro p κ w i' j rfl
     have p := p.2 (range w) i'.coe_range (range_comp_subset_range _ _)
-    rw [range_comp, ← @image_univ _ _ w] at p 
+    rw [range_comp, ← @image_univ _ _ w] at p
     exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
   · intro p
     use i
     intro w i' h
     specialize p w (coe : w → A) i' (fun i => ⟨x i, range_subset_iff.mp h i⟩) (by ext; simp)
     have q := congr_arg (fun s => (coe : w → A) '' s) p.range_eq
-    dsimp at q 
-    rw [← image_univ, image_image] at q 
+    dsimp at q
+    rw [← image_univ, image_image] at q
     simpa using q
 #align algebraic_independent.is_transcendence_basis_iff AlgebraicIndependent.isTranscendenceBasis_iff
 -/

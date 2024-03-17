@@ -74,12 +74,12 @@ theorem polynomialFunctions_closure_eq_top (a b : ℝ) :
     -- Thus we take the statement of the Weierstrass approximation theorem for `[0,1]`,
     have p := polynomialFunctions_closure_eq_top'
     -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
-    apply_fun fun s => s.comap W at p 
-    simp only [Algebra.comap_top] at p 
+    apply_fun fun s => s.comap W at p
+    simp only [Algebra.comap_top] at p
     -- Since the pullback operation is continuous, it commutes with taking `topological_closure`,
-    rw [Subalgebra.topologicalClosure_comap_homeomorph _ W W' w] at p 
+    rw [Subalgebra.topologicalClosure_comap_homeomorph _ W W' w] at p
     -- and precomposing with an affine map takes polynomial functions to polynomial functions.
-    rw [polynomialFunctions.comap_compRightAlgHom_iccHomeoI] at p 
+    rw [polynomialFunctions.comap_compRightAlgHom_iccHomeoI] at p
     -- 🎉
     exact p
   · -- Otherwise, `b ≤ a`, and the interval is a subsingleton,
@@ -117,9 +117,9 @@ theorem exists_polynomial_near_continuousMap (a b : ℝ) (f : C(Set.Icc a b, ℝ
     (pos : 0 < ε) : ∃ p : ℝ[X], ‖p.toContinuousMapOn _ - f‖ < ε :=
   by
   have w := mem_closure_iff_frequently.mp (continuousMap_mem_polynomialFunctions_closure _ _ f)
-  rw [metric.nhds_basis_ball.frequently_iff] at w 
+  rw [metric.nhds_basis_ball.frequently_iff] at w
   obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos
-  rw [Metric.mem_ball, dist_eq_norm] at H 
+  rw [Metric.mem_ball, dist_eq_norm] at H
   exact ⟨m, H⟩
 #align exists_polynomial_near_continuous_map exists_polynomial_near_continuousMap
 -/
@@ -138,7 +138,7 @@ theorem exists_polynomial_near_of_continuousOn (a b : ℝ) (f : ℝ → ℝ)
   let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
   obtain ⟨p, b⟩ := exists_polynomial_near_continuousMap a b f' ε Pos
   use p
-  rw [norm_lt_iff _ Pos] at b 
+  rw [norm_lt_iff _ Pos] at b
   intro x m
   exact b ⟨x, m⟩
 #align exists_polynomial_near_of_continuous_on exists_polynomial_near_of_continuousOn

@@ -31,9 +31,9 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
     ⟨(inl.trans f, inr.trans f), by
       rw [Set.disjoint_left]
       rintro _ ⟨a, h⟩ ⟨b, rfl⟩
-      simp only [trans_apply, inl_apply, inr_apply] at h 
+      simp only [trans_apply, inl_apply, inr_apply] at h
       have : Sum.inl a = Sum.inr b := f.injective h
-      simp only at this 
+      simp only at this
       assumption⟩
   invFun := fun ⟨⟨f, g⟩, disj⟩ =>
     ⟨fun x =>
@@ -42,10 +42,10 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
       | Sum.inr b => g b,
       by
       rintro (a₁ | b₁) (a₂ | b₂) f_eq <;>
-        simp only [Equiv.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq 
+        simp only [Equiv.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq
       · rw [f.injective f_eq]
-      · simp! only at f_eq ; exfalso; exact disj.le_bot ⟨⟨a₁, by simp⟩, ⟨b₂, by simp [f_eq]⟩⟩
-      · simp! only at f_eq ; exfalso; exact disj.le_bot ⟨⟨a₂, by simp⟩, ⟨b₁, by simp [f_eq]⟩⟩
+      · simp! only at f_eq; exfalso; exact disj.le_bot ⟨⟨a₁, by simp⟩, ⟨b₂, by simp [f_eq]⟩⟩
+      · simp! only at f_eq; exfalso; exact disj.le_bot ⟨⟨a₂, by simp⟩, ⟨b₁, by simp [f_eq]⟩⟩
       · rw [g.injective f_eq]⟩
   left_inv f := by dsimp only; ext; cases x <;> simp!
   right_inv := fun ⟨⟨f, g⟩, _⟩ => by simp only [Prod.mk.inj_iff]; constructor <;> ext <;> simp!

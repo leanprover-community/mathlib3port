@@ -100,8 +100,8 @@ theorem primitive_element_inf_aux_exists_c (f g : F[X]) :
   let s := (sf.bind fun α' => sg.map fun β' => -(α' - α) / (β' - β)).toFinset
   let s' := s.preimage ϕ fun x hx y hy h => ϕ.injective h
   obtain ⟨c, hc⟩ := Infinite.exists_not_mem_finset s'
-  simp_rw [Finset.mem_preimage, Multiset.mem_toFinset, Multiset.mem_bind, Multiset.mem_map] at hc 
-  push_neg at hc 
+  simp_rw [Finset.mem_preimage, Multiset.mem_toFinset, Multiset.mem_bind, Multiset.mem_map] at hc
+  push_neg at hc
   exact ⟨c, hc⟩
 #align field.primitive_element_inf_aux_exists_c Field.primitive_element_inf_aux_exists_c
 -/
@@ -174,12 +174,12 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   have h_roots : ∀ x ∈ (h.map ιEE').roots, x = ιEE' β :=
     by
     intro x hx
-    rw [mem_roots_map h_ne_zero] at hx 
+    rw [mem_roots_map h_ne_zero] at hx
     specialize
       hc (ιEE' γ - ιEE' (ιFE c) * x)
         (by
           have f_root := root_left_of_root_gcd hx
-          rw [eval₂_comp, eval₂_sub, eval₂_mul, eval₂_C, eval₂_C, eval₂_X, eval₂_map] at f_root 
+          rw [eval₂_comp, eval₂_sub, eval₂_mul, eval₂_C, eval₂_C, eval₂_X, eval₂_map] at f_root
           exact (mem_roots_map (minpoly.ne_zero hα)).mpr f_root)
     specialize
       hc x

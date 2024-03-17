@@ -363,7 +363,7 @@ theorem AECover.aemeasurable {β : Type _} [MeasurableSpace β] [l.IsCountablyGe
   by
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
-  rwa [measure.restrict_eq_self_of_ae_mem] at this 
+  rwa [measure.restrict_eq_self_of_ae_mem] at this
   filter_upwards [hφ.ae_eventually_mem] with x hx using
     let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
@@ -377,7 +377,7 @@ theorem AECover.aestronglyMeasurable {β : Type _} [TopologicalSpace β] [Pseudo
   by
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_strongly_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
-  rwa [measure.restrict_eq_self_of_ae_mem] at this 
+  rwa [measure.restrict_eq_self_of_ae_mem] at this
   filter_upwards [hφ.ae_eventually_mem] with x hx using
     let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
@@ -1007,7 +1007,7 @@ theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : �
         (hg1.mono_set <| image_subset _ _) (hg2.mono_set i2)
     · rw [min_eq_left hb.le]; exact Ioo_subset_Ioi_self
     · rw [uIcc_of_le hb.le]; exact Icc_subset_Ici_self
-  rw [integrableOn_Ici_iff_integrableOn_Ioi] at hg2 
+  rw [integrableOn_Ici_iff_integrableOn_Ioi] at hg2
   have t2 := interval_integral_tendsto_integral_Ioi _ hg2 tendsto_id
   have : Ioi (f a) ⊆ f '' Ici a :=
     Ioi_subset_Ici_self.trans <|
@@ -1055,7 +1055,7 @@ theorem integral_comp_rpow_Ioi (g : ℝ → E) {p : ℝ} (hp : p ≠ 0) :
     · intro hx; refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
       rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
   have := integral_image_eq_integral_abs_deriv_smul measurableSet_Ioi a1 a2 g
-  rw [a3] at this ; rw [this]
+  rw [a3] at this; rw [this]
   refine' set_integral_congr measurableSet_Ioi _
   intro x hx; dsimp only
   rw [abs_mul, abs_of_nonneg (rpow_nonneg_of_nonneg (le_of_lt hx) _)]
@@ -1123,7 +1123,7 @@ theorem integrableOn_Ioi_comp_rpow_iff [NormedSpace ℝ E] (f : ℝ → E) {p : 
     · intro hx; refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
       rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
   have := integrable_on_image_iff_integrable_on_abs_deriv_smul measurableSet_Ioi a1 a2 f
-  rw [a3] at this 
+  rw [a3] at this
   rw [this]
   refine' integrable_on_congr_fun (fun x hx => _) measurableSet_Ioi
   simp_rw [abs_mul, abs_of_nonneg (rpow_nonneg_of_nonneg (le_of_lt hx) _)]

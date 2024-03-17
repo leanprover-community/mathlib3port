@@ -94,7 +94,7 @@ theorem MellinConvergent.comp_mul_left {f : ℝ → E} {s : ℂ} {a : ℝ} (ha :
     MellinConvergent (fun t => f (a * t)) s ↔ MellinConvergent f s :=
   by
   have := integrable_on_Ioi_comp_mul_left_iff (fun t : ℝ => (t : ℂ) ^ (s - 1) • f t) 0 ha
-  rw [MulZeroClass.mul_zero] at this 
+  rw [MulZeroClass.mul_zero] at this
   have h1 :
     eq_on (fun t : ℝ => (↑(a * t) : ℂ) ^ (s - 1) • f (a * t))
       ((a : ℂ) ^ (s - 1) • fun t : ℝ => (t : ℂ) ^ (s - 1) • f (a * t)) (Ioi 0) :=
@@ -272,7 +272,7 @@ theorem mellin_convergent_top_of_isBigO {f : ℝ → ℝ}
     ∃ c : ℝ, 0 < c ∧ IntegrableOn (fun t : ℝ => t ^ (s - 1) * f t) (Ioi c) :=
   by
   obtain ⟨d, hd, hd'⟩ := hf.exists_pos
-  simp_rw [is_O_with, eventually_at_top] at hd' 
+  simp_rw [is_O_with, eventually_at_top] at hd'
   obtain ⟨e, he⟩ := hd'
   have he' : 0 < max e 1 := zero_lt_one.trans_le (le_max_right _ _)
   refine' ⟨max e 1, he', _, _⟩
@@ -302,7 +302,7 @@ theorem mellin_convergent_zero_of_isBigO {b : ℝ} {f : ℝ → ℝ}
     ∃ c : ℝ, 0 < c ∧ IntegrableOn (fun t : ℝ => t ^ (s - 1) * f t) (Ioc 0 c) :=
   by
   obtain ⟨d, hd, hd'⟩ := hf.exists_pos
-  simp_rw [is_O_with, eventually_nhdsWithin_iff, Metric.eventually_nhds_iff, gt_iff_lt] at hd' 
+  simp_rw [is_O_with, eventually_nhdsWithin_iff, Metric.eventually_nhds_iff, gt_iff_lt] at hd'
   obtain ⟨ε, hε, hε'⟩ := hd'
   refine' ⟨ε, hε, integrable_on_Ioc_iff_integrable_on_Ioo.mpr ⟨_, _⟩⟩
   · refine' ae_strongly_measurable.mul _ (hfc.mono_set Ioo_subset_Ioi_self)
@@ -455,15 +455,15 @@ theorem mellin_hasDerivAt_of_isBigO_rpow [CompleteSpace E] [NormedSpace ℂ E] {
         le_add_of_le_of_nonneg (rpow_le_rpow_of_exponent_le h _)
           (rpow_nonneg_of_nonneg (zero_le_one.trans h) _)
       rw [sub_re, one_re, sub_le_sub_iff_right]
-      rw [mem_ball_iff_norm, Complex.norm_eq_abs] at hz 
+      rw [mem_ball_iff_norm, Complex.norm_eq_abs] at hz
       have hz' := (re_le_abs _).trans hz.le
-      rwa [sub_re, sub_le_iff_le_add'] at hz' 
+      rwa [sub_re, sub_le_iff_le_add'] at hz'
     · refine'
         le_add_of_nonneg_of_le (rpow_pos_of_pos ht _).le (rpow_le_rpow_of_exponent_ge ht h.le _)
       rw [sub_re, one_re, sub_le_iff_le_add, sub_add_cancel]
-      rw [mem_ball_iff_norm', Complex.norm_eq_abs] at hz 
+      rw [mem_ball_iff_norm', Complex.norm_eq_abs] at hz
       have hz' := (re_le_abs _).trans hz.le
-      rwa [sub_re, sub_le_iff_le_add, ← sub_le_iff_le_add'] at hz' 
+      rwa [sub_re, sub_le_iff_le_add, ← sub_le_iff_le_add'] at hz'
   have h5 : integrable_on bound (Ioi 0) :=
     by
     simp_rw [bound, add_mul, mul_assoc]
@@ -580,7 +580,7 @@ theorem hasMellin_cpow_Ioc (a : ℂ) {s : ℂ} (hs : 0 < re s + re a) :
   by
   have := hasMellin_one_Ioc (by rwa [add_re] : 0 < (s + a).re)
   simp_rw [HasMellin, ← MellinConvergent.cpow_smul, ← mellin_cpow_smul, ← indicator_smul,
-    smul_eq_mul, mul_one] at this 
+    smul_eq_mul, mul_one] at this
   exact this
 #align has_mellin_cpow_Ioc hasMellin_cpow_Ioc
 -/

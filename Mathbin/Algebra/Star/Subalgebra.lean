@@ -696,7 +696,7 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
       rintro ⟨x, hx⟩ ⟨y, hy⟩
       ext
       simp only [SetLike.coe_mk, MulMemClass.mk_mul_mk]
-      rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy 
+      rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy
       letI : CommSemiring (Algebra.adjoin R (s ∪ star s)) :=
         Algebra.adjoinCommSemiringOfComm R
           (by
@@ -728,8 +728,8 @@ def adjoinCommRingOfComm (R : Type u) {A : Type v} [CommRing R] [StarRing R] [Ri
 if `x` is normal. -/
 instance adjoinCommSemiringOfIsStarNormal (x : A) [IsStarNormal x] :
     CommSemiring (adjoin R ({x} : Set A)) :=
-  adjoinCommSemiringOfComm R (fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb ; rw [ha, hb])
-    fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb ;
+  adjoinCommSemiringOfComm R (fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb; rw [ha, hb])
+    fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb;
     simpa only [ha, hb] using (star_comm_self' x).symm
 #align star_subalgebra.adjoin_comm_semiring_of_is_star_normal StarSubalgebra.adjoinCommSemiringOfIsStarNormal
 -/
@@ -860,7 +860,7 @@ theorem coe_iInf {ι : Sort _} {S : ι → StarSubalgebra R A} : (↑(⨅ i, S i
 
 #print StarSubalgebra.mem_iInf /-
 theorem mem_iInf {ι : Sort _} {S : ι → StarSubalgebra R A} {x : A} :
-    (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by simp only [iInf, mem_Inf, Set.forall_range_iff]
+    (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by simp only [iInf, mem_Inf, Set.forall_mem_range]
 #align star_subalgebra.mem_infi StarSubalgebra.mem_iInf
 -/
 

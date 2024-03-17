@@ -112,7 +112,7 @@ theorem exists_continuous_snorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠ �
     by
     intro x
     by_cases hv : x ∈ v
-    · rw [← Set.diff_union_of_subset hsv] at hv 
+    · rw [← Set.diff_union_of_subset hsv] at hv
       cases' hv with hsv hs
       ·
         simpa only [hsv.2, Set.indicator_of_not_mem, not_false_iff, sub_zero, hsv,
@@ -221,11 +221,11 @@ theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le [LocallyCompactSpa
   have B : ENNReal.ofReal p ≠ 0 := by simpa only [Ne.def, ENNReal.ofReal_eq_zero, not_le] using hp
   rcases hf.exists_has_compact_support_snorm_sub_le ENNReal.coe_ne_top A with
     ⟨g, g_support, hg, g_cont, g_mem⟩
-  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg 
+  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg
   refine' ⟨g, g_support, _, g_cont, g_mem⟩
   rwa [(hf.sub g_mem).snorm_eq_integral_rpow_norm B ENNReal.coe_ne_top,
     ENNReal.ofReal_le_ofReal_iff I.le, one_div, ENNReal.toReal_ofReal hp.le,
-    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
+    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg
   exact integral_nonneg fun x => Real.rpow_nonneg (norm_nonneg _) _
 #align measure_theory.mem_ℒp.exists_has_compact_support_integral_rpow_sub_le MeasureTheory.Memℒp.exists_hasCompactSupport_integral_rpow_sub_le
 -/
@@ -325,11 +325,11 @@ theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular]
     simp only [Ne.def, ENNReal.ofReal_eq_zero, not_le, I]
   have B : ENNReal.ofReal p ≠ 0 := by simpa only [Ne.def, ENNReal.ofReal_eq_zero, not_le] using hp
   rcases hf.exists_bounded_continuous_snorm_sub_le ENNReal.coe_ne_top A with ⟨g, hg, g_mem⟩
-  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg 
+  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg
   refine' ⟨g, _, g_mem⟩
   rwa [(hf.sub g_mem).snorm_eq_integral_rpow_norm B ENNReal.coe_ne_top,
     ENNReal.ofReal_le_ofReal_iff I.le, one_div, ENNReal.toReal_ofReal hp.le,
-    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
+    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg
   exact integral_nonneg fun x => Real.rpow_nonneg (norm_nonneg _) _
 #align measure_theory.mem_ℒp.exists_bounded_continuous_integral_rpow_sub_le MeasureTheory.Memℒp.exists_boundedContinuous_integral_rpow_sub_le
 -/

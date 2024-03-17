@@ -2146,7 +2146,7 @@ theorem piCongr'_symm_apply_symm_apply (f : ∀ b, Z b) (b : β) :
   generalize_proofs hWb
   revert hWb
   generalize hb : h₁ (h₁.symm b) = b'
-  rw [h₁.apply_symm_apply b] at hb 
+  rw [h₁.apply_symm_apply b] at hb
   subst hb
   simp
 #align equiv.Pi_congr'_symm_apply_symm_apply Equiv.piCongr'_symm_apply_symm_apply

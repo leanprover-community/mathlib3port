@@ -160,7 +160,7 @@ theorem Multiset.cons_congr {α : Type _} (x : α) {xs : Multiset α} {xs' : Lis
 
 theorem Multiset.map_congr {α β : Type _} (f : α → β) {xs : Multiset α} {xs' : List α} {ys : List β}
     (xs_eq : xs = (xs' : Multiset α)) (ys_eq : xs'.map f = ys) : xs.map f = (ys : Multiset β) := by
-  rw [← ys_eq, ← Multiset.coe_map, xs_eq]
+  rw [← ys_eq, ← Multiset.map_coe, xs_eq]
 #align tactic.norm_num.multiset.map_congr Tactic.NormNum.Multiset.map_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -426,7 +426,7 @@ theorem List.prod_congr {α : Type _} [Monoid α] {xs xs' : List α} {z : α} (h
 @[to_additive]
 theorem Multiset.prod_congr {α : Type _} [CommMonoid α] {xs : Multiset α} {xs' : List α} {z : α}
     (h₁ : xs = (xs' : Multiset α)) (h₂ : xs'.Prod = z) : xs.Prod = z := by
-  rw [← h₂, ← Multiset.coe_prod, h₁]
+  rw [← h₂, ← Multiset.prod_coe, h₁]
 #align tactic.norm_num.multiset.prod_congr Tactic.NormNum.Multiset.prod_congr
 #align tactic.norm_num.multiset.sum_congr Tactic.NormNum.Multiset.sum_congr
 
@@ -452,7 +452,7 @@ unsafe def list.prove_sum_map (β ef : expr) (xs : List expr) : tactic (expr × 
 theorem Finset.eval_prod_of_list {β α : Type _} [CommMonoid β] (s : Finset α) (f : α → β)
     {is : List α} (his : is.Nodup) (hs : Finset.mk (↑is) (Multiset.coe_nodup.mpr his) = s) {x : β}
     (hx : (is.map f).Prod = x) : s.Prod f = x := by
-  rw [← hs, Finset.prod_mk, Multiset.coe_map, Multiset.coe_prod, hx]
+  rw [← hs, Finset.prod_mk, Multiset.map_coe, Multiset.prod_coe, hx]
 #align tactic.norm_num.finset.eval_prod_of_list Tactic.NormNum.Finset.eval_prod_of_list
 #align tactic.norm_num.finset.eval_sum_of_list Tactic.NormNum.Finset.eval_sum_of_list
 

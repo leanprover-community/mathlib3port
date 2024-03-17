@@ -65,7 +65,7 @@ variable (M : Type _) [AddMonoidWithOne M] [CharZero M]
 instance CharZero.NeZero.two : NeZero (2 : M) :=
   ⟨by
     have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 (by decide)
-    rwa [Nat.cast_two] at this ⟩
+    rwa [Nat.cast_two] at this⟩
 #align char_zero.ne_zero.two CharZero.NeZero.two
 -/
 
@@ -128,7 +128,7 @@ theorem eq_neg_self_iff {a : R} : a = -a ↔ a = 0 :=
 #print nat_mul_inj /-
 theorem nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 ∨ a = b :=
   by
-  rw [← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero] at h 
+  rw [← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero] at h
   exact_mod_cast h
 #align nat_mul_inj nat_mul_inj
 -/
@@ -142,8 +142,8 @@ theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n 
 #print bit0_injective /-
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
   by
-  dsimp [bit0] at h 
-  simp only [(two_mul a).symm, (two_mul b).symm] at h 
+  dsimp [bit0] at h
+  simp only [(two_mul a).symm, (two_mul b).symm] at h
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
 #align bit0_injective bit0_injective
@@ -152,7 +152,7 @@ theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
 #print bit1_injective /-
 theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h =>
   by
-  simp only [bit1, add_left_inj] at h 
+  simp only [bit1, add_left_inj] at h
   exact bit0_injective h
 #align bit1_injective bit1_injective
 -/
@@ -217,7 +217,7 @@ end
 namespace WithTop
 
 instance {R : Type _} [AddMonoidWithOne R] [CharZero R] : CharZero (WithTop R)
-    where cast_injective m n h := by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h 
+    where cast_injective m n h := by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
 

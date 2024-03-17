@@ -686,7 +686,7 @@ theorem has_good_supp_iff {α : Type u} (x : F α) :
   constructor
   · intro h
     have : liftp (supp x) x := by rw [h] <;> intro u <;> exact id
-    rw [liftp_iff] at this ; rcases this with ⟨a, f, xeq, h'⟩
+    rw [liftp_iff] at this; rcases this with ⟨a, f, xeq, h'⟩
     refine' ⟨a, f, xeq.symm, _⟩
     intro a' f' h''
     rintro u ⟨i, _, hfi⟩
@@ -781,13 +781,13 @@ theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpP
   by
   constructor <;> intro h
   · rintro α p ⟨a, f⟩
-    have h' := h; rw [supp_preservation_iff_uniform] at h' 
-    dsimp only [supp_preservation, supp] at h 
+    have h' := h; rw [supp_preservation_iff_uniform] at h'
+    dsimp only [supp_preservation, supp] at h
     rwa [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, PFunctor.liftp_iff'] <;> try assumption
     · simp only [image_univ, mem_range, exists_imp]
       constructor <;> intros <;> subst_vars <;> solve_by_elim
   · rintro α ⟨a, f⟩
-    simp only [liftp_preservation] at h 
+    simp only [liftp_preservation] at h
     simp only [supp, h]
 #align qpf.supp_preservation_iff_liftp_preservation QPF.suppPreservation_iff_liftpPreservation
 -/

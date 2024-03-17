@@ -38,8 +38,7 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
   calc
     eigenspace f (-q.coeff 0 / q.leadingCoeff) =
         (q.leadingCoeff • f - algebraMap K (End K V) (-q.coeff 0)).ker :=
-      by rw [eigenspace_div]; intro h; rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq ;
-      cases hq
+      by rw [eigenspace_div]; intro h; rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq; cases hq
     _ = (aeval f (C q.leadingCoeff * X + C (q.coeff 0))).ker := by rw [C_mul', aeval_def];
       simp [algebraMap, Algebra.toRingHom]
     _ = (aeval f q).ker := by rwa [← eq_X_add_C_of_degree_eq_one]
@@ -97,8 +96,8 @@ theorem hasEigenvalue_of_isRoot (h : (minpoly K f).IsRoot μ) : f.HasEigenvalue 
     apply minpoly.ne_zero f.is_integral
     rw [hp, Con, MulZeroClass.mul_zero]
   have h_deg := minpoly.degree_le_of_ne_zero K f p_ne_0 _
-  · rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_natDegree p_ne_0] at h_deg 
-    norm_cast at h_deg 
+  · rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_natDegree p_ne_0] at h_deg
+    norm_cast at h_deg
     linarith
   · have h_aeval := minpoly.aeval K f
     revert h_aeval

@@ -174,7 +174,7 @@ variable {H}
 theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy : y ∈ (R ∙ x) ⊔ ↑H)
     (hz : z ∈ (R ∙ x) ⊔ ↑H) : ⁅y, z⁆ ∈ (R ∙ x) ⊔ ↑H :=
   by
-  rw [Submodule.mem_sup] at hy hz 
+  rw [Submodule.mem_sup] at hy hz
   obtain ⟨u₁, hu₁, v, hv : v ∈ H, rfl⟩ := hy
   obtain ⟨u₂, hu₂, w, hw : w ∈ H, rfl⟩ := hz
   obtain ⟨t, rfl⟩ := submodule.mem_span_singleton.mp hu₁
@@ -220,7 +220,7 @@ theorem normalizer_eq_self_iff :
     rw [← h, H.mem_normalizer_iff']
     intro y hy
     replace hx : ⁅_, LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩
-    rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx 
+    rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx
   · let y := LieSubmodule.Quotient.mk' H.to_lie_submodule x
     have hy : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.to_lie_submodule) :=
       by

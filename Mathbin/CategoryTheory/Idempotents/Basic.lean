@@ -81,7 +81,7 @@ theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
               constructor
               · erw [assoc, h₂, ← limits.fork.condition s, comp_id]
               · intro m hm
-                rw [fork.ι_of_ι] at hm 
+                rw [fork.ι_of_ι] at hm
                 rw [← hm]
                 simp only [← hm, assoc, h₁]
                 exact (comp_id m).symm }⟩

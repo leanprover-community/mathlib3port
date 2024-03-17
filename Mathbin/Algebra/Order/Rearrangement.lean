@@ -73,8 +73,8 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
   set τ : perm ι := σ.trans (swap a (σ a)) with hτ
   have hτs : {x | τ x ≠ x} ⊆ s := by
     intro x hx
-    simp only [Ne.def, Set.mem_setOf_eq, Equiv.coe_trans, Equiv.swap_comp_apply] at hx 
-    split_ifs at hx  with h₁ h₂ h₃
+    simp only [Ne.def, Set.mem_setOf_eq, Equiv.coe_trans, Equiv.swap_comp_apply] at hx
+    split_ifs at hx with h₁ h₂ h₃
     · obtain rfl | hax := eq_or_ne x a
       · contradiction
       · exact mem_of_mem_insert_of_ne (hσ fun h => hax <| h.symm.trans h₁) hax
@@ -86,24 +86,24 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
   obtain hσa | hσa := eq_or_ne a (σ a)
   · rw [hτ, ← hσa, swap_self, trans_refl]
   have h1s : σ⁻¹ a ∈ s := by
-    rw [Ne.def, ← inv_eq_iff_eq] at hσa 
+    rw [Ne.def, ← inv_eq_iff_eq] at hσa
     refine' mem_of_mem_insert_of_ne (hσ fun h => hσa _) hσa
-    rwa [apply_inv_self, eq_comm] at h 
+    rwa [apply_inv_self, eq_comm] at h
   simp only [← s.sum_erase_add _ h1s, add_comm]
   rw [← add_assoc, ← add_assoc]
   simp only [hτ, swap_apply_left, Function.comp_apply, Equiv.coe_trans, apply_inv_self]
   refine' add_le_add (smul_add_smul_le_smul_add_smul' _ _) (sum_congr rfl fun x hx => _).le
   · specialize hamax (σ⁻¹ a) h1s
-    rw [Prod.Lex.le_iff] at hamax 
+    rw [Prod.Lex.le_iff] at hamax
     cases hamax
     · exact hfg (mem_insert_of_mem h1s) (mem_insert_self _ _) hamax
     · exact hamax.2
   · specialize hamax (σ a) (mem_of_mem_insert_of_ne (hσ <| σ.injective.ne hσa.symm) hσa.symm)
-    rw [Prod.Lex.le_iff] at hamax 
+    rw [Prod.Lex.le_iff] at hamax
     cases hamax
     · exact hamax.le
     · exact hamax.1.le
-  · rw [mem_erase, Ne.def, eq_inv_iff_eq] at hx 
+  · rw [mem_erase, Ne.def, eq_inv_iff_eq] at hx
     rw [swap_apply_of_ne_of_ne hx.1 (σ.injective.ne _)]
     rintro rfl
     exact has hx.2
@@ -119,8 +119,8 @@ theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s)
     ∑ i in s, f i • g (σ i) = ∑ i in s, f i • g i ↔ MonovaryOn f (g ∘ σ) s := by
   classical
   refine' ⟨not_imp_not.1 fun h => _, fun h => (hfg.sum_smul_comp_perm_le_sum_smul hσ).antisymm _⟩
-  · rw [MonovaryOn] at h 
-    push_neg at h 
+  · rw [MonovaryOn] at h
+    push_neg at h
     obtain ⟨x, hx, y, hy, hgxy, hfxy⟩ := h
     set τ : perm ι := (swap x y).trans σ
     have hτs : {x | τ x ≠ x} ⊆ s :=
@@ -135,7 +135,7 @@ theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s)
     refine'
       add_lt_add_of_le_of_lt (Finset.sum_congr rfl fun z hz => _).le
         (smul_add_smul_lt_smul_add_smul hfxy hgxy)
-    simp_rw [mem_erase] at hz 
+    simp_rw [mem_erase] at hz
     rw [swap_apply_of_ne_of_ne hz.2.1 hz.1]
   · convert h.sum_smul_comp_perm_le_sum_smul ((set_support_inv_eq _).Subset.trans hσ) using 1
     simp_rw [Function.comp_apply, apply_inv_self]

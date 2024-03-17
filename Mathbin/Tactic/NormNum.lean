@@ -1197,7 +1197,7 @@ unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cach
 #align norm_num.prove_inv norm_num.prove_inv
 
 theorem div_eq {α} [DivisionRing α] (a b b' c : α) (hb : b⁻¹ = b') (h : a * b' = c) : a / b = c :=
-  by rwa [← hb, ← div_eq_mul_inv] at h 
+  by rwa [← hb, ← div_eq_mul_inv] at h
 #align norm_num.div_eq NormNum.div_eq
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a / b = c)`. -/
@@ -1225,7 +1225,7 @@ unsafe def prove_neg (ic : instance_cache) (a : expr) : tactic (instance_cache �
 #align norm_num.prove_neg norm_num.prove_neg
 
 theorem sub_pos {α} [AddGroup α] (a b b' c : α) (hb : -b = b') (h : a + b' = c) : a - b = c := by
-  rwa [← hb, ← sub_eq_add_neg] at h 
+  rwa [← hb, ← sub_eq_add_neg] at h
 #align norm_num.sub_pos NormNum.sub_pos
 
 theorem sub_neg {α} [AddGroup α] (a b c : α) (h : a + b = c) : a - -b = c := by rwa [sub_neg_eq_add]

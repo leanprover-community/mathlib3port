@@ -402,7 +402,7 @@ theorem sup_vanishingIdeal_le (t t' : Set (ProjectiveSpectrum 𝒜)) :
   rw [← HomogeneousIdeal.mem_iff, HomogeneousIdeal.toIdeal_sup, mem_vanishing_ideal,
     Submodule.mem_sup]
   rintro ⟨f, hf, g, hg, rfl⟩ x ⟨hxt, hxt'⟩
-  erw [mem_vanishing_ideal] at hf hg 
+  erw [mem_vanishing_ideal] at hf hg
   apply Submodule.add_mem <;> solve_by_elim
 #align projective_spectrum.sup_vanishing_ideal_le ProjectiveSpectrum.sup_vanishingIdeal_le
 -/
@@ -461,8 +461,8 @@ theorem zeroLocus_vanishingIdeal_eq_closure (t : Set (ProjectiveSpectrum 𝒜)) 
   by
   apply Set.Subset.antisymm
   · rintro x hx t' ⟨ht', ht⟩
-    obtain ⟨fs, rfl⟩ : ∃ s, t' = zero_locus 𝒜 s := by rwa [is_closed_iff_zero_locus] at ht' 
-    rw [subset_zero_locus_iff_subset_vanishing_ideal] at ht 
+    obtain ⟨fs, rfl⟩ : ∃ s, t' = zero_locus 𝒜 s := by rwa [is_closed_iff_zero_locus] at ht'
+    rw [subset_zero_locus_iff_subset_vanishing_ideal] at ht
     exact Set.Subset.trans ht hx
   · rw [(is_closed_zero_locus _ _).closure_subset_iff]
     exact subset_zero_locus_vanishing_ideal 𝒜 t
@@ -474,9 +474,9 @@ theorem vanishingIdeal_closure (t : Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (closure t) = vanishingIdeal t :=
   by
   have := (gc_ideal 𝒜).u_l_u_eq_u t
-  dsimp only at this 
+  dsimp only at this
   ext1
-  erw [zero_locus_vanishing_ideal_eq_closure 𝒜 t] at this 
+  erw [zero_locus_vanishing_ideal_eq_closure 𝒜 t] at this
   exact this
 #align projective_spectrum.vanishing_ideal_closure ProjectiveSpectrum.vanishingIdeal_closure
 -/
@@ -589,7 +589,7 @@ theorem isTopologicalBasis_basic_opens :
   · rintro _ ⟨r, rfl⟩
     exact is_open_basic_open 𝒜
   · rintro p U hp ⟨s, hs⟩
-    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zero_locus, Set.not_subset] at hp 
+    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zero_locus, Set.not_subset] at hp
     obtain ⟨f, hfs, hfp⟩ := hp
     refine' ⟨basic_open 𝒜 f, ⟨f, rfl⟩, hfp, _⟩
     rw [← Set.compl_subset_compl, ← hs, basic_open_eq_zero_locus_compl, compl_compl]

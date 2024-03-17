@@ -167,8 +167,8 @@ open CategoryTheory.Limits.WalkingParallelPair
 theorem eqvGen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
     EqvGen (Types.CoequalizerRel 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap) x y :=
   by
-  delta glue_data.π multicoequalizer.sigma_π at h 
-  simp_rw [comp_app] at h 
+  delta glue_data.π multicoequalizer.sigma_π at h
+  simp_rw [comp_app] at h
   replace h := (TopCat.mono_iff_injective (multicoequalizer.iso_coequalizer 𝖣.diagram).inv).mp _ h
   let diagram := parallel_pair 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap ⋙ forget _
   have : colimit.ι diagram one x = colimit.ι diagram one y :=
@@ -184,7 +184,7 @@ theorem eqvGen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
         this :
       _)
   simp only [eq_to_hom_refl, types_comp_apply, colimit.ι_map_assoc,
-    diagram_iso_parallel_pair_hom_app, colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this 
+    diagram_iso_parallel_pair_hom_app, colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this
   exact Quot.eq.1 this
   infer_instance
 #align Top.glue_data.eqv_gen_of_π_eq TopCat.GlueData.eqvGen_of_π_eq
@@ -347,7 +347,7 @@ structure MkCore where
 theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x :=
   by
   have := h.cocycle j i j x _
-  rw [h.t_id] at this 
+  rw [h.t_id] at this
   convert Subtype.eq this
   · ext; rfl
   all_goals rw [h.V_id]; trivial
@@ -451,8 +451,8 @@ theorem fromOpenSubsetsGlue_injective : Function.Injective (fromOpenSubsetsGlue 
   intro x y e
   obtain ⟨i, ⟨x, hx⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
   obtain ⟨j, ⟨y, hy⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective y
-  rw [ι_from_open_subsets_glue_apply, ι_from_open_subsets_glue_apply] at e 
-  change x = y at e 
+  rw [ι_from_open_subsets_glue_apply, ι_from_open_subsets_glue_apply] at e
+  change x = y at e
   subst e
   rw [(of_open_subsets U).ι_eq_iff_rel]
   right
@@ -464,7 +464,7 @@ theorem fromOpenSubsetsGlue_injective : Function.Injective (fromOpenSubsetsGlue 
 theorem fromOpenSubsetsGlue_isOpenMap : IsOpenMap (fromOpenSubsetsGlue U) :=
   by
   intro s hs
-  rw [(of_open_subsets U).isOpen_iff] at hs 
+  rw [(of_open_subsets U).isOpen_iff] at hs
   rw [isOpen_iff_forall_mem_open]
   rintro _ ⟨x, hx, rfl⟩
   obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x

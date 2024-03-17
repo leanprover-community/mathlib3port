@@ -189,7 +189,7 @@ theorem exists_mem_iterate_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f
     ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
   wlog hlt : i < j generalizing i j
   · exact this j hj i hi hij.symm hxj hxi (hij.lt_or_lt.resolve_left hlt)
-  simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj 
+  simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
   refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩
   rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
 #align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_iterate_mem_of_volume_lt_mul_volume

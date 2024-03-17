@@ -143,7 +143,7 @@ theorem isLimit_iff_isSheafFor :
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_pi]; constructor
   · intro hu E x hx; specialize hu hx.cone
-    erw [(hom_equiv_amalgamation hx).uniqueCongr.nonempty_congr] at hu 
+    erw [(hom_equiv_amalgamation hx).uniqueCongr.nonempty_congr] at hu
     exact (unique_subtype_iff_exists_unique _).1 hu
   · rintro h ⟨E, π⟩; let eqv := cones_equiv_sieve_compatible_family P S (op E)
     rw [← eqv.left_inv π]; erw [(hom_equiv_amalgamation (eqv π).2).uniqueCongr.nonempty_congr]
@@ -161,7 +161,7 @@ theorem subsingleton_iff_isSeparatedFor :
   by
   constructor
   · intro hs E x t₁ t₂ h₁ h₂; have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
-    rw [compatible_iff_sieve_compatible] at hx ; specialize hs hx.cone; cases hs
+    rw [compatible_iff_sieve_compatible] at hx; specialize hs hx.cone; cases hs
     have := (hom_equiv_amalgamation hx).symm.Injective
     exact Subtype.ext_iff.1 (@this ⟨t₁, h₁⟩ ⟨t₂, h₂⟩ (hs _ _))
   · rintro h ⟨E, π⟩; let eqv := cones_equiv_sieve_compatible_family P S (op E); constructor
@@ -684,8 +684,8 @@ theorem isSheaf_iff_isSheaf' : IsSheaf J P ↔ IsSheaf' J P :=
     apply coyoneda_jointly_reflects_limits
     intro X
     have q : presieve.is_sheaf_for (P ⋙ coyoneda.obj X) _ := h X.unop _ hR
-    rw [← presieve.is_sheaf_for_iff_generate] at q 
-    rw [equalizer.presieve.sheaf_condition] at q 
+    rw [← presieve.is_sheaf_for_iff_generate] at q
+    rw [equalizer.presieve.sheaf_condition] at q
     replace q := Classical.choice q
     apply (is_sheaf_for_is_sheaf_for' _ _ _ _).symm q
   · intro h U X S hS

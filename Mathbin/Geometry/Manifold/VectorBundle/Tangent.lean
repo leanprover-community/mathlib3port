@@ -354,7 +354,7 @@ instance tangentBundleCore.isSmooth : (tangentBundleCore I M).IsSmooth I :=
   rw [SmoothOn, contMDiffOn_iff_source_of_mem_maximalAtlas (subset_maximal_atlas I i.2),
     contMDiffOn_iff_contDiffOn]
   refine' ((contDiffOn_fderiv_coord_change I i j).congr fun x hx => _).mono _
-  · rw [PartialEquiv.trans_source'] at hx 
+  · rw [PartialEquiv.trans_source'] at hx
     simp_rw [Function.comp_apply, tangentBundleCore_coordChange, (i.1.extend I).right_inv hx.1]
   · exact (i.1.extend_image_source_inter j.1 I).Subset
   · apply inter_subset_left

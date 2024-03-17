@@ -198,7 +198,7 @@ theorem bind_congr {f g : α → Multiset β} {m : Multiset α} :
 #print Multiset.bind_hcongr /-
 theorem bind_hcongr {β' : Type _} {m : Multiset α} {f : α → Multiset β} {f' : α → Multiset β'}
     (h : β = β') (hf : ∀ a ∈ m, HEq (f a) (f' a)) : HEq (bind m f) (bind m f') := by subst h;
-  simp at hf ; simp [bind_congr hf]
+  simp at hf; simp [bind_congr hf]
 #align multiset.bind_hcongr Multiset.bind_hcongr
 -/
 

@@ -64,7 +64,7 @@ open Ordinal
 theorem ord_isLimit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit :=
   by
   refine' ⟨fun h => aleph_0_ne_zero _, fun a => lt_imp_lt_of_le_imp_le fun h => _⟩
-  · rw [← Ordinal.le_zero, ord_le] at h 
+  · rw [← Ordinal.le_zero, ord_le] at h
     simpa only [card_zero, nonpos_iff_eq_zero] using co.trans h
   · rw [ord_le] at h ⊢
     rwa [← @add_one_of_aleph_0_le (card a), ← card_succ]
@@ -546,7 +546,7 @@ theorem beth_strictMono : StrictMono beth := by
   intro h
   rcases zero_or_succ_or_limit b with (rfl | ⟨c, rfl⟩ | hb)
   · exact (Ordinal.not_lt_zero a h).elim
-  · rw [lt_succ_iff] at h 
+  · rw [lt_succ_iff] at h
     rw [beth_succ]
     apply lt_of_le_of_lt _ (cantor _)
     rcases eq_or_lt_of_le h with (rfl | h); · rfl
@@ -657,7 +657,7 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c :=
       by
       intro q h
       simp only [s, embedding.coe_fn_mk, Order.Preimage, typein_lt_typein, Prod.lex_def,
-        typein_inj] at h 
+        typein_inj] at h
       exact max_le_iff.1 (le_iff_lt_or_eq.2 <| h.imp_right And.left)
     suffices H : (insert (g p) {x | r x (g p)} : Set α) ≃ Sum {x | r x (g p)} PUnit
     ·
@@ -845,12 +845,12 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
     · have : a ≠ 0 := by rintro rfl; exact ha.not_lt aleph_0_pos
       left; use ha
       · rw [← not_lt]; exact fun hb => ne_of_gt (hb.trans_le (le_mul_left this)) h
-      · rintro rfl; apply this; rw [MulZeroClass.mul_zero] at h ; exact h.symm
+      · rintro rfl; apply this; rw [MulZeroClass.mul_zero] at h; exact h.symm
     right; by_cases h2a : a = 0; · exact Or.inr h2a
-    have hb : b ≠ 0 := by rintro rfl; apply h2a; rw [MulZeroClass.mul_zero] at h ; exact h.symm
-    left; rw [← h, mul_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha 
+    have hb : b ≠ 0 := by rintro rfl; apply h2a; rw [MulZeroClass.mul_zero] at h; exact h.symm
+    left; rw [← h, mul_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha
     rcases ha with (rfl | rfl | ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩); contradiction; contradiction
-    rw [← Ne] at h2a ; rw [← one_le_iff_ne_zero] at h2a hb ; norm_cast at h2a hb h ⊢
+    rw [← Ne] at h2a; rw [← one_le_iff_ne_zero] at h2a hb; norm_cast at h2a hb h ⊢
     apply le_antisymm _ hb; rw [← not_lt]
     apply fun h2b => ne_of_gt _ h; conv_lhs => rw [← mul_one n]
     rwa [mul_lt_mul_left]; apply Nat.lt_of_succ_le h2a
@@ -963,7 +963,7 @@ theorem add_eq_left_iff {a b : Cardinal} : a + b = a ↔ max ℵ₀ b ≤ a ∨ 
   · cases' le_or_lt ℵ₀ a with ha ha
     · left; use ha; rw [← not_lt]; apply fun hb => ne_of_gt _ h
       exact hb.trans_le (self_le_add_left b a)
-    right; rw [← h, add_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha 
+    right; rw [← h, add_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha
     rcases ha with ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩; norm_cast at h ⊢
     rw [← add_right_inj, h, add_zero]
   · rintro (⟨h1, h2⟩ | h3)
@@ -1002,7 +1002,7 @@ protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (
     b = c := by
   cases' le_or_lt ℵ₀ b with hb hb
   · have : a < b := ha.trans_le hb
-    rw [add_eq_right hb this.le, eq_comm] at h 
+    rw [add_eq_right hb this.le, eq_comm] at h
     rw [eq_of_add_eq_of_aleph_0_le h this hb]
   · have hc : c < ℵ₀ := by
       rw [← not_le]; intro hc
@@ -1016,7 +1016,7 @@ protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (
 
 #print Cardinal.eq_of_add_eq_add_right /-
 protected theorem eq_of_add_eq_add_right {a b c : Cardinal} (h : a + b = c + b) (hb : b < ℵ₀) :
-    a = c := by rw [add_comm a b, add_comm c b] at h ; exact Cardinal.eq_of_add_eq_add_left h hb
+    a = c := by rw [add_comm a b, add_comm c b] at h; exact Cardinal.eq_of_add_eq_add_left h hb
 #align cardinal.eq_of_add_eq_add_right Cardinal.eq_of_add_eq_add_right
 -/
 
@@ -1330,9 +1330,9 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
   use fun y => if h : ∃ x : s, g x = y then Sum.inl (Classical.choose h).val else Sum.inr ⟨⟩
   apply Subtype.eq; ext
   constructor
-  · rintro ⟨y, h⟩; dsimp only at h ; by_cases h' : ∃ z : s, g z = y
-    · rw [dif_pos h'] at h ; cases Sum.inl.inj h; exact (Classical.choose h').2
-    · rw [dif_neg h'] at h ; cases h
+  · rintro ⟨y, h⟩; dsimp only at h; by_cases h' : ∃ z : s, g z = y
+    · rw [dif_pos h'] at h; cases Sum.inl.inj h; exact (Classical.choose h').2
+    · rw [dif_neg h'] at h; cases h
   · intro h; have : ∃ z : s, g z = g ⟨x, h⟩ := ⟨⟨x, h⟩, rfl⟩
     use g ⟨x, h⟩; dsimp only; rw [dif_pos this]; congr
     suffices : Classical.choose this = ⟨x, h⟩; exact congr_arg Subtype.val this
@@ -1401,7 +1401,7 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α]
   classical
   lift s to Finset α using s.to_finite
   lift t to Finset β using t.to_finite
-  simp only [Finset.coe_sort_coe, mk_coe_finset, lift_nat_cast, Nat.cast_inj] at h2 
+  simp only [Finset.coe_sort_coe, mk_coe_finset, lift_nat_cast, Nat.cast_inj] at h2
   simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
     lift_nat_cast, Nat.cast_inj, h1, h2]
 #align cardinal.mk_compl_eq_mk_compl_finite_lift Cardinal.mk_compl_eq_mk_compl_finite_lift
@@ -1442,7 +1442,7 @@ theorem extend_function_finite {α β : Type _} [Finite α] {s : Set α} (f : s 
   by
   apply extend_function f
   cases' id h with g
-  rw [← lift_mk_eq] at h 
+  rw [← lift_mk_eq] at h
   rw [← lift_mk_eq, mk_compl_eq_mk_compl_finite_lift h]
   rw [mk_range_eq_lift]; exact f.2
 #align cardinal.extend_function_finite Cardinal.extend_function_finite

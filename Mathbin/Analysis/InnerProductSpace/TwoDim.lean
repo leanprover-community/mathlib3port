@@ -198,7 +198,7 @@ theorem areaForm_comp_linearIsometryEquiv (φ : E ≃ₗᵢ[ℝ] E)
   by
   convert o.area_form_map φ (φ x) (φ y)
   · symm
-    rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ 
+    rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ
     rw [Fact.out (finrank ℝ E = 2), Fintype.card_fin]
   · simp
   · simp
@@ -427,7 +427,7 @@ theorem linearIsometryEquiv_comp_rightAngleRotation (φ : E ≃ₗᵢ[ℝ] E)
   convert (o.right_angle_rotation_map φ (φ x)).symm
   · simp
   · symm
-    rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ 
+    rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ
     rw [Fact.out (finrank ℝ E = 2), Fintype.card_fin]
 #align orientation.linear_isometry_equiv_comp_right_angle_rotation Orientation.linearIsometryEquiv_comp_rightAngleRotation
 -/

@@ -139,7 +139,7 @@ theorem lt_pow_iff_log_lt {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : y ≠ 0) : y 
 theorem pow_le_of_le_log {b x y : ℕ} (hy : y ≠ 0) (h : x ≤ log b y) : b ^ x ≤ y :=
   by
   refine' (le_or_lt b 1).elim (fun hb => _) fun hb => (pow_le_iff_le_log hb hy).2 h
-  rw [log_of_left_le_one hb, nonpos_iff_eq_zero] at h 
+  rw [log_of_left_le_one hb, nonpos_iff_eq_zero] at h
   rwa [h, pow_zero, one_le_iff_ne_zero]
 #align nat.pow_le_of_le_log Nat.pow_le_of_le_log
 -/
@@ -185,7 +185,7 @@ theorem log_eq_iff {b m n : ℕ} (h : m ≠ 0 ∨ 1 < b ∧ n ≠ 0) :
     rw [le_antisymm_iff, ← lt_succ_iff, ← pow_le_iff_le_log, ← lt_pow_iff_log_lt, and_comm] <;>
       assumption
   · have hm : m ≠ 0 := h.resolve_right hbn
-    rw [not_and_or, not_lt, Ne.def, Classical.not_not] at hbn 
+    rw [not_and_or, not_lt, Ne.def, Classical.not_not] at hbn
     rcases hbn with (hb | rfl)
     ·
       simpa only [log_of_left_le_one hb, hm.symm, false_iff_iff, not_and, not_lt] using
@@ -200,7 +200,7 @@ theorem log_eq_iff {b m n : ℕ} (h : m ≠ 0 ∨ 1 < b ∧ n ≠ 0) :
 theorem log_eq_of_pow_le_of_lt_pow {b m n : ℕ} (h₁ : b ^ m ≤ n) (h₂ : n < b ^ (m + 1)) :
     log b n = m := by
   rcases eq_or_ne m 0 with (rfl | hm)
-  · rw [pow_one] at h₂ ; exact log_of_lt h₂
+  · rw [pow_one] at h₂; exact log_of_lt h₂
   · exact (log_eq_iff (Or.inl hm)).2 ⟨h₁, h₂⟩
 #align nat.log_eq_of_pow_le_of_lt_pow Nat.log_eq_of_pow_le_of_lt_pow
 -/

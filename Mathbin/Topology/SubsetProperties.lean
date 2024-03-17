@@ -351,7 +351,7 @@ theorem IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed {ι : 
   by
   let i₀ := hι.some
   suffices (Z i₀ ∩ ⋂ i, Z i).Nonempty by
-    rwa [inter_eq_right_iff_subset.mpr (Inter_subset _ i₀)] at this 
+    rwa [inter_eq_right_iff_subset.mpr (Inter_subset _ i₀)] at this
   simp only [nonempty_iff_ne_empty] at hZn ⊢
   apply mt ((hZc i₀).elim_directed_family_closed Z hZcl)
   push_neg
@@ -403,10 +403,10 @@ theorem isCompact_of_finite_subfamily_closed
     have : ¬∃ x ∈ s, ∀ t ∈ f.sets, x ∈ closure t := fun ⟨x, hxs, hx⟩ =>
       by
       have : ∅ ∈ 𝓝 x ⊓ f := by rw [empty_mem_iff_bot, hf x hxs]
-      let ⟨t₁, ht₁, t₂, ht₂, ht⟩ := by rw [mem_inf_iff] at this  <;> exact this
+      let ⟨t₁, ht₁, t₂, ht₂, ht⟩ := by rw [mem_inf_iff] at this <;> exact this
       have : ∅ ∈ 𝓝[t₂] x := by rw [ht, inter_comm]; exact inter_mem_nhdsWithin _ ht₁
-      have : 𝓝[t₂] x = ⊥ := by rwa [empty_mem_iff_bot] at this 
-      simp only [closure_eq_cluster_pts] at hx  <;> exact (hx t₂ ht₂).Ne this
+      have : 𝓝[t₂] x = ⊥ := by rwa [empty_mem_iff_bot] at this
+      simp only [closure_eq_cluster_pts] at hx <;> exact (hx t₂ ht₂).Ne this
     let ⟨t, ht⟩ :=
       h (fun i : f.sets => closure i.1) (fun i => isClosed_closure)
         (by simpa [eq_empty_iff_forall_not_mem, not_exists])
@@ -415,11 +415,11 @@ theorem isCompact_of_finite_subfamily_closed
     have : ∅ ∈ f :=
       mem_of_superset this fun x ⟨hxs, hx⟩ =>
         let ⟨i, hit, hxi⟩ :=
-          show ∃ i ∈ t, x ∉ closure (Subtype.val i) by rw [eq_empty_iff_forall_not_mem] at ht ;
+          show ∃ i ∈ t, x ∉ closure (Subtype.val i) by rw [eq_empty_iff_forall_not_mem] at ht;
             simpa [hxs, Classical.not_forall] using ht x
-        have : x ∈ closure i.val := subset_closure (by rw [mem_Inter₂] at hx ; exact hx i hit)
+        have : x ∈ closure i.val := subset_closure (by rw [mem_Inter₂] at hx; exact hx i hit)
         show False from hxi this
-    hfn.Ne <| by rwa [empty_mem_iff_bot] at this 
+    hfn.Ne <| by rwa [empty_mem_iff_bot] at this
 #align is_compact_of_finite_subfamily_closed isCompact_of_finite_subfamily_closed
 -/
 
@@ -481,7 +481,7 @@ theorem IsCompact.eventually_forall_of_forall_eventually {x₀ : α} {K : Set β
     exacts [h1 y hys, h2 y hyt]
   · intro y hyK
     specialize hP y hyK
-    rw [nhds_prod_eq, eventually_prod_iff] at hP 
+    rw [nhds_prod_eq, eventually_prod_iff] at hP
     rcases hP with ⟨p, hp, q, hq, hpq⟩
     exact ⟨{y | q y}, mem_nhdsWithin_of_mem_nhds hq, eventually_of_mem hp @hpq⟩
 #align is_compact.eventually_forall_of_forall_eventually IsCompact.eventually_forall_of_forall_eventually
@@ -563,7 +563,7 @@ theorem IsCompact.finite_of_discrete [DiscreteTopology α] {s : Set α} (hs : Is
     s.Finite := by
   have : ∀ x : α, ({x} : Set α) ∈ 𝓝 x := by simp [nhds_discrete]
   rcases hs.elim_nhds_subcover (fun x => {x}) fun x hx => this x with ⟨t, hts, hst⟩
-  simp only [← t.set_bUnion_coe, bUnion_of_singleton] at hst 
+  simp only [← t.set_bUnion_coe, bUnion_of_singleton] at hst
   exact t.finite_to_set.subset hst
 #align is_compact.finite_of_discrete IsCompact.finite_of_discrete
 -/
@@ -710,7 +710,7 @@ theorem Tendsto.isCompact_insert_range_of_cocompact {f : α → β} {b}
   intro l hne hle
   by_cases hb : ClusterPt b l; · exact ⟨b, Or.inl rfl, hb⟩
   simp only [clusterPt_iff, Classical.not_forall, ← not_disjoint_iff_nonempty_inter,
-    Classical.not_not] at hb 
+    Classical.not_not] at hb
   rcases hb with ⟨s, hsb, t, htl, hd⟩
   rcases mem_cocompact.1 (hf hsb) with ⟨K, hKc, hKs⟩
   have : f '' K ∈ l :=
@@ -729,7 +729,7 @@ theorem Tendsto.isCompact_insert_range_of_cofinite {f : ι → α} {a} (hf : Ten
     IsCompact (insert a (range f)) :=
   by
   letI : TopologicalSpace ι := ⊥; haveI := discreteTopology_bot ι
-  rw [← cocompact_eq_cofinite] at hf 
+  rw [← cocompact_eq_cofinite] at hf
   exact hf.is_compact_insert_range_of_cocompact continuous_of_discreteTopology
 #align filter.tendsto.is_compact_insert_range_of_cofinite Filter.Tendsto.isCompact_insert_range_of_cofinite
 -/
@@ -832,7 +832,7 @@ theorem NhdsContainBoxes.symm {s : Set α} {t : Set β} :
     NhdsContainBoxes s t → NhdsContainBoxes t s := fun H n hn hp =>
   let ⟨u, v, uo, vo, su, tv, p⟩ :=
     H (Prod.swap ⁻¹' n) (hn.Preimage continuous_swap) (by rwa [← image_subset_iff, image_swap_prod])
-  ⟨v, u, vo, uo, tv, su, by rwa [← image_subset_iff, image_swap_prod] at p ⟩
+  ⟨v, u, vo, uo, tv, su, by rwa [← image_subset_iff, image_swap_prod] at p⟩
 #align nhds_contain_boxes.symm NhdsContainBoxes.symm
 
 theorem NhdsContainBoxes.comm {s : Set α} {t : Set β} :
@@ -974,7 +974,7 @@ theorem IsCompact.ne_univ [NoncompactSpace α] {s : Set α} (hs : IsCompact s) :
 instance [NoncompactSpace α] : NeBot (Filter.cocompact α) :=
   by
   refine' filter.has_basis_cocompact.ne_bot_iff.2 fun s hs => _
-  contrapose hs; rw [not_nonempty_iff_eq_empty, compl_empty_iff] at hs 
+  contrapose hs; rw [not_nonempty_iff_eq_empty, compl_empty_iff] at hs
   rw [hs]; exact noncompact_univ α
 
 #print Filter.cocompact_eq_bot /-
@@ -1020,7 +1020,7 @@ theorem finite_of_compact_of_discrete [CompactSpace α] [DiscreteTopology α] : 
 theorem exists_nhds_ne_neBot (α : Type _) [TopologicalSpace α] [CompactSpace α] [Infinite α] :
     ∃ z : α, (𝓝[≠] z).ne_bot := by
   by_contra! H
-  simp_rw [not_ne_bot] at H 
+  simp_rw [not_ne_bot] at H
   haveI := discrete_topology_iff_nhds_ne.mpr H
   exact Infinite.not_finite (finite_of_compact_of_discrete : Finite α)
 #align exists_nhds_ne_ne_bot exists_nhds_ne_neBot
@@ -1216,7 +1216,7 @@ theorem IsCompact.finite {s : Set α} (hs : IsCompact s) (hs' : DiscreteTopology
 theorem exists_nhds_ne_inf_principal_neBot {s : Set α} (hs : IsCompact s) (hs' : s.Infinite) :
     ∃ z ∈ s, (𝓝[≠] z ⊓ 𝓟 s).ne_bot := by
   by_contra! H
-  simp_rw [not_ne_bot] at H 
+  simp_rw [not_ne_bot] at H
   exact hs' (hs.finite <| discrete_topology_subtype_iff.mpr H)
 #align exists_nhds_ne_inf_principal_ne_bot exists_nhds_ne_inf_principal_neBot
 -/
@@ -1242,12 +1242,12 @@ theorem IsCompact.prod {s : Set α} {t : Set β} (hs : IsCompact s) (ht : IsComp
   by
   rw [isCompact_iff_ultrafilter_le_nhds] at hs ht ⊢
   intro f hfs
-  rw [le_principal_iff] at hfs 
+  rw [le_principal_iff] at hfs
   obtain ⟨a : α, sa : a ∈ s, ha : map Prod.fst ↑f ≤ 𝓝 a⟩ :=
     hs (f.map Prod.fst) (le_principal_iff.2 <| mem_map.2 <| mem_of_superset hfs fun x => And.left)
   obtain ⟨b : β, tb : b ∈ t, hb : map Prod.snd ↑f ≤ 𝓝 b⟩ :=
     ht (f.map Prod.snd) (le_principal_iff.2 <| mem_map.2 <| mem_of_superset hfs fun x => And.right)
-  rw [map_le_iff_le_comap] at ha hb 
+  rw [map_le_iff_le_comap] at ha hb
   refine' ⟨⟨a, b⟩, ⟨sa, tb⟩, _⟩
   rw [nhds_prod_eq]; exact le_inf ha hb
 #align is_compact.prod IsCompact.prod
@@ -1450,7 +1450,7 @@ variable [∀ i, TopologicalSpace (π i)] [∀ i, LocallyCompactSpace (π i)]
   but that's not straightforward to state and use. -/
 instance Pi.locallyCompactSpace_of_finite [Finite ι] : LocallyCompactSpace (∀ i, π i) :=
   ⟨fun t n hn => by
-    rw [nhds_pi, Filter.mem_pi] at hn 
+    rw [nhds_pi, Filter.mem_pi] at hn
     obtain ⟨s, hs, n', hn', hsub⟩ := hn
     choose n'' hn'' hsub' hc using fun i =>
       LocallyCompactSpace.local_compact_nhds (t i) (n' i) (hn' i)
@@ -1464,7 +1464,7 @@ instance Pi.locallyCompactSpace_of_finite [Finite ι] : LocallyCompactSpace (∀
 /-- For spaces that are not Hausdorff. -/
 instance Pi.locallyCompactSpace [∀ i, CompactSpace (π i)] : LocallyCompactSpace (∀ i, π i) :=
   ⟨fun t n hn => by
-    rw [nhds_pi, Filter.mem_pi] at hn 
+    rw [nhds_pi, Filter.mem_pi] at hn
     obtain ⟨s, hs, n', hn', hsub⟩ := hn
     choose n'' hn'' hsub' hc using fun i =>
       LocallyCompactSpace.local_compact_nhds (t i) (n' i) (hn' i)
@@ -1793,7 +1793,7 @@ the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/
 theorem countable_cover_nhdsWithin_of_sigma_compact {f : α → Set α} {s : Set α} (hs : IsClosed s)
     (hf : ∀ x ∈ s, f x ∈ 𝓝[s] x) : ∃ (t : _) (_ : t ⊆ s), t.Countable ∧ s ⊆ ⋃ x ∈ t, f x :=
   by
-  simp only [nhdsWithin, mem_inf_principal] at hf 
+  simp only [nhdsWithin, mem_inf_principal] at hf
   choose t ht hsub using fun n =>
     ((isCompact_compactCovering α n).inter_right hs).elim_nhds_subcover _ fun x hx => hf x hx.right
   refine'
@@ -1812,7 +1812,7 @@ point `x` to a neighborhood of `x`, then for some countable set `s`, the neighbo
 theorem countable_cover_nhds_of_sigma_compact {f : α → Set α} (hf : ∀ x, f x ∈ 𝓝 x) :
     ∃ s : Set α, s.Countable ∧ (⋃ x ∈ s, f x) = univ :=
   by
-  simp only [← nhdsWithin_univ] at hf 
+  simp only [← nhdsWithin_univ] at hf
   rcases countable_cover_nhdsWithin_of_sigma_compact isClosed_univ fun x _ => hf x with
     ⟨s, -, hsc, hsU⟩
   exact ⟨s, hsc, univ_subset_iff.1 hsU⟩
@@ -2390,12 +2390,12 @@ theorem IsPreirreducible.image {s : Set α} (H : IsPreirreducible s) (f : α →
     (hf : ContinuousOn f s) : IsPreirreducible (f '' s) :=
   by
   rintro u v hu hv ⟨_, ⟨⟨x, hx, rfl⟩, hxu⟩⟩ ⟨_, ⟨⟨y, hy, rfl⟩, hyv⟩⟩
-  rw [← mem_preimage] at hxu hyv 
+  rw [← mem_preimage] at hxu hyv
   rcases continuousOn_iff'.1 hf u hu with ⟨u', hu', u'_eq⟩
   rcases continuousOn_iff'.1 hf v hv with ⟨v', hv', v'_eq⟩
   have := H u' v' hu' hv'
-  rw [inter_comm s u', ← u'_eq] at this 
-  rw [inter_comm s v', ← v'_eq] at this 
+  rw [inter_comm s u', ← u'_eq] at this
+  rw [inter_comm s v', ← v'_eq] at this
   rcases this ⟨x, hxu, hx⟩ ⟨y, hyv, hy⟩ with ⟨z, hzs, hzu', hzv'⟩
   refine' ⟨f z, mem_image_of_mem f hzs, _, _⟩
   all_goals
@@ -2418,7 +2418,7 @@ theorem Subtype.preirreducibleSpace {s : Set α} (h : IsPreirreducible s) : Prei
   {
     isPreirreducible_univ := by
       intro u v hu hv hsu hsv
-      rw [isOpen_induced_iff] at hu hv 
+      rw [isOpen_induced_iff] at hu hv
       rcases hu with ⟨u, hu, rfl⟩
       rcases hv with ⟨v, hv, rfl⟩
       rcases hsu with ⟨⟨x, hxs⟩, hxs', hxu⟩
@@ -2490,17 +2490,17 @@ theorem isPreirreducible_iff_closed_union_closed {s : Set α} :
   all_goals
     intro h t₁ t₂ ht₁ ht₂
     specialize h (t₁ᶜ) (t₂ᶜ)
-    simp only [isOpen_compl_iff, isClosed_compl_iff] at h 
+    simp only [isOpen_compl_iff, isClosed_compl_iff] at h
     specialize h ht₁ ht₂
   · contrapose!; simp only [not_subset]
     rintro ⟨⟨x, hx, hx'⟩, ⟨y, hy, hy'⟩⟩
     rcases h ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩ with ⟨z, hz, hz'⟩
-    rw [← compl_union] at hz' 
+    rw [← compl_union] at hz'
     exact ⟨z, hz, hz'⟩
   · rintro ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
-    rw [← compl_inter] at h 
+    rw [← compl_inter] at h
     delta Set.Nonempty
-    rw [imp_iff_not_or] at h 
+    rw [imp_iff_not_or] at h
     contrapose! h
     constructor
     · intro z hz hz'; exact h z ⟨hz, hz'⟩
@@ -2519,7 +2519,7 @@ theorem isIrreducible_iff_sUnion_closed {s : Set α} :
   rw [IsIrreducible, isPreirreducible_iff_closed_union_closed]
   constructor <;> intro h
   · intro Z; apply Finset.induction_on Z
-    · intros; rw [Finset.coe_empty, sUnion_empty] at H 
+    · intros; rw [Finset.coe_empty, sUnion_empty] at H
       rcases h.1 with ⟨x, hx⟩
       exfalso; tauto
     · intro z Z hz IH hZ H
@@ -2540,7 +2540,7 @@ theorem isIrreducible_iff_sUnion_closed {s : Set α} :
       · simpa [Set.Nonempty] using hs
     intro z₁ z₂ hz₁ hz₂ H
     have := h {z₁, z₂} _ _
-    simp only [exists_prop, Finset.mem_insert, Finset.mem_singleton] at this 
+    simp only [exists_prop, Finset.mem_insert, Finset.mem_singleton] at this
     · rcases this with ⟨z, rfl | rfl, hz⟩ <;> tauto
     · intro t
       rw [Finset.mem_insert, Finset.mem_singleton]
@@ -2575,7 +2575,7 @@ theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreduci
   replace ha' : a ∈ U ∧ a ∈ u ∧ a ∈ v := by simpa using ha'
   exact ⟨a, h₁ ha'.1, ha'.2⟩
   · intro U H
-    simp only [Finset.mem_insert, Finset.mem_singleton] at H 
+    simp only [Finset.mem_insert, Finset.mem_singleton] at H
     rcases H with (rfl | rfl | rfl)
     exacts [⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
 #align is_preirreducible.subset_irreducible IsPreirreducible.subset_irreducible

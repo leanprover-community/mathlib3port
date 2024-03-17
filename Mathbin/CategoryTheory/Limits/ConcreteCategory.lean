@@ -124,7 +124,7 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
       by
       have a := x.2 (walking_multicospan.hom.fst i)
       have b := x.2 (walking_multicospan.hom.snd i)
-      rw [← b] at a 
+      rw [← b] at a
       exact a⟩
   invFun x :=
     { val := fun j =>
@@ -208,8 +208,8 @@ theorem Concrete.from_union_surjective_of_isColimit {D : Cocone F} (hD : IsColim
     intro a
     obtain ⟨b, hb⟩ := this (TX.hom a)
     refine' ⟨b, _⟩
-    apply_fun TX.inv at hb 
-    change (TX.hom ≫ TX.inv) (ff b) = (TX.hom ≫ TX.inv) _ at hb 
+    apply_fun TX.inv at hb
+    change (TX.hom ≫ TX.inv) (ff b) = (TX.hom ≫ TX.inv) _ at hb
     simpa only [TX.hom_inv_id] using hb
   have : TX.hom ∘ ff = fun a => G.ι.app a.1 a.2 :=
     by
@@ -285,9 +285,9 @@ theorem Concrete.isColimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCol
   let hG := Types.colimitCoconeIsColimit.{v, v} (F ⋙ forget C)
   let T : E ≅ G := hE.unique_up_to_iso hG
   let TX : E.X ≅ G.X := (cocones.forget _).mapIso T
-  apply_fun TX.hom at h 
-  change (E.ι.app i ≫ TX.hom) x = (E.ι.app j ≫ TX.hom) y at h 
-  erw [T.hom.w, T.hom.w] at h 
+  apply_fun TX.hom at h
+  change (E.ι.app i ≫ TX.hom) x = (E.ι.app j ≫ TX.hom) y at h
+  erw [T.hom.w, T.hom.w] at h
   replace h := Quot.exact _ h
   suffices
     ∀ (a b : Σ j, F.obj j) (h : EqvGen (Limits.Types.Quot.Rel.{v, v} (F ⋙ forget C)) a b),

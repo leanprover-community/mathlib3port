@@ -137,7 +137,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
         (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
       wittPolynomial p ℤ n
     by
-    apply_fun aeval x.coeff at this 
+    apply_fun aeval x.coeff at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
   simp only [wittPolynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
     AlgHom.map_mul, bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_add]
@@ -169,7 +169,7 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
     _ = x.coeff n + y.coeff n := _
   dsimp [z]
   split_ifs with hn
-  · dsimp [P] at hn ; rw [hn, add_zero]
+  · dsimp [P] at hn; rw [hn, add_zero]
   · rw [(h n).resolve_right hn, zero_add]
 #align witt_vector.coeff_add_of_disjoint WittVector.coeff_add_of_disjoint
 -/

@@ -263,7 +263,7 @@ variable [Group G]
 theorem mem_norm_comm {s : Set G} (hs : IsNormalSubgroup s) {a b : G} (hab : a * b ∈ s) :
     b * a ∈ s := by
   have h : a⁻¹ * (a * b) * a⁻¹⁻¹ ∈ s := hs.Normal (a * b) hab a⁻¹
-  simp at h  <;> exact h
+  simp at h <;> exact h
 #align is_subgroup.mem_norm_comm IsSubgroup.mem_norm_comm
 #align is_add_subgroup.mem_norm_comm IsAddSubgroup.mem_norm_comm
 -/
@@ -415,7 +415,7 @@ variable [Group G] [Group H]
 @[to_additive]
 theorem one_ker_inv {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a * b⁻¹) = 1) : f a = f b :=
   by
-  rw [hf.map_mul, hf.map_inv] at h 
+  rw [hf.map_mul, hf.map_inv] at h
   rw [← inv_inv (f b), eq_inv_of_mul_eq_one_left h]
 #align is_group_hom.one_ker_inv IsGroupHom.one_ker_inv
 #align is_add_group_hom.zero_ker_neg IsAddGroupHom.zero_ker_neg
@@ -425,7 +425,7 @@ theorem one_ker_inv {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a * b⁻
 @[to_additive]
 theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ * b) = 1) : f a = f b :=
   by
-  rw [hf.map_mul, hf.map_inv] at h 
+  rw [hf.map_mul, hf.map_inv] at h
   apply inv_injective
   rw [eq_inv_of_mul_eq_one_left h]
 #align is_group_hom.one_ker_inv' IsGroupHom.one_ker_inv'
@@ -437,7 +437,7 @@ theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ 
 theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a * b⁻¹) = 1 :=
   by
   have : f a * (f b)⁻¹ = 1 := by rw [h, mul_right_inv]
-  rwa [← hf.map_inv, ← hf.map_mul] at this 
+  rwa [← hf.map_inv, ← hf.map_mul] at this
 #align is_group_hom.inv_ker_one IsGroupHom.inv_ker_one
 #align is_add_group_hom.neg_ker_zero IsAddGroupHom.neg_ker_zero
 -/
@@ -447,7 +447,7 @@ theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) 
 theorem inv_ker_one' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a⁻¹ * b) = 1 :=
   by
   have : (f a)⁻¹ * f b = 1 := by rw [h, mul_left_inv]
-  rwa [← hf.map_inv, ← hf.map_mul] at this 
+  rwa [← hf.map_inv, ← hf.map_mul] at this
 #align is_group_hom.inv_ker_one' IsGroupHom.inv_ker_one'
 #align is_add_group_hom.neg_ker_zero' IsAddGroupHom.neg_ker_zero'
 -/
@@ -542,7 +542,7 @@ theorem isNormalSubgroup_ker {f : G → H} (hf : IsGroupHom f) : IsNormalSubgrou
 theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : ker f = trivial G) :
     Function.Injective f := by
   intro a₁ a₂ hfa
-  simp [ext_iff, ker, IsSubgroup.trivial] at h 
+  simp [ext_iff, ker, IsSubgroup.trivial] at h
   have ha : a₁ * a₂⁻¹ = 1 := by rw [← h] <;> exact hf.inv_ker_one hfa
   rw [eq_inv_of_mul_eq_one_left ha, inv_inv a₂]
 #align is_group_hom.injective_of_trivial_ker IsGroupHom.injective_of_trivial_ker
@@ -557,7 +557,7 @@ theorem trivial_ker_of_injective {f : G → H} (hf : IsGroupHom f) (h : Function
     Iff.intro
       (fun hx => by
         suffices f x = f 1 by simpa using h this
-        simp [hf.map_one] <;> rwa [mem_ker] at hx )
+        simp [hf.map_one] <;> rwa [mem_ker] at hx)
       (by simp (config := { contextual := true }) [mem_ker, hf.map_one])
 #align is_group_hom.trivial_ker_of_injective IsGroupHom.trivial_ker_of_injective
 #align is_add_group_hom.trivial_ker_of_injective IsAddGroupHom.trivial_ker_of_injective

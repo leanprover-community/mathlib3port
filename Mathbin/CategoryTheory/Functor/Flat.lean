@@ -198,12 +198,12 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 
 attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
 
-#print CategoryTheory.cofiltered_of_hasFiniteLimits /-
-theorem cofiltered_of_hasFiniteLimits [HasFiniteLimits C] : IsCofiltered C :=
+#print CategoryTheory.IsCofiltered.of_hasFiniteLimits /-
+theorem CategoryTheory.IsCofiltered.of_hasFiniteLimits [HasFiniteLimits C] : IsCofiltered C :=
   { cone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩
     cone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
     Nonempty := ⟨⊤_ C⟩ }
-#align category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_hasFiniteLimits
+#align category_theory.cofiltered_of_has_finite_limits CategoryTheory.IsCofiltered.of_hasFiniteLimits
 -/
 
 #print CategoryTheory.flat_of_preservesFiniteLimits /-

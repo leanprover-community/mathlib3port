@@ -386,7 +386,7 @@ theorem Faithful.div_comp (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful G] 
   by
   cases' F with F_obj _ _ _; cases' G with G_obj _ _ _
   unfold faithful.div Functor.Comp
-  unfold_projs  at h_obj 
+  unfold_projs  at h_obj
   have : F_obj = G_obj ∘ obj := (funext h_obj).symm
   subst this
   congr

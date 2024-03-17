@@ -166,7 +166,7 @@ theorem trivial_iff_lower_central_eq_bot : IsTrivial L M ↔ lowerCentralSeries 
   by
   constructor <;> intro h
   · erw [eq_bot_iff, LieSubmodule.lieSpan_le]; rintro m ⟨x, n, hn⟩; rw [← hn, h.trivial]; simp
-  · rw [LieSubmodule.eq_bot_iff] at h ; apply is_trivial.mk; intro x m; apply h
+  · rw [LieSubmodule.eq_bot_iff] at h; apply is_trivial.mk; intro x m; apply h
     apply LieSubmodule.subset_lieSpan; use x, m; rfl
 #align lie_module.trivial_iff_lower_central_eq_bot LieModule.trivial_iff_lower_central_eq_bot
 -/
@@ -294,7 +294,7 @@ theorem nilpotentOfNilpotentQuotient {N : LieSubmodule R L M} (h₁ : N ≤ maxT
   suffices lowerCentralSeries R L M k ≤ N
     by
     replace this := LieSubmodule.mono_lie_right _ _ ⊤ (le_trans this h₁)
-    rwa [ideal_oper_max_triv_submodule_eq_bot, le_bot_iff] at this 
+    rwa [ideal_oper_max_triv_submodule_eq_bot, le_bot_iff] at this
   rw [← LieSubmodule.Quotient.map_mk'_eq_bot_le, ← le_bot_iff, ← hk]
   exact map_lower_central_series_le k (LieSubmodule.Quotient.mk' N)
 #align lie_module.nilpotent_of_nilpotent_quotient LieModule.nilpotentOfNilpotentQuotient
@@ -364,7 +364,7 @@ theorem lowerCentralSeriesLast_le_max_triv :
   cases' h : nilpotency_length R L M with k
   · exact bot_le
   · rw [le_max_triv_iff_bracket_eq_bot]
-    rw [nilpotency_length_eq_succ_iff, lowerCentralSeries_succ] at h 
+    rw [nilpotency_length_eq_succ_iff, lowerCentralSeries_succ] at h
     exact h.1
 #align lie_module.lower_central_series_last_le_max_triv LieModule.lowerCentralSeriesLast_le_max_triv
 -/
@@ -375,9 +375,9 @@ theorem nontrivial_lowerCentralSeriesLast [Nontrivial M] [IsNilpotent R L M] :
   by
   rw [LieSubmodule.nontrivial_iff_ne_bot, lower_central_series_last]
   cases h : nilpotency_length R L M
-  · rw [nilpotency_length_eq_zero_iff, ← not_nontrivial_iff_subsingleton] at h 
+  · rw [nilpotency_length_eq_zero_iff, ← not_nontrivial_iff_subsingleton] at h
     contradiction
-  · rw [nilpotency_length_eq_succ_iff] at h 
+  · rw [nilpotency_length_eq_succ_iff] at h
     exact h.2
 #align lie_module.nontrivial_lower_central_series_last LieModule.nontrivial_lowerCentralSeriesLast
 -/
@@ -559,7 +559,7 @@ theorem Function.Surjective.lieModule_lcs_map_eq (k : ℕ) :
       g '' {m | ∃ (x : L) (n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, n⁆ = m} =
         {m | ∃ (x : L₂) (n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, g n⁆ = m}
       by
-      simp only [← LieSubmodule.mem_coeSubmodule] at this 
+      simp only [← LieSubmodule.mem_coeSubmodule] at this
       simp [← LieSubmodule.mem_coeSubmodule, ← ih, LieSubmodule.lieIdeal_oper_eq_linear_span',
         Submodule.map_span, -Submodule.span_image, this]
     ext m₂
@@ -672,10 +672,10 @@ theorem coe_lowerCentralSeries_ideal_quot_eq {I : LieIdeal R L} (k : ℕ) :
     ext x
     constructor
     · rintro ⟨⟨y, -⟩, ⟨z, hz⟩, rfl : ⁅y, z⁆ = x⟩
-      erw [← LieSubmodule.mem_coeSubmodule, ih, LieSubmodule.mem_coeSubmodule] at hz 
+      erw [← LieSubmodule.mem_coeSubmodule, ih, LieSubmodule.mem_coeSubmodule] at hz
       exact ⟨⟨LieSubmodule.Quotient.mk y, LieSubmodule.mem_top _⟩, ⟨z, hz⟩, rfl⟩
     · rintro ⟨⟨⟨y⟩, -⟩, ⟨z, hz⟩, rfl : ⁅y, z⁆ = x⟩
-      erw [← LieSubmodule.mem_coeSubmodule, ← ih, LieSubmodule.mem_coeSubmodule] at hz 
+      erw [← LieSubmodule.mem_coeSubmodule, ← ih, LieSubmodule.mem_coeSubmodule] at hz
       exact ⟨⟨y, LieSubmodule.mem_top _⟩, ⟨z, hz⟩, rfl⟩
 #align coe_lower_central_series_ideal_quot_eq coe_lowerCentralSeries_ideal_quot_eq
 -/

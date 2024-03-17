@@ -397,9 +397,9 @@ theorem Monoid.CoprodI.Word.rcons_inj {i} :
   by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
   by_cases hm : m = 1 <;> by_cases hm' : m' = 1
-  · simp only [rcons, dif_pos hm, dif_pos hm'] at he ; cc
-  · exfalso; simp only [rcons, dif_pos hm, dif_neg hm'] at he ; rw [he] at h ; exact h rfl
-  · exfalso; simp only [rcons, dif_pos hm', dif_neg hm] at he ; rw [← he] at h' ; exact h' rfl
+  · simp only [rcons, dif_pos hm, dif_pos hm'] at he; cc
+  · exfalso; simp only [rcons, dif_pos hm, dif_neg hm'] at he; rw [he] at h; exact h rfl
+  · exfalso; simp only [rcons, dif_pos hm', dif_neg hm] at he; rw [← he] at h'; exact h' rfl
   · have : m = m' ∧ w.to_list = w'.to_list := by
       simpa only [rcons, dif_neg hm, dif_neg hm', true_and_iff, eq_self_iff_true, Subtype.mk_eq_mk,
         heq_iff_eq, ← Subtype.ext_iff_val] using he
@@ -625,7 +625,7 @@ def Monoid.CoprodI.NeWord.toWord {i j} (w : Monoid.CoprodI.NeWord M i j) : Monoi
       exact w_hne1
       exfalso; apply H
     · intro l h
-      simp only [to_list, List.mem_append] at h 
+      simp only [to_list, List.mem_append] at h
       cases h
       · exact w_ih_w₁ _ h
       · exact w_ih_w₂ _ h
@@ -634,8 +634,8 @@ def Monoid.CoprodI.NeWord.toWord {i j} (w : Monoid.CoprodI.NeWord M i j) : Monoi
     · exact List.chain'_singleton _
     · apply List.Chain'.append w_ih_w₁ w_ih_w₂
       intro x hx y hy
-      rw [w_w₁.to_list_last', Option.mem_some_iff] at hx 
-      rw [w_w₂.to_list_head', Option.mem_some_iff] at hy 
+      rw [w_w₁.to_list_last', Option.mem_some_iff] at hx
+      rw [w_w₂.to_list_head', Option.mem_some_iff] at hy
       subst hx; subst hy
       exact w_hne
 #align free_product.neword.to_word Monoid.CoprodI.NeWord.toWord
@@ -652,11 +652,11 @@ theorem Monoid.CoprodI.NeWord.of_word (w : Monoid.CoprodI.Word M) (h : w ≠ Emp
   cases' w with l hnot1 hchain
   induction' l with x l hi
   · contradiction
-  · rw [List.forall_mem_cons] at hnot1 
+  · rw [List.forall_mem_cons] at hnot1
     cases' l with y l
     · refine' ⟨x.1, x.1, singleton x.2 hnot1.1, _⟩
       simp [to_word]
-    · rw [List.chain'_cons] at hchain 
+    · rw [List.chain'_cons] at hchain
       specialize hi hnot1.2 hchain.2 (by rintro ⟨rfl⟩)
       obtain ⟨i, j, w', hw' : w'.to_list = y::l⟩ := hi
       obtain rfl : y = ⟨i, w'.head⟩ := by simpa [hw'] using w'.to_list_head'
@@ -904,15 +904,15 @@ theorem Monoid.CoprodI.lift_word_prod_nontrivial_of_not_empty {i j}
     · subst hh; subst hl
       exact lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w
     · subst hh
-      change j ≠ i at hl 
+      change j ≠ i at hl
       exact lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w hcard hl.symm
     · subst hl
-      change i ≠ j at hh 
+      change i ≠ j at hh
       have : lift f w.inv.prod ≠ 1 :=
         lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w.inv hcard hh.symm
       intro heq; apply this; simpa using HEq
-    · change i ≠ k at hh 
-      change j ≠ k at hl 
+    · change i ≠ k at hh
+      change j ≠ k at hl
       obtain ⟨h, hn1, -⟩ := Cardinal.three_le hcard 1 1
       let w' : neword H k k :=
         neword.append (neword.append (neword.singleton h hn1) hh.symm w) hl

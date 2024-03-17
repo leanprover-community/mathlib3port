@@ -20,9 +20,9 @@ Instances on `Prop` such as `distrib_lattice`, `bounded_order`, `linear_order`.
 -/
 
 
-#print Prop.distribLattice /-
+#print Prop.instDistribLattice /-
 /-- Propositions form a distributive lattice. -/
-instance Prop.distribLattice : DistribLattice Prop :=
+instance Prop.instDistribLattice : DistribLattice Prop :=
   { Prop.partialOrder with
     sup := Or
     le_sup_left := @Or.inl
@@ -33,18 +33,18 @@ instance Prop.distribLattice : DistribLattice Prop :=
     inf_le_right := @And.right
     le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha)
     le_sup_inf := fun a b c => or_and_left.2 }
-#align Prop.distrib_lattice Prop.distribLattice
+#align Prop.distrib_lattice Prop.instDistribLattice
 -/
 
-#print Prop.boundedOrder /-
+#print Prop.instBoundedOrder /-
 /-- Propositions form a bounded order. -/
-instance Prop.boundedOrder : BoundedOrder Prop
+instance Prop.instBoundedOrder : BoundedOrder Prop
     where
   top := True
   le_top a Ha := True.intro
   bot := False
   bot_le := @False.elim
-#align Prop.bounded_order Prop.boundedOrder
+#align Prop.bounded_order Prop.instBoundedOrder
 -/
 
 #print Prop.bot_eq_false /-

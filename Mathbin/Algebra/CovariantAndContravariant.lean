@@ -173,7 +173,7 @@ theorem Group.covariant_iff_contravariant [Group N] :
   refine' ⟨fun h a b c bc => _, fun h a b c bc => _⟩
   · rw [← inv_mul_cancel_left a b, ← inv_mul_cancel_left a c]
     exact h a⁻¹ bc
-  · rw [← inv_mul_cancel_left a b, ← inv_mul_cancel_left a c] at bc 
+  · rw [← inv_mul_cancel_left a b, ← inv_mul_cancel_left a c] at bc
     exact h a⁻¹ bc
 #align group.covariant_iff_contravariant Group.covariant_iff_contravariant
 #align add_group.covariant_iff_contravariant AddGroup.covariant_iff_contravariant
@@ -196,7 +196,7 @@ theorem Group.covariant_swap_iff_contravariant_swap [Group N] :
   refine' ⟨fun h a b c bc => _, fun h a b c bc => _⟩
   · rw [← mul_inv_cancel_right b a, ← mul_inv_cancel_right c a]
     exact h a⁻¹ bc
-  · rw [← mul_inv_cancel_right b a, ← mul_inv_cancel_right c a] at bc 
+  · rw [← mul_inv_cancel_right b a, ← mul_inv_cancel_right c a] at bc
     exact h a⁻¹ bc
 #align group.covariant_swap_iff_contravariant_swap Group.covariant_swap_iff_contravariant_swap
 #align add_group.covariant_swap_iff_contravariant_swap AddGroup.covariant_swap_iff_contravariant_swap

@@ -55,7 +55,7 @@ theorem StrictMonoOn.continuousWithinAt_right_of_exists_between {f : α → β} 
     filter_upwards [hs, self_mem_nhdsWithin] with _ hxs hxa using
       hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-    rw [h_mono.lt_iff_lt has hcs] at hac 
+    rw [h_mono.lt_iff_lt has hcs] at hac
     filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)]
     rintro x hx ⟨hax, hxc⟩
     exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb

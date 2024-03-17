@@ -91,7 +91,7 @@ theorem sum_lt_half_of_not_tendsto
     intro n; split_ifs
     · simp only [one_div, inv_nonneg, Nat.cast_nonneg]
     · exact le_rfl
-  rw [h0, ← summable_iff_not_tendsto_nat_atTop_of_nonneg hf, summable_iff_vanishing] at h 
+  rw [h0, ← summable_iff_not_tendsto_nat_atTop_of_nonneg hf, summable_iff_vanishing] at h
   obtain ⟨s, h⟩ := h (Set.Ioo (-1) (1 / 2)) (is_open_Ioo.mem_nhds (by norm_num))
   obtain ⟨k, hk⟩ := exists_nat_subset_range s
   use k

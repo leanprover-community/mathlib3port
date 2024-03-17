@@ -1325,11 +1325,11 @@ instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
         α) with
     hMul_left_cancel_of_ne_zero := fun a b c ha h =>
       by
-      rw [← sub_eq_zero, ← mul_sub] at h 
+      rw [← sub_eq_zero, ← mul_sub] at h
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
     hMul_right_cancel_of_ne_zero := fun a b c hb h =>
       by
-      rw [← sub_eq_zero, ← sub_mul] at h 
+      rw [← sub_eq_zero, ← sub_mul] at h
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb) }
 #align linear_ordered_ring.is_domain LinearOrderedRing.isDomain
 -/
@@ -1476,7 +1476,7 @@ theorem sub_one_lt (a : α) : a - 1 < a :=
 theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 :=
   by
   constructor
-  · rintro h rfl; rw [MulZeroClass.mul_zero] at h ; exact h.false
+  · rintro h rfl; rw [MulZeroClass.mul_zero] at h; exact h.false
   · intro h
     cases' h.lt_or_lt with h h
     exacts [mul_pos_of_neg_of_neg h h, mul_pos h h]

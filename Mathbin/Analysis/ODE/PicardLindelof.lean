@@ -367,7 +367,7 @@ theorem hasDerivWithinAt_next (t : Icc v.tMin v.tMax) :
     integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _)
       (f.continuous_v_comp.strongly_measurable_at_filter _ _)
       f.continuous_v_comp.continuous_within_at
-  rw [v_comp_apply_coe] at this 
+  rw [v_comp_apply_coe] at this
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
   filter_upwards [self_mem_nhdsWithin] with _ ht'
   rw [v.proj_of_mem ht']
@@ -540,7 +540,7 @@ theorem exists_isPicardLindelof_const_of_contDiffAt {s : Set E} (hv : ContDiffOn
         by
         rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
         split_ifs
-        · rwa [← h] at hr' 
+        · rwa [← h] at hr'
         · exact (mul_div_cancel' (r / 2) h).le }
 #align exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_isPicardLindelof_const_of_contDiffAt
 -/
@@ -563,7 +563,7 @@ theorem exists_forall_hasDerivAt_Ioo_eq_of_contDiffAt {s : Set E} (hv : ContDiff
     apply ContinuousAt.preimage_mem_nhds this.continuous_at
     rw [hf1]
     exact hs
-  rw [Metric.mem_nhds_iff] at h 
+  rw [Metric.mem_nhds_iff] at h
   obtain ⟨r, hr1, hr2⟩ := h
   refine'
     ⟨min r ε, lt_min hr1 hε, f, hf1, fun t ht =>

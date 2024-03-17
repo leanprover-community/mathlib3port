@@ -221,7 +221,7 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) :
     eval₂ f x (p * q) = eval₂ f x p * eval₂ f x q :=
   by
   rcases p with ⟨⟩; rcases q with ⟨⟩
-  simp only [coeff] at hf 
+  simp only [coeff] at hf
   simp only [← of_finsupp_mul, eval₂_of_finsupp]
   exact lift_nc_mul _ _ p q fun k n hn => (hf k).pow_right n
 #align polynomial.eval₂_mul_noncomm Polynomial.eval₂_mul_noncomm
@@ -262,7 +262,7 @@ theorem eval₂_list_prod_noncomm (ps : List R[X])
   by
   induction' ps using List.reverseRecOn with ps p ihp
   · simp
-  · simp only [List.forall_mem_append, List.forall_mem_singleton] at hf 
+  · simp only [List.forall_mem_append, List.forall_mem_singleton] at hf
     simp [eval₂_mul_noncomm _ _ hf.2, ihp hf.1]
 #align polynomial.eval₂_list_prod_noncomm Polynomial.eval₂_list_prod_noncomm
 -/
@@ -641,7 +641,7 @@ theorem coeff_zero_eq_eval_zero (p : R[X]) : coeff p 0 = p.eval 0 :=
 
 #print Polynomial.zero_isRoot_of_coeff_zero_eq_zero /-
 theorem zero_isRoot_of_coeff_zero_eq_zero {p : R[X]} (hp : p.coeff 0 = 0) : IsRoot p 0 := by
-  rwa [coeff_zero_eq_eval_zero] at hp 
+  rwa [coeff_zero_eq_eval_zero] at hp
 #align polynomial.zero_is_root_of_coeff_zero_eq_zero Polynomial.zero_isRoot_of_coeff_zero_eq_zero
 -/
 
@@ -1051,7 +1051,7 @@ theorem map_surjective (hf : Function.Surjective f) : Function.Surjective (map f
 theorem degree_map_le (p : R[X]) : degree (p.map f) ≤ degree p :=
   by
   apply (degree_le_iff_coeff_zero _ _).2 fun m hm => _
-  rw [degree_lt_iff_coeff_zero] at hm 
+  rw [degree_lt_iff_coeff_zero] at hm
   simp [hm m le_rfl]
 #align polynomial.degree_map_le Polynomial.degree_map_le
 -/

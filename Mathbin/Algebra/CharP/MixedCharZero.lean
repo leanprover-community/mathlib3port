@@ -99,7 +99,7 @@ theorem reduce_to_p_prime {P : Prop} :
     have r_pos : r ≠ 0 :=
       by
       have q_zero := congr_arg (Ideal.Quotient.factor I M h_IM) (CharP.cast_eq_zero (R ⧸ I) q)
-      simp only [map_natCast, map_zero] at q_zero 
+      simp only [map_natCast, map_zero] at q_zero
       apply ne_zero_of_dvd_ne_zero (ne_of_gt q_pos)
       exact (CharP.cast_eq_zero_iff (R ⧸ M) r q).mp q_zero
     have r_prime : Nat.Prime r :=
@@ -359,10 +359,10 @@ theorem split_equalCharZero_mixedCharZero [CharZero R] (h_equal : Algebra ℚ R 
   by
   by_cases h : ∃ p > 0, MixedCharZero R p
   · rcases h with ⟨p, ⟨H, hp⟩⟩
-    rw [← MixedCharZero.reduce_to_p_prime] at h_mixed 
+    rw [← MixedCharZero.reduce_to_p_prime] at h_mixed
     exact h_mixed p H hp
   · apply h_equal
-    rw [← isEmpty_algebraRat_iff_mixedCharZero, not_isEmpty_iff] at h 
+    rw [← isEmpty_algebraRat_iff_mixedCharZero, not_isEmpty_iff] at h
     exact h.some
 #align split_equal_mixed_char split_equalCharZero_mixedCharZero
 -/
@@ -381,7 +381,7 @@ theorem split_by_characteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → 
   by
   cases' CharP.exists R with p p_char
   by_cases p = 0
-  · rw [h] at p_char 
+  · rw [h] at p_char
     skip
     -- make `p_char : char_p R 0` an instance.
     haveI h0 : CharZero R := CharP.charP_to_charZero R

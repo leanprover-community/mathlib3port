@@ -328,7 +328,7 @@ theorem nth_mul_coeff' (n : ℕ) :
     rintro ⟨a, ha⟩
     apply Function.uncurry ![x, y]
     simp only [true_and_iff, Multiset.mem_cons, range_val, product_val, Multiset.mem_range,
-      Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha 
+      Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha
     refine' ⟨a.fst, ⟨a.snd, _⟩⟩
     cases' ha with ha ha <;> linarith only [ha]
   use f
@@ -341,7 +341,7 @@ theorem nth_mul_coeff' (n : ℕ) :
   cases' a with a ha
   cases' a with i m
   simp only [true_and_iff, Multiset.mem_cons, range_val, product_val, Multiset.mem_range,
-    Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha 
+    Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha
   have ha' : m < n + 1 := by cases' ha with ha ha <;> linarith only [ha]
   fin_cases i <;>-- surely this case split is not necessary
     · simpa only using x.coeff_truncate_fun ⟨m, ha'⟩

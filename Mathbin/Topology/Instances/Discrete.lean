@@ -38,8 +38,8 @@ instance (priority := 100) DiscreteTopology.firstCountableTopology [DiscreteTopo
 #align discrete_topology.first_countable_topology DiscreteTopology.firstCountableTopology
 -/
 
-#print DiscreteTopology.secondCountableTopology_of_encodable /-
-instance (priority := 100) DiscreteTopology.secondCountableTopology_of_encodable
+#print DiscreteTopology.secondCountableTopology_of_countable /-
+instance (priority := 100) DiscreteTopology.secondCountableTopology_of_countable
     [hd : DiscreteTopology α] [Encodable α] : SecondCountableTopology α :=
   haveI : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
     {
@@ -47,7 +47,7 @@ instance (priority := 100) DiscreteTopology.secondCountableTopology_of_encodable
         ⟨{univ}, countable_singleton _, by simp only [eq_iff_true_of_subsingleton]⟩ }
   second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd)
     (Union_of_singleton α)
-#align discrete_topology.second_countable_topology_of_encodable DiscreteTopology.secondCountableTopology_of_encodable
+#align discrete_topology.second_countable_topology_of_encodable DiscreteTopology.secondCountableTopology_of_countable
 -/
 
 #print bot_topologicalSpace_eq_generateFrom_of_pred_succOrder /-
@@ -94,23 +94,23 @@ theorem LinearOrder.bot_topologicalSpace_eq_generateFrom {α} [LinearOrder α] [
   refine' (eq_bot_of_singletons_open fun a => _).symm
   have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
   by_cases ha_top : IsTop a
-  · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter 
+  · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
     by_cases ha_bot : IsBot a
-    · rw [ha_bot.Ici_eq] at h_singleton_eq_inter 
+    · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply isOpen_univ
-    · rw [isBot_iff_isMin] at ha_bot 
-      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter 
+    · rw [isBot_iff_isMin] at ha_bot
+      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-  · rw [isTop_iff_isMax] at ha_top 
-    rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter 
+  · rw [isTop_iff_isMax] at ha_top
+    rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
     by_cases ha_bot : IsBot a
-    · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter 
+    · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-    · rw [isBot_iff_isMin] at ha_bot 
-      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter 
+    · rw [isBot_iff_isMin] at ha_bot
+      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply IsOpen.inter
       · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩

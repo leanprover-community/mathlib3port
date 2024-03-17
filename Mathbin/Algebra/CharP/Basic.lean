@@ -44,7 +44,7 @@ protected theorem add_pow_prime_pow_eq (hp : p.Prime) (h : Commute x y) (n : ℕ
   · congr 1
     simp_rw [Finset.mul_sum, Nat.cast_comm, mul_assoc _ _ (p : R), ← Nat.cast_mul]
     refine' Finset.sum_congr rfl fun i hi => _
-    rw [mem_Ioo] at hi 
+    rw [mem_Ioo] at hi
     rw [Nat.div_mul_cancel (hp.dvd_choose_pow hi.1.ne' hi.2.Ne)]
 #align commute.add_pow_prime_pow_eq Commute.add_pow_prime_pow_eq
 -/
@@ -213,7 +213,7 @@ theorem CharP.exists [NonAssocSemiring R] : ∃ p, CharP R p :=
                     rwa [← Nat.mod_add_div x (Nat.find (Classical.not_forall.1 H)), Nat.cast_add,
                       Nat.cast_mul,
                       of_not_not (not_not_of_not_imp <| Nat.find_spec (Classical.not_forall.1 H)),
-                      MulZeroClass.zero_mul, add_zero] at H1 ,
+                      MulZeroClass.zero_mul, add_zero] at H1,
                     H2⟩)),
           fun H1 => by
           rw [← Nat.mul_div_cancel' H1, Nat.cast_mul,
@@ -371,7 +371,7 @@ theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1
   by
   suffices (2 : R) ≠ 0 by symm; rw [Ne.def, ← sub_eq_zero, sub_neg_eq_add]; exact this
   intro h
-  rw [show (2 : R) = (2 : ℕ) by norm_cast] at h 
+  rw [show (2 : R) = (2 : ℕ) by norm_cast] at h
   have := (CharP.cast_eq_zero_iff R p 2).mp h
   have := Nat.le_of_dvd (by decide) this
   rw [fact_iff] at *; linarith
@@ -558,7 +558,7 @@ end frobenius
 #print frobenius_inj /-
 theorem frobenius_inj [CommRing R] [IsReduced R] (p : ℕ) [Fact p.Prime] [CharP R p] :
     Function.Injective (frobenius R p) := fun x h H => by rw [← sub_eq_zero] at H ⊢;
-  rw [← frobenius_sub] at H ; exact IsReduced.eq_zero _ ⟨_, H⟩
+  rw [← frobenius_sub] at H; exact IsReduced.eq_zero _ ⟨_, H⟩
 #align frobenius_inj frobenius_inj
 -/
 
@@ -624,7 +624,7 @@ theorem pow_prime_pow_mul_eq_one_iff (p k m : ℕ) [Fact p.Prime] [CharP R p] (x
   induction' k with k hk
   · rw [pow_zero, one_mul]
   · refine' ⟨fun h => _, fun h => _⟩
-    · rw [pow_succ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at h 
+    · rw [pow_succ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at h
       exact hk.1 (frobenius_inj R p h)
     · rw [pow_mul', h, one_pow]
 #align char_p.pow_prime_pow_mul_eq_one_iff ExpChar.pow_prime_pow_mul_eq_one_iff
@@ -666,7 +666,7 @@ theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.
     have : e ∣ p := dvd_of_mul_left_eq d (Eq.symm hmul)
     have : e = p := dvd_antisymm ‹e ∣ p› ‹p ∣ e›
     have h₀ : 0 < p := two_pos.trans_le hp
-    have : d * p = 1 * p := by rw [‹e = p›] at hmul  <;> rw [one_mul] <;> exact Eq.symm hmul
+    have : d * p = 1 * p := by rw [‹e = p›] at hmul <;> rw [one_mul] <;> exact Eq.symm hmul
     show d = 1 ∨ d = p from Or.inl (mul_right_cancel₀ h₀.ne' this)
 #align char_p.char_is_prime_of_two_le CharP.char_is_prime_of_two_le
 -/
@@ -738,7 +738,7 @@ theorem ringChar_ne_one [Nontrivial R] : ringChar R ≠ 1 := by intro h; apply z
 #print CharP.nontrivial_of_char_ne_one /-
 theorem nontrivial_of_char_ne_one {v : ℕ} (hv : v ≠ 1) [hr : CharP R v] : Nontrivial R :=
   ⟨⟨(1 : ℕ), 0, fun h =>
-      hv <| by rwa [CharP.cast_eq_zero_iff _ v, Nat.dvd_one] at h  <;> assumption⟩⟩
+      hv <| by rwa [CharP.cast_eq_zero_iff _ v, Nat.dvd_one] at h <;> assumption⟩⟩
 #align char_p.nontrivial_of_char_ne_one CharP.nontrivial_of_char_ne_one
 -/
 
@@ -804,7 +804,7 @@ theorem charP_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 
       constructor
       · intro h
         rw [← Nat.mod_add_div k n, Nat.cast_add, Nat.cast_mul, H, MulZeroClass.zero_mul,
-          add_zero] at h 
+          add_zero] at h
         rw [Nat.dvd_iff_mod_eq_zero]
         apply hR _ (Nat.mod_lt _ _) h
         rw [← hn, Fintype.card_pos_iff]
@@ -819,7 +819,7 @@ theorem charP_of_prime_pow_injective (R) [Ring R] [Fintype R] (p : ℕ) [hp : Fa
   by
   obtain ⟨c, hc⟩ := CharP.exists R; skip
   have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, CharP.cast_card_eq_zero]
-  obtain ⟨i, hi, hc⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn 
+  obtain ⟨i, hi, hc⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn
   obtain rfl : i = n := by apply hR i hi; rw [← Nat.cast_pow, ← hc, CharP.cast_eq_zero]
   rwa [← hc]
 #align char_p_of_prime_pow_injective charP_of_prime_pow_injective
@@ -869,23 +869,23 @@ theorem Int.cast_injOn_of_ringChar_ne_two {R : Type _} [NonAssocRing R] [Nontriv
   intro a ha b hb h
   apply eq_of_sub_eq_zero
   by_contra hf
-  change a = 0 ∨ a = 1 ∨ a = -1 at ha 
-  change b = 0 ∨ b = 1 ∨ b = -1 at hb 
+  change a = 0 ∨ a = 1 ∨ a = -1 at ha
+  change b = 0 ∨ b = 1 ∨ b = -1 at hb
   have hh : a - b = 1 ∨ b - a = 1 ∨ a - b = 2 ∨ b - a = 2 :=
     by
     rcases ha with (ha | ha | ha) <;> rcases hb with (hb | hb | hb)
     pick_goal 5; pick_goal 9
     -- move goals with `a = b` to the front
-    iterate 3 rw [ha, hb, sub_self] at hf ; tauto
+    iterate 3 rw [ha, hb, sub_self] at hf; tauto
     -- 6 goals remain
     all_goals rw [ha, hb]; norm_num
   have h' : ((a - b : ℤ) : R) = 0 := by exact_mod_cast sub_eq_zero_of_eq h
   have h'' : ((b - a : ℤ) : R) = 0 := by exact_mod_cast sub_eq_zero_of_eq h.symm
   rcases hh with (hh | hh | hh | hh)
-  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h' ; exact one_ne_zero h'
-  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h'' ; exact one_ne_zero h''
-  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h' ; exact Ring.two_ne_zero hR h'
-  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h'' ; exact Ring.two_ne_zero hR h''
+  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h'; exact one_ne_zero h'
+  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h''; exact one_ne_zero h''
+  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h'; exact Ring.two_ne_zero hR h'
+  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h''; exact Ring.two_ne_zero hR h''
 #align int.cast_inj_on_of_ring_char_ne_two Int.cast_injOn_of_ringChar_ne_two
 -/
 

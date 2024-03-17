@@ -88,11 +88,11 @@ theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type _} {n : ℕ} (φ : L.B
   have h :=
     f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
       (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
-  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h 
+  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
   rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
     Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equiv.symm_comp_self,
     Function.comp_id, Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr,
-    Sum.elim_comp_inr, ← Function.comp.assoc] at h 
+    Sum.elim_comp_inr, ← Function.comp.assoc] at h
   refine' h.trans _
   rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp_id,
     Sum.elim_comp_inl, Sum.elim_comp_inr, ← Set.inclusion_eq_id,
@@ -137,9 +137,9 @@ theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ :=
   intro x y
   have h :=
     φ.map_formula ((var 0).equal (var 1) : L.formula (Fin 2)) fun i => if i = 0 then x else y
-  rw [formula.realize_equal, formula.realize_equal] at h 
+  rw [formula.realize_equal, formula.realize_equal] at h
   simp only [Nat.one_ne_zero, term.realize, Fin.one_eq_zero_iff, if_true, eq_self_iff_true,
-    Function.comp_apply, if_false] at h 
+    Function.comp_apply, if_false] at h
   exact h.1
 #align first_order.language.elementary_embedding.injective FirstOrder.Language.ElementaryEmbedding.injective
 -/
@@ -156,7 +156,7 @@ theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n �
     φ (funMap f x) = funMap f (φ ∘ x) :=
   by
   have h := φ.map_formula (formula.graph f) (Fin.cons (fun_map f x) x)
-  rw [formula.realize_graph, Fin.comp_cons, formula.realize_graph] at h 
+  rw [formula.realize_graph, Fin.comp_cons, formula.realize_graph] at h
   rw [eq_comm, h]
 #align first_order.language.elementary_embedding.map_fun FirstOrder.Language.ElementaryEmbedding.map_fun
 -/

@@ -120,7 +120,7 @@ theorem ascPochhammer_ne_zero_eval_zero {n : ℕ} (h : n ≠ 0) : (ascPochhammer
 theorem ascPochhammer_succ_right (n : ℕ) : ascPochhammer S (n + 1) = ascPochhammer S n * (X + n) :=
   by
   suffices h : ascPochhammer ℕ (n + 1) = ascPochhammer ℕ n * (X + n)
-  · apply_fun Polynomial.map (algebraMap ℕ S) at h 
+  · apply_fun Polynomial.map (algebraMap ℕ S) at h
     simpa only [ascPochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
       Polynomial.map_nat_cast] using h
   induction' n with n ih

@@ -329,7 +329,7 @@ variable [NormedField 𝕜] [NormedRing 𝕝] [NormedSpace 𝕜 𝕝] [AddCommGr
 theorem Balanced.smul_mono (hs : Balanced 𝕝 s) {a : 𝕝} {b : 𝕜} (h : ‖a‖ ≤ ‖b‖) : a • s ⊆ b • s :=
   by
   obtain rfl | hb := eq_or_ne b 0
-  · rw [norm_zero] at h 
+  · rw [norm_zero] at h
     rw [norm_eq_zero.1 (h.antisymm <| norm_nonneg _)]
     obtain rfl | h := s.eq_empty_or_nonempty
     · simp_rw [smul_set_empty]
@@ -360,7 +360,7 @@ theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ‖a‖) : A ⊆
   by
   refine' (subset_set_smul_iff₀ _).2 (hA a⁻¹ _)
   · rintro rfl
-    rw [norm_zero] at ha 
+    rw [norm_zero] at ha
     exact zero_lt_one.not_le ha
   · rw [norm_inv]
     exact inv_le_one ha
@@ -377,7 +377,7 @@ theorem Balanced.smul_eq (hA : Balanced 𝕜 A) (ha : ‖a‖ = 1) : a • A = A
 theorem Balanced.smul_mem_iff (hs : Balanced 𝕜 s) (h : ‖a‖ = ‖b‖) : a • x ∈ s ↔ b • x ∈ s :=
   by
   obtain rfl | hb := eq_or_ne b 0
-  · rw [norm_zero, norm_eq_zero] at h 
+  · rw [norm_zero, norm_eq_zero] at h
     rw [h]
   have ha : a ≠ 0 := norm_ne_zero_iff.1 (ne_of_eq_of_ne h <| norm_ne_zero_iff.2 hb)
   constructor <;> intro h' <;> [rw [← inv_mul_cancel_right₀ ha b];
@@ -494,7 +494,7 @@ theorem absorbs_zero_iff : Absorbs 𝕜 s 0 ↔ (0 : E) ∈ s :=
   rintro ⟨r, hr, h⟩
   obtain ⟨a, ha⟩ := NormedSpace.exists_lt_norm 𝕜 𝕜 r
   have := h _ ha.le
-  rwa [zero_subset, zero_mem_smul_set_iff] at this 
+  rwa [zero_subset, zero_mem_smul_set_iff] at this
   exact norm_ne_zero_iff.1 (hr.trans ha).ne'
 #align absorbs_zero_iff absorbs_zero_iff
 -/
@@ -531,7 +531,7 @@ variable [AddCommGroup E] [Module ℝ E] {s : Set E}
 theorem balanced_iff_neg_mem (hs : Convex ℝ s) : Balanced ℝ s ↔ ∀ ⦃x⦄, x ∈ s → -x ∈ s :=
   by
   refine' ⟨fun h x => h.neg_mem_iff.2, fun h a ha => smul_set_subset_iff.2 fun x hx => _⟩
-  rw [Real.norm_eq_abs, abs_le] at ha 
+  rw [Real.norm_eq_abs, abs_le] at ha
   rw [show a = -((1 - a) / 2) + (a - -1) / 2 by ring, add_smul, neg_smul, ← smul_neg]
   exact
     hs (h hx) hx (div_nonneg (sub_nonneg_of_le ha.2) zero_le_two)

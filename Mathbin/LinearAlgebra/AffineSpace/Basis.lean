@@ -273,7 +273,7 @@ theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (
     ∑ i, b.Coord i v • b i = v :=
   by
   have hb := b.affine_combination_coord_eq_self v
-  rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb 
+  rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
 #align affine_basis.linear_combination_coord_eq_self AffineBasis.linear_combination_coord_eq_self
 -/
 

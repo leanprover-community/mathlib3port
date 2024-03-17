@@ -104,7 +104,7 @@ theorem one_div_ne_zero : 1 / p ≠ 0 :=
 theorem conj_eq : q = p / (p - 1) :=
   by
   have := h.inv_add_inv_conj
-  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_eq_inv] at this 
+  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_eq_inv] at this
   field_simp [this, h.ne_zero]
 #align real.is_conjugate_exponent.conj_eq Real.IsConjExponent.conj_eq
 -/

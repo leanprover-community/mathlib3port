@@ -519,7 +519,7 @@ theorem isometry_toBCF : Isometry (toBCF : C₀(α, β) → α →ᵇ β) := by 
 theorem closed_range_toBCF : IsClosed (range (toBCF : C₀(α, β) → α →ᵇ β)) :=
   by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
-  rw [clusterPt_principal_iff] at hf 
+  rw [clusterPt_principal_iff] at hf
   have : tendsto f (cocompact α) (𝓝 0) :=
     by
     refine' metric.tendsto_nhds.mpr fun ε hε => _

@@ -564,10 +564,10 @@ theorem abs_add_eq_add_abs_le (hle : a ≤ b) : |a + b| = |a| + |b| ↔ 0 ≤ a 
   refine' this.mp ⟨fun h => _, fun h => by simp only [le_antisymm h b0, abs_of_neg a0, add_zero]⟩
   obtain ab | ab := le_or_lt (a + b) 0
   · refine' le_of_eq (eq_zero_of_neg_eq _)
-    rwa [abs_of_nonpos ab, neg_add_rev, add_comm, add_right_inj] at h 
+    rwa [abs_of_nonpos ab, neg_add_rev, add_comm, add_right_inj] at h
   · refine' (lt_irrefl (0 : α) _).elim
-    rw [abs_of_pos ab, add_left_inj] at h 
-    rwa [eq_zero_of_neg_eq h.symm] at a0 
+    rw [abs_of_pos ab, add_left_inj] at h
+    rwa [eq_zero_of_neg_eq h.symm] at a0
 #align abs_add_eq_add_abs_le abs_add_eq_add_abs_le
 
 #print abs_add_eq_add_abs_iff /-

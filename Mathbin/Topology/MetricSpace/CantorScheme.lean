@@ -98,7 +98,7 @@ its image under this map is in each set along the corresponding branch. -/
 theorem map_mem (x : (inducedMap A).1) (n : ℕ) : (inducedMap A).2 x ∈ A (res x n) :=
   by
   have := x.property.some_mem
-  rw [mem_Inter] at this 
+  rw [mem_Inter] at this
   exact this n
 #align cantor_scheme.map_mem CantorScheme.map_mem
 -/
@@ -162,7 +162,7 @@ theorem VanishingDiam.dist_lt (hA : VanishingDiam A) (ε : ℝ) (ε_pos : 0 < ε
     ∃ n : ℕ, ∀ (y) (_ : y ∈ A (res x n)) (z) (_ : z ∈ A (res x n)), dist y z < ε :=
   by
   specialize hA x
-  rw [ENNReal.tendsto_atTop_zero] at hA 
+  rw [ENNReal.tendsto_atTop_zero] at hA
   cases' hA (ENNReal.ofReal (ε / 2)) (by simp only [gt_iff_lt, ENNReal.ofReal_pos]; linarith) with n
     hn
   use n
@@ -186,7 +186,7 @@ theorem VanishingDiam.map_continuous [TopologicalSpace β] [DiscreteTopology β]
   rw [_root_.eventually_nhds_iff]
   refine' ⟨coe ⁻¹' cylinder x n, _, _, by simp⟩
   · rintro ⟨y, hy⟩ hyx
-    rw [mem_preimage, Subtype.coe_mk, cylinder_eq_res, mem_set_of] at hyx 
+    rw [mem_preimage, Subtype.coe_mk, cylinder_eq_res, mem_set_of] at hyx
     apply hn
     · rw [← hyx]
       apply map_mem

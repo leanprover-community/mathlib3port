@@ -90,7 +90,7 @@ theorem isClosed_subsets_of_isClosed (hs : IsClosed s) :
     rcases exists_edist_lt_of_Hausdorff_edist_lt hx Dtu with ⟨y, hy, Dxy⟩
     -- y : α,  hy : y ∈ u, Dxy : edist x y < ε
     exact ⟨y, hu hy, Dxy⟩
-  rwa [hs.closure_eq] at this 
+  rwa [hs.closure_eq] at this
 #align emetric.is_closed_subsets_of_is_closed EMetric.isClosed_subsets_of_isClosed
 -/
 
@@ -181,7 +181,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     have : x ∈ closure (⋃ m ≥ n, s m : Set α) := by apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
-    simp only [exists_prop, Set.mem_iUnion] at hz 
+    simp only [exists_prop, Set.mem_iUnion] at hz
     rcases hz with ⟨m, ⟨m_ge_n, hm⟩⟩
     -- m : ℕ, m_ge_n : m ≥ n, hm : z ∈ s m
     have : Hausdorff_edist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_refl n)
@@ -202,7 +202,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     ENNReal.Tendsto.const_mul
       (ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one <| by simp [ENNReal.one_lt_two])
       (Or.inr <| by simp)
-  rw [MulZeroClass.mul_zero] at this 
+  rw [MulZeroClass.mul_zero] at this
   obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_atTop
   exact ⟨N, fun n hn => lt_of_le_of_lt (main n) (hN n hn)⟩
@@ -236,7 +236,7 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
       · intro x hx
         have : x ∈ ⋃ y ∈ s, ball y δ := hs (by simp)
         rcases mem_Union₂.1 this with ⟨y, ys, dy⟩
-        have : edist y x < δ := by simp at dy  <;> rwa [edist_comm] at dy 
+        have : edist y x < δ := by simp at dy <;> rwa [edist_comm] at dy
         exact ⟨y, ⟨ys, ⟨x, hx, this⟩⟩, le_of_lt dy⟩
       · rintro x ⟨hx1, ⟨y, yu, hy⟩⟩
         exact ⟨y, yu, le_of_lt hy⟩
@@ -248,7 +248,7 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
       · apply fs.finite_subsets.subset fun b => _
         simp only [and_imp, Set.mem_image, Set.mem_setOf_eq, exists_imp]
         intro x hx hx'
-        rwa [hx'] at hx 
+        rwa [hx'] at hx
       · exact set_like.coe_injective.inj_on F
     -- `F` is ε-dense
     · obtain ⟨t0, t0s, Dut0⟩ := main u
@@ -274,7 +274,7 @@ instance NonemptyCompacts.emetricSpace : EMetricSpace (NonemptyCompacts α)
     NonemptyCompacts.ext <|
       by
       have : closure (s : Set α) = closure t := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
-      rwa [s.is_compact.is_closed.closure_eq, t.is_compact.is_closed.closure_eq] at this 
+      rwa [s.is_compact.is_closed.closure_eq, t.is_compact.is_closed.closure_eq] at this
 #align emetric.nonempty_compacts.emetric_space EMetric.NonemptyCompacts.emetricSpace
 -/
 
@@ -303,7 +303,7 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
   refine' isClosed_of_closure_subset fun s hs => ⟨_, _⟩
   · -- take a set set t which is nonempty and at a finite distance of s
     rcases mem_closure_iff.1 hs ⊤ ENNReal.coe_lt_top with ⟨t, ht, Dst⟩
-    rw [edist_comm] at Dst 
+    rw [edist_comm] at Dst
     -- since `t` is nonempty, so is `s`
     exact nonempty_of_Hausdorff_edist_ne_top ht.1 (ne_of_lt Dst)
   · refine' isCompact_iff_totallyBounded_isComplete.2 ⟨_, s.closed.is_complete⟩

@@ -150,12 +150,12 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B
           (e.restr (u ×ˢ univ)).EqOnSource
             (FiberwiseLinear.partialHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn) :=
   by
-  rw [SetCoe.forall'] at h 
+  rw [SetCoe.forall'] at h
   -- choose s hs hsp φ u hu hφ h2φ heφ using h,
   -- the following 2 lines should be `choose s hs hsp φ u hu hφ h2φ heφ using h,`
   -- `choose` produces a proof term that takes a long time to type-check by the kernel (it seems)
   -- porting note: todo: try using `choose` again in Lean 4
-  simp only [Classical.skolem, ← exists_prop] at h 
+  simp only [Classical.skolem, ← exists_prop] at h
   rcases h with ⟨s, hs, hsp, φ, u, hu, hφ, h2φ, heφ⟩
   have hesu : ∀ p : e.source, e.source ∩ s p = u p ×ˢ univ :=
     by
@@ -171,7 +171,7 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B
     by
     intro p q hq
     have : q ∈ u p ×ˢ (univ : Set F) := ⟨hq, trivial⟩
-    rw [← hesu p] at this 
+    rw [← hesu p] at this
     exact this.1
   have he : e.source = (Prod.fst '' e.source) ×ˢ (univ : Set F) :=
     by
@@ -219,7 +219,7 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B
       e.EqOnSource (FiberwiseLinear.partialHomeomorph Φ hU₀ hΦ.ContinuousOn h2Φ.ContinuousOn) :=
   by
   classical
-  rw [SetCoe.forall'] at h 
+  rw [SetCoe.forall'] at h
   choose! φ u hu hUu hux hφ h2φ heφ using h
   have heuφ : ∀ x : U, eq_on e (fun q => (q.1, φ x q.1 q.2)) (u x ×ˢ univ) :=
     by
@@ -269,7 +269,7 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B
     intro y hy
     rw [hΦφ ⟨x, hx⟩ y hy]
   refine' ⟨Φ, U, hU', hΦ, h2Φ, hU, fun p hp => _⟩
-  rw [hU] at hp 
+  rw [hU] at hp
   -- using rw on the next line seems to cause a timeout in kernel type-checking
   refine' (heuφ ⟨p.fst, hp.1⟩ ⟨hux _, hp.2⟩).trans _
   trace

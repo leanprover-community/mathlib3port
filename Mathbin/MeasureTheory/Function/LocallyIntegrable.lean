@@ -105,7 +105,7 @@ theorem LocallyIntegrableOn.aestronglyMeasurable [SecondCountableTopology X]
     have : s ⊆ ⋃ x : s, u x := fun y hy => mem_Union_of_mem ⟨y, hy⟩ (xu ⟨y, hy⟩)
     obtain ⟨T, hT_count, hT_un⟩ := is_open_Union_countable u u_open
     refine' ⟨T, hT_count, _⟩
-    rw [← hT_un, bUnion_eq_Union] at this 
+    rw [← hT_un, bUnion_eq_Union] at this
     rw [← Union_inter, eq_comm, inter_eq_right_iff_subset]
     exact this
   have : Countable T := countable_coe_iff.mpr T_count
@@ -196,7 +196,7 @@ theorem locallyIntegrableOn_iff_locallyIntegrable_restrict [OpensMeasurableSpace
     refine' ⟨u, hu_o.mem_nhds hu_x, _⟩
     rw [integrable_on, restrict_restrict hu_o.measurable_set]
     exact ht_int.mono_set hu_sub
-  · rw [← isOpen_compl_iff] at hs 
+  · rw [← isOpen_compl_iff] at hs
     refine' ⟨sᶜ, hs.mem_nhds h, _⟩
     rw [integrable_on, restrict_restrict, inter_comm, inter_compl_self, ← integrable_on]
     exacts [integrable_on_empty, hs.measurable_set]

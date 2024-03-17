@@ -82,11 +82,9 @@ theorem Multiset.fst_coe_eq_coe {x : m} : x.1 = x :=
   rfl
 #align multiset.fst_coe_eq_coe Multiset.fst_coe_eq_coe
 
-#print Multiset.coe_eq /-
 @[simp]
 theorem Multiset.coe_eq {x y : m} : (x : α) = (y : α) ↔ x.1 = y.1 := by cases x; cases y; rfl
 #align multiset.coe_eq Multiset.coe_eq
--/
 
 #print Multiset.coe_mk /-
 @[simp]
@@ -269,7 +267,7 @@ theorem Multiset.image_toEnumFinset_fst (m : Multiset α) :
 theorem Multiset.map_univ_coe (m : Multiset α) : (Finset.univ : Finset m).val.map coe = m :=
   by
   have := m.map_to_enum_finset_fst
-  rw [← m.map_univ_coe_embedding] at this 
+  rw [← m.map_univ_coe_embedding] at this
   simpa only [Finset.map_val, Multiset.coeEmbedding_apply, Multiset.map_map,
     Function.comp_apply] using this
 #align multiset.map_univ_coe Multiset.map_univ_coe

@@ -134,9 +134,9 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         by_cases h : ε ≤ dist x y
         · exact Or.inl h
         · have Z := hε (not_le.1 h)
-          simp only [Set.mem_setOf_eq] at Z 
+          simp only [Set.mem_setOf_eq] at Z
           exact Or.inr Z
-    simp only [not_le.mpr hxy, false_or_iff, not_le] at this 
+    simp only [not_le.mpr hxy, false_or_iff, not_le] at this
     exact ts this
   · /- Start from a set `s` containing an ε-neighborhood of the diagonal in `completion α`. To show
         that it is an entourage, we use the fact that `dist` is uniformly continuous on
@@ -150,7 +150,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     have : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos
     have T := uniformContinuous_def.1 (@completion.uniform_continuous_dist α _) r this
     simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map,
-      Set.mem_setOf_eq] at T 
+      Set.mem_setOf_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩
     refine' mem_of_superset ht1 _
     have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε :=
@@ -158,7 +158,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
       intro a b hab
       have : ((a, b), (a, a)) ∈ t1 ×ˢ t2 := ⟨hab, refl_mem_uniformity ht2⟩
       have I := ht this
-      simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I 
+      simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I
       exact lt_of_le_of_lt (le_abs_self _) I
     show t1 ⊆ s
     · rintro ⟨a, b⟩ hp
@@ -173,10 +173,10 @@ protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : 
   by
   /- This follows from the separation of `completion α` and from the description of
     entourages in terms of the distance. -/
-  have : SeparatedSpace (completion α) := by infer_instance
-  refine' separated_def.1 this x y fun s hs => _
+  have : T0Space (completion α) := by infer_instance
+  refine' t0Space_iff_uniformity.1 this x y fun s hs => _
   rcases(completion.mem_uniformity_dist s).1 hs with ⟨ε, εpos, hε⟩
-  rw [← h] at εpos 
+  rw [← h] at εpos
   exact hε εpos
 #align uniform_space.completion.eq_of_dist_eq_zero UniformSpace.Completion.eq_of_dist_eq_zero
 -/

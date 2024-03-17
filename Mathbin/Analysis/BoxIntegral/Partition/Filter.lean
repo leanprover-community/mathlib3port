@@ -578,7 +578,7 @@ theorem tendsto_embedBox_toFilteriUnion_top (l : IntegrationParams) (h : I ≤ J
           (l.has_basis_to_filter_distortion_Union J _ _)).2
       fun r hr => _
   refine' ⟨r, hr, fun π hπ => _⟩
-  rw [mem_set_of_eq, prepartition.Union_top] at hπ 
+  rw [mem_set_of_eq, prepartition.Union_top] at hπ
   refine' ⟨⟨hπ.1.1, hπ.1.2, fun hD => le_trans (hπ.1.3 hD) (le_max_left _ _), fun hD => _⟩, _⟩
   · refine' ⟨_, π₀.Union_compl.trans _, le_max_right _ _⟩; congr 1
     exact (prepartition.Union_single h).trans hπ.2.symm
@@ -601,7 +601,7 @@ theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Preparti
 theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc : I.distortion ≤ c)
     (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.MemBaseSet I c r π ∧ π.IsPartition :=
   by
-  rw [← prepartition.distortion_top] at hc 
+  rw [← prepartition.distortion_top] at hc
   have hc' : (⊤ : prepartition I).compl.distortion ≤ c := by simp
   simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
 #align box_integral.integration_params.exists_mem_base_set_is_partition BoxIntegral.IntegrationParams.exists_memBaseSet_isPartition

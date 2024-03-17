@@ -102,7 +102,7 @@ theorem integral_comp_neg_Iic {E : Type _} [NormedAddCommGroup E] [NormedSpace �
   have A : MeasurableEmbedding fun x : ℝ => -x :=
     (Homeomorph.neg ℝ).ClosedEmbedding.MeasurableEmbedding
   have := A.set_integral_map f (Ici (-c))
-  rw [measure.map_neg_eq_self (volume : Measure ℝ)] at this 
+  rw [measure.map_neg_eq_self (volume : Measure ℝ)] at this
   simp_rw [← integral_Ici_eq_integral_Ioi, this, neg_preimage, preimage_neg_Ici, neg_neg]
 #align integral_comp_neg_Iic integral_comp_neg_Iic
 -/

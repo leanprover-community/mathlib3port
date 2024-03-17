@@ -213,7 +213,7 @@ theorem rdropWhile_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p (
   intro h
   rw [nth_le_reverse']
   · simp
-  · rw [← Ne.def, ← pos_iff_ne_zero] at h 
+  · rw [← Ne.def, ← pos_iff_ne_zero] at h
     simp [tsub_lt_iff_right (Nat.succ_le_of_lt h)]
 #align list.rdrop_while_eq_self_iff List.rdropWhile_eq_self_iff
 -/

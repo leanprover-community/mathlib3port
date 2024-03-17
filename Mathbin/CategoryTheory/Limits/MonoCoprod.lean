@@ -120,8 +120,8 @@ instance monoCoprodType : MonoCoprod (Type u) :=
       · dsimp; exact congr_fun h₂ x
     · rw [mono_iff_injective]
       intro a₁ a₂ h
-      simp only [binary_cofan.mk_inl] at h 
-      dsimp at h 
+      simp only [binary_cofan.mk_inl] at h
+      dsimp at h
       simpa only using h
 #align category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.monoCoprodType
 -/

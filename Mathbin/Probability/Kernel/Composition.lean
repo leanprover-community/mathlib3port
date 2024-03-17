@@ -297,7 +297,7 @@ theorem ae_kernel_lt_top (a : α) (h2s : (κ ⊗ₖ η) a s ≠ ∞) :
   have h2t : (κ ⊗ₖ η) a t ≠ ∞ := by rwa [measure_to_measurable]
   have ht_lt_top : ∀ᵐ b ∂κ a, η (a, b) (Prod.mk b ⁻¹' t) < ∞ :=
     by
-    rw [kernel.comp_prod_apply _ _ _ ht] at h2t 
+    rw [kernel.comp_prod_apply _ _ _ ht] at h2t
     exact ae_lt_top (kernel.measurable_kernel_prod_mk_left' ht a) h2t
   filter_upwards [ht_lt_top] with b hb
   exact (this b).trans_lt hb
@@ -319,7 +319,7 @@ theorem ae_null_of_compProd_null (h : (κ ⊗ₖ η) a s = 0) :
     (fun b => η (a, b) (Prod.mk b ⁻¹' s)) =ᵐ[κ a] 0 :=
   by
   obtain ⟨t, hst, mt, ht⟩ := exists_measurable_superset_of_null h
-  simp_rw [comp_prod_null a mt] at ht 
+  simp_rw [comp_prod_null a mt] at ht
   rw [Filter.eventuallyLE_antisymm_iff]
   exact
     ⟨Filter.EventuallyLE.trans_eq
@@ -397,7 +397,7 @@ theorem lintegral_compProd' (κ : kernel α β) [IsSFiniteKernel κ] (η : kerne
   let F : ℕ → simple_func (β × γ) ℝ≥0∞ := simple_func.eapprox (Function.uncurry f)
   have h : ∀ a, (⨆ n, F n a) = Function.uncurry f a :=
     simple_func.supr_eapprox_apply (Function.uncurry f) hf
-  simp only [Prod.forall, Function.uncurry_apply_pair] at h 
+  simp only [Prod.forall, Function.uncurry_apply_pair] at h
   simp_rw [← h, Prod.mk.eta]
   have h_mono : Monotone F := fun i j hij b =>
     simple_func.monotone_eapprox (Function.uncurry f) hij _

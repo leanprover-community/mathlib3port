@@ -78,7 +78,7 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
       diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_toAlgHom',
       LinearMap.toFun_eq_coe]
     simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this ⊢
-    rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this 
+    rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this
     rw [this]
     ring
 #align derivation_to_square_zero_of_lift derivationToSquareZeroOfLift

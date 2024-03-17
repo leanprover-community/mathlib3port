@@ -123,7 +123,7 @@ theorem finprod_eq_prod_plift_of_mulSupport_toFinset_subset {f : α → M}
     ∏ᶠ i, f i = ∏ i in s, f i.down := by
   rw [finprod, dif_pos]
   refine' Finset.prod_subset hs fun x hx hxf => _
-  rwa [hf.mem_to_finset, nmem_mul_support] at hxf 
+  rwa [hf.mem_to_finset, nmem_mul_support] at hxf
 #align finprod_eq_prod_plift_of_mul_support_to_finset_subset finprod_eq_prod_plift_of_mulSupport_toFinset_subset
 #align finsum_eq_sum_plift_of_support_to_finset_subset finsum_eq_sum_plift_of_support_toFinset_subset
 -/
@@ -133,7 +133,7 @@ theorem finprod_eq_prod_plift_of_mulSupport_toFinset_subset {f : α → M}
 theorem finprod_eq_prod_plift_of_mulSupport_subset {f : α → M} {s : Finset (PLift α)}
     (hs : mulSupport (f ∘ PLift.down) ⊆ s) : ∏ᶠ i, f i = ∏ i in s, f i.down :=
   finprod_eq_prod_plift_of_mulSupport_toFinset_subset (s.finite_toSet.Subset hs) fun x hx => by
-    rw [finite.mem_to_finset] at hx ; exact hs hx
+    rw [finite.mem_to_finset] at hx; exact hs hx
 #align finprod_eq_prod_plift_of_mul_support_subset finprod_eq_prod_plift_of_mulSupport_subset
 #align finsum_eq_sum_plift_of_support_subset finsum_eq_sum_plift_of_support_subset
 -/
@@ -554,7 +554,7 @@ theorem finprod_mem_eq_one_of_infinite {f : α → M} {s : Set α} (hs : (s ∩ 
     ∏ᶠ i ∈ s, f i = 1 := by
   rw [finprod_mem_def]
   apply finprod_of_infinite_mulSupport
-  rwa [← mul_support_mul_indicator] at hs 
+  rwa [← mul_support_mul_indicator] at hs
 #align finprod_mem_eq_one_of_infinite finprod_mem_eq_one_of_infinite
 #align finsum_mem_eq_zero_of_infinite finsum_mem_eq_zero_of_infinite
 -/
@@ -666,7 +666,7 @@ theorem finprod_div_distrib [DivisionCommMonoid G] {f g : α → G} (hf : (mulSu
 theorem finprod_mem_mul_distrib' (hf : (s ∩ mulSupport f).Finite) (hg : (s ∩ mulSupport g).Finite) :
     ∏ᶠ i ∈ s, f i * g i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ s, g i :=
   by
-  rw [← mul_support_mul_indicator] at hf hg 
+  rw [← mul_support_mul_indicator] at hf hg
   simp only [finprod_mem_def, mul_indicator_mul, finprod_mul_distrib hf hg]
 #align finprod_mem_mul_distrib' finprod_mem_mul_distrib'
 #align finsum_mem_add_distrib' finsum_mem_add_distrib'
@@ -1212,7 +1212,7 @@ theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
   rw [finprod_cond_eq_prod_of_cond_iff f h, Finset.sdiff_singleton_eq_erase]
   by_cases ha : a ∈ mul_support f
   · apply Finset.mul_prod_erase _ _ ((finite.mem_to_finset _).mpr ha)
-  · rw [mem_mul_support, Classical.not_not] at ha 
+  · rw [mem_mul_support, Classical.not_not] at ha
     rw [ha, one_mul]
     apply Finset.prod_erase _ ha
 #align mul_finprod_cond_ne mul_finprod_cond_ne

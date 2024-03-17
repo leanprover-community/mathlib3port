@@ -757,7 +757,7 @@ theorem mem_pairSelfAdjointMatricesSubmodule :
     Submodule.mem_map, mem_is_pair_self_adjoint_submodule]
   constructor
   · rintro ⟨f, hf, hA⟩
-    have hf' : f = A₁.to_lin' := by rw [← hA, Matrix.toLin'_toMatrix']; rw [hf'] at hf 
+    have hf' : f = A₁.to_lin' := by rw [← hA, Matrix.toLin'_toMatrix']; rw [hf'] at hf
     rw [← isAdjointPair_toLinearMap₂']
     exact hf
   · intro h; refine' ⟨A₁.to_lin', _, LinearMap.toMatrix'_toLin' _⟩

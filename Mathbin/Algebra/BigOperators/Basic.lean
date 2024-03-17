@@ -444,7 +444,7 @@ section ToList
 #print Finset.prod_to_list /-
 @[simp, to_additive]
 theorem prod_to_list (s : Finset α) (f : α → β) : (s.toList.map f).Prod = s.Prod f := by
-  rw [Finset.prod, ← Multiset.coe_prod, ← Multiset.coe_map, Finset.coe_toList]
+  rw [Finset.prod, ← Multiset.prod_coe, ← Multiset.map_coe, Finset.coe_toList]
 #align finset.prod_to_list Finset.prod_to_list
 #align finset.sum_to_list Finset.sum_to_list
 -/
@@ -865,7 +865,7 @@ theorem prod_filter (p : α → Prop) [DecidablePred p] (f : α → β) :
     _ = ∏ a in s, if p a then f a else 1 :=
       by
       refine' prod_subset (filter_subset _ s) fun x hs h => _
-      rw [mem_filter, not_and] at h 
+      rw [mem_filter, not_and] at h
       exact if_neg (h hs)
 #align finset.prod_filter Finset.prod_filter
 #align finset.sum_filter Finset.sum_filter
@@ -1336,7 +1336,7 @@ theorem nonempty_of_prod_ne_one (h : ∏ x in s, f x ≠ 1) : s.Nonempty :=
 @[to_additive]
 theorem exists_ne_one_of_prod_ne_one (h : ∏ x in s, f x ≠ 1) : ∃ a ∈ s, f a ≠ 1 := by
   classical
-  rw [← prod_filter_ne_one] at h 
+  rw [← prod_filter_ne_one] at h
   rcases nonempty_of_prod_ne_one h with ⟨x, hx⟩
   exact ⟨x, (mem_filter.1 hx).1, (mem_filter.1 hx).2⟩
 #align finset.exists_ne_one_of_prod_ne_one Finset.exists_ne_one_of_prod_ne_one
@@ -1462,7 +1462,7 @@ theorem prod_list_count_of_subset [DecidableEq α] [CommMonoid α] (m : List α)
   by
   rw [prod_list_count]
   refine' prod_subset hs fun x _ hx => _
-  rw [mem_to_finset] at hx 
+  rw [mem_to_finset] at hx
   rw [count_eq_zero_of_not_mem hx, pow_zero]
 #align finset.prod_list_count_of_subset Finset.prod_list_count_of_subset
 #align finset.sum_list_count_of_subset Finset.sum_list_count_of_subset
@@ -1720,7 +1720,7 @@ theorem prod_comp [DecidableEq γ] (f : γ → β) (g : α → γ) :
         (-- `(by finish)` closes this
         by
           rintro ⟨b_fst, b_snd⟩ H
-          simp only [mem_image, exists_prop, mem_filter, mem_sigma] at H 
+          simp only [mem_image, exists_prop, mem_filter, mem_sigma] at H
           tauto)
     _ = ∏ b in s.image g, ∏ a in s.filterₓ fun a => g a = b, f (g a) := (prod_sigma _ _ _)
     _ = ∏ b in s.image g, ∏ a in s.filterₓ fun a => g a = b, f b :=
@@ -1826,7 +1826,7 @@ theorem prod_update_of_not_mem [DecidableEq α] {s : Finset α} {i : α} (h : i 
     (b : β) : ∏ x in s, Function.update f i b x = ∏ x in s, f x :=
   by
   apply prod_congr rfl fun j hj => _
-  have : j ≠ i := by intro eq; rw [Eq] at hj ; exact h hj
+  have : j ≠ i := by intro eq; rw [Eq] at hj; exact h hj
   simp [this]
 #align finset.prod_update_of_not_mem Finset.prod_update_of_not_mem
 #align finset.sum_update_of_not_mem Finset.sum_update_of_not_mem
@@ -1853,12 +1853,12 @@ theorem eq_of_card_le_one_of_prod_eq {s : Finset α} (hc : s.card ≤ 1) {f : α
   by_cases hc0 : s.card = 0
   · exact False.elim (card_ne_zero_of_mem hx hc0)
   · have h1 : s.card = 1 := le_antisymm hc (Nat.one_le_of_lt (Nat.pos_of_ne_zero hc0))
-    rw [card_eq_one] at h1 
+    rw [card_eq_one] at h1
     cases' h1 with x2 hx2
-    rw [hx2, mem_singleton] at hx 
-    simp_rw [hx2] at h 
+    rw [hx2, mem_singleton] at hx
+    simp_rw [hx2] at h
     rw [hx]
-    rw [prod_singleton] at h 
+    rw [prod_singleton] at h
     exact h
 #align finset.eq_of_card_le_one_of_prod_eq Finset.eq_of_card_le_one_of_prod_eq
 #align finset.eq_of_card_le_one_of_sum_eq Finset.eq_of_card_le_one_of_sum_eq
@@ -1897,7 +1897,7 @@ theorem prod_erase [DecidableEq α] (s : Finset α) {f : α → β} {a : α} (h 
   by
   rw [← sdiff_singleton_eq_erase]
   refine' prod_subset (sdiff_subset _ _) fun x hx hnx => _
-  rw [sdiff_singleton_eq_erase] at hnx 
+  rw [sdiff_singleton_eq_erase] at hnx
   rwa [eq_of_mem_of_not_mem_erase hx hnx]
 #align finset.prod_erase Finset.prod_erase
 #align finset.sum_erase Finset.sum_erase
@@ -1913,7 +1913,7 @@ theorem prod_ite_one {f : α → Prop} [DecidablePred f] (hf : (s : Set α).Pair
   · obtain ⟨i, hi, hfi⟩ := h
     rw [prod_eq_single_of_mem _ hi, if_pos hfi]
     exact fun j hj h => if_neg fun hfj => (hf hj hi h).le_bot ⟨hfj, hfi⟩
-  · push_neg at h 
+  · push_neg at h
     rw [prod_eq_one]
     exact fun i hi => if_neg (h i hi)
 #align finset.prod_ite_one Finset.prod_ite_one
@@ -1945,9 +1945,9 @@ theorem eq_one_of_prod_eq_one {s : Finset α} {f : α → β} {a : α} (hp : ∏
   classical
   by_cases h : x = a
   · rw [h]
-    rw [h] at hx 
+    rw [h] at hx
     rw [← prod_subset (singleton_subset_iff.2 hx) fun t ht ha => h1 t ht (not_mem_singleton.1 ha),
-      prod_singleton] at hp 
+      prod_singleton] at hp
     exact hp
   · exact h1 x hx h
 #align finset.eq_one_of_prod_eq_one Finset.eq_one_of_prod_eq_one
@@ -2211,7 +2211,7 @@ theorem prod_boole {s : Finset α} {p : α → Prop} [DecidablePred p] :
   · apply prod_eq_one
     intro i hi
     rw [if_pos (h i hi)]
-  · push_neg at h 
+  · push_neg at h
     rcases h with ⟨i, hi, hq⟩
     apply prod_eq_zero hi
     rw [if_neg hq]
@@ -2400,7 +2400,7 @@ theorem disjoint_sum_left {a : Multiset α} {i : Multiset (Multiset α)} :
     Multiset.Disjoint i.Sum a ↔ ∀ b ∈ i, Multiset.Disjoint b a :=
   Quotient.inductionOn i fun l =>
     by
-    rw [quot_mk_to_coe, Multiset.coe_sum]
+    rw [quot_mk_to_coe, Multiset.sum_coe]
     exact disjoint_list_sum_left
 #align multiset.disjoint_sum_left Multiset.disjoint_sum_left
 -/

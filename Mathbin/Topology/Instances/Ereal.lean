@@ -157,7 +157,7 @@ theorem tendsto_toReal {a : EReal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) :
 #print EReal.continuousOn_toReal /-
 theorem continuousOn_toReal : ContinuousOn EReal.toReal ({⊥, ⊤}ᶜ : Set EReal) := fun a ha =>
   ContinuousAt.continuousWithinAt
-    (tendsto_toReal (by simp [not_or] at ha ; exact ha.2) (by simp [not_or] at ha ; exact ha.1))
+    (tendsto_toReal (by simp [not_or] at ha; exact ha.2) (by simp [not_or] at ha; exact ha.1))
 #align ereal.continuous_on_to_real EReal.continuousOn_toReal
 -/
 

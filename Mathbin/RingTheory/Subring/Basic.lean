@@ -950,7 +950,7 @@ theorem coe_iInf {ι : Sort _} {S : ι → Subring R} : (↑(⨅ i, S i) : Set R
 
 #print Subring.mem_iInf /-
 theorem mem_iInf {ι : Sort _} {S : ι → Subring R} {x : R} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [iInf, mem_Inf, Set.forall_range_iff]
+  simp only [iInf, mem_Inf, Set.forall_mem_range]
 #align subring.mem_infi Subring.mem_iInf
 -/
 
@@ -1746,7 +1746,7 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩; clear hx
   induction' L with hd tl ih; · exact h0
-  rw [List.forall_mem_cons] at HL 
+  rw [List.forall_mem_cons] at HL
   suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
@@ -1754,16 +1754,16 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   rsuffices ⟨L, HL', HP | HP⟩ :
     ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
   · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact h1
-    rw [List.forall_mem_cons] at HL' 
+    rw [List.forall_mem_cons] at HL'
     rw [List.prod_cons]
     exact hs _ HL'.1 _ (ih HL'.2)
   · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact hneg1
     rw [List.prod_cons, neg_mul_eq_mul_neg]
-    rw [List.forall_mem_cons] at HL' 
+    rw [List.forall_mem_cons] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
   induction' hd with hd tl ih
   · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
-  rw [List.forall_mem_cons] at HL 
+  rw [List.forall_mem_cons] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
   ·
     exact

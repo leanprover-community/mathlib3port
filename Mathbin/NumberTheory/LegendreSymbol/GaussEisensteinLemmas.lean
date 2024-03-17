@@ -285,8 +285,8 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
         (Nat.div_lt_self hp.1.Pos (by decide))
     have : (x.1 : ZMod p) = 0 := by
       simpa [hq0] using congr_arg (coe : ℕ → ZMod p) (le_antisymm hpq hqp)
-    apply_fun ZMod.val at this 
-    rw [val_cast_of_lt hxp, val_zero] at this 
+    apply_fun ZMod.val at this
+    rw [val_cast_of_lt hxp, val_zero] at this
     simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_and_iff, mem_product] using hx
   have hunion :
     (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪

@@ -51,62 +51,50 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-#print ContinuousMap.CompactOpen.gen /-
 /-- A generating set for the compact-open topology (when `s` is compact and `u` is open). -/
-def CompactOpen.gen (s : Set α) (u : Set β) : Set C(α, β) :=
+def compactOpen.gen (s : Set α) (u : Set β) : Set C(α, β) :=
   {f | f '' s ⊆ u}
-#align continuous_map.compact_open.gen ContinuousMap.CompactOpen.gen
--/
+#align continuous_map.compact_open.gen ContinuousMap.compactOpen.gen
 
-#print ContinuousMap.gen_empty /-
 @[simp]
-theorem gen_empty (u : Set β) : CompactOpen.gen (∅ : Set α) u = Set.univ :=
+theorem gen_empty (u : Set β) : compactOpen.gen (∅ : Set α) u = Set.univ :=
   Set.ext fun f => iff_true_intro ((congr_arg (· ⊆ u) (image_empty f)).mpr u.empty_subset)
 #align continuous_map.gen_empty ContinuousMap.gen_empty
--/
 
-#print ContinuousMap.gen_univ /-
 @[simp]
-theorem gen_univ (s : Set α) : CompactOpen.gen s (Set.univ : Set β) = Set.univ :=
+theorem gen_univ (s : Set α) : compactOpen.gen s (Set.univ : Set β) = Set.univ :=
   Set.ext fun f => iff_true_intro (f '' s).subset_univ
 #align continuous_map.gen_univ ContinuousMap.gen_univ
--/
 
-#print ContinuousMap.gen_inter /-
 @[simp]
 theorem gen_inter (s : Set α) (u v : Set β) :
-    CompactOpen.gen s (u ∩ v) = CompactOpen.gen s u ∩ CompactOpen.gen s v :=
+    compactOpen.gen s (u ∩ v) = compactOpen.gen s u ∩ compactOpen.gen s v :=
   Set.ext fun f => subset_inter_iff
 #align continuous_map.gen_inter ContinuousMap.gen_inter
--/
 
-#print ContinuousMap.gen_union /-
 @[simp]
 theorem gen_union (s t : Set α) (u : Set β) :
-    CompactOpen.gen (s ∪ t) u = CompactOpen.gen s u ∩ CompactOpen.gen t u :=
+    compactOpen.gen (s ∪ t) u = compactOpen.gen s u ∩ compactOpen.gen t u :=
   Set.ext fun f => (iff_of_eq (congr_arg (· ⊆ u) (image_union f s t))).trans union_subset_iff
 #align continuous_map.gen_union ContinuousMap.gen_union
--/
 
-#print ContinuousMap.gen_empty_right /-
-theorem gen_empty_right {s : Set α} (h : s.Nonempty) : CompactOpen.gen s (∅ : Set β) = ∅ :=
+theorem gen_empty_right {s : Set α} (h : s.Nonempty) : compactOpen.gen s (∅ : Set β) = ∅ :=
   eq_empty_of_forall_not_mem fun f => (h.image _).not_subset_empty
 #align continuous_map.gen_empty_right ContinuousMap.gen_empty_right
--/
 
 #print ContinuousMap.compactOpen /-
 -- The compact-open topology on the space of continuous maps α → β.
 instance compactOpen : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
-    {m | ∃ (s : Set α) (hs : IsCompact s) (u : Set β) (hu : IsOpen u), m = CompactOpen.gen s u}
+    {m | ∃ (s : Set α) (hs : IsCompact s) (u : Set β) (hu : IsOpen u), m = compactOpen.gen s u}
 #align continuous_map.compact_open ContinuousMap.compactOpen
 -/
 
-#print ContinuousMap.isOpen_gen /-
-protected theorem isOpen_gen {s : Set α} (hs : IsCompact s) {u : Set β} (hu : IsOpen u) :
-    IsOpen (CompactOpen.gen s u) :=
+#print ContinuousMap.isOpen_setOf_mapsTo /-
+protected theorem isOpen_setOf_mapsTo {s : Set α} (hs : IsCompact s) {u : Set β} (hu : IsOpen u) :
+    IsOpen (compactOpen.gen s u) :=
   TopologicalSpace.GenerateOpen.basic _ (by dsimp [mem_set_of_eq] <;> tauto)
-#align continuous_map.is_open_gen ContinuousMap.isOpen_gen
+#align continuous_map.is_open_gen ContinuousMap.isOpen_setOf_mapsTo
 -/
 
 section Functorial
@@ -114,7 +102,7 @@ section Functorial
 variable (g : C(β, γ))
 
 private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsOpen u) :
-    ContinuousMap.comp g ⁻¹' CompactOpen.gen s u = CompactOpen.gen s (g ⁻¹' u) :=
+    ContinuousMap.comp g ⁻¹' compactOpen.gen s u = compactOpen.gen s (g ⁻¹' u) :=
   by
   ext ⟨f, _⟩
   change g ∘ f '' s ⊆ u ↔ f '' s ⊆ g ⁻¹' u
@@ -124,14 +112,14 @@ private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : 
 /-- C(α, -) is a functor. -/
 theorem continuous_comp : Continuous (ContinuousMap.comp g : C(α, β) → C(α, γ)) :=
   continuous_generateFrom fun m ⟨s, hs, u, hu, hm⟩ => by
-    rw [hm, preimage_gen g hs hu] <;> exact ContinuousMap.isOpen_gen hs (hu.preimage g.2)
+    rw [hm, preimage_gen g hs hu] <;> exact ContinuousMap.isOpen_setOf_mapsTo hs (hu.preimage g.2)
 #align continuous_map.continuous_comp ContinuousMap.continuous_comp
 -/
 
 variable (f : C(α, β))
 
 private theorem image_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsOpen u) :
-    (fun g : C(β, γ) => g.comp f) ⁻¹' CompactOpen.gen s u = CompactOpen.gen (f '' s) u :=
+    (fun g : C(β, γ) => g.comp f) ⁻¹' compactOpen.gen s u = compactOpen.gen (f '' s) u :=
   by
   ext ⟨g, _⟩
   change g ∘ f '' s ⊆ u ↔ g '' (f '' s) ⊆ u
@@ -141,7 +129,7 @@ private theorem image_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsO
 /-- C(-, γ) is a functor. -/
 theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(α, γ)) :=
   continuous_generateFrom fun m ⟨s, hs, u, hu, hm⟩ => by rw [hm, image_gen f hs hu];
-    exact ContinuousMap.isOpen_gen (hs.image f.2) hu
+    exact ContinuousMap.isOpen_setOf_mapsTo (hs.image f.2) hu
 #align continuous_map.continuous_comp_left ContinuousMap.continuous_comp_left
 -/
 
@@ -165,7 +153,8 @@ theorem continuous_comp' [LocallyCompactSpace β] :
       obtain ⟨L, hL, hKL, hLU⟩ := exists_compact_between (hK.image φ₀.2) (hU.preimage ψ₀.2) H
       use{φ : C(α, β) | φ '' K ⊆ interior L} ×ˢ {ψ : C(β, γ) | ψ '' L ⊆ U}
       use fun ⟨φ, ψ⟩ ⟨hφ, hψ⟩ => subset_trans hφ (interior_subset.trans <| image_subset_iff.mp hψ)
-      use(ContinuousMap.isOpen_gen hK isOpen_interior).Prod (ContinuousMap.isOpen_gen hL hU)
+      use(ContinuousMap.isOpen_setOf_mapsTo hK isOpen_interior).Prod
+          (ContinuousMap.isOpen_setOf_mapsTo hL hU)
       exact mem_prod.mpr ⟨hKL, image_subset_iff.mpr hLU⟩)
 #align continuous_map.continuous_comp' ContinuousMap.continuous_comp'
 -/
@@ -197,13 +186,13 @@ theorem continuous_eval [LocallyCompactSpace α] : Continuous fun p : C(α, β) 
       LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
     let ⟨u, us, uo, xu⟩ := mem_nhds_iff.mp hs
     show (fun p : C(α, β) × α => p.1 p.2) ⁻¹' n ∈ 𝓝 (f, x) from
-      let w := CompactOpen.gen s v ×ˢ u
+      let w := compactOpen.gen s v ×ˢ u
       have : w ⊆ (fun p : C(α, β) × α => p.1 p.2) ⁻¹' n := fun ⟨f', x'⟩ ⟨hf', hx'⟩ =>
         calc
           f' x' ∈ f' '' s := mem_image_of_mem f' (us hx')
           _ ⊆ v := hf'
           _ ⊆ n := vn
-      have : IsOpen w := (ContinuousMap.isOpen_gen sc vo).Prod uo
+      have : IsOpen w := (ContinuousMap.isOpen_setOf_mapsTo sc vo).Prod uo
       have : (f, x) ∈ w := ⟨image_subset_iff.mpr sv, xu⟩
       mem_nhds_iff.mpr ⟨w, by assumption, by assumption, by assumption⟩
 #align continuous_map.continuous_eval' ContinuousMap.continuous_eval
@@ -230,8 +219,8 @@ instance [T2Space β] : T2Space C(α, β) :=
     obtain ⟨u, v, hu, hv, hxu, hxv, huv⟩ := t2_separation hx
     refine'
       ⟨compact_open.gen {x} u, compact_open.gen {x} v,
-        ContinuousMap.isOpen_gen isCompact_singleton hu,
-        ContinuousMap.isOpen_gen isCompact_singleton hv, _, _, _⟩
+        ContinuousMap.isOpen_setOf_mapsTo isCompact_singleton hu,
+        ContinuousMap.isOpen_setOf_mapsTo isCompact_singleton hv, _, _, _⟩
     · rwa [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
     · rwa [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
     ·
@@ -257,11 +246,11 @@ theorem compactOpen_le_induced (s : Set α) :
 #align continuous_map.compact_open_le_induced ContinuousMap.compactOpen_le_induced
 -/
 
-#print ContinuousMap.compactOpen_eq_sInf_induced /-
+#print ContinuousMap.compactOpen_eq_iInf_induced /-
 /-- The compact-open topology on `C(α, β)` is equal to the infimum of the compact-open topologies
 on `C(s, β)` for `s` a compact subset of `α`.  The key point of the proof is that the union of the
 compact subsets of `α` is equal to the union of compact subsets of the compact subsets of `α`. -/
-theorem compactOpen_eq_sInf_induced :
+theorem compactOpen_eq_iInf_induced :
     (ContinuousMap.compactOpen : TopologicalSpace C(α, β)) =
       ⨅ (s : Set α) (hs : IsCompact s),
         TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
@@ -278,7 +267,7 @@ theorem compactOpen_eq_sInf_induced :
   simp only [compact_open.gen, mem_set_of_eq, mem_preimage, ContinuousMap.coe_restrict]
   rw [image_comp f (coe : s → α)]
   simp
-#align continuous_map.compact_open_eq_Inf_induced ContinuousMap.compactOpen_eq_sInf_induced
+#align continuous_map.compact_open_eq_Inf_induced ContinuousMap.compactOpen_eq_iInf_induced
 -/
 
 #print ContinuousMap.continuous_restrict /-
@@ -289,11 +278,11 @@ theorem continuous_restrict (s : Set α) : Continuous fun F : C(α, β) => F.res
 #align continuous_map.continuous_restrict ContinuousMap.continuous_restrict
 -/
 
-#print ContinuousMap.nhds_compactOpen_eq_sInf_nhds_induced /-
-theorem nhds_compactOpen_eq_sInf_nhds_induced (f : C(α, β)) :
+#print ContinuousMap.nhds_compactOpen_eq_iInf_nhds_induced /-
+theorem nhds_compactOpen_eq_iInf_nhds_induced (f : C(α, β)) :
     𝓝 f = ⨅ (s) (hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) := by
   rw [compact_open_eq_Inf_induced]; simp [nhds_iInf, nhds_induced]
-#align continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compactOpen_eq_sInf_nhds_induced
+#align continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compactOpen_eq_iInf_nhds_induced
 -/
 
 #print ContinuousMap.tendsto_compactOpen_restrict /-
@@ -381,8 +370,8 @@ theorem continuous_coev : Continuous (coev α β) :=
     rintro _ ⟨s, sc, u, uo, rfl⟩
     rw [isOpen_iff_forall_mem_open]
     intro y hy
-    change coev α β y '' s ⊆ u at hy 
-    rw [image_coev s] at hy 
+    change coev α β y '' s ⊆ u at hy
+    rw [image_coev s] at hy
     rcases generalized_tube_lemma isCompact_singleton sc uo hy with ⟨v, w, vo, wo, yv, sw, vwu⟩
     refine' ⟨v, _, vo, singleton_subset_iff.mp yv⟩
     intro y' hy'

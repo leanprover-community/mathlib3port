@@ -428,7 +428,7 @@ theorem count_bagInter {a : α} :
       · rw [if_neg ab, tsub_zero, add_zero, add_zero]
     · rw [cons_bag_inter_of_neg _ hb, count_bag_inter]
       by_cases ab : a = b
-      · rw [← ab] at hb ; rw [count_eq_zero.2 hb, min_zero, min_zero]
+      · rw [← ab] at hb; rw [count_eq_zero.2 hb, min_zero, min_zero]
       · rw [count_cons_of_ne ab]
 #align list.count_bag_inter List.count_bagInter
 -/

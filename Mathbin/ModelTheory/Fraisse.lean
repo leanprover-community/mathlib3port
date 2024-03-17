@@ -252,8 +252,8 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     (jep : JointEmbedding K) : ∃ M : Bundled.{w} L.Structure, Structure.CG L M ∧ L.age M = K :=
   by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
-  simp only [Set.ext_iff, Quotient.forall, mem_image, mem_range, Quotient.eq'] at hF 
-  simp_rw [Quotient.eq_mk_iff_out] at hF 
+  simp only [Set.ext_iff, Quotient.forall, mem_image, mem_range, Quotient.eq'] at hF
+  simp_rw [Quotient.eq_mk_iff_out] at hF
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
@@ -336,7 +336,7 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
   ext n
   have hgn := (embedding.ext_iff.1 hg) ((PM.comp NP).equivRange n)
   simp only [embedding.comp_apply, Equiv.coe_toEmbedding, Equiv.symm_apply_apply,
-    substructure.coe_subtype, embedding.equiv_range_apply] at hgn 
+    substructure.coe_subtype, embedding.equiv_range_apply] at hgn
   simp only [embedding.comp_apply, Equiv.coe_toEmbedding, substructure.coe_inclusion,
     Set.coe_inclusion, embedding.equiv_range_apply, hgn]
 #align first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age

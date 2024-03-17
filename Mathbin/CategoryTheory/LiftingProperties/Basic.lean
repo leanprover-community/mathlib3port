@@ -115,7 +115,7 @@ instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] :
     HasLiftingProperty (i ≫ i') p :=
   ⟨fun f g sq => by
     have fac := sq.w
-    rw [assoc] at fac 
+    rw [assoc] at fac
     exact
       comm_sq.has_lift.mk'
         { l := (comm_sq.mk (comm_sq.mk fac).fac_right).lift
@@ -129,7 +129,7 @@ instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] :
     HasLiftingProperty i (p ≫ p') :=
   ⟨fun f g sq => by
     have fac := sq.w
-    rw [← assoc] at fac 
+    rw [← assoc] at fac
     let sq₂ := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift
     exact
       comm_sq.has_lift.mk'

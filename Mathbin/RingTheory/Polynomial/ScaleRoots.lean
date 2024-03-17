@@ -62,7 +62,7 @@ theorem scaleRoots_ne_zero {p : R[X]} (hp : p ≠ 0) (s : R) : scaleRoots p s �
   have : p.coeff p.nat_degree ≠ 0 := mt leading_coeff_eq_zero.mp hp
   have : (scale_roots p s).coeff p.nat_degree = 0 :=
     congr_fun (congr_arg (coeff : R[X] → ℕ → R) h) p.nat_degree
-  rw [coeff_scale_roots_nat_degree] at this 
+  rw [coeff_scale_roots_nat_degree] at this
   contradiction
 #align polynomial.scale_roots_ne_zero Polynomial.scaleRoots_ne_zero
 -/

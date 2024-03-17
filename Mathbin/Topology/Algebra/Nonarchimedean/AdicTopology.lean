@@ -121,7 +121,7 @@ theorem hasBasis_nhds_adic (I : Ideal R) (x : R) :
   by
   letI := I.adic_topology
   have := I.has_basis_nhds_zero_adic.map fun y => x + y
-  rwa [map_add_left_nhds_zero x] at this 
+  rwa [map_add_left_nhds_zero x] at this
 #align ideal.has_basis_nhds_adic Ideal.hasBasis_nhds_adic
 -/
 
@@ -186,7 +186,7 @@ theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} 
   by
   constructor
   · intro H
-    change _ = _ at H 
+    change _ = _ at H
     rw [H]
     letI := J.adic_topology
     constructor

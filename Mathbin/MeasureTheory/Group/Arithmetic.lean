@@ -1014,7 +1014,7 @@ variable {M α : Type _} [Monoid M] [MeasurableSpace M] [MeasurableMul₂ M] {m 
 theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f ∈ l, Measurable f) : Measurable l.Prod :=
   by
   induction' l with f l ihl; · exact measurable_one
-  rw [List.forall_mem_cons] at hl 
+  rw [List.forall_mem_cons] at hl
   rw [List.prod_cons]
   exact hl.1.mul (ihl hl.2)
 #align list.measurable_prod' List.measurable_prod'
@@ -1026,7 +1026,7 @@ theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f ∈ l, Measurabl
 theorem List.aemeasurable_prod' (l : List (α → M)) (hl : ∀ f ∈ l, AEMeasurable f μ) :
     AEMeasurable l.Prod μ := by
   induction' l with f l ihl; · exact aemeasurable_one
-  rw [List.forall_mem_cons] at hl 
+  rw [List.forall_mem_cons] at hl
   rw [List.prod_cons]
   exact hl.1.mul (ihl hl.2)
 #align list.ae_measurable_prod' List.aemeasurable_prod'

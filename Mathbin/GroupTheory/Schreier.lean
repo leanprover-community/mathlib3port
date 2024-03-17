@@ -219,12 +219,12 @@ theorem card_commutator_le_of_finite_commutatorSet [Finite (commutatorSet G)] :
   by
   have h1 := index_center_le_pow (closureCommutatorRepresentatives G)
   have h2 := card_commutator_dvd_index_center_pow (closureCommutatorRepresentatives G)
-  rw [card_commutatorSet_closureCommutatorRepresentatives] at h1 h2 
-  rw [card_commutator_closureCommutatorRepresentatives] at h2 
+  rw [card_commutatorSet_closureCommutatorRepresentatives] at h1 h2
+  rw [card_commutator_closureCommutatorRepresentatives] at h2
   replace h1 :=
     h1.trans (Nat.pow_le_pow_right Finite.card_pos (rank_closureCommutatorRepresentatives_le G))
   replace h2 := h2.trans (pow_dvd_pow _ (add_le_add_right (mul_le_mul_right' h1 _) 1))
-  rw [← pow_succ'] at h2 
+  rw [← pow_succ'] at h2
   refine' (Nat.le_of_dvd _ h2).trans (Nat.pow_le_pow_left h1 _)
   exact pow_pos (Nat.pos_of_ne_zero finite_index.finite_index) _
 #align subgroup.card_commutator_le_of_finite_commutator_set Subgroup.card_commutator_le_of_finite_commutatorSet
@@ -235,7 +235,7 @@ instance [Finite (commutatorSet G)] : Finite (commutator G) :=
   by
   have h2 := card_commutator_dvd_index_center_pow (closureCommutatorRepresentatives G)
   refine' Nat.finite_of_card_ne_zero fun h => _
-  rw [card_commutator_closureCommutatorRepresentatives, h, zero_dvd_iff] at h2 
+  rw [card_commutator_closureCommutatorRepresentatives, h, zero_dvd_iff] at h2
   exact finite_index.finite_index (pow_eq_zero h2)
 
 end Subgroup

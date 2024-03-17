@@ -293,7 +293,7 @@ theorem mul_le_of_nonneg_of_le_div (hb : 0 ≤ b) (hc : 0 ≤ c) (h : a ≤ b / 
   by
   obtain rfl | hc := hc.eq_or_lt
   · simpa using hb
-  · rwa [le_div_iff hc] at h 
+  · rwa [le_div_iff hc] at h
 #align mul_le_of_nonneg_of_le_div mul_le_of_nonneg_of_le_div
 -/
 
@@ -446,32 +446,32 @@ theorem div_le_div_of_le (hc : 0 ≤ c) (h : a ≤ b) : a / c ≤ b / c :=
 #align div_le_div_of_le div_le_div_of_le
 -/
 
-#print div_le_div_of_le_left /-
+#print div_le_div_of_nonneg_left /-
 -- Not a `mono` lemma b/c `div_le_div` is strictly more general
-theorem div_le_div_of_le_left (ha : 0 ≤ a) (hc : 0 < c) (h : c ≤ b) : a / b ≤ a / c :=
+theorem div_le_div_of_nonneg_left (ha : 0 ≤ a) (hc : 0 < c) (h : c ≤ b) : a / b ≤ a / c :=
   by
   rw [div_eq_mul_inv, div_eq_mul_inv]
   exact mul_le_mul_of_nonneg_left ((inv_le_inv (hc.trans_le h) hc).mpr h) ha
-#align div_le_div_of_le_left div_le_div_of_le_left
+#align div_le_div_of_le_left div_le_div_of_nonneg_left
 -/
 
-#print div_le_div_of_le_of_nonneg /-
-theorem div_le_div_of_le_of_nonneg (hab : a ≤ b) (hc : 0 ≤ c) : a / c ≤ b / c :=
+#print div_le_div_of_nonneg_right /-
+theorem div_le_div_of_nonneg_right (hab : a ≤ b) (hc : 0 ≤ c) : a / c ≤ b / c :=
   div_le_div_of_le hc hab
-#align div_le_div_of_le_of_nonneg div_le_div_of_le_of_nonneg
+#align div_le_div_of_le_of_nonneg div_le_div_of_nonneg_right
 -/
 
-#print div_lt_div_of_lt /-
-theorem div_lt_div_of_lt (hc : 0 < c) (h : a < b) : a / c < b / c :=
+#print div_lt_div_of_pos_right /-
+theorem div_lt_div_of_pos_right (hc : 0 < c) (h : a < b) : a / c < b / c :=
   by
   rw [div_eq_mul_one_div a c, div_eq_mul_one_div b c]
   exact mul_lt_mul_of_pos_right h (one_div_pos.2 hc)
-#align div_lt_div_of_lt div_lt_div_of_lt
+#align div_lt_div_of_lt div_lt_div_of_pos_right
 -/
 
 #print div_le_div_right /-
 theorem div_le_div_right (hc : 0 < c) : a / c ≤ b / c ↔ a ≤ b :=
-  ⟨le_imp_le_of_lt_imp_lt <| div_lt_div_of_lt hc, div_le_div_of_le <| hc.le⟩
+  ⟨le_imp_le_of_lt_imp_lt <| div_lt_div_of_pos_right hc, div_le_div_of_le <| hc.le⟩
 #align div_le_div_right div_le_div_right
 -/
 
@@ -524,10 +524,10 @@ theorem div_lt_div' (hac : a ≤ c) (hbd : d < b) (c0 : 0 < c) (d0 : 0 < d) : a 
 #align div_lt_div' div_lt_div'
 -/
 
-#print div_lt_div_of_lt_left /-
-theorem div_lt_div_of_lt_left (hc : 0 < c) (hb : 0 < b) (h : b < a) : c / a < c / b :=
+#print div_lt_div_of_pos_left /-
+theorem div_lt_div_of_pos_left (hc : 0 < c) (hb : 0 < b) (h : b < a) : c / a < c / b :=
   (div_lt_div_left hc (hb.trans h) hb).mpr h
-#align div_lt_div_of_lt_left div_lt_div_of_lt_left
+#align div_lt_div_of_lt_left div_lt_div_of_pos_left
 -/
 
 /-!
@@ -537,19 +537,19 @@ theorem div_lt_div_of_lt_left (hc : 0 < c) (hb : 0 < b) (h : b < a) : c / a < c 
 
 #print div_le_self /-
 theorem div_le_self (ha : 0 ≤ a) (hb : 1 ≤ b) : a / b ≤ a := by
-  simpa only [div_one] using div_le_div_of_le_left ha zero_lt_one hb
+  simpa only [div_one] using div_le_div_of_nonneg_left ha zero_lt_one hb
 #align div_le_self div_le_self
 -/
 
 #print div_lt_self /-
 theorem div_lt_self (ha : 0 < a) (hb : 1 < b) : a / b < a := by
-  simpa only [div_one] using div_lt_div_of_lt_left ha zero_lt_one hb
+  simpa only [div_one] using div_lt_div_of_pos_left ha zero_lt_one hb
 #align div_lt_self div_lt_self
 -/
 
 #print le_div_self /-
 theorem le_div_self (ha : 0 ≤ a) (hb₀ : 0 < b) (hb₁ : b ≤ 1) : a ≤ a / b := by
-  simpa only [div_one] using div_le_div_of_le_left ha hb₀ hb₁
+  simpa only [div_one] using div_le_div_of_nonneg_left ha hb₀ hb₁
 #align le_div_self le_div_self
 -/
 
@@ -737,7 +737,7 @@ theorem add_div_two_lt_right : (a + b) / 2 < b ↔ a < b := by simp [div_lt_iff,
 #print mul_le_mul_of_mul_div_le /-
 theorem mul_le_mul_of_mul_div_le (h : a * (b / c) ≤ d) (hc : 0 < c) : b * a ≤ d * c :=
   by
-  rw [← mul_div_assoc] at h 
+  rw [← mul_div_assoc] at h
   rwa [mul_comm b, ← div_le_iff hc]
 #align mul_le_mul_of_mul_div_le mul_le_mul_of_mul_div_le
 -/
@@ -790,9 +790,9 @@ instance (priority := 100) LinearOrderedSemifield.to_denselyOrdered : DenselyOrd
     ⟨(a₁ + a₂) / 2,
       calc
         a₁ = (a₁ + a₁) / 2 := (add_self_div_two a₁).symm
-        _ < (a₁ + a₂) / 2 := div_lt_div_of_lt zero_lt_two (add_lt_add_left h _),
+        _ < (a₁ + a₂) / 2 := div_lt_div_of_pos_right zero_lt_two (add_lt_add_left h _),
       calc
-        (a₁ + a₂) / 2 < (a₂ + a₂) / 2 := div_lt_div_of_lt zero_lt_two (add_lt_add_right h _)
+        (a₁ + a₂) / 2 < (a₂ + a₂) / 2 := div_lt_div_of_pos_right zero_lt_two (add_lt_add_right h _)
         _ = a₂ := add_self_div_two a₂⟩
 #align linear_ordered_semifield.to_densely_ordered LinearOrderedSemifield.to_denselyOrdered
 
@@ -1212,14 +1212,14 @@ theorem one_div_lt_one_div_of_neg (ha : a < 0) (hb : b < 0) : 1 / a < 1 / b ↔ 
 
 #print one_div_lt_neg_one /-
 theorem one_div_lt_neg_one (h1 : a < 0) (h2 : -1 < a) : 1 / a < -1 :=
-  suffices 1 / a < 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this 
+  suffices 1 / a < 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this
   one_div_lt_one_div_of_neg_of_lt h1 h2
 #align one_div_lt_neg_one one_div_lt_neg_one
 -/
 
 #print one_div_le_neg_one /-
 theorem one_div_le_neg_one (h1 : a < 0) (h2 : -1 ≤ a) : 1 / a ≤ -1 :=
-  suffices 1 / a ≤ 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this 
+  suffices 1 / a ≤ 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this
   one_div_le_one_div_of_neg_of_le h1 h2
 #align one_div_le_neg_one one_div_le_neg_one
 -/
@@ -1230,7 +1230,7 @@ theorem one_div_le_neg_one (h1 : a < 0) (h2 : -1 ≤ a) : 1 / a ≤ -1 :=
 #print sub_self_div_two /-
 theorem sub_self_div_two (a : α) : a - a / 2 = a / 2 :=
   by
-  suffices a / 2 + a / 2 - a / 2 = a / 2 by rwa [add_halves] at this 
+  suffices a / 2 + a / 2 - a / 2 = a / 2 by rwa [add_halves] at this
   rw [add_sub_cancel]
 #align sub_self_div_two sub_self_div_two
 -/
@@ -1238,7 +1238,7 @@ theorem sub_self_div_two (a : α) : a - a / 2 = a / 2 :=
 #print div_two_sub_self /-
 theorem div_two_sub_self (a : α) : a / 2 - a = -(a / 2) :=
   by
-  suffices a / 2 - (a / 2 + a / 2) = -(a / 2) by rwa [add_halves] at this 
+  suffices a / 2 - (a / 2 + a / 2) = -(a / 2) by rwa [add_halves] at this
   rw [sub_add_eq_sub_sub, sub_self, zero_sub]
 #align div_two_sub_self div_two_sub_self
 -/

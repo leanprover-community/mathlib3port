@@ -86,7 +86,7 @@ theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
   rw [disjoint_iff_inf_le]
   rintro y ⟨hs, ht⟩; apply h
   ext i
-  rw [mem_coe, mem_split_center_box] at hs ht 
+  rw [mem_coe, mem_split_center_box] at hs ht
   rw [← hs.2, ← ht.2]
 #align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_splitCenterBox
 -/
@@ -158,7 +158,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   by_contra hpI
   -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
   replace H_ind := fun J hJ => not_imp_not.2 (H_ind J hJ)
-  simp only [exists_imp, Classical.not_forall] at H_ind 
+  simp only [exists_imp, Classical.not_forall] at H_ind
   choose! s hs using H_ind
   set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
   have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m =>

@@ -238,7 +238,7 @@ theorem Topology.IsLower.isClosed_upperClosure (h : s.Finite) : IsClosed (upperC
 /-- Every set open in the lower topology is a lower set. -/
 theorem Topology.IsLower.isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   by
-  rw [is_open_iff_generate_Ici_compl] at h 
+  rw [is_open_iff_generate_Ici_compl] at h
   induction h
   case basic u h => obtain ⟨a, rfl⟩ := h; exact (isUpperSet_Ici a).compl
   case univ => exact isLowerSet_univ
@@ -278,7 +278,7 @@ protected theorem Topology.IsLower.isTopologicalBasis :
     rw [sInter_image]
   · rintro ⟨F, ⟨hF, hs⟩, rfl⟩
     haveI := hF.to_subtype
-    rw [subset_def, Subtype.forall'] at hs 
+    rw [subset_def, Subtype.forall'] at hs
     choose f hf using hs
     exact ⟨_, finite_range f, by simp_rw [bInter_range, hf, sInter_eq_Inter]⟩
 #align lower_topology.is_topological_basis Topology.IsLower.isTopologicalBasis

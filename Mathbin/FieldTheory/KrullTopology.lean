@@ -120,7 +120,7 @@ theorem IntermediateField.fixingSubgroup.bot {K L : Type _} [Field K] [Field L] 
   ext f
   refine' ⟨fun _ => Subgroup.mem_top _, fun _ => _⟩
   rintro ⟨x, hx : x ∈ (⊥ : IntermediateField K L)⟩
-  rw [IntermediateField.mem_bot] at hx 
+  rw [IntermediateField.mem_bot] at hx
   rcases hx with ⟨y, rfl⟩
   exact f.commutes y
 #align intermediate_field.fixing_subgroup.bot IntermediateField.fixingSubgroup.bot
@@ -218,7 +218,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
     have h_in_F : σ⁻¹ x ∈ F := ⟨x, hx, by dsimp; rw [← AlgEquiv.invFun_eq_symm]; rfl⟩
     have h_g_fix : g (σ⁻¹ x) = σ⁻¹ x :=
       by
-      rw [Subgroup.mem_carrier, IntermediateField.mem_fixingSubgroup_iff F g] at hg 
+      rw [Subgroup.mem_carrier, IntermediateField.mem_fixingSubgroup_iff F g] at hg
       exact hg (σ⁻¹ x) h_in_F
     rw [h_g_fix]
     change σ (σ⁻¹ x) = x
@@ -285,7 +285,7 @@ theorem krullTopology_t2 {K L : Type _} [Field K] [Field L] [Algebra K L]
       let H := E.fixing_subgroup
       have h_basis : (H : Set (L ≃ₐ[K] L)) ∈ galGroupBasis K L := ⟨H, ⟨E, ⟨h_findim, rfl⟩⟩, rfl⟩
       have h_nhd := GroupFilterBasis.mem_nhds_one (galGroupBasis K L) h_basis
-      rw [mem_nhds_iff] at h_nhd 
+      rw [mem_nhds_iff] at h_nhd
       rcases h_nhd with ⟨W, hWH, hW_open, hW_1⟩
       refine'
         ⟨HSMul.hSMul f W, HSMul.hSMul g W,
@@ -293,11 +293,11 @@ theorem krullTopology_t2 {K L : Type _} [Field K] [Field L] [Algebra K L]
             _⟩⟩
       rw [Set.disjoint_left]
       rintro σ ⟨w1, hw1, h⟩ ⟨w2, hw2, rfl⟩
-      rw [eq_inv_mul_iff_mul_eq.symm, ← mul_assoc, mul_inv_eq_iff_eq_mul.symm] at h 
+      rw [eq_inv_mul_iff_mul_eq.symm, ← mul_assoc, mul_inv_eq_iff_eq_mul.symm] at h
       have h_in_H : w1 * w2⁻¹ ∈ H := H.mul_mem (hWH hw1) (H.inv_mem (hWH hw2))
-      rw [h] at h_in_H 
-      change φ ∈ E.fixing_subgroup at h_in_H 
-      rw [IntermediateField.mem_fixingSubgroup_iff] at h_in_H 
+      rw [h] at h_in_H
+      change φ ∈ E.fixing_subgroup at h_in_H
+      rw [IntermediateField.mem_fixingSubgroup_iff] at h_in_H
       specialize h_in_H x
       have hxE : x ∈ E := by
         apply IntermediateField.subset_adjoin

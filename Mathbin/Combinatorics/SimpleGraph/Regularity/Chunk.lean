@@ -116,7 +116,7 @@ private theorem card_nonuniform_witness_sdiff_bUnion_star (hV : V ∈ P.parts) (
     by
     intro x hx
     rw [← bUnion_filter_atomise hX (G.nonuniform_witness_subset h₂), star, mem_sdiff, mem_bUnion] at
-      hx 
+      hx
     simp only [not_exists, mem_bUnion, and_imp, filter_congr_decidable, exists_prop, mem_filter,
       not_and, mem_sdiff, id.def, mem_sdiff] at hx ⊢
     obtain ⟨⟨B, hB₁, hB₂⟩, hx⟩ := hx
@@ -139,7 +139,7 @@ private theorem card_nonuniform_witness_sdiff_bUnion_star (hV : V ∈ P.parts) (
   rw [sum_const]
   refine' mul_le_mul_right' _ _
   have t := card_filter_atomise_le_two_pow hX
-  rw [filter_congr_decidable] at t 
+  rw [filter_congr_decidable] at t
   refine' t.trans (pow_le_pow_right (by norm_num) <| tsub_le_tsub_right _ _)
   exact card_image_le.trans (card_le_of_subset <| filter_subset _ _)
 
@@ -220,8 +220,8 @@ theorem card_chunk (hm : m ≠ 0) : (chunk hP G ε hU).parts.card = 4 ^ P.parts.
 
 #print SzemerediRegularity.card_eq_of_mem_parts_chunk /-
 theorem card_eq_of_mem_parts_chunk (hs : s ∈ (chunk hP G ε hU).parts) :
-    s.card = m ∨ s.card = m + 1 := by unfold chunk at hs ;
-  split_ifs at hs  <;> exact card_eq_of_mem_parts_equitabilise hs
+    s.card = m ∨ s.card = m + 1 := by unfold chunk at hs;
+  split_ifs at hs <;> exact card_eq_of_mem_parts_equitabilise hs
 #align szemeredi_regularity.card_eq_of_mem_parts_chunk SzemerediRegularity.card_eq_of_mem_parts_chunk
 -/
 
@@ -393,7 +393,7 @@ private theorem average_density_near_total_density [Nonempty α]
       ε ^ 5 / 50
     by
     apply this.trans
-    exact div_le_div_of_le_left (by positivity) (by norm_num) (by norm_num)
+    exact div_le_div_of_nonneg_left (by positivity) (by norm_num) (by norm_num)
   rw [sub_le_iff_le_add, ← sub_le_iff_le_add']
   apply density_sub_eps_le_sum_density_div_card hPα hPε hA hB
 
@@ -409,8 +409,8 @@ private theorem edge_density_chunk_aux [Nonempty α]
   · refine' (sub_nonpos_of_le <| (sq_le _ _).trans <| hGε.trans _).trans (sq_nonneg _)
     · exact_mod_cast G.edge_density_nonneg _ _
     · exact_mod_cast G.edge_density_le_one _ _
-    · exact div_le_div_of_le_left (by positivity) (by norm_num) (by norm_num)
-  rw [← sub_nonneg] at hGε 
+    · exact div_le_div_of_nonneg_left (by positivity) (by norm_num) (by norm_num)
+  rw [← sub_nonneg] at hGε
   have :
     ↑(G.edge_density U V) - ε ^ 5 / 50 ≤
       (∑ ab in (chunk hP G ε hU).parts.product (chunk hP G ε hV).parts, G.edge_density ab.1 ab.2) /
@@ -459,7 +459,7 @@ private theorem eps_le_card_star_div [Nonempty α] (hPα : P.parts.card * 16 ^ P
     4 / 5 * ε = (1 - 1 / 10) * (1 - 9⁻¹) * ε := by norm_num
     _ ≤ (1 - ε / 10) * (1 - m⁻¹) * ((G.nonuniform_witness ε U V).card / U.card) :=
       (mul_le_mul
-        (mul_le_mul (sub_le_sub_left (div_le_div_of_le_of_nonneg hε₁ <| by norm_num) _)
+        (mul_le_mul (sub_le_sub_left (div_le_div_of_nonneg_right hε₁ <| by norm_num) _)
           (sub_le_sub_left
             (inv_le_inv_of_le (by norm_num) <| by
               exact_mod_cast show 9 ≤ 100 by norm_num.trans (hundred_le_m hPα hPε hε₁))
@@ -477,7 +477,8 @@ private theorem eps_le_card_star_div [Nonempty α] (hPα : P.parts.card * 16 ^ P
       (mul_le_mul_of_nonneg_right card_bUnion_star_le_m_add_one_card_star_mul (by positivity))
     _ ≤ (star hP G ε hU V).card * (m + 1) * ((1 - m⁻¹) / (4 ^ P.parts.card * m)) :=
       (mul_le_mul_of_nonneg_left
-        (div_le_div_of_le_left hm (by positivity) <| pow_mul_m_le_card_part hP hU) (by positivity))
+        (div_le_div_of_nonneg_left hm (by positivity) <| pow_mul_m_le_card_part hP hU)
+        (by positivity))
     _ ≤ (star hP G ε hU V).card / 4 ^ P.parts.card :=
       by
       rw [mul_assoc, mul_comm ((4 : ℝ) ^ P.parts.card), ← div_div, ← mul_div_assoc, ← mul_comm_div]
@@ -525,14 +526,14 @@ private theorem edge_density_star_not_uniform [Nonempty α]
     have :=
       average_density_near_total_density hPα hPε hε₁ (subset.refl (chunk hP G ε hU).parts)
         (subset.refl (chunk hP G ε hV).parts)
-    simp_rw [← sup_eq_bUnion, sup_parts, card_chunk (m_pos hPα).ne', cast_pow] at this 
-    norm_num at this 
+    simp_rw [← sup_eq_bUnion, sup_parts, card_chunk (m_pos hPα).ne', cast_pow] at this
+    norm_num at this
     exact this
   have hε' : ε ^ 5 ≤ ε := by
     simpa using pow_le_pow_of_le_one (by positivity) hε₁ (show 1 ≤ 5 by norm_num)
-  have hpr' : |p - r| ≤ ε / 49 := hpr.trans (div_le_div_of_le_of_nonneg hε' <| by norm_num)
-  have hqt' : |q - t| ≤ ε / 49 := hqt.trans (div_le_div_of_le_of_nonneg hε' <| by norm_num)
-  rw [abs_sub_le_iff] at hrs hpr' hqt' 
+  have hpr' : |p - r| ≤ ε / 49 := hpr.trans (div_le_div_of_nonneg_right hε' <| by norm_num)
+  have hqt' : |q - t| ≤ ε / 49 := hqt.trans (div_le_div_of_nonneg_right hε' <| by norm_num)
+  rw [abs_sub_le_iff] at hrs hpr' hqt'
   rw [le_abs] at hst ⊢
   cases hst
   left; linarith
@@ -585,8 +586,8 @@ theorem edgeDensity_chunk_not_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ 
         add_div_le_sum_sq_div_card t (fun x => (G.edge_density x.1 x.2 : ℝ))
           (G.edge_density U V ^ 2 - ε ^ 5 / 25) (show 0 ≤ 3 / 4 * ε by linarith) _ _
       · simp_rw [card_product, card_chunk (m_pos hPα).ne', ← mul_pow, cast_pow, mul_pow, div_pow, ←
-          mul_assoc] at this 
-        norm_num at this 
+          mul_assoc] at this
+        norm_num at this
         exact this
       · simp_rw [card_product, card_chunk (m_pos hPα).ne', ← mul_pow]
         norm_num

@@ -173,7 +173,7 @@ theorem IsCompact.exists_isLeast {s : Set α} (hs : IsCompact s) (ne_s : s.Nonem
   exact ⟨this.some, this.some_spec.1, mem_Inter₂.mp this.some_spec.2⟩
   rw [bInter_eq_Inter]
   by_contra H
-  rw [not_nonempty_iff_eq_empty] at H 
+  rw [not_nonempty_iff_eq_empty] at H
   rcases hs.elim_directed_family_closed (fun x : s => Iic ↑x) (fun x => isClosed_Iic) H
       ((IsTotal.directed coe).mono_comp _ fun _ _ => Iic_subset_Iic.mpr) with
     ⟨x, hx⟩
@@ -294,7 +294,7 @@ theorem Continuous.exists_forall_le_of_hasCompactMulSupport [Nonempty β] [One �
     (hf : Continuous f) (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f x ≤ f y :=
   by
   obtain ⟨_, ⟨x, rfl⟩, hx⟩ := (h.is_compact_range hf).exists_isLeast (range_nonempty _)
-  rw [mem_lowerBounds, forall_range_iff] at hx 
+  rw [mem_lowerBounds, forall_range_iff] at hx
   exact ⟨x, hx⟩
 #align continuous.exists_forall_le_of_has_compact_mul_support Continuous.exists_forall_le_of_hasCompactMulSupport
 #align continuous.exists_forall_le_of_has_compact_support Continuous.exists_forall_le_of_hasCompactSupport

@@ -124,7 +124,7 @@ theorem mul [Mul R] [IsScalarTower R R M] (ra : IsSMulRegular M a) (rb : IsSMulR
 
 #print IsSMulRegular.of_mul /-
 theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSMulRegular M (a * b)) : IsSMulRegular M b :=
-  by rw [← smul_eq_mul] at ab ; exact ab.of_smul _
+  by rw [← smul_eq_mul] at ab; exact ab.of_smul _
 #align is_smul_regular.of_mul IsSMulRegular.of_mul
 -/
 
@@ -161,7 +161,7 @@ variable (M)
 #print IsSMulRegular.one /-
 /-- One is `M`-regular always. -/
 @[simp]
-theorem one : IsSMulRegular M (1 : R) := fun a b ab => by rwa [one_smul, one_smul] at ab 
+theorem one : IsSMulRegular M (1 : R) := fun a b ab => by rwa [one_smul, one_smul] at ab
 #align is_smul_regular.one IsSMulRegular.one
 -/
 

@@ -105,7 +105,7 @@ theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f =>
       by
       have p := not_congr (is_iso_iff_nonzero f)
-      simp only [Classical.not_not, Ne.def] at p 
+      simp only [Classical.not_not, Ne.def] at p
       refine' p.mp fun _ => h (as_iso f)
   finrank_zero_of_subsingleton
 #align category_theory.finrank_hom_simple_simple_eq_zero_of_not_iso CategoryTheory.finrank_hom_simple_simple_eq_zero_of_not_iso
@@ -143,7 +143,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
         (by convert I; ext; rfl; ext; rfl) (End.of f)
     use c
     rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def,
-      Classical.not_not, sub_eq_zero, Algebra.algebraMap_eq_smul_one] at nu 
+      Classical.not_not, sub_eq_zero, Algebra.algebraMap_eq_smul_one] at nu
     exact nu.symm
 #align category_theory.finrank_endomorphism_eq_one CategoryTheory.finrank_endomorphism_eq_one
 -/
@@ -215,9 +215,9 @@ theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (
   by
   fconstructor
   · intro h
-    rw [finrank_eq_one_iff'] at h 
+    rw [finrank_eq_one_iff'] at h
     obtain ⟨f, nz, -⟩ := h
-    rw [← is_iso_iff_nonzero] at nz 
+    rw [← is_iso_iff_nonzero] at nz
     exact ⟨as_iso f⟩
   · rintro ⟨f⟩
     have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y

@@ -220,7 +220,7 @@ protected theorem splits (n : ℕ) :
     fun n ih K _ f hf => by
     skip;
     rw [← splits_id_iff_splits, algebra_map_succ, ← map_map, splits_id_iff_splits, ←
-      X_sub_C_mul_remove_factor f fun h => by rw [h] at hf ; cases hf]
+      X_sub_C_mul_remove_factor f fun h => by rw [h] at hf; cases hf]
     exact splits_mul _ (splits_X_sub_C _) (ih _ (nat_degree_remove_factor' hf))
 #align polynomial.splitting_field_aux.splits Polynomial.SplittingFieldAux.splits
 -/
@@ -233,8 +233,8 @@ theorem adjoin_rootSet (n : ℕ) :
   Nat.recOn n (fun K _ f hf => Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)
     fun n ih K _ f hfn =>
     by
-    have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hfn ; cases hfn
-    have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf ; exact hndf rfl
+    have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hfn; cases hfn
+    have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf; exact hndf rfl
     have hmf0 : map (algebraMap K (splitting_field_aux n.succ f)) f ≠ 0 := map_ne_zero hfn0
     simp_rw [root_set] at ih ⊢
     rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, Polynomial.map_mul] at hmf0
@@ -264,7 +264,7 @@ def ofMvPolynomial (f : K[X]) :
 theorem ofMvPolynomial_surjective (f : K[X]) : Function.Surjective (ofMvPolynomial f) :=
   by
   suffices AlgHom.range (of_mv_polynomial f) = ⊤ by
-    rw [← Set.range_iff_surjective] <;> rwa [SetLike.ext'_iff] at this 
+    rw [← Set.range_iff_surjective] <;> rwa [SetLike.ext'_iff] at this
   rw [of_mv_polynomial, ← Algebra.adjoin_range_eq_range_aeval K, eq_top_iff, ←
     adjoin_root_set _ _ rfl]
   exact Algebra.adjoin_le fun α hα => Algebra.subset_adjoin ⟨⟨α, hα⟩, rfl⟩

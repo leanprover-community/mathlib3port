@@ -119,7 +119,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- We use a decreasing balanced basis for 0 : E and a balanced basis for 0 : F
   -- and reformulate non-continuity in terms of these bases
   rcases(nhds_basis_balanced 𝕜 E).exists_antitone_subbasis with ⟨b, bE1, bE⟩
-  simp only [id.def] at bE 
+  simp only [id.def] at bE
   have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n :=
     by
     refine' bE.1.to_hasBasis _ _
@@ -141,15 +141,15 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     -- The converse direction follows from continuity of the scalar multiplication
     have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
       (continuous_const_smul (n : 𝕜)).ContinuousAt
-    simp only [ContinuousAt, map_zero, smul_zero] at hcont 
-    rw [bE.1.tendsto_left_iffₓ] at hcont 
+    simp only [ContinuousAt, map_zero, smul_zero] at hcont
+    rw [bE.1.tendsto_left_iffₓ] at hcont
     rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
     refine' ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
     simp [← mul_smul, hn]
-  rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h 
-  push_neg at h 
+  rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h
+  push_neg at h
   rcases h with ⟨V, ⟨hV, hV'⟩, h⟩
-  simp only [id.def, forall_true_left] at h 
+  simp only [id.def, forall_true_left] at h
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
   choose! u hu hu' using h
   -- The sequence `(λ n, n • u n)` converges to `0`
@@ -173,14 +173,14 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- We now find a contradiction between `f (u n) ∉ V` and the absorbing property
   have h1 : r ≤ ‖(n : 𝕜')‖ := by rw [IsROrC.norm_natCast]; exact hn.le
   have hn' : 0 < ‖(n : 𝕜')‖ := lt_of_lt_of_le hr h1
-  rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn' 
+  rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn'
   have h'' : f (u n) ∈ V := by
-    simp only [Set.image_subset_iff] at h' 
+    simp only [Set.image_subset_iff] at h'
     specialize h' (n : 𝕜') h1 (Set.mem_range_self n)
-    simp only [Set.mem_preimage, LinearMap.map_smulₛₗ, map_natCast] at h' 
+    simp only [Set.mem_preimage, LinearMap.map_smulₛₗ, map_natCast] at h'
     rcases h' with ⟨y, hy, h'⟩
-    apply_fun fun y : F => (n : 𝕜')⁻¹ • y at h' 
-    simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h' 
+    apply_fun fun y : F => (n : 𝕜')⁻¹ • y at h'
+    simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h'
     rwa [← h']
   exact hu' n hn' h''
 #align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuousAt_zero_of_locally_bounded

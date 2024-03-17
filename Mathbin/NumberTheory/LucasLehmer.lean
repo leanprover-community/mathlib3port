@@ -191,7 +191,7 @@ theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
   · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
     -- and `lucas_lehmer_residue p = 0 → 2^p - 1 ∣ s_mod p (p-2)`.
     intro h
-    simp [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h 
+    simp [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
     apply s_mod_nonneg _ (Nat.lt_of_succ_lt w)
     exact s_mod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
@@ -484,11 +484,11 @@ Here and below, we introduce `p' = p - 2`, in order to avoid using subtraction i
 theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
   by
   by_contra H
-  simp at H 
+  simp at H
   interval_cases; clear H
   · -- If q = 1, we get a contradiction from 2^p = 2
-    dsimp [q] at h ; injection h with h'; clear h
-    simp [mersenne] at h' 
+    dsimp [q] at h; injection h with h'; clear h
+    simp [mersenne] at h'
     exact
       lt_irrefl 2
         (calc
@@ -496,8 +496,8 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
           _ < 2 ^ (p' + 2) := (Nat.lt_two_pow _)
           _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h')
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
-    dsimp [q] at h ; injection h with h'; clear h
-    rw [mersenne, PNat.one_coe, Nat.minFac_eq_two_iff, pow_succ] at h' 
+    dsimp [q] at h; injection h with h'; clear h
+    rw [mersenne, PNat.one_coe, Nat.minFac_eq_two_iff, pow_succ] at h'
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
 #align lucas_lehmer.two_lt_q LucasLehmer.two_lt_q
 -/
@@ -508,21 +508,21 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
       (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) =
         k * mersenne (p' + 2) * (ω : X (q (p' + 2))) ^ 2 ^ p' - 1 :=
   by
-  dsimp [lucas_lehmer_residue] at h 
-  rw [s_zmod_eq_s p'] at h 
-  simp [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h 
+  dsimp [lucas_lehmer_residue] at h
+  rw [s_zmod_eq_s p'] at h
+  simp [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h
   cases' h with k h
   use k
   replace h := congr_arg (fun n : ℤ => (n : X (q (p' + 2)))) h
   -- coercion from ℤ to X q
-  dsimp at h 
-  rw [closed_form] at h 
+  dsimp at h
+  rw [closed_form] at h
   replace h := congr_arg (fun x => ω ^ 2 ^ p' * x) h
-  dsimp at h 
+  dsimp at h
   have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by ring
-  rw [mul_add, ← pow_add ω, t, ← mul_pow ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h 
-  rw [mul_comm, coe_mul] at h 
-  rw [mul_comm _ (k : X (q (p' + 2)))] at h 
+  rw [mul_add, ← pow_add ω, t, ← mul_pow ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h
+  rw [mul_comm, coe_mul] at h
+  rw [mul_comm _ (k : X (q (p' + 2)))] at h
   replace h := eq_sub_of_add_eq h
   have : 1 ≤ 2 ^ (p' + 2) := Nat.one_le_pow _ _ (by decide)
   exact_mod_cast h
@@ -543,7 +543,7 @@ theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = -1 :=
   by
   cases' ω_pow_formula p' h with k w
-  rw [mersenne_coe_X] at w 
+  rw [mersenne_coe_X] at w
   simpa using w
 #align lucas_lehmer.ω_pow_eq_neg_one LucasLehmer.ω_pow_eq_neg_one
 -/
@@ -587,7 +587,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     have ω_pow := orderOf_dvd_iff_pow_eq_one.1 o
     replace ω_pow :=
       congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
-    simp at ω_pow 
+    simp at ω_pow
     have h : (1 : ZMod (q (p' + 2))) = -1 :=
       congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
     haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
@@ -623,8 +623,8 @@ theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (
   have w : 1 < p' + 2 := Nat.lt_of_sub_eq_succ rfl
   contrapose
   intro a t
-  rw [z] at a 
-  rw [z] at t 
+  rw [z] at a
+  rw [z] at t
   have h₁ := order_ineq p' t
   have h₂ := Nat.minFac_sq_le_self (mersenne_pos (Nat.lt_of_succ_lt w)) a
   have h := lt_of_lt_of_le h₁ h₂

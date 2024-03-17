@@ -187,7 +187,7 @@ theorem noncommProd_cons' (s : Multiset α) (a : α) (comm) :
     · congr 1
       apply comm.of_refl <;> simp
     · intro x hx y hy
-      simp only [quot_mk_to_coe, List.mem_cons, mem_coe, cons_coe] at hx hy 
+      simp only [quot_mk_to_coe, List.mem_cons, mem_coe, cons_coe] at hx hy
       apply comm
       · cases hx <;> simp [hx]
       · cases hy <;> simp [hy]
@@ -300,7 +300,7 @@ theorem noncommProd_congr {s₁ s₂ : Finset α} {f g : α → β} (h₁ : s₁
 theorem noncommProd_toFinset [DecidableEq α] (l : List α) (f : α → β) (comm) (hl : l.Nodup) :
     noncommProd l.toFinset f comm = (l.map f).Prod :=
   by
-  rw [← List.dedup_eq_self] at hl 
+  rw [← List.dedup_eq_self] at hl
   simp [noncomm_prod, hl]
 #align finset.noncomm_prod_to_finset Finset.noncommProd_toFinset
 #align finset.noncomm_sum_to_finset Finset.noncommSum_toFinset
@@ -404,7 +404,7 @@ theorem noncommProd_union_of_disjoint [DecidableEq α] {s t : Finset α} (h : Di
   by
   obtain ⟨sl, sl', rfl⟩ := exists_list_nodup_eq s
   obtain ⟨tl, tl', rfl⟩ := exists_list_nodup_eq t
-  rw [List.disjoint_toFinset_iff_disjoint] at h 
+  rw [List.disjoint_toFinset_iff_disjoint] at h
   simp [sl', tl', noncomm_prod_to_finset, ← List.prod_append, ← List.toFinset_append,
     sl'.append tl' h]
 #align finset.noncomm_prod_union_of_disjoint Finset.noncommProd_union_of_disjoint
@@ -470,7 +470,7 @@ theorem noncommProd_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
   rw [← insert_erase (mem_univ i), noncomm_prod_insert_of_not_mem' _ _ _ _ (not_mem_erase _ _),
     noncomm_prod_eq_pow_card, one_pow]
   · simp
-  · intro i h; simp at h ; simp [h]
+  · intro i h; simp at h; simp [h]
 #align finset.noncomm_prod_mul_single Finset.noncommProd_mul_single
 #align finset.noncomm_sum_single Finset.noncommSum_single
 -/

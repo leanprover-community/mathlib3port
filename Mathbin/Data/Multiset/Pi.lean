@@ -144,8 +144,8 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (β a)} :
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
     (by
       intro a s ih hs ht
-      have has : a ∉ s := by simp at hs  <;> exact hs.1
-      have hs : nodup s := by simp at hs  <;> exact hs.2
+      have has : a ∉ s := by simp at hs <;> exact hs.1
+      have hs : nodup s := by simp at hs <;> exact hs.2
       simp
       refine'
         ⟨fun b hb => (ih hs fun a' h' => ht a' <| mem_cons_of_mem h').map (pi.cons_injective has),
@@ -155,7 +155,7 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (β a)} :
         disjoint_map_map.2 fun f hf g hg eq =>
           have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) :=
             by rw [Eq]
-          neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this )
+          neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
 #align multiset.nodup.pi Multiset.Nodup.pi
 -/
 

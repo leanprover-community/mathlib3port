@@ -99,23 +99,23 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
   obtain ⟨q, hq⟩ := q
   simp only
   induction' p with u pu pv pw ph p ih generalizing q
-  · rw [walk.is_path_iff_eq_nil] at hq 
+  · rw [walk.is_path_iff_eq_nil] at hq
     exact hq.symm
-  · rw [is_acyclic_iff_forall_adj_is_bridge] at h 
+  · rw [is_acyclic_iff_forall_adj_is_bridge] at h
     specialize h ph
-    rw [is_bridge_iff_adj_and_forall_walk_mem_edges] at h 
+    rw [is_bridge_iff_adj_and_forall_walk_mem_edges] at h
     replace h := h.2 (q.append p.reverse)
-    simp only [walk.edges_append, walk.edges_reverse, List.mem_append, List.mem_reverse] at h 
+    simp only [walk.edges_append, walk.edges_reverse, List.mem_append, List.mem_reverse] at h
     cases h
     · cases q
       · simpa [walk.is_path_def] using hp
-      · rw [walk.cons_is_path_iff] at hp hq 
-        simp only [walk.edges_cons, List.mem_cons, Sym2.eq_iff] at h 
+      · rw [walk.cons_is_path_iff] at hp hq
+        simp only [walk.edges_cons, List.mem_cons, Sym2.eq_iff] at h
         obtain (⟨h, rfl⟩ | ⟨rfl, rfl⟩) | h := h
         · rw [ih hp.1 _ hq.1]
         · simpa using hq
         · exact absurd (walk.fst_mem_support_of_mem_edges _ h) hq.2
-    · rw [walk.cons_is_path_iff] at hp 
+    · rw [walk.cons_is_path_iff] at hp
       exact absurd (walk.fst_mem_support_of_mem_edges _ h) hp.2
 #align simple_graph.is_acyclic.path_unique SimpleGraph.IsAcyclic.path_unique
 -/
@@ -124,13 +124,13 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
 theorem isAcyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) : G.IsAcyclic :=
   by
   intro v c hc
-  simp only [walk.is_cycle_def, Ne.def] at hc 
+  simp only [walk.is_cycle_def, Ne.def] at hc
   cases c
   · exact absurd rfl hc.2.1
   · simp only [walk.cons_is_trail_iff, not_false_iff, walk.support_cons, List.tail_cons,
-      true_and_iff] at hc 
+      true_and_iff] at hc
     specialize h _ _ ⟨c_p, by simp only [walk.is_path_def, hc.2]⟩ (path.singleton (G.symm c_h))
-    simp only [path.singleton] at h 
+    simp only [path.singleton] at h
     simpa [-Quotient.eq', Sym2.eq_swap, h] using hc
 #align simple_graph.is_acyclic_of_path_unique SimpleGraph.isAcyclic_of_path_unique
 -/

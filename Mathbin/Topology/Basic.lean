@@ -211,7 +211,7 @@ theorem Set.Finite.isOpen_biInter {s : Set β} {f : β → Set α} (hs : s.Finit
 #print isOpen_iInter_of_finite /-
 theorem isOpen_iInter_of_finite [Finite ι] {s : ι → Set α} (h : ∀ i, IsOpen (s i)) :
     IsOpen (⋂ i, s i) :=
-  Set.Finite.isOpen_sInter (finite_range _) (forall_range_iff.2 h)
+  Set.Finite.isOpen_sInter (finite_range _) (forall_mem_range.2 h)
 #align is_open_Inter isOpen_iInter_of_finite
 -/
 
@@ -493,7 +493,7 @@ theorem interior_union_isClosed_of_interior_empty {s t : Set α} (h₁ : IsClose
     by_contradiction fun hx₂ : x ∉ s =>
       have : u \ s ⊆ t := fun x ⟨h₁, h₂⟩ => Or.resolve_left (hu₂ h₁) h₂
       have : u \ s ⊆ interior t := by rwa [(IsOpen.sdiff hu₁ h₁).subset_interior_iff]
-      have : u \ s ⊆ ∅ := by rwa [h₂] at this 
+      have : u \ s ⊆ ∅ := by rwa [h₂] at this
       this ⟨hx₁, hx₂⟩
   Subset.antisymm (interior_maximal this isOpen_interior) (interior_mono <| subset_union_left _ _)
 #align interior_union_is_closed_of_interior_empty interior_union_isClosed_of_interior_empty
@@ -1042,7 +1042,7 @@ theorem interior_frontier {s : Set α} (h : IsClosed s) : interior (frontier s) 
   have C : interior (frontier s) ⊆ frontier s := interior_subset
   have : interior (frontier s) ⊆ interior s ∩ (s \ interior s) :=
     subset_inter B (by simpa [A] using C)
-  rwa [inter_diff_self, subset_empty_iff] at this 
+  rwa [inter_diff_self, subset_empty_iff] at this
 #align interior_frontier interior_frontier
 -/
 
@@ -1977,7 +1977,7 @@ theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter 
   refine' ⟨fun h' => _, le_trans inf_le_left⟩
   have := sup_le h' h
   rw [sup_inf_right, sup_principal, union_compl_self, principal_univ, inf_top_eq, sup_le_iff] at
-    this 
+    this
   exact this.1
 #align tendsto_inf_principal_nhds_iff_of_forall_eq tendsto_inf_principal_nhds_iff_of_forall_eq
 -/

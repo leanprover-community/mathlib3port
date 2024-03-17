@@ -136,7 +136,7 @@ theorem ordConnected_sInter {S : Set (Set α)} (hS : ∀ s ∈ S, OrdConnected s
 #print Set.ordConnected_iInter /-
 theorem ordConnected_iInter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdConnected (s i)) :
     OrdConnected (⋂ i, s i) :=
-  ordConnected_sInter <| forall_range_iff.2 hs
+  ordConnected_sInter <| forall_mem_range.2 hs
 #align set.ord_connected_Inter Set.ordConnected_iInter
 -/
 
@@ -301,7 +301,7 @@ variable {α : Type _} [PartialOrder α] {s : Set α}
 protected theorem IsAntichain.ordConnected (hs : IsAntichain (· ≤ ·) s) : s.OrdConnected :=
   ⟨fun x hx y hy z hz => by
     obtain rfl := hs.eq hx hy (hz.1.trans hz.2)
-    rw [Icc_self, mem_singleton_iff] at hz ; rwa [hz]⟩
+    rw [Icc_self, mem_singleton_iff] at hz; rwa [hz]⟩
 #align is_antichain.ord_connected IsAntichain.ordConnected
 -/
 

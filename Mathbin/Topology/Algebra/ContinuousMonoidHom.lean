@@ -348,10 +348,11 @@ theorem closedEmbedding_toContinuousMap [ContinuousMul B] [T2Space B] :
                 {f | f '' {x} ⊆ U} ∩ {f | f '' {y} ⊆ V} ∩ {f | f '' {x * y} ⊆ W})ᶜ
         by
         rw [this, compl_compl]
-        refine' (ContinuousMap.isOpen_gen isCompact_singleton isOpen_compl_singleton).union _
+        refine'
+          (ContinuousMap.isOpen_setOf_mapsTo isCompact_singleton isOpen_compl_singleton).union _
         repeat' apply isOpen_iUnion; intro
         repeat' apply IsOpen.inter
-        all_goals apply ContinuousMap.isOpen_gen isCompact_singleton; assumption
+        all_goals apply ContinuousMap.isOpen_setOf_mapsTo isCompact_singleton; assumption
       simp_rw [Set.compl_union, Set.compl_iUnion, Set.image_singleton, Set.singleton_subset_iff,
         Set.ext_iff, Set.mem_inter_iff, Set.mem_iInter, Set.mem_compl_iff]
       refine' fun f => ⟨_, _⟩

@@ -342,7 +342,7 @@ protected theorem Summable.map_iff_of_leftInverse [AddCommMonoid γ] [Topologica
     (hg' : Continuous g') (hinv : Function.LeftInverse g' g) : Summable (g ∘ f) ↔ Summable f :=
   ⟨fun h => by
     have := h.map _ hg'
-    rwa [← Function.comp.assoc, hinv.id] at this , fun h => h.map _ hg⟩
+    rwa [← Function.comp.assoc, hinv.id] at this, fun h => h.map _ hg⟩
 #align summable.map_iff_of_left_inverse Summable.map_iff_of_leftInverse
 -/
 
@@ -501,7 +501,7 @@ theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ 
   rcases mem_at_top_sets.mp (ha hs) with ⟨u, hu⟩
   use u.image Sigma.fst, trivial
   intro bs hbs
-  simp only [Set.mem_preimage, ge_iff_le, Finset.le_iff_subset] at hu 
+  simp only [Set.mem_preimage, ge_iff_le, Finset.le_iff_subset] at hu
   have :
     tendsto (fun t : Finset (Σ b, γ b) => ∑ p in t.filterₓ fun p => p.1 ∈ bs, f p) at_top
       (𝓝 <| ∑ b in bs, g b) :=
@@ -554,7 +554,7 @@ theorem HasSum.update' {α β : Type _} [TopologicalSpace α] [AddCommMonoid α]
     · simpa only [Function.update_apply, hb', eq_self_iff_true] using add_comm (f b) x
     · simp only [Function.update_apply, hb', if_false]
   have h := hf.add (hasSum_ite_eq b x)
-  simp_rw [this] at h 
+  simp_rw [this] at h
   exact HasSum.unique h (hf'.add (hasSum_ite_eq b (f b)))
 #align has_sum.update' HasSum.update'
 -/
@@ -909,7 +909,7 @@ theorem tsum_iSup_decode₂ [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0
   symm; refine' tsum_eq_tsum_of_ne_zero_bij (fun a => Option.get (H a.1 a.2)) _ _ _
   · rintro ⟨m, hm⟩ ⟨n, hn⟩ e
     have := mem_decode₂.1 (Option.get_mem (H n hn))
-    rwa [← e, mem_decode₂.1 (Option.get_mem (H m hm))] at this 
+    rwa [← e, mem_decode₂.1 (Option.get_mem (H m hm))] at this
   · intro b h
     refine' ⟨⟨encode b, _⟩, _⟩
     · simp only [mem_support, encodek₂] at h ⊢; convert h; simp [Set.ext_iff, encodek₂]
@@ -1252,7 +1252,7 @@ theorem tendsto_sum_nat_add [T2Space α] (f : ℕ → α) :
     simpa only [h₀, sub_self] using tendsto.sub h₁ hf.has_sum.tendsto_sum_nat
   · convert tendsto_const_nhds
     ext1 i
-    rw [← summable_nat_add_iff i] at hf 
+    rw [← summable_nat_add_iff i] at hf
     · exact tsum_eq_zero_of_not_summable hf
     · infer_instance
 #align tendsto_sum_nat_add tendsto_sum_nat_add
@@ -1283,7 +1283,7 @@ theorem HasSum.int_rec {b : α} {f g : ℕ → α} (hf : HasSum f a) (hg : HasSu
 theorem HasSum.nonneg_add_neg {b : α} {f : ℤ → α} (hnonneg : HasSum (fun n : ℕ => f n) a)
     (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) : HasSum f (a + b) :=
   by
-  simp_rw [← Int.negSucc_coe] at hneg 
+  simp_rw [← Int.negSucc_coe] at hneg
   convert hnonneg.int_rec hneg using 1
   ext (i | j) <;> rfl
 #align has_sum.nonneg_add_neg HasSum.nonneg_add_neg
@@ -1341,7 +1341,7 @@ theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalS
         simpa only [mem_sdiff, mem_union, mem_image, neg_eq_zero, or_self_iff, mem_inter,
           and_self_iff, and_not_self_iff] using hx
       · intro x hx
-        simp only [mem_inter, mem_image, exists_prop] at hx 
+        simp only [mem_inter, mem_image, exists_prop] at hx
         have : x = 0 := by
           apply le_antisymm
           · rcases hx.2 with ⟨a, ha, rfl⟩
@@ -1456,7 +1456,7 @@ theorem Summable.summable_of_eq_zero_or_self (hf : Summable f) (h : ∀ b, g b =
             by
             refine' Finset.sum_subset (Finset.filter_subset _ _) _
             intro b hbt hb
-            simp only [(· ∉ ·), Finset.mem_filter, and_iff_right hbt] at hb 
+            simp only [(· ∉ ·), Finset.mem_filter, and_iff_right hbt] at hb
             exact (h b).resolve_right hb
       Eq ▸ hs _ <| Finset.disjoint_of_subset_left (Finset.filter_subset _ _) ht⟩
 #align summable.summable_of_eq_zero_or_self Summable.summable_of_eq_zero_or_self

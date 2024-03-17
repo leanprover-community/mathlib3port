@@ -264,7 +264,7 @@ theorem IsTopologicalBasis.exists_nonempty_subset {B : Set (Set α)} (hb : IsTop
     {u : Set α} (hu : u.Nonempty) (ou : IsOpen u) : ∃ v ∈ B, Set.Nonempty v ∧ v ⊆ u :=
   by
   cases' hu with x hx
-  rw [hb.open_eq_sUnion' ou, mem_sUnion] at hx 
+  rw [hb.open_eq_sUnion' ou, mem_sUnion] at hx
   rcases hx with ⟨v, hv, hxv⟩
   exact ⟨v, hv.1, ⟨x, hxv⟩, hv.2⟩
 #align topological_space.is_topological_basis.exists_nonempty_subset TopologicalSpace.IsTopologicalBasis.exists_nonempty_subset
@@ -302,7 +302,7 @@ protected theorem IsTopologicalBasis.inducing {β} [TopologicalSpace β] {f : α
     rwa [hf.is_open_iff]
     refine' ⟨V, h.is_open hV, rfl⟩
   · intro a U ha hU
-    rw [hf.is_open_iff] at hU 
+    rw [hf.is_open_iff] at hU
     obtain ⟨V, hV, rfl⟩ := hU
     obtain ⟨S, hS, rfl⟩ := h.open_eq_sUnion hV
     obtain ⟨W, hW, ha⟩ := ha
@@ -316,7 +316,7 @@ theorem isTopologicalBasis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOpen
     IsTopologicalBasis (⋃ i : ι, image (coe : U i → α) '' b i) :=
   by
   refine' is_topological_basis_of_open_of_nhds (fun u hu => _) _
-  · simp only [mem_Union, mem_image] at hu 
+  · simp only [mem_Union, mem_image] at hu
     rcases hu with ⟨i, s, sb, rfl⟩
     exact (Uo i).isOpenMap_subtype_val _ ((hb i).IsOpen sb)
   · intro a u ha uo

@@ -81,7 +81,7 @@ protected theorem preconnectedSpace [PreconnectedSpace α] (di : DenseInducing i
 theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs : s ∈ 𝓝 a) :
     closure (i '' s) ∈ 𝓝 (i a) :=
   by
-  rw [di.nhds_eq_comap a, ((nhds_basis_opens _).comap _).mem_iff] at hs 
+  rw [di.nhds_eq_comap a, ((nhds_basis_opens _).comap _).mem_iff] at hs
   rcases hs with ⟨U, ⟨haU, hUo⟩, sub : i ⁻¹' U ⊆ s⟩
   refine' mem_of_superset (hUo.mem_nhds haU) _
   calc
@@ -106,9 +106,9 @@ theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dens
     {s : Set α} (hs : IsCompact s) : interior s = ∅ :=
   by
   refine' eq_empty_iff_forall_not_mem.2 fun x hx => _
-  rw [mem_interior_iff_mem_nhds] at hx 
+  rw [mem_interior_iff_mem_nhds] at hx
   have := di.closure_image_mem_nhds hx
-  rw [(hs.image di.continuous).IsClosed.closure_eq] at this 
+  rw [(hs.image di.continuous).IsClosed.closure_eq] at this
   rcases hd.inter_nhds_nonempty this with ⟨y, hyi, hys⟩
   exact hyi (image_subset_range _ _ hys)
 #align dense_inducing.interior_compact_eq_empty DenseInducing.interior_compact_eq_empty
@@ -147,9 +147,9 @@ theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i)
   by
   have lim1 : map g (comap g (𝓝 d)) ≤ 𝓝 d := map_comap_le
   replace lim1 : map h (map g (comap g (𝓝 d))) ≤ map h (𝓝 d) := map_mono lim1
-  rw [Filter.map_map, comm, ← Filter.map_map, map_le_iff_le_comap] at lim1 
+  rw [Filter.map_map, comm, ← Filter.map_map, map_le_iff_le_comap] at lim1
   have lim2 : comap i (map h (𝓝 d)) ≤ comap i (𝓝 (i a)) := comap_mono H
-  rw [← di.nhds_eq_comap] at lim2 
+  rw [← di.nhds_eq_comap] at lim2
   exact le_trans lim1 lim2
 #align dense_inducing.tendsto_comap_nhds_nhds DenseInducing.tendsto_comap_nhds_nhds
 -/
@@ -217,7 +217,7 @@ theorem extend_eq' [T2Space γ] {f : α → γ} (di : DenseInducing i)
   by
   rcases hf (i a) with ⟨b, hb⟩
   refine' di.extend_eq_at' b _
-  rwa [← di.to_inducing.nhds_eq_comap] at hb 
+  rwa [← di.to_inducing.nhds_eq_comap] at hb
 #align dense_inducing.extend_eq' DenseInducing.extend_eq'
 -/
 
@@ -355,7 +355,7 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
   { dense :=
       dense_iff_closure_eq.2 <| by
         ext ⟨x, hx⟩
-        rw [image_eq_range] at hx 
+        rw [image_eq_range] at hx
         simpa [closure_subtype, ← range_comp, (· ∘ ·)]
     inj := (de.inj.comp Subtype.coe_injective).codRestrict _
     induced :=

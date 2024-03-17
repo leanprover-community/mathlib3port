@@ -129,7 +129,7 @@ theorem colimitMulAux_eq_of_rel_left {x x' y : Σ j, F.obj j}
   by
   cases' x with j₁ x; cases' y with j₂ y; cases' x' with j₃ x'
   obtain ⟨l, f, g, hfg⟩ := hxx'
-  simp at hfg 
+  simp at hfg
   obtain ⟨s, α, β, γ, h₁, h₂, h₃⟩ :=
     tulip (left_to_max j₁ j₂) (right_to_max j₁ j₂) (right_to_max j₃ j₂) (left_to_max j₃ j₂) f g
   apply M.mk_eq
@@ -149,7 +149,7 @@ theorem colimitMulAux_eq_of_rel_right {x y y' : Σ j, F.obj j}
   by
   cases' y with j₁ y; cases' x with j₂ x; cases' y' with j₃ y'
   obtain ⟨l, f, g, hfg⟩ := hyy'
-  simp at hfg 
+  simp at hfg
   obtain ⟨s, α, β, γ, h₁, h₂, h₃⟩ :=
     tulip (right_to_max j₂ j₁) (left_to_max j₂ j₁) (left_to_max j₂ j₃) (right_to_max j₂ j₃) f g
   apply M.mk_eq

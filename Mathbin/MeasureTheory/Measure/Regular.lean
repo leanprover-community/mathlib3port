@@ -189,7 +189,7 @@ theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} 
     (hB₁ : ∀ K, pb K → MeasurableSet K) (hB₂ : ∀ U, qb U → MeasurableSet U) :
     InnerRegularWRT (map f μ) pb qb := by
   intro U hU r hr
-  rw [map_apply_of_ae_measurable hf (hB₂ _ hU)] at hr 
+  rw [map_apply_of_ae_measurable hf (hB₂ _ hU)] at hr
   rcases H (hAB U hU) r hr with ⟨K, hKU, hKc, hK⟩
   refine' ⟨f '' K, image_subset_iff.2 hKU, hAB' _ hKc, _⟩
   rwa [map_apply_of_ae_measurable hf (hB₁ _ <| hAB' _ hKc), f.preimage_image]
@@ -200,7 +200,7 @@ theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} 
 theorem smul (H : InnerRegularWRT μ p q) (c : ℝ≥0∞) : InnerRegularWRT (c • μ) p q :=
   by
   intro U hU r hr
-  rw [smul_apply, H.measure_eq_supr hU, smul_eq_mul] at hr 
+  rw [smul_apply, H.measure_eq_supr hU, smul_eq_mul] at hr
   simpa only [ENNReal.mul_iSup, lt_iSup_iff, exists_prop] using hr
 #align measure_theory.measure.inner_regular.smul MeasureTheory.Measure.InnerRegularWRT.smul
 -/
@@ -335,7 +335,7 @@ protected theorem map [OpensMeasurableSpace α] [MeasurableSpace β] [Topologica
     [BorelSpace β] (f : α ≃ₜ β) (μ : Measure α) [OuterRegular μ] : (Measure.map f μ).OuterRegular :=
   by
   refine' ⟨fun A hA r hr => _⟩
-  rw [map_apply f.measurable hA, ← f.image_symm] at hr 
+  rw [map_apply f.measurable hA, ← f.image_symm] at hr
   rcases Set.exists_isOpen_lt_of_lt _ r hr with ⟨U, hAU, hUo, hU⟩
   have : IsOpen (f.symm ⁻¹' U) := hUo.preimage f.symm.continuous
   refine' ⟨f.symm ⁻¹' U, image_subset_iff.1 hAU, this, _⟩
@@ -349,7 +349,7 @@ protected theorem smul (μ : Measure α) [OuterRegular μ] {x : ℝ≥0∞} (hx 
   rcases eq_or_ne x 0 with (rfl | h0)
   · rw [zero_smul]; exact outer_regular.zero
   · refine' ⟨fun A hA r hr => _⟩
-    rw [smul_apply, A.measure_eq_infi_is_open, smul_eq_mul] at hr 
+    rw [smul_apply, A.measure_eq_infi_is_open, smul_eq_mul] at hr
     simpa only [ENNReal.mul_iInf_of_ne h0 hx, gt_iff_lt, iInf_lt_iff, exists_prop] using hr
 #align measure_theory.measure.outer_regular.smul MeasureTheory.Measure.OuterRegular.smul
 -/
@@ -378,7 +378,7 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
         (disjoint_disjointed s.set).mono fun k l hkl => hkl.mono inf_le_right inf_le_right, _⟩
     rw [← inter_Union, iUnion_disjointed, s.spanning, inter_univ]
   rcases ENNReal.exists_pos_sum_of_countable' (tsub_pos_iff_lt.2 hr).ne' ℕ with ⟨δ, δ0, hδε⟩
-  rw [lt_tsub_iff_right, add_comm] at hδε 
+  rw [lt_tsub_iff_right, add_comm] at hδε
   have : ∀ n, ∃ (U : _) (_ : U ⊇ A n), IsOpen U ∧ μ U < μ (A n) + δ n :=
     by
     intro n
@@ -386,7 +386,7 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
     have Ht : μ.restrict (s.set n) (A n) ≠ ⊤ := by rw [H₁];
       exact ((measure_mono <| inter_subset_right _ _).trans_lt (s.finite n)).Ne
     rcases(A n).exists_isOpen_lt_add Ht (δ0 n).ne' with ⟨U, hAU, hUo, hU⟩
-    rw [H₁, H₁, inter_eq_self_of_subset_left (hAs _)] at hU 
+    rw [H₁, H₁, inter_eq_self_of_subset_left (hAs _)] at hU
     exact ⟨U ∩ s.set n, subset_inter hAU (hAs _), hUo.inter (s.set_mem n).1, hU⟩
   choose U hAU hUo hU
   refine' ⟨⋃ n, U n, Union_mono hAU, isOpen_iUnion hUo, _⟩
@@ -453,7 +453,7 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
     rcases exists_between hr with ⟨r', hsr', hr'r⟩
     rcases this s hs _ (tsub_pos_iff_lt.2 hsr').ne' with ⟨-, -, U, hsU, -, hUo, -, H⟩
     refine' ⟨U, hsU, hUo, _⟩
-    rw [add_tsub_cancel_of_le hsr'.le] at H ; exact H.trans_lt hr'r
+    rw [add_tsub_cancel_of_le hsr'.le] at H; exact H.trans_lt hr'r
   refine' MeasurableSet.induction_on_open _ _ _
   /- The proof is by measurable induction: we should check that the property is true for the empty
     set, for open sets, and is stable by taking the complement and by taking countable disjoint
@@ -511,7 +511,7 @@ theorem of_pseudoMetrizableSpace {X : Type _} [PseudoEMetricSpace X] [Measurable
   by
   intro U hU r hr
   rcases hU.exists_Union_is_closed with ⟨F, F_closed, -, rfl, F_mono⟩
-  rw [measure_Union_eq_supr F_mono.directed_le] at hr 
+  rw [measure_Union_eq_supr F_mono.directed_le] at hr
   rcases lt_iSup_iff.1 hr with ⟨n, hn⟩
   exact ⟨F n, subset_Union _ _, F_closed n, hn⟩
 #align measure_theory.measure.inner_regular.of_pseudo_emetric_space MeasureTheory.Measure.InnerRegularWRT.of_pseudoMetrizableSpace
@@ -530,7 +530,7 @@ theorem isCompact_isClosed {X : Type _} [TopologicalSpace X] [SigmaCompactSpace 
     by
     rw [← measure_Union_eq_supr, hBU]
     exact Monotone.directed_le fun m n h => inter_subset_inter_right _ (compactCovering_subset _ h)
-  rw [this] at hr ; rcases lt_iSup_iff.1 hr with ⟨n, hn⟩
+  rw [this] at hr; rcases lt_iSup_iff.1 hr with ⟨n, hn⟩
   exact ⟨_, inter_subset_left _ _, hBc n, hn⟩
 #align measure_theory.measure.inner_regular.is_compact_is_closed MeasureTheory.Measure.InnerRegularWRT.isCompact_isClosed
 -/

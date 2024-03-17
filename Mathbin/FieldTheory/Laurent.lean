@@ -47,7 +47,7 @@ theorem taylor_mem_nonZeroDivisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]⁰
   have : x = taylor (r - r) x := by simp
   rwa [this, sub_eq_add_neg, ← taylor_taylor, ← taylor_mul,
     LinearMap.map_eq_zero_iff _ (taylor_injective _), mul_right_mem_nonZeroDivisors_eq_zero_iff hp,
-    LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx 
+    LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx
 #align ratfunc.taylor_mem_non_zero_divisors RatFunc.taylor_mem_nonZeroDivisors
 -/
 

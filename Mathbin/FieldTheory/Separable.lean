@@ -102,14 +102,14 @@ theorem separable_C (r : R) : (C r).Separable ↔ IsUnit r := by
 #print Polynomial.Separable.of_mul_left /-
 theorem Separable.of_mul_left {f g : R[X]} (h : (f * g).Separable) : f.Separable :=
   by
-  have := h.of_mul_left_left; rw [derivative_mul] at this 
+  have := h.of_mul_left_left; rw [derivative_mul] at this
   exact IsCoprime.of_mul_right_left (IsCoprime.of_add_mul_left_right this)
 #align polynomial.separable.of_mul_left Polynomial.Separable.of_mul_left
 -/
 
 #print Polynomial.Separable.of_mul_right /-
 theorem Separable.of_mul_right {f g : R[X]} (h : (f * g).Separable) : g.Separable := by
-  rw [mul_comm] at h ; exact h.of_mul_left
+  rw [mul_comm] at h; exact h.of_mul_left
 #align polynomial.separable.of_mul_right Polynomial.Separable.of_mul_right
 -/
 
@@ -136,7 +136,7 @@ theorem separable_gcd_right {F : Type _} [Field F] {g : F[X]} (f : F[X]) (hg : g
 #print Polynomial.Separable.isCoprime /-
 theorem Separable.isCoprime {f g : R[X]} (h : (f * g).Separable) : IsCoprime f g :=
   by
-  have := h.of_mul_left_left; rw [derivative_mul] at this 
+  have := h.of_mul_left_left; rw [derivative_mul] at this
   exact IsCoprime.of_mul_right_right (IsCoprime.of_add_mul_left_right this)
 #align polynomial.separable.is_coprime Polynomial.Separable.isCoprime
 -/
@@ -147,7 +147,7 @@ theorem Separable.of_pow' {f : R[X]} :
   | 0 => fun h => Or.inr <| Or.inr rfl
   | 1 => fun h => Or.inr <| Or.inl ⟨pow_one f ▸ h, rfl⟩
   | n + 2 => fun h => by
-    rw [pow_succ, pow_succ] at h 
+    rw [pow_succ, pow_succ] at h
     exact Or.inl (isCoprime_self.1 h.is_coprime.of_mul_right_left)
 #align polynomial.separable.of_pow' Polynomial.Separable.of_pow'
 -/
@@ -233,7 +233,7 @@ theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finset ι} :
       (∀ x ∈ s, (f x).Separable) → (∏ x in s, f x).Separable :=
   Finset.induction_on s (fun _ _ => separable_one) fun a s has ih h1 h2 =>
     by
-    simp_rw [Finset.forall_mem_insert, forall_and] at h1 h2 ; rw [prod_insert has]
+    simp_rw [Finset.forall_mem_insert, forall_and] at h1 h2; rw [prod_insert has]
     exact
       h2.1.mul (ih h1.2.2 h2.2)
         (IsCoprime.prod_right fun i his => h1.1.2 i his <| Ne.symm <| ne_of_mem_of_not_mem his has)
@@ -254,7 +254,7 @@ theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R
   by_contra hxy
   rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ←
     insert_erase (mem_erase_of_ne_of_mem (Ne.symm hxy) hy), prod_insert (not_mem_erase _ _), ←
-    mul_assoc, hfxy, ← sq] at hfs 
+    mul_assoc, hfxy, ← sq] at hfs
   cases (hfs.of_mul_left.of_pow (not_is_unit_X_sub_C _) two_ne_zero).2
 #align polynomial.separable.inj_of_prod_X_sub_C Polynomial.Separable.inj_of_prod_X_sub_C
 -/
@@ -391,7 +391,7 @@ theorem separable_or {f : F[X]} (hf : Irreducible f) :
     exact
       Or.inr
         ⟨by rw [separable_iff_derivative_ne_zero hf, Classical.not_not, H], contract p f,
-          of_irreducible_map (↑(expand F p)) (by rwa [← expand_contract p H hp.ne'] at hf ),
+          of_irreducible_map (↑(expand F p)) (by rwa [← expand_contract p H hp.ne'] at hf),
           expand_contract p H hp.ne'⟩
   else Or.inl <| (separable_iff_derivative_ne_zero hf).2 H
 #align polynomial.separable_or Polynomial.separable_or
@@ -406,13 +406,12 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
   rcases separable_or p hf with (h | ⟨h1, g, hg, hgf⟩)
   · refine' ⟨0, f, h, _⟩; rw [pow_zero, expand_one]
   · cases' N with N
-    · rw [nat_degree_eq_zero_iff_degree_le_zero, degree_le_zero_iff] at hn 
-      rw [hn, separable_C, isUnit_iff_ne_zero, Classical.not_not] at h1 
+    · rw [nat_degree_eq_zero_iff_degree_le_zero, degree_le_zero_iff] at hn
+      rw [hn, separable_C, isUnit_iff_ne_zero, Classical.not_not] at h1
       have hf0 : f ≠ 0 := hf.ne_zero
-      rw [h1, C_0] at hn ; exact absurd hn hf0
+      rw [h1, C_0] at hn; exact absurd hn hf0
     have hg1 : g.nat_degree * p = N.succ := by rwa [← nat_degree_expand, hgf]
-    have hg2 : g.nat_degree ≠ 0 := by intro this; rw [this, MulZeroClass.zero_mul] at hg1 ;
-      cases hg1
+    have hg2 : g.nat_degree ≠ 0 := by intro this; rw [this, MulZeroClass.zero_mul] at hg1; cases hg1
     have hg3 : g.nat_degree < N.succ :=
       by
       rw [← mul_one g.nat_degree, ← hg1]
@@ -431,9 +430,9 @@ theorem isUnit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
   have hf2 : (expand F (p ^ n) f).derivative = 0 := by
     rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow hn.bot_lt,
       MulZeroClass.zero_mul, MulZeroClass.mul_zero]
-  rw [separable_def, hf2, isCoprime_zero_right, is_unit_iff] at hf 
+  rw [separable_def, hf2, isCoprime_zero_right, is_unit_iff] at hf
   rcases hf with ⟨r, hr, hrf⟩
-  rw [eq_comm, expand_eq_C (pow_pos hp _)] at hrf 
+  rw [eq_comm, expand_eq_C (pow_pos hp _)] at hrf
   rwa [hrf, is_unit_C]
 #align polynomial.is_unit_or_eq_zero_of_separable_expand Polynomial.isUnit_or_eq_zero_of_separable_expand
 -/
@@ -448,12 +447,12 @@ theorem unique_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : 0 
   · intro g₁ g₂ hg₁ Hg₁ hg₂ Hg₂
     simpa only [eq_comm] using this hf hp n₂ n₁ (le_of_not_le hn) g₂ g₁ hg₂ Hg₂ hg₁ Hg₁
   have hf0 : f ≠ 0 := hf.ne_zero
-  intros; rw [le_iff_exists_add] at hn ; rcases hn with ⟨k, rfl⟩
-  rw [← hgf₁, pow_add, expand_mul, expand_inj (pow_pos hp n₁)] at hgf₂ ; subst hgf₂
+  intros; rw [le_iff_exists_add] at hn; rcases hn with ⟨k, rfl⟩
+  rw [← hgf₁, pow_add, expand_mul, expand_inj (pow_pos hp n₁)] at hgf₂; subst hgf₂
   subst hgf₁
   rcases is_unit_or_eq_zero_of_separable_expand p k hp hg₁ with (h | rfl)
-  · rw [is_unit_iff] at h ; rcases h with ⟨r, hr, rfl⟩
-    simp_rw [expand_C] at hf ; exact absurd (is_unit_C.2 hr) hf.1
+  · rw [is_unit_iff] at h; rcases h with ⟨r, hr, rfl⟩
+    simp_rw [expand_C] at hf; exact absurd (is_unit_C.2 hr) hf.1
   · rw [add_zero, pow_zero, expand_one]; constructor <;> rfl
 #align polynomial.unique_separable_of_irreducible Polynomial.unique_separable_of_irreducible
 -/
@@ -478,7 +477,7 @@ theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔
   rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
   -- Suppose `(n : F) = 0`, then the derivative is `0`, so `X ^ n - 1` is a unit, contradiction.
   rintro (h : IsCoprime _ _) hn'
-  rw [hn', C_0, MulZeroClass.zero_mul, isCoprime_zero_right] at h 
+  rw [hn', C_0, MulZeroClass.zero_mul, isCoprime_zero_right] at h
   exact not_is_unit_X_pow_sub_one F n h
 #align polynomial.X_pow_sub_one_separable_iff Polynomial.X_pow_sub_one_separable_iff
 -/
@@ -542,7 +541,7 @@ theorem Irreducible.separable [CharZero F] {f : F[X]} (hf : Irreducible f) : f.S
   refine' fun hf1 => hf.not_unit _
   rw [hf1, is_unit_C, isUnit_iff_ne_zero]
   intro hf2
-  rw [hf2, C_0] at hf1 
+  rw [hf2, C_0] at hf1
   exact absurd hf1 hf.ne_zero
 #align irreducible.separable Irreducible.separable
 -/
@@ -636,7 +635,7 @@ theorem isSeparable_tower_bot_of_isSeparable [h : IsSeparable F E] : IsSeparable
     obtain ⟨q, hq⟩ :=
       minpoly.dvd F x
         ((aeval_algebra_map_eq_zero_iff _ _ _).mp (minpoly.aeval F ((algebraMap K E) x)))
-    rw [hq] at hs 
+    rw [hq] at hs
     exact hs.of_mul_left
 #align is_separable_tower_bot_of_is_separable isSeparable_tower_bot_of_isSeparable
 -/

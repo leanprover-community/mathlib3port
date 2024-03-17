@@ -65,7 +65,7 @@ structure AbstractCompletion (α : Type u) [UniformSpace α] where
   coe : α → space
   uniformStruct : UniformSpace space
   complete : CompleteSpace space
-  separation : SeparatedSpace space
+  separation : T0Space space
   UniformInducing : UniformInducing coe
   dense : DenseRange coe
 #align abstract_completion AbstractCompletion
@@ -84,7 +84,7 @@ local notation "ι" => pkg.coe
 
 #print AbstractCompletion.ofComplete /-
 /-- If `α` is complete, then it is an abstract completion of itself. -/
-def ofComplete [SeparatedSpace α] [CompleteSpace α] : AbstractCompletion α :=
+def ofComplete [T0Space α] [CompleteSpace α] : AbstractCompletion α :=
   mk α id inferInstance inferInstance inferInstance uniformInducing_id denseRange_id
 #align abstract_completion.of_complete AbstractCompletion.ofComplete
 -/
@@ -177,7 +177,7 @@ theorem continuous_extend : Continuous (pkg.extend f) :=
 #align abstract_completion.continuous_extend AbstractCompletion.continuous_extend
 -/
 
-variable [SeparatedSpace β]
+variable [T0Space β]
 
 #print AbstractCompletion.extend_unique /-
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
@@ -261,9 +261,8 @@ theorem map_id : pkg.map pkg id = id :=
 variable {γ : Type _} [UniformSpace γ]
 
 #print AbstractCompletion.extend_map /-
-theorem extend_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β}
-    (hf : UniformContinuous f) (hg : UniformContinuous g) :
-    pkg'.extend f ∘ map g = pkg.extend (f ∘ g) :=
+theorem extend_map [CompleteSpace γ] [T0Space γ] {f : β → γ} {g : α → β} (hf : UniformContinuous f)
+    (hg : UniformContinuous g) : pkg'.extend f ∘ map g = pkg.extend (f ∘ g) :=
   pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend
     fun a => by rw [pkg.extend_coe (hf.comp hg), comp_app, pkg.map_coe pkg' hg, pkg'.extend_coe hf]
 #align abstract_completion.extend_map AbstractCompletion.extend_map
@@ -386,9 +385,9 @@ protected def extend₂ (f : α → β → γ) : hatα → hatβ → γ :=
 #align abstract_completion.extend₂ AbstractCompletion.extend₂
 -/
 
-section SeparatedSpace
+section T0Space
 
-variable [SeparatedSpace γ] {f : α → β → γ}
+variable [T0Space γ] {f : α → β → γ}
 
 #print AbstractCompletion.extension₂_coe_coe /-
 theorem extension₂_coe_coe (hf : UniformContinuous <| uncurry f) (a : α) (b : β) :
@@ -398,7 +397,7 @@ theorem extension₂_coe_coe (hf : UniformContinuous <| uncurry f) (a : α) (b :
 #align abstract_completion.extension₂_coe_coe AbstractCompletion.extension₂_coe_coe
 -/
 
-end SeparatedSpace
+end T0Space
 
 variable {f : α → β → γ}
 

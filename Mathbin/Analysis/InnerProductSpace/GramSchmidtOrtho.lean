@@ -252,7 +252,7 @@ theorem gramSchmidt_ne_zero_coe {f : ι → E} (n : ι)
     simp_intro a ha only [Finset.mem_Ico]
     simp only [Set.mem_image, Set.mem_Iio, orthogonalProjection_singleton]
     apply Submodule.smul_mem _ _ _
-    rw [Finset.mem_Iio] at ha 
+    rw [Finset.mem_Iio] at ha
     refine' subset_span ⟨a, ha, by rfl⟩
   have h₂ :
     (f ∘ (coe : Set.Iic n → ι)) ⟨n, le_refl n⟩ ∈
@@ -377,7 +377,7 @@ theorem gramSchmidt_orthonormal' (f : ι → E) :
   by
   refine' ⟨fun i => gramSchmidtNormed_unit_length' i.Prop, _⟩
   rintro i j (hij : ¬_)
-  rw [Subtype.ext_iff] at hij 
+  rw [Subtype.ext_iff] at hij
   simp [gramSchmidtNormed, inner_smul_left, inner_smul_right, gramSchmidt_orthogonal 𝕜 f hij]
 #align gram_schmidt_orthonormal' gramSchmidt_orthonormal'
 -/

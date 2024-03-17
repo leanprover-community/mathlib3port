@@ -51,21 +51,21 @@ theorem Std.RBNode.find?_correct {t : Std.RBNode α} {lt x} [DecidableRel lt]
       apply Iff.intro
       · intro hm; cases_type* or.1
         · exact Iff.mp (ih hs_hs₁) hm
-        · simp at h ; cases hm; contradiction
+        · simp at h; cases hm; contradiction
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ hm).1
-          simp [lift] at hyx 
-          have hxy : lt x y := by simp [cmpUsing] at h ; assumption
+          simp [lift] at hyx
+          have hxy : lt x y := by simp [cmpUsing] at h; assumption
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
       · intro hc; left; exact Iff.mpr (ih hs_hs₁) hc
-    · simp at h ; simp [h, StrictWeakOrder.Equiv]
+    · simp at h; simp [h, StrictWeakOrder.Equiv]
     · cases hs
       apply Iff.intro
       · intro hm; cases_type* or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ hm).2
-          simp [lift] at hxy 
-          have hyx : lt y x := by simp [cmpUsing] at h ; exact h.2
+          simp [lift] at hxy
+          have hyx : lt y x := by simp [cmpUsing] at h; exact h.2
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
-        · simp at h ; cases hm; contradiction
+        · simp at h; cases hm; contradiction
         · exact Iff.mp (ih hs_hs₂) hm
       · intro hc; right; right; exact Iff.mpr (ih hs_hs₂) hc
 #align rbnode.find_correct Std.RBNode.find?_correct
@@ -91,32 +91,32 @@ theorem Std.RBNode.find?_correct_exact {t : Std.RBNode α} {lt x} [DecidableRel 
       apply Iff.intro
       · intro hm; cases_type* or.1
         · exact Iff.mp (ih hs_hs₁) hm
-        · simp at h ; subst x; exact absurd h (irrefl y)
+        · simp at h; subst x; exact absurd h (irrefl y)
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
-          simp [lift] at hyx 
-          have hxy : lt x y := by simp [cmpUsing] at h ; assumption
+          simp [lift] at hyx
+          have hxy : lt x y := by simp [cmpUsing] at h; assumption
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
       · intro hc; left; exact Iff.mpr (ih hs_hs₁) hc
-    · simp at h 
+    · simp at h
       cases hs
       apply Iff.intro
       · intro hm; cases_type* or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
-          simp [lift] at hxy 
+          simp [lift] at hxy
           exact absurd hxy h.1
         · subst hm
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
-          simp [lift] at hyx 
+          simp [lift] at hyx
           exact absurd hyx h.2
       · intro hm; simp [*]
     · cases hs
       apply Iff.intro
       · intro hm; cases_type* or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
-          simp [lift] at hxy 
-          have hyx : lt y x := by simp [cmpUsing] at h ; exact h.2
+          simp [lift] at hxy
+          have hyx : lt y x := by simp [cmpUsing] at h; exact h.2
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
-        · simp at h ; subst x; exact absurd h (irrefl y)
+        · simp at h; subst x; exact absurd h (irrefl y)
         · exact Iff.mp (ih hs_hs₂) hm
       · intro hc; right; right; exact Iff.mpr (ih hs_hs₂) hc
 #align rbnode.find_correct_exact Std.RBNode.find?_correct_exact
@@ -128,7 +128,7 @@ theorem Std.RBNode.eqv_of_find?_some {t : Std.RBNode α} {lt x y} [DecidableRel 
   apply find.induction lt t x <;> intros <;> simp_all only [mem, find]
   iterate 2 
     · cases hs; exact ih hs_hs₁ rfl
-    · subst y; simp at h ; exact h
+    · subst y; simp at h; exact h
     · cases hs; exact ih hs_hs₂ rfl
 #align rbnode.eqv_of_find_some Std.RBNode.eqv_of_find?_some
 

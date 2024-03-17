@@ -163,7 +163,7 @@ theorem isBigO_cocompact_zpow_neg_nat (k : ℕ) :
     Asymptotics.IsBigO (Filter.cocompact E) f fun x => ‖x‖ ^ (-k : ℤ) :=
   by
   obtain ⟨d, hd, hd'⟩ := f.decay k 0
-  simp_rw [norm_iteratedFDeriv_zero] at hd' 
+  simp_rw [norm_iteratedFDeriv_zero] at hd'
   simp_rw [Asymptotics.IsBigO, Asymptotics.IsBigOWith]
   refine' ⟨d, Filter.Eventually.filter_mono Filter.cocompact_le_cofinite _⟩
   refine' (Filter.eventually_cofinite_ne 0).mp (Filter.eventually_of_forall fun x hx => _)
@@ -567,7 +567,7 @@ theorem norm_iteratedFDeriv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
     ‖iteratedFDeriv ℝ n f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 0 n) f :=
   by
   have := SchwartzMap.le_seminorm 𝕜 0 n f x₀
-  rwa [pow_zero, one_mul] at this 
+  rwa [pow_zero, one_mul] at this
 #align schwartz_map.norm_iterated_fderiv_le_seminorm SchwartzMap.norm_iteratedFDeriv_le_seminorm
 -/
 
@@ -576,7 +576,7 @@ theorem norm_pow_mul_le_seminorm (f : 𝓢(E, F)) (k : ℕ) (x₀ : E) :
     ‖x₀‖ ^ k * ‖f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 k 0) f :=
   by
   have := SchwartzMap.le_seminorm 𝕜 k 0 f x₀
-  rwa [norm_iteratedFDeriv_zero] at this 
+  rwa [norm_iteratedFDeriv_zero] at this
 #align schwartz_map.norm_pow_mul_le_seminorm SchwartzMap.norm_pow_mul_le_seminorm
 -/
 
@@ -584,7 +584,7 @@ theorem norm_pow_mul_le_seminorm (f : 𝓢(E, F)) (k : ℕ) (x₀ : E) :
 theorem norm_le_seminorm (f : 𝓢(E, F)) (x₀ : E) : ‖f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 0 0) f :=
   by
   have := norm_pow_mul_le_seminorm 𝕜 f 0 x₀
-  rwa [pow_zero, one_mul] at this 
+  rwa [pow_zero, one_mul] at this
 #align schwartz_map.norm_le_seminorm SchwartzMap.norm_le_seminorm
 -/
 
@@ -720,7 +720,7 @@ theorem Function.HasTemperateGrowth.norm_iteratedFDeriv_le_uniform_aux {f : E �
   have hC' : 0 ≤ C' := by simp only [le_refl, Finset.le_sup'_iff, true_or_iff, le_max_iff]
   use C', hC'
   intro N hN x
-  rw [← Finset.mem_range_succ_iff] at hN 
+  rw [← Finset.mem_range_succ_iff] at hN
   refine' le_trans (f N x) (mul_le_mul _ _ (by positivity) hC')
   · simp only [Finset.le_sup'_iff, le_max_iff]
     right
@@ -884,8 +884,8 @@ def bilinLeftCLM (B : E →L[ℝ] F →L[ℝ] G) {g : D → F} (hg : g.HasTemper
       refine' mul_le_mul_of_nonneg_left _ hC
       nth_rw 2 [mul_comm]
       rw [← mul_assoc]
-      rw [Finset.mem_range_succ_iff] at hi 
-      change i ≤ (l + k, n).snd at hi 
+      rw [Finset.mem_range_succ_iff] at hi
+      change i ≤ (l + k, n).snd at hi
       refine' le_trans _ (one_add_le_sup_seminorm_apply le_rfl hi f x)
       refine' mul_le_mul_of_nonneg_right _ (norm_nonneg _)
       rw [pow_add]
@@ -926,7 +926,7 @@ def compCLM {g : D → E} (hg : g.HasTemperateGrowth)
       have hCg : 1 ≤ 1 + Cg := by
         refine' le_add_of_nonneg_right _
         specialize hg_upper' 0
-        rw [norm_zero] at hg_upper' 
+        rw [norm_zero] at hg_upper'
         refine' nonneg_of_mul_nonneg_left hg_upper' (by positivity)
       let k' := kg * (k + l * n)
       use Finset.Iic (k', n), (1 + Cg) ^ (k + l * n) * ((C + 1) ^ n * n ! * 2 ^ k'), by positivity
@@ -947,7 +947,7 @@ def compCLM {g : D → E} (hg : g.HasTemperateGrowth)
         intro i hi
         have hpos : 0 < (1 + ‖g x‖) ^ k' := by positivity
         rw [le_div_iff' hpos]
-        change i ≤ (k', n).snd at hi 
+        change i ≤ (k', n).snd at hi
         exact one_add_le_sup_seminorm_apply le_rfl hi _ _
       have hgrowth' :
         ∀ (N : ℕ) (hN₁ : 1 ≤ N) (hN₂ : N ≤ n),
@@ -974,7 +974,7 @@ def compCLM {g : D → E} (hg : g.HasTemperateGrowth)
         ring
       rw [rearrange]
       have hgxk' : 0 < (1 + ‖g x‖) ^ k' := by positivity
-      rw [← div_le_iff hgxk'] at hg_upper'' 
+      rw [← div_le_iff hgxk'] at hg_upper''
       have hpos : 0 ≤ (C + 1) ^ n * n ! * 2 ^ k' * seminorm_f :=
         by
         have : 0 ≤ seminorm_f := map_nonneg _ _
@@ -1132,29 +1132,31 @@ variable (𝕜 E F)
 
 variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
-#print SchwartzMap.toBoundedContinuousFunctionLM /-
+#print SchwartzMap.toBoundedContinuousFunctionCLM /-
 /-- The inclusion map from Schwartz functions to bounded continuous functions as a linear map. -/
-def toBoundedContinuousFunctionLM : 𝓢(E, F) →ₗ[𝕜] E →ᵇ F
+def toBoundedContinuousFunctionCLM : 𝓢(E, F) →ₗ[𝕜] E →ᵇ F
     where
   toFun f := f.toBoundedContinuousFunction
   map_add' f g := by ext; exact add_apply
   map_smul' a f := by ext; exact smul_apply
-#align schwartz_map.to_bounded_continuous_function_lm SchwartzMap.toBoundedContinuousFunctionLM
+#align schwartz_map.to_bounded_continuous_function_lm SchwartzMap.toBoundedContinuousFunctionCLM
 -/
 
-#print SchwartzMap.toBoundedContinuousFunctionLM_apply /-
+#print SchwartzMap.toBoundedContinuousFunctionCLM_apply /-
 @[simp]
-theorem toBoundedContinuousFunctionLM_apply (f : 𝓢(E, F)) (x : E) :
-    toBoundedContinuousFunctionLM 𝕜 E F f x = f x :=
+theorem toBoundedContinuousFunctionCLM_apply (f : 𝓢(E, F)) (x : E) :
+    toBoundedContinuousFunctionCLM 𝕜 E F f x = f x :=
   rfl
-#align schwartz_map.to_bounded_continuous_function_lm_apply SchwartzMap.toBoundedContinuousFunctionLM_apply
+#align schwartz_map.to_bounded_continuous_function_lm_apply SchwartzMap.toBoundedContinuousFunctionCLM_apply
 -/
 
+/- warning: schwartz_map.to_bounded_continuous_function_clm clashes with schwartz_map.to_bounded_continuous_function_lm -> SchwartzMap.toBoundedContinuousFunctionCLM
+Case conversion may be inaccurate. Consider using '#align schwartz_map.to_bounded_continuous_function_clm SchwartzMap.toBoundedContinuousFunctionCLMₓ'. -/
 #print SchwartzMap.toBoundedContinuousFunctionCLM /-
 /-- The inclusion map from Schwartz functions to bounded continuous functions as a continuous linear
 map. -/
 def toBoundedContinuousFunctionCLM : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
-  { toBoundedContinuousFunctionLM 𝕜 E F with
+  { toBoundedContinuousFunctionCLM 𝕜 E F with
     cont := by
       change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
       refine'
@@ -1167,6 +1169,8 @@ def toBoundedContinuousFunctionCLM : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
 #align schwartz_map.to_bounded_continuous_function_clm SchwartzMap.toBoundedContinuousFunctionCLM
 -/
 
+/- warning: schwartz_map.to_bounded_continuous_function_clm_apply clashes with schwartz_map.to_bounded_continuous_function_lm_apply -> SchwartzMap.toBoundedContinuousFunctionCLM_apply
+Case conversion may be inaccurate. Consider using '#align schwartz_map.to_bounded_continuous_function_clm_apply SchwartzMap.toBoundedContinuousFunctionCLM_applyₓ'. -/
 #print SchwartzMap.toBoundedContinuousFunctionCLM_apply /-
 @[simp]
 theorem toBoundedContinuousFunctionCLM_apply (f : 𝓢(E, F)) (x : E) :

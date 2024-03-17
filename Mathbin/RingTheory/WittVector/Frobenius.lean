@@ -192,7 +192,7 @@ theorem map_frobeniusPoly (n : ℕ) :
   simp only [RingHom.map_sum, mul_sum, sum_mul, ← sum_sub_distrib]
   apply sum_congr rfl
   intro i hi
-  rw [mem_range] at hi 
+  rw [mem_range] at hi
   rw [← IH i hi]
   clear IH
   rw [add_comm (X i ^ p), add_pow, sum_range_succ', pow_zero, tsub_zero, Nat.choose_zero_right,
@@ -200,7 +200,7 @@ theorem map_frobeniusPoly (n : ℕ) :
     Nat.succ_eq_add_one (n - i), pow_succ, pow_mul, add_sub_cancel, mul_sum, sum_mul]
   apply sum_congr rfl
   intro j hj
-  rw [mem_range] at hj 
+  rw [mem_range] at hj
   rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow,
     RingHom.map_pow, RingHom.map_pow, map_C, map_X, mul_pow]
   rw [mul_comm (C ↑p ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C ↑p ^ (j + 1)), mul_comm (C ↑p)]

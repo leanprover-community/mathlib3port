@@ -231,8 +231,8 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
     rintro ⟨k, hk⟩
     cases finset.mem_singleton.mp hk
     exact ⟨h, h₁⟩
-  · rw [isPreirreducible_iff_closed_union_closed] at h₁ 
-    push_neg at h₁ 
+  · rw [isPreirreducible_iff_closed_union_closed] at h₁
+    push_neg at h₁
     obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
     obtain ⟨S₁, hS₁, hS₁'⟩ := H (s ⊓ ⟨z₁, hz₁⟩) (inf_lt_left.2 hz₁')
     obtain ⟨S₂, hS₂, hS₂'⟩ := H (s ⊓ ⟨z₂, hz₂⟩) (inf_lt_left.2 hz₂')
@@ -258,7 +258,7 @@ theorem NoetherianSpace.finite_irreducibleComponents [NoetherianSpace α] :
       exact z.2
     · exact (Set.subset_univ _).trans ((congr_arg coe hS₂).trans <| by simp).Subset
   obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz
-  rw [← e] at hz' 
+  rw [← e] at hz'
   refine' ⟨s, hs, _⟩
   symm
   suffices K ≤ s by exact this.antisymm (hK.2 (hS₁ ⟨s, hs⟩) this)

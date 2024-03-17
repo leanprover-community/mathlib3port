@@ -275,7 +275,7 @@ to `R` and then extended back up to `S`, the resulting extension equals `x`.
 theorem extend_restrict {x : FamilyOfElements P (generate R)} (t : x.Compatible) :
     (x.restrict (le_generate R)).sieveExtend = x :=
   by
-  rw [compatible_iff_sieve_compatible] at t 
+  rw [compatible_iff_sieve_compatible] at t
   ext _ _ h; apply (t _ _ _).symm.trans; congr
   exact h.some_spec.some_spec.some_spec.2
 #align category_theory.presieve.extend_restrict CategoryTheory.Presieve.extend_restrict
@@ -502,7 +502,7 @@ theorem isSeparatedFor_top (P : Cᵒᵖ ⥤ Type w) : IsSeparatedFor P (⊤ : Pr
   fun x t₁ t₂ h₁ h₂ => by
   have q₁ := h₁ (𝟙 X) (by simp)
   have q₂ := h₂ (𝟙 X) (by simp)
-  simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂ 
+  simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂
   rw [q₁, q₂]
 #align category_theory.presieve.is_separated_for_top CategoryTheory.Presieve.isSeparatedFor_top
 -/
@@ -586,7 +586,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
   · intro h
     ext Y ⟨f, hf⟩
     have : _ = x.app Y _ := h f hf
-    rw [yoneda_equiv_naturality] at this 
+    rw [yoneda_equiv_naturality] at this
     rw [← this]
     dsimp
     simp
@@ -1025,7 +1025,7 @@ theorem compatible_iff (x : FirstObj P S) :
     ext ⟨Y, Z, g, f, hf⟩
     simpa [first_map, second_map] using t _ g hf
   · intro t Y Z f g hf
-    rw [types.limit_ext_iff'] at t 
+    rw [types.limit_ext_iff'] at t
     simpa [first_map, second_map] using t ⟨⟨Y, Z, g, f, hf⟩⟩
 #align category_theory.equalizer.sieve.compatible_iff CategoryTheory.Equalizer.Sieve.compatible_iff
 -/
@@ -1121,7 +1121,7 @@ theorem compatible_iff (x : FirstObj P R) :
     ext ⟨⟨Y, f, hf⟩, Z, g, hg⟩
     simpa [first_map, second_map] using t hf hg
   · intro t Y Z f g hf hg
-    rw [types.limit_ext_iff'] at t 
+    rw [types.limit_ext_iff'] at t
     simpa [first_map, second_map] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
 #align category_theory.equalizer.presieve.compatible_iff CategoryTheory.Equalizer.Presieve.compatible_iff
 -/

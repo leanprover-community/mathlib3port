@@ -129,7 +129,7 @@ theorem isPreconnected_of_forall {s : Set α} (x : α)
   rintro u v hu hv hs ⟨z, zs, zu⟩ ⟨y, ys, yv⟩
   have xs : x ∈ s := by rcases H y ys with ⟨t, ts, xt, yt, ht⟩; exact ts xt
   wlog xu : x ∈ u
-  · rw [inter_comm u v]; rw [union_comm] at hs 
+  · rw [inter_comm u v]; rw [union_comm] at hs
     exact this x H v u hv hu hs y ys yv z zs zu xs ((hs xs).resolve_right xu)
   rcases H y ys with ⟨t, ts, xt, yt, ht⟩
   have := ht u v hu hv (subset.trans ts hs) ⟨x, xt, xu⟩ ⟨y, yt, yv⟩
@@ -165,7 +165,7 @@ theorem isPreconnected_sUnion (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x �
 #print isPreconnected_iUnion /-
 theorem isPreconnected_iUnion {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty)
     (h₂ : ∀ i, IsPreconnected (s i)) : IsPreconnected (⋃ i, s i) :=
-  Exists.elim h₁ fun f hf => isPreconnected_sUnion f _ hf (forall_range_iff.2 h₂)
+  Exists.elim h₁ fun f hf => isPreconnected_sUnion f _ hf (forall_mem_range.2 h₂)
 #align is_preconnected_Union isPreconnected_iUnion
 -/
 
@@ -398,9 +398,9 @@ theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnec
   rcases continuousOn_iff'.1 hf v hv with ⟨v', hv', v'_eq⟩
   -- Reformulate `huv : f '' s ⊆ u ∪ v` in terms of `u'` and `v'`
   replace huv : s ⊆ u' ∪ v'
-  · rw [image_subset_iff, preimage_union] at huv 
+  · rw [image_subset_iff, preimage_union] at huv
     replace huv := subset_inter huv (subset.refl _)
-    rw [inter_distrib_right, u'_eq, v'_eq, ← inter_distrib_right] at huv 
+    rw [inter_distrib_right, u'_eq, v'_eq, ← inter_distrib_right] at huv
     exact (subset_inter_iff.1 huv).1
   -- Now `s ⊆ u' ∪ v'`, so we can apply `‹is_preconnected s›`
   obtain ⟨z, hz⟩ : (s ∩ (u' ∩ v')).Nonempty :=
@@ -408,7 +408,7 @@ theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnec
     refine' H u' v' hu' hv' huv ⟨x, _⟩ ⟨y, _⟩ <;> rw [inter_comm]
     exacts [u'_eq ▸ ⟨xu, xs⟩, v'_eq ▸ ⟨yv, ys⟩]
   rw [← inter_self s, inter_assoc, inter_left_comm s u', ← inter_assoc, inter_comm s, inter_comm s,
-    ← u'_eq, ← v'_eq] at hz 
+    ← u'_eq, ← v'_eq] at hz
   exact ⟨f z, ⟨z, hz.1.2, rfl⟩, hz.1.1, hz.2.1⟩
 #align is_preconnected.image IsPreconnected.image
 -/
@@ -434,7 +434,7 @@ theorem isPreconnected_closed_iff {s : Set α} :
     have xt' : x ∉ t' := (h' xs).resolve_left (absurd xt)
     have yt : y ∉ t := (h' ys).resolve_right (absurd yt')
     have := h _ _ ht.is_open_compl ht'.is_open_compl h' ⟨y, ys, yt⟩ ⟨x, xs, xt'⟩
-    rw [← compl_union] at this 
+    rw [← compl_union] at this
     exact this.ne_empty htt'.disjoint_compl_right.inter_eq,
     by
     rintro h u v hu hv huv ⟨x, xs, xu⟩ ⟨y, ys, yv⟩
@@ -443,7 +443,7 @@ theorem isPreconnected_closed_iff {s : Set α} :
     have xv : x ∉ v := (h' xs).elim (absurd xu) id
     have yu : y ∉ u := (h' ys).elim id (absurd yv)
     have := h _ _ hu.is_closed_compl hv.is_closed_compl h' ⟨y, ys, yu⟩ ⟨x, xs, xv⟩
-    rw [← compl_union] at this 
+    rw [← compl_union] at this
     exact this.ne_empty huv.disjoint_compl_right.inter_eq⟩
 #align is_preconnected_closed_iff isPreconnected_closed_iff
 -/
@@ -472,10 +472,10 @@ theorem IsPreconnected.preimage_of_isOpenMap [TopologicalSpace β] {s : Set β}
   by
   obtain ⟨b, hbs, hbu, hbv⟩ := hs (f '' u) (f '' v) (hf u hu) (hf v hv) _ _ _
   obtain ⟨a, rfl⟩ := hsf hbs
-  rw [hinj.mem_set_image] at hbu hbv 
+  rw [hinj.mem_set_image] at hbu hbv
   exact ⟨a, hbs, hbu, hbv⟩
   · have := image_subset f hsuv
-    rwa [Set.image_preimage_eq_of_subset hsf, image_union] at this 
+    rwa [Set.image_preimage_eq_of_subset hsf, image_union] at this
   · obtain ⟨x, hx1, hx2⟩ := hsu
     exact ⟨f x, hx1, x, hx2, rfl⟩
   · obtain ⟨y, hy1, hy2⟩ := hsv
@@ -492,10 +492,10 @@ theorem IsPreconnected.preimage_of_isClosedMap [TopologicalSpace β] {s : Set β
     obtain ⟨b, hbs, hbu, hbv⟩ :=
       isPreconnected_closed_iff.1 hs (f '' u) (f '' v) (hf u hu) (hf v hv) _ _ _
     obtain ⟨a, rfl⟩ := hsf hbs
-    rw [hinj.mem_set_image] at hbu hbv 
+    rw [hinj.mem_set_image] at hbu hbv
     exact ⟨a, hbs, hbu, hbv⟩
     · have := image_subset f hsuv
-      rwa [Set.image_preimage_eq_of_subset hsf, image_union] at this 
+      rwa [Set.image_preimage_eq_of_subset hsf, image_union] at this
     · obtain ⟨x, hx1, hx2⟩ := hsu
       exact ⟨f x, hx1, x, hx2, rfl⟩
     · obtain ⟨y, hy1, hy2⟩ := hsv
@@ -528,7 +528,7 @@ theorem IsPreconnected.subset_or_subset (hu : IsOpen u) (hv : IsOpen v) (huv : D
   · exact Or.inr ((Set.disjoint_iff_inter_eq_empty.2 hsu).subset_right_of_subset_union hsuv)
   · replace hs := mt (hs hsu)
     simp_rw [Set.not_nonempty_iff_eq_empty, ← Set.disjoint_iff_inter_eq_empty,
-      disjoint_iff_inter_eq_empty.1 huv] at hs 
+      disjoint_iff_inter_eq_empty.1 huv] at hs
     exact Or.inl ((hs s.disjoint_empty).subset_left_of_subset_union hsuv)
 #align is_preconnected.subset_or_subset IsPreconnected.subset_or_subset
 -/
@@ -540,7 +540,7 @@ theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen 
   Disjoint.subset_left_of_subset_union hsuv
     (by
       by_contra hsv
-      rw [not_disjoint_iff_nonempty_inter] at hsv 
+      rw [not_disjoint_iff_nonempty_inter] at hsv
       obtain ⟨x, _, hx⟩ := hs u v hu hv hsuv hsu hsv
       exact Set.disjoint_iff.1 huv hx)
 #align is_preconnected.subset_left_of_subset_union IsPreconnected.subset_left_of_subset_union
@@ -606,7 +606,7 @@ theorem isPreconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set 
   rcases exists_finset_piecewise_mem_of_mem_nhds (uo.mem_nhds hfu) g with ⟨I, hI⟩
   induction' I using Finset.induction_on with i I hi ihI
   · refine' ⟨g, hgs, ⟨_, hgv⟩⟩; simpa using hI
-  · rw [Finset.piecewise_insert] at hI 
+  · rw [Finset.piecewise_insert] at hI
     have := I.piecewise_mem_set_pi hfs hgs
     refine' (hsuv this).elim ihI fun h => _
     set S := update (I.piecewise f g) i '' s i
@@ -1137,7 +1137,7 @@ theorem isPreconnected_iff_subset_of_disjoint {s : Set α} :
     specialize h u v hu hv hs
     contrapose! huv
     rw [← nonempty_iff_ne_empty]
-    simp [not_subset] at huv 
+    simp [not_subset] at huv
     rcases huv with ⟨⟨x, hxs, hxu⟩, ⟨y, hys, hyv⟩⟩
     have hxv : x ∈ v := or_iff_not_imp_left.mp (hs hxs) hxu
     have hyu : y ∈ u := or_iff_not_imp_right.mp (hs hys) hyv
@@ -1170,7 +1170,7 @@ theorem isConnected_iff_sUnion_disjoint_open {s : Set α} :
       suffices s ⊆ ∅ → False by simpa
       intro; solve_by_elim
     · intro u U hu IH hs hU H
-      rw [Finset.coe_insert, sUnion_insert] at H 
+      rw [Finset.coe_insert, sUnion_insert] at H
       cases' h.2 u (⋃₀ ↑U) _ _ H _ with hsu hsU
       · exact ⟨u, Finset.mem_insert_self _ _, hsu⟩
       · rcases IH _ _ hsU with ⟨v, hvU, hsv⟩
@@ -1182,7 +1182,7 @@ theorem isConnected_iff_sUnion_disjoint_open {s : Set α} :
         intros; solve_by_elim [Finset.mem_insert_of_mem]
       · apply eq_empty_of_subset_empty
         rintro x ⟨hxs, hxu, hxU⟩
-        rw [mem_sUnion] at hxU 
+        rw [mem_sUnion] at hxU
         rcases hxU with ⟨v, hvU, hxv⟩
         rcases hs u v (Finset.mem_insert_self _ _) (Finset.mem_insert_of_mem hvU) _ with rfl
         · contradiction
@@ -1193,18 +1193,18 @@ theorem isConnected_iff_sUnion_disjoint_open {s : Set α} :
       simpa using h ∅ _ _ _ <;> simp
     intro u v hu hv hs hsuv
     rcases h {u, v} _ _ _ with ⟨t, ht, ht'⟩
-    · rw [Finset.mem_insert, Finset.mem_singleton] at ht 
+    · rw [Finset.mem_insert, Finset.mem_singleton] at ht
       rcases ht with (rfl | rfl) <;> tauto
     · intro t₁ t₂ ht₁ ht₂ hst
-      rw [nonempty_iff_ne_empty] at hst 
-      rw [Finset.mem_insert, Finset.mem_singleton] at ht₁ ht₂ 
+      rw [nonempty_iff_ne_empty] at hst
+      rw [Finset.mem_insert, Finset.mem_singleton] at ht₁ ht₂
       rcases ht₁ with (rfl | rfl) <;> rcases ht₂ with (rfl | rfl)
       all_goals
         first
         | rfl
         | contradiction
         | skip
-      rw [inter_comm t₁] at hst ; contradiction
+      rw [inter_comm t₁] at hst; contradiction
     · intro t
       rw [Finset.mem_insert, Finset.mem_singleton]
       rintro (rfl | rfl) <;> assumption
@@ -1243,11 +1243,11 @@ theorem isPreconnected_iff_subset_of_disjoint_closed :
   by
   constructor <;> intro h
   · intro u v hu hv hs huv
-    rw [isPreconnected_closed_iff] at h 
+    rw [isPreconnected_closed_iff] at h
     specialize h u v hu hv hs
     contrapose! huv
     rw [← nonempty_iff_ne_empty]
-    simp [not_subset] at huv 
+    simp [not_subset] at huv
     rcases huv with ⟨⟨x, hxs, hxu⟩, ⟨y, hys, hyv⟩⟩
     have hxv : x ∈ v := or_iff_not_imp_left.mp (hs hxs) hxu
     have hyu : y ∈ u := or_iff_not_imp_right.mp (hs hys) hyv
@@ -1282,8 +1282,8 @@ theorem isPreconnected_iff_subset_of_fully_disjoint_closed {s : Set α} (hs : Is
   rw [isPreconnected_iff_subset_of_disjoint_closed]
   intro u v hu hv hss huv
   have H1 := H (u ∩ s) (v ∩ s)
-  rw [subset_inter_iff, subset_inter_iff] at H1 
-  simp only [subset.refl, and_true_iff] at H1 
+  rw [subset_inter_iff, subset_inter_iff] at H1
+  simp only [subset.refl, and_true_iff] at H1
   apply H1 (IsClosed.inter hu hs) (IsClosed.inter hv hs)
   · rw [← inter_distrib_right]
     exact subset_inter hss subset.rfl
@@ -1399,12 +1399,12 @@ theorem preimage_connectedComponent_connected [TopologicalSpace β] {f : α → 
     (isPreconnected_iff_subset_of_fully_disjoint_closed isClosed_connectedComponent).1
       isPreconnected_connectedComponent T₁ T₂ hT₁ hT₂ T_decomp T_disjoint
   · left
-    rw [subset.antisymm_iff] at T₁_u 
+    rw [subset.antisymm_iff] at T₁_u
     suffices f ⁻¹' connectedComponent t ⊆ f ⁻¹' T₁ by
       exact subset.trans (subset.trans this T₁_u.1) (inter_subset_right _ _)
     exact preimage_mono h
   right
-  rw [subset.antisymm_iff] at T₂_v 
+  rw [subset.antisymm_iff] at T₂_v
   suffices f ⁻¹' connectedComponent t ⊆ f ⁻¹' T₂ by
     exact subset.trans (subset.trans this T₂_v.1) (inter_subset_right _ _)
   exact preimage_mono h
@@ -1490,7 +1490,7 @@ instance (priority := 100) DiscreteTopology.toLocallyConnectedSpace (α) [Topolo
 theorem connectedComponentIn_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α} (h : F ∈ 𝓝 x) :
     connectedComponentIn F x ∈ 𝓝 x :=
   by
-  rw [(LocallyConnectedSpace.open_connected_basis x).mem_iff] at h 
+  rw [(LocallyConnectedSpace.open_connected_basis x).mem_iff] at h
   rcases h with ⟨s, ⟨h1s, hxs, h2s⟩, hsF⟩
   exact mem_nhds_iff.mpr ⟨s, h2s.is_preconnected.subset_connected_component_in hxs hsF, h1s, hxs⟩
 #align connected_component_in_mem_nhds connectedComponentIn_mem_nhds
@@ -1677,7 +1677,7 @@ theorem isTotallyDisconnected_of_isClopen_set {X : Type _} [TopologicalSpace X]
   obtain ⟨U, h_clopen, hxU, hyU⟩ := hX hxy
   specialize
     hS U (Uᶜ) h_clopen.1 h_clopen.compl.1 (fun a ha => em (a ∈ U)) ⟨x, hx, hxU⟩ ⟨y, hy, hyU⟩
-  rw [inter_compl_self, Set.inter_empty] at hS 
+  rw [inter_compl_self, Set.inter_empty] at hS
   exact Set.not_nonempty_empty hS
 #align is_totally_disconnected_of_clopen_set isTotallyDisconnected_of_isClopen_set
 -/
@@ -1837,8 +1837,8 @@ theorem exists_isClopen_of_totally_separated {α : Type _} [TopologicalSpace α]
   obtain ⟨U, V, hU, hV, Ux, Vy, f, disj⟩ :=
     TotallySeparatedSpace.isTotallySeparated_univ α x (Set.mem_univ x) y (Set.mem_univ y) hxy
   have clopen_U := isClopen_inter_of_disjoint_cover_clopen isClopen_univ f hU hV disj
-  rw [univ_inter _] at clopen_U 
-  rw [← Set.subset_compl_iff_disjoint_right, subset_compl_comm] at disj 
+  rw [univ_inter _] at clopen_U
+  rw [← Set.subset_compl_iff_disjoint_right, subset_compl_comm] at disj
   exact ⟨U, clopen_U, Ux, disj Vy⟩
 #align exists_clopen_of_totally_separated exists_isClopen_of_totally_separated
 -/
@@ -2048,7 +2048,7 @@ theorem isPreconnected_of_forall_constant {s : Set α}
   unfold IsPreconnected
   by_contra!
   rcases this with ⟨u, v, u_op, v_op, hsuv, ⟨x, x_in_s, x_in_u⟩, ⟨y, y_in_s, y_in_v⟩, H⟩
-  rw [not_nonempty_iff_eq_empty] at H 
+  rw [not_nonempty_iff_eq_empty] at H
   have hy : y ∉ u := fun y_in_u => eq_empty_iff_forall_not_mem.mp H y ⟨y_in_s, ⟨y_in_u, y_in_v⟩⟩
   have : ContinuousOn u.bool_indicator s :=
     by
@@ -2086,7 +2086,7 @@ theorem IsPreconnected.constant_of_mapsTo [TopologicalSpace β] {S : Set α} (hS
     {x y : α} (hx : x ∈ S) (hy : y ∈ S) : f x = f y :=
   by
   let F : S → T := fun x : S => ⟨f x.val, hTm x.property⟩
-  suffices F ⟨x, hx⟩ = F ⟨y, hy⟩ by rw [← Subtype.coe_inj] at this ; exact this
+  suffices F ⟨x, hx⟩ = F ⟨y, hy⟩ by rw [← Subtype.coe_inj] at this; exact this
   exact
     (is_preconnected_iff_preconnected_space.mp hS).constant
       (continuous_induced_rng.mpr <| continuous_on_iff_continuous_restrict.mp hc)

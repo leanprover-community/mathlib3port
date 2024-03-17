@@ -161,8 +161,8 @@ theorem divInt_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 :=
     rintro a ⟨b, h⟩ e
     injection e with e
     apply Int.eq_mul_of_ediv_eq_right gcd_abs_dvd_left e
-  cases' b with b <;> simp only [mk, mk_nat, Int.ofNat_eq_coe, dite_eq_left_iff] at h 
-  · simp only [mt (congr_arg Int.ofNat) b0, not_false_iff, forall_true_left] at h 
+  cases' b with b <;> simp only [mk, mk_nat, Int.ofNat_eq_coe, dite_eq_left_iff] at h
+  · simp only [mt (congr_arg Int.ofNat) b0, not_false_iff, forall_true_left] at h
     exact this h
   · apply neg_injective; simp [this h]
 #align rat.mk_eq_zero Rat.divInt_eq_zero
@@ -199,12 +199,12 @@ theorem divInt_eq_iff :
     have ha := by
       have dv := @gcd_abs_dvd_left
       have := Int.eq_mul_of_ediv_eq_right dv ha
-      rw [← Int.mul_ediv_assoc _ dv] at this 
+      rw [← Int.mul_ediv_assoc _ dv] at this
       exact Int.eq_mul_of_ediv_eq_left (dv.mul_left _) this.symm
     have hb := by
       have dv := fun {a b} => Nat.gcd_dvd_right (Int.natAbs a) b
       have := Nat.eq_mul_of_div_eq_right dv hb
-      rw [← Nat.mul_div_assoc _ dv] at this 
+      rw [← Nat.mul_div_assoc _ dv] at this
       exact Nat.eq_mul_of_div_eq_left (dv.mul_left _) this.symm
     have m0 : (a.nat_abs.gcd b * c.nat_abs.gcd d : ℤ) ≠ 0 :=
       by
@@ -218,7 +218,7 @@ theorem divInt_eq_iff :
         h₁ h₂
       have hs := congr_arg Int.sign h
       simp [Int.sign_eq_one_of_pos (Int.ofNat_lt.2 hb),
-        Int.sign_eq_one_of_pos (Int.ofNat_lt.2 hd)] at hs 
+        Int.sign_eq_one_of_pos (Int.ofNat_lt.2 hd)] at hs
       conv in a => rw [← Int.sign_mul_natAbs a]
       conv in c => rw [← Int.sign_mul_natAbs c]
       rw [Int.mul_ediv_assoc, Int.mul_ediv_assoc]
@@ -317,8 +317,8 @@ theorem lift_binop_eq (f : ℚ → ℚ → ℚ) (f₁ : ℤ → ℤ → ℤ → 
         f₁ n₁ d₁ n₂ d₂ * f₂ a b c d = f₁ a b c d * f₂ n₁ d₁ n₂ d₂) :
     f (a /. b) (c /. d) = f₁ a b c d /. f₂ a b c d :=
   by
-  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha 
-  generalize hc : c /. d = x; cases' x with n₂ d₂ h₂ c₂; rw [num_denom'] at hc 
+  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
+  generalize hc : c /. d = x; cases' x with n₂ d₂ h₂ c₂; rw [num_denom'] at hc
   rw [fv]
   have d₁0 := ne_of_gt (Int.ofNat_lt.2 h₁)
   have d₂0 := ne_of_gt (Int.ofNat_lt.2 h₂)
@@ -357,7 +357,7 @@ instance : Neg ℚ :=
 theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b :=
   by
   by_cases b0 : b = 0; · subst b0; simp; rfl
-  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha 
+  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   show Rat.mk' _ _ _ _ = _; rw [num_denom']
   have d0 := ne_of_gt (Int.ofNat_lt.2 h₁)
   apply (mk_eq d0 b0).2; have h₁ := (mk_eq b0 d0).1 ha
@@ -414,7 +414,7 @@ theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
   by
   by_cases a0 : a = 0; · subst a0; simp; rfl
   by_cases b0 : b = 0; · subst b0; simp; rfl
-  generalize ha : a /. b = x; cases' x with n d h c; rw [num_denom'] at ha 
+  generalize ha : a /. b = x; cases' x with n d h c; rw [num_denom'] at ha
   refine' Eq.trans (_ : Rat.inv ⟨n, d, h, c⟩ = d /. n) _
   · cases' n with n <;> [cases' n with n; skip]
     · rfl
@@ -423,7 +423,7 @@ theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
     · unfold Rat.inv; rw [num_denom']; rfl
   have n0 : n ≠ 0 := by
     rintro rfl
-    rw [Rat.zero_divInt, mk_eq_zero b0] at ha 
+    rw [Rat.zero_divInt, mk_eq_zero b0] at ha
     exact a0 ha
   have d0 := ne_of_gt (Int.ofNat_lt.2 h)
   have ha := (mk_eq b0 d0).1 ha

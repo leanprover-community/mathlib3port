@@ -259,7 +259,7 @@ theorem IntValuation.map_add_le_max' (x y : R) :
           by
           rw [Associates.le_singleton_iff]
           exact Ideal.add_mem (v.as_ideal ^ nmin) h_dvd_x h_dvd_y
-        rw [Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hxy) _] at h_dvd_xy 
+        rw [Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hxy) _] at h_dvd_xy
         exact h_dvd_xy
         apply v.associates_irreducible
 #align is_dedekind_domain.height_one_spectrum.int_valuation.map_add_le_max' IsDedekindDomain.HeightOneSpectrum.IntValuation.map_add_le_max'
@@ -294,15 +294,15 @@ theorem int_valuation_exists_uniformizer :
     by
     rw [Associates.mk_ne_zero']
     intro h
-    rw [h] at nmem 
+    rw [h] at nmem
     exact nmem (Submodule.zero_mem (v.as_ideal ^ 2))
   use π
   rw [int_valuation_def, if_neg (associates.mk_ne_zero'.mp hπ), WithZero.coe_inj]
   apply congr_arg
   rw [neg_inj, ← Int.ofNat_one, Int.coe_nat_inj']
-  rw [← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd_iff] at mem nmem 
-  rw [← pow_one (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem 
-  rw [Associates.mk_pow, Associates.prime_pow_dvd_iff_le hπ hv, not_le] at nmem 
+  rw [← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd_iff] at mem nmem
+  rw [← pow_one (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem
+  rw [Associates.mk_pow, Associates.prime_pow_dvd_iff_le hπ hv, not_le] at nmem
   exact Nat.eq_of_le_of_lt_succ mem nmem
 #align is_dedekind_domain.height_one_spectrum.int_valuation_exists_uniformizer IsDedekindDomain.HeightOneSpectrum.int_valuation_exists_uniformizer
 -/
@@ -553,10 +553,10 @@ theorem coe_smul_adicCompletionIntegers (r : R) (x : v.adicCompletionIntegers K)
 instance : NoZeroSMulDivisors R (v.adicCompletionIntegers K)
     where eq_zero_or_eq_zero_of_smul_eq_zero c x hcx :=
     by
-    rw [Algebra.smul_def, mul_eq_zero] at hcx 
+    rw [Algebra.smul_def, mul_eq_zero] at hcx
     refine' hcx.imp_left fun hc => _
     letI : UniformSpace K := v.adic_valued.to_uniform_space
-    rw [← map_zero (algebraMap R (v.adic_completion_integers K))] at hc 
+    rw [← map_zero (algebraMap R (v.adic_completion_integers K))] at hc
     exact
       IsFractionRing.injective R K (UniformSpace.Completion.coe_injective K (subtype.ext_iff.mp hc))
 

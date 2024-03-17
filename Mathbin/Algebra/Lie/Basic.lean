@@ -661,7 +661,7 @@ theorem to_linearEquiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
 #print LieEquiv.coe_linearEquiv_injective /-
 theorem coe_linearEquiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) :=
   by
-  intro f₁ f₂ h; cases f₁; cases f₂; dsimp at h ; simp only at h 
+  intro f₁ f₂ h; cases f₁; cases f₂; dsimp at h; simp only at h
   congr; exacts [LieHom.coe_injective h.1, h.2]
 #align lie_equiv.coe_linear_equiv_injective LieEquiv.coe_linearEquiv_injective
 -/
@@ -1229,7 +1229,7 @@ theorem toEquiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N) 
   by
   rcases e₁ with ⟨⟨⟩⟩; rcases e₂ with ⟨⟨⟩⟩
   have inj := Equiv.mk.inj h
-  dsimp at inj 
+  dsimp at inj
   apply lie_module_equiv.mk.inj_eq.mpr
   constructor
   · congr

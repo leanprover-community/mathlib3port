@@ -88,7 +88,7 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
     (hg : ∀ i ∈ s, (g i).PairwiseDisjoint f) : (⋃ i ∈ s, g i).PairwiseDisjoint f :=
   by
   rintro a ha b hb hab
-  simp_rw [Set.mem_iUnion] at ha hb 
+  simp_rw [Set.mem_iUnion] at ha hb
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
@@ -107,7 +107,7 @@ theorem PairwiseDisjoint.prod_left {f : ι × ι' → α}
     (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint f :=
   by
   rintro ⟨i, i'⟩ hi ⟨j, j'⟩ hj h
-  rw [mem_prod] at hi hj 
+  rw [mem_prod] at hi hj
   obtain rfl | hij := eq_or_ne i j
   · refine' (ht hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 h).mono _ _
     · convert le_iSup₂ i hi.1; rfl

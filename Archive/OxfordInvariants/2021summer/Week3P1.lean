@@ -95,7 +95,7 @@ theorem OxfordInvariants.week3_p1 (n : ℕ) (a : ℕ → ℕ) (a_pos : ∀ i ≤
       (b : α) = ∑ i in Finset.range (n + 1), a 0 * a (n + 1) / (a i * a (i + 1)) ∧
         a (n + 1) ∣ a n * b - a 0
   · exact ⟨b, hb⟩
-  simp_rw [← @Nat.cast_pos α] at a_pos 
+  simp_rw [← @Nat.cast_pos α] at a_pos
   /- Declare the induction
     `ih` will be the induction hypothesis -/
   induction' n with n ih

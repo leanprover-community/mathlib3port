@@ -171,13 +171,13 @@ theorem mk_prod_swap_eq {p : α × α} : ⟦p.symm⟧ = ⟦p⟧ := by cases p; e
 
 #print Sym2.congr_right /-
 theorem congr_right {a b c : α} : ⟦(a, b)⟧ = ⟦(a, c)⟧ ↔ b = c := by constructor <;> intro h;
-  · rw [Quotient.eq'] at h ; cases h <;> rfl; rw [h]
+  · rw [Quotient.eq'] at h; cases h <;> rfl; rw [h]
 #align sym2.congr_right Sym2.congr_right
 -/
 
 #print Sym2.congr_left /-
 theorem congr_left {a b c : α} : ⟦(b, a)⟧ = ⟦(c, a)⟧ ↔ b = c := by constructor <;> intro h;
-  · rw [Quotient.eq'] at h ; cases h <;> rfl; rw [h]
+  · rw [Quotient.eq'] at h; cases h <;> rfl; rw [h]
 #align sym2.congr_left Sym2.congr_left
 -/
 
@@ -321,7 +321,7 @@ protected def Mem (x : α) (z : Sym2 α) : Prop :=
 
 #print Sym2.mem_iff' /-
 theorem mem_iff' {a b c : α} : Sym2.Mem a ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
-  { mp := by rintro ⟨_, h⟩; rw [eq_iff] at h ; tidy
+  { mp := by rintro ⟨_, h⟩; rw [eq_iff] at h; tidy
     mpr := by rintro (rfl | rfl); · exact ⟨_, rfl⟩; rw [eq_swap]; exact ⟨_, rfl⟩ }
 #align sym2.mem_iff' Sym2.mem_iff'
 -/
@@ -329,12 +329,12 @@ theorem mem_iff' {a b c : α} : Sym2.Mem a ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
 instance : SetLike (Sym2 α) α where
   coe z := {x | z.Mem x}
   coe_injective' z z' h := by
-    simp only [Set.ext_iff, Set.mem_setOf_eq] at h 
+    simp only [Set.ext_iff, Set.mem_setOf_eq] at h
     induction' z using Sym2.ind with x y
     induction' z' using Sym2.ind with x' y'
     have hx := h x; have hy := h y; have hx' := h x'; have hy' := h y'
     simp only [mem_iff', eq_self_iff_true, or_true_iff, iff_true_iff, true_or_iff, true_iff_iff] at
-      hx hy hx' hy' 
+      hx hy hx' hy'
     cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
     rw [Sym2.eq_swap]
 
@@ -552,7 +552,7 @@ theorem other_ne {a : α} {z : Sym2 α} (hd : ¬IsDiag z) (h : a ∈ z) : h.othe
   by
   contrapose! hd
   have h' := Sym2.other_spec h
-  rw [hd] at h' 
+  rw [hd] at h'
   rw [← h']
   simp
 #align sym2.other_ne Sym2.other_ne
@@ -690,10 +690,10 @@ def sym2EquivSym' : Equiv (Sym2 α) (Sym' α 2)
         rintro ⟨x, hx⟩ ⟨y, hy⟩ h
         cases' x with _ x; · simpa using hx
         cases' x with _ x; · simpa using hx
-        cases' x with _ x; swap; · exfalso; simp at hx ; linarith [hx]
+        cases' x with _ x; swap; · exfalso; simp at hx; linarith [hx]
         cases' y with _ y; · simpa using hy
         cases' y with _ y; · simpa using hy
-        cases' y with _ y; swap; · exfalso; simp at hy ; linarith [hy]
+        cases' y with _ y; swap; · exfalso; simp at hy; linarith [hy]
         rcases perm_card_two_iff.mp h with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩); · rfl
         apply Sym2.Rel.swap)
   left_inv := by tidy
@@ -702,7 +702,7 @@ def sym2EquivSym' : Equiv (Sym2 α) (Sym' α 2)
     · cases' x with x hx
       cases' x with _ x; · simpa using hx
       cases' x with _ x; · simpa using hx
-      cases' x with _ x; swap; · exfalso; simp at hx ; linarith [hx]
+      cases' x with _ x; swap; · exfalso; simp at hx; linarith [hx]
       rfl
 #align sym2.sym2_equiv_sym' Sym2.sym2EquivSym'
 -/
@@ -778,8 +778,8 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
         apply h'
       have h' := (rel_bool_spec x y).mpr h
       cases' x with x₁ x₂; cases' y with y₁ y₂
-      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h'  <;> split_ifs at h'  <;>
-          try rw [Bool.of_decide_iff] at h' ; subst x₁; subst x₂ <;>
+      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h' <;> split_ifs at h' <;>
+          try rw [Bool.of_decide_iff] at h'; subst x₁; subst x₂ <;>
         dsimp [pair_other]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
       exfalso; exact Bool.not_false' h'
@@ -820,8 +820,8 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
 theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) :
     hb.other' = a := by
   induction z; cases' z with x y
-  dsimp [mem.other', Quot.rec, pair_other] at hb 
-  split_ifs at hb  <;> dsimp [mem.other', Quot.rec, pair_other]
+  dsimp [mem.other', Quot.rec, pair_other] at hb
+  split_ifs at hb <;> dsimp [mem.other', Quot.rec, pair_other]
   simp only [h, if_true, eq_self_iff_true]
   split_ifs; assumption; rfl
   simp only [h, if_false, eq_self_iff_true]
@@ -850,7 +850,7 @@ theorem filter_image_mk_isDiag [DecidableEq α] (s : Finset α) :
   simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-    rw [← h, Sym2.mk_isDiag_iff] at hab 
+    rw [← h, Sym2.mk_isDiag_iff] at hab
     exact ⟨a, b, ⟨ha, hab⟩, h⟩
   · rintro ⟨a, b, ⟨ha, rfl⟩, h⟩
     rw [← h]
@@ -870,10 +870,10 @@ theorem filter_image_mk_not_isDiag [DecidableEq α] (s : Finset α) :
   simp only [mem_image, mem_off_diag, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-    rw [← h, Sym2.mk_isDiag_iff] at hab 
+    rw [← h, Sym2.mk_isDiag_iff] at hab
     exact ⟨a, b, ⟨ha, hb, hab⟩, h⟩
   · rintro ⟨a, b, ⟨ha, hb, hab⟩, h⟩
-    rw [Ne.def, ← Sym2.mk_isDiag_iff, h] at hab 
+    rw [Ne.def, ← Sym2.mk_isDiag_iff, h] at hab
     exact ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
 #align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_mk_not_isDiag
 -/

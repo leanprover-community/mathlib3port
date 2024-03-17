@@ -122,7 +122,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 #print integral_eq_zero_of_forall_integral_inner_eq_zero /-
 theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E) (hf : Integrable f μ)
     (hf_int : ∀ c : E, ∫ x, ⟪c, f x⟫ ∂μ = 0) : ∫ x, f x ∂μ = 0 := by
-  specialize hf_int (∫ x, f x ∂μ); rwa [integral_inner hf, inner_self_eq_zero] at hf_int 
+  specialize hf_int (∫ x, f x ∂μ); rwa [integral_inner hf, inner_self_eq_zero] at hf_int
 #align integral_eq_zero_of_forall_integral_inner_eq_zero integral_eq_zero_of_forall_integral_inner_eq_zero
 -/
 
@@ -233,7 +233,7 @@ private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f
     inner_add_left]
   refine' integral_congr_ae ((coe_fn_add f f').mono fun x hx => _)
   congr
-  rwa [Pi.add_apply] at hx 
+  rwa [Pi.add_apply] at hx
 
 private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫ = conj r * inner f g :=
   by
@@ -241,7 +241,7 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
   refine' integral_congr_ae ((coe_fn_smul r f).mono fun x hx => _)
   rw [smul_eq_mul, ← inner_smul_left]
   congr
-  rwa [Pi.smul_apply] at hx 
+  rwa [Pi.smul_apply] at hx
 
 #print MeasureTheory.L2.innerProductSpace /-
 instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E)
@@ -278,7 +278,7 @@ theorem inner_indicatorConstLp_eq_set_integral_inner (f : Lp E 2 μ) (hs : Measu
   have h_right : ∫ x in sᶜ, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ = 0 :=
     by
     suffices h_ae_eq : ∀ᵐ x ∂μ, x ∉ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
-    · simp_rw [← Set.mem_compl_iff] at h_ae_eq 
+    · simp_rw [← Set.mem_compl_iff] at h_ae_eq
       suffices h_int_zero :
         ∫ x in sᶜ, inner (indicator_const_Lp 2 hs hμs c x) (f x) ∂μ = ∫ x in sᶜ, (0 : 𝕜) ∂μ
       · rw [h_int_zero]

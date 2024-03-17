@@ -81,7 +81,7 @@ theorem degree_list_sum_le (l : List S[X]) : degree l.Sum ≤ (l.map natDegree).
     rw [← List.foldr_max_of_ne_nil]
     · congr
     contrapose! h
-    rw [List.map_eq_nil] at h 
+    rw [List.map_eq_nil] at h
     simp [h]
 #align polynomial.degree_list_sum_le Polynomial.degree_list_sum_le
 -/
@@ -319,9 +319,9 @@ theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
   nontriviality R
   convert multiset_prod_X_sub_C_next_coeff (by assumption)
   rw [next_coeff]; split_ifs
-  · rw [nat_degree_multiset_prod_of_monic] at h  <;> simp only [Multiset.mem_map] at *
+  · rw [nat_degree_multiset_prod_of_monic] at h <;> simp only [Multiset.mem_map] at *
     swap; · rintro _ ⟨_, _, rfl⟩; apply monic_X_sub_C
-    simp_rw [Multiset.sum_eq_zero_iff, Multiset.mem_map] at h 
+    simp_rw [Multiset.sum_eq_zero_iff, Multiset.mem_map] at h
     contrapose! h
     obtain ⟨x, hx⟩ := card_pos_iff_exists_mem.mp ht
     exact ⟨_, ⟨_, ⟨x, hx, rfl⟩, nat_degree_X_sub_C _⟩, one_ne_zero⟩

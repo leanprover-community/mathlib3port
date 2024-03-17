@@ -41,8 +41,8 @@ theorem Complex.hasSum_cos' (z : ℂ) :
           (NormedSpace.expSeries_div_hasSum_exp ℂ (-z * Complex.I))).div_const
       2
   replace := (Nat.divModEquiv 2).symm.hasSum_iff.mpr this
-  dsimp [Function.comp] at this 
-  simp_rw [← mul_comm 2 _] at this 
+  dsimp [Function.comp] at this
+  simp_rw [← mul_comm 2 _] at this
   refine' this.prod_fiberwise fun k => _
   dsimp only
   convert hasSum_fintype (_ : Fin 2 → ℂ) using 1
@@ -65,8 +65,8 @@ theorem Complex.hasSum_sin' (z : ℂ) :
           Complex.I).div_const
       2
   replace := (Nat.divModEquiv 2).symm.hasSum_iff.mpr this
-  dsimp [Function.comp] at this 
-  simp_rw [← mul_comm 2 _] at this 
+  dsimp [Function.comp] at this
+  simp_rw [← mul_comm 2 _] at this
   refine' this.prod_fiberwise fun k => _
   dsimp only
   convert hasSum_fintype (_ : Fin 2 → ℂ) using 1

@@ -88,7 +88,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
   have : p (Nat.find h') := Nat.find_spec h'
   generalize hk : Nat.find h' = k
   replace hk : Nat.find h' = k + (@upto.zero p).val := hk
-  rw [hk] at this 
+  rw [hk] at this
   revert hk
   dsimp [Part.fix]; rw [assert_pos h']; revert this
   generalize upto.zero = z; intros
@@ -97,7 +97,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
   induction k generalizing z <;> intro
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
     congr; ext : 1; rw [assert_neg]; rfl
-    rw [Nat.zero_add] at this 
+    rw [Nat.zero_add] at this
     simpa only [Classical.not_not, Subtype.val_eq_coe]
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
     congr; ext : 1
@@ -107,7 +107,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
       rw [hk, Nat.succ_add, ← Nat.add_succ]
       apply Nat.lt_of_succ_le
       apply Nat.le_add_left
-    rw [succ_add_eq_succ_add] at this hk 
+    rw [succ_add_eq_succ_add] at this hk
     rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
 #align part.fix_def Part.fix_def
 -/

@@ -294,7 +294,7 @@ theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 :=
   · simp [h]
   ·
     classical
-    rw [order_eq_find' h] at hp 
+    rw [order_eq_find' h] at hp
     simpa using Nat.find_min _ hp
 #align formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
 -/

@@ -214,7 +214,7 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
         ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).And
             (eventually_cofinite_ne 0)).exists
       apply hk₀
-      rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀ 
+      rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀
       simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp,
         hp.not_lt, hk₀] using hk₁
 #align real.summable_nat_rpow_inv Real.summable_nat_rpow_inv
@@ -359,7 +359,7 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : ∑ i in Ioo k n, ((i ^ 2)⁻¹ : α) �
       by
       apply sum_le_sum_of_subset_of_nonneg
       · intro x hx
-        simp only [mem_Ioo] at hx 
+        simp only [mem_Ioo] at hx
         simp only [hx, hx.2.le, mem_Ioc, le_max_iff, or_true_iff, and_self_iff]
       · intro i hi hident
         exact inv_nonneg.2 (sq_nonneg _)

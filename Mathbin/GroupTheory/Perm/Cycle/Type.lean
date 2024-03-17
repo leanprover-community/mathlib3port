@@ -109,7 +109,7 @@ theorem card_cycleType_eq_zero {σ : Perm α} : σ.cycleType.card = 0 ↔ σ = 1
 theorem two_le_of_mem_cycleType {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleType) : 2 ≤ n :=
   by
   simp only [cycle_type_def, ← Finset.mem_def, Function.comp_apply, Multiset.mem_map,
-    mem_cycle_factors_finset_iff] at h 
+    mem_cycle_factors_finset_iff] at h
   obtain ⟨_, ⟨hc, -⟩, rfl⟩ := h
   exact hc.two_le_card_support
 #align equiv.perm.two_le_of_mem_cycle_type Equiv.Perm.two_le_of_mem_cycleType
@@ -238,7 +238,7 @@ theorem dvd_of_mem_cycleType {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleType) :
 theorem orderOf_cycleOf_dvd_orderOf (f : Perm α) (x : α) : orderOf (cycleOf f x) ∣ orderOf f :=
   by
   by_cases hx : f x = x
-  · rw [← cycle_of_eq_one_iff] at hx 
+  · rw [← cycle_of_eq_one_iff] at hx
     simp [hx]
   · refine' dvd_of_mem_cycle_type _
     rw [cycle_type, Multiset.mem_map]
@@ -270,7 +270,7 @@ theorem cycleType_prime_order {σ : Perm α} (hσ : (orderOf σ).Prime) :
   rw [tsub_add_cancel_of_le]
   rw [Nat.succ_le_iff, pos_iff_ne_zero, Ne, card_cycle_type_eq_zero]
   intro H
-  rw [H, orderOf_one] at hσ 
+  rw [H, orderOf_one] at hσ
   exact hσ.ne_one rfl
 #align equiv.perm.cycle_type_prime_order Equiv.Perm.cycleType_prime_order
 -/
@@ -281,7 +281,7 @@ theorem isCycle_of_prime_order {σ : Perm α} (h1 : (orderOf σ).Prime)
   by
   obtain ⟨n, hn⟩ := cycle_type_prime_order h1
   rw [← σ.sum_cycle_type, hn, Multiset.sum_replicate, nsmul_eq_mul, Nat.cast_id,
-    mul_lt_mul_right (orderOf_pos σ), Nat.succ_lt_succ_iff, Nat.lt_succ_iff, le_zero_iff] at h2 
+    mul_lt_mul_right (orderOf_pos σ), Nat.succ_lt_succ_iff, Nat.lt_succ_iff, le_zero_iff] at h2
   rw [← card_cycle_type_eq_one, hn, card_replicate, h2]
 #align equiv.perm.is_cycle_of_prime_order Equiv.Perm.isCycle_of_prime_order
 -/
@@ -290,7 +290,7 @@ theorem isCycle_of_prime_order {σ : Perm α} (h1 : (orderOf σ).Prime)
 theorem cycleType_le_of_mem_cycleFactorsFinset {f g : Perm α} (hf : f ∈ g.cycleFactorsFinset) :
     f.cycleType ≤ g.cycleType :=
   by
-  rw [mem_cycle_factors_finset_iff] at hf 
+  rw [mem_cycle_factors_finset_iff] at hf
   rw [cycle_type_def, cycle_type_def, hf.left.cycle_factors_finset_eq_singleton]
   refine' map_le_map _
   simpa [← Finset.mem_def, mem_cycle_factors_finset_iff] using hf
@@ -303,7 +303,7 @@ theorem cycleType_mul_inv_mem_cycleFactorsFinset_eq_sub {f g : Perm α}
   by
   suffices (g * f⁻¹).cycleType + f.cycle_type = g.cycle_type - f.cycle_type + f.cycle_type
     by
-    rw [tsub_add_cancel_of_le (cycle_type_le_of_mem_cycle_factors_finset hf)] at this 
+    rw [tsub_add_cancel_of_le (cycle_type_le_of_mem_cycle_factors_finset hf)] at this
     simp [← this]
   simp [← (disjoint_mul_inv_of_mem_cycle_factors_finset hf).cycleType,
     tsub_add_cancel_of_le (cycle_type_le_of_mem_cycle_factors_finset hf)]
@@ -316,17 +316,17 @@ theorem isConj_of_cycleType_eq {σ τ : Perm α} (h : cycleType σ = cycleType �
   revert τ
   apply cycle_induction_on _ σ
   · intro τ h
-    rw [cycle_type_one, eq_comm, cycle_type_eq_zero] at h 
+    rw [cycle_type_one, eq_comm, cycle_type_eq_zero] at h
     rw [h]
   · intro σ hσ τ hστ
     have hτ := card_cycle_type_eq_one.2 hσ
-    rw [hστ, card_cycle_type_eq_one] at hτ 
+    rw [hστ, card_cycle_type_eq_one] at hτ
     apply hσ.is_conj hτ
-    rw [hσ.cycle_type, hτ.cycle_type, coe_eq_coe, singleton_perm] at hστ 
-    simp only [and_true_iff, eq_self_iff_true] at hστ 
+    rw [hσ.cycle_type, hτ.cycle_type, coe_eq_coe, singleton_perm] at hστ
+    simp only [and_true_iff, eq_self_iff_true] at hστ
     exact hστ
   · intro σ τ hστ hσ h1 h2 π hπ
-    rw [hστ.cycle_type] at hπ 
+    rw [hστ.cycle_type] at hπ
     · have h : σ.support.card ∈ map (Finset.card ∘ perm.support) π.cycle_factors_finset.val := by
         simp [← cycle_type_def, ← hπ, hσ.cycle_type]
       obtain ⟨σ', hσ'l, hσ'⟩ := multiset.mem_map.mp h
@@ -338,7 +338,7 @@ theorem isConj_of_cycleType_eq {σ τ : Perm α} (h : cycleType σ = cycleType �
       refine' IsConj.trans _ key
       have hs : σ.cycle_type = σ'.cycle_type :=
         by
-        rw [← Finset.mem_def, mem_cycle_factors_finset_iff] at hσ'l 
+        rw [← Finset.mem_def, mem_cycle_factors_finset_iff] at hσ'l
         rw [hσ.cycle_type, ← hσ', hσ'l.left.cycle_type]
       refine' hστ.is_conj_mul (h1 hs) (h2 _) _
       · rw [cycle_type_mul_mem_cycle_factors_finset_eq_sub, ← hπ, add_comm, hs,
@@ -385,9 +385,9 @@ theorem mem_cycleType_iff {n : ℕ} {σ : Perm α} :
   constructor
   · intro h
     obtain ⟨l, rfl, hlc, hld⟩ := trunc_cycle_factors σ
-    rw [cycle_type_eq _ rfl hlc hld] at h 
+    rw [cycle_type_eq _ rfl hlc hld] at h
     obtain ⟨c, cl, rfl⟩ := List.exists_of_mem_map h
-    rw [(List.perm_cons_erase cl).pairwise_iff fun _ _ hd => _] at hld 
+    rw [(List.perm_cons_erase cl).pairwise_iff fun _ _ hd => _] at hld
     swap; · exact hd.symm
     refine' ⟨c, (l.erase c).Prod, _, _, hlc _ cl, rfl⟩
     ·
@@ -440,7 +440,7 @@ theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p �
     {σ : Perm α} (hσ : σ ^ p ^ n = 1) : ∃ a : α, σ a = a := by
   classical
   contrapose! hα
-  simp_rw [← mem_support] at hα 
+  simp_rw [← mem_support] at hα
   exact
     nat.modeq_zero_iff_dvd.mp
       ((congr_arg _
@@ -751,14 +751,14 @@ theorem card_support_eq_three_iff : σ.support.card = 3 ↔ σ.IsThreeCycle :=
   by
   refine' ⟨fun h => _, is_three_cycle.card_support⟩
   by_cases h0 : σ.cycle_type = 0
-  · rw [← sum_cycle_type, h0, sum_zero] at h 
+  · rw [← sum_cycle_type, h0, sum_zero] at h
     exact (ne_of_lt zero_lt_three h).elim
   obtain ⟨n, hn⟩ := exists_mem_of_ne_zero h0
   by_cases h1 : σ.cycle_type.erase n = 0
-  · rw [← sum_cycle_type, ← cons_erase hn, h1, cons_zero, Multiset.sum_singleton] at h 
+  · rw [← sum_cycle_type, ← cons_erase hn, h1, cons_zero, Multiset.sum_singleton] at h
     rw [is_three_cycle, ← cons_erase hn, h1, h, ← cons_zero]
   obtain ⟨m, hm⟩ := exists_mem_of_ne_zero h1
-  rw [← sum_cycle_type, ← cons_erase hn, ← cons_erase hm, Multiset.sum_cons, Multiset.sum_cons] at h 
+  rw [← sum_cycle_type, ← cons_erase hn, ← cons_erase hm, Multiset.sum_cons, Multiset.sum_cons] at h
   -- TODO: linarith [...] should solve this directly
   have : ∀ {k}, 2 ≤ m → 2 ≤ n → n + (m + k) = 3 → False := by intros; linarith
   cases this (two_le_of_mem_cycle_type (mem_of_mem_erase hm)) (two_le_of_mem_cycle_type hn) h
@@ -822,7 +822,7 @@ theorem isThreeCycle_swap_mul_swap_same {a b c : α} (ab : a ≠ b) (ac : a ≠ 
     simp [ab, ac, bc]
   apply le_antisymm ((support_mul_le _ _).trans fun x => _) fun x hx => _
   · simp [ab, ac, bc]
-  · simp only [Finset.mem_insert, Finset.mem_singleton] at hx 
+  · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
     rw [mem_support]
     simp only [perm.coe_mul, Function.comp_apply, Ne.def]
     obtain rfl | rfl | rfl := hx

@@ -936,7 +936,7 @@ theorem orthonormal_iff_ite {v : ι → E} :
       have h' : ‖v i‖ ^ 2 = 1 ^ 2 := by simp [@norm_sq_eq_inner 𝕜, h i i]
       have h₁ : 0 ≤ ‖v i‖ := norm_nonneg _
       have h₂ : (0 : ℝ) ≤ 1 := zero_le_one
-      rwa [sq_eq_sq h₁ h₂] at h' 
+      rwa [sq_eq_sq h₁ h₂] at h'
     · intro i j hij
       simpa [hij] using h i j
 #align orthonormal_iff_ite orthonormal_iff_ite
@@ -1108,7 +1108,7 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
     (hi : i ∉ s) {l : ι →₀ 𝕜} (hl : l ∈ Finsupp.supported 𝕜 𝕜 s) :
     ⟪Finsupp.total ι E 𝕜 v l, v i⟫ = 0 :=
   by
-  rw [Finsupp.mem_supported'] at hl 
+  rw [Finsupp.mem_supported'] at hl
   simp only [hv.inner_left_finsupp, hl i hi, map_zero]
 #align orthonormal.inner_finsupp_eq_zero Orthonormal.inner_finsupp_eq_zero
 -/
@@ -1149,7 +1149,7 @@ theorem orthonormal_iUnion_of_directed {η : Type _} {s : η → Set E} (hs : Di
   rintro x ⟨_, ⟨i, rfl⟩, hxi⟩ y ⟨_, ⟨j, rfl⟩, hyj⟩
   obtain ⟨k, hik, hjk⟩ := hs i j
   have h_orth : Orthonormal 𝕜 (fun x => x : s k → E) := h k
-  rw [orthonormal_subtype_iff_ite] at h_orth 
+  rw [orthonormal_subtype_iff_ite] at h_orth
   exact h_orth x (hik hxi) y (hjk hyj)
 #align orthonormal_Union_of_directed orthonormal_iUnion_of_directed
 -/
@@ -1672,7 +1672,7 @@ isometric equivalence. -/
 def LinearEquiv.isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
     (hf : Orthonormal 𝕜 (f ∘ v)) : E ≃ₗᵢ[𝕜] E' :=
   f.isometryOfInner fun x y => by
-    rw [← LinearEquiv.coe_coe] at hf 
+    rw [← LinearEquiv.coe_coe] at hf
     rw [← v.total_repr x, ← v.total_repr y, ← LinearEquiv.coe_coe, Finsupp.apply_total,
       Finsupp.apply_total, hv.inner_finsupp_eq_sum_left, hf.inner_finsupp_eq_sum_left]
 #align linear_equiv.isometry_of_orthonormal LinearEquiv.isometryOfOrthonormal
@@ -1863,7 +1863,7 @@ theorem real_inner_add_sub_eq_zero_iff (x y : F) : ⟪x + y, x - y⟫_ℝ = 0 �
     sub_eq_zero, re_to_real]
   constructor
   · intro h
-    rw [add_comm] at h 
+    rw [add_comm] at h
     linarith
   · intro h
     linarith
@@ -1964,11 +1964,11 @@ theorem norm_inner_eq_norm_tfae (x y : E) :
   · refine' fun h => Classical.or_iff_not_imp_left.2 fun hx₀ => _
     have : ‖x‖ ^ 2 ≠ 0 := pow_ne_zero _ (norm_ne_zero_iff.2 hx₀)
     rw [← sq_eq_sq (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _)), mul_pow, ←
-      mul_right_inj' this, eq_comm, ← sub_eq_zero, ← mul_sub] at h 
-    simp only [@norm_sq_eq_inner 𝕜] at h 
+      mul_right_inj' this, eq_comm, ← sub_eq_zero, ← mul_sub] at h
+    simp only [@norm_sq_eq_inner 𝕜] at h
     letI : InnerProductSpace.Core 𝕜 E := InnerProductSpace.toCore
     erw [← InnerProductSpace.Core.cauchy_schwarz_aux, InnerProductSpace.Core.normSq_eq_zero,
-      sub_eq_zero] at h 
+      sub_eq_zero] at h
     rw [div_eq_inv_mul, mul_smul, h, inv_smul_smul₀]
     rwa [inner_self_ne_zero]
   tfae_have 2 → 3; exact fun h => h.imp_right fun h' => ⟨_, h'⟩
@@ -2032,7 +2032,7 @@ theorem inner_eq_norm_mul_iff_div {x y : E} (h₀ : x ≠ 0) :
     ⟪x, y⟫ = (‖x‖ : 𝕜) * ‖y‖ ↔ (‖y‖ / ‖x‖ : 𝕜) • x = y :=
   by
   have h₀' := h₀
-  rw [← norm_ne_zero_iff, Ne.def, ← @of_real_eq_zero 𝕜] at h₀' 
+  rw [← norm_ne_zero_iff, Ne.def, ← @of_real_eq_zero 𝕜] at h₀'
   constructor <;> intro h
   · have : x = 0 ∨ y = (⟪x, y⟫ / ⟪x, x⟫ : 𝕜) • x :=
       ((@norm_inner_eq_norm_tfae 𝕜 _ _ _ _ x y).out 0 1).1 (by simp [h])
@@ -2618,7 +2618,7 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
   rw [← @LinearMap.ker_eq_bot _ _ _ _ _ _ (DirectSum.addCommGroup fun i => V i),
     Submodule.eq_bot_iff]
   intro v hv
-  rw [LinearMap.mem_ker] at hv 
+  rw [LinearMap.mem_ker] at hv
   ext i
   suffices ⟪(v i : E), v i⟫ = 0 by simpa only [inner_self_eq_zero] using this
   calc

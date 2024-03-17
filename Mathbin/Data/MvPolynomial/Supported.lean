@@ -167,7 +167,7 @@ theorem supported_strictMono [Nontrivial R] :
 theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ}
     (hF : ↑F.vars ⊆ s) : ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
   classical
-  rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF 
+  rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF
   cases' hF with F' hF'
   use fun z => aeval z F'
   intro x

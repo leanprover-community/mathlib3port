@@ -104,7 +104,7 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
   ⟨mt degree_eq_zero_of_isUnit fun h => by simp_all only [lt_irrefl],
     by
     rintro p q rfl
-    rw [Polynomial.map_mul] at hf 
+    rw [Polynomial.map_mul] at hf
     rcases mul_eq_mul_prime_pow
         (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X) hf with
       ⟨m, n, b, c, hmnd, hbc, hp, hq⟩
@@ -122,23 +122,23 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       simp_all only [eq_self_iff_true, not_true, Ne.def, MulZeroClass.mul_zero]
     have hbc0 : degree b = 0 ∧ degree c = 0 :=
       by
-      apply_fun degree at hbc 
-      rwa [degree_C hpql0, degree_mul, eq_comm, Nat.WithBot.add_eq_zero_iff] at hbc 
+      apply_fun degree at hbc
+      rwa [degree_C hpql0, degree_mul, eq_comm, Nat.WithBot.add_eq_zero_iff] at hbc
     have hmp : m ≤ nat_degree p := le_nat_degree_of_map_eq_mul_X_pow hP hp hbc0.1
     have hnq : n ≤ nat_degree q := le_nat_degree_of_map_eq_mul_X_pow hP hq hbc0.2
     have hpmqn : p.nat_degree = m ∧ q.nat_degree = n :=
       by
-      rw [nat_degree_mul hp0 hq0] at hmnd 
+      rw [nat_degree_mul hp0 hq0] at hmnd
       clear * - hmnd hmp hnq
       contrapose hmnd
       apply ne_of_lt
-      rw [not_and_or] at hmnd 
+      rw [not_and_or] at hmnd
       cases hmnd
       · exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
       · exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_ne hnq (Ne.symm hmnd))
     obtain rfl | rfl : m = 0 ∨ n = 0 := by
       rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, Classical.not_not, ←
-        Classical.or_iff_not_imp_left] at hmn 
+        Classical.or_iff_not_imp_left] at hmn
     · exact Or.inl (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit hu hpmqn.1)
     ·
       exact

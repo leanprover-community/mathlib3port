@@ -124,7 +124,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁ (I : Box (
     has_integral_GP_divergence_of_forall_has_deriv_within_at I f f' (s ∩ I.Icc)
       (hs.mono (inter_subset_left _ _)) (fun x hx => Hc _ hx.2) fun x hx =>
       Hd _ ⟨hx.1, fun h => hx.2 ⟨h, hx.1⟩⟩
-  rw [continuousOn_pi] at Hc 
+  rw [continuousOn_pi] at Hc
   refine' (A.unique B).trans (sum_congr rfl fun i hi => _)
   refine' congr_arg₂ Sub.sub _ _
   · have := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (I.lower_le_upper i))
@@ -176,7 +176,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
   -- Thus it suffices to prove the same about the RHS.
   refine' tendsto_nhds_unique_of_eventuallyEq hI_tendsto _ (eventually_of_forall HJ_eq)
   clear hI_tendsto
-  rw [tendsto_pi_nhds] at hJl hJu 
+  rw [tendsto_pi_nhds] at hJl hJu
   /- We'll need to prove a similar statement about the integrals over the front sides and the
     integrals over the back sides. In order to avoid repeating ourselves, we formulate a lemma. -/
   suffices
@@ -186,7 +186,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
           tendsto (fun k => ∫ x in ((J k).face i).Icc, f (i.insertNth (c k) x) i) at_top
             (𝓝 <| ∫ x in (I.face i).Icc, f (i.insertNth d x) i)
     by
-    rw [box.Icc_eq_pi] at hJ_sub' 
+    rw [box.Icc_eq_pi] at hJ_sub'
     refine' tendsto_finset_sum _ fun i hi => (this _ _ _ _ (hJu _)).sub (this _ _ _ _ (hJl _))
     exacts [fun k => hJ_sub' k (J k).upper_mem_Icc _ trivial, fun k =>
       hJ_sub' k (J k).lower_mem_Icc _ trivial]
@@ -249,7 +249,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
       rw [box.Icc_def, Real.volume_Icc_pi_toReal ((J k).face i).lower_le_upper, ←
         le_div_iff (hvol_pos _)]
       refine'
-        div_le_div_of_le_left εpos.le (hvol_pos _) (prod_le_prod (fun j hj => _) fun j hj => _)
+        div_le_div_of_nonneg_left εpos.le (hvol_pos _) (prod_le_prod (fun j hj => _) fun j hj => _)
       exacts [sub_nonneg.2 (box.lower_le_upper _ _),
         sub_le_sub ((hJ_sub' _ (J _).upper_mem_Icc).2 _) ((hJ_sub' _ (J _).lower_mem_Icc).1 _)]
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂
@@ -421,14 +421,14 @@ theorem integral_eq_of_hasDerivWithinAt_off_countable_of_le (f f' : ℝ → E) {
             ∫ x in Icc (e a ∘ i.succAboveEmb) (e b ∘ i.succAboveEmb),
               f (e.symm <| i.insertNth (e a i) x)) :=
       by
-      simp only [← interior_Icc] at Hd 
+      simp only [← interior_Icc] at Hd
       refine'
         integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv e _ _ (fun _ => f)
           (fun _ => F') s hs a b hle (fun i => Hc) (fun x hx i => Hd x hx) _ _ _
       · exact fun x y => (OrderIso.funUnique (Fin 1) ℝ).symm.le_iff_le
       · exact (volume_preserving_fun_unique (Fin 1) ℝ).symm _
       · intro x; rw [Fin.sum_univ_one, hF', e_symm, Pi.single_eq_same, one_smul]
-      · rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hle] at Hi 
+      · rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hle] at Hi
         exact Hi.congr_set_ae Ioc_ae_eq_Icc.symm
     _ = f b - f a := by
       simp only [Fin.sum_univ_one, e_symm]
@@ -496,7 +496,7 @@ theorem integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le (f
       · exact fun x y => (OrderIso.finTwoArrowIso ℝ).symm.le_iff_le
       · exact (volume_preserving_fin_two_arrow ℝ).symm _
       · exact Fin.forall_fin_two.2 ⟨Hcf, Hcg⟩
-      · rw [Icc_prod_eq, interior_prod_eq, interior_Icc, interior_Icc] at hx 
+      · rw [Icc_prod_eq, interior_prod_eq, interior_Icc, interior_Icc] at hx
         exact Fin.forall_fin_two.2 ⟨Hdf x hx, Hdg x hx⟩
       · intro x; rw [Fin.sum_univ_two]; simp
     _ =
@@ -554,15 +554,15 @@ theorem integral2_divergence_prod_of_hasFDerivWithinAt_off_countable (f g : ℝ 
   by
   wlog h₁ : a₁ ≤ b₁ generalizing a₁ b₁
   · specialize this b₁ a₁
-    rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this 
+    rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
     simp only [intervalIntegral.integral_symm b₁ a₁]
     refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₁))).trans _; abel
   wlog h₂ : a₂ ≤ b₂ generalizing a₂ b₂
   · specialize this b₂ a₂
-    rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this 
+    rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
     simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
     refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₂))).trans _; abel
-  simp only [uIcc_of_le h₁, uIcc_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at Hcf Hcg Hdf Hdg Hi 
+  simp only [uIcc_of_le h₁, uIcc_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at Hcf Hcg Hdf Hdg Hi
   calc
     ∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1) =
         ∫ x in Icc a₁ b₁, ∫ y in Icc a₂ b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1) :=

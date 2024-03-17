@@ -998,7 +998,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
     intro x
     by_cases H : ∀ i : ℕ, x ∉ t i
     · exact ⟨0, Or.inr (by simpa only [mem_Inter, compl_Union] using H)⟩
-    · simp only [Classical.not_forall, not_not_mem] at H 
+    · simp only [Classical.not_forall, not_not_mem] at H
       rcases H with ⟨n, hn⟩
       exact ⟨n, Or.inl hn⟩
   refine' ⟨fun x => g (Nat.find (P x)) x, Measurable.find hg M P, _⟩
@@ -1427,7 +1427,7 @@ theorem measurable_comp_iff (hg : MeasurableEmbedding g) : Measurable (g ∘ f) 
   by
   refine' ⟨fun H => _, hg.measurable.comp⟩
   suffices Measurable ((range_splitting g ∘ range_factorization g) ∘ f) by
-    rwa [(right_inverse_range_splitting hg.injective).comp_eq_id] at this 
+    rwa [(right_inverse_range_splitting hg.injective).comp_eq_id] at this
   exact hg.measurable_range_splitting.comp H.subtype_mk
 #align measurable_embedding.measurable_comp_iff MeasurableEmbedding.measurable_comp_iff
 -/
@@ -1695,7 +1695,7 @@ protected theorem measurable_comp_iff {f : β → γ} (e : α ≃ᵐ β) :
     (fun hfe =>
       by
       have : Measurable (f ∘ (e.symm.trans e).toEquiv) := hfe.comp e.symm.Measurable
-      rwa [coe_to_equiv, symm_trans_self] at this )
+      rwa [coe_to_equiv, symm_trans_self] at this)
     fun h => h.comp e.Measurable
 #align measurable_equiv.measurable_comp_iff MeasurableEquiv.measurable_comp_iff
 -/
@@ -2122,14 +2122,14 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
     rw [Function.iterate_succ', Function.comp_apply]
     exact Fmono (Inter_subset _ _)
   rintro x hx ⟨y, hy, rfl⟩
-  rw [mem_Inter] at hx 
+  rw [mem_Inter] at hx
   apply hy
   rw [(inj_on_of_injective hf.injective _).image_iInter_eq]
   swap; · infer_instance
   rw [mem_Inter]
   intro n
   specialize hx n.succ
-  rw [Function.iterate_succ', Function.comp_apply] at hx 
+  rw [Function.iterate_succ', Function.comp_apply] at hx
   by_contra h
   apply hx
   exact ⟨y, h, rfl⟩
@@ -2182,7 +2182,7 @@ theorem measurable_injection_nat_bool_of_countablyGenerated [MeasurableSpace α]
   by
   obtain ⟨b, bct, hb⟩ := h.is_countably_generated
   obtain ⟨e, he⟩ := Set.Countable.exists_eq_range (bct.insert ∅) (insert_nonempty _ _)
-  rw [← generate_from_insert_empty, he] at hb 
+  rw [← generate_from_insert_empty, he] at hb
   refine' ⟨fun x n => to_bool (x ∈ e n), _, _⟩
   · rw [measurable_pi_iff]
     intro n
@@ -2198,7 +2198,7 @@ theorem measurable_injection_nat_bool_of_countablyGenerated [MeasurableSpace α]
     apply generate_from_induction
     · rintro - ⟨n, rfl⟩
       rw [← decide_eq_decide]
-      rw [funext_iff] at hxy 
+      rw [funext_iff] at hxy
       exact hxy n
     · tauto
     · intro t
@@ -2287,7 +2287,7 @@ instance iInf_isMeasurablyGenerated {f : ι → Filter α} [∀ i, IsMeasurablyG
     IsMeasurablyGenerated (⨅ i, f i) :=
   by
   refine' ⟨fun s hs => _⟩
-  rw [← equiv.plift.surjective.infi_comp, mem_infi] at hs 
+  rw [← equiv.plift.surjective.infi_comp, mem_infi] at hs
   rcases hs with ⟨t, ht, ⟨V, hVf, rfl⟩⟩
   choose U hUf hU using fun i => is_measurably_generated.exists_measurable_subset (hVf i)
   refine' ⟨⋂ i : t, U i, _, _, _⟩

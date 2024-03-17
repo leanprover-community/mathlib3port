@@ -125,7 +125,7 @@ theorem edist_congr_right {x y z : α} (h : edist x y = 0) : edist x z = edist y
   apply le_antisymm
   · rw [← zero_add (edist y z), ← h]
     apply edist_triangle
-  · rw [edist_comm] at h 
+  · rw [edist_comm] at h
     rw [← zero_add (edist x z), ← h]
     apply edist_triangle
 #align edist_congr_right edist_congr_right
@@ -605,7 +605,7 @@ instance pseudoEMetricSpacePi [∀ b, PseudoEMetricSpace (π b)] : PseudoEMetric
       preimage_set_of_eq, comap_principal]
     rw [iInf_comm]; congr; funext ε
     rw [iInf_comm]; congr; funext εpos
-    change 0 < ε at εpos 
+    change 0 < ε at εpos
     simp [Set.ext_iff, εpos]
 #align pseudo_emetric_space_pi pseudoEMetricSpacePi
 -/
@@ -1222,7 +1222,7 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
       _ ≤ diam s + (edist x y + diam t) := le_self_add
       _ = diam s + edist x y + diam t := (add_assoc _ _ _).symm
   · exact A a h'a b h'b
-  · have Z := A b h'b a h'a; rwa [edist_comm] at Z 
+  · have Z := A b h'b a h'a; rwa [edist_comm] at Z
   ·
     calc
       edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b
@@ -1259,7 +1259,7 @@ theorem diam_pi_le_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEMetric
     {s : ∀ b : β, Set (π b)} {c : ℝ≥0∞} (h : ∀ b, diam (s b) ≤ c) : diam (Set.pi univ s) ≤ c :=
   by
   apply diam_le fun x hx y hy => edist_pi_le_iff.mpr _
-  rw [mem_univ_pi] at hx hy 
+  rw [mem_univ_pi] at hx hy
   exact fun b => diam_le_iff.1 (h b) (x b) (hx b) (y b) (hy b)
 #align emetric.diam_pi_le_of_le EMetric.diam_pi_le_of_le
 -/
@@ -1314,13 +1314,13 @@ theorem eq_of_forall_edist_le {x y : γ} (h : ∀ ε > 0, edist x y ≤ ε) : x 
 #align eq_of_forall_edist_le eq_of_forall_edist_le
 -/
 
-#print to_separated /-
+#print EMetricSpace.instT0Space /-
 -- see Note [lower instance priority]
 /-- An emetric space is separated -/
-instance (priority := 100) to_separated : SeparatedSpace γ :=
-  separated_def.2 fun x y h =>
+instance (priority := 100) EMetricSpace.instT0Space : T0Space γ :=
+  t0Space_iff_uniformity.2 fun x y h =>
     eq_of_forall_edist_le fun ε ε0 => le_of_lt (h _ (edist_mem_uniformity ε0))
-#align to_separated to_separated
+#align to_separated EMetricSpace.instT0Space
 -/
 
 #print EMetric.uniformEmbedding_iff' /-
@@ -1431,7 +1431,7 @@ instance emetricSpacePi [∀ b, EMetricSpace (π b)] : EMetricSpace (∀ b, π b
     eq_of_edist_eq_zero := fun f g eq0 =>
       by
       have eq1 : (sup univ fun b : β => edist (f b) (g b)) ≤ 0 := le_of_eq eq0
-      simp only [Finset.sup_le_iff] at eq1 
+      simp only [Finset.sup_le_iff] at eq1
       exact funext fun b => edist_le_zero.1 <| eq1 b <| mem_univ b }
 #align emetric_space_pi emetricSpacePi
 -/
@@ -1476,25 +1476,25 @@ end Emetric
 -/
 
 
-instance [PseudoEMetricSpace X] : EDist (UniformSpace.SeparationQuotient X) :=
+instance [PseudoEMetricSpace X] : EDist (SeparationQuotient X) :=
   ⟨fun x y =>
     Quotient.liftOn₂' x y edist fun x y x' y' hx hy =>
       calc
         edist x y = edist x' y :=
-          edist_congr_right <| EMetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hx
+          edist_congr_right <| EMetric.inseparable_iff.1 <| inseparable_iff_inseparable.1 hx
         _ = edist x' y' :=
-          edist_congr_left <| EMetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hy⟩
+          edist_congr_left <| EMetric.inseparable_iff.1 <| inseparable_iff_inseparable.1 hy⟩
 
-#print UniformSpace.SeparationQuotient.edist_mk /-
+#print SeparationQuotient.edist_mk /-
 @[simp]
-theorem UniformSpace.SeparationQuotient.edist_mk [PseudoEMetricSpace X] (x y : X) :
-    @edist (UniformSpace.SeparationQuotient X) _ (Quot.mk _ x) (Quot.mk _ y) = edist x y :=
+theorem SeparationQuotient.edist_mk [PseudoEMetricSpace X] (x y : X) :
+    @edist (SeparationQuotient X) _ (Quot.mk _ x) (Quot.mk _ y) = edist x y :=
   rfl
-#align uniform_space.separation_quotient.edist_mk UniformSpace.SeparationQuotient.edist_mk
+#align uniform_space.separation_quotient.edist_mk SeparationQuotient.edist_mk
 -/
 
-instance [PseudoEMetricSpace X] : EMetricSpace (UniformSpace.SeparationQuotient X) :=
-  @EMetricSpace.ofT0PseudoEMetricSpace (UniformSpace.SeparationQuotient X)
+instance [PseudoEMetricSpace X] : EMetricSpace (SeparationQuotient X) :=
+  @EMetricSpace.ofT0PseudoEMetricSpace (SeparationQuotient X)
     { edist_self := fun x => Quotient.inductionOn' x edist_self
       edist_comm := fun x y => Quotient.inductionOn₂' x y edist_comm
       edist_triangle := fun x y z => Quotient.inductionOn₃' x y z edist_triangle
@@ -1508,7 +1508,7 @@ instance [PseudoEMetricSpace X] : EMetricSpace (UniformSpace.SeparationQuotient 
                   ext ⟨⟨x⟩, ⟨y⟩⟩
                   refine' ⟨_, fun h => ⟨(x, y), h, rfl⟩⟩
                   rintro ⟨⟨x', y'⟩, h', h⟩
-                  simp only [Prod.ext_iff] at h 
+                  simp only [Prod.ext_iff] at h
                   rwa [← h.1, ← h.2]) }
     _
 

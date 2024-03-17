@@ -198,7 +198,7 @@ theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Con
   by
   constructor
   · rintro hsx hx
-    rw [hsx.convex_hull_eq] at hx 
+    rw [hsx.convex_hull_eq] at hx
     exact hx.2 (mem_singleton _)
   rintro hx
   suffices h : s \ {x} = convexHull 𝕜 (s \ {x}); · convert convex_convexHull 𝕜 _
@@ -208,8 +208,8 @@ theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Con
 #align convex.convex_remove_iff_not_mem_convex_hull_remove Convex.convex_remove_iff_not_mem_convexHull_remove
 -/
 
-#print IsLinearMap.convexHull_image /-
-theorem IsLinearMap.convexHull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s : Set E) :
+#print IsLinearMap.image_convexHull /-
+theorem IsLinearMap.image_convexHull {f : E → F} (hf : IsLinearMap 𝕜 f) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   Set.Subset.antisymm
     (convexHull_min (image_subset _ (subset_convexHull 𝕜 s)) <|
@@ -217,14 +217,14 @@ theorem IsLinearMap.convexHull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s 
     (image_subset_iff.2 <|
       convexHull_min (image_subset_iff.1 <| subset_convexHull 𝕜 _)
         ((convex_convexHull 𝕜 _).is_linear_preimage hf))
-#align is_linear_map.convex_hull_image IsLinearMap.convexHull_image
+#align is_linear_map.convex_hull_image IsLinearMap.image_convexHull
 -/
 
-#print LinearMap.convexHull_image /-
-theorem LinearMap.convexHull_image (f : E →ₗ[𝕜] F) (s : Set E) :
+#print LinearMap.image_convexHull /-
+theorem LinearMap.image_convexHull (f : E →ₗ[𝕜] F) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
-  f.isLinear.convexHull_image s
-#align linear_map.convex_hull_image LinearMap.convexHull_image
+  f.isLinear.image_convexHull s
+#align linear_map.convex_hull_image LinearMap.image_convexHull
 -/
 
 end AddCommMonoid
@@ -237,7 +237,7 @@ variable [OrderedCommSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
 #print convexHull_smul /-
 theorem convexHull_smul (a : 𝕜) (s : Set E) : convexHull 𝕜 (a • s) = a • convexHull 𝕜 s :=
-  (LinearMap.lsmul _ _ a).convexHull_image _
+  (LinearMap.lsmul _ _ a).image_convexHull _
 #align convex_hull_smul convexHull_smul
 -/
 

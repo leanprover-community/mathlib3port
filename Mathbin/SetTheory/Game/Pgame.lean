@@ -2281,7 +2281,7 @@ private theorem add_le_add_right' : ∀ {x y z : SetTheory.PGame} (h : x ≤ y),
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => fun h =>
     by
     refine' le_def.2 ⟨fun i => _, fun i => _⟩ <;> cases i
-    · rw [le_def] at h 
+    · rw [le_def] at h
       cases h
       rcases h_left i with (⟨i', ih⟩ | ⟨j, jh⟩)
       · exact Or.inl ⟨to_left_moves_add (Sum.inl i'), add_le_add_right' ih⟩
@@ -2289,7 +2289,7 @@ private theorem add_le_add_right' : ∀ {x y z : SetTheory.PGame} (h : x ≤ y),
         convert add_le_add_right' jh
         apply add_move_right_inl
     · exact Or.inl ⟨@to_left_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), add_le_add_right' h⟩
-    · rw [le_def] at h 
+    · rw [le_def] at h
       cases h
       rcases h_right i with (⟨i, ih⟩ | ⟨j', jh⟩)
       · refine' Or.inl ⟨to_left_moves_add (Sum.inl i), _⟩

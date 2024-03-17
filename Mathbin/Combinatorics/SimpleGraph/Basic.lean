@@ -649,9 +649,9 @@ theorem adj_iff_exists_edge {v w : V} :
   refine' ⟨fun _ => ⟨G.ne_of_adj ‹_›, ⟦(v, w)⟧, _⟩, _⟩
   · simpa
   · rintro ⟨hne, e, he, hv⟩
-    rw [Sym2.mem_and_mem_iff hne] at hv 
+    rw [Sym2.mem_and_mem_iff hne] at hv
     subst e
-    rwa [mem_edge_set] at he 
+    rwa [mem_edge_set] at he
 #align simple_graph.adj_iff_exists_edge SimpleGraph.adj_iff_exists_edge
 -/
 
@@ -666,7 +666,7 @@ variable (G G₁ G₂)
 #print SimpleGraph.edge_other_ne /-
 theorem edge_other_ne {e : Sym2 V} (he : e ∈ G.edgeSetEmbedding) {v : V} (h : v ∈ e) :
     h.other ≠ v := by
-  erw [← Sym2.other_spec h, Sym2.eq_swap] at he 
+  erw [← Sym2.other_spec h, Sym2.eq_swap] at he
   exact G.ne_of_adj he
 #align simple_graph.edge_other_ne SimpleGraph.edge_other_ne
 -/
@@ -1222,7 +1222,7 @@ theorem compl_neighborSet_disjoint (G : SimpleGraph V) (v : V) :
   by
   rw [Set.disjoint_iff]
   rintro w ⟨h, h'⟩
-  rw [mem_neighbor_set, compl_adj] at h' 
+  rw [mem_neighbor_set, compl_adj] at h'
   exact h'.2 h
 #align simple_graph.compl_neighbor_set_disjoint SimpleGraph.compl_neighborSet_disjoint
 -/
@@ -1342,7 +1342,7 @@ theorem edge_other_incident_set {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v
 #print SimpleGraph.incidence_other_prop /-
 theorem incidence_other_prop {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v) :
     G.otherVertexOfIncident h ∈ G.neighborSet v := by cases' h with he hv;
-  rwa [← Sym2.other_spec' hv, mem_edge_set] at he 
+  rwa [← Sym2.other_spec' hv, mem_edge_set] at he
 #align simple_graph.incidence_other_prop SimpleGraph.incidence_other_prop
 -/
 
@@ -1505,7 +1505,7 @@ theorem deleteFar_iff :
   refine' ⟨fun h H _ hHG hH => _, fun h s hs hG => _⟩
   · have := h (sdiff_subset G.edge_finset H.edge_finset)
     simp only [delete_edges_sdiff_eq_of_le _ hHG, edge_finset_mono hHG, card_sdiff,
-      card_le_of_subset, coe_sdiff, coe_edge_finset, Nat.cast_sub] at this 
+      card_le_of_subset, coe_sdiff, coe_edge_finset, Nat.cast_sub] at this
     convert this hH
   ·
     simpa [card_sdiff hs, edge_finset_delete_edges, -Set.toFinset_card, Nat.cast_sub,
@@ -2021,7 +2021,7 @@ theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] :
   by
   obtain ⟨t, ht⟩ := max_of_nonempty (univ_nonempty.image fun v => G.degree v)
   have ht₂ := mem_of_max ht
-  simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂ 
+  simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂
   rcases ht₂ with ⟨v, rfl⟩
   refine' ⟨v, _⟩
   rw [max_degree, ht]
@@ -2050,7 +2050,7 @@ theorem maxDegree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀
     obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
     rw [hv]
     apply h
-  · rw [not_nonempty_iff_eq_empty] at hV 
+  · rw [not_nonempty_iff_eq_empty] at hV
     rw [max_degree, hV, image_empty]
     exact zero_le k
 #align simple_graph.max_degree_le_of_forall_degree_le SimpleGraph.maxDegree_le_of_forall_degree_le

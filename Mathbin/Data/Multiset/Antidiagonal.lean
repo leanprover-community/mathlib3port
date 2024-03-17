@@ -115,7 +115,7 @@ theorem antidiagonal_eq_map_powerset [DecidableEq α] (s : Multiset α) :
 #print Multiset.card_antidiagonal /-
 @[simp]
 theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s := by
-  have := card_powerset s <;> rwa [← antidiagonal_map_fst, card_map] at this 
+  have := card_powerset s <;> rwa [← antidiagonal_map_fst, card_map] at this
 #align multiset.card_antidiagonal Multiset.card_antidiagonal
 -/
 

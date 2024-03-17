@@ -157,7 +157,7 @@ theorem exact_epi_comp_iff {W : C} (h : W ⟶ X) [Epi h] : Exact (h ≫ f) g ↔
 def isLimitImage (h : Exact f g) :
     IsLimit (KernelFork.ofι (Abelian.image.ι f) (image_ι_comp_eq_zero h.1) : KernelFork g) :=
   by
-  rw [exact_iff] at h 
+  rw [exact_iff] at h
   refine' kernel_fork.is_limit.of_ι _ _ _ _ _
   · refine' fun W u hu => kernel.lift (cokernel.π f) u _
     rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
@@ -180,7 +180,7 @@ def isColimitCoimage (h : Exact f g) :
       (CokernelCofork.ofπ (Abelian.coimage.π g) (Abelian.comp_coimage_π_eq_zero h.1) :
         CokernelCofork f) :=
   by
-  rw [exact_iff] at h 
+  rw [exact_iff] at h
   refine' cokernel_cofork.is_colimit.of_π _ _ _ _ _
   · refine' fun W u hu => cokernel.desc (kernel.ι g) u _
     rw [← cokernel.π_desc f u hu, ← category.assoc, h.2, has_zero_morphisms.zero_comp]
@@ -259,7 +259,7 @@ theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.of
   by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (cokernel_cofork.of_π _ (cokernel.condition f)) walking_parallel_pair.one
-  simp only [cofork.of_π_ι_app] at this 
+  simp only [cofork.of_π_ι_app] at this
   rw [← this, ← category.assoc, kernel.condition, zero_comp]
 #align category_theory.abelian.exact_of_is_cokernel CategoryTheory.Abelian.exact_of_is_cokernel
 -/
@@ -269,7 +269,7 @@ theorem exact_of_is_kernel (w : f ≫ g = 0) (h : IsLimit (KernelFork.ofι _ w))
   by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (kernel_fork.of_ι _ (kernel.condition g)) walking_parallel_pair.zero
-  simp only [fork.of_ι_π_app] at this 
+  simp only [fork.of_ι_π_app] at this
   rw [← this, category.assoc, cokernel.condition, comp_zero]
 #align category_theory.abelian.exact_of_is_kernel CategoryTheory.Abelian.exact_of_is_kernel
 -/
@@ -361,14 +361,14 @@ theorem Exact.op_iff : Exact g.op f.op ↔ Exact f g :=
 #print CategoryTheory.Abelian.Exact.unop /-
 theorem Exact.unop {X Y Z : Cᵒᵖ} (g : X ⟶ Y) (f : Y ⟶ Z) (h : Exact g f) : Exact f.unop g.unop :=
   by
-  rw [← f.op_unop, ← g.op_unop] at h 
+  rw [← f.op_unop, ← g.op_unop] at h
   rwa [← exact.op_iff]
 #align category_theory.abelian.exact.unop CategoryTheory.Abelian.Exact.unop
 -/
 
 #print CategoryTheory.Abelian.Exact.unop_iff /-
 theorem Exact.unop_iff {X Y Z : Cᵒᵖ} (g : X ⟶ Y) (f : Y ⟶ Z) : Exact f.unop g.unop ↔ Exact g f :=
-  ⟨fun e => by rwa [← f.op_unop, ← g.op_unop, ← exact.op_iff] at e , fun e => @Exact.unop _ _ g f e⟩
+  ⟨fun e => by rwa [← f.op_unop, ← g.op_unop, ← exact.op_iff] at e, fun e => @Exact.unop _ _ g f e⟩
 #align category_theory.abelian.exact.unop_iff CategoryTheory.Abelian.Exact.unop_iff
 -/
 
@@ -389,7 +389,7 @@ instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaith
     ReflectsExactSequences F
     where reflects X Y Z f g hfg :=
     by
-    rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg 
+    rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg
     refine' (abelian.exact_iff _ _).2 ⟨hfg.1, F.zero_of_map_zero _ _⟩
     obtain ⟨k, hk⟩ :=
       kernel.lift' (F.map g) (F.map (kernel.ι g))
@@ -446,7 +446,7 @@ open scoped ZeroObject
 theorem preservesZeroMorphisms_of_map_exact : L.PreservesZeroMorphisms :=
   by
   replace h := (h (exact_of_zero (𝟙 0) (𝟙 0))).w
-  rw [L.map_id, category.comp_id] at h 
+  rw [L.map_id, category.comp_id] at h
   exact preserves_zero_morphisms_of_map_zero_object (id_zero_equiv_iso_zero _ h)
 #align category_theory.functor.preserves_zero_morphisms_of_map_exact CategoryTheory.Functor.preservesZeroMorphisms_of_map_exact
 -/

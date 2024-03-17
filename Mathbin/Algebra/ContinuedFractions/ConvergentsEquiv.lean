@@ -114,7 +114,7 @@ def squashSeq (s : Seq <| Pair K) (n : ℕ) : Seq (Pair K) :=
 theorem squashSeq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (n + 1)) :
     squashSeq s n = s :=
   by
-  change s.nth (n + 1) = none at terminated_at_succ_n 
+  change s.nth (n + 1) = none at terminated_at_succ_n
   cases s_nth_eq : s.nth n <;> simp only [*, squash_seq]
 #align generalized_continued_fraction.squash_seq_eq_self_of_terminated GeneralizedContinuedFraction.squashSeq_eq_self_of_terminated
 -/
@@ -234,7 +234,7 @@ theorem squashGCF_eq_self_of_terminated (terminated_at_n : TerminatedAt g n) : s
   by
   cases n
   case zero =>
-    change g.s.nth 0 = none at terminated_at_n 
+    change g.s.nth 0 = none at terminated_at_n
     simp only [convergents', squash_gcf, convergents'_aux, terminated_at_n]
   case succ => cases g; simp [squash_seq_eq_self_of_terminated terminated_at_n, squash_gcf]
 #align generalized_continued_fraction.squash_gcf_eq_self_of_terminated GeneralizedContinuedFraction.squashGCF_eq_self_of_terminated
@@ -398,7 +398,6 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
       intro _ _ m_lt_n s_mth_eq; exact s_pos (Nat.lt.step m_lt_n) s_mth_eq
     · suffices g.convergents (n + 1) = g'.convergents n
         by
-        -- invoke the IH for the squashed gcf
         rwa [← IH]
         intro gp' m m_lt_n s_mth_eq'
         -- case distinction on m + 1 = n or m + 1 < n

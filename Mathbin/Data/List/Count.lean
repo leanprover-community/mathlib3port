@@ -169,7 +169,7 @@ variable {p q}
 theorem countP_mono_left (h : ∀ x ∈ l, p x → q x) : countP p l ≤ countP q l :=
   by
   induction' l with a l ihl; · rfl
-  rw [forall_mem_cons] at h ; cases' h with ha hl
+  rw [forall_mem_cons] at h; cases' h with ha hl
   rw [countp_cons, countp_cons]
   refine' add_le_add (ihl hl) _
   split_ifs <;> try simp only [le_rfl, zero_le]
@@ -417,7 +417,7 @@ theorem count_erase (a b : α) : ∀ l : List α, count a (l.eraseₓ b) = count
     · rw [if_pos hc, hc, count_cons', Nat.add_sub_cancel]
     · rw [if_neg hc, count_cons', count_cons', count_erase]
       by_cases ha : a = b
-      · rw [← ha, eq_comm] at hc 
+      · rw [← ha, eq_comm] at hc
         rw [if_pos ha, if_neg hc, add_zero, add_zero]
       · rw [if_neg ha, tsub_zero, tsub_zero]
 #align list.count_erase List.count_erase

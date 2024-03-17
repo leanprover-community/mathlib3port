@@ -1072,7 +1072,7 @@ theorem toReal_le_coe_of_le_coe {a : ℝ≥0∞} {b : ℝ≥0} (h : a ≤ b) : a
   show ↑a.toNNReal ≤ ↑b
     by
     have : ↑a.to_nnreal = a := ENNReal.coe_toNNReal (lt_of_le_of_lt h coe_lt_top).Ne
-    rw [← this] at h 
+    rw [← this] at h
     exact_mod_cast h
 #align ennreal.to_real_le_coe_of_le_coe ENNReal.toReal_le_coe_of_le_coe
 -/
@@ -1198,7 +1198,7 @@ instance contravariantClass_add_lt : ContravariantClass ℝ≥0∞ ℝ≥0∞ (�
 
 #print ENNReal.lt_add_right /-
 theorem lt_add_right (ha : a ≠ ∞) (hb : b ≠ 0) : a < a + b := by
-  rwa [← pos_iff_ne_zero, ← ENNReal.add_lt_add_iff_left ha, add_zero] at hb 
+  rwa [← pos_iff_ne_zero, ← ENNReal.add_lt_add_iff_left ha, add_zero] at hb
 #align ennreal.lt_add_right ENNReal.lt_add_right
 -/
 
@@ -1208,7 +1208,7 @@ theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε : ℝ≥0, 0 <
   | none, some a, h =>
     by
     have : ∞ ≤ ↑a + ↑(1 : ℝ≥0) := h 1 zero_lt_one coe_lt_top
-    rw [← coe_add] at this  <;> exact (not_top_le_coe this).elim
+    rw [← coe_add] at this <;> exact (not_top_le_coe this).elim
   | some a, some b, h => by
     simp only [none_eq_top, some_eq_coe, coe_add.symm, coe_le_coe, coe_lt_top,
         true_imp_iff] at * <;>
@@ -1253,7 +1253,7 @@ theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r : ℝ≥0, 0 < r ∧ a + r < 
   rcases lt_iff_exists_real_btwn.1 hab with ⟨c, c_nonneg, ac, cb⟩
   let d : ℝ≥0 := ⟨c, c_nonneg⟩
   have ad : a < d := by
-    rw [of_real_eq_coe_nnreal c_nonneg] at ac 
+    rw [of_real_eq_coe_nnreal c_nonneg] at ac
     exact coe_lt_coe.1 ac
   refine' ⟨d - a, tsub_pos_iff_lt.2 ad, _⟩
   rw [some_eq_coe, ← coe_add]
@@ -1483,7 +1483,7 @@ theorem mul_max : a * max b c = max (a * b) (a * c) :=
 theorem hMul_left_strictMono (h0 : a ≠ 0) (hinf : a ≠ ∞) : StrictMono ((· * ·) a) :=
   by
   lift a to ℝ≥0 using hinf
-  rw [coe_ne_zero] at h0 
+  rw [coe_ne_zero] at h0
   intro x y h
   contrapose! h
   simpa only [← mul_assoc, ← coe_mul, inv_mul_cancel h0, coe_one, one_mul] using
@@ -1991,7 +1991,7 @@ theorem inv_top : ∞⁻¹ = 0 :=
 theorem coe_inv_le : (↑r⁻¹ : ℝ≥0∞) ≤ (↑r)⁻¹ :=
   le_sInf fun b (hb : 1 ≤ ↑r * b) =>
     coe_le_iff.2 <| by rintro b rfl; apply NNReal.inv_le_of_le_mul;
-      rwa [← coe_mul, ← coe_one, coe_le_coe] at hb 
+      rwa [← coe_mul, ← coe_one, coe_le_coe] at hb
 #align ennreal.coe_inv_le ENNReal.coe_inv_le
 -/
 
@@ -2179,7 +2179,7 @@ theorem inv_strictAnti : StrictAnti (Inv.inv : ℝ≥0∞ → ℝ≥0∞) :=
   intro a b h
   lift a to ℝ≥0 using h.ne_top
   induction b using WithTop.recTopCoe; · simp
-  rw [coe_lt_coe] at h 
+  rw [coe_lt_coe] at h
   rcases eq_or_ne a 0 with (rfl | ha); · simp [h]
   rw [← coe_inv h.ne_bot, ← coe_inv ha, coe_lt_coe]
   exact NNReal.inv_lt_inv ha h
@@ -2317,7 +2317,7 @@ protected theorem le_div_iff_mul_le (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ �
   rcases eq_or_ne b 0 with (rfl | hb)
   · have hc : c ≠ 0 := h0.neg_resolve_left rfl
     simp [div_zero hc]
-  · rw [← coe_ne_zero] at hb 
+  · rw [← coe_ne_zero] at hb
     rw [← ENNReal.mul_le_mul_right hb coe_ne_top, ENNReal.div_mul_cancel hb coe_ne_top]
 #align ennreal.le_div_iff_mul_le ENNReal.le_div_iff_mul_le
 -/
@@ -2569,7 +2569,7 @@ protected theorem one_half_lt_one : (2⁻¹ : ℝ≥0∞) < 1 :=
 protected theorem half_lt_self (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < a :=
   by
   lift a to ℝ≥0 using ht
-  rw [coe_ne_zero] at hz 
+  rw [coe_ne_zero] at hz
   rw [← coe_two, ← coe_div, coe_lt_coe]
   exacts [NNReal.half_lt_self hz, two_ne_zero' _]
 #align ennreal.half_lt_self ENNReal.half_lt_self

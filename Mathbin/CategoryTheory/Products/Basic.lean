@@ -75,12 +75,12 @@ theorem isIso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} :
     IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by
   constructor
   · rintro ⟨g, hfg, hgf⟩
-    simp at hfg hgf 
+    simp at hfg hgf
     rcases hfg with ⟨hfg₁, hfg₂⟩
     rcases hgf with ⟨hgf₁, hgf₂⟩
     exact ⟨⟨⟨g.1, hfg₁, hgf₁⟩⟩, ⟨⟨g.2, hfg₂, hgf₂⟩⟩⟩
   · rintro ⟨⟨g₁, hfg₁, hgf₁⟩, ⟨g₂, hfg₂, hgf₂⟩⟩
-    dsimp at hfg₁ hgf₁ hfg₂ hgf₂ 
+    dsimp at hfg₁ hgf₁ hfg₂ hgf₂
     refine' ⟨⟨(g₁, g₂), _, _⟩⟩ <;> · simp <;> constructor <;> assumption
 #align category_theory.is_iso_prod_iff CategoryTheory.isIso_prod_iff
 -/

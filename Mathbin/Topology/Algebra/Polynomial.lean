@@ -126,13 +126,13 @@ theorem tendsto_abv_eval₂_atTop {R S k α : Type _} [Semiring R] [Ring S] [Lin
   by
   revert hf; refine' degree_pos_induction_on p hd _ _ _ <;> clear hd p
   · rintro c - hc
-    rw [leading_coeff_mul_X, leading_coeff_C] at hc 
+    rw [leading_coeff_mul_X, leading_coeff_C] at hc
     simpa [abv_mul abv] using hz.const_mul_at_top ((abv_pos abv).2 hc)
   · intro p hpd ihp hf
-    rw [leading_coeff_mul_X] at hf 
+    rw [leading_coeff_mul_X] at hf
     simpa [abv_mul abv] using (ihp hf).atTop_mul_atTop hz
   · intro p a hd ihp hf
-    rw [add_comm, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf 
+    rw [add_comm, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
     refine' tendsto_at_top_of_add_const_right (abv (-f a)) _
     refine' tendsto_at_top_mono (fun _ => abv_add abv _ _) _
     simpa using ihp hf
@@ -187,7 +187,7 @@ theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1
   h1.natDegree_eq_zero_iff_eq_one.mp
     (by
       contrapose! hB
-      rw [← h1.nat_degree_map f, nat_degree_eq_card_roots' h2] at hB 
+      rw [← h1.nat_degree_map f, nat_degree_eq_card_roots' h2] at hB
       obtain ⟨z, hz⟩ := card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
       exact le_trans (norm_nonneg _) (h3 z hz))
 #align polynomial.eq_one_of_roots_le Polynomial.eq_one_of_roots_le
@@ -211,9 +211,9 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   ·
     rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2,
       Nat.choose_symm hi, mul_comm, nsmul_eq_mul]
-  simp_rw [Multiset.mem_map] at hr 
+  simp_rw [Multiset.mem_map] at hr
   obtain ⟨_, ⟨s, hs, rfl⟩, rfl⟩ := hr
-  rw [mem_powerset_len] at hs 
+  rw [mem_powerset_len] at hs
   lift B to ℝ≥0 using hB
   rw [← coe_nnnorm, ← NNReal.coe_pow, NNReal.coe_le_coe, ← nnnormHom_apply, ← MonoidHom.coe_coe,
     MonoidHom.map_multiset_prod]

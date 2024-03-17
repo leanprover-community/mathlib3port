@@ -166,8 +166,8 @@ theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
   by
   obtain ⟨i, j, hpij, hij⟩ : ∃ i j, p i = p j ∧ i ≠ j :=
     by
-    rw [← Finite.injective_iff_bijective, injective] at H 
-    push_neg at H 
+    rw [← Finite.injective_iff_bijective, injective] at H
+    push_neg at H
     exact H
   exact
     sum_involution (fun σ _ => σ * swap i j)
@@ -644,7 +644,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   have M_k : M k.cast_succ = M' k.cast_succ := (update_row_ne k_ne_succ).symm
   rw [hM, M_k, det_update_row_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
   · intro i hi
-    rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi 
+    rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi
     rw [Function.update_apply]
     split_ifs with hik; · rfl
     exact hc _ (fin.succ_lt_succ_iff.mpr (lt_of_le_of_ne hi (Ne.symm hik)))
@@ -718,16 +718,16 @@ theorem det_blockDiagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Ma
       prod_congr_left_apply]
   · intro σ σ' _ _ eq
     ext x hx k
-    simp only at eq 
+    simp only at eq
     have :
       ∀ k x,
         prod_congr_left (fun k => σ k (Finset.mem_univ _)) (k, x) =
           prod_congr_left (fun k => σ' k (Finset.mem_univ _)) (k, x) :=
       fun k x => by rw [Eq]
-    simp only [prod_congr_left_apply, Prod.mk.inj_iff] at this 
+    simp only [prod_congr_left_apply, Prod.mk.inj_iff] at this
     exact (this k x).1
   · intro σ hσ
-    rw [mem_preserving_snd] at hσ 
+    rw [mem_preserving_snd] at hσ
     have hσ' : ∀ x, (σ⁻¹ x).snd = x.snd := by intro x;
       conv_rhs => rw [← perm.apply_inv_self σ x, hσ]
     have mk_apply_eq : ∀ k x, ((σ (x, k)).fst, k) = σ (x, k) :=
@@ -753,7 +753,7 @@ theorem det_blockDiagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Ma
       · simp only [coe_fn_mk, prod_congr_left_apply]
       · simp only [prod_congr_left_apply, hσ]
   · intro σ _ hσ
-    rw [mem_preserving_snd] at hσ 
+    rw [mem_preserving_snd] at hσ
     obtain ⟨⟨k, x⟩, hkx⟩ := not_forall.mp hσ
     rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), MulZeroClass.mul_zero]
     rw [← @Prod.mk.eta _ _ (σ (k, x)), block_diagonal_apply_ne]
@@ -793,12 +793,12 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
     intro h
     have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x := by intro x;
       exact congr_fun (congr_arg to_fun h) x
-    simp only [Sum.map_inr, Sum.map_inl, perm.sum_congr_apply, Sum.forall] at h2 
+    simp only [Sum.map_inr, Sum.map_inl, perm.sum_congr_apply, Sum.forall] at h2
     ext
     · exact h2.left x
     · exact h2.right x
   · intro σ hσ
-    erw [Set.mem_toFinset, MonoidHom.mem_range] at hσ 
+    erw [Set.mem_toFinset, MonoidHom.mem_range] at hσ
     obtain ⟨σ₁₂, hσ₁₂⟩ := hσ
     use σ₁₂
     rw [← hσ₁₂]
@@ -807,7 +807,7 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
     have h1 : ¬∀ x, ∃ y, Sum.inl y = σ (Sum.inl x) :=
       by
       by_contra
-      rw [Set.mem_toFinset] at hσn 
+      rw [Set.mem_toFinset] at hσn
       apply absurd (mem_sum_congr_hom_range_of_perm_maps_to_inl _) hσn
       rintro x ⟨a, ha⟩
       rw [← ha]; exact h a

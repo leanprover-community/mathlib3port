@@ -108,7 +108,7 @@ theorem Nat.geomSum_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A → x
   by
   apply lt_of_le_of_lt (sum_le_sum_of_subset fun t => mem_range.2 ∘ h₁)
   have z := geom_sum_mul_add 1 k
-  rw [mul_one, one_add_one_eq_two] at z 
+  rw [mul_one, one_add_one_eq_two] at z
   rw [← z]
   apply Nat.lt_succ_self
 #align nat.sum_two_pow_lt Nat.geomSum_lt
@@ -135,7 +135,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrder α] [DecidableEq β] [Preorder β]
       first
       | rwa [← z _]
       | rwa [z _]
-      rwa [StrictMono.lt_iff_lt h₁] at hx 
+      rwa [StrictMono.lt_iff_lt h₁] at hx
   · simp only [h₁.injective, Function.Injective.eq_iff]
     exact fun x hx => ne_of_mem_of_not_mem hx ka
 #align colex.hom_lt_iff Colex.hom_lt_iff
@@ -177,26 +177,26 @@ theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B
   by_cases h₁ : A = B
   · tauto
   rcases exists_max_image (A \ B ∪ B \ A) id _ with ⟨k, hk, z⟩
-  · simp only [mem_union, mem_sdiff] at hk 
+  · simp only [mem_union, mem_sdiff] at hk
     cases hk
     · right
       right
       refine' ⟨k, fun t th => _, hk.2, hk.1⟩
       specialize z t
       by_contra h₂
-      simp only [mem_union, mem_sdiff, id.def] at z 
-      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm'] at h₂ 
+      simp only [mem_union, mem_sdiff, id.def] at z
+      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm'] at h₂
       apply not_le_of_lt th (z h₂)
     · left
       refine' ⟨k, fun t th => _, hk.2, hk.1⟩
       specialize z t
       by_contra h₃
-      simp only [mem_union, mem_sdiff, id.def] at z 
-      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm', or_comm'] at h₃ 
+      simp only [mem_union, mem_sdiff, id.def] at z
+      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm', or_comm'] at h₃
       apply not_le_of_lt th (z h₃)
   rw [nonempty_iff_ne_empty]
   intro a
-  simp only [union_eq_empty_iff, sdiff_eq_empty_iff_subset] at a 
+  simp only [union_eq_empty_iff, sdiff_eq_empty_iff_subset] at a
   apply h₁ (subset.antisymm a.1 a.2)
 #align colex.lt_trichotomy Colex.lt_trichotomy
 
@@ -261,7 +261,7 @@ theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Fin n)) :
 theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrder α] {A B : Finset α} (t : α)
     (h₁ : A.toColex < B.toColex) (h₂ : ∀ x ∈ B, x < t) : ∀ x ∈ A, x < t :=
   by
-  rw [Colex.lt_def] at h₁ 
+  rw [Colex.lt_def] at h₁
   rcases h₁ with ⟨k, z, _, _⟩
   intro x hx
   apply lt_of_not_ge
@@ -414,7 +414,7 @@ theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) :
     apply lt_of_le_of_ne (le_of_not_lt fun kx => _)
     · apply ne_of_mem_of_not_mem hx kA
     have := (z kx).1 hx
-    rw [mem_sdiff] at this hx 
+    rw [mem_sdiff] at this hx
     exact hx.2 this.1
   refine'
     ⟨fun h => (lt_trichotomy A B).resolve_right fun h₁ => h₁.elim _ (not_lt_of_gt h ∘ z _ _), z A B⟩

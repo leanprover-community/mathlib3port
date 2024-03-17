@@ -194,7 +194,7 @@ theorem integral_boundary_rect_of_hasFDerivAt_real_off_countable (f : ℂ → E)
       neg_sub]
   set R : Set (ℝ × ℝ) := [z.re, w.re] ×ˢ [w.im, z.im]
   set t : Set (ℝ × ℝ) := e ⁻¹' s
-  rw [uIcc_comm z.im] at Hc Hi ; rw [min_comm z.im, max_comm z.im] at Hd 
+  rw [uIcc_comm z.im] at Hc Hi; rw [min_comm z.im, max_comm z.im] at Hd
   have hR : e ⁻¹' ([z.re, w.re] ×ℂ [w.im, z.im]) = R := rfl
   have htc : ContinuousOn F R := Hc.comp e.continuous_on hR.ge
   have htd :
@@ -210,7 +210,7 @@ theorem integral_boundary_rect_of_hasFDerivAt_real_off_countable (f : ℂ → E)
   rw [←
     (volume_preserving_equiv_real_prod.symm _).integrableOn_comp_preimage
       (MeasurableEquiv.measurableEmbedding _)] at
-    Hi 
+    Hi
   simpa only [hF'] using Hi.neg
 #align complex.integral_boundary_rect_of_has_fderiv_at_real_off_countable Complex.integral_boundary_rect_of_hasFDerivAt_real_off_countable
 -/
@@ -337,7 +337,7 @@ theorem circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_c
   set A := closed_ball c R \ ball c r
   obtain ⟨a, rfl⟩ : ∃ a, Real.exp a = r; exact ⟨Real.log r, Real.exp_log h0⟩
   obtain ⟨b, rfl⟩ : ∃ b, Real.exp b = R; exact ⟨Real.log R, Real.exp_log (h0.trans_le hle)⟩
-  rw [Real.exp_le_exp] at hle 
+  rw [Real.exp_le_exp] at hle
   -- Unfold definition of `circle_integral` and cancel some terms.
   suffices
     ∫ θ in 0 ..2 * π, I • f (circleMap c (Real.exp b) θ) =
@@ -436,7 +436,7 @@ theorem circleIntegral_sub_center_inv_smul_of_differentiable_on_off_countable_of
       by
       refine' circleIntegral.norm_integral_le_of_norm_le_const hr0.le fun z hz => _
       specialize hzne z hz
-      rw [mem_sphere, dist_eq_norm] at hz 
+      rw [mem_sphere, dist_eq_norm] at hz
       rw [norm_smul, norm_inv, hz, ← dist_eq_norm]
       refine' mul_le_mul_of_nonneg_left (hδ _ ⟨_, hzne⟩).le (inv_nonneg.2 hr0.le)
       rwa [mem_closedBall_iff_norm, hz]
@@ -551,7 +551,7 @@ theorem two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
     refine' nonempty_diff.2 fun hsub => _
     have : (Ioo l u).Countable :=
       (hs.preimage ((add_right_injective w).comp of_real_injective)).mono hsub
-    rw [← Cardinal.le_aleph0_iff_set_countable, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this 
+    rw [← Cardinal.le_aleph0_iff_set_countable, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this
     exact this.not_lt Cardinal.aleph0_lt_continuum
   exact ⟨g x, (hlu_sub hx.1).1, (hlu_sub hx.1).2, hx.2⟩
 #align complex.two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable Complex.two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable

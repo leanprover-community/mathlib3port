@@ -709,7 +709,7 @@ theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σ i : Fin (n + 1), Sym α
     (by
       dsimp only [filter_ne, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
       rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
-      · intro b hb; rw [mem_filter, Sym.mem_coe, mem_replicate] at hb ; exact hb.2 hb.1.2.symm
+      · intro b hb; rw [mem_filter, Sym.mem_coe, mem_replicate] at hb; exact hb.2 hb.1.2.symm
       · exact fun b hb => (hb.ne_of_not_mem h).symm)
 #align sym.filter_ne_fill Sym.filter_ne_fill
 -/

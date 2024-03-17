@@ -52,7 +52,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   replace H :
     ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'
-    push_neg at H 
+    push_neg at H
     simpa [reformulation] using H (ε / 2 ^ k) (by simp [ε_pos]) x' (by simp [ε_pos.le, one_le_two])
   clear reformulation
   haveI : Nonempty X := ⟨x⟩
@@ -107,7 +107,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   have lim_top : tendsto (ϕ ∘ u) at_top at_top :=
     by
     let v n := (ϕ ∘ u) (n + 1)
-    suffices tendsto v at_top at_top by rwa [tendsto_add_at_top_iff_nat] at this 
+    suffices tendsto v at_top at_top by rwa [tendsto_add_at_top_iff_nat] at this
     have hv₀ : 0 < v 0 := by
       have : 0 ≤ ϕ (u 0) := nonneg x
       calc

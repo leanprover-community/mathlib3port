@@ -145,7 +145,7 @@ theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X])
   wlog hm : m ≤ m'
   · exact (this g' g m' m h_expand.symm hg' hg (le_of_not_le hm)).symm
   obtain ⟨s, rfl⟩ := exists_add_of_le hm
-  rw [pow_add, expand_mul, expand_inj (pow_pos (NeZero.pos q) m)] at h_expand 
+  rw [pow_add, expand_mul, expand_inj (pow_pos (NeZero.pos q) m)] at h_expand
   subst h_expand
   rcases is_unit_or_eq_zero_of_separable_expand q s (NeZero.pos q) hg with (h | rfl)
   · rw [nat_degree_expand, nat_degree_eq_zero_of_is_unit h, MulZeroClass.zero_mul]
@@ -160,7 +160,7 @@ theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X])
   by
   cases hF
   · rcases hg with ⟨g, m, hm⟩
-    rw [one_pow, expand_one] at hm 
+    rw [one_pow, expand_one] at hm
     rw [hf.eq_degree]
     rw [hm]
   · rcases hg with ⟨hg, m, hm⟩

@@ -51,7 +51,7 @@ theorem Real.uniformContinuous_add : UniformContinuous fun p : ℝ × ℝ => p.1
 #print Real.uniformContinuous_neg /-
 theorem Real.uniformContinuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
-    ⟨_, ε0, fun a b h => by rw [dist_comm] at h  <;> simpa [Real.dist_eq] using h⟩
+    ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
 #align real.uniform_continuous_neg Real.uniformContinuous_neg
 -/
 
@@ -121,7 +121,7 @@ theorem Real.uniformContinuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
 
 #print Real.tendsto_inv /-
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
-  rw [← abs_pos] at r0  <;>
+  rw [← abs_pos] at r0 <;>
     exact
       tendsto_of_uniformContinuous_subtype
         (Real.uniformContinuous_inv {x | |r| / 2 < |x|} (half_pos r0) fun x h => le_of_lt h)
@@ -223,7 +223,7 @@ theorem Real.isBounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBe
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     -- hr : s ⊆ closed_ball 0 r
-    rw [Real.closedBall_eq_Icc] at hr 
+    rw [Real.closedBall_eq_Icc] at hr
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
     fun h => isBounded_of_bddAbove_of_bddBelow h.2 h.1⟩
@@ -339,7 +339,7 @@ theorem AddSubgroup.dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in 
     (H' : ¬∃ a : ℝ, IsLeast {g : ℝ | g ∈ G ∧ 0 < g} a) : Dense (G : Set ℝ) :=
   by
   let G_pos := {g : ℝ | g ∈ G ∧ 0 < g}
-  push_neg at H' 
+  push_neg at H'
   intro x
   suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, |x - g| < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos

@@ -66,7 +66,7 @@ theorem hasInitial_of_weakly_initial_and_hasWideEqualizers [HasWideEqualizers.{v
       by
       rw [category.assoc, category.assoc]
       apply wide_equalizer.condition (id : endos → endos) (h ≫ e ≫ i)
-    rw [category.comp_id, cancel_mono_id i] at this 
+    rw [category.comp_id, cancel_mono_id i] at this
     haveI : is_split_epi e := is_split_epi.mk' ⟨i ≫ h, this⟩
     rw [← cancel_epi e]
     apply equalizer.condition

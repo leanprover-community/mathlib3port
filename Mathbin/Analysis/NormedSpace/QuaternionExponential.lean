@@ -51,7 +51,7 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
   replace hs := (hs.div_const ‖q‖).smul_const q
   obtain rfl | hq0 := eq_or_ne q 0
   · simp_rw [NormedSpace.expSeries_apply_zero, norm_zero, div_zero, zero_smul, add_zero]
-    simp_rw [norm_zero] at hc 
+    simp_rw [norm_zero] at hc
     convert hc
     ext (_ | n) : 1
     ·

@@ -352,7 +352,7 @@ noncomputable def CategoryTheory.Functor.IsCoverDense.sheafCoyonedaHom
     apply sheaf_eq_amalgamation
     apply H.is_cover
     intro Y' f' hf'
-    change unop X ⟶ ℱ.obj (op (unop _)) at x 
+    change unop X ⟶ ℱ.obj (op (unop _)) at x
     dsimp
     simp only [pushforward_family, functor.comp_map, coyoneda_obj_map, hom_over_app, category.assoc]
     congr 1
@@ -548,8 +548,8 @@ instance CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous
     where map_injective' := by
     intro ℱ ℱ' α β e
     ext1
-    apply_fun fun e => e.val at e 
-    dsimp at e 
+    apply_fun fun e => e.val at e
+    dsimp at e
     rw [← H.sheaf_hom_eq α.val, ← H.sheaf_hom_eq β.val, e]
 #align category_theory.cover_dense.sites.pullback.faithful CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous
 -/

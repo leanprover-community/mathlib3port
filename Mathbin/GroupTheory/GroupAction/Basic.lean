@@ -360,7 +360,7 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     rw [Set.mem_iUnion]
     exact ⟨a⁻¹, a • x, hy, inv_smul_smul a x⟩
   · intro hx
-    rw [Set.mem_iUnion] at hx 
+    rw [Set.mem_iUnion] at hx
     obtain ⟨a, u, hu₁, hu₂⟩ := hx
     rw [Set.mem_preimage, Set.mem_image_iff_bex]
     refine' ⟨a⁻¹ • x, _, by simp only [Quotient.eq'] <;> use a⁻¹⟩

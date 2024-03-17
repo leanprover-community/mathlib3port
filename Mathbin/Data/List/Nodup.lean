@@ -161,7 +161,7 @@ theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
   · specialize hl h.of_cons
     by_cases hx : tl = [x]
     · simpa [hx, and_comm, and_or_left] using h
-    · rw [← Ne.def, hl] at hx 
+    · rw [← Ne.def, hl] at hx
       rcases hx with (rfl | ⟨y, hy, hx⟩)
       · simp
       · have : tl ≠ [] := ne_nil_of_mem hy
@@ -285,7 +285,7 @@ theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : Nodup (map f l)) 
   by
   induction' l with hd tl ih
   · simp
-  · simp only [map, nodup_cons, mem_map, not_exists, not_and, ← Ne.def] at d 
+  · simp only [map, nodup_cons, mem_map, not_exists, not_and, ← Ne.def] at d
     rintro _ (rfl | h₁) _ (rfl | h₂) h₃
     · rfl
     · apply (d.1 _ h₂ h₃.symm).elim
@@ -499,7 +499,7 @@ theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α �
     l.map (Function.update f x y) = if x ∈ l then (l.map f).set (l.indexOfₓ x) y else l.map f :=
   by
   induction' l with hd tl ihl; · simp
-  rw [nodup_cons] at hl 
+  rw [nodup_cons] at hl
   simp only [mem_cons_iff, map, ihl hl.2]
   by_cases H : hd = x
   · subst hd
@@ -514,7 +514,7 @@ theorem Nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl :
   classical
   refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
   intro x hx
-  rw [nodup_iff_count_le_one] at hl 
+  rw [nodup_iff_count_le_one] at hl
   exact absurd (hl x) hx.not_le
 #align list.nodup.pairwise_of_forall_ne List.Nodup.pairwise_of_forall_ne
 -/
@@ -532,7 +532,7 @@ theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : {a | a ∈ l}.Pairwise
   by
   induction' l with a l ih
   · simp
-  rw [List.nodup_cons] at hl 
+  rw [List.nodup_cons] at hl
   have : ∀ b ∈ l, ¬a = b → r a b ↔ r a b := fun b hb =>
     imp_iff_right (ne_of_mem_of_not_mem hb hl.1).symm
   simp [Set.setOf_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm',

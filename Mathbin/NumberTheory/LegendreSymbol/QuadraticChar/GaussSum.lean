@@ -60,7 +60,7 @@ theorem FiniteField.isSquare_two_iff :
     simp only [h, Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (by decide : (-1 : ℤ) ≠ 1),
       imp_false, Classical.not_not]
   all_goals
-    rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h 
+    rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
     have h₁ := Nat.mod_lt (Fintype.card F) (by decide : 0 < 8)
     revert h₁ h
     generalize Fintype.card F % 8 = n
@@ -94,7 +94,7 @@ theorem FiniteField.isSquare_neg_two_iff :
     simp only [h, Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (by decide : (-1 : ℤ) ≠ 1),
       imp_false, Classical.not_not]
   all_goals
-    rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h 
+    rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
     have h₁ := Nat.mod_lt (Fintype.card F) (by decide : 0 < 8)
     revert h₁ h
     generalize Fintype.card F % 8 = n
@@ -123,7 +123,7 @@ theorem quadraticChar_card_card [DecidableEq F] (hF : ringChar F ≠ 2) {F' : Ty
     exact Ring.neg_one_ne_one_of_char_ne_two hF'
   have hχ₂ : χ.is_quadratic := is_quadratic.comp (quadraticChar_isQuadratic F) _
   have h := Char.card_pow_card hχ₁ hχ₂ h hF'
-  rw [← quadraticChar_eq_pow_of_char_ne_two' hF'] at h 
+  rw [← quadraticChar_eq_pow_of_char_ne_two' hF'] at h
   exact
     (is_quadratic.eq_of_eq_coe (quadraticChar_isQuadratic F') (quadraticChar_isQuadratic F) hF'
         h).symm
@@ -140,7 +140,7 @@ theorem quadraticChar_odd_prime [DecidableEq F] (hF : ringChar F ≠ 2) {p : ℕ
   have h :=
     quadraticChar_card_card hF (ne_of_eq_of_ne (ring_char_zmod_n p) hp₁)
       (ne_of_eq_of_ne (ring_char_zmod_n p) hp₂.symm)
-  rwa [card p] at h 
+  rwa [card p] at h
 #align quadratic_char_odd_prime quadraticChar_odd_prime
 -/
 

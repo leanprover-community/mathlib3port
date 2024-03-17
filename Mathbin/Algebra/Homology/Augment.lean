@@ -75,7 +75,7 @@ def augment (C : ChainComplex V ℕ) {X : V} (f : C.pt 0 ⟶ X) (w : C.d 1 0 ≫
     | i + 1, j + 1 => C.d i j
     | _, _ => 0
   shape' i j s := by
-    simp at s 
+    simp at s
     rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;> try simp
     · simpa using s
     · rw [C.shape]; simpa [← Ne.def, Nat.succ_ne_succ] using s
@@ -272,7 +272,7 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.pt 0) (w : f ≫ C.d
     | i + 1, j + 1 => C.d i j
     | _, _ => 0
   shape' i j s := by
-    simp at s 
+    simp at s
     rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> try simp
     · simpa using s
     · rw [C.shape]; simp only [ComplexShape.up_Rel]; contrapose! s; rw [← s]

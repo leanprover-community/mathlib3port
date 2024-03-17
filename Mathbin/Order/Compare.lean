@@ -157,12 +157,12 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder �
   by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomy a b with hab hab
-  · change compares Ordering.lt a b at hab 
+  · change compares Ordering.lt a b at hab
     rwa [ho.inj (h hab)]
   · cases' hab with hab hab
-    · change compares Ordering.eq a b at hab 
+    · change compares Ordering.eq a b at hab
       rwa [ho.inj (h hab)]
-    · change compares Ordering.gt a b at hab 
+    · change compares Ordering.gt a b at hab
       rwa [ho.inj (h hab)]
 #align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_impl
 -/

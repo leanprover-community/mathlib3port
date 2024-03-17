@@ -127,7 +127,7 @@ instance (X : Type u₁) [Nonempty X] : Injective X
       ext y
       change dite _ _ _ = _
       split_ifs
-      · rw [mono_iff_injective] at mono 
+      · rw [mono_iff_injective] at mono
         rw [mono (Classical.choose_spec h)]
       · exact False.elim (h ⟨y, rfl⟩)⟩
 

@@ -415,9 +415,9 @@ theorem convexOn_iff_forall_pos {s : Set E} {f : E → β} :
     and_congr_right'
       ⟨fun h x hx y hy a b ha hb hab => h hx hy ha.le hb.le hab, fun h x hx y hy a b ha hb hab => _⟩
   obtain rfl | ha' := ha.eq_or_lt
-  · rw [zero_add] at hab ; subst b; simp_rw [zero_smul, zero_add, one_smul]
+  · rw [zero_add] at hab; subst b; simp_rw [zero_smul, zero_add, one_smul]
   obtain rfl | hb' := hb.eq_or_lt
-  · rw [add_zero] at hab ; subst a; simp_rw [zero_smul, add_zero, one_smul]
+  · rw [add_zero] at hab; subst a; simp_rw [zero_smul, add_zero, one_smul]
   exact h hx hy ha' hb' hab
 #align convex_on_iff_forall_pos convexOn_iff_forall_pos
 -/
@@ -539,7 +539,7 @@ theorem LinearOrder.convexOn_of_lt (hs : Convex 𝕜 s)
   by
   refine' convexOn_iff_pairwise_pos.2 ⟨hs, fun x hx y hy hxy a b ha hb hab => _⟩
   wlog h : x < y
-  · rw [add_comm (a • x), add_comm (a • f x)]; rw [add_comm] at hab 
+  · rw [add_comm (a • x), add_comm (a • f x)]; rw [add_comm] at hab
     refine' this hs hf y hy x hx hxy.symm b a hb ha hab (hxy.lt_or_lt.resolve_left h)
   exact hf hx hy h ha hb hab
 #align linear_order.convex_on_of_lt LinearOrder.convexOn_of_lt
@@ -580,7 +580,7 @@ theorem LinearOrder.strictConvexOn_of_lt (hs : Convex 𝕜 s)
   by
   refine' ⟨hs, fun x hx y hy hxy a b ha hb hab => _⟩
   wlog h : x < y
-  · rw [add_comm (a • x), add_comm (a • f x)]; rw [add_comm] at hab 
+  · rw [add_comm (a • x), add_comm (a • f x)]; rw [add_comm] at hab
     refine' this hs hf y hy x hx hxy.symm b a hb ha hab (hxy.lt_or_lt.resolve_left h)
   exact hf hx hy h ha hb hab
 #align linear_order.strict_convex_on_of_lt LinearOrder.strictConvexOn_of_lt
@@ -1079,7 +1079,7 @@ theorem neg_convexOn_iff : ConvexOn 𝕜 s (-f) ↔ ConcaveOn 𝕜 s f :=
   constructor
   · rintro ⟨hconv, h⟩
     refine' ⟨hconv, fun x hx y hy a b ha hb hab => _⟩
-    simp [neg_apply, neg_le, add_comm] at h 
+    simp [neg_apply, neg_le, add_comm] at h
     exact h hx hy ha hb hab
   · rintro ⟨hconv, h⟩
     refine' ⟨hconv, fun x hx y hy a b ha hb hab => _⟩
@@ -1105,7 +1105,7 @@ theorem neg_strictConvexOn_iff : StrictConvexOn 𝕜 s (-f) ↔ StrictConcaveOn 
   constructor
   · rintro ⟨hconv, h⟩
     refine' ⟨hconv, fun x hx y hy hxy a b ha hb hab => _⟩
-    simp [neg_apply, neg_lt, add_comm] at h 
+    simp [neg_apply, neg_lt, add_comm] at h
     exact h hx hy hxy ha hb hab
   · rintro ⟨hconv, h⟩
     refine' ⟨hconv, fun x hx y hy hxy a b ha hb hab => _⟩

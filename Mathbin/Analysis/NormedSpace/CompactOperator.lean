@@ -303,7 +303,7 @@ theorem IsCompactOperator.comp_clm [AddCommMonoid M₂] [Module R₂ M₂] {f : 
     (hf : IsCompactOperator f) (g : M₁ →SL[σ₁₂] M₂) : IsCompactOperator (f ∘ g) :=
   by
   have := g.continuous.tendsto 0
-  rw [map_zero] at this 
+  rw [map_zero] at this
   rcases hf with ⟨K, hK, hKf⟩
   exact ⟨K, hK, this hKf⟩
 #align is_compact_operator.comp_clm IsCompactOperator.comp_clm
@@ -379,9 +379,9 @@ of an endomorphism `f : E →ₗ E` to an endomorphism `f' : ↥V →ₗ ↥V`. 
 `f' : ↥U →ₛₗ ↥V` of a compact operator `f : E →ₛₗ F` is compact, apply
 `is_compact_operator.cod_restrict` to `f ∘ U.subtypeL`, which is compact by
 `is_compact_operator.comp_clm`. -/
-theorem IsCompactOperator.restrict' [SeparatedSpace M₂] {f : M₂ →ₗ[R₂] M₂}
-    (hf : IsCompactOperator f) {V : Submodule R₂ M₂} (hV : ∀ v ∈ V, f v ∈ V)
-    [hcomplete : CompleteSpace V] : IsCompactOperator (f.restrict hV) :=
+theorem IsCompactOperator.restrict' [T0Space M₂] {f : M₂ →ₗ[R₂] M₂} (hf : IsCompactOperator f)
+    {V : Submodule R₂ M₂} (hV : ∀ v ∈ V, f v ∈ V) [hcomplete : CompleteSpace V] :
+    IsCompactOperator (f.restrict hV) :=
   hf.restrict hV (completeSpace_coe_iff_isComplete.mp hcomplete).IsClosed
 #align is_compact_operator.restrict' IsCompactOperator.restrict'
 -/
@@ -405,7 +405,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   -- Since `f` is linear, we only need to show that it is continuous at zero.
   -- Let `U` be a neighborhood of `0` in `M₂`.
   refine' continuous_of_continuousAt_zero f fun U hU => _
-  rw [map_zero] at hU 
+  rw [map_zero] at hU
   -- The compactness of `f` gives us a compact set `K : set M₂` such that `f ⁻¹' K` is a
   -- neighborhood of `0` in `M₁`.
   rcases hf with ⟨K, hK, hKf⟩
@@ -478,7 +478,7 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
   by
   refine' isClosed_of_closure_subset _
   rintro u hu
-  rw [mem_closure_iff_nhds_zero] at hu 
+  rw [mem_closure_iff_nhds_zero] at hu
   suffices TotallyBounded (u '' Metric.closedBall 0 1)
     by
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)

@@ -482,7 +482,7 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     · simp
     infer_instance
   have := h₁.add h₂
-  rw [Asymptotics.isLittleO_const_iff one_ne] at this 
+  rw [Asymptotics.isLittleO_const_iff one_ne] at this
   change tendsto _ _ _
   convert this.add_const (f x)
   · ext e

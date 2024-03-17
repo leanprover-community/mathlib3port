@@ -122,7 +122,7 @@ instance [∀ i, Preorder (α i)] : Preorder (Σ i, α i) :=
       · rintro ⟨i, a, b, hab⟩
         rwa [mk_le_mk_iff, mk_le_mk_iff, ← lt_iff_le_not_le]
       · rintro ⟨⟨i, a, b, hab⟩, h⟩
-        rw [mk_le_mk_iff] at h 
+        rw [mk_le_mk_iff] at h
         exact mk_lt_mk_iff.2 (hab.lt_of_not_le h) }
 
 instance [∀ i, PartialOrder (α i)] : PartialOrder (Σ i, α i) :=

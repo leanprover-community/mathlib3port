@@ -108,13 +108,13 @@ theorem coeff_mirror (n : ℕ) :
     · rw [rev_at_le h1, coeff_eq_zero_of_lt_nat_trailing_degree]
       exact (tsub_lt_iff_left h1).mpr (Nat.add_lt_add_right h2 _)
     · rw [← rev_at_fun_eq, rev_at_fun, if_neg h1, coeff_eq_zero_of_nat_degree_lt h2]
-  rw [not_lt] at h2 
+  rw [not_lt] at h2
   rw [rev_at_le (h2.trans (Nat.le_add_right _ _))]
   by_cases h3 : p.nat_trailing_degree ≤ n
   ·
     rw [← tsub_add_eq_add_tsub h2, ← tsub_tsub_assoc h2 h3, mirror, coeff_mul_X_pow', if_pos h3,
       coeff_reverse, rev_at_le (tsub_le_self.trans h2)]
-  rw [not_le] at h3 
+  rw [not_le] at h3
   rw [coeff_eq_zero_of_nat_degree_lt (lt_tsub_iff_right.mpr (Nat.add_lt_add_left h3 _))]
   exact coeff_eq_zero_of_lt_nat_trailing_degree (by rwa [mirror_nat_trailing_degree])
 #align polynomial.coeff_mirror Polynomial.coeff_mirror

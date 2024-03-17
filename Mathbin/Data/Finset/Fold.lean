@@ -208,7 +208,7 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
   rw [Finset.fold_insert ha, hr, IH, ← and_assoc', and_comm' (r c (f a)), and_assoc']
   apply and_congr Iff.rfl
   constructor
-  · rintro ⟨h₁, h₂⟩; intro b hb; rw [Finset.mem_insert] at hb 
+  · rintro ⟨h₁, h₂⟩; intro b hb; rw [Finset.mem_insert] at hb
     rcases hb with (rfl | hb) <;> solve_by_elim
   · intro h; constructor
     · exact h a (Finset.mem_insert_self _ _)
@@ -231,8 +231,8 @@ theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y
     · use a; simp [h₁]
     · refine' ⟨x, by simp [hx], h₂⟩
   · rintro ⟨x, hx, h⟩
-    rw [mem_insert] at hx ; cases hx
-    · left; rwa [hx] at h 
+    rw [mem_insert] at hx; cases hx
+    · left; rwa [hx] at h
     · right; exact ⟨x, hx, h⟩
 #align finset.fold_op_rel_iff_or Finset.fold_op_rel_iff_or
 -/

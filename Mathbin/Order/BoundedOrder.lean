@@ -94,7 +94,7 @@ noncomputable def topOrderOrNoTopOrder (α : Type _) [LE α] : PSum (OrderTop α
   by
   by_cases H : ∀ a : α, ∃ b, ¬b ≤ a
   · exact PSum.inr ⟨H⟩
-  · push_neg at H 
+  · push_neg at H
     exact PSum.inl ⟨_, Classical.choose_spec H⟩
 #align top_order_or_no_top_order topOrderOrNoTopOrder
 -/
@@ -314,7 +314,7 @@ noncomputable def botOrderOrNoBotOrder (α : Type _) [LE α] : PSum (OrderBot α
   by
   by_cases H : ∀ a : α, ∃ b, ¬a ≤ b
   · exact PSum.inr ⟨H⟩
-  · push_neg at H 
+  · push_neg at H
     exact PSum.inl ⟨_, Classical.choose_spec H⟩
 #align bot_order_or_no_bot_order botOrderOrNoBotOrder
 -/

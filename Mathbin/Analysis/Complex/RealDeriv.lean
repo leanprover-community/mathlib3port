@@ -205,7 +205,7 @@ theorem conformalAt_iff_differentiableAt_or_differentiableAt_comp_conj {f : ℂ 
   have h_diff := h.imp_symm fderiv_zero_of_not_differentiableAt
   apply or_congr
   · rw [differentiableAt_iff_restrictScalars ℝ h_diff]
-  rw [← conj_conj z] at h_diff 
+  rw [← conj_conj z] at h_diff
   rw [differentiableAt_iff_restrictScalars ℝ (h_diff.comp _ conj_cle.differentiable_at)]
   refine' exists_congr fun g => rfl.congr _
   have : fderiv ℝ conj (conj z) = _ := conj_cle.fderiv

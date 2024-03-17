@@ -266,13 +266,13 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
   rintro x ⟨hx₁, hx₂⟩
   rcases mem_Union₂.1 hx₁ with ⟨a, has, ha⟩; clear hx₁
   rcases mem_Union₂.1 hx₂ with ⟨b, hbt, hb⟩; clear hx₂
-  rw [mem_ord_connected_component, subset_inter_iff] at ha hb 
+  rw [mem_ord_connected_component, subset_inter_iff] at ha hb
   wlog hab : a ≤ b
   · exact this b hbt a has ha hb (le_of_not_le hab)
   cases' ha with ha ha'; cases' hb with hb hb'
   have hsub : [a, b] ⊆ (ord_separating_set s t).ordConnectedSectionᶜ :=
     by
-    rw [ord_separating_set_comm, uIcc_comm] at hb' 
+    rw [ord_separating_set_comm, uIcc_comm] at hb'
     calc
       [a, b] ⊆ [a, x] ∪ [x, b] := uIcc_subset_uIcc_union_uIcc
       _ ⊆ (ord_separating_set s t).ordConnectedSectionᶜ := union_subset ha' hb'

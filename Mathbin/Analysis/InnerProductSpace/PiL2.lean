@@ -498,7 +498,7 @@ protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E)
     ∑ i, ⟪x, b i⟫ * ⟪b i, y⟫ = ⟪x, y⟫ :=
   by
   have := congr_arg (innerSL 𝕜 x) (b.sum_repr y)
-  rw [map_sum] at this 
+  rw [map_sum] at this
   convert this
   ext i
   rw [SMulHomClass.map_smul, b.repr_apply_apply, mul_comm]
@@ -654,7 +654,7 @@ protected def mkOfOrthogonalEqBot (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (
       haveI : FiniteDimensional 𝕜 (span 𝕜 (range v)) :=
         FiniteDimensional.span_of_finite 𝕜 (finite_range v)
       haveI : CompleteSpace (span 𝕜 (range v)) := FiniteDimensional.complete 𝕜 _
-      rwa [orthogonal_eq_bot_iff] at hsp )
+      rwa [orthogonal_eq_bot_iff] at hsp)
 #align orthonormal_basis.mk_of_orthogonal_eq_bot OrthonormalBasis.mkOfOrthogonalEqBot
 -/
 
@@ -811,7 +811,7 @@ theorem OrthonormalBasis.det_to_matrix_orthonormalBasis : ‖a.toBasis.det b‖ 
   have : (norm_sq (a.to_basis.det b) : 𝕜) = 1 := by
     simpa [IsROrC.mul_conj] using
       (Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)).2
-  norm_cast at this 
+  norm_cast at this
   rwa [← sqrt_norm_sq_eq_norm, sqrt_eq_one]
 #align orthonormal_basis.det_to_matrix_orthonormal_basis OrthonormalBasis.det_to_matrix_orthonormalBasis
 -/
@@ -886,7 +886,7 @@ theorem Orthonormal.exists_orthonormalBasis_extension (hv : Orthonormal 𝕜 (co
     ∃ (u : Finset E) (b : OrthonormalBasis u 𝕜 E), v ⊆ u ∧ ⇑b = coe :=
   by
   obtain ⟨u₀, hu₀s, hu₀, hu₀_max⟩ := exists_maximal_orthonormal hv
-  rw [maximal_orthonormal_iff_orthogonalComplement_eq_bot hu₀] at hu₀_max 
+  rw [maximal_orthonormal_iff_orthogonalComplement_eq_bot hu₀] at hu₀_max
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
   let u : Finset E := hu₀_finite.to_finset
   let fu : ↥u ≃ ↥u₀ := Equiv.cast (congr_arg coeSort hu₀_finite.coe_to_finset)
@@ -953,7 +953,7 @@ theorem orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
   have : b default = 1 ∨ b default = -1 :=
     by
     have : ‖b default‖ = 1 := b.orthonormal.1 _
-    rwa [Real.norm_eq_abs, abs_eq (zero_le_one : (0 : ℝ) ≤ 1)] at this 
+    rwa [Real.norm_eq_abs, abs_eq (zero_le_one : (0 : ℝ) ≤ 1)] at this
   rw [eq_const_of_unique b]
   refine' this.imp _ _ <;> simp
 #align orthonormal_basis_one_dim orthonormalBasis_one_dim

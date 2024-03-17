@@ -100,7 +100,7 @@ theorem pdf_undef {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {
 theorem hasPDF_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E}
     (h : pdf X ℙ μ ≠ 0) : HasPDF X ℙ μ := by
   by_contra hpdf
-  rw [pdf, dif_neg hpdf] at h 
+  rw [pdf, dif_neg hpdf] at h
   exact hpdf (False.ndrec (has_pdf X ℙ μ) (h rfl))
 #align measure_theory.has_pdf_of_pdf_ne_zero MeasureTheory.hasPDF_of_pdf_ne_zero
 -/
@@ -241,7 +241,7 @@ theorem integral_pdf_smul [IsFiniteMeasure ℙ] {X : Ω → E} [HasPDF X ℙ μ]
       rw [lintegral_congr_ae this]
       exact hpdf.2
   · rw [integral_undef hpdf, integral_undef]
-    rwa [← integrable_iff_integrable_mul_pdf hf] at hpdf 
+    rwa [← integrable_iff_integrable_mul_pdf hf] at hpdf
     all_goals infer_instance
 #align measure_theory.pdf.integral_fun_mul_eq_integral MeasureTheory.pdf.integral_pdf_smul
 -/
@@ -311,7 +311,7 @@ theorem quasiMeasurePreserving_hasPDF {X : Ω → E} [HasPDF X ℙ μ] {g : E �
   refine' absolutely_continuous.mk fun s hsm hs => _
   rw [map_apply hg.measurable hsm, with_density_apply _ (hg.measurable hsm)]
   have := hg.absolutely_continuous hs
-  rw [map_apply hg.measurable hsm] at this 
+  rw [map_apply hg.measurable hsm] at this
   exact set_lintegral_measure_zero _ _ this
 #align measure_theory.pdf.quasi_measure_preserving_has_pdf MeasureTheory.pdf.quasiMeasurePreserving_hasPDF
 -/
@@ -403,7 +403,7 @@ theorem hasPDF {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : 
   hasPDF_of_pdf_ne_zero
     (by
       intro hpdf
-      rw [is_uniform, hpdf] at hu 
+      rw [is_uniform, hpdf] at hu
       suffices μ (s ∩ Function.support ((μ s)⁻¹ • 1)) = 0
         by
         have heq : Function.support ((μ s)⁻¹ • (1 : E → ℝ≥0∞)) = Set.univ :=
@@ -411,7 +411,7 @@ theorem hasPDF {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : 
           ext x
           rw [Function.mem_support]
           simp [hnt]
-        rw [HEq, Set.inter_univ] at this 
+        rw [HEq, Set.inter_univ] at this
         exact hns this
       exact Set.indicator_ae_eq_zero.1 hu.symm)
 #align measure_theory.pdf.is_uniform.has_pdf MeasureTheory.pdf.IsUniform.hasPDF

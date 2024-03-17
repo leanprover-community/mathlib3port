@@ -60,7 +60,7 @@ theorem euler_criterion_units (x : (ZMod p)ˣ) : (∃ y : (ZMod p)ˣ, y ^ 2 = x)
       rw [isSquare_iff_exists_sq x]
       simp_rw [eq_comm]
     rw [hs]
-    rwa [card p] at h₀ 
+    rwa [card p] at h₀
 #align zmod.euler_criterion_units ZMod.euler_criterion_units
 -/
 
@@ -268,10 +268,10 @@ of the equation `x^2 - a*y^2 = 0` with `y ≠ 0`. -/
 theorem eq_one_of_sq_sub_mul_sq_eq_zero {p : ℕ} [Fact p.Prime] {a : ℤ} (ha : (a : ZMod p) ≠ 0)
     {x y : ZMod p} (hy : y ≠ 0) (hxy : x ^ 2 - a * y ^ 2 = 0) : legendreSym p a = 1 :=
   by
-  apply_fun (· * y⁻¹ ^ 2) at hxy 
-  simp only [MulZeroClass.zero_mul] at hxy 
+  apply_fun (· * y⁻¹ ^ 2) at hxy
+  simp only [MulZeroClass.zero_mul] at hxy
   rw [(by ring : (x ^ 2 - ↑a * y ^ 2) * y⁻¹ ^ 2 = (x * y⁻¹) ^ 2 - a * (y * y⁻¹) ^ 2),
-    mul_inv_cancel hy, one_pow, mul_one, sub_eq_zero, pow_two] at hxy 
+    mul_inv_cancel hy, one_pow, mul_one, sub_eq_zero, pow_two] at hxy
   exact (eq_one_iff p ha).mpr ⟨x * y⁻¹, hxy.symm⟩
 #align legendre_sym.eq_one_of_sq_sub_mul_sq_eq_zero legendreSym.eq_one_of_sq_sub_mul_sq_eq_zero
 -/
@@ -284,7 +284,7 @@ theorem eq_one_of_sq_sub_mul_sq_eq_zero' {p : ℕ} [Fact p.Prime] {a : ℤ} (ha 
   haveI hy : y ≠ 0 := by
     rintro rfl
     rw [zero_pow 2 (by norm_num), MulZeroClass.mul_zero, sub_zero,
-      pow_eq_zero_iff (by norm_num : 0 < 2)] at hxy 
+      pow_eq_zero_iff (by norm_num : 0 < 2)] at hxy
     exacts [hx hxy, inferInstance]
   -- why is the instance not inferred automatically?
     eq_one_of_sq_sub_mul_sq_eq_zero
@@ -300,13 +300,13 @@ theorem eq_zero_mod_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legend
   by
   have ha : (a : ZMod p) ≠ 0 := by
     intro hf
-    rw [(eq_zero_iff p a).mpr hf] at h 
+    rw [(eq_zero_iff p a).mpr hf] at h
     exact Int.zero_ne_neg_of_ne zero_ne_one h
   by_contra hf
   cases' not_and_distrib.mp hf with hx hy
-  · rw [eq_one_of_sq_sub_mul_sq_eq_zero' ha hx hxy, eq_neg_self_iff] at h 
+  · rw [eq_one_of_sq_sub_mul_sq_eq_zero' ha hx hxy, eq_neg_self_iff] at h
     exact one_ne_zero h
-  · rw [eq_one_of_sq_sub_mul_sq_eq_zero ha hy hxy, eq_neg_self_iff] at h 
+  · rw [eq_one_of_sq_sub_mul_sq_eq_zero ha hy hxy, eq_neg_self_iff] at h
     exact one_ne_zero h
 #align legendre_sym.eq_zero_mod_of_eq_neg_one legendreSym.eq_zero_mod_of_eq_neg_one
 -/
@@ -317,7 +317,7 @@ theorem prime_dvd_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legendre
     (hxy : ↑p ∣ x ^ 2 - a * y ^ 2) : ↑p ∣ x ∧ ↑p ∣ y :=
   by
   simp_rw [← ZMod.int_cast_zmod_eq_zero_iff_dvd] at hxy ⊢
-  push_cast at hxy 
+  push_cast at hxy
   exact eq_zero_mod_of_eq_neg_one h hxy
 #align legendre_sym.prime_dvd_of_eq_neg_one legendreSym.prime_dvd_of_eq_neg_one
 -/
@@ -368,8 +368,8 @@ theorem mod_four_ne_three_of_sq_eq_neg_sq' {x y : ZMod p} (hy : y ≠ 0) (hxy : 
     p % 4 ≠ 3 :=
   @mod_four_ne_three_of_sq_eq_neg_one p _ (x / y)
     (by
-      apply_fun fun z => z / y ^ 2 at hxy 
-      rwa [neg_div, ← div_pow, ← div_pow, div_self hy, one_pow] at hxy )
+      apply_fun fun z => z / y ^ 2 at hxy
+      rwa [neg_div, ← div_pow, ← div_pow, div_self hy, one_pow] at hxy)
 #align zmod.mod_four_ne_three_of_sq_eq_neg_sq' ZMod.mod_four_ne_three_of_sq_eq_neg_sq'
 -/
 

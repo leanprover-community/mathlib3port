@@ -172,7 +172,7 @@ theorem hasSum_of_disjoint_iUnion [Countable β] {f : β → Set α} (hf₁ : �
     MeasurableSet.iUnion fun b => MeasurableSet.iUnion fun _ => hf₁ b
   have hg₂ : Pairwise (Disjoint on g) := Encodable.iUnion_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
-  rw [hg, Encodable.iUnion_decode₂] at this 
+  rw [hg, Encodable.iUnion_decode₂] at this
   have hg₃ : (fun i : β => v (f i)) = fun i => v (g (Encodable.encode i)) :=
     by
     ext; rw [hg]; simp only
@@ -181,7 +181,7 @@ theorem hasSum_of_disjoint_iUnion [Countable β] {f : β → Set α} (hf₁ : �
     · intro hy
       refine' ⟨x, (Encodable.decode₂_is_partial_inv _ _).2 rfl, hy⟩
     · rintro ⟨b, hb₁, hb₂⟩
-      rw [Encodable.decode₂_is_partial_inv _ _] at hb₁ 
+      rw [Encodable.decode₂_is_partial_inv _ _] at hb₁
       rwa [← Encodable.encode_injective hb₁]
   rw [Summable.hasSum_iff, this, ← tsum_iUnion_decode₂]
   · exact v.empty
@@ -275,7 +275,7 @@ theorem of_nonneg_disjoint_union_eq_zero {s : SignedMeasure α} {A B : Set α} (
     (hA₁ : MeasurableSet A) (hB₁ : MeasurableSet B) (hA₂ : 0 ≤ s A) (hB₂ : 0 ≤ s B)
     (hAB : s (A ∪ B) = 0) : s A = 0 :=
   by
-  rw [of_union h hA₁ hB₁] at hAB 
+  rw [of_union h hA₁ hB₁] at hAB
   linarith
   infer_instance
 #align measure_theory.vector_measure.of_nonneg_disjoint_union_eq_zero MeasureTheory.VectorMeasure.of_nonneg_disjoint_union_eq_zero
@@ -286,7 +286,7 @@ theorem of_nonpos_disjoint_union_eq_zero {s : SignedMeasure α} {A B : Set α} (
     (hA₁ : MeasurableSet A) (hB₁ : MeasurableSet B) (hA₂ : s A ≤ 0) (hB₂ : s B ≤ 0)
     (hAB : s (A ∪ B) = 0) : s A = 0 :=
   by
-  rw [of_union h hA₁ hB₁] at hAB 
+  rw [of_union h hA₁ hB₁] at hAB
   linarith
   infer_instance
 #align measure_theory.vector_measure.of_nonpos_disjoint_union_eq_zero MeasureTheory.VectorMeasure.of_nonpos_disjoint_union_eq_zero
@@ -537,7 +537,7 @@ theorem toSignedMeasure_eq_toSignedMeasure_iff {μ ν : Measure α} [IsFiniteMea
   · ext1 i hi
     have : μ.to_signed_measure i = ν.to_signed_measure i := by rw [h]
     rwa [to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi,
-        ENNReal.toReal_eq_toReal] at this  <;>
+        ENNReal.toReal_eq_toReal] at this <;>
       · exact measure_ne_top _ _
   · congr; assumption
 #align measure_theory.measure.to_signed_measure_eq_to_signed_measure_iff MeasureTheory.Measure.toSignedMeasure_eq_toSignedMeasure_iff
@@ -1082,7 +1082,7 @@ theorem le_restrict_univ_iff_le : v ≤[univ] w ↔ v ≤ w :=
   · intro h s hs
     have := h s hs
     rwa [restrict_apply _ MeasurableSet.univ hs, inter_univ, restrict_apply _ MeasurableSet.univ hs,
-      inter_univ] at this 
+      inter_univ] at this
   · intro h s hs
     rw [restrict_apply _ MeasurableSet.univ hs, inter_univ, restrict_apply _ MeasurableSet.univ hs,
       inter_univ]
@@ -1254,8 +1254,8 @@ theorem exists_pos_measure_of_not_restrict_le_zero (hi : ¬v ≤[i] 0) :
     ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ 0 < v j :=
   by
   have hi₁ : MeasurableSet i := measurable_of_not_restrict_le_zero _ hi
-  rw [restrict_le_restrict_iff _ _ hi₁] at hi 
-  push_neg at hi 
+  rw [restrict_le_restrict_iff _ _ hi₁] at hi
+  push_neg at hi
   obtain ⟨j, hj₁, hj₂, hj⟩ := hi
   exact ⟨j, hj₁, hj₂, hj⟩
 #align measure_theory.vector_measure.exists_pos_measure_of_not_restrict_le_zero MeasureTheory.VectorMeasure.exists_pos_measure_of_not_restrict_le_zero
@@ -1347,7 +1347,7 @@ theorem neg_right {N : Type _} [AddCommGroup N] [TopologicalSpace N] [Topologica
     {v : VectorMeasure α M} {w : VectorMeasure α N} (h : v ≪ᵥ w) : v ≪ᵥ -w :=
   by
   intro s hs
-  rw [neg_apply, neg_eq_zero] at hs 
+  rw [neg_apply, neg_eq_zero] at hs
   exact h hs
 #align measure_theory.vector_measure.absolutely_continuous.neg_right MeasureTheory.VectorMeasure.AbsolutelyContinuous.neg_right
 -/
@@ -1393,7 +1393,7 @@ theorem ennrealToMeasure {μ : VectorMeasure α ℝ≥0∞} :
     rw [← hs, ennreal_to_measure_apply hmeas]
   · intro s hs
     by_cases hmeas : MeasurableSet s
-    · rw [ennreal_to_measure_apply hmeas] at hs 
+    · rw [ennreal_to_measure_apply hmeas] at hs
       exact h hs
     · exact not_measurable v hmeas
 #align measure_theory.vector_measure.absolutely_continuous.ennreal_to_measure MeasureTheory.VectorMeasure.AbsolutelyContinuous.ennrealToMeasure
@@ -1463,7 +1463,7 @@ theorem add_left [T2Space N] [ContinuousAdd M] (h₁ : v₁ ⟂ᵥ w) (h₂ : v�
   obtain ⟨v, hmv, hv₁, hv₂⟩ := h₂
   refine' mk (u ∩ v) (hmu.inter hmv) (fun t ht hmt => _) fun t ht hmt => _
   · rw [add_apply, hu₁ _ (subset_inter_iff.1 ht).1, hv₁ _ (subset_inter_iff.1 ht).2, zero_add]
-  · rw [compl_inter] at ht 
+  · rw [compl_inter] at ht
     rw [(_ : t = uᶜ ∩ t ∪ vᶜ \ uᶜ ∩ t),
       of_union _ (hmu.compl.inter hmt) ((hmv.compl.diff hmu.compl).inter hmt), hu₂, hv₂, add_zero]
     · exact subset.trans (inter_subset_left _ _) (diff_subset _ _)

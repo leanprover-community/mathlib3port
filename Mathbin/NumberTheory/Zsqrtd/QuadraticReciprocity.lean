@@ -41,14 +41,14 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
         (mt irreducible_iff_prime.2 fun ⟨hu, h⟩ =>
           by
           have := h ⟨1, 1⟩ ⟨1, -1⟩ (hp2.symm ▸ rfl)
-          rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this 
+          rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this
           exact absurd this (by decide)))
     fun hp1 =>
     by_contradiction fun hp3 : p % 4 ≠ 3 =>
       by
       have hp41 : p % 4 = 1 :=
         by
-        rw [← Nat.mod_mul_left_mod p 2 2, show 2 * 2 = 4 from rfl] at hp1 
+        rw [← Nat.mod_mul_left_mod p 2 2, show 2 * 2 = 4 from rfl] at hp1
         have := Nat.mod_lt p (show 0 < 4 by decide)
         revert this hp3 hp1
         generalize p % 4 = m; decide!

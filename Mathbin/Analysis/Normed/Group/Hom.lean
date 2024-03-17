@@ -515,7 +515,7 @@ theorem norm_id_of_nontrivial_seminorm (h : ∃ x : V, ‖x‖ ≠ 0) : ‖id V�
   le_antisymm (norm_id_le V) <| by
     let ⟨x, hx⟩ := h
     have := (id V).ratio_le_opNorm x
-    rwa [id_apply, div_self hx] at this 
+    rwa [id_apply, div_self hx] at this
 #align normed_add_group_hom.norm_id_of_nontrivial_seminorm NormedAddGroupHom.norm_id_of_nontrivial_seminorm
 -/
 
@@ -609,7 +609,7 @@ instance : SMul R (NormedAddGroupHom V₁ V₂)
         let ⟨b, hb⟩ := f.bound'
         ⟨dist r 0 * b, fun x => by
           have := dist_smul_pair r (f x) (f 0)
-          rw [map_zero, smul_zero, dist_zero_right, dist_zero_right] at this 
+          rw [map_zero, smul_zero, dist_zero_right, dist_zero_right] at this
           rw [mul_assoc]
           refine' this.trans _
           refine' mul_le_mul_of_nonneg_left _ dist_nonneg

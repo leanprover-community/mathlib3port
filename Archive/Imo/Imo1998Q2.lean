@@ -157,7 +157,7 @@ theorem a_card_upper_bound {k : ℕ}
   rw [← Finset.offDiag_card]
   apply Finset.card_le_mul_card_image_of_maps_to (A_maps_to_off_diag_judge_pair r)
   intro p hp
-  have hp' : p.distinct := by simp [Finset.mem_offDiag] at hp ; exact hp
+  have hp' : p.distinct := by simp [Finset.mem_offDiag] at hp; exact hp
   rw [← A_fibre_over_judge_pair_card r hp']; apply hk; exact hp'
 #align imo1998_q2.A_card_upper_bound Imo1998Q2.a_card_upper_bound
 
@@ -207,7 +207,7 @@ theorem distinct_judge_pairs_card_lower_bound {z : ℕ} (hJ : Fintype.card J = 2
     · suffices p.judge₁ = p.judge₂ by simp [this]; finish
   have hst' : (s \ t).card = 2 * z + 1 := by rw [hst, Finset.diag_card, ← hJ]; rfl
   rw [Finset.filter_and, ← Finset.sdiff_sdiff_self_left s t, Finset.card_sdiff]
-  · rw [hst']; rw [add_assoc] at hs ; apply le_tsub_of_add_le_right hs
+  · rw [hst']; rw [add_assoc] at hs; apply le_tsub_of_add_le_right hs
   · apply Finset.sdiff_subset
 #align imo1998_q2.distinct_judge_pairs_card_lower_bound Imo1998Q2.distinct_judge_pairs_card_lower_bound
 
@@ -238,14 +238,14 @@ theorem imo1998_q2 [Fintype J] [Fintype C] (a b k : ℕ) (hC : Fintype.card C = 
     (b - 1 : ℚ) / (2 * b) ≤ k / a :=
   by
   rw [clear_denominators ha hb.pos]
-  obtain ⟨z, hz⟩ := hb; rw [hz] at hJ ; rw [hz]
+  obtain ⟨z, hz⟩ := hb; rw [hz] at hJ; rw [hz]
   have h := le_trans (A_card_lower_bound r hJ) (A_card_upper_bound r hk)
-  rw [hC, hJ] at h 
+  rw [hC, hJ] at h
   -- We are now essentially done; we just need to bash `h` into exactly the right shape.
   have hl : k * ((2 * z + 1) * (2 * z + 1) - (2 * z + 1)) = k * (2 * (2 * z + 1)) * z := by
     simp only [add_mul, two_mul, mul_comm, mul_assoc]; finish
   have hr : 2 * z * z * a = 2 * z * a * z := by ring
-  rw [hl, hr] at h 
+  rw [hl, hr] at h
   cases z
   · simp
   · exact le_of_mul_le_mul_right h z.succ_pos

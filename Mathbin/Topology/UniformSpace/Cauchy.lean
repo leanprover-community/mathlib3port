@@ -239,7 +239,7 @@ theorem CauchySeq.mem_entourage {β : Type _} [SemilatticeSup β] {u : β → α
     {V : Set (α × α)} (hV : V ∈ 𝓤 α) : ∃ k₀, ∀ i j, k₀ ≤ i → k₀ ≤ j → (u i, u j) ∈ V :=
   by
   haveI := h.nonempty
-  have := h.tendsto_uniformity; rw [← prod_at_top_at_top_eq] at this 
+  have := h.tendsto_uniformity; rw [← prod_at_top_at_top_eq] at this
   simpa [maps_to] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
 #align cauchy_seq.mem_entourage CauchySeq.mem_entourage
 -/
@@ -293,7 +293,7 @@ theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V 
     (hu : CauchySeq u) {f g : ℕ → ℕ} (hf : Tendsto f atTop atTop) (hg : Tendsto g atTop atTop) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, ((u ∘ f ∘ φ) n, (u ∘ g ∘ φ) n) ∈ V n :=
   by
-  rw [cauchySeq_iff_tendsto] at hu 
+  rw [cauchySeq_iff_tendsto] at hu
   exact ((hu.comp <| hf.prod_at_top hg).comp tendsto_at_top_diagonal).subseq_mem hV
 #align cauchy_seq.subseq_subseq_mem CauchySeq.subseq_subseq_mem
 -/
@@ -348,7 +348,7 @@ theorem CauchySeq.subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ �
   have : ∀ n, ∃ N, ∀ k ≥ N, ∀ l ≥ k, (u l, u k) ∈ V n :=
     by
     intro n
-    rw [cauchySeq_iff] at hu 
+    rw [cauchySeq_iff] at hu
     rcases hu _ (hV n) with ⟨N, H⟩
     exact ⟨N, fun k hk l hl => H _ (le_trans hk hl) _ hk⟩
   obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∀ l ≥ φ n, (u l, u <| φ n) ∈ V n⟩ :=
@@ -467,7 +467,7 @@ theorem isComplete_iUnion_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ 
     IsComplete (⋃ i, s i) := by
   set S := ⋃ i, s i
   intro l hl hls
-  rw [le_principal_iff] at hls 
+  rw [le_principal_iff] at hls
   cases' cauchy_iff.1 hl with hl_ne hl'
   obtain ⟨t, htS, htl, htU⟩ : ∃ (t : _) (_ : t ⊆ S), t ∈ l ∧ t ×ˢ t ⊆ U :=
     by
@@ -697,7 +697,7 @@ theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs 
   let ⟨c, hfc, hct⟩ := hs _ this
   ⟨f '' c, hfc.image f, by
     simp [image_subset_iff]
-    simp [subset_def] at hct 
+    simp [subset_def] at hct
     intro x hx; simp
     exact hct x hx⟩
 #align totally_bounded.image TotallyBounded.image

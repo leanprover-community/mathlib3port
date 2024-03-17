@@ -47,7 +47,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
       ((μ (s ∩ I)).toReal • y) :=
   by
   refine' has_integral_of_mul ‖y‖ fun ε ε0 => _
-  lift ε to ℝ≥0 using ε0.le; rw [NNReal.coe_pos] at ε0 
+  lift ε to ℝ≥0 using ε0.le; rw [NNReal.coe_pos] at ε0
   /- First we choose a closed set `F ⊆ s ∩ I.Icc` and an open set `U ⊇ s` such that
     both `(s ∩ I.Icc) \ F` and `U \ s` have measuer less than `ε`. -/
   have A : μ (s ∩ I.Icc) ≠ ∞ :=
@@ -114,10 +114,10 @@ theorem BoxIntegral.HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι
   /- Each set `{x | n < ‖f x‖ ≤ n + 1}`, `n : ℕ`, has measure zero. We cover it by an open set of
     measure less than `ε / 2 ^ n / (n + 1)`. Then the norm of the integral sum is less than `ε`. -/
   refine' has_integral_iff.2 fun ε ε0 => _
-  lift ε to ℝ≥0 using ε0.lt.le; rw [gt_iff_lt, NNReal.coe_pos] at ε0 
+  lift ε to ℝ≥0 using ε0.lt.le; rw [gt_iff_lt, NNReal.coe_pos] at ε0
   rcases NNReal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
   haveI := Fact.mk (I.measure_coe_lt_top μ)
-  change μ.restrict I {x | f x ≠ 0} = 0 at hf 
+  change μ.restrict I {x | f x ≠ 0} = 0 at hf
   set N : (ι → ℝ) → ℕ := fun x => ⌈‖f x‖⌉₊
   have N0 : ∀ {x}, N x = 0 ↔ f x = 0 := by intro x; simp [N]
   have : ∀ n, ∃ (U : _) (_ : U ⊇ N ⁻¹' {n}), IsOpen U ∧ μ.restrict I U < δ n / n :=
@@ -142,7 +142,7 @@ theorem BoxIntegral.HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι
   have :
     ∀ J ∈ π.filter fun J => N (π.tag J) = n, ‖(μ ↑J).toReal • f (π.tag J)‖ ≤ (μ J).toReal * n :=
     by
-    intro J hJ; rw [tagged_prepartition.mem_filter] at hJ 
+    intro J hJ; rw [tagged_prepartition.mem_filter] at hJ
     rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
     exact mul_le_mul_of_nonneg_left (hJ.2 ▸ Nat.le_ceil _) ENNReal.toReal_nonneg
   refine' (norm_sum_le_of_le _ this).trans _; clear this
@@ -150,7 +150,7 @@ theorem BoxIntegral.HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι
   generalize hm : μ (π.filter fun J => N (π.tag J) = n).iUnion = m
   have : m < δ n / n :=
     by
-    simp only [measure.restrict_apply (hUo _).MeasurableSet] at hμU 
+    simp only [measure.restrict_apply (hUo _).MeasurableSet] at hμU
     refine' hm ▸ (measure_mono _).trans_lt (hμU _)
     simp only [Set.subset_def, tagged_prepartition.mem_Union, exists_prop,
       tagged_prepartition.mem_filter]
@@ -248,7 +248,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   /- Now consider `ε > 0`. We need to find `r` such that for any tagged partition subordinate
     to `r`, the integral sum is `(μ I + 1 + 1) * ε`-close to the Bochner integral. -/
   refine' has_integral_of_mul ((μ I).toReal + 1 + 1) fun ε ε0 => _
-  lift ε to ℝ≥0 using ε0.le; rw [NNReal.coe_pos] at ε0 ; have ε0' := ENNReal.coe_pos.2 ε0
+  lift ε to ℝ≥0 using ε0.le; rw [NNReal.coe_pos] at ε0; have ε0' := ENNReal.coe_pos.2 ε0
   -- Choose `N` such that the integral of `‖f N x - g x‖` is less than or equal to `ε`.
   obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, ∫ x in I, ‖f N x - g x‖ ∂μ ≤ ε :=
     by

@@ -282,7 +282,7 @@ theorem destruct_eq_cons {s : Seq α} {a s'} : destruct s = some (a, s') → s =
   · cases' s with f al
     injections _ h1 h2
     rw [← h2]; apply Subtype.eq; dsimp [tail, cons]
-    rw [h1] at f0 ; rw [← f0]
+    rw [h1] at f0; rw [← f0]
     exact (Stream'.eta f).symm
 #align stream.seq.destruct_eq_cons Stream'.Seq.destruct_eq_cons
 -/
@@ -359,7 +359,7 @@ def recOn {C : Seq α → Sort v} (s : Seq α) (h1 : C nil) (h2 : ∀ x s, C (co
 theorem mem_rec_on {C : Seq α → Prop} {a s} (M : a ∈ s)
     (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) : C s :=
   by
-  cases' M with k e; unfold Stream'.get at e 
+  cases' M with k e; unfold Stream'.get at e
   induction' k with k IH generalizing s
   · have TH : s = cons a (tail s) := by
       apply destruct_eq_cons
@@ -368,7 +368,7 @@ theorem mem_rec_on {C : Seq α → Prop} {a s} (M : a ∈ s)
   revert e; apply s.rec_on _ fun b s' => _ <;> intro e
   · injection e
   · have h_eq : (cons b s').val (Nat.succ k) = s'.val k := by cases s' <;> rfl
-    rw [h_eq] at e 
+    rw [h_eq] at e
     apply h1 _ _ (Or.inr (IH e))
 #align stream.seq.mem_rec_on Stream'.Seq.mem_rec_on
 -/
@@ -396,7 +396,7 @@ def corec (f : β → Option (α × β)) (b : β) : Seq α :=
   induction' n with n IH <;> intro o
   · change (corec.F f o).1 = none → (corec.F f (corec.F f o).2).1 = none
     cases' o with b <;> intro h; · rfl
-    dsimp [corec.F] at h ; dsimp [corec.F]
+    dsimp [corec.F] at h; dsimp [corec.F]
     cases' f b with s; · rfl
     · cases' s with a b'; contradiction
   · rw [Stream'.corec'_eq (corec.F f) (corec.F f o).2, Stream'.corec'_eq (corec.F f) o]
@@ -462,11 +462,11 @@ theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s
       have := bisim r; revert r this
       apply rec_on s _ _ <;> intros <;> apply rec_on s' _ _ <;> intros <;> intro r this
       · constructor; rfl; assumption
-      · rw [destruct_nil, destruct_cons] at this 
+      · rw [destruct_nil, destruct_cons] at this
         exact False.elim this
-      · rw [destruct_nil, destruct_cons] at this 
+      · rw [destruct_nil, destruct_cons] at this
         exact False.elim this
-      · rw [destruct_cons, destruct_cons] at this 
+      · rw [destruct_cons, destruct_cons] at this
         rw [head_cons, head_cons, tail_cons, tail_cons]
         cases' this with h1 h2
         constructor; rw [h1]; exact h2

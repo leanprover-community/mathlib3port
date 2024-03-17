@@ -188,13 +188,13 @@ theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : Gamma0 N) :
   constructor
   · intro ha
     have hA := A.property
-    rw [Gamma0_mem] at hA 
+    rw [Gamma0_mem] at hA
     have adet := Gamma0_det N A
-    rw [Matrix.det_fin_two] at adet 
+    rw [Matrix.det_fin_two] at adet
     simp only [Gamma0Map, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply, Gamma1_mem',
       MonoidHom.coe_mk, Subtype.val_eq_coe, Int.cast_sub, Int.cast_mul] at *
-    rw [hA, ha] at adet 
-    simp only [mul_one, MulZeroClass.mul_zero, sub_zero] at adet 
+    rw [hA, ha] at adet
+    simp only [mul_one, MulZeroClass.mul_zero, sub_zero] at adet
     simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
   · intro ha
     simp only [Gamma1_mem', Gamma0Map, MonoidHom.coe_mk, coe_coe, coe_matrix_coe,
@@ -219,10 +219,10 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
   by
   constructor
   · intro ha
-    simp_rw [Gamma1, Subgroup.mem_map] at ha 
-    simp at ha 
+    simp_rw [Gamma1, Subgroup.mem_map] at ha
+    simp at ha
     obtain ⟨⟨x, hx⟩, hxx⟩ := ha
-    rw [Gamma1_to_Gamma0_mem] at hx 
+    rw [Gamma1_to_Gamma0_mem] at hx
     rw [← hxx]
     convert hx
   · intro ha

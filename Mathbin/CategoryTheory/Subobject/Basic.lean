@@ -725,11 +725,11 @@ def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y
   map_rel_iff' A B := by
     dsimp; fconstructor
     · intro h
-      apply_fun (map e.inv).obj at h 
-      simp_rw [← map_comp, e.hom_inv_id, map_id] at h 
+      apply_fun (map e.inv).obj at h
+      simp_rw [← map_comp, e.hom_inv_id, map_id] at h
       exact h
     · intro h
-      apply_fun (map e.hom).obj at h 
+      apply_fun (map e.hom).obj at h
       exact h
 #align category_theory.subobject.map_iso_to_order_iso CategoryTheory.Subobject.mapIsoToOrderIso
 -/

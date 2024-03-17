@@ -45,16 +45,17 @@ variable {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable (B : BilinForm R M)
 
-#print BilinForm.isSkewAdjoint_bracket /-
-theorem BilinForm.isSkewAdjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skewAdjointSubmodule)
-    (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
+#print LinearMap.BilinForm.isSkewAdjoint_bracket /-
+theorem LinearMap.BilinForm.isSkewAdjoint_bracket (f g : Module.End R M)
+    (hf : f ∈ B.skewAdjointSubmodule) (hg : g ∈ B.skewAdjointSubmodule) :
+    ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
   by
   rw [mem_skew_adjoint_submodule] at *
   have hfg : is_adjoint_pair B B (f * g) (g * f) := by rw [← neg_mul_neg g f]; exact hf.mul hg
   have hgf : is_adjoint_pair B B (g * f) (f * g) := by rw [← neg_mul_neg f g]; exact hg.mul hf
   change BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f)); rw [neg_sub]
   exact hfg.sub hgf
-#align bilin_form.is_skew_adjoint_bracket BilinForm.isSkewAdjoint_bracket
+#align bilin_form.is_skew_adjoint_bracket LinearMap.BilinForm.isSkewAdjoint_bracket
 -/
 
 #print skewAdjointLieSubalgebra /-
@@ -117,8 +118,7 @@ theorem Matrix.isSkewAdjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjoin
     (hB : B ∈ skewAdjointMatricesSubmodule J) : ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J :=
   by
   simp only [mem_skewAdjointMatricesSubmodule] at *
-  change ⁅A, B⁆ᵀ ⬝ J = J ⬝ (-⁅A, B⁆); change Aᵀ ⬝ J = J ⬝ (-A) at hA ;
-  change Bᵀ ⬝ J = J ⬝ (-B) at hB 
+  change ⁅A, B⁆ᵀ ⬝ J = J ⬝ (-⁅A, B⁆); change Aᵀ ⬝ J = J ⬝ (-A) at hA; change Bᵀ ⬝ J = J ⬝ (-B) at hB
   simp only [← Matrix.hMul_eq_hMul] at *
   rw [Matrix.lie_transpose, LieRing.of_associative_ring_bracket,
     LieRing.of_associative_ring_bracket, sub_mul, mul_assoc, mul_assoc, hA, hB, ← mul_assoc, ←

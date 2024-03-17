@@ -154,7 +154,7 @@ theorem realize_restrictVar [DecidableEq α] {t : L.term α} {s : Set α} (h : �
   by
   induction' t with _ _ _ _ ih
   · rfl
-  · simp_rw [var_finset, Finset.coe_biUnion, Set.iUnion_subset_iff] at h 
+  · simp_rw [var_finset, Finset.coe_biUnion, Set.iUnion_subset_iff] at h
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 #align first_order.language.term.realize_restrict_var FirstOrder.Language.Term.realize_restrictVar
 -/
@@ -168,7 +168,7 @@ theorem realize_restrictVarLeft [DecidableEq α] {γ : Type _} {t : L.term (Sum 
   by
   induction' t with a _ _ _ ih
   · cases a <;> rfl
-  · simp_rw [var_finset_left, Finset.coe_biUnion, Set.iUnion_subset_iff] at h 
+  · simp_rw [var_finset_left, Finset.coe_biUnion, Set.iUnion_subset_iff] at h
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 #align first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrictVarLeft
 -/
@@ -1103,7 +1103,7 @@ theorem realize_exs {φ : L.BoundedFormula α n} {v : α → M} :
     · rintro ⟨xs, x, h⟩
       exact ⟨_, h⟩
     · rintro ⟨xs, h⟩
-      rw [← Fin.snoc_init_self xs] at h 
+      rw [← Fin.snoc_init_self xs] at h
       exact ⟨_, _, h⟩
 #align first_order.language.bounded_formula.realize_exs FirstOrder.Language.BoundedFormula.realize_exs
 -/
@@ -1123,7 +1123,7 @@ theorem realize_toFormula (φ : L.BoundedFormula α n) (v : Sum α (Fin n) → M
   · rw [to_formula, formula.realize, realize_all, realize_all]
     refine' forall_congr' fun a => _
     have h := ih3 (Sum.elim (v ∘ Sum.inl) (snoc (v ∘ Sum.inr) a))
-    simp only [Sum.elim_comp_inl, Sum.elim_comp_inr] at h 
+    simp only [Sum.elim_comp_inl, Sum.elim_comp_inr] at h
     rw [← h, realize_relabel, formula.realize]
     rcongr
     · cases x
@@ -1157,11 +1157,11 @@ theorem realize_boundedFormula (g : M ≃[L] N) (φ : L.BoundedFormula α n) {v 
     constructor
     · intro h a
       have h' := h (g a)
-      rw [← Fin.comp_snoc, ih3] at h' 
+      rw [← Fin.comp_snoc, ih3] at h'
       exact h'
     · intro h a
       have h' := h (g.symm a)
-      rw [← ih3, Fin.comp_snoc, g.apply_symm_apply] at h' 
+      rw [← ih3, Fin.comp_snoc, g.apply_symm_apply] at h'
       exact h'
 #align first_order.language.equiv.realize_bounded_formula FirstOrder.Language.Equiv.realize_boundedFormula
 -/
@@ -1280,7 +1280,7 @@ theorem Sentence.realize_cardGe (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#M
     contrapose! ij
     have hij := h _ i j ij rfl
     simp only [bounded_formula.realize_not, term.realize, bounded_formula.realize_bd_equal,
-      Sum.elim_inr] at hij 
+      Sum.elim_inr] at hij
     exact hij
   · rintro _ i j ij rfl
     simp [ij]
@@ -1329,7 +1329,7 @@ theorem model_distinctConstantsTheory {M : Type w} [L[[α]].Structure M] (s : Se
   · contrapose! ab
     have h' := h _ a b ⟨⟨as, bs⟩, ab⟩ rfl
     simp only [sentence.realize, formula.realize_not, formula.realize_equal,
-      term.realize_constants] at h' 
+      term.realize_constants] at h'
     exact h'
   · rintro h φ a b ⟨⟨as, bs⟩, ab⟩ rfl
     simp only [sentence.realize, formula.realize_not, formula.realize_equal, term.realize_constants]

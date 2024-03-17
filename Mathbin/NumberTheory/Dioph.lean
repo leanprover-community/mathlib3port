@@ -346,9 +346,9 @@ theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.Forall fun a : Poly α =>
               le_antisymm
                 (by
                   rw [← h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x * p x) <;>
-                    rwa [add_zero] at t )
+                    rwa [add_zero] at t)
                 (hMul_self_nonneg _)
-          ⟨this, by simp [this] at h  <;> exact h⟩,
+          ⟨this, by simp [this] at h <;> exact h⟩,
           fun ⟨h1, h2⟩ => by rw [h1, h2] <;> rfl⟩
 #align poly.sumsq_eq_zero Poly.sumsq_eq_zero
 -/
@@ -456,7 +456,7 @@ theorem DiophList.forall (l : List (Set <| α → ℕ)) (d : l.Forall Dioph) :
     ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
   induction' l with S l IH
   exact ⟨ULift Empty, [], fun v => by simp <;> exact ⟨fun ⟨t⟩ => Empty.rec _ t, trivial⟩⟩
-  simp at d 
+  simp at d
   exact
     let ⟨⟨β, p, pe⟩, dl⟩ := d
     let ⟨γ, pl, ple⟩ := IH dl
@@ -479,14 +479,14 @@ theorem DiophList.forall (l : List (Set <| α → ℕ)) (d : l.Forall Dioph) :
               ⟨⟨t ∘ inl, by
                   rwa [show (v ⊗ t) ∘ (inl ⊗ inr ∘ inl) = v ⊗ t ∘ inl from
                       funext fun s => by cases' s with a b <;> rfl] at
-                    hl ⟩,
+                    hl⟩,
                 ⟨t ∘ inr, by
-                  refine' List.Forall.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq 
+                  refine' List.Forall.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq
                   rwa [show
                       (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) =
                         v ⊗ t ∘ inr
                       from funext fun s => by cases' s with a b <;> rfl] at
-                    hq ⟩⟩⟩⟩
+                    hq⟩⟩⟩⟩
 #align dioph.dioph_list.all₂ Dioph.DiophList.forall
 -/
 
@@ -547,10 +547,10 @@ theorem ex_dioph {S : Set (Sum α β → ℕ)} : Dioph S → Dioph {v | ∃ x, v
         ⟨t ∘ inl,
           (pe _).2
             ⟨t ∘ inr, by
-              simp at ht  <;>
+              simp at ht <;>
                 rwa [show (v ⊗ t) ∘ ((inl ⊗ inr ∘ inl) ⊗ inr ∘ inr) = (v ⊗ t ∘ inl) ⊗ t ∘ inr from
                     funext fun s => by cases' s with a b <;> try cases a <;> rfl] at
-                  ht ⟩⟩⟩⟩
+                  ht⟩⟩⟩⟩
 #align dioph.ex_dioph Dioph.ex_dioph
 -/
 
@@ -569,10 +569,10 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph {v | ∃ x, 
         ⟨t none,
           (pe _).2
             ⟨t ∘ some, by
-              simp at ht  <;>
+              simp at ht <;>
                 rwa [show (v ⊗ t) ∘ (inr none ::ₒ inl ⊗ inr ∘ some) = t none ::ₒ v ⊗ t ∘ some from
                     funext fun s => by cases' s with a b <;> try cases a <;> rfl] at
-                  ht ⟩⟩⟩⟩
+                  ht⟩⟩⟩⟩
 #align dioph.ex1_dioph Dioph.ex1_dioph
 -/
 
@@ -606,7 +606,7 @@ theorem diophPFun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : Di
     Dioph {v : α → ℕ | ∃ h : f.Dom v, f.fn v h ::ₒ v ∈ S} :=
   ext (ex1_dioph (d.inter df)) fun v =>
     ⟨fun ⟨x, hS, (h : Exists _)⟩ => by
-      rw [show (x ::ₒ v) ∘ some = v from funext fun s => rfl] at h  <;> cases' h with hf h <;>
+      rw [show (x ::ₒ v) ∘ some = v from funext fun s => rfl] at h <;> cases' h with hf h <;>
             refine' ⟨hf, _⟩ <;>
           rw [PFun.fn, h] <;>
         exact hS,

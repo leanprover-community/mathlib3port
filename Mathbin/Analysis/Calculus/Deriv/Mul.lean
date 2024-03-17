@@ -103,7 +103,7 @@ theorem HasStrictDerivAt.smul_const (hc : HasStrictDerivAt c c' x) (f : F) :
     HasStrictDerivAt (fun y => c y • f) (c' • f) x :=
   by
   have := hc.smul (hasStrictDerivAt_const x f)
-  rwa [smul_zero, zero_add] at this 
+  rwa [smul_zero, zero_add] at this
 #align has_strict_deriv_at.smul_const HasStrictDerivAt.smul_const
 -/
 
@@ -112,7 +112,7 @@ theorem HasDerivWithinAt.smul_const (hc : HasDerivWithinAt c c' s x) (f : F) :
     HasDerivWithinAt (fun y => c y • f) (c' • f) s x :=
   by
   have := hc.smul (hasDerivWithinAt_const x s f)
-  rwa [smul_zero, zero_add] at this 
+  rwa [smul_zero, zero_add] at this
 #align has_deriv_within_at.smul_const HasDerivWithinAt.smul_const
 -/
 
@@ -207,7 +207,7 @@ theorem HasDerivWithinAt.mul (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWith
   rwa [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.smulRight_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply, one_smul, one_smul,
-    add_comm] at this 
+    add_comm] at this
 #align has_deriv_within_at.mul HasDerivWithinAt.mul
 -/
 
@@ -228,7 +228,7 @@ theorem HasStrictDerivAt.mul (hc : HasStrictDerivAt c c' x) (hd : HasStrictDeriv
   rwa [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.smulRight_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply, one_smul, one_smul,
-    add_comm] at this 
+    add_comm] at this
 #align has_strict_deriv_at.mul HasStrictDerivAt.mul
 -/
 
@@ -457,7 +457,7 @@ theorem HasStrictDerivAt.clm_comp (hc : HasStrictDerivAt c c' x) (hd : HasStrict
   by
   have := (hc.has_strict_fderiv_at.clm_comp hd.has_strict_fderiv_at).HasStrictDerivAt
   rwa [add_apply, comp_apply, comp_apply, smul_right_apply, smul_right_apply, one_apply, one_smul,
-    one_smul, add_comm] at this 
+    one_smul, add_comm] at this
 #align has_strict_deriv_at.clm_comp HasStrictDerivAt.clm_comp
 -/
 
@@ -468,7 +468,7 @@ theorem HasDerivWithinAt.clm_comp (hc : HasDerivWithinAt c c' s x)
   by
   have := (hc.has_fderiv_within_at.clm_comp hd.has_fderiv_within_at).HasDerivWithinAt
   rwa [add_apply, comp_apply, comp_apply, smul_right_apply, smul_right_apply, one_apply, one_smul,
-    one_smul, add_comm] at this 
+    one_smul, add_comm] at this
 #align has_deriv_within_at.clm_comp HasDerivWithinAt.clm_comp
 -/
 
@@ -503,7 +503,7 @@ theorem HasStrictDerivAt.clm_apply (hc : HasStrictDerivAt c c' x) (hu : HasStric
   by
   have := (hc.has_strict_fderiv_at.clm_apply hu.has_strict_fderiv_at).HasStrictDerivAt
   rwa [add_apply, comp_apply, flip_apply, smul_right_apply, smul_right_apply, one_apply, one_smul,
-    one_smul, add_comm] at this 
+    one_smul, add_comm] at this
 #align has_strict_deriv_at.clm_apply HasStrictDerivAt.clm_apply
 -/
 
@@ -514,7 +514,7 @@ theorem HasDerivWithinAt.clm_apply (hc : HasDerivWithinAt c c' s x)
   by
   have := (hc.has_fderiv_within_at.clm_apply hu.has_fderiv_within_at).HasDerivWithinAt
   rwa [add_apply, comp_apply, flip_apply, smul_right_apply, smul_right_apply, one_apply, one_smul,
-    one_smul, add_comm] at this 
+    one_smul, add_comm] at this
 #align has_deriv_within_at.clm_apply HasDerivWithinAt.clm_apply
 -/
 
@@ -524,7 +524,7 @@ theorem HasDerivAt.clm_apply (hc : HasDerivAt c c' x) (hu : HasDerivAt u u' x) :
   by
   have := (hc.has_fderiv_at.clm_apply hu.has_fderiv_at).HasDerivAt
   rwa [add_apply, comp_apply, flip_apply, smul_right_apply, smul_right_apply, one_apply, one_smul,
-    one_smul, add_comm] at this 
+    one_smul, add_comm] at this
 #align has_deriv_at.clm_apply HasDerivAt.clm_apply
 -/
 

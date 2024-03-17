@@ -630,7 +630,7 @@ theorem sInf_eq_top : sInf s = ⊤ ↔ ∀ a ∈ s, a = ⊤ :=
 #print eq_singleton_bot_of_sSup_eq_bot_of_nonempty /-
 theorem eq_singleton_bot_of_sSup_eq_bot_of_nonempty {s : Set α} (h_sup : sSup s = ⊥)
     (hne : s.Nonempty) : s = {⊥} := by rw [Set.eq_singleton_iff_nonempty_unique_mem];
-  rw [sSup_eq_bot] at h_sup ; exact ⟨hne, h_sup⟩
+  rw [sSup_eq_bot] at h_sup; exact ⟨hne, h_sup⟩
 #align eq_singleton_bot_of_Sup_eq_bot_of_nonempty eq_singleton_bot_of_sSup_eq_bot_of_nonempty
 -/
 
@@ -1119,14 +1119,14 @@ theorem biInf_mono {p q : ι → Prop} (hpq : ∀ i, p i → q i) :
 #print iSup_le_iff /-
 @[simp]
 theorem iSup_le_iff : iSup f ≤ a ↔ ∀ i, f i ≤ a :=
-  (isLUB_le_iff isLUB_iSup).trans forall_range_iff
+  (isLUB_le_iff isLUB_iSup).trans forall_mem_range
 #align supr_le_iff iSup_le_iff
 -/
 
 #print le_iInf_iff /-
 @[simp]
 theorem le_iInf_iff : a ≤ iInf f ↔ ∀ i, a ≤ f i :=
-  (le_isGLB_iff isGLB_iInf).trans forall_range_iff
+  (le_isGLB_iff isGLB_iInf).trans forall_mem_range
 #align le_infi_iff le_iInf_iff
 -/
 
@@ -1354,14 +1354,14 @@ theorem iInf_top : (⨅ i : ι, ⊤ : α) = ⊤ :=
 #print iSup_eq_bot /-
 @[simp]
 theorem iSup_eq_bot : iSup s = ⊥ ↔ ∀ i, s i = ⊥ :=
-  sSup_eq_bot.trans forall_range_iff
+  sSup_eq_bot.trans forall_mem_range
 #align supr_eq_bot iSup_eq_bot
 -/
 
 #print iInf_eq_top /-
 @[simp]
 theorem iInf_eq_top : iInf s = ⊤ ↔ ∀ i, s i = ⊤ :=
-  sInf_eq_top.trans forall_range_iff
+  sInf_eq_top.trans forall_mem_range
 #align infi_eq_top iInf_eq_top
 -/
 
@@ -1416,7 +1416,7 @@ See `csupr_eq_of_forall_le_of_forall_lt_exists_gt` for a version in conditionall
 lattices. -/
 theorem iSup_eq_of_forall_le_of_forall_lt_exists_gt {f : ι → α} (h₁ : ∀ i, f i ≤ b)
     (h₂ : ∀ w, w < b → ∃ i, w < f i) : (⨆ i : ι, f i) = b :=
-  sSup_eq_of_forall_le_of_forall_lt_exists_gt (forall_range_iff.mpr h₁) fun w hw =>
+  sSup_eq_of_forall_le_of_forall_lt_exists_gt (forall_mem_range.mpr h₁) fun w hw =>
     exists_range_iff.mpr <| h₂ w hw
 #align supr_eq_of_forall_le_of_forall_lt_exists_gt iSup_eq_of_forall_le_of_forall_lt_exists_gt
 -/
@@ -2242,23 +2242,23 @@ end CompleteLinearOrder
 -/
 
 
-#print Prop.completeLattice /-
-instance Prop.completeLattice : CompleteLattice Prop :=
-  { Prop.boundedOrder,
-    Prop.distribLattice with
+#print Prop.instCompleteLattice /-
+instance Prop.instCompleteLattice : CompleteLattice Prop :=
+  { Prop.instBoundedOrder,
+    Prop.instDistribLattice with
     sSup := fun s => ∃ a ∈ s, a
     le_sup := fun s a h p => ⟨a, h, p⟩
     sup_le := fun s a h ⟨b, h', p⟩ => h b h' p
     sInf := fun s => ∀ a, a ∈ s → a
     inf_le := fun s a h p => p a h
     le_inf := fun s a h p b hb => h b hb p }
-#align Prop.complete_lattice Prop.completeLattice
+#align Prop.complete_lattice Prop.instCompleteLattice
 -/
 
-#print Prop.completeLinearOrder /-
-noncomputable instance Prop.completeLinearOrder : CompleteLinearOrder Prop :=
-  { Prop.completeLattice, Prop.linearOrder with }
-#align Prop.complete_linear_order Prop.completeLinearOrder
+#print Prop.instCompleteLinearOrder /-
+noncomputable instance Prop.instCompleteLinearOrder : CompleteLinearOrder Prop :=
+  { Prop.instCompleteLattice, Prop.linearOrder with }
+#align Prop.complete_linear_order Prop.instCompleteLinearOrder
 -/
 
 #print sSup_Prop_eq /-
@@ -2302,8 +2302,8 @@ instance Pi.infSet {α : Type _} {β : α → Type _} [∀ i, InfSet (β i)] : I
 #align pi.has_Inf Pi.infSet
 -/
 
-#print Pi.completeLattice /-
-instance Pi.completeLattice {α : Type _} {β : α → Type _} [∀ i, CompleteLattice (β i)] :
+#print Pi.instCompleteLattice /-
+instance Pi.instCompleteLattice {α : Type _} {β : α → Type _} [∀ i, CompleteLattice (β i)] :
     CompleteLattice (∀ i, β i) :=
   { Pi.boundedOrder, Pi.lattice with
     sSup := sSup
@@ -2312,7 +2312,7 @@ instance Pi.completeLattice {α : Type _} {β : α → Type _} [∀ i, CompleteL
     inf_le := fun s f hf i => iInf_le (fun f : s => (f : ∀ i, β i) i) ⟨f, hf⟩
     sup_le := fun s f hf i => iSup_le fun g => hf g g.2 i
     le_inf := fun s f hf i => le_iInf fun g => hf g g.2 i }
-#align pi.complete_lattice Pi.completeLattice
+#align pi.complete_lattice Pi.instCompleteLattice
 -/
 
 #print sSup_apply /-

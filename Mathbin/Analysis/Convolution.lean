@@ -660,7 +660,7 @@ theorem support_convolution_subset_swap : support (f ⋆[L, μ] g) ⊆ support g
   intro x h2x
   by_contra hx
   apply h2x
-  simp_rw [Set.mem_add, not_exists, not_and_or, nmem_support] at hx 
+  simp_rw [Set.mem_add, not_exists, not_and_or, nmem_support] at hx
   rw [convolution_def]
   convert integral_zero G F
   ext t
@@ -764,7 +764,7 @@ theorem continuousOn_convolution_right_with_param {g : P → G → E'} {s : Set 
       have H' : (p, x) ∈ (s ×ˢ univ : Set (P × G)) := by
         simpa only [prod_mk_mem_set_prod_eq, mem_univ, and_true_iff] using hps
       have : g p x ∈ closed_ball (0 : E') C := hC (mem_image_of_mem _ ⟨H, H'⟩)
-      rwa [mem_closedBall_zero_iff] at this 
+      rwa [mem_closedBall_zero_iff] at this
     · have : g p x = 0 := hgs _ _ hps hx
       rw [this]
       simpa only [norm_zero] using Cpos.le
@@ -792,7 +792,7 @@ theorem continuousOn_convolution_right_with_param {g : P → G → E'} {s : Set 
       exact mem_nhdsWithin_iff_exists_mem_nhds_inter.2 ⟨w, w_open.mem_nhds q₀w, subset.rfl⟩
     filter_upwards [this]
     rintro ⟨p, x⟩ hpx
-    simp only [prod_mk_mem_set_prod_eq] at hpx 
+    simp only [prod_mk_mem_set_prod_eq] at hpx
     apply eventually_of_forall fun a => _
     apply convolution_integrand_bound_right_of_le_of_subset _ _ hpx.2 _
     · intro x
@@ -1034,11 +1034,11 @@ theorem convolution_eq_right' {x₀ : G} {R : ℝ} (hf : support f ⊆ ball (0 :
     by
     intro t; by_cases ht : t ∈ support f
     · have h2t := hf ht
-      rw [mem_ball_zero_iff] at h2t 
+      rw [mem_ball_zero_iff] at h2t
       specialize hg (x₀ - t)
-      rw [sub_eq_add_neg, add_mem_ball_iff_norm, norm_neg, ← sub_eq_add_neg] at hg 
+      rw [sub_eq_add_neg, add_mem_ball_iff_norm, norm_neg, ← sub_eq_add_neg] at hg
       rw [hg h2t]
-    · rw [nmem_support] at ht 
+    · rw [nmem_support] at ht
       simp_rw [ht, L.map_zero₂]
   simp_rw [convolution_def, h2]
 #align convolution_eq_right' convolution_eq_right'
@@ -1074,12 +1074,12 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε
     by
     intro t; by_cases ht : t ∈ support f
     · have h2t := hf ht
-      rw [mem_ball_zero_iff] at h2t 
+      rw [mem_ball_zero_iff] at h2t
       specialize hg (x₀ - t)
-      rw [sub_eq_add_neg, add_mem_ball_iff_norm, norm_neg, ← sub_eq_add_neg] at hg 
+      rw [sub_eq_add_neg, add_mem_ball_iff_norm, norm_neg, ← sub_eq_add_neg] at hg
       refine' ((L (f t)).dist_le_opNorm _ _).trans _
       exact mul_le_mul_of_nonneg_left (hg h2t) (norm_nonneg _)
-    · rw [nmem_support] at ht 
+    · rw [nmem_support] at ht
       simp_rw [ht, L.map_zero₂, L.map_zero, norm_zero, MulZeroClass.zero_mul, dist_self]
   simp_rw [convolution_def]
   simp_rw [dist_eq_norm] at h2 ⊢
@@ -1139,13 +1139,13 @@ theorem convolution_tendsto_right {ι} {g : ι → G → E'} {l : Filter ι} {x�
     (hk : Tendsto k l (𝓝 x₀)) :
     Tendsto (fun i : ι => (φ i ⋆[lsmul ℝ ℝ, μ] g i : G → E') (k i)) l (𝓝 z₀) :=
   by
-  simp_rw [tendsto_small_sets_iff] at hφ 
+  simp_rw [tendsto_small_sets_iff] at hφ
   rw [Metric.tendsto_nhds] at hcg ⊢
-  simp_rw [Metric.eventually_prod_nhds_iff] at hcg 
+  simp_rw [Metric.eventually_prod_nhds_iff] at hcg
   intro ε hε
   have h2ε : 0 < ε / 3 := div_pos hε (by norm_num)
   obtain ⟨p, hp, δ, hδ, hgδ⟩ := hcg _ h2ε
-  dsimp only [uncurry] at hgδ 
+  dsimp only [uncurry] at hgδ
   have h2k := hk.eventually (ball_mem_nhds x₀ <| half_pos hδ)
   have h2φ := hφ (ball (0 : G) _) <| ball_mem_nhds _ (half_pos hδ)
   filter_upwards [hp, h2k, h2φ, hnφ, hiφ, hmg] with i hpi hki hφi hnφi hiφi hmgi
@@ -1365,7 +1365,7 @@ theorem convolution_assoc (hL : ∀ (x : E) (y : E') (z : E''), L₂ (L x y) z =
     (measure_preserving_sub_prod μ ν).map_eq
   suffices integrable (uncurry fun x y => L₃ (f y) (L₄ (g x) (k (x₀ - y - x)))) (μ.prod ν)
     by
-    rw [← h3] at this 
+    rw [← h3] at this
     convert this.comp_measurable (measurable_sub.prod_mk measurable_snd)
     ext ⟨x, y⟩
     simp_rw [uncurry, Function.comp_apply, sub_sub_sub_cancel_right]
@@ -1591,10 +1591,10 @@ theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
         ·
           simp only [hx, singleton_prod, mem_image, Prod.mk.inj_iff, eq_self_iff_true, true_and_iff,
             exists_eq_right]
-        · rw [← dist_eq_norm] at hp 
+        · rw [← dist_eq_norm] at hp
           simpa only [Prod.dist_eq, εpos, dist_self, max_lt_iff, and_true_iff] using hp
       have : g' (p, x) ∈ closed_ball (0 : P × G →L[𝕜] E') C := hC (mem_image_of_mem _ H)
-      rwa [mem_closedBall_zero_iff] at this 
+      rwa [mem_closedBall_zero_iff] at this
     · have : g' (p, x) = 0 := g'_zero _ _ hps hx
       rw [this]
       simpa only [norm_zero] using Cpos.le
@@ -1642,7 +1642,7 @@ theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
     by
     apply eventually_of_forall
     intro a x hx
-    rw [Prod.dist_eq, dist_eq_norm, dist_eq_norm] at hx 
+    rw [Prod.dist_eq, dist_eq_norm, dist_eq_norm] at hx
     have : (-tsupport fun a => g' (x.1, a)) + ball q₀.2 δ ⊆ U :=
       by
       apply subset.trans _ hδ
@@ -1676,7 +1676,7 @@ theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
     have N : s ×ˢ univ ∈ 𝓝 (x.1, x.2 - a) := by
       apply A'
       apply h₀ε
-      rw [Prod.dist_eq] at hx 
+      rw [Prod.dist_eq] at hx
       exact lt_of_lt_of_le (lt_of_le_of_lt (le_max_left _ _) hx) δε
     have Z := ((hg.differentiable_on le_rfl).DifferentiableAt N).HasFDerivAt
     have Z' : HasFDerivAt (fun x : P × G => (x.1, x.2 - a)) (ContinuousLinearMap.id 𝕜 (P × G)) x :=
@@ -1825,7 +1825,7 @@ theorem contDiffOn_convolution_right_with_param {f : G → E} {n : ℕ∞} (L : 
       ContinuousLinearEquiv.prod_apply, ContinuousLinearEquiv.map_sub,
       ContinuousLinearEquiv.arrowCongr, ContinuousLinearEquiv.arrowCongrSL_symm_apply,
       ContinuousLinearEquiv.coe_coe, comp_app, ContinuousLinearEquiv.apply_symm_apply]
-  simp_rw [this] at A 
+  simp_rw [this] at A
   exact A
 #align cont_diff_on_convolution_right_with_param contDiffOn_convolution_right_with_param
 -/
@@ -1961,7 +1961,7 @@ theorem integrable_posConvolution {f : ℝ → E} {g : ℝ → E'} {μ ν : Meas
     (hg : IntegrableOn g (Ioi 0) μ) (L : E →L[ℝ] E' →L[ℝ] F) :
     Integrable (posConvolution f g L ν) μ :=
   by
-  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg 
+  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg
   rw [posConvolution_eq_convolution_indicator f g L ν]
   exact (hf.convolution_integrand L hg).integral_prod_left
 #align integrable_pos_convolution integrable_posConvolution
@@ -1976,7 +1976,7 @@ theorem integral_posConvolution [CompleteSpace E] [CompleteSpace E'] {μ ν : Me
     ∫ x : ℝ in Ioi 0, ∫ t : ℝ in 0 ..x, L (f t) (g (x - t)) ∂ν ∂μ =
       L (∫ x : ℝ in Ioi 0, f x ∂ν) (∫ x : ℝ in Ioi 0, g x ∂μ) :=
   by
-  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg 
+  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg
   simp_rw [← integral_indicator measurableSet_Ioi]
   convert integral_convolution L hf hg using 2
   apply posConvolution_eq_convolution_indicator

@@ -640,7 +640,7 @@ variable {F} {α}
 theorem adjoin_algebraic_toSubalgebra {S : Set E} (hS : ∀ x ∈ S, IsAlgebraic F x) :
     (IntermediateField.adjoin F S).toSubalgebra = Algebra.adjoin F S :=
   by
-  simp only [isAlgebraic_iff_isIntegral] at hS 
+  simp only [isAlgebraic_iff_isIntegral] at hS
   have : Algebra.IsIntegral F (Algebra.adjoin F S) := by
     rwa [← le_integralClosure_iff_isIntegral, Algebra.adjoin_le_iff]
   have := isField_of_isIntegral_of_isField' this (Field.toIsField F)
@@ -781,7 +781,7 @@ theorem exists_finset_of_mem_iSup {ι : Type _} {f : ι → IntermediateField F 
     (hx : x ∈ ⨆ i, f i) : ∃ s : Finset ι, x ∈ ⨆ i ∈ s, f i :=
   by
   have := (adjoin_simple_is_compact_element x).exists_finset_of_le_iSup (IntermediateField F E) f
-  simp only [adjoin_simple_le_iff] at this 
+  simp only [adjoin_simple_le_iff] at this
   exact this hx
 #align intermediate_field.exists_finset_of_mem_supr IntermediateField.exists_finset_of_mem_iSup
 -/
@@ -999,7 +999,7 @@ variable {K : Type _} [Field K] [Algebra F K]
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (AdjoinSimple.gen F α) = minpoly F α :=
   by
-  rw [← adjoin_simple.algebra_map_gen F α] at h 
+  rw [← adjoin_simple.algebra_map_gen F α] at h
   have inj := (algebraMap F⟮⟯ E).Injective
   exact
     minpoly.eq_of_algebraMap_eq inj ((isIntegral_algebraMap_iff inj).mp h)
@@ -1085,7 +1085,7 @@ noncomputable def adjoin.powerBasis {x : L} (hx : IsIntegral K x) : PowerBasis K
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print IntermediateField.adjoin.finiteDimensional /-
 theorem adjoin.finiteDimensional {x : L} (hx : IsIntegral K x) : FiniteDimensional K K⟮⟯ :=
-  PowerBasis.finiteDimensional (adjoin.powerBasis hx)
+  PowerBasis.finite (adjoin.powerBasis hx)
 #align intermediate_field.adjoin.finite_dimensional IntermediateField.adjoin.finiteDimensional
 -/
 
@@ -1412,7 +1412,7 @@ theorem nonempty_algHom_adjoin_of_splits
         (fun s t => x.2.map_hMul ⟨s, _⟩ ⟨t, _⟩) x.2.map_zero (fun s t => x.2.map_add ⟨s, _⟩ ⟨t, _⟩)
         x.2.commutes⟩
   rcases x.exists_lift_of_splits (hK s hs).1 (hK s hs).2 with ⟨y, h1, h2⟩
-  rwa [hx y h1] at h2 
+  rwa [hx y h1] at h2
 #align intermediate_field.alg_hom_mk_adjoin_splits IntermediateField.nonempty_algHom_adjoin_of_splits
 -/
 
@@ -1421,7 +1421,7 @@ theorem nonempty_algHom_of_adjoin_splits (hS : adjoin F S = ⊤)
     (hK : ∀ x ∈ S, IsIntegral F (x : E) ∧ (minpoly F x).Splits (algebraMap F K)) :
     Nonempty (E →ₐ[F] K) := by
   cases' alg_hom_mk_adjoin_splits hK with ϕ
-  rw [hS] at ϕ 
+  rw [hS] at ϕ
   exact ⟨ϕ.comp top_equiv.symm.to_alg_hom⟩
 #align intermediate_field.alg_hom_mk_adjoin_splits' IntermediateField.nonempty_algHom_of_adjoin_splits
 -/
@@ -1471,7 +1471,7 @@ instance finiteDimensional_sup [h1 : FiniteDimensional K E1] [h2 : FiniteDimensi
   suffices g.range = (E1 ⊔ E2).toSubalgebra
     by
     have h : FiniteDimensional K g.range.to_submodule := g.to_linear_map.finite_dimensional_range
-    rwa [this] at h 
+    rwa [this] at h
   rw [Algebra.TensorProduct.productMap_range, E1.range_val, E2.range_val, sup_to_subalgebra]
 #align intermediate_field.finite_dimensional_sup IntermediateField.finiteDimensional_sup
 -/

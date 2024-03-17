@@ -313,7 +313,7 @@ protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M)
     rw [Subalgebra.smul_def, PolynomialModule.smul_apply]
     apply Submodule.sum_mem
     rintro ⟨j, k⟩ e
-    rw [Finset.Nat.mem_antidiagonal] at e 
+    rw [Finset.Nat.mem_antidiagonal] at e
     subst e
     exact F.pow_smul_le j k (Submodule.smul_mem_smul (r.2 j) (hf k))
 #align ideal.filtration.submodule Ideal.Filtration.submodule
@@ -385,8 +385,8 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     intro x hx
     obtain ⟨l, hl⟩ := (Finsupp.mem_span_iff_total _ _ _).mp (H _ ⟨x, hx, rfl⟩)
     replace hl := congr_arg (fun f : ℕ →₀ M => f (n + 1)) hl
-    dsimp only at hl 
-    erw [Finsupp.single_eq_same] at hl 
+    dsimp only at hl
+    erw [Finsupp.single_eq_same] at hl
     rw [← hl, Finsupp.total_apply, Finsupp.sum_apply]
     apply Submodule.sum_mem _ _
     rintro ⟨_, _, ⟨n', rfl⟩, _, ⟨hn', rfl⟩, m, hm, rfl⟩ -
@@ -394,7 +394,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     rw [Subalgebra.smul_def, smul_single_apply, if_pos (show n' ≤ n + 1 by linarith)]
     have e : n' ≤ n := by linarith
     have := F.pow_smul_le_pow_smul (n - n') n' 1
-    rw [tsub_add_cancel_of_le e, pow_one, add_comm _ 1, ← add_tsub_assoc_of_le e, add_comm] at this 
+    rw [tsub_add_cancel_of_le e, pow_one, add_comm _ 1, ← add_tsub_assoc_of_le e, add_comm] at this
     exact this (Submodule.smul_mem_smul ((l _).2 <| n + 1 - n') hm)
   · let F' := Submodule.span (reesAlgebra I) (⋃ i ≤ n₀, single R i '' (F.N i : Set M))
     intro hF i
@@ -404,7 +404,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     · exact this _ (zero_le _)
     by_cases hj' : j.succ ≤ n₀
     · exact this _ hj'
-    simp only [not_le, Nat.lt_succ_iff] at hj' 
+    simp only [not_le, Nat.lt_succ_iff] at hj'
     rw [Nat.succ_eq_add_one, ← hF _ hj']
     rintro _ ⟨m, hm, rfl⟩
     apply Submodule.smul_induction_on hm
@@ -468,7 +468,7 @@ theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable
   rw [← submodule_fg_iff_stable] at hF ⊢
   any_goals intro i; exact IsNoetherian.noetherian _
   have := isNoetherian_of_fg_of_noetherian _ hF
-  rw [isNoetherian_submodule] at this 
+  rw [isNoetherian_submodule] at this
   exact this _ (OrderHomClass.mono (submodule_inf_hom M I) hf)
 #align ideal.filtration.stable.of_le Ideal.Filtration.Stable.of_le
 -/
@@ -513,7 +513,7 @@ theorem Ideal.mem_iInf_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Fin
     · intro H; exact ⟨⟨r, hr₁⟩, hr₂ _ H⟩
     obtain ⟨k, hk⟩ := (I.stable_filtration_stable ⊤).inter_right (I.trivial_filtration N)
     have := hk k (le_refl _)
-    rw [hN, hN] at this 
+    rw [hN, hN] at this
     exact le_of_eq this.symm
   · rintro ⟨r, eq⟩
     rw [Submodule.mem_iInf]
@@ -559,7 +559,7 @@ theorem Ideal.iInf_pow_eq_bot_of_isDomain [IsNoetherianRing R] [IsDomain R] (h :
   intro x hx
   by_contra hx'
   have := Ideal.mem_iInf_smul_pow_eq_bot_iff I x
-  simp_rw [smul_eq_mul, ← Ideal.one_eq_top, mul_one] at this 
+  simp_rw [smul_eq_mul, ← Ideal.one_eq_top, mul_one] at this
   obtain ⟨r, hr⟩ := this.mp hx
   have := mul_right_cancel₀ hx' (hr.trans (one_mul x).symm)
   exact I.eq_top_iff_one.not.mp h (this ▸ r.prop)

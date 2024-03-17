@@ -254,7 +254,7 @@ theorem dom_of_le_some {x : PartENat} {y : ℕ} (h : x ≤ some y) : x.Dom :=
 -/
 
 #print PartENat.dom_of_le_natCast /-
-theorem dom_of_le_natCast {x : PartENat} {y : ℕ} (h : x ≤ y) : x.Dom := by rw [← some_eq_coe] at h ;
+theorem dom_of_le_natCast {x : PartENat} {y : ℕ} (h : x ≤ y) : x.Dom := by rw [← some_eq_coe] at h;
   exact dom_of_le_some h
 #align part_enat.dom_of_le_coe PartENat.dom_of_le_natCast
 -/
@@ -299,10 +299,10 @@ theorem lt_def (x y : PartENat) : x < y ↔ ∃ hx : x.Dom, ∀ hy : y.Dom, x.ge
     by_cases hx : x.dom
     · use hx; intro hy
       specialize H hy; specialize h fun _ => hy
-      rw [Classical.not_forall] at h ; cases' h with hx' h
-      rw [not_le] at h ; exact h
+      rw [Classical.not_forall] at h; cases' h with hx' h
+      rw [not_le] at h; exact h
     · specialize h fun hx' => (hx hx').elim
-      rw [Classical.not_forall] at h ; cases' h with hx' h
+      rw [Classical.not_forall] at h; cases' h with hx' h
       exact (hx hx').elim
   · rintro ⟨hx, H⟩;
     exact ⟨⟨fun _ => hx, fun hy => (H hy).le⟩, fun hxy h => not_lt_of_le (h _) (H _)⟩
@@ -534,7 +534,7 @@ theorem eq_natCast_sub_of_add_eq_natCast {x y : PartENat} {n : ℕ} (h : x + y =
   by
   lift x to ℕ using dom_of_le_coe ((le_add_right le_rfl).trans_eq h)
   lift y to ℕ using dom_of_le_coe ((le_add_left le_rfl).trans_eq h)
-  rw [← Nat.cast_add, coe_inj] at h 
+  rw [← Nat.cast_add, coe_inj] at h
   rw [get_coe, coe_inj, eq_tsub_of_add_eq h]
 #align part_enat.eq_coe_sub_of_add_eq_coe PartENat.eq_natCast_sub_of_add_eq_natCast
 -/
@@ -546,7 +546,7 @@ protected theorem add_lt_add_right {x y z : PartENat} (h : x < y) (hz : z ≠ �
   rcases ne_top_iff.mp hz with ⟨k, rfl⟩
   induction' y using PartENat.casesOn with n
   · rw [top_add]; apply_mod_cast coe_lt_top
-  norm_cast at h ; apply_mod_cast add_lt_add_right h
+  norm_cast at h; apply_mod_cast add_lt_add_right h
 #align part_enat.add_lt_add_right PartENat.add_lt_add_right
 -/
 
@@ -893,7 +893,7 @@ theorem lt_find_iff (n : ℕ) : (n : PartENat) < find P ↔ ∀ m ≤ n, ¬P m :
   refine' ⟨_, lt_find P n⟩
   intro h m hm
   by_cases H : (find P).Dom
-  · apply Nat.find_min H; rw [coe_lt_iff] at h ; specialize h H; exact lt_of_le_of_lt hm h
+  · apply Nat.find_min H; rw [coe_lt_iff] at h; specialize h H; exact lt_of_le_of_lt hm h
   · exact not_exists.mp H m
 #align part_enat.lt_find_iff PartENat.lt_find_iff
 -/

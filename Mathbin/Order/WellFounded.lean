@@ -157,7 +157,7 @@ protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {
   constructor
   · intro h';
     have : ¬r x y := by
-      intro hy; rw [WellFounded.succ, dif_pos] at h' 
+      intro hy; rw [WellFounded.succ, dif_pos] at h'
       exact wo.wf.not_lt_min _ h hy h'
     rcases trichotomous_of r x y with (hy | hy | hy)
     exfalso; exact this hy
@@ -183,8 +183,8 @@ private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMo
   by
   obtain ⟨c, hc⟩ : g b ∈ Set.range f := by rw [hfg]; exact Set.mem_range_self b
   cases' lt_or_le c b with hcb hbc
-  · rw [H c hcb] at hc 
-    rw [hg.injective hc] at hcb 
+  · rw [H c hcb] at hc
+    rw [hg.injective hc] at hcb
     exact hcb.false.elim
   · rw [← hc]
     exact hf.monotone hbc

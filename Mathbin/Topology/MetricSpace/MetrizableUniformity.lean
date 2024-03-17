@@ -146,7 +146,7 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
     simpa only [*, max_eq_right, MulZeroClass.mul_zero] using hd a b c c
   haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
   induction' hn : length l using Nat.strong_induction_on with n ihn generalizing x y l
-  simp only at ihn ; subst n
+  simp only at ihn; subst n
   set L := zip_with d (x::l) (l ++ [y])
   have hL_len : length L = length l + 1 := by simp
   cases' eq_or_ne (d x y) 0 with hd₀ hd₀; · simp only [hd₀, zero_le]
@@ -163,7 +163,7 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
       intro hLm
       rw [mem_set_of_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
           sum_eq_zero_iff, ← all₂_iff_forall, all₂_zip_with, ←
-          chain_append_singleton_iff_forall₂] at hm  <;>
+          chain_append_singleton_iff_forall₂] at hm <;>
         [skip; · simp]
       exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
     have hs_bdd : BddAbove s := ⟨length l, hs_ub⟩
@@ -173,7 +173,7 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zip_with hM_lt
   refine' ⟨(x::l).nthLe M hM_ltx, (l ++ [y]).nthLe M hM_lty, _, _, _⟩
   · cases M; · simp [dist_self]
-    rw [Nat.succ_le_iff] at hMl 
+    rw [Nat.succ_le_iff] at hMl
     have hMl' : length (take M l) = M := (length_take _ _).trans (min_eq_left hMl.le)
     simp only [nth_le]
     refine' (ihn _ hMl _ _ _ hMl').trans _
@@ -193,7 +193,7 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
     have hMs' : L.sum ≤ 2 * (L.take (M + 1)).Sum :=
       not_lt.1 fun h => (hMs.2 h.le).not_lt M.lt_succ_self
     rw [← sum_take_add_sum_drop L (M + 1), two_mul, add_le_add_iff_left, ← add_le_add_iff_right,
-      sum_take_add_sum_drop, ← two_mul] at hMs' 
+      sum_take_add_sum_drop, ← two_mul] at hMs'
     convert hMs'
     rwa [zip_with_distrib_drop, drop, drop_append_of_le_length]
 #align pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_ofPreNNDist
@@ -227,14 +227,14 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
           (eventually_uniformity_iterate_comp_subset (hB.mem m) 2) with
       ⟨φ, hφ_mono, hφ_comp, hφB⟩
     exact ⟨V ∘ φ, fun n => hV_symm _, hφ_comp, hφB⟩
-  letI := UniformSpace.separationSetoid X
+  letI := inseparableSetoid X
   set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.find h else 0
   have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
     intro x y; dsimp only [d]
     refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
     simp only [true_imp_iff]
     split_ifs with h
-    · rw [← Classical.not_forall] at h ; simp [h, pow_eq_zero_iff']
+    · rw [← Classical.not_forall] at h; simp [h, pow_eq_zero_iff']
     · simpa only [not_exists, Classical.not_not, eq_self_iff_true, true_iff_iff] using h
   have hd_symm : ∀ x y, d x y = d y x := by
     intro x y; dsimp only [d]
@@ -248,7 +248,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     simp only [d]; split_ifs with h
     · rw [(pow_right_strictAnti hr.1 hr.2).le_iff_le, Nat.find_le_iff]
       exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rfl, h⟩⟩
-    · push_neg at h 
+    · push_neg at h
       simp only [h, not_true, (pow_pos hr.1 _).not_le]
   have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y :=
     by
@@ -265,7 +265,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
   · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
     rwa [← NNReal.coe_pow, NNReal.coe_lt_coe, ← not_le, hle_d, Classical.not_not, Prod.mk.eta]
   · refine' fun n hn => ⟨n + 1, trivial, fun x hx => _⟩
-    rw [mem_set_of_eq] at hx 
+    rw [mem_set_of_eq] at hx
     contrapose! hx
     refine' le_trans _ ((div_le_iff' (zero_lt_two' ℝ)).2 (hd_le x.1 x.2))
     rwa [← NNReal.coe_two, ← NNReal.coe_div, ← NNReal.coe_pow, NNReal.coe_le_coe, pow_succ',

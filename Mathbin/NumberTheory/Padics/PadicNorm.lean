@@ -171,7 +171,7 @@ protected theorem nonzero {q : ℚ} (hq : q ≠ 0) : padicNorm p q ≠ 0 :=
 theorem zero_of_padicNorm_eq_zero {q : ℚ} (h : padicNorm p q = 0) : q = 0 :=
   by
   apply by_contradiction; intro hq
-  unfold padicNorm at h ; rw [if_neg hq] at h 
+  unfold padicNorm at h; rw [if_neg hq] at h
   apply absurd h
   apply zpow_ne_zero_of_ne_zero
   exact_mod_cast hp.1.NeZero
@@ -284,10 +284,10 @@ theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
     by
     apply le_of_not_gt
     intro hgt
-    rw [max_eq_right_of_lt hgt] at this 
+    rw [max_eq_right_of_lt hgt] at this
     apply not_lt_of_ge this
     assumption
-  have : padicNorm p q ≤ padicNorm p (q + r) := by rwa [max_eq_left hnge] at this 
+  have : padicNorm p q ≤ padicNorm p (q + r) := by rwa [max_eq_left hnge] at this
   apply _root_.le_antisymm
   · apply padicNorm.nonarchimedean
   · rwa [max_eq_left_of_lt hlt]
@@ -307,7 +307,7 @@ instance : IsAbsoluteValue (padicNorm p)
 theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z ≤ p ^ (-n : ℤ) :=
   by
   unfold padicNorm; split_ifs with hz
-  · norm_cast at hz 
+  · norm_cast at hz
     have : 0 ≤ (p ^ n : ℚ) := by apply pow_nonneg; exact_mod_cast le_of_lt hp.1.Pos
     simp [hz, this]
   · rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int,

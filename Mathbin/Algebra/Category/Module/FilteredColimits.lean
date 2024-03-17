@@ -89,7 +89,7 @@ theorem colimitSMulAux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
   apply M.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
-  simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg 
+  simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
 #align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimitSMulAux_eq_of_rel
 -/

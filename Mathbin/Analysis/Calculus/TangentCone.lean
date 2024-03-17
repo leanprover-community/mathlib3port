@@ -131,7 +131,7 @@ theorem tangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
   have A : tendsto (fun n => ‖c n‖⁻¹) l (𝓝 0) := tendsto_inv_at_top_zero.comp hc
   have B : tendsto (fun n => ‖c n • d n‖) l (𝓝 ‖y‖) := (continuous_norm.tendsto _).comp hd
   have C : tendsto (fun n => ‖c n‖⁻¹ * ‖c n • d n‖) l (𝓝 (0 * ‖y‖)) := A.mul B
-  rw [MulZeroClass.zero_mul] at C 
+  rw [MulZeroClass.zero_mul] at C
   have : ∀ᶠ n in l, ‖c n‖⁻¹ * ‖c n • d n‖ = ‖d n‖ :=
     by
     apply (eventually_ne_of_tendsto_norm_atTop hc 0).mono fun n hn => _
@@ -416,7 +416,7 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
   have : _ ≤ Submodule.span 𝕜 (tangentConeAt 𝕜 (s ×ˢ t) (x, y)) :=
     Submodule.span_mono
       (union_subset (subset_tangentCone_prod_left ht.2) (subset_tangentCone_prod_right hs.2))
-  rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this 
+  rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
   exact (hs.1.Prod ht.1).mono this
 #align unique_diff_within_at.prod UniqueDiffWithinAt.prod
 -/

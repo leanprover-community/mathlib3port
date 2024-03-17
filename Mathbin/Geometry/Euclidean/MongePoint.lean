@@ -358,7 +358,7 @@ theorem eq_mongePoint_of_forall_mem_mongePlane {n : ℕ} {s : Simplex ℝ P (n +
     by
     rw [Submodule.mem_iInf]
     exact fun i => (Submodule.mem_inf.1 (h' i i.property)).1
-  rw [Submodule.iInf_orthogonal, ← Submodule.span_iUnion] at hi 
+  rw [Submodule.iInf_orthogonal, ← Submodule.span_iUnion] at hi
   have hu :
     (⋃ i : { i // i₁ ≠ i }, ({s.points i₁ -ᵥ s.points i} : Set V)) =
       (· -ᵥ ·) (s.points i₁) '' (s.points '' (Set.univ \ {i₁})) :=
@@ -371,7 +371,7 @@ theorem eq_mongePoint_of_forall_mem_mongePlane {n : ℕ} {s : Simplex ℝ P (n +
       use i, ⟨Set.mem_univ _, i.property.symm⟩
     · rintro ⟨i, ⟨hiu, hi⟩, rfl⟩
       use⟨i, hi.symm⟩, rfl
-  rw [hu, ← vectorSpan_image_eq_span_vsub_set_left_ne ℝ _ (Set.mem_univ _), Set.image_univ] at hi 
+  rw [hu, ← vectorSpan_image_eq_span_vsub_set_left_ne ℝ _ (Set.mem_univ _), Set.image_univ] at hi
   have hv : p -ᵥ s.monge_point ∈ vectorSpan ℝ (Set.range s.points) :=
     by
     let s₁ : Finset (Fin (n + 3)) := univ.erase i₁
@@ -479,14 +479,14 @@ theorem affineSpan_pair_eq_altitude_iff {n : ℕ} (s : Simplex ℝ P (n + 1)) (i
   · intro h
     constructor
     · intro heq
-      rw [HEq, Set.pair_eq_singleton, vectorSpan_singleton] at h 
+      rw [HEq, Set.pair_eq_singleton, vectorSpan_singleton] at h
       have hd : finrank ℝ (s.altitude i).direction = 0 := by rw [← h, finrank_bot]
       simpa using hd
     · rw [← Submodule.mem_inf, _root_.inf_comm, ← direction_altitude, ← h]
       exact
         vsub_mem_vectorSpan ℝ (Set.mem_insert _ _) (Set.mem_insert_of_mem _ (Set.mem_singleton _))
   · rintro ⟨hne, h⟩
-    rw [← Submodule.mem_inf, _root_.inf_comm, ← direction_altitude] at h 
+    rw [← Submodule.mem_inf, _root_.inf_comm, ← direction_altitude] at h
     rw [vectorSpan_eq_span_vsub_set_left_ne ℝ (Set.mem_insert _ _),
       Set.insert_diff_of_mem _ (Set.mem_singleton _),
       Set.diff_singleton_eq_self fun h => hne (Set.mem_singleton_iff.1 h), Set.image_singleton]
@@ -585,8 +585,8 @@ theorem eq_orthocenter_of_forall_mem_altitude {t : Triangle ℝ P} {i₁ i₂ : 
     (h₁₂ : i₁ ≠ i₂) (h₁ : p ∈ t.altitude i₁) (h₂ : p ∈ t.altitude i₂) : p = t.orthocenter :=
   by
   obtain ⟨i₃, h₂₃, h₁₃⟩ : ∃ i₃, i₂ ≠ i₃ ∧ i₁ ≠ i₃ := by clear h₁ h₂; decide!
-  rw [t.altitude_eq_monge_plane h₁₃ h₁₂ h₂₃.symm] at h₁ 
-  rw [t.altitude_eq_monge_plane h₂₃ h₁₂.symm h₁₃.symm] at h₂ 
+  rw [t.altitude_eq_monge_plane h₁₃ h₁₂ h₂₃.symm] at h₁
+  rw [t.altitude_eq_monge_plane h₂₃ h₁₂.symm h₁₃.symm] at h₂
   rw [orthocenter_eq_monge_point]
   have ha : ∀ i, i₃ ≠ i → p ∈ t.monge_plane i₃ i :=
     by
@@ -768,12 +768,12 @@ theorem exists_of_range_subset_orthocentricSystem {t : Triangle ℝ P}
     rcases h i₃ h₁₃ with ⟨j₃, h₃⟩
     have hj₂₃ : j₂ ≠ j₃ := by
       intro he
-      rw [he, h₃] at h₂ 
+      rw [he, h₃] at h₂
       exact h₂₃.symm (hpi h₂)
     exact ⟨i₁, i₂, i₃, j₂, j₃, h₁₂, h₁₃, h₂₃, h₁₂₃, h₁, hj₂₃, h₂, h₃⟩
   · right
     have hs := Set.subset_diff_singleton hps h
-    rw [Set.insert_diff_self_of_not_mem ho] at hs 
+    rw [Set.insert_diff_self_of_not_mem ho] at hs
     refine' Set.eq_of_subset_of_card_le hs _
     rw [Set.card_range_of_injective hpi, Set.card_range_of_injective t.independent.injective]
 #align euclidean_geometry.exists_of_range_subset_orthocentric_system EuclideanGeometry.exists_of_range_subset_orthocentricSystem
@@ -810,7 +810,7 @@ theorem exists_dist_eq_circumradius_of_subset_insert_orthocenter {t : Triangle �
       exact t.dist_circumcenter_eq_circumradius _
   · use t.circumcenter, t.circumcenter_mem_affine_span
     intro p₁ hp₁
-    rw [hs] at hp₁ 
+    rw [hs] at hp₁
     rcases hp₁ with ⟨i, rfl⟩
     exact t.dist_circumcenter_eq_circumradius _
 #align euclidean_geometry.exists_dist_eq_circumradius_of_subset_insert_orthocenter EuclideanGeometry.exists_dist_eq_circumradius_of_subset_insert_orthocenter
@@ -822,7 +822,7 @@ theorem OrthocentricSystem.affineIndependent {s : Set P} (ho : OrthocentricSyste
     (hps : Set.range p ⊆ s) (hpi : Function.Injective p) : AffineIndependent ℝ p :=
   by
   rcases ho with ⟨t, hto, hst⟩
-  rw [hst] at hps 
+  rw [hst] at hps
   rcases exists_dist_eq_circumradius_of_subset_insert_orthocenter hto hps hpi with ⟨c, hcs, hc⟩
   exact cospherical.affine_independent ⟨c, t.circumradius, hc⟩ Set.Subset.rfl hpi
 #align euclidean_geometry.orthocentric_system.affine_independent EuclideanGeometry.OrthocentricSystem.affineIndependent
@@ -859,16 +859,16 @@ theorem OrthocentricSystem.exists_circumradius_eq {s : Set P} (ho : Orthocentric
   use t.circumradius
   intro t₂ ht₂
   have ht₂s := ht₂
-  rw [hts] at ht₂ 
+  rw [hts] at ht₂
   rcases exists_dist_eq_circumradius_of_subset_insert_orthocenter hto ht₂
       t₂.independent.injective with
     ⟨c, hc, h⟩
-  rw [Set.forall_range_iff] at h 
+  rw [Set.forall_mem_range] at h
   have hs : Set.range t.points ⊆ s := by
     rw [hts]
     exact Set.subset_insert _ _
   rw [affine_span_of_orthocentric_system ⟨t, hto, hts⟩ hs t.independent.injective, ←
-    affine_span_of_orthocentric_system ⟨t, hto, hts⟩ ht₂s t₂.independent.injective] at hc 
+    affine_span_of_orthocentric_system ⟨t, hto, hts⟩ ht₂s t₂.independent.injective] at hc
   exact (t₂.eq_circumradius_of_dist_eq hc h).symm
 #align euclidean_geometry.orthocentric_system.exists_circumradius_eq EuclideanGeometry.OrthocentricSystem.exists_circumradius_eq
 -/
@@ -881,7 +881,7 @@ theorem OrthocentricSystem.eq_insert_orthocenter {s : Set P} (ho : OrthocentricS
     s = insert t.orthocenter (Set.range t.points) :=
   by
   rcases ho with ⟨t₀, ht₀o, ht₀s⟩
-  rw [ht₀s] at ht 
+  rw [ht₀s] at ht
   rcases exists_of_range_subset_orthocentric_system ht₀o ht t.independent.injective with
     (⟨i₁, i₂, i₃, j₂, j₃, h₁₂, h₁₃, h₂₃, h₁₂₃, h₁, hj₂₃, h₂, h₃⟩ | hs)
   · obtain ⟨j₁, hj₁₂, hj₁₃, hj₁₂₃⟩ :

@@ -390,7 +390,7 @@ theorem exists_extension_forall_mem_of_closedEmbedding (f : C(X, ℝ)) {t : Set 
   have : ord_connected t' := by
     constructor; rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ z hz
     lift z to Ioo (-1 : ℝ) 1 using Icc_subset_Ioo (h x).2.1 (h y).2.2 hz
-    change z ∈ Icc (h x) (h y) at hz ; rw [← h.image_Icc] at hz 
+    change z ∈ Icc (h x) (h y) at hz; rw [← h.image_Icc] at hz
     rcases hz with ⟨z, hz, rfl⟩
     exact ⟨z, hs.out hx hy hz, rfl⟩
   have hFt : ∀ x, F x ∈ t' := fun x => mem_image_of_mem _ (hf x)

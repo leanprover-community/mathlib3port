@@ -126,7 +126,7 @@ theorem semiconj_of_isLUB [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃
   by
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
-  rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this 
+  rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this
   simpa [(· ∘ ·)] using this
 #align function.semiconj_of_is_lub Function.semiconj_of_isLUB
 -/

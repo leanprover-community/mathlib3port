@@ -51,7 +51,7 @@ theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h
 #print CancelDenoms.cancel_factors_eq_div /-
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) :
     e = e' / n :=
-  eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h 
+  eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h
 #align cancel_factors.cancel_factors_eq_div CancelDenoms.cancel_factors_eq_div
 -/
 
@@ -103,7 +103,7 @@ theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
   ext; constructor
   · rintro rfl; rfl
   · intro h
-    simp only [← mul_assoc] at h 
+    simp only [← mul_assoc] at h
     refine' mul_left_cancel₀ (mul_ne_zero _ _) h
     apply mul_ne_zero; apply div_ne_zero
     all_goals

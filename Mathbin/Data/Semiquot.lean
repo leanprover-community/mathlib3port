@@ -288,7 +288,7 @@ theorem eq_pure {q : Semiquot α} (p) : q = pure (get q p) :=
 #print Semiquot.pure_isPure /-
 @[simp]
 theorem pure_isPure (a : α) : IsPure (pure a)
-  | b, ab, c, ac => by rw [mem_pure] at ab ac ; cc
+  | b, ab, c, ac => by rw [mem_pure] at ab ac; cc
 #align semiquot.pure_is_pure Semiquot.pure_isPure
 -/
 

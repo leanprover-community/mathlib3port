@@ -375,8 +375,8 @@ theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
   by
   refine' ⟨fun h => _, fun h => sign_pos h⟩
   by_contra hn
-  rw [sign_apply, if_neg hn] at h 
-  split_ifs at h  <;> simpa using h
+  rw [sign_apply, if_neg hn] at h
+  split_ifs at h <;> simpa using h
 #align sign_eq_one_iff sign_eq_one_iff
 -/
 
@@ -384,8 +384,8 @@ theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
 theorem sign_eq_neg_one_iff : SignType.sign a = -1 ↔ a < 0 :=
   by
   refine' ⟨fun h => _, fun h => sign_neg h⟩
-  rw [sign_apply] at h 
-  split_ifs at h 
+  rw [sign_apply] at h
+  split_ifs at h
   · simpa using h
   · exact h_2
   · simpa using h
@@ -403,8 +403,8 @@ variable [Zero α] [LinearOrder α] {a : α}
 theorem sign_eq_zero_iff : SignType.sign a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ sign_zero⟩
-  rw [sign_apply] at h 
-  split_ifs at h  <;> cases h
+  rw [sign_apply] at h
+  split_ifs at h <;> cases h
   exact (le_of_not_lt h_1).eq_of_not_lt h_2
 #align sign_eq_zero_iff sign_eq_zero_iff
 -/

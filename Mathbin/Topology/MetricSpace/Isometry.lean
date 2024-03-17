@@ -465,7 +465,7 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : EMetric.diam (h '' s) = EM
 
 #print IsometryEquiv.toEquiv_injective /-
 theorem toEquiv_injective : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
-  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by dsimp at H ; subst e₁
+  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by dsimp at H; subst e₁
 #align isometry_equiv.to_equiv_inj IsometryEquiv.toEquiv_injective
 -/
 

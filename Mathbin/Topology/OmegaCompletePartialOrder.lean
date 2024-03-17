@@ -150,18 +150,18 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :
     OmegaCompletePartialOrder.Continuous' f :=
   by
-  simp only [continuous_def, (· ⁻¹' ·)] at hf 
+  simp only [continuous_def, (· ⁻¹' ·)] at hf
   have h : Monotone f := by
     intro x y h
     cases' hf {x | ¬x ≤ f y} (notBelow_isOpen _) with hf hf'; clear hf'
-    specialize hf h; simp only [preimage, mem_set_of_eq, le_Prop_eq] at hf 
+    specialize hf h; simp only [preimage, mem_set_of_eq, le_Prop_eq] at hf
     by_contra H; apply hf H le_rfl
   exists h; intro c
   apply eq_of_forall_ge_iff; intro z
   specialize
     «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:571:11: unsupported: specialize non-hyp»
   cases hf; specialize hf_h c
-  simp only [notBelow, OrderHom.coe_mk, eq_iff_iff, mem_set_of_eq] at hf_h 
+  simp only [notBelow, OrderHom.coe_mk, eq_iff_iff, mem_set_of_eq] at hf_h
   rw [← not_iff_not]
   simp only [ωSup_le_iff, hf_h, ωSup, iSup, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
     exists_prop, mem_range, OrderHom.coe_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,

@@ -78,14 +78,14 @@ theorem not_of_mem_foldl_argAux (hr₀ : Irreflexive r) (hr₁ : Transitive r) :
   induction' l using List.reverseRecOn with tl a ih
   · exact fun _ _ _ h => absurd h <| not_mem_nil _
   intro b m o hb ho
-  rw [foldl_append, foldl_cons, foldl_nil, arg_aux] at ho 
+  rw [foldl_append, foldl_cons, foldl_nil, arg_aux] at ho
   cases' hf : foldl (arg_aux r) o tl with c
-  · rw [hf] at ho 
-    rw [foldl_arg_aux_eq_none] at hf 
+  · rw [hf] at ho
+    rw [foldl_arg_aux_eq_none] at hf
     simp_all [hf.1, hf.2, hr₀ _]
-  rw [hf, Option.mem_def] at ho 
-  dsimp only at ho 
-  split_ifs at ho  with hac hac <;> cases' mem_append.1 hb with h h <;> subst ho
+  rw [hf, Option.mem_def] at ho
+  dsimp only at ho
+  split_ifs at ho with hac hac <;> cases' mem_append.1 hb with h h <;> subst ho
   · exact fun hba => ih h hf (hr₁ hba hac)
   · simp_all [hr₀ _]
   · exact ih h hf
@@ -253,11 +253,11 @@ theorem index_of_argmax :
     by
     simp only [index_of_cons, argmax_cons, Option.mem_def] at hm ⊢
     cases h : argmax f tl
-    · rw [h] at hm 
+    · rw [h] at hm
       simp_all
-    rw [h] at hm 
-    dsimp only at hm 
-    obtain rfl | ha := ha <;> split_ifs at hm  <;> subst hm
+    rw [h] at hm
+    dsimp only at hm
+    obtain rfl | ha := ha <;> split_ifs at hm <;> subst hm
     · cases not_le_of_lt ‹_› ‹_›
     · rw [if_neg, if_neg]
       exact Nat.succ_le_succ (index_of_argmax h ha ham)

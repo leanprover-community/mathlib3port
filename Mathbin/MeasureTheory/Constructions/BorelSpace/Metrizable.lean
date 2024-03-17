@@ -28,47 +28,47 @@ variable [TopologicalSpace β] [PseudoMetrizableSpace β] [MeasurableSpace β] [
 
 open Metric
 
-#print measurable_of_tendsto_ennreal' /-
+#print ENNReal.measurable_of_tendsto' /-
 /-- A limit (over a general filter) of measurable `ℝ≥0∞` valued functions is measurable. -/
-theorem measurable_of_tendsto_ennreal' {ι} {f : ι → α → ℝ≥0∞} {g : α → ℝ≥0∞} (u : Filter ι)
+theorem ENNReal.measurable_of_tendsto' {ι} {f : ι → α → ℝ≥0∞} {g : α → ℝ≥0∞} (u : Filter ι)
     [NeBot u] [IsCountablyGenerated u] (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) :
     Measurable g := by
   rcases u.exists_seq_tendsto with ⟨x, hx⟩
-  rw [tendsto_pi_nhds] at lim 
+  rw [tendsto_pi_nhds] at lim
   have : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top) = g := by ext1 y;
     exact ((limUnder y).comp hx).liminf_eq
   rw [← this]
   show Measurable fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top
   exact measurable_liminf fun n => hf (x n)
-#align measurable_of_tendsto_ennreal' measurable_of_tendsto_ennreal'
+#align measurable_of_tendsto_ennreal' ENNReal.measurable_of_tendsto'
 -/
 
-#print measurable_of_tendsto_ennreal /-
+#print ENNReal.measurable_of_tendsto /-
 /-- A sequential limit of measurable `ℝ≥0∞` valued functions is measurable. -/
-theorem measurable_of_tendsto_ennreal {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0∞} (hf : ∀ i, Measurable (f i))
+theorem ENNReal.measurable_of_tendsto {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0∞} (hf : ∀ i, Measurable (f i))
     (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
-  measurable_of_tendsto_ennreal' atTop hf limUnder
-#align measurable_of_tendsto_ennreal measurable_of_tendsto_ennreal
+  ENNReal.measurable_of_tendsto' atTop hf limUnder
+#align measurable_of_tendsto_ennreal ENNReal.measurable_of_tendsto
 -/
 
-#print measurable_of_tendsto_nnreal' /-
+#print NNReal.measurable_of_tendsto' /-
 /-- A limit (over a general filter) of measurable `ℝ≥0` valued functions is measurable. -/
-theorem measurable_of_tendsto_nnreal' {ι} {f : ι → α → ℝ≥0} {g : α → ℝ≥0} (u : Filter ι) [NeBot u]
+theorem NNReal.measurable_of_tendsto' {ι} {f : ι → α → ℝ≥0} {g : α → ℝ≥0} (u : Filter ι) [NeBot u]
     [IsCountablyGenerated u] (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) :
     Measurable g := by
   simp_rw [← measurable_coe_nnreal_ennreal_iff] at hf ⊢
-  refine' measurable_of_tendsto_ennreal' u hf _
+  refine' ENNReal.measurable_of_tendsto' u hf _
   rw [tendsto_pi_nhds] at lim ⊢
   exact fun x => (ennreal.continuous_coe.tendsto (g x)).comp (limUnder x)
-#align measurable_of_tendsto_nnreal' measurable_of_tendsto_nnreal'
+#align measurable_of_tendsto_nnreal' NNReal.measurable_of_tendsto'
 -/
 
-#print measurable_of_tendsto_nnreal /-
+#print NNReal.measurable_of_tendsto /-
 /-- A sequential limit of measurable `ℝ≥0` valued functions is measurable. -/
-theorem measurable_of_tendsto_nnreal {f : ℕ → α → ℝ≥0} {g : α → ℝ≥0} (hf : ∀ i, Measurable (f i))
+theorem NNReal.measurable_of_tendsto {f : ℕ → α → ℝ≥0} {g : α → ℝ≥0} (hf : ∀ i, Measurable (f i))
     (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
-  measurable_of_tendsto_nnreal' atTop hf limUnder
-#align measurable_of_tendsto_nnreal measurable_of_tendsto_nnreal
+  NNReal.measurable_of_tendsto' atTop hf limUnder
+#align measurable_of_tendsto_nnreal NNReal.measurable_of_tendsto
 -/
 
 #print measurable_of_tendsto_metrizable' /-
@@ -83,7 +83,7 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
   have : Measurable fun x => inf_nndist (g x) s :=
     by
     suffices : tendsto (fun i x => inf_nndist (f i x) s) u (𝓝 fun x => inf_nndist (g x) s)
-    exact measurable_of_tendsto_nnreal' u (fun i => (hf i).infNndist) this
+    exact NNReal.measurable_of_tendsto' u (fun i => (hf i).infNndist) this
     rw [tendsto_pi_nhds] at lim ⊢; intro x
     exact ((continuous_inf_nndist_pt s).Tendsto (g x)).comp (limUnder x)
   have h4s : g ⁻¹' s = (fun x => inf_nndist (g x) s) ⁻¹' {0} := by ext x;

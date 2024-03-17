@@ -28,7 +28,7 @@ theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc
   cases' hbc with k hk
   subst hk
   rw [Int.mul_ediv_cancel_left _ hb]
-  rw [mul_assoc] at h 
+  rw [mul_assoc] at h
   apply mul_left_cancel₀ hb h
 #align int.eq_mul_div_of_mul_eq_mul_of_dvd_left Int.eq_mul_div_of_mul_eq_mul_of_dvd_left
 -/
@@ -38,7 +38,7 @@ theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc
 zero. -/
 theorem eq_zero_of_dvd_of_natAbs_lt_natAbs {a b : ℤ} (w : a ∣ b) (h : natAbs b < natAbs a) :
     b = 0 := by
-  rw [← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd] at w 
+  rw [← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd] at w
   rw [← nat_abs_eq_zero]
   exact eq_zero_of_dvd_of_lt w h
 #align int.eq_zero_of_dvd_of_nat_abs_lt_nat_abs Int.eq_zero_of_dvd_of_natAbs_lt_natAbs

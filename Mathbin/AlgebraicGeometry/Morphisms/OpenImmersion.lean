@@ -74,12 +74,12 @@ theorem isOpenImmersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImme
         ((is_open_immersion_respects_iso.arrow_iso_iff
                 (morphism_restrict_opens_range f (𝒰.map i))).mpr
             (H i)).1
-      rwa [arrow.mk_hom, morphism_restrict_val_base] at this 
+      rwa [arrow.mk_hom, morphism_restrict_val_base] at this
     · intro x
       have :=
         arrow.iso_w
           (morphism_restrict_stalk_map f (𝒰.map <| 𝒰.f <| f.1 x).opensRange ⟨x, 𝒰.covers _⟩)
-      dsimp only [arrow.mk_hom] at this 
+      dsimp only [arrow.mk_hom] at this
       rw [this]
       haveI : is_open_immersion (f ∣_ (𝒰.map <| 𝒰.f <| f.1 x).opensRange) :=
         (is_open_immersion_respects_iso.arrow_iso_iff

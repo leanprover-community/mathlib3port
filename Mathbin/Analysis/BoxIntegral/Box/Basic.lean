@@ -213,7 +213,7 @@ theorem le_iff_bounds : I ≤ J ↔ J.lower ≤ I.lower ∧ I.upper ≤ J.upper 
 theorem injective_coe : Injective (coe : Box ι → Set (ι → ℝ)) :=
   by
   rintro ⟨l₁, u₁, h₁⟩ ⟨l₂, u₂, h₂⟩ h
-  simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h 
+  simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h
   congr
   exacts [le_antisymm h.2.1 h.1.1, le_antisymm h.1.2 h.2.2]
 #align box_integral.box.injective_coe BoxIntegral.Box.injective_coe
@@ -613,7 +613,7 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
   have : 0 < r := by
     by_contra hr
     have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
-    rw [← h] at this 
+    rw [← h] at this
     exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
   simp_rw [NNReal.finset_sup_div, div_div_div_cancel_right _ ((map_ne_zero Real.nnabs).2 this.ne')]
 #align box_integral.box.distortion_eq_of_sub_eq_div BoxIntegral.Box.distortion_eq_of_sub_eq_div

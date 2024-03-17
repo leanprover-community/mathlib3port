@@ -217,8 +217,8 @@ theorem le_bound (f : BoundedAdditiveMeasure α) (s : Set α) : f s ≤ f.C :=
 theorem empty (f : BoundedAdditiveMeasure α) : f ∅ = 0 :=
   by
   have : (∅ : Set α) = ∅ ∪ ∅ := by simp only [empty_union]
-  apply_fun f at this 
-  rwa [f.additive _ _ (empty_disjoint _), self_eq_add_left] at this 
+  apply_fun f at this
+  rwa [f.additive _ _ (empty_disjoint _), self_eq_add_left] at this
 #align counterexample.phillips_1940.bounded_additive_measure.empty Counterexample.Phillips1940.BoundedAdditiveMeasure.empty
 
 instance : Neg (BoundedAdditiveMeasure α) :=
@@ -350,7 +350,7 @@ theorem exists_discrete_support (f : BoundedAdditiveMeasure α) :
     exact h₁ _ (ht.mono (diff_subset _ _))
   · have : t \ (s₁ ∪ s₂) = (t \ (s₁ ∪ s₂)) \ s₂ := by rw [diff_diff, union_assoc, union_self]
     rw [this]
-    simp only [neg_nonpos, neg_apply] at h₂ 
+    simp only [neg_nonpos, neg_apply] at h₂
     exact h₂ _ (ht.mono (diff_subset _ _))
 #align counterexample.phillips_1940.bounded_additive_measure.exists_discrete_support Counterexample.Phillips1940.BoundedAdditiveMeasure.exists_discrete_support
 
@@ -593,15 +593,15 @@ theorem countable_ne (Hcont : (#ℝ) = aleph 1) (φ : (DiscreteCopy ℝ →ᵇ �
     by
     intro x hx
     contrapose! hx
-    simp only [Classical.not_not, mem_set_of_eq] at hx 
+    simp only [Classical.not_not, mem_set_of_eq] at hx
     simp [apply_f_eq_continuous_part Hcont φ x hx]
   have B :
     {x | φ.to_bounded_additive_measure.discrete_support ∩ spf Hcont x ≠ ∅} ⊆
       ⋃ y ∈ φ.to_bounded_additive_measure.discrete_support, {x | y ∈ spf Hcont x} :=
     by
     intro x hx
-    dsimp at hx 
-    rw [← Ne.def, ← nonempty_iff_ne_empty] at hx 
+    dsimp at hx
+    rw [← Ne.def, ← nonempty_iff_ne_empty] at hx
     simp only [exists_prop, mem_Union, mem_set_of_eq]
     exact hx
   apply countable.mono (subset.trans A B)
@@ -664,15 +664,15 @@ theorem no_pettis_integral (Hcont : (#ℝ) = aleph 1) :
         ∀ φ : (DiscreteCopy ℝ →ᵇ ℝ) →L[ℝ] ℝ, ∫ x in Icc 0 1, φ (f Hcont x) = φ g :=
   by
   rintro ⟨g, h⟩
-  simp only [integral_comp] at h 
+  simp only [integral_comp] at h
   have : g = 0 := by
     ext x
     have : g x = eval_clm ℝ x g := rfl
     rw [this, ← h]
     simp
-  simp only [this, ContinuousLinearMap.map_zero] at h 
+  simp only [this, ContinuousLinearMap.map_zero] at h
   specialize h (volume.restrict (Icc (0 : ℝ) 1)).extensionToBoundedFunctions
-  simp_rw [to_functions_to_measure_continuous_part _ _ MeasurableSet.univ] at h 
+  simp_rw [to_functions_to_measure_continuous_part _ _ MeasurableSet.univ] at h
   simpa using h
 #align counterexample.phillips_1940.no_pettis_integral Counterexample.Phillips1940.no_pettis_integral
 

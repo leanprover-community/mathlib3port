@@ -348,8 +348,8 @@ theorem shiftFunctorAdd'_zero_add_inv_app (a : A) (X : C) :
   by
   have := nat_trans.congr_app (congr_arg iso.inv (shift_functor_add'_zero_add C a)) X
   simp only [iso.trans_inv, iso_whisker_right_inv, iso.symm_inv, nat_trans.comp_app,
-    whisker_right_app, functor.left_unitor_hom_app] at this 
-  dsimp at this 
+    whisker_right_app, functor.left_unitor_hom_app] at this
+  dsimp at this
   simpa only [category.comp_id] using this
 #align category_theory.shift_functor_add'_zero_add_inv_app CategoryTheory.shiftFunctorAdd'_zero_add_inv_app
 -/
@@ -389,8 +389,8 @@ theorem shiftFunctorAdd'_add_zero_inv_app (a : A) (X : C) :
   by
   have := nat_trans.congr_app (congr_arg iso.inv (shift_functor_add'_add_zero C a)) X
   simp only [iso.trans_inv, iso_whisker_left_inv, iso.symm_inv, nat_trans.comp_app,
-    whisker_left_app, functor.right_unitor_hom_app] at this 
-  dsimp at this 
+    whisker_left_app, functor.right_unitor_hom_app] at this
+  dsimp at this
   simpa only [category.comp_id] using this
 #align category_theory.shift_functor_add'_add_zero_inv_app CategoryTheory.shiftFunctorAdd'_add_zero_inv_app
 -/
@@ -897,7 +897,7 @@ def hasShiftOfFullyFaithful : HasShift C A :=
               category.assoc, iso.inv_hom_id_app_assoc, iso.inv_hom_id_app]
             erw [(i m₃).Hom.naturality]
             have := dcongr_arg (fun a => (i a).Hom.app X) (add_assoc m₁ m₂ m₃)
-            dsimp at this 
+            dsimp at this
             dsimp
             rw [iso.inv_hom_id_app_assoc, map_has_shift_of_fully_faithful_add_hom_app, this,
               eq_to_hom_map, category.comp_id, ← functor.map_comp, category.assoc,
@@ -910,7 +910,7 @@ def hasShiftOfFullyFaithful : HasShift C A :=
         F.map_injective
           (by
             have := dcongr_arg (fun a => (i a).Hom.app X) (zero_add n)
-            dsimp at this 
+            dsimp at this
             rw [← cancel_mono ((i n).Hom.app ((s 0).obj X))]
             simp only [this, map_has_shift_of_fully_faithful_add_hom_app,
               shift_functor_add_zero_add_hom_app, eq_to_hom_map, category.assoc,
@@ -923,7 +923,7 @@ def hasShiftOfFullyFaithful : HasShift C A :=
         F.map_injective
           (by
             have := dcongr_arg (fun a => (i a).Hom.app X) (add_zero n)
-            dsimp at this 
+            dsimp at this
             simpa [this, ← nat_trans.naturality_assoc, eq_to_hom_map,
               shift_functor_add_add_zero_hom_app]) }
 #align category_theory.has_shift_of_fully_faithful CategoryTheory.hasShiftOfFullyFaithful

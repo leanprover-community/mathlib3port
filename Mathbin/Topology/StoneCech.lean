@@ -112,7 +112,7 @@ instance : TotallyDisconnectedSpace (Ultrafilter α) :=
   intro B hB
   rw [← Ultrafilter.coe_le_coe]
   intro s hs
-  rw [connectedComponent_eq_iInter_isClopen, Set.mem_iInter] at hB 
+  rw [connectedComponent_eq_iInter_isClopen, Set.mem_iInter] at hB
   let Z := {F : Ultrafilter α | s ∈ F}
   have hZ : IsClopen Z := ⟨ultrafilter_isOpen_basic s, ultrafilter_isClosed_basic s⟩
   exact hB ⟨Z, hZ, hs⟩
@@ -137,7 +137,7 @@ theorem ultrafilter_pure_injective : Function.Injective (pure : α → Ultrafilt
   by
   intro x y h
   have : {x} ∈ (pure x : Ultrafilter α) := singleton_mem_pure
-  rw [h] at this 
+  rw [h] at this
   exact (mem_singleton_iff.mp (mem_pure.mp this)).symm
 #align ultrafilter_pure_injective ultrafilter_pure_injective
 -/
@@ -365,7 +365,7 @@ theorem continuous_stoneCechUnit : Continuous (stoneCechUnit : α → StoneCech 
     have : ↑(g.map pure) ≤ 𝓝 g := by rw [ultrafilter_converges_iff] <;> exact (bind_pure _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
       continuousAt_iff_ultrafilter.mp (continuous_quotient_mk'.Tendsto g) _ this
-    rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound <| convergent_eqv_pure gx] at this 
+    rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound <| convergent_eqv_pure gx] at this
 #align continuous_stone_cech_unit continuous_stoneCechUnit
 -/
 

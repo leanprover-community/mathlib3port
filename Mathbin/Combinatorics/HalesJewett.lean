@@ -381,11 +381,11 @@ theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finse
   · rw [← Finset.sum_const]
     apply Finset.sum_congr rfl
     intro i hi
-    rw [hs, Finset.sep_def, Finset.mem_filter] at hi 
+    rw [hs, Finset.sep_def, Finset.mem_filter] at hi
     rw [l.apply_none _ _ hi.right, Subtype.coe_mk]
   · apply Finset.sum_congr rfl
     intro i hi
-    rw [hs, Finset.sep_def, Finset.compl_filter, Finset.mem_filter] at hi 
+    rw [hs, Finset.sep_def, Finset.compl_filter, Finset.mem_filter] at hi
     obtain ⟨y, hy⟩ := option.ne_none_iff_exists.mp hi.right
     simp_rw [line.apply, ← hy, Option.map_some', Option.getD_some]
 #align combinatorics.exists_mono_homothetic_copy Combinatorics.exists_mono_homothetic_copy

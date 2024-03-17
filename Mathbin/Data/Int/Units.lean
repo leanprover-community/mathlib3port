@@ -141,7 +141,7 @@ theorem isUnit_mul_self {a : ℤ} (ha : IsUnit a) : a * a = 1 :=
 theorem isUnit_add_isUnit_eq_isUnit_add_isUnit {a b c d : ℤ} (ha : IsUnit a) (hb : IsUnit b)
     (hc : IsUnit c) (hd : IsUnit d) : a + b = c + d ↔ a = c ∧ b = d ∨ a = d ∧ b = c :=
   by
-  rw [is_unit_iff] at ha hb hc hd 
+  rw [is_unit_iff] at ha hb hc hd
   cases ha <;> cases hb <;> cases hc <;> cases hd <;> subst ha <;> subst hb <;> subst hc <;>
       subst hd <;>
     tidy

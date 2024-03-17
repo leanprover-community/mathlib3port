@@ -193,8 +193,8 @@ noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal :
     obtain ⟨x, rfl⟩ := I.to_cotangent_surjective x
     obtain ⟨y, rfl⟩ := I.to_cotangent_surjective y
     rw [I.to_cotangent_eq]
-    dsimp only [to_cotangent_to_quotient_square, Submodule.mkQ_apply] at e 
-    rwa [Submodule.Quotient.eq] at e 
+    dsimp only [to_cotangent_to_quotient_square, Submodule.mkQ_apply] at e
+    rwa [Submodule.Quotient.eq] at e
   · rintro ⟨_, x, hx, rfl⟩
     refine' ⟨I.to_cotangent ⟨x, hx⟩, Subtype.ext rfl⟩
 #align ideal.cotangent_equiv_ideal Ideal.cotangentEquivIdeal

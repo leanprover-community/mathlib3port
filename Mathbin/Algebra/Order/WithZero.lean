@@ -269,7 +269,7 @@ theorem inv_le_inv₀ (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ ≤ b⁻¹ ↔ b �
 theorem lt_of_mul_lt_mul_of_le₀ (h : a * b < c * d) (hc : 0 < c) (hh : c ≤ a) : b < d :=
   by
   have ha : a ≠ 0 := ne_of_gt (lt_of_lt_of_le hc hh)
-  simp_rw [← inv_le_inv₀ ha (ne_of_gt hc)] at hh 
+  simp_rw [← inv_le_inv₀ ha (ne_of_gt hc)] at hh
   have := mul_lt_mul_of_lt_of_le₀ hh (inv_ne_zero (ne_of_gt hc)) h
   simpa [inv_mul_cancel_left₀ ha, inv_mul_cancel_left₀ (ne_of_gt hc)] using this
 #align lt_of_mul_lt_mul_of_le₀ lt_of_mul_lt_mul_of_le₀

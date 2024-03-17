@@ -112,7 +112,7 @@ theorem bound_of_shell {ε : ι → ℝ} {C : ℝ} (hε : ∀ i, 0 < ε i) {c : 
     (hf : ∀ m : ∀ i, E i, (∀ i, ε i / ‖c i‖ ≤ ‖m i‖) → (∀ i, ‖m i‖ < ε i) → ‖f m‖ ≤ C * ∏ i, ‖m i‖)
     (m : ∀ i, E i) : ‖f m‖ ≤ C * ∏ i, ‖m i‖ :=
   by
-  rcases em (∃ i, m i = 0) with (⟨i, hi⟩ | hm) <;> [skip; push_neg at hm ]
+  rcases em (∃ i, m i = 0) with (⟨i, hi⟩ | hm) <;> [skip; push_neg at hm]
   · simp [f.map_coord_zero i hi, prod_eq_zero (mem_univ i), hi]
   choose δ hδ0 hδm_lt hle_δm hδinv using fun i => rescale_to_shell (hc i) (hε i) (hm i)
   have hδ0 : 0 < ∏ i, ‖δ i‖ := prod_pos fun i _ => norm_pos_iff.2 (hδ0 i)
@@ -134,7 +134,7 @@ theorem exists_bound_of_continuous (hf : Continuous f) :
     simp [univ_eq_empty, zero_le_one]
   obtain ⟨ε : ℝ, ε0 : 0 < ε, hε : ∀ m : ∀ i, E i, ‖m - 0‖ < ε → ‖f m - f 0‖ < 1⟩ :=
     NormedAddCommGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one
-  simp only [sub_zero, f.map_zero] at hε 
+  simp only [sub_zero, f.map_zero] at hε
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   have : 0 < (‖c‖ / ε) ^ Fintype.card ι := pow_pos (div_pos (zero_lt_one.trans hc) ε0) _
   refine' ⟨_, this, _⟩
@@ -376,7 +376,7 @@ theorem le_opNorm : ‖f m‖ ≤ ‖f‖ * ∏ i, ‖m i‖ :=
   have A : 0 ≤ ∏ i, ‖m i‖ := prod_nonneg fun j hj => norm_nonneg _
   cases' A.eq_or_lt with h hlt
   · rcases prod_eq_zero_iff.1 h.symm with ⟨i, _, hi⟩
-    rw [norm_eq_zero] at hi 
+    rw [norm_eq_zero] at hi
     have : f m = 0 := f.map_coord_zero i hi
     rw [this, norm_zero]
     exact mul_nonneg (op_norm_nonneg f) A
@@ -588,9 +588,9 @@ theorem norm_ofSubsingleton_id [Subsingleton ι] [Nontrivial G] (i' : ι) :
   by
   apply le_antisymm (norm_of_subsingleton_le 𝕜 G i')
   obtain ⟨g, hg⟩ := exists_ne (0 : G)
-  rw [← norm_ne_zero_iff] at hg 
+  rw [← norm_ne_zero_iff] at hg
   have := (of_subsingleton 𝕜 G i').ratio_le_opNorm fun _ => g
-  rwa [Fintype.prod_subsingleton _ i', of_subsingleton_apply, div_self hg] at this 
+  rwa [Fintype.prod_subsingleton _ i', of_subsingleton_apply, div_self hg] at this
 #align continuous_multilinear_map.norm_of_subsingleton ContinuousMultilinearMap.norm_ofSubsingleton_id
 -/
 
@@ -839,13 +839,13 @@ instance [CompleteSpace G] : CompleteSpace (ContinuousMultilinearMap 𝕜 E G) :
         skip
         have A := hF (Function.update v i (x + y))
         have B := (hF (Function.update v i x)).add (hF (Function.update v i y))
-        simp at A B 
+        simp at A B
         exact tendsto_nhds_unique A B
       map_smul' := fun _ v i c x => by
         skip
         have A := hF (Function.update v i (c • x))
         have B := Filter.Tendsto.smul (@tendsto_const_nhds _ ℕ _ c _) (hF (Function.update v i x))
-        simp at A B 
+        simp at A B
         exact tendsto_nhds_unique A B }
   -- and that `F` has norm at most `(b 0 + ‖f 0‖)`.
   have Fnorm : ∀ v, ‖F v‖ ≤ (b 0 + ‖f 0‖) * ∏ i, ‖v i‖ :=
@@ -983,7 +983,7 @@ theorem norm_mkPiAlgebraFin_succ_le : ‖ContinuousMultilinearMap.mkPiAlgebraFin
   refine' this _ _
   intro m
   simp only [ContinuousMultilinearMap.mkPiAlgebraFin_apply, one_mul, List.ofFn_eq_map,
-    Fin.prod_univ_def, Multiset.coe_map, Multiset.coe_prod]
+    Fin.prod_univ_def, Multiset.map_coe, Multiset.prod_coe]
   refine' (List.norm_prod_le' _).trans_eq _
   · rw [Ne.def, List.map_eq_nil, List.finRange_eq_nil]
     exact Nat.succ_ne_zero _

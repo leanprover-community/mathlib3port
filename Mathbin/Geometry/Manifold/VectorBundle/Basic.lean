@@ -226,7 +226,7 @@ theorem contMDiff_proj : ContMDiff (IB.Prod 𝓘(𝕜, F)) IB n (π F E) :=
   simp_rw [(· ∘ ·), FiberBundle.extChartAt]
   apply cont_diff_within_at_fst.congr
   · rintro ⟨a, b⟩ hab
-    simp only [mfld_simps] at hab 
+    simp only [mfld_simps] at hab
     have : ((chart_at HB x.1).symm (IB.symm a), b) ∈ (trivialization_at F E x.proj).target := by
       simp only [hab, mfld_simps]
     simp only [Trivialization.proj_symm_apply _ this, hab, mfld_simps]
@@ -364,7 +364,7 @@ instance : SmoothManifoldWithCorners (IB.Prod 𝓘(𝕜, F)) (TotalSpace F E) :=
   by
   refine' { StructureGroupoid.HasGroupoid.comp (smoothFiberwiseLinear B F IB) _ with }
   intro e he
-  rw [mem_smoothFiberwiseLinear_iff] at he 
+  rw [mem_smoothFiberwiseLinear_iff] at he
   obtain ⟨φ, U, hU, hφ, h2φ, heφ⟩ := he
   rw [isLocalStructomorphOn_contDiffGroupoid_iff]
   refine' ⟨ContMDiffOn.congr _ heφ.eq_on, ContMDiffOn.congr _ heφ.symm'.eq_on⟩

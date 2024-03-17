@@ -159,7 +159,7 @@ def equivIntegerLattice [NumberField K] : 𝓞 K ≃ₗ[ℤ] integerLattice K :=
       map_smul' := fun c x => by simpa only [zsmul_eq_mul, map_mul, map_intCast] }
     (by
       refine' ⟨fun _ _ h => _, fun ⟨_, _, ⟨a, rfl⟩, rfl⟩ => ⟨a, rfl⟩⟩
-      rw [LinearMap.coe_mk, Subtype.mk_eq_mk] at h 
+      rw [LinearMap.coe_mk, Subtype.mk_eq_mk] at h
       exact IsFractionRing.injective (𝓞 K) K (canonical_embedding_injective K h))
 #align number_field.canonical_embedding.equiv_integer_lattice NumberField.canonicalEmbedding.equivIntegerLattice
 

@@ -128,7 +128,7 @@ theorem destruct_eq_pure {s : Computation α} {a : α} : destruct s = Sum.inl a 
   · contradiction
   · apply Subtype.eq; funext n
     induction' n with n IH
-    · injection h with h'; rwa [h'] at f0 
+    · injection h with h'; rwa [h'] at f0
     · exact s.2 IH
 #align computation.destruct_eq_ret Computation.destruct_eq_pure
 -/
@@ -250,7 +250,7 @@ def corec (f : β → Sum α β) (b : β) : Computation α :=
   induction' n with n IH <;> intro o
   · change (corec.F f o).1 = some a' → (corec.F f (corec.F f o).2).1 = some a'
     cases' o with a b <;> intro h; · exact h
-    dsimp [corec.F] at h ; dsimp [corec.F]
+    dsimp [corec.F] at h; dsimp [corec.F]
     cases' f b with a b'; · exact h
     · contradiction
   · rw [Stream'.corec'_eq (corec.F f) (corec.F f o).2, Stream'.corec'_eq (corec.F f) o]
@@ -329,12 +329,12 @@ theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s
         And.imp id (fun r => ⟨tail s, tail s', by cases s <;> rfl, by cases s' <;> rfl, r⟩) this
       have := bisim r; revert r this
       apply rec_on s _ _ <;> intros <;> apply rec_on s' _ _ <;> intros <;> intro r this
-      · constructor; dsimp at this ; rw [this]; assumption
-      · rw [destruct_ret, destruct_think] at this 
+      · constructor; dsimp at this; rw [this]; assumption
+      · rw [destruct_ret, destruct_think] at this
         exact False.elim this
-      · rw [destruct_ret, destruct_think] at this 
+      · rw [destruct_ret, destruct_think] at this
         exact False.elim this
-      · simp at this ; simp [*]
+      · simp at this; simp [*]
   exact ⟨s₁, s₂, rfl, rfl, r⟩
 #align computation.eq_of_bisim Computation.eq_of_bisim
 -/
@@ -393,7 +393,7 @@ theorem terminates_of_mem {s : Computation α} {a : α} (h : a ∈ s) : Terminat
 
 #print Computation.terminates_def /-
 theorem terminates_def (s : Computation α) : Terminates s ↔ ∃ n, (s.1 n).isSome :=
-  ⟨fun ⟨⟨a, n, h⟩⟩ => ⟨n, by dsimp [Stream'.get] at h ; rw [← h]; exact rfl⟩, fun ⟨n, h⟩ =>
+  ⟨fun ⟨⟨a, n, h⟩⟩ => ⟨n, by dsimp [Stream'.get] at h; rw [← h]; exact rfl⟩, fun ⟨n, h⟩ =>
     ⟨⟨Option.get h, n, (Option.eq_some_of_isSome h).symm⟩⟩⟩
 #align computation.terminates_def Computation.terminates_def
 -/
@@ -698,7 +698,7 @@ theorem results_thinkN {s : Computation α} {a m} :
 
 #print Computation.results_thinkN_pure /-
 theorem results_thinkN_pure (a : α) (n) : Results (thinkN (pure a) n) a n := by
-  have := results_thinkN n (results_ret a) <;> rwa [Nat.zero_add] at this 
+  have := results_thinkN n (results_ret a) <;> rwa [Nat.zero_add] at this
 #align computation.results_thinkN_ret Computation.results_thinkN_pure
 -/
 
@@ -963,10 +963,10 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
     Results (bind s f) b k → ∃ a m n, Results s a m ∧ Results (f a) b n ∧ k = n + m :=
   by
   induction' k with n IH generalizing s <;> apply rec_on s (fun a => _) fun s' => _ <;> intro e
-  · simp [thinkN] at e ; refine' ⟨a, _, _, results_ret _, e, rfl⟩
+  · simp [thinkN] at e; refine' ⟨a, _, _, results_ret _, e, rfl⟩
   · have := congr_arg head (eq_thinkN e); contradiction
-  · simp at e ; refine' ⟨a, _, n + 1, results_ret _, e, rfl⟩
-  · simp at e ;
+  · simp at e; refine' ⟨a, _, n + 1, results_ret _, e, rfl⟩
+  · simp at e;
     exact by
       let ⟨a, m, n', h1, h2, e'⟩ := IH e
       rw [e'] <;> exact ⟨a, m.succ, n', results_think h1, h2, rfl⟩
@@ -987,7 +987,7 @@ theorem bind_promises {s : Computation α} {f : α → Computation β} {a b} (h1
     (h2 : f a ~> b) : bind s f ~> b := fun b' bB =>
   by
   rcases exists_of_mem_bind bB with ⟨a', a's, ba'⟩
-  rw [← h1 a's] at ba' ; exact h2 ba'
+  rw [← h1 a's] at ba'; exact h2 ba'
 #align computation.bind_promises Computation.bind_promises
 -/
 
@@ -1038,7 +1038,7 @@ theorem mem_map (f : α → β) {a} {s : Computation α} (m : a ∈ s) : f a ∈
 #print Computation.exists_of_mem_map /-
 theorem exists_of_mem_map {f : α → β} {b : β} {s : Computation α} (h : b ∈ map f s) :
     ∃ a, a ∈ s ∧ f a = b := by
-  rw [← bind_ret] at h  <;>
+  rw [← bind_ret] at h <;>
     exact
       let ⟨a, as, fb⟩ := exists_of_mem_bind h
       ⟨a, as, mem_unique (ret_mem _) fb⟩
@@ -1396,7 +1396,7 @@ theorem liftRel_pure_right (R : α → β → Prop) (ca : Computation α) (b : �
 @[simp]
 theorem liftRel_pure (R : α → β → Prop) (a : α) (b : β) : LiftRel R (pure a) (pure b) ↔ R a b := by
   rw [lift_rel_return_left] <;>
-    exact ⟨fun ⟨b', mb', ab'⟩ => by rwa [eq_of_ret_mem mb'] at ab' , fun ab => ⟨_, ret_mem _, ab⟩⟩
+    exact ⟨fun ⟨b', mb', ab'⟩ => by rwa [eq_of_ret_mem mb'] at ab', fun ab => ⟨_, ret_mem _, ab⟩⟩
 #align computation.lift_rel_return Computation.liftRel_pure
 -/
 
@@ -1496,9 +1496,9 @@ theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computat
     (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) (a)
     (ha : a ∈ ca) : LiftRel R ca cb := by
   revert cb; refine' mem_rec_on ha _ fun ca' IH => _ <;> intro cb Hc <;> have h := H Hc
-  · simp at h ; simp [h]
+  · simp at h; simp [h]
   · have h := H Hc; simp; revert h;
-    apply cb.rec_on (fun b => _) fun cb' => _ <;> intro h <;> simp at h  <;> simp [h]
+    apply cb.rec_on (fun b => _) fun cb' => _ <;> intro h <;> simp at h <;> simp [h]
     exact IH _ h
 #align computation.lift_rel_rec.lem Computation.LiftRelRec.lem
 -/

@@ -326,7 +326,7 @@ theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
   use fun hx => ⟨hx.1, (isExtreme_singleton.1 hx).convex_diff hA⟩
   rintro ⟨hxA, hAx⟩
   refine' mem_extremePoints_iff_forall_segment.2 ⟨hxA, fun x₁ hx₁ x₂ hx₂ hx => _⟩
-  rw [convex_iff_segment_subset] at hAx 
+  rw [convex_iff_segment_subset] at hAx
   by_contra! h
   exact
     (hAx ⟨hx₁, fun hx₁ => h.1 (mem_singleton_iff.2 hx₁)⟩
@@ -347,7 +347,7 @@ theorem Convex.mem_extremePoints_iff_mem_diff_convexHull_diff (hA : Convex 𝕜 
 theorem extremePoints_convexHull_subset : (convexHull 𝕜 A).extremePoints 𝕜 ⊆ A :=
   by
   rintro x hx
-  rw [(convex_convexHull 𝕜 _).mem_extremePoints_iff_convex_diff] at hx 
+  rw [(convex_convexHull 𝕜 _).mem_extremePoints_iff_convex_diff] at hx
   by_contra
   exact
     (convexHull_min (subset_diff.2 ⟨subset_convexHull 𝕜 _, disjoint_singleton_right.2 h⟩) hx.2

@@ -582,19 +582,19 @@ instance : GeneralizedCoheytingAlgebra αᵒᵈ :=
     sdiff := fun a b => toDual (ofDual b ⇨ ofDual a)
     sdiff_le_iff := fun a b c => by rw [sup_comm]; exact le_himp_iff }
 
-#print Prod.generalizedHeytingAlgebra /-
-instance Prod.generalizedHeytingAlgebra [GeneralizedHeytingAlgebra β] :
+#print Prod.instGeneralizedHeytingAlgebra /-
+instance Prod.instGeneralizedHeytingAlgebra [GeneralizedHeytingAlgebra β] :
     GeneralizedHeytingAlgebra (α × β) :=
   { Prod.lattice α β, Prod.orderTop α β, Prod.hasHimp, Prod.hasCompl with
     le_himp_iff := fun a b c => and_congr le_himp_iff le_himp_iff }
-#align prod.generalized_heyting_algebra Prod.generalizedHeytingAlgebra
+#align prod.generalized_heyting_algebra Prod.instGeneralizedHeytingAlgebra
 -/
 
-#print Pi.generalizedHeytingAlgebra /-
-instance Pi.generalizedHeytingAlgebra {α : ι → Type _} [∀ i, GeneralizedHeytingAlgebra (α i)] :
+#print Pi.instGeneralizedHeytingAlgebra /-
+instance Pi.instGeneralizedHeytingAlgebra {α : ι → Type _} [∀ i, GeneralizedHeytingAlgebra (α i)] :
     GeneralizedHeytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => le_himp_iff
-#align pi.generalized_heyting_algebra Pi.generalizedHeytingAlgebra
+#align pi.generalized_heyting_algebra Pi.instGeneralizedHeytingAlgebra
 -/
 
 end GeneralizedHeytingAlgebra
@@ -970,19 +970,19 @@ instance : GeneralizedHeytingAlgebra αᵒᵈ :=
     himp := fun a b => toDual (ofDual b \ ofDual a)
     le_himp_iff := fun a b c => by rw [inf_comm]; exact sdiff_le_iff }
 
-#print Prod.generalizedCoheytingAlgebra /-
-instance Prod.generalizedCoheytingAlgebra [GeneralizedCoheytingAlgebra β] :
+#print Prod.instGeneralizedCoheytingAlgebra /-
+instance Prod.instGeneralizedCoheytingAlgebra [GeneralizedCoheytingAlgebra β] :
     GeneralizedCoheytingAlgebra (α × β) :=
   { Prod.lattice α β, Prod.orderBot α β, Prod.hasSdiff, Prod.hasHnot with
     sdiff_le_iff := fun a b c => and_congr sdiff_le_iff sdiff_le_iff }
-#align prod.generalized_coheyting_algebra Prod.generalizedCoheytingAlgebra
+#align prod.generalized_coheyting_algebra Prod.instGeneralizedCoheytingAlgebra
 -/
 
-#print Pi.generalizedCoheytingAlgebra /-
-instance Pi.generalizedCoheytingAlgebra {α : ι → Type _} [∀ i, GeneralizedCoheytingAlgebra (α i)] :
-    GeneralizedCoheytingAlgebra (∀ i, α i) := by pi_instance;
-  exact fun a b c => forall_congr' fun i => sdiff_le_iff
-#align pi.generalized_coheyting_algebra Pi.generalizedCoheytingAlgebra
+#print Pi.instGeneralizedCoheytingAlgebra /-
+instance Pi.instGeneralizedCoheytingAlgebra {α : ι → Type _}
+    [∀ i, GeneralizedCoheytingAlgebra (α i)] : GeneralizedCoheytingAlgebra (∀ i, α i) := by
+  pi_instance; exact fun a b c => forall_congr' fun i => sdiff_le_iff
+#align pi.generalized_coheyting_algebra Pi.instGeneralizedCoheytingAlgebra
 -/
 
 end GeneralizedCoheytingAlgebra
@@ -1250,18 +1250,18 @@ theorem toDual_compl (a : α) : toDual (aᶜ) = ￢toDual a :=
 #align to_dual_compl toDual_compl
 -/
 
-#print Prod.heytingAlgebra /-
-instance Prod.heytingAlgebra [HeytingAlgebra β] : HeytingAlgebra (α × β) :=
-  { Prod.generalizedHeytingAlgebra, Prod.boundedOrder α β, Prod.hasCompl with
+#print Prod.instHeytingAlgebra /-
+instance Prod.instHeytingAlgebra [HeytingAlgebra β] : HeytingAlgebra (α × β) :=
+  { Prod.instGeneralizedHeytingAlgebra, Prod.boundedOrder α β, Prod.hasCompl with
     himp_bot := fun a => Prod.ext (himp_bot a.1) (himp_bot a.2) }
-#align prod.heyting_algebra Prod.heytingAlgebra
+#align prod.heyting_algebra Prod.instHeytingAlgebra
 -/
 
-#print Pi.heytingAlgebra /-
-instance Pi.heytingAlgebra {α : ι → Type _} [∀ i, HeytingAlgebra (α i)] :
+#print Pi.instHeytingAlgebra /-
+instance Pi.instHeytingAlgebra {α : ι → Type _} [∀ i, HeytingAlgebra (α i)] :
     HeytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => le_himp_iff
-#align pi.heyting_algebra Pi.heytingAlgebra
+#align pi.heyting_algebra Pi.instHeytingAlgebra
 -/
 
 end HeytingAlgebra
@@ -1511,20 +1511,20 @@ theorem toDual_sdiff (a b : α) : toDual (a \ b) = toDual b ⇨ toDual a :=
 #align to_dual_sdiff toDual_sdiff
 -/
 
-#print Prod.coheytingAlgebra /-
-instance Prod.coheytingAlgebra [CoheytingAlgebra β] : CoheytingAlgebra (α × β) :=
+#print Prod.instCoheytingAlgebra /-
+instance Prod.instCoheytingAlgebra [CoheytingAlgebra β] : CoheytingAlgebra (α × β) :=
   { Prod.lattice α β, Prod.boundedOrder α β, Prod.hasSdiff,
     Prod.hasHnot with
     sdiff_le_iff := fun a b c => and_congr sdiff_le_iff sdiff_le_iff
     top_sdiff := fun a => Prod.ext (top_sdiff' a.1) (top_sdiff' a.2) }
-#align prod.coheyting_algebra Prod.coheytingAlgebra
+#align prod.coheyting_algebra Prod.instCoheytingAlgebra
 -/
 
-#print Pi.coheytingAlgebra /-
-instance Pi.coheytingAlgebra {α : ι → Type _} [∀ i, CoheytingAlgebra (α i)] :
+#print Pi.instCoheytingAlgebra /-
+instance Pi.instCoheytingAlgebra {α : ι → Type _} [∀ i, CoheytingAlgebra (α i)] :
     CoheytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => sdiff_le_iff
-#align pi.coheyting_algebra Pi.coheytingAlgebra
+#align pi.coheyting_algebra Pi.instCoheytingAlgebra
 -/
 
 end CoheytingAlgebra
@@ -1542,16 +1542,16 @@ theorem compl_le_hnot : aᶜ ≤ ￢a :=
 end BiheytingAlgebra
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
-#print Prop.heytingAlgebra /-
+#print Prop.instHeytingAlgebra /-
 /-- Propositions form a Heyting algebra with implication as Heyting implication and negation as
 complement. -/
-instance Prop.heytingAlgebra : HeytingAlgebra Prop :=
-  { Prop.hasCompl, Prop.distribLattice,
-    Prop.boundedOrder with
+instance Prop.instHeytingAlgebra : HeytingAlgebra Prop :=
+  { Prop.hasCompl, Prop.instDistribLattice,
+    Prop.instBoundedOrder with
     himp := («->» · ·)
     le_himp_iff := fun p q r => and_imp.symm
     himp_bot := fun p => rfl }
-#align Prop.heyting_algebra Prop.heytingAlgebra
+#align Prop.heyting_algebra Prop.instHeytingAlgebra
 -/
 
 #print himp_iff_imp /-

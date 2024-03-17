@@ -54,7 +54,7 @@ theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs :=
   have him : |im x / abs x| ≤ 1 := by
     rw [_root_.abs_div, abs_abs]
     exact div_le_one_of_le x.abs_im_le_abs (abs.nonneg x)
-  rw [abs_le] at him 
+  rw [abs_le] at him
   rw [arg]; split_ifs with h₁ h₂ h₂
   · rw [Real.cos_arcsin]; field_simp [Real.sqrt_sq, habs.le, *]
   · rw [Real.cos_add_pi, Real.cos_arcsin]
@@ -114,7 +114,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
     mk_eq_add_mul_I, neg_div, mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
   by_cases h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
   · rw [if_pos]; exacts [Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
-  · rw [mem_Icc, not_and_or, not_le, not_le] at h₁ ; cases h₁
+  · rw [mem_Icc, not_and_or, not_le, not_le] at h₁; cases h₁
     · replace hθ := hθ.1
       have hcos : Real.cos θ < 0 := by rw [← neg_pos, ← Real.cos_add_pi];
         refine' Real.cos_pos_of_mem_Ioo ⟨_, _⟩ <;> linarith
@@ -159,7 +159,7 @@ theorem arg_mem_Ioc (z : ℂ) : arg z ∈ Ioc (-π) π :=
   have hπ : 0 < π := Real.pi_pos
   rcases eq_or_ne z 0 with (rfl | hz); simp [hπ, hπ.le]
   rcases existsUnique_add_zsmul_mem_Ioc Real.two_pi_pos (arg z) (-π) with ⟨N, hN, -⟩
-  rw [two_mul, neg_add_cancel_left, ← two_mul, zsmul_eq_mul] at hN 
+  rw [two_mul, neg_add_cancel_left, ← two_mul, zsmul_eq_mul] at hN
   rw [← abs_mul_cos_add_sin_mul_I z, ← cos_add_int_mul_two_pi _ N, ← sin_add_int_mul_two_pi _ N]
   simp only [← of_real_one, ← of_real_bit0, ← of_real_mul, ← of_real_add, ← of_real_int_cast]
   rwa [arg_mul_cos_add_sin_mul_I (abs.pos hz) hN]
@@ -679,7 +679,7 @@ theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.
 theorem continuousAt_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x :=
   by
   have h₀ : abs x ≠ 0 := by rw [abs.ne_zero_iff]; rintro rfl; simpa using h
-  rw [← lt_or_lt_iff_ne] at h 
+  rw [← lt_or_lt_iff_ne] at h
   rcases h with (hx_re | hx_im | hx_im)
   exacts
     [(real.continuous_at_arcsin.comp
@@ -752,7 +752,7 @@ theorem continuousAt_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : �
       Function.comp.assoc]
     refine' ContinuousAt.comp _ continuous_neg.continuous_at
     suffices ContinuousAt (Function.update ((coe ∘ arg) ∘ Neg.neg : ℂ → Real.Angle) 0 π) (-x) by
-      rwa [continuousAt_update_of_ne (neg_ne_zero.2 h)] at this 
+      rwa [continuousAt_update_of_ne (neg_ne_zero.2 h)] at this
     have ha :
       Function.update ((coe ∘ arg) ∘ Neg.neg : ℂ → Real.Angle) 0 π = fun z =>
         (arg z : Real.Angle) + π :=
@@ -760,7 +760,7 @@ theorem continuousAt_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : �
       rw [Function.update_eq_iff]
       exact ⟨by simp, fun z hz => arg_neg_coe_angle hz⟩
     rw [ha]
-    push_neg at hs 
+    push_neg at hs
     refine'
       (real.angle.continuous_coe.continuous_at.comp (continuous_at_arg (Or.inl _))).add
         continuousAt_const

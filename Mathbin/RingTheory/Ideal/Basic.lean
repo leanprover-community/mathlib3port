@@ -128,7 +128,7 @@ theorem unit_mul_mem_iff_mem {x y : α} (hy : IsUnit y) : y * x ∈ I ↔ x ∈ 
   refine' ⟨fun h => _, fun h => I.mul_mem_left y h⟩
   obtain ⟨y', hy'⟩ := hy.exists_left_inv
   have := I.mul_mem_left y' h
-  rwa [← mul_assoc, hy', one_mul] at this 
+  rwa [← mul_assoc, hy', one_mul] at this
 #align ideal.unit_mul_mem_iff_mem Ideal.unit_mul_mem_iff_mem
 -/
 
@@ -346,8 +346,8 @@ theorem IsPrime.mem_or_mem_of_mul_eq_zero {I : Ideal α} (hI : I.IsPrime) {x y :
 theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ) (H : r ^ n ∈ I) :
     r ∈ I := by
   induction' n with n ih
-  · rw [pow_zero] at H ; exact (mt (eq_top_iff_one _).2 hI.1).elim H
-  · rw [pow_succ] at H ; exact Or.cases_on (hI.mem_or_mem H) id ih
+  · rw [pow_zero] at H; exact (mt (eq_top_iff_one _).2 hI.1).elim H
+  · rw [pow_succ] at H; exact Or.cases_on (hI.mem_or_mem H) id ih
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 -/
 
@@ -373,7 +373,7 @@ theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 :=
 
 #print Ideal.bot_prime /-
 theorem bot_prime {R : Type _} [Ring R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
-  ⟨fun h => one_ne_zero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h ), fun x y h =>
+  ⟨fun h => one_ne_zero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
     mul_eq_zero.mp (by simpa only [Submodule.mem_bot] using h)⟩
 #align ideal.bot_prime Ideal.bot_prime
 -/
@@ -607,7 +607,7 @@ theorem sInf_isPrime_of_isChain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : Is
     Classical.or_iff_not_imp_left.mpr fun hx =>
       by
       rw [Ideal.mem_sInf] at hx e ⊢
-      push_neg at hx 
+      push_neg at hx
       obtain ⟨I, hI, hI'⟩ := hx
       intro J hJ
       cases hs'.total hI hJ
@@ -697,7 +697,7 @@ theorem IsMaximal.isPrime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
       obtain F : y * 1 = y * (a • x + b) := congr_arg (fun g : α => y * g) oe
       rw [← mul_one y, F, mul_add, mul_comm, smul_eq_mul, mul_assoc]
       refine' Submodule.add_mem I (I.mul_mem_left a hxy) (Submodule.smul_mem I y _)
-      rwa [Submodule.span_eq] at h ⟩
+      rwa [Submodule.span_eq] at h⟩
 #align ideal.is_maximal.is_prime Ideal.IsMaximal.isPrime
 -/
 
@@ -807,14 +807,14 @@ theorem span_pow_eq_top (s : Set α) (hs : span s = ⊤) (n : ℕ) : span ((fun 
     · rw [Set.image_empty, hs]
       trivial
     · exact subset_span ⟨_, hx, pow_zero _⟩
-  rw [eq_top_iff_one, span, Finsupp.mem_span_iff_total] at hs 
+  rw [eq_top_iff_one, span, Finsupp.mem_span_iff_total] at hs
   rcases hs with ⟨f, hf⟩
-  change (f.support.sum fun a => f a * a) = 1 at hf 
+  change (f.support.sum fun a => f a * a) = 1 at hf
   have := sum_pow_mem_span_pow f.support (fun a => f a * a) n
-  rw [hf, one_pow] at this 
+  rw [hf, one_pow] at this
   refine' span_le.mpr _ this
   rintro _ hx
-  simp_rw [Finset.mem_coe, Set.mem_image] at hx 
+  simp_rw [Finset.mem_coe, Set.mem_image] at hx
   rcases hx with ⟨x, hx, rfl⟩
   have : span ({x ^ (n + 1)} : Set α) ≤ span ((fun x : α => x ^ (n + 1)) '' s) :=
     by
@@ -970,9 +970,9 @@ theorem not_isField_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] :
     exact ⟨mt ideal.span_singleton_eq_bot.mp nz, mt ideal.span_singleton_eq_top.mp nu⟩
   · rintro ⟨I, bot_lt, lt_top⟩ hf
     obtain ⟨x, mem, ne_zero⟩ := SetLike.exists_of_lt bot_lt
-    rw [Submodule.mem_bot] at ne_zero 
+    rw [Submodule.mem_bot] at ne_zero
     obtain ⟨y, hy⟩ := hf.mul_inv_cancel NeZero
-    rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, ← hy] at lt_top 
+    rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, ← hy] at lt_top
     exact lt_top (I.mul_mem_right _ mem)
 #align ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top
 -/
@@ -1012,7 +1012,7 @@ theorem isField_iff_isSimpleOrder_ideal : IsField R ↔ IsSimpleOrder (Ideal R) 
 theorem ne_bot_of_isMaximal_of_not_isField [Nontrivial R] {M : Ideal R} (max : M.IsMaximal)
     (not_field : ¬IsField R) : M ≠ ⊥ := by
   rintro h
-  rw [h] at max 
+  rw [h] at max
   rcases max with ⟨⟨h1, h2⟩⟩
   obtain ⟨I, hIbot, hItop⟩ := not_is_field_iff_exists_ideal_bot_lt_and_lt_top.mp not_field
   exact ne_of_lt hItop (h2 I hIbot)
@@ -1034,7 +1034,7 @@ theorem bot_lt_of_maximal (M : Ideal R) [hm : M.IsMaximal] (non_field : ¬IsFiel
   apply @irrefl _ (· < ·) _ (⊤ : Ideal R)
   have : M = ⊥ := eq_bot_iff.mpr mle
   rw [this] at *
-  rwa [hm.1.2 I Ibot] at Itop 
+  rwa [hm.1.2 I Ibot] at Itop
 #align ideal.bot_lt_of_maximal Ideal.bot_lt_of_maximal
 -/
 
@@ -1091,7 +1091,7 @@ theorem coe_subset_nonunits [Semiring α] {I : Ideal α} (h : I ≠ ⊤) : (I : 
 theorem exists_max_ideal_of_mem_nonunits [CommSemiring α] (h : a ∈ nonunits α) :
     ∃ I : Ideal α, I.IsMaximal ∧ a ∈ I :=
   by
-  have : Ideal.span ({a} : Set α) ≠ ⊤ := by intro H; rw [Ideal.span_singleton_eq_top] at H ;
+  have : Ideal.span ({a} : Set α) ≠ ⊤ := by intro H; rw [Ideal.span_singleton_eq_top] at H;
     contradiction
   rcases Ideal.exists_le_maximal _ this with ⟨I, Imax, H⟩
   use I, Imax; apply H; apply Ideal.subset_span; exact Set.mem_singleton a

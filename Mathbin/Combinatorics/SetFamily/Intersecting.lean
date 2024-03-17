@@ -105,8 +105,8 @@ theorem intersecting_iff_pairwise_not_disjoint :
   · rintro rfl
     exact intersecting_singleton.1 h rfl
   · have := h.1.Eq ha hb (Classical.not_not.2 hab)
-    rw [this, disjoint_self] at hab 
-    rw [hab] at hb 
+    rw [this, disjoint_self] at hab
+    rw [hab] at hb
     exact
       h.2
         (eq_singleton_iff_unique_mem.2
@@ -234,8 +234,8 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
   refine' hs.insert _ fun b hb hab => ha.2 <| (hs.is_upper_set' h) hab.le_compl_left hb
   rintro rfl
   have := h {⊤} (by rw [coe_singleton]; exact intersecting_singleton.2 top_ne_bot)
-  rw [compl_bot] at ha 
-  rw [coe_eq_empty.1 ((hs.is_upper_set' h).not_top_mem.1 ha.2)] at this 
+  rw [compl_bot] at ha
+  rw [coe_eq_empty.1 ((hs.is_upper_set' h).not_top_mem.1 ha.2)] at this
   exact Finset.singleton_ne_empty _ (this <| empty_subset _).symm
 #align set.intersecting.is_max_iff_card_eq Set.Intersecting.is_max_iff_card_eq
 -/
@@ -245,13 +245,13 @@ theorem Intersecting.exists_card_eq (hs : (s : Set α).Intersecting) :
     ∃ t, s ⊆ t ∧ 2 * t.card = Fintype.card α ∧ (t : Set α).Intersecting :=
   by
   have := hs.card_le
-  rw [mul_comm, ← Nat.le_div_iff_mul_le' two_pos] at this 
+  rw [mul_comm, ← Nat.le_div_iff_mul_le' two_pos] at this
   revert hs
   refine' s.strong_downward_induction_on _ this
   rintro s ih hcard hs
   by_cases ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t
   · exact ⟨s, subset.rfl, hs.is_max_iff_card_eq.1 h, hs⟩
-  push_neg at h 
+  push_neg at h
   obtain ⟨t, ht, hst⟩ := h
   refine' (ih _ (_root_.ssubset_iff_subset_ne.2 hst) ht).imp fun u => And.imp_left hst.1.trans
   rw [Nat.le_div_iff_mul_le' two_pos, mul_comm]

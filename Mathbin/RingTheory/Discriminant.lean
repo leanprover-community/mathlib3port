@@ -103,7 +103,7 @@ theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
     simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
       this j, ← map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
   by_contra h
-  rw [discr_def] at h 
+  rw [discr_def] at h
   simpa [Matrix.eq_zero_of_mulVec_eq_zero h this] using hi
 #align algebra.discr_zero_of_not_linear_independent Algebra.discr_zero_of_not_linearIndependent
 -/
@@ -276,17 +276,17 @@ theorem discr_powerBasis_eq_norm [IsSeparable K L] :
       ← Finset.prod_mk _ (hnodup.erase _)]
   rw [prod_sigma', prod_sigma']
   refine'
-    prod_bij (fun i hi => ⟨e i.2, e i.1 pb.gen⟩) (fun i hi => _) (fun i hi => by simp at hi )
+    prod_bij (fun i hi => ⟨e i.2, e i.1 pb.gen⟩) (fun i hi => _) (fun i hi => by simp at hi)
       (fun i j hi hj hij => _) fun σ hσ => _
   · simp only [true_and_iff, Finset.mem_mk, mem_univ, mem_sigma]
     rw [Multiset.mem_erase_of_ne fun h => _]
     · exact hroots _
-    · simp only [true_and_iff, mem_univ, Ne.def, mem_sigma, mem_compl, mem_singleton] at hi 
-      rw [← PowerBasis.liftEquiv_apply_coe, ← PowerBasis.liftEquiv_apply_coe] at h 
+    · simp only [true_and_iff, mem_univ, Ne.def, mem_sigma, mem_compl, mem_singleton] at hi
+      rw [← PowerBasis.liftEquiv_apply_coe, ← PowerBasis.liftEquiv_apply_coe] at h
       exact hi (e.injective <| pb.lift_equiv.injective <| Subtype.eq h.symm)
-  · simp only [Equiv.apply_eq_iff_eq, heq_iff_eq] at hij 
+  · simp only [Equiv.apply_eq_iff_eq, heq_iff_eq] at hij
     have h := hij.2
-    rw [← PowerBasis.liftEquiv_apply_coe, ← PowerBasis.liftEquiv_apply_coe] at h 
+    rw [← PowerBasis.liftEquiv_apply_coe, ← PowerBasis.liftEquiv_apply_coe] at h
     refine' Sigma.eq (Equiv.injective e (Equiv.injective _ (Subtype.eq h))) (by simp [hij.1])
   · simp only [true_and_iff, Finset.mem_mk, mem_univ, mem_sigma] at hσ ⊢
     simp only [Sigma.exists, exists_prop, mem_compl, mem_singleton, Ne.def]
@@ -295,8 +295,8 @@ theorem discr_powerBasis_eq_norm [IsSeparable K L] :
       · exact Multiset.erase_subset _ _ hσ
       · simp [minpoly.ne_zero (IsSeparable.isIntegral K pb.gen)]
     · replace h := AlgHom.congr_fun (Equiv.injective _ h) pb.gen
-      rw [PowerBasis.lift_gen] at h 
-      rw [← h] at hσ 
+      rw [PowerBasis.lift_gen] at h
+      rw [← h] at hσ
       exact hnodup.not_mem_erase hσ
     all_goals simp
 #align algebra.discr_power_basis_eq_norm Algebra.discr_powerBasis_eq_norm
@@ -343,7 +343,7 @@ theorem discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K] {b : Basis �
     refine' isUnit_iff_exists_inv.2 ⟨r', _⟩
     suffices algebraMap ℤ ℚ (r * r') = 1
       by
-      rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this 
+      rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this
       exact (IsFractionRing.injective ℤ ℚ) this
     rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.toMatrix_mul_toMatrix_flip, det_one]
   rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
@@ -374,18 +374,18 @@ theorem discr_mul_isIntegral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsIntegr
     rw [← B.basis.sum_repr z, Finset.smul_sum]
     refine' Subalgebra.sum_mem _ fun i hi => _
     replace this := this i
-    rw [← discr_def, Pi.smul_apply, mem_bot] at this 
+    rw [← discr_def, Pi.smul_apply, mem_bot] at this
     obtain ⟨r, hr⟩ := this
-    rw [Basis.equivFun_apply] at hr 
+    rw [Basis.equivFun_apply] at hr
     rw [← smul_assoc, ← hr, algebraMap_smul]
     refine' Subalgebra.smul_mem _ _ _
     rw [B.basis_eq_pow i]
     refine' Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
   intro i
-  rw [← H, ← mul_vec_smul] at cramer 
+  rw [← H, ← mul_vec_smul] at cramer
   replace cramer := congr_arg (mul_vec (trace_matrix K B.basis)⁻¹) cramer
   rw [mul_vec_mul_vec, nonsing_inv_mul _ hinv, mul_vec_mul_vec, nonsing_inv_mul _ hinv, one_mul_vec,
-    one_mul_vec] at cramer 
+    one_mul_vec] at cramer
   rw [← congr_fun cramer i, cramer_apply, det_apply]
   refine'
     Subalgebra.sum_mem _ fun σ _ => Subalgebra.zsmul_mem _ (Subalgebra.prod_mem _ fun j _ => _) _

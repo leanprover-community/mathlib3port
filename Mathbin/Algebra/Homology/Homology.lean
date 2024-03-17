@@ -185,7 +185,7 @@ def ChainComplex.homology'ZeroIso [HasKernels V] [HasImages V] [HasCokernels V]
           Arrow.mk (C.dTo 0) ≅ Arrow.mk (C.d 1 0))
         (Arrow.isoMk (Iso.refl _) (Iso.refl _) <| by
             simp [C.d_from_eq_zero fun h : _ = _ =>
-                one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h ] :
+                one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h] :
           Arrow.mk (C.dFrom 0) ≅ Arrow.mk 0)
         rfl).trans <|
     homology'OfZeroRight _

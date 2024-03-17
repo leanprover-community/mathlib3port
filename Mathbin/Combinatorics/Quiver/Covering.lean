@@ -257,17 +257,17 @@ theorem Prefunctor.pathStar_injective (hφ : ∀ u, Injective (φ.unit u)) (u : 
   rintro ⟨v₁, p₁⟩
   induction' p₁ with x₁ y₁ p₁ e₁ ih <;> rintro ⟨y₂, p₂⟩ <;> cases' p₂ with x₂ _ p₂ e₂ <;>
       intro h <;>
-    simp only [Prefunctor.pathStar_apply, Prefunctor.mapPath_nil, Prefunctor.mapPath_cons] at h 
+    simp only [Prefunctor.pathStar_apply, Prefunctor.mapPath_nil, Prefunctor.mapPath_cons] at h
   · exfalso
     cases' h with h h'
-    rw [← path.eq_cast_iff_heq rfl h.symm, path.cast_cons] at h' 
+    rw [← path.eq_cast_iff_heq rfl h.symm, path.cast_cons] at h'
     exact (path.nil_ne_cons _ _) h'
   · exfalso
     cases' h with h h'
-    rw [← path.cast_eq_iff_heq rfl h, path.cast_cons] at h' 
+    rw [← path.cast_eq_iff_heq rfl h, path.cast_cons] at h'
     exact (path.cons_ne_nil _ _) h'
   · cases' h with hφy h'
-    rw [← path.cast_eq_iff_heq rfl hφy, path.cast_cons, path.cast_rfl_rfl] at h' 
+    rw [← path.cast_eq_iff_heq rfl hφy, path.cast_cons, path.cast_rfl_rfl] at h'
     have hφx := path.obj_eq_of_cons_eq_cons h'
     have hφp := path.heq_of_cons_eq_cons h'
     have hφe := HEq.trans (hom.cast_heq rfl hφy _).symm (path.hom_heq_of_cons_eq_cons h')
@@ -291,10 +291,10 @@ theorem Prefunctor.pathStar_surjective (hφ : ∀ u, Surjective (φ.unit u)) (u 
   · use⟨u, path.nil⟩
     simp only [Prefunctor.mapPath_nil, eq_self_iff_true, heq_iff_eq, and_self_iff]
   · obtain ⟨⟨u', q'⟩, h⟩ := ih
-    simp only at h 
+    simp only at h
     obtain ⟨rfl, rfl⟩ := h
     obtain ⟨⟨u'', eu⟩, k⟩ := hφ u' ⟨_, ev⟩
-    simp at k 
+    simp at k
     obtain ⟨rfl, rfl⟩ := k
     use⟨_, q'.cons eu⟩
     simp only [Prefunctor.mapPath_cons, eq_self_iff_true, heq_iff_eq, and_self_iff]

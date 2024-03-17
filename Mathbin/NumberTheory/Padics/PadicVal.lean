@@ -423,7 +423,7 @@ theorem le_padicValRat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
         multiplicity_le_multiplicity_iff, mul_left_comm,
         multiplicity.mul (Nat.prime_iff_prime_int.1 hp.1), add_mul]
       rw [← @Rat.num_den q, ← @Rat.num_den r, padic_val_rat_le_padic_val_rat_iff hqn hrn hqd hrd, ←
-        multiplicity_le_multiplicity_iff] at h 
+        multiplicity_le_multiplicity_iff] at h
       calc
         _ ≤
             min (multiplicity (↑p) (q.num * ↑r.denom * ↑q.denom))
@@ -547,7 +547,7 @@ variable {p : ℕ}
 theorem dvd_of_one_le_padicValNat {n : ℕ} (hp : 1 ≤ padicValNat p n) : p ∣ n :=
   by
   by_contra h
-  rw [padicValNat.eq_zero_of_not_dvd h] at hp 
+  rw [padicValNat.eq_zero_of_not_dvd h] at hp
   exact lt_irrefl 0 (lt_of_lt_of_le zero_lt_one hp)
 #align dvd_of_one_le_padic_val_nat dvd_of_one_le_padicValNat
 -/
@@ -602,7 +602,7 @@ theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
     (Finset.range (padicValNat p n + 1)).image (pow p) ⊆ n.divisors :=
   by
   intro t ht
-  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht 
+  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Nat.mem_divisors]
   exact ⟨(pow_dvd_pow p <| by linarith).trans pow_padicValNat_dvd, hn⟩
@@ -616,7 +616,7 @@ theorem range_pow_padicValNat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
   intro t ht
-  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht 
+  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Finset.mem_erase, Nat.mem_divisors]
   refine' ⟨_, (pow_dvd_pow p <| succ_le_iff.2 hk).trans pow_padicValNat_dvd, hn⟩

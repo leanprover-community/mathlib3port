@@ -277,7 +277,7 @@ theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x =
   · letI : Module Rᵐᵒᵖ M := Module.compHom _ ((RingHom.id R).fromOpposite mul_comm)
     haveI : IsCentralScalar R M := ⟨fun r m => rfl⟩
     have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := to_triv_sq_zero_ext_ι _
-    rw [h, AlgHom.commutes] at hf0 
+    rw [h, AlgHom.commutes] at hf0
     have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm
   · rintro ⟨rfl, rfl⟩
@@ -302,7 +302,7 @@ theorem ι_range_disjoint_one :
   by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
-  rw [ι_eq_algebra_map_iff x] at hx 
+  rw [ι_eq_algebra_map_iff x] at hx
   rw [hx.2, RingHom.map_zero]
 #align exterior_algebra.ι_range_disjoint_one ExteriorAlgebra.ι_range_disjoint_one
 -/
@@ -326,8 +326,8 @@ theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) :
     by_cases h : i = 0
     · rw [h, ι_sq_zero, MulZeroClass.zero_mul]
     · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Fin.succ i) (i.pred h))
-      simp only at hn 
-      rw [Fin.succ_pred, ← mul_assoc, MulZeroClass.mul_zero] at hn 
+      simp only at hn
+      rw [Fin.succ_pred, ← mul_assoc, MulZeroClass.mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
       rw [← add_mul, ι_add_mul_swap, MulZeroClass.zero_mul]
 #align exterior_algebra.ι_mul_prod_list ExteriorAlgebra.ι_mul_prod_list
@@ -356,7 +356,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
       · exact x.elim0
       · rw [List.ofFn_succ, List.prod_cons]
         by_cases hx : x = 0
-        · rw [hx] at hfxy h 
+        · rw [hx] at hfxy h
           rw [hfxy, ← Fin.succ_pred y (ne_of_lt h).symm]
           exact ι_mul_prod_list (f ∘ Fin.succ) _
         · convert MulZeroClass.mul_zero _

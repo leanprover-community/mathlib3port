@@ -709,7 +709,7 @@ theorem imp_not_self : a → ¬a ↔ ¬a :=
 
 #print Decidable.not_imp_self /-
 theorem Decidable.not_imp_self [Decidable a] : ¬a → a ↔ a := by have := @imp_not_self ¬a;
-  rwa [Decidable.not_not] at this 
+  rwa [Decidable.not_not] at this
 #align decidable.not_imp_self Decidable.not_imp_self
 -/
 
@@ -967,7 +967,7 @@ theorem iff_and_self {p q : Prop} : (p ↔ q ∧ p) ↔ p → q := by rw [and_co
 #print and_congr_right_iff /-
 @[simp]
 theorem and_congr_right_iff : (a ∧ b ↔ a ∧ c) ↔ a → (b ↔ c) :=
-  ⟨fun h ha => by simp [ha] at h  <;> exact h, and_congr_right⟩
+  ⟨fun h ha => by simp [ha] at h <;> exact h, and_congr_right⟩
 #align and.congr_right_iff and_congr_right_iff
 -/
 
@@ -2609,7 +2609,7 @@ theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingle
     {q : ∀ (x) (h : p x), Prop} {b : Prop} (h₂ : ∃! (x : _) (h : p x), q x h)
     (h₁ : ∀ (x) (h : p x), q x h → (∀ (y) (hy : p y), q y hy → y = x) → b) : b :=
   by
-  simp only [exists_unique_iff_exists] at h₂ 
+  simp only [exists_unique_iff_exists] at h₂
   apply h₂.elim
   exact fun x ⟨hxp, hxq⟩ H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
 #align exists_unique.elim2 ExistsUnique.elim₂
@@ -2637,7 +2637,7 @@ theorem ExistsUnique.unique₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsing
     {q : ∀ (x : α) (hx : p x), Prop} (h : ∃! (x : _) (hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁)
     (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) : y₁ = y₂ :=
   by
-  simp only [exists_unique_iff_exists] at h 
+  simp only [exists_unique_iff_exists] at h
   exact h.unique ⟨hpy₁, hqy₁⟩ ⟨hpy₂, hqy₂⟩
 #align exists_unique.unique2 ExistsUnique.unique₂
 -/

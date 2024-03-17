@@ -190,7 +190,7 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
   rcases em (∃ (i : _) (_ : i ∉ chain_Sup_carrier c), x ∈ u i) with (⟨i, hi, hxi⟩ | hx)
   · use i
     rwa [(find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)]
-  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂] at hx 
+  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂] at hx
     haveI : Nonempty (partial_refinement u s) := ⟨ne.some⟩
     choose! v hvc hiv using hx
     rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with
@@ -235,12 +235,12 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   · refine' fun x hx => mem_Union.2 _
     rcases em (∃ (j : _) (_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)
     · use j; rwa [update_noteq hji]
-    · push_neg at h ; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
+    · push_neg at h; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
   · rintro j (rfl | hj)
     · rwa [update_same, ← v.apply_eq hi]
     · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]; exact v.closure_subset hj
   · intro j hj
-    rw [mem_insert_iff, not_or] at hj 
+    rw [mem_insert_iff, not_or] at hj
     rw [update_noteq hj.1, v.apply_eq hj.2]
   · refine' ⟨subset_insert _ _, fun j hj => _⟩
     exact (update_noteq (ne_of_mem_of_not_mem hj hi) _ _).symm

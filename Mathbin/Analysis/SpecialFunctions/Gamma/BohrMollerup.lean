@@ -284,12 +284,12 @@ theorem f_add_nat_ge (hf_conv : ConvexOn ℝ (Ioi 0) f)
   have c :=
     (convex_on_iff_slope_mono_adjacent.mp <| hf_conv).2 npos (by linarith : 0 < (n : ℝ) + x)
       (by linarith : (n : ℝ) - 1 < (n : ℝ)) (by linarith)
-  rw [add_sub_cancel', sub_sub_cancel, div_one] at c 
+  rw [add_sub_cancel', sub_sub_cancel, div_one] at c
   have : f (↑n - 1) = f n - log (↑n - 1) :=
     by
     nth_rw_rhs 1 [(by ring : (n : ℝ) = ↑n - 1 + 1)]
     rw [hf_feq npos, add_sub_cancel]
-  rwa [this, le_div_iff hx, sub_sub_cancel, le_sub_iff_add_le, mul_comm _ x, add_comm] at c 
+  rwa [this, le_div_iff hx, sub_sub_cancel, le_sub_iff_add_le, mul_comm _ x, add_comm] at c
 #align real.bohr_mollerup.f_add_nat_ge Real.BohrMollerup.f_add_nat_ge
 -/
 
@@ -380,8 +380,8 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
   · rw [Nat.cast_zero, zero_add]
     exact fun _ hx' => tendsto_log_gamma_seq_of_le_one hf_conv (@hf_feq) hx hx'
   · intro hy hy'
-    rw [Nat.cast_succ, ← sub_le_iff_le_add] at hy' 
-    rw [Nat.cast_succ, ← lt_sub_iff_add_lt] at hy 
+    rw [Nat.cast_succ, ← sub_le_iff_le_add] at hy'
+    rw [Nat.cast_succ, ← lt_sub_iff_add_lt] at hy
     specialize hm ((Nat.cast_nonneg _).trans_lt hy) hy hy'
     -- now massage gauss_product n (x - 1) into gauss_product (n - 1) x
     have :
@@ -391,7 +391,7 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
       by
       refine' eventually.mp (eventually_ge_at_top 1) (eventually_of_forall fun n hn => _)
       have := log_gamma_seq_add_one (x - 1) (n - 1)
-      rw [sub_add_cancel, Nat.sub_add_cancel hn] at this 
+      rw [sub_add_cancel, Nat.sub_add_cancel hn] at this
       rw [this]
       ring
     replace hm :=
@@ -409,11 +409,11 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
       ext1 n
       dsimp only [Function.comp_apply]
       rw [sub_add_cancel, Nat.add_sub_cancel]
-    rw [this] at hm 
+    rw [this] at hm
     convert hm.sub (tendsto_log_nat_add_one_sub_log.const_mul x) using 2
     · ext1 n; ring
     · have := hf_feq ((Nat.cast_nonneg m).trans_lt hy)
-      rw [sub_add_cancel] at this 
+      rw [sub_add_cancel] at this
       rw [this]
       ring
 #align real.bohr_mollerup.tendsto_log_gamma_seq Real.BohrMollerup.tendsto_logGammaSeq
@@ -445,7 +445,7 @@ theorem eq_Gamma_of_log_convex {f : ℝ → ℝ} (hf_conv : ConvexOn ℝ (Ioi 0)
   exact fun x hx => log_inj_on_pos (hf_pos hx) (Gamma_pos_of_pos hx) (this hx)
   intro x hx
   have e1 := bohr_mollerup.tendsto_log_gamma_seq hf_conv _ hx
-  · rw [Function.comp_apply log f 1, hf_one, log_one, sub_zero] at e1 
+  · rw [Function.comp_apply log f 1, hf_one, log_one, sub_zero] at e1
     exact tendsto_nhds_unique e1 (bohr_mollerup.tendsto_log_Gamma hx)
   · intro y hy
     rw [Function.comp_apply, hf_feq hy, log_mul hy.ne' (hf_pos hy).ne']
@@ -480,7 +480,7 @@ theorem Gamma_three_div_two_lt_one : Gamma (3 / 2) < 1 :=
   rw [Function.comp_apply, Function.comp_apply, Nat.cast_two, Gamma_two, log_one, zero_add,
     (by norm_num : (2 : ℝ) + 1 / 2 = 3 / 2 + 1), Gamma_add_one A.ne',
     log_mul A.ne' (Gamma_pos_of_pos A).ne', ← le_sub_iff_add_le',
-    log_le_iff_le_exp (Gamma_pos_of_pos A)] at this 
+    log_le_iff_le_exp (Gamma_pos_of_pos A)] at this
   refine' this.trans_lt (exp_lt_one_iff.mpr _)
   rw [mul_comm, ← mul_div_assoc, div_sub' _ _ (2 : ℝ) two_ne_zero]
   refine' div_neg_of_neg_of_pos _ two_pos

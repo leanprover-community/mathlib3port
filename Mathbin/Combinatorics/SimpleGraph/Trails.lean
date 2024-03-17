@@ -62,7 +62,7 @@ theorem IsTrail.even_countP_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
   by
   induction' p with u u v w huv p ih
   · simp
-  · rw [cons_is_trail_iff] at ht 
+  · rw [cons_is_trail_iff] at ht
     specialize ih ht.1
     simp only [List.countP_cons, Ne.def, edges_cons, Sym2.mem_iff]
     split_ifs with h
@@ -79,12 +79,12 @@ theorem IsTrail.even_countP_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
           true_and_iff, iff_and_self]
         rintro rfl
         exact huv.ne
-    · rw [not_or] at h 
+    · rw [not_or] at h
       simp only [h.1, h.2, not_false_iff, true_and_iff, add_zero, Ne.def] at ih ⊢
       rw [ih]
       constructor <;>
         · rintro h' h'' rfl
-          simp only [imp_false, eq_self_iff_true, not_true, Classical.not_not] at h' 
+          simp only [imp_false, eq_self_iff_true, not_true, Classical.not_not] at h'
           cases h'
           simpa using h
 #align simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countP_edges_iff

@@ -1299,7 +1299,7 @@ theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
           Finset.sum_insert_of_eq_zero_if_not_mem Finsupp.not_mem_support_iff.1, add_zero, sub_self]
       use hw
       have hz : w i0 • (p i0 -ᵥ p i0 : V) = 0 := (vsub_self (p i0)).symm ▸ smul_zero _
-      change (fun i => w i • (p i -ᵥ p i0 : V)) i0 = 0 at hz 
+      change (fun i => w i • (p i -ᵥ p i0 : V)) i0 = 0 at hz
       rw [Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero _ w p hw (p i0),
         Finset.weightedVSubOfPoint_apply, ← hv, Finsupp.total_apply, Finset.sum_insert_zero hz]
       change ∑ i in l.support, l i • _ = _
@@ -1328,12 +1328,12 @@ theorem eq_affineCombination_of_mem_affineSpan {p1 : P} {p : ι → P}
     ∃ (s : Finset ι) (w : ι → k) (hw : ∑ i in s, w i = 1), p1 = s.affineCombination k p w := by
   classical
   have hn : (affineSpan k (Set.range p) : Set P).Nonempty := ⟨p1, h⟩
-  rw [affineSpan_nonempty, Set.range_nonempty_iff_nonempty] at hn 
+  rw [affineSpan_nonempty, Set.range_nonempty_iff_nonempty] at hn
   cases' hn with i0
   have h0 : p i0 ∈ affineSpan k (Set.range p) := mem_affineSpan k (Set.mem_range_self i0)
   have hd : p1 -ᵥ p i0 ∈ (affineSpan k (Set.range p)).direction :=
     AffineSubspace.vsub_mem_direction h h0
-  rw [direction_affineSpan, mem_vectorSpan_iff_eq_weightedVSub] at hd 
+  rw [direction_affineSpan, mem_vectorSpan_iff_eq_weightedVSub] at hd
   rcases hd with ⟨s, w, h, hs⟩
   let s' := insert i0 s
   let w' := Set.indicator (↑s) w

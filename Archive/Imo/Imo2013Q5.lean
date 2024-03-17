@@ -131,7 +131,7 @@ theorem fx_gt_xm1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 ≤ x)
       (x - 1 : ℝ) < ⌊x⌋₊ := by exact_mod_cast Nat.sub_one_lt_floor x
       _ ≤ f ⌊x⌋₊ := H4 _ (Nat.floor_pos.2 hx)
   obtain h_eq | h_lt := (Nat.floor_le <| zero_le_one.trans hx).eq_or_lt
-  · rwa [h_eq] at hx0 
+  · rwa [h_eq] at hx0
   calc
     (x - 1 : ℝ) < f ⌊x⌋₊ := hx0
     _ < f (x - ⌊x⌋₊) + f ⌊x⌋₊ := (lt_add_of_pos_left _ (f_pos_of_pos (sub_pos.mpr h_lt) H1 H4))
@@ -180,7 +180,7 @@ theorem fixed_point_of_gt_1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 < x)
       (x : ℝ) + (a ^ N - x : ℚ) ≤ f x + (a ^ N - x : ℚ) := add_le_add_right (H5 x hx) _
       _ ≤ f x + f (a ^ N - x) := add_le_add_left (H5 _ h_big_enough) _
   have hxp : 0 < x := by positivity
-  have hNp : 0 < N := by by_contra! H; rw [le_zero_iff.mp H] at hN ; linarith
+  have hNp : 0 < N := by by_contra! H; rw [le_zero_iff.mp H] at hN; linarith
   have h2 :=
     calc
       f x + f (a ^ N - x) ≤ f (x + (a ^ N - x)) :=
@@ -260,7 +260,7 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
         have :=
           fixed_point_of_gt_1 (nat.one_lt_cast.mpr (Nat.succ_lt_succ n.succ_pos)) H1 H2 H4 H5 ha1
             hae
-        rwa [Rat.cast_coe_nat n.succ.succ] at this 
+        rwa [Rat.cast_coe_nat n.succ.succ] at this
       rw [← hfneq]
       exact H1 (n.succ.succ : ℚ) x (nat.cast_pos.mpr hn) hx
     exact h2.antisymm (H3 x hx n hn)
@@ -292,7 +292,7 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     have hx2num_gt_one : (1 : ℚ) < (2 * x.num : ℤ) := by norm_cast;
       linarith [rat.num_pos_iff_pos.mpr hx]
     have hh := fixed_point_of_gt_1 hx2num_gt_one H1 H2 H4 H5 ha1 hae
-    rwa [Rat.cast_coe_int x2num] at hh 
+    rwa [Rat.cast_coe_int x2num] at hh
   calc
     f x = f x * 1 := (mul_one (f x)).symm
     _ = f x * (x2denom / x2denom) := by rw [← div_self hx2cnezr]

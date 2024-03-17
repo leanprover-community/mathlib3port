@@ -46,9 +46,9 @@ theorem norm_sub (h : SameRay ℝ x y) : ‖x - y‖ = |‖x‖ - ‖y‖| :=
   by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   wlog hab : b ≤ a
-  · rw [SameRay.sameRay_comm] at h ; rw [norm_sub_rev, abs_sub_comm]
+  · rw [SameRay.sameRay_comm] at h; rw [norm_sub_rev, abs_sub_comm]
     exact this u b a hb ha h (le_of_not_le hab)
-  rw [← sub_nonneg] at hab 
+  rw [← sub_nonneg] at hab
   rw [← sub_smul, norm_smul_of_nonneg hab, norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, ←
     sub_mul, abs_of_nonneg (mul_nonneg hab (norm_nonneg _))]
 #align same_ray.norm_sub SameRay.norm_sub
@@ -74,7 +74,7 @@ theorem norm_injOn_ray_left (hx : x ≠ 0) : {y | SameRay ℝ x y}.InjOn norm :=
   rcases hy.exists_nonneg_left hx with ⟨r, hr, rfl⟩
   rcases hz.exists_nonneg_left hx with ⟨s, hs, rfl⟩
   rw [norm_smul, norm_smul, mul_left_inj' (norm_ne_zero_iff.2 hx), norm_of_nonneg hr,
-    norm_of_nonneg hs] at h 
+    norm_of_nonneg hs] at h
   rw [h]
 #align norm_inj_on_ray_left norm_injOn_ray_left
 -/
@@ -123,7 +123,7 @@ theorem sameRay_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ �
 theorem sameRay_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : SameRay ℝ x y ↔ x = y :=
   by
   obtain rfl | hy := eq_or_ne y 0
-  · rw [norm_zero, norm_eq_zero] at h 
+  · rw [norm_zero, norm_eq_zero] at h
     exact iff_of_true (SameRay.zero_right _) h
   · exact ⟨fun hxy => norm_injOn_ray_right hy hxy SameRay.rfl h, fun hxy => hxy ▸ SameRay.rfl⟩
 #align same_ray_iff_of_norm_eq sameRay_iff_of_norm_eq

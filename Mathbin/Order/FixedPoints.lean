@@ -365,7 +365,7 @@ instance : CompleteSemilatticeSup (fixedPoints f) :=
         (f.le_map_sSup_subset_fixedPoints (coe '' s) fun z ⟨x, hx⟩ => hx.2 ▸ x.2)
     le_sup := fun s x hx =>
       Subtype.coe_le_coe.1 <| le_trans (le_sSup <| Set.mem_image_of_mem _ hx) (f.le_nextFixed _)
-    sup_le := fun s x hx => f.nextFixed_le _ <| sSup_le <| Set.ball_image_iff.2 hx }
+    sup_le := fun s x hx => f.nextFixed_le _ <| sSup_le <| Set.forall_mem_image.2 hx }
 
 instance : CompleteSemilatticeInf (fixedPoints f) :=
   {
@@ -374,7 +374,7 @@ instance : CompleteSemilatticeInf (fixedPoints f) :=
     sInf := fun s =>
       f.prevFixed (sInf (coe '' s))
         (f.map_sInf_subset_fixedPoints_le (coe '' s) fun z ⟨x, hx⟩ => hx.2 ▸ x.2)
-    le_inf := fun s x hx => f.le_prevFixed _ <| le_sInf <| Set.ball_image_iff.2 hx
+    le_inf := fun s x hx => f.le_prevFixed _ <| le_sInf <| Set.forall_mem_image.2 hx
     inf_le := fun s x hx =>
       Subtype.coe_le_coe.1 <| le_trans (f.prevFixed_le _) (sInf_le <| Set.mem_image_of_mem _ hx) }
 

@@ -52,7 +52,7 @@ theorem charZero_of_inj_zero {R : Type _} [AddGroupWithOne R] (H : ∀ n : ℕ, 
   ⟨fun m n h => by
     induction' m with m ih generalizing n; · rw [H n]; rw [← h, Nat.cast_zero]
     cases' n with n; · apply H; rw [h, Nat.cast_zero]
-    simp_rw [Nat.cast_succ, add_right_cancel_iff] at h ; rwa [ih]⟩
+    simp_rw [Nat.cast_succ, add_right_cancel_iff] at h; rwa [ih]⟩
 #align char_zero_of_inj_zero charZero_of_inj_zero
 -/
 

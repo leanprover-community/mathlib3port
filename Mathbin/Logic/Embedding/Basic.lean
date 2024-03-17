@@ -239,8 +239,8 @@ def setValue {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = 
   ⟨fun a' => if a' = a then b else if f a' = b then f a else f a',
     by
     intro x y h
-    dsimp at h 
-    split_ifs at h  <;> try subst b <;> try simp only [f.injective.eq_iff] at * <;> cc⟩
+    dsimp at h
+    split_ifs at h <;> try subst b <;> try simp only [f.injective.eq_iff] at * <;> cc⟩
 #align function.embedding.set_value Function.Embedding.setValue
 -/
 

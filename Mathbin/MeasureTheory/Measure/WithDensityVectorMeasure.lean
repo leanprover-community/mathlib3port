@@ -163,7 +163,7 @@ theorem Measure.withDensityᵥ_absolutelyContinuous (μ : Measure α) (f : α �
   by
   by_cases hf : integrable f μ
   · refine' vector_measure.absolutely_continuous.mk fun i hi₁ hi₂ => _
-    rw [to_ennreal_vector_measure_apply_measurable hi₁] at hi₂ 
+    rw [to_ennreal_vector_measure_apply_measurable hi₁] at hi₂
     rw [with_densityᵥ_apply hf hi₁, measure.restrict_zero_set hi₂, integral_zero_measure]
   · rw [with_densityᵥ, dif_neg hf]
     exact vector_measure.absolutely_continuous.zero _
@@ -248,7 +248,7 @@ theorem Integrable.withDensityᵥ_trim_absolutelyContinuous {m m0 : MeasurableSp
     (μ.withDensityᵥ f).trim hm ≪ᵥ (μ.trim hm).toENNRealVectorMeasure :=
   by
   refine' vector_measure.absolutely_continuous.mk fun j hj₁ hj₂ => _
-  rw [measure.to_ennreal_vector_measure_apply_measurable hj₁, trim_measurable_set_eq hm hj₁] at hj₂ 
+  rw [measure.to_ennreal_vector_measure_apply_measurable hj₁, trim_measurable_set_eq hm hj₁] at hj₂
   rw [vector_measure.trim_measurable_set_eq hm hj₁, with_densityᵥ_apply hfi (hm _ hj₁)]
   simp only [measure.restrict_eq_zero.mpr hj₂, integral_zero_measure]
 #align measure_theory.integrable.with_densityᵥ_trim_absolutely_continuous MeasureTheory.Integrable.withDensityᵥ_trim_absolutelyContinuous

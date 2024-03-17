@@ -61,7 +61,7 @@ instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R 
     -- Evaluate `(minpoly R g) g` at the vector `(0,...,0,1)`
     have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Fin.last n) 1)
     obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
-    rw [← monomial_add_erase (minpoly R g) 0, hP] at heval 
+    rw [← monomial_add_erase (minpoly R g) 0, hP] at heval
     replace heval := congr_fun heval (Fin.last n)
     simpa [hnex] using heval
   contradiction

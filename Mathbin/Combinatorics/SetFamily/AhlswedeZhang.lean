@@ -122,7 +122,7 @@ theorem truncatedSup_union (hs : a ∈ lowerClosure (s : Set α)) (ht : a ∈ lo
 theorem truncatedSup_union_left (hs : a ∈ lowerClosure (s : Set α))
     (ht : a ∉ lowerClosure (t : Set α)) : truncatedSup (s ∪ t) a = truncatedSup s a :=
   by
-  simp only [mem_lowerClosure, mem_coe, exists_prop, not_exists, not_and] at ht 
+  simp only [mem_lowerClosure, mem_coe, exists_prop, not_exists, not_and] at ht
   simp only [truncated_sup_of_mem, hs, filter_union, filter_false_of_mem ht, union_empty,
     lower_aux.2 (Or.inl hs), ht]
 #align finset.truncated_sup_union_left Finset.truncatedSup_union_left
@@ -226,7 +226,7 @@ theorem truncatedInf_union (hs : a ∈ upperClosure (s : Set α)) (ht : a ∈ up
 theorem truncatedInf_union_left (hs : a ∈ upperClosure (s : Set α))
     (ht : a ∉ upperClosure (t : Set α)) : truncatedInf (s ∪ t) a = truncatedInf s a :=
   by
-  simp only [mem_upperClosure, mem_coe, exists_prop, not_exists, not_and] at ht 
+  simp only [mem_upperClosure, mem_coe, exists_prop, not_exists, not_and] at ht
   simp only [truncated_inf_of_mem, hs, filter_union, filter_false_of_mem ht, union_empty,
     upper_aux.2 (Or.inl hs), ht]
 #align finset.truncated_inf_union_left Finset.truncatedInf_union_left

@@ -421,17 +421,16 @@ noncomputable def Trivialization.pullback (e : Trivialization F (π F E)) (f : K
   target := (f ⁻¹' e.baseSet) ×ˢ univ
   map_source' x h :=
     by
-    simp_rw [e.source_eq, mem_preimage, pullback.lift_proj] at h 
+    simp_rw [e.source_eq, mem_preimage, pullback.lift_proj] at h
     simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_true_iff, mem_preimage, h]
   map_target' y h := by
-    rw [mem_prod, mem_preimage] at h 
+    rw [mem_prod, mem_preimage] at h
     simp_rw [e.source_eq, mem_preimage, pullback.lift_proj, h.1]
   left_inv' x h := by
-    simp_rw [mem_preimage, e.mem_source, pullback.lift_proj] at h 
+    simp_rw [mem_preimage, e.mem_source, pullback.lift_proj] at h
     simp_rw [pullback.lift, e.symm_apply_apply_mk h, total_space.eta]
-  right_inv' x h :=
-    by
-    simp_rw [mem_prod, mem_preimage, mem_univ, and_true_iff] at h 
+  right_inv' x h := by
+    simp_rw [mem_prod, mem_preimage, mem_univ, and_true_iff] at h
     simp_rw [pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
   open_source := by simp_rw [e.source_eq, ← preimage_comp];
     exact

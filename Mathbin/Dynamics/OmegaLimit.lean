@@ -266,7 +266,7 @@ theorem omegaLimit_subset_closure_fw_image {u : Set τ} (hu : u ∈ f) :
   by
   rw [omegaLimit_eq_iInter]
   intro _ hx
-  rw [mem_Inter] at hx 
+  rw [mem_Inter] at hx
   exact hx ⟨u, hu⟩
 #align omega_limit_subset_closure_fw_image omegaLimit_subset_closure_fw_image
 -/
@@ -295,7 +295,7 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
     by
     have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bUnion_eq_Union _ _
     rw [this, diff_subset_comm, diff_Union]
-    rw [omegaLimit_eq_iInter_inter _ _ _ hv₁] at hn₂ 
+    rw [omegaLimit_eq_iInter_inter _ _ _ hv₁] at hn₂
     simp_rw [diff_compl]
     rw [← inter_Inter]
     exact subset.trans (inter_subset_right _ _) hn₂

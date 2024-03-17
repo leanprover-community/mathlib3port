@@ -123,7 +123,7 @@ theorem cyclotomic_irreducible_pow_of_irreducible_pow {p : ℕ} (hp : Nat.Prime 
   induction' k with k hk
   · simpa using h
   have : m + k ≠ 0 := (add_pos_of_pos_of_nonneg hm k.zero_le).ne'
-  rw [Nat.add_succ, pow_succ', ← cyclotomic_expand_eq_cyclotomic hp <| dvd_pow_self p this] at h 
+  rw [Nat.add_succ, pow_succ', ← cyclotomic_expand_eq_cyclotomic hp <| dvd_pow_self p this] at h
   exact hk (by linarith) (of_irreducible_expand hp.ne_zero h)
 #align polynomial.cyclotomic_irreducible_pow_of_irreducible_pow Polynomial.cyclotomic_irreducible_pow_of_irreducible_pow
 -/
@@ -201,10 +201,10 @@ theorem isRoot_cyclotomic_prime_pow_mul_iff_of_charP {m k p : ℕ} {R : Type _} 
   rcases k.eq_zero_or_pos with (rfl | hk)
   · rw [pow_zero, one_mul, is_root_cyclotomic_iff]
   refine' ⟨fun h => _, fun h => _⟩
-  · rw [is_root.def, cyclotomic_mul_prime_pow_eq R (NeZero.not_char_dvd R p m) hk, eval_pow] at h 
+  · rw [is_root.def, cyclotomic_mul_prime_pow_eq R (NeZero.not_char_dvd R p m) hk, eval_pow] at h
     replace h := pow_eq_zero h
-    rwa [← is_root.def, is_root_cyclotomic_iff] at h 
-  · rw [← is_root_cyclotomic_iff, is_root.def] at h 
+    rwa [← is_root.def, is_root_cyclotomic_iff] at h
+  · rw [← is_root_cyclotomic_iff, is_root.def] at h
     rw [cyclotomic_mul_prime_pow_eq R (NeZero.not_char_dvd R p m) hk, is_root.def, eval_pow, h,
       zero_pow]
     simp only [tsub_pos_iff_lt]

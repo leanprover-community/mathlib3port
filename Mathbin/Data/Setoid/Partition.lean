@@ -267,7 +267,7 @@ theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃
   Set.eq_univ_of_forall fun x =>
     Set.mem_sUnion.2 <|
       let ⟨t, ht⟩ := hc.2 x
-      ⟨t, by simp only [exists_unique_iff_exists] at ht ; tauto⟩
+      ⟨t, by simp only [exists_unique_iff_exists] at ht; tauto⟩
 #align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.sUnion_eq_univ
 -/
 

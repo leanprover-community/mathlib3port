@@ -377,7 +377,7 @@ theorem choose_le_middle (r n : ℕ) : choose n r ≤ choose n (n / 2) :=
     · apply choose_le_middle_of_le_half_left a
     · rw [← choose_symm b]
       apply choose_le_middle_of_le_half_left
-      rw [div_lt_iff_lt_mul' zero_lt_two] at h 
+      rw [div_lt_iff_lt_mul' zero_lt_two] at h
       rw [le_div_iff_mul_le' zero_lt_two, tsub_mul, tsub_le_iff_tsub_le, mul_two,
         add_tsub_cancel_right]
       exact le_of_lt h

@@ -353,7 +353,7 @@ private theorem sup_aux (f g : E →ₗ.[R] F)
     dsimp [fg]
     rw [add_comm, ← sub_eq_sub_iff_add_eq_add, eq_comm, ← map_sub, ← map_sub]
     apply h
-    simp only [← eq_sub_iff_add_eq] at hxy 
+    simp only [← eq_sub_iff_add_eq] at hxy
     simp only [AddSubgroupClass.coe_sub, coe_mk, coe_mk, hxy, ← sub_add, ← sub_sub, sub_self,
       zero_sub, ← H]
     apply neg_add_eq_sub
@@ -431,7 +431,7 @@ protected theorem sup_le {f g h : E →ₗ.[R] F}
 theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain) (x : f.domain)
     (y : g.domain) (hxy : (x : E) = y) : f x = g y :=
   by
-  rw [disjoint_def] at h 
+  rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
   have hx : x = 0 := Subtype.eq (hxy.trans <| congr_arg _ hy)
   simp [*]
@@ -565,7 +565,7 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
     rintro x
     apply Classical.indefiniteDescription
     have := (mem_Sup_of_directed (cne.image _) hdir).1 x.2
-    rwa [bex_image_iff, SetCoe.exists'] at this 
+    rwa [bex_image_iff, SetCoe.exists'] at this
   set f : Sup (domain '' c) → F := fun x => (P x).val.val ⟨x, (P x).property⟩
   have f_eq : ∀ (p : c) (x : Sup (domain '' c)) (y : p.1.1) (hxy : (x : E) = y), f x = p.1 y :=
     by
@@ -777,19 +777,19 @@ theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
   by
   ext x; cases x
   constructor <;> intro h
-  · rw [mem_graph_iff] at h 
+  · rw [mem_graph_iff] at h
     rcases h with ⟨y, hy, h⟩
-    rw [LinearPMap.smul_apply] at h 
+    rw [LinearPMap.smul_apply] at h
     rw [Submodule.mem_map]
     simp only [mem_graph_iff, LinearMap.prodMap_apply, LinearMap.id_coe, id.def,
       LinearMap.smul_apply, Prod.mk.inj_iff, Prod.exists, exists_exists_and_eq_and]
     use x_fst, y
     simp [hy, h]
-  rw [Submodule.mem_map] at h 
+  rw [Submodule.mem_map] at h
   rcases h with ⟨x', hx', h⟩
   cases x'
   simp only [LinearMap.prodMap_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply,
-    Prod.mk.inj_iff] at h 
+    Prod.mk.inj_iff] at h
   rw [mem_graph_iff] at hx' ⊢
   rcases hx' with ⟨y, hy, hx'⟩
   use y
@@ -805,19 +805,19 @@ theorem neg_graph (f : E →ₗ.[R] F) :
   by
   ext; cases x
   constructor <;> intro h
-  · rw [mem_graph_iff] at h 
+  · rw [mem_graph_iff] at h
     rcases h with ⟨y, hy, h⟩
-    rw [LinearPMap.neg_apply] at h 
+    rw [LinearPMap.neg_apply] at h
     rw [Submodule.mem_map]
     simp only [mem_graph_iff, LinearMap.prodMap_apply, LinearMap.id_coe, id.def,
       LinearMap.neg_apply, Prod.mk.inj_iff, Prod.exists, exists_exists_and_eq_and]
     use x_fst, y
     simp [hy, h]
-  rw [Submodule.mem_map] at h 
+  rw [Submodule.mem_map] at h
   rcases h with ⟨x', hx', h⟩
   cases x'
   simp only [LinearMap.prodMap_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply,
-    Prod.mk.inj_iff] at h 
+    Prod.mk.inj_iff] at h
   rw [mem_graph_iff] at hx' ⊢
   rcases hx' with ⟨y, hy, hx'⟩
   use y
@@ -830,11 +830,11 @@ theorem neg_graph (f : E →ₗ.[R] F) :
 theorem mem_graph_snd_inj (f : E →ₗ.[R] F) {x y : E} {x' y' : F} (hx : (x, x') ∈ f.graph)
     (hy : (y, y') ∈ f.graph) (hxy : x = y) : x' = y' :=
   by
-  rw [mem_graph_iff] at hx hy 
+  rw [mem_graph_iff] at hx hy
   rcases hx with ⟨x'', hx1, hx2⟩
   rcases hy with ⟨y'', hy1, hy2⟩
-  simp only at hx1 hx2 hy1 hy2 
-  rw [← hx1, ← hy1, SetLike.coe_eq_coe] at hxy 
+  simp only at hx1 hx2 hy1 hy2
+  rw [← hx1, ← hy1, SetLike.coe_eq_coe] at hxy
   rw [← hx2, ← hy2, hxy]
 #align linear_pmap.mem_graph_snd_inj LinearPMap.mem_graph_snd_inj
 -/
@@ -860,9 +860,9 @@ theorem mem_domain_iff {f : E →ₗ.[R] F} {x : E} : x ∈ f.domain ↔ ∃ y :
   · use f ⟨x, h⟩
     exact f.mem_graph ⟨x, h⟩
   cases' h with y h
-  rw [mem_graph_iff] at h 
+  rw [mem_graph_iff] at h
   cases' h with x' h
-  simp only at h 
+  simp only at h
   rw [← h.1]
   simp
 #align linear_pmap.mem_domain_iff LinearPMap.mem_domain_iff
@@ -882,7 +882,7 @@ theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) :
   · use⟨x, hx⟩
     simp [h]
   rcases h with ⟨⟨x', hx'⟩, ⟨h1, h2⟩⟩
-  simp only [Submodule.coe_mk] at h1 h2 
+  simp only [Submodule.coe_mk] at h1 h2
   simp only [← h2, h1]
 #align linear_pmap.image_iff LinearPMap.image_iff
 -/
@@ -891,17 +891,17 @@ theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) :
 theorem mem_range_iff {f : E →ₗ.[R] F} {y : F} : y ∈ Set.range f ↔ ∃ x : E, (x, y) ∈ f.graph :=
   by
   constructor <;> intro h
-  · rw [Set.mem_range] at h 
+  · rw [Set.mem_range] at h
     rcases h with ⟨⟨x, hx⟩, h⟩
     use x
     rw [← h]
     exact f.mem_graph ⟨x, hx⟩
   cases' h with x h
-  rw [mem_graph_iff] at h 
+  rw [mem_graph_iff] at h
   cases' h with x h
   rw [Set.mem_range]
   use x
-  simp only at h 
+  simp only at h
   rw [h.2]
 #align linear_pmap.mem_range_iff LinearPMap.mem_range_iff
 -/
@@ -924,8 +924,8 @@ theorem le_of_le_graph {f g : E →ₗ.[R] F} (h : f.graph ≤ g.graph) : f ≤ 
   rintro ⟨x, hx⟩ ⟨y, hy⟩ hxy
   rw [image_iff]
   refine' h _
-  simp only [Submodule.coe_mk] at hxy 
-  rw [hxy] at hx 
+  simp only [Submodule.coe_mk] at hxy
+  rw [hxy] at hx
   rw [← image_iff hx]
   simp [hxy]
 #align linear_pmap.le_of_le_graph LinearPMap.le_of_le_graph
@@ -1011,14 +1011,14 @@ noncomputable def toLinearPMap (g : Submodule R (E × F))
         have hadd := (g.map (LinearMap.fst R E F)).add_mem v.2 w.2
         have hvw := val_from_graph_mem hg hadd
         have hvw' := g.add_mem (val_from_graph_mem hg v.2) (val_from_graph_mem hg w.2)
-        rw [Prod.mk_add_mk] at hvw' 
+        rw [Prod.mk_add_mk] at hvw'
         exact (exists_unique_from_graph hg hadd).unique hvw hvw'
       map_smul' := fun a v =>
         by
         have hsmul := (g.map (LinearMap.fst R E F)).smul_mem a v.2
         have hav := val_from_graph_mem hg hsmul
         have hav' := g.smul_mem a (val_from_graph_mem hg v.2)
-        rw [Prod.smul_mk] at hav' 
+        rw [Prod.smul_mk] at hav'
         exact (exists_unique_from_graph hg hsmul).unique hav hav' }
 #align submodule.to_linear_pmap Submodule.toLinearPMap
 -/
@@ -1038,7 +1038,7 @@ theorem toLinearPMap_graph_eq (g : Submodule R (E × F))
     (g.toLinearPMap hg).graph = g := by
   ext
   constructor <;> intro hx
-  · rw [LinearPMap.mem_graph_iff] at hx 
+  · rw [LinearPMap.mem_graph_iff] at hx
     rcases hx with ⟨y, hx1, hx2⟩
     convert g.mem_graph_to_linear_pmap hg y
     rw [Subtype.val_eq_coe]

@@ -463,8 +463,8 @@ theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.Salient ↔ ¬S.Flat :=
   · rintro h₁ ⟨x, xs, H₁, H₂⟩
     exact h₁ x xs H₁ H₂
   · intro h
-    unfold flat at h 
-    push_neg at h 
+    unfold flat at h
+    push_neg at h
     exact h
 #align convex_cone.salient_iff_not_flat ConvexCone.salient_iff_not_flat
 -/
@@ -519,7 +519,7 @@ def toPartialOrder (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrder E :=
       by_contra h
       have h' : b - a ≠ 0 := fun h'' => h (eq_of_sub_eq_zero h'').symm
       have H := h₂ (b - a) ab h'
-      rw [neg_sub b a] at H 
+      rw [neg_sub b a] at H
       exact H ba }
 #align convex_cone.to_partial_order ConvexCone.toPartialOrder
 -/
@@ -911,23 +911,23 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
       simpa only [Set.Nonempty, upperBounds, lowerBounds, ball_image_iff] using this
     refine' exists_between_of_forall_le (nonempty.image f _) (nonempty.image f (Dense y)) _
     · rcases Dense (-y) with ⟨x, hx⟩
-      rw [← neg_neg x, NegMemClass.coe_neg, ← sub_eq_add_neg] at hx 
+      rw [← neg_neg x, NegMemClass.coe_neg, ← sub_eq_add_neg] at hx
       exact ⟨_, hx⟩
     rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
     have := s.add_mem hxp hxn
-    rw [add_assoc, add_sub_cancel'_right, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this 
+    rw [add_assoc, add_sub_cancel'_right, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this
     replace := nonneg _ this
-    rwa [f.map_sub, sub_nonneg] at this 
+    rwa [f.map_sub, sub_nonneg] at this
   have hy' : y ≠ 0 := fun hy₀ => hy (hy₀.symm ▸ zero_mem _)
   refine' ⟨f.sup_span_singleton y (-c) hy, _, _⟩
   · refine' lt_iff_le_not_le.2 ⟨f.left_le_sup _ _, fun H => _⟩
     replace H := linear_pmap.domain_mono.monotone H
-    rw [LinearPMap.domain_supSpanSingleton, sup_le_iff, span_le, singleton_subset_iff] at H 
+    rw [LinearPMap.domain_supSpanSingleton, sup_le_iff, span_le, singleton_subset_iff] at H
     exact hy H.2
   · rintro ⟨z, hz⟩ hzs
     rcases mem_sup.1 hz with ⟨x, hx, y', hy', rfl⟩
     rcases mem_span_singleton.1 hy' with ⟨r, rfl⟩
-    simp only [Subtype.coe_mk] at hzs 
+    simp only [Subtype.coe_mk] at hzs
     erw [LinearPMap.supSpanSingleton_apply_mk _ _ _ _ _ hx, smul_neg, ← sub_eq_add_neg, sub_nonneg]
     rcases lt_trichotomy r 0 with (hr | hr | hr)
     · have : -(r⁻¹ • x) - y ∈ s := by
@@ -935,7 +935,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
           mul_inv_cancel hr.ne, one_smul, sub_eq_add_neg, neg_smul, neg_neg]
       replace := le_c (r⁻¹ • ⟨x, hx⟩) this
       rwa [← mul_le_mul_left (neg_pos.2 hr), neg_mul, neg_mul, neg_le_neg_iff, f.map_smul,
-        smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne, one_mul] at this 
+        smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne, one_mul] at this
     · subst r
       simp only [zero_smul, add_zero] at hzs ⊢
       apply nonneg
@@ -944,7 +944,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
         rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
       replace := c_le (r⁻¹ • ⟨x, hx⟩) this
       rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne',
-        one_mul] at this 
+        one_mul] at this
 #align riesz_extension.step RieszExtension.step
 -/
 
@@ -1028,9 +1028,9 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
     · intro x
       have A : (x, N x) = (x, 0) + (0, N x) := by simp
       have B := g_nonneg ⟨x, N x⟩ (le_refl (N x))
-      rw [A, map_add, ← neg_le_iff_add_nonneg'] at B 
+      rw [A, map_add, ← neg_le_iff_add_nonneg'] at B
       have C := g_eq 0 (N x)
-      simp only [Submodule.coe_zero, f.map_zero, sub_zero] at C 
+      simp only [Submodule.coe_zero, f.map_zero, sub_zero] at C
       rwa [← C]
   · exact fun x hx => le_trans (hf _) hx
   · rintro ⟨x, y⟩

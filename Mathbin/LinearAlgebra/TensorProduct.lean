@@ -1446,14 +1446,14 @@ variable {M}
 #print LinearMap.rTensor_pow /-
 @[simp]
 theorem rTensor_pow (f : M →ₗ[R] M) (n : ℕ) : f.rTensor N ^ n = (f ^ n).rTensor N := by
-  have h := TensorProduct.map_pow f (id : N →ₗ[R] N) n; rwa [id_pow] at h 
+  have h := TensorProduct.map_pow f (id : N →ₗ[R] N) n; rwa [id_pow] at h
 #align linear_map.rtensor_pow LinearMap.rTensor_pow
 -/
 
 #print LinearMap.lTensor_pow /-
 @[simp]
 theorem lTensor_pow (f : N →ₗ[R] N) (n : ℕ) : f.lTensor M ^ n = (f ^ n).lTensor M := by
-  have h := TensorProduct.map_pow (id : M →ₗ[R] M) f n; rwa [id_pow] at h 
+  have h := TensorProduct.map_pow (id : M →ₗ[R] M) f n; rwa [id_pow] at h
 #align linear_map.ltensor_pow LinearMap.lTensor_pow
 -/
 

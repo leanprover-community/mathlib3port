@@ -51,7 +51,7 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
     simp only [preimage_empty, measure_empty, measurable_const]
   · -- case of a box: `t = t₁ ×ˢ t₂` for measurable sets `t₁` and `t₂`
     intro t' ht'
-    simp only [Set.mem_image2, Set.mem_setOf_eq, exists_and_left] at ht' 
+    simp only [Set.mem_image2, Set.mem_setOf_eq, exists_and_left] at ht'
     obtain ⟨t₁, ht₁, t₂, ht₂, rfl⟩ := ht'
     classical
     simp_rw [mk_preimage_prod_right_eq_if]
@@ -164,7 +164,7 @@ theorem Measurable.lintegral_kernel_prod_right {f : α → β → ℝ≥0∞} (h
   by
   let F : ℕ → simple_func (α × β) ℝ≥0∞ := simple_func.eapprox (uncurry f)
   have h : ∀ a, (⨆ n, F n a) = uncurry f a := simple_func.supr_eapprox_apply (uncurry f) hf
-  simp only [Prod.forall, uncurry_apply_pair] at h 
+  simp only [Prod.forall, uncurry_apply_pair] at h
   simp_rw [← h]
   have : ∀ a, ∫⁻ b, ⨆ n, F n (a, b) ∂κ a = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a :=
     by
@@ -327,7 +327,7 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
 
 #print MeasureTheory.StronglyMeasurable.integral_kernel_prod_right' /-
 theorem StronglyMeasurable.integral_kernel_prod_right' ⦃f : α × β → E⦄ (hf : StronglyMeasurable f) :
-    StronglyMeasurable fun x => ∫ y, f (x, y) ∂κ x := by rw [← uncurry_curry f] at hf ;
+    StronglyMeasurable fun x => ∫ y, f (x, y) ∂κ x := by rw [← uncurry_curry f] at hf;
   exact hf.integral_kernel_prod_right
 #align measure_theory.strongly_measurable.integral_kernel_prod_right' MeasureTheory.StronglyMeasurable.integral_kernel_prod_right'
 -/

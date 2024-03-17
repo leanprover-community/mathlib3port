@@ -57,7 +57,7 @@ theorem ofFn_eq_pmap {α n} {f : Fin n → α} :
     ofFn f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 := by
   rw [pmap_eq_map_attach] <;>
     exact
-      ext_le (by simp) fun i hi1 hi2 => by simp at hi1 ;
+      ext_le (by simp) fun i hi1 hi2 => by simp at hi1;
         simp [nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
 #align list.of_fn_eq_pmap List.ofFn_eq_pmap
 -/
@@ -89,7 +89,7 @@ theorem nodup_ofFn {α n} {f : Fin n → α} : Nodup (ofFn f) ↔ Function.Injec
     exact Function.injective_of_subsingleton _
   · intro h
     rw [Fin.cons_injective_iff]
-    simp_rw [of_fn_succ, Fin.cons_succ, nodup_cons, Fin.cons_zero, mem_of_fn] at h 
+    simp_rw [of_fn_succ, Fin.cons_succ, nodup_cons, Fin.cons_zero, mem_of_fn] at h
     exact h.imp_right ih
 #align list.nodup_of_fn List.nodup_ofFn
 -/

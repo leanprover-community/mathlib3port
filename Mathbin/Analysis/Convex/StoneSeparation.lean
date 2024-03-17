@@ -39,12 +39,12 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
   rw [not_disjoint_iff]
   obtain ⟨az, bz, haz, hbz, habz, rfl⟩ := hz
   obtain rfl | haz' := haz.eq_or_lt
-  · rw [zero_add] at habz 
+  · rw [zero_add] at habz
     rw [zero_smul, zero_add, habz, one_smul]
     refine' ⟨v, right_mem_segment _ _ _, segment_subset_convexHull _ _ hv⟩ <;> simp
   obtain ⟨av, bv, hav, hbv, habv, rfl⟩ := hv
   obtain rfl | hav' := hav.eq_or_lt
-  · rw [zero_add] at habv 
+  · rw [zero_add] at habv
     rw [zero_smul, zero_add, habv, one_smul]
     exact ⟨q, right_mem_segment _ _ _, subset_convexHull _ _ <| by simp⟩
   obtain ⟨au, bu, hau, hbu, habu, rfl⟩ := hu
@@ -120,7 +120,7 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
   by_contra! h
   suffices h : Disjoint (convexHull 𝕜 (insert c C)) t
   · rw [←
-      hCmax _ ⟨convex_convexHull _ _, h⟩ ((subset_insert _ _).trans <| subset_convexHull _ _)] at hc 
+      hCmax _ ⟨convex_convexHull _ _, h⟩ ((subset_insert _ _).trans <| subset_convexHull _ _)] at hc
     exact hc (subset_convexHull _ _ <| mem_insert _ _)
   rw [convexHull_insert ⟨z, hzC⟩, convexJoin_singleton_left]
   refine' disjoint_Union₂_left.2 fun a ha => disjoint_iff_inf_le.mpr fun b hb => h a _ ⟨b, hb⟩

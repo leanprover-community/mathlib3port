@@ -691,8 +691,8 @@ theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) :=
   ext i
   have h1 : (mk s x : ∀ i, β i) i = (mk s y : ∀ i, β i) i := by rw [H]
   cases' i with i hi
-  change i ∈ s at hi 
-  dsimp only [mk_apply, Subtype.coe_mk] at h1 
+  change i ∈ s at hi
+  dsimp only [mk_apply, Subtype.coe_mk] at h1
   simpa only [dif_pos hi] using h1
 #align dfinsupp.mk_injective DFinsupp.mk_injective
 -/
@@ -793,9 +793,9 @@ theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
     · have h_coe : ⇑(DFinsupp.single i xi) = DFinsupp.single j xj := congr_arg coeFn h
       have hci := congr_fun h_coe i
       have hcj := congr_fun h_coe j
-      rw [DFinsupp.single_eq_same] at hci hcj 
-      rw [DFinsupp.single_eq_of_ne (Ne.symm hij)] at hci 
-      rw [DFinsupp.single_eq_of_ne hij] at hcj 
+      rw [DFinsupp.single_eq_same] at hci hcj
+      rw [DFinsupp.single_eq_of_ne (Ne.symm hij)] at hci
+      rw [DFinsupp.single_eq_of_ne hij] at hcj
       exact Or.inr ⟨hci, hcj.symm⟩
   · rintro (⟨rfl, hxi⟩ | ⟨hi, hj⟩)
     · rw [eq_of_hEq hxi]
@@ -827,7 +827,7 @@ theorem filter_single (p : ι → Prop) [DecidablePred p] (i : ι) (x : β i) :
   by
   ext j
   have := apply_ite (fun x : Π₀ i, β i => x j) (p i) (single i x) 0
-  dsimp at this 
+  dsimp at this
   rw [filter_apply, this]
   obtain rfl | hij := Decidable.eq_or_ne i j
   · rfl
@@ -1215,7 +1215,7 @@ theorem addHom_ext {γ : Type w} [AddZeroClass γ] ⦃f g : (Π₀ i, β i) →+
     (H : ∀ (i : ι) (y : β i), f (single i y) = g (single i y)) : f = g :=
   by
   refine' AddMonoidHom.eq_of_eqOn_denseM add_closure_Union_range_single fun f hf => _
-  simp only [Set.mem_iUnion, Set.mem_range] at hf 
+  simp only [Set.mem_iUnion, Set.mem_range] at hf
   rcases hf with ⟨x, y, rfl⟩
   apply H
 #align dfinsupp.add_hom_ext DFinsupp.addHom_ext
@@ -1352,7 +1352,7 @@ theorem eq_mk_support (f : Π₀ i, β i) : f = mk f.support fun i => f i :=
   by
   change f = mk f.support fun i => f i.1
   ext i
-  by_cases h : f i ≠ 0 <;> [skip; rw [Classical.not_not] at h ] <;> simp [h]
+  by_cases h : f i ≠ 0 <;> [skip; rw [Classical.not_not] at h] <;> simp [h]
 #align dfinsupp.eq_mk_support DFinsupp.eq_mk_support
 -/
 
@@ -1421,7 +1421,7 @@ theorem mapRange_def [∀ (i) (x : β₁ i), Decidable (x ≠ 0)] {f : ∀ i, β
     mapRange f hf g = mk g.support fun i => f i.1 (g i.1) :=
   by
   ext i
-  by_cases h : g i ≠ 0 <;> simp at h  <;> simp [h, hf]
+  by_cases h : g i ≠ 0 <;> simp at h <;> simp [h, hf]
 #align dfinsupp.map_range_def DFinsupp.mapRange_def
 -/
 
@@ -1450,7 +1450,7 @@ theorem zipWith_def {ι : Type u} {β : ι → Type v} {β₁ : ι → Type v₁
   by
   ext i
   by_cases h1 : g₁ i ≠ 0 <;> by_cases h2 : g₂ i ≠ 0 <;>
-      simp only [Classical.not_not, Ne.def] at h1 h2  <;>
+      simp only [Classical.not_not, Ne.def] at h1 h2 <;>
     simp [h1, h2, hf]
 #align dfinsupp.zip_with_def DFinsupp.zipWith_def
 -/
@@ -1466,14 +1466,14 @@ end MapRangeAndZipWith
 
 #print DFinsupp.erase_def /-
 theorem erase_def (i : ι) (f : Π₀ i, β i) : f.eraseₓ i = mk (f.support.eraseₓ i) fun j => f j.1 :=
-  by ext j; by_cases h1 : j = i <;> by_cases h2 : f j ≠ 0 <;> simp at h2  <;> simp [h1, h2]
+  by ext j; by_cases h1 : j = i <;> by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
 #align dfinsupp.erase_def DFinsupp.erase_def
 -/
 
 #print DFinsupp.support_erase /-
 @[simp]
 theorem support_erase (i : ι) (f : Π₀ i, β i) : (f.eraseₓ i).support = f.support.eraseₓ i := by
-  ext j; by_cases h1 : j = i; simp [h1]; by_cases h2 : f j ≠ 0 <;> simp at h2  <;> simp [h1, h2]
+  ext j; by_cases h1 : j = i; simp [h1]; by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
 #align dfinsupp.support_erase DFinsupp.support_erase
 -/
 
@@ -1505,7 +1505,7 @@ variable {p : ι → Prop} [DecidablePred p]
 
 #print DFinsupp.filter_def /-
 theorem filter_def (f : Π₀ i, β i) : f.filterₓ p = mk (f.support.filterₓ p) fun i => f i.1 := by
-  ext i <;> by_cases h1 : p i <;> by_cases h2 : f i ≠ 0 <;> simp at h2  <;> simp [h1, h2]
+  ext i <;> by_cases h1 : p i <;> by_cases h2 : f i ≠ 0 <;> simp at h2 <;> simp [h1, h2]
 #align dfinsupp.filter_def DFinsupp.filter_def
 -/
 
@@ -1519,7 +1519,7 @@ theorem support_filter (f : Π₀ i, β i) : (f.filterₓ p).support = f.support
 #print DFinsupp.subtypeDomain_def /-
 theorem subtypeDomain_def (f : Π₀ i, β i) :
     f.subtypeDomain p = mk (f.support.Subtype p) fun i => f i := by
-  ext i <;> by_cases h2 : f i ≠ 0 <;> try simp at h2  <;> dsimp <;> simp [h2]
+  ext i <;> by_cases h2 : f i ≠ 0 <;> try simp at h2 <;> dsimp <;> simp [h2]
 #align dfinsupp.subtype_domain_def DFinsupp.subtypeDomain_def
 -/
 
@@ -1562,8 +1562,8 @@ instance [∀ i, Zero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀ i
       ext fun i =>
         if h : i ∈ f.support then h₂ i h
         else by
-          have hf : f i = 0 := by rwa [mem_support_iff, Classical.not_not] at h 
-          have hg : g i = 0 := by rwa [h₁, mem_support_iff, Classical.not_not] at h 
+          have hf : f i = 0 := by rwa [mem_support_iff, Classical.not_not] at h
+          have hg : g i = 0 := by rwa [h₁, mem_support_iff, Classical.not_not] at h
           rw [hf, hg],
       by rintro rfl; simp⟩
 
@@ -2035,7 +2035,7 @@ theorem prod_mapRange_index {β₁ : ι → Type v₁} {β₂ : ι → Type v₂
   rw [map_range_def]
   refine' (Finset.prod_subset support_mk_subset _).trans _
   · intro i h1 h2
-    dsimp; simp [h1] at h2 ; dsimp at h2 
+    dsimp; simp [h1] at h2; dsimp at h2
     simp [h1, h2, h0]
   · refine' Finset.prod_congr rfl _
     intro i h1
@@ -2060,7 +2060,7 @@ theorem prod_single_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x
   by
   by_cases h : b ≠ 0
   · simp [DFinsupp.prod, support_single_ne_zero h]
-  · rw [Classical.not_not] at h ; simp [h, prod_zero_index, h_zero]; rfl
+  · rw [Classical.not_not] at h; simp [h, prod_zero_index, h_zero]; rfl
 #align dfinsupp.prod_single_index DFinsupp.prod_single_index
 #align dfinsupp.sum_single_index DFinsupp.sum_single_index
 -/
@@ -2199,7 +2199,7 @@ theorem prod_eq_prod_fintype [Fintype ι] [∀ i, Zero (β i)] [∀ (i : ι) (x 
   suffices ∏ i in v.support, f i (v i) = ∏ i, f i (v i) by simp [DFinsupp.prod, this]
   apply Finset.prod_subset v.support.subset_univ
   intro i hi' hi
-  rw [mem_support_iff, Classical.not_not] at hi 
+  rw [mem_support_iff, Classical.not_not] at hi
   rw [hi, hf]
 #align dfinsupp.prod_eq_prod_fintype DFinsupp.prod_eq_prod_fintype
 #align dfinsupp.sum_eq_sum_fintype DFinsupp.sum_eq_sum_fintype
@@ -2222,12 +2222,12 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
       refine'
         (Finset.sum_subset H1 _).symm.trans
           ((Finset.sum_congr rfl _).trans (Finset.sum_subset H2 _))
-      · intro i H1 H2; rw [Finset.mem_inter] at H2 
-        simp only [Multiset.mem_toFinset] at H1 H2 
+      · intro i H1 H2; rw [Finset.mem_inter] at H2
+        simp only [Multiset.mem_toFinset] at H1 H2
         rw [(hy i).resolve_left (mt (And.intro H1) H2), AddMonoidHom.map_zero]
       · intro i H1; rfl
-      · intro i H1 H2; rw [Finset.mem_inter] at H2 
-        simp only [Multiset.mem_toFinset] at H1 H2 
+      · intro i H1 H2; rw [Finset.mem_inter] at H2
+        simp only [Multiset.mem_toFinset] at H1 H2
         rw [(hx i).resolve_left (mt (fun H3 => And.intro H3 H1) H2), AddMonoidHom.map_zero]
   map_add' := by
     rintro ⟨f, sf, hf⟩ ⟨g, sg, hg⟩
@@ -2236,11 +2236,11 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
     congr 1
     · refine' (Finset.sum_subset _ _).symm
       · intro i; simp only [Multiset.mem_toFinset, Multiset.mem_add]; exact Or.inl
-      · intro i H1 H2; simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2 
+      · intro i H1 H2; simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
         rw [(hf i).resolve_left H2, AddMonoidHom.map_zero]
     · refine' (Finset.sum_subset _ _).symm
       · intro i; simp only [Multiset.mem_toFinset, Multiset.mem_add]; exact Or.inr
-      · intro i H1 H2; simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2 
+      · intro i H1 H2; simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
         rw [(hg i).resolve_left H2, AddMonoidHom.map_zero]
   map_zero' := rfl
 #align dfinsupp.sum_add_hom DFinsupp.sumAddHom
@@ -2456,7 +2456,7 @@ theorem sum_sub_index [∀ i, AddGroup (β i)] [∀ (i) (x : β i), Decidable (x
     (f - g).Sum h = f.Sum h - g.Sum h :=
   by
   have := (lift_add_hom fun a => AddMonoidHom.ofMapSub (h a) (h_sub a)).map_sub f g
-  rw [lift_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply] at this 
+  rw [lift_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply] at this
   exact this
 #align dfinsupp.sum_sub_index DFinsupp.sum_sub_index
 -/
@@ -2494,7 +2494,7 @@ theorem sum_single [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable 
     f.Sum single = f :=
   by
   have := AddMonoidHom.congr_fun lift_add_hom_single_add_hom f
-  rw [lift_add_hom_apply, sum_add_hom_apply] at this 
+  rw [lift_add_hom_apply, sum_add_hom_apply] at this
   exact this
 #align dfinsupp.sum_single DFinsupp.sum_single
 -/

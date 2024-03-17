@@ -540,7 +540,7 @@ theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i �
       apply prod_le_prod_of_subset_of_one_le'
       · simp [Finset.insert_subset_iff, h, ht]
       · intro x hx h'x
-        simp only [mem_insert, not_or] at h'x 
+        simp only [mem_insert, not_or] at h'x
         exact hle x hx h'x.2
 #align finset.prod_lt_prod_of_subset' Finset.prod_lt_prod_of_subset'
 #align finset.sum_lt_sum_of_subset Finset.sum_lt_sum_of_subset
@@ -734,7 +734,7 @@ theorem CanonicallyOrderedCommSemiring.multiset_prod_pos [Nontrivial R] {m : Mul
     0 < m.Prod ↔ ∀ x ∈ m, (0 : R) < x :=
   by
   induction m using Quotient.inductionOn
-  rw [Multiset.quot_mk_to_coe, Multiset.coe_prod]
+  rw [Multiset.quot_mk_to_coe, Multiset.prod_coe]
   exact CanonicallyOrderedCommSemiring.list_prod_pos
 #align canonically_ordered_comm_semiring.multiset_prod_pos CanonicallyOrderedCommSemiring.multiset_prod_pos
 -/

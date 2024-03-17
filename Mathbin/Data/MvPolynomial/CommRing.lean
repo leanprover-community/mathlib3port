@@ -147,7 +147,7 @@ variable {p q}
 theorem vars_sub_of_disjoint [DecidableEq σ] (hpq : Disjoint p.vars q.vars) :
     (p - q).vars = p.vars ∪ q.vars :=
   by
-  rw [← vars_neg q] at hpq 
+  rw [← vars_neg q] at hpq
   convert vars_add_of_disjoint hpq using 2 <;> simp [sub_eq_add_neg]
 #align mv_polynomial.vars_sub_of_disjoint MvPolynomial.vars_sub_of_disjoint
 -/
@@ -217,9 +217,9 @@ theorem degreeOf_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc
-  simp only [not_lt] at hc 
+  simp only [not_lt] at hc
   have h := support_sub σ f g hm
-  simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm 
+  simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm
   cases' Finset.mem_union.1 h with cf cg
   · exact hm (hf m cf hc)
   · exact hm (hg m cg hc)

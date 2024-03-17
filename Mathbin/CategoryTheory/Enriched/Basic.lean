@@ -416,7 +416,7 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp,
         forget_enrichment.hom_to_hom_of, enriched_functor.map_comp, forget_enrichment_comp]
       rfl
-    · intro f g w; apply_fun forget_enrichment.hom_of W at w ; simpa using w
+    · intro f g w; apply_fun forget_enrichment.hom_of W at w; simpa using w
 #align category_theory.enriched_functor.forget CategoryTheory.EnrichedFunctor.forget
 -/
 

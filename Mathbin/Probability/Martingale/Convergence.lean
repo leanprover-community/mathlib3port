@@ -115,12 +115,12 @@ then it does not frequently visit both below `a` and above `b`. -/
 theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a b f ω ≠ ∞) :
     ¬((∃ᶠ n in atTop, f n ω < a) ∧ ∃ᶠ n in atTop, b < f n ω) :=
   by
-  rw [← lt_top_iff_ne_top, upcrossings_lt_top_iff] at hω 
+  rw [← lt_top_iff_ne_top, upcrossings_lt_top_iff] at hω
   replace hω : ∃ k, ∀ N, upcrossings_before a b f N ω < k
   · obtain ⟨k, hk⟩ := hω
     exact ⟨k + 1, fun N => lt_of_le_of_lt (hk N) k.lt_succ_self⟩
   rintro ⟨h₁, h₂⟩
-  rw [frequently_at_top] at h₁ h₂ 
+  rw [frequently_at_top] at h₁ h₂
   refine' Classical.not_not.2 hω _
   push_neg
   intro k
@@ -156,7 +156,7 @@ theorem tendsto_of_uncrossing_lt_top (hf₁ : liminf (fun n => (‖f n ω‖₊ 
     ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) :=
   by
   by_cases h : is_bounded_under (· ≤ ·) at_top fun n => |f n ω|
-  · rw [is_bounded_under_le_abs] at h 
+  · rw [is_bounded_under_le_abs] at h
     refine' tendsto_of_no_upcrossings Rat.denseRange_cast _ h.1 h.2
     · intro a ha b hb hab
       obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := ha, hb
@@ -174,11 +174,11 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
   by
   refine' ae_lt_top (hf.adapted.measurable_upcrossings hab) _
   have := hf.mul_lintegral_upcrossings_le_lintegral_pos_part a b
-  rw [mul_comm, ← ENNReal.le_div_iff_mul_le] at this 
+  rw [mul_comm, ← ENNReal.le_div_iff_mul_le] at this
   · refine' (lt_of_le_of_lt this (ENNReal.div_lt_top _ _)).Ne
     · have hR' : ∀ n, ∫⁻ ω, ‖f n ω - a‖₊ ∂μ ≤ R + ‖a‖₊ * μ Set.univ :=
         by
-        simp_rw [snorm_one_eq_lintegral_nnnorm] at hbdd 
+        simp_rw [snorm_one_eq_lintegral_nnnorm] at hbdd
         intro n
         refine' (lintegral_mono _ : ∫⁻ ω, ‖f n ω - a‖₊ ∂μ ≤ ∫⁻ ω, ‖f n ω‖₊ + ‖a‖₊ ∂μ).trans _
         · intro ω
@@ -474,7 +474,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ)
     have hheq :=
       @integral_add_compl _ _ (⨆ n, ℱ n) _ _ _ _ _ _ htmeas
         (hlimint.trim hle strongly_measurable_limit_process)
-    rw [add_comm, ← eq_sub_iff_add_eq] at hgeq hheq 
+    rw [add_comm, ← eq_sub_iff_add_eq] at hgeq hheq
     rw [set_integral_trim hle hgmeas htmeas.compl,
       set_integral_trim hle strongly_measurable_limit_process htmeas.compl, hgeq, hheq, ←
       set_integral_trim hle hgmeas htmeas, ←
@@ -517,7 +517,7 @@ theorem tendsto_ae_condexp (g : Ω → ℝ) :
     integrable_condexp.tendsto_ae_condexp strongly_measurable_condexp
   have heq : ∀ n, ∀ᵐ x ∂μ, (μ[μ[g|⨆ n, ℱ n]|ℱ n]) x = (μ[g|ℱ n]) x := fun n =>
     condexp_condexp_of_le (le_iSup _ n) (iSup_le fun n => ℱ.le n)
-  rw [← ae_all_iff] at heq 
+  rw [← ae_all_iff] at heq
   filter_upwards [HEq, ht] with x hxeq hxt
   exact hxt.congr hxeq
 #align measure_theory.tendsto_ae_condexp MeasureTheory.tendsto_ae_condexp

@@ -276,7 +276,7 @@ line, it is still real-differentiable, and the derivative is what one would form
 theorem hasDerivAt_ofReal_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1) :
     HasDerivAt (fun y : ℝ => (y : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x :=
   by
-  rw [Ne.def, ← add_eq_zero_iff_eq_neg, ← Ne.def] at hr 
+  rw [Ne.def, ← add_eq_zero_iff_eq_neg, ← Ne.def] at hr
   rcases lt_or_gt_of_ne hx.symm with (hx | hx)
   · -- easy case : `0 < x`
     convert (((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_ofReal
@@ -484,7 +484,7 @@ theorem contDiff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDif
   induction' n with n ihn generalizing p
   · exact contDiff_zero.2 (continuous_id.rpow_const fun x => by exact_mod_cast Or.inr h)
   · have h1 : 1 ≤ p := le_trans (by simp) h
-    rw [Nat.cast_succ, ← le_sub_iff_add_le] at h 
+    rw [Nat.cast_succ, ← le_sub_iff_add_le] at h
     rw [contDiff_succ_iff_deriv, deriv_rpow_const' h1]
     refine' ⟨differentiable_rpow_const h1, cont_diff_const.mul (ihn h)⟩
 #align real.cont_diff_rpow_const_of_le Real.contDiff_rpow_const_of_le

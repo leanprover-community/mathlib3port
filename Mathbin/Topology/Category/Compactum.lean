@@ -197,7 +197,7 @@ theorem isClosed_iff {X : Compactum} (S : Set X) :
   · intro cond F h
     by_contra c
     specialize cond F c
-    rw [compl_mem_iff_not_mem] at cond 
+    rw [compl_mem_iff_not_mem] at cond
     contradiction
   · intro h1 F h2
     specialize h1 F
@@ -269,7 +269,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
     have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
     rcases this with ⟨q, hq1, P, hq2, hq3⟩
     refine' ⟨P, hq2, _⟩
-    rw [← hq3] at hq1 
+    rw [← hq3] at hq1
     simpa
   -- Suffices to show that the intersection of any finite subcollection of C1 is nonempty.
   suffices ∀ T : fsu, ι T ⊆ C1 → (⋂₀ ι T).Nonempty
@@ -330,9 +330,9 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     by
     intro A hA h
     by_contra H
-    rw [le_nhds_iff] at cond 
+    rw [le_nhds_iff] at cond
     specialize cond (Aᶜ) H hA.is_open_compl
-    rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond 
+    rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond
     contradiction
   -- If A ∈ F, then x ∈ cl A.
   have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A :=
@@ -452,7 +452,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
   unit' := by ext x; exact lim_eq (pure_le_nhds _)
   assoc' := by
     ext FF
-    change Ultrafilter (Ultrafilter X) at FF 
+    change Ultrafilter (Ultrafilter X) at FF
     set x := (Ultrafilter.map Ultrafilter.lim FF).lim with c1
     have c2 : ∀ (U : Set X) (F : Ultrafilter X), F.lim ∈ U → IsOpen U → U ∈ F :=
       by
@@ -483,7 +483,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
 def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
   { f
     h' := by
-      rw [continuous_iff_ultrafilter] at cont 
+      rw [continuous_iff_ultrafilter] at cont
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
       have := str_eq_of_le_nhds (Ultrafilter.map f F) _ Cont
@@ -527,7 +527,7 @@ def isoOfTopologicalSpace {D : CompHaus} :
   Hom :=
     { toFun := id
       continuous_toFun :=
-        continuous_def.2 fun _ h => by rw [isOpen_iff_ultrafilter'] at h ; exact h }
+        continuous_def.2 fun _ h => by rw [isOpen_iff_ultrafilter'] at h; exact h }
   inv :=
     { toFun := id
       continuous_toFun :=

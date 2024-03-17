@@ -1143,7 +1143,7 @@ theorem sum_eq_of_subset {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → 
     p.Sum f = ∑ n in s, f n (p.coeff n) :=
   by
   apply Finset.sum_subset hs fun n hn h'n => _
-  rw [not_mem_support_iff] at h'n 
+  rw [not_mem_support_iff] at h'n
   simp [h'n, hf]
 #align polynomial.sum_eq_of_subset Polynomial.sum_eq_of_subset
 -/

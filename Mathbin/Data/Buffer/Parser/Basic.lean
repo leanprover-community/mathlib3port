@@ -543,7 +543,7 @@ instance orelse [p.mono] [q.mono] : (p <|> q).mono :=
   · obtain h | ⟨h, -, -⟩ := orelse_eq_done.mp hx <;> simpa [h] using of_done h
   · by_cases h : n = posx
     · simp [hx, h]
-    · simp only [orelse_eq_fail_of_mono_ne h] at hx 
+    · simp only [orelse_eq_fail_of_mono_ne h] at hx
       exact of_fail hx
 #align parser.mono.orelse Parser.Mono.orelse
 
@@ -758,11 +758,11 @@ theorem charBuf_eq_done {cb' : CharBuffer} :
     · rintro ⟨h, rfl⟩
       by_cases hn : n < cb.size
       · have : n < cb.to_list.length := by simpa using hn
-        rw [← List.cons_nthLe_drop_succ this, List.cons_prefix_iff] at h 
+        rw [← List.cons_nthLe_drop_succ this, List.cons_prefix_iff] at h
         use n + 1, h.right
         simpa [Buffer.nthLe_toList, add_comm, add_left_comm, add_assoc, hn] using h.left.symm
       · have : cb.to_list.length ≤ n := by simpa using hn
-        rw [List.drop_eq_nil_of_le this] at h 
+        rw [List.drop_eq_nil_of_le this] at h
         simpa using h
 #align parser.char_buf_eq_done Parser.charBuf_eq_done
 
@@ -1006,7 +1006,7 @@ theorem many'_eq_done {p : Parser α} :
     · exact Or.inl hl
     · have hl2 := hl
       simp only [foldr_core_eq_done, or_false_iff, exists_and_left, and_false_iff, false_and_iff,
-        exists_eq_right_right] at hl 
+        exists_eq_right_right] at hl
       obtain ⟨np, hp, h⟩ := hl
       refine' Or.inr ⟨np, _, _, hl2, hp, h⟩
   · rintro (h | ⟨np, a, l, hp, h⟩)
@@ -1220,7 +1220,7 @@ theorem charBuf_iff {cb' : CharBuffer} : Static (charBuf cb') ↔ cb' = Buffer.n
   cases' hc : cb'.size with n
   · simp only [eq_self_iff_true, iff_true_iff]
     exact ⟨fun _ _ _ _ h => by simpa [hc] using (char_buf_eq_done.mp h).left⟩
-  · rw [hc] at this 
+  · rw [hc] at this
     simpa [Nat.succ_ne_zero] using not_of_ne this (Nat.succ_ne_zero n).symm
 #align parser.static.char_buf_iff Parser.Static.charBuf_iff
 
@@ -1347,7 +1347,7 @@ theorem nat : ¬nat.Static :=
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Static → (F p).Static) :
     Static (fix F) :=
-  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h ;
+  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h;
     exact static.of_done h⟩
 #align parser.static.fix Parser.Static.fix
 
@@ -1441,7 +1441,7 @@ theorem decorateErrors_iff : (@Parser.decorateErrors α msgs p).Bounded ↔ p.Bo
     constructor
     intro _ _ hn
     obtain ⟨_, _, h⟩ := bounded.exists (@Parser.decorateErrors α msgs p) hn
-    simp [decorate_errors_eq_fail] at h 
+    simp [decorate_errors_eq_fail] at h
     exact h.right.right
   · intro
     constructor
@@ -1497,7 +1497,7 @@ theorem str_iff {s : String} : (str s).Bounded ↔ s ≠ "" :=
   by
   rw [str, decorate_error_iff]
   cases hs : s.to_list
-  · have : s = "" := by cases s; rw [String.toList] at hs ; simpa [hs]
+  · have : s = "" := by cases s; rw [String.toList] at hs; simpa [hs]
     simp [pure, this]
   · have : s ≠ "" := by intro H; simpa [H] using hs
     simp only [this, iff_true_iff, Ne.def, not_false_iff]
@@ -1956,7 +1956,7 @@ instance nat : nat.ErrStatic :=
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStatic → (F p).ErrStatic) :
     ErrStatic (fix F) :=
-  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h ;
+  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h;
     exact err_static.of_fail h⟩
 #align parser.err_static.fix Parser.ErrStatic.fix
 
@@ -2057,7 +2057,7 @@ theorem decorateErrors_iff : (@Parser.decorateErrors α msgs p).step ↔ p.step 
   · intro
     constructor
     intro _ _ _ _ h
-    rw [decorate_errors_eq_done] at h 
+    rw [decorate_errors_eq_done] at h
     exact of_done h
 #align parser.step.decorate_errors_iff Parser.Step.decorateErrors_iff
 
@@ -2149,7 +2149,7 @@ instance digit : digit.step :=
 #align parser.step.digit Parser.Step.digit
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : Step (fix F) :=
-  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h ; exact of_done h⟩
+  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h; exact of_done h⟩
 #align parser.step.fix Parser.Step.fix
 
 end Step
@@ -2181,8 +2181,8 @@ theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List 
         simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm
     cases' tl with hd' tl'
     · simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm
-    · rw [← @IH hd' tl'] at hm ; swap; rfl
-      simp only [many1_eq_done, many, foldr] at hm 
+    · rw [← @IH hd' tl'] at hm; swap; rfl
+      simp only [many1_eq_done, many, foldr] at hm
       obtain ⟨np, hp', hf⟩ := hm
       obtain rfl : np = n + 1 + 1 := step.of_done hp'
       simpa [Nat.sub_succ, many_eq_done, hp, hk, foldr_core_eq_done, hp'] using hf
@@ -2201,10 +2201,10 @@ theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List 
     · simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm
     · simp [hp]
       rw [← @IH hd' tl' (n + 1) n']; swap; rfl
-      rw [hk, foldr_core_eq_done, or_comm] at hm 
+      rw [hk, foldr_core_eq_done, or_comm] at hm
       obtain hm | ⟨np, hd', tl', hp', hf, hm⟩ := hm
       · simpa using hm
-      simp only at hm 
+      simp only at hm
       obtain ⟨rfl, rfl⟩ := hm
       obtain rfl : np = n + 1 + 1 := step.of_done hp'
       simp [Nat.sub_succ, many, many1_eq_done, hp, hk, foldr_core_eq_done, hp', ← hf, foldr]
@@ -2292,7 +2292,7 @@ theorem decorateErrors_iff : (@Parser.decorateErrors α msgs p).Prog ↔ p.Prog 
   · intro
     constructor
     intro _ _ _ _ h
-    rw [decorate_errors_eq_done] at h 
+    rw [decorate_errors_eq_done] at h
     exact of_done h
 #align parser.prog.decorate_errors_iff Parser.Prog.decorateErrors_iff
 
@@ -2387,7 +2387,7 @@ instance nat : nat.Prog :=
 #align parser.prog.nat Parser.Prog.nat
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F p).Prog) : Prog (fix F) :=
-  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h ; exact of_done h⟩
+  ⟨fun cb n _ _ h => by haveI := fix_core hF (cb.size - n + 1); dsimp [fix] at h; exact of_done h⟩
 #align parser.prog.fix Parser.Prog.fix
 
 end Prog
@@ -2405,14 +2405,14 @@ theorem many_sublist_of_done [p.step] [p.Bounded] {l : List α} (h : p.anyM cb n
     ∀ k < n' - n, p.anyM cb (n + k) = done n' (l.drop k) :=
   by
   induction' l with hd tl hl generalizing n
-  · rw [many_eq_done_nil] at h 
+  · rw [many_eq_done_nil] at h
     simp [h.left]
   intro m hm
   cases m
   · exact h
   rw [List.drop, Nat.add_succ, ← Nat.succ_add]
   apply hl
-  · rw [← many1_eq_done_iff_many_eq_done, many1_eq_done] at h 
+  · rw [← many1_eq_done_iff_many_eq_done, many1_eq_done] at h
     obtain ⟨_, hp, h⟩ := h
     convert h
     exact (step.of_done hp).symm
@@ -2424,9 +2424,9 @@ theorem many_eq_nil_of_done [p.step] [p.Bounded] {l : List α} (h : p.anyM cb n 
   by
   induction' l with hd tl hl generalizing n
   · convert h
-    rw [many_eq_done_nil] at h 
+    rw [many_eq_done_nil] at h
     exact h.left.symm
-  · rw [← many1_eq_done_iff_many_eq_done, many1_eq_done] at h 
+  · rw [← many1_eq_done_iff_many_eq_done, many1_eq_done] at h
     obtain ⟨_, -, h⟩ := h
     exact hl h
 #align parser.many_eq_nil_of_done Parser.many_eq_nil_of_done
@@ -2434,9 +2434,9 @@ theorem many_eq_nil_of_done [p.step] [p.Bounded] {l : List α} (h : p.anyM cb n 
 theorem many_eq_nil_of_out_of_bound [p.Bounded] {l : List α} (h : p.anyM cb n = done n' l)
     (hn : cb.size < n) : n' = n ∧ l = [] := by
   cases l
-  · rw [many_eq_done_nil] at h 
+  · rw [many_eq_done_nil] at h
     exact ⟨h.left.symm, rfl⟩
-  · rw [many_eq_done] at h 
+  · rw [many_eq_done] at h
     obtain ⟨np, hp, -⟩ := h
     exact absurd (bounded.of_done hp) hn.not_lt
 #align parser.many_eq_nil_of_out_of_bound Parser.many_eq_nil_of_out_of_bound
@@ -2448,14 +2448,14 @@ theorem many1_length_of_done [p.mono] [p.step] [p.Bounded] {l : List α}
   · simpa using h
   · obtain ⟨k, hk⟩ : ∃ k, n' = n + k + 1 := Nat.exists_eq_add_of_lt (prog.of_done h)
     subst hk
-    simp only [many1_eq_done] at h 
+    simp only [many1_eq_done] at h
     obtain ⟨_, hp, h⟩ := h
     obtain rfl := step.of_done hp
     cases tl
-    · simp only [many_eq_done_nil, add_left_inj, exists_and_right, self_eq_add_right] at h 
+    · simp only [many_eq_done_nil, add_left_inj, exists_and_right, self_eq_add_right] at h
       rcases h with ⟨rfl, -⟩
       simp
-    rw [← many1_eq_done_iff_many_eq_done] at h 
+    rw [← many1_eq_done_iff_many_eq_done] at h
     specialize hl h
     simp [hl, add_comm, add_assoc, Nat.sub_succ]
 #align parser.many1_length_of_done Parser.many1_length_of_done
@@ -2464,13 +2464,13 @@ theorem many1_bounded_of_done [p.step] [p.Bounded] {l : List α} (h : many1 p cb
     n' ≤ cb.size := by
   induction' l with hd tl hl generalizing n n'
   · simpa using h
-  · simp only [many1_eq_done] at h 
+  · simp only [many1_eq_done] at h
     obtain ⟨np, hp, h⟩ := h
     obtain rfl := step.of_done hp
     cases tl
-    · simp only [many_eq_done_nil, exists_and_right] at h 
+    · simp only [many_eq_done_nil, exists_and_right] at h
       simpa [← h.left] using bounded.of_done hp
-    · rw [← many1_eq_done_iff_many_eq_done] at h 
+    · rw [← many1_eq_done_iff_many_eq_done] at h
       exact hl h
 #align parser.many1_bounded_of_done Parser.many1_bounded_of_done
 
@@ -2532,7 +2532,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
   -- We convert the hypothesis that `parser.nat` has succeeded into an existential that there is
   -- some list of digits that it has parsed in, and that those digits, when folded over by the
   -- function above, give the value at hand.
-  simp only [Nat, pure_eq_done, natm, decorate_error_eq_done, bind_eq_done] at h 
+  simp only [Nat, pure_eq_done, natm, decorate_error_eq_done, bind_eq_done] at h
   obtain ⟨n', l, hp, rfl, rfl⟩ := h
   -- We now want to stop working with the `cb : char_buffer` and parse positions `n` and `n'`,
   -- and just deal with the parsed digit list `l : list ℕ`. To do so, we have to show that
@@ -2558,7 +2558,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
   -- character at position `n`, which we now call `chd : char`.
   have chdh : chd.to_nat - '0'.toNat = lhd :=
     by
-    simp only [many1_eq_done] at hp 
+    simp only [many1_eq_done] at hp
     -- We know that `parser.digit` succeeded, so it has moved to a possibly different position.
     -- In fact, we know that this new position is `n + 1`, by the `step` property of
     -- `parser.digit`.
@@ -2569,15 +2569,15 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     -- that the `n`th character of `cb`, let's say `c`, when converted to a `ℕ` via
     -- `char.to_nat c - '0'.to_nat`, must be equal to the resulting value, `lhd` in our case.
     simp only [digit_eq_done, Buffer.read_eq_nthLe_toList, hx, Buffer.length_toList, true_and_iff,
-      add_left_inj, List.length, List.nthLe, eq_self_iff_true, exists_and_left, Fin.val_mk] at hp 
+      add_left_inj, List.length, List.nthLe, eq_self_iff_true, exists_and_left, Fin.val_mk] at hp
     rcases hp with ⟨_, hn, rfl, _, _⟩
     -- But we already know the list corresponding to `cb : char_buffer` from position `n` and on
     -- is equal to `(chd :: ctl) : list char`, so our `c` above must satisfy `c = chd`.
     have hn' : n < cb.to_list.length := by simpa using hn
-    rw [← List.cons_nthLe_drop_succ hn'] at hx 
+    rw [← List.cons_nthLe_drop_succ hn'] at hx
     -- We can ignore proving any correspondence of `ctl : list char` to the other portions of the
     -- `cb : char_buffer`.
-    simp only at hx 
+    simp only at hx
     simp [hx]
   -- We know that we parsed in more than one character because of the `prog` property of
   -- `parser.digit`, which the `many1` parser combinator retains. In other words, we know that
@@ -2591,7 +2591,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     by
     cases ltl
     · simp
-    · rw [many1_eq_done] at hp 
+    · rw [many1_eq_done] at hp
       obtain ⟨_, hp, hp'⟩ := hp
       simpa [step.of_done hp, many1_eq_done_iff_many_eq_done] using hp'
   -- Now we case on the two possibilities, that there was only a single digit parsed in, and
@@ -2604,7 +2604,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
   -- in reverse.
   rcases hdm with (rfl | hdm)
   · -- Case that `ltl = []`.
-    simp only [many1_eq_done, many_eq_done_nil, exists_and_right] at hp 
+    simp only [many1_eq_done, many_eq_done_nil, exists_and_right] at hp
     -- This means we must have failed parsing with `parser.digit` at some other position,
     -- which we prove must be `n + 1` via the `step` property.
     obtain ⟨_, hp, rfl, hp'⟩ := hp
@@ -2654,7 +2654,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
         -- parsing in at position `n` using a `bounded` parser, so we must have that
         -- `n < cb.size`.
         have := bounded.of_done hp
-        rw [hc] at this 
+        rw [hc] at this
         -- But then `n < 0`, a contradiction.
         exact absurd n.zero_le this.not_le
       · simp
@@ -2694,7 +2694,7 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
   -- the resulting value given by `parser.nat`, and focus solely on the `list ℕ` generated by
   -- `parser.digit.many1`.
   simp only [Nat, pure_eq_done, and_left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
-    exists_and_left] at h 
+    exists_and_left] at h
   obtain ⟨xs, h, -⟩ := h
   -- We want to avoid having to make statements about the `cb : char_buffer` itself. Instead, we
   -- induct on the `xs : list ℕ` that `parser.digit.many1` produced.
@@ -2707,14 +2707,14 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
   -- induction hypothesis on the remaining `tl`.
   -- We break apart a `many1` success into a success of the underlying `parser.digit` to give `hd`
   -- and a `parser.digit.many` which gives `tl`. We first deal with the `hd`.
-  rw [many1_eq_done] at h 
+  rw [many1_eq_done] at h
   -- Right away, we can throw away the information about the "new" position that `parser.digit`
   -- ended on because we will soon prove that it must have been `n + 1`.
   obtain ⟨_, hp, h⟩ := h
   -- The main lemma here is `digit_eq_done`, which already proves the necessary conditions about
   -- the character at hand. What is left to do is properly unpack the information.
   simp only [digit_eq_done, and_comm, and_left_comm, digit_eq_fail, true_and_iff, exists_eq_left,
-    eq_self_iff_true, exists_and_left, exists_and_left] at hp 
+    eq_self_iff_true, exists_and_left, exists_and_left] at hp
   obtain ⟨rfl, -, hn, ge0, le9, rfl⟩ := hp
   -- Let's now consider a position `k` between `n` and `n'`, excluding `n'`.
   intro hn k hk hk'
@@ -2730,7 +2730,7 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
     -- position `k` was not "numeric" or we are out of bounds. More importantly, when `many`
     -- successfully produces a `[]`, it does not progress the parser head, so we have that
     -- `n + 1 = n'`. This will lead to a contradiction because now we have `n < k` and `k < n + 1`.
-    simp only [many_eq_done_nil, exists_and_right] at h 
+    simp only [many_eq_done_nil, exists_and_right] at h
     -- Extract out just the `n + 1 = n'`.
     obtain ⟨rfl, -⟩ := h
     -- Form the contradictory hypothesis, and discharge the goal.
@@ -2739,7 +2739,7 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
   · -- Case where `tl ≠ []`. But that means that `many` produced a nonempty list as a result, so
     -- `many1` would have successfully parsed at this position too. We use this statement to
     -- rewrite our hypothesis into something that works with the induction hypothesis, and apply it.
-    rw [← many1_eq_done_iff_many_eq_done] at h 
+    rw [← many1_eq_done_iff_many_eq_done] at h
     apply hl h
     -- All that is left to prove is that our `k` is at least our new "lower bound" `n + 1`, which
     -- we have from our original split of the `n ≤ k`, since we are now on the `n < k` case.
@@ -2766,7 +2766,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
   -- `∀ (hn : n' < cb.size)`. Thus we only have to prove the lemma for the cases where `n'` is still
   -- "in-bounds".
   simp only [Nat, pure_eq_done, and_left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
-    exists_and_left] at h 
+    exists_and_left] at h
   obtain ⟨xs, h, -⟩ := h
   -- We want to avoid having to make statements about the `cb : char_buffer` itself. Instead, we
   -- induct on the `xs : list ℕ` that `parser.digit.many1` produced.
@@ -2783,14 +2783,14 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
   · -- Case where `tl = []`, so we parsed in only `hd`. That must mean that `parser.digit` failed
     -- at `n + 1`.
     simp only [many1_eq_done, many_eq_done_nil, and_left_comm, exists_and_right, exists_eq_left] at
-      h 
+      h
     -- We throw away the success information of what happened at position `n`, and we do not need
     -- the "error" value that the failure produced.
     obtain ⟨-, _, h⟩ := h
     -- If `parser.digit` failed at `n + 1`, then either we hit a non-numeric character, or
     -- we are out of bounds. `digit_eq_fail` provides us with those two cases.
     simp only [digit_eq_done, and_comm, and_left_comm, digit_eq_fail, true_and_iff, exists_eq_left,
-      eq_self_iff_true, exists_and_left] at h 
+      eq_self_iff_true, exists_and_left] at h
     obtain ⟨rfl, h⟩ | ⟨h, -⟩ := h
     · -- First case: we are still in bounds, but the character is not numeric. We must prove
       -- that we are still in bounds. But we know that from our initial requirement.
@@ -2805,9 +2805,9 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
   · -- Case where `tl ≠ []`. But that means that `many` produced a nonempty list as a result, so
     -- `many1` would have successfully parsed at this position too. We use this statement to
     -- rewrite our hypothesis into something that works with the induction hypothesis, and apply it.
-    rw [many1_eq_done] at h 
+    rw [many1_eq_done] at h
     obtain ⟨_, -, h⟩ := h
-    rw [← many1_eq_done_iff_many_eq_done] at h 
+    rw [← many1_eq_done_iff_many_eq_done] at h
     exact hl h
 #align parser.nat_of_done_bounded Parser.nat_of_done_bounded
 
@@ -2853,9 +2853,9 @@ theorem nat_eq_done {val : ℕ} :
     -- We clone the success hypothesis `h` so that we can supply it back later.
     have H := h
     -- We unwrap the `parser.nat` success down to the `many1` success, throwing away other info.
-    rw [Nat] at h 
+    rw [Nat] at h
     simp only [decorate_error_eq_done, bind_eq_done, pure_eq_done, and_left_comm, exists_eq_left,
-      exists_and_left] at h 
+      exists_and_left] at h
     obtain ⟨_, h, -⟩ := h
     -- Now we get our existential witness that `n' ≤ cb.size`.
     replace h := many1_bounded_of_done h
@@ -2891,7 +2891,7 @@ theorem nat_eq_done {val : ℕ} :
   induction' H : cb.to_list.drop n with hd tl IH generalizing n
   · -- Base case: there are no characters at position `n` or onwards, which means that
     -- `cb.size ≤ n`. But this is a contradiction, since we have `n < n' ≤ cb.size`.
-    rw [List.drop_eq_nil_iff_le] at H 
+    rw [List.drop_eq_nil_iff_le] at H
     refine' absurd ((lt_of_le_of_lt H hn).trans_le hn') _
     simp
   · -- Inductive case: we prove that if we could have parsed from `n + 1`, we could have also parsed
@@ -2904,7 +2904,7 @@ theorem nat_eq_done {val : ℕ} :
     -- list.drop (n + 1), which fits out induction hypothesis conditions better. To use the
     -- rearranging lemma, we must prove that we are "dropping" in bounds, which we supply on-the-fly
     simp only [←
-      List.cons_nthLe_drop_succ (show n < cb.to_list.length by simpa using hn.trans_le hn')] at H 
+      List.cons_nthLe_drop_succ (show n < cb.to_list.length by simpa using hn.trans_le hn')] at H
     -- We prove that parsing our `n`th character, `hd`, would have resulted in a success from
     -- `parser.digit`, with the appropriate `ℕ` success value. We use this later to simplify the
     -- unwrapped fold, since `hd` is our head character.
@@ -2951,7 +2951,7 @@ theorem nat_eq_done {val : ℕ} :
         simpa using hdl
       -- Case `l = lhd :: ltl`. We can rewrite the fold of the function inside `parser.nat` on
       -- `lhd :: ltl`, which will be used to rewrite in the goal.
-      simp only [natm, List.foldr] at hvl 
+      simp only [natm, List.foldr] at hvl
       -- We also expand the fold in the goal, using the expanded fold from our hypothesis, powered
       -- by `many1_eq_done` to proceed in the parsing. We know exactly what the next `many` will
       -- produce from `many1_eq_done_iff_many_eq_done.mp` of our `hdl` hypothesis. Finally,

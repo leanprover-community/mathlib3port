@@ -226,7 +226,7 @@ theorem zetaKernel₂_one_div {t : ℝ} (ht : 0 < t) : zetaKernel₂ (1 / t) = s
   · exact aux h
   · simp only [div_self, Ne.def, one_ne_zero, not_false_iff, sqrt_one, of_real_one, one_mul]
   · have := aux (show 1 < 1 / t by rwa [lt_one_div (zero_lt_one' ℝ) ht, div_one])
-    rw [one_div_one_div] at this 
+    rw [one_div_one_div] at this
     rw [this, ← mul_assoc, ← of_real_mul, ← sqrt_mul ht.le, mul_one_div_cancel ht.ne', sqrt_one,
       of_real_one, one_mul]
 #align zeta_kernel₂_one_div zetaKernel₂_one_div
@@ -245,7 +245,7 @@ show holomorphy of their Mellin transforms (for `1 / 2 < re s` for `zeta_kernel�
 theorem isBigO_atTop_zetaKernel₁ : IsBigO atTop zetaKernel₁ fun t => exp (-π * t) :=
   by
   have h := isBigO_at_im_infty_jacobiTheta_sub_one.const_mul_left (1 / 2)
-  simp_rw [mul_comm (1 / 2 : ℂ) _, mul_one_div] at h 
+  simp_rw [mul_comm (1 / 2 : ℂ) _, mul_one_div] at h
   have h' : tendsto (fun t : ℝ => ↑t * I) at_top (comap im at_top) :=
     by
     rw [tendsto_comap_iff]
@@ -276,7 +276,7 @@ theorem isBigO_atTop_zetaKernel₂ : IsBigO atTop zetaKernel₂ fun t => exp (-�
 theorem isBigO_zero_zetaKernel₂ : IsBigO (𝓝[>] 0) zetaKernel₂ fun t => exp (-π / t) / sqrt t :=
   by
   have h1 := isBigO_atTop_zetaKernel₂.comp_tendsto tendsto_inv_zero_atTop
-  simp_rw [← one_div] at h1 
+  simp_rw [← one_div] at h1
   have h2 : zetaKernel₂ ∘ Div.div 1 =ᶠ[𝓝[>] 0] fun t => sqrt t * zetaKernel₂ t :=
     eventually_of_mem self_mem_nhdsWithin fun t ht => by simp_rw [← zetaKernel₂_one_div ht]
   have h3 := h1.congr' h2 (eventually_eq.refl _ _)
@@ -428,7 +428,7 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
     suffices tendsto (fun z => riemannCompletedZeta z * z / 2) (𝓝[≠] 0) (𝓝 (-1 / 2 : ℂ))
       by
       have := this.div h4 one_ne_zero
-      simp_rw [div_one, mul_div_assoc] at this 
+      simp_rw [div_one, mul_div_assoc] at this
       exact this
     refine' tendsto.div _ tendsto_const_nhds two_ne_zero
     simp_rw [riemannCompletedZeta, add_mul, sub_mul]
@@ -762,7 +762,7 @@ theorem riemannCompletedZeta₀_one_sub (s : ℂ) :
   by
   have := mellin_comp_rpow zetaKernel₂ (s / 2 - 1 / 2) neg_one_lt_zero.ne
   simp_rw [rpow_neg_one, ← one_div, abs_neg, abs_one, div_one, one_smul, of_real_neg, of_real_one,
-    div_neg, div_one, neg_sub] at this 
+    div_neg, div_one, neg_sub] at this
   conv_lhs => rw [riemannCompletedZeta₀, sub_div, ← this]
   refine' set_integral_congr measurableSet_Ioi fun t ht => _
   simp_rw [zetaKernel₂_one_div ht, smul_eq_mul, ← mul_assoc, sqrt_eq_rpow,
@@ -802,7 +802,7 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     rw [Ne.def, Complex.Gamma_eq_zero_iff]
     contrapose! hs
     obtain ⟨m, hm⟩ := hs
-    rw [div_eq_iff (two_ne_zero' ℂ), ← Nat.cast_two, neg_mul, ← Nat.cast_mul] at hm 
+    rw [div_eq_iff (two_ne_zero' ℂ), ← Nat.cast_two, neg_mul, ← Nat.cast_mul] at hm
     exact ⟨m * 2, by rw [hm]⟩
   have h_Ga_eq : Gamma s = Gamma (s / 2) * Gamma ((s + 1) / 2) * 2 ^ (s - 1) / sqrt π := by
     rw [add_div, Complex.Gamma_mul_Gamma_add_half, mul_div_cancel' _ (two_ne_zero' ℂ),
@@ -832,14 +832,14 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     contrapose! hs_pos_odd
     obtain ⟨m, hm⟩ := hs_pos_odd
     rw [div_eq_iff (two_ne_zero' ℂ), sub_eq_iff_eq_add, neg_mul, ← sub_eq_neg_add,
-      eq_sub_iff_add_eq] at hm 
+      eq_sub_iff_add_eq] at hm
     exact ⟨m, by rw [← hm, mul_comm]⟩
   -- At last the main proof
   rw [show sin (↑π * (1 - s) / 2) = π * (Gamma ((1 - s) / 2) * Gamma (s / 2 + 1 / 2))⁻¹
       by
       have := congr_arg Inv.inv (Complex.Gamma_mul_Gamma_one_sub ((1 - s) / 2)).symm
       rwa [(by ring : 1 - (1 - s) / 2 = s / 2 + 1 / 2), inv_div,
-        div_eq_iff (of_real_ne_zero.mpr pi_pos.ne'), mul_comm _ ↑π, mul_div_assoc'] at this ]
+        div_eq_iff (of_real_ne_zero.mpr pi_pos.ne'), mul_comm _ ↑π, mul_div_assoc'] at this]
   rw [(by rw [← neg_sub] : (2 : ℂ) ^ (1 - s) = 2 ^ (-(s - 1))), cpow_neg, h_Ga_eq]
   suffices (π : ℂ) ^ ((1 - s) / 2) = π ^ (-s) * sqrt π * π ^ (s / 2) by rw [this]; field_simp;
     ring_nf; rw [← of_real_pow, sq_sqrt pi_pos.le]; ring
@@ -891,8 +891,8 @@ theorem riemannZeta_neg_nat_eq_bernoulli (k : ℕ) :
     -- substitute in what we know about zeta values at positive integers
     have step1 := congr_arg (coe : ℝ → ℂ) (hasSum_zeta_nat (by norm_num : m + 1 ≠ 0)).tsum_eq
     have step2 := zeta_nat_eq_tsum_of_gt_one (by rw [mul_add]; norm_num : 1 < 2 * (m + 1))
-    simp_rw [of_real_tsum, of_real_div, of_real_one, of_real_pow, of_real_nat_cast] at step1 
-    rw [step1, (by norm_cast : (↑(2 * (m + 1)) : ℂ) = 2 * ↑m + 2)] at step2 
+    simp_rw [of_real_tsum, of_real_div, of_real_one, of_real_pow, of_real_nat_cast] at step1
+    rw [step1, (by norm_cast : (↑(2 * (m + 1)) : ℂ) = 2 * ↑m + 2)] at step2
     rw [step2, mul_div]
     -- now the rest is just a lengthy but elementary rearrangement
     rw [show ((2 * (m + 1))! : ℂ) = Gamma (2 * m + 2) * (↑(2 * m + 1) + 1)

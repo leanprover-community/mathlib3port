@@ -63,9 +63,9 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
   · intro a ha; simp only [cast_id, nat_cast_val]
   · intro _ _ _ _ h; rw [Units.ext_iff]; exact val_injective p h
   · intro b hb
-    rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb 
+    rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb
     refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
-    · intro h; apply hb.1; apply_fun val at h 
+    · intro h; apply hb.1; apply_fun val at h
       simpa only [val_cast_of_lt hb.right, val_zero] using h
     · simp only [val_cast_of_lt hb.right, Units.val_mk0]
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
@@ -91,7 +91,7 @@ variable {n : ℕ}
 theorem prime_of_fac_equiv_neg_one (h : ((n - 1)! : ZMod n) = -1) (h1 : n ≠ 1) : Prime n :=
   by
   rcases eq_or_ne n 0 with (rfl | h0)
-  · norm_num at h 
+  · norm_num at h
   replace h1 : 1 < n := n.two_le_iff.mpr ⟨h0, h1⟩
   by_contra h2
   obtain ⟨m, hm1, hm2 : 1 < m, hm3⟩ := exists_dvd_of_not_prime2 h1 h2

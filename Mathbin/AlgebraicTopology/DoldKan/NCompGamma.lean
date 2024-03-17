@@ -46,30 +46,30 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
   by
   induction' Δ' using SimplexCategory.rec with m
   obtain ⟨k, hk⟩ :=
-    Nat.exists_eq_add_of_lt (len_lt_of_mono i fun h => by rw [← h] at h₁ ; exact h₁ rfl)
-  simp only [len_mk] at hk 
+    Nat.exists_eq_add_of_lt (len_lt_of_mono i fun h => by rw [← h] at h₁; exact h₁ rfl)
+  simp only [len_mk] at hk
   cases k
-  · change n = m + 1 at hk 
+  · change n = m + 1 at hk
     subst hk; obtain ⟨j, rfl⟩ := eq_δ_of_mono i
-    rw [is_δ₀.iff] at h₂ 
+    rw [is_δ₀.iff] at h₂
     have h₃ : 1 ≤ (j : ℕ) := by
       by_contra
       exact h₂ (by simpa only [Fin.ext_iff, not_le, Nat.lt_one_iff] using h)
     exact (higher_faces_vanish.of_P (m + 1) m).comp_δ_eq_zero j h₂ (by linarith)
-  · simp only [Nat.succ_eq_add_one, ← add_assoc] at hk 
+  · simp only [Nat.succ_eq_add_one, ← add_assoc] at hk
     clear h₂ hi
     subst hk
     obtain ⟨j₁, i, rfl⟩ :=
       eq_comp_δ_of_not_surjective i fun h =>
         by
         have h' := len_le_of_epi (SimplexCategory.epi_iff_surjective.2 h)
-        dsimp at h' 
+        dsimp at h'
         linarith
     obtain ⟨j₂, i, rfl⟩ :=
       eq_comp_δ_of_not_surjective i fun h =>
         by
         have h' := len_le_of_epi (SimplexCategory.epi_iff_surjective.2 h)
-        dsimp at h' 
+        dsimp at h'
         linarith
     by_cases hj₁ : j₁ = 0
     · subst hj₁
@@ -258,7 +258,7 @@ instance : IsIso (Γ₂N₂.natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ 
     have : is_iso (N₂.map (Γ₂N₂.nat_trans.app P)) :=
       by
       have h := identity_N₂_objectwise P
-      erw [hom_comp_eq_id] at h 
+      erw [hom_comp_eq_id] at h
       rw [h]
       infer_instance
     exact is_iso_of_reflects_iso _ N₂

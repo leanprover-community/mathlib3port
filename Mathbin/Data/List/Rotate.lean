@@ -228,7 +228,7 @@ theorem prod_rotate_eq_one_of_prod_eq_one [Group α] :
   | a :: l, hl, n =>
     by
     have : n % List.length (a :: l) ≤ List.length (a :: l) := le_of_lt (Nat.mod_lt _ (by decide))
-    rw [← List.take_append_drop (n % List.length (a :: l)) (a :: l)] at hl  <;>
+    rw [← List.take_append_drop (n % List.length (a :: l)) (a :: l)] at hl <;>
       rw [← rotate_mod, rotate_eq_drop_append_take this, List.prod_append, mul_eq_one_iff_inv_eq, ←
         one_mul (List.prod _)⁻¹, ← hl, List.prod_append, mul_assoc, mul_inv_self, mul_one]
 #align list.prod_rotate_eq_one_of_prod_eq_one List.prod_rotate_eq_one_of_prod_eq_one
@@ -490,7 +490,7 @@ theorem Nodup.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} :
     cases' l.length.zero_le.eq_or_lt with hl' hl'
     · simp [← length_eq_zero, ← hl']
     left
-    rw [nodup_iff_nth_le_inj] at hl 
+    rw [nodup_iff_nth_le_inj] at hl
     refine' hl _ _ (mod_lt _ hl') hl' _
     rw [← nth_le_rotate' _ n]
     simp_rw [h, tsub_add_cancel_of_le (mod_lt _ hl').le, mod_self]
@@ -756,7 +756,7 @@ theorem nthLe_cyclicPermutations (l : List α) (n : ℕ) (hn : n < length (cycli
   by
   obtain rfl | h := eq_or_ne l []
   · simp
-  · rw [length_cyclic_permutations_of_ne_nil _ h] at hn 
+  · rw [length_cyclic_permutations_of_ne_nil _ h] at hn
     simp [init_eq_take, cyclic_permutations_of_ne_nil _ h, nth_le_take',
       rotate_eq_drop_append_take hn.le]
 #align list.nth_le_cyclic_permutations List.nthLe_cyclicPermutations
@@ -827,7 +827,7 @@ theorem Nodup.cyclicPermutations {l : List α} (hn : Nodup l) : Nodup (cyclicPer
   · simp
   rw [nodup_iff_nth_le_inj]
   intro i j hi hj h
-  simp only [length_cyclic_permutations_cons] at hi hj 
+  simp only [length_cyclic_permutations_cons] at hi hj
   rw [← mod_eq_of_lt hi, ← mod_eq_of_lt hj, ← length_cons x l]
   apply hn.rotate_congr
   · simp

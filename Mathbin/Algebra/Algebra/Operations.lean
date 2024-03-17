@@ -214,7 +214,7 @@ theorem mul_toAddSubmonoid (M N : Submodule R A) :
 protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N)
     (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   by
-  rw [← mem_to_add_submonoid, mul_to_add_submonoid] at hr 
+  rw [← mem_to_add_submonoid, mul_to_add_submonoid] at hr
   exact AddSubmonoid.mul_induction_on hr hm ha
 #align submodule.mul_induction_on Submodule.mul_induction_on
 -/
@@ -332,7 +332,7 @@ protected theorem map_mul {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
       · obtain ⟨y', hy', fy_eq⟩ := mem_map.mp y.2
         use y', hy'
         refine' trans _ hy
-        rw [f.to_linear_map_apply] at fy_eq 
+        rw [f.to_linear_map_apply] at fy_eq
         ext
         simp [fy_eq]
 #align submodule.map_mul Submodule.map_mul
@@ -446,7 +446,7 @@ theorem mul_iSup (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s 
 theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈ P * Q) :
     ∃ T T' : Finset A, (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=
   Submodule.mem_span_mul_finite_of_mem_span_mul
-    (by rwa [← Submodule.span_eq P, ← Submodule.span_eq Q, Submodule.span_mul_span] at hx )
+    (by rwa [← Submodule.span_eq P, ← Submodule.span_eq Q, Submodule.span_mul_span] at hx)
 #align submodule.mem_span_mul_finite_of_mem_mul Submodule.mem_span_mul_finite_of_mem_mul
 -/
 
@@ -536,7 +536,7 @@ protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n →
     (hx : x ∈ M ^ n) : C n x hx :=
   by
   induction' n with n n_ih generalizing x
-  · rw [pow_zero] at hx 
+  · rw [pow_zero] at hx
     obtain ⟨r, rfl⟩ := hx
     exact hr r
   exact
@@ -556,7 +556,7 @@ protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n �
     {x : A} {n : ℕ} (hx : x ∈ M ^ n) : C n x hx :=
   by
   induction' n with n n_ih generalizing x
-  · rw [pow_zero] at hx 
+  · rw [pow_zero] at hx
     obtain ⟨r, rfl⟩ := hx
     exact hr r
   revert hx
@@ -835,7 +835,7 @@ theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ I * K ≤ J 
 theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 :=
   by
   constructor; all_goals intro hI
-  · rwa [le_div_iff_mul_le, one_mul] at hI 
+  · rwa [le_div_iff_mul_le, one_mul] at hI
   · rwa [le_div_iff_mul_le, one_mul]
 #align submodule.one_le_one_div Submodule.one_le_one_div
 -/
@@ -854,7 +854,7 @@ theorem mul_one_div_le_one {I : Submodule R A} : I * (1 / I) ≤ 1 :=
   by
   rw [Submodule.mul_le]
   intro m hm n hn
-  rw [Submodule.mem_div_iff_forall_mul_mem] at hn 
+  rw [Submodule.mem_div_iff_forall_mul_mem] at hn
   rw [mul_comm]
   exact hn m hm
 #align submodule.mul_one_div_le_one Submodule.mul_one_div_le_one

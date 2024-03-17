@@ -315,7 +315,7 @@ theorem SetTheory.PGame.nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) :
     SetTheory.PGame.nim o ‖ 0 :=
   by
   rw [impartial.fuzzy_zero_iff_lf, nim_def, lf_zero_le]
-  rw [← Ordinal.pos_iff_ne_zero] at ho 
+  rw [← Ordinal.pos_iff_ne_zero] at ho
   exact ⟨(Ordinal.principalSegOut ho).top, by simp⟩
 #align pgame.nim_fuzzy_zero_of_ne_zero SetTheory.PGame.nim_fuzzy_zero_of_ne_zero
 -/
@@ -387,9 +387,9 @@ theorem SetTheory.PGame.equiv_nim_grundyValue :
       apply (fuzzy_congr_left (add_congr_left (equiv_nim_grundy_value (G.move_left i₁)).symm)).1
       rw [nim_add_fuzzy_zero_iff]
       intro heq
-      rw [eq_comm, grundy_value_eq_mex_left G] at heq 
+      rw [eq_comm, grundy_value_eq_mex_left G] at heq
       have h := Ordinal.ne_mex _
-      rw [HEq] at h 
+      rw [HEq] at h
       exact (h i₁).irrefl
     · intro i₂
       rw [add_move_left_inr, ← impartial.exists_left_move_equiv_iff_fuzzy_zero]
@@ -507,15 +507,15 @@ theorem SetTheory.PGame.grundyValue_nim_add_nim (n m : ℕ) :
         obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (hk.trans (Ordinal.nat_lt_omega _))
         simp only [add_move_left_inl, add_move_left_inr, move_left_nim', Equiv.symm_apply_apply]
         -- The inequality follows from injectivity.
-        rw [nat_cast_lt] at hk 
+        rw [nat_cast_lt] at hk
         first
         | rw [hn _ hk]
         | rw [hm _ hk]
         refine' fun h => hk.ne _
-        rw [Ordinal.nat_cast_inj] at h 
+        rw [Ordinal.nat_cast_inj] at h
         first
-        | rwa [Nat.xor_left_inj] at h 
-        | rwa [Nat.xor_right_inj] at h 
+        | rwa [Nat.xor_left_inj] at h
+        | rwa [Nat.xor_right_inj] at h
   -- Every other smaller Grundy value can be reached by left moves.
   · -- If `u < nat.lxor m n`, then either `nat.lxor u n < m` or `nat.lxor u m < n`.
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))

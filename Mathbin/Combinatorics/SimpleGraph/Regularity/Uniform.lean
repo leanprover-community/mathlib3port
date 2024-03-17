@@ -95,7 +95,7 @@ theorem isUniform_comm : IsUniform G ε s t ↔ IsUniform G ε t s :=
 theorem isUniform_singleton (hε : 0 < ε) : G.IsUniform ε {a} {b} :=
   by
   intro s' hs' t' ht' hs ht
-  rw [card_singleton, Nat.cast_one, one_mul] at hs ht 
+  rw [card_singleton, Nat.cast_one, one_mul] at hs ht
   obtain rfl | rfl := Finset.subset_singleton_iff.1 hs'
   · replace hs : ε ≤ 0 := by simpa using hs
     exact (hε.not_le hs).elim
@@ -116,7 +116,7 @@ theorem not_isUniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
 theorem isUniform_one : G.IsUniform (1 : 𝕜) s t :=
   by
   intro s' hs' t' ht' hs ht
-  rw [mul_one] at hs ht 
+  rw [mul_one] at hs ht
   rw [eq_of_subset_of_card_le hs' (Nat.cast_le.1 hs),
     eq_of_subset_of_card_le ht' (Nat.cast_le.1 ht), sub_self, abs_zero]
   exact zero_lt_one

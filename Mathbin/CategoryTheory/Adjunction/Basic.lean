@@ -349,16 +349,16 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           rw [F.map_comp, assoc, ← functor.comp_map, adj.counit.naturality, ← assoc]
           convert id_comp f
           have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.left_triangle
-          dsimp at t 
-          simp only [id_comp] at t 
+          dsimp at t
+          simp only [id_comp] at t
           exact t
         right_inv := fun g => by
           change _ ≫ G.map (_ ≫ _) = _
           rw [G.map_comp, ← assoc, ← functor.comp_map, ← adj.unit.naturality, assoc]
           convert comp_id g
           have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.right_triangle
-          dsimp at t 
-          simp only [id_comp] at t 
+          dsimp at t
+          simp only [id_comp] at t
           exact t } }
 #align category_theory.adjunction.mk_of_unit_counit CategoryTheory.Adjunction.mkOfUnitCounit
 -/

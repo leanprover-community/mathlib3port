@@ -77,7 +77,7 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
         by
         cases' le_iff_exists_add.mp hi with j hj
         rw [← Nat.lt_succ_iff, Nat.succ_eq_add_one, add_assoc, hj, not_lt, add_le_iff_nonpos_right,
-          nonpos_iff_eq_zero] at h 
+          nonpos_iff_eq_zero] at h
         rw [← add_left_inj 1, add_assoc, hj, self_eq_add_right, h]
       cases n
       · fin_cases i
@@ -107,10 +107,10 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
         swap
         · ext; simp only [Fin.val_mk, Fin.val_succ]
         · intro j hj
-          simp only [true_and_iff, Finset.mem_univ, Finset.mem_filter] at hj 
-          simp only [Nat.succ_eq_add_one] at hi' 
+          simp only [true_and_iff, Finset.mem_univ, Finset.mem_filter] at hj
+          simp only [Nat.succ_eq_add_one] at hi'
           obtain ⟨k, hk⟩ := Nat.le.dest (nat.lt_succ_iff.mp (Fin.is_lt j))
-          rw [add_comm] at hk 
+          rw [add_comm] at hk
           have hi'' : i = Fin.castSuccEmb ⟨i, by linarith⟩ := by ext;
             simp only [Fin.castSucc_mk, Fin.eta]
           have eq :=
@@ -141,7 +141,7 @@ theorem σ_comp_PInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
 theorem degeneracy_comp_PInfty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
     (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ PInfty.f n = 0 :=
   by
-  rw [SimplexCategory.mono_iff_injective] at hθ 
+  rw [SimplexCategory.mono_iff_injective] at hθ
   cases n
   · exfalso
     apply hθ

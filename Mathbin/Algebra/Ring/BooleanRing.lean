@@ -76,7 +76,7 @@ theorem add_self : a + a = 0 :=
       a + a = (a + a) * (a + a) := by rw [mul_self]
       _ = a * a + a * a + (a * a + a * a) := by rw [add_mul, mul_add]
       _ = a + a + (a + a) := by rw [mul_self]
-  rwa [self_eq_add_left] at this 
+  rwa [self_eq_add_left] at this
 #align add_self add_self
 -/
 
@@ -108,7 +108,7 @@ theorem mul_add_mul : a * b + b * a = 0 :=
       _ = a * a + a * b + (b * a + b * b) := by rw [add_mul, mul_add, mul_add]
       _ = a + a * b + (b * a + b) := by simp only [mul_self]
       _ = a + b + (a * b + b * a) := by abel
-  rwa [self_eq_add_right] at this 
+  rwa [self_eq_add_right] at this
 #align mul_add_mul mul_add_mul
 -/
 

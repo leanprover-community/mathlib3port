@@ -642,7 +642,7 @@ theorem continuousOn_list_prod {f : ι → X → M} (l : List ι) {t : Set X}
   rw [continuousWithinAt_iff_continuousAt_restrict _ hx]
   refine' tendsto_list_prod _ fun i hi => _
   specialize h i hi x hx
-  rw [continuousWithinAt_iff_continuousAt_restrict _ hx] at h 
+  rw [continuousWithinAt_iff_continuousAt_restrict _ hx] at h
   exact h
 #align continuous_on_list_prod continuousOn_list_prod
 #align continuous_on_list_sum continuousOn_list_sum

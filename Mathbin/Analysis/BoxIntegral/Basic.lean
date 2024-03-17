@@ -445,7 +445,7 @@ theorem BoxIntegral.HasIntegral.sum {α : Type _} {s : Finset α} {f : α → �
     HasIntegral I l (fun x => ∑ i in s, f i x) vol (∑ i in s, g i) :=
   by
   induction' s using Finset.induction_on with a s ha ihs; · simp [has_integral_zero]
-  simp only [Finset.sum_insert ha]; rw [Finset.forall_mem_insert] at h 
+  simp only [Finset.sum_insert ha]; rw [Finset.forall_mem_insert] at h
   exact h.1.add (ihs h.2)
 #align box_integral.has_integral_sum BoxIntegral.HasIntegral.sum
 -/
@@ -583,7 +583,7 @@ theorem dist_integralSum_integral_le_of_memBaseSet (h : Integrable I l f vol) (h
     (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) (hπp : π.IsPartition) :
     dist (integralSum f vol π) (integral I l f vol) ≤ ε :=
   by
-  rw [convergence_r, dif_pos h₀] at hπ 
+  rw [convergence_r, dif_pos h₀] at hπ
   exact (has_integral_iff.1 h.has_integral ε h₀).choose_spec.2 c _ hπ hπp
 #align box_integral.integrable.dist_integral_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integralSum_integral_le_of_memBaseSet
 -/
@@ -619,7 +619,7 @@ theorem dist_integralSum_le_of_memBaseSet (h : Integrable I l f vol) (hpos₁ : 
     h.dist_integral_sum_integral_le_of_mem_base_set hpos₁
       (h₁.union_compl_to_subordinate (fun _ _ => min_le_left _ _) hπU hπc₁)
       (is_partition_union_compl_to_subordinate _ _ _ _)
-  rw [HU] at hπU 
+  rw [HU] at hπU
   have H₂ :
     dist (integral_sum f vol (π₂.union_compl_to_subordinate π hπU r)) (integral I l f vol) ≤ ε₂ :=
     h.dist_integral_sum_integral_le_of_mem_base_set hpos₂
@@ -757,7 +757,7 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq (h : Integra
   have hU' : π.Union = (π₀.bUnion_tagged πi).iUnion :=
     hU.trans (prepartition.Union_bUnion_partition _ hπip).symm
   have := h.dist_integral_sum_le_of_mem_base_set h0 δ'0 hπ this hU'
-  rw [integral_sum_bUnion_tagged] at this 
+  rw [integral_sum_bUnion_tagged] at this
   calc
     dist (integral_sum f vol π) (∑ J in π₀.boxes, integral J l f vol) ≤
         dist (integral_sum f vol π) (∑ J in π₀.boxes, integral_sum f vol (πi J)) +
@@ -831,7 +831,7 @@ def toBoxAdditive (h : Integrable I l f vol) : ι →ᵇᵃ[I] F
     where
   toFun J := integral J l f vol
   sum_partition_boxes' J hJ π hπ := by
-    replace hπ := hπ.Union_eq; rw [← prepartition.Union_top] at hπ 
+    replace hπ := hπ.Union_eq; rw [← prepartition.Union_top] at hπ
     rw [(h.to_subbox (WithTop.coe_le_coe.1 hJ)).sum_integral_congr hπ, prepartition.top_boxes,
       sum_singleton]
 #align box_integral.integrable.to_box_additive BoxIntegral.Integrable.toBoxAdditive
@@ -857,7 +857,7 @@ theorem integrable_of_continuousOn [CompleteSpace E] {I : Box ι} {f : ℝⁿ �
     Integrable.{u, v, v} I l f μ.toBoxAdditive.toSMul :=
   by
   have huc := I.is_compact_Icc.uniform_continuous_on_of_continuous hc
-  rw [Metric.uniformContinuousOn_iff_le] at huc 
+  rw [Metric.uniformContinuousOn_iff_le] at huc
   refine' integrable_iff_cauchy_basis.2 fun ε ε0 => _
   rcases exists_pos_mul_lt ε0 (μ.to_box_additive I) with ⟨ε', ε0', hε⟩
   rcases huc ε' ε0' with ⟨δ, δ0 : 0 < δ, Hδ⟩
@@ -880,9 +880,9 @@ theorem integrable_of_continuousOn [CompleteSpace E] {I : Box ι} {f : ℝⁿ �
     refine' (dist_triangle_left _ _ J.upper).trans (add_le_add (h₁.1 _ _ _) (h₂.1 _ _ _))
     · exact prepartition.bUnion_index_mem _ hJ
     · exact box.le_iff_Icc.1 (prepartition.le_bUnion_index _ hJ) J.upper_mem_Icc
-    · rw [_root_.inf_comm] at hJ 
+    · rw [_root_.inf_comm] at hJ
       exact prepartition.bUnion_index_mem _ hJ
-    · rw [_root_.inf_comm] at hJ 
+    · rw [_root_.inf_comm] at hJ
       exact box.le_iff_Icc.1 (prepartition.le_bUnion_index _ hJ) J.upper_mem_Icc
   refine' (norm_sum_le_of_le _ this).trans _
   rw [← Finset.sum_mul, μ.to_box_additive.sum_partition_boxes le_top (h₁p.inf h₂p)]
@@ -928,12 +928,12 @@ theorem BoxIntegral.HasIntegral.of_bRiemann_eq_false_of_forall_isLittleO (hl : l
     `J` in the `δ`-neighborhood of `x`. -/
   refine' ((l.has_basis_to_filter_Union_top _).tendsto_iffₓ Metric.nhds_basis_closedBall).2 _
   intro ε ε0
-  simp only [Subtype.exists'] at H₁ H₂ 
+  simp only [Subtype.exists'] at H₁ H₂
   choose! δ₁ Hδ₁ using H₁
   choose! δ₂ Hδ₂ using H₂
   have ε0' := half_pos ε0; have H0 : 0 < (2 ^ Fintype.card ι : ℝ) := pow_pos zero_lt_two _
   rcases hs.exists_pos_forall_sum_le (div_pos ε0' H0) with ⟨εs, hεs0, hεs⟩
-  simp only [le_div_iff' H0, mul_sum] at hεs 
+  simp only [le_div_iff' H0, mul_sum] at hεs
   rcases exists_pos_mul_lt ε0' (B I) with ⟨ε', ε'0, hεI⟩
   set δ : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ) := fun c x => if x ∈ s then δ₁ c x (εs x) else (δ₂ c) x ε'
   refine' ⟨δ, fun c => l.r_cond_of_bRiemann_eq_ff hl, _⟩
@@ -951,7 +951,7 @@ theorem BoxIntegral.HasIntegral.of_bRiemann_eq_false_of_forall_isLittleO (hl : l
     have :
       ∀ J ∈ π.boxes.filter fun J => π.tag J ∈ s, dist (vol J (f <| π.tag J)) (g J) ≤ εs (π.tag J) :=
       by
-      intro J hJ; rw [Finset.mem_filter] at hJ ; cases' hJ with hJ hJs
+      intro J hJ; rw [Finset.mem_filter] at hJ; cases' hJ with hJ hJs
       refine'
         Hδ₁ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ (hεs0 _) _ (π.le_of_mem' _ hJ) _ (hπδ.2 hlH J hJ) fun hD =>
           (Finset.le_sup hJ).trans (hπδ.3 hD)
@@ -971,7 +971,7 @@ theorem BoxIntegral.HasIntegral.of_bRiemann_eq_false_of_forall_isLittleO (hl : l
   have H₂ :
     ∀ J ∈ π.boxes.filter fun J => π.tag J ∉ s, dist (vol J (f <| π.tag J)) (g J) ≤ ε' * B J :=
     by
-    intro J hJ; rw [Finset.mem_filter] at hJ ; cases' hJ with hJ hJs
+    intro J hJ; rw [Finset.mem_filter] at hJ; cases' hJ with hJ hJs
     refine'
       Hδ₂ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ ε'0 _ (π.le_of_mem' _ hJ) _ (fun hH => hπδ.2 hH J hJ)
         fun hD => (Finset.le_sup hJ).trans (hπδ.3 hD)

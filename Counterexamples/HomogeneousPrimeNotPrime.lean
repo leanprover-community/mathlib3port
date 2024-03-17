@@ -115,7 +115,7 @@ theorem grading.right_inv : Function.RightInverse (coeLinearMap (grading R)) gra
   induction' zz using DirectSum.induction_on with i zz d1 d2 ih1 ih2
   · simp only [map_zero]
   ·
-    rcases i with (_ | ⟨⟨⟩⟩) <;> rcases zz with ⟨⟨a, b⟩, hab : _ = _⟩ <;> dsimp at hab  <;>
+    rcases i with (_ | ⟨⟨⟩⟩) <;> rcases zz with ⟨⟨a, b⟩, hab : _ = _⟩ <;> dsimp at hab <;>
         cases hab <;>
       decide!
   · simp only [map_add, ih1, ih2]
@@ -169,8 +169,7 @@ theorem homogeneous_mem_or_mem {x y : R × R} (hx : SetLike.Homogeneous (grading
   by
   simp only [I, Ideal.mem_span_singleton] at hxy ⊢
   cases x; cases y
-  obtain ⟨_ | ⟨⟨⟩⟩, hx : _ = _⟩ := hx <;> obtain ⟨_ | ⟨⟨⟩⟩, hy : _ = _⟩ := hy <;>
-            dsimp at hx hy  <;>
+  obtain ⟨_ | ⟨⟨⟩⟩, hx : _ = _⟩ := hx <;> obtain ⟨_ | ⟨⟨⟩⟩, hy : _ = _⟩ := hy <;> dsimp at hx hy <;>
           cases hx <;>
         cases hy <;>
       clear hx hy <;>

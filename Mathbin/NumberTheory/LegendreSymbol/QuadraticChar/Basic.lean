@@ -286,7 +286,7 @@ when the domain has odd characteristic. -/
 theorem quadraticChar_isNontrivial (hF : ringChar F ≠ 2) : (quadraticChar F).IsNontrivial :=
   by
   rcases quadraticChar_exists_neg_one hF with ⟨a, ha⟩
-  have hu : IsUnit a := by by_contra hf; rw [map_nonunit _ hf] at ha ; norm_num at ha 
+  have hu : IsUnit a := by by_contra hf; rw [map_nonunit _ hf] at ha; norm_num at ha
   refine' ⟨hu.unit, (_ : quadraticChar F a ≠ 1)⟩
   rw [ha]
   norm_num
@@ -307,12 +307,12 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
     by_cases h : IsSquare a
     · rw [(quadraticChar_one_iff_isSquare h₀).mpr h]
       rcases h with ⟨b, h⟩
-      rw [h, mul_self_eq_zero] at h₀ 
+      rw [h, mul_self_eq_zero] at h₀
       have h₁ : s = [b, -b].toFinset := by
         ext x
         simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, List.toFinset_cons,
           List.toFinset_nil, insert_emptyc_eq, Finset.mem_insert, Finset.mem_singleton]
-        rw [← pow_two] at h 
+        rw [← pow_two] at h
         simp only [hs, Set.mem_toFinset, Set.mem_setOf_eq, h]
         constructor
         · exact eq_or_eq_neg_of_sq_eq_sq _ _
@@ -327,7 +327,7 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       ext x
       simp only [iff_false_iff, Finset.mem_filter, Finset.mem_univ, true_and_iff,
         Finset.not_mem_empty]
-      rw [isSquare_iff_exists_sq] at h 
+      rw [isSquare_iff_exists_sq] at h
       exact fun h' => h ⟨_, h'.symm⟩
 #align quadratic_char_card_sqrts quadraticChar_card_sqrts
 -/

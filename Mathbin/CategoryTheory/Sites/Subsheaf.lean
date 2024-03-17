@@ -250,7 +250,7 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
       intro V' i' hi'
       have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
       have := H _ hi''
-      rw [op_comp, F.map_comp] at this 
+      rw [op_comp, F.map_comp] at this
       refine' this.trans (congr_arg Subtype.val (hx _ _ (hi₂ hi'') hi (h₂ hi'')))
   have : x''.compatible := by
     intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
@@ -338,7 +338,7 @@ theorem Subpresheaf.to_sheafify_lift_unique (h : Presieve.IsSheaf J F')
   ext U ⟨s, hs⟩
   apply (h _ hs).IsSeparatedFor.ext
   rintro V i hi
-  dsimp at hi 
+  dsimp at hi
   erw [← functor_to_types.naturality, ← functor_to_types.naturality]
   exact (congr_fun (congr_app e <| op V) ⟨_, hi⟩ : _)
 #align category_theory.grothendieck_topology.subpresheaf.to_sheafify_lift_unique CategoryTheory.GrothendieckTopology.Subpresheaf.to_sheafify_lift_unique
@@ -427,7 +427,7 @@ instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso 
   constructor
   · intro x y e
     have := (nat_trans.mono_iff_mono_app _ _).mp hf X
-    rw [mono_iff_injective] at this 
+    rw [mono_iff_injective] at this
     exact this (congr_arg Subtype.val e : _)
   · rintro ⟨_, ⟨x, rfl⟩⟩; exact ⟨x, rfl⟩
 

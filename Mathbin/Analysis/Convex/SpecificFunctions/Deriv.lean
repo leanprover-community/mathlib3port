@@ -82,7 +82,7 @@ theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in
   by
   rcases hn with ⟨n, rfl⟩
   induction' n with n ihn; · simp
-  rw [← two_mul] at ihn 
+  rw [← two_mul] at ihn
   rw [← two_mul, Nat.succ_eq_add_one, mul_add, mul_one, bit0, ← add_assoc, Finset.prod_range_succ,
     Finset.prod_range_succ, mul_assoc]
   refine' mul_nonneg ihn _; generalize (1 + 1) * n = k
@@ -99,7 +99,7 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 
     0 < ∏ k in Finset.range n, (m - k) :=
   by
   refine' (int_prod_range_nonneg m n hn).lt_of_ne fun h => hm _
-  rw [eq_comm, Finset.prod_eq_zero_iff] at h 
+  rw [eq_comm, Finset.prod_eq_zero_iff] at h
   obtain ⟨a, ha, h⟩ := h
   rw [sub_eq_zero.1 h]
   exact ⟨Int.ofNat_zero_le _, Int.ofNat_lt.2 <| Finset.mem_range.1 ha⟩
@@ -117,8 +117,8 @@ theorem strictConvexOn_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) :
   rw [iter_deriv_zpow]
   refine' mul_pos _ (zpow_pos_of_pos hx _)
   exact_mod_cast int_prod_range_pos (even_bit0 1) fun hm => _
-  norm_cast at hm 
-  rw [← Finset.coe_Ico] at hm 
+  norm_cast at hm
+  rw [← Finset.coe_Ico] at hm
   fin_cases hm <;> cc
 #align strict_convex_on_zpow strictConvexOn_zpow
 -/
@@ -198,7 +198,7 @@ open scoped Real
 theorem strictConcaveOn_sin_Icc : StrictConcaveOn ℝ (Icc 0 π) sin :=
   by
   apply strictConcaveOn_of_deriv2_neg (convex_Icc _ _) continuous_on_sin fun x hx => _
-  rw [interior_Icc] at hx 
+  rw [interior_Icc] at hx
   simp [sin_pos_of_mem_Ioo hx]
 #align strict_concave_on_sin_Icc strictConcaveOn_sin_Icc
 -/
@@ -207,7 +207,7 @@ theorem strictConcaveOn_sin_Icc : StrictConcaveOn ℝ (Icc 0 π) sin :=
 theorem strictConcaveOn_cos_Icc : StrictConcaveOn ℝ (Icc (-(π / 2)) (π / 2)) cos :=
   by
   apply strictConcaveOn_of_deriv2_neg (convex_Icc _ _) continuous_on_cos fun x hx => _
-  rw [interior_Icc] at hx 
+  rw [interior_Icc] at hx
   simp [cos_pos_of_mem_Ioo hx]
 #align strict_concave_on_cos_Icc strictConcaveOn_cos_Icc
 -/

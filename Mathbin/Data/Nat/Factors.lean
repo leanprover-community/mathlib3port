@@ -63,7 +63,7 @@ theorem prime_of_mem_factors : ∀ {n p}, p ∈ factors n → Prime p
   | n@(k + 2) => fun p h =>
     let m := minFac n
     have : n / m < n := factors_lemma
-    have h₁ : p = m ∨ p ∈ factors (n / m) := (List.mem_cons _ _ _).1 (by rwa [factors] at h )
+    have h₁ : p = m ∨ p ∈ factors (n / m) := (List.mem_cons _ _ _).1 (by rwa [factors] at h)
     Or.cases_on h₁ (fun h₂ => h₂.symm ▸ minFac_prime (by decide)) prime_of_mem_factors
 #align nat.prime_of_mem_factors Nat.prime_of_mem_factors
 -/
@@ -86,7 +86,7 @@ theorem prod_factors : ∀ {n}, n ≠ 0 → List.prod (factors n) = n
       have h₁ : n / m ≠ 0 := fun h =>
         by
         have : n = 0 * m := (Nat.div_eq_iff_eq_mul_left (minFac_pos _) (minFac_dvd _)).1 h
-        rw [MulZeroClass.zero_mul] at this  <;> exact (show k + 2 ≠ 0 by decide) this
+        rw [MulZeroClass.zero_mul] at this <;> exact (show k + 2 ≠ 0 by decide) this
       rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel' (min_fac_dvd _)]
 #align nat.prod_factors Nat.prod_factors
 -/
@@ -150,7 +150,7 @@ theorem factors_eq_nil (n : ℕ) : n.factors = [] ↔ n = 0 ∨ n = 1 :=
   · rcases n with (_ | _ | n)
     · exact Or.inl rfl
     · exact Or.inr rfl
-    · rw [factors] at h ; injection h
+    · rw [factors] at h; injection h
   · rcases h with (rfl | rfl)
     · exact factors_zero
     · exact factors_one
@@ -195,7 +195,7 @@ theorem mem_factors {n p} (hn : n ≠ 0) : p ∈ factors n ↔ Prime p ∧ p ∣
 theorem le_of_mem_factors {n p : ℕ} (h : p ∈ n.factors) : p ≤ n :=
   by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · rw [factors_zero] at h ; cases h
+  · rw [factors_zero] at h; cases h
   · exact le_of_dvd hn (dvd_of_mem_factors h)
 #align nat.le_of_mem_factors Nat.le_of_mem_factors
 -/
@@ -208,7 +208,7 @@ theorem factors_unique {n : ℕ} {l : List ℕ} (h₁ : Prod l = n) (h₂ : ∀ 
   · rw [h₁]
     refine' (prod_factors _).symm
     rintro rfl
-    rw [prod_eq_zero_iff] at h₁ 
+    rw [prod_eq_zero_iff] at h₁
     exact Prime.ne_zero (h₂ 0 h₁) rfl
   · simp_rw [← prime_iff]; exact h₂
   · simp_rw [← prime_iff]; exact fun p => prime_of_mem_factors
@@ -244,7 +244,7 @@ theorem perm_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
   refine' (factors_unique _ _).symm
   · rw [List.prod_append, prod_factors ha, prod_factors hb]
   · intro p hp
-    rw [List.mem_append] at hp 
+    rw [List.mem_append] at hp
     cases hp <;> exact prime_of_mem_factors hp
 #align nat.perm_factors_mul Nat.perm_factors_mul
 -/

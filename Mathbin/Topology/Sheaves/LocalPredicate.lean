@@ -128,8 +128,8 @@ def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
       intro x
       specialize w x
       rcases w with ⟨V, m, i, w⟩
-      dsimp at w 
-      rw [continuous_iff_continuousAt] at w 
+      dsimp at w
+      rw [continuous_iff_continuousAt] at w
       specialize w ⟨x, m⟩
       simpa using (opens.open_embedding_of_le i.le).continuousAt_iff.1 w }
 #align Top.continuous_local TopCat.continuousLocal
@@ -315,7 +315,7 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective'.{v, v} tV
   · -- Decompose everything into its constituent parts:
     dsimp
-    simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h 
+    simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h
     specialize w (unop U) (unop V) fU hU fV hV h
     rcases w with ⟨W, iU, iV, w⟩
     -- and put it back together again in the correct order.

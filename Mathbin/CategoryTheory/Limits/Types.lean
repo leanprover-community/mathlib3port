@@ -97,7 +97,7 @@ theorem isLimitEquivSections_apply {F : J ⥤ Type max v u} {c : Cone F} (t : Is
 theorem isLimitEquivSections_symm_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c)
     (x : F.sections) (j : J) : c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j :=
   by
-  equiv_rw (is_limit_equiv_sections t).symm at x 
+  equiv_rw (is_limit_equiv_sections t).symm at x
   simp
 #align category_theory.limits.types.is_limit_equiv_sections_symm_apply CategoryTheory.Limits.Types.isLimitEquivSections_symm_apply
 -/
@@ -419,8 +419,8 @@ theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimi
     by
     have := congr_fun this x
     have H := congr_arg ULift.down this
-    dsimp at H 
-    rwa [eq_true_iff] at H 
+    dsimp at H
+    rwa [eq_true_iff] at H
   refine' h.hom_ext _
   intro j; ext y
   erw [iff_true_iff]
@@ -489,8 +489,8 @@ noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.pt, ∃ i xi, x 
       intro a b h
       rcases jointly_surjective F (colimit.is_colimit F) a with ⟨i, xi, rfl⟩
       rcases jointly_surjective F (colimit.is_colimit F) b with ⟨j, xj, rfl⟩
-      change (colimit.ι F i ≫ colimit.desc F t) xi = (colimit.ι F j ≫ colimit.desc F t) xj at h 
-      rw [colimit.ι_desc, colimit.ι_desc] at h 
+      change (colimit.ι F i ≫ colimit.desc F t) xi = (colimit.ι F j ≫ colimit.desc F t) xj at h
+      rw [colimit.ι_desc, colimit.ι_desc] at h
       rcases hinj i j xi xj h with ⟨k, f, g, h'⟩
       change colimit.ι F i xi = colimit.ι F j xj
       rw [← colimit.w F f, ← colimit.w F g]
@@ -645,7 +645,7 @@ instance : HasImageMaps (Type u)
           ⟨st.left (Classical.choose x.2), by
             have p := st.w
             replace p := congr_fun p (Classical.choose x.2)
-            simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p 
+            simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p
             erw [p, Classical.choose_spec x.2]⟩⟩)
       rfl
 

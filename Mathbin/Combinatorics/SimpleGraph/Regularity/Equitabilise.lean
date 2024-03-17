@@ -60,10 +60,10 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   induction' s using Finset.strongInduction with s ih generalizing P a b
   -- If `a = b = 0`, then `s = ∅` and we can partition into zero parts
   by_cases hab : a = 0 ∧ b = 0
-  · simp only [hab.1, hab.2, add_zero, MulZeroClass.zero_mul, eq_comm, card_eq_zero] at hs 
+  · simp only [hab.1, hab.2, add_zero, MulZeroClass.zero_mul, eq_comm, card_eq_zero] at hs
     subst hs
     exact ⟨Finpartition.empty _, by simp, by simp [Unique.eq_default P], by simp [hab.2]⟩
-  simp_rw [not_and_or, ← Ne.def, ← pos_iff_ne_zero] at hab 
+  simp_rw [not_and_or, ← Ne.def, ← pos_iff_ne_zero] at hab
   -- `n` will be the size of the smallest part
   set n := if 0 < a then m else m + 1 with hn
   -- Some easy facts about it
@@ -103,7 +103,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     rw [card_insert_of_not_mem fun H => _, hR₃, if_neg ha, tsub_add_cancel_of_le]
     · exact hab.resolve_left ha
     · exact ht.ne_empty (le_sdiff_iff.1 <| R.le <| filter_subset _ _ H)
-  push_neg at h 
+  push_neg at h
   obtain ⟨u, hu₁, hu₂⟩ := h
   obtain ⟨t, htu, htn⟩ := exists_smaller_set _ _ (hn₁.trans hu₂)
   have ht : t.nonempty := by rwa [← card_pos, htn]
@@ -227,7 +227,7 @@ variable (s)
 theorem exists_equipartition_card_eq (hn : n ≠ 0) (hs : n ≤ s.card) :
     ∃ P : Finpartition s, P.IsEquipartition ∧ P.parts.card = n :=
   by
-  rw [← pos_iff_ne_zero] at hn 
+  rw [← pos_iff_ne_zero] at hn
   have : (n - s.card % n) * (s.card / n) + s.card % n * (s.card / n + 1) = s.card := by
     rw [tsub_mul, mul_add, ← add_assoc,
       tsub_add_cancel_of_le (Nat.mul_le_mul_right _ (mod_lt _ hn).le), mul_one, add_comm,

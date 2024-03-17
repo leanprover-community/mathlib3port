@@ -55,7 +55,7 @@ theorem Ideal.finite_factors {I : Ideal R} (hI : I ≠ 0) :
   refine'
     Finite.of_injective (fun v => (⟨(v : height_one_spectrum R).asIdeal, v.2⟩ : { x // x ∣ I })) _
   intro v w hvw
-  simp only at hvw 
+  simp only at hvw
   exact Subtype.coe_injective ((height_one_spectrum.ext_iff ↑v ↑w).mpr hvw)
 #align ideal.finite_factors Ideal.finite_factors
 -/
@@ -144,7 +144,7 @@ theorem finprod_not_dvd (I : Ideal R) (hI : I ≠ 0) :
     Prime.exists_mem_finset_dvd hv_prime ((mul_dvd_mul_iff_left h_ne_zero).mp h_contr)
   have hw_prime : Prime w.as_ideal := Ideal.prime_of_isPrime w.ne_bot w.is_prime
   have hvw := Prime.dvd_of_dvd_pow hv_prime hvw'
-  rw [Prime.dvd_prime_iff_associated hv_prime hw_prime, associated_iff_eq] at hvw 
+  rw [Prime.dvd_prime_iff_associated hv_prime hw_prime, associated_iff_eq] at hvw
   exact (finset.mem_erase.mp hw).1 (height_one_spectrum.ext w v (Eq.symm hvw))
 #align ideal.finprod_not_dvd Ideal.finprod_not_dvd
 -/
@@ -177,10 +177,10 @@ theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
   have hv : Irreducible (Associates.mk v.as_ideal) := v.associates_irreducible
   have h_dvd := finprod_mem_dvd v (Ideal.finite_mulSupport hI)
   have h_not_dvd := Ideal.finprod_not_dvd v I hI
-  simp only [IsDedekindDomain.HeightOneSpectrum.maxPowDividing] at h_dvd h_ne_zero h_not_dvd 
+  simp only [IsDedekindDomain.HeightOneSpectrum.maxPowDividing] at h_dvd h_ne_zero h_not_dvd
   rw [← Associates.mk_dvd_mk, Associates.dvd_eq_le, Associates.mk_pow,
-    Associates.prime_pow_dvd_iff_le h_ne_zero hv] at h_dvd h_not_dvd 
-  rw [not_le] at h_not_dvd 
+    Associates.prime_pow_dvd_iff_le h_ne_zero hv] at h_dvd h_not_dvd
+  rw [not_le] at h_not_dvd
   apply Nat.eq_of_le_of_lt_succ h_dvd h_not_dvd
 #align ideal.finprod_count Ideal.finprod_count
 -/
@@ -196,7 +196,7 @@ theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
   · apply associates.mk_ne_zero.mpr hI
   intro v hv
   obtain ⟨J, hJv⟩ := Associates.exists_rep v
-  rw [← hJv, Associates.irreducible_mk] at hv 
+  rw [← hJv, Associates.irreducible_mk] at hv
   rw [← hJv]
   apply
     Ideal.finprod_count

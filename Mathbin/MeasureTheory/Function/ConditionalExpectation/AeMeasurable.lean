@@ -714,7 +714,7 @@ theorem Lp.induction_stronglyMeasurable_aux (hm : m ≤ m0) (hp_ne_top : p ≠ �
     rw [Lp.simple_func.coe_indicator_const, Lp_meas_to_Lp_trim_lie_symm_indicator ht hμt.ne b]
     have hμt' : μ t < ∞ := (le_trim hm).trans_lt hμt
     specialize h_ind b ht hμt'
-    rwa [Lp.simple_func.coe_indicator_const] at h_ind 
+    rwa [Lp.simple_func.coe_indicator_const] at h_ind
   · intro f g hf hg h_disj hfP hgP
     rw [LinearIsometryEquiv.map_add]
     push_cast

@@ -94,7 +94,7 @@ theorem continuousAt_cpow {p : ℂ × ℂ} (hp_fst : 0 < p.fst.re ∨ p.fst.im �
     ContinuousAt (fun x : ℂ × ℂ => x.1 ^ x.2) p :=
   by
   have hp_fst_ne_zero : p.fst ≠ 0 := by intro h;
-    cases hp_fst <;> · rw [h] at hp_fst ; simpa using hp_fst
+    cases hp_fst <;> · rw [h] at hp_fst; simpa using hp_fst
   rw [continuousAt_congr (cpow_eq_nhds' hp_fst_ne_zero)]
   refine' continuous_exp.continuous_at.comp _
   refine'
@@ -251,7 +251,7 @@ theorem rpow_eq_nhds_of_pos {p : ℝ × ℝ} (hp_fst : 0 < p.fst) :
 theorem continuousAt_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) :
     ContinuousAt (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
   by
-  rw [ne_iff_lt_or_gt] at hp 
+  rw [ne_iff_lt_or_gt] at hp
   cases hp
   · rw [continuousAt_congr (rpow_eq_nhds_of_neg hp)]
     refine' ContinuousAt.mul _ (continuous_cos.continuous_at.comp _)
@@ -432,7 +432,7 @@ theorem continuousAt_cpow_of_re_pos {p : ℂ × ℂ} (h₁ : 0 ≤ p.1.re ∨ p.
   by
   cases' p with z w
   rw [← not_lt_zero_iff, lt_iff_le_and_ne, not_and_or, Ne.def, Classical.not_not,
-    not_le_zero_iff] at h₁ 
+    not_le_zero_iff] at h₁
   rcases h₁ with (h₁ | (rfl : z = 0))
   exacts [continuousAt_cpow h₁, continuous_at_cpow_zero_of_re_pos h₂]
 #align complex.continuous_at_cpow_of_re_pos Complex.continuousAt_cpow_of_re_pos
@@ -520,8 +520,8 @@ theorem continuousAt_rpow {x : ℝ≥0} {y : ℝ} (h : x ≠ 0 ∨ 0 < y) :
   rw [this]
   refine' continuous_real_to_nnreal.continuous_at.comp (ContinuousAt.comp _ _)
   · apply Real.continuousAt_rpow
-    simp only [Ne.def] at h 
-    rw [← NNReal.coe_eq_zero x] at h 
+    simp only [Ne.def] at h
+    rw [← NNReal.coe_eq_zero x] at h
     exact h
   · exact ((continuous_subtype_val.comp continuous_fst).prod_mk continuous_snd).ContinuousAt
 #align nnreal.continuous_at_rpow NNReal.continuousAt_rpow
@@ -532,7 +532,7 @@ theorem eventually_pow_one_div_le (x : ℝ≥0) {y : ℝ≥0} (hy : 1 < y) :
     ∀ᶠ n : ℕ in atTop, x ^ (1 / n : ℝ) ≤ y :=
   by
   obtain ⟨m, hm⟩ := add_one_pow_unbounded_of_pos x (tsub_pos_of_lt hy)
-  rw [tsub_add_cancel_of_le hy.le] at hm 
+  rw [tsub_add_cancel_of_le hy.le] at hm
   refine' eventually_at_top.2 ⟨m + 1, fun n hn => _⟩
   simpa only [NNReal.rpow_one_div_le_iff (Nat.cast_pos.2 <| m.succ_pos.trans_le hn),
     NNReal.rpow_nat_cast] using hm.le.trans (pow_le_pow_right hy.le (m.le_succ.trans hn))

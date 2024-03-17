@@ -140,7 +140,7 @@ theorem drop_empty {n : ℕ} : "".drop n = "" :=
   induction' n with n hn
   · rfl
   · rcases hs : "" with ⟨_ | ⟨hd, tl⟩⟩
-    · rw [hs] at hn 
+    · rw [hs] at hn
       conv_rhs => rw [← hn]
       simp only [popn, mk_iterator, iterator.nextn, iterator.next]
     · simpa only [← to_list_inj] using hs

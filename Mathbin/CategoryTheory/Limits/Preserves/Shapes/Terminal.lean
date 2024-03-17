@@ -121,7 +121,7 @@ def PreservesTerminal.ofIsoComparison [i : IsIso (terminalComparison G)] :
 def preservesTerminalOfIsIso (f : G.obj (⊤_ C) ⟶ ⊤_ D) [i : IsIso f] :
     PreservesLimit (Functor.empty C) G :=
   by
-  rw [Subsingleton.elim f (terminal_comparison G)] at i 
+  rw [Subsingleton.elim f (terminal_comparison G)] at i
   exact preserves_terminal.of_iso_comparison G
 #align category_theory.limits.preserves_terminal_of_is_iso CategoryTheory.Limits.preservesTerminalOfIsIso
 -/
@@ -240,7 +240,7 @@ def PreservesInitial.ofIsoComparison [i : IsIso (initialComparison G)] :
 def preservesInitialOfIsIso (f : ⊥_ D ⟶ G.obj (⊥_ C)) [i : IsIso f] :
     PreservesColimit (Functor.empty C) G :=
   by
-  rw [Subsingleton.elim f (initial_comparison G)] at i 
+  rw [Subsingleton.elim f (initial_comparison G)] at i
   exact preserves_initial.of_iso_comparison G
 #align category_theory.limits.preserves_initial_of_is_iso CategoryTheory.Limits.preservesInitialOfIsIso
 -/

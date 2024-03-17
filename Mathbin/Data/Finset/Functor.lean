@@ -122,7 +122,7 @@ instance : LawfulApplicative Finset :=
         rw [if_neg ht.ne_empty, mem_sup]
         refine' ⟨fun ha => ⟨const β a, mem_image_of_mem _ ha, mem_image_const_self.2 ht⟩, _⟩
         rintro ⟨f, hf, ha⟩
-        rw [mem_image] at hf ha 
+        rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := hf
         obtain ⟨_, _, rfl⟩ := ha
         exact hb
@@ -135,7 +135,7 @@ instance : LawfulApplicative Finset :=
         rw [if_neg hs.ne_empty, mem_sup]
         refine' ⟨fun ha => ⟨id, mem_image_const_self.2 hs, by rwa [image_id]⟩, _⟩
         rintro ⟨f, hf, ha⟩
-        rw [mem_image] at hf ha 
+        rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := ha
         obtain ⟨_, _, rfl⟩ := hf
         exact hb

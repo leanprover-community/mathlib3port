@@ -104,7 +104,7 @@ theorem isMaximal_inf_right_of_isMaximal_sup {x y : X} (hxz : IsMaximal x (x ⊔
     (hyz : IsMaximal y (x ⊔ y)) : IsMaximal (x ⊓ y) y :=
   by
   rw [inf_comm]
-  rw [sup_comm] at hxz hyz 
+  rw [sup_comm] at hxz hyz
   exact is_maximal_inf_left_of_is_maximal_sup hyz hxz
 #align jordan_holder_lattice.is_maximal_inf_right_of_is_maximal_sup JordanHolderLattice.isMaximal_inf_right_of_isMaximal_sup
 -/
@@ -277,7 +277,7 @@ theorem toList_injective : Function.Injective (@CompositionSeries.toList X _ _) 
   dsimp at *
   subst h₁
   simp only [heq_iff_eq, eq_self_iff_true, true_and_iff]
-  simp only [Fin.castIso_refl] at h₂ 
+  simp only [Fin.castIso_refl] at h₂
   exact funext h₂
 #align composition_series.to_list_injective CompositionSeries.toList_injective
 -/
@@ -288,7 +288,7 @@ theorem chain'_toList (s : CompositionSeries X) : List.Chain' IsMaximal s.toList
     (by
       intro i hi
       simp only [to_list, List.nthLe_ofFn']
-      rw [length_to_list] at hi 
+      rw [length_to_list] at hi
       exact s.step ⟨i, hi⟩)
 #align composition_series.chain'_to_list CompositionSeries.chain'_toList
 -/

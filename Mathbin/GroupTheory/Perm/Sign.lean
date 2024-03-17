@@ -133,18 +133,18 @@ theorem perm_mapsTo_inl_iff_mapsTo_inr {m n : Type _} [Finite m] [Finite n] (σ 
   constructor <;>
     ( intro h
       classical
-      rw [← perm_inv_maps_to_iff_maps_to] at h 
+      rw [← perm_inv_maps_to_iff_maps_to] at h
       intro x
       cases' hx : σ x with l r)
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨l, rfl⟩
-    rw [← hx, σ.inv_apply_self] at hy 
+    rw [← hx, σ.inv_apply_self] at hy
     exact absurd hy Sum.inl_ne_inr
   · rintro ⟨a, ha⟩; exact ⟨r, rfl⟩
   · rintro ⟨a, ha⟩; exact ⟨l, rfl⟩
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨r, rfl⟩
-    rw [← hx, σ.inv_apply_self] at hy 
+    rw [← hx, σ.inv_apply_self] at hy
     exact absurd hy Sum.inr_ne_inl
 #align equiv.perm.perm_maps_to_inl_iff_maps_to_inr Equiv.Perm.perm_mapsTo_inl_iff_mapsTo_inr
 -/
@@ -385,10 +385,10 @@ theorem signBijAux_injOn {n : ℕ} {f : Perm (Fin n)} :
     ∀ a b : Σ a : Fin n, Fin n,
       a ∈ finPairsLT n → b ∈ finPairsLT n → signBijAux f a = signBijAux f b → a = b :=
   fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ha hb h => by
-  unfold sign_bij_aux at h 
+  unfold sign_bij_aux at h
   rw [mem_fin_pairs_lt] at *
   have : ¬b₁ < b₂ := hb.le.not_lt
-  split_ifs at h  <;>
+  split_ifs at h <;>
     simp_all only [(Equiv.injective f).eq_iff, eq_self_iff_true, and_self_iff, heq_iff_eq]
 #align equiv.perm.sign_bij_aux_inj Equiv.Perm.signBijAux_injOn
 -/
@@ -451,7 +451,7 @@ theorem signAux_mul {n : ℕ} (f g : Perm (Fin n)) : signAux (f * g) = signAux f
     prod_bij (fun a ha => sign_bij_aux g a) sign_bij_aux_mem _ sign_bij_aux_inj sign_bij_aux_surj
   rintro ⟨a, b⟩ hab
   rw [sign_bij_aux, mul_apply, mul_apply]
-  rw [mem_fin_pairs_lt] at hab 
+  rw [mem_fin_pairs_lt] at hab
   by_cases h : g b < g a
   · rw [dif_pos h]
     simp only [not_le_of_gt hab, mul_one, perm.inv_apply_self, if_false]
@@ -486,7 +486,7 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Fin (n + 
     rcases a₁.zero_le.eq_or_lt with (rfl | H)
     · exact absurd a₂.zero_le ha₁.not_le
     rcases a₂.zero_le.eq_or_lt with (rfl | H')
-    · simp only [and_true_iff, eq_self_iff_true, heq_iff_eq, mem_singleton] at ha₂ 
+    · simp only [and_true_iff, eq_self_iff_true, heq_iff_eq, mem_singleton] at ha₂
       have : 1 < a₁ := lt_of_le_of_ne (Nat.succ_le_of_lt ha₁) (Ne.symm ha₂)
       have h01 : Equiv.swap (0 : Fin (n + 2)) 1 0 = 1 := by simp
       -- TODO : fix properly
@@ -506,8 +506,8 @@ private theorem sign_aux_swap_zero_one {n : ℕ} (hn : 2 ≤ n) :
       -1 :=
   by
   rcases n with (_ | _ | n)
-  · norm_num at hn 
-  · norm_num at hn 
+  · norm_num at hn
+  · norm_num at hn
   · exact sign_aux_swap_zero_one' n
 
 #print Equiv.Perm.signAux_swap /-
@@ -746,7 +746,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
           hg.2 ▸ this _ (hl.2 _ hg.1)
         have : s l.Prod = 1 := by
           rw [← l.prod_hom s, List.eq_replicate_length.2 this, List.prod_replicate, one_pow]
-        rw [hl.1, hg] at this 
+        rw [hl.1, hg] at this
         exact absurd this (by decide)
   MonoidHom.ext fun f => by
     let ⟨l, hl₁, hl₂⟩ := (truncSwapFactors f).out

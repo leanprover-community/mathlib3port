@@ -187,7 +187,7 @@ theorem hom.congr_right {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ�
 theorem iso_w {f g : Arrow T} (e : f ≅ g) : g.Hom = e.inv.left ≫ f.Hom ≫ e.Hom.right :=
   by
   have eq := arrow.hom.congr_right e.inv_hom_id
-  dsimp at eq 
+  dsimp at eq
   erw [w_assoc, Eq, category.comp_id]
 #align category_theory.arrow.iso_w CategoryTheory.Arrow.iso_w
 -/
@@ -364,7 +364,7 @@ def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D
   map a b f :=
     { left := F.map f.left
       right := F.map f.right
-      w' := by have w := f.w; simp only [id_map] at w ; dsimp; simp only [← F.map_comp, w] }
+      w' := by have w := f.w; simp only [id_map] at w; dsimp; simp only [← F.map_comp, w] }
 #align category_theory.functor.map_arrow CategoryTheory.Functor.mapArrow
 -/
 

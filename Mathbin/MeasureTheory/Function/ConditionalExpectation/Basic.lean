@@ -274,7 +274,7 @@ theorem integral_condexp (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] (hf :
     ∫ x, (μ[f|m]) x ∂μ = ∫ x, f x ∂μ :=
   by
   suffices ∫ x in Set.univ, (μ[f|m]) x ∂μ = ∫ x in Set.univ, f x ∂μ by
-    simp_rw [integral_univ] at this ; exact this
+    simp_rw [integral_univ] at this; exact this
   exact set_integral_condexp hm hf (@MeasurableSet.univ _ m)
 #align measure_theory.integral_condexp MeasureTheory.integral_condexp
 -/
@@ -304,7 +304,7 @@ theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') :
   by_cases hμ_finite : is_finite_measure μ
   swap
   · have h : ¬sigma_finite (μ.trim bot_le) := by rwa [sigma_finite_trim_bot_iff]
-    rw [not_is_finite_measure_iff] at hμ_finite 
+    rw [not_is_finite_measure_iff] at hμ_finite
     rw [condexp_of_not_sigma_finite bot_le h]
     simp only [hμ_finite, ENNReal.top_toReal, inv_zero, zero_smul]
     rfl
@@ -315,7 +315,7 @@ theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') :
   obtain ⟨c, h_eq⟩ := strongly_measurable_bot_iff.mp h_meas
   rw [h_eq]
   have h_integral : ∫ x, (μ[f|⊥]) x ∂μ = ∫ x, f x ∂μ := integral_condexp bot_le hf
-  simp_rw [h_eq, integral_const] at h_integral 
+  simp_rw [h_eq, integral_const] at h_integral
   rw [← h_integral, ← smul_assoc, smul_eq_mul, inv_mul_cancel, one_smul]
   rw [Ne.def, ENNReal.toReal_eq_zero_iff, Auto.not_or_eq, measure.measure_univ_eq_zero, ← ae_eq_bot,
     ← Ne.def, ← ne_bot_iff]
@@ -331,7 +331,7 @@ theorem condexp_bot_ae_eq (f : α → F') :
   · refine' eventually_of_forall fun x => _
     rw [condexp_bot' f]
     exact h
-  · rw [ne_bot_iff, Classical.not_not, ae_eq_bot] at h 
+  · rw [ne_bot_iff, Classical.not_not, ae_eq_bot] at h
     simp only [h, ae_zero]
 #align measure_theory.condexp_bot_ae_eq MeasureTheory.condexp_bot_ae_eq
 -/

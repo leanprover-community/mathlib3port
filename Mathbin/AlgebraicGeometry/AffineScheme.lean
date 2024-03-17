@@ -359,11 +359,11 @@ theorem IsAffineOpen.SpecΓIdentity_hom_app_fromSpec {X : Scheme} {U : Opens X.c
   by
   haveI : is_affine _ := hU
   have e₁ := Spec_Γ_identity.hom.naturality (X.presheaf.map (eq_to_hom U.open_embedding_obj_top).op)
-  rw [← is_iso.comp_inv_eq] at e₁ 
+  rw [← is_iso.comp_inv_eq] at e₁
   have e₂ := Γ_Spec.adjunction_unit_app_app_top (X.restrict U.open_embedding)
-  erw [← e₂] at e₁ 
+  erw [← e₂] at e₁
   simp only [functor.id_map, Quiver.Hom.unop_op, functor.comp_map, ← functor.map_inv, ← op_inv,
-    LocallyRingedSpace.Γ_map, category.assoc, functor.right_op_map, inv_eq_to_hom] at e₁ 
+    LocallyRingedSpace.Γ_map, category.assoc, functor.right_op_map, inv_eq_to_hom] at e₁
   delta is_affine_open.from_Spec Scheme.iso_Spec
   rw [Scheme.comp_val_c_app, Scheme.comp_val_c_app, ← e₁]
   simp_rw [category.assoc]
@@ -797,10 +797,10 @@ theorem IsAffineOpen.basicOpen_union_eq_self_iff {X : Scheme} {U : Opens X.carri
       hU.from_Spec.1.base ⁻¹' U.1
   · refine' ⟨fun h => by rw [h], _⟩
     intro h
-    apply_fun Set.image hU.from_Spec.1.base at h 
+    apply_fun Set.image hU.from_Spec.1.base at h
     rw [Set.image_preimage_eq_inter_range, Set.image_preimage_eq_inter_range, hU.from_Spec_range] at
-      h 
-    simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right] at h 
+      h
+    simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right] at h
     ext1
     refine' Set.Subset.antisymm _ h
     simp only [Set.iUnion_subset_iff, SetCoe.forall, opens.coe_supr]
@@ -854,7 +854,7 @@ theorem of_affine_open_cover {X : Scheme} (V : X.affineOpens) (S : Set X.affineO
     by
     intro x
     have : ↑x ∈ (Set.univ : Set X.carrier) := trivial
-    rw [← hS] at this 
+    rw [← hS] at this
     obtain ⟨W, hW⟩ := set.mem_Union.mp this
     obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
     refine' ⟨f, hf, _⟩

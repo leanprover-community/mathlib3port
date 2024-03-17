@@ -311,9 +311,9 @@ theorem of.injective_of_degree_ne_zero [IsDomain R] (hf : f.degree ≠ 0) :
   by
   rw [injective_iff_map_eq_zero]
   intro p hp
-  rw [AdjoinRoot.of, RingHom.comp_apply, AdjoinRoot.mk_eq_zero] at hp 
+  rw [AdjoinRoot.of, RingHom.comp_apply, AdjoinRoot.mk_eq_zero] at hp
   by_cases h : f = 0
-  · exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp ))
+  · exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp))
   · contrapose! hf with h_contra
     rw [← degree_C h_contra]
     apply le_antisymm (degree_le_of_dvd hp (by rwa [Ne.def, C_eq_zero])) _

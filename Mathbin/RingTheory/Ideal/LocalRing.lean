@@ -104,7 +104,7 @@ variable [LocalRing R]
 theorem isUnit_or_isUnit_of_isUnit_add {a b : R} (h : IsUnit (a + b)) : IsUnit a ∨ IsUnit b :=
   by
   rcases h with ⟨u, hu⟩
-  rw [← Units.inv_mul_eq_one, mul_add] at hu 
+  rw [← Units.inv_mul_eq_one, mul_add] at hu
   apply Or.imp _ _ (is_unit_or_is_unit_of_add_one hu) <;> exact isUnit_of_mul_isUnit_right
 #align local_ring.is_unit_or_is_unit_of_is_unit_add LocalRing.isUnit_or_isUnit_of_isUnit_add
 -/
@@ -134,7 +134,7 @@ instance maximalIdeal.isMaximal : (maximalIdeal R).IsMaximal :=
   constructor
   · intro h; apply h; exact isUnit_one
   · intro I x hI hx H
-    erw [Classical.not_not] at hx 
+    erw [Classical.not_not] at hx
     rcases hx with ⟨u, rfl⟩
     simpa using I.mul_mem_left (↑u⁻¹) H
 #align local_ring.maximal_ideal.is_maximal LocalRing.maximalIdeal.isMaximal
@@ -384,7 +384,7 @@ theorem of_surjective [CommSemiring R] [LocalRing R] [CommSemiring S] [Nontrivia
       intro a b hab
       obtain ⟨a, rfl⟩ := hf a
       obtain ⟨b, rfl⟩ := hf b
-      rw [← map_add] at hab 
+      rw [← map_add] at hab
       exact
         (is_unit_or_is_unit_of_is_unit_add <| IsLocalRingHom.map_nonunit _ hab).imp f.is_unit_map
           f.is_unit_map)
@@ -609,7 +609,7 @@ theorem isLocalRingHom_residue : IsLocalRingHom (LocalRing.residue R) :=
   constructor
   intro a ha
   by_contra
-  erw [ideal.quotient.eq_zero_iff_mem.mpr ((LocalRing.mem_maximalIdeal _).mpr h)] at ha 
+  erw [ideal.quotient.eq_zero_iff_mem.mpr ((LocalRing.mem_maximalIdeal _).mpr h)] at ha
   exact ha.ne_zero rfl
 #align local_ring.is_local_ring_hom_residue LocalRing.isLocalRingHom_residue
 -/

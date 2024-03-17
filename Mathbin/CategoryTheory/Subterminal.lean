@@ -110,7 +110,7 @@ theorem isSubterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fu
 The converse of `is_subterminal_of_is_iso_diag`.
 -/
 theorem IsSubterminal.isIso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
-  ⟨⟨Limits.prod.fst, ⟨by simp, by rw [is_subterminal.def] at hA ; tidy⟩⟩⟩
+  ⟨⟨Limits.prod.fst, ⟨by simp, by rw [is_subterminal.def] at hA; tidy⟩⟩⟩
 #align category_theory.is_subterminal.is_iso_diag CategoryTheory.IsSubterminal.isIso_diag
 -/
 

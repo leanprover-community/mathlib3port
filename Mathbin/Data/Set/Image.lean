@@ -309,23 +309,23 @@ theorem Function.Injective.mem_set_image {f : α → β} (hf : Injective f) {s :
 #align function.injective.mem_set_image Function.Injective.mem_set_image
 -/
 
-#print Set.ball_image_iff /-
-theorem ball_image_iff {f : α → β} {s : Set α} {p : β → Prop} :
+#print Set.forall_mem_image /-
+theorem forall_mem_image {f : α → β} {s : Set α} {p : β → Prop} :
     (∀ y ∈ f '' s, p y) ↔ ∀ x ∈ s, p (f x) := by simp
-#align set.ball_image_iff Set.ball_image_iff
+#align set.ball_image_iff Set.forall_mem_image
 -/
 
 #print Set.ball_image_of_ball /-
 theorem ball_image_of_ball {f : α → β} {s : Set α} {p : β → Prop} (h : ∀ x ∈ s, p (f x)) :
     ∀ y ∈ f '' s, p y :=
-  ball_image_iff.2 h
+  forall_mem_image.2 h
 #align set.ball_image_of_ball Set.ball_image_of_ball
 -/
 
-#print Set.bex_image_iff /-
-theorem bex_image_iff {f : α → β} {s : Set α} {p : β → Prop} :
+#print Set.exists_mem_image /-
+theorem exists_mem_image {f : α → β} {s : Set α} {p : β → Prop} :
     (∃ y ∈ f '' s, p y) ↔ ∃ x ∈ s, p (f x) := by simp
-#align set.bex_image_iff Set.bex_image_iff
+#align set.bex_image_iff Set.exists_mem_image
 -/
 
 #print Set.mem_image_elim /-
@@ -623,7 +623,7 @@ instance (f : α → β) (s : Set α) [Nonempty s] : Nonempty (f '' s) :=
 /-- image and preimage are a Galois connection -/
 @[simp]
 theorem image_subset_iff {s : Set α} {t : Set β} {f : α → β} : f '' s ⊆ t ↔ s ⊆ f ⁻¹' t :=
-  ball_image_iff
+  forall_mem_image
 #align set.image_subset_iff Set.image_subset_iff
 -/
 
@@ -863,9 +863,9 @@ theorem mem_range_self (i : ι) : f i ∈ range f :=
 #align set.mem_range_self Set.mem_range_self
 -/
 
-#print Set.forall_range_iff /-
-theorem forall_range_iff {p : α → Prop} : (∀ a ∈ range f, p a) ↔ ∀ i, p (f i) := by simp
-#align set.forall_range_iff Set.forall_range_iff
+#print Set.forall_mem_range /-
+theorem forall_mem_range {p : α → Prop} : (∀ a ∈ range f, p a) ↔ ∀ i, p (f i) := by simp
+#align set.forall_range_iff Set.forall_mem_range
 -/
 
 #print Set.forall_subtype_range_iff /-
@@ -937,14 +937,14 @@ theorem Nonempty.preimage' {s : Set β} (hs : s.Nonempty) {f : α → β} (hf : 
 
 #print Set.range_comp /-
 theorem range_comp (g : α → β) (f : ι → α) : range (g ∘ f) = g '' range f :=
-  Subset.antisymm (forall_range_iff.mpr fun i => mem_image_of_mem g (mem_range_self _))
-    (ball_image_iff.mpr <| forall_range_iff.mpr mem_range_self)
+  Subset.antisymm (forall_mem_range.mpr fun i => mem_image_of_mem g (mem_range_self _))
+    (forall_mem_image.mpr <| forall_mem_range.mpr mem_range_self)
 #align set.range_comp Set.range_comp
 -/
 
 #print Set.range_subset_iff /-
 theorem range_subset_iff : range f ⊆ s ↔ ∀ y, f y ∈ s :=
-  forall_range_iff
+  forall_mem_range
 #align set.range_subset_iff Set.range_subset_iff
 -/
 
@@ -1419,7 +1419,7 @@ theorem range_unique [h : Unique ι] : range f = {f default} :=
   rw [mem_range]
   constructor
   · rintro ⟨i, hi⟩
-    rw [h.uniq i] at hi 
+    rw [h.uniq i] at hi
     exact hi ▸ mem_singleton _
   · exact fun h => ⟨default, h.symm⟩
 #align set.range_unique Set.range_unique
@@ -1568,7 +1568,7 @@ theorem subsingleton_of_preimage {α β : Type _} {f : α → β} (hf : Function
 
 #print Set.subsingleton_range /-
 theorem subsingleton_range {α : Sort _} [Subsingleton α] (f : α → β) : (range f).Subsingleton :=
-  forall_range_iff.2 fun x => forall_range_iff.2 fun y => congr_arg f (Subsingleton.elim x y)
+  forall_mem_range.2 fun x => forall_mem_range.2 fun y => congr_arg f (Subsingleton.elim x y)
 #align set.subsingleton_range Set.subsingleton_range
 -/
 
@@ -1701,7 +1701,7 @@ theorem Injective.compl_image_eq (hf : Injective f) (s : Set α) : (f '' s)ᶜ =
   ext y
   rcases em (y ∈ range f) with (⟨x, rfl⟩ | hx)
   · simp [hf.eq_iff]
-  · rw [mem_range, not_exists] at hx 
+  · rw [mem_range, not_exists] at hx
     simp [hx]
 #align function.injective.compl_image_eq Function.Injective.compl_image_eq
 -/
@@ -1957,7 +1957,7 @@ theorem preimage_surjective : Surjective (preimage f) ↔ Injective f :=
   by
   refine' ⟨fun h x x' hx => _, injective.preimage_surjective⟩
   cases' h {x} with s hs; have := mem_singleton x
-  rwa [← hs, mem_preimage, hx, ← mem_preimage, hs, mem_singleton_iff, eq_comm] at this 
+  rwa [← hs, mem_preimage, hx, ← mem_preimage, hs, mem_singleton_iff, eq_comm] at this
 #align set.preimage_surjective Set.preimage_surjective
 -/
 
@@ -1967,7 +1967,7 @@ theorem image_surjective : Surjective (image f) ↔ Surjective f :=
   by
   refine' ⟨fun h y => _, surjective.image_surjective⟩
   cases' h {y} with s hs
-  have := mem_singleton y; rw [← hs] at this ; rcases this with ⟨x, h1x, h2x⟩
+  have := mem_singleton y; rw [← hs] at this; rcases this with ⟨x, h1x, h2x⟩
   exact ⟨x, h2x⟩
 #align set.image_surjective Set.image_surjective
 -/
@@ -2069,7 +2069,7 @@ theorem preimage_eq_empty_iff {s : Set β} : f ⁻¹' s = ∅ ↔ Disjoint s (ra
     simp only [eq_empty_iff_forall_not_mem, disjoint_iff_inter_eq_empty, not_exists, mem_inter_iff,
       not_and, mem_range, mem_preimage] at h ⊢
     intro y hy x hx
-    rw [← hx] at hy 
+    rw [← hx] at hy
     exact h x hy, preimage_eq_empty⟩
 #align set.preimage_eq_empty_iff Set.preimage_eq_empty_iff
 -/

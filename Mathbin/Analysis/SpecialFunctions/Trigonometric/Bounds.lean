@@ -50,7 +50,7 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x :=
   · exact (sin_le_one x).trans_lt h'
   have hx : |x| = x := abs_of_nonneg h.le
   have := le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
-  rw [sub_le_iff_le_add', hx] at this 
+  rw [sub_le_iff_le_add', hx] at this
   apply this.trans_lt
   rw [sub_add, sub_lt_self_iff, sub_pos, div_eq_mul_inv (x ^ 3)]
   refine' mul_lt_mul' _ (by norm_num) (by norm_num) (pow_pos h 3)
@@ -69,7 +69,7 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
   by
   have hx : |x| = x := abs_of_nonneg h.le
   have := neg_le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
-  rw [le_sub_iff_add_le, hx] at this 
+  rw [le_sub_iff_add_le, hx] at this
   refine' lt_of_lt_of_le _ this
   have : x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ := by norm_num [div_eq_mul_inv, ← mul_sub]
   rw [add_comm, sub_add, sub_neg_eq_add, sub_lt_sub_iff_left, ← lt_sub_iff_add_lt', this]
@@ -104,7 +104,7 @@ theorem lt_tan {x : ℝ} (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
   have sin_pos : ∀ {y : ℝ}, y ∈ interior U → 0 < sin y :=
     by
     intro y hy
-    rw [intU] at hy 
+    rw [intU] at hy
     exact sin_pos_of_mem_Ioo (Ioo_subset_Ioo_right (div_le_self pi_pos.le one_le_two) hy)
   have tan_cts_U : ContinuousOn tan U :=
     by

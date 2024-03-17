@@ -149,7 +149,7 @@ def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
   right := G.right
   w' := by
     have := G.w
-    apply_fun fun e => e.app (Opposite.op <| SimplexCategory.mk 0) at this 
+    apply_fun fun e => e.app (Opposite.op <| SimplexCategory.mk 0) at this
     simpa using this
 #align category_theory.simplicial_object.equivalence_right_to_left CategoryTheory.SimplicialObject.equivalenceRightToLeft
 -/
@@ -202,7 +202,7 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
       rw [← op_id]
       congr 1
       ext ⟨a, ha⟩
-      change a < 1 at ha 
+      change a < 1 at ha
       change 0 = a
       linarith
     · rfl
@@ -215,8 +215,8 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
       rfl
     · erw [wide_pullback.lift_base]
       have := A.w
-      apply_fun fun e => e.app x at this 
-      rw [nat_trans.comp_app] at this 
+      apply_fun fun e => e.app x at this
+      rw [nat_trans.comp_app] at this
       erw [this]
       rfl
     · rfl
@@ -343,7 +343,7 @@ def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
   right := (WidePushout.ι (fun i => F.Hom) 0 ≫ G.right.app (SimplexCategory.mk 0) : _)
   w' := by
     have := G.w
-    apply_fun fun e => e.app (SimplexCategory.mk 0) at this 
+    apply_fun fun e => e.app (SimplexCategory.mk 0) at this
     simpa only [CategoryTheory.Functor.id_map, augmented.to_arrow_obj_hom,
       wide_pushout.arrow_ι_assoc fun i => F.hom]
 #align category_theory.cosimplicial_object.equivalence_left_to_right CategoryTheory.CosimplicialObject.equivalenceLeftToRight
@@ -365,7 +365,7 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
             rw [← arrow.w_assoc G]
             have t := X.hom.naturality (x.const j)
             dsimp at t ⊢
-            simp only [category.id_comp] at t 
+            simp only [category.id_comp] at t
             rw [← t])
       naturality' := by
         intro x y f
@@ -401,8 +401,8 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
       rfl
     · erw [wide_pushout.head_desc]
       have := A.w
-      apply_fun fun e => e.app x at this 
-      rw [nat_trans.comp_app] at this 
+      apply_fun fun e => e.app x at this
+      rw [nat_trans.comp_app] at this
       erw [this]
       rfl
   right_inv := by
@@ -415,7 +415,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
       congr 1
       convert X.right.map_id _
       ext ⟨a, ha⟩
-      change a < 1 at ha 
+      change a < 1 at ha
       change 0 = a
       linarith
 #align category_theory.cosimplicial_object.cech_conerve_equiv CategoryTheory.CosimplicialObject.cechConerveEquiv

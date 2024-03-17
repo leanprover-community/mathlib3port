@@ -513,7 +513,7 @@ theorem induction_on' {P : MvPolynomial σ R → Prop} (p : MvPolynomial σ R)
     (h1 : ∀ (u : σ →₀ ℕ) (a : R), P (monomial u a))
     (h2 : ∀ p q : MvPolynomial σ R, P p → P q → P (p + q)) : P p :=
   Finsupp.induction p
-    (suffices P (monomial 0 0) by rwa [monomial_zero] at this 
+    (suffices P (monomial 0 0) by rwa [monomial_zero] at this
     show P (monomial 0 0) from h1 0 0)
     fun a b f ha hb hPf => h2 _ _ (h1 _ _) hPf
 #align mv_polynomial.induction_on' MvPolynomial.induction_on'
@@ -842,7 +842,7 @@ theorem coeff_X_pow [DecidableEq σ] (i : σ) (m) (k : ℕ) :
   by
   have := coeff_monomial m (Finsupp.single i k) (1 : R)
   rwa [@monomial_eq _ _ (1 : R) (Finsupp.single i k) _, C_1, one_mul, Finsupp.prod_single_index] at
-    this 
+    this
   exact pow_zero _
 #align mv_polynomial.coeff_X_pow MvPolynomial.coeff_X_pow
 -/
@@ -939,7 +939,7 @@ theorem support_sdiff_support_subset_support_add [DecidableEq σ] (p q : MvPolyn
     p.support \ q.support ⊆ (p + q).support :=
   by
   intro m hm
-  simp only [Classical.not_not, mem_support_iff, Finset.mem_sdiff, Ne.def] at hm 
+  simp only [Classical.not_not, mem_support_iff, Finset.mem_sdiff, Ne.def] at hm
   simp [hm.2, hm.1]
 #align mv_polynomial.support_sdiff_support_subset_support_add MvPolynomial.support_sdiff_support_subset_support_add
 -/
@@ -968,10 +968,10 @@ theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ
     congr with t
     rw [tsub_add_cancel_of_le h]
   · rw [← not_mem_support_iff]; intro hm; apply h
-    have H := support_mul _ _ hm; simp only [Finset.mem_biUnion] at H 
+    have H := support_mul _ _ hm; simp only [Finset.mem_biUnion] at H
     rcases H with ⟨j, hj, i', hi', H⟩
-    rw [support_monomial, if_neg hr, Finset.mem_singleton] at hi' ; subst i'
-    rw [Finset.mem_singleton] at H ; subst m
+    rw [support_monomial, if_neg hr, Finset.mem_singleton] at hi'; subst i'
+    rw [Finset.mem_singleton] at H; subst m
     exact le_add_left le_rfl
 #align mv_polynomial.coeff_mul_monomial' MvPolynomial.coeff_mul_monomial'
 -/
@@ -1047,7 +1047,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : C r ∣ φ ↔ �
     simp only [coeff_C_mul, coeff_sum, coeff_monomial, Finset.sum_ite_eq', c']
     split_ifs with hi hi
     · rw [hc]
-    · rw [not_mem_support_iff] at hi ; rwa [MulZeroClass.mul_zero]
+    · rw [not_mem_support_iff] at hi; rwa [MulZeroClass.mul_zero]
 #align mv_polynomial.C_dvd_iff_dvd_coeff MvPolynomial.C_dvd_iff_dvd_coeff
 -/
 
@@ -1360,7 +1360,7 @@ theorem eval₂_congr (g₁ g₂ : σ → S₁)
   apply Finset.prod_congr rfl
   intro i hi; dsimp; congr 1
   apply h hi
-  rwa [Finsupp.mem_support_iff] at hc 
+  rwa [Finsupp.mem_support_iff] at hc
 #align mv_polynomial.eval₂_congr MvPolynomial.eval₂_congr
 -/
 
@@ -1548,7 +1548,7 @@ theorem eval₂_eq_eval_map (g : σ → S₁) (p : MvPolynomial σ R) : p.eval�
   by
   unfold map eval; simp only [coe_eval₂_hom]
   have h := eval₂_comp_left (eval₂_hom _ g)
-  dsimp at h 
+  dsimp at h
   rw [h]
   congr
   · ext1 a; simp only [coe_eval₂_hom, RingHom.id_apply, comp_app, eval₂_C, RingHom.coe_comp]
@@ -1696,8 +1696,8 @@ theorem support_map_of_injective (p : MvPolynomial σ R) {f : R →+* S₁} (hf 
   rw [mem_support_iff]
   contrapose! hx
   simp only [Classical.not_not, mem_support_iff]
-  change (map f p).coeff x = 0 at hx 
-  rw [coeff_map, ← f.map_zero] at hx 
+  change (map f p).coeff x = 0 at hx
+  rw [coeff_map, ← f.map_zero] at hx
   exact hf hx
 #align mv_polynomial.support_map_of_injective MvPolynomial.support_map_of_injective
 -/
@@ -2082,12 +2082,12 @@ theorem eval₂_mem {f : R →+* S} {p : MvPolynomial σ R} {s : subS}
     simpa only [coeff_add, coeff_monomial, if_pos rfl, MvPolynomial.not_mem_support_iff.1 ha,
       add_zero] using hs a
   have := hs i
-  rw [coeff_add, coeff_monomial] at this 
-  split_ifs at this  with h h
+  rw [coeff_add, coeff_monomial] at this
+  split_ifs at this with h h
   · subst h
     rw [MvPolynomial.not_mem_support_iff.1 ha, map_zero]
     exact zero_mem _
-  · rwa [zero_add] at this 
+  · rwa [zero_add] at this
 #align mv_polynomial.eval₂_mem MvPolynomial.eval₂_mem
 -/
 

@@ -168,7 +168,7 @@ theorem lift_comp_ι {A : Type _} [Semiring A] [Algebra R A] (g : TensorAlgebra 
 theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : TensorAlgebra R M →ₐ[R] A}
     (w : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g :=
   by
-  rw [← lift_symm_apply, ← lift_symm_apply] at w 
+  rw [← lift_symm_apply, ← lift_symm_apply] at w
   exact (lift R).symm.Injective w
 #align tensor_algebra.hom_ext TensorAlgebra.hom_ext
 -/
@@ -303,7 +303,7 @@ theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x =
   · letI : Module Rᵐᵒᵖ M := Module.compHom _ ((RingHom.id R).fromOpposite mul_comm)
     haveI : IsCentralScalar R M := ⟨fun r m => rfl⟩
     have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := lift_ι_apply _ _
-    rw [h, AlgHom.commutes] at hf0 
+    rw [h, AlgHom.commutes] at hf0
     have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm
   · rintro ⟨rfl, rfl⟩
@@ -328,7 +328,7 @@ theorem ι_range_disjoint_one :
   by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
-  rw [ι_eq_algebra_map_iff x] at hx 
+  rw [ι_eq_algebra_map_iff x] at hx
   rw [hx.2, RingHom.map_zero]
 #align tensor_algebra.ι_range_disjoint_one TensorAlgebra.ι_range_disjoint_one
 -/

@@ -41,7 +41,7 @@ namespace CompHaus
 #print CompHaus.projective_ultrafilter /-
 instance projective_ultrafilter (X : Type _) : Projective (of <| Ultrafilter X)
     where Factors Y Z f g hg := by
-    rw [epi_iff_surjective] at hg 
+    rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
     let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)
     let h : Ultrafilter X → Y := Ultrafilter.extend t

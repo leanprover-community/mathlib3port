@@ -197,8 +197,8 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
 theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x) :
     (Ideal.span s).Homogeneous 𝒜 := by
   rintro i r hr
-  rw [Ideal.span, Finsupp.span_eq_range_total] at hr 
-  rw [LinearMap.mem_range] at hr 
+  rw [Ideal.span, Finsupp.span_eq_range_total] at hr
+  rw [LinearMap.mem_range] at hr
   obtain ⟨s, rfl⟩ := hr
   rw [Finsupp.total_apply, Finsupp.sum, decompose_sum, DFinsupp.finset_sum_apply,
     AddSubmonoidClass.coe_finset_sum]
@@ -217,7 +217,7 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x)
 is the largest homogeneous ideal of `A` contained in `I`.-/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
-    Ideal.homogeneous_span _ _ fun x h => by rw [Subtype.image_preimage_coe] at h ; exact h.2⟩
+    Ideal.homogeneous_span _ _ fun x h => by rw [Subtype.image_preimage_coe] at h; exact h.2⟩
 #align ideal.homogeneous_core Ideal.homogeneousCore
 -/
 
@@ -300,7 +300,7 @@ namespace Ideal.IsHomogeneous
 #print Ideal.IsHomogeneous.bot /-
 theorem bot : Ideal.IsHomogeneous 𝒜 ⊥ := fun i r hr =>
   by
-  simp only [Ideal.mem_bot] at hr 
+  simp only [Ideal.mem_bot] at hr
   rw [hr, decompose_zero, zero_apply]
   apply Ideal.zero_mem
 #align ideal.is_homogeneous.bot Ideal.IsHomogeneous.bot

@@ -697,7 +697,7 @@ theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j
   rw [mk_lt]
   refine' ⟨_, half_pos K0, i, fun j ij => _⟩
   have := add_le_add (H _ ij).2.1 (le_of_lt (abs_lt.1 <| (H _ le_rfl).2.2 _ ij).1)
-  rwa [← sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this 
+  rwa [← sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this
 #align real.le_mk_of_forall_le Real.le_mk_of_forall_le
 -/
 
@@ -1002,7 +1002,7 @@ As `0` is the default value for `real.Sup` of the empty set or sets which are no
 suffices to show that `f i` is nonnegative to show that `0 ≤ ⨆ i, f i`.
 -/
 protected theorem iSup_nonneg {ι : Sort _} {f : ι → ℝ} (hf : ∀ i, 0 ≤ f i) : 0 ≤ ⨆ i, f i :=
-  sSup_nonneg _ <| Set.forall_range_iff.2 hf
+  sSup_nonneg _ <| Set.forall_mem_range.2 hf
 #align real.supr_nonneg Real.iSup_nonneg
 -/
 
@@ -1022,7 +1022,7 @@ protected theorem sSup_le {S : Set ℝ} {a : ℝ} (hS : ∀ x ∈ S, x ≤ a) (h
 #print Real.iSup_le /-
 protected theorem iSup_le {ι : Sort _} {f : ι → ℝ} {a : ℝ} (hS : ∀ i, f i ≤ a) (ha : 0 ≤ a) :
     (⨆ i, f i) ≤ a :=
-  Real.sSup_le (Set.forall_range_iff.2 hS) ha
+  Real.sSup_le (Set.forall_mem_range.2 hS) ha
 #align real.supr_le Real.iSup_le
 -/
 

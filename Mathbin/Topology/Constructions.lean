@@ -669,18 +669,18 @@ theorem continuous_swap : Continuous (Prod.swap : α × β → β × α) :=
 #align continuous_swap continuous_swap
 -/
 
-#print continuous_uncurry_left /-
-theorem continuous_uncurry_left {f : α → β → γ} (a : α) (h : Continuous (uncurry f)) :
+#print Continuous.uncurry_left /-
+theorem Continuous.uncurry_left {f : α → β → γ} (a : α) (h : Continuous (uncurry f)) :
     Continuous (f a) :=
   show Continuous (uncurry f ∘ fun b => (a, b)) from h.comp (by continuity)
-#align continuous_uncurry_left continuous_uncurry_left
+#align continuous_uncurry_left Continuous.uncurry_left
 -/
 
-#print continuous_uncurry_right /-
-theorem continuous_uncurry_right {f : α → β → γ} (b : β) (h : Continuous (uncurry f)) :
+#print Continuous.uncurry_right /-
+theorem Continuous.uncurry_right {f : α → β → γ} (b : β) (h : Continuous (uncurry f)) :
     Continuous fun a => f a b :=
   show Continuous (uncurry f ∘ fun a => (a, b)) from h.comp (by continuity)
-#align continuous_uncurry_right continuous_uncurry_right
+#align continuous_uncurry_right Continuous.uncurry_right
 -/
 
 #print continuous_curry /-
@@ -808,7 +808,7 @@ theorem Filter.Tendsto.prod_mk_nhds {γ} {a : α} {b : β} {f : Filter γ} {ma :
 #print Filter.Eventually.curry_nhds /-
 theorem Filter.Eventually.curry_nhds {p : α × β → Prop} {x : α} {y : β}
     (h : ∀ᶠ x in 𝓝 (x, y), p x) : ∀ᶠ x' in 𝓝 x, ∀ᶠ y' in 𝓝 y, p (x', y') := by
-  rw [nhds_prod_eq] at h ; exact h.curry
+  rw [nhds_prod_eq] at h; exact h.curry
 #align filter.eventually.curry_nhds Filter.Eventually.curry_nhds
 -/
 
@@ -929,9 +929,9 @@ theorem map_fst_nhdsWithin (x : α × β) : map Prod.fst (𝓝[Prod.snd ⁻¹' {
   by
   refine' le_antisymm (continuous_at_fst.mono_left inf_le_left) fun s hs => _
   rcases x with ⟨x, y⟩
-  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs 
+  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs
   rcases hs with ⟨u, hu, v, hv, H⟩
-  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H 
+  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H
   exact mem_of_superset hu fun z hz => H _ hz _ (mem_of_mem_nhds hv) rfl
 #align map_fst_nhds_within map_fst_nhdsWithin
 -/
@@ -957,9 +957,9 @@ theorem map_snd_nhdsWithin (x : α × β) : map Prod.snd (𝓝[Prod.fst ⁻¹' {
   by
   refine' le_antisymm (continuous_at_snd.mono_left inf_le_left) fun s hs => _
   rcases x with ⟨x, y⟩
-  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs 
+  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs
   rcases hs with ⟨u, hu, v, hv, H⟩
-  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H 
+  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H
   exact mem_of_superset hv fun z hz => H _ (mem_of_mem_nhds hu) _ hz rfl
 #align map_snd_nhds_within map_snd_nhdsWithin
 -/
@@ -1000,7 +1000,7 @@ theorem isOpen_prod_iff' {s : Set α} {t : Set β} :
       · rw [← snd_image_prod st.1 t]
         exact isOpenMap_snd _ H
     · intro H
-      simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_false_iff] at H 
+      simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_false_iff] at H
       exact H.1.Prod H.2
 #align is_open_prod_iff' isOpen_prod_iff'
 -/
@@ -1800,7 +1800,7 @@ theorem isClosed_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, 
 
 #print mem_nhds_of_pi_mem_nhds /-
 theorem mem_nhds_of_pi_mem_nhds {I : Set ι} {s : ∀ i, Set (π i)} (a : ∀ i, π i) (hs : I.pi s ∈ 𝓝 a)
-    {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by rw [nhds_pi] at hs ; exact mem_of_pi_mem_pi hs hi
+    {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by rw [nhds_pi] at hs; exact mem_of_pi_mem_pi hs hi
 #align mem_nhds_of_pi_mem_nhds mem_nhds_of_pi_mem_nhds
 -/
 
@@ -1829,7 +1829,7 @@ theorem interior_pi_set {I : Set ι} (hI : I.Finite) {s : ∀ i, Set (π i)} :
 theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] {s : Set (∀ a, π a)} {x : ∀ a, π a}
     (hs : s ∈ 𝓝 x) (y : ∀ a, π a) : ∃ I : Finset ι, I.piecewise x y ∈ s :=
   by
-  simp only [nhds_pi, Filter.mem_pi'] at hs 
+  simp only [nhds_pi, Filter.mem_pi'] at hs
   rcases hs with ⟨I, t, htx, hts⟩
   refine' ⟨I, hts fun i hi => _⟩
   simpa [Finset.mem_coe.1 hi] using mem_of_mem_nhds (htx i)
