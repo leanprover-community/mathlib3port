@@ -1527,7 +1527,7 @@ instance : Inf (UniformSpace α) :=
             refl := le_inf u₁.refl u₂.refl
             symm := u₁.symm.inf u₂.symm
             comp := (lift'_inf_le _ _ _).trans <| inf_le_inf u₁.comp u₂.comp }) <|
-      eq_of_nhds_eq_nhds fun a => by
+      TopologicalSpace.ext_nhds fun a => by
         simpa only [nhds_inf, nhds_eq_comap_uniformity] using comap_inf.symm⟩
 
 instance : CompleteLattice (UniformSpace α) :=
@@ -1725,7 +1725,7 @@ theorem UniformSpace.toTopologicalSpace_top : @UniformSpace.toTopologicalSpace �
 theorem UniformSpace.toTopologicalSpace_iInf {ι : Sort _} {u : ι → UniformSpace α} :
     (iInf u).toTopologicalSpace = ⨅ i, (u i).toTopologicalSpace :=
   by
-  refine' eq_of_nhds_eq_nhds fun a => _
+  refine' TopologicalSpace.ext_nhds fun a => _
   simp only [nhds_iInf, nhds_eq_uniformity, iInf_uniformity]
   exact lift'_infi_of_map_univ (ball_inter _) preimage_univ
 #align to_topological_space_infi UniformSpace.toTopologicalSpace_iInf

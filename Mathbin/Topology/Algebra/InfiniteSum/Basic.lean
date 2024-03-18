@@ -487,10 +487,12 @@ theorem Summable.compl_add {s : Set β} (hs : Summable (f ∘ coe : sᶜ → α)
 #align summable.compl_add Summable.compl_add
 -/
 
+#print Summable.even_add_odd /-
 theorem Summable.even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k))
     (ho : Summable fun k => f (2 * k + 1)) : Summable f :=
   (he.HasSum.even_add_odd ho.HasSum).Summable
 #align summable.even_add_odd Summable.even_add_odd
+-/
 
 #print HasSum.sigma /-
 theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α}
@@ -1279,36 +1281,37 @@ theorem HasSum.int_rec {b : α} {f g : ℕ → α} (hf : HasSum f a) (hg : HasSu
 #align has_sum.int_rec HasSum.int_rec
 -/
 
-#print HasSum.nonneg_add_neg /-
-theorem HasSum.nonneg_add_neg {b : α} {f : ℤ → α} (hnonneg : HasSum (fun n : ℕ => f n) a)
+#print HasSum.of_nat_of_neg_add_one /-
+theorem HasSum.of_nat_of_neg_add_one {b : α} {f : ℤ → α} (hnonneg : HasSum (fun n : ℕ => f n) a)
     (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) : HasSum f (a + b) :=
   by
   simp_rw [← Int.negSucc_coe] at hneg
   convert hnonneg.int_rec hneg using 1
   ext (i | j) <;> rfl
-#align has_sum.nonneg_add_neg HasSum.nonneg_add_neg
+#align has_sum.nonneg_add_neg HasSum.of_nat_of_neg_add_one
 -/
 
-#print HasSum.pos_add_zero_add_neg /-
-theorem HasSum.pos_add_zero_add_neg {b : α} {f : ℤ → α} (hpos : HasSum (fun n : ℕ => f (n + 1)) a)
-    (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) : HasSum f (a + f 0 + b) :=
+#print HasSum.of_add_one_of_neg_add_one /-
+theorem HasSum.of_add_one_of_neg_add_one {b : α} {f : ℤ → α}
+    (hpos : HasSum (fun n : ℕ => f (n + 1)) a) (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) :
+    HasSum f (a + f 0 + b) :=
   haveI : ∀ g : ℕ → α, HasSum (fun k => g (k + 1)) a → HasSum g (a + g 0) := by intro g hg;
     simpa using (hasSum_nat_add_iff _).mp hg
-  (this (fun n => f n) hpos).nonneg_add_neg hneg
-#align has_sum.pos_add_zero_add_neg HasSum.pos_add_zero_add_neg
+  (this (fun n => f n) hpos).of_nat_of_neg_add_one hneg
+#align has_sum.pos_add_zero_add_neg HasSum.of_add_one_of_neg_add_one
 -/
 
-#print summable_int_of_summable_nat /-
-theorem summable_int_of_summable_nat {f : ℤ → α} (hp : Summable fun n : ℕ => f n)
+#print Summable.of_nat_of_neg /-
+theorem Summable.of_nat_of_neg {f : ℤ → α} (hp : Summable fun n : ℕ => f n)
     (hn : Summable fun n : ℕ => f (-n)) : Summable f :=
-  (HasSum.nonneg_add_neg hp.HasSum <| Summable.hasSum <| (summable_nat_add_iff 1).mpr hn).Summable
-#align summable_int_of_summable_nat summable_int_of_summable_nat
+  (HasSum.of_nat_of_neg_add_one hp.HasSum <|
+      Summable.hasSum <| (summable_nat_add_iff 1).mpr hn).Summable
+#align summable_int_of_summable_nat Summable.of_nat_of_neg
 -/
 
-#print HasSum.sum_nat_of_sum_int /-
-theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalSpace α]
-    [ContinuousAdd α] {a : α} {f : ℤ → α} (hf : HasSum f a) :
-    HasSum (fun n : ℕ => f n + f (-n)) (a + f 0) :=
+#print HasSum.nat_add_neg /-
+theorem HasSum.nat_add_neg {α : Type _} [AddCommMonoid α] [TopologicalSpace α] [ContinuousAdd α]
+    {a : α} {f : ℤ → α} (hf : HasSum f a) : HasSum (fun n : ℕ => f n + f (-n)) (a + f 0) :=
   by
   apply (hf.add (hasSum_ite_eq (0 : ℤ) (f 0))).hasSum_of_sum_eq fun u => _
   refine' ⟨u.image Int.natAbs, fun v' hv' => _⟩
@@ -1353,7 +1356,7 @@ theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalS
     _ = ∑ b in v', f b + ∑ b in v', f (-b) := by
       simp only [sum_image, Nat.cast_inj, imp_self, imp_true_iff, neg_inj]
     _ = ∑ b in v', (f b + f (-b)) := sum_add_distrib.symm
-#align has_sum.sum_nat_of_sum_int HasSum.sum_nat_of_sum_int
+#align has_sum.sum_nat_of_sum_int HasSum.nat_add_neg
 -/
 
 end Nat

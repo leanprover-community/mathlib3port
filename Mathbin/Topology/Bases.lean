@@ -562,8 +562,8 @@ theorem isTopologicalBasis_pi {ι : Type _} {X : ι → Type _} [∀ i, Topologi
 #align is_topological_basis_pi isTopologicalBasis_pi
 -/
 
-#print isTopologicalBasis_iInf /-
-theorem isTopologicalBasis_iInf {β : Type _} {ι : Type _} {X : ι → Type _}
+#print IsTopologicalBasis.iInf_induced /-
+theorem IsTopologicalBasis.iInf_induced {β : Type _} {ι : Type _} {X : ι → Type _}
     [t : ∀ i, TopologicalSpace (X i)] {T : ∀ i, Set (Set (X i))}
     (cond : ∀ i, IsTopologicalBasis (T i)) (f : ∀ i, β → X i) :
     @IsTopologicalBasis β (⨅ i, induced (f i) (t i))
@@ -592,7 +592,7 @@ theorem isTopologicalBasis_iInf {β : Type _} {ι : Type _} {X : ι → Type _}
     ext1
     rw [Set.preimage_iInter]
     rfl
-#align is_topological_basis_infi isTopologicalBasis_iInf
+#align is_topological_basis_infi IsTopologicalBasis.iInf_induced
 -/
 
 #print isTopologicalBasis_singletons /-

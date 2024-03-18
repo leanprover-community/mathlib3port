@@ -64,7 +64,7 @@ theorem exists_summable_bound_exp_mul_sq {R : ℝ} (hR : 0 < R) :
   by
   let y := rexp (-π * R)
   have h : y < 1 := exp_lt_one_iff.mpr (mul_neg_of_neg_of_pos (neg_lt_zero.mpr pi_pos) hR)
-  refine' ⟨fun n => y ^ n.natAbs, summable_int_of_summable_nat _ _, fun τ hτ n => _⟩; pick_goal 3
+  refine' ⟨fun n => y ^ n.natAbs, Summable.of_nat_of_neg _ _, fun τ hτ n => _⟩; pick_goal 3
   · refine' (norm_exp_mul_sq_le (hR.trans_le hτ) n).trans _
     refine' pow_le_pow_left (exp_pos _).le (real.exp_le_exp.mpr _) _
     rwa [mul_le_mul_left_of_neg (neg_lt_zero.mpr pi_pos)]
@@ -136,7 +136,7 @@ theorem jacobiTheta_S_smul (τ : ℍ) :
 theorem hasSum_nat_jacobiTheta {z : ℂ} (hz : 0 < im z) :
     HasSum (fun n : ℕ => cexp (π * I * (n + 1) ^ 2 * z)) ((jacobiTheta z - 1) / 2) :=
   by
-  have := (summable_exp_mul_sq hz).HasSum.sum_nat_of_sum_int
+  have := (summable_exp_mul_sq hz).HasSum.nat_add_neg
   rw [← @hasSum_nat_add_iff' ℂ _ _ _ _ 1] at this
   simp_rw [Finset.sum_range_one, Int.cast_neg, Int.cast_ofNat, Nat.cast_zero, neg_zero,
     Int.cast_zero, sq (0 : ℂ), MulZeroClass.mul_zero, MulZeroClass.zero_mul, neg_sq, ← mul_two,

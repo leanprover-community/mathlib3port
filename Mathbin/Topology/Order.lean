@@ -387,12 +387,12 @@ theorem le_of_nhds_le_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds �
 #align le_of_nhds_le_nhds le_of_nhds_le_nhds
 -/
 
-#print eq_of_nhds_eq_nhds /-
-theorem eq_of_nhds_eq_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x = @nhds α t₂ x) :
-    t₁ = t₂ :=
+#print TopologicalSpace.ext_nhds /-
+theorem TopologicalSpace.ext_nhds {t₁ t₂ : TopologicalSpace α}
+    (h : ∀ x, @nhds α t₁ x = @nhds α t₂ x) : t₁ = t₂ :=
   le_antisymm (le_of_nhds_le_nhds fun x => le_of_eq <| h x)
     (le_of_nhds_le_nhds fun x => le_of_eq <| (h x).symm)
-#align eq_of_nhds_eq_nhds eq_of_nhds_eq_nhds
+#align eq_of_nhds_eq_nhds TopologicalSpace.ext_nhds
 -/
 
 #print eq_bot_of_singletons_open /-
@@ -1126,7 +1126,7 @@ theorem nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) :
 theorem induced_iff_nhds_eq [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : β → α) :
     tβ = tα.induced f ↔ ∀ b, 𝓝 b = comap f (𝓝 <| f b) :=
   ⟨fun h a => h.symm ▸ nhds_induced f a, fun h =>
-    eq_of_nhds_eq_nhds fun x => by rw [h, nhds_induced]⟩
+    TopologicalSpace.ext_nhds fun x => by rw [h, nhds_induced]⟩
 #align induced_iff_nhds_eq induced_iff_nhds_eq
 -/
 

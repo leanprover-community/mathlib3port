@@ -258,7 +258,7 @@ theorem Real.summable_one_div_int_pow {p : ℕ} : (Summable fun n : ℤ => 1 / (
   by
   refine'
     ⟨fun h => real.summable_one_div_nat_pow.mp (h.comp_injective Nat.cast_injective), fun h =>
-      summable_int_of_summable_nat (real.summable_one_div_nat_pow.mpr h)
+      Summable.of_nat_of_neg (real.summable_one_div_nat_pow.mpr h)
         (((real.summable_one_div_nat_pow.mpr h).hMul_left <| 1 / (-1) ^ p).congr fun n => _)⟩
   conv_rhs => rw [Int.cast_neg, neg_eq_neg_one_mul, mul_pow, ← div_div]
   conv_lhs => rw [mul_div, mul_one]
@@ -270,7 +270,7 @@ theorem Real.summable_one_div_int_pow {p : ℕ} : (Summable fun n : ℤ => 1 / (
 theorem Real.summable_abs_int_rpow {b : ℝ} (hb : 1 < b) : Summable fun n : ℤ => |(n : ℝ)| ^ (-b) :=
   by
   refine'
-    summable_int_of_summable_nat (_ : Summable fun n : ℕ => |(n : ℝ)| ^ _)
+    Summable.of_nat_of_neg (_ : Summable fun n : ℕ => |(n : ℝ)| ^ _)
       (_ : Summable fun n : ℕ => |((-n : ℤ) : ℝ)| ^ _)
   on_goal 2 => simp_rw [Int.cast_neg, Int.cast_ofNat, abs_neg]
   all_goals

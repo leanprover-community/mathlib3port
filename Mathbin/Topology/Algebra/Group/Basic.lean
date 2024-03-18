@@ -1058,7 +1058,7 @@ theorem continuous_of_continuousAt_one {M hom : Type _} [MulOneClass M] [Topolog
 theorem TopologicalGroup.ext {G : Type _} [Group G] {t t' : TopologicalSpace G}
     (tg : @TopologicalGroup G t _) (tg' : @TopologicalGroup G t' _)
     (h : @nhds G t 1 = @nhds G t' 1) : t = t' :=
-  eq_of_nhds_eq_nhds fun x => by
+  TopologicalSpace.ext_nhds fun x => by
     rw [← @nhds_translation_mul_inv G t _ _ x, ← @nhds_translation_mul_inv G t' _ _ x, ← h]
 #align topological_group.ext TopologicalGroup.ext
 #align topological_add_group.ext TopologicalAddGroup.ext

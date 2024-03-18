@@ -1214,7 +1214,7 @@ theorem induced_orderTopology' {α : Type u} {β : Type v} [Preorder α] [ta : T
     @OrderTopology _ (induced f ta) _ :=
   by
   letI := induced f ta
-  refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
+  refine' ⟨TopologicalSpace.ext_nhds fun a => _⟩
   rw [nhds_induced, nhds_generate_from, nhds_eq_order (f a)]
   apply le_antisymm
   · refine' le_iInf fun s => le_iInf fun hs => le_principal_iff.2 _
@@ -1265,7 +1265,7 @@ instance orderTopology_of_ordConnected {α : Type u} [ta : TopologicalSpace α] 
     [OrderTopology α] {t : Set α} [ht : OrdConnected t] : OrderTopology t :=
   by
   letI := induced (coe : t → α) ta
-  refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
+  refine' ⟨TopologicalSpace.ext_nhds fun a => _⟩
   rw [nhds_induced, nhds_generate_from, nhds_eq_order (a : α)]
   apply le_antisymm
   · refine' le_iInf fun s => le_iInf fun hs => le_principal_iff.2 _
@@ -2271,7 +2271,7 @@ theorem nhds_eq_iInf_abs_sub (a : α) : 𝓝 a = ⨅ r > 0, 𝓟 {b | |a - b| < 
 theorem orderTopology_of_nhds_abs {α : Type _} [TopologicalSpace α] [LinearOrderedAddCommGroup α]
     (h_nhds : ∀ a : α, 𝓝 a = ⨅ r > 0, 𝓟 {b | |a - b| < r}) : OrderTopology α :=
   by
-  refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
+  refine' ⟨TopologicalSpace.ext_nhds fun a => _⟩
   rw [h_nhds]
   letI := Preorder.topology α; letI : OrderTopology α := ⟨rfl⟩
   exact (nhds_eq_iInf_abs_sub a).symm

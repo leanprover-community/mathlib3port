@@ -1003,7 +1003,7 @@ just be added as an instance soon after the definition of `polish_space`.-/
 private theorem second_countable_of_polish [h : PolishSpace α] : SecondCountableTopology α :=
   h.second_countable
 
-attribute [-instance] polishSpace_of_complete_second_countable
+attribute [-instance] PolishSpace.of_separableSpace_completeSpace_metrizable
 
 attribute [local instance] second_countable_of_polish
 

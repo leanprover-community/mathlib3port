@@ -85,13 +85,13 @@ class UpgradedPolishSpace (α : Type _) extends MetricSpace α, SecondCountableT
 #align upgraded_polish_space UpgradedPolishSpace
 -/
 
-#print polishSpace_of_complete_second_countable /-
-instance (priority := 100) polishSpace_of_complete_second_countable [m : MetricSpace α]
-    [h : SecondCountableTopology α] [h' : CompleteSpace α] : PolishSpace α
+#print PolishSpace.of_separableSpace_completeSpace_metrizable /-
+instance (priority := 100) PolishSpace.of_separableSpace_completeSpace_metrizable
+    [m : MetricSpace α] [h : SecondCountableTopology α] [h' : CompleteSpace α] : PolishSpace α
     where
   second_countable := h
   complete := ⟨m, rfl, h'⟩
-#align polish_space_of_complete_second_countable polishSpace_of_complete_second_countable
+#align polish_space_of_complete_second_countable PolishSpace.of_separableSpace_completeSpace_metrizable
 -/
 
 #print polishSpaceMetric /-
@@ -210,14 +210,12 @@ theorem IsClosed.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α
 #align is_closed.polish_space IsClosed.polishSpace
 -/
 
-#print PolishSpace.AuxCopy /-
 /-- A sequence of type synonyms of a given type `α`, useful in the proof of
 `exists_polish_space_forall_le` to endow each copy with a different topology. -/
 @[nolint unused_arguments has_nonempty_instance]
 def AuxCopy (α : Type _) {ι : Type _} (i : ι) : Type _ :=
   α
 #align polish_space.aux_copy PolishSpace.AuxCopy
--/
 
 #print PolishSpace.exists_polishSpace_forall_le /-
 /-- Given a Polish space, and countably many finer Polish topologies, there exists another Polish
