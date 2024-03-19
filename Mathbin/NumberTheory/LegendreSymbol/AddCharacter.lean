@@ -97,10 +97,10 @@ instance hasCoeToFun : CoeFun (AddChar R R') fun x => R → R'
     where coe ψ x := ψ.toMonoidHom (ofAdd x)
 #align add_char.has_coe_to_fun AddChar.hasCoeToFun
 
-#print AddChar.coe_to_fun_apply /-
-theorem coe_to_fun_apply (ψ : AddChar R R') (a : R) : ψ a = ψ.toMonoidHom (ofAdd a) :=
+#print AddChar.toMonoidHom_apply /-
+theorem toMonoidHom_apply (ψ : AddChar R R') (a : R) : ψ a = ψ.toMonoidHom (ofAdd a) :=
   rfl
-#align add_char.coe_to_fun_apply AddChar.coe_to_fun_apply
+#align add_char.coe_to_fun_apply AddChar.toMonoidHom_apply
 -/
 
 instance monoidHomClass : MonoidHomClass (AddChar R R') (Multiplicative R) R' :=
@@ -138,14 +138,16 @@ open Multiplicative
 
 variable {R : Type u} [AddCommGroup R] {R' : Type v} [CommMonoid R']
 
-#print AddChar.hasInv /-
+/- warning: add_char.has_inv clashes with add_char.comm_group -> AddChar.instCommGroup
+Case conversion may be inaccurate. Consider using '#align add_char.has_inv AddChar.instCommGroupₓ'. -/
+#print AddChar.instCommGroup /-
 /-- An additive character on a commutative additive group has an inverse.
 
 Note that this is a different inverse to the one provided by `monoid_hom.has_inv`,
 as it acts on the domain instead of the codomain. -/
-instance hasInv : Inv (AddChar R R') :=
+instance instCommGroup : Inv (AddChar R R') :=
   ⟨fun ψ => ψ.comp invMonoidHom⟩
-#align add_char.has_inv AddChar.hasInv
+#align add_char.has_inv AddChar.instCommGroup
 -/
 
 #print AddChar.inv_apply /-
@@ -162,15 +164,15 @@ theorem map_zsmul_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ
 #align add_char.map_zsmul_zpow AddChar.map_zsmul_zpow
 -/
 
-#print AddChar.commGroup /-
+#print AddChar.instCommGroup /-
 /-- The additive characters on a commutative additive group form a commutative group. -/
-instance commGroup : CommGroup (AddChar R R') :=
+instance instCommGroup : CommGroup (AddChar R R') :=
   { MonoidHom.commMonoid with
     inv := Inv.inv
     hMul_left_inv := fun ψ => by ext;
       rw [MonoidHom.mul_apply, MonoidHom.one_apply, inv_apply, ← map_add_mul, add_left_neg,
         map_zero_one] }
-#align add_char.comm_group AddChar.commGroup
+#align add_char.comm_group AddChar.instCommGroup
 -/
 
 end GroupStructure
