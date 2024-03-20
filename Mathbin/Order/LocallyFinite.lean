@@ -230,18 +230,18 @@ def LocallyFiniteOrderBot.ofIic' (α : Type _) [Preorder α] [DecidableRel ((· 
 #align locally_finite_order_bot.of_Iic' LocallyFiniteOrderBot.ofIic'
 -/
 
-#print LocallyFiniteOrderTop.ofIic /-
+#print LocallyFiniteOrderBot.ofIic /-
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici'`, this one requires `partial_order` but
 only `decidable_eq`. -/
-def LocallyFiniteOrderTop.ofIic (α : Type _) [PartialOrder α] [DecidableEq α]
+def LocallyFiniteOrderBot.ofIic (α : Type _) [PartialOrder α] [DecidableEq α]
     (finset_Iic : α → Finset α) (mem_Iic : ∀ a x, x ∈ finset_Iic a ↔ x ≤ a) :
     LocallyFiniteOrderBot α :=
   { finsetIic
     finsetIio := fun a => (finset_Iic a).filterₓ fun x => x ≠ a
     finset_mem_Iic := mem_Iic
     finset_mem_Iio := fun a x => by rw [mem_filter, mem_Iic, lt_iff_le_and_ne] }
-#align locally_finite_order_top.of_Iic LocallyFiniteOrderTop.ofIic
+#align locally_finite_order_top.of_Iic LocallyFiniteOrderBot.ofIic
 -/
 
 variable {α β : Type _}

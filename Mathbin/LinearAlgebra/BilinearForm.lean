@@ -398,13 +398,11 @@ theorem flip_flip [Algebra R₂ R] :
 #align bilin_form.flip_flip BilinForm.flip_flip
 -/
 
-#print BilinForm.flip' /-
 /-- The flip of a bilinear form over a ring, obtained by exchanging the left and right arguments,
 here considered as an `ℕ`-linear equivalence, i.e. an additive equivalence. -/
 abbrev flip' : BilinForm R M ≃ₗ[ℕ] BilinForm R M :=
   flipHom ℕ
 #align bilin_form.flip' BilinForm.flip'
--/
 
 #print BilinForm.flip /-
 /-- The `flip` of a bilinear form over a commutative ring, obtained by exchanging the left and
@@ -484,14 +482,12 @@ theorem toLin'_apply (A : BilinForm R M) (x : M) : ⇑(toLinHom R₂ A x) = A x 
 #align bilin_form.to_lin'_apply BilinForm.toLin'_apply
 -/
 
-#print BilinForm.toLin' /-
 /-- The linear map obtained from a `bilin_form` by fixing the left co-ordinate and evaluating in
 the right.
 Over a commutative semiring, use `to_lin`, which is linear rather than `ℕ`-linear. -/
 abbrev toLin' : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
   toLinHom ℕ
 #align bilin_form.to_lin' BilinForm.toLin'
--/
 
 #print BilinForm.sum_left /-
 @[simp]
@@ -532,14 +528,12 @@ theorem toLin'Flip_apply (A : BilinForm R M) (x : M) : ⇑(toLinHomFlip R₂ A x
 #align bilin_form.to_lin'_flip_apply BilinForm.toLin'Flip_apply
 -/
 
-#print BilinForm.toLin'Flip /-
 /-- The linear map obtained from a `bilin_form` by fixing the right co-ordinate and evaluating in
 the left.
 Over a commutative semiring, use `to_lin_flip`, which is linear rather than `ℕ`-linear. -/
 abbrev toLin'Flip : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
   toLinHomFlip ℕ
 #align bilin_form.to_lin'_flip BilinForm.toLin'Flip
--/
 
 end ToLin'
 
