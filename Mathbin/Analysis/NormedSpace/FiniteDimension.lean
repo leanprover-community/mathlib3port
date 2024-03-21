@@ -587,7 +587,7 @@ theorem LinearMap.closedEmbedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ke
     [FiniteDimensional 𝕜 E] : ClosedEmbedding ⇑f :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
   { embedding_subtype_val.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
-    closed_range := by
+    isClosed_range := by
       haveI := f.finite_dimensional_range
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
 #align linear_equiv.closed_embedding_of_injective LinearMap.closedEmbedding_of_injective

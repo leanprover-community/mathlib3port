@@ -643,10 +643,10 @@ theorem of_nonempty {f : α → β} (h : ∀ s, IsClosed s → s.Nonempty → Is
 #align is_closed_map.of_nonempty IsClosedMap.of_nonempty
 -/
 
-#print IsClosedMap.closed_range /-
-theorem closed_range {f : α → β} (hf : IsClosedMap f) : IsClosed (range f) :=
+#print IsClosedMap.isClosed_range /-
+theorem isClosed_range {f : α → β} (hf : IsClosedMap f) : IsClosed (range f) :=
   @image_univ _ _ f ▸ hf _ isClosed_univ
-#align is_closed_map.closed_range IsClosedMap.closed_range
+#align is_closed_map.closed_range IsClosedMap.isClosed_range
 -/
 
 #print IsClosedMap.to_quotientMap /-
@@ -815,7 +815,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 /-- A closed embedding is an embedding with closed image. -/
 @[mk_iff]
 structure ClosedEmbedding (f : α → β) extends Embedding f : Prop where
-  closed_range : IsClosed <| range f
+  isClosed_range : IsClosed <| range f
 #align closed_embedding ClosedEmbedding
 -/
 
@@ -836,7 +836,7 @@ theorem ClosedEmbedding.continuous (hf : ClosedEmbedding f) : Continuous f :=
 
 #print ClosedEmbedding.isClosedMap /-
 theorem ClosedEmbedding.isClosedMap (hf : ClosedEmbedding f) : IsClosedMap f :=
-  hf.toEmbedding.to_inducing.IsClosedMap hf.closed_range
+  hf.toEmbedding.to_inducing.IsClosedMap hf.isClosed_range
 #align closed_embedding.is_closed_map ClosedEmbedding.isClosedMap
 -/
 

@@ -189,7 +189,7 @@ theorem gelfandTransform_bijective : Function.Bijective (gelfandTransform ℂ A)
   have h : (gelfand_transform ℂ A).range.topologicalClosure = (gelfand_transform ℂ A).range :=
     le_antisymm
       (Subalgebra.topologicalClosure_minimal _ le_rfl
-        (gelfandTransform_isometry A).ClosedEmbedding.closed_range)
+        (gelfandTransform_isometry A).ClosedEmbedding.isClosed_range)
       (Subalgebra.le_topologicalClosure _)
   refine'
     h ▸

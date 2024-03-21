@@ -95,12 +95,12 @@ theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ :=
 #align is_coercive.ker_eq_bot IsCoercive.ker_eq_bot
 -/
 
-#print IsCoercive.closed_range /-
-theorem closed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) :=
+#print IsCoercive.isClosed_range /-
+theorem isClosed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) :=
   by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.is_closed_range B♯.UniformContinuous
-#align is_coercive.closed_range IsCoercive.closed_range
+#align is_coercive.closed_range IsCoercive.isClosed_range
 -/
 
 #print IsCoercive.range_eq_top /-

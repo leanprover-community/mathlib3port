@@ -1286,7 +1286,7 @@ protected theorem Embedding.measurableEmbedding {f : α → β} (h₁ : Embeddin
 #print ClosedEmbedding.measurableEmbedding /-
 protected theorem ClosedEmbedding.measurableEmbedding {f : α → β} (h : ClosedEmbedding f) :
     MeasurableEmbedding f :=
-  h.toEmbedding.MeasurableEmbedding h.closed_range.MeasurableSet
+  h.toEmbedding.MeasurableEmbedding h.isClosed_range.MeasurableSet
 #align closed_embedding.measurable_embedding ClosedEmbedding.measurableEmbedding
 -/
 

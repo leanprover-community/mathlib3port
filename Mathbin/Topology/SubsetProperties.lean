@@ -2128,7 +2128,7 @@ theorem isClopen_discrete [DiscreteTopology α] (x : Set α) : IsClopen x :=
 #print isClopen_range_sigmaMk /-
 theorem isClopen_range_sigmaMk {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)] {i : ι} :
     IsClopen (Set.range (@Sigma.mk ι σ i)) :=
-  ⟨openEmbedding_sigmaMk.open_range, closedEmbedding_sigmaMk.closed_range⟩
+  ⟨openEmbedding_sigmaMk.open_range, closedEmbedding_sigmaMk.isClosed_range⟩
 #align clopen_range_sigma_mk isClopen_range_sigmaMk
 -/
 

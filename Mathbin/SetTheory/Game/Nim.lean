@@ -523,7 +523,7 @@ theorem SetTheory.PGame.grundyValue_nim_add_nim (n m : ℕ) :
     cases' Nat.lt_xor_cases hu with h h
     -- In the first case, reducing the `m` pile to `nat.lxor u n` gives the desired Grundy value.
     · refine' ⟨to_left_moves_add (Sum.inl <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
-      simp [Nat.lxor_cancel_right, hn _ h]
+      simp [Nat.xor_cancel_right, hn _ h]
     -- In the second case, reducing the `n` pile to `nat.lxor u m` gives the desired Grundy value.
     · refine' ⟨to_left_moves_add (Sum.inr <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
       have : n.lxor (u.lxor n) = u; rw [Nat.xor_comm u, Nat.xor_cancel_left]

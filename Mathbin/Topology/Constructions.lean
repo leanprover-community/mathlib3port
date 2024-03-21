@@ -1401,7 +1401,7 @@ theorem IsClosed.closedEmbedding_subtype_val {s : Set α} (hs : IsClosed s) :
     ClosedEmbedding (coe : { x // x ∈ s } → α) :=
   { induced := rfl
     inj := Subtype.coe_injective
-    closed_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
+    isClosed_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
 #align is_closed.closed_embedding_subtype_coe IsClosed.closedEmbedding_subtype_val
 -/
 
@@ -1985,7 +1985,7 @@ theorem isClosedMap_sigmaMk {i : ι} : IsClosedMap (@Sigma.mk ι σ i) :=
 
 #print isClosed_range_sigmaMk /-
 theorem isClosed_range_sigmaMk {i : ι} : IsClosed (Set.range (@Sigma.mk ι σ i)) :=
-  isClosedMap_sigmaMk.closed_range
+  isClosedMap_sigmaMk.isClosed_range
 #align is_closed_range_sigma_mk isClosed_range_sigmaMk
 -/
 

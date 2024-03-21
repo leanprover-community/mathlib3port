@@ -824,7 +824,7 @@ theorem Embedding.comp_stronglyMeasurable_iff {m : MeasurableSpace α} [Topologi
   · let G : β → range g := cod_restrict g (range g) mem_range_self
     have hG : ClosedEmbedding G :=
       { hg.cod_restrict _ _ with
-        closed_range := by
+        isClosed_range := by
           convert isClosed_univ
           apply eq_univ_of_forall
           rintro ⟨-, ⟨x, rfl⟩⟩
@@ -1954,7 +1954,7 @@ theorem Embedding.aestronglyMeasurable_comp_iff [PseudoMetrizableSpace β] [Pseu
   · let G : β → range g := cod_restrict g (range g) mem_range_self
     have hG : ClosedEmbedding G :=
       { hg.cod_restrict _ _ with
-        closed_range := by
+        isClosed_range := by
           convert isClosed_univ
           apply eq_univ_of_forall
           rintro ⟨-, ⟨x, rfl⟩⟩

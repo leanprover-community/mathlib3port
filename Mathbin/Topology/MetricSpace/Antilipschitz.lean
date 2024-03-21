@@ -246,7 +246,7 @@ theorem isClosed_range {α β : Type _} [PseudoEMetricSpace α] [EMetricSpace β
 theorem closedEmbedding {α : Type _} {β : Type _} [EMetricSpace α] [EMetricSpace β] {K : ℝ≥0}
     {f : α → β} [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     ClosedEmbedding f :=
-  { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.isClosed_range hfc }
+  { (hf.UniformEmbedding hfc).Embedding with isClosed_range := hf.isClosed_range hfc }
 #align antilipschitz_with.closed_embedding AntilipschitzWith.closedEmbedding
 -/
 

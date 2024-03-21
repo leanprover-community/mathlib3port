@@ -246,7 +246,7 @@ theorem nonempty_support : (support f).Nonempty :=
 #print SmoothBumpFunction.isCompact_symm_image_closedBall /-
 theorem isCompact_symm_image_closedBall :
     IsCompact ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.rOut ∩ range I)) :=
-  ((isCompact_closedBall _ _).inter_right I.closed_range).image_of_continuousOn <|
+  ((isCompact_closedBall _ _).inter_right I.isClosed_range).image_of_continuousOn <|
     (continuousOn_extChartAt_symm _ _).mono f.closedBall_subset
 #align smooth_bump_function.is_compact_symm_image_closed_ball SmoothBumpFunction.isCompact_symm_image_closedBall
 -/

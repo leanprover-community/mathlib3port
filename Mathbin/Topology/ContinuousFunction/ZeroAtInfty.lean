@@ -515,8 +515,8 @@ theorem isometry_toBCF : Isometry (toBCF : C₀(α, β) → α →ᵇ β) := by 
 #align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometry_toBCF
 -/
 
-#print ZeroAtInftyContinuousMap.closed_range_toBCF /-
-theorem closed_range_toBCF : IsClosed (range (toBCF : C₀(α, β) → α →ᵇ β)) :=
+#print ZeroAtInftyContinuousMap.isClosed_range_toBCF /-
+theorem isClosed_range_toBCF : IsClosed (range (toBCF : C₀(α, β) → α →ᵇ β)) :=
   by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
   rw [clusterPt_principal_iff] at hf
@@ -532,14 +532,14 @@ theorem closed_range_toBCF : IsClosed (range (toBCF : C₀(α, β) → α →ᵇ
       _ < dist g.to_bcf f + ε / 2 := (add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx)
       _ < ε := by simpa [add_halves ε] using add_lt_add_right hg (ε / 2)
   exact ⟨⟨f.to_continuous_map, this⟩, by ext; rfl⟩
-#align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closed_range_toBCF
+#align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.isClosed_range_toBCF
 -/
 
 /-- Continuous functions vanishing at infinity taking values in a complete space form a
 complete space. -/
 instance [CompleteSpace β] : CompleteSpace C₀(α, β) :=
   (completeSpace_iff_isComplete_range isometry_toBCF.UniformInducing).mpr
-    closed_range_toBCF.IsComplete
+    isClosed_range_toBCF.IsComplete
 
 end Metric
 

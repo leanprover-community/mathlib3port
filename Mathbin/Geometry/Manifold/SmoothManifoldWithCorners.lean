@@ -348,10 +348,10 @@ protected theorem closedEmbedding : ClosedEmbedding I :=
 #align model_with_corners.closed_embedding ModelWithCorners.closedEmbedding
 -/
 
-#print ModelWithCorners.closed_range /-
-theorem closed_range : IsClosed (range I) :=
-  I.ClosedEmbedding.closed_range
-#align model_with_corners.closed_range ModelWithCorners.closed_range
+#print ModelWithCorners.isClosed_range /-
+theorem isClosed_range : IsClosed (range I) :=
+  I.ClosedEmbedding.isClosed_range
+#align model_with_corners.closed_range ModelWithCorners.isClosed_range
 -/
 
 #print ModelWithCorners.map_nhds_eq /-

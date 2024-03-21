@@ -288,11 +288,10 @@ theorem xor_self (n : ℕ) : xor n n = 0 :=
 #align nat.lxor_self Nat.xor_self
 -/
 
-#print Nat.lxor_cancel_right /-
+#print Nat.xor_cancel_right /-
 -- These lemmas match `mul_inv_cancel_right` and `mul_inv_cancel_left`.
-theorem lxor_cancel_right (n m : ℕ) : xor (xor m n) n = m := by
-  rw [lxor_assoc, lxor_self, lxor_zero]
-#align nat.lxor_cancel_right Nat.lxor_cancel_right
+theorem xor_cancel_right (n m : ℕ) : xor (xor m n) n = m := by rw [lxor_assoc, lxor_self, lxor_zero]
+#align nat.lxor_cancel_right Nat.xor_cancel_right
 -/
 
 #print Nat.xor_cancel_left /-

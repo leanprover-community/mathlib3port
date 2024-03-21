@@ -330,7 +330,7 @@ theorem closedEmbedding_of_spaced_out {α} [TopologicalSpace α] [DiscreteTopolo
   rcases DiscreteTopology.eq_bot α with rfl; letI : UniformSpace α := ⊥
   exact
     { (uniformEmbedding_of_spaced_out hs hf).Embedding with
-      closed_range := isClosed_range_of_spaced_out hs hf }
+      isClosed_range := isClosed_range_of_spaced_out hs hf }
 #align closed_embedding_of_spaced_out closedEmbedding_of_spaced_out
 -/
 
