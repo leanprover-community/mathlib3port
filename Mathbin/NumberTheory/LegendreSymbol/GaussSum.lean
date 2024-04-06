@@ -3,8 +3,8 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import NumberTheory.LegendreSymbol.AddCharacter
-import NumberTheory.LegendreSymbol.ZmodChar
+import Algebra.Group.AddChar
+import NumberTheory.LegendreSymbol.ZModChar
 import Algebra.CharP.CharAndCard
 
 #align_import number_theory.legendre_symbol.gauss_sum from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
@@ -193,7 +193,7 @@ theorem MulChar.IsQuadratic.gaussSum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) {
   induction' n with n ih
   · rw [pow_zero, pow_one, pow_zero, MulChar.map_one, one_mul]
   ·
-    rw [pow_succ, mul_comm p, pow_mul, ih, mul_pow, hχ.gauss_sum_frob _ hp, ← mul_assoc, pow_succ,
+    rw [pow_succ', mul_comm p, pow_mul, ih, mul_pow, hχ.gauss_sum_frob _ hp, ← mul_assoc, pow_succ',
       mul_comm (p : R), map_mul, ← pow_apply' χ fp.1.Pos (p ^ n), hχ.pow_char p]
 #align mul_char.is_quadratic.gauss_sum_frob_iter MulChar.IsQuadratic.gaussSum_frob_iter
 -/
@@ -225,7 +225,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
       not_isUnit_prime_of_dvd_card p
         ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).NeZero) hp
   rw [← hg]; apply mul_right_cancel₀ this
-  rw [← hχ.gauss_sum_frob_iter p n hp ψ, ← pow_mul, mul_comm, ← pow_succ,
+  rw [← hχ.gauss_sum_frob_iter p n hp ψ, ← pow_mul, mul_comm, ← pow_succ',
     Nat.two_mul_div_two_add_one_of_odd (fp.1.eq_two_or_odd'.resolve_left hp').pow]
 #align char.card_pow_char_pow Char.card_pow_char_pow
 -/

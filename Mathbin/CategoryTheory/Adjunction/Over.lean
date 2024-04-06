@@ -5,7 +5,7 @@ Authors: Bhavik Mehta
 -/
 import CategoryTheory.Limits.Shapes.BinaryProducts
 import CategoryTheory.Monad.Products
-import CategoryTheory.Over
+import CategoryTheory.Comma.Over
 
 #align_import category_theory.adjunction.over from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"
 

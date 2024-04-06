@@ -3,7 +3,7 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Algebra.Modeq
+import Algebra.ModEq
 import Algebra.Module.Basic
 import Algebra.Order.Archimedean
 import Algebra.Periodic
@@ -522,7 +522,7 @@ theorem toIcoDiv_neg' (a b : α) : toIcoDiv hp (-a) b = -(toIocDiv hp a (-b) + 1
 
 #print toIocDiv_neg /-
 theorem toIocDiv_neg (a b : α) : toIocDiv hp a (-b) = -(toIcoDiv hp (-a) b + 1) := by
-  rw [← neg_neg b, toIcoDiv_neg, neg_neg, neg_neg, neg_add', neg_neg, add_sub_cancel]
+  rw [← neg_neg b, toIcoDiv_neg, neg_neg, neg_neg, neg_add', neg_neg, add_sub_cancel_right]
 #align to_Ioc_div_neg toIocDiv_neg
 -/
 

@@ -5,7 +5,7 @@ Authors: Oliver Nash
 -/
 import Topology.Algebra.ContinuousAffineMap
 import Analysis.NormedSpace.AffineIsometry
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 
 #align_import analysis.normed_space.continuous_affine_map from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

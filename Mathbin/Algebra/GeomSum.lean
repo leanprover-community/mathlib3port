@@ -47,7 +47,7 @@ variable [Semiring α]
 #print geom_sum_succ /-
 theorem geom_sum_succ {x : α} {n : ℕ} :
     ∑ i in range (n + 1), x ^ i = x * ∑ i in range n, x ^ i + 1 := by
-  simp only [mul_sum, ← pow_succ, sum_range_succ', pow_zero]
+  simp only [mul_sum, ← pow_succ', sum_range_succ', pow_zero]
 #align geom_sum_succ geom_sum_succ
 -/
 
@@ -134,16 +134,16 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
       by
       dsimp [f]
       have : Commute y ((x + y) ^ i) := (h.symm.add_right (Commute.refl y)).pow_right i
-      rw [← mul_assoc, this.eq, mul_assoc, ← pow_succ y (n - 1 - i)]
+      rw [← mul_assoc, this.eq, mul_assoc, ← pow_succ' y (n - 1 - i)]
       congr 2
       rw [add_tsub_cancel_right, ← tsub_add_eq_tsub_tsub, add_comm 1 i]
       have : i + 1 + (n - (i + 1)) = n := add_tsub_cancel_of_le (mem_range.mp hi)
       rw [add_comm (i + 1)] at this
       rw [← this, add_tsub_cancel_right, add_comm i 1, ← add_assoc, add_tsub_cancel_right]
-    rw [pow_succ (x + y), add_mul, sum_range_succ_comm, add_mul, f_last, add_assoc]
+    rw [pow_succ' (x + y), add_mul, sum_range_succ_comm, add_mul, f_last, add_assoc]
     rw [(((Commute.refl x).add_right h).pow_right n).Eq]
     congr 1
-    rw [sum_congr rfl f_succ, ← mul_sum, pow_succ y, mul_assoc, ← mul_add y, ih]
+    rw [sum_congr rfl f_succ, ← mul_sum, pow_succ' y, mul_assoc, ← mul_add y, ih]
 #align commute.geom_sum₂_mul_add Commute.geom_sum₂_mul_add
 -/
 
@@ -201,7 +201,7 @@ protected theorem Commute.geom_sum₂_mul [Ring α] {x y : α} (h : Commute x y)
   by
   have := (h.sub_left (Commute.refl y)).geom_sum₂_mul_add n
   rw [sub_add_cancel] at this
-  rw [← this, add_sub_cancel]
+  rw [← this, add_sub_cancel_right]
 #align commute.geom_sum₂_mul Commute.geom_sum₂_mul
 -/
 
@@ -316,7 +316,7 @@ protected theorem Commute.geom_sum₂ [DivisionRing α] {x y : α} (h' : Commute
     (n : ℕ) : ∑ i in range n, x ^ i * y ^ (n - 1 - i) = (x ^ n - y ^ n) / (x - y) :=
   by
   have : x - y ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
-  rw [← h'.geom_sum₂_mul, mul_div_cancel _ this]
+  rw [← h'.geom_sum₂_mul, mul_div_cancel_right₀ _ this]
 #align commute.geom_sum₂ Commute.geom_sum₂
 -/
 
@@ -332,7 +332,7 @@ theorem geom_sum_eq [DivisionRing α] {x : α} (h : x ≠ 1) (n : ℕ) :
     ∑ i in range n, x ^ i = (x ^ n - 1) / (x - 1) :=
   by
   have : x - 1 ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
-  rw [← geom_sum_mul, mul_div_cancel _ this]
+  rw [← geom_sum_mul, mul_div_cancel_right₀ _ this]
 #align geom_sum_eq geom_sum_eq
 -/
 
@@ -367,7 +367,7 @@ protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ring α] {x y : α}
       x ^ n + y * ∑ i in range n, x ^ i * y ^ (n - 1 - i) :=
   by
   simp_rw [mul_sum, sum_range_succ_comm, tsub_self, pow_zero, mul_one, add_right_inj, ← mul_assoc,
-    (h.symm.pow_right _).Eq, mul_assoc, ← pow_succ]
+    (h.symm.pow_right _).Eq, mul_assoc, ← pow_succ']
   refine' sum_congr rfl fun i hi => _
   suffices n - 1 - i + 1 = n - i by rw [this]
   cases n
@@ -430,7 +430,7 @@ protected theorem Commute.geom_sum₂_Ico [DivisionRing α] {x y : α} (h : Comm
     ∑ i in Finset.Ico m n, x ^ i * y ^ (n - 1 - i) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) :=
   by
   have : x - y ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
-  rw [← h.geom_sum₂_Ico_mul hmn, mul_div_cancel _ this]
+  rw [← h.geom_sum₂_Ico_mul hmn, mul_div_cancel_right₀ _ this]
 #align commute.geom_sum₂_Ico Commute.geom_sum₂_Ico
 -/
 
@@ -479,7 +479,7 @@ theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) 
   have h₃ : x - 1 ≠ 0 := mt sub_eq_zero.1 hx1
   have h₄ : x * (x ^ n)⁻¹ = (x ^ n)⁻¹ * x :=
     Nat.recOn n (by simp) fun n h => by
-      rw [pow_succ, mul_inv_rev, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc,
+      rw [pow_succ', mul_inv_rev, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc,
         inv_mul_cancel hx0]
   rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ← mul_right_inj' h₃, ← mul_assoc, ← mul_assoc,
     mul_inv_cancel h₃]
@@ -518,7 +518,7 @@ theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) :
     _ ≤ ∑ i in range n, a / b ^ i + a * b - (∑ i in range n, a / b ^ i + a / b ^ n) :=
       by
       refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum fun i _ => _) _) _
-      rw [pow_succ', ← Nat.div_div_eq_div_mul]
+      rw [pow_succ, ← Nat.div_div_eq_div_mul]
       exact Nat.div_mul_le_self _ _
     _ = a * b - a / b ^ n := add_tsub_add_eq_tsub_left _ _ _
 #align nat.pred_mul_geom_sum_le Nat.pred_mul_geom_sum_le

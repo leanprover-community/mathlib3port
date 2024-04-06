@@ -5,7 +5,7 @@ Authors: Scott Morrison, Bhavik Mehta, Adam Topaz
 -/
 import CategoryTheory.Functor.Category
 import CategoryTheory.Functor.FullyFaithful
-import CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Functor.ReflectsIso
 
 #align_import category_theory.monad.basic from "leanprover-community/mathlib"@"9c6816cab5872990d450d2c2e7832176167b1c07"
 

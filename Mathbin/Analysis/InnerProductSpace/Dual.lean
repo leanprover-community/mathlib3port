@@ -48,11 +48,11 @@ universe u v
 
 namespace InnerProductSpace
 
-open IsROrC ContinuousLinearMap
+open RCLike ContinuousLinearMap
 
 variable (𝕜 : Type _)
 
-variable (E : Type _) [IsROrC 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+variable (E : Type _) [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 

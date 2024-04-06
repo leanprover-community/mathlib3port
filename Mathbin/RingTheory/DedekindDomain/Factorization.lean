@@ -73,7 +73,7 @@ theorem Associates.finite_factors {I : Ideal R} (hI : I ≠ 0) :
       {v : height_one_spectrum R | v.asIdeal ∣ I} :=
     by
     ext v
-    simp_rw [Int.coe_nat_eq_zero]
+    simp_rw [Int.natCast_eq_zero]
     exact Associates.count_ne_zero_iff_dvd hI v.irreducible
   rw [Filter.eventually_cofinite, h_supp]
   exact Ideal.finite_factors hI
@@ -110,7 +110,7 @@ theorem finite_mulSupport_coe {I : Ideal R} (hI : I ≠ 0) :
           ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ)).Finite :=
   by
   rw [mul_support]
-  simp_rw [Ne.def, zpow_coe_nat, ← FractionalIdeal.coeIdeal_pow, FractionalIdeal.coeIdeal_eq_one]
+  simp_rw [Ne.def, zpow_natCast, ← FractionalIdeal.coeIdeal_pow, FractionalIdeal.coeIdeal_eq_one]
   exact finite_mul_support hI
 #align ideal.finite_mul_support_coe Ideal.finite_mulSupport_coe
 -/
@@ -216,7 +216,7 @@ theorem finprod_heightOneSpectrum_factorization_coe (I : Ideal R) (hI : I ≠ 0)
   conv_rhs => rw [← Ideal.finprod_heightOneSpectrum_factorization I hI]
   rw [FractionalIdeal.coeIdeal_finprod R⁰ K (le_refl _)]
   simp_rw [IsDedekindDomain.HeightOneSpectrum.maxPowDividing, FractionalIdeal.coeIdeal_pow,
-    zpow_coe_nat]
+    zpow_natCast]
 #align ideal.finprod_height_one_spectrum_factorization_coe Ideal.finprod_heightOneSpectrum_factorization_coe
 -/
 

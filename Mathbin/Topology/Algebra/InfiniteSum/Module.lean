@@ -3,7 +3,7 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov, Frédéric Dupuis
 -/
-import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.InfiniteSum.Defs
 import Topology.Algebra.Module.Basic
 
 #align_import topology.algebra.infinite_sum.module from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"

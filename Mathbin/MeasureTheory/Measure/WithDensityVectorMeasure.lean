@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
 import MeasureTheory.Measure.VectorMeasure
-import MeasureTheory.Function.AeEqOfIntegral
+import MeasureTheory.Function.AEEqOfIntegral
 
 #align_import measure_theory.measure.with_density_vector_measure from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
 

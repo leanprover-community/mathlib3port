@@ -3,7 +3,7 @@ Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import CategoryTheory.Monoidal.Braided
+import CategoryTheory.Monoidal.Braided.Basic
 import CategoryTheory.Monoidal.Linear
 import CategoryTheory.Preadditive.AdditiveFunctor
 import CategoryTheory.Linear.LinearFunctor

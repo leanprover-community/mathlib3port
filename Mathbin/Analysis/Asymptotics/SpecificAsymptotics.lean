@@ -67,7 +67,7 @@ theorem Filter.tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) :
     Tendsto (fun x : 𝕜 => x ^ n) atTop atTop :=
   by
   lift n to ℕ using hn.le
-  simp only [zpow_coe_nat]
+  simp only [zpow_natCast]
   exact tendsto_pow_at_top (nat.cast_pos.mp hn).ne'
 #align tendsto_zpow_at_top_at_top Filter.tendsto_zpow_atTop_atTop
 -/
@@ -115,7 +115,7 @@ theorem Asymptotics.IsBigO.trans_tendsto_norm_atTop {α : Type _} {u v : α → 
   rw [is_O_with] at hcuv
   convert tendsto.at_top_div_const hc (tendsto_at_top_mono' l hcuv hu)
   ext x
-  rw [mul_div_cancel_left _ hc.ne.symm]
+  rw [mul_div_cancel_left₀ _ hc.ne.symm]
 #align asymptotics.is_O.trans_tendsto_norm_at_top Asymptotics.IsBigO.trans_tendsto_norm_atTop
 -/
 

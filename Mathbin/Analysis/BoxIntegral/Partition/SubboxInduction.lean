@@ -143,7 +143,7 @@ theorem exists_taggedPartition_isHenstock_isSubordinate_homothetic (I : Box ι)
       intro J' hJ'
       rcases(split_center J).mem_biUnionTagged.1 hJ' with ⟨J₁, h₁, h₂⟩
       refine' ⟨n J₁ J' + 1, fun i => _⟩
-      simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_split_center h₁, pow_succ, div_div]
+      simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_split_center h₁, pow_succ', div_div]
     refine' ⟨_, hP, is_Henstock_bUnion_tagged.2 hHen, is_subordinate_bUnion_tagged.2 hr, hsub, _⟩
     refine' tagged_prepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => _
     rcases hsub J' h' with ⟨n, hn⟩

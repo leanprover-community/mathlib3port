@@ -271,7 +271,7 @@ instance : Pow (NumDenSameDeg 𝒜 x) ℕ
       by
       induction' n with n ih
       · simpa only [coe_gnpow, pow_zero] using Submonoid.one_mem _
-      · simpa only [pow_succ', coe_gnpow] using x.mul_mem ih c.denom_mem⟩
+      · simpa only [pow_succ, coe_gnpow] using x.mul_mem ih c.denom_mem⟩
 
 #print HomogeneousLocalization.NumDenSameDeg.deg_pow /-
 @[simp]

@@ -3,7 +3,7 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 -/
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 import Order.Filter.NAry
 import Order.Filter.Ultrafilter
 
@@ -844,7 +844,7 @@ scoped[Pointwise] attribute [instance] Filter.monoid Filter.addMonoid
 @[to_additive]
 theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
   | 0 => by rw [pow_zero]; exact one_mem_one
-  | n + 1 => by rw [pow_succ]; exact mul_mem_mul hs (pow_mem_pow _)
+  | n + 1 => by rw [pow_succ']; exact mul_mem_mul hs (pow_mem_pow _)
 #align filter.pow_mem_pow Filter.pow_mem_pow
 #align filter.nsmul_mem_nsmul Filter.nsmul_mem_nsmul
 -/
@@ -852,7 +852,7 @@ theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
 #print Filter.bot_pow /-
 @[simp, to_additive nsmul_bot]
 theorem bot_pow {n : ℕ} (hn : n ≠ 0) : (⊥ : Filter α) ^ n = ⊥ := by
-  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, bot_mul]
+  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ', bot_mul]
 #align filter.bot_pow Filter.bot_pow
 #align filter.nsmul_bot Filter.nsmul_bot
 -/
@@ -894,7 +894,7 @@ theorem top_mul_top : (⊤ : Filter α) * ⊤ = ⊤ :=
 theorem nsmul_top {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (⊤ : Filter α) = ⊤
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => one_nsmul _
-  | n + 2 => fun _ => by rw [succ_nsmul, nsmul_top n.succ_ne_zero, top_add_top]
+  | n + 2 => fun _ => by rw [succ_nsmul', nsmul_top n.succ_ne_zero, top_add_top]
 #align filter.nsmul_top Filter.nsmul_top
 -/
 
@@ -903,7 +903,7 @@ theorem nsmul_top {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n �
 theorem top_pow : ∀ {n : ℕ}, n ≠ 0 → (⊤ : Filter α) ^ n = ⊤
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => pow_one _
-  | n + 2 => fun _ => by rw [pow_succ, top_pow n.succ_ne_zero, top_mul_top]
+  | n + 2 => fun _ => by rw [pow_succ', top_pow n.succ_ne_zero, top_mul_top]
 #align filter.top_pow Filter.top_pow
 #align filter.nsmul_top Filter.nsmul_top
 -/

@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import MeasureTheory.Function.AeEqOfIntegral
-import MeasureTheory.Function.ConditionalExpectation.AeMeasurable
+import MeasureTheory.Function.AEEqOfIntegral
+import MeasureTheory.Function.ConditionalExpectation.AEMeasurable
 
 #align_import measure_theory.function.conditional_expectation.unique from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 
@@ -34,7 +34,7 @@ open scoped ENNReal MeasureTheory
 
 namespace MeasureTheory
 
-variable {α E' F' 𝕜 : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [IsROrC 𝕜]
+variable {α E' F' 𝕜 : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [RCLike 𝕜]
   -- 𝕜 for ℝ or ℂ
   -- E' for an inner product space on which we compute integrals
   [NormedAddCommGroup E']

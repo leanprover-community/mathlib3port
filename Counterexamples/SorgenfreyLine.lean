@@ -5,9 +5,9 @@ Authors: Yury Kudryashov
 -/
 import Topology.Instances.Irrational
 import Topology.Algebra.Order.Archimedean
-import Topology.Paracompact
-import Topology.MetricSpace.Metrizable
-import Topology.MetricSpace.EmetricParacompact
+import Topology.Compactness.Paracompact
+import Topology.Metrizable.Basic
+import Topology.EMetricSpace.Paracompact
 import Data.Set.Intervals.Monotone
 
 #align_import sorgenfrey_line from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
@@ -127,7 +127,7 @@ theorem isOpen_iff {s : Set ℝₗ} : IsOpen s ↔ ∀ x ∈ s, ∃ y > x, Ico x
   isOpen_iff_mem_nhds.trans <| forall₂_congr fun x hx => (nhds_basis_Ico x).mem_iff
 #align counterexample.sorgenfrey_line.is_open_iff Counterexample.SorgenfreyLine.isOpen_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem isClosed_iff {s : Set ℝₗ} : IsClosed s ↔ ∀ (x) (_ : x ∉ s), ∃ y > x, Disjoint (Ico x y) s :=
   by simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, subset_compl_iff_disjoint_right]
 #align counterexample.sorgenfrey_line.is_closed_iff Counterexample.SorgenfreyLine.isClosed_iff

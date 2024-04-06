@@ -7,7 +7,7 @@ import Mathbin.Tactic.Linarith.Default
 import CategoryTheory.Skeletal
 import Data.Fintype.Sort
 import Order.Category.NonemptyFinLinOrd
-import CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Functor.ReflectsIso
 
 #align_import algebraic_topology.simplex_category from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

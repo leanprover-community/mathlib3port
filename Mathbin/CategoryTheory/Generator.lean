@@ -582,11 +582,11 @@ theorem isSeparator_def (G : C) :
 #align category_theory.is_separator_def CategoryTheory.isSeparator_def
 -/
 
-#print CategoryTheory.IsSeparator.def /-
-theorem IsSeparator.def {G : C} :
+#print CategoryTheory.IsSeparator.def' /-
+theorem IsSeparator.def' {G : C} :
     IsSeparator G → ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   (isSeparator_def _).1
-#align category_theory.is_separator.def CategoryTheory.IsSeparator.def
+#align category_theory.is_separator.def CategoryTheory.IsSeparator.def'
 -/
 
 #print CategoryTheory.isCoseparator_def /-
@@ -598,11 +598,11 @@ theorem isCoseparator_def (G : C) :
 #align category_theory.is_coseparator_def CategoryTheory.isCoseparator_def
 -/
 
-#print CategoryTheory.IsCoseparator.def /-
-theorem IsCoseparator.def {G : C} :
+#print CategoryTheory.IsCoseparator.def' /-
+theorem IsCoseparator.def' {G : C} :
     IsCoseparator G → ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   (isCoseparator_def _).1
-#align category_theory.is_coseparator.def CategoryTheory.IsCoseparator.def
+#align category_theory.is_coseparator.def CategoryTheory.IsCoseparator.def'
 -/
 
 #print CategoryTheory.isDetector_def /-
@@ -613,11 +613,11 @@ theorem isDetector_def (G : C) :
 #align category_theory.is_detector_def CategoryTheory.isDetector_def
 -/
 
-#print CategoryTheory.IsDetector.def /-
-theorem IsDetector.def {G : C} :
+#print CategoryTheory.IsDetector.def' /-
+theorem IsDetector.def' {G : C} :
     IsDetector G → ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
   (isDetector_def _).1
-#align category_theory.is_detector.def CategoryTheory.IsDetector.def
+#align category_theory.is_detector.def CategoryTheory.IsDetector.def'
 -/
 
 #print CategoryTheory.isCodetector_def /-
@@ -628,11 +628,11 @@ theorem isCodetector_def (G : C) :
 #align category_theory.is_codetector_def CategoryTheory.isCodetector_def
 -/
 
-#print CategoryTheory.IsCodetector.def /-
-theorem IsCodetector.def {G : C} :
+#print CategoryTheory.IsCodetector.def' /-
+theorem IsCodetector.def' {G : C} :
     IsCodetector G → ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
   (isCodetector_def _).1
-#align category_theory.is_codetector.def CategoryTheory.IsCodetector.def
+#align category_theory.is_codetector.def CategoryTheory.IsCodetector.def'
 -/
 
 #print CategoryTheory.isSeparator_iff_faithful_coyoneda_obj /-

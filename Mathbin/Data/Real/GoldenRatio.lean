@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Alexey Soloyev, Junyan Xu
 -/
 import Data.Real.Irrational
-import Data.Nat.Fib
-import Data.Nat.PrimeNormNum
+import Data.Nat.Fib.Basic
+import Tactic.NormNum.Prime
 import Data.Fin.VecNotation
 import Tactic.RingExp
 import Algebra.LinearRecurrence

@@ -191,7 +191,7 @@ theorem QInfty_comp_PInfty : (QInfty : K[X] ⟶ _) ≫ PInfty = 0 := by ext n;
 #print AlgebraicTopology.DoldKan.PInfty_add_QInfty /-
 @[simp]
 theorem PInfty_add_QInfty : (PInfty : K[X] ⟶ _) + QInfty = 𝟙 _ := by dsimp only [Q_infty];
-  simp only [add_sub_cancel'_right]
+  simp only [add_sub_cancel]
 #align algebraic_topology.dold_kan.P_infty_add_Q_infty AlgebraicTopology.DoldKan.PInfty_add_QInfty
 -/
 

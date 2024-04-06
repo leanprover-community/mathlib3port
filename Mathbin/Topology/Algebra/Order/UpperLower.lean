@@ -52,10 +52,10 @@ instance (priority := 100) OrderedCommGroup.to_hasUpperLowerClosure [OrderedComm
     where
   isUpperSet_closure s h x y hxy hx :=
     closure_mono (h.smul_subset <| one_le_div'.2 hxy) <| by rw [closure_smul];
-      exact ⟨x, hx, div_mul_cancel' _ _⟩
+      exact ⟨x, hx, div_mul_cancel _ _⟩
   isLowerSet_closure s h x y hxy hx :=
     closure_mono (h.smul_subset <| div_le_one'.2 hxy) <| by rw [closure_smul];
-      exact ⟨x, hx, div_mul_cancel' _ _⟩
+      exact ⟨x, hx, div_mul_cancel _ _⟩
   isOpen_upperClosure s hs := by rw [← mul_one s, ← mul_upperClosure]; exact hs.mul_right
   isOpen_lowerClosure s hs := by rw [← mul_one s, ← mul_lowerClosure]; exact hs.mul_right
 #align ordered_comm_group.to_has_upper_lower_closure OrderedCommGroup.to_hasUpperLowerClosure

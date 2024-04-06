@@ -66,7 +66,7 @@ theorem doubleFactorial_two_mul : ∀ n : ℕ, (2 * n)‼ = 2 ^ n * n !
   | 0 => rfl
   | n + 1 =>
     by
-    rw [mul_add, mul_one, double_factorial_add_two, factorial, pow_succ, double_factorial_two_mul,
+    rw [mul_add, mul_one, double_factorial_add_two, factorial, pow_succ', double_factorial_two_mul,
       succ_eq_add_one]
     ring
 #align nat.double_factorial_two_mul Nat.doubleFactorial_two_mul

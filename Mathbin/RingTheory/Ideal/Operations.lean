@@ -9,7 +9,7 @@ import Data.Nat.Choose.Sum
 import LinearAlgebra.Basis.Bilinear
 import RingTheory.Coprime.Lemmas
 import RingTheory.Ideal.Basic
-import RingTheory.NonZeroDivisors
+import Algebra.GroupWithZero.NonZeroDivisors
 
 #align_import ring_theory.ideal.operations from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -672,7 +672,7 @@ theorem span_singleton_mul_span_singleton (r s : R) :
 theorem span_singleton_pow (s : R) (n : ℕ) : span {s} ^ n = (span {s ^ n} : Ideal R) :=
   by
   induction' n with n ih; · simp [Set.singleton_one]
-  simp only [pow_succ, ih, span_singleton_mul_span_singleton]
+  simp only [pow_succ', ih, span_singleton_mul_span_singleton]
 #align ideal.span_singleton_pow Ideal.span_singleton_pow
 -/
 
@@ -1030,7 +1030,7 @@ theorem pow_mono {I J : Ideal R} (e : I ≤ J) (n : ℕ) : I ^ n ≤ J ^ n :=
   by
   induction n
   · rw [pow_zero, pow_zero]; exact rfl.le
-  · rw [pow_succ, pow_succ]; exact Ideal.mul_mono e n_ih
+  · rw [pow_succ', pow_succ']; exact Ideal.mul_mono e n_ih
 #align ideal.pow_mono Ideal.pow_mono
 
 #print Ideal.mul_eq_bot /-
@@ -1211,7 +1211,7 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » m) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » m) -/
 #print Ideal.radical_eq_sInf /-
 theorem radical_eq_sInf (I : Ideal R) : radical I = sInf {J : Ideal R | I ≤ J ∧ IsPrime J} :=
   le_antisymm (le_sInf fun J hJ => hJ.2.radical_le_iff.2 hJ.1) fun r hr =>
@@ -1272,7 +1272,7 @@ variable (R)
 
 #print Ideal.top_pow /-
 theorem top_pow (n : ℕ) : (⊤ ^ n : Ideal R) = ⊤ :=
-  Nat.recOn n one_eq_top fun n ih => by rw [pow_succ, ih, top_mul]
+  Nat.recOn n one_eq_top fun n ih => by rw [pow_succ', ih, top_mul]
 #align ideal.top_pow Ideal.top_pow
 -/
 
@@ -1287,7 +1287,7 @@ theorem radical_pow (n : ℕ) (H : n > 0) : radical (I ^ n) = radical I :=
       Or.cases_on (lt_or_eq_of_le <| Nat.le_of_lt_succ H)
         (fun H =>
           calc
-            radical (I ^ (n + 1)) = radical I ⊓ radical (I ^ n) := by rw [pow_succ];
+            radical (I ^ (n + 1)) = radical I ⊓ radical (I ^ n) := by rw [pow_succ'];
               exact radical_mul _ _
             _ = radical I ⊓ radical I := by rw [ih H]
             _ = radical I := inf_idem)
@@ -1371,8 +1371,8 @@ theorem subset_union {R : Type u} [Ring R] {I J K : Ideal R} :
       let ⟨r, hri, hrj⟩ := Set.not_subset.1 hij
       by_contradiction fun hsk =>
         Or.cases_on (h <| I.add_mem hri hsi)
-          (fun hj => hrj <| add_sub_cancel r s ▸ J.sub_mem hj ((h hsi).resolve_right hsk)) fun hk =>
-          hsk <| add_sub_cancel' r s ▸ K.sub_mem hk ((h hri).resolve_left hrj),
+          (fun hj => hrj <| add_sub_cancel_right r s ▸ J.sub_mem hj ((h hsi).resolve_right hsk))
+          fun hk => hsk <| add_sub_cancel_left r s ▸ K.sub_mem hk ((h hri).resolve_left hrj),
     fun h =>
     Or.cases_on h (fun h => Set.Subset.trans h <| Set.subset_union_left J K) fun h =>
       Set.Subset.trans h <| Set.subset_union_right J K⟩
@@ -1474,12 +1474,13 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
   rw [Finset.coe_insert, Set.biUnion_insert] at h
   have hsi : s ∈ f i := ((h hsI).resolve_left (mt Or.inl hs)).resolve_right (mt Or.inr hs)
   rcases h (I.add_mem hrI hsI) with (⟨ha | hb⟩ | hi | ht)
-  · exact hs (Or.inl <| Or.inl <| add_sub_cancel' r s ▸ (f a).sub_mem ha hra)
-  · exact hs (Or.inl <| Or.inr <| add_sub_cancel' r s ▸ (f b).sub_mem hb hrb)
-  · exact hri (add_sub_cancel r s ▸ (f i).sub_mem hi hsi)
+  · exact hs (Or.inl <| Or.inl <| add_sub_cancel_left r s ▸ (f a).sub_mem ha hra)
+  · exact hs (Or.inl <| Or.inr <| add_sub_cancel_left r s ▸ (f b).sub_mem hb hrb)
+  · exact hri (add_sub_cancel_right r s ▸ (f i).sub_mem hi hsi)
   · rw [Set.mem_iUnion₂] at ht; rcases ht with ⟨j, hjt, hj⟩
     simp only [Finset.inf_eq_iInf, SetLike.mem_coe, Submodule.mem_iInf] at hr
-    exact hs (Or.inr <| Set.mem_biUnion hjt <| add_sub_cancel' r s ▸ (f j).sub_mem hj <| hr j hjt)
+    exact
+      hs (Or.inr <| Set.mem_biUnion hjt <| add_sub_cancel_left r s ▸ (f j).sub_mem hj <| hr j hjt)
 #align ideal.subset_union_prime' Ideal.subset_union_prime'
 -/
 
@@ -2052,7 +2053,7 @@ theorem comap_map_of_surjective (I : Ideal R) : comap f (map f I) = I ⊔ comap 
       let ⟨s, hsi, hfsr⟩ := mem_image_of_mem_map_of_surjective f hf h
       Submodule.mem_sup.2
         ⟨s, hsi, r - s, (Submodule.mem_bot S).2 <| by rw [map_sub, hfsr, sub_self],
-          add_sub_cancel'_right s r⟩)
+          add_sub_cancel s r⟩)
     (sup_le (map_le_iff_le_comap.1 le_rfl) (comap_mono bot_le))
 #align ideal.comap_map_of_surjective Ideal.comap_map_of_surjective
 -/
@@ -2276,7 +2277,7 @@ theorem le_comap_pow (n : ℕ) : K.comap f ^ n ≤ (K ^ n).comap f :=
   by
   induction n
   · rw [pow_zero, pow_zero, Ideal.one_eq_top, Ideal.one_eq_top]; exact rfl.le
-  · rw [pow_succ, pow_succ]; exact (Ideal.mul_mono_right n_ih).trans (Ideal.le_comap_mul f)
+  · rw [pow_succ', pow_succ']; exact (Ideal.mul_mono_right n_ih).trans (Ideal.le_comap_mul f)
 #align ideal.le_comap_pow Ideal.le_comap_pow
 -/
 

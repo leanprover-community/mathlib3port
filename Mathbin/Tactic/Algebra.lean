@@ -90,7 +90,7 @@ On failure, the empty list is returned.
 unsafe def find_ancestors : Name → expr → tactic (List expr)
   | cl, arg => do
     let cs ← get_ancestors cl
-    let r ← cs.mapM fun c => List.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg
+    let r ← cs.mapM fun c => List.pure <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg
     return r
 #align tactic.find_ancestors tactic.find_ancestors
 

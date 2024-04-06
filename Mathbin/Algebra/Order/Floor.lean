@@ -991,7 +991,7 @@ theorem self_sub_floor (a : α) : a - ⌊a⌋ = fract a :=
 #print Int.floor_add_fract /-
 @[simp]
 theorem floor_add_fract (a : α) : (⌊a⌋ : α) + fract a = a :=
-  add_sub_cancel'_right _ _
+  add_sub_cancel _ _
 #align int.floor_add_fract Int.floor_add_fract
 -/
 
@@ -1262,7 +1262,7 @@ theorem fract_div_mul_self_mem_Ico (a b : k) (ha : 0 < a) : fract (b / a) * a �
 #print Int.fract_div_mul_self_add_zsmul_eq /-
 theorem fract_div_mul_self_add_zsmul_eq (a b : k) (ha : a ≠ 0) :
     fract (b / a) * a + ⌊b / a⌋ • a = b := by
-  rw [zsmul_eq_mul, ← add_mul, fract_add_floor, div_mul_cancel b ha]
+  rw [zsmul_eq_mul, ← add_mul, fract_add_floor, div_mul_cancel₀ b ha]
 #align int.fract_div_mul_self_add_zsmul_eq Int.fract_div_mul_self_add_zsmul_eq
 -/
 
@@ -1285,8 +1285,8 @@ theorem fract_div_natCast_eq_div_natCast_mod {m n : ℕ} : fract ((m : k) / n) =
   have hn' : 0 < (n : k) := by norm_cast; assumption
   refine' fract_eq_iff.mpr ⟨by positivity, _, m / n, _⟩
   · simpa only [div_lt_one hn', Nat.cast_lt] using m.mod_lt hn
-  · rw [sub_eq_iff_eq_add', ← mul_right_inj' hn'.ne.symm, mul_div_cancel' _ hn'.ne.symm, mul_add,
-      mul_div_cancel' _ hn'.ne.symm]
+  · rw [sub_eq_iff_eq_add', ← mul_right_inj' hn'.ne.symm, mul_div_cancel₀ _ hn'.ne.symm, mul_add,
+      mul_div_cancel₀ _ hn'.ne.symm]
     norm_cast
     rw [← Nat.cast_add, Nat.mod_add_div m n]
 #align int.fract_div_nat_cast_eq_div_nat_cast_mod Int.fract_div_natCast_eq_div_natCast_mod
@@ -1314,7 +1314,8 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} : fract ((m : k
     _ = fract ((m₁ : k) / n) := _
     _ = ↑(m₁ % (n : ℤ)) / ↑n := (this hm₁)
     _ = ↑(-(↑m₀ : ℤ) % ↑n) / ↑n := _
-  · rw [← fract_int_add q, ← mul_div_cancel (q : k) (ne_of_gt hn), ← add_div, ← sub_eq_add_neg]
+  · rw [← fract_int_add q, ← mul_div_cancel_right₀ (q : k) (ne_of_gt hn), ← add_div, ←
+      sub_eq_add_neg]
     push_cast
   · congr 2
     change (q * ↑n - (↑m₀ : ℤ)) % ↑n = _

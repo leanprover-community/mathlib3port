@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
 import Analysis.Calculus.Deriv.Slope
-import Analysis.Calculus.LocalExtr
+import Analysis.Calculus.LocalExtr.Basic
 import Analysis.Convex.Slope
 import Analysis.Convex.Normed
-import Data.IsROrC.Basic
+import Analysis.RCLike.Basic
 import Topology.Instances.RealVectorSpace
 
 #align_import analysis.calculus.mean_value from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
@@ -500,7 +500,7 @@ also assume `[normed_space ℝ E]` to have a notion of a `convex` set. -/
 
 section
 
-variable {𝕜 G : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup G] [NormedSpace 𝕜 G]
+variable {𝕜 G : Type _} [RCLike 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 namespace Convex
 
@@ -529,7 +529,7 @@ theorem norm_image_sub_le_of_norm_hasFDerivWithin_le (hf : ∀ x ∈ s, HasFDeri
     apply hs.segment_subset xs ys
   have : f x = f (g 0) := by simp only [g]; rw [zero_smul, add_zero]
   rw [this]
-  have : f y = f (g 1) := by simp only [g]; rw [one_smul, add_sub_cancel'_right]
+  have : f y = f (g 1) := by simp only [g]; rw [one_smul, add_sub_cancel]
   rw [this]
   have D2 : ∀ t ∈ Icc (0 : ℝ) 1, HasDerivWithinAt (f ∘ g) (f' (g t) (y - x)) (Icc 0 1) t :=
     by
@@ -885,7 +885,7 @@ theorem exists_hasDerivAt_eq_slope : ∃ c ∈ Ioo a b, f' c = (f b - f a) / (b 
     ⟨c, cmem, hc⟩
   use c, cmem
   simp only [_root_.id, Pi.one_apply, mul_one] at hc
-  rw [← hc, mul_div_cancel_left]
+  rw [← hc, mul_div_cancel_left₀]
   exact ne_of_gt (sub_pos.2 hab)
 #align exists_has_deriv_at_eq_slope exists_hasDerivAt_eq_slope
 -/
@@ -924,7 +924,7 @@ theorem exists_deriv_eq_slope : ∃ c ∈ Ioo a b, deriv f c = (f b - f a) / (b 
 
 end Interval
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.mul_sub_lt_image_sub_of_lt_deriv /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C < f'`, then
@@ -956,7 +956,7 @@ theorem mul_sub_lt_image_sub_of_lt_deriv {f : ℝ → ℝ} (hf : Differentiable 
 #align mul_sub_lt_image_sub_of_lt_deriv mul_sub_lt_image_sub_of_lt_deriv
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.mul_sub_le_image_sub_of_le_deriv /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C ≤ f'`, then
@@ -989,7 +989,7 @@ theorem mul_sub_le_image_sub_of_le_deriv {f : ℝ → ℝ} (hf : Differentiable 
 #align mul_sub_le_image_sub_of_le_deriv mul_sub_le_image_sub_of_le_deriv
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.image_sub_lt_mul_sub_of_deriv_lt /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' < C`, then
@@ -1021,7 +1021,7 @@ theorem image_sub_lt_mul_sub_of_deriv_lt {f : ℝ → ℝ} (hf : Differentiable 
 #align image_sub_lt_mul_sub_of_deriv_lt image_sub_lt_mul_sub_of_deriv_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 #print Convex.image_sub_le_mul_sub_of_deriv_le /-
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' ≤ C`, then
@@ -1578,7 +1578,7 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
 #align domain_mvt domain_mvt
 -/
 
-section IsROrC
+section RCLike
 
 /-!
 ### Vector-valued functions `f : E → F`.  Strict differentiability.
@@ -1591,7 +1591,7 @@ balls over `ℝ` or `ℂ`. For now, we only include the ones that we need.
 -/
 
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {H : Type _}
+variable {𝕜 : Type _} [RCLike 𝕜] {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {H : Type _}
   [NormedAddCommGroup H] [NormedSpace 𝕜 H] {f : G → H} {f' : G → G →L[𝕜] H} {x : G}
 
 #print hasStrictFDerivAt_of_hasFDerivAt_of_continuousAt /-
@@ -1630,5 +1630,5 @@ theorem hasStrictDerivAt_of_hasDerivAt_of_continuousAt {f f' : 𝕜 → G} {x : 
 #align has_strict_deriv_at_of_has_deriv_at_of_continuous_at hasStrictDerivAt_of_hasDerivAt_of_continuousAt
 -/
 
-end IsROrC
+end RCLike
 

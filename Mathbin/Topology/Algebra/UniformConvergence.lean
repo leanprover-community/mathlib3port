@@ -227,13 +227,13 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
     refine' ⟨U, hU, ⟨S, W⟩, ⟨hS, hW⟩, _⟩
     rw [Set.smul_subset_iff]
     intro a ha u hu x hx
-    rw [SMulHomClass.map_smul]
+    rw [MulActionSemiHomClass.map_smul]
     exact hUW (⟨ha, hu x hx⟩ : (a, φ u x) ∈ U ×ˢ W)
   · rintro a ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
     rw [smul_zero] at this
     refine' ⟨⟨S, (· • ·) a ⁻¹' V⟩, ⟨hS, this hV⟩, fun f hf x hx => _⟩
-    rw [SMulHomClass.map_smul]
+    rw [MulActionSemiHomClass.map_smul]
     exact hf x hx
   · rintro u ⟨S, V⟩ ⟨hS, hV⟩
     rcases h u S hS hV with ⟨r, hrpos, hr⟩
@@ -243,7 +243,7 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
     · rw [ha0]
       simp [mem_of_mem_nhds hV]
     · rw [mem_ball_zero_iff] at ha
-      rw [SMulHomClass.map_smul, Pi.smul_apply]
+      rw [MulActionSemiHomClass.map_smul, Pi.smul_apply]
       have : φ u x ∈ a⁻¹ • V :=
         by
         have ha0 : 0 < ‖a‖ := norm_pos_iff.mpr ha0

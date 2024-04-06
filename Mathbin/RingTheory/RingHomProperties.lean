@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import Algebra.Category.Ring.Constructions
 import Algebra.Category.Ring.Colimits
-import CategoryTheory.Isomorphism
+import CategoryTheory.Iso
 import RingTheory.Localization.Away.Basic
 import RingTheory.IsTensorProduct
 

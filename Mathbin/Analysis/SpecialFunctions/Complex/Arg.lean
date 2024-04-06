@@ -111,7 +111,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
   by
   simp only [arg, map_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_one]
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ←
-    mk_eq_add_mul_I, neg_div, mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
+    mk_eq_add_mul_I, neg_div, mul_div_cancel_left₀ _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
   by_cases h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
   · rw [if_pos]; exacts [Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
   · rw [mem_Icc, not_and_or, not_le, not_le] at h₁; cases h₁
@@ -119,7 +119,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
       have hcos : Real.cos θ < 0 := by rw [← neg_pos, ← Real.cos_add_pi];
         refine' Real.cos_pos_of_mem_Ioo ⟨_, _⟩ <;> linarith
       have hsin : Real.sin θ < 0 := Real.sin_neg_of_neg_of_neg_pi_lt (by linarith) hθ
-      rw [if_neg, if_neg, ← Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel] <;> [linarith;
+      rw [if_neg, if_neg, ← Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel_right] <;> [linarith;
         linarith; exact hsin.not_le; exact hcos.not_le]
     · replace hθ := hθ.2
       have hcos : Real.cos θ < 0 := Real.cos_neg_of_pi_div_two_lt_of_lt h₁ (by linarith)
@@ -226,7 +226,7 @@ theorem arg_eq_arg_iff {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
     arg x = arg y ↔ (abs y / abs x : ℂ) * x = y :=
   by
   simp only [ext_abs_arg_iff, map_mul, map_div₀, abs_of_real, abs_abs,
-    div_mul_cancel _ (abs.ne_zero hx), eq_self_iff_true, true_and_iff]
+    div_mul_cancel₀ _ (abs.ne_zero hx), eq_self_iff_true, true_and_iff]
   rw [← of_real_div, arg_real_mul]
   exact div_pos (abs.pos hy) (abs.pos hx)
 #align complex.arg_eq_arg_iff Complex.arg_eq_arg_iff

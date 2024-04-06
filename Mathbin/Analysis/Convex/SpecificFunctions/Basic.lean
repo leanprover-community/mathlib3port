@@ -140,7 +140,7 @@ We give an elementary proof rather than using the second derivative test, since 
 needed early in the analysis library. -/
 theorem convexOn_zpow : ∀ m : ℤ, ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m
   | (n : ℕ) => by
-    simp_rw [zpow_coe_nat]
+    simp_rw [zpow_natCast]
     exact (convexOn_pow n).Subset Ioi_subset_Ici_self (convex_Ioi _)
   | -[n+1] => by
     simp_rw [zpow_negSucc]

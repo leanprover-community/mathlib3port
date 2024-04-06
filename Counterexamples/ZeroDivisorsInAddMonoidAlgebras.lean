@@ -7,7 +7,7 @@ import Algebra.GeomSum
 import Algebra.Group.UniqueProds
 import Algebra.MonoidAlgebra.Basic
 import Data.Finsupp.Lex
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 
 #align_import zero_divisors_in_add_monoid_algebras from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
@@ -66,7 +66,7 @@ theorem zero_divisors_of_periodic {R A} [Nontrivial R] [Ring R] [AddMonoid A] {n
   · exact sub_ne_zero.mpr (by simpa [single_eq_single_iff])
   ·
     rw [mul_sub, AddMonoidAlgebra.single_mul_single, AddMonoidAlgebra.single_mul_single,
-      sub_eq_zero, add_zero, ← succ_nsmul, Nat.sub_add_cancel (one_le_two.trans n2), na]
+      sub_eq_zero, add_zero, ← succ_nsmul', Nat.sub_add_cancel (one_le_two.trans n2), na]
 #align counterexample.zero_divisors_of_periodic Counterexample.zero_divisors_of_periodic
 
 theorem single_zero_one {R A} [Semiring R] [Zero A] :

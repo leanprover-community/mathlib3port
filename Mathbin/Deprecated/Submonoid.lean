@@ -235,7 +235,7 @@ theorem Range.isSubmonoid {γ : Type _} [Monoid γ] {f : M → γ} (hf : IsMonoi
       "An `add_submonoid` is closed under multiplication by naturals."]
 theorem IsSubmonoid.pow_mem {a : M} (hs : IsSubmonoid s) (h : a ∈ s) : ∀ {n : ℕ}, a ^ n ∈ s
   | 0 => by rw [pow_zero]; exact hs.one_mem
-  | n + 1 => by rw [pow_succ]; exact hs.mul_mem h IsSubmonoid.pow_mem
+  | n + 1 => by rw [pow_succ']; exact hs.mul_mem h IsSubmonoid.pow_mem
 #align is_submonoid.pow_mem IsSubmonoid.pow_mem
 -/
 

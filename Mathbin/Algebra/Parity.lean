@@ -334,7 +334,7 @@ theorem even_two_mul (m : α) : Even (2 * m) :=
 #print Even.pow_of_ne_zero /-
 theorem Even.pow_of_ne_zero (hm : Even m) : ∀ {a : ℕ}, a ≠ 0 → Even (m ^ a)
   | 0, a0 => (a0 rfl).elim
-  | a + 1, _ => by rw [pow_succ]; exact hm.mul_right _
+  | a + 1, _ => by rw [pow_succ']; exact hm.mul_right _
 #align even.pow_of_ne_zero Even.pow_of_ne_zero
 -/
 
@@ -426,7 +426,7 @@ theorem Odd.mul : Odd m → Odd n → Odd (m * n) :=
 #print Odd.pow /-
 theorem Odd.pow (hm : Odd m) : ∀ {a : ℕ}, Odd (m ^ a)
   | 0 => by rw [pow_zero]; exact odd_one
-  | a + 1 => by rw [pow_succ]; exact hm.mul Odd.pow
+  | a + 1 => by rw [pow_succ']; exact hm.mul Odd.pow
 #align odd.pow Odd.pow
 -/
 

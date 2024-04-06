@@ -412,7 +412,7 @@ theorem Real.Gamma_one_half_eq : Real.Gamma (1 / 2) = sqrt π :=
     rw [smul_eq_mul, this]
     field_simp [(ne_of_lt hx).symm]
     norm_num; ring
-  · rw [div_one, ← mul_div_assoc, mul_comm, mul_div_cancel _ (two_ne_zero' ℝ)]
+  · rw [div_one, ← mul_div_assoc, mul_comm, mul_div_cancel_right₀ _ (two_ne_zero' ℝ)]
 #align real.Gamma_one_half_eq Real.Gamma_one_half_eq
 -/
 

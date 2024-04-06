@@ -199,7 +199,7 @@ private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X 
     IntervalIntegrable (fun x => -((-x).exp * x ^ s) : ℝ → ℂ) volume 0 X :=
   by
   convert (Gamma_integrand_interval_integrable (s + 1) _ hX).neg
-  · ext1; simp only [add_sub_cancel, Pi.neg_apply]
+  · ext1; simp only [add_sub_cancel_right, Pi.neg_apply]
   · simp only [add_re, one_re]; linarith
 
 private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y : ℝ} (hY : 0 ≤ Y) :
@@ -234,7 +234,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
 theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
     partialGamma (s + 1) X = s * partialGamma s X - (-X).exp * X ^ s :=
   by
-  rw [partial_Gamma, partial_Gamma, add_sub_cancel]
+  rw [partial_Gamma, partial_Gamma, add_sub_cancel_right]
   have F_der_I :
     ∀ x : ℝ,
       x ∈ Ioo 0 X →
@@ -325,7 +325,7 @@ theorem GammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
   induction' n with n hn generalizing s
   · simp only [Nat.cast_zero, neg_lt_zero] at h1
     dsimp only [Gamma_aux]; rw [Gamma_integral_add_one h1]
-    rw [mul_comm, mul_div_cancel]; contrapose! h1; rw [h1]
+    rw [mul_comm, mul_div_cancel_right₀]; contrapose! h1; rw [h1]
     simp
   · dsimp only [Gamma_aux]
     have hh1 : -(s + 1).re < n :=
@@ -342,7 +342,7 @@ theorem GammaAux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
   cases n
   · simp only [Nat.cast_zero, neg_lt_zero] at h1
     dsimp only [Gamma_aux]
-    rw [Gamma_integral_add_one h1, mul_div_cancel_left]
+    rw [Gamma_integral_add_one h1, mul_div_cancel_left₀]
     rintro rfl
     rw [zero_re] at h1
     exact h1.false

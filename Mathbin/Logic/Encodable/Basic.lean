@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
 import Logic.Equiv.Nat
-import Data.Pnat.Basic
+import Data.PNat.Basic
 import Order.Directed
 import Data.Countable.Defs
 import Order.RelIso.Basic

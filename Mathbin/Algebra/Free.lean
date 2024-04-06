@@ -3,8 +3,8 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Algebra.Hom.Group
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Hom.Defs
+import Algebra.Group.Equiv.Basic
 import Control.Applicative
 import Control.Traversable.Basic
 import Logic.Equiv.Defs

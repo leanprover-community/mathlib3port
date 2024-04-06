@@ -35,7 +35,7 @@ theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h 
   by
   induction' k with k ih
   · rwa [pow_one, pow_zero, pow_one, pow_one]
-  rw [pow_succ' p k, pow_mul, pow_mul, ← geom_sum₂_mul, pow_succ]
+  rw [pow_succ p k, pow_mul, pow_mul, ← geom_sum₂_mul, pow_succ']
   refine' mul_dvd_mul _ ih
   let I : Ideal R := span {p}
   let f : R →+* R ⧸ I := mk I

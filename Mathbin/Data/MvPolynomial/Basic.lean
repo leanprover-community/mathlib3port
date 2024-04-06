@@ -267,7 +267,7 @@ theorem C_mul : (C (a * a') : MvPolynomial σ R) = C a * C a' :=
 #print MvPolynomial.C_pow /-
 @[simp]
 theorem C_pow (a : R) (n : ℕ) : (C (a ^ n) : MvPolynomial σ R) = C a ^ n := by
-  induction n <;> simp [pow_succ, *]
+  induction n <;> simp [pow_succ', *]
 #align mv_polynomial.C_pow MvPolynomial.C_pow
 -/
 
@@ -498,7 +498,7 @@ theorem induction_on_monomial {M : MvPolynomial σ R → Prop} (h_C : ∀ a, M (
       intro e
       induction e
       · simp [ih]
-      · simp [ih, pow_succ', (mul_assoc _ _ _).symm, h_X, e_ih]
+      · simp [ih, pow_succ, (mul_assoc _ _ _).symm, h_X, e_ih]
     simp [add_comm, monomial_add_single, this]
 #align mv_polynomial.induction_on_monomial MvPolynomial.induction_on_monomial
 -/

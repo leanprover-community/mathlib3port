@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Analysis.Calculus.Inverse
+import Analysis.Calculus.InverseFunctionTheorem.ApproximatesLinearOn
 import LinearAlgebra.Dual
 
 #align_import analysis.calculus.lagrange_multipliers from "leanprover-community/mathlib"@"575b4ea3738b017e30fb205cb9b4a8742e5e82b6"

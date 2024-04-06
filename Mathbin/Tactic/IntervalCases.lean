@@ -6,8 +6,8 @@ Authors: Scott Morrison
 import Tactic.FinCases
 import Data.Fin.Interval
 import Data.Int.Interval
-import Data.Pnat.Interval
-import Data.Pnat.Basic
+import Data.PNat.Interval
+import Data.PNat.Basic
 
 #align_import tactic.interval_cases from "leanprover-community/mathlib"@"d3b54a9f9613af6ae818c7fee31872db11c4d928"
 

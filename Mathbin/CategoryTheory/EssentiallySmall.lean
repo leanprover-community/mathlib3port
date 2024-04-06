@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Logic.Small.Basic
-import CategoryTheory.Category.Ulift
+import Logic.Small.Defs
+import CategoryTheory.Category.ULift
 import CategoryTheory.Skeletal
 
 #align_import category_theory.essentially_small from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"

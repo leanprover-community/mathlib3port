@@ -73,7 +73,7 @@ theorem bodd_negOfNat (n : ℕ) : bodd (negOfNat n) = n.bodd := by cases n <;> s
 #print Int.bodd_neg /-
 @[simp]
 theorem bodd_neg (n : ℤ) : bodd (-n) = bodd n := by
-  cases n <;> simp [Neg.neg, Int.coe_nat_eq, Int.neg, bodd, -of_nat_eq_coe]
+  cases n <;> simp [Neg.neg, Int.natCast_eq_ofNat, Int.neg, bodd, -of_nat_eq_coe]
 #align int.bodd_neg Int.bodd_neg
 -/
 
@@ -268,7 +268,7 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
   cases' m with m m <;> cases' n with n n <;>
         repeat'
           first
-          | rw [← Int.coe_nat_eq]
+          | rw [← Int.natCast_eq_ofNat]
           | rw [bit_coe_nat]
           | rw [bit_neg_succ] <;>
       unfold bitwise nat_bitwise not <;>

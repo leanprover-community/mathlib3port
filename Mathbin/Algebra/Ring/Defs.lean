@@ -508,7 +508,7 @@ theorem sub_hMul_add_eq_of_hMul_add_eq_hMul_add : a * e + c = b * e + d → (a -
   fun h =>
   calc
     (a - b) * e + c = a * e + c - b * e := by simp [sub_mul, sub_add_eq_add_sub]
-    _ = d := by rw [h]; simp [@add_sub_cancel α]
+    _ = d := by rw [h]; simp [@add_sub_cancel_right α]
 #align sub_mul_add_eq_of_mul_add_eq_mul_add sub_hMul_add_eq_of_hMul_add_eq_hMul_add
 
 end NonUnitalNonAssocRing

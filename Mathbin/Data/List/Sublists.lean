@@ -89,7 +89,7 @@ theorem mem_sublists' {s t : List α} : s ∈ sublists' t ↔ s <+ t :=
 theorem length_sublists' : ∀ l : List α, length (sublists' l) = 2 ^ length l
   | [] => rfl
   | a :: l => by
-    simp only [sublists'_cons, length_append, length_sublists' l, length_map, length, pow_succ',
+    simp only [sublists'_cons, length_append, length_sublists' l, length_map, length, pow_succ,
       mul_succ, MulZeroClass.mul_zero, zero_add]
 #align list.length_sublists' List.length_sublists'
 -/
@@ -257,15 +257,15 @@ theorem length_sublists (l : List α) : length (sublists l) = 2 ^ length l := by
 #align list.length_sublists List.length_sublists
 -/
 
-#print List.map_ret_sublist_sublists /-
-theorem map_ret_sublist_sublists (l : List α) : map List.ret l <+ sublists l :=
+#print List.map_pure_sublist_sublists /-
+theorem map_pure_sublist_sublists (l : List α) : map List.pure l <+ sublists l :=
   reverseRecOn l (nil_sublist _) fun l a IH => by
     simp only [map, map_append, sublists_concat] <;>
       exact
         ((append_sublist_append_left _).2 <|
               singleton_sublist.2 <| mem_map.2 ⟨[], mem_sublists.2 (nil_sublist _), by rfl⟩).trans
           ((append_sublist_append_right _).2 IH)
-#align list.map_ret_sublist_sublists List.map_ret_sublist_sublists
+#align list.map_ret_sublist_sublists List.map_pure_sublist_sublists
 -/
 
 /-! ### sublists_len -/
@@ -458,7 +458,7 @@ theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
 #print List.nodup_sublists /-
 @[simp]
 theorem nodup_sublists {l : List α} : Nodup (sublists l) ↔ Nodup l :=
-  ⟨fun h => (h.Sublist (map_ret_sublist_sublists _)).of_map _, fun h =>
+  ⟨fun h => (h.Sublist (map_pure_sublist_sublists _)).of_map _, fun h =>
     (pairwise_sublists h).imp fun _ _ h => mt reverse_inj.2 h.to_ne⟩
 #align list.nodup_sublists List.nodup_sublists
 -/

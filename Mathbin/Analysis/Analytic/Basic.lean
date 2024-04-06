@@ -532,7 +532,7 @@ theorem HasFPowerSeriesOnBall.hasSum_sub (hf : HasFPowerSeriesOnBall f p x r) {y
     (hy : y ∈ EMetric.ball x r) : HasSum (fun n : ℕ => p n fun i => y - x) (f y) :=
   by
   have : y - x ∈ EMetric.ball (0 : E) r := by simpa [edist_eq_coe_nnnorm_sub] using hy
-  simpa only [add_sub_cancel'_right] using hf.has_sum this
+  simpa only [add_sub_cancel] using hf.has_sum this
 #align has_fpower_series_on_ball.has_sum_sub HasFPowerSeriesOnBall.hasSum_sub
 -/
 
@@ -736,7 +736,7 @@ theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
 #align analytic_on.sub AnalyticOn.sub
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » 0) -/
 #print HasFPowerSeriesOnBall.coeff_zero /-
 theorem HasFPowerSeriesOnBall.coeff_zero (hf : HasFPowerSeriesOnBall f pf x r) (v : Fin 0 → E) :
     pf 0 v = f x := by
@@ -912,12 +912,12 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
             Prod.fst_sub, Prod.snd_sub, sub_sub_sub_cancel_right] using
             (p <| n + 2).norm_image_sub_le (fun _ => y.1 - x) fun _ => y.2 - x
         _ = ‖p (n + 2)‖ * ‖y - (x, x)‖ ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
-          rw [pow_succ ‖y - (x, x)‖]; ring
+          rw [pow_succ' ‖y - (x, x)‖]; ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
           apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_left, hy'.le,
             norm_nonneg, pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg,
             ha.1.le]
-        _ = B n := by field_simp [B, pow_succ, hr'0.ne'];
+        _ = B n := by field_simp [B, pow_succ', hr'0.ne'];
           simp only [mul_assoc, mul_comm, mul_left_comm]
     have hBL : HasSum B (L y) := by
       apply HasSum.mul_left
@@ -937,7 +937,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
 #align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 #print HasFPowerSeriesOnBall.image_sub_sub_deriv_le /-
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
@@ -1150,7 +1150,7 @@ theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p :
         ‖p fun i => k • y‖ ≤ c * ‖k • y‖ ^ (n.succ + 1) := by
           simpa only [norm_pow, norm_norm] using ht (k • y) (δε (mem_ball_zero_iff.mpr h₁))
         _ = ‖k‖ ^ n.succ * (‖k‖ * (c * ‖y‖ ^ (n.succ + 1))) := by simp only [norm_smul, mul_pow];
-          rw [pow_succ]; ring
+          rw [pow_succ']; ring
     have h₃ : ‖k‖ * (c * ‖y‖ ^ (n.succ + 1)) < ε :=
       inv_mul_cancel_right₀ h₀.ne.symm ε ▸
         mul_lt_mul_of_pos_right (lt_of_lt_of_le k_norm (min_le_right _ _)) h₀
@@ -1612,7 +1612,7 @@ theorem HasFPowerSeriesOnBall.analyticAt_of_mem (hf : HasFPowerSeriesOnBall f p 
   by
   have : (‖y - x‖₊ : ℝ≥0∞) < r := by simpa [edist_eq_coe_nnnorm_sub] using h
   have := hf.change_origin this
-  rw [add_sub_cancel'_right] at this
+  rw [add_sub_cancel] at this
   exact this.analytic_at
 #align has_fpower_series_on_ball.analytic_at_of_mem HasFPowerSeriesOnBall.analyticAt_of_mem
 -/
@@ -1683,7 +1683,7 @@ theorem hasFPowerSeriesAt_iff' :
   rw [← map_add_left_nhds_zero, eventually_map, hasFPowerSeriesAt_iff]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]"
-  rw [add_sub_cancel']
+  rw [add_sub_cancel_left]
 #align has_fpower_series_at_iff' hasFPowerSeriesAt_iff'
 -/
 

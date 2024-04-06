@@ -5,7 +5,7 @@ Authors: Christopher Hoskin
 -/
 import Topology.Order.Lattice
 import Analysis.Normed.Group.Basic
-import Algebra.Order.LatticeGroup
+import Algebra.Order.Group.Lattice
 
 #align_import analysis.normed.order.lattice from "leanprover-community/mathlib"@"5dc275ec639221ca4d5f56938eb966f6ad9bc89f"
 

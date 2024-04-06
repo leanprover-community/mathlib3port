@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
 import Algebra.Group.Prod
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Equiv.Basic
 import Data.Setoid.Basic
 import GroupTheory.Submonoid.Operations
 
@@ -1287,7 +1287,7 @@ section Monoids
 protected theorem pow {M : Type _} [Monoid M] (c : Con M) :
     ∀ (n : ℕ) {w x}, c w x → c (w ^ n) (x ^ n)
   | 0, w, x, h => by simpa using c.refl _
-  | Nat.succ n, w, x, h => by simpa [pow_succ] using c.mul h (pow n h)
+  | Nat.succ n, w, x, h => by simpa [pow_succ'] using c.mul h (pow n h)
 #align con.pow Con.pow
 #align add_con.nsmul AddCon.nsmul
 -/
@@ -1384,7 +1384,7 @@ protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := 
 /-- Multiplicative congruence relations preserve integer powers. -/
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
-  | Int.ofNat n, w, x, h => by simpa only [zpow_coe_nat] using c.pow _ h
+  | Int.ofNat n, w, x, h => by simpa only [zpow_natCast] using c.pow _ h
   | -[n+1], w, x, h => by simpa only [zpow_negSucc] using c.inv (c.pow _ h)
 #align con.zpow Con.zpow
 #align add_con.zsmul AddCon.zsmul

@@ -8,8 +8,8 @@ import Algebra.Polynomial.BigOperators
 import RingTheory.RootsOfUnity.Complex
 import Data.Polynomial.Lifts
 import Data.Polynomial.Splits
-import Data.Zmod.Algebra
-import FieldTheory.Ratfunc
+import Data.ZMod.Algebra
+import FieldTheory.RatFunc
 import FieldTheory.Separable
 import NumberTheory.ArithmeticFunction
 import RingTheory.RootsOfUnity.Basic
@@ -711,7 +711,7 @@ theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRing R] {p n : ℕ} (
 theorem cyclotomic_prime_pow_mul_X_pow_sub_one (R : Type _) [CommRing R] (p k : ℕ)
     [hn : Fact (Nat.Prime p)] :
     cyclotomic (p ^ (k + 1)) R * (X ^ p ^ k - 1) = X ^ p ^ (k + 1) - 1 := by
-  rw [cyclotomic_prime_pow_eq_geom_sum hn.out, geom_sum_mul, ← pow_mul, pow_succ, mul_comm]
+  rw [cyclotomic_prime_pow_eq_geom_sum hn.out, geom_sum_mul, ← pow_mul, pow_succ', mul_comm]
 #align polynomial.cyclotomic_prime_pow_mul_X_pow_sub_one Polynomial.cyclotomic_prime_pow_mul_X_pow_sub_one
 -/
 

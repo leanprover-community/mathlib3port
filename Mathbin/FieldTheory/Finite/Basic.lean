@@ -143,7 +143,7 @@ theorem pow_card (a : K) : a ^ q = a :=
   by
   have hp : 0 < Fintype.card K := lt_trans zero_lt_one Fintype.one_lt_card
   by_cases h : a = 0; · rw [h]; apply zero_pow hp
-  rw [← Nat.succ_pred_eq_of_pos hp, pow_succ, Nat.pred_eq_sub_one, pow_card_sub_one_eq_one a h,
+  rw [← Nat.succ_pred_eq_of_pos hp, pow_succ', Nat.pred_eq_sub_one, pow_card_sub_one_eq_one a h,
     mul_one]
 #align finite_field.pow_card FiniteField.pow_card
 -/
@@ -153,7 +153,7 @@ theorem pow_card_pow (n : ℕ) (a : K) : a ^ q ^ n = a :=
   by
   induction' n with n ih
   · simp
-  · simp [pow_succ, pow_mul, ih, pow_card]
+  · simp [pow_succ', pow_mul, ih, pow_card]
 #align finite_field.pow_card_pow FiniteField.pow_card_pow
 -/
 
@@ -331,7 +331,7 @@ theorem frobenius_pow {p : ℕ} [Fact p.Prime] [CharP K p] {n : ℕ} (hcard : q 
     frobenius K p ^ n = 1 := by
   ext; conv_rhs => rw [RingHom.one_def, RingHom.id_apply, ← pow_card x, hcard]; clear hcard
   induction n; · simp
-  rw [pow_succ, pow_succ', pow_mul, RingHom.mul_def, RingHom.comp_apply, frobenius_def, n_ih]
+  rw [pow_succ', pow_succ, pow_mul, RingHom.mul_def, RingHom.comp_apply, frobenius_def, n_ih]
 #align finite_field.frobenius_pow FiniteField.frobenius_pow
 -/
 
@@ -453,7 +453,7 @@ theorem pow_card_pow {n p : ℕ} [Fact p.Prime] (x : ZMod p) : x ^ p ^ n = x :=
   by
   induction' n with n ih
   · simp
-  · simp [pow_succ, pow_mul, ih, pow_card]
+  · simp [pow_succ', pow_mul, ih, pow_card]
 #align zmod.pow_card_pow ZMod.pow_card_pow
 -/
 

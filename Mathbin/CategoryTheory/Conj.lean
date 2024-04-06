@@ -3,7 +3,7 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Algebra.Hom.Equiv.Units.Basic
+import Algebra.Group.Units.Equiv
 import CategoryTheory.Endomorphism
 
 #align_import category_theory.conj from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"

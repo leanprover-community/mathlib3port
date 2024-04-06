@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Data.Num.Basic
-import Data.Bitvec.Core
+import Data.BitVec.Defs
 
 #align_import data.num.bitwise from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

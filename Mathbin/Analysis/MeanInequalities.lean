@@ -5,8 +5,8 @@ Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 -/
 import Analysis.Convex.Jensen
 import Analysis.Convex.SpecificFunctions.Basic
-import Analysis.SpecialFunctions.Pow.Nnreal
-import Data.Real.ConjugateExponents
+import Analysis.SpecialFunctions.Pow.NNReal
+import Data.Real.ConjExponents
 
 #align_import analysis.mean_inequalities from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -366,8 +366,8 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0) {p q : 
     _ ≤ 1 / Real.toNNReal p + 1 / Real.toNNReal q :=
       by
       refine' add_le_add _ _
-      · rwa [div_le_iff hp_ne_zero, div_mul_cancel _ hp_ne_zero]
-      · rwa [div_le_iff hq_ne_zero, div_mul_cancel _ hq_ne_zero]
+      · rwa [div_le_iff hp_ne_zero, div_mul_cancel₀ _ hp_ne_zero]
+      · rwa [div_le_iff hq_ne_zero, div_mul_cancel₀ _ hq_ne_zero]
     _ = 1 := hpq.inv_add_inv_conj_nnreal
 
 private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0) {p q : ℝ}
@@ -518,7 +518,7 @@ theorem isGreatest_Lp (f : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjExponent q
         refine' fun y => mul_div_cancel_left_of_imp fun h => _
         simpa [h, hpq.ne_zero]
       simp only [Set.mem_setOf_eq, div_rpow, ← sum_div, ← rpow_mul,
-        div_mul_cancel _ hpq.symm.ne_zero, rpow_one, div_le_iff hf, one_mul, hpq.mul_eq_add, ←
+        div_mul_cancel₀ _ hpq.symm.ne_zero, rpow_one, div_le_iff hf, one_mul, hpq.mul_eq_add, ←
         rpow_sub' _ A, _root_.add_sub_cancel, le_refl, true_and_iff, ← mul_div_assoc, B]
       rw [div_eq_iff, ← rpow_add hf, hpq.inv_add_inv_conj, rpow_one]
       simpa [hpq.symm.ne_zero] using hf

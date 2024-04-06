@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 -/
 import Topology.VectorBundle.Basic
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 
 #align_import topology.vector_bundle.hom from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

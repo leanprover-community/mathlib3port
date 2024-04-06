@@ -72,7 +72,7 @@ theorem tendsto_norm_zpow_nhdsWithin_0_atTop {𝕜 : Type _} [NormedField 𝕜] 
   by
   rcases neg_surjective m with ⟨m, rfl⟩
   rw [neg_lt_zero] at hm; lift m to ℕ using hm.le; rw [Int.coe_nat_pos] at hm
-  simp only [norm_pow, zpow_neg, zpow_coe_nat, ← inv_pow]
+  simp only [norm_pow, zpow_neg, zpow_natCast, ← inv_pow]
   exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhdsWithin_0_atTop
 #align normed_field.tendsto_norm_zpow_nhds_within_0_at_top NormedField.tendsto_norm_zpow_nhdsWithin_0_atTop
 -/
@@ -251,7 +251,7 @@ theorem isLittleO_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [Nor
   have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ‖r₁‖) ^ n :=
     isLittleO_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
   suffices (fun n => r₁ ^ n) =O[at_top] fun n => ‖r₁‖ ^ n by
-    simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this
+    simpa [div_mul_cancel₀ _ (pow_pos h0 _).ne'] using A.mul_is_O this
   exact is_O.of_bound 1 (by simpa using eventually_norm_pow_le r₁)
 #align is_o_pow_const_mul_const_pow_const_pow_of_norm_lt isLittleO_pow_const_mul_const_pow_const_pow_of_norm_lt
 -/
@@ -422,12 +422,12 @@ theorem hasSum_coe_mul_geometric_of_norm_lt_one {𝕜 : Type _} [NormedField �
   have hr' : r ≠ 1 := by rintro rfl; simpa [lt_irrefl] using hr
   set s : 𝕜 := ∑' n : ℕ, n * r ^ n
   calc
-    s = (1 - r) * s / (1 - r) := (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm
+    s = (1 - r) * s / (1 - r) := (mul_div_cancel_left₀ _ (sub_ne_zero.2 hr'.symm)).symm
     _ = (s - r * s) / (1 - r) := by rw [sub_mul, one_mul]
     _ = ((0 : ℕ) * r ^ 0 + ∑' n : ℕ, (n + 1 : ℕ) * r ^ (n + 1) - r * s) / (1 - r) := by
       rw [← tsum_eq_zero_add A]
     _ = (r * ∑' n : ℕ, (n + 1) * r ^ n - r * s) / (1 - r) := by
-      simp [pow_succ, mul_left_comm _ r, tsum_mul_left]
+      simp [pow_succ', mul_left_comm _ r, tsum_mul_left]
     _ = r / (1 - r) ^ 2 := by
       simp [add_mul, tsum_add A B.summable, mul_add, B.tsum_eq, ← div_eq_mul_inv, sq, div_div]
 #align has_sum_coe_mul_geometric_of_norm_lt_1 hasSum_coe_mul_geometric_of_norm_lt_one
@@ -458,7 +458,7 @@ theorem SeminormedAddCommGroup.cauchySeq_of_le_geometric {C : ℝ} {r : ℝ} (hr
 theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) (n : ℕ) :
     dist (∑ i in range n, f i) (∑ i in range (n + 1), f i) ≤ C * r ^ n :=
   by
-  rw [sum_range_succ, dist_eq_norm, ← norm_neg, neg_sub, add_sub_cancel']
+  rw [sum_range_succ, dist_eq_norm, ← norm_neg, neg_sub, add_sub_cancel_left]
   exact hf n
 #align dist_partial_sum_le_of_le_geometric dist_partial_sum_le_of_le_geometric
 -/
@@ -803,7 +803,7 @@ theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n
   intro n hn
   calc
     ‖x ^ (n + 1) / (n + 1)!‖ = ‖x‖ / (n + 1) * ‖x ^ n / n !‖ := by
-      rw [pow_succ, Nat.factorial_succ, Nat.cast_mul, ← div_mul_div_comm, norm_mul, norm_div,
+      rw [pow_succ', Nat.factorial_succ, Nat.cast_mul, ← div_mul_div_comm, norm_mul, norm_div,
         Real.norm_coe_nat, Nat.cast_succ]
     _ ≤ ‖x‖ / (⌊‖x‖⌋₊ + 1) * ‖x ^ n / n !‖ := by
       mono* with 0 ≤ ‖x ^ n / n !‖, 0 ≤ ‖x‖ <;> apply norm_nonneg

@@ -194,7 +194,7 @@ theorem parallelepiped_single [DecidableEq ι] (a : ι → ℝ) :
       cases' eq_or_ne (a i) 0 with hai hai
       · rw [hai, inf_idem, sup_idem, ← le_antisymm_iff] at h
         rw [hai, ← h, zero_div, MulZeroClass.zero_mul]
-      · rw [div_mul_cancel _ hai]
+      · rw [div_mul_cancel₀ _ hai]
 #align parallelepiped_single parallelepiped_single
 -/
 

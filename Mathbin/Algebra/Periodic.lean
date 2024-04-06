@@ -9,7 +9,7 @@ import Algebra.Module.Basic
 import Algebra.Order.Archimedean
 import Data.Int.Parity
 import GroupTheory.Coset
-import GroupTheory.Subgroup.Zpowers
+import GroupTheory.Subgroup.ZPowers
 import GroupTheory.Submonoid.Membership
 
 #align_import algebra.periodic from "leanprover-community/mathlib"@"30413fc89f202a090a54d78e540963ed3de0056e"
@@ -306,7 +306,7 @@ theorem Periodic.nat_mul_sub_eq [Ring α] (h : Periodic f c) (n : ℕ) : f (n * 
 protected theorem Periodic.zsmul [AddGroup α] (h : Periodic f c) (n : ℤ) : Periodic f (n • c) :=
   by
   cases n
-  · simpa only [Int.ofNat_eq_coe, coe_nat_zsmul] using h.nsmul n
+  · simpa only [Int.ofNat_eq_coe, natCast_zsmul] using h.nsmul n
   · simpa only [negSucc_zsmul] using (h.nsmul n.succ).neg
 #align function.periodic.zsmul Function.Periodic.zsmul
 -/
@@ -483,12 +483,12 @@ protected theorem Antiperiodic.funext' [Add α] [InvolutiveNeg β] (h : Antiperi
 #align function.antiperiodic.funext' Function.Antiperiodic.funext'
 -/
 
-#print Function.Antiperiodic.periodic /-
+#print Function.Antiperiodic.periodic_two_mul /-
 /-- If a function is `antiperiodic` with antiperiod `c`, then it is also `periodic` with period
   `2 * c`. -/
-protected theorem Antiperiodic.periodic [Semiring α] [InvolutiveNeg β] (h : Antiperiodic f c) :
-    Periodic f (2 * c) := by simp [two_mul, ← add_assoc, h _]
-#align function.antiperiodic.periodic Function.Antiperiodic.periodic
+protected theorem Antiperiodic.periodic_two_mul [Semiring α] [InvolutiveNeg β]
+    (h : Antiperiodic f c) : Periodic f (2 * c) := by simp [two_mul, ← add_assoc, h _]
+#align function.antiperiodic.periodic Function.Antiperiodic.periodic_two_mul
 -/
 
 #print Function.Antiperiodic.eq /-

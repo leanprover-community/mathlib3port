@@ -428,7 +428,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
     integral_cpow h'
   apply_fun Complex.re at this; convert this
   · simp_rw [interval_integral_eq_integral_uIoc, Complex.real_smul, Complex.re_ofReal_mul]
-    · change Complex.re with IsROrC.re
+    · change Complex.re with RCLike.re
       rw [← integral_re]; rfl
       refine' interval_integrable_iff.mp _
       cases h'
@@ -451,7 +451,7 @@ theorem integral_zpow {n : ℤ} (h : 0 ≤ n ∨ n ≠ -1 ∧ (0 : ℝ) ∉ [a, 
 #print integral_pow /-
 @[simp]
 theorem integral_pow : ∫ x in a..b, x ^ n = (b ^ (n + 1) - a ^ (n + 1)) / (n + 1) := by
-  simpa only [← Int.ofNat_succ, zpow_coe_nat] using integral_zpow (Or.inl (Int.coe_nat_nonneg n))
+  simpa only [← Int.ofNat_succ, zpow_natCast] using integral_zpow (Or.inl (Int.natCast_nonneg n))
 #align integral_pow integral_pow
 -/
 
@@ -565,7 +565,7 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
     conv =>
       congr
       skip
-      rw [← mul_div_cancel (Complex.exp (c * x)) hc]
+      rw [← mul_div_cancel_right₀ (Complex.exp (c * x)) hc]
     convert ((Complex.hasDerivAt_exp _).comp x _).div_const c using 1
     simpa only [mul_one] using ((hasDerivAt_id (x : ℂ)).const_mul _).comp_ofReal
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
@@ -633,7 +633,7 @@ theorem integral_cos_mul_complex {z : ℂ} (hz : z ≠ 0) (a b : ℝ) :
   have c : HasDerivAt (fun y : ℂ => Complex.sin (y * z)) _ ↑x := HasDerivAt.comp x a b
   convert HasDerivAt.comp_ofReal (c.div_const z)
   · simp_rw [mul_comm]
-  · rw [mul_div_cancel _ hz, mul_comm]
+  · rw [mul_div_cancel_right₀ _ hz, mul_comm]
 #align integral_cos_mul_complex integral_cos_mul_complex
 -/
 
@@ -743,7 +743,7 @@ theorem integral_sin_pow_aux :
     simpa only [neg_neg] using (has_deriv_at_cos x).neg
   have H := integral_mul_deriv_eq_deriv_mul hu hv _ _
   calc
-    ∫ x in a..b, sin x ^ (n + 2) = ∫ x in a..b, sin x ^ (n + 1) * sin x := by simp only [pow_succ']
+    ∫ x in a..b, sin x ^ (n + 2) = ∫ x in a..b, sin x ^ (n + 1) * sin x := by simp only [pow_succ]
     _ = C + (n + 1) * ∫ x in a..b, cos x ^ 2 * sin x ^ n := by simp [H, h, sq]
     _ = C + (n + 1) * ∫ x in a..b, sin x ^ n - sin x ^ (n + 2) := by
       simp [cos_sq', sub_mul, ← pow_add, add_comm]
@@ -838,7 +838,7 @@ theorem integral_cos_pow_aux :
   have hv : ∀ x ∈ [a, b], HasDerivAt sin (cos x) x := fun x hx => has_deriv_at_sin x
   have H := integral_mul_deriv_eq_deriv_mul hu hv _ _
   calc
-    ∫ x in a..b, cos x ^ (n + 2) = ∫ x in a..b, cos x ^ (n + 1) * cos x := by simp only [pow_succ']
+    ∫ x in a..b, cos x ^ (n + 2) = ∫ x in a..b, cos x ^ (n + 1) * cos x := by simp only [pow_succ]
     _ = C + (n + 1) * ∫ x in a..b, sin x ^ 2 * cos x ^ n := by simp [H, h, sq, -neg_add_rev]
     _ = C + (n + 1) * ∫ x in a..b, cos x ^ n - cos x ^ (n + 2) := by
       simp [sin_sq, sub_mul, ← pow_add, add_comm]
@@ -881,7 +881,7 @@ theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
   calc
     ∫ x in a..b, sin x ^ m * cos x ^ (2 * n + 1) =
         ∫ x in a..b, sin x ^ m * (1 - sin x ^ 2) ^ n * cos x :=
-      by simp only [pow_succ', ← mul_assoc, pow_mul, cos_sq']
+      by simp only [pow_succ, ← mul_assoc, pow_mul, cos_sq']
     _ = ∫ u in sin a..sin b, u ^ m * (1 - u ^ 2) ^ n :=
       integral_comp_mul_deriv (fun x hx => hasDerivAt_sin x) continuousOn_cos hc
 #align integral_sin_pow_mul_cos_pow_odd integral_sin_pow_mul_cos_pow_odd
@@ -919,8 +919,7 @@ theorem integral_sin_pow_odd_mul_cos_pow (m n : ℕ) :
   calc
     ∫ x in a..b, sin x ^ (2 * m + 1) * cos x ^ n = -∫ x in b..a, sin x ^ (2 * m + 1) * cos x ^ n :=
       by rw [integral_symm]
-    _ = ∫ x in b..a, (1 - cos x ^ 2) ^ m * -sin x * cos x ^ n := by
-      simp [pow_succ', pow_mul, sin_sq]
+    _ = ∫ x in b..a, (1 - cos x ^ 2) ^ m * -sin x * cos x ^ n := by simp [pow_succ, pow_mul, sin_sq]
     _ = ∫ x in b..a, cos x ^ n * (1 - cos x ^ 2) ^ m * -sin x := by congr; ext; ring
     _ = ∫ u in cos b..cos a, u ^ n * (1 - u ^ 2) ^ m :=
       integral_comp_mul_deriv (fun x hx => hasDerivAt_cos x) continuousOn_sin.neg hc

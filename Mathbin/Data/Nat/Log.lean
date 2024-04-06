@@ -121,7 +121,7 @@ theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : y ≠ 0) : b 
   · have b_pos : 0 < b := zero_le_one.trans_lt hb
     rw [succ_eq_add_one, add_le_add_iff_right, ←
       ih (y / b) (div_lt_self hy.bot_lt hb) (Nat.div_pos h.1 b_pos).ne', le_div_iff_mul_le b_pos,
-      pow_succ']
+      pow_succ]
   ·
     exact
       iff_of_false (fun hby => h ⟨(le_self_pow x.succ_ne_zero _).trans hby, hb⟩)
@@ -192,7 +192,7 @@ theorem log_eq_iff {b m n : ℕ} (h : m ≠ 0 ∨ 1 < b ∧ n ≠ 0) :
         le_trans (pow_le_pow_right_of_le_one' hb m.le_succ)
     ·
       simpa only [log_zero_right, hm.symm, false_iff_iff, not_and, not_lt, le_zero_iff,
-        pow_succ] using mul_eq_zero_of_right _
+        pow_succ'] using mul_eq_zero_of_right _
 #align nat.log_eq_iff Nat.log_eq_iff
 -/
 
@@ -227,7 +227,7 @@ theorem log_eq_one_iff {b n : ℕ} : log b n = 1 ↔ n < b * b ∧ 1 < b ∧ b �
 #print Nat.log_mul_base /-
 theorem log_mul_base {b n : ℕ} (hb : 1 < b) (hn : n ≠ 0) : log b (n * b) = log b n + 1 :=
   by
-  apply log_eq_of_pow_le_of_lt_pow <;> rw [pow_succ']
+  apply log_eq_of_pow_le_of_lt_pow <;> rw [pow_succ]
   exacts [mul_le_mul_right' (pow_log_le_self _ hn) _,
     (mul_lt_mul_right (zero_lt_one.trans hb)).2 (lt_pow_succ_log_self hb _)]
 #align nat.log_mul_base Nat.log_mul_base
@@ -400,7 +400,7 @@ theorem le_pow_iff_clog_le {b : ℕ} (hb : 1 < b) {x y : ℕ} : x ≤ b ^ y ↔ 
   rw [clog]; split_ifs
   ·
     rw [succ_eq_add_one, add_le_add_iff_right, ← ih ((x + b - 1) / b) (add_pred_div_lt hb h.2),
-      Nat.div_le_iff_le_mul_add_pred b_pos, ← pow_succ,
+      Nat.div_le_iff_le_mul_add_pred b_pos, ← pow_succ',
       add_tsub_assoc_of_le (Nat.succ_le_of_lt b_pos), add_le_add_iff_right]
   ·
     exact

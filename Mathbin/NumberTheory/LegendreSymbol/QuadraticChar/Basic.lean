@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
 import Data.Fintype.Parity
-import NumberTheory.LegendreSymbol.ZmodChar
+import NumberTheory.LegendreSymbol.ZModChar
 import FieldTheory.Finite.Basic
 
 #align_import number_theory.legendre_symbol.quadratic_char.basic from "leanprover-community/mathlib"@"e160cefedc932ce41c7049bf0c4b0f061d06216e"
@@ -322,7 +322,7 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       rw [h₁, List.toFinset_cons, List.toFinset_cons, List.toFinset_nil]
       exact Finset.card_pair (Ne.symm (mt (Ring.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
-      simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.toFinset_card, Fintype.card_ofFinset,
+      simp only [Int.natCast_eq_zero, Finset.card_eq_zero, Set.toFinset_card, Fintype.card_ofFinset,
         Set.mem_setOf_eq, add_left_neg]
       ext x
       simp only [iff_false_iff, Finset.mem_filter, Finset.mem_univ, true_and_iff,

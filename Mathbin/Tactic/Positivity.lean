@@ -982,7 +982,7 @@ unsafe def positivity_abs : expr → tactic strictness
 #align tactic.positivity_abs tactic.positivity_abs
 
 private theorem int_nat_abs_pos {n : ℤ} (hn : 0 < n) : 0 < n.natAbs :=
-  Int.natAbs_pos_of_ne_zero hn.ne'
+  Int.natAbs_pos hn.ne'
 
 /-- Extension for the `positivity` tactic: `int.nat_abs` is positive when its input is.
 
@@ -995,7 +995,7 @@ unsafe def positivity_nat_abs : expr → tactic strictness
     let strict_a ← core a
     match strict_a with
       | positive p => positive <$> mk_app `` int_nat_abs_pos [p]
-      | nonzero p => positive <$> mk_app `` Int.natAbs_pos_of_ne_zero [p]
+      | nonzero p => positive <$> mk_app `` Int.natAbs_pos [p]
       | _ => failed
   | _ => failed
 #align tactic.positivity_nat_abs tactic.positivity_nat_abs

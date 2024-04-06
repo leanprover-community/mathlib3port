@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 -/
 import Data.Nat.Choose.Factorization
-import Data.Nat.PrimeNormNum
+import Tactic.NormNum.Prime
 import NumberTheory.Primorial
 import Analysis.Convex.SpecificFunctions.Basic
 import Analysis.Convex.SpecificFunctions.Deriv

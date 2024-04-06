@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Analysis.Calculus.Deriv.Add
-import Analysis.Calculus.Fderiv.Equiv
-import Analysis.Calculus.Fderiv.Prod
+import Analysis.Calculus.FDeriv.Equiv
+import Analysis.Calculus.FDeriv.Prod
 import Analysis.Calculus.Monotone
 import Data.Set.Function
 import Algebra.Group.Basic
@@ -236,7 +236,7 @@ theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y �
 #align evariation_on.edist_le eVariationOn.edist_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print eVariationOn.eq_zero_iff /-
 theorem eq_zero_iff (f : α → E) {s : Set α} :
     eVariationOn f s = 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
@@ -1002,7 +1002,7 @@ theorem sub_self_monotoneOn {f : α → ℝ} {s : Set α} (hf : LocallyBoundedVa
       apply eVariationOn.edist_le f
       exacts [⟨bs, le_rfl, bc⟩, ⟨cs, bc, le_rfl⟩]
     _ = variationOnFromTo f s a c - variationOnFromTo f s a b := by
-      rw [← add hf as bs cs, add_sub_cancel']
+      rw [← add hf as bs cs, add_sub_cancel_left]
 #align variation_on_from_to.sub_self_monotone_on variationOnFromTo.sub_self_monotoneOn
 -/
 

@@ -143,7 +143,7 @@ protected abbrev Set.UniformEquicontinuous (H : Set <| β → α) : Prop :=
 #align set.uniform_equicontinuous Set.UniformEquicontinuous
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » V) -/
 #print equicontinuousAt_iff_pair /-
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/

@@ -198,7 +198,7 @@ end Std.RBNode
 
 open Std.RBNode
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option auto_param.check_exists -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/

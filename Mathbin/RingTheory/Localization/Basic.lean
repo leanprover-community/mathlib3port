@@ -7,7 +7,7 @@ import Algebra.Algebra.Tower
 import Algebra.Ring.Equiv
 import GroupTheory.MonoidLocalization
 import RingTheory.Ideal.Basic
-import RingTheory.NonZeroDivisors
+import Algebra.GroupWithZero.NonZeroDivisors
 import Tactic.RingExp
 
 #align_import ring_theory.localization.basic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
@@ -1079,7 +1079,7 @@ instance : CommSemiring (Localization M) :=
     nsmul_zero := fun x =>
       Localization.induction_on x fun x => by simp only [smul_mk, zero_nsmul, mk_zero]
     nsmul_succ := fun n x =>
-      Localization.induction_on x fun x => by simp only [smul_mk, succ_nsmul, add_mk_self]
+      Localization.induction_on x fun x => by simp only [smul_mk, succ_nsmul', add_mk_self]
     add_assoc := fun m n k =>
       Localization.induction_on₃ m n k
         (by

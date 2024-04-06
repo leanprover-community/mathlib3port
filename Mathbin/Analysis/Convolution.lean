@@ -3,11 +3,11 @@ Copyright (c) 2022 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Analysis.Calculus.BumpFunctionInner
+import Analysis.Calculus.BumpFunction.Basic
 import Analysis.Calculus.ParametricIntegral
 import MeasureTheory.Constructions.Prod.Integral
 import MeasureTheory.Function.LocallyIntegrable
-import MeasureTheory.Group.Integration
+import MeasureTheory.Group.Integral
 import MeasureTheory.Group.Prod
 import MeasureTheory.Integral.IntervalIntegral
 
@@ -1248,9 +1248,9 @@ end NontriviallyNormedField
 
 open scoped convolution
 
-section IsROrC
+section RCLike
 
-variable [IsROrC 𝕜]
+variable [RCLike 𝕜]
 
 variable [NormedSpace 𝕜 E]
 
@@ -1420,7 +1420,7 @@ theorem HasCompactSupport.hasFDerivAt_convolution_right (hcg : HasCompactSupport
     simp only [this, convolution_zero, Pi.zero_apply]
     exact hasFDerivAt_const (0 : F) x₀
   skip
-  have : ProperSpace G := FiniteDimensional.proper_isROrC 𝕜 G
+  have : ProperSpace G := FiniteDimensional.proper_rclike 𝕜 G
   set L' := L.precompR G
   have h1 : ∀ᶠ x in 𝓝 x₀, ae_strongly_measurable (fun t => L (f t) (g (x - t))) μ :=
     eventually_of_forall
@@ -1459,14 +1459,14 @@ theorem HasCompactSupport.hasFDerivAt_convolution_left [IsNegInvariant μ]
 #align has_compact_support.has_fderiv_at_convolution_left HasCompactSupport.hasFDerivAt_convolution_left
 -/
 
-end IsROrC
+end RCLike
 
 section Real
 
 /-! The one-variable case -/
 
 
-variable [IsROrC 𝕜]
+variable [RCLike 𝕜]
 
 variable [NormedSpace 𝕜 E]
 
@@ -1511,7 +1511,7 @@ end Real
 
 section WithParam
 
-variable [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 E'] [NormedSpace 𝕜 E''] [NormedSpace ℝ F]
+variable [RCLike 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 E'] [NormedSpace 𝕜 E''] [NormedSpace ℝ F]
   [NormedSpace 𝕜 F] [CompleteSpace F] [MeasurableSpace G] [NormedAddCommGroup G] [BorelSpace G]
   [NormedSpace 𝕜 G] [NormedAddCommGroup P] [NormedSpace 𝕜 P] {μ : Measure G}
   (L : E →L[𝕜] E' →L[𝕜] F)

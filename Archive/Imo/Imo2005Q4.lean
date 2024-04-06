@@ -51,7 +51,7 @@ theorem find_specified_factor {p : ℕ} (hp : Nat.Prime p) (hp' : IsCoprime (6 :
   have H : (6 : ℤ) * a (p - 2) ≡ 0 [ZMOD p]
   calc
     (6 : ℤ) * a (p - 2) = 3 * 2 ^ (p - 1) + 2 * 3 ^ (p - 1) + 6 ^ (p - 1) - 6 := by
-      simp only [a, mul_add, mul_sub, hp_sub_one, pow_succ]; ring
+      simp only [a, mul_add, mul_sub, hp_sub_one, pow_succ']; ring
     _ ≡ 3 * 1 + 2 * 1 + 1 - 6 [ZMOD p] :=-- At this step we use Fermat's little theorem
     by
       apply_rules [Int.ModEq.sub_right, Int.ModEq.add, Int.ModEq.mul_left,

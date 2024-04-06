@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Analysis.Calculus.ContDiff
+import Analysis.Calculus.ContDiff.Basic
 import MeasureTheory.Measure.Hausdorff
 
 #align_import topology.metric_space.hausdorff_dimension from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"

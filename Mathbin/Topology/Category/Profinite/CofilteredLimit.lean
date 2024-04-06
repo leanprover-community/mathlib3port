@@ -6,8 +6,8 @@ Authors: Adam Topaz
 import Topology.Category.Profinite.Basic
 import Topology.LocallyConstant.Basic
 import Topology.DiscreteQuotient
-import Topology.Category.Top.Limits.Cofiltered
-import Topology.Category.Top.Limits.Konig
+import Topology.Category.TopCat.Limits.Cofiltered
+import Topology.Category.TopCat.Limits.Konig
 
 #align_import topology.category.Profinite.cofiltered_limit from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

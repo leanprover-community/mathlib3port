@@ -119,7 +119,7 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     rw [mem_smul_span_singleton] at hy; rcases hy with ⟨c, hci, rfl⟩
     use r - c; constructor
     · rw [sub_right_comm]; exact I.sub_mem hr1 hci
-    · rw [sub_smul, ← hyz, add_sub_cancel']; exact hz
+    · rw [sub_smul, ← hyz, add_sub_cancel_left]; exact hz
   rcases this with ⟨c, hc1, hci⟩; refine' ⟨c * r, _, _, hs.2⟩
   · simpa only [mul_sub, mul_one, sub_add_sub_cancel] using I.add_mem (I.mul_mem_left c hr1) hc1
   · intro n hn; specialize hrn hn; rw [mem_comap, mem_sup] at hrn
@@ -322,7 +322,7 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
     mem_sup.2
       ⟨(Finsupp.total M M R id).toFun ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _,
         x - Finsupp.total M M R id ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _,
-        add_sub_cancel'_right _ _⟩
+        add_sub_cancel _ _⟩
   · rw [← Set.image_id (g '' ↑t1), Finsupp.mem_span_image_iff_total]; refine' ⟨_, _, rfl⟩
     haveI : Inhabited P := ⟨0⟩
     rw [← Finsupp.lmapDomain_supported _ _ g, mem_map]
@@ -468,7 +468,7 @@ theorem FG.mul (hm : M.FG) (hn : N.FG) : (M * N).FG :=
 
 #print Submodule.FG.pow /-
 theorem FG.pow (h : M.FG) (n : ℕ) : (M ^ n).FG :=
-  Nat.recOn n ⟨{1}, by simp [one_eq_span]⟩ fun n ih => by simpa [pow_succ] using h.mul ih
+  Nat.recOn n ⟨{1}, by simp [one_eq_span]⟩ fun n ih => by simpa [pow_succ'] using h.mul ih
 #align submodule.fg.pow Submodule.FG.pow
 -/
 

@@ -72,7 +72,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
     calc
       ‖u n‖ ≤ C * ‖v n‖ := hnorm_u n
       _ ≤ C * b n := (mul_le_mul_of_nonneg_left (hv _ <| nat.succ_le_iff.mp hn).le hC.le)
-      _ = (1 / 2) ^ n * (ε * ‖h‖ / 2) := by simp [b, mul_div_cancel' _ hC.ne.symm]
+      _ = (1 / 2) ^ n * (ε * ‖h‖ / 2) := by simp [b, mul_div_cancel₀ _ hC.ne.symm]
       _ = ε * ‖h‖ / 2 * (1 / 2) ^ n := mul_comm _ _
   -- We now show that the limit `g` of `s` is the desired preimage.
   obtain ⟨g : G, hg⟩ := cauchySeq_tendsto_of_complete this
@@ -104,10 +104,10 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
     have : ∑ k in range (n + 1), C * b k ≤ ε * ‖h‖ :=
       calc
         ∑ k in range (n + 1), C * b k = (∑ k in range (n + 1), (1 / 2) ^ k) * (ε * ‖h‖ / 2) := by
-          simp only [b, mul_div_cancel' _ hC.ne.symm, ← sum_mul]
+          simp only [b, mul_div_cancel₀ _ hC.ne.symm, ← sum_mul]
         _ ≤ 2 * (ε * ‖h‖ / 2) :=
           (mul_le_mul_of_nonneg_right (sum_geometric_two_le _) (by nlinarith [hε, norm_nonneg h]))
-        _ = ε * ‖h‖ := mul_div_cancel' _ two_ne_zero
+        _ = ε * ‖h‖ := mul_div_cancel₀ _ two_ne_zero
     calc
       ‖s n‖ ≤ ∑ k in range (n + 1), ‖u k‖ := norm_sum_le _ _
       _ = ∑ k in range n, ‖u (k + 1)‖ + ‖u 0‖ := (sum_range_succ' _ _)

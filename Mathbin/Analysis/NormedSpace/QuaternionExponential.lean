@@ -81,7 +81,7 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
     ext n : 1
     let k : ℝ := ↑(2 * n + 1)!
     calc
-      k⁻¹ • q ^ (2 * n + 1) = k⁻¹ • ((-norm_sq q) ^ n * q) := by rw [pow_succ', pow_mul, hq2]
+      k⁻¹ • q ^ (2 * n + 1) = k⁻¹ • ((-norm_sq q) ^ n * q) := by rw [pow_succ, pow_mul, hq2]
       _ = k⁻¹ • ((-1) ^ n * ‖q‖ ^ (2 * n)) • q := _
       _ = ((-1) ^ n * ‖q‖ ^ (2 * n + 1) / k / ‖q‖) • q := _
     · congr 1
@@ -89,7 +89,7 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
       push_cast
     · rw [smul_smul]
       congr 1
-      simp_rw [pow_succ', mul_div_assoc, div_div_cancel_left' hqn]
+      simp_rw [pow_succ, mul_div_assoc, div_div_cancel_left' hqn]
       ring
 #align quaternion.has_sum_exp_series_of_imaginary Quaternion.hasSum_expSeries_of_imaginary
 -/
@@ -149,7 +149,7 @@ theorem normSq_exp (q : ℍ[ℝ]) : normSq (NormedSpace.exp ℝ q) = NormedSpace
       · simp [hv]
       rw [norm_sq_add, norm_sq_smul, star_smul, coe_mul_eq_smul, smul_re, smul_re, star_re, im_re,
         smul_zero, smul_zero, MulZeroClass.mul_zero, add_zero, div_pow, norm_sq_coe,
-        norm_sq_eq_norm_sq, ← sq, div_mul_cancel _ (pow_ne_zero _ hv)]
+        norm_sq_eq_norm_sq, ← sq, div_mul_cancel₀ _ (pow_ne_zero _ hv)]
     _ = NormedSpace.exp ℝ q.re ^ 2 := by rw [Real.cos_sq_add_sin_sq, mul_one]
 #align quaternion.norm_sq_exp Quaternion.normSq_exp
 -/

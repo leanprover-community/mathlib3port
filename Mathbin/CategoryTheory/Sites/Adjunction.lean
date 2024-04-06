@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
 import CategoryTheory.Adjunction.Whiskering
-import CategoryTheory.Sites.Sheafification
+import CategoryTheory.Sites.ConcreteSheafification
 import CategoryTheory.Sites.Whiskering
 
 #align_import category_theory.sites.adjunction from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"

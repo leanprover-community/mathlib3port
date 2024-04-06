@@ -20,9 +20,9 @@ open Nat
 
 namespace Int
 
-#print Int.coe_nat_dvd /-
+#print Int.natCast_dvd_natCast /-
 @[norm_cast]
-theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
+theorem natCast_dvd_natCast {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
   ⟨fun ⟨a, ae⟩ =>
     m.eq_zero_or_pos.elim (fun m0 => by simp [m0] at ae <;> simp [ae, m0]) fun m0l =>
       by
@@ -32,25 +32,26 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
         k e
       subst a; exact ⟨k, Int.ofNat.inj ae⟩,
     fun ⟨k, e⟩ => Dvd.intro k <| by rw [e, Int.ofNat_mul]⟩
-#align int.coe_nat_dvd Int.coe_nat_dvd
+#align int.coe_nat_dvd Int.natCast_dvd_natCast
 -/
 
-#print Int.coe_nat_dvd_left /-
-theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
+#print Int.natCast_dvd /-
+theorem natCast_dvd {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
-#align int.coe_nat_dvd_left Int.coe_nat_dvd_left
+#align int.coe_nat_dvd_left Int.natCast_dvd
 -/
 
-#print Int.coe_nat_dvd_right /-
-theorem coe_nat_dvd_right {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
+#print Int.dvd_natCast /-
+theorem dvd_natCast {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
-#align int.coe_nat_dvd_right Int.coe_nat_dvd_right
+#align int.coe_nat_dvd_right Int.dvd_natCast
 -/
 
 #print Int.le_of_dvd /-
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
-  | (m : ℕ), _, ⟨n, rfl⟩, H => ofNat_le_ofNat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
+  | (m : ℕ), _, ⟨n, rfl⟩, H =>
+    ofNat_le_ofNat_of_le <| Nat.le_of_dvd n.succ_pos <| natCast_dvd_natCast.1 H
   | -[m+1], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt <| negSucc_lt_zero _) (ofNat_zero_le _)
 #align int.le_of_dvd Int.le_of_dvd
 -/
@@ -58,7 +59,7 @@ theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
 #print Int.eq_one_of_dvd_one /-
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
   match a, eq_ofNat_of_zero_le H, H' with
-  | _, ⟨n, rfl⟩, H' => congr_arg coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
+  | _, ⟨n, rfl⟩, H' => congr_arg coe <| Nat.eq_one_of_dvd_one <| natCast_dvd_natCast.1 H'
 #align int.eq_one_of_dvd_one Int.eq_one_of_dvd_one
 -/
 

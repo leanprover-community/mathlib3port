@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Algebra.Group.InjSurj
-import Data.List.BigOperators.Basic
+import Algebra.BigOperators.List.Basic
 import Data.List.FinRange
 import GroupTheory.GroupAction.Defs
 import GroupTheory.Submonoid.Basic
@@ -167,7 +167,7 @@ variable {A} [AddMonoid ι] [GMul A] [GOne A]
 `gmonoid.gnpow` should be used instead. -/
 def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
   | 0, i, a => cast (congr_arg A (zero_nsmul i).symm) GOne.one
-  | n + 1, i, a => cast (congr_arg A (succ_nsmul i n).symm) (GMul.mul a <| gnpow_rec _ a)
+  | n + 1, i, a => cast (congr_arg A (succ_nsmul' i n).symm) (GMul.mul a <| gnpow_rec _ a)
 #align graded_monoid.gmonoid.gnpow_rec GradedMonoid.GMonoid.gnpowRec
 -/
 
@@ -189,7 +189,7 @@ unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
 @[simp]
 theorem gnpowRec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
-  Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
+  Sigma.ext (succ_nsmul' _ _) (heq_of_cast_eq _ rfl).symm
 #align graded_monoid.gmonoid.gnpow_rec_succ GradedMonoid.GMonoid.gnpowRec_succ
 -/
 
@@ -247,7 +247,7 @@ theorem mk_pow [AddMonoid ι] [GMonoid A] {i} (a : A i) (n : ℕ) :
   induction' n with n
   · rw [pow_zero]
     exact (gmonoid.gnpow_zero' ⟨_, a⟩).symm
-  · rw [pow_succ, n_ih, mk_mul_mk]
+  · rw [pow_succ', n_ih, mk_mul_mk]
     exact (gmonoid.gnpow_succ' n ⟨_, a⟩).symm
 #align graded_monoid.mk_pow GradedMonoid.mk_pow
 -/
@@ -531,7 +531,7 @@ instance Monoid.gMonoid [AddMonoid ι] [Monoid R] : GradedMonoid.GMonoid fun i :
     mul_assoc := fun a b c => Sigma.ext (add_assoc _ _ _) (hEq_of_eq (mul_assoc _ _ _))
     gnpow := fun n i a => a ^ n
     gnpow_zero' := fun a => Sigma.ext (zero_nsmul _) (hEq_of_eq (Monoid.npow_zero _))
-    gnpow_succ' := fun n ⟨i, a⟩ => Sigma.ext (succ_nsmul _ _) (hEq_of_eq (Monoid.npow_succ _ _)) }
+    gnpow_succ' := fun n ⟨i, a⟩ => Sigma.ext (succ_nsmul' _ _) (hEq_of_eq (Monoid.npow_succ _ _)) }
 #align monoid.gmonoid Monoid.gMonoid
 -/
 
@@ -643,7 +643,7 @@ theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A 
   by
   induction n
   · rw [pow_zero, zero_nsmul]; exact one_mem_graded _
-  · rw [pow_succ', succ_nsmul']; exact mul_mem_graded n_ih h
+  · rw [pow_succ, succ_nsmul]; exact mul_mem_graded n_ih h
 #align set_like.pow_mem_graded SetLike.pow_mem_graded
 -/
 
@@ -685,7 +685,7 @@ instance SetLike.gMonoid {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι] (A
       Sigma.subtype_ext (add_assoc _ _ _) (mul_assoc _ _ _)
     gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.Prop⟩
     gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zero _)
-    gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul _ _) (pow_succ _ _) }
+    gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul' _ _) (pow_succ' _ _) }
 #align set_like.gmonoid SetLike.gMonoid
 -/
 

@@ -435,7 +435,7 @@ theorem horner_pow {α} [CommSemiring α] (a x n m n' a') (h₁ : n * m = n') (h
 #align tactic.ring.horner_pow Tactic.Ring.horner_pow
 
 theorem pow_succ {α} [CommSemiring α] (a n b c) (h₁ : (a : α) ^ n = b) (h₂ : b * a = c) :
-    a ^ (n + 1) = c := by rw [← h₂, ← h₁, pow_succ']
+    a ^ (n + 1) = c := by rw [← h₂, ← h₁, pow_succ]
 #align tactic.ring.pow_succ Tactic.Ring.pow_succ
 
 /-- Evaluate `a ^ n` where `a` is in normal form and `n` is a natural numeral. -/
@@ -466,7 +466,7 @@ unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × exp
         let e₂ ← nc_lift fun nc => nc (m.2 - 1)
         let (tl, hl) ← eval_pow he (e₂, m.2 - 1)
         let (t, p₂) ← eval_mul tl he
-        return (t, c `` pow_succ [e, e₂, tl, t, hl, p₂])
+        return (t, c `` pow_succ' [e, e₂, tl, t, hl, p₂])
 #align tactic.ring.eval_pow tactic.ring.eval_pow
 
 theorem horner_atom {α} [CommSemiring α] (x : α) : x = horner 1 x 1 0 := by simp [horner]

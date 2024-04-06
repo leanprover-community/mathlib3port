@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Yury Kudryashov
 -/
 import Analysis.Calculus.Deriv.Basic
-import Analysis.Calculus.Fderiv.Linear
+import Analysis.Calculus.FDeriv.Linear
 
 #align_import analysis.calculus.deriv.linear from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

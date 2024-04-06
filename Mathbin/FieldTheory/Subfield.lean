@@ -406,7 +406,7 @@ theorem zpow_mem {x : K} (hx : x ∈ s) (n : ℤ) : x ^ n ∈ s :=
   by
   cases n
   · simpa using s.pow_mem hx n
-  · simpa [pow_succ] using s.inv_mem (s.mul_mem hx (s.pow_mem hx n))
+  · simpa [pow_succ'] using s.inv_mem (s.mul_mem hx (s.pow_mem hx n))
 #align subfield.zpow_mem Subfield.zpow_mem
 -/
 

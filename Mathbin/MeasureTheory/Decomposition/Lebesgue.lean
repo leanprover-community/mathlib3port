@@ -7,7 +7,7 @@ import MeasureTheory.Measure.Complex
 import MeasureTheory.Measure.Sub
 import MeasureTheory.Decomposition.Jordan
 import MeasureTheory.Measure.WithDensityVectorMeasure
-import MeasureTheory.Function.AeEqOfIntegral
+import MeasureTheory.Function.AEEqOfIntegral
 
 #align_import measure_theory.decomposition.lebesgue from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 
@@ -121,9 +121,9 @@ theorem haveLebesgueDecomposition_add (μ ν : Measure α) [HaveLebesgueDecompos
 #align measure_theory.measure.have_lebesgue_decomposition_add MeasureTheory.Measure.haveLebesgueDecomposition_add
 -/
 
-#print MeasureTheory.Measure.haveLebesgueDecomposition_smul /-
-instance haveLebesgueDecomposition_smul (μ ν : Measure α) [HaveLebesgueDecomposition μ ν]
-    (r : ℝ≥0) : (r • μ).HaveLebesgueDecomposition ν
+#print MeasureTheory.Measure.haveLebesgueDecompositionSmul /-
+instance haveLebesgueDecompositionSmul (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (r : ℝ≥0) :
+    (r • μ).HaveLebesgueDecomposition ν
     where lebesgue_decomposition :=
     by
     obtain ⟨hmeas, hsing, hadd⟩ := have_lebesgue_decomposition_spec μ ν
@@ -134,7 +134,7 @@ instance haveLebesgueDecomposition_smul (μ ν : Measure α) [HaveLebesgueDecomp
     · change _ = (r : ℝ≥0∞) • _ + ν.with_density ((r : ℝ≥0∞) • _)
       rw [with_density_smul _ hmeas, ← smul_add, ← hadd]
       rfl
-#align measure_theory.measure.have_lebesgue_decomposition_smul MeasureTheory.Measure.haveLebesgueDecomposition_smul
+#align measure_theory.measure.have_lebesgue_decomposition_smul MeasureTheory.Measure.haveLebesgueDecompositionSmul
 -/
 
 #print MeasureTheory.Measure.measurable_rnDeriv /-
@@ -1430,14 +1430,14 @@ theorem singularPart_add_withDensity_rnDeriv_eq [c.HaveLebesgueDecomposition μ]
   ext i hi : 1
   rw [vector_measure.add_apply, signed_measure.to_complex_measure_apply]
   ext
-  · rw [Complex.add_re, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← IsROrC.re_eq_complex_re,
-      ← integral_re (c.integrable_rn_deriv μ).IntegrableOn, IsROrC.re_eq_complex_re, ←
+  · rw [Complex.add_re, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← RCLike.re_eq_complex_re,
+      ← integral_re (c.integrable_rn_deriv μ).IntegrableOn, RCLike.re_eq_complex_re, ←
       with_densityᵥ_apply _ hi]
     · change (c.re.singular_part μ + μ.with_densityᵥ (c.re.rn_deriv μ)) i = _
       rw [c.re.singular_part_add_with_density_rn_deriv_eq μ]
     · exact signed_measure.integrable_rn_deriv _ _
-  · rw [Complex.add_im, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← IsROrC.im_eq_complex_im,
-      ← integral_im (c.integrable_rn_deriv μ).IntegrableOn, IsROrC.im_eq_complex_im, ←
+  · rw [Complex.add_im, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← RCLike.im_eq_complex_im,
+      ← integral_im (c.integrable_rn_deriv μ).IntegrableOn, RCLike.im_eq_complex_im, ←
       with_densityᵥ_apply _ hi]
     · change (c.im.singular_part μ + μ.with_densityᵥ (c.im.rn_deriv μ)) i = _
       rw [c.im.singular_part_add_with_density_rn_deriv_eq μ]

@@ -3,8 +3,8 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 -/
-import Algebra.Category.Group.Basic
-import CategoryTheory.ConcreteCategory.ReflectsIsomorphisms
+import Algebra.Category.GroupCat.Basic
+import CategoryTheory.ConcreteCategory.ReflectsIso
 import CategoryTheory.Elementwise
 import Algebra.Ring.Equiv
 

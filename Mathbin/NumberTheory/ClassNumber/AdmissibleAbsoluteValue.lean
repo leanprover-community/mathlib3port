@@ -104,7 +104,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     -- there must be a subset that contains more than `M^n` elements.
     obtain ⟨s, hs⟩ :=
       @Fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M ^ n)
-        (by simpa only [Fintype.card_fin, pow_succ] using Nat.lt_succ_self (M ^ n.succ))
+        (by simpa only [Fintype.card_fin, pow_succ'] using Nat.lt_succ_self (M ^ n.succ))
     refine'
       ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
     · refine' i.2.trans_le _; rwa [Finset.length_toList]

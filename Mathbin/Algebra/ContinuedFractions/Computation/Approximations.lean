@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 -/
 import Algebra.ContinuedFractions.Computation.CorrectnessTerminating
-import Data.Nat.Fib
+import Data.Nat.Fib.Basic
 import Tactic.SolveByElim
 
 #align_import algebra.continued_fractions.computation.approximations from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
@@ -415,7 +415,7 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
       _ = (-1) ^ (n + 1) := by assumption
     suffices ppA * pB - ppB * pA = (-1) ^ n
       by
-      have pow_succ_n : (-1 : K) ^ (n + 1) = -1 * (-1) ^ n := pow_succ (-1) n
+      have pow_succ_n : (-1 : K) ^ (n + 1) = -1 * (-1) ^ n := pow_succ' (-1) n
       rw [pow_succ_n, ← this]
       ring
     exact IH <| Or.inr <| mt (terminated_stable <| n.sub_le 1) not_terminated_at_n

@@ -6,7 +6,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
 -/
 import Analysis.SpecialFunctions.Pow.Continuity
 import Analysis.SpecialFunctions.Complex.LogDeriv
-import Analysis.Calculus.ExtendDeriv
+import Analysis.Calculus.FDeriv.Extend
 import Analysis.Calculus.Deriv.Prod
 import Analysis.SpecialFunctions.Log.Deriv
 import Analysis.SpecialFunctions.Trigonometric.Deriv
@@ -280,7 +280,7 @@ theorem hasDerivAt_ofReal_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1
   rcases lt_or_gt_of_ne hx.symm with (hx | hx)
   · -- easy case : `0 < x`
     convert (((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_ofReal
-    · rw [add_sub_cancel, id.def, mul_one, mul_comm, mul_div_cancel _ hr]
+    · rw [add_sub_cancel_right, id.def, mul_one, mul_comm, mul_div_cancel_right₀ _ hr]
     · rw [id.def, of_real_re]; exact Or.inl hx
   · -- harder case : `x < 0`
     have :
@@ -297,7 +297,7 @@ theorem hasDerivAt_ofReal_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1
         ((r + 1) * (-↑x) ^ r * NormedSpace.exp (↑π * I * r)) x
       by
       convert this.div_const (r + 1) using 1
-      conv_rhs => rw [mul_assoc, mul_comm, mul_div_cancel _ hr]
+      conv_rhs => rw [mul_assoc, mul_comm, mul_div_cancel_right₀ _ hr]
     rw [mul_add ((π : ℂ) * _), mul_one, NormedSpace.exp_add, exp_pi_mul_I,
       mul_comm (_ : ℂ) (-1 : ℂ), neg_one_mul]
     simp_rw [mul_neg, ← neg_mul, ← of_real_neg]

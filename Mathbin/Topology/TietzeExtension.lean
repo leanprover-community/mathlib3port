@@ -5,7 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 import Analysis.SpecificLimits.Basic
 import Data.Set.Intervals.IsoIoo
-import Topology.Algebra.Order.MonotoneContinuity
+import Topology.Order.MonotoneContinuity
 import Topology.UrysohnsBounded
 
 #align_import topology.tietze_extension from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
@@ -121,7 +121,8 @@ theorem exists_extension_norm_eq_of_closedEmbedding' (f : X →ᵇ ℝ) (e : C(X
     by
     intro n; induction' n with n ihn
     · simp [g0]
-    · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel', pow_succ, mul_assoc]
+    · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel_left, pow_succ',
+        mul_assoc]
       refine' (hF_dist _).trans (mul_le_mul_of_nonneg_left _ (by norm_num1))
       rwa [← dist_eq_norm']
   have hg_dist : ∀ n, dist (g n) (g (n + 1)) ≤ 1 / 3 * ‖f‖ * (2 / 3) ^ n :=
@@ -129,7 +130,7 @@ theorem exists_extension_norm_eq_of_closedEmbedding' (f : X →ᵇ ℝ) (e : C(X
     intro n
     calc
       dist (g n) (g (n + 1)) = ‖F (f - (g n).comp_continuous e)‖ := by
-        rw [g_succ, dist_eq_norm', add_sub_cancel']
+        rw [g_succ, dist_eq_norm', add_sub_cancel_left]
       _ ≤ ‖f - (g n).comp_continuous e‖ / 3 := (hF_norm _)
       _ = 1 / 3 * dist ((g n).comp_continuous e) f := by rw [dist_eq_norm', one_div, div_eq_inv_mul]
       _ ≤ 1 / 3 * ((2 / 3) ^ n * ‖f‖) := (mul_le_mul_of_nonneg_left (hgf n) (by norm_num1))
@@ -276,7 +277,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
       ·
         calc
           g y + dg y ≤ c + (c - a) := add_le_add hc (dgmem _).2
-          _ = b := by rw [hsub, add_sub_cancel'_right]
+          _ = b := by rw [hsub, add_sub_cancel]
   /- Now we deal with the case `∀ x, f x ≠ b`. The proof is the same as in the first case, with
     minor modifications that make it hard to deduplicate code. -/
   choose xl hxl hgb using hg_mem

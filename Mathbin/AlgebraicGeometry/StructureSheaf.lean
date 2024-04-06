@@ -815,7 +815,7 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
   -- This is because we will need the equality `basic_open (h ^ n) = basic_open h`, which only
   -- holds for a nonzero power `n`. We therefore artificially increase `n` by one.
   replace hn := Ideal.mul_mem_left (Ideal.span {g}) h hn
-  rw [← pow_succ, Ideal.mem_span_singleton'] at hn
+  rw [← pow_succ', Ideal.mem_span_singleton'] at hn
   cases' hn with c hc
   have basic_opens_eq := basic_open_pow h (n + 1) (by linarith)
   have i_basic_open := eq_to_hom basic_opens_eq ≫ hom_of_le hDhV
@@ -835,7 +835,7 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 #print AlgebraicGeometry.StructureSheaf.normalize_finite_fraction_representation /-
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
@@ -887,7 +887,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.Top R
     intro i j
     obtain ⟨⟨c, n, rfl⟩, hc⟩ := is_localization.eq.mp (fractions_eq i j)
     use n + 1
-    rw [pow_succ]
+    rw [pow_succ']
     dsimp at hc
     convert hc using 1 <;> ring
   let n := fun p : ι × ι => (exists_power p.1 p.2).some
@@ -920,7 +920,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.Top R
   swap;
   exact (basic_opens_eq i).le
   apply const_ext
-  rw [pow_succ]
+  rw [pow_succ']
   ring
 #align algebraic_geometry.structure_sheaf.normalize_finite_fraction_representation AlgebraicGeometry.StructureSheaf.normalize_finite_fraction_representation
 -/
@@ -967,7 +967,7 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
     apply vanishing_ideal_anti_mono ht_cover
     exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
   replace hn := Ideal.mul_mem_left _ f hn
-  erw [← pow_succ, Finsupp.mem_span_image_iff_total] at hn
+  erw [← pow_succ', Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨b, b_supp, hb⟩
   rw [Finsupp.total_apply_of_mem_supported R b_supp] at hb
   dsimp at hb

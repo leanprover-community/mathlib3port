@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Algebra.BigOperators.Multiset.Lemmas
-import Algebra.Group.Pi
+import Algebra.Group.Pi.Lemmas
 import Algebra.GroupPower.Lemmas
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Equiv.Basic
 import Algebra.Ring.Opposite
 import Data.Finset.Sum
 import Data.Fintype.Basic
@@ -1433,7 +1433,7 @@ theorem prod_list_map_count [DecidableEq α] (l : List α) {M : Type _} [CommMon
   simp only [List.map, List.prod_cons, to_finset_cons, IH]
   by_cases has : a ∈ s.to_finset
   · rw [insert_eq_of_mem has, ← insert_erase has, prod_insert (not_mem_erase _ _),
-      prod_insert (not_mem_erase _ _), ← mul_assoc, count_cons_self, pow_succ]
+      prod_insert (not_mem_erase _ _), ← mul_assoc, count_cons_self, pow_succ']
     congr 1
     refine' prod_congr rfl fun x hx => _
     rw [count_cons_of_ne (ne_of_mem_erase hx)]
@@ -1587,7 +1587,7 @@ theorem prod_range_div' {M : Type _} [CommGroup M] (f : ℕ → M) (n : ℕ) :
 #print Finset.eq_prod_range_div /-
 @[to_additive]
 theorem eq_prod_range_div {M : Type _} [CommGroup M] (f : ℕ → M) (n : ℕ) :
-    f n = f 0 * ∏ i in range n, f (i + 1) / f i := by rw [prod_range_div, mul_div_cancel'_right]
+    f n = f 0 * ∏ i in range n, f (i + 1) / f i := by rw [prod_range_div, mul_div_cancel]
 #align finset.eq_prod_range_div Finset.eq_prod_range_div
 #align finset.eq_sum_range_sub Finset.eq_sum_range_sub
 -/
@@ -2453,8 +2453,8 @@ theorem add_eq_union_right_of_le {x y z : Multiset α} (h : z ≤ y) :
 #align multiset.add_eq_union_right_of_le Multiset.add_eq_union_right_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∈ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » i) -/
 #print Multiset.finset_sum_eq_sup_iff_disjoint /-
 theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β → Multiset α} :
     i.Sum f = i.sup f ↔ ∀ (x) (_ : x ∈ i) (y) (_ : y ∈ i), x ≠ y → Multiset.Disjoint (f x) (f y) :=

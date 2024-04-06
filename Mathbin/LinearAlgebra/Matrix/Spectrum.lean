@@ -25,7 +25,7 @@ spectral theorem, diagonalization theorem
 
 namespace Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜] [DecidableEq 𝕜] {n : Type _} [Fintype n] [DecidableEq n]
+variable {𝕜 : Type _} [RCLike 𝕜] [DecidableEq 𝕜] {n : Type _} [Fintype n] [DecidableEq n]
 
 variable {A : Matrix n n 𝕜}
 
@@ -98,7 +98,7 @@ theorem eigenvectorMatrixInv_apply (i j : n) :
     hA.eigenvectorMatrixInv i j = star (hA.eigenvectorBasis i j) := by
   rw [eigenvector_matrix_inv, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
     OrthonormalBasis.repr_apply_apply, PiLp.basisFun_apply, WithLp.equiv_symm_single,
-    EuclideanSpace.inner_single_right, one_mul, IsROrC.star_def]
+    EuclideanSpace.inner_single_right, one_mul, RCLike.star_def]
 #align matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvectorMatrixInv_apply
 -/
 
@@ -145,12 +145,12 @@ theorem spectral_theorem :
 #print Matrix.IsHermitian.eigenvalues_eq /-
 theorem eigenvalues_eq (i : n) :
     hA.Eigenvalues i =
-      IsROrC.re (star (hA.eigenvectorMatrixᵀ i) ⬝ᵥ A.mulVec (hA.eigenvectorMatrixᵀ i)) :=
+      RCLike.re (star (hA.eigenvectorMatrixᵀ i) ⬝ᵥ A.mulVec (hA.eigenvectorMatrixᵀ i)) :=
   by
   have := hA.spectral_theorem
   rw [← Matrix.mul_inv_eq_iff_eq_mul_of_invertible] at this
-  have := congr_arg IsROrC.re (congr_fun (congr_fun this i) i)
-  rw [diagonal_apply_eq, IsROrC.ofReal_re, inv_eq_left_inv hA.eigenvector_matrix_mul_inv, ←
+  have := congr_arg RCLike.re (congr_fun (congr_fun this i) i)
+  rw [diagonal_apply_eq, RCLike.ofReal_re, inv_eq_left_inv hA.eigenvector_matrix_mul_inv, ←
     conj_transpose_eigenvector_matrix, mul_mul_apply] at this
   exact this.symm
 #align matrix.is_hermitian.eigenvalues_eq Matrix.IsHermitian.eigenvalues_eq

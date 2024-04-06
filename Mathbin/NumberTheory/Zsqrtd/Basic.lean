@@ -716,12 +716,12 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
         (fun hx =>
           show x ∣ 1 from
             ⟨star x, by
-              rwa [← Int.coe_nat_inj', Int.natAbs_of_nonneg hx, ← @Int.cast_inj (ℤ√d) _ _,
+              rwa [← Int.natCast_inj, Int.natAbs_of_nonneg hx, ← @Int.cast_inj (ℤ√d) _ _,
                 norm_eq_mul_conj, eq_comm] at h⟩)
         fun hx =>
         show x ∣ 1 from
           ⟨-star x, by
-            rwa [← Int.coe_nat_inj', Int.ofNat_natAbs_of_nonpos hx, ← @Int.cast_inj (ℤ√d) _ _,
+            rwa [← Int.natCast_inj, Int.ofNat_natAbs_of_nonpos hx, ← @Int.cast_inj (ℤ√d) _ _,
               Int.cast_neg, norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
     fun h => by
     let ⟨y, hy⟩ := isUnit_iff_dvd_one.1 h
@@ -740,7 +740,7 @@ theorem isUnit_iff_norm_isUnit {d : ℤ} (z : ℤ√d) : IsUnit z ↔ IsUnit z.n
 
 #print Zsqrtd.norm_eq_one_iff' /-
 theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔ IsUnit z := by
-  rw [← norm_eq_one_iff, ← Int.coe_nat_inj', Int.natAbs_of_nonneg (norm_nonneg hd z), Int.ofNat_one]
+  rw [← norm_eq_one_iff, ← Int.natCast_inj, Int.natAbs_of_nonneg (norm_nonneg hd z), Int.ofNat_one]
 #align zsqrtd.norm_eq_one_iff' Zsqrtd.norm_eq_one_iff'
 -/
 
@@ -1078,7 +1078,7 @@ theorem divides_sq_eq_zero_z {x y : ℤ} (h : x * x = d * y * y) : x = 0 ∧ y =
       h <;>
     exact
       let ⟨h1, h2⟩ := divides_sq_eq_zero (Int.ofNat.inj h)
-      ⟨Int.eq_zero_of_natAbs_eq_zero h1, Int.eq_zero_of_natAbs_eq_zero h2⟩
+      ⟨Int.natAbs_eq_zero h1, Int.natAbs_eq_zero h2⟩
 #align zsqrtd.divides_sq_eq_zero_z Zsqrtd.divides_sq_eq_zero_z
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Algebra.Algebra.Equiv
-import LinearAlgebra.Finrank
+import LinearAlgebra.Dimension.Finrank
 import LinearAlgebra.FreeModule.Basic
 import LinearAlgebra.FreeModule.Finite.Basic
 import SetTheory.Cardinal.Ordinal

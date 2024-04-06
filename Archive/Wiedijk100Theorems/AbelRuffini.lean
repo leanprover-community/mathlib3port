@@ -3,8 +3,8 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Analysis.Calculus.LocalExtr
-import Data.Nat.PrimeNormNum
+import Analysis.Calculus.LocalExtr.Basic
+import Tactic.NormNum.Prime
 import FieldTheory.AbelRuffini
 import RingTheory.RootsOfUnity.Minpoly
 import RingTheory.EisensteinCriterion

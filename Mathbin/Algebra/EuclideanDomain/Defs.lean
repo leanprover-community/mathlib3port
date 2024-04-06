@@ -3,7 +3,7 @@ Copyright (c) 2018 Louis Carlin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 -/
-import Logic.Nontrivial
+import Logic.Nontrivial.Defs
 import Algebra.Divisibility.Basic
 import Algebra.Group.Basic
 import Algebra.Ring.Defs
@@ -129,7 +129,7 @@ theorem div_add_mod' (m k : R) : m / k * k + m % k = m := by rw [mul_comm]; exac
 #print EuclideanDomain.mod_eq_sub_mul_div /-
 theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = a - b * (a / b) :=
   calc
-    a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel' _ _).symm
+    a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel_left _ _).symm
     _ = a - b * (a / b) := by rw [div_add_mod]
 #align euclidean_domain.mod_eq_sub_mul_div EuclideanDomain.mod_eq_sub_mul_div
 -/

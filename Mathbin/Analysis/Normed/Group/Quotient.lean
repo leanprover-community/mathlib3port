@@ -530,7 +530,7 @@ noncomputable def lift {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup 
       calc
         ‖f m‖ ≤ c * ‖m‖ := hc m
         _ ≤ c * (‖mk' S m‖ + ε / c) := ((mul_lt_mul_left hcpos).mpr hmnorm).le
-        _ = c * ‖mk' S m‖ + ε := by rw [mul_add, mul_div_cancel' _ hcpos.ne.symm] }
+        _ = c * ‖mk' S m‖ + ε := by rw [mul_add, mul_div_cancel₀ _ hcpos.ne.symm] }
 #align normed_add_group_hom.lift NormedAddGroupHom.lift
 -/
 
@@ -615,7 +615,7 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
       _ ≤ c * (‖S.normed_mk x‖ + ε / c) := ((mul_le_mul_left _).mpr Hx.le)
       _ = c * _ + ε := _
     · exact_mod_cast hc
-    · rw [mul_add, mul_div_cancel']; exact_mod_cast hc.ne'
+    · rw [mul_add, mul_div_cancel₀]; exact_mod_cast hc.ne'
 #align normed_add_group_hom.lift_norm_le NormedAddGroupHom.lift_norm_le
 -/
 

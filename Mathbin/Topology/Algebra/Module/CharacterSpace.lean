@@ -95,7 +95,7 @@ theorem coe_toCLM (φ : characterSpace 𝕜 A) : ⇑(toCLM φ) = φ :=
 -/
 
 /-- Elements of the character space are non-unital algebra homomorphisms. -/
-instance : NonUnitalAlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
+instance : NonUnitalAlgSemiHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
   {
     characterSpace.continuousLinearMapClass with
     map_smul := fun φ => map_smul φ

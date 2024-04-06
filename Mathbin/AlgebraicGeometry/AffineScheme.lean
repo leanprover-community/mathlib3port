@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import AlgebraicGeometry.GammaSpecAdjunction
-import AlgebraicGeometry.OpenImmersion.Scheme
+import AlgebraicGeometry.OpenImmersion
 import CategoryTheory.Limits.Opposites
 import RingTheory.Localization.InvSubmonoid
 

@@ -397,8 +397,8 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
         exact uIcc_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
     _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := _
   simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left,
-    MeasureTheory.integral_mul_right, integral_pow_abs_sub_uIoc, div_eq_mul_inv, pow_succ (v.L : ℝ),
-    Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, mul_inv, mul_assoc]
+    MeasureTheory.integral_mul_right, integral_pow_abs_sub_uIoc, div_eq_mul_inv,
+    pow_succ' (v.L : ℝ), Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, mul_inv, mul_assoc]
 #align picard_lindelof.fun_space.dist_next_apply_le_of_le PicardLindelof.FunSpace.dist_next_apply_le_of_le
 -/
 
@@ -538,10 +538,10 @@ theorem exists_isPicardLindelof_const_of_contDiffAt {s : Set E} (hv : ContDiffOn
       norm_le := fun t ht x hx => hC ⟨x, hx, rfl⟩
       C_hMul_le_R :=
         by
-        rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
+        rw [add_sub_cancel_left, sub_sub_cancel, max_self, mul_ite, mul_one]
         split_ifs
         · rwa [← h] at hr'
-        · exact (mul_div_cancel' (r / 2) h).le }
+        · exact (mul_div_cancel₀ (r / 2) h).le }
 #align exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_isPicardLindelof_const_of_contDiffAt
 -/
 

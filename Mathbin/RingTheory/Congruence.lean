@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Algebra.GroupRingAction.Basic
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 import Algebra.Ring.InjSurj
 import GroupTheory.Congruence
 

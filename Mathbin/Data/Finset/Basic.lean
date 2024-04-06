@@ -1571,7 +1571,7 @@ theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) :
 #align finset.insert_inj_on Finset.insert_inj_on
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.ssubset_iff /-
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _) (_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
@@ -2324,28 +2324,28 @@ theorem inter_right_idem (s t : Finset α) : s ∩ t ∩ t = s ∩ t :=
 #align finset.inter_right_idem Finset.inter_right_idem
 -/
 
-#print Finset.inter_distrib_left /-
-theorem inter_distrib_left (s t u : Finset α) : s ∩ (t ∪ u) = s ∩ t ∪ s ∩ u :=
+#print Finset.inter_union_distrib_left /-
+theorem inter_union_distrib_left (s t u : Finset α) : s ∩ (t ∪ u) = s ∩ t ∪ s ∩ u :=
   inf_sup_left
-#align finset.inter_distrib_left Finset.inter_distrib_left
+#align finset.inter_distrib_left Finset.inter_union_distrib_left
 -/
 
-#print Finset.inter_distrib_right /-
-theorem inter_distrib_right (s t u : Finset α) : (s ∪ t) ∩ u = s ∩ u ∪ t ∩ u :=
+#print Finset.union_inter_distrib_right /-
+theorem union_inter_distrib_right (s t u : Finset α) : (s ∪ t) ∩ u = s ∩ u ∪ t ∩ u :=
   inf_sup_right
-#align finset.inter_distrib_right Finset.inter_distrib_right
+#align finset.inter_distrib_right Finset.union_inter_distrib_right
 -/
 
-#print Finset.union_distrib_left /-
-theorem union_distrib_left (s t u : Finset α) : s ∪ t ∩ u = (s ∪ t) ∩ (s ∪ u) :=
+#print Finset.union_inter_distrib_left /-
+theorem union_inter_distrib_left (s t u : Finset α) : s ∪ t ∩ u = (s ∪ t) ∩ (s ∪ u) :=
   sup_inf_left
-#align finset.union_distrib_left Finset.union_distrib_left
+#align finset.union_distrib_left Finset.union_inter_distrib_left
 -/
 
-#print Finset.union_distrib_right /-
-theorem union_distrib_right (s t u : Finset α) : s ∩ t ∪ u = (s ∪ u) ∩ (t ∪ u) :=
+#print Finset.inter_union_distrib_right /-
+theorem inter_union_distrib_right (s t u : Finset α) : s ∩ t ∪ u = (s ∪ u) ∩ (t ∪ u) :=
   sup_inf_right
-#align finset.union_distrib_right Finset.union_distrib_right
+#align finset.union_distrib_right Finset.inter_union_distrib_right
 -/
 
 #print Finset.union_union_distrib_left /-
@@ -3355,7 +3355,7 @@ theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g 
 #align finset.piecewise_eq_of_not_mem Finset.piecewise_eq_of_not_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print Finset.piecewise_congr /-
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i ∈ s, f i = f' i)
     (hg : ∀ (i) (_ : i ∉ s), g i = g' i) : s.piecewise f g = s.piecewise f' g' :=
@@ -3480,7 +3480,7 @@ theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {
 #align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print Finset.piecewise_le_piecewise' /-
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) :
@@ -4326,12 +4326,10 @@ theorem toFinset_dedup (m : Multiset α) : m.dedup.toFinset = m.toFinset := by
 #align multiset.to_finset_dedup Multiset.toFinset_dedup
 -/
 
-#print Multiset.toFinset_bind_dedup /-
 @[simp]
 theorem toFinset_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset β) :
     (m.dedup.bind f).toFinset = (m.bind f).toFinset := by simp_rw [to_finset, dedup_bind_dedup]
 #align multiset.to_finset_bind_dedup Multiset.toFinset_bind_dedup
--/
 
 #print Multiset.isWellFounded_ssubset /-
 instance isWellFounded_ssubset : IsWellFounded (Multiset β) (· ⊂ ·) :=

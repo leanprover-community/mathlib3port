@@ -216,7 +216,7 @@ theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 /
 
 #print unitInterval.qRight_one_right /-
 theorem qRight_one_right (t : I) : qRight (t, 1) = t :=
-  Eq.trans (by rw [Q_right]; congr; apply mul_div_cancel_left; exact two_ne_zero) <|
+  Eq.trans (by rw [Q_right]; congr; apply mul_div_cancel_left₀; exact two_ne_zero) <|
     Set.projIcc_val zero_le_one _
 #align unit_interval.Q_right_one_right unitInterval.qRight_one_right
 -/

@@ -62,7 +62,7 @@ theorem coeff_p_pow [CharP R p] (i : ℕ) : (p ^ i : 𝕎 R).coeff i = 1 :=
   induction' i with i h
   · simp only [one_coeff_zero, Ne.def, pow_zero]
   ·
-    rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h,
+    rw [pow_succ, ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h,
       one_pow]
 #align witt_vector.coeff_p_pow WittVector.coeff_p_pow
 -/
@@ -73,7 +73,7 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
   induction' i with i hi generalizing j
   · rw [pow_zero, one_coeff_eq_of_pos]
     exact Nat.pos_of_ne_zero hj
-  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p]
+  · rw [pow_succ, ← frobenius_verschiebung, coeff_frobenius_char_p]
     cases j
     · rw [verschiebung_coeff_zero, zero_pow]
       exact Nat.Prime.pos hp.out

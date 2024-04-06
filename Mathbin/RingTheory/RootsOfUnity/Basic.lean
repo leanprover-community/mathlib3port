@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Algebra.CharP.Two
 import Algebra.NeZero
-import Algebra.GcdMonoid.IntegrallyClosed
+import Algebra.GCDMonoid.IntegrallyClosed
 import Data.Polynomial.RingDivision
 import FieldTheory.Finite.Basic
 import FieldTheory.Separable
@@ -246,7 +246,7 @@ def rootsOfUnityEquivNthRoots : rootsOfUnity k R ≃ { x // x ∈ nthRoots k (1 
   pick_goal 4; · rintro ⟨x, hx⟩; ext; rfl
   all_goals
     rcases x with ⟨x, hx⟩; rw [mem_nth_roots k.pos] at hx
-    simp only [Subtype.coe_mk, ← pow_succ, ← pow_succ', hx,
+    simp only [Subtype.coe_mk, ← pow_succ', ← pow_succ, hx,
       tsub_add_cancel_of_le (show 1 ≤ (k : ℕ) from k.one_le)]
   · show (_ : Rˣ) ^ (k : ℕ) = 1
     simp only [Units.ext_iff, hx, Units.val_mk, Units.val_one, Subtype.coe_mk,
@@ -308,7 +308,7 @@ theorem map_rootsOfUnity_eq_pow_self [RingHomClass F R R] (σ : F) (ζ : rootsOf
   rw [← restrictRootsOfUnity_coe_apply, hm, zpow_mod_orderOf, ←
     Int.toNat_of_nonneg
       (m.mod_nonneg (int.coe_nat_ne_zero.mpr (pos_iff_ne_zero.mp (orderOf_pos ζ)))),
-    zpow_coe_nat, rootsOfUnity.coe_pow]
+    zpow_natCast, rootsOfUnity.coe_pow]
   exact ⟨(m % orderOf ζ).toNat, rfl⟩
 #align map_root_of_unity_eq_pow_self map_rootsOfUnity_eq_pow_self
 -/
@@ -432,7 +432,7 @@ theorem pow_eq_one_iff_dvd (l : ℕ) : ζ ^ l = 1 ↔ k ∣ l :=
 theorem isUnit (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) : IsUnit ζ :=
   by
   apply isUnit_of_mul_eq_one ζ (ζ ^ (k - 1))
-  rw [← pow_succ, tsub_add_cancel_of_le h0.nat_succ_le, h.pow_eq_one]
+  rw [← pow_succ', tsub_add_cancel_of_le h0.nat_succ_le, h.pow_eq_one]
 #align is_primitive_root.is_unit IsPrimitiveRoot.isUnit
 -/
 
@@ -507,9 +507,9 @@ theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.Coprime k) :
       dvd_of_pow_eq_one := _ }
   intro l hl
   apply h.dvd_of_pow_eq_one
-  rw [← pow_one ζ, ← zpow_coe_nat ζ, ← hi.gcd_eq_one, Nat.gcd_eq_gcd_ab, zpow_add, mul_pow, ←
-    zpow_coe_nat, ← zpow_mul, mul_right_comm]
-  simp only [zpow_mul, hl, h.pow_eq_one, one_zpow, one_pow, one_mul, zpow_coe_nat]
+  rw [← pow_one ζ, ← zpow_natCast ζ, ← hi.gcd_eq_one, Nat.gcd_eq_gcd_ab, zpow_add, mul_pow, ←
+    zpow_natCast, ← zpow_mul, mul_right_comm]
+  simp only [zpow_mul, hl, h.pow_eq_one, one_zpow, one_pow, one_mul, zpow_natCast]
 #align is_primitive_root.pow_of_coprime IsPrimitiveRoot.pow_of_coprime
 -/
 
@@ -668,7 +668,7 @@ section DivisionCommMonoid
 variable {ζ : G}
 
 #print IsPrimitiveRoot.zpow_eq_one /-
-theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : ζ ^ (k : ℤ) = 1 := by rw [zpow_coe_nat];
+theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : ζ ^ (k : ℤ) = 1 := by rw [zpow_natCast];
   exact h.pow_eq_one
 #align is_primitive_root.zpow_eq_one IsPrimitiveRoot.zpow_eq_one
 -/
@@ -677,12 +677,12 @@ theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : ζ ^ (k : ℤ) = 1 := by rw [zp
 theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 ↔ (k : ℤ) ∣ l :=
   by
   by_cases h0 : 0 ≤ l
-  · lift l to ℕ using h0; rw [zpow_coe_nat]; norm_cast; exact h.pow_eq_one_iff_dvd l
+  · lift l to ℕ using h0; rw [zpow_natCast]; norm_cast; exact h.pow_eq_one_iff_dvd l
   · have : 0 ≤ -l := by simp only [not_le, neg_nonneg] at h0 ⊢; exact le_of_lt h0
     lift -l to ℕ using this with l' hl'
     rw [← dvd_neg, ← hl']
     norm_cast
-    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_coe_nat, inv_one]
+    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_natCast, inv_one]
 #align is_primitive_root.zpow_eq_one_iff_dvd IsPrimitiveRoot.zpow_eq_one_iff_dvd
 -/
 
@@ -708,11 +708,11 @@ theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 
     IsPrimitiveRoot (ζ ^ i) k := by
   by_cases h0 : 0 ≤ i
   · lift i to ℕ using h0
-    rw [zpow_coe_nat]
+    rw [zpow_natCast]
     exact h.pow_of_coprime i hi
   have : 0 ≤ -i := by simp only [not_le, neg_nonneg] at h0 ⊢; exact le_of_lt h0
   lift -i to ℕ using this with i' hi'
-  rw [← inv_iff, ← zpow_neg, ← hi', zpow_coe_nat]
+  rw [← inv_iff, ← zpow_neg, ← hi', zpow_natCast]
   apply h.pow_of_coprime
   rw [Int.gcd, ← Int.natAbs_neg, ← hi'] at hi
   exact hi
@@ -751,7 +751,7 @@ theorem neZero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R)
     haveI : NeZero p := NeZero.of_pos (Nat.pos_of_dvd_of_pos hp n.pos)
     haveI hpri : Fact p.prime := CharP.char_is_prime_of_pos R p
     have := hζ.pow_eq_one
-    rw [hm.1, hk, pow_succ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at this
+    rw [hm.1, hk, pow_succ', mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at this
     exfalso
     have hpos : 0 < p ^ k * m :=
       by
@@ -760,7 +760,7 @@ theorem neZero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R)
       rw [h] at H
       simpa using H
     refine' hζ.pow_ne_one_of_pos_of_lt hpos _ (frobenius_inj R p this)
-    · rw [hm.1, hk, pow_succ, mul_assoc, mul_comm p]
+    · rw [hm.1, hk, pow_succ', mul_assoc, mul_comm p]
       exact lt_mul_of_one_lt_right hpos hpri.1.one_lt
   · exact NeZero.of_not_dvd R hp
 #align is_primitive_root.ne_zero' IsPrimitiveRoot.neZero'
@@ -830,7 +830,7 @@ def zmodEquivZPowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup
         simp only [AddMonoidHom.mem_ker, CharP.int_cast_eq_zero_iff (ZMod k) k, AddMonoidHom.coe_mk,
           Int.coe_castAddHom] at hi ⊢
         obtain ⟨i, rfl⟩ := hi
-        simp only [zpow_mul, h.pow_eq_one, one_zpow, zpow_coe_nat]
+        simp only [zpow_mul, h.pow_eq_one, one_zpow, zpow_natCast]
         rfl⟩)
     (by
       constructor
@@ -861,7 +861,7 @@ theorem zmodEquivZPowers_apply_coe_nat (i : ℕ) :
     h.zmodEquivZPowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   by
   have : (i : ZMod k) = (i : ℤ) := by norm_cast
-  simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_coe_nat]
+  simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_natCast]
   rfl
 #align is_primitive_root.zmod_equiv_zpowers_apply_coe_nat IsPrimitiveRoot.zmodEquivZPowers_apply_coe_nat
 -/
@@ -927,7 +927,7 @@ theorem eq_pow_of_mem_rootsOfUnity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRoot
   refine' ⟨i₀, _, _⟩
   · zify; rw [hi₀]; exact Int.emod_lt_of_pos _ hk0
   · have aux := h.zpow_eq_one; rw [← coe_coe] at aux
-    rw [← zpow_coe_nat, hi₀, ← Int.emod_add_ediv n k, zpow_add, zpow_mul, aux, one_zpow, mul_one]
+    rw [← zpow_natCast, hi₀, ← Int.emod_add_ediv n k, zpow_add, zpow_mul, aux, one_zpow, mul_one]
 #align is_primitive_root.eq_pow_of_mem_roots_of_unity IsPrimitiveRoot.eq_pow_of_mem_rootsOfUnity
 -/
 

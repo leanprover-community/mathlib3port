@@ -9,7 +9,7 @@ import Control.Traversable.Instances
 import Control.Traversable.Lemmas
 import CategoryTheory.Endomorphism
 import CategoryTheory.Types
-import CategoryTheory.Category.Kleisli
+import CategoryTheory.Category.KleisliCat
 
 #align_import control.fold from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
 

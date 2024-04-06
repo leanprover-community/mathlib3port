@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
 import MeasureTheory.Constructions.BorelSpace.Basic
-import Order.Filter.Ennreal
+import Order.Filter.ENNReal
 
 #align_import measure_theory.function.ess_sup from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

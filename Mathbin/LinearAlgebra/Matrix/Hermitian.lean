@@ -323,11 +323,11 @@ theorem IsHermitian.adjugate [Fintype m] [DecidableEq m] {A : Matrix m m α} (hA
 
 end CommRing
 
-section IsROrC
+section RCLike
 
-open IsROrC
+open RCLike
 
-variable [IsROrC α] [IsROrC β]
+variable [RCLike α] [RCLike β]
 
 #print Matrix.IsHermitian.coe_re_apply_self /-
 /-- The diagonal elements of a complex hermitian matrix are real. -/
@@ -364,7 +364,7 @@ theorem isHermitian_iff_isSymmetric [Fintype n] [DecidableEq n] {A : Matrix n n 
 #align matrix.is_hermitian_iff_is_symmetric Matrix.isHermitian_iff_isSymmetric
 -/
 
-end IsROrC
+end RCLike
 
 end Matrix
 

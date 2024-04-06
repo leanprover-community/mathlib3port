@@ -27,23 +27,23 @@ open Nat
 
 namespace Int
 
-#print Int.le_coe_nat_sub /-
-theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) :=
+#print Int.le_natCast_sub /-
+theorem le_natCast_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) :=
   by
   by_cases h : m ≥ n
   · exact le_of_eq (Int.ofNat_sub h).symm
   · simp [le_of_not_ge h, coe_nat_le]
-#align int.le_coe_nat_sub Int.le_coe_nat_sub
+#align int.le_coe_nat_sub Int.le_natCast_sub
 -/
 
 /-! ### succ and pred -/
 
 
-#print Int.succ_coe_nat_pos /-
+#print Int.succ_natCast_pos /-
 @[simp]
-theorem succ_coe_nat_pos (n : ℕ) : 0 < (n : ℤ) + 1 :=
+theorem succ_natCast_pos (n : ℕ) : 0 < (n : ℤ) + 1 :=
   lt_add_one_iff.mpr (by simp)
-#align int.succ_coe_nat_pos Int.succ_coe_nat_pos
+#align int.succ_coe_nat_pos Int.succ_natCast_pos
 -/
 
 /-! ### nat abs -/

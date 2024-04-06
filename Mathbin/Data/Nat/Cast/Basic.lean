@@ -5,7 +5,7 @@ Authors: Mario Carneiro
 -/
 import Algebra.CharZero.Defs
 import Algebra.GroupWithZero.Commute
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 import Algebra.Order.Group.Abs
 import Algebra.Ring.Commute
 import Data.Nat.Order.Basic
@@ -223,10 +223,10 @@ theorem abs_cast [LinearOrderedRing α] (a : ℕ) : |(a : α)| = a :=
 #align nat.abs_cast Nat.abs_cast
 -/
 
-#print Nat.coe_nat_dvd /-
-theorem coe_nat_dvd [Semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
+#print Nat.cast_dvd_cast /-
+theorem cast_dvd_cast [Semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
   map_dvd (Nat.castRingHom α) h
-#align nat.coe_nat_dvd Nat.coe_nat_dvd
+#align nat.coe_nat_dvd Nat.cast_dvd_cast
 -/
 
 alias _root_.has_dvd.dvd.nat_cast := coe_nat_dvd

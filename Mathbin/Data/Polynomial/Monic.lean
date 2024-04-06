@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
 import Data.Polynomial.Reverse
-import Algebra.Regular.Smul
+import Algebra.Regular.SMul
 
 #align_import data.polynomial.monic from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -142,7 +142,7 @@ theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=
 #print Polynomial.Monic.pow /-
 theorem Monic.pow (hp : Monic p) : ∀ n : ℕ, Monic (p ^ n)
   | 0 => monic_one
-  | n + 1 => by rw [pow_succ]; exact hp.mul (monic.pow n)
+  | n + 1 => by rw [pow_succ']; exact hp.mul (monic.pow n)
 #align polynomial.monic.pow Polynomial.Monic.pow
 -/
 
@@ -285,7 +285,7 @@ theorem natDegree_pow (hp : p.Monic) (n : ℕ) : (p ^ n).natDegree = n * p.natDe
   by
   induction' n with n hn
   · simp
-  · rw [pow_succ, hp.nat_degree_mul (hp.pow n), hn]
+  · rw [pow_succ', hp.nat_degree_mul (hp.pow n), hn]
     ring
 #align polynomial.monic.nat_degree_pow Polynomial.Monic.natDegree_pow
 -/

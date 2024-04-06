@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel, Yury Kudryashov, Yuyang Zhao
 -/
 import Analysis.Calculus.Deriv.Basic
-import Analysis.Calculus.Fderiv.Comp
-import Analysis.Calculus.Fderiv.RestrictScalars
+import Analysis.Calculus.FDeriv.Comp
+import Analysis.Calculus.FDeriv.RestrictScalars
 
 #align_import analysis.calculus.deriv.comp from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

@@ -5,10 +5,10 @@ Authors: Johan Commelin, Robert Y. Lewis
 -/
 import Algebra.CharP.Invertible
 import Data.Fintype.BigOperators
-import Data.MvPolynomial.Variables
+import Data.MvPolynomial.Degrees
 import Data.MvPolynomial.CommRing
 import Data.MvPolynomial.Expand
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 
 #align_import ring_theory.witt_vector.witt_polynomial from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -178,7 +178,7 @@ theorem wittPolynomial_zmod_self (n : ℕ) :
   rw [sum_range_succ, ← Nat.cast_pow, CharP.cast_eq_zero (ZMod (p ^ (n + 1))) (p ^ (n + 1)), C_0,
     MulZeroClass.zero_mul, add_zero, AlgHom.map_sum, sum_congr rfl]
   intro k hk
-  rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mul, ← pow_succ]
+  rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mul, ← pow_succ']
   congr
   rw [mem_range] at hk
   rw [add_comm, add_tsub_assoc_of_le (nat.lt_succ_iff.mp hk), ← add_comm]
@@ -350,7 +350,7 @@ theorem bind₁_wittPolynomial_xInTermsOfW [Invertible (p : R)] (n : ℕ) :
   rw [xInTermsOfW_eq, AlgHom.map_mul, AlgHom.map_sub, bind₁_X_right, alg_hom_C, AlgHom.map_sum]
   have : W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i) = C (p ^ n : R) * X n := by
     simp only [wittPolynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_one,
-      add_sub_cancel, pow_zero]
+      add_sub_cancel_right, pow_zero]
   rw [sum_congr rfl, this]
   ·-- this is really slow for some reason
     rw [mul_right_comm, ← C_mul, ← mul_pow, mul_invOf_self, one_pow, C_1, one_mul]

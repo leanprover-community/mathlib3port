@@ -435,8 +435,8 @@ theorem SimpleGraph.chromaticNumber_mono_of_embedding {V' : Type _} {G' : Simple
 #align simple_graph.colorable.chromatic_number_mono_of_embedding SimpleGraph.chromaticNumber_mono_of_embedding
 -/
 
-#print SimpleGraph.chromaticNumber_eq_card_of_forall_surj /-
-theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
+#print SimpleGraph.chromaticNumber_eq_card_iff_forall_surjective /-
+theorem chromaticNumber_eq_card_iff_forall_surjective [Fintype α] (C : G.Coloring α)
     (h : ∀ C' : G.Coloring α, Function.Surjective C') : G.chromaticNumber = Fintype.card α :=
   by
   apply le_antisymm
@@ -453,7 +453,7 @@ theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
     have h1 : Function.Surjective f := Function.Surjective.of_comp h
     have h2 := Fintype.card_le_of_surjective _ h1
     exact Nat.lt_le_asymm hc h2
-#align simple_graph.chromatic_number_eq_card_of_forall_surj SimpleGraph.chromaticNumber_eq_card_of_forall_surj
+#align simple_graph.chromatic_number_eq_card_of_forall_surj SimpleGraph.chromaticNumber_eq_card_iff_forall_surjective
 -/
 
 #print SimpleGraph.chromaticNumber_bot /-

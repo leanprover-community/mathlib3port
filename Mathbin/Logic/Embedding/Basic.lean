@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Data.FunLike.Embedding
-import Data.Prod.Pprod
+import Data.Prod.PProd
 import Data.Sigma.Basic
 import Data.Option.Basic
 import Data.Subtype

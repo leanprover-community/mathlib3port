@@ -176,7 +176,7 @@ theorem eq_zero_iff_not_coprime {a : ℤ} {b : ℕ} [NeZero b] : J(a | b) = 0 �
     (by
       rw [List.mem_pmap, Int.gcd_eq_natAbs, Ne, prime.not_coprime_iff_dvd]
       simp_rw [legendreSym.eq_zero_iff, int_coe_zmod_eq_zero_iff_dvd, mem_factors (NeZero.ne b), ←
-        Int.coe_nat_dvd_left, Int.coe_nat_dvd, exists_prop, and_assoc', and_comm'])
+        Int.natCast_dvd, Int.natCast_dvd_natCast, exists_prop, and_assoc', and_comm'])
 #align jacobi_sym.eq_zero_iff_not_coprime jacobiSym.eq_zero_iff_not_coprime
 -/
 
@@ -221,7 +221,7 @@ theorem eq_one_or_neg_one {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) = 1 �
 /-- We have that `J(a^e | b) = J(a | b)^e`. -/
 theorem pow_left (a : ℤ) (e b : ℕ) : J(a ^ e | b) = J(a | b) ^ e :=
   Nat.recOn e (by rw [pow_zero, pow_zero, one_left]) fun _ ih => by
-    rw [pow_succ, pow_succ, mul_left, ih]
+    rw [pow_succ', pow_succ', mul_left, ih]
 #align jacobi_sym.pow_left jacobiSym.pow_left
 -/
 
@@ -233,7 +233,7 @@ theorem pow_right (a : ℤ) (b e : ℕ) : J(a | b ^ e) = J(a | b) ^ e :=
   · rw [pow_zero, pow_zero, one_right]
   · cases' eq_zero_or_neZero b with hb
     · rw [hb, zero_pow (succ_pos e), zero_right, one_pow]
-    · rw [pow_succ, pow_succ, mul_right, ih]
+    · rw [pow_succ', pow_succ', mul_right, ih]
 #align jacobi_sym.pow_right jacobiSym.pow_right
 -/
 
@@ -258,8 +258,9 @@ theorem mod_left (a : ℤ) (b : ℕ) : J(a | b) = J(a % b | b) :=
       (by
         rintro p hp _ _
         conv_rhs =>
-          rw [legendreSym.mod, Int.emod_emod_of_dvd _ (Int.coe_nat_dvd.2 <| dvd_of_mem_factors hp),
-            ← legendreSym.mod])
+          rw [legendreSym.mod,
+            Int.emod_emod_of_dvd _ (Int.natCast_dvd_natCast.2 <| dvd_of_mem_factors hp), ←
+            legendreSym.mod])
 #align jacobi_sym.mod_left jacobiSym.mod_left
 -/
 
@@ -559,12 +560,12 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
   congr 1; swap; congr 1
   · simp_rw [qrSign]
     rw [χ₄_nat_mod_four, χ₄_nat_mod_four (b % (4 * a)), mod_mod_of_dvd b (dvd_mul_right 4 a)]
-  · rw [mod_left ↑(b % _), mod_left b, Int.coe_nat_mod, Int.emod_emod_of_dvd b]
+  · rw [mod_left ↑(b % _), mod_left b, Int.natCast_mod, Int.emod_emod_of_dvd b]
     simp only [ha₂, Nat.cast_mul, ← mul_assoc]
     exact dvd_mul_left a' _
   cases e; · rfl
   · rw [χ₈_nat_mod_eight, χ₈_nat_mod_eight (b % (4 * a)), mod_mod_of_dvd b]
-    use 2 ^ e * a'; rw [ha₂, pow_succ]; ring
+    use 2 ^ e * a'; rw [ha₂, pow_succ']; ring
 #align jacobi_sym.mod_right' jacobiSym.mod_right'
 -/
 

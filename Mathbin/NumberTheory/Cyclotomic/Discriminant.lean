@@ -86,12 +86,12 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
   congr 1
   · rcases eq_or_ne p 2 with (rfl | hp2)
     · rcases Nat.exists_eq_succ_of_ne_zero (hp2 rfl) with ⟨k, rfl⟩
-      rw [PNat.coe_bit0, PNat.one_coe, succ_sub_succ_eq_sub, tsub_zero, mul_one, pow_succ,
+      rw [PNat.coe_bit0, PNat.one_coe, succ_sub_succ_eq_sub, tsub_zero, mul_one, pow_succ',
         mul_assoc, Nat.mul_div_cancel_left _ zero_lt_two, Nat.mul_div_cancel_left _ zero_lt_two]
       cases k
       · simp
       ·
-        rw [pow_succ, (even_two.mul_right _).neg_one_pow,
+        rw [pow_succ', (even_two.mul_right _).neg_one_pow,
           ((even_two.mul_right _).hMul_right _).neg_one_pow]
     · replace hp2 : (p : ℕ) ≠ 2
       · rwa [Ne.def, ← PNat.one_coe, ← PNat.coe_bit0, PNat.coe_inj]

@@ -6,7 +6,7 @@ Authors: Thomas Browning, Patrick Lutz
 import FieldTheory.IntermediateField
 import FieldTheory.Separable
 import FieldTheory.SplittingField.IsSplittingField
-import RingTheory.TensorProduct
+import LinearAlgebra.TensorProduct.Tower
 
 #align_import field_theory.adjoin from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

@@ -5,7 +5,7 @@ Authors: Vincent Beffara
 -/
 import Analysis.Analytic.Basic
 import Analysis.Calculus.Dslope
-import Analysis.Calculus.FderivAnalytic
+import Analysis.Calculus.FDeriv.Analytic
 import Analysis.Calculus.FormalMultilinearSeries
 import Analysis.Analytic.Uniqueness
 
@@ -89,7 +89,7 @@ theorem has_fpower_series_dslope_fslope (hp : HasFPowerSeriesAt f p z₀) :
   refine' hp.mono fun x hx => _
   by_cases h : x = 0
   · convert hasSum_single 0 _ <;> intros <;> simp [*]
-  · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ']
+  · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ]
     suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
       simpa [dslope, slope, h, smul_smul, hxx] using this
     · simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul x⁻¹

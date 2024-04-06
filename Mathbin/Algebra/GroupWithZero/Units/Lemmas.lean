@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Algebra.GroupWithZero.Commute
-import Algebra.Hom.Units
+import Algebra.Group.Units.Hom
 import GroupTheory.GroupAction.Units
 
 #align_import algebra.group_with_zero.units.lemmas from "leanprover-community/mathlib"@"dc6c365e751e34d100e80fe6e314c3c3e0fd2988"
@@ -81,18 +81,18 @@ theorem mul_eq_one_iff_inv_eq₀ (ha : a ≠ 0) : a * b = 1 ↔ a⁻¹ = b :=
 #align mul_eq_one_iff_inv_eq₀ mul_eq_one_iff_inv_eq₀
 -/
 
-#print div_mul_cancel /-
+#print div_mul_cancel₀ /-
 @[simp]
-theorem div_mul_cancel (a : G₀) (h : b ≠ 0) : a / b * b = a :=
+theorem div_mul_cancel₀ (a : G₀) (h : b ≠ 0) : a / b * b = a :=
   h.IsUnit.div_mul_cancelₓ _
-#align div_mul_cancel div_mul_cancel
+#align div_mul_cancel div_mul_cancel₀
 -/
 
-#print mul_div_cancel /-
+#print mul_div_cancel_right₀ /-
 @[simp]
-theorem mul_div_cancel (a : G₀) (h : b ≠ 0) : a * b / b = a :=
+theorem mul_div_cancel_right₀ (a : G₀) (h : b ≠ 0) : a * b / b = a :=
   h.IsUnit.mul_div_cancel _
-#align mul_div_cancel mul_div_cancel
+#align mul_div_cancel mul_div_cancel_right₀
 -/
 
 #print mul_one_div_cancel /-
@@ -177,25 +177,25 @@ theorem mul_mul_div (a : G₀) (hb : b ≠ 0) : a = a * b * (1 / b) :=
 
 #print div_div_div_cancel_right /-
 theorem div_div_div_cancel_right (a : G₀) (hc : c ≠ 0) : a / c / (b / c) = a / b := by
-  rw [div_div_eq_mul_div, div_mul_cancel _ hc]
+  rw [div_div_eq_mul_div, div_mul_cancel₀ _ hc]
 #align div_div_div_cancel_right div_div_div_cancel_right
 -/
 
 #print div_mul_div_cancel /-
 theorem div_mul_div_cancel (a : G₀) (hc : c ≠ 0) : a / c * (c / b) = a / b := by
-  rw [← mul_div_assoc, div_mul_cancel _ hc]
+  rw [← mul_div_assoc, div_mul_cancel₀ _ hc]
 #align div_mul_div_cancel div_mul_div_cancel
 -/
 
 #print div_mul_cancel_of_imp /-
 theorem div_mul_cancel_of_imp {a b : G₀} (h : b = 0 → a = 0) : a / b * b = a :=
-  by_cases (fun hb : b = 0 => by simp [*]) (div_mul_cancel a)
+  by_cases (fun hb : b = 0 => by simp [*]) (div_mul_cancel₀ a)
 #align div_mul_cancel_of_imp div_mul_cancel_of_imp
 -/
 
 #print mul_div_cancel_of_imp /-
 theorem mul_div_cancel_of_imp {a b : G₀} (h : b = 0 → a = 0) : a * b / b = a :=
-  by_cases (fun hb : b = 0 => by simp [*]) (mul_div_cancel a)
+  by_cases (fun hb : b = 0 => by simp [*]) (mul_div_cancel_right₀ a)
 #align mul_div_cancel_of_imp mul_div_cancel_of_imp
 -/
 
@@ -225,10 +225,10 @@ theorem mul_div_cancel_left_of_imp {a b : G₀} (h : a = 0 → b = 0) : a * b / 
 #align mul_div_cancel_left_of_imp mul_div_cancel_left_of_imp
 -/
 
-#print mul_div_cancel_left /-
-theorem mul_div_cancel_left (b : G₀) (ha : a ≠ 0) : a * b / a = b :=
+#print mul_div_cancel_left₀ /-
+theorem mul_div_cancel_left₀ (b : G₀) (ha : a ≠ 0) : a * b / a = b :=
   ha.IsUnit.mul_div_cancel_left _
-#align mul_div_cancel_left mul_div_cancel_left
+#align mul_div_cancel_left mul_div_cancel_left₀
 -/
 
 #print mul_div_cancel_of_imp' /-
@@ -237,10 +237,10 @@ theorem mul_div_cancel_of_imp' {a b : G₀} (h : b = 0 → a = 0) : b * (a / b) 
 #align mul_div_cancel_of_imp' mul_div_cancel_of_imp'
 -/
 
-#print mul_div_cancel' /-
-theorem mul_div_cancel' (a : G₀) (hb : b ≠ 0) : b * (a / b) = a :=
+#print mul_div_cancel₀ /-
+theorem mul_div_cancel₀ (a : G₀) (hb : b ≠ 0) : b * (a / b) = a :=
   hb.IsUnit.mul_div_cancel'ₓ _
-#align mul_div_cancel' mul_div_cancel'
+#align mul_div_cancel' mul_div_cancel₀
 -/
 
 #print mul_div_mul_left /-
@@ -252,7 +252,7 @@ theorem mul_div_mul_left (a b : G₀) (hc : c ≠ 0) : c * a / (c * b) = a / b :
 #print mul_eq_mul_of_div_eq_div /-
 theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb : b ≠ 0) (hd : d ≠ 0)
     (h : a / b = c / d) : a * d = c * b := by
-  rw [← mul_one a, ← div_self hb, ← mul_comm_div, h, div_mul_eq_mul_div, div_mul_cancel _ hd]
+  rw [← mul_one a, ← div_self hb, ← mul_comm_div, h, div_mul_eq_mul_div, div_mul_cancel₀ _ hd]
 #align mul_eq_mul_of_div_eq_div mul_eq_mul_of_div_eq_div
 -/
 

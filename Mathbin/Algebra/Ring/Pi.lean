@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
 import Tactic.PiInstances
-import Algebra.Group.Pi
-import Algebra.Hom.Ring
+import Algebra.Group.Pi.Lemmas
+import Algebra.Ring.Hom.Defs
 
 #align_import algebra.ring.pi from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

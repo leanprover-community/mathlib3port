@@ -7,7 +7,7 @@ import Tactic.AutoCases
 import Tactic.Tidy
 import Tactic.WithLocalReducibility
 import Tactic.ShowTerm
-import Topology.Basic
+import Topology.Defs.Basic
 
 #align_import topology.tactic from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

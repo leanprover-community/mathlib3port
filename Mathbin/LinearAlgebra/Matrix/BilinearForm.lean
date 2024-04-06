@@ -7,7 +7,7 @@ import LinearAlgebra.Matrix.Basis
 import LinearAlgebra.Matrix.Nondegenerate
 import LinearAlgebra.Matrix.NonsingularInverse
 import LinearAlgebra.Matrix.ToLinearEquiv
-import LinearAlgebra.BilinearForm
+import LinearAlgebra.BilinearForm.Basic
 import LinearAlgebra.Matrix.SesquilinearForm
 
 #align_import linear_algebra.matrix.bilinear_form from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"

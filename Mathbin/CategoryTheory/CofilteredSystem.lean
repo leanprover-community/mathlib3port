@@ -3,9 +3,9 @@ Copyright (c) 2022 Kyle Miller, Adam Topaz, Rémi Bottinelli, Junyan Xu. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Adam Topaz, Rémi Bottinelli, Junyan Xu
 -/
-import CategoryTheory.Filtered
+import CategoryTheory.Filtered.Basic
 import Data.Set.Finite
-import Topology.Category.Top.Limits.Konig
+import Topology.Category.TopCat.Limits.Konig
 
 #align_import category_theory.cofiltered_system from "leanprover-community/mathlib"@"2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe"
 

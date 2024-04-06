@@ -5,7 +5,7 @@ Authors: Frédéric Dupuis
 -/
 import Analysis.Convex.Function
 import Topology.Algebra.Affine
-import Topology.LocalExtr
+import Topology.Order.LocalExtr
 import Topology.MetricSpace.Basic
 
 #align_import analysis.convex.extrema from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"

@@ -5,7 +5,7 @@ Authors: Rémy Degenne
 -/
 import Order.SuccPred.Basic
 import Topology.Order.Basic
-import Topology.MetricSpace.MetrizableUniformity
+import Topology.Metrizable.Uniformity
 
 #align_import topology.instances.discrete from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
 

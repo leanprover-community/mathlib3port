@@ -355,7 +355,7 @@ theorem monotone_or_antitone_iff_uIcc :
 #align set.monotone_or_antitone_iff_uIcc Set.monotone_or_antitone_iff_uIcc
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.monotoneOn_or_antitoneOn_iff_uIcc /-
 theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔

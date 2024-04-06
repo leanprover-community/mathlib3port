@@ -6,7 +6,7 @@ Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Masso
 import Algebra.GeomSum
 import Order.Filter.Archimedean
 import Order.Iterate
-import Topology.Instances.Ennreal
+import Topology.Instances.ENNReal
 import Topology.Algebra.Algebra
 
 #align_import analysis.specific_limits.basic from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
@@ -128,7 +128,7 @@ theorem tendsto_pow_atTop_nhds_zero_of_lt_one {𝕜 : Type _} [LinearOrderedFiel
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   h₁.eq_or_lt.elim
     (fun this : 0 = r =>
-      (tendsto_add_atTop_iff_nat 1).mp <| by simp [pow_succ, ← this, tendsto_const_nhds])
+      (tendsto_add_atTop_iff_nat 1).mp <| by simp [pow_succ', ← this, tendsto_const_nhds])
     fun this : 0 < r =>
     have : Tendsto (fun n => (r⁻¹ ^ n)⁻¹) atTop (𝓝 0) :=
       tendsto_inv_atTop_zero.comp (tendsto_pow_atTop_atTop_of_one_lt <| one_lt_inv this h₂)
@@ -160,7 +160,7 @@ theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
   by
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_le_of_lt hn _ _ h
   · simp
-  · simp [pow_succ, mul_assoc, le_refl]
+  · simp [pow_succ', mul_assoc, le_refl]
 #align geom_lt geom_lt
 -/
 
@@ -168,7 +168,7 @@ theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
 theorem geom_le {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k < n, c * u k ≤ u (k + 1)) :
     c ^ n * u 0 ≤ u n := by
   refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ _ h <;>
-    simp [pow_succ, mul_assoc, le_refl]
+    simp [pow_succ', mul_assoc, le_refl]
 #align geom_le geom_le
 -/
 
@@ -178,7 +178,7 @@ theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
   by
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_lt_of_le hn _ h _
   · simp
-  · simp [pow_succ, mul_assoc, le_refl]
+  · simp [pow_succ', mul_assoc, le_refl]
 #align lt_geom lt_geom
 -/
 
@@ -186,7 +186,7 @@ theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
 theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k < n, u (k + 1) ≤ c * u k) :
     u n ≤ c ^ n * u 0 := by
   refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;>
-    simp [pow_succ, mul_assoc, le_refl]
+    simp [pow_succ', mul_assoc, le_refl]
 #align le_geom le_geom
 -/
 

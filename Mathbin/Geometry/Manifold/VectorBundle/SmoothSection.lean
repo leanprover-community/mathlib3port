@@ -3,7 +3,7 @@ Copyright © 2023 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 -/
-import Geometry.Manifold.ContMdiffMfderiv
+import Geometry.Manifold.ContMDiffMFDeriv
 import Topology.ContinuousFunction.Basic
 import Geometry.Manifold.Algebra.LieGroup
 
@@ -255,7 +255,7 @@ theorem coe_nsmul (s : Cₛ^n⟮I; F, V⟯) (k : ℕ) : ⇑(k • s : Cₛ^n⟮I
   by
   induction' k with k ih
   · simp_rw [zero_smul]; rfl
-  simp_rw [succ_nsmul, ← ih]; rfl
+  simp_rw [succ_nsmul', ← ih]; rfl
 #align cont_mdiff_section.coe_nsmul ContMDiffSection.coe_nsmul
 -/
 
@@ -271,7 +271,7 @@ theorem coe_zsmul (s : Cₛ^n⟮I; F, V⟯) (z : ℤ) : ⇑(z • s : Cₛ^n⟮I
   by
   cases' z with n n
   refine' (coe_nsmul s n).trans _
-  simp only [Int.ofNat_eq_coe, coe_nat_zsmul]
+  simp only [Int.ofNat_eq_coe, natCast_zsmul]
   refine' (congr_arg Neg.neg (coe_nsmul s (n + 1))).trans _
   simp only [negSucc_zsmul, neg_inj]
 #align cont_mdiff_section.coe_zsmul ContMDiffSection.coe_zsmul

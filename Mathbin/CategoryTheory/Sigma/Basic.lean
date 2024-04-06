@@ -5,7 +5,7 @@ Authors: Bhavik Mehta
 -/
 import CategoryTheory.Whiskering
 import CategoryTheory.Functor.FullyFaithful
-import CategoryTheory.NaturalIsomorphism
+import CategoryTheory.NatIso
 
 #align_import category_theory.sigma.basic from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

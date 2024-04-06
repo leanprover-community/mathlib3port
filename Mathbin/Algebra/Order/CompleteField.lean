@@ -181,8 +181,7 @@ theorem cutMap_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b :=
   refine' (image_subset_iff.2 fun q hq => _).antisymm _
   · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
-    refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;>
-      rwa [coe_mem_cut_map_iff]
+    refine' ⟨q₁, q - q₁, _, _, add_sub_cancel _ _⟩ <;> try norm_cast <;> rwa [coe_mem_cut_map_iff]
     exact_mod_cast sub_lt_comm.mp hq₁q
   · rintro _ ⟨_, _, ⟨qa, ha, rfl⟩, ⟨qb, hb, rfl⟩, rfl⟩
     refine' ⟨qa + qb, _, by norm_cast⟩

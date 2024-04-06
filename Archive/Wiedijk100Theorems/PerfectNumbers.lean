@@ -51,7 +51,8 @@ theorem sigma_two_pow_eq_mersenne_succ (k : ℕ) : σ 1 (2 ^ k) = mersenne (k + 
 theorem perfect_two_pow_hMul_mersenne_of_prime (k : ℕ) (pr : (mersenne (k + 1)).Prime) :
     Nat.Perfect (2 ^ k * mersenne (k + 1)) :=
   by
-  rw [Nat.perfect_iff_sum_divisors_eq_two_mul, ← mul_assoc, ← pow_succ, ← sigma_one_apply, mul_comm,
+  rw [Nat.perfect_iff_sum_divisors_eq_two_mul, ← mul_assoc, ← pow_succ', ← sigma_one_apply,
+    mul_comm,
     is_multiplicative_sigma.map_mul_of_coprime
       (nat.prime_two.coprime_pow_of_not_dvd (odd_mersenne_succ _)),
     sigma_two_pow_eq_mersenne_succ]
@@ -81,7 +82,7 @@ theorem eq_two_pow_hMul_odd {n : ℕ} (hpos : 0 < n) : ∃ k m : ℕ, n = 2 ^ k 
   contrapose! hg
   rcases hg with ⟨k, rfl⟩
   apply Dvd.intro k
-  rw [pow_succ', mul_assoc, ← hm]
+  rw [pow_succ, mul_assoc, ← hm]
 #align theorems_100.nat.eq_two_pow_mul_odd Theorems100.Nat.eq_two_pow_hMul_odd
 
 /-- **Perfect Number Theorem**: Euler's theorem that even perfect numbers can be factored as a
@@ -95,7 +96,7 @@ theorem eq_two_pow_hMul_prime_mersenne_of_even_perfect {n : ℕ} (ev : Even n)
   rw [even_iff_two_dvd] at hm
   rw [Nat.perfect_iff_sum_divisors_eq_two_mul hpos, ← sigma_one_apply,
     is_multiplicative_sigma.map_mul_of_coprime (nat.prime_two.coprime_pow_of_not_dvd hm).symm,
-    sigma_two_pow_eq_mersenne_succ, ← mul_assoc, ← pow_succ] at perf
+    sigma_two_pow_eq_mersenne_succ, ← mul_assoc, ← pow_succ'] at perf
   rcases Nat.Coprime.dvd_of_dvd_mul_left
       (nat.prime_two.coprime_pow_of_not_dvd (odd_mersenne_succ _)) (Dvd.intro _ perf) with
     ⟨j, rfl⟩

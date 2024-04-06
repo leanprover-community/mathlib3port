@@ -208,7 +208,7 @@ theorem coeff_pow_of_natDegree_le (pn : p.natDegree ≤ n) : (p ^ m).coeff (n * 
   by
   induction' m with m hm
   · simp
-  · rw [pow_succ', pow_succ', ← hm, Nat.mul_succ, coeff_mul_of_nat_degree_le _ pn]
+  · rw [pow_succ, pow_succ, ← hm, Nat.mul_succ, coeff_mul_of_nat_degree_le _ pn]
     refine' nat_degree_pow_le.trans (le_trans _ (mul_comm _ _).le)
     exact mul_le_mul_of_nonneg_left pn m.zero_le
 #align polynomial.coeff_pow_of_nat_degree_le Polynomial.coeff_pow_of_natDegree_le
@@ -424,7 +424,7 @@ theorem natDegree_iterate_comp (k : ℕ) :
   by
   induction' k with k IH
   · simp
-  · rw [Function.iterate_succ_apply', nat_degree_comp, IH, pow_succ, mul_assoc]
+  · rw [Function.iterate_succ_apply', nat_degree_comp, IH, pow_succ', mul_assoc]
 #align polynomial.nat_degree_iterate_comp Polynomial.natDegree_iterate_comp
 -/
 

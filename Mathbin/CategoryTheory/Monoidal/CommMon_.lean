@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import CategoryTheory.Monoidal.Braided
+import CategoryTheory.Monoidal.Braided.Basic
 import CategoryTheory.Monoidal.Mon_
 
 #align_import category_theory.monoidal.CommMon_ from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"

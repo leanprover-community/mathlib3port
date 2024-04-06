@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
 import CategoryTheory.Preadditive.Yoneda.Basic
-import Algebra.Category.Module.Abelian
+import Algebra.Category.ModuleCat.Abelian
 
 #align_import category_theory.preadditive.yoneda.limits from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

@@ -62,7 +62,7 @@ theorem fromBlocks_eq_of_invertible₁₁ (A : Matrix m m α) (B : Matrix m n α
   by
   simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
     Matrix.one_mul, Matrix.mul_one, invOf_mul_self, Matrix.mul_invOf_self_assoc,
-    Matrix.mul_invOf_mul_self_cancel, Matrix.mul_assoc, add_sub_cancel'_right]
+    Matrix.mul_invOf_mul_self_cancel, Matrix.mul_assoc, add_sub_cancel]
 #align matrix.from_blocks_eq_of_invertible₁₁ Matrix.fromBlocks_eq_of_invertible₁₁
 -/
 
@@ -541,11 +541,11 @@ end CommRing
 /-! ### Lemmas about `ℝ` and `ℂ`-/
 
 
-section IsROrC
+section RCLike
 
 open scoped Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜]
+variable {𝕜 : Type _} [RCLike 𝕜]
 
 scoped infixl:65 " ⊕ᵥ " => Sum.elim
 
@@ -645,7 +645,7 @@ theorem PosSemidef.fromBlocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A :
 #align matrix.pos_semidef.from_blocks₂₂ Matrix.PosSemidef.fromBlocks₂₂
 -/
 
-end IsROrC
+end RCLike
 
 end Matrix
 

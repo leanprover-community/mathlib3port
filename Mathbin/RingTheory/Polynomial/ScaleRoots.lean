@@ -3,7 +3,7 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Devon Tuma
 -/
-import RingTheory.NonZeroDivisors
+import Algebra.GroupWithZero.NonZeroDivisors
 import Data.Polynomial.AlgebraMap
 
 #align_import ring_theory.polynomial.scale_roots from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
@@ -160,7 +160,7 @@ theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+
     (hs : s ∈ nonZeroDivisors A) : eval₂ f (f r) (scaleRoots p s) = 0 :=
   by
   convert scale_roots_eval₂_eq_zero f hr
-  rw [← mul_div_assoc, mul_comm, mul_div_cancel]
+  rw [← mul_div_assoc, mul_comm, mul_div_cancel_right₀]
   exact map_ne_zero_of_mem_nonZeroDivisors _ hf hs
 #align polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero
 -/

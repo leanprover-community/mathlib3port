@@ -101,7 +101,7 @@ theorem hyperoperation_three : hyperoperation 3 = (· ^ ·) :=
   · rw [hyperoperation_ge_three_eq_one]
     exact (pow_zero m).symm
   · rw [hyperoperation_recursion, hyperoperation_two, bih]
-    exact (pow_succ m bn).symm
+    exact (pow_succ' m bn).symm
 #align hyperoperation_three hyperoperation_three
 -/
 

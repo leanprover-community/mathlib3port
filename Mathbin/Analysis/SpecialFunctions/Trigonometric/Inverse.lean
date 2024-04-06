@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
 import Analysis.SpecialFunctions.Trigonometric.Basic
-import Topology.Algebra.Order.ProjIcc
+import Topology.Order.ProjIcc
 
 #align_import analysis.special_functions.trigonometric.inverse from "leanprover-community/mathlib"@"50251fd6309cca5ca2e747882ffecd2729f38c5d"
 

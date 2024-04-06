@@ -141,7 +141,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     apply le_antisymm
     · rw [adjoin_le_iff]
       have α_in_Fγ : α ∈ F⟮⟯ := by
-        rw [← add_sub_cancel α (c • β)]
+        rw [← add_sub_cancel_right α (c • β)]
         exact F⟮⟯.sub_mem (mem_adjoin_simple_self F γ) (F⟮⟯.toSubalgebra.smul_mem β_in_Fγ c)
       exact fun x hx => by cases hx <;> cases hx <;> cases hx <;> assumption
     · rw [adjoin_simple_le_iff]
@@ -159,7 +159,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   · have finale : β = algebraMap F⟮⟯ E (-p.coeff 0 / p.coeff 1) :=
       by
       rw [map_div₀, RingHom.map_neg, ← coeff_map, ← coeff_map, p_linear]
-      simp [mul_sub, coeff_C, mul_div_cancel_left β (mt leading_coeff_eq_zero.mp h_ne_zero)]
+      simp [mul_sub, coeff_C, mul_div_cancel_left₀ β (mt leading_coeff_eq_zero.mp h_ne_zero)]
     rw [finale]
     exact Subtype.mem (-p.coeff 0 / p.coeff 1)
   have h_sep : h.separable := separable_gcd_right _ (IsSeparable.separable F β).map
@@ -167,7 +167,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     apply eval_gcd_eq_zero
     ·
       rw [eval_comp, eval_sub, eval_mul, eval_C, eval_C, eval_X, eval_map, ← aeval_def, ←
-        Algebra.smul_def, add_sub_cancel, minpoly.aeval]
+        Algebra.smul_def, add_sub_cancel_right, minpoly.aeval]
     · rw [eval_map, ← aeval_def, minpoly.aeval]
   have h_splits : splits ιEE' h :=
     splits_of_splits_gcd_right ιEE' map_g_ne_zero (splitting_field.splits _)

@@ -212,7 +212,7 @@ noncomputable def extension : hat K → Γ₀ :=
 #align valued.extension Valued.extension
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » V') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » V') -/
 #print Valued.continuous_extension /-
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :=
   by

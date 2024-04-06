@@ -3,8 +3,8 @@ Copyright (c) 2021 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Analysis.NormedSpace.OperatorNorm
-import Topology.MetricSpace.Baire
+import Analysis.NormedSpace.OperatorNorm.Basic
+import Topology.Baire.Lemmas
 import Topology.Algebra.Module.Basic
 
 #align_import analysis.normed_space.banach_steinhaus from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
@@ -66,7 +66,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   · exact div_nonneg (Nat.cast_nonneg _) εk_pos.le
   intro y le_y y_lt
   calc
-    ‖g i y‖ = ‖g i (y + x) - g i x‖ := by rw [ContinuousLinearMap.map_add, add_sub_cancel]
+    ‖g i y‖ = ‖g i (y + x) - g i x‖ := by rw [ContinuousLinearMap.map_add, add_sub_cancel_right]
     _ ≤ ‖g i (y + x)‖ + ‖g i x‖ := (norm_sub_le _ _)
     _ ≤ m + m :=
       (add_le_add (real_norm_le (y + x) (by rwa [add_comm, add_mem_ball_iff_norm]) i)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Noam Atar
 -/
 import Order.Ideal
-import Order.Pfilter
+import Order.PFilter
 
 #align_import order.prime_ideal from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

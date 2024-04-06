@@ -5,7 +5,7 @@ Authors: Yakov Pechersky
 -/
 import Algebra.GroupPower.Order
 import Algebra.Order.Monoid.WithTop
-import Algebra.SmulWithZero
+import Algebra.SMulWithZero
 import Algebra.Order.Monoid.MinMax
 
 #align_import algebra.tropical.basic from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
@@ -600,7 +600,7 @@ instance [AddMonoid R] : Monoid (Tropical R) :=
     Tropical.semigroup with
     npow := fun n x => x ^ n
     npow_zero := fun _ => untrop_injective <| zero_smul _ _
-    npow_succ := fun _ _ => untrop_injective <| succ_nsmul _ _ }
+    npow_succ := fun _ _ => untrop_injective <| succ_nsmul' _ _ }
 
 #print Tropical.trop_nsmul /-
 @[simp]

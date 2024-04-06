@@ -3,7 +3,7 @@ Copyright (c) 2018 Sean Leather. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sean Leather, Mario Carneiro
 -/
-import Data.List.Alist
+import Data.List.AList
 import Data.Finset.Sigma
 import Data.Part
 

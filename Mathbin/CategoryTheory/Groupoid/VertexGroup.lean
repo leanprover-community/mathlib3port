@@ -6,8 +6,8 @@ Authors: Rémi Bottinelli
 import CategoryTheory.Groupoid
 import CategoryTheory.PathCategory
 import Algebra.Group.Defs
-import Algebra.Hom.Group
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Hom.Defs
+import Algebra.Group.Equiv.Basic
 import Combinatorics.Quiver.Path
 
 #align_import category_theory.groupoid.vertex_group from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mark Lavrentyev
 -/
 import CategoryTheory.Groupoid
-import Topology.Category.Top.Basic
-import Topology.PathConnected
+import Topology.Category.TopCat.Basic
+import Topology.Connected.PathConnected
 import Topology.Homotopy.Path
 import AlgebraicTopology.FundamentalGroupoid.Basic
 

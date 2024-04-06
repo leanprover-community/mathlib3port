@@ -3,7 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Data.Pi.Algebra
+import Algebra.Group.Pi.Basic
 import CategoryTheory.Limits.Shapes.Products
 import CategoryTheory.Limits.Shapes.Images
 import CategoryTheory.IsomorphismClasses

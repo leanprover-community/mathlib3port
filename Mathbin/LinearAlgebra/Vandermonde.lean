@@ -60,7 +60,7 @@ theorem vandermonde_cons {n : ℕ} (v0 : R) (v : Fin n → R) :
   ext i j
   refine' Fin.cases (by simp) (fun i => _) i
   refine' Fin.cases (by simp) (fun j => _) j
-  simp [pow_succ]
+  simp [pow_succ']
 #align matrix.vandermonde_cons Matrix.vandermonde_cons
 -/
 
@@ -147,7 +147,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
       rw [Finset.sum_range_succ, add_comm, tsub_self, pow_zero, mul_one, Finset.mul_sum]
       congr 1
       refine' Finset.sum_congr rfl fun i' hi' => _
-      rw [mul_left_comm (v 0), Nat.succ_sub, pow_succ]
+      rw [mul_left_comm (v 0), Nat.succ_sub, pow_succ']
       exact nat.lt_succ_iff.mp (finset.mem_range.mp hi')
 #align matrix.det_vandermonde Matrix.det_vandermonde
 -/

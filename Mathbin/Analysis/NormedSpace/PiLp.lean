@@ -66,7 +66,7 @@ We also set up the theory for `pseudo_emetric_space` and `pseudo_metric_space`.
 -/
 
 
-open Real Set Filter IsROrC Bornology
+open Real Set Filter RCLike Bornology
 
 open scoped BigOperators uniformity Topology NNReal ENNReal
 
@@ -406,7 +406,7 @@ theorem lipschitzWith_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) :=
   ·
     simpa only [ENNReal.coe_one, one_mul, edist_eq_supr, edist, Finset.sup_le_iff, Finset.mem_univ,
       forall_true_left] using le_iSup fun i => edist (x i) (y i)
-  · have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le h).ne'
+  · have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel₀ 1 (zero_lt_one.trans_le h).ne'
     rw [edist_eq_sum (zero_lt_one.trans_le h)]
     simp only [edist, forall_prop_of_true, one_mul, Finset.mem_univ, Finset.sup_le_iff,
       ENNReal.coe_one]
@@ -432,7 +432,7 @@ theorem antilipschitzWith_equiv_aux :
     exact fun i => Finset.le_sup (Finset.mem_univ i)
   · have pos : 0 < p.to_real := zero_lt_one.trans_le h
     have nonneg : 0 ≤ 1 / p.to_real := one_div_nonneg.2 (le_of_lt Pos)
-    have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (ne_of_gt Pos)
+    have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel₀ 1 (ne_of_gt Pos)
     rw [edist_eq_sum Pos, ENNReal.toReal_div 1 p]
     simp only [edist, ← one_div, ENNReal.one_toReal]
     calc
@@ -690,7 +690,7 @@ instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 
       · letI : Module 𝕜 (PiLp ∞ β) := Pi.module ι β 𝕜
         suffices ‖c • f‖₊ = ‖c‖₊ * ‖f‖₊ by exact_mod_cast NNReal.coe_mono this.le
         simpa only [nnnorm_eq_csupr, NNReal.mul_iSup, ← nnnorm_smul]
-      · have : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le hp).ne'
+      · have : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel₀ 1 (zero_lt_one.trans_le hp).ne'
         simp only [norm_eq_sum (zero_lt_one.trans_le hp), norm_smul, mul_rpow, norm_nonneg, ←
           Finset.mul_sum, Pi.smul_apply]
         rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ← rpow_mul (norm_nonneg _), this,

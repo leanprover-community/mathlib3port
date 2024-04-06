@@ -59,7 +59,7 @@ class Bornology (α : Type _) where
 #align bornology Bornology
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 #print Bornology.ofBounded /-
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
@@ -83,7 +83,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
 #align bornology.of_bounded Bornology.ofBounded
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 #print Bornology.ofBounded' /-
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/

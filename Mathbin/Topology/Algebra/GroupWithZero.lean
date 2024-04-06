@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 import Topology.Algebra.Monoid
-import Algebra.Group.Pi
+import Algebra.Group.Pi.Lemmas
 import Topology.Homeomorph
 
 #align_import topology.algebra.group_with_zero from "leanprover-community/mathlib"@"c10e724be91096453ee3db13862b9fb9a992fef2"
@@ -207,9 +207,11 @@ theorem Filter.tendsto_mul_iff_of_ne_zero [T1Space G₀] {f g : α → G₀} {l 
     Tendsto (fun n => f n * g n) l (𝓝 <| x * y) ↔ Tendsto f l (𝓝 x) :=
   by
   refine' ⟨fun hfg => _, fun hf => hf.mul hg⟩
-  rw [← mul_div_cancel x hy]
+  rw [← mul_div_cancel_right₀ x hy]
   refine' tendsto.congr' _ (hfg.div hg hy)
-  refine' eventually.mp (hg.eventually_ne hy) (eventually_of_forall fun n hn => mul_div_cancel _ hn)
+  refine'
+    eventually.mp (hg.eventually_ne hy)
+      (eventually_of_forall fun n hn => mul_div_cancel_right₀ _ hn)
 #align filter.tendsto_mul_iff_of_ne_zero Filter.tendsto_mul_iff_of_ne_zero
 -/
 
@@ -351,7 +353,7 @@ variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀]
 theorem continuousAt_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x :=
   by
   cases m
-  · simpa only [zpow_coe_nat] using continuousAt_pow x m
+  · simpa only [zpow_natCast] using continuousAt_pow x m
   · simp only [zpow_negSucc]
     have hx : x ≠ 0 := h.resolve_right (Int.negSucc_lt_zero m).not_le
     exact (continuousAt_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)

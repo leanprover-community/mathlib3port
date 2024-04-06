@@ -7,8 +7,8 @@ import Data.Rat.Init
 import Data.Int.Cast.Defs
 import Data.Int.Dvd.Basic
 import Algebra.Ring.Regular
-import Data.Nat.Gcd.Basic
-import Data.Pnat.Defs
+import Data.Nat.GCD.Basic
+import Data.PNat.Defs
 
 #align_import data.rat.defs from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -90,7 +90,7 @@ def mkPnat (n : ℤ) : ℕ+ → ℚ
         by
         cases' Int.natAbs_eq n with e e <;> rw [e]; · rfl
         rw [Int.neg_ediv_of_dvd, Int.natAbs_neg]; · rfl
-        exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
+        exact Int.natCast_dvd_natCast.2 (Nat.gcd_dvd_left _ _)
       rw [this]
       exact Nat.coprime_div_gcd_div_gcd (Nat.gcd_pos_of_pos_right _ dpos)⟩
 #align rat.mk_pnat Rat.mkPnat
@@ -149,7 +149,7 @@ theorem zero_divInt (n) : 0 /. n = 0 := by cases n <;> simp [mk]
 -/
 
 private theorem gcd_abs_dvd_left {a b} : (Nat.gcd (Int.natAbs a) b : ℤ) ∣ a :=
-  Int.dvd_natAbs.1 <| Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left (Int.natAbs a) b
+  Int.dvd_natAbs.1 <| Int.natCast_dvd_natCast.2 <| Nat.gcd_dvd_left (Int.natAbs a) b
 
 #print Rat.divInt_eq_zero /-
 @[simp]
@@ -208,7 +208,7 @@ theorem divInt_eq_iff :
       exact Nat.eq_mul_of_div_eq_left (dv.mul_left _) this.symm
     have m0 : (a.nat_abs.gcd b * c.nat_abs.gcd d : ℤ) ≠ 0 :=
       by
-      refine' Int.coe_nat_ne_zero.2 (ne_of_gt _)
+      refine' Int.natCast_ne_zero.2 (ne_of_gt _)
       apply mul_pos <;> apply Nat.gcd_pos_of_pos_right <;> assumption
     apply mul_right_cancel₀ m0
     simpa [mul_comm, mul_left_comm] using congr (congr_arg (· * ·) ha.symm) (congr_arg coe hb)
@@ -223,7 +223,7 @@ theorem divInt_eq_iff :
       conv in c => rw [← Int.sign_mul_natAbs c]
       rw [Int.mul_ediv_assoc, Int.mul_ediv_assoc]
       exact ⟨congr (congr_arg (· * ·) hs) (congr_arg coe h₁), h₂⟩
-      all_goals exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
+      all_goals exact Int.natCast_dvd_natCast.2 (Nat.gcd_dvd_left _ _)
     intro a c h
     suffices bd : b / a.gcd b = d / c.gcd d
     · refine' ⟨mul_left_cancel₀ hb.ne' _, bd⟩
@@ -520,7 +520,7 @@ protected theorem add_mul : (a + b) * c = a * c + b * c :=
     numDenCasesOn' b fun n₂ d₂ h₂ =>
       numDenCasesOn' c fun n₃ d₃ h₃ => by
         simp [h₁, h₂, h₃, mul_ne_zero] <;>
-            refine' (div_mk_div_cancel_left (Int.coe_nat_ne_zero.2 h₃)).symm.trans _ <;>
+            refine' (div_mk_div_cancel_left (Int.natCast_ne_zero.2 h₃)).symm.trans _ <;>
           simp [mul_add, mul_comm, mul_assoc, mul_left_comm]
 #align rat.add_mul Rat.add_mul
 -/

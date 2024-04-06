@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import Order.Hom.Basic
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Equiv.Basic
 import Algebra.Ring.Basic
 import Algebra.Order.Sub.Defs
 

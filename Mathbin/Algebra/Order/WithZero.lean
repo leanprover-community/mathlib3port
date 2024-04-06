@@ -3,11 +3,11 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin, Patrick Massot
 -/
-import Algebra.Hom.Equiv.Units.GroupWithZero
+import Algebra.GroupWithZero.Units.Equiv
 import Algebra.GroupWithZero.InjSurj
 import Algebra.Order.Group.Units
 import Algebra.Order.Monoid.Basic
-import Algebra.Order.Monoid.WithZero.Defs
+import Algebra.Order.Monoid.WithZero
 import Algebra.Order.Group.Instances
 import Algebra.Order.Monoid.TypeTags
 
@@ -69,7 +69,7 @@ instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoidWithZero (WithZer
     zero_le_one := WithZero.zero_le _ }
 
 instance [LinearOrderedCommGroup α] : LinearOrderedCommGroupWithZero (WithZero α) :=
-  { instLinearOrderedCommMonoidWithZeroWithZero, WithZero.commGroupWithZero with }
+  { WithZero.instLinearOrderedCommMonoidWithZero, WithZero.commGroupWithZero with }
 
 section LinearOrderedCommMonoid
 

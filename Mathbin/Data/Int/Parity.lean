@@ -205,7 +205,7 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 #print Int.even_pow /-
 @[parity_simps]
 theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
-  induction' n with n ih <;> simp [*, even_mul, pow_succ]; tauto
+  induction' n with n ih <;> simp [*, even_mul, pow_succ']; tauto
 #align int.even_pow Int.even_pow
 -/
 
@@ -299,7 +299,7 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
     rw [Int.even_add, ← Int.even_sub] at h
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 k
-    rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel, ← two_mul, ← mul_assoc]
+    rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel_right, ← two_mul, ← mul_assoc]
     rfl
   · left
     obtain ⟨k, hk⟩ := h

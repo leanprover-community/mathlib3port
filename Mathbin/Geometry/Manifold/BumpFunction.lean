@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Analysis.Calculus.BumpFunctionFindim
-import Geometry.Manifold.ContMdiff
+import Analysis.Calculus.BumpFunction.FiniteDimension
+import Geometry.Manifold.ContMDiff.Defs
 
 #align_import geometry.manifold.bump_function from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 

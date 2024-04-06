@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import NumberTheory.Padics.PadicIntegers
 
 #align_import number_theory.padics.ring_homs from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
@@ -110,7 +110,7 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : �
     simp only [← norm_int_lt_one_iff_dvd, ← padic_norm_e_of_padic_int]
     norm_cast; exact ⟨key, norm_denom_lt⟩
   apply hp_prime.1.not_dvd_one
-  rwa [← r.cop.gcd_eq_one, Nat.dvd_gcd_iff, ← Int.coe_nat_dvd_left, ← Int.coe_nat_dvd]
+  rwa [← r.cop.gcd_eq_one, Nat.dvd_gcd_iff, ← Int.natCast_dvd, ← Int.natCast_dvd_natCast]
 #align padic_int.is_unit_denom PadicInt.isUnit_den
 -/
 
@@ -129,7 +129,7 @@ theorem norm_sub_modPart_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
   · rw [rdcp.gcd_eq_one]; simp only [mul_one, cast_one, sub_self]
   apply coprime.symm
   apply (coprime_or_dvd_of_prime hp_prime.1 _).resolve_right
-  rw [← Int.coe_nat_dvd, ← norm_int_lt_one_iff_dvd, not_lt]
+  rw [← Int.natCast_dvd_natCast, ← norm_int_lt_one_iff_dvd, not_lt]
   apply ge_of_eq
   rw [← is_unit_iff]
   exact is_unit_denom r h
@@ -361,7 +361,7 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n :=
       apply Nat.mul_le_mul_left
       apply le_pred_of_lt
       apply ZMod.val_lt
-    · rw [mul_tsub, mul_one, ← pow_succ']
+    · rw [mul_tsub, mul_one, ← pow_succ]
       apply add_tsub_cancel_of_le (le_of_lt hp)
 #align padic_int.appr_lt PadicInt.appr_lt
 -/
@@ -412,7 +412,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
     congr
     simp only [hc]
   rw [show (x - ↑(appr x n)).Valuation = (↑p ^ n * c).Valuation by rw [hc]]
-  rw [valuation_p_pow_mul _ _ hc', add_sub_cancel', pow_succ', ← mul_sub]
+  rw [valuation_p_pow_mul _ _ hc', add_sub_cancel_left, pow_succ, ← mul_sub]
   apply mul_dvd_mul_left
   obtain hc0 | hc0 := c.valuation.nat_abs.eq_zero_or_pos
   · simp only [hc0, mul_one, pow_zero]

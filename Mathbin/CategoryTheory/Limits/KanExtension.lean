@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Adam Topaz
 -/
 import CategoryTheory.Limits.Shapes.Terminal
-import CategoryTheory.Punit
-import CategoryTheory.StructuredArrow
+import CategoryTheory.PUnit
+import CategoryTheory.Comma.StructuredArrow
 
 #align_import category_theory.limits.kan_extension from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

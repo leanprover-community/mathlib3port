@@ -6,7 +6,7 @@ Authors: Scott Morrison, Bhavik Mehta
 import CategoryTheory.Limits.Shapes.Terminal
 import CategoryTheory.DiscreteCategory
 import CategoryTheory.EpiMono
-import CategoryTheory.Over
+import CategoryTheory.Comma.Over
 
 #align_import category_theory.limits.shapes.binary_products from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

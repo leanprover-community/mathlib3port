@@ -6,7 +6,7 @@ Authors: Adam Topaz
 import AlgebraicTopology.SimplicialObject
 import CategoryTheory.Limits.Shapes.WidePullbacks
 import CategoryTheory.Limits.Shapes.FiniteProducts
-import CategoryTheory.Arrow
+import CategoryTheory.Comma.Arrow
 
 #align_import algebraic_topology.cech_nerve from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

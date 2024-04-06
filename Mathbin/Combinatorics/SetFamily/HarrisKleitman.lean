@@ -85,7 +85,7 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
             card_le_of_subset hℬ.member_subfamily_subset_non_member_subfamily)
           _).trans
       _
-  rw [← two_mul, pow_succ, mul_assoc]
+  rw [← two_mul, pow_succ', mul_assoc]
   have h₀ :
     ∀ 𝒞 : Finset (Finset α), (∀ t ∈ 𝒞, t ⊆ insert a s) → ∀ t ∈ 𝒞.nonMemberSubfamily a, t ⊆ s :=
     by

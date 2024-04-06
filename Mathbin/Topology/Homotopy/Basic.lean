@@ -3,7 +3,7 @@ Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Topology.Algebra.Order.ProjIcc
+import Topology.Order.ProjIcc
 import Topology.ContinuousFunction.Ordered
 import Topology.CompactOpen
 import Topology.UnitInterval

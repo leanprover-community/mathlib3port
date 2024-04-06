@@ -312,11 +312,11 @@ theorem not_covBy [DenselyOrdered α] : ¬a ⋖ b := fun h =>
 #align not_covby not_covBy
 -/
 
-#print densely_ordered_iff_forall_not_covBy /-
-theorem densely_ordered_iff_forall_not_covBy : DenselyOrdered α ↔ ∀ a b : α, ¬a ⋖ b :=
+#print denselyOrdered_iff_forall_not_covBy /-
+theorem denselyOrdered_iff_forall_not_covBy : DenselyOrdered α ↔ ∀ a b : α, ¬a ⋖ b :=
   ⟨fun h a b => @not_covBy _ _ _ _ h, fun h =>
     ⟨fun a b hab => exists_lt_lt_of_not_covBy hab <| h _ _⟩⟩
-#align densely_ordered_iff_forall_not_covby densely_ordered_iff_forall_not_covBy
+#align densely_ordered_iff_forall_not_covby denselyOrdered_iff_forall_not_covBy
 -/
 
 #print toDual_covBy_toDual_iff /-

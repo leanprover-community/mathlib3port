@@ -132,7 +132,7 @@ instance : Monoid (SubMulAction R M) :=
 theorem coe_pow (p : SubMulAction R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n) = (p ^ n : Set M)
   | 0, hn => (hn rfl).elim
   | 1, hn => by rw [pow_one, pow_one]
-  | n + 2, hn => by rw [pow_succ _ (n + 1), pow_succ _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
+  | n + 2, hn => by rw [pow_succ' _ (n + 1), pow_succ' _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
 #align sub_mul_action.coe_pow SubMulAction.coe_pow
 -/
 

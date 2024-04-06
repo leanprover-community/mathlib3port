@@ -3,7 +3,7 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 import GroupTheory.Submonoid.Membership
 import Order.WellFoundedSet
 
@@ -856,7 +856,7 @@ instance : Monoid (AddSubmonoid R) :=
 #print AddSubmonoid.closure_pow /-
 theorem closure_pow (s : Set R) : ∀ n : ℕ, closure s ^ n = closure (s ^ n)
   | 0 => by rw [pow_zero, pow_zero, one_eq_closure_one_set]
-  | n + 1 => by rw [pow_succ, pow_succ, closure_pow, closure_mul_closure]
+  | n + 1 => by rw [pow_succ', pow_succ', closure_pow, closure_mul_closure]
 #align add_submonoid.closure_pow AddSubmonoid.closure_pow
 -/
 

@@ -5,8 +5,8 @@ Authors: Markus Himmel
 -/
 import CategoryTheory.Limits.Yoneda
 import CategoryTheory.Preadditive.Opposite
-import Algebra.Category.Module.Basic
-import Algebra.Category.Group.Preadditive
+import Algebra.Category.ModuleCat.Basic
+import Algebra.Category.GroupCat.Preadditive
 
 #align_import category_theory.preadditive.yoneda.basic from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
 

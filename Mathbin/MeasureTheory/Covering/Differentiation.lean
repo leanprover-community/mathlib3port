@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel
 -/
 import MeasureTheory.Covering.VitaliFamily
 import MeasureTheory.Measure.Regular
-import MeasureTheory.Function.AeMeasurableOrder
+import MeasureTheory.Function.AEMeasurableOrder
 import MeasureTheory.Integral.Lebesgue
 import MeasureTheory.Integral.Average
 import MeasureTheory.Decomposition.Lebesgue

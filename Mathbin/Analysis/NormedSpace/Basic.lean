@@ -33,7 +33,7 @@ section SeminormedAddCommGroup
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
 set_option extends_priority 920
 
 #print NormedSpace /-
@@ -148,8 +148,8 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
   · rw [one_smul, sub_add_cancel]
   · simp [closure_Ico zero_ne_one, zero_le_one]
   · rintro c ⟨hc0, hc1⟩
-    rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
-      mul_comm, ← mul_one r]
+    rw [mem_ball, dist_eq_norm, add_sub_cancel_right, norm_smul, Real.norm_eq_abs,
+      abs_of_nonneg hc0, mul_comm, ← mul_one r]
     rw [mem_closed_ball, dist_eq_norm] at hy
     replace hr : 0 < r; exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
     apply mul_lt_mul' <;> assumption
@@ -709,7 +709,7 @@ end NormedAlgebra
 See note [reducible non-instances] -/
 @[reducible]
 def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Ring β] [Algebra α β]
-    [SeminormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
+    [SeminormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgSemiHomClass F α β γ] (f : F) :
     @NormedAlgebra α β _ (SeminormedRing.induced β γ f)
     where norm_smul_le a b := by unfold norm; exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
 #align normed_algebra.induced NormedAlgebra.induced

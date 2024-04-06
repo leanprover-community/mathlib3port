@@ -212,7 +212,7 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
       have := AlgHom.apply_mem_spectrum φ (s : A)
       rw [selfAdjoint.val_re_map_spectrum s] at this
       rcases this with ⟨⟨_, _⟩, _, heq⟩
-      rw [← HEq, IsROrC.star_def, IsROrC.conj_ofReal]
+      rw [← HEq, RCLike.star_def, RCLike.conj_ofReal]
 
 #print AlgHomClass.instStarAlgHomClass /-
 /-- This is not an instance to avoid type class inference loops. See

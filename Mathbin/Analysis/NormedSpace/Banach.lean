@@ -3,8 +3,8 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Topology.MetricSpace.Baire
-import Analysis.NormedSpace.OperatorNorm
+import Topology.Baire.Lemmas
+import Analysis.NormedSpace.OperatorNorm.Basic
 import Analysis.NormedSpace.AffineIsometry
 
 #align_import analysis.normed_space.banach from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
@@ -31,7 +31,6 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 
 namespace ContinuousLinearMap
 
-#print ContinuousLinearMap.NonlinearRightInverse /-
 /-- A (possibly nonlinear) right inverse to a continuous linear map, which doesn't have to be
 linear itself but which satisfies a bound `‖inverse x‖ ≤ C * ‖x‖`. A surjective continuous linear
 map doesn't always have a continuous linear right inverse, but it always has a nonlinear inverse
@@ -41,8 +40,7 @@ structure NonlinearRightInverse where
   nnnorm : ℝ≥0
   bound' : ∀ y, ‖to_fun y‖ ≤ nnnorm * ‖y‖
   right_inv' : ∀ y, f (to_fun y) = y
-#align continuous_linear_map.nonlinear_right_inverse ContinuousLinearMap.NonlinearRightInverse
--/
+#align continuous_linear_map.nonlinear_right_inverse ContinuousLinearMap.NonlinearRightInverseₓ
 
 instance : CoeFun (NonlinearRightInverse f) fun _ => F → E :=
   ⟨fun fsymm => fsymm.toFun⟩
@@ -198,7 +196,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
     · simp only [one_div, Nat.zero_eq, one_mul, iterate_zero_apply, pow_zero]
     · rw [iterate_succ']
       apply le_trans (hle _) _
-      rw [pow_succ, mul_assoc]
+      rw [pow_succ', mul_assoc]
       apply mul_le_mul_of_nonneg_left IH
       norm_num
   let u n := g ((h^[n]) y)
@@ -260,7 +258,7 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
   rcases is_open_iff.1 hs x xs with ⟨ε, εpos, hε⟩
   refine' ⟨ε / C, div_pos εpos Cpos, fun z hz => _⟩
   rcases hC (z - y) with ⟨w, wim, wnorm⟩
-  have : f (x + w) = z := by rw [f.map_add, wim, fxy, add_sub_cancel'_right]
+  have : f (x + w) = z := by rw [f.map_add, wim, fxy, add_sub_cancel]
   rw [← this]
   have : x + w ∈ ball x ε :=
     calc
@@ -269,7 +267,7 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
       _ < C * (ε / C) := by
         apply mul_lt_mul_of_pos_left _ Cpos
         rwa [mem_ball, dist_eq_norm] at hz
-      _ = ε := mul_div_cancel' _ (ne_of_gt Cpos)
+      _ = ε := mul_div_cancel₀ _ (ne_of_gt Cpos)
   exact Set.mem_image_of_mem _ (hε this)
 #align continuous_linear_map.is_open_map ContinuousLinearMap.isOpenMap
 -/

@@ -3,7 +3,7 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import CategoryTheory.Sites.Sheafification
+import CategoryTheory.Sites.ConcreteSheafification
 import CategoryTheory.Sites.Limits
 import CategoryTheory.Limits.FunctorCategory
 import CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit

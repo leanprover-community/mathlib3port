@@ -3,9 +3,9 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 -/
-import Algebra.GcdMonoid.Finset
-import Algebra.Hom.Iterate
-import Data.Int.Modeq
+import Algebra.GCDMonoid.Finset
+import Algebra.GroupPower.IterateHom
+import Data.Int.ModEq
 import Data.Set.Pointwise.Basic
 import Data.Set.Intervals.Infinite
 import Dynamics.PeriodicPts
@@ -465,7 +465,7 @@ theorem orderOf_dvd_lcm_mul : orderOf y ∣ Nat.lcm (orderOf x) (orderOf (x * y)
   · rw [h0, Nat.lcm_zero_left]; apply dvd_zero
   conv_lhs =>
     rw [← one_mul y, ← pow_orderOf_eq_one x, ← succ_pred_eq_of_pos (Nat.pos_of_ne_zero h0),
-      pow_succ', mul_assoc]
+      pow_succ, mul_assoc]
   exact
     (((Commute.refl x).mulRight h).pow_leftₓ _).orderOf_mul_dvd_lcm.trans
       (Nat.lcm_dvd_iff.2 ⟨trans (orderOf_pow_dvd _) (dvd_lcm_left _ _), dvd_lcm_right _ _⟩)
@@ -676,8 +676,10 @@ theorem isOfFinOrder_inv_iff {x : G} : IsOfFinOrder x⁻¹ ↔ IsOfFinOrder x :=
 theorem orderOf_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 :=
   by
   rcases Int.eq_nat_or_neg i with ⟨i, rfl | rfl⟩
-  · rw [Int.coe_nat_dvd, orderOf_dvd_iff_pow_eq_one, zpow_coe_nat]
-  · rw [dvd_neg, Int.coe_nat_dvd, zpow_neg, inv_eq_one, zpow_coe_nat, orderOf_dvd_iff_pow_eq_one]
+  · rw [Int.natCast_dvd_natCast, orderOf_dvd_iff_pow_eq_one, zpow_natCast]
+  ·
+    rw [dvd_neg, Int.natCast_dvd_natCast, zpow_neg, inv_eq_one, zpow_natCast,
+      orderOf_dvd_iff_pow_eq_one]
 #align order_of_dvd_iff_zpow_eq_one orderOf_dvd_iff_zpow_eq_one
 #align add_order_of_dvd_iff_zsmul_eq_zero addOrderOf_dvd_iff_zsmul_eq_zero
 -/
@@ -719,7 +721,7 @@ theorem pow_inj_iff_of_orderOf_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n =
     · simpa [eq_comm] using h m.succ m.zero_lt_succ
   · cases m
     · simpa using h n.succ n.zero_lt_succ
-    · simp [pow_succ, IH]
+    · simp [pow_succ', IH]
 #align pow_inj_iff_of_order_of_eq_zero pow_inj_iff_of_orderOf_eq_zero
 #align nsmul_inj_iff_of_add_order_of_eq_zero nsmul_inj_iff_of_addOrderOf_eq_zero
 -/
@@ -741,7 +743,7 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
 theorem zpow_pow_orderOf : (x ^ i) ^ orderOf x = 1 :=
   by
   by_cases h : IsOfFinOrder x
-  · rw [← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat, pow_orderOf_eq_one, one_zpow]
+  · rw [← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, pow_orderOf_eq_one, one_zpow]
   · rw [orderOf_eq_zero h, pow_zero]
 #align zpow_pow_order_of zpow_pow_orderOf
 #align zsmul_smul_order_of zsmul_smul_addOrderOf
@@ -989,7 +991,7 @@ theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ) (H : i ≠ 0), x ^
   by
   rcases isOfFinOrder_of_finite x with ⟨w, hw1, hw2⟩
   refine' ⟨w, int.coe_nat_ne_zero.mpr (ne_of_gt hw1), _⟩
-  rw [zpow_coe_nat]
+  rw [zpow_natCast]
   exact (isPeriodicPt_mul_iff_pow_eq_one _).mp hw2
 #align exists_zpow_eq_one exists_zpow_eq_one
 #align exists_zsmul_eq_zero exists_zsmul_eq_zero
@@ -1002,8 +1004,8 @@ open Subgroup
 theorem mem_powers_iff_mem_zpowers [Finite G] : y ∈ Submonoid.powers x ↔ y ∈ zpowers x :=
   ⟨fun ⟨n, hn⟩ => ⟨n, by simp_all⟩, fun ⟨i, hi⟩ =>
     ⟨(i % orderOf x).natAbs, by
-      rwa [← zpow_coe_nat,
-        Int.natAbs_of_nonneg (Int.emod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (orderOf_pos x))), ←
+      rwa [← zpow_natCast,
+        Int.natAbs_of_nonneg (Int.emod_nonneg _ (Int.natCast_ne_zero_iff_pos.2 (orderOf_pos x))), ←
         zpow_mod_orderOf]⟩⟩
 #align mem_powers_iff_mem_zpowers mem_powers_iff_mem_zpowers
 #align mem_multiples_iff_mem_zmultiples mem_multiples_iff_mem_zmultiples
@@ -1078,7 +1080,7 @@ noncomputable def finEquivZPowers [Finite G] (x : G) :
 #print finEquivZPowers_apply /-
 @[simp, to_additive finEquivZMultiples_apply]
 theorem finEquivZPowers_apply [Finite G] {n : Fin (orderOf x)} :
-    finEquivZPowers x n = ⟨x ^ (n : ℕ), n, zpow_coe_nat x n⟩ :=
+    finEquivZPowers x n = ⟨x ^ (n : ℕ), n, zpow_natCast x n⟩ :=
   rfl
 #align fin_equiv_zpowers_apply finEquivZPowers_apply
 #align fin_equiv_zmultiples_apply finEquivZMultiples_apply
@@ -1110,7 +1112,7 @@ noncomputable def zpowersEquivZPowers [Finite G] (h : orderOf x = orderOf y) :
 #print zpowersEquivZPowers_apply /-
 @[simp, to_additive zmultiples_equiv_zmultiples_apply]
 theorem zpowersEquivZPowers_apply [Finite G] (h : orderOf x = orderOf y) (n : ℕ) :
-    zpowersEquivZPowers h ⟨x ^ n, n, zpow_coe_nat x n⟩ = ⟨y ^ n, n, zpow_coe_nat y n⟩ :=
+    zpowersEquivZPowers h ⟨x ^ n, n, zpow_natCast x n⟩ = ⟨y ^ n, n, zpow_natCast y n⟩ :=
   by
   rw [zpowersEquivZPowers, Equiv.trans_apply, Equiv.trans_apply, finEquivZPowers_symm_apply, ←
     Equiv.eq_symm_apply, finEquivZPowers_symm_apply]
@@ -1203,7 +1205,7 @@ theorem pow_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
 #print zpow_mod_card /-
 @[to_additive]
 theorem zpow_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
-  rw [zpow_mod_orderOf, ← Int.emod_emod_of_dvd n (Int.coe_nat_dvd.2 orderOf_dvd_card), ←
+  rw [zpow_mod_orderOf, ← Int.emod_emod_of_dvd n (Int.natCast_dvd_natCast.2 orderOf_dvd_card), ←
     zpow_mod_orderOf]
 #align zpow_eq_mod_card zpow_mod_card
 #align zsmul_eq_mod_card mod_card_zsmul
@@ -1218,11 +1220,11 @@ noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).Coprime n)
   invFun g := g ^ (Nat.card G).gcdB n
   left_inv g := by
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
-    rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one,
+    rwa [zpow_add, zpow_mul, zpow_mul, zpow_natCast, zpow_natCast, zpow_natCast, h.gcd_eq_one,
       pow_one, pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
   right_inv g := by
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
-    rwa [zpow_add, zpow_mul, zpow_mul', zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one,
+    rwa [zpow_add, zpow_mul, zpow_mul', zpow_natCast, zpow_natCast, zpow_natCast, h.gcd_eq_one,
       pow_one, pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
 #align pow_coprime powCoprime
 #align nsmul_coprime nsmulCoprime
@@ -1292,7 +1294,7 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
     (hS1 : S.Nonempty) (hS2 : S * S = S) : Submonoid M :=
   have pow_mem : ∀ a : M, a ∈ S → ∀ n : ℕ, a ^ (n + 1) ∈ S := fun a ha =>
     Nat.rec (by rwa [zero_add, pow_one]) fun n ih =>
-      (congr_arg₂ (· ∈ ·) (pow_succ a (n + 1)).symm hS2).mp (Set.mul_mem_mul ha ih)
+      (congr_arg₂ (· ∈ ·) (pow_succ' a (n + 1)).symm hS2).mp (Set.mul_mem_mul ha ih)
   { carrier := S
     one_mem' := by
       obtain ⟨a, ha⟩ := hS1

@@ -542,8 +542,8 @@ theorem eval_monomial_one_add_sub [CommRing S] (d : ℕ) (y : S) :
     apply_congr
     skip
     rw [one_pow, mul_one, mul_comm]
-  rw [sum_range_succ, mul_add, Nat.choose_self, Nat.cast_one, one_mul, add_sub_cancel, mul_sum,
-    sum_range_succ', Nat.cast_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, add_zero]
+  rw [sum_range_succ, mul_add, Nat.choose_self, Nat.cast_one, one_mul, add_sub_cancel_right,
+    mul_sum, sum_range_succ', Nat.cast_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, add_zero]
   apply sum_congr rfl fun y hy => _
   rw [← mul_assoc, ← mul_assoc, ← Nat.cast_mul, Nat.succ_mul_choose_eq, Nat.cast_mul,
     Nat.add_sub_cancel]
@@ -576,7 +576,7 @@ theorem eval_mul_X : (p * X).eval x = p.eval x * x :=
   · intro p q ph qh
     simp only [add_mul, eval_add, ph, qh]
   · intro n a
-    simp only [← monomial_one_one_eq_X, monomial_mul_monomial, eval_monomial, mul_one, pow_succ',
+    simp only [← monomial_one_one_eq_X, monomial_mul_monomial, eval_monomial, mul_one, pow_succ,
       mul_assoc]
 #align polynomial.eval_mul_X Polynomial.eval_mul_X
 -/
@@ -587,7 +587,7 @@ theorem eval_mul_X_pow {k : ℕ} : (p * X ^ k).eval x = p.eval x * x ^ k :=
   by
   induction' k with k ih
   · simp
-  · simp [pow_succ', ← mul_assoc, ih]
+  · simp [pow_succ, ← mul_assoc, ih]
 #align polynomial.eval_mul_X_pow Polynomial.eval_mul_X_pow
 -/
 
@@ -614,11 +614,11 @@ def IsRoot (p : R[X]) (a : R) : Prop :=
 
 instance [DecidableEq R] : Decidable (IsRoot p a) := by unfold is_root <;> infer_instance
 
-#print Polynomial.IsRoot.def /-
+#print Polynomial.IsRoot.definition /-
 @[simp]
-theorem IsRoot.def : IsRoot p a ↔ p.eval a = 0 :=
+theorem IsRoot.definition : IsRoot p a ↔ p.eval a = 0 :=
   Iff.rfl
-#align polynomial.is_root.def Polynomial.IsRoot.def
+#align polynomial.is_root.def Polynomial.IsRoot.definition
 -/
 
 #print Polynomial.IsRoot.eq_zero /-
@@ -757,7 +757,7 @@ theorem mul_X_comp : (p * X).comp r = p.comp r * r :=
   by
   apply Polynomial.induction_on' p
   · intro p q hp hq; simp only [hp, hq, add_mul, add_comp]
-  · intro n b; simp only [pow_succ', mul_assoc, monomial_mul_X, monomial_comp]
+  · intro n b; simp only [pow_succ, mul_assoc, monomial_mul_X, monomial_comp]
 #align polynomial.mul_X_comp Polynomial.mul_X_comp
 -/
 
@@ -767,7 +767,7 @@ theorem X_pow_comp {k : ℕ} : (X ^ k).comp p = p ^ k :=
   by
   induction' k with k ih
   · simp
-  · simp [pow_succ', mul_X_comp, ih]
+  · simp [pow_succ, mul_X_comp, ih]
 #align polynomial.X_pow_comp Polynomial.X_pow_comp
 -/
 
@@ -777,7 +777,7 @@ theorem mul_X_pow_comp {k : ℕ} : (p * X ^ k).comp r = p.comp r * r ^ k :=
   by
   induction' k with k ih
   · simp
-  · simp [ih, pow_succ', ← mul_assoc, mul_X_comp]
+  · simp [ih, pow_succ, ← mul_assoc, mul_X_comp]
 #align polynomial.mul_X_pow_comp Polynomial.mul_X_pow_comp
 -/
 
@@ -839,7 +839,7 @@ theorem smul_comp [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] (s : S
 theorem comp_assoc {R : Type _} [CommSemiring R] (φ ψ χ : R[X]) :
     (φ.comp ψ).comp χ = φ.comp (ψ.comp χ) := by
   apply Polynomial.induction_on φ <;>
-    · intros; simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ', ← mul_assoc]
+    · intros; simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ, ← mul_assoc]
 #align polynomial.comp_assoc Polynomial.comp_assoc
 -/
 
@@ -1199,7 +1199,7 @@ theorem map_comp (p q : R[X]) : map f (p.comp q) = (map f p).comp (map f q) :=
       simp (config := { contextual := true }) only [Polynomial.map_add, add_comp, forall_const,
         imp_true_iff, eq_self_iff_true])
     (by
-      simp (config := { contextual := true }) only [pow_succ', ← mul_assoc, comp, forall_const,
+      simp (config := { contextual := true }) only [pow_succ, ← mul_assoc, comp, forall_const,
         eval₂_mul_X, imp_true_iff, eq_self_iff_true, map_X, Polynomial.map_mul])
 #align polynomial.map_comp Polynomial.map_comp
 -/

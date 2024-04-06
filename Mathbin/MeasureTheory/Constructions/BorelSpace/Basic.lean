@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 -/
 import Analysis.Normed.Group.Basic
-import MeasureTheory.Function.AeMeasurableSequence
+import MeasureTheory.Function.AEMeasurableSequence
 import MeasureTheory.Group.Arithmetic
-import MeasureTheory.Lattice
+import MeasureTheory.Order.Lattice
 import MeasureTheory.Measure.OpenPos
 import Topology.Algebra.Order.LiminfLimsup
 import Topology.ContinuousFunction.Basic
-import Topology.Instances.Ereal
+import Topology.Instances.EReal
 import Topology.MetricSpace.HausdorffDistance
 import Topology.GDelta
 import Topology.Order.Lattice

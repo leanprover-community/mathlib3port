@@ -6,7 +6,7 @@ Authors: Scott Morrison
 import RingTheory.MatrixAlgebra
 import Data.Polynomial.AlgebraMap
 import Data.Matrix.Basis
-import Data.Matrix.Dmatrix
+import Data.Matrix.DMatrix
 
 #align_import ring_theory.polynomial_algebra from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

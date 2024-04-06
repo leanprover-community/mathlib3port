@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import CategoryTheory.Endomorphism
 import CategoryTheory.Category.Cat
-import Algebra.Category.Mon.Basic
+import Algebra.Category.MonCat.Basic
 import Combinatorics.Quiver.SingleObj
 
 #align_import category_theory.single_obj from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"

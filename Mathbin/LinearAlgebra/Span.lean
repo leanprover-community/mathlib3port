@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Frédéric Dupuis,
   Heather Macbeth
 -/
-import LinearAlgebra.Basic
-import Order.CompactlyGenerated
+import Algebra.Module.Submodule.Ker
+import Order.CompactlyGenerated.Basic
 import Order.OmegaCompletePartialOrder
 
 #align_import linear_algebra.span from "leanprover-community/mathlib"@"10878f6bf1dab863445907ab23fbfcefcb5845d0"
@@ -1037,7 +1037,7 @@ instance : IsModularLattice (Submodule R M) :=
     rcases ha with ⟨⟨b, hb, c, hc, rfl⟩, haz⟩
     rw [mem_sup]
     refine' ⟨b, hb, c, mem_inf.2 ⟨hc, _⟩, rfl⟩
-    rw [← add_sub_cancel c b, add_comm]
+    rw [← add_sub_cancel_right c b, add_comm]
     apply z.sub_mem haz (xz hb)⟩
 
 end AddCommGroup
@@ -1225,7 +1225,7 @@ theorem span_singleton_sup_ker_eq_top (f : V →ₗ[K] K) {x : V} (hx : f x ≠ 
         ⟨y - (f y * (f x)⁻¹) • x, by
           rw [LinearMap.mem_ker, f.map_sub, f.map_smul, smul_eq_mul, mul_assoc, inv_mul_cancel hx,
             mul_one, sub_self],
-          by simp only [add_sub_cancel'_right]⟩⟩
+          by simp only [add_sub_cancel]⟩⟩
 #align linear_map.span_singleton_sup_ker_eq_top LinearMap.span_singleton_sup_ker_eq_top
 -/
 

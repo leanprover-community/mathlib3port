@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
 import Data.MvPolynomial.Rename
-import Data.MvPolynomial.Variables
+import Data.MvPolynomial.Degrees
 
 #align_import data.mv_polynomial.monad from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"
 

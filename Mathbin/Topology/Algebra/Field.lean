@@ -5,7 +5,7 @@ Authors: Patrick Massot, Scott Morrison
 -/
 import Topology.Algebra.Ring.Basic
 import Topology.Algebra.GroupWithZero
-import Topology.LocalExtr
+import Topology.Order.LocalExtr
 import FieldTheory.Subfield
 
 #align_import topology.algebra.field from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
@@ -112,8 +112,8 @@ def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜
     where
   toFun x := a * x + b
   invFun y := (y - b) / a
-  left_inv x := by simp only [add_sub_cancel]; exact mul_div_cancel_left x h
-  right_inv y := by simp [mul_div_cancel' _ h]
+  left_inv x := by simp only [add_sub_cancel_right]; exact mul_div_cancel_left₀ x h
+  right_inv y := by simp [mul_div_cancel₀ _ h]
 #align affine_homeomorph affineHomeomorph
 -/
 

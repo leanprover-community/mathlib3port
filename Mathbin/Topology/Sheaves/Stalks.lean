@@ -3,7 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 -/
-import Topology.Category.Top.OpenNhds
+import Topology.Category.TopCat.OpenNhds
 import Topology.Sheaves.Presheaf
 import Topology.Sheaves.SheafCondition.UniqueGluing
 import CategoryTheory.Adjunction.Evaluation
@@ -12,7 +12,7 @@ import CategoryTheory.Limits.Preserves.Filtered
 import CategoryTheory.Limits.Final
 import Tactic.Elementwise
 import Algebra.Category.Ring.Colimits
-import CategoryTheory.Sites.Pushforward
+import CategoryTheory.Sites.Pullback
 
 #align_import topology.sheaves.stalks from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
 import Analysis.SpecialFunctions.Integrals
-import MeasureTheory.Group.Integration
+import MeasureTheory.Group.Integral
 import MeasureTheory.Integral.ExpDecay
 import MeasureTheory.Integral.IntegralEqImproper
 import MeasureTheory.Measure.Lebesgue.Integral

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Order.WellFounded
-import Algebra.Group.Pi
+import Algebra.Group.Pi.Lemmas
 import Algebra.Order.Group.Defs
 
 #align_import data.pi.lex from "leanprover-community/mathlib"@"6623e6af705e97002a9054c1c05a980180276fc1"

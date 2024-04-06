@@ -5,7 +5,7 @@ Authors: Oliver Nash
 -/
 import Algebra.Module.Equiv
 import Data.Bracket
-import LinearAlgebra.Basic
+import Algebra.Module.Submodule.Ker
 import Tactic.NoncommRing
 
 #align_import algebra.lie.basic from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
@@ -245,7 +245,8 @@ theorem lie_zsmul (a : ℤ) : ⁅x, a • m⁆ = a • ⁅x, m⁆ :=
 
 #print lie_lie /-
 @[simp]
-theorem lie_lie : ⁅⁅x, y⁆, m⁆ = ⁅x, ⁅y, m⁆⁆ - ⁅y, ⁅x, m⁆⁆ := by rw [leibniz_lie, add_sub_cancel]
+theorem lie_lie : ⁅⁅x, y⁆, m⁆ = ⁅x, ⁅y, m⁆⁆ - ⁅y, ⁅x, m⁆⁆ := by
+  rw [leibniz_lie, add_sub_cancel_right]
 #align lie_lie lie_lie
 -/
 

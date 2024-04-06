@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Algebra.Algebra.Basic
-import Algebra.Hom.Iterate
-import Algebra.Hom.NonUnitalAlg
-import LinearAlgebra.TensorProduct
+import Algebra.GroupPower.IterateHom
+import Algebra.Algebra.NonUnitalHom
+import LinearAlgebra.TensorProduct.Basic
 
 #align_import algebra.algebra.bilinear from "leanprover-community/mathlib"@"832f7b9162039c28b9361289c8681f155cae758f"
 

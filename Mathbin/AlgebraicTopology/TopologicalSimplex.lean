@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Adam Topaz
 -/
 import AlgebraicTopology.SimplexCategory
-import Topology.Category.Top.Basic
-import Topology.Instances.Nnreal
+import Topology.Category.TopCat.Basic
+import Topology.Instances.NNReal
 
 #align_import algebraic_topology.topological_simplex from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

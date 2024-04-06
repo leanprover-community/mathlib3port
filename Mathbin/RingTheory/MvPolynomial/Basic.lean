@@ -5,7 +5,7 @@ Authors: Johannes Hölzl
 -/
 import Algebra.CharP.Basic
 import Data.Polynomial.AlgebraMap
-import Data.MvPolynomial.Variables
+import Data.MvPolynomial.Degrees
 import LinearAlgebra.FinsuppVectorSpace
 
 #align_import ring_theory.mv_polynomial.basic from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"

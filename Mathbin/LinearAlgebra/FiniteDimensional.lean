@@ -627,7 +627,7 @@ theorem exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card [FiniteDimen
       rw [mem_erase] at x₁_mem
       simp only [x₁_mem, sub_add_cancel, Function.Embedding.coeFn_mk]
     · dsimp only [f]
-      rwa [if_neg, add_sub_cancel]
+      rwa [if_neg, add_sub_cancel_right]
       rw [add_left_eq_self]; rintro rfl
       simpa only [sub_eq_zero, exists_prop, Finset.mem_map, embedding.coe_fn_mk, eq_self_iff_true,
         mem_erase, not_true, exists_eq_right, Ne.def, false_and_iff] using x₁_mem
@@ -675,12 +675,12 @@ noncomputable def basisSingleton (ι : Type _) [Unique ι] (h : finrank K V = 1)
         apply_fun Equiv.finsuppUnique
         simp only [LinearEquiv.map_smulₛₗ, Finsupp.coe_smul, Finsupp.single_eq_same,
           RingHom.id_apply, smul_eq_mul, Pi.smul_apply, Equiv.finsuppUnique_apply]
-        exact div_mul_cancel _ h
+        exact div_mul_cancel₀ _ h
       right_inv := fun f => by
         ext
         simp only [LinearEquiv.map_smulₛₗ, Finsupp.coe_smul, Finsupp.single_eq_same,
           RingHom.id_apply, smul_eq_mul, Pi.smul_apply]
-        exact mul_div_cancel _ h }
+        exact mul_div_cancel_right₀ _ h }
 #align finite_dimensional.basis_singleton FiniteDimensional.basisSingleton
 -/
 
@@ -1718,7 +1718,7 @@ theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
     · have h_ker_lt_ker : (f ^ n).ker < (f ^ n.succ).ker :=
         by
         refine' lt_of_le_of_ne _ (h_contra n (Nat.le_of_succ_le_succ hn))
-        rw [pow_succ]
+        rw [pow_succ']
         apply LinearMap.ker_le_ker_comp
       have h_finrank_lt_finrank : finrank K (f ^ n).ker < finrank K (f ^ n.succ).ker := by
         apply Submodule.finrank_lt_finrank_of_lt h_ker_lt_ker

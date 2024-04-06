@@ -43,7 +43,7 @@ theorem primeFactors_pow_succ (n k : ℕ) : (n ^ (k + 1)).factors.toFinset = n.f
   · simp
   induction' k with k ih
   · simp
-  rw [pow_succ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
+  rw [pow_succ', factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
 #align nat.pow_succ_factors_to_finset Nat.primeFactors_pow_succ
 -/
 

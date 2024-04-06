@@ -101,7 +101,7 @@ theorem pow {p : N} (n : ℕ) (h : IsIdempotentElem p) : IsIdempotentElem (p ^ n
 
 #print IsIdempotentElem.pow_succ_eq /-
 theorem pow_succ_eq {p : N} (n : ℕ) (h : IsIdempotentElem p) : p ^ (n + 1) = p :=
-  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_one p) fun n ih => by rw [pow_succ, ih, h.eq]
+  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_one p) fun n ih => by rw [pow_succ', ih, h.eq]
 #align is_idempotent_elem.pow_succ_eq IsIdempotentElem.pow_succ_eq
 -/
 

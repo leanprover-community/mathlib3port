@@ -212,7 +212,7 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
       rw [← mul_one P.parts.card]
     rw [← Nat.mul_sub_left_distrib]
   simp_rw [mul_assoc, sub_add_eq_add_sub, add_sub_assoc, ← mul_sub_left_distrib, mul_div_assoc' ε, ←
-    pow_succ, div_eq_mul_one_div (ε ^ 5), ← mul_sub_left_distrib, mul_left_comm _ (ε ^ 5), sq,
+    pow_succ', div_eq_mul_one_div (ε ^ 5), ← mul_sub_left_distrib, mul_left_comm _ (ε ^ 5), sq,
     Nat.cast_mul, mul_assoc, ← mul_assoc (ε ^ 5)]
   refine' add_le_add_left (mul_le_mul_of_nonneg_left _ <| by positivity) _
   rw [Nat.cast_sub (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos, mul_sub_right_distrib,
@@ -230,7 +230,7 @@ theorem energy_increment [Nonempty α] (hP : P.IsEquipartition) (hP₇ : 7 ≤ P
   by
   rw [coe_energy]
   have h := uniform_add_nonuniform_eq_off_diag_pairs hε₁ hP₇ hPα hε.le hPG
-  rw [add_div, mul_div_cancel_left] at h
+  rw [add_div, mul_div_cancel_left₀] at h
   exact h.trans (by exact_mod_cast off_diag_pairs_le_increment_energy)
   positivity
 #align szemeredi_regularity.energy_increment SzemerediRegularity.energy_increment

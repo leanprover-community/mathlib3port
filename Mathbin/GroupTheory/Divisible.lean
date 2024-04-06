@@ -5,7 +5,7 @@ Authors: Jujian Zhang
 -/
 import GroupTheory.Subgroup.Pointwise
 import GroupTheory.QuotientGroup
-import Algebra.Group.Pi
+import Algebra.Group.Pi.Lemmas
 
 #align_import group_theory.divisible from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 
@@ -216,7 +216,7 @@ instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [
   div q n := q / n
   div_zero q := by norm_num
   div_cancel n q hn := by
-    rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
+    rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel₀ q (int.cast_ne_zero.mpr hn)]
 #align divisible_by_int_of_char_zero divisibleByIntOfCharZero
 -/
 

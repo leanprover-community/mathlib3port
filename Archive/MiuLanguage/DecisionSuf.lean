@@ -341,7 +341,7 @@ theorem mem_of_count_u_eq_succ {xs : Miustr} {k : ℕ} (h : count U xs = succ k)
 -- case `z = U`
 theorem eq_append_cons_u_of_count_u_pos {k : ℕ} {zs : Miustr} (h : count U zs = succ k) :
     ∃ as bs : Miustr, zs = as ++ U :: bs :=
-  mem_split (mem_of_count_u_eq_succ h)
+  append_of_mem (mem_of_count_u_eq_succ h)
 #align miu.eq_append_cons_U_of_count_U_pos Miu.eq_append_cons_u_of_count_u_pos
 
 /-- `ind_hyp_suf` is the inductive step of the sufficiency result.

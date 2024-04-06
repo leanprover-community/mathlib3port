@@ -6,7 +6,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 import Analysis.Convex.Basic
 import Analysis.NormedSpace.Pointwise
 import Analysis.Seminorm
-import Data.IsROrC.Basic
+import Analysis.RCLike.Basic
 import Tactic.Congrm
 
 #align_import analysis.convex.gauge from "leanprover-community/mathlib"@"373b03b5b9d0486534edbe94747f23cb3712f93d"
@@ -368,18 +368,18 @@ theorem gauge_smul_left [Module α E] [SMulCommClass α ℝ ℝ] [IsScalarTower 
 
 end LinearOrderedField
 
-section IsROrC
+section RCLike
 
-variable [IsROrC 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
+variable [RCLike 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
 
 #print gauge_norm_smul /-
 theorem gauge_norm_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (‖r‖ • x) = gauge s (r • x) :=
   by
   unfold gauge
   congr with θ
-  rw [@IsROrC.real_smul_eq_coe_smul 𝕜]
+  rw [@RCLike.real_smul_eq_coe_smul 𝕜]
   refine' and_congr_right fun hθ => (hs.smul _).smul_mem_iff _
-  rw [IsROrC.norm_ofReal, abs_norm]
+  rw [RCLike.norm_ofReal, abs_norm]
 #align gauge_norm_smul gauge_norm_smul
 -/
 
@@ -390,7 +390,7 @@ theorem gauge_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (r • x)
 #align gauge_smul gauge_smul
 -/
 
-end IsROrC
+end RCLike
 
 section TopologicalSpace
 
@@ -467,9 +467,9 @@ theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) :
 #align gauge_add_le gauge_add_le
 -/
 
-section IsROrC
+section RCLike
 
-variable [IsROrC 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
+variable [RCLike 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
 
 #print gaugeSeminorm /-
 /-- `gauge s` as a seminorm when `s` is  balanced, convex and absorbent. -/
@@ -497,7 +497,7 @@ theorem gaugeSeminorm_ball_one (hs : IsOpen s) : (gaugeSeminorm hs₀ hs₁ hs�
 #align gauge_seminorm_ball_one gaugeSeminorm_ball_one
 -/
 
-end IsROrC
+end RCLike
 
 #print Seminorm.gauge_ball /-
 /-- Any seminorm arises as the gauge of its unit ball. -/

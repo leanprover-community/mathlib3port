@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Algebra.DirectSum.Module
-import Data.Finsupp.ToDfinsupp
+import Data.Finsupp.ToDFinsupp
 
 #align_import algebra.direct_sum.finsupp from "leanprover-community/mathlib"@"aa3a420527e0fbfd0f6615b95b761254a9166e12"
 

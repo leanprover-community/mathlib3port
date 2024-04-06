@@ -3,7 +3,7 @@ Copyright (c) 2015 Nathaniel Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
-import Algebra.SmulWithZero
+import Algebra.SMulWithZero
 import GroupTheory.GroupAction.Group
 import Tactic.Abel
 
@@ -229,7 +229,7 @@ theorem Module.eq_zero_of_zero_eq_one (zero_eq_one : (0 : R) = 1) : x = 0 := by
 #print smul_add_one_sub_smul /-
 @[simp]
 theorem smul_add_one_sub_smul {R : Type _} [Ring R] [Module R M] {r : R} {m : M} :
-    r • m + (1 - r) • m = m := by rw [← add_smul, add_sub_cancel'_right, one_smul]
+    r • m + (1 - r) • m = m := by rw [← add_smul, add_sub_cancel, one_smul]
 #align smul_add_one_sub_smul smul_add_one_sub_smul
 -/
 

@@ -313,7 +313,7 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
     calc
       ↑(Zsqrtd.norm (x % y)) = (x - y * (x / y : ℤ[i]) : ℂ).normSq := by simp [mod_def]
       _ = (y : ℂ).normSq * (x / y - (x / y : ℤ[i]) : ℂ).normSq := by
-        rw [← norm_sq_mul, mul_sub, mul_div_cancel' _ this]
+        rw [← norm_sq_mul, mul_sub, mul_div_cancel₀ _ this]
       _ < (y : ℂ).normSq * 1 :=
         (mul_lt_mul_of_pos_left (normSq_div_sub_div_lt_one _ _) (normSq_pos.2 this))
       _ = Zsqrtd.norm y := by simp
@@ -366,7 +366,7 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime]
   let ⟨a, b, hpab, hau, hbu⟩ := hab
   have hnap : (norm a).natAbs = p :=
     ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 <| by
-        rw [← Int.coe_nat_inj', Int.coe_nat_pow, sq, ← @norm_nat_cast (-1), hpab] <;> simp).1
+        rw [← Int.natCast_inj, Int.coe_nat_pow, sq, ← @norm_nat_cast (-1), hpab] <;> simp).1
   ⟨a.re.natAbs, a.im.natAbs, by simpa [nat_abs_norm_eq, sq] using hnap⟩
 #align gaussian_int.sq_add_sq_of_nat_prime_of_not_irreducible GaussianInt.sq_add_sq_of_nat_prime_of_not_irreducible
 -/

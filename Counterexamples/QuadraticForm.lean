@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import LinearAlgebra.QuadraticForm.Basic
 import Algebra.CharP.Two
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 
 #align_import quadratic_form from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Analysis.Calculus.Deriv.Basic
-import Analysis.Calculus.Fderiv.Star
+import Analysis.Calculus.FDeriv.Star
 
 #align_import analysis.calculus.deriv.star from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

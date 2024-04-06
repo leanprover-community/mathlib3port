@@ -157,7 +157,7 @@ theorem matches'_mul (P Q : RegularExpression α) : (P * Q).matches' = P.matches
 @[simp]
 theorem matches'_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches' = P.matches' ^ n
   | 0 => matches'_epsilon
-  | n + 1 => (matches'_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
+  | n + 1 => (matches'_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ' _ _).symm
 #align regular_expression.matches_pow RegularExpression.matches'_pow
 -/
 

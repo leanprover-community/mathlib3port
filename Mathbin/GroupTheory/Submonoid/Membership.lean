@@ -614,7 +614,7 @@ theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (
 #align submonoid.map_powers Submonoid.map_powers
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Submonoid.closureCommMonoidOfComm /-
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive

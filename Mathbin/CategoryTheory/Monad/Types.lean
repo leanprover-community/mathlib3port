@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Bhavik Mehta
 -/
 import CategoryTheory.Monad.Basic
 import CategoryTheory.Monad.Kleisli
-import CategoryTheory.Category.Kleisli
+import CategoryTheory.Category.KleisliCat
 import CategoryTheory.Types
 
 #align_import category_theory.monad.types from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"

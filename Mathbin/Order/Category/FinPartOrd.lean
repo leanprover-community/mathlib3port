@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import CategoryTheory.Fintype
+import CategoryTheory.FintypeCat
 import Order.Category.PartOrd
 
 #align_import order.category.FinPartOrd from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"

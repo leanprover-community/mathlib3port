@@ -5,7 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 import Data.Real.Irrational
 import Data.Rat.Encodable
-import Topology.MetricSpace.Baire
+import Topology.Baire.Lemmas
 
 #align_import topology.instances.irrational from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

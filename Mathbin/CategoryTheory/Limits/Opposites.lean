@@ -38,30 +38,34 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 variable {J : Type u₂} [Category.{v₂} J]
 
-#print CategoryTheory.Limits.isLimitCoconeOp /-
+/- warning: category_theory.limits.is_limit_cocone_op clashes with category_theory.limits.is_colimit.op -> CategoryTheory.Limits.IsColimit.op
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_limit_cocone_op CategoryTheory.Limits.IsColimit.opₓ'. -/
+#print CategoryTheory.Limits.IsColimit.op /-
 /-- Turn a colimit for `F : J ⥤ C` into a limit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ`. -/
 @[simps]
-def isLimitCoconeOp (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) : IsLimit c.op
+def CategoryTheory.Limits.IsColimit.op (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) : IsLimit c.op
     where
   lift s := (hc.desc s.unop).op
   fac s j := Quiver.Hom.unop_inj (by simpa)
   uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_colimit.fac] using w (op j)
-#align category_theory.limits.is_limit_cocone_op CategoryTheory.Limits.isLimitCoconeOp
+#align category_theory.limits.is_limit_cocone_op CategoryTheory.Limits.IsColimit.op
 -/
 
-#print CategoryTheory.Limits.isColimitConeOp /-
+/- warning: category_theory.limits.is_colimit_cone_op clashes with category_theory.limits.is_limit.op -> CategoryTheory.Limits.IsLimit.op
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_colimit_cone_op CategoryTheory.Limits.IsLimit.opₓ'. -/
+#print CategoryTheory.Limits.IsLimit.op /-
 /-- Turn a limit for `F : J ⥤ C` into a colimit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ`. -/
 @[simps]
-def isColimitConeOp (F : J ⥤ C) {c : Cone F} (hc : IsLimit c) : IsColimit c.op
+def CategoryTheory.Limits.IsLimit.op (F : J ⥤ C) {c : Cone F} (hc : IsLimit c) : IsColimit c.op
     where
   desc s := (hc.lift s.unop).op
   fac s j := Quiver.Hom.unop_inj (by simpa)
   uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_limit.fac] using w (op j)
-#align category_theory.limits.is_colimit_cone_op CategoryTheory.Limits.isColimitConeOp
+#align category_theory.limits.is_colimit_cone_op CategoryTheory.Limits.IsLimit.op
 -/
 
 #print CategoryTheory.Limits.isLimitConeLeftOpOfCocone /-
@@ -154,30 +158,34 @@ def isColimitCoconeUnopOfCone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLim
 #align category_theory.limits.is_colimit_cocone_unop_of_cone CategoryTheory.Limits.isColimitCoconeUnopOfCone
 -/
 
-#print CategoryTheory.Limits.isLimitCoconeUnop /-
+/- warning: category_theory.limits.is_limit_cocone_unop clashes with category_theory.limits.is_colimit.unop -> CategoryTheory.Limits.IsColimit.unop
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_limit_cocone_unop CategoryTheory.Limits.IsColimit.unopₓ'. -/
+#print CategoryTheory.Limits.IsColimit.unop /-
 /-- Turn a colimit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ` into a limit for `F : J ⥤ C`. -/
 @[simps]
-def isLimitCoconeUnop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) : IsLimit c.unop
-    where
+def CategoryTheory.Limits.IsColimit.unop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) :
+    IsLimit c.unop where
   lift s := (hc.desc s.op).unop
   fac s j := Quiver.Hom.op_inj (by simpa)
   uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_colimit.fac] using w (unop j)
-#align category_theory.limits.is_limit_cocone_unop CategoryTheory.Limits.isLimitCoconeUnop
+#align category_theory.limits.is_limit_cocone_unop CategoryTheory.Limits.IsColimit.unop
 -/
 
-#print CategoryTheory.Limits.isColimitConeUnop /-
+/- warning: category_theory.limits.is_colimit_cone_unop clashes with category_theory.limits.is_limit.unop -> CategoryTheory.Limits.IsLimit.unop
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_colimit_cone_unop CategoryTheory.Limits.IsLimit.unopₓ'. -/
+#print CategoryTheory.Limits.IsLimit.unop /-
 /-- Turn a limit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ` into a colimit for `F : J ⥤ C`. -/
 @[simps]
-def isColimitConeUnop (F : J ⥤ C) {c : Cone F.op} (hc : IsLimit c) : IsColimit c.unop
-    where
+def CategoryTheory.Limits.IsLimit.unop (F : J ⥤ C) {c : Cone F.op} (hc : IsLimit c) :
+    IsColimit c.unop where
   desc s := (hc.lift s.op).unop
   fac s j := Quiver.Hom.op_inj (by simpa)
   uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_limit.fac] using w (unop j)
-#align category_theory.limits.is_colimit_cone_unop CategoryTheory.Limits.isColimitConeUnop
+#align category_theory.limits.is_colimit_cone_unop CategoryTheory.Limits.IsLimit.unop
 -/
 
 #print CategoryTheory.Limits.isLimitConeOfCoconeLeftOp /-
@@ -284,7 +292,7 @@ theorem hasLimit_of_hasColimit_leftOp (F : J ⥤ Cᵒᵖ) [HasColimit F.leftOp] 
 theorem hasLimit_of_hasColimit_op (F : J ⥤ C) [HasColimit F.op] : HasLimit F :=
   HasLimit.mk
     { Cone := (colimit.cocone F.op).unop
-      IsLimit := isLimitCoconeUnop _ (colimit.isColimit _) }
+      IsLimit := CategoryTheory.Limits.IsColimit.unop _ (colimit.isColimit _) }
 #align category_theory.limits.has_limit_of_has_colimit_op CategoryTheory.Limits.hasLimit_of_hasColimit_op
 -/
 
@@ -348,7 +356,7 @@ theorem hasColimit_of_hasLimit_leftOp (F : J ⥤ Cᵒᵖ) [HasLimit F.leftOp] : 
 theorem hasColimit_of_hasLimit_op (F : J ⥤ C) [HasLimit F.op] : HasColimit F :=
   HasColimit.mk
     { Cocone := (limit.cone F.op).unop
-      IsColimit := isColimitConeUnop _ (limit.isLimit _) }
+      IsColimit := CategoryTheory.Limits.IsLimit.unop _ (limit.isLimit _) }
 #align category_theory.limits.has_colimit_of_has_limit_op CategoryTheory.Limits.hasColimit_of_hasLimit_op
 -/
 

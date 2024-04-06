@@ -310,7 +310,7 @@ theorem eq_lineMap_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y = 
   by
   have : y -ᵥ x ∈ [(0 : E) -[ℝ] z -ᵥ x] := by
     rw [← dist_add_dist_eq_iff, dist_zero_left, dist_vsub_cancel_right, ← dist_eq_norm_vsub', ←
-      dist_eq_norm_vsub', hxy, hyz, ← add_mul, add_sub_cancel'_right, one_mul]
+      dist_eq_norm_vsub', hxy, hyz, ← add_mul, add_sub_cancel, one_mul]
   rcases eq_or_ne x z with (rfl | hne)
   · obtain rfl : y = x := by simpa
     simp

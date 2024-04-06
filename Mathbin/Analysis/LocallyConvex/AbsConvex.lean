@@ -154,7 +154,7 @@ instance : Nonempty (AbsConvexOpenSets 𝕜 E) :=
 
 end AbsolutelyConvexSets
 
-variable [IsROrC 𝕜]
+variable [RCLike 𝕜]
 
 variable [AddCommGroup E] [TopologicalSpace E]
 

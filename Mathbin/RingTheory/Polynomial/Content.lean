@@ -3,7 +3,7 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Algebra.GcdMonoid.Finset
+import Algebra.GCDMonoid.Finset
 import Data.Polynomial.FieldDivision
 import Data.Polynomial.EraseLead
 import Data.Polynomial.CancelLeads
@@ -167,7 +167,7 @@ theorem content_X_pow {k : ℕ} : content ((X : R[X]) ^ k) = 1 :=
   by
   induction' k with k hi
   · simp
-  rw [pow_succ, content_X_mul, hi]
+  rw [pow_succ', content_X_mul, hi]
 #align polynomial.content_X_pow Polynomial.content_X_pow
 -/
 

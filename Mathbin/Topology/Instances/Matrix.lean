@@ -3,7 +3,7 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 -/
-import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.InfiniteSum.Defs
 import Topology.Algebra.Ring.Basic
 import Topology.Algebra.Star
 import LinearAlgebra.Matrix.NonsingularInverse

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import MeasureTheory.Constructions.BorelSpace.Basic
-import Topology.MetricSpace.Metrizable
+import Topology.Metrizable.Basic
 
 #align_import measure_theory.constructions.borel_space.metrizable from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

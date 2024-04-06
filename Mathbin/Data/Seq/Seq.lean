@@ -5,7 +5,7 @@ Authors: Mario Carneiro
 -/
 import Data.List.Basic
 import Data.LazyList
-import Data.Nat.Basic
+import Data.Nat.Defs
 import Data.Stream.Init
 import Data.Seq.Computation
 

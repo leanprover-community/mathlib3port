@@ -158,11 +158,9 @@ theorem leibniz : D (a * b) = a • D b + b • D a :=
 #align derivation.leibniz Derivation.leibniz
 -/
 
-#print Derivation.map_sum /-
 theorem map_sum {ι : Type _} (s : Finset ι) (f : ι → A) : D (∑ i in s, f i) = ∑ i in s, D (f i) :=
   D.toLinearMap.map_sum
 #align derivation.map_sum Derivation.map_sum
--/
 
 #print Derivation.map_smul_of_tower /-
 @[simp]
@@ -202,8 +200,8 @@ theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a :=
   · rw [pow_zero, map_one_eq_zero, zero_smul]
   · rcases(zero_le n).eq_or_lt with (rfl | hpos)
     · rw [pow_one, one_smul, pow_zero, one_smul]
-    · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ, Nat.sub_add_cancel hpos]
-      simp only [pow_succ, leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this,
+    · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ', Nat.sub_add_cancel hpos]
+      simp only [pow_succ', leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this,
         Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, one_nsmul]
 #align derivation.leibniz_pow Derivation.leibniz_pow
 -/

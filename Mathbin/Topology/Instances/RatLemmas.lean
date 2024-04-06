@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Topology.Instances.Irrational
 import Topology.Instances.Rat
-import Topology.Alexandroff
+import Topology.Compactification.OnePoint
 
 #align_import topology.instances.rat_lemmas from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

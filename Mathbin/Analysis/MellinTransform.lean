@@ -120,7 +120,7 @@ theorem MellinConvergent.comp_rpow {f : ℝ → E} {s : ℂ} {a : ℝ} (ha : a �
   dsimp only [Pi.smul_apply]
   rw [← Complex.coe_smul (t ^ (a - 1)), ← mul_smul, ← cpow_mul_of_real_nonneg (le_of_lt ht),
     of_real_cpow (le_of_lt ht), ← cpow_add _ _ (of_real_ne_zero.mpr (ne_of_gt ht)), of_real_sub,
-    of_real_one, mul_sub, mul_div_cancel' _ (of_real_ne_zero.mpr ha), mul_one, add_comm, ←
+    of_real_one, mul_sub, mul_div_cancel₀ _ (of_real_ne_zero.mpr ha), mul_one, add_comm, ←
     add_sub_assoc, sub_add_cancel]
 #align mellin_convergent.comp_rpow MellinConvergent.comp_rpow
 -/
@@ -172,7 +172,7 @@ theorem mellin_comp_rpow (f : ℝ → E) (s : ℂ) {a : ℝ} (ha : a ≠ 0) :
   show |a| ≠ 0; · contrapose! ha; exact abs_eq_zero.mp ha
   rw [of_real_cpow (le_of_lt ht), ← cpow_mul_of_real_nonneg (le_of_lt ht), ←
     cpow_add _ _ (of_real_ne_zero.mpr <| ne_of_gt ht), of_real_sub, of_real_one, mul_sub,
-    mul_div_cancel' _ (of_real_ne_zero.mpr ha), add_comm, ← add_sub_assoc, mul_one, sub_add_cancel]
+    mul_div_cancel₀ _ (of_real_ne_zero.mpr ha), add_comm, ← add_sub_assoc, mul_one, sub_add_cancel]
 #align mellin_comp_rpow mellin_comp_rpow
 -/
 
@@ -377,7 +377,7 @@ theorem isBigO_rpow_top_log_smul [NormedSpace ℝ E] {a b : ℝ} {f : ℝ → E}
     ((isLittleO_log_rpow_atTop (sub_pos.mpr hab)).IsBigO.smul hf).congr'
       (eventually_of_forall fun t => by rfl)
       ((eventually_gt_at_top 0).mp (eventually_of_forall fun t ht => _))
-  rw [smul_eq_mul, ← rpow_add ht, ← sub_eq_add_neg, sub_eq_add_neg a, add_sub_cancel']
+  rw [smul_eq_mul, ← rpow_add ht, ← sub_eq_add_neg, sub_eq_add_neg a, add_sub_cancel_left]
 #align is_O_rpow_top_log_smul isBigO_rpow_top_log_smul
 -/
 

@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Algebra.Hom.Iterate
+import Algebra.GroupPower.IterateHom
 import Data.Polynomial.Eval
 
 #align_import data.polynomial.derivative from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
@@ -558,8 +558,8 @@ variable [CommSemiring R]
 theorem derivative_pow_succ (p : R[X]) (n : ℕ) :
     (p ^ (n + 1)).derivative = C ↑(n + 1) * p ^ n * p.derivative :=
   Nat.recOn n (by rw [pow_one, Nat.cast_one, C_1, one_mul, pow_zero, one_mul]) fun n ih => by
-    rw [pow_succ', derivative_mul, ih, Nat.add_one, mul_right_comm, Nat.cast_add n.succ, C_add,
-      add_mul, add_mul, pow_succ', ← mul_assoc, Nat.cast_one, C_1, one_mul]
+    rw [pow_succ, derivative_mul, ih, Nat.add_one, mul_right_comm, Nat.cast_add n.succ, C_add,
+      add_mul, add_mul, pow_succ, ← mul_assoc, Nat.cast_one, C_1, one_mul]
 #align polynomial.derivative_pow_succ Polynomial.derivative_pow_succ
 -/
 
@@ -667,7 +667,7 @@ theorem derivative_eval₂_C (p q : R[X]) :
     (fun p₁ p₂ ih₁ ih₂ => by
       rw [eval₂_add, derivative_add, ih₁, ih₂, derivative_add, eval₂_add, add_mul])
     fun n r ih => by
-    rw [pow_succ', ← mul_assoc, eval₂_mul, eval₂_X, derivative_mul, ih, @derivative_mul _ _ _ X,
+    rw [pow_succ, ← mul_assoc, eval₂_mul, eval₂_X, derivative_mul, ih, @derivative_mul _ _ _ X,
       derivative_X, mul_one, eval₂_add, @eval₂_mul _ _ _ _ X, eval₂_X, add_mul, mul_right_comm]
 #align polynomial.derivative_eval₂_C Polynomial.derivative_eval₂_C
 -/
@@ -776,7 +776,7 @@ theorem iterate_derivative_comp_one_sub_X (p : R[X]) (k : ℕ) :
   by
   induction' k with k ih generalizing p
   · simp
-  · simp [ih p.derivative, iterate_derivative_neg, derivative_comp, pow_succ]
+  · simp [ih p.derivative, iterate_derivative_neg, derivative_comp, pow_succ']
 #align polynomial.iterate_derivative_comp_one_sub_X Polynomial.iterate_derivative_comp_one_sub_X
 -/
 

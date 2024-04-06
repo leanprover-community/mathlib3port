@@ -144,7 +144,7 @@ theorem coe_pow {R} [Semiring R] [SetLike S R] [SubsemiringClass S R] (x : s) (n
   by
   induction' n with n ih
   · simp
-  · simp [pow_succ, ih]
+  · simp [pow_succ', ih]
 #align subsemiring_class.coe_pow SubsemiringClass.coe_pow
 -/
 
@@ -528,7 +528,7 @@ theorem coe_pow {R} [Semiring R] (s : Subsemiring R) (x : s) (n : ℕ) :
   by
   induction' n with n ih
   · simp
-  · simp [pow_succ, ih]
+  · simp [pow_succ', ih]
 #align subsemiring.coe_pow Subsemiring.coe_pow
 -/
 

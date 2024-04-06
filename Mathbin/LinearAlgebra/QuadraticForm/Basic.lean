@@ -3,7 +3,7 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 -/
-import Algebra.Invertible
+import Algebra.Invertible.Defs
 import LinearAlgebra.Matrix.Determinant
 import LinearAlgebra.Matrix.BilinearForm
 import LinearAlgebra.Matrix.Symmetric
@@ -328,7 +328,7 @@ theorem polar_add_left (x x' y : M) : polar Q (x + x') y = polar Q x y + polar Q
 theorem polar_smul_left (a : R) (x y : M) : polar Q (a • x) y = a * polar Q x y :=
   by
   obtain ⟨B, h⟩ := Q.exists_companion
-  simp_rw [polar, h, Q.map_smul, BilinForm.smul_left, sub_sub, add_sub_cancel']
+  simp_rw [polar, h, Q.map_smul, BilinForm.smul_left, sub_sub, add_sub_cancel_left]
 #align quadratic_form.polar_smul_left QuadraticForm.polar_smul_left
 -/
 
@@ -434,7 +434,7 @@ def ofPolar (to_fun : M → R) (to_fun_smul : ∀ (a : R) (x : M), to_fun (a •
           bilin_add_right := fun x y z => by simp_rw [polar_comm _ x, polar_add_left]
           bilin_smul_right := fun r x y => by
             simp_rw [polar_comm _ x, polar_smul_left, smul_eq_mul] },
-        fun x y => by rw [BilinForm.coeFn_mk, polar, sub_sub, add_sub_cancel'_right]⟩ }
+        fun x y => by rw [BilinForm.coeFn_mk, polar, sub_sub, add_sub_cancel]⟩ }
 #align quadratic_form.of_polar QuadraticForm.ofPolar
 -/
 
@@ -442,7 +442,7 @@ def ofPolar (to_fun : M → R) (to_fun_smul : ∀ (a : R) (x : M), to_fun (a •
 /-- In a ring the companion bilinear form is unique and equal to `quadratic_form.polar`. -/
 theorem choose_exists_companion : Q.exists_companion.some = polarBilin Q :=
   BilinForm.ext fun x y => by
-    rw [polar_bilin_apply, polar, Q.exists_companion.some_spec, sub_sub, add_sub_cancel']
+    rw [polar_bilin_apply, polar, Q.exists_companion.some_spec, sub_sub, add_sub_cancel_left]
 #align quadratic_form.some_exists_companion QuadraticForm.choose_exists_companion
 -/
 
@@ -880,7 +880,7 @@ variable {B : BilinForm R M}
 #print LinearMap.BilinForm.polar_toQuadraticForm /-
 theorem LinearMap.BilinForm.polar_toQuadraticForm (x y : M) :
     polar (fun x => B x x) x y = B x y + B y x := by
-  simp only [add_assoc, add_sub_cancel', add_right, polar, add_left_inj, add_neg_cancel_left,
+  simp only [add_assoc, add_sub_cancel_left, add_right, polar, add_left_inj, add_neg_cancel_left,
     add_left, sub_eq_add_neg _ (B y y), add_comm (B y x) _]
 #align bilin_form.polar_to_quadratic_form LinearMap.BilinForm.polar_toQuadraticForm
 -/
@@ -982,7 +982,7 @@ theorem toQuadraticForm_associated : (associatedHom S Q).toQuadraticForm = Q :=
   QuadraticForm.ext fun x =>
     calc
       (associatedHom S Q).toQuadraticForm x = ⅟ 2 * (Q x + Q x) := by
-        simp only [add_assoc, add_sub_cancel', one_mul, to_quadratic_form_apply, add_mul,
+        simp only [add_assoc, add_sub_cancel_left, one_mul, to_quadratic_form_apply, add_mul,
           associated_apply, map_add_self, bit0]
       _ = Q x := by rw [← two_mul (Q x), ← mul_assoc, invOf_mul_self, one_mul]
 #align quadratic_form.to_quadratic_form_associated QuadraticForm.toQuadraticForm_associated
@@ -1084,7 +1084,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
 #align quadratic_form.anisotropic QuadraticForm.Anisotropic
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print QuadraticForm.not_anisotropic_iff_exists /-
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) :
     ¬Anisotropic Q ↔ ∃ (x : _) (_ : x ≠ 0), Q x = 0 := by
@@ -1127,7 +1127,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoid M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 #print QuadraticForm.PosDef /-
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
@@ -1360,7 +1360,7 @@ theorem LinearMap.BilinForm.exists_orthogonal_basis [hK : Invertible (2 : K)] {B
         intro y
         refine' ⟨-B x y / B x x, fun z hz => _⟩
         obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz
-        rw [is_ortho, smul_left, add_right, smul_right, div_mul_cancel _ hx, add_neg_self,
+        rw [is_ortho, smul_left, add_right, smul_right, div_mul_cancel₀ _ hx, add_neg_self,
           MulZeroClass.mul_zero])
   refine' ⟨b, _⟩
   · rw [Basis.coe_mkFinCons]

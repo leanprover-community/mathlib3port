@@ -330,7 +330,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       rw [show id = add 0 from rfl, h]
       apply Tactic.Ring.horner_add_horner_gt
       · change (_ + k : ℕ) = _
-        rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add']
+        rw [← Int.natCast_inj, Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add']
         simpa using congr_arg (coe : ZNum → ℤ) e
       · rfl
       · apply add_comm
@@ -338,7 +338,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       simp [B₁ csb₁ csb₂, A₁ csa₁ this]
       symm; apply Tactic.Ring.horner_add_horner_lt
       · change (_ + k : ℕ) = _
-        rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
+        rw [← Int.natCast_inj, Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
         simpa using congr_arg (coe : ZNum → ℤ) e
       all_goals rfl
   · rcases B₂ csb₂ _ _ B₁ ⟨csa₁, csb₁⟩ with ⟨csh, h⟩

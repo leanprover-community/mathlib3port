@@ -3,8 +3,8 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Data.Zmod.Basic
-import Data.Nat.Basic
+import Data.ZMod.Basic
+import Data.Nat.Defs
 import Tactic.IntervalCases
 import GroupTheory.SpecificGroups.Dihedral
 import GroupTheory.SpecificGroups.Cyclic
@@ -202,7 +202,7 @@ theorem a_one_pow (k : ℕ) : (a 1 : QuaternionGroup n) ^ k = a k :=
   by
   induction' k with k IH
   · rw [Nat.cast_zero]; rfl
-  · rw [pow_succ, IH, a_mul_a]
+  · rw [pow_succ', IH, a_mul_a]
     congr 1
     norm_cast
     rw [Nat.one_add]
@@ -229,8 +229,8 @@ theorem xa_sq (i : ZMod (2 * n)) : xa i ^ 2 = a n := by simp [sq]
 @[simp]
 theorem xa_pow_four (i : ZMod (2 * n)) : xa i ^ 4 = 1 :=
   by
-  simp only [pow_succ, sq, xa_mul_xa, xa_mul_a, add_sub_cancel, add_sub_assoc, add_sub_cancel',
-    sub_self, add_zero]
+  simp only [pow_succ', sq, xa_mul_xa, xa_mul_a, add_sub_cancel_right, add_sub_assoc,
+    add_sub_cancel_left, sub_self, add_zero]
   norm_cast
   rw [← two_mul]
   simp [one_def]

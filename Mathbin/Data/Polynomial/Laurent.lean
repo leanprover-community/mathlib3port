@@ -384,7 +384,7 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (C r * T n) = ite (0 ≤ n) (mon
   by_cases n0 : 0 ≤ n
   · lift n to ℕ using n0
     erw [comap_domain_single, to_finsupp_iso_symm_apply]
-    simp only [Int.coe_nat_nonneg, Int.toNat_coe_nat, if_true, to_finsupp_iso_apply,
+    simp only [Int.natCast_nonneg, Int.toNat_natCast, if_true, to_finsupp_iso_apply,
       to_finsupp_monomial]
   · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
     rw [to_finsupp_iso_apply, to_finsupp_inj, if_neg n0]
@@ -405,7 +405,7 @@ theorem leftInverse_trunc_toLaurent :
   · exact fun f g hf hg => by simp only [hf, hg, _root_.map_add]
   ·
     exact fun n r => by
-      simp only [Polynomial.toLaurent_C_mul_T, trunc_C_mul_T, Int.coe_nat_nonneg, Int.toNat_coe_nat,
+      simp only [Polynomial.toLaurent_C_mul_T, trunc_C_mul_T, Int.natCast_nonneg, Int.toNat_natCast,
         if_true]
 #align laurent_polynomial.left_inverse_trunc_to_laurent LaurentPolynomial.leftInverse_trunc_toLaurent
 -/

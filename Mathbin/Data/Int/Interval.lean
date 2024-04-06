@@ -5,7 +5,7 @@ Authors: Yaël Dillies
 -/
 import Algebra.CharZero.Lemmas
 import Order.LocallyFinite
-import Data.Finset.LocallyFinite
+import Data.Finset.LocallyFinite.Basic
 
 #align_import data.int.interval from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
 
@@ -43,7 +43,7 @@ instance : LocallyFiniteOrder ℤ
       use(x - a).toNat
       rw [← lt_add_one_iff] at hb
       rw [to_nat_sub_of_le ha]
-      exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
+      exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
   finset_mem_Ico a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
@@ -54,7 +54,7 @@ instance : LocallyFiniteOrder ℤ
     · rintro ⟨ha, hb⟩
       use(x - a).toNat
       rw [to_nat_sub_of_le ha]
-      exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
+      exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
   finset_mem_Ioc a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
@@ -65,8 +65,8 @@ instance : LocallyFiniteOrder ℤ
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
       use(x - (a + 1)).toNat
-      rw [to_nat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel]
-      exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
+      rw [to_nat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel_right]
+      exact ⟨sub_le_sub_right hb _, add_sub_cancel _ _⟩
   finset_mem_Ioo a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
@@ -78,7 +78,7 @@ instance : LocallyFiniteOrder ℤ
     · rintro ⟨ha, hb⟩
       use(x - (a + 1)).toNat
       rw [to_nat_sub_of_le ha, sub_sub]
-      exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
+      exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
 
 namespace Int
 
@@ -159,7 +159,7 @@ theorem card_uIcc : (uIcc a b).card = (b - a).natAbs + 1 :=
     Int.ofNat.inj <| by
       rw [card_range, sup_eq_max, inf_eq_min,
         Int.toNat_of_nonneg (sub_nonneg_of_le <| le_add_one min_le_max), Int.ofNat_add,
-        Int.coe_natAbs, add_comm, add_sub_assoc, max_sub_min_eq_abs, add_comm, Int.ofNat_one]
+        Int.natCast_natAbs, add_comm, add_sub_assoc, max_sub_min_eq_abs, add_comm, Int.ofNat_one]
 #align int.card_uIcc Int.card_uIcc
 -/
 

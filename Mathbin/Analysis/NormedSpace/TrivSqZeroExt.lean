@@ -79,7 +79,7 @@ theorem hasSum_snd_expSeries_of_smul_comm [Field 𝕜] [CharZero 𝕜] [Ring R] 
     sub_zero]
   simp_rw [← Nat.succ_eq_add_one, Nat.pred_succ, Nat.factorial_succ, Nat.cast_mul, ←
     Nat.succ_eq_add_one,
-    mul_div_cancel_left _ ((@Nat.cast_ne_zero 𝕜 _ _ _).mpr <| Nat.succ_ne_zero _)]
+    mul_div_cancel_left₀ _ ((@Nat.cast_ne_zero 𝕜 _ _ _).mpr <| Nat.succ_ne_zero _)]
   exact h
 #align triv_sq_zero_ext.has_sum_snd_exp_series_of_smul_comm TrivSqZeroExt.hasSum_snd_expSeries_of_smul_comm
 -/
@@ -103,7 +103,7 @@ end Topology
 
 section NormedRing
 
-variable [IsROrC 𝕜] [NormedRing R] [AddCommGroup M]
+variable [RCLike 𝕜] [NormedRing R] [AddCommGroup M]
 
 variable [NormedAlgebra 𝕜 R] [Module R M] [Module Rᵐᵒᵖ M] [SMulCommClass R Rᵐᵒᵖ M]
 
@@ -147,7 +147,7 @@ end NormedRing
 
 section NormedCommRing
 
-variable [IsROrC 𝕜] [NormedCommRing R] [AddCommGroup M]
+variable [RCLike 𝕜] [NormedCommRing R] [AddCommGroup M]
 
 variable [NormedAlgebra 𝕜 R] [Module R M] [Module Rᵐᵒᵖ M] [IsCentralScalar R M]
 
@@ -193,7 +193,7 @@ end NormedCommRing
 
 section NormedField
 
-variable [IsROrC 𝕜] [NormedField R] [AddCommGroup M]
+variable [RCLike 𝕜] [NormedField R] [AddCommGroup M]
 
 variable [NormedAlgebra 𝕜 R] [Module R M] [Module Rᵐᵒᵖ M] [IsCentralScalar R M]
 

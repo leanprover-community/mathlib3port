@@ -3,7 +3,7 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Control.Uliftable
+import Control.ULiftable
 import Data.Bitvec.Basic
 import Data.Stream.Defs
 import Tactic.NormNum
@@ -290,7 +290,7 @@ instance intBoundedRandom : BoundedRandom ℤ
     where randomR g inst x y hxy := do
     let ⟨z, h₀, h₁⟩ ← @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
     pure
-        ⟨z + x, Int.le_add_of_nonneg_left (Int.coe_nat_nonneg _),
+        ⟨z + x, Int.le_add_of_nonneg_left (Int.natCast_nonneg _),
           Int.add_le_of_le_sub_right <|
             le_trans (Int.ofNat_le_ofNat_of_le h₁)
               (le_of_eq <| Int.ofNat_natAbs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩

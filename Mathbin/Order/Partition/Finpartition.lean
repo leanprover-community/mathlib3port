@@ -618,7 +618,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
 #print Finpartition.mem_atomise /-
 theorem mem_atomise :
     t ∈ (atomise s F).parts ↔

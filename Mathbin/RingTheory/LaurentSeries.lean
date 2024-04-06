@@ -3,7 +3,7 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import RingTheory.HahnSeries
+import RingTheory.HahnSeries.Basic
 import RingTheory.Localization.FractionRing
 
 #align_import ring_theory.laurent_series from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
@@ -112,8 +112,7 @@ theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
   by_cases h : x.order ≤ n
   ·
     rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series,
-      power_series_part_coeff, ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h),
-      add_sub_cancel'_right]
+      power_series_part_coeff, ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), add_sub_cancel]
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_range]
     · contrapose! h
       exact order_le_of_coeff_ne_zero h.symm
@@ -254,12 +253,12 @@ theorem coeff_coe (i : ℤ) :
   by
   cases i
   ·
-    rw [Int.natAbs_ofNat_core, Int.ofNat_eq_coe, coeff_coe_power_series,
-      if_neg (Int.coe_nat_nonneg _).not_lt]
+    rw [Int.natAbs_ofNat', Int.ofNat_eq_coe, coeff_coe_power_series,
+      if_neg (Int.natCast_nonneg _).not_lt]
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support,
       if_pos (Int.negSucc_lt_zero _)]
     simp only [not_exists, RelEmbedding.coe_mk, Set.mem_image, not_and, Function.Embedding.coeFn_mk,
-      Ne.def, to_power_series_symm_apply_coeff, mem_support, Int.coe_nat_eq, imp_true_iff,
+      Ne.def, to_power_series_symm_apply_coeff, mem_support, Int.natCast_eq_ofNat, imp_true_iff,
       not_false_iff]
 #align power_series.coeff_coe PowerSeries.coeff_coe
 -/

@@ -5,7 +5,7 @@ Authors: Bolton Bailey
 -/
 import Data.Nat.PrimeFin
 import Data.Nat.Totient
-import Data.Finset.LocallyFinite
+import Data.Finset.LocallyFinite.Basic
 import Data.Nat.Count
 import Data.Nat.Nth
 

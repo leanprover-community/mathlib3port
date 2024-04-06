@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Data.Sum.Basic
-import Logic.Nontrivial
+import Logic.Nontrivial.Defs
 
 #align_import data.two_pointing from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

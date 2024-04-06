@@ -5,8 +5,8 @@ Authors: Praneeth Kolichala
 -/
 import AlgebraicTopology.FundamentalGroupoid.InducedMaps
 import Topology.Homotopy.Contractible
-import CategoryTheory.Punit
-import AlgebraicTopology.FundamentalGroupoid.Punit
+import CategoryTheory.PUnit
+import AlgebraicTopology.FundamentalGroupoid.PUnit
 
 #align_import algebraic_topology.fundamental_groupoid.simply_connected from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

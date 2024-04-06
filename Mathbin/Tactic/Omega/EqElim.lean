@@ -216,7 +216,7 @@ theorem coeffsReduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Na
           intro x;
           have h5 : a_n = m - 1 := by
             simp only [m]
-            rw [add_sub_cancel]
+            rw [add_sub_cancel_right]
           rw [h5, sub_mul, one_mul, add_sub, add_comm, add_sub_assoc, ← mul_symdiv_eq]
           simp only [sym_sym, mul_add, add_comm]
         apply fun_mono_2 (h4 _)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Data.Fintype.Card
-import Logic.Small.Basic
+import Logic.Small.Defs
 
 #align_import data.fintype.small from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 
@@ -21,11 +21,9 @@ That is, any `α` with `[fintype α]` is equivalent to a type in any universe.
 
 universe w v
 
-#print small_of_fintype /-
-instance (priority := 100) small_of_fintype (α : Type v) [Fintype α] : Small.{w} α :=
+instance (priority := 100) Countable.toSmall (α : Type v) [Fintype α] : Small.{w} α :=
   by
   rw [small_congr (Fintype.equivFin α)]
   infer_instance
-#align small_of_fintype small_of_fintype
--/
+#align small_of_fintype Countable.toSmallₓ
 

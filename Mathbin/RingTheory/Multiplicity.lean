@@ -277,7 +277,7 @@ theorem exists_eq_pow_mul_and_not_dvd {a b : α} (hfin : Finite a b) :
   obtain ⟨c, hc⟩ := multiplicity.pow_multiplicity_dvd hfin
   refine' ⟨c, hc, _⟩
   rintro ⟨k, hk⟩
-  rw [hk, ← mul_assoc, ← pow_succ'] at hc
+  rw [hk, ← mul_assoc, ← pow_succ] at hc
   have h₁ : a ^ ((multiplicity a b).get hfin + 1) ∣ b := ⟨k, hc⟩
   exact (multiplicity.eq_coe_iff.1 (by simp)).2 h₁
 #align multiplicity.exists_eq_pow_mul_and_not_dvd multiplicity.exists_eq_pow_mul_and_not_dvd
@@ -632,7 +632,7 @@ theorem finite_mul_iff {p a b : α} (hp : Prime p) : Finite p (a * b) ↔ Finite
 #print multiplicity.finite_pow /-
 theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} (ha : Finite p a), Finite p (a ^ k)
   | 0, ha => ⟨0, by simp [mt isUnit_iff_dvd_one.2 hp.2.1]⟩
-  | k + 1, ha => by rw [pow_succ] <;> exact finite_mul hp ha (finite_pow ha)
+  | k + 1, ha => by rw [pow_succ'] <;> exact finite_mul hp ha (finite_pow ha)
 #align multiplicity.finite_pow multiplicity.finite_pow
 -/
 
@@ -650,7 +650,7 @@ theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplic
             ⟨b,
               mul_left_cancel₀ ha0 <| by
                 clear _fun_match
-                simpa [pow_succ, mul_assoc] using hb⟩)⟩
+                simpa [pow_succ', mul_assoc] using hb⟩)⟩
 #align multiplicity.multiplicity_self multiplicity.multiplicity_self
 -/
 
@@ -736,7 +736,7 @@ protected theorem pow' {p a : α} (hp : Prime p) (ha : Finite p a) :
   | 0 => by simp [one_right hp.not_unit]
   | k + 1 =>
     by
-    have : multiplicity p (a ^ (k + 1)) = multiplicity p (a * a ^ k) := by rw [pow_succ]
+    have : multiplicity p (a ^ (k + 1)) = multiplicity p (a * a ^ k) := by rw [pow_succ']
     rw [get_eq_get_of_eq _ _ this, multiplicity.mul' hp, pow', add_mul, one_mul, add_comm]
 #align multiplicity.pow' multiplicity.pow'
 -/
@@ -744,7 +744,7 @@ protected theorem pow' {p a : α} (hp : Prime p) (ha : Finite p a) :
 #print multiplicity.pow /-
 theorem pow {p a : α} (hp : Prime p) : ∀ {k : ℕ}, multiplicity p (a ^ k) = k • multiplicity p a
   | 0 => by simp [one_right hp.not_unit]
-  | succ k => by simp [pow_succ, succ_nsmul, pow, multiplicity.mul hp]
+  | succ k => by simp [pow_succ', succ_nsmul', pow, multiplicity.mul hp]
 #align multiplicity.pow multiplicity.pow
 -/
 

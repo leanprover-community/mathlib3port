@@ -92,10 +92,10 @@ def Invariant (κ : kernel α α) (μ : Measure α) : Prop :=
 
 variable {κ η : kernel α α} {μ : Measure α}
 
-#print ProbabilityTheory.kernel.Invariant.def /-
-theorem Invariant.def (hκ : Invariant κ μ) : μ.bind κ = μ :=
+#print ProbabilityTheory.kernel.Invariant.def' /-
+theorem Invariant.def' (hκ : Invariant κ μ) : μ.bind κ = μ :=
   hκ
-#align probability_theory.kernel.invariant.def ProbabilityTheory.kernel.Invariant.def
+#align probability_theory.kernel.invariant.def ProbabilityTheory.kernel.Invariant.def'
 -/
 
 #print ProbabilityTheory.kernel.Invariant.comp_const /-

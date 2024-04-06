@@ -110,7 +110,7 @@ theorem f_pos_of_pos {f : ℚ → ℝ} {q : ℚ} (hq : 0 < q)
     calc
       (0 : ℝ) < q.num := int.cast_pos.mpr num_pos
       _ = ((q.num.nat_abs : ℤ) : ℝ) := (congr_arg coe (Int.natAbs_of_nonneg num_pos.le).symm)
-      _ ≤ f q.num.nat_abs := (H4 q.num.nat_abs (Int.natAbs_pos_of_ne_zero num_pos.ne'))
+      _ ≤ f q.num.nat_abs := (H4 q.num.nat_abs (Int.natAbs_pos num_pos.ne'))
       _ = f q.num := by rw [Nat.cast_natAbs, abs_of_nonneg num_pos.le]
       _ = f (q * q.denom) := by rw [← Rat.mul_den_eq_num]
       _ ≤ f q * f q.denom := H1 q q.denom hq (nat.cast_pos.mpr q.pos)
@@ -147,7 +147,7 @@ theorem pow_f_le_f_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n) {x : ℚ} (hx : 
   cases pn
   · simp only [pow_one]
   have hpn' := hpn pn.succ_pos
-  rw [pow_succ' x (pn + 1), pow_succ' (f x) (pn + 1)]
+  rw [pow_succ x (pn + 1), pow_succ (f x) (pn + 1)]
   have hxp : 0 < x := by positivity
   calc
     f (x ^ (pn + 1) * x) ≤ f (x ^ (pn + 1)) * f x := H1 (x ^ (pn + 1)) x (pow_pos hxp (pn + 1)) hxp
@@ -260,7 +260,7 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
         have :=
           fixed_point_of_gt_1 (nat.one_lt_cast.mpr (Nat.succ_lt_succ n.succ_pos)) H1 H2 H4 H5 ha1
             hae
-        rwa [Rat.cast_coe_nat n.succ.succ] at this
+        rwa [Rat.cast_natCast n.succ.succ] at this
       rw [← hfneq]
       exact H1 (n.succ.succ : ℚ) x (nat.cast_pos.mpr hn) hx
     exact h2.antisymm (H3 x hx n hn)
@@ -292,7 +292,7 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     have hx2num_gt_one : (1 : ℚ) < (2 * x.num : ℤ) := by norm_cast;
       linarith [rat.num_pos_iff_pos.mpr hx]
     have hh := fixed_point_of_gt_1 hx2num_gt_one H1 H2 H4 H5 ha1 hae
-    rwa [Rat.cast_coe_int x2num] at hh
+    rwa [Rat.cast_intCast x2num] at hh
   calc
     f x = f x * 1 := (mul_one (f x)).symm
     _ = f x * (x2denom / x2denom) := by rw [← div_self hx2cnezr]

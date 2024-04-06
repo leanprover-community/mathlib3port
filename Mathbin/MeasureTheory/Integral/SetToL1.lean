@@ -173,7 +173,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
 #align measure_theory.fin_meas_additive.map_empty_eq_zero MeasureTheory.FinMeasAdditive.map_empty_eq_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
 #print MeasureTheory.FinMeasAdditive.map_iUnion_fin_meas_set_eq_sum /-
 theorem map_iUnion_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
     (h_add : FinMeasAdditive μ T) {ι} (S : ι → Set α) (sι : Finset ι)
@@ -1995,7 +1995,7 @@ theorem continuous_L1_toL1 {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ �
     _ = c'.to_real * (snorm (⇑g - ⇑f) 1 μ).toReal := to_real_mul
     _ ≤ c'.to_real * (ε / 2 / c'.to_real) :=
       (mul_le_mul le_rfl hfg.le to_real_nonneg to_real_nonneg)
-    _ = ε / 2 := by refine' mul_div_cancel' (ε / 2) _; rw [Ne.def, to_real_eq_zero_iff];
+    _ = ε / 2 := by refine' mul_div_cancel₀ (ε / 2) _; rw [Ne.def, to_real_eq_zero_iff];
       simp [hc', hc'0]
     _ < ε := half_lt_self hε_pos
 #align measure_theory.continuous_L1_to_L1 MeasureTheory.continuous_L1_toL1

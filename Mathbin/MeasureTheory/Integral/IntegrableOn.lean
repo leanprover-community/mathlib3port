@@ -447,7 +447,7 @@ theorem IntegrableOn.integrable_of_ae_not_mem_eq_zero (hf : IntegrableOn f s μ)
 #align measure_theory.integrable_on.integrable_of_ae_not_mem_eq_zero MeasureTheory.IntegrableOn.integrable_of_ae_not_mem_eq_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print MeasureTheory.IntegrableOn.integrable_of_forall_not_mem_eq_zero /-
 /-- If a function is integrable on a set `s` and vanishes everywhere on its complement,
 then it is integrable. -/

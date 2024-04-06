@@ -649,9 +649,9 @@ theorem frobenius_nnnorm_one [DecidableEq n] [SeminormedAddCommGroup α] [One α
 #align matrix.frobenius_nnnorm_one Matrix.frobenius_nnnorm_one
 -/
 
-section IsROrC
+section RCLike
 
-variable [IsROrC α]
+variable [RCLike α]
 
 #print Matrix.frobenius_nnnorm_mul /-
 theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
@@ -661,12 +661,12 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
   refine' NNReal.rpow_le_rpow _ one_half_pos.le
   refine' Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => _
   rw [← NNReal.rpow_le_rpow_iff one_half_pos, ← NNReal.rpow_mul,
-    mul_div_cancel' (1 : ℝ) two_ne_zero, NNReal.rpow_one, NNReal.mul_rpow]
+    mul_div_cancel₀ (1 : ℝ) two_ne_zero, NNReal.rpow_one, NNReal.mul_rpow]
   dsimp only
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))
       ((PiLp.equiv 2 fun i => α).symm fun k => B k j)
-  simpa only [WithLp.equiv_symm_pi_apply, PiLp.inner_apply, IsROrC.inner_apply, starRingEnd_apply,
+  simpa only [WithLp.equiv_symm_pi_apply, PiLp.inner_apply, RCLike.inner_apply, starRingEnd_apply,
     Pi.nnnorm_def, PiLp.nnnorm_eq_of_L2, star_star, nnnorm_star, NNReal.sqrt_eq_rpow,
     NNReal.rpow_two] using this
 #align matrix.frobenius_nnnorm_mul Matrix.frobenius_nnnorm_mul
@@ -702,7 +702,7 @@ def frobeniusNormedAlgebra [DecidableEq m] [NormedField R] [NormedAlgebra R α] 
 #align matrix.frobenius_normed_algebra Matrix.frobeniusNormedAlgebra
 -/
 
-end IsROrC
+end RCLike
 
 end frobenius
 

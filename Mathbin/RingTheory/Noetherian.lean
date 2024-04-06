@@ -8,7 +8,7 @@ import Algebra.Algebra.Tower
 import Algebra.Ring.Idempotents
 import GroupTheory.Finiteness
 import LinearAlgebra.LinearIndependent
-import Order.CompactlyGenerated
+import Order.CompactlyGenerated.Basic
 import Order.OrderIsoNat
 import RingTheory.Finiteness
 import RingTheory.Nilpotent

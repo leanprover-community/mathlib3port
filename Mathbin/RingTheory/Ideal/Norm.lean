@@ -9,9 +9,9 @@ import Data.Int.AbsoluteValue
 import Data.Int.Associated
 import LinearAlgebra.FreeModule.Determinant
 import LinearAlgebra.FreeModule.IdealQuotient
-import RingTheory.DedekindDomain.Pid
+import RingTheory.DedekindDomain.PID
 import RingTheory.LocalProperties
-import RingTheory.Localization.Norm
+import RingTheory.Localization.NormTrace
 
 #align_import ring_theory.ideal.norm from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 
@@ -151,7 +151,7 @@ theorem Ideal.mul_add_mem_pow_succ_inj (P : Ideal S) {i : ℕ} (a d d' e e' : S)
     a * d + e - (a * d' + e') ∈ P ^ (i + 1) :=
   by
   have : a * d - a * d' ∈ P ^ (i + 1) := by
-    convert Ideal.mul_mem_mul a_mem h <;> simp [mul_sub, pow_succ, mul_comm]
+    convert Ideal.mul_mem_mul a_mem h <;> simp [mul_sub, pow_succ', mul_comm]
   convert Ideal.add_mem _ this (Ideal.sub_mem _ e_mem e'_mem)
   ring
 #align ideal.mul_add_mem_pow_succ_inj Ideal.mul_add_mem_pow_succ_inj
@@ -187,7 +187,7 @@ theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_pri
     (hP : P ≠ ⊥) {i : ℕ} {a b : S} (a_not_mem : a ∉ P ^ (i + 1)) (ab_mem : a * b ∈ P ^ (i + 1)) :
     b ∈ P :=
   by
-  simp only [← Ideal.span_singleton_le_iff_mem, ← Ideal.dvd_iff_le, pow_succ, ←
+  simp only [← Ideal.span_singleton_le_iff_mem, ← Ideal.dvd_iff_le, pow_succ', ←
     Ideal.span_singleton_mul_span_singleton] at a_not_mem ab_mem ⊢
   exact (prime_pow_succ_dvd_mul (Ideal.prime_of_isPrime hP P_prime) ab_mem).resolve_left a_not_mem
 #align ideal.mem_prime_of_mul_mem_pow Ideal.mem_prime_of_mul_mem_pow
@@ -223,7 +223,7 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module
   letI := Ideal.fintypeQuotientOfFreeOfNeBot P hP
   have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
   suffices hquot : map (P ^ i.succ).mkQ (P ^ i) ≃ S ⧸ P
-  · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
+  · rw [pow_succ' (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
       card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
       card_quot_apply P]
     congr 1
@@ -457,7 +457,7 @@ theorem absNorm_dvd_absNorm_of_le {I J : Ideal S} (h : J ≤ I) : I.absNorm ∣ 
 #print Ideal.absNorm_dvd_norm_of_mem /-
 theorem absNorm_dvd_norm_of_mem {I : Ideal S} {x : S} (h : x ∈ I) : ↑I.absNorm ∣ Algebra.norm ℤ x :=
   by
-  rw [← Int.dvd_natAbs, ← abs_norm_span_singleton x, Int.coe_nat_dvd]
+  rw [← Int.dvd_natAbs, ← abs_norm_span_singleton x, Int.natCast_dvd_natCast]
   exact abs_norm_dvd_abs_norm_of_le ((span_singleton_le_iff_mem _).mpr h)
 #align ideal.abs_norm_dvd_norm_of_mem Ideal.absNorm_dvd_norm_of_mem
 -/

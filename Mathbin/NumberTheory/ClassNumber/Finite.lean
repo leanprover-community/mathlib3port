@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Analysis.SpecialFunctions.Pow.Real
-import LinearAlgebra.FreeModule.Pid
+import LinearAlgebra.FreeModule.PID
 import LinearAlgebra.Matrix.AbsoluteValue
 import NumberTheory.ClassNumber.AdmissibleAbsoluteValue
 import RingTheory.ClassGroup
@@ -246,7 +246,7 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
     by
     have := norm_bound_pos abv bS
     have := abv.nonneg b
-    rw [ε_eq, Algebra.smul_def, eq_intCast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel,
+    rw [ε_eq, Algebra.smul_def, eq_intCast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel₀,
         rpow_neg_one, mul_left_comm, mul_inv_cancel, mul_one, rpow_nat_cast] <;>
       try norm_cast; linarith
     · apply rpow_nonneg_of_nonneg

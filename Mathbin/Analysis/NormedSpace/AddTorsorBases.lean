@@ -97,7 +97,7 @@ variable {V P : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace 
 
 open AffineMap
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y «expr ∉ » s) -/
 #print IsOpen.exists_between_affineIndependent_span_eq_top /-
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
@@ -131,7 +131,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
 #align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affineIndependent_span_eq_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s «expr ⊆ » u) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 #print IsOpen.exists_subset_affineIndependent_span_eq_top /-
 theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) :

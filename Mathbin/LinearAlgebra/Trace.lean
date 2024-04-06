@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen, Antoine Labe
 import LinearAlgebra.Matrix.ToLin
 import LinearAlgebra.Matrix.Trace
 import LinearAlgebra.Contraction
-import LinearAlgebra.TensorProductBasis
+import LinearAlgebra.TensorProduct.Basis
 import LinearAlgebra.FreeModule.StrongRankCondition
 import LinearAlgebra.FreeModule.Finite.Rank
 import LinearAlgebra.Projection

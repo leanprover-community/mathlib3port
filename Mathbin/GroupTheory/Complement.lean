@@ -3,7 +3,7 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Data.Zmod.Quotient
+import Data.ZMod.Quotient
 
 #align_import group_theory.complement from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 
@@ -806,9 +806,9 @@ theorem transferTransversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H)
   rw [smul_apply_eq_smul_apply_inv_smul, transfer_transversal_apply, transfer_function_apply, ←
     mul_smul, ← zpow_neg_one, ← zpow_add, quotient_equiv_sigma_zmod_apply, smul_eq_mul, ← mul_assoc,
     ← zpow_one_add, Int.cast_add, Int.cast_neg, Int.cast_one, int_cast_cast, cast_id', id.def, ←
-    sub_eq_neg_add, cast_sub_one, add_sub_cancel'_right]
+    sub_eq_neg_add, cast_sub_one, add_sub_cancel]
   by_cases hk : k = 0
-  · rw [if_pos hk, if_pos hk, zpow_coe_nat]
+  · rw [if_pos hk, if_pos hk, zpow_natCast]
   · rw [if_neg hk, if_neg hk]
 #align subgroup.transfer_transversal_apply'' Subgroup.transferTransversal_apply''
 -/

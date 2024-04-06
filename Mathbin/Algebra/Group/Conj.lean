@@ -3,10 +3,10 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Chris Hughes, Michael Howes
 -/
-import Algebra.Group.Semiconj
+import Algebra.Group.Semiconj.Defs
 import Algebra.GroupWithZero.Basic
-import Algebra.Hom.Aut
-import Algebra.Hom.Group
+import Algebra.Group.Aut
+import Algebra.Group.Hom.Defs
 
 #align_import algebra.group.conj from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 
@@ -138,7 +138,7 @@ theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻�
   by
   induction' i with i hi
   · simp
-  · simp [pow_succ, hi]
+  · simp [pow_succ', hi]
 #align conj_pow conj_pow
 -/
 

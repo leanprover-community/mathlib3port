@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Analysis.BoxIntegral.Partition.Split
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 
 #align_import analysis.box_integral.partition.additive from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

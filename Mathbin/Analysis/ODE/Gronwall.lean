@@ -77,7 +77,7 @@ theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
       (((hasDerivAt_id x).const_mul K).exp.const_mul δ).add
         ((((hasDerivAt_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
       1
-    simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
+    simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel₀ _ hK]
     ring
 #align has_deriv_at_gronwall_bound hasDerivAt_gronwallBound
 -/
@@ -178,7 +178,7 @@ theorem norm_le_gronwallBound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε
 #align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwallBound_of_norm_deriv_right_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 #print dist_le_of_approx_trajectories_ODE_of_mem /-
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
@@ -231,7 +231,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0}
 #align dist_le_of_approx_trajectories_ODE dist_le_of_approx_trajectories_ODE
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 #print dist_le_of_trajectories_ODE_of_mem /-
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
@@ -272,7 +272,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : �
 #align dist_le_of_trajectories_ODE dist_le_of_trajectories_ODE
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 #print ODE_solution_unique_of_mem_Icc_right /-
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,

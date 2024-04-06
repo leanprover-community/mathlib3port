@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 -/
 import Analysis.Convex.Cone.Basic
-import Analysis.NormedSpace.IsROrC
+import Analysis.NormedSpace.RCLike
 import Analysis.NormedSpace.Extend
-import Data.IsROrC.Lemmas
+import Analysis.RCLike.Lemmas
 
 #align_import analysis.normed_space.hahn_banach.extension from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 
@@ -65,11 +65,11 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
 
 end Real
 
-section IsROrC
+section RCLike
 
-open IsROrC
+open RCLike
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [RCLike 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 #print exists_extension_norm_eq /-
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
@@ -115,11 +115,11 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
 #align exists_extension_norm_eq exists_extension_norm_eq
 -/
 
-end IsROrC
+end RCLike
 
 section DualVector
 
-variable (𝕜 : Type v) [IsROrC 𝕜]
+variable (𝕜 : Type v) [RCLike 𝕜]
 
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
@@ -129,7 +129,7 @@ open scoped Classical
 
 #print coord_norm' /-
 theorem coord_norm' {x : E} (h : x ≠ 0) : ‖(‖x‖ : 𝕜) • coord 𝕜 x h‖ = 1 := by
-  rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
+  rw [norm_smul, RCLike.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
 #align coord_norm' coord_norm'
 -/
 

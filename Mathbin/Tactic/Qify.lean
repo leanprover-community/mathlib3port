@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao
 -/
 import Tactic.NormCast
-import Data.Rat.Cast
+import Data.Rat.Cast.Defs
 
 #align_import tactic.qify from "leanprover-community/mathlib"@"9fe85cd025655fc6285758c29b6a392c0fa96743"
 

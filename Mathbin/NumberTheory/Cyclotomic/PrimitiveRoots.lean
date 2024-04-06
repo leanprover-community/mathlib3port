@@ -3,7 +3,7 @@ Copyright (c) 2022 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 -/
-import Data.Pnat.Prime
+import Data.PNat.Prime
 import Algebra.IsPrimePow
 import NumberTheory.Cyclotomic.Basic
 import RingTheory.Adjoin.PowerBasis
@@ -397,7 +397,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
         · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
           exact Subalgebra.add_mem _ (subset_adjoin (mem_singleton η)) (Subalgebra.one_mem _)
         · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
-          nth_rw 1 [← add_sub_cancel η 1]
+          nth_rw 1 [← add_sub_cancel_right η 1]
           refine' Subalgebra.sub_mem _ (subset_adjoin (mem_singleton _)) (Subalgebra.one_mem _)
       rw [H] at this
       exact this
@@ -413,7 +413,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
   rw [norm_eq_norm_adjoin K]
   · have H := hη.sub_one_norm_is_prime_pow _ hirr₁ htwo
     swap; · rw [PNat.pow_coe]; exact hpri.1.IsPrimePow.pow (Nat.succ_ne_zero _)
-    rw [add_sub_cancel] at H
+    rw [add_sub_cancel_right] at H
     rw [H, coe_coe]
     congr
     · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]; exact Nat.succ_ne_zero _
@@ -539,8 +539,8 @@ theorem pow_sub_one_norm_prime_pow_of_ne_zero {k s : ℕ} (hζ : IsPrimitiveRoot
     haveI := hcycl
     obtain ⟨k₁, hk₁⟩ := Nat.exists_eq_succ_of_ne_zero hk
     rw [hζ.pow_sub_one_norm_two hirr]
-    rw [hk₁, pow_succ, pow_mul, neg_eq_neg_one_mul, mul_pow, neg_one_sq, one_mul, ← pow_mul, ←
-      pow_succ]
+    rw [hk₁, pow_succ', pow_mul, neg_eq_neg_one_mul, mul_pow, neg_one_sq, one_mul, ← pow_mul, ←
+      pow_succ']
   · exact hζ.pow_sub_one_norm_prime_pow_ne_two hirr hs htwo
 #align is_primitive_root.pow_sub_one_norm_prime_pow_of_ne_zero IsPrimitiveRoot.pow_sub_one_norm_prime_pow_of_ne_zero
 -/

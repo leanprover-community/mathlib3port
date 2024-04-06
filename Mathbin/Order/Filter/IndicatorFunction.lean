@@ -3,7 +3,7 @@ Copyright (c) 2020 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 -/
-import Algebra.IndicatorFunction
+import Algebra.Function.Indicator
 import Order.Filter.AtTopBot
 
 #align_import order.filter.indicator_function from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"

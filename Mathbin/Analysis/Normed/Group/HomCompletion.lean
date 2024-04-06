@@ -289,7 +289,7 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
         _ < δ + C' * ‖f‖ * ‖hatg - g‖ := by linarith
         _ ≤ δ + C' * ‖f‖ * δ := (add_le_add_left (mul_le_mul_of_nonneg_left hg.le hCf) δ)
         _ = (1 + C' * ‖f‖) * δ := by ring
-        _ = ε := mul_div_cancel' _ ineq.ne.symm
+        _ = ε := mul_div_cancel₀ _ ineq.ne.symm
   · rw [← f.completion.is_closed_ker.closure_eq]
     exact closure_mono f.ker_le_ker_completion
 #align normed_add_group_hom.ker_completion NormedAddGroupHom.ker_completion

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Yuyang Zhao
 -/
 import Algebra.Order.Monoid.Lemmas
-import Algebra.Order.ZeroLeOne
+import Algebra.Order.ZeroLEOne
 import Data.Nat.Cast.Defs
 
 #align_import algebra.order.monoid.nat_cast from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

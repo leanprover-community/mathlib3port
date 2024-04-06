@@ -3,7 +3,7 @@ Copyright (c) 2020 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Data.Enat.Basic
+import Data.ENat.Basic
 import Data.Polynomial.Degree.Definitions
 
 #align_import data.polynomial.degree.trailing_degree from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
@@ -80,10 +80,10 @@ def TrailingMonic (p : R[X]) :=
 #align polynomial.trailing_monic Polynomial.TrailingMonic
 -/
 
-#print Polynomial.TrailingMonic.def /-
-theorem TrailingMonic.def : TrailingMonic p ↔ trailingCoeff p = 1 :=
+#print Polynomial.TrailingMonic.definition /-
+theorem TrailingMonic.definition : TrailingMonic p ↔ trailingCoeff p = 1 :=
   Iff.rfl
-#align polynomial.trailing_monic.def Polynomial.TrailingMonic.def
+#align polynomial.trailing_monic.def Polynomial.TrailingMonic.definition
 -/
 
 #print Polynomial.TrailingMonic.decidable /-
@@ -182,10 +182,10 @@ theorem natTrailingDegree_eq_of_trailingDegree_eq [Semiring S] {q : S[X]}
 #align polynomial.nat_trailing_degree_eq_of_trailing_degree_eq Polynomial.natTrailingDegree_eq_of_trailingDegree_eq
 -/
 
-#print Polynomial.le_trailingDegree_of_ne_zero /-
-theorem le_trailingDegree_of_ne_zero (h : coeff p n ≠ 0) : trailingDegree p ≤ n :=
+#print Polynomial.trailingDegree_le_of_ne_zero /-
+theorem trailingDegree_le_of_ne_zero (h : coeff p n ≠ 0) : trailingDegree p ≤ n :=
   show @LE.le ℕ∞ _ p.support.min n from min_le (mem_support_iff.2 h)
-#align polynomial.le_trailing_degree_of_ne_zero Polynomial.le_trailingDegree_of_ne_zero
+#align polynomial.le_trailing_degree_of_ne_zero Polynomial.trailingDegree_le_of_ne_zero
 -/
 
 #print Polynomial.natTrailingDegree_le_of_ne_zero /-
@@ -311,10 +311,10 @@ theorem le_trailingDegree_C_mul_X_pow (n : ℕ) (a : R) : (n : ℕ∞) ≤ trail
 #align polynomial.le_trailing_degree_C_mul_X_pow Polynomial.le_trailingDegree_C_mul_X_pow
 -/
 
-#print Polynomial.coeff_eq_zero_of_trailingDegree_lt /-
-theorem coeff_eq_zero_of_trailingDegree_lt (h : (n : ℕ∞) < trailingDegree p) : coeff p n = 0 :=
-  Classical.not_not.1 (mt le_trailingDegree_of_ne_zero (not_le_of_gt h))
-#align polynomial.coeff_eq_zero_of_trailing_degree_lt Polynomial.coeff_eq_zero_of_trailingDegree_lt
+#print Polynomial.coeff_eq_zero_of_lt_trailingDegree /-
+theorem coeff_eq_zero_of_lt_trailingDegree (h : (n : ℕ∞) < trailingDegree p) : coeff p n = 0 :=
+  Classical.not_not.1 (mt trailingDegree_le_of_ne_zero (not_le_of_gt h))
+#align polynomial.coeff_eq_zero_of_trailing_degree_lt Polynomial.coeff_eq_zero_of_lt_trailingDegree
 -/
 
 #print Polynomial.coeff_eq_zero_of_lt_natTrailingDegree /-
@@ -583,11 +583,11 @@ theorem nextCoeffUp_C_eq_zero (c : R) : nextCoeffUp (C c) = 0 := by rw [next_coe
 #align polynomial.next_coeff_up_C_eq_zero Polynomial.nextCoeffUp_C_eq_zero
 -/
 
-#print Polynomial.nextCoeffUp_of_pos_natTrailingDegree /-
-theorem nextCoeffUp_of_pos_natTrailingDegree (p : R[X]) (hp : 0 < p.natTrailingDegree) :
+#print Polynomial.nextCoeffUp_of_constantCoeff_eq_zero /-
+theorem nextCoeffUp_of_constantCoeff_eq_zero (p : R[X]) (hp : 0 < p.natTrailingDegree) :
     nextCoeffUp p = p.coeff (p.natTrailingDegree + 1) := by rw [next_coeff_up, if_neg];
   contrapose! hp; simpa
-#align polynomial.next_coeff_up_of_pos_nat_trailing_degree Polynomial.nextCoeffUp_of_pos_natTrailingDegree
+#align polynomial.next_coeff_up_of_pos_nat_trailing_degree Polynomial.nextCoeffUp_of_constantCoeff_eq_zero
 -/
 
 end Semiring
@@ -599,7 +599,7 @@ variable [Semiring R] {p q : R[X]} {ι : Type _}
 #print Polynomial.coeff_natTrailingDegree_eq_zero_of_trailingDegree_lt /-
 theorem coeff_natTrailingDegree_eq_zero_of_trailingDegree_lt
     (h : trailingDegree p < trailingDegree q) : coeff q (natTrailingDegree p) = 0 :=
-  coeff_eq_zero_of_trailingDegree_lt <| natTrailingDegree_le_trailingDegree.trans_lt h
+  coeff_eq_zero_of_lt_trailingDegree <| natTrailingDegree_le_trailingDegree.trans_lt h
 #align polynomial.coeff_nat_trailing_degree_eq_zero_of_trailing_degree_lt Polynomial.coeff_natTrailingDegree_eq_zero_of_trailingDegree_lt
 -/
 

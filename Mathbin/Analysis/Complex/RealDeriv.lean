@@ -3,7 +3,7 @@ Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yourong Zang
 -/
-import Analysis.Calculus.ContDiff
+import Analysis.Calculus.ContDiff.Basic
 import Analysis.Calculus.Deriv.Linear
 import Analysis.Complex.Conformal
 import Analysis.Calculus.Conformal.NormedSpace

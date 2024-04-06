@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Johan Commelin
 -/
 import RingTheory.GradedAlgebra.HomogeneousIdeal
-import Topology.Category.Top.Basic
+import Topology.Category.TopCat.Basic
 import Topology.Sets.Opens
 
 #align_import algebraic_geometry.projective_spectrum.topology from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"

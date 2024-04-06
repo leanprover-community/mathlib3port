@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Emily Witt, Scott Morrison, Jake Levinson, Sam van Gool
 -/
 import RingTheory.Ideal.Basic
-import Algebra.Category.Module.Colimits
-import Algebra.Category.Module.Projective
+import Algebra.Category.ModuleCat.Colimits
+import Algebra.Category.ModuleCat.Projective
 import CategoryTheory.Abelian.Ext
 import CategoryTheory.Limits.Final
 import RingTheory.Noetherian

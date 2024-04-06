@@ -207,7 +207,7 @@ theorem ofFinsupp_pow (a) (n : ℕ) : (⟨a ^ n⟩ : R[X]) = ⟨a⟩ ^ n :=
   change _ = npowRec n _
   induction n
   · simp [npowRec]
-  · simp [npowRec, n_ih, pow_succ]
+  · simp [npowRec, n_ih, pow_succ']
 #align polynomial.of_finsupp_pow Polynomial.ofFinsupp_pow
 -/
 
@@ -500,7 +500,7 @@ theorem monomial_pow (n : ℕ) (r : R) (k : ℕ) : monomial n r ^ k = monomial (
   by
   induction' k with k ih
   · simp [pow_zero, monomial_zero_one]
-  · simp [pow_succ, ih, monomial_mul_monomial, Nat.succ_eq_add_one, mul_add, add_comm]
+  · simp [pow_succ', ih, monomial_mul_monomial, Nat.succ_eq_add_one, mul_add, add_comm]
 #align polynomial.monomial_pow Polynomial.monomial_pow
 -/
 
@@ -647,7 +647,7 @@ theorem monomial_one_right_eq_X_pow (n : ℕ) : monomial n (1 : R) = X ^ n :=
   by
   induction' n with n ih
   · simp [monomial_zero_one]
-  · rw [pow_succ, ← ih, ← monomial_one_one_eq_X, monomial_mul_monomial, add_comm, one_mul]
+  · rw [pow_succ', ← ih, ← monomial_one_one_eq_X, monomial_mul_monomial, add_comm, one_mul]
 #align polynomial.monomial_one_right_eq_X_pow Polynomial.monomial_one_right_eq_X_pow
 -/
 
@@ -673,8 +673,8 @@ theorem X_pow_mul {n : ℕ} : X ^ n * p = p * X ^ n :=
   by
   induction' n with n ih
   · simp
-  · conv_lhs => rw [pow_succ']
-    rw [mul_assoc, X_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ']
+  · conv_lhs => rw [pow_succ]
+    rw [mul_assoc, X_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ]
 #align polynomial.X_pow_mul Polynomial.X_pow_mul
 -/
 
@@ -739,7 +739,7 @@ theorem monomial_mul_X_pow (n : ℕ) (r : R) (k : ℕ) : monomial n r * X ^ k = 
   by
   induction' k with k ih
   · simp
-  · simp [ih, pow_succ', ← mul_assoc, add_assoc]
+  · simp [ih, pow_succ, ← mul_assoc, add_assoc]
 #align polynomial.monomial_mul_X_pow Polynomial.monomial_mul_X_pow
 -/
 
@@ -867,7 +867,7 @@ theorem coeff_C_ne_zero (h : n ≠ 0) : (C a).coeff n = 0 := by rw [coeff_C, if_
 theorem C_mul_X_pow_eq_monomial : ∀ {n : ℕ}, C a * X ^ n = monomial n a
   | 0 => mul_one _
   | n + 1 => by
-    rw [pow_succ', ← mul_assoc, C_mul_X_pow_eq_monomial, X, monomial_mul_monomial, mul_one]
+    rw [pow_succ, ← mul_assoc, C_mul_X_pow_eq_monomial, X, monomial_mul_monomial, mul_one]
 #align polynomial.C_mul_X_pow_eq_monomial Polynomial.C_mul_X_pow_eq_monomial
 -/
 
@@ -1064,7 +1064,7 @@ theorem X_pow_eq_monomial (n) : X ^ n = monomial n (1 : R) :=
   by
   induction' n with n hn
   · rw [pow_zero, monomial_zero_one]
-  · rw [pow_succ', hn, X, monomial_mul_monomial, one_mul]
+  · rw [pow_succ, hn, X, monomial_mul_monomial, one_mul]
 #align polynomial.X_pow_eq_monomial Polynomial.X_pow_eq_monomial
 -/
 

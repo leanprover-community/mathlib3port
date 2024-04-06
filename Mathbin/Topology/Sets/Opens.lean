@@ -7,7 +7,7 @@ import Order.Hom.CompleteLattice
 import Topology.Bases
 import Topology.Homeomorph
 import Topology.ContinuousFunction.Basic
-import Order.CompactlyGenerated
+import Order.CompactlyGenerated.Basic
 import Tactic.AutoCases
 
 #align_import topology.sets.opens from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
@@ -346,7 +346,7 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.isBasis_iff_nbhd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 #print TopologicalSpace.Opens.isBasis_iff_cover /-
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _) (_ : Us ⊆ B), U = sSup Us :=

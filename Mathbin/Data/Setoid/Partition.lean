@@ -44,7 +44,7 @@ namespace Setoid
 
 variable {α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eq_of_mem_eqv_class /-
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
 theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b ∈ c), a ∈ b) {x b b'}
@@ -53,7 +53,7 @@ theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b �
 #align setoid.eq_of_mem_eqv_class Setoid.eq_of_mem_eqv_class
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.mkClasses /-
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
 def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _) (_ : b ∈ c), a ∈ b) : Setoid α :=
@@ -133,7 +133,7 @@ theorem empty_not_mem_classes {r : Setoid α} : ∅ ∉ r.classes := fun ⟨y, h
 #align setoid.empty_not_mem_classes Setoid.empty_not_mem_classes
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
 #print Setoid.classes_eqv_classes /-
 /-- Equivalence classes partition the type. -/
 theorem classes_eqv_classes {r : Setoid α} (a) : ∃! (b : _) (_ : b ∈ r.classes), a ∈ b :=
@@ -153,7 +153,7 @@ theorem eq_of_mem_classes {r : Setoid α} {x b} (hc : b ∈ r.classes) (hb : x �
 #align setoid.eq_of_mem_classes Setoid.eq_of_mem_classes
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eq_eqv_class_of_mem /-
 /-- The elements of a set of sets partitioning α are the equivalence classes of the
     equivalence relation defined by the set of sets. -/
@@ -167,7 +167,7 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b �
 #align setoid.eq_eqv_class_of_mem Setoid.eq_eqv_class_of_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_class_mem /-
 /-- The equivalence classes of the equivalence relation defined by a set of sets
     partitioning α are elements of the set of sets. -/
@@ -177,7 +177,7 @@ theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b ∈ c),
 #align setoid.eqv_class_mem Setoid.eqv_class_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_class_mem' /-
 theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b ∈ c), a ∈ b) {x} :
     {y : α | (mkClasses c H).Rel x y} ∈ c := by convert Setoid.eqv_class_mem H; ext;
@@ -185,7 +185,7 @@ theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b ∈ c)
 #align setoid.eqv_class_mem' Setoid.eqv_class_mem'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_classes_disjoint /-
 /-- Distinct elements of a set of sets partitioning α are disjoint. -/
 theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b ∈ c), a ∈ b) :
@@ -195,7 +195,7 @@ theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _) (_ : b 
 #align setoid.eqv_classes_disjoint Setoid.eqv_classes_disjoint
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_classes_of_disjoint_union /-
 /-- A set of disjoint sets covering α partition α (classical). -/
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.sUnion c = @Set.univ α)
@@ -232,7 +232,7 @@ theorem sUnion_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
 
 section Partition
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.IsPartition /-
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/

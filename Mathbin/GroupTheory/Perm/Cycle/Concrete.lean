@@ -91,7 +91,7 @@ theorem isCycle_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) : IsCycle (formPer
       have : w ∈ x::y::l := mem_of_form_perm_ne_self _ _ hw
       obtain ⟨k, hk, rfl⟩ := nth_le_of_mem this
       use k
-      simp only [zpow_coe_nat, form_perm_pow_apply_head _ _ hl k, Nat.mod_eq_of_lt hk]
+      simp only [zpow_natCast, form_perm_pow_apply_head _ _ hl k, Nat.mod_eq_of_lt hk]
 #align list.is_cycle_form_perm List.isCycle_formPerm
 -/
 
@@ -369,7 +369,7 @@ theorem next_toList_eq_apply (p : Perm α) (x y : α) (hy : y ∈ toList p x) :
   obtain ⟨k, hk, hk'⟩ := hy.left.exists_pow_eq_of_mem_support hy.right
   rw [← nth_le_to_list p x k (by simpa using hk)] at hk'
   simp_rw [← hk']
-  rw [next_nth_le _ (nodup_to_list _ _), nth_le_to_list, nth_le_to_list, ← mul_apply, ← pow_succ,
+  rw [next_nth_le _ (nodup_to_list _ _), nth_le_to_list, nth_le_to_list, ← mul_apply, ← pow_succ',
     length_to_list, pow_apply_eq_pow_mod_order_of_cycle_of_apply p (k + 1), is_cycle.order_of]
   exact is_cycle_cycle_of _ (mem_support.mp hy.right)
 #align equiv.perm.next_to_list_eq_apply Equiv.Perm.next_toList_eq_apply
@@ -464,7 +464,7 @@ theorem formPerm_toList (f : Perm α) (x : α) : formPerm (toList f x) = f.cycle
   by_cases hy : same_cycle f x y
   · obtain ⟨k, hk, rfl⟩ := hy.exists_pow_eq_of_mem_support (mem_support.mpr hx)
     rw [cycle_of_apply_apply_pow_self, List.formPerm_apply_mem_eq_next (nodup_to_list f x),
-      next_to_list_eq_apply, pow_succ, mul_apply]
+      next_to_list_eq_apply, pow_succ', mul_apply]
     rw [mem_to_list_iff]
     exact ⟨⟨k, rfl⟩, mem_support.mpr hx⟩
   · rw [cycle_of_apply_of_not_same_cycle hy, form_perm_apply_of_not_mem]

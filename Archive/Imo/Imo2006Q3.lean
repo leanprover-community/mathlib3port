@@ -40,7 +40,7 @@ namespace imo2006_q3
 theorem lhs_ineq {x y : ℝ} (hxy : 0 ≤ x * y) :
     16 * x ^ 2 * y ^ 2 * (x + y) ^ 2 ≤ ((x + y) ^ 2) ^ 3 :=
   by
-  conv_rhs => rw [pow_succ']
+  conv_rhs => rw [pow_succ]
   refine' mul_le_mul_of_nonneg_right _ (sq_nonneg _)
   apply le_of_sub_nonneg
   calc

@@ -531,7 +531,7 @@ variable [Semiring B] [Algebra R B] [StarRing B] [StarModule R B]
 
 variable (R)
 
-#print StarSubalgebra.adjoin /-
+#print StarAlgebra.adjoin /-
 /-- The minimal star subalgebra that contains `s`. -/
 @[simps]
 def adjoin (s : Set A) : StarSubalgebra R A :=
@@ -539,51 +539,51 @@ def adjoin (s : Set A) : StarSubalgebra R A :=
     star_mem' := fun x hx => by
       rwa [Subalgebra.mem_carrier, ← Subalgebra.mem_star_iff, Subalgebra.star_adjoin_comm,
         Set.union_star, star_star, Set.union_comm] }
-#align star_subalgebra.adjoin StarSubalgebra.adjoin
+#align star_subalgebra.adjoin StarAlgebra.adjoin
 -/
 
-#print StarSubalgebra.adjoin_eq_starClosure_adjoin /-
+#print StarAlgebra.adjoin_eq_starClosure_adjoin /-
 theorem adjoin_eq_starClosure_adjoin (s : Set A) : adjoin R s = (Algebra.adjoin R s).starClosure :=
   toSubalgebra_injective <|
     show Algebra.adjoin R (s ∪ star s) = Algebra.adjoin R s ⊔ star (Algebra.adjoin R s) from
       (Subalgebra.star_adjoin_comm R s).symm ▸ Algebra.adjoin_union s (star s)
-#align star_subalgebra.adjoin_eq_star_closure_adjoin StarSubalgebra.adjoin_eq_starClosure_adjoin
+#align star_subalgebra.adjoin_eq_star_closure_adjoin StarAlgebra.adjoin_eq_starClosure_adjoin
 -/
 
-#print StarSubalgebra.adjoin_toSubalgebra /-
+#print StarAlgebra.adjoin_toSubalgebra /-
 theorem adjoin_toSubalgebra (s : Set A) :
     (adjoin R s).toSubalgebra = Algebra.adjoin R (s ∪ star s) :=
   rfl
-#align star_subalgebra.adjoin_to_subalgebra StarSubalgebra.adjoin_toSubalgebra
+#align star_subalgebra.adjoin_to_subalgebra StarAlgebra.adjoin_toSubalgebra
 -/
 
-#print StarSubalgebra.subset_adjoin /-
+#print StarAlgebra.subset_adjoin /-
 theorem subset_adjoin (s : Set A) : s ⊆ adjoin R s :=
   (Set.subset_union_left s (star s)).trans Algebra.subset_adjoin
-#align star_subalgebra.subset_adjoin StarSubalgebra.subset_adjoin
+#align star_subalgebra.subset_adjoin StarAlgebra.subset_adjoin
 -/
 
-#print StarSubalgebra.star_subset_adjoin /-
+#print StarAlgebra.star_subset_adjoin /-
 theorem star_subset_adjoin (s : Set A) : star s ⊆ adjoin R s :=
   (Set.subset_union_right s (star s)).trans Algebra.subset_adjoin
-#align star_subalgebra.star_subset_adjoin StarSubalgebra.star_subset_adjoin
+#align star_subalgebra.star_subset_adjoin StarAlgebra.star_subset_adjoin
 -/
 
-#print StarSubalgebra.self_mem_adjoin_singleton /-
+#print StarAlgebra.self_mem_adjoin_singleton /-
 theorem self_mem_adjoin_singleton (x : A) : x ∈ adjoin R ({x} : Set A) :=
   Algebra.subset_adjoin <| Set.mem_union_left _ (Set.mem_singleton x)
-#align star_subalgebra.self_mem_adjoin_singleton StarSubalgebra.self_mem_adjoin_singleton
+#align star_subalgebra.self_mem_adjoin_singleton StarAlgebra.self_mem_adjoin_singleton
 -/
 
-#print StarSubalgebra.star_self_mem_adjoin_singleton /-
+#print StarAlgebra.star_self_mem_adjoin_singleton /-
 theorem star_self_mem_adjoin_singleton (x : A) : star x ∈ adjoin R ({x} : Set A) :=
   star_mem <| self_mem_adjoin_singleton R x
-#align star_subalgebra.star_self_mem_adjoin_singleton StarSubalgebra.star_self_mem_adjoin_singleton
+#align star_subalgebra.star_self_mem_adjoin_singleton StarAlgebra.star_self_mem_adjoin_singleton
 -/
 
 variable {R}
 
-#print StarSubalgebra.gc /-
+#print StarAlgebra.gc /-
 protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A) coe :=
   by
   intro s S
@@ -591,30 +591,30 @@ protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A
   exact
     ⟨fun h => (Set.subset_union_left s _).trans h, fun h =>
       Set.union_subset h fun x hx => star_star x ▸ star_mem (show star x ∈ S from h hx)⟩
-#align star_subalgebra.gc StarSubalgebra.gc
+#align star_subalgebra.gc StarAlgebra.gc
 -/
 
-#print StarSubalgebra.gi /-
+#print StarAlgebra.gi /-
 /-- Galois insertion between `adjoin` and `coe`. -/
 protected def gi : GaloisInsertion (adjoin R : Set A → StarSubalgebra R A) coe
     where
-  choice s hs := (adjoin R s).copy s <| le_antisymm (StarSubalgebra.gc.le_u_l s) hs
-  gc := StarSubalgebra.gc
-  le_l_u S := (StarSubalgebra.gc (S : Set A) (adjoin R S)).1 <| le_rfl
+  choice s hs := (adjoin R s).copy s <| le_antisymm (StarAlgebra.gc.le_u_l s) hs
+  gc := StarAlgebra.gc
+  le_l_u S := (StarAlgebra.gc (S : Set A) (adjoin R S)).1 <| le_rfl
   choice_eq _ _ := StarSubalgebra.copy_eq _ _ _
-#align star_subalgebra.gi StarSubalgebra.gi
+#align star_subalgebra.gi StarAlgebra.gi
 -/
 
-#print StarSubalgebra.adjoin_le /-
+#print StarAlgebra.adjoin_le /-
 theorem adjoin_le {S : StarSubalgebra R A} {s : Set A} (hs : s ⊆ S) : adjoin R s ≤ S :=
-  StarSubalgebra.gc.l_le hs
-#align star_subalgebra.adjoin_le StarSubalgebra.adjoin_le
+  StarAlgebra.gc.l_le hs
+#align star_subalgebra.adjoin_le StarAlgebra.adjoin_le
 -/
 
-#print StarSubalgebra.adjoin_le_iff /-
+#print StarAlgebra.adjoin_le_iff /-
 theorem adjoin_le_iff {S : StarSubalgebra R A} {s : Set A} : adjoin R s ≤ S ↔ s ⊆ S :=
-  StarSubalgebra.gc _ _
-#align star_subalgebra.adjoin_le_iff StarSubalgebra.adjoin_le_iff
+  StarAlgebra.gc _ _
+#align star_subalgebra.adjoin_le_iff StarAlgebra.adjoin_le_iff
 -/
 
 #print Subalgebra.starClosure_eq_adjoin /-
@@ -625,7 +625,7 @@ theorem Subalgebra.starClosure_eq_adjoin (S : Subalgebra R A) :
 #align subalgebra.star_closure_eq_adjoin Subalgebra.starClosure_eq_adjoin
 -/
 
-#print StarSubalgebra.adjoin_induction /-
+#print StarAlgebra.adjoin_induction /-
 /-- If some predicate holds for all `x ∈ (s : set A)` and this predicate is closed under the
 `algebra_map`, addition, multiplication and star operations, then it holds for `a ∈ adjoin R s`. -/
 theorem adjoin_induction {s : Set A} {p : A → Prop} {a : A} (h : a ∈ adjoin R s)
@@ -635,10 +635,10 @@ theorem adjoin_induction {s : Set A} {p : A → Prop} {a : A} (h : a ∈ adjoin 
   Algebra.adjoin_induction h
     (fun x hx => hx.elim (fun hx => Hs x hx) fun hx => star_star x ▸ Hstar _ (Hs _ hx)) Halg Hadd
     Hmul
-#align star_subalgebra.adjoin_induction StarSubalgebra.adjoin_induction
+#align star_subalgebra.adjoin_induction StarAlgebra.adjoin_induction
 -/
 
-#print StarSubalgebra.adjoin_induction₂ /-
+#print StarAlgebra.adjoin_induction₂ /-
 theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin R s)
     (hb : b ∈ adjoin R s) (Hs : ∀ x : A, x ∈ s → ∀ y : A, y ∈ s → p x y)
     (Halg : ∀ r₁ r₂ : R, p (algebraMap R A r₁) (algebraMap R A r₂))
@@ -660,10 +660,10 @@ theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a
       star_star x ▸ star_star y ▸ Hstar _ _ (Hs _ hx _ hy)]
   · cases hx; exacts [Halg_left _ _ hx, star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)]
   · cases hx; exacts [Halg_right _ _ hx, star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)]
-#align star_subalgebra.adjoin_induction₂ StarSubalgebra.adjoin_induction₂
+#align star_subalgebra.adjoin_induction₂ StarAlgebra.adjoin_induction₂
 -/
 
-#print StarSubalgebra.adjoin_induction' /-
+#print StarAlgebra.adjoin_induction' /-
 /-- The difference with `star_subalgebra.adjoin_induction` is that this acts on the subtype. -/
 theorem adjoin_induction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
     (Hs : ∀ (x) (h : x ∈ s), p ⟨x, subset_adjoin R s h⟩) (Halg : ∀ r, p (algebraMap R _ r))
@@ -679,12 +679,12 @@ theorem adjoin_induction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
       fun x y hx hy =>
       Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy => ⟨mul_mem hx' hy', Hmul _ _ hx hy⟩,
       fun x hx => Exists.elim hx fun hx' hx => ⟨star_mem hx', Hstar _ hx⟩]
-#align star_subalgebra.adjoin_induction' StarSubalgebra.adjoin_induction'
+#align star_subalgebra.adjoin_induction' StarAlgebra.adjoin_induction'
 -/
 
 variable (R)
 
-#print StarSubalgebra.adjoinCommSemiringOfComm /-
+#print StarAlgebra.adjoinCommSemiringOfComm /-
 /-- If all elements of `s : set A` commute pairwise and also commute pairwise with elements of
 `star s`, then `star_subalgebra.adjoin R s` is commutative. See note [reducible non-instances]. -/
 @[reducible]
@@ -706,10 +706,10 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
               star_star a ▸ (hcomm_star _ hb _ ha).symm, by
               simpa only [star_mul, star_star] using congr_arg star (hcomm _ hb _ ha)])
       exact congr_arg coe (mul_comm (⟨x, hx⟩ : Algebra.adjoin R (s ∪ star s)) ⟨y, hy⟩) }
-#align star_subalgebra.adjoin_comm_semiring_of_comm StarSubalgebra.adjoinCommSemiringOfComm
+#align star_subalgebra.adjoin_comm_semiring_of_comm StarAlgebra.adjoinCommSemiringOfComm
 -/
 
-#print StarSubalgebra.adjoinCommRingOfComm /-
+#print StarAlgebra.adjoinCommRingOfComm /-
 /-- If all elements of `s : set A` commute pairwise and also commute pairwise with elements of
 `star s`, then `star_subalgebra.adjoin R s` is commutative. See note [reducible non-instances]. -/
 @[reducible]
@@ -718,12 +718,11 @@ def adjoinCommRingOfComm (R : Type u) {A : Type v} [CommRing R] [StarRing R] [Ri
     (hcomm : ∀ a : A, a ∈ s → ∀ b : A, b ∈ s → a * b = b * a)
     (hcomm_star : ∀ a : A, a ∈ s → ∀ b : A, b ∈ s → a * star b = star b * a) :
     CommRing (adjoin R s) :=
-  { StarSubalgebra.adjoinCommSemiringOfComm R hcomm hcomm_star,
-    (adjoin R s).toSubalgebra.toRing with }
-#align star_subalgebra.adjoin_comm_ring_of_comm StarSubalgebra.adjoinCommRingOfComm
+  { StarAlgebra.adjoinCommSemiringOfComm R hcomm hcomm_star, (adjoin R s).toSubalgebra.toRing with }
+#align star_subalgebra.adjoin_comm_ring_of_comm StarAlgebra.adjoinCommRingOfComm
 -/
 
-#print StarSubalgebra.adjoinCommSemiringOfIsStarNormal /-
+#print StarAlgebra.adjoinCommSemiringOfIsStarNormal /-
 /-- The star subalgebra `star_subalgebra.adjoin R {x}` generated by a single `x : A` is commutative
 if `x` is normal. -/
 instance adjoinCommSemiringOfIsStarNormal (x : A) [IsStarNormal x] :
@@ -731,17 +730,17 @@ instance adjoinCommSemiringOfIsStarNormal (x : A) [IsStarNormal x] :
   adjoinCommSemiringOfComm R (fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb; rw [ha, hb])
     fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb;
     simpa only [ha, hb] using (star_comm_self' x).symm
-#align star_subalgebra.adjoin_comm_semiring_of_is_star_normal StarSubalgebra.adjoinCommSemiringOfIsStarNormal
+#align star_subalgebra.adjoin_comm_semiring_of_is_star_normal StarAlgebra.adjoinCommSemiringOfIsStarNormal
 -/
 
-#print StarSubalgebra.adjoinCommRingOfIsStarNormal /-
+#print StarAlgebra.adjoinCommRingOfIsStarNormal /-
 /-- The star subalgebra `star_subalgebra.adjoin R {x}` generated by a single `x : A` is commutative
 if `x` is normal. -/
 instance adjoinCommRingOfIsStarNormal (R : Type u) {A : Type v} [CommRing R] [StarRing R] [Ring A]
     [Algebra R A] [StarRing A] [StarModule R A] (x : A) [IsStarNormal x] :
     CommRing (adjoin R ({x} : Set A)) :=
   { (adjoin R ({x} : Set A)).toSubalgebra.toRing with mul_comm := mul_comm }
-#align star_subalgebra.adjoin_comm_ring_of_is_star_normal StarSubalgebra.adjoinCommRingOfIsStarNormal
+#align star_subalgebra.adjoin_comm_ring_of_is_star_normal StarAlgebra.adjoinCommRingOfIsStarNormal
 -/
 
 /-! ### Complete lattice structure -/
@@ -750,7 +749,7 @@ instance adjoinCommRingOfIsStarNormal (R : Type u) {A : Type v} [CommRing R] [St
 variable {F R A B}
 
 instance : CompleteLattice (StarSubalgebra R A) :=
-  GaloisInsertion.liftCompleteLattice StarSubalgebra.gi
+  GaloisInsertion.liftCompleteLattice StarAlgebra.gi
 
 instance : Inhabited (StarSubalgebra R A) :=
   ⟨⊤⟩
@@ -948,8 +947,8 @@ theorem ext_of_adjoin_eq_top {s : Set A} (h : adjoin R s = ⊤) ⦃f g : F⦄ (h
 #print StarAlgHom.map_adjoin /-
 theorem map_adjoin [StarModule R B] (f : A →⋆ₐ[R] B) (s : Set A) :
     map f (adjoin R s) = adjoin R (f '' s) :=
-  GaloisConnection.l_comm_of_u_comm Set.image_preimage (gc_map_comap f) StarSubalgebra.gc
-    StarSubalgebra.gc fun _ => rfl
+  GaloisConnection.l_comm_of_u_comm Set.image_preimage (gc_map_comap f) StarAlgebra.gc
+    StarAlgebra.gc fun _ => rfl
 #align star_alg_hom.map_adjoin StarAlgHom.map_adjoin
 -/
 

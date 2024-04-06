@@ -1828,7 +1828,7 @@ theorem smulRight_one_pow [TopologicalSpace R] [TopologicalRing R] (c : R) (n : 
   by
   induction' n with n ihn
   · ext; simp
-  · rw [pow_succ, ihn, mul_def, smul_right_comp, smul_eq_mul, pow_succ']
+  · rw [pow_succ', ihn, mul_def, smul_right_comp, smul_eq_mul, pow_succ]
 #align continuous_linear_map.smul_right_one_pow ContinuousLinearMap.smulRight_one_pow
 -/
 

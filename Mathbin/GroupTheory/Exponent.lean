@@ -3,10 +3,10 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Data.Zmod.Quotient
+import Data.ZMod.Quotient
 import GroupTheory.NoncommPiCoprod
 import GroupTheory.OrderOfElement
-import Algebra.GcdMonoid.Finset
+import Algebra.GCDMonoid.Finset
 import Data.Nat.Factorization.Basic
 import Tactic.ByContra
 
@@ -244,7 +244,7 @@ theorem Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} (hp : p
   refine' ⟨g ^ k, _⟩
   rw [ht]
   apply orderOf_eq_prime_pow
-  · rwa [hk, mul_comm, ht, pow_succ', ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
+  · rwa [hk, mul_comm, ht, pow_succ, ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
   · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
     exact pow_exponent_eq_one g
 #align nat.prime.exists_order_of_eq_pow_factorization_exponent Nat.Prime.exists_orderOf_eq_pow_factorization_exponent
@@ -367,7 +367,7 @@ theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = �
     simp [hp]
   rw [(Commute.all _ g).orderOf_mul_eq_mul_orderOf_of_coprime hcoprime, hpk', hg, ha, ← ht, ← hk,
     pow_add, pow_add, pow_one, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancel, mul_assoc,
-    lt_mul_iff_one_lt_right <| h t, ← pow_succ']
+    lt_mul_iff_one_lt_right <| h t, ← pow_succ]
   exact one_lt_pow hp.one_lt a.succ_ne_zero
   exact hpk
 #align monoid.exponent_eq_supr_order_of Monoid.exponent_eq_iSup_orderOf

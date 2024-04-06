@@ -591,7 +591,7 @@ def isBilimitBinaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSpli
       dsimp only [binary_bicone_of_is_split_mono_of_cokernel_X]
       rw [is_colimit_cofork_of_cokernel_cofork_desc, is_cokernel_epi_comp_desc]
       simp only [binary_bicone_of_is_split_mono_of_cokernel_inl, cofork.is_colimit.π_desc,
-        cokernel_cofork_of_cofork_π, cofork.π_of_π, add_sub_cancel'_right])
+        cokernel_cofork_of_cofork_π, cofork.π_of_π, add_sub_cancel])
 #align category_theory.limits.is_bilimit_binary_bicone_of_is_split_mono_of_cokernel CategoryTheory.Limits.isBilimitBinaryBiconeOfIsSplitMonoOfCokernel
 -/
 

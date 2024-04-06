@@ -3,7 +3,7 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Analysis.LocallyConvex.Basic
+import Topology.Bornology.Absorbs
 
 #align_import analysis.locally_convex.balanced_core_hull from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

@@ -187,7 +187,7 @@ open OmegaCompletePartialOrder
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
 set_option extends_priority 50
 
 #print OmegaCompletePartialOrder /-

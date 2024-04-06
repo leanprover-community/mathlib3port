@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 -/
 import GroupTheory.MonoidLocalization
-import RingTheory.NonZeroDivisors
+import Algebra.GroupWithZero.NonZeroDivisors
 import RingTheory.OreLocalization.OreSet
 import Tactic.NoncommRing
 

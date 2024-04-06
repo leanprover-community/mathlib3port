@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Algebra.BigOperators.Order
-import Data.Nat.Basic
+import Data.Nat.Defs
 
 #align_import data.set.equitable from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 

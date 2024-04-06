@@ -3,7 +3,7 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Algebra.Hom.NonUnitalAlg
+import Algebra.Algebra.NonUnitalHom
 import Algebra.Star.Prod
 import Algebra.Algebra.Prod
 
@@ -74,7 +74,7 @@ homomorphisms from `A` to `B`. -/
 class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
     (B : outParam (Type _)) [Monoid R] [Star A] [Star B] [NonUnitalNonAssocSemiring A]
     [NonUnitalNonAssocSemiring B] [DistribMulAction R A] [DistribMulAction R B] extends
-    NonUnitalAlgHomClass F R A B, StarHomClass F A B
+    NonUnitalAlgSemiHomClass F R A B, StarHomClass F A B
 #align non_unital_star_alg_hom_class NonUnitalStarAlgHomClass
 -/
 
@@ -809,7 +809,7 @@ attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
 
 -- See note [lower instance priority]
 instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [Star A] [SMul R A] [Add B] [Mul B]
-    [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : SMulHomClass F R A B :=
+    [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : MulActionSemiHomClass F R A B :=
   { hF with
     coe := fun f => f
     coe_injective' := DFunLike.coe_injective }

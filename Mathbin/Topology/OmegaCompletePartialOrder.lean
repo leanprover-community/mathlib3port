@@ -3,7 +3,7 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Topology.Basic
+import Topology.Defs.Basic
 import Order.OmegaCompletePartialOrder
 
 #align_import topology.omega_complete_partial_order from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"

@@ -66,7 +66,7 @@ theorem Nat.sq_add_sq_mul {a b x y u v : ℕ} (ha : a = x ^ 2 + y ^ 2) (hb : b =
   zify at ha hb ⊢
   obtain ⟨r, s, h⟩ := sq_add_sq_mul ha hb
   refine' ⟨r.nat_abs, s.nat_abs, _⟩
-  simpa only [Int.coe_natAbs, sq_abs]
+  simpa only [Int.natCast_natAbs, sq_abs]
 #align nat.sq_add_sq_mul Nat.sq_add_sq_mul
 -/
 

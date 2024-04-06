@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Damiano Testa, Yaël Dillies
 -/
 import Logic.Equiv.Defs
-import Logic.Nontrivial
+import Logic.Nontrivial.Defs
 import Order.Basic
 
 #align_import order.synonym from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

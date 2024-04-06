@@ -3,7 +3,7 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Scott Morrison, Simon Hudon
 -/
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Equiv.Basic
 import CategoryTheory.Groupoid
 import CategoryTheory.Opposites
 import GroupTheory.GroupAction.Defs

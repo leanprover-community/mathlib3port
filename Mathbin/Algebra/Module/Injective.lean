@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
 import CategoryTheory.Preadditive.Injective
-import Algebra.Category.Module.EpiMono
+import Algebra.Category.ModuleCat.EpiMono
 import RingTheory.Ideal.Basic
-import LinearAlgebra.LinearPmap
+import LinearAlgebra.LinearPMap
 
 #align_import algebra.module.injective from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 

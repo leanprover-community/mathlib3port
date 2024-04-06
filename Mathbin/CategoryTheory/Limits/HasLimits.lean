@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Scott Morrison, Floris van Doorn
 -/
 import CategoryTheory.Limits.IsLimit
-import CategoryTheory.Category.Ulift
+import CategoryTheory.Category.ULift
 
 #align_import category_theory.limits.has_limits from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
 import Control.Random
-import Control.Uliftable
-import Data.List.BigOperators.Lemmas
+import Control.ULiftable
+import Algebra.BigOperators.List.Lemmas
 import Data.List.Perm
 
 #align_import testing.slim_check.gen from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"

@@ -287,8 +287,8 @@ theorem ofPow {i} (a : A i) (n : ℕ) :
   by
   induction' n with n
   · exact of_eq_of_graded_monoid_eq (pow_zero <| GradedMonoid.mk _ a).symm
-  · rw [pow_succ, n_ih, of_mul_of]
-    exact of_eq_of_graded_monoid_eq (pow_succ (GradedMonoid.mk _ a) n).symm
+  · rw [pow_succ', n_ih, of_mul_of]
+    exact of_eq_of_graded_monoid_eq (pow_succ' (GradedMonoid.mk _ a) n).symm
 #align direct_sum.of_pow DirectSum.ofPow
 -/
 
@@ -486,7 +486,7 @@ variable [∀ i, AddCommMonoid (A i)] [AddMonoid ι] [GSemiring A]
 @[simp]
 theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of _ 0 (a ^ n) = of _ 0 a ^ n
   | 0 => by rw [pow_zero, pow_zero, DirectSum.of_zero_one]
-  | n + 1 => by rw [pow_succ, pow_succ, of_zero_mul, of_zero_pow]
+  | n + 1 => by rw [pow_succ', pow_succ', of_zero_mul, of_zero_pow]
 #align direct_sum.of_zero_pow DirectSum.of_zero_pow
 -/
 

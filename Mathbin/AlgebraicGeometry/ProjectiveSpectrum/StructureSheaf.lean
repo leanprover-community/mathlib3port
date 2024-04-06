@@ -6,7 +6,7 @@ Authors: Jujian Zhang
 import AlgebraicGeometry.ProjectiveSpectrum.Topology
 import Topology.Sheaves.LocalPredicate
 import RingTheory.GradedAlgebra.HomogeneousLocalization
-import AlgebraicGeometry.LocallyRingedSpace
+import Geometry.RingedSpace.LocallyRingedSpace
 
 #align_import algebraic_geometry.projective_spectrum.structure_sheaf from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

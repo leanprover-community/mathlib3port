@@ -336,7 +336,7 @@ theorem intervalIntegral_add_eq (hf : Periodic f T) (t s : ℝ) :
   · exact hf.interval_integral_add_eq_of_pos hT t s
   · simp
   · rw [← neg_inj, ← integral_symm, ← integral_symm]
-    simpa only [← sub_eq_add_neg, add_sub_cancel] using
+    simpa only [← sub_eq_add_neg, add_sub_cancel_right] using
       hf.neg.interval_integral_add_eq_of_pos (neg_pos.2 hT) (t + T) (s + T)
 #align function.periodic.interval_integral_add_eq Function.Periodic.intervalIntegral_add_eq
 -/
@@ -368,7 +368,7 @@ theorem intervalIntegral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     intros
     induction' m with m ih
     · simp
-    · simp only [succ_nsmul', hf.interval_integral_add_eq_add 0 (m • T) h_int, ih, zero_add]
+    · simp only [succ_nsmul, hf.interval_integral_add_eq_add 0 (m • T) h_int, ih, zero_add]
   -- Then prove it for all integers
   cases' n with n n
   · simp [← this n]

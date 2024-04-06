@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Analysis.Complex.UpperHalfPlane.Topology
 import Analysis.SpecialFunctions.Arsinh
-import Geometry.Euclidean.Inversion
+import Geometry.Euclidean.Inversion.Basic
 
 #align_import analysis.complex.upper_half_plane.metric from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 
@@ -50,7 +50,7 @@ theorem dist_eq (z w : ℍ) : dist z w = 2 * arsinh (dist (z : ℂ) w / (2 * sqr
 #print UpperHalfPlane.sinh_half_dist /-
 theorem sinh_half_dist (z w : ℍ) :
     sinh (dist z w / 2) = dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) := by
-  rw [dist_eq, mul_div_cancel_left (arsinh _) two_ne_zero, sinh_arsinh]
+  rw [dist_eq, mul_div_cancel_left₀ (arsinh _) two_ne_zero, sinh_arsinh]
 #align upper_half_plane.sinh_half_dist UpperHalfPlane.sinh_half_dist
 -/
 
@@ -223,7 +223,7 @@ theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
   by
   have H : 2 * z.im * w.im ≠ 0 := by apply_rules [mul_ne_zero, two_ne_zero, im_ne_zero]
   simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im,
-    cosh_dist', mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
+    cosh_dist', mul_div_cancel₀ _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
     sq]
   ring
 #align upper_half_plane.dist_coe_center_sq UpperHalfPlane.dist_coe_center_sq

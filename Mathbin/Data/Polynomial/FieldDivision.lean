@@ -49,7 +49,7 @@ theorem derivative_rootMultiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hpt
   set q := p /ₘ (X - C t) ^ (n + 1) with hq
   convert_to root_multiplicity t ((X - C t) ^ n * (derivative q * (X - C t) + q * C ↑(n + 1))) = n
   · congr
-    rw [mul_add, mul_left_comm <| (X - C t) ^ n, ← pow_succ']
+    rw [mul_add, mul_left_comm <| (X - C t) ^ n, ← pow_succ]
     congr 1
     rw [mul_left_comm <| (X - C t) ^ n, mul_comm <| (X - C t) ^ n]
   have h : (derivative q * (X - C t) + q * C ↑(n + 1)).eval t ≠ 0 :=
@@ -496,7 +496,7 @@ theorem exists_root_of_degree_eq_one (h : degree p = 1) : ∃ x, IsRoot p x :=
       rw [← nat_degree_eq_of_degree_eq_some h] <;>
         exact mt leading_coeff_eq_zero.1 fun h0 => by simpa [h0] using h
     conv in p => rw [eq_X_add_C_of_degree_le_one (show degree p ≤ 1 by rw [h] <;> exact le_rfl)] <;>
-      simp [is_root, mul_div_cancel' _ this]⟩
+      simp [is_root, mul_div_cancel₀ _ this]⟩
 #align polynomial.exists_root_of_degree_eq_one Polynomial.exists_root_of_degree_eq_one
 -/
 

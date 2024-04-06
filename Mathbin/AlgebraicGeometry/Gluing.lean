@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import AlgebraicGeometry.PresheafedSpace.Gluing
-import AlgebraicGeometry.OpenImmersion.Scheme
+import Geometry.RingedSpace.PresheafedSpace.Gluing
+import AlgebraicGeometry.OpenImmersion
 
 #align_import algebraic_geometry.gluing from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
 

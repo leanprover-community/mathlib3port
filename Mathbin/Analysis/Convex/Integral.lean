@@ -5,7 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 import Analysis.Convex.Function
 import Analysis.Convex.StrictConvexSpace
-import MeasureTheory.Function.AeEqOfIntegral
+import MeasureTheory.Function.AEEqOfIntegral
 import MeasureTheory.Integral.Average
 
 #align_import analysis.convex.integral from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"

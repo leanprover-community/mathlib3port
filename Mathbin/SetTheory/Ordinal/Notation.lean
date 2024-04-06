@@ -1286,7 +1286,7 @@ theorem fastGrowing_two : fastGrowing 2 = fun n => (2^n) * n :=
   by
   rw [@fast_growing_succ 2 1 rfl]; funext i; rw [fast_growing_one]
   suffices : ∀ a b, ((fun n : ℕ => 2 * n)^[a]) b = (2^a) * b; exact this _ _
-  intro a b; induction a <;> simp [*, Function.iterate_succ', pow_succ, mul_assoc]
+  intro a b; induction a <;> simp [*, Function.iterate_succ', pow_succ', mul_assoc]
 #align onote.fast_growing_two ONote.fastGrowing_two
 -/
 

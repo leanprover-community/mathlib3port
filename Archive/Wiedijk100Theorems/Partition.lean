@@ -3,8 +3,8 @@ Copyright (c) 2020 Bhavik Mehta, Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Aaron Anderson
 -/
-import RingTheory.PowerSeries.Basic
-import Combinatorics.Partition
+import RingTheory.MvPowerSeries.Basic
+import Combinatorics.Enumerative.Partition
 import Data.Nat.Parity
 import Data.Finset.NatAntidiagonal
 import Data.Fin.Tuple.NatAntidiagonal
@@ -108,7 +108,7 @@ def cut {ι : Type _} (s : Finset ι) (n : ℕ) : Finset (ι → ℕ) :=
         simpa [dif_pos hi] using congr_fun h i⟩)
 #align theorems_100.cut Theorems100.cut
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem mem_cut {ι : Type _} (s : Finset ι) (n : ℕ) (f : ι → ℕ) :
     f ∈ cut s n ↔ s.Sum f = n ∧ ∀ (i) (_ : i ∉ s), f i = 0 :=
   by
@@ -323,7 +323,7 @@ def mkOdd : ℕ ↪ ℕ :=
   ⟨fun i => 2 * i + 1, fun x y h => by linarith⟩
 #align theorems_100.mk_odd Theorems100.mkOdd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 -- The main workhorse of the partition theorem proof.
 theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset ℕ) (hs : ∀ i ∈ s, 0 < i)
     (c : ℕ → Set ℕ) (hc : ∀ (i) (_ : i ∉ s), 0 ∈ c i) :

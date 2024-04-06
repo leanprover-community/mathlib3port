@@ -49,7 +49,7 @@ theorem nnnorm_coe_nat (n : ℕ) : ‖(n : ℤ)‖₊ = n :=
 #print Int.toNat_add_toNat_neg_eq_nnnorm /-
 @[simp]
 theorem toNat_add_toNat_neg_eq_nnnorm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖₊ := by
-  rw [← Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, NNReal.coe_natAbs]
+  rw [← Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, NNReal.natCast_natAbs]
 #align int.to_nat_add_to_nat_neg_eq_nnnorm Int.toNat_add_toNat_neg_eq_nnnorm
 -/
 

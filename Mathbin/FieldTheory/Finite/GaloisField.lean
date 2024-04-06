@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 -/
 import Algebra.CharP.Algebra
-import Data.Zmod.Algebra
+import Data.ZMod.Algebra
 import FieldTheory.Finite.Basic
 import FieldTheory.Galois
 import FieldTheory.SplittingField.IsSplittingField

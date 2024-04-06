@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import CategoryTheory.Yoneda
 import Topology.Sheaves.Presheaf
-import Topology.Category.TopCommRing
+import Topology.Category.TopCommRingCat
 import Topology.ContinuousFunction.Algebra
 
 #align_import topology.sheaves.presheaf_of_functions from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"

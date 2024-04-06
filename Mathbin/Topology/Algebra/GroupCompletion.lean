@@ -135,7 +135,7 @@ instance : AddMonoid (Completion α) :=
     nsmul_succ := fun n a =>
       Completion.induction_on a
         (isClosed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
-        rw_mod_cast [succ_nsmul] }
+        rw_mod_cast [succ_nsmul'] }
 
 instance : SubNegMonoid (Completion α) :=
   { Completion.addMonoid, Completion.hasNeg,

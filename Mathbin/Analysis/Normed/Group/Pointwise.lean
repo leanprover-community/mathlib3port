@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel, Yaël Dillies
 -/
 import Analysis.Normed.Group.Basic
 import Topology.MetricSpace.HausdorffDistance
-import Topology.MetricSpace.IsometricSmul
+import Topology.MetricSpace.IsometricSMul
 
 #align_import analysis.normed.group.pointwise from "leanprover-community/mathlib"@"c8f305514e0d47dfaa710f5a52f0d21b588e6328"
 

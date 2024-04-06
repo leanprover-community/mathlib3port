@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Algebra.GroupRingAction.Basic
-import Algebra.Hom.GroupAction
+import GroupTheory.GroupAction.Hom
 import Data.Polynomial.AlgebraMap
 import Data.Polynomial.Monic
 import GroupTheory.GroupAction.Quotient

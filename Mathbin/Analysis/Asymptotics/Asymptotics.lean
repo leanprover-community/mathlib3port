@@ -6,7 +6,7 @@ Authors: Jeremy Avigad, Yury Kudryashov
 import Analysis.Normed.Group.InfiniteSum
 import Analysis.NormedSpace.Basic
 import Topology.Algebra.Order.LiminfLimsup
-import Topology.LocalHomeomorph
+import Topology.PartialHomeomorph
 
 #align_import analysis.asymptotics.asymptotics from "leanprover-community/mathlib"@"9a48a083b390d9b84a71efbdc4e8dfa26a687104"
 
@@ -182,10 +182,10 @@ alias ⟨is_o.bound, is_o.of_bound⟩ := is_o_iff
 #align asymptotics.is_o.bound Asymptotics.IsLittleO.bound
 #align asymptotics.is_o.of_bound Asymptotics.IsLittleO.of_bound
 
-#print Asymptotics.IsLittleO.def /-
-theorem IsLittleO.def (h : f =o[l] g) (hc : 0 < c) : ∀ᶠ x in l, ‖f x‖ ≤ c * ‖g x‖ :=
+#print Asymptotics.IsLittleO.definition /-
+theorem IsLittleO.definition (h : f =o[l] g) (hc : 0 < c) : ∀ᶠ x in l, ‖f x‖ ≤ c * ‖g x‖ :=
   isLittleO_iff.1 h hc
-#align asymptotics.is_o.def Asymptotics.IsLittleO.def
+#align asymptotics.is_o.def Asymptotics.IsLittleO.definition
 -/
 
 #print Asymptotics.IsLittleO.def' /-
@@ -584,7 +584,7 @@ theorem IsLittleO.trans_isBigOWith (hfg : f =o[l] g) (hgk : IsBigOWith c l g k) 
   unfold is_o at *
   intro c' c'pos
   have : 0 < c' / c := div_pos c'pos hc
-  exact ((hfg this).trans hgk this.le).congr_const (div_mul_cancel _ hc.ne')
+  exact ((hfg this).trans hgk this.le).congr_const (div_mul_cancel₀ _ hc.ne')
 #align asymptotics.is_o.trans_is_O_with Asymptotics.IsLittleO.trans_isBigOWith
 -/
 
@@ -603,7 +603,7 @@ theorem IsBigOWith.trans_isLittleO (hfg : IsBigOWith c l f g) (hgk : g =o[l] k) 
   unfold is_o at *
   intro c' c'pos
   have : 0 < c' / c := div_pos c'pos hc
-  exact (hfg.trans (hgk this) hc.le).congr_const (mul_div_cancel' _ hc.ne')
+  exact (hfg.trans (hgk this) hc.le).congr_const (mul_div_cancel₀ _ hc.ne')
 #align asymptotics.is_O_with.trans_is_o Asymptotics.IsBigOWith.trans_isLittleO
 -/
 
@@ -1354,7 +1354,7 @@ theorem IsLittleO.add_isBigO (h₁ : f₁ =o[l] g) (h₂ : f₂ =O[l] g) : (fun 
 #print Asymptotics.IsBigOWith.add_isLittleO /-
 theorem IsBigOWith.add_isLittleO (h₁ : IsBigOWith c₁ l f₁ g) (h₂ : f₂ =o[l] g) (hc : c₁ < c₂) :
     IsBigOWith c₂ l (fun x => f₁ x + f₂ x) g :=
-  (h₁.add (h₂.forall_isBigOWith (sub_pos.2 hc))).congr_const (add_sub_cancel'_right _ _)
+  (h₁.add (h₂.forall_isBigOWith (sub_pos.2 hc))).congr_const (add_sub_cancel _ _)
 #align asymptotics.is_O_with.add_is_o Asymptotics.IsBigOWith.add_isLittleO
 -/
 
@@ -1555,7 +1555,7 @@ theorem isBigOWith_const_const (c : E) {c' : F''} (hc' : c' ≠ 0) (l : Filter �
   unfold is_O_with
   apply univ_mem'
   intro x
-  rw [mem_set_of_eq, div_mul_cancel]
+  rw [mem_set_of_eq, div_mul_cancel₀]
   rwa [Ne.def, norm_eq_zero]
 #align asymptotics.is_O_with_const_const Asymptotics.isBigOWith_const_const
 -/
@@ -2017,7 +2017,7 @@ theorem IsBigO.mul_isLittleO {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} (h
   unfold is_o at *
   intro c cpos
   rcases h₁.exists_pos with ⟨c', c'pos, hc'⟩
-  exact (hc'.mul (h₂ (div_pos cpos c'pos))).congr_const (mul_div_cancel' _ (ne_of_gt c'pos))
+  exact (hc'.mul (h₂ (div_pos cpos c'pos))).congr_const (mul_div_cancel₀ _ (ne_of_gt c'pos))
 #align asymptotics.is_O.mul_is_o Asymptotics.IsBigO.mul_isLittleO
 -/
 
@@ -2028,7 +2028,7 @@ theorem IsLittleO.mul_isBigO {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} (h
   unfold is_o at *
   intro c cpos
   rcases h₂.exists_pos with ⟨c', c'pos, hc'⟩
-  exact ((h₁ (div_pos cpos c'pos)).mul hc').congr_const (div_mul_cancel _ (ne_of_gt c'pos))
+  exact ((h₁ (div_pos cpos c'pos)).mul hc').congr_const (div_mul_cancel₀ _ (ne_of_gt c'pos))
 #align asymptotics.is_o.mul_is_O Asymptotics.IsLittleO.mul_isBigO
 -/
 
@@ -2046,7 +2046,7 @@ theorem IsBigOWith.pow' {f : α → R} {g : α → 𝕜} (h : IsBigOWith c l f g
         g x ^ n
   | 0 => by simpa using is_O_with_const_const (1 : R) (one_ne_zero' 𝕜) l
   | 1 => by simpa
-  | n + 2 => by simpa [pow_succ] using h.mul (is_O_with.pow' (n + 1))
+  | n + 2 => by simpa [pow_succ'] using h.mul (is_O_with.pow' (n + 1))
 #align asymptotics.is_O_with.pow' Asymptotics.IsBigOWith.pow'
 -/
 
@@ -2097,7 +2097,7 @@ theorem IsLittleO.pow {f : α → R} {g : α → 𝕜} (h : f =o[l] g) {n : ℕ}
   by
   cases n; exact hn.false.elim; clear hn
   induction' n with n ihn; · simpa only [pow_one]
-  convert h.mul ihn <;> simp [pow_succ]
+  convert h.mul ihn <;> simp [pow_succ']
 #align asymptotics.is_o.pow Asymptotics.IsLittleO.pow
 -/
 

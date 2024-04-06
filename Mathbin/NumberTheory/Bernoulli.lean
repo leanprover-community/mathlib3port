@@ -279,7 +279,7 @@ theorem sum_bernoulli (n : ℕ) :
   simp_rw [sum_range_succ', bernoulli'_one, choose_one_right, cast_succ, ← eq_sub_iff_add_eq] at f
   convert f
   · funext x; rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
-  · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel]
+  · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel_right]
     ring
 #align sum_bernoulli sum_bernoulli
 -/
@@ -430,7 +430,7 @@ theorem sum_Ico_pow (n p : ℕ) :
   have hle := Nat.le_add_left 1 n
   have hne : (p + 1 + 1 : ℚ) ≠ 0 := by exact_mod_cast succ_ne_zero p.succ
   have h1 : ∀ r : ℚ, r * (p + 1 + 1) * n ^ p.succ / (p + 1 + 1 : ℚ) = r * n ^ p.succ := fun r => by
-    rw [mul_div_right_comm, mul_div_cancel _ hne]
+    rw [mul_div_right_comm, mul_div_cancel_right₀ _ hne]
   have h2 : f 1 + n ^ p.succ = 1 / 2 * n ^ p.succ :=
     by
     simp_rw [f, bernoulli_one, choose_one_right, succ_sub_succ_eq_sub, cast_succ, tsub_zero, h1]

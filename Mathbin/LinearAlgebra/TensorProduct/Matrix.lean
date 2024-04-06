@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import Data.Matrix.Kronecker
 import LinearAlgebra.Matrix.ToLin
-import LinearAlgebra.TensorProductBasis
+import LinearAlgebra.TensorProduct.Basis
 
 #align_import linear_algebra.tensor_product.matrix from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

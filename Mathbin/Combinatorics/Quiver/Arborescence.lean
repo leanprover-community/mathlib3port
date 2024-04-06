@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
 import Order.WellFounded
-import Data.Nat.Basic
+import Data.Nat.Defs
 import Combinatorics.Quiver.Subquiver
 import Combinatorics.Quiver.Path
 

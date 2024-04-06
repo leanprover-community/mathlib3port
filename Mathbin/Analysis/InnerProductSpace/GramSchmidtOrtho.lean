@@ -44,7 +44,7 @@ open scoped BigOperators
 
 open Finset Submodule FiniteDimensional
 
-variable (𝕜 : Type _) {E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+variable (𝕜 : Type _) {E : Type _} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 variable {ι : Type _} [LinearOrder ι] [LocallyFiniteOrderBot ι] [IsWellOrder ι (· < ·)]
 
@@ -118,7 +118,7 @@ theorem gramSchmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) :
   rw [Finset.sum_eq_single_of_mem a (finset.mem_Iio.mpr h₀)]
   · by_cases h : gramSchmidt 𝕜 f a = 0
     · simp only [h, inner_zero_left, zero_div, MulZeroClass.zero_mul, sub_zero]
-    · rw [← inner_self_eq_norm_sq_to_K, div_mul_cancel, sub_self]
+    · rw [← inner_self_eq_norm_sq_to_K, div_mul_cancel₀, sub_self]
       rwa [inner_self_ne_zero]
   simp_intro i hi hia only [Finset.mem_range]
   simp only [mul_eq_zero, div_eq_zero_iff, inner_self_eq_zero]
@@ -361,8 +361,8 @@ theorem gramSchmidt_orthonormal {f : ι → E} (h₀ : LinearIndependent 𝕜 f)
   constructor
   · simp only [gramSchmidtNormed_unit_length, h₀, eq_self_iff_true, imp_true_iff]
   · intro i j hij
-    simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right, IsROrC.conj_inv,
-      IsROrC.conj_ofReal, mul_eq_zero, inv_eq_zero, IsROrC.ofReal_eq_zero, norm_eq_zero]
+    simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right, RCLike.conj_inv,
+      RCLike.conj_ofReal, mul_eq_zero, inv_eq_zero, RCLike.ofReal_eq_zero, norm_eq_zero]
     repeat' right
     exact gramSchmidt_orthogonal 𝕜 f hij
 #align gram_schmidt_orthonormal gramSchmidt_orthonormal

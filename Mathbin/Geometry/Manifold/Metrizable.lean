@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Geometry.Manifold.SmoothManifoldWithCorners
-import Topology.Paracompact
-import Topology.MetricSpace.Metrizable
+import Topology.Compactness.Paracompact
+import Topology.Metrizable.Basic
 
 #align_import geometry.manifold.metrizable from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

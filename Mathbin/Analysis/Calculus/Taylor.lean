@@ -3,9 +3,9 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
-import Analysis.Calculus.IteratedDeriv
+import Analysis.Calculus.IteratedDeriv.Defs
 import Analysis.Calculus.MeanValue
-import Data.Polynomial.Module
+import Data.Polynomial.Module.Basic
 
 #align_import analysis.calculus.taylor from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 
@@ -238,7 +238,7 @@ theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} 
     hk.add
       (hasDerivWithinAt_taylor_coeff_within hs'_unique (nhdsWithin_mono _ h self_mem_nhdsWithin)
         hf')
-  exact (add_sub_cancel'_right _ _).symm
+  exact (add_sub_cancel _ _).symm
 #align has_deriv_within_at_taylor_within_eval hasDerivWithinAt_taylorWithinEval
 -/
 
@@ -304,7 +304,7 @@ theorem taylor_mean_remainder {f : ℝ → ℝ} {g g' : ℝ → ℝ} {x x₀ : �
   use y, hy
   -- The rest is simplifications and trivial calculations
   simp only [taylorWithinEval_self] at h
-  rw [mul_comm, ← div_left_inj' (g'_ne y hy), mul_div_cancel _ (g'_ne y hy)] at h
+  rw [mul_comm, ← div_left_inj' (g'_ne y hy), mul_div_cancel_right₀ _ (g'_ne y hy)] at h
   rw [← h]
   field_simp [g'_ne y hy, n.factorial_ne_zero]
   ring

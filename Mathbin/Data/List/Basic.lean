@@ -166,14 +166,14 @@ theorem ne_nil_of_mem {a : α} {l : List α} (h : a ∈ l) : l ≠ [] := by
 #align list.ne_nil_of_mem List.ne_nil_of_mem
 -/
 
-#print List.mem_split /-
-theorem mem_split {a : α} {l : List α} (h : a ∈ l) : ∃ s t : List α, l = s ++ a :: t :=
+#print List.append_of_mem /-
+theorem append_of_mem {a : α} {l : List α} (h : a ∈ l) : ∃ s t : List α, l = s ++ a :: t :=
   by
   induction' l with b l ih; · cases h; rcases h with (rfl | h)
   · exact ⟨[], l, rfl⟩
   · rcases ih h with ⟨s, t, rfl⟩
     exact ⟨b :: s, t, rfl⟩
-#align list.mem_split List.mem_split
+#align list.mem_split List.append_of_mem
 -/
 
 #print List.mem_of_ne_of_mem /-
@@ -941,7 +941,7 @@ theorem replicate_left_inj {a : α} {n m : ℕ} : replicate n a = replicate m a 
 
 #print List.mem_pure /-
 @[simp]
-theorem mem_pure {α} (x y : α) : x ∈ (pure y : List α) ↔ x = y := by simp! [pure, List.ret]
+theorem mem_pure {α} (x y : α) : x ∈ (pure y : List α) ↔ x = y := by simp! [pure, List.pure]
 #align list.mem_pure List.mem_pure
 -/
 
@@ -1819,7 +1819,7 @@ theorem Sublist.subset : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → l₁ ⊆ l�
 @[simp]
 theorem singleton_sublist {a : α} {l} : [a] <+ l ↔ a ∈ l :=
   ⟨fun h => h.Subset (mem_singleton_self _), fun h =>
-    let ⟨s, t, e⟩ := mem_split h
+    let ⟨s, t, e⟩ := append_of_mem h
     e.symm ▸ ((nil_sublist _).cons_cons _).trans (sublist_append_right _ _)⟩
 #align list.singleton_sublist List.singleton_sublist
 -/
@@ -2856,13 +2856,13 @@ theorem map_join (f : α → β) (L : List (List α)) : map f (join L) = join (m
 #align list.map_join List.map_join
 -/
 
-#print List.bind_ret_eq_map /-
-theorem bind_ret_eq_map (f : α → β) (l : List α) : l.bind (List.ret ∘ f) = map f l := by
+#print List.bind_pure_eq_map /-
+theorem bind_pure_eq_map (f : α → β) (l : List α) : l.bind (List.pure ∘ f) = map f l := by
   unfold List.bind <;> induction l <;>
-        simp only [map, join, List.ret, cons_append, nil_append, *] <;>
+        simp only [map, join, List.pure, cons_append, nil_append, *] <;>
       constructor <;>
     rfl
-#align list.bind_ret_eq_map List.bind_ret_eq_map
+#align list.bind_ret_eq_map List.bind_pure_eq_map
 -/
 
 #print List.bind_congr /-

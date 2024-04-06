@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Topology.SubsetProperties
-import Topology.Connected
+import Topology.Connected.Basic
 import Topology.ContinuousFunction.Basic
-import Algebra.IndicatorFunction
+import Algebra.Function.Indicator
 import Tactic.Tfae
 import Tactic.FinCases
 

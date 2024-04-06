@@ -3,11 +3,11 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Algebra.Hom.Iterate
+import Algebra.GroupPower.IterateHom
 import Analysis.SpecificLimits.Basic
 import Order.Iterate
 import Order.SemiconjSup
-import Topology.Algebra.Order.MonotoneContinuity
+import Topology.Order.MonotoneContinuity
 
 #align_import dynamics.circle.rotation_number.translation_number from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 
@@ -322,7 +322,7 @@ theorem isUnit_iff_bijective {f : CircleDeg1Lift} : IsUnit f ↔ Bijective f :=
 #print CircleDeg1Lift.coe_pow /-
 theorem coe_pow : ∀ n : ℕ, ⇑(f ^ n) = f^[n]
   | 0 => rfl
-  | n + 1 => by ext x; simp [coe_pow n, pow_succ']
+  | n + 1 => by ext x; simp [coe_pow n, pow_succ]
 #align circle_deg1_lift.coe_pow CircleDeg1Lift.coe_pow
 -/
 
@@ -857,11 +857,11 @@ theorem transnumAuxSeq_dist_lt (n : ℕ) :
     dist (f.transnumAuxSeq n) (f.transnumAuxSeq (n + 1)) < 1 / 2 / 2 ^ n :=
   by
   have : 0 < (2 ^ (n + 1) : ℝ) := pow_pos zero_lt_two _
-  rw [div_div, ← pow_succ, ← abs_of_pos this]
+  rw [div_div, ← pow_succ', ← abs_of_pos this]
   replace := abs_pos.2 (ne_of_gt this)
   convert (div_lt_div_right this).2 ((f ^ 2 ^ n).dist_map_map_zero_lt (f ^ 2 ^ n))
   simp_rw [transnum_aux_seq, Real.dist_eq]
-  rw [← abs_div, sub_div, pow_succ', pow_succ, ← two_mul, mul_div_mul_left _ _ (two_ne_zero' ℝ),
+  rw [← abs_div, sub_div, pow_succ, pow_succ', ← two_mul, mul_div_mul_left _ _ (two_ne_zero' ℝ),
     pow_mul, sq, mul_apply]
 #align circle_deg1_lift.transnum_aux_seq_dist_lt CircleDeg1Lift.transnumAuxSeq_dist_lt
 -/
@@ -958,7 +958,7 @@ theorem translationNumber_units_inv (f : CircleDeg1Liftˣ) : τ ↑f⁻¹ = -τ 
 theorem translationNumber_pow : ∀ n : ℕ, τ (f ^ n) = n * τ f
   | 0 => by simp
   | n + 1 => by
-    rw [pow_succ', translation_number_mul_of_commute (Commute.pow_self f n),
+    rw [pow_succ, translation_number_mul_of_commute (Commute.pow_self f n),
       translation_number_pow n, Nat.cast_add_one, add_mul, one_mul]
 #align circle_deg1_lift.translation_number_pow CircleDeg1Lift.translationNumber_pow
 -/
@@ -1046,7 +1046,7 @@ theorem translationNumber_mono : Monotone τ := fun f g h =>
 #print CircleDeg1Lift.translationNumber_translate /-
 theorem translationNumber_translate (x : ℝ) : τ (translate <| Multiplicative.ofAdd x) = x :=
   translationNumber_eq_of_tendsto₀' _ <| by
-    simp [Nat.cast_add_one_ne_zero, mul_div_cancel_left, tendsto_const_nhds]
+    simp [Nat.cast_add_one_ne_zero, mul_div_cancel_left₀, tendsto_const_nhds]
 #align circle_deg1_lift.translation_number_translate CircleDeg1Lift.translationNumber_translate
 -/
 

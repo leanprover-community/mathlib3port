@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
 import Analysis.Complex.RemovableSingularity
-import Analysis.Calculus.Series
+import Analysis.NormedSpace.FunctionSeries
 
 #align_import analysis.complex.locally_uniform_limit from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 
@@ -129,7 +129,7 @@ theorem TendstoUniformlyOn.cderiv (hF : TendstoUniformlyOn F f φ (cthickening �
   have e3 := sphere_subset_closed_ball.trans (closed_ball_subset_cthickening hz δ)
   have hf : ContinuousOn f (sphere z δ) :=
     e1.mono (sphere_subset_closed_ball.trans (closed_ball_subset_cthickening hz δ))
-  simpa only [mul_div_cancel _ hδ.ne.symm] using norm_cderiv_sub_lt hδ e2 hf (h'.mono e3)
+  simpa only [mul_div_cancel_right₀ _ hδ.ne.symm] using norm_cderiv_sub_lt hδ e2 hf (h'.mono e3)
 #align complex.tendsto_uniformly_on.cderiv Complex.TendstoUniformlyOn.cderiv
 
 end Cderiv

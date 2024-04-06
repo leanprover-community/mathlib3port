@@ -3,7 +3,7 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Yaël Dillies
 -/
-import Algebra.Order.Smul
+import Algebra.Order.Module.OrderedSMul
 
 #align_import algebra.order.module from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"
 

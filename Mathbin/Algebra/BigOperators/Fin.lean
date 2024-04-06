@@ -370,7 +370,7 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
         · exact isEmptyElim (f <| Fin.last _)
         simp_rw [Fin.sum_univ_castSucc, Fin.coe_castSucc, Fin.val_last]
         refine' (add_lt_add_of_lt_of_le (ih _) <| mul_le_mul_right' (Fin.is_le _) _).trans_eq _
-        rw [← one_add_mul, add_comm, pow_succ]⟩)
+        rw [← one_add_mul, add_comm, pow_succ']⟩)
     (fun a b =>
       ⟨a / m ^ (b : ℕ) % m, by
         cases n
@@ -387,7 +387,7 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
     simp_rw [Fin.forall_iff, Fin.ext_iff, Fin.val_mk] at ih
     ext
     simp_rw [Fin.val_mk, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ, pow_zero, Nat.div_one,
-      mul_one, pow_succ, ← Nat.div_div_eq_div_mul, mul_left_comm _ m, ← mul_sum]
+      mul_one, pow_succ', ← Nat.div_div_eq_div_mul, mul_left_comm _ m, ← mul_sum]
     rw [ih _ (Nat.div_lt_of_lt_mul a.is_lt), Nat.mod_add_div]
 #align fin_function_fin_equiv finFunctionFinEquiv
 -/

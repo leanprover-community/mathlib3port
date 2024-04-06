@@ -7,8 +7,8 @@ import Data.Matrix.Basic
 import Data.Matrix.Block
 import LinearAlgebra.Matrix.Determinant
 import LinearAlgebra.Matrix.NonsingularInverse
-import LinearAlgebra.TensorProduct
-import RingTheory.TensorProduct
+import LinearAlgebra.TensorProduct.Basic
+import LinearAlgebra.TensorProduct.Tower
 
 #align_import data.matrix.kronecker from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

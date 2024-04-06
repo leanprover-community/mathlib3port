@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Algebra.Category.Mon.Basic
+import Algebra.Category.MonCat.Basic
 import CategoryTheory.Monoidal.CommMon_
 import CategoryTheory.Monoidal.Types.Symmetric
 

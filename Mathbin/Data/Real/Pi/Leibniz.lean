@@ -61,7 +61,7 @@ theorem tendsto_sum_pi_div_four :
     · ext k
       simp only [NNReal.coe_nat_cast, Function.comp_apply, NNReal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
-        @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
+        @div_mul_cancel₀ _ _ (2 * (k : ℝ) + 1) _
           (by norm_cast; simp only [Nat.succ_ne_zero, not_false_iff]),
         rpow_neg_one k, sub_eq_add_neg]
     · simp only [add_zero, add_right_neg]
@@ -105,7 +105,7 @@ theorem tendsto_sum_pi_div_four :
         ring
       · simp only [Nat.add_succ_sub_one, add_zero, mul_one, id.def, Nat.cast_bit0, Nat.cast_add,
           Nat.cast_one, Nat.cast_mul]
-        rw [← mul_assoc, @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _ (by norm_cast; linarith),
+        rw [← mul_assoc, @div_mul_cancel₀ _ _ (2 * (i : ℝ) + 1) _ (by norm_cast; linarith),
           pow_mul x 2 i, ← mul_pow (-1) (x ^ 2) i]
         ring_nf
     convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
@@ -151,7 +151,7 @@ theorem tendsto_sum_pi_div_four :
     _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) :=
       (le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2))
     _ = 1 - U + U ^ (2 * k) * U := by ring
-    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by rw [← pow_succ' (U : ℝ) (2 * k)]; norm_cast
+    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by rw [← pow_succ (U : ℝ) (2 * k)]; norm_cast
 #align real.tendsto_sum_pi_div_four Real.tendsto_sum_pi_div_four
 -/
 

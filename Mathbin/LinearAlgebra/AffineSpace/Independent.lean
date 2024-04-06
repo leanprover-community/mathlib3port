@@ -648,7 +648,7 @@ theorem exists_subset_affineIndependent_affineSpan_eq_top {s : Set P}
 
 variable (k V)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print exists_affineIndependent /-
 theorem exists_affineIndependent (s : Set P) :
     ∃ (t : _) (_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) :=

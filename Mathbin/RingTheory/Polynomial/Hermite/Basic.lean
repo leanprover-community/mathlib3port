@@ -194,7 +194,7 @@ theorem coeff_hermite_explicit :
   | n + 1, 0 => by
     convert coeff_hermite_succ_zero (2 * n + 1) using 1
     rw [coeff_hermite_explicit n 1, (by ring_nf : 2 * (n + 1) - 1 = 2 * n + 1),
-      Nat.doubleFactorial_add_one, Nat.choose_zero_right, Nat.choose_one_right, pow_succ]
+      Nat.doubleFactorial_add_one, Nat.choose_zero_right, Nat.choose_one_right, pow_succ']
     push_cast
     ring
   | n + 1, k + 1 =>
@@ -211,7 +211,7 @@ theorem coeff_hermite_explicit :
       -- Factor out (-1)'s.
       rw [mul_comm (↑k + _), sub_eq_add_neg]
       nth_rw 3 [neg_eq_neg_one_mul]
-      simp only [mul_assoc, ← mul_add, pow_succ]
+      simp only [mul_assoc, ← mul_add, pow_succ']
       congr 2
       -- Factor out double factorials.
       norm_cast

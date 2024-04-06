@@ -40,12 +40,12 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     remainder_lt := fun a b b0 =>
       Int.ofNat_lt.1 <|
         by
-        rw [Int.natAbs_of_nonneg (Int.emod_nonneg _ b0), Int.coe_natAbs]
+        rw [Int.natAbs_of_nonneg (Int.emod_nonneg _ b0), Int.natCast_natAbs]
         exact Int.emod_lt _ b0
     mul_left_not_lt := fun a b b0 =>
       not_lt_of_ge <| by
         rw [← mul_one a.nat_abs, Int.natAbs_mul]
-        exact mul_le_mul_of_nonneg_left (Int.natAbs_pos_of_ne_zero b0) (Nat.zero_le _) }
+        exact mul_le_mul_of_nonneg_left (Int.natAbs_pos b0) (Nat.zero_le _) }
 #align int.euclidean_domain Int.euclideanDomain
 -/
 
@@ -62,7 +62,7 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : Eucl
     remainder := fun a b => a - a * b / b
     quotient_zero := div_zero
     quotient_mul_add_remainder_eq := fun a b => by
-      classical by_cases b = 0 <;> simp [h, mul_div_cancel']
+      classical by_cases b = 0 <;> simp [h, mul_div_cancel₀]
     R := fun a b => a = 0 ∧ b ≠ 0
     r_wellFounded :=
       WellFounded.intro fun a =>

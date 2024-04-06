@@ -248,33 +248,25 @@ theorem add_im (z w : ℂ) : (z + w).im = z.im + w.im :=
 #align complex.add_im Complex.add_im
 -/
 
-#print Complex.bit0_re /-
 @[simp]
 theorem bit0_re (z : ℂ) : (bit0 z).re = bit0 z.re :=
   rfl
 #align complex.bit0_re Complex.bit0_re
--/
 
-#print Complex.bit1_re /-
 @[simp]
 theorem bit1_re (z : ℂ) : (bit1 z).re = bit1 z.re :=
   rfl
 #align complex.bit1_re Complex.bit1_re
--/
 
-#print Complex.bit0_im /-
 @[simp]
 theorem bit0_im (z : ℂ) : (bit0 z).im = bit0 z.im :=
   Eq.refl _
 #align complex.bit0_im Complex.bit0_im
--/
 
-#print Complex.bit1_im /-
 @[simp]
 theorem bit1_im (z : ℂ) : (bit1 z).im = bit0 z.im :=
   add_zero _
 #align complex.bit1_im Complex.bit1_im
--/
 
 #print Complex.ofReal_add /-
 @[simp, norm_cast]
@@ -283,19 +275,15 @@ theorem ofReal_add (r s : ℝ) : ((r + s : ℝ) : ℂ) = r + s :=
 #align complex.of_real_add Complex.ofReal_add
 -/
 
-#print Complex.ofReal_bit0 /-
 @[simp, norm_cast]
-theorem ofReal_bit0 (r : ℝ) : ((bit0 r : ℝ) : ℂ) = bit0 r :=
+theorem of_real_bit0 (r : ℝ) : ((bit0 r : ℝ) : ℂ) = bit0 r :=
   ext_iff.2 <| by simp [bit0]
-#align complex.of_real_bit0 Complex.ofReal_bit0
--/
+#align complex.of_real_bit0 Complex.of_real_bit0
 
-#print Complex.ofReal_bit1 /-
 @[simp, norm_cast]
-theorem ofReal_bit1 (r : ℝ) : ((bit1 r : ℝ) : ℂ) = bit1 r :=
+theorem of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : ℂ) = bit1 r :=
   ext_iff.2 <| by simp [bit1]
-#align complex.of_real_bit1 Complex.ofReal_bit1
--/
+#align complex.of_real_bit1 Complex.of_real_bit1
 
 instance : Neg ℂ :=
   ⟨fun z => ⟨-z.re, -z.im⟩⟩
@@ -589,17 +577,13 @@ theorem conj_I : conj I = -I :=
 #align complex.conj_I Complex.conj_I
 -/
 
-#print Complex.conj_bit0 /-
 theorem conj_bit0 (z : ℂ) : conj (bit0 z) = bit0 (conj z) :=
   ext_iff.2 <| by simp [bit0]
 #align complex.conj_bit0 Complex.conj_bit0
--/
 
-#print Complex.conj_bit1 /-
 theorem conj_bit1 (z : ℂ) : conj (bit1 z) = bit1 (conj z) :=
   ext_iff.2 <| by simp [bit0]
 #align complex.conj_bit1 Complex.conj_bit1
--/
 
 #print Complex.conj_neg_I /-
 @[simp]
@@ -824,7 +808,7 @@ theorem ofReal_sub (r s : ℝ) : ((r - s : ℝ) : ℂ) = r - s :=
 #print Complex.ofReal_pow /-
 @[simp, norm_cast]
 theorem ofReal_pow (r : ℝ) (n : ℕ) : ((r ^ n : ℝ) : ℂ) = r ^ n := by
-  induction n <;> simp [*, of_real_mul, pow_succ]
+  induction n <;> simp [*, of_real_mul, pow_succ']
 #align complex.of_real_pow Complex.ofReal_pow
 -/
 
@@ -1039,7 +1023,7 @@ instance charZero : CharZero ℂ :=
 /-- A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/
 theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z + conj z) / 2 := by
   simp only [add_conj, of_real_mul, of_real_one, of_real_bit0,
-    mul_div_cancel_left (z.re : ℂ) two_ne_zero]
+    mul_div_cancel_left₀ (z.re : ℂ) two_ne_zero]
 #align complex.re_eq_add_conj Complex.re_eq_add_conj
 -/
 
@@ -1047,7 +1031,7 @@ theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z + conj z) / 2 := by
 /-- A complex number `z` minus its conjugate `conj z` is `2i` times its imaginary part. -/
 theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
   simp only [sub_conj, of_real_mul, of_real_one, of_real_bit0, mul_right_comm,
-    mul_div_cancel_left _ (mul_ne_zero two_ne_zero I_ne_zero : 2 * I ≠ 0)]
+    mul_div_cancel_left₀ _ (mul_ne_zero two_ne_zero I_ne_zero : 2 * I ≠ 0)]
 #align complex.im_eq_sub_conj Complex.im_eq_sub_conj
 -/
 
@@ -1152,7 +1136,7 @@ theorem sq_abs (z : ℂ) : abs z ^ 2 = normSq z :=
 #print Complex.sq_abs_sub_sq_re /-
 @[simp]
 theorem sq_abs_sub_sq_re (z : ℂ) : abs z ^ 2 - z.re ^ 2 = z.im ^ 2 := by
-  rw [sq_abs, norm_sq_apply, ← sq, ← sq, add_sub_cancel']
+  rw [sq_abs, norm_sq_apply, ← sq, ← sq, add_sub_cancel_left]
 #align complex.sq_abs_sub_sq_re Complex.sq_abs_sub_sq_re
 -/
 

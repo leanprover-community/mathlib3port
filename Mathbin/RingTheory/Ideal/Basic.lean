@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 -/
 import Algebra.Associated
-import LinearAlgebra.Basic
+import Algebra.Module.Submodule.Ker
 import Order.Atoms
-import Order.CompactlyGenerated
+import Order.CompactlyGenerated.Basic
 import Tactic.Abel
 import Data.Nat.Choose.Sum
 import LinearAlgebra.Finsupp
@@ -347,12 +347,12 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     r ∈ I := by
   induction' n with n ih
   · rw [pow_zero] at H; exact (mt (eq_top_iff_one _).2 hI.1).elim H
-  · rw [pow_succ] at H; exact Or.cases_on (hI.mem_or_mem H) id ih
+  · rw [pow_succ'] at H; exact Or.cases_on (hI.mem_or_mem H) id ih
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y «expr ∉ » I) -/
 #print Ideal.not_isPrime_iff /-
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _) (_ : x ∉ I) (y : _) (_ : y ∉ I), x * y ∈ I :=
@@ -740,7 +740,7 @@ variable {b}
 #print Ideal.pow_mem_of_mem /-
 theorem pow_mem_of_mem (ha : a ∈ I) (n : ℕ) (hn : 0 < n) : a ^ n ∈ I :=
   Nat.casesOn n (Not.elim (by decide))
-    (fun m hm => (pow_succ a m).symm ▸ I.mul_mem_right (a ^ m) ha) hn
+    (fun m hm => (pow_succ' a m).symm ▸ I.mul_mem_right (a ^ m) ha) hn
 #align ideal.pow_mem_of_mem Ideal.pow_mem_of_mem
 -/
 
@@ -945,7 +945,7 @@ namespace Ring
 
 variable {R : Type _} [CommSemiring R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 #print Ring.exists_not_isUnit_of_not_isField /-
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _) (_ : x ≠ (0 : R)), ¬IsUnit x :=

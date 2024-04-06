@@ -936,7 +936,7 @@ theorem isTorsion_iff_isTorsion_int [AddCommGroup M] :
   · obtain ⟨n, h0, hn⟩ := (isOfFinAddOrder_iff_nsmul_eq_zero x).mp (h x)
     exact
       ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt <| int.coe_nat_pos.mpr h0⟩,
-        (coe_nat_zsmul _ _).trans hn⟩
+        (natCast_zsmul _ _).trans hn⟩
   · rw [isOfFinAddOrder_iff_nsmul_eq_zero]
     obtain ⟨n, hn⟩ := @h x
     exact exists_nsmul_eq_zero_of_zsmul_eq_zero (nonZeroDivisors.coe_ne_zero n) hn

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
 import Data.Set.Finite
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 
 #align_import data.set.pointwise.finite from "leanprover-community/mathlib"@"c941bb9426d62e266612b6d99e6c9fc93e7a1d07"
 
@@ -91,7 +91,7 @@ instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)
     DecidablePred (· ∈ s ^ n) := by
   induction' n with n ih
   · simp_rw [pow_zero, mem_one]; infer_instance
-  · letI := ih; rw [pow_succ]; infer_instance
+  · letI := ih; rw [pow_succ']; infer_instance
 #align set.decidable_mem_pow Set.decidableMemPow
 #align set.decidable_mem_nsmul Set.decidableMemNSMul
 -/
@@ -225,7 +225,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   · refine' Set.eq_of_subset_of_card_le _ (le_trans (ge_of_eq h) _)
     · exact mul_subset_mul (set.singleton_subset_iff.mpr ha) Set.Subset.rfl
     · convert key a (S ^ n) ({a} * S ^ n) fun b hb => Set.mul_mem_mul (Set.mem_singleton a) hb
-  rw [pow_succ', ← h, mul_assoc, ← pow_succ', h]
+  rw [pow_succ, ← h, mul_assoc, ← pow_succ, h]
   rintro _ ⟨b, c, hb, hc, rfl⟩
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_left]
 #align group.card_pow_eq_card_pow_card_univ Group.card_pow_eq_card_pow_card_univ

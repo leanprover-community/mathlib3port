@@ -35,7 +35,7 @@ theorem linComb_holds {v : Nat → Int} :
       by
       apply add_nonneg
       · apply mul_nonneg
-        apply Int.coe_nat_nonneg
+        apply Int.natCast_nonneg
         apply h _ (Or.inl rfl)
       · apply lin_comb_holds
         apply List.forall_mem_of_forall_mem_cons h

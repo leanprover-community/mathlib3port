@@ -5,7 +5,7 @@ Authors: Jireh Loreaux
 -/
 import Algebra.Algebra.Basic
 import LinearAlgebra.Prod
-import Algebra.Hom.NonUnitalAlg
+import Algebra.Algebra.NonUnitalHom
 
 #align_import algebra.algebra.unitization from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

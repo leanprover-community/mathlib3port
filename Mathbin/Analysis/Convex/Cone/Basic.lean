@@ -5,7 +5,7 @@ Authors: Yury Kudryashov, Frédéric Dupuis
 -/
 import Analysis.Convex.Hull
 import Data.Real.Basic
-import LinearAlgebra.LinearPmap
+import LinearAlgebra.LinearPMap
 
 #align_import analysis.convex.cone.basic from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 
@@ -799,7 +799,7 @@ def toCone (s : Set E) (hs : Convex 𝕜 s) : ConvexCone 𝕜 E :=
   · rintro _ ⟨cx, cx_pos, x, hx, rfl⟩ _ ⟨cy, cy_pos, y, hy, rfl⟩
     have : 0 < cx + cy := add_pos cx_pos cy_pos
     refine' ⟨_, this, _, convex_iff_div.1 hs hx hy cx_pos.le cy_pos.le this, _⟩
-    simp only [smul_add, smul_smul, mul_div_assoc', mul_div_cancel_left _ this.ne']
+    simp only [smul_add, smul_smul, mul_div_assoc', mul_div_cancel_left₀ _ this.ne']
 #align convex.to_cone Convex.toCone
 -/
 
@@ -915,7 +915,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
       exact ⟨_, hx⟩
     rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
     have := s.add_mem hxp hxn
-    rw [add_assoc, add_sub_cancel'_right, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this
+    rw [add_assoc, add_sub_cancel, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this
     replace := nonneg _ this
     rwa [f.map_sub, sub_nonneg] at this
   have hy' : y ≠ 0 := fun hy₀ => hy (hy₀.symm ▸ zero_mem _)

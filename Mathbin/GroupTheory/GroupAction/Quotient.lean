@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 -/
-import Algebra.Hom.GroupAction
+import GroupTheory.GroupAction.Hom
 import Data.Fintype.BigOperators
 import Dynamics.PeriodicPts
 import GroupTheory.GroupAction.ConjAct

@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 -/
-import Algebra.GcdMonoid.Basic
+import Algebra.GCDMonoid.Basic
 import Algebra.EuclideanDomain.Basic
 import RingTheory.Ideal.Basic
 import RingTheory.PrincipalIdealDomain
@@ -54,7 +54,7 @@ theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GCDMonoid.gcd p q �
   by
   obtain ⟨r, hr⟩ := GCDMonoid.gcd_dvd_left p q
   obtain ⟨pq0, r0⟩ : GCDMonoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hp)
-  rw [hr, mul_comm, mul_div_cancel _ pq0]
+  rw [hr, mul_comm, mul_div_cancel_right₀ _ pq0]
   exact r0
 #align left_div_gcd_ne_zero left_div_gcd_ne_zero
 -/
@@ -65,7 +65,7 @@ theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GCDMonoid.gcd p q �
   by
   obtain ⟨r, hr⟩ := GCDMonoid.gcd_dvd_right p q
   obtain ⟨pq0, r0⟩ : GCDMonoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hq)
-  rw [hr, mul_comm, mul_div_cancel _ pq0]
+  rw [hr, mul_comm, mul_div_cancel_right₀ _ pq0]
   exact r0
 #align right_div_gcd_ne_zero right_div_gcd_ne_zero
 -/

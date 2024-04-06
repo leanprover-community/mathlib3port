@@ -3,11 +3,11 @@ Copyright (c) 2018 Andreas Swerdlow. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 -/
-import Algebra.Module.LinearMap
+import Algebra.Module.LinearMap.Basic
 import LinearAlgebra.Basis.Bilinear
 import LinearAlgebra.BilinearMap
 import Algebra.EuclideanDomain.Instances
-import RingTheory.NonZeroDivisors
+import Algebra.GroupWithZero.NonZeroDivisors
 
 #align_import linear_algebra.sesquilinear_form from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"
 

@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import Algebra.GroupWithZero.Basic
 import Algebra.Group.Opposite
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 
 #align_import algebra.ring.opposite from "leanprover-community/mathlib"@"76de8ae01554c3b37d66544866659ff174e66e1f"
 

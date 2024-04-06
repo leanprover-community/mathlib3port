@@ -1631,11 +1631,11 @@ theorem continuousAt_apply (i : ι) (x : ∀ i, π i) : ContinuousAt (fun p : �
 #align continuous_at_apply continuousAt_apply
 -/
 
-#print Filter.Tendsto.apply /-
-theorem Filter.Tendsto.apply {l : Filter β} {f : β → ∀ i, π i} {x : ∀ i, π i}
+#print Filter.Tendsto.apply_nhds /-
+theorem Filter.Tendsto.apply_nhds {l : Filter β} {f : β → ∀ i, π i} {x : ∀ i, π i}
     (h : Tendsto f l (𝓝 x)) (i : ι) : Tendsto (fun a => f a i) l (𝓝 <| x i) :=
   (continuousAt_apply i _).Tendsto.comp h
-#align filter.tendsto.apply Filter.Tendsto.apply
+#align filter.tendsto.apply Filter.Tendsto.apply_nhds
 -/
 
 #print nhds_pi /-

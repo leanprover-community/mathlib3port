@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 -/
-import Data.Int.Modeq
+import Data.Int.ModEq
 import Data.Nat.Multiplicity
 import GroupTheory.OrderOfElement
 import RingTheory.Nilpotent
@@ -157,10 +157,10 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a 
   rcases lt_trichotomy a 0 with (h | rfl | h)
   · rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
     lift -a to ℕ using neg_nonneg.mpr (le_of_lt h) with b
-    rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
+    rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
   · simp only [Int.cast_zero, eq_self_iff_true, dvd_zero]
   · lift a to ℕ using le_of_lt h with b
-    rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
+    rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
 #align char_p.int_cast_eq_zero_iff CharP.int_cast_eq_zero_iff
 -/
 
@@ -176,7 +176,7 @@ theorem CharP.natCast_eq_natCast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b 
     (a : R) = b ↔ a ≡ b [MOD p] :=
   by
   rw [← Int.cast_ofNat, ← Int.cast_ofNat b]
-  exact (CharP.intCast_eq_intCast _ _).trans Int.coe_nat_modEq_iff
+  exact (CharP.intCast_eq_intCast _ _).trans Int.natCast_modEq_iff
 #align char_p.nat_cast_eq_nat_cast CharP.natCast_eq_natCast
 -/
 
@@ -333,7 +333,7 @@ theorem sub_pow_char_pow_of_commute [Ring R] {p : ℕ} [Fact p.Prime] [CharP R p
     (h : Commute x y) : (x - y) ^ p ^ n = x ^ p ^ n - y ^ p ^ n :=
   by
   induction n; · simp
-  rw [pow_succ', pow_mul, pow_mul, pow_mul, n_ih]
+  rw [pow_succ, pow_mul, pow_mul, pow_mul, n_ih]
   apply sub_pow_char_of_commute; apply Commute.pow_pow h
 #align sub_pow_char_pow_of_commute sub_pow_char_pow_of_commute
 -/
@@ -433,7 +433,7 @@ theorem frobenius_def : frobenius R p x = x ^ p :=
 theorem iterate_frobenius (n : ℕ) : (frobenius R p^[n]) x = x ^ p ^ n :=
   by
   induction n; · simp
-  rw [Function.iterate_succ', pow_succ', pow_mul, Function.comp_apply, frobenius_def, n_ih]
+  rw [Function.iterate_succ', pow_succ, pow_mul, Function.comp_apply, frobenius_def, n_ih]
 #align iterate_frobenius iterate_frobenius
 -/
 
@@ -624,7 +624,7 @@ theorem pow_prime_pow_mul_eq_one_iff (p k m : ℕ) [Fact p.Prime] [CharP R p] (x
   induction' k with k hk
   · rw [pow_zero, one_mul]
   · refine' ⟨fun h => _, fun h => _⟩
-    · rw [pow_succ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at h
+    · rw [pow_succ', mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at h
       exact hk.1 (frobenius_inj R p h)
     · rw [pow_mul', h, one_pow]
 #align char_p.pow_prime_pow_mul_eq_one_iff ExpChar.pow_prime_pow_mul_eq_one_iff
@@ -649,7 +649,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (d «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (d «expr ∣ » p) -/
 #print CharP.char_is_prime_of_two_le /-
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩

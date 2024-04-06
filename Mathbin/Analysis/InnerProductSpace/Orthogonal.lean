@@ -3,7 +3,7 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 -/
-import LinearAlgebra.BilinearForm
+import LinearAlgebra.BilinearForm.Basic
 import Analysis.InnerProductSpace.Basic
 
 #align_import analysis.inner_product_space.orthogonal from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
@@ -29,7 +29,7 @@ Note this is not the same unicode symbol as `⊥` (`has_bot`).
 -/
 
 
-variable {𝕜 E F : Type _} [IsROrC 𝕜]
+variable {𝕜 E F : Type _} [RCLike 𝕜]
 
 variable [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 

@@ -187,7 +187,7 @@ theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Ba
     · exact isIntegral_one
     · exact isIntegral_zero
   · intro hx
-    rw [pow_succ]
+    rw [pow_succ']
     exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
 #align power_basis.repr_pow_is_integral PowerBasis.repr_pow_isIntegral
 -/

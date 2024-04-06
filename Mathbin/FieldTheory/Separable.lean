@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Algebra.Squarefree
+import Algebra.Squarefree.Basic
 import Data.Polynomial.Expand
 import Data.Polynomial.Splits
 import FieldTheory.Minpoly.Field
@@ -147,7 +147,7 @@ theorem Separable.of_pow' {f : R[X]} :
   | 0 => fun h => Or.inr <| Or.inr rfl
   | 1 => fun h => Or.inr <| Or.inl ⟨pow_one f ▸ h, rfl⟩
   | n + 2 => fun h => by
-    rw [pow_succ, pow_succ] at h
+    rw [pow_succ', pow_succ'] at h
     exact Or.inl (isCoprime_self.1 h.is_coprime.of_mul_right_left)
 #align polynomial.separable.of_pow' Polynomial.Separable.of_pow'
 -/
@@ -293,7 +293,7 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) :
         C (↑u⁻¹ * ↑u) - C ↑u⁻¹ * X ^ n + C ↑u⁻¹ * C (n' * ↑n) * (X * X ^ (n - 1)) :=
       by simp only [C.map_mul, C_eq_nat_cast]; ring
     _ = 1 := by
-      simp only [Units.inv_mul, hn', C.map_one, mul_one, ← pow_succ,
+      simp only [Units.inv_mul, hn', C.map_one, mul_one, ← pow_succ',
         Nat.sub_add_cancel (show 1 ≤ n from hpos), sub_add_cancel]
 #align polynomial.separable_X_pow_sub_C_unit Polynomial.separable_X_pow_sub_C_unit
 -/
@@ -417,7 +417,7 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
       rw [← mul_one g.nat_degree, ← hg1]
       exact Nat.mul_lt_mul_of_pos_left hp.one_lt hg2.bot_lt
     rcases ih _ hg3 hg rfl with ⟨n, g, hg4, rfl⟩; refine' ⟨n + 1, g, hg4, _⟩
-    rw [← hgf, expand_expand, pow_succ]
+    rw [← hgf, expand_expand, pow_succ']
 #align polynomial.exists_separable_of_irreducible Polynomial.exists_separable_of_irreducible
 -/
 

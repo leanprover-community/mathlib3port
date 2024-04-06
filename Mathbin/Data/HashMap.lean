@@ -7,7 +7,7 @@ import Data.Array.Lemmas
 import Data.List.Join
 import Data.List.Range
 import Data.List.Nodup
-import Data.Pnat.Defs
+import Data.PNat.Defs
 
 #align_import data.hash_map from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

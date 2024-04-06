@@ -72,8 +72,8 @@ theorem Real.integrable_of_summable_norm_Icc {E : Type _} [NormedAddCommGroup E]
             ENNReal.toReal_nonneg)
         (fun n => _) hf)
       (iUnion_Icc_int_cast ℝ)
-  simp only [compacts.coe_mk, Real.volume_Icc, add_sub_cancel', ENNReal.toReal_ofReal zero_le_one,
-    mul_one, norm_le _ (norm_nonneg _)]
+  simp only [compacts.coe_mk, Real.volume_Icc, add_sub_cancel_left,
+    ENNReal.toReal_ofReal zero_le_one, mul_one, norm_le _ (norm_nonneg _)]
   intro x
   have :=
     ((f.comp <| ContinuousMap.addRight n).restrict (Icc 0 1)).norm_coe_le_norm

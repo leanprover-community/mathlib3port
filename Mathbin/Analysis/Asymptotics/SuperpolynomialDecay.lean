@@ -125,7 +125,7 @@ theorem SuperpolynomialDecay.param_mul (hf : SuperpolynomialDecay l k f) :
     SuperpolynomialDecay l k (k * f) := fun z =>
   tendsto_nhds.2 fun s hs hs0 =>
     l.sets_of_superset ((tendsto_nhds.1 (hf <| z + 1)) s hs hs0) fun x hx => by
-      simpa only [Set.mem_preimage, Pi.mul_apply, ← mul_assoc, ← pow_succ'] using hx
+      simpa only [Set.mem_preimage, Pi.mul_apply, ← mul_assoc, ← pow_succ] using hx
 #align asymptotics.superpolynomial_decay.param_mul Asymptotics.SuperpolynomialDecay.param_mul
 -/
 
@@ -142,7 +142,7 @@ theorem SuperpolynomialDecay.param_pow_mul (hf : SuperpolynomialDecay l k f) (n 
   by
   induction' n with n hn
   · simpa only [one_mul, pow_zero] using hf
-  · simpa only [pow_succ, mul_assoc] using hn.param_mul
+  · simpa only [pow_succ', mul_assoc] using hn.param_mul
 #align asymptotics.superpolynomial_decay.param_pow_mul Asymptotics.SuperpolynomialDecay.param_pow_mul
 -/
 
@@ -283,7 +283,7 @@ theorem superpolynomialDecay_iff_abs_isBoundedUnder (hk : Tendsto k l atTop) :
       ((eventually_map.1 hm).mp _)
   refine' (hk.eventually_ne_at_top 0).mono fun x hk0 hx => _
   refine' Eq.trans_le _ (mul_le_mul_of_nonneg_left hx <| abs_nonneg (k x)⁻¹)
-  rw [← abs_mul, ← mul_assoc, pow_succ, ← mul_assoc, inv_mul_cancel hk0, one_mul]
+  rw [← abs_mul, ← mul_assoc, pow_succ', ← mul_assoc, inv_mul_cancel hk0, one_mul]
 #align asymptotics.superpolynomial_decay_iff_abs_is_bounded_under Asymptotics.superpolynomialDecay_iff_abs_isBoundedUnder
 -/
 
@@ -291,7 +291,7 @@ theorem superpolynomialDecay_iff_abs_isBoundedUnder (hk : Tendsto k l atTop) :
 theorem superpolynomialDecay_iff_zpow_tendsto_zero (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, Tendsto (fun a : α => k a ^ z * f a) l (𝓝 0) :=
   by
-  refine' ⟨fun h z => _, fun h n => by simpa only [zpow_coe_nat] using h (n : ℤ)⟩
+  refine' ⟨fun h z => _, fun h n => by simpa only [zpow_natCast] using h (n : ℤ)⟩
   by_cases hz : 0 ≤ z
   · lift z to ℕ using hz
     simpa using h z
@@ -361,7 +361,7 @@ theorem superpolynomialDecay_param_pow_mul_iff (hk : Tendsto k l atTop) (n : ℕ
   induction' n with n hn
   · simp
   ·
-    simpa [pow_succ, ← mul_comm k, mul_assoc,
+    simpa [pow_succ', ← mul_comm k, mul_assoc,
       superpolynomial_decay_param_mul_iff (k ^ n * f) hk] using hn
 #align asymptotics.superpolynomial_decay_param_pow_mul_iff Asymptotics.superpolynomialDecay_param_pow_mul_iff
 -/

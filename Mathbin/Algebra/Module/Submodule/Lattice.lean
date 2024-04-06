@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 -/
 import Algebra.Module.Submodule.Basic
-import Algebra.PunitInstances
+import Algebra.PUnitInstances
 
 #align_import algebra.module.submodule.lattice from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

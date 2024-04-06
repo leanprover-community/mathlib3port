@@ -169,8 +169,8 @@ theorem exists_rat_abs_sub_le_and_den_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
   refine' ⟨j / k, _, nat.cast_le.mp (hden.trans hk₁)⟩
   rw [← div_div, le_div_iff (nat.cast_pos.mpr <| Rat.pos _ : (0 : ℝ) < _)]
   refine' (mul_le_mul_of_nonneg_left (int.cast_le.mpr hden : _ ≤ (k : ℝ)) (abs_nonneg _)).trans _
-  rwa [← abs_of_pos hk₀', Rat.cast_div, Rat.cast_coe_int, Rat.cast_coe_int, ← abs_mul, sub_mul,
-    div_mul_cancel _ hk₀'.ne', mul_comm]
+  rwa [← abs_of_pos hk₀', Rat.cast_div, Rat.cast_intCast, Rat.cast_intCast, ← abs_mul, sub_mul,
+    div_mul_cancel₀ _ hk₀'.ne', mul_comm]
 #align real.exists_rat_abs_sub_le_and_denom_le Real.exists_rat_abs_sub_le_and_den_le
 -/
 
@@ -254,7 +254,7 @@ theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q|
   replace h : |ξ * q.denom - q.num| < 1 / q.denom
   · rw [← mul_lt_mul_right hq₀] at h
     conv_lhs at h => rw [← abs_of_pos hq₀, ← abs_mul, sub_mul, mul_denom_eq_num]
-    rwa [sq, div_mul, mul_div_cancel_left _ hq₀.ne'] at h
+    rwa [sq, div_mul, mul_div_cancel_left₀ _ hq₀.ne'] at h
   constructor
   · rcases eq_or_ne ξ q with (rfl | H)
     · exact le_rfl
@@ -419,7 +419,7 @@ theorem continued_fraction_convergent_eq_convergent (ξ : ℝ) (n : ℕ) :
     (GeneralizedContinuedFraction.of ξ).convergents n = ξ.convergent n :=
   by
   induction' n with n ih generalizing ξ
-  · simp only [zeroth_convergent_eq_h, of_h_eq_floor, convergent_zero, Rat.cast_coe_int]
+  · simp only [zeroth_convergent_eq_h, of_h_eq_floor, convergent_zero, Rat.cast_intCast]
   · rw [convergents_succ, ih (fract ξ)⁻¹, convergent_succ, one_div]
     norm_cast
 #align real.continued_fraction_convergent_eq_convergent Real.continued_fraction_convergent_eq_convergent
@@ -482,7 +482,7 @@ private theorem aux₂ : 0 < u - ⌊ξ⌋ * v ∧ u - ⌊ξ⌋ * v < v :=
   obtain ⟨hv₀, hv₀'⟩ := aux₀ (zero_lt_two.trans_le hv)
   have hv₁ : 0 < 2 * v - 1 := by linarith only [hv]
   rw [← one_div, lt_div_iff (mul_pos hv₀ hv₀'), ← abs_of_pos (mul_pos hv₀ hv₀'), ← abs_mul, sub_mul,
-    ← mul_assoc, ← mul_assoc, div_mul_cancel _ hv₀.ne', abs_sub_comm, abs_lt, lt_sub_iff_add_lt,
+    ← mul_assoc, ← mul_assoc, div_mul_cancel₀ _ hv₀.ne', abs_sub_comm, abs_lt, lt_sub_iff_add_lt,
     sub_lt_iff_lt_add, mul_assoc] at h
   have hu₀ : 0 ≤ u - ⌊ξ⌋ * v :=
     by
@@ -527,13 +527,13 @@ private theorem aux₃ :
   have H₁ := div_pos (div_pos Hv Hu) hξ₀
   replace h := h.2.2
   have h' : |fract ξ - u' / v| < (v * (2 * v - 1))⁻¹ := by
-    rwa [hu'ℝ, add_div, mul_div_cancel _ Hv.ne', ← sub_sub, sub_right_comm] at h
+    rwa [hu'ℝ, add_div, mul_div_cancel_right₀ _ Hv.ne', ← sub_sub, sub_right_comm] at h
   have H : (2 * u' - 1 : ℝ) ≤ (2 * v - 1) * fract ξ :=
     by
     replace h := (abs_lt.mp h).1
     have : (2 * (v : ℝ) - 1) * (-(v * (2 * v - 1))⁻¹ + u' / v) = 2 * u' - (1 + u') / v := by
       field_simp [Hv.ne', Hv'.ne']; ring
-    rw [hu'ℝ, add_div, mul_div_cancel _ Hv.ne', ← sub_sub, sub_right_comm, self_sub_floor,
+    rw [hu'ℝ, add_div, mul_div_cancel_right₀ _ Hv.ne', ← sub_sub, sub_right_comm, self_sub_floor,
       lt_sub_iff_add_lt, ← mul_lt_mul_left Hv', this] at h
     refine' LE.le.trans _ h.le
     rw [sub_le_sub_iff_left, div_le_one Hv, add_comm]
@@ -617,7 +617,7 @@ theorem exists_rat_eq_convergent' {v : ℕ} (h : ContfracLegendre.Ass ξ u v) :
     use n + 1
     rw [convergent_succ, ← hn,
       (by exact_mod_cast to_nat_of_nonneg huv₀.le : ((u - ⌊ξ⌋ * v).toNat : ℚ) = u - ⌊ξ⌋ * v), ←
-      coe_coe, inv_div, sub_div, mul_div_cancel _ Hv, add_sub_cancel'_right]
+      coe_coe, inv_div, sub_div, mul_div_cancel_right₀ _ Hv, add_sub_cancel]
 #align real.exists_rat_eq_convergent' Real.exists_rat_eq_convergent'
 -/
 

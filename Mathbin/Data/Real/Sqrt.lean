@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 -/
 import Algebra.Star.Order
-import Topology.Algebra.Order.MonotoneContinuity
-import Topology.Instances.Nnreal
+import Topology.Order.MonotoneContinuity
+import Topology.Instances.NNReal
 import Tactic.Positivity
 
 #align_import data.real.sqrt from "leanprover-community/mathlib"@"31c24aa72e7b3e5ed97a8412470e904f82b81004"

@@ -52,7 +52,7 @@ theorem IsSubfield.div_mem {S : Set F} (hS : IsSubfield S) {x y : F} (hx : x ∈
 theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h : a ∈ s) :
     a ^ n ∈ s := by
   cases n
-  · rw [zpow_coe_nat]; exact hs.to_is_subring.to_is_submonoid.pow_mem h
+  · rw [zpow_natCast]; exact hs.to_is_subring.to_is_submonoid.pow_mem h
   · rw [zpow_negSucc]; exact hs.inv_mem (hs.to_is_subring.to_is_submonoid.pow_mem h)
 #align is_subfield.pow_mem IsSubfield.pow_mem
 -/

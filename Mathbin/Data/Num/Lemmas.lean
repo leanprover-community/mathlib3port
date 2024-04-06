@@ -5,8 +5,8 @@ Authors: Mario Carneiro
 -/
 import Data.Num.Bitwise
 import Data.Int.CharZero
-import Data.Nat.Gcd.Basic
-import Data.Nat.Psub
+import Data.Nat.GCD.Basic
+import Data.Nat.PSub
 import Data.Nat.Size
 
 #align_import data.num.lemmas from "leanprover-community/mathlib"@"25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e"
@@ -1962,7 +1962,7 @@ theorem divMod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : (r : ℕ) + d * bit
     by
     intro r₂
     apply num.mem_of_znum'.trans
-    rw [← ZNum.to_int_inj, Num.cast_toZNum, Num.cast_sub', sub_eq_iff_eq_add, ← Int.coe_nat_inj']
+    rw [← ZNum.to_int_inj, Num.cast_toZNum, Num.cast_sub', sub_eq_iff_eq_add, ← Int.natCast_inj]
     simp
   cases' e : Num.ofZNum' (Num.sub' r (Num.pos d)) with r₂ <;> simp [divmod_aux]
   · refine' ⟨h₁, lt_of_not_ge fun h => _⟩
@@ -2070,7 +2070,7 @@ theorem gcd_to_nat_aux :
       exact le_of_lt (Nat.mod_lt _ (PosNum.cast_pos _))
     rw [nat_size_to_nat, mul_to_nat, Nat.size_le] at h ⊢
     rw [mod_to_nat, mul_comm]
-    rw [pow_succ', ← Nat.mod_add_div b (Pos a)] at h
+    rw [pow_succ, ← Nat.mod_add_div b (Pos a)] at h
     refine' lt_of_mul_lt_mul_right (lt_of_le_of_lt _ h) (Nat.zero_le 2)
     rw [mul_two, mul_add]
     refine'

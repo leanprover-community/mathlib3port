@@ -6,7 +6,7 @@ Authors: David Loeffler
 import Analysis.Fourier.AddCircle
 import Analysis.Fourier.FourierTransform
 import Analysis.PSeries
-import Analysis.SchwartzSpace
+import Analysis.Distribution.SchwartzSpace
 import MeasureTheory.Measure.Lebesgue.Integral
 
 #align_import analysis.fourier.poisson_summation from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"

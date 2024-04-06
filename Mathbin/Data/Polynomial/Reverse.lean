@@ -369,8 +369,8 @@ theorem reverse_leadingCoeff (f : R[X]) : f.reverse.leadingCoeff = f.trailingCoe
 #align polynomial.reverse_leading_coeff Polynomial.reverse_leadingCoeff
 -/
 
-#print Polynomial.reverse_natTrailingDegree /-
-theorem reverse_natTrailingDegree (f : R[X]) : f.reverse.natTrailingDegree = 0 :=
+#print Polynomial.natTrailingDegree_reverse /-
+theorem natTrailingDegree_reverse (f : R[X]) : f.reverse.natTrailingDegree = 0 :=
   by
   by_cases hf : f = 0
   · rw [hf, reverse_zero, nat_trailing_degree_zero]
@@ -378,7 +378,7 @@ theorem reverse_natTrailingDegree (f : R[X]) : f.reverse.natTrailingDegree = 0 :
     apply nat_trailing_degree_le_of_ne_zero
     rw [coeff_zero_reverse]
     exact mt leading_coeff_eq_zero.mp hf
-#align polynomial.reverse_nat_trailing_degree Polynomial.reverse_natTrailingDegree
+#align polynomial.reverse_nat_trailing_degree Polynomial.natTrailingDegree_reverse
 -/
 
 #print Polynomial.reverse_trailingCoeff /-

@@ -705,7 +705,7 @@ theorem exists_average_le (hμ : μ ≠ 0) (hf : Integrable f μ) : ∃ x, ⨍ a
 #align measure_theory.exists_average_le MeasureTheory.exists_average_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_le_average /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its mean, while
 avoiding a null set. -/
@@ -719,7 +719,7 @@ theorem exists_not_mem_null_le_average (hμ : μ ≠ 0) (hf : Integrable f μ) (
 #align measure_theory.exists_not_mem_null_le_average MeasureTheory.exists_not_mem_null_le_average
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_average_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its mean, while
 avoiding a null set. -/
@@ -767,7 +767,7 @@ theorem exists_integral_le (hf : Integrable f μ) : ∃ x, ∫ a, f a ∂μ ≤ 
 #align measure_theory.exists_integral_le MeasureTheory.exists_integral_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_le_integral /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its integral,
 while avoiding a null set. -/
@@ -778,7 +778,7 @@ theorem exists_not_mem_null_le_integral (hf : Integrable f μ) (hN : μ N = 0) :
 #align measure_theory.exists_not_mem_null_le_integral MeasureTheory.exists_not_mem_null_le_integral
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_integral_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its integral,
 while avoiding a null set. -/
@@ -886,7 +886,7 @@ theorem exists_laverage_le (hμ : μ ≠ 0) (hint : ∫⁻ a, f a ∂μ ≠ ∞)
 #align measure_theory.exists_laverage_le MeasureTheory.exists_laverage_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_laverage_le /-
 /-- **First moment method**. The maximum of a measurable function is greater than its mean, while
 avoiding a null set. -/
@@ -922,7 +922,7 @@ theorem exists_le_laverage (hμ : μ ≠ 0) (hf : AEMeasurable f μ) : ∃ x, f 
 #align measure_theory.exists_le_laverage MeasureTheory.exists_le_laverage
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_le_laverage /-
 /-- **First moment method**. The minimum of a measurable function is smaller than its mean, while
 avoiding a null set. -/
@@ -975,7 +975,7 @@ theorem exists_lintegral_le (hint : ∫⁻ a, f a ∂μ ≠ ∞) : ∃ x, ∫⁻
 #align measure_theory.exists_lintegral_le MeasureTheory.exists_lintegral_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_le_lintegral /-
 /-- **First moment method**. The minimum of a measurable function is smaller than its integral,
 while avoiding a null set. -/
@@ -986,7 +986,7 @@ theorem exists_not_mem_null_le_lintegral (hf : AEMeasurable f μ) (hN : μ N = 0
 #align measure_theory.exists_not_mem_null_le_lintegral MeasureTheory.exists_not_mem_null_le_lintegral
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » N) -/
 #print MeasureTheory.exists_not_mem_null_lintegral_le /-
 /-- **First moment method**. The maximum of a measurable function is greater than its integral,
 while avoiding a null set. -/

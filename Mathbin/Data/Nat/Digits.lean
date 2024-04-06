@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 -/
-import Data.Int.Modeq
+import Data.Int.ModEq
 import Data.Nat.Bits
 import Data.Nat.Log
 import Data.List.Indexes
@@ -223,7 +223,7 @@ theorem ofDigits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
     by simp [this]
   congr
   ext
-  simp [pow_succ]
+  simp [pow_succ']
   ring
 #align nat.of_digits_eq_sum_map_with_index_aux Nat.ofDigits_eq_sum_map_with_index_aux
 -/
@@ -262,7 +262,7 @@ theorem ofDigits_append {b : ℕ} {l1 l2 : List ℕ} :
   by
   induction' l1 with hd tl IH
   · simp [of_digits]
-  · rw [of_digits, List.cons_append, of_digits, IH, List.length_cons, pow_succ']
+  · rw [of_digits, List.cons_append, of_digits, IH, List.length_cons, pow_succ]
     ring
 #align nat.of_digits_append Nat.ofDigits_append
 -/
@@ -494,7 +494,7 @@ theorem ofDigits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l,
   by
   induction' l with hd tl IH
   · simp [of_digits]
-  · rw [of_digits, List.length_cons, pow_succ]
+  · rw [of_digits, List.length_cons, pow_succ']
     have : (of_digits (b + 2) tl + 1) * (b + 2) ≤ (b + 2) ^ tl.length * (b + 2) :=
       mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) (by decide)
         (Nat.zero_le _)
@@ -768,7 +768,7 @@ theorem nine_dvd_iff (n : ℕ) : 9 ∣ n ↔ 9 ∣ (digits 10 n).Sum :=
 theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ) - c) (n : ℕ) :
     b ∣ n ↔ (b : ℤ) ∣ ofDigits c (digits b' n) :=
   by
-  rw [← Int.coe_nat_dvd]
+  rw [← Int.natCast_dvd_natCast]
   exact
     dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modEq_iff_dvd.2 h).symm _).symm.Dvd
 #align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_ofDigits
@@ -791,7 +791,7 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
   replace h : Even dig.length := by rwa [List.length_map]
   refine' eleven_dvd_iff.2 ⟨0, (_ : dig.alternating_sum = 0)⟩
   have := dig.alternating_sum_reverse
-  rw [(p.map _).reverse_eq, pow_succ, h.neg_one_pow, mul_one, neg_one_zsmul] at this
+  rw [(p.map _).reverse_eq, pow_succ', h.neg_one_pow, mul_one, neg_one_zsmul] at this
   exact eq_zero_of_neg_eq this.symm
 #align nat.eleven_dvd_of_palindrome Nat.eleven_dvd_of_palindrome
 -/

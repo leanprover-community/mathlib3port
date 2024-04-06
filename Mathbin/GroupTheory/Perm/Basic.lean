@@ -3,9 +3,9 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Algebra.Group.Pi
+import Algebra.Group.Pi.Lemmas
 import Algebra.Group.Prod
-import Algebra.Hom.Iterate
+import Algebra.GroupPower.IterateHom
 import Logic.Equiv.Set
 
 #align_import group_theory.perm.basic from "leanprover-community/mathlib"@"b86832321b586c6ac23ef8cdef6a7a27e42b13bd"
@@ -542,7 +542,7 @@ theorem subtypePerm_pow (f : Perm α) (n : ℕ) (hf) :
   by
   induction' n with n ih
   · simp
-  · simp_rw [pow_succ', ih, subtype_perm_mul]
+  · simp_rw [pow_succ, ih, subtype_perm_mul]
 #align equiv.perm.subtype_perm_pow Equiv.Perm.subtypePerm_pow
 -/
 

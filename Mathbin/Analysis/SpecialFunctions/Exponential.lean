@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 -/
 import Analysis.NormedSpace.Exponential
-import Analysis.Calculus.FderivAnalytic
+import Analysis.Calculus.FDeriv.Analytic
 import Topology.MetricSpace.CauSeqFilter
 
 #align_import analysis.special_functions.exponential from "leanprover-community/mathlib"@"c20927220ef87bb4962ba08bf6da2ce3cf50a6dd"
@@ -56,7 +56,7 @@ We prove most result for an arbitrary field `𝕂`, and then specialize to `𝕂
 -/
 
 
-open Filter IsROrC ContinuousMultilinearMap NormedField Asymptotics
+open Filter RCLike ContinuousMultilinearMap NormedField Asymptotics
 
 open scoped Nat Topology BigOperators ENNReal
 
@@ -184,7 +184,7 @@ end deriv
 
 section IsROrCAnyAlgebra
 
-variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [RCLike 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 #print hasStrictFDerivAt_exp_zero /-
 /-- The exponential in a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ` has strict Fréchet-derivative
@@ -206,7 +206,7 @@ end IsROrCAnyAlgebra
 
 section IsROrCCommAlgebra
 
-variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [RCLike 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 #print hasStrictFDerivAt_exp /-
 /-- The exponential map in a commutative Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ` has strict
@@ -231,7 +231,7 @@ end IsROrCCommAlgebra
 
 section DerivROrC
 
-variable {𝕂 : Type _} [IsROrC 𝕂]
+variable {𝕂 : Type _} [RCLike 𝕂]
 
 #print hasStrictDerivAt_exp /-
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has strict derivative `exp 𝕂 x` at any point
@@ -448,9 +448,9 @@ theorem hasDerivAt_exp_smul_const_of_mem_ball' (x : 𝔸) (t : 𝕂)
 
 end MemBall
 
-section IsROrC
+section RCLike
 
-variable [IsROrC 𝕂]
+variable [RCLike 𝕂]
 
 variable [NormedCommRing 𝕊] [NormedRing 𝔸]
 
@@ -532,7 +532,7 @@ theorem hasDerivAt_exp_smul_const' (x : 𝔸) (t : 𝕂) :
 #align has_deriv_at_exp_smul_const' hasDerivAt_exp_smul_const'
 -/
 
-end IsROrC
+end RCLike
 
 end NormedSpace.exp_smul
 

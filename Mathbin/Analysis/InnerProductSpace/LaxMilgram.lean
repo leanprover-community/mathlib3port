@@ -6,7 +6,7 @@ Authors: Daniel Roca González
 import Analysis.InnerProductSpace.Projection
 import Analysis.InnerProductSpace.Dual
 import Analysis.NormedSpace.Banach
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 import Topology.MetricSpace.Antilipschitz
 
 #align_import analysis.inner_product_space.lax_milgram from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
@@ -41,7 +41,7 @@ dual, Lax-Milgram
 
 noncomputable section
 
-open IsROrC LinearMap ContinuousLinearMap InnerProductSpace
+open RCLike LinearMap ContinuousLinearMap InnerProductSpace
 
 open LinearMap (ker range)
 

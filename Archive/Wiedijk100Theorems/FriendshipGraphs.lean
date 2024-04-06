@@ -5,8 +5,8 @@ Authors: Aaron Anderson, Jalex Stark, Kyle Miller
 -/
 import Combinatorics.SimpleGraph.AdjMatrix
 import LinearAlgebra.Matrix.Charpoly.FiniteField
-import Data.Int.Modeq
-import Data.Zmod.Basic
+import Data.Int.ModEq
+import Data.ZMod.Basic
 import Tactic.IntervalCases
 
 #align_import wiedijk_100_theorems.friendship_graphs from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
@@ -97,7 +97,7 @@ theorem adjMatrix_sq_of_ne {v w : V} (hvw : v ≠ w) : (G.adjMatrix R ^ 2) v w =
 theorem adjMatrix_pow_three_of_not_adj {v w : V} (non_adj : ¬G.Adj v w) :
     (G.adjMatrix R ^ 3) v w = degree G v :=
   by
-  rw [pow_succ, mul_eq_mul, adj_matrix_mul_apply, degree, card_eq_sum_ones, Nat.cast_sum]
+  rw [pow_succ', mul_eq_mul, adj_matrix_mul_apply, degree, card_eq_sum_ones, Nat.cast_sum]
   apply sum_congr rfl
   intro x hx
   rw [adj_matrix_sq_of_ne _ hG, Nat.cast_one]
@@ -119,7 +119,7 @@ theorem degree_eq_of_not_adj {v w : V} (hvw : ¬G.Adj v w) : degree G v = degree
     adj_matrix_pow_three_of_not_adj ℕ hG hvw, ←
     adj_matrix_pow_three_of_not_adj ℕ hG fun h => hvw (G.symm h)]
   conv_lhs => rw [← transpose_adj_matrix]
-  simp only [pow_succ, sq, mul_eq_mul, ← transpose_mul, transpose_apply]
+  simp only [pow_succ', sq, mul_eq_mul, ← transpose_mul, transpose_apply]
   simp only [← mul_eq_mul, mul_assoc]
 #align theorems_100.friendship.degree_eq_of_not_adj Theorems100.Friendship.degree_eq_of_not_adj
 
@@ -229,7 +229,7 @@ theorem adjMatrix_pow_mod_p_of_regular {p : ℕ} (dmod : (d : ZMod p) = 1)
   iterate 2 cases' k with k; · exfalso; linarith
   induction' k with k hind
   · exact adj_matrix_sq_mod_p_of_regular hG dmod hd
-  rw [pow_succ, hind (Nat.le_add_left 2 k)]
+  rw [pow_succ', hind (Nat.le_add_left 2 k)]
   exact adj_matrix_mul_const_one_mod_p_of_regular dmod hd
 #align theorems_100.friendship.adj_matrix_pow_mod_p_of_regular Theorems100.Friendship.adjMatrix_pow_mod_p_of_regular
 

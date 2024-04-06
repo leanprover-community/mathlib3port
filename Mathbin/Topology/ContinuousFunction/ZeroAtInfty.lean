@@ -251,7 +251,7 @@ variable [AddMonoid β] [ContinuousAdd β] (f g : C₀(α, β))
 @[simp]
 theorem coe_nsmulRec : ∀ n, ⇑(nsmulRec n f) = n • f
   | 0 => by rw [nsmulRec, zero_smul, coe_zero]
-  | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
+  | n + 1 => by rw [nsmulRec, succ_nsmul', coe_add, coe_nsmul_rec]
 #align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_nsmulRec
 -/
 
@@ -308,7 +308,7 @@ theorem sub_apply : (f - g) x = f x - g x :=
 #print ZeroAtInftyContinuousMap.coe_zsmulRec /-
 @[simp]
 theorem coe_zsmulRec : ∀ z, ⇑(zsmulRec z f) = z • f
-  | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
+  | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, natCast_zsmul]
   | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
 #align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmulRec
 -/

@@ -3,7 +3,7 @@ Copyright (c) 2020 Fox Thomson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 -/
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 import Algebra.Order.Kleene
 import Data.List.Join
 import Data.Set.Lattice
@@ -293,7 +293,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     constructor
     · rintro rfl; exact ⟨[], rfl, rfl, fun y h => h.elim⟩
     · rintro ⟨_, rfl, rfl, _⟩; rfl
-  · simp only [pow_succ, mem_mul, ihn]
+  · simp only [pow_succ', mem_mul, ihn]
     constructor
     · rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
       exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
@@ -326,7 +326,7 @@ theorem map_kstar (f : α → β) (l : Language α) : map f l∗ = (map f l)∗ 
 
 #print Language.mul_self_kstar_comm /-
 theorem mul_self_kstar_comm (l : Language α) : l∗ * l = l * l∗ := by
-  simp only [kstar_eq_supr_pow, mul_supr, supr_mul, ← pow_succ, ← pow_succ']
+  simp only [kstar_eq_supr_pow, mul_supr, supr_mul, ← pow_succ', ← pow_succ]
 #align language.mul_self_kstar_comm Language.mul_self_kstar_comm
 -/
 
@@ -334,7 +334,7 @@ theorem mul_self_kstar_comm (l : Language α) : l∗ * l = l * l∗ := by
 @[simp]
 theorem one_add_self_mul_kstar_eq_kstar (l : Language α) : 1 + l * l∗ = l∗ :=
   by
-  simp only [kstar_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
+  simp only [kstar_eq_supr_pow, mul_supr, ← pow_succ', ← pow_zero l]
   exact sup_iSup_nat_succ _
 #align language.one_add_self_mul_kstar_eq_kstar Language.one_add_self_mul_kstar_eq_kstar
 -/
@@ -358,7 +358,7 @@ instance : KleeneAlgebra (Language α) :=
       refine' iSup_le fun n => _
       induction' n with n ih
       · simp
-      rw [pow_succ', mul_assoc (l ^ n) l m]
+      rw [pow_succ, mul_assoc (l ^ n) l m]
       exact le_trans (le_mul_congr le_rfl h) ih
     mul_kstar_le_self := fun l m h =>
       by
@@ -366,7 +366,7 @@ instance : KleeneAlgebra (Language α) :=
       refine' iSup_le fun n => _
       induction' n with n ih
       · simp
-      rw [pow_succ, ← mul_assoc m l (l ^ n)]
+      rw [pow_succ', ← mul_assoc m l (l ^ n)]
       exact le_trans (le_mul_congr h le_rfl) ih }
 
 end Language

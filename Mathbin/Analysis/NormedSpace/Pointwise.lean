@@ -168,7 +168,7 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
       _ = ε := by field_simp [Rpos.ne']
   have : y = x + r • z := by simp only [hz, add_neg_cancel_left]
   apply hε
-  simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I
+  simpa only [this, dist_eq_norm, add_sub_cancel_left, mem_closed_ball] using I
 #align eventually_singleton_add_smul_subset eventually_singleton_add_smul_subset
 -/
 
@@ -323,7 +323,7 @@ theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     have := hs.trans_lt ((inf_edist_le_edist_of_mem hz).trans_lt h)
     rw [of_real_eq_coe_nnreal hδ.le, some_eq_coe] at this
     exact_mod_cast this
-  rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h
+  rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel δ ↑r] at h
   obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
   refine'
     (ENNReal.add_lt_add_right of_real_ne_top <|

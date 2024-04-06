@@ -46,8 +46,8 @@ protected theorem uniformAddGroup : @UniformAddGroup G B.UniformSpace _ :=
 #align add_group_filter_basis.uniform_add_group AddGroupFilterBasis.uniformAddGroup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » M) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 #print AddGroupFilterBasis.cauchy_iff /-
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔

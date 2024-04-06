@@ -136,7 +136,7 @@ theorem int_valuation_le_one (x : R) : v.intValuationDef x ≤ 1 :=
   · rw [if_pos hx]; exact WithZero.zero_le 1
   · rw [if_neg hx, ← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, of_add_le,
       Right.neg_nonpos_iff]
-    exact Int.coe_nat_nonneg _
+    exact Int.natCast_nonneg _
 #align is_dedekind_domain.height_one_spectrum.int_valuation_le_one IsDedekindDomain.HeightOneSpectrum.int_valuation_le_one
 -/
 
@@ -299,7 +299,7 @@ theorem int_valuation_exists_uniformizer :
   use π
   rw [int_valuation_def, if_neg (associates.mk_ne_zero'.mp hπ), WithZero.coe_inj]
   apply congr_arg
-  rw [neg_inj, ← Int.ofNat_one, Int.coe_nat_inj']
+  rw [neg_inj, ← Int.ofNat_one, Int.natCast_inj]
   rw [← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd_iff] at mem nmem
   rw [← pow_one (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem
   rw [Associates.mk_pow, Associates.prime_pow_dvd_iff_le hπ hv, not_le] at nmem

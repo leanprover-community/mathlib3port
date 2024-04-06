@@ -5,9 +5,9 @@ Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
 import Data.Fintype.BigOperators
 import Data.Finsupp.Defs
-import Data.Nat.PartEnat
+import Data.Nat.PartENat
 import Data.Set.Countable
-import Logic.Small.Basic
+import Logic.Small.Defs
 import Order.ConditionallyCompleteLattice.Basic
 import Order.SuccPred.Limit
 import SetTheory.Cardinal.SchroederBernstein
@@ -1591,7 +1591,7 @@ theorem card_le_of_finset {α} (s : Finset α) : (s.card : Cardinal) ≤ (#α) :
 #print Cardinal.natCast_pow /-
 @[simp, norm_cast]
 theorem natCast_pow {m n : ℕ} : (↑(pow m n) : Cardinal) = (m^n) := by
-  induction n <;> simp [pow_succ', power_add, *]
+  induction n <;> simp [pow_succ, power_add, *]
 #align cardinal.nat_cast_pow Cardinal.natCast_pow
 -/
 
@@ -1854,7 +1854,7 @@ theorem nsmul_lt_aleph0_iff {n : ℕ} {a : Cardinal} : n • a < ℵ₀ ↔ n = 
   simp only [Nat.succ_ne_zero, false_or_iff]
   induction' n with n ih
   · simp
-  rw [succ_nsmul, add_lt_aleph_0_iff, ih, and_self_iff]
+  rw [succ_nsmul', add_lt_aleph_0_iff, ih, and_self_iff]
 #align cardinal.nsmul_lt_aleph_0_iff Cardinal.nsmul_lt_aleph0_iff
 -/
 

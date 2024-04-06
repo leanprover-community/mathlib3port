@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import RingTheory.PowerSeries.Basic
+import RingTheory.MvPowerSeries.Basic
 import Data.Nat.Parity
 import Algebra.BigOperators.NatAntidiagonal
 
@@ -58,7 +58,7 @@ theorem invUnitsSub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * C R u 
   by
   ext (_ | n)
   · simp
-  · simp [n.succ_ne_zero, pow_succ]
+  · simp [n.succ_ne_zero, pow_succ']
 #align power_series.inv_units_sub_mul_X PowerSeries.invUnitsSub_mul_X
 -/
 
@@ -220,7 +220,7 @@ theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (
     simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
       coe_comp]
   simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply,
-    rescale_one] using pow_succ' (NormedSpace.exp A) k
+    rescale_one] using pow_succ (NormedSpace.exp A) k
 #align power_series.exp_pow_eq_rescale_exp PowerSeries.exp_pow_eq_rescale_exp
 -/
 

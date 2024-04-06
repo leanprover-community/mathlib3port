@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Geometry.Manifold.ContMdiffMap
+import Geometry.Manifold.ContMDiffMap
 
 #align_import geometry.manifold.algebra.monoid from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
@@ -299,7 +299,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
 #print smooth_pow /-
 theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
   | 0 => by simp only [pow_zero]; exact smooth_const
-  | k + 1 => by simpa [pow_succ] using smooth_id.mul (smooth_pow _)
+  | k + 1 => by simpa [pow_succ'] using smooth_id.mul (smooth_pow _)
 #align smooth_pow smooth_pow
 -/
 

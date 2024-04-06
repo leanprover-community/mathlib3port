@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import LinearAlgebra.Basis
 import Algebra.FreeAlgebra
-import LinearAlgebra.Dimension
+import LinearAlgebra.Dimension.Basic
 import LinearAlgebra.FinsuppVectorSpace
 
 #align_import linear_algebra.free_algebra from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"

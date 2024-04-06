@@ -154,7 +154,7 @@ theorem add_idem (a : α) : a + a = a := by simp
 theorem nsmul_eq_self : ∀ {n : ℕ} (hn : n ≠ 0) (a : α), n • a = a
   | 0, h => (h rfl).elim
   | 1, h => one_nsmul
-  | n + 2, h => fun a => by rw [succ_nsmul, nsmul_eq_self n.succ_ne_zero, add_idem]
+  | n + 2, h => fun a => by rw [succ_nsmul', nsmul_eq_self n.succ_ne_zero, add_idem]
 #align nsmul_eq_self nsmul_eq_self
 -/
 
@@ -335,7 +335,7 @@ theorem kstar_idem (a : α) : a∗∗ = a∗ :=
 @[simp]
 theorem pow_le_kstar : ∀ {n : ℕ}, a ^ n ≤ a∗
   | 0 => (pow_zero _).trans_le one_le_kstar
-  | n + 1 => by rw [pow_succ]; exact (mul_le_mul_left' pow_le_kstar _).trans mul_kstar_le_kstar
+  | n + 1 => by rw [pow_succ']; exact (mul_le_mul_left' pow_le_kstar _).trans mul_kstar_le_kstar
 #align pow_le_kstar pow_le_kstar
 -/
 

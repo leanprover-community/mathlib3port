@@ -163,21 +163,21 @@ scoped notation "π" => Real.pi
 #print Real.cos_pi_div_two /-
 @[simp]
 theorem cos_pi_div_two : cos (π / 2) = 0 := by
-  rw [Real.pi, mul_div_cancel_left _ (two_ne_zero' ℝ)] <;>
+  rw [Real.pi, mul_div_cancel_left₀ _ (two_ne_zero' ℝ)] <;>
     exact (Classical.choose_spec exists_cos_eq_zero).2
 #align real.cos_pi_div_two Real.cos_pi_div_two
 -/
 
 #print Real.one_le_pi_div_two /-
 theorem one_le_pi_div_two : (1 : ℝ) ≤ π / 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (two_ne_zero' ℝ)] <;>
+  rw [Real.pi, mul_div_cancel_left₀ _ (two_ne_zero' ℝ)] <;>
     exact (Classical.choose_spec exists_cos_eq_zero).1.1
 #align real.one_le_pi_div_two Real.one_le_pi_div_two
 -/
 
 #print Real.pi_div_two_le_two /-
 theorem pi_div_two_le_two : π / 2 ≤ 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (two_ne_zero' ℝ)] <;>
+  rw [Real.pi, mul_div_cancel_left₀ _ (two_ne_zero' ℝ)] <;>
     exact (Classical.choose_spec exists_cos_eq_zero).1.2
 #align real.pi_div_two_le_two Real.pi_div_two_le_two
 -/
@@ -263,14 +263,14 @@ open scoped Real
 #print Real.sin_pi /-
 @[simp]
 theorem sin_pi : sin π = 0 := by
-  rw [← mul_div_cancel_left π (two_ne_zero' ℝ), two_mul, add_div, sin_add, cos_pi_div_two] <;> simp
+  rw [← mul_div_cancel_left₀ π (two_ne_zero' ℝ), two_mul, add_div, sin_add, cos_pi_div_two] <;> simp
 #align real.sin_pi Real.sin_pi
 -/
 
 #print Real.cos_pi /-
 @[simp]
 theorem cos_pi : cos π = -1 := by
-  rw [← mul_div_cancel_left π (two_ne_zero' ℝ), mul_div_assoc, cos_two_mul, cos_pi_div_two] <;>
+  rw [← mul_div_cancel_left₀ π (two_ne_zero' ℝ), mul_div_assoc, cos_two_mul, cos_pi_div_two] <;>
     simp [bit0, pow_add]
 #align real.cos_pi Real.cos_pi
 -/
@@ -978,10 +978,10 @@ theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSe
     have : (2 : ℝ) ≠ 0 := two_ne_zero
     symm; rw [div_eq_iff_mul_eq this]; symm
     rw [sqrt_two_add_series, sqrt_eq_iff_sq_eq, mul_pow, cos_sq, ← mul_div_assoc, Nat.add_succ,
-      pow_succ, mul_div_mul_left _ _ this, cos_pi_over_two_pow, add_mul]
+      pow_succ', mul_div_mul_left _ _ this, cos_pi_over_two_pow, add_mul]
     congr; · norm_num
-    rw [mul_comm, sq, mul_assoc, ← mul_div_assoc, mul_div_cancel_left, ← mul_div_assoc,
-        mul_div_cancel_left] <;>
+    rw [mul_comm, sq, mul_assoc, ← mul_div_assoc, mul_div_cancel_left₀, ← mul_div_assoc,
+        mul_div_cancel_left₀] <;>
       try exact this
     apply add_nonneg; norm_num; apply sqrt_two_add_series_zero_nonneg; norm_num
     apply le_of_lt; apply cos_pos_of_mem_Ioo ⟨_, _⟩
@@ -1016,7 +1016,7 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) :
   by
   symm; rw [div_eq_iff_mul_eq]; symm
   rw [sqrt_eq_iff_sq_eq, mul_pow, sin_sq_pi_over_two_pow_succ, sub_mul]
-  · congr; norm_num; rw [mul_comm]; convert mul_div_cancel' _ _; norm_num; norm_num
+  · congr; norm_num; rw [mul_comm]; convert mul_div_cancel₀ _ _; norm_num; norm_num
   · rw [sub_nonneg]; apply le_of_lt; apply sqrt_two_add_series_lt_two
   apply le_of_lt; apply mul_pos; apply sin_pos_of_pos_of_lt_pi
   · apply div_pos pi_pos; apply pow_pos; norm_num

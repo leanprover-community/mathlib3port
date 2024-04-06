@@ -3,7 +3,7 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import CategoryTheory.Extensive
+import CategoryTheory.Limits.VanKampen
 import CategoryTheory.Limits.Shapes.KernelPair
 
 #align_import category_theory.adhesive from "leanprover-community/mathlib"@"5c1efce12ba86d4901463f61019832f6a4b1a0d0"

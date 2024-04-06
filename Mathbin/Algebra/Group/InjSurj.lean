@@ -137,7 +137,7 @@ protected def monoid [Monoid M₂] (f : M₁ → M₂) (hf : Injective f) (one :
     hf.MulOneClass f one mul with
     npow := fun n x => x ^ n
     npow_zero := fun x => hf <| by erw [npow, one, pow_zero]
-    npow_succ := fun n x => hf <| by erw [npow, pow_succ, mul, npow] }
+    npow_succ := fun n x => hf <| by erw [npow, pow_succ', mul, npow] }
 #align function.injective.monoid Function.Injective.monoid
 #align function.injective.add_monoid Function.Injective.addMonoid
 -/
@@ -280,8 +280,8 @@ protected def divInvMonoid [DivInvMonoid M₂] (f : M₁ → M₂) (hf : Injecti
     ‹Div M₁› with
     zpow := fun n x => x ^ n
     zpow_zero' := fun x => hf <| by erw [zpow, zpow_zero, one]
-    zpow_succ' := fun n x => hf <| by erw [zpow, mul, zpow_coe_nat, pow_succ, zpow, zpow_coe_nat]
-    zpow_neg' := fun n x => hf <| by erw [zpow, zpow_negSucc, inv, zpow, zpow_coe_nat]
+    zpow_succ' := fun n x => hf <| by erw [zpow, mul, zpow_natCast, pow_succ', zpow, zpow_natCast]
+    zpow_neg' := fun n x => hf <| by erw [zpow, zpow_negSucc, inv, zpow, zpow_natCast]
     div_eq_hMul_inv := fun x y => hf <| by erw [div, mul, inv, div_eq_mul_inv] }
 #align function.injective.div_inv_monoid Function.Injective.divInvMonoid
 #align function.injective.sub_neg_monoid Function.Injective.subNegMonoid
@@ -468,7 +468,7 @@ protected def monoid [Monoid M₁] (f : M₁ → M₂) (hf : Surjective f) (one 
     hf.MulOneClass f one mul with
     npow := fun n x => x ^ n
     npow_zero := hf.forall.2 fun x => by erw [← npow, pow_zero, ← one]
-    npow_succ := fun n => hf.forall.2 fun x => by erw [← npow, pow_succ, ← npow, ← mul] }
+    npow_succ := fun n => hf.forall.2 fun x => by erw [← npow, pow_succ', ← npow, ← mul] }
 #align function.surjective.monoid Function.Surjective.monoid
 #align function.surjective.add_monoid Function.Surjective.addMonoid
 -/
@@ -552,9 +552,9 @@ protected def divInvMonoid [DivInvMonoid M₁] (f : M₁ → M₂) (hf : Surject
     zpow := fun n x => x ^ n
     zpow_zero' := hf.forall.2 fun x => by erw [← zpow, zpow_zero, ← one]
     zpow_succ' := fun n =>
-      hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_coe_nat, zpow_coe_nat, pow_succ, ← mul]
+      hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_natCast, zpow_natCast, pow_succ', ← mul]
     zpow_neg' := fun n =>
-      hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_negSucc, zpow_coe_nat, inv]
+      hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_negSucc, zpow_natCast, inv]
     div_eq_hMul_inv := hf.Forall₂.2 fun x y => by erw [← inv, ← mul, ← div, div_eq_mul_inv] }
 #align function.surjective.div_inv_monoid Function.Surjective.divInvMonoid
 #align function.surjective.sub_neg_monoid Function.Surjective.subNegMonoid

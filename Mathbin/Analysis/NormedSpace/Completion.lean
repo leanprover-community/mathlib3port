@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 import Analysis.Normed.Group.Completion
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 import Topology.Algebra.UniformRing
 
 #align_import analysis.normed_space.completion from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"

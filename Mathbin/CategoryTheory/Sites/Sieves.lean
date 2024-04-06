@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 -/
 import Order.CompleteLattice
-import CategoryTheory.Over
+import CategoryTheory.Comma.Over
 import CategoryTheory.Yoneda
 import CategoryTheory.Limits.Shapes.Pullbacks
 import Data.Set.Lattice

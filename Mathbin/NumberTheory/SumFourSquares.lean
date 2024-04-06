@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Algebra.GroupPower.Identities
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import FieldTheory.Finite.Basic
 import Data.Int.Parity
 import Data.Fintype.BigOperators
@@ -46,7 +46,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
         rw [even_iff_two_dvd] at hxsuby hxaddy
         rw [Int.mul_ediv_cancel' hxsuby, Int.mul_ediv_cancel' hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
-        simp [mul_add, pow_succ, mul_comm, mul_assoc, mul_left_comm]
+        simp [mul_add, pow_succ', mul_comm, mul_assoc, mul_left_comm]
 #align int.sq_add_sq_of_two_mul_sq_add_sq Int.sq_add_sq_of_two_mul_sq_add_sq
 -/
 
@@ -66,7 +66,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
       lt_of_mul_lt_mul_left
         (calc
           p * k.natAbs = a.valMinAbs.natAbs ^ 2 + b.valMinAbs.natAbs ^ 2 + 1 := by
-            rw [← Int.coe_nat_inj', Int.ofNat_add, Int.ofNat_add, Int.coe_nat_pow, Int.coe_nat_pow,
+            rw [← Int.natCast_inj, Int.ofNat_add, Int.ofNat_add, Int.coe_nat_pow, Int.coe_nat_pow,
               Int.natAbs_sq, Int.natAbs_sq, Int.ofNat_one, hk, Int.ofNat_mul,
               Int.natAbs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=
@@ -189,7 +189,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             ((lt_add_iff_pos_right _).2
               (by
                 rw [hm2, Int.ofNat_one, one_pow, mul_one]
-                exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one))
+                exact add_pos_of_nonneg_of_pos (Int.natCast_nonneg _) zero_lt_one))
           _ = m ^ 2 := by
             conv_rhs => rw [← Nat.mod_add_div m 2]
             simp [-Nat.mod_add_div, mul_add, add_mul, bit0, bit1, mul_comm, mul_assoc,
@@ -202,9 +202,9 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
         rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, ZMod.nat_cast_self, MulZeroClass.zero_mul]
       let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
       have hn0 : 0 < n.natAbs :=
-        Int.natAbs_pos_of_ne_zero fun hn0 =>
+        Int.natAbs_pos fun hn0 =>
           have hwxyz0 : (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) = 0 := by
-            rw [← Int.coe_nat_eq_zero, ← hnat_abs]; rwa [hn0, MulZeroClass.mul_zero] at hn
+            rw [← Int.natCast_eq_zero, ← hnat_abs]; rwa [hn0, MulZeroClass.mul_zero] at hn
           have habcd0 : (m : ℤ) ∣ a ∧ (m : ℤ) ∣ b ∧ (m : ℤ) ∣ c ∧ (m : ℤ) ∣ d := by
             simpa only [add_eq_zero_iff, Int.natAbs_eq_zero, ZMod.valMinAbs_eq_zero, and_assoc,
               pow_eq_zero_iff two_pos, CharP.int_cast_eq_zero_iff _ m _] using hwxyz0
@@ -213,9 +213,9 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           let ⟨mc, hmc⟩ := habcd0.2.2.1
           let ⟨md, hmd⟩ := habcd0.2.2.2
           have hmdvdp : m ∣ p :=
-            Int.coe_nat_dvd.1
+            Int.natCast_dvd_natCast.1
               ⟨ma ^ 2 + mb ^ 2 + mc ^ 2 + md ^ 2,
-                (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero.2 hm0.1)).1 <| by
+                (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.natCast_ne_zero.2 hm0.1)).1 <| by
                   rw [← habcd, hma, hmb, hmc, hmd]; ring⟩
           (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by
             simpa [lt_irrefl, hmeqp] using hmp
@@ -238,10 +238,10 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hnm : n.natAbs < m :=
         Int.ofNat_lt.1
           (lt_of_mul_lt_mul_left (by rw [Int.natAbs_of_nonneg hn_nonneg, ← hn, ← sq]; exact hwxyzlt)
-            (Int.coe_nat_nonneg m))
+            (Int.natCast_nonneg m))
       have hstuv : s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2 = n.natAbs * p :=
         (mul_right_inj'
-              (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero.2 hm0.1))).1 <|
+              (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.natCast_ne_zero.2 hm0.1))).1 <|
           calc
             (m : ℤ) ^ 2 * (s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2) =
                 ((m : ℕ) * s) ^ 2 + ((m : ℕ) * t) ^ 2 + ((m : ℕ) * u) ^ 2 + ((m : ℕ) * v) ^ 2 :=
@@ -266,8 +266,7 @@ theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2
     ⟨(a * w - b * x - c * y - d * z).natAbs, (a * x + b * w + c * z - d * y).natAbs,
       (a * y - b * z + c * w + d * x).natAbs, (a * z + b * y - c * x + d * w).natAbs,
       by
-      rw [← Int.coe_nat_inj', ← Nat.mul_div_cancel' (min_fac_dvd (k + 2)), Int.ofNat_mul, ← h₁, ←
-        h₂]
+      rw [← Int.natCast_inj, ← Nat.mul_div_cancel' (min_fac_dvd (k + 2)), Int.ofNat_mul, ← h₁, ← h₂]
       simp [sum_four_sq_mul_sum_four_sq]⟩
 #align nat.sum_four_squares Nat.sum_four_squares
 -/

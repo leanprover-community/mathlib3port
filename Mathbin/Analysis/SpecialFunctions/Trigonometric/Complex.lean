@@ -215,7 +215,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (w «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (w «expr ≠ » 0) -/
 #print Complex.cos_surjective /-
 theorem cos_surjective : Function.Surjective cos :=
   by
@@ -229,7 +229,7 @@ theorem cos_surjective : Function.Surjective cos :=
     rintro rfl
     simpa only [zero_add, one_ne_zero, MulZeroClass.mul_zero] using hw
   refine' ⟨log w / I, cos_eq_iff_quadratic.2 _⟩
-  rw [div_mul_cancel _ I_ne_zero, exp_log w₀]
+  rw [div_mul_cancel₀ _ I_ne_zero, exp_log w₀]
   convert hw
   ring
 #align complex.cos_surjective Complex.cos_surjective

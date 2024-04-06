@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Algebra.Group.TypeTags
-import Algebra.Hom.Equiv.Basic
-import Algebra.Hom.Ring
-import Algebra.Hom.Units
+import Algebra.Group.Equiv.Basic
+import Algebra.Ring.Hom.Defs
+import Algebra.Group.Units.Hom
 
 #align_import deprecated.group from "leanprover-community/mathlib"@"10708587e81b68c763fcdb7505f279d52e569768"
 

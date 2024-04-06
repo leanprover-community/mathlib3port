@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 -/
 import Tactic.Qify
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import NumberTheory.DiophantineApproximation
 import NumberTheory.Zsqrtd.Basic
 
@@ -344,7 +344,7 @@ theorem x_pow_pos {a : Solution₁ d} (hax : 0 < a.x) (n : ℕ) : 0 < (a ^ n).x 
   by
   induction' n with n ih
   · simp only [pow_zero, x_one, zero_lt_one]
-  · rw [pow_succ]
+  · rw [pow_succ']
     exact x_mul_pos hax ih
 #align pell.solution₁.x_pow_pos Pell.Solution₁.x_pow_pos
 -/
@@ -356,7 +356,7 @@ theorem y_pow_succ_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) (n : 
     0 < (a ^ n.succ).y := by
   induction' n with n ih
   · simp only [hay, pow_one]
-  · rw [pow_succ]
+  · rw [pow_succ']
     exact y_mul_pos hax hay (x_pow_pos hax _) ih
 #align pell.solution₁.y_pow_succ_pos Pell.Solution₁.y_pow_succ_pos
 -/
@@ -378,7 +378,7 @@ theorem y_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) {n : ℤ}
 theorem x_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (n : ℤ) : 0 < (a ^ n).x :=
   by
   cases n
-  · rw [zpow_coe_nat]
+  · rw [zpow_natCast]
     exact x_pow_pos hax n
   · rw [zpow_negSucc]
     exact x_pow_pos hax (n + 1)
@@ -393,7 +393,7 @@ theorem sign_y_zpow_eq_sign_of_x_pos_of_y_pos {a : Solution₁ d} (hax : 0 < a.x
   by
   rcases n with ((_ | _) | _)
   · rfl
-  · rw [zpow_coe_nat]
+  · rw [zpow_natCast]
     exact Int.sign_eq_one_of_pos (y_pow_succ_pos hax hay n)
   · rw [zpow_negSucc]
     exact Int.sign_eq_neg_one_of_neg (neg_neg_of_pos (y_pow_succ_pos hax hay n))
@@ -449,7 +449,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     have h1 : (q.num : ℝ) / (q.denom : ℝ) = q := by exact_mod_cast q.num_div_denom
     rw [mem_set_of, abs_sub_comm, ← @Int.cast_lt ℝ, ← div_lt_div_right (abs_pos_of_pos h0)]
     push_cast
-    rw [← abs_div, abs_sq, sub_div, mul_div_cancel _ h0.ne', ← div_pow, h1, ←
+    rw [← abs_div, abs_sq, sub_div, mul_div_cancel_right₀ _ h0.ne', ← div_pow, h1, ←
       sq_sqrt (int.cast_pos.mpr h₀).le, sq_sub_sq, abs_mul, ← mul_one_div]
     refine' mul_lt_mul'' (((abs_add ξ q).trans _).trans_lt hM₁) h (abs_nonneg _) (abs_nonneg _)
     rw [two_mul, add_assoc, add_le_add_iff_left, ← sub_le_iff_le_add']
@@ -808,7 +808,7 @@ theorem eq_pow_of_nonneg {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : So
     have hyy := h.mul_inv_y_nonneg hx₁ hy
     lift (a * a₁⁻¹).x to ℕ using hxx₁.le with x' hx'
     obtain ⟨n, hn⟩ := ih x' (by exact_mod_cast hxx₂.trans_eq hax'.symm) hxx₁ hyy hx'
-    exact ⟨n + 1, by rw [pow_succ, ← hn, mul_comm a, ← mul_assoc, mul_inv_self, one_mul]⟩
+    exact ⟨n + 1, by rw [pow_succ', ← hn, mul_comm a, ← mul_assoc, mul_inv_self, one_mul]⟩
 #align pell.is_fundamental.eq_pow_of_nonneg Pell.IsFundamental.eq_pow_of_nonneg
 -/
 

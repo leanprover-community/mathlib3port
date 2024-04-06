@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Analysis.Calculus.FderivAnalytic
+import Analysis.Calculus.FDeriv.Analytic
 import Analysis.Asymptotics.SpecificAsymptotics
 import Analysis.Complex.CauchyIntegral
 

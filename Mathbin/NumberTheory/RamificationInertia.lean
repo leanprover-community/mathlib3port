@@ -681,7 +681,7 @@ theorem quotientToQuotientRangePowQuotSucc_surjective [IsDomain S] [IsDedekindDo
       Submodule.coe_sub]
     refine' ⟨⟨_, Ideal.mem_map_of_mem _ (Submodule.neg_mem _ hz)⟩, _⟩
     rw [pow_quot_succ_inclusion_apply_coe, Subtype.coe_mk, Ideal.Quotient.mk_eq_mk, map_add,
-      mul_comm y a, sub_add_cancel', map_neg]
+      mul_comm y a, sub_add_cancel_left, map_neg]
   letI := Classical.decEq (Ideal S)
   rw [sup_eq_prod_inf_factors _ (pow_ne_zero _ hP0), normalized_factors_pow,
     normalized_factors_irreducible ((Ideal.prime_iff_isPrime hP0).mpr hP).Irreducible, normalize_eq,
@@ -735,7 +735,7 @@ theorem rank_pow_quot [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime
       (e - i) • Module.rank (R ⧸ p) (S ⧸ P) :=
   by
   refine' @Nat.decreasingInduction' _ i e (fun j lt_e le_j ih => _) hi _
-  · rw [rank_pow_quot_aux f p P _ lt_e, ih, ← succ_nsmul, Nat.sub_succ, ← Nat.succ_eq_add_one,
+  · rw [rank_pow_quot_aux f p P _ lt_e, ih, ← succ_nsmul', Nat.sub_succ, ← Nat.succ_eq_add_one,
       Nat.succ_pred_eq_of_pos (Nat.sub_pos_of_lt lt_e)]
     assumption
   · rw [Nat.sub_self, zero_nsmul, map_quotient_self]

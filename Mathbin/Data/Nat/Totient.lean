@@ -6,7 +6,7 @@ Authors: Chris Hughes
 import Algebra.CharP.Two
 import Data.Nat.Factorization.Basic
 import Data.Nat.Periodic
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 
 #align_import data.nat.totient from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 
@@ -242,7 +242,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
           · rintro hap b _ rfl
             exact hap (dvd_mul_left _ _)
           · rintro h ⟨b, rfl⟩
-            rw [pow_succ] at ha
+            rw [pow_succ'] at ha
             exact h b (lt_of_mul_lt_mul_left ha (zero_le _)) (mul_comm _ _)))
     _ = _ := by
       have h1 : Function.Injective (· * p) := mul_left_injective₀ hp.NeZero
@@ -250,10 +250,10 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
         by
         simp only [mem_image, mem_range, exists_imp]
         rintro b h rfl
-        rw [pow_succ']
+        rw [pow_succ]
         exact (mul_lt_mul_right hp.pos).2 h
       rw [card_sdiff h2, card_image_of_inj_on (h1.inj_on _), card_range, card_range, ←
-        one_mul (p ^ n), pow_succ, ← tsub_mul, one_mul, mul_comm]
+        one_mul (p ^ n), pow_succ', ← tsub_mul, one_mul, mul_comm]
 #align nat.totient_prime_pow_succ Nat.totient_prime_pow_succ
 -/
 
@@ -361,7 +361,7 @@ theorem totient_mul_prod_primeFactors (n : ℕ) :
   simp only [← prod_factorization_eq_prod_factors, ← Finsupp.prod_mul]
   refine' Finsupp.prod_congr fun p hp => _
   rw [Finsupp.mem_support_iff, ← zero_lt_iff] at hp
-  rw [mul_comm, ← mul_assoc, ← pow_succ, Nat.sub_add_cancel hp]
+  rw [mul_comm, ← mul_assoc, ← pow_succ', Nat.sub_add_cancel hp]
 #align nat.totient_mul_prod_factors Nat.totient_mul_prod_primeFactors
 -/
 

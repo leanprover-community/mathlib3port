@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
 -/
 import Control.Basic
-import Data.Dlist.Basic
+import Data.DList.Basic
 import Meta.Expr
 import System.Io
 import Tactic.BinderMatching

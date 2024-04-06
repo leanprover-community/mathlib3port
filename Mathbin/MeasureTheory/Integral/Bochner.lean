@@ -1104,20 +1104,20 @@ theorem integral_smul (c : 𝕜) (f : α → E) : ∫ a, c • f a ∂μ = c •
 -/
 
 #print MeasureTheory.integral_mul_left /-
-theorem integral_mul_left {L : Type _} [IsROrC L] (r : L) (f : α → L) :
+theorem integral_mul_left {L : Type _} [RCLike L] (r : L) (f : α → L) :
     ∫ a, r * f a ∂μ = r * ∫ a, f a ∂μ :=
   integral_smul r f
 #align measure_theory.integral_mul_left MeasureTheory.integral_mul_left
 -/
 
 #print MeasureTheory.integral_mul_right /-
-theorem integral_mul_right {L : Type _} [IsROrC L] (r : L) (f : α → L) :
+theorem integral_mul_right {L : Type _} [RCLike L] (r : L) (f : α → L) :
     ∫ a, f a * r ∂μ = (∫ a, f a ∂μ) * r := by simp only [mul_comm]; exact integral_mul_left r f
 #align measure_theory.integral_mul_right MeasureTheory.integral_mul_right
 -/
 
 #print MeasureTheory.integral_div /-
-theorem integral_div {L : Type _} [IsROrC L] (r : L) (f : α → L) :
+theorem integral_div {L : Type _} [RCLike L] (r : L) (f : α → L) :
     ∫ a, f a / r ∂μ = (∫ a, f a ∂μ) / r := by
   simpa only [← div_eq_mul_inv] using integral_mul_right r⁻¹ f
 #align measure_theory.integral_div MeasureTheory.integral_div
@@ -1792,7 +1792,7 @@ theorem integral_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → E}
 theorem nndist_integral_add_measure_le_lintegral (h₁ : Integrable f μ) (h₂ : Integrable f ν) :
     (nndist (∫ x, f x ∂μ) (∫ x, f x ∂(μ + ν)) : ℝ≥0∞) ≤ ∫⁻ x, ‖f x‖₊ ∂ν :=
   by
-  rw [integral_add_measure h₁ h₂, nndist_comm, nndist_eq_nnnorm, add_sub_cancel']
+  rw [integral_add_measure h₁ h₂, nndist_comm, nndist_eq_nnnorm, add_sub_cancel_left]
   exact ennnorm_integral_le_lintegral_ennnorm _
 #align measure_theory.nndist_integral_add_measure_le_lintegral MeasureTheory.nndist_integral_add_measure_le_lintegral
 -/
@@ -1831,7 +1831,7 @@ theorem integral_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : 
 #align measure_theory.integral_sum_measure MeasureTheory.integral_sum_measure
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:355:22: unsupported: parse error @ arg 0: next failed, no more args -/
 #print MeasureTheory.integral_tsum /-
 theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AEStronglyMeasurable (f i) μ)
     (hf' : ∑' i, ∫⁻ a : α, ‖f i a‖₊ ∂μ ≠ ∞) : ∫ a : α, ∑' i, f i a ∂μ = ∑' i, ∫ a : α, f i a ∂μ :=
@@ -1849,7 +1849,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AES
           _).tsum_eq.symm
   · intro n
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:355:22: unsupported: parse error @ arg 0: next failed, no more args"
     rfl
   · simp_rw [← coe_nnnorm, ← NNReal.coe_tsum]
     rw [aestronglyMeasurable_iff_aemeasurable]

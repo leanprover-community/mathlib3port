@@ -3,7 +3,7 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Analysis.NormedSpace.LpSpace
+import Analysis.NormedSpace.lpSpace
 import Analysis.NormedSpace.PiLp
 import Topology.ContinuousFunction.Bounded
 
@@ -158,100 +158,100 @@ variable [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NonUnitalNormedRing R]
 
 section NormedAddCommGroup
 
-#print AddEquiv.lpBcf /-
+#print AddEquiv.lpBCF /-
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
-noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E)
+noncomputable def AddEquiv.lpBCF : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E)
     where
   toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_ciSup (memℓp_infty_iff.mp f.Prop)
   invFun f := ⟨f, f.bddAbove_range_norm_comp⟩
   left_inv f := lp.ext rfl
   right_inv f := ext fun x => rfl
   map_add' f g := ext fun x => rfl
-#align add_equiv.lp_bcf AddEquiv.lpBcf
+#align add_equiv.lp_bcf AddEquiv.lpBCF
 -/
 
-#print coe_addEquiv_lpBcf /-
-theorem coe_addEquiv_lpBcf (f : lp (fun _ : α => E) ∞) : (AddEquiv.lpBcf f : α → E) = f :=
+#print coe_addEquiv_lpBCF /-
+theorem coe_addEquiv_lpBCF (f : lp (fun _ : α => E) ∞) : (AddEquiv.lpBCF f : α → E) = f :=
   rfl
-#align coe_add_equiv_lp_bcf coe_addEquiv_lpBcf
+#align coe_add_equiv_lp_bcf coe_addEquiv_lpBCF
 -/
 
-#print coe_addEquiv_lpBcf_symm /-
-theorem coe_addEquiv_lpBcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : α → E) = f :=
+#print coe_addEquiv_lpBCF_symm /-
+theorem coe_addEquiv_lpBCF_symm (f : α →ᵇ E) : (AddEquiv.lpBCF.symm f : α → E) = f :=
   rfl
-#align coe_add_equiv_lp_bcf_symm coe_addEquiv_lpBcf_symm
+#align coe_add_equiv_lp_bcf_symm coe_addEquiv_lpBCF_symm
 -/
 
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as a `linear_isometry_equiv`. -/
-noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
-  { AddEquiv.lpBcf with
+noncomputable def lpBCFₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
+  { AddEquiv.lpBCF with
     map_smul' := fun k f => rfl
     norm_map' := fun f => by simp only [norm_eq_supr_norm, lp.norm_eq_ciSup]; rfl }
-#align lp_bcfₗᵢ lpBcfₗᵢₓ
+#align lp_bcfₗᵢ lpBCFₗᵢₓ
 
 variable {𝕜}
 
-#print coe_lpBcfₗᵢ /-
-theorem coe_lpBcfₗᵢ (f : lp (fun _ : α => E) ∞) : (lpBcfₗᵢ 𝕜 f : α → E) = f :=
+#print coe_lpBCFₗᵢ /-
+theorem coe_lpBCFₗᵢ (f : lp (fun _ : α => E) ∞) : (lpBCFₗᵢ 𝕜 f : α → E) = f :=
   rfl
-#align coe_lp_bcfₗᵢ coe_lpBcfₗᵢ
+#align coe_lp_bcfₗᵢ coe_lpBCFₗᵢ
 -/
 
-#print coe_lpBcfₗᵢ_symm /-
-theorem coe_lpBcfₗᵢ_symm (f : α →ᵇ E) : ((lpBcfₗᵢ 𝕜).symm f : α → E) = f :=
+#print coe_lpBCFₗᵢ_symm /-
+theorem coe_lpBCFₗᵢ_symm (f : α →ᵇ E) : ((lpBCFₗᵢ 𝕜).symm f : α → E) = f :=
   rfl
-#align coe_lp_bcfₗᵢ_symm coe_lpBcfₗᵢ_symm
+#align coe_lp_bcfₗᵢ_symm coe_lpBCFₗᵢ_symm
 -/
 
 end NormedAddCommGroup
 
 section RingAlgebra
 
-#print RingEquiv.lpBcf /-
+#print RingEquiv.lpBCF /-
 /-- The canonical map between `lp (λ (_ : α), R) ∞` and `α →ᵇ R` as a `ring_equiv`. -/
-noncomputable def RingEquiv.lpBcf : lp (fun _ : α => R) ∞ ≃+* (α →ᵇ R) :=
-  { @AddEquiv.lpBcf _ R _ _ _ with map_mul' := fun f g => ext fun x => rfl }
-#align ring_equiv.lp_bcf RingEquiv.lpBcf
+noncomputable def RingEquiv.lpBCF : lp (fun _ : α => R) ∞ ≃+* (α →ᵇ R) :=
+  { @AddEquiv.lpBCF _ R _ _ _ with map_mul' := fun f g => ext fun x => rfl }
+#align ring_equiv.lp_bcf RingEquiv.lpBCF
 -/
 
 variable {R}
 
-#print coe_ringEquiv_lpBcf /-
-theorem coe_ringEquiv_lpBcf (f : lp (fun _ : α => R) ∞) : (RingEquiv.lpBcf R f : α → R) = f :=
+#print coe_ringEquiv_lpBCF /-
+theorem coe_ringEquiv_lpBCF (f : lp (fun _ : α => R) ∞) : (RingEquiv.lpBCF R f : α → R) = f :=
   rfl
-#align coe_ring_equiv_lp_bcf coe_ringEquiv_lpBcf
+#align coe_ring_equiv_lp_bcf coe_ringEquiv_lpBCF
 -/
 
-#print coe_ringEquiv_lpBcf_symm /-
-theorem coe_ringEquiv_lpBcf_symm (f : α →ᵇ R) : ((RingEquiv.lpBcf R).symm f : α → R) = f :=
+#print coe_ringEquiv_lpBCF_symm /-
+theorem coe_ringEquiv_lpBCF_symm (f : α →ᵇ R) : ((RingEquiv.lpBCF R).symm f : α → R) = f :=
   rfl
-#align coe_ring_equiv_lp_bcf_symm coe_ringEquiv_lpBcf_symm
+#align coe_ring_equiv_lp_bcf_symm coe_ringEquiv_lpBCF_symm
 -/
 
 variable (α)
 
-#print AlgEquiv.lpBcf /-
+#print AlgEquiv.lpBCF /-
 -- even `α` needs to be explicit here for elaboration
 -- the `norm_one_class A` shouldn't really be necessary, but currently it is for
 -- `one_mem_ℓp_infty` to get the `ring` instance on `lp`.
 /-- The canonical map between `lp (λ (_ : α), A) ∞` and `α →ᵇ A` as an `alg_equiv`. -/
-noncomputable def AlgEquiv.lpBcf : lp (fun _ : α => A) ∞ ≃ₐ[𝕜] α →ᵇ A :=
-  { RingEquiv.lpBcf A with commutes' := fun k => rfl }
-#align alg_equiv.lp_bcf AlgEquiv.lpBcf
+noncomputable def AlgEquiv.lpBCF : lp (fun _ : α => A) ∞ ≃ₐ[𝕜] α →ᵇ A :=
+  { RingEquiv.lpBCF A with commutes' := fun k => rfl }
+#align alg_equiv.lp_bcf AlgEquiv.lpBCF
 -/
 
 variable {α A 𝕜}
 
-#print coe_algEquiv_lpBcf /-
-theorem coe_algEquiv_lpBcf (f : lp (fun _ : α => A) ∞) : (AlgEquiv.lpBcf α A 𝕜 f : α → A) = f :=
+#print coe_algEquiv_lpBCF /-
+theorem coe_algEquiv_lpBCF (f : lp (fun _ : α => A) ∞) : (AlgEquiv.lpBCF α A 𝕜 f : α → A) = f :=
   rfl
-#align coe_alg_equiv_lp_bcf coe_algEquiv_lpBcf
+#align coe_alg_equiv_lp_bcf coe_algEquiv_lpBCF
 -/
 
-#print coe_algEquiv_lpBcf_symm /-
-theorem coe_algEquiv_lpBcf_symm (f : α →ᵇ A) : ((AlgEquiv.lpBcf α A 𝕜).symm f : α → A) = f :=
+#print coe_algEquiv_lpBCF_symm /-
+theorem coe_algEquiv_lpBCF_symm (f : α →ᵇ A) : ((AlgEquiv.lpBCF α A 𝕜).symm f : α → A) = f :=
   rfl
-#align coe_alg_equiv_lp_bcf_symm coe_algEquiv_lpBcf_symm
+#align coe_alg_equiv_lp_bcf_symm coe_algEquiv_lpBCF_symm
 -/
 
 end RingAlgebra

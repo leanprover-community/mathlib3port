@@ -29,7 +29,7 @@ open TrivSqZeroExt
 
 variable (𝕜 : Type _) {R : Type _}
 
-variable [IsROrC 𝕜] [NormedCommRing R] [NormedAlgebra 𝕜 R]
+variable [RCLike 𝕜] [NormedCommRing R] [NormedAlgebra 𝕜 R]
 
 variable [TopologicalRing R] [CompleteSpace R] [T2Space R]
 

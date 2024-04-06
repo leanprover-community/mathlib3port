@@ -298,7 +298,7 @@ theorem le_add_order_smul_norm_of_isOfFinAddOrder {u : AddCircle p} (hu : IsOfFi
   obtain ⟨n, hn⟩ := exists_norm_eq_of_fin_add_order hu
   replace hu : (addOrderOf u : ℝ) ≠ 0; · norm_cast; exact (add_order_of_pos_iff.mpr hu).Ne.symm
   conv_lhs => rw [← mul_one p]
-  rw [hn, nsmul_eq_mul, ← mul_assoc, mul_comm _ p, mul_assoc, mul_div_cancel' _ hu,
+  rw [hn, nsmul_eq_mul, ← mul_assoc, mul_comm _ p, mul_assoc, mul_div_cancel₀ _ hu,
     mul_le_mul_left hp.out, Nat.one_le_cast, Nat.one_le_iff_ne_zero]
   contrapose! hu'
   simpa only [hu', algebraMap.coe_zero, zero_div, MulZeroClass.mul_zero, norm_eq_zero] using hn

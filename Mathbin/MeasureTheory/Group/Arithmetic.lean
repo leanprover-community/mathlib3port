@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import MeasureTheory.Measure.AeMeasurable
+import MeasureTheory.Measure.AEMeasurable
 
 #align_import measure_theory.group.arithmetic from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 
@@ -244,7 +244,7 @@ instance Monoid.measurablePow (M : Type _) [Monoid M] [MeasurableSpace M] [Measu
       by
       induction' n with n ih
       · simp only [pow_zero, ← Pi.one_def, measurable_one]
-      · simp only [pow_succ]; exact measurable_id.mul ih⟩
+      · simp only [pow_succ']; exact measurable_id.mul ih⟩
 #align monoid.has_measurable_pow Monoid.measurablePow
 -/
 
@@ -619,7 +619,7 @@ instance DivInvMonoid.measurableZPow (G : Type u) [DivInvMonoid G] [MeasurableSp
     [MeasurableMul₂ G] [MeasurableInv G] : MeasurablePow G ℤ :=
   ⟨measurable_from_prod_countable fun n => by
       cases' n with n n
-      · simp_rw [zpow_coe_nat]; exact measurable_id.pow_const _
+      · simp_rw [zpow_natCast]; exact measurable_id.pow_const _
       · simp_rw [zpow_negSucc]; exact (measurable_id.pow_const (n + 1)).inv⟩
 #align div_inv_monoid.has_measurable_zpow DivInvMonoid.measurableZPow
 -/
@@ -819,7 +819,7 @@ instance AddMonoid.measurableSMul_nat₂ (M : Type _) [AddMonoid M] [MeasurableS
     refine' measurable_from_prod_countable fun n => _
     induction' n with n ih
     · simp only [zero_smul, ← Pi.zero_def, measurable_zero]
-    · simp only [succ_nsmul]; exact measurable_id.add ih⟩
+    · simp only [succ_nsmul']; exact measurable_id.add ih⟩
 #align add_monoid.has_measurable_smul_nat₂ AddMonoid.measurableSMul_nat₂
 -/
 
@@ -831,7 +831,7 @@ instance SubNegMonoid.measurableSMul_int₂ (M : Type _) [SubNegMonoid M] [Measu
     suffices Measurable fun p : M × ℤ => p.2 • p.1 by apply this.comp measurable_swap
     refine' measurable_from_prod_countable fun n => _
     induction' n with n n ih
-    · simp only [coe_nat_zsmul]; exact measurable_const_smul _
+    · simp only [natCast_zsmul]; exact measurable_const_smul _
     · simp only [negSucc_zsmul]; exact (measurable_const_smul _).neg⟩
 #align sub_neg_monoid.has_measurable_smul_int₂ SubNegMonoid.measurableSMul_int₂
 -/

@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
-import Analysis.Calculus.Inverse
+import Analysis.Calculus.InverseFunctionTheorem.ApproximatesLinearOn
 import Analysis.SpecialFunctions.Complex.Log
 import Analysis.SpecialFunctions.ExpDeriv
 
@@ -28,7 +28,7 @@ open scoped Real Topology
 
 #print Complex.isOpenMap_exp /-
 theorem isOpenMap_exp : IsOpenMap exp :=
-  open_map_of_strict_deriv hasStrictDerivAt_exp exp_ne_zero
+  isOpenMap_of_hasStrictDerivAt hasStrictDerivAt_exp exp_ne_zero
 #align complex.is_open_map_exp Complex.isOpenMap_exp
 -/
 

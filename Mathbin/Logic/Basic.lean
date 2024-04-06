@@ -1684,7 +1684,7 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
 #align ball_cond_comm ball_cond_comm
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print ball_mem_comm /-
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
     (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
@@ -2230,7 +2230,7 @@ theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by simp [@eq_
 #align forall_eq' forall_eq'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print Decidable.and_forall_ne /-
 theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
     (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
@@ -2238,7 +2238,7 @@ theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
 #align decidable.and_forall_ne Decidable.and_forall_ne
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print and_forall_ne /-
 theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b :=
   Decidable.and_forall_ne a

@@ -8,7 +8,7 @@ import Algebra.Parity
 import Data.Int.Dvd.Basic
 import Data.Int.Units
 import Data.Nat.Factorial.Basic
-import Data.Nat.Gcd.Basic
+import Data.Nat.GCD.Basic
 import Data.Nat.Sqrt
 import Order.Bounds.Basic
 import Tactic.ByContra
@@ -120,7 +120,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
 #align nat.prime.eq_one_or_self_of_dvd Nat.Prime.eq_one_or_self_of_dvd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (m «expr ∣ » p) -/
 #print Nat.prime_def_lt'' /-
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p :=
   by
@@ -734,7 +734,7 @@ theorem Prime.dvd_of_dvd_pow {p m n : ℕ} (pp : Prime p) (h : p ∣ m ^ n) : p 
   by
   induction' n with n IH
   · exact pp.not_dvd_one.elim h
-  · rw [pow_succ] at h; exact (pp.dvd_mul.1 h).elim id IH
+  · rw [pow_succ'] at h; exact (pp.dvd_mul.1 h).elim id IH
 #align nat.prime.dvd_of_dvd_pow Nat.Prime.dvd_of_dvd_pow
 -/
 
@@ -745,7 +745,7 @@ theorem Prime.not_prime_pow {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun 
     lt_irrefl x <|
       calc
         x = x ^ 1 := (pow_one _).symm
-        _ < x ^ n := (pow_right_strictMono (hxn.symm ▸ hp.two_le) hn)
+        _ < x ^ n := (Nat.pow_right_strictMono (hxn.symm ▸ hp.two_le) hn)
         _ = x := hxn.symm
 #align nat.prime.pow_not_prime Nat.Prime.not_prime_pow
 -/
@@ -917,12 +917,12 @@ theorem eq_one_iff_not_exists_prime_dvd {n : ℕ} : n = 1 ↔ ∀ p : ℕ, p.Pri
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {m n k l : ℕ}
     (hpm : p ^ k ∣ m) (hpn : p ^ l ∣ n) (hpmn : p ^ (k + l + 1) ∣ m * n) :
     p ^ (k + 1) ∣ m ∨ p ^ (l + 1) ∣ n :=
-  have hpd : p ^ (k + l) * p ∣ m * n := by rwa [pow_succ'] at hpmn
+  have hpd : p ^ (k + l) * p ∣ m * n := by rwa [pow_succ] at hpmn
   have hpd2 : p ∣ m * n / p ^ (k + l) := dvd_div_of_mul_dvd hpd
   have hpd3 : p ∣ m * n / (p ^ k * p ^ l) := by simpa [pow_add] using hpd2
   have hpd4 : p ∣ m / p ^ k * (n / p ^ l) := by simpa [Nat.div_mul_div_comm hpm hpn] using hpd3
   have hpd5 : p ∣ m / p ^ k ∨ p ∣ n / p ^ l := (Prime.dvd_mul p_prime).1 hpd4
-  suffices p ^ k * p ∣ m ∨ p ^ l * p ∣ n by rwa [pow_succ', pow_succ']
+  suffices p ^ k * p ∣ m ∨ p ^ l * p ∣ n by rwa [pow_succ, pow_succ]
   hpd5.elim (fun this : p ∣ m / p ^ k => Or.inl <| mul_dvd_of_dvd_div hpm this)
     fun this : p ∣ n / p ^ l => Or.inr <| mul_dvd_of_dvd_div hpn this
 #align nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul Nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul
@@ -931,14 +931,14 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
 #print Nat.prime_iff_prime_int /-
 theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
   ⟨fun hp =>
-    ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.isUnit_iff_natAbs_eq.1 hp.ne_one, fun a b h => by
-      rw [← Int.dvd_natAbs, Int.coe_nat_dvd, Int.natAbs_mul, hp.dvd_mul] at h <;>
-        rwa [← Int.dvd_natAbs, Int.coe_nat_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd]⟩,
+    ⟨Int.natCast_ne_zero_iff_pos.2 hp.Pos, mt Int.isUnit_iff_natAbs_eq.1 hp.ne_one, fun a b h => by
+      rw [← Int.dvd_natAbs, Int.natCast_dvd_natCast, Int.natAbs_mul, hp.dvd_mul] at h <;>
+        rwa [← Int.dvd_natAbs, Int.natCast_dvd_natCast, ← Int.dvd_natAbs, Int.natCast_dvd_natCast]⟩,
     fun hp =>
     Nat.prime_iff.2
-      ⟨Int.coe_nat_ne_zero.1 hp.1,
+      ⟨Int.natCast_ne_zero.1 hp.1,
         mt Nat.isUnit_iff.1 fun h => by simpa [h, not_prime_one] using hp, fun a b => by
-        simpa only [Int.coe_nat_dvd, (Int.ofNat_mul _ _).symm] using hp.2.2 a b⟩⟩
+        simpa only [Int.natCast_dvd_natCast, (Int.ofNat_mul _ _).symm] using hp.2.2 a b⟩⟩
 #align nat.prime_iff_prime_int Nat.prime_iff_prime_int
 -/
 

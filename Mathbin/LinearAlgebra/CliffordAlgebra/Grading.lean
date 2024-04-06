@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import LinearAlgebra.CliffordAlgebra.Basic
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import RingTheory.GradedAlgebra.Basic
 
 #align_import linear_algebra.clifford_algebra.grading from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"

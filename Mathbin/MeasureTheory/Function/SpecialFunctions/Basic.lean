@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Analysis.SpecialFunctions.Pow.Nnreal
+import Analysis.SpecialFunctions.Pow.NNReal
 import MeasureTheory.Constructions.BorelSpace.Complex
 
 #align_import measure_theory.function.special_functions.basic from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"

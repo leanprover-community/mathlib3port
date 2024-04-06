@@ -3,7 +3,7 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Algebra.Group.Commute
+import Algebra.Group.Commute.Defs
 import Algebra.Order.Monoid.Lemmas
 import Algebra.GroupWithZero.Basic
 

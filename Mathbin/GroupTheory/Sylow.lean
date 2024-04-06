@@ -660,7 +660,7 @@ theorem card_normalizer_modEq_card [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact p.
   have : H.subgroupOf (normalizer H) ≃ H := (subgroupOfEquivOfLe le_normalizer).toEquiv
   rw [card_eq_card_quotient_mul_card_subgroup H,
     card_eq_card_quotient_mul_card_subgroup (H.subgroup_of (normalizer H)), Fintype.card_congr this,
-    hH, pow_succ]
+    hH, pow_succ']
   exact (card_quotient_normalizer_modeq_card_quotient hH).mul_right' _
 #align sylow.card_normalizer_modeq_card Sylow.card_normalizer_modEq_card
 -/
@@ -675,7 +675,7 @@ theorem prime_dvd_card_quotient_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp :
   have hcard : card (G ⧸ H) = s * p :=
     (mul_left_inj' (show card H ≠ 0 from Fintype.card_ne_zero)).1
       (by
-        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ', mul_assoc, mul_comm p])
+        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ, mul_assoc, mul_comm p])
   have hm :
     s * p % p =
       card (normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H) % p :=
@@ -705,7 +705,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
   have hcard : card (G ⧸ H) = s * p :=
     (mul_left_inj' (show card H ≠ 0 from Fintype.card_ne_zero)).1
       (by
-        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ', mul_assoc, mul_comm p])
+        rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ, mul_assoc, mul_comm p])
   have hm : s * p % p = card (normalizer H ⧸ H.subgroupOf H.normalizer) % p :=
     card_congr (fixedPointsMulLeftCosetsEquivQuotient H) ▸
       hcard ▸ (IsPGroup.of_card hH).card_modEq_card_fixedPoints _
@@ -730,7 +730,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
     rw [Set.card_image_of_injective
         (Subgroup.comap (mk' (H.subgroup_of H.normalizer)) (zpowers x) : Set H.normalizer)
         Subtype.val_injective,
-      pow_succ', ← hH, Fintype.card_congr hequiv, ← hx, Fintype.card_zpowers, ← Fintype.card_prod]
+      pow_succ, ← hH, Fintype.card_congr hequiv, ← hx, Fintype.card_zpowers, ← Fintype.card_prod]
     exact @Fintype.card_congr _ _ (id _) (id _) (preimage_mk_equiv_subgroup_times_set _ _),
     by
     intro y hy

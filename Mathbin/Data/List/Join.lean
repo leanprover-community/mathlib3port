@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn, Mario Carneiro, Martin Dvorak
 -/
-import Data.List.BigOperators.Basic
+import Algebra.BigOperators.List.Basic
 
 #align_import data.list.join from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
@@ -160,7 +160,6 @@ theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.len
 #align list.sum_take_map_length_lt1 List.sum_take_map_length_lt1
 -/
 
-#print List.sum_take_map_length_lt2 /-
 /-- Auxiliary lemma to control elements in a join. -/
 theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length)
     (hj : j < (nthLe L i hi).length) : ((L.map length).take i).Sum + j < L.join.length :=
@@ -169,9 +168,7 @@ theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.len
   have : L.length = (L.map length).length := by simp
   simp [this, -length_map]
 #align list.sum_take_map_length_lt2 List.sum_take_map_length_lt2
--/
 
-#print List.nthLe_join /-
 /-- The `n`-th element in a join of sublists is the `j`-th element of the `i`th sublist,
 where `n` can be obtained in terms of `i` and `j` by adding the lengths of all the sublists
 of index `< i`, and adding `j`. -/
@@ -183,7 +180,6 @@ theorem nthLe_join (L : List (List α)) {i j : ℕ} (hi : i < L.length)
   rw [nth_le_take L.join (sum_take_map_length_lt2 L hi hj) (sum_take_map_length_lt1 L hi hj),
     nth_le_drop, nth_le_of_eq (drop_take_succ_join_eq_nth_le L hi)]
 #align list.nth_le_join List.nthLe_join
--/
 
 #print List.eq_iff_join_eq /-
 /-- Two lists of sublists are equal iff their joins coincide, as well as the lengths of the

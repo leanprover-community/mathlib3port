@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
 import CategoryTheory.Abelian.Exact
-import CategoryTheory.Over
-import Algebra.Category.Module.EpiMono
+import CategoryTheory.Comma.Over
+import Algebra.Category.ModuleCat.EpiMono
 
 #align_import category_theory.abelian.pseudoelements from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
 

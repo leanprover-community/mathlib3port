@@ -210,7 +210,7 @@ private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
           dsimp only
           induction n
           · rw [pow_zero, pow_zero]
-          · rw [pow_succ, pow_succ]
+          · rw [pow_succ', pow_succ']
             simpa only [mul] using congr_arg₂ (fun x y => mul r ⟨x⟩ ⟨y⟩) (Quot.sound h) n_ih)
         a⟩
 
@@ -312,7 +312,7 @@ instance (r : R → R → Prop) : Semiring (RingQuot r)
   right_distrib := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [mul_quot, add_quot, right_distrib]
   npow n x := x ^ n
   npow_zero := by rintro ⟨⟨⟩⟩; simp [pow_quot, ← one_quot]
-  npow_succ := by rintro n ⟨⟨⟩⟩; simp [pow_quot, mul_quot, pow_succ]
+  npow_succ := by rintro n ⟨⟨⟩⟩; simp [pow_quot, mul_quot, pow_succ']
   nsmul := (· • ·)
   nsmul_zero := by rintro ⟨⟨⟩⟩; simp [smul_quot, ← zero_quot]
   nsmul_succ := by rintro n ⟨⟨⟩⟩; simp [smul_quot, add_quot, add_mul, add_comm]

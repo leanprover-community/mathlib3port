@@ -52,7 +52,7 @@ def rotationAux (θ : Real.Angle) : V →ₗᵢ[ℝ] V :=
     (Real.Angle.cos θ • LinearMap.id + Real.Angle.sin θ • ↑(LinearIsometryEquiv.toLinearEquiv J))
     (by
       intro x y
-      simp only [IsROrC.conj_to_real, id.def, LinearMap.smul_apply, LinearMap.add_apply,
+      simp only [RCLike.conj_to_real, id.def, LinearMap.smul_apply, LinearMap.add_apply,
         LinearMap.id_coe, LinearEquiv.coe_coe, LinearIsometryEquiv.coe_toLinearEquiv,
         Orientation.areaForm_rightAngleRotation_left, Orientation.inner_rightAngleRotation_left,
         Orientation.inner_rightAngleRotation_right, inner_add_left, inner_smul_left,
@@ -219,7 +219,7 @@ theorem kahler_rotation_left (x y : V) (θ : Real.Angle) :
   by
   simp only [o.rotation_apply, map_add, map_mul, LinearMap.map_smulₛₗ, RingHom.id_apply,
     LinearMap.add_apply, LinearMap.smul_apply, real_smul, kahler_right_angle_rotation_left,
-    Real.Angle.coe_expMapCircle, IsROrC.conj_ofReal, conj_I]
+    Real.Angle.coe_expMapCircle, RCLike.conj_ofReal, conj_I]
   ring
 #align orientation.kahler_rotation_left Orientation.kahler_rotation_left
 -/
@@ -406,7 +406,7 @@ theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero {x y : V} (hx : 
   · rintro rfl
     rw [← LinearIsometryEquiv.map_smul, ← o.oangle_smul_left_of_pos x y hp, eq_comm,
       rotation_oangle_eq_iff_norm_eq, norm_smul, Real.norm_of_nonneg hp.le,
-      div_mul_cancel _ (norm_ne_zero_iff.2 hx)]
+      div_mul_cancel₀ _ (norm_ne_zero_iff.2 hx)]
   · intro hye
     rw [hye, o.oangle_smul_right_of_pos _ _ hp, o.oangle_rotation_self_right hx]
 #align orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero Orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero

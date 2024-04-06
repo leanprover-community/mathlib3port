@@ -7,7 +7,7 @@ import CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import CategoryTheory.Limits.Preserves.Shapes.Products
 import CategoryTheory.Limits.Yoneda
 import CategoryTheory.Preadditive.FunctorCategory
-import CategoryTheory.Sites.SheafOfTypes
+import CategoryTheory.Sites.IsSheafFor
 
 #align_import category_theory.sites.sheaf from "leanprover-community/mathlib"@"2efd2423f8d25fa57cf7a179f5d8652ab4d0df44"
 

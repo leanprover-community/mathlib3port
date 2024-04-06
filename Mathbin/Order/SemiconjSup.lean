@@ -8,7 +8,7 @@ import Order.Bounds.OrderIso
 import Order.ConditionallyCompleteLattice.Basic
 import Order.RelIso.Group
 import Order.OrdContinuous
-import Algebra.Hom.Equiv.Units.Basic
+import Algebra.Group.Units.Equiv
 
 #align_import order.semiconj_Sup from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -828,7 +828,7 @@ theorem decomp (f : V1 →ᵃ[k] V2) : (f : V1 → V2) = f.linear + fun z => f 0
 /-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
 theorem decomp' (f : V1 →ᵃ[k] V2) : (f.linear : V1 → V2) = f - fun z => f 0 := by
-  rw [decomp] <;> simp only [LinearMap.map_zero, Pi.add_apply, add_sub_cancel, zero_add]
+  rw [decomp] <;> simp only [LinearMap.map_zero, Pi.add_apply, add_sub_cancel_right, zero_add]
 #align affine_map.decomp' AffineMap.decomp'
 -/
 

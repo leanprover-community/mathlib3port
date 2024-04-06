@@ -5,7 +5,7 @@ Authors: Johannes Hölzl
 -/
 import Data.Bool.Set
 import Data.Nat.Set
-import Data.Ulift
+import Data.ULift
 import Order.Bounds.Basic
 import Order.Hom.Basic
 

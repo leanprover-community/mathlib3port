@@ -34,7 +34,8 @@ theorem cast_div [DivisionSemiring α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero 
     ((m / n : ℕ) : α) = m / n := by
   rcases n_dvd with ⟨k, rfl⟩
   have : n ≠ 0 := by rintro rfl; simpa using n_nonzero
-  rw [Nat.mul_div_cancel_left _ this.bot_lt, mul_comm n k, cast_mul, mul_div_cancel _ n_nonzero]
+  rw [Nat.mul_div_cancel_left _ this.bot_lt, mul_comm n k, cast_mul,
+    mul_div_cancel_right₀ _ n_nonzero]
 #align nat.cast_div Nat.cast_div
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
 import Analysis.NormedSpace.HahnBanach.Extension
-import Analysis.NormedSpace.IsROrC
+import Analysis.NormedSpace.RCLike
 import Analysis.LocallyConvex.Polar
 
 #align_import analysis.normed_space.dual from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
@@ -137,7 +137,7 @@ end General
 
 section BidualIsometry
 
-variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+variable (𝕜 : Type v) [RCLike 𝕜] {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 #print NormedSpace.norm_le_dual_bound /-
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
@@ -302,7 +302,7 @@ theorem closedBall_inv_subset_polar_closedBall {r : ℝ} :
 #print NormedSpace.polar_closedBall /-
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with
 inverse radius. -/
-theorem polar_closedBall {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
+theorem polar_closedBall {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
     (hr : 0 < r) : polar 𝕜 (closedBall (0 : E) r) = closedBall (0 : Dual 𝕜 E) r⁻¹ :=
   by
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)

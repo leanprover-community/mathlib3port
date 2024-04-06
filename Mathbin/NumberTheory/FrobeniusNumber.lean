@@ -3,7 +3,7 @@ Copyright (c) 2021 Alex Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Zhao
 -/
-import Data.Nat.Modeq
+import Data.Nat.ModEq
 import GroupTheory.Submonoid.Basic
 import GroupTheory.Submonoid.Membership
 import Tactic.Ring

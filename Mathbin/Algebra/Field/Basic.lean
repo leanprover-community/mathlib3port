@@ -5,7 +5,7 @@ Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
 import Algebra.Field.Defs
 import Algebra.GroupWithZero.Units.Lemmas
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 import Algebra.Ring.Commute
 
 #align_import algebra.field.basic from "leanprover-community/mathlib"@"05101c3df9d9cfe9430edc205860c79b6d660102"
@@ -73,14 +73,14 @@ theorem one_div_mul_add_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
 
 #print add_div_eq_mul_add_div /-
 theorem add_div_eq_mul_add_div (a b : α) (hc : c ≠ 0) : a + b / c = (a * c + b) / c :=
-  (eq_div_iff_mul_eq hc).2 <| by rw [right_distrib, div_mul_cancel _ hc]
+  (eq_div_iff_mul_eq hc).2 <| by rw [right_distrib, div_mul_cancel₀ _ hc]
 #align add_div_eq_mul_add_div add_div_eq_mul_add_div
 -/
 
 #print add_div' /-
 @[field_simps]
 theorem add_div' (a b c : α) (hc : c ≠ 0) : b + a / c = (b * c + a) / c := by
-  rw [add_div, mul_div_cancel _ hc]
+  rw [add_div, mul_div_cancel_right₀ _ hc]
 #align add_div' add_div'
 -/
 

@@ -7,7 +7,7 @@ import RingTheory.Ideal.LocalRing
 import RingTheory.Noetherian
 import RingTheory.ReesAlgebra
 import RingTheory.Finiteness
-import Data.Polynomial.Module
+import Data.Polynomial.Module.Basic
 import Order.Hom.Lattice
 
 #align_import ring_theory.filtration from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"
@@ -71,7 +71,7 @@ theorem pow_smul_le (i j : ℕ) : I ^ i • F.n j ≤ F.n (i + j) :=
   by
   induction i
   · simp
-  · rw [pow_succ, mul_smul, Nat.succ_eq_add_one, add_assoc, add_comm 1, ← add_assoc]
+  · rw [pow_succ', mul_smul, Nat.succ_eq_add_one, add_assoc, add_comm 1, ← add_assoc]
     exact (Submodule.smul_mono_right i_ih).trans (F.smul_le _)
 #align ideal.filtration.pow_smul_le Ideal.Filtration.pow_smul_le
 -/
@@ -266,7 +266,7 @@ theorem stable_iff_exists_pow_smul_eq_of_ge :
     F.Stable ↔ ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ (n - n₀) • F.n n₀ :=
   by
   refine' ⟨stable.exists_pow_smul_eq_of_ge, fun h => ⟨h.some, fun n hn => _⟩⟩
-  rw [h.some_spec n hn, h.some_spec (n + 1) (by linarith), smul_smul, ← pow_succ,
+  rw [h.some_spec n hn, h.some_spec (n + 1) (by linarith), smul_smul, ← pow_succ',
     tsub_add_eq_add_tsub hn]
 #align ideal.filtration.stable_iff_exists_pow_smul_eq_of_ge Ideal.Filtration.stable_iff_exists_pow_smul_eq_of_ge
 -/

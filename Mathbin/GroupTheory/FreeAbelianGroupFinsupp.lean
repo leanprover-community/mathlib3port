@@ -3,12 +3,12 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Algebra.Hom.Equiv.TypeTags
+import Algebra.Group.Equiv.TypeTags
 import Algebra.Module.Equiv
 import Data.Finsupp.Defs
 import GroupTheory.FreeAbelianGroup
-import GroupTheory.IsFreeGroup
-import LinearAlgebra.Dimension
+import GroupTheory.FreeGroup.IsFreeGroup
+import LinearAlgebra.Dimension.Basic
 
 #align_import group_theory.free_abelian_group_finsupp from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

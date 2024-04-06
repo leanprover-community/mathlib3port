@@ -89,12 +89,12 @@ theorem intervalIntegrable_iff : IntervalIntegrable f μ a b ↔ IntegrableOn f 
 #align interval_integrable_iff intervalIntegrable_iff
 -/
 
-#print IntervalIntegrable.def /-
+#print IntervalIntegrable.def' /-
 /-- If a function is interval integrable with respect to a given measure `μ` on `a..b` then
   it is integrable on `uIoc a b` with respect to `μ`. -/
-theorem IntervalIntegrable.def (h : IntervalIntegrable f μ a b) : IntegrableOn f (Ι a b) μ :=
+theorem IntervalIntegrable.def' (h : IntervalIntegrable f μ a b) : IntegrableOn f (Ι a b) μ :=
   intervalIntegrable_iff.mp h
-#align interval_integrable.def IntervalIntegrable.def
+#align interval_integrable.def IntervalIntegrable.def'
 -/
 
 #print intervalIntegrable_iff_integrableOn_Ioc_of_le /-
@@ -778,7 +778,7 @@ theorem integral_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpac
 
 #print intervalIntegral.integral_smul_const /-
 @[simp]
-theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (f : ℝ → 𝕜) (c : E) :
+theorem integral_smul_const {𝕜 : Type _} [RCLike 𝕜] [NormedSpace 𝕜 E] (f : ℝ → 𝕜) (c : E) :
     ∫ x in a..b, f x • c ∂μ = (∫ x in a..b, f x ∂μ) • c := by
   simp only [interval_integral_eq_integral_uIoc, integral_smul_const, smul_assoc]
 #align interval_integral.integral_smul_const intervalIntegral.integral_smul_const
@@ -786,7 +786,7 @@ theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (
 
 #print intervalIntegral.integral_const_mul /-
 @[simp]
-theorem integral_const_mul {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
+theorem integral_const_mul {𝕜 : Type _} [RCLike 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
     ∫ x in a..b, r * f x ∂μ = r * ∫ x in a..b, f x ∂μ :=
   integral_smul r f
 #align interval_integral.integral_const_mul intervalIntegral.integral_const_mul
@@ -794,7 +794,7 @@ theorem integral_const_mul {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ →
 
 #print intervalIntegral.integral_mul_const /-
 @[simp]
-theorem integral_mul_const {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
+theorem integral_mul_const {𝕜 : Type _} [RCLike 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
     ∫ x in a..b, f x * r ∂μ = (∫ x in a..b, f x ∂μ) * r := by
   simpa only [mul_comm r] using integral_const_mul r f
 #align interval_integral.integral_mul_const intervalIntegral.integral_mul_const
@@ -802,7 +802,7 @@ theorem integral_mul_const {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ →
 
 #print intervalIntegral.integral_div /-
 @[simp]
-theorem integral_div {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
+theorem integral_div {𝕜 : Type _} [RCLike 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
     ∫ x in a..b, f x / r ∂μ = (∫ x in a..b, f x ∂μ) / r := by
   simpa only [div_eq_mul_inv] using integral_mul_const r⁻¹ f
 #align interval_integral.integral_div intervalIntegral.integral_div
@@ -843,7 +843,7 @@ section ContinuousLinearMap
 
 variable {a b : ℝ} {μ : Measure ℝ} {f : ℝ → E}
 
-variable [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+variable [RCLike 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 open ContinuousLinearMap
 
@@ -881,8 +881,8 @@ theorem integral_comp_mul_right (hc : c ≠ 0) :
   simp_rw [integral_smul_measure, intervalIntegral, A.set_integral_map,
     ENNReal.toReal_ofReal (abs_nonneg c)]
   cases hc.lt_or_lt
-  · simp [h, mul_div_cancel, hc, abs_of_neg, measure.restrict_congr_set Ico_ae_eq_Ioc]
-  · simp [h, mul_div_cancel, hc, abs_of_pos]
+  · simp [h, mul_div_cancel_right₀, hc, abs_of_neg, measure.restrict_congr_set Ico_ae_eq_Ioc]
+  · simp [h, mul_div_cancel_right₀, hc, abs_of_pos]
 #align interval_integral.integral_comp_mul_right intervalIntegral.integral_comp_mul_right
 -/
 

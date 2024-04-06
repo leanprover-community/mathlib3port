@@ -6,7 +6,7 @@ Authors: Kyle Miller
 import Combinatorics.SimpleGraph.Basic
 import Algebra.BigOperators.Basic
 import Data.Nat.Parity
-import Data.Zmod.Parity
+import Data.ZMod.Parity
 
 #align_import combinatorics.simple_graph.degree_sum from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

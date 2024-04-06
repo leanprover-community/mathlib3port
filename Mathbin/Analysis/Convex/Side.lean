@@ -43,7 +43,7 @@ variable [StrictOrderedCommRing R] [AddCommGroup V] [Module R V] [AddTorsor V P]
 
 variable [AddCommGroup V'] [Module R V'] [AddTorsor V' P']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 #print AffineSubspace.WSameSide /-
 /-- The points `x` and `y` are weakly on the same side of `s`. -/
 def WSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
@@ -58,7 +58,7 @@ def SSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
 #align affine_subspace.s_same_side AffineSubspace.SSameSide
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 #print AffineSubspace.WOppSide /-
 /-- The points `x` and `y` are weakly on opposite sides of `s`. -/
 def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
@@ -579,7 +579,7 @@ theorem wSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p
         Or.inr
           ⟨(r₁ / r₂) • (p₁ -ᵥ p₁') +ᵥ p₂', s.smul_vsub_vadd_mem _ h hp₁' hp₂',
             Or.inr (Or.inr ⟨r₁, r₂, hr₁, hr₂, _⟩)⟩
-      rw [vsub_vadd_eq_vsub_sub, smul_sub, ← hr, smul_smul, mul_div_cancel' _ hr₂.ne.symm, ←
+      rw [vsub_vadd_eq_vsub_sub, smul_sub, ← hr, smul_smul, mul_div_cancel₀ _ hr₂.ne.symm, ←
         smul_sub, vsub_sub_vsub_cancel_right]
   · rintro (h' | h')
     · exact w_same_side_of_left_mem y h'
@@ -632,7 +632,7 @@ theorem wOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p�
           ⟨(-r₁ / r₂) • (p₁ -ᵥ p₁') +ᵥ p₂', s.smul_vsub_vadd_mem _ h hp₁' hp₂',
             Or.inr (Or.inr ⟨r₁, r₂, hr₁, hr₂, _⟩)⟩
       rw [vadd_vsub_assoc, smul_add, ← hr, smul_smul, neg_div, mul_neg,
-        mul_div_cancel' _ hr₂.ne.symm, neg_smul, neg_add_eq_sub, ← smul_sub,
+        mul_div_cancel₀ _ hr₂.ne.symm, neg_smul, neg_add_eq_sub, ← smul_sub,
         vsub_sub_vsub_cancel_right]
   · rintro (h' | h')
     · exact w_opp_side_of_left_mem y h'

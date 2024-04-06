@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Algebra.Group.InjSurj
-import Algebra.Group.Commute
-import Algebra.Hom.Equiv.Basic
+import Algebra.Group.Commute.Defs
+import Algebra.Group.Equiv.Basic
 import Algebra.Opposites
 import Data.Int.Cast.Defs
 
@@ -133,7 +133,7 @@ instance [Monoid α] : Monoid αᵐᵒᵖ :=
     MulOpposite.mulOneClass α with
     npow := fun n x => op <| x.unop ^ n
     npow_zero := fun x => unop_injective <| Monoid.npow_zero x.unop
-    npow_succ := fun n x => unop_injective <| pow_succ' x.unop n }
+    npow_succ := fun n x => unop_injective <| pow_succ x.unop n }
 
 @[to_additive]
 instance [RightCancelMonoid α] : LeftCancelMonoid αᵐᵒᵖ :=
@@ -162,7 +162,7 @@ instance [DivInvMonoid α] : DivInvMonoid αᵐᵒᵖ :=
     zpow := fun n x => op <| x.unop ^ n
     zpow_zero' := fun x => unop_injective <| DivInvMonoid.zpow_zero' x.unop
     zpow_succ' := fun n x =>
-      unop_injective <| by rw [unop_op, zpow_coe_nat, zpow_coe_nat, pow_succ', unop_mul, unop_op]
+      unop_injective <| by rw [unop_op, zpow_natCast, zpow_natCast, pow_succ, unop_mul, unop_op]
     zpow_neg' := fun z x => unop_injective <| DivInvMonoid.zpow_neg' z x.unop }
 
 @[to_additive AddOpposite.subtractionMonoid]

@@ -251,7 +251,7 @@ theorem nsmul_pow_two_powHalf (n : ℕ) : 2 ^ n • powHalf n = 1 :=
   · simp only [nsmul_one, pow_half_zero, Nat.cast_one, pow_zero]
   ·
     rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm,
-      pow_succ]
+      pow_succ']
 #align surreal.nsmul_pow_two_pow_half Surreal.nsmul_pow_two_powHalf
 -/
 

@@ -436,7 +436,7 @@ theorem exists_eigenvalue (H : Set (Q (m + 1))) (hH : Card H ≥ 2 ^ m + 1) :
   rw [← finrank_eq_rank ℝ] at dim_le dim_add dimW ⊢
   rw [← finrank_eq_rank ℝ, ← finrank_eq_rank ℝ] at dim_add
   norm_cast at dim_le dim_add dimW ⊢
-  rw [pow_succ'] at dim_le
+  rw [pow_succ] at dim_le
   rw [Set.toFinset_card] at hH
   linarith
 #align sensitivity.exists_eigenvalue Sensitivity.exists_eigenvalue

@@ -3,9 +3,9 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import CategoryTheory.Monoidal.Braided
-import CategoryTheory.Functor.ReflectsIsomorphisms
-import CategoryTheory.Monoidal.Coherence
+import CategoryTheory.Monoidal.Braided.Basic
+import CategoryTheory.Functor.ReflectsIso
+import Tactic.CategoryTheory.Coherence
 
 #align_import category_theory.monoidal.center from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

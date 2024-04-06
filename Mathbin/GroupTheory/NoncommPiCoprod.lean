@@ -6,7 +6,7 @@ Authors: Joachim Breitner
 import GroupTheory.OrderOfElement
 import Data.Finset.NoncommProd
 import Data.Fintype.BigOperators
-import Data.Nat.Gcd.BigOperators
+import Data.Nat.GCD.BigOperators
 import Order.SupIndep
 
 #align_import group_theory.noncomm_pi_coprod from "leanprover-community/mathlib"@"ef7acf407d265ad4081c8998687e994fa80ba70c"

@@ -147,7 +147,7 @@ theorem map_single_le_powerset (s : Multiset α) : s.map singleton ≤ powerset 
   Quotient.inductionOn s fun l =>
     by
     simp only [powerset_coe, quot_mk_to_coe, coe_le, coe_map]
-    show l.map (coe ∘ List.ret) <+~ (sublists l).map coe
+    show l.map (coe ∘ List.pure) <+~ (sublists l).map coe
     rw [← List.map_map]
     exact ((map_ret_sublist_sublists _).map _).Subperm
 #align multiset.map_single_le_powerset Multiset.map_single_le_powerset

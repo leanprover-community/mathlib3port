@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Damiano Testa, Kevin Buzzard
 -/
 import Algebra.Order.Monoid.Defs
-import Algebra.Order.Monoid.WithZero.Defs
+import Algebra.Order.Monoid.WithZero
 
 #align_import linear_order_with_pos_mul_pos_eq_zero from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

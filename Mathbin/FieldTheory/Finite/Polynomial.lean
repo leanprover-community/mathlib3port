@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import LinearAlgebra.FiniteDimensional
-import LinearAlgebra.Basic
+import Algebra.Module.Submodule.Ker
 import RingTheory.MvPolynomial.Basic
 import Data.MvPolynomial.Expand
 import FieldTheory.Finite.Basic

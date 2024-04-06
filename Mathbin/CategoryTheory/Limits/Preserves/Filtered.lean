@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 -/
 import CategoryTheory.Limits.Preserves.Basic
-import CategoryTheory.Filtered
+import CategoryTheory.Filtered.Basic
 
 #align_import category_theory.limits.preserves.filtered from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

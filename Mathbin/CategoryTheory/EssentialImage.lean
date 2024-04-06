@@ -3,7 +3,7 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import CategoryTheory.NaturalIsomorphism
+import CategoryTheory.NatIso
 import CategoryTheory.FullSubcategory
 
 #align_import category_theory.essential_image from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

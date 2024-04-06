@@ -138,12 +138,10 @@ theorem one_lt_two_pow' (n : ℕ) : 1 < 2 ^ (n + 1) :=
 #align nat.one_lt_two_pow' Nat.one_lt_two_pow'
 -/
 
-/- warning: nat.pow_right_strict_mono clashes with pow_strict_mono_right -> pow_right_strictMono
-Case conversion may be inaccurate. Consider using '#align nat.pow_right_strict_mono pow_right_strictMonoₓ'. -/
-#print pow_right_strictMono /-
+#print Nat.pow_right_strictMono /-
 theorem pow_right_strictMono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ =>
   pow_lt_pow_right k
-#align nat.pow_right_strict_mono pow_right_strictMono
+#align nat.pow_right_strict_mono Nat.pow_right_strictMono
 -/
 
 #print Nat.pow_le_iff_le_right /-
@@ -152,12 +150,10 @@ theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m 
 #align nat.pow_le_iff_le_right Nat.pow_le_iff_le_right
 -/
 
-/- warning: nat.pow_lt_iff_lt_right clashes with pow_lt_pow_iff_ -> pow_lt_pow_iff_right
-Case conversion may be inaccurate. Consider using '#align nat.pow_lt_iff_lt_right pow_lt_pow_iff_rightₓ'. -/
-#print pow_lt_pow_iff_right /-
+#print Nat.pow_lt_pow_iff_right /-
 theorem pow_lt_pow_iff_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m < x ^ n ↔ m < n :=
   StrictMono.lt_iff_lt (pow_right_strictMono k)
-#align nat.pow_lt_iff_lt_right pow_lt_pow_iff_right
+#align nat.pow_lt_iff_lt_right Nat.pow_lt_pow_iff_right
 -/
 
 #print Nat.pow_right_injective /-
@@ -175,7 +171,7 @@ theorem pow_left_strictMono {m : ℕ} (k : 1 ≤ m) : StrictMono fun x : ℕ => 
 #print Nat.mul_lt_mul_pow_succ /-
 theorem mul_lt_mul_pow_succ {n a q : ℕ} (a0 : 0 < a) (q1 : 1 < q) : n * q < a * q ^ (n + 1) :=
   by
-  rw [pow_succ', ← mul_assoc, mul_lt_mul_right (zero_lt_one.trans q1)]
+  rw [pow_succ, ← mul_assoc, mul_lt_mul_right (zero_lt_one.trans q1)]
   exact lt_mul_of_one_le_of_lt (nat.succ_le_iff.mpr a0) (Nat.lt_pow_self q1 n)
 #align nat.mul_lt_mul_pow_succ Nat.mul_lt_mul_pow_succ
 -/
@@ -225,7 +221,7 @@ alias pow_two_sub_pow_two := sq_sub_sq
 theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n :=
   by
   induction' b with b ih
-  rfl; simp [pow_succ, Nat.mul_mod, ih]
+  rfl; simp [pow_succ', Nat.mul_mod, ih]
 #align nat.pow_mod Nat.pow_mod
 -/
 
@@ -233,7 +229,7 @@ theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n :=
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b :=
   by
   by_cases b_h : b = 0
-  · simp [b_h, pow_succ]
+  · simp [b_h, pow_succ']
   have b_pos := Nat.pos_of_ne_zero b_h
   apply Nat.strong_induction_on m
   clear m
@@ -242,7 +238,7 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
   -- base case: p < b^succ w
   · have h₂ : p / b < b ^ w := by
       rw [div_lt_iff_lt_mul b_pos]
-      simpa [pow_succ'] using h₁
+      simpa [pow_succ] using h₁
     rw [mod_eq_of_lt h₁, mod_eq_of_lt h₂]
     simp [div_add_mod]
   -- step: p ≥ b^succ w
@@ -251,8 +247,8 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
     -- Apply induction
     rw [mod_eq_sub_mod h₁, IH _ h₂]
     -- Normalize goal and h1
-    simp only [pow_succ]
-    simp only [GE.ge, pow_succ] at h₁
+    simp only [pow_succ']
+    simp only [GE.ge, pow_succ'] at h₁
     -- Pull subtraction outside mod and div
     rw [sub_mul_mod _ _ _ h₁, sub_mul_div _ _ _ h₁]
     -- Cancel subtraction inside mod b^w
@@ -293,7 +289,7 @@ theorem pow_dvd_pow_iff_le_right' {b k l : ℕ} : (b + 2) ^ k ∣ (b + 2) ^ l �
 #print Nat.not_pos_pow_dvd /-
 theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣ p
   | succ p, succ k, hp, hk, h =>
-    have : succ p * succ p ^ k ∣ succ p * 1 := by simpa [pow_succ] using h
+    have : succ p * succ p ^ k ∣ succ p * 1 := by simpa [pow_succ'] using h
     have : succ p ^ k ∣ 1 := dvd_of_mul_dvd_mul_left (succ_pos _) this
     have he : succ p ^ k = 1 := eq_one_of_dvd_one this
     have : k < succ p ^ k := lt_pow_self hp k

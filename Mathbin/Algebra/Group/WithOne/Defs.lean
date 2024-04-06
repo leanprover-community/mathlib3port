@@ -286,7 +286,7 @@ instance [Monoid α] : MonoidWithZero (WithZero α) :=
     npow_succ := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_succ _ _ }
+      | some x => congr_arg some <| pow_succ' _ _ }
 
 instance [CommMonoid α] : CommMonoidWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.commSemigroup with }

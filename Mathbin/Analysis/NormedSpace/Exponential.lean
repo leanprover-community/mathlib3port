@@ -67,7 +67,7 @@ We prove most result for an arbitrary field `𝕂`, and then specialize to `𝕂
 -/
 
 
-open Filter IsROrC ContinuousMultilinearMap NormedField Asymptotics
+open Filter RCLike ContinuousMultilinearMap NormedField Asymptotics
 
 open scoped Nat Topology BigOperators ENNReal
 
@@ -499,11 +499,11 @@ theorem NormedSpace.exp_add_of_mem_ball [CharZero 𝕂] {x y : 𝔸}
 
 end AnyFieldCommAlgebra
 
-section IsROrC
+section RCLike
 
 section AnyAlgebra
 
-variable (𝕂 𝔸 𝔹 : Type _) [IsROrC 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
+variable (𝕂 𝔸 𝔹 : Type _) [RCLike 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
 variable [NormedRing 𝔹] [NormedAlgebra 𝕂 𝔹]
 
@@ -694,7 +694,7 @@ theorem NormedSpace.exp_nsmul (n : ℕ) (x : 𝔸) :
   by
   induction' n with n ih
   · rw [zero_smul, pow_zero, NormedSpace.exp_zero]
-  · rw [succ_nsmul, pow_succ, NormedSpace.exp_add_of_commute ((Commute.refl x).smul_right n), ih]
+  · rw [succ_nsmul', pow_succ', NormedSpace.exp_add_of_commute ((Commute.refl x).smul_right n), ih]
 #align exp_nsmul NormedSpace.exp_nsmul
 -/
 
@@ -791,7 +791,7 @@ end AnyAlgebra
 
 section DivisionAlgebra
 
-variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedDivisionRing 𝔸] [NormedAlgebra 𝕂 𝔸]
+variable {𝕂 𝔸 : Type _} [RCLike 𝕂] [NormedDivisionRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
 variable (𝕂)
 
@@ -832,8 +832,8 @@ theorem NormedSpace.exp_zsmul (z : ℤ) (x : 𝔸) :
     NormedSpace.exp 𝕂 (z • x) = NormedSpace.exp 𝕂 x ^ z :=
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_coe_nat, coe_nat_zsmul, NormedSpace.exp_nsmul]
-  · rw [zpow_neg, zpow_coe_nat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul, NormedSpace.exp_nsmul]
+  · rw [zpow_natCast, natCast_zsmul, NormedSpace.exp_nsmul]
+  · rw [zpow_neg, zpow_natCast, neg_smul, NormedSpace.exp_neg, natCast_zsmul, NormedSpace.exp_nsmul]
 #align exp_zsmul NormedSpace.exp_zsmul
 -/
 
@@ -855,7 +855,7 @@ end DivisionAlgebra
 
 section CommAlgebra
 
-variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [RCLike 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 #print NormedSpace.exp_add /-
 /-- In a commutative Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`,
@@ -880,7 +880,7 @@ theorem NormedSpace.exp_sum {ι} (s : Finset ι) (f : ι → 𝔸) :
 
 end CommAlgebra
 
-end IsROrC
+end RCLike
 
 end Normed
 

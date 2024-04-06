@@ -3,7 +3,7 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
-import Algebra.Group.Pi
+import Algebra.Group.Pi.Lemmas
 import GroupTheory.GroupAction.Defs
 
 #align_import group_theory.group_action.pi from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

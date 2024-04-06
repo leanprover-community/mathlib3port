@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Analysis.NormedSpace.Ray
-import Topology.LocalExtr
+import Topology.Order.LocalExtr
 
 #align_import analysis.normed_space.extr from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
 

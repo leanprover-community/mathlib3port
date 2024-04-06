@@ -3,8 +3,8 @@ Copyright (c) 2020 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Algebra.GcdMonoid.Multiset
-import Combinatorics.Partition
+import Algebra.GCDMonoid.Multiset
+import Combinatorics.Enumerative.Partition
 import Data.List.Rotate
 import GroupTheory.Perm.Cycle.Basic
 import RingTheory.Int.Basic

@@ -3,7 +3,7 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import CategoryTheory.Sites.SheafOfTypes
+import CategoryTheory.Sites.IsSheafFor
 
 #align_import category_theory.sites.canonical from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

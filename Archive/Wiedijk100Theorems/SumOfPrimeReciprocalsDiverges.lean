@@ -3,7 +3,7 @@ Copyright (c) 2021 Manuel Candales. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales
 -/
-import Topology.Instances.Ennreal
+import Topology.Instances.ENNReal
 import Data.Nat.Squarefree
 
 #align_import wiedijk_100_theorems.sum_of_prime_reciprocals_diverges from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
@@ -248,7 +248,7 @@ theorem Real.tendsto_sum_one_div_prime_atTop :
     calc
       (card M : ℝ) ≤ 2 ^ k * x.sqrt := by exact_mod_cast card_le_two_pow_mul_sqrt
       _ = 2 ^ k * ↑(2 ^ (k + 1)) := by rw [Nat.sqrt_eq]
-      _ = x / 2 := by field_simp [x, mul_right_comm, ← pow_succ']
+      _ = x / 2 := by field_simp [x, mul_right_comm, ← pow_succ]
   refine' lt_irrefl (x : ℝ) _
   calc
     (x : ℝ) = (card U : ℝ) + (card M : ℝ) := by assumption_mod_cast

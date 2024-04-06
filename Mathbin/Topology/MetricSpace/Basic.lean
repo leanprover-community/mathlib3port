@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébas
 -/
 import Tactic.Positivity
 import Topology.Algebra.Order.Compact
-import Topology.MetricSpace.EmetricSpace
+import Topology.EMetricSpace.Basic
 import Topology.Bornology.Constructions
 
 #align_import topology.metric_space.basic from "leanprover-community/mathlib"@"c8f305514e0d47dfaa710f5a52f0d21b588e6328"
@@ -911,7 +911,7 @@ theorem iUnion_inter_closedBall_nat (s : Set α) (x : α) : (⋃ n : ℕ, s ∩ 
 
 #print Metric.ball_subset /-
 theorem ball_subset (h : dist x y ≤ ε₂ - ε₁) : ball x ε₁ ⊆ ball y ε₂ := fun z zx => by
-  rw [← add_sub_cancel'_right ε₁ ε₂] <;>
+  rw [← add_sub_cancel ε₁ ε₂] <;>
     exact lt_of_le_of_lt (dist_triangle z x y) (add_lt_add_of_lt_of_le zx h)
 #align metric.ball_subset Metric.ball_subset
 -/
@@ -1125,7 +1125,7 @@ theorem uniformContinuous_iff [PseudoMetricSpace β] {f : α → β} :
 #align metric.uniform_continuous_iff Metric.uniformContinuous_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff /-
 theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1134,7 +1134,7 @@ theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set 
 #align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff_le /-
 theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1201,7 +1201,7 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
 #align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretization
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Metric.finite_approx_of_totallyBounded /-
 theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
@@ -1270,7 +1270,7 @@ theorem tendstoUniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α
 #align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print Metric.cauchy_iff /-
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
@@ -1882,15 +1882,15 @@ theorem Real.closedBall_eq_Icc {x r : ℝ} : closedBall x r = Icc (x - r) (x + r
 
 #print Real.Ioo_eq_ball /-
 theorem Real.Ioo_eq_ball (x y : ℝ) : Ioo x y = ball ((x + y) / 2) ((y - x) / 2) := by
-  rw [Real.ball_eq_Ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
-    add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
+  rw [Real.ball_eq_Ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel_left, add_self_div_two, ←
+    add_div, add_assoc, add_sub_cancel, add_self_div_two]
 #align real.Ioo_eq_ball Real.Ioo_eq_ball
 -/
 
 #print Real.Icc_eq_closedBall /-
 theorem Real.Icc_eq_closedBall (x y : ℝ) : Icc x y = closedBall ((x + y) / 2) ((y - x) / 2) := by
-  rw [Real.closedBall_eq_Icc, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
-    add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
+  rw [Real.closedBall_eq_Icc, ← sub_div, add_comm, ← sub_add, add_sub_cancel_left, add_self_div_two,
+    ← add_div, add_assoc, add_sub_cancel, add_self_div_two]
 #align real.Icc_eq_closed_ball Real.Icc_eq_closedBall
 -/
 
@@ -2002,7 +2002,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Metric.cauchySeq_iff /-
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
@@ -2917,7 +2917,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print finite_cover_balls_of_compact /-
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
@@ -3029,7 +3029,7 @@ instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyC
 #align locally_compact_of_proper locally_compact_of_proper
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print complete_of_proper /-
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
@@ -3161,7 +3161,7 @@ namespace Metric
 
 /- warning: metric.bounded clashes with bornology.is_bounded -> Bornology.IsBounded
 Case conversion may be inaccurate. Consider using '#align metric.bounded Bornology.IsBoundedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Bornology.IsBounded /-
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/

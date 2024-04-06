@@ -7,7 +7,7 @@ import Data.Fintype.Option
 import Data.Fintype.Prod
 import Data.Fintype.Pi
 import Data.Vector.Basic
-import Data.Pfun
+import Data.PFun
 import Logic.Function.Iterate
 import Order.Basic
 import Tactic.ApplyFun
@@ -811,7 +811,7 @@ theorem Tape.move_left_nth {Γ} [Inhabited Γ] :
   | ⟨a, L, R⟩, 0 => (ListBlank.nth_zero _).symm
   | ⟨a, L, R⟩, 1 => (ListBlank.nth_zero _).trans (ListBlank.head_cons _ _)
   | ⟨a, L, R⟩, (n + 1 : ℕ) + 1 => by
-    rw [add_sub_cancel]
+    rw [add_sub_cancel_right]
     change (R.cons a).get? (n + 1) = R.nth n
     rw [list_blank.nth_succ, list_blank.tail_cons]
 #align turing.tape.move_left_nth Turing.Tape.move_left_nth
@@ -824,7 +824,7 @@ theorem Tape.move_right_nth {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℤ) :
   conv =>
       rhs
       rw [← T.move_right_left] <;>
-    rw [tape.move_left_nth, add_sub_cancel]
+    rw [tape.move_left_nth, add_sub_cancel_right]
 #align turing.tape.move_right_nth Turing.Tape.move_right_nth
 -/
 
@@ -3118,7 +3118,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
 #align turing.TM2to1.tr_cfg Turing.TM2to1.TrCfg
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
 #print Turing.TM2to1.tr_respects_aux₁ /-
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :

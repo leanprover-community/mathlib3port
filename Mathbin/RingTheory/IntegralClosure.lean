@@ -6,11 +6,11 @@ Authors: Kenny Lau
 import Data.Polynomial.Expand
 import LinearAlgebra.FiniteDimensional
 import LinearAlgebra.Matrix.Charpoly.LinearMap
-import RingTheory.Adjoin.Fg
+import RingTheory.Adjoin.FG
 import RingTheory.FiniteType
 import RingTheory.Polynomial.ScaleRoots
 import RingTheory.Polynomial.Tower
-import RingTheory.TensorProduct
+import LinearAlgebra.TensorProduct.Tower
 
 #align_import ring_theory.integral_closure from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 
@@ -836,7 +836,7 @@ theorem normalizeScaleRoots_coeff_mul_leadingCoeff_pow (i : ℕ) (hp : 1 ≤ nat
     MulZeroClass.zero_mul, mem_support_iff, ite_mul, Ne.def, ite_not]
   split_ifs with h₁ h₂
   · simp [h₁]
-  · rw [h₂, leading_coeff, ← pow_succ, tsub_add_cancel_of_le hp]
+  · rw [h₂, leading_coeff, ← pow_succ', tsub_add_cancel_of_le hp]
   · rw [mul_assoc, ← pow_add, tsub_add_cancel_of_le]
     apply Nat.le_pred_of_lt
     rw [lt_iff_le_and_ne]
@@ -854,7 +854,7 @@ theorem leadingCoeff_smul_normalizeScaleRoots (p : R[X]) :
   split_ifs with h₁ h₂
   · simp [*]
   · simp [*]
-  · rw [Algebra.id.smul_eq_mul, mul_comm, mul_assoc, ← pow_succ', tsub_right_comm,
+  · rw [Algebra.id.smul_eq_mul, mul_comm, mul_assoc, ← pow_succ, tsub_right_comm,
       tsub_add_cancel_of_le]
     rw [Nat.succ_le_iff]
     exact tsub_pos_of_lt (lt_of_le_of_ne (le_nat_degree_of_ne_zero h₁) h₂)
@@ -1328,7 +1328,7 @@ theorem isField_of_isIntegral_of_isField {R S : Type _} [CommRing R] [Nontrivial
   convert hq using 2
   refine' Finset.sum_congr rfl fun i hi => _
   have : 1 ≤ p.nat_degree - i := le_tsub_of_add_le_left (finset.mem_range.mp hi)
-  rw [mul_assoc, ← pow_succ', tsub_add_cancel_of_le this]
+  rw [mul_assoc, ← pow_succ, tsub_add_cancel_of_le this]
 #align is_field_of_is_integral_of_is_field isField_of_isIntegral_of_isField
 -/
 

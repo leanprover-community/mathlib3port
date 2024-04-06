@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Data.Multiset.Sort
-import Data.Pnat.Interval
+import Data.PNat.Interval
 import Data.Rat.Order
-import Data.Pnat.Basic
+import Data.PNat.Basic
 import Tactic.NormNum
 import Tactic.FieldSimp
 import Tactic.IntervalCases

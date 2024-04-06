@@ -6,7 +6,7 @@ Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 import Data.Nat.Order.Basic
 import Data.Nat.Units
 import Data.Set.Basic
-import Algebra.Ring.Divisibility
+import Algebra.Ring.Divisibility.Basic
 import Algebra.GroupWithZero.Divisibility
 
 #align_import data.nat.order.lemmas from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"

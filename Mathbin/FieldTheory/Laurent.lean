@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
 import Data.Polynomial.Taylor
-import FieldTheory.Ratfunc
+import FieldTheory.RatFunc
 
 #align_import field_theory.laurent from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

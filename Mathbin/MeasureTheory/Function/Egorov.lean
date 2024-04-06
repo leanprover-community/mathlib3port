@@ -184,7 +184,7 @@ theorem measure_iUnionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasu
         (ENNReal.tsum_le_tsum <| not_convergent_seq_lt_index_spec (half_pos hε) hf hg hsm hs hfg) _)
   simp_rw [ENNReal.ofReal_mul (half_pos hε).le]
   rw [ENNReal.tsum_mul_left, ← ENNReal.ofReal_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two, ←
-    ENNReal.ofReal_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
+    ENNReal.ofReal_mul (half_pos hε).le, div_mul_cancel₀ ε two_ne_zero]
   · exact le_rfl
   · exact fun n => pow_nonneg (by norm_num) _
   · rw [inv_eq_one_div]
@@ -230,7 +230,7 @@ end Egorov
 variable [SemilatticeSup ι] [Nonempty ι] [Countable ι] {γ : Type _} [TopologicalSpace γ]
   {f : ι → α → β} {g : α → β} {s : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.tendstoUniformlyOn_of_ae_tendsto /-
 /-- **Egorov's theorem**: If `f : ι → α → β` is a sequence of strongly measurable functions that
 converges to `g : α → β` almost everywhere on a measurable set `s` of finite measure,

@@ -7,8 +7,8 @@ import Algebra.BigOperators.Ring
 import Algebra.Module.BigOperators
 import NumberTheory.Divisors
 import Data.Nat.Squarefree
-import Data.Nat.Gcd.BigOperators
-import Algebra.Invertible
+import Data.Nat.GCD.BigOperators
+import Algebra.Invertible.Defs
 import Data.Nat.Factorization.Basic
 
 #align_import number_theory.arithmetic_function from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"
@@ -577,22 +577,22 @@ theorem ArithmeticFunction.ppow_apply {f : ArithmeticFunction R} {k x : ℕ} (kp
 #align nat.arithmetic_function.ppow_apply ArithmeticFunction.ppow_apply
 -/
 
-#print ArithmeticFunction.ppow_succ /-
-theorem ArithmeticFunction.ppow_succ {f : ArithmeticFunction R} {k : ℕ} :
-    f.ppow (k + 1) = f.pmul (f.ppow k) := by
-  ext x
-  rw [ppow_apply (Nat.succ_pos k), pow_succ]
-  induction k <;> simp
-#align nat.arithmetic_function.ppow_succ ArithmeticFunction.ppow_succ
--/
-
 #print ArithmeticFunction.ppow_succ' /-
-theorem ArithmeticFunction.ppow_succ' {f : ArithmeticFunction R} {k : ℕ} {kpos : 0 < k} :
-    f.ppow (k + 1) = (f.ppow k).pmul f := by
+theorem ArithmeticFunction.ppow_succ' {f : ArithmeticFunction R} {k : ℕ} :
+    f.ppow (k + 1) = f.pmul (f.ppow k) := by
   ext x
   rw [ppow_apply (Nat.succ_pos k), pow_succ']
   induction k <;> simp
-#align nat.arithmetic_function.ppow_succ' ArithmeticFunction.ppow_succ'
+#align nat.arithmetic_function.ppow_succ ArithmeticFunction.ppow_succ'
+-/
+
+#print ArithmeticFunction.ppow_succ /-
+theorem ArithmeticFunction.ppow_succ {f : ArithmeticFunction R} {k : ℕ} {kpos : 0 < k} :
+    f.ppow (k + 1) = (f.ppow k).pmul f := by
+  ext x
+  rw [ppow_apply (Nat.succ_pos k), pow_succ]
+  induction k <;> simp
+#align nat.arithmetic_function.ppow_succ' ArithmeticFunction.ppow_succ
 -/
 
 end Pmul

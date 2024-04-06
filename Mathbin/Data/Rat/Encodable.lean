@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Logic.Encodable.Basic
-import Data.Nat.Gcd.Basic
+import Data.Nat.GCD.Basic
 import Data.Rat.Init
 
 #align_import data.rat.encodable from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"

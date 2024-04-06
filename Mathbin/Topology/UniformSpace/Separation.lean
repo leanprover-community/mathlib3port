@@ -76,7 +76,7 @@ open scoped Classical Topology uniformity Filter
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 universe u v w

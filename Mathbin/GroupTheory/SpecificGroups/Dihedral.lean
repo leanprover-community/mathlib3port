@@ -3,7 +3,7 @@ Copyright (c) 2020 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import GroupTheory.Exponent
 
 #align_import group_theory.specific_groups.dihedral from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
@@ -149,7 +149,7 @@ theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k :=
   by
   induction' k with k IH
   · rw [Nat.cast_zero]; rfl
-  · rw [pow_succ, IH, r_mul_r]
+  · rw [pow_succ', IH, r_mul_r]
     congr 1
     norm_cast
     rw [Nat.one_add]

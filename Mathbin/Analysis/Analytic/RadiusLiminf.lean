@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Analysis.Analytic.Basic
-import Analysis.SpecialFunctions.Pow.Nnreal
+import Analysis.SpecialFunctions.Pow.NNReal
 
 #align_import analysis.analytic.radius_liminf from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

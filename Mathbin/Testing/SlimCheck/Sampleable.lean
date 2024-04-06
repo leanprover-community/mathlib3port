@@ -5,9 +5,9 @@ Authors: Simon Hudon
 -/
 import Data.LazyList.Basic
 import Data.Tree
-import Data.Pnat.Basic
+import Data.PNat.Basic
 import Control.Bifunctor
-import Control.Ulift
+import Control.ULift
 import Testing.SlimCheck.Gen
 import Mathbin.Tactic.Linarith.Default
 
@@ -194,7 +194,7 @@ section Prio
 
 open SampleableExt
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option default_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 50
 
 instance SampleableExt.ofSampleable {α} [Sampleable α] [Repr α] : SampleableExt α
@@ -218,7 +218,7 @@ instance Sampleable.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] 
   shrink := SampleableBifunctor.shrink α β Sampleable.shrink Sampleable.shrink
 #align slim_check.sampleable.bifunctor SlimCheck.Sampleable.bifunctor
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option default_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 instance SampleableExt.functor {α} {F} [Functor F] [SampleableFunctor F] [SampleableExt α] :
@@ -430,7 +430,7 @@ instance Rat.sampleable : Sampleable ℚ :=
     intro i
     rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
     mono*
-    · rw [← Int.ofNat_le, Int.coe_natAbs, Int.coe_natAbs]
+    · rw [← Int.ofNat_le, Int.natCast_natAbs, Int.natCast_natAbs]
       apply Int.abs_ediv_le_abs
     · change _ - 1 ≤ y - 1
       apply tsub_le_tsub_right
@@ -866,7 +866,7 @@ instance IntGe.sampleable {x : ℤ} : SlimCheck.Sampleable { y : ℤ // x ≤ y 
 
 instance IntLt.sampleable {y} : SlimCheck.Sampleable { x : ℤ // x < y } :=
   Sampleable.lift ℕ
-    (fun n => ⟨y - (n + 1), Int.sub_left_lt_of_lt_add <| by linarith [Int.coe_nat_nonneg n]⟩)
+    (fun n => ⟨y - (n + 1), Int.sub_left_lt_of_lt_add <| by linarith [Int.natCast_nonneg n]⟩)
     (fun ⟨i, h⟩ => (y - i - 1).natAbs) fun n => by
     unfold_wf <;> simp [int_lt.sampleable._match_1] <;> ring
 #align slim_check.int_lt.sampleable SlimCheck.IntLt.sampleable

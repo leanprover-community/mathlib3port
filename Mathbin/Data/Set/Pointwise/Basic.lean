@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
 import Algebra.GroupPower.Basic
-import Algebra.Hom.Equiv.Basic
-import Algebra.Hom.Units
+import Algebra.Group.Equiv.Basic
+import Algebra.Group.Units.Hom
 import Data.Set.Lattice
 import Data.Nat.Order.Basic
 
@@ -1178,7 +1178,7 @@ scoped[Pointwise] attribute [instance] Set.monoid Set.addMonoid
 @[to_additive]
 theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
   | 0 => by rw [pow_zero]; exact one_mem_one
-  | n + 1 => by rw [pow_succ]; exact mul_mem_mul ha (pow_mem_pow _)
+  | n + 1 => by rw [pow_succ']; exact mul_mem_mul ha (pow_mem_pow _)
 #align set.pow_mem_pow Set.pow_mem_pow
 #align set.nsmul_mem_nsmul Set.nsmul_mem_nsmul
 -/
@@ -1187,7 +1187,7 @@ theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
 @[to_additive]
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
   | 0 => by rw [pow_zero]; exact subset.rfl
-  | n + 1 => by rw [pow_succ]; exact mul_subset_mul hst (pow_subset_pow _)
+  | n + 1 => by rw [pow_succ']; exact mul_subset_mul hst (pow_subset_pow _)
 #align set.pow_subset_pow Set.pow_subset_pow
 #align set.nsmul_subset_nsmul Set.nsmul_subset_nsmul
 -/
@@ -1198,7 +1198,7 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ 
   by
   refine' Nat.le_induction _ (fun n h ih => _) _
   · exact subset.rfl
-  · rw [pow_succ]
+  · rw [pow_succ']
     exact ih.trans (subset_mul_right _ hs)
 #align set.pow_subset_pow_of_one_mem Set.pow_subset_pow_of_one_mem
 #align set.nsmul_subset_nsmul_of_zero_mem Set.nsmul_subset_nsmul_of_zero_mem
@@ -1207,7 +1207,7 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ 
 #print Set.empty_pow /-
 @[simp, to_additive]
 theorem empty_pow {n : ℕ} (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
-  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, empty_mul]
+  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ', empty_mul]
 #align set.empty_pow Set.empty_pow
 #align set.empty_nsmul Set.empty_nsmul
 -/
@@ -1242,7 +1242,7 @@ theorem univ_mul_univ : (univ : Set α) * univ = univ :=
 theorem nsmul_univ {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (univ : Set α) = univ
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => one_nsmul _
-  | n + 2 => fun _ => by rw [succ_nsmul, nsmul_univ n.succ_ne_zero, univ_add_univ]
+  | n + 2 => fun _ => by rw [succ_nsmul', nsmul_univ n.succ_ne_zero, univ_add_univ]
 #align set.nsmul_univ Set.nsmul_univ
 -/
 
@@ -1251,7 +1251,7 @@ theorem nsmul_univ {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n �
 theorem univ_pow : ∀ {n : ℕ}, n ≠ 0 → (univ : Set α) ^ n = univ
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => pow_one _
-  | n + 2 => fun _ => by rw [pow_succ, univ_pow n.succ_ne_zero, univ_mul_univ]
+  | n + 2 => fun _ => by rw [pow_succ', univ_pow n.succ_ne_zero, univ_mul_univ]
 #align set.univ_pow Set.univ_pow
 #align set.nsmul_univ Set.nsmul_univ
 -/

@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 -/
-import Topology.Instances.Ennreal
+import Topology.Instances.ENNReal
 import MeasureTheory.Measure.MeasureSpace
 
 #align_import probability.probability_mass_function.basic from "leanprover-community/mathlib"@"a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea"
@@ -262,7 +262,7 @@ theorem toOuterMeasure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p
 #align pmf.to_outer_measure_apply_eq_zero_iff PMF.toOuterMeasure_apply_eq_zero_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print PMF.toOuterMeasure_apply_eq_one_iff /-
 theorem toOuterMeasure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support ⊆ s :=
   by

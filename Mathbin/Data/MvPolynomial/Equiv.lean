@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 -/
 import Data.MvPolynomial.Rename
 import Data.Polynomial.AlgebraMap
-import Data.MvPolynomial.Variables
+import Data.MvPolynomial.Degrees
 import Data.Finsupp.Fin
 import Logic.Equiv.Fin
 import Algebra.BigOperators.Fin

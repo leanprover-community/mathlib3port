@@ -5,7 +5,7 @@ Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 -/
 import RingTheory.Localization.LocalizationLocalization
 import RingTheory.Localization.Submodule
-import RingTheory.DiscreteValuationRing.Tfae
+import RingTheory.DiscreteValuationRing.TFAE
 
 #align_import ring_theory.dedekind_domain.dvr from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 
@@ -55,7 +55,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [IsDomain A] [Field K]
 open scoped nonZeroDivisors Polynomial
 
 #print IsDedekindDomainDvr /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal[ideal] A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal[ideal] A)) -/
 /-- A Dedekind domain is an integral domain that is Noetherian, and the
 localization at every nonzero prime is a discrete valuation ring.
 

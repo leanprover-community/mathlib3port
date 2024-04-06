@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
 import Analysis.Complex.Circle
-import MeasureTheory.Group.Integration
+import MeasureTheory.Group.Integral
 import MeasureTheory.Measure.Haar.OfBasis
 
 #align_import analysis.fourier.fourier_transform from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
@@ -110,7 +110,7 @@ theorem fourierIntegral_comp_add_right [MeasurableAdd V] (e : Multiplicative �
   by
   ext1 w
   dsimp only [fourier_integral, Function.comp_apply]
-  conv in L _ => rw [← add_sub_cancel v v₀]
+  conv in L _ => rw [← add_sub_cancel_right v v₀]
   rw [integral_add_right_eq_self fun v : V => e[-L (v - v₀) w] • f v]
   swap; infer_instance
   dsimp only
@@ -134,9 +134,9 @@ section Continuous
 variable [TopologicalSpace 𝕜] [TopologicalRing 𝕜] [TopologicalSpace V] [BorelSpace V]
   [TopologicalSpace W] {e : Multiplicative 𝕜 →* 𝕊} {μ : Measure V} {L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜}
 
-#print VectorFourier.fourier_integral_convergent_iff /-
+#print VectorFourier.fourierIntegral_convergent_iff /-
 /-- For any `w`, the Fourier integral is convergent iff `f` is integrable. -/
-theorem fourier_integral_convergent_iff (he : Continuous e)
+theorem fourierIntegral_convergent_iff (he : Continuous e)
     (hL : Continuous fun p : V × W => L p.1 p.2) {f : V → E} (w : W) :
     Integrable f μ ↔ Integrable (fun v : V => e[-L v w] • f v) μ :=
   by
@@ -160,7 +160,7 @@ theorem fourier_integral_convergent_iff (he : Continuous e)
   rw [← smul_assoc, smul_eq_mul, ← Submonoid.coe_mul, ← MonoidHom.map_mul, ← ofAdd_add,
     LinearMap.map_neg, neg_neg, ← sub_eq_add_neg, sub_self, ofAdd_zero, MonoidHom.map_one,
     Submonoid.coe_one, one_smul]
-#align vector_fourier.fourier_integral_convergent_iff VectorFourier.fourier_integral_convergent_iff
+#align vector_fourier.fourier_integral_convergent_iff VectorFourier.fourierIntegral_convergent_iff
 -/
 
 variable [CompleteSpace E]

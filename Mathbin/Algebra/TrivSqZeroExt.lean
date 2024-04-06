@@ -748,8 +748,8 @@ theorem snd_pow_of_smul_comm [Monoid R] [AddMonoid M] [DistribMulAction R M]
     induction' n with n ih
     · simp
     ·
-      rw [pow_succ', MulOpposite.op_mul, mul_smul, mul_smul, ← h,
-        smul_comm (_ : R) (op x.fst) x.snd, ih]
+      rw [pow_succ, MulOpposite.op_mul, mul_smul, mul_smul, ← h, smul_comm (_ : R) (op x.fst) x.snd,
+        ih]
   simp_rw [snd_pow_eq_sum, this, smul_smul, ← pow_add]
   cases n
   · rw [Nat.pred_zero, pow_zero, List.range_zero, zero_smul, List.map_nil, List.sum_nil]
@@ -792,7 +792,7 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐ�
     npow := fun n x => x ^ n
     npow_zero := fun x => ext (pow_zero x.fst) (by simp [snd_pow_eq_sum])
     npow_succ := fun n x =>
-      ext (pow_succ _ _)
+      ext (pow_succ' _ _)
         (by
           simp_rw [snd_mul, snd_pow_eq_sum, Nat.pred_succ]
           cases n
@@ -801,7 +801,7 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐ�
           rw [List.range_succ, List.map_append, List.sum_append, List.map_singleton,
             List.sum_singleton, Nat.sub_self, pow_zero, one_smul, List.smul_sum, List.map_map,
             Function.comp, fst_pow]
-          simp_rw [smul_smul, ← pow_succ, Nat.succ_eq_add_one]
+          simp_rw [smul_smul, ← pow_succ', Nat.succ_eq_add_one]
           congr 2
           refine' List.map_congr fun i hi => _
           rw [List.mem_range, Nat.lt_succ_iff] at hi

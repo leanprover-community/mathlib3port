@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Algebra.CharP.Basic
-import Algebra.Hom.Iterate
+import Algebra.GroupPower.IterateHom
 import Algebra.Ring.Equiv
 
 #align_import field_theory.perfect_closure from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"
@@ -489,10 +489,10 @@ theorem frobenius_mk (x : ℕ × K) :
   intro p; induction' p with p ih
   case zero => apply r.sound; rw [(frobenius _ _).iterate_map_one, pow_zero]
   case succ =>
-    rw [pow_succ, ih]
+    rw [pow_succ', ih]
     symm
     apply r.sound
-    simp only [pow_succ, (frobenius _ _).iterate_map_hMul]
+    simp only [pow_succ', (frobenius _ _).iterate_map_hMul]
 #align perfect_closure.frobenius_mk PerfectClosure.frobenius_mk
 -/
 

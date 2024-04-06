@@ -3,7 +3,7 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Analysis.Calculus.ContDiff
+import Analysis.Calculus.ContDiff.Basic
 import Geometry.Manifold.ChartedSpace
 
 #align_import geometry.manifold.smooth_manifold_with_corners from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"

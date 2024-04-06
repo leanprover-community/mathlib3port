@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
 import Data.Polynomial.Eval
-import LinearAlgebra.Dimension
+import LinearAlgebra.Dimension.Basic
 
 #align_import algebra.linear_recurrence from "leanprover-community/mathlib"@"814d76e2247d5ba8bc024843552da1278bfe9e5c"
 
@@ -245,7 +245,7 @@ def charPoly : α[X] :=
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=
   by
-  rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
+  rw [char_poly, Polynomial.IsRoot.definition, Polynomial.eval]
   simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial,
     Polynomial.eval₂_sub]
   constructor

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Ashvni Narayanan
 -/
 import Algebra.Order.Group.TypeTags
-import FieldTheory.Ratfunc
+import FieldTheory.RatFunc
 import RingTheory.DedekindDomain.IntegralClosure
 import RingTheory.IntegrallyClosed
 import Topology.Algebra.ValuedField
@@ -296,11 +296,11 @@ def inftyValuedFqt : Valued (RatFunc Fq) ℤₘ₀ :=
 #align function_field.infty_valued_Fqt FunctionField.inftyValuedFqt
 -/
 
-#print FunctionField.inftyValuedFqt.def /-
-theorem inftyValuedFqt.def {x : RatFunc Fq} :
+#print FunctionField.inftyValuedFqt.def' /-
+theorem inftyValuedFqt.def' {x : RatFunc Fq} :
     @Valued.v (RatFunc Fq) _ _ _ (inftyValuedFqt Fq) x = inftyValuationDef Fq x :=
   rfl
-#align function_field.infty_valued_Fqt.def FunctionField.inftyValuedFqt.def
+#align function_field.infty_valued_Fqt.def FunctionField.inftyValuedFqt.def'
 -/
 
 #print FunctionField.FqtInfty /-
@@ -324,11 +324,11 @@ instance valuedFqtInfty : Valued (FqtInfty Fq) ℤₘ₀ :=
 #align function_field.valued_Fqt_infty FunctionField.valuedFqtInfty
 -/
 
-#print FunctionField.valuedFqtInfty.def /-
-theorem valuedFqtInfty.def {x : FqtInfty Fq} :
+#print FunctionField.valuedFqtInfty.def' /-
+theorem valuedFqtInfty.def' {x : FqtInfty Fq} :
     Valued.v x = @Valued.extension (RatFunc Fq) _ _ _ (inftyValuedFqt Fq) x :=
   rfl
-#align function_field.valued_Fqt_infty.def FunctionField.valuedFqtInfty.def
+#align function_field.valued_Fqt_infty.def FunctionField.valuedFqtInfty.def'
 -/
 
 end InftyValuation

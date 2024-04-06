@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Algebra.Module.Basic
-import Algebra.Module.Ulift
+import Algebra.Module.ULift
 import Algebra.NeZero
-import Algebra.PunitInstances
+import Algebra.PUnitInstances
 import Algebra.Ring.Aut
-import Algebra.Ring.Ulift
+import Algebra.Ring.ULift
 import Algebra.CharZero.Lemmas
-import LinearAlgebra.Basic
+import Algebra.Module.Submodule.Ker
 import RingTheory.Subring.Basic
 import Tactic.Abel
 
@@ -105,7 +105,7 @@ open scoped BigOperators
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 
@@ -719,7 +719,7 @@ theorem mul_sub_algebraMap_pow_commutes [Ring A] [Algebra R A] (x : A) (r : R) (
   by
   induction' n with n ih
   · simp
-  · rw [pow_succ, ← mul_assoc, mul_sub_algebra_map_commutes, mul_assoc, ih, ← mul_assoc]
+  · rw [pow_succ', ← mul_assoc, mul_sub_algebra_map_commutes, mul_assoc, ih, ← mul_assoc]
 #align algebra.mul_sub_algebra_map_pow_commutes Algebra.mul_sub_algebraMap_pow_commutes
 -/
 

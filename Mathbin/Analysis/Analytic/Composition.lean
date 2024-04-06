@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 -/
 import Analysis.Analytic.Basic
-import Combinatorics.Composition
+import Combinatorics.Enumerative.Composition
 
 #align_import analysis.analytic.composition from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 
@@ -593,7 +593,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   convert (NNReal.summable_geometric (NNReal.div_lt_one_of_lt one_lt_two)).hMul_left (1 / 4)
   ext1 n
   rw [(this _).tsum_eq, add_tsub_cancel_right]
-  field_simp [← mul_assoc, pow_succ', mul_pow, show (4 : ℝ≥0) = 2 * 2 from (two_mul 2).symm,
+  field_simp [← mul_assoc, pow_succ, mul_pow, show (4 : ℝ≥0) = 2 * 2 from (two_mul 2).symm,
     mul_right_comm]
 #align formal_multilinear_series.comp_summable_nnreal FormalMultilinearSeries.comp_summable_nnreal
 -/
@@ -919,13 +919,13 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     have B₁ : ContinuousAt (fun z : F => g (f x + z)) (f (x + y) - f x) :=
       by
       refine' ContinuousAt.comp _ (continuous_const.add continuous_id).ContinuousAt
-      simp only [add_sub_cancel'_right, id.def]
+      simp only [add_sub_cancel, id.def]
       exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds EMetric.isOpen_ball fy_mem)
     have B₂ : f (x + y) - f x ∈ EMetric.ball (0 : F) rg := by
       simpa [edist_eq_coe_nnnorm, edist_eq_coe_nnnorm_sub] using fy_mem
     rw [← emetric.is_open_ball.nhds_within_eq B₂] at A
     convert Hg.tendsto_locally_uniformly_on.tendsto_comp B₁.continuous_within_at B₂ A
-    simp only [add_sub_cancel'_right]
+    simp only [add_sub_cancel]
   -- Third step: the sum over all compositions in `comp_partial_sum_target 0 n n` converges to
   -- `g (f (x + y))`. As this sum is exactly the composition of the partial sum, this is a direct
   -- consequence of the second step

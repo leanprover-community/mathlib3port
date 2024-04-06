@@ -5,7 +5,7 @@ Authors: Scott Morrison, Simon Hudon
 -/
 import CategoryTheory.Monoidal.Category
 import CategoryTheory.Limits.Shapes.BinaryProducts
-import CategoryTheory.Pempty
+import CategoryTheory.PEmpty
 
 #align_import category_theory.monoidal.of_chosen_finite_products.basic from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

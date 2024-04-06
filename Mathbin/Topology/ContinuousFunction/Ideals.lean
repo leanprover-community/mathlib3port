@@ -6,7 +6,7 @@ Authors: Jireh Loreaux
 import Topology.Algebra.Algebra
 import Topology.ContinuousFunction.Compact
 import Topology.UrysohnsLemma
-import Data.IsROrC.Basic
+import Analysis.RCLike.Basic
 import Analysis.NormedSpace.Units
 import Topology.Algebra.Module.CharacterSpace
 
@@ -206,11 +206,11 @@ theorem ideal_gc : GaloisConnection (setOfIdeal : Ideal C(X, R) → Set X) (idea
 
 end TopologicalRing
 
-section IsROrC
+section RCLike
 
-open IsROrC
+open RCLike
 
-variable {X 𝕜 : Type _} [IsROrC 𝕜] [TopologicalSpace X]
+variable {X 𝕜 : Type _} [RCLike 𝕜] [TopologicalSpace X]
 
 #print ContinuousMap.exists_mul_le_one_eqOn_ge /-
 /-- An auxiliary lemma used in the proof of `ideal_of_set_of_ideal_eq_closure` which may be useful
@@ -333,7 +333,7 @@ theorem idealOfSet_ofIdeal_eq_closure (I : Ideal C(X, 𝕜)) :
       ext
       simp only [comp_apply, coe_mk, algebraMapCLM_coe, map_pow, coe_mul, coe_star, Pi.mul_apply,
         Pi.star_apply, star_def, ContinuousMap.coe_coe]
-      simpa only [norm_sq_eq_def', IsROrC.conj_mul, of_real_pow]
+      simpa only [norm_sq_eq_def', RCLike.conj_mul, of_real_pow]
   /- Get the function `g'` which is guaranteed to exist above. By the extreme value theorem and
     compactness of `t`, there is some `0 < c` such that `c ≤ g' x` for all `x ∈ t`. Then by
     `main_lemma_aux` there is some `g` for which `g * g'` is the desired function. -/
@@ -382,7 +382,7 @@ theorem setOfIdeal_ofSet_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 s
   exact
     ⟨⟨fun x => g x, continuous_of_real.comp (map_continuous g)⟩, by
       simpa only [coe_mk, of_real_eq_zero] using fun x hx => hgs (subset_closure hx), by
-      simpa only [coe_mk, hgx (Set.mem_singleton x), Pi.one_apply, IsROrC.ofReal_one] using
+      simpa only [coe_mk, hgx (Set.mem_singleton x), Pi.one_apply, RCLike.ofReal_one] using
         one_ne_zero⟩
 #align continuous_map.set_of_ideal_of_set_eq_interior ContinuousMap.setOfIdeal_ofSet_eq_interior
 -/
@@ -463,7 +463,7 @@ theorem ideal_isMaximal_iff (I : Ideal C(X, 𝕜)) [hI : IsClosed (I : Set C(X, 
 #align continuous_map.ideal_is_maximal_iff ContinuousMap.ideal_isMaximal_iff
 -/
 
-end IsROrC
+end RCLike
 
 end ContinuousMap
 
@@ -505,7 +505,7 @@ theorem continuousMapEval_apply_apply (x : X) (f : C(X, 𝕜)) : continuousMapEv
 
 end ContinuousMapEval
 
-variable [CompactSpace X] [T2Space X] [IsROrC 𝕜]
+variable [CompactSpace X] [T2Space X] [RCLike 𝕜]
 
 #print WeakDual.CharacterSpace.continuousMapEval_bijective /-
 theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) :=
@@ -517,9 +517,9 @@ theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) :=
         (isClosed_singleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
       ⟨f, fx, fy, -⟩
     rw [← Ne.def, DFunLike.ne_iff]
-    use(⟨coe, IsROrC.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
+    use(⟨coe, RCLike.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
     simpa only [continuous_map_eval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne.def,
-      IsROrC.ofReal_inj] using
+      RCLike.ofReal_inj] using
       ((fx (Set.mem_singleton x)).symm ▸ (fy (Set.mem_singleton y)).symm ▸ zero_ne_one : f x ≠ f y)
   · obtain ⟨x, hx⟩ := (ideal_is_maximal_iff (RingHom.ker φ)).mp inferInstance
     refine' ⟨x, ext_ker <| Ideal.ext fun f => _⟩

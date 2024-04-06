@@ -189,8 +189,8 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
         _ = spectralRadius ℂ (algebraMap ℂ A ‖star a * a‖ - star a * a) :=
           by
           refine' (IsSelfAdjoint.spectralRadius_eq_nnnorm _).symm
-          rw [IsSelfAdjoint, star_sub, star_mul, star_star, ← algebraMap_star_comm, IsROrC.star_def,
-            IsROrC.conj_ofReal]
+          rw [IsSelfAdjoint, star_sub, star_mul, star_star, ← algebraMap_star_comm, RCLike.star_def,
+            RCLike.conj_ofReal]
         _ < ‖star a * a‖₊ := spectrum.spectralRadius_lt_of_forall_lt _ h₂)
 #align elemental_star_algebra.is_unit_of_is_unit_of_is_star_normal elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal
 -/

@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Analysis.SpecialFunctions.Pow.Nnreal
+import Analysis.SpecialFunctions.Pow.NNReal
 
 #align_import analysis.p_series from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -62,7 +62,7 @@ theorem le_sum_condensed' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
   have : ∀ k ∈ Ico (2 ^ n) (2 ^ (n + 1)), f k ≤ f (2 ^ n) := fun k hk =>
     hf (pow_pos zero_lt_two _) (mem_Ico.mp hk).1
   convert sum_le_sum this
-  simp [pow_succ, two_mul]
+  simp [pow_succ', two_mul]
 #align finset.le_sum_condensed' Finset.le_sum_condensed'
 -/
 
@@ -90,7 +90,7 @@ theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
     hf (n.one_le_two_pow.trans_lt <| (Nat.lt_succ_of_le le_rfl).trans_le (mem_Ico.mp hk).1)
       (Nat.le_of_lt_succ <| (mem_Ico.mp hk).2)
   convert sum_le_sum this
-  simp [pow_succ, two_mul]
+  simp [pow_succ', two_mul]
 #align finset.sum_condensed_le' Finset.sum_condensed_le'
 -/
 
@@ -99,7 +99,7 @@ theorem sum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m)
     ∑ k in range (n + 1), 2 ^ k • f (2 ^ k) ≤ f 1 + 2 • ∑ k in Ico 2 (2 ^ n + 1), f k :=
   by
   convert add_le_add_left (nsmul_le_nsmul_right (sum_condensed_le' hf n) 2) (f 1)
-  simp [sum_range_succ', add_comm, pow_succ, mul_nsmul', sum_nsmul]
+  simp [sum_range_succ', add_comm, pow_succ', mul_nsmul', sum_nsmul]
 #align finset.sum_condensed_le Finset.sum_condensed_le
 -/
 

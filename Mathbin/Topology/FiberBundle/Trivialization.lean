@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel
 -/
 import Data.Bundle
 import Topology.Algebra.Order.Field
-import Topology.LocalHomeomorph
+import Topology.PartialHomeomorph
 
 #align_import topology.fiber_bundle.trivialization from "leanprover-community/mathlib"@"e473c3198bb41f68560cab68a0529c854b618833"
 

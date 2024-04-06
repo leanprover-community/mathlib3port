@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Data.Fin.Fin2
-import Data.Pfun
+import Data.PFun
 import Data.Vector3
 import NumberTheory.PellMatiyasevic
 

@@ -649,9 +649,8 @@ theorem IsPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.m
 #align list.is_prefix.map List.IsPrefix.map
 -/
 
-#print List.IsPrefix.filter_map /-
-theorem IsPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
-    l₁.filterMap f <+: l₂.filterMap f :=
+#print List.IsPrefix.filterMap /-
+theorem IsPrefix.filterMap (h : l₁ <+: l₂) (f : α → Option β) : l₁.filterMap f <+: l₂.filterMap f :=
   by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
   · simp only [nil_prefix, filter_map_nil]
@@ -661,7 +660,7 @@ theorem IsPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
       rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filter_map_append,
         filter_map_append, h.left, prefix_append_right_inj]
       exact hl h.right
-#align list.is_prefix.filter_map List.IsPrefix.filter_map
+#align list.is_prefix.filter_map List.IsPrefix.filterMap
 -/
 
 #print List.IsPrefix.reduceOption /-

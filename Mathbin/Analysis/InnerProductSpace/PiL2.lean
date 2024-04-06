@@ -57,7 +57,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 -/
 
 
-open Real Set Filter IsROrC Submodule Function
+open Real Set Filter RCLike Submodule Function
 
 open scoped BigOperators uniformity Topology NNReal ENNReal ComplexConjugate DirectSum
 
@@ -65,7 +65,7 @@ noncomputable section
 
 variable {ι : Type _} {ι' : Type _}
 
-variable {𝕜 : Type _} [IsROrC 𝕜]
+variable {𝕜 : Type _} [RCLike 𝕜]
 
 variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
@@ -117,41 +117,41 @@ theorem PiLp.inner_apply {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i, 
 /-- The standard real/complex Euclidean space, functions on a finite type. For an `n`-dimensional
 space use `euclidean_space 𝕜 (fin n)`. -/
 @[reducible, nolint unused_arguments]
-def EuclideanSpace (𝕜 : Type _) [IsROrC 𝕜] (n : Type _) [Fintype n] : Type _ :=
+def EuclideanSpace (𝕜 : Type _) [RCLike 𝕜] (n : Type _) [Fintype n] : Type _ :=
   PiLp 2 fun i : n => 𝕜
 #align euclidean_space EuclideanSpace
 -/
 
 #print EuclideanSpace.nnnorm_eq /-
-theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [RCLike 𝕜] {n : Type _} [Fintype n]
     (x : EuclideanSpace 𝕜 n) : ‖x‖₊ = NNReal.sqrt (∑ i, ‖x i‖₊ ^ 2) :=
   PiLp.nnnorm_eq_of_L2 x
 #align euclidean_space.nnnorm_eq EuclideanSpace.nnnorm_eq
 -/
 
 #print EuclideanSpace.norm_eq /-
-theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+theorem EuclideanSpace.norm_eq {𝕜 : Type _} [RCLike 𝕜] {n : Type _} [Fintype n]
     (x : EuclideanSpace 𝕜 n) : ‖x‖ = Real.sqrt (∑ i, ‖x i‖ ^ 2) := by
   simpa only [Real.coe_sqrt, NNReal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) x.nnnorm_eq
 #align euclidean_space.norm_eq EuclideanSpace.norm_eq
 -/
 
 #print EuclideanSpace.dist_eq /-
-theorem EuclideanSpace.dist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+theorem EuclideanSpace.dist_eq {𝕜 : Type _} [RCLike 𝕜] {n : Type _} [Fintype n]
     (x y : EuclideanSpace 𝕜 n) : dist x y = (∑ i, dist (x i) (y i) ^ 2).sqrt :=
   (PiLp.dist_eq_of_L2 x y : _)
 #align euclidean_space.dist_eq EuclideanSpace.dist_eq
 -/
 
 #print EuclideanSpace.nndist_eq /-
-theorem EuclideanSpace.nndist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+theorem EuclideanSpace.nndist_eq {𝕜 : Type _} [RCLike 𝕜] {n : Type _} [Fintype n]
     (x y : EuclideanSpace 𝕜 n) : nndist x y = (∑ i, nndist (x i) (y i) ^ 2).sqrt :=
   (PiLp.nndist_eq_of_L2 x y : _)
 #align euclidean_space.nndist_eq EuclideanSpace.nndist_eq
 -/
 
 #print EuclideanSpace.edist_eq /-
-theorem EuclideanSpace.edist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+theorem EuclideanSpace.edist_eq {𝕜 : Type _} [RCLike 𝕜] {n : Type _} [Fintype n]
     (x y : EuclideanSpace 𝕜 n) : edist x y = (∑ i, edist (x i) (y i) ^ 2) ^ (1 / 2 : ℝ) :=
   (PiLp.edist_eq_of_L2 x y : _)
 #align euclidean_space.edist_eq EuclideanSpace.edist_eq
@@ -501,7 +501,7 @@ protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E)
   rw [map_sum] at this
   convert this
   ext i
-  rw [SMulHomClass.map_smul, b.repr_apply_apply, mul_comm]
+  rw [MulActionSemiHomClass.map_smul, b.repr_apply_apply, mul_comm]
   rfl
 #align orthonormal_basis.sum_inner_mul_inner OrthonormalBasis.sum_inner_mul_inner
 -/
@@ -809,7 +809,7 @@ unit length. -/
 theorem OrthonormalBasis.det_to_matrix_orthonormalBasis : ‖a.toBasis.det b‖ = 1 :=
   by
   have : (norm_sq (a.to_basis.det b) : 𝕜) = 1 := by
-    simpa [IsROrC.mul_conj] using
+    simpa [RCLike.mul_conj] using
       (Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)).2
   norm_cast at this
   rwa [← sqrt_norm_sq_eq_norm, sqrt_eq_one]

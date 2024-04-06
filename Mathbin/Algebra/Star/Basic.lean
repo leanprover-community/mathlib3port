@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Algebra.Ring.Aut
 import Algebra.Ring.CompTypeclasses
-import Data.Rat.Cast
+import Data.Rat.Cast.Defs
 import GroupTheory.GroupAction.Opposite
 import Data.SetLike.Basic
 
@@ -492,8 +492,8 @@ theorem RingHom.star_apply {S : Type _} [NonAssocSemiring S] [CommSemiring R] [S
 alias Complex.conj_conj := starRingEnd_self_apply
 #align complex.conj_conj Complex.conj_conj
 
-alias IsROrC.conj_conj := starRingEnd_self_apply
-#align is_R_or_C.conj_conj IsROrC.conj_conj
+alias RCLike.conj_conj := starRingEnd_self_apply
+#align is_R_or_C.conj_conj RCLike.conj_conj
 
 #print star_inv' /-
 @[simp]

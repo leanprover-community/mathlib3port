@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import RingTheory.IntegrallyClosed
-import RingTheory.Localization.NumDenom
+import RingTheory.Localization.NumDen
 import RingTheory.Polynomial.ScaleRoots
 
 #align_import ring_theory.polynomial.rational_root from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"

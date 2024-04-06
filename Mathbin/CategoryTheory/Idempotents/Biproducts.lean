@@ -146,7 +146,7 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
       inr_snd := P.complement.decompId.symm }
     (by
       simp only [hom_ext, ← decomp_p, quiver.hom.add_comm_group_add_f, to_karoubi_map_f, id_eq,
-        coe_p, complement_p, add_sub_cancel'_right])
+        coe_p, complement_p, add_sub_cancel])
 
 #print CategoryTheory.Idempotents.Karoubi.decomposition /-
 /-- A formal direct factor `P : karoubi C` of an object `P.X : C` in a
@@ -177,7 +177,7 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.p
     simp only [← decomp_p]
     ext
     dsimp only [complement, to_karoubi]
-    simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel'_right, id_eq]
+    simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel, id_eq]
 #align category_theory.idempotents.karoubi.decomposition CategoryTheory.Idempotents.Karoubi.decomposition
 -/
 

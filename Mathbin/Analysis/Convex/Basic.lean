@@ -773,7 +773,7 @@ theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq
           ⟨_,
             h_conv h₁₂ h₂₂ _ _
               (by rw [← div_self hpq.ne', add_div] : p / (p + q) + q / (p + q) = 1),
-            by simp only [← mul_smul, smul_add, mul_div_cancel' _ hpq.ne']⟩ <;>
+            by simp only [← mul_smul, smul_add, mul_div_cancel₀ _ hpq.ne']⟩ <;>
       positivity
 #align convex.add_smul Convex.add_smul
 -/

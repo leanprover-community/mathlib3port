@@ -3,7 +3,7 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import LinearAlgebra.Basic
+import Algebra.Module.Submodule.Ker
 import Algebra.Algebra.Basic
 import Algebra.BigOperators.Order
 import Algebra.BigOperators.Ring

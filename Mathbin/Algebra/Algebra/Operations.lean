@@ -483,7 +483,7 @@ variable (M)
 #print Submodule.span_pow /-
 theorem span_pow (s : Set A) : ∀ n : ℕ, span R s ^ n = span R (s ^ n)
   | 0 => by rw [pow_zero, pow_zero, one_eq_span_one_set]
-  | n + 1 => by rw [pow_succ, pow_succ, span_pow, span_mul_span]
+  | n + 1 => by rw [pow_succ', pow_succ', span_pow, span_mul_span]
 #align submodule.span_pow Submodule.span_pow
 -/
 
@@ -510,7 +510,7 @@ theorem pow_toAddSubmonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = M.
   by
   induction' n with n ih
   · exact (h rfl).elim
-  · rw [pow_succ, pow_succ, mul_to_add_submonoid]
+  · rw [pow_succ', pow_succ', mul_to_add_submonoid]
     cases n
     · rw [pow_zero, pow_zero, mul_one, ← mul_to_add_submonoid, mul_one]
     · rw [ih n.succ_ne_zero]
@@ -551,8 +551,7 @@ protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n →
 protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebraMap_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
-    (hmul :
-      ∀ i x hx, C i x hx → ∀ m ∈ M, C i.succ (x * m) ((pow_succ' M i).symm ▸ mul_mem_mul hx H))
+    (hmul : ∀ i x hx, C i x hx → ∀ m ∈ M, C i.succ (x * m) ((pow_succ M i).symm ▸ mul_mem_mul hx H))
     {x : A} {n : ℕ} (hx : x ∈ M ^ n) : C n x hx :=
   by
   induction' n with n n_ih generalizing x
@@ -560,7 +559,7 @@ protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n �
     obtain ⟨r, rfl⟩ := hx
     exact hr r
   revert hx
-  simp_rw [pow_succ']
+  simp_rw [pow_succ]
   intro hx
   exact
     Submodule.mul_induction_on' (fun m hm x ih => hmul _ _ hm (n_ih _) _ ih)

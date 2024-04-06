@@ -40,7 +40,7 @@ A slightly more elaborate corollary is that if `E` is complete and `T` is a comp
 -/
 
 
-variable {𝕜 : Type _} [IsROrC 𝕜]
+variable {𝕜 : Type _} [RCLike 𝕜]
 
 variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
@@ -195,7 +195,7 @@ theorem eq_smul_self_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : E}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (sphere (0 : E) ‖x₀‖) x₀) :
     T x₀ = (↑(rayleigh_quotient x₀) : 𝕜) • x₀ :=
   by
-  letI := InnerProductSpace.isROrCToReal 𝕜 E
+  letI := InnerProductSpace.rclikeToReal 𝕜 E
   let hSA := hT.is_symmetric.restrict_scalars.to_self_adjoint.prop
   exact hSA.eq_smul_self_of_is_local_extr_on_real hextr
 #align is_self_adjoint.eq_smul_self_of_is_local_extr_on IsSelfAdjoint.eq_smul_self_of_isLocalExtrOn
@@ -272,9 +272,9 @@ namespace IsSymmetric
 /-- The supremum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem hasEigenvalue_iSup_of_finiteDimensional (hT : T.IsSymmetric) :
-    HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
+    HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, RCLike.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
   by
-  haveI := FiniteDimensional.proper_isROrC 𝕜 E
+  haveI := FiniteDimensional.proper_rclike 𝕜 E
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ‖x‖) := isCompact_sphere _ _
@@ -296,9 +296,9 @@ theorem hasEigenvalue_iSup_of_finiteDimensional (hT : T.IsSymmetric) :
 /-- The infimum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem hasEigenvalue_iInf_of_finiteDimensional (hT : T.IsSymmetric) :
-    HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
+    HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, RCLike.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
   by
-  haveI := FiniteDimensional.proper_isROrC 𝕜 E
+  haveI := FiniteDimensional.proper_rclike 𝕜 E
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ‖x‖) := isCompact_sphere _ _

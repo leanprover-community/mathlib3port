@@ -147,7 +147,7 @@ theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, x ^ (n : ℂ) = x ^ n
   | 0 => by simp
   | n + 1 =>
     if hx : x = 0 then by
-      simp only [hx, pow_succ, Complex.zero_cpow (Nat.cast_ne_zero.2 (Nat.succ_ne_zero _)),
+      simp only [hx, pow_succ', Complex.zero_cpow (Nat.cast_ne_zero.2 (Nat.succ_ne_zero _)),
         MulZeroClass.zero_mul]
     else by simp [cpow_add, hx, pow_add, cpow_nat_cast n]
 #align complex.cpow_nat_cast Complex.cpow_nat_cast
@@ -218,7 +218,7 @@ theorem inv_cpow_eq_ite (x : ℂ) (n : ℂ) :
     x⁻¹ ^ n = if x.arg = π then conj (x ^ conj n)⁻¹ else (x ^ n)⁻¹ :=
   by
   simp_rw [Complex.cpow_def, log_inv_eq_ite, inv_eq_zero, map_eq_zero, ite_mul, neg_mul,
-    IsROrC.conj_inv, apply_ite conj, apply_ite NormedSpace.exp, apply_ite Inv.inv, map_zero,
+    RCLike.conj_inv, apply_ite conj, apply_ite NormedSpace.exp, apply_ite Inv.inv, map_zero,
     map_one, NormedSpace.exp_neg, inv_one, inv_zero, ← NormedSpace.exp_conj, map_mul, conj_conj]
   split_ifs with hx hn ha ha <;> rfl
 #align complex.inv_cpow_eq_ite Complex.inv_cpow_eq_ite

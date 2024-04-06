@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Data.Pi.Algebra
+import Algebra.Group.Pi.Basic
 import Data.Set.Intervals.Basic
 import Data.Set.Intervals.UnorderedInterval
 import Data.Set.Lattice
@@ -51,7 +51,7 @@ theorem pi_univ_Icc : (pi univ fun i => Icc (x i) (y i)) = Icc x y :=
 #align set.pi_univ_Icc Set.pi_univ_Icc
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print Set.piecewise_mem_Icc /-
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
     (h₁ : ∀ i ∈ s, f₁ i ∈ Icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ Icc (g₁ i) (g₂ i)) :

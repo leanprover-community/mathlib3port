@@ -49,7 +49,7 @@ theorem tan_add' {x y : ℝ}
 #print Real.tan_two_mul /-
 theorem tan_two_mul {x : ℝ} : tan (2 * x) = 2 * tan x / (1 - tan x ^ 2) := by
   simpa only [← Complex.ofReal_inj, Complex.ofReal_sub, Complex.ofReal_div, Complex.ofReal_pow,
-    Complex.ofReal_mul, Complex.ofReal_tan, Complex.ofReal_bit0, Complex.ofReal_one] using
+    Complex.ofReal_mul, Complex.ofReal_tan, Complex.of_real_bit0, Complex.ofReal_one] using
     Complex.tan_two_mul
 #align real.tan_two_mul Real.tan_two_mul
 -/
@@ -220,7 +220,7 @@ theorem arctan_eq_arcsin (x : ℝ) : arctan x = arcsin (x / sqrt (1 + x ^ 2)) :=
 #print Real.arcsin_eq_arctan /-
 theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ Ioo (-(1 : ℝ)) 1) :
     arcsin x = arctan (x / sqrt (1 - x ^ 2)) := by
-  rw [arctan_eq_arcsin, div_pow, sq_sqrt, one_add_div, div_div, ← sqrt_mul, mul_div_cancel',
+  rw [arctan_eq_arcsin, div_pow, sq_sqrt, one_add_div, div_div, ← sqrt_mul, mul_div_cancel₀,
       sub_add_cancel, sqrt_one, div_one] <;>
     nlinarith [h.1, h.2]
 #align real.arcsin_eq_arctan Real.arcsin_eq_arctan
@@ -257,7 +257,7 @@ theorem arctan_eq_arccos {x : ℝ} (h : 0 ≤ x) : arctan x = arccos (sqrt (1 + 
   by
   rw [arctan_eq_arcsin, arccos_eq_arcsin]; swap; · exact inv_nonneg.2 (sqrt_nonneg _)
   congr 1
-  rw [← sqrt_inv, sq_sqrt, ← one_div, one_sub_div, add_sub_cancel', sqrt_div, sqrt_sq h]
+  rw [← sqrt_inv, sq_sqrt, ← one_div, one_sub_div, add_sub_cancel_left, sqrt_div, sqrt_sq h]
   all_goals positivity
 #align real.arctan_eq_arccos Real.arctan_eq_arccos
 -/

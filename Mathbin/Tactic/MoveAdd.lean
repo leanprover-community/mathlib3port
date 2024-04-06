@@ -268,7 +268,7 @@ unsafe def move_op_arg (prec : Nat) : parser (Bool × pexpr) :=
 /-- `move_pexpr_list_or_texpr` is either a list of `move_op_arg`, possibly empty, or a single
 `move_op_arg`. -/
 unsafe def move_pexpr_list_or_texpr : parser (List (Bool × pexpr)) :=
-  list_of (move_op_arg 0) <|> List.ret <$> move_op_arg tac_rbp <|> return []
+  list_of (move_op_arg 0) <|> List.pure <$> move_op_arg tac_rbp <|> return []
 #align tactic.move_op.move_pexpr_list_or_texpr tactic.move_op.move_pexpr_list_or_texpr
 
 end ParsingArgumentsForMoveOp

@@ -5,8 +5,8 @@ Authors: Andrew Yang
 -/
 import CategoryTheory.GlueData
 import CategoryTheory.ConcreteCategory.Elementwise
-import Topology.Category.Top.Limits.Pullbacks
-import Topology.Category.Top.Opens
+import Topology.Category.TopCat.Limits.Pullbacks
+import Topology.Category.TopCat.Opens
 
 #align_import topology.gluing from "leanprover-community/mathlib"@"8af7091a43227e179939ba132e54e54e9f3b089a"
 

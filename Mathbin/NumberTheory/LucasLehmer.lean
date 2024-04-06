@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 -/
 import Data.Nat.Parity
-import Data.Pnat.Interval
-import Data.Zmod.Basic
+import Data.PNat.Interval
+import Data.ZMod.Basic
 import GroupTheory.OrderOfElement
 import RingTheory.Fintype
 import Tactic.IntervalCases
@@ -465,8 +465,8 @@ theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^
       _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by rw [ih]
       _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by ring
       _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
-        rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel]
-      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, pow_succ']
+        rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel_right]
+      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, pow_succ]
 #align lucas_lehmer.X.closed_form LucasLehmer.X.closed_form
 -/
 
@@ -497,7 +497,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
           _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h')
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
     dsimp [q] at h; injection h with h'; clear h
-    rw [mersenne, PNat.one_coe, Nat.minFac_eq_two_iff, pow_succ] at h'
+    rw [mersenne, PNat.one_coe, Nat.minFac_eq_two_iff, pow_succ'] at h'
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
 #align lucas_lehmer.two_lt_q LucasLehmer.two_lt_q
 -/
@@ -552,7 +552,7 @@ theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
 theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = 1 :=
   calc
-    (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by rw [← pow_mul, ← pow_succ']
+    (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by rw [← pow_mul, ← pow_succ]
     _ = (-1) ^ 2 := by rw [ω_pow_eq_neg_one p' h]
     _ = 1 := by simp
 #align lucas_lehmer.ω_pow_eq_one LucasLehmer.ω_pow_eq_one

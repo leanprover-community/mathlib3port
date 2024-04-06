@@ -49,7 +49,7 @@ theorem bound (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
       (mul_pos (mul_pos (bit0_pos zero_lt_four) (pow_pos hb 3)) (pow_pos hc 3))
   have hdenom := denom_pos ha hb hc
   rw [div_le_div_iff hdenom (sqrt_pos.mpr hsqrt)]
-  conv_lhs => rw [pow_succ', mul_assoc]
+  conv_lhs => rw [pow_succ, mul_assoc]
   apply mul_le_mul_of_nonneg_left _ (pow_pos ha 3).le
   apply le_of_pow_le_pow_left _ hdenom.le zero_lt_two
   rw [mul_pow, sq_sqrt hsqrt.le, ← sub_nonneg]

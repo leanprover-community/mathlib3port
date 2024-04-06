@@ -112,7 +112,7 @@ private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 :=
   by
   induction' n with n IH
   · simp; norm_num
-  · simp [IH, pow_succ]
+  · simp [IH, pow_succ']
     rw [mul_sub, sub_add]
     norm_num
 
@@ -325,14 +325,14 @@ private theorem sq_le_two_pow_add_one_minus_three (n : ℕ) : n ^ 2 ≤ 2 ^ (n +
   · norm_num
   · cases k
     · norm_num
-    · rw [succ_eq_add_one, add_sq, pow_succ 2, two_mul (2 ^ _), add_tsub_assoc_of_le,
+    · rw [succ_eq_add_one, add_sq, pow_succ' 2, two_mul (2 ^ _), add_tsub_assoc_of_le,
         add_comm (2 ^ _), add_assoc]
       · apply add_le_add hk
         norm_num
         apply succ_le_of_lt
-        rw [pow_succ, mul_lt_mul_left (zero_lt_two' ℕ)]
+        rw [pow_succ', mul_lt_mul_left (zero_lt_two' ℕ)]
         apply lt_two_pow
-      · rw [pow_succ, pow_succ]
+      · rw [pow_succ', pow_succ']
         linarith [one_le_pow k 2 zero_lt_two]
 
 #print ack_add_one_sq_lt_ack_add_three /-

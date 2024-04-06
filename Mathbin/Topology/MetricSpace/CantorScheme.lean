@@ -156,7 +156,7 @@ def VanishingDiam : Prop :=
 
 variable {A}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
 #print CantorScheme.VanishingDiam.dist_lt /-
 theorem VanishingDiam.dist_lt (hA : VanishingDiam A) (ε : ℝ) (ε_pos : 0 < ε) (x : ℕ → β) :
     ∃ n : ℕ, ∀ (y) (_ : y ∈ A (res x n)) (z) (_ : z ∈ A (res x n)), dist y z < ε :=

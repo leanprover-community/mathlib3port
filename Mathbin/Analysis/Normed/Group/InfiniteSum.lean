@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel, Heather Macbeth, Johannes Hölzl, Yury Kudryashov
 -/
 import Algebra.BigOperators.Intervals
 import Analysis.Normed.Group.Basic
-import Topology.Instances.Nnreal
+import Topology.Instances.NNReal
 
 #align_import analysis.normed.group.infinite_sum from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 
@@ -45,7 +45,7 @@ theorem cauchySeq_finset_iff_vanishing_norm {f : ι → E} :
     (CauchySeq fun s : Finset ι => ∑ i in s, f i) ↔
       ∀ ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ‖∑ i in t, f i‖ < ε :=
   by
-  rw [cauchySeq_finset_iff_vanishing, nhds_basis_ball.forall_iff]
+  rw [cauchySeq_finset_iff_sum_vanishing, nhds_basis_ball.forall_iff]
   · simp only [ball_zero_eq, Set.mem_setOf_eq]
   · rintro s t hst ⟨s', hs'⟩
     exact ⟨s', fun t' ht' => hst <| hs' _ ht'⟩

@@ -6,7 +6,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 import Algebra.BigOperators.Order
 import Algebra.BigOperators.Ring
 import Algebra.CharZero.Lemmas
-import Data.Rat.Cast
+import Data.Rat.Cast.Defs
 
 #align_import oxford_invariants.«2021summer».week3_p1 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 
@@ -143,7 +143,7 @@ theorem OxfordInvariants.week3_p1 (n : ℕ) (a : ℕ → ℕ) (a_pos : ∀ i ≤
         rw [Finset.sum_range_succ, hb, Finset.mul_sum]
         congr; ext i
         rw [← mul_div_assoc, ← mul_div_right_comm, mul_div_assoc,
-          mul_div_cancel _ (a_pos _ <| Nat.le_succ _).ne', mul_comm]
+          mul_div_cancel_right₀ _ (a_pos _ <| Nat.le_succ _).ne', mul_comm]
   -- Check the divisibility condition
   · rw [mul_tsub, ← mul_assoc, Nat.mul_div_cancel' ha, add_mul, Nat.mul_div_cancel' han,
       add_tsub_tsub_cancel ha₀, add_tsub_cancel_right]

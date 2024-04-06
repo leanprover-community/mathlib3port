@@ -78,7 +78,7 @@ theorem W_eq_factorial_ratio (n : ℕ) : W n = 2 ^ (4 * n) * n ! ^ 4 / ((2 * n)!
     rw [prod_range_succ, IH, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
     refine' (div_eq_div_iff _ _).mpr _
     any_goals exact ne_of_gt (by positivity)
-    simp_rw [Nat.mul_succ, Nat.factorial_succ, pow_succ]
+    simp_rw [Nat.mul_succ, Nat.factorial_succ, pow_succ']
     push_cast
     ring_nf
 #align real.wallis.W_eq_factorial_ratio Real.Wallis.W_eq_factorial_ratio

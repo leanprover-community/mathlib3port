@@ -51,7 +51,7 @@ self-adjoint operator, spectral theorem, diagonalization theorem
 -/
 
 
-variable {𝕜 : Type _} [IsROrC 𝕜] [dec_𝕜 : DecidableEq 𝕜]
+variable {𝕜 : Type _} [RCLike 𝕜] [dec_𝕜 : DecidableEq 𝕜]
 
 variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
@@ -250,7 +250,7 @@ for a self-adjoint operator `T` on `E`.
 
 TODO Postcompose with a permutation so that these eigenvalues are listed in increasing order. -/
 noncomputable irreducible_def eigenvalues (i : Fin n) : ℝ :=
-  @IsROrC.re 𝕜 _ <|
+  @RCLike.re 𝕜 _ <|
     hT.direct_sum_isInternal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamily_eigenspaces'
 #align linear_map.is_symmetric.eigenvalues LinearMap.IsSymmetric.eigenvalues
 -/
@@ -264,7 +264,7 @@ theorem hasEigenvector_eigenvectorBasis (i : Fin n) :
     hT.direct_sum_is_internal.subordinate_orthonormal_basis_index hn i
       hT.orthogonal_family_eigenspaces'
   simp_rw [eigenvalues]
-  change has_eigenvector T (IsROrC.re μ) v
+  change has_eigenvector T (RCLike.re μ) v
   have key : has_eigenvector T μ v :=
     by
     have H₁ : v ∈ eigenspace T μ := by
@@ -274,8 +274,8 @@ theorem hasEigenvector_eigenvectorBasis (i : Fin n) :
           hT.orthogonal_family_eigenspaces'
     have H₂ : v ≠ 0 := by simpa using (hT.eigenvector_basis hn).toBasis.NeZero i
     exact ⟨H₁, H₂⟩
-  have re_μ : ↑(IsROrC.re μ) = μ := by
-    rw [← IsROrC.conj_eq_iff_re]
+  have re_μ : ↑(RCLike.re μ) = μ := by
+    rw [← RCLike.conj_eq_iff_re]
     exact hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)
   simpa [re_μ] using key
 #align linear_map.is_symmetric.has_eigenvector_eigenvector_basis LinearMap.IsSymmetric.hasEigenvector_eigenvectorBasis
@@ -337,24 +337,24 @@ theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] 
 
 #print eigenvalue_nonneg_of_nonneg /-
 theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)
-    (hnn : ∀ x : E, 0 ≤ IsROrC.re ⟪x, T x⟫) : 0 ≤ μ :=
+    (hnn : ∀ x : E, 0 ≤ RCLike.re ⟪x, T x⟫) : 0 ≤ μ :=
   by
   obtain ⟨v, hv⟩ := hμ.exists_has_eigenvector
   have hpos : 0 < ‖v‖ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
-  have : IsROrC.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
-    exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
+  have : RCLike.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
+    exact_mod_cast congr_arg RCLike.re (inner_product_apply_eigenvector hv.1)
   exact (mul_nonneg_iff_of_pos_right hpos).mp (this ▸ hnn v)
 #align eigenvalue_nonneg_of_nonneg eigenvalue_nonneg_of_nonneg
 -/
 
 #print eigenvalue_pos_of_pos /-
 theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)
-    (hnn : ∀ x : E, 0 < IsROrC.re ⟪x, T x⟫) : 0 < μ :=
+    (hnn : ∀ x : E, 0 < RCLike.re ⟪x, T x⟫) : 0 < μ :=
   by
   obtain ⟨v, hv⟩ := hμ.exists_has_eigenvector
   have hpos : 0 < ‖v‖ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
-  have : IsROrC.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
-    exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
+  have : RCLike.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
+    exact_mod_cast congr_arg RCLike.re (inner_product_apply_eigenvector hv.1)
   exact (mul_pos_iff_of_pos_right hpos).mp (this ▸ hnn v)
 #align eigenvalue_pos_of_pos eigenvalue_pos_of_pos
 -/

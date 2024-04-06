@@ -3,7 +3,7 @@ Copyright (c) 2017 Simon Hudon All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 -/
-import Data.Rat.Cast
+import Data.Rat.Cast.Defs
 import Data.Rat.MetaDefs
 import Data.Int.Lemmas
 
@@ -431,7 +431,7 @@ unsafe def prove_ne_zero' (c : instance_cache) : expr → tactic (instance_cache
 #align norm_num.prove_ne_zero' norm_num.prove_ne_zero'
 
 theorem clear_denom_div {α} [DivisionRing α] (a b b' c d : α) (h₀ : b ≠ 0) (h₁ : b * b' = d)
-    (h₂ : a * b' = c) : a / b * d = c := by rwa [← h₁, ← mul_assoc, div_mul_cancel _ h₀]
+    (h₂ : a * b' = c) : a / b * d = c := by rwa [← h₁, ← mul_assoc, div_mul_cancel₀ _ h₀]
 #align norm_num.clear_denom_div NormNum.clear_denom_div
 
 /-- Given `a` nonnegative rational and `d` a natural number, returns `(b, ⊢ a * d = b)`.
@@ -1060,7 +1060,7 @@ theorem clear_denom_simple_nat {α} [DivisionRing α] (a : α) : (1 : α) ≠ 0 
 #align norm_num.clear_denom_simple_nat NormNum.clear_denom_simple_nat
 
 theorem clear_denom_simple_div {α} [DivisionRing α] (a b : α) (h : b ≠ 0) : b ≠ 0 ∧ a / b * b = a :=
-  ⟨h, div_mul_cancel _ h⟩
+  ⟨h, div_mul_cancel₀ _ h⟩
 #align norm_num.clear_denom_simple_div NormNum.clear_denom_simple_div
 
 /-- Given `a` a nonnegative rational numeral, returns `(b, c, ⊢ a * b = c)`
@@ -1367,7 +1367,7 @@ unsafe def prove_pow (a : expr) (na : ℚ) :
 end
 
 theorem zpow_pos {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c : α) (hb : b = b')
-    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_coe_nat]
+    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_natCast]
 #align norm_num.zpow_pos NormNum.zpow_pos
 
 theorem zpow_neg {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b')

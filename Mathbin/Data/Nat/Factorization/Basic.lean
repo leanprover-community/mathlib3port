@@ -316,7 +316,7 @@ theorem factorization_pow (n k : ℕ) : factorization (n ^ k) = k • n.factoriz
   by
   induction' k with k ih; · simp
   rcases eq_or_ne n 0 with (rfl | hn); · simp
-  rw [pow_succ, factorization_mul hn (pow_ne_zero _ hn), ih, succ_eq_one_add, add_smul, one_smul]
+  rw [pow_succ', factorization_mul hn (pow_ne_zero _ hn), ih, succ_eq_one_add, add_smul, one_smul]
 #align nat.factorization_pow Nat.factorization_pow
 -/
 
@@ -980,7 +980,7 @@ def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1)
         exact hp.factorization_pos_of_dvd (Nat.succ_ne_zero _) (min_fac_dvd _)
       convert h ((k + 2) / p ^ t) p t hp _ _ _
       · rw [Nat.mul_div_cancel' hpt]
-      · rw [Nat.dvd_div_iff hpt, ← pow_succ', ht]
+      · rw [Nat.dvd_div_iff hpt, ← pow_succ, ht]
         exact pow_succ_factorization_not_dvd (k + 1).succ_ne_zero hp
       · exact htp
       · apply hk _ (Nat.div_lt_of_lt_mul _)

@@ -317,7 +317,7 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
         -- requires `field`, not `division_ring`
             _ =
             g.h + a / b :=
-          by rw [mul_div_cancel_left _ b_ne_zero]
+          by rw [mul_div_cancel_left₀ _ b_ne_zero]
     case
       succ =>
       obtain ⟨⟨pa, pb⟩, s_n'th_eq⟩ : ∃ gp_n', g.s.nth n' = some gp_n' :=
@@ -363,7 +363,7 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
           simp [*, (continuants_aux_eq_continuants_aux_squash_gcf_of_le <| le_refl <| n' + 1).symm,
             (continuants_aux_eq_continuants_aux_squash_gcf_of_le n'.le_succ).symm]
         symm
-        simpa only [eq1, eq2, eq3, eq4, mul_div_cancel _ b_ne_zero]
+        simpa only [eq1, eq2, eq3, eq4, mul_div_cancel_right₀ _ b_ne_zero]
       field_simp
       congr 1 <;> ring
 #align generalized_continued_fraction.succ_nth_convergent_eq_squash_gcf_nth_convergent GeneralizedContinuedFraction.succ_nth_convergent_eq_squashGCF_nth_convergent
@@ -398,6 +398,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
       intro _ _ m_lt_n s_mth_eq; exact s_pos (Nat.lt.step m_lt_n) s_mth_eq
     · suffices g.convergents (n + 1) = g'.convergents n
         by
+        -- invoke the IH for the squashed gcf
         rwa [← IH]
         intro gp' m m_lt_n s_mth_eq'
         -- case distinction on m + 1 = n or m + 1 < n

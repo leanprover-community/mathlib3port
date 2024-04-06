@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 -/
 import LinearAlgebra.CliffordAlgebra.Basic
-import LinearAlgebra.Alternating
+import LinearAlgebra.Alternating.Basic
 
 #align_import linear_algebra.exterior_algebra.basic from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

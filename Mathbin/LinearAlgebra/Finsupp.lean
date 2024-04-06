@@ -244,7 +244,7 @@ theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔
 #align finsupp.mem_supported Finsupp.mem_supported
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print Finsupp.mem_supported' /-
 theorem mem_supported' {s : Set α} (p : α →₀ M) :
     p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
@@ -598,7 +598,7 @@ theorem lmapDomain_supported [Nonempty α] (f : α → α') (s : Set α) :
 #align finsupp.lmap_domain_supported Finsupp.lmapDomain_supported
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Finsupp.lmapDomain_disjoint_ker /-
 theorem lmapDomain_disjoint_ker (f : α → α') {s : Set α}
     (H : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), f a = f b → a = b) :

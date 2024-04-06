@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Algebra.Star.Unitary
-import Data.Nat.Modeq
+import Data.Nat.ModEq
 import NumberTheory.Zsqrtd.Basic
 
 #align_import number_theory.pell_matiyasevic from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
@@ -324,7 +324,7 @@ instance dnsq : Zsqrtd.Nonsquare d :=
 theorem xn_ge_a_pow : ∀ n : ℕ, a ^ n ≤ xn n
   | 0 => le_refl 1
   | n + 1 => by
-    simp [pow_succ'] <;>
+    simp [pow_succ] <;>
       exact le_trans (Nat.mul_le_mul_right _ (xn_ge_a_pow n)) (Nat.le_add_right _ _)
 #align pell.xn_ge_a_pow Pell.xn_ge_a_pow
 -/
@@ -335,7 +335,7 @@ theorem n_lt_a_pow : ∀ n : ℕ, n < a ^ n
   | n + 1 => by
     have IH := n_lt_a_pow n
     have : a ^ n + a ^ n ≤ a ^ n * a := by rw [← mul_two]; exact Nat.mul_le_mul_left _ a1
-    simp [pow_succ']; refine' lt_of_lt_of_le _ this
+    simp [pow_succ]; refine' lt_of_lt_of_le _ this
     exact add_lt_add_of_lt_of_le IH (lt_of_le_of_lt (Nat.zero_le _) IH)
 #align pell.n_lt_a_pow Pell.n_lt_a_pow
 -/
@@ -566,25 +566,25 @@ theorem xy_modEq_yn (n) :
     have L : xn (n * k) * xn n + d * yn (n * k) * yn n ≡ xn n ^ k * xn n + 0 [MOD yn n ^ 2] :=
       (hx.mul_right _).add <|
         modEq_zero_iff_dvd.2 <| by
-          rw [pow_succ'] <;>
+          rw [pow_succ] <;>
             exact
               mul_dvd_mul_right
                 (dvd_mul_of_dvd_right
                   (modeq_zero_iff_dvd.1 <|
-                    (hy.of_dvd <| by simp [pow_succ']).trans <|
+                    (hy.of_dvd <| by simp [pow_succ]).trans <|
                       modeq_zero_iff_dvd.2 <| by simp [-mul_comm, -mul_assoc])
                   _)
                 _
     have R :
       xn (n * k) * yn n + yn (n * k) * xn n ≡ xn n ^ k * yn n + k * xn n ^ k * yn n [MOD
         yn n ^ 3] :=
-      ModEq.add (by rw [pow_succ']; exact hx.mul_right' _) <|
+      ModEq.add (by rw [pow_succ]; exact hx.mul_right' _) <|
         by
         have : k * xn n ^ (k - 1) * yn n * xn n = k * xn n ^ k * yn n := by
-          clear _let_match <;> cases' k with k <;> simp [pow_succ', mul_comm, mul_left_comm]
+          clear _let_match <;> cases' k with k <;> simp [pow_succ, mul_comm, mul_left_comm]
         rw [← this]
         exact hy.mul_right _
-    rw [add_tsub_cancel_right, Nat.mul_succ, xn_add, yn_add, pow_succ' (xn _ n), Nat.succ_mul,
+    rw [add_tsub_cancel_right, Nat.mul_succ, xn_add, yn_add, pow_succ (xn _ n), Nat.succ_mul,
       add_comm (k * xn _ n ^ k) (xn _ n ^ k), right_distrib]
     exact ⟨L, R⟩
 #align pell.xy_modeq_yn Pell.xy_modEq_yn
@@ -593,7 +593,7 @@ theorem xy_modEq_yn (n) :
 #print Pell.ysq_dvd_yy /-
 theorem ysq_dvd_yy (n) : yn n * yn n ∣ yn (n * yn n) :=
   modEq_zero_iff_dvd.1 <|
-    ((xy_modeq_yn n (yn n)).right.of_dvd <| by simp [pow_succ]).trans
+    ((xy_modeq_yn n (yn n)).right.of_dvd <| by simp [pow_succ']).trans
       (modEq_zero_iff_dvd.2 <| by simp [mul_dvd_mul_left, mul_assoc])
 #align pell.ysq_dvd_yy Pell.ysq_dvd_yy
 -/
@@ -608,7 +608,7 @@ theorem dvd_of_ysq_dvd {n t} (h : yn n * yn n ∣ yn t) : yn n ∣ t :=
       Nat.dvd_of_mul_dvd_mul_right (strict_mono_y n0l) <|
         modEq_zero_iff_dvd.1 <| by
           have xm := (xy_modeq_yn a1 n k).right <;> rw [← ke] at xm <;>
-            exact (xm.of_dvd <| by simp [pow_succ]).symm.trans h.modeq_zero_nat
+            exact (xm.of_dvd <| by simp [pow_succ']).symm.trans h.modeq_zero_nat
     rw [ke] <;>
       exact dvd_mul_of_dvd_right (((xy_coprime _ _).pow_leftₓ _).symm.dvd_of_dvd_mul_right this) _
 #align pell.dvd_of_ysq_dvd Pell.dvd_of_ysq_dvd
@@ -706,7 +706,7 @@ theorem x_sub_y_dvd_pow (y : ℕ) :
     have : (2 * a * y - y * y - 1 : ℤ) ∣ ↑(y ^ (n + 2)) - ↑(2 * a) * ↑(y ^ (n + 1)) + ↑(y ^ n) :=
       ⟨-↑(y ^ n),
         by
-        simp [pow_succ, mul_add, Int.ofNat_mul, show ((2 : ℕ) : ℤ) = 2 from rfl, mul_comm,
+        simp [pow_succ', mul_add, Int.ofNat_mul, show ((2 : ℕ) : ℤ) = 2 from rfl, mul_comm,
           mul_left_comm]
         ring⟩
     rw [xz_succ_succ, yz_succ_succ, x_sub_y_dvd_pow_lem ↑(y ^ (n + 2)) ↑(y ^ (n + 1)) ↑(y ^ n)]
@@ -755,12 +755,12 @@ theorem xn_modEq_x2n_sub_lem {n j} (h : j ≤ n) : xn (2 * n - j) + xn j ≡ 0 [
                     | rw [← Int.ofNat_add]
                     | rw [← Int.ofNat_mul] <;>
                 rw [mul_comm (xn a1 j) (yn a1 n)] <;>
-              exact Int.coe_nat_dvd.2 (xn_modeq_x2n_add_lem _ _ _))
+              exact Int.natCast_dvd_natCast.2 (xn_modeq_x2n_add_lem _ _ _))
           ((dvd_mul_right _ _).mul_left _)
   rw [two_mul, add_tsub_assoc_of_le h, xn_add, add_assoc, ← zero_add 0]
   exact
     (dvd_mul_right _ _).modEq_zero_nat.add
-      (Int.coe_nat_dvd.1 <| by simpa [xz, yz] using h1).modEq_zero_nat
+      (Int.natCast_dvd_natCast.1 <| by simpa [xz, yz] using h1).modEq_zero_nat
 #align pell.xn_modeq_x2n_sub_lem Pell.xn_modEq_x2n_sub_lem
 -/
 
@@ -1040,7 +1040,7 @@ theorem matiyasevic {a k x y} :
         have sx : s ≡ x [MOD u] := (xy_modeq_of_modeq b1 a1 ba k).left
         have tk : t ≡ k [MOD 4 * y] :=
           have : 4 * y ∣ b - 1 :=
-            Int.coe_nat_dvd.1 <| by rw [Int.ofNat_sub (le_of_lt b1)] <;> exact bm1.symm.dvd
+            Int.natCast_dvd_natCast.1 <| by rw [Int.ofNat_sub (le_of_lt b1)] <;> exact bm1.symm.dvd
           (yn_modeq_a_sub_one _ _).of_dvd this
         ⟨ky,
           Or.inr
@@ -1070,7 +1070,8 @@ theorem matiyasevic {a k x y} :
                 have yd : 4 * yn a1 i ∣ 4 * n := mul_dvd_mul_left _ <| dvd_of_ysq_dvd a1 yv
                 have jk : j ≡ k [MOD 4 * yn a1 i] :=
                   have : 4 * yn a1 i ∣ b - 1 :=
-                    Int.coe_nat_dvd.1 <| by rw [Int.ofNat_sub (le_of_lt b1)] <;> exact bm1.symm.dvd
+                    Int.natCast_dvd_natCast.1 <| by
+                      rw [Int.ofNat_sub (le_of_lt b1)] <;> exact bm1.symm.dvd
                   ((yn_modeq_a_sub_one b1 _).of_dvd this).symm.trans tk
                 have ki : k + i < 4 * yn a1 i :=
                   lt_of_le_of_lt (add_le_add ky (yn_ge_n a1 i)) <| by

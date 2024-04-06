@@ -429,7 +429,7 @@ theorem le_generate_iff {s : Set (Set α)} {f : Filter α} : f ≤ Filter.genera
 #align filter.sets_iff_generate Filter.le_generate_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.mem_generate_iff /-
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
     U ∈ generate s ↔ ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ ⋂₀ t ⊆ U :=
@@ -792,7 +792,7 @@ theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
 #align filter.mem_infi Filter.mem_iInf
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » I) -/
 #print Filter.mem_iInf' /-
 theorem mem_iInf' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔

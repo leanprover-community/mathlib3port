@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Algebra.GroupWithZero.Units.Basic
-import Algebra.Group.Semiconj
+import Algebra.Group.Semiconj.Defs
 
 #align_import algebra.group_with_zero.semiconj from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

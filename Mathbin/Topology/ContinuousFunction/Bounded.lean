@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 -/
 import Analysis.Normed.Order.Lattice
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 import Analysis.NormedSpace.Star.Basic
 import Data.Real.Sqrt
 import Topology.ContinuousFunction.Algebra
@@ -652,7 +652,7 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 #print BoundedContinuousFunction.arzela_ascoli₁ /-
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
@@ -874,16 +874,16 @@ theorem add_compContinuous [TopologicalSpace γ] (h : C(γ, α)) :
 @[simp]
 theorem coe_nsmulRec : ∀ n, ⇑(nsmulRec n f) = n • f
   | 0 => by rw [nsmulRec, zero_smul, coe_zero]
-  | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
+  | n + 1 => by rw [nsmulRec, succ_nsmul', coe_add, coe_nsmul_rec]
 #align bounded_continuous_function.coe_nsmul_rec BoundedContinuousFunction.coe_nsmulRec
 -/
 
-#print BoundedContinuousFunction.hasNatScalar /-
-instance hasNatScalar : SMul ℕ (α →ᵇ β)
+#print BoundedContinuousFunction.instSMulNat /-
+instance instSMulNat : SMul ℕ (α →ᵇ β)
     where smul n f :=
     { toContinuousMap := n • f.toContinuousMap
       map_bounded' := by simpa [coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
-#align bounded_continuous_function.has_nat_scalar BoundedContinuousFunction.hasNatScalar
+#align bounded_continuous_function.has_nat_scalar BoundedContinuousFunction.instSMulNat
 -/
 
 #print BoundedContinuousFunction.coe_nsmul /-
@@ -1233,17 +1233,17 @@ theorem mkOfCompact_sub [CompactSpace α] (f g : C(α, β)) :
 #print BoundedContinuousFunction.coe_zsmulRec /-
 @[simp]
 theorem coe_zsmulRec : ∀ z, ⇑(zsmulRec z f) = z • f
-  | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
+  | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, natCast_zsmul]
   | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
 #align bounded_continuous_function.coe_zsmul_rec BoundedContinuousFunction.coe_zsmulRec
 -/
 
-#print BoundedContinuousFunction.hasIntScalar /-
-instance hasIntScalar : SMul ℤ (α →ᵇ β)
+#print BoundedContinuousFunction.instSMulInt /-
+instance instSMulInt : SMul ℤ (α →ᵇ β)
     where smul n f :=
     { toContinuousMap := n • f.toContinuousMap
       map_bounded' := by simpa using (zsmulRec n f).map_bounded' }
-#align bounded_continuous_function.has_int_scalar BoundedContinuousFunction.hasIntScalar
+#align bounded_continuous_function.has_int_scalar BoundedContinuousFunction.instSMulInt
 -/
 
 #print BoundedContinuousFunction.coe_zsmul /-
@@ -1586,7 +1586,7 @@ variable [SeminormedRing R]
 @[simp]
 theorem coe_npowRec (f : α →ᵇ R) : ∀ n, ⇑(npowRec n f) = f ^ n
   | 0 => by rw [npowRec, pow_zero, coe_one]
-  | n + 1 => by rw [npowRec, pow_succ, coe_mul, coe_npow_rec]
+  | n + 1 => by rw [npowRec, pow_succ', coe_mul, coe_npow_rec]
 #align bounded_continuous_function.coe_npow_rec BoundedContinuousFunction.coe_npowRec
 -/
 
@@ -1724,26 +1724,26 @@ functions from `α` to `β` is naturally a module over the algebra of bounded co
 functions from `α` to `𝕜`. -/
 
 
-#print BoundedContinuousFunction.hasSMul' /-
-instance hasSMul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
+#print BoundedContinuousFunction.instSMul' /-
+instance instSMul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
   ⟨fun (f : α →ᵇ 𝕜) (g : α →ᵇ β) =>
     ofNormedAddCommGroup (fun x => f x • g x) (f.Continuous.smul g.Continuous) (‖f‖ * ‖g‖) fun x =>
       calc
         ‖f x • g x‖ ≤ ‖f x‖ * ‖g x‖ := norm_smul_le _ _
         _ ≤ ‖f‖ * ‖g‖ :=
           mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _)⟩
-#align bounded_continuous_function.has_smul' BoundedContinuousFunction.hasSMul'
+#align bounded_continuous_function.has_smul' BoundedContinuousFunction.instSMul'
 -/
 
-#print BoundedContinuousFunction.module' /-
-instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
+#print BoundedContinuousFunction.instModule' /-
+instance instModule' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
   Module.ofMinimalAxioms <|
     { smul := (· • ·)
       smul_add := fun c f₁ f₂ => ext fun x => smul_add _ _ _
       add_smul := fun c₁ c₂ f => ext fun x => add_smul _ _ _
       hMul_smul := fun c₁ c₂ f => ext fun x => hMul_smul _ _ _
       one_smul := fun f => ext fun x => one_smul 𝕜 (f x) }
-#align bounded_continuous_function.module' BoundedContinuousFunction.module'
+#align bounded_continuous_function.module' BoundedContinuousFunction.instModule'
 -/
 
 /- warning: bounded_continuous_function.norm_smul_le clashes with norm_smul_le -> norm_smul_le
@@ -1901,18 +1901,18 @@ instance : SemilatticeSup (α →ᵇ β) :=
 instance : Lattice (α →ᵇ β) :=
   { BoundedContinuousFunction.semilatticeSup, BoundedContinuousFunction.semilatticeInf with }
 
-#print BoundedContinuousFunction.coeFn_sup /-
+#print BoundedContinuousFunction.coe_sup /-
 @[simp]
-theorem coeFn_sup (f g : α →ᵇ β) : ⇑(f ⊔ g) = f ⊔ g :=
+theorem coe_sup (f g : α →ᵇ β) : ⇑(f ⊔ g) = f ⊔ g :=
   rfl
-#align bounded_continuous_function.coe_fn_sup BoundedContinuousFunction.coeFn_sup
+#align bounded_continuous_function.coe_fn_sup BoundedContinuousFunction.coe_sup
 -/
 
-#print BoundedContinuousFunction.coeFn_abs /-
+#print BoundedContinuousFunction.coe_abs /-
 @[simp]
-theorem coeFn_abs (f : α →ᵇ β) : ⇑|f| = |f| :=
+theorem coe_abs (f : α →ᵇ β) : ⇑|f| = |f| :=
   rfl
-#align bounded_continuous_function.coe_fn_abs BoundedContinuousFunction.coeFn_abs
+#align bounded_continuous_function.coe_fn_abs BoundedContinuousFunction.coe_abs
 -/
 
 instance : NormedLatticeAddCommGroup (α →ᵇ β) :=

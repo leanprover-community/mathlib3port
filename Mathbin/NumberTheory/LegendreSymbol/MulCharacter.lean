@@ -454,7 +454,7 @@ theorem pow_apply_coe (χ : MulChar R R') (n : ℕ) (a : Rˣ) : (χ ^ n) a = χ 
   by
   induction' n with n ih
   · rw [pow_zero, pow_zero, one_apply_coe]
-  · rw [pow_succ, pow_succ, mul_apply, ih]
+  · rw [pow_succ', pow_succ', mul_apply, ih]
 #align mul_char.pow_apply_coe MulChar.pow_apply_coe
 -/
 

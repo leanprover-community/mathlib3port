@@ -9,7 +9,7 @@ import Algebra.Algebra.Subalgebra.Basic
 import Algebra.Star.StarAlgHom
 import Tactic.FieldSimp
 import Topology.Algebra.Module.Basic
-import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.InfiniteSum.Defs
 import Topology.Algebra.Star
 import Topology.Algebra.UniformGroup
 import Topology.ContinuousFunction.Ordered

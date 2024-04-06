@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 -/
 import Algebra.BigOperators.Associated
-import Algebra.GcdMonoid.Basic
+import Algebra.GCDMonoid.Basic
 import Data.Finsupp.Multiset
 import RingTheory.Noetherian
 import RingTheory.Multiplicity
@@ -167,7 +167,7 @@ theorem WfDvdMonoid.iff_wellFounded_associates [CancelCommMonoidWithZero α] :
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option default_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 #print UniqueFactorizationMonoid /-
@@ -588,7 +588,7 @@ theorem factors_pow {x : α} (n : ℕ) : Multiset.Rel Associated (factors (x ^ n
   · simp
   by_cases h0 : x = 0
   · simp [h0, zero_pow n.succ_pos, smul_zero]
-  rw [pow_succ, succ_nsmul]
+  rw [pow_succ', succ_nsmul']
   refine' Multiset.Rel.trans _ (factors_mul h0 (pow_ne_zero n h0)) _
   refine' Multiset.Rel.add _ ih
   exact Multiset.rel_refl_of_refl_on fun y hy => Associated.refl _
@@ -694,7 +694,7 @@ theorem normalizedFactors_irreducible {a : α} (ha : Irreducible a) :
 #align unique_factorization_monoid.normalized_factors_irreducible UniqueFactorizationMonoid.normalizedFactors_irreducible
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
 #print UniqueFactorizationMonoid.normalizedFactors_eq_of_dvd /-
 theorem normalizedFactors_eq_of_dvd (a : α) :
     ∀ (p) (_ : p ∈ normalizedFactors a) (q) (_ : q ∈ normalizedFactors a), p ∣ q → p = q :=
@@ -794,7 +794,7 @@ theorem normalizedFactors_pow {x : α} (n : ℕ) :
   · simp
   by_cases h0 : x = 0
   · simp [h0, zero_pow n.succ_pos, smul_zero]
-  rw [pow_succ, succ_nsmul, normalized_factors_mul h0 (pow_ne_zero _ h0), ih]
+  rw [pow_succ', succ_nsmul', normalized_factors_mul h0 (pow_ne_zero _ h0), ih]
 #align unique_factorization_monoid.normalized_factors_pow UniqueFactorizationMonoid.normalizedFactors_pow
 -/
 
@@ -1029,7 +1029,7 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
 #align unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors UniqueFactorizationMonoid.dvd_of_dvd_mul_right_of_no_prime_factors
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
 #print UniqueFactorizationMonoid.exists_reduced_factors /-
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
@@ -1113,8 +1113,8 @@ theorem le_multiplicity_iff_replicate_le_normalizedFactors [DecidableEq R] {a b 
   intro b hb
   constructor
   · rintro ⟨c, rfl⟩
-    rw [Ne.def, pow_succ, mul_assoc, mul_eq_zero, Decidable.not_or_iff_and_not] at hb
-    rw [pow_succ, mul_assoc, normalized_factors_mul hb.1 hb.2, replicate_succ,
+    rw [Ne.def, pow_succ', mul_assoc, mul_eq_zero, Decidable.not_or_iff_and_not] at hb
+    rw [pow_succ', mul_assoc, normalized_factors_mul hb.1 hb.2, replicate_succ,
       normalized_factors_irreducible ha, singleton_add, cons_le_cons_iff, ← ih hb.2]
     apply Dvd.intro _ rfl
   · rw [Multiset.le_iff_exists_add]
@@ -1206,7 +1206,7 @@ variable {β : Type _} [CancelCommMonoidWithZero β]
 
 open scoped BigOperators
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
 #print UniqueFactorizationMonoid.prime_pow_coprime_prod_of_coprime_insert /-
 theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α} (i : α → ℕ) (p : α)
     (hps : p ∉ s) (is_prime : ∀ q ∈ insert p s, Prime q)
@@ -1227,7 +1227,7 @@ theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α
 #align unique_factorization_monoid.prime_pow_coprime_prod_of_coprime_insert UniqueFactorizationMonoid.prime_pow_coprime_prod_of_coprime_insert
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 #print UniqueFactorizationMonoid.induction_on_prime_power /-
 /-- If `P` holds for units and powers of primes,
 and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
@@ -1275,8 +1275,8 @@ theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}
 #align unique_factorization_monoid.induction_on_coprime UniqueFactorizationMonoid.induction_on_coprime
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p q «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 #print UniqueFactorizationMonoid.multiplicative_prime_power /-
 /-- If `f` maps `p ^ i` to `(f p) ^ i` for primes `p`, and `f`
 is multiplicative on coprime elements, then `f` is multiplicative on all products of primes. -/
@@ -2101,7 +2101,7 @@ theorem pow_factors [Nontrivial α] {a : Associates α} {k : ℕ} : (a ^ k).fact
   by
   induction' k with n h
   · rw [zero_nsmul, pow_zero]; exact factors_one
-  · rw [pow_succ, succ_nsmul, factors_mul, h]
+  · rw [pow_succ', succ_nsmul', factors_mul, h]
 #align associates.pow_factors Associates.pow_factors
 -/
 
@@ -2111,7 +2111,7 @@ theorem count_pow [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {p : Associ
   by
   induction' k with n h
   · rw [pow_zero, factors_one, MulZeroClass.zero_mul, count_zero hp]
-  · rw [pow_succ, count_mul ha (pow_ne_zero _ ha) hp, h, Nat.succ_eq_add_one]; ring
+  · rw [pow_succ', count_mul ha (pow_ne_zero _ ha) hp, h, Nat.succ_eq_add_one]; ring
 #align associates.count_pow Associates.count_pow
 -/
 

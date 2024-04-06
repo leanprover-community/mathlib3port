@@ -121,7 +121,7 @@ open Set Filter Classical
 
 open scoped Classical Topology Filter
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 universe u
@@ -362,7 +362,6 @@ class UniformSpace (α : Type u) extends TopologicalSpace α, UniformSpace.Core 
 #align uniform_space UniformSpace
 -/
 
-#print UniformSpace.mk' /-
 /-- Alternative constructor for `uniform_space α` when a topology is already given. -/
 @[match_pattern]
 def UniformSpace.mk' {α} (t : TopologicalSpace α) (c : UniformSpace.Core α)
@@ -371,7 +370,6 @@ def UniformSpace.mk' {α} (t : TopologicalSpace α) (c : UniformSpace.Core α)
     UniformSpace α :=
   ⟨c, isOpen_uniformity⟩
 #align uniform_space.mk' UniformSpace.mk'
--/
 
 #print UniformSpace.ofCore /-
 /-- Construct a `uniform_space` from a `uniform_space.core`. -/
@@ -1119,7 +1117,7 @@ theorem nhds_eq_uniformity_prod {a b : α} :
 #align nhds_eq_uniformity_prod nhds_eq_uniformity_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
 #print nhdset_of_mem_uniformity /-
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α),
@@ -1452,7 +1450,7 @@ theorem Filter.HasBasis.uniformContinuous_iff {ι'} [UniformSpace β] {p : ι �
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » S) -/
 #print Filter.HasBasis.uniformContinuousOn_iff /-
 theorem Filter.HasBasis.uniformContinuousOn_iff {ι'} [UniformSpace β] {p : ι → Prop}
     {s : ι → Set (α × α)} (ha : (𝓤 α).HasBasis p s) {q : ι' → Prop} {t : ι' → Set (β × β)}

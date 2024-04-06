@@ -60,7 +60,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ
   surj := by
     rintro ⟨n, d, hd, h⟩
     refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_den_eq_num⟩
-    rwa [mem_nonZeroDivisors_iff_ne_zero, Int.coe_nat_ne_zero_iff_pos]
+    rwa [mem_nonZeroDivisors_iff_ne_zero, Int.natCast_ne_zero_iff_pos]
   eq_iff_exists := by
     intro x y
     rw [eq_intCast, eq_intCast, Int.cast_inj]
@@ -180,7 +180,7 @@ variable {B : Type _} [CommRing B] [IsDomain B] [Field K] {L : Type _} [Field L]
 theorem mk'_mk_eq_div {r s} (hs : s ∈ nonZeroDivisors A) :
     mk' K r ⟨s, hs⟩ = algebraMap A K r / algebraMap A K s :=
   mk'_eq_iff_eq_mul.2 <|
-    (div_mul_cancel (algebraMap A K r)
+    (div_mul_cancel₀ (algebraMap A K r)
         (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hs)).symm
 #align is_fraction_ring.mk'_mk_eq_div IsFractionRing.mk'_mk_eq_div
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Algebra.CharP.Invertible
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import RingTheory.Localization.FractionRing
 import RingTheory.Polynomial.Chebyshev
 import RingTheory.Ideal.LocalRing
@@ -158,7 +158,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
     by
     simp only [eval_sub, eval_mul, dickson_one_one_eval_add_inv, eval_X, dickson_add_two, C_1,
       eval_one]
-    conv_lhs => simp only [pow_succ, add_mul, mul_add, h, ← mul_assoc, mul_comm y x, one_mul]
+    conv_lhs => simp only [pow_succ', add_mul, mul_add, h, ← mul_assoc, mul_comm y x, one_mul]
     ring
 #align polynomial.dickson_one_one_eval_add_inv Polynomial.dickson_one_one_eval_add_inv
 -/

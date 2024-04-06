@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Algebra.Order.Group.Defs
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 import Order.UpperLower.Basic
 
 #align_import algebra.order.upper_lower from "leanprover-community/mathlib"@"c0c52abb75074ed8b73a948341f50521fbf43b4c"

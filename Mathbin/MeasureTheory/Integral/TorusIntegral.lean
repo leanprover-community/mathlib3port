@@ -232,7 +232,7 @@ theorem torusIntegral_sub (hf : TorusIntegrable f c R) (hg : TorusIntegrable g c
 -/
 
 #print torusIntegral_smul /-
-theorem torusIntegral_smul {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [SMulCommClass 𝕜 ℂ E] (a : 𝕜)
+theorem torusIntegral_smul {𝕜 : Type _} [RCLike 𝕜] [NormedSpace 𝕜 E] [SMulCommClass 𝕜 ℂ E] (a : 𝕜)
     (f : ℂⁿ → E) (c : ℂⁿ) (R : ℝⁿ) : ∯ x in T(c, R), a • f x = a • ∯ x in T(c, R), f x := by
   simp only [torusIntegral, integral_smul, ← smul_comm a]
 #align torus_integral_smul torusIntegral_smul

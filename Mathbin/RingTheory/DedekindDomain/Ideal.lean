@@ -8,7 +8,7 @@ import AlgebraicGeometry.PrimeSpectrum.Maximal
 import AlgebraicGeometry.PrimeSpectrum.Noetherian
 import Order.Hom.Basic
 import RingTheory.DedekindDomain.Basic
-import RingTheory.FractionalIdeal
+import RingTheory.FractionalIdeal.Basic
 import RingTheory.PrincipalIdealDomain
 import RingTheory.ChainOfDivisors
 
@@ -295,7 +295,7 @@ noncomputable instance : InvOneClass (FractionalIdeal R₁⁰ K) :=
 
 end FractionalIdeal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
 #print IsDedekindDomainInv /-
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
@@ -313,7 +313,7 @@ open FractionalIdeal
 
 variable {R A K}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
 #print isDedekindDomainInv_iff /-
 theorem isDedekindDomainInv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), I * I⁻¹ = 1 :=
@@ -541,7 +541,6 @@ theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I
 #align fractional_ideal.exists_not_mem_one_of_ne_bot FractionalIdeal.exists_not_mem_one_of_ne_bot
 -/
 
-#print FractionalIdeal.one_mem_inv_coe_ideal /-
 theorem one_mem_inv_coe_ideal {I : Ideal A} (hI : I ≠ ⊥) : (1 : K) ∈ (I : FractionalIdeal A⁰ K)⁻¹ :=
   by
   rw [mem_inv_iff (coe_ideal_ne_zero.mpr hI)]
@@ -550,7 +549,6 @@ theorem one_mem_inv_coe_ideal {I : Ideal A} (hI : I ≠ ⊥) : (1 : K) ∈ (I : 
   exact coe_ideal_le_one hy
   assumption
 #align fractional_ideal.one_mem_inv_coe_ideal FractionalIdeal.one_mem_inv_coe_ideal
--/
 
 #print FractionalIdeal.mul_inv_cancel_of_le_one /-
 theorem mul_inv_cancel_of_le_one [h : IsDedekindDomain A] {I : Ideal A} (hI0 : I ≠ ⊥)
@@ -625,7 +623,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
   induction' i with i ih
   · rw [pow_zero]; exact one_mem_inv_coe_ideal hI0
   · show x ^ i.succ ∈ (I⁻¹ : FractionalIdeal A⁰ K)
-    rw [pow_succ]; exact x_mul_mem _ ih
+    rw [pow_succ']; exact x_mul_mem _ ih
 #align fractional_ideal.coe_ideal_mul_inv FractionalIdeal.coe_ideal_mul_inv
 -/
 
@@ -882,7 +880,7 @@ theorem Ideal.isPrime_iff_bot_or_prime {P : Ideal A} : IsPrime P ↔ P = ⊥ ∨
 theorem Ideal.pow_right_strictAnti (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
     StrictAnti ((· ^ ·) I : ℕ → Ideal A) :=
   strictAnti_nat_of_succ_lt fun e =>
-    Ideal.dvdNotUnit_iff_lt.mp ⟨pow_ne_zero _ hI0, I, mt isUnit_iff.mp hI1, pow_succ' I e⟩
+    Ideal.dvdNotUnit_iff_lt.mp ⟨pow_ne_zero _ hI0, I, mt isUnit_iff.mp hI1, pow_succ I e⟩
 #align ideal.strict_anti_pow Ideal.pow_right_strictAnti
 -/
 
@@ -1455,7 +1453,7 @@ theorem Ideal.IsPrime.mul_mem_pow (I : Ideal R) [hI : I.IsPrime] {a b : R} {n : 
     (h : a * b ∈ I ^ n) : a ∈ I ∨ b ∈ I ^ n :=
   by
   cases n; · simp
-  by_cases hI0 : I = ⊥; · simpa [pow_succ, hI0] using h
+  by_cases hI0 : I = ⊥; · simpa [pow_succ', hI0] using h
   simp only [← Submodule.span_singleton_le_iff_mem, Ideal.submodule_span_eq, ← Ideal.dvd_iff_le, ←
     Ideal.span_singleton_mul_span_singleton] at h ⊢
   by_cases ha : I ∣ span {a}
@@ -1528,7 +1526,7 @@ theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {
 #align ideal.prod_le_prime Ideal.prod_le_prime
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.inf_prime_pow_eq_prod /-
 /-- The intersection of distinct prime powers in a Dedekind domain is the product of these
 prime powers. -/
@@ -1628,7 +1626,7 @@ noncomputable def Ideal.quotientMulEquivQuotientProd (I J : Ideal R) (coprime : 
 #align ideal.quotient_mul_equiv_quotient_prod Ideal.quotientMulEquivQuotientProd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.quotientEquivPiOfFinsetProdEq /-
 /-- **Chinese remainder theorem** for a Dedekind domain: if the ideal `I` factors as
 `∏ i in s, P i ^ e i`, then `R ⧸ I` factors as `Π (i : s), R ⧸ (P i ^ e i)`.
@@ -1646,7 +1644,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfFinsetProdEq {ι : Type _} {
 #align is_dedekind_domain.quotient_equiv_pi_of_finset_prod_eq IsDedekindDomain.quotientEquivPiOfFinsetProdEq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.exists_representative_mod_finset /-
 /-- Corollary of the Chinese remainder theorem: given elements `x i : R / P i ^ e i`,
 we can choose a representative `y : R` such that `y ≡ x i (mod P i ^ e i)`.-/
@@ -1662,7 +1660,7 @@ theorem IsDedekindDomain.exists_representative_mod_finset {ι : Type _} {s : Fin
 #align is_dedekind_domain.exists_representative_mod_finset IsDedekindDomain.exists_representative_mod_finset
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 #print IsDedekindDomain.exists_forall_sub_mem_ideal /-
 /-- Corollary of the Chinese remainder theorem: given elements `x i : R`,
 we can choose a representative `y : R` such that `y - x i ∈ P i ^ e i`.-/

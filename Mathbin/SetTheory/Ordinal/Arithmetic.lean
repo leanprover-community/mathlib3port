@@ -733,7 +733,8 @@ instance : ExistsAddOfLE Ordinal :=
 
 #print Ordinal.sub_zero /-
 @[simp]
-theorem sub_zero (a : Ordinal) : a - 0 = a := by simpa only [zero_add] using add_sub_cancel 0 a
+theorem sub_zero (a : Ordinal) : a - 0 = a := by
+  simpa only [zero_add] using add_sub_cancel_right 0 a
 #align ordinal.sub_zero Ordinal.sub_zero
 -/
 
@@ -745,7 +746,8 @@ theorem zero_sub (a : Ordinal) : 0 - a = 0 := by rw [← Ordinal.le_zero] <;> ap
 
 #print Ordinal.sub_self /-
 @[simp]
-theorem sub_self (a : Ordinal) : a - a = 0 := by simpa only [add_zero] using add_sub_cancel a 0
+theorem sub_self (a : Ordinal) : a - a = 0 := by
+  simpa only [add_zero] using add_sub_cancel_right a 0
 #align ordinal.sub_self Ordinal.sub_self
 -/
 
@@ -765,7 +767,7 @@ theorem sub_sub (a b c : Ordinal) : a - b - c = a - (b + c) :=
 #print Ordinal.add_sub_add_cancel /-
 @[simp]
 theorem add_sub_add_cancel (a b c : Ordinal) : a + b - (a + c) = b - c := by
-  rw [← sub_sub, add_sub_cancel]
+  rw [← sub_sub, add_sub_cancel_right]
 #align ordinal.add_sub_add_cancel Ordinal.add_sub_add_cancel
 -/
 
@@ -1052,7 +1054,7 @@ theorem mul_isLimit_left {a b : Ordinal} (l : IsLimit a) (b0 : 0 < b) : IsLimit 
 #print Ordinal.smul_eq_mul /-
 theorem smul_eq_mul : ∀ (n : ℕ) (a : Ordinal), n • a = a * n
   | 0, a => by rw [zero_smul, Nat.cast_zero, MulZeroClass.mul_zero]
-  | n + 1, a => by rw [succ_nsmul', Nat.cast_add, mul_add, Nat.cast_one, mul_one, smul_eq_mul]
+  | n + 1, a => by rw [succ_nsmul, Nat.cast_add, mul_add, Nat.cast_one, mul_one, smul_eq_mul]
 #align ordinal.smul_eq_mul Ordinal.smul_eq_mul
 -/
 
@@ -1192,14 +1194,14 @@ theorem mul_div_cancel (a) {b : Ordinal} (b0 : b ≠ 0) : b * a / b = a := by
 #print Ordinal.div_one /-
 @[simp]
 theorem div_one (a : Ordinal) : a / 1 = a := by
-  simpa only [one_mul] using mul_div_cancel a Ordinal.one_ne_zero
+  simpa only [one_mul] using mul_div_cancel_right₀ a Ordinal.one_ne_zero
 #align ordinal.div_one Ordinal.div_one
 -/
 
 #print Ordinal.div_self /-
 @[simp]
 theorem div_self {a : Ordinal} (h : a ≠ 0) : a / a = 1 := by
-  simpa only [mul_one] using mul_div_cancel 1 h
+  simpa only [mul_one] using mul_div_cancel_right₀ 1 h
 #align ordinal.div_self Ordinal.div_self
 -/
 
@@ -1217,7 +1219,7 @@ theorem isLimit_add_iff {a b} : IsLimit (a + b) ↔ IsLimit b ∨ b = 0 ∧ IsLi
   constructor <;> intro h
   · by_cases h' : b = 0
     · rw [h', add_zero] at h; right; exact ⟨h', h⟩
-    left; rw [← add_sub_cancel a b]; apply sub_is_limit h
+    left; rw [← add_sub_cancel_right a b]; apply sub_is_limit h
     suffices : a + 0 < a + b; simpa only [add_zero]
     rwa [add_lt_add_iff_left, Ordinal.pos_iff_ne_zero]
   rcases h with (h | ⟨rfl, h⟩); exact add_is_limit a h; simpa only [add_zero]
@@ -1227,14 +1229,14 @@ theorem isLimit_add_iff {a b} : IsLimit (a + b) ↔ IsLimit b ∨ b = 0 ∧ IsLi
 #print Ordinal.dvd_add_iff /-
 theorem dvd_add_iff : ∀ {a b c : Ordinal}, a ∣ b → (a ∣ b + c ↔ a ∣ c)
   | a, _, c, ⟨b, rfl⟩ =>
-    ⟨fun ⟨d, e⟩ => ⟨d - b, by rw [mul_sub, ← e, add_sub_cancel]⟩, fun ⟨d, e⟩ => by
+    ⟨fun ⟨d, e⟩ => ⟨d - b, by rw [mul_sub, ← e, add_sub_cancel_right]⟩, fun ⟨d, e⟩ => by
       rw [e, ← mul_add]; apply dvd_mul_right⟩
 #align ordinal.dvd_add_iff Ordinal.dvd_add_iff
 -/
 
 #print Ordinal.div_mul_cancel /-
 theorem div_mul_cancel : ∀ {a b : Ordinal}, a ≠ 0 → a ∣ b → a * (b / a) = b
-  | a, _, a0, ⟨b, rfl⟩ => by rw [mul_div_cancel _ a0]
+  | a, _, a0, ⟨b, rfl⟩ => by rw [mul_div_cancel_right₀ _ a0]
 #align ordinal.div_mul_cancel Ordinal.div_mul_cancel
 -/
 
@@ -1350,7 +1352,7 @@ theorem mul_add_mod_self (x y z : Ordinal) : (x * y + z) % x = z % x :=
   by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
-  · rwa [mod_def, mul_add_div, mul_add, ← sub_sub, add_sub_cancel, mod_def]
+  · rwa [mod_def, mul_add_div, mul_add, ← sub_sub, add_sub_cancel_right, mod_def]
 #align ordinal.mul_add_mod_self Ordinal.mul_add_mod_self
 -/
 

@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Calle Sönne
 -/
 import Topology.Category.CompHaus.Basic
-import Topology.Connected
+import Topology.Connected.Basic
 import Topology.SubsetProperties
 import Topology.LocallyConstant.Basic
 import CategoryTheory.Adjunction.Reflective
 import CategoryTheory.Monad.Limits
-import CategoryTheory.Fintype
+import CategoryTheory.FintypeCat
 
 #align_import topology.category.Profinite.basic from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

@@ -2528,7 +2528,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     intro l
     induction' l with hd tl hl
     · simp
-    · simp [hl, pow_succ, mul_comm]
+    · simp [hl, pow_succ', mul_comm]
   -- We convert the hypothesis that `parser.nat` has succeeded into an existential that there is
   -- some list of digits that it has parsed in, and that those digits, when folded over by the
   -- function above, give the value at hand.
@@ -2980,7 +2980,7 @@ theorem nat_eq_done {val : ℕ} :
         intro l
         induction' l with hd tl hl
         · simp
-        · simp [hl, pow_succ, mul_comm]
+        · simp [hl, pow_succ', mul_comm]
       -- We prove that the parsed list of digits `(lhd :: ltl) : list ℕ` must be of length `m`
       -- which is used later when the `parser.nat` fold places `ltl.length` in the exponent.
       have hml : ltl.length + 1 = m := by simpa using many1_length_of_done hdl
@@ -3001,7 +3001,7 @@ theorem nat_eq_done {val : ℕ} :
       -- Any complicated expression about list lengths is further simplified by the auxiliary
       -- lemmas we just proved. Finally, we assist the simplifier by rearranging terms with our
       -- `n + m + 1 - n = m + 1` proof and `mul_comm`.
-      simp [this, hpow, Nat.ofDigits_append, mul_comm, ← pow_succ 10, hml, ltll]
+      simp [this, hpow, Nat.ofDigits_append, mul_comm, ← pow_succ' 10, hml, ltll]
     · -- Consider the case that `n' ≤ n + 1`. But then since `n < n' ≤ n + 1`, `n' = n + 1`.
       obtain rfl : n' = n + 1 := le_antisymm hn'' (Nat.succ_le_of_lt hn)
       -- This means we have only parsed in a single character, so the resulting parsed in list

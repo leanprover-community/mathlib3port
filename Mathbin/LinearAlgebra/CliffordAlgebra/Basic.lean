@@ -5,7 +5,7 @@ Authors: Eric Wieser, Utensil Song
 -/
 import Algebra.RingQuot
 import LinearAlgebra.TensorAlgebra.Basic
-import LinearAlgebra.QuadraticForm.Isometry
+import LinearAlgebra.QuadraticForm.IsometryEquiv
 
 #align_import linear_algebra.clifford_algebra.basic from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

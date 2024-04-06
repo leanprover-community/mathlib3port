@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import Algebra.DirectSum.Algebra
 import Algebra.MonoidAlgebra.Basic
-import Data.Finsupp.ToDfinsupp
+import Data.Finsupp.ToDFinsupp
 
 #align_import algebra.monoid_algebra.to_direct_sum from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

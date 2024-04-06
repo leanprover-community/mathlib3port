@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Algebra.GroupWithZero.Semiconj
-import Algebra.Group.Commute
+import Algebra.Group.Commute.Defs
 import Tactic.Nontriviality
 
 #align_import algebra.group_with_zero.commute from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

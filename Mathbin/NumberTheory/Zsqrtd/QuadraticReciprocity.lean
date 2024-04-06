@@ -64,7 +64,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
         calc
           1 + k * k ≤ k + k * k :=
             add_le_add_right
-              (Nat.pos_of_ne_zero fun hk0 => by clear_aux_decl <;> simp_all [pow_succ']) _
+              (Nat.pos_of_ne_zero fun hk0 => by clear_aux_decl <;> simp_all [pow_succ]) _
           _ = k * (k + 1) := by simp [add_comm, mul_add]
           _ < p * p := mul_lt_mul k_lt_p k_lt_p (Nat.succ_pos _) (Nat.zero_le _)
       have hpk₁ : ¬(p : ℤ[i]) ∣ ⟨k, -1⟩ := fun ⟨x, hx⟩ =>

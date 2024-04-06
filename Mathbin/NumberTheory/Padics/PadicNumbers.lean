@@ -437,7 +437,7 @@ theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.n
       by
       have hfg' : f + g ≈ g := by
         change lim_zero (f - 0) at hf
-        show lim_zero (f + g - g); · simpa only [sub_zero, add_sub_cancel] using hf
+        show lim_zero (f + g - g); · simpa only [sub_zero, add_sub_cancel_right] using hf
       have hcfg : (f + g).norm = g.norm := norm_equiv hfg'
       have hcl : f.norm = 0 := (norm_zero_iff f).2 hf
       have : max f.norm g.norm = g.norm := by rw [hcl] <;> exact max_eq_right (norm_nonneg _)
@@ -447,7 +447,7 @@ theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.n
         by
         have hfg' : f + g ≈ f := by
           change lim_zero (g - 0) at hg
-          show lim_zero (f + g - f); · simpa only [add_sub_cancel', sub_zero] using hg
+          show lim_zero (f + g - f); · simpa only [add_sub_cancel_left, sub_zero] using hg
         have hcfg : (f + g).norm = f.norm := norm_equiv hfg'
         have hcl : g.norm = 0 := (norm_zero_iff g).2 hg
         have : max f.norm g.norm = f.norm := by rw [hcl] <;> exact max_eq_left (norm_nonneg _)
@@ -498,14 +498,15 @@ theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) :
   have hfg : ¬f + g ≈ 0 := mt norm_eq_of_add_equiv_zero hfgne
   if hf : f ≈ 0 then by
     have : LimZero (f - 0) := hf
-    have : f + g ≈ g := show LimZero (f + g - g) by simpa only [sub_zero, add_sub_cancel]
+    have : f + g ≈ g := show LimZero (f + g - g) by simpa only [sub_zero, add_sub_cancel_right]
     have h1 : (f + g).norm = g.norm := norm_equiv this
     have h2 : f.norm = 0 := (norm_zero_iff _).2 hf
     rw [h1, h2] <;> rw [max_eq_right (norm_nonneg _)]
   else
     if hg : g ≈ 0 then by
       have : LimZero (g - 0) := hg
-      have : f + g ≈ f := show LimZero (f + g - f) by rw [add_sub_cancel'] <;> simpa only [sub_zero]
+      have : f + g ≈ f :=
+        show LimZero (f + g - f) by rw [add_sub_cancel_left] <;> simpa only [sub_zero]
       have h1 : (f + g).norm = f.norm := norm_equiv this
       have h2 : g.norm = 0 := (norm_zero_iff _).2 hg
       rw [h1, h2] <;> rw [max_eq_left (norm_nonneg _)]
@@ -601,7 +602,7 @@ theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
 -/
 
 instance : CharZero ℚ_[p] :=
-  ⟨fun m n => by rw [← Rat.cast_coe_nat]; norm_cast; exact id⟩
+  ⟨fun m n => by rw [← Rat.cast_natCast]; norm_cast; exact id⟩
 
 #print Padic.coe_add /-
 @[norm_cast]
@@ -750,7 +751,7 @@ open PadicSeq Padic
 
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Padic.rat_dense' /-
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   Quotient.inductionOn q fun q' =>
@@ -962,9 +963,9 @@ theorem norm_p : ‖(p : ℚ_[p])‖ = p⁻¹ :=
   by
   have p₀ : p ≠ 0 := hp.1.NeZero
   have p₁ : p ≠ 1 := hp.1.ne_one
-  rw [← @Rat.cast_coe_nat ℝ _ p]
-  rw [← @Rat.cast_coe_nat ℚ_[p] _ p]
-  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Rat.cast_coe_nat]
+  rw [← @Rat.cast_natCast ℝ _ p]
+  rw [← @Rat.cast_natCast ℚ_[p] _ p]
+  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Rat.cast_natCast]
 #align padic_norm_e.norm_p padicNormE.norm_p
 -/
 
@@ -986,7 +987,7 @@ theorem norm_p_zpow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
 
 #print padicNormE.norm_p_pow /-
 @[simp]
-theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_coe_nat]
+theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_natCast]
 #align padic_norm_e.norm_p_pow padicNormE.norm_p_pow
 -/
 
@@ -1049,7 +1050,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])�
       rw [padicNorm.eq_zpow_of_nonzero hnz', padicValRat, neg_sub,
         padicValNat.eq_zero_of_not_dvd hq]
       norm_cast
-      rw [zero_sub, zpow_neg, zpow_coe_nat]
+      rw [zero_sub, zpow_neg, zpow_natCast]
       apply inv_le_one
       · norm_cast
         apply one_le_pow
@@ -1133,7 +1134,7 @@ namespace Padic
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:339:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 #print Padic.complete /-
@@ -1228,7 +1229,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation)
   change (PadicSeq.norm _ : ℝ) = (p : ℝ) ^ (-PadicSeq.valuation _)
   rw [PadicSeq.norm_eq_pow_val]
   change ↑((p : ℚ) ^ (-PadicSeq.valuation f)) = (p : ℝ) ^ (-PadicSeq.valuation f)
-  · rw [Rat.cast_zpow, Rat.cast_coe_nat]
+  · rw [Rat.cast_zpow, Rat.cast_natCast]
   · apply CauSeq.not_limZero_of_not_congr_zero
     contrapose! hf
     apply Quotient.sound

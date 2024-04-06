@@ -283,7 +283,7 @@ instance : CommMonoid (Localization S) where
   npow_zero := show ∀ x : Localization S, Localization.npow S 0 x = 1 from pow_zero
   npow_succ :=
     show ∀ (n : ℕ) (x : Localization S), Localization.npow S n.succ x = x * Localization.npow S n x
-      from fun n x => pow_succ x n
+      from fun n x => pow_succ' x n
 
 variable {S}
 

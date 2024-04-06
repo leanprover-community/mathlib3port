@@ -5,7 +5,7 @@ Authors: Mario Carneiro
 -/
 import Order.Compare
 import Data.List.Defs
-import Data.Nat.Psub
+import Data.Nat.PSub
 
 #align_import data.ordmap.ordnode from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"
 

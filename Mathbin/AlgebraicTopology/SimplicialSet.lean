@@ -8,7 +8,7 @@ import AlgebraicTopology.TopologicalSimplex
 import CategoryTheory.Limits.Presheaf
 import CategoryTheory.Limits.Types
 import CategoryTheory.Yoneda
-import Topology.Category.Top.Limits.Basic
+import Topology.Category.TopCat.Limits.Basic
 
 #align_import algebraic_topology.simplicial_set from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Logic.Nontrivial
+import Logic.Nontrivial.Defs
 
 #align_import tactic.nontriviality from "leanprover-community/mathlib"@"c93660aa62cc7be8026b707c31edcbc0ca018057"
 

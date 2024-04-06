@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Ne
 -/
 import Algebra.Ring.Semiconj
 import Algebra.Ring.Units
-import Algebra.Group.Commute
+import Algebra.Group.Commute.Defs
 
 #align_import algebra.ring.commute from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

@@ -3,7 +3,7 @@ Copyright (c) 2018 . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 -/
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import GroupTheory.Index
 import GroupTheory.GroupAction.ConjAct
 import GroupTheory.GroupAction.Quotient

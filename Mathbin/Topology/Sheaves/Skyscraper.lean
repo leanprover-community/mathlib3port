@@ -3,7 +3,7 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Junyan Xu
 -/
-import Topology.Sheaves.Punit
+import Topology.Sheaves.PUnit
 import Topology.Sheaves.Stalks
 import Topology.Sheaves.Functors
 

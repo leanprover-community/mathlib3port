@@ -5,7 +5,7 @@ Authors: Simon Hudon, Patrick Massot, Yury Kudryashov
 -/
 import Algebra.Group.Opposite
 import Algebra.GroupWithZero.Units.Basic
-import Algebra.Hom.Units
+import Algebra.Group.Units.Hom
 
 #align_import algebra.group.prod from "leanprover-community/mathlib"@"cd391184c85986113f8c00844cfe6dda1d34be3d"
 

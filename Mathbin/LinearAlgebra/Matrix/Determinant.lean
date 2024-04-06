@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Tim Baanen
 -/
-import Data.Matrix.Pequiv
+import Data.Matrix.PEquiv
 import Data.Matrix.Block
 import Data.Matrix.Notation
 import Data.Fintype.BigOperators
@@ -11,7 +11,7 @@ import GroupTheory.Perm.Fin
 import GroupTheory.Perm.Sign
 import Algebra.Algebra.Basic
 import Tactic.Ring
-import LinearAlgebra.Alternating
+import LinearAlgebra.Alternating.Basic
 import LinearAlgebra.Pi
 
 #align_import linear_algebra.matrix.determinant from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
@@ -850,7 +850,7 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
   -- `perm (fin n.succ)` than the determinant of the submatrix we want,
   -- permute `A` so that we get the correct one.
   have : (-1 : R) ^ (i : ℕ) = i.cycle_range.sign := by simp [Fin.sign_cycleRange]
-  rw [Fin.val_succ, pow_succ, this, mul_assoc, mul_assoc, mul_left_comm ↑(Equiv.Perm.sign _), ←
+  rw [Fin.val_succ, pow_succ', this, mul_assoc, mul_assoc, mul_left_comm ↑(Equiv.Perm.sign _), ←
     det_permute, Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
   -- now we just need to move the corresponding parts to the same place
   refine' Finset.sum_congr rfl fun σ _ => _

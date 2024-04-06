@@ -3,7 +3,7 @@ Copyright (c) 2021 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
-import Data.Pnat.Basic
+import Data.PNat.Basic
 import Data.Nat.Parity
 import Algebra.BigOperators.Pi
 import Tactic.Ring
@@ -81,7 +81,7 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
       exact ne_of_gt <| arith_lemma pk t
     calc
       (1 : ℚ) + (2 ^ pk.succ - 1) / ↑n = 1 + (2 * 2 ^ pk - 1) / (2 * (t + 1) : ℕ) := by
-        rw [coe_coe n, ht, pow_succ]
+        rw [coe_coe n, ht, pow_succ']
       _ = (1 + 1 / (2 * t + 2 * 2 ^ pk)) * (1 + (2 ^ pk - 1) / (↑t + 1)) :=
         by
         field_simp [t.cast_add_one_ne_zero]
@@ -100,7 +100,7 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
     have denom_ne_zero : 2 * (t : ℚ) + 1 ≠ 0 := by norm_cast; apply (2 * t).succ_ne_zero
     calc
       (1 : ℚ) + (2 ^ pk.succ - 1) / ↑n = 1 + (2 * 2 ^ pk - 1) / (2 * t + 1 : ℕ) := by
-        rw [coe_coe n, ht, pow_succ]
+        rw [coe_coe n, ht, pow_succ']
       _ = (1 + 1 / (2 * t + 1)) * (1 + (2 ^ pk - 1) / (t + 1)) :=
         by
         field_simp [t.cast_add_one_ne_zero]

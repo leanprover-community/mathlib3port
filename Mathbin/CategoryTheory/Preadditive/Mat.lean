@@ -8,9 +8,9 @@ import Algebra.BigOperators.Pi
 import CategoryTheory.Limits.Shapes.Biproducts
 import CategoryTheory.Preadditive.Basic
 import CategoryTheory.Preadditive.AdditiveFunctor
-import Data.Matrix.Dmatrix
+import Data.Matrix.DMatrix
 import Data.Matrix.Basic
-import CategoryTheory.Fintype
+import CategoryTheory.FintypeCat
 import CategoryTheory.Preadditive.SingleObj
 import Algebra.Opposites
 

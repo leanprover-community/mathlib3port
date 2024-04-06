@@ -3,9 +3,9 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Algebra.IndicatorFunction
+import Algebra.Function.Indicator
 import Topology.ContinuousOn
-import Topology.Instances.Ennreal
+import Topology.Instances.ENNReal
 
 #align_import topology.semicontinuous from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

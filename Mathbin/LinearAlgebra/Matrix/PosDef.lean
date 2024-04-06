@@ -24,7 +24,7 @@ of quadratic forms.
 
 namespace Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {m n : Type _} [Fintype m] [Fintype n]
+variable {𝕜 : Type _} [RCLike 𝕜] {m n : Type _} [Fintype m] [Fintype n]
 
 open scoped Matrix
 
@@ -32,7 +32,7 @@ open scoped Matrix
 /-- A matrix `M : matrix n n 𝕜` is positive definite if it is hermitian
    and `xᴴMx` is greater than zero for all nonzero `x`. -/
 def PosDef (M : Matrix n n 𝕜) :=
-  M.IsHermitian ∧ ∀ x : n → 𝕜, x ≠ 0 → 0 < IsROrC.re (dotProduct (star x) (M.mulVec x))
+  M.IsHermitian ∧ ∀ x : n → 𝕜, x ≠ 0 → 0 < RCLike.re (dotProduct (star x) (M.mulVec x))
 #align matrix.pos_def Matrix.PosDef
 -/
 
@@ -46,7 +46,7 @@ theorem PosDef.isHermitian {M : Matrix n n 𝕜} (hM : M.PosDef) : M.IsHermitian
 /-- A matrix `M : matrix n n 𝕜` is positive semidefinite if it is hermitian
    and `xᴴMx` is nonnegative for all `x`. -/
 def PosSemidef (M : Matrix n n 𝕜) :=
-  M.IsHermitian ∧ ∀ x : n → 𝕜, 0 ≤ IsROrC.re (dotProduct (star x) (M.mulVec x))
+  M.IsHermitian ∧ ∀ x : n → 𝕜, 0 ≤ RCLike.re (dotProduct (star x) (M.mulVec x))
 #align matrix.pos_semidef Matrix.PosSemidef
 -/
 
@@ -56,7 +56,7 @@ theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef :
   refine' ⟨hM.1, _⟩
   intro x
   by_cases hx : x = 0
-  · simp only [hx, zero_dot_product, star_zero, IsROrC.zero_re']
+  · simp only [hx, zero_dot_product, star_zero, RCLike.zero_re']
   · exact le_of_lt (hM.2 x hx)
 #align matrix.pos_def.pos_semidef Matrix.PosDef.posSemidef
 -/
@@ -169,7 +169,7 @@ end QuadraticForm
 
 namespace Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+variable {𝕜 : Type _} [RCLike 𝕜] {n : Type _} [Fintype n]
 
 #print Matrix.NormedAddCommGroup.ofMatrix /-
 /-- A positive definite matrix `M` induces a norm `‖x‖ = sqrt (re xᴴMx)`. -/

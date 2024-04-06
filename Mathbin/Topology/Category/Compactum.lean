@@ -236,7 +236,7 @@ private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = ba
 private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ cl A := fun a ha =>
   ⟨X.incl a, ha, by simp⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   by
   rintro _ ⟨F, hF, rfl⟩
@@ -312,7 +312,7 @@ theorem isClosed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
 #align Compactum.is_closed_cl Compactum.isClosed_cl
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 #print Compactum.str_eq_of_le_nhds /-
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
   by

@@ -3,7 +3,7 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Data.Nat.Basic
+import Data.Nat.Defs
 import Order.Monotone.Basic
 
 #align_import data.int.basic from "leanprover-community/mathlib"@"00d163e35035c3577c1c79fa53b68de17781ffc1"
@@ -108,11 +108,11 @@ theorem add_neg_one (i : ℤ) : i + -1 = i - 1 :=
 #align int.add_neg_one Int.add_neg_one
 -/
 
-#print Int.sign_coe_add_one /-
+#print Int.sign_natCast_add_one /-
 @[simp]
-theorem sign_coe_add_one (n : ℕ) : Int.sign (n + 1) = 1 :=
+theorem sign_natCast_add_one (n : ℕ) : Int.sign (n + 1) = 1 :=
   rfl
-#align int.sign_coe_add_one Int.sign_coe_add_one
+#align int.sign_coe_add_one Int.sign_natCast_add_one
 -/
 
 #print Int.sign_negSucc /-
@@ -215,10 +215,10 @@ theorem ofNat_lt {m n : ℕ} : (↑m : ℤ) < ↑n ↔ m < n :=
 #align int.coe_nat_lt Int.ofNat_lt
 -/
 
-#print Int.coe_nat_inj' /-
-theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
+#print Int.natCast_inj /-
+theorem natCast_inj {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
   Int.ofNat_inj m n
-#align int.coe_nat_inj' Int.coe_nat_inj'
+#align int.coe_nat_inj' Int.natCast_inj
 -/
 
 #print Int.coe_nat_strictMono /-
@@ -226,10 +226,10 @@ theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.of
 #align int.coe_nat_strict_mono Int.coe_nat_strictMono
 -/
 
-#print Int.coe_nat_nonneg /-
-theorem coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
+#print Int.natCast_nonneg /-
+theorem natCast_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
   ofNat_le.2 (Nat.zero_le _)
-#align int.coe_nat_nonneg Int.coe_nat_nonneg
+#align int.coe_nat_nonneg Int.natCast_nonneg
 -/
 
 #print Int.negSucc_ne_zero /-
@@ -261,15 +261,15 @@ def pred (a : ℤ) :=
 #align int.pred Int.pred
 -/
 
-#print Int.nat_succ_eq_int_succ /-
-theorem nat_succ_eq_int_succ (n : ℕ) : (Nat.succ n : ℤ) = Int.succ n :=
+#print Int.natCast_succ /-
+theorem natCast_succ (n : ℕ) : (Nat.succ n : ℤ) = Int.succ n :=
   rfl
-#align int.nat_succ_eq_int_succ Int.nat_succ_eq_int_succ
+#align int.nat_succ_eq_int_succ Int.natCast_succ
 -/
 
 #print Int.pred_succ /-
 theorem pred_succ (a : ℤ) : pred (succ a) = a :=
-  add_sub_cancel _ _
+  add_sub_cancel_right _ _
 #align int.pred_succ Int.pred_succ
 -/
 
@@ -313,10 +313,10 @@ theorem neg_nat_succ (n : ℕ) : -(Nat.succ n : ℤ) = pred (-n) :=
 #align int.neg_nat_succ Int.neg_nat_succ
 -/
 
-#print Int.succ_neg_nat_succ /-
-theorem succ_neg_nat_succ (n : ℕ) : succ (-Nat.succ n) = -n :=
+#print Int.succ_neg_natCast_succ /-
+theorem succ_neg_natCast_succ (n : ℕ) : succ (-Nat.succ n) = -n :=
   succ_neg_succ n
-#align int.succ_neg_nat_succ Int.succ_neg_nat_succ
+#align int.succ_neg_nat_succ Int.succ_neg_natCast_succ
 -/
 
 #print Int.add_one_le_iff /-
@@ -325,11 +325,11 @@ theorem add_one_le_iff {a b : ℤ} : a + 1 ≤ b ↔ a < b :=
 #align int.add_one_le_iff Int.add_one_le_iff
 -/
 
-#print Int.coe_pred_of_pos /-
+#print Int.natCast_pred_of_pos /-
 @[norm_cast]
-theorem coe_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by cases n;
+theorem natCast_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by cases n;
   cases h; simp
-#align int.coe_pred_of_pos Int.coe_pred_of_pos
+#align int.coe_pred_of_pos Int.natCast_pred_of_pos
 -/
 
 #print Int.induction_on /-
@@ -418,14 +418,16 @@ theorem negSucc_eq' (m : ℕ) : -[m+1] = -m - 1 := by simp [neg_succ_of_nat_eq, 
 
 #print Int.natAbs_ne_zero_of_ne_zero /-
 theorem natAbs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h =>
-  hz <| Int.eq_zero_of_natAbs_eq_zero h
+  hz <| Int.natAbs_eq_zero h
 #align int.nat_abs_ne_zero_of_ne_zero Int.natAbs_ne_zero_of_ne_zero
 -/
 
+/- warning: int.nat_abs_eq_zero clashes with int.eq_zero_of_nat_abs_eq_zero -> Int.natAbs_eq_zero
+Case conversion may be inaccurate. Consider using '#align int.nat_abs_eq_zero Int.natAbs_eq_zeroₓ'. -/
 #print Int.natAbs_eq_zero /-
 @[simp]
 theorem natAbs_eq_zero {a : ℤ} : a.natAbs = 0 ↔ a = 0 :=
-  ⟨Int.eq_zero_of_natAbs_eq_zero, fun h => h.symm ▸ rfl⟩
+  ⟨Int.natAbs_eq_zero, fun h => h.symm ▸ rfl⟩
 #align int.nat_abs_eq_zero Int.natAbs_eq_zero
 -/
 
@@ -471,11 +473,11 @@ theorem ofNat_div (m n : ℕ) : ofNat (m / n) = ofNat m / ofNat n :=
 #align int.of_nat_div Int.ofNat_div
 -/
 
-#print Int.coe_nat_div /-
+#print Int.natCast_div /-
 @[simp, norm_cast]
-theorem coe_nat_div (m n : ℕ) : ((m / n : ℕ) : ℤ) = m / n :=
+theorem natCast_div (m n : ℕ) : ((m / n : ℕ) : ℤ) = m / n :=
   rfl
-#align int.coe_nat_div Int.coe_nat_div
+#align int.coe_nat_div Int.natCast_div
 -/
 
 #print Int.negSucc_ediv /-
@@ -517,7 +519,7 @@ protected theorem div_neg : ∀ a b : ℤ, a / -b = -(a / b)
 theorem ediv_of_neg_of_pos {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b = -((-a - 1) / b + 1) :=
   match a, b, eq_negSucc_of_lt_zero Ha, eq_succ_of_zero_lt Hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
-    change (- -[m+1] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
+    change (- -[m+1] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel_right] <;> rfl
 #align int.div_of_neg_of_pos Int.ediv_of_neg_of_pos
 -/
 
@@ -553,11 +555,11 @@ theorem ofNat_mod_ofNat (m n : Nat) : (m % n : ℤ) = ofNat (m % n) :=
 #align int.of_nat_mod Int.ofNat_mod_ofNat
 -/
 
-#print Int.coe_nat_mod /-
+#print Int.natCast_mod /-
 @[simp, norm_cast]
-theorem coe_nat_mod (m n : ℕ) : (↑(m % n) : ℤ) = ↑m % ↑n :=
+theorem natCast_mod (m n : ℕ) : (↑(m % n) : ℤ) = ↑m % ↑n :=
   rfl
-#align int.coe_nat_mod Int.coe_nat_mod
+#align int.coe_nat_mod Int.natCast_mod
 -/
 
 #print Int.negSucc_emod /-
@@ -700,12 +702,12 @@ theorem natAbs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : z.sign.natAbs = 1 := b
 #align int.nat_abs_sign_of_nonzero Int.natAbs_sign_of_nonzero
 -/
 
-#print Int.sign_coe_nat_of_nonzero /-
-theorem sign_coe_nat_of_nonzero {n : ℕ} (hn : n ≠ 0) : Int.sign n = 1 :=
+#print Int.sign_natCast_of_ne_zero /-
+theorem sign_natCast_of_ne_zero {n : ℕ} (hn : n ≠ 0) : Int.sign n = 1 :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
   exact Int.sign_of_succ n
-#align int.sign_coe_nat_of_nonzero Int.sign_coe_nat_of_nonzero
+#align int.sign_coe_nat_of_nonzero Int.sign_natCast_of_ne_zero
 -/
 
 #print Int.sign_neg /-
@@ -793,18 +795,18 @@ theorem toNat_of_nonneg {a : ℤ} (h : 0 ≤ a) : (toNat a : ℤ) = a := by
 #align int.to_nat_of_nonneg Int.toNat_of_nonneg
 -/
 
-#print Int.toNat_coe_nat /-
+#print Int.toNat_natCast /-
 @[simp]
-theorem toNat_coe_nat (n : ℕ) : toNat ↑n = n :=
+theorem toNat_natCast (n : ℕ) : toNat ↑n = n :=
   rfl
-#align int.to_nat_coe_nat Int.toNat_coe_nat
+#align int.to_nat_coe_nat Int.toNat_natCast
 -/
 
-#print Int.toNat_coe_nat_add_one /-
+#print Int.toNat_natCast_add_one /-
 @[simp]
-theorem toNat_coe_nat_add_one {n : ℕ} : ((n : ℤ) + 1).toNat = n + 1 :=
+theorem toNat_natCast_add_one {n : ℕ} : ((n : ℤ) + 1).toNat = n + 1 :=
   rfl
-#align int.to_nat_coe_nat_add_one Int.toNat_coe_nat_add_one
+#align int.to_nat_coe_nat_add_one Int.toNat_natCast_add_one
 -/
 
 #print Int.self_le_toNat /-
@@ -874,7 +876,7 @@ def toNat' : ℤ → Option ℕ
 
 #print Int.mem_toNat' /-
 theorem mem_toNat' : ∀ (a : ℤ) (n : ℕ), n ∈ toNat' a ↔ a = n
-  | (m : ℕ), n => Option.some_inj.trans coe_nat_inj'.symm
+  | (m : ℕ), n => Option.some_inj.trans natCast_inj.symm
   | -[m+1], n => by constructor <;> intro h <;> cases h
 #align int.mem_to_nat' Int.mem_toNat'
 -/

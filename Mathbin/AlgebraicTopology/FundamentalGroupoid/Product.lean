@@ -5,7 +5,7 @@ Authors: Praneeth Kolichala
 -/
 import CategoryTheory.Groupoid
 import AlgebraicTopology.FundamentalGroupoid.Basic
-import Topology.Category.Top.Limits.Products
+import Topology.Category.TopCat.Limits.Products
 import Topology.Homotopy.Product
 
 #align_import algebraic_topology.fundamental_groupoid.product from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"

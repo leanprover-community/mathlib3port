@@ -269,7 +269,7 @@ def unaryFinEncodingNat : FinEncoding ℕ where
 #print Computability.encodeBool /-
 /-- An encoding function of bool in bool. -/
 def encodeBool : Bool → List Bool :=
-  List.ret
+  List.pure
 #align computability.encode_bool Computability.encodeBool
 -/
 

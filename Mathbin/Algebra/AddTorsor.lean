@@ -3,7 +3,7 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 -/
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 
 #align_import algebra.add_torsor from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 
@@ -68,7 +68,7 @@ instance addGroupIsAddTorsor (G : Type _) [AddGroup G] : AddTorsor G G
     where
   vsub := Sub.sub
   vsub_vadd' := sub_add_cancel
-  vadd_vsub' := add_sub_cancel
+  vadd_vsub' := add_sub_cancel_right
 #align add_group_is_add_torsor addGroupIsAddTorsor
 -/
 
@@ -315,7 +315,7 @@ theorem vsub_sub_vsub_cancel_left (p1 p2 p3 : P) : p3 -ᵥ p2 - (p3 -ᵥ p1) = p
 #print vadd_vsub_vadd_cancel_left /-
 @[simp]
 theorem vadd_vsub_vadd_cancel_left (v : G) (p1 p2 : P) : v +ᵥ p1 -ᵥ (v +ᵥ p2) = p1 -ᵥ p2 := by
-  rw [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_sub_cancel']
+  rw [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_sub_cancel_left]
 #align vadd_vsub_vadd_cancel_left vadd_vsub_vadd_cancel_left
 -/
 

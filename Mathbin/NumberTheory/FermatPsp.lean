@@ -174,7 +174,7 @@ private theorem b_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 < b) : 2 ≤ (a ^
   apply Nat.succ_le_succ
   calc
     2 * a + 1 ≤ a ^ 2 * a := by nlinarith
-    _ = a ^ 3 := by rw [pow_succ' a 2]
+    _ = a ^ 3 := by rw [pow_succ a 2]
     _ ≤ a ^ b := pow_le_pow_right (Nat.le_of_succ_le ha) hb
 
 private theorem AB_id_helper (b p : ℕ) (hb : 2 ≤ b) (hp : Odd p) :
@@ -200,7 +200,7 @@ private theorem bp_helper {b p : ℕ} (hb : 0 < b) (hp : 1 ≤ p) :
     _ = (b ^ p + b) * (b ^ p - b) := by rw [Nat.sq_sub_sq]
     _ = (b ^ p - b) * (b ^ p + b) := by rw [mul_comm]
     _ = (b ^ (p - 1 + 1) - b) * (b ^ p + b) := by rw [Nat.sub_add_cancel hp]
-    _ = (b * b ^ (p - 1) - b) * (b ^ p + b) := by rw [pow_succ]
+    _ = (b * b ^ (p - 1) - b) * (b ^ p + b) := by rw [pow_succ']
     _ = (b * b ^ (p - 1) - b * 1) * (b ^ p + b) := by rw [mul_one]
     _ = b * (b ^ (p - 1) - 1) * (b ^ p + b) := by rw [Nat.mul_sub_left_distrib]
 
@@ -353,7 +353,7 @@ private theorem psp_from_prime_gt_p {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_
     rwa [Nat.mul_div_cancel _ h₂] at h₁
   rw [Nat.mul_sub_left_distrib, mul_one, pow_mul]
   nth_rw_rhs 1 [← Nat.sub_add_cancel (show 1 ≤ p by linarith)]
-  rw [pow_succ (b ^ 2)]
+  rw [pow_succ' (b ^ 2)]
   suffices h : p * b ^ 2 < b ^ 2 * (b ^ 2) ^ (p - 1)
   · apply gt_of_ge_of_gt
     · exact tsub_le_tsub_left (show 1 ≤ p by linarith) (b ^ 2 * (b ^ 2) ^ (p - 1))

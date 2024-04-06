@@ -30,13 +30,13 @@ theorem not_prime_of_int_mul {a b : ℤ} {c : ℕ} (ha : 1 < a.natAbs) (hb : 1 <
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
     (hpm : ↑(p ^ k) ∣ m) (hpn : ↑(p ^ l) ∣ n) (hpmn : ↑(p ^ (k + l + 1)) ∣ m * n) :
     ↑(p ^ (k + 1)) ∣ m ∨ ↑(p ^ (l + 1)) ∣ n :=
-  have hpm' : p ^ k ∣ m.natAbs := Int.coe_nat_dvd.1 <| Int.dvd_natAbs.2 hpm
-  have hpn' : p ^ l ∣ n.natAbs := Int.coe_nat_dvd.1 <| Int.dvd_natAbs.2 hpn
+  have hpm' : p ^ k ∣ m.natAbs := Int.natCast_dvd_natCast.1 <| Int.dvd_natAbs.2 hpm
+  have hpn' : p ^ l ∣ n.natAbs := Int.natCast_dvd_natCast.1 <| Int.dvd_natAbs.2 hpn
   have hpmn' : p ^ (k + l + 1) ∣ m.natAbs * n.natAbs := by
-    rw [← Int.natAbs_mul] <;> apply Int.coe_nat_dvd.1 <| Int.dvd_natAbs.2 hpmn
+    rw [← Int.natAbs_mul] <;> apply Int.natCast_dvd_natCast.1 <| Int.dvd_natAbs.2 hpmn
   let hsd := Nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul p_prime hpm' hpn' hpmn'
-  hsd.elim (fun hsd1 => Or.inl (by apply Int.dvd_natAbs.1; apply Int.coe_nat_dvd.2 hsd1))
-    fun hsd2 => Or.inr (by apply Int.dvd_natAbs.1; apply Int.coe_nat_dvd.2 hsd2)
+  hsd.elim (fun hsd1 => Or.inl (by apply Int.dvd_natAbs.1; apply Int.natCast_dvd_natCast.2 hsd1))
+    fun hsd2 => Or.inr (by apply Int.dvd_natAbs.1; apply Int.natCast_dvd_natCast.2 hsd2)
 #align int.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul Int.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul
 -/
 

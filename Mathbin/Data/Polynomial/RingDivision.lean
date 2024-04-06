@@ -556,7 +556,7 @@ theorem rootMultiplicity_X_sub_C_pow (a : R) (n : ℕ) : rootMultiplicity a ((X 
   · refine' root_multiplicity_eq_zero _
     simp only [eval_one, is_root.def, not_false_iff, one_ne_zero, pow_zero]
   have hzero := pow_ne_zero n.succ (X_sub_C_ne_zero a)
-  rw [pow_succ (X - C a) n] at hzero ⊢
+  rw [pow_succ' (X - C a) n] at hzero ⊢
   simp only [root_multiplicity_mul hzero, root_multiplicity_X_sub_C_self, hn, Nat.one_add]
 #align polynomial.root_multiplicity_X_sub_C_pow Polynomial.rootMultiplicity_X_sub_C_pow
 -/
@@ -854,7 +854,7 @@ theorem roots_pow (p : R[X]) (n : ℕ) : (p ^ n).roots = n • p.roots :=
   · rcases eq_or_ne p 0 with (rfl | hp)
     · rw [zero_pow n.succ_pos, roots_zero, smul_zero]
     ·
-      rw [pow_succ', roots_mul (mul_ne_zero (pow_ne_zero _ hp) hp), ihn, Nat.succ_eq_add_one,
+      rw [pow_succ, roots_mul (mul_ne_zero (pow_ne_zero _ hp) hp), ihn, Nat.succ_eq_add_one,
         add_smul, one_smul]
 #align polynomial.roots_pow Polynomial.roots_pow
 -/

@@ -1047,7 +1047,7 @@ section TendstoMono
 variable {μ : Measure α} [NormedAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α}
   {f : α → E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:355:22: unsupported: parse error @ arg 0: next failed, no more args -/
 #print Antitone.tendsto_set_integral /-
 theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) :
@@ -1069,7 +1069,7 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:354:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:355:22: unsupported: parse error @ arg 0: next failed, no more args"
 #align antitone.tendsto_set_integral Antitone.tendsto_set_integral
 -/
 
@@ -1296,7 +1296,7 @@ as `continuous_linear_map.comp_Lp`. We take advantage of this construction here.
 
 open scoped ComplexConjugate
 
-variable {μ : Measure α} {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup F]
+variable {μ : Measure α} {𝕜 : Type _} [RCLike 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup F]
   [NormedSpace 𝕜 F] {p : ENNReal}
 
 namespace ContinuousLinearMap
@@ -1404,53 +1404,53 @@ variable [CompleteSpace E] [NormedSpace ℝ E] [CompleteSpace F] [NormedSpace �
 #print integral_ofReal /-
 @[norm_cast]
 theorem integral_ofReal {f : α → ℝ} : ∫ a, (f a : 𝕜) ∂μ = ↑(∫ a, f a ∂μ) :=
-  (@IsROrC.ofRealLI 𝕜 _).integral_comp_comm f
+  (@RCLike.ofRealLI 𝕜 _).integral_comp_comm f
 #align integral_of_real integral_ofReal
 -/
 
 #print integral_re /-
 theorem integral_re {f : α → 𝕜} (hf : Integrable f μ) :
-    ∫ a, IsROrC.re (f a) ∂μ = IsROrC.re (∫ a, f a ∂μ) :=
-  (@IsROrC.reCLM 𝕜 _).integral_comp_comm hf
+    ∫ a, RCLike.re (f a) ∂μ = RCLike.re (∫ a, f a ∂μ) :=
+  (@RCLike.reCLM 𝕜 _).integral_comp_comm hf
 #align integral_re integral_re
 -/
 
 #print integral_im /-
 theorem integral_im {f : α → 𝕜} (hf : Integrable f μ) :
-    ∫ a, IsROrC.im (f a) ∂μ = IsROrC.im (∫ a, f a ∂μ) :=
-  (@IsROrC.imCLM 𝕜 _).integral_comp_comm hf
+    ∫ a, RCLike.im (f a) ∂μ = RCLike.im (∫ a, f a ∂μ) :=
+  (@RCLike.imCLM 𝕜 _).integral_comp_comm hf
 #align integral_im integral_im
 -/
 
 #print integral_conj /-
 theorem integral_conj {f : α → 𝕜} : ∫ a, conj (f a) ∂μ = conj (∫ a, f a ∂μ) :=
-  (@IsROrC.conjLIE 𝕜 _).toLinearIsometry.integral_comp_comm f
+  (@RCLike.conjLIE 𝕜 _).toLinearIsometry.integral_comp_comm f
 #align integral_conj integral_conj
 -/
 
 #print integral_coe_re_add_coe_im /-
 theorem integral_coe_re_add_coe_im {f : α → 𝕜} (hf : Integrable f μ) :
-    ∫ x, (IsROrC.re (f x) : 𝕜) ∂μ + (∫ x, IsROrC.im (f x) ∂μ) * IsROrC.i = ∫ x, f x ∂μ :=
+    ∫ x, (RCLike.re (f x) : 𝕜) ∂μ + (∫ x, RCLike.im (f x) ∂μ) * RCLike.i = ∫ x, f x ∂μ :=
   by
   rw [mul_comm, ← smul_eq_mul, ← integral_smul, ← integral_add]
   · congr
     ext1 x
-    rw [smul_eq_mul, mul_comm, IsROrC.re_add_im]
+    rw [smul_eq_mul, mul_comm, RCLike.re_add_im]
   · exact hf.re.of_real
-  · exact hf.im.of_real.smul IsROrC.i
+  · exact hf.im.of_real.smul RCLike.i
 #align integral_coe_re_add_coe_im integral_coe_re_add_coe_im
 -/
 
 #print integral_re_add_im /-
 theorem integral_re_add_im {f : α → 𝕜} (hf : Integrable f μ) :
-    ((∫ x, IsROrC.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x, IsROrC.im (f x) ∂μ : ℝ) * IsROrC.i = ∫ x, f x ∂μ :=
+    ((∫ x, RCLike.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x, RCLike.im (f x) ∂μ : ℝ) * RCLike.i = ∫ x, f x ∂μ :=
   by rw [← integral_ofReal, ← integral_ofReal, integral_coe_re_add_coe_im hf]
 #align integral_re_add_im integral_re_add_im
 -/
 
 #print set_integral_re_add_im /-
 theorem set_integral_re_add_im {f : α → 𝕜} {i : Set α} (hf : IntegrableOn f i μ) :
-    ((∫ x in i, IsROrC.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x in i, IsROrC.im (f x) ∂μ : ℝ) * IsROrC.i =
+    ((∫ x in i, RCLike.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x in i, RCLike.im (f x) ∂μ : ℝ) * RCLike.i =
       ∫ x in i, f x ∂μ :=
   integral_re_add_im hf
 #align set_integral_re_add_im set_integral_re_add_im
@@ -1477,7 +1477,7 @@ theorem integral_pair {f : α → E} {g : α → F} (hf : Integrable f μ) (hg :
 -/
 
 #print integral_smul_const /-
-theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (f : α → 𝕜) (c : E) :
+theorem integral_smul_const {𝕜 : Type _} [RCLike 𝕜] [NormedSpace 𝕜 E] (f : α → 𝕜) (c : E) :
     ∫ x, f x • c ∂μ = (∫ x, f x ∂μ) • c :=
   by
   by_cases hf : integrable f μ

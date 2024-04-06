@@ -308,7 +308,7 @@ theorem forall_mem_cons {p : α → Prop} {a : α} {s : Multiset α} :
 #print Multiset.exists_cons_of_mem /-
 theorem exists_cons_of_mem {s : Multiset α} {a : α} : a ∈ s → ∃ t, s = a ::ₘ t :=
   Quot.inductionOn s fun l (h : a ∈ l) =>
-    let ⟨l₁, l₂, e⟩ := mem_split h
+    let ⟨l₁, l₂, e⟩ := append_of_mem h
     e.symm ▸ ⟨(l₁ ++ l₂ : List α), Quot.sound perm_middle⟩
 #align multiset.exists_cons_of_mem Multiset.exists_cons_of_mem
 -/
@@ -871,7 +871,7 @@ theorem mem_of_mem_nsmul {a : α} {s : Multiset α} {n : ℕ} (h : a ∈ n • s
   induction' n with n ih
   · rw [zero_nsmul] at h
     exact absurd h (not_mem_zero _)
-  · rw [succ_nsmul, mem_add] at h
+  · rw [succ_nsmul', mem_add] at h
     exact h.elim id ih
 #align multiset.mem_of_mem_nsmul Multiset.mem_of_mem_nsmul
 -/
@@ -882,7 +882,7 @@ theorem mem_nsmul {a : α} {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : a ∈ n 
   by
   refine' ⟨mem_of_mem_nsmul, fun h => _⟩
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero h0
-  rw [succ_nsmul, mem_add]
+  rw [succ_nsmul', mem_add]
   exact Or.inl h
 #align multiset.mem_nsmul Multiset.mem_nsmul
 -/
@@ -2967,7 +2967,7 @@ theorem countP_add (s t) : countP p (s + t) = countP p s + countP p t := by
 #print Multiset.countP_nsmul /-
 @[simp]
 theorem countP_nsmul (s) (n : ℕ) : countP p (n • s) = n * countP p s := by
-  induction n <;> simp [*, succ_nsmul', succ_mul, zero_nsmul]
+  induction n <;> simp [*, succ_nsmul, succ_mul, zero_nsmul]
 #align multiset.countp_nsmul Multiset.countP_nsmul
 -/
 
@@ -3211,7 +3211,7 @@ theorem coe_countAddMonoidHom {a : α} : (countAddMonoidHom a : Multiset α → 
 #print Multiset.count_nsmul /-
 @[simp]
 theorem count_nsmul (a : α) (n s) : count a (n • s) = n * count a s := by
-  induction n <;> simp [*, succ_nsmul', succ_mul, zero_nsmul]
+  induction n <;> simp [*, succ_nsmul, succ_mul, zero_nsmul]
 #align multiset.count_nsmul Multiset.count_nsmul
 -/
 
@@ -3391,7 +3391,7 @@ theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableE
 #align multiset.count_map Multiset.count_map
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∈ » s) -/
 #print Multiset.count_map_eq_count /-
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/

@@ -152,7 +152,7 @@ def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
     (by
       simp [preadditive.comp_sub, ← category.assoc, preadditive.sub_comp,
         show I.cocomplex.d (n + 1) (n + 2) ≫ g' = f.f (n + 1) - g ≫ J.cocomplex.d n (n + 1) by
-          rw [w]; simp only [add_sub_cancel]])
+          rw [w]; simp only [add_sub_cancel_right]])
 #align category_theory.InjectiveResolution.desc_homotopy_zero_succ CategoryTheory.InjectiveResolution.descHomotopyZeroSucc
 -/
 

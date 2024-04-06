@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
 import Algebra.Group.Opposite
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 import Logic.Equiv.Set
 import Tactic.AssertExists
 

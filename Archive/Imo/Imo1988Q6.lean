@@ -137,6 +137,7 @@ theorem constant_descent_vieta_jumping (x y : ℕ) {claim : Prop} {H : ℕ → �
     -- It contains the image of p.
     use p.2
     apply Set.mem_image_of_mem
+    -- After all, we assumed that the exceptional locus is empty.
     rwa [exceptional_empty, Set.diff_empty]
   -- We are now set for an infinite descent argument.
   -- Let m be the smallest element of the nonempty set S.
@@ -220,7 +221,7 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
     clear hk a b
   · -- We will now show that the fibers of the solution set are described by a quadratic equation.
     intro x y; dsimp only
-    rw [← Int.coe_nat_inj', ← sub_eq_zero]
+    rw [← Int.natCast_inj, ← sub_eq_zero]
     apply eq_iff_eq_cancel_right.2
     norm_cast
     simp; ring
@@ -284,7 +285,7 @@ example {a b : ℕ} (h : a * b ∣ a ^ 2 + b ^ 2 + 1) : 3 * a * b = a ^ 2 + b ^ 
     clear hk a b
   · -- We will now show that the fibers of the solution set are described by a quadratic equation.
     intro x y; dsimp only
-    rw [← Int.coe_nat_inj', ← sub_eq_zero]
+    rw [← Int.natCast_inj, ← sub_eq_zero]
     apply eq_iff_eq_cancel_right.2
     simp; ring
   ·-- Show that the solution set is symmetric in a and b.

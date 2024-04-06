@@ -6,7 +6,7 @@ Authors: Floris van Doorn, Yaël Dillies
 import Data.Finset.NAry
 import Data.Finset.Preimage
 import Data.Set.Pointwise.Finite
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 import Data.Set.Pointwise.ListOfFn
 
 #align_import data.finset.pointwise from "leanprover-community/mathlib"@"eba7871095e834365616b5e43c8c7bb0b37058d0"
@@ -1091,7 +1091,7 @@ theorem coe_pow (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s ^ n : Set α) :=
   change ↑(npowRec n s) = _
   induction' n with n ih
   · rw [npowRec, pow_zero, coe_one]
-  · rw [npowRec, pow_succ, coe_mul, ih]
+  · rw [npowRec, pow_succ', coe_mul, ih]
 #align finset.coe_pow Finset.coe_pow
 #align finset.coe_nsmul Finset.coe_nsmul
 -/
@@ -1111,7 +1111,7 @@ scoped[Pointwise] attribute [instance] Finset.monoid Finset.addMonoid
 @[to_additive]
 theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
   | 0 => by rw [pow_zero]; exact one_mem_one
-  | n + 1 => by rw [pow_succ]; exact mul_mem_mul ha (pow_mem_pow _)
+  | n + 1 => by rw [pow_succ']; exact mul_mem_mul ha (pow_mem_pow _)
 #align finset.pow_mem_pow Finset.pow_mem_pow
 #align finset.nsmul_mem_nsmul Finset.nsmul_mem_nsmul
 -/
@@ -1120,7 +1120,7 @@ theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
 @[to_additive]
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
   | 0 => by rw [pow_zero]; exact subset.rfl
-  | n + 1 => by rw [pow_succ]; exact mul_subset_mul hst (pow_subset_pow _)
+  | n + 1 => by rw [pow_succ']; exact mul_subset_mul hst (pow_subset_pow _)
 #align finset.pow_subset_pow Finset.pow_subset_pow
 #align finset.nsmul_subset_nsmul Finset.nsmul_subset_nsmul
 -/
@@ -1131,7 +1131,7 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ 
   by
   refine' Nat.le_induction _ (fun n h ih => _) _
   · exact subset.rfl
-  · rw [pow_succ]
+  · rw [pow_succ']
     exact ih.trans (subset_mul_right _ hs)
 #align finset.pow_subset_pow_of_one_mem Finset.pow_subset_pow_of_one_mem
 #align finset.nsmul_subset_nsmul_of_zero_mem Finset.nsmul_subset_nsmul_of_zero_mem
@@ -1166,7 +1166,7 @@ theorem mem_pow {a : α} {n : ℕ} :
 #print Finset.empty_pow /-
 @[simp, to_additive]
 theorem empty_pow (hn : n ≠ 0) : (∅ : Finset α) ^ n = ∅ := by
-  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, empty_mul]
+  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ', empty_mul]
 #align finset.empty_pow Finset.empty_pow
 #align finset.empty_nsmul Finset.empty_nsmul
 -/

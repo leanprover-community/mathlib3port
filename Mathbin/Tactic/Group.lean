@@ -73,7 +73,7 @@ unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
         expr ``(neg_neg), expr ``(tsub_self), expr ``(Int.ofNat_add), expr ``(Int.ofNat_mul),
         expr ``(Int.ofNat_zero), expr ``(Int.ofNat_one), expr ``(Int.ofNat_bit0),
         expr ``(Int.ofNat_bit1), expr ``(Int.mul_neg_eq_neg_mul_symm),
-        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_coe_nat),
+        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_natCast),
         symm_expr ``(zpow_neg_one), symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one),
         symm_expr ``(zpow_one_add), symm_expr ``(zpow_add), expr ``(mul_zpow_neg_one),
         expr ``(zpow_zero), expr ``(mul_zpow), symm_expr ``(mul_assoc),

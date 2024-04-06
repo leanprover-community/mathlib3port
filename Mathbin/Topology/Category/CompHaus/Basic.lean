@@ -7,7 +7,7 @@ import CategoryTheory.Adjunction.Reflective
 import Topology.StoneCech
 import CategoryTheory.Monad.Limits
 import Topology.UrysohnsLemma
-import Topology.Category.Top.Limits.Basic
+import Topology.Category.TopCat.Limits.Basic
 
 #align_import topology.category.CompHaus.basic from "leanprover-community/mathlib"@"f2b757fc5c341d88741b9c4630b1e8ba973c5726"
 

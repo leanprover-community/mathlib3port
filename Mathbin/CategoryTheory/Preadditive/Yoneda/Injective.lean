@@ -5,8 +5,8 @@ Authors: Markus Himmel, Scott Morrison
 -/
 import CategoryTheory.Preadditive.Yoneda.Basic
 import CategoryTheory.Preadditive.Injective
-import Algebra.Category.Group.EpiMono
-import Algebra.Category.Module.EpiMono
+import Algebra.Category.GroupCat.EpiMono
+import Algebra.Category.ModuleCat.EpiMono
 
 #align_import category_theory.preadditive.yoneda.injective from "leanprover-community/mathlib"@"bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de"
 

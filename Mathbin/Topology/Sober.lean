@@ -46,11 +46,11 @@ theorem isGenericPoint_def {x : α} {S : Set α} : IsGenericPoint x S ↔ closur
 #align is_generic_point_def isGenericPoint_def
 -/
 
-#print IsGenericPoint.def /-
-theorem IsGenericPoint.def {x : α} {S : Set α} (h : IsGenericPoint x S) :
+#print IsGenericPoint.def' /-
+theorem IsGenericPoint.def' {x : α} {S : Set α} (h : IsGenericPoint x S) :
     closure ({x} : Set α) = S :=
   h
-#align is_generic_point.def IsGenericPoint.def
+#align is_generic_point.def IsGenericPoint.def'
 -/
 
 #print isGenericPoint_closure /-

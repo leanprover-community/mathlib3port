@@ -7,12 +7,12 @@ import Algebra.Order.Group.Defs
 import Algebra.Order.Monoid.Cancel.Defs
 import Algebra.Order.Monoid.Canonical.Defs
 import Algebra.Order.Monoid.NatCast
-import Algebra.Order.Monoid.WithZero.Defs
+import Algebra.Order.Monoid.WithZero
 import Algebra.Order.Ring.Lemmas
 import Algebra.Ring.Defs
 import Order.MinMax
 import Tactic.Nontriviality
-import Data.Pi.Algebra
+import Algebra.Group.Pi.Basic
 import Algebra.Group.Units
 
 #align_import algebra.order.ring.defs from "leanprover-community/mathlib"@"44e29dbcff83ba7114a464d592b8c3743987c1e5"
@@ -277,7 +277,7 @@ theorem bit1_mono : Monotone (bit1 : α → α) := fun a b h => add_le_add_right
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
   | 0 => by rw [pow_zero]; exact zero_le_one
-  | n + 1 => by rw [pow_succ]; exact mul_nonneg H (pow_nonneg _)
+  | n + 1 => by rw [pow_succ']; exact mul_nonneg H (pow_nonneg _)
 #align pow_nonneg pow_nonneg
 -/
 
@@ -653,7 +653,7 @@ theorem mul_lt_mul' (hac : a ≤ c) (hbd : b < d) (hb : 0 ≤ b) (hc : 0 < c) : 
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
   | 0 => by nontriviality; rw [pow_zero]; exact zero_lt_one
-  | n + 1 => by rw [pow_succ]; exact mul_pos H (pow_pos _)
+  | n + 1 => by rw [pow_succ']; exact mul_pos H (pow_pos _)
 #align pow_pos pow_pos
 -/
 

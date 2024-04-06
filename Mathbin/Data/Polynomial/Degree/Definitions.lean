@@ -88,10 +88,10 @@ theorem monic_of_subsingleton [Subsingleton R] (p : R[X]) : Monic p :=
 #align polynomial.monic_of_subsingleton Polynomial.monic_of_subsingleton
 -/
 
-#print Polynomial.Monic.def /-
-theorem Monic.def : Monic p ↔ leadingCoeff p = 1 :=
+#print Polynomial.Monic.def' /-
+theorem Monic.def' : Monic p ↔ leadingCoeff p = 1 :=
   Iff.rfl
-#align polynomial.monic.def Polynomial.Monic.def
+#align polynomial.monic.def Polynomial.Monic.def'
 -/
 
 #print Polynomial.Monic.decidable /-
@@ -1011,8 +1011,8 @@ theorem degree_pow_le (p : R[X]) : ∀ n : ℕ, degree (p ^ n) ≤ n • degree 
   | n + 1 =>
     calc
       degree (p ^ (n + 1)) ≤ degree p + degree (p ^ n) := by
-        rw [pow_succ] <;> exact degree_mul_le _ _
-      _ ≤ _ := by rw [succ_nsmul] <;> exact add_le_add le_rfl (degree_pow_le _)
+        rw [pow_succ'] <;> exact degree_mul_le _ _
+      _ ≤ _ := by rw [succ_nsmul'] <;> exact add_le_add le_rfl (degree_pow_le _)
 #align polynomial.degree_pow_le Polynomial.degree_pow_le
 -/
 
@@ -1236,9 +1236,9 @@ theorem C_mul_X_pow_eq_self (h : p.support.card ≤ 1) : C p.leadingCoeff * X ^ 
 theorem leadingCoeff_pow' : leadingCoeff p ^ n ≠ 0 → leadingCoeff (p ^ n) = leadingCoeff p ^ n :=
   Nat.recOn n (by simp) fun n ih h =>
     by
-    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, MulZeroClass.mul_zero]
-    have h₂ : leadingCoeff p * leadingCoeff (p ^ n) ≠ 0 := by rwa [pow_succ, ← ih h₁] at h
-    rw [pow_succ, pow_succ, leading_coeff_mul' h₂, ih h₁]
+    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ', h₁, MulZeroClass.mul_zero]
+    have h₂ : leadingCoeff p * leadingCoeff (p ^ n) ≠ 0 := by rwa [pow_succ', ← ih h₁] at h
+    rw [pow_succ', pow_succ', leading_coeff_mul' h₂, ih h₁]
 #align polynomial.leading_coeff_pow' Polynomial.leadingCoeff_pow'
 -/
 
@@ -1247,10 +1247,10 @@ theorem degree_pow' : ∀ {n : ℕ}, leadingCoeff p ^ n ≠ 0 → degree (p ^ n)
   | 0 => fun h => by rw [pow_zero, ← C_1] at * <;> rw [degree_C h, zero_nsmul]
   | n + 1 => fun h =>
     by
-    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, MulZeroClass.mul_zero]
+    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ', h₁, MulZeroClass.mul_zero]
     have h₂ : leadingCoeff p * leadingCoeff (p ^ n) ≠ 0 := by
-      rwa [pow_succ, ← leading_coeff_pow' h₁] at h
-    rw [pow_succ, degree_mul' h₂, succ_nsmul, degree_pow' h₁]
+      rwa [pow_succ', ← leading_coeff_pow' h₁] at h
+    rw [pow_succ', degree_mul' h₂, succ_nsmul', degree_pow' h₁]
 #align polynomial.degree_pow' Polynomial.degree_pow'
 -/
 
@@ -1321,7 +1321,7 @@ theorem natDegree_pow_le {p : R[X]} {n : ℕ} : (p ^ n).natDegree ≤ n * p.natD
   by
   induction' n with i hi
   · simp
-  · rw [pow_succ, Nat.succ_mul, add_comm]
+  · rw [pow_succ', Nat.succ_mul, add_comm]
     apply le_trans nat_degree_mul_le
     exact add_le_add_left hi _
 #align polynomial.nat_degree_pow_le Polynomial.natDegree_pow_le
@@ -1334,7 +1334,7 @@ theorem coeff_pow_mul_natDegree (p : R[X]) (n : ℕ) :
   by
   induction' n with i hi
   · simp
-  · rw [pow_succ', pow_succ', Nat.succ_mul]
+  · rw [pow_succ, pow_succ, Nat.succ_mul]
     by_cases hp1 : p.leading_coeff ^ i = 0
     · rw [hp1, MulZeroClass.zero_mul]
       by_cases hp2 : p ^ i = 0

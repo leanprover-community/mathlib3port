@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Data.Set.Intervals.Monotone
-import Topology.Algebra.Order.MonotoneConvergence
+import Topology.Order.MonotoneConvergence
 import Topology.MetricSpace.Basic
 
 #align_import analysis.box_integral.box.basic from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"
@@ -625,7 +625,7 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
   calc
     nndist I.lower I.upper =
         nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
-      (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
+      (div_mul_cancel₀ _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
     _ ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
       mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
 #align box_integral.box.nndist_le_distortion_mul BoxIntegral.Box.nndist_le_distortion_mul

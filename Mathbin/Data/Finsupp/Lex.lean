@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
 import Data.Finsupp.Order
-import Data.Dfinsupp.Lex
-import Data.Finsupp.ToDfinsupp
+import Data.DFinsupp.Lex
+import Data.Finsupp.ToDFinsupp
 
 #align_import data.finsupp.lex from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

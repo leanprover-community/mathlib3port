@@ -3,8 +3,8 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Algebra.Category.Module.Monoidal.Basic
-import Algebra.Category.Algebra.Basic
+import Algebra.Category.ModuleCat.Monoidal.Basic
+import Algebra.Category.AlgebraCat.Basic
 import CategoryTheory.Monoidal.Mon_
 
 #align_import category_theory.monoidal.internal.Module from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 -/
 import Analysis.Normed.Group.Hom
-import MeasureTheory.Function.LpSeminorm
+import MeasureTheory.Function.LpSeminorm.Basic
 import Topology.ContinuousFunction.Compact
 
 #align_import measure_theory.function.lp_space from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
@@ -1179,31 +1179,31 @@ theorem comp_memℒp' (L : E →L[𝕜] F) {f : α → E} (hf : Memℒp f p μ) 
 #align continuous_linear_map.comp_mem_ℒp' ContinuousLinearMap.comp_memℒp'
 -/
 
-section IsROrC
+section RCLike
 
-variable {K : Type _} [IsROrC K]
+variable {K : Type _} [RCLike K]
 
 #print MeasureTheory.Memℒp.ofReal /-
 theorem MeasureTheory.Memℒp.ofReal {f : α → ℝ} (hf : Memℒp f p μ) :
     Memℒp (fun x => (f x : K)) p μ :=
-  (@IsROrC.ofRealCLM K _).comp_memℒp' hf
+  (@RCLike.ofRealCLM K _).comp_memℒp' hf
 #align measure_theory.mem_ℒp.of_real MeasureTheory.Memℒp.ofReal
 -/
 
 #print MeasureTheory.memℒp_re_im_iff /-
 theorem MeasureTheory.memℒp_re_im_iff {f : α → K} :
-    Memℒp (fun x => IsROrC.re (f x)) p μ ∧ Memℒp (fun x => IsROrC.im (f x)) p μ ↔ Memℒp f p μ :=
+    Memℒp (fun x => RCLike.re (f x)) p μ ∧ Memℒp (fun x => RCLike.im (f x)) p μ ↔ Memℒp f p μ :=
   by
   refine' ⟨_, fun hf => ⟨hf.re, hf.im⟩⟩
   rintro ⟨hre, him⟩
-  convert hre.of_real.add (him.of_real.const_mul IsROrC.i)
+  convert hre.of_real.add (him.of_real.const_mul RCLike.i)
   · ext1 x
-    rw [Pi.add_apply, mul_comm, IsROrC.re_add_im]
+    rw [Pi.add_apply, mul_comm, RCLike.re_add_im]
   all_goals infer_instance
 #align measure_theory.mem_ℒp_re_im_iff MeasureTheory.memℒp_re_im_iff
 -/
 
-end IsROrC
+end RCLike
 
 #print ContinuousLinearMap.add_compLp /-
 theorem add_compLp (L L' : E →L[𝕜] F) (f : Lp E p μ) :
@@ -1258,7 +1258,7 @@ def compLpₗ (L : E →L[𝕜] F) : Lp E p μ →ₗ[𝕜] Lp F p μ
     ext1
     filter_upwards [Lp.coe_fn_smul c f, coe_fn_comp_Lp L (c • f), Lp.coe_fn_smul c (L.comp_Lp f),
       coe_fn_comp_Lp L f] with _ ha1 ha2 ha3 ha4
-    simp only [ha1, ha2, ha3, ha4, SMulHomClass.map_smul, Pi.smul_apply]
+    simp only [ha1, ha2, ha3, ha4, MulActionSemiHomClass.map_smul, Pi.smul_apply]
 #align continuous_linear_map.comp_Lpₗ ContinuousLinearMap.compLpₗ
 -/
 

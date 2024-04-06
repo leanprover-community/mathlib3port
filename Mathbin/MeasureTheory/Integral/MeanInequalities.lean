@@ -333,7 +333,7 @@ theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ} (hpq 
         exact le_top
       refine' le_of_eq _
       nth_rw 2 [← ENNReal.rpow_one ((f + g) a)]
-      rw [← ENNReal.rpow_add _ _ h_zero h_top, add_sub_cancel'_right]
+      rw [← ENNReal.rpow_add _ _ h_zero h_top, add_sub_cancel]
     _ = ∫⁻ a : α, f a * (f + g) a ^ (p - 1) ∂μ + ∫⁻ a : α, g a * (f + g) a ^ (p - 1) ∂μ :=
       by
       have h_add_m : AEMeasurable (fun a : α => (f + g) a ^ (p - 1)) μ := (hf.add hg).pow_const _

@@ -48,7 +48,7 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
           rw [← coe_nat_lt, to_nat_of_nonneg (sub_nonneg_of_le h1),
               to_nat_of_nonneg (sub_nonneg_of_le (le_of_lt (lt_of_le_of_lt h1 h2)))] <;>
             exact sub_lt_sub_right h2 _,
-        show m + _ = _ by rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
+        show m + _ = _ by rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel]⟩⟩
 #align int.mem_range_iff Int.mem_range_iff
 -/
 

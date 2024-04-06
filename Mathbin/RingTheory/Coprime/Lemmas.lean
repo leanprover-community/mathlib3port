@@ -5,7 +5,7 @@ Authors: Kenny Lau, Ken Lee, Chris Hughes
 -/
 import Algebra.BigOperators.Ring
 import Data.Fintype.Basic
-import Data.Int.Gcd
+import Data.Int.GCD
 import RingTheory.Coprime.Basic
 
 #align_import ring_theory.coprime.lemmas from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
@@ -38,11 +38,11 @@ open scoped Classical
 theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
-      Int.coe_nat_dvd.1 <| by
+      Int.natCast_dvd_natCast.1 <| by
         rw [Int.ofNat_one, ← H]
         exact
-          dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left m n) _)
-            (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_right m n) _),
+          dvd_add (dvd_mul_of_dvd_right (Int.natCast_dvd_natCast.2 <| Nat.gcd_dvd_left m n) _)
+            (dvd_mul_of_dvd_right (Int.natCast_dvd_natCast.2 <| Nat.gcd_dvd_right m n) _),
     fun H =>
     ⟨Nat.gcdA m n, Nat.gcdB m n, by
       rw [mul_comm _ (m : ℤ), mul_comm _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H,

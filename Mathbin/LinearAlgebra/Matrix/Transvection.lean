@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Data.Matrix.Basis
-import Data.Matrix.Dmatrix
+import Data.Matrix.DMatrix
 import LinearAlgebra.Matrix.Determinant
 import LinearAlgebra.Matrix.Reindex
 import Tactic.FieldSimp

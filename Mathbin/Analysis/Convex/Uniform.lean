@@ -115,7 +115,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
       rw [← le_sub_iff_add_le, ← le_sub_iff_add_le, sub_sub, sub_sub]
       refine' sub_le_sub_left _ _
       ring_nf
-      rw [← mul_div_cancel' δ three_ne_zero]
+      rw [← mul_div_cancel₀ δ three_ne_zero]
       exact mul_le_mul_of_nonneg_left (min_le_of_right_le <| min_le_right _ _) three_pos.le
 #align exists_forall_closed_ball_dist_add_le_two_sub exists_forall_closed_ball_dist_add_le_two_sub
 -/

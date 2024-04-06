@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import Analysis.NormedSpace.Exponential
 import Analysis.Matrix
-import LinearAlgebra.Matrix.Zpow
+import LinearAlgebra.Matrix.ZPow
 import LinearAlgebra.Matrix.Hermitian
 import LinearAlgebra.Matrix.Symmetric
 import Topology.UniformSpace.Matrix
@@ -174,7 +174,7 @@ end Topological
 
 section Normed
 
-variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
+variable [RCLike 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
   [∀ i, DecidableEq (n' i)] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 #print Matrix.exp_add_of_commute /-
@@ -244,7 +244,7 @@ end Normed
 
 section NormedComm
 
-variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
+variable [RCLike 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
   [∀ i, DecidableEq (n' i)] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 #print Matrix.exp_neg /-
@@ -263,10 +263,10 @@ theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) :
     NormedSpace.exp 𝕂 (z • A) = NormedSpace.exp 𝕂 A ^ z :=
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [zpow_coe_nat, coe_nat_zsmul, NormedSpace.exp_nsmul]
+  · rw [zpow_natCast, natCast_zsmul, NormedSpace.exp_nsmul]
   · have : IsUnit (NormedSpace.exp 𝕂 A).det :=
       (Matrix.isUnit_iff_isUnit_det _).mp (NormedSpace.isUnit_exp _ _)
-    rw [Matrix.zpow_neg this, zpow_coe_nat, neg_smul, NormedSpace.exp_neg, coe_nat_zsmul,
+    rw [Matrix.zpow_neg this, zpow_natCast, neg_smul, NormedSpace.exp_neg, natCast_zsmul,
       NormedSpace.exp_nsmul]
 #align matrix.exp_zsmul Matrix.exp_zsmul
 -/

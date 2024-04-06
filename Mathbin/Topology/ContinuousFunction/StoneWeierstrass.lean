@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 -/
 import Topology.ContinuousFunction.Weierstrass
-import Data.IsROrC.Basic
+import Analysis.RCLike.Basic
 
 #align_import topology.continuous_function.stone_weierstrass from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
@@ -194,8 +194,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open scoped Topology
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (f g «expr ∈ » L) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 #print ContinuousMap.sublattice_closure_eq_top /-
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
@@ -375,12 +375,12 @@ theorem exists_mem_subalgebra_near_continuous_of_separatesPoints (A : Subalgebra
 
 end ContinuousMap
 
-section IsROrC
+section RCLike
 
-open IsROrC
+open RCLike
 
 -- Redefine `X`, since for the next few lemmas it need not be compact
-variable {𝕜 : Type _} {X : Type _} [IsROrC 𝕜] [TopologicalSpace X]
+variable {𝕜 : Type _} {X : Type _} [RCLike 𝕜] [TopologicalSpace X]
 
 namespace ContinuousMap
 
@@ -418,10 +418,10 @@ end ContinuousMap
 
 open ContinuousMap
 
-#print Subalgebra.SeparatesPoints.isROrC_to_real /-
+#print Subalgebra.SeparatesPoints.rclike_to_real /-
 /-- If a conjugation-invariant subalgebra of `C(X, 𝕜)` separates points, then the real subalgebra
 of its purely real-valued elements also separates points. -/
-theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜)}
+theorem Subalgebra.SeparatesPoints.rclike_to_real {A : Subalgebra 𝕜 C(X, 𝕜)}
     (hA : A.SeparatesPoints) (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
     ((A.restrictScalars ℝ).comap
         (ofRealAm.compLeftContinuous ℝ continuous_ofReal)).SeparatesPoints :=
@@ -438,18 +438,18 @@ theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜
     simp only [coe_smul, coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_one,
       const_apply]
   -- Consider now the function `λ x, |f x - f x₂| ^ 2`
-  refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
+  refine' ⟨_, ⟨(⟨RCLike.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values
     rw [SetLike.mem_coe, Subalgebra.mem_comap]
     convert (A.restrict_scalars ℝ).hMul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
     ext1
     rw [mul_comm]
-    exact (IsROrC.mul_conj _).symm
+    exact (RCLike.mul_conj _).symm
   · -- And it also separates the points `x₁`, `x₂`
     have : f x₁ - f x₂ ≠ 0 := sub_ne_zero.mpr hf
     simpa only [comp_apply, coe_sub, coe_const, Pi.sub_apply, coe_mk, sub_self, map_zero, Ne.def,
       norm_sq_eq_zero] using this
-#align subalgebra.separates_points.is_R_or_C_to_real Subalgebra.SeparatesPoints.isROrC_to_real
+#align subalgebra.separates_points.is_R_or_C_to_real Subalgebra.SeparatesPoints.rclike_to_real
 -/
 
 variable [CompactSpace X]
@@ -487,17 +487,17 @@ theorem ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoint
   -- In particular, for a function `f` in `C(X, 𝕜)`, the real and imaginary parts of `f` are in the
   -- closure of `A`
   intro f
-  let f_re : C(X, ℝ) := (⟨IsROrC.re, is_R_or_C.re_clm.continuous⟩ : C(𝕜, ℝ)).comp f
-  let f_im : C(X, ℝ) := (⟨IsROrC.im, is_R_or_C.im_clm.continuous⟩ : C(𝕜, ℝ)).comp f
+  let f_re : C(X, ℝ) := (⟨RCLike.re, is_R_or_C.re_clm.continuous⟩ : C(𝕜, ℝ)).comp f
+  let f_im : C(X, ℝ) := (⟨RCLike.im, is_R_or_C.im_clm.continuous⟩ : C(𝕜, ℝ)).comp f
   have h_f_re : I f_re ∈ A.topological_closure := key ⟨f_re, rfl⟩
   have h_f_im : I f_im ∈ A.topological_closure := key ⟨f_im, rfl⟩
   -- So `f_re + I • f_im` is in the closure of `A`
-  convert A.topological_closure.add_mem h_f_re (A.topological_closure.smul_mem h_f_im IsROrC.i)
+  convert A.topological_closure.add_mem h_f_re (A.topological_closure.smul_mem h_f_im RCLike.i)
   -- And this, of course, is just `f`
   ext
   apply Eq.symm
-  simp [I, mul_comm IsROrC.i _]
+  simp [I, mul_comm RCLike.i _]
 #align continuous_map.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPointsₓ
 
-end IsROrC
+end RCLike
 

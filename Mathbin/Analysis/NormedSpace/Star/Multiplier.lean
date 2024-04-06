@@ -5,9 +5,9 @@ Authors: Jireh Loreaux, Jon Bannon
 -/
 import Algebra.Star.StarAlgHom
 import Analysis.NormedSpace.Star.Basic
-import Analysis.NormedSpace.OperatorNorm
-import Analysis.SpecialFunctions.Pow.Nnreal
-import Analysis.NormedSpace.Star.Mul
+import Analysis.NormedSpace.OperatorNorm.Basic
+import Analysis.SpecialFunctions.Pow.NNReal
+import Analysis.NormedSpace.Star.Unitization
 
 #align_import analysis.normed_space.star.multiplier from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 
@@ -204,7 +204,7 @@ instance : Pow 𝓜(𝕜, A) ℕ
       induction' n with k hk generalizing x y
       · rfl
       · rw [Prod.pow_snd, Prod.pow_fst] at hk ⊢
-        rw [pow_succ a.snd, mul_apply, a.central, hk, pow_succ' a.fst, mul_apply]⟩
+        rw [pow_succ' a.snd, mul_apply, a.central, hk, pow_succ a.fst, mul_apply]⟩
 
 instance : Inhabited 𝓜(𝕜, A) :=
   ⟨0⟩

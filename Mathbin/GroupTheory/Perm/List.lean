@@ -386,7 +386,9 @@ theorem formPerm_pow_apply_nthLe (l : List α) (h : Nodup l) (n k : ℕ) (hk : k
   by
   induction' n with n hn
   · simp [Nat.mod_eq_of_lt hk]
-  · simp [pow_succ, mul_apply, hn, form_perm_apply_nth_le _ h, Nat.succ_eq_add_one, ← Nat.add_assoc]
+  ·
+    simp [pow_succ', mul_apply, hn, form_perm_apply_nth_le _ h, Nat.succ_eq_add_one, ←
+      Nat.add_assoc]
 #align list.form_perm_pow_apply_nth_le List.formPerm_pow_apply_nthLe
 -/
 

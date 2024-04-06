@@ -3,7 +3,7 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 -/
-import Data.Nat.Modeq
+import Data.Nat.ModEq
 import Algebra.Parity
 
 #align_import data.nat.parity from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
@@ -246,7 +246,7 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 if and only if `m` is even and `n` is positive. -/
 @[parity_simps]
 theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
-  induction' n with n ih <;> simp [*, pow_succ', even_mul]; tauto
+  induction' n with n ih <;> simp [*, pow_succ, even_mul]; tauto
 #align nat.even_pow Nat.even_pow
 -/
 

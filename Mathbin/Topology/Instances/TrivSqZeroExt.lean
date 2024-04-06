@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Algebra.TrivSqZeroExt
-import Topology.Algebra.InfiniteSum.Basic
+import Topology.Algebra.InfiniteSum.Defs
 import Topology.Algebra.Module.Basic
 
 #align_import topology.instances.triv_sq_zero_ext from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"

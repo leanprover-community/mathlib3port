@@ -148,7 +148,8 @@ theorem succNthVal_spec' (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k)
   have := succ_nth_val_spec p n a₁ a₂ bs ha₁ ha₂
   simp only [Polynomial.map_add, Polynomial.eval_X, Polynomial.map_pow, Polynomial.eval_C,
     Polynomial.eval_pow, succ_nth_defining_poly, Polynomial.eval_mul, Polynomial.eval_add,
-    Polynomial.eval_sub, Polynomial.map_mul, Polynomial.map_sub, Polynomial.IsRoot.def] at this
+    Polynomial.eval_sub, Polynomial.map_mul, Polynomial.map_sub, Polynomial.IsRoot.definition] at
+    this
   convert this using 1
   ring
 #align witt_vector.recursion_main.succ_nth_val_spec' WittVector.RecursionMain.succNthVal_spec'
@@ -204,7 +205,7 @@ theorem solution_spec' {a₁ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (a₂ : 𝕎
     congr
     skip
     rw [hq]
-  rw [pow_succ', hq', this]
+  rw [pow_succ, hq', this]
   field_simp [ha₁, mul_comm]
 #align witt_vector.recursion_base.solution_spec' WittVector.RecursionBase.solution_spec'
 -/

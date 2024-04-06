@@ -7,7 +7,7 @@ import Data.Set.Intervals.Pi
 import Data.Set.Pointwise.Interval
 import Order.Filter.Interval
 import Topology.Support
-import Topology.Algebra.Order.LeftRight
+import Topology.Order.LeftRight
 
 #align_import topology.order.basic from "leanprover-community/mathlib"@"3efd324a3a31eaa40c9d5bfc669c4fafee5f9423"
 
@@ -3279,7 +3279,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) :=
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.Ne⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Dense.exists_countable_dense_subset_no_bot_top /-
 /-- Let `s` be a dense set in a nontrivial dense linear order `α`. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable

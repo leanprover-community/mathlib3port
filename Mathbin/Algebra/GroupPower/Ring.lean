@@ -5,10 +5,10 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 -/
 import Algebra.GroupPower.Basic
 import Algebra.GroupWithZero.Commute
-import Algebra.Hom.Ring
+import Algebra.Ring.Hom.Defs
 import Algebra.Ring.Commute
 import Algebra.GroupWithZero.Divisibility
-import Algebra.Ring.Divisibility
+import Algebra.Ring.Divisibility.Basic
 import Data.Nat.Order.Basic
 
 #align_import algebra.group_power.ring from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
@@ -33,7 +33,7 @@ variable [MonoidWithZero M]
 
 #print zero_pow /-
 theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
-  | n + 1, _ => by rw [pow_succ, MulZeroClass.zero_mul]
+  | n + 1, _ => by rw [pow_succ', MulZeroClass.zero_mul]
 #align zero_pow zero_pow
 -/
 
@@ -43,7 +43,7 @@ Case conversion may be inaccurate. Consider using '#align zero_pow' zero_powₓ'
 @[simp]
 theorem zero_pow : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
-  | k + 1, h => by rw [pow_succ]; exact MulZeroClass.zero_mul _
+  | k + 1, h => by rw [pow_succ']; exact MulZeroClass.zero_mul _
 #align zero_pow' zero_pow
 -/
 
@@ -68,7 +68,7 @@ theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0
   induction' n with n ih
   · rw [pow_zero] at H
     rw [← mul_one x, H, MulZeroClass.mul_zero]
-  · rw [pow_succ] at H
+  · rw [pow_succ'] at H
     exact Or.cases_on (mul_eq_zero.1 H) id ih
 #align pow_eq_zero pow_eq_zero
 -/
@@ -134,7 +134,7 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
 theorem Ring.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
   | 0 => by rw [pow_zero, pow_zero, Ring.inverse_one]
   | n + 1 => by
-    rw [pow_succ, pow_succ', Ring.mul_inverse_rev' ((Commute.refl r).pow_leftₓ n), Ring.inverse_pow]
+    rw [pow_succ', pow_succ, Ring.mul_inverse_rev' ((Commute.refl r).pow_leftₓ n), Ring.inverse_pow]
 #align ring.inverse_pow Ring.inverse_pow
 -/
 
@@ -173,7 +173,7 @@ theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x
   by
   constructor
   · intro h; rw [← not_lt]; intro hmn; apply h1
-    have : x ^ m * x ∣ x ^ m * 1 := by rw [← pow_succ', mul_one];
+    have : x ^ m * x ∣ x ^ m * 1 := by rw [← pow_succ, mul_one];
       exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
     rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this; apply pow_ne_zero m h0
   · apply pow_dvd_pow
@@ -233,8 +233,8 @@ variable (R)
 theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
   | 0 => Or.inl (pow_zero _)
   | n + 1 =>
-    (neg_one_pow_eq_or n).symm.imp (fun h => by rw [pow_succ, h, neg_one_mul, neg_neg]) fun h => by
-      rw [pow_succ, h, mul_one]
+    (neg_one_pow_eq_or n).symm.imp (fun h => by rw [pow_succ', h, neg_one_mul, neg_neg]) fun h => by
+      rw [pow_succ', h, mul_one]
 #align neg_one_pow_eq_or neg_one_pow_eq_or
 -/
 
@@ -256,7 +256,7 @@ theorem neg_pow_bit0 (a : R) (n : ℕ) : (-a) ^ bit0 n = a ^ bit0 n := by
 #print neg_pow_bit1 /-
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : (-a) ^ bit1 n = -a ^ bit1 n := by
-  simp only [bit1, pow_succ, neg_pow_bit0, neg_mul_eq_neg_mul]
+  simp only [bit1, pow_succ', neg_pow_bit0, neg_mul_eq_neg_mul]
 #align neg_pow_bit1 neg_pow_bit1
 -/
 

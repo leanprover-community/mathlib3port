@@ -68,7 +68,7 @@ attribute [local simp] sqrt_aux_0
 theorem sqrtAux_1 {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
     sqrtAux b r n = sqrtAux (shiftr b 2) (div2 r + b) n' := by
   rw [sqrt_aux] <;> simp only [h, h₂.symm, Int.ofNat_add, if_false] <;>
-    rw [add_comm _ (n' : ℤ), add_sub_cancel, sqrt_aux._match_1]
+    rw [add_comm _ (n' : ℤ), add_sub_cancel_right, sqrt_aux._match_1]
 #align nat.sqrt_aux_1 Nat.sqrtAux_1
 
 theorem sqrtAux_2 {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
@@ -124,15 +124,15 @@ private theorem sqrt_aux_is_sqrt (n) :
     apply
         sqrt_aux_is_sqrt_lemma (m + 1) r n h₁ (2 ^ m * 2 ^ m)
           (by
-            simp [shiftr, pow_succ, div2_val, mul_comm, mul_left_comm] <;>
+            simp [shiftr, pow_succ', div2_val, mul_comm, mul_left_comm] <;>
               repeat' rw [@Nat.mul_div_cancel_left _ 2 (by decide)]) <;>
       intro h
     · have := sqrt_aux_is_sqrt m r h₁ h
-      simpa [pow_succ, mul_comm, mul_assoc]
-    · rw [pow_succ', mul_two, ← add_assoc] at h₂
+      simpa [pow_succ', mul_comm, mul_assoc]
+    · rw [pow_succ, mul_two, ← add_assoc] at h₂
       have := sqrt_aux_is_sqrt m (r + 2 ^ (m + 1)) h h₂
       rwa [show (r + 2 ^ (m + 1)) * 2 ^ (m + 1) = 2 * (r + 2 ^ (m + 1)) * 2 ^ m by
-          simp [pow_succ, mul_comm, mul_left_comm]]
+          simp [pow_succ', mul_comm, mul_left_comm]]
 
 private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
   by

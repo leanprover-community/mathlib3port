@@ -107,7 +107,7 @@ theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
     ext
     rw [Nat.cast_add]
   apply AntitoneOn.integral_le_sum
-  simp only [hf, hab, Nat.cast_sub, add_sub_cancel'_right]
+  simp only [hf, hab, Nat.cast_sub, add_sub_cancel]
 #align antitone_on.integral_le_sum_Ico AntitoneOn.integral_le_sum_Ico
 -/
 
@@ -170,7 +170,7 @@ theorem AntitoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
     ext
     rw [add_assoc, Nat.cast_add]
   apply AntitoneOn.sum_le_integral
-  simp only [hf, hab, Nat.cast_sub, add_sub_cancel'_right]
+  simp only [hf, hab, Nat.cast_sub, add_sub_cancel]
 #align antitone_on.sum_le_integral_Ico AntitoneOn.sum_le_integral_Ico
 -/
 

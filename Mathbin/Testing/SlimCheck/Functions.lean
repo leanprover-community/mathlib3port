@@ -6,7 +6,7 @@ Authors: Simon Hudon
 import Data.List.Sigma
 import Data.Int.Range
 import Data.Finsupp.Defs
-import Data.Finsupp.ToDfinsupp
+import Data.Finsupp.ToDFinsupp
 import Tactic.PrettyCases
 import Testing.SlimCheck.Sampleable
 import Testing.SlimCheck.Testable

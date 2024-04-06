@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import CategoryTheory.Limits.Shapes.Pullbacks
-import RingTheory.TensorProduct
+import LinearAlgebra.TensorProduct.Tower
 import Algebra.Category.Ring.Limits
 import Algebra.Category.Ring.Instances
 import CategoryTheory.Limits.Shapes.StrictInitial

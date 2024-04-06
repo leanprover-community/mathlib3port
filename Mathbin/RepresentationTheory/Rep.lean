@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import RepresentationTheory.Basic
-import RepresentationTheory.Action
-import Algebra.Category.Module.Abelian
-import Algebra.Category.Module.Colimits
-import Algebra.Category.Module.Monoidal.Closed
-import Algebra.Category.Module.Adjunctions
+import RepresentationTheory.Action.Basic
+import Algebra.Category.ModuleCat.Abelian
+import Algebra.Category.ModuleCat.Colimits
+import Algebra.Category.ModuleCat.Monoidal.Closed
+import Algebra.Category.ModuleCat.Adjunctions
 import CategoryTheory.Closed.FunctorCategory
 
 #align_import representation_theory.Rep from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"

@@ -3,8 +3,8 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Yury Kudryashov
 -/
-import Geometry.Manifold.ContMdiffMap
-import Geometry.Manifold.ContMdiffMfderiv
+import Geometry.Manifold.ContMDiffMap
+import Geometry.Manifold.ContMDiffMFDeriv
 
 #align_import geometry.manifold.diffeomorph from "leanprover-community/mathlib"@"1a51edf13debfcbe223fa06b1cb353b9ed9751cc"
 

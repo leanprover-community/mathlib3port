@@ -239,14 +239,14 @@ theorem toZ_of_eq : toZ i0 i0 = 0 := by
 
 #print iterate_succ_toZ /-
 theorem iterate_succ_toZ (i : ι) (hi : i0 ≤ i) : (succ^[(toZ i0 i).toNat]) i0 = i := by
-  rw [toZ_of_ge hi, Int.toNat_coe_nat]; exact Nat.find_spec (exists_succ_iterate_of_le hi)
+  rw [toZ_of_ge hi, Int.toNat_natCast]; exact Nat.find_spec (exists_succ_iterate_of_le hi)
 #align iterate_succ_to_Z iterate_succ_toZ
 -/
 
 #print iterate_pred_toZ /-
 theorem iterate_pred_toZ (i : ι) (hi : i < i0) : (pred^[(-toZ i0 i).toNat]) i0 = i :=
   by
-  rw [toZ_of_lt hi, neg_neg, Int.toNat_coe_nat]
+  rw [toZ_of_lt hi, neg_neg, Int.toNat_natCast]
   exact Nat.find_spec (exists_pred_iterate_of_le hi.le)
 #align iterate_pred_to_Z iterate_pred_toZ
 -/
@@ -487,7 +487,7 @@ def orderIsoNatOfLinearSuccPredArch [NoMaxOrder ι] [OrderBot ι] : ι ≃o ℕ
   right_inv n := by
     simp_rw [if_pos bot_le]
     rw [toZ_iterate_succ]
-    exact Int.toNat_coe_nat n
+    exact Int.toNat_natCast n
   map_rel_iff' i j := by
     simp only [Equiv.coe_fn_mk, Int.toNat_le]
     rw [← @toZ_le_iff ι _ _ _ _ ⊥, Int.toNat_of_nonneg (toZ_nonneg bot_le)]
@@ -516,7 +516,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
       rw [hn_max]
       exact nat.lt_succ_iff.mp (finset.mem_range.mp n.prop)
     · rw [toZ_iterate_succ_of_not_isMax _ hn_max]
-      simp only [Int.toNat_coe_nat]
+      simp only [Int.toNat_natCast]
   map_rel_iff' i j :=
     by
     simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Int.toNat_le]

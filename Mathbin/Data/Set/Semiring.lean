@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import Algebra.Order.Kleene
-import Data.Set.Pointwise.Smul
+import Data.Set.Pointwise.SMul
 
 #align_import data.set.semiring from "leanprover-community/mathlib"@"62e8311c791f02c47451bf14aa2501048e7c2f33"
 

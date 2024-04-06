@@ -193,7 +193,7 @@ theorem mul : Primrec (unpaired (· * ·)) :=
 #print Nat.Primrec.pow /-
 theorem pow : Primrec (unpaired (· ^ ·)) :=
   (prec (const 1) (mul.comp (pair (right.comp right) left))).of_eq fun p => by
-    simp <;> induction p.unpair.2 <;> simp [*, pow_succ']
+    simp <;> induction p.unpair.2 <;> simp [*, pow_succ]
 #align nat.primrec.pow Nat.Primrec.pow
 -/
 

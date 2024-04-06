@@ -5,7 +5,7 @@ Authors: Jeremy Avigad
 -/
 import Data.Int.Basic
 import Data.Int.Cast.Basic
-import Algebra.Ring.Divisibility
+import Algebra.Ring.Divisibility.Basic
 import Algebra.Order.Group.Abs
 import Algebra.Order.Ring.CharZero
 import Tactic.AssertExists
@@ -67,16 +67,16 @@ theorem abs_eq_natAbs : ∀ a : ℤ, |a| = natAbs a
 #align int.abs_eq_nat_abs Int.abs_eq_natAbs
 -/
 
-#print Int.coe_natAbs /-
+#print Int.natCast_natAbs /-
 @[simp, norm_cast]
-theorem coe_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
+theorem natCast_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
   n.abs_eq_natAbs.symm
-#align int.coe_nat_abs Int.coe_natAbs
+#align int.coe_nat_abs Int.natCast_natAbs
 -/
 
 #print Nat.cast_natAbs /-
 theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑|n| := by
-  rw [← Int.coe_natAbs, Int.cast_ofNat]
+  rw [← Int.natCast_natAbs, Int.cast_ofNat]
 #align nat.cast_nat_abs Nat.cast_natAbs
 -/
 
@@ -90,28 +90,28 @@ theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by rw [abs_eq_nat_abs, sign
 #align int.sign_mul_abs Int.sign_mul_abs
 -/
 
-#print Int.coe_nat_eq_zero /-
-theorem coe_nat_eq_zero {n : ℕ} : (n : ℤ) = 0 ↔ n = 0 :=
+#print Int.natCast_eq_zero /-
+theorem natCast_eq_zero {n : ℕ} : (n : ℤ) = 0 ↔ n = 0 :=
   Nat.cast_eq_zero
-#align int.coe_nat_eq_zero Int.coe_nat_eq_zero
+#align int.coe_nat_eq_zero Int.natCast_eq_zero
 -/
 
-#print Int.coe_nat_ne_zero /-
-theorem coe_nat_ne_zero {n : ℕ} : (n : ℤ) ≠ 0 ↔ n ≠ 0 := by simp
-#align int.coe_nat_ne_zero Int.coe_nat_ne_zero
+#print Int.natCast_ne_zero /-
+theorem natCast_ne_zero {n : ℕ} : (n : ℤ) ≠ 0 ↔ n ≠ 0 := by simp
+#align int.coe_nat_ne_zero Int.natCast_ne_zero
 -/
 
-#print Int.coe_nat_ne_zero_iff_pos /-
-theorem coe_nat_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
-  ⟨fun h => Nat.pos_of_ne_zero (coe_nat_ne_zero.1 h), fun h => (ne_of_lt (ofNat_lt.2 h)).symm⟩
-#align int.coe_nat_ne_zero_iff_pos Int.coe_nat_ne_zero_iff_pos
+#print Int.natCast_ne_zero_iff_pos /-
+theorem natCast_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
+  ⟨fun h => Nat.pos_of_ne_zero (natCast_ne_zero.1 h), fun h => (ne_of_lt (ofNat_lt.2 h)).symm⟩
+#align int.coe_nat_ne_zero_iff_pos Int.natCast_ne_zero_iff_pos
 -/
 
-#print Int.abs_coe_nat /-
+#print Int.abs_natCast /-
 @[norm_cast]
-theorem abs_coe_nat (n : ℕ) : |(n : ℤ)| = n :=
-  abs_of_nonneg (coe_nat_nonneg n)
-#align int.abs_coe_nat Int.abs_coe_nat
+theorem abs_natCast (n : ℕ) : |(n : ℤ)| = n :=
+  abs_of_nonneg (natCast_nonneg n)
+#align int.abs_coe_nat Int.abs_natCast
 -/
 
 #print Int.sign_add_eq_of_sign_eq /-
@@ -368,8 +368,7 @@ theorem emod_abs (a b : ℤ) : a % |b| = a % b :=
 #print Int.emod_nonneg /-
 theorem emod_nonneg : ∀ (a : ℤ) {b : ℤ}, b ≠ 0 → 0 ≤ a % b
   | (m : ℕ), n, H => ofNat_zero_le _
-  | -[m+1], n, H =>
-    sub_nonneg_of_le <| ofNat_le_ofNat_of_le <| Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
+  | -[m+1], n, H => sub_nonneg_of_le <| ofNat_le_ofNat_of_le <| Nat.mod_lt _ (natAbs_pos H)
 #align int.mod_nonneg Int.emod_nonneg
 -/
 
@@ -936,12 +935,12 @@ theorem lt_toNat {n : ℕ} {a : ℤ} : n < toNat a ↔ (n : ℤ) < a :=
 #align int.lt_to_nat Int.lt_toNat
 -/
 
-#print Int.coe_nat_nonpos_iff /-
+#print Int.natCast_nonpos_iff /-
 @[simp]
-theorem coe_nat_nonpos_iff {n : ℕ} : (n : ℤ) ≤ 0 ↔ n = 0 :=
+theorem natCast_nonpos_iff {n : ℕ} : (n : ℤ) ≤ 0 ↔ n = 0 :=
   ⟨fun h => le_antisymm (Int.ofNat_le.mp (h.trans Int.ofNat_zero.le)) n.zero_le, fun h =>
-    (coe_nat_eq_zero.mpr h).le⟩
-#align int.coe_nat_nonpos_iff Int.coe_nat_nonpos_iff
+    (natCast_eq_zero.mpr h).le⟩
+#align int.coe_nat_nonpos_iff Int.natCast_nonpos_iff
 -/
 
 #print Int.toNat_le_toNat /-
@@ -975,8 +974,8 @@ theorem toNat_pred_coe_of_pos {i : ℤ} (h : 0 < i) : ((i.toNat - 1 : ℕ) : ℤ
 theorem toNat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
   | (n : ℕ) =>
     calc
-      _ ↔ n = 0 := ⟨(toNat_coe_nat n).symm.trans, (toNat_coe_nat n).trans⟩
-      _ ↔ _ := coe_nat_nonpos_iff.symm
+      _ ↔ n = 0 := ⟨(toNat_natCast n).symm.trans, (toNat_natCast n).trans⟩
+      _ ↔ _ := natCast_nonpos_iff.symm
   | -[n+1] =>
     show (-((n : ℤ) + 1)).toNat = 0 ↔ (-(n + 1) : ℤ) ≤ 0 from
       calc

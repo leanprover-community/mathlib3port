@@ -3,9 +3,9 @@ Copyright (c) 2020 Ruben Van de Velde. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ruben Van de Velde
 -/
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 import Algebra.Algebra.RestrictScalars
-import Data.IsROrC.Basic
+import Analysis.RCLike.Basic
 
 #align_import analysis.normed_space.extend from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 
@@ -36,11 +36,11 @@ Alternate forms which operate on `[is_scalar_tower ℝ 𝕜 F]` instead are prov
 -/
 
 
-open IsROrC
+open RCLike
 
 open scoped ComplexConjugate
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [RCLike 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 namespace LinearMap
 
@@ -64,7 +64,7 @@ noncomputable def extendTo𝕜' (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 :
     intro c x
     rw [← of_real_mul]
     congr 1
-    rw [IsROrC.ofReal_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
+    rw [RCLike.ofReal_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
   have smul_ℝ : ∀ (c : ℝ) (x : F), fc ((c : 𝕜) • x) = (c : 𝕜) * fc x :=
     by
     intro c x
@@ -112,7 +112,7 @@ theorem norm_extendTo𝕜'_apply_sq (f : F →ₗ[ℝ] ℝ) (x : F) :
     ‖(f.extendTo𝕜' x : 𝕜)‖ ^ 2 = f (conj (f.extendTo𝕜' x : 𝕜) • x) :=
   calc
     ‖(f.extendTo𝕜' x : 𝕜)‖ ^ 2 = re (conj (f.extendTo𝕜' x) * f.extendTo𝕜' x : 𝕜) := by
-      rw [IsROrC.conj_mul, norm_sq_eq_def', of_real_re]
+      rw [RCLike.conj_mul, norm_sq_eq_def', of_real_re]
     _ = f (conj (f.extendTo𝕜' x : 𝕜) • x) := by
       rw [← smul_eq_mul, ← map_smul, extend_to_𝕜'_apply_re]
 #align linear_map.norm_extend_to_𝕜'_apply_sq LinearMap.norm_extendTo𝕜'_apply_sq

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
 import CategoryTheory.Sites.CompatiblePlus
-import CategoryTheory.Sites.Sheafification
+import CategoryTheory.Sites.ConcreteSheafification
 
 #align_import category_theory.sites.compatible_sheafification from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"
 

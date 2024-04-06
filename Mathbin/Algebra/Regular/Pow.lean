@@ -3,7 +3,7 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Algebra.Hom.Iterate
+import Algebra.GroupPower.IterateHom
 import Algebra.Regular.Basic
 
 #align_import algebra.regular.pow from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
@@ -55,7 +55,7 @@ theorem IsRegular.pow (n : ℕ) (ra : IsRegular a) : IsRegular (a ^ n) :=
 theorem IsLeftRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsLeftRegular (a ^ n) ↔ IsLeftRegular a :=
   by
   refine' ⟨_, IsLeftRegular.pow n⟩
-  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ']
+  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ]
   exact IsLeftRegular.of_mul
 #align is_left_regular.pow_iff IsLeftRegular.pow_iff
 -/
@@ -65,7 +65,7 @@ theorem IsLeftRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsLeftRegular (a ^ n) ↔
 theorem IsRightRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsRightRegular (a ^ n) ↔ IsRightRegular a :=
   by
   refine' ⟨_, IsRightRegular.pow n⟩
-  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ]
+  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ']
   exact IsRightRegular.of_mul
 #align is_right_regular.pow_iff IsRightRegular.pow_iff
 -/

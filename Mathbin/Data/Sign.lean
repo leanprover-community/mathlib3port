@@ -557,7 +557,7 @@ theorem sign_eq_sign (n : ℤ) : n.sign = SignType.sign n :=
   by
   obtain (_ | _) | _ := n
   · exact congr_arg coe sign_zero.symm
-  · exact congr_arg coe (sign_pos <| Int.succ_coe_nat_pos _).symm
+  · exact congr_arg coe (sign_pos <| Int.succ_natCast_pos _).symm
   · exact congr_arg coe (_root_.sign_neg <| neg_succ_lt_zero _).symm
 #align int.sign_eq_sign Int.sign_eq_sign
 -/

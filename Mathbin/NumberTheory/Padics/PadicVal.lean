@@ -126,7 +126,7 @@ theorem of_ne_one_ne_zero {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
     padicValInt p z =
       (multiplicity (p : ℤ) z).get (by apply multiplicity.finite_int_iff.2; simp [hp, hz]) :=
   by
-  rw [padicValInt, padicValNat, dif_pos (And.intro hp (Int.natAbs_pos_of_ne_zero hz))]
+  rw [padicValInt, padicValNat, dif_pos (And.intro hp (Int.natAbs_pos hz))]
   simp only [multiplicity.Int.natAbs p z]
   rfl
 #align padic_val_int.of_ne_one_ne_zero padicValInt.of_ne_one_ne_zero
@@ -355,7 +355,7 @@ protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
 #print padicValRat.pow /-
 /-- A rewrite lemma for `padic_val_rat p (q^k)` with condition `q ≠ 0`. -/
 protected theorem pow {q : ℚ} (hq : q ≠ 0) {k : ℕ} : padicValRat p (q ^ k) = k * padicValRat p q :=
-  by induction k <;> simp [*, padicValRat.mul hq (pow_ne_zero _ hq), pow_succ, add_mul, add_comm]
+  by induction k <;> simp [*, padicValRat.mul hq (pow_ne_zero _ hq), pow_succ', add_mul, add_comm]
 #align padic_val_rat.pow padicValRat.pow
 -/
 
@@ -632,8 +632,7 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 #print padicValInt_dvd_iff /-
 theorem padicValInt_dvd_iff (n : ℕ) (a : ℤ) : (p : ℤ) ^ n ∣ a ↔ a = 0 ∨ n ≤ padicValInt p a := by
-  rw [padicValInt, ← Int.natAbs_eq_zero, ← padicValNat_dvd_iff, ← Int.coe_nat_dvd_left,
-    Int.coe_nat_pow]
+  rw [padicValInt, ← Int.natAbs_eq_zero, ← padicValNat_dvd_iff, ← Int.natCast_dvd, Int.coe_nat_pow]
 #align padic_val_int_dvd_iff padicValInt_dvd_iff
 -/
 

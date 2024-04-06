@@ -1175,7 +1175,7 @@ theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} :
     qs = succ qs' → ps * ps ^ qs' = pqqs → ps ^ qs = pqqs := fun qs_pf pqqs_pf =>
   calc
     ps ^ qs = ps ^ succ qs' := by rw [qs_pf]
-    _ = ps * ps ^ qs' := (pow_succ _ _)
+    _ = ps * ps ^ qs' := (pow_succ' _ _)
     _ = pqqs := by rw [pqqs_pf]
 #align tactic.ring_exp.pow_p_pf_succ Tactic.RingExp.pow_p_pf_succ
 

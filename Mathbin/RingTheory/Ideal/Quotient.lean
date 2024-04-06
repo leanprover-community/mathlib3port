@@ -490,7 +490,7 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     rw [eq_top_iff_one, Submodule.mem_sup] at hf
     rcases hf with ⟨r, hri, s, hsj, hrs⟩; refine' ⟨1 - r, _, _⟩
     · rw [sub_right_comm, sub_self, zero_sub]; exact (f i).neg_mem hri
-    · rw [← hrs, add_sub_cancel']; exact hsj
+    · rw [← hrs, add_sub_cancel_left]; exact hsj
   classical
   have : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀ j ∈ s, j ≠ i → g j ∈ f j :=
     by

@@ -6,7 +6,7 @@ Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 import CategoryTheory.Functor.Const
 import CategoryTheory.DiscreteCategory
 import CategoryTheory.Yoneda
-import CategoryTheory.Functor.ReflectsIsomorphisms
+import CategoryTheory.Functor.ReflectsIso
 
 #align_import category_theory.limits.cones from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Data.Real.Ennreal
+import Data.ENNReal.Basic
 import Topology.ContinuousFunction.Bounded
 import Topology.MetricSpace.HausdorffDistance
 

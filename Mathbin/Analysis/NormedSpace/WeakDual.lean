@@ -5,7 +5,7 @@ Authors: Kalle Kytölä, Yury Kudryashov
 -/
 import Topology.Algebra.Module.WeakDual
 import Analysis.NormedSpace.Dual
-import Analysis.NormedSpace.OperatorNorm
+import Analysis.NormedSpace.OperatorNorm.Basic
 
 #align_import analysis.normed_space.weak_dual from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

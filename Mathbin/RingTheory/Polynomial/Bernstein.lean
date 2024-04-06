@@ -8,7 +8,7 @@ import Data.Nat.Choose.Sum
 import RingTheory.Polynomial.Pochhammer
 import Data.Polynomial.AlgebraMap
 import LinearAlgebra.LinearIndependent
-import Data.MvPolynomial.Pderiv
+import Data.MvPolynomial.PDeriv
 
 #align_import ring_theory.polynomial.bernstein from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 
@@ -182,7 +182,7 @@ theorem iterate_derivative_at_0_eq_zero_of_lt (n : ℕ) {ν k : ℕ} :
   · rw [Nat.lt_succ_iff]
     induction' k with k ih generalizing n ν
     · simp [eval_at_0]
-    · simp only [derivative_succ, Int.coe_nat_eq_zero, mul_eq_zero, Function.comp_apply,
+    · simp only [derivative_succ, Int.natCast_eq_zero, mul_eq_zero, Function.comp_apply,
         Function.iterate_succ, Polynomial.iterate_derivative_sub,
         Polynomial.iterate_derivative_nat_cast_mul, Polynomial.eval_mul, Polynomial.eval_nat_cast,
         Polynomial.eval_sub]
@@ -236,7 +236,7 @@ theorem iterate_derivative_at_0 (n ν : ℕ) :
 theorem iterate_derivative_at_0_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n) :
     ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 ≠ 0 :=
   by
-  simp only [Int.coe_nat_eq_zero, bernsteinPolynomial.iterate_derivative_at_0, Ne.def,
+  simp only [Int.natCast_eq_zero, bernsteinPolynomial.iterate_derivative_at_0, Ne.def,
     Nat.cast_eq_zero]
   simp only [← ascPochhammer_eval_cast]
   norm_cast
@@ -381,7 +381,7 @@ theorem sum_smul (n : ℕ) : ∑ ν in Finset.range (n + 1), ν • bernsteinPol
       rintro (_ | k)
       · simp
       · rw [bernsteinPolynomial]
-        simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, pow_succ]
+        simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, pow_succ']
         push_cast
         ring
     rw [add_pow, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum, Finset.sum_mul]
@@ -393,8 +393,8 @@ theorem sum_smul (n : ℕ) : ∑ ν in Finset.range (n + 1), ν • bernsteinPol
       map_mul]
   · rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]
     simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_natCast, map_pow, map_add, map_mul, e,
-      Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow,
-      add_zero, mul_one]
+      Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_X, add_sub_cancel, one_pow, add_zero,
+      mul_one]
 #align bernstein_polynomial.sum_smul bernsteinPolynomial.sum_smul
 -/
 
@@ -427,7 +427,7 @@ theorem sum_mul_smul (n : ℕ) :
       · simp
       · simp
       · rw [bernsteinPolynomial]
-        simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, pow_succ]
+        simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, pow_succ']
         push_cast
         ring
     rw [add_pow, (pderiv tt).map_sum, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
@@ -444,7 +444,7 @@ theorem sum_mul_smul (n : ℕ) :
     simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat,
       (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, add_zero, mul_one,
       Derivation.map_smul_of_tower, map_nsmul, map_pow, map_add, e, Bool.cond_true, Bool.cond_false,
-      MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow, smul_smul, smul_one_mul]
+      MvPolynomial.aeval_X, add_sub_cancel, one_pow, smul_smul, smul_one_mul]
 #align bernstein_polynomial.sum_mul_smul bernsteinPolynomial.sum_mul_smul
 -/
 

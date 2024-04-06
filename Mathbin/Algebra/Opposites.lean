@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import Algebra.Group.Defs
 import Logic.Equiv.Defs
-import Logic.Nontrivial
+import Logic.Nontrivial.Defs
 
 #align_import algebra.opposites from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

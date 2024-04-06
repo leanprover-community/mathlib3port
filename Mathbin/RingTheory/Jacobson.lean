@@ -398,7 +398,7 @@ theorem isIntegral_isLocalization_polynomial_quotient (P : Ideal R[X]) (pX : R[X
         (fun _ _ h1 h2 => _) fun n _ hr => _
     · convert Subring.add_mem _ h1 h2
       rw [RingHom.map_add, RingHom.map_add]
-    · rw [pow_succ X n, mul_comm X, ← mul_assoc, RingHom.map_mul, RingHom.map_mul]
+    · rw [pow_succ' X n, mul_comm X, ← mul_assoc, RingHom.map_mul, RingHom.map_mul]
       exact Subring.mul_mem _ hr (Subring.subset_closure (Set.mem_image_of_mem _ (Or.inl rfl)))
 #align ideal.polynomial.is_integral_is_localization_polynomial_quotient Ideal.Polynomial.isIntegral_isLocalization_polynomial_quotient
 -/

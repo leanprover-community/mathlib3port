@@ -155,7 +155,7 @@ theorem div_mem {x y : M} (hx : x ∈ H) (hy : y ∈ H) : x / y ∈ H := by
 #print zpow_mem /-
 @[to_additive]
 theorem zpow_mem {x : M} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
-  | (n : ℕ) => by rw [zpow_coe_nat]; exact pow_mem hx n
+  | (n : ℕ) => by rw [zpow_natCast]; exact pow_mem hx n
   | -[n+1] => by rw [zpow_negSucc]; exact inv_mem (pow_mem hx n.succ)
 #align zpow_mem zpow_mem
 #align zsmul_mem zsmul_mem
@@ -727,7 +727,7 @@ protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
 #align add_subgroup.zsmul_mem AddSubgroup.zsmul_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Subgroup.ofDiv /-
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]

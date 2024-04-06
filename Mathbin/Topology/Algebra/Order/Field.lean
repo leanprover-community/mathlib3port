@@ -80,7 +80,7 @@ theorem nhds_eq_map_hMul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ = |x₀| * |x - 1| := (abs_mul x₀ (x - 1))
       _ < |x₀| * (i / |x₀|) := (mul_lt_mul' le_rfl hx (by positivity) (abs_pos.2 hx₀))
       _ = |x₀| * i / |x₀| := by ring
-      _ = i := mul_div_cancel_left i fun h => hx₀ (abs_eq_zero.1 h)
+      _ = i := mul_div_cancel_left₀ i fun h => hx₀ (abs_eq_zero.1 h)
   · obtain ⟨i, hi, hit⟩ := h
     refine' ⟨i * |x₀|, mul_pos hi (abs_pos.2 hx₀), fun x hx => _⟩
     have : |x / x₀ - 1| < i
@@ -91,7 +91,7 @@ theorem nhds_eq_map_hMul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ < i * |x₀| / |x₀| := (div_lt_div_of_pos_right (abs_pos.2 hx₀) hx)
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
     specialize hit (x / x₀) this
-    rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit
+    rwa [mul_div_assoc', mul_div_cancel_left₀ x hx₀] at hit
 #align nhds_eq_map_mul_left_nhds_one nhds_eq_map_hMul_left_nhds_one
 
 theorem nhds_eq_map_hMul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
@@ -300,7 +300,7 @@ theorem Filter.Tendsto.inv_tendsto_zero (h : Tendsto f l (𝓝[>] 0)) : Tendsto 
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
 theorem tendsto_pow_neg_atTop {n : ℕ} (hn : n ≠ 0) :
     Tendsto (fun x : α => x ^ (-(n : ℤ))) atTop (𝓝 0) := by
-  simpa only [zpow_neg, zpow_coe_nat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_atTop
+  simpa only [zpow_neg, zpow_natCast] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_atTop
 #align tendsto_pow_neg_at_top tendsto_pow_neg_atTop
 -/
 
@@ -349,8 +349,8 @@ theorem tendsto_const_mul_zpow_atTop_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 0
   refine' ⟨fun h => _, fun h => _⟩
   · by_cases hn : 0 ≤ n
     · lift n to ℕ using hn
-      simp only [zpow_coe_nat] at h
-      rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h
+      simp only [zpow_natCast] at h
+      rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.natCast_eq_zero] at h
       exact Or.inl h
     · rw [not_le] at hn
       refine' Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_atTop_zero hn)⟩
@@ -394,8 +394,8 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing : Topolo
       refine' (mul_lt_mul'' h this (by positivity) (by positivity)).trans_le _
       rw [mul_comm, mul_min_of_nonneg _ _ aux.le]
       apply min_le_of_left_le
-      rw [← mul_div, ← mul_assoc, div_mul_cancel _ (sq_pos_of_pos ht).ne',
-        mul_div_cancel' ε two_ne_zero]
+      rw [← mul_div, ← mul_assoc, div_mul_cancel₀ _ (sq_pos_of_pos ht).ne',
+        mul_div_cancel₀ ε two_ne_zero]
     refine' inv_lt_of_inv_lt aux _
     rw [inv_div, abs_of_pos <| mul_pos ht hx', sq, ← mul_div_assoc']
     exact mul_lt_mul_of_pos_left hx ht

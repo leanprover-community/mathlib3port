@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
 import CategoryTheory.Abelian.Pseudoelements
-import Algebra.Category.Module.Biproducts
+import Algebra.Category.ModuleCat.Biproducts
 
 #align_import pseudoelement from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

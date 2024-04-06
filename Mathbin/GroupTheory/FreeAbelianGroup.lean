@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Algebra.Group.Pi
-import GroupTheory.FreeGroup
+import Algebra.Group.Pi.Lemmas
+import GroupTheory.FreeGroup.Basic
 import GroupTheory.Abelianization
 import Algebra.Module.Basic
 

@@ -6,7 +6,7 @@ Authors: Mario Carneiro, Floris van Doorn
 import Algebra.Bounds
 import Algebra.Order.Archimedean
 import Algebra.Star.Basic
-import Data.Real.CauSeqCompletion
+import Algebra.Order.CauSeq.Completion
 
 #align_import data.real.basic from "leanprover-community/mathlib"@"cb42593171ba005beaaf4549fcfe0dece9ada4c9"
 
@@ -763,7 +763,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
 #align real.exists_floor Real.exists_floor
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
 #print Real.exists_isLUB /-
 theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLUB S x :=
   by

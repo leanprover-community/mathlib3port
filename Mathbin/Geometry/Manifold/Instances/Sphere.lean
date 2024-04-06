@@ -10,7 +10,7 @@ import Analysis.InnerProductSpace.Calculus
 import Analysis.InnerProductSpace.PiL2
 import Geometry.Manifold.Algebra.LieGroup
 import Geometry.Manifold.Instances.Real
-import Geometry.Manifold.ContMdiffMfderiv
+import Geometry.Manifold.ContMDiffMFDeriv
 
 #align_import geometry.manifold.instances.sphere from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

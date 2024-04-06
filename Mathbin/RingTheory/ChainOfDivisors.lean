@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 -/
 import Algebra.IsPrimePow
-import Algebra.Squarefree
+import Algebra.Squarefree.Basic
 import Order.Hom.Bounded
-import Algebra.GcdMonoid.Basic
+import Algebra.GCDMonoid.Basic
 
 #align_import ring_theory.chain_of_divisors from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

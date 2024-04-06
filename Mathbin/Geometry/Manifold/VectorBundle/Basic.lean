@@ -471,7 +471,7 @@ namespace VectorPrebundle
 variable [∀ x, TopologicalSpace (E x)] {F E}
 
 #print VectorPrebundle.IsSmooth /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
 /-- Mixin for a `vector_prebundle` stating smoothness of coordinate changes. -/
 class IsSmooth (a : VectorPrebundle 𝕜 F E) : Prop where
   exists_smooth_coord_change :

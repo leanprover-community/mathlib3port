@@ -169,7 +169,7 @@ theorem rat_mul (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (r * x)
 
 #print LiouvilleWith.mul_int_iff /-
 theorem mul_int_iff (hm : m ≠ 0) : LiouvilleWith p (x * m) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_int, mul_rat_iff (Int.cast_ne_zero.2 hm)]
+  rw [← Rat.cast_intCast, mul_rat_iff (Int.cast_ne_zero.2 hm)]
 #align liouville_with.mul_int_iff LiouvilleWith.mul_int_iff
 -/
 
@@ -193,7 +193,7 @@ theorem int_mul (h : LiouvilleWith p x) (hm : m ≠ 0) : LiouvilleWith p (m * x)
 
 #print LiouvilleWith.mul_nat_iff /-
 theorem mul_nat_iff (hn : n ≠ 0) : LiouvilleWith p (x * n) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_nat, mul_rat_iff (Nat.cast_ne_zero.2 hn)]
+  rw [← Rat.cast_natCast, mul_rat_iff (Nat.cast_ne_zero.2 hn)]
 #align liouville_with.mul_nat_iff LiouvilleWith.mul_nat_iff
 -/
 
@@ -254,7 +254,7 @@ theorem rat_add (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (r + x) :=
 #print LiouvilleWith.add_int_iff /-
 @[simp]
 theorem add_int_iff : LiouvilleWith p (x + m) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_int m, add_rat_iff]
+  rw [← Rat.cast_intCast m, add_rat_iff]
 #align liouville_with.add_int_iff LiouvilleWith.add_int_iff
 -/
 
@@ -267,7 +267,7 @@ theorem int_add_iff : LiouvilleWith p (m + x) ↔ LiouvilleWith p x := by rw [ad
 #print LiouvilleWith.add_nat_iff /-
 @[simp]
 theorem add_nat_iff : LiouvilleWith p (x + n) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_nat n, add_rat_iff]
+  rw [← Rat.cast_natCast n, add_rat_iff]
 #align liouville_with.add_nat_iff LiouvilleWith.add_nat_iff
 -/
 
@@ -334,7 +334,7 @@ theorem sub_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x - r) :=
 #print LiouvilleWith.sub_int_iff /-
 @[simp]
 theorem sub_int_iff : LiouvilleWith p (x - m) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_int, sub_rat_iff]
+  rw [← Rat.cast_intCast, sub_rat_iff]
 #align liouville_with.sub_int_iff LiouvilleWith.sub_int_iff
 -/
 
@@ -347,7 +347,7 @@ theorem sub_int (h : LiouvilleWith p x) (m : ℤ) : LiouvilleWith p (x - m) :=
 #print LiouvilleWith.sub_nat_iff /-
 @[simp]
 theorem sub_nat_iff : LiouvilleWith p (x - n) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_nat, sub_rat_iff]
+  rw [← Rat.cast_natCast, sub_rat_iff]
 #align liouville_with.sub_nat_iff LiouvilleWith.sub_nat_iff
 -/
 

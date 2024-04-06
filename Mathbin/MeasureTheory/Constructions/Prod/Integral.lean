@@ -351,7 +351,7 @@ theorem Integrable.integral_norm_prod_right [SigmaFinite μ] ⦃f : α × β →
 -/
 
 #print MeasureTheory.Integrable.prod_mul /-
-theorem MeasureTheory.Integrable.prod_mul {L : Type _} [IsROrC L] {f : α → L} {g : β → L}
+theorem MeasureTheory.Integrable.prod_mul {L : Type _} [RCLike L] {f : α → L} {g : β → L}
     (hf : Integrable f μ) (hg : Integrable g ν) :
     Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=
   by
@@ -587,7 +587,7 @@ theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β}
 -/
 
 #print MeasureTheory.integral_prod_mul /-
-theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) :
+theorem integral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) :
     ∫ z, f z.1 * g z.2 ∂μ.Prod ν = (∫ x, f x ∂μ) * ∫ y, g y ∂ν :=
   by
   by_cases h : integrable (fun z : α × β => f z.1 * g z.2) (μ.prod ν)
@@ -603,7 +603,7 @@ theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.set_integral_prod_mul /-
-theorem set_integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) (s : Set α)
+theorem set_integral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) (s : Set α)
     (t : Set β) : ∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν :=
   by simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
 #align measure_theory.set_integral_prod_mul MeasureTheory.set_integral_prod_mul

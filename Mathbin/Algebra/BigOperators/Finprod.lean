@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Kevin Buzzard, Yury Kudryashov
 -/
 import Algebra.BigOperators.Order
-import Algebra.IndicatorFunction
+import Algebra.Function.Indicator
 
 #align_import algebra.big_operators.finprod from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"
 
@@ -164,7 +164,7 @@ theorem finprod_false (f : False → M) : ∏ᶠ i, f i = 1 :=
 #align finsum_false finsum_false
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print finprod_eq_single /-
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) : ∏ᶠ x, f x = f a :=
@@ -463,7 +463,7 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
 #align finsum_cond_eq_sum_of_cond_iff finsum_cond_eq_sum_of_cond_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » a) -/
 #print finprod_cond_ne /-
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
@@ -893,7 +893,7 @@ theorem finprod_mem_singleton : ∏ᶠ i ∈ ({a} : Set α), f i = f a := by
 #align finsum_mem_singleton finsum_mem_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr = » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr = » a) -/
 #print finprod_cond_eq_left /-
 @[simp, to_additive]
 theorem finprod_cond_eq_left : ∏ᶠ (i) (_ : i = a), f i = f a :=
@@ -1197,7 +1197,7 @@ theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀
 #align finsum_mem_sUnion finsum_mem_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » a) -/
 #print mul_finprod_cond_ne /-
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :

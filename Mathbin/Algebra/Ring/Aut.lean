@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
 import Algebra.GroupRingAction.Basic
-import Algebra.Hom.Aut
+import Algebra.Group.Aut
 import Algebra.Ring.Equiv
 
 #align_import algebra.ring.aut from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Sidharth Hariharan
 -/
 import Data.Polynomial.Div
-import Data.Zmod.Basic
+import Data.ZMod.Basic
 import Logic.Function.Basic
 import RingTheory.Localization.FractionRing
 import Tactic.FieldSimp

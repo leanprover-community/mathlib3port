@@ -164,8 +164,8 @@ instance : GCDMonoid ℤ where
     by
     rw [← Int.ofNat_mul, gcd_mul_lcm, coe_nat_abs, abs_eq_normalize]
     exact normalize_associated (a * b)
-  lcm_zero_left a := coe_nat_eq_zero.2 <| Nat.lcm_zero_left _
-  lcm_zero_right a := coe_nat_eq_zero.2 <| Nat.lcm_zero_right _
+  lcm_zero_left a := natCast_eq_zero.2 <| Nat.lcm_zero_left _
+  lcm_zero_right a := natCast_eq_zero.2 <| Nat.lcm_zero_right _
 
 instance : NormalizedGCDMonoid ℤ :=
   { Int.normalizationMonoid,
@@ -287,7 +287,7 @@ theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : a * b = c ^ 2) :
 #print Int.natAbs_euclideanDomain_gcd /-
 theorem natAbs_euclideanDomain_gcd (a b : ℤ) : Int.natAbs (EuclideanDomain.gcd a b) = Int.gcd a b :=
   by
-  apply Nat.dvd_antisymm <;> rw [← Int.coe_nat_dvd]
+  apply Nat.dvd_antisymm <;> rw [← Int.natCast_dvd_natCast]
   · rw [Int.natAbs_dvd]
     exact Int.dvd_gcd (EuclideanDomain.gcd_dvd_left _ _) (EuclideanDomain.gcd_dvd_right _ _)
   · rw [Int.dvd_natAbs]
@@ -306,7 +306,7 @@ def associatesIntEquivNat : Associates ℤ ≃ ℕ :=
       Quotient.inductionOn' a fun a =>
         Associates.mk_eq_mk_iff_associated.2 <| Associated.symm <| ⟨norm_unit a, _⟩
     show normalize a = Int.natAbs (normalize a)
-    rw [Int.coe_natAbs, Int.abs_eq_normalize, normalize_idem]
+    rw [Int.natCast_natAbs, Int.abs_eq_normalize, normalize_idem]
   · intro n
     dsimp
     rw [← normalize_apply, ← Int.abs_eq_normalize, Int.natAbs_abs, Int.natAbs_ofNat]
@@ -327,7 +327,7 @@ theorem Int.Prime.dvd_mul {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ
 theorem Int.Prime.dvd_mul' {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m * n) :
     (p : ℤ) ∣ m ∨ (p : ℤ) ∣ n :=
   by
-  rw [Int.coe_nat_dvd_left, Int.coe_nat_dvd_left]
+  rw [Int.natCast_dvd, Int.natCast_dvd]
   exact Int.Prime.dvd_mul hp h
 #align int.prime.dvd_mul' Int.Prime.dvd_mul'
 -/
@@ -344,7 +344,7 @@ theorem Int.Prime.dvd_pow {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ
 #print Int.Prime.dvd_pow' /-
 theorem Int.Prime.dvd_pow' {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ n ^ k) :
     (p : ℤ) ∣ n := by
-  rw [Int.coe_nat_dvd_left]
+  rw [Int.natCast_dvd]
   exact Int.Prime.dvd_pow hp h
 #align int.prime.dvd_pow' Int.Prime.dvd_pow'
 -/
@@ -445,7 +445,7 @@ theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1)
 
 #print Int.associated_natAbs /-
 theorem Int.associated_natAbs (k : ℤ) : Associated k k.natAbs :=
-  associated_of_dvd_dvd (Int.coe_nat_dvd_right.mpr dvd_rfl) (Int.natAbs_dvd.mpr dvd_rfl)
+  associated_of_dvd_dvd (Int.dvd_natCast.mpr dvd_rfl) (Int.natAbs_dvd.mpr dvd_rfl)
 #align int.associated_nat_abs Int.associated_natAbs
 -/
 

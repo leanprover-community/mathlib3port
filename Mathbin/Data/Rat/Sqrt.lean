@@ -50,7 +50,7 @@ theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
     (divInt_nonneg _ <|
           Int.coe_nat_pos.2 <|
             Nat.pos_of_ne_zero fun H => pos_iff_ne_zero.1 q.Pos <| Nat.sqrt_eq_zero.1 H).2 <|
-      Int.coe_nat_nonneg _
+      Int.natCast_nonneg _
 #align rat.sqrt_nonneg Rat.sqrt_nonneg
 -/
 

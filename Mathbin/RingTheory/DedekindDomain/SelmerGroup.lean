@@ -3,8 +3,8 @@ Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 -/
-import Algebra.Hom.Equiv.TypeTags
-import Data.Zmod.Quotient
+import Algebra.Group.Equiv.TypeTags
+import Data.ZMod.Quotient
 import RingTheory.DedekindDomain.AdicValuation
 import RingTheory.Norm
 
@@ -179,7 +179,7 @@ end HeightOneSpectrum
 
 variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
 #print IsDedekindDomain.selmerGroup /-
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmerGroup : Subgroup <| K/n

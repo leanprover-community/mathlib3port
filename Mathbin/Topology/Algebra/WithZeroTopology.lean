@@ -45,7 +45,7 @@ namespace WithZeroTopology
 variable {α Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] {γ γ₁ γ₂ : Γ₀} {l : Filter α}
   {f : α → Γ₀}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 #print WithZeroTopology.topologicalSpace /-
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
@@ -56,7 +56,7 @@ protected def topologicalSpace : TopologicalSpace Γ₀ :=
 
 attribute [scoped instance] WithZeroTopology.topologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 #print WithZeroTopology.nhds_eq_update /-
 theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ)) :=
   funext <| nhds_mkOfNhds_single <| le_iInf₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
@@ -68,7 +68,7 @@ theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (�
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 #print WithZeroTopology.nhds_zero /-
 theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ) := by rw [nhds_eq_update, update_same]
 #align with_zero_topology.nhds_zero WithZeroTopology.nhds_zero
@@ -99,7 +99,7 @@ theorem nhds_zero_of_units (γ : Γ₀ˣ) : Iio ↑γ ∈ 𝓝 (0 : Γ₀) :=
 #align with_zero_topology.nhds_zero_of_units WithZeroTopology.nhds_zero_of_units
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
 #print WithZeroTopology.tendsto_zero /-
 theorem tendsto_zero : Tendsto f l (𝓝 (0 : Γ₀)) ↔ ∀ (γ₀) (_ : γ₀ ≠ 0), ∀ᶠ x in l, f x < γ₀ := by
   simp [nhds_zero]
@@ -178,7 +178,7 @@ theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 #print WithZeroTopology.isOpen_iff /-
 theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _) (_ : γ ≠ 0), Iio γ ⊆ s :=
   by
@@ -188,7 +188,7 @@ theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ 
 #align with_zero_topology.is_open_iff WithZeroTopology.isOpen_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 #print WithZeroTopology.isClosed_iff /-
 theorem isClosed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _) (_ : γ ≠ 0), s ⊆ Ici γ :=
   by
@@ -266,7 +266,7 @@ protected theorem continuousMul : ContinuousMul Γ₀ :=
       refine' ⟨γ / y, div_ne_zero hγ hy, fun x hx => _⟩
       calc
         x * y < γ / y * y := mul_lt_right₀ _ hx hy
-        _ = γ := div_mul_cancel _ hy
+        _ = γ := div_mul_cancel₀ _ hy
     · have hy : y ≠ 0 := ((zero_lt_iff.mpr hx).trans_le hle).ne'
       rw [ContinuousAt, nhds_prod_eq, nhds_of_ne_zero hx, nhds_of_ne_zero hy, prod_pure_pure]
       exact pure_le_nhds (x * y)⟩

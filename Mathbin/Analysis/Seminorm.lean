@@ -5,7 +5,7 @@ Authors: Jean Lo, Yaël Dillies, Moritz Doll
 -/
 import Data.Real.Pointwise
 import Analysis.Convex.Function
-import Analysis.LocallyConvex.Basic
+import Topology.Bornology.Absorbs
 import Analysis.Normed.Group.AddTorsor
 
 #align_import analysis.seminorm from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"
@@ -1361,7 +1361,7 @@ theorem continuousAt_zero' [TopologicalSpace E] [ContinuousConstSMul 𝕜 E] {p 
   have hk0' := norm_pos_iff.mp hk0
   have := (set_smul_mem_nhds_zero_iff hk0').mpr hp
   refine' Filter.mem_of_superset this (smul_set_subset_iff.mpr fun x hx => _)
-  rw [mem_closed_ball_zero, map_smul_eq_mul, ← div_mul_cancel ε hr.ne.symm]
+  rw [mem_closed_ball_zero, map_smul_eq_mul, ← div_mul_cancel₀ ε hr.ne.symm]
   exact mul_le_mul hkε.le (p.mem_closed_ball_zero.mp hx) (map_nonneg _ _) (div_nonneg hε.le hr.le)
 #align seminorm.continuous_at_zero' Seminorm.continuousAt_zero'
 -/

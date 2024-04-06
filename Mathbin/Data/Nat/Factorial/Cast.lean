@@ -74,7 +74,7 @@ theorem cast_descFactorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
   cases a
   · rw [zero_tsub, cast_zero, ascPochhammer_ne_zero_eval_zero _ two_ne_zero, MulZeroClass.zero_mul]
   ·
-    rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, ascPochhammer_succ_right,
+    rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel_right, ascPochhammer_succ_right,
       ascPochhammer_one, Polynomial.X_mul, Polynomial.eval_mul_X, Polynomial.eval_add,
       Polynomial.eval_X, cast_one, Polynomial.eval_one]
 #align nat.cast_desc_factorial_two Nat.cast_descFactorial_two

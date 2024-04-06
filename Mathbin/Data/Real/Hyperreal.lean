@@ -960,7 +960,7 @@ theorem Hyperreal.IsSt.mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
             (div_pos hd (coe_pos.1 (lt_of_le_of_lt (abs_nonneg x) ht)))
         rw [hs, coe_zero, sub_zero] at hys'
         rw [hs, MulZeroClass.mul_zero, coe_zero, sub_zero, abs_mul, mul_comm, ←
-          div_mul_cancel (d : ℝ*) (ne_of_gt (lt_of_le_of_lt (abs_nonneg x) ht)), ← coe_div]
+          div_mul_cancel₀ (d : ℝ*) (ne_of_gt (lt_of_le_of_lt (abs_nonneg x) ht)), ← coe_div]
         exact mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)
       exact is_st_mul' hxr hys hs
 #align hyperreal.is_st_mul Hyperreal.IsSt.mul
@@ -1254,7 +1254,7 @@ theorem infinitePos_mul_of_infinitePos_not_infinitesimal_pos {x y : ℝ*} :
   Exists.dcases_on hy₁' fun r₁ hy₁'' =>
     by
     have hyr := by rw [not_imp, ← abs_lt, not_lt, abs_of_pos hy₂] at hy₁'' <;> exact hy₁''
-    rw [← div_mul_cancel r (ne_of_gt hyr.1), coe_mul] <;>
+    rw [← div_mul_cancel₀ r (ne_of_gt hyr.1), coe_mul] <;>
       exact mul_lt_mul (hx (r / r₁)) hyr.2 (coe_lt_coe.2 hyr.1) (le_of_lt (hx 0))
 #align hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos Hyperreal.infinitePos_mul_of_infinitePos_not_infinitesimal_pos
 -/

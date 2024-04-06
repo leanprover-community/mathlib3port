@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import CategoryTheory.Adjunction.Comma
 import CategoryTheory.Limits.Preserves.Shapes.Terminal
-import CategoryTheory.StructuredArrow
+import CategoryTheory.Comma.StructuredArrow
 import CategoryTheory.Limits.Shapes.Equivalence
 
 #align_import category_theory.limits.cone_category from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"

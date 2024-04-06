@@ -5,7 +5,7 @@ Authors: Dhruv Bhatia, Eric Wieser
 -/
 import Tactic.LinearCombination
 import Data.Buffer.Parser.Numeral
-import Data.Json
+import Lean.Json
 
 #align_import tactic.polyrith from "leanprover-community/mathlib"@"5fc18b5e34affac9a4020b228bea6d1c67519415"
 

@@ -5,7 +5,7 @@ Authors: Manuel Candales
 -/
 import Data.Real.Basic
 import Data.Real.Sqrt
-import Data.Real.Nnreal
+import Data.Real.NNReal
 import Tactic.LinearCombination
 
 #align_import imo.imo2008_q4 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"

@@ -1046,7 +1046,7 @@ theorem exists_subset_range_and_iff {f : α → β} {p : Set β → Prop} :
 #align set.exists_subset_range_and_iff Set.exists_subset_range_and_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:641:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
 #print Set.exists_subset_range_iff /-
 theorem exists_subset_range_iff {f : α → β} {p : Set β → Prop} :
     (∃ (s : _) (_ : s ⊆ range f), p s) ↔ ∃ s, p (f '' s) := by

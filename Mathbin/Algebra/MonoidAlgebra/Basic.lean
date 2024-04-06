@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 -/
 import Algebra.Algebra.Equiv
 import Algebra.BigOperators.Finsupp
-import Algebra.Hom.NonUnitalAlg
+import Algebra.Algebra.NonUnitalHom
 import Algebra.Module.BigOperators
 import LinearAlgebra.Finsupp
 
@@ -406,7 +406,7 @@ theorem single_mul_single [Mul G] {a₁ a₂ : G} {b₁ b₂ : k} :
 theorem single_pow [Monoid G] {a : G} {b : k} :
     ∀ n : ℕ, (single a b : MonoidAlgebra k G) ^ n = single (a ^ n) (b ^ n)
   | 0 => by simp only [pow_zero]; rfl
-  | n + 1 => by simp only [pow_succ, single_pow n, single_mul_single]
+  | n + 1 => by simp only [pow_succ', single_pow n, single_mul_single]
 #align monoid_algebra.single_pow MonoidAlgebra.single_pow
 -/
 
@@ -1473,7 +1473,7 @@ theorem single_pow [AddMonoid G] {a : G} {b : k} :
     ∀ n : ℕ, (single a b ^ n : AddMonoidAlgebra k G) = single (n • a) (b ^ n)
   | 0 => by simp only [pow_zero, zero_nsmul]; rfl
   | n + 1 => by
-    rw [pow_succ, pow_succ, single_pow n, single_mul_single, add_comm, add_nsmul, one_nsmul]
+    rw [pow_succ', pow_succ', single_pow n, single_mul_single, add_comm, add_nsmul, one_nsmul]
 #align add_monoid_algebra.single_pow AddMonoidAlgebra.single_pow
 -/
 

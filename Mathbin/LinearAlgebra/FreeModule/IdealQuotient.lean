@@ -3,9 +3,9 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Data.Zmod.Quotient
+import Data.ZMod.Quotient
 import LinearAlgebra.FreeModule.Finite.Rank
-import LinearAlgebra.FreeModule.Pid
+import LinearAlgebra.FreeModule.PID
 import LinearAlgebra.FreeModule.StrongRankCondition
 import LinearAlgebra.QuotientPi
 

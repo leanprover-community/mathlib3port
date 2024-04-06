@@ -108,7 +108,7 @@ theorem numDerangements_succ (n : ℕ) :
   by
   induction' n with n hn
   · rfl
-  · simp only [numDerangements_add_two, hn, pow_succ, Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
+  · simp only [numDerangements_add_two, hn, pow_succ', Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
     ring
 #align num_derangements_succ numDerangements_succ
 -/
@@ -143,7 +143,7 @@ theorem numDerangements_sum (n : ℕ) :
   by
   induction' n with n hn; · rfl
   rw [Finset.sum_range_succ, numDerangements_succ, hn, Finset.mul_sum, tsub_self,
-    Nat.ascFactorial_zero, Int.ofNat_one, mul_one, pow_succ, neg_one_mul, sub_eq_add_neg,
+    Nat.ascFactorial_zero, Int.ofNat_one, mul_one, pow_succ', neg_one_mul, sub_eq_add_neg,
     add_left_inj, Finset.sum_congr rfl]
   -- show that (n + 1) * (-1)^x * asc_fac x (n - x) = (-1)^x * asc_fac x (n.succ - x)
   intro x hx

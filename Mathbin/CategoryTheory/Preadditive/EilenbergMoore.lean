@@ -59,10 +59,10 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T)
       zero_add := by intros; ext; apply zero_add
       add_zero := by intros; ext; apply add_zero
       nsmul_zero := by intros; ext; apply zero_smul
-      nsmul_succ := by intros; ext; apply succ_nsmul
+      nsmul_succ := by intros; ext; apply succ_nsmul'
       sub_eq_add_neg := by intros; ext; apply sub_eq_add_neg
       zsmul_zero' := by intros; ext; apply zero_smul
-      zsmul_succ' := by intros; ext; dsimp; simp only [coe_nat_zsmul, succ_nsmul]; rfl
+      zsmul_succ' := by intros; ext; dsimp; simp only [natCast_zsmul, succ_nsmul']; rfl
       zsmul_neg' := by intros; ext; simp only [negSucc_zsmul, neg_inj, nsmul_eq_smul_cast ℤ]
       add_left_neg := by intros; ext; apply add_left_neg
       add_comm := by intros; ext; apply add_comm }
@@ -106,10 +106,10 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U)
       zero_add := by intros; ext; apply zero_add
       add_zero := by intros; ext; apply add_zero
       nsmul_zero := by intros; ext; apply zero_smul
-      nsmul_succ := by intros; ext; apply succ_nsmul
+      nsmul_succ := by intros; ext; apply succ_nsmul'
       sub_eq_add_neg := by intros; ext; apply sub_eq_add_neg
       zsmul_zero' := by intros; ext; apply zero_smul
-      zsmul_succ' := by intros; ext; dsimp; simp only [coe_nat_zsmul, succ_nsmul]; rfl
+      zsmul_succ' := by intros; ext; dsimp; simp only [natCast_zsmul, succ_nsmul']; rfl
       zsmul_neg' := by intros; ext; simp only [negSucc_zsmul, neg_inj, nsmul_eq_smul_cast ℤ]
       add_left_neg := by intros; ext; apply add_left_neg
       add_comm := by intros; ext; apply add_comm }

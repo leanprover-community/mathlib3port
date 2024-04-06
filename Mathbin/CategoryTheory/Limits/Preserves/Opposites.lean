@@ -64,7 +64,7 @@ def preservesLimitLeftOp (K : J ⥤ Cᵒᵖ) (F : C ⥤ Dᵒᵖ) [PreservesColim
 def preservesLimitRightOp (K : J ⥤ C) (F : Cᵒᵖ ⥤ D) [PreservesColimit K.op F] :
     PreservesLimit K F.rightOp
     where preserves c hc :=
-    isLimitConeRightOpOfCocone _ (isColimitOfPreserves F (isColimitConeOp _ hc))
+    isLimitConeRightOpOfCocone _ (isColimitOfPreserves F (CategoryTheory.Limits.IsLimit.op _ hc))
 #align category_theory.limits.preserves_limit_right_op CategoryTheory.Limits.preservesLimitRightOp
 -/
 
@@ -74,7 +74,7 @@ def preservesLimitRightOp (K : J ⥤ C) (F : Cᵒᵖ ⥤ D) [PreservesColimit K.
 def preservesLimitUnop (K : J ⥤ C) (F : Cᵒᵖ ⥤ Dᵒᵖ) [PreservesColimit K.op F] :
     PreservesLimit K F.unop
     where preserves c hc :=
-    isLimitConeUnopOfCocone _ (isColimitOfPreserves F (isColimitConeOp _ hc))
+    isLimitConeUnopOfCocone _ (isColimitOfPreserves F (CategoryTheory.Limits.IsLimit.op _ hc))
 #align category_theory.limits.preserves_limit_unop CategoryTheory.Limits.preservesLimitUnop
 -/
 
@@ -104,7 +104,7 @@ def preservesColimitLeftOp (K : J ⥤ Cᵒᵖ) (F : C ⥤ Dᵒᵖ) [PreservesLim
 def preservesColimitRightOp (K : J ⥤ C) (F : Cᵒᵖ ⥤ D) [PreservesLimit K.op F] :
     PreservesColimit K F.rightOp
     where preserves c hc :=
-    isColimitCoconeRightOpOfCone _ (isLimitOfPreserves F (isLimitCoconeOp _ hc))
+    isColimitCoconeRightOpOfCone _ (isLimitOfPreserves F (CategoryTheory.Limits.IsColimit.op _ hc))
 #align category_theory.limits.preserves_colimit_right_op CategoryTheory.Limits.preservesColimitRightOp
 -/
 
@@ -114,7 +114,7 @@ def preservesColimitRightOp (K : J ⥤ C) (F : Cᵒᵖ ⥤ D) [PreservesLimit K.
 def preservesColimitUnop (K : J ⥤ C) (F : Cᵒᵖ ⥤ Dᵒᵖ) [PreservesLimit K.op F] :
     PreservesColimit K F.unop
     where preserves c hc :=
-    isColimitCoconeUnopOfCone _ (isLimitOfPreserves F (isLimitCoconeOp _ hc))
+    isColimitCoconeUnopOfCone _ (isLimitOfPreserves F (CategoryTheory.Limits.IsColimit.op _ hc))
 #align category_theory.limits.preserves_colimit_unop CategoryTheory.Limits.preservesColimitUnop
 -/
 

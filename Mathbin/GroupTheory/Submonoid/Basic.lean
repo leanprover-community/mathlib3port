@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
-import Algebra.Hom.Group
+import Algebra.Group.Hom.Defs
 import Algebra.Group.Units
 import GroupTheory.Subsemigroup.Basic
 
@@ -143,7 +143,7 @@ attribute [to_additive] Submonoid SubmonoidClass
 theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M}
     (hx : x ∈ S) : ∀ n : ℕ, x ^ n ∈ S
   | 0 => by rw [pow_zero]; exact OneMemClass.one_mem S
-  | n + 1 => by rw [pow_succ]; exact MulMemClass.hMul_mem hx (pow_mem n)
+  | n + 1 => by rw [pow_succ']; exact MulMemClass.hMul_mem hx (pow_mem n)
 #align pow_mem pow_mem
 #align nsmul_mem nsmul_mem
 -/

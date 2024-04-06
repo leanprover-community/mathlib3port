@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
 import Analysis.SpecialFunctions.Gamma.Beta
-import NumberTheory.ModularForms.JacobiTheta.Basic
+import NumberTheory.ModularForms.JacobiTheta.OneVariable
 import NumberTheory.ZetaValues
 
 #align_import number_theory.zeta_function from "leanprover-community/mathlib"@"d0b1936853671209a866fa35b9e54949c81116e2"
@@ -146,8 +146,8 @@ the Dirichlet series for `re s > 1`.) -/
 theorem zetaKernel₁_eq_jacobiTheta {t : ℝ} (ht : 0 < t) :
     zetaKernel₁ t = (jacobiTheta (t * I) - 1) / 2 :=
   by
-  rw [jacobiTheta_eq_tsum_nat ((mul_I_im t).symm ▸ ht : 0 < (↑t * I).im), add_comm, add_sub_cancel,
-    mul_div_cancel_left _ (two_ne_zero' ℂ), zetaKernel₁]
+  rw [jacobiTheta_eq_tsum_nat ((mul_I_im t).symm ▸ ht : 0 < (↑t * I).im), add_comm,
+    add_sub_cancel_right, mul_div_cancel_left₀ _ (two_ne_zero' ℂ), zetaKernel₁]
   congr 1 with n : 1
   push_cast
   rw [(by ring : ↑π * I * (n + 1) ^ 2 * (t * I) = I ^ 2 * π * t * (n + 1) ^ 2), I_sq, neg_one_mul]
@@ -288,7 +288,7 @@ theorem isBigO_zero_zetaKernel₂ : IsBigO (𝓝[>] 0) zetaKernel₂ fun t => ex
     exact of_real_ne_zero.mpr ((sqrt_ne_zero <| le_of_lt hx).mpr (ne_of_gt hx))
   · refine' eventually_of_mem self_mem_nhdsWithin fun x hx => _
     dsimp only
-    rw [Function.comp_apply, mul_one_div, one_div ↑(sqrt _), ← of_real_inv, IsROrC.norm_ofReal,
+    rw [Function.comp_apply, mul_one_div, one_div ↑(sqrt _), ← of_real_inv, RCLike.norm_ofReal,
       abs_inv, abs_of_nonneg (sqrt_nonneg _), ← div_eq_mul_inv]
 #align is_O_zero_zeta_kernel₂ isBigO_zero_zetaKernel₂
 -/
@@ -331,7 +331,7 @@ theorem isBigO_zero_zetaKernel₁ : IsBigO (𝓝[>] 0) zetaKernel₁ fun t => t 
       ((is_O_refl _ _).congr' (eventually_eq.refl _ _)
             (eventually_eq_of_mem self_mem_nhdsWithin fun x hx => _)).const_mul_left
         _
-    rw [IsROrC.norm_ofReal, abs_of_nonneg (sqrt_nonneg _)]
+    rw [RCLike.norm_ofReal, abs_of_nonneg (sqrt_nonneg _)]
     simp_rw [sqrt_eq_rpow, rpow_neg (le_of_lt hx), one_div]
   · refine' is_O_iff.mpr ⟨‖(1 / 2 : ℂ)‖, _⟩
     refine' eventually_of_mem (Ioc_mem_nhdsWithin_Ioi <| left_mem_Ico.mpr zero_lt_one) fun t ht => _
@@ -417,7 +417,7 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
       tendsto (fun z => riemannCompletedZeta z * (z / 2) / (z / 2 * Gamma (z / 2))) (𝓝[≠] 0)
         (𝓝 <| -1 / 2)
     · refine' tendsto.congr' (eventually_eq_of_mem self_mem_nhdsWithin fun z hz => _) h3
-      rw [← div_div, mul_div_cancel _ (div_ne_zero hz two_ne_zero)]
+      rw [← div_div, mul_div_cancel_right₀ _ (div_ne_zero hz two_ne_zero)]
     have h4 : tendsto (fun z : ℂ => z / 2 * Gamma (z / 2)) (𝓝[≠] 0) (𝓝 1) :=
       by
       refine' tendsto_self_mul_Gamma_nhds_zero.comp _
@@ -529,7 +529,7 @@ theorem hasMellin_one_div_sqrt_sub_one_div_two_Ioc {s : ℂ} (hs : 1 / 2 < s.re)
       by ext1 t; simp_rw [div_eq_inv_mul, indicator_mul_right]]
   simp_rw [HasMellin, mellin_div_const, step1.2, sub_div, div_div]
   refine' ⟨step1.1.div_const _, _⟩
-  rw [mul_comm, sub_mul, div_mul_cancel _ (two_ne_zero' ℂ), mul_comm s 2]
+  rw [mul_comm, sub_mul, div_mul_cancel₀ _ (two_ne_zero' ℂ), mul_comm s 2]
 #align has_mellin_one_div_sqrt_sub_one_div_two_Ioc hasMellin_one_div_sqrt_sub_one_div_two_Ioc
 -/
 
@@ -557,7 +557,7 @@ theorem completed_zeta_eq_mellin_of_one_lt_re {s : ℂ} (hs : 1 < re s) :
     sub_sub, ← add_sub]
   conv_rhs => rw [← add_zero (mellin zetaKernel₁ <| s / 2)]
   congr 1
-  rw [mul_div_cancel' _ (two_ne_zero' ℂ)]
+  rw [mul_div_cancel₀ _ (two_ne_zero' ℂ)]
   abel
 #align completed_zeta_eq_mellin_of_one_lt_re completed_zeta_eq_mellin_of_one_lt_re
 -/
@@ -655,7 +655,7 @@ theorem completed_zeta_eq_tsum_of_one_lt_re {s : ℂ} (hs : 1 < re s) :
     riemannCompletedZeta s = π ^ (-s / 2) * Gamma (s / 2) * ∑' n : ℕ, 1 / (n + 1) ^ s :=
   by
   rw [completed_zeta_eq_mellin_of_one_lt_re hs, mellin_zetaKernel₁_eq_tsum, neg_div,
-    mul_div_cancel' _ (two_ne_zero' ℂ)]
+    mul_div_cancel₀ _ (two_ne_zero' ℂ)]
   rw [show s / 2 = ↑(2⁻¹ : ℝ) * s by push_cast; rw [mul_comm]; rfl]
   rwa [of_real_mul_re, ← div_eq_inv_mul, div_lt_div_right (zero_lt_two' ℝ)]
 #align completed_zeta_eq_tsum_of_one_lt_re completed_zeta_eq_tsum_of_one_lt_re
@@ -670,7 +670,7 @@ theorem zeta_eq_tsum_one_div_nat_add_one_cpow {s : ℂ} (hs : 1 < re s) :
   by
   have : s ≠ 0 := by contrapose! hs; rw [hs, zero_re]; exact zero_le_one
   rw [riemannZeta, Function.update_noteq this, completed_zeta_eq_tsum_of_one_lt_re hs, ← mul_assoc,
-    neg_div, cpow_neg, mul_inv_cancel_left₀, mul_div_cancel_left]
+    neg_div, cpow_neg, mul_inv_cancel_left₀, mul_div_cancel_left₀]
   · apply Gamma_ne_zero_of_re_pos
     rw [← of_real_one, ← of_real_bit0, div_eq_mul_inv, ← of_real_inv, mul_comm, of_real_mul_re]
     exact mul_pos (inv_pos_of_pos two_pos) (zero_lt_one.trans hs)
@@ -805,9 +805,9 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     rw [div_eq_iff (two_ne_zero' ℂ), ← Nat.cast_two, neg_mul, ← Nat.cast_mul] at hm
     exact ⟨m * 2, by rw [hm]⟩
   have h_Ga_eq : Gamma s = Gamma (s / 2) * Gamma ((s + 1) / 2) * 2 ^ (s - 1) / sqrt π := by
-    rw [add_div, Complex.Gamma_mul_Gamma_add_half, mul_div_cancel' _ (two_ne_zero' ℂ),
+    rw [add_div, Complex.Gamma_mul_Gamma_add_half, mul_div_cancel₀ _ (two_ne_zero' ℂ),
       (by ring : 1 - s = -(s - 1)), cpow_neg, ← div_eq_mul_inv, eq_div_iff h_sqrt,
-      div_mul_eq_mul_div₀, div_mul_cancel _ h_pow]
+      div_mul_eq_mul_div₀, div_mul_cancel₀ _ h_pow]
   have h_Ga_ne3 : Gamma ((s + 1) / 2) ≠ 0 :=
     by
     have h_Ga_aux : Gamma s ≠ 0 := Complex.Gamma_ne_zero hs
@@ -822,7 +822,7 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     -- `function.update_noteq` to change the goal; the original goal is genuinely false for s = 1.
     obtain ⟨n, rfl⟩ := hs_pos_odd
     have : (1 - (1 + 2 * (n : ℂ))) / 2 = -↑n := by
-      rw [← sub_sub, sub_self, zero_sub, neg_div, mul_div_cancel_left _ (two_ne_zero' ℂ)]
+      rw [← sub_sub, sub_self, zero_sub, neg_div, mul_div_cancel_left₀ _ (two_ne_zero' ℂ)]
     rw [this, Complex.Gamma_neg_nat_eq_zero, div_zero]
     have : (π : ℂ) * (1 - (1 + 2 * ↑n)) / 2 = ↑(-n : ℤ) * π := by push_cast; field_simp; ring
     rw [this, Complex.sin_int_mul_pi, MulZeroClass.mul_zero, MulZeroClass.zero_mul]

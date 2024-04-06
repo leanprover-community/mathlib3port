@@ -31,13 +31,13 @@ The last part of the file should be generalized to `pi_Lp`.
 
 noncomputable section
 
-open IsROrC Real Filter
+open RCLike Real Filter
 
 open scoped BigOperators Classical Topology
 
 section DerivInner
 
-variable {𝕜 E F : Type _} [IsROrC 𝕜]
+variable {𝕜 E F : Type _} [RCLike 𝕜]
 
 variable [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
@@ -381,7 +381,7 @@ section PiLike
 
 open ContinuousLinearMap
 
-variable {𝕜 ι H : Type _} [IsROrC 𝕜] [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Fintype ι]
+variable {𝕜 ι H : Type _} [RCLike 𝕜] [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Fintype ι]
   {f : H → EuclideanSpace 𝕜 ι} {f' : H →L[𝕜] EuclideanSpace 𝕜 ι} {t : Set H} {y : H}
 
 #print differentiableWithinAt_euclidean /-

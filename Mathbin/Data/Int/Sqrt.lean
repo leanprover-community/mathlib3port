@@ -44,7 +44,7 @@ theorem exists_mul_self (x : ℤ) : (∃ n, n * n = x) ↔ sqrt x * sqrt x = x :
 
 #print Int.sqrt_nonneg /-
 theorem sqrt_nonneg (n : ℤ) : 0 ≤ sqrt n :=
-  coe_nat_nonneg _
+  natCast_nonneg _
 #align int.sqrt_nonneg Int.sqrt_nonneg
 -/
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 -/
-import Analysis.Calculus.FderivMeasurable
+import Analysis.Calculus.FDeriv.Measurable
 import Analysis.Calculus.Deriv.Comp
 import Analysis.Calculus.Deriv.Add
 import Analysis.Calculus.Deriv.Slope
@@ -1493,7 +1493,7 @@ theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → A}
     ∫ x in a..b, u x * v' x = u b * v b - u a * v a - ∫ x in a..b, u' x * v x :=
   by
   rw [← integral_deriv_mul_eq_sub hu hv hu' hv', ← integral_sub]
-  · exact integral_congr fun x hx => by simp only [add_sub_cancel']
+  · exact integral_congr fun x hx => by simp only [add_sub_cancel_left]
   ·
     exact
       (hu'.mul_continuous_on (HasDerivAt.continuousOn hv)).add

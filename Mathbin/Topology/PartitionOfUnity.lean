@@ -6,7 +6,7 @@ Authors: Yury Kudryashov
 import Algebra.BigOperators.Finprod
 import SetTheory.Ordinal.Basic
 import Topology.ContinuousFunction.Algebra
-import Topology.Paracompact
+import Topology.Compactness.Paracompact
 import Topology.ShrinkingLemma
 import Topology.UrysohnsLemma
 

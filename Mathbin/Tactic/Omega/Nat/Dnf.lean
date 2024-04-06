@@ -148,7 +148,7 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   rw [List.forall_mem_append]
   apply And.intro (holds_nonneg_consts _) h5.right
   intro x
-  apply Int.coe_nat_nonneg
+  apply Int.natCast_nonneg
 #align omega.nat.exists_clause_holds Omega.Nat.exists_clause_holds
 
 theorem exists_clause_sat {p : Preform} :

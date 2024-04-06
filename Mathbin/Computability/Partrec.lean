@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Computability.Primrec
-import Data.Nat.Psub
-import Data.Pfun
+import Data.Nat.PSub
+import Data.PFun
 
 #align_import computability.partrec from "leanprover-community/mathlib"@"7d34004e19699895c13c86b78ae62bbaea0bc893"
 

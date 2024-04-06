@@ -284,11 +284,11 @@ theorem f_add_nat_ge (hf_conv : ConvexOn ℝ (Ioi 0) f)
   have c :=
     (convex_on_iff_slope_mono_adjacent.mp <| hf_conv).2 npos (by linarith : 0 < (n : ℝ) + x)
       (by linarith : (n : ℝ) - 1 < (n : ℝ)) (by linarith)
-  rw [add_sub_cancel', sub_sub_cancel, div_one] at c
+  rw [add_sub_cancel_left, sub_sub_cancel, div_one] at c
   have : f (↑n - 1) = f n - log (↑n - 1) :=
     by
     nth_rw_rhs 1 [(by ring : (n : ℝ) = ↑n - 1 + 1)]
-    rw [hf_feq npos, add_sub_cancel]
+    rw [hf_feq npos, add_sub_cancel_right]
   rwa [this, le_div_iff hx, sub_sub_cancel, le_sub_iff_add_le, mul_comm _ x, add_comm] at c
 #align real.bohr_mollerup.f_add_nat_ge Real.BohrMollerup.f_add_nat_ge
 -/
@@ -334,7 +334,7 @@ theorem ge_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
   dsimp [log_gamma_seq]
   rw [← add_sub_assoc, sub_le_iff_le_add, ← f_add_nat_eq (@hf_feq) hx, add_comm x _]
   refine' le_trans (le_of_eq _) (f_add_nat_ge hf_conv @hf_feq _ hx)
-  · rw [f_nat_eq @hf_feq, Nat.add_sub_cancel, Nat.cast_add_one, add_sub_cancel]
+  · rw [f_nat_eq @hf_feq, Nat.add_sub_cancel, Nat.cast_add_one, add_sub_cancel_right]
     · ring
     · exact Nat.succ_ne_zero _
   · apply Nat.succ_le_succ
@@ -602,7 +602,7 @@ theorem Gamma_mul_Gamma_add_half_of_pos {s : ℝ} (hs : 0 < s) :
     Gamma s * Gamma (s + 1 / 2) = Gamma (2 * s) * 2 ^ (1 - 2 * s) * sqrt π :=
   by
   rw [← doubling_Gamma_eq_Gamma (mul_pos two_pos hs), doubling_Gamma,
-    mul_div_cancel_left _ (two_ne_zero' ℝ), (by abel : 1 - 2 * s = -(2 * s - 1)),
+    mul_div_cancel_left₀ _ (two_ne_zero' ℝ), (by abel : 1 - 2 * s = -(2 * s - 1)),
     rpow_neg zero_le_two]
   field_simp [(sqrt_pos_of_pos pi_pos).ne', (rpow_pos_of_pos two_pos (2 * s - 1)).ne']
   ring

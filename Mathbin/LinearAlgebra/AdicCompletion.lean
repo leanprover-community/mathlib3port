@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Algebra.GeomSum
-import LinearAlgebra.Smodeq
+import LinearAlgebra.SModEq
 import RingTheory.JacobsonIdeal
 
 #align_import linear_algebra.adic_completion from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
