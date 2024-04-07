@@ -5,7 +5,7 @@ Authors: Anatole Dedecker, Devon Tuma
 -/
 import Analysis.Asymptotics.AsymptoticEquivalent
 import Analysis.Asymptotics.SpecificAsymptotics
-import Data.Polynomial.RingDivision
+import Algebra.Polynomial.RingDivision
 
 #align_import analysis.special_functions.polynomials from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"
 

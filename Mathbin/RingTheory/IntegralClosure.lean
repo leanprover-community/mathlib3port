@@ -3,7 +3,7 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Data.Polynomial.Expand
+import Algebra.Polynomial.Expand
 import LinearAlgebra.FiniteDimensional
 import LinearAlgebra.Matrix.Charpoly.LinearMap
 import RingTheory.Adjoin.FG

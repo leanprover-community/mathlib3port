@@ -5,8 +5,8 @@ Authors: Kenny Lau
 -/
 import Algebra.GroupRingAction.Basic
 import GroupTheory.GroupAction.Hom
-import Data.Polynomial.AlgebraMap
-import Data.Polynomial.Monic
+import Algebra.Polynomial.AlgebraMap
+import Algebra.Polynomial.Monic
 import GroupTheory.GroupAction.Quotient
 
 #align_import algebra.polynomial.group_ring_action from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"

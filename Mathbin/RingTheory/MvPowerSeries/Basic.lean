@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 -/
 import Data.Finsupp.Interval
-import Data.MvPolynomial.Basic
-import Data.Polynomial.AlgebraMap
-import Data.Polynomial.Coeff
+import Algebra.MvPolynomial.Basic
+import Algebra.Polynomial.AlgebraMap
+import Algebra.Polynomial.Coeff
 import LinearAlgebra.StdBasis
 import RingTheory.Ideal.LocalRing
 import RingTheory.Multiplicity

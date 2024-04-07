@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel
 -/
 import Algebra.Module.Submodule.Ker
 import Algebra.Algebra.Basic
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Algebra.BigOperators.Ring
 import Data.List.FinRange
 import Data.Fintype.BigOperators

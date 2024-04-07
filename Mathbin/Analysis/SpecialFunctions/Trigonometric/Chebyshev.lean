@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Data.Complex.Exponential
 import Data.Complex.Module
-import Data.Polynomial.AlgebraMap
+import Algebra.Polynomial.AlgebraMap
 import RingTheory.Polynomial.Chebyshev
 
 #align_import analysis.special_functions.trigonometric.chebyshev from "leanprover-community/mathlib"@"fe8d0ff42c3c24d789f491dc2622b6cac3d61564"

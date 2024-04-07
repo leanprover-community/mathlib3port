@@ -6,9 +6,9 @@ Authors: Chris Hughes
 import RingTheory.Adjoin.Basic
 import LinearAlgebra.LinearIndependent
 import RingTheory.MvPolynomial.Basic
-import Data.MvPolynomial.Supported
+import Algebra.MvPolynomial.Supported
 import RingTheory.Algebraic
-import Data.MvPolynomial.Equiv
+import Algebra.MvPolynomial.Equiv
 
 #align_import ring_theory.algebraic_independent from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

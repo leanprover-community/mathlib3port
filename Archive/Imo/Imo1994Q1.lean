@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
 import Algebra.BigOperators.Basic
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Data.Fintype.BigOperators
 import Data.Finset.Sort
 import Data.Fin.Interval

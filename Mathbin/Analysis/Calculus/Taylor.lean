@@ -5,7 +5,7 @@ Authors: Moritz Doll
 -/
 import Analysis.Calculus.IteratedDeriv.Defs
 import Analysis.Calculus.MeanValue
-import Data.Polynomial.Module.Basic
+import Algebra.Polynomial.Module.Basic
 
 #align_import analysis.calculus.taylor from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"
 

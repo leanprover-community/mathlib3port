@@ -247,18 +247,20 @@ section AddMonoid
 
 variable [AddMonoid β] [ContinuousAdd β] (f g : C₀(α, β))
 
-#print ZeroAtInftyContinuousMap.coe_nsmulRec /-
+/- warning: zero_at_infty_continuous_map.coe_nsmul_rec clashes with zero_at_infty_continuous_map.coe_smul -> ZeroAtInftyContinuousMap.coe_smul
+Case conversion may be inaccurate. Consider using '#align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_smulₓ'. -/
+#print ZeroAtInftyContinuousMap.coe_smul /-
 @[simp]
-theorem coe_nsmulRec : ∀ n, ⇑(nsmulRec n f) = n • f
+theorem coe_smul : ∀ n, ⇑(nsmulRec n f) = n • f
   | 0 => by rw [nsmulRec, zero_smul, coe_zero]
   | n + 1 => by rw [nsmulRec, succ_nsmul', coe_add, coe_nsmul_rec]
-#align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_nsmulRec
+#align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_smul
 -/
 
-#print ZeroAtInftyContinuousMap.instNatSMul /-
-instance instNatSMul : SMul ℕ C₀(α, β) :=
+#print ZeroAtInftyContinuousMap.instSMul /-
+instance instSMul : SMul ℕ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa [coe_nsmul_rec] using zero_at_infty (nsmulRec n f)⟩⟩
-#align zero_at_infty_continuous_map.has_nat_scalar ZeroAtInftyContinuousMap.instNatSMul
+#align zero_at_infty_continuous_map.has_nat_scalar ZeroAtInftyContinuousMap.instSMul
 -/
 
 instance : AddMonoid C₀(α, β) :=
@@ -305,18 +307,22 @@ theorem sub_apply : (f - g) x = f x - g x :=
 #align zero_at_infty_continuous_map.sub_apply ZeroAtInftyContinuousMap.sub_apply
 -/
 
-#print ZeroAtInftyContinuousMap.coe_zsmulRec /-
+/- warning: zero_at_infty_continuous_map.coe_zsmul_rec clashes with zero_at_infty_continuous_map.coe_smul -> ZeroAtInftyContinuousMap.coe_smul
+Case conversion may be inaccurate. Consider using '#align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_smulₓ'. -/
+#print ZeroAtInftyContinuousMap.coe_smul /-
 @[simp]
-theorem coe_zsmulRec : ∀ z, ⇑(zsmulRec z f) = z • f
+theorem coe_smul : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, natCast_zsmul]
   | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
-#align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmulRec
+#align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_smul
 -/
 
-#print ZeroAtInftyContinuousMap.instIntSMul /-
-instance instIntSMul : SMul ℤ C₀(α, β) :=
+/- warning: zero_at_infty_continuous_map.has_int_scalar clashes with zero_at_infty_continuous_map.has_nat_scalar -> ZeroAtInftyContinuousMap.instSMul
+Case conversion may be inaccurate. Consider using '#align zero_at_infty_continuous_map.has_int_scalar ZeroAtInftyContinuousMap.instSMulₓ'. -/
+#print ZeroAtInftyContinuousMap.instSMul /-
+instance instSMul : SMul ℤ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa using zero_at_infty (zsmulRec n f)⟩⟩
-#align zero_at_infty_continuous_map.has_int_scalar ZeroAtInftyContinuousMap.instIntSMul
+#align zero_at_infty_continuous_map.has_int_scalar ZeroAtInftyContinuousMap.instSMul
 -/
 
 instance : AddGroup C₀(α, β) :=

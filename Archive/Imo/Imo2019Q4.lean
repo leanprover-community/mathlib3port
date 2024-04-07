@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import Tactic.IntervalCases
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Data.Nat.Multiplicity
 
 #align_import imo.imo2019_q4 from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"

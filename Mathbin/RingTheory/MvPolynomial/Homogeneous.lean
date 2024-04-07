@@ -5,7 +5,7 @@ Authors: Johan Commelin, Eric Wieser
 -/
 import Algebra.DirectSum.Internal
 import Algebra.GradedMonoid
-import Data.MvPolynomial.Degrees
+import Algebra.MvPolynomial.Degrees
 
 #align_import ring_theory.mv_polynomial.homogeneous from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"
 

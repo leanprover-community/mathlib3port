@@ -3,8 +3,8 @@ Copyright (c) 2020 Hanting Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang, Johan Commelin
 -/
-import Data.MvPolynomial.Rename
-import Data.MvPolynomial.CommRing
+import Algebra.MvPolynomial.Rename
+import Algebra.MvPolynomial.CommRing
 import Algebra.Algebra.Subalgebra.Basic
 
 #align_import ring_theory.mv_polynomial.symmetric from "leanprover-community/mathlib"@"2f5b500a507264de86d666a5f87ddb976e2d8de4"

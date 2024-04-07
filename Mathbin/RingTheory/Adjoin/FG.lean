@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import RingTheory.Polynomial.Basic
 import RingTheory.PrincipalIdealDomain
-import Data.MvPolynomial.Basic
+import Algebra.MvPolynomial.Basic
 
 #align_import ring_theory.adjoin.fg from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
 

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Algebra.Squarefree.Basic
-import Data.Polynomial.Expand
-import Data.Polynomial.Splits
+import Algebra.Polynomial.Expand
+import Algebra.Polynomial.Splits
 import FieldTheory.Minpoly.Field
 import RingTheory.PowerBasis
 

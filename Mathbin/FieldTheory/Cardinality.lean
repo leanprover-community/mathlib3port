@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
 import Algebra.Field.ULift
-import Data.MvPolynomial.Cardinal
+import Algebra.MvPolynomial.Cardinal
 import Data.Nat.Factorization.PrimePow
 import Data.Rat.Denumerable
 import FieldTheory.Finite.GaloisField

@@ -3,8 +3,8 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Data.MvPolynomial.Counit
-import Data.MvPolynomial.Invertible
+import Algebra.MvPolynomial.Counit
+import Algebra.MvPolynomial.Invertible
 import RingTheory.WittVector.Defs
 
 #align_import ring_theory.witt_vector.basic from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"

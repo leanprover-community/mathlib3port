@@ -5,8 +5,8 @@ Authors: Chris Hughes
 -/
 import RingTheory.AlgebraicIndependent
 import FieldTheory.IsAlgClosed.Basic
-import Data.Polynomial.Cardinal
-import Data.MvPolynomial.Cardinal
+import Algebra.Polynomial.Cardinal
+import Algebra.MvPolynomial.Cardinal
 import Data.ZMod.Algebra
 
 #align_import field_theory.is_alg_closed.classification from "leanprover-community/mathlib"@"0723536a0522d24fc2f159a096fb3304bef77472"

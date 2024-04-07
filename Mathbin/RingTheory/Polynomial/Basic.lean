@@ -5,8 +5,8 @@ Authors: Kenny Lau
 -/
 import Algebra.CharP.Basic
 import Algebra.GeomSum
-import Data.MvPolynomial.CommRing
-import Data.MvPolynomial.Equiv
+import Algebra.MvPolynomial.CommRing
+import Algebra.MvPolynomial.Equiv
 import RingTheory.Polynomial.Content
 import RingTheory.UniqueFactorizationDomain
 

@@ -5,7 +5,7 @@ Authors: Kyle Miller, Yury Kudryashov
 -/
 import Data.Nat.ModEq
 import Data.Set.Finite
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Algebra.Module.Basic
 import Algebra.Module.BigOperators
 

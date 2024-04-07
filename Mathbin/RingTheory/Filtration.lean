@@ -7,7 +7,7 @@ import RingTheory.Ideal.LocalRing
 import RingTheory.Noetherian
 import RingTheory.ReesAlgebra
 import RingTheory.Finiteness
-import Data.Polynomial.Module.Basic
+import Algebra.Polynomial.Module.Basic
 import Order.Hom.Lattice
 
 #align_import ring_theory.filtration from "leanprover-community/mathlib"@"2ebc1d6c2fed9f54c95bbc3998eaa5570527129a"

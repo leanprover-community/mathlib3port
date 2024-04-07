@@ -6,7 +6,7 @@ Authors: Johan Commelin
 import LinearAlgebra.FiniteDimensional
 import Algebra.Module.Submodule.Ker
 import RingTheory.MvPolynomial.Basic
-import Data.MvPolynomial.Expand
+import Algebra.MvPolynomial.Expand
 import FieldTheory.Finite.Basic
 
 #align_import field_theory.finite.polynomial from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"

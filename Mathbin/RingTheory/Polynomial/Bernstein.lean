@@ -3,12 +3,12 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Data.Polynomial.Derivative
+import Algebra.Polynomial.Derivative
 import Data.Nat.Choose.Sum
 import RingTheory.Polynomial.Pochhammer
-import Data.Polynomial.AlgebraMap
+import Algebra.Polynomial.AlgebraMap
 import LinearAlgebra.LinearIndependent
-import Data.MvPolynomial.PDeriv
+import Algebra.MvPolynomial.PDeriv
 
 #align_import ring_theory.polynomial.bernstein from "leanprover-community/mathlib"@"36938f775671ff28bea1c0310f1608e4afbb22e0"
 

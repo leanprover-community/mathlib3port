@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import LinearAlgebra.Matrix.Determinant
-import Data.MvPolynomial.Basic
-import Data.MvPolynomial.CommRing
+import Algebra.MvPolynomial.Basic
+import Algebra.MvPolynomial.CommRing
 
 #align_import linear_algebra.matrix.mv_polynomial from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

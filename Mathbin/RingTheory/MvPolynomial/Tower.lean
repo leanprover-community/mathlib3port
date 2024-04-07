@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuyang Zhao
 -/
 import Algebra.Algebra.Tower
-import Data.MvPolynomial.Basic
+import Algebra.MvPolynomial.Basic
 
 #align_import ring_theory.mv_polynomial.tower from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

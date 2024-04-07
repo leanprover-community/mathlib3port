@@ -5,8 +5,8 @@ Authors: Sébastien Gouëzel, Eric Wieser
 -/
 import Analysis.Calculus.Deriv.Pow
 import Analysis.Calculus.Deriv.Add
-import Data.Polynomial.AlgebraMap
-import Data.Polynomial.Derivative
+import Algebra.Polynomial.AlgebraMap
+import Algebra.Polynomial.Derivative
 
 #align_import analysis.calculus.deriv.polynomial from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

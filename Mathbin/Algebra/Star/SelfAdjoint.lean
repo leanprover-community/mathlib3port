@@ -483,25 +483,25 @@ theorem val_ratCast (x : ℚ) : ↑(x : selfAdjoint R) = (x : R) :=
 #align self_adjoint.coe_rat_cast selfAdjoint.val_ratCast
 -/
 
-#print selfAdjoint.instQSMul /-
-instance instQSMul : SMul ℚ (selfAdjoint R) :=
+#print selfAdjoint.instSMulRat /-
+instance instSMulRat : SMul ℚ (selfAdjoint R) :=
   ⟨fun a x =>
     ⟨a • x, by rw [Rat.smul_def] <;> exact IsSelfAdjoint.mul (isSelfAdjoint_ratCast a) x.prop⟩⟩
-#align self_adjoint.has_qsmul selfAdjoint.instQSMul
+#align self_adjoint.has_qsmul selfAdjoint.instSMulRat
 -/
 
-#print selfAdjoint.val_rat_smul /-
+#print selfAdjoint.val_qsmul /-
 @[simp, norm_cast]
-theorem val_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R) :=
+theorem val_qsmul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R) :=
   rfl
-#align self_adjoint.coe_rat_smul selfAdjoint.val_rat_smul
+#align self_adjoint.coe_rat_smul selfAdjoint.val_qsmul
 -/
 
 instance : Field (selfAdjoint R) :=
   Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).val_zero val_one
     (selfAdjoint R).val_add val_mul (selfAdjoint R).val_neg (selfAdjoint R).val_neg_eq_neg_val
     val_inv val_div (selfAdjoint R).val_nsmul_eq_nsmul_val (selfAdjoint R).val_zsmul_eq_zsmul_val
-    val_rat_smul val_pow val_zpow (fun _ => rfl) (fun _ => rfl) val_ratCast
+    val_qsmul val_pow val_zpow (fun _ => rfl) (fun _ => rfl) val_ratCast
 
 end Field
 

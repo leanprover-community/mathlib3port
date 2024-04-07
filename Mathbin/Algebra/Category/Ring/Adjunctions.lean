@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl
 -/
 import Algebra.Category.Ring.Basic
-import Data.MvPolynomial.CommRing
+import Algebra.MvPolynomial.CommRing
 
 #align_import algebra.category.Ring.adjunctions from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
 import Analysis.SpecificLimits.Basic
-import Data.Polynomial.Identities
+import Algebra.Polynomial.Identities
 import NumberTheory.Padics.PadicIntegers
 import Topology.Algebra.Polynomial
 import Topology.MetricSpace.CauSeqFilter

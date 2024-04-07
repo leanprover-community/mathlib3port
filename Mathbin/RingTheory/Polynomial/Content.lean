@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Algebra.GCDMonoid.Finset
-import Data.Polynomial.FieldDivision
-import Data.Polynomial.EraseLead
-import Data.Polynomial.CancelLeads
+import Algebra.Polynomial.FieldDivision
+import Algebra.Polynomial.EraseLead
+import Algebra.Polynomial.CancelLeads
 
 #align_import ring_theory.polynomial.content from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 

@@ -299,11 +299,11 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCo
 #align pi.normed_space Pi.normedSpace
 -/
 
-#print MulOpposite.normedSpace /-
-instance MulOpposite.normedSpace : NormedSpace α Eᵐᵒᵖ :=
+#print MulOpposite.instNormedSpace /-
+instance MulOpposite.instNormedSpace : NormedSpace α Eᵐᵒᵖ :=
   { MulOpposite.normedAddCommGroup, MulOpposite.module _ with
     norm_smul_le := fun s x => (norm_smul_le s x.unop : _) }
-#align mul_opposite.normed_space MulOpposite.normedSpace
+#align mul_opposite.normed_space MulOpposite.instNormedSpace
 -/
 
 #print Submodule.normedSpace /-
@@ -693,11 +693,11 @@ instance Pi.normedAlgebra {E : ι → Type _} [Fintype ι] [∀ i, SeminormedRin
 #align pi.normed_algebra Pi.normedAlgebra
 -/
 
-#print MulOpposite.normedAlgebra /-
-instance MulOpposite.normedAlgebra {E : Type _} [SeminormedRing E] [NormedAlgebra 𝕜 E] :
+#print MulOpposite.instNormedAlgebra /-
+instance MulOpposite.instNormedAlgebra {E : Type _} [SeminormedRing E] [NormedAlgebra 𝕜 E] :
     NormedAlgebra 𝕜 Eᵐᵒᵖ :=
-  { MulOpposite.normedSpace with }
-#align mul_opposite.normed_algebra MulOpposite.normedAlgebra
+  { MulOpposite.instNormedSpace with }
+#align mul_opposite.normed_algebra MulOpposite.instNormedAlgebra
 -/
 
 end NormedAlgebra

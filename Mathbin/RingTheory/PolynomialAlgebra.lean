@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import RingTheory.MatrixAlgebra
-import Data.Polynomial.AlgebraMap
+import Algebra.Polynomial.AlgebraMap
 import Data.Matrix.Basis
 import Data.Matrix.DMatrix
 

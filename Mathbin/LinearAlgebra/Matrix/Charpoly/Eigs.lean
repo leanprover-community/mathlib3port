@@ -3,7 +3,7 @@ Copyright (c) 2023 Mohanad Ahmed. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mohanad Ahmed
 -/
-import Data.Polynomial.Basic
+import Algebra.Polynomial.Basic
 import FieldTheory.IsAlgClosed.Basic
 
 #align_import linear_algebra.matrix.charpoly.eigs from "leanprover-community/mathlib"@"660b3a2db3522fa0db036e569dc995a615c4c848"

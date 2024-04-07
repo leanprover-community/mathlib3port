@@ -352,22 +352,22 @@ section NoncomputableDefs
 
 variable {R : Type _} [Nontrivial R]
 
-#print divisionRingOfIsUnitOrEqZero /-
+#print DivisionRing.ofIsUnitOrEqZero /-
 /-- Constructs a `division_ring` structure on a `ring` consisting only of units and 0. -/
-noncomputable def divisionRingOfIsUnitOrEqZero [hR : Ring R] (h : ∀ a : R, IsUnit a ∨ a = 0) :
+noncomputable def DivisionRing.ofIsUnitOrEqZero [hR : Ring R] (h : ∀ a : R, IsUnit a ∨ a = 0) :
     DivisionRing R :=
   { groupWithZeroOfIsUnitOrEqZero h, hR with }
-#align division_ring_of_is_unit_or_eq_zero divisionRingOfIsUnitOrEqZero
+#align division_ring_of_is_unit_or_eq_zero DivisionRing.ofIsUnitOrEqZero
 -/
 
-#print fieldOfIsUnitOrEqZero /-
+#print Field.ofIsUnitOrEqZero /-
 /-- Constructs a `field` structure on a `comm_ring` consisting only of units and 0.
 See note [reducible non-instances]. -/
 @[reducible]
-noncomputable def fieldOfIsUnitOrEqZero [hR : CommRing R] (h : ∀ a : R, IsUnit a ∨ a = 0) :
+noncomputable def Field.ofIsUnitOrEqZero [hR : CommRing R] (h : ∀ a : R, IsUnit a ∨ a = 0) :
     Field R :=
   { groupWithZeroOfIsUnitOrEqZero h, hR with }
-#align field_of_is_unit_or_eq_zero fieldOfIsUnitOrEqZero
+#align field_of_is_unit_or_eq_zero Field.ofIsUnitOrEqZero
 -/
 
 end NoncomputableDefs
@@ -477,18 +477,18 @@ instance [h : Semifield α] : Semifield αᵒᵈ :=
 instance [h : Field α] : Field αᵒᵈ :=
   h
 
-#print toDual_rat_cast /-
+#print toDual_ratCast /-
 @[simp]
-theorem toDual_rat_cast [HasRatCast α] (n : ℚ) : toDual (n : α) = n :=
+theorem toDual_ratCast [HasRatCast α] (n : ℚ) : toDual (n : α) = n :=
   rfl
-#align to_dual_rat_cast toDual_rat_cast
+#align to_dual_rat_cast toDual_ratCast
 -/
 
-#print ofDual_rat_cast /-
+#print ofDual_ratCast /-
 @[simp]
-theorem ofDual_rat_cast [HasRatCast α] (n : ℚ) : (ofDual n : α) = n :=
+theorem ofDual_ratCast [HasRatCast α] (n : ℚ) : (ofDual n : α) = n :=
   rfl
-#align of_dual_rat_cast ofDual_rat_cast
+#align of_dual_rat_cast ofDual_ratCast
 -/
 
 /-! ### Lexicographic order -/
@@ -509,17 +509,17 @@ instance [h : Semifield α] : Semifield (Lex α) :=
 instance [h : Field α] : Field (Lex α) :=
   h
 
-#print toLex_rat_cast /-
+#print toLex_ratCast /-
 @[simp]
-theorem toLex_rat_cast [HasRatCast α] (n : ℚ) : toLex (n : α) = n :=
+theorem toLex_ratCast [HasRatCast α] (n : ℚ) : toLex (n : α) = n :=
   rfl
-#align to_lex_rat_cast toLex_rat_cast
+#align to_lex_rat_cast toLex_ratCast
 -/
 
-#print ofLex_rat_cast /-
+#print ofLex_ratCast /-
 @[simp]
-theorem ofLex_rat_cast [HasRatCast α] (n : ℚ) : (ofLex n : α) = n :=
+theorem ofLex_ratCast [HasRatCast α] (n : ℚ) : (ofLex n : α) = n :=
   rfl
-#align of_lex_rat_cast ofLex_rat_cast
+#align of_lex_rat_cast ofLex_ratCast
 -/
 

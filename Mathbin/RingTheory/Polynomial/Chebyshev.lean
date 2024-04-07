@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Julian Kuelshammer, Heather Macbeth
 -/
-import Data.Polynomial.Derivative
+import Algebra.Polynomial.Derivative
 import Tactic.LinearCombination
 
 #align_import ring_theory.polynomial.chebyshev from "leanprover-community/mathlib"@"1dac236edca9b4b6f5f00b1ad831e35f89472837"

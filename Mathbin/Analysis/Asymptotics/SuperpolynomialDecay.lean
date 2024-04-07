@@ -5,7 +5,7 @@ Authors: Devon Tuma
 -/
 import Analysis.Asymptotics.Asymptotics
 import Analysis.Normed.Order.Basic
-import Data.Polynomial.Eval
+import Algebra.Polynomial.Eval
 import Topology.Algebra.Order.LiminfLimsup
 
 #align_import analysis.asymptotics.superpolynomial_decay from "leanprover-community/mathlib"@"4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b"

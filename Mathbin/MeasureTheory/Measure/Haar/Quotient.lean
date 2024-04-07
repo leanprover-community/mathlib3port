@@ -61,13 +61,13 @@ variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opEquiv 𝓕 μ)
 
 variable [Countable Γ] [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)]
 
-#print MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map /-
+#print MeasureTheory.QuotientMeasureEqMeasurePreimage.smulInvariantMeasure_quotient /-
 /-- The pushforward to the coset space `G ⧸ Γ` of the restriction of a both left- and right-
   invariant measure on `G` to a fundamental domain `𝓕` is a `G`-invariant measure on `G ⧸ Γ`. -/
 @[to_additive
       "The pushforward to the coset space `G ⧸ Γ` of the restriction of a both left- and\n  right-invariant measure on an additive topological group `G` to a fundamental domain `𝓕` is a\n  `G`-invariant measure on `G ⧸ Γ`."]
-theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map [μ.IsMulLeftInvariant]
-    [μ.IsMulRightInvariant] :
+theorem MeasureTheory.QuotientMeasureEqMeasurePreimage.smulInvariantMeasure_quotient
+    [μ.IsMulLeftInvariant] [μ.IsMulRightInvariant] :
     SMulInvariantMeasure G (G ⧸ Γ) (Measure.map QuotientGroup.mk (μ.restrict 𝓕)) :=
   {
     measure_preimage_smul := by
@@ -99,11 +99,10 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map [μ.IsMulLeft
       ext
       have : π (x * MulOpposite.unop γ) = π x := by simpa [QuotientGroup.eq'] using γ_in_Γ
       simp [(· • ·), this] }
-#align measure_theory.is_fundamental_domain.smul_invariant_measure_map MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map
-#align measure_theory.is_add_fundamental_domain.vadd_invariant_measure_map MeasureTheory.IsAddFundamentalDomain.vaddInvariantMeasure_map
+#align measure_theory.is_fundamental_domain.smul_invariant_measure_map MeasureTheory.QuotientMeasureEqMeasurePreimage.smulInvariantMeasure_quotient
+#align measure_theory.is_add_fundamental_domain.vadd_invariant_measure_map MeasureTheory.AddQuotientMeasureEqMeasurePreimage.vaddInvariantMeasure_quotient
 -/
 
-#print MeasureTheory.IsFundamentalDomain.isMulLeftInvariant_map /-
 /-- Assuming `Γ` is a normal subgroup of a topological group `G`, the pushforward to the quotient
   group `G ⧸ Γ` of the restriction of a both left- and right-invariant measure on `G` to a
   fundamental domain `𝓕` is a left-invariant measure on `G ⧸ Γ`. -/
@@ -125,10 +124,8 @@ theorem MeasureTheory.IsFundamentalDomain.isMulLeftInvariant_map [Subgroup.Norma
       · exact measurable_const_mul _
       · exact hA }
 #align measure_theory.is_fundamental_domain.is_mul_left_invariant_map MeasureTheory.IsFundamentalDomain.isMulLeftInvariant_map
-#align measure_theory.is_add_fundamental_domain.is_add_left_invariant_map MeasureTheory.IsAddFundamentalDomain.isAddLeftInvariant_map
--/
+#align measure_theory.is_add_fundamental_domain.is_add_left_invariant_map MeasureTheory.IsAddFundamentalDomain.is_add_left_invariant_map
 
-#print MeasureTheory.IsFundamentalDomain.map_restrict_quotient /-
 /-- Given a normal subgroup `Γ` of a topological group `G` with Haar measure `μ`, which is also
   right-invariant, and a finite volume fundamental domain `𝓕`, the pushforward to the quotient
   group `G ⧸ Γ` of the restriction of `μ` to `𝓕` is a multiple of Haar measure on `G ⧸ Γ`. -/
@@ -154,9 +151,7 @@ theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [T2Space (G ⧸ 
   exact K.is_compact.measurable_set
 #align measure_theory.is_fundamental_domain.map_restrict_quotient MeasureTheory.IsFundamentalDomain.map_restrict_quotient
 #align measure_theory.is_add_fundamental_domain.map_restrict_quotient MeasureTheory.IsAddFundamentalDomain.map_restrict_quotient
--/
 
-#print MeasurePreservingQuotientGroup.mk' /-
 /-- Given a normal subgroup `Γ` of a topological group `G` with Haar measure `μ`, which is also
   right-invariant, and a finite volume fundamental domain `𝓕`, the quotient map to `G ⧸ Γ` is
   measure-preserving between appropriate multiples of Haar measure on `G` and `G ⧸ Γ`. -/
@@ -172,7 +167,6 @@ theorem MeasurePreservingQuotientGroup.mk' [T2Space (G ⧸ Γ)] [SecondCountable
     map_eq := by rw [h𝓕.map_restrict_quotient K h𝓕_finite, h] <;> rfl }
 #align measure_preserving_quotient_group.mk' MeasurePreservingQuotientGroup.mk'
 #align measure_preserving_quotient_add_group.mk' MeasurePreservingQuotientAddGroup.mk'
--/
 
 section
 

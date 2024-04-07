@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yuyang Zhao
 -/
 import Algebra.Algebra.Tower
-import Data.Polynomial.AlgebraMap
+import Algebra.Polynomial.AlgebraMap
 
 #align_import ring_theory.polynomial.tower from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Kexing Ying and Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Kevin Buzzard, Yury Kudryashov
 -/
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Algebra.Function.Indicator
 
 #align_import algebra.big_operators.finprod from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"

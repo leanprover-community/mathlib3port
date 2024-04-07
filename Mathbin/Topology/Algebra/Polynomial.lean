@@ -3,9 +3,9 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Data.Polynomial.AlgebraMap
-import Data.Polynomial.Inductions
-import Data.Polynomial.Splits
+import Algebra.Polynomial.AlgebraMap
+import Algebra.Polynomial.Inductions
+import Algebra.Polynomial.Splits
 import RingTheory.Polynomial.Vieta
 import Analysis.Normed.Field.Basic
 

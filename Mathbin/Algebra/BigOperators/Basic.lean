@@ -172,7 +172,7 @@ protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β →* γ) (f :
     g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
 #align monoid_hom.map_prod map_prodₓ
-#align add_monoid_hom.map_sum map_sumₓ
+#align linear_map.map_sum map_sumₓ
 
 /- warning: mul_equiv.map_prod clashes with monoid_hom.map_prod -> map_prodₓ
 Case conversion may be inaccurate. Consider using '#align mul_equiv.map_prod map_prodₓₓ'. -/
@@ -183,7 +183,7 @@ protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β ≃* γ) (f :
     g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
 #align mul_equiv.map_prod map_prodₓ
-#align add_monoid_hom.map_sum map_sumₓ
+#align linear_map.map_sum map_sumₓ
 -/
 
 #print RingHom.map_list_prod /-

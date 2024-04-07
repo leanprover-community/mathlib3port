@@ -217,7 +217,6 @@ theorem nonZeroDivisors_le_comap_nonZeroDivisors_of_injective [NoZeroDivisors M'
 #align non_zero_divisors_le_comap_non_zero_divisors_of_injective nonZeroDivisors_le_comap_nonZeroDivisors_of_injective
 -/
 
-#print prod_zero_iff_exists_zero /-
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
     s.Prod = 0 ↔ ∃ (r : M₁) (hr : r ∈ s), r = 0 :=
   by
@@ -236,7 +235,6 @@ theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : M
       rintro b ⟨hb₁, hb₂⟩
       exact ⟨Multiset.mem_cons_of_mem hb₁, hb₂⟩
 #align prod_zero_iff_exists_zero prod_zero_iff_exists_zero
--/
 
 end nonZeroDivisors
 

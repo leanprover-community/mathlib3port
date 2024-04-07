@@ -5,7 +5,7 @@ Authors: Oliver Nash
 -/
 import Data.Fintype.Prod
 import Data.Int.Parity
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Tactic.Ring
 import Tactic.NoncommRing
 

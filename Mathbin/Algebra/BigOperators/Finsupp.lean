@@ -6,7 +6,7 @@ Authors: Kenny Lau
 import Data.Finsupp.Indicator
 import Algebra.BigOperators.Pi
 import Algebra.BigOperators.Ring
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import GroupTheory.Submonoid.Membership
 
 #align_import algebra.big_operators.finsupp from "leanprover-community/mathlib"@"842328d9df7e96fd90fc424e115679c15fb23a71"

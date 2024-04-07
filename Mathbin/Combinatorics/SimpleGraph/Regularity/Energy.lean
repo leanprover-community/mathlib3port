@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Algebra.Module.Basic
 import Combinatorics.SimpleGraph.Density
 import Data.Rat.BigOperators

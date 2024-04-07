@@ -3,7 +3,7 @@ Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Data.Nat.Interval
 import Data.Nat.Factors
 

@@ -6,8 +6,8 @@ Authors: Riccardo Brasca
 import Algebra.NeZero
 import Algebra.Polynomial.BigOperators
 import RingTheory.RootsOfUnity.Complex
-import Data.Polynomial.Lifts
-import Data.Polynomial.Splits
+import Algebra.Polynomial.Lifts
+import Algebra.Polynomial.Splits
 import Data.ZMod.Algebra
 import FieldTheory.RatFunc
 import FieldTheory.Separable

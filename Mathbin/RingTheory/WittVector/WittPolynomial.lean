@@ -5,9 +5,9 @@ Authors: Johan Commelin, Robert Y. Lewis
 -/
 import Algebra.CharP.Invertible
 import Data.Fintype.BigOperators
-import Data.MvPolynomial.Degrees
-import Data.MvPolynomial.CommRing
-import Data.MvPolynomial.Expand
+import Algebra.MvPolynomial.Degrees
+import Algebra.MvPolynomial.CommRing
+import Algebra.MvPolynomial.Expand
 import Data.ZMod.Basic
 
 #align_import ring_theory.witt_vector.witt_polynomial from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"

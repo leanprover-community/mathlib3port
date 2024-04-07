@@ -5,8 +5,8 @@ Authors: Pim Spelier, Daan van Gent
 -/
 import Computability.Encoding
 import Computability.TuringMachine
-import Data.Polynomial.Basic
-import Data.Polynomial.Eval
+import Algebra.Polynomial.Basic
+import Algebra.Polynomial.Eval
 
 #align_import computability.tm_computable from "leanprover-community/mathlib"@"8eb9c42d4d34c77f6ee84ea766ae4070233a973c"
 

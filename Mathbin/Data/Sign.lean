@@ -3,7 +3,7 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Data.Fintype.BigOperators
 import Data.Int.Lemmas
 import Tactic.DeriveFintype

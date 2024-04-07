@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 -/
 import Algebra.Algebra.Basic
-import Data.Polynomial.FieldDivision
+import Algebra.Polynomial.FieldDivision
 import FieldTheory.Minpoly.Basic
 import RingTheory.Adjoin.Basic
 import RingTheory.FinitePresentation

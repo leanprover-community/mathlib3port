@@ -3,7 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Data.Polynomial.Degree.Lemmas
+import Algebra.Polynomial.Degree.Lemmas
 
 #align_import tactic.compute_degree from "leanprover-community/mathlib"@"2d915e4ef8f55de94a850f0e5363ba8b25dc4c29"
 

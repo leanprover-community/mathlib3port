@@ -7,7 +7,7 @@ import Data.Nat.Choose.Basic
 import Mathbin.Tactic.Linarith.Default
 import Algebra.BigOperators.Ring
 import Algebra.BigOperators.Intervals
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Algebra.BigOperators.NatAntidiagonal
 
 #align_import data.nat.choose.sum from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"

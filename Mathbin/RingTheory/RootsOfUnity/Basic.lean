@@ -6,7 +6,7 @@ Authors: Johan Commelin
 import Algebra.CharP.Two
 import Algebra.NeZero
 import Algebra.GCDMonoid.IntegrallyClosed
-import Data.Polynomial.RingDivision
+import Algebra.Polynomial.RingDivision
 import FieldTheory.Finite.Basic
 import FieldTheory.Separable
 import GroupTheory.SpecificGroups.Cyclic

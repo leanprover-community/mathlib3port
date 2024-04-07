@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Data.Polynomial.Lifts
+import Algebra.Polynomial.Lifts
 import GroupTheory.MonoidLocalization
 import RingTheory.Algebraic
 import RingTheory.Ideal.LocalRing

@@ -5,7 +5,7 @@ Authors: Johan Commelin, Robert Y. Lewis
 -/
 import Algebra.Ring.ULift
 import RingTheory.WittVector.Basic
-import Data.MvPolynomial.Funext
+import Algebra.MvPolynomial.Funext
 
 #align_import ring_theory.witt_vector.is_poly from "leanprover-community/mathlib"@"48fb5b5280e7c81672afc9524185ae994553ebf4"
 

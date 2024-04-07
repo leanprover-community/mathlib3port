@@ -3,7 +3,7 @@ Copyright (c) 2023 Luke Mantle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle
 -/
-import Data.Polynomial.Derivative
+import Algebra.Polynomial.Derivative
 import Data.Nat.Parity
 import Data.Nat.Factorial.DoubleFactorial
 

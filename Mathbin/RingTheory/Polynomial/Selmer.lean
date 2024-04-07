@@ -3,7 +3,7 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Data.Polynomial.UnitTrinomial
+import Algebra.Polynomial.UnitTrinomial
 import RingTheory.Polynomial.GaussLemma
 import Tactic.LinearCombination
 

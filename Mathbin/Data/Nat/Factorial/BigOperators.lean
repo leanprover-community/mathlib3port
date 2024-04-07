@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
 -/
 import Data.Nat.Factorial.Basic
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 
 #align_import data.nat.factorial.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

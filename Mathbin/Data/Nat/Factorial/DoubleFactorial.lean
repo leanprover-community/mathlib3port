@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jake Levinson
 -/
 import Data.Nat.Factorial.Basic
-import Algebra.BigOperators.Order
+import Algebra.Order.BigOperators.Group.Finset
 import Tactic.Ring
 
 #align_import data.nat.factorial.double_factorial from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
