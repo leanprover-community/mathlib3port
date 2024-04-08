@@ -326,7 +326,7 @@ noncomputable instance : DivisionRing (Cauchy abv) :=
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩
     inv_zero := inv_zero
     ratCast := fun q => ofRat q
-    ratCast_mk := fun n d hd hnd => by
+    ratCast_def := fun n d hd hnd => by
       rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
 
 #print CauSeq.Completion.ofRat_div /-

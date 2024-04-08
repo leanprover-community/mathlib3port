@@ -357,9 +357,9 @@ protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMul ℕ
     hf.AddMonoidWithOne f zero one add nsmul
       nat_cast with
     intCast := coe
-    intCast_ofNat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_ofNat])
+    intCast_ofNat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_natCast])
     intCast_negSucc := fun n =>
-      hf (by erw [int_cast, neg, nat_cast, Int.cast_neg, Int.cast_ofNat]) }
+      hf (by erw [int_cast, neg, nat_cast, Int.cast_neg, Int.cast_natCast]) }
 #align function.injective.add_group_with_one Function.Injective.addGroupWithOne
 -/
 
@@ -592,8 +592,8 @@ protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂
     hf.AddGroup f zero add neg sub nsmul
       zsmul with
     intCast := coe
-    intCast_ofNat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast]
-    intCast_negSucc := fun n => by rw [← int_cast, Int.cast_neg, Int.cast_ofNat, neg, nat_cast];
+    intCast_ofNat := fun n => by rw [← int_cast, Int.cast_natCast, nat_cast]
+    intCast_negSucc := fun n => by rw [← int_cast, Int.cast_neg, Int.cast_natCast, neg, nat_cast];
       rfl }
 #align function.surjective.add_group_with_one Function.Surjective.addGroupWithOne
 -/

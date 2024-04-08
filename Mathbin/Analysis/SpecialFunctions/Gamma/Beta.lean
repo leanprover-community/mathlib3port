@@ -500,7 +500,7 @@ theorem Gamma_mul_Gamma_one_sub (z : ℂ) : Gamma z * Gamma (1 - z) = π / sin (
       neg_eq_iff_eq_neg] at hk
     rw [hk]
     cases k
-    · rw [Int.cast_ofNat, Complex.Gamma_neg_nat_eq_zero, MulZeroClass.zero_mul]
+    · rw [Int.cast_natCast, Complex.Gamma_neg_nat_eq_zero, MulZeroClass.zero_mul]
     ·
       rw [Int.cast_negSucc, neg_neg, Nat.cast_add, Nat.cast_one, add_comm, sub_add_cancel_left,
         Complex.Gamma_neg_nat_eq_zero, MulZeroClass.mul_zero]

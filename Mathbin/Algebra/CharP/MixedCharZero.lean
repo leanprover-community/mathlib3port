@@ -248,7 +248,7 @@ noncomputable def EqualCharZero.algebraRat (h : ∀ I : Ideal R, I ≠ ⊤ → C
         field_simp
         repeat' rw [EqualCharZero.pnatCast_eq_natCast R]
         trans (↑((a * b).num * a.denom * b.denom) : R)
-        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
+        · simp_rw [Int.cast_mul, Int.cast_natCast, coe_coe, Rat.coe_pnatDen]
           ring
         rw [Rat.mul_num_den' a b]
         simp
@@ -257,7 +257,7 @@ noncomputable def EqualCharZero.algebraRat (h : ∀ I : Ideal R, I ≠ ⊤ → C
         field_simp
         repeat' rw [EqualCharZero.pnatCast_eq_natCast R]
         trans (↑((a + b).num * a.denom * b.denom) : R)
-        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
+        · simp_rw [Int.cast_mul, Int.cast_natCast, coe_coe, Rat.coe_pnatDen]
           ring
         rw [Rat.add_num_den' a b]
         simp }

@@ -27,7 +27,7 @@ namespace Int
 theorem cast_eq_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 0 ↔ n = 0 :=
   ⟨fun h => by
     cases n
-    · rw [Int.cast_ofNat] at h; exact congr_arg coe (Nat.cast_eq_zero.1 h)
+    · rw [Int.cast_natCast] at h; exact congr_arg coe (Nat.cast_eq_zero.1 h)
     · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
       contradiction, fun h => by rw [h, cast_zero]⟩
 #align int.cast_eq_zero Int.cast_eq_zero

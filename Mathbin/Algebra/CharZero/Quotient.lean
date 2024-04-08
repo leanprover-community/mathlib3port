@@ -49,7 +49,7 @@ theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0)
       ∃ k : Fin n, r - (k : ℕ) • (p / n : R) ∈ AddSubgroup.zmultiples p :=
   by
   simp_rw [← natCast_zsmul r, zsmul_mem_zmultiples_iff_exists_sub_div (int.coe_nat_ne_zero.mpr hn),
-    Int.cast_ofNat]
+    Int.cast_natCast]
   rfl
 #align add_subgroup.nsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.nsmul_mem_zmultiples_iff_exists_sub_div
 -/
@@ -76,7 +76,7 @@ theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
     n • ψ = n • θ ↔ ∃ k : Fin n, ψ = θ + (k : ℕ) • (p / n : R) :=
   by
   simp_rw [← natCast_zsmul ψ, ← natCast_zsmul θ,
-    zmultiples_zsmul_eq_zsmul_iff (int.coe_nat_ne_zero.mpr hz), Int.cast_ofNat]
+    zmultiples_zsmul_eq_zsmul_iff (int.coe_nat_ne_zero.mpr hz), Int.cast_natCast]
   rfl
 #align quotient_add_group.zmultiples_nsmul_eq_nsmul_iff QuotientAddGroup.zmultiples_nsmul_eq_nsmul_iff
 -/

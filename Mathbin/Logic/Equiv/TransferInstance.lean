@@ -376,7 +376,7 @@ protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
   { e.AddMonoidWithOne,
     e.AddGroup with
     intCast := fun n => e.symm n
-    intCast_ofNat := fun n => by rw [Int.cast_ofNat] <;> rfl
+    intCast_ofNat := fun n => by rw [Int.cast_natCast] <;> rfl
     intCast_negSucc := fun n =>
       congr_arg e.symm <| (Int.cast_negSucc _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 #align equiv.add_group_with_one Equiv.addGroupWithOne

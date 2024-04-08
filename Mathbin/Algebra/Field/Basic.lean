@@ -407,10 +407,10 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast
       int_cast with
     ratCast := coe
-    ratCast_mk := fun a b h1 h2 =>
+    ratCast_def := fun a b h1 h2 =>
       hf
         (by
-          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.ratCast_mk a b h1 h2)
+          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.ratCast_def a b h1 h2)
     qsmul := (· • ·)
     qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 #align function.injective.division_ring Function.Injective.divisionRing
@@ -450,10 +450,10 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast
       int_cast with
     ratCast := coe
-    ratCast_mk := fun a b h1 h2 =>
+    ratCast_def := fun a b h1 h2 =>
       hf
         (by
-          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.ratCast_mk a b h1 h2)
+          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.ratCast_def a b h1 h2)
     qsmul := (· • ·)
     qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 #align function.injective.field Function.Injective.field

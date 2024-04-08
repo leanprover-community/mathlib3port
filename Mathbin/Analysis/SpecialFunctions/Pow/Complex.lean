@@ -166,7 +166,7 @@ theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by simp
   | -[n+1] => by
     rw [zpow_negSucc] <;>
-      simp only [Int.negSucc_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_ofNat,
+      simp only [Int.negSucc_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_natCast,
         cpow_nat_cast]
 #align complex.cpow_int_cast Complex.cpow_int_cast
 -/

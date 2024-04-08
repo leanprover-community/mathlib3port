@@ -560,7 +560,7 @@ theorem Antiperiodic.nat_mul_eq_of_eq_zero [Ring α] [NegZeroClass β] (h : Anti
 #print Function.Antiperiodic.int_mul_eq_of_eq_zero /-
 theorem Antiperiodic.int_mul_eq_of_eq_zero [Ring α] [SubtractionMonoid β] (h : Antiperiodic f c)
     (hi : f 0 = 0) : ∀ n : ℤ, f (n * c) = 0
-  | (n : ℕ) => by rwa [Int.cast_ofNat, h.nat_mul_eq_of_eq_zero]
+  | (n : ℕ) => by rwa [Int.cast_natCast, h.nat_mul_eq_of_eq_zero]
   | -[n+1] => by rw [Int.cast_negSucc, neg_mul, ← mul_neg, h.neg.nat_mul_eq_of_eq_zero hi]
 #align function.antiperiodic.int_mul_eq_of_eq_zero Function.Antiperiodic.int_mul_eq_of_eq_zero
 -/

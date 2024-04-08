@@ -137,7 +137,6 @@ theorem drop_take_succ_eq_cons_nthLe (L : List α) {i : ℕ} (hi : i < L.length)
 #align list.drop_take_succ_eq_cons_nth_le List.drop_take_succ_eq_cons_nthLe
 -/
 
-#print List.drop_take_succ_join_eq_nthLe /-
 /-- In a join of sublists, taking the slice between the indices `A` and `B - 1` gives back the
 original sublist of index `i` if `A` is the sum of the lenghts of sublists of index `< i`, and
 `B` is the sum of the lengths of sublists of index `≤ i`. -/
@@ -149,16 +148,13 @@ theorem drop_take_succ_join_eq_nthLe (L : List (List α)) {i : ℕ} (hi : i < L.
     simp [map_take, take_take]
   simp [take_sum_join, this, drop_sum_join, drop_take_succ_eq_cons_nth_le _ hi]
 #align list.drop_take_succ_join_eq_nth_le List.drop_take_succ_join_eq_nthLe
--/
 
-#print List.sum_take_map_length_lt1 /-
 /-- Auxiliary lemma to control elements in a join. -/
 theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.length)
     (hj : j < (nthLe L i hi).length) :
     ((L.map length).take i).Sum + j < ((L.map length).take (i + 1)).Sum := by
   simp [hi, sum_take_succ, hj]
 #align list.sum_take_map_length_lt1 List.sum_take_map_length_lt1
--/
 
 /-- Auxiliary lemma to control elements in a join. -/
 theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length)

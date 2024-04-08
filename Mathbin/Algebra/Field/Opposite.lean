@@ -52,7 +52,7 @@ instance [DivisionRing α] : DivisionRing αᵐᵒᵖ :=
   { MulOpposite.divisionSemiring α,
     MulOpposite.ring α with
     ratCast := fun q => op q
-    ratCast_mk := fun a b hb h =>
+    ratCast_def := fun a b hb h =>
       by
       rw [Rat.cast_def, op_div, op_nat_cast, op_int_cast]
       exact Int.commute_cast _ _ }
@@ -72,7 +72,8 @@ instance [DivisionSemiring α] : DivisionSemiring αᵃᵒᵖ :=
 
 instance [DivisionRing α] : DivisionRing αᵃᵒᵖ :=
   { AddOpposite.ring α, AddOpposite.groupWithZero α, AddOpposite.hasRatCast α with
-    ratCast_mk := fun a b hb h => by rw [← div_eq_mul_inv] <;> exact congr_arg op (Rat.cast_def _) }
+    ratCast_def := fun a b hb h => by
+      rw [← div_eq_mul_inv] <;> exact congr_arg op (Rat.cast_def _) }
 
 instance [Semifield α] : Semifield αᵃᵒᵖ :=
   { AddOpposite.divisionSemiring α, AddOpposite.commSemiring α with }

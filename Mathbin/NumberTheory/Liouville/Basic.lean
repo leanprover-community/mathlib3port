@@ -60,14 +60,14 @@ protected theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
       div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _), abs_of_pos bq0, one_mul,
       ←-- ... and revert to integers
       Int.cast_pow,
-      ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ←
+      ← Int.cast_mul, ← Int.cast_natCast, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ←
       Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1
   -- At a0, clear denominators...
   replace a0 : ¬a * q - ↑b * p = 0;
   ·
     rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero,
       ←-- ... and revert to integers
-      Int.cast_ofNat,
+      Int.cast_natCast,
       ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0
   -- Actually, `q` is a natural number
   lift q to ℕ using (zero_lt_one.trans q1).le

@@ -277,7 +277,7 @@ instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
   { ULift.addMonoidWithOne,
     ULift.addGroup with
     intCast := fun n => ⟨n⟩
-    intCast_ofNat := fun n => congr_arg ULift.up (Int.cast_ofNat _)
+    intCast_ofNat := fun n => congr_arg ULift.up (Int.cast_natCast _)
     intCast_negSucc := fun n => congr_arg ULift.up (Int.cast_negSucc _) }
 #align ulift.add_group_with_one ULift.addGroupWithOne
 -/

@@ -119,9 +119,9 @@ theorem norm_sub_modPart_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
     ↑p ∣ r.num - r.num * r.den.gcdA p % p * ↑r.den :=
   by
   rw [← ZMod.int_cast_zmod_eq_zero_iff_dvd]
-  simp only [Int.cast_ofNat, ZMod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
+  simp only [Int.cast_natCast, ZMod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
   have := congr_arg (coe : ℤ → ZMod p) (gcd_eq_gcd_ab r.denom p)
-  simp only [Int.cast_ofNat, add_zero, Int.cast_add, ZMod.nat_cast_self, Int.cast_mul,
+  simp only [Int.cast_natCast, add_zero, Int.cast_add, ZMod.nat_cast_self, Int.cast_mul,
     MulZeroClass.zero_mul] at this
   push_cast
   rw [mul_right_comm, mul_assoc, ← this]
@@ -144,7 +144,7 @@ theorem norm_sub_modPart (h : ‖(r : ℚ_[p])‖ ≤ 1) : ‖(⟨r, h⟩ - modP
   suffices ↑p ∣ r.num - n * r.denom
     by
     convert (Int.castRingHom ℤ_[p]).map_dvd this
-    simp only [sub_mul, Int.cast_ofNat, eq_intCast, Int.cast_mul, sub_left_inj, Int.cast_sub]
+    simp only [sub_mul, Int.cast_natCast, eq_intCast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_nat_cast]
     rw_mod_cast [@Rat.mul_den_eq_num r]; rfl
@@ -191,7 +191,7 @@ theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m �
   specialize this hm hn
   apply_fun ZMod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (ZMod p) at this
   simp only [map_intCast] at this
-  simpa only [Int.cast_ofNat] using this
+  simpa only [Int.cast_natCast] using this
 #align padic_int.zmod_congr_of_sub_mem_max_ideal PadicInt.zmod_congr_of_sub_mem_max_ideal
 -/
 

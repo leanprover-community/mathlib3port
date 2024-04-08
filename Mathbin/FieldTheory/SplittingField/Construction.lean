@@ -352,7 +352,7 @@ instance : Field (SplittingField f) :=
             ext
             simp only [MvPolynomial.algebraMap_eq, Rat.smul_def, MvPolynomial.coeff_smul,
               MvPolynomial.coeff_C_mul])
-    ratCast_mk := fun a b h1 h2 => by
+    ratCast_def := fun a b h1 h2 => by
       apply e.injective
       change e (algebraMap K _ _) = _
       simp only [map_ratCast, map_natCast, map_mul, map_intCast, AlgEquiv.commutes]

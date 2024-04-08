@@ -76,7 +76,7 @@ theorem natCast_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
 
 #print Nat.cast_natAbs /-
 theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑|n| := by
-  rw [← Int.natCast_natAbs, Int.cast_ofNat]
+  rw [← Int.natCast_natAbs, Int.cast_natCast]
 #align nat.cast_nat_abs Nat.cast_natAbs
 -/
 

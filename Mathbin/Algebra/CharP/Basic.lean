@@ -157,10 +157,10 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a 
   rcases lt_trichotomy a 0 with (h | rfl | h)
   · rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
     lift -a to ℕ using neg_nonneg.mpr (le_of_lt h) with b
-    rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
+    rw [Int.cast_natCast, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
   · simp only [Int.cast_zero, eq_self_iff_true, dvd_zero]
   · lift a to ℕ using le_of_lt h with b
-    rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
+    rw [Int.cast_natCast, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
 #align char_p.int_cast_eq_zero_iff CharP.int_cast_eq_zero_iff
 -/
 
@@ -175,7 +175,7 @@ theorem CharP.intCast_eq_intCast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b 
 theorem CharP.natCast_eq_natCast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℕ} :
     (a : R) = b ↔ a ≡ b [MOD p] :=
   by
-  rw [← Int.cast_ofNat, ← Int.cast_ofNat b]
+  rw [← Int.cast_natCast, ← Int.cast_natCast b]
   exact (CharP.intCast_eq_intCast _ _).trans Int.natCast_modEq_iff
 #align char_p.nat_cast_eq_nat_cast CharP.natCast_eq_natCast
 -/

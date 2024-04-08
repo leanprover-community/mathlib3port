@@ -410,8 +410,8 @@ instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
     natCast_zero := by simp
     natCast_succ := by simp
     intCast := fun n => ((n : R) : ℍ[R,c₁,c₂])
-    intCast_ofNat := fun _ => congr_arg coe (Int.cast_ofNat _)
-    intCast_negSucc := fun n => show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_ofNat, coe_neg]
+    intCast_ofNat := fun _ => congr_arg coe (Int.cast_natCast _)
+    intCast_negSucc := fun n => show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_natCast, coe_neg]
     one := 1 }
 
 #print QuaternionAlgebra.nat_cast_re /-
@@ -1843,7 +1843,8 @@ instance : DivisionRing ℍ[R] :=
   { Quaternion.groupWithZero,
     Quaternion.ring with
     ratCast := fun q => ↑(q : R)
-    ratCast_mk := fun n d hd h => by rw [Rat.cast_mk', coe_mul, coe_int_cast, coe_inv, coe_nat_cast]
+    ratCast_def := fun n d hd h => by
+      rw [Rat.cast_mk', coe_mul, coe_int_cast, coe_inv, coe_nat_cast]
     qsmul := (· • ·)
     qsmul_eq_mul' := fun q x => by
       rw [coe_mul_eq_smul]

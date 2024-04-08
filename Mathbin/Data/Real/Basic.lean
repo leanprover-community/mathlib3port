@@ -647,7 +647,7 @@ noncomputable instance : LinearOrderedField ℝ :=
       exact CauSeq.Completion.inv_mul_cancel h
     inv_zero := by simp [← of_cauchy_zero, ← of_cauchy_inv]
     ratCast := coe
-    ratCast_mk := fun n d hd h2 => by
+    ratCast_def := fun n d hd h2 => by
       rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast,
         of_cauchy_int_cast] }
 

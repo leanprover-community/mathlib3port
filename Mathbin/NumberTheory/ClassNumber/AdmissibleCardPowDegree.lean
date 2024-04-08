@@ -149,7 +149,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   suffices (nat_degree (A i₁ % b - A i₀ % b) : ℝ) < b.nat_degree + log ε / log (Fintype.card Fq) by
     rwa [← Real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε,
       card_pow_degree_nonzero _ h', card_pow_degree_nonzero _ hb, Algebra.smul_def, eq_intCast,
-      Int.cast_pow, Int.cast_ofNat, Int.cast_pow, Int.cast_ofNat,
+      Int.cast_pow, Int.cast_natCast, Int.cast_pow, Int.cast_natCast,
       log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ← rpow_nat_cast, ← rpow_nat_cast, log_rpow q_pos',
       log_rpow q_pos', ← lt_div_iff (log_pos one_lt_q'), add_div,
       mul_div_cancel_right₀ _ (log_pos one_lt_q').ne']
@@ -181,7 +181,7 @@ theorem cardPowDegree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowD
   rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy',
     card_pow_degree_nonzero _ hyz']
   have : (1 : ℤ) ≤ Fintype.card Fq := by exact_mod_cast (@Fintype.one_lt_card Fq _ _).le
-  simp only [Int.cast_pow, Int.cast_ofNat, le_max_iff]
+  simp only [Int.cast_pow, Int.cast_natCast, le_max_iff]
   refine' Or.imp (pow_le_pow_right this) (pow_le_pow_right this) _
   rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ← le_max_iff, ←
     degree_eq_nat_degree hxy', ← degree_eq_nat_degree hyz']

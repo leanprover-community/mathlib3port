@@ -657,7 +657,7 @@ instance [AddGroupWithOne R] [AddGroup M] : AddGroupWithOne (tsze R M) :=
   { TrivSqZeroExt.addGroup,
     TrivSqZeroExt.addMonoidWithOne with
     intCast := fun z => inl z
-    intCast_ofNat := fun n => ext (Int.cast_ofNat _) rfl
+    intCast_ofNat := fun n => ext (Int.cast_natCast _) rfl
     intCast_negSucc := fun n => ext (Int.cast_negSucc _) neg_zero.symm }
 
 #print TrivSqZeroExt.fst_int_cast /-

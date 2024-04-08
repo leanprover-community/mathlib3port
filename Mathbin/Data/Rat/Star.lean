@@ -47,9 +47,9 @@ instance : StarOrderedRing ℚ :=
         x
       by exact this ▸ sum_mem fun n hn => AddSubmonoid.subset_closure ⟨_, rfl⟩
     simp only [Function.const_apply, Finset.sum_const, Finset.card_range, nsmul_eq_mul, mk_pnat_eq]
-    rw [← Int.cast_ofNat, Int.ofNat_mul, Int.natCast_natAbs,
-      abs_of_nonneg (num_nonneg_iff_zero_le.mpr hx), Int.cast_mul, Int.cast_ofNat]
-    simp only [Int.cast_mul, Int.cast_ofNat, coe_int_eq_mk, coe_nat_eq_mk]
+    rw [← Int.cast_natCast, Int.ofNat_mul, Int.natCast_natAbs,
+      abs_of_nonneg (num_nonneg_iff_zero_le.mpr hx), Int.cast_mul, Int.cast_natCast]
+    simp only [Int.cast_mul, Int.cast_natCast, coe_int_eq_mk, coe_nat_eq_mk]
     rw [mul_assoc, ← mul_assoc (mk (x.denom : ℤ) 1), mk_mul_mk_cancel one_ne_zero, ←
       one_mul (x.denom : ℤ), div_mk_div_cancel_left (by simpa using x.pos.ne' : (x.denom : ℤ) ≠ 0),
       one_mul, mk_one_one, one_mul, mk_mul_mk_cancel one_ne_zero, Rat.num_den]

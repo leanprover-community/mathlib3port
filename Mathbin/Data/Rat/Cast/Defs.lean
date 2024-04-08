@@ -53,7 +53,7 @@ theorem cast_intCast (n : ℤ) : ((n : ℚ) : α) = n :=
 #print Rat.cast_natCast /-
 @[simp, norm_cast]
 theorem cast_natCast (n : ℕ) : ((n : ℚ) : α) = n := by
-  rw [← Int.cast_ofNat, cast_coe_int, Int.cast_ofNat]
+  rw [← Int.cast_natCast, cast_coe_int, Int.cast_natCast]
 #align rat.cast_coe_nat Rat.cast_natCast
 -/
 
@@ -99,11 +99,11 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     intro d0
     have dd := denom_dvd a b
     cases' show (d : ℤ) ∣ b by rwa [e] at dd with k ke
-    have : (b : α) = (d : α) * (k : α) := by rw [ke, Int.cast_mul, Int.cast_ofNat]
+    have : (b : α) = (d : α) * (k : α) := by rw [ke, Int.cast_mul, Int.cast_natCast]
     rw [d0, MulZeroClass.zero_mul] at this; contradiction
   rw [num_denom'] at e
   have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
-  rw [Int.cast_mul, Int.cast_mul, Int.cast_ofNat] at this
+  rw [Int.cast_mul, Int.cast_mul, Int.cast_natCast] at this
   symm
   rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc,
     this, mul_assoc, mul_inv_cancel b0, mul_one]
@@ -215,7 +215,7 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.den : α) ≠ 0) (nn : (n.num :
     by
     let ⟨k, e⟩ := this
     have := congr_arg (coe : ℤ → α) e <;>
-      rwa [Int.cast_mul, Int.cast_ofNat, h, MulZeroClass.zero_mul] at this
+      rwa [Int.cast_mul, Int.cast_natCast, h, MulZeroClass.zero_mul] at this
   rw [division_def, cast_mul_of_ne_zero md (mt this nn), cast_inv_of_ne_zero nn nd, division_def]
 #align rat.cast_div_of_ne_zero Rat.cast_div_of_ne_zero
 -/
@@ -233,8 +233,8 @@ theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
     rw [num_denom', num_denom'] at h ⊢
     rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero] at h <;> simp [d₁0, d₂0] at h ⊢
     rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assoc, (d₁.cast_commute (d₂ : α)).inv_left₀.Eq, ←
-      mul_assoc, ← division_def, eq_comm, eq_div_iff_mul_eq d₁a, eq_comm, ← Int.cast_ofNat d₁, ←
-      Int.cast_mul, ← Int.cast_ofNat d₂, ← Int.cast_mul, Int.cast_inj, ←
+      mul_assoc, ← division_def, eq_comm, eq_div_iff_mul_eq d₁a, eq_comm, ← Int.cast_natCast d₁, ←
+      Int.cast_mul, ← Int.cast_natCast d₂, ← Int.cast_mul, Int.cast_inj, ←
       mk_eq (Int.natCast_ne_zero.2 d₁0) (Int.natCast_ne_zero.2 d₂0)] at h
 #align rat.cast_inj Rat.cast_inj
 -/
@@ -536,7 +536,7 @@ variable {M₀ : Type _} [MonoidWithZero M₀] [MonoidWithZeroHomClass F ℚ M�
 /-- If `f` and `g` agree on the integers then they are equal `φ`. -/
 theorem ext_rat' (h : ∀ m : ℤ, f m = g m) : f = g :=
   DFunLike.ext f g fun r => by
-    rw [← r.num_div_denom, div_eq_mul_inv, map_mul, map_mul, h, ← Int.cast_ofNat,
+    rw [← r.num_div_denom, div_eq_mul_inv, map_mul, map_mul, h, ← Int.cast_natCast,
       eq_on_inv₀ f g (h _)]
 #align monoid_with_zero_hom.ext_rat' MonoidWithZeroHom.ext_rat'
 -/

@@ -482,13 +482,13 @@ instance span_maximal_of_irreducible [Fact (Irreducible f)] : (span {f}).IsMaxim
 #align adjoin_root.span_maximal_of_irreducible AdjoinRoot.span_maximal_of_irreducible
 -/
 
-#print AdjoinRoot.field /-
-noncomputable instance field [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
+#print AdjoinRoot.instField /-
+noncomputable instance instField [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
   { AdjoinRoot.instCommRing f,
     Ideal.Quotient.groupWithZero
       (span {f} : Ideal K[X]) with
     ratCast := fun a => of f (a : K)
-    ratCast_mk := fun a b h1 h2 =>
+    ratCast_def := fun a b h1 h2 =>
       by
       letI : GroupWithZero (AdjoinRoot f) := Ideal.Quotient.groupWithZero _
       rw [Rat.cast_mk', _root_.map_mul, _root_.map_int_cast, map_inv₀, map_natCast]
@@ -496,7 +496,7 @@ noncomputable instance field [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
     qsmul_eq_mul' := fun a x =>
       AdjoinRoot.induction_on _ x fun p => by
         rw [smul_mk, of, RingHom.comp_apply, ← (mk f).map_hMul, Polynomial.rat_smul_eq_C_mul] }
-#align adjoin_root.field AdjoinRoot.field
+#align adjoin_root.field AdjoinRoot.instField
 -/
 
 #print AdjoinRoot.coe_injective /-

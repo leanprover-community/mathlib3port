@@ -218,7 +218,7 @@ end Casts
 
 #print Rat.inv_def'' /-
 theorem inv_def'' {q : ℚ} : q⁻¹ = (q.den : ℚ) / q.num := by conv_lhs => rw [← @num_denom q];
-  rw [inv_def, mk_eq_div, Int.cast_ofNat]
+  rw [inv_def, mk_eq_div, Int.cast_natCast]
 #align rat.inv_def' Rat.inv_def''
 -/
 
@@ -347,7 +347,7 @@ theorem inv_coe_int_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : �
 #print Rat.inv_coe_nat_den_of_pos /-
 theorem inv_coe_nat_den_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.den = a :=
   by
-  rw [← Int.ofNat_inj, ← Int.cast_ofNat a, inv_coe_int_denom_of_pos]
+  rw [← Int.ofNat_inj, ← Int.cast_natCast a, inv_coe_int_denom_of_pos]
   rwa [← Nat.cast_zero, Nat.cast_lt]
 #align rat.inv_coe_nat_denom_of_pos Rat.inv_coe_nat_den_of_pos
 -/

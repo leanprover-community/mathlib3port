@@ -59,13 +59,13 @@ theorem cast_negSucc (n : ℕ) : (-[n+1] : R) = -(n + 1 : ℕ) :=
 
 @[simp, norm_cast]
 theorem cast_zero : ((0 : ℤ) : R) = 0 :=
-  (cast_ofNat 0).trans Nat.cast_zero
+  (cast_natCast 0).trans Nat.cast_zero
 #align int.cast_zero Int.cast_zeroₓ
 
 @[simp, norm_cast]
-theorem cast_ofNat (n : ℕ) : ((n : ℤ) : R) = n :=
-  cast_ofNat _
-#align int.cast_coe_nat Int.cast_ofNatₓ
+theorem cast_natCast (n : ℕ) : ((n : ℤ) : R) = n :=
+  cast_natCast _
+#align int.cast_coe_nat Int.cast_natCastₓ
 
 @[simp, norm_cast]
 theorem cast_one : ((1 : ℤ) : R) = 1 :=

@@ -325,7 +325,7 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
 theorem int_eq_one_iff (m : ℤ) : padicNorm p m = 1 ↔ ¬(p : ℤ) ∣ m :=
   by
   nth_rw 2 [← pow_one p]
-  simp only [dvd_iff_norm_le, Int.cast_ofNat, Nat.cast_one, zpow_neg, zpow_one, not_le]
+  simp only [dvd_iff_norm_le, Int.cast_natCast, Nat.cast_one, zpow_neg, zpow_one, not_le]
   constructor
   · intro h
     rw [h, inv_lt_one_iff_of_pos] <;> norm_cast
@@ -360,13 +360,13 @@ theorem of_nat (m : ℕ) : padicNorm p m ≤ 1 :=
 #print padicNorm.nat_eq_one_iff /-
 /-- The `p`-adic norm of a natural `m` is one iff `p` doesn't divide `m`. -/
 theorem nat_eq_one_iff (m : ℕ) : padicNorm p m = 1 ↔ ¬p ∣ m := by
-  simp only [← Int.natCast_dvd_natCast, ← int_eq_one_iff, Int.cast_ofNat]
+  simp only [← Int.natCast_dvd_natCast, ← int_eq_one_iff, Int.cast_natCast]
 #align padic_norm.nat_eq_one_iff padicNorm.nat_eq_one_iff
 -/
 
 #print padicNorm.nat_lt_one_iff /-
 theorem nat_lt_one_iff (m : ℕ) : padicNorm p m < 1 ↔ p ∣ m := by
-  simp only [← Int.natCast_dvd_natCast, ← int_lt_one_iff, Int.cast_ofNat]
+  simp only [← Int.natCast_dvd_natCast, ← int_lt_one_iff, Int.cast_natCast]
 #align padic_norm.nat_lt_one_iff padicNorm.nat_lt_one_iff
 -/
 

@@ -296,7 +296,7 @@ private theorem int_prop (n : ℤ) : InnerProp E (n : 𝕜) :=
   by
   intro x y
   rw [← n.sign_mul_nat_abs]
-  simp only [Int.cast_ofNat, map_natCast, map_intCast, Int.cast_mul, map_mul, mul_smul]
+  simp only [Int.cast_natCast, map_natCast, map_intCast, Int.cast_mul, map_mul, mul_smul]
   obtain hn | rfl | hn := lt_trichotomy n 0
   · rw [Int.sign_eq_neg_one_of_neg hn, inner_prop_neg_one ((n.nat_abs : 𝕜) • x), Nat]
     simp only [map_neg, neg_mul, one_mul, mul_eq_mul_left_iff, true_or_iff, Int.natAbs_eq_zero,

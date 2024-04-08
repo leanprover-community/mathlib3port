@@ -570,8 +570,10 @@ theorem map_inv_int_cast_smul [AddCommGroup M] [AddCommGroup M₂] {F : Type _}
     [Module S M₂] (z : ℤ) (x : M) : f ((z⁻¹ : R) • x) = (z⁻¹ : S) • f x :=
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [Int.cast_ofNat, Int.cast_ofNat, map_inv_nat_cast_smul _ R S]
-  · simp_rw [Int.cast_neg, Int.cast_ofNat, inv_neg, neg_smul, map_neg, map_inv_nat_cast_smul _ R S]
+  · rw [Int.cast_natCast, Int.cast_natCast, map_inv_nat_cast_smul _ R S]
+  ·
+    simp_rw [Int.cast_neg, Int.cast_natCast, inv_neg, neg_smul, map_neg,
+      map_inv_nat_cast_smul _ R S]
 #align map_inv_int_cast_smul map_inv_int_cast_smul
 -/
 

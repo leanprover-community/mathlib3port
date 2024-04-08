@@ -471,7 +471,7 @@ instance : AddGroupWithOne (CauSeq β abv) :=
     natCast_zero := congr_arg const Nat.cast_zero
     natCast_succ := fun n => congr_arg const (Nat.cast_succ n)
     intCast := fun n => const n
-    intCast_ofNat := fun n => congr_arg const (Int.cast_ofNat n)
+    intCast_ofNat := fun n => congr_arg const (Int.cast_natCast n)
     intCast_negSucc := fun n => congr_arg const (Int.cast_negSucc n) }
 
 instance : Pow (CauSeq β abv) ℕ :=

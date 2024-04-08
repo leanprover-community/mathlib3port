@@ -168,7 +168,6 @@ end NNReal
 
 namespace Real
 
-#print Real.sqrtAux /-
 /-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
 def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
@@ -177,16 +176,13 @@ def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
     let s := sqrt_aux n
     max 0 <| (s + f (n + 1) / s) / 2
 #align real.sqrt_aux Real.sqrtAux
--/
 
-#print Real.sqrtAux_nonneg /-
 theorem sqrtAux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
     rw [sqrt_aux, Rat.mkRat_eq, Rat.divInt_eq_div] <;> apply div_nonneg <;>
       exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
   | n + 1 => le_max_left _ _
 #align real.sqrt_aux_nonneg Real.sqrtAux_nonneg
--/
 
 #print Real.sqrt /-
 /- TODO(Mario): finish the proof

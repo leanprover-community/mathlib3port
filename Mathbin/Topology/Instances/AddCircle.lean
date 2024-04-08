@@ -464,7 +464,7 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
     addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n :=
   by
   induction m
-  · simp only [Int.ofNat_eq_coe, Int.cast_ofNat, Int.natAbs_ofNat] at h ⊢
+  · simp only [Int.ofNat_eq_coe, Int.cast_natCast, Int.natAbs_ofNat] at h ⊢
     exact add_order_of_div_of_gcd_eq_one hn h
   · simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, addOrderOf_neg]
     exact add_order_of_div_of_gcd_eq_one hn h
@@ -475,7 +475,7 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
 theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den :=
   by
   have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by norm_cast; exact q.pos.ne.symm
-  rw [← @Rat.num_den q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_ofNat, Rat.num_den,
+  rw [← @Rat.num_den q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_natCast, Rat.num_den,
     add_order_of_div_of_gcd_eq_one' q.pos q.cop]
   infer_instance
 #align add_circle.add_order_of_coe_rat AddCircle.addOrderOf_coe_rat
@@ -492,8 +492,8 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   obtain ⟨a, ha⟩ := h0
   have h0 : (_ : 𝕜) ≠ 0 := Nat.cast_ne_zero.2 h.ne'
   rw [nsmul_eq_mul, mul_comm, ← div_eq_iff h0, ← a.div_add_mod' n, add_smul, add_div, zsmul_eq_mul,
-    Int.cast_mul, Int.cast_ofNat, mul_assoc, ← mul_div, mul_comm _ p, mul_div_cancel_right₀ p h0] at
-    ha
+    Int.cast_mul, Int.cast_natCast, mul_assoc, ← mul_div, mul_comm _ p,
+    mul_div_cancel_right₀ p h0] at ha
   have han : _ = a % n := Int.toNat_of_nonneg (Int.emod_nonneg _ <| by exact_mod_cast h.ne')
   have he := _; refine' ⟨(a % n).toNat, _, _, he⟩
   · rw [← Int.ofNat_lt, han]
@@ -501,8 +501,8 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   · have := (gcd_mul_add_order_of_div_eq p _ h).trans ((congr_arg addOrderOf he).trans hk).symm
     rw [he, Nat.mul_left_eq_self_iff] at this; · exact this; · rwa [hk]
   convert congr_arg coe ha using 1
-  rw [coe_add, ← Int.cast_ofNat, han, zsmul_eq_mul, mul_div_right_comm, eq_comm, add_left_eq_self, ←
-    zsmul_eq_mul, coe_zsmul, coe_period, smul_zero]
+  rw [coe_add, ← Int.cast_natCast, han, zsmul_eq_mul, mul_div_right_comm, eq_comm, add_left_eq_self,
+    ← zsmul_eq_mul, coe_zsmul, coe_period, smul_zero]
 #align add_circle.add_order_of_eq_pos_iff AddCircle.addOrderOf_eq_pos_iff
 -/
 
@@ -527,8 +527,8 @@ def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
       (by
         refine' ⟨fun m₁ m₂ h => Subtype.ext _, fun u => _⟩
         · simp_rw [Subtype.ext_iff, Subtype.coe_mk] at h
-          rw [← sub_eq_zero, ← coe_sub, ← sub_mul, ← sub_div, coe_coe, coe_coe, ← Int.cast_ofNat m₁,
-            ← Int.cast_ofNat m₂, ← Int.cast_sub, coe_eq_zero_iff] at h
+          rw [← sub_eq_zero, ← coe_sub, ← sub_mul, ← sub_div, coe_coe, coe_coe, ←
+            Int.cast_natCast m₁, ← Int.cast_natCast m₂, ← Int.cast_sub, coe_eq_zero_iff] at h
           obtain ⟨m, hm⟩ := h
           rw [← mul_div_right_comm, eq_div_iff, mul_comm, ← zsmul_eq_mul, mul_smul_comm, ←
             nsmul_eq_mul, ← natCast_zsmul, smul_smul,

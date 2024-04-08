@@ -85,16 +85,16 @@ instance [Zero (Fin n)] : Inhabited (EuclideanHalfSpace n) :=
 instance : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_rfl⟩⟩
 
-#print range_half_space /-
-theorem range_half_space (n : ℕ) [Zero (Fin n)] :
+#print range_euclideanHalfSpace /-
+theorem range_euclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
     (range fun x : EuclideanHalfSpace n => x.val) = {y | 0 ≤ y 0} := by simp
-#align range_half_space range_half_space
+#align range_half_space range_euclideanHalfSpace
 -/
 
-#print range_quadrant /-
-theorem range_quadrant (n : ℕ) :
+#print range_euclideanQuadrant /-
+theorem range_euclideanQuadrant (n : ℕ) :
     (range fun x : EuclideanQuadrant n => x.val) = {y | ∀ i : Fin n, 0 ≤ y i} := by simp
-#align range_quadrant range_quadrant
+#align range_quadrant range_euclideanQuadrant
 -/
 
 end

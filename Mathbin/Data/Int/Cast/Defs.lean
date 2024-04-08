@@ -85,12 +85,12 @@ instance (priority := 900) castCoe {R} [IntCast R] : CoeTC ℤ R :=
   ⟨Int.cast⟩
 #align int.cast_coe Int.castCoe
 
-/- warning: int.cast_of_nat clashes with int.cast_coe_nat -> Int.cast_ofNatₓ
-Case conversion may be inaccurate. Consider using '#align int.cast_of_nat Int.cast_ofNatₓₓ'. -/
-#print Int.cast_ofNatₓ /-
-theorem cast_ofNat (n : ℕ) : (ofNat n : R) = n :=
+/- warning: int.cast_of_nat clashes with int.cast_coe_nat -> Int.cast_natCastₓ
+Case conversion may be inaccurate. Consider using '#align int.cast_of_nat Int.cast_natCastₓₓ'. -/
+#print Int.cast_natCastₓ /-
+theorem cast_natCast (n : ℕ) : (ofNat n : R) = n :=
   AddGroupWithOne.intCast_ofNat n
-#align int.cast_of_nat Int.cast_ofNatₓ
+#align int.cast_of_nat Int.cast_natCastₓ
 -/
 
 end Int

@@ -138,7 +138,7 @@ theorem hasSum_nat_jacobiTheta {z : ℂ} (hz : 0 < im z) :
   by
   have := (summable_exp_mul_sq hz).HasSum.nat_add_neg
   rw [← @hasSum_nat_add_iff' ℂ _ _ _ _ 1] at this
-  simp_rw [Finset.sum_range_one, Int.cast_neg, Int.cast_ofNat, Nat.cast_zero, neg_zero,
+  simp_rw [Finset.sum_range_one, Int.cast_neg, Int.cast_natCast, Nat.cast_zero, neg_zero,
     Int.cast_zero, sq (0 : ℂ), MulZeroClass.mul_zero, MulZeroClass.zero_mul, neg_sq, ← mul_two,
     Complex.exp_zero, add_sub_assoc, (by norm_num : (1 : ℂ) - 1 * 2 = -1), ← sub_eq_add_neg,
     Nat.cast_add, Nat.cast_one] at this

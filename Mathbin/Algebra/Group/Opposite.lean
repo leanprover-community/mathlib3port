@@ -85,7 +85,7 @@ instance [AddGroupWithOne α] : AddGroupWithOne αᵐᵒᵖ :=
   { MulOpposite.addMonoidWithOne α,
     MulOpposite.addGroup α with
     intCast := fun n => op n
-    intCast_ofNat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_ofNat]
+    intCast_ofNat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_natCast]
     intCast_negSucc := fun n =>
       show op _ = op (-unop (op ((n + 1 : ℕ) : α))) by erw [unop_op, Int.cast_negSucc] <;> rfl }
 
@@ -389,7 +389,7 @@ instance [AddCommGroupWithOne α] : AddCommGroupWithOne αᵃᵒᵖ :=
   { AddOpposite.addCommMonoidWithOne _, AddOpposite.addCommGroup α,
     AddOpposite.hasIntCast
       α with
-    intCast_ofNat := fun n => congr_arg op <| Int.cast_ofNat n
+    intCast_ofNat := fun n => congr_arg op <| Int.cast_natCast n
     intCast_negSucc := fun _ => congr_arg op <| Int.cast_negSucc _ }
 
 variable {α}

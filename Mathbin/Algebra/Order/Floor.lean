@@ -909,14 +909,15 @@ theorem floor_int_add (z : ℤ) (a : α) : ⌊↑z + a⌋ = z + ⌊a⌋ := by
 
 #print Int.floor_add_nat /-
 @[simp]
-theorem floor_add_nat (a : α) (n : ℕ) : ⌊a + n⌋ = ⌊a⌋ + n := by rw [← Int.cast_ofNat, floor_add_int]
+theorem floor_add_nat (a : α) (n : ℕ) : ⌊a + n⌋ = ⌊a⌋ + n := by
+  rw [← Int.cast_natCast, floor_add_int]
 #align int.floor_add_nat Int.floor_add_nat
 -/
 
 #print Int.floor_nat_add /-
 @[simp]
 theorem floor_nat_add (n : ℕ) (a : α) : ⌊↑n + a⌋ = n + ⌊a⌋ := by
-  rw [← Int.cast_ofNat, floor_int_add]
+  rw [← Int.cast_natCast, floor_int_add]
 #align int.floor_nat_add Int.floor_nat_add
 -/
 
@@ -929,7 +930,8 @@ theorem floor_sub_int (a : α) (z : ℤ) : ⌊a - z⌋ = ⌊a⌋ - z :=
 
 #print Int.floor_sub_nat /-
 @[simp]
-theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n := by rw [← Int.cast_ofNat, floor_sub_int]
+theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n := by
+  rw [← Int.cast_natCast, floor_sub_int]
 #align int.floor_sub_nat Int.floor_sub_nat
 -/
 
@@ -1412,7 +1414,7 @@ theorem ceil_add_int (a : α) (z : ℤ) : ⌈a + z⌉ = ⌈a⌉ + z := by
 
 #print Int.ceil_add_nat /-
 @[simp]
-theorem ceil_add_nat (a : α) (n : ℕ) : ⌈a + n⌉ = ⌈a⌉ + n := by rw [← Int.cast_ofNat, ceil_add_int]
+theorem ceil_add_nat (a : α) (n : ℕ) : ⌈a + n⌉ = ⌈a⌉ + n := by rw [← Int.cast_natCast, ceil_add_int]
 #align int.ceil_add_nat Int.ceil_add_nat
 -/
 
@@ -1697,7 +1699,7 @@ theorem round_add_nat (x : α) (y : ℕ) : round (x + y) = round x + y := by
 #print round_sub_nat /-
 @[simp]
 theorem round_sub_nat (x : α) (y : ℕ) : round (x - y) = round x - y := by
-  rw [sub_eq_add_neg, ← Int.cast_ofNat]; norm_cast; rw [round_add_int, sub_eq_add_neg]
+  rw [sub_eq_add_neg, ← Int.cast_natCast]; norm_cast; rw [round_add_int, sub_eq_add_neg]
 #align round_sub_nat round_sub_nat
 -/
 
@@ -1916,8 +1918,8 @@ instance (priority := 100) FloorRing.toFloorSemiring : FloorSemiring α
   floor a := ⌊a⌋.toNat
   ceil a := ⌈a⌉.toNat
   floor_of_neg a ha := Int.toNat_of_nonpos (Int.floor_nonpos ha.le)
-  gc_floor a n ha := by rw [Int.le_toNat (Int.floor_nonneg.2 ha), Int.le_floor, Int.cast_ofNat]
-  gc_ceil a n := by rw [Int.toNat_le, Int.ceil_le, Int.cast_ofNat]
+  gc_floor a n ha := by rw [Int.le_toNat (Int.floor_nonneg.2 ha), Int.le_floor, Int.cast_natCast]
+  gc_ceil a n := by rw [Int.toNat_le, Int.ceil_le, Int.cast_natCast]
 #align floor_ring.to_floor_semiring FloorRing.toFloorSemiring
 -/
 
@@ -1957,7 +1959,7 @@ theorem Int.ofNat_floor_eq_floor (ha : 0 ≤ a) : (⌊a⌋₊ : ℤ) = ⌊a⌋ :
 
 #print natCast_floor_eq_intCast_floor /-
 theorem natCast_floor_eq_intCast_floor (ha : 0 ≤ a) : (⌊a⌋₊ : α) = ⌊a⌋ := by
-  rw [← Int.ofNat_floor_eq_floor ha, Int.cast_ofNat]
+  rw [← Int.ofNat_floor_eq_floor ha, Int.cast_natCast]
 #align nat.cast_floor_eq_cast_int_floor natCast_floor_eq_intCast_floor
 -/
 
@@ -1969,7 +1971,7 @@ theorem Int.ofNat_ceil_eq_ceil (ha : 0 ≤ a) : (⌈a⌉₊ : ℤ) = ⌈a⌉ := 
 
 #print natCast_ceil_eq_intCast_ceil /-
 theorem natCast_ceil_eq_intCast_ceil (ha : 0 ≤ a) : (⌈a⌉₊ : α) = ⌈a⌉ := by
-  rw [← Int.ofNat_ceil_eq_ceil ha, Int.cast_ofNat]
+  rw [← Int.ofNat_ceil_eq_ceil ha, Int.cast_natCast]
 #align nat.cast_ceil_eq_cast_int_ceil natCast_ceil_eq_intCast_ceil
 -/
 

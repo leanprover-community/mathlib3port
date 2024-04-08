@@ -951,7 +951,7 @@ protected theorem add_lt_add_left (a b : ℤ√d) (h : a < b) (c) : c + a < c + 
 
 #print Zsqrtd.nonneg_smul /-
 theorem nonneg_smul {a : ℤ√d} {n : ℕ} (ha : nonneg a) : nonneg (n * a) := by
-  simp (config := { singlePass := true }) only [← Int.cast_ofNat] <;>
+  simp (config := { singlePass := true }) only [← Int.cast_natCast] <;>
     exact
       match a, nonneg_cases ha, ha with
       | _, ⟨x, y, Or.inl rfl⟩, ha => by rw [smul_val] <;> trivial

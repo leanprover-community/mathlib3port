@@ -685,7 +685,7 @@ theorem Int.cast_mul_eq_zsmul_cast [AddCommGroupWithOne α] : ∀ m n, ((m * n :
 #print zsmul_eq_mul /-
 @[simp]
 theorem zsmul_eq_mul [Ring R] (a : R) : ∀ n : ℤ, n • a = n * a
-  | (n : ℕ) => by rw [natCast_zsmul, nsmul_eq_mul, Int.cast_ofNat]
+  | (n : ℕ) => by rw [natCast_zsmul, nsmul_eq_mul, Int.cast_natCast]
   | -[n+1] => by simp [Nat.cast_succ, neg_add_rev, Int.cast_negSucc, add_mul]
 #align zsmul_eq_mul zsmul_eq_mul
 -/

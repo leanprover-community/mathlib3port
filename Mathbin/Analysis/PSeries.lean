@@ -272,7 +272,7 @@ theorem Real.summable_abs_int_rpow {b : ℝ} (hb : 1 < b) : Summable fun n : ℤ
   refine'
     Summable.of_nat_of_neg (_ : Summable fun n : ℕ => |(n : ℝ)| ^ _)
       (_ : Summable fun n : ℕ => |((-n : ℤ) : ℝ)| ^ _)
-  on_goal 2 => simp_rw [Int.cast_neg, Int.cast_ofNat, abs_neg]
+  on_goal 2 => simp_rw [Int.cast_neg, Int.cast_natCast, abs_neg]
   all_goals
     simp_rw [fun n : ℕ => abs_of_nonneg (n.cast_nonneg : 0 ≤ (n : ℝ))]
     rwa [Real.summable_nat_rpow, neg_lt_neg_iff]
