@@ -3,7 +3,7 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Int
 import Data.Nat.SuccPred
 
 #align_import data.int.succ_pred from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"

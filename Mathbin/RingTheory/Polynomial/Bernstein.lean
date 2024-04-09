@@ -389,7 +389,7 @@ theorem sum_smul (n : ℕ) : ∑ ν in Finset.range (n + 1), ν • bernsteinPol
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
       Bool.cond_false, add_zero, mul_one, MulZeroClass.mul_zero, smul_zero, MvPolynomial.aeval_X,
-      MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_coe_nat, map_natCast, map_pow,
+      MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_natCast, map_natCast, map_pow,
       map_mul]
   · rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]
     simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_natCast, map_pow, map_add, map_mul, e,
@@ -437,11 +437,11 @@ theorem sum_mul_smul (n : ℕ) :
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
       Bool.cond_false, add_zero, zero_add, MulZeroClass.mul_zero, smul_zero, mul_one,
       MvPolynomial.aeval_X, MvPolynomial.pderiv_X_self, MvPolynomial.pderiv_X_of_ne,
-      Derivation.leibniz_pow, Derivation.leibniz, Derivation.map_coe_nat, map_natCast, map_pow,
+      Derivation.leibniz_pow, Derivation.leibniz, Derivation.map_natCast, map_natCast, map_pow,
       map_mul, map_add]
   -- On the right hand side, we'll just simplify.
   ·
-    simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat,
+    simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_natCast,
       (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, add_zero, mul_one,
       Derivation.map_smul_of_tower, map_nsmul, map_pow, map_add, e, Bool.cond_true, Bool.cond_false,
       MvPolynomial.aeval_X, add_sub_cancel, one_pow, smul_smul, smul_one_mul]

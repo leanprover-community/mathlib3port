@@ -50,10 +50,10 @@ variable [NormedField 𝕜₁] [NormedField 𝕜₂] [Module 𝕜₁ E] [Module 
 
 variable [Module R F] [ContinuousConstSMul R F] [LocallyConvexSpace R F] [SMulCommClass 𝕜₂ R F]
 
-#print ContinuousLinearMap.strongTopology.locallyConvexSpace /-
-theorem strongTopology.locallyConvexSpace (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty)
+#print UniformConvergenceCLM.locallyConvexSpace /-
+theorem UniformConvergenceCLM.locallyConvexSpace (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
-    @LocallyConvexSpace R (E →SL[σ] F) _ _ _ (strongTopology σ F 𝔖) :=
+    @LocallyConvexSpace R (E →SL[σ] F) _ _ _ (instTopologicalSpace σ F 𝔖) :=
   by
   letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
   haveI : TopologicalAddGroup (E →SL[σ] F) := strong_topology.topological_add_group _ _ _
@@ -64,7 +64,7 @@ theorem strongTopology.locallyConvexSpace (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.
       _
   rintro ⟨S, V⟩ ⟨hS, hVmem, hVconvex⟩ f hf g hg a b ha hb hab x hx
   exact hVconvex (hf x hx) (hg x hx) ha hb hab
-#align continuous_linear_map.strong_topology.locally_convex_space ContinuousLinearMap.strongTopology.locallyConvexSpace
+#align continuous_linear_map.strong_topology.locally_convex_space UniformConvergenceCLM.locallyConvexSpace
 -/
 
 end General
@@ -78,7 +78,7 @@ variable [NormedField 𝕜₁] [NormedField 𝕜₂] [Module 𝕜₁ E] [Module 
 variable [Module R F] [ContinuousConstSMul R F] [LocallyConvexSpace R F] [SMulCommClass 𝕜₂ R F]
 
 instance : LocallyConvexSpace R (E →SL[σ] F) :=
-  strongTopology.locallyConvexSpace R _ ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
+  UniformConvergenceCLM.locallyConvexSpace R _ ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 
 end BoundedSets

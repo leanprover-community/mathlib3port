@@ -45,7 +45,7 @@ open scoped Classical Polynomial
 noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
-    pow_pos (Int.coe_nat_pos.mpr card_pos) n
+    pow_pos (Int.natCast_pos.mpr card_pos) n
   { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.natDegree
     nonneg' := fun p => by dsimp; split_ifs; · rfl; exact pow_nonneg (Int.ofNat_zero_le _) _
     eq_zero' := fun p =>
@@ -97,7 +97,7 @@ theorem cardPowDegree_nonzero (p : Fq[X]) (hp : p ≠ 0) :
 theorem cardPowDegree_isEuclidean : IsEuclidean (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
-    pow_pos (Int.coe_nat_pos.mpr card_pos) n
+    pow_pos (Int.natCast_pos.mpr card_pos) n
   {
     map_lt_map_iff' := fun p q =>
       by

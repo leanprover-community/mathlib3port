@@ -270,10 +270,10 @@ theorem num_den' {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
 #align rat.num_denom' Rat.num_den'
 -/
 
-#print Rat.coe_int_eq_divInt /-
-theorem coe_int_eq_divInt (z : ℤ) : (z : ℚ) = z /. 1 :=
+#print Rat.intCast_eq_divInt /-
+theorem intCast_eq_divInt (z : ℤ) : (z : ℚ) = z /. 1 :=
   num_den'
-#align rat.coe_int_eq_mk Rat.coe_int_eq_divInt
+#align rat.coe_int_eq_mk Rat.intCast_eq_divInt
 -/
 
 #print Rat.numDenCasesOn /-
@@ -806,12 +806,12 @@ theorem divInt_div_divInt_cancel_right {x : ℤ} (hx : x ≠ 0) (n d : ℤ) :
 #align rat.mk_div_mk_cancel_right Rat.divInt_div_divInt_cancel_right
 -/
 
-#print Rat.coe_int_div_eq_divInt /-
-theorem coe_int_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d :=
+#print Rat.intCast_div_eq_divInt /-
+theorem intCast_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d :=
   by
   repeat' rw [coe_int_eq_mk]
   exact mk_div_mk_cancel_left one_ne_zero n d
-#align rat.coe_int_div_eq_mk Rat.coe_int_div_eq_divInt
+#align rat.coe_int_div_eq_mk Rat.intCast_div_eq_divInt
 -/
 
 #print Rat.num_div_den /-
@@ -839,9 +839,9 @@ instance canLift : CanLift ℚ ℤ coe fun q => q.den = 1 :=
 #align rat.can_lift Rat.canLift
 -/
 
-#print Rat.coe_nat_eq_divInt /-
-theorem coe_nat_eq_divInt (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_natCast, coe_int_eq_mk]
-#align rat.coe_nat_eq_mk Rat.coe_nat_eq_divInt
+#print Rat.natCast_eq_divInt /-
+theorem natCast_eq_divInt (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_natCast, coe_int_eq_mk]
+#align rat.coe_nat_eq_mk Rat.natCast_eq_divInt
 -/
 
 #print Rat.num_natCast /-

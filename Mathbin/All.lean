@@ -1399,7 +1399,7 @@ import Data.HashMap
 import Data.Holor
 import Data.Int.AbsoluteValue
 import Data.Int.Associated
-import Data.Int.Basic
+import Algebra.Group.Int
 import Data.Int.Bitwise
 import Data.Int.Cast.Basic
 import Data.Int.Cast.Defs
@@ -1418,7 +1418,7 @@ import Data.Int.Lemmas
 import Data.Int.Log
 import Data.Int.ModEq
 import Data.Int.NatPrime
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Int
 import Data.Int.Order.Lemmas
 import Data.Int.Order.Units
 import Data.Int.Parity
@@ -1524,7 +1524,7 @@ import Algebra.MvPolynomial.Polynomial
 import Algebra.MvPolynomial.Rename
 import Algebra.MvPolynomial.Supported
 import Algebra.MvPolynomial.Degrees
-import Data.Nat.Defs
+import Algebra.Group.Nat
 import Data.Nat.Bits
 import Data.Nat.Bitwise
 import Data.Nat.Cast.Basic
@@ -1562,7 +1562,7 @@ import Data.Nat.Log
 import Data.Nat.ModEq
 import Data.Nat.Multiplicity
 import Data.Nat.Nth
-import Data.Nat.Order.Basic
+import Algebra.Order.Group.Nat
 import Data.Nat.Order.Lemmas
 import Data.Nat.Pairing
 import Data.Nat.Parity
@@ -1576,7 +1576,7 @@ import Data.Nat.PSub
 import Data.Nat.Set
 import Data.Nat.Size
 import Data.Nat.SqrtNormNum
-import Data.Nat.Sqrt
+import Data.Nat.Defs
 import Data.Nat.Squarefree
 import Data.Nat.SuccPred
 import Data.Nat.Totient

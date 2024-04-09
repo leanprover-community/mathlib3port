@@ -3,7 +3,7 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 -/
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Int
 
 #align_import data.int.least_greatest from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -61,7 +61,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     have hk0 : 0 ≤ k :=
       nonneg_of_mul_nonneg_right
         (by rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
-        (Int.coe_nat_pos.2 hp.1.Pos)
+        (Int.natCast_pos.2 hp.1.Pos)
     ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by rw [hk, Int.natAbs_of_nonneg hk0, mul_comm],
       lt_of_mul_lt_mul_left
         (calc
@@ -234,7 +234,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hn_nonneg : 0 ≤ n :=
         nonneg_of_mul_nonneg_right
           (by erw [← hn]; repeat' try refine' add_nonneg _ _; try exact sq_nonneg _)
-          (Int.coe_nat_pos.2 <| NeZero.pos m)
+          (Int.natCast_pos.2 <| NeZero.pos m)
       have hnm : n.natAbs < m :=
         Int.ofNat_lt.1
           (lt_of_mul_lt_mul_left (by rw [Int.natAbs_of_nonneg hn_nonneg, ← hn, ← sq]; exact hwxyzlt)

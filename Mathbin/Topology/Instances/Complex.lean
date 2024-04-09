@@ -43,7 +43,7 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
     rw [← IsClosed.closure_eq hc]
     apply closure_mono
     rintro _ ⟨_, rfl⟩
-    simp only [Function.comp_apply, of_real_rat_cast, SetLike.mem_coe, SubfieldClass.coe_rat_mem]
+    simp only [Function.comp_apply, of_real_rat_cast, SetLike.mem_coe, SubfieldClass.ratCast_mem]
   nth_rw 2 [range_comp]
   refine' subset_trans _ (image_closure_subset_closure_image continuous_of_real)
   rw [DenseRange.closure_range rat.dense_embedding_coe_real.dense]

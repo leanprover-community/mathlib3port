@@ -828,7 +828,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
       (uniform_integrable_average hp <|
             mem_ℒp.uniform_integrable_of_ident_distrib hp hp' hℒp hident).2.1
   · ext n ω
-    simp only [Pi.coe_nat, Pi.div_apply, sum_apply]
+    simp only [Pi.natCast_def, Pi.div_apply, sum_apply]
 #align probability_theory.strong_law_Lp ProbabilityTheory.strong_law_Lp
 -/
 

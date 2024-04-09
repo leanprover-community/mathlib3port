@@ -3963,7 +3963,7 @@ theorem ae_mem_iff_measure_eq [IsFiniteMeasure μ] {s : Set α} (hs : NullMeasur
 instance [Finite α] [MeasurableSpace α] : IsFiniteMeasure (Measure.count : Measure α) :=
   ⟨by
     cases nonempty_fintype α
-    simpa [measure.count_apply, tsum_fintype] using (ENNReal.nat_ne_top _).lt_top⟩
+    simpa [measure.count_apply, tsum_fintype] using (ENNReal.natCast_ne_top _).lt_top⟩
 
 end IsFiniteMeasure
 

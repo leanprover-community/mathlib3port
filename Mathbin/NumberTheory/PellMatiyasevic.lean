@@ -406,7 +406,7 @@ theorem eq_pellZd (b : ℤ√d) (b1 : 1 ≤ b) (hp : IsPell b) : ∃ n, b = pell
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b
   eq_pell_lem n b b1 hp <|
     h.trans <| by
-      rw [Zsqrtd.coe_nat_val] <;>
+      rw [Zsqrtd.natCast_val] <;>
         exact
           Zsqrtd.le_of_le_le (Int.ofNat_le_ofNat_of_le <| le_of_lt <| n_lt_xn _ _)
             (Int.ofNat_zero_le _)
@@ -619,7 +619,7 @@ theorem pellZd_succ_succ (n) : pell_zd (n + 2) + pell_zd n = (2 * a : ℕ) * pel
   by
   have : (1 : ℤ√d) + ⟨a, 1⟩ * ⟨a, 1⟩ = ⟨a, 1⟩ * (2 * a) :=
     by
-    rw [Zsqrtd.coe_nat_val]; change (⟨_, _⟩ : ℤ√d a1) = ⟨_, _⟩
+    rw [Zsqrtd.natCast_val]; change (⟨_, _⟩ : ℤ√d a1) = ⟨_, _⟩
     rw [dz_val]; dsimp [az]; rw [Zsqrtd.ext_iff]; dsimp; constructor <;> ring
   simpa [mul_add, mul_comm, mul_left_comm, add_comm] using congr_arg (· * pell_zd a1 n) this
 #align pell.pell_zd_succ_succ Pell.pellZd_succ_succ

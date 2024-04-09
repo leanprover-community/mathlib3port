@@ -194,10 +194,10 @@ protected theorem nsmul_mem {x : A} (hx : x ∈ S) (n : ℕ) : n • x ∈ S :=
 #align subalgebra.nsmul_mem Subalgebra.nsmul_mem
 -/
 
-#print Subalgebra.coe_nat_mem /-
-protected theorem coe_nat_mem (n : ℕ) : (n : A) ∈ S :=
-  coe_nat_mem S n
-#align subalgebra.coe_nat_mem Subalgebra.coe_nat_mem
+#print Subalgebra.natCast_mem /-
+protected theorem natCast_mem (n : ℕ) : (n : A) ∈ S :=
+  natCast_mem S n
+#align subalgebra.coe_nat_mem Subalgebra.natCast_mem
 -/
 
 #print Subalgebra.list_prod_mem /-
@@ -264,11 +264,11 @@ protected theorem zsmul_mem {R : Type u} {A : Type v} [CommRing R] [Ring A] [Alg
 #align subalgebra.zsmul_mem Subalgebra.zsmul_mem
 -/
 
-#print Subalgebra.coe_int_mem /-
-protected theorem coe_int_mem {R : Type u} {A : Type v} [CommRing R] [Ring A] [Algebra R A]
+#print Subalgebra.intCast_mem /-
+protected theorem intCast_mem {R : Type u} {A : Type v} [CommRing R] [Ring A] [Algebra R A]
     (S : Subalgebra R A) (n : ℤ) : (n : A) ∈ S :=
-  coe_int_mem S n
-#align subalgebra.coe_int_mem Subalgebra.coe_int_mem
+  intCast_mem S n
+#align subalgebra.coe_int_mem Subalgebra.intCast_mem
 -/
 
 #print Subalgebra.toAddSubmonoid /-
@@ -1910,7 +1910,7 @@ variable {R : Type _} [Semiring R]
 #print subalgebraOfSubsemiring /-
 /-- A subsemiring is a `ℕ`-subalgebra. -/
 def subalgebraOfSubsemiring (S : Subsemiring R) : Subalgebra ℕ R :=
-  { S with algebraMap_mem' := fun i => coe_nat_mem S i }
+  { S with algebraMap_mem' := fun i => natCast_mem S i }
 #align subalgebra_of_subsemiring subalgebraOfSubsemiring
 -/
 

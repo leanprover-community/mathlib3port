@@ -482,11 +482,11 @@ theorem Real.toNNReal_coe {r : ℝ≥0} : Real.toNNReal r = r :=
 #align real.to_nnreal_coe Real.toNNReal_coe
 -/
 
-#print NNReal.mk_coe_nat /-
+#print NNReal.mk_natCast /-
 @[simp]
-theorem mk_coe_nat (n : ℕ) : @Eq ℝ≥0 (⟨(n : ℝ), n.cast_nonneg⟩ : ℝ≥0) n :=
+theorem mk_natCast (n : ℕ) : @Eq ℝ≥0 (⟨(n : ℝ), n.cast_nonneg⟩ : ℝ≥0) n :=
   NNReal.eq (NNReal.coe_nat_cast n).symm
-#align nnreal.mk_coe_nat NNReal.mk_coe_nat
+#align nnreal.mk_coe_nat NNReal.mk_natCast
 -/
 
 #print NNReal.toNNReal_coe_nat /-

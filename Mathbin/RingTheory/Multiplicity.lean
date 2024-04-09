@@ -75,16 +75,16 @@ theorem not_dvd_one_of_finite_one_right {a : α} : Finite a 1 → ¬a ∣ 1 := f
 #align multiplicity.not_dvd_one_of_finite_one_right multiplicity.not_dvd_one_of_finite_one_right
 -/
 
-#print multiplicity.Int.coe_nat_multiplicity /-
+#print multiplicity.Int.natCast_multiplicity /-
 @[norm_cast]
-theorem Int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) = multiplicity a b :=
+theorem Int.natCast_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) = multiplicity a b :=
   by
   apply Part.ext'
   · repeat' rw [← finite_iff_dom, finite_def]
     norm_cast
   · intro h1 h2
     apply _root_.le_antisymm <;> · apply Nat.find_mono; norm_cast; simp
-#align multiplicity.int.coe_nat_multiplicity multiplicity.Int.coe_nat_multiplicity
+#align multiplicity.int.coe_nat_multiplicity multiplicity.Int.natCast_multiplicity
 -/
 
 #print multiplicity.not_finite_iff_forall /-

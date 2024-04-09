@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Algebra.Order.Monoid.WithTop
-import Data.Nat.Defs
+import Algebra.Group.Nat
 
 #align_import data.nat.cast.with_top from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

@@ -395,10 +395,10 @@ theorem coe_mul (n m : ℤ) : ((n * m : ℤ) : X q) = (n : X q) * (m : X q) := b
 #align lucas_lehmer.X.coe_mul LucasLehmer.X.coe_mul
 -/
 
-#print LucasLehmer.X.coe_nat /-
+#print LucasLehmer.X.coe_natCast /-
 @[norm_cast]
-theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by ext <;> simp
-#align lucas_lehmer.X.coe_nat LucasLehmer.X.coe_nat
+theorem coe_natCast (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by ext <;> simp
+#align lucas_lehmer.X.coe_nat LucasLehmer.X.coe_natCast
 -/
 
 #print LucasLehmer.X.card_eq /-

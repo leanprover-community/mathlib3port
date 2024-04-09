@@ -419,14 +419,14 @@ theorem Nat.two_pow_sub_pow {x y : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n 
       multiplicity 2 (x + y) + multiplicity 2 (x - y) + multiplicity 2 n :=
   by
   obtain hyx | hyx := le_total y x
-  · iterate 3 rw [← multiplicity.Int.coe_nat_multiplicity]
+  · iterate 3 rw [← multiplicity.Int.natCast_multiplicity]
     have hxyn : y ^ n ≤ x ^ n := pow_le_pow_left' hyx _
     simp only [Int.ofNat_sub hyx, Int.ofNat_sub (pow_le_pow_left' hyx _), Int.ofNat_add,
       Int.coe_nat_pow]
     rw [← Int.natCast_dvd_natCast] at hx
     rw [← Int.natCast_dvd_natCast, Int.ofNat_sub hyx] at hxy
     convert Int.two_pow_sub_pow hxy hx hn using 2
-    rw [← multiplicity.Int.coe_nat_multiplicity]
+    rw [← multiplicity.Int.natCast_multiplicity]
     rfl
   ·
     simp only [nat.sub_eq_zero_iff_le.mpr hyx, nat.sub_eq_zero_iff_le.mpr (pow_le_pow_left' hyx n),

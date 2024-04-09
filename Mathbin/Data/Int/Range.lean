@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
 import Data.List.Range
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Int
 
 #align_import data.int.range from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

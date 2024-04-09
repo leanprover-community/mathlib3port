@@ -1001,31 +1001,31 @@ theorem one_lt_coe_iff : 1 < (↑p : ℝ≥0∞) ↔ 1 < p :=
 #align ennreal.one_lt_coe_iff ENNReal.one_lt_coe_iff
 -/
 
-#print ENNReal.coe_nat /-
+#print ENNReal.coe_natCast /-
 @[simp, norm_cast]
-theorem coe_nat (n : ℕ) : ((n : ℝ≥0) : ℝ≥0∞) = n :=
-  WithTop.coe_nat n
-#align ennreal.coe_nat ENNReal.coe_nat
+theorem coe_natCast (n : ℕ) : ((n : ℝ≥0) : ℝ≥0∞) = n :=
+  WithTop.coe_natCast n
+#align ennreal.coe_nat ENNReal.coe_natCast
 -/
 
-#print ENNReal.ofReal_coe_nat /-
+#print ENNReal.ofReal_natCast /-
 @[simp]
-theorem ofReal_coe_nat (n : ℕ) : ENNReal.ofReal n = n := by simp [ENNReal.ofReal]
-#align ennreal.of_real_coe_nat ENNReal.ofReal_coe_nat
+theorem ofReal_natCast (n : ℕ) : ENNReal.ofReal n = n := by simp [ENNReal.ofReal]
+#align ennreal.of_real_coe_nat ENNReal.ofReal_natCast
 -/
 
-#print ENNReal.nat_ne_top /-
+#print ENNReal.natCast_ne_top /-
 @[simp]
-theorem nat_ne_top (n : ℕ) : (n : ℝ≥0∞) ≠ ∞ :=
-  WithTop.nat_ne_top n
-#align ennreal.nat_ne_top ENNReal.nat_ne_top
+theorem natCast_ne_top (n : ℕ) : (n : ℝ≥0∞) ≠ ∞ :=
+  WithTop.natCast_ne_top n
+#align ennreal.nat_ne_top ENNReal.natCast_ne_top
 -/
 
-#print ENNReal.top_ne_nat /-
+#print ENNReal.top_ne_natCast /-
 @[simp]
-theorem top_ne_nat (n : ℕ) : ∞ ≠ n :=
-  WithTop.top_ne_nat n
-#align ennreal.top_ne_nat ENNReal.top_ne_nat
+theorem top_ne_natCast (n : ℕ) : ∞ ≠ n :=
+  WithTop.top_ne_natCast n
+#align ennreal.top_ne_nat ENNReal.top_ne_natCast
 -/
 
 #print ENNReal.one_lt_top /-
@@ -1038,14 +1038,14 @@ theorem one_lt_top : 1 < ∞ :=
 #print ENNReal.toNNReal_nat /-
 @[simp, norm_cast]
 theorem toNNReal_nat (n : ℕ) : (n : ℝ≥0∞).toNNReal = n := by
-  conv_lhs => rw [← ENNReal.coe_nat n, ENNReal.toNNReal_coe]
+  conv_lhs => rw [← ENNReal.coe_natCast n, ENNReal.toNNReal_coe]
 #align ennreal.to_nnreal_nat ENNReal.toNNReal_nat
 -/
 
 #print ENNReal.toReal_nat /-
 @[simp, norm_cast]
 theorem toReal_nat (n : ℕ) : (n : ℝ≥0∞).toReal = n := by
-  conv_lhs => rw [← ENNReal.ofReal_coe_nat n, ENNReal.toReal_ofReal (Nat.cast_nonneg _)]
+  conv_lhs => rw [← ENNReal.ofReal_natCast n, ENNReal.toReal_ofReal (Nat.cast_nonneg _)]
 #align ennreal.to_real_nat ENNReal.toReal_nat
 -/
 
@@ -1264,18 +1264,18 @@ theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r : ℝ≥0, 0 < r ∧ a + r < 
 #align ennreal.lt_iff_exists_add_pos_lt ENNReal.lt_iff_exists_add_pos_lt
 -/
 
-#print ENNReal.coe_nat_lt_coe /-
+#print ENNReal.natCast_lt_coe /-
 @[simp, norm_cast]
-theorem coe_nat_lt_coe {n : ℕ} : (n : ℝ≥0∞) < r ↔ ↑n < r :=
-  ENNReal.coe_nat n ▸ coe_lt_coe
-#align ennreal.coe_nat_lt_coe ENNReal.coe_nat_lt_coe
+theorem natCast_lt_coe {n : ℕ} : (n : ℝ≥0∞) < r ↔ ↑n < r :=
+  ENNReal.coe_natCast n ▸ coe_lt_coe
+#align ennreal.coe_nat_lt_coe ENNReal.natCast_lt_coe
 -/
 
-#print ENNReal.coe_lt_coe_nat /-
+#print ENNReal.coe_lt_natCast /-
 @[simp, norm_cast]
-theorem coe_lt_coe_nat {n : ℕ} : (r : ℝ≥0∞) < n ↔ r < n :=
-  ENNReal.coe_nat n ▸ coe_lt_coe
-#align ennreal.coe_lt_coe_nat ENNReal.coe_lt_coe_nat
+theorem coe_lt_natCast {n : ℕ} : (r : ℝ≥0∞) < n ↔ r < n :=
+  ENNReal.coe_natCast n ▸ coe_lt_coe
+#align ennreal.coe_lt_coe_nat ENNReal.coe_lt_natCast
 -/
 
 #print ENNReal.exists_nat_gt /-
@@ -1300,7 +1300,7 @@ theorem iUnion_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ :=
 #print ENNReal.iUnion_Iic_coe_nat /-
 @[simp]
 theorem iUnion_Iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
-  Subset.antisymm (iUnion_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
+  Subset.antisymm (iUnion_subset fun n x hx => ne_top_of_le_ne_top (natCast_ne_top n) hx) <|
     iUnion_Iio_coe_nat ▸ iUnion_mono fun n => Iio_subset_Iic_self
 #align ennreal.Union_Iic_coe_nat ENNReal.iUnion_Iic_coe_nat
 -/
@@ -3577,10 +3577,10 @@ theorem sup_eq_zero {a b : ℝ≥0∞} : a ⊔ b = 0 ↔ a = 0 ∧ b = 0 :=
 #align ennreal.sup_eq_zero ENNReal.sup_eq_zero
 -/
 
-#print ENNReal.iSup_coe_nat /-
-theorem iSup_coe_nat : (⨆ n : ℕ, (n : ℝ≥0∞)) = ∞ :=
+#print ENNReal.iSup_natCast /-
+theorem iSup_natCast : (⨆ n : ℕ, (n : ℝ≥0∞)) = ∞ :=
   (iSup_eq_top _).2 fun b hb => ENNReal.exists_nat_gt (lt_top_iff_ne_top.1 hb)
-#align ennreal.supr_coe_nat ENNReal.iSup_coe_nat
+#align ennreal.supr_coe_nat ENNReal.iSup_natCast
 -/
 
 end iSup

@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Data.Nat.Order.Basic
+import Algebra.Order.Group.Nat
 import Algebra.Order.Monoid.WithTop
 
 #align_import data.nat.with_bot from "leanprover-community/mathlib"@"12665d3612d46b1838ec1273d291c21a61fc1707"

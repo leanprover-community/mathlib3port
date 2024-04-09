@@ -6,7 +6,7 @@ Authors: Simon Hudon
 import Control.Monad.Basic
 import Data.Part
 import Order.Hom.Order
-import Data.Nat.Order.Basic
+import Algebra.Order.Group.Nat
 import Tactic.Wlog
 
 #align_import order.omega_complete_partial_order from "leanprover-community/mathlib"@"92ca63f0fb391a9ca5f22d2409a6080e786d99f7"

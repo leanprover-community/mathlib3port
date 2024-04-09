@@ -3,7 +3,7 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
-import Data.Nat.Sqrt
+import Data.Nat.Defs
 import Data.Set.Lattice
 import Algebra.Group.Prod
 import Algebra.Order.Monoid.MinMax

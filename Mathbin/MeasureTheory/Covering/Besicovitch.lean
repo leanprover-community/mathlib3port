@@ -647,7 +647,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul]
         rw [ENNReal.mul_div_cancel']
         · simp only [Npos, Ne.def, Nat.cast_eq_zero, not_false_iff]
-        · exact ENNReal.nat_ne_top _
+        · exact ENNReal.natCast_ne_top _
       _ ≤ ∑ i, μ (s ∩ v i) := by conv_lhs => rw [A]; apply measure_Union_fintype_le
   -- choose an index `i` of a subfamily covering at least a proportion `1/N` of `s`.
   obtain ⟨i, -, hi⟩ : ∃ (i : Fin N) (hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) :=
@@ -659,7 +659,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     apply (ENNReal.mul_lt_mul_left hμs.ne' (measure_lt_top μ s).Ne).2
     rw [ENNReal.inv_lt_inv]
     conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
-    exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) zero_lt_one
+    exact ENNReal.add_lt_add_left (ENNReal.natCast_ne_top N) zero_lt_one
   have B : μ (o ∩ v i) = ∑' x : u i, μ (o ∩ closed_ball x (r x)) :=
     by
     have : o ∩ v i = ⋃ (x : s) (hx : x ∈ u i), o ∩ closed_ball x (r x) := by simp only [inter_Union]
@@ -868,9 +868,9 @@ theorem exists_disjoint_closedBall_covering_ae_of_finiteMeasure_aux (μ : Measur
       apply ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one
       rw [ENNReal.div_lt_iff, one_mul]
       · conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
-        exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) zero_lt_one
+        exact ENNReal.add_lt_add_left (ENNReal.natCast_ne_top N) zero_lt_one
       · simp only [true_or_iff, add_eq_zero_iff, Ne.def, not_false_iff, one_ne_zero, and_false_iff]
-      · simp only [ENNReal.nat_ne_top, Ne.def, not_false_iff, or_true_iff]
+      · simp only [ENNReal.natCast_ne_top, Ne.def, not_false_iff, or_true_iff]
     rw [MulZeroClass.zero_mul] at C
     apply le_bot_iff.1
     exact le_of_tendsto_of_tendsto' tendsto_const_nhds C fun n => (A n).trans (B n)
@@ -1032,9 +1032,9 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
   obtain ⟨v, s'v, v_open, μv⟩ : ∃ (v : _) (_ : v ⊇ s'), IsOpen v ∧ μ v ≤ μ s' + ε / 2 / N :=
     Set.exists_isOpen_le_add _ _
       (by
-        simp only [hε, ENNReal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, ENNReal.div_eq_zero_iff,
-          ENNReal.one_ne_top, not_false_iff, and_false_iff, false_and_iff, or_self_iff,
-          ENNReal.bit0_eq_top_iff])
+        simp only [hε, ENNReal.natCast_ne_top, WithTop.mul_eq_top_iff, Ne.def,
+          ENNReal.div_eq_zero_iff, ENNReal.one_ne_top, not_false_iff, and_false_iff, false_and_iff,
+          or_self_iff, ENNReal.bit0_eq_top_iff])
   have : ∀ x ∈ s', ∃ r1 ∈ f x ∩ Ioo (0 : ℝ) 1, closed_ball x r1 ⊆ v :=
     by
     intro x hx

@@ -9,7 +9,7 @@ import Data.Int.Dvd.Basic
 import Data.Int.Units
 import Data.Nat.Factorial.Basic
 import Data.Nat.GCD.Basic
-import Data.Nat.Sqrt
+import Data.Nat.Defs
 import Order.Bounds.Basic
 import Tactic.ByContra
 

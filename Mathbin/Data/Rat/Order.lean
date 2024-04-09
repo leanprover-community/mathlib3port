@@ -65,8 +65,8 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
   numDenCasesOn' a fun n₁ d₁ h₁ =>
     numDenCasesOn' b fun n₂ d₂ h₂ =>
       by
-      have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
-      have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
+      have d₁0 : 0 < (d₁ : ℤ) := Int.natCast_pos.2 (Nat.pos_of_ne_zero h₁)
+      have d₂0 : 0 < (d₂ : ℤ) := Int.natCast_pos.2 (Nat.pos_of_ne_zero h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
       intro n₁0 n₂0
       apply add_nonneg <;> apply mul_nonneg <;>
@@ -82,8 +82,8 @@ protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
   numDenCasesOn' a fun n₁ d₁ h₁ =>
     numDenCasesOn' b fun n₂ d₂ h₂ =>
       by
-      have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
-      have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
+      have d₁0 : 0 < (d₁ : ℤ) := Int.natCast_pos.2 (Nat.pos_of_ne_zero h₁)
+      have d₂0 : 0 < (d₂ : ℤ) := Int.natCast_pos.2 (Nat.pos_of_ne_zero h₂)
       simp (config := { contextual := true }) [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
 #align rat.nonneg_mul Rat.nonneg_mul
 -/
@@ -92,7 +92,7 @@ protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
   numDenCasesOn' a fun n d h =>
     by
-    have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h)
+    have d0 : 0 < (d : ℤ) := Int.natCast_pos.2 (Nat.pos_of_ne_zero h)
     simp [d0, h]
     exact fun h₁ h₂ => le_antisymm h₂ h₁
 #align rat.nonneg_antisymm Rat.nonneg_antisymm
@@ -292,11 +292,11 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
-    rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,
+    rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.natCast_pos.2 q.pos) zero_lt_one, mul_one,
       MulZeroClass.zero_mul] at hq
     rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
   · rw [abs_of_nonneg hq]
-    rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one,
+    rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.natCast_pos.2 q.pos), mul_one,
       MulZeroClass.zero_mul] at hq
     rw [Int.natAbs_of_nonneg hq, num_denom]
 #align rat.abs_def Rat.abs_def

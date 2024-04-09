@@ -266,11 +266,11 @@ theorem coe_natCast (n : ℕ) : (↑(↑n : ℚ≥0) : ℚ) = n :=
 #align nnrat.coe_nat_cast NNRat.coe_natCast
 -/
 
-#print NNRat.mk_coe_nat /-
+#print NNRat.mk_natCast /-
 @[simp]
-theorem mk_coe_nat (n : ℕ) : @Eq ℚ≥0 (⟨(n : ℚ), n.cast_nonneg⟩ : ℚ≥0) n :=
+theorem mk_natCast (n : ℕ) : @Eq ℚ≥0 (⟨(n : ℚ), n.cast_nonneg⟩ : ℚ≥0) n :=
   ext (coe_natCast n).symm
-#align nnrat.mk_coe_nat NNRat.mk_coe_nat
+#align nnrat.mk_coe_nat NNRat.mk_natCast
 -/
 
 /-- The rational numbers are an algebra over the non-negative rationals. -/

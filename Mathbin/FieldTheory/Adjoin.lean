@@ -854,19 +854,19 @@ theorem adjoin_one : F⟮⟯ = ⊥ :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-#print IntermediateField.adjoin_int /-
+#print IntermediateField.adjoin_intCast /-
 @[simp]
-theorem adjoin_int (n : ℤ) : F⟮⟯ = ⊥ :=
-  adjoin_simple_eq_bot_iff.mpr (coe_int_mem ⊥ n)
-#align intermediate_field.adjoin_int IntermediateField.adjoin_int
+theorem adjoin_intCast (n : ℤ) : F⟮⟯ = ⊥ :=
+  adjoin_simple_eq_bot_iff.mpr (intCast_mem ⊥ n)
+#align intermediate_field.adjoin_int IntermediateField.adjoin_intCast
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-#print IntermediateField.adjoin_nat /-
+#print IntermediateField.adjoin_natCast /-
 @[simp]
-theorem adjoin_nat (n : ℕ) : F⟮⟯ = ⊥ :=
-  adjoin_simple_eq_bot_iff.mpr (coe_nat_mem ⊥ n)
-#align intermediate_field.adjoin_nat IntermediateField.adjoin_nat
+theorem adjoin_natCast (n : ℕ) : F⟮⟯ = ⊥ :=
+  adjoin_simple_eq_bot_iff.mpr (natCast_mem ⊥ n)
+#align intermediate_field.adjoin_nat IntermediateField.adjoin_natCast
 -/
 
 section AdjoinRank

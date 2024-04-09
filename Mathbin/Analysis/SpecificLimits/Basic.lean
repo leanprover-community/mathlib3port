@@ -67,13 +67,13 @@ theorem tendsto_one_div_add_atTop_nhds_zero_nat :
 #align tendsto_one_div_add_at_top_nhds_0_nat tendsto_one_div_add_atTop_nhds_zero_nat
 -/
 
-#print tendsto_coe_nat_div_add_atTop /-
+#print tendsto_natCast_div_add_atTop /-
 /-- The limit of `n / (n + x)` is 1, for any constant `x` (valid in `ℝ` or any topological division
 algebra over `ℝ`, e.g., `ℂ`).
 
 TODO: introduce a typeclass saying that `1 / n` tends to 0 at top, making it possible to get this
 statement simultaneously on `ℚ`, `ℝ` and `ℂ`. -/
-theorem tendsto_coe_nat_div_add_atTop {𝕜 : Type _} [DivisionRing 𝕜] [TopologicalSpace 𝕜]
+theorem tendsto_natCast_div_add_atTop {𝕜 : Type _} [DivisionRing 𝕜] [TopologicalSpace 𝕜]
     [CharZero 𝕜] [Algebra ℝ 𝕜] [ContinuousSMul ℝ 𝕜] [TopologicalDivisionRing 𝕜] (x : 𝕜) :
     Tendsto (fun n : ℕ => (n : 𝕜) / (n + x)) atTop (𝓝 1) :=
   by
@@ -93,7 +93,7 @@ theorem tendsto_coe_nat_div_add_atTop {𝕜 : Type _} [DivisionRing 𝕜] [Topol
       rfl
     rw [this]
     exact ((continuous_algebraMap ℝ 𝕜).Tendsto _).comp tendsto_inverse_atTop_nhds_zero_nat
-#align tendsto_coe_nat_div_add_at_top tendsto_coe_nat_div_add_atTop
+#align tendsto_coe_nat_div_add_at_top tendsto_natCast_div_add_atTop
 -/
 
 /-! ### Powers -/

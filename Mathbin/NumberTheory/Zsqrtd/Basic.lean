@@ -309,49 +309,49 @@ instance : StarRing (ℤ√d)
 instance : Nontrivial (ℤ√d) :=
   ⟨⟨0, 1, by decide⟩⟩
 
-#print Zsqrtd.coe_nat_re /-
+#print Zsqrtd.natCast_re /-
 @[simp]
-theorem coe_nat_re (n : ℕ) : (n : ℤ√d).re = n :=
+theorem natCast_re (n : ℕ) : (n : ℤ√d).re = n :=
   rfl
-#align zsqrtd.coe_nat_re Zsqrtd.coe_nat_re
+#align zsqrtd.coe_nat_re Zsqrtd.natCast_re
 -/
 
-#print Zsqrtd.coe_nat_im /-
+#print Zsqrtd.natCast_im /-
 @[simp]
-theorem coe_nat_im (n : ℕ) : (n : ℤ√d).im = 0 :=
+theorem natCast_im (n : ℕ) : (n : ℤ√d).im = 0 :=
   rfl
-#align zsqrtd.coe_nat_im Zsqrtd.coe_nat_im
+#align zsqrtd.coe_nat_im Zsqrtd.natCast_im
 -/
 
-#print Zsqrtd.coe_nat_val /-
-theorem coe_nat_val (n : ℕ) : (n : ℤ√d) = ⟨n, 0⟩ :=
+#print Zsqrtd.natCast_val /-
+theorem natCast_val (n : ℕ) : (n : ℤ√d) = ⟨n, 0⟩ :=
   rfl
-#align zsqrtd.coe_nat_val Zsqrtd.coe_nat_val
+#align zsqrtd.coe_nat_val Zsqrtd.natCast_val
 -/
 
-#print Zsqrtd.coe_int_re /-
+#print Zsqrtd.intCast_re /-
 @[simp]
-theorem coe_int_re (n : ℤ) : (n : ℤ√d).re = n := by cases n <;> rfl
-#align zsqrtd.coe_int_re Zsqrtd.coe_int_re
+theorem intCast_re (n : ℤ) : (n : ℤ√d).re = n := by cases n <;> rfl
+#align zsqrtd.coe_int_re Zsqrtd.intCast_re
 -/
 
-#print Zsqrtd.coe_int_im /-
+#print Zsqrtd.intCast_im /-
 @[simp]
-theorem coe_int_im (n : ℤ) : (n : ℤ√d).im = 0 := by cases n <;> rfl
-#align zsqrtd.coe_int_im Zsqrtd.coe_int_im
+theorem intCast_im (n : ℤ) : (n : ℤ√d).im = 0 := by cases n <;> rfl
+#align zsqrtd.coe_int_im Zsqrtd.intCast_im
 -/
 
-#print Zsqrtd.coe_int_val /-
-theorem coe_int_val (n : ℤ) : (n : ℤ√d) = ⟨n, 0⟩ := by simp [ext]
-#align zsqrtd.coe_int_val Zsqrtd.coe_int_val
+#print Zsqrtd.intCast_val /-
+theorem intCast_val (n : ℤ) : (n : ℤ√d) = ⟨n, 0⟩ := by simp [ext]
+#align zsqrtd.coe_int_val Zsqrtd.intCast_val
 -/
 
 instance : CharZero (ℤ√d) where cast_injective m n := by simp [ext]
 
-#print Zsqrtd.ofInt_eq_coe /-
+#print Zsqrtd.ofInt_eq_intCast /-
 @[simp]
-theorem ofInt_eq_coe (n : ℤ) : (of_int n : ℤ√d) = n := by simp [ext, of_int_re, of_int_im]
-#align zsqrtd.of_int_eq_coe Zsqrtd.ofInt_eq_coe
+theorem ofInt_eq_intCast (n : ℤ) : (of_int n : ℤ√d) = n := by simp [ext, of_int_re, of_int_im]
+#align zsqrtd.of_int_eq_coe Zsqrtd.ofInt_eq_intCast
 -/
 
 #print Zsqrtd.smul_val /-

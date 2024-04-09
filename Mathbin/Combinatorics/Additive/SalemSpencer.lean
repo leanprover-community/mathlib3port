@@ -628,7 +628,7 @@ open Asymptotics Filter
 #print rothNumberNat_isBigOWith_id /-
 theorem rothNumberNat_isBigOWith_id :
     IsBigOWith 1 atTop (fun N => (rothNumberNat N : ℝ)) fun N => (N : ℝ) :=
-  isBigOWith_of_le _ <| by simpa only [Real.norm_coe_nat, Nat.cast_le] using rothNumberNat_le
+  isBigOWith_of_le _ <| by simpa only [Real.norm_natCast, Nat.cast_le] using rothNumberNat_le
 #align roth_number_nat_is_O_with_id rothNumberNat_isBigOWith_id
 -/
 

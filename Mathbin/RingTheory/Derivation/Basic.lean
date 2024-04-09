@@ -185,11 +185,11 @@ theorem map_algebraMap : D (algebraMap R A r) = 0 := by
 #align derivation.map_algebra_map Derivation.map_algebraMap
 -/
 
-#print Derivation.map_coe_nat /-
+#print Derivation.map_natCast /-
 @[simp]
-theorem map_coe_nat (n : ℕ) : D (n : A) = 0 := by
+theorem map_natCast (n : ℕ) : D (n : A) = 0 := by
   rw [← nsmul_one, D.map_smul_of_tower n, map_one_eq_zero, smul_zero]
-#align derivation.map_coe_nat Derivation.map_coe_nat
+#align derivation.map_coe_nat Derivation.map_natCast
 -/
 
 #print Derivation.leibniz_pow /-
@@ -482,11 +482,11 @@ protected theorem map_sub : D (a - b) = D a - D b :=
 #align derivation.map_sub Derivation.map_sub
 -/
 
-#print Derivation.map_coe_int /-
+#print Derivation.map_intCast /-
 @[simp]
-theorem map_coe_int (n : ℤ) : D (n : A) = 0 := by
+theorem map_intCast (n : ℤ) : D (n : A) = 0 := by
   rw [← zsmul_one, D.map_smul_of_tower n, map_one_eq_zero, smul_zero]
-#align derivation.map_coe_int Derivation.map_coe_int
+#align derivation.map_coe_int Derivation.map_intCast
 -/
 
 #print Derivation.leibniz_of_mul_eq_one /-

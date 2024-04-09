@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Data.ZMod.Basic
-import Data.Nat.Defs
+import Algebra.Group.Nat
 import Tactic.IntervalCases
 import GroupTheory.SpecificGroups.Dihedral
 import GroupTheory.SpecificGroups.Cyclic

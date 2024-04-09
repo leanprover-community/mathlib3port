@@ -6,7 +6,7 @@ Authors: Robert Y. Lewis, Keeley Hoek
 import Algebra.NeZero
 import Algebra.Order.WithZero
 import Order.RelIso.Basic
-import Data.Nat.Order.Basic
+import Algebra.Order.Group.Nat
 import Order.Hom.Set
 
 #align_import data.fin.basic from "leanprover-community/mathlib"@"3a2b5524a138b5d0b818b858b516d4ac8a484b03"

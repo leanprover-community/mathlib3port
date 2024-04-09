@@ -129,20 +129,22 @@ theorem zpow_neg_one (A : M) : A ^ (-1 : ℤ) = A⁻¹ :=
 #align matrix.zpow_neg_one Matrix.zpow_neg_one
 -/
 
-#print Matrix.zpow_coe_nat /-
-theorem zpow_coe_nat (A : M) (n : ℕ) : A ^ (n : ℤ) = A ^ n :=
+/- warning: matrix.zpow_coe_nat clashes with zpow_coe_nat -> zpow_natCast
+Case conversion may be inaccurate. Consider using '#align matrix.zpow_coe_nat zpow_natCastₓ'. -/
+#print zpow_natCast /-
+theorem zpow_natCast (A : M) (n : ℕ) : A ^ (n : ℤ) = A ^ n :=
   zpow_natCast _ _
-#align matrix.zpow_coe_nat Matrix.zpow_coe_nat
+#align matrix.zpow_coe_nat zpow_natCast
 -/
 
-#print Matrix.zpow_neg_coe_nat /-
+#print Matrix.zpow_neg_natCast /-
 @[simp]
-theorem zpow_neg_coe_nat (A : M) (n : ℕ) : A ^ (-n : ℤ) = (A ^ n)⁻¹ :=
+theorem zpow_neg_natCast (A : M) (n : ℕ) : A ^ (-n : ℤ) = (A ^ n)⁻¹ :=
   by
   cases n
   · simp
   · exact DivInvMonoid.zpow_neg' _ _
-#align matrix.zpow_neg_coe_nat Matrix.zpow_neg_coe_nat
+#align matrix.zpow_neg_coe_nat Matrix.zpow_neg_natCast
 -/
 
 #print IsUnit.det_zpow /-
@@ -170,7 +172,7 @@ theorem isUnit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A ^ z).det ↔ IsUnit A.
 
 #print Matrix.zpow_neg /-
 theorem zpow_neg {A : M} (h : IsUnit A.det) : ∀ n : ℤ, A ^ (-n) = (A ^ n)⁻¹
-  | (n : ℕ) => zpow_neg_coe_nat _ _
+  | (n : ℕ) => zpow_neg_natCast _ _
   | -[n+1] =>
     by
     rw [zpow_negSucc, neg_neg_of_nat_succ, of_nat_eq_coe, zpow_natCast, nonsing_inv_nonsing_inv]

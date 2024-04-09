@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes, Floris van Doorn, Yaël Dillies
 -/
-import Data.Nat.Defs
+import Algebra.Group.Nat
 import Data.Nat.Pow
 
 #align_import data.nat.factorial.basic from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

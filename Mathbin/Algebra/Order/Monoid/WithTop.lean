@@ -433,25 +433,25 @@ instance [CanonicallyLinearOrderedAddCommMonoid α] :
     CanonicallyLinearOrderedAddCommMonoid (WithTop α) :=
   { WithTop.canonicallyOrderedAddMonoid, WithTop.linearOrder with }
 
-#print WithTop.coe_nat /-
+#print WithTop.coe_natCast /-
 @[simp, norm_cast]
-theorem coe_nat [AddMonoidWithOne α] (n : ℕ) : ((n : α) : WithTop α) = n :=
+theorem coe_natCast [AddMonoidWithOne α] (n : ℕ) : ((n : α) : WithTop α) = n :=
   rfl
-#align with_top.coe_nat WithTop.coe_nat
+#align with_top.coe_nat WithTop.coe_natCast
 -/
 
-#print WithTop.nat_ne_top /-
+#print WithTop.natCast_ne_top /-
 @[simp]
-theorem nat_ne_top [AddMonoidWithOne α] (n : ℕ) : (n : WithTop α) ≠ ⊤ :=
+theorem natCast_ne_top [AddMonoidWithOne α] (n : ℕ) : (n : WithTop α) ≠ ⊤ :=
   coe_ne_top
-#align with_top.nat_ne_top WithTop.nat_ne_top
+#align with_top.nat_ne_top WithTop.natCast_ne_top
 -/
 
-#print WithTop.top_ne_nat /-
+#print WithTop.top_ne_natCast /-
 @[simp]
-theorem top_ne_nat [AddMonoidWithOne α] (n : ℕ) : (⊤ : WithTop α) ≠ n :=
+theorem top_ne_natCast [AddMonoidWithOne α] (n : ℕ) : (⊤ : WithTop α) ≠ n :=
   top_ne_coe
-#align with_top.top_ne_nat WithTop.top_ne_nat
+#align with_top.top_ne_nat WithTop.top_ne_natCast
 -/
 
 #print WithTop.addHom /-
@@ -622,25 +622,25 @@ protected theorem map_one {β} [One α] (f : α → β) : (1 : WithBot α).map f
 #align with_bot.map_zero WithBot.map_zero
 -/
 
-#print WithBot.coe_nat /-
+#print WithBot.coe_natCast /-
 @[norm_cast]
-theorem coe_nat [AddMonoidWithOne α] (n : ℕ) : ((n : α) : WithBot α) = n :=
+theorem coe_natCast [AddMonoidWithOne α] (n : ℕ) : ((n : α) : WithBot α) = n :=
   rfl
-#align with_bot.coe_nat WithBot.coe_nat
+#align with_bot.coe_nat WithBot.coe_natCast
 -/
 
-#print WithBot.nat_ne_bot /-
+#print WithBot.natCast_ne_bot /-
 @[simp]
-theorem nat_ne_bot [AddMonoidWithOne α] (n : ℕ) : (n : WithBot α) ≠ ⊥ :=
+theorem natCast_ne_bot [AddMonoidWithOne α] (n : ℕ) : (n : WithBot α) ≠ ⊥ :=
   coe_ne_bot
-#align with_bot.nat_ne_bot WithBot.nat_ne_bot
+#align with_bot.nat_ne_bot WithBot.natCast_ne_bot
 -/
 
-#print WithBot.bot_ne_nat /-
+#print WithBot.bot_ne_natCast /-
 @[simp]
-theorem bot_ne_nat [AddMonoidWithOne α] (n : ℕ) : (⊥ : WithBot α) ≠ n :=
+theorem bot_ne_natCast [AddMonoidWithOne α] (n : ℕ) : (⊥ : WithBot α) ≠ n :=
   bot_ne_coe
-#align with_bot.bot_ne_nat WithBot.bot_ne_nat
+#align with_bot.bot_ne_nat WithBot.bot_ne_natCast
 -/
 
 section Add

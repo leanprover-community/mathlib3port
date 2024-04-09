@@ -2091,18 +2091,18 @@ theorem le_norm_self (r : ℝ) : r ≤ ‖r‖ :=
 #align real.le_norm_self Real.le_norm_self
 -/
 
-#print Real.norm_coe_nat /-
+#print Real.norm_natCast /-
 @[simp]
-theorem norm_coe_nat (n : ℕ) : ‖(n : ℝ)‖ = n :=
+theorem norm_natCast (n : ℕ) : ‖(n : ℝ)‖ = n :=
   abs_of_nonneg n.cast_nonneg
-#align real.norm_coe_nat Real.norm_coe_nat
+#align real.norm_coe_nat Real.norm_natCast
 -/
 
-#print Real.nnnorm_coe_nat /-
+#print Real.nnnorm_natCast /-
 @[simp]
-theorem nnnorm_coe_nat (n : ℕ) : ‖(n : ℝ)‖₊ = n :=
-  NNReal.eq <| norm_coe_nat _
-#align real.nnnorm_coe_nat Real.nnnorm_coe_nat
+theorem nnnorm_natCast (n : ℕ) : ‖(n : ℝ)‖₊ = n :=
+  NNReal.eq <| norm_natCast _
+#align real.nnnorm_coe_nat Real.nnnorm_natCast
 -/
 
 #print Real.norm_two /-
@@ -2183,10 +2183,10 @@ theorem norm_eq_abs (n : ℤ) : ‖n‖ = |n| :=
 #align int.norm_eq_abs Int.norm_eq_abs
 -/
 
-#print Int.norm_coe_nat /-
+#print Int.norm_natCast /-
 @[simp]
-theorem norm_coe_nat (n : ℕ) : ‖(n : ℤ)‖ = n := by simp [Int.norm_eq_abs]
-#align int.norm_coe_nat Int.norm_coe_nat
+theorem norm_natCast (n : ℕ) : ‖(n : ℤ)‖ = n := by simp [Int.norm_eq_abs]
+#align int.norm_coe_nat Int.norm_natCast
 -/
 
 #print NNReal.natCast_natAbs /-

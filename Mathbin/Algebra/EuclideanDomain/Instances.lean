@@ -6,8 +6,8 @@ Authors: Louis Carlin, Mario Carneiro
 import Algebra.EuclideanDomain.Defs
 import Algebra.Field.Defs
 import Algebra.GroupWithZero.Units.Lemmas
-import Data.Nat.Order.Basic
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Nat
+import Algebra.Order.Group.Int
 
 #align_import algebra.euclidean_domain.instances from "leanprover-community/mathlib"@"e1bccd6e40ae78370f01659715d3c948716e3b7e"
 

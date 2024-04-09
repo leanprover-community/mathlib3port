@@ -102,7 +102,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     have : (b : α) = (d : α) * (k : α) := by rw [ke, Int.cast_mul, Int.cast_natCast]
     rw [d0, MulZeroClass.zero_mul] at this; contradiction
   rw [num_denom'] at e
-  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
+  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.natCast_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_natCast] at this
   symm
   rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc,

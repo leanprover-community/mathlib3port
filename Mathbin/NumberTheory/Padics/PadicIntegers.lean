@@ -250,13 +250,13 @@ instance : CharZero ℤ_[p]
     where cast_injective m n h :=
     Nat.cast_injective <| show (m : ℚ_[p]) = n by rw [Subtype.ext_iff] at h; norm_cast at h; exact h
 
-#print PadicInt.coe_int_eq /-
+#print PadicInt.intCast_eq /-
 @[simp, norm_cast]
-theorem coe_int_eq (z1 z2 : ℤ) : (z1 : ℤ_[p]) = z2 ↔ z1 = z2 :=
+theorem intCast_eq (z1 z2 : ℤ) : (z1 : ℤ_[p]) = z2 ↔ z1 = z2 :=
   by
   suffices (z1 : ℚ_[p]) = z2 ↔ z1 = z2 from Iff.trans (by norm_cast) this
   norm_cast
-#align padic_int.coe_int_eq PadicInt.coe_int_eq
+#align padic_int.coe_int_eq PadicInt.intCast_eq
 -/
 
 #print PadicInt.ofIntSeq /-

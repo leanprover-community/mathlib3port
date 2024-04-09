@@ -444,7 +444,7 @@ theorem GammaSeq_tendsto_Gamma (s : ℂ) : Tendsto (GammaSeq s) atTop (𝓝 <| G
     conv at this in _ / _ * _ => rw [mul_comm]
     rwa [← mul_one (Gamma_aux m (s + 1) / s), tendsto_mul_iff_of_ne_zero _ (one_ne_zero' ℂ)] at this
     simp_rw [add_assoc]
-    exact tendsto_coe_nat_div_add_atTop (1 + s)
+    exact tendsto_natCast_div_add_atTop (1 + s)
 #align complex.Gamma_seq_tendsto_Gamma Complex.GammaSeq_tendsto_Gamma
 -/
 
@@ -510,7 +510,7 @@ theorem Gamma_mul_Gamma_one_sub (z : ℂ) : Gamma z * Gamma (1 - z) = π / sin (
     tendsto.congr'
       ((eventually_ne_at_top 0).mp (eventually_of_forall fun n hn => (Gamma_seq_mul z hn).symm))
       (tendsto.mul _ _)
-  · convert tendsto_coe_nat_div_add_atTop (1 - z); ext1 n; rw [add_sub_assoc]
+  · convert tendsto_natCast_div_add_atTop (1 - z); ext1 n; rw [add_sub_assoc]
   · have : ↑π / sin (↑π * z) = 1 / (sin (π * z) / π) := by field_simp; rw [this]
     refine' tendsto_const_nhds.div _ (div_ne_zero hs pi_ne)
     rw [← tendsto_mul_iff_of_ne_zero tendsto_const_nhds pi_ne, div_mul_cancel₀ _ pi_ne]

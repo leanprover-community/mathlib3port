@@ -7,7 +7,7 @@ import Algebra.GroupPower.Basic
 import Algebra.Group.Equiv.Basic
 import Algebra.Group.Units.Hom
 import Data.Set.Lattice
-import Data.Nat.Order.Basic
+import Algebra.Order.Group.Nat
 
 #align_import data.set.pointwise.basic from "leanprover-community/mathlib"@"5e526d18cea33550268dcbbddcb822d5cde40654"
 

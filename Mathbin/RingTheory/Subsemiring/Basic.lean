@@ -83,9 +83,11 @@ instance (priority := 100) SubsemiringClass.addSubmonoidWithOneClass (S : Type _
 
 variable [SetLike S R] [hSR : SubsemiringClass S R] (s : S)
 
-#print coe_nat_mem /-
-theorem coe_nat_mem (n : ℕ) : (n : R) ∈ s := by rw [← nsmul_one]; exact nsmul_mem (one_mem _) _
-#align coe_nat_mem coe_nat_mem
+/- warning: coe_nat_mem clashes with nat_cast_mem -> natCast_mem
+Case conversion may be inaccurate. Consider using '#align coe_nat_mem natCast_memₓ'. -/
+#print natCast_mem /-
+theorem natCast_mem (n : ℕ) : (n : R) ∈ s := by rw [← nsmul_one]; exact nsmul_mem (one_mem _) _
+#align coe_nat_mem natCast_mem
 -/
 
 namespace SubsemiringClass
@@ -459,7 +461,7 @@ instance toNonAssocSemiring : NonAssocSemiring s :=
     zero_mul := fun x => Subtype.eq <| MulZeroClass.zero_mul x
     right_distrib := fun x y z => Subtype.eq <| right_distrib x y z
     left_distrib := fun x y z => Subtype.eq <| left_distrib x y z
-    natCast := fun n => ⟨n, coe_nat_mem s n⟩
+    natCast := fun n => ⟨n, natCast_mem s n⟩
     natCast_zero := by simp [Nat.cast] <;> rfl
     natCast_succ := fun _ => by simp [Nat.cast] <;> rfl }
 #align subsemiring.to_non_assoc_semiring Subsemiring.toNonAssocSemiring
@@ -903,7 +905,7 @@ instance : CompleteLattice (Subsemiring R) :=
     bot := ⊥
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
-      hn ▸ coe_nat_mem s n
+      hn ▸ natCast_mem s n
     top := ⊤
     le_top := fun s x hx => trivial
     inf := (· ⊓ ·)

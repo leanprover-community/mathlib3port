@@ -1132,7 +1132,7 @@ theorem uniformIntegrable_average_real (hp : 1 ≤ p) {f : ℕ → α → ℝ} (
       · rw [Set.indicator_const_smul s (↑n)⁻¹ (f i)]
         rfl
       · rfl
-    simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
+    simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_natCast]
     by_cases hn : (↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
     · simp only [hn, MulZeroClass.zero_mul, zero_le]
     refine' le_trans _ (_ : ↑(↑n : ℝ≥0)⁻¹ * n • ENNReal.ofReal ε ≤ ENNReal.ofReal ε)
@@ -1140,8 +1140,8 @@ theorem uniformIntegrable_average_real (hp : 1 ≤ p) {f : ℕ → α → ℝ} (
       conv_rhs => rw [← Finset.card_range n]
       exact Finset.sum_le_card_nsmul _ _ _ fun i hi => hδ₂ _ _ hs hle
     · simp only [ENNReal.coe_eq_zero, inv_eq_zero, Nat.cast_eq_zero] at hn
-      rw [nsmul_eq_mul, ← mul_assoc, ENNReal.coe_inv, ENNReal.coe_nat,
-        ENNReal.inv_mul_cancel _ (ENNReal.nat_ne_top _), one_mul]
+      rw [nsmul_eq_mul, ← mul_assoc, ENNReal.coe_inv, ENNReal.coe_natCast,
+        ENNReal.inv_mul_cancel _ (ENNReal.natCast_ne_top _), one_mul]
       · exact le_rfl
       all_goals simpa only [Ne.def, Nat.cast_eq_zero]
   · obtain ⟨C, hC⟩ := hf₃
@@ -1152,7 +1152,7 @@ theorem uniformIntegrable_average_real (hp : 1 ≤ p) {f : ℕ → α → ℝ} (
       intro i
       ext ω
       simp only [mul_comm, Pi.smul_apply, Algebra.id.smul_eq_mul]
-    simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
+    simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_natCast]
     by_cases hn : (↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
     · simp only [hn, MulZeroClass.zero_mul, zero_le]
     refine' le_trans _ (_ : ↑(↑n : ℝ≥0)⁻¹ * (n • C : ℝ≥0∞) ≤ C)
@@ -1160,8 +1160,8 @@ theorem uniformIntegrable_average_real (hp : 1 ≤ p) {f : ℕ → α → ℝ} (
       conv_rhs => rw [← Finset.card_range n]
       exact Finset.sum_le_card_nsmul _ _ _ fun i hi => hC i
     · simp only [ENNReal.coe_eq_zero, inv_eq_zero, Nat.cast_eq_zero] at hn
-      rw [nsmul_eq_mul, ← mul_assoc, ENNReal.coe_inv, ENNReal.coe_nat,
-        ENNReal.inv_mul_cancel _ (ENNReal.nat_ne_top _), one_mul]
+      rw [nsmul_eq_mul, ← mul_assoc, ENNReal.coe_inv, ENNReal.coe_natCast,
+        ENNReal.inv_mul_cancel _ (ENNReal.natCast_ne_top _), one_mul]
       · exact le_rfl
       all_goals simpa only [Ne.def, Nat.cast_eq_zero]
 #align measure_theory.uniform_integrable_average MeasureTheory.uniformIntegrable_average_real

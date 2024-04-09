@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Algebra.Order.BigOperators.Group.Finset
-import Data.Nat.Defs
+import Algebra.Group.Nat
 
 #align_import data.set.equitable from "leanprover-community/mathlib"@"4d392a6c9c4539cbeca399b3ee0afea398fbd2eb"
 

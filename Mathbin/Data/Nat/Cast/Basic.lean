@@ -8,7 +8,7 @@ import Algebra.GroupWithZero.Commute
 import Algebra.Ring.Hom.Defs
 import Algebra.Order.Group.Abs
 import Algebra.Ring.Commute
-import Data.Nat.Order.Basic
+import Algebra.Order.Group.Nat
 import Algebra.Group.Opposite
 
 #align_import data.nat.cast.basic from "leanprover-community/mathlib"@"acebd8d49928f6ed8920e502a6c90674e75bd441"
@@ -379,17 +379,17 @@ variable {π : α → Type _} [∀ a, NatCast (π a)]
 
 instance : NatCast (∀ a, π a) := by refine_struct { .. } <;> pi_instance_derive_field
 
-#print Pi.nat_apply /-
-theorem nat_apply (n : ℕ) (a : α) : (n : ∀ a, π a) a = n :=
+#print Pi.natCast_apply /-
+theorem natCast_apply (n : ℕ) (a : α) : (n : ∀ a, π a) a = n :=
   rfl
-#align pi.nat_apply Pi.nat_apply
+#align pi.nat_apply Pi.natCast_apply
 -/
 
-#print Pi.coe_nat /-
+#print Pi.natCast_def /-
 @[simp]
-theorem coe_nat (n : ℕ) : (n : ∀ a, π a) = fun _ => n :=
+theorem natCast_def (n : ℕ) : (n : ∀ a, π a) = fun _ => n :=
   rfl
-#align pi.coe_nat Pi.coe_nat
+#align pi.coe_nat Pi.natCast_def
 -/
 
 end Pi

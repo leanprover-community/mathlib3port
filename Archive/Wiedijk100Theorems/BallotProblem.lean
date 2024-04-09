@@ -280,8 +280,8 @@ theorem first_vote_neg (p q : ℕ) (h : 0 < p + q) :
       (counted_sequence_nonempty p q)
   rw [compl_compl, first_vote_pos _ _ h] at this
   rw [(_ : (q / (p + q) : ENNReal) = 1 - p / (p + q)), ← this, ENNReal.add_sub_cancel_right]
-  · simp only [Ne.def, ENNReal.div_eq_top, Nat.cast_eq_zero, add_eq_zero_iff, ENNReal.nat_ne_top,
-      false_and_iff, or_false_iff, not_and]
+  · simp only [Ne.def, ENNReal.div_eq_top, Nat.cast_eq_zero, add_eq_zero_iff,
+      ENNReal.natCast_ne_top, false_and_iff, or_false_iff, not_and]
     intros
     contradiction
   rw [eq_comm, ENNReal.eq_div_iff, ENNReal.mul_sub, ENNReal.mul_div_cancel']
@@ -456,13 +456,14 @@ theorem ballot_problem :
     rw [ballot_problem' q p qp]
     rw [ENNReal.toReal_div, ← Nat.cast_add, ← Nat.cast_add, ENNReal.toReal_nat,
       ENNReal.toReal_sub_of_le, ENNReal.toReal_nat, ENNReal.toReal_nat]
-    exacts [Nat.cast_le.2 qp.le, ENNReal.nat_ne_top _]
+    exacts [Nat.cast_le.2 qp.le, ENNReal.natCast_ne_top _]
   rwa [ENNReal.toReal_eq_toReal (measure_lt_top _ _).Ne] at this
   · simp only [Ne.def, ENNReal.div_eq_top, tsub_eq_zero_iff_le, Nat.cast_le, not_le,
-      add_eq_zero_iff, Nat.cast_eq_zero, ENNReal.add_eq_top, ENNReal.nat_ne_top, or_self_iff,
+      add_eq_zero_iff, Nat.cast_eq_zero, ENNReal.add_eq_top, ENNReal.natCast_ne_top, or_self_iff,
       not_false_iff, and_true_iff]
     push_neg
-    exact ⟨fun _ _ => by linarith, (lt_of_le_of_lt tsub_le_self (ENNReal.nat_ne_top p).lt_top).Ne⟩
+    exact
+      ⟨fun _ _ => by linarith, (lt_of_le_of_lt tsub_le_self (ENNReal.natCast_ne_top p).lt_top).Ne⟩
   infer_instance
 #align ballot.ballot_problem Ballot.ballot_problem
 

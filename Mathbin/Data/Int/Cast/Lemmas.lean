@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Int
 import Data.Nat.Cast.Basic
 
 #align_import data.int.cast.lemmas from "leanprover-community/mathlib"@"acebd8d49928f6ed8920e502a6c90674e75bd441"
@@ -39,17 +39,17 @@ def ofNatHom : ℕ →+* ℤ :=
 #align int.of_nat_hom Int.ofNatHom
 -/
 
-#print Int.coe_nat_pos /-
+#print Int.natCast_pos /-
 @[simp]
-theorem coe_nat_pos {n : ℕ} : (0 : ℤ) < n ↔ 0 < n :=
+theorem natCast_pos {n : ℕ} : (0 : ℤ) < n ↔ 0 < n :=
   Nat.cast_pos
-#align int.coe_nat_pos Int.coe_nat_pos
+#align int.coe_nat_pos Int.natCast_pos
 -/
 
-#print Int.coe_nat_succ_pos /-
-theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
-  Int.coe_nat_pos.2 (succ_pos n)
-#align int.coe_nat_succ_pos Int.coe_nat_succ_pos
+#print Int.natCast_succ_pos /-
+theorem natCast_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
+  Int.natCast_pos.2 (succ_pos n)
+#align int.coe_nat_succ_pos Int.natCast_succ_pos
 -/
 
 #print Int.toNat_lt' /-
@@ -60,7 +60,7 @@ theorem toNat_lt' {a : ℤ} {b : ℕ} (hb : b ≠ 0) : a.toNat < b ↔ a < b := 
 
 #print Int.natMod_lt /-
 theorem natMod_lt {a : ℤ} {b : ℕ} (hb : b ≠ 0) : a.natMod b < b :=
-  (toNat_lt' hb).2 <| emod_lt_of_pos _ <| coe_nat_pos.2 hb.bot_lt
+  (toNat_lt' hb).2 <| emod_lt_of_pos _ <| natCast_pos.2 hb.bot_lt
 #align int.nat_mod_lt Int.natMod_lt
 -/
 
@@ -437,17 +437,17 @@ variable {π : ι → Type _} [∀ i, IntCast (π i)]
 
 instance : IntCast (∀ i, π i) := by refine_struct { .. } <;> pi_instance_derive_field
 
-#print Pi.int_apply /-
-theorem int_apply (n : ℤ) (i : ι) : (n : ∀ i, π i) i = n :=
+#print Pi.intCast_apply /-
+theorem intCast_apply (n : ℤ) (i : ι) : (n : ∀ i, π i) i = n :=
   rfl
-#align pi.int_apply Pi.int_apply
+#align pi.int_apply Pi.intCast_apply
 -/
 
-#print Pi.coe_int /-
+#print Pi.intCast_def /-
 @[simp]
-theorem coe_int (n : ℤ) : (n : ∀ i, π i) = fun _ => n :=
+theorem intCast_def (n : ℤ) : (n : ∀ i, π i) = fun _ => n :=
   rfl
-#align pi.coe_int Pi.coe_int
+#align pi.coe_int Pi.intCast_def
 -/
 
 end Pi

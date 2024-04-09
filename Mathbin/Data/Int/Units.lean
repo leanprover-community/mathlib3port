@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
 import Data.Nat.Units
-import Data.Int.Basic
+import Algebra.Group.Int
 import Algebra.Ring.Units
 
 #align_import data.int.units from "leanprover-community/mathlib"@"45a1ada01ed893722d0f8d15b9e44270996515d5"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Data.Fin.VecNotation
-import Data.Int.Order.Basic
+import Algebra.Order.Group.Int
 import Logic.Equiv.Defs
 
 #align_import logic.equiv.fin from "leanprover-community/mathlib"@"bd835ef554f37ef9b804f0903089211f89cb370b"

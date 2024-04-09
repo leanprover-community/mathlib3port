@@ -298,10 +298,10 @@ protected theorem zsmul_mem {x : L} (hx : x ∈ S) (n : ℤ) : n • x ∈ S :=
 #align intermediate_field.zsmul_mem IntermediateField.zsmul_mem
 -/
 
-#print IntermediateField.coe_int_mem /-
-protected theorem coe_int_mem (n : ℤ) : (n : L) ∈ S :=
-  coe_int_mem S n
-#align intermediate_field.coe_int_mem IntermediateField.coe_int_mem
+#print IntermediateField.intCast_mem /-
+protected theorem intCast_mem (n : ℤ) : (n : L) ∈ S :=
+  intCast_mem S n
+#align intermediate_field.coe_int_mem IntermediateField.intCast_mem
 -/
 
 #print IntermediateField.coe_add /-
@@ -348,9 +348,9 @@ protected theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n :=
 
 end InheritedLemmas
 
-#print IntermediateField.coe_nat_mem /-
-theorem coe_nat_mem (n : ℕ) : (n : L) ∈ S := by simpa using coe_int_mem S n
-#align intermediate_field.coe_nat_mem IntermediateField.coe_nat_mem
+#print IntermediateField.natCast_mem /-
+theorem natCast_mem (n : ℕ) : (n : L) ∈ S := by simpa using intCast_mem S n
+#align intermediate_field.coe_nat_mem IntermediateField.natCast_mem
 -/
 
 end IntermediateField
