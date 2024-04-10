@@ -53,7 +53,7 @@ theorem LinearMap.BilinForm.isSkewAdjoint_bracket (f g : Module.End R M)
   rw [mem_skew_adjoint_submodule] at *
   have hfg : is_adjoint_pair B B (f * g) (g * f) := by rw [← neg_mul_neg g f]; exact hf.mul hg
   have hgf : is_adjoint_pair B B (g * f) (f * g) := by rw [← neg_mul_neg f g]; exact hg.mul hf
-  change BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f)); rw [neg_sub]
+  change LinearMap.BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f)); rw [neg_sub]
   exact hfg.sub hgf
 #align bilin_form.is_skew_adjoint_bracket LinearMap.BilinForm.isSkewAdjoint_bracket
 -/
@@ -78,7 +78,7 @@ def skewAdjointLieSubalgebraEquiv :
   ext f
   simp only [LieSubalgebra.mem_coe, Submodule.mem_map_equiv, LieSubalgebra.mem_map_submodule,
     coe_coe]
-  exact (BilinForm.isPairSelfAdjoint_equiv (-B) B e f).symm
+  exact (LinearMap.BilinForm.isPairSelfAdjoint_equiv (-B) B e f).symm
 #align skew_adjoint_lie_subalgebra_equiv skewAdjointLieSubalgebraEquiv
 -/
 

@@ -39,17 +39,17 @@ notation:50 x " ≡ " y " [SMOD " N "]" => SModEq N x y
 
 variable {U U₁ U₂}
 
-#print SModEq.def' /-
-protected theorem SModEq.def' :
+#print SModEq.def /-
+protected theorem SModEq.def :
     x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y :=
   Iff.rfl
-#align smodeq.def SModEq.def'
+#align smodeq.def SModEq.def
 -/
 
 namespace SModEq
 
 #print SModEq.sub_mem /-
-theorem sub_mem : x ≡ y [SMOD U] ↔ x - y ∈ U := by rw [SModEq.def', Submodule.Quotient.eq]
+theorem sub_mem : x ≡ y [SMOD U] ↔ x - y ∈ U := by rw [SModEq.def, Submodule.Quotient.eq]
 #align smodeq.sub_mem SModEq.sub_mem
 -/
 
@@ -63,7 +63,7 @@ theorem top : x ≡ y [SMOD (⊤ : Submodule R M)] :=
 #print SModEq.bot /-
 @[simp]
 theorem bot : x ≡ y [SMOD (⊥ : Submodule R M)] ↔ x = y := by
-  rw [SModEq.def', Submodule.Quotient.eq, mem_bot, sub_eq_zero]
+  rw [SModEq.def, Submodule.Quotient.eq, mem_bot, sub_eq_zero]
 #align smodeq.bot SModEq.bot
 -/
 
@@ -106,18 +106,18 @@ theorem trans (hxy : x ≡ y [SMOD U]) (hyz : y ≡ z [SMOD U]) : x ≡ z [SMOD 
 
 #print SModEq.add /-
 theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] := by
-  rw [SModEq.def'] at hxy₁ hxy₂ ⊢; simp_rw [quotient.mk_add, hxy₁, hxy₂]
+  rw [SModEq.def] at hxy₁ hxy₂ ⊢; simp_rw [quotient.mk_add, hxy₁, hxy₂]
 #align smodeq.add SModEq.add
 -/
 
 #print SModEq.smul /-
-theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := by
-  rw [SModEq.def'] at hxy ⊢; simp_rw [quotient.mk_smul, hxy]
+theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := by rw [SModEq.def] at hxy ⊢;
+  simp_rw [quotient.mk_smul, hxy]
 #align smodeq.smul SModEq.smul
 -/
 
 #print SModEq.zero /-
-theorem zero : x ≡ 0 [SMOD U] ↔ x ∈ U := by rw [SModEq.def', Submodule.Quotient.eq, sub_zero]
+theorem zero : x ≡ 0 [SMOD U] ↔ x ∈ U := by rw [SModEq.def, Submodule.Quotient.eq, sub_zero]
 #align smodeq.zero SModEq.zero
 -/
 
@@ -137,7 +137,7 @@ theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V
 #print SModEq.eval /-
 theorem eval {R : Type _} [CommRing R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
     f.eval x ≡ f.eval y [SMOD I] := by
-  rw [SModEq.def'] at h ⊢
+  rw [SModEq.def] at h ⊢
   show Ideal.Quotient.mk I (f.eval x) = Ideal.Quotient.mk I (f.eval y)
   change Ideal.Quotient.mk I x = Ideal.Quotient.mk I y at h
   rw [← Polynomial.eval₂_at_apply, ← Polynomial.eval₂_at_apply, h]

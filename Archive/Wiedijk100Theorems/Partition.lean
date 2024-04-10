@@ -432,7 +432,7 @@ theorem odd_gf_prop [Field α] (n m : ℕ) (h : n < m * 2) :
   rw [← partial_odd_gf_prop]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, (_ : exprProp())) _)]]"
-  apply ball_congr
+  apply forall₂_congr
   intro i hi
   have hin : i ≤ n := by
     simpa [p.parts_sum] using Multiset.single_le_sum (fun _ _ => Nat.zero_le _) _ hi

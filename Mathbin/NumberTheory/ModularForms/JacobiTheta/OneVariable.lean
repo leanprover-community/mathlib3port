@@ -57,8 +57,7 @@ theorem norm_exp_mul_sq_le {z : ℂ} (hz : 0 < z.im) (n : ℤ) :
 #align norm_exp_mul_sq_le norm_exp_mul_sq_le
 -/
 
-#print exists_summable_bound_exp_mul_sq /-
-theorem exists_summable_bound_exp_mul_sq {R : ℝ} (hR : 0 < R) :
+theorem exists_summable_bound_exp_hMul_sq {R : ℝ} (hR : 0 < R) :
     ∃ bd : ℤ → ℝ,
       Summable bd ∧ ∀ {τ : ℂ} (hτ : R ≤ τ.im) (n : ℤ), ‖cexp (π * I * n ^ 2 * τ)‖ ≤ bd n :=
   by
@@ -71,16 +70,13 @@ theorem exists_summable_bound_exp_mul_sq {R : ℝ} (hR : 0 < R) :
   all_goals
     simpa only [Int.natAbs_neg, Int.natAbs_ofNat] using
       summable_geometric_of_lt_one (Real.exp_pos _).le h
-#align exists_summable_bound_exp_mul_sq exists_summable_bound_exp_mul_sq
--/
+#align exists_summable_bound_exp_mul_sq exists_summable_bound_exp_hMul_sq
 
-#print summable_exp_mul_sq /-
-theorem summable_exp_mul_sq {z : ℂ} (hz : 0 < z.im) :
+theorem summable_exp_hMul_sq {z : ℂ} (hz : 0 < z.im) :
     Summable fun n : ℤ => cexp (π * I * n ^ 2 * z) :=
-  let ⟨bd, h, h'⟩ := exists_summable_bound_exp_mul_sq hz
+  let ⟨bd, h, h'⟩ := exists_summable_bound_exp_hMul_sq hz
   summable_norm_iff.mp (Summable.of_nonneg_of_le (fun n => norm_nonneg _) (h' <| le_refl _) h)
-#align summable_exp_mul_sq summable_exp_mul_sq
--/
+#align summable_exp_mul_sq summable_exp_hMul_sq
 
 #print jacobiTheta_two_add /-
 theorem jacobiTheta_two_add (z : ℂ) : jacobiTheta (2 + z) = jacobiTheta z :=
@@ -136,7 +132,7 @@ theorem jacobiTheta_S_smul (τ : ℍ) :
 theorem hasSum_nat_jacobiTheta {z : ℂ} (hz : 0 < im z) :
     HasSum (fun n : ℕ => cexp (π * I * (n + 1) ^ 2 * z)) ((jacobiTheta z - 1) / 2) :=
   by
-  have := (summable_exp_mul_sq hz).HasSum.nat_add_neg
+  have := (summable_exp_hMul_sq hz).HasSum.nat_add_neg
   rw [← @hasSum_nat_add_iff' ℂ _ _ _ _ 1] at this
   simp_rw [Finset.sum_range_one, Int.cast_neg, Int.cast_natCast, Nat.cast_zero, neg_zero,
     Int.cast_zero, sq (0 : ℂ), MulZeroClass.mul_zero, MulZeroClass.zero_mul, neg_sq, ← mul_two,
@@ -225,7 +221,7 @@ theorem differentiableAt_jacobiTheta {z : ℂ} (hz : 0 < im z) : DifferentiableA
       DifferentiableWithinAt ℂ (fun v : ℂ => cexp (↑π * I * ↑n ^ 2 * v)) {z : ℂ | y < im z} w :=
     fun n w hw => (differentiable_at_id.const_mul _).cexp.DifferentiableWithinAt
   have h2 : IsOpen {w : ℂ | y < im w} := continuous_im.is_open_preimage _ isOpen_Ioi
-  obtain ⟨bd, bd_s, le_bd⟩ := exists_summable_bound_exp_mul_sq hy
+  obtain ⟨bd, bd_s, le_bd⟩ := exists_summable_bound_exp_hMul_sq hy
   exact differentiable_on_tsum_of_summable_norm bd_s h1 h2 fun i w hw => le_bd (le_of_lt hw) i
 #align differentiable_at_jacobi_theta differentiableAt_jacobiTheta
 -/

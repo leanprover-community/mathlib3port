@@ -29,8 +29,8 @@ namespace Counterexample
 
 /-- The bilinear form we will use as a counterexample, over some field `F` of characteristic two. -/
 def b : BilinForm F (F × F) :=
-  BilinForm.linMulLin (LinearMap.fst _ _ _) (LinearMap.snd _ _ _) +
-    BilinForm.linMulLin (LinearMap.snd _ _ _) (LinearMap.fst _ _ _)
+  LinearMap.BilinForm.linMulLin (LinearMap.fst _ _ _) (LinearMap.snd _ _ _) +
+    LinearMap.BilinForm.linMulLin (LinearMap.snd _ _ _) (LinearMap.fst _ _ _)
 #align counterexample.B Counterexample.b
 
 @[simp]
@@ -44,7 +44,7 @@ theorem isSymm_b : (b F).IsSymm := fun x y => by simp [mul_comm, add_comm]
 theorem isAlt_b : (b F).IsAlt := fun x => by simp [mul_comm, CharTwo.add_self_eq_zero (x.1 * x.2)]
 #align counterexample.is_alt_B Counterexample.isAlt_b
 
-theorem b_ne_zero : b F ≠ 0 := fun h => by simpa using BilinForm.congr_fun h (1, 0) (1, 1)
+theorem b_ne_zero : b F ≠ 0 := fun h => by simpa using LinearMap.BilinForm.congr_fun h (1, 0) (1, 1)
 #align counterexample.B_ne_zero Counterexample.b_ne_zero
 
 /-- `bilin_form.to_quadratic_form` is not injective on symmetric bilinear forms.

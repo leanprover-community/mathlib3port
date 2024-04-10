@@ -720,7 +720,7 @@ theorem isSheaf_iff_isSheaf_forget (s : A ⥤ Type max v₁ u₁) [HasLimits A] 
   by
   rw [is_sheaf_iff_is_sheaf', is_sheaf_iff_is_sheaf']
   apply forall_congr' fun U => _
-  apply ball_congr fun R hR => _
+  apply forall₂_congr fun R hR => _
   letI : reflects_limits s := reflects_limits_of_reflects_isomorphisms
   have : is_limit (s.map_cone (fork.of_ι _ (w R P))) ≃ is_limit (fork.of_ι _ (w R (P ⋙ s))) :=
     is_sheaf_for_is_sheaf_for' P s U R

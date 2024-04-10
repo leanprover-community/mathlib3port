@@ -60,7 +60,7 @@ variable {r r'}
 
 #print directedOn_iff_directed /-
 theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s → α) := by
-  simp [Directed, DirectedOn] <;> refine' ball_congr fun x hx => by simp <;> rfl
+  simp [Directed, DirectedOn] <;> refine' forall₂_congr fun x hx => by simp <;> rfl
 #align directed_on_iff_directed directedOn_iff_directed
 -/
 

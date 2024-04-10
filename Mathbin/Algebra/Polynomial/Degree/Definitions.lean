@@ -88,10 +88,10 @@ theorem monic_of_subsingleton [Subsingleton R] (p : R[X]) : Monic p :=
 #align polynomial.monic_of_subsingleton Polynomial.monic_of_subsingleton
 -/
 
-#print Polynomial.Monic.def' /-
-theorem Monic.def' : Monic p ↔ leadingCoeff p = 1 :=
+#print Polynomial.Monic.def /-
+theorem Monic.def : Monic p ↔ leadingCoeff p = 1 :=
   Iff.rfl
-#align polynomial.monic.def Polynomial.Monic.def'
+#align polynomial.monic.def Polynomial.Monic.def
 -/
 
 #print Polynomial.Monic.decidable /-

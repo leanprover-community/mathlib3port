@@ -1744,7 +1744,7 @@ theorem isOpen_pi_iff {s : Set (∀ a, π a)} :
   by
   rw [isOpen_iff_nhds]
   simp_rw [le_principal_iff, nhds_pi, Filter.mem_pi', mem_nhds_iff, exists_prop]
-  refine' ball_congr fun a h => ⟨_, _⟩
+  refine' forall₂_congr fun a h => ⟨_, _⟩
   · rintro ⟨I, t, ⟨h1, h2⟩⟩
     refine' ⟨I, fun a => eval a '' (I : Set ι).pi fun a => (h1 a).some, fun i hi => _, _⟩
     · simp_rw [Set.eval_image_pi (finset.mem_coe.mpr hi)
@@ -1776,7 +1776,7 @@ theorem isOpen_pi_iff' [Finite ι] {s : Set (∀ a, π a)} :
   cases nonempty_fintype ι
   rw [isOpen_iff_nhds]
   simp_rw [le_principal_iff, nhds_pi, Filter.mem_pi', mem_nhds_iff, exists_prop]
-  refine' ball_congr fun a h => ⟨_, _⟩
+  refine' forall₂_congr fun a h => ⟨_, _⟩
   · rintro ⟨I, t, ⟨h1, h2⟩⟩
     refine'
       ⟨fun i => (h1 i).some,

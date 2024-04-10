@@ -245,7 +245,7 @@ def charPoly : α[X] :=
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=
   by
-  rw [char_poly, Polynomial.IsRoot.definition, Polynomial.eval]
+  rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
   simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial,
     Polynomial.eval₂_sub]
   constructor

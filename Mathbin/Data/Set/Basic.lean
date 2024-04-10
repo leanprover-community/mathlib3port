@@ -806,10 +806,10 @@ theorem subset_eq_empty {s t : Set α} (h : t ⊆ s) (e : s = ∅) : t = ∅ :=
 #align set.subset_eq_empty Set.subset_eq_empty
 -/
 
-#print Set.ball_empty_iff /-
-theorem ball_empty_iff {p : α → Prop} : (∀ x ∈ (∅ : Set α), p x) ↔ True :=
+#print Set.forall_mem_empty /-
+theorem forall_mem_empty {p : α → Prop} : (∀ x ∈ (∅ : Set α), p x) ↔ True :=
   iff_true_intro fun x => False.elim
-#align set.ball_empty_iff Set.ball_empty_iff
+#align set.ball_empty_iff Set.forall_mem_empty
 -/
 
 instance (α : Type u) : IsEmpty.{u + 1} (∅ : Set α) :=
@@ -1671,18 +1671,18 @@ theorem forall_insert_of_forall {P : α → Prop} {a : α} {s : Set α} (H : ∀
 #align set.forall_insert_of_forall Set.forall_insert_of_forall
 -/
 
-#print Set.bex_insert_iff /-
-theorem bex_insert_iff {P : α → Prop} {a : α} {s : Set α} :
+#print Set.exists_mem_insert /-
+theorem exists_mem_insert {P : α → Prop} {a : α} {s : Set α} :
     (∃ x ∈ insert a s, P x) ↔ P a ∨ ∃ x ∈ s, P x :=
-  bex_or_left.trans <| or_congr_left bex_eq_left
-#align set.bex_insert_iff Set.bex_insert_iff
+  exists_mem_or_left.trans <| or_congr_left bex_eq_left
+#align set.bex_insert_iff Set.exists_mem_insert
 -/
 
-#print Set.ball_insert_iff /-
-theorem ball_insert_iff {P : α → Prop} {a : α} {s : Set α} :
+#print Set.forall_mem_insert /-
+theorem forall_mem_insert {P : α → Prop} {a : α} {s : Set α} :
     (∀ x ∈ insert a s, P x) ↔ P a ∧ ∀ x ∈ s, P x :=
-  ball_or_left.trans <| and_congr_left' forall_eq
-#align set.ball_insert_iff Set.ball_insert_iff
+  forall₂_or_left.trans <| and_congr_left' forall_eq
+#align set.ball_insert_iff Set.forall_mem_insert
 -/
 
 /-! ### Lemmas about singletons -/

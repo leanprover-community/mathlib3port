@@ -46,7 +46,7 @@ theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.Prod �
 #print Prime.not_dvd_prod /-
 theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀ a ∈ L, ¬p ∣ a) :
     ¬p ∣ L.Prod :=
-  mt (Prime.dvd_prod_iff pp).mp <| not_bex.mpr hL
+  mt (Prime.dvd_prod_iff pp).mp <| not_exists_mem.mpr hL
 #align prime.not_dvd_prod Prime.not_dvd_prod
 -/
 

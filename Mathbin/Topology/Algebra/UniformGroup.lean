@@ -949,7 +949,7 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0) := by simpa using hφ.tendsto (0, y₁)
   have lim := lim2.comp lim1
   rw [tendsto_prod_self_iff] at lim
-  simp_rw [ball_mem_comm]
+  simp_rw [forall_mem_comm]
   exact limUnder W' W'_nhd
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/

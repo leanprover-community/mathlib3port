@@ -2603,7 +2603,7 @@ import RingTheory.DiscreteValuationRing.Basic
 import RingTheory.DiscreteValuationRing.TFAE
 import RingTheory.Discriminant
 import RingTheory.EisensteinCriterion
-import RingTheory.Etale
+import RingTheory.Smooth.Basic
 import RingTheory.EuclideanDomain
 import RingTheory.Filtration
 import RingTheory.FinitePresentation

@@ -293,7 +293,7 @@ theorem EqOn.mono (hs : s₁ ⊆ s₂) (hf : EqOn f₁ f₂ s₂) : EqOn f₁ f�
 #print Set.eqOn_union /-
 @[simp]
 theorem eqOn_union : EqOn f₁ f₂ (s₁ ∪ s₂) ↔ EqOn f₁ f₂ s₁ ∧ EqOn f₁ f₂ s₂ :=
-  ball_or_left
+  forall₂_or_left
 #align set.eq_on_union Set.eqOn_union
 -/
 

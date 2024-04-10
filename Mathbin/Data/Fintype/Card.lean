@@ -776,7 +776,7 @@ theorem injective_iff_surjective {f : α → α} : Injective f ↔ Surjective f 
           eq_of_subset_of_card_le (subset_univ _)
             ((card_image_of_injective univ hinj).symm ▸ le_rfl)
         have h₂ : x ∈ image f univ := h₁.symm ▸ mem_univ _
-        exists_of_bex (mem_image.1 h₂)
+        exists_of_exists_mem (mem_image.1 h₂)
       ⟨this, fun hsurj =>
         has_left_inverse.injective
           ⟨surj_inv hsurj,

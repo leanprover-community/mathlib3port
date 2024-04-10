@@ -1676,20 +1676,20 @@ theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
 #align proof_irrel_heq proof_irrel_heq
 -/
 
-#print ball_cond_comm /-
+#print forall_cond_comm /-
 -- todo: change name
-theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
+theorem forall_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
   ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
-#align ball_cond_comm ball_cond_comm
+#align ball_cond_comm forall_cond_comm
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b «expr ∈ » s) -/
-#print ball_mem_comm /-
-theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
+#print forall_mem_comm /-
+theorem forall_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
     (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
-  ball_cond_comm
-#align ball_mem_comm ball_mem_comm
+  forall_cond_comm
+#align ball_mem_comm forall_mem_comm
 -/
 
 #print ne_of_apply_ne /-
@@ -2756,16 +2756,20 @@ theorem BEx.intro (a : α) (h₁ : p a) (h₂ : P a h₁) : ∃ (x : _) (h : p x
 #align bex.intro BEx.intro
 -/
 
-#print ball_congr /-
-theorem ball_congr (H : ∀ x h, P x h ↔ Q x h) : (∀ x h, P x h) ↔ ∀ x h, Q x h :=
+/- warning: ball_congr clashes with forall₂_congr -> forall₂_congr
+Case conversion may be inaccurate. Consider using '#align ball_congr forall₂_congrₓ'. -/
+#print forall₂_congr /-
+theorem forall₂_congr (H : ∀ x h, P x h ↔ Q x h) : (∀ x h, P x h) ↔ ∀ x h, Q x h :=
   forall_congr' fun x => forall_congr' (H x)
-#align ball_congr ball_congr
+#align ball_congr forall₂_congr
 -/
 
-#print bex_congr /-
-theorem bex_congr (H : ∀ x h, P x h ↔ Q x h) : (∃ x h, P x h) ↔ ∃ x h, Q x h :=
+/- warning: bex_congr clashes with exists₂_congr -> exists₂_congr
+Case conversion may be inaccurate. Consider using '#align bex_congr exists₂_congrₓ'. -/
+#print exists₂_congr /-
+theorem exists₂_congr (H : ∀ x h, P x h ↔ Q x h) : (∃ x h, P x h) ↔ ∃ x h, Q x h :=
   exists_congr fun x => exists_congr (H x)
-#align bex_congr bex_congr
+#align bex_congr exists₂_congr
 -/
 
 #print bex_eq_left /-
@@ -2810,80 +2814,82 @@ theorem forall_of_ball (H : ∀ x, p x) (h : ∀ x, p x → q x) (x) : q x :=
 #align forall_of_ball forall_of_ball
 -/
 
-#print bex_of_exists /-
-theorem bex_of_exists (H : ∀ x, p x) : (∃ x, q x) → ∃ (x : _) (_ : p x), q x
+#print exists_mem_of_exists /-
+theorem exists_mem_of_exists (H : ∀ x, p x) : (∃ x, q x) → ∃ (x : _) (_ : p x), q x
   | ⟨x, hq⟩ => ⟨x, H x, hq⟩
-#align bex_of_exists bex_of_exists
+#align bex_of_exists exists_mem_of_exists
 -/
 
-#print exists_of_bex /-
-theorem exists_of_bex : (∃ (x : _) (_ : p x), q x) → ∃ x, q x
+#print exists_of_exists_mem /-
+theorem exists_of_exists_mem : (∃ (x : _) (_ : p x), q x) → ∃ x, q x
   | ⟨x, _, hq⟩ => ⟨x, hq⟩
-#align exists_of_bex exists_of_bex
+#align exists_of_bex exists_of_exists_mem
 -/
 
-#print bex_imp /-
+#print exists₂_imp /-
 @[simp]
-theorem bex_imp : (∃ x h, P x h) → b ↔ ∀ x h, P x h → b := by simp
-#align bex_imp_distrib bex_imp
+theorem exists₂_imp : (∃ x h, P x h) → b ↔ ∀ x h, P x h → b := by simp
+#align bex_imp_distrib exists₂_imp
 -/
 
-#print not_bex /-
-theorem not_bex : (¬∃ x h, P x h) ↔ ∀ x h, ¬P x h :=
-  bex_imp
-#align not_bex not_bex
+#print not_exists_mem /-
+theorem not_exists_mem : (¬∃ x h, P x h) ↔ ∀ x h, ¬P x h :=
+  exists₂_imp
+#align not_bex not_exists_mem
 -/
 
-#print not_ball_of_bex_not /-
-theorem not_ball_of_bex_not : (∃ x h, ¬P x h) → ¬∀ x h, P x h
+#print not_forall₂_of_exists₂_not /-
+theorem not_forall₂_of_exists₂_not : (∃ x h, ¬P x h) → ¬∀ x h, P x h
   | ⟨x, h, hp⟩, al => hp <| al x h
-#align not_ball_of_bex_not not_ball_of_bex_not
+#align not_ball_of_bex_not not_forall₂_of_exists₂_not
 -/
 
-#print Decidable.not_ball /-
+#print Decidable.not_forall₂ /-
 -- See Note [decidable namespace]
-protected theorem Decidable.not_ball [Decidable (∃ x h, ¬P x h)] [∀ x h, Decidable (P x h)] :
+protected theorem Decidable.not_forall₂ [Decidable (∃ x h, ¬P x h)] [∀ x h, Decidable (P x h)] :
     (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
   ⟨Not.decidable_imp_symm fun nx x h => nx.decidable_imp_symm fun h' => ⟨x, h, h'⟩,
-    not_ball_of_bex_not⟩
-#align decidable.not_ball Decidable.not_ball
+    not_forall₂_of_exists₂_not⟩
+#align decidable.not_ball Decidable.not_forall₂
 -/
 
-#print not_ball /-
-theorem not_ball : (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
-  Decidable.not_ball
-#align not_ball not_ball
+#print not_forall₂ /-
+theorem not_forall₂ : (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
+  Decidable.not_forall₂
+#align not_ball not_forall₂
 -/
 
-#print ball_true_iff /-
-theorem ball_true_iff (p : α → Prop) : (∀ x, p x → True) ↔ True :=
+/- warning: ball_true_iff clashes with forall_2_true_iff -> forall₂_true_iff
+Case conversion may be inaccurate. Consider using '#align ball_true_iff forall₂_true_iffₓ'. -/
+#print forall₂_true_iff /-
+theorem forall₂_true_iff (p : α → Prop) : (∀ x, p x → True) ↔ True :=
   iff_true_intro fun h hrx => trivial
-#align ball_true_iff ball_true_iff
+#align ball_true_iff forall₂_true_iff
 -/
 
-#print ball_and /-
-theorem ball_and : (∀ x h, P x h ∧ Q x h) ↔ (∀ x h, P x h) ∧ ∀ x h, Q x h :=
+#print forall₂_and /-
+theorem forall₂_and : (∀ x h, P x h ∧ Q x h) ↔ (∀ x h, P x h) ∧ ∀ x h, Q x h :=
   Iff.trans (forall_congr' fun x => forall_and) forall_and
-#align ball_and_distrib ball_and
+#align ball_and_distrib forall₂_and
 -/
 
-#print bex_or /-
-theorem bex_or : (∃ x h, P x h ∨ Q x h) ↔ (∃ x h, P x h) ∨ ∃ x h, Q x h :=
+#print exists_mem_or /-
+theorem exists_mem_or : (∃ x h, P x h ∨ Q x h) ↔ (∃ x h, P x h) ∨ ∃ x h, Q x h :=
   Iff.trans (exists_congr fun x => exists_or) exists_or
-#align bex_or_distrib bex_or
+#align bex_or_distrib exists_mem_or
 -/
 
-#print ball_or_left /-
-theorem ball_or_left : (∀ x, p x ∨ q x → r x) ↔ (∀ x, p x → r x) ∧ ∀ x, q x → r x :=
+#print forall₂_or_left /-
+theorem forall₂_or_left : (∀ x, p x ∨ q x → r x) ↔ (∀ x, p x → r x) ∧ ∀ x, q x → r x :=
   Iff.trans (forall_congr' fun x => or_imp) forall_and
-#align ball_or_left_distrib ball_or_left
+#align ball_or_left_distrib forall₂_or_left
 -/
 
-#print bex_or_left /-
-theorem bex_or_left :
+#print exists_mem_or_left /-
+theorem exists_mem_or_left :
     (∃ (x : _) (_ : p x ∨ q x), r x) ↔ (∃ (x : _) (_ : p x), r x) ∨ ∃ (x : _) (_ : q x), r x := by
   simp only [exists_prop] <;> exact Iff.trans (exists_congr fun x => or_and_right) exists_or
-#align bex_or_left_distrib bex_or_left
+#align bex_or_left_distrib exists_mem_or_left
 -/
 
 end BoundedQuantifiers
@@ -2892,12 +2898,10 @@ namespace Classical
 
 attribute [local instance] prop_decidable
 
-/- warning: classical.not_ball clashes with not_ball -> not_ball
-Case conversion may be inaccurate. Consider using '#align classical.not_ball not_ballₓ'. -/
 #print not_ball /-
 theorem not_ball {α : Sort _} {p : α → Prop} {P : ∀ x : α, p x → Prop} :
     (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
-  not_ball
+  not_forall₂
 #align classical.not_ball not_ball
 -/
 

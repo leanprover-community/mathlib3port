@@ -123,7 +123,7 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
     conv_lhs => rw [← Classical.choose_spec (hc' i)]
     rw [← IsScalarTower.algebraMap_smul K (Classical.choose (hc' i)) (db i)]
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
-  rw [BilinForm.dualBasis_repr_apply]
+  rw [LinearMap.BilinForm.dualBasis_repr_apply]
   exact is_integral_trace (IsIntegral.mul hx (hb_int i))
 #align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dualBasis
 -/

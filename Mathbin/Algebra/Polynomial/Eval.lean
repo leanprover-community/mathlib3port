@@ -614,11 +614,11 @@ def IsRoot (p : R[X]) (a : R) : Prop :=
 
 instance [DecidableEq R] : Decidable (IsRoot p a) := by unfold is_root <;> infer_instance
 
-#print Polynomial.IsRoot.definition /-
+#print Polynomial.IsRoot.def /-
 @[simp]
-theorem IsRoot.definition : IsRoot p a ↔ p.eval a = 0 :=
+theorem IsRoot.def : IsRoot p a ↔ p.eval a = 0 :=
   Iff.rfl
-#align polynomial.is_root.def Polynomial.IsRoot.definition
+#align polynomial.is_root.def Polynomial.IsRoot.def
 -/
 
 #print Polynomial.IsRoot.eq_zero /-

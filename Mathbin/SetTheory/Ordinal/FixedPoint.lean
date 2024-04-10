@@ -252,7 +252,7 @@ theorem le_iff_derivFamily (H : ∀ i, IsNormal (f i)) {a} :
       rw [deriv_family_succ]
       exact nfp_family_le_fp (fun i => (H i).Monotone) (succ_le_of_lt h) ha
     · cases eq_or_lt_of_le h₁; · exact ⟨_, h.symm⟩
-      rw [deriv_family_limit _ l, ← not_le, bsup_le_iff, not_ball] at h
+      rw [deriv_family_limit _ l, ← not_le, bsup_le_iff, not_forall₂] at h
       exact
         let ⟨o', h, hl⟩ := h
         IH o' h (le_of_not_le hl),

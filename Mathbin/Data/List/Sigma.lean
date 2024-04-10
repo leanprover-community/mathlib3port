@@ -192,7 +192,7 @@ theorem nodupKeys_join {L : List (List (Sigma β))} :
     NodupKeys (join L) ↔ (∀ l ∈ L, NodupKeys l) ∧ Pairwise Disjoint (L.map keys) :=
   by
   rw [nodupkeys_iff_pairwise, pairwise_join, pairwise_map]
-  refine' and_congr (ball_congr fun l h => by simp [nodupkeys_iff_pairwise]) _
+  refine' and_congr (forall₂_congr fun l h => by simp [nodupkeys_iff_pairwise]) _
   apply iff_of_eq; congr with (l₁ l₂)
   simp [keys, disjoint_iff_ne]
 #align list.nodupkeys_join List.nodupKeys_join

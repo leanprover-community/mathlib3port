@@ -1567,7 +1567,7 @@ variable [LinearOrder α] {s : Finset ι} (H : s.Nonempty) {f : ι → α} {a : 
 theorem le_sup'_iff : a ≤ s.sup' H f ↔ ∃ b ∈ s, a ≤ f b :=
   by
   rw [← WithBot.coe_le_coe, coe_sup', Finset.le_sup_iff (WithBot.bot_lt_coe a)]
-  exact bex_congr fun b hb => WithBot.coe_le_coe
+  exact exists₂_congr fun b hb => WithBot.coe_le_coe
 #align finset.le_sup'_iff Finset.le_sup'_iff
 -/
 
@@ -1576,7 +1576,7 @@ theorem le_sup'_iff : a ≤ s.sup' H f ↔ ∃ b ∈ s, a ≤ f b :=
 theorem lt_sup'_iff : a < s.sup' H f ↔ ∃ b ∈ s, a < f b :=
   by
   rw [← WithBot.coe_lt_coe, coe_sup', Finset.lt_sup_iff]
-  exact bex_congr fun b hb => WithBot.coe_lt_coe
+  exact exists₂_congr fun b hb => WithBot.coe_lt_coe
 #align finset.lt_sup'_iff Finset.lt_sup'_iff
 -/
 
@@ -1585,7 +1585,7 @@ theorem lt_sup'_iff : a < s.sup' H f ↔ ∃ b ∈ s, a < f b :=
 theorem sup'_lt_iff : s.sup' H f < a ↔ ∀ i ∈ s, f i < a :=
   by
   rw [← WithBot.coe_lt_coe, coe_sup', Finset.sup_lt_iff (WithBot.bot_lt_coe a)]
-  exact ball_congr fun b hb => WithBot.coe_lt_coe
+  exact forall₂_congr fun b hb => WithBot.coe_lt_coe
 #align finset.sup'_lt_iff Finset.sup'_lt_iff
 -/
 

@@ -614,10 +614,10 @@ alias ⟨_, nonempty.to_set⟩ := coe_nonempty
 alias ⟨_, nonempty.coe_sort⟩ := nonempty_coe_sort
 #align finset.nonempty.coe_sort Finset.Nonempty.coe_sort
 
-#print Finset.Nonempty.bex /-
-theorem Nonempty.bex {s : Finset α} (h : s.Nonempty) : ∃ x : α, x ∈ s :=
+#print Finset.Nonempty.exists_mem /-
+theorem Nonempty.exists_mem {s : Finset α} (h : s.Nonempty) : ∃ x : α, x ∈ s :=
   h
-#align finset.nonempty.bex Finset.Nonempty.bex
+#align finset.nonempty.bex Finset.Nonempty.exists_mem
 -/
 
 #print Finset.Nonempty.mono /-

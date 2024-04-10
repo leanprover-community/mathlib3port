@@ -1816,7 +1816,7 @@ theorem hereditarily_iff : Hereditarily p x ↔ p x ∧ ∀ y ∈ x, Hereditaril
 -/
 
 alias ⟨hereditarily.def, _⟩ := hereditarily_iff
-#align Set.hereditarily.def ZFSet.Hereditarily.def'
+#align Set.hereditarily.def ZFSet.Hereditarily.def
 
 #print ZFSet.Hereditarily.self /-
 theorem Hereditarily.self (h : x.Hereditarily p) : p x :=

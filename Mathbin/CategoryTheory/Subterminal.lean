@@ -49,10 +49,10 @@ def IsSubterminal (A : C) : Prop :=
 #align category_theory.is_subterminal CategoryTheory.IsSubterminal
 -/
 
-#print CategoryTheory.IsSubterminal.def' /-
-theorem IsSubterminal.def' : IsSubterminal A ↔ ∀ ⦃Z : C⦄ (f g : Z ⟶ A), f = g :=
+#print CategoryTheory.IsSubterminal.def /-
+theorem IsSubterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ (f g : Z ⟶ A), f = g :=
   Iff.rfl
-#align category_theory.is_subterminal.def CategoryTheory.IsSubterminal.def'
+#align category_theory.is_subterminal.def CategoryTheory.IsSubterminal.def
 -/
 
 #print CategoryTheory.IsSubterminal.mono_isTerminal_from /-

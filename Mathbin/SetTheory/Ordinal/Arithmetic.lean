@@ -335,7 +335,7 @@ theorem limit_le {o} (h : IsLimit o) {a} : o ≤ a ↔ ∀ x < o, x ≤ a :=
 
 #print Ordinal.lt_limit /-
 theorem lt_limit {o} (h : IsLimit o) {a} : a < o ↔ ∃ x < o, a < x := by
-  simpa only [not_ball, not_le] using not_congr (@limit_le _ h a)
+  simpa only [not_forall₂, not_le] using not_congr (@limit_le _ h a)
 #align ordinal.lt_limit Ordinal.lt_limit
 -/
 
@@ -568,9 +568,9 @@ theorem IsNormal.le_set {f o} (H : IsNormal f) (p : Set Ordinal) (p0 : p.Nonempt
     · cases' p0 with x px
       have := Ordinal.le_zero.1 ((H₂ _).1 (Ordinal.zero_le _) _ px)
       rw [this] at px; exact h _ px
-    · rcases not_ball.1 (mt (H₂ S).2 <| (lt_succ S).not_le) with ⟨a, h₁, h₂⟩
+    · rcases not_forall₂.1 (mt (H₂ S).2 <| (lt_succ S).not_le) with ⟨a, h₁, h₂⟩
       exact (H.le_iff.2 <| succ_le_of_lt <| not_le.1 h₂).trans (h _ h₁)
-    · rcases not_ball.1 (mt (H₂ a).2 h'.not_le) with ⟨b, h₁, h₂⟩
+    · rcases not_forall₂.1 (mt (H₂ a).2 h'.not_le) with ⟨b, h₁, h₂⟩
       exact (H.le_iff.2 <| (not_le.1 h₂).le).trans (h _ h₁)⟩
 #align ordinal.is_normal.le_set Ordinal.IsNormal.le_set
 -/
@@ -989,7 +989,7 @@ theorem mul_isNormal {a : Ordinal} (h : 0 < a) : IsNormal ((· * ·) a) :=
 
 #print Ordinal.lt_mul_of_limit /-
 theorem lt_mul_of_limit {a b c : Ordinal} (h : IsLimit c) : a < b * c ↔ ∃ c' < c, a < b * c' := by
-  simpa only [not_ball, not_le] using not_congr (@mul_le_of_limit b c a h)
+  simpa only [not_forall₂, not_le] using not_congr (@mul_le_of_limit b c a h)
 #align ordinal.lt_mul_of_limit Ordinal.lt_mul_of_limit
 -/
 

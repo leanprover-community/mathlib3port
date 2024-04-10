@@ -80,10 +80,10 @@ def TrailingMonic (p : R[X]) :=
 #align polynomial.trailing_monic Polynomial.TrailingMonic
 -/
 
-#print Polynomial.TrailingMonic.definition /-
-theorem TrailingMonic.definition : TrailingMonic p ↔ trailingCoeff p = 1 :=
+#print Polynomial.TrailingMonic.def /-
+theorem TrailingMonic.def : TrailingMonic p ↔ trailingCoeff p = 1 :=
   Iff.rfl
-#align polynomial.trailing_monic.def Polynomial.TrailingMonic.definition
+#align polynomial.trailing_monic.def Polynomial.TrailingMonic.def
 -/
 
 #print Polynomial.TrailingMonic.decidable /-

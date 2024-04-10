@@ -152,7 +152,7 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
     classical
     rw [discr_def, trace_matrix]
     simp_rw [← Basis.mk_apply b.linear_independent this.ge]
-    rw [← trace_matrix, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
+    rw [← trace_matrix, trace_matrix_of_basis, ← LinearMap.BilinForm.nondegenerate_iff_det_ne_zero]
     exact traceForm_nondegenerate _ _
 #align algebra.discr_not_zero_of_basis Algebra.discr_not_zero_of_basis
 -/

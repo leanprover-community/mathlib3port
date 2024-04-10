@@ -516,9 +516,9 @@ theorem traceMatrix_of_matrix_vecMul [Fintype κ] (b : κ → B) (P : Matrix κ 
   by
   ext α β
   rw [trace_matrix_apply, vec_mul, dot_product, vec_mul, dot_product, Matrix.mul_apply,
-    BilinForm.sum_left,
+    LinearMap.BilinForm.sum_left,
     Fintype.sum_congr _ _ fun i : κ =>
-      @BilinForm.sum_right _ _ _ _ _ _ _ _ (b i * P.map (algebraMap A B) i α) fun y : κ =>
+      @LinearMap.BilinForm.sum_right _ _ _ _ _ _ _ _ (b i * P.map (algebraMap A B) i α) fun y : κ =>
         b y * P.map (algebraMap A B) y β,
     sum_comm]
   congr; ext x
@@ -706,7 +706,7 @@ variable (K L)
 #print traceForm_nondegenerate /-
 theorem traceForm_nondegenerate [FiniteDimensional K L] [IsSeparable K L] :
     (traceForm K L).Nondegenerate :=
-  BilinForm.nondegenerate_of_det_ne_zero (traceForm K L) _
+  LinearMap.BilinForm.nondegenerate_of_det_ne_zero (traceForm K L) _
     (det_traceForm_ne_zero (FiniteDimensional.finBasis K L))
 #align trace_form_nondegenerate traceForm_nondegenerate
 -/

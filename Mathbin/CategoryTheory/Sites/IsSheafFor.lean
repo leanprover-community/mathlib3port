@@ -606,7 +606,7 @@ theorem isSheafFor_iff_yonedaSheafCondition {P : Cᵒᵖ ⥤ Type v₁} :
   simp_rw [extension_iff_amalgamation]
   rw [Equiv.forall_congr_left' nat_trans_equiv_compatible_family]
   rw [Subtype.forall]
-  apply ball_congr
+  apply forall₂_congr
   intro x hx
   rw [Equiv.exists_unique_congr_left _]
   simp
@@ -1039,7 +1039,7 @@ theorem equalizer_sheaf_condition :
     Equiv.forall_congr_left (first_obj_eq_family P S).toEquiv.symm]
   simp_rw [← compatible_iff]
   simp only [inv_hom_id_apply, iso.to_equiv_symm_fun]
-  apply ball_congr
+  apply forall₂_congr
   intro x tx
   apply existsUnique_congr
   intro t
@@ -1135,7 +1135,7 @@ theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P
   rw [types.type_equalizer_iff_unique]
   erw [← Equiv.forall_congr_left (first_obj_eq_family P R).toEquiv.symm]
   simp_rw [← compatible_iff, ← iso.to_equiv_fun, Equiv.apply_symm_apply]
-  apply ball_congr
+  apply forall₂_congr
   intro x hx
   apply existsUnique_congr
   intro t

@@ -48,8 +48,8 @@ def LinearMap.BilinForm.tensorDistrib :
           (TensorProduct.lift.equiv R _ _ _).symm ≪≫ₗ
         LinearMap.toBilin).toLinearMap ∘ₗ
     TensorProduct.dualDistrib R _ _ ∘ₗ
-      (TensorProduct.congr (BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)
-          (BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)).toLinearMap
+      (TensorProduct.congr (LinearMap.BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)
+          (LinearMap.BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)).toLinearMap
 #align bilin_form.tensor_distrib LinearMap.BilinForm.tensorDistrib
 -/
 
@@ -92,8 +92,8 @@ noncomputable def LinearMap.BilinForm.tensorDistribEquiv :
   -- the same `linear_equiv`s as from `tensor_distrib`, but with the inner linear map also as an
             -- equiv
             TensorProduct.congr
-            (BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)
-            (BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _) ≪≫ₗ
+            (LinearMap.BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)
+            (LinearMap.BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _) ≪≫ₗ
           TensorProduct.dualDistribEquiv R (M₁ ⊗ M₁) (M₂ ⊗ M₂) ≪≫ₗ
         (TensorProduct.tensorTensorTensorComm R _ _ _ _).dualMap ≪≫ₗ
       (TensorProduct.lift.equiv R _ _ _).symm ≪≫ₗ

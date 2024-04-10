@@ -560,7 +560,7 @@ theorem exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card [FiniteDimen
   by
   -- Pick an element x₀ ∈ t,
   have card_pos : 0 < t.card := lt_trans (Nat.succ_pos _) h
-  obtain ⟨x₀, m⟩ := (Finset.card_pos.1 card_pos).bex
+  obtain ⟨x₀, m⟩ := (Finset.card_pos.1 card_pos).exists_mem
   -- and apply the previous lemma to the {xᵢ - x₀}
   let shift : V ↪ V := ⟨fun x => x - x₀, sub_left_injective⟩
   let t' := (t.erase x₀).map shift

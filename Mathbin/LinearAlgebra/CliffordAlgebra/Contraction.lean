@@ -370,7 +370,8 @@ theorem changeForm_ι (m : M) : changeForm h (ι _ m) = ι _ m :=
 
 #print CliffordAlgebra.changeForm_ι_mul /-
 theorem changeForm_ι_mul (m : M) (x : CliffordAlgebra Q) :
-    changeForm h (ι _ m * x) = ι _ m * changeForm h x - BilinForm.toLin B m⌋changeForm h x :=
+    changeForm h (ι _ m * x) =
+      ι _ m * changeForm h x - LinearMap.BilinForm.toLin B m⌋changeForm h x :=
   (foldr_mul _ _ _ _ _ _).trans <| by rw [foldr_ι]; rfl
 #align clifford_algebra.change_form_ι_mul CliffordAlgebra.changeForm_ι_mul
 -/

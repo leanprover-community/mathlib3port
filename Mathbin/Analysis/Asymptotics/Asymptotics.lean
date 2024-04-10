@@ -182,10 +182,10 @@ alias ⟨is_o.bound, is_o.of_bound⟩ := is_o_iff
 #align asymptotics.is_o.bound Asymptotics.IsLittleO.bound
 #align asymptotics.is_o.of_bound Asymptotics.IsLittleO.of_bound
 
-#print Asymptotics.IsLittleO.definition /-
-theorem IsLittleO.definition (h : f =o[l] g) (hc : 0 < c) : ∀ᶠ x in l, ‖f x‖ ≤ c * ‖g x‖ :=
+#print Asymptotics.IsLittleO.def /-
+theorem IsLittleO.def (h : f =o[l] g) (hc : 0 < c) : ∀ᶠ x in l, ‖f x‖ ≤ c * ‖g x‖ :=
   isLittleO_iff.1 h hc
-#align asymptotics.is_o.def Asymptotics.IsLittleO.definition
+#align asymptotics.is_o.def Asymptotics.IsLittleO.def
 -/
 
 #print Asymptotics.IsLittleO.def' /-

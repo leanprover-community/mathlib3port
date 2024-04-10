@@ -604,7 +604,7 @@ theorem adjugate_mul_distrib (A B : Matrix n n α) : adjugate (A ⬝ B) = adjuga
     by
     intro M
     refine' Polynomial.Monic.isRegular _
-    simp only [g, Polynomial.Monic.def', ← Polynomial.leadingCoeff_det_X_one_add_C M, add_comm]
+    simp only [g, Polynomial.Monic.def, ← Polynomial.leadingCoeff_det_X_one_add_C M, add_comm]
   rw [← f'_adj, ← f'_adj, ← f'_adj, ← mul_eq_mul (f' (adjugate (g B))), ← f'.map_mul, mul_eq_mul, ←
     adjugate_mul_distrib_aux _ _ (hu A).left (hu B).left, RingHom.map_adjugate,
     RingHom.map_adjugate, f'_inv, f'_g_mul]

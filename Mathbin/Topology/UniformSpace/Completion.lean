@@ -154,7 +154,7 @@ theorem mem_uniformity {s : Set (CauchyFilter α × CauchyFilter α)} :
 #print CauchyFilter.mem_uniformity' /-
 theorem mem_uniformity' {s : Set (CauchyFilter α × CauchyFilter α)} :
     s ∈ 𝓤 (CauchyFilter α) ↔ ∃ t ∈ 𝓤 α, ∀ f g : CauchyFilter α, t ∈ f.1 ×ᶠ g.1 → (f, g) ∈ s :=
-  mem_uniformity.trans <| bex_congr fun t h => Prod.forall
+  mem_uniformity.trans <| exists₂_congr fun t h => Prod.forall
 #align Cauchy.mem_uniformity' CauchyFilter.mem_uniformity'
 -/
 

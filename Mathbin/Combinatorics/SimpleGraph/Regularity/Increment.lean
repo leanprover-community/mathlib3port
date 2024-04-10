@@ -109,7 +109,7 @@ private theorem distinct_pairs_increment :
   rintro ⟨Ui, Vj⟩
   simp only [increment, mem_off_diag, bind_parts, mem_bUnion, Prod.exists, exists_and_left,
     exists_prop, mem_product, mem_attach, true_and_iff, Subtype.exists, and_imp, mem_off_diag,
-    forall_exists_index, bex_imp, Ne.def]
+    forall_exists_index, exists₂_imp, Ne.def]
   refine' fun U V hUV hUi hVj => ⟨⟨_, hUV.1, hUi⟩, ⟨_, hUV.2.1, hVj⟩, _⟩
   rintro rfl
   obtain ⟨i, hi⟩ := nonempty_of_mem_parts _ hUi
