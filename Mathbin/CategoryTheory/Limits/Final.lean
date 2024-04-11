@@ -332,7 +332,6 @@ instance (priority := 100) comp_hasColimit [HasColimit G] : HasColimit (F ⋙ G)
 #align category_theory.functor.final.comp_has_colimit CategoryTheory.Functor.Final.comp_hasColimit
 -/
 
-#print CategoryTheory.Functor.Final.colimit_pre_is_iso_aux /-
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.pt :=
   by
@@ -341,7 +340,6 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
   intro j
   dsimp; simp
 #align category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_aux
--/
 
 #print CategoryTheory.Functor.Final.colimit_pre_isIso /-
 instance colimit_pre_isIso [HasColimit G] : IsIso (colimit.pre G F) :=
@@ -630,7 +628,6 @@ instance (priority := 100) comp_hasLimit [HasLimit G] : HasLimit (F ⋙ G) :=
 #align category_theory.functor.initial.comp_has_limit CategoryTheory.Functor.Initial.comp_hasLimit
 -/
 
-#print CategoryTheory.Functor.Initial.limit_pre_is_iso_aux /-
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.pt :=
   by
@@ -639,7 +636,6 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
   intro j
   simp
 #align category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_aux
--/
 
 #print CategoryTheory.Functor.Initial.limit_pre_isIso /-
 instance limit_pre_isIso [HasLimit G] : IsIso (limit.pre G F) :=
