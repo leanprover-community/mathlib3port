@@ -776,11 +776,11 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
 #align continuous_multilinear_map.continuous_eval ContinuousMultilinearMap.continuous_eval
 -/
 
-#print ContinuousMultilinearMap.continuous_eval_left /-
-theorem continuous_eval_left (m : ∀ i, E i) :
+#print ContinuousMultilinearMap.continuous_eval_const /-
+theorem continuous_eval_const (m : ∀ i, E i) :
     Continuous fun p : ContinuousMultilinearMap 𝕜 E G => p m :=
   continuous_eval.comp (continuous_id.prod_mk continuous_const)
-#align continuous_multilinear_map.continuous_eval_left ContinuousMultilinearMap.continuous_eval_left
+#align continuous_multilinear_map.continuous_eval_left ContinuousMultilinearMap.continuous_eval_const
 -/
 
 #print ContinuousMultilinearMap.hasSum_eval /-
