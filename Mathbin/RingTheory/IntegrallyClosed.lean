@@ -32,7 +32,6 @@ open scoped nonZeroDivisors Polynomial
 
 open Polynomial
 
-#print IsIntegrallyClosed /-
 /-- `R` is integrally closed if all integral elements of `Frac(R)` are also elements of `R`.
 
 This definition uses `fraction_ring R` to denote `Frac(R)`. See `is_integrally_closed_iff`
@@ -41,8 +40,7 @@ if you want to choose another field of fractions for `R`.
 class IsIntegrallyClosed (R : Type _) [CommRing R] [IsDomain R] : Prop where
   algebraMap_eq_of_integral :
     ∀ {x : FractionRing R}, IsIntegral R x → ∃ y, algebraMap R (FractionRing R) y = x
-#align is_integrally_closed IsIntegrallyClosed
--/
+#align is_integrally_closed IsIntegrallyClosedₓ
 
 section Iff
 
