@@ -365,8 +365,8 @@ theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : I
 -/
 
 #print CategoryTheory.Adjunction.injective_of_map_injective /-
-theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
-    (hI : Injective (G.obj I)) : Injective I :=
+theorem injective_of_map_injective (adj : F ⊣ G) [CategoryTheory.Functor.Full G]
+    [CategoryTheory.Functor.Faithful G] (I : D) (hI : Injective (G.obj I)) : Injective I :=
   ⟨fun X Y f g => by
     intro
     haveI : PreservesLimitsOfSize.{0, 0} G := adj.right_adjoint_preserves_limits

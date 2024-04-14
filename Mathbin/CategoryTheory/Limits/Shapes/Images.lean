@@ -1149,8 +1149,9 @@ open CategoryTheory.Limits
 variable {C D : Type _} [Category C] [Category D]
 
 #print CategoryTheory.Functor.hasStrongEpiMonoFactorisations_imp_of_isEquivalence /-
-theorem hasStrongEpiMonoFactorisations_imp_of_isEquivalence (F : C ⥤ D) [IsEquivalence F]
-    [h : HasStrongEpiMonoFactorisations C] : HasStrongEpiMonoFactorisations D :=
+theorem hasStrongEpiMonoFactorisations_imp_of_isEquivalence (F : C ⥤ D)
+    [CategoryTheory.Functor.IsEquivalence F] [h : HasStrongEpiMonoFactorisations C] :
+    HasStrongEpiMonoFactorisations D :=
   ⟨fun X Y f =>
     by
     let em : strong_epi_mono_factorisation (F.inv.map f) :=

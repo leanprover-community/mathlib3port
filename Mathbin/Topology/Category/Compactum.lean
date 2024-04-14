@@ -97,7 +97,7 @@ namespace Compactum
 /-- The forgetful functor to Type* -/
 def forget : Compactum ⥤ Type _ :=
   Monad.forget _
-deriving CreatesLimits, Faithful
+deriving CreatesLimits, CategoryTheory.Functor.Faithful
 #align Compactum.forget Compactum.forget
 -/
 
@@ -508,13 +508,14 @@ namespace compactumToCompHaus
 
 #print compactumToCompHaus.full /-
 /-- The functor Compactum_to_CompHaus is full. -/
-def full : Full compactumToCompHaus.{u} where preimage X Y f := Compactum.homOfContinuous f.1 f.2
+def full : CategoryTheory.Functor.Full compactumToCompHaus.{u}
+    where preimage X Y f := Compactum.homOfContinuous f.1 f.2
 #align Compactum_to_CompHaus.full compactumToCompHaus.full
 -/
 
 #print compactumToCompHaus.faithful /-
 /-- The functor Compactum_to_CompHaus is faithful. -/
-theorem faithful : Faithful compactumToCompHaus :=
+theorem faithful : CategoryTheory.Functor.Faithful compactumToCompHaus :=
   { }
 #align Compactum_to_CompHaus.faithful compactumToCompHaus.faithful
 -/
@@ -537,14 +538,14 @@ def isoOfTopologicalSpace {D : CompHaus} :
 
 #print compactumToCompHaus.essSurj /-
 /-- The functor Compactum_to_CompHaus is essentially surjective. -/
-theorem essSurj : EssSurj compactumToCompHaus :=
+theorem essSurj : CategoryTheory.Functor.EssSurj compactumToCompHaus :=
   { mem_essImage := fun X => ⟨Compactum.ofTopologicalSpace X, ⟨isoOfTopologicalSpace⟩⟩ }
 #align Compactum_to_CompHaus.ess_surj compactumToCompHaus.essSurj
 -/
 
 #print compactumToCompHaus.isEquivalence /-
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/
-noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
+noncomputable instance isEquivalence : CategoryTheory.Functor.IsEquivalence compactumToCompHaus :=
   by
   apply equivalence.of_fully_faithfully_ess_surj _
   exact compactumToCompHaus.full

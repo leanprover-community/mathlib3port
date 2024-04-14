@@ -318,7 +318,8 @@ def forget : Action V G ⥤ V where
 #align Action.forget Action.forget
 -/
 
-instance : Faithful (forget V G) where map_injective' X Y f g w := Hom.ext _ _ w
+instance : CategoryTheory.Functor.Faithful (forget V G)
+    where map_injective' X Y f g w := Hom.ext _ _ w
 
 instance [ConcreteCategory V] : ConcreteCategory (Action V G)
     where forget := forget V G ⋙ ConcreteCategory.forget V
@@ -628,8 +629,8 @@ def forgetMonoidal : MonoidalFunctor (Action V G) V :=
 -/
 
 #print Action.forgetMonoidal_faithful /-
-instance forgetMonoidal_faithful : Faithful (forgetMonoidal V G).toFunctor := by
-  change faithful (forget V G); infer_instance
+instance forgetMonoidal_faithful : CategoryTheory.Functor.Faithful (forgetMonoidal V G).toFunctor :=
+  by change faithful (forget V G); infer_instance
 #align Action.forget_monoidal_faithful Action.forgetMonoidal_faithful
 -/
 
@@ -649,8 +650,8 @@ def forgetBraided : BraidedFunctor (Action V G) V :=
 -/
 
 #print Action.forgetBraided_faithful /-
-instance forgetBraided_faithful : Faithful (forgetBraided V G).toFunctor := by
-  change faithful (forget V G); infer_instance
+instance forgetBraided_faithful : CategoryTheory.Functor.Faithful (forgetBraided V G).toFunctor :=
+  by change faithful (forget V G); infer_instance
 #align Action.forget_braided_faithful Action.forgetBraided_faithful
 -/
 
@@ -684,7 +685,8 @@ def functorCategoryMonoidalEquivalence : MonoidalFunctor (Action V G) (SingleObj
 #align Action.functor_category_monoidal_equivalence Action.functorCategoryMonoidalEquivalence
 -/
 
-instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor := by
+instance :
+    CategoryTheory.Functor.IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor := by
   change is_equivalence (Action.functorCategoryEquivalence _ _).Functor; infer_instance
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

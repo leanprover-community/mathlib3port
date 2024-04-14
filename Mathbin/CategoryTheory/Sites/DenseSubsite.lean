@@ -128,9 +128,9 @@ theorem CategoryTheory.Functor.IsCoverDense.ext (H : CategoryTheory.Functor.IsCo
 -/
 
 #print CategoryTheory.Functor.IsCoverDense.functorPullback_pushforward_covering /-
-theorem CategoryTheory.Functor.IsCoverDense.functorPullback_pushforward_covering [Full G]
-    (H : CategoryTheory.Functor.IsCoverDense K G) {X : C} (T : K (G.obj X)) :
-    (T.val.functorPullback G).functorPushforward G ∈ K (G.obj X) :=
+theorem CategoryTheory.Functor.IsCoverDense.functorPullback_pushforward_covering
+    [CategoryTheory.Functor.Full G] (H : CategoryTheory.Functor.IsCoverDense K G) {X : C}
+    (T : K (G.obj X)) : (T.val.functorPullback G).functorPushforward G ∈ K (G.obj X) :=
   by
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
   rintro Y _ ⟨Z, _, f, hf, ⟨W, g, f', ⟨rfl⟩⟩, rfl⟩
@@ -173,7 +173,7 @@ theorem CategoryTheory.Functor.IsCoverDense.sheaf_eq_amalgamation (ℱ : Sheaf K
 #align category_theory.cover_dense.sheaf_eq_amalgamation CategoryTheory.Functor.IsCoverDense.sheaf_eq_amalgamation
 -/
 
-variable [Full G]
+variable [CategoryTheory.Functor.Full G]
 
 namespace Types
 
@@ -516,8 +516,9 @@ theorem CategoryTheory.Functor.IsCoverDense.iso_of_restrict_iso {ℱ ℱ' : Shea
 
 #print CategoryTheory.Functor.IsCoverDense.compatiblePreserving /-
 /-- A fully faithful cover-dense functor preserves compatible families. -/
-theorem CategoryTheory.Functor.IsCoverDense.compatiblePreserving [Faithful G] :
-    CompatiblePreserving K G := by
+theorem CategoryTheory.Functor.IsCoverDense.compatiblePreserving
+    [CategoryTheory.Functor.Faithful G] : CompatiblePreserving K G :=
+  by
   constructor
   intro ℱ Z T x hx Y₁ Y₂ X f₁ f₂ g₁ g₂ hg₁ hg₂ eq
   apply H.ext
@@ -533,8 +534,8 @@ theorem CategoryTheory.Functor.IsCoverDense.compatiblePreserving [Faithful G] :
 
 #print CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous /-
 noncomputable instance CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous
-    [Faithful G] (Hp : CoverPreserving J K G) :
-    Full (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
+    [CategoryTheory.Functor.Faithful G] (Hp : CoverPreserving J K G) :
+    CategoryTheory.Functor.Full (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
     where
   preimage ℱ ℱ' α := ⟨H.sheafHom α.val⟩
   witness' ℱ ℱ' α := Sheaf.Hom.ext _ _ <| H.sheafHom_restrict_eq α.val
@@ -542,9 +543,9 @@ noncomputable instance CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardC
 -/
 
 #print CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous /-
-instance CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous [Faithful G]
-    (Hp : CoverPreserving J K G) :
-    Faithful (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
+instance CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous
+    [CategoryTheory.Functor.Faithful G] (Hp : CoverPreserving J K G) :
+    CategoryTheory.Functor.Faithful (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
     where map_injective' := by
     intro ℱ ℱ' α β e
     ext1
@@ -564,7 +565,7 @@ open CategoryTheory
 
 variable {C D : Type u} [Category.{v} C] [Category.{v} D]
 
-variable {G : C ⥤ D} [Full G] [Faithful G]
+variable {G : C ⥤ D} [CategoryTheory.Functor.Full G] [CategoryTheory.Functor.Faithful G]
 
 variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 

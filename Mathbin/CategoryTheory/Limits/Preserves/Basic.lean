@@ -773,8 +773,9 @@ def reflectsSmallestLimitsOfReflectsLimits (F : C ⥤ D) [ReflectsLimitsOfSize.{
 /-- If the limit of `F` exists and `G` preserves it, then if `G` reflects isomorphisms then it
 reflects the limit of `F`.
 -/
-def reflectsLimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsIsomorphisms G]
-    [HasLimit F] [PreservesLimit F G] : ReflectsLimit F G
+def reflectsLimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D)
+    [CategoryTheory.Functor.ReflectsIsomorphisms G] [HasLimit F] [PreservesLimit F G] :
+    ReflectsLimit F G
     where reflects c t := by
     apply is_limit.of_point_iso (limit.is_limit F)
     change is_iso ((cones.forget _).map ((limit.is_limit F).liftConeMorphism c))
@@ -788,8 +789,9 @@ def reflectsLimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsIso
 /-- If `C` has limits of shape `J` and `G` preserves them, then if `G` reflects isomorphisms then it
 reflects limits of shape `J`.
 -/
-def reflectsLimitsOfShapeOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorphisms G]
-    [HasLimitsOfShape J C] [PreservesLimitsOfShape J G] : ReflectsLimitsOfShape J G
+def reflectsLimitsOfShapeOfReflectsIsomorphisms {G : C ⥤ D}
+    [CategoryTheory.Functor.ReflectsIsomorphisms G] [HasLimitsOfShape J C]
+    [PreservesLimitsOfShape J G] : ReflectsLimitsOfShape J G
     where ReflectsLimit F := reflectsLimitOfReflectsIsomorphisms F G
 #align category_theory.limits.reflects_limits_of_shape_of_reflects_isomorphisms CategoryTheory.Limits.reflectsLimitsOfShapeOfReflectsIsomorphisms
 -/
@@ -798,7 +800,7 @@ def reflectsLimitsOfShapeOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorphi
 /-- If `C` has limits and `G` preserves limits, then if `G` reflects isomorphisms then it reflects
 limits.
 -/
-def reflectsLimitsOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorphisms G]
+def reflectsLimitsOfReflectsIsomorphisms {G : C ⥤ D} [CategoryTheory.Functor.ReflectsIsomorphisms G]
     [HasLimitsOfSize.{w', w} C] [PreservesLimitsOfSize.{w', w} G] : ReflectsLimitsOfSize.{w', w} G
     where ReflectsLimitsOfShape J 𝒥₁ := reflects_limits_of_shape_of_reflects_isomorphisms
 #align category_theory.limits.reflects_limits_of_reflects_isomorphisms CategoryTheory.Limits.reflectsLimitsOfReflectsIsomorphisms
@@ -904,8 +906,9 @@ def reflectsSmallestColimitsOfReflectsColimits (F : C ⥤ D) [ReflectsColimitsOf
 /-- If the colimit of `F` exists and `G` preserves it, then if `G` reflects isomorphisms then it
 reflects the colimit of `F`.
 -/
-def reflectsColimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsIsomorphisms G]
-    [HasColimit F] [PreservesColimit F G] : ReflectsColimit F G
+def reflectsColimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D)
+    [CategoryTheory.Functor.ReflectsIsomorphisms G] [HasColimit F] [PreservesColimit F G] :
+    ReflectsColimit F G
     where reflects c t :=
     by
     apply is_colimit.of_point_iso (colimit.is_colimit F)
@@ -921,8 +924,9 @@ def reflectsColimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsI
 If `C` has colimits of shape `J` and `G` preserves them, then if `G` reflects isomorphisms then it
 reflects colimits of shape `J`.
 -/
-def reflectsColimitsOfShapeOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorphisms G]
-    [HasColimitsOfShape J C] [PreservesColimitsOfShape J G] : ReflectsColimitsOfShape J G
+def reflectsColimitsOfShapeOfReflectsIsomorphisms {G : C ⥤ D}
+    [CategoryTheory.Functor.ReflectsIsomorphisms G] [HasColimitsOfShape J C]
+    [PreservesColimitsOfShape J G] : ReflectsColimitsOfShape J G
     where ReflectsColimit F := reflectsColimitOfReflectsIsomorphisms F G
 #align category_theory.limits.reflects_colimits_of_shape_of_reflects_isomorphisms CategoryTheory.Limits.reflectsColimitsOfShapeOfReflectsIsomorphisms
 -/
@@ -932,9 +936,9 @@ def reflectsColimitsOfShapeOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorp
 If `C` has colimits and `G` preserves colimits, then if `G` reflects isomorphisms then it reflects
 colimits.
 -/
-def reflectsColimitsOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorphisms G]
-    [HasColimitsOfSize.{w', w} C] [PreservesColimitsOfSize.{w', w} G] :
-    ReflectsColimitsOfSize.{w', w} G
+def reflectsColimitsOfReflectsIsomorphisms {G : C ⥤ D}
+    [CategoryTheory.Functor.ReflectsIsomorphisms G] [HasColimitsOfSize.{w', w} C]
+    [PreservesColimitsOfSize.{w', w} G] : ReflectsColimitsOfSize.{w', w} G
     where ReflectsColimitsOfShape J 𝒥₁ := reflects_colimits_of_shape_of_reflects_isomorphisms
 #align category_theory.limits.reflects_colimits_of_reflects_isomorphisms CategoryTheory.Limits.reflectsColimitsOfReflectsIsomorphisms
 -/
@@ -945,7 +949,8 @@ variable (F : C ⥤ D)
 
 #print CategoryTheory.Limits.fullyFaithfulReflectsLimits /-
 /-- A fully faithful functor reflects limits. -/
-def fullyFaithfulReflectsLimits [Full F] [Faithful F] : ReflectsLimitsOfSize.{w, w'} F
+def fullyFaithfulReflectsLimits [CategoryTheory.Functor.Full F]
+    [CategoryTheory.Functor.Faithful F] : ReflectsLimitsOfSize.{w, w'} F
     where ReflectsLimitsOfShape J 𝒥₁ :=
     {
       ReflectsLimit := fun K =>
@@ -962,7 +967,8 @@ def fullyFaithfulReflectsLimits [Full F] [Faithful F] : ReflectsLimitsOfSize.{w,
 
 #print CategoryTheory.Limits.fullyFaithfulReflectsColimits /-
 /-- A fully faithful functor reflects colimits. -/
-def fullyFaithfulReflectsColimits [Full F] [Faithful F] : ReflectsColimitsOfSize.{w, w'} F
+def fullyFaithfulReflectsColimits [CategoryTheory.Functor.Full F]
+    [CategoryTheory.Functor.Faithful F] : ReflectsColimitsOfSize.{w, w'} F
     where ReflectsColimitsOfShape J 𝒥₁ :=
     {
       ReflectsColimit := fun K =>

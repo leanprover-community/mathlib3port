@@ -126,7 +126,8 @@ namespace AffineScheme
 /-- The `Spec` functor into the category of affine schemes. -/
 def Spec : CommRingCatᵒᵖ ⥤ AffineScheme :=
   Scheme.Spec.toEssImage
-deriving Full, Faithful, EssSurj
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful,
+  CategoryTheory.Functor.EssSurj
 #align algebraic_geometry.AffineScheme.Spec AlgebraicGeometry.AffineScheme.Spec
 -/
 
@@ -135,7 +136,7 @@ deriving Full, Faithful, EssSurj
 @[simps]
 def forgetToScheme : AffineScheme ⥤ Scheme :=
   Scheme.Spec.essImageInclusion
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align algebraic_geometry.AffineScheme.forget_to_Scheme AlgebraicGeometry.AffineScheme.forgetToScheme
 -/
 
@@ -154,7 +155,7 @@ def equivCommRingCat : AffineScheme ≌ CommRingCatᵒᵖ :=
 -/
 
 #print AlgebraicGeometry.AffineScheme.ΓIsEquiv /-
-instance ΓIsEquiv : IsEquivalence Γ.{u} :=
+instance ΓIsEquiv : CategoryTheory.Functor.IsEquivalence Γ.{u} :=
   haveI : is_equivalence Γ.{u}.rightOp.op := is_equivalence.of_equivalence equiv_CommRing.op
   (functor.is_equivalence_trans Γ.{u}.rightOp.op (op_op_equivalence _).Functor : _)
 #align algebraic_geometry.AffineScheme.Γ_is_equiv AlgebraicGeometry.AffineScheme.ΓIsEquiv
@@ -172,7 +173,7 @@ instance : HasLimits AffineScheme.{u} :=
 
 noncomputable instance : PreservesLimits Γ.{u}.rightOp :=
   @Adjunction.isEquivalencePreservesLimits _ _ Γ.rightOp
-    (IsEquivalence.ofEquivalence equivCommRingCat)
+    (CategoryTheory.Functor.IsEquivalence.ofEquivalence equivCommRingCat)
 
 noncomputable instance : PreservesLimits forgetToScheme :=
   by

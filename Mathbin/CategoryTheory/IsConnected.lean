@@ -336,8 +336,8 @@ theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : Zigzag j₁ j₂
 
 #print CategoryTheory.zag_of_zag_obj /-
 -- TODO: figure out the right way to generalise this to `zigzag`.
-theorem zag_of_zag_obj (F : J ⥤ K) [Full F] {j₁ j₂ : J} (h : Zag (F.obj j₁) (F.obj j₂)) :
-    Zag j₁ j₂ :=
+theorem zag_of_zag_obj (F : J ⥤ K) [CategoryTheory.Functor.Full F] {j₁ j₂ : J}
+    (h : Zag (F.obj j₁) (F.obj j₂)) : Zag j₁ j₂ :=
   Or.imp (Nonempty.map F.Preimage) (Nonempty.map F.Preimage) h
 #align category_theory.zag_of_zag_obj CategoryTheory.zag_of_zag_obj
 -/
@@ -432,7 +432,7 @@ theorem nat_trans_from_is_connected [IsPreconnected J] {X Y : C}
 #align category_theory.nat_trans_from_is_connected CategoryTheory.nat_trans_from_is_connected
 -/
 
-instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C)
+instance [IsConnected J] : CategoryTheory.Functor.Full (Functor.const J : C ⥤ J ⥤ C)
     where
   Preimage X Y f := f.app (Classical.arbitrary J)
   witness' X Y f := by

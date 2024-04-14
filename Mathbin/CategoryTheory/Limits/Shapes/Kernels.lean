@@ -143,8 +143,8 @@ def ofιCongr {P : C} {ι ι' : P ⟶ X} {w : ι ≫ f = 0} (h : ι = ι') :
 #print CategoryTheory.Limits.compNatIso /-
 /-- If `F` is an equivalence, then applying `F` to a diagram indexing a (co)kernel of `f` yields
     the diagram indexing the (co)kernel of `F.map f`. -/
-def compNatIso {D : Type u'} [Category.{v} D] [HasZeroMorphisms D] (F : C ⥤ D) [IsEquivalence F] :
-    parallelPair f 0 ⋙ F ≅ parallelPair (F.map f) 0 :=
+def compNatIso {D : Type u'} [Category.{v} D] [HasZeroMorphisms D] (F : C ⥤ D)
+    [CategoryTheory.Functor.IsEquivalence F] : parallelPair f 0 ⋙ F ≅ parallelPair (F.map f) 0 :=
   (NatIso.ofComponents fun j =>
       match j with
       | zero => Iso.refl _

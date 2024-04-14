@@ -164,14 +164,15 @@ def associativity : Sum (Sum C D) E ≌ Sum C (Sum D E) :=
 -/
 
 #print CategoryTheory.sum.associatorIsEquivalence /-
-instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
-  (by infer_instance : IsEquivalence (associativity C D E).Functor)
+instance associatorIsEquivalence : CategoryTheory.Functor.IsEquivalence (associator C D E) :=
+  (by infer_instance : CategoryTheory.Functor.IsEquivalence (associativity C D E).Functor)
 #align category_theory.sum.associator_is_equivalence CategoryTheory.sum.associatorIsEquivalence
 -/
 
 #print CategoryTheory.sum.inverseAssociatorIsEquivalence /-
-instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
-  (by infer_instance : IsEquivalence (associativity C D E).inverse)
+instance inverseAssociatorIsEquivalence :
+    CategoryTheory.Functor.IsEquivalence (inverseAssociator C D E) :=
+  (by infer_instance : CategoryTheory.Functor.IsEquivalence (associativity C D E).inverse)
 #align category_theory.sum.inverse_associator_is_equivalence CategoryTheory.sum.inverseAssociatorIsEquivalence
 -/
 

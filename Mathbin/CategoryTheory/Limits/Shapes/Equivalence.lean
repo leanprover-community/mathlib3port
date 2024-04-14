@@ -28,7 +28,8 @@ universe v₁ v₂ u₁ u₂
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 #print CategoryTheory.hasInitial_of_equivalence /-
-theorem hasInitial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C] : HasInitial D :=
+theorem hasInitial_of_equivalence (e : D ⥤ C) [CategoryTheory.Functor.IsEquivalence e]
+    [HasInitial C] : HasInitial D :=
   Adjunction.hasColimitsOfShape_of_equivalence e
 #align category_theory.has_initial_of_equivalence CategoryTheory.hasInitial_of_equivalence
 -/
@@ -40,7 +41,8 @@ theorem Equivalence.hasInitial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D
 -/
 
 #print CategoryTheory.hasTerminal_of_equivalence /-
-theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
+theorem hasTerminal_of_equivalence (e : D ⥤ C) [CategoryTheory.Functor.IsEquivalence e]
+    [HasTerminal C] : HasTerminal D :=
   Adjunction.hasLimitsOfShape_of_equivalence e
 #align category_theory.has_terminal_of_equivalence CategoryTheory.hasTerminal_of_equivalence
 -/

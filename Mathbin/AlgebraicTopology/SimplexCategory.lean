@@ -524,19 +524,19 @@ theorem skeletal : Skeletal SimplexCategory := fun X Y ⟨I⟩ =>
 
 namespace SkeletalFunctor
 
-instance : Full skeletalFunctor.{v}
+instance : CategoryTheory.Functor.Full skeletalFunctor.{v}
     where
   Preimage a b f :=
     SimplexCategory.Hom.mk ⟨fun i => (f (ULift.up i)).down, fun i j h => f.Monotone h⟩
   witness' := by intro m n f; dsimp at *; ext1 ⟨i⟩; ext1; ext1; cases x; simp
 
-instance : Faithful skeletalFunctor.{v}
+instance : CategoryTheory.Functor.Faithful skeletalFunctor.{v}
     where map_injective' m n f g h := by
     ext1; ext1; ext1 i; apply ULift.up.inj
     change (skeletal_functor.map f) ⟨i⟩ = (skeletal_functor.map g) ⟨i⟩
     rw [h]
 
-instance : EssSurj skeletalFunctor.{v}
+instance : CategoryTheory.Functor.EssSurj skeletalFunctor.{v}
     where mem_essImage X :=
     ⟨mk (Fintype.card X - 1 : ℕ),
       ⟨by
@@ -556,8 +556,8 @@ instance : EssSurj skeletalFunctor.{v}
         · ext1; ext1 i; exact f.apply_symm_apply i⟩⟩
 
 #print SimplexCategory.SkeletalFunctor.isEquivalence /-
-noncomputable instance isEquivalence : IsEquivalence skeletalFunctor.{v} :=
-  Equivalence.ofFullyFaithfullyEssSurj skeletalFunctor
+noncomputable instance isEquivalence : CategoryTheory.Functor.IsEquivalence skeletalFunctor.{v} :=
+  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj skeletalFunctor
 #align simplex_category.skeletal_functor.is_equivalence SimplexCategory.SkeletalFunctor.isEquivalence
 -/
 
@@ -602,7 +602,7 @@ simplex category.
 -/
 def inclusion {n : ℕ} : SimplexCategory.Truncated n ⥤ SimplexCategory :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align simplex_category.truncated.inclusion SimplexCategory.Truncated.inclusion
 -/
 
@@ -701,7 +701,7 @@ instance {n : ℕ} {i : Fin (n + 1)} : Epi (σ i) :=
     rw [Fin.lt_iff_val_lt_val] at h ⊢
     simpa only [Fin.val_succ, Fin.coe_castSucc] using Nat.lt.step h
 
-instance : ReflectsIsomorphisms (forget SimplexCategory) :=
+instance : CategoryTheory.Functor.ReflectsIsomorphisms (forget SimplexCategory) :=
   ⟨by
     intro x y f
     intro

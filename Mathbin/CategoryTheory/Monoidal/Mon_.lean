@@ -174,7 +174,7 @@ def forget : Mon_ C ⥤ C where
 end
 
 #print Mon_.forget_faithful /-
-instance forget_faithful : Faithful (@forget C _ _) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (@forget C _ _) where
 #align Mon_.forget_faithful Mon_.forget_faithful
 -/
 
@@ -182,7 +182,7 @@ instance {A B : Mon_ C} (f : A ⟶ B) [e : IsIso ((forget C).map f)] : IsIso f.H
   e
 
 /-- The forgetful functor from monoid objects to the ambient category reflects isomorphisms. -/
-instance : ReflectsIsomorphisms (forget C)
+instance : CategoryTheory.Functor.ReflectsIsomorphisms (forget C)
     where reflects X Y f e :=
     ⟨⟨{   Hom := inv f.hom
           mul_hom' := by

@@ -59,7 +59,7 @@ They are specified that order, to avoid unnecessary universe annotations.
 -/
 class ConcreteCategory (C : Type u) [Category.{v} C] where
   forget : C ⥤ Type w
-  [forget_faithful : Faithful forget]
+  [forget_faithful : CategoryTheory.Functor.Faithful forget]
 #align category_theory.concrete_category CategoryTheory.ConcreteCategory
 -/
 
@@ -258,7 +258,8 @@ def forget₂ (C : Type u) (D : Type u') [Category.{v} C] [ConcreteCategory.{w} 
 
 #print CategoryTheory.forget₂_faithful /-
 instance forget₂_faithful (C : Type u) (D : Type u') [Category.{v} C] [ConcreteCategory.{w} C]
-    [Category.{v'} D] [ConcreteCategory.{w} D] [HasForget₂ C D] : Faithful (forget₂ C D) :=
+    [Category.{v'} D] [ConcreteCategory.{w} D] [HasForget₂ C D] :
+    CategoryTheory.Functor.Faithful (forget₂ C D) :=
   HasForget₂.forget_comp.faithful_of_comp
 #align category_theory.forget₂_faithful CategoryTheory.forget₂_faithful
 -/
@@ -321,7 +322,7 @@ def HasForget₂.mk' {C : Type u} {D : Type u'} [Category.{v} C] [ConcreteCatego
     (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq ((forget D).map (map f)) ((forget C).map f)) : HasForget₂ C D
     where
-  forget₂ := Faithful.div _ _ _ @h_obj _ @h_map
+  forget₂ := CategoryTheory.Functor.Faithful.div _ _ _ @h_obj _ @h_map
   forget_comp := by apply faithful.div_comp
 #align category_theory.has_forget₂.mk' CategoryTheory.HasForget₂.mk'
 -/

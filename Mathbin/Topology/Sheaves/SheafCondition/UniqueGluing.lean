@@ -222,7 +222,8 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable [HasLimits C] [ReflectsIsomorphisms (forget C)] [PreservesLimits (forget C)]
+variable [HasLimits C] [CategoryTheory.Functor.ReflectsIsomorphisms (forget C)]
+  [PreservesLimits (forget C)]
 
 variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
@@ -251,7 +252,7 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable [HasLimits C] [ReflectsIsomorphisms (ConcreteCategory.forget C)]
+variable [HasLimits C] [CategoryTheory.Functor.ReflectsIsomorphisms (ConcreteCategory.forget C)]
 
 variable [PreservesLimits (ConcreteCategory.forget C)]
 

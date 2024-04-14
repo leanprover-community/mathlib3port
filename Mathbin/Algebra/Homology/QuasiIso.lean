@@ -250,7 +250,8 @@ end ToSingle₀
 end HomologicalComplex.Hom
 
 variable {A : Type _} [Category A] [Abelian A] {B : Type _} [Category B] [Abelian B] (F : A ⥤ B)
-  [Functor.Additive F] [PreservesFiniteLimits F] [PreservesFiniteColimits F] [Faithful F]
+  [Functor.Additive F] [PreservesFiniteLimits F] [PreservesFiniteColimits F]
+  [CategoryTheory.Functor.Faithful F]
 
 #print CategoryTheory.Functor.quasiIso'_of_map_quasiIso' /-
 theorem CategoryTheory.Functor.quasiIso'_of_map_quasiIso' {C D : HomologicalComplex A c} (f : C ⟶ D)

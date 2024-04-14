@@ -545,8 +545,8 @@ abbrev shiftEquiv (i : A) : C ≌ C :=
 variable (X Y : C) (f : X ⟶ Y)
 
 /-- Shifting by `i` is an equivalence. -/
-instance (i : A) : IsEquivalence (shiftFunctor C i) :=
-  IsEquivalence.ofEquivalence (shiftEquiv C i)
+instance (i : A) : CategoryTheory.Functor.IsEquivalence (shiftFunctor C i) :=
+  CategoryTheory.Functor.IsEquivalence.ofEquivalence (shiftEquiv C i)
 
 #print CategoryTheory.shiftFunctor_inv /-
 @[simp]
@@ -561,7 +561,7 @@ variable (C)
 
 #print CategoryTheory.shiftFunctor_essSurj /-
 /-- Shifting by `n` is an essentially surjective functor. -/
-instance shiftFunctor_essSurj (i : A) : EssSurj (shiftFunctor C i) :=
+instance shiftFunctor_essSurj (i : A) : CategoryTheory.Functor.EssSurj (shiftFunctor C i) :=
   Equivalence.essSurj_of_equivalence _
 #align category_theory.shift_functor_ess_surj CategoryTheory.shiftFunctor_essSurj
 -/
@@ -813,7 +813,7 @@ end AddCommMonoid
 
 variable {C A} {D : Type _} [Category D] [AddMonoid A] [HasShift D A]
 
-variable (F : C ⥤ D) [Full F] [Faithful F]
+variable (F : C ⥤ D) [CategoryTheory.Functor.Full F] [CategoryTheory.Functor.Faithful F]
 
 section
 

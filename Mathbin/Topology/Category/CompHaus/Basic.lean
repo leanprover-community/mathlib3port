@@ -137,12 +137,13 @@ end CompHaus
 @[simps (config := { rhsMd := semireducible })]
 def compHausToTop : CompHaus.{u} ⥤ TopCat.{u} :=
   inducedFunctor _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align CompHaus_to_Top compHausToTop
 -/
 
 #print CompHaus.forget_reflectsIsomorphisms /-
-instance CompHaus.forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget CompHaus.{u}) :=
+instance CompHaus.forget_reflectsIsomorphisms :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget CompHaus.{u}) :=
   ⟨by intro A B f hf <;> exact CompHaus.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 #align CompHaus.forget_reflects_isomorphisms CompHaus.forget_reflectsIsomorphisms
 -/

@@ -64,7 +64,7 @@ theorem Preadditive.isCoseparator_iff (G : C) :
 
 #print CategoryTheory.isSeparator_iff_faithful_preadditiveCoyoneda /-
 theorem isSeparator_iff_faithful_preadditiveCoyoneda (G : C) :
-    IsSeparator G ↔ Faithful (preadditiveCoyoneda.obj (op G)) :=
+    IsSeparator G ↔ CategoryTheory.Functor.Faithful (preadditiveCoyoneda.obj (op G)) :=
   by
   rw [is_separator_iff_faithful_coyoneda_obj, ← whiskering_preadditive_coyoneda, functor.comp_obj,
     whiskering_right_obj_obj]
@@ -74,7 +74,7 @@ theorem isSeparator_iff_faithful_preadditiveCoyoneda (G : C) :
 
 #print CategoryTheory.isSeparator_iff_faithful_preadditiveCoyonedaObj /-
 theorem isSeparator_iff_faithful_preadditiveCoyonedaObj (G : C) :
-    IsSeparator G ↔ Faithful (preadditiveCoyonedaObj (op G)) :=
+    IsSeparator G ↔ CategoryTheory.Functor.Faithful (preadditiveCoyonedaObj (op G)) :=
   by
   rw [is_separator_iff_faithful_preadditive_coyoneda, preadditive_coyoneda_obj_2]
   exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGroupCat.{v}), fun h => faithful.comp _ _⟩
@@ -83,7 +83,7 @@ theorem isSeparator_iff_faithful_preadditiveCoyonedaObj (G : C) :
 
 #print CategoryTheory.isCoseparator_iff_faithful_preadditiveYoneda /-
 theorem isCoseparator_iff_faithful_preadditiveYoneda (G : C) :
-    IsCoseparator G ↔ Faithful (preadditiveYoneda.obj G) :=
+    IsCoseparator G ↔ CategoryTheory.Functor.Faithful (preadditiveYoneda.obj G) :=
   by
   rw [is_coseparator_iff_faithful_yoneda_obj, ← whiskering_preadditive_yoneda, functor.comp_obj,
     whiskering_right_obj_obj]
@@ -93,7 +93,7 @@ theorem isCoseparator_iff_faithful_preadditiveYoneda (G : C) :
 
 #print CategoryTheory.isCoseparator_iff_faithful_preadditiveYonedaObj /-
 theorem isCoseparator_iff_faithful_preadditiveYonedaObj (G : C) :
-    IsCoseparator G ↔ Faithful (preadditiveYonedaObj G) :=
+    IsCoseparator G ↔ CategoryTheory.Functor.Faithful (preadditiveYonedaObj G) :=
   by
   rw [is_coseparator_iff_faithful_preadditive_yoneda, preadditive_yoneda_obj_2]
   exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGroupCat.{v}), fun h => faithful.comp _ _⟩

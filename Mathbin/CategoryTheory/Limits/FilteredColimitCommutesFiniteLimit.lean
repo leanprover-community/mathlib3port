@@ -361,7 +361,8 @@ end
 attribute [local instance] reflects_limits_of_shape_of_reflects_isomorphisms
 
 noncomputable instance [PreservesFiniteLimits (forget C)] [PreservesFilteredColimits (forget C)]
-    [HasFiniteLimits C] [HasColimitsOfShape K C] [ReflectsIsomorphisms (forget C)] :
+    [HasFiniteLimits C] [HasColimitsOfShape K C]
+    [CategoryTheory.Functor.ReflectsIsomorphisms (forget C)] :
     PreservesFiniteLimits (colim : (K ⥤ C) ⥤ _) :=
   by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{v}

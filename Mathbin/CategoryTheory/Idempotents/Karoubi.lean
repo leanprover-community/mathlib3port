@@ -185,9 +185,9 @@ def toKaroubi : C ⥤ Karoubi C
 #align category_theory.idempotents.to_karoubi CategoryTheory.Idempotents.toKaroubi
 -/
 
-instance : Full (toKaroubi C) where preimage X Y f := f.f
+instance : CategoryTheory.Functor.Full (toKaroubi C) where preimage X Y f := f.f
 
-instance : Faithful (toKaroubi C) where
+instance : CategoryTheory.Functor.Faithful (toKaroubi C) where
 
 variable {C}
 
@@ -256,7 +256,7 @@ instance : IsIdempotentComplete (Karoubi C) :=
   use⟨p.f, by rw [hp', p_comp p]⟩
   constructor <;> simpa only [hom_ext] using hp'
 
-instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
+instance [IsIdempotentComplete C] : CategoryTheory.Functor.EssSurj (toKaroubi C) :=
   ⟨fun P => by
     have h : is_idempotent_complete C := inferInstance
     rcases is_idempotent_complete.idempotents_split P.X P.p P.idem with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
@@ -268,8 +268,9 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
 
 #print CategoryTheory.Idempotents.toKaroubiIsEquivalence /-
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
-def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
-  Equivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
+def toKaroubiIsEquivalence [IsIdempotentComplete C] :
+    CategoryTheory.Functor.IsEquivalence (toKaroubi C) :=
+  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
 #align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
 -/
 

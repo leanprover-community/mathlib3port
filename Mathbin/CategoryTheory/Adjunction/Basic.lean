@@ -598,8 +598,10 @@ isomorphisms, then the functor is an equivalence of categories.
 @[simps]
 noncomputable def isRightAdjointToIsEquivalence [IsRightAdjoint G]
     [∀ X, IsIso ((Adjunction.ofRightAdjoint G).Unit.app X)]
-    [∀ Y, IsIso ((Adjunction.ofRightAdjoint G).counit.app Y)] : IsEquivalence G :=
-  IsEquivalence.ofEquivalenceInverse (Adjunction.ofRightAdjoint G).toEquivalence
+    [∀ Y, IsIso ((Adjunction.ofRightAdjoint G).counit.app Y)] :
+    CategoryTheory.Functor.IsEquivalence G :=
+  CategoryTheory.Functor.IsEquivalence.ofEquivalenceInverse
+    (Adjunction.ofRightAdjoint G).toEquivalence
 #align category_theory.adjunction.is_right_adjoint_to_is_equivalence CategoryTheory.Adjunction.isRightAdjointToIsEquivalence
 -/
 
@@ -635,14 +637,15 @@ namespace Functor
 
 #print CategoryTheory.Functor.adjunction /-
 /-- An equivalence `E` is left adjoint to its inverse. -/
-def adjunction (E : C ⥤ D) [IsEquivalence E] : E ⊣ E.inv :=
+def adjunction (E : C ⥤ D) [CategoryTheory.Functor.IsEquivalence E] : E ⊣ E.inv :=
   E.asEquivalence.toAdjunction
 #align category_theory.functor.adjunction CategoryTheory.Functor.adjunction
 -/
 
 #print CategoryTheory.Functor.leftAdjointOfEquivalence /-
 /-- If `F` is an equivalence, it's a left adjoint. -/
-instance (priority := 10) leftAdjointOfEquivalence {F : C ⥤ D} [IsEquivalence F] : IsLeftAdjoint F
+instance (priority := 10) leftAdjointOfEquivalence {F : C ⥤ D}
+    [CategoryTheory.Functor.IsEquivalence F] : IsLeftAdjoint F
     where
   right := _
   adj := Functor.adjunction F
@@ -651,14 +654,16 @@ instance (priority := 10) leftAdjointOfEquivalence {F : C ⥤ D} [IsEquivalence 
 
 #print CategoryTheory.Functor.rightAdjoint_of_isEquivalence /-
 @[simp]
-theorem rightAdjoint_of_isEquivalence {F : C ⥤ D} [IsEquivalence F] : rightAdjoint F = inv F :=
+theorem rightAdjoint_of_isEquivalence {F : C ⥤ D} [CategoryTheory.Functor.IsEquivalence F] :
+    rightAdjoint F = inv F :=
   rfl
 #align category_theory.functor.right_adjoint_of_is_equivalence CategoryTheory.Functor.rightAdjoint_of_isEquivalence
 -/
 
 #print CategoryTheory.Functor.rightAdjointOfEquivalence /-
 /-- If `F` is an equivalence, it's a right adjoint. -/
-instance (priority := 10) rightAdjointOfEquivalence {F : C ⥤ D} [IsEquivalence F] : IsRightAdjoint F
+instance (priority := 10) rightAdjointOfEquivalence {F : C ⥤ D}
+    [CategoryTheory.Functor.IsEquivalence F] : IsRightAdjoint F
     where
   left := _
   adj := Functor.adjunction F.inv
@@ -667,7 +672,8 @@ instance (priority := 10) rightAdjointOfEquivalence {F : C ⥤ D} [IsEquivalence
 
 #print CategoryTheory.Functor.leftAdjoint_of_isEquivalence /-
 @[simp]
-theorem leftAdjoint_of_isEquivalence {F : C ⥤ D} [IsEquivalence F] : leftAdjoint F = inv F :=
+theorem leftAdjoint_of_isEquivalence {F : C ⥤ D} [CategoryTheory.Functor.IsEquivalence F] :
+    leftAdjoint F = inv F :=
   rfl
 #align category_theory.functor.left_adjoint_of_is_equivalence CategoryTheory.Functor.leftAdjoint_of_isEquivalence
 -/

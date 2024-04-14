@@ -162,7 +162,7 @@ def forgetToSheafedSpace : LocallyRingedSpace ⥤ SheafedSpace CommRingCat
 #align algebraic_geometry.LocallyRingedSpace.forget_to_SheafedSpace AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace
 -/
 
-instance : Faithful forgetToSheafedSpace where
+instance : CategoryTheory.Functor.Faithful forgetToSheafedSpace where
 
 #print AlgebraicGeometry.LocallyRingedSpace.forgetToTop /-
 /-- The forgetful functor from `LocallyRingedSpace` to `Top`. -/
@@ -230,7 +230,7 @@ def isoOfSheafedSpaceIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace ≅ Y.
 #align algebraic_geometry.LocallyRingedSpace.iso_of_SheafedSpace_iso AlgebraicGeometry.LocallyRingedSpace.isoOfSheafedSpaceIso
 -/
 
-instance : ReflectsIsomorphisms forgetToSheafedSpace
+instance : CategoryTheory.Functor.ReflectsIsomorphisms forgetToSheafedSpace
     where reflects X Y f i :=
     {
       out :=

@@ -251,7 +251,7 @@ section IsIdempotentComplete
 
 variable [IsIdempotentComplete D]
 
-noncomputable instance : IsEquivalence (toKaroubi D) :=
+noncomputable instance : CategoryTheory.Functor.IsEquivalence (toKaroubi D) :=
   toKaroubiIsEquivalence D
 
 #print CategoryTheory.Idempotents.karoubiUniversal₂ /-
@@ -269,7 +269,7 @@ theorem karoubiUniversal₂_functor_eq : (karoubiUniversal₂ C D).Functor = fun
 #align category_theory.idempotents.karoubi_universal₂_functor_eq CategoryTheory.Idempotents.karoubiUniversal₂_functor_eq
 -/
 
-noncomputable instance : IsEquivalence (functorExtension₂ C D) := by
+noncomputable instance : CategoryTheory.Functor.IsEquivalence (functorExtension₂ C D) := by
   rw [← karoubi_universal₂_functor_eq]; infer_instance
 
 #print CategoryTheory.Idempotents.functorExtension /-
@@ -296,13 +296,14 @@ theorem karoubiUniversal_functor_eq : (karoubiUniversal C D).Functor = functorEx
 #align category_theory.idempotents.karoubi_universal_functor_eq CategoryTheory.Idempotents.karoubiUniversal_functor_eq
 -/
 
-noncomputable instance : IsEquivalence (functorExtension C D) := by
+noncomputable instance : CategoryTheory.Functor.IsEquivalence (functorExtension C D) := by
   rw [← karoubi_universal_functor_eq]; infer_instance
 
-noncomputable instance : IsEquivalence ((whiskeringLeft C (Karoubi C) D).obj (toKaroubi C)) :=
-  IsEquivalence.cancelCompRight _
+noncomputable instance :
+    CategoryTheory.Functor.IsEquivalence ((whiskeringLeft C (Karoubi C) D).obj (toKaroubi C)) :=
+  CategoryTheory.Functor.IsEquivalence.cancelCompRight _
     ((whiskeringRight C _ _).obj (toKaroubi D) ⋙ (whiskeringRight C _ _).obj (toKaroubi D).inv)
-    (IsEquivalence.ofEquivalence
+    (CategoryTheory.Functor.IsEquivalence.ofEquivalence
       (@Equivalence.congrRight _ _ _ _ C _
         ((toKaroubi D).asEquivalence.trans (toKaroubi D).asEquivalence.symm)))
     (by change is_equivalence (karoubi_universal C D).inverse; infer_instance)

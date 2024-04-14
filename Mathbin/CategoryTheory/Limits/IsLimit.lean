@@ -515,9 +515,10 @@ def homIso' (h : IsLimit t) (W : C) :
 /-- If G : C → D is a faithful functor which sends t to a limit cone,
   then it suffices to check that the induced maps for the image of t
   can be lifted to maps of C. -/
-def ofFaithful {t : Cone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) [Faithful G]
-    (ht : IsLimit (G.mapCone t)) (lift : ∀ s : Cone F, s.pt ⟶ t.pt)
-    (h : ∀ s, G.map (lift s) = ht.lift (G.mapCone s)) : IsLimit t :=
+def ofFaithful {t : Cone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D)
+    [CategoryTheory.Functor.Faithful G] (ht : IsLimit (G.mapCone t))
+    (lift : ∀ s : Cone F, s.pt ⟶ t.pt) (h : ∀ s, G.map (lift s) = ht.lift (G.mapCone s)) :
+    IsLimit t :=
   { lift
     fac := fun s j => by apply G.map_injective <;> rw [G.map_comp, h] <;> apply ht.fac
     uniq := fun s m w => by
@@ -1133,9 +1134,10 @@ def homIso' (h : IsColimit t) (W : C) :
 /-- If G : C → D is a faithful functor which sends t to a colimit cocone,
   then it suffices to check that the induced maps for the image of t
   can be lifted to maps of C. -/
-def ofFaithful {t : Cocone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) [Faithful G]
-    (ht : IsColimit (G.mapCocone t)) (desc : ∀ s : Cocone F, t.pt ⟶ s.pt)
-    (h : ∀ s, G.map (desc s) = ht.desc (G.mapCocone s)) : IsColimit t :=
+def ofFaithful {t : Cocone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D)
+    [CategoryTheory.Functor.Faithful G] (ht : IsColimit (G.mapCocone t))
+    (desc : ∀ s : Cocone F, t.pt ⟶ s.pt) (h : ∀ s, G.map (desc s) = ht.desc (G.mapCocone s)) :
+    IsColimit t :=
   { desc
     fac := fun s j => by apply G.map_injective <;> rw [G.map_comp, h] <;> apply ht.fac
     uniq := fun s m w => by

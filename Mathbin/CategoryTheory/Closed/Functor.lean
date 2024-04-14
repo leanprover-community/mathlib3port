@@ -73,8 +73,8 @@ def frobeniusMorphism (h : L ⊣ F) (A : C) :
 Frobenius morphism is an isomorphism.
 -/
 instance frobeniusMorphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : C)
-    [PreservesLimitsOfShape (Discrete WalkingPair) L] [Full F] [Faithful F] :
-    IsIso (frobeniusMorphism F h A) :=
+    [PreservesLimitsOfShape (Discrete WalkingPair) L] [CategoryTheory.Functor.Full F]
+    [CategoryTheory.Functor.Faithful F] : IsIso (frobeniusMorphism F h A) :=
   by
   apply nat_iso.is_iso_of_is_iso_app _
   intro B
@@ -206,7 +206,8 @@ cartesian closed.
 TODO: Show the converse, that if `F` is cartesian closed and its left adjoint preserves binary
 products, then it is full and faithful.
 -/
-def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
+def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F)
+    [CategoryTheory.Functor.Full F] [CategoryTheory.Functor.Faithful F]
     [PreservesLimitsOfShape (Discrete WalkingPair) L] : CartesianClosedFunctor F
     where comparison_iso A := expComparison_iso_of_frobeniusMorphism_iso F h _
 #align category_theory.cartesian_closed_functor_of_left_adjoint_preserves_binary_products CategoryTheory.cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts

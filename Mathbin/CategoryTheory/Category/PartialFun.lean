@@ -102,7 +102,7 @@ def typeToPartialFun : Type u ⥤ PartialFun
 #align Type_to_PartialFun typeToPartialFun
 -/
 
-instance : Faithful typeToPartialFun :=
+instance : CategoryTheory.Functor.Faithful typeToPartialFun :=
   ⟨fun X Y => PFun.lift_injective⟩
 
 #print pointedToPartialFun /-

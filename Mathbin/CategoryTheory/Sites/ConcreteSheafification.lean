@@ -477,7 +477,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
 #align category_theory.grothendieck_topology.plus.exists_of_sep CategoryTheory.GrothendieckTopology.Plus.exists_of_sep
 -/
 
-variable [ReflectsIsomorphisms (forget D)]
+variable [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 #print CategoryTheory.GrothendieckTopology.Plus.isSheaf_of_sep /-
 /-- If `P` is separated, then `P⁺` is a sheaf. -/
@@ -711,7 +711,8 @@ variable (J)
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
   [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
   [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
-  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
+  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
+  [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 #print CategoryTheory.GrothendieckTopology.sheafify_isSheaf /-
 theorem GrothendieckTopology.sheafify_isSheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=

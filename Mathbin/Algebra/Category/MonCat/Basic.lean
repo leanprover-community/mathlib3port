@@ -309,7 +309,8 @@ def mulEquivIsoCommMonCatIso {X Y : Type u} [CommMonoid X] [CommMonoid Y] :
 
 #print MonCat.forget_reflects_isos /-
 @[to_additive]
-instance MonCat.forget_reflects_isos : ReflectsIsomorphisms (forget MonCat.{u})
+instance MonCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget MonCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget MonCat).map f)
@@ -321,7 +322,8 @@ instance MonCat.forget_reflects_isos : ReflectsIsomorphisms (forget MonCat.{u})
 
 #print CommMonCat.forget_reflects_isos /-
 @[to_additive]
-instance CommMonCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommMonCat.{u})
+instance CommMonCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget CommMonCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget CommMonCat).map f)
@@ -338,5 +340,6 @@ reflect isomorphisms.
 -/
 
 
-example : ReflectsIsomorphisms (forget₂ CommMonCat MonCat) := by infer_instance
+example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ CommMonCat MonCat) := by
+  infer_instance
 

@@ -160,11 +160,11 @@ def typeToCat : Type u ⥤ Cat where
 #align category_theory.Type_to_Cat CategoryTheory.typeToCat
 -/
 
-instance : Faithful typeToCat.{u}
+instance : CategoryTheory.Functor.Faithful typeToCat.{u}
     where map_injective' X Y f g h :=
     funext fun x => congr_arg Discrete.as (Functor.congr_obj h ⟨x⟩)
 
-instance : Full typeToCat.{u}
+instance : CategoryTheory.Functor.Full typeToCat.{u}
     where
   preimage X Y F := Discrete.as ∘ F.obj ∘ Discrete.mk
   witness' := by

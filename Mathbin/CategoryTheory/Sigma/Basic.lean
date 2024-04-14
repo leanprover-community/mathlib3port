@@ -108,12 +108,12 @@ theorem incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ :=
 #align category_theory.sigma.incl_obj CategoryTheory.Sigma.incl_obj
 -/
 
-instance (i : I) : Full (incl i : C i ⥤ Σ i, C i)
+instance (i : I) : CategoryTheory.Functor.Full (incl i : C i ⥤ Σ i, C i)
     where
   preimage := fun X Y ⟨f⟩ => f
   witness' := fun X Y ⟨f⟩ => rfl
 
-instance (i : I) : Faithful (incl i : C i ⥤ Σ i, C i) where
+instance (i : I) : CategoryTheory.Functor.Faithful (incl i : C i ⥤ Σ i, C i) where
 
 section
 

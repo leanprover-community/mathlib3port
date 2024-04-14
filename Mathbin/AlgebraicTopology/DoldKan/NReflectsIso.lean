@@ -45,7 +45,9 @@ variable {C : Type _} [Category C] [Preadditive C]
 
 open MorphComponents
 
-instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)) :=
+instance :
+    CategoryTheory.Functor.ReflectsIsomorphisms
+      (N₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)) :=
   ⟨fun X Y f => by
     intro
     -- restating the result in a way that allows induction on the degree n
@@ -115,7 +117,9 @@ theorem compatibility_N₂_N₁_karoubi :
 /-- We deduce that `N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms from the fact that
 `N₁ : simplicial_object (karoubi C) ⥤ karoubi (chain_complex (karoubi C) ℕ)` does. -/
-instance : ReflectsIsomorphisms (N₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ)) :=
+instance :
+    CategoryTheory.Functor.ReflectsIsomorphisms
+      (N₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ)) :=
   ⟨fun X Y f => by
     intro
     -- The following functor `F` reflects isomorphism because it is

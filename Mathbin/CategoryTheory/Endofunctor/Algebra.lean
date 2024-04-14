@@ -164,12 +164,13 @@ theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
 -/
 
 #print CategoryTheory.Endofunctor.Algebra.forget_reflects_iso /-
-instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects A B := iso_of_iso
+instance forget_reflects_iso : CategoryTheory.Functor.ReflectsIsomorphisms (forget F)
+    where reflects A B := iso_of_iso
 #align category_theory.endofunctor.algebra.forget_reflects_iso CategoryTheory.Endofunctor.Algebra.forget_reflects_iso
 -/
 
 #print CategoryTheory.Endofunctor.Algebra.forget_faithful /-
-instance forget_faithful : Faithful (forget F) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (forget F) where
 #align category_theory.endofunctor.algebra.forget_faithful CategoryTheory.Endofunctor.Algebra.forget_faithful
 -/
 
@@ -427,12 +428,13 @@ theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
 -/
 
 #print CategoryTheory.Endofunctor.Coalgebra.forget_reflects_iso /-
-instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects A B := iso_of_iso
+instance forget_reflects_iso : CategoryTheory.Functor.ReflectsIsomorphisms (forget F)
+    where reflects A B := iso_of_iso
 #align category_theory.endofunctor.coalgebra.forget_reflects_iso CategoryTheory.Endofunctor.Coalgebra.forget_reflects_iso
 -/
 
 #print CategoryTheory.Endofunctor.Coalgebra.forget_faithful /-
-instance forget_faithful : Faithful (forget F) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (forget F) where
 #align category_theory.endofunctor.coalgebra.forget_faithful CategoryTheory.Endofunctor.Coalgebra.forget_faithful
 -/
 

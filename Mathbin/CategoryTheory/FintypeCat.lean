@@ -64,7 +64,7 @@ instance : Category FintypeCat :=
 @[simps]
 def incl : FintypeCat ⥤ Type _ :=
   inducedFunctor _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align Fintype.incl FintypeCat.incl
 -/
 
@@ -185,20 +185,20 @@ def incl : Skeleton.{u} ⥤ FintypeCat.{u}
 #align Fintype.skeleton.incl FintypeCat.Skeleton.incl
 -/
 
-instance : Full incl where preimage _ _ f := f
+instance : CategoryTheory.Functor.Full incl where preimage _ _ f := f
 
-instance : Faithful incl where
+instance : CategoryTheory.Functor.Faithful incl where
 
-instance : EssSurj incl :=
-  EssSurj.mk fun X =>
+instance : CategoryTheory.Functor.EssSurj incl :=
+  CategoryTheory.Functor.EssSurj.mk fun X =>
     let F := Fintype.equivFin X
     ⟨mk (Fintype.card X),
       Nonempty.intro
         { Hom := F.symm ∘ ULift.down
           inv := ULift.up ∘ F }⟩
 
-noncomputable instance : IsEquivalence incl :=
-  Equivalence.ofFullyFaithfullyEssSurj _
+noncomputable instance : CategoryTheory.Functor.IsEquivalence incl :=
+  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
 
 #print FintypeCat.Skeleton.equivalence /-
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/

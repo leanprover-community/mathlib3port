@@ -55,7 +55,8 @@ abbrev sheafForget : Sheaf J D ⥤ SheafOfTypes J :=
 -- We need to sheafify...
 variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
   [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
-  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
+  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
+  [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 namespace Sheaf
 

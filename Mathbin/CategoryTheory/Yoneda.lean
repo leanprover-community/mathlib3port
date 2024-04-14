@@ -85,7 +85,8 @@ theorem naturality {X Y : C} (α : yoneda.obj X ⟶ yoneda.obj Y) {Z Z' : C} (f 
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where preimage X Y f := f.app (op X) (𝟙 X)
+instance yonedaFull : CategoryTheory.Functor.Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁)
+    where preimage X Y f := f.app (op X) (𝟙 X)
 #align category_theory.yoneda.yoneda_full CategoryTheory.Yoneda.yonedaFull
 -/
 
@@ -94,7 +95,7 @@ instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where preimage
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-instance yoneda_faithful : Faithful (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁)
+instance yoneda_faithful : CategoryTheory.Functor.Faithful (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁)
     where map_injective' X Y f g p := by
     convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp <;> simp
 #align category_theory.yoneda.yoneda_faithful CategoryTheory.Yoneda.yoneda_faithful
@@ -142,13 +143,13 @@ theorem naturality {X Y : Cᵒᵖ} (α : coyoneda.obj X ⟶ coyoneda.obj Y) {Z Z
 -/
 
 #print CategoryTheory.Coyoneda.coyonedaFull /-
-instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁)
+instance coyonedaFull : CategoryTheory.Functor.Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁)
     where preimage X Y f := (f.app _ (𝟙 X.unop)).op
 #align category_theory.coyoneda.coyoneda_full CategoryTheory.Coyoneda.coyonedaFull
 -/
 
 #print CategoryTheory.Coyoneda.coyoneda_faithful /-
-instance coyoneda_faithful : Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁)
+instance coyoneda_faithful : CategoryTheory.Functor.Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁)
     where map_injective' X Y f g p :=
     by
     have t := congr_fun (congr_app p X.unop) (𝟙 _)

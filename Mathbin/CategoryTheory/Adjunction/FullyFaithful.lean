@@ -51,7 +51,8 @@ See
 * https://math.stackexchange.com/a/2727177
 * https://stacks.math.columbia.edu/tag/07RB (we only prove the forward direction!)
 -/
-instance unit_isIso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjunction.unit h) :=
+instance unit_isIso_of_L_fully_faithful [CategoryTheory.Functor.Full L]
+    [CategoryTheory.Functor.Faithful L] : IsIso (Adjunction.unit h) :=
   @NatIso.isIso_of_isIso_app _ _ _ _ _ _ (Adjunction.unit h) fun X =>
     @Yoneda.isIso _ _ _ _ ((Adjunction.unit h).app X)
       ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
@@ -71,7 +72,8 @@ instance unit_isIso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjunctio
 
 See <https://stacks.math.columbia.edu/tag/07RB> (we only prove the forward direction!)
 -/
-instance counit_isIso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunction.counit h) :=
+instance counit_isIso_of_R_fully_faithful [CategoryTheory.Functor.Full R]
+    [CategoryTheory.Functor.Faithful R] : IsIso (Adjunction.counit h) :=
   @NatIso.isIso_of_isIso_app _ _ _ _ _ _ (Adjunction.counit h) fun X =>
     @isIso_of_op _ _ _ _ _ <|
       @Coyoneda.isIso _ _ _ _ ((Adjunction.counit h).app X).op
@@ -125,14 +127,14 @@ noncomputable def whiskerLeftRUnitIsoOfIsIsoCounit [IsIso h.counit] : R ⋙ L �
 
 #print CategoryTheory.lFullOfUnitIsIso /-
 /-- If the unit is an isomorphism, then the left adjoint is full-/
-noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : Full L
+noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : CategoryTheory.Functor.Full L
     where preimage X Y f := h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
 #align category_theory.L_full_of_unit_is_iso CategoryTheory.lFullOfUnitIsIso
 -/
 
 #print CategoryTheory.L_faithful_of_unit_isIso /-
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
-theorem L_faithful_of_unit_isIso [IsIso h.Unit] : Faithful L :=
+theorem L_faithful_of_unit_isIso [IsIso h.Unit] : CategoryTheory.Functor.Faithful L :=
   {
     map_injective' := fun X Y f g H =>
       by
@@ -143,14 +145,14 @@ theorem L_faithful_of_unit_isIso [IsIso h.Unit] : Faithful L :=
 
 #print CategoryTheory.rFullOfCounitIsIso /-
 /-- If the counit is an isomorphism, then the right adjoint is full-/
-noncomputable def rFullOfCounitIsIso [IsIso h.counit] : Full R
+noncomputable def rFullOfCounitIsIso [IsIso h.counit] : CategoryTheory.Functor.Full R
     where preimage X Y f := inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
 #align category_theory.R_full_of_counit_is_iso CategoryTheory.rFullOfCounitIsIso
 -/
 
 #print CategoryTheory.R_faithful_of_counit_isIso /-
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
-theorem R_faithful_of_counit_isIso [IsIso h.counit] : Faithful R :=
+theorem R_faithful_of_counit_isIso [IsIso h.counit] : CategoryTheory.Functor.Faithful R :=
   {
     map_injective' := fun X Y f g H =>
       by
@@ -160,8 +162,9 @@ theorem R_faithful_of_counit_isIso [IsIso h.counit] : Faithful R :=
 -/
 
 #print CategoryTheory.whiskerLeft_counit_iso_of_L_fully_faithful /-
-instance whiskerLeft_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
-    IsIso (whiskerLeft L h.counit) := by
+instance whiskerLeft_counit_iso_of_L_fully_faithful [CategoryTheory.Functor.Full L]
+    [CategoryTheory.Functor.Faithful L] : IsIso (whiskerLeft L h.counit) :=
+  by
   have := h.left_triangle
   rw [← is_iso.eq_inv_comp] at this
   rw [this]
@@ -170,8 +173,8 @@ instance whiskerLeft_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
 -/
 
 #print CategoryTheory.whiskerRight_counit_iso_of_L_fully_faithful /-
-instance whiskerRight_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
-    IsIso (whiskerRight h.counit R) :=
+instance whiskerRight_counit_iso_of_L_fully_faithful [CategoryTheory.Functor.Full L]
+    [CategoryTheory.Functor.Faithful L] : IsIso (whiskerRight h.counit R) :=
   by
   have := h.right_triangle
   rw [← is_iso.eq_inv_comp] at this
@@ -181,8 +184,9 @@ instance whiskerRight_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
 -/
 
 #print CategoryTheory.whiskerLeft_unit_iso_of_R_fully_faithful /-
-instance whiskerLeft_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
-    IsIso (whiskerLeft R h.Unit) := by
+instance whiskerLeft_unit_iso_of_R_fully_faithful [CategoryTheory.Functor.Full R]
+    [CategoryTheory.Functor.Faithful R] : IsIso (whiskerLeft R h.Unit) :=
+  by
   have := h.right_triangle
   rw [← is_iso.eq_comp_inv] at this
   rw [this]
@@ -191,8 +195,9 @@ instance whiskerLeft_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
 -/
 
 #print CategoryTheory.whiskerRight_unit_iso_of_R_fully_faithful /-
-instance whiskerRight_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
-    IsIso (whiskerRight h.Unit L) := by
+instance whiskerRight_unit_iso_of_R_fully_faithful [CategoryTheory.Functor.Full R]
+    [CategoryTheory.Functor.Faithful R] : IsIso (whiskerRight h.Unit L) :=
+  by
   have := h.left_triangle
   rw [← is_iso.eq_comp_inv] at this
   rw [this]
@@ -218,7 +223,8 @@ natural isomorphism) with the proposed restrictions.
 -/
 def Adjunction.restrictFullyFaithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' ⥤ D'} {R' : D' ⥤ C'}
     (adj : L' ⊣ R') {L : C ⥤ D} {R : D ⥤ C} (comm1 : iC ⋙ L' ≅ L ⋙ iD) (comm2 : iD ⋙ R' ≅ R ⋙ iC)
-    [Full iC] [Faithful iC] [Full iD] [Faithful iD] : L ⊣ R :=
+    [CategoryTheory.Functor.Full iC] [CategoryTheory.Functor.Faithful iC]
+    [CategoryTheory.Functor.Full iD] [CategoryTheory.Functor.Faithful iD] : L ⊣ R :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         calc

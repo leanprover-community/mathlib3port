@@ -485,7 +485,8 @@ theorem stalkFunctor_map_injective_of_app_injective {F G : Presheaf C X} (f : F 
 #align Top.presheaf.stalk_functor_map_injective_of_app_injective TopCat.Presheaf.stalkFunctor_map_injective_of_app_injective
 -/
 
-variable [HasLimits C] [PreservesLimits (forget C)] [ReflectsIsomorphisms (forget C)]
+variable [HasLimits C] [PreservesLimits (forget C)]
+  [CategoryTheory.Functor.ReflectsIsomorphisms (forget C)]
 
 #print TopCat.Presheaf.section_ext /-
 /-- Let `F` be a sheaf valued in a concrete category, whose forgetful functor reflects isomorphisms,

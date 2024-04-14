@@ -54,7 +54,7 @@ in particular `F` is a (strong) equivalence and `D` is skeletal.
 -/
 structure IsSkeletonOf (F : D ⥤ C) where
   skel : Skeletal D
-  eqv : IsEquivalence F
+  eqv : CategoryTheory.Functor.IsEquivalence F
 #align category_theory.is_skeleton_of CategoryTheory.IsSkeletonOf
 -/
 
@@ -99,14 +99,15 @@ instance [Inhabited C] : Inhabited (Skeleton C) :=
 @[simps]
 noncomputable def fromSkeleton : Skeleton C ⥤ C :=
   inducedFunctor _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.from_skeleton CategoryTheory.fromSkeleton
 -/
 
-instance : EssSurj (fromSkeleton C) where mem_essImage X := ⟨Quotient.mk' X, Quotient.mk_out X⟩
+instance : CategoryTheory.Functor.EssSurj (fromSkeleton C)
+    where mem_essImage X := ⟨Quotient.mk' X, Quotient.mk_out X⟩
 
-noncomputable instance : IsEquivalence (fromSkeleton C) :=
-  Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
+noncomputable instance : CategoryTheory.Functor.IsEquivalence (fromSkeleton C) :=
+  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
 
 #print CategoryTheory.skeletonEquivalence /-
 /-- The equivalence between the skeleton and the category itself. -/
@@ -263,7 +264,7 @@ section
 variable [Quiver.IsThin C]
 
 #print CategoryTheory.ThinSkeleton.toThinSkeleton_faithful /-
-instance toThinSkeleton_faithful : Faithful (toThinSkeleton C) where
+instance toThinSkeleton_faithful : CategoryTheory.Functor.Faithful (toThinSkeleton C) where
 #align category_theory.thin_skeleton.to_thin_skeleton_faithful CategoryTheory.ThinSkeleton.toThinSkeleton_faithful
 -/
 
@@ -280,7 +281,8 @@ noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C
 -/
 
 #print CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence /-
-noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkeleton C)
+noncomputable instance fromThinSkeletonEquivalence :
+    CategoryTheory.Functor.IsEquivalence (fromThinSkeleton C)
     where
   inverse := toThinSkeleton C
   counitIso := NatIso.ofComponents (fun X => Nonempty.some (Quotient.mk_out X)) (by tidy)

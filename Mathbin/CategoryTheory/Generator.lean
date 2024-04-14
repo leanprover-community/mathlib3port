@@ -637,14 +637,15 @@ theorem IsCodetector.def {G : C} :
 
 #print CategoryTheory.isSeparator_iff_faithful_coyoneda_obj /-
 theorem isSeparator_iff_faithful_coyoneda_obj (G : C) :
-    IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
+    IsSeparator G ↔ CategoryTheory.Functor.Faithful (coyoneda.obj (op G)) :=
   ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_fun hfg)⟩, fun h =>
     (isSeparator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 #align category_theory.is_separator_iff_faithful_coyoneda_obj CategoryTheory.isSeparator_iff_faithful_coyoneda_obj
 -/
 
 #print CategoryTheory.isCoseparator_iff_faithful_yoneda_obj /-
-theorem isCoseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
+theorem isCoseparator_iff_faithful_yoneda_obj (G : C) :
+    IsCoseparator G ↔ CategoryTheory.Functor.Faithful (yoneda.obj G) :=
   ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
     (isCoseparator_def _).2 fun X Y f g hfg =>
       Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
@@ -789,7 +790,7 @@ end ZeroMorphisms
 
 #print CategoryTheory.isDetector_iff_reflectsIsomorphisms_coyoneda_obj /-
 theorem isDetector_iff_reflectsIsomorphisms_coyoneda_obj (G : C) :
-    IsDetector G ↔ ReflectsIsomorphisms (coyoneda.obj (op G)) :=
+    IsDetector G ↔ CategoryTheory.Functor.ReflectsIsomorphisms (coyoneda.obj (op G)) :=
   by
   refine'
     ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h =>
@@ -804,7 +805,7 @@ theorem isDetector_iff_reflectsIsomorphisms_coyoneda_obj (G : C) :
 
 #print CategoryTheory.isCodetector_iff_reflectsIsomorphisms_yoneda_obj /-
 theorem isCodetector_iff_reflectsIsomorphisms_yoneda_obj (G : C) :
-    IsCodetector G ↔ ReflectsIsomorphisms (yoneda.obj G) :=
+    IsCodetector G ↔ CategoryTheory.Functor.ReflectsIsomorphisms (yoneda.obj G) :=
   by
   refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => (is_codetector_def _).2 fun X Y f hf => _⟩
   · refine' (is_iso_unop_iff _).1 (hG.def _ _)

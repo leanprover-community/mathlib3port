@@ -304,7 +304,8 @@ def mulEquivIsoSemigroupCatIso {X Y : Type u} [Semigroup X] [Semigroup Y] :
 
 #print MagmaCat.forgetReflectsIsos /-
 @[to_additive]
-instance MagmaCat.forgetReflectsIsos : ReflectsIsomorphisms (forget MagmaCat.{u})
+instance MagmaCat.forgetReflectsIsos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget MagmaCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget MagmaCat).map f)
@@ -316,7 +317,8 @@ instance MagmaCat.forgetReflectsIsos : ReflectsIsomorphisms (forget MagmaCat.{u}
 
 #print SemigroupCat.forgetReflectsIsos /-
 @[to_additive]
-instance SemigroupCat.forgetReflectsIsos : ReflectsIsomorphisms (forget SemigroupCat.{u})
+instance SemigroupCat.forgetReflectsIsos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget SemigroupCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget SemigroupCat).map f)
@@ -333,5 +335,6 @@ reflect isomorphisms.
 -/
 
 
-example : ReflectsIsomorphisms (forget₂ SemigroupCat MagmaCat) := by infer_instance
+example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ SemigroupCat MagmaCat) := by
+  infer_instance
 

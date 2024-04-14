@@ -76,7 +76,7 @@ variable (C)
 /-- The forgetful functor from commutative monoid objects to monoid objects. -/
 def forget₂Mon_ : CommMon_ C ⥤ Mon_ C :=
   inducedFunctor CommMon_.toMon_
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align CommMon_.forget₂_Mon_ CommMon_.forget₂Mon_
 -/
 

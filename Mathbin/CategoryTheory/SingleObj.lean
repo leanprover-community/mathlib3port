@@ -258,7 +258,7 @@ def toCat : MonCat ⥤ Cat where
 -/
 
 #print MonCat.toCatFull /-
-instance toCatFull : Full toCat
+instance toCatFull : CategoryTheory.Functor.Full toCat
     where
   preimage x y := (SingleObj.mapHom x y).invFun
   witness' x y := by apply Equiv.right_inv
@@ -266,7 +266,8 @@ instance toCatFull : Full toCat
 -/
 
 #print MonCat.toCat_faithful /-
-instance toCat_faithful : Faithful toCat where map_injective' x y := by apply Equiv.injective
+instance toCat_faithful : CategoryTheory.Functor.Faithful toCat
+    where map_injective' x y := by apply Equiv.injective
 #align Mon.to_Cat_faithful MonCat.toCat_faithful
 -/
 

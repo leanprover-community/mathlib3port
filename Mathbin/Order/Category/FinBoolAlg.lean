@@ -101,13 +101,13 @@ instance hasForgetToFinBddDistLat : HasForget₂ FinBoolAlg FinBddDistLat
 -/
 
 #print FinBoolAlg.forgetToBoolAlgFull /-
-instance forgetToBoolAlgFull : Full (forget₂ FinBoolAlg BoolAlg) :=
+instance forgetToBoolAlgFull : CategoryTheory.Functor.Full (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.full _
 #align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlg.forgetToBoolAlgFull
 -/
 
 #print FinBoolAlg.forgetToBoolAlgFaithful /-
-instance forgetToBoolAlgFaithful : Faithful (forget₂ FinBoolAlg BoolAlg) :=
+instance forgetToBoolAlgFaithful : CategoryTheory.Functor.Faithful (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.faithful _
 #align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlg.forgetToBoolAlgFaithful
 -/
@@ -122,7 +122,8 @@ instance hasForgetToFinPartOrd : HasForget₂ FinBoolAlg FinPartOrd
 -/
 
 #print FinBoolAlg.forgetToFinPartOrdFaithful /-
-instance forgetToFinPartOrdFaithful : Faithful (forget₂ FinBoolAlg FinPartOrd) :=
+instance forgetToFinPartOrdFaithful :
+    CategoryTheory.Functor.Faithful (forget₂ FinBoolAlg FinPartOrd) :=
   ⟨fun X Y f g h =>
     haveI := congr_arg (coeFn : _ → X → Y) h
     DFunLike.coe_injective this⟩

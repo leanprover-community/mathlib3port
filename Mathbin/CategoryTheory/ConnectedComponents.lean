@@ -63,7 +63,7 @@ deriving Category
 @[simps (config := { rhsMd := semireducible })]
 def Component.ι (j) : Component j ⥤ J :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.component.ι CategoryTheory.Component.ι
 -/
 
@@ -140,7 +140,7 @@ theorem inclusion_comp_decomposedTo (j : ConnectedComponents J) :
 #align category_theory.inclusion_comp_decomposed_to CategoryTheory.inclusion_comp_decomposedTo
 -/
 
-instance : Full (decomposedTo J)
+instance : CategoryTheory.Functor.Full (decomposedTo J)
     where
   Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
@@ -158,16 +158,17 @@ instance : Full (decomposedTo J)
     subst this
     rfl
 
-instance : Faithful (decomposedTo J)
+instance : CategoryTheory.Functor.Faithful (decomposedTo J)
     where map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨f⟩ ⟨g⟩ e
     change f = g at e
     subst e
 
-instance : EssSurj (decomposedTo J) where mem_essImage j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
+instance : CategoryTheory.Functor.EssSurj (decomposedTo J)
+    where mem_essImage j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
 
-instance : IsEquivalence (decomposedTo J) :=
-  Equivalence.ofFullyFaithfullyEssSurj _
+instance : CategoryTheory.Functor.IsEquivalence (decomposedTo J) :=
+  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
 
 #print CategoryTheory.decomposedEquiv /-
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/

@@ -117,7 +117,7 @@ variable {C : Type u₁} [Category.{v} C] {D : Type u₂} [Category.{v} D]
 
 variable (G : C ⥤ D)
 
-variable [ReflectsIsomorphisms G]
+variable [CategoryTheory.Functor.ReflectsIsomorphisms G]
 
 variable [HasLimits C] [HasLimits D] [PreservesLimits G]
 

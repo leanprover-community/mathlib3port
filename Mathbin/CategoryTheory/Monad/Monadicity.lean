@@ -371,7 +371,8 @@ def monadicOfCreatesGSplitCoequalizers
 /-- An alternate version of Beck's monadicity theorem. If `G` reflects isomorphisms, preserves
 coequalizers of `G`-split pairs and `C` has coequalizers of `G`-split pairs, then it is monadic.
 -/
-def monadicOfHasPreservesGSplitCoequalizersOfReflectsIsomorphisms [ReflectsIsomorphisms G]
+def monadicOfHasPreservesGSplitCoequalizersOfReflectsIsomorphisms
+    [CategoryTheory.Functor.ReflectsIsomorphisms G]
     [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], HasCoequalizer f g]
     [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G] :
     MonadicRightAdjoint G :=
@@ -389,7 +390,7 @@ end BeckMonadicity
 
 section ReflexiveMonadicity
 
-variable [HasReflexiveCoequalizers D] [ReflectsIsomorphisms G]
+variable [HasReflexiveCoequalizers D] [CategoryTheory.Functor.ReflectsIsomorphisms G]
 
 variable [∀ ⦃A B⦄ (f g : A ⟶ B) [IsReflexivePair f g], PreservesColimit (parallelPair f g) G]
 

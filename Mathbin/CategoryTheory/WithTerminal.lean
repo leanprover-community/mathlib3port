@@ -109,9 +109,9 @@ def incl : C ⥤ WithTerminal C where
 #align category_theory.with_terminal.incl CategoryTheory.WithTerminal.incl
 -/
 
-instance : Full (incl : C ⥤ _) where preimage X Y f := f
+instance : CategoryTheory.Functor.Full (incl : C ⥤ _) where preimage X Y f := f
 
-instance : Faithful (incl : C ⥤ _) where
+instance : CategoryTheory.Functor.Faithful (incl : C ⥤ _) where
 
 #print CategoryTheory.WithTerminal.map /-
 /-- Map `with_terminal` with respect to a functor `F : C ⥤ D`. -/
@@ -310,9 +310,9 @@ def incl : C ⥤ WithInitial C where
 #align category_theory.with_initial.incl CategoryTheory.WithInitial.incl
 -/
 
-instance : Full (incl : C ⥤ _) where preimage X Y f := f
+instance : CategoryTheory.Functor.Full (incl : C ⥤ _) where preimage X Y f := f
 
-instance : Faithful (incl : C ⥤ _) where
+instance : CategoryTheory.Functor.Faithful (incl : C ⥤ _) where
 
 #print CategoryTheory.WithInitial.map /-
 /-- Map `with_initial` with respect to a functor `F : C ⥤ D`. -/

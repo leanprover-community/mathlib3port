@@ -159,7 +159,7 @@ namespace Sheaf
 -/
 def forget : TopCat.Sheaf C X ⥤ TopCat.Presheaf C X :=
   sheafToPresheaf _ _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align Top.sheaf.forget TopCat.Sheaf.forget
 -/
 

@@ -141,7 +141,7 @@ theorem ext_iff {A B : StructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.right 
 -/
 
 #print CategoryTheory.StructuredArrow.proj_faithful /-
-instance proj_faithful : Faithful (proj S T) where map_injective' X Y := ext
+instance proj_faithful : CategoryTheory.Functor.Faithful (proj S T) where map_injective' X Y := ext
 #align category_theory.structured_arrow.proj_faithful CategoryTheory.StructuredArrow.proj_faithful
 -/
 
@@ -223,7 +223,7 @@ theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
 -/
 
 #print CategoryTheory.StructuredArrow.proj_reflectsIsomorphisms /-
-instance proj_reflectsIsomorphisms : ReflectsIsomorphisms (proj S T)
+instance proj_reflectsIsomorphisms : CategoryTheory.Functor.ReflectsIsomorphisms (proj S T)
     where reflects Y Z f t :=
     ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
 #align category_theory.structured_arrow.proj_reflects_iso CategoryTheory.StructuredArrow.proj_reflectsIsomorphisms
@@ -235,7 +235,8 @@ attribute [local tidy] tactic.discrete_cases
 
 #print CategoryTheory.StructuredArrow.mkIdInitial /-
 /-- The identity structured arrow is initial. -/
-def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y)))
+def mkIdInitial [CategoryTheory.Functor.Full T] [CategoryTheory.Functor.Faithful T] :
+    IsInitial (mk (𝟙 (T.obj Y)))
     where
   desc c := homMk (T.preimage c.pt.Hom) (by dsimp; simp)
   uniq c m _ := by
@@ -374,7 +375,7 @@ theorem ext_iff {A B : CostructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.left
 -/
 
 #print CategoryTheory.CostructuredArrow.proj_faithful /-
-instance proj_faithful : Faithful (proj S T) where map_injective' X Y := ext
+instance proj_faithful : CategoryTheory.Functor.Faithful (proj S T) where map_injective' X Y := ext
 #align category_theory.costructured_arrow.proj_faithful CategoryTheory.CostructuredArrow.proj_faithful
 -/
 
@@ -456,7 +457,7 @@ theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
 -/
 
 #print CategoryTheory.CostructuredArrow.proj_reflectsIsomorphisms /-
-instance proj_reflectsIsomorphisms : ReflectsIsomorphisms (proj S T)
+instance proj_reflectsIsomorphisms : CategoryTheory.Functor.ReflectsIsomorphisms (proj S T)
     where reflects Y Z f t :=
     ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
 #align category_theory.costructured_arrow.proj_reflects_iso CategoryTheory.CostructuredArrow.proj_reflectsIsomorphisms
@@ -468,7 +469,8 @@ attribute [local tidy] tactic.discrete_cases
 
 #print CategoryTheory.CostructuredArrow.mkIdTerminal /-
 /-- The identity costructured arrow is terminal. -/
-def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y)))
+def mkIdTerminal [CategoryTheory.Functor.Full S] [CategoryTheory.Functor.Faithful S] :
+    IsTerminal (mk (𝟙 (S.obj Y)))
     where
   lift c := homMk (S.preimage c.pt.Hom) (by dsimp; simp)
   uniq := by

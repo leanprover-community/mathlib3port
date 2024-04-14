@@ -491,21 +491,21 @@ instance Spec.preservesLimits : Limits.preservesLimits Scheme.Spec :=
 -/
 
 /-- Spec is a full functor. -/
-instance : Full Spec.toLocallyRingedSpace :=
+instance : CategoryTheory.Functor.Full Spec.toLocallyRingedSpace :=
   rFullOfCounitIsIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.full /-
-instance Spec.full : Full Scheme.Spec :=
+instance Spec.full : CategoryTheory.Functor.Full Scheme.Spec :=
   rFullOfCounitIsIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.full AlgebraicGeometry.Spec.full
 -/
 
 /-- Spec is a faithful functor. -/
-instance : Faithful Spec.toLocallyRingedSpace :=
+instance : CategoryTheory.Functor.Faithful Spec.toLocallyRingedSpace :=
   R_faithful_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.faithful /-
-instance Spec.faithful : Faithful Scheme.Spec :=
+instance Spec.faithful : CategoryTheory.Functor.Faithful Scheme.Spec :=
   R_faithful_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.faithful AlgebraicGeometry.Spec.faithful
 -/

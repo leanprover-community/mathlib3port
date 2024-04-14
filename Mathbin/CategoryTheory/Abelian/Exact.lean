@@ -129,7 +129,7 @@ theorem exact_tfae :
 
 #print CategoryTheory.Abelian.IsEquivalence.exact_iff /-
 theorem IsEquivalence.exact_iff {D : Type u₁} [Category.{v₁} D] [Abelian D] (F : C ⥤ D)
-    [IsEquivalence F] : Exact (F.map f) (F.map g) ↔ Exact f g :=
+    [CategoryTheory.Functor.IsEquivalence F] : Exact (F.map f) (F.map g) ↔ Exact f g :=
   by
   simp only [exact_iff, ← F.map_eq_zero_iff, F.map_comp, category.assoc, ←
     kernel_comparison_comp_ι g F, ← π_comp_cokernel_comparison f F]
@@ -385,8 +385,8 @@ variable {D : Type u₂} [Category.{v₂} D] [Abelian D]
 variable (F : C ⥤ D) [PreservesZeroMorphisms F]
 
 #print CategoryTheory.Functor.reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful /-
-instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful [Faithful F] :
-    ReflectsExactSequences F
+instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful
+    [CategoryTheory.Functor.Faithful F] : ReflectsExactSequences F
     where reflects X Y Z f g hfg :=
     by
     rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg

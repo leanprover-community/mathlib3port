@@ -182,7 +182,8 @@ theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type
 -/
 
 #print CategoryTheory.compatiblePreservingOfDownwardsClosed /-
-theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
+theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [CategoryTheory.Functor.Full F]
+    [CategoryTheory.Functor.Faithful F]
     (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σ c', F.obj c' ≅ d) : CompatiblePreserving K F :=
   by
   constructor

@@ -91,12 +91,13 @@ def inducedFunctor : InducedCategory D F ⥤ D
 -/
 
 #print CategoryTheory.InducedCategory.full /-
-instance InducedCategory.full : Full (inducedFunctor F) where preimage x y f := f
+instance InducedCategory.full : CategoryTheory.Functor.Full (inducedFunctor F)
+    where preimage x y f := f
 #align category_theory.induced_category.full CategoryTheory.InducedCategory.full
 -/
 
 #print CategoryTheory.InducedCategory.faithful /-
-instance InducedCategory.faithful : Faithful (inducedFunctor F) where
+instance InducedCategory.faithful : CategoryTheory.Functor.Faithful (inducedFunctor F) where
 #align category_theory.induced_category.faithful CategoryTheory.InducedCategory.faithful
 -/
 
@@ -152,13 +153,13 @@ theorem fullSubcategoryInclusion.map {X Y} {f : X ⟶ Y} : (fullSubcategoryInclu
 -/
 
 #print CategoryTheory.FullSubcategory.full /-
-instance FullSubcategory.full : Full (fullSubcategoryInclusion Z) :=
+instance FullSubcategory.full : CategoryTheory.Functor.Full (fullSubcategoryInclusion Z) :=
   InducedCategory.full _
 #align category_theory.full_subcategory.full CategoryTheory.FullSubcategory.full
 -/
 
 #print CategoryTheory.FullSubcategory.faithful /-
-instance FullSubcategory.faithful : Faithful (fullSubcategoryInclusion Z) :=
+instance FullSubcategory.faithful : CategoryTheory.Functor.Faithful (fullSubcategoryInclusion Z) :=
   InducedCategory.faithful _
 #align category_theory.full_subcategory.faithful CategoryTheory.FullSubcategory.faithful
 -/
@@ -175,9 +176,10 @@ def FullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) : FullSubcategory Z ⥤ 
 #align category_theory.full_subcategory.map CategoryTheory.FullSubcategory.map
 -/
 
-instance (h : ∀ ⦃X⦄, Z X → Z' X) : Full (FullSubcategory.map h) where preimage X Y f := f
+instance (h : ∀ ⦃X⦄, Z X → Z' X) : CategoryTheory.Functor.Full (FullSubcategory.map h)
+    where preimage X Y f := f
 
-instance (h : ∀ ⦃X⦄, Z X → Z' X) : Faithful (FullSubcategory.map h) where
+instance (h : ∀ ⦃X⦄, Z X → Z' X) : CategoryTheory.Functor.Faithful (FullSubcategory.map h) where
 
 #print CategoryTheory.FullSubcategory.map_inclusion /-
 @[simp]
@@ -229,12 +231,13 @@ theorem CategoryTheory.fullSubcategoryInclusion_map_lift_map (F : C ⥤ D) (hF :
 #align category_theory.full_subcategory.inclusion_map_lift_map CategoryTheory.fullSubcategoryInclusion_map_lift_map
 -/
 
-instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Faithful F] :
-    Faithful (FullSubcategory.lift P F hF) :=
-  Faithful.of_comp_iso (FullSubcategory.lift_comp_inclusion P F hF)
+instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [CategoryTheory.Functor.Faithful F] :
+    CategoryTheory.Functor.Faithful (FullSubcategory.lift P F hF) :=
+  CategoryTheory.Functor.Faithful.of_comp_iso (FullSubcategory.lift_comp_inclusion P F hF)
 
-instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Full F] : Full (FullSubcategory.lift P F hF) :=
-  Full.ofCompFaithfulIso (FullSubcategory.lift_comp_inclusion P F hF)
+instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [CategoryTheory.Functor.Full F] :
+    CategoryTheory.Functor.Full (FullSubcategory.lift P F hF) :=
+  CategoryTheory.Functor.Full.ofCompFaithfulIso (FullSubcategory.lift_comp_inclusion P F hF)
 
 #print CategoryTheory.FullSubcategory.lift_comp_map /-
 @[simp]

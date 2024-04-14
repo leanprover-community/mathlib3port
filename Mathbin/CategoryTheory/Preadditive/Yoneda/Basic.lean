@@ -157,9 +157,10 @@ theorem whiskering_preadditiveCoyoneda :
 -/
 
 #print CategoryTheory.full_preadditiveYoneda /-
-instance full_preadditiveYoneda : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
+instance full_preadditiveYoneda :
+    CategoryTheory.Functor.Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
   let yoneda_full :
-    Full
+    CategoryTheory.Functor.Full
       (preadditiveYoneda ⋙
         (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     Yoneda.yonedaFull
@@ -169,9 +170,10 @@ instance full_preadditiveYoneda : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ Ad
 -/
 
 #print CategoryTheory.full_preadditiveCoyoneda /-
-instance full_preadditiveCoyoneda : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
+instance full_preadditiveCoyoneda :
+    CategoryTheory.Functor.Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
   let coyoneda_full :
-    Full
+    CategoryTheory.Functor.Full
       (preadditiveCoyoneda ⋙
         (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     Coyoneda.coyonedaFull
@@ -181,15 +183,16 @@ instance full_preadditiveCoyoneda : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C �
 -/
 
 #print CategoryTheory.faithful_preadditiveYoneda /-
-instance faithful_preadditiveYoneda : Faithful (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
-  Faithful.of_comp_eq whiskering_preadditiveYoneda
+instance faithful_preadditiveYoneda :
+    CategoryTheory.Functor.Faithful (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
+  CategoryTheory.Functor.Faithful.of_comp_eq whiskering_preadditiveYoneda
 #align category_theory.preadditive_yoneda_faithful CategoryTheory.faithful_preadditiveYoneda
 -/
 
 #print CategoryTheory.faithful_preadditiveCoyoneda /-
 instance faithful_preadditiveCoyoneda :
-    Faithful (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
-  Faithful.of_comp_eq whiskering_preadditiveCoyoneda
+    CategoryTheory.Functor.Faithful (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
+  CategoryTheory.Functor.Faithful.of_comp_eq whiskering_preadditiveCoyoneda
 #align category_theory.preadditive_coyoneda_faithful CategoryTheory.faithful_preadditiveCoyoneda
 -/
 

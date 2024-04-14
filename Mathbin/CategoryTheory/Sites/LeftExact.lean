@@ -214,7 +214,8 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
     rw [← category.assoc, ← nat_trans.comp_app, limit.lift_π]
     rfl
 
-instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [ReflectsIsomorphisms (forget D)] :
+instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)]
+    [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)] :
     PreservesFiniteLimits (J.plusFunctor D) :=
   by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{max v u}
@@ -227,7 +228,8 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
     PreservesLimitsOfShape K (J.sheafification D) :=
   Limits.compPreservesLimitsOfShape _ _
 
-instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [ReflectsIsomorphisms (forget D)] :
+instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)]
+    [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)] :
     PreservesFiniteLimits (J.sheafification D) :=
   Limits.compPreservesFiniteLimits _ _
 
@@ -243,7 +245,7 @@ variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 variable [PreservesLimits (forget D)]
 
-variable [ReflectsIsomorphisms (forget D)]
+variable [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 variable (K : Type max v u)
 

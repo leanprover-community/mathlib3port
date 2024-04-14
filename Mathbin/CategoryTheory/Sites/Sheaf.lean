@@ -330,9 +330,9 @@ def sheafToPresheaf : Sheaf J A ⥤ Cᵒᵖ ⥤ A
 #align category_theory.Sheaf_to_presheaf CategoryTheory.sheafToPresheaf
 -/
 
-instance : Full (sheafToPresheaf J A) where preimage X Y f := ⟨f⟩
+instance : CategoryTheory.Functor.Full (sheafToPresheaf J A) where preimage X Y f := ⟨f⟩
 
-instance : Faithful (sheafToPresheaf J A) where
+instance : CategoryTheory.Functor.Faithful (sheafToPresheaf J A) where
 
 #print CategoryTheory.Sheaf.Hom.mono_of_presheaf_mono /-
 /-- This is stated as a lemma to prevent class search from forming a loop since a sheaf morphism is
@@ -716,7 +716,7 @@ for the category of topological spaces, topological rings, etc since reflecting 
 hold.
 -/
 theorem isSheaf_iff_isSheaf_forget (s : A ⥤ Type max v₁ u₁) [HasLimits A] [PreservesLimits s]
-    [ReflectsIsomorphisms s] : IsSheaf J P ↔ IsSheaf J (P ⋙ s) :=
+    [CategoryTheory.Functor.ReflectsIsomorphisms s] : IsSheaf J P ↔ IsSheaf J (P ⋙ s) :=
   by
   rw [is_sheaf_iff_is_sheaf', is_sheaf_iff_is_sheaf']
   apply forall_congr' fun U => _

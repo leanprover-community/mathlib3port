@@ -148,7 +148,7 @@ def karoubiFunctorCategoryEmbedding : Karoubi (J ⥤ C) ⥤ J ⥤ Karoubi C
 #align category_theory.idempotents.karoubi_functor_category_embedding CategoryTheory.Idempotents.karoubiFunctorCategoryEmbedding
 -/
 
-instance : Full (karoubiFunctorCategoryEmbedding J C)
+instance : CategoryTheory.Functor.Full (karoubiFunctorCategoryEmbedding J C)
     where
   preimage P Q f :=
     { f :=
@@ -162,7 +162,7 @@ instance : Full (karoubiFunctorCategoryEmbedding J C)
       comm := by ext j; exact (f.app j).comm }
   witness' P Q f := by ext j; rfl
 
-instance : Faithful (karoubiFunctorCategoryEmbedding J C)
+instance : CategoryTheory.Functor.Faithful (karoubiFunctorCategoryEmbedding J C)
     where map_injective' P Q f f' h := by ext j; exact hom_ext.mp (congr_app h j)
 
 #print CategoryTheory.Idempotents.toKaroubi_comp_karoubiFunctorCategoryEmbedding /-

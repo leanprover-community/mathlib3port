@@ -605,8 +605,8 @@ theorem finitaryExtensive_of_preserves_and_reflects (F : C ⥤ D) [FinitaryExten
 #print CategoryTheory.finitaryExtensive_of_preserves_and_reflects_isomorphism /-
 theorem finitaryExtensive_of_preserves_and_reflects_isomorphism (F : C ⥤ D) [FinitaryExtensive D]
     [HasFiniteCoproducts C] [HasPullbacks C] [PreservesLimitsOfShape WalkingCospan F]
-    [PreservesColimitsOfShape (Discrete WalkingPair) F] [ReflectsIsomorphisms F] :
-    FinitaryExtensive C :=
+    [PreservesColimitsOfShape (Discrete WalkingPair) F]
+    [CategoryTheory.Functor.ReflectsIsomorphisms F] : FinitaryExtensive C :=
   by
   haveI : reflects_limits_of_shape walking_cospan F :=
     reflects_limits_of_shape_of_reflects_isomorphisms

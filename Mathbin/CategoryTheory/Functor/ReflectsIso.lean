@@ -37,41 +37,43 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {E : Type u₃} [Category.{v₃} E]
 
-#print CategoryTheory.ReflectsIsomorphisms /-
+#print CategoryTheory.Functor.ReflectsIsomorphisms /-
 /-- Define what it means for a functor `F : C ⥤ D` to reflect isomorphisms: for any
 morphism `f : A ⟶ B`, if `F.map f` is an isomorphism then `f` is as well.
 Note that we do not assume or require that `F` is faithful.
 -/
-class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
+class CategoryTheory.Functor.ReflectsIsomorphisms (F : C ⥤ D) : Prop where
   reflects : ∀ {A B : C} (f : A ⟶ B) [IsIso (F.map f)], IsIso f
-#align category_theory.reflects_isomorphisms CategoryTheory.ReflectsIsomorphisms
+#align category_theory.reflects_isomorphisms CategoryTheory.Functor.ReflectsIsomorphisms
 -/
 
 #print CategoryTheory.isIso_of_reflects_iso /-
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
 theorem isIso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)]
-    [ReflectsIsomorphisms F] : IsIso f :=
-  ReflectsIsomorphisms.reflects F f
+    [CategoryTheory.Functor.ReflectsIsomorphisms F] : IsIso f :=
+  CategoryTheory.Functor.ReflectsIsomorphisms.reflects F f
 #align category_theory.is_iso_of_reflects_iso CategoryTheory.isIso_of_reflects_iso
 -/
 
 #print CategoryTheory.reflectsIsomorphisms_of_full_and_faithful /-
-instance (priority := 100) reflectsIsomorphisms_of_full_and_faithful (F : C ⥤ D) [Full F]
-    [Faithful F] : ReflectsIsomorphisms F
+instance (priority := 100) reflectsIsomorphisms_of_full_and_faithful (F : C ⥤ D)
+    [CategoryTheory.Functor.Full F] [CategoryTheory.Functor.Faithful F] :
+    CategoryTheory.Functor.ReflectsIsomorphisms F
     where reflects X Y f i :=
     ⟨⟨F.preimage (inv (F.map f)), ⟨F.map_injective (by simp), F.map_injective (by simp)⟩⟩⟩
 #align category_theory.of_full_and_faithful CategoryTheory.reflectsIsomorphisms_of_full_and_faithful
 -/
 
-instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] :
-    ReflectsIsomorphisms (F ⋙ G) :=
+instance (F : C ⥤ D) (G : D ⥤ E) [CategoryTheory.Functor.ReflectsIsomorphisms F]
+    [CategoryTheory.Functor.ReflectsIsomorphisms G] :
+    CategoryTheory.Functor.ReflectsIsomorphisms (F ⋙ G) :=
   ⟨fun _ _ f (hf : IsIso (G.map _)) => by skip; haveI := is_iso_of_reflects_iso (F.map f) G;
     exact is_iso_of_reflects_iso f F⟩
 
 #print CategoryTheory.reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms /-
 instance (priority := 100) reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms
     [Balanced C] (F : C ⥤ D) [ReflectsMonomorphisms F] [ReflectsEpimorphisms F] :
-    ReflectsIsomorphisms F
+    CategoryTheory.Functor.ReflectsIsomorphisms F
     where reflects A B f hf := by
     skip
     haveI : epi f := epi_of_epi_map F inferInstance

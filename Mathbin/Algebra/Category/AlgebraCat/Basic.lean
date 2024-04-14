@@ -232,7 +232,8 @@ instance (X : Type u) [Ring X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat 
   ⟨fun N => AlgebraCat.of R N⟩
 
 #print AlgebraCat.forget_reflects_isos /-
-instance AlgebraCat.forget_reflects_isos : ReflectsIsomorphisms (forget (AlgebraCat.{u} R))
+instance AlgebraCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget (AlgebraCat.{u} R))
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget (AlgebraCat.{u} R)).map f)

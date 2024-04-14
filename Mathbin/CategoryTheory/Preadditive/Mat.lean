@@ -313,10 +313,10 @@ def embedding : C ⥤ Mat_ C where
 
 namespace Embedding
 
-instance : Faithful (embedding C)
+instance : CategoryTheory.Functor.Faithful (embedding C)
     where map_injective' X Y f g h := congr_fun (congr_fun h PUnit.unit) PUnit.unit
 
-instance : Full (embedding C) where Preimage X Y f := f PUnit.unit PUnit.unit
+instance : CategoryTheory.Functor.Full (embedding C) where Preimage X Y f := f PUnit.unit PUnit.unit
 
 instance : Functor.Additive (embedding C) where
 
@@ -629,15 +629,16 @@ def equivalenceSingleObjInverse : Mat_ (SingleObj Rᵐᵒᵖ) ⥤ Mat R
 #align category_theory.Mat.equivalence_single_obj_inverse CategoryTheory.Mat.equivalenceSingleObjInverse
 -/
 
-instance : Faithful (equivalenceSingleObjInverse R)
+instance : CategoryTheory.Functor.Faithful (equivalenceSingleObjInverse R)
     where map_injective' X Y f g w := by
     ext i j
     apply_fun MulOpposite.unop using MulOpposite.unop_injective
     exact congr_fun (congr_fun w i) j
 
-instance : Full (equivalenceSingleObjInverse R) where Preimage X Y f i j := MulOpposite.op (f i j)
+instance : CategoryTheory.Functor.Full (equivalenceSingleObjInverse R)
+    where Preimage X Y f i j := MulOpposite.op (f i j)
 
-instance : EssSurj (equivalenceSingleObjInverse R)
+instance : CategoryTheory.Functor.EssSurj (equivalenceSingleObjInverse R)
     where mem_essImage X :=
     ⟨{  ι := X
         pt := fun _ => PUnit.unit }, ⟨eqToIso (by dsimp; cases X; congr)⟩⟩

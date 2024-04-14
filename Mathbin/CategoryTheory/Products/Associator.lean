@@ -57,14 +57,15 @@ def associativity : (C × D) × E ≌ C × D × E :=
 -/
 
 #print CategoryTheory.prod.associatorIsEquivalence /-
-instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
-  (by infer_instance : IsEquivalence (associativity C D E).Functor)
+instance associatorIsEquivalence : CategoryTheory.Functor.IsEquivalence (associator C D E) :=
+  (by infer_instance : CategoryTheory.Functor.IsEquivalence (associativity C D E).Functor)
 #align category_theory.prod.associator_is_equivalence CategoryTheory.prod.associatorIsEquivalence
 -/
 
 #print CategoryTheory.prod.inverseAssociatorIsEquivalence /-
-instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
-  (by infer_instance : IsEquivalence (associativity C D E).inverse)
+instance inverseAssociatorIsEquivalence :
+    CategoryTheory.Functor.IsEquivalence (inverseAssociator C D E) :=
+  (by infer_instance : CategoryTheory.Functor.IsEquivalence (associativity C D E).inverse)
 #align category_theory.prod.inverse_associator_is_equivalence CategoryTheory.prod.inverseAssociatorIsEquivalence
 -/
 

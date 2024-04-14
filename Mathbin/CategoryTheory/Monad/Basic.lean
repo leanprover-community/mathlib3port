@@ -353,7 +353,7 @@ def monadToFunctor : Monad C ⥤ C ⥤ C where
 #align category_theory.monad_to_functor CategoryTheory.monadToFunctor
 -/
 
-instance : Faithful (monadToFunctor C) where
+instance : CategoryTheory.Functor.Faithful (monadToFunctor C) where
 
 #print CategoryTheory.monadToFunctor_mapIso_monad_iso_mk /-
 theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
@@ -361,7 +361,7 @@ theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) �
 #align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mk
 -/
 
-instance : ReflectsIsomorphisms (monadToFunctor C)
+instance : CategoryTheory.Functor.ReflectsIsomorphisms (monadToFunctor C)
     where reflects M N f i := by
     skip
     convert is_iso.of_iso (monad_iso.mk (as_iso ((monad_to_functor C).map f)) f.app_η f.app_μ)
@@ -377,7 +377,7 @@ def comonadToFunctor : Comonad C ⥤ C ⥤ C where
 #align category_theory.comonad_to_functor CategoryTheory.comonadToFunctor
 -/
 
-instance : Faithful (comonadToFunctor C) where
+instance : CategoryTheory.Functor.Faithful (comonadToFunctor C) where
 
 #print CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk /-
 theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
@@ -385,7 +385,7 @@ theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤
 #align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk
 -/
 
-instance : ReflectsIsomorphisms (comonadToFunctor C)
+instance : CategoryTheory.Functor.ReflectsIsomorphisms (comonadToFunctor C)
     where reflects M N f i := by
     skip
     convert is_iso.of_iso (comonad_iso.mk (as_iso ((comonad_to_functor C).map f)) f.app_ε f.app_δ)

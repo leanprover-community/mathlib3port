@@ -204,8 +204,8 @@ instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : 
 
 #print CategoryTheory.Functor.mapHomologicalComplex_reflects_iso /-
 instance Functor.mapHomologicalComplex_reflects_iso (F : V ⥤ W) [F.Additive]
-    [ReflectsIsomorphisms F] (c : ComplexShape ι) :
-    ReflectsIsomorphisms (F.mapHomologicalComplex c) :=
+    [CategoryTheory.Functor.ReflectsIsomorphisms F] (c : ComplexShape ι) :
+    CategoryTheory.Functor.ReflectsIsomorphisms (F.mapHomologicalComplex c) :=
   ⟨fun X Y f => by
     intro
     haveI : ∀ n : ι, is_iso (F.map (f.f n)) := fun n =>

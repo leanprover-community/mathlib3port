@@ -117,10 +117,10 @@ theorem forget_obj_hom {f} : ((forget X).obj f).Hom = f.arrow :=
 #align category_theory.mono_over.forget_obj_hom CategoryTheory.MonoOver.forget_obj_hom
 -/
 
-instance : Full (forget X) :=
+instance : CategoryTheory.Functor.Full (forget X) :=
   FullSubcategory.full _
 
-instance : Faithful (forget X) :=
+instance : CategoryTheory.Functor.Faithful (forget X) :=
   FullSubcategory.faithful _
 
 #print CategoryTheory.MonoOver.mono /-
@@ -190,7 +190,8 @@ def lift {Y : D} (F : Over Y ⥤ Over X)
 /-- Isomorphic functors `over Y ⥤ over X` lift to isomorphic functors `mono_over Y ⥤ mono_over X`.
 -/
 def liftIso {Y : D} {F₁ F₂ : Over Y ⥤ Over X} (h₁ h₂) (i : F₁ ≅ F₂) : lift F₁ h₁ ≅ lift F₂ h₂ :=
-  fullyFaithfulCancelRight (MonoOver.forget X) (isoWhiskerLeft (MonoOver.forget Y) i)
+  CategoryTheory.Functor.fullyFaithfulCancelRight (MonoOver.forget X)
+    (isoWhiskerLeft (MonoOver.forget Y) i)
 #align category_theory.mono_over.lift_iso CategoryTheory.MonoOver.liftIso
 -/
 
@@ -198,14 +199,14 @@ def liftIso {Y : D} {F₁ F₂ : Over Y ⥤ Over X} (h₁ h₂) (i : F₁ ≅ F�
 /-- `mono_over.lift` commutes with composition of functors. -/
 def liftComp {X Z : C} {Y : D} (F : Over X ⥤ Over Y) (G : Over Y ⥤ Over Z) (h₁ h₂) :
     lift F h₁ ⋙ lift G h₂ ≅ lift (F ⋙ G) fun f => h₂ ⟨_, h₁ f⟩ :=
-  fullyFaithfulCancelRight (MonoOver.forget _) (Iso.refl _)
+  CategoryTheory.Functor.fullyFaithfulCancelRight (MonoOver.forget _) (Iso.refl _)
 #align category_theory.mono_over.lift_comp CategoryTheory.MonoOver.liftComp
 -/
 
 #print CategoryTheory.MonoOver.liftId /-
 /-- `mono_over.lift` preserves the identity functor. -/
 def liftId : (lift (𝟭 (Over X)) fun f => f.2) ≅ 𝟭 _ :=
-  fullyFaithfulCancelRight (MonoOver.forget _) (Iso.refl _)
+  CategoryTheory.Functor.fullyFaithfulCancelRight (MonoOver.forget _) (Iso.refl _)
 #align category_theory.mono_over.lift_id CategoryTheory.MonoOver.liftId
 -/
 
@@ -335,7 +336,7 @@ theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).
 -/
 
 #print CategoryTheory.MonoOver.fullMap /-
-instance fullMap (f : X ⟶ Y) [Mono f] : Full (map f)
+instance fullMap (f : X ⟶ Y) [Mono f] : CategoryTheory.Functor.Full (map f)
     where preimage g h e := by
     refine' hom_mk e.left _
     rw [← cancel_mono f, assoc]
@@ -344,7 +345,7 @@ instance fullMap (f : X ⟶ Y) [Mono f] : Full (map f)
 -/
 
 #print CategoryTheory.MonoOver.faithful_map /-
-instance faithful_map (f : X ⟶ Y) [Mono f] : Faithful (map f) where
+instance faithful_map (f : X ⟶ Y) [Mono f] : CategoryTheory.Functor.Faithful (map f) where
 #align category_theory.mono_over.faithful_map CategoryTheory.MonoOver.faithful_map
 -/
 
@@ -514,7 +515,7 @@ def exists (f : X ⟶ Y) : MonoOver X ⥤ MonoOver Y :=
 -/
 
 #print CategoryTheory.MonoOver.faithful_exists /-
-instance faithful_exists (f : X ⟶ Y) : Faithful (exists f) where
+instance faithful_exists (f : X ⟶ Y) : CategoryTheory.Functor.Faithful (exists f) where
 #align category_theory.mono_over.faithful_exists CategoryTheory.MonoOver.faithful_exists
 -/
 

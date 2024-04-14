@@ -78,7 +78,7 @@ def inclusion : Core C ⥤ C where
 #align category_theory.core.inclusion CategoryTheory.Core.inclusion
 -/
 
-instance : Faithful (inclusion C) where
+instance : CategoryTheory.Functor.Faithful (inclusion C) where
 
 variable {C} {G : Type u₂} [Groupoid.{v₂} G]
 

@@ -312,22 +312,25 @@ protected def rightOp (F : Cᵒᵖ ⥤ D) : C ⥤ Dᵒᵖ
 #align category_theory.functor.right_op CategoryTheory.Functor.rightOp
 -/
 
-instance {F : C ⥤ D} [Full F] : Full F.op where preimage X Y f := (F.preimage f.unop).op
+instance {F : C ⥤ D} [CategoryTheory.Functor.Full F] : CategoryTheory.Functor.Full F.op
+    where preimage X Y f := (F.preimage f.unop).op
 
-instance {F : C ⥤ D} [Faithful F] : Faithful F.op
+instance {F : C ⥤ D} [CategoryTheory.Functor.Faithful F] : CategoryTheory.Functor.Faithful F.op
     where map_injective' X Y f g h :=
     Quiver.Hom.unop_inj <| by simpa using map_injective F (Quiver.Hom.op_inj h)
 
 #print CategoryTheory.Functor.rightOp_faithful /-
 /-- If F is faithful then the right_op of F is also faithful. -/
-instance rightOp_faithful {F : Cᵒᵖ ⥤ D} [Faithful F] : Faithful F.rightOp
+instance rightOp_faithful {F : Cᵒᵖ ⥤ D} [CategoryTheory.Functor.Faithful F] :
+    CategoryTheory.Functor.Faithful F.rightOp
     where map_injective' X Y f g h := Quiver.Hom.op_inj (map_injective F (Quiver.Hom.op_inj h))
 #align category_theory.functor.right_op_faithful CategoryTheory.Functor.rightOp_faithful
 -/
 
 #print CategoryTheory.Functor.leftOp_faithful /-
 /-- If F is faithful then the left_op of F is also faithful. -/
-instance leftOp_faithful {F : C ⥤ Dᵒᵖ} [Faithful F] : Faithful F.leftOp
+instance leftOp_faithful {F : C ⥤ Dᵒᵖ} [CategoryTheory.Functor.Faithful F] :
+    CategoryTheory.Functor.Faithful F.leftOp
     where map_injective' X Y f g h := Quiver.Hom.unop_inj (map_injective F (Quiver.Hom.unop_inj h))
 #align category_theory.functor.left_op_faithful CategoryTheory.Functor.leftOp_faithful
 -/

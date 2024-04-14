@@ -224,7 +224,7 @@ instance : Preadditive (C ⥤+ D) :=
 /-- An additive functor is in particular a functor. -/
 def AdditiveFunctor.forget : (C ⥤+ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.AdditiveFunctor.forget CategoryTheory.AdditiveFunctor.forget
 -/
 
@@ -293,7 +293,7 @@ def AdditiveFunctor.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
     functor.additive_of_preserves_binary_biproducts F
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.AdditiveFunctor.of_left_exact CategoryTheory.AdditiveFunctor.ofLeftExact
 -/
 
@@ -303,7 +303,7 @@ def AdditiveFunctor.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
     functor.additive_of_preserves_binary_biproducts F
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.AdditiveFunctor.of_right_exact CategoryTheory.AdditiveFunctor.ofRightExact
 -/
 
@@ -313,7 +313,7 @@ def AdditiveFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h.1
     functor.additive_of_preserves_binary_biproducts F
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.AdditiveFunctor.of_exact CategoryTheory.AdditiveFunctor.ofExact
 -/
 

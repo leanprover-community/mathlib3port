@@ -128,13 +128,14 @@ theorem Monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMon
 #align category_theory.monad.left_comparison CategoryTheory.Monad.left_comparison
 -/
 
-instance [Faithful R] (h : L ⊣ R) : Faithful (Monad.comparison h)
+instance [CategoryTheory.Functor.Faithful R] (h : L ⊣ R) :
+    CategoryTheory.Functor.Faithful (Monad.comparison h)
     where map_injective' X Y f g w := R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
 
-instance (T : Monad C) : Full (Monad.comparison T.adj)
+instance (T : Monad C) : CategoryTheory.Functor.Full (Monad.comparison T.adj)
     where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
-instance (T : Monad C) : EssSurj (Monad.comparison T.adj)
+instance (T : Monad C) : CategoryTheory.Functor.EssSurj (Monad.comparison T.adj)
     where mem_essImage X :=
     ⟨{  A := X.A
         a := X.a
@@ -179,16 +180,16 @@ theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.t
 -/
 
 #print CategoryTheory.Comonad.comparison_faithful_of_faithful /-
-instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) :
-    Faithful (Comonad.comparison h)
+instance Comonad.comparison_faithful_of_faithful [CategoryTheory.Functor.Faithful L] (h : L ⊣ R) :
+    CategoryTheory.Functor.Faithful (Comonad.comparison h)
     where map_injective' X Y f g w := L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
 #align category_theory.comonad.comparison_faithful_of_faithful CategoryTheory.Comonad.comparison_faithful_of_faithful
 -/
 
-instance (G : Comonad C) : Full (Comonad.comparison G.adj)
+instance (G : Comonad C) : CategoryTheory.Functor.Full (Comonad.comparison G.adj)
     where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
-instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj)
+instance (G : Comonad C) : CategoryTheory.Functor.EssSurj (Comonad.comparison G.adj)
     where mem_essImage X :=
     ⟨{  A := X.A
         a := X.a
@@ -200,7 +201,7 @@ instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj)
 from `D` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.
 -/
 class MonadicRightAdjoint (R : D ⥤ C) extends IsRightAdjoint R where
-  eqv : IsEquivalence (Monad.comparison (Adjunction.ofRightAdjoint R))
+  eqv : CategoryTheory.Functor.IsEquivalence (Monad.comparison (Adjunction.ofRightAdjoint R))
 #align category_theory.monadic_right_adjoint CategoryTheory.MonadicRightAdjoint
 -/
 
@@ -210,15 +211,17 @@ A left adjoint functor `L : C ⥤ D` is *comonadic* if the comparison functor `c
 from `C` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.
 -/
 class ComonadicLeftAdjoint (L : C ⥤ D) extends IsLeftAdjoint L where
-  eqv : IsEquivalence (Comonad.comparison (Adjunction.ofLeftAdjoint L))
+  eqv : CategoryTheory.Functor.IsEquivalence (Comonad.comparison (Adjunction.ofLeftAdjoint L))
 #align category_theory.comonadic_left_adjoint CategoryTheory.ComonadicLeftAdjoint
 -/
 
 noncomputable instance (T : Monad C) : MonadicRightAdjoint T.forget :=
-  ⟨(Equivalence.ofFullyFaithfullyEssSurj _ : IsEquivalence (Monad.comparison T.adj))⟩
+  ⟨(CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _ :
+      CategoryTheory.Functor.IsEquivalence (Monad.comparison T.adj))⟩
 
 noncomputable instance (G : Comonad C) : ComonadicLeftAdjoint G.forget :=
-  ⟨(Equivalence.ofFullyFaithfullyEssSurj _ : IsEquivalence (Comonad.comparison G.adj))⟩
+  ⟨(CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _ :
+      CategoryTheory.Functor.IsEquivalence (Comonad.comparison G.adj))⟩
 
 #print CategoryTheory.μ_iso_of_reflective /-
 -- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
@@ -246,7 +249,7 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
 
 #print CategoryTheory.Reflective.comparison_essSurj /-
 instance comparison_essSurj [Reflective R] :
-    EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
+    CategoryTheory.Functor.EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
   by
   refine' ⟨fun X => ⟨(left_adjoint R).obj X.A, ⟨_⟩⟩⟩
   symm
@@ -261,8 +264,9 @@ instance comparison_essSurj [Reflective R] :
 -/
 
 #print CategoryTheory.Reflective.comparisonFull /-
-instance comparisonFull [Full R] [IsRightAdjoint R] :
-    Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where preimage X Y f := R.preimage f.f
+instance comparisonFull [CategoryTheory.Functor.Full R] [IsRightAdjoint R] :
+    CategoryTheory.Functor.Full (Monad.comparison (Adjunction.ofRightAdjoint R))
+    where preimage X Y f := R.preimage f.f
 #align category_theory.reflective.comparison_full CategoryTheory.Reflective.comparisonFull
 -/
 
@@ -275,7 +279,7 @@ end Reflective
 /-- Any reflective inclusion has a monadic right adjoint.
     cf Prop 5.3.3 of [Riehl][riehl2017] -/
 noncomputable instance (priority := 100) monadicOfReflective [Reflective R] : MonadicRightAdjoint R
-    where eqv := Equivalence.ofFullyFaithfullyEssSurj _
+    where eqv := CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
 #align category_theory.monadic_of_reflective CategoryTheory.monadicOfReflective
 -/
 

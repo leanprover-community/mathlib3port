@@ -61,7 +61,8 @@ def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
 
 namespace LocallyCoverDense
 
-variable [Full G] [Faithful G] (Hld : LocallyCoverDense K G)
+variable [CategoryTheory.Functor.Full G] [CategoryTheory.Functor.Faithful G]
+  (Hld : LocallyCoverDense K G)
 
 #print CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback /-
 theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
@@ -124,7 +125,7 @@ theorem inducedTopology_coverPreserving : CoverPreserving Hld.inducedTopology K 
 end LocallyCoverDense
 
 #print CategoryTheory.Functor.locallyCoverDense_of_isCoverDense /-
-theorem Functor.locallyCoverDense_of_isCoverDense [Full G]
+theorem Functor.locallyCoverDense_of_isCoverDense [CategoryTheory.Functor.Full G]
     (H : CategoryTheory.Functor.IsCoverDense K G) : LocallyCoverDense K G :=
   by
   intro X T
@@ -140,8 +141,9 @@ theorem Functor.locallyCoverDense_of_isCoverDense [Full G]
 #print CategoryTheory.Functor.inducedTopologyOfIsCoverDense /-
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
-abbrev Functor.inducedTopologyOfIsCoverDense [Full G] [Faithful G]
-    (H : CategoryTheory.Functor.IsCoverDense K G) : GrothendieckTopology C :=
+abbrev Functor.inducedTopologyOfIsCoverDense [CategoryTheory.Functor.Full G]
+    [CategoryTheory.Functor.Faithful G] (H : CategoryTheory.Functor.IsCoverDense K G) :
+    GrothendieckTopology C :=
   H.LocallyCoverDense.inducedTopology
 #align category_theory.cover_dense.induced_topology CategoryTheory.Functor.inducedTopologyOfIsCoverDense
 -/
@@ -178,9 +180,9 @@ variable (A : Type u) [Category.{v} A]
 This is known as the comparison lemma. It requires that the sites are small and the value category
 is complete.
 -/
-noncomputable def Functor.sheafInducedTopologyEquivOfIsCoverDense [Full G] [Faithful G]
-    (H : CategoryTheory.Functor.IsCoverDense K G) [HasLimits A] :
-    Sheaf H.inducedTopology A ≌ Sheaf K A :=
+noncomputable def Functor.sheafInducedTopologyEquivOfIsCoverDense [CategoryTheory.Functor.Full G]
+    [CategoryTheory.Functor.Faithful G] (H : CategoryTheory.Functor.IsCoverDense K G)
+    [HasLimits A] : Sheaf H.inducedTopology A ≌ Sheaf K A :=
   H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopology_coverPreserving
     H.LocallyCoverDense.inducedTopology_isCocontinuous
 #align category_theory.cover_dense.Sheaf_equiv CategoryTheory.Functor.sheafInducedTopologyEquivOfIsCoverDense

@@ -21,7 +21,7 @@ universe u
 
 namespace CategoryTheory
 
-instance : ReflectsIsomorphisms (forget (Type u)) where reflects X Y f i := i
+instance : CategoryTheory.Functor.ReflectsIsomorphisms (forget (Type u)) where reflects X Y f i := i
 
 variable (C : Type (u + 1)) [Category C] [ConcreteCategory.{u} C]
 
@@ -33,8 +33,9 @@ variable (D : Type (u + 1)) [Category D] [ConcreteCategory.{u} D]
 /-- A `forget₂ C D` forgetful functor between concrete categories `C` and `D`
 where `forget C` reflects isomorphisms, itself reflects isomorphisms.
 -/
-theorem reflectsIsomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms (forget C)] :
-    ReflectsIsomorphisms (forget₂ C D) :=
+theorem reflectsIsomorphisms_forget₂ [HasForget₂ C D]
+    [CategoryTheory.Functor.ReflectsIsomorphisms (forget C)] :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ C D) :=
   {
     reflects := fun X Y f i => by
       skip

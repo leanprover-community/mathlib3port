@@ -259,7 +259,8 @@ def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e)
 
 end
 
-instance (e : C ≌ D) : IsEquivalence (toTransported e).toFunctor := by dsimp; infer_instance
+instance (e : C ≌ D) : CategoryTheory.Functor.IsEquivalence (toTransported e).toFunctor := by dsimp;
+  infer_instance
 
 #print CategoryTheory.Monoidal.fromTransported /-
 /-- We can upgrade `e.inverse` to a monoidal functor from `D` with the transported structure to `C`.

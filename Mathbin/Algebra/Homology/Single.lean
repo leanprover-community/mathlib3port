@@ -93,7 +93,7 @@ theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
 #align homological_complex.single_map_f_self HomologicalComplex.single_map_f_self
 -/
 
-instance (j : ι) : Faithful (single V c j)
+instance (j : ι) : CategoryTheory.Functor.Faithful (single V c j)
     where map_injective' X Y f g w := by
     have := congr_hom w j
     dsimp at this
@@ -103,7 +103,7 @@ instance (j : ι) : Faithful (single V c j)
       eq_to_hom_refl, category.comp_id] at this
     exact this
 
-instance (j : ι) : Full (single V c j)
+instance (j : ι) : CategoryTheory.Functor.Full (single V c j)
     where
   preimage X Y f := eqToHom (by simp) ≫ f.f j ≫ eqToHom (by simp)
   witness' X Y f := by
@@ -298,11 +298,11 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
     fun X Y f => by ext (_ | i) <;> · dsimp; simp
 #align chain_complex.single₀_iso_single ChainComplex.single₀IsoSingle
 
-instance : Faithful (single₀ V) :=
-  Faithful.of_iso (single₀IsoSingle V).symm
+instance : CategoryTheory.Functor.Faithful (single₀ V) :=
+  CategoryTheory.Functor.Faithful.of_iso (single₀IsoSingle V).symm
 
-instance : Full (single₀ V) :=
-  Full.ofIso (single₀IsoSingle V).symm
+instance : CategoryTheory.Functor.Full (single₀ V) :=
+  CategoryTheory.Functor.Full.ofIso (single₀IsoSingle V).symm
 
 end ChainComplex
 
@@ -452,11 +452,11 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
     fun X Y f => by ext (_ | i) <;> · dsimp; simp
 #align cochain_complex.single₀_iso_single CochainComplex.single₀IsoSingle
 
-instance : Faithful (single₀ V) :=
-  Faithful.of_iso (single₀IsoSingle V).symm
+instance : CategoryTheory.Functor.Faithful (single₀ V) :=
+  CategoryTheory.Functor.Faithful.of_iso (single₀IsoSingle V).symm
 
-instance : Full (single₀ V) :=
-  Full.ofIso (single₀IsoSingle V).symm
+instance : CategoryTheory.Functor.Full (single₀ V) :=
+  CategoryTheory.Functor.Full.ofIso (single₀IsoSingle V).symm
 
 end CochainComplex
 

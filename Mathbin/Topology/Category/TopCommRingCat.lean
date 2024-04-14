@@ -138,7 +138,7 @@ instance forgetToTopCatTopologicalRing (R : TopCommRingCat) :
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.
 -/
-instance : ReflectsIsomorphisms (forget₂ TopCommRingCat.{u} TopCat.{u})
+instance : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ TopCommRingCat.{u} TopCat.{u})
     where reflects X Y f _ := by
     skip
     -- We have an isomorphism in `Top`,

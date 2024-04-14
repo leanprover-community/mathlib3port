@@ -156,8 +156,8 @@ def equivalence : Sum C D ≌ Sum D C :=
 -/
 
 #print CategoryTheory.Sum.Swap.isEquivalence /-
-instance isEquivalence : IsEquivalence (swap C D) :=
-  (by infer_instance : IsEquivalence (equivalence C D).Functor)
+instance isEquivalence : CategoryTheory.Functor.IsEquivalence (swap C D) :=
+  (by infer_instance : CategoryTheory.Functor.IsEquivalence (equivalence C D).Functor)
 #align category_theory.sum.swap.is_equivalence CategoryTheory.Sum.Swap.isEquivalence
 -/
 

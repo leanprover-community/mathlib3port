@@ -668,7 +668,7 @@ theorem pullback_comp (f : X ⟶ Y) (g : Y ⟶ Z) (x : Subobject Z) :
 #align category_theory.subobject.pullback_comp CategoryTheory.Subobject.pullback_comp
 -/
 
-instance (f : X ⟶ Y) : Faithful (pullback f) where
+instance (f : X ⟶ Y) : CategoryTheory.Functor.Faithful (pullback f) where
 
 end Pullback
 

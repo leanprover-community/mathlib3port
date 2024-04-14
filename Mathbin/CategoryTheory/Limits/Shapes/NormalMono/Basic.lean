@@ -64,11 +64,11 @@ attribute [local instance] equivalence.ess_surj_of_equivalence
 #print CategoryTheory.equivalenceReflectsNormalMono /-
 /-- If `F` is an equivalence and `F.map f` is a normal mono, then `f` is a normal mono. -/
 def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
-    [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f
-    where
+    [CategoryTheory.Functor.IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) :
+    NormalMono f where
   z := F.objPreimage hf.z
-  g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
-  w := Faithful.map_injective F <| by simp [reassoc_of hf.w]
+  g := CategoryTheory.Functor.Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
+  w := CategoryTheory.Functor.Faithful.map_injective F <| by simp [reassoc_of hf.w]
   IsLimit :=
     ReflectsLimit.reflects <|
       IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
@@ -188,11 +188,11 @@ attribute [local instance] equivalence.ess_surj_of_equivalence
 #print CategoryTheory.equivalenceReflectsNormalEpi /-
 /-- If `F` is an equivalence and `F.map f` is a normal epi, then `f` is a normal epi. -/
 def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
-    [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f
-    where
+    [CategoryTheory.Functor.IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) :
+    NormalEpi f where
   w := F.objPreimage hf.w
-  g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
-  w := Faithful.map_injective F <| by simp [hf.w]
+  g := CategoryTheory.Functor.Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
+  w := CategoryTheory.Functor.Faithful.map_injective F <| by simp [hf.w]
   IsColimit :=
     ReflectsColimit.reflects <|
       IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) <|

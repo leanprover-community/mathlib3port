@@ -84,7 +84,8 @@ instance (V : FGModuleCat R) : Module.Finite R V.obj :=
 instance : HasForget₂ (FGModuleCat.{u} R) (ModuleCat.{u} R) := by dsimp [FGModuleCat];
   infer_instance
 
-instance : Full (forget₂ (FGModuleCat R) (ModuleCat.{u} R)) where preimage X Y f := f
+instance : CategoryTheory.Functor.Full (forget₂ (FGModuleCat R) (ModuleCat.{u} R))
+    where preimage X Y f := f
 
 variable {R}
 
@@ -147,8 +148,8 @@ def forget₂Monoidal : MonoidalFunctor (FGModuleCat R) (ModuleCat.{u} R) :=
 -/
 
 #print FGModuleCat.forget₂Monoidal_faithful /-
-instance forget₂Monoidal_faithful : Faithful (forget₂Monoidal R).toFunctor := by
-  dsimp [forget₂_monoidal]; infer_instance
+instance forget₂Monoidal_faithful : CategoryTheory.Functor.Faithful (forget₂Monoidal R).toFunctor :=
+  by dsimp [forget₂_monoidal]; infer_instance
 #align fgModule.forget₂_monoidal_faithful FGModuleCat.forget₂Monoidal_faithful
 -/
 

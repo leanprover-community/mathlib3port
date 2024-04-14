@@ -116,7 +116,8 @@ def leftAdjointsCoyonedaEquiv {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (a
 #print CategoryTheory.Adjunction.leftAdjointUniq /-
 /-- If `F` and `F'` are both left adjoint to `G`, then they are naturally isomorphic. -/
 def leftAdjointUniq {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) : F ≅ F' :=
-  NatIso.removeOp (fullyFaithfulCancelRight _ (leftAdjointsCoyonedaEquiv adj2 adj1))
+  NatIso.removeOp
+    (CategoryTheory.Functor.fullyFaithfulCancelRight _ (leftAdjointsCoyonedaEquiv adj2 adj1))
 #align category_theory.adjunction.left_adjoint_uniq CategoryTheory.Adjunction.leftAdjointUniq
 -/
 

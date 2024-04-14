@@ -170,7 +170,8 @@ section
 
 -- We will sheafify `D`-valued presheaves in this section.
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
-  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
+  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
+  [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 #print CategoryTheory.GrothendieckTopology.sheafifyCompIso_inv_eq_sheafifyLift /-
 @[simp]

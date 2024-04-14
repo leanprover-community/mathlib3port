@@ -164,8 +164,8 @@ def adjunction [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] :
 -/
 
 #print CategoryTheory.Ran.reflective /-
-theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] :
-    IsIso (adjunction D ι).counit :=
+theorem reflective [CategoryTheory.Functor.Full ι] [CategoryTheory.Functor.Faithful ι]
+    [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : IsIso (adjunction D ι).counit :=
   by
   apply nat_iso.is_iso_of_is_iso_app _
   intro F
@@ -317,8 +317,8 @@ def adjunction [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] :
 -/
 
 #print CategoryTheory.Lan.coreflective /-
-theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] :
-    IsIso (adjunction D ι).Unit :=
+theorem coreflective [CategoryTheory.Functor.Full ι] [CategoryTheory.Functor.Faithful ι]
+    [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : IsIso (adjunction D ι).Unit :=
   by
   apply nat_iso.is_iso_of_is_iso_app _
   intro F

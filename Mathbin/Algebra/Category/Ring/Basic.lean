@@ -309,7 +309,8 @@ instance hasForgetToCommSemiRingCat : HasForget₂ CommRingCat CommSemiRingCat :
 #align CommRing.has_forget_to_CommSemiRing CommRingCat.hasForgetToCommSemiRingCat
 -/
 
-instance : Full (forget₂ CommRingCat CommSemiRingCat) where preimage X Y f := f
+instance : CategoryTheory.Functor.Full (forget₂ CommRingCat CommSemiRingCat)
+    where preimage X Y f := f
 
 end CommRingCat
 
@@ -410,7 +411,8 @@ def ringEquivIsoCommRingIso {X Y : Type u} [CommRing X] [CommRing Y] :
 -/
 
 #print RingCat.forget_reflects_isos /-
-instance RingCat.forget_reflects_isos : ReflectsIsomorphisms (forget RingCat.{u})
+instance RingCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget RingCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget RingCat).map f)
@@ -420,7 +422,8 @@ instance RingCat.forget_reflects_isos : ReflectsIsomorphisms (forget RingCat.{u}
 -/
 
 #print CommRingCat.forget_reflects_isos /-
-instance CommRingCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommRingCat.{u})
+instance CommRingCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget CommRingCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget CommRingCat).map f)
@@ -448,5 +451,6 @@ theorem CommRingCat.ringHom_comp_eq_comp {R S T : Type _} [CommRing R] [CommRing
 -- which can cause typeclass loops:
 attribute [local instance] reflects_isomorphisms_forget₂
 
-example : ReflectsIsomorphisms (forget₂ RingCat AddCommGroupCat) := by infer_instance
+example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ RingCat AddCommGroupCat) := by
+  infer_instance
 

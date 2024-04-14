@@ -262,8 +262,8 @@ theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : P
 -/
 
 #print CategoryTheory.Adjunction.projective_of_map_projective /-
-theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : C)
-    (hP : Projective (F.obj P)) : Projective P :=
+theorem projective_of_map_projective (adj : F ⊣ G) [CategoryTheory.Functor.Full F]
+    [CategoryTheory.Functor.Faithful F] (P : C) (hP : Projective (F.obj P)) : Projective P :=
   ⟨fun X Y f g => by
     intro
     haveI : PreservesColimitsOfSize.{0, 0} F := adj.left_adjoint_preserves_colimits

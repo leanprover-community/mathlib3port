@@ -120,16 +120,16 @@ def leftAdjointPreservesColimits : PreservesColimitsOfSize.{v, u} F
 
 #print CategoryTheory.Adjunction.isEquivalencePreservesColimits /-
 -- see Note [lower instance priority]
-instance (priority := 100) isEquivalencePreservesColimits (E : C ⥤ D) [IsEquivalence E] :
-    PreservesColimitsOfSize.{v, u} E :=
+instance (priority := 100) isEquivalencePreservesColimits (E : C ⥤ D)
+    [CategoryTheory.Functor.IsEquivalence E] : PreservesColimitsOfSize.{v, u} E :=
   leftAdjointPreservesColimits E.Adjunction
 #align category_theory.adjunction.is_equivalence_preserves_colimits CategoryTheory.Adjunction.isEquivalencePreservesColimits
 -/
 
 #print CategoryTheory.Adjunction.isEquivalenceReflectsColimits /-
 -- see Note [lower instance priority]
-instance (priority := 100) isEquivalenceReflectsColimits (E : D ⥤ C) [IsEquivalence E] :
-    ReflectsColimitsOfSize.{v, u} E
+instance (priority := 100) isEquivalenceReflectsColimits (E : D ⥤ C)
+    [CategoryTheory.Functor.IsEquivalence E] : ReflectsColimitsOfSize.{v, u} E
     where ReflectsColimitsOfShape J 𝒥 :=
     {
       ReflectsColimit := fun K =>
@@ -145,8 +145,8 @@ instance (priority := 100) isEquivalenceReflectsColimits (E : D ⥤ C) [IsEquiva
 
 #print CategoryTheory.Adjunction.isEquivalenceCreatesColimits /-
 -- see Note [lower instance priority]
-instance (priority := 100) isEquivalenceCreatesColimits (H : D ⥤ C) [IsEquivalence H] :
-    CreatesColimitsOfSize.{v, u} H
+instance (priority := 100) isEquivalenceCreatesColimits (H : D ⥤ C)
+    [CategoryTheory.Functor.IsEquivalence H] : CreatesColimitsOfSize.{v, u} H
     where CreatesColimitsOfShape J 𝒥 :=
     {
       CreatesColimit := fun F =>
@@ -158,13 +158,13 @@ instance (priority := 100) isEquivalenceCreatesColimits (H : D ⥤ C) [IsEquival
 -/
 
 -- verify the preserve_colimits instance works as expected:
-example (E : C ⥤ D) [IsEquivalence E] (c : Cocone K) (h : IsColimit c) :
+example (E : C ⥤ D) [CategoryTheory.Functor.IsEquivalence E] (c : Cocone K) (h : IsColimit c) :
     IsColimit (E.mapCocone c) :=
   PreservesColimit.preserves h
 
 #print CategoryTheory.Adjunction.hasColimit_comp_equivalence /-
-theorem hasColimit_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit K] :
-    HasColimit (K ⋙ E) :=
+theorem hasColimit_comp_equivalence (E : C ⥤ D) [CategoryTheory.Functor.IsEquivalence E]
+    [HasColimit K] : HasColimit (K ⋙ E) :=
   HasColimit.mk
     { Cocone := E.mapCocone (colimit.cocone K)
       IsColimit := PreservesColimit.preserves (colimit.isColimit K) }
@@ -172,8 +172,8 @@ theorem hasColimit_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit 
 -/
 
 #print CategoryTheory.Adjunction.hasColimit_of_comp_equivalence /-
-theorem hasColimit_of_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit (K ⋙ E)] :
-    HasColimit K :=
+theorem hasColimit_of_comp_equivalence (E : C ⥤ D) [CategoryTheory.Functor.IsEquivalence E]
+    [HasColimit (K ⋙ E)] : HasColimit K :=
   @hasColimitOfIso _ _ _ _ (K ⋙ E ⋙ inv E) K
     (@hasColimit_comp_equivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
     ((Functor.rightUnitor _).symm ≪≫ isoWhiskerLeft K E.asEquivalence.unitIso)
@@ -182,16 +182,16 @@ theorem hasColimit_of_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColim
 
 #print CategoryTheory.Adjunction.hasColimitsOfShape_of_equivalence /-
 /-- Transport a `has_colimits_of_shape` instance across an equivalence. -/
-theorem hasColimitsOfShape_of_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimitsOfShape J D] :
-    HasColimitsOfShape J C :=
+theorem hasColimitsOfShape_of_equivalence (E : C ⥤ D) [CategoryTheory.Functor.IsEquivalence E]
+    [HasColimitsOfShape J D] : HasColimitsOfShape J C :=
   ⟨fun F => has_colimit_of_comp_equivalence F E⟩
 #align category_theory.adjunction.has_colimits_of_shape_of_equivalence CategoryTheory.Adjunction.hasColimitsOfShape_of_equivalence
 -/
 
 #print CategoryTheory.Adjunction.has_colimits_of_equivalence /-
 /-- Transport a `has_colimits` instance across an equivalence. -/
-theorem has_colimits_of_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimitsOfSize.{v, u} D] :
-    HasColimitsOfSize.{v, u} C :=
+theorem has_colimits_of_equivalence (E : C ⥤ D) [CategoryTheory.Functor.IsEquivalence E]
+    [HasColimitsOfSize.{v, u} D] : HasColimitsOfSize.{v, u} C :=
   ⟨fun J hJ => has_colimits_of_shape_of_equivalence E⟩
 #align category_theory.adjunction.has_colimits_of_equivalence CategoryTheory.Adjunction.has_colimits_of_equivalence
 -/
@@ -268,16 +268,16 @@ def rightAdjointPreservesLimits : PreservesLimitsOfSize.{v, u} G
 
 #print CategoryTheory.Adjunction.isEquivalencePreservesLimits /-
 -- see Note [lower instance priority]
-instance (priority := 100) isEquivalencePreservesLimits (E : D ⥤ C) [IsEquivalence E] :
-    PreservesLimitsOfSize.{v, u} E :=
+instance (priority := 100) isEquivalencePreservesLimits (E : D ⥤ C)
+    [CategoryTheory.Functor.IsEquivalence E] : PreservesLimitsOfSize.{v, u} E :=
   rightAdjointPreservesLimits E.inv.Adjunction
 #align category_theory.adjunction.is_equivalence_preserves_limits CategoryTheory.Adjunction.isEquivalencePreservesLimits
 -/
 
 #print CategoryTheory.Adjunction.isEquivalenceReflectsLimits /-
 -- see Note [lower instance priority]
-instance (priority := 100) isEquivalenceReflectsLimits (E : D ⥤ C) [IsEquivalence E] :
-    ReflectsLimitsOfSize.{v, u} E
+instance (priority := 100) isEquivalenceReflectsLimits (E : D ⥤ C)
+    [CategoryTheory.Functor.IsEquivalence E] : ReflectsLimitsOfSize.{v, u} E
     where ReflectsLimitsOfShape J 𝒥 :=
     {
       ReflectsLimit := fun K =>
@@ -292,8 +292,8 @@ instance (priority := 100) isEquivalenceReflectsLimits (E : D ⥤ C) [IsEquivale
 
 #print CategoryTheory.Adjunction.isEquivalenceCreatesLimits /-
 -- see Note [lower instance priority]
-instance (priority := 100) isEquivalenceCreatesLimits (H : D ⥤ C) [IsEquivalence H] :
-    CreatesLimitsOfSize.{v, u} H
+instance (priority := 100) isEquivalenceCreatesLimits (H : D ⥤ C)
+    [CategoryTheory.Functor.IsEquivalence H] : CreatesLimitsOfSize.{v, u} H
     where CreatesLimitsOfShape J 𝒥 :=
     {
       CreatesLimit := fun F =>
@@ -305,11 +305,13 @@ instance (priority := 100) isEquivalenceCreatesLimits (H : D ⥤ C) [IsEquivalen
 -/
 
 -- verify the preserve_limits instance works as expected:
-example (E : D ⥤ C) [IsEquivalence E] (c : Cone K) [h : IsLimit c] : IsLimit (E.mapCone c) :=
+example (E : D ⥤ C) [CategoryTheory.Functor.IsEquivalence E] (c : Cone K) [h : IsLimit c] :
+    IsLimit (E.mapCone c) :=
   PreservesLimit.preserves h
 
 #print CategoryTheory.Adjunction.hasLimit_comp_equivalence /-
-theorem hasLimit_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit K] : HasLimit (K ⋙ E) :=
+theorem hasLimit_comp_equivalence (E : D ⥤ C) [CategoryTheory.Functor.IsEquivalence E]
+    [HasLimit K] : HasLimit (K ⋙ E) :=
   HasLimit.mk
     { Cone := E.mapCone (limit.cone K)
       IsLimit := PreservesLimit.preserves (limit.isLimit K) }
@@ -317,8 +319,8 @@ theorem hasLimit_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit K] :
 -/
 
 #print CategoryTheory.Adjunction.hasLimit_of_comp_equivalence /-
-theorem hasLimit_of_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit (K ⋙ E)] :
-    HasLimit K :=
+theorem hasLimit_of_comp_equivalence (E : D ⥤ C) [CategoryTheory.Functor.IsEquivalence E]
+    [HasLimit (K ⋙ E)] : HasLimit K :=
   @hasLimitOfIso _ _ _ _ (K ⋙ E ⋙ inv E) K
     (@hasLimit_comp_equivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
     (isoWhiskerLeft K E.asEquivalence.unitIso.symm ≪≫ Functor.rightUnitor _)
@@ -327,16 +329,16 @@ theorem hasLimit_of_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit (
 
 #print CategoryTheory.Adjunction.hasLimitsOfShape_of_equivalence /-
 /-- Transport a `has_limits_of_shape` instance across an equivalence. -/
-theorem hasLimitsOfShape_of_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J D :=
+theorem hasLimitsOfShape_of_equivalence (E : D ⥤ C) [CategoryTheory.Functor.IsEquivalence E]
+    [HasLimitsOfShape J C] : HasLimitsOfShape J D :=
   ⟨fun F => has_limit_of_comp_equivalence F E⟩
 #align category_theory.adjunction.has_limits_of_shape_of_equivalence CategoryTheory.Adjunction.hasLimitsOfShape_of_equivalence
 -/
 
 #print CategoryTheory.Adjunction.has_limits_of_equivalence /-
 /-- Transport a `has_limits` instance across an equivalence. -/
-theorem has_limits_of_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfSize.{v, u} C] :
-    HasLimitsOfSize.{v, u} D :=
+theorem has_limits_of_equivalence (E : D ⥤ C) [CategoryTheory.Functor.IsEquivalence E]
+    [HasLimitsOfSize.{v, u} C] : HasLimitsOfSize.{v, u} D :=
   ⟨fun J hJ => has_limits_of_shape_of_equivalence E⟩
 #align category_theory.adjunction.has_limits_of_equivalence CategoryTheory.Adjunction.has_limits_of_equivalence
 -/

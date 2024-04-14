@@ -123,7 +123,7 @@ def forget : DifferentialObject C ⥤ C where
 -/
 
 #print CategoryTheory.DifferentialObject.forget_faithful /-
-instance forget_faithful : Faithful (forget C) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (forget C) where
 #align category_theory.differential_object.forget_faithful CategoryTheory.DifferentialObject.forget_faithful
 -/
 

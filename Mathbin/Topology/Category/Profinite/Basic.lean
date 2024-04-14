@@ -131,7 +131,7 @@ end Profinite
 @[simps]
 def profiniteToCompHaus : Profinite ⥤ CompHaus :=
   inducedFunctor _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align Profinite_to_CompHaus profiniteToCompHaus
 -/
 
@@ -141,7 +141,7 @@ obvious composite. -/
 @[simps]
 def Profinite.toTopCat : Profinite ⥤ TopCat :=
   forget₂ _ _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align Profinite.to_Top Profinite.toTopCat
 -/
 
@@ -344,7 +344,8 @@ noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
 -/
 
 #print Profinite.forget_reflectsIsomorphisms /-
-instance forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget Profinite) :=
+instance forget_reflectsIsomorphisms :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget Profinite) :=
   ⟨by intro A B f hf <;> exact Profinite.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 #align Profinite.forget_reflects_isomorphisms Profinite.forget_reflectsIsomorphisms
 -/

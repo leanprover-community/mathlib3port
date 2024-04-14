@@ -433,7 +433,8 @@ end CategoryTheory.Aut
 
 #print GroupCat.forget_reflects_isos /-
 @[to_additive]
-instance GroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget GroupCat.{u})
+instance GroupCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget GroupCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget GroupCat).map f)
@@ -445,7 +446,8 @@ instance GroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget GroupCat.{
 
 #print CommGroupCat.forget_reflects_isos /-
 @[to_additive]
-instance CommGroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommGroupCat.{u})
+instance CommGroupCat.forget_reflects_isos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget CommGroupCat.{u})
     where reflects X Y f _ := by
     skip
     let i := as_iso ((forget CommGroupCat).map f)

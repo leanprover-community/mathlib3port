@@ -173,11 +173,11 @@ def triangleRotation : Equivalence (Triangle C) (Triangle C)
 
 variable {C}
 
-instance : IsEquivalence (rotate C) := by change is_equivalence (triangle_rotation C).Functor;
-  infer_instance
+instance : CategoryTheory.Functor.IsEquivalence (rotate C) := by
+  change is_equivalence (triangle_rotation C).Functor; infer_instance
 
-instance : IsEquivalence (invRotate C) := by change is_equivalence (triangle_rotation C).inverse;
-  infer_instance
+instance : CategoryTheory.Functor.IsEquivalence (invRotate C) := by
+  change is_equivalence (triangle_rotation C).inverse; infer_instance
 
 end CategoryTheory.Pretriangulated
 

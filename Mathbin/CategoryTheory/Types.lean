@@ -243,12 +243,13 @@ theorem uliftFunctor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
 -/
 
 #print CategoryTheory.uliftFunctorFull /-
-instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (ULift.up x)).down
+instance uliftFunctorFull : CategoryTheory.Functor.Full.{u} uliftFunctor
+    where preimage X Y f x := (f (ULift.up x)).down
 #align category_theory.ulift_functor_full CategoryTheory.uliftFunctorFull
 -/
 
 #print CategoryTheory.uliftFunctor_faithful /-
-instance uliftFunctor_faithful : Faithful uliftFunctor
+instance uliftFunctor_faithful : CategoryTheory.Functor.Faithful uliftFunctor
     where map_injective' X Y f g p :=
     funext fun x =>
       congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))

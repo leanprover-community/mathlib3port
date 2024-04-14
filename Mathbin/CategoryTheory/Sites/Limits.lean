@@ -204,7 +204,7 @@ variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
-variable [ReflectsIsomorphisms (forget D)]
+variable [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 #print CategoryTheory.Sheaf.sheafifyCocone /-
 /-- Construct a cocone by sheafifying a cocone point of a cocone `E` of presheaves

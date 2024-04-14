@@ -205,13 +205,13 @@ theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f
 -/
 
 #print CategoryTheory.Monad.forget_reflects_iso /-
-instance forget_reflects_iso : ReflectsIsomorphisms T.forget
+instance forget_reflects_iso : CategoryTheory.Functor.ReflectsIsomorphisms T.forget
     where reflects A B := algebra_iso_of_iso T
 #align category_theory.monad.forget_reflects_iso CategoryTheory.Monad.forget_reflects_iso
 -/
 
 #print CategoryTheory.Monad.forget_faithful /-
-instance forget_faithful : Faithful T.forget where
+instance forget_faithful : CategoryTheory.Functor.Faithful T.forget where
 #align category_theory.monad.forget_faithful CategoryTheory.Monad.forget_faithful
 -/
 
@@ -495,13 +495,13 @@ theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsI
 -/
 
 #print CategoryTheory.Comonad.forget_reflects_iso /-
-instance forget_reflects_iso : ReflectsIsomorphisms G.forget
+instance forget_reflects_iso : CategoryTheory.Functor.ReflectsIsomorphisms G.forget
     where reflects A B := coalgebra_iso_of_iso G
 #align category_theory.comonad.forget_reflects_iso CategoryTheory.Comonad.forget_reflects_iso
 -/
 
 #print CategoryTheory.Comonad.forget_faithful /-
-instance forget_faithful : Faithful (forget G) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (forget G) where
 #align category_theory.comonad.forget_faithful CategoryTheory.Comonad.forget_faithful
 -/
 

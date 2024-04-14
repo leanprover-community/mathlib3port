@@ -204,8 +204,8 @@ def braiding : C × D ≌ D × C :=
 -/
 
 #print CategoryTheory.Prod.swapIsEquivalence /-
-instance swapIsEquivalence : IsEquivalence (swap C D) :=
-  (by infer_instance : IsEquivalence (braiding C D).Functor)
+instance swapIsEquivalence : CategoryTheory.Functor.IsEquivalence (swap C D) :=
+  (by infer_instance : CategoryTheory.Functor.IsEquivalence (braiding C D).Functor)
 #align category_theory.prod.swap_is_equivalence CategoryTheory.Prod.swapIsEquivalence
 -/
 

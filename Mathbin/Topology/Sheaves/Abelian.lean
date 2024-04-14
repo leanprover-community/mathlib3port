@@ -56,7 +56,7 @@ variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
 
 variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
-variable [ReflectsIsomorphisms (forget D)]
+variable [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 
 #print CategoryTheory.sheafIsAbelian /-
 instance sheafIsAbelian [HasFiniteLimits D] : Abelian (Sheaf J D) :=

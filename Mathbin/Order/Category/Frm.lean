@@ -113,7 +113,8 @@ def topCatOpToFrm : TopCatᵒᵖ ⥤ Frm
 
 #print CompHausOpToFrame.faithful /-
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
-instance CompHausOpToFrame.faithful : Faithful (compHausToTop.op ⋙ topCatOpToFrm.{u}) :=
+instance CompHausOpToFrame.faithful :
+    CategoryTheory.Functor.Faithful (compHausToTop.op ⋙ topCatOpToFrm.{u}) :=
   ⟨fun X Y f g h => Quiver.Hom.unop_inj <| Opens.comap_injective h⟩
 #align CompHaus_op_to_Frame.faithful CompHausOpToFrame.faithful
 -/

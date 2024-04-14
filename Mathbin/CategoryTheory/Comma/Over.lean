@@ -233,7 +233,7 @@ def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map f ⋙ 
 end
 
 #print CategoryTheory.Over.forget_reflects_iso /-
-instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
+instance forget_reflects_iso : CategoryTheory.Functor.ReflectsIsomorphisms (forget X)
     where reflects Y Z f t :=
     ⟨⟨over.hom_mk (inv ((forget X).map f))
           ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm),
@@ -242,7 +242,7 @@ instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
 -/
 
 #print CategoryTheory.Over.forget_faithful /-
-instance forget_faithful : Faithful (forget X) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (forget X) where
 #align category_theory.over.forget_faithful CategoryTheory.Over.forget_faithful
 -/
 
@@ -546,7 +546,7 @@ def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ 
 end
 
 #print CategoryTheory.Under.forget_reflects_iso /-
-instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
+instance forget_reflects_iso : CategoryTheory.Functor.ReflectsIsomorphisms (forget X)
     where reflects Y Z f t :=
     ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by
         tidy⟩⟩
@@ -554,7 +554,7 @@ instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
 -/
 
 #print CategoryTheory.Under.forget_faithful /-
-instance forget_faithful : Faithful (forget X) where
+instance forget_faithful : CategoryTheory.Functor.Faithful (forget X) where
 #align category_theory.under.forget_faithful CategoryTheory.Under.forget_faithful
 -/
 

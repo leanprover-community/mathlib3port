@@ -29,8 +29,8 @@ variable (F : MonoidalFunctor C D)
 /-- Given candidate data for an exact pairing,
 which is sent by a faithful monoidal functor to an exact pairing,
 the equations holds automatically. -/
-def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 𝟙_ C)
-    (coeval : 𝟙_ C ⟶ X ⊗ Y) [ExactPairing (F.obj X) (F.obj Y)]
+def exactPairingOfFaithful [CategoryTheory.Functor.Faithful F.toFunctor] {X Y : C}
+    (eval : Y ⊗ X ⟶ 𝟙_ C) (coeval : 𝟙_ C ⟶ X ⊗ Y) [ExactPairing (F.obj X) (F.obj Y)]
     (map_eval : F.map eval = inv (F.μ _ _) ≫ ε_ _ _ ≫ F.ε)
     (map_coeval : F.map coeval = inv F.ε ≫ η_ _ _ ≫ F.μ _ _) : ExactPairing X Y
     where
@@ -47,8 +47,9 @@ def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 
 /-- Given a pair of objects which are sent by a fully faithful functor to a pair of objects
 with an exact pairing, we get an exact pairing.
 -/
-def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y : C)
-    [ExactPairing (F.obj X) (F.obj Y)] : ExactPairing X Y :=
+def exactPairingOfFullyFaithful [CategoryTheory.Functor.Full F.toFunctor]
+    [CategoryTheory.Functor.Faithful F.toFunctor] (X Y : C) [ExactPairing (F.obj X) (F.obj Y)] :
+    ExactPairing X Y :=
   exactPairingOfFaithful F (F.toFunctor.preimage (inv (F.μ _ _) ≫ ε_ _ _ ≫ F.ε))
     (F.toFunctor.preimage (inv F.ε ≫ η_ _ _ ≫ F.μ _ _)) (by simp) (by simp)
 #align category_theory.exact_pairing_of_fully_faithful CategoryTheory.exactPairingOfFullyFaithful
@@ -57,8 +58,9 @@ def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.hasLeftDualOfEquivalence /-
 /-- Pull back a left dual along an equivalence. -/
-def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F.obj X)] :
-    HasLeftDual X where
+def hasLeftDualOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor] (X : C)
+    [HasLeftDual (F.obj X)] : HasLeftDual X
+    where
   leftDual := F.toFunctor.inv.obj (ᘁF.obj X)
   exact := by
     apply exact_pairing_of_fully_faithful F _ _
@@ -71,8 +73,9 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.hasRightDualOfEquivalence /-
 /-- Pull back a right dual along an equivalence. -/
-def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual (F.obj X)] :
-    HasRightDual X where
+def hasRightDualOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor] (X : C)
+    [HasRightDual (F.obj X)] : HasRightDual X
+    where
   rightDual := F.toFunctor.inv.obj (F.obj Xᘁ)
   exact := by
     apply exact_pairing_of_fully_faithful F _ _
@@ -84,21 +87,22 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
 
 #print CategoryTheory.leftRigidCategoryOfEquivalence /-
 /-- Pull back a left rigid structure along an equivalence. -/
-def leftRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [LeftRigidCategory D] :
-    LeftRigidCategory C where leftDual X := hasLeftDualOfEquivalence F X
+def leftRigidCategoryOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor]
+    [LeftRigidCategory D] : LeftRigidCategory C where leftDual X := hasLeftDualOfEquivalence F X
 #align category_theory.left_rigid_category_of_equivalence CategoryTheory.leftRigidCategoryOfEquivalence
 -/
 
 #print CategoryTheory.rightRigidCategoryOfEquivalence /-
 /-- Pull back a right rigid structure along an equivalence. -/
-def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCategory D] :
-    RightRigidCategory C where rightDual X := hasRightDualOfEquivalence F X
+def rightRigidCategoryOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor]
+    [RightRigidCategory D] : RightRigidCategory C where rightDual X := hasRightDualOfEquivalence F X
 #align category_theory.right_rigid_category_of_equivalence CategoryTheory.rightRigidCategoryOfEquivalence
 -/
 
 #print CategoryTheory.rigidCategoryOfEquivalence /-
 /-- Pull back a rigid structure along an equivalence. -/
-def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] : RigidCategory C
+def rigidCategoryOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor]
+    [RigidCategory D] : RigidCategory C
     where
   leftDual X := hasLeftDualOfEquivalence F X
   rightDual X := hasRightDualOfEquivalence F X

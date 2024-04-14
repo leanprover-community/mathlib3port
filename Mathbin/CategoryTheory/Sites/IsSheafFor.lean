@@ -1205,9 +1205,9 @@ def sheafOfTypesToPresheaf : SheafOfTypes J ⥤ Cᵒᵖ ⥤ Type w
 #align category_theory.SheafOfTypes_to_presheaf CategoryTheory.sheafOfTypesToPresheaf
 -/
 
-instance : Full (sheafOfTypesToPresheaf J) where Preimage X Y f := ⟨f⟩
+instance : CategoryTheory.Functor.Full (sheafOfTypesToPresheaf J) where Preimage X Y f := ⟨f⟩
 
-instance : Faithful (sheafOfTypesToPresheaf J) where
+instance : CategoryTheory.Functor.Faithful (sheafOfTypesToPresheaf J) where
 
 #print CategoryTheory.sheafOfTypesBotEquiv /-
 /--

@@ -136,9 +136,10 @@ def functor : C ⥤ Quotient r where
 #align category_theory.quotient.functor CategoryTheory.Quotient.functor
 -/
 
-noncomputable instance : Full (functor r) where preimage X Y f := Quot.out f
+noncomputable instance : CategoryTheory.Functor.Full (functor r) where preimage X Y f := Quot.out f
 
-instance : EssSurj (functor r) where mem_essImage Y := ⟨Y.as, ⟨eqToIso (by ext; rfl)⟩⟩
+instance : CategoryTheory.Functor.EssSurj (functor r)
+    where mem_essImage Y := ⟨Y.as, ⟨eqToIso (by ext; rfl)⟩⟩
 
 #print CategoryTheory.Quotient.induction /-
 protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}

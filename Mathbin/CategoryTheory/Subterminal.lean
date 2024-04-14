@@ -158,7 +158,7 @@ instance [HasTerminal C] : Inhabited (Subterminals C) :=
 @[simps]
 def subterminalInclusion : Subterminals C ⥤ C :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.subterminal_inclusion CategoryTheory.subterminalInclusion
 -/
 

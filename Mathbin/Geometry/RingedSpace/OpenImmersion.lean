@@ -935,7 +935,7 @@ section OfStalkIso
 
 variable [HasLimits C] [HasColimits C] [ConcreteCategory.{v} C]
 
-variable [ReflectsIsomorphisms (forget C)] [PreservesLimits (forget C)]
+variable [CategoryTheory.Functor.ReflectsIsomorphisms (forget C)] [PreservesLimits (forget C)]
 
 variable [PreservesFilteredColimits (forget C)]
 

@@ -109,7 +109,8 @@ noncomputable section
 when we promote a monoidal category to a single object bicategory,
 and the original monoidal category.
 -/
-def endMonoidalStarFunctorIsEquivalence : IsEquivalence (endMonoidalStarFunctor C).toFunctor
+def endMonoidalStarFunctorIsEquivalence :
+    CategoryTheory.Functor.IsEquivalence (endMonoidalStarFunctor C).toFunctor
     where
   inverse :=
     { obj := fun X => X

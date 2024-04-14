@@ -109,10 +109,10 @@ def preordToCat : Preord.{u} ⥤ Cat where
 #align Preord_to_Cat preordToCat
 -/
 
-instance : Faithful preordToCat.{u}
+instance : CategoryTheory.Functor.Faithful preordToCat.{u}
     where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
 
-instance : Full preordToCat.{u}
+instance : CategoryTheory.Functor.Full preordToCat.{u}
     where
   preimage X Y f := ⟨f.obj, f.Monotone⟩
   witness' X Y f := by apply CategoryTheory.Functor.ext; tidy

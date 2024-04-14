@@ -113,8 +113,8 @@ def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E
 variable {C} {D} {E}
 
 #print CategoryTheory.faithful_whiskeringRight_obj /-
-instance faithful_whiskeringRight_obj {F : D ⥤ E} [Faithful F] :
-    Faithful ((whiskeringRight C D E).obj F)
+instance faithful_whiskeringRight_obj {F : D ⥤ E} [CategoryTheory.Functor.Faithful F] :
+    CategoryTheory.Functor.Faithful ((whiskeringRight C D E).obj F)
     where map_injective' G H α β hαβ :=
     NatTrans.ext _ _ <|
       funext fun X => Functor.map_injective _ <| congr_fun (congr_arg NatTrans.app hαβ) X

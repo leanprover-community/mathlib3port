@@ -403,8 +403,8 @@ variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
 
 #print CategoryTheory.MonoidalClosed.ofEquiv /-
 /-- Transport the property of being monoidal closed across a monoidal equivalence of categories -/
-noncomputable def ofEquiv (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
-    [h : MonoidalClosed D] : MonoidalClosed C
+noncomputable def ofEquiv (F : MonoidalFunctor C D)
+    [CategoryTheory.Functor.IsEquivalence F.toFunctor] [h : MonoidalClosed D] : MonoidalClosed C
     where closed' X :=
     {
       isAdj := by
@@ -423,8 +423,9 @@ monoidal closed instance back along the equivalence. For `X, Y, Z : C`, this lem
 resulting currying map `Hom(X ⊗ Y, Z) → Hom(Y, (X ⟶[C] Z))`. (`X ⟶[C] Z` is defined to be
 `F⁻¹(F(X) ⟶[D] F(Z))`, so currying in `C` is given by essentially conjugating currying in
 `D` by `F.`) -/
-theorem ofEquiv_curry_def (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
-    [h : MonoidalClosed D] {X Y Z : C} (f : X ⊗ Y ⟶ Z) :
+theorem ofEquiv_curry_def (F : MonoidalFunctor C D)
+    [CategoryTheory.Functor.IsEquivalence F.toFunctor] [h : MonoidalClosed D] {X Y Z : C}
+    (f : X ⊗ Y ⟶ Z) :
     @MonoidalClosed.curry _ _ _ _ _ _ ((MonoidalClosed.ofEquiv F).1 _) f =
       (F.1.1.Adjunction.homEquiv Y ((ihom _).obj _))
         (MonoidalClosed.curry
@@ -441,8 +442,8 @@ monoidal closed instance back along the equivalence. For `X, Y, Z : C`, this lem
 resulting uncurrying map `Hom(Y, (X ⟶[C] Z)) → Hom(X ⊗ Y ⟶ Z)`. (`X ⟶[C] Z` is
 defined to be `F⁻¹(F(X) ⟶[D] F(Z))`, so uncurrying in `C` is given by essentially conjugating
 uncurrying in `D` by `F.`) -/
-theorem ofEquiv_uncurry_def (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
-    [h : MonoidalClosed D] {X Y Z : C}
+theorem ofEquiv_uncurry_def (F : MonoidalFunctor C D)
+    [CategoryTheory.Functor.IsEquivalence F.toFunctor] [h : MonoidalClosed D] {X Y Z : C}
     (f : Y ⟶ (@ihom _ _ _ X <| (MonoidalClosed.ofEquiv F).1 X).obj Z) :
     @MonoidalClosed.uncurry _ _ _ _ _ _ ((MonoidalClosed.ofEquiv F).1 _) f =
       (CategoryTheory.Iso.compInvIso (F.commTensorLeft X)).inv.app Y ≫

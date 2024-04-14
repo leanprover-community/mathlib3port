@@ -48,7 +48,7 @@ infixr:26 " ⥤ₗ " => LeftExactFunctor
 /-- A left exact functor is in particular a functor. -/
 def LeftExactFunctor.forget : (C ⥤ₗ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.LeftExactFunctor.forget CategoryTheory.LeftExactFunctor.forget
 -/
 
@@ -67,7 +67,7 @@ infixr:26 " ⥤ᵣ " => RightExactFunctor
 /-- A right exact functor is in particular a functor. -/
 def RightExactFunctor.forget : (C ⥤ᵣ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.RightExactFunctor.forget CategoryTheory.RightExactFunctor.forget
 -/
 
@@ -87,7 +87,7 @@ infixr:26 " ⥤ₑ " => ExactFunctor
 /-- An exact functor is in particular a functor. -/
 def ExactFunctor.forget : (C ⥤ₑ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.ExactFunctor.forget CategoryTheory.ExactFunctor.forget
 -/
 
@@ -95,7 +95,7 @@ deriving Full, Faithful
 /-- Turn an exact functor into a left exact functor. -/
 def LeftExactFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤ₗ D :=
   FullSubcategory.map fun X => And.left
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.LeftExactFunctor.of_exact CategoryTheory.LeftExactFunctor.ofExact
 -/
 
@@ -103,7 +103,7 @@ deriving Full, Faithful
 /-- Turn an exact functor into a left exact functor. -/
 def RightExactFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤ᵣ D :=
   FullSubcategory.map fun X => And.right
-deriving Full, Faithful
+deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align category_theory.RightExactFunctor.of_exact CategoryTheory.RightExactFunctor.ofExact
 -/
 

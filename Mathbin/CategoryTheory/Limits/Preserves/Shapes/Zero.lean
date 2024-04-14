@@ -60,15 +60,15 @@ protected theorem map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C) :
 -/
 
 #print CategoryTheory.Functor.zero_of_map_zero /-
-theorem zero_of_map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} (f : X ⟶ Y)
-    (h : F.map f = 0) : f = 0 :=
+theorem zero_of_map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] [CategoryTheory.Functor.Faithful F]
+    {X Y : C} (f : X ⟶ Y) (h : F.map f = 0) : f = 0 :=
   F.map_injective <| h.trans <| Eq.symm <| F.map_zero _ _
 #align category_theory.functor.zero_of_map_zero CategoryTheory.Functor.zero_of_map_zero
 -/
 
 #print CategoryTheory.Functor.map_eq_zero_iff /-
-theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} {f : X ⟶ Y} :
-    F.map f = 0 ↔ f = 0 :=
+theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [CategoryTheory.Functor.Faithful F]
+    {X Y : C} {f : X ⟶ Y} : F.map f = 0 ↔ f = 0 :=
   ⟨F.zero_of_map_zero _, by rintro rfl; exact F.map_zero _ _⟩
 #align category_theory.functor.map_eq_zero_iff CategoryTheory.Functor.map_eq_zero_iff
 -/
@@ -104,8 +104,8 @@ instance (priority := 100) preservesZeroMorphisms_of_isRightAdjoint (G : C ⥤ D
 -/
 
 #print CategoryTheory.Functor.preservesZeroMorphisms_of_full /-
-instance (priority := 100) preservesZeroMorphisms_of_full (F : C ⥤ D) [Full F] :
-    PreservesZeroMorphisms F
+instance (priority := 100) preservesZeroMorphisms_of_full (F : C ⥤ D)
+    [CategoryTheory.Functor.Full F] : PreservesZeroMorphisms F
     where map_zero' X Y :=
     calc
       F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by rw [zero_comp]
