@@ -412,9 +412,10 @@ theorem image_smul_setₛₗ [SemilinearMapClass F σ M M₃] (c : R) (s : Set M
 #align image_smul_setₛₗ image_smul_setₛₗ
 -/
 
-#print preimage_smul_setₛₗ /-
-theorem preimage_smul_setₛₗ [SemilinearMapClass F σ M M₃] {c : R} (hc : IsUnit c) (s : Set M₃) :
-    h ⁻¹' (σ c • s) = c • h ⁻¹' s := by
+#print preimage_smul_setₛₗ_of_units /-
+theorem preimage_smul_setₛₗ_of_units [SemilinearMapClass F σ M M₃] {c : R} (hc : IsUnit c)
+    (s : Set M₃) : h ⁻¹' (σ c • s) = c • h ⁻¹' s :=
+  by
   apply Set.Subset.antisymm
   · rintro x ⟨y, ys, hy⟩
     refine' ⟨(hc.unit.inv : R) • x, _, _⟩
@@ -424,7 +425,7 @@ theorem preimage_smul_setₛₗ [SemilinearMapClass F σ M M₃] {c : R} (hc : I
     · simp only [smul_smul, IsUnit.mul_val_inv, one_smul, Units.inv_eq_val_inv]
   · rintro x ⟨y, hy, rfl⟩
     refine' ⟨h y, hy, by simp only [RingHom.id_apply, map_smulₛₗ h]⟩
-#align preimage_smul_setₛₗ preimage_smul_setₛₗ
+#align preimage_smul_setₛₗ preimage_smul_setₛₗ_of_units
 -/
 
 variable (R M₂)
@@ -438,7 +439,7 @@ theorem image_smul_set [LinearMapClass F R M M₂] (c : R) (s : Set M) : h '' (c
 #print preimage_smul_set /-
 theorem preimage_smul_set [LinearMapClass F R M M₂] {c : R} (hc : IsUnit c) (s : Set M₂) :
     h ⁻¹' (c • s) = c • h ⁻¹' s :=
-  preimage_smul_setₛₗ _ _ _ h hc s
+  preimage_smul_setₛₗ_of_units _ _ _ h hc s
 #align preimage_smul_set preimage_smul_set
 -/
 

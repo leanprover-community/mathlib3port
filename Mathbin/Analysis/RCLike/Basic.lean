@@ -305,7 +305,7 @@ theorem ofReal_pow (r : ℝ) (n : ℕ) : ((r ^ n : ℝ) : K) = r ^ n :=
 @[simp, is_R_or_C_simps, norm_cast]
 theorem ofReal_prod {α : Type _} (s : Finset α) (f : α → ℝ) :
     ((∏ i in s, f i : ℝ) : K) = ∏ i in s, (f i : K) :=
-  RingHom.map_prod _ _ _
+  map_prod _ _ _
 #align is_R_or_C.of_real_prod RCLike.ofReal_prod
 -/
 

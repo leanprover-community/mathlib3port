@@ -583,7 +583,7 @@ theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius {n : ℕ} (R : Type _) [Com
           algebraMap _ _ (X ^ n - 1) :=
     by
     intro n hn
-    rw [← prod_cyclotomic_eq_X_pow_sub_one hn R, RingHom.map_prod]
+    rw [← prod_cyclotomic_eq_X_pow_sub_one hn R, map_prod]
   rw [(prod_eq_iff_prod_pow_moebius_eq_of_nonzero (fun n hn => _) fun n hn => _).1 h n hpos] <;>
     rw [Ne.def, IsFractionRing.to_map_eq_zero_iff]
   · apply cyclotomic_ne_zero

@@ -1297,7 +1297,7 @@ instance [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix n n α) :=
 #print Matrix.map_mul /-
 @[simp]
 theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
-    {f : α →+* β} : (L ⬝ M).map f = L.map f ⬝ M.map f := by ext; simp [mul_apply, RingHom.map_sum]
+    {f : α →+* β} : (L ⬝ M).map f = L.map f ⬝ M.map f := by ext; simp [mul_apply, map_sum]
 #align matrix.map_mul Matrix.map_mul
 -/
 
@@ -3503,8 +3503,7 @@ variable [Fintype n] [NonAssocSemiring α] [NonAssocSemiring β]
 
 #print RingHom.map_matrix_mul /-
 theorem map_matrix_mul (M : Matrix m n α) (N : Matrix n o α) (i : m) (j : o) (f : α →+* β) :
-    f (HMul.hMul M N i j) = HMul.hMul (M.map f) (N.map f) i j := by
-  simp [Matrix.mul_apply, RingHom.map_sum]
+    f (HMul.hMul M N i j) = HMul.hMul (M.map f) (N.map f) i j := by simp [Matrix.mul_apply, map_sum]
 #align ring_hom.map_matrix_mul RingHom.map_matrix_mul
 -/
 

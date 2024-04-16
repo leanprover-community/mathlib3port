@@ -991,7 +991,7 @@ theorem map_dvd (f : R →+* S) {x y : R[X]} : x ∣ y → x.map f ∣ y.map f :
 theorem coeff_map (n : ℕ) : coeff (p.map f) n = f (coeff p n) :=
   by
   rw [map, eval₂, coeff_sum, Sum]
-  conv_rhs => rw [← sum_C_mul_X_pow_eq p, coeff_sum, Sum, RingHom.map_sum]
+  conv_rhs => rw [← sum_C_mul_X_pow_eq p, coeff_sum, Sum, map_sum]
   refine' Finset.sum_congr rfl fun x hx => _
   simp [Function.comp, coeff_C_mul_X_pow, f.map_mul]
   split_ifs <;> simp [f.map_zero]

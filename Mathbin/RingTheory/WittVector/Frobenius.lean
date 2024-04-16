@@ -189,7 +189,7 @@ theorem map_frobeniusPoly (n : ℕ) :
     mul_assoc (↑p) (↑p ^ n), h1, mul_one, C_1, one_mul, add_comm _ (X n ^ p), add_assoc, ← add_sub,
     add_right_inj, frobenius_poly_aux_eq, RingHom.map_sub, map_X, mul_sub, sub_eq_add_neg,
     add_comm _ (C ↑p * X (n + 1)), ← add_sub, add_right_inj, neg_eq_iff_eq_neg, neg_sub, eq_comm]
-  simp only [RingHom.map_sum, mul_sum, sum_mul, ← sum_sub_distrib]
+  simp only [map_sum, mul_sum, sum_mul, ← sum_sub_distrib]
   apply sum_congr rfl
   intro i hi
   rw [mem_range] at hi

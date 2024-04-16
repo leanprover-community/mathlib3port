@@ -166,83 +166,101 @@ theorem map_prod [CommMonoid β] [CommMonoid γ] {G : Type _} [MonoidHomClass G 
 
 section Deprecated
 
+/- warning: monoid_hom.map_prod clashes with map_prod -> map_prod
+Case conversion may be inaccurate. Consider using '#align monoid_hom.map_prod map_prodₓ'. -/
+#print map_prod /-
 /-- Deprecated: use `_root_.map_prod` instead. -/
 @[to_additive "Deprecated: use `_root_.map_sum` instead."]
 protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β →* γ) (f : α → β) (s : Finset α) :
     g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
-#align monoid_hom.map_prod map_prodₓ
-#align linear_map.map_sum map_sumₓ
+#align monoid_hom.map_prod map_prod
+#align map_sum map_sum
+-/
 
-/- warning: mul_equiv.map_prod clashes with monoid_hom.map_prod -> map_prodₓ
-Case conversion may be inaccurate. Consider using '#align mul_equiv.map_prod map_prodₓₓ'. -/
-#print map_prodₓ /-
+/- warning: mul_equiv.map_prod clashes with map_prod -> map_prod
+Case conversion may be inaccurate. Consider using '#align mul_equiv.map_prod map_prodₓ'. -/
+#print map_prod /-
 /-- Deprecated: use `_root_.map_prod` instead. -/
 @[to_additive "Deprecated: use `_root_.map_sum` instead."]
 protected theorem map_prod [CommMonoid β] [CommMonoid γ] (g : β ≃* γ) (f : α → β) (s : Finset α) :
     g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
-#align mul_equiv.map_prod map_prodₓ
-#align linear_map.map_sum map_sumₓ
+#align mul_equiv.map_prod map_prod
+#align map_sum map_sum
 -/
 
-#print RingHom.map_list_prod /-
+/- warning: ring_hom.map_list_prod clashes with map_list_prod -> map_list_prod
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_list_prod map_list_prodₓ'. -/
+#print map_list_prod /-
 /-- Deprecated: use `_root_.map_list_prod` instead. -/
-protected theorem RingHom.map_list_prod [Semiring β] [Semiring γ] (f : β →+* γ) (l : List β) :
+protected theorem map_list_prod [Semiring β] [Semiring γ] (f : β →+* γ) (l : List β) :
     f l.Prod = (l.map f).Prod :=
   map_list_prod f l
-#align ring_hom.map_list_prod RingHom.map_list_prod
+#align ring_hom.map_list_prod map_list_prod
 -/
 
-#print RingHom.map_list_sum /-
+/- warning: ring_hom.map_list_sum clashes with map_list_sum -> map_list_sum
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_list_sum map_list_sumₓ'. -/
+#print map_list_sum /-
 /-- Deprecated: use `_root_.map_list_sum` instead. -/
-protected theorem RingHom.map_list_sum [NonAssocSemiring β] [NonAssocSemiring γ] (f : β →+* γ)
+protected theorem map_list_sum [NonAssocSemiring β] [NonAssocSemiring γ] (f : β →+* γ)
     (l : List β) : f l.Sum = (l.map f).Sum :=
   map_list_sum f l
-#align ring_hom.map_list_sum RingHom.map_list_sum
+#align ring_hom.map_list_sum map_list_sum
 -/
 
-#print RingHom.unop_map_list_prod /-
+/- warning: ring_hom.unop_map_list_prod clashes with unop_map_list_prod -> unop_map_list_prod
+Case conversion may be inaccurate. Consider using '#align ring_hom.unop_map_list_prod unop_map_list_prodₓ'. -/
+#print unop_map_list_prod /-
 /-- A morphism into the opposite ring acts on the product by acting on the reversed elements.
 
 Deprecated: use `_root_.unop_map_list_prod` instead.
 -/
-protected theorem RingHom.unop_map_list_prod [Semiring β] [Semiring γ] (f : β →+* γᵐᵒᵖ)
-    (l : List β) : MulOpposite.unop (f l.Prod) = (l.map (MulOpposite.unop ∘ f)).reverse.Prod :=
+protected theorem unop_map_list_prod [Semiring β] [Semiring γ] (f : β →+* γᵐᵒᵖ) (l : List β) :
+    MulOpposite.unop (f l.Prod) = (l.map (MulOpposite.unop ∘ f)).reverse.Prod :=
   unop_map_list_prod f l
-#align ring_hom.unop_map_list_prod RingHom.unop_map_list_prod
+#align ring_hom.unop_map_list_prod unop_map_list_prod
 -/
 
-#print RingHom.map_multiset_prod /-
+/- warning: ring_hom.map_multiset_prod clashes with map_multiset_prod -> map_multiset_prod
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_multiset_prod map_multiset_prodₓ'. -/
+#print map_multiset_prod /-
 /-- Deprecated: use `_root_.map_multiset_prod` instead. -/
-protected theorem RingHom.map_multiset_prod [CommSemiring β] [CommSemiring γ] (f : β →+* γ)
+protected theorem map_multiset_prod [CommSemiring β] [CommSemiring γ] (f : β →+* γ)
     (s : Multiset β) : f s.Prod = (s.map f).Prod :=
   map_multiset_prod f s
-#align ring_hom.map_multiset_prod RingHom.map_multiset_prod
+#align ring_hom.map_multiset_prod map_multiset_prod
 -/
 
-#print RingHom.map_multiset_sum /-
+/- warning: ring_hom.map_multiset_sum clashes with map_multiset_sum -> map_multiset_sum
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_multiset_sum map_multiset_sumₓ'. -/
+#print map_multiset_sum /-
 /-- Deprecated: use `_root_.map_multiset_sum` instead. -/
-protected theorem RingHom.map_multiset_sum [NonAssocSemiring β] [NonAssocSemiring γ] (f : β →+* γ)
+protected theorem map_multiset_sum [NonAssocSemiring β] [NonAssocSemiring γ] (f : β →+* γ)
     (s : Multiset β) : f s.Sum = (s.map f).Sum :=
   map_multiset_sum f s
-#align ring_hom.map_multiset_sum RingHom.map_multiset_sum
+#align ring_hom.map_multiset_sum map_multiset_sum
 -/
 
-#print RingHom.map_prod /-
+/- warning: ring_hom.map_prod clashes with map_prod -> map_prod
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_prod map_prodₓ'. -/
+#print map_prod /-
 /-- Deprecated: use `_root_.map_prod` instead. -/
-protected theorem RingHom.map_prod [CommSemiring β] [CommSemiring γ] (g : β →+* γ) (f : α → β)
+protected theorem map_prod [CommSemiring β] [CommSemiring γ] (g : β →+* γ) (f : α → β)
     (s : Finset α) : g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
-#align ring_hom.map_prod RingHom.map_prod
+#align ring_hom.map_prod map_prod
 -/
 
-#print RingHom.map_sum /-
+/- warning: ring_hom.map_sum clashes with map_sum -> map_sum
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_sum map_sumₓ'. -/
+#print map_sum /-
 /-- Deprecated: use `_root_.map_sum` instead. -/
-protected theorem RingHom.map_sum [NonAssocSemiring β] [NonAssocSemiring γ] (g : β →+* γ)
-    (f : α → β) (s : Finset α) : g (∑ x in s, f x) = ∑ x in s, g (f x) :=
+protected theorem map_sum [NonAssocSemiring β] [NonAssocSemiring γ] (g : β →+* γ) (f : α → β)
+    (s : Finset α) : g (∑ x in s, f x) = ∑ x in s, g (f x) :=
   map_sum g f s
-#align ring_hom.map_sum RingHom.map_sum
+#align ring_hom.map_sum map_sum
 -/
 
 end Deprecated

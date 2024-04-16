@@ -501,10 +501,10 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
   rcases this with ⟨g, hgi, hgj⟩
   use∏ x in s.erase i, g x
   constructor
-  · rw [← Quotient.eq', RingHom.map_one, RingHom.map_prod]
+  · rw [← Quotient.eq', RingHom.map_one, map_prod]
     apply Finset.prod_eq_one; intros; rw [← RingHom.map_one, Quotient.eq']; apply hgi
   intro j hjs hji
-  rw [← quotient.eq_zero_iff_mem, RingHom.map_prod]
+  rw [← quotient.eq_zero_iff_mem, map_prod]
   refine' Finset.prod_eq_zero (Finset.mem_erase_of_ne_of_mem hji hjs) _
   rw [quotient.eq_zero_iff_mem]
   exact hgj j hjs hji
@@ -523,7 +523,7 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   rcases this with ⟨φ, hφ1, hφ2⟩
   use∑ i, g i * φ i
   intro i
-  rw [← Quotient.eq', RingHom.map_sum]
+  rw [← Quotient.eq', map_sum]
   refine' Eq.trans (Finset.sum_eq_single i _ _) _
   · intro j _ hji; rw [quotient.eq_zero_iff_mem]; exact (f i).mul_mem_left _ (hφ2 j i hji)
   · intro hi; exact (hi <| Finset.mem_univ i).elim

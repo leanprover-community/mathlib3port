@@ -150,7 +150,7 @@ theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] 
   have hanz : a ≠ 0 := norm_pos_iff.mp (hrpos.trans_le ha)
   have : σ'.symm a ≠ 0 := (map_ne_zero σ'.symm.to_ring_hom).mpr hanz
   change _ ⊆ σ _ • _
-  rw [Set.image_subset_iff, preimage_smul_setₛₗ _ _ _ f this.is_unit]
+  rw [Set.image_subset_iff, preimage_smul_setₛₗ_of_units _ _ _ f this.is_unit]
   refine' hr (σ'.symm a) _
   rwa [σ'_symm_iso.norm_map_of_map_zero (map_zero _)]
 #align bornology.is_vonN_bounded.image Bornology.IsVonNBounded.image

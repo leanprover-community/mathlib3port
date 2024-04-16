@@ -122,7 +122,7 @@ variable {R} {S : Type _} [CommRing S]
 @[simp]
 theorem map_wittPolynomial (f : R →+* S) (n : ℕ) : map f (W n) = W n :=
   by
-  rw [wittPolynomial, RingHom.map_sum, wittPolynomial, sum_congr rfl]
+  rw [wittPolynomial, map_sum, wittPolynomial, sum_congr rfl]
   intro i hi
   rw [map_monomial, RingHom.map_pow, map_natCast]
 #align map_witt_polynomial map_wittPolynomial
@@ -135,7 +135,7 @@ variable (R)
 theorem constantCoeff_wittPolynomial [hp : Fact p.Prime] (n : ℕ) :
     constantCoeff (wittPolynomial p R n) = 0 :=
   by
-  simp only [wittPolynomial, RingHom.map_sum, constant_coeff_monomial]
+  simp only [wittPolynomial, map_sum, constant_coeff_monomial]
   rw [sum_eq_zero]
   rintro i hi
   rw [if_neg]
@@ -257,7 +257,7 @@ theorem constantCoeff_xInTermsOfW [hp : Fact p.Prime] [Invertible (p : R)] (n : 
   by
   apply Nat.strong_induction_on n <;> clear n
   intro n IH
-  rw [xInTermsOfW_eq, mul_comm, RingHom.map_mul, RingHom.map_sub, RingHom.map_sum, constant_coeff_C,
+  rw [xInTermsOfW_eq, mul_comm, RingHom.map_mul, RingHom.map_sub, map_sum, constant_coeff_C,
     sum_eq_zero]
   · simp only [constant_coeff_X, sub_zero, MulZeroClass.mul_zero]
   · intro m H

@@ -92,7 +92,7 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _)
   conj_symm := by
     intro x y
     unfold inner
-    rw [RingHom.map_sum]
+    rw [map_sum]
     apply Finset.sum_congr rfl
     rintro z -
     apply inner_conj_symm

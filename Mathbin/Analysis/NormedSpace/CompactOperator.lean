@@ -120,7 +120,7 @@ theorem IsCompactOperator.image_subset_compact_of_isVonNBounded {f : M₁ →ₛ
   let ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜₁ r
   let this := ne_zero_of_norm_ne_zero (hr.trans hc).Ne.symm
   ⟨σ₁₂ c • K, hK.image <| continuous_id.const_smul (σ₁₂ c), by
-    rw [image_subset_iff, preimage_smul_setₛₗ _ _ _ f this.is_unit] <;> exact hrS c hc.le⟩
+    rw [image_subset_iff, preimage_smul_setₛₗ_of_units _ _ _ f this.is_unit] <;> exact hrS c hc.le⟩
 #align is_compact_operator.image_subset_compact_of_vonN_bounded IsCompactOperator.image_subset_compact_of_isVonNBounded
 -/
 
@@ -420,7 +420,8 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   suffices (σ₁₂ <| c⁻¹) • K ⊆ U by
     refine' mem_of_superset _ this
     have : IsUnit c⁻¹ := hcnz.is_unit.inv
-    rwa [mem_map, preimage_smul_setₛₗ _ _ _ f this, set_smul_mem_nhds_zero_iff (inv_ne_zero hcnz)]
+    rwa [mem_map, preimage_smul_setₛₗ_of_units _ _ _ f this,
+      set_smul_mem_nhds_zero_iff (inv_ne_zero hcnz)]
     infer_instance
   -- Since `σ₁₂ c⁻¹` = `(σ₁₂ c)⁻¹`, we have to prove that `K ⊆ σ₁₂ c • U`.
   rw [map_inv₀, ← subset_set_smul_iff₀ ((map_ne_zero σ₁₂).mpr hcnz)]

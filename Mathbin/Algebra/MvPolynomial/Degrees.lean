@@ -935,7 +935,7 @@ theorem eval₂Hom_eq_constantCoeff_of_vars (f : R →+* S) {g : σ → S} {p : 
     (hp : ∀ i ∈ p.vars, g i = 0) : eval₂Hom f g p = f (constantCoeff p) :=
   by
   conv_lhs => rw [p.as_sum]
-  simp only [RingHom.map_sum, eval₂_hom_monomial]
+  simp only [map_sum, eval₂_hom_monomial]
   by_cases h0 : constant_coeff p = 0
   on_goal 1 =>
     rw [h0, f.map_zero, Finset.sum_eq_zero]
@@ -976,7 +976,7 @@ theorem eval₂Hom_congr' {f₁ f₂ : R →+* S} {g₁ g₂ : σ → S} {p₁ p
   rintro rfl h rfl
   rename' p₁ => p, f₁ => f
   rw [p.as_sum]
-  simp only [RingHom.map_sum, eval₂_hom_monomial]
+  simp only [map_sum, eval₂_hom_monomial]
   apply Finset.sum_congr rfl
   intro d hd
   congr 1

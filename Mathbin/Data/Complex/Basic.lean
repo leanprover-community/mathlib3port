@@ -1553,14 +1553,14 @@ variable {α : Type _} (s : Finset α)
 #print Complex.ofReal_prod /-
 @[simp, norm_cast]
 theorem ofReal_prod (f : α → ℝ) : ((∏ i in s, f i : ℝ) : ℂ) = ∏ i in s, (f i : ℂ) :=
-  RingHom.map_prod ofReal _ _
+  map_prod ofReal _ _
 #align complex.of_real_prod Complex.ofReal_prod
 -/
 
 #print Complex.ofReal_sum /-
 @[simp, norm_cast]
 theorem ofReal_sum (f : α → ℝ) : ((∑ i in s, f i : ℝ) : ℂ) = ∑ i in s, (f i : ℂ) :=
-  RingHom.map_sum ofReal _ _
+  map_sum ofReal _ _
 #align complex.of_real_sum Complex.ofReal_sum
 -/
 

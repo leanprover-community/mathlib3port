@@ -1326,8 +1326,8 @@ theorem map_eval₂Hom [CommSemiring S₂] (f : R →+* S₁) (g : σ → S₁) 
 #print MvPolynomial.eval₂Hom_monomial /-
 theorem eval₂Hom_monomial (f : R →+* S₁) (g : σ → S₁) (d : σ →₀ ℕ) (r : R) :
     eval₂Hom f g (monomial d r) = f r * d.Prod fun i k => g i ^ k := by
-  simp only [monomial_eq, RingHom.map_mul, eval₂_hom_C, Finsupp.prod, RingHom.map_prod,
-    RingHom.map_pow, eval₂_hom_X']
+  simp only [monomial_eq, RingHom.map_mul, eval₂_hom_C, Finsupp.prod, map_prod, RingHom.map_pow,
+    eval₂_hom_X']
 #align mv_polynomial.eval₂_hom_monomial MvPolynomial.eval₂Hom_monomial
 -/
 
@@ -1922,7 +1922,7 @@ theorem aeval_monomial (g : σ → S₁) (d : σ →₀ ℕ) (r : R) :
 theorem eval₂Hom_eq_zero (f : R →+* S₂) (g : σ → S₂) (φ : MvPolynomial σ R)
     (h : ∀ d, φ.coeff d ≠ 0 → ∃ i ∈ d.support, g i = 0) : eval₂Hom f g φ = 0 :=
   by
-  rw [φ.as_sum, RingHom.map_sum, Finset.sum_eq_zero]
+  rw [φ.as_sum, map_sum, Finset.sum_eq_zero]
   intro d hd
   obtain ⟨i, hi, hgi⟩ : ∃ i ∈ d.support, g i = 0 := h d (finsupp.mem_support_iff.mp hd)
   rw [eval₂_hom_monomial, Finsupp.prod, Finset.prod_eq_zero hi, MulZeroClass.mul_zero]
