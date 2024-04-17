@@ -89,9 +89,9 @@ theorem commute_cast (a : α) (r : ℚ) : Commute a r :=
 #align rat.commute_cast Rat.commute_cast
 -/
 
-#print Rat.cast_mk_of_ne_zero /-
+#print Rat.cast_divInt_of_ne_zero /-
 @[norm_cast]
-theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a / b :=
+theorem cast_divInt_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a / b :=
   by
   have b0' : b ≠ 0 := by refine' mt _ b0; simp (config := { contextual := true })
   cases' e : a /. b with n d h c
@@ -107,7 +107,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
   symm
   rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc,
     this, mul_assoc, mul_inv_cancel b0, mul_one]
-#align rat.cast_mk_of_ne_zero Rat.cast_mk_of_ne_zero
+#align rat.cast_mk_of_ne_zero Rat.cast_divInt_of_ne_zero
 -/
 
 #print Rat.cast_add_of_ne_zero /-
@@ -589,19 +589,19 @@ namespace Rat
 
 variable {K : Type _} [DivisionRing K]
 
-#print Rat.distribSMul /-
-instance (priority := 100) distribSMul : DistribSMul ℚ K
+#print Rat.instDistribSMul /-
+instance (priority := 100) instDistribSMul : DistribSMul ℚ K
     where
   smul := (· • ·)
   smul_zero a := by rw [smul_def, MulZeroClass.mul_zero]
   smul_add a x y := by simp only [smul_def, mul_add, cast_add]
-#align rat.distrib_smul Rat.distribSMul
+#align rat.distrib_smul Rat.instDistribSMul
 -/
 
-#print Rat.isScalarTower_right /-
-instance isScalarTower_right : IsScalarTower ℚ K K :=
+#print Rat.instIsScalarTowerRight /-
+instance instIsScalarTowerRight : IsScalarTower ℚ K K :=
   ⟨fun a x y => by simp only [smul_def, smul_eq_mul, mul_assoc]⟩
-#align rat.is_scalar_tower_right Rat.isScalarTower_right
+#align rat.is_scalar_tower_right Rat.instIsScalarTowerRight
 -/
 
 end Rat

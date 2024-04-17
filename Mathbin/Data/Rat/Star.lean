@@ -30,7 +30,7 @@ instance : StarRing ℚ where
 instance : TrivialStar ℚ where star_trivial _ := rfl
 
 instance : StarOrderedRing ℚ :=
-  StarOrderedRing.ofNonnegIff (fun _ _ => add_le_add_left) fun x =>
+  StarOrderedRing.of_nonneg_iff (fun _ _ => add_le_add_left) fun x =>
     by
     refine'
       ⟨fun hx => _, fun hx =>
@@ -52,7 +52,7 @@ instance : StarOrderedRing ℚ :=
     simp only [Int.cast_mul, Int.cast_natCast, coe_int_eq_mk, coe_nat_eq_mk]
     rw [mul_assoc, ← mul_assoc (mk (x.denom : ℤ) 1), mk_mul_mk_cancel one_ne_zero, ←
       one_mul (x.denom : ℤ), div_mk_div_cancel_left (by simpa using x.pos.ne' : (x.denom : ℤ) ≠ 0),
-      one_mul, mk_one_one, one_mul, mk_mul_mk_cancel one_ne_zero, Rat.num_den]
+      one_mul, mk_one_one, one_mul, mk_mul_mk_cancel one_ne_zero, Rat.num_divInt_den]
 
 end Rat
 

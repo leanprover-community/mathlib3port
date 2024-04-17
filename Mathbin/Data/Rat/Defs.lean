@@ -257,22 +257,22 @@ theorem divInt_mul_right {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. 
 #align rat.div_mk_div_cancel_left Rat.divInt_mul_right
 -/
 
-#print Rat.num_den /-
+#print Rat.num_divInt_den /-
 @[simp]
-theorem num_den : ∀ {a : ℚ}, a.num /. a.den = a
+theorem num_divInt_den : ∀ {a : ℚ}, a.num /. a.den = a
   | ⟨n, d, h, (c : _ = 1)⟩ => show mkRat n d = _ by simp [mk_nat, ne_of_gt h, mk_pnat, c]
-#align rat.num_denom Rat.num_den
+#align rat.num_denom Rat.num_divInt_den
 -/
 
-#print Rat.num_den' /-
-theorem num_den' {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
-  num_den.symm
-#align rat.num_denom' Rat.num_den'
+#print Rat.mk'_eq_divInt /-
+theorem mk'_eq_divInt {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
+  num_divInt_den.symm
+#align rat.num_denom' Rat.mk'_eq_divInt
 -/
 
 #print Rat.intCast_eq_divInt /-
 theorem intCast_eq_divInt (z : ℤ) : (z : ℚ) = z /. 1 :=
-  num_den'
+  mk'_eq_divInt
 #align rat.coe_int_eq_mk Rat.intCast_eq_divInt
 -/
 
@@ -352,9 +352,9 @@ protected def neg (r : ℚ) : ℚ :=
 instance : Neg ℚ :=
   ⟨Rat.neg⟩
 
-#print Rat.neg_def /-
+#print Rat.neg_divInt /-
 @[simp]
-theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b :=
+theorem neg_divInt {a b : ℤ} : -(a /. b) = -a /. b :=
   by
   by_cases b0 : b = 0; · subst b0; simp; rfl
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
@@ -362,14 +362,14 @@ theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b :=
   have d0 := ne_of_gt (Int.ofNat_lt.2 h₁)
   apply (mk_eq d0 b0).2; have h₁ := (mk_eq b0 d0).1 ha
   simp only [neg_mul, congr_arg Neg.neg h₁]
-#align rat.neg_def Rat.neg_def
+#align rat.neg_def Rat.neg_divInt
 -/
 
-#print Rat.divInt_neg_den /-
+#print Rat.divInt_neg /-
 @[simp]
-theorem divInt_neg_den (n d : ℤ) : n /. -d = -n /. d := by
+theorem divInt_neg (n d : ℤ) : n /. -d = -n /. d := by
   by_cases hd : d = 0 <;> simp [Rat.divInt_eq_iff, hd]
-#align rat.mk_neg_denom Rat.divInt_neg_den
+#align rat.mk_neg_denom Rat.divInt_neg
 -/
 
 #print Rat.mul /-
@@ -382,15 +382,16 @@ protected def mul : ℚ → ℚ → ℚ
 instance : Mul ℚ :=
   ⟨Rat.mul⟩
 
-#print Rat.mul_def' /-
+#print Rat.divInt_mul_divInt' /-
 @[simp]
-theorem mul_def' {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b * (c /. d) = a * c /. (b * d) :=
+theorem divInt_mul_divInt' {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) :
+    a /. b * (c /. d) = a * c /. (b * d) :=
   by
   apply lift_binop_eq Rat.mul <;> intros <;> try assumption
   · apply mk_pnat_eq
   · apply mul_ne_zero d₁0 d₂0
   cc
-#align rat.mul_def Rat.mul_def'
+#align rat.mul_def Rat.divInt_mul_divInt'
 -/
 
 #print Rat.inv /-
@@ -408,9 +409,9 @@ instance : Inv ℚ :=
 instance : Div ℚ :=
   ⟨fun a b => a * b⁻¹⟩
 
-#print Rat.inv_def' /-
+#print Rat.inv_divInt /-
 @[simp]
-theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
+theorem inv_divInt {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
   by
   by_cases a0 : a = 0; · subst a0; simp; rfl
   by_cases b0 : b = 0; · subst b0; simp; rfl
@@ -429,7 +430,7 @@ theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
   have ha := (mk_eq b0 d0).1 ha
   apply (mk_eq n0 a0).2
   cc
-#align rat.inv_def Rat.inv_def'
+#align rat.inv_def Rat.inv_divInt
 -/
 
 variable (a b c : ℚ)
@@ -467,11 +468,13 @@ protected theorem add_left_neg : -a + a = 0 :=
 #align rat.add_left_neg Rat.add_left_neg
 -/
 
-#print Rat.divInt_zero_one /-
+/- warning: rat.mk_zero_one clashes with rat.zero_mk -> Rat.zero_divInt
+Case conversion may be inaccurate. Consider using '#align rat.mk_zero_one Rat.zero_divIntₓ'. -/
+#print Rat.zero_divInt /-
 @[simp]
-theorem divInt_zero_one : 0 /. 1 = 0 :=
+theorem zero_divInt : 0 /. 1 = 0 :=
   show mkPnat _ _ = _ by rw [mk_pnat]; simp; rfl
-#align rat.mk_zero_one Rat.divInt_zero_one
+#align rat.mk_zero_one Rat.zero_divInt
 -/
 
 #print Rat.divInt_one_one /-
@@ -693,7 +696,7 @@ theorem den_zero : Rat.den 0 = 1 :=
 #print Rat.zero_of_num_zero /-
 theorem zero_of_num_zero {q : ℚ} (hq : q.num = 0) : q = 0 :=
   by
-  have : q = q.num /. q.den := num_den.symm
+  have : q = q.num /. q.den := num_divInt_den.symm
   simpa [hq]
 #align rat.zero_of_num_zero Rat.zero_of_num_zero
 -/
@@ -704,10 +707,10 @@ theorem zero_iff_num_zero {q : ℚ} : q = 0 ↔ q.num = 0 :=
 #align rat.zero_iff_num_zero Rat.zero_iff_num_zero
 -/
 
-#print Rat.num_ne_zero_of_ne_zero /-
-theorem num_ne_zero_of_ne_zero {q : ℚ} (h : q ≠ 0) : q.num ≠ 0 := fun this : q.num = 0 =>
+#print Rat.num_ne_zero /-
+theorem num_ne_zero {q : ℚ} (h : q ≠ 0) : q.num ≠ 0 := fun this : q.num = 0 =>
   h <| zero_of_num_zero this
-#align rat.num_ne_zero_of_ne_zero Rat.num_ne_zero_of_ne_zero
+#align rat.num_ne_zero_of_ne_zero Rat.num_ne_zero
 -/
 
 #print Rat.num_one /-
@@ -742,19 +745,19 @@ theorem divInt_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /
 #align rat.mk_ne_zero_of_ne_zero Rat.divInt_ne_zero_of_ne_zero
 -/
 
-#print Rat.mul_num_den /-
-theorem mul_num_den (q r : ℚ) : q * r = q.num * r.num /. ↑(q.den * r.den) :=
+#print Rat.mul_def' /-
+theorem mul_def' (q r : ℚ) : q * r = q.num * r.num /. ↑(q.den * r.den) :=
   by
   have hq' : (↑q.den : ℤ) ≠ 0 := by have := denom_ne_zero q <;> simpa
   have hr' : (↑r.den : ℤ) ≠ 0 := by have := denom_ne_zero r <;> simpa
   suffices q.num /. ↑q.den * (r.num /. ↑r.den) = q.num * r.num /. ↑(q.den * r.den) by
     simpa using this
   simp [mul_def hq' hr', -num_denom]
-#align rat.mul_num_denom Rat.mul_num_den
+#align rat.mul_num_denom Rat.mul_def'
 -/
 
-#print Rat.div_num_den /-
-theorem div_num_den (q r : ℚ) : q / r = q.num * r.den /. (q.den * r.num) :=
+#print Rat.div_def' /-
+theorem div_def' (q r : ℚ) : q / r = q.num * r.den /. (q.den * r.num) :=
   if hr : r.num = 0 then by
     have hr' : r = 0 := zero_of_num_zero hr
     simp [*]
@@ -763,8 +766,8 @@ theorem div_num_den (q r : ℚ) : q / r = q.num * r.den /. (q.den * r.num) :=
       q / r = q * r⁻¹ := div_eq_mul_inv q r
       _ = q.num /. q.den * (r.num /. r.den)⁻¹ := by simp
       _ = q.num /. q.den * (r.den /. r.num) := by rw [inv_def]
-      _ = q.num * r.den /. (q.den * r.num) := mul_def' (by simpa using denom_ne_zero q) hr
-#align rat.div_num_denom Rat.div_num_den
+      _ = q.num * r.den /. (q.den * r.num) := divInt_mul_divInt' (by simpa using denom_ne_zero q) hr
+#align rat.div_num_denom Rat.div_def'
 -/
 
 section Casts

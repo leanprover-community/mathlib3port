@@ -47,7 +47,7 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
     have h' := Int.ofNat_lt.2 h
     conv =>
       rhs
-      rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_one]
+      rw [coe_int_eq_mk, Rat.divInt_le_divInt zero_lt_one h', mul_one]
     exact Int.le_ediv_iff_mul_le h'
 #align rat.le_floor Rat.le_floor
 -/
@@ -161,7 +161,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   -- we will work with the absolute value of the numerator, which is equal to the numerator
   have q_num_abs_eq_q_num : (q.num.nat_abs : ℤ) = q.num := Int.natAbs_of_nonneg q_num_pos.le
   set q_inv := (q.denom : ℚ) / q.num with q_inv_def
-  have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def''
+  have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def'
   suffices (q_inv - ⌊q_inv⌋).num < q.num by rwa [q_inv_eq]
   suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
     field_simp [this, ne_of_gt q_num_pos]

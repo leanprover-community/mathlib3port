@@ -63,12 +63,12 @@ variable [AddCommMonoid M]
 /-! ### `weighted_degree'` -/
 
 
-#print MvPolynomial.weightedDegree' /-
+#print MvPolynomial.weightedDegree /-
 /-- The `weighted degree'` of the finitely supported function `s : σ →₀ ℕ` is the sum
   `∑(s i)•(w i)`. -/
-def weightedDegree' (w : σ → M) : (σ →₀ ℕ) →+ M :=
+def weightedDegree (w : σ → M) : (σ →₀ ℕ) →+ M :=
   (Finsupp.total σ M ℕ w).toAddMonoidHom
-#align mv_polynomial.weighted_degree' MvPolynomial.weightedDegree'
+#align mv_polynomial.weighted_degree' MvPolynomial.weightedDegree
 -/
 
 section SemilatticeSup
@@ -78,7 +78,7 @@ variable [SemilatticeSup M]
 #print MvPolynomial.weightedTotalDegree' /-
 /-- The weighted total degree of a multivariate polynomial, taking values in `with_bot M`. -/
 def weightedTotalDegree' (w : σ → M) (p : MvPolynomial σ R) : WithBot M :=
-  p.support.sup fun s => weightedDegree' w s
+  p.support.sup fun s => weightedDegree w s
 #align mv_polynomial.weighted_total_degree' MvPolynomial.weightedTotalDegree'
 -/
 
@@ -108,7 +108,7 @@ variable [OrderBot M]
 /-- When `M` has a `⊥` element, we can define the weighted total degree of a multivariate
   polynomial as a function taking values in `M`. -/
 def weightedTotalDegree (w : σ → M) (p : MvPolynomial σ R) : M :=
-  p.support.sup fun s => weightedDegree' w s
+  p.support.sup fun s => weightedDegree w s
 #align mv_polynomial.weighted_total_degree MvPolynomial.weightedTotalDegree
 -/
 
@@ -139,7 +139,7 @@ theorem weightedTotalDegree_zero (w : σ → M) : weightedTotalDegree w (0 : MvP
 
 #print MvPolynomial.le_weightedTotalDegree /-
 theorem le_weightedTotalDegree (w : σ → M) {φ : MvPolynomial σ R} {d : σ →₀ ℕ}
-    (hd : d ∈ φ.support) : weightedDegree' w d ≤ φ.weightedTotalDegree w :=
+    (hd : d ∈ φ.support) : weightedDegree w d ≤ φ.weightedTotalDegree w :=
   le_sup hd
 #align mv_polynomial.le_weighted_total_degree MvPolynomial.le_weightedTotalDegree
 -/
@@ -152,7 +152,7 @@ end SemilatticeSup
 /-- A multivariate polynomial `φ` is weighted homogeneous of weighted degree `m` if all monomials
   occuring in `φ` have weighted degree `m`. -/
 def IsWeightedHomogeneous (w : σ → M) (φ : MvPolynomial σ R) (m : M) : Prop :=
-  ∀ ⦃d⦄, coeff d φ ≠ 0 → weightedDegree' w d = m
+  ∀ ⦃d⦄, coeff d φ ≠ 0 → weightedDegree w d = m
 #align mv_polynomial.is_weighted_homogeneous MvPolynomial.IsWeightedHomogeneous
 -/
 
@@ -191,7 +191,7 @@ variable (R)
   `p.support ⊆ {d | weighted_degree' w d = m}`. While equal, the former has a
   convenient definitional reduction. -/
 theorem weightedHomogeneousSubmodule_eq_finsupp_supported (w : σ → M) (m : M) :
-    weightedHomogeneousSubmodule R w m = Finsupp.supported _ R {d | weightedDegree' w d = m} :=
+    weightedHomogeneousSubmodule R w m = Finsupp.supported _ R {d | weightedDegree w d = m} :=
   by
   ext
   simp only [mem_supported, Set.subset_def, Finsupp.mem_support_iff, mem_coe]
@@ -224,7 +224,7 @@ theorem weightedHomogeneousSubmodule_mul (w : σ → M) (m n : M) :
 #print MvPolynomial.isWeightedHomogeneous_monomial /-
 /-- Monomials are weighted homogeneous. -/
 theorem isWeightedHomogeneous_monomial (w : σ → M) (d : σ →₀ ℕ) (r : R) {m : M}
-    (hm : weightedDegree' w d = m) : IsWeightedHomogeneous w (monomial d r) m := by
+    (hm : weightedDegree w d = m) : IsWeightedHomogeneous w (monomial d r) m := by
   classical
   intro c hc
   rw [coeff_monomial] at hc
@@ -289,7 +289,7 @@ variable {R} {φ ψ : MvPolynomial σ R} {m n : M}
 #print MvPolynomial.IsWeightedHomogeneous.coeff_eq_zero /-
 /-- The weighted degree of a weighted homogeneous polynomial controls its support. -/
 theorem coeff_eq_zero {w : σ → M} (hφ : IsWeightedHomogeneous w φ n) (d : σ →₀ ℕ)
-    (hd : weightedDegree' w d ≠ n) : coeff d φ = 0 := by have aux := mt (@hφ d) hd;
+    (hd : weightedDegree w d ≠ n) : coeff d φ = 0 := by have aux := mt (@hφ d) hd;
   rwa [Classical.not_not] at aux
 #align mv_polynomial.is_weighted_homogeneous.coeff_eq_zero MvPolynomial.IsWeightedHomogeneous.coeff_eq_zero
 -/
@@ -386,7 +386,7 @@ variable {R}
   See `sum_weighted_homogeneous_component` for the statement that `φ` is equal to the sum
   of all its weighted homogeneous components. -/
 def weightedHomogeneousComponent (w : σ → M) (n : M) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
-  (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ {d | weightedDegree' w d = n}
+  (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ {d | weightedDegree w d = n}
 #align mv_polynomial.weighted_homogeneous_component MvPolynomial.weightedHomogeneousComponent
 -/
 
@@ -397,16 +397,16 @@ variable {w : σ → M} (n : M) (φ ψ : MvPolynomial σ R)
 #print MvPolynomial.coeff_weightedHomogeneousComponent /-
 theorem coeff_weightedHomogeneousComponent [DecidableEq M] (d : σ →₀ ℕ) :
     coeff d (weightedHomogeneousComponent w n φ) =
-      if weightedDegree' w d = n then coeff d φ else 0 :=
-  Finsupp.filter_apply (fun d : σ →₀ ℕ => weightedDegree' w d = n) φ d
+      if weightedDegree w d = n then coeff d φ else 0 :=
+  Finsupp.filter_apply (fun d : σ →₀ ℕ => weightedDegree w d = n) φ d
 #align mv_polynomial.coeff_weighted_homogeneous_component MvPolynomial.coeff_weightedHomogeneousComponent
 -/
 
 #print MvPolynomial.weightedHomogeneousComponent_apply /-
 theorem weightedHomogeneousComponent_apply [DecidableEq M] :
     weightedHomogeneousComponent w n φ =
-      ∑ d in φ.support.filterₓ fun d => weightedDegree' w d = n, monomial d (coeff d φ) :=
-  Finsupp.filter_eq_sum (fun d : σ →₀ ℕ => weightedDegree' w d = n) φ
+      ∑ d in φ.support.filterₓ fun d => weightedDegree w d = n, monomial d (coeff d φ) :=
+  Finsupp.filter_eq_sum (fun d : σ →₀ ℕ => weightedDegree w d = n) φ
 #align mv_polynomial.weighted_homogeneous_component_apply MvPolynomial.weightedHomogeneousComponent_apply
 -/
 
@@ -432,7 +432,7 @@ theorem weightedHomogeneousComponent_C_mul (n : M) (r : R) :
 
 #print MvPolynomial.weightedHomogeneousComponent_eq_zero' /-
 theorem weightedHomogeneousComponent_eq_zero'
-    (h : ∀ d : σ →₀ ℕ, d ∈ φ.support → weightedDegree' w d ≠ n) :
+    (h : ∀ d : σ →₀ ℕ, d ∈ φ.support → weightedDegree w d ≠ n) :
     weightedHomogeneousComponent w n φ = 0 := by
   classical
   rw [weighted_homogeneous_component_apply, sum_eq_zero]

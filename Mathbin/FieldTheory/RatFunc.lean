@@ -1250,7 +1250,7 @@ theorem numDenom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 /-- `ratfunc.num` is the numerator of a rational function,
 normalized such that the denominator is monic. -/
 def num (x : RatFunc K) : K[X] :=
-  x.num_den.1
+  x.num_divInt_den.1
 #align ratfunc.num RatFunc.num
 -/
 
@@ -1311,7 +1311,7 @@ theorem num_div_dvd' (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 /-- `ratfunc.denom` is the denominator of a rational function,
 normalized such that it is monic. -/
 def denom (x : RatFunc K) : K[X] :=
-  x.num_den.2
+  x.num_divInt_den.2
 #align ratfunc.denom RatFunc.denom
 -/
 

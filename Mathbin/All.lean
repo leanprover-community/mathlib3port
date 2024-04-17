@@ -763,7 +763,7 @@ import Analysis.SpecialFunctions.Exp
 import Analysis.SpecialFunctions.Gamma.Basic
 import Analysis.SpecialFunctions.Gamma.Beta
 import Analysis.SpecialFunctions.Gamma.BohrMollerup
-import Analysis.SpecialFunctions.Gaussian
+import Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Analysis.SpecialFunctions.ImproperIntegrals
 import Analysis.SpecialFunctions.Integrals
 import Analysis.SpecialFunctions.JapaneseBracket

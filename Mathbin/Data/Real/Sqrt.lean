@@ -599,7 +599,7 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
 -/
 
 instance : StarOrderedRing ℝ :=
-  StarOrderedRing.ofNonnegIff' (fun _ _ => add_le_add_left) fun r =>
+  StarOrderedRing.of_nonneg_iff' (fun _ _ => add_le_add_left) fun r =>
     by
     refine'
       ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩

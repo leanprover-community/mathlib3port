@@ -1403,7 +1403,7 @@ scoped[ComplexOrder] attribute [instance] Complex.strictOrderedCommRing
 (That is, a star ring in which the nonnegative elements are those of the form `star z * z`.)
 -/
 protected def starOrderedRing : StarOrderedRing ℂ :=
-  StarOrderedRing.ofNonnegIff' (fun _ _ => add_le_add_left) fun r =>
+  StarOrderedRing.of_nonneg_iff' (fun _ _ => add_le_add_left) fun r =>
     by
     refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
     · have h₁ : 0 ≤ r.re := by rw [le_def] at hr; exact hr.1

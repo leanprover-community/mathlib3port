@@ -96,7 +96,7 @@ instance commRing (I : Ideal R) : CommRing (R ⧸ I) :=
 -- this instance is harder to find than the one via `algebra α (R ⧸ I)`, so use a lower priority
 instance (priority := 100) isScalarTower_right {α} [SMul α R] [IsScalarTower α R R] :
     IsScalarTower α (R ⧸ I) (R ⧸ I) :=
-  (Quotient.ringCon I).isScalarTower_right
+  (Quotient.ringCon I).instIsScalarTowerRight
 #align ideal.quotient.is_scalar_tower_right Ideal.Quotient.isScalarTower_right
 -/
 

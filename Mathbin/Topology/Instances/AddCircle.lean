@@ -475,8 +475,8 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
 theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den :=
   by
   have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by norm_cast; exact q.pos.ne.symm
-  rw [← @Rat.num_den q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_natCast, Rat.num_den,
-    add_order_of_div_of_gcd_eq_one' q.pos q.cop]
+  rw [← @Rat.num_divInt_den q, Rat.cast_divInt_of_ne_zero _ _ this, Int.cast_natCast,
+    Rat.num_divInt_den, add_order_of_div_of_gcd_eq_one' q.pos q.cop]
   infer_instance
 #align add_circle.add_order_of_coe_rat AddCircle.addOrderOf_coe_rat
 -/

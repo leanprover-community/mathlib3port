@@ -223,13 +223,13 @@ theorem of_int_multiplicity {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
 #print padicValRat.multiplicity_sub_multiplicity /-
 theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
     padicValRat p q =
-      (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Rat.num_ne_zero_of_ne_zero hq⟩) -
+      (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Rat.num_ne_zero hq⟩) -
         (multiplicity p q.den).get (by rw [← finite_iff_dom, finite_nat_iff]; exact ⟨hp, q.pos⟩) :=
   by
   rw [padicValRat, padicValInt.of_ne_one_ne_zero hp, padicValNat, dif_pos]
   · rfl
   · exact ⟨hp, q.pos⟩
-  · exact Rat.num_ne_zero_of_ne_zero hq
+  · exact Rat.num_ne_zero hq
 #align padic_val_rat.multiplicity_sub_multiplicity padicValRat.multiplicity_sub_multiplicity
 -/
 
@@ -340,13 +340,14 @@ protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz 
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
     padicValRat p (q * r) = padicValRat p q + padicValRat p r :=
   by
-  have : q * r = q.num * r.num /. (q.den * r.den) := by rw_mod_cast [Rat.mul_num_den]
-  have hq' : q.num /. q.den ≠ 0 := by rw [Rat.num_den] <;> exact hq
-  have hr' : r.num /. r.den ≠ 0 := by rw [Rat.num_den] <;> exact hr
+  have : q * r = q.num * r.num /. (q.den * r.den) := by rw_mod_cast [Rat.mul_def']
+  have hq' : q.num /. q.den ≠ 0 := by rw [Rat.num_divInt_den] <;> exact hq
+  have hr' : r.num /. r.den ≠ 0 := by rw [Rat.num_divInt_den] <;> exact hr
   have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.1 hp.1
   rw [padicValRat.defn p (mul_ne_zero hq hr) this]
   conv_rhs =>
-    rw [← @Rat.num_den q, padicValRat.defn p hq', ← @Rat.num_den r, padicValRat.defn p hr']
+    rw [← @Rat.num_divInt_den q, padicValRat.defn p hq', ← @Rat.num_divInt_den r,
+      padicValRat.defn p hr']
   rw [multiplicity.mul' hp', multiplicity.mul' hp'] <;>
     simp [add_comm, add_left_comm, sub_eq_add_neg]
 #align padic_val_rat.mul padicValRat.mul
@@ -412,18 +413,18 @@ theorem le_padicValRat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
   else
     if hr : r = 0 then by simp [hr]
     else by
-      have hqn : q.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hq
+      have hqn : q.num ≠ 0 := Rat.num_ne_zero hq
       have hqd : (q.den : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
-      have hrn : r.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hr
+      have hrn : r.num ≠ 0 := Rat.num_ne_zero hr
       have hrd : (r.den : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
       have hqreq : q + r = (q.num * r.den + q.den * r.num) /. (q.den * r.den) := Rat.add_num_den _ _
       have hqrd : q.num * r.den + q.den * r.num ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq
-      conv_lhs => rw [← @Rat.num_den q]
+      conv_lhs => rw [← @Rat.num_divInt_den q]
       rw [hqreq, padic_val_rat_le_padic_val_rat_iff hqn hqrd hqd (mul_ne_zero hqd hrd), ←
         multiplicity_le_multiplicity_iff, mul_left_comm,
         multiplicity.mul (Nat.prime_iff_prime_int.1 hp.1), add_mul]
-      rw [← @Rat.num_den q, ← @Rat.num_den r, padic_val_rat_le_padic_val_rat_iff hqn hrn hqd hrd, ←
-        multiplicity_le_multiplicity_iff] at h
+      rw [← @Rat.num_divInt_den q, ← @Rat.num_divInt_den r,
+        padic_val_rat_le_padic_val_rat_iff hqn hrn hqd hrd, ← multiplicity_le_multiplicity_iff] at h
       calc
         _ ≤
             min (multiplicity (↑p) (q.num * ↑r.denom * ↑q.denom))

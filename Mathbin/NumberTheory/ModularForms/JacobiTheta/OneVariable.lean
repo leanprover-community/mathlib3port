@@ -3,7 +3,7 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Analysis.SpecialFunctions.Gaussian
+import Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Analysis.Complex.LocallyUniformLimit
 import Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 import Analysis.Complex.UpperHalfPlane.Topology
