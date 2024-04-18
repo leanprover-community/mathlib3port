@@ -415,7 +415,7 @@ def mkFactorOrderIsoOfFactorDvdEquiv {m : M} {n : N} {d : { l : M // l ∣ m } �
             obtain ⟨x, hx⟩ := l;
             rw [Subtype.coe_mk, associatesEquivOfUniqueUnits_apply, out_dvd_iff]
             exact hx⟩),
-      mk_le_mk_iff_dvd_iff.mpr (Subtype.prop (d ⟨associatesEquivOfUniqueUnits ↑l, _⟩))⟩
+      mk_le_mk_iff_dvd.mpr (Subtype.prop (d ⟨associatesEquivOfUniqueUnits ↑l, _⟩))⟩
   invFun l :=
     ⟨Associates.mk
         (d.symm
@@ -423,7 +423,7 @@ def mkFactorOrderIsoOfFactorDvdEquiv {m : M} {n : N} {d : { l : M // l ∣ m } �
             obtain ⟨x, hx⟩ := l <;>
                 rw [Subtype.coe_mk, associatesEquivOfUniqueUnits_apply, out_dvd_iff] <;>
               exact hx⟩),
-      mk_le_mk_iff_dvd_iff.mpr (Subtype.prop (d.symm ⟨associatesEquivOfUniqueUnits ↑l, _⟩))⟩
+      mk_le_mk_iff_dvd.mpr (Subtype.prop (d.symm ⟨associatesEquivOfUniqueUnits ↑l, _⟩))⟩
   left_inv := fun ⟨l, hl⟩ => by
     simp only [Subtype.coe_eta, Equiv.symm_apply_apply, Subtype.coe_mk,
       associatesEquivOfUniqueUnits_apply, mk_out, out_mk, normalize_eq]
@@ -432,8 +432,8 @@ def mkFactorOrderIsoOfFactorDvdEquiv {m : M} {n : N} {d : { l : M // l ∣ m } �
       associatesEquivOfUniqueUnits_apply, out_mk, normalize_eq, mk_out]
   map_rel_iff' := by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ <;>
-      simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Associates.mk_le_mk_iff_dvd_iff, hd,
-        Subtype.coe_mk, associatesEquivOfUniqueUnits_apply, out_dvd_iff, mk_out]
+      simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Associates.mk_le_mk_iff_dvd, hd, Subtype.coe_mk,
+        associatesEquivOfUniqueUnits_apply, out_dvd_iff, mk_out]
 #align mk_factor_order_iso_of_factor_dvd_equiv mkFactorOrderIsoOfFactorDvdEquiv
 -/
 

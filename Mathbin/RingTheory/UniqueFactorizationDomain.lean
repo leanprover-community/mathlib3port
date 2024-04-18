@@ -1655,11 +1655,11 @@ noncomputable def factors (a : Associates α) : FactorSet α :=
 #align associates.factors Associates.factors
 -/
 
-#print Associates.factors_0 /-
+#print Associates.factors_zero /-
 @[simp]
-theorem factors_0 : (0 : Associates α).factors = ⊤ :=
+theorem factors_zero : (0 : Associates α).factors = ⊤ :=
   dif_pos rfl
-#align associates.factors_0 Associates.factors_0
+#align associates.factors_0 Associates.factors_zero
 -/
 
 #print Associates.factors_mk /-
@@ -1696,13 +1696,13 @@ theorem factors_subsingleton [Subsingleton α] {a : Associates α} : a.factors =
 #align associates.factors_subsingleton Associates.factors_subsingleton
 -/
 
-#print Associates.factors_eq_none_iff_zero /-
-theorem factors_eq_none_iff_zero {a : Associates α} : a.factors = Option.none ↔ a = 0 :=
+#print Associates.factors_eq_top_iff_zero /-
+theorem factors_eq_top_iff_zero {a : Associates α} : a.factors = Option.none ↔ a = 0 :=
   by
   nontriviality α
   exact
     ⟨fun h => by rwa [← factors_prod a, factor_set.prod_eq_zero_iff], fun h => h.symm ▸ factors_0⟩
-#align associates.factors_eq_none_iff_zero Associates.factors_eq_none_iff_zero
+#align associates.factors_eq_none_iff_zero Associates.factors_eq_top_iff_zero
 -/
 
 #print Associates.factors_eq_some_iff_ne_zero /-
@@ -1991,7 +1991,7 @@ theorem count_ne_zero_iff_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
     (Associates.mk p).count (Associates.mk a).factors ≠ 0 ↔ p ∣ a :=
   by
   nontriviality α
-  rw [← Associates.mk_le_mk_iff_dvd_iff]
+  rw [← Associates.mk_le_mk_iff_dvd]
   refine'
     ⟨fun h =>
       Associates.le_of_count_ne_zero (associates.mk_ne_zero.mpr ha0)

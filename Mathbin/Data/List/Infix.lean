@@ -849,9 +849,9 @@ theorem length_inits (l : List α) : length (inits l) = length l + 1 := by simp 
 #align list.length_inits List.length_inits
 -/
 
-#print List.nth_le_tails /-
+#print List.get_tails /-
 @[simp]
-theorem nth_le_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) :
+theorem get_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) :
     nthLe (tails l) n hn = l.drop n :=
   by
   induction' l with x l IH generalizing n
@@ -859,12 +859,12 @@ theorem nth_le_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) :
   · cases n
     · simp
     · simpa using IH n _
-#align list.nth_le_tails List.nth_le_tails
+#align list.nth_le_tails List.get_tails
 -/
 
-#print List.nth_le_inits /-
+#print List.get_inits /-
 @[simp]
-theorem nth_le_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) :
+theorem get_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) :
     nthLe (inits l) n hn = l.take n :=
   by
   induction' l with x l IH generalizing n
@@ -872,7 +872,7 @@ theorem nth_le_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) :
   · cases n
     · simp
     · simpa using IH n _
-#align list.nth_le_inits List.nth_le_inits
+#align list.nth_le_inits List.get_inits
 -/
 
 end InitsTails

@@ -1151,10 +1151,10 @@ theorem mk_le_mk_of_dvd {a b : α} : a ∣ b → Associates.mk a ≤ Associates.
 #align associates.mk_le_mk_of_dvd Associates.mk_le_mk_of_dvd
 -/
 
-#print Associates.mk_le_mk_iff_dvd_iff /-
-theorem mk_le_mk_iff_dvd_iff {a b : α} : Associates.mk a ≤ Associates.mk b ↔ a ∣ b :=
+#print Associates.mk_le_mk_iff_dvd /-
+theorem mk_le_mk_iff_dvd {a b : α} : Associates.mk a ≤ Associates.mk b ↔ a ∣ b :=
   Iff.intro dvd_of_mk_le_mk mk_le_mk_of_dvd
-#align associates.mk_le_mk_iff_dvd_iff Associates.mk_le_mk_iff_dvd_iff
+#align associates.mk_le_mk_iff_dvd_iff Associates.mk_le_mk_iff_dvd
 -/
 
 #print Associates.mk_dvd_mk /-

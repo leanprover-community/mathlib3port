@@ -2535,7 +2535,7 @@ import Probability.Kernel.Composition
 import Probability.Kernel.Disintegration.CondCdf
 import Probability.Kernel.CondDistrib
 import Probability.Kernel.Condexp
-import Probability.Kernel.Disintegration
+import Probability.Kernel.Disintegration.Basic
 import Probability.Kernel.IntegralCompProd
 import Probability.Kernel.Invariance
 import Probability.Kernel.MeasurableIntegral
