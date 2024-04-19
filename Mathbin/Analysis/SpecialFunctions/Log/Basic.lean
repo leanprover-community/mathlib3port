@@ -569,7 +569,7 @@ theorem tendsto_log_comp_add_sub_log (y : ℝ) :
 
 #print Real.tendsto_log_nat_add_one_sub_log /-
 theorem tendsto_log_nat_add_one_sub_log : Tendsto (fun k : ℕ => log (k + 1) - log k) atTop (𝓝 0) :=
-  (tendsto_log_comp_add_sub_log 1).comp tendsto_nat_cast_atTop_atTop
+  (tendsto_log_comp_add_sub_log 1).comp tendsto_natCast_atTop_atTop
 #align real.tendsto_log_nat_add_one_sub_log Real.tendsto_log_nat_add_one_sub_log
 -/
 

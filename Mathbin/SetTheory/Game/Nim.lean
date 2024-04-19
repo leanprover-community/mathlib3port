@@ -512,20 +512,20 @@ theorem SetTheory.PGame.grundyValue_nim_add_nim (n m : ℕ) :
         | rw [hn _ hk]
         | rw [hm _ hk]
         refine' fun h => hk.ne _
-        rw [Ordinal.nat_cast_inj] at h
+        rw [Ordinal.natCast_inj] at h
         first
         | rwa [Nat.xor_left_inj] at h
         | rwa [Nat.xor_right_inj] at h
   -- Every other smaller Grundy value can be reached by left moves.
   · -- If `u < nat.lxor m n`, then either `nat.lxor u n < m` or `nat.lxor u m < n`.
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))
-    replace hu := Ordinal.nat_cast_lt.1 hu
+    replace hu := Ordinal.natCast_lt.1 hu
     cases' Nat.lt_xor_cases hu with h h
     -- In the first case, reducing the `m` pile to `nat.lxor u n` gives the desired Grundy value.
-    · refine' ⟨to_left_moves_add (Sum.inl <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
+    · refine' ⟨to_left_moves_add (Sum.inl <| to_left_moves_nim ⟨_, Ordinal.natCast_lt.2 h⟩), _⟩
       simp [Nat.xor_cancel_right, hn _ h]
     -- In the second case, reducing the `n` pile to `nat.lxor u m` gives the desired Grundy value.
-    · refine' ⟨to_left_moves_add (Sum.inr <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
+    · refine' ⟨to_left_moves_add (Sum.inr <| to_left_moves_nim ⟨_, Ordinal.natCast_lt.2 h⟩), _⟩
       have : n.lxor (u.lxor n) = u; rw [Nat.xor_comm u, Nat.xor_cancel_left]
       simpa [hm _ h] using this
 #align pgame.grundy_value_nim_add_nim SetTheory.PGame.grundyValue_nim_add_nim

@@ -48,8 +48,8 @@ section UniquenessOfConditionalExpectation
 /-! ## Uniqueness of the conditional expectation -/
 
 
-#print MeasureTheory.lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero /-
-theorem lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero (hm : m ≤ m0) (f : lpMeas E' 𝕜 m p μ)
+#print MeasureTheory.lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero /-
+theorem lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero (hm : m ≤ m0) (f : lpMeas E' 𝕜 m p μ)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = 0) : f =ᵐ[μ] 0 :=
@@ -65,13 +65,13 @@ theorem lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero (hm : m ≤ m0) (f : lp
     have hfg_restrict : f =ᵐ[μ.restrict s] g := ae_restrict_of_ae hfg
     rw [integral_congr_ae hfg_restrict.symm]
     exact hf_zero s hs hμs
-#align measure_theory.Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero MeasureTheory.lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero
+#align measure_theory.Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero MeasureTheory.lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero
 -/
 
 variable (𝕜)
 
-#print MeasureTheory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero' /-
-theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E' p μ)
+#print MeasureTheory.Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' /-
+theorem Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' (hm : m ≤ m0) (f : Lp E' p μ)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = 0)
@@ -89,12 +89,12 @@ theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E'
     have hfg_restrict : f =ᵐ[μ.restrict s] f_meas := ae_restrict_of_ae hf_f_meas
     rw [integral_congr_ae hfg_restrict.symm]
     exact hf_zero s hs hμs
-#align measure_theory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero' MeasureTheory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero'
+#align measure_theory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero' MeasureTheory.Lp.ae_eq_zero_of_forall_setIntegral_eq_zero'
 -/
 
-#print MeasureTheory.Lp.ae_eq_of_forall_set_integral_eq' /-
+#print MeasureTheory.Lp.ae_eq_of_forall_setIntegral_eq' /-
 /-- **Uniqueness of the conditional expectation** -/
-theorem Lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (hp_ne_zero : p ≠ 0)
+theorem Lp.ae_eq_of_forall_setIntegral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (hp_ne_zero : p ≠ 0)
     (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
     (hfg : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = ∫ x in s, g x ∂μ)
@@ -118,13 +118,13 @@ theorem Lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (
   exact
     Lp.ae_eq_zero_of_forall_set_integral_eq_zero' 𝕜 hm (f - g) hp_ne_zero hp_ne_top hfg_int hfg'
       hfg_meas
-#align measure_theory.Lp.ae_eq_of_forall_set_integral_eq' MeasureTheory.Lp.ae_eq_of_forall_set_integral_eq'
+#align measure_theory.Lp.ae_eq_of_forall_set_integral_eq' MeasureTheory.Lp.ae_eq_of_forall_setIntegral_eq'
 -/
 
 variable {𝕜}
 
-#print MeasureTheory.ae_eq_of_forall_set_integral_eq_of_sigmaFinite' /-
-theorem ae_eq_of_forall_set_integral_eq_of_sigmaFinite' (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
+#print MeasureTheory.ae_eq_of_forall_setIntegral_eq_of_sigmaFinite' /-
+theorem ae_eq_of_forall_setIntegral_eq_of_sigmaFinite' (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     {f g : α → F'} (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
     (hfg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = ∫ x in s, g x ∂μ)
@@ -160,7 +160,7 @@ theorem ae_eq_of_forall_set_integral_eq_of_sigmaFinite' (hm : m ≤ m0) [SigmaFi
       integral_congr_ae (ae_restrict_of_ae hgm.ae_eq_mk.symm)]
     exact hfg_eq s hs hμs
   exact ae_eq_of_forall_set_integral_eq_of_sigma_finite hf_mk_int_finite hg_mk_int_finite hfg_mk_eq
-#align measure_theory.ae_eq_of_forall_set_integral_eq_of_sigma_finite' MeasureTheory.ae_eq_of_forall_set_integral_eq_of_sigmaFinite'
+#align measure_theory.ae_eq_of_forall_set_integral_eq_of_sigma_finite' MeasureTheory.ae_eq_of_forall_setIntegral_eq_of_sigmaFinite'
 -/
 
 end UniquenessOfConditionalExpectation

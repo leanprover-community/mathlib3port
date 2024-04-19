@@ -133,7 +133,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   conv_rhs => rw [div_mul_cancel₀ _ h']
   have := bernsteinPolynomial.variance ℝ n
   apply_fun fun p => Polynomial.aeval (x : ℝ) p at this
-  simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.nat_cast_mul] at this
+  simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.natCast_mul] at this
   convert this using 1
   · congr 1; funext k
     rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]

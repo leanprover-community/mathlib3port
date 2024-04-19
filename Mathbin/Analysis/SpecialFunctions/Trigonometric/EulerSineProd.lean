@@ -328,7 +328,7 @@ theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f 
     rw [interior_Icc, closure_Ioo pi_div_two_pos.ne, left_mem_Icc]
     exact pi_div_two_pos.le
   exact
-    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn is_compact_Icc
+    tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn is_compact_Icc
       continuous_on_cos c_lt c_nonneg c_zero_pos zero_mem hf
 #align euler_sine.tendsto_integral_cos_pow_mul_div EulerSine.tendsto_integral_cos_pow_mul_div
 -/

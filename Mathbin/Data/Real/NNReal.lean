@@ -434,11 +434,11 @@ theorem coe_nsmul (r : ℝ≥0) (n : ℕ) : ↑(n • r) = n • (r : ℝ) := by
 #align nnreal.nsmul_coe NNReal.coe_nsmul
 -/
 
-#print NNReal.coe_nat_cast /-
+#print NNReal.coe_natCast /-
 @[simp, norm_cast]
-protected theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℝ≥0) : ℝ) = n :=
+protected theorem coe_natCast (n : ℕ) : (↑(↑n : ℝ≥0) : ℝ) = n :=
   map_natCast toRealHom n
-#align nnreal.coe_nat_cast NNReal.coe_nat_cast
+#align nnreal.coe_nat_cast NNReal.coe_natCast
 -/
 
 noncomputable example : LinearOrder ℝ≥0 := by infer_instance
@@ -485,7 +485,7 @@ theorem Real.toNNReal_coe {r : ℝ≥0} : Real.toNNReal r = r :=
 #print NNReal.mk_natCast /-
 @[simp]
 theorem mk_natCast (n : ℕ) : @Eq ℝ≥0 (⟨(n : ℝ), n.cast_nonneg⟩ : ℝ≥0) n :=
-  NNReal.eq (NNReal.coe_nat_cast n).symm
+  NNReal.eq (NNReal.coe_natCast n).symm
 #align nnreal.mk_coe_nat NNReal.mk_natCast
 -/
 
@@ -1428,7 +1428,7 @@ theorem toNNReal_abs (x : ℝ) : |x|.toNNReal = x.nnabs :=
 
 #print Real.cast_natAbs_eq_nnabs_cast /-
 theorem cast_natAbs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n := by ext;
-  rw [NNReal.coe_nat_cast, Int.cast_natAbs, Real.coe_nnabs]
+  rw [NNReal.coe_natCast, Int.cast_natAbs, Real.coe_nnabs]
 #align real.cast_nat_abs_eq_nnabs_cast Real.cast_natAbs_eq_nnabs_cast
 -/
 

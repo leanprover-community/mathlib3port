@@ -252,7 +252,7 @@ theorem norm_torusIntegral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (tor
     ‖∯ x in T(c, R), f x‖ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
     ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (Icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
-      norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSet_Icc fun θ hθ =>
+      norm_setIntegral_le_of_norm_le_const' measure_Icc_lt_top measurableSet_Icc fun θ hθ =>
         calc
           ‖(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)‖ =
               (∏ i : Fin n, |R i|) * ‖f (torusMap c R θ)‖ :=
@@ -285,7 +285,7 @@ theorem torusIntegral_dim1 (f : ℂ¹ → E) (c : ℂ¹) (R : ℝ¹) :
     (OrderIso.funUnique (Fin 1) ℝ).symm.preimage_Icc _ _
   simp only [torusIntegral, circleIntegral, intervalIntegral.integral_of_le real.two_pi_pos.le,
     measure.restrict_congr_set Ioc_ae_eq_Icc, deriv_circleMap, Fin.prod_univ_one, ←
-    ((volume_preserving_fun_unique (Fin 1) ℝ).symm _).set_integral_preimage_emb
+    ((volume_preserving_fun_unique (Fin 1) ℝ).symm _).setIntegral_preimage_emb
       (MeasurableEquiv.measurableEmbedding _),
     this, MeasurableEquiv.funUnique_symm_apply]
   simp only [torusMap, circleMap, zero_add]

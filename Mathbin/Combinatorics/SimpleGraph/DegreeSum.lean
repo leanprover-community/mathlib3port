@@ -139,7 +139,7 @@ theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.Adj] :
     Even (univ.filterₓ fun v => Odd (G.degree v)).card := by
   classical
   have h := congr_arg (fun n => ↑n : ℕ → ZMod 2) G.sum_degrees_eq_twice_card_edges
-  simp only [ZMod.nat_cast_self, MulZeroClass.zero_mul, Nat.cast_mul] at h
+  simp only [ZMod.natCast_self, MulZeroClass.zero_mul, Nat.cast_mul] at h
   rw [Nat.cast_sum, ← sum_filter_ne_zero] at h
   rw [@sum_congr _ _ _ _ (fun v => (G.degree v : ZMod 2)) (fun v => (1 : ZMod 2)) _ rfl] at h
   · simp only [filter_congr_decidable, mul_one, nsmul_eq_mul, sum_const, Ne.def] at h

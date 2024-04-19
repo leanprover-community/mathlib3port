@@ -71,7 +71,7 @@ theorem Real.integrable_of_summable_norm_Icc {E : Type _} [NormedAddCommGroup E]
           mul_nonneg (norm_nonneg (f.restrict (⟨Icc n (n + 1), is_compact_Icc⟩ : compacts ℝ)))
             ENNReal.toReal_nonneg)
         (fun n => _) hf)
-      (iUnion_Icc_int_cast ℝ)
+      (iUnion_Icc_intCast ℝ)
   simp only [compacts.coe_mk, Real.volume_Icc, add_sub_cancel_left,
     ENNReal.toReal_ofReal zero_le_one, mul_one, norm_le _ (norm_nonneg _)]
   intro x

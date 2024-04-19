@@ -650,17 +650,17 @@ theorem norm_one : norm 1 = 1 := by simp [norm]
 #align zsqrtd.norm_one Zsqrtd.norm_one
 -/
 
-#print Zsqrtd.norm_int_cast /-
+#print Zsqrtd.norm_intCast /-
 @[simp]
-theorem norm_int_cast (n : ℤ) : norm n = n * n := by simp [norm]
-#align zsqrtd.norm_int_cast Zsqrtd.norm_int_cast
+theorem norm_intCast (n : ℤ) : norm n = n * n := by simp [norm]
+#align zsqrtd.norm_int_cast Zsqrtd.norm_intCast
 -/
 
-#print Zsqrtd.norm_nat_cast /-
+#print Zsqrtd.norm_natCast /-
 @[simp]
-theorem norm_nat_cast (n : ℕ) : norm n = n * n :=
+theorem norm_natCast (n : ℕ) : norm n = n * n :=
   norm_int_cast n
-#align zsqrtd.norm_nat_cast Zsqrtd.norm_nat_cast
+#align zsqrtd.norm_nat_cast Zsqrtd.norm_natCast
 -/
 
 #print Zsqrtd.norm_mul /-

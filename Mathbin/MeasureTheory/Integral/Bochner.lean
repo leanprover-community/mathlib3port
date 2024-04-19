@@ -1176,11 +1176,11 @@ theorem integral_eq_zero_of_ae {f : α → E} (hf : f =ᵐ[μ] 0) : ∫ a, f a �
 #align measure_theory.integral_eq_zero_of_ae MeasureTheory.integral_eq_zero_of_ae
 -/
 
-#print MeasureTheory.HasFiniteIntegral.tendsto_set_integral_nhds_zero /-
+#print MeasureTheory.HasFiniteIntegral.tendsto_setIntegral_nhds_zero /-
 /-- If `f` has finite integral, then `∫ x in s, f x ∂μ` is absolutely continuous in `s`: it tends
 to zero as `μ s` tends to zero. -/
-theorem HasFiniteIntegral.tendsto_set_integral_nhds_zero {ι} {f : α → E}
-    (hf : HasFiniteIntegral f μ) {l : Filter ι} {s : ι → Set α} (hs : Tendsto (μ ∘ s) l (𝓝 0)) :
+theorem HasFiniteIntegral.tendsto_setIntegral_nhds_zero {ι} {f : α → E} (hf : HasFiniteIntegral f μ)
+    {l : Filter ι} {s : ι → Set α} (hs : Tendsto (μ ∘ s) l (𝓝 0)) :
     Tendsto (fun i => ∫ x in s i, f x ∂μ) l (𝓝 0) :=
   by
   rw [tendsto_zero_iff_norm_tendsto_zero]
@@ -1190,17 +1190,17 @@ theorem HasFiniteIntegral.tendsto_set_integral_nhds_zero {ι} {f : α → E}
     tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
       (tendsto_set_lintegral_zero (ne_of_lt hf) hs) (fun i => zero_le _) fun i =>
       ennnorm_integral_le_lintegral_ennnorm _
-#align measure_theory.has_finite_integral.tendsto_set_integral_nhds_zero MeasureTheory.HasFiniteIntegral.tendsto_set_integral_nhds_zero
+#align measure_theory.has_finite_integral.tendsto_set_integral_nhds_zero MeasureTheory.HasFiniteIntegral.tendsto_setIntegral_nhds_zero
 -/
 
-#print MeasureTheory.Integrable.tendsto_set_integral_nhds_zero /-
+#print MeasureTheory.Integrable.tendsto_setIntegral_nhds_zero /-
 /-- If `f` is integrable, then `∫ x in s, f x ∂μ` is absolutely continuous in `s`: it tends
 to zero as `μ s` tends to zero. -/
-theorem Integrable.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : Integrable f μ)
+theorem Integrable.tendsto_setIntegral_nhds_zero {ι} {f : α → E} (hf : Integrable f μ)
     {l : Filter ι} {s : ι → Set α} (hs : Tendsto (μ ∘ s) l (𝓝 0)) :
     Tendsto (fun i => ∫ x in s i, f x ∂μ) l (𝓝 0) :=
-  hf.2.tendsto_set_integral_nhds_zero hs
-#align measure_theory.integrable.tendsto_set_integral_nhds_zero MeasureTheory.Integrable.tendsto_set_integral_nhds_zero
+  hf.2.tendsto_setIntegral_nhds_zero hs
+#align measure_theory.integrable.tendsto_set_integral_nhds_zero MeasureTheory.Integrable.tendsto_setIntegral_nhds_zero
 -/
 
 #print MeasureTheory.tendsto_integral_of_L1 /-
@@ -1991,8 +1991,8 @@ theorem integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : �
 #align measure_theory.integral_dirac MeasureTheory.integral_dirac
 -/
 
-#print MeasureTheory.set_integral_dirac' /-
-theorem set_integral_dirac' {mα : MeasurableSpace α} {f : α → E} (hf : StronglyMeasurable f) (a : α)
+#print MeasureTheory.setIntegral_dirac' /-
+theorem setIntegral_dirac' {mα : MeasurableSpace α} {f : α → E} (hf : StronglyMeasurable f) (a : α)
     {s : Set α} (hs : MeasurableSet s) [Decidable (a ∈ s)] :
     ∫ x in s, f x ∂Measure.dirac a = if a ∈ s then f a else 0 :=
   by
@@ -2001,18 +2001,18 @@ theorem set_integral_dirac' {mα : MeasurableSpace α} {f : α → E} (hf : Stro
   split_ifs
   · exact integral_dirac' _ _ hf
   · exact integral_zero_measure _
-#align measure_theory.set_integral_dirac' MeasureTheory.set_integral_dirac'
+#align measure_theory.set_integral_dirac' MeasureTheory.setIntegral_dirac'
 -/
 
-#print MeasureTheory.set_integral_dirac /-
-theorem set_integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : α → E) (a : α)
+#print MeasureTheory.setIntegral_dirac /-
+theorem setIntegral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : α → E) (a : α)
     (s : Set α) [Decidable (a ∈ s)] : ∫ x in s, f x ∂Measure.dirac a = if a ∈ s then f a else 0 :=
   by
   rw [restrict_dirac]
   split_ifs
   · exact integral_dirac _ _
   · exact integral_zero_measure _
-#align measure_theory.set_integral_dirac MeasureTheory.set_integral_dirac
+#align measure_theory.set_integral_dirac MeasureTheory.setIntegral_dirac
 -/
 
 #print MeasureTheory.mul_meas_ge_le_integral_of_nonneg /-

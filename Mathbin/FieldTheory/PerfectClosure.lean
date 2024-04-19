@@ -442,8 +442,8 @@ theorem mk_eq_iff (x y : ℕ × K) :
 #align perfect_closure.eq_iff' PerfectClosure.mk_eq_iff
 -/
 
-#print PerfectClosure.nat_cast /-
-theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) :=
+#print PerfectClosure.natCast /-
+theorem natCast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) :=
   by
   induction' n with n ih
   · induction' x with x ih; · simp
@@ -453,26 +453,26 @@ theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) :=
     congr
     skip
     skip
-    rw [← frobenius_nat_cast K p x]
+    rw [← frobenius_natCast K p x]
   apply r.intro
-#align perfect_closure.nat_cast PerfectClosure.nat_cast
+#align perfect_closure.nat_cast PerfectClosure.natCast
 -/
 
-#print PerfectClosure.int_cast /-
-theorem int_cast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
+#print PerfectClosure.intCast /-
+theorem intCast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
   induction x <;> simp only [Int.cast_natCast, Int.cast_negSucc, nat_cast K p 0] <;> rfl
-#align perfect_closure.int_cast PerfectClosure.int_cast
+#align perfect_closure.int_cast PerfectClosure.intCast
 -/
 
-#print PerfectClosure.nat_cast_eq_iff /-
-theorem nat_cast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y :=
+#print PerfectClosure.natCast_eq_iff /-
+theorem natCast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y :=
   by
   constructor <;> intro H
   · rw [nat_cast K p 0, nat_cast K p 0, eq_iff'] at H
     cases' H with z H
-    simpa only [zero_add, iterate_fixed (frobenius_nat_cast K p _)] using H
+    simpa only [zero_add, iterate_fixed (frobenius_natCast K p _)] using H
   rw [nat_cast K p 0, nat_cast K p 0, H]
-#align perfect_closure.nat_cast_eq_iff PerfectClosure.nat_cast_eq_iff
+#align perfect_closure.nat_cast_eq_iff PerfectClosure.natCast_eq_iff
 -/
 
 instance : CharP (PerfectClosure K p) p := by

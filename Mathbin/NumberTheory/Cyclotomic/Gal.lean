@@ -140,7 +140,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
       rw [pow_eq_pow_iff_modEq, ← Subgroup.orderOf_coe, ← orderOf_units,
         hζ.coe_to_roots_of_unity_coe, ← (zeta_spec n K L).eq_orderOf, ← ZMod.eq_iff_modEq_nat] at
         key
-      simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key
+      simp only [ZMod.natCast_val, ZMod.cast_id', id.def] at key
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
 -/

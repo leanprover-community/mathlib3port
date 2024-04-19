@@ -1409,45 +1409,45 @@ section LinearOrderedRing
 
 variable {α : Type _} [LinearOrderedRing α] [Archimedean α] (a : α)
 
-#print iUnion_Ioc_add_int_cast /-
-theorem iUnion_Ioc_add_int_cast : (⋃ n : ℤ, Ioc (a + n) (a + n + 1)) = Set.univ := by
+#print iUnion_Ioc_add_intCast /-
+theorem iUnion_Ioc_add_intCast : (⋃ n : ℤ, Ioc (a + n) (a + n + 1)) = Set.univ := by
   simpa only [zsmul_one, Int.cast_add, Int.cast_one, ← add_assoc] using
     iUnion_Ioc_add_zsmul zero_lt_one a
-#align Union_Ioc_add_int_cast iUnion_Ioc_add_int_cast
+#align Union_Ioc_add_int_cast iUnion_Ioc_add_intCast
 -/
 
-#print iUnion_Ico_add_int_cast /-
-theorem iUnion_Ico_add_int_cast : (⋃ n : ℤ, Ico (a + n) (a + n + 1)) = Set.univ := by
+#print iUnion_Ico_add_intCast /-
+theorem iUnion_Ico_add_intCast : (⋃ n : ℤ, Ico (a + n) (a + n + 1)) = Set.univ := by
   simpa only [zsmul_one, Int.cast_add, Int.cast_one, ← add_assoc] using
     iUnion_Ico_add_zsmul zero_lt_one a
-#align Union_Ico_add_int_cast iUnion_Ico_add_int_cast
+#align Union_Ico_add_int_cast iUnion_Ico_add_intCast
 -/
 
-#print iUnion_Icc_add_int_cast /-
-theorem iUnion_Icc_add_int_cast : (⋃ n : ℤ, Icc (a + n) (a + n + 1)) = Set.univ := by
+#print iUnion_Icc_add_intCast /-
+theorem iUnion_Icc_add_intCast : (⋃ n : ℤ, Icc (a + n) (a + n + 1)) = Set.univ := by
   simpa only [zsmul_one, Int.cast_add, Int.cast_one, ← add_assoc] using
     iUnion_Icc_add_zsmul zero_lt_one a
-#align Union_Icc_add_int_cast iUnion_Icc_add_int_cast
+#align Union_Icc_add_int_cast iUnion_Icc_add_intCast
 -/
 
 variable (α)
 
-#print iUnion_Ioc_int_cast /-
-theorem iUnion_Ioc_int_cast : (⋃ n : ℤ, Ioc (n : α) (n + 1)) = Set.univ := by
-  simpa only [zero_add] using iUnion_Ioc_add_int_cast (0 : α)
-#align Union_Ioc_int_cast iUnion_Ioc_int_cast
+#print iUnion_Ioc_intCast /-
+theorem iUnion_Ioc_intCast : (⋃ n : ℤ, Ioc (n : α) (n + 1)) = Set.univ := by
+  simpa only [zero_add] using iUnion_Ioc_add_intCast (0 : α)
+#align Union_Ioc_int_cast iUnion_Ioc_intCast
 -/
 
-#print iUnion_Ico_int_cast /-
-theorem iUnion_Ico_int_cast : (⋃ n : ℤ, Ico (n : α) (n + 1)) = Set.univ := by
-  simpa only [zero_add] using iUnion_Ico_add_int_cast (0 : α)
-#align Union_Ico_int_cast iUnion_Ico_int_cast
+#print iUnion_Ico_intCast /-
+theorem iUnion_Ico_intCast : (⋃ n : ℤ, Ico (n : α) (n + 1)) = Set.univ := by
+  simpa only [zero_add] using iUnion_Ico_add_intCast (0 : α)
+#align Union_Ico_int_cast iUnion_Ico_intCast
 -/
 
-#print iUnion_Icc_int_cast /-
-theorem iUnion_Icc_int_cast : (⋃ n : ℤ, Icc (n : α) (n + 1)) = Set.univ := by
-  simpa only [zero_add] using iUnion_Icc_add_int_cast (0 : α)
-#align Union_Icc_int_cast iUnion_Icc_int_cast
+#print iUnion_Icc_intCast /-
+theorem iUnion_Icc_intCast : (⋃ n : ℤ, Icc (n : α) (n + 1)) = Set.univ := by
+  simpa only [zero_add] using iUnion_Icc_add_intCast (0 : α)
+#align Union_Icc_int_cast iUnion_Icc_intCast
 -/
 
 end LinearOrderedRing

@@ -84,7 +84,7 @@ theorem hasDerivAt_bernoulliFun (k : ℕ) (x : ℝ) :
   by
   convert ((Polynomial.bernoulli k).map <| algebraMap ℚ ℝ).HasDerivAt x using 1
   simp only [bernoulliFun, Polynomial.derivative_map, Polynomial.derivative_bernoulli k,
-    Polynomial.map_mul, Polynomial.map_nat_cast, Polynomial.eval_mul, Polynomial.eval_nat_cast]
+    Polynomial.map_mul, Polynomial.map_natCast, Polynomial.eval_mul, Polynomial.eval_natCast]
 #align has_deriv_at_bernoulli_fun hasDerivAt_bernoulliFun
 -/
 

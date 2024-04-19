@@ -402,16 +402,16 @@ section AddMonoidWithOne
 
 variable [AddMonoidWithOne R] [CharZero R] {n : ℕ}
 
-#print Function.support_nat_cast /-
-theorem support_nat_cast (hn : n ≠ 0) : support (n : α → R) = univ :=
+#print Function.support_natCast /-
+theorem support_natCast (hn : n ≠ 0) : support (n : α → R) = univ :=
   support_const <| Nat.cast_ne_zero.2 hn
-#align function.support_nat_cast Function.support_nat_cast
+#align function.support_nat_cast Function.support_natCast
 -/
 
-#print Function.mulSupport_nat_cast /-
-theorem mulSupport_nat_cast (hn : n ≠ 1) : mulSupport (n : α → R) = univ :=
+#print Function.mulSupport_natCast /-
+theorem mulSupport_natCast (hn : n ≠ 1) : mulSupport (n : α → R) = univ :=
   mulSupport_const <| Nat.cast_ne_one.2 hn
-#align function.mul_support_nat_cast Function.mulSupport_nat_cast
+#align function.mul_support_nat_cast Function.mulSupport_natCast
 -/
 
 end AddMonoidWithOne
@@ -420,16 +420,16 @@ section AddGroupWithOne
 
 variable [AddGroupWithOne R] [CharZero R] {n : ℤ}
 
-#print Function.support_int_cast /-
-theorem support_int_cast (hn : n ≠ 0) : support (n : α → R) = univ :=
+#print Function.support_intCast /-
+theorem support_intCast (hn : n ≠ 0) : support (n : α → R) = univ :=
   support_const <| Int.cast_ne_zero.2 hn
-#align function.support_int_cast Function.support_int_cast
+#align function.support_int_cast Function.support_intCast
 -/
 
-#print Function.mulSupport_int_cast /-
-theorem mulSupport_int_cast (hn : n ≠ 1) : mulSupport (n : α → R) = univ :=
+#print Function.mulSupport_intCast /-
+theorem mulSupport_intCast (hn : n ≠ 1) : mulSupport (n : α → R) = univ :=
   mulSupport_const <| Int.cast_ne_one.2 hn
-#align function.mul_support_int_cast Function.mulSupport_int_cast
+#align function.mul_support_int_cast Function.mulSupport_intCast
 -/
 
 end AddGroupWithOne

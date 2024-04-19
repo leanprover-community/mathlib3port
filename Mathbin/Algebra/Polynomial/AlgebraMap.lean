@@ -162,12 +162,12 @@ theorem ringHom_eval₂_cast_int_ringHom {R S : Type _} [Ring R] [Ring S] (p : �
 #align polynomial.ring_hom_eval₂_cast_int_ring_hom Polynomial.ringHom_eval₂_cast_int_ringHom
 -/
 
-#print Polynomial.eval₂_int_castRingHom_X /-
+#print Polynomial.eval₂_intCastRingHom_X /-
 @[simp]
-theorem eval₂_int_castRingHom_X {R : Type _} [Ring R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
+theorem eval₂_intCastRingHom_X {R : Type _} [Ring R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
     eval₂ (Int.castRingHom R) (f X) p = f p :=
   eval₂_algebraMap_X p f.toIntAlgHom
-#align polynomial.eval₂_int_cast_ring_hom_X Polynomial.eval₂_int_castRingHom_X
+#align polynomial.eval₂_int_cast_ring_hom_X Polynomial.eval₂_intCastRingHom_X
 -/
 
 end CommSemiring
@@ -282,11 +282,11 @@ theorem aeval_bit1 : aeval x (bit1 p) = bit1 (aeval x p) :=
 #align polynomial.aeval_bit1 Polynomial.aeval_bit1
 -/
 
-#print Polynomial.aeval_nat_cast /-
+#print Polynomial.aeval_natCast /-
 @[simp]
-theorem aeval_nat_cast (n : ℕ) : aeval x (n : R[X]) = n :=
+theorem aeval_natCast (n : ℕ) : aeval x (n : R[X]) = n :=
   map_natCast _ _
-#align polynomial.aeval_nat_cast Polynomial.aeval_nat_cast
+#align polynomial.aeval_nat_cast Polynomial.aeval_natCast
 -/
 
 #print Polynomial.aeval_mul /-

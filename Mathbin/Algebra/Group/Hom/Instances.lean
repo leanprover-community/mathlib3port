@@ -97,13 +97,13 @@ instance [AddCommGroup M] : Ring (AddMonoid.End M) :=
     intCast_ofNat := natCast_zsmul _
     intCast_negSucc := negSucc_zsmul _ }
 
-#print AddMonoid.End.int_cast_apply /-
+#print AddMonoid.End.intCast_apply /-
 /-- See also `add_monoid.End.int_cast_def`. -/
 @[simp]
-theorem AddMonoid.End.int_cast_apply [AddCommGroup M] (z : ℤ) (m : M) :
+theorem AddMonoid.End.intCast_apply [AddCommGroup M] (z : ℤ) (m : M) :
     (↑z : AddMonoid.End M) m = z • m :=
   rfl
-#align add_monoid.End.int_cast_apply AddMonoid.End.int_cast_apply
+#align add_monoid.End.int_cast_apply AddMonoid.End.intCast_apply
 -/
 
 /-!

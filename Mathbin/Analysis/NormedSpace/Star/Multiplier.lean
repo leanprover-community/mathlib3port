@@ -244,18 +244,18 @@ theorem one_toProd : (1 : 𝓜(𝕜, A)).toProd = 1 :=
 #align double_centralizer.one_to_prod DoubleCentralizer.one_toProd
 -/
 
-#print DoubleCentralizer.nat_cast_toProd /-
+#print DoubleCentralizer.natCast_toProd /-
 @[simp]
-theorem nat_cast_toProd (n : ℕ) : (n : 𝓜(𝕜, A)).toProd = n :=
+theorem natCast_toProd (n : ℕ) : (n : 𝓜(𝕜, A)).toProd = n :=
   rfl
-#align double_centralizer.nat_cast_to_prod DoubleCentralizer.nat_cast_toProd
+#align double_centralizer.nat_cast_to_prod DoubleCentralizer.natCast_toProd
 -/
 
-#print DoubleCentralizer.int_cast_toProd /-
+#print DoubleCentralizer.intCast_toProd /-
 @[simp]
-theorem int_cast_toProd (n : ℤ) : (n : 𝓜(𝕜, A)).toProd = n :=
+theorem intCast_toProd (n : ℤ) : (n : 𝓜(𝕜, A)).toProd = n :=
   rfl
-#align double_centralizer.int_cast_to_prod DoubleCentralizer.int_cast_toProd
+#align double_centralizer.int_cast_to_prod DoubleCentralizer.intCast_toProd
 -/
 
 #print DoubleCentralizer.pow_toProd /-
@@ -339,28 +339,28 @@ theorem mul_snd (a b : 𝓜(𝕜, A)) : (a * b).snd = b.snd * a.snd :=
 #align double_centralizer.mul_snd DoubleCentralizer.mul_snd
 -/
 
-#print DoubleCentralizer.nat_cast_fst /-
-theorem nat_cast_fst (n : ℕ) : (n : 𝓜(𝕜, A)).fst = n :=
+#print DoubleCentralizer.natCast_fst /-
+theorem natCast_fst (n : ℕ) : (n : 𝓜(𝕜, A)).fst = n :=
   rfl
-#align double_centralizer.nat_cast_fst DoubleCentralizer.nat_cast_fst
+#align double_centralizer.nat_cast_fst DoubleCentralizer.natCast_fst
 -/
 
-#print DoubleCentralizer.nat_cast_snd /-
-theorem nat_cast_snd (n : ℕ) : (n : 𝓜(𝕜, A)).snd = n :=
+#print DoubleCentralizer.natCast_snd /-
+theorem natCast_snd (n : ℕ) : (n : 𝓜(𝕜, A)).snd = n :=
   rfl
-#align double_centralizer.nat_cast_snd DoubleCentralizer.nat_cast_snd
+#align double_centralizer.nat_cast_snd DoubleCentralizer.natCast_snd
 -/
 
-#print DoubleCentralizer.int_cast_fst /-
-theorem int_cast_fst (n : ℤ) : (n : 𝓜(𝕜, A)).fst = n :=
+#print DoubleCentralizer.intCast_fst /-
+theorem intCast_fst (n : ℤ) : (n : 𝓜(𝕜, A)).fst = n :=
   rfl
-#align double_centralizer.int_cast_fst DoubleCentralizer.int_cast_fst
+#align double_centralizer.int_cast_fst DoubleCentralizer.intCast_fst
 -/
 
-#print DoubleCentralizer.int_cast_snd /-
-theorem int_cast_snd (n : ℤ) : (n : 𝓜(𝕜, A)).snd = n :=
+#print DoubleCentralizer.intCast_snd /-
+theorem intCast_snd (n : ℤ) : (n : 𝓜(𝕜, A)).snd = n :=
   rfl
-#align double_centralizer.int_cast_snd DoubleCentralizer.int_cast_snd
+#align double_centralizer.int_cast_snd DoubleCentralizer.intCast_snd
 -/
 
 #print DoubleCentralizer.pow_fst /-

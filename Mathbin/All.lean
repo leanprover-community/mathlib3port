@@ -346,7 +346,7 @@ import Algebra.Module.Submodule.Lattice
 import Algebra.Module.Submodule.Pointwise
 import Algebra.Module.Torsion
 import Algebra.Module.ULift
-import Algebra.Module.Zlattice
+import Algebra.Module.Zlattice.Basic
 import Algebra.MonoidAlgebra.Basic
 import Algebra.MonoidAlgebra.Degree
 import Algebra.MonoidAlgebra.Division

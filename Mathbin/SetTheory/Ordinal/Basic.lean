@@ -1297,10 +1297,10 @@ theorem card_succ (o : Ordinal) : card (succ o) = card o + 1 := by
 #align ordinal.card_succ Ordinal.card_succ
 -/
 
-#print Ordinal.nat_cast_succ /-
-theorem nat_cast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
+#print Ordinal.natCast_succ /-
+theorem natCast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
   rfl
-#align ordinal.nat_cast_succ Ordinal.nat_cast_succ
+#align ordinal.nat_cast_succ Ordinal.natCast_succ
 -/
 
 #print Ordinal.uniqueIioOne /-

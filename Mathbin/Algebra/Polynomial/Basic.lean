@@ -608,11 +608,11 @@ theorem C_pow : C (a ^ n) = C a ^ n :=
 #align polynomial.C_pow Polynomial.C_pow
 -/
 
-#print Polynomial.C_eq_nat_cast /-
+#print Polynomial.C_eq_natCast /-
 @[simp]
-theorem C_eq_nat_cast (n : ℕ) : C (n : R) = (n : R[X]) :=
+theorem C_eq_natCast (n : ℕ) : C (n : R) = (n : R[X]) :=
   map_natCast C n
-#align polynomial.C_eq_nat_cast Polynomial.C_eq_nat_cast
+#align polynomial.C_eq_nat_cast Polynomial.C_eq_natCast
 -/
 
 #print Polynomial.C_mul_monomial /-
@@ -1117,10 +1117,10 @@ theorem binomial_eq_binomial {k l m n : ℕ} {u v : R} (hu : u ≠ 0) (hv : v �
 #align polynomial.binomial_eq_binomial Polynomial.binomial_eq_binomial
 -/
 
-#print Polynomial.nat_cast_mul /-
-theorem nat_cast_mul (n : ℕ) (p : R[X]) : (n : R[X]) * p = n • p :=
+#print Polynomial.natCast_mul /-
+theorem natCast_mul (n : ℕ) (p : R[X]) : (n : R[X]) * p = n • p :=
   (nsmul_eq_mul _ _).symm
-#align polynomial.nat_cast_mul Polynomial.nat_cast_mul
+#align polynomial.nat_cast_mul Polynomial.natCast_mul
 -/
 
 #print Polynomial.sum /-
@@ -1436,11 +1436,11 @@ theorem support_neg {p : R[X]} : (-p).support = p.support := by rcases p with �
 #align polynomial.support_neg Polynomial.support_neg
 -/
 
-#print Polynomial.C_eq_int_cast /-
+#print Polynomial.C_eq_intCast /-
 @[simp]
-theorem C_eq_int_cast (n : ℤ) : C (n : R) = n :=
+theorem C_eq_intCast (n : ℤ) : C (n : R) = n :=
   map_intCast C n
-#align polynomial.C_eq_int_cast Polynomial.C_eq_int_cast
+#align polynomial.C_eq_int_cast Polynomial.C_eq_intCast
 -/
 
 end Ring

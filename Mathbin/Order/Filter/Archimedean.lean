@@ -33,18 +33,18 @@ theorem Nat.comap_cast_atTop [StrictOrderedSemiring R] [Archimedean R] :
 #align nat.comap_coe_at_top Nat.comap_cast_atTop
 -/
 
-#print tendsto_nat_cast_atTop_iff /-
-theorem tendsto_nat_cast_atTop_iff [StrictOrderedSemiring R] [Archimedean R] {f : α → ℕ}
+#print tendsto_natCast_atTop_iff /-
+theorem tendsto_natCast_atTop_iff [StrictOrderedSemiring R] [Archimedean R] {f : α → ℕ}
     {l : Filter α} : Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop :=
   tendsto_atTop_embedding (fun a₁ a₂ => Nat.cast_le) exists_nat_ge
-#align tendsto_coe_nat_at_top_iff tendsto_nat_cast_atTop_iff
+#align tendsto_coe_nat_at_top_iff tendsto_natCast_atTop_iff
 -/
 
-#print tendsto_nat_cast_atTop_atTop /-
-theorem tendsto_nat_cast_atTop_atTop [StrictOrderedSemiring R] [Archimedean R] :
+#print tendsto_natCast_atTop_atTop /-
+theorem tendsto_natCast_atTop_atTop [StrictOrderedSemiring R] [Archimedean R] :
     Tendsto (coe : ℕ → R) atTop atTop :=
   Nat.mono_cast.tendsto_atTop_atTop exists_nat_ge
-#align tendsto_coe_nat_at_top_at_top tendsto_nat_cast_atTop_atTop
+#align tendsto_coe_nat_at_top_at_top tendsto_natCast_atTop_atTop
 -/
 
 #print Int.comap_cast_atTop /-
@@ -67,27 +67,27 @@ theorem Int.comap_cast_atBot [StrictOrderedRing R] [Archimedean R] :
 #align int.comap_coe_at_bot Int.comap_cast_atBot
 -/
 
-#print tendsto_int_cast_atTop_iff /-
-theorem tendsto_int_cast_atTop_iff [StrictOrderedRing R] [Archimedean R] {f : α → ℤ}
-    {l : Filter α} : Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by
+#print tendsto_intCast_atTop_iff /-
+theorem tendsto_intCast_atTop_iff [StrictOrderedRing R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
+    Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by
   rw [← tendsto_comap_iff, Int.comap_cast_atTop]
-#align tendsto_coe_int_at_top_iff tendsto_int_cast_atTop_iff
+#align tendsto_coe_int_at_top_iff tendsto_intCast_atTop_iff
 -/
 
-#print tendsto_int_cast_atBot_iff /-
-theorem tendsto_int_cast_atBot_iff [StrictOrderedRing R] [Archimedean R] {f : α → ℤ}
-    {l : Filter α} : Tendsto (fun n => (f n : R)) l atBot ↔ Tendsto f l atBot := by
+#print tendsto_intCast_atBot_iff /-
+theorem tendsto_intCast_atBot_iff [StrictOrderedRing R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
+    Tendsto (fun n => (f n : R)) l atBot ↔ Tendsto f l atBot := by
   rw [← tendsto_comap_iff, Int.comap_cast_atBot]
-#align tendsto_coe_int_at_bot_iff tendsto_int_cast_atBot_iff
+#align tendsto_coe_int_at_bot_iff tendsto_intCast_atBot_iff
 -/
 
-#print tendsto_int_cast_atTop_atTop /-
-theorem tendsto_int_cast_atTop_atTop [StrictOrderedRing R] [Archimedean R] :
+#print tendsto_intCast_atTop_atTop /-
+theorem tendsto_intCast_atTop_atTop [StrictOrderedRing R] [Archimedean R] :
     Tendsto (coe : ℤ → R) atTop atTop :=
   Int.cast_mono.tendsto_atTop_atTop fun b =>
     let ⟨n, hn⟩ := exists_nat_ge b
     ⟨n, by exact_mod_cast hn⟩
-#align tendsto_coe_int_at_top_at_top tendsto_int_cast_atTop_atTop
+#align tendsto_coe_int_at_top_at_top tendsto_intCast_atTop_atTop
 -/
 
 #print Rat.comap_cast_atTop /-
@@ -110,18 +110,18 @@ theorem Rat.comap_cast_atBot [LinearOrderedField R] [Archimedean R] :
 #align rat.comap_coe_at_bot Rat.comap_cast_atBot
 -/
 
-#print tendsto_rat_cast_atTop_iff /-
-theorem tendsto_rat_cast_atTop_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ}
+#print tendsto_ratCast_atTop_iff /-
+theorem tendsto_ratCast_atTop_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ}
     {l : Filter α} : Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by
   rw [← tendsto_comap_iff, Rat.comap_cast_atTop]
-#align tendsto_coe_rat_at_top_iff tendsto_rat_cast_atTop_iff
+#align tendsto_coe_rat_at_top_iff tendsto_ratCast_atTop_iff
 -/
 
-#print tendsto_rat_cast_atBot_iff /-
-theorem tendsto_rat_cast_atBot_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ}
+#print tendsto_ratCast_atBot_iff /-
+theorem tendsto_ratCast_atBot_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ}
     {l : Filter α} : Tendsto (fun n => (f n : R)) l atBot ↔ Tendsto f l atBot := by
   rw [← tendsto_comap_iff, Rat.comap_cast_atBot]
-#align tendsto_coe_rat_at_bot_iff tendsto_rat_cast_atBot_iff
+#align tendsto_coe_rat_at_bot_iff tendsto_ratCast_atBot_iff
 -/
 
 #print atTop_hasCountableBasis_of_archimedean /-

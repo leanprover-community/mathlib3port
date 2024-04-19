@@ -347,11 +347,11 @@ theorem natDegree_one : natDegree (1 : R[X]) = 0 :=
 #align polynomial.nat_degree_one Polynomial.natDegree_one
 -/
 
-#print Polynomial.natDegree_nat_cast /-
+#print Polynomial.natDegree_natCast /-
 @[simp]
-theorem natDegree_nat_cast (n : ℕ) : natDegree (n : R[X]) = 0 := by
+theorem natDegree_natCast (n : ℕ) : natDegree (n : R[X]) = 0 := by
   simp only [← C_eq_nat_cast, nat_degree_C]
-#align polynomial.nat_degree_nat_cast Polynomial.natDegree_nat_cast
+#align polynomial.nat_degree_nat_cast Polynomial.natDegree_natCast
 -/
 
 #print Polynomial.degree_monomial /-
@@ -699,12 +699,10 @@ theorem natDegree_neg (p : R[X]) : natDegree (-p) = natDegree p := by simp [nat_
 #align polynomial.nat_degree_neg Polynomial.natDegree_neg
 -/
 
-#print Polynomial.natDegree_int_cast /-
 @[simp]
 theorem natDegree_int_cast (n : ℤ) : natDegree (n : R[X]) = 0 := by
   rw [← C_eq_int_cast, nat_degree_C]
 #align polynomial.nat_degree_int_cast Polynomial.natDegree_int_cast
--/
 
 #print Polynomial.leadingCoeff_neg /-
 @[simp]

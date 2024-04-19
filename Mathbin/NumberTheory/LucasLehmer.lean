@@ -191,7 +191,7 @@ theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
   · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
     -- and `lucas_lehmer_residue p = 0 → 2^p - 1 ∣ s_mod p (p-2)`.
     intro h
-    simp [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h
+    simp [ZMod.intCast_zmod_eq_zero_iff_dvd] at h
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
     apply s_mod_nonneg _ (Nat.lt_of_succ_lt w)
     exact s_mod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
@@ -510,7 +510,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   by
   dsimp [lucas_lehmer_residue] at h
   rw [s_zmod_eq_s p'] at h
-  simp [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h
+  simp [ZMod.intCast_zmod_eq_zero_iff_dvd] at h
   cases' h with k h
   use k
   replace h := congr_arg (fun n : ℤ => (n : X (q (p' + 2)))) h
@@ -533,7 +533,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
 /-- `q` is the minimum factor of `mersenne p`, so `M p = 0` in `X q`. -/
 theorem mersenne_coe_X (p : ℕ) : (mersenne p : X (q p)) = 0 :=
   by
-  ext <;> simp [mersenne, q, ZMod.nat_cast_zmod_eq_zero_iff_dvd, -pow_pos]
+  ext <;> simp [mersenne, q, ZMod.natCast_zmod_eq_zero_iff_dvd, -pow_pos]
   apply Nat.minFac_dvd
 #align lucas_lehmer.mersenne_coe_X LucasLehmer.mersenne_coe_X
 -/

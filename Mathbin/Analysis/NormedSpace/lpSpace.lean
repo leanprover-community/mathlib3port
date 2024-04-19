@@ -1055,16 +1055,16 @@ theorem Memℓp.infty_pow {f : ∀ i, B i} (hf : Memℓp f ∞) (n : ℕ) : Mem�
 #align mem_ℓp.infty_pow Memℓp.infty_pow
 -/
 
-#print nat_cast_memℓp_infty /-
-theorem nat_cast_memℓp_infty (n : ℕ) : Memℓp (n : ∀ i, B i) ∞ :=
+#print natCast_memℓp_infty /-
+theorem natCast_memℓp_infty (n : ℕ) : Memℓp (n : ∀ i, B i) ∞ :=
   natCast_mem (lpInftySubring B) n
-#align nat_cast_mem_ℓp_infty nat_cast_memℓp_infty
+#align nat_cast_mem_ℓp_infty natCast_memℓp_infty
 -/
 
-#print int_cast_memℓp_infty /-
-theorem int_cast_memℓp_infty (z : ℤ) : Memℓp (z : ∀ i, B i) ∞ :=
+#print intCast_memℓp_infty /-
+theorem intCast_memℓp_infty (z : ℤ) : Memℓp (z : ∀ i, B i) ∞ :=
   intCast_mem (lpInftySubring B) z
-#align int_cast_mem_ℓp_infty int_cast_memℓp_infty
+#align int_cast_mem_ℓp_infty intCast_memℓp_infty
 -/
 
 #print lp.infty_coeFn_one /-
@@ -1081,18 +1081,18 @@ theorem infty_coeFn_pow (f : lp B ∞) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
 #align lp.infty_coe_fn_pow lp.infty_coeFn_pow
 -/
 
-#print lp.infty_coeFn_nat_cast /-
+#print lp.infty_coeFn_natCast /-
 @[simp]
-theorem infty_coeFn_nat_cast (n : ℕ) : ⇑(n : lp B ∞) = n :=
+theorem infty_coeFn_natCast (n : ℕ) : ⇑(n : lp B ∞) = n :=
   rfl
-#align lp.infty_coe_fn_nat_cast lp.infty_coeFn_nat_cast
+#align lp.infty_coe_fn_nat_cast lp.infty_coeFn_natCast
 -/
 
-#print lp.infty_coeFn_int_cast /-
+#print lp.infty_coeFn_intCast /-
 @[simp]
-theorem infty_coeFn_int_cast (z : ℤ) : ⇑(z : lp B ∞) = z :=
+theorem infty_coeFn_intCast (z : ℤ) : ⇑(z : lp B ∞) = z :=
   rfl
-#align lp.infty_coe_fn_int_cast lp.infty_coeFn_int_cast
+#align lp.infty_coe_fn_int_cast lp.infty_coeFn_intCast
 -/
 
 instance [Nonempty I] : NormOneClass (lp B ∞)

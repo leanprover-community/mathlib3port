@@ -87,11 +87,11 @@ theorem integrableOn_peak_smul_of_integrableOn_of_tendsto (hs : MeasurableSet s)
 
 variable [CompleteSpace E]
 
-#print tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux /-
+#print tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux /-
 /-- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
 `g` is integrable and continuous at `x₀`, then `∫ φᵢ • g` converges to `x₀`. Auxiliary lemma
 where one assumes additionally `g x₀ = 0`. -/
-theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux (hs : MeasurableSet s)
+theorem tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux (hs : MeasurableSet s)
     (hnφ : ∀ᶠ i in l, ∀ x ∈ s, 0 ≤ φ i x)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
     (hiφ : ∀ᶠ i in l, ∫ x in s, φ i x ∂μ = 1) (hmg : IntegrableOn g s μ) (h'g : g x₀ = 0)
@@ -167,13 +167,13 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux (hs : Meas
           (h''i.mono_set (diff_subset _ _)) (h''i.mono_set (inter_subset_left _ _))]
     _ ≤ ‖∫ x in s \ u, φ i x • g x ∂μ‖ + ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ := (norm_add_le _ _)
     _ ≤ δ * ∫ x in s, ‖g x‖ ∂μ + δ := add_le_add C B
-#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux
+#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux
 -/
 
-#print tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto /-
+#print tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto /-
 /- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
 `g` is integrable and continuous at `x₀`, then `∫ φᵢ • g` converges to `x₀`. -/
-theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto (hs : MeasurableSet s)
+theorem tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto (hs : MeasurableSet s)
     (h's : μ s ≠ ∞) (hnφ : ∀ᶠ i in l, ∀ x ∈ s, 0 ≤ φ i x)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
     (hiφ : (fun i => ∫ x in s, φ i x ∂μ) =ᶠ[l] 1) (hmg : IntegrableOn g s μ)
@@ -186,7 +186,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto (hs : Measurab
       (𝓝 (0 + (1 : ℝ) • g x₀)) :=
     by
     refine' tendsto.add _ (tendsto.smul (tendsto_const_nhds.congr' hiφ.symm) tendsto_const_nhds)
-    apply tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto_aux hs hnφ hlφ hiφ
+    apply tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux hs hnφ hlφ hiφ
     · apply integrable.sub hmg
       apply integrable_on_const.2
       simp only [h's.lt_top, or_true_iff]
@@ -199,10 +199,10 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto (hs : Measurab
   simp only [h, Pi.sub_apply, smul_sub]
   rw [integral_sub hi, integral_smul_const, sub_add_cancel]
   exact integrable.smul_const (integrable_of_integral_eq_one h'i) _
-#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto
+#align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto
 -/
 
-#print tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos /-
+#print tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos /-
 /-- If a continuous function `c` realizes its maximum at a unique point `x₀` in a compact set `s`,
 then the sequence of functions `(c x) ^ n / ∫ (c x) ^ n` is a sequence of peak functions
 concentrating around `x₀`. Therefore, `∫ (c x) ^ n * g / ∫ (c x) ^ n` converges to `g x₀` if `g` is
@@ -212,7 +212,7 @@ Version assuming that `μ` gives positive mass to all neighborhoods of `x₀` wi
 For a less precise but more usable version, see
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`.
  -/
-theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos
+theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos
     [MetrizableSpace α] [IsLocallyFiniteMeasure μ] (hs : IsCompact s)
     (hμ : ∀ u, IsOpen u → x₀ ∈ u → 0 < μ (u ∩ s)) {c : α → ℝ} (hc : ContinuousOn c s)
     (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ s)
@@ -303,14 +303,14 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
     simp only [Pi.zero_apply, dist_zero_left, Real.norm_of_nonneg (hnφ n x hx.1)]
     exact (M n x hx).trans_lt hn
   have : tendsto (fun i : ℕ => ∫ x : α in s, φ i x • g x ∂μ) at_top (𝓝 (g x₀)) :=
-    tendsto_set_integral_peak_smul_of_integrableOn_of_tendsto hs.measurable_set hs.measure_lt_top.ne
+    tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto hs.measurable_set hs.measure_lt_top.ne
       (eventually_of_forall hnφ) A (eventually_of_forall hiφ) hmg hcg
   convert this
   simp_rw [← smul_smul, integral_smul]
-#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_measure_nhds_within_pos tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos
+#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_measure_nhds_within_pos tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos
 -/
 
-#print tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn /-
+#print tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn /-
 /-- If a continuous function `c` realizes its maximum at a unique point `x₀` in a compact set `s`,
 then the sequence of functions `(c x) ^ n / ∫ (c x) ^ n` is a sequence of peak functions
 concentrating around `x₀`. Therefore, `∫ (c x) ^ n * g / ∫ (c x) ^ n` converges to `g x₀` if `g` is
@@ -320,7 +320,7 @@ Version assuming that `μ` gives positive mass to all open sets.
 For a less precise but more usable version, see
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`.
 -/
-theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
+theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
     [MetrizableSpace α] [IsLocallyFiniteMeasure μ] [IsOpenPosMeasure μ] (hs : IsCompact s)
     {c : α → ℝ} (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀)
     (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s))
@@ -329,30 +329,30 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrab
   by
   have : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
   apply
-    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos hs _ hc
+    tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos hs _ hc
       h'c hnc hnc₀ this hmg hcg
   intro u u_open x₀_u
   calc
     0 < μ (u ∩ interior s) :=
       (u_open.inter isOpen_interior).measure_pos μ (_root_.mem_closure_iff.1 h₀ u u_open x₀_u)
     _ ≤ μ (u ∩ s) := measure_mono (inter_subset_inter_right _ interior_subset)
-#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_integrable_on tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
+#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_integrable_on tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
 -/
 
-#print tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn /-
+#print tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn /-
 /-- If a continuous function `c` realizes its maximum at a unique point `x₀` in a compact set `s`,
 then the sequence of functions `(c x) ^ n / ∫ (c x) ^ n` is a sequence of peak functions
 concentrating around `x₀`. Therefore, `∫ (c x) ^ n * g / ∫ (c x) ^ n` converges to `g x₀` if `g` is
 continuous on `s`. -/
-theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn
+theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn
     [MetrizableSpace α] [IsLocallyFiniteMeasure μ] [IsOpenPosMeasure μ] (hs : IsCompact s)
     {c : α → ℝ} (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀)
     (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s))
     (hmg : ContinuousOn g s) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop (𝓝 (g x₀)) :=
   haveI : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
-  tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn hs hc h'c hnc hnc₀ h₀
+  tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn hs hc h'c hnc hnc₀ h₀
     (hmg.integrable_on_compact hs) (hmg x₀ this)
-#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn
+#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn
 -/
 

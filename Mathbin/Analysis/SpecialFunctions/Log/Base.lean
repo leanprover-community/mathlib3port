@@ -517,8 +517,8 @@ theorem tendsto_logb_atTop_of_base_lt_one : Tendsto (logb b) atTop atBot :=
 
 end BPosAndBLtOne
 
-#print Real.floor_logb_nat_cast /-
-theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌊logb b r⌋ = Int.log b r :=
+#print Real.floor_logb_natCast /-
+theorem floor_logb_natCast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌊logb b r⌋ = Int.log b r :=
   by
   obtain rfl | hr := hr.eq_or_lt
   · rw [logb_zero, Int.log_zero_right, Int.floor_zero]
@@ -529,11 +529,11 @@ theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : �
     exact rpow_le_rpow_of_exponent_le hb1'.le (Int.floor_le _)
   · rw [Int.le_floor, le_logb_iff_rpow_le hb1' hr, rpow_int_cast]
     exact Int.zpow_log_le_self hb hr
-#align real.floor_logb_nat_cast Real.floor_logb_nat_cast
+#align real.floor_logb_nat_cast Real.floor_logb_natCast
 -/
 
-#print Real.ceil_logb_nat_cast /-
-theorem ceil_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈logb b r⌉ = Int.clog b r :=
+#print Real.ceil_logb_natCast /-
+theorem ceil_logb_natCast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈logb b r⌉ = Int.clog b r :=
   by
   obtain rfl | hr := hr.eq_or_lt
   · rw [logb_zero, Int.clog_zero_right, Int.ceil_zero]
@@ -544,7 +544,7 @@ theorem ceil_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈
   · rw [← Int.le_zpow_iff_clog_le hb hr, ← rpow_int_cast b]
     refine' (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr).symm.trans_le _
     exact rpow_le_rpow_of_exponent_le hb1'.le (Int.le_ceil _)
-#align real.ceil_logb_nat_cast Real.ceil_logb_nat_cast
+#align real.ceil_logb_nat_cast Real.ceil_logb_natCast
 -/
 
 #print Real.logb_eq_zero /-

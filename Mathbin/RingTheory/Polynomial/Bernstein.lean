@@ -133,10 +133,10 @@ theorem derivative_succ_aux (n ν : ℕ) :
           ↑(n.choose (ν + 1)) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
     by
     simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub,
-      Polynomial.derivative_mul, Polynomial.derivative_nat_cast, MulZeroClass.zero_mul,
-      Nat.cast_add, algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add,
-      Polynomial.derivative_sub, Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ←
-      Nat.cast_succ, Polynomial.C_eq_nat_cast]
+      Polynomial.derivative_mul, Polynomial.derivative_natCast, MulZeroClass.zero_mul, Nat.cast_add,
+      algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add, Polynomial.derivative_sub,
+      Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ← Nat.cast_succ,
+      Polynomial.C_eq_natCast]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
   refine' congr (congr_arg Sub.sub _) _
@@ -184,7 +184,7 @@ theorem iterate_derivative_at_0_eq_zero_of_lt (n : ℕ) {ν k : ℕ} :
     · simp [eval_at_0]
     · simp only [derivative_succ, Int.natCast_eq_zero, mul_eq_zero, Function.comp_apply,
         Function.iterate_succ, Polynomial.iterate_derivative_sub,
-        Polynomial.iterate_derivative_nat_cast_mul, Polynomial.eval_mul, Polynomial.eval_nat_cast,
+        Polynomial.iterate_derivative_natCast_mul, Polynomial.eval_mul, Polynomial.eval_natCast,
         Polynomial.eval_sub]
       intro h
       apply mul_eq_zero_of_right

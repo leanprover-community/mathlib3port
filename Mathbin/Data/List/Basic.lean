@@ -657,20 +657,20 @@ theorem nil_eq_append {a b : List α} : [] = a ++ b ↔ a = [] ∧ b = [] := by
 #align list.nil_eq_append_iff List.nil_eq_append
 -/
 
-#print List.append_eq_cons_iff /-
-theorem append_eq_cons_iff {a b c : List α} {x : α} :
+#print List.append_eq_cons /-
+theorem append_eq_cons {a b c : List α} {x : α} :
     a ++ b = x :: c ↔ a = [] ∧ b = x :: c ∨ ∃ a', a = x :: a' ∧ c = a' ++ b := by
   cases a <;>
     simp only [and_assoc', @eq_comm _ c, nil_append, cons_append, eq_self_iff_true, true_and_iff,
       false_and_iff, exists_false, false_or_iff, or_false_iff, exists_and_left, exists_eq_left']
-#align list.append_eq_cons_iff List.append_eq_cons_iff
+#align list.append_eq_cons_iff List.append_eq_cons
 -/
 
-#print List.cons_eq_append_iff /-
-theorem cons_eq_append_iff {a b c : List α} {x : α} :
+#print List.cons_eq_append /-
+theorem cons_eq_append {a b c : List α} {x : α} :
     (x :: c : List α) = a ++ b ↔ a = [] ∧ b = x :: c ∨ ∃ a', a = x :: a' ∧ c = a' ++ b := by
   rw [eq_comm, append_eq_cons_iff]
-#align list.cons_eq_append_iff List.cons_eq_append_iff
+#align list.cons_eq_append_iff List.cons_eq_append
 -/
 
 #print List.append_eq_append_iff /-

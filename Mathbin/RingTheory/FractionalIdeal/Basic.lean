@@ -710,15 +710,15 @@ protected theorem mul_induction_on {I J : FractionalIdeal S P} {C : P → Prop} 
 instance : NatCast (FractionalIdeal S P) :=
   ⟨Nat.unaryCast⟩
 
-#print FractionalIdeal.coe_nat_cast /-
-theorem coe_nat_cast (n : ℕ) : ((n : FractionalIdeal S P) : Submodule R P) = n :=
+#print FractionalIdeal.coe_natCast /-
+theorem coe_natCast (n : ℕ) : ((n : FractionalIdeal S P) : Submodule R P) = n :=
   show ↑n.unaryCast = ↑n by induction n <;> simp [*, Nat.unaryCast]
-#align fractional_ideal.coe_nat_cast FractionalIdeal.coe_nat_cast
+#align fractional_ideal.coe_nat_cast FractionalIdeal.coe_natCast
 -/
 
 instance : CommSemiring (FractionalIdeal S P) :=
   Function.Injective.commSemiring coe Subtype.coe_injective coe_zero coe_one coe_add coe_mul
-    (fun _ _ => coe_nsmul _ _) coe_pow coe_nat_cast
+    (fun _ _ => coe_nsmul _ _) coe_pow coe_natCast
 
 variable (S P)
 

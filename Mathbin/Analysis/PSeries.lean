@@ -279,20 +279,20 @@ theorem Real.summable_abs_int_rpow {b : ℝ} (hb : 1 < b) : Summable fun n : ℤ
 #align real.summable_abs_int_rpow Real.summable_abs_int_rpow
 -/
 
-#print Real.not_summable_nat_cast_inv /-
+#print Real.not_summable_natCast_inv /-
 /-- Harmonic series is not unconditionally summable. -/
-theorem Real.not_summable_nat_cast_inv : ¬Summable (fun n => n⁻¹ : ℕ → ℝ) :=
+theorem Real.not_summable_natCast_inv : ¬Summable (fun n => n⁻¹ : ℕ → ℝ) :=
   by
   have : ¬Summable (fun n => (n ^ 1)⁻¹ : ℕ → ℝ) := mt Real.summable_nat_pow_inv.1 (lt_irrefl 1)
   simpa
-#align real.not_summable_nat_cast_inv Real.not_summable_nat_cast_inv
+#align real.not_summable_nat_cast_inv Real.not_summable_natCast_inv
 -/
 
-#print Real.not_summable_one_div_nat_cast /-
+#print Real.not_summable_one_div_natCast /-
 /-- Harmonic series is not unconditionally summable. -/
-theorem Real.not_summable_one_div_nat_cast : ¬Summable (fun n => 1 / n : ℕ → ℝ) := by
-  simpa only [inv_eq_one_div] using Real.not_summable_nat_cast_inv
-#align real.not_summable_one_div_nat_cast Real.not_summable_one_div_nat_cast
+theorem Real.not_summable_one_div_natCast : ¬Summable (fun n => 1 / n : ℕ → ℝ) := by
+  simpa only [inv_eq_one_div] using Real.not_summable_natCast_inv
+#align real.not_summable_one_div_nat_cast Real.not_summable_one_div_natCast
 -/
 
 #print Real.tendsto_sum_range_one_div_nat_succ_atTop /-
@@ -301,7 +301,7 @@ theorem Real.tendsto_sum_range_one_div_nat_succ_atTop :
     Tendsto (fun n => ∑ i in Finset.range n, (1 / (i + 1) : ℝ)) atTop atTop :=
   by
   rw [← not_summable_iff_tendsto_nat_atTop_of_nonneg]
-  · exact_mod_cast mt (summable_nat_add_iff 1).1 Real.not_summable_one_div_nat_cast
+  · exact_mod_cast mt (summable_nat_add_iff 1).1 Real.not_summable_one_div_natCast
   · exact fun i => div_nonneg zero_le_one i.cast_add_one_pos.le
 #align real.tendsto_sum_range_one_div_nat_succ_at_top Real.tendsto_sum_range_one_div_nat_succ_atTop
 -/

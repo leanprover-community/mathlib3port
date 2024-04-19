@@ -162,7 +162,7 @@ theorem r_one_pow_n : r (1 : ZMod n) ^ n = 1 :=
   by
   rw [r_one_pow, one_def]
   congr 1
-  exact ZMod.nat_cast_self _
+  exact ZMod.natCast_self _
 #align dihedral_group.r_one_pow_n DihedralGroup.r_one_pow_n
 -/
 
@@ -205,7 +205,7 @@ theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
     have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_orderOf_eq_one _
     rw [r_one_pow] at h1
     injection h1 with h2
-    rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
+    rw [← ZMod.val_eq_zero, ZMod.val_natCast, Nat.mod_eq_of_lt h] at h2
     exact absurd h2.symm (orderOf_pos _).Ne
 #align dihedral_group.order_of_r_one DihedralGroup.orderOf_r_one
 -/
@@ -215,7 +215,7 @@ theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
 -/
 theorem orderOf_r [NeZero n] (i : ZMod n) : orderOf (r i) = n / Nat.gcd n i.val :=
   by
-  conv_lhs => rw [← ZMod.nat_cast_zmod_val i]
+  conv_lhs => rw [← ZMod.natCast_zmod_val i]
   rw [← r_one_pow, orderOf_pow, order_of_r_one]
 #align dihedral_group.order_of_r DihedralGroup.orderOf_r
 -/

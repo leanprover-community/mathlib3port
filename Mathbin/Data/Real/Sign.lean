@@ -95,8 +95,8 @@ theorem sign_eq_zero_iff {r : ℝ} : sign r = 0 ↔ r = 0 :=
 #align real.sign_eq_zero_iff Real.sign_eq_zero_iff
 -/
 
-#print Real.sign_int_cast /-
-theorem sign_int_cast (z : ℤ) : sign (z : ℝ) = ↑(Int.sign z) :=
+#print Real.sign_intCast /-
+theorem sign_intCast (z : ℤ) : sign (z : ℝ) = ↑(Int.sign z) :=
   by
   obtain hn | rfl | hp := lt_trichotomy z (0 : ℤ)
   ·
@@ -104,7 +104,7 @@ theorem sign_int_cast (z : ℤ) : sign (z : ℝ) = ↑(Int.sign z) :=
       Int.cast_one]
   · rw [Int.cast_zero, sign_zero, Int.sign_zero, Int.cast_zero]
   · rw [sign_of_pos (int.cast_pos.mpr hp), Int.sign_eq_one_of_pos hp, Int.cast_one]
-#align real.sign_int_cast Real.sign_int_cast
+#align real.sign_int_cast Real.sign_intCast
 -/
 
 #print Real.sign_neg /-

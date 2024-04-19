@@ -170,18 +170,18 @@ theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
 #align witt_vector.map_fun.pow WittVector.mapFun.pow
 -/
 
-#print WittVector.mapFun.nat_cast /-
-theorem nat_cast (n : ℕ) : mapFun f (n : 𝕎 R) = n :=
+#print WittVector.mapFun.natCast /-
+theorem natCast (n : ℕ) : mapFun f (n : 𝕎 R) = n :=
   show mapFun f n.unaryCast = coe n by
     induction n <;> simp [*, Nat.unaryCast, add, one, zero] <;> rfl
-#align witt_vector.map_fun.nat_cast WittVector.mapFun.nat_cast
+#align witt_vector.map_fun.nat_cast WittVector.mapFun.natCast
 -/
 
-#print WittVector.mapFun.int_cast /-
-theorem int_cast (n : ℤ) : mapFun f (n : 𝕎 R) = n :=
+#print WittVector.mapFun.intCast /-
+theorem intCast (n : ℤ) : mapFun f (n : 𝕎 R) = n :=
   show mapFun f n.castDef = coe n by
     cases n <;> simp [*, Int.castDef, add, one, neg, zero, nat_cast] <;> rfl
-#align witt_vector.map_fun.int_cast WittVector.mapFun.int_cast
+#align witt_vector.map_fun.int_cast WittVector.mapFun.intCast
 -/
 
 end MapFun
@@ -299,7 +299,7 @@ private def comm_ring_aux₁ : CommRing (𝕎 (MvPolynomial R ℚ)) :=
 private def comm_ring_aux₂ : CommRing (𝕎 (MvPolynomial R ℤ)) :=
   (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _
     (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
-    (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
+    (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.natCast _) (mapFun.intCast _)
 
 attribute [reducible] comm_ring_aux₂
 
@@ -307,7 +307,7 @@ attribute [reducible] comm_ring_aux₂
 instance : CommRing (𝕎 R) :=
   (mapFun.surjective _ <| counit_surjective _).CommRing (mapFun <| MvPolynomial.counit _)
     (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
-    (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
+    (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.natCast _) (mapFun.intCast _)
 
 variable {p R}
 

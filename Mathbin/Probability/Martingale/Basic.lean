@@ -136,14 +136,14 @@ theorem integrable (hf : Martingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
 #align measure_theory.martingale.integrable MeasureTheory.Martingale.integrable
 -/
 
-#print MeasureTheory.Martingale.set_integral_eq /-
-theorem set_integral_eq [SigmaFiniteFiltration μ ℱ] (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j)
+#print MeasureTheory.Martingale.setIntegral_eq /-
+theorem setIntegral_eq [SigmaFiniteFiltration μ ℱ] (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j)
     {s : Set Ω} (hs : measurable_set[ℱ i] s) : ∫ ω in s, f i ω ∂μ = ∫ ω in s, f j ω ∂μ :=
   by
   rw [← @set_integral_condexp _ _ _ _ _ (ℱ i) m0 _ _ _ (ℱ.le i) _ (hf.integrable j) hs]
   refine' set_integral_congr_ae (ℱ.le i s hs) _
   filter_upwards [hf.2 i j hij] with _ heq _ using HEq.symm
-#align measure_theory.martingale.set_integral_eq MeasureTheory.Martingale.set_integral_eq
+#align measure_theory.martingale.set_integral_eq MeasureTheory.Martingale.setIntegral_eq
 -/
 
 #print MeasureTheory.Martingale.add /-
@@ -235,15 +235,15 @@ theorem condexp_ae_le [LE E] (hf : Supermartingale f ℱ μ) {i j : ι} (hij : i
 #align measure_theory.supermartingale.condexp_ae_le MeasureTheory.Supermartingale.condexp_ae_le
 -/
 
-#print MeasureTheory.Supermartingale.set_integral_le /-
-theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (hf : Supermartingale f ℱ μ)
+#print MeasureTheory.Supermartingale.setIntegral_le /-
+theorem setIntegral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (hf : Supermartingale f ℱ μ)
     {i j : ι} (hij : i ≤ j) {s : Set Ω} (hs : measurable_set[ℱ i] s) :
     ∫ ω in s, f j ω ∂μ ≤ ∫ ω in s, f i ω ∂μ :=
   by
   rw [← set_integral_condexp (ℱ.le i) (hf.integrable j) hs]
   refine' set_integral_mono_ae integrable_condexp.integrable_on (hf.integrable i).IntegrableOn _
   filter_upwards [hf.2.1 i j hij] with _ heq using HEq
-#align measure_theory.supermartingale.set_integral_le MeasureTheory.Supermartingale.set_integral_le
+#align measure_theory.supermartingale.set_integral_le MeasureTheory.Supermartingale.setIntegral_le
 -/
 
 #print MeasureTheory.Supermartingale.add /-
@@ -338,15 +338,15 @@ theorem neg [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submar
 #align measure_theory.submartingale.neg MeasureTheory.Submartingale.neg
 -/
 
-#print MeasureTheory.Submartingale.set_integral_le /-
+#print MeasureTheory.Submartingale.setIntegral_le /-
 /-- The converse of this lemma is `measure_theory.submartingale_of_set_integral_le`. -/
-theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ)
+theorem setIntegral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ)
     {i j : ι} (hij : i ≤ j) {s : Set Ω} (hs : measurable_set[ℱ i] s) :
     ∫ ω in s, f i ω ∂μ ≤ ∫ ω in s, f j ω ∂μ :=
   by
   rw [← neg_le_neg_iff, ← integral_neg, ← integral_neg]
   exact supermartingale.set_integral_le hf.neg hij hs
-#align measure_theory.submartingale.set_integral_le MeasureTheory.Submartingale.set_integral_le
+#align measure_theory.submartingale.set_integral_le MeasureTheory.Submartingale.setIntegral_le
 -/
 
 #print MeasureTheory.Submartingale.sub_supermartingale /-
@@ -394,8 +394,8 @@ end Submartingale
 
 section Submartingale
 
-#print MeasureTheory.submartingale_of_set_integral_le /-
-theorem submartingale_of_set_integral_le [IsFiniteMeasure μ] {f : ι → Ω → ℝ} (hadp : Adapted ℱ f)
+#print MeasureTheory.submartingale_of_setIntegral_le /-
+theorem submartingale_of_setIntegral_le [IsFiniteMeasure μ] {f : ι → Ω → ℝ} (hadp : Adapted ℱ f)
     (hint : ∀ i, Integrable (f i) μ)
     (hf :
       ∀ i j : ι,
@@ -415,7 +415,7 @@ theorem submartingale_of_set_integral_le [IsFiniteMeasure μ] {f : ι → Ω →
   rwa [← set_integral_trim _ (strongly_measurable_condexp.sub <| hadp i) hs,
     integral_sub' integrable_condexp.integrable_on (hint i).IntegrableOn, sub_nonneg,
     set_integral_condexp (ℱ.le i) (hint j) hs]
-#align measure_theory.submartingale_of_set_integral_le MeasureTheory.submartingale_of_set_integral_le
+#align measure_theory.submartingale_of_set_integral_le MeasureTheory.submartingale_of_setIntegral_le
 -/
 
 #print MeasureTheory.submartingale_of_condexp_sub_nonneg /-
@@ -533,8 +533,8 @@ section Nat
 
 variable {𝒢 : Filtration ℕ m0}
 
-#print MeasureTheory.submartingale_of_set_integral_le_succ /-
-theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+#print MeasureTheory.submartingale_of_setIntegral_le_succ /-
+theorem submartingale_of_setIntegral_le_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
     (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
     (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → ∫ ω in s, f i ω ∂μ ≤ ∫ ω in s, f (i + 1) ω ∂μ) :
     Submartingale f 𝒢 μ :=
@@ -543,29 +543,29 @@ theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → 
   induction' hij with k hk₁ hk₂
   · exact le_rfl
   · exact le_trans hk₂ (hf k s (𝒢.mono hk₁ _ hs))
-#align measure_theory.submartingale_of_set_integral_le_succ MeasureTheory.submartingale_of_set_integral_le_succ
+#align measure_theory.submartingale_of_set_integral_le_succ MeasureTheory.submartingale_of_setIntegral_le_succ
 -/
 
-#print MeasureTheory.supermartingale_of_set_integral_succ_le /-
-theorem supermartingale_of_set_integral_succ_le [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+#print MeasureTheory.supermartingale_of_setIntegral_succ_le /-
+theorem supermartingale_of_setIntegral_succ_le [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
     (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
     (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → ∫ ω in s, f (i + 1) ω ∂μ ≤ ∫ ω in s, f i ω ∂μ) :
     Supermartingale f 𝒢 μ := by
   rw [← neg_neg f]
   refine' (submartingale_of_set_integral_le_succ hadp.neg (fun i => (hint i).neg) _).neg
   simpa only [integral_neg, Pi.neg_apply, neg_le_neg_iff]
-#align measure_theory.supermartingale_of_set_integral_succ_le MeasureTheory.supermartingale_of_set_integral_succ_le
+#align measure_theory.supermartingale_of_set_integral_succ_le MeasureTheory.supermartingale_of_setIntegral_succ_le
 -/
 
-#print MeasureTheory.martingale_of_set_integral_eq_succ /-
-theorem martingale_of_set_integral_eq_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
+#print MeasureTheory.martingale_of_setIntegral_eq_succ /-
+theorem martingale_of_setIntegral_eq_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ)
     (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → ∫ ω in s, f i ω ∂μ = ∫ ω in s, f (i + 1) ω ∂μ) :
     Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨supermartingale_of_set_integral_succ_le hadp hint fun i s hs => (hf i s hs).ge,
-      submartingale_of_set_integral_le_succ hadp hint fun i s hs => (hf i s hs).le⟩
-#align measure_theory.martingale_of_set_integral_eq_succ MeasureTheory.martingale_of_set_integral_eq_succ
+    ⟨supermartingale_of_setIntegral_succ_le hadp hint fun i s hs => (hf i s hs).ge,
+      submartingale_of_setIntegral_le_succ hadp hint fun i s hs => (hf i s hs).le⟩
+#align measure_theory.martingale_of_set_integral_eq_succ MeasureTheory.martingale_of_setIntegral_eq_succ
 -/
 
 #print MeasureTheory.submartingale_nat /-

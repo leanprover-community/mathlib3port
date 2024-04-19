@@ -1782,7 +1782,7 @@ theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[
   calc
     |∫ x in a..b, f x ∂μ| = |∫ x in Ι a b, f x ∂μ| := abs_integral_eq_abs_integral_uIoc f
     _ = ∫ x in Ι a b, f x ∂μ := (abs_of_nonneg (MeasureTheory.integral_nonneg_of_ae hf'))
-    _ ≤ ∫ x in Ι c d, f x ∂μ := (set_integral_mono_set hfi.def hf h.EventuallyLE)
+    _ ≤ ∫ x in Ι c d, f x ∂μ := (setIntegral_mono_set hfi.def hf h.EventuallyLE)
     _ ≤ |∫ x in Ι c d, f x ∂μ| := (le_abs_self _)
     _ = |∫ x in c..d, f x ∂μ| := (abs_integral_eq_abs_integral_uIoc f).symm
 #align interval_integral.abs_integral_mono_interval intervalIntegral.abs_integral_mono_interval
@@ -1801,7 +1801,7 @@ theorem MeasureTheory.Integrable.hasSum_intervalIntegral (hfi : Integrable f μ)
     HasSum (fun n : ℤ => ∫ x in y + n..y + n + 1, f x ∂μ) (∫ x, f x ∂μ) :=
   by
   simp_rw [integral_of_le (le_add_of_nonneg_right zero_le_one)]
-  rw [← integral_univ, ← iUnion_Ioc_add_int_cast y]
+  rw [← integral_univ, ← iUnion_Ioc_add_intCast y]
   exact
     has_sum_integral_Union (fun i => measurableSet_Ioc) (pairwise_disjoint_Ioc_add_int_cast y)
       hfi.integrable_on

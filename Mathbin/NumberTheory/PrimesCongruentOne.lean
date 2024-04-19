@@ -48,7 +48,7 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
     by
     rw [is_root.def, ← map_cyclotomic_int k (ZMod p), eval_map, coe_cast_ring_hom, ←
       Int.cast_natCast, ← Int.coe_castRingHom, eval₂_hom, Int.coe_castRingHom,
-      ZMod.int_cast_zmod_eq_zero_iff_dvd _ _]
+      ZMod.intCast_zmod_eq_zero_iff_dvd _ _]
     apply Int.dvd_natAbs.1
     exact_mod_cast min_fac_dvd (eval (↑b) (cyclotomic k ℤ)).natAbs
   have hpb : ¬p ∣ b :=

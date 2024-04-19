@@ -560,32 +560,32 @@ theorem condexpIndSMul_empty {x : G} :
 #align measure_theory.condexp_ind_smul_empty MeasureTheory.condexpIndSMul_empty
 -/
 
-#print MeasureTheory.set_integral_condexpL2_indicator /-
-theorem set_integral_condexpL2_indicator (hs : measurable_set[m] s) (ht : MeasurableSet t)
+#print MeasureTheory.setIntegral_condexpL2_indicator /-
+theorem setIntegral_condexpL2_indicator (hs : measurable_set[m] s) (ht : MeasurableSet t)
     (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞) :
     ∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ = (μ (t ∩ s)).toReal :=
   calc
     ∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ =
         ∫ x in s, indicatorConstLp 2 ht hμt (1 : ℝ) x ∂μ :=
       @integral_condexpL2_eq α _ ℝ _ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
-    _ = (μ (t ∩ s)).toReal • 1 := (set_integral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ))
+    _ = (μ (t ∩ s)).toReal • 1 := (setIntegral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ))
     _ = (μ (t ∩ s)).toReal := by rw [smul_eq_mul, mul_one]
-#align measure_theory.set_integral_condexp_L2_indicator MeasureTheory.set_integral_condexpL2_indicator
+#align measure_theory.set_integral_condexp_L2_indicator MeasureTheory.setIntegral_condexpL2_indicator
 -/
 
-#print MeasureTheory.set_integral_condexpIndSMul /-
-theorem set_integral_condexpIndSMul (hs : measurable_set[m] s) (ht : MeasurableSet t)
-    (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞) (x : G') :
+#print MeasureTheory.setIntegral_condexpIndSMul /-
+theorem setIntegral_condexpIndSMul (hs : measurable_set[m] s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞)
+    (hμt : μ t ≠ ∞) (x : G') :
     ∫ a in s, (condexpIndSMul hm ht hμt x) a ∂μ = (μ (t ∩ s)).toReal • x :=
   calc
     ∫ a in s, (condexpIndSMul hm ht hμt x) a ∂μ =
         ∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a • x ∂μ :=
-      set_integral_congr_ae (hm s hs)
+      setIntegral_congr_ae (hm s hs)
         ((condexpIndSMul_ae_eq_smul hm ht hμt x).mono fun x hx hxs => hx)
     _ = (∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a ∂μ) • x :=
       (integral_smul_const _ x)
     _ = (μ (t ∩ s)).toReal • x := by rw [set_integral_condexp_L2_indicator hs ht hμs hμt]
-#align measure_theory.set_integral_condexp_ind_smul MeasureTheory.set_integral_condexpIndSMul
+#align measure_theory.set_integral_condexp_ind_smul MeasureTheory.setIntegral_condexpIndSMul
 -/
 
 #print MeasureTheory.condexpL2_indicator_nonneg /-

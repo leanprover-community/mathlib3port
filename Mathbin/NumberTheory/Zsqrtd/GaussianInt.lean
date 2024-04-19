@@ -187,18 +187,18 @@ theorem toComplex_eq_zero {x : ℤ[i]} : (x : ℂ) = 0 ↔ x = 0 := by
 #align gaussian_int.to_complex_eq_zero GaussianInt.toComplex_eq_zero
 -/
 
-#print GaussianInt.int_cast_real_norm /-
+#print GaussianInt.intCast_real_norm /-
 @[simp]
-theorem int_cast_real_norm (x : ℤ[i]) : (x.norm : ℝ) = (x : ℂ).normSq := by
+theorem intCast_real_norm (x : ℤ[i]) : (x.norm : ℝ) = (x : ℂ).normSq := by
   rw [Zsqrtd.norm, norm_sq] <;> simp
-#align gaussian_int.nat_cast_real_norm GaussianInt.int_cast_real_norm
+#align gaussian_int.nat_cast_real_norm GaussianInt.intCast_real_norm
 -/
 
-#print GaussianInt.int_cast_complex_norm /-
+#print GaussianInt.intCast_complex_norm /-
 @[simp]
-theorem int_cast_complex_norm (x : ℤ[i]) : (x.norm : ℂ) = (x : ℂ).normSq := by
+theorem intCast_complex_norm (x : ℤ[i]) : (x.norm : ℂ) = (x : ℂ).normSq := by
   cases x <;> rw [Zsqrtd.norm, norm_sq] <;> simp
-#align gaussian_int.nat_cast_complex_norm GaussianInt.int_cast_complex_norm
+#align gaussian_int.nat_cast_complex_norm GaussianInt.intCast_complex_norm
 -/
 
 #print GaussianInt.norm_nonneg /-
@@ -225,11 +225,11 @@ theorem abs_natCast_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
 #align gaussian_int.abs_coe_nat_norm GaussianInt.abs_natCast_norm
 -/
 
-#print GaussianInt.nat_cast_natAbs_norm /-
+#print GaussianInt.natCast_natAbs_norm /-
 @[simp]
-theorem nat_cast_natAbs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
+theorem natCast_natAbs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
   rw [← Int.cast_natCast, abs_coe_nat_norm]
-#align gaussian_int.nat_cast_nat_abs_norm GaussianInt.nat_cast_natAbs_norm
+#align gaussian_int.nat_cast_nat_abs_norm GaussianInt.natCast_natAbs_norm
 -/
 
 #print GaussianInt.natAbs_norm_eq /-

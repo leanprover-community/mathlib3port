@@ -729,7 +729,7 @@ theorem quotientEquivSigmaZMod_symm_apply (q : orbitRel.Quotient (zpowers g) (G 
 #print Subgroup.quotientEquivSigmaZMod_apply /-
 theorem quotientEquivSigmaZMod_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H)) (k : ℤ) :
     quotientEquivSigmaZMod H g (g ^ k • q.out') = ⟨q, k⟩ := by
-  rw [apply_eq_iff_eq_symm_apply, quotient_equiv_sigma_zmod_symm_apply, ZMod.coe_int_cast,
+  rw [apply_eq_iff_eq_symm_apply, quotient_equiv_sigma_zmod_symm_apply, ZMod.coe_intCast,
     zpow_smul_mod_minimal_period]
 #align subgroup.quotient_equiv_sigma_zmod_apply Subgroup.quotientEquivSigmaZMod_apply
 -/

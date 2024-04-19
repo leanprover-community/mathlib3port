@@ -54,7 +54,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
         generalize p % 4 = m; decide!
       let ⟨k, hk⟩ := ZMod.exists_sq_eq_neg_one_iff.2 <| by rw [hp41] <;> exact by decide
       obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ) (h : k' < p), (k' : ZMod p) = k := by
-        refine' ⟨k.val, k.val_lt, ZMod.nat_cast_zmod_val k⟩
+        refine' ⟨k.val, k.val_lt, ZMod.natCast_zmod_val k⟩
       have hpk : p ∣ k ^ 2 + 1 := by
         rw [pow_two, ← CharP.cast_eq_zero_iff (ZMod p) p, Nat.cast_add, Nat.cast_mul, Nat.cast_one,
           ← hk, add_left_neg]
@@ -102,7 +102,7 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (h
     by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
       have : ∀ a b : ZMod 4, a ^ 2 + b ^ 2 ≠ p := by
-        erw [← ZMod.nat_cast_mod p 4, hp3] <;> exact by decide
+        erw [← ZMod.natCast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
 #align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.prime_of_nat_prime_of_mod_four_eq_three
 -/

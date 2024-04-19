@@ -187,7 +187,7 @@ theorem isBigO_cocompact_rpow [ProperSpace E] (s : ℝ) :
   simp_rw [Asymptotics.IsBigO, Asymptotics.IsBigOWith]
   refine' ⟨1, Filter.eventually_of_mem (Filter.eventually_ge_atTop 1) fun x hx => _⟩
   rw [one_mul, Real.norm_of_nonneg (Real.rpow_nonneg (zero_le_one.trans hx) _),
-    Real.norm_of_nonneg (zpow_nonneg (zero_le_one.trans hx) _), ← Real.rpow_int_cast, Int.cast_neg,
+    Real.norm_of_nonneg (zpow_nonneg (zero_le_one.trans hx) _), ← Real.rpow_intCast, Int.cast_neg,
     Int.cast_natCast]
   exact Real.rpow_le_rpow_of_exponent_le hx hk
 #align schwartz_map.is_O_cocompact_rpow SchwartzMap.isBigO_cocompact_rpow
@@ -196,7 +196,7 @@ theorem isBigO_cocompact_rpow [ProperSpace E] (s : ℝ) :
 #print SchwartzMap.isBigO_cocompact_zpow /-
 theorem isBigO_cocompact_zpow [ProperSpace E] (k : ℤ) :
     Asymptotics.IsBigO (Filter.cocompact E) f fun x => ‖x‖ ^ k := by
-  simpa only [Real.rpow_int_cast] using is_O_cocompact_rpow f k
+  simpa only [Real.rpow_intCast] using is_O_cocompact_rpow f k
 #align schwartz_map.is_O_cocompact_zpow SchwartzMap.isBigO_cocompact_zpow
 -/
 

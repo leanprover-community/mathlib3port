@@ -184,7 +184,7 @@ theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
   by
   rw [fourier_apply, ← QuotientAddGroup.mk_zsmul, to_circle, Function.Periodic.lift_coe,
     expMapCircle_apply, Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_mul, zsmul_eq_mul,
-    Complex.ofReal_mul, Complex.ofReal_int_cast, Complex.of_real_bit0, Complex.ofReal_one]
+    Complex.ofReal_mul, Complex.ofReal_intCast, Complex.of_real_bit0, Complex.ofReal_one]
   congr 1; ring
 #align fourier_coe_apply fourier_coe_apply
 -/

@@ -822,12 +822,12 @@ theorem pow_sub_one_eq [IsDomain R] {ζ : R} (hζ : IsPrimitiveRoot ζ k) (hk : 
 and the powers of a primitive root of unity `ζ`. -/
 def zmodEquivZPowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup.zpowers ζ) :=
   AddEquiv.ofBijective
-    (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| ZMod k) _ ZMod.int_cast_rightInverse
+    (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| ZMod k) _ ZMod.intCast_rightInverse
       ⟨{  toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ)
           map_zero' := by simp only [zpow_zero]; rfl
           map_add' := by intro i j; simp only [zpow_add]; rfl }, fun i hi =>
         by
-        simp only [AddMonoidHom.mem_ker, CharP.int_cast_eq_zero_iff (ZMod k) k, AddMonoidHom.coe_mk,
+        simp only [AddMonoidHom.mem_ker, CharP.intCast_eq_zero_iff (ZMod k) k, AddMonoidHom.coe_mk,
           Int.coe_castAddHom] at hi ⊢
         obtain ⟨i, rfl⟩ := hi
         simp only [zpow_mul, h.pow_eq_one, one_zpow, zpow_natCast]
@@ -838,8 +838,8 @@ def zmodEquivZPowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup
         intro i hi
         rw [Subtype.ext_iff] at hi
         have := (h.zpow_eq_one_iff_dvd _).mp hi
-        rw [← (CharP.int_cast_eq_zero_iff (ZMod k) k _).mpr this, eq_comm]
-        exact ZMod.int_cast_rightInverse i
+        rw [← (CharP.intCast_eq_zero_iff (ZMod k) k _).mpr this, eq_comm]
+        exact ZMod.intCast_rightInverse i
       · rintro ⟨ξ, i, rfl⟩
         refine' ⟨Int.castAddHom _ i, _⟩
         rw [AddMonoidHom.liftOfRightInverse_comp_apply]
@@ -851,7 +851,7 @@ def zmodEquivZPowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup
 @[simp]
 theorem zmodEquivZPowers_apply_coe_int (i : ℤ) :
     h.zmodEquivZPowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
-  AddMonoidHom.liftOfRightInverse_comp_apply _ _ ZMod.int_cast_rightInverse _ _
+  AddMonoidHom.liftOfRightInverse_comp_apply _ _ ZMod.intCast_rightInverse _ _
 #align is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmodEquivZPowers_apply_coe_int
 -/
 
@@ -1156,8 +1156,8 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (ZMod n)ˣ :=
         replace h : μ' = μ' ^ h1.some :=
           rootsOfUnity.coe_injective (by simpa only [rootsOfUnity.coe_pow] using h)
         rw [← pow_one μ'] at h
-        rw [← @Nat.cast_one <| ZMod n, ZMod.nat_cast_eq_nat_cast_iff, ← ho, ←
-          pow_eq_pow_iff_modEq μ', h]
+        rw [← @Nat.cast_one <| ZMod n, ZMod.natCast_eq_natCast_iff, ← ho, ← pow_eq_pow_iff_modEq μ',
+          h]
       map_mul' := by
         generalize_proofs hxy' hx' hy'
         have hxy := hxy'.some_spec
@@ -1171,7 +1171,7 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (ZMod n)ˣ :=
         rw [← pow_mul] at hxy
         replace hxy : μ' ^ (hx'.some * hy'.some) = μ' ^ hxy'.some :=
           rootsOfUnity.coe_injective (by simpa only [rootsOfUnity.coe_pow] using hxy)
-        rw [← Nat.cast_mul, ZMod.nat_cast_eq_nat_cast_iff, ← ho, ← pow_eq_pow_iff_modEq μ', hxy] }
+        rw [← Nat.cast_mul, ZMod.natCast_eq_natCast_iff, ← ho, ← pow_eq_pow_iff_modEq μ', hxy] }
 #align is_primitive_root.aut_to_pow IsPrimitiveRoot.autToPow
 -/
 
@@ -1196,7 +1196,7 @@ theorem autToPow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : ZMod n).val
   rw [← rootsOfUnity.coe_pow, ← rootsOfUnity.coe_pow]
   congr 1
   rw [pow_eq_pow_iff_modEq, ← Subgroup.orderOf_coe, ← orderOf_units, hμ.coe_to_roots_of_unity_coe, ←
-    hμ.eq_order_of, ZMod.val_nat_cast]
+    hμ.eq_order_of, ZMod.val_natCast]
   exact Nat.mod_modEq _ _
 #align is_primitive_root.aut_to_pow_spec IsPrimitiveRoot.autToPow_spec
 -/

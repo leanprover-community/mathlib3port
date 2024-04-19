@@ -223,10 +223,10 @@ instance : NonAssocSemiring (MonoidAlgebra k G) :=
       simp only [mul_def, one_def, sum_single_index, MulZeroClass.mul_zero, single_zero, sum_zero,
         add_zero, mul_one, sum_single] }
 
-#print MonoidAlgebra.nat_cast_def /-
-theorem nat_cast_def (n : ℕ) : (n : MonoidAlgebra k G) = single 1 n :=
+#print MonoidAlgebra.natCast_def /-
+theorem natCast_def (n : ℕ) : (n : MonoidAlgebra k G) = single 1 n :=
   rfl
-#align monoid_algebra.nat_cast_def MonoidAlgebra.nat_cast_def
+#align monoid_algebra.nat_cast_def MonoidAlgebra.natCast_def
 -/
 
 end MulOneClass
@@ -298,10 +298,10 @@ instance [Ring k] [MulOneClass G] : NonAssocRing (MonoidAlgebra k G) :=
     intCast_ofNat := fun n => by simpa
     intCast_negSucc := fun n => by simpa }
 
-#print MonoidAlgebra.int_cast_def /-
-theorem int_cast_def [Ring k] [MulOneClass G] (z : ℤ) : (z : MonoidAlgebra k G) = single 1 z :=
+#print MonoidAlgebra.intCast_def /-
+theorem intCast_def [Ring k] [MulOneClass G] (z : ℤ) : (z : MonoidAlgebra k G) = single 1 z :=
   rfl
-#align monoid_algebra.int_cast_def MonoidAlgebra.int_cast_def
+#align monoid_algebra.int_cast_def MonoidAlgebra.intCast_def
 -/
 
 instance [Ring k] [Monoid G] : Ring (MonoidAlgebra k G) :=
@@ -1316,10 +1316,10 @@ instance : NonAssocSemiring (AddMonoidAlgebra k G) :=
       simp only [mul_def, one_def, sum_single_index, MulZeroClass.mul_zero, single_zero, sum_zero,
         add_zero, mul_one, sum_single] }
 
-#print AddMonoidAlgebra.nat_cast_def /-
-theorem nat_cast_def (n : ℕ) : (n : AddMonoidAlgebra k G) = single 0 n :=
+#print AddMonoidAlgebra.natCast_def /-
+theorem natCast_def (n : ℕ) : (n : AddMonoidAlgebra k G) = single 0 n :=
   rfl
-#align add_monoid_algebra.nat_cast_def AddMonoidAlgebra.nat_cast_def
+#align add_monoid_algebra.nat_cast_def AddMonoidAlgebra.natCast_def
 -/
 
 end MulOneClass
@@ -1391,10 +1391,10 @@ instance [Ring k] [AddZeroClass G] : NonAssocRing (AddMonoidAlgebra k G) :=
     intCast_ofNat := fun n => by simpa
     intCast_negSucc := fun n => by simpa }
 
-#print AddMonoidAlgebra.int_cast_def /-
-theorem int_cast_def [Ring k] [AddZeroClass G] (z : ℤ) : (z : AddMonoidAlgebra k G) = single 0 z :=
+#print AddMonoidAlgebra.intCast_def /-
+theorem intCast_def [Ring k] [AddZeroClass G] (z : ℤ) : (z : AddMonoidAlgebra k G) = single 0 z :=
   rfl
-#align add_monoid_algebra.int_cast_def AddMonoidAlgebra.int_cast_def
+#align add_monoid_algebra.int_cast_def AddMonoidAlgebra.intCast_def
 -/
 
 instance [Ring k] [AddMonoid G] : Ring (AddMonoidAlgebra k G) :=

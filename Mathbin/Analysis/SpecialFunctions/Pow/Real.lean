@@ -417,7 +417,7 @@ theorem rpow_mul {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ 
 #print Real.rpow_add_int /-
 theorem rpow_add_int {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℤ) : x ^ (y + n) = x ^ y * x ^ n := by
   rw [rpow_def, Complex.ofReal_add, Complex.cpow_add _ _ (complex.of_real_ne_zero.mpr hx),
-    Complex.ofReal_int_cast, Complex.cpow_int_cast, ← Complex.ofReal_zpow, mul_comm,
+    Complex.ofReal_intCast, Complex.cpow_intCast, ← Complex.ofReal_zpow, mul_comm,
     Complex.re_ofReal_mul, ← rpow_def, mul_comm]
 #align real.rpow_add_int Real.rpow_add_int
 -/
@@ -452,18 +452,18 @@ theorem rpow_sub_one {x : ℝ} (hx : x ≠ 0) (y : ℝ) : x ^ (y - 1) = x ^ y / 
 #align real.rpow_sub_one Real.rpow_sub_one
 -/
 
-#print Real.rpow_int_cast /-
+#print Real.rpow_intCast /-
 @[simp, norm_cast]
-theorem rpow_int_cast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
-  simp only [rpow_def, ← Complex.ofReal_zpow, Complex.cpow_int_cast, Complex.ofReal_int_cast,
+theorem rpow_intCast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
+  simp only [rpow_def, ← Complex.ofReal_zpow, Complex.cpow_intCast, Complex.ofReal_intCast,
     Complex.ofReal_re]
-#align real.rpow_int_cast Real.rpow_int_cast
+#align real.rpow_int_cast Real.rpow_intCast
 -/
 
-#print Real.rpow_nat_cast /-
+#print Real.rpow_natCast /-
 @[simp, norm_cast]
-theorem rpow_nat_cast (x : ℝ) (n : ℕ) : x ^ (n : ℝ) = x ^ n := by simpa using rpow_int_cast x n
-#align real.rpow_nat_cast Real.rpow_nat_cast
+theorem rpow_natCast (x : ℝ) (n : ℕ) : x ^ (n : ℝ) = x ^ n := by simpa using rpow_int_cast x n
+#align real.rpow_nat_cast Real.rpow_natCast
 -/
 
 #print Real.rpow_two /-
@@ -911,11 +911,11 @@ namespace NormNum
 open Tactic
 
 theorem rpow_pos (a b : ℝ) (b' : ℕ) (c : ℝ) (hb : (b' : ℝ) = b) (h : a ^ b' = c) : a ^ b = c := by
-  rw [← h, ← hb, Real.rpow_nat_cast]
+  rw [← h, ← hb, Real.rpow_natCast]
 #align norm_num.rpow_pos NormNum.rpow_pos
 
 theorem rpow_neg (a b : ℝ) (b' : ℕ) (c c' : ℝ) (a0 : 0 ≤ a) (hb : (b' : ℝ) = b) (h : a ^ b' = c)
-    (hc : c⁻¹ = c') : a ^ (-b) = c' := by rw [← hc, ← h, ← hb, Real.rpow_neg a0, Real.rpow_nat_cast]
+    (hc : c⁻¹ = c') : a ^ (-b) = c' := by rw [← hc, ← h, ← hb, Real.rpow_neg a0, Real.rpow_natCast]
 #align norm_num.rpow_neg NormNum.rpow_neg
 
 /-- Evaluate `real.rpow a b` where `a` is a rational numeral and `b` is an integer.

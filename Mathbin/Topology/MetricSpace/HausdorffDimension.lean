@@ -572,7 +572,7 @@ theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.ball
   · rw [← ENNReal.coe_natCast]
     have : μH[Fintype.card ι] (Metric.ball x r) = ENNReal.ofReal ((2 * r) ^ Fintype.card ι) := by
       rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
-    refine' dimH_of_hausdorffMeasure_ne_zero_ne_top _ _ <;> rw [NNReal.coe_nat_cast, this]
+    refine' dimH_of_hausdorffMeasure_ne_zero_ne_top _ _ <;> rw [NNReal.coe_natCast, this]
     · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
     · exact ENNReal.ofReal_ne_top
 #align real.dimH_ball_pi Real.dimH_ball_pi

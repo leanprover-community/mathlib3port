@@ -632,25 +632,25 @@ instance [AddMonoidWithOne R] [AddMonoid M] : AddMonoidWithOne (tsze R M) :=
     natCast_zero := by simp [Nat.cast]
     natCast_succ := fun _ => by ext <;> simp [Nat.cast] }
 
-#print TrivSqZeroExt.fst_nat_cast /-
+#print TrivSqZeroExt.fst_natCast /-
 @[simp]
-theorem fst_nat_cast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (n : tsze R M).fst = n :=
+theorem fst_natCast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (n : tsze R M).fst = n :=
   rfl
-#align triv_sq_zero_ext.fst_nat_cast TrivSqZeroExt.fst_nat_cast
+#align triv_sq_zero_ext.fst_nat_cast TrivSqZeroExt.fst_natCast
 -/
 
-#print TrivSqZeroExt.snd_nat_cast /-
+#print TrivSqZeroExt.snd_natCast /-
 @[simp]
-theorem snd_nat_cast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (n : tsze R M).snd = 0 :=
+theorem snd_natCast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (n : tsze R M).snd = 0 :=
   rfl
-#align triv_sq_zero_ext.snd_nat_cast TrivSqZeroExt.snd_nat_cast
+#align triv_sq_zero_ext.snd_nat_cast TrivSqZeroExt.snd_natCast
 -/
 
-#print TrivSqZeroExt.inl_nat_cast /-
+#print TrivSqZeroExt.inl_natCast /-
 @[simp]
-theorem inl_nat_cast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (inl n : tsze R M) = n :=
+theorem inl_natCast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (inl n : tsze R M) = n :=
   rfl
-#align triv_sq_zero_ext.inl_nat_cast TrivSqZeroExt.inl_nat_cast
+#align triv_sq_zero_ext.inl_nat_cast TrivSqZeroExt.inl_natCast
 -/
 
 instance [AddGroupWithOne R] [AddGroup M] : AddGroupWithOne (tsze R M) :=
@@ -660,25 +660,25 @@ instance [AddGroupWithOne R] [AddGroup M] : AddGroupWithOne (tsze R M) :=
     intCast_ofNat := fun n => ext (Int.cast_natCast _) rfl
     intCast_negSucc := fun n => ext (Int.cast_negSucc _) neg_zero.symm }
 
-#print TrivSqZeroExt.fst_int_cast /-
+#print TrivSqZeroExt.fst_intCast /-
 @[simp]
-theorem fst_int_cast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (z : tsze R M).fst = z :=
+theorem fst_intCast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (z : tsze R M).fst = z :=
   rfl
-#align triv_sq_zero_ext.fst_int_cast TrivSqZeroExt.fst_int_cast
+#align triv_sq_zero_ext.fst_int_cast TrivSqZeroExt.fst_intCast
 -/
 
-#print TrivSqZeroExt.snd_int_cast /-
+#print TrivSqZeroExt.snd_intCast /-
 @[simp]
-theorem snd_int_cast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (z : tsze R M).snd = 0 :=
+theorem snd_intCast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (z : tsze R M).snd = 0 :=
   rfl
-#align triv_sq_zero_ext.snd_int_cast TrivSqZeroExt.snd_int_cast
+#align triv_sq_zero_ext.snd_int_cast TrivSqZeroExt.snd_intCast
 -/
 
-#print TrivSqZeroExt.inl_int_cast /-
+#print TrivSqZeroExt.inl_intCast /-
 @[simp]
-theorem inl_int_cast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (inl z : tsze R M) = z :=
+theorem inl_intCast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (inl z : tsze R M) = z :=
   rfl
-#align triv_sq_zero_ext.inl_int_cast TrivSqZeroExt.inl_int_cast
+#align triv_sq_zero_ext.inl_int_cast TrivSqZeroExt.inl_intCast
 -/
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] :

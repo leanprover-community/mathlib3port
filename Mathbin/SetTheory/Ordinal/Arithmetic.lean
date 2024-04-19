@@ -2843,77 +2843,77 @@ end
 /-! ### Casting naturals into ordinals, compatibility with operations -/
 
 
-#print Ordinal.one_add_nat_cast /-
+#print Ordinal.one_add_natCast /-
 @[simp]
-theorem one_add_nat_cast (m : ℕ) : 1 + (m : Ordinal) = succ m := by
+theorem one_add_natCast (m : ℕ) : 1 + (m : Ordinal) = succ m := by
   rw [← Nat.cast_one, ← Nat.cast_add, add_comm]; rfl
-#align ordinal.one_add_nat_cast Ordinal.one_add_nat_cast
+#align ordinal.one_add_nat_cast Ordinal.one_add_natCast
 -/
 
-#print Ordinal.nat_cast_mul /-
+#print Ordinal.natCast_mul /-
 @[simp, norm_cast]
-theorem nat_cast_mul (m : ℕ) : ∀ n : ℕ, ((m * n : ℕ) : Ordinal) = m * n
+theorem natCast_mul (m : ℕ) : ∀ n : ℕ, ((m * n : ℕ) : Ordinal) = m * n
   | 0 => by simp
   | n + 1 => by rw [Nat.mul_succ, Nat.cast_add, nat_cast_mul, Nat.cast_succ, mul_add_one]
-#align ordinal.nat_cast_mul Ordinal.nat_cast_mul
+#align ordinal.nat_cast_mul Ordinal.natCast_mul
 -/
 
-#print Ordinal.nat_cast_le /-
+#print Ordinal.natCast_le /-
 @[simp, norm_cast]
-theorem nat_cast_le {m n : ℕ} : (m : Ordinal) ≤ n ↔ m ≤ n := by
+theorem natCast_le {m n : ℕ} : (m : Ordinal) ≤ n ↔ m ≤ n := by
   rw [← Cardinal.ord_nat, ← Cardinal.ord_nat, Cardinal.ord_le_ord, Cardinal.natCast_le]
-#align ordinal.nat_cast_le Ordinal.nat_cast_le
+#align ordinal.nat_cast_le Ordinal.natCast_le
 -/
 
-#print Ordinal.nat_cast_lt /-
+#print Ordinal.natCast_lt /-
 @[simp, norm_cast]
-theorem nat_cast_lt {m n : ℕ} : (m : Ordinal) < n ↔ m < n := by
+theorem natCast_lt {m n : ℕ} : (m : Ordinal) < n ↔ m < n := by
   simp only [lt_iff_le_not_le, nat_cast_le]
-#align ordinal.nat_cast_lt Ordinal.nat_cast_lt
+#align ordinal.nat_cast_lt Ordinal.natCast_lt
 -/
 
-#print Ordinal.nat_cast_inj /-
+#print Ordinal.natCast_inj /-
 @[simp, norm_cast]
-theorem nat_cast_inj {m n : ℕ} : (m : Ordinal) = n ↔ m = n := by
+theorem natCast_inj {m n : ℕ} : (m : Ordinal) = n ↔ m = n := by
   simp only [le_antisymm_iff, nat_cast_le]
-#align ordinal.nat_cast_inj Ordinal.nat_cast_inj
+#align ordinal.nat_cast_inj Ordinal.natCast_inj
 -/
 
-#print Ordinal.nat_cast_eq_zero /-
+#print Ordinal.natCast_eq_zero /-
 @[simp, norm_cast]
-theorem nat_cast_eq_zero {n : ℕ} : (n : Ordinal) = 0 ↔ n = 0 :=
-  @nat_cast_inj n 0
-#align ordinal.nat_cast_eq_zero Ordinal.nat_cast_eq_zero
+theorem natCast_eq_zero {n : ℕ} : (n : Ordinal) = 0 ↔ n = 0 :=
+  @natCast_inj n 0
+#align ordinal.nat_cast_eq_zero Ordinal.natCast_eq_zero
 -/
 
-#print Ordinal.nat_cast_ne_zero /-
-theorem nat_cast_ne_zero {n : ℕ} : (n : Ordinal) ≠ 0 ↔ n ≠ 0 :=
-  not_congr nat_cast_eq_zero
-#align ordinal.nat_cast_ne_zero Ordinal.nat_cast_ne_zero
+#print Ordinal.natCast_ne_zero /-
+theorem natCast_ne_zero {n : ℕ} : (n : Ordinal) ≠ 0 ↔ n ≠ 0 :=
+  not_congr natCast_eq_zero
+#align ordinal.nat_cast_ne_zero Ordinal.natCast_ne_zero
 -/
 
-#print Ordinal.nat_cast_pos /-
+#print Ordinal.natCast_pos /-
 @[simp, norm_cast]
-theorem nat_cast_pos {n : ℕ} : (0 : Ordinal) < n ↔ 0 < n :=
-  @nat_cast_lt 0 n
-#align ordinal.nat_cast_pos Ordinal.nat_cast_pos
+theorem natCast_pos {n : ℕ} : (0 : Ordinal) < n ↔ 0 < n :=
+  @natCast_lt 0 n
+#align ordinal.nat_cast_pos Ordinal.natCast_pos
 -/
 
-#print Ordinal.nat_cast_sub /-
+#print Ordinal.natCast_sub /-
 @[simp, norm_cast]
-theorem nat_cast_sub (m n : ℕ) : ((m - n : ℕ) : Ordinal) = m - n :=
+theorem natCast_sub (m n : ℕ) : ((m - n : ℕ) : Ordinal) = m - n :=
   by
   cases' le_total m n with h h
   · rw [tsub_eq_zero_iff_le.2 h, Ordinal.sub_eq_zero_iff_le.2 (nat_cast_le.2 h)]
     rfl
   · apply (add_left_cancel n).1
     rw [← Nat.cast_add, add_tsub_cancel_of_le h, Ordinal.add_sub_cancel_of_le (nat_cast_le.2 h)]
-#align ordinal.nat_cast_sub Ordinal.nat_cast_sub
+#align ordinal.nat_cast_sub Ordinal.natCast_sub
 -/
 
-#print Ordinal.nat_cast_div /-
+#print Ordinal.natCast_div /-
 @[simp, norm_cast]
-theorem nat_cast_div (m n : ℕ) : ((m / n : ℕ) : Ordinal) = m / n :=
+theorem natCast_div (m n : ℕ) : ((m / n : ℕ) : Ordinal) = m / n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
@@ -2924,23 +2924,23 @@ theorem nat_cast_div (m n : ℕ) : ((m / n : ℕ) : Ordinal) = m / n :=
     · rw [div_le hn', ← add_one_eq_succ, ← Nat.cast_succ, ← nat_cast_mul, nat_cast_lt, mul_comm, ←
         Nat.div_lt_iff_lt_mul (Nat.pos_of_ne_zero hn)]
       apply Nat.lt_succ_self
-#align ordinal.nat_cast_div Ordinal.nat_cast_div
+#align ordinal.nat_cast_div Ordinal.natCast_div
 -/
 
-#print Ordinal.nat_cast_mod /-
+#print Ordinal.natCast_mod /-
 @[simp, norm_cast]
-theorem nat_cast_mod (m n : ℕ) : ((m % n : ℕ) : Ordinal) = m % n := by
+theorem natCast_mod (m n : ℕ) : ((m % n : ℕ) : Ordinal) = m % n := by
   rw [← add_left_cancel, div_add_mod, ← nat_cast_div, ← nat_cast_mul, ← Nat.cast_add,
     Nat.div_add_mod]
-#align ordinal.nat_cast_mod Ordinal.nat_cast_mod
+#align ordinal.nat_cast_mod Ordinal.natCast_mod
 -/
 
-#print Ordinal.lift_nat_cast /-
+#print Ordinal.lift_natCast /-
 @[simp]
-theorem lift_nat_cast : ∀ n : ℕ, lift.{u, v} n = n
+theorem lift_natCast : ∀ n : ℕ, lift.{u, v} n = n
   | 0 => by simp
   | n + 1 => by simp [lift_nat_cast n]
-#align ordinal.lift_nat_cast Ordinal.lift_nat_cast
+#align ordinal.lift_nat_cast Ordinal.lift_natCast
 -/
 
 end Ordinal
@@ -3029,11 +3029,11 @@ theorem omega_le {o : Ordinal} : ω ≤ o ↔ ∀ n : ℕ, ↑n ≤ o :=
 #align ordinal.omega_le Ordinal.omega_le
 -/
 
-#print Ordinal.sup_nat_cast /-
+#print Ordinal.sup_natCast /-
 @[simp]
-theorem sup_nat_cast : sup Nat.cast = ω :=
+theorem sup_natCast : sup Nat.cast = ω :=
   (sup_le fun n => (nat_lt_omega n).le).antisymm <| omega_le.2 <| le_sup _
-#align ordinal.sup_nat_cast Ordinal.sup_nat_cast
+#align ordinal.sup_nat_cast Ordinal.sup_natCast
 -/
 
 #print Ordinal.nat_lt_limit /-

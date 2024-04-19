@@ -321,7 +321,7 @@ theorem intervalIntegral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : �
   haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume :=
     ⟨fun c s hs => measure_preimage_add _ _ _⟩
   exact
-    (isAddFundamentalDomain_Ioc hT t).set_integral_eq (isAddFundamentalDomain_Ioc hT s)
+    (isAddFundamentalDomain_Ioc hT t).setIntegral_eq (isAddFundamentalDomain_Ioc hT s)
       hf.map_vadd_zmultiples
 #align function.periodic.interval_integral_add_eq_of_pos Function.Periodic.intervalIntegral_add_eq_of_pos
 -/

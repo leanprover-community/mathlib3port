@@ -141,16 +141,16 @@ theorem cpow_neg_one (x : ℂ) : x ^ (-1 : ℂ) = x⁻¹ := by simpa using cpow_
 #align complex.cpow_neg_one Complex.cpow_neg_one
 -/
 
-#print Complex.cpow_nat_cast /-
+#print Complex.cpow_natCast /-
 @[simp, norm_cast]
-theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, x ^ (n : ℂ) = x ^ n
+theorem cpow_natCast (x : ℂ) : ∀ n : ℕ, x ^ (n : ℂ) = x ^ n
   | 0 => by simp
   | n + 1 =>
     if hx : x = 0 then by
       simp only [hx, pow_succ', Complex.zero_cpow (Nat.cast_ne_zero.2 (Nat.succ_ne_zero _)),
         MulZeroClass.zero_mul]
     else by simp [cpow_add, hx, pow_add, cpow_nat_cast n]
-#align complex.cpow_nat_cast Complex.cpow_nat_cast
+#align complex.cpow_nat_cast Complex.cpow_natCast
 -/
 
 #print Complex.cpow_two /-
@@ -160,15 +160,15 @@ theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 := by rw [← cpow_nat_cast];
 #align complex.cpow_two Complex.cpow_two
 -/
 
-#print Complex.cpow_int_cast /-
+#print Complex.cpow_intCast /-
 @[simp, norm_cast]
-theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
+theorem cpow_intCast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by simp
   | -[n+1] => by
     rw [zpow_negSucc] <;>
       simp only [Int.negSucc_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_natCast,
         cpow_nat_cast]
-#align complex.cpow_int_cast Complex.cpow_int_cast
+#align complex.cpow_int_cast Complex.cpow_intCast
 -/
 
 #print Complex.cpow_nat_inv_pow /-
@@ -276,11 +276,11 @@ section Tactics
 namespace NormNum
 
 theorem cpow_pos (a b : ℂ) (b' : ℕ) (c : ℂ) (hb : b = b') (h : a ^ b' = c) : a ^ b = c := by
-  rw [← h, hb, Complex.cpow_nat_cast]
+  rw [← h, hb, Complex.cpow_natCast]
 #align norm_num.cpow_pos NormNum.cpow_pos
 
 theorem cpow_neg (a b : ℂ) (b' : ℕ) (c c' : ℂ) (hb : b = b') (h : a ^ b' = c) (hc : c⁻¹ = c') :
-    a ^ (-b) = c' := by rw [← hc, ← h, hb, Complex.cpow_neg, Complex.cpow_nat_cast]
+    a ^ (-b) = c' := by rw [← hc, ← h, hb, Complex.cpow_neg, Complex.cpow_natCast]
 #align norm_num.cpow_neg NormNum.cpow_neg
 
 open Tactic

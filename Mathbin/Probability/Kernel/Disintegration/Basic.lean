@@ -536,8 +536,8 @@ theorem MeasureTheory.Measure.integral_condKernel {ρ : Measure (α × Ω)} [IsF
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_integral_condKernel /-
-theorem MeasureTheory.Measure.set_integral_condKernel {ρ : Measure (α × Ω)} [IsFiniteMeasure ρ]
+#print MeasureTheory.Measure.setIntegral_condKernel /-
+theorem MeasureTheory.Measure.setIntegral_condKernel {ρ : Measure (α × Ω)} [IsFiniteMeasure ρ]
     {f : α × Ω → E} {s : Set α} (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t)
     (hf : IntegrableOn f (s ×ˢ t) ρ) :
     ∫ a in s, ∫ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst = ∫ x in s ×ˢ t, f x ∂ρ :=
@@ -546,29 +546,29 @@ theorem MeasureTheory.Measure.set_integral_condKernel {ρ : Measure (α × Ω)} 
   rw [set_integral_comp_prod hs ht]
   · simp_rw [kernel.prod_mk_left_apply, kernel.const_apply]
   · rwa [measure_eq_comp_prod ρ] at hf
-#align probability_theory.set_integral_cond_kernel MeasureTheory.Measure.set_integral_condKernel
+#align probability_theory.set_integral_cond_kernel MeasureTheory.Measure.setIntegral_condKernel
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_integral_condKernel_univ_right /-
-theorem MeasureTheory.Measure.set_integral_condKernel_univ_right {ρ : Measure (α × Ω)}
+#print MeasureTheory.Measure.setIntegral_condKernel_univ_right /-
+theorem MeasureTheory.Measure.setIntegral_condKernel_univ_right {ρ : Measure (α × Ω)}
     [IsFiniteMeasure ρ] {f : α × Ω → E} {s : Set α} (hs : MeasurableSet s)
     (hf : IntegrableOn f (s ×ˢ univ) ρ) :
     ∫ a in s, ∫ ω, f (a, ω) ∂ρ.condKernel a ∂ρ.fst = ∫ x in s ×ˢ univ, f x ∂ρ := by
   rw [← set_integral_cond_kernel hs MeasurableSet.univ hf]; simp_rw [measure.restrict_univ]
-#align probability_theory.set_integral_cond_kernel_univ_right MeasureTheory.Measure.set_integral_condKernel_univ_right
+#align probability_theory.set_integral_cond_kernel_univ_right MeasureTheory.Measure.setIntegral_condKernel_univ_right
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_integral_condKernel_univ_left /-
-theorem MeasureTheory.Measure.set_integral_condKernel_univ_left {ρ : Measure (α × Ω)}
+#print MeasureTheory.Measure.setIntegral_condKernel_univ_left /-
+theorem MeasureTheory.Measure.setIntegral_condKernel_univ_left {ρ : Measure (α × Ω)}
     [IsFiniteMeasure ρ] {f : α × Ω → E} {t : Set Ω} (ht : MeasurableSet t)
     (hf : IntegrableOn f (univ ×ˢ t) ρ) :
     ∫ a, ∫ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst = ∫ x in univ ×ˢ t, f x ∂ρ := by
   rw [← set_integral_cond_kernel MeasurableSet.univ ht hf]; simp_rw [measure.restrict_univ]
-#align probability_theory.set_integral_cond_kernel_univ_left MeasureTheory.Measure.set_integral_condKernel_univ_left
+#align probability_theory.set_integral_cond_kernel_univ_left MeasureTheory.Measure.setIntegral_condKernel_univ_left
 -/
 
 end IntegralCondKernel

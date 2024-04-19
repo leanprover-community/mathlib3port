@@ -258,15 +258,15 @@ theorem integrable_condexp : Integrable (μ[f|m]) μ :=
 #align measure_theory.integrable_condexp MeasureTheory.integrable_condexp
 -/
 
-#print MeasureTheory.set_integral_condexp /-
+#print MeasureTheory.setIntegral_condexp /-
 /-- The integral of the conditional expectation `μ[f|hm]` over an `m`-measurable set is equal to
 the integral of `f` on that set. -/
-theorem set_integral_condexp (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : Integrable f μ)
+theorem setIntegral_condexp (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : Integrable f μ)
     (hs : measurable_set[m] s) : ∫ x in s, (μ[f|m]) x ∂μ = ∫ x in s, f x ∂μ :=
   by
   rw [set_integral_congr_ae (hm s hs) ((condexp_ae_eq_condexp_L1 hm f).mono fun x hx _ => hx)]
   exact set_integral_condexp_L1 hf hs
-#align measure_theory.set_integral_condexp MeasureTheory.set_integral_condexp
+#align measure_theory.set_integral_condexp MeasureTheory.setIntegral_condexp
 -/
 
 #print MeasureTheory.integral_condexp /-
@@ -279,11 +279,11 @@ theorem integral_condexp (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] (hf :
 #align measure_theory.integral_condexp MeasureTheory.integral_condexp
 -/
 
-#print MeasureTheory.ae_eq_condexp_of_forall_set_integral_eq /-
+#print MeasureTheory.ae_eq_condexp_of_forall_setIntegral_eq /-
 /-- **Uniqueness of the conditional expectation**
 If a function is a.e. `m`-measurable, verifies an integrability condition and has same integral
 as `f` on all `m`-measurable sets, then it is a.e. equal to `μ[f|hm]`. -/
-theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
+theorem ae_eq_condexp_of_forall_setIntegral_eq (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     {f g : α → F'} (hf : Integrable f μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
     (hg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, g x ∂μ = ∫ x in s, f x ∂μ)
@@ -294,7 +294,7 @@ theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [SigmaFinite (μ
       (fun s hs hμs => integrable_condexp.integrable_on) (fun s hs hμs => _) hgm
       (strongly_measurable.ae_strongly_measurable' strongly_measurable_condexp)
   rw [hg_eq s hs hμs, set_integral_condexp hm hf hs]
-#align measure_theory.ae_eq_condexp_of_forall_set_integral_eq MeasureTheory.ae_eq_condexp_of_forall_set_integral_eq
+#align measure_theory.ae_eq_condexp_of_forall_set_integral_eq MeasureTheory.ae_eq_condexp_of_forall_setIntegral_eq
 -/
 
 #print MeasureTheory.condexp_bot' /-

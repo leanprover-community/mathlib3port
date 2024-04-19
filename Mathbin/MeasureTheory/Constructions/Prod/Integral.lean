@@ -575,15 +575,15 @@ theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncur
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.set_integral_prod /-
+#print MeasureTheory.setIntegral_prod /-
 /-- **Fubini's Theorem** for set integrals. -/
-theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β}
+theorem setIntegral_prod (f : α × β → E) {s : Set α} {t : Set β}
     (hf : IntegrableOn f (s ×ˢ t) (μ.Prod ν)) :
     ∫ z in s ×ˢ t, f z ∂μ.Prod ν = ∫ x in s, ∫ y in t, f (x, y) ∂ν ∂μ :=
   by
   simp only [← measure.prod_restrict s t, integrable_on] at hf ⊢
   exact integral_prod f hf
-#align measure_theory.set_integral_prod MeasureTheory.set_integral_prod
+#align measure_theory.set_integral_prod MeasureTheory.setIntegral_prod
 -/
 
 #print MeasureTheory.integral_prod_mul /-
@@ -602,11 +602,11 @@ theorem integral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) 
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.set_integral_prod_mul /-
-theorem set_integral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) (s : Set α)
+#print MeasureTheory.setIntegral_prod_mul /-
+theorem setIntegral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) (s : Set α)
     (t : Set β) : ∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν :=
   by simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
-#align measure_theory.set_integral_prod_mul MeasureTheory.set_integral_prod_mul
+#align measure_theory.set_integral_prod_mul MeasureTheory.setIntegral_prod_mul
 -/
 
 end MeasureTheory

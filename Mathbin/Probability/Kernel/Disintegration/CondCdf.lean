@@ -499,7 +499,7 @@ theorem tendsto_preCDF_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
     simp_rw [F, dif_pos ha]
     exact ha.some_spec
   have h_tendsto_ℕ : ∀ᵐ a ∂ρ.fst, tendsto (fun n : ℕ => pre_cdf ρ n a) at_top (𝓝 (F a)) := by
-    filter_upwards [h_tendsto_ℚ] with a ha using ha.comp tendsto_nat_cast_atTop_atTop
+    filter_upwards [h_tendsto_ℚ] with a ha using ha.comp tendsto_natCast_atTop_atTop
   have hF_ae_meas : AEMeasurable F ρ.fst :=
     by
     refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto_ℚ
@@ -530,7 +530,7 @@ theorem tendsto_preCDF_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
       tendsto (fun r : ℕ => ∫⁻ a, pre_cdf ρ r a ∂ρ.fst) at_top (𝓝 (∫⁻ a, 1 ∂ρ.fst)) :=
       by
       rw [lintegral_one, measure.fst_univ]
-      exact (tendsto_lintegral_pre_cdf_at_top ρ).comp tendsto_nat_cast_atTop_atTop
+      exact (tendsto_lintegral_pre_cdf_at_top ρ).comp tendsto_natCast_atTop_atTop
     exact tendsto_nhds_unique h_lintegral h_lintegral'
   have : ∫⁻ a, 1 - F a ∂ρ.fst = 0 :=
     by
@@ -1119,8 +1119,8 @@ theorem integrable_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : 
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.set_integral_condCDF /-
-theorem set_integral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
+#print ProbabilityTheory.setIntegral_condCDF /-
+theorem setIntegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
     (hs : MeasurableSet s) : ∫ a in s, condCDF ρ a x ∂ρ.fst = (ρ (s ×ˢ Iic x)).toReal :=
   by
   have h := set_lintegral_cond_cdf ρ x hs
@@ -1129,7 +1129,7 @@ theorem set_integral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x 
     exact integral_nonneg fun _ => cond_cdf_nonneg _ _ _
   · exact (integrable_cond_cdf _ _).IntegrableOn
   · exact eventually_of_forall fun _ => cond_cdf_nonneg _ _ _
-#align probability_theory.set_integral_cond_cdf ProbabilityTheory.set_integral_condCDF
+#align probability_theory.set_integral_cond_cdf ProbabilityTheory.setIntegral_condCDF
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

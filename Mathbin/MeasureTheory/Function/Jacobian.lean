@@ -1351,7 +1351,7 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : M
   have : ∀ x : s, g (s.restrict f x) = (g ∘ f) x := fun x => rfl
   simp only [this, ENNReal.ofReal]
   rw [← (MeasurableEmbedding.subtype_coe hs).integral_map, map_comap_subtype_coe hs,
-    set_integral_withDensity_eq_set_integral_smul₀
+    setIntegral_withDensity_eq_setIntegral_smul₀
       (ae_measurable_to_nnreal_abs_det_fderiv_within μ hs hf') _ hs]
   congr with x
   conv_rhs => rw [← Real.coe_toNNReal _ (abs_nonneg (f' x).det)]

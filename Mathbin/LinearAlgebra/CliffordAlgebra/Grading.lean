@@ -194,7 +194,7 @@ of vectors. -/
 theorem evenOdd_induction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     (hr :
       ∀ (v) (h : v ∈ (ι Q).range ^ n.val),
-        P v (Submodule.mem_iSup_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
+        P v (Submodule.mem_iSup_of_mem ⟨n.val, n.natCast_zmod_val⟩ h))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},

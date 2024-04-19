@@ -108,7 +108,7 @@ theorem LSeriesSummable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ}
   rw [Complex.cpow_def, Complex.cpow_def, if_neg h0, if_neg h0, Complex.abs_exp_eq_iff_re_eq]
   simp only [h, Complex.mul_re, mul_eq_mul_left_iff, sub_right_inj]
   right
-  rw [Complex.log_im, ← Complex.ofReal_nat_cast]
+  rw [Complex.log_im, ← Complex.ofReal_natCast]
   exact Complex.arg_ofReal_of_nonneg (le_of_lt (cast_pos.2 n.succ_pos))
 #align nat.arithmetic_function.l_series_summable_iff_of_re_eq_re LSeriesSummable_iff_of_re_eq_re
 -/

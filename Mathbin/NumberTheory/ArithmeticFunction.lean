@@ -641,18 +641,18 @@ theorem ArithmeticFunction.IsMultiplicative.map_prod {ι : Type _} [CommMonoidWi
 #align nat.arithmetic_function.is_multiplicative.map_prod ArithmeticFunction.IsMultiplicative.map_prod
 -/
 
-#print ArithmeticFunction.IsMultiplicative.nat_cast /-
-theorem ArithmeticFunction.IsMultiplicative.nat_cast {f : ArithmeticFunction ℕ} [Semiring R]
+#print ArithmeticFunction.IsMultiplicative.natCast /-
+theorem ArithmeticFunction.IsMultiplicative.natCast {f : ArithmeticFunction ℕ} [Semiring R]
     (h : f.IsMultiplicative) : ArithmeticFunction.IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
-#align nat.arithmetic_function.is_multiplicative.nat_cast ArithmeticFunction.IsMultiplicative.nat_cast
+#align nat.arithmetic_function.is_multiplicative.nat_cast ArithmeticFunction.IsMultiplicative.natCast
 -/
 
-#print ArithmeticFunction.IsMultiplicative.int_cast /-
-theorem ArithmeticFunction.IsMultiplicative.int_cast {f : ArithmeticFunction ℤ} [Ring R]
+#print ArithmeticFunction.IsMultiplicative.intCast /-
+theorem ArithmeticFunction.IsMultiplicative.intCast {f : ArithmeticFunction ℤ} [Ring R]
     (h : f.IsMultiplicative) : ArithmeticFunction.IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
-#align nat.arithmetic_function.is_multiplicative.int_cast ArithmeticFunction.IsMultiplicative.int_cast
+#align nat.arithmetic_function.is_multiplicative.int_cast ArithmeticFunction.IsMultiplicative.intCast
 -/
 
 #print ArithmeticFunction.IsMultiplicative.mul /-

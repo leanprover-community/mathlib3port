@@ -112,7 +112,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
   have C : ∀ᶠ p : ℕ in at_top, w + x / p < L :=
     by
     have : tendsto (fun p : ℕ => w + x / p) at_top (𝓝 (w + 0)) :=
-      tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_nat_cast_atTop_atTop)
+      tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_natCast_atTop_atTop)
     rw [add_zero] at this
     exact (tendsto_order.1 this).2 _ wL
   filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p

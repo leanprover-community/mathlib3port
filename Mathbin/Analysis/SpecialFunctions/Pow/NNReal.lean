@@ -167,11 +167,11 @@ theorem sqrt_eq_rpow (x : ℝ≥0) : sqrt x = x ^ (1 / (2 : ℝ)) :=
 #align nnreal.sqrt_eq_rpow NNReal.sqrt_eq_rpow
 -/
 
-#print NNReal.rpow_nat_cast /-
+#print NNReal.rpow_natCast /-
 @[simp, norm_cast]
-theorem rpow_nat_cast (x : ℝ≥0) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
-  NNReal.eq <| by simpa only [coe_rpow, coe_pow] using Real.rpow_nat_cast x n
-#align nnreal.rpow_nat_cast NNReal.rpow_nat_cast
+theorem rpow_natCast (x : ℝ≥0) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
+  NNReal.eq <| by simpa only [coe_rpow, coe_pow] using Real.rpow_natCast x n
+#align nnreal.rpow_nat_cast NNReal.rpow_natCast
 -/
 
 #print NNReal.rpow_two /-
@@ -638,14 +638,14 @@ theorem rpow_mul (x : ℝ≥0∞) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ z :=
 #align ennreal.rpow_mul ENNReal.rpow_mul
 -/
 
-#print ENNReal.rpow_nat_cast /-
+#print ENNReal.rpow_natCast /-
 @[simp, norm_cast]
-theorem rpow_nat_cast (x : ℝ≥0∞) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
+theorem rpow_natCast (x : ℝ≥0∞) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
   by
   cases x
   · cases n <;> simp [top_rpow_of_pos (Nat.cast_add_one_pos _), top_pow (Nat.succ_pos _)]
   · simp [coe_rpow_of_nonneg _ (Nat.cast_nonneg n)]
-#align ennreal.rpow_nat_cast ENNReal.rpow_nat_cast
+#align ennreal.rpow_nat_cast ENNReal.rpow_natCast
 -/
 
 #print ENNReal.rpow_two /-
@@ -1052,20 +1052,19 @@ section Tactics
 namespace NormNum
 
 theorem nnrpow_pos (a : ℝ≥0) (b : ℝ) (b' : ℕ) (c : ℝ≥0) (hb : b = b') (h : a ^ b' = c) :
-    a ^ b = c := by rw [← h, hb, NNReal.rpow_nat_cast]
+    a ^ b = c := by rw [← h, hb, NNReal.rpow_natCast]
 #align norm_num.nnrpow_pos NormNum.nnrpow_pos
 
 theorem nnrpow_neg (a : ℝ≥0) (b : ℝ) (b' : ℕ) (c c' : ℝ≥0) (hb : b = b') (h : a ^ b' = c)
-    (hc : c⁻¹ = c') : a ^ (-b) = c' := by rw [← hc, ← h, hb, NNReal.rpow_neg, NNReal.rpow_nat_cast]
+    (hc : c⁻¹ = c') : a ^ (-b) = c' := by rw [← hc, ← h, hb, NNReal.rpow_neg, NNReal.rpow_natCast]
 #align norm_num.nnrpow_neg NormNum.nnrpow_neg
 
 theorem ennrpow_pos (a : ℝ≥0∞) (b : ℝ) (b' : ℕ) (c : ℝ≥0∞) (hb : b = b') (h : a ^ b' = c) :
-    a ^ b = c := by rw [← h, hb, ENNReal.rpow_nat_cast]
+    a ^ b = c := by rw [← h, hb, ENNReal.rpow_natCast]
 #align norm_num.ennrpow_pos NormNum.ennrpow_pos
 
 theorem ennrpow_neg (a : ℝ≥0∞) (b : ℝ) (b' : ℕ) (c c' : ℝ≥0∞) (hb : b = b') (h : a ^ b' = c)
-    (hc : c⁻¹ = c') : a ^ (-b) = c' := by
-  rw [← hc, ← h, hb, ENNReal.rpow_neg, ENNReal.rpow_nat_cast]
+    (hc : c⁻¹ = c') : a ^ (-b) = c' := by rw [← hc, ← h, hb, ENNReal.rpow_neg, ENNReal.rpow_natCast]
 #align norm_num.ennrpow_neg NormNum.ennrpow_neg
 
 /-- Evaluate `nnreal.rpow a b` where `a` is a rational numeral and `b` is an integer. -/

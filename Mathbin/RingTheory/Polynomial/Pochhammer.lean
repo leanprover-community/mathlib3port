@@ -122,7 +122,7 @@ theorem ascPochhammer_succ_right (n : ℕ) : ascPochhammer S (n + 1) = ascPochha
   suffices h : ascPochhammer ℕ (n + 1) = ascPochhammer ℕ n * (X + n)
   · apply_fun Polynomial.map (algebraMap ℕ S) at h
     simpa only [ascPochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
-      Polynomial.map_nat_cast] using h
+      Polynomial.map_natCast] using h
   induction' n with n ih
   · simp
   ·
@@ -155,11 +155,11 @@ theorem ascPochhammer_succ_comp_X_add_one (n : ℕ) :
 #align pochhammer_succ_comp_X_add_one ascPochhammer_succ_comp_X_add_one
 -/
 
-#print Polynomial.mul_X_add_nat_cast_comp /-
-theorem Polynomial.mul_X_add_nat_cast_comp {p q : S[X]} {n : ℕ} :
+#print Polynomial.mul_X_add_natCast_comp /-
+theorem Polynomial.mul_X_add_natCast_comp {p q : S[X]} {n : ℕ} :
     (p * (X + n)).comp q = p.comp q * (q + n) := by
   rw [mul_add, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_add]
-#align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_X_add_nat_cast_comp
+#align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_X_add_natCast_comp
 -/
 
 #print ascPochhammer_mul /-
@@ -169,7 +169,7 @@ theorem ascPochhammer_mul (n m : ℕ) :
   induction' m with m ih
   · simp
   ·
-    rw [ascPochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih,
+    rw [ascPochhammer_succ_right, Polynomial.mul_X_add_natCast_comp, ← mul_assoc, ih,
       Nat.succ_eq_add_one, ← add_assoc, ascPochhammer_succ_right, Nat.cast_add, add_assoc]
 #align pochhammer_mul ascPochhammer_mul
 -/

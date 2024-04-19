@@ -414,88 +414,88 @@ instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
     intCast_negSucc := fun n => show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_natCast, coe_neg]
     one := 1 }
 
-#print QuaternionAlgebra.nat_cast_re /-
+#print QuaternionAlgebra.natCast_re /-
 @[simp, norm_cast]
-theorem nat_cast_re (n : ℕ) : (n : ℍ[R,c₁,c₂]).re = n :=
+theorem natCast_re (n : ℕ) : (n : ℍ[R,c₁,c₂]).re = n :=
   rfl
-#align quaternion_algebra.nat_cast_re QuaternionAlgebra.nat_cast_re
+#align quaternion_algebra.nat_cast_re QuaternionAlgebra.natCast_re
 -/
 
-#print QuaternionAlgebra.nat_cast_imI /-
+#print QuaternionAlgebra.natCast_imI /-
 @[simp, norm_cast]
-theorem nat_cast_imI (n : ℕ) : (n : ℍ[R,c₁,c₂]).imI = 0 :=
+theorem natCast_imI (n : ℕ) : (n : ℍ[R,c₁,c₂]).imI = 0 :=
   rfl
-#align quaternion_algebra.nat_cast_im_i QuaternionAlgebra.nat_cast_imI
+#align quaternion_algebra.nat_cast_im_i QuaternionAlgebra.natCast_imI
 -/
 
-#print QuaternionAlgebra.nat_cast_imJ /-
+#print QuaternionAlgebra.natCast_imJ /-
 @[simp, norm_cast]
-theorem nat_cast_imJ (n : ℕ) : (n : ℍ[R,c₁,c₂]).imJ = 0 :=
+theorem natCast_imJ (n : ℕ) : (n : ℍ[R,c₁,c₂]).imJ = 0 :=
   rfl
-#align quaternion_algebra.nat_cast_im_j QuaternionAlgebra.nat_cast_imJ
+#align quaternion_algebra.nat_cast_im_j QuaternionAlgebra.natCast_imJ
 -/
 
-#print QuaternionAlgebra.nat_cast_imK /-
+#print QuaternionAlgebra.natCast_imK /-
 @[simp, norm_cast]
-theorem nat_cast_imK (n : ℕ) : (n : ℍ[R,c₁,c₂]).imK = 0 :=
+theorem natCast_imK (n : ℕ) : (n : ℍ[R,c₁,c₂]).imK = 0 :=
   rfl
-#align quaternion_algebra.nat_cast_im_k QuaternionAlgebra.nat_cast_imK
+#align quaternion_algebra.nat_cast_im_k QuaternionAlgebra.natCast_imK
 -/
 
-#print QuaternionAlgebra.nat_cast_im /-
+#print QuaternionAlgebra.natCast_im /-
 @[simp, norm_cast]
-theorem nat_cast_im (n : ℕ) : (n : ℍ[R,c₁,c₂]).im = 0 :=
+theorem natCast_im (n : ℕ) : (n : ℍ[R,c₁,c₂]).im = 0 :=
   rfl
-#align quaternion_algebra.nat_cast_im QuaternionAlgebra.nat_cast_im
+#align quaternion_algebra.nat_cast_im QuaternionAlgebra.natCast_im
 -/
 
-#print QuaternionAlgebra.coe_nat_cast /-
+#print QuaternionAlgebra.coe_natCast /-
 @[norm_cast]
-theorem coe_nat_cast (n : ℕ) : ↑(n : R) = (n : ℍ[R,c₁,c₂]) :=
+theorem coe_natCast (n : ℕ) : ↑(n : R) = (n : ℍ[R,c₁,c₂]) :=
   rfl
-#align quaternion_algebra.coe_nat_cast QuaternionAlgebra.coe_nat_cast
+#align quaternion_algebra.coe_nat_cast QuaternionAlgebra.coe_natCast
 -/
 
-#print QuaternionAlgebra.int_cast_re /-
+#print QuaternionAlgebra.intCast_re /-
 @[simp, norm_cast]
-theorem int_cast_re (z : ℤ) : (z : ℍ[R,c₁,c₂]).re = z :=
+theorem intCast_re (z : ℤ) : (z : ℍ[R,c₁,c₂]).re = z :=
   rfl
-#align quaternion_algebra.int_cast_re QuaternionAlgebra.int_cast_re
+#align quaternion_algebra.int_cast_re QuaternionAlgebra.intCast_re
 -/
 
-#print QuaternionAlgebra.int_cast_imI /-
+#print QuaternionAlgebra.intCast_imI /-
 @[simp, norm_cast]
-theorem int_cast_imI (z : ℤ) : (z : ℍ[R,c₁,c₂]).imI = 0 :=
+theorem intCast_imI (z : ℤ) : (z : ℍ[R,c₁,c₂]).imI = 0 :=
   rfl
-#align quaternion_algebra.int_cast_im_i QuaternionAlgebra.int_cast_imI
+#align quaternion_algebra.int_cast_im_i QuaternionAlgebra.intCast_imI
 -/
 
-#print QuaternionAlgebra.int_cast_imJ /-
+#print QuaternionAlgebra.intCast_imJ /-
 @[simp, norm_cast]
-theorem int_cast_imJ (z : ℤ) : (z : ℍ[R,c₁,c₂]).imJ = 0 :=
+theorem intCast_imJ (z : ℤ) : (z : ℍ[R,c₁,c₂]).imJ = 0 :=
   rfl
-#align quaternion_algebra.int_cast_im_j QuaternionAlgebra.int_cast_imJ
+#align quaternion_algebra.int_cast_im_j QuaternionAlgebra.intCast_imJ
 -/
 
-#print QuaternionAlgebra.int_cast_imK /-
+#print QuaternionAlgebra.intCast_imK /-
 @[simp, norm_cast]
-theorem int_cast_imK (z : ℤ) : (z : ℍ[R,c₁,c₂]).imK = 0 :=
+theorem intCast_imK (z : ℤ) : (z : ℍ[R,c₁,c₂]).imK = 0 :=
   rfl
-#align quaternion_algebra.int_cast_im_k QuaternionAlgebra.int_cast_imK
+#align quaternion_algebra.int_cast_im_k QuaternionAlgebra.intCast_imK
 -/
 
-#print QuaternionAlgebra.int_cast_im /-
+#print QuaternionAlgebra.intCast_im /-
 @[simp, norm_cast]
-theorem int_cast_im (z : ℤ) : (z : ℍ[R,c₁,c₂]).im = 0 :=
+theorem intCast_im (z : ℤ) : (z : ℍ[R,c₁,c₂]).im = 0 :=
   rfl
-#align quaternion_algebra.int_cast_im QuaternionAlgebra.int_cast_im
+#align quaternion_algebra.int_cast_im QuaternionAlgebra.intCast_im
 -/
 
-#print QuaternionAlgebra.coe_int_cast /-
+#print QuaternionAlgebra.coe_intCast /-
 @[norm_cast]
-theorem coe_int_cast (z : ℤ) : ↑(z : R) = (z : ℍ[R,c₁,c₂]) :=
+theorem coe_intCast (z : ℤ) : ↑(z : R) = (z : ℍ[R,c₁,c₂]) :=
   rfl
-#align quaternion_algebra.coe_int_cast QuaternionAlgebra.coe_int_cast
+#align quaternion_algebra.coe_int_cast QuaternionAlgebra.coe_intCast
 -/
 
 instance : Ring ℍ[R,c₁,c₂] := by
@@ -1290,88 +1290,88 @@ theorem coe_pow (n : ℕ) : (↑(x ^ n) : ℍ[R]) = ↑x ^ n :=
 #align quaternion.coe_pow Quaternion.coe_pow
 -/
 
-#print Quaternion.nat_cast_re /-
+#print Quaternion.natCast_re /-
 @[simp, norm_cast]
-theorem nat_cast_re (n : ℕ) : (n : ℍ[R]).re = n :=
+theorem natCast_re (n : ℕ) : (n : ℍ[R]).re = n :=
   rfl
-#align quaternion.nat_cast_re Quaternion.nat_cast_re
+#align quaternion.nat_cast_re Quaternion.natCast_re
 -/
 
-#print Quaternion.nat_cast_imI /-
+#print Quaternion.natCast_imI /-
 @[simp, norm_cast]
-theorem nat_cast_imI (n : ℕ) : (n : ℍ[R]).imI = 0 :=
+theorem natCast_imI (n : ℕ) : (n : ℍ[R]).imI = 0 :=
   rfl
-#align quaternion.nat_cast_im_i Quaternion.nat_cast_imI
+#align quaternion.nat_cast_im_i Quaternion.natCast_imI
 -/
 
-#print Quaternion.nat_cast_imJ /-
+#print Quaternion.natCast_imJ /-
 @[simp, norm_cast]
-theorem nat_cast_imJ (n : ℕ) : (n : ℍ[R]).imJ = 0 :=
+theorem natCast_imJ (n : ℕ) : (n : ℍ[R]).imJ = 0 :=
   rfl
-#align quaternion.nat_cast_im_j Quaternion.nat_cast_imJ
+#align quaternion.nat_cast_im_j Quaternion.natCast_imJ
 -/
 
-#print Quaternion.nat_cast_imK /-
+#print Quaternion.natCast_imK /-
 @[simp, norm_cast]
-theorem nat_cast_imK (n : ℕ) : (n : ℍ[R]).imK = 0 :=
+theorem natCast_imK (n : ℕ) : (n : ℍ[R]).imK = 0 :=
   rfl
-#align quaternion.nat_cast_im_k Quaternion.nat_cast_imK
+#align quaternion.nat_cast_im_k Quaternion.natCast_imK
 -/
 
-#print Quaternion.nat_cast_im /-
+#print Quaternion.natCast_im /-
 @[simp, norm_cast]
-theorem nat_cast_im (n : ℕ) : (n : ℍ[R]).im = 0 :=
+theorem natCast_im (n : ℕ) : (n : ℍ[R]).im = 0 :=
   rfl
-#align quaternion.nat_cast_im Quaternion.nat_cast_im
+#align quaternion.nat_cast_im Quaternion.natCast_im
 -/
 
-#print Quaternion.coe_nat_cast /-
+#print Quaternion.coe_natCast /-
 @[norm_cast]
-theorem coe_nat_cast (n : ℕ) : ↑(n : R) = (n : ℍ[R]) :=
+theorem coe_natCast (n : ℕ) : ↑(n : R) = (n : ℍ[R]) :=
   rfl
-#align quaternion.coe_nat_cast Quaternion.coe_nat_cast
+#align quaternion.coe_nat_cast Quaternion.coe_natCast
 -/
 
-#print Quaternion.int_cast_re /-
+#print Quaternion.intCast_re /-
 @[simp, norm_cast]
-theorem int_cast_re (z : ℤ) : (z : ℍ[R]).re = z :=
+theorem intCast_re (z : ℤ) : (z : ℍ[R]).re = z :=
   rfl
-#align quaternion.int_cast_re Quaternion.int_cast_re
+#align quaternion.int_cast_re Quaternion.intCast_re
 -/
 
-#print Quaternion.int_cast_imI /-
+#print Quaternion.intCast_imI /-
 @[simp, norm_cast]
-theorem int_cast_imI (z : ℤ) : (z : ℍ[R]).imI = 0 :=
+theorem intCast_imI (z : ℤ) : (z : ℍ[R]).imI = 0 :=
   rfl
-#align quaternion.int_cast_im_i Quaternion.int_cast_imI
+#align quaternion.int_cast_im_i Quaternion.intCast_imI
 -/
 
-#print Quaternion.int_cast_imJ /-
+#print Quaternion.intCast_imJ /-
 @[simp, norm_cast]
-theorem int_cast_imJ (z : ℤ) : (z : ℍ[R]).imJ = 0 :=
+theorem intCast_imJ (z : ℤ) : (z : ℍ[R]).imJ = 0 :=
   rfl
-#align quaternion.int_cast_im_j Quaternion.int_cast_imJ
+#align quaternion.int_cast_im_j Quaternion.intCast_imJ
 -/
 
-#print Quaternion.int_cast_imK /-
+#print Quaternion.intCast_imK /-
 @[simp, norm_cast]
-theorem int_cast_imK (z : ℤ) : (z : ℍ[R]).imK = 0 :=
+theorem intCast_imK (z : ℤ) : (z : ℍ[R]).imK = 0 :=
   rfl
-#align quaternion.int_cast_im_k Quaternion.int_cast_imK
+#align quaternion.int_cast_im_k Quaternion.intCast_imK
 -/
 
-#print Quaternion.int_cast_im /-
+#print Quaternion.intCast_im /-
 @[simp, norm_cast]
-theorem int_cast_im (z : ℤ) : (z : ℍ[R]).im = 0 :=
+theorem intCast_im (z : ℤ) : (z : ℍ[R]).im = 0 :=
   rfl
-#align quaternion.int_cast_im Quaternion.int_cast_im
+#align quaternion.int_cast_im Quaternion.intCast_im
 -/
 
-#print Quaternion.coe_int_cast /-
+#print Quaternion.coe_intCast /-
 @[norm_cast]
-theorem coe_int_cast (z : ℤ) : ↑(z : R) = (z : ℍ[R]) :=
+theorem coe_intCast (z : ℤ) : ↑(z : R) = (z : ℍ[R]) :=
   rfl
-#align quaternion.coe_int_cast Quaternion.coe_int_cast
+#align quaternion.coe_int_cast Quaternion.coe_intCast
 -/
 
 #print Quaternion.coe_injective /-
@@ -1670,16 +1670,16 @@ theorem normSq_star : normSq (star a) = normSq a := by simp [norm_sq_def']
 #align quaternion.norm_sq_star Quaternion.normSq_star
 -/
 
-#print Quaternion.normSq_nat_cast /-
+#print Quaternion.normSq_natCast /-
 @[norm_cast]
-theorem normSq_nat_cast (n : ℕ) : normSq (n : ℍ[R]) = n ^ 2 := by rw [← coe_nat_cast, norm_sq_coe]
-#align quaternion.norm_sq_nat_cast Quaternion.normSq_nat_cast
+theorem normSq_natCast (n : ℕ) : normSq (n : ℍ[R]) = n ^ 2 := by rw [← coe_nat_cast, norm_sq_coe]
+#align quaternion.norm_sq_nat_cast Quaternion.normSq_natCast
 -/
 
-#print Quaternion.normSq_int_cast /-
+#print Quaternion.normSq_intCast /-
 @[norm_cast]
-theorem normSq_int_cast (z : ℤ) : normSq (z : ℍ[R]) = z ^ 2 := by rw [← coe_int_cast, norm_sq_coe]
-#align quaternion.norm_sq_int_cast Quaternion.normSq_int_cast
+theorem normSq_intCast (z : ℤ) : normSq (z : ℍ[R]) = z ^ 2 := by rw [← coe_int_cast, norm_sq_coe]
+#align quaternion.norm_sq_int_cast Quaternion.normSq_intCast
 -/
 
 #print Quaternion.normSq_neg /-
@@ -1850,46 +1850,46 @@ instance : DivisionRing ℍ[R] :=
       rw [coe_mul_eq_smul]
       ext <;> exact DivisionRing.qsmul_eq_mul' _ _ }
 
-#print Quaternion.rat_cast_re /-
+#print Quaternion.ratCast_re /-
 @[simp, norm_cast]
-theorem rat_cast_re (q : ℚ) : (q : ℍ[R]).re = q :=
+theorem ratCast_re (q : ℚ) : (q : ℍ[R]).re = q :=
   rfl
-#align quaternion.rat_cast_re Quaternion.rat_cast_re
+#align quaternion.rat_cast_re Quaternion.ratCast_re
 -/
 
-#print Quaternion.rat_cast_imI /-
+#print Quaternion.ratCast_imI /-
 @[simp, norm_cast]
-theorem rat_cast_imI (q : ℚ) : (q : ℍ[R]).imI = 0 :=
+theorem ratCast_imI (q : ℚ) : (q : ℍ[R]).imI = 0 :=
   rfl
-#align quaternion.rat_cast_im_i Quaternion.rat_cast_imI
+#align quaternion.rat_cast_im_i Quaternion.ratCast_imI
 -/
 
-#print Quaternion.rat_cast_imJ /-
+#print Quaternion.ratCast_imJ /-
 @[simp, norm_cast]
-theorem rat_cast_imJ (q : ℚ) : (q : ℍ[R]).imJ = 0 :=
+theorem ratCast_imJ (q : ℚ) : (q : ℍ[R]).imJ = 0 :=
   rfl
-#align quaternion.rat_cast_im_j Quaternion.rat_cast_imJ
+#align quaternion.rat_cast_im_j Quaternion.ratCast_imJ
 -/
 
-#print Quaternion.rat_cast_imK /-
+#print Quaternion.ratCast_imK /-
 @[simp, norm_cast]
-theorem rat_cast_imK (q : ℚ) : (q : ℍ[R]).imK = 0 :=
+theorem ratCast_imK (q : ℚ) : (q : ℍ[R]).imK = 0 :=
   rfl
-#align quaternion.rat_cast_im_k Quaternion.rat_cast_imK
+#align quaternion.rat_cast_im_k Quaternion.ratCast_imK
 -/
 
-#print Quaternion.rat_cast_im /-
+#print Quaternion.ratCast_im /-
 @[simp, norm_cast]
-theorem rat_cast_im (q : ℚ) : (q : ℍ[R]).im = 0 :=
+theorem ratCast_im (q : ℚ) : (q : ℍ[R]).im = 0 :=
   rfl
-#align quaternion.rat_cast_im Quaternion.rat_cast_im
+#align quaternion.rat_cast_im Quaternion.ratCast_im
 -/
 
-#print Quaternion.coe_rat_cast /-
+#print Quaternion.coe_ratCast /-
 @[norm_cast]
-theorem coe_rat_cast (q : ℚ) : ↑(q : R) = (q : ℍ[R]) :=
+theorem coe_ratCast (q : ℚ) : ↑(q : R) = (q : ℍ[R]) :=
   rfl
-#align quaternion.coe_rat_cast Quaternion.coe_rat_cast
+#align quaternion.coe_rat_cast Quaternion.coe_ratCast
 -/
 
 #print Quaternion.normSq_inv /-
@@ -1913,10 +1913,10 @@ theorem normSq_zpow (z : ℤ) : normSq (a ^ z) = normSq a ^ z :=
 #align quaternion.norm_sq_zpow Quaternion.normSq_zpow
 -/
 
-#print Quaternion.normSq_rat_cast /-
+#print Quaternion.normSq_ratCast /-
 @[norm_cast]
-theorem normSq_rat_cast (q : ℚ) : normSq (q : ℍ[R]) = q ^ 2 := by rw [← coe_rat_cast, norm_sq_coe]
-#align quaternion.norm_sq_rat_cast Quaternion.normSq_rat_cast
+theorem normSq_ratCast (q : ℚ) : normSq (q : ℍ[R]) = q ^ 2 := by rw [← coe_rat_cast, norm_sq_coe]
+#align quaternion.norm_sq_rat_cast Quaternion.normSq_ratCast
 -/
 
 end Field

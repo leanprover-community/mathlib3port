@@ -1624,11 +1624,11 @@ theorem sub_ne_top (ha : a ≠ ∞) : a - b ≠ ∞ :=
 #align ennreal.sub_ne_top ENNReal.sub_ne_top
 -/
 
-#print ENNReal.nat_cast_sub /-
+#print ENNReal.natCast_sub /-
 @[simp, norm_cast]
-theorem nat_cast_sub (m n : ℕ) : ↑(m - n) = (m - n : ℝ≥0∞) := by
+theorem natCast_sub (m n : ℕ) : ↑(m - n) = (m - n : ℝ≥0∞) := by
   rw [← coe_nat, Nat.cast_tsub, coe_sub, coe_nat, coe_nat]
-#align ennreal.nat_cast_sub ENNReal.nat_cast_sub
+#align ennreal.nat_cast_sub ENNReal.natCast_sub
 -/
 
 #print ENNReal.sub_eq_of_eq_add /-

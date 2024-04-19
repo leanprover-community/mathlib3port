@@ -585,7 +585,7 @@ theorem GammaSeq_tendsto_Gamma (s : ℝ) : Tendsto (GammaSeq s) atTop (𝓝 <| G
   ext1 n
   dsimp only [Gamma_seq, Function.comp_apply, Complex.GammaSeq]
   push_cast
-  rw [Complex.ofReal_cpow n.cast_nonneg, Complex.ofReal_nat_cast]
+  rw [Complex.ofReal_cpow n.cast_nonneg, Complex.ofReal_natCast]
 #align real.Gamma_seq_tendsto_Gamma Real.GammaSeq_tendsto_Gamma
 -/
 

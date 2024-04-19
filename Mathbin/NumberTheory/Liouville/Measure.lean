@@ -106,7 +106,7 @@ theorem volume_iUnion_setOf_liouvilleWith :
   have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0) :=
     by
     intro a b
-    rw [Real.volume_ball, mul_one_div, ← NNReal.coe_two, ← NNReal.coe_nat_cast, ← NNReal.coe_rpow, ←
+    rw [Real.volume_ball, mul_one_div, ← NNReal.coe_two, ← NNReal.coe_natCast, ← NNReal.coe_rpow, ←
       NNReal.coe_div, ENNReal.ofReal_coe_nnreal]
   have :
     ∀ b : ℕ, volume (⋃ a ∈ Finset.Icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) :=

@@ -528,11 +528,11 @@ protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) :
 #align equiv.is_domain Equiv.isDomain
 -/
 
-#print Equiv.RatCast /-
+#print Equiv.ratCast /-
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
-protected def RatCast [HasRatCast β] : HasRatCast α where ratCast n := e.symm n
-#align equiv.has_rat_cast Equiv.RatCast
+protected def ratCast [HasRatCast β] : HasRatCast α where ratCast n := e.symm n
+#align equiv.has_rat_cast Equiv.ratCast
 -/
 
 #print Equiv.divisionRing /-

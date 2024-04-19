@@ -478,14 +478,14 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     prod.ext_iff.mp hqf
   have hd₁ : m ∣ q₁.1 * q₂.1 - d * (q₁.2 * q₂.2) :=
     by
-    rw [← Int.natAbs_dvd, ← ZMod.int_cast_zmod_eq_zero_iff_dvd]
+    rw [← Int.natAbs_dvd, ← ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast
     rw [hq1, hq2, ← sq, ← sq]
     norm_cast
-    rw [ZMod.int_cast_zmod_eq_zero_iff_dvd, Int.natAbs_dvd, Nat.cast_pow, ← h₂]
+    rw [ZMod.intCast_zmod_eq_zero_iff_dvd, Int.natAbs_dvd, Nat.cast_pow, ← h₂]
   have hd₂ : m ∣ q₁.1 * q₂.2 - q₂.1 * q₁.2 :=
     by
-    rw [← Int.natAbs_dvd, ← ZMod.int_cast_eq_int_cast_iff_dvd_sub]
+    rw [← Int.natAbs_dvd, ← ZMod.intCast_eq_intCast_iff_dvd_sub]
     push_cast
     rw [hq1, hq2]
   replace hm₀ : (m : ℚ) ≠ 0 := int.cast_ne_zero.mpr hm₀

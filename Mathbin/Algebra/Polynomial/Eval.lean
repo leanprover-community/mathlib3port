@@ -163,14 +163,14 @@ def eval₂AddMonoidHom : R[X] →+ S where
 #align polynomial.eval₂_add_monoid_hom Polynomial.eval₂AddMonoidHom
 -/
 
-#print Polynomial.eval₂_nat_cast /-
+#print Polynomial.eval₂_natCast /-
 @[simp]
-theorem eval₂_nat_cast (n : ℕ) : (n : R[X]).eval₂ f x = n :=
+theorem eval₂_natCast (n : ℕ) : (n : R[X]).eval₂ f x = n :=
   by
   induction' n with n ih
   · simp only [eval₂_zero, Nat.cast_zero]
   · rw [n.cast_succ, eval₂_add, ih, eval₂_one, n.cast_succ]
-#align polynomial.eval₂_nat_cast Polynomial.eval₂_nat_cast
+#align polynomial.eval₂_nat_cast Polynomial.eval₂_natCast
 -/
 
 variable [Semiring T]
@@ -434,13 +434,13 @@ theorem eval₂_at_one {S : Type _} [Semiring S] (f : R →+* S) : p.eval₂ f 1
 #align polynomial.eval₂_at_one Polynomial.eval₂_at_one
 -/
 
-#print Polynomial.eval₂_at_nat_cast /-
+#print Polynomial.eval₂_at_natCast /-
 @[simp]
-theorem eval₂_at_nat_cast {S : Type _} [Semiring S] (f : R →+* S) (n : ℕ) :
+theorem eval₂_at_natCast {S : Type _} [Semiring S] (f : R →+* S) (n : ℕ) :
     p.eval₂ f n = f (p.eval n) := by
   convert eval₂_at_apply f n
   simp
-#align polynomial.eval₂_at_nat_cast Polynomial.eval₂_at_nat_cast
+#align polynomial.eval₂_at_nat_cast Polynomial.eval₂_at_natCast
 -/
 
 #print Polynomial.eval_C /-
@@ -450,10 +450,10 @@ theorem eval_C : (C a).eval x = a :=
 #align polynomial.eval_C Polynomial.eval_C
 -/
 
-#print Polynomial.eval_nat_cast /-
+#print Polynomial.eval_natCast /-
 @[simp]
-theorem eval_nat_cast {n : ℕ} : (n : R[X]).eval x = n := by simp only [← C_eq_nat_cast, eval_C]
-#align polynomial.eval_nat_cast Polynomial.eval_nat_cast
+theorem eval_natCast {n : ℕ} : (n : R[X]).eval x = n := by simp only [← C_eq_nat_cast, eval_C]
+#align polynomial.eval_nat_cast Polynomial.eval_natCast
 -/
 
 #print Polynomial.eval_X /-
@@ -561,11 +561,11 @@ def leval {R : Type _} [Semiring R] (r : R) : R[X] →ₗ[R] R
 #align polynomial.leval Polynomial.leval
 -/
 
-#print Polynomial.eval_nat_cast_mul /-
+#print Polynomial.eval_natCast_mul /-
 @[simp]
-theorem eval_nat_cast_mul {n : ℕ} : ((n : R[X]) * p).eval x = n * p.eval x := by
+theorem eval_natCast_mul {n : ℕ} : ((n : R[X]) * p).eval x = n * p.eval x := by
   rw [← C_eq_nat_cast, eval_C_mul]
-#align polynomial.eval_nat_cast_mul Polynomial.eval_nat_cast_mul
+#align polynomial.eval_nat_cast_mul Polynomial.eval_natCast_mul
 -/
 
 #print Polynomial.eval_mul_X /-
@@ -707,10 +707,10 @@ theorem C_comp : (C a).comp p = C a :=
 #align polynomial.C_comp Polynomial.C_comp
 -/
 
-#print Polynomial.nat_cast_comp /-
+#print Polynomial.natCast_comp /-
 @[simp]
-theorem nat_cast_comp {n : ℕ} : (n : R[X]).comp p = n := by rw [← C_eq_nat_cast, C_comp]
-#align polynomial.nat_cast_comp Polynomial.nat_cast_comp
+theorem natCast_comp {n : ℕ} : (n : R[X]).comp p = n := by rw [← C_eq_nat_cast, C_comp]
+#align polynomial.nat_cast_comp Polynomial.natCast_comp
 -/
 
 #print Polynomial.comp_zero /-
@@ -791,11 +791,11 @@ theorem C_mul_comp : (C a * p).comp r = C a * p.comp r :=
 #align polynomial.C_mul_comp Polynomial.C_mul_comp
 -/
 
-#print Polynomial.nat_cast_mul_comp /-
+#print Polynomial.natCast_mul_comp /-
 @[simp]
-theorem nat_cast_mul_comp {n : ℕ} : ((n : R[X]) * p).comp r = n * p.comp r := by
+theorem natCast_mul_comp {n : ℕ} : ((n : R[X]) * p).comp r = n * p.comp r := by
   rw [← C_eq_nat_cast, C_mul_comp, C_eq_nat_cast]
-#align polynomial.nat_cast_mul_comp Polynomial.nat_cast_mul_comp
+#align polynomial.nat_cast_mul_comp Polynomial.natCast_mul_comp
 -/
 
 #print Polynomial.mul_comp /-
@@ -957,12 +957,12 @@ theorem coe_mapRingHom (f : R →+* S) : ⇑(mapRingHom f) = map f :=
 #align polynomial.coe_map_ring_hom Polynomial.coe_mapRingHom
 -/
 
-#print Polynomial.map_nat_cast /-
+#print Polynomial.map_natCast /-
 -- This is protected to not clash with the global `map_nat_cast`.
 @[simp]
-protected theorem map_nat_cast (n : ℕ) : (n : R[X]).map f = n :=
+protected theorem map_natCast (n : ℕ) : (n : R[X]).map f = n :=
   map_natCast (mapRingHom f) n
-#align polynomial.map_nat_cast Polynomial.map_nat_cast
+#align polynomial.map_nat_cast Polynomial.map_natCast
 -/
 
 #print Polynomial.map_bit0 /-
@@ -1221,25 +1221,25 @@ theorem eval_one_map (f : R →+* S) (p : R[X]) : (p.map f).eval 1 = f (p.eval 1
 #align polynomial.eval_one_map Polynomial.eval_one_map
 -/
 
-#print Polynomial.eval_nat_cast_map /-
+#print Polynomial.eval_natCast_map /-
 @[simp]
-theorem eval_nat_cast_map (f : R →+* S) (p : R[X]) (n : ℕ) : (p.map f).eval n = f (p.eval n) :=
+theorem eval_natCast_map (f : R →+* S) (p : R[X]) (n : ℕ) : (p.map f).eval n = f (p.eval n) :=
   by
   apply Polynomial.induction_on' p
   · intro p q hp hq; simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
   · intro n r; simp only [map_natCast f, eval_monomial, map_monomial, f.map_pow, f.map_mul]
-#align polynomial.eval_nat_cast_map Polynomial.eval_nat_cast_map
+#align polynomial.eval_nat_cast_map Polynomial.eval_natCast_map
 -/
 
-#print Polynomial.eval_int_cast_map /-
+#print Polynomial.eval_intCast_map /-
 @[simp]
-theorem eval_int_cast_map {R S : Type _} [Ring R] [Ring S] (f : R →+* S) (p : R[X]) (i : ℤ) :
+theorem eval_intCast_map {R S : Type _} [Ring R] [Ring S] (f : R →+* S) (p : R[X]) (i : ℤ) :
     (p.map f).eval i = f (p.eval i) :=
   by
   apply Polynomial.induction_on' p
   · intro p q hp hq; simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
   · intro n r; simp only [map_intCast, eval_monomial, map_monomial, map_pow, map_mul]
-#align polynomial.eval_int_cast_map Polynomial.eval_int_cast_map
+#align polynomial.eval_int_cast_map Polynomial.eval_intCast_map
 -/
 
 end Map
@@ -1570,18 +1570,18 @@ protected theorem map_neg {S} [Ring S] (f : R →+* S) : (-p).map f = -p.map f :
 #align polynomial.map_neg Polynomial.map_neg
 -/
 
-#print Polynomial.map_int_cast /-
+#print Polynomial.map_intCast /-
 @[simp]
-theorem map_int_cast {S} [Ring S] (f : R →+* S) (n : ℤ) : map f ↑n = ↑n :=
+theorem map_intCast {S} [Ring S] (f : R →+* S) (n : ℤ) : map f ↑n = ↑n :=
   map_intCast (mapRingHom f) n
-#align polynomial.map_int_cast Polynomial.map_int_cast
+#align polynomial.map_int_cast Polynomial.map_intCast
 -/
 
-#print Polynomial.eval_int_cast /-
+#print Polynomial.eval_intCast /-
 @[simp]
-theorem eval_int_cast {n : ℤ} {x : R} : (n : R[X]).eval x = n := by
+theorem eval_intCast {n : ℤ} {x : R} : (n : R[X]).eval x = n := by
   simp only [← C_eq_int_cast, eval_C]
-#align polynomial.eval_int_cast Polynomial.eval_int_cast
+#align polynomial.eval_int_cast Polynomial.eval_intCast
 -/
 
 #print Polynomial.eval₂_neg /-

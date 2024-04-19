@@ -447,50 +447,50 @@ end Coeff
 
 section cast
 
-#print Polynomial.nat_cast_coeff_zero /-
+#print Polynomial.natCast_coeff_zero /-
 @[simp]
-theorem nat_cast_coeff_zero {n : ℕ} {R : Type _} [Semiring R] : (n : R[X]).coeff 0 = n :=
+theorem natCast_coeff_zero {n : ℕ} {R : Type _} [Semiring R] : (n : R[X]).coeff 0 = n :=
   by
   induction' n with n ih
   · simp
   · simp [ih]
-#align polynomial.nat_cast_coeff_zero Polynomial.nat_cast_coeff_zero
+#align polynomial.nat_cast_coeff_zero Polynomial.natCast_coeff_zero
 -/
 
-#print Polynomial.nat_cast_inj /-
+#print Polynomial.natCast_inj /-
 @[simp, norm_cast]
-theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n :=
+theorem natCast_inj {m n : ℕ} {R : Type _} [Semiring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n :=
   by
   fconstructor
   · intro h
     apply_fun fun p => p.coeff 0 at h
     simpa using h
   · rintro rfl; rfl
-#align polynomial.nat_cast_inj Polynomial.nat_cast_inj
+#align polynomial.nat_cast_inj Polynomial.natCast_inj
 -/
 
-#print Polynomial.int_cast_coeff_zero /-
+#print Polynomial.intCast_coeff_zero /-
 @[simp]
-theorem int_cast_coeff_zero {i : ℤ} {R : Type _} [Ring R] : (i : R[X]).coeff 0 = i := by
+theorem intCast_coeff_zero {i : ℤ} {R : Type _} [Ring R] : (i : R[X]).coeff 0 = i := by
   cases i <;> simp
-#align polynomial.int_cast_coeff_zero Polynomial.int_cast_coeff_zero
+#align polynomial.int_cast_coeff_zero Polynomial.intCast_coeff_zero
 -/
 
-#print Polynomial.int_cast_inj /-
+#print Polynomial.intCast_inj /-
 @[simp, norm_cast]
-theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n :=
+theorem intCast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n :=
   by
   fconstructor
   · intro h
     apply_fun fun p => p.coeff 0 at h
     simpa using h
   · rintro rfl; rfl
-#align polynomial.int_cast_inj Polynomial.int_cast_inj
+#align polynomial.int_cast_inj Polynomial.intCast_inj
 -/
 
 end cast
 
-instance [CharZero R] : CharZero R[X] where cast_injective x y := nat_cast_inj.mp
+instance [CharZero R] : CharZero R[X] where cast_injective x y := natCast_inj.mp
 
 end Polynomial
 

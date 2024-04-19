@@ -215,7 +215,7 @@ theorem a_one_pow_n : (a 1 : QuaternionGroup n) ^ (2 * n) = 1 :=
   by
   rw [a_one_pow, one_def]
   congr 1
-  exact ZMod.nat_cast_self _
+  exact ZMod.natCast_self _
 #align quaternion_group.a_one_pow_n QuaternionGroup.a_one_pow_n
 -/
 
@@ -251,7 +251,7 @@ theorem orderOf_xa [NeZero n] (i : ZMod (2 * n)) : orderOf (xa i) = 4 :=
     injection h with h'
     apply_fun ZMod.val at h'
     apply_fun (· / n) at h'
-    simp only [ZMod.val_nat_cast, ZMod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
+    simp only [ZMod.val_natCast, ZMod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
       Nat.div_self (NeZero.pos n)] at h'
     norm_num at h'
   · norm_num
@@ -289,7 +289,7 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
   have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_orderOf_eq_one _
   rw [a_one_pow] at h1
   injection h1 with h2
-  rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
+  rw [← ZMod.val_eq_zero, ZMod.val_natCast, Nat.mod_eq_of_lt h] at h2
   exact absurd h2.symm (orderOf_pos _).Ne
 #align quaternion_group.order_of_a_one QuaternionGroup.orderOf_a_one
 -/
@@ -299,7 +299,7 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
 -/
 theorem orderOf_a [NeZero n] (i : ZMod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
   by
-  conv_lhs => rw [← ZMod.nat_cast_zmod_val i]
+  conv_lhs => rw [← ZMod.natCast_zmod_val i]
   rw [← a_one_pow, orderOf_pow, order_of_a_one]
 #align quaternion_group.order_of_a QuaternionGroup.orderOf_a
 -/

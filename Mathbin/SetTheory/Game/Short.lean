@@ -201,15 +201,15 @@ attribute [instance] list_short.nil list_short.cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print SetTheory.PGame.listShortNthLe /-
-instance SetTheory.PGame.listShortNthLe :
+#print SetTheory.PGame.listShortGet /-
+instance SetTheory.PGame.listShortGet :
     ∀ (L : List SetTheory.PGame.{u}) [SetTheory.PGame.ListShort L] (i : Fin (List.length L)),
       SetTheory.PGame.Short (List.nthLe L i i.is_lt)
   | [], _, n => by exfalso; rcases n with ⟨_, ⟨⟩⟩
   | hd::tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
   | hd::tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ =>
     @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
-#align pgame.list_short_nth_le SetTheory.PGame.listShortNthLe
+#align pgame.list_short_nth_le SetTheory.PGame.listShortGet
 -/
 
 #print SetTheory.PGame.shortOfLists /-
@@ -219,7 +219,7 @@ instance SetTheory.PGame.shortOfLists :
   | L, R, _, _ => by
     skip; apply short.mk
     · intros; infer_instance
-    · intros; apply SetTheory.PGame.listShortNthLe
+    · intros; apply SetTheory.PGame.listShortGet
 #align pgame.short_of_lists SetTheory.PGame.shortOfLists
 -/
 

@@ -353,11 +353,11 @@ variable [AddMonoidWithOne R] [Mul R] (c : RingCon R)
 instance : NatCast c.Quotient :=
   ⟨fun n => ↑(n : R)⟩
 
-#print RingCon.coe_nat_cast /-
+#print RingCon.coe_natCast /-
 @[simp, norm_cast]
-theorem coe_nat_cast (n : ℕ) : (↑(n : R) : c.Quotient) = n :=
+theorem coe_natCast (n : ℕ) : (↑(n : R) : c.Quotient) = n :=
   rfl
-#align ring_con.coe_nat_cast RingCon.coe_nat_cast
+#align ring_con.coe_nat_cast RingCon.coe_natCast
 -/
 
 end NatCast
@@ -369,11 +369,11 @@ variable [AddGroupWithOne R] [Mul R] (c : RingCon R)
 instance : IntCast c.Quotient :=
   ⟨fun z => ↑(z : R)⟩
 
-#print RingCon.coe_int_cast /-
+#print RingCon.coe_intCast /-
 @[simp, norm_cast]
-theorem coe_int_cast (n : ℕ) : (↑(n : R) : c.Quotient) = n :=
+theorem coe_intCast (n : ℕ) : (↑(n : R) : c.Quotient) = n :=
   rfl
-#align ring_con.coe_int_cast RingCon.coe_int_cast
+#align ring_con.coe_int_cast RingCon.coe_intCast
 -/
 
 end IntCast

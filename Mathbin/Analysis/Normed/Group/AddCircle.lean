@@ -270,13 +270,13 @@ section FiniteOrderPoints
 
 variable {p} [hp : Fact (0 < p)]
 
-#print AddCircle.norm_div_nat_cast /-
-theorem norm_div_nat_cast {m n : ℕ} :
+#print AddCircle.norm_div_natCast /-
+theorem norm_div_natCast {m n : ℕ} :
     ‖(↑(↑m / ↑n * p) : AddCircle p)‖ = p * (↑(min (m % n) (n - m % n)) / n) :=
   by
   have : p⁻¹ * (↑m / ↑n * p) = ↑m / ↑n := by rw [mul_comm _ p, inv_mul_cancel_left₀ hp.out.ne.symm]
   rw [norm_eq' p hp.out, this, abs_sub_round_div_natCast_eq]
-#align add_circle.norm_div_nat_cast AddCircle.norm_div_nat_cast
+#align add_circle.norm_div_nat_cast AddCircle.norm_div_natCast
 -/
 
 #print AddCircle.exists_norm_eq_of_isOfFinAddOrder /-

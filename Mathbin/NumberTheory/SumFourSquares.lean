@@ -56,7 +56,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
   hp.1.eq_two_or_odd.elim (fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
     let ⟨a, b, hab⟩ := ZMod.sq_add_sq p (-1)
     have hab' : (p : ℤ) ∣ a.valMinAbs ^ 2 + b.valMinAbs ^ 2 + 1 :=
-      (CharP.int_cast_eq_zero_iff (ZMod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab
+      (CharP.intCast_eq_zero_iff (ZMod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab
     let ⟨k, hk⟩ := hab'
     have hk0 : 0 ≤ k :=
       nonneg_of_mul_nonneg_right
@@ -113,10 +113,10 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
           rfl)
   let σ := swap i 0
   have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by
+    (CharP.intCast_eq_zero_iff (ZMod 2) 2 _).1 <| by
       simpa only [Int.cast_pow, Int.cast_add, Equiv.swap_apply_right, ZMod.pow_card] using hσ.1
   have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by
+    (CharP.intCast_eq_zero_iff (ZMod 2) 2 _).1 <| by
       simpa only [Int.cast_pow, Int.cast_add, ZMod.pow_card] using hσ.2
   let ⟨x, hx⟩ := h01
   let ⟨y, hy⟩ := h23
@@ -199,15 +199,15 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           ((a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 : ℤ) : ZMod m) :=
         by push_cast
       have hwxyz0 : ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) = 0 := by
-        rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, ZMod.nat_cast_self, MulZeroClass.zero_mul]
-      let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
+        rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, ZMod.natCast_self, MulZeroClass.zero_mul]
+      let ⟨n, hn⟩ := (CharP.intCast_eq_zero_iff _ m _).1 hwxyz0
       have hn0 : 0 < n.natAbs :=
         Int.natAbs_pos fun hn0 =>
           have hwxyz0 : (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) = 0 := by
             rw [← Int.natCast_eq_zero, ← hnat_abs]; rwa [hn0, MulZeroClass.mul_zero] at hn
           have habcd0 : (m : ℤ) ∣ a ∧ (m : ℤ) ∣ b ∧ (m : ℤ) ∣ c ∧ (m : ℤ) ∣ d := by
             simpa only [add_eq_zero_iff, Int.natAbs_eq_zero, ZMod.valMinAbs_eq_zero, and_assoc,
-              pow_eq_zero_iff two_pos, CharP.int_cast_eq_zero_iff _ m _] using hwxyz0
+              pow_eq_zero_iff two_pos, CharP.intCast_eq_zero_iff _ m _] using hwxyz0
           let ⟨ma, hma⟩ := habcd0.1
           let ⟨mb, hmb⟩ := habcd0.2.1
           let ⟨mc, hmc⟩ := habcd0.2.2.1
@@ -220,13 +220,13 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by
             simpa [lt_irrefl, hmeqp] using hmp
       have hawbxcydz : ((m : ℕ) : ℤ) ∣ a * w + b * x + c * y + d * z :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by rw [← hwxyz0]; simp_rw [sq]; push_cast
+        (CharP.intCast_eq_zero_iff (ZMod m) m _).1 <| by rw [← hwxyz0]; simp_rw [sq]; push_cast
       have haxbwczdy : ((m : ℕ) : ℤ) ∣ a * x - b * w - c * z + d * y :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
+        (CharP.intCast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
       have haybzcwdx : ((m : ℕ) : ℤ) ∣ a * y + b * z - c * w - d * x :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
+        (CharP.intCast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
       have hazbycxdw : ((m : ℕ) : ℤ) ∣ a * z - b * y + c * x - d * w :=
-        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
+        (CharP.intCast_eq_zero_iff (ZMod m) m _).1 <| by push_cast; ring
       let ⟨s, hs⟩ := hawbxcydz
       let ⟨t, ht⟩ := haxbwczdy
       let ⟨u, hu⟩ := haybzcwdx

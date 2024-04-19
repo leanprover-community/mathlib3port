@@ -203,18 +203,18 @@ instance : AddCommGroup ℤ_[p] :=
 instance : CommRing ℤ_[p] :=
   (by infer_instance : CommRing (subring p))
 
-#print PadicInt.coe_nat_cast /-
+#print PadicInt.coe_natCast /-
 @[simp, norm_cast]
-theorem coe_nat_cast (n : ℕ) : ((n : ℤ_[p]) : ℚ_[p]) = n :=
+theorem coe_natCast (n : ℕ) : ((n : ℤ_[p]) : ℚ_[p]) = n :=
   rfl
-#align padic_int.coe_nat_cast PadicInt.coe_nat_cast
+#align padic_int.coe_nat_cast PadicInt.coe_natCast
 -/
 
-#print PadicInt.coe_int_cast /-
+#print PadicInt.coe_intCast /-
 @[simp, norm_cast]
-theorem coe_int_cast (z : ℤ) : ((z : ℤ_[p]) : ℚ_[p]) = z :=
+theorem coe_intCast (z : ℤ) : ((z : ℤ_[p]) : ℚ_[p]) = z :=
   rfl
-#align padic_int.coe_int_cast PadicInt.coe_int_cast
+#align padic_int.coe_int_cast PadicInt.coe_intCast
 -/
 
 #print PadicInt.Coe.ringHom /-
@@ -396,9 +396,9 @@ theorem padic_norm_e_of_padicInt (z : ℤ_[p]) : ‖(z : ℚ_[p])‖ = ‖z‖ :
 #align padic_int.padic_norm_e_of_padic_int PadicInt.padic_norm_e_of_padicInt
 -/
 
-#print PadicInt.norm_int_cast_eq_padic_norm /-
-theorem norm_int_cast_eq_padic_norm (z : ℤ) : ‖(z : ℤ_[p])‖ = ‖(z : ℚ_[p])‖ := by simp [norm_def]
-#align padic_int.norm_int_cast_eq_padic_norm PadicInt.norm_int_cast_eq_padic_norm
+#print PadicInt.norm_intCast_eq_padic_norm /-
+theorem norm_intCast_eq_padic_norm (z : ℤ) : ‖(z : ℤ_[p])‖ = ‖(z : ℚ_[p])‖ := by simp [norm_def]
+#align padic_int.norm_int_cast_eq_padic_norm PadicInt.norm_intCast_eq_padic_norm
 -/
 
 #print PadicInt.norm_eq_padic_norm /-
@@ -875,7 +875,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
       use(⟨a, le_of_eq ha_norm⟩,
           ⟨(p ^ n : ℤ_[p]), mem_non_zero_divisors_iff_ne_zero.mpr (NeZero.ne _)⟩)
       simp only [SetLike.coe_mk, map_pow, map_natCast, algebraMap_apply, PadicInt.coe_pow,
-        PadicInt.coe_nat_cast, Subtype.coe_mk]
+        PadicInt.coe_natCast, Subtype.coe_mk]
   eq_iff_exists x y :=
     by
     rw [algebraMap_apply, algebraMap_apply, Subtype.coe_inj]

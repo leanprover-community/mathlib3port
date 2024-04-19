@@ -136,8 +136,8 @@ theorem integral_abs_condexp_le (f : α → ℝ) : ∫ x, |(μ[f|m]) x| ∂μ �
 #align measure_theory.integral_abs_condexp_le MeasureTheory.integral_abs_condexp_le
 -/
 
-#print MeasureTheory.set_integral_abs_condexp_le /-
-theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
+#print MeasureTheory.setIntegral_abs_condexp_le /-
+theorem setIntegral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
     ∫ x in s, |(μ[f|m]) x| ∂μ ≤ ∫ x in s, |f x| ∂μ :=
   by
   by_cases hnm : m ≤ m0
@@ -166,7 +166,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
       (le_of_eq <| integral_congr_ae <| eventually_of_forall fun x => _)
   rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
   rfl
-#align measure_theory.set_integral_abs_condexp_le MeasureTheory.set_integral_abs_condexp_le
+#align measure_theory.set_integral_abs_condexp_le MeasureTheory.setIntegral_abs_condexp_le
 -/
 
 #print MeasureTheory.ae_bdd_condexp_of_ae_bdd /-

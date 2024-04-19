@@ -508,7 +508,7 @@ theorem integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le (f
         by
         intro a b f
         convert
-          (((volume_preserving_fun_unique (Fin 1) ℝ).symm _).set_integral_preimage_emb
+          (((volume_preserving_fun_unique (Fin 1) ℝ).symm _).setIntegral_preimage_emb
               (MeasurableEquiv.measurableEmbedding _) _ _).symm
         exact ((OrderIso.funUnique (Fin 1) ℝ).symm.preimage_Icc a b).symm
       simp only [Fin.sum_univ_two, this]

@@ -46,10 +46,10 @@ instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring {
   gc_floor a n ha :=
     by
     refine' (FloorSemiring.gc_floor (show 0 ≤ (a : α) from ha)).trans _
-    rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
+    rw [← Subtype.coe_le_coe, Nonneg.coe_natCast]
   gc_ceil a n := by
     refine' (FloorSemiring.gc_ceil (a : α) n).trans _
-    rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
+    rw [← Subtype.coe_le_coe, Nonneg.coe_natCast]
 #align nonneg.floor_semiring Nonneg.floorSemiring
 -/
 

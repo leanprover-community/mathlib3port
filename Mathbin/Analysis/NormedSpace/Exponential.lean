@@ -166,7 +166,7 @@ theorem NormedSpace.exp_unop [T2Space 𝔸] (x : 𝔸ᵐᵒᵖ) :
 #print NormedSpace.star_exp /-
 theorem NormedSpace.star_exp [T2Space 𝔸] [StarRing 𝔸] [ContinuousStar 𝔸] (x : 𝔸) :
     star (NormedSpace.exp 𝕂 x) = NormedSpace.exp 𝕂 (star x) := by
-  simp_rw [NormedSpace.exp_eq_tsum, ← star_pow, ← star_inv_nat_cast_smul, ← tsum_star]
+  simp_rw [NormedSpace.exp_eq_tsum, ← star_pow, ← star_inv_natCast_smul, ← tsum_star]
 #align star_exp NormedSpace.star_exp
 -/
 
@@ -213,7 +213,7 @@ variable {𝕂 𝔸 : Type _} [Field 𝕂] [DivisionRing 𝔸] [Algebra 𝕂 �
 theorem NormedSpace.expSeries_apply_eq_div (x : 𝔸) (n : ℕ) :
     (NormedSpace.expSeries 𝕂 𝔸 n fun _ => x) = x ^ n / n ! := by
   rw [div_eq_mul_inv, ← (Nat.cast_commute n ! (x ^ n)).inv_left₀.Eq, ← smul_eq_mul,
-    NormedSpace.expSeries_apply_eq, inv_nat_cast_smul_eq _ _ _ _]
+    NormedSpace.expSeries_apply_eq, inv_natCast_smul_eq _ _ _ _]
 #align exp_series_apply_eq_div NormedSpace.expSeries_apply_eq_div
 -/
 
@@ -417,7 +417,7 @@ theorem NormedSpace.map_exp_of_mem_ball {F} [RingHomClass F 𝔸 𝔹] (f : F) (
   rw [NormedSpace.exp_eq_tsum, NormedSpace.exp_eq_tsum]
   refine' ((NormedSpace.expSeries_summable_of_mem_ball' _ hx).HasSum.map f hf).tsum_eq.symm.trans _
   dsimp only [Function.comp]
-  simp_rw [one_div, map_inv_nat_cast_smul f 𝕂 𝕂, map_pow]
+  simp_rw [one_div, map_inv_natCast_smul f 𝕂 𝕂, map_pow]
 #align map_exp_of_mem_ball NormedSpace.map_exp_of_mem_ball
 -/
 
@@ -894,7 +894,7 @@ variable (𝕂 𝕂' 𝔸 : Type _) [Field 𝕂] [Field 𝕂'] [Ring 𝔸] [Alge
 `exp_series` on `𝔸`. -/
 theorem NormedSpace.expSeries_eq_expSeries (n : ℕ) (x : 𝔸) :
     (NormedSpace.expSeries 𝕂 𝔸 n fun _ => x) = NormedSpace.expSeries 𝕂' 𝔸 n fun _ => x := by
-  rw [NormedSpace.expSeries_apply_eq, NormedSpace.expSeries_apply_eq, inv_nat_cast_smul_eq 𝕂 𝕂']
+  rw [NormedSpace.expSeries_apply_eq, NormedSpace.expSeries_apply_eq, inv_natCast_smul_eq 𝕂 𝕂']
 #align exp_series_eq_exp_series NormedSpace.expSeries_eq_expSeries
 -/
 

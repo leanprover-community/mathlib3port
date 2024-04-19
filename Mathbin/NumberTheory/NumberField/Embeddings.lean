@@ -603,7 +603,7 @@ theorem prod_eq_abs_norm (x : K) :
               (congr_fun (congr_arg coeFn (Finset.mem_filter.1 hφ).2) x),
           Finset.prod_const, mk_complex.filter_card K w]
         rfl
-  · rw [eq_ratCast, ← Complex.abs_ofReal, Complex.ofReal_rat_cast]
+  · rw [eq_ratCast, ← Complex.abs_ofReal, Complex.ofReal_ratCast]
 #align number_field.infinite_place.prod_eq_abs_norm NumberField.InfinitePlace.prod_eq_abs_norm
 -/
 

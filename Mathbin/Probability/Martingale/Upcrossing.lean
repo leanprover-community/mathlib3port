@@ -553,7 +553,7 @@ theorem Submartingale.sum_mul_upcrossingStrat_le [IsFiniteMeasure μ] (hf : Subm
   have h₁ :
     (0 : ℝ) ≤ μ[∑ k in Finset.range n, (1 - upcrossing_strat a b f N k) * (f (k + 1) - f k)] :=
     by
-    have := (hf.sum_sub_upcrossing_strat_mul a b N).set_integral_le (zero_le n) MeasurableSet.univ
+    have := (hf.sum_sub_upcrossing_strat_mul a b N).setIntegral_le (zero_le n) MeasurableSet.univ
     rw [integral_univ, integral_univ] at this
     refine' le_trans _ this
     simp only [Finset.range_zero, Finset.sum_empty, integral_zero']
@@ -1114,12 +1114,12 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
       rw [(by simp :
           ∫⁻ ω, upcrossings_before a b f N ω ∂μ = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
         lintegral_coe_eq_integral, ← ENNReal.ofReal_mul (sub_pos.2 hab).le]
-      · simp_rw [NNReal.coe_nat_cast]
+      · simp_rw [NNReal.coe_natCast]
         exact
           (ENNReal.ofReal_le_ofReal
                 (hf.mul_integral_upcrossings_before_le_integral_pos_part a b N)).trans
             (le_iSup _ N)
-      · simp only [NNReal.coe_nat_cast, hf.adapted.integrable_upcrossings_before hab]
+      · simp only [NNReal.coe_natCast, hf.adapted.integrable_upcrossings_before hab]
     ·
       exact fun n =>
         measurable_from_top.comp_ae_measurable

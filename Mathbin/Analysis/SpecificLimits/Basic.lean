@@ -33,7 +33,7 @@ variable {α : Type _} {β : Type _} {ι : Type _}
 
 #print tendsto_inverse_atTop_nhds_zero_nat /-
 theorem tendsto_inverse_atTop_nhds_zero_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻¹) atTop (𝓝 0) :=
-  tendsto_inv_atTop_zero.comp tendsto_nat_cast_atTop_atTop
+  tendsto_inv_atTop_zero.comp tendsto_natCast_atTop_atTop
 #align tendsto_inverse_at_top_nhds_0_nat tendsto_inverse_atTop_nhds_zero_nat
 -/
 

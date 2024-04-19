@@ -952,71 +952,71 @@ theorem normSq_div (z w : ℂ) : normSq (z / w) = normSq z / normSq w :=
 /-! ### Cast lemmas -/
 
 
-#print Complex.ofReal_nat_cast /-
+#print Complex.ofReal_natCast /-
 @[simp, norm_cast]
-theorem ofReal_nat_cast (n : ℕ) : ((n : ℝ) : ℂ) = n :=
+theorem ofReal_natCast (n : ℕ) : ((n : ℝ) : ℂ) = n :=
   map_natCast ofReal n
-#align complex.of_real_nat_cast Complex.ofReal_nat_cast
+#align complex.of_real_nat_cast Complex.ofReal_natCast
 -/
 
-#print Complex.nat_cast_re /-
+#print Complex.natCast_re /-
 @[simp, norm_cast]
-theorem nat_cast_re (n : ℕ) : (n : ℂ).re = n := by rw [← of_real_nat_cast, of_real_re]
-#align complex.nat_cast_re Complex.nat_cast_re
+theorem natCast_re (n : ℕ) : (n : ℂ).re = n := by rw [← of_real_nat_cast, of_real_re]
+#align complex.nat_cast_re Complex.natCast_re
 -/
 
-#print Complex.nat_cast_im /-
+#print Complex.natCast_im /-
 @[simp, norm_cast]
-theorem nat_cast_im (n : ℕ) : (n : ℂ).im = 0 := by rw [← of_real_nat_cast, of_real_im]
-#align complex.nat_cast_im Complex.nat_cast_im
+theorem natCast_im (n : ℕ) : (n : ℂ).im = 0 := by rw [← of_real_nat_cast, of_real_im]
+#align complex.nat_cast_im Complex.natCast_im
 -/
 
-#print Complex.ofReal_int_cast /-
+#print Complex.ofReal_intCast /-
 @[simp, norm_cast]
-theorem ofReal_int_cast (n : ℤ) : ((n : ℝ) : ℂ) = n :=
+theorem ofReal_intCast (n : ℤ) : ((n : ℝ) : ℂ) = n :=
   map_intCast ofReal n
-#align complex.of_real_int_cast Complex.ofReal_int_cast
+#align complex.of_real_int_cast Complex.ofReal_intCast
 -/
 
-#print Complex.int_cast_re /-
+#print Complex.intCast_re /-
 @[simp, norm_cast]
-theorem int_cast_re (n : ℤ) : (n : ℂ).re = n := by rw [← of_real_int_cast, of_real_re]
-#align complex.int_cast_re Complex.int_cast_re
+theorem intCast_re (n : ℤ) : (n : ℂ).re = n := by rw [← of_real_int_cast, of_real_re]
+#align complex.int_cast_re Complex.intCast_re
 -/
 
-#print Complex.int_cast_im /-
+#print Complex.intCast_im /-
 @[simp, norm_cast]
-theorem int_cast_im (n : ℤ) : (n : ℂ).im = 0 := by rw [← of_real_int_cast, of_real_im]
-#align complex.int_cast_im Complex.int_cast_im
+theorem intCast_im (n : ℤ) : (n : ℂ).im = 0 := by rw [← of_real_int_cast, of_real_im]
+#align complex.int_cast_im Complex.intCast_im
 -/
 
-#print Complex.ofReal_rat_cast /-
+#print Complex.ofReal_ratCast /-
 @[simp, norm_cast]
-theorem ofReal_rat_cast (n : ℚ) : ((n : ℝ) : ℂ) = n :=
+theorem ofReal_ratCast (n : ℚ) : ((n : ℝ) : ℂ) = n :=
   map_ratCast ofReal n
-#align complex.of_real_rat_cast Complex.ofReal_rat_cast
+#align complex.of_real_rat_cast Complex.ofReal_ratCast
 -/
 
-#print Complex.rat_cast_re /-
+#print Complex.ratCast_re /-
 @[simp, norm_cast]
-theorem rat_cast_re (q : ℚ) : (q : ℂ).re = q := by rw [← of_real_rat_cast, of_real_re]
-#align complex.rat_cast_re Complex.rat_cast_re
+theorem ratCast_re (q : ℚ) : (q : ℂ).re = q := by rw [← of_real_rat_cast, of_real_re]
+#align complex.rat_cast_re Complex.ratCast_re
 -/
 
-#print Complex.rat_cast_im /-
+#print Complex.ratCast_im /-
 @[simp, norm_cast]
-theorem rat_cast_im (q : ℚ) : (q : ℂ).im = 0 := by rw [← of_real_rat_cast, of_real_im]
-#align complex.rat_cast_im Complex.rat_cast_im
+theorem ratCast_im (q : ℚ) : (q : ℂ).im = 0 := by rw [← of_real_rat_cast, of_real_im]
+#align complex.rat_cast_im Complex.ratCast_im
 -/
 
 /-! ### Characteristic zero -/
 
 
-#print Complex.charZero /-
-instance charZero : CharZero ℂ :=
+#print Complex.instCharZero /-
+instance instCharZero : CharZero ℂ :=
   charZero_of_inj_zero fun n h => by
     rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
-#align complex.char_zero_complex Complex.charZero
+#align complex.char_zero_complex Complex.instCharZero
 -/
 
 #print Complex.re_eq_add_conj /-
