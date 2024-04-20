@@ -3167,7 +3167,7 @@ import Topology.Sets.Closeds
 import Topology.Sets.Compacts
 import Topology.Sets.Opens
 import Topology.Sets.Order
-import Topology.Sheaves.Abelian
+import CategoryTheory.Sites.Abelian
 import Topology.Sheaves.Forget
 import Topology.Sheaves.Functors
 import Topology.Sheaves.Limits
