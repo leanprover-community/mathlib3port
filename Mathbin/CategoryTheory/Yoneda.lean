@@ -228,11 +228,11 @@ noncomputable def reprX : C :=
 #align category_theory.functor.repr_X CategoryTheory.Functor.reprX
 -/
 
-#print CategoryTheory.Functor.reprF /-
+#print CategoryTheory.Functor.reprW /-
 /-- The (forward direction of the) isomorphism witnessing `F` is representable. -/
-noncomputable def reprF : yoneda.obj F.reprX ⟶ F :=
+noncomputable def reprW : yoneda.obj F.reprX ⟶ F :=
   Representable.has_representation.choose_spec.some
-#align category_theory.functor.repr_f CategoryTheory.Functor.reprF
+#align category_theory.functor.repr_f CategoryTheory.Functor.reprW
 -/
 
 #print CategoryTheory.Functor.reprx /-
@@ -240,28 +240,28 @@ noncomputable def reprF : yoneda.obj F.reprX ⟶ F :=
 element of the functor.
 -/
 noncomputable def reprx : F.obj (op F.reprX) :=
-  F.reprF.app (op F.reprX) (𝟙 F.reprX)
+  F.reprW.app (op F.reprX) (𝟙 F.reprX)
 #align category_theory.functor.repr_x CategoryTheory.Functor.reprx
 -/
 
-instance : IsIso F.reprF :=
+instance : IsIso F.reprW :=
   Representable.has_representation.choose_spec.choose_spec
 
+/- warning: category_theory.functor.repr_w clashes with category_theory.functor.repr_f -> CategoryTheory.Functor.reprW
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.repr_w CategoryTheory.Functor.reprWₓ'. -/
 #print CategoryTheory.Functor.reprW /-
 /-- An isomorphism between `F` and a functor of the form `C(-, F.repr_X)`.  Note the components
 `F.repr_w.app X` definitionally have type `(X.unop ⟶ F.repr_X) ≅ F.obj X`.
 -/
 noncomputable def reprW : yoneda.obj F.reprX ≅ F :=
-  asIso F.reprF
+  asIso F.reprW
 #align category_theory.functor.repr_w CategoryTheory.Functor.reprW
 -/
 
-#print CategoryTheory.Functor.reprW_hom /-
 @[simp]
-theorem reprW_hom : F.reprW.Hom = F.reprF :=
+theorem reprW_hom : F.reprW.Hom = F.reprW :=
   rfl
 #align category_theory.functor.repr_w_hom CategoryTheory.Functor.reprW_hom
--/
 
 #print CategoryTheory.Functor.reprW_app_hom /-
 theorem reprW_app_hom (X : Cᵒᵖ) (f : unop X ⟶ F.reprX) :
@@ -289,11 +289,11 @@ noncomputable def coreprX : C :=
 #align category_theory.functor.corepr_X CategoryTheory.Functor.coreprX
 -/
 
-#print CategoryTheory.Functor.coreprF /-
+#print CategoryTheory.Functor.coreprW /-
 /-- The (forward direction of the) isomorphism witnessing `F` is corepresentable. -/
-noncomputable def coreprF : coyoneda.obj (op F.coreprX) ⟶ F :=
+noncomputable def coreprW : coyoneda.obj (op F.coreprX) ⟶ F :=
   Corepresentable.has_corepresentation.choose_spec.some
-#align category_theory.functor.corepr_f CategoryTheory.Functor.coreprF
+#align category_theory.functor.corepr_f CategoryTheory.Functor.coreprW
 -/
 
 #print CategoryTheory.Functor.coreprx /-
@@ -301,19 +301,21 @@ noncomputable def coreprF : coyoneda.obj (op F.coreprX) ⟶ F :=
 element of the functor.
 -/
 noncomputable def coreprx : F.obj F.coreprX :=
-  F.coreprF.app F.coreprX (𝟙 F.coreprX)
+  F.coreprW.app F.coreprX (𝟙 F.coreprX)
 #align category_theory.functor.corepr_x CategoryTheory.Functor.coreprx
 -/
 
-instance : IsIso F.coreprF :=
+instance : IsIso F.coreprW :=
   Corepresentable.has_corepresentation.choose_spec.choose_spec
 
+/- warning: category_theory.functor.corepr_w clashes with category_theory.functor.corepr_f -> CategoryTheory.Functor.coreprW
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.corepr_w CategoryTheory.Functor.coreprWₓ'. -/
 #print CategoryTheory.Functor.coreprW /-
 /-- An isomorphism between `F` and a functor of the form `C(F.corepr X, -)`. Note the components
 `F.corepr_w.app X` definitionally have type `F.corepr_X ⟶ X ≅ F.obj X`.
 -/
 noncomputable def coreprW : coyoneda.obj (op F.coreprX) ≅ F :=
-  asIso F.coreprF
+  asIso F.coreprW
 #align category_theory.functor.corepr_w CategoryTheory.Functor.coreprW
 -/
 
@@ -331,22 +333,22 @@ end Corepresentable
 
 end Functor
 
-#print CategoryTheory.representable_of_nat_iso /-
-theorem representable_of_nat_iso (F : Cᵒᵖ ⥤ Type v₁) {G} (i : F ≅ G) [F.Representable] :
+#print CategoryTheory.representable_of_natIso /-
+theorem representable_of_natIso (F : Cᵒᵖ ⥤ Type v₁) {G} (i : F ≅ G) [F.Representable] :
     G.Representable :=
-  { has_representation := ⟨F.reprX, F.reprF ≫ i.Hom, inferInstance⟩ }
-#align category_theory.representable_of_nat_iso CategoryTheory.representable_of_nat_iso
+  { has_representation := ⟨F.reprX, F.reprW ≫ i.Hom, inferInstance⟩ }
+#align category_theory.representable_of_nat_iso CategoryTheory.representable_of_natIso
 -/
 
-#print CategoryTheory.corepresentable_of_nat_iso /-
-theorem corepresentable_of_nat_iso (F : C ⥤ Type v₁) {G} (i : F ≅ G) [F.Corepresentable] :
+#print CategoryTheory.corepresentable_of_natIso /-
+theorem corepresentable_of_natIso (F : C ⥤ Type v₁) {G} (i : F ≅ G) [F.Corepresentable] :
     G.Corepresentable :=
-  { has_corepresentation := ⟨op F.coreprX, F.coreprF ≫ i.Hom, inferInstance⟩ }
-#align category_theory.corepresentable_of_nat_iso CategoryTheory.corepresentable_of_nat_iso
+  { has_corepresentation := ⟨op F.coreprX, F.coreprW ≫ i.Hom, inferInstance⟩ }
+#align category_theory.corepresentable_of_nat_iso CategoryTheory.corepresentable_of_natIso
 -/
 
 instance : Functor.Corepresentable (𝟭 (Type v₁)) :=
-  corepresentable_of_nat_iso (coyoneda.obj (op PUnit)) Coyoneda.punitIso
+  corepresentable_of_natIso (coyoneda.obj (op PUnit)) Coyoneda.punitIso
 
 open Opposite
 
