@@ -117,7 +117,7 @@ note [partially-applied ext lemmas]. -/
   to_additive
       "\nThis is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in\nnote [partially-applied ext lemmas]."]
 theorem MonoidHom.functions_ext' [Finite I] (M : Type _) [CommMonoid M] (g h : (∀ i, Z i) →* M)
-    (H : ∀ i, g.comp (MonoidHom.single Z i) = h.comp (MonoidHom.single Z i)) : g = h :=
+    (H : ∀ i, g.comp (MonoidHom.mulSingle Z i) = h.comp (MonoidHom.mulSingle Z i)) : g = h :=
   g.functions_ext M h fun i => MonoidHom.congr_fun (H i)
 #align monoid_hom.functions_ext' MonoidHom.functions_ext'
 #align add_monoid_hom.functions_ext' AddMonoidHom.functions_ext'

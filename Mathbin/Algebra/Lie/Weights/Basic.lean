@@ -247,22 +247,18 @@ theorem zero_weightSpace_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNil
 #align lie_module.zero_weight_space_eq_top_of_nilpotent LieModule.zero_weightSpace_eq_top_of_nilpotent
 -/
 
-#print LieModule.IsWeight /-
 /-- Given a Lie module `M` of a Lie algebra `L`, a weight of `M` with respect to a nilpotent
 subalgebra `H ⊆ L` is a Lie character whose corresponding weight space is non-empty. -/
 def IsWeight (χ : LieCharacter R H) : Prop :=
   weightSpace M χ ≠ ⊥
 #align lie_module.is_weight LieModule.IsWeight
--/
 
-#print LieModule.isWeight_zero_of_nilpotent /-
 /-- For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
 weight with respect to the `⊤` Lie subalgebra. -/
-theorem isWeight_zero_of_nilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
+theorem isWeightZeroOfNilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     IsWeight (⊤ : LieSubalgebra R L) M 0 := by
   rw [is_weight, LieHom.coe_zero, zero_weight_space_eq_top_of_nilpotent]; exact top_ne_bot
-#align lie_module.is_weight_zero_of_nilpotent LieModule.isWeight_zero_of_nilpotent
--/
+#align lie_module.is_weight_zero_of_nilpotent LieModule.isWeightZeroOfNilpotent
 
 #print LieModule.isNilpotent_toEndomorphism_weightSpace_zero /-
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie
@@ -312,13 +308,11 @@ theorem zero_rootSpace_eq_top_of_nilpotent [h : IsNilpotent R L] :
 #align lie_algebra.zero_root_space_eq_top_of_nilpotent LieAlgebra.zero_rootSpace_eq_top_of_nilpotent
 -/
 
-#print LieAlgebra.IsRoot /-
 /-- A root of a Lie algebra `L` with respect to a nilpotent subalgebra `H ⊆ L` is a weight of `L`,
 regarded as a module of `H` via the adjoint action. -/
 abbrev IsRoot :=
   IsWeight H L
 #align lie_algebra.is_root LieAlgebra.IsRoot
--/
 
 #print LieAlgebra.rootSpace_comap_eq_weightSpace /-
 @[simp]

@@ -1968,8 +1968,8 @@ import GroupTheory.Submonoid.Membership
 import GroupTheory.Submonoid.Operations
 import GroupTheory.Submonoid.Pointwise
 import GroupTheory.Subsemigroup.Basic
-import GroupTheory.Subsemigroup.Center
-import GroupTheory.Subsemigroup.Centralizer
+import Algebra.Group.Center
+import Algebra.Group.Centralizer
 import GroupTheory.Subsemigroup.Membership
 import GroupTheory.Subsemigroup.Operations
 import GroupTheory.Sylow

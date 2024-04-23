@@ -470,49 +470,49 @@ open Pi
 
 variable (f)
 
-#print OneHom.single /-
+#print OneHom.mulSingle /-
 /-- The one-preserving homomorphism including a single value
 into a dependent family of values, as functions supported at a point.
 
 This is the `one_hom` version of `pi.mul_single`. -/
 @[to_additive ZeroHom.single
       "The zero-preserving homomorphism including a single value\ninto a dependent family of values, as functions supported at a point.\n\nThis is the `zero_hom` version of `pi.single`."]
-def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i)
+def OneHom.mulSingle [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i)
     where
   toFun := mulSingle i
   map_one' := mulSingle_one i
-#align one_hom.single OneHom.single
+#align one_hom.single OneHom.mulSingle
 #align zero_hom.single ZeroHom.single
 -/
 
-#print OneHom.single_apply /-
+#print OneHom.mulSingle_apply /-
 @[simp, to_additive]
-theorem OneHom.single_apply [∀ i, One <| f i] (i : I) (x : f i) :
-    OneHom.single f i x = mulSingle i x :=
+theorem OneHom.mulSingle_apply [∀ i, One <| f i] (i : I) (x : f i) :
+    OneHom.mulSingle f i x = mulSingle i x :=
   rfl
-#align one_hom.single_apply OneHom.single_apply
+#align one_hom.single_apply OneHom.mulSingle_apply
 #align zero_hom.single_apply ZeroHom.single_apply
 -/
 
-#print MonoidHom.single /-
+#print MonoidHom.mulSingle /-
 /-- The monoid homomorphism including a single monoid into a dependent family of additive monoids,
 as functions supported at a point.
 
 This is the `monoid_hom` version of `pi.mul_single`. -/
 @[to_additive
       "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`."]
-def MonoidHom.single [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :=
-  { OneHom.single f i with map_mul' := mulSingle_op₂ (fun _ => (· * ·)) (fun _ => one_mul _) _ }
-#align monoid_hom.single MonoidHom.single
+def MonoidHom.mulSingle [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :=
+  { OneHom.mulSingle f i with map_mul' := mulSingle_op₂ (fun _ => (· * ·)) (fun _ => one_mul _) _ }
+#align monoid_hom.single MonoidHom.mulSingle
 #align add_monoid_hom.single AddMonoidHom.single
 -/
 
-#print MonoidHom.single_apply /-
+#print MonoidHom.mulSingle_apply /-
 @[simp, to_additive]
-theorem MonoidHom.single_apply [∀ i, MulOneClass <| f i] (i : I) (x : f i) :
-    MonoidHom.single f i x = mulSingle i x :=
+theorem MonoidHom.mulSingle_apply [∀ i, MulOneClass <| f i] (i : I) (x : f i) :
+    MonoidHom.mulSingle f i x = mulSingle i x :=
   rfl
-#align monoid_hom.single_apply MonoidHom.single_apply
+#align monoid_hom.single_apply MonoidHom.mulSingle_apply
 #align add_monoid_hom.single_apply AddMonoidHom.single_apply
 -/
 
@@ -553,7 +553,7 @@ theorem Pi.mulSingle_inf [∀ i, SemilatticeInf (f i)] [∀ i, One (f i)] (i : I
 @[to_additive]
 theorem Pi.mulSingle_mul [∀ i, MulOneClass <| f i] (i : I) (x y : f i) :
     mulSingle i (x * y) = mulSingle i x * mulSingle i y :=
-  (MonoidHom.single f i).map_hMul x y
+  (MonoidHom.mulSingle f i).map_hMul x y
 #align pi.mul_single_mul Pi.mulSingle_mul
 #align pi.single_add Pi.single_add
 -/
@@ -562,17 +562,17 @@ theorem Pi.mulSingle_mul [∀ i, MulOneClass <| f i] (i : I) (x y : f i) :
 @[to_additive]
 theorem Pi.mulSingle_inv [∀ i, Group <| f i] (i : I) (x : f i) :
     mulSingle i x⁻¹ = (mulSingle i x)⁻¹ :=
-  (MonoidHom.single f i).map_inv x
+  (MonoidHom.mulSingle f i).map_inv x
 #align pi.mul_single_inv Pi.mulSingle_inv
 #align pi.single_neg Pi.single_neg
 -/
 
-#print Pi.single_div /-
+#print Pi.mulSingle_div /-
 @[to_additive]
-theorem Pi.single_div [∀ i, Group <| f i] (i : I) (x y : f i) :
+theorem Pi.mulSingle_div [∀ i, Group <| f i] (i : I) (x y : f i) :
     mulSingle i (x / y) = mulSingle i x / mulSingle i y :=
-  (MonoidHom.single f i).map_div x y
-#align pi.single_div Pi.single_div
+  (MonoidHom.mulSingle f i).map_div x y
+#align pi.single_div Pi.mulSingle_div
 #align pi.single_sub Pi.single_sub
 -/
 

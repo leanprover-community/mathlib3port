@@ -466,7 +466,8 @@ theorem noncommProd_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
       x :=
   by
   ext i
-  apply (univ.noncomm_prod_map (fun i => MonoidHom.single M i (x i)) _ (Pi.evalMonoidHom M i)).trans
+  apply
+    (univ.noncomm_prod_map (fun i => MonoidHom.mulSingle M i (x i)) _ (Pi.evalMonoidHom M i)).trans
   rw [← insert_erase (mem_univ i), noncomm_prod_insert_of_not_mem' _ _ _ _ (not_mem_erase _ _),
     noncomm_prod_eq_pow_card, one_pow]
   · simp
