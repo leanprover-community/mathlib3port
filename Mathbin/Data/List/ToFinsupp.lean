@@ -82,7 +82,7 @@ theorem toFinsupp_support :
 
 #print List.toFinsupp_apply_lt' /-
 theorem toFinsupp_apply_lt' (hn : n < l.length) : l.toFinsupp n = l.nthLe n hn :=
-  getD_eq_nthLe _ _ _
+  getD_eq_get _ _ _
 #align list.to_finsupp_apply_lt List.toFinsupp_apply_lt'
 -/
 

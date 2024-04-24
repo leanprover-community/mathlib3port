@@ -42,7 +42,7 @@ local notation "β*" => Germ (φ : Filter α) β
 
 instance [DivisionSemiring β] : DivisionSemiring β* :=
   { Germ.semiring, Germ.divInvMonoid,
-    Germ.nontrivial with
+    Germ.instNontrivial with
     mul_inv_cancel := fun f =>
       inductionOn f fun f hf =>
         coe_eq.2 <|
@@ -189,7 +189,7 @@ instance [OrderedCommRing β] : OrderedCommRing β* :=
 
 instance [StrictOrderedSemiring β] : StrictOrderedSemiring β* :=
   { Germ.orderedSemiring, Germ.orderedCancelAddCommMonoid,
-    Germ.nontrivial with
+    Germ.instNontrivial with
     mul_lt_mul_of_pos_left := fun x y z =>
       inductionOn₃ x y z fun f g h hfg hh =>
         coe_lt.2 <| (coe_lt.1 hh).mp <| (coe_lt.1 hfg).mono fun a => mul_lt_mul_of_pos_left

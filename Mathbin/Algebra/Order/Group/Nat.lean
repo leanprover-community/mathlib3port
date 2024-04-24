@@ -26,15 +26,15 @@ universe u v
 /-! ### instances -/
 
 
-#print Nat.orderBot /-
-instance Nat.orderBot : OrderBot ℕ where
+#print Nat.instOrderBot /-
+instance Nat.instOrderBot : OrderBot ℕ where
   bot := 0
   bot_le := Nat.zero_le
-#align nat.order_bot Nat.orderBot
+#align nat.order_bot Nat.instOrderBot
 -/
 
 instance : LinearOrderedCommSemiring ℕ :=
-  { Nat.commSemiring, Nat.linearOrder with
+  { Nat.commSemiring, Nat.instLinearOrder with
     lt := Nat.lt
     add_le_add_left := @Nat.add_le_add_left
     le_of_add_le_add_left := @Nat.le_of_add_le_add_left
@@ -71,7 +71,7 @@ instance : LinearOrderedCancelAddCommMonoid ℕ :=
   inferInstance
 
 instance : CanonicallyOrderedCommSemiring ℕ :=
-  { Nat.nontrivial, Nat.orderBot, (inferInstance : OrderedAddCommMonoid ℕ),
+  { Nat.nontrivial, Nat.instOrderBot, (inferInstance : OrderedAddCommMonoid ℕ),
     (inferInstance : LinearOrderedSemiring ℕ),
     (inferInstance :
       CommSemiring
@@ -81,7 +81,7 @@ instance : CanonicallyOrderedCommSemiring ℕ :=
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero }
 
 instance : CanonicallyLinearOrderedAddCommMonoid ℕ :=
-  { (inferInstance : CanonicallyOrderedAddCommMonoid ℕ), Nat.linearOrder with }
+  { (inferInstance : CanonicallyOrderedAddCommMonoid ℕ), Nat.instLinearOrder with }
 
 variable {a b m n k l : ℕ}
 

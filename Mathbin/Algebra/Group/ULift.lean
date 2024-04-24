@@ -221,7 +221,7 @@ theorem down_intCast [IntCast α] (n : ℤ) : down (n : ULift α) = n :=
 #print ULift.addMonoidWithOne /-
 instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
   { ULift.one, ULift.addMonoid,
-    ULift.natCast with
+    ULift.instNatCast with
     natCast_zero := congr_arg ULift.up Nat.cast_zero
     natCast_succ := fun n => congr_arg ULift.up (Nat.cast_succ _) }
 #align ulift.add_monoid_with_one ULift.addMonoidWithOne

@@ -352,7 +352,7 @@ def ListBlank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
       cases' lt_or_le _ _ with h h; · rw [List.getI_append _ _ _ h]
       rw [List.getI_eq_default _ h]
       cases' le_or_lt _ _ with h₂ h₂; · rw [List.getI_eq_default _ h₂]
-      rw [List.getI_eq_nthLe _ h₂, List.nthLe_append_right h, List.nthLe_replicate])
+      rw [List.getI_eq_get _ h₂, List.nthLe_append_right h, List.nthLe_replicate])
 #align turing.list_blank.nth Turing.ListBlank.nth
 -/
 
@@ -404,10 +404,10 @@ theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} :
       cases' lt_or_le i l₁.length with h' h'
       ·
         simp only [List.nthLe_append _ h', List.nthLe_get? h, List.nthLe_get? h', ←
-          List.getI_eq_nthLe _ h, ← List.getI_eq_nthLe _ h', H]
+          List.getI_eq_get _ h, ← List.getI_eq_get _ h', H]
       ·
         simp only [List.nthLe_append_right h', List.nthLe_replicate, List.nthLe_get? h,
-          List.get?_len_le h', ← List.getI_eq_default _ h', H, List.getI_eq_nthLe _ h]
+          List.get?_len_le h', ← List.getI_eq_default _ h', H, List.getI_eq_get _ h]
 #align turing.list_blank.ext Turing.ListBlank.ext
 -/
 
@@ -3040,7 +3040,7 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
     · subst k';
       split_ifs <;> simp only [List.reverse_cons, Function.update_same, list_blank.nth_mk, List.map]
       ·
-        rw [List.getI_eq_nthLe, List.nthLe_append_right] <;>
+        rw [List.getI_eq_get, List.nthLe_append_right] <;>
           simp only [h, List.nthLe_singleton, List.length_map, List.length_reverse, Nat.succ_pos',
             List.length_append, lt_add_iff_pos_right, List.length]
       rw [← proj_map_nth, hL, list_blank.nth_mk]

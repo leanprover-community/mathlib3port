@@ -604,11 +604,11 @@ section Ring
 
 variable {R : Type _}
 
-#print Filter.Germ.nontrivial /-
-instance nontrivial [Nontrivial R] [NeBot l] : Nontrivial (Germ l R) :=
+#print Filter.Germ.instNontrivial /-
+instance instNontrivial [Nontrivial R] [NeBot l] : Nontrivial (Germ l R) :=
   let ⟨x, y, h⟩ := exists_pair_ne R
   ⟨⟨↑x, ↑y, mt const_inj.1 h⟩⟩
-#align filter.germ.nontrivial Filter.Germ.nontrivial
+#align filter.germ.nontrivial Filter.Germ.instNontrivial
 -/
 
 instance [MulZeroClass R] : MulZeroClass (Germ l R)
@@ -679,14 +679,14 @@ instance [Monoid M] [MulAction M β] : MulAction M (Germ l β)
   one_smul f := inductionOn f fun f => by norm_cast; simp only [one_smul]
   hMul_smul c₁ c₂ f := inductionOn f fun f => by norm_cast; simp only [mul_smul]
 
-#print Filter.Germ.mulAction' /-
+#print Filter.Germ.instMulAction' /-
 @[to_additive]
-instance mulAction' [Monoid M] [MulAction M β] : MulAction (Germ l M) (Germ l β)
+instance instMulAction' [Monoid M] [MulAction M β] : MulAction (Germ l M) (Germ l β)
     where
   one_smul f := inductionOn f fun f => by simp only [← coe_one, ← coe_smul', one_smul]
   hMul_smul c₁ c₂ f := inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by norm_cast; simp only [mul_smul]
-#align filter.germ.mul_action' Filter.Germ.mulAction'
-#align filter.germ.add_action' Filter.Germ.addAction'
+#align filter.germ.mul_action' Filter.Germ.instMulAction'
+#align filter.germ.add_action' Filter.Germ.instAddAction'
 -/
 
 instance [Monoid M] [AddMonoid N] [DistribMulAction M N] : DistribMulAction M (Germ l N)
@@ -694,13 +694,13 @@ instance [Monoid M] [AddMonoid N] [DistribMulAction M N] : DistribMulAction M (G
   smul_add c f g := inductionOn₂ f g fun f g => by norm_cast; simp only [smul_add]
   smul_zero c := by simp only [← coe_zero, ← coe_smul, smul_zero]
 
-#print Filter.Germ.distribMulAction' /-
-instance distribMulAction' [Monoid M] [AddMonoid N] [DistribMulAction M N] :
+#print Filter.Germ.instDistribMulAction' /-
+instance instDistribMulAction' [Monoid M] [AddMonoid N] [DistribMulAction M N] :
     DistribMulAction (Germ l M) (Germ l N)
     where
   smul_add c f g := inductionOn₃ c f g fun c f g => by norm_cast; simp only [smul_add]
   smul_zero c := inductionOn c fun c => by simp only [← coe_zero, ← coe_smul', smul_zero]
-#align filter.germ.distrib_mul_action' Filter.Germ.distribMulAction'
+#align filter.germ.distrib_mul_action' Filter.Germ.instDistribMulAction'
 -/
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] : Module R (Germ l M)
@@ -708,12 +708,12 @@ instance [Semiring R] [AddCommMonoid M] [Module R M] : Module R (Germ l M)
   add_smul c₁ c₂ f := inductionOn f fun f => by norm_cast; simp only [add_smul]
   zero_smul f := inductionOn f fun f => by norm_cast; simp only [zero_smul, coe_zero]
 
-#print Filter.Germ.module' /-
-instance module' [Semiring R] [AddCommMonoid M] [Module R M] : Module (Germ l R) (Germ l M)
+#print Filter.Germ.instModule' /-
+instance instModule' [Semiring R] [AddCommMonoid M] [Module R M] : Module (Germ l R) (Germ l M)
     where
   add_smul c₁ c₂ f := inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by norm_cast; simp only [add_smul]
   zero_smul f := inductionOn f fun f => by simp only [← coe_zero, ← coe_smul', zero_smul]
-#align filter.germ.module' Filter.Germ.module'
+#align filter.germ.module' Filter.Germ.instModule'
 -/
 
 end Module

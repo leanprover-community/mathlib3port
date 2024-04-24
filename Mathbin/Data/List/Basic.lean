@@ -550,10 +550,10 @@ theorem subset_append_of_subset_left (l l₁ l₂ : List α) : l ⊆ l₁ → l 
 #align list.subset_append_of_subset_left List.subset_append_of_subset_left
 -/
 
-#print List.subset_append_of_subset_right' /-
-theorem subset_append_of_subset_right' (l l₁ l₂ : List α) : l ⊆ l₂ → l ⊆ l₁ ++ l₂ := fun s =>
+#print List.subset_append_of_subset_right /-
+theorem subset_append_of_subset_right (l l₁ l₂ : List α) : l ⊆ l₂ → l ⊆ l₁ ++ l₂ := fun s =>
   Subset.trans s <| subset_append_right _ _
-#align list.subset_append_of_subset_right List.subset_append_of_subset_right'
+#align list.subset_append_of_subset_right List.subset_append_of_subset_right
 -/
 
 #print List.cons_subset /-
@@ -1006,11 +1006,11 @@ theorem concat_cons (a b : α) (l : List α) : concat (a :: l) b = a :: concat l
 #align list.concat_cons List.concat_cons
 -/
 
-#print List.concat_eq_append' /-
+#print List.concat_eq_append /-
 @[simp]
-theorem concat_eq_append' (a : α) (l : List α) : concat l a = l ++ [a] := by
+theorem concat_eq_append (a : α) (l : List α) : concat l a = l ++ [a] := by
   induction l <;> simp only [*, concat] <;> constructor <;> rfl
-#align list.concat_eq_append List.concat_eq_append'
+#align list.concat_eq_append List.concat_eq_append
 -/
 
 #print List.init_eq_of_concat_eq /-
@@ -1041,10 +1041,10 @@ theorem concat_append (a : α) (l₁ l₂ : List α) : concat l₁ a ++ l₂ = l
 #align list.concat_append List.concat_append
 -/
 
-#print List.length_concat' /-
-theorem length_concat' (a : α) (l : List α) : length (concat l a) = succ (length l) := by
+#print List.length_concat /-
+theorem length_concat (a : α) (l : List α) : length (concat l a) = succ (length l) := by
   simp only [concat_eq_append, length_append, length]
-#align list.length_concat List.length_concat'
+#align list.length_concat List.length_concat
 -/
 
 #print List.append_concat /-
@@ -2264,8 +2264,8 @@ theorem nthLe_cons_length (x : α) (xs : List α) (n : ℕ) (h : n = xs.length) 
 #align list.nth_le_cons_length List.nthLe_cons_length
 -/
 
-#print List.take_one_drop_eq_of_lt_length' /-
-theorem take_one_drop_eq_of_lt_length' {l : List α} {n : ℕ} (h : n < l.length) :
+#print List.take_one_drop_eq_of_lt_length /-
+theorem take_one_drop_eq_of_lt_length {l : List α} {n : ℕ} (h : n < l.length) :
     (l.drop n).take 1 = [l.nthLe n h] :=
   by
   induction' l with x l ih generalizing n
@@ -2274,7 +2274,7 @@ theorem take_one_drop_eq_of_lt_length' {l : List α} {n : ℕ} (h : n < l.length
     · subst h₁; rw [nth_le_singleton]; simp [lt_succ_iff] at h; subst h; simp
     have h₂ := h; rw [length_cons, Nat.lt_succ_iff, le_iff_eq_or_lt] at h₂
     cases n; · simp; rw [drop, nth_le]; apply ih
-#align list.take_one_drop_eq_of_lt_length List.take_one_drop_eq_of_lt_length'
+#align list.take_one_drop_eq_of_lt_length List.take_one_drop_eq_of_lt_length
 -/
 
 #print List.ext /-
@@ -5826,22 +5826,22 @@ theorem enum_map (l : List α) (f : α → β) : (l.map f).enum = l.enum.map (Pr
 #align list.enum_map List.enum_map
 -/
 
-#print List.nthLe_enumFrom /-
-theorem nthLe_enumFrom (l : List α) (n i : ℕ) (hi' : i < (l.enumFrom n).length)
+#print List.get_enumFrom /-
+theorem get_enumFrom (l : List α) (n i : ℕ) (hi' : i < (l.enumFrom n).length)
     (hi : i < l.length := (by simpa [length_enum_from] using hi')) :
     (l.enumFrom n).nthLe i hi' = (n + i, l.nthLe i hi) :=
   by
   rw [← Option.some_inj, ← nth_le_nth]
   simp [enum_from_nth, nth_le_nth hi]
-#align list.nth_le_enum_from List.nthLe_enumFrom
+#align list.nth_le_enum_from List.get_enumFrom
 -/
 
-#print List.nthLe_enum /-
-theorem nthLe_enum (l : List α) (i : ℕ) (hi' : i < l.enum.length)
+#print List.get_enum /-
+theorem get_enum (l : List α) (i : ℕ) (hi' : i < l.enum.length)
     (hi : i < l.length := (by simpa [length_enum] using hi')) :
     l.enum.nthLe i hi' = (i, l.nthLe i hi) := by convert nth_le_enum_from _ _ _ hi';
   exact (zero_add _).symm
-#align list.nth_le_enum List.nthLe_enum
+#align list.nth_le_enum List.get_enum
 -/
 
 section Choose
@@ -6396,14 +6396,16 @@ theorem getD_cons_succ : getD (x :: xs) (n + 1) d = getD xs n d :=
   rfl
 #align list.nthd_cons_succ List.getD_cons_succₓ
 
-theorem getD_eq_nthLe {n : ℕ} (hn : n < l.length) : l.getD n d = l.nthLe n hn :=
+#print List.getD_eq_get /-
+theorem getD_eq_get {n : ℕ} (hn : n < l.length) : l.getD n d = l.nthLe n hn :=
   by
   induction' l with hd tl IH generalizing n
   · exact absurd hn (not_lt_of_ge (Nat.zero_le _))
   · cases n
     · exact nthd_cons_zero _ _ _
     · exact IH _
-#align list.nthd_eq_nth_le List.getD_eq_nthLeₓ
+#align list.nthd_eq_nth_le List.getD_eq_get
+-/
 
 theorem getD_eq_default {n : ℕ} (hn : l.length ≤ n) : l.getD n d = d :=
   by
@@ -6481,10 +6483,10 @@ theorem getI_cons_succ : getI (x :: xs) (n + 1) = getI xs n :=
 #align list.inth_cons_succ List.getI_cons_succ
 -/
 
-#print List.getI_eq_nthLe /-
-theorem getI_eq_nthLe {n : ℕ} (hn : n < l.length) : l.getI n = l.nthLe n hn :=
-  getD_eq_nthLe _ _ _
-#align list.inth_eq_nth_le List.getI_eq_nthLe
+#print List.getI_eq_get /-
+theorem getI_eq_get {n : ℕ} (hn : n < l.length) : l.getI n = l.nthLe n hn :=
+  getD_eq_get _ _ _
+#align list.inth_eq_nth_le List.getI_eq_get
 -/
 
 #print List.getI_eq_default /-
