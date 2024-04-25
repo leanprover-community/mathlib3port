@@ -111,20 +111,20 @@ theorem coe_ratCast (s : S) (x : ℚ) : ((x : s) : K) = x :=
 #align subfield_class.coe_rat_cast SubfieldClass.coe_ratCast
 -/
 
-#print SubfieldClass.rat_smul_mem /-
-theorem rat_smul_mem (s : S) (a : ℚ) (x : s) : (a • x : K) ∈ s := by
+#print SubfieldClass.qsmul_mem /-
+theorem qsmul_mem (s : S) (a : ℚ) (x : s) : (a • x : K) ∈ s := by
   simpa only [Rat.smul_def] using mul_mem (coe_rat_mem s a) x.prop
-#align subfield_class.rat_smul_mem SubfieldClass.rat_smul_mem
+#align subfield_class.rat_smul_mem SubfieldClass.qsmul_mem
 -/
 
 instance (s : S) : SMul ℚ s :=
-  ⟨fun a x => ⟨a • x, rat_smul_mem s a x⟩⟩
+  ⟨fun a x => ⟨a • x, qsmul_mem s a x⟩⟩
 
-#print SubfieldClass.coe_rat_smul /-
+#print SubfieldClass.coe_qsmul /-
 @[simp]
-theorem coe_rat_smul (s : S) (a : ℚ) (x : s) : (↑(a • x) : K) = a • x :=
+theorem coe_qsmul (s : S) (a : ℚ) (x : s) : (↑(a • x) : K) = a • x :=
   rfl
-#align subfield_class.coe_rat_smul SubfieldClass.coe_rat_smul
+#align subfield_class.coe_rat_smul SubfieldClass.coe_qsmul
 -/
 
 variable (S)

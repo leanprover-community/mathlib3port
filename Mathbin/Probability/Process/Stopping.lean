@@ -618,7 +618,7 @@ protected theorem measurableSet_ge' [TopologicalSpace ι] [OrderTopology ι]
     by
     ext1 ω
     simp only [le_iff_lt_or_eq, Set.mem_setOf_eq, Set.mem_union]
-    rw [@eq_comm _ i, or_comm']
+    rw [@eq_comm _ i, or_comm]
   rw [this]
   exact (hτ.measurable_set_eq' i).union (hτ.measurable_set_gt' i)
 #align measure_theory.is_stopping_time.measurable_set_ge' MeasureTheory.IsStoppingTime.measurableSet_ge'
@@ -666,7 +666,7 @@ protected theorem measurableSet_ge_of_countable_range' (hτ : IsStoppingTime f �
     by
     ext1 ω
     simp only [le_iff_lt_or_eq, Set.mem_setOf_eq, Set.mem_union]
-    rw [@eq_comm _ i, or_comm']
+    rw [@eq_comm _ i, or_comm]
   rw [this]
   exact (hτ.measurable_set_eq_of_countable_range' h_countable i).union (hτ.measurable_set_gt' i)
 #align measure_theory.is_stopping_time.measurable_set_ge_of_countable_range' MeasureTheory.IsStoppingTime.measurableSet_ge_of_countable_range'

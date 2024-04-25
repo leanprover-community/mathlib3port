@@ -455,7 +455,7 @@ theorem ultrafilter_le_nhds_infty {f : Ultrafilter (OnePoint X)} :
 #print OnePoint.tendsto_nhds_infty' /-
 theorem tendsto_nhds_infty' {α : Type _} {f : OnePoint X → α} {l : Filter α} :
     Tendsto f (𝓝 ∞) l ↔ Tendsto f (pure ∞) l ∧ Tendsto (f ∘ coe) (coclosedCompact X) l := by
-  simp [nhds_infty_eq, and_comm']
+  simp [nhds_infty_eq, and_comm]
 #align alexandroff.tendsto_nhds_infty' OnePoint.tendsto_nhds_infty'
 -/
 
@@ -465,7 +465,7 @@ theorem tendsto_nhds_infty {α : Type _} {f : OnePoint X → α} {l : Filter α}
       ∀ s ∈ l, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
   tendsto_nhds_infty'.trans <| by
     simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and,
-      and_assoc', exists_prop]
+      and_assoc, exists_prop]
 #align alexandroff.tendsto_nhds_infty OnePoint.tendsto_nhds_infty
 -/
 
@@ -481,7 +481,7 @@ theorem continuousAt_infty {Y : Type _} [TopologicalSpace Y] {f : OnePoint X →
     ContinuousAt f ∞ ↔
       ∀ s ∈ 𝓝 (f ∞), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
   continuousAt_infty'.trans <| by
-    simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc']
+    simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc]
 #align alexandroff.continuous_at_infty OnePoint.continuousAt_infty
 -/
 

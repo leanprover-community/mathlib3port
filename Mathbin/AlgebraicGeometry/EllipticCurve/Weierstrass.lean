@@ -670,7 +670,7 @@ theorem WeierstrassCurve.Affine.nonsingular_iff (x y : R) :
 theorem WeierstrassCurve.Affine.nonsingular_zero :
     W.nonsingular 0 0 ↔ W.a₆ = 0 ∧ (W.a₃ ≠ 0 ∨ W.a₄ ≠ 0) := by
   rw [nonsingular, equation_zero, C_0, eval_polynomial_X_zero, neg_ne_zero, eval_polynomial_Y_zero,
-    or_comm']
+    or_comm]
 #align weierstrass_curve.nonsingular_zero WeierstrassCurve.Affine.nonsingular_zero
 -/
 
@@ -678,7 +678,7 @@ theorem WeierstrassCurve.Affine.nonsingular_zero :
 theorem WeierstrassCurve.Affine.nonsingular_iff_variableChange (x y : R) :
     W.nonsingular x y ↔ (W.variableChange 1 x 0 y).nonsingular 0 0 :=
   by
-  rw [nonsingular_iff', equation_iff_variable_change, equation_zero, ← neg_ne_zero, or_comm',
+  rw [nonsingular_iff', equation_iff_variable_change, equation_zero, ← neg_ne_zero, or_comm,
     nonsingular_zero, variable_change_a₃, variable_change_a₄, inv_one, Units.val_one]
   congr 4 <;> ring1
 #align weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.Affine.nonsingular_iff_variableChange

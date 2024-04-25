@@ -160,7 +160,7 @@ def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorder α] [DecidableRel ((· ≤
     finsetIoc := fun a b => (finset_Icc a b).filterₓ fun x => ¬x ≤ a
     finsetIoo := fun a b => (finset_Icc a b).filterₓ fun x => ¬x ≤ a ∧ ¬b ≤ x
     finset_mem_Icc := mem_Icc
-    finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc', lt_iff_le_not_le]
+    finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc, lt_iff_le_not_le]
     finset_mem_Ioc := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_not_le]
     finset_mem_Ioo := fun a b x => by
@@ -180,7 +180,7 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrder α] [DecidableEq α]
     finsetIoc := fun a b => (finset_Icc a b).filterₓ fun x => a ≠ x
     finsetIoo := fun a b => (finset_Icc a b).filterₓ fun x => a ≠ x ∧ x ≠ b
     finset_mem_Icc := mem_Icc
-    finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc', lt_iff_le_and_ne]
+    finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc, lt_iff_le_and_ne]
     finset_mem_Ioc := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_and_ne]
     finset_mem_Ioo := fun a b x => by
@@ -974,56 +974,56 @@ instance : LocallyFiniteOrder αᵒᵈ
   finsetIco a b := @Ioc α _ _ (ofDual b) (ofDual a)
   finsetIoc a b := @Ico α _ _ (ofDual b) (ofDual a)
   finsetIoo a b := @Ioo α _ _ (ofDual b) (ofDual a)
-  finset_mem_Icc a b x := mem_Icc.trans (and_comm' _ _)
-  finset_mem_Ico a b x := mem_Ioc.trans (and_comm' _ _)
-  finset_mem_Ioc a b x := mem_Ico.trans (and_comm' _ _)
-  finset_mem_Ioo a b x := mem_Ioo.trans (and_comm' _ _)
+  finset_mem_Icc a b x := mem_Icc.trans (and_comm _ _)
+  finset_mem_Ico a b x := mem_Ioc.trans (and_comm _ _)
+  finset_mem_Ioc a b x := mem_Ico.trans (and_comm _ _)
+  finset_mem_Ioo a b x := mem_Ioo.trans (and_comm _ _)
 
 #print Icc_toDual /-
 theorem Icc_toDual : Icc (toDual a) (toDual b) = (Icc b a).map toDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Icc, mem_Icc]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Icc, mem_Icc]; exact and_comm _ _
 #align Icc_to_dual Icc_toDual
 -/
 
 #print Ico_toDual /-
 theorem Ico_toDual : Ico (toDual a) (toDual b) = (Ioc b a).map toDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ico, mem_Ioc]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ico, mem_Ioc]; exact and_comm _ _
 #align Ico_to_dual Ico_toDual
 -/
 
 #print Ioc_toDual /-
 theorem Ioc_toDual : Ioc (toDual a) (toDual b) = (Ico b a).map toDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioc, mem_Ico]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioc, mem_Ico]; exact and_comm _ _
 #align Ioc_to_dual Ioc_toDual
 -/
 
 #print Ioo_toDual /-
 theorem Ioo_toDual : Ioo (toDual a) (toDual b) = (Ioo b a).map toDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioo, mem_Ioo]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioo, mem_Ioo]; exact and_comm _ _
 #align Ioo_to_dual Ioo_toDual
 -/
 
 #print Icc_ofDual /-
 theorem Icc_ofDual (a b : αᵒᵈ) : Icc (ofDual a) (ofDual b) = (Icc b a).map ofDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Icc, mem_Icc]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Icc, mem_Icc]; exact and_comm _ _
 #align Icc_of_dual Icc_ofDual
 -/
 
 #print Ico_ofDual /-
 theorem Ico_ofDual (a b : αᵒᵈ) : Ico (ofDual a) (ofDual b) = (Ioc b a).map ofDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ico, mem_Ioc]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ico, mem_Ioc]; exact and_comm _ _
 #align Ico_of_dual Ico_ofDual
 -/
 
 #print Ioc_ofDual /-
 theorem Ioc_ofDual (a b : αᵒᵈ) : Ioc (ofDual a) (ofDual b) = (Ico b a).map ofDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioc, mem_Ico]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioc, mem_Ico]; exact and_comm _ _
 #align Ioc_of_dual Ioc_ofDual
 -/
 
 #print Ioo_ofDual /-
 theorem Ioo_ofDual (a b : αᵒᵈ) : Ioo (ofDual a) (ofDual b) = (Ioo b a).map ofDual.toEmbedding := by
-  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioo, mem_Ioo]; exact and_comm' _ _
+  refine' Eq.trans _ map_refl.symm; ext c; rw [mem_Ioo, mem_Ioo]; exact and_comm _ _
 #align Ioo_of_dual Ioo_ofDual
 -/
 
@@ -1240,7 +1240,7 @@ instance : LocallyFiniteOrder (WithTop α)
     | (a : α), (b : α) => (Ioo a b).map Embedding.some
   finset_mem_Icc a b x :=
     match a, b, x with
-    | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iff.trans <| and_comm' _ _)
+    | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iff.trans <| and_comm _ _)
     | ⊤, (b : α), x =>
       iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt <| coe_lt_top _
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match1]

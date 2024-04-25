@@ -7,7 +7,7 @@ import Algebra.Lie.Solvable
 import Algebra.Lie.Quotient
 import Algebra.Lie.Normalizer
 import LinearAlgebra.Eigenspace.Basic
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 
 #align_import algebra.lie.nilpotent from "leanprover-community/mathlib"@"fd4551cfe4b7484b81c2c9ba3405edae27659676"
 

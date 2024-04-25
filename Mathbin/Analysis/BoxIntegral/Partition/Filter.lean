@@ -408,7 +408,7 @@ theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (
         (l.bDistortion → π.distortion ≤ c₁) ∧ (l.bDistortion → π.distortion ≤ c₂) :=
   by
   wlog hc : c₁ ≤ c₂
-  · simpa [hU, and_comm'] using this h₂ h₁ hU.symm (le_of_not_le hc)
+  · simpa [hU, and_comm] using this h₂ h₁ hU.symm (le_of_not_le hc)
   by_cases hD : (l.bDistortion : Prop)
   · rcases h₁.4 hD with ⟨π, hπU, hπc⟩
     exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩

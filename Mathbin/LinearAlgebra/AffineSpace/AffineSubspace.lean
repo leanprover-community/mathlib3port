@@ -1809,7 +1809,7 @@ theorem direction_sup {s1 s2 : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s1)
       rw [zero_add]
     · rw [sup_assoc, SetLike.mem_coe, Submodule.mem_sup]
       use 0, Submodule.zero_mem _, p3 -ᵥ p1
-      rw [and_comm', zero_add]
+      rw [and_comm, zero_add]
       use rfl
       rw [← vsub_add_vsub_cancel p3 p2 p1, Submodule.mem_sup]
       use p3 -ᵥ p2, vsub_mem_direction hp3 hp2, p2 -ᵥ p1, Submodule.mem_span_singleton_self _

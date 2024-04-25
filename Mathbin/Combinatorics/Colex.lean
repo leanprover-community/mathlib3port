@@ -185,14 +185,14 @@ theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B
       specialize z t
       by_contra h₂
       simp only [mem_union, mem_sdiff, id.def] at z
-      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm'] at h₂
+      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm] at h₂
       apply not_le_of_lt th (z h₂)
     · left
       refine' ⟨k, fun t th => _, hk.2, hk.1⟩
       specialize z t
       by_contra h₃
       simp only [mem_union, mem_sdiff, id.def] at z
-      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm', or_comm'] at h₃
+      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm, or_comm] at h₃
       apply not_le_of_lt th (z h₃)
   rw [nonempty_iff_ne_empty]
   intro a
@@ -209,7 +209,7 @@ instance decidableLt [LinearOrder α] : ∀ {A B : Finset.Colex α}, Decidable (
       (by
         rw [Colex.lt_def]
         apply exists_congr
-        simp only [mem_union, exists_prop, or_imp, and_comm' (_ ∈ B), and_assoc']
+        simp only [mem_union, exists_prop, or_imp, and_comm (_ ∈ B), and_assoc]
         intro k
         refine' and_congr_left' (forall_congr' _)
         tauto)
@@ -275,7 +275,7 @@ theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrder α] {A B : Finset α} (t
 theorem lt_singleton_iff_mem_lt [LinearOrder α] {r : α} {s : Finset α} :
     s.toColex < ({r} : Finset α).toColex ↔ ∀ x ∈ s, x < r :=
   by
-  simp only [lt_def, mem_singleton, ← and_assoc', exists_eq_right]
+  simp only [lt_def, mem_singleton, ← and_assoc, exists_eq_right]
   constructor
   · intro t x hx
     rw [← not_le]

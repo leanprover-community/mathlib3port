@@ -101,7 +101,7 @@ def atMostOneFixedPointEquivSum_derangements [DecidableEq α] (a : α) :
     _ ≃ Sum { f : Perm α // fixedPoints f = {a} } { f : Perm α // fixedPoints f = ∅ } :=
       by
       refine' Equiv.sumCongr (subtype_equiv_right fun f => _) (subtype_equiv_right fun f => _)
-      · rw [Set.eq_singleton_iff_unique_mem, and_comm']
+      · rw [Set.eq_singleton_iff_unique_mem, and_comm]
         rfl
       · rw [Set.eq_empty_iff_forall_not_mem]
         refine' ⟨fun h x hx => h.2 (h.1 hx ▸ hx), fun h => ⟨fun x hx => (h _ hx).elim, h _⟩⟩

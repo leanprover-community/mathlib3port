@@ -1740,7 +1740,7 @@ theorem countable_of_isolated_left' [SecondCountableTopology α] :
     Set.Countable {x : α | ∃ y, y < x ∧ Ioo y x = ∅} :=
   by
   convert @countable_of_isolated_right' αᵒᵈ _ _ _ _
-  have : ∀ x y : α, Ioo x y = {z | z < y ∧ x < z} := by simp_rw [and_comm', Ioo];
+  have : ∀ x y : α, Ioo x y = {z | z < y ∧ x < z} := by simp_rw [and_comm, Ioo];
     simp only [eq_self_iff_true, forall₂_true_iff]
   simp_rw [this]
   rfl
@@ -3030,7 +3030,7 @@ theorem nhdsWithin_Ioi_self_neBot [NoMaxOrder α] (a : α) : NeBot (𝓝[>] a) :
 #print Filter.Eventually.exists_gt /-
 theorem Filter.Eventually.exists_gt [NoMaxOrder α] {a : α} {p : α → Prop} (h : ∀ᶠ x in 𝓝 a, p x) :
     ∃ b > a, p b := by
-  simpa only [exists_prop, gt_iff_lt, and_comm'] using
+  simpa only [exists_prop, gt_iff_lt, and_comm] using
     ((h.filter_mono (@nhdsWithin_le_nhds _ _ a (Ioi a))).And self_mem_nhdsWithin).exists
 #align filter.eventually.exists_gt Filter.Eventually.exists_gt
 -/

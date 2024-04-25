@@ -895,7 +895,7 @@ theorem subtype_map (p : α → Prop) [DecidablePred p] {s : Finset α} :
     (s.Subtype p).map (Embedding.subtype _) = s.filterₓ p :=
   by
   ext x
-  simp [and_comm' _ (_ = _), @and_left_comm _ (_ = _), and_comm' (p x) (x ∈ s)]
+  simp [and_comm _ (_ = _), @and_left_comm _ (_ = _), and_comm (p x) (x ∈ s)]
 #align finset.subtype_map Finset.subtype_map
 -/
 

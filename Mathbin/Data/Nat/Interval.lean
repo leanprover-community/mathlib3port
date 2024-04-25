@@ -317,7 +317,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) :
 theorem Ico_succ_left_eq_erase_Ico : Ico a.succ b = erase (Ico a b) a :=
   by
   ext x
-  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc', ne_comm, and_comm' (a ≠ x),
+  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc, ne_comm, and_comm (a ≠ x),
     lt_iff_le_and_ne]
 #align nat.Ico_succ_left_eq_erase_Ico Nat.Ico_succ_left_eq_erase_Ico
 -/

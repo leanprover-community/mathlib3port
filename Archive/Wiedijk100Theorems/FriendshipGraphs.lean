@@ -88,7 +88,7 @@ variable (R)
 theorem adjMatrix_sq_of_ne {v w : V} (hvw : v ≠ w) : (G.adjMatrix R ^ 2) v w = 1 :=
   by
   rw [sq, ← Nat.cast_one, ← hG hvw]
-  simp [common_neighbors, neighbor_finset_eq_filter, Finset.filter_filter, and_comm', ←
+  simp [common_neighbors, neighbor_finset_eq_filter, Finset.filter_filter, and_comm, ←
     neighbor_finset_def]
 #align theorems_100.friendship.adj_matrix_sq_of_ne Theorems100.Friendship.adjMatrix_sq_of_ne
 

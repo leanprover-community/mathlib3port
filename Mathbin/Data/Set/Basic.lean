@@ -658,7 +658,7 @@ theorem inter_nonempty_iff_exists_left : (s ∩ t).Nonempty ↔ ∃ x ∈ s, x �
 
 #print Set.inter_nonempty_iff_exists_right /-
 theorem inter_nonempty_iff_exists_right : (s ∩ t).Nonempty ↔ ∃ x ∈ t, x ∈ s := by
-  simp_rw [inter_nonempty, exists_prop, and_comm']
+  simp_rw [inter_nonempty, exists_prop, and_comm]
 #align set.inter_nonempty_iff_exists_right Set.inter_nonempty_iff_exists_right
 -/
 
@@ -1592,7 +1592,7 @@ theorem subset_insert_iff_of_not_mem (ha : a ∉ s) : s ⊆ insert a t ↔ s ⊆
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _) (_ : a ∉ s), insert a s ⊆ t :=
   by
   simp only [insert_subset, exists_and_right, ssubset_def, not_subset]
-  simp only [exists_prop, and_comm']
+  simp only [exists_prop, and_comm]
 #align set.ssubset_iff_insert Set.ssubset_iff_insert
 -/
 
@@ -3759,7 +3759,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
       ∃ (a : _) (_ : a ∈ s) (b : _) (_ : b ∈ s) (c : _) (_ : c ∈ s),
         a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
-  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
+  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc, exists_and_left,
     not_monotone_not_antitone_iff_exists_le_le, @and_left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
 -/
@@ -3773,7 +3773,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
       ∃ (a : _) (_ : a ∈ s) (b : _) (_ : b ∈ s) (c : _) (_ : c ∈ s),
         a < b ∧ b < c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
-  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
+  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc, exists_and_left,
     not_monotone_not_antitone_iff_exists_lt_lt, @and_left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt
 -/

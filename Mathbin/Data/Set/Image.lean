@@ -504,7 +504,7 @@ theorem compl_compl_image [BooleanAlgebra α] (S : Set α) : compl '' (compl '' 
 
 #print Set.image_insert_eq /-
 theorem image_insert_eq {f : α → β} {a : α} {s : Set α} : f '' insert a s = insert (f a) (f '' s) :=
-  by ext; simp [and_or_left, exists_or, eq_comm, or_comm', and_comm']
+  by ext; simp [and_or_left, exists_or, eq_comm, or_comm, and_comm]
 #align set.image_insert_eq Set.image_insert_eq
 -/
 

@@ -58,7 +58,7 @@ deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.T
   Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=
-  ⟨BinTree.Empty⟩
+  ⟨BinTree.empty⟩
 
 instance : Inhabited Unsigned :=
   ⟨0⟩

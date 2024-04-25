@@ -77,7 +77,7 @@ theorem mem_nhdsSet_iff_exists : s ∈ 𝓝ˢ t ↔ ∃ U : Set α, IsOpen U ∧
 
 #print hasBasis_nhdsSet /-
 theorem hasBasis_nhdsSet (s : Set α) : (𝓝ˢ s).HasBasis (fun U => IsOpen U ∧ s ⊆ U) fun U => U :=
-  ⟨fun t => by simp [mem_nhdsSet_iff_exists, and_assoc']⟩
+  ⟨fun t => by simp [mem_nhdsSet_iff_exists, and_assoc]⟩
 #align has_basis_nhds_set hasBasis_nhdsSet
 -/
 

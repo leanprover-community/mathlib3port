@@ -3,7 +3,7 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 import RingTheory.Ideal.QuotientOperations
 
 #align_import ring_theory.quotient_nilpotent from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"

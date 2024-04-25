@@ -1893,7 +1893,7 @@ theorem union_left_comm (s t u : Finset α) : s ∪ (t ∪ u) = t ∪ (s ∪ u) 
 
 #print Finset.union_right_comm /-
 theorem union_right_comm (s t u : Finset α) : s ∪ t ∪ u = s ∪ u ∪ t :=
-  ext fun x => by simp only [mem_union, or_assoc', or_comm' (x ∈ t)]
+  ext fun x => by simp only [mem_union, or_assoc, or_comm (x ∈ t)]
 #align finset.union_right_comm Finset.union_right_comm
 -/
 
@@ -2145,14 +2145,14 @@ theorem union_inter_cancel_right {s t : Finset α} : (s ∪ t) ∩ t = t := by
 
 #print Finset.inter_comm /-
 theorem inter_comm (s₁ s₂ : Finset α) : s₁ ∩ s₂ = s₂ ∩ s₁ :=
-  ext fun _ => by simp only [mem_inter, and_comm']
+  ext fun _ => by simp only [mem_inter, and_comm]
 #align finset.inter_comm Finset.inter_comm
 -/
 
 #print Finset.inter_assoc /-
 @[simp]
 theorem inter_assoc (s₁ s₂ s₃ : Finset α) : s₁ ∩ s₂ ∩ s₃ = s₁ ∩ (s₂ ∩ s₃) :=
-  ext fun _ => by simp only [mem_inter, and_assoc']
+  ext fun _ => by simp only [mem_inter, and_assoc]
 #align finset.inter_assoc Finset.inter_assoc
 -/
 
@@ -2625,7 +2625,7 @@ theorem subset_erase {a : α} {s t : Finset α} : s ⊆ t.eraseₓ a ↔ s ⊆ t
 #print Finset.coe_erase /-
 @[simp, norm_cast]
 theorem coe_erase (a : α) (s : Finset α) : ↑(erase s a) = (s \ {a} : Set α) :=
-  Set.ext fun _ => mem_erase.trans <| by rw [and_comm', Set.mem_diff, Set.mem_singleton_iff] <;> rfl
+  Set.ext fun _ => mem_erase.trans <| by rw [and_comm, Set.mem_diff, Set.mem_singleton_iff] <;> rfl
 #align finset.coe_erase Finset.coe_erase
 -/
 
@@ -2672,7 +2672,7 @@ theorem erase_idem {a : α} {s : Finset α} : erase (erase s a) a = erase s a :=
 
 #print Finset.erase_right_comm /-
 theorem erase_right_comm {a b : α} {s : Finset α} : erase (erase s a) b = erase (erase s b) a := by
-  ext x; simp only [mem_erase, ← and_assoc']; rw [and_comm' (x ≠ a)]
+  ext x; simp only [mem_erase, ← and_assoc]; rw [and_comm (x ≠ a)]
 #align finset.erase_right_comm Finset.erase_right_comm
 -/
 
@@ -2800,7 +2800,7 @@ theorem sdiff_union_of_subset {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₂
 -/
 
 #print Finset.inter_sdiff /-
-theorem inter_sdiff (s t u : Finset α) : s ∩ (t \ u) = (s ∩ t) \ u := by ext x; simp [and_assoc']
+theorem inter_sdiff (s t u : Finset α) : s ∩ (t \ u) = (s ∩ t) \ u := by ext x; simp [and_assoc]
 #align finset.inter_sdiff Finset.inter_sdiff
 -/
 
@@ -3603,13 +3603,13 @@ variable (p)
 
 #print Finset.filter_filter /-
 theorem filter_filter (s : Finset α) : (s.filterₓ p).filterₓ q = s.filterₓ fun a => p a ∧ q a :=
-  ext fun a => by simp only [mem_filter, and_comm', and_left_comm]
+  ext fun a => by simp only [mem_filter, and_comm, and_left_comm]
 #align finset.filter_filter Finset.filter_filter
 -/
 
 #print Finset.filter_comm /-
 theorem filter_comm (s : Finset α) : (s.filterₓ p).filterₓ q = (s.filterₓ q).filterₓ p := by
-  simp_rw [filter_filter, and_comm']
+  simp_rw [filter_filter, and_comm]
 #align finset.filter_comm Finset.filter_comm
 -/
 
@@ -3844,7 +3844,7 @@ theorem filter_insert (a : α) (s : Finset α) :
 
 #print Finset.filter_erase /-
 theorem filter_erase (a : α) (s : Finset α) : filter p (erase s a) = erase (filter p s) a := by
-  ext x; simp only [and_assoc', mem_filter, iff_self_iff, mem_erase]
+  ext x; simp only [and_assoc, mem_filter, iff_self_iff, mem_erase]
 #align finset.filter_erase Finset.filter_erase
 -/
 
@@ -3858,7 +3858,7 @@ theorem filter_or [DecidablePred fun a => p a ∨ q a] (s : Finset α) :
 #print Finset.filter_and /-
 theorem filter_and [DecidablePred fun a => p a ∧ q a] (s : Finset α) :
     (s.filterₓ fun a => p a ∧ q a) = s.filterₓ p ∩ s.filterₓ q :=
-  ext fun _ => by simp only [mem_filter, mem_inter, and_comm', and_left_comm, and_self_iff]
+  ext fun _ => by simp only [mem_filter, mem_inter, and_comm, and_left_comm, and_self_iff]
 #align finset.filter_and Finset.filter_and
 -/
 
@@ -3866,7 +3866,7 @@ theorem filter_and [DecidablePred fun a => p a ∧ q a] (s : Finset α) :
 theorem filter_not [DecidablePred fun a => ¬p a] (s : Finset α) :
     (s.filterₓ fun a => ¬p a) = s \ s.filterₓ p :=
   ext <| by
-    simpa only [mem_filter, mem_sdiff, and_comm', not_and] using fun a =>
+    simpa only [mem_filter, mem_sdiff, and_comm, not_and] using fun a =>
       and_congr_right fun h : a ∈ s => (imp_iff_right h).symm.trans imp_not_comm
 #align finset.filter_not Finset.filter_not
 -/
@@ -4840,7 +4840,7 @@ theorem biUnion_biUnion [DecidableEq γ] (s : Finset α) (f : α → Finset β) 
   by
   ext
   simp only [Finset.mem_biUnion, exists_prop]
-  simp_rw [← exists_and_right, ← exists_and_left, and_assoc']
+  simp_rw [← exists_and_right, ← exists_and_left, and_assoc]
   rw [exists_comm]
 #align finset.bUnion_bUnion Finset.biUnion_biUnion
 -/

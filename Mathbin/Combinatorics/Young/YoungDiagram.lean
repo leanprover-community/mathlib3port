@@ -361,7 +361,7 @@ theorem row_eq_prod {μ : YoungDiagram} {i : ℕ} : μ.row i = {i} ×ˢ Finset.r
   by
   ext ⟨a, b⟩
   simp only [Finset.mem_product, Finset.mem_singleton, Finset.mem_range, mem_row_iff,
-    mem_iff_lt_row_len, and_comm', and_congr_right_iff]
+    mem_iff_lt_row_len, and_comm, and_congr_right_iff]
   rintro rfl; rfl
 #align young_diagram.row_eq_prod YoungDiagram.row_eq_prod
 -/
@@ -448,7 +448,7 @@ theorem col_eq_prod {μ : YoungDiagram} {j : ℕ} : μ.col j = Finset.range (μ.
   by
   ext ⟨a, b⟩
   simp only [Finset.mem_product, Finset.mem_singleton, Finset.mem_range, mem_col_iff,
-    mem_iff_lt_col_len, and_comm', and_congr_right_iff]
+    mem_iff_lt_col_len, and_comm, and_congr_right_iff]
   rintro rfl; rfl
 #align young_diagram.col_eq_prod YoungDiagram.col_eq_prod
 -/

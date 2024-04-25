@@ -106,7 +106,7 @@ theorem toOuterMeasure_uniformOfFinset_apply :
       toOuterMeasure_apply (uniformOfFinset s hs) t
     _ = ∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       (tsum_congr fun x => by
-        simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, ENNReal.coe_natCast])
+        simp only [uniform_of_finset_apply, and_comm (x ∈ s), ite_and, ENNReal.coe_natCast])
     _ = ∑ x in s.filterₓ (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       (tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h))
     _ = ∑ x in s.filterₓ (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=

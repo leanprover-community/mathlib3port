@@ -253,14 +253,14 @@ variable {f}
 @[simp]
 theorem bind_eq_done :
     (p >>= f) cb n = done n' b ↔ ∃ (np : ℕ) (a : α), p cb n = done np a ∧ f a cb np = done n' b :=
-  by cases hp : p cb n <;> simp [hp, ← bind_eq_bind, Parser.bind, and_assoc']
+  by cases hp : p cb n <;> simp [hp, ← bind_eq_bind, Parser.bind, and_assoc]
 #align parser.bind_eq_done Parser.bind_eq_done
 
 @[simp]
 theorem bind_eq_fail :
     (p >>= f) cb n = fail n' err ↔
       p cb n = fail n' err ∨ ∃ (np : ℕ) (a : α), p cb n = done np a ∧ f a cb np = fail n' err :=
-  by cases hp : p cb n <;> simp [hp, ← bind_eq_bind, Parser.bind, and_assoc']
+  by cases hp : p cb n <;> simp [hp, ← bind_eq_bind, Parser.bind, and_assoc]
 #align parser.bind_eq_fail Parser.bind_eq_fail
 
 @[simp]
@@ -286,7 +286,7 @@ variable {f : α → β}
 
 @[simp]
 theorem map_eq_done : (f <$> p) cb n = done n' b ↔ ∃ a : α, p cb n = done n' a ∧ f a = b := by
-  cases hp : p cb n <;> simp [← LawfulMonad.bind_pure_comp, hp, and_assoc', pure_eq_done]
+  cases hp : p cb n <;> simp [← LawfulMonad.bind_pure_comp, hp, and_assoc, pure_eq_done]
 #align parser.map_eq_done Parser.map_eq_done
 
 @[simp]
@@ -805,7 +805,7 @@ theorem remaining_ne_fail : remaining cb n ≠ fail n' err := by simp [remaining
 #align parser.remaining_ne_fail Parser.remaining_ne_fail
 
 theorem eof_eq_done {u : Unit} : eof cb n = done n' u ↔ n = n' ∧ cb.size ≤ n := by
-  simp [eof, guard_eq_done, remaining_eq_done, tsub_eq_zero_iff_le, and_comm', and_assoc']
+  simp [eof, guard_eq_done, remaining_eq_done, tsub_eq_zero_iff_le, and_comm, and_assoc]
 #align parser.eof_eq_done Parser.eof_eq_done
 
 @[simp]
@@ -836,7 +836,7 @@ theorem foldrCore_succ_eq_fail {f : α → β → β} {p : Parser α} {reps : �
       n ≠ n' ∧
         (p cb n = fail n' err ∨
           ∃ (np : ℕ) (a : α), p cb n = done np a ∧ foldrCore f p b reps cb np = fail n' err) :=
-  by simp [foldr_core, and_comm']
+  by simp [foldr_core, and_comm]
 #align parser.foldr_core_succ_eq_fail Parser.foldrCore_succ_eq_fail
 
 theorem foldr_eq_done {f : α → β → β} {p : Parser α} {b' : β} :
@@ -903,7 +903,7 @@ theorem foldlCore_succ_eq_fail {f : β → α → β} {p : Parser α} {reps : �
         (p cb n = fail n' err ∨
           ∃ (np : ℕ) (a : α),
             p cb n = done np a ∧ foldlCore f (f b a) p reps cb np = fail n' err) :=
-  by simp [foldl_core, and_comm']
+  by simp [foldl_core, and_comm]
 #align parser.foldl_core_succ_eq_fail Parser.foldlCore_succ_eq_fail
 
 theorem foldl_eq_done {f : β → α → β} {p : Parser α} {b' : β} :

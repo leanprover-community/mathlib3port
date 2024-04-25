@@ -101,7 +101,7 @@ theorem properDivisors.not_self_mem : ¬n ∈ properDivisors n := by simp [prope
 theorem mem_properDivisors {m : ℕ} : n ∈ properDivisors m ↔ n ∣ m ∧ n < m :=
   by
   rcases eq_or_ne m 0 with (rfl | hm); · simp [proper_divisors]
-  simp only [and_comm', ← filter_dvd_eq_proper_divisors hm, mem_filter, mem_range]
+  simp only [and_comm, ← filter_dvd_eq_proper_divisors hm, mem_filter, mem_range]
 #align nat.mem_proper_divisors Nat.mem_properDivisors
 -/
 
@@ -156,7 +156,7 @@ theorem mem_divisorsAntidiagonal {x : ℕ × ℕ} :
     x ∈ divisorsAntidiagonal n ↔ x.fst * x.snd = n ∧ n ≠ 0 :=
   by
   simp only [divisors_antidiagonal, Finset.mem_Ico, Ne.def, Finset.mem_filter, Finset.mem_product]
-  rw [and_comm']
+  rw [and_comm]
   apply and_congr_right
   rintro rfl
   constructor <;> intro h
@@ -506,7 +506,7 @@ theorem mem_properDivisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ
     x ∈ properDivisors (p ^ k) ↔ ∃ (j : ℕ) (H : j < k), x = p ^ j :=
   by
   rw [mem_proper_divisors, Nat.dvd_prime_pow pp, ← exists_and_right]
-  simp only [exists_prop, and_assoc']
+  simp only [exists_prop, and_assoc]
   apply exists_congr
   intro a
   constructor <;> intro h
@@ -574,7 +574,7 @@ theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
   · ext q
-    simpa [hn, hn.ne', mem_factors] using and_comm' (Prime q) (q ∣ n)
+    simpa [hn, hn.ne', mem_factors] using and_comm (Prime q) (q ∣ n)
 #align nat.prime_divisors_eq_to_filter_divisors_prime Nat.prime_divisors_eq_to_filter_divisors_prime
 -/
 

@@ -332,28 +332,28 @@ theorem dual_Iio : Iio (toDual a) = ofDual ⁻¹' Ioi a :=
 #print Set.dual_Icc /-
 @[simp]
 theorem dual_Icc : Icc (toDual a) (toDual b) = ofDual ⁻¹' Icc b a :=
-  Set.ext fun x => and_comm' _ _
+  Set.ext fun x => and_comm _ _
 #align set.dual_Icc Set.dual_Icc
 -/
 
 #print Set.dual_Ioc /-
 @[simp]
 theorem dual_Ioc : Ioc (toDual a) (toDual b) = ofDual ⁻¹' Ico b a :=
-  Set.ext fun x => and_comm' _ _
+  Set.ext fun x => and_comm _ _
 #align set.dual_Ioc Set.dual_Ioc
 -/
 
 #print Set.dual_Ico /-
 @[simp]
 theorem dual_Ico : Ico (toDual a) (toDual b) = ofDual ⁻¹' Ioc b a :=
-  Set.ext fun x => and_comm' _ _
+  Set.ext fun x => and_comm _ _
 #align set.dual_Ico Set.dual_Ico
 -/
 
 #print Set.dual_Ioo /-
 @[simp]
 theorem dual_Ioo : Ioo (toDual a) (toDual b) = ofDual ⁻¹' Ioo b a :=
-  Set.ext fun x => and_comm' _ _
+  Set.ext fun x => and_comm _ _
 #align set.dual_Ioo Set.dual_Ioo
 -/
 
@@ -1070,7 +1070,7 @@ variable [PartialOrder α] {a b c : α}
 #print Set.Icc_self /-
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} :=
-  Set.ext <| by simp [Icc, le_antisymm_iff, and_comm']
+  Set.ext <| by simp [Icc, le_antisymm_iff, and_comm]
 #align set.Icc_self Set.Icc_self
 -/
 
@@ -1098,7 +1098,7 @@ theorem Icc_diff_left : Icc a b \ {a} = Ioc a b :=
 #print Set.Icc_diff_right /-
 @[simp]
 theorem Icc_diff_right : Icc a b \ {b} = Ico a b :=
-  ext fun x => by simp [lt_iff_le_and_ne, and_assoc']
+  ext fun x => by simp [lt_iff_le_and_ne, and_assoc]
 #align set.Icc_diff_right Set.Icc_diff_right
 -/
 
@@ -1112,7 +1112,7 @@ theorem Ico_diff_left : Ico a b \ {a} = Ioo a b :=
 #print Set.Ioc_diff_right /-
 @[simp]
 theorem Ioc_diff_right : Ioc a b \ {b} = Ioo a b :=
-  ext fun x => by simp [and_assoc', ← lt_iff_le_and_ne]
+  ext fun x => by simp [and_assoc, ← lt_iff_le_and_ne]
 #align set.Ioc_diff_right Set.Ioc_diff_right
 -/
 
@@ -2500,14 +2500,14 @@ theorem Ioo_inter_Ioo : Ioo a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (a₁ ⊔ a₂) (b
 #print Set.Ioc_inter_Ioo_of_left_lt /-
 theorem Ioc_inter_Ioo_of_left_lt (h : b₁ < b₂) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioc (max a₁ a₂) b₁ :=
   ext fun x => by
-    simp [and_assoc', @and_left_comm (x ≤ _), and_iff_left_iff_imp.2 fun h' => lt_of_le_of_lt h' h]
+    simp [and_assoc, @and_left_comm (x ≤ _), and_iff_left_iff_imp.2 fun h' => lt_of_le_of_lt h' h]
 #align set.Ioc_inter_Ioo_of_left_lt Set.Ioc_inter_Ioo_of_left_lt
 -/
 
 #print Set.Ioc_inter_Ioo_of_right_le /-
 theorem Ioc_inter_Ioo_of_right_le (h : b₂ ≤ b₁) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (max a₁ a₂) b₂ :=
   ext fun x => by
-    simp [and_assoc', @and_left_comm (x ≤ _),
+    simp [and_assoc, @and_left_comm (x ≤ _),
       and_iff_right_iff_imp.2 fun h' => (le_of_lt h').trans h]
 #align set.Ioc_inter_Ioo_of_right_le Set.Ioc_inter_Ioo_of_right_le
 -/
@@ -2639,7 +2639,7 @@ theorem Iic_prod_eq (a : α × β) : Iic a = Iic a.1 ×ˢ Iic a.2 :=
 #print Set.Icc_prod_Icc /-
 @[simp]
 theorem Icc_prod_Icc (a₁ a₂ : α) (b₁ b₂ : β) : Icc a₁ a₂ ×ˢ Icc b₁ b₂ = Icc (a₁, b₁) (a₂, b₂) := by
-  ext ⟨x, y⟩; simp [and_assoc, and_comm', and_left_comm]
+  ext ⟨x, y⟩; simp [and_assoc, and_comm, and_left_comm]
 #align set.Icc_prod_Icc Set.Icc_prod_Icc
 -/
 

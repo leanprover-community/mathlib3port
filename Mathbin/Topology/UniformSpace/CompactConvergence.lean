@@ -318,7 +318,7 @@ theorem mem_compactConvergenceUniformity (X : Set (C(α, β) × C(α, β))) :
         {fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V} ⊆ X :=
   by
   simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_prop, Prod.exists,
-    and_assoc']
+    and_assoc]
 #align continuous_map.mem_compact_convergence_uniformity ContinuousMap.mem_compactConvergenceUniformity
 
 #print ContinuousMap.compactConvergenceUniformSpace /-

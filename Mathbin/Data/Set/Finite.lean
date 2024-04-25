@@ -425,7 +425,7 @@ instance fintypeInterOfLeft (s t : Set α) [Fintype s] [DecidablePred (· ∈ t)
 /-- A `fintype` instance for set intersection where the right set has a `fintype` instance. -/
 instance fintypeInterOfRight (s t : Set α) [Fintype t] [DecidablePred (· ∈ s)] :
     Fintype (s ∩ t : Set α) :=
-  Fintype.ofFinset (t.toFinset.filterₓ (· ∈ s)) <| by simp [and_comm']
+  Fintype.ofFinset (t.toFinset.filterₓ (· ∈ s)) <| by simp [and_comm]
 #align set.fintype_inter_of_right Set.fintypeInterOfRight
 -/
 
@@ -1184,7 +1184,7 @@ protected theorem infinite_prod :
     (s ×ˢ t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
   by
   refine' ⟨fun h => _, _⟩
-  · simp_rw [Set.Infinite, and_comm' ¬_, ← not_imp]
+  · simp_rw [Set.Infinite, and_comm ¬_, ← not_imp]
     by_contra!
     exact h ((this.1 h.nonempty.snd).Prod <| this.2 h.nonempty.fst)
   · rintro (h | h)

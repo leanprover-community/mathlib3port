@@ -64,7 +64,7 @@ instance : SecondCountableTopology EReal :=
         [rw [show s = ⋃ q ∈ {q : ℚ | a < (q : ℝ)}, {b | ((q : ℝ) : EReal) < b} by ext x;
             simpa only [hs, exists_prop, mem_Union] using lt_iff_exists_rat_btwn];
         rw [show s = ⋃ q ∈ {q : ℚ | ((q : ℝ) : EReal) < a}, {b | b < ((q : ℝ) : EReal)} by ext x;
-            simpa only [hs, and_comm', exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
+            simpa only [hs, and_comm, exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
       · apply isOpen_iUnion; intro q
         apply isOpen_iUnion; intro hq
         apply generate_open.basic

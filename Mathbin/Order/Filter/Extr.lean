@@ -265,7 +265,7 @@ theorem isMaxFilter_dual_iff : IsMaxFilter (toDual ∘ f) l a ↔ IsMinFilter f 
 
 #print isExtrFilter_dual_iff /-
 theorem isExtrFilter_dual_iff : IsExtrFilter (toDual ∘ f) l a ↔ IsExtrFilter f l a :=
-  or_comm' _ _
+  or_comm _ _
 #align is_extr_filter_dual_iff isExtrFilter_dual_iff
 -/
 
@@ -295,7 +295,7 @@ theorem isMaxOn_dual_iff : IsMaxOn (toDual ∘ f) s a ↔ IsMinOn f s a :=
 
 #print isExtrOn_dual_iff /-
 theorem isExtrOn_dual_iff : IsExtrOn (toDual ∘ f) s a ↔ IsExtrOn f s a :=
-  or_comm' _ _
+  or_comm _ _
 #align is_extr_on_dual_iff isExtrOn_dual_iff
 -/
 

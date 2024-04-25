@@ -84,7 +84,7 @@ theorem isOpen_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s 
 #print Filter.nhds_eq /-
 theorem nhds_eq (l : Filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
   nhds_generateFrom.trans <| by
-    simp only [mem_set_of_eq, and_comm' (l ∈ _), iInf_and, iInf_range, Filter.lift', Filter.lift,
+    simp only [mem_set_of_eq, and_comm (l ∈ _), iInf_and, iInf_range, Filter.lift', Filter.lift,
       (· ∘ ·), mem_Iic, le_principal_iff]
 #align filter.nhds_eq Filter.nhds_eq
 -/
@@ -205,7 +205,7 @@ protected theorem mem_interior {s : Set (Filter α)} {l : Filter α} :
 protected theorem mem_closure {s : Set (Filter α)} {l : Filter α} :
     l ∈ closure s ↔ ∀ t ∈ l, ∃ l' ∈ s, t ∈ l' := by
   simp only [closure_eq_compl_interior_compl, Filter.mem_interior, mem_compl_iff, not_exists,
-    Classical.not_forall, Classical.not_not, exists_prop, not_and, and_comm', subset_def, mem_Iic,
+    Classical.not_forall, Classical.not_not, exists_prop, not_and, and_comm, subset_def, mem_Iic,
     le_principal_iff]
 #align filter.mem_closure Filter.mem_closure
 -/

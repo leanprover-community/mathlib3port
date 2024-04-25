@@ -302,7 +302,7 @@ instance sup_commutative : Std.Commutative α (· ⊔ ·) :=
 
 #print sup_assoc /-
 theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
-  eq_of_forall_ge_iff fun x => by simp only [sup_le_iff, and_assoc']
+  eq_of_forall_ge_iff fun x => by simp only [sup_le_iff, and_assoc]
 #align sup_assoc sup_assoc
 -/
 

@@ -265,7 +265,7 @@ theorem nodup_append_comm {l₁ l₂ : List α} : Nodup (l₁ ++ l₂) ↔ Nodup
 #print List.nodup_middle /-
 theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodup (l₁ ++ a :: l₂) ↔ Nodup (a :: (l₁ ++ l₂)) :=
   by
-  simp only [nodup_append, not_or, and_left_comm, and_assoc', nodup_cons, mem_append,
+  simp only [nodup_append, not_or, and_left_comm, and_assoc, nodup_cons, mem_append,
     disjoint_cons_right]
 #align list.nodup_middle List.nodup_middle
 -/
@@ -374,7 +374,7 @@ theorem Nodup.diff [DecidableEq α] : l₁.Nodup → (l₁.diffₓ l₂).Nodup :
 
 #print List.Nodup.mem_erase_iff /-
 theorem Nodup.mem_erase_iff [DecidableEq α] (d : Nodup l) : a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by
-  rw [d.erase_eq_filter, mem_filter, and_comm']
+  rw [d.erase_eq_filter, mem_filter, and_comm]
 #align list.nodup.mem_erase_iff List.Nodup.mem_erase_iff
 -/
 
@@ -396,7 +396,7 @@ theorem nodup_bind {l₁ : List α} {f : α → List β} :
     Nodup (l₁.bind f) ↔
       (∀ x ∈ l₁, Nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ :=
   by
-  simp only [List.bind, nodup_join, pairwise_map, and_comm', and_left_comm, mem_map, exists_imp,
+  simp only [List.bind, nodup_join, pairwise_map, and_comm, and_left_comm, mem_map, exists_imp,
       and_imp] <;>
     rw [show (∀ (l : List β) (x : α), f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x)
         from forall_swap.trans <| forall_congr' fun _ => forall_eq']
@@ -535,7 +535,7 @@ theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : {a | a ∈ l}.Pairwise
   rw [List.nodup_cons] at hl
   have : ∀ b ∈ l, ¬a = b → r a b ↔ r a b := fun b hb =>
     imp_iff_right (ne_of_mem_of_not_mem hb hl.1).symm
-  simp [Set.setOf_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm',
+  simp [Set.setOf_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm,
     forall₂_congr this]
 #align list.nodup.pairwise_coe List.Nodup.pairwise_coe
 -/

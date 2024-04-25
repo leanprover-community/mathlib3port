@@ -697,7 +697,7 @@ theorem lineMap_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ :=
 theorem lineMap_eq_lineMap_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c₁ c₂ : k} :
     lineMap p₀ p₁ c₁ = lineMap p₀ p₁ c₂ ↔ p₀ = p₁ ∨ c₁ = c₂ := by
   rw [line_map_apply, line_map_apply, ← @vsub_eq_zero_iff_eq V1, vadd_vsub_vadd_cancel_right, ←
-    sub_smul, smul_eq_zero, sub_eq_zero, vsub_eq_zero_iff_eq, or_comm', eq_comm]
+    sub_smul, smul_eq_zero, sub_eq_zero, vsub_eq_zero_iff_eq, or_comm, eq_comm]
 #align affine_map.line_map_eq_line_map_iff AffineMap.lineMap_eq_lineMap_iff
 -/
 

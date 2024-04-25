@@ -912,7 +912,7 @@ theorem csSup_Iic : sSup (Iic a) = a :=
 @[simp]
 theorem csSup_Iio [NoMinOrder α] [DenselyOrdered α] : sSup (Iio a) = a :=
   csSup_eq_of_forall_le_of_forall_lt_exists_gt nonempty_Iio (fun _ => le_of_lt) fun w hw => by
-    simpa [and_comm'] using exists_between hw
+    simpa [and_comm] using exists_between hw
 #align cSup_Iio csSup_Iio
 -/
 

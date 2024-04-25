@@ -140,7 +140,7 @@ theorem implies_negElim : ∀ {p : Preform}, Preform.Implies p (negElim p) :=
   · cases' p with t s t s <;> try apply h
     · simp only [le_and_le_iff_eq.symm, not_and_or, not_le, preterm.val, preform.holds] at h
       simp only [Int.add_one_le_iff, preterm.add_one, preterm.val, preform.holds, neg_elim]
-      rw [or_comm']; assumption
+      rw [or_comm]; assumption
     · simp only [not_le, Int.add_one_le_iff, preterm.add_one, not_le, preterm.val, preform.holds,
         neg_elim] at *
       assumption

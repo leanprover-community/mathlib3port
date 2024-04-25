@@ -163,7 +163,7 @@ theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
 theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a)) (t : Finset α) :
     (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) =
       s.filterₓ fun a => a.1 ∈ t :=
-  by ext x; simp [and_comm']
+  by ext x; simp [and_comm]
 #align finset.sigma_preimage_mk Finset.sigma_preimage_mk
 -/
 

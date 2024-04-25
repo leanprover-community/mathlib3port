@@ -112,7 +112,7 @@ theorem mem_asList {a : Σ a, β a} : a ∈ data.asList ↔ ∃ i, a ∈ Array'.
     (∃ (l : List (Σ a : α, β a)) (i : Fin n.val), a ∈ l ∧ Array'.read data i = l) ↔
       ∃ i : Fin n.val, a ∈ Array'.read data i :=
     by rw [exists_swap] <;> exact exists_congr fun i => by simp
-  simp [as_list] <;> simpa [Array'.Mem.def, and_comm']
+  simp [as_list] <;> simpa [Array'.Mem.def, and_comm]
 #align bucket_array.mem_as_list BucketArray.mem_asList
 
 /-- Fold a function `f` over the key-value pairs in the bucket list -/
@@ -382,7 +382,7 @@ theorem Std.HashMap.Valid.eraseAux (a : α) :
   | ⟨a', b'⟩ :: t => by
     by_cases e : a' = a
     · subst a'
-      simpa [erase_aux, and_comm'] using
+      simpa [erase_aux, and_comm] using
         show ∃ (u w : _) (x : β a), t = u ++ w ∧ Sigma.mk a b' :: t = u ++ ⟨a, x⟩ :: w from
           ⟨[], t, b', by simp⟩
     · simp [erase_aux, e, Ne.symm e]
@@ -522,7 +522,7 @@ theorem Std.HashMap.insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArr
           c.fst ∉ l.map Sigma.fst ∧
             c.fst ∉ (BucketArray.asList t).map Sigma.fst ∧
               (l.map Sigma.fst).Disjoint ((BucketArray.asList t).map Sigma.fst)
-      by simpa [List.nodup_append, not_or, and_comm', and_left_comm] using nd with
+      by simpa [List.nodup_append, not_or, and_comm, and_left_comm] using nd with
     ⟨nd1, nd2, nm1, nm2, dj⟩
   have v' := v.insert _ _ c.2 fun Hc => nm2 <| (v.contains_aux_iff _ c.1).1 Hc
   apply IH _ _ v'
@@ -705,7 +705,7 @@ theorem Std.HashMap.mem_erase :
           Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w ↔
             (¬a = a' ∧ a' = a) ∧ HEq b' b ∨ ¬a = a' ∧ (Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w) :=
           by simp [eq_comm, not_and_self_iff, and_iff_right_of_imp this]
-        simpa [hl, show bkts'.as_list = _ from hfl, and_or_left, and_comm', and_left_comm,
+        simpa [hl, show bkts'.as_list = _ from hfl, and_or_left, and_comm, and_left_comm,
           or_left_comm]
       rintro m rfl; revert m; apply not_or.2
       have nd' := v.as_list_nodup _

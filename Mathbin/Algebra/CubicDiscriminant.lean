@@ -753,7 +753,7 @@ theorem disc_ne_zero_iff_roots_ne (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, 
   by
   rw [← _root_.map_ne_zero φ, disc_eq_prod_three_roots ha h3, pow_two]
   simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_self_iff, and_iff_right ha,
-    and_assoc']
+    and_assoc]
 #align cubic.disc_ne_zero_iff_roots_ne Cubic.disc_ne_zero_iff_roots_ne
 -/
 

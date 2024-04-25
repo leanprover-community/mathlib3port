@@ -381,7 +381,7 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
       _ = ∑ p in (f.support ×ˢ g.support).filterₓ fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
         (Finset.sum_filter _ _).symm
       _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1 * g p.2 :=
-        (sum_congr (by ext; simp only [mem_filter, mem_product, hs, and_comm']) fun _ _ => rfl)
+        (sum_congr (by ext; simp only [mem_filter, mem_product, hs, and_comm]) fun _ _ => rfl)
       _ = ∑ p in s, f p.1 * g p.2 :=
         sum_subset (filter_subset _ _) fun p hps hp =>
           by

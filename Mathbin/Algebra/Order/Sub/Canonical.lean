@@ -498,7 +498,7 @@ protected theorem tsub_le_tsub_iff_left (ha : AddLECancellable a) (hc : AddLECan
 protected theorem tsub_right_inj (ha : AddLECancellable a) (hb : AddLECancellable b)
     (hc : AddLECancellable c) (hba : b ≤ a) (hca : c ≤ a) : a - b = a - c ↔ b = c := by
   simp_rw [le_antisymm_iff, ha.tsub_le_tsub_iff_left hb hba, ha.tsub_le_tsub_iff_left hc hca,
-    and_comm']
+    and_comm]
 #align add_le_cancellable.tsub_right_inj AddLECancellable.tsub_right_inj
 -/
 

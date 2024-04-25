@@ -368,7 +368,7 @@ def interior (s : Set α) : Set α :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem mem_interior {s : Set α} {x : α} :
     x ∈ interior s ↔ ∃ (t : _) (_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
-  simp only [interior, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc', and_left_comm]
+  simp only [interior, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc, and_left_comm]
 #align mem_interior mem_interiorₓ
 
 #print isOpen_interior /-
@@ -1128,7 +1128,7 @@ theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ {s : Set α | a ∈ s ∧ IsOpen 
 
 #print nhds_def' /-
 theorem nhds_def' (a : α) : 𝓝 a = ⨅ (s : Set α) (hs : IsOpen s) (ha : a ∈ s), 𝓟 s := by
-  simp only [nhds_def, mem_set_of_eq, and_comm' (a ∈ _), iInf_and]
+  simp only [nhds_def, mem_set_of_eq, and_comm (a ∈ _), iInf_and]
 #align nhds_def' nhds_def'
 -/
 
@@ -1349,7 +1349,7 @@ theorem Filter.EventuallyLE.eventuallyLE_nhds [LE β] {f g : α → β} {a : α}
 #print all_mem_nhds /-
 theorem all_mem_nhds (x : α) (P : Set α → Prop) (hP : ∀ s t, s ⊆ t → P s → P t) :
     (∀ s ∈ 𝓝 x, P s) ↔ ∀ s, IsOpen s → x ∈ s → P s :=
-  ((nhds_basis_opens x).forall_iff hP).trans <| by simp only [and_comm' (x ∈ _), and_imp]
+  ((nhds_basis_opens x).forall_iff hP).trans <| by simp only [and_comm (x ∈ _), and_imp]
 #align all_mem_nhds all_mem_nhds
 -/
 
@@ -1570,8 +1570,8 @@ theorem acc_principal_iff_cluster (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ C
 /-- `x` is an accumulation point of a set `C` iff every neighborhood
 of `x` contains a point of `C` other than `x`. -/
 theorem accPt_iff_nhds (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ ∀ U ∈ 𝓝 x, ∃ y ∈ U ∩ C, y ≠ x := by
-  simp [acc_principal_iff_cluster, clusterPt_principal_iff, Set.Nonempty, exists_prop, and_assoc',
-    and_comm' ¬_ = x]
+  simp [acc_principal_iff_cluster, clusterPt_principal_iff, Set.Nonempty, exists_prop, and_assoc,
+    and_comm ¬_ = x]
 #align acc_pt_iff_nhds accPt_iff_nhds
 -/
 
@@ -1579,7 +1579,7 @@ theorem accPt_iff_nhds (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ ∀ U ∈ �
 /-- `x` is an accumulation point of a set `C` iff
 there are points near `x` in `C` and different from `x`.-/
 theorem accPt_iff_frequently (x : α) (C : Set α) : AccPt x (𝓟 C) ↔ ∃ᶠ y in 𝓝 x, y ≠ x ∧ y ∈ C := by
-  simp [acc_principal_iff_cluster, clusterPt_principal_iff_frequently, and_comm']
+  simp [acc_principal_iff_cluster, clusterPt_principal_iff_frequently, and_comm]
 #align acc_pt_iff_frequently accPt_iff_frequently
 -/
 
@@ -1814,7 +1814,7 @@ theorem mem_closure_iff_nhds_basis' {a : α} {p : ι → Prop} {s : ι → Set �
 theorem mem_closure_iff_nhds_basis {a : α} {p : ι → Prop} {s : ι → Set α} (h : (𝓝 a).HasBasis p s)
     {t : Set α} : a ∈ closure t ↔ ∀ i, p i → ∃ y ∈ t, y ∈ s i :=
   (mem_closure_iff_nhds_basis' h).trans <| by
-    simp only [Set.Nonempty, mem_inter_iff, exists_prop, and_comm']
+    simp only [Set.Nonempty, mem_inter_iff, exists_prop, and_comm]
 #align mem_closure_iff_nhds_basis mem_closure_iff_nhds_basis
 -/
 

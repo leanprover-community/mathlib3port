@@ -309,7 +309,7 @@ variable [NoZeroDivisors R]
 #print Commute.sq_eq_sq_iff_eq_or_eq_neg /-
 protected theorem Commute.sq_eq_sq_iff_eq_or_eq_neg (h : Commute a b) :
     a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
-  rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm']
+  rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm]
 #align commute.sq_eq_sq_iff_eq_or_eq_neg Commute.sq_eq_sq_iff_eq_or_eq_neg
 -/
 

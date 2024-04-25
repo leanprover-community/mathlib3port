@@ -1803,7 +1803,7 @@ theorem contDiffAt_one_iff :
   by
   simp_rw [show (1 : ℕ∞) = (0 + 1 : ℕ) from (zero_add 1).symm, contDiffAt_succ_iff_hasFDerivAt,
     show ((0 : ℕ) : ℕ∞) = 0 from rfl, contDiffAt_zero,
-    exists_mem_and_iff antitone_bforall antitone_continuousOn, and_comm']
+    exists_mem_and_iff antitone_bforall antitone_continuousOn, and_comm]
 #align cont_diff_at_one_iff contDiffAt_one_iff
 -/
 

@@ -738,7 +738,7 @@ theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) :
   simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right, ←
     exists_and_left]
   rw [exists_comm]
-  simp_rw [and_assoc', and_comm]
+  simp_rw [and_assoc, and_comm]
 #align pfun.preimage_comp PFun.preimage_comp
 -/
 
@@ -750,7 +750,7 @@ theorem PFun.Part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) :
   simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right, ←
     exists_and_left]
   rw [exists_comm]
-  simp_rw [and_assoc']
+  simp_rw [and_assoc]
 #align part.bind_comp PFun.Part.bind_comp
 -/
 

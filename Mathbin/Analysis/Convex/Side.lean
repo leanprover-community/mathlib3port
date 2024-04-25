@@ -249,7 +249,7 @@ alias ⟨w_same_side.symm, _⟩ := w_same_side_comm
 
 #print AffineSubspace.sSameSide_comm /-
 theorem sSameSide_comm {s : AffineSubspace R P} {x y : P} : s.SSameSide x y ↔ s.SSameSide y x := by
-  rw [s_same_side, s_same_side, w_same_side_comm, and_comm' (x ∉ s)]
+  rw [s_same_side, s_same_side, w_same_side_comm, and_comm (x ∉ s)]
 #align affine_subspace.s_same_side_comm AffineSubspace.sSameSide_comm
 -/
 
@@ -274,7 +274,7 @@ alias ⟨w_opp_side.symm, _⟩ := w_opp_side_comm
 
 #print AffineSubspace.sOppSide_comm /-
 theorem sOppSide_comm {s : AffineSubspace R P} {x y : P} : s.SOppSide x y ↔ s.SOppSide y x := by
-  rw [s_opp_side, s_opp_side, w_opp_side_comm, and_comm' (x ∉ s)]
+  rw [s_opp_side, s_opp_side, w_opp_side_comm, and_comm (x ∉ s)]
 #align affine_subspace.s_opp_side_comm AffineSubspace.sOppSide_comm
 -/
 
@@ -600,7 +600,7 @@ theorem wSameSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : 
 theorem sSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
     s.SSameSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) :=
   by
-  rw [s_same_side, and_comm', w_same_side_iff_exists_left h, and_assoc', and_congr_right_iff]
+  rw [s_same_side, and_comm, w_same_side_iff_exists_left h, and_assoc, and_congr_right_iff]
   intro hx
   rw [or_iff_right hx]
 #align affine_subspace.s_same_side_iff_exists_left AffineSubspace.sSameSide_iff_exists_left
@@ -610,7 +610,7 @@ theorem sSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p
 theorem sSameSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
     s.SSameSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) :=
   by
-  rw [s_same_side_comm, s_same_side_iff_exists_left h, ← and_assoc', and_comm' (y ∉ s), and_assoc']
+  rw [s_same_side_comm, s_same_side_iff_exists_left h, ← and_assoc, and_comm (y ∉ s), and_assoc]
   simp_rw [SameRay.sameRay_comm]
 #align affine_subspace.s_same_side_iff_exists_right AffineSubspace.sSameSide_iff_exists_right
 -/
@@ -659,7 +659,7 @@ theorem wOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p
 theorem sOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
     s.SOppSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) :=
   by
-  rw [s_opp_side, and_comm', w_opp_side_iff_exists_left h, and_assoc', and_congr_right_iff]
+  rw [s_opp_side, and_comm, w_opp_side_iff_exists_left h, and_assoc, and_congr_right_iff]
   intro hx
   rw [or_iff_right hx]
 #align affine_subspace.s_opp_side_iff_exists_left AffineSubspace.sOppSide_iff_exists_left
@@ -669,7 +669,7 @@ theorem sOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p�
 theorem sOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
     s.SOppSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) :=
   by
-  rw [s_opp_side, and_comm', w_opp_side_iff_exists_right h, and_assoc', and_congr_right_iff,
+  rw [s_opp_side, and_comm, w_opp_side_iff_exists_right h, and_assoc, and_congr_right_iff,
     and_congr_right_iff]
   rintro hx hy
   rw [or_iff_right hy]

@@ -1421,7 +1421,7 @@ theorem prod_eq_prod_of_nonempty {e₁ e₁' : PartialHomeomorph α β} {e₂ e�
   haveI : Nonempty δ := ⟨e₂ y⟩
   simp_rw [PartialHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iff,
     Set.prod_eq_prod_iff_of_nonempty h, forall_and, Prod.forall, forall_const, forall_forall_const,
-    and_assoc', and_left_comm]
+    and_assoc, and_left_comm]
 #align local_homeomorph.prod_eq_prod_of_nonempty PartialHomeomorph.prod_eq_prod_of_nonempty
 -/
 

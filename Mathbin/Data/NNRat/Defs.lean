@@ -51,11 +51,13 @@ variable {α : Type _} {p q : ℚ≥0}
 instance : Coe ℚ≥0 ℚ :=
   ⟨Subtype.val⟩
 
+#print NNRat.val_eq_cast /-
 -- Simp lemma to put back `n.val` into the normal form given by the coercion.
 @[simp]
-theorem val_eq_coe (q : ℚ≥0) : q.val = q :=
+theorem val_eq_cast (q : ℚ≥0) : q.val = q :=
   rfl
-#align nnrat.val_eq_coe NNRat.val_eq_coe
+#align nnrat.val_eq_coe NNRat.val_eq_cast
+-/
 
 #print NNRat.canLift /-
 instance canLift : CanLift ℚ ℚ≥0 coe fun q => 0 ≤ q where prf q hq := ⟨⟨q, hq⟩, rfl⟩

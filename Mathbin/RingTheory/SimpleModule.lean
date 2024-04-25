@@ -167,7 +167,7 @@ theorem injective_of_ne_zero [IsSimpleModule R M] {f : M →ₗ[R] N} (h : f ≠
 theorem surjective_or_eq_zero [IsSimpleModule R N] (f : M →ₗ[R] N) :
     Function.Surjective f ∨ f = 0 :=
   by
-  rw [← range_eq_top, ← range_eq_bot, or_comm']
+  rw [← range_eq_top, ← range_eq_bot, or_comm]
   apply eq_bot_or_eq_top
 #align linear_map.surjective_or_eq_zero LinearMap.surjective_or_eq_zero
 -/

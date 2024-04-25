@@ -72,8 +72,8 @@ theorem coe_splitLower : (splitLower I i x : Set (ι → ℝ)) = I ∩ {y | y i 
   rw [split_lower, coe_mk']
   ext y
   simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and, ← Pi.le_def,
-    le_update_iff, le_min_iff, and_assoc', and_forall_ne i, mem_def]
-  rw [and_comm' (y i ≤ x), Pi.le_def]
+    le_update_iff, le_min_iff, and_assoc, and_forall_ne i, mem_def]
+  rw [and_comm (y i ≤ x), Pi.le_def]
 #align box_integral.box.coe_split_lower BoxIntegral.Box.coe_splitLower
 -/
 
@@ -126,9 +126,9 @@ theorem coe_splitUpper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ {y | x < 
   rw [split_upper, coe_mk']
   ext y
   simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and,
-    forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc' (x < y i), and_forall_ne i,
+    forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc (x < y i), and_forall_ne i,
     mem_def]
-  exact and_comm' _ _
+  exact and_comm _ _
 #align box_integral.box.coe_split_upper BoxIntegral.Box.coe_splitUpper
 -/
 

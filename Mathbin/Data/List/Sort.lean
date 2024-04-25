@@ -104,7 +104,7 @@ theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~
     rw [(@eq_replicate _ a (length u₂ + 1) (a :: u₂)).2,
           (@eq_replicate _ a (length u₂ + 1) (u₂ ++ [a])).2] <;>
         constructor <;>
-      simp [iff_true_intro this, or_comm']
+      simp [iff_true_intro this, or_comm]
 #align list.eq_of_perm_of_sorted List.eq_of_perm_of_sorted
 -/
 

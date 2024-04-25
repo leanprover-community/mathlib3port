@@ -72,7 +72,6 @@ class HasRatCast (K : Type u) where
   ratCast : ℚ → K
 #align has_rat_cast HasRatCast
 
-#print qsmulRec /-
 /-- The default definition of the scalar multiplication `(a : ℚ) • (x : K)` for a division ring `K`
 is given by `a • x = (↑ a) * x`.
 Use `(a : ℚ) • (x : K)` instead of `qsmul_rec` for better definitional behaviour.
@@ -80,7 +79,6 @@ Use `(a : ℚ) • (x : K)` instead of `qsmul_rec` for better definitional behav
 def qsmulRec (coe : ℚ → K) [Mul K] (a : ℚ) (x : K) : K :=
   coe a * x
 #align qsmul_rec qsmulRec
--/
 
 #print DivisionSemiring /-
 /-- A `division_semiring` is a `semiring` with multiplicative inverses for nonzero elements. -/

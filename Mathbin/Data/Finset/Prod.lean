@@ -372,7 +372,7 @@ theorem product_inter [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∩ t') = s 
 #print Finset.product_inter_product /-
 theorem product_inter_product [DecidableEq α] [DecidableEq β] :
     s ×ˢ t ∩ s' ×ˢ t' = (s ∩ s') ×ˢ (t ∩ t') := by ext ⟨x, y⟩;
-  simp only [and_assoc', and_left_comm, mem_inter, mem_product]
+  simp only [and_assoc, and_left_comm, mem_inter, mem_product]
 #align finset.product_inter_product Finset.product_inter_product
 -/
 

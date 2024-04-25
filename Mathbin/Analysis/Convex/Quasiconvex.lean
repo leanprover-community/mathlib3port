@@ -189,7 +189,7 @@ theorem quasilinearOn_iff_mem_uIcc :
   rw [QuasilinearOn, quasiconvexOn_iff_le_max, quasiconcaveOn_iff_min_le, and_and_and_comm,
     and_self_iff]
   apply and_congr_right'
-  simp_rw [← forall_and, ← Icc_min_max, mem_Icc, and_comm']
+  simp_rw [← forall_and, ← Icc_min_max, mem_Icc, and_comm]
 #align quasilinear_on_iff_mem_uIcc quasilinearOn_iff_mem_uIcc
 -/
 

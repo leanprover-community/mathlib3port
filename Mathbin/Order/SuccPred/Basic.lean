@@ -668,7 +668,7 @@ theorem lt_succ_bot_iff [NoMaxOrder α] : a < succ ⊥ ↔ a = ⊥ := by rw [lt_
 
 #print Order.le_succ_bot_iff /-
 theorem le_succ_bot_iff : a ≤ succ ⊥ ↔ a = ⊥ ∨ a = succ ⊥ := by
-  rw [le_succ_iff_eq_or_le, le_bot_iff, or_comm']
+  rw [le_succ_iff_eq_or_le, le_bot_iff, or_comm]
 #align order.le_succ_bot_iff Order.le_succ_bot_iff
 -/
 

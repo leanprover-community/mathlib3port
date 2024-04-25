@@ -3445,7 +3445,7 @@ theorem ae_restrict_iff {p : α → Prop} (hp : MeasurableSet {x | p x}) :
     (∀ᵐ x ∂μ.restrict s, p x) ↔ ∀ᵐ x ∂μ, x ∈ s → p x :=
   by
   simp only [ae_iff, ← compl_set_of, restrict_apply hp.compl]
-  congr with x; simp [and_comm']
+  congr with x; simp [and_comm]
 #align measure_theory.ae_restrict_iff MeasureTheory.ae_restrict_iff
 -/
 
@@ -3462,7 +3462,7 @@ theorem ae_restrict_iff' {p : α → Prop} (hs : MeasurableSet s) :
     (∀ᵐ x ∂μ.restrict s, p x) ↔ ∀ᵐ x ∂μ, x ∈ s → p x :=
   by
   simp only [ae_iff, ← compl_set_of, restrict_apply_eq_zero' hs]
-  congr with x; simp [and_comm']
+  congr with x; simp [and_comm]
 #align measure_theory.ae_restrict_iff' MeasureTheory.ae_restrict_iff'
 -/
 
@@ -3591,7 +3591,7 @@ theorem ae_restrict_eq (hs : MeasurableSet s) : (μ.restrict s).ae = μ.ae ⊓ �
   by
   ext t
   simp only [mem_inf_principal, mem_ae_iff, restrict_apply_eq_zero' hs, compl_set_of, not_imp,
-    and_comm' (_ ∈ s)]
+    and_comm (_ ∈ s)]
   rfl
 #align measure_theory.ae_restrict_eq MeasureTheory.ae_restrict_eq
 -/

@@ -69,7 +69,7 @@ scoped[Convex] notation "[" x " -[" 𝕜 "] " y "]" => segment 𝕜 x y
 #print segment_eq_image₂ /-
 theorem segment_eq_image₂ (x y : E) :
     [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' {p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1} :=
-  by simp only [segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc']
+  by simp only [segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
 #align segment_eq_image₂ segment_eq_image₂
 -/
 
@@ -77,7 +77,7 @@ theorem segment_eq_image₂ (x y : E) :
 theorem openSegment_eq_image₂ (x y : E) :
     openSegment 𝕜 x y =
       (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' {p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1} :=
-  by simp only [openSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc']
+  by simp only [openSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
 #align open_segment_eq_image₂ openSegment_eq_image₂
 -/
 

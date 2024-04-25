@@ -1226,7 +1226,7 @@ def LiftRel (R : α → β → Prop) (ca : Computation α) (cb : Computation β)
 #print Computation.LiftRel.swap /-
 theorem LiftRel.swap (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     LiftRel (swap R) cb ca ↔ LiftRel R ca cb :=
-  and_comm' _ _
+  and_comm _ _
 #align computation.lift_rel.swap Computation.LiftRel.swap
 -/
 

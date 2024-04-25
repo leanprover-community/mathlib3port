@@ -641,7 +641,7 @@ variable {s t u} {a b c : α}
 #print Finset.mem_disjSups /-
 @[simp]
 theorem mem_disjSups : c ∈ s ○ t ↔ ∃ a ∈ s, ∃ b ∈ t, Disjoint a b ∧ a ⊔ b = c := by
-  simp [disj_sups, and_assoc']
+  simp [disj_sups, and_assoc]
 #align finset.mem_disj_sups Finset.mem_disjSups
 -/
 

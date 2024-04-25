@@ -362,7 +362,7 @@ theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
-  mul_eq_zero.trans <| (or_comm' _ _).trans mul_eq_zero.symm
+  mul_eq_zero.trans <| (or_comm _ _).trans mul_eq_zero.symm
 #align mul_eq_zero_comm mul_eq_zero_comm
 -/
 

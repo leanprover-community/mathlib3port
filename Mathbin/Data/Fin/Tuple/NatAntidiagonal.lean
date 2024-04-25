@@ -100,7 +100,7 @@ theorem mem_antidiagonalTuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
   · intro k x₀ x ih n
     simp_rw [Fin.sum_cons, antidiagonal_tuple, List.mem_bind, List.mem_map,
       List.Nat.mem_antidiagonal, Fin.cons_eq_cons, exists_eq_right_right, ih,
-      @eq_comm _ _ (Prod.snd _), and_comm' (Prod.snd _ = _), ← Prod.mk.inj_iff, Prod.mk.eta,
+      @eq_comm _ _ (Prod.snd _), and_comm (Prod.snd _ = _), ← Prod.mk.inj_iff, Prod.mk.eta,
       exists_prop, exists_eq_right]
 #align list.nat.mem_antidiagonal_tuple List.Nat.mem_antidiagonalTuple
 -/

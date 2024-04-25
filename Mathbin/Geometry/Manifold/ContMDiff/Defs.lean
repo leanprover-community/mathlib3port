@@ -413,7 +413,7 @@ theorem contMDiffWithinAt_iff_target :
     ContMDiffWithinAt I I' n f s x ↔
       ContinuousWithinAt f s x ∧ ContMDiffWithinAt I 𝓘(𝕜, E') n (extChartAt I' (f x) ∘ f) s x :=
   by
-  simp_rw [ContMDiffWithinAt, lift_prop_within_at, ← and_assoc']
+  simp_rw [ContMDiffWithinAt, lift_prop_within_at, ← and_assoc]
   have cont :
     ContinuousWithinAt f s x ∧ ContinuousWithinAt (extChartAt I' (f x) ∘ f) s x ↔
       ContinuousWithinAt f s x :=

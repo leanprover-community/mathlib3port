@@ -264,7 +264,7 @@ noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
 #print Finpartition.mk_mem_nonUniforms_iff /-
 theorem mk_mem_nonUniforms_iff (u v : Finset α) (ε : 𝕜) :
     (u, v) ∈ P.nonUniforms G ε ↔ u ∈ P.parts ∧ v ∈ P.parts ∧ u ≠ v ∧ ¬G.IsUniform ε u v := by
-  rw [non_uniforms, mem_filter, mem_off_diag, and_assoc', and_assoc']
+  rw [non_uniforms, mem_filter, mem_off_diag, and_assoc, and_assoc]
 #align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_nonUniforms_iff
 -/
 

@@ -286,7 +286,7 @@ theorem map_map (r : α → β → Prop) (f₁ : α → γ) (g₁ : β → δ) (
   ext a b
   simp only [map_apply, Function.comp_apply, ← exists_and_right, @exists₂_comm γ]
   refine' exists₂_congr fun a b => _
-  simp [and_assoc']
+  simp [and_assoc]
 #align relation.map_map Relation.map_map
 -/
 

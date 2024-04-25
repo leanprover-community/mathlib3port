@@ -867,7 +867,7 @@ theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
   by
   rcases eq_or_ne n 0 with (rfl | hn); · simp
   ext x
-  simp only [mem_Icc, Finset.mem_filter, mem_Ico, and_assoc', and_congr_right_iff,
+  simp only [mem_Icc, Finset.mem_filter, mem_Ico, and_assoc, and_congr_right_iff,
     pp.pow_dvd_iff_le_factorization hn, iff_and_self]
   exact fun H1 H2 => lt_of_le_of_lt H2 (factorization_lt p hn)
 #align nat.Icc_factorization_eq_pow_dvd Nat.Icc_factorization_eq_pow_dvd

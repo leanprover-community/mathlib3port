@@ -112,7 +112,7 @@ def cut {ι : Type _} (s : Finset ι) (n : ℕ) : Finset (ι → ℕ) :=
 theorem mem_cut {ι : Type _} (s : Finset ι) (n : ℕ) (f : ι → ℕ) :
     f ∈ cut s n ↔ s.Sum f = n ∧ ∀ (i) (_ : i ∉ s), f i = 0 :=
   by
-  rw [cut, mem_filter, and_comm', and_congr_right]
+  rw [cut, mem_filter, and_comm, and_congr_right]
   intro h
   simp only [mem_map, exists_prop, Function.Embedding.coeFn_mk, mem_pi]
   constructor
@@ -336,7 +336,7 @@ theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset �
   simp_rw [coeff_prod_range, coeff_indicator, prod_boole, sum_boole]
   congr 1
   refine' Finset.card_congr (fun p _ i => Multiset.count i p.parts • i) _ _ _
-  · simp only [mem_filter, mem_cut, mem_univ, true_and_iff, exists_prop, and_assoc', and_imp,
+  · simp only [mem_filter, mem_cut, mem_univ, true_and_iff, exists_prop, and_assoc, and_imp,
       smul_eq_zero, Function.Embedding.coeFn_mk, exists_imp]
     rintro ⟨p, hp₁, hp₂⟩ hp₃ hp₄
     dsimp only at *
@@ -360,7 +360,7 @@ theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset �
       intro a; exact Nat.lt_irrefl 0 (hs 0 (hp₂.2 0 a))
       intro a; exact Nat.lt_irrefl 0 (hs 0 (hp₁.2 0 a))
     · rwa [Nat.nsmul_eq_mul, Nat.nsmul_eq_mul, mul_left_inj' i.succ_ne_zero] at h
-  · simp only [mem_filter, mem_cut, mem_univ, exists_prop, true_and_iff, and_assoc']
+  · simp only [mem_filter, mem_cut, mem_univ, exists_prop, true_and_iff, and_assoc]
     rintro f ⟨hf₁, hf₂, hf₃⟩
     refine' ⟨⟨∑ i in s, Multiset.replicate (f i / i) i, _, _⟩, _, _, _⟩
     · intro i hi

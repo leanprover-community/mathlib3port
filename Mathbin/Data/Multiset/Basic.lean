@@ -2744,7 +2744,7 @@ theorem filter_filter (q) [DecidablePred q] (s : Multiset α) :
 
 #print Multiset.filter_comm /-
 theorem filter_comm (q) [DecidablePred q] (s : Multiset α) :
-    filter p (filter q s) = filter q (filter p s) := by simp [and_comm']
+    filter p (filter q s) = filter q (filter p s) := by simp [and_comm]
 #align multiset.filter_comm Multiset.filter_comm
 -/
 

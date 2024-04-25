@@ -132,7 +132,7 @@ theorem compress_of_disjoint_of_le' (hva : Disjoint v a) (hua : u ≤ a) :
 original, or it's not in the original but it's the compression of something in the original. -/
 theorem mem_compression :
     a ∈ 𝓒 u v s ↔ a ∈ s ∧ compress u v a ∈ s ∨ a ∉ s ∧ ∃ b ∈ s, compress u v b = a := by
-  simp_rw [compression, mem_union, mem_filter, mem_image, and_comm' (a ∉ s)]
+  simp_rw [compression, mem_union, mem_filter, mem_image, and_comm (a ∉ s)]
 #align uv.mem_compression UV.mem_compression
 -/
 

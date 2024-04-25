@@ -402,7 +402,7 @@ theorem continuousPart_apply_eq_zero_of_countable (f : BoundedAdditiveMeasure α
   simp [continuous_part]
   convert f.apply_countable s hs using 2
   ext x
-  simp [and_comm']
+  simp [and_comm]
 #align counterexample.phillips_1940.bounded_additive_measure.continuous_part_apply_eq_zero_of_countable Counterexample.Phillips1940.BoundedAdditiveMeasure.continuousPart_apply_eq_zero_of_countable
 
 theorem continuousPart_apply_diff (f : BoundedAdditiveMeasure α) (s t : Set α) (hs : s.Countable) :

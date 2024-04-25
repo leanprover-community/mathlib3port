@@ -1174,7 +1174,7 @@ theorem IsTrail.of_cons {u v w : V} {h : G.Adj u v} {p : G.Walk v w} :
 #print SimpleGraph.Walk.cons_isTrail_iff /-
 @[simp]
 theorem cons_isTrail_iff {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
-    (cons h p).IsTrail ↔ p.IsTrail ∧ ⟦(u, v)⟧ ∉ p.edges := by simp [is_trail_def, and_comm']
+    (cons h p).IsTrail ↔ p.IsTrail ∧ ⟦(u, v)⟧ ∉ p.edges := by simp [is_trail_def, and_comm]
 #align simple_graph.walk.cons_is_trail_iff SimpleGraph.Walk.cons_isTrail_iff
 -/
 
@@ -2814,7 +2814,7 @@ theorem mem_verts_toSubgraph (p : G.Walk u v) : w ∈ p.toSubgraph.verts ↔ w �
   · simp
   · have : w = y ∨ w ∈ p'.support ↔ w ∈ p'.support :=
       ⟨by rintro (rfl | h) <;> simp [*], by simp (config := { contextual := true })⟩
-    simp [ih, or_assoc', this]
+    simp [ih, or_assoc, this]
 #align simple_graph.walk.mem_verts_to_subgraph SimpleGraph.Walk.mem_verts_toSubgraph
 -/
 
@@ -3008,7 +3008,7 @@ theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
 instance fintypeSetPathLength (u v : V) (n : ℕ) :
     Fintype {p : G.Walk u v | p.IsPath ∧ p.length = n} :=
   Fintype.ofFinset ((G.finsetWalkLength n u v).filterₓ Walk.IsPath) <| by
-    simp [walk.mem_finset_walk_length_iff_length_eq, and_comm']
+    simp [walk.mem_finset_walk_length_iff_length_eq, and_comm]
 #align simple_graph.fintype_set_path_length SimpleGraph.fintypeSetPathLength
 -/
 
@@ -3158,7 +3158,7 @@ theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
       apply
         reachable_delete_edges_iff_exists_cycle.aux hb' (pvu.append puv) (hc.to_trail.rotate hvc) _
           (walk.start_mem_support _)
-      rwa [walk.edges_append, List.mem_append, or_comm', ← List.mem_append, ← walk.edges_append,
+      rwa [walk.edges_append, List.mem_append, or_comm, ← List.mem_append, ← walk.edges_append,
         walk.take_spec, Sym2.eq_swap]
 #align simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle
 -/

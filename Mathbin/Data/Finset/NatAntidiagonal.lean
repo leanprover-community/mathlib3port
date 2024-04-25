@@ -140,7 +140,7 @@ theorem Finset.filter_fst_eq_antidiagonal (n m : ℕ) :
   ext ⟨x, y⟩
   simp only [mem_filter, nat.mem_antidiagonal]
   split_ifs with h h
-  · simp (config := { contextual := true }) [and_comm', eq_tsub_iff_add_eq_of_le h, add_comm]
+  · simp (config := { contextual := true }) [and_comm, eq_tsub_iff_add_eq_of_le h, add_comm]
   · rw [not_le] at h
     simp only [not_mem_empty, iff_false_iff, not_and]
     exact fun hn => ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h)

@@ -765,7 +765,7 @@ theorem hasBasis_coclosedCompact :
 
 #print Filter.mem_coclosedCompact /-
 theorem mem_coclosedCompact : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t ∧ IsCompact t ∧ tᶜ ⊆ s := by
-  simp [has_basis_coclosed_compact.mem_iff, and_assoc']
+  simp [has_basis_coclosed_compact.mem_iff, and_assoc]
 #align filter.mem_coclosed_compact Filter.mem_coclosedCompact
 -/
 
@@ -1411,7 +1411,7 @@ class LocallyCompactSpace (α : Type _) [TopologicalSpace α] : Prop where
 #print compact_basis_nhds /-
 theorem compact_basis_nhds [LocallyCompactSpace α] (x : α) :
     (𝓝 x).HasBasis (fun s => s ∈ 𝓝 x ∧ IsCompact s) fun s => s :=
-  hasBasis_self.2 <| by simpa only [and_comm'] using LocallyCompactSpace.local_compact_nhds x
+  hasBasis_self.2 <| by simpa only [and_comm] using LocallyCompactSpace.local_compact_nhds x
 #align compact_basis_nhds compact_basis_nhds
 -/
 

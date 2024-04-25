@@ -242,7 +242,7 @@ theorem Nodup.erase [DecidableEq α] (a : α) {l} : Nodup l → Nodup (l.erase�
 
 #print Multiset.Nodup.mem_erase_iff /-
 theorem Nodup.mem_erase_iff [DecidableEq α] {a b : α} {l} (d : Nodup l) :
-    a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by rw [d.erase_eq_filter b, mem_filter, and_comm']
+    a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by rw [d.erase_eq_filter b, mem_filter, and_comm]
 #align multiset.nodup.mem_erase_iff Multiset.Nodup.mem_erase_iff
 -/
 

@@ -504,7 +504,7 @@ theorem blockDiagonal_diagonal [DecidableEq m] (d : o → m → α) :
   ext ⟨i, k⟩ ⟨j, k'⟩
   simp only [block_diagonal_apply, diagonal_apply, Prod.mk.inj_iff, ← ite_and]
   congr 1
-  rw [and_comm']
+  rw [and_comm]
 #align matrix.block_diagonal_diagonal Matrix.blockDiagonal_diagonal
 -/
 

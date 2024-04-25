@@ -6,7 +6,7 @@ Authors: Yaël Dillies
 import Algebra.Group.Pi.Basic
 import Algebra.Group.Hom.Defs
 import Algebra.Order.Group.Instances
-import Algebra.Order.Monoid.WithZero
+import Algebra.Order.Monoid.WithZero.Defs
 import Order.Hom.Basic
 
 #align_import algebra.order.hom.monoid from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

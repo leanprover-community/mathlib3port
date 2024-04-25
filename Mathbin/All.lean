@@ -405,8 +405,8 @@ import Algebra.Order.Monoid.ToMulBot
 import Algebra.Order.Monoid.TypeTags
 import Algebra.Order.Monoid.Units
 import Algebra.Order.Monoid.WithTop
-import Algebra.Order.Monoid.WithZero.Basic
-import Algebra.Order.Monoid.WithZero
+import Algebra.Order.GroupWithZero.Canonical
+import Algebra.Order.Monoid.WithZero.Defs
 import Algebra.Order.Nonneg.Field
 import Algebra.Order.Nonneg.Floor
 import Algebra.Order.Nonneg.Ring
@@ -2668,7 +2668,7 @@ import RingTheory.MvPolynomial.Symmetric
 import RingTheory.MvPolynomial.Tower
 import RingTheory.MvPolynomial.WeightedHomogeneous
 import RingTheory.Nakayama
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 import RingTheory.Noetherian
 import RingTheory.NonUnitalSubsemiring.Basic
 import Algebra.GroupWithZero.NonZeroDivisors

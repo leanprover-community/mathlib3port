@@ -155,7 +155,7 @@ theorem IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt {ι : Type _} [Finit
   rcases hextr.exists_multipliers_of_has_strict_fderiv_at hf' hφ' with ⟨Λ, Λ₀, hΛ, hΛf⟩
   refine' ⟨Option.elim' Λ₀ Λ, _, _⟩
   · simpa [add_comm] using hΛf
-  · simpa [Function.funext_iff, not_and_or, or_comm', Option.exists] using hΛ
+  · simpa [Function.funext_iff, not_and_or, or_comm, Option.exists] using hΛ
 #align is_local_extr_on.linear_dependent_of_has_strict_fderiv_at IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt
 -/
 

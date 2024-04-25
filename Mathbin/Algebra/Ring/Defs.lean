@@ -268,7 +268,7 @@ theorem mul_ite_zero {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a
 #print ite_zero_mul_ite_zero /-
 theorem ite_zero_mul_ite_zero {α : Type _} [MulZeroClass α] (P Q : Prop) [Decidable P] [Decidable Q]
     (a b : α) : ite (P ∧ Q) (a * b) 0 = ite P a 0 * ite Q b 0 := by
-  simp only [← ite_and, ite_mul, mul_ite, MulZeroClass.mul_zero, MulZeroClass.zero_mul, and_comm']
+  simp only [← ite_and, ite_mul, mul_ite, MulZeroClass.mul_zero, MulZeroClass.zero_mul, and_comm]
 #align ite_and_mul_zero ite_zero_mul_ite_zero
 -/
 

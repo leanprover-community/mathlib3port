@@ -62,7 +62,7 @@ variable {r}
 
 #print Rel.mem_interedges_iff /-
 theorem mem_interedges_iff {x : α × β} : x ∈ interedges r s t ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ r x.1 x.2 := by
-  simp only [interedges, and_assoc', mem_filter, Finset.mem_product]
+  simp only [interedges, and_assoc, mem_filter, Finset.mem_product]
 #align rel.mem_interedges_iff Rel.mem_interedges_iff
 -/
 

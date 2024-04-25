@@ -153,8 +153,8 @@ unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name)
   parser := Prod.mk <$> Option.isNone <$> parser.optional (tk "*") <*> parser.optional ident
 #align notation_class_attr notation_class_attr
 
-attribute [notation_class] Zero One Add Mul Inv Neg Sub Div Dvd Mod LE LT Append AndThen' Union
-  Inter SDiff HasEquiv HasSubset HasSSubset EmptyCollection Insert Singleton Sep Membership Pow
+attribute [notation_class] Zero One Add Mul Inv Neg Sub Div Dvd Mod LE LT Append AndThen Union Inter
+  SDiff HasEquiv HasSubset HasSSubset EmptyCollection Insert Singleton Sep Membership Pow
 
 attribute [notation_class* coeSort] CoeSort
 

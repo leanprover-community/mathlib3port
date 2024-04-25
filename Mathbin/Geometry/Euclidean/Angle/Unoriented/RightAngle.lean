@@ -504,7 +504,7 @@ theorem angle_eq_arcsin_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p�
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [← @vsub_ne_zero V, @ne_comm _ p₃, ← @vsub_ne_zero V _ _ _ p₂, or_comm'] at h0
+  rw [← @vsub_ne_zero V, @ne_comm _ p₃, ← @vsub_ne_zero V _ _ _ p₂, or_comm] at h0
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, angle_add_eq_arcsin_of_inner_eq_zero h h0]
 #align euclidean_geometry.angle_eq_arcsin_of_angle_eq_pi_div_two EuclideanGeometry.angle_eq_arcsin_of_angle_eq_pi_div_two
@@ -530,7 +530,7 @@ theorem angle_pos_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [← @vsub_ne_zero V, eq_comm, ← @vsub_eq_zero_iff_eq V, or_comm'] at h0
+  rw [← @vsub_ne_zero V, eq_comm, ← @vsub_eq_zero_iff_eq V, or_comm] at h0
   rw [angle, ← vsub_add_vsub_cancel p₁ p₂ p₃, add_comm]
   exact angle_add_pos_of_inner_eq_zero h h0
 #align euclidean_geometry.angle_pos_of_angle_eq_pi_div_two EuclideanGeometry.angle_pos_of_angle_eq_pi_div_two
@@ -580,7 +580,7 @@ theorem sin_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [← @vsub_ne_zero V, @ne_comm _ p₃, ← @vsub_ne_zero V _ _ _ p₂, or_comm'] at h0
+  rw [← @vsub_ne_zero V, @ne_comm _ p₃, ← @vsub_ne_zero V _ _ _ p₂, or_comm] at h0
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, sin_angle_add_of_inner_eq_zero h h0]
 #align euclidean_geometry.sin_angle_of_angle_eq_pi_div_two EuclideanGeometry.sin_angle_of_angle_eq_pi_div_two
@@ -632,7 +632,7 @@ theorem tan_angle_mul_dist_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [ne_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm'] at h0
+  rw [ne_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm] at h0
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub' V p₃ p₂, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, tan_angle_add_mul_norm_of_inner_eq_zero h h0]
 #align euclidean_geometry.tan_angle_mul_dist_of_angle_eq_pi_div_two EuclideanGeometry.tan_angle_mul_dist_of_angle_eq_pi_div_two
@@ -646,7 +646,7 @@ theorem dist_div_cos_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [ne_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm'] at h0
+  rw [ne_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm] at h0
   rw [angle, dist_eq_norm_vsub' V p₃ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, norm_div_cos_angle_add_of_inner_eq_zero h h0]
 #align euclidean_geometry.dist_div_cos_angle_of_angle_eq_pi_div_two EuclideanGeometry.dist_div_cos_angle_of_angle_eq_pi_div_two
@@ -660,7 +660,7 @@ theorem dist_div_sin_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [eq_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm'] at h0
+  rw [eq_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm] at h0
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub V p₁ p₃, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, norm_div_sin_angle_add_of_inner_eq_zero h h0]
 #align euclidean_geometry.dist_div_sin_angle_of_angle_eq_pi_div_two EuclideanGeometry.dist_div_sin_angle_of_angle_eq_pi_div_two
@@ -674,7 +674,7 @@ theorem dist_div_tan_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ 
   by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ←
     inner_neg_left, neg_vsub_eq_vsub_rev] at h
-  rw [eq_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm'] at h0
+  rw [eq_comm, ← @vsub_ne_zero V, ← @vsub_eq_zero_iff_eq V, or_comm] at h0
   rw [angle, dist_eq_norm_vsub V p₁ p₂, dist_eq_norm_vsub' V p₃ p₂, ← vsub_add_vsub_cancel p₁ p₂ p₃,
     add_comm, norm_div_tan_angle_add_of_inner_eq_zero h h0]
 #align euclidean_geometry.dist_div_tan_angle_of_angle_eq_pi_div_two EuclideanGeometry.dist_div_tan_angle_of_angle_eq_pi_div_two

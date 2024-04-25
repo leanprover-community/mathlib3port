@@ -793,7 +793,7 @@ def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set EReal) ≃ ℝ
   left_inv := fun ⟨x, hx⟩ =>
     Subtype.eq <| by
       lift x to ℝ
-      · simpa [not_or, and_comm'] using hx
+      · simpa [not_or, and_comm] using hx
       · simp
   right_inv x := by simp
 #align ereal.ne_top_bot_equiv_real EReal.neTopBotEquivReal

@@ -76,7 +76,7 @@ theorem HasBasis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α}
     (f.lift g).HasBasis (fun i : Σ i, β i => p i.1 ∧ pg i.1 i.2) fun i : Σ i, β i => sg i.1 i.2 :=
   by
   refine' ⟨fun t => (hf.mem_lift_iff hg gm).trans _⟩
-  simp [Sigma.exists, and_assoc', exists_and_left]
+  simp [Sigma.exists, and_assoc, exists_and_left]
 #align filter.has_basis.lift Filter.HasBasis.lift
 -/
 

@@ -31,7 +31,7 @@ variable [OrderedCommGroup α] {a b c d : α}
 #print Set.inv_mem_Icc_iff /-
 @[to_additive]
 theorem inv_mem_Icc_iff : a⁻¹ ∈ Set.Icc c d ↔ a ∈ Set.Icc d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_le' le_inv'
+  (and_comm _ _).trans <| and_congr inv_le' le_inv'
 #align set.inv_mem_Icc_iff Set.inv_mem_Icc_iff
 #align set.neg_mem_Icc_iff Set.neg_mem_Icc_iff
 -/
@@ -39,7 +39,7 @@ theorem inv_mem_Icc_iff : a⁻¹ ∈ Set.Icc c d ↔ a ∈ Set.Icc d⁻¹ c⁻¹
 #print Set.inv_mem_Ico_iff /-
 @[to_additive]
 theorem inv_mem_Ico_iff : a⁻¹ ∈ Set.Ico c d ↔ a ∈ Set.Ioc d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_lt' le_inv'
+  (and_comm _ _).trans <| and_congr inv_lt' le_inv'
 #align set.inv_mem_Ico_iff Set.inv_mem_Ico_iff
 #align set.neg_mem_Ico_iff Set.neg_mem_Ico_iff
 -/
@@ -47,7 +47,7 @@ theorem inv_mem_Ico_iff : a⁻¹ ∈ Set.Ico c d ↔ a ∈ Set.Ioc d⁻¹ c⁻¹
 #print Set.inv_mem_Ioc_iff /-
 @[to_additive]
 theorem inv_mem_Ioc_iff : a⁻¹ ∈ Set.Ioc c d ↔ a ∈ Set.Ico d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_le' lt_inv'
+  (and_comm _ _).trans <| and_congr inv_le' lt_inv'
 #align set.inv_mem_Ioc_iff Set.inv_mem_Ioc_iff
 #align set.neg_mem_Ioc_iff Set.neg_mem_Ioc_iff
 -/
@@ -55,7 +55,7 @@ theorem inv_mem_Ioc_iff : a⁻¹ ∈ Set.Ioc c d ↔ a ∈ Set.Ico d⁻¹ c⁻¹
 #print Set.inv_mem_Ioo_iff /-
 @[to_additive]
 theorem inv_mem_Ioo_iff : a⁻¹ ∈ Set.Ioo c d ↔ a ∈ Set.Ioo d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_lt' lt_inv'
+  (and_comm _ _).trans <| and_congr inv_lt' lt_inv'
 #align set.inv_mem_Ioo_iff Set.inv_mem_Ioo_iff
 #align set.neg_mem_Ioo_iff Set.neg_mem_Ioo_iff
 -/
@@ -152,25 +152,25 @@ theorem sub_mem_Ioo_iff_left : a - b ∈ Set.Ioo c d ↔ a ∈ Set.Ioo (c + b) (
 
 #print Set.sub_mem_Icc_iff_right /-
 theorem sub_mem_Icc_iff_right : a - b ∈ Set.Icc c d ↔ b ∈ Set.Icc (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_le_comm le_sub_comm
+  (and_comm _ _).trans <| and_congr sub_le_comm le_sub_comm
 #align set.sub_mem_Icc_iff_right Set.sub_mem_Icc_iff_right
 -/
 
 #print Set.sub_mem_Ico_iff_right /-
 theorem sub_mem_Ico_iff_right : a - b ∈ Set.Ico c d ↔ b ∈ Set.Ioc (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_lt_comm le_sub_comm
+  (and_comm _ _).trans <| and_congr sub_lt_comm le_sub_comm
 #align set.sub_mem_Ico_iff_right Set.sub_mem_Ico_iff_right
 -/
 
 #print Set.sub_mem_Ioc_iff_right /-
 theorem sub_mem_Ioc_iff_right : a - b ∈ Set.Ioc c d ↔ b ∈ Set.Ico (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_le_comm lt_sub_comm
+  (and_comm _ _).trans <| and_congr sub_le_comm lt_sub_comm
 #align set.sub_mem_Ioc_iff_right Set.sub_mem_Ioc_iff_right
 -/
 
 #print Set.sub_mem_Ioo_iff_right /-
 theorem sub_mem_Ioo_iff_right : a - b ∈ Set.Ioo c d ↔ b ∈ Set.Ioo (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_lt_comm lt_sub_comm
+  (and_comm _ _).trans <| and_congr sub_lt_comm lt_sub_comm
 #align set.sub_mem_Ioo_iff_right Set.sub_mem_Ioo_iff_right
 -/
 
@@ -179,7 +179,7 @@ theorem sub_mem_Ioo_iff_right : a - b ∈ Set.Ioo c d ↔ b ∈ Set.Ioo (a - d) 
 -- for instance when considering metric balls in `ℝ`.
 theorem mem_Icc_iff_abs_le {R : Type _} [LinearOrderedAddCommGroup R] {x y z : R} :
     |x - y| ≤ z ↔ y ∈ Icc (x - z) (x + z) :=
-  abs_le.trans <| (and_comm' _ _).trans <| and_congr sub_le_comm neg_le_sub_iff_le_add
+  abs_le.trans <| (and_comm _ _).trans <| and_congr sub_le_comm neg_le_sub_iff_le_add
 #align set.mem_Icc_iff_abs_le Set.mem_Icc_iff_abs_le
 -/
 

@@ -7,7 +7,7 @@ import Algebra.GroupWithZero.Units.Equiv
 import Algebra.GroupWithZero.InjSurj
 import Algebra.Order.Group.Units
 import Algebra.Order.Monoid.Basic
-import Algebra.Order.Monoid.WithZero
+import Algebra.Order.Monoid.WithZero.Defs
 import Algebra.Order.Group.Instances
 import Algebra.Order.Monoid.TypeTags
 

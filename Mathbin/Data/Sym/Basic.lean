@@ -657,7 +657,7 @@ theorem coe_fill {a : α} {i : Fin (n + 1)} {m : Sym α (n - i)} :
 #print Sym.mem_fill_iff /-
 theorem mem_fill_iff {a b : α} {i : Fin (n + 1)} {s : Sym α (n - i)} :
     a ∈ Sym.fill b i s ↔ (i : ℕ) ≠ 0 ∧ a = b ∨ a ∈ s := by
-  rw [fill, mem_cast, mem_append_iff, or_comm', mem_replicate]
+  rw [fill, mem_cast, mem_append_iff, or_comm, mem_replicate]
 #align sym.mem_fill_iff Sym.mem_fill_iff
 -/
 

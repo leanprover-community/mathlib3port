@@ -171,7 +171,7 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
   have hc : (fun w : V => w ≠ v ∧ Odd (G.degree w)) = fun w : V => Odd (G.degree w) ∧ w ≠ v :=
     by
     ext w
-    rw [and_comm']
+    rw [and_comm]
   simp only [hc, filter_congr_decidable]
   rw [← filter_filter, filter_ne', card_erase_of_mem]
   · refine' ⟨k - 1, tsub_eq_of_eq_add <| hg.trans _⟩

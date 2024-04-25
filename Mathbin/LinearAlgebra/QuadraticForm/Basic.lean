@@ -1095,7 +1095,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
 #print QuadraticForm.not_anisotropic_iff_exists /-
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) :
     ¬Anisotropic Q ↔ ∃ (x : _) (_ : x ≠ 0), Q x = 0 := by
-  simp only [anisotropic, Classical.not_forall, exists_prop, and_comm']
+  simp only [anisotropic, Classical.not_forall, exists_prop, and_comm]
 #align quadratic_form.not_anisotropic_iff_exists QuadraticForm.not_anisotropic_iff_exists
 -/
 

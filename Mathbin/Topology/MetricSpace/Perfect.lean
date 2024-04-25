@@ -136,7 +136,7 @@ theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (
   have : ∀ y, y ≠ x ∧ y ∈ closure C → ∃ᶠ z in 𝓝 y, z ≠ x ∧ z ∈ C :=
     by
     rintro y ⟨hyx, yC⟩
-    simp only [← mem_compl_singleton_iff, @and_comm' _ (_ ∈ C), ← frequently_nhdsWithin_iff,
+    simp only [← mem_compl_singleton_iff, @and_comm _ (_ ∈ C), ← frequently_nhdsWithin_iff,
       hyx.nhds_within_compl_singleton, ← mem_closure_iff_frequently]
     exact yC
   rw [← frequently_frequently_nhds]
@@ -172,7 +172,7 @@ theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty
     exact ⟨x, xC.2, hxy⟩
   obtain ⟨U, xU, Uop, V, yV, Vop, hUV⟩ := exists_open_nhds_disjoint_closure hxy
   use closure (U ∩ C), closure (V ∩ C)
-  constructor <;> rw [← and_assoc']
+  constructor <;> rw [← and_assoc]
   · refine' ⟨hC.closure_nhds_inter x xC xU Uop, _⟩
     rw [hC.closed.closure_subset_iff]
     exact inter_subset_right _ _

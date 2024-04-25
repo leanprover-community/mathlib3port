@@ -625,7 +625,7 @@ theorem mem_atomise :
       t.Nonempty ∧ ∃ (Q : _) (_ : Q ⊆ F), (s.filterₓ fun i => ∀ u ∈ F, u ∈ Q ↔ i ∈ u) = t :=
   by
   simp only [atomise, of_erase, bot_eq_empty, mem_erase, mem_image, nonempty_iff_ne_empty,
-    mem_singleton, and_comm', mem_powerset, exists_prop]
+    mem_singleton, and_comm, mem_powerset, exists_prop]
 #align finpartition.mem_atomise Finpartition.mem_atomise
 -/
 
@@ -668,7 +668,7 @@ theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
   · refine' (card_le_of_subset h).trans (card_image_le.trans _)
     rw [card_powerset, card_erase_of_mem ht]
   rw [subset_iff]
-  simp only [mem_erase, mem_sdiff, mem_powerset, mem_image, exists_prop, mem_filter, and_assoc',
+  simp only [mem_erase, mem_sdiff, mem_powerset, mem_image, exists_prop, mem_filter, and_assoc,
     Finset.Nonempty, exists_imp, and_imp, mem_atomise, forall_apply_eq_imp_iff₂]
   rintro P' i hi P PQ rfl hy₂ j hj
   refine' ⟨P.erase t, erase_subset_erase _ PQ, _⟩

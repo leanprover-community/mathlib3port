@@ -270,7 +270,7 @@ theorem eventually_residual {p : α → Prop} :
   by
   -- this can probably be improved...
   convert @mem_residual _ _ _ p
-  simp_rw [exists_prop, and_comm' ((_ : Set α) ⊆ p), and_assoc']
+  simp_rw [exists_prop, and_comm ((_ : Set α) ⊆ p), and_assoc]
   rfl
 #align eventually_residual eventually_residual
 -/

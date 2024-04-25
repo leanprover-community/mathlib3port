@@ -1174,7 +1174,7 @@ theorem map_nhds_induced_of_mem {a : α} (h : range f ∈ 𝓝 (f a)) :
 #print closure_induced /-
 theorem closure_induced [t : TopologicalSpace β] {f : α → β} {a : α} {s : Set α} :
     a ∈ @closure α (TopologicalSpace.induced f t) s ↔ f a ∈ closure (f '' s) := by
-  simp only [mem_closure_iff_frequently, nhds_induced, frequently_comap, mem_image, and_comm']
+  simp only [mem_closure_iff_frequently, nhds_induced, frequently_comap, mem_image, and_comm]
 #align closure_induced closure_induced
 -/
 

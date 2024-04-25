@@ -70,7 +70,7 @@ def IsPushout.IsVanKampen (H : IsPushout f g h i) : Prop :=
 theorem IsPushout.IsVanKampen.flip {H : IsPushout f g h i} (H' : H.IsVanKampen) :
     H.flip.IsVanKampen := by
   introv W' hf hg hh hi w
-  simpa only [is_pushout.flip_iff, is_pullback.flip_iff, and_comm'] using
+  simpa only [is_pushout.flip_iff, is_pullback.flip_iff, and_comm] using
     H' g' f' i' h' αW αY αX αZ hg hf hi hh w.flip
 #align category_theory.is_pushout.is_van_kampen.flip CategoryTheory.IsPushout.IsVanKampen.flip
 -/

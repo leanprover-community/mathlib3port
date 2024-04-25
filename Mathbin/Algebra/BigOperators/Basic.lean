@@ -1713,7 +1713,7 @@ theorem prod_involution {s : Finset α} {f : α → β} :
             ih' ▸
               Eq.symm
                 (prod_subset hmem fun y hy hy₁ =>
-                  have : y = x ∨ y = g x hx := by simpa [hy, not_and_or, or_comm'] using hy₁
+                  have : y = x ∨ y = g x hx := by simpa [hy, not_and_or, or_comm] using hy₁
                   this.elim (fun hy => hy.symm ▸ hx1) fun hy =>
                     h x hx ▸ hy ▸ hx1.symm ▸ (one_mul _).symm)
           else by
@@ -2466,8 +2466,7 @@ theorem add_eq_union_left_of_le {x y z : Multiset α} (h : y ≤ x) :
 
 #print Multiset.add_eq_union_right_of_le /-
 theorem add_eq_union_right_of_le {x y z : Multiset α} (h : z ≤ y) :
-    x + y = x ∪ z ↔ y = z ∧ x.Disjoint y := by
-  simpa only [and_comm'] using add_eq_union_left_of_le h
+    x + y = x ∪ z ↔ y = z ∧ x.Disjoint y := by simpa only [and_comm] using add_eq_union_left_of_le h
 #align multiset.add_eq_union_right_of_le Multiset.add_eq_union_right_of_le
 -/
 
@@ -2486,7 +2485,7 @@ theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β →
       imp_and, forall_and, ← hr, @eq_comm _ z]
     have := fun x (_ : x ∈ i) => ne_of_mem_of_not_mem H hz
     simp (config := { contextual := true }) only [this, not_false_iff, true_imp_iff]
-    simp_rw [← disjoint_finset_sum_left, ← disjoint_finset_sum_right, disjoint_comm, ← and_assoc',
+    simp_rw [← disjoint_finset_sum_left, ← disjoint_finset_sum_right, disjoint_comm, ← and_assoc,
       and_self_iff]
     exact add_eq_union_left_of_le (Finset.sup_le fun x hx => le_sum_of_mem (mem_map_of_mem f hx))
 #align multiset.finset_sum_eq_sup_iff_disjoint Multiset.finset_sum_eq_sup_iff_disjoint

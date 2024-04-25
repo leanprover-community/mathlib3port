@@ -2068,7 +2068,7 @@ theorem withDensity_apply_eq_zero {f : α → ℝ≥0∞} {s : Set α} (hf : Mea
     simp only [Pi.zero_apply, mem_set_of_eq, Filter.mem_mk] at A
     convert A
     ext x
-    simp only [and_comm', exists_prop, mem_inter_iff, iff_self_iff, mem_set_of_eq, mem_compl_iff,
+    simp only [and_comm, exists_prop, mem_inter_iff, iff_self_iff, mem_set_of_eq, mem_compl_iff,
       Classical.not_forall]
   · intro hs
     let t := to_measurable μ ({x | f x ≠ 0} ∩ s)

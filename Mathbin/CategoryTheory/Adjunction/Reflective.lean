@@ -59,7 +59,6 @@ theorem unit_obj_eq_map_unit [Reflective i] (X : C) :
 #align category_theory.unit_obj_eq_map_unit CategoryTheory.unit_obj_eq_map_unit
 -/
 
-#print CategoryTheory.isIso_unit_obj /-
 /--
 When restricted to objects in `D` given by `i : D ⥤ C`, the unit is an isomorphism. In other words,
 `η_iX` is an isomorphism for any `X` in `D`.
@@ -76,7 +75,6 @@ instance isIso_unit_obj [Reflective i] {B : D} : IsIso ((ofRightAdjoint i).Unit.
   rw [this]
   exact is_iso.inv_is_iso
 #align category_theory.is_iso_unit_obj CategoryTheory.isIso_unit_obj
--/
 
 #print CategoryTheory.Functor.essImage.unit_isIso /-
 /-- If `A` is essentially in the image of a reflective functor `i`, then `η_A` is an isomorphism.

@@ -698,8 +698,8 @@ theorem geom_sum_neg_iff [LinearOrderedRing α] (hn : n ≠ 0) :
     ∑ i in range n, x ^ i < 0 ↔ Even n ∧ x + 1 < 0 := by
   rw [← not_iff_not, not_lt, le_iff_lt_or_eq, eq_comm,
     or_congr (geom_sum_pos_iff hn) (geom_sum_eq_zero_iff_neg_one hn), Nat.odd_iff_not_even, ←
-    add_eq_zero_iff_eq_neg, not_and, not_lt, le_iff_lt_or_eq, eq_comm, ← imp_iff_not_or, or_comm',
-    and_comm', Decidable.and_or_imp, or_comm']
+    add_eq_zero_iff_eq_neg, not_and, not_lt, le_iff_lt_or_eq, eq_comm, ← imp_iff_not_or, or_comm,
+    and_comm, Decidable.and_or_imp, or_comm]
 #align geom_sum_neg_iff geom_sum_neg_iff
 -/
 

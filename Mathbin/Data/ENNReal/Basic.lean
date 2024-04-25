@@ -577,7 +577,7 @@ theorem toNNReal_eq_toNNReal_iff (x y : ℝ≥0∞) :
   ·
     simp only [@eq_comm ℝ≥0 _ y.to_nnreal, @eq_comm ℝ≥0∞ _ y, to_nnreal_eq_zero_iff, none_eq_top,
       top_to_nnreal, top_ne_zero, false_and_iff, eq_self_iff_true, true_and_iff, false_or_iff,
-      or_comm' (y = ⊤)]
+      or_comm (y = ⊤)]
   · cases y <;> simp
 #align ennreal.to_nnreal_eq_to_nnreal_iff ENNReal.toNNReal_eq_toNNReal_iff
 -/
@@ -881,7 +881,7 @@ theorem lt_top_of_mul_ne_top_right (h : a * b ≠ ∞) (ha : a ≠ 0) : b < ∞ 
 theorem mul_lt_top_iff {a b : ℝ≥0∞} : a * b < ∞ ↔ a < ∞ ∧ b < ∞ ∨ a = 0 ∨ b = 0 :=
   by
   constructor
-  · intro h; rw [← or_assoc', Classical.or_iff_not_imp_right, Classical.or_iff_not_imp_right];
+  · intro h; rw [← or_assoc, Classical.or_iff_not_imp_right, Classical.or_iff_not_imp_right];
     intro hb ha
     exact ⟨lt_top_of_mul_ne_top_left h.ne hb, lt_top_of_mul_ne_top_right h.ne ha⟩
   · rintro (⟨ha, hb⟩ | rfl | rfl) <;> [exact mul_lt_top ha.ne hb.ne; simp; simp]

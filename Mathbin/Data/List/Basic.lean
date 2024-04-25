@@ -661,7 +661,7 @@ theorem nil_eq_append {a b : List α} : [] = a ++ b ↔ a = [] ∧ b = [] := by
 theorem append_eq_cons {a b c : List α} {x : α} :
     a ++ b = x :: c ↔ a = [] ∧ b = x :: c ∨ ∃ a', a = x :: a' ∧ c = a' ++ b := by
   cases a <;>
-    simp only [and_assoc', @eq_comm _ c, nil_append, cons_append, eq_self_iff_true, true_and_iff,
+    simp only [and_assoc, @eq_comm _ c, nil_append, cons_append, eq_self_iff_true, true_and_iff,
       false_and_iff, exists_false, false_or_iff, or_false_iff, exists_and_left, exists_eq_left']
 #align list.append_eq_cons_iff List.append_eq_cons
 -/
@@ -687,7 +687,7 @@ theorem append_eq_append_iff {a b c d : List α} :
     · simp only [cons_append, nil_append, false_and_iff, exists_false, false_or_iff,
         exists_eq_left']
       exact eq_comm
-    · simp only [cons_append, @eq_comm _ a, ih, and_assoc', and_or_left, exists_and_left]
+    · simp only [cons_append, @eq_comm _ a, ih, and_assoc, and_or_left, exists_and_left]
 #align list.append_eq_append_iff List.append_eq_append_iff
 -/
 
@@ -1193,7 +1193,7 @@ theorem map_reverseAux (f : α → β) (l₁ l₂ : List α) :
 theorem mem_reverse {a : α} {l : List α} : a ∈ reverse l ↔ a ∈ l := by
   induction l <;> [rfl;
     simp only [*, reverse_cons, mem_append, mem_singleton, mem_cons_iff, not_mem_nil, false_or_iff,
-      or_false_iff, or_comm']]
+      or_false_iff, or_comm]]
 #align list.mem_reverse List.mem_reverse
 -/
 
@@ -2675,7 +2675,7 @@ theorem mem_insertNth {a b : α} :
   | n + 1, [], h => (Nat.not_succ_le_zero _ h).elim
   | n + 1, a' :: as, h => by
     dsimp [List.insertNth]
-    erw [mem_insert_nth (Nat.le_of_succ_le_succ h), ← or_assoc, or_comm' (a = a'), or_assoc]
+    erw [mem_insert_nth (Nat.le_of_succ_le_succ h), ← or_assoc, or_comm (a = a'), or_assoc]
 #align list.mem_insert_nth List.mem_insertNth
 -/
 
@@ -5136,7 +5136,7 @@ theorem filter_filter (q) [DecidablePred q] :
 
 #print List.filter_comm /-
 theorem filter_comm (q) [DecidablePred q] (l : List α) :
-    filter p (filter q l) = filter q (filter p l) := by simp [and_comm']
+    filter p (filter q l) = filter q (filter p l) := by simp [and_comm]
 #align list.filter_comm List.filter_comm
 -/
 
@@ -6336,7 +6336,7 @@ theorem mem_map_swap (x : α) (y : β) (xs : List (α × β)) :
   induction' xs with x xs
   · simp only [not_mem_nil, map_nil]
   · cases' x with a b
-    simp only [mem_cons_iff, Prod.mk.inj_iff, map, Prod.swap_prod_mk, Prod.exists, xs_ih, and_comm']
+    simp only [mem_cons_iff, Prod.mk.inj_iff, map, Prod.swap_prod_mk, Prod.exists, xs_ih, and_comm]
 #align list.mem_map_swap List.mem_map_swap
 -/
 

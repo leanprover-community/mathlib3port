@@ -179,7 +179,7 @@ theorem bind_singleton (f : α → β) : (s.bind fun x => ({f x} : Multiset β))
 @[simp]
 theorem mem_bind {b s} {f : α → Multiset β} : b ∈ bind s f ↔ ∃ a ∈ s, b ∈ f a := by
   simp [bind] <;> simp [-exists_and_right, exists_and_distrib_right.symm] <;> rw [exists_swap] <;>
-    simp [and_assoc']
+    simp [and_assoc]
 #align multiset.mem_bind Multiset.mem_bind
 -/
 
@@ -454,7 +454,7 @@ theorem sigma_add :
 #print Multiset.mem_sigma /-
 @[simp]
 theorem mem_sigma {s t} : ∀ {p : Σ a, σ a}, p ∈ @Multiset.sigma α σ s t ↔ p.1 ∈ s ∧ p.2 ∈ t p.1
-  | ⟨a, b⟩ => by simp [Multiset.sigma, and_assoc', and_left_comm]
+  | ⟨a, b⟩ => by simp [Multiset.sigma, and_assoc, and_left_comm]
 #align multiset.mem_sigma Multiset.mem_sigma
 -/
 

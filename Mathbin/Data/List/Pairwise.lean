@@ -208,7 +208,7 @@ theorem pairwise_append {l₁ l₂ : List α} :
     [simp only [List.Pairwise.nil, forall_prop_of_false (not_mem_nil _), forall_true_iff,
       and_true_iff, true_and_iff, nil_append];
     simp only [cons_append, pairwise_cons, forall_mem_append, IH, forall_mem_cons, forall_and,
-      and_assoc', and_left_comm]]
+      and_assoc, and_left_comm]]
 #align list.pairwise_append List.pairwise_append
 -/
 
@@ -230,7 +230,7 @@ theorem pairwise_middle (s : Symmetric R) {a : α} {l₁ l₂ : List α} :
   show Pairwise R (l₁ ++ ([a] ++ l₂)) ↔ Pairwise R ([a] ++ l₁ ++ l₂) by
     rw [← append_assoc, pairwise_append, @pairwise_append _ _ ([a] ++ l₁),
         pairwise_append_comm s] <;>
-      simp only [mem_append, or_comm']
+      simp only [mem_append, or_comm]
 #align list.pairwise_middle List.pairwise_middle
 -/
 
@@ -337,7 +337,7 @@ theorem pairwise_join {L : List (List α)} :
     ⟨fun h a b c d e => h c d e a b, fun h c d e a b => h a b c d e⟩
   simp only [join, pairwise_append, IH, mem_join, exists_imp, and_imp, this, forall_mem_cons,
     pairwise_cons]
-  simp only [and_assoc', and_comm', and_left_comm]
+  simp only [and_assoc, and_comm, and_left_comm]
 #align list.pairwise_join List.pairwise_join
 -/
 

@@ -1014,7 +1014,7 @@ protected theorem decode₂ : Primrec (decode₂ α) :=
 
 #print Primrec.list_findIdx₁ /-
 theorem list_findIdx₁ {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hp : PrimrecRel p) :
-    ∀ l : List β, Primrec fun a => l.findIndex (p a)
+    ∀ l : List β, Primrec fun a => l.findIdx (p a)
   | [] => const 0
   | a :: l => ite (hp.comp Primrec.id (const a)) (const 0) (succ.comp (list_find_index₁ l))
 #align primrec.list_find_index₁ Primrec.list_findIdx₁
@@ -1446,10 +1446,10 @@ theorem list_length : Primrec (@List.length α) :=
 
 #print Primrec.list_findIdx /-
 theorem list_findIdx {f : α → List β} {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hf : Primrec f)
-    (hp : PrimrecRel p) : Primrec fun a => (f a).findIndex (p a) :=
+    (hp : PrimrecRel p) : Primrec fun a => (f a).findIdx (p a) :=
   (list_foldr hf (const 0) <|
         to₂ <| ite (hp.comp fst <| fst.comp snd) (const 0) (succ.comp <| snd.comp snd)).of_eq
-    fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl; simp [*, List.findIndex]]
+    fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl; simp [*, List.findIdx]]
 #align primrec.list_find_index Primrec.list_findIdx
 -/
 

@@ -83,7 +83,7 @@ theorem mul_self_sub_mul_self_eq' [NonUnitalNonAssocRing R] {a b : R} (h : Commu
 #print Commute.mul_self_eq_mul_self_iff /-
 theorem mul_self_eq_mul_self_iff [NonUnitalNonAssocRing R] [NoZeroDivisors R] {a b : R}
     (h : Commute a b) : a * a = b * b ↔ a = b ∨ a = -b := by
-  rw [← sub_eq_zero, h.mul_self_sub_mul_self_eq, mul_eq_zero, or_comm', sub_eq_zero,
+  rw [← sub_eq_zero, h.mul_self_sub_mul_self_eq, mul_eq_zero, or_comm, sub_eq_zero,
     add_eq_zero_iff_eq_neg]
 #align commute.mul_self_eq_mul_self_iff Commute.mul_self_eq_mul_self_iff
 -/

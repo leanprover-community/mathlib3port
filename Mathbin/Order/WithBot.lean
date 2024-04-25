@@ -186,7 +186,7 @@ theorem unbot'_eq_self_iff {d : α} {x : WithBot α} : unbot' d x = d ↔ x = d 
 #print WithBot.unbot'_eq_unbot'_iff /-
 theorem unbot'_eq_unbot'_iff {d : α} {x y : WithBot α} :
     unbot' d x = unbot' d y ↔ x = y ∨ x = d ∧ y = ⊥ ∨ x = ⊥ ∧ y = d := by
-  induction y using WithBot.recBotCoe <;> simp [unbot'_eq_iff, or_comm', coe_eq_coe]
+  induction y using WithBot.recBotCoe <;> simp [unbot'_eq_iff, or_comm, coe_eq_coe]
 #align with_bot.unbot'_eq_unbot'_iff WithBot.unbot'_eq_unbot'_iff
 -/
 

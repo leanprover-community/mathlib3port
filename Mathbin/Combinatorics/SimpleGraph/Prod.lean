@@ -45,7 +45,7 @@ and `(a, b₁)` and `(a, b₂)` if `H` relates `b₁` and `b₂`. -/
 def boxProd (G : SimpleGraph α) (H : SimpleGraph β) : SimpleGraph (α × β)
     where
   Adj x y := G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.Adj x.2 y.2 ∧ x.1 = y.1
-  symm x y := by simp [and_comm', or_comm', eq_comm, adj_comm]
+  symm x y := by simp [and_comm, or_comm, eq_comm, adj_comm]
   loopless x := by simp
 #align simple_graph.box_prod SimpleGraph.boxProd
 -/
@@ -81,7 +81,7 @@ theorem boxProd_neighborSet (x : α × β) :
   by
   ext ⟨a', b'⟩
   simp only [mem_neighbor_set, Set.mem_union, box_prod_adj, Set.mem_prod, Set.mem_singleton_iff]
-  simp only [eq_comm, and_comm']
+  simp only [eq_comm, and_comm]
 #align simple_graph.box_prod_neighbor_set SimpleGraph.boxProd_neighborSet
 -/
 
@@ -91,7 +91,7 @@ variable (G H I)
 /-- The box product is commutative up to isomorphism. `equiv.prod_comm` as a graph isomorphism. -/
 @[simps]
 def boxProdComm : G □ H ≃g H □ G :=
-  ⟨Equiv.prodComm _ _, fun x y => or_comm' _ _⟩
+  ⟨Equiv.prodComm _ _, fun x y => or_comm _ _⟩
 #align simple_graph.box_prod_comm SimpleGraph.boxProdComm
 -/
 
@@ -100,8 +100,8 @@ def boxProdComm : G □ H ≃g H □ G :=
 @[simps]
 def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
   ⟨Equiv.prodAssoc _ _ _, fun x y => by
-    simp only [box_prod_adj, Equiv.prodAssoc_apply, or_and_right, or_assoc', Prod.ext_iff,
-      and_assoc', @and_comm (x.1.1 = _)]⟩
+    simp only [box_prod_adj, Equiv.prodAssoc_apply, or_and_right, or_assoc, Prod.ext_iff, and_assoc,
+      @and_comm (x.1.1 = _)]⟩
 #align simple_graph.box_prod_assoc SimpleGraph.boxProdAssoc
 -/
 
@@ -272,7 +272,7 @@ instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)]
       by
       simp_rw [Finset.mem_disjUnion, Finset.mem_product, Finset.mem_singleton, mem_neighbor_finset,
         mem_neighbor_set, Equiv.refl_apply, box_prod_adj]
-      simp only [eq_comm, and_comm'])
+      simp only [eq_comm, and_comm])
 #align simple_graph.box_prod_fintype_neighbor_set SimpleGraph.boxProdFintypeNeighborSet
 -/
 

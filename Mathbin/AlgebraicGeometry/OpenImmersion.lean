@@ -493,7 +493,7 @@ theorem AlgebraicGeometry.isIso_iff_isOpenImmersionCat {X Y : Scheme} (f : X ⟶
 theorem AlgebraicGeometry.isIso_iff_stalk_iso {X Y : Scheme} (f : X ⟶ Y) :
     IsIso f ↔ IsIso f.1.base ∧ ∀ x, IsIso (PresheafedSpace.stalkMap f.1 x) :=
   by
-  rw [is_iso_iff_is_open_immersion, is_open_immersion.iff_stalk_iso, and_comm', ← and_assoc']
+  rw [is_iso_iff_is_open_immersion, is_open_immersion.iff_stalk_iso, and_comm, ← and_assoc]
   refine' and_congr ⟨_, _⟩ Iff.rfl
   · rintro ⟨h₁, h₂⟩
     convert_to

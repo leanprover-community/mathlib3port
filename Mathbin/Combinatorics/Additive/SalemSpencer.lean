@@ -266,7 +266,7 @@ theorem mulSalemSpencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
       MulSalemSpencer s ∧ ∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b :=
   by
   refine' mul_salem_spencer_insert.trans _
-  rw [← and_assoc']
+  rw [← and_assoc]
   exact and_iff_left fun b c hb hc h => ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).Ne h).elim
 #align mul_salem_spencer_insert_of_lt mulSalemSpencer_insert_of_lt
 #align add_salem_spencer_insert_of_lt addSalemSpencer_insert_of_lt

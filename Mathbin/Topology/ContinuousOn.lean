@@ -117,7 +117,7 @@ theorem nhdsWithin_basis_open (a : α) (t : Set α) :
 #print mem_nhdsWithin /-
 theorem mem_nhdsWithin {t : Set α} {a : α} {s : Set α} :
     t ∈ 𝓝[s] a ↔ ∃ u, IsOpen u ∧ a ∈ u ∧ u ∩ s ⊆ t := by
-  simpa only [exists_prop, and_assoc', and_comm'] using (nhdsWithin_basis_open a s).mem_iff
+  simpa only [exists_prop, and_assoc, and_comm] using (nhdsWithin_basis_open a s).mem_iff
 #align mem_nhds_within mem_nhdsWithin
 -/
 

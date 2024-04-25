@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Algebra.Group.Hom.Defs
 import Algebra.Order.Monoid.OrderDual
-import Algebra.Order.Monoid.WithZero.Basic
+import Algebra.Order.GroupWithZero.Canonical
 import Data.Nat.Cast.Defs
 
 #align_import algebra.order.monoid.with_top from "leanprover-community/mathlib"@"0111834459f5d7400215223ea95ae38a1265a907"

@@ -176,7 +176,7 @@ theorem eq_zero_iff_not_coprime {a : ℤ} {b : ℕ} [NeZero b] : J(a | b) = 0 �
     (by
       rw [List.mem_pmap, Int.gcd_eq_natAbs, Ne, prime.not_coprime_iff_dvd]
       simp_rw [legendreSym.eq_zero_iff, int_coe_zmod_eq_zero_iff_dvd, mem_factors (NeZero.ne b), ←
-        Int.natCast_dvd, Int.natCast_dvd_natCast, exists_prop, and_assoc', and_comm'])
+        Int.natCast_dvd, Int.natCast_dvd_natCast, exists_prop, and_assoc, and_comm])
 #align jacobi_sym.eq_zero_iff_not_coprime jacobiSym.eq_zero_iff_not_coprime
 -/
 

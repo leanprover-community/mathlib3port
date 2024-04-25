@@ -943,7 +943,7 @@ theorem UniformSpace.mem_nhds_iff_symm {x : α} {s : Set α} :
 #print UniformSpace.hasBasis_nhds /-
 theorem UniformSpace.hasBasis_nhds (x : α) :
     HasBasis (𝓝 x) (fun s : Set (α × α) => s ∈ 𝓤 α ∧ SymmetricRel s) fun s => ball x s :=
-  ⟨fun t => by simp [UniformSpace.mem_nhds_iff_symm, and_assoc']⟩
+  ⟨fun t => by simp [UniformSpace.mem_nhds_iff_symm, and_assoc]⟩
 #align uniform_space.has_basis_nhds UniformSpace.hasBasis_nhds
 -/
 
@@ -1326,7 +1326,7 @@ of `𝓤 α`. -/
 theorem uniformity_hasBasis_open_symmetric :
     HasBasis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsOpen V ∧ SymmetricRel V) id :=
   by
-  simp only [← and_assoc']
+  simp only [← and_assoc]
   refine' uniformity_has_basis_open.restrict fun s hs => ⟨symmetrizeRel s, _⟩
   exact
     ⟨⟨symmetrize_mem_uniformity hs.1, IsOpen.inter hs.2 (hs.2.Preimage continuous_swap)⟩,

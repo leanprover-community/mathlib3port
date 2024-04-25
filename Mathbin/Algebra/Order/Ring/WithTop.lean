@@ -203,7 +203,7 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
     mul := (· * ·)
     zero := 0
     mul_comm := fun a b => by
-      simp only [or_comm', mul_def, mul_comm, @Option.map₂_comm _ _ _ _ a b _ mul_comm] }
+      simp only [or_comm, mul_def, mul_comm, @Option.map₂_comm _ _ _ _ a b _ mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 

@@ -591,7 +591,7 @@ instance : CompleteDistribLattice G.Subgraph :=
         exact (Set.inter_iUnion₂ _ _).Subset
       ·
         simpa only [spanning_coe_adj, exists_prop, Sup_adj, and_imp, forall_exists_index, supr_adj,
-          inf_adj, ← exists_and_right, exists_and_left, and_assoc', and_self_right] using hab
+          inf_adj, ← exists_and_right, exists_and_left, and_assoc, and_self_right] using hab
     iInf_sup_le_sup_inf := fun G' s =>
       by
       refine' ⟨_, fun a b hab => _⟩
@@ -1145,7 +1145,7 @@ theorem edgeSet_subgraphOfAdj {v w : V} (hvw : G.Adj v w) :
 
 #print SimpleGraph.subgraphOfAdj_symm /-
 theorem subgraphOfAdj_symm {v w : V} (hvw : G.Adj v w) :
-    G.subgraphOfAdj hvw.symm = G.subgraphOfAdj hvw := by ext <;> simp [or_comm', and_comm']
+    G.subgraphOfAdj hvw.symm = G.subgraphOfAdj hvw := by ext <;> simp [or_comm, and_comm]
 #align simple_graph.subgraph_of_adj_symm SimpleGraph.subgraphOfAdj_symm
 -/
 
@@ -1310,7 +1310,7 @@ theorem deleteEdges_adj (v w : V) : (G'.deleteEdges s).Adj v w ↔ G'.Adj v w �
 @[simp]
 theorem deleteEdges_deleteEdges (s s' : Set (Sym2 V)) :
     (G'.deleteEdges s).deleteEdges s' = G'.deleteEdges (s ∪ s') := by
-  ext <;> simp [and_assoc', not_or]
+  ext <;> simp [and_assoc, not_or]
 #align simple_graph.subgraph.delete_edges_delete_edges SimpleGraph.Subgraph.deleteEdges_deleteEdges
 -/
 
@@ -1523,7 +1523,7 @@ theorem deleteVerts_verts : (G'.deleteVerts s).verts = G'.verts \ s :=
 #print SimpleGraph.Subgraph.deleteVerts_adj /-
 theorem deleteVerts_adj {u v : V} :
     (G'.deleteVerts s).Adj u v ↔ u ∈ G'.verts ∧ ¬u ∈ s ∧ v ∈ G'.verts ∧ ¬v ∈ s ∧ G'.Adj u v := by
-  simp [and_assoc']
+  simp [and_assoc]
 #align simple_graph.subgraph.delete_verts_adj SimpleGraph.Subgraph.deleteVerts_adj
 -/
 
@@ -1531,7 +1531,7 @@ theorem deleteVerts_adj {u v : V} :
 @[simp]
 theorem deleteVerts_deleteVerts (s s' : Set V) :
     (G'.deleteVerts s).deleteVerts s' = G'.deleteVerts (s ∪ s') := by
-  ext <;> simp (config := { contextual := true }) [not_or, and_assoc']
+  ext <;> simp (config := { contextual := true }) [not_or, and_assoc]
 #align simple_graph.subgraph.delete_verts_delete_verts SimpleGraph.Subgraph.deleteVerts_deleteVerts
 -/
 

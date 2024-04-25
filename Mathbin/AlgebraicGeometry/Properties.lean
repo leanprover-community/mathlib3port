@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import AlgebraicGeometry.AffineScheme
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 import Topology.Sheaves.SheafCondition.Sites
 import Algebra.Category.Ring.Constructions
 import RingTheory.LocalProperties

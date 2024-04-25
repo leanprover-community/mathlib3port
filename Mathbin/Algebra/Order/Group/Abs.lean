@@ -370,13 +370,13 @@ theorem abs_sub (a b : α) : |a - b| ≤ |a| + |b| := by rw [sub_eq_add_neg, ←
 
 #print abs_sub_le_iff /-
 theorem abs_sub_le_iff : |a - b| ≤ c ↔ a - b ≤ c ∧ b - a ≤ c := by
-  rw [abs_le, neg_le_sub_iff_le_add, sub_le_iff_le_add', and_comm', sub_le_iff_le_add']
+  rw [abs_le, neg_le_sub_iff_le_add, sub_le_iff_le_add', and_comm, sub_le_iff_le_add']
 #align abs_sub_le_iff abs_sub_le_iff
 -/
 
 #print abs_sub_lt_iff /-
 theorem abs_sub_lt_iff : |a - b| < c ↔ a - b < c ∧ b - a < c := by
-  rw [abs_lt, neg_lt_sub_iff_lt_add', sub_lt_iff_lt_add', and_comm', sub_lt_iff_lt_add']
+  rw [abs_lt, neg_lt_sub_iff_lt_add', sub_lt_iff_lt_add', and_comm, sub_lt_iff_lt_add']
 #align abs_sub_lt_iff abs_sub_lt_iff
 -/
 

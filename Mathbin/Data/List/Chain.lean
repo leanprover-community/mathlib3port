@@ -87,7 +87,7 @@ theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
 theorem chain_split {a b : α} {l₁ l₂ : List α} :
     Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
   induction' l₁ with x l₁ IH generalizing a <;>
-    simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_true_iff, and_assoc']
+    simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_true_iff, and_assoc]
 #align list.chain_split List.chain_split
 -/
 
@@ -380,7 +380,7 @@ theorem chain'_append :
     ∀ {l₁ l₂ : List α},
       Chain' R (l₁ ++ l₂) ↔ Chain' R l₁ ∧ Chain' R l₂ ∧ ∀ x ∈ l₁.getLast?, ∀ y ∈ l₂.head?, R x y
   | [], l => by simp
-  | [a], l => by simp [chain'_cons', and_comm']
+  | [a], l => by simp [chain'_cons', and_comm]
   | a :: b :: l₁, l₂ => by
     rw [cons_append, cons_append, chain'_cons, chain'_cons, ← cons_append, chain'_append, last',
       and_assoc]
@@ -461,7 +461,7 @@ theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
   | [a] => by simp only [chain'_singleton, reverse_singleton]
   | a :: b :: l => by
     rw [chain'_cons, reverse_cons, reverse_cons, append_assoc, cons_append, nil_append,
-      chain'_split, ← reverse_cons, @chain'_reverse (b :: l), and_comm', chain'_pair, flip]
+      chain'_split, ← reverse_cons, @chain'_reverse (b :: l), and_comm, chain'_pair, flip]
 #align list.chain'_reverse List.chain'_reverse
 -/
 

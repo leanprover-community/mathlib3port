@@ -727,7 +727,7 @@ theorem continuousOn_update_iff [T1Space α] [DecidableEq α] [TopologicalSpace 
     ContinuousOn (Function.update f x y) s ↔
       ContinuousOn f (s \ {x}) ∧ (x ∈ s → Tendsto f (𝓝[s \ {x}] x) (𝓝 y)) :=
   by
-  rw [ContinuousOn, ← and_forall_ne x, and_comm']
+  rw [ContinuousOn, ← and_forall_ne x, and_comm]
   refine' and_congr ⟨fun H z hz => _, fun H z hzx hzs => _⟩ (forall_congr' fun hxs => _)
   · specialize H z hz.2 hz.1
     rw [continuousWithinAt_update_of_ne hz.2] at H
@@ -1127,7 +1127,7 @@ theorem t2Space_iff_disjoint_nhds : T2Space α ↔ ∀ x y : α, x ≠ y → Dis
   by
   refine' (t2Space_iff α).trans (forall₃_congr fun x y hne => _)
   simp only [(nhds_basis_opens x).disjoint_iff (nhds_basis_opens y), exists_prop, ← exists_and_left,
-    and_assoc, and_comm', and_left_comm]
+    and_assoc, and_comm, and_left_comm]
 #align t2_space_iff_disjoint_nhds t2Space_iff_disjoint_nhds
 -/
 
@@ -1209,7 +1209,7 @@ theorem t2_separation_nhds [T2Space α] {x y : α} (h : x ≠ y) :
 #print t2_separation_compact_nhds /-
 theorem t2_separation_compact_nhds [LocallyCompactSpace α] [T2Space α] {x y : α} (h : x ≠ y) :
     ∃ u v, u ∈ 𝓝 x ∧ v ∈ 𝓝 y ∧ IsCompact u ∧ IsCompact v ∧ Disjoint u v := by
-  simpa only [exists_prop, ← exists_and_left, and_comm', and_assoc, and_left_comm] using
+  simpa only [exists_prop, ← exists_and_left, and_comm, and_assoc, and_left_comm] using
     ((compact_basis_nhds x).disjoint_iff (compact_basis_nhds y)).1 (disjoint_nhds_nhds.2 h)
 #align t2_separation_compact_nhds t2_separation_compact_nhds
 -/
@@ -1893,7 +1893,7 @@ theorem regularSpace_TFAE (X : Type u) [TopologicalSpace X] :
   by
   tfae_have 1 ↔ 5
   · rw [regularSpace_iff, (@compl_surjective (Set X) _).forall, forall_swap]
-    simp only [isClosed_compl_iff, mem_compl_iff, Classical.not_not, @and_comm' (_ ∈ _),
+    simp only [isClosed_compl_iff, mem_compl_iff, Classical.not_not, @and_comm (_ ∈ _),
       (nhds_basis_opens _).lift'_closure.le_basis_iffₓ (nhds_basis_opens _), and_imp,
       (nhds_basis_opens _).disjoint_iff_rightₓ, exists_prop, ← subset_interior_iff_mem_nhdsSet,
       interior_compl, compl_subset_compl]
@@ -1994,7 +1994,7 @@ theorem hasBasis_opens_closure (a : α) : (𝓝 a).HasBasis (fun s => a ∈ s �
 theorem TopologicalSpace.IsTopologicalBasis.nhds_basis_closure {B : Set (Set α)}
     (hB : TopologicalSpace.IsTopologicalBasis B) (a : α) :
     (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ s ∈ B) closure := by
-  simpa only [and_comm'] using hB.nhds_has_basis.nhds_closure
+  simpa only [and_comm] using hB.nhds_has_basis.nhds_closure
 #align topological_space.is_topological_basis.nhds_basis_closure TopologicalSpace.IsTopologicalBasis.nhds_basis_closure
 -/
 

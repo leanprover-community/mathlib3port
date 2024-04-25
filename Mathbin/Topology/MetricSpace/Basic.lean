@@ -2384,7 +2384,7 @@ theorem sphere_prod (x : α × β) (r : ℝ) :
   · ext ⟨x', y'⟩
     simp_rw [Set.mem_union, Set.mem_prod, Metric.mem_closedBall, Metric.mem_sphere, Prod.dist_eq,
       max_eq_iff]
-    refine' or_congr (and_congr_right _) ((and_comm' _ _).trans (and_congr_left _))
+    refine' or_congr (and_congr_right _) ((and_comm _ _).trans (and_congr_left _))
     all_goals rintro rfl; rfl
 #align sphere_prod sphere_prod
 -/
@@ -2592,7 +2592,7 @@ theorem closedBall_zero' (x : α) : closedBall x 0 = closure {x} :=
 #print Metric.dense_iff /-
 theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀ r > 0, (ball x r ∩ s).Nonempty :=
   forall_congr' fun x => by
-    simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_iff, mem_ball', and_comm']
+    simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_iff, mem_ball', and_comm]
 #align metric.dense_iff Metric.dense_iff
 -/
 
@@ -2741,7 +2741,7 @@ theorem nndist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
 theorem nndist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ≥0} (hr : 0 < r) :
     nndist f g = r ↔ (∃ i, nndist (f i) (g i) = r) ∧ ∀ b, nndist (f b) (g b) ≤ r :=
   by
-  rw [eq_iff_le_not_lt, nndist_pi_lt_iff hr, nndist_pi_le_iff, Classical.not_forall, and_comm']
+  rw [eq_iff_le_not_lt, nndist_pi_lt_iff hr, nndist_pi_le_iff, Classical.not_forall, and_comm]
   simp_rw [not_lt, and_congr_left_iff, le_antisymm_iff]
   intro h
   refine' exists_congr fun b => _

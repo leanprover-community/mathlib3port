@@ -820,7 +820,7 @@ instance : Monoid Ordinal.{u}
           ⟨⟨prodAssoc _ _ _, fun a b => by
               rcases a with ⟨⟨a₁, a₂⟩, a₃⟩
               rcases b with ⟨⟨b₁, b₂⟩, b₃⟩
-              simp [Prod.lex_def, and_or_left, or_assoc', and_assoc']⟩⟩
+              simp [Prod.lex_def, and_or_left, or_assoc, and_assoc]⟩⟩
   mul_one a :=
     inductionOn a fun α r _ =>
       Quotient.sound
@@ -850,7 +850,7 @@ private theorem mul_eq_zero' {a b : Ordinal} : a * b = 0 ↔ a = 0 ∨ b = 0 :=
     inductionOn b fun β _ _ =>
       by
       simp_rw [← type_prod_lex, type_eq_zero_iff_is_empty]
-      rw [or_comm']
+      rw [or_comm]
       exact isEmpty_prod
 
 instance : MonoidWithZero Ordinal :=

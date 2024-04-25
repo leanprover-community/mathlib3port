@@ -222,7 +222,7 @@ theorem gauge_lt_eq (absorbs : Absorbent ℝ s) (a : ℝ) :
     {x | gauge s x < a} = ⋃ r ∈ Set.Ioo 0 (a : ℝ), r • s :=
   by
   ext
-  simp_rw [mem_set_of_eq, mem_Union, exists_prop, mem_Ioo, and_assoc']
+  simp_rw [mem_set_of_eq, mem_Union, exists_prop, mem_Ioo, and_assoc]
   exact
     ⟨exists_lt_of_gauge_lt Absorbs, fun ⟨r, hr₀, hr₁, hx⟩ =>
       (gauge_le_of_mem hr₀.le hx).trans_lt hr₁⟩

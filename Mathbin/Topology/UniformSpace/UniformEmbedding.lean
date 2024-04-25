@@ -54,7 +54,7 @@ protected theorem UniformInducing.comap_uniformSpace {f : α → β} (hf : Unifo
 #print uniformInducing_iff' /-
 theorem uniformInducing_iff' {f : α → β} :
     UniformInducing f ↔ UniformContinuous f ∧ comap (Prod.map f f) (𝓤 β) ≤ 𝓤 α := by
-  rw [uniformInducing_iff, UniformContinuous, tendsto_iff_comap, le_antisymm_iff, and_comm'] <;> rfl
+  rw [uniformInducing_iff, UniformContinuous, tendsto_iff_comap, le_antisymm_iff, and_comm] <;> rfl
 #align uniform_inducing_iff' uniformInducing_iff'
 -/
 
@@ -177,7 +177,7 @@ structure UniformEmbedding (f : α → β) extends UniformInducing f : Prop wher
 #print uniformEmbedding_iff' /-
 theorem uniformEmbedding_iff' {f : α → β} :
     UniformEmbedding f ↔ Injective f ∧ UniformContinuous f ∧ comap (Prod.map f f) (𝓤 β) ≤ 𝓤 α := by
-  rw [uniformEmbedding_iff, and_comm', uniformInducing_iff']
+  rw [uniformEmbedding_iff, and_comm, uniformInducing_iff']
 #align uniform_embedding_iff' uniformEmbedding_iff'
 -/
 
@@ -188,7 +188,7 @@ theorem Filter.HasBasis.uniformEmbedding_iff' {ι ι'} {p : ι → Prop} {p' : �
       Injective f ∧
         (∀ i, p' i → ∃ j, p j ∧ ∀ x y, (x, y) ∈ s j → (f x, f y) ∈ s' i) ∧
           ∀ j, p j → ∃ i, p' i ∧ ∀ x y, (f x, f y) ∈ s' i → (x, y) ∈ s j :=
-  by rw [uniformEmbedding_iff, and_comm', h.uniform_inducing_iff h']
+  by rw [uniformEmbedding_iff, and_comm, h.uniform_inducing_iff h']
 #align filter.has_basis.uniform_embedding_iff' Filter.HasBasis.uniformEmbedding_iff'
 -/
 

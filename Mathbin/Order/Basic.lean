@@ -1435,7 +1435,7 @@ theorem mk_le_mk [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁
 #print Prod.swap_le_swap /-
 @[simp]
 theorem swap_le_swap [LE α] [LE β] {x y : α × β} : x.symm ≤ y.symm ↔ x ≤ y :=
-  and_comm' _ _
+  and_comm _ _
 #align prod.swap_le_swap Prod.swap_le_swap
 -/
 

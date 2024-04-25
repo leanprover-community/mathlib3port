@@ -344,7 +344,7 @@ theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
 @[to_additive]
 theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c :=
   by
-  simp_rw [lt_iff_le_and_ne, and_comm', le_iff_exists_mul, ← exists_and_left, exists_prop]
+  simp_rw [lt_iff_le_and_ne, and_comm, le_iff_exists_mul, ← exists_and_left, exists_prop]
   apply exists_congr; intro c
   rw [and_congr_left_iff, gt_iff_lt]; rintro rfl
   constructor

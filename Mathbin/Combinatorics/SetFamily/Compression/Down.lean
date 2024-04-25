@@ -189,7 +189,7 @@ scoped[FinsetFamily] notation "𝓓 " => Down.compression
 original, or it's not in the original but it's the compression of something in the original. -/
 theorem mem_compression : s ∈ 𝓓 a 𝒜 ↔ s ∈ 𝒜 ∧ s.eraseₓ a ∈ 𝒜 ∨ s ∉ 𝒜 ∧ insert a s ∈ 𝒜 :=
   by
-  simp_rw [compression, mem_disj_union, mem_filter, mem_image, and_comm' (s ∉ 𝒜)]
+  simp_rw [compression, mem_disj_union, mem_filter, mem_image, and_comm (s ∉ 𝒜)]
   refine'
     or_congr_right
       (and_congr_left fun hs =>

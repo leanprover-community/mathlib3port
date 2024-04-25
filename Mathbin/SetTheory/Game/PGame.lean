@@ -1637,7 +1637,7 @@ theorem SetTheory.PGame.neg_ofLists (L R : List SetTheory.PGame) :
 theorem SetTheory.PGame.isOption_neg {x y : SetTheory.PGame} :
     SetTheory.PGame.IsOption x (-y) ↔ SetTheory.PGame.IsOption (-x) y :=
   by
-  rw [is_option_iff, is_option_iff, or_comm']
+  rw [is_option_iff, is_option_iff, or_comm]
   cases y; apply or_congr <;> · apply exists_congr; intro; rw [neg_eq_iff_eq_neg]; rfl
 #align pgame.is_option_neg SetTheory.PGame.isOption_neg
 -/
@@ -1746,8 +1746,8 @@ private theorem neg_le_lf_neg_iff :
     by
     simp_rw [neg_def, mk_le_mk, mk_lf_mk, ← neg_def]
     constructor
-    · rw [and_comm']; apply and_congr <;> exact forall_congr' fun _ => neg_le_lf_neg_iff.2
-    · rw [or_comm']; apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
+    · rw [and_comm]; apply and_congr <;> exact forall_congr' fun _ => neg_le_lf_neg_iff.2
+    · rw [or_comm]; apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
 decreasing_by pgame_wf_tac
 
 #print SetTheory.PGame.neg_le_neg_iff /-

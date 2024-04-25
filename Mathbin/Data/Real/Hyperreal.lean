@@ -523,7 +523,7 @@ theorem isSt_inj_real {r₁ r₂ s : ℝ} (h1 : IsSt r₁ s) (h2 : IsSt r₂ s) 
 
 #print Hyperreal.isSt_iff_abs_sub_lt_delta /-
 theorem isSt_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : IsSt x r ↔ ∀ δ : ℝ, 0 < δ → |x - r| < δ := by
-  simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm', add_comm]
+  simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm, add_comm]
 #align hyperreal.is_st_iff_abs_sub_lt_delta Hyperreal.isSt_iff_abs_sub_lt_delta
 -/
 

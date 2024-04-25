@@ -180,7 +180,7 @@ theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) (s t) : s = e ⁻¹' t 
 #print Equiv.prod_assoc_preimage /-
 @[simp]
 theorem prod_assoc_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
-    Equiv.prodAssoc α β γ ⁻¹' s ×ˢ t ×ˢ u = (s ×ˢ t) ×ˢ u := by ext; simp [and_assoc']
+    Equiv.prodAssoc α β γ ⁻¹' s ×ˢ t ×ˢ u = (s ×ˢ t) ×ˢ u := by ext; simp [and_assoc]
 #align equiv.prod_assoc_preimage Equiv.prod_assoc_preimage
 -/
 
@@ -191,7 +191,7 @@ theorem prod_assoc_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
 #print Equiv.prod_assoc_symm_preimage /-
 @[simp]
 theorem prod_assoc_symm_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
-    (Equiv.prodAssoc α β γ).symm ⁻¹' (s ×ˢ t) ×ˢ u = s ×ˢ t ×ˢ u := by ext; simp [and_assoc']
+    (Equiv.prodAssoc α β γ).symm ⁻¹' (s ×ˢ t) ×ˢ u = s ×ˢ t ×ˢ u := by ext; simp [and_assoc]
 #align equiv.prod_assoc_symm_preimage Equiv.prod_assoc_symm_preimage
 -/
 

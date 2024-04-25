@@ -11,7 +11,7 @@ import LinearAlgebra.LinearIndependent
 import Order.CompactlyGenerated.Basic
 import Order.OrderIsoNat
 import RingTheory.Finiteness
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 
 #align_import ring_theory.noetherian from "leanprover-community/mathlib"@"210657c4ea4a4a7b234392f70a3a2a83346dfa90"
 

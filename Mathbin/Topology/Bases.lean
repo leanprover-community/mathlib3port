@@ -149,7 +149,7 @@ theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
   by
   change s ∈ (𝓝 a).sets ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s
   rw [hb.eq_generate_from, nhds_generate_from, binfi_sets_eq]
-  · simp [and_assoc', and_left_comm]
+  · simp [and_assoc, and_left_comm]
   ·
     exact fun s ⟨hs₁, hs₂⟩ t ⟨ht₁, ht₂⟩ =>
       have : a ∈ s ∩ t := ⟨hs₁, ht₁⟩
@@ -170,7 +170,7 @@ theorem IsTopologicalBasis.isOpen_iff {s : Set α} {b : Set (Set α)} (hb : IsTo
 #print TopologicalSpace.IsTopologicalBasis.nhds_hasBasis /-
 theorem IsTopologicalBasis.nhds_hasBasis {b : Set (Set α)} (hb : IsTopologicalBasis b) {a : α} :
     (𝓝 a).HasBasis (fun t : Set α => t ∈ b ∧ a ∈ t) fun t => t :=
-  ⟨fun s => hb.mem_nhds_iffₓ.trans <| by simp only [exists_prop, and_assoc']⟩
+  ⟨fun s => hb.mem_nhds_iffₓ.trans <| by simp only [exists_prop, and_assoc]⟩
 #align topological_space.is_topological_basis.nhds_has_basis TopologicalSpace.IsTopologicalBasis.nhds_hasBasis
 -/
 

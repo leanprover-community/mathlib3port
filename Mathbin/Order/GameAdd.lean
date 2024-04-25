@@ -82,7 +82,7 @@ theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
 #print Prod.gameAdd_swap_swap /-
 @[simp]
 theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.symm b.symm ↔ GameAdd rα rβ a b :=
-  fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm']
+  fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm]
 #align prod.game_add_swap_swap Prod.gameAdd_swap_swap
 -/
 
@@ -188,7 +188,7 @@ def GameAdd (rα : α → α → Prop) : Sym2 α → Sym2 α → Prop :=
       fun a₁ b₁ a₂ b₂ =>
       by
       rw [Prod.gameAdd_swap_swap_mk _ _ b₁ b₂ a₁ a₂, Prod.gameAdd_swap_swap_mk _ _ a₁ b₂ b₁ a₂]
-      simp [or_comm']⟩
+      simp [or_comm]⟩
 #align sym2.game_add Sym2.GameAdd
 -/
 

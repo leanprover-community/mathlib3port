@@ -49,7 +49,7 @@ def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ 
 #print Finset.mem_image₂ /-
 @[simp]
 theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by
-  simp [image₂, and_assoc']
+  simp [image₂, and_assoc]
 #align finset.mem_image₂ Finset.mem_image₂
 -/
 

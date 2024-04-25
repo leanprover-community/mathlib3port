@@ -198,7 +198,7 @@ theorem eventually_smallSets_eventually {p : α → Prop} :
     _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x :=
       eventually_smallSets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
     _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
-    _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm', mem_inter_iff, ← and_imp]
+    _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
 #align filter.eventually_small_sets_eventually Filter.eventually_smallSets_eventually
 -/
 

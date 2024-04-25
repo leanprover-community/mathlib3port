@@ -233,7 +233,7 @@ theorem ndunion_le_add (s t : Multiset α) : ndunion s t ≤ s + t :=
 #print Multiset.ndunion_le /-
 theorem ndunion_le {s t u : Multiset α} : ndunion s t ≤ u ↔ s ⊆ u ∧ t ≤ u :=
   Multiset.induction_on s (by simp)
-    (by simp (config := { contextual := true }) [ndinsert_le, and_comm', and_left_comm])
+    (by simp (config := { contextual := true }) [ndinsert_le, and_comm, and_left_comm])
 #align multiset.ndunion_le Multiset.ndunion_le
 -/
 

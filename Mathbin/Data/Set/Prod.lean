@@ -151,7 +151,7 @@ theorem forall_prod_set {p : α × β → Prop} : (∀ x ∈ s ×ˢ t, p x) ↔ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.exists_prod_set /-
 theorem exists_prod_set {p : α × β → Prop} : (∃ x ∈ s ×ˢ t, p x) ↔ ∃ x ∈ s, ∃ y ∈ t, p (x, y) := by
-  simp [and_assoc']
+  simp [and_assoc]
 #align set.exists_prod_set Set.exists_prod_set
 -/
 
@@ -252,7 +252,7 @@ theorem prod_inter : s ×ˢ (t₁ ∩ t₂) = s ×ˢ t₁ ∩ s ×ˢ t₂ := by 
 #print Set.prod_inter_prod /-
 @[mfld_simps]
 theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×ˢ (t₁ ∩ t₂) := by ext ⟨x, y⟩;
-  simp [and_assoc', and_left_comm]
+  simp [and_assoc, and_left_comm]
 #align set.prod_inter_prod Set.prod_inter_prod
 -/
 
@@ -405,7 +405,7 @@ theorem mk_preimage_prod_right_fn_eq_if [DecidablePred (· ∈ s)] (g : δ → �
 #print Set.preimage_swap_prod /-
 @[simp]
 theorem preimage_swap_prod (s : Set α) (t : Set β) : Prod.swap ⁻¹' s ×ˢ t = t ×ˢ s := by ext ⟨x, y⟩;
-  simp [and_comm']
+  simp [and_comm]
 #align set.preimage_swap_prod Set.preimage_swap_prod
 -/
 

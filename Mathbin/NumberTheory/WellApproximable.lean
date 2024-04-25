@@ -285,7 +285,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
     refine' funext fun n => propext <| iff_self_and.mpr fun hn => _
     -- `tauto` can finish from here but unfortunately it's very slow.
     simp only [(em (p ∣ n)).symm, (em (p * p ∣ n)).symm, or_and_left, or_true_iff, true_and_iff,
-      or_assoc']
+      or_assoc]
   have hE₂ : ∀ p : Nat.Primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∧ B p =ᵐ[μ] (∅ : Set 𝕊) → E =ᵐ[μ] C p :=
     by
     rintro p ⟨hA, hB⟩

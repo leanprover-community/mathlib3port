@@ -1055,7 +1055,7 @@ theorem perm_replicate_append_replicate {l : List α} {a b : α} {m n : ℕ} (h 
   suffices l ⊆ [a, b] ↔ ∀ c, c ≠ b → c ≠ a → c ∉ l by
     simp (config := { contextual := true }) [count_replicate, h, h.symm, this]
   simp_rw [Ne.def, ← and_imp, ← not_or, Decidable.not_imp_not, subset_def, mem_cons_iff,
-    not_mem_nil, or_false_iff, or_comm']
+    not_mem_nil, or_false_iff, or_comm]
 #align list.perm_replicate_append_replicate List.perm_replicate_append_replicate
 -/
 

@@ -369,7 +369,7 @@ theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s �
 #print inseparable_iff_mem_closure /-
 theorem inseparable_iff_mem_closure :
     (x ~ y) ↔ x ∈ closure ({y} : Set X) ∧ y ∈ closure ({x} : Set X) :=
-  inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm']
+  inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm]
 #align inseparable_iff_mem_closure inseparable_iff_mem_closure
 -/
 

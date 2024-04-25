@@ -95,7 +95,7 @@ theorem balancedCore_empty : balancedCore 𝕜 (∅ : Set E) = ∅ :=
 
 #print mem_balancedCore_iff /-
 theorem mem_balancedCore_iff : x ∈ balancedCore 𝕜 s ↔ ∃ t, Balanced 𝕜 t ∧ t ⊆ s ∧ x ∈ t := by
-  simp_rw [balancedCore, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc']
+  simp_rw [balancedCore, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc]
 #align mem_balanced_core_iff mem_balancedCore_iff
 -/
 

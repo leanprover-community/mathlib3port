@@ -186,7 +186,7 @@ theorem sigma_union : (s.Sigma fun i => t₁ i ∪ t₂ i) = s.Sigma t₁ ∪ s.
 
 #print Set.sigma_inter_sigma /-
 theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
-  ext ⟨x, y⟩; simp [and_assoc', and_left_comm]
+  ext ⟨x, y⟩; simp [and_assoc, and_left_comm]
 #align set.sigma_inter_sigma Set.sigma_inter_sigma
 -/
 

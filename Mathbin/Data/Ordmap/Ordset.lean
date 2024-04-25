@@ -601,7 +601,7 @@ theorem all_node' {P l x r} : @All α P (node' l x r) ↔ All P l ∧ P x ∧ Al
 #print Ordnode.all_node3L /-
 theorem all_node3L {P l x m y r} :
     @All α P (node3L l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r := by
-  simp [node3_l, all_node', and_assoc']
+  simp [node3_l, all_node', and_assoc]
 #align ordnode.all_node3_l Ordnode.all_node3L
 -/
 
@@ -615,14 +615,14 @@ theorem all_node3R {P l x m y r} :
 #print Ordnode.all_node4L /-
 theorem all_node4L {P l x m y r} :
     @All α P (node4L l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r := by
-  cases m <;> simp [node4_l, all_node', all, all_node3_l, and_assoc']
+  cases m <;> simp [node4_l, all_node', all, all_node3_l, and_assoc]
 #align ordnode.all_node4_l Ordnode.all_node4L
 -/
 
 #print Ordnode.all_node4R /-
 theorem all_node4R {P l x m y r} :
     @All α P (node4R l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r := by
-  cases m <;> simp [node4_r, all_node', all, all_node3_r, and_assoc']
+  cases m <;> simp [node4_r, all_node', all, all_node3_r, and_assoc]
 #align ordnode.all_node4_r Ordnode.all_node4R
 -/
 
@@ -634,7 +634,7 @@ theorem all_rotateL {P l x r} : @All α P (rotateL l x r) ↔ All P l ∧ P x �
 
 #print Ordnode.all_rotateR /-
 theorem all_rotateR {P l x r} : @All α P (rotateR l x r) ↔ All P l ∧ P x ∧ All P r := by
-  rw [← all_dual, dual_rotate_r, all_rotate_l] <;> simp [all_dual, and_comm', and_left_comm]
+  rw [← all_dual, dual_rotate_r, all_rotate_l] <;> simp [all_dual, and_comm, and_left_comm]
 #align ordnode.all_rotate_r Ordnode.all_rotateR
 -/
 
@@ -673,7 +673,7 @@ theorem toList_node (s l x r) : toList (@node α s l x r) = toList l ++ x :: toL
 
 #print Ordnode.emem_iff_mem_toList /-
 theorem emem_iff_mem_toList {x : α} {t} : Emem x t ↔ x ∈ toList t := by
-  unfold emem <;> induction t <;> simp [any, *, or_assoc']
+  unfold emem <;> induction t <;> simp [any, *, or_assoc]
 #align ordnode.emem_iff_mem_to_list Ordnode.emem_iff_mem_toList
 -/
 

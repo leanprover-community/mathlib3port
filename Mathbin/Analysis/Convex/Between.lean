@@ -355,7 +355,7 @@ alias ⟨Wbtw.symm, _⟩ := wbtw_comm
 
 #print sbtw_comm /-
 theorem sbtw_comm {x y z : P} : Sbtw R x y z ↔ Sbtw R z y x := by
-  rw [Sbtw, Sbtw, wbtw_comm, ← and_assoc', ← and_assoc', and_right_comm]
+  rw [Sbtw, Sbtw, wbtw_comm, ← and_assoc, ← and_assoc, and_right_comm]
 #align sbtw_comm sbtw_comm
 -/
 
@@ -543,7 +543,7 @@ theorem wbtw_lineMap_iff [NoZeroSMulDivisors R V] {x y : P} {r : R} :
 theorem sbtw_lineMap_iff [NoZeroSMulDivisors R V] {x y : P} {r : R} :
     Sbtw R x (lineMap x y r) y ↔ x ≠ y ∧ r ∈ Set.Ioo (0 : R) 1 :=
   by
-  rw [sbtw_iff_mem_image_Ioo_and_ne, and_comm', and_congr_right]
+  rw [sbtw_iff_mem_image_Ioo_and_ne, and_comm, and_congr_right]
   intro hxy
   rw [(line_map_injective R hxy).mem_set_image]
 #align sbtw_line_map_iff sbtw_lineMap_iff
@@ -1095,7 +1095,7 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
   rcases lt_trichotomy ty 0 with (hy0 | rfl | hy0)
   · rcases lt_trichotomy tz 0 with (hz0 | rfl | hz0)
     · nth_rw 2 [wbtw_comm]
-      rw [← or_assoc']
+      rw [← or_assoc]
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonpos _ _ hy0.le hz0.le)
     · simp
     · exact Or.inr (Or.inr (wbtw_smul_vadd_smul_vadd_of_nonneg_of_nonpos _ _ hz0.le hy0.le))
@@ -1104,7 +1104,7 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
     · refine' Or.inr (Or.inr (wbtw_smul_vadd_smul_vadd_of_nonpos_of_nonneg _ _ hz0.le hy0.le))
     · simp
     · nth_rw 2 [wbtw_comm]
-      rw [← or_assoc']
+      rw [← or_assoc]
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonneg _ _ hy0.le hz0.le)
 #align collinear.wbtw_or_wbtw_or_wbtw Collinear.wbtw_or_wbtw_or_wbtw
 -/

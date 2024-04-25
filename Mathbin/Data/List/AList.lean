@@ -615,7 +615,7 @@ theorem insert_union {a} {b : β a} {s₁ s₂ : AList β} : insert a b (s₁ �
 #print AList.union_assoc /-
 theorem union_assoc {s₁ s₂ s₃ : AList β} : (s₁ ∪ s₂ ∪ s₃).entries ~ (s₁ ∪ (s₂ ∪ s₃)).entries :=
   lookup_ext (AList.nodupKeys _) (AList.nodupKeys _)
-    (by simp [Decidable.not_or_iff_and_not, or_assoc', and_or_left, and_assoc'])
+    (by simp [Decidable.not_or_iff_and_not, or_assoc, and_or_left, and_assoc])
 #align alist.union_assoc AList.union_assoc
 -/
 

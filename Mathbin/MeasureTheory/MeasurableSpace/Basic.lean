@@ -967,7 +967,7 @@ theorem measurable_from_prod_countable [Countable β] [MeasurableSingletonClass 
   have : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s) ×ˢ ({y} : Set β) :=
     by
     ext1 ⟨x, y⟩
-    simp [and_assoc', and_left_comm]
+    simp [and_assoc, and_left_comm]
   rw [this]
   exact MeasurableSet.iUnion fun y => (hf y hs).Prod (measurable_set_singleton y)
 #align measurable_from_prod_countable measurable_from_prod_countable

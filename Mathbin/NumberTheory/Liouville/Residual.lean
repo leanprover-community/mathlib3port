@@ -32,7 +32,7 @@ theorem setOf_liouville_eq_iInter_iUnion :
   by
   ext x
   simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff,
-    mem_singleton_iff, mem_ball, Real.dist_eq, and_comm']
+    mem_singleton_iff, mem_ball, Real.dist_eq, and_comm]
 #align set_of_liouville_eq_Inter_Union setOf_liouville_eq_iInter_iUnion
 -/
 

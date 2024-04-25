@@ -479,7 +479,7 @@ theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s
 #print Filter.generate_neBot_iff /-
 theorem generate_neBot_iff {s : Set (Set α)} :
     NeBot (generate s) ↔ ∀ (t) (_ : t ⊆ s), t.Finite → (⋂₀ t).Nonempty :=
-  (hasBasis_generate s).neBot_iff.trans <| by simp only [← and_imp, and_comm']
+  (hasBasis_generate s).neBot_iff.trans <| by simp only [← and_imp, and_comm]
 #align filter.generate_ne_bot_iff Filter.generate_neBot_iff
 -/
 
@@ -499,7 +499,7 @@ theorem asBasis_filter (f : Filter α) : f.asBasis.filterₓ = f := by
 theorem hasBasis_self {l : Filter α} {P : Set α → Prop} :
     HasBasis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t ∈ l, ∃ r ∈ l, P r ∧ r ⊆ t :=
   by
-  simp only [has_basis_iff, exists_prop, id, and_assoc']
+  simp only [has_basis_iff, exists_prop, id, and_assoc]
   exact
     forall_congr' fun s =>
       ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
@@ -546,7 +546,7 @@ theorem HasBasis.restrict_subset (h : l.HasBasis p s) {V : Set α} (hV : V ∈ l
 #print Filter.HasBasis.hasBasis_self_subset /-
 theorem HasBasis.hasBasis_self_subset {p : Set α → Prop} (h : l.HasBasis (fun s => s ∈ l ∧ p s) id)
     {V : Set α} (hV : V ∈ l) : l.HasBasis (fun s => s ∈ l ∧ p s ∧ s ⊆ V) id := by
-  simpa only [and_assoc'] using h.restrict_subset hV
+  simpa only [and_assoc] using h.restrict_subset hV
 #align filter.has_basis.has_basis_self_subset Filter.HasBasis.hasBasis_self_subset
 -/
 
@@ -714,8 +714,8 @@ theorem HasBasis.sup' (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
   ⟨by
     intro t
     simp only [mem_sup, hl.mem_iff, hl'.mem_iff, PProd.exists, union_subset_iff, exists_prop,
-      and_assoc', exists_and_left]
-    simp only [← and_assoc', exists_and_right, and_comm']⟩
+      and_assoc, exists_and_left]
+    simp only [← and_assoc, exists_and_right, and_comm]⟩
 #align filter.has_basis.sup' Filter.HasBasis.sup'
 -/
 
@@ -914,7 +914,7 @@ theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V 
 #print Filter.inf_neBot_iff_frequently_left /-
 theorem inf_neBot_iff_frequently_left {f g : Filter α} :
     NeBot (f ⊓ g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in f, p x) → ∃ᶠ x in g, p x := by
-  simpa only [inf_ne_bot_iff, frequently_iff, exists_prop, and_comm']
+  simpa only [inf_ne_bot_iff, frequently_iff, exists_prop, and_comm]
 #align filter.inf_ne_bot_iff_frequently_left Filter.inf_neBot_iff_frequently_left
 -/
 

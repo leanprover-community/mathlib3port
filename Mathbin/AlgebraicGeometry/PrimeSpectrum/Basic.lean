@@ -8,7 +8,7 @@ import LinearAlgebra.Finsupp
 import RingTheory.Ideal.Over
 import RingTheory.Ideal.Prod
 import RingTheory.Localization.Away.Basic
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 import Topology.Sets.Closeds
 import Topology.Sober
 

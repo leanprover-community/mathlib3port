@@ -246,7 +246,7 @@ theorem classifier_isSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :
       apply congr_arg Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
     have MSNS : M ⊓ S = N ⊓ S := by
       ext Z g
-      rw [sieve.inter_apply, sieve.inter_apply, and_comm' (N g), and_comm']
+      rw [sieve.inter_apply, sieve.inter_apply, and_comm (N g), and_comm]
       apply and_congr_right
       intro hg
       rw [sieve.pullback_eq_top_iff_mem, sieve.pullback_eq_top_iff_mem, q g hg]

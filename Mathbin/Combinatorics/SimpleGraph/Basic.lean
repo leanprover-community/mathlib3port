@@ -382,7 +382,7 @@ instance : CompleteBooleanAlgebra (SimpleGraph V) :=
     le_inf := fun s G hG a b hab => ⟨fun H hH => hG _ hH hab, hab.Ne⟩
     inf_sup_le_iSup_inf := fun G s a b hab => by
       simpa only [exists_prop, Sup_adj, and_imp, forall_exists_index, Inf_adj, supr_adj, inf_adj, ←
-        exists_and_right, exists_and_left, and_assoc', and_self_right] using hab
+        exists_and_right, exists_and_left, and_assoc, and_self_right] using hab
     iInf_sup_le_sup_inf := fun G s a b hab =>
       by
       simp only [sup_adj, Inf_adj, infi_adj] at hab ⊢
@@ -1250,7 +1250,7 @@ theorem card_neighborSet_union_compl_neighborSet [Fintype V] (G : SimpleGraph V)
 
 #print SimpleGraph.neighborSet_compl /-
 theorem neighborSet_compl (G : SimpleGraph V) (v : V) : Gᶜ.neighborSet v = G.neighborSet vᶜ \ {v} :=
-  by ext w; simp [and_comm', eq_comm]
+  by ext w; simp [and_comm, eq_comm]
 #align simple_graph.neighbor_set_compl SimpleGraph.neighborSet_compl
 -/
 
@@ -1422,7 +1422,7 @@ theorem compl_eq_deleteEdges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSe
 #print SimpleGraph.deleteEdges_deleteEdges /-
 @[simp]
 theorem deleteEdges_deleteEdges (s s' : Set (Sym2 V)) :
-    (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') := by ext; simp [and_assoc', not_or]
+    (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') := by ext; simp [and_assoc, not_or]
 #align simple_graph.delete_edges_delete_edges SimpleGraph.deleteEdges_deleteEdges
 -/
 

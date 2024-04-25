@@ -166,7 +166,7 @@ theorem not_subsingleton (α) [h : Nontrivial α] : ¬Subsingleton α :=
 #print subsingleton_or_nontrivial /-
 /-- A type is either a subsingleton or nontrivial. -/
 theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α := by
-  rw [← not_nontrivial_iff_subsingleton, or_comm']; exact Classical.em _
+  rw [← not_nontrivial_iff_subsingleton, or_comm]; exact Classical.em _
 #align subsingleton_or_nontrivial subsingleton_or_nontrivial
 -/
 

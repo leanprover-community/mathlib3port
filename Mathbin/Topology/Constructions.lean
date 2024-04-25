@@ -892,7 +892,7 @@ theorem isOpen_prod_iff {s : Set (α × β)} :
   rw [isOpen_iff_nhds]
   simp_rw [le_principal_iff, Prod.forall,
     ((nhds_basis_opens _).prod_nhds (nhds_basis_opens _)).mem_iff, Prod.exists, exists_prop]
-  simp only [and_assoc', and_left_comm]
+  simp only [and_assoc, and_left_comm]
 #align is_open_prod_iff isOpen_prod_iff
 -/
 

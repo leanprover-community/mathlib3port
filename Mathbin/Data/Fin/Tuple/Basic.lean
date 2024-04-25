@@ -325,7 +325,7 @@ theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Fin n, α i.succ}
       s x₀ y₀ ∨ x₀ = y₀ ∧ Pi.Lex (· < ·) (fun i : Fin n => @s i.succ) x y :=
   by
   simp_rw [Pi.Lex, Fin.exists_fin_succ, Fin.cons_succ, Fin.cons_zero, Fin.forall_fin_succ]
-  simp [and_assoc', exists_and_left]
+  simp [and_assoc, exists_and_left]
 #align fin.pi_lex_lt_cons_cons Fin.pi_lex_lt_cons_cons
 -/
 

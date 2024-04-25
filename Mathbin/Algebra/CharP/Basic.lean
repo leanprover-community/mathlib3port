@@ -6,7 +6,7 @@ Authors: Kenny Lau, Joey van Langen, Casper Putz
 import Data.Int.ModEq
 import Data.Nat.Multiplicity
 import GroupTheory.OrderOfElement
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 
 #align_import algebra.char_p.basic from "leanprover-community/mathlib"@"47a1a73351de8dd6c8d3d32b569c8e434b03ca47"
 

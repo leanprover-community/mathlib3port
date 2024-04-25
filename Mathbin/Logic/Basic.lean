@@ -787,7 +787,7 @@ theorem xor_false : Xor' False = id :=
 
 #print xor_comm /-
 theorem xor_comm (a b) : Xor' a b ↔ Xor' b a :=
-  or_comm' _ _
+  or_comm _ _
 #align xor_comm xor_comm
 -/
 
@@ -813,7 +813,7 @@ theorem xor_not_right : Xor' a ¬b ↔ (a ↔ b) := by by_cases a <;> simp [*]
 -/
 
 #print xor_not_not /-
-theorem xor_not_not : Xor' (¬a) ¬b ↔ Xor' a b := by simp [Xor', or_comm', and_comm']
+theorem xor_not_not : Xor' (¬a) ¬b ↔ Xor' a b := by simp [Xor', or_comm, and_comm]
 #align xor_not_not xor_not_not
 -/
 
@@ -877,7 +877,7 @@ theorem and_right_comm : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b := by simp only [an
 
 #print and_and_and_comm /-
 theorem and_and_and_comm (a b c d : Prop) : (a ∧ b) ∧ c ∧ d ↔ (a ∧ c) ∧ b ∧ d := by
-  rw [← and_assoc', @and_right_comm a, and_assoc']
+  rw [← and_assoc, @and_right_comm a, and_assoc]
 #align and_and_and_comm and_and_and_comm
 -/
 
@@ -960,7 +960,7 @@ theorem iff_self_and {p q : Prop} : (p ↔ p ∧ q) ↔ p → q := by rw [@Iff.c
 
 #print iff_and_self /-
 @[simp]
-theorem iff_and_self {p q : Prop} : (p ↔ q ∧ p) ↔ p → q := by rw [and_comm', iff_self_and]
+theorem iff_and_self {p q : Prop} : (p ↔ q ∧ p) ↔ p → q := by rw [and_comm, iff_self_and]
 #align iff_and_self iff_and_self
 -/
 
@@ -1010,13 +1010,13 @@ theorem or_congr_right (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
 #align or_congr_right' or_congr_rightₓ
 
 #print or_right_comm /-
-theorem or_right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by rw [or_assoc', or_assoc', or_comm' b]
+theorem or_right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by rw [or_assoc, or_assoc, or_comm b]
 #align or.right_comm or_right_comm
 -/
 
 #print or_or_or_comm /-
 theorem or_or_or_comm (a b c d : Prop) : (a ∨ b) ∨ c ∨ d ↔ (a ∨ c) ∨ b ∨ d := by
-  rw [← or_assoc', @or_right_comm a, or_assoc']
+  rw [← or_assoc, @or_right_comm a, or_assoc]
 #align or_or_or_comm or_or_or_comm
 -/
 
@@ -1206,7 +1206,7 @@ theorem or_iff_left_iff_imp : (a ∨ b ↔ a) ↔ b → a :=
 
 #print or_iff_right_iff_imp /-
 @[simp]
-theorem or_iff_right_iff_imp : (a ∨ b ↔ b) ↔ a → b := by rw [or_comm', or_iff_left_iff_imp]
+theorem or_iff_right_iff_imp : (a ∨ b ↔ b) ↔ a → b := by rw [or_comm, or_iff_left_iff_imp]
 #align or_iff_right_iff_imp or_iff_right_iff_imp
 -/
 
@@ -2213,7 +2213,7 @@ theorem exists_and_left {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q 
 #print exists_and_right /-
 @[simp]
 theorem exists_and_right {q : Prop} {p : α → Prop} : (∃ x, p x ∧ q) ↔ (∃ x, p x) ∧ q := by
-  simp [and_comm']
+  simp [and_comm]
 #align exists_and_distrib_right exists_and_right
 -/
 
@@ -2465,7 +2465,7 @@ theorem forall_or_left {q : Prop} {p : α → Prop} : (∀ x, q ∨ p x) ↔ q �
 #print Decidable.forall_or_right /-
 -- See Note [decidable namespace]
 protected theorem Decidable.forall_or_right {q : Prop} {p : α → Prop} [Decidable q] :
-    (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q := by simp [or_comm', Decidable.forall_or_left]
+    (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q := by simp [or_comm, Decidable.forall_or_left]
 #align decidable.forall_or_distrib_right Decidable.forall_or_right
 -/
 

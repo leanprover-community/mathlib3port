@@ -835,7 +835,7 @@ theorem lcm_dvd_iff [GCDMonoid α] {a b c : α} : lcm a b ∣ c ↔ a ∣ c ∧ 
     have h : gcd a b ≠ 0 := fun H => h1 ((gcd_eq_zero_iff _ _).1 H).1
     rw [← mul_dvd_mul_iff_left h, (gcd_mul_lcm a b).dvd_iff_dvd_left, ←
       (gcd_mul_right' c a b).dvd_iff_dvd_right, dvd_gcd_iff, mul_comm b c, mul_dvd_mul_iff_left h1,
-      mul_dvd_mul_iff_right h2, and_comm']
+      mul_dvd_mul_iff_right h2, and_comm]
 #align lcm_dvd_iff lcm_dvd_iff
 -/
 

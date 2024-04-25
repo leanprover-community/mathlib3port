@@ -203,7 +203,7 @@ theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert 
 theorem mem_union_iff : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
   induction l₁ <;>
     simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons_iff,
-      or_assoc', *]
+      or_assoc, *]
 #align list.mem_union List.mem_union_iff
 -/
 

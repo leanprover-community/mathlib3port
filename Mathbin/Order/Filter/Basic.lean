@@ -1154,7 +1154,7 @@ instance : DistribLattice (Filter α) :=
   { Filter.completeLattice with
     le_sup_inf := by
       intro x y z s
-      simp only [and_assoc', mem_inf_iff, mem_sup, exists_prop, exists_imp, and_imp]
+      simp only [and_assoc, mem_inf_iff, mem_sup, exists_prop, exists_imp, and_imp]
       rintro hs t₁ ht₁ t₂ ht₂ rfl
       exact
         ⟨t₁, x.sets_of_superset hs (inter_subset_left t₁ t₂), ht₁, t₂,
@@ -1582,7 +1582,7 @@ theorem eventually_or_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} 
 @[simp]
 theorem eventually_or_distrib_right {f : Filter α} {p : α → Prop} {q : Prop} :
     (∀ᶠ x in f, p x ∨ q) ↔ (∀ᶠ x in f, p x) ∨ q := by
-  simp only [or_comm' _ q, eventually_or_distrib_left]
+  simp only [or_comm _ q, eventually_or_distrib_left]
 #align filter.eventually_or_distrib_right Filter.eventually_or_distrib_right
 -/
 
@@ -1745,7 +1745,7 @@ theorem frequently_iff_forall_eventually_exists_and {p : α → Prop} {f : Filte
 theorem frequently_iff {f : Filter α} {P : α → Prop} :
     (∃ᶠ x in f, P x) ↔ ∀ {U}, U ∈ f → ∃ x ∈ U, P x :=
   by
-  simp only [frequently_iff_forall_eventually_exists_and, exists_prop, and_comm' (P _)]
+  simp only [frequently_iff_forall_eventually_exists_and, exists_prop, and_comm (P _)]
   rfl
 #align filter.frequently_iff Filter.frequently_iff
 -/
@@ -1844,7 +1844,7 @@ theorem frequently_and_distrib_left {f : Filter α} {p : Prop} {q : α → Prop}
 @[simp]
 theorem frequently_and_distrib_right {f : Filter α} {p : α → Prop} {q : Prop} :
     (∃ᶠ x in f, p x ∧ q) ↔ (∃ᶠ x in f, p x) ∧ q := by
-  simp only [and_comm' _ q, frequently_and_distrib_left]
+  simp only [and_comm _ q, frequently_and_distrib_left]
 #align filter.frequently_and_distrib_right Filter.frequently_and_distrib_right
 -/
 

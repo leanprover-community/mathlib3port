@@ -131,7 +131,7 @@ theorem forall₂_and_left {p : α → Prop} :
     simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff,
       true_and_iff]
   | a :: l, u => by
-    simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assoc', and_comm',
+    simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assoc, and_comm,
       and_left_comm, exists_and_distrib_left.symm]
 #align list.forall₂_and_left List.forall₂_and_left
 -/

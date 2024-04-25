@@ -495,7 +495,7 @@ noncomputable instance instField [Fact (Irreducible f)] : Field (AdjoinRoot f) :
     qsmul := (· • ·)
     qsmul_eq_mul' := fun a x =>
       AdjoinRoot.induction_on _ x fun p => by
-        rw [smul_mk, of, RingHom.comp_apply, ← (mk f).map_hMul, Polynomial.rat_smul_eq_C_mul] }
+        rw [smul_mk, of, RingHom.comp_apply, ← (mk f).map_hMul, Polynomial.qsmul_eq_C_mul] }
 #align adjoin_root.field AdjoinRoot.instField
 -/
 

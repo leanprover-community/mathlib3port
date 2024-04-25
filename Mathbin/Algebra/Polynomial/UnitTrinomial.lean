@@ -357,7 +357,7 @@ theorem irreducible_aux3 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
   · exact irreducible_aux2 hkm hmn hkm' hmn' u v w hp hq h
   · rw [← mirror_inj, trinomial_mirror hkm' hmn' w.ne_zero u.ne_zero] at hq
     rw [mul_comm q, ← q.mirror_mirror, q.mirror.mirror_mirror] at h
-    rw [← mirror_inj, or_comm', ← mirror_eq_iff]
+    rw [← mirror_inj, or_comm, ← mirror_eq_iff]
     exact
       irreducible_aux2 hkm hmn (lt_add_of_pos_left k (tsub_pos_of_lt hmn'))
         (lt_tsub_iff_right.mp ((tsub_lt_tsub_iff_left_of_le hmn'.le).mpr hkm')) u v w hp hq h

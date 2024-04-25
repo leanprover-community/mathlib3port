@@ -8,7 +8,7 @@ import RingTheory.Localization.AtPrime
 import RingTheory.Localization.Away.Basic
 import RingTheory.Localization.Integer
 import RingTheory.Localization.Submodule
-import RingTheory.Nilpotent
+import RingTheory.Nilpotent.Defs
 import RingTheory.RingHomProperties
 
 #align_import ring_theory.local_properties from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"

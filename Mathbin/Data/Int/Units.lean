@@ -59,7 +59,7 @@ theorem isUnit_eq_or_eq_neg {a b : ℤ} (ha : IsUnit a) (hb : IsUnit b) : a = b 
   by
   rcases is_unit_eq_one_or hb with (rfl | rfl)
   · exact is_unit_eq_one_or ha
-  · rwa [or_comm', neg_neg, ← is_unit_iff]
+  · rwa [or_comm, neg_neg, ← is_unit_iff]
 #align int.is_unit_eq_or_eq_neg Int.isUnit_eq_or_eq_neg
 -/
 
