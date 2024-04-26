@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 -/
 import Logic.Function.Iterate
-import Data.Set.Intervals.ProjIcc
+import Order.Interval.Set.ProjIcc
 import Topology.Algebra.Order.Field
 import Topology.MetricSpace.Basic
 import Topology.Bornology.Hom

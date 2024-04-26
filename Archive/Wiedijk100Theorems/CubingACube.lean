@@ -5,7 +5,7 @@ Authors: Floris van Doorn
 -/
 import Data.Real.Basic
 import Data.Set.Finite
-import Data.Set.Intervals.Disjoint
+import Order.Interval.Set.Disjoint
 
 #align_import wiedijk_100_theorems.cubing_a_cube from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

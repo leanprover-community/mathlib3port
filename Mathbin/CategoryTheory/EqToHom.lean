@@ -225,10 +225,8 @@ theorem congr_inv_of_congr_hom (F G : C ⥤ D) {X Y : C} (e : X ≅ Y) (hX : F.o
 #align category_theory.functor.congr_inv_of_congr_hom CategoryTheory.Functor.congr_inv_of_congr_hom
 -/
 
-#print CategoryTheory.Functor.congr_map /-
 theorem congr_map (F : C ⥤ D) {X Y : C} {f g : X ⟶ Y} (h : f = g) : F.map f = F.map g := by rw [h]
 #align category_theory.functor.congr_map CategoryTheory.Functor.congr_map
--/
 
 section HEq
 

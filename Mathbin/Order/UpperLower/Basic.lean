@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 -/
 import Data.SetLike.Basic
-import Data.Set.Intervals.OrdConnected
-import Data.Set.Intervals.OrderIso
+import Order.Interval.Set.OrdConnected
+import Order.Interval.Set.OrderIso
 import Tactic.ByContra
 
 #align_import order.upper_lower.basic from "leanprover-community/mathlib"@"c0c52abb75074ed8b73a948341f50521fbf43b4c"

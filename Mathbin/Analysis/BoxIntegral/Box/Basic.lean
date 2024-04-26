@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Data.Set.Intervals.Monotone
+import Order.Interval.Set.Monotone
 import Topology.Order.MonotoneConvergence
 import Topology.MetricSpace.Basic
 

@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
 -/
-import Data.Set.Intervals.Basic
+import Order.Interval.Set.Basic
 import Data.Set.Pairwise.Basic
 import Algebra.Order.Group.Abs
 import Algebra.GroupPower.Lemmas

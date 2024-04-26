@@ -50,7 +50,7 @@ unsafe def inhabited_instance : derive_handler :=
 end Tactic
 
 deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency,
-  Tactic.ApplyCfg, SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config,
+  Tactic.ApplyCfg, SmtPreConfig, EmatchConfig, Mathlib.Tactic.CC.CCConfig, SmtConfig, Rsimp.Config,
   Tactic.DunfoldConfig, Tactic.DsimpConfig, Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig,
   Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg, Interactive.Loc, Tactic.UnfoldConfig,
   ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos, Environment.ProjectionInfo,

@@ -749,9 +749,9 @@ theorem length_cyclicPermutations_of_ne_nil (l : List α) (h : l ≠ []) :
 #align list.length_cyclic_permutations_of_ne_nil List.length_cyclicPermutations_of_ne_nil
 -/
 
-#print List.nthLe_cyclicPermutations /-
+#print List.get_cyclicPermutations /-
 @[simp]
-theorem nthLe_cyclicPermutations (l : List α) (n : ℕ) (hn : n < length (cyclicPermutations l)) :
+theorem get_cyclicPermutations (l : List α) (n : ℕ) (hn : n < length (cyclicPermutations l)) :
     nthLe (cyclicPermutations l) n hn = l.rotate n :=
   by
   obtain rfl | h := eq_or_ne l []
@@ -759,7 +759,7 @@ theorem nthLe_cyclicPermutations (l : List α) (n : ℕ) (hn : n < length (cycli
   · rw [length_cyclic_permutations_of_ne_nil _ h] at hn
     simp [init_eq_take, cyclic_permutations_of_ne_nil _ h, nth_le_take',
       rotate_eq_drop_append_take hn.le]
-#align list.nth_le_cyclic_permutations List.nthLe_cyclicPermutations
+#align list.nth_le_cyclic_permutations List.get_cyclicPermutations
 -/
 
 #print List.mem_cyclicPermutations_self /-

@@ -1730,16 +1730,16 @@ theorem sublist_append_of_sublist_right {l l₁ l₂ : List α} (s : l <+ l₂) 
 #align list.sublist_append_of_sublist_right List.sublist_append_of_sublist_right
 -/
 
-#print List.sublist_of_cons_sublist_cons /-
-theorem sublist_of_cons_sublist_cons {l₁ l₂ : List α} : ∀ {a : α}, a :: l₁ <+ a :: l₂ → l₁ <+ l₂
+#print List.Sublist.of_cons_cons /-
+theorem List.Sublist.of_cons_cons {l₁ l₂ : List α} : ∀ {a : α}, a :: l₁ <+ a :: l₂ → l₁ <+ l₂
   | _, sublist.cons _ _ a s => sublist_of_cons_sublist s
   | _, sublist.cons2 _ _ a s => s
-#align list.sublist_of_cons_sublist_cons List.sublist_of_cons_sublist_cons
+#align list.sublist_of_cons_sublist_cons List.Sublist.of_cons_cons
 -/
 
 #print List.cons_sublist_cons_iff /-
 theorem cons_sublist_cons_iff {l₁ l₂ : List α} {a : α} : a :: l₁ <+ a :: l₂ ↔ l₁ <+ l₂ :=
-  ⟨sublist_of_cons_sublist_cons, Sublist.cons_cons _⟩
+  ⟨List.Sublist.of_cons_cons, Sublist.cons_cons _⟩
 #align list.cons_sublist_cons_iff List.cons_sublist_cons_iff
 -/
 
@@ -5663,21 +5663,21 @@ theorem enum_length : ∀ l : List α, length (enum l) = length l :=
 #align list.length_enum List.enum_length
 -/
 
-#print List.enumFrom_get? /-
+#print List.get?_enumFrom /-
 @[simp]
-theorem enumFrom_get? :
+theorem get?_enumFrom :
     ∀ (n) (l : List α) (m), get? (enumFrom n l) m = (fun a => (n + m, a)) <$> get? l m
   | n, [], m => rfl
   | n, a :: l, 0 => rfl
   | n, a :: l, m + 1 => (enum_from_nth (n + 1) l m).trans <| by rw [add_right_comm] <;> rfl
-#align list.enum_from_nth List.enumFrom_get?
+#align list.enum_from_nth List.get?_enumFrom
 -/
 
-#print List.enum_get? /-
+#print List.get?_enum /-
 @[simp]
-theorem enum_get? : ∀ (l : List α) (n), get? (enum l) n = (fun a => (n, a)) <$> get? l n := by
+theorem get?_enum : ∀ (l : List α) (n), get? (enum l) n = (fun a => (n, a)) <$> get? l n := by
   simp only [enum, enum_from_nth, zero_add] <;> intros <;> rfl
-#align list.enum_nth List.enum_get?
+#align list.enum_nth List.get?_enum
 -/
 
 #print List.enumFrom_map_snd /-
@@ -6317,15 +6317,15 @@ theorem ilast'_mem : ∀ a l, @ilast' α a l ∈ a :: l
 #align list.ilast'_mem List.ilast'_mem
 -/
 
-#print List.nthLe_attach /-
+#print List.get_attach /-
 @[simp]
-theorem nthLe_attach (L : List α) (i) (H : i < L.attach.length) :
+theorem get_attach (L : List α) (i) (H : i < L.attach.length) :
     (L.attach.nthLe i H).1 = L.nthLe i (length_attach L ▸ H) :=
   calc
     (L.attach.nthLe i H).1 = (L.attach.map Subtype.val).nthLe i (by simpa using H) := by
       rw [nth_le_map']
     _ = L.nthLe i _ := by congr <;> apply attach_map_val
-#align list.nth_le_attach List.nthLe_attach
+#align list.nth_le_attach List.get_attach
 -/
 
 #print List.mem_map_swap /-

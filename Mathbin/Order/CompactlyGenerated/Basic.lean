@@ -9,7 +9,7 @@ import Order.RelIso.Set
 import Order.SupIndep
 import Order.Zorn
 import Data.Finset.Order
-import Data.Set.Intervals.OrderIso
+import Order.Interval.Set.OrderIso
 import Data.Finite.Set
 import Tactic.Tfae
 

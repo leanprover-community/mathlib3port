@@ -5,7 +5,7 @@ Authors: Yaël Dillies
 -/
 import Data.Finset.Sum
 import Data.Sum.Order
-import Order.LocallyFinite
+import Order.Interval.Finset.Defs
 
 #align_import data.sum.interval from "leanprover-community/mathlib"@"48a058d7e39a80ed56858505719a0b2197900999"
 

@@ -6,7 +6,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 import Algebra.Order.Ring.Abs
 import Algebra.Order.WithZero
 import Algebra.GroupPower.Ring
-import Data.Set.Intervals.Basic
+import Order.Interval.Set.Basic
 
 #align_import algebra.group_power.order from "leanprover-community/mathlib"@"00f91228655eecdcd3ac97a7fd8dbcb139fe990a"
 

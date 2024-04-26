@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel
 -/
 import Order.Bounds.Basic
 import Order.WellFounded
-import Data.Set.Intervals.Basic
+import Order.Interval.Set.Basic
 import Data.Set.Lattice
 
 #align_import order.conditionally_complete_lattice.basic from "leanprover-community/mathlib"@"29cb56a7b35f72758b05a30490e1f10bd62c35c1"

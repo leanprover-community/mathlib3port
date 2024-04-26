@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Data.Set.Intervals.Basic
+import Order.Interval.Set.Basic
 
 #align_import data.set.intervals.with_bot_top from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

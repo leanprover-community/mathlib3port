@@ -5,7 +5,7 @@ Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
 -/
 import Data.Fin.Basic
 import Data.Pi.Lex
-import Data.Set.Intervals.Basic
+import Order.Interval.Set.Basic
 
 #align_import data.fin.tuple.basic from "leanprover-community/mathlib"@"ef997baa41b5c428be3fb50089a7139bf4ee886b"
 

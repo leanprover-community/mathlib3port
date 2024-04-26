@@ -8,7 +8,7 @@ import Topology.Algebra.Order.Archimedean
 import Topology.Compactness.Paracompact
 import Topology.Metrizable.Basic
 import Topology.EMetricSpace.Paracompact
-import Data.Set.Intervals.Monotone
+import Order.Interval.Set.Monotone
 
 #align_import sorgenfrey_line from "leanprover-community/mathlib"@"08b081ea92d80e3a41f899eea36ef6d56e0f1db0"
 

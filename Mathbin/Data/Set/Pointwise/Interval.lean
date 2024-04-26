@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 -/
-import Data.Set.Intervals.UnorderedInterval
-import Data.Set.Intervals.Monoid
+import Order.Interval.Set.UnorderedInterval
+import Algebra.Order.Interval.Set.Monoid
 import Data.Set.Pointwise.Basic
 import Algebra.Order.Field.Basic
 import Algebra.Order.Group.MinMax

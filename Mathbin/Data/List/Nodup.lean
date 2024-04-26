@@ -170,14 +170,14 @@ theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
 #align list.nodup.ne_singleton_iff List.Nodup.ne_singleton_iff
 -/
 
-#print List.nthLe_eq_of_ne_imp_not_nodup /-
-theorem nthLe_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length)
-    (hm : m < xs.length) (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs :=
+#print List.not_nodup_of_get_eq_of_ne /-
+theorem not_nodup_of_get_eq_of_ne (xs : List α) (n m : ℕ) (hn : n < xs.length) (hm : m < xs.length)
+    (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs :=
   by
   rw [nodup_iff_nth_le_inj]
   simp only [exists_prop, exists_and_right, Classical.not_forall]
   exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
-#align list.nth_le_eq_of_ne_imp_not_nodup List.nthLe_eq_of_ne_imp_not_nodup
+#align list.nth_le_eq_of_ne_imp_not_nodup List.not_nodup_of_get_eq_of_ne
 -/
 
 #print List.nthLe_index_of /-

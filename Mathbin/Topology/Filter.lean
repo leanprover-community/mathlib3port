@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Order.Filter.Lift
 import Topology.Separation
-import Data.Set.Intervals.Monotone
+import Order.Interval.Set.Monotone
 
 #align_import topology.filter from "leanprover-community/mathlib"@"b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6"
 

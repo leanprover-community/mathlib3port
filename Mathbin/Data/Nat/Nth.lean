@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 -/
 import Data.Nat.Count
-import Data.Set.Intervals.Monotone
+import Order.Interval.Set.Monotone
 import Order.OrderIsoNat
 
 #align_import data.nat.nth from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"

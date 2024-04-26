@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
 import Order.RelClasses
-import Data.Set.Intervals.Basic
+import Order.Interval.Set.Basic
 
 #align_import order.bounded from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

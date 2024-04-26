@@ -5,8 +5,8 @@ Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 -/
 import Algebra.Order.Field.Basic
 import Data.Finset.Preimage
-import Data.Set.Intervals.Disjoint
-import Data.Set.Intervals.OrderIso
+import Order.Interval.Set.Disjoint
+import Order.Interval.Set.OrderIso
 import Order.Filter.Bases
 import Algebra.Order.Group.MinMax
 

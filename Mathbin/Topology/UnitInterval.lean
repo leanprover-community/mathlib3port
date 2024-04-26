@@ -5,8 +5,8 @@ Authors: Patrick Massot, Scott Morrison
 -/
 import Topology.Instances.Real
 import Topology.Algebra.Field
-import Data.Set.Intervals.ProjIcc
-import Data.Set.Intervals.Instances
+import Order.Interval.Set.ProjIcc
+import Algebra.Order.Interval.Set.Instances
 
 #align_import topology.unit_interval from "leanprover-community/mathlib"@"69c6a5a12d8a2b159f20933e60115a4f2de62b58"
 

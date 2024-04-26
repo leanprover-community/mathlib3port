@@ -7,7 +7,7 @@ import Algebra.Order.BigOperators.Group.Finset
 import Algebra.Group.Prod
 import Data.Option.NAry
 import Data.Set.Pointwise.Basic
-import Order.Interval
+import Order.Interval.Basic
 import Tactic.Positivity
 
 #align_import algebra.order.interval from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"

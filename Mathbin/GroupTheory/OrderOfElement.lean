@@ -7,7 +7,7 @@ import Algebra.GCDMonoid.Finset
 import Algebra.GroupPower.IterateHom
 import Data.Int.ModEq
 import Data.Set.Pointwise.Basic
-import Data.Set.Intervals.Infinite
+import Order.Interval.Set.Infinite
 import Dynamics.PeriodicPts
 import GroupTheory.Index
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Data.Set.Intervals.Group
+import Algebra.Order.Interval.Set.Group
 import Analysis.Convex.Segment
 import LinearAlgebra.AffineSpace.FiniteDimensional
 import Tactic.FieldSimp

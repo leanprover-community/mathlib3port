@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Patrick Massot
 -/
-import Data.Set.Intervals.ProjIcc
+import Order.Interval.Set.ProjIcc
 import Topology.Order.Basic
 
 #align_import topology.algebra.order.proj_Icc from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
