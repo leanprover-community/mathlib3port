@@ -55,7 +55,7 @@ instance : IsScalarTower S S' I.Cotangent :=
   Submodule.Quotient.isScalarTower _ _
 
 instance [IsNoetherian R I] : IsNoetherian R I.Cotangent :=
-  Submodule.Quotient.isNoetherian _
+  isNoetherian_quotient _
 
 #print Ideal.toCotangent /-
 /-- The quotient map from `I` to `I ⧸ I ^ 2`. -/

@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import AlgebraicGeometry.AffineScheme
 import AlgebraicGeometry.Pullbacks
-import CategoryTheory.MorphismProperty
+import CategoryTheory.MorphismProperty.Basic
 
 #align_import algebraic_geometry.morphisms.basic from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 

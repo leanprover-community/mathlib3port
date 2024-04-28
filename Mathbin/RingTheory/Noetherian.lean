@@ -568,13 +568,13 @@ theorem isNoetherian_of_submodule_of_noetherian (R M) [Semiring R] [AddCommMonoi
 #align is_noetherian_of_submodule_of_noetherian isNoetherian_of_submodule_of_noetherian
 -/
 
-#print Submodule.Quotient.isNoetherian /-
-instance Submodule.Quotient.isNoetherian {R} [Ring R] {M} [AddCommGroup M] [Module R M]
-    (N : Submodule R M) [h : IsNoetherian R M] : IsNoetherian R (M ⧸ N) :=
+#print isNoetherian_quotient /-
+instance isNoetherian_quotient {R} [Ring R] {M} [AddCommGroup M] [Module R M] (N : Submodule R M)
+    [h : IsNoetherian R M] : IsNoetherian R (M ⧸ N) :=
   by
   rw [isNoetherian_iff_wellFounded] at h ⊢
   exact OrderEmbedding.wellFounded (Submodule.comapMkQOrderEmbedding N).dual h
-#align submodule.quotient.is_noetherian Submodule.Quotient.isNoetherian
+#align submodule.quotient.is_noetherian isNoetherian_quotient
 -/
 
 #print isNoetherian_of_tower /-

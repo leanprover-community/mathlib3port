@@ -34,21 +34,25 @@ variable [EuclideanDomain R]
 
 local infixl:50 " ≺ " => EuclideanDomain.r
 
-#print EuclideanDomain.mul_div_cancel_left /-
-theorem mul_div_cancel_left {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
+/- warning: euclidean_domain.mul_div_cancel_left clashes with mul_div_cancel_left -> mul_div_cancel_left₀
+Case conversion may be inaccurate. Consider using '#align euclidean_domain.mul_div_cancel_left mul_div_cancel_left₀ₓ'. -/
+#print mul_div_cancel_left₀ /-
+theorem mul_div_cancel_left₀ {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
   Eq.symm <|
     eq_of_sub_eq_zero <|
       by_contradiction fun h => by
         have := mul_left_not_lt a h
         rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a * b) a).symm] at this
         exact this (mod_lt _ a0)
-#align euclidean_domain.mul_div_cancel_left EuclideanDomain.mul_div_cancel_left
+#align euclidean_domain.mul_div_cancel_left mul_div_cancel_left₀
 -/
 
-#print EuclideanDomain.mul_div_cancel /-
-theorem mul_div_cancel (a) {b : R} (b0 : b ≠ 0) : a * b / b = a := by rw [mul_comm];
+/- warning: euclidean_domain.mul_div_cancel clashes with mul_div_cancel -> mul_div_cancel_right₀
+Case conversion may be inaccurate. Consider using '#align euclidean_domain.mul_div_cancel mul_div_cancel_right₀ₓ'. -/
+#print mul_div_cancel_right₀ /-
+theorem mul_div_cancel_right₀ (a) {b : R} (b0 : b ≠ 0) : a * b / b = a := by rw [mul_comm];
   exact mul_div_cancel_left₀ a b0
-#align euclidean_domain.mul_div_cancel EuclideanDomain.mul_div_cancel
+#align euclidean_domain.mul_div_cancel mul_div_cancel_right₀
 -/
 
 #print EuclideanDomain.mod_eq_zero /-
@@ -150,8 +154,7 @@ theorem div_dvd_of_dvd {p q : R} (hpq : q ∣ p) : p / q ∣ p :=
     rw [hpq]
     exact dvd_zero _
   use q
-  rw [mul_comm, ← EuclideanDomain.mul_div_assoc _ hpq, mul_comm,
-    EuclideanDomain.mul_div_cancel _ hq]
+  rw [mul_comm, ← EuclideanDomain.mul_div_assoc _ hpq, mul_comm, mul_div_cancel_right₀ _ hq]
 #align euclidean_domain.div_dvd_of_dvd EuclideanDomain.div_dvd_of_dvd
 -/
 

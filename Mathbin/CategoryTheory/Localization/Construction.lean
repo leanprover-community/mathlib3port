@@ -3,7 +3,7 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import CategoryTheory.MorphismProperty
+import CategoryTheory.MorphismProperty.Basic
 import CategoryTheory.Category.Quiv
 
 #align_import category_theory.localization.construction from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"

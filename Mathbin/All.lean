@@ -212,7 +212,7 @@ import Algebra.FreeMonoid.Count
 import Algebra.FreeNonUnitalNonAssocAlgebra
 import Algebra.Free
 import Algebra.GCDMonoid.Basic
-import Algebra.GCDMonoid.Div
+import Algebra.GcdMonoid.Div
 import Algebra.GCDMonoid.Finset
 import Algebra.GCDMonoid.IntegrallyClosed
 import Algebra.GCDMonoid.Multiset
@@ -1071,7 +1071,7 @@ import CategoryTheory.Monoidal.Transport
 import CategoryTheory.Monoidal.Types.Basic
 import CategoryTheory.Monoidal.Types.Coyoneda
 import CategoryTheory.Monoidal.Types.Symmetric
-import CategoryTheory.MorphismProperty
+import CategoryTheory.MorphismProperty.Basic
 import CategoryTheory.NatIso
 import CategoryTheory.NatTrans
 import CategoryTheory.Noetherian
