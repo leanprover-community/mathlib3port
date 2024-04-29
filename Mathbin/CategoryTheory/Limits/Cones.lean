@@ -458,13 +458,13 @@ def functoriality : Cone F ⥤ Cone (F ⋙ G)
 #align category_theory.limits.cones.functoriality CategoryTheory.Limits.Cones.functoriality
 -/
 
-#print CategoryTheory.Limits.Cones.functorialityFull /-
-instance functorialityFull [CategoryTheory.Functor.Full G] [CategoryTheory.Functor.Faithful G] :
+#print CategoryTheory.Limits.Cones.functoriality_full /-
+instance functoriality_full [CategoryTheory.Functor.Full G] [CategoryTheory.Functor.Faithful G] :
     CategoryTheory.Functor.Full (functoriality F G)
     where preimage X Y t :=
     { Hom := G.preimage t.Hom
       w' := fun j => G.map_injective (by simpa using t.w j) }
-#align category_theory.limits.cones.functoriality_full CategoryTheory.Limits.Cones.functorialityFull
+#align category_theory.limits.cones.functoriality_full CategoryTheory.Limits.Cones.functoriality_full
 -/
 
 #print CategoryTheory.Limits.Cones.functoriality_faithful /-
@@ -692,13 +692,13 @@ def functoriality : Cocone F ⥤ Cocone (F ⋙ G)
 #align category_theory.limits.cocones.functoriality CategoryTheory.Limits.Cocones.functoriality
 -/
 
-#print CategoryTheory.Limits.Cocones.functorialityFull /-
-instance functorialityFull [CategoryTheory.Functor.Full G] [CategoryTheory.Functor.Faithful G] :
+#print CategoryTheory.Limits.Cocones.functoriality_full /-
+instance functoriality_full [CategoryTheory.Functor.Full G] [CategoryTheory.Functor.Faithful G] :
     CategoryTheory.Functor.Full (functoriality F G)
     where preimage X Y t :=
     { Hom := G.preimage t.Hom
       w' := fun j => G.map_injective (by simpa using t.w j) }
-#align category_theory.limits.cocones.functoriality_full CategoryTheory.Limits.Cocones.functorialityFull
+#align category_theory.limits.cocones.functoriality_full CategoryTheory.Limits.Cocones.functoriality_full
 -/
 
 #print CategoryTheory.Limits.Cocones.functoriality_faithful /-

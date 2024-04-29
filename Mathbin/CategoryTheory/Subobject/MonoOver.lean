@@ -335,13 +335,13 @@ theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).
 #align category_theory.mono_over.map_obj_arrow CategoryTheory.MonoOver.map_obj_arrow
 -/
 
-#print CategoryTheory.MonoOver.fullMap /-
-instance fullMap (f : X ⟶ Y) [Mono f] : CategoryTheory.Functor.Full (map f)
+#print CategoryTheory.MonoOver.full_map /-
+instance full_map (f : X ⟶ Y) [Mono f] : CategoryTheory.Functor.Full (map f)
     where preimage g h e := by
     refine' hom_mk e.left _
     rw [← cancel_mono f, assoc]
     apply w e
-#align category_theory.mono_over.full_map CategoryTheory.MonoOver.fullMap
+#align category_theory.mono_over.full_map CategoryTheory.MonoOver.full_map
 -/
 
 #print CategoryTheory.MonoOver.faithful_map /-

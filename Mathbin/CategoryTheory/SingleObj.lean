@@ -257,12 +257,12 @@ def toCat : MonCat ⥤ Cat where
 #align Mon.to_Cat MonCat.toCat
 -/
 
-#print MonCat.toCatFull /-
-instance toCatFull : CategoryTheory.Functor.Full toCat
+#print MonCat.toCat_full /-
+instance toCat_full : CategoryTheory.Functor.Full toCat
     where
   preimage x y := (SingleObj.mapHom x y).invFun
   witness' x y := by apply Equiv.right_inv
-#align Mon.to_Cat_full MonCat.toCatFull
+#align Mon.to_Cat_full MonCat.toCat_full
 -/
 
 #print MonCat.toCat_faithful /-

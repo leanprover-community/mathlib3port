@@ -102,9 +102,9 @@ def forgetToCat : Grpd.{v, u} ⥤ Cat.{v, u}
 #align category_theory.Groupoid.forget_to_Cat CategoryTheory.Grpd.forgetToCat
 -/
 
-#print CategoryTheory.Grpd.forgetToCatFull /-
-instance forgetToCatFull : CategoryTheory.Functor.Full forgetToCat where preimage C D := id
-#align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCatFull
+#print CategoryTheory.Grpd.forgetToCat_full /-
+instance forgetToCat_full : CategoryTheory.Functor.Full forgetToCat where preimage C D := id
+#align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCat_full
 -/
 
 #print CategoryTheory.Grpd.forgetToCat_faithful /-

@@ -154,10 +154,10 @@ def fullMonoidalSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
 #align category_theory.monoidal_category.full_monoidal_subcategory.map CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map
 -/
 
-#print CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.mapFull /-
-instance fullMonoidalSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
+#print CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map_full /-
+instance fullMonoidalSubcategory.map_full (h : ∀ ⦃X⦄, P X → P' X) :
     CategoryTheory.Functor.Full (fullMonoidalSubcategory.map h).toFunctor where preimage X Y f := f
-#align category_theory.monoidal_category.full_monoidal_subcategory.map_full CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.mapFull
+#align category_theory.monoidal_category.full_monoidal_subcategory.map_full CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map_full
 -/
 
 #print CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map_faithful /-
@@ -224,7 +224,7 @@ def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
 #print CategoryTheory.MonoidalCategory.fullBraidedSubcategory.mapFull /-
 instance fullBraidedSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
     CategoryTheory.Functor.Full (fullBraidedSubcategory.map h).toFunctor :=
-  fullMonoidalSubcategory.mapFull h
+  fullMonoidalSubcategory.map_full h
 #align category_theory.monoidal_category.full_braided_subcategory.map_full CategoryTheory.MonoidalCategory.fullBraidedSubcategory.mapFull
 -/
 

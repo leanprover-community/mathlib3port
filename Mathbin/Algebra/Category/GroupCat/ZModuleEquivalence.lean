@@ -28,9 +28,9 @@ universe u
 
 namespace ModuleCat
 
-#print ModuleCat.forget₂AddCommGroupFull /-
+#print ModuleCat.forget₂_addCommGroup_full /-
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is full. -/
-instance forget₂AddCommGroupFull :
+instance forget₂_addCommGroup_full :
     CategoryTheory.Functor.Full (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
     where preimage A B
     f :=-- `add_monoid_hom.to_int_linear_map` doesn't work here because `A` and `B` are not definitionally
@@ -39,7 +39,7 @@ instance forget₂AddCommGroupFull :
       map_add' := AddMonoidHom.map_add f
       map_smul' := fun n x => by
         rw [int_smul_eq_zsmul, int_smul_eq_zsmul, map_zsmul, RingHom.id_apply] }
-#align Module.forget₂_AddCommGroup_full ModuleCat.forget₂AddCommGroupFull
+#align Module.forget₂_AddCommGroup_full ModuleCat.forget₂_addCommGroup_full
 -/
 
 #print ModuleCat.forget₂_addCommGroupCat_essSurj /-

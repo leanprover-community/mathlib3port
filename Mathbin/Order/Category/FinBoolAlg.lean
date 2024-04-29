@@ -100,10 +100,10 @@ instance hasForgetToFinBddDistLat : HasForget₂ FinBoolAlg FinBddDistLat
 #align FinBoolAlg.has_forget_to_FinBddDistLat FinBoolAlg.hasForgetToFinBddDistLat
 -/
 
-#print FinBoolAlg.forgetToBoolAlgFull /-
-instance forgetToBoolAlgFull : CategoryTheory.Functor.Full (forget₂ FinBoolAlg BoolAlg) :=
+#print FinBoolAlg.forgetToBoolAlg_full /-
+instance forgetToBoolAlg_full : CategoryTheory.Functor.Full (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.full _
-#align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlg.forgetToBoolAlgFull
+#align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlg.forgetToBoolAlg_full
 -/
 
 #print FinBoolAlg.forgetToBoolAlgFaithful /-

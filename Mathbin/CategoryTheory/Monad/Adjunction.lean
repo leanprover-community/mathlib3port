@@ -263,11 +263,11 @@ instance comparison_essSurj [Reflective R] :
 #align category_theory.reflective.comparison_ess_surj CategoryTheory.Reflective.comparison_essSurj
 -/
 
-#print CategoryTheory.Reflective.comparisonFull /-
-instance comparisonFull [CategoryTheory.Functor.Full R] [IsRightAdjoint R] :
+#print CategoryTheory.Reflective.comparison_full /-
+instance comparison_full [CategoryTheory.Functor.Full R] [IsRightAdjoint R] :
     CategoryTheory.Functor.Full (Monad.comparison (Adjunction.ofRightAdjoint R))
     where preimage X Y f := R.preimage f.f
-#align category_theory.reflective.comparison_full CategoryTheory.Reflective.comparisonFull
+#align category_theory.reflective.comparison_full CategoryTheory.Reflective.comparison_full
 -/
 
 end Reflective

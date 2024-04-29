@@ -44,14 +44,14 @@ theorem range_list_map_coe (s : Set α) : range (map (coe : s → α)) = {l | �
 #align set.range_list_map_coe Set.range_list_map_coe
 -/
 
-#print Set.range_list_nthLe /-
+#print Set.range_list_get /-
 @[simp]
-theorem range_list_nthLe : (range fun k : Fin l.length => l.nthLe k k.2) = {x | x ∈ l} :=
+theorem range_list_get : (range fun k : Fin l.length => l.nthLe k k.2) = {x | x ∈ l} :=
   by
   ext x
   rw [mem_set_of_eq, mem_iff_nth_le]
   exact ⟨fun ⟨⟨n, h₁⟩, h₂⟩ => ⟨n, h₁, h₂⟩, fun ⟨n, h₁, h₂⟩ => ⟨⟨n, h₁⟩, h₂⟩⟩
-#align set.range_list_nth_le Set.range_list_nthLe
+#align set.range_list_nth_le Set.range_list_get
 -/
 
 #print Set.range_list_get? /-

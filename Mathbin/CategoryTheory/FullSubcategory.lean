@@ -237,7 +237,7 @@ instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [CategoryTheory.Functor.Faithfu
 
 instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [CategoryTheory.Functor.Full F] :
     CategoryTheory.Functor.Full (FullSubcategory.lift P F hF) :=
-  CategoryTheory.Functor.Full.ofCompFaithfulIso (FullSubcategory.lift_comp_inclusion P F hF)
+  CategoryTheory.Functor.Full.of_comp_faithful_iso (FullSubcategory.lift_comp_inclusion P F hF)
 
 #print CategoryTheory.FullSubcategory.lift_comp_map /-
 @[simp]

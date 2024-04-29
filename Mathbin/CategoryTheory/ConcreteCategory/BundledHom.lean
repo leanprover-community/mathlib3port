@@ -168,10 +168,10 @@ instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] : HasForg
 #align category_theory.bundled_hom.forget₂ CategoryTheory.BundledHom.forget₂
 -/
 
-#print CategoryTheory.BundledHom.forget₂Full /-
-instance forget₂Full (F : ∀ {α}, d α → c α) [ParentProjection @F] :
+#print CategoryTheory.BundledHom.forget₂_full /-
+instance forget₂_full (F : ∀ {α}, d α → c α) [ParentProjection @F] :
     CategoryTheory.Functor.Full (forget₂ (Bundled d) (Bundled c)) where preimage X Y f := f
-#align category_theory.bundled_hom.forget₂_full CategoryTheory.BundledHom.forget₂Full
+#align category_theory.bundled_hom.forget₂_full CategoryTheory.BundledHom.forget₂_full
 -/
 
 end BundledHom

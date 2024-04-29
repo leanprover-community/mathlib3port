@@ -302,7 +302,7 @@ instance : CategoryTheory.Functor.Faithful (single₀ V) :=
   CategoryTheory.Functor.Faithful.of_iso (single₀IsoSingle V).symm
 
 instance : CategoryTheory.Functor.Full (single₀ V) :=
-  CategoryTheory.Functor.Full.ofIso (single₀IsoSingle V).symm
+  CategoryTheory.Functor.Full.of_iso (single₀IsoSingle V).symm
 
 end ChainComplex
 
@@ -456,7 +456,7 @@ instance : CategoryTheory.Functor.Faithful (single₀ V) :=
   CategoryTheory.Functor.Faithful.of_iso (single₀IsoSingle V).symm
 
 instance : CategoryTheory.Functor.Full (single₀ V) :=
-  CategoryTheory.Functor.Full.ofIso (single₀IsoSingle V).symm
+  CategoryTheory.Functor.Full.of_iso (single₀IsoSingle V).symm
 
 end CochainComplex
 

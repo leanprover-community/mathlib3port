@@ -492,11 +492,11 @@ instance Spec.preservesLimits : Limits.preservesLimits Scheme.Spec :=
 
 /-- Spec is a full functor. -/
 instance : CategoryTheory.Functor.Full Spec.toLocallyRingedSpace :=
-  rFullOfCounitIsIso ΓSpec.locallyRingedSpaceAdjunction
+  R_full_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.full /-
 instance Spec.full : CategoryTheory.Functor.Full Scheme.Spec :=
-  rFullOfCounitIsIso ΓSpec.adjunction
+  R_full_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.full AlgebraicGeometry.Spec.full
 -/
 

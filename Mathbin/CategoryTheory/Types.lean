@@ -242,10 +242,10 @@ theorem uliftFunctor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
 #align category_theory.ulift_functor_map CategoryTheory.uliftFunctor_map
 -/
 
-#print CategoryTheory.uliftFunctorFull /-
-instance uliftFunctorFull : CategoryTheory.Functor.Full.{u} uliftFunctor
+#print CategoryTheory.uliftFunctor_full /-
+instance uliftFunctor_full : CategoryTheory.Functor.Full.{u} uliftFunctor
     where preimage X Y f x := (f (ULift.up x)).down
-#align category_theory.ulift_functor_full CategoryTheory.uliftFunctorFull
+#align category_theory.ulift_functor_full CategoryTheory.uliftFunctor_full
 -/
 
 #print CategoryTheory.uliftFunctor_faithful /-

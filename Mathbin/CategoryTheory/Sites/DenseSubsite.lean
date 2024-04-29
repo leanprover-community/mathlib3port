@@ -532,14 +532,14 @@ theorem CategoryTheory.Functor.IsCoverDense.compatiblePreserving
 #align category_theory.cover_dense.compatible_preserving CategoryTheory.Functor.IsCoverDense.compatiblePreserving
 -/
 
-#print CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous /-
-noncomputable instance CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous
+#print CategoryTheory.Functor.IsCoverDense.full_sheafPushforwardContinuous /-
+noncomputable instance CategoryTheory.Functor.IsCoverDense.full_sheafPushforwardContinuous
     [CategoryTheory.Functor.Faithful G] (Hp : CoverPreserving J K G) :
     CategoryTheory.Functor.Full (Functor.sheafPushforwardContinuous A H.CompatiblePreserving Hp)
     where
   preimage ℱ ℱ' α := ⟨H.sheafHom α.val⟩
   witness' ℱ ℱ' α := Sheaf.Hom.ext _ _ <| H.sheafHom_restrict_eq α.val
-#align category_theory.cover_dense.sites.pullback.full CategoryTheory.Functor.IsCoverDense.fullSheafPushforwardContinuous
+#align category_theory.cover_dense.sites.pullback.full CategoryTheory.Functor.IsCoverDense.full_sheafPushforwardContinuous
 -/
 
 #print CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous /-

@@ -851,21 +851,21 @@ instance (priority := 100) faithfulOfEquivalence (F : C ⥤ D)
 #align category_theory.equivalence.faithful_of_equivalence CategoryTheory.Equivalence.faithfulOfEquivalence
 -/
 
-#print CategoryTheory.Equivalence.fullOfEquivalence /-
+#print CategoryTheory.Equivalence.full_of_equivalence /-
 -- see Note [lower instance priority]
 /-- An equivalence is full.
 
 See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
-instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [CategoryTheory.Functor.IsEquivalence F] :
-    CategoryTheory.Functor.Full F
+instance (priority := 100) full_of_equivalence (F : C ⥤ D)
+    [CategoryTheory.Functor.IsEquivalence F] : CategoryTheory.Functor.Full F
     where
   preimage X Y f := F.asEquivalence.Unit.app X ≫ F.inv.map f ≫ F.asEquivalence.unitInv.app Y
   witness' X Y f :=
     F.inv.map_injective <| by
       simpa only [is_equivalence.inv_fun_map, assoc, iso.inv_hom_id_app_assoc,
         iso.inv_hom_id_app] using comp_id _
-#align category_theory.equivalence.full_of_equivalence CategoryTheory.Equivalence.fullOfEquivalence
+#align category_theory.equivalence.full_of_equivalence CategoryTheory.Equivalence.full_of_equivalence
 -/
 
 @[simps]

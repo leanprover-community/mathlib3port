@@ -80,14 +80,14 @@ theorem naturality {X Y : C} (α : yoneda.obj X ⟶ yoneda.obj Y) {Z Z' : C} (f 
 #align category_theory.yoneda.naturality CategoryTheory.Yoneda.naturality
 -/
 
-#print CategoryTheory.Yoneda.yonedaFull /-
+#print CategoryTheory.Yoneda.yoneda_full /-
 /-- The Yoneda embedding is full.
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-instance yonedaFull : CategoryTheory.Functor.Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁)
+instance yoneda_full : CategoryTheory.Functor.Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁)
     where preimage X Y f := f.app (op X) (𝟙 X)
-#align category_theory.yoneda.yoneda_full CategoryTheory.Yoneda.yonedaFull
+#align category_theory.yoneda.yoneda_full CategoryTheory.Yoneda.yoneda_full
 -/
 
 #print CategoryTheory.Yoneda.yoneda_faithful /-
@@ -142,10 +142,10 @@ theorem naturality {X Y : Cᵒᵖ} (α : coyoneda.obj X ⟶ coyoneda.obj Y) {Z Z
 #align category_theory.coyoneda.naturality CategoryTheory.Coyoneda.naturality
 -/
 
-#print CategoryTheory.Coyoneda.coyonedaFull /-
-instance coyonedaFull : CategoryTheory.Functor.Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁)
+#print CategoryTheory.Coyoneda.coyoneda_full /-
+instance coyoneda_full : CategoryTheory.Functor.Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁)
     where preimage X Y f := (f.app _ (𝟙 X.unop)).op
-#align category_theory.coyoneda.coyoneda_full CategoryTheory.Coyoneda.coyonedaFull
+#align category_theory.coyoneda.coyoneda_full CategoryTheory.Coyoneda.coyoneda_full
 -/
 
 #print CategoryTheory.Coyoneda.coyoneda_faithful /-

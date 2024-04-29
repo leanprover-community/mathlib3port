@@ -318,7 +318,7 @@ theorem whiskeringLeft_obj_preimage_app {F G : Karoubi C ⥤ D}
   by
   rw [nat_trans_eq]
   congr 2
-  exact congr_app (((whiskering_left _ _ _).obj (to_karoubi _)).image_preimage τ) P.X
+  exact congr_app (((whiskering_left _ _ _).obj (to_karoubi _)).map_preimage τ) P.X
 #align category_theory.idempotents.whiskering_left_obj_preimage_app CategoryTheory.Idempotents.whiskeringLeft_obj_preimage_app
 -/
 

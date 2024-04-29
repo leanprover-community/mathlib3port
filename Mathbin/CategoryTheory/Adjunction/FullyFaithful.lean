@@ -125,11 +125,11 @@ noncomputable def whiskerLeftRUnitIsoOfIsIsoCounit [IsIso h.counit] : R ⋙ L �
 #align category_theory.whisker_left_R_unit_iso_of_is_iso_counit CategoryTheory.whiskerLeftRUnitIsoOfIsIsoCounit
 -/
 
-#print CategoryTheory.lFullOfUnitIsIso /-
+#print CategoryTheory.L_full_of_unit_isIso /-
 /-- If the unit is an isomorphism, then the left adjoint is full-/
-noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : CategoryTheory.Functor.Full L
+noncomputable def L_full_of_unit_isIso [IsIso h.Unit] : CategoryTheory.Functor.Full L
     where preimage X Y f := h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
-#align category_theory.L_full_of_unit_is_iso CategoryTheory.lFullOfUnitIsIso
+#align category_theory.L_full_of_unit_is_iso CategoryTheory.L_full_of_unit_isIso
 -/
 
 #print CategoryTheory.L_faithful_of_unit_isIso /-
@@ -143,11 +143,11 @@ theorem L_faithful_of_unit_isIso [IsIso h.Unit] : CategoryTheory.Functor.Faithfu
 #align category_theory.L_faithful_of_unit_is_iso CategoryTheory.L_faithful_of_unit_isIso
 -/
 
-#print CategoryTheory.rFullOfCounitIsIso /-
+#print CategoryTheory.R_full_of_counit_isIso /-
 /-- If the counit is an isomorphism, then the right adjoint is full-/
-noncomputable def rFullOfCounitIsIso [IsIso h.counit] : CategoryTheory.Functor.Full R
+noncomputable def R_full_of_counit_isIso [IsIso h.counit] : CategoryTheory.Functor.Full R
     where preimage X Y f := inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
-#align category_theory.R_full_of_counit_is_iso CategoryTheory.rFullOfCounitIsIso
+#align category_theory.R_full_of_counit_is_iso CategoryTheory.R_full_of_counit_isIso
 -/
 
 #print CategoryTheory.R_faithful_of_counit_isIso /-

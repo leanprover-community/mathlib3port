@@ -346,7 +346,7 @@ def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [CategoryTheo
     { liftedCone := c
       validLift := i ≪≫ IsLimit.uniqueUpToIso hl t
       makesLimit :=
-        IsLimit.ofFaithful F (IsLimit.ofIsoLimit hl i.symm) _ fun s => F.image_preimage _ }
+        IsLimit.ofFaithful F (IsLimit.ofIsoLimit hl i.symm) _ fun s => F.map_preimage _ }
 #align category_theory.creates_limit_of_fully_faithful_of_lift' CategoryTheory.createsLimitOfFullyFaithfulOfLift'
 -/
 
@@ -468,7 +468,7 @@ def createsColimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [CategoryTh
     { liftedCocone := c
       validLift := i ≪≫ IsColimit.uniqueUpToIso hl t
       makesColimit :=
-        IsColimit.ofFaithful F (IsColimit.ofIsoColimit hl i.symm) _ fun s => F.image_preimage _ }
+        IsColimit.ofFaithful F (IsColimit.ofIsoColimit hl i.symm) _ fun s => F.map_preimage _ }
 #align category_theory.creates_colimit_of_fully_faithful_of_lift' CategoryTheory.createsColimitOfFullyFaithfulOfLift'
 -/
 

@@ -90,35 +90,31 @@ def preimage (F : C ⥤ D) [CategoryTheory.Functor.Full F] (f : F.obj X ⟶ F.ob
 #align category_theory.functor.preimage CategoryTheory.Functor.preimage
 -/
 
-#print CategoryTheory.Functor.image_preimage /-
+#print CategoryTheory.Functor.map_preimage /-
 @[simp]
-theorem image_preimage (F : C ⥤ D) [CategoryTheory.Functor.Full F] {X Y : C}
-    (f : F.obj X ⟶ F.obj Y) : F.map (preimage F f) = f := by unfold preimage <;> obviously
-#align category_theory.functor.image_preimage CategoryTheory.Functor.image_preimage
+theorem map_preimage (F : C ⥤ D) [CategoryTheory.Functor.Full F] {X Y : C} (f : F.obj X ⟶ F.obj Y) :
+    F.map (preimage F f) = f := by unfold preimage <;> obviously
+#align category_theory.functor.image_preimage CategoryTheory.Functor.map_preimage
 -/
 
 #print CategoryTheory.Functor.map_surjective /-
 theorem map_surjective (F : C ⥤ D) [CategoryTheory.Functor.Full F] :
-    Function.Surjective (@Functor.map _ _ _ _ F X Y) := fun f => ⟨F.preimage f, F.image_preimage f⟩
+    Function.Surjective (@Functor.map _ _ _ _ F X Y) := fun f => ⟨F.preimage f, F.map_preimage f⟩
 #align category_theory.functor.map_surjective CategoryTheory.Functor.map_surjective
 -/
 
-#print CategoryTheory.Functor.fullOfExists /-
 /-- Deduce that `F` is full from the existence of preimages, using choice. -/
-noncomputable def fullOfExists (F : C ⥤ D)
+noncomputable def full_of_exists (F : C ⥤ D)
     (h : ∀ (X Y : C) (f : F.obj X ⟶ F.obj Y), ∃ p, F.map p = f) : CategoryTheory.Functor.Full F :=
   by choose p hp using h; exact ⟨p, hp⟩
-#align category_theory.functor.full_of_exists CategoryTheory.Functor.fullOfExists
--/
+#align category_theory.functor.full_of_exists CategoryTheory.Functor.full_of_exists
 
-#print CategoryTheory.Functor.fullOfSurjective /-
 /-- Deduce that `F` is full from surjectivity of `F.map`, using choice. -/
-noncomputable def fullOfSurjective (F : C ⥤ D)
+noncomputable def full_of_surjective (F : C ⥤ D)
     (h : ∀ X Y : C, Function.Surjective (@Functor.map _ _ _ _ F X Y)) :
     CategoryTheory.Functor.Full F :=
-  fullOfExists _ h
-#align category_theory.functor.full_of_surjective CategoryTheory.Functor.fullOfSurjective
--/
+  full_of_exists _ h
+#align category_theory.functor.full_of_surjective CategoryTheory.Functor.full_of_surjective
 
 end Functor
 
@@ -314,14 +310,14 @@ section
 
 variable {F F'}
 
-#print CategoryTheory.Functor.Full.ofIso /-
+#print CategoryTheory.Functor.Full.of_iso /-
 /-- If `F` is full, and naturally isomorphic to some `F'`, then `F'` is also full. -/
-def CategoryTheory.Functor.Full.ofIso [CategoryTheory.Functor.Full F] (α : F ≅ F') :
+def CategoryTheory.Functor.Full.of_iso [CategoryTheory.Functor.Full F] (α : F ≅ F') :
     CategoryTheory.Functor.Full F'
     where
   preimage X Y f := F.preimage ((α.app X).Hom ≫ f ≫ (α.app Y).inv)
   witness' X Y f := by simp [← nat_iso.naturality_1 α]
-#align category_theory.full.of_iso CategoryTheory.Functor.Full.ofIso
+#align category_theory.full.of_iso CategoryTheory.Functor.Full.of_iso
 -/
 
 #print CategoryTheory.Functor.Faithful.of_iso /-
@@ -426,24 +422,24 @@ instance CategoryTheory.Functor.Full.comp [CategoryTheory.Functor.Full F]
 #align category_theory.full.comp CategoryTheory.Functor.Full.comp
 -/
 
-#print CategoryTheory.Functor.Full.ofCompFaithful /-
+#print CategoryTheory.Functor.Full.of_comp_faithful /-
 /-- If `F ⋙ G` is full and `G` is faithful, then `F` is full. -/
-def CategoryTheory.Functor.Full.ofCompFaithful [CategoryTheory.Functor.Full <| F ⋙ G]
+def CategoryTheory.Functor.Full.of_comp_faithful [CategoryTheory.Functor.Full <| F ⋙ G]
     [CategoryTheory.Functor.Faithful G] : CategoryTheory.Functor.Full F
     where
   preimage X Y f := (F ⋙ G).preimage (G.map f)
-  witness' X Y f := G.map_injective ((F ⋙ G).image_preimage _)
-#align category_theory.full.of_comp_faithful CategoryTheory.Functor.Full.ofCompFaithful
+  witness' X Y f := G.map_injective ((F ⋙ G).map_preimage _)
+#align category_theory.full.of_comp_faithful CategoryTheory.Functor.Full.of_comp_faithful
 -/
 
-#print CategoryTheory.Functor.Full.ofCompFaithfulIso /-
+#print CategoryTheory.Functor.Full.of_comp_faithful_iso /-
 /-- If `F ⋙ G` is full and `G` is faithful, then `F` is full. -/
-def CategoryTheory.Functor.Full.ofCompFaithfulIso {F : C ⥤ D} {G : D ⥤ E} {H : C ⥤ E}
+def CategoryTheory.Functor.Full.of_comp_faithful_iso {F : C ⥤ D} {G : D ⥤ E} {H : C ⥤ E}
     [CategoryTheory.Functor.Full H] [CategoryTheory.Functor.Faithful G] (h : F ⋙ G ≅ H) :
     CategoryTheory.Functor.Full F :=
-  @CategoryTheory.Functor.Full.ofCompFaithful _ _ _ _ _ _ F G
-    (CategoryTheory.Functor.Full.ofIso h.symm) _
-#align category_theory.full.of_comp_faithful_iso CategoryTheory.Functor.Full.ofCompFaithfulIso
+  @CategoryTheory.Functor.Full.of_comp_faithful _ _ _ _ _ _ F G
+    (CategoryTheory.Functor.Full.of_iso h.symm) _
+#align category_theory.full.of_comp_faithful_iso CategoryTheory.Functor.Full.of_comp_faithful_iso
 -/
 
 #print CategoryTheory.Functor.fullyFaithfulCancelRight /-
