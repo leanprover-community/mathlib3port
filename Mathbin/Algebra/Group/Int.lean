@@ -203,12 +203,16 @@ theorem negSucc_mul_negSucc (m n : ℕ) : -[m+1] * -[n+1] = succ m * succ n :=
 #align int.neg_succ_mul_neg_succ Int.negSucc_mul_negSucc
 -/
 
+/- warning: int.coe_nat_le clashes with int.coe_nat_le_coe_nat_iff -> Int.ofNat_le
+Case conversion may be inaccurate. Consider using '#align int.coe_nat_le Int.ofNat_leₓ'. -/
 #print Int.ofNat_le /-
 theorem ofNat_le {m n : ℕ} : (↑m : ℤ) ≤ ↑n ↔ m ≤ n :=
   ofNat_le m n
 #align int.coe_nat_le Int.ofNat_le
 -/
 
+/- warning: int.coe_nat_lt clashes with int.coe_nat_lt_coe_nat_iff -> Int.ofNat_lt
+Case conversion may be inaccurate. Consider using '#align int.coe_nat_lt Int.ofNat_ltₓ'. -/
 #print Int.ofNat_lt /-
 theorem ofNat_lt {m n : ℕ} : (↑m : ℤ) < ↑n ↔ m < n :=
   ofNat_lt m n

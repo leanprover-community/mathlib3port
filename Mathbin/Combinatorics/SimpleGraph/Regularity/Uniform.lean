@@ -261,11 +261,11 @@ noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
 #align finpartition.non_uniforms Finpartition.nonUniforms
 -/
 
-#print Finpartition.mk_mem_nonUniforms_iff /-
-theorem mk_mem_nonUniforms_iff (u v : Finset α) (ε : 𝕜) :
+#print Finpartition.mk_mem_nonUniforms /-
+theorem mk_mem_nonUniforms (u v : Finset α) (ε : 𝕜) :
     (u, v) ∈ P.nonUniforms G ε ↔ u ∈ P.parts ∧ v ∈ P.parts ∧ u ≠ v ∧ ¬G.IsUniform ε u v := by
   rw [non_uniforms, mem_filter, mem_off_diag, and_assoc, and_assoc]
-#align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_nonUniforms_iff
+#align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_nonUniforms
 -/
 
 #print Finpartition.nonUniforms_mono /-
@@ -279,7 +279,7 @@ theorem nonUniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε
   by
   rw [eq_empty_iff_forall_not_mem]
   rintro ⟨u, v⟩
-  simp only [Finpartition.mk_mem_nonUniforms_iff, Finpartition.parts_bot, mem_map, not_and,
+  simp only [Finpartition.mk_mem_nonUniforms, Finpartition.parts_bot, mem_map, not_and,
     Classical.not_not, exists_imp]
   rintro x hx rfl y hy rfl h
   exact G.is_uniform_singleton hε
@@ -294,22 +294,22 @@ def IsUniform (ε : 𝕜) : Prop :=
 #align finpartition.is_uniform Finpartition.IsUniform
 -/
 
-#print Finpartition.botIsUniform /-
-theorem botIsUniform (hε : 0 < ε) : (⊥ : Finpartition A).IsUniform G ε :=
+#print Finpartition.bot_isUniform /-
+theorem bot_isUniform (hε : 0 < ε) : (⊥ : Finpartition A).IsUniform G ε :=
   by
   rw [Finpartition.IsUniform, Finpartition.card_bot, non_uniforms_bot _ hε, Finset.card_empty,
     Nat.cast_zero]
   exact mul_nonneg (Nat.cast_nonneg _) hε.le
-#align finpartition.bot_is_uniform Finpartition.botIsUniform
+#align finpartition.bot_is_uniform Finpartition.bot_isUniform
 -/
 
-#print Finpartition.isUniformOne /-
-theorem isUniformOne : P.IsUniform G (1 : 𝕜) :=
+#print Finpartition.isUniform_one /-
+theorem isUniform_one : P.IsUniform G (1 : 𝕜) :=
   by
   rw [is_uniform, mul_one, Nat.cast_le]
   refine' (card_filter_le _ _).trans _
   rw [off_diag_card, Nat.mul_sub_left_distrib, mul_one]
-#align finpartition.is_uniform_one Finpartition.isUniformOne
+#align finpartition.is_uniform_one Finpartition.isUniform_one
 -/
 
 variable {P G}

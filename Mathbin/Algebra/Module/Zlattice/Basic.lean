@@ -200,8 +200,8 @@ theorem fract_eq_fract (m n : E) : fract b m = fract b n ↔ -m + n ∈ span ℤ
   classical
   rw [eq_comm, Basis.ext_elem_iff b]
   simp_rw [repr_fract_apply, Int.fract_eq_fract, eq_comm, Basis.mem_span_iff_repr_mem,
-    sub_eq_neg_add, map_add, LinearEquiv.map_neg, Finsupp.coe_add, Finsupp.coe_neg, Pi.add_apply,
-    Pi.neg_apply, ← eq_intCast (algebraMap ℤ K) _, Set.mem_range]
+    sub_eq_neg_add, map_add, map_neg, Finsupp.coe_add, Finsupp.coe_neg, Pi.add_apply, Pi.neg_apply,
+    ← eq_intCast (algebraMap ℤ K) _, Set.mem_range]
 #align zspan.fract_eq_fract Zspan.fract_eq_fract
 -/
 

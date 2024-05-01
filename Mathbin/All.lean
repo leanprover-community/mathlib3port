@@ -72,7 +72,7 @@ import AlgebraicTopology.TopologicalSimplex
 import Algebra.Abs
 import Algebra.AddTorsor
 import Algebra.AlgebraicCard
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Algebra.Algebra.Bilinear
 import Algebra.Algebra.Equiv
 import Algebra.Algebra.Hom
@@ -324,7 +324,7 @@ import Algebra.Lie.Weights.Basic
 import Algebra.LinearRecurrence
 import Algebra.ModEq
 import Algebra.Module.Algebra
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Algebra.Module.BigOperators
 import Algebra.Module.Bimodule
 import Algebra.Module.DedekindDomain
@@ -1527,7 +1527,7 @@ import Algebra.MvPolynomial.Degrees
 import Algebra.Group.Nat
 import Data.Nat.Bits
 import Data.Nat.Bitwise
-import Data.Nat.Cast.Basic
+import Data.Nat.Cast.Commute
 import Data.Nat.Cast.Defs
 import Data.Nat.Cast.Field
 import Data.Nat.Cast.Prod
@@ -1976,7 +1976,7 @@ import GroupTheory.Sylow
 import GroupTheory.Torsion
 import GroupTheory.Transfer
 import InformationTheory.Hamming
-import LinearAlgebra.AdicCompletion
+import RingTheory.AdicCompletion.Basic
 import LinearAlgebra.AffineSpace.AffineEquiv
 import LinearAlgebra.AffineSpace.AffineMap
 import LinearAlgebra.AffineSpace.AffineSubspace

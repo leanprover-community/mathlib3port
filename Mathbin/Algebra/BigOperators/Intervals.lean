@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Algebra.BigOperators.Basic
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Data.Nat.Interval
 import Mathbin.Tactic.Linarith.Default
 

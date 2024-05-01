@@ -9,7 +9,7 @@ import Topology.Algebra.MulAction
 import Topology.Algebra.UniformGroup
 import Topology.ContinuousFunction.Basic
 import Topology.UniformSpace.UniformEmbedding
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import LinearAlgebra.Projection
 import LinearAlgebra.Pi
 

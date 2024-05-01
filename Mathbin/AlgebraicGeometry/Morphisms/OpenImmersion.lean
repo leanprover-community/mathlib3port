@@ -44,11 +44,11 @@ theorem isOpenImmersion_iff_stalk {f : X ⟶ Y} :
 #align algebraic_geometry.is_open_immersion_iff_stalk AlgebraicGeometry.isOpenImmersion_iff_stalk
 -/
 
-#print AlgebraicGeometry.isOpenImmersion_stableUnderComposition /-
-theorem isOpenImmersion_stableUnderComposition :
-    MorphismProperty.StableUnderComposition @IsOpenImmersionCat := by intro X Y Z f g h₁ h₂;
+#print AlgebraicGeometry.isOpenImmersion_isStableUnderComposition /-
+theorem isOpenImmersion_isStableUnderComposition :
+    MorphismProperty.IsStableUnderComposition @IsOpenImmersionCat := by intro X Y Z f g h₁ h₂;
   infer_instance
-#align algebraic_geometry.is_open_immersion_stable_under_composition AlgebraicGeometry.isOpenImmersion_stableUnderComposition
+#align algebraic_geometry.is_open_immersion_stable_under_composition AlgebraicGeometry.isOpenImmersion_isStableUnderComposition
 -/
 
 #print AlgebraicGeometry.isOpenImmersion_respectsIso /-

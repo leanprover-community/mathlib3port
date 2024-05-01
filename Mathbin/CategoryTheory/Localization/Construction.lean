@@ -247,7 +247,7 @@ morphisms in the original category, the inverses of the morphisms
 in `W` and if it is stable under composition -/
 theorem morphismProperty_is_top (P : MorphismProperty W.Localization)
     (hP₁ : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), P (W.Q.map f))
-    (hP₂ : ∀ ⦃X Y : C⦄ (w : X ⟶ Y) (hw : W w), P (winv w hw)) (hP₃ : P.StableUnderComposition) :
+    (hP₂ : ∀ ⦃X Y : C⦄ (w : X ⟶ Y) (hw : W w), P (winv w hw)) (hP₃ : P.IsStableUnderComposition) :
     P = ⊤ := by
   ext X Y f
   constructor
@@ -285,7 +285,7 @@ and if the property is stable by passing to inverses. -/
 theorem morphismProperty_is_top' (P : MorphismProperty W.Localization)
     (hP₁ : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), P (W.Q.map f))
     (hP₂ : ∀ ⦃X Y : W.Localization⦄ (e : X ≅ Y) (he : P e.Hom), P e.inv)
-    (hP₃ : P.StableUnderComposition) : P = ⊤ :=
+    (hP₃ : P.IsStableUnderComposition) : P = ⊤ :=
   morphismProperty_is_top P hP₁ (fun X Y w hw => hP₂ _ (hP₁ w)) hP₃
 #align category_theory.localization.construction.morphism_property_is_top' CategoryTheory.Localization.Construction.morphismProperty_is_top'
 -/

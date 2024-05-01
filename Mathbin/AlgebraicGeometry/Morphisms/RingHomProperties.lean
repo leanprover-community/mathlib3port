@@ -598,8 +598,8 @@ theorem affineLocally_of_comp
 #align ring_hom.property_is_local.affine_locally_of_comp RingHom.PropertyIsLocal.affineLocally_of_comp
 -/
 
-#print RingHom.PropertyIsLocal.affineLocally_stableUnderComposition /-
-theorem affineLocally_stableUnderComposition : (affineLocally @P).StableUnderComposition :=
+#print RingHom.PropertyIsLocal.affineLocally_isStableUnderComposition /-
+theorem affineLocally_isStableUnderComposition : (affineLocally @P).IsStableUnderComposition :=
   by
   intro X Y S f g hf hg
   let 𝒰 : ∀ i, ((S.affine_cover.pullback_cover (f ≫ g)).obj i).OpenCover :=
@@ -634,7 +634,7 @@ theorem affineLocally_stableUnderComposition : (affineLocally @P).StableUnderCom
           0 3] at
         hf
       apply hf
-#align ring_hom.property_is_local.affine_locally_stable_under_composition RingHom.PropertyIsLocal.affineLocally_stableUnderComposition
+#align ring_hom.property_is_local.affine_locally_stable_under_composition RingHom.PropertyIsLocal.affineLocally_isStableUnderComposition
 -/
 
 end RingHom.PropertyIsLocal

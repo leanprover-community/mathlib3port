@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
 import Algebra.Group.Conj
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Algebra.Order.Group.InjSurj
 import Data.Countable.Basic
 import GroupTheory.Submonoid.Centralizer

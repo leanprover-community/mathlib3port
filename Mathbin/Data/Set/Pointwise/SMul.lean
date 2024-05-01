@@ -3,7 +3,7 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Data.Set.Pairwise.Lattice
 import Data.Set.Pointwise.Basic
 import Tactic.ByContra

@@ -3,7 +3,7 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Data.Nat.Cast.Basic
+import Data.Nat.Cast.Commute
 import Algebra.Order.Ring.Defs
 import Algebra.Order.Ring.InjSurj
 import Algebra.GroupPower.Order

@@ -8,7 +8,7 @@ import Data.Set.Finite
 import Algebra.BigOperators.Basic
 import Algebra.Group.Prod
 import Algebra.Group.Pi.Lemmas
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import GroupTheory.GroupAction.Pi
 
 #align_import algebra.support from "leanprover-community/mathlib"@"29cb56a7b35f72758b05a30490e1f10bd62c35c1"

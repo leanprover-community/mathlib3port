@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
 import Algebra.ModEq
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Algebra.Order.Archimedean
 import Algebra.Periodic
 import Data.Int.SuccPred

@@ -65,18 +65,18 @@ theorem universallyClosed_stableUnderBaseChange : StableUnderBaseChange @Univers
 #align algebraic_geometry.universally_closed_stable_under_base_change AlgebraicGeometry.universallyClosed_stableUnderBaseChange
 -/
 
-#print AlgebraicGeometry.universallyClosed_stableUnderComposition /-
-theorem universallyClosed_stableUnderComposition : StableUnderComposition @UniversallyClosed :=
+#print AlgebraicGeometry.universallyClosed_isStableUnderComposition /-
+theorem universallyClosed_isStableUnderComposition : IsStableUnderComposition @UniversallyClosed :=
   by
   rw [universally_closed_eq]
   exact stable_under_composition.universally fun X Y Z f g hf hg => IsClosedMap.comp hg hf
-#align algebraic_geometry.universally_closed_stable_under_composition AlgebraicGeometry.universallyClosed_stableUnderComposition
+#align algebraic_geometry.universally_closed_stable_under_composition AlgebraicGeometry.universallyClosed_isStableUnderComposition
 -/
 
 #print AlgebraicGeometry.universallyClosedTypeComp /-
 instance universallyClosedTypeComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : UniversallyClosed f] [hg : UniversallyClosed g] : UniversallyClosed (f ≫ g) :=
-  universallyClosed_stableUnderComposition f g hf hg
+  universallyClosed_isStableUnderComposition f g hf hg
 #align algebraic_geometry.universally_closed_type_comp AlgebraicGeometry.universallyClosedTypeComp
 -/
 

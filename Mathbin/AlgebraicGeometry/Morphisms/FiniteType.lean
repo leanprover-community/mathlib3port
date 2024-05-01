@@ -62,17 +62,17 @@ instance (priority := 900) locallyOfFiniteTypeOfIsOpenImmersion {X Y : Scheme} (
 #align algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locallyOfFiniteTypeOfIsOpenImmersion
 -/
 
-#print AlgebraicGeometry.locallyOfFiniteType_stableUnderComposition /-
-theorem locallyOfFiniteType_stableUnderComposition :
-    MorphismProperty.StableUnderComposition @LocallyOfFiniteType :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_stableUnderComposition
-#align algebraic_geometry.locally_of_finite_type_stable_under_composition AlgebraicGeometry.locallyOfFiniteType_stableUnderComposition
+#print AlgebraicGeometry.locallyOfFiniteType_isStableUnderComposition /-
+theorem locallyOfFiniteType_isStableUnderComposition :
+    MorphismProperty.IsStableUnderComposition @LocallyOfFiniteType :=
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_isStableUnderComposition
+#align algebraic_geometry.locally_of_finite_type_stable_under_composition AlgebraicGeometry.locallyOfFiniteType_isStableUnderComposition
 -/
 
 #print AlgebraicGeometry.locallyOfFiniteTypeComp /-
 instance locallyOfFiniteTypeComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : LocallyOfFiniteType f] [hg : LocallyOfFiniteType g] : LocallyOfFiniteType (f ≫ g) :=
-  locallyOfFiniteType_stableUnderComposition f g hf hg
+  locallyOfFiniteType_isStableUnderComposition f g hf hg
 #align algebraic_geometry.locally_of_finite_type_comp AlgebraicGeometry.locallyOfFiniteTypeComp
 -/
 

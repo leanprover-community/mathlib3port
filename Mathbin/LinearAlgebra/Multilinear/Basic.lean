@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Algebra.Module.Submodule.Ker
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Algebra.Order.BigOperators.Group.Finset
 import Algebra.BigOperators.Ring
 import Data.List.FinRange

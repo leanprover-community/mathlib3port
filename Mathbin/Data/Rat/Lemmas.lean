@@ -249,7 +249,7 @@ theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den
     use k
     rwa [eq_div_iff_mul_eq hn, ← Int.cast_mul, mul_comm, eq_comm, coe_int_inj] at hk
   · rintro ⟨d, rfl⟩
-    rw [Int.cast_mul, mul_comm, mul_div_cancel_right₀ _ hn, Rat.coe_int_den]
+    rw [Int.cast_mul, mul_comm, mul_div_cancel_right₀ _ hn, Rat.den_intCast]
 #align rat.denom_div_cast_eq_one_iff Rat.den_div_cast_eq_one_iff
 -/
 
@@ -322,7 +322,7 @@ theorem natCast_div (a b : ℕ) (h : b ∣ a) : ((a / b : ℕ) : ℚ) = a / b :=
 #print Rat.inv_intCast_num_of_pos /-
 theorem inv_intCast_num_of_pos {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 :=
   by
-  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_den, Nat.cast_one, ← Int.cast_one]
+  rw [Rat.inv_def', Rat.num_intCast, Rat.den_intCast, Nat.cast_one, ← Int.cast_one]
   apply num_div_eq_of_coprime ha0
   rw [Int.natAbs_one]
   exact Nat.coprime_one_left _
@@ -338,7 +338,7 @@ theorem inv_natCast_num_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 
 #print Rat.inv_intCast_den_of_pos /-
 theorem inv_intCast_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : ℤ) = a :=
   by
-  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_den, Nat.cast_one, ← Int.cast_one]
+  rw [Rat.inv_def', Rat.num_intCast, Rat.den_intCast, Nat.cast_one, ← Int.cast_one]
   apply denom_div_eq_of_coprime ha0
   rw [Int.natAbs_one]
   exact Nat.coprime_one_left _

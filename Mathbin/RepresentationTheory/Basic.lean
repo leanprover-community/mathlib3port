@@ -3,7 +3,7 @@ Copyright (c) 2022 Antoine Labelle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Algebra.Module.LinearMap.Basic
 import Algebra.MonoidAlgebra.Basic
 import LinearAlgebra.Dual

@@ -179,7 +179,7 @@ def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
 
 theorem sqrtAux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Rat.mkRat_eq, Rat.divInt_eq_div] <;> apply div_nonneg <;>
+    rw [sqrt_aux, Rat.mkRat_eq_divInt, Rat.divInt_eq_div] <;> apply div_nonneg <;>
       exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
   | n + 1 => le_max_left _ _
 #align real.sqrt_aux_nonneg Real.sqrtAux_nonneg

@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import LinearAlgebra.Prod
 
 #align_import algebra.triv_sq_zero_ext from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"

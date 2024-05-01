@@ -470,7 +470,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
       replace z := neg_eq_iff_eq_neg.mpr z
       apply_fun fun x => b.repr x b' at z
       simp only [repr_self, LinearEquiv.map_smul, mul_one, Finsupp.single_eq_same, Pi.neg_apply,
-        Finsupp.smul_single', LinearEquiv.map_neg, Finsupp.coe_neg] at z
+        Finsupp.smul_single', map_neg, Finsupp.coe_neg] at z
       erw [Finsupp.congr_fun (Finsupp.apply_total R (b.repr : M →ₗ[R] ι →₀ R) v l.some) b'] at z
       simpa [Finsupp.total_apply, w] using z
     -- Then all the other coefficients are zero, because `v` is linear independent.

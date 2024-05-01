@@ -47,10 +47,14 @@ theorem isEquipartition_iff_card_parts_eq_average :
 
 variable {P}
 
+/- warning: set.subsingleton.is_equipartition clashes with finpartition.set.subsingleton.is_equipartition -> Set.Subsingleton.isEquipartition
+Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_equipartition Set.Subsingleton.isEquipartitionₓ'. -/
+#print Set.Subsingleton.isEquipartition /-
 theorem Set.Subsingleton.isEquipartition (h : (P.parts : Set (Finset α)).Subsingleton) :
     P.IsEquipartition :=
   h.EquitableOn _
 #align set.subsingleton.is_equipartition Set.Subsingleton.isEquipartition
+-/
 
 #print Finpartition.IsEquipartition.card_parts_eq_average /-
 theorem IsEquipartition.card_parts_eq_average (hP : P.IsEquipartition) (ht : t ∈ P.parts) :

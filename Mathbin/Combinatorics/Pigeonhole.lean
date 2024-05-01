@@ -6,7 +6,7 @@ Authors: Kyle Miller, Yury Kudryashov
 import Data.Nat.ModEq
 import Data.Set.Finite
 import Algebra.Order.BigOperators.Group.Finset
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Algebra.Module.BigOperators
 
 #align_import combinatorics.pigeonhole from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"

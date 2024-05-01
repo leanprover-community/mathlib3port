@@ -2773,19 +2773,15 @@ variable {re₃₄ : RingHomInvPair σ₃₄ σ₄₃} {re₄₃ : RingHomInvPai
 
 variable (e e₁ : M ≃ₛₗ[σ₁₂] M₂) (e₂ : M₃ ≃ₛₗ[σ₃₄] M₄)
 
-#print LinearEquiv.map_neg /-
 @[simp]
 theorem map_neg (a : M) : e (-a) = -e a :=
   e.toLinearMap.map_neg a
-#align linear_equiv.map_neg LinearEquiv.map_neg
--/
+#align linear_equiv.map_neg map_negₓ
 
-#print LinearEquiv.map_sub /-
 @[simp]
 theorem map_sub (a b : M) : e (a - b) = e a - e b :=
   e.toLinearMap.map_sub a b
-#align linear_equiv.map_sub LinearEquiv.map_sub
--/
+#align linear_equiv.map_sub map_subₓ
 
 end AddCommGroup
 

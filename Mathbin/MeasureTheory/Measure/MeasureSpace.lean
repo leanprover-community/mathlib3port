@@ -4408,14 +4408,14 @@ theorem eventually_mem_spanningSets (μ : Measure α) [SigmaFinite μ] (x : α) 
 
 namespace Measure
 
-#print MeasureTheory.Measure.iSup_restrict_spanningSets /-
-theorem iSup_restrict_spanningSets [SigmaFinite μ] (hs : MeasurableSet s) :
+#print MeasureTheory.Measure.iSup_restrict_spanningSets_of_measurableSet /-
+theorem iSup_restrict_spanningSets_of_measurableSet [SigmaFinite μ] (hs : MeasurableSet s) :
     (⨆ i, μ.restrict (spanningSets μ i) s) = μ s :=
   calc
     (⨆ i, μ.restrict (spanningSets μ i) s) = μ.restrict (⋃ i, spanningSets μ i) s :=
       (restrict_iUnion_apply_eq_iSup (directed_of_isDirected_le (monotone_spanningSets μ)) hs).symm
     _ = μ s := by rw [Union_spanning_sets, restrict_univ]
-#align measure_theory.measure.supr_restrict_spanning_sets MeasureTheory.Measure.iSup_restrict_spanningSets
+#align measure_theory.measure.supr_restrict_spanning_sets MeasureTheory.Measure.iSup_restrict_spanningSets_of_measurableSet
 -/
 
 #print MeasureTheory.Measure.exists_subset_measure_lt_top /-

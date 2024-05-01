@@ -9,7 +9,7 @@ import Data.Matrix.Notation
 import Data.Fintype.BigOperators
 import GroupTheory.Perm.Fin
 import GroupTheory.Perm.Sign
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Tactic.Ring
 import LinearAlgebra.Alternating.Basic
 import LinearAlgebra.Pi

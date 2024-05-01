@@ -286,10 +286,10 @@ theorem quasiCompact_respectsIso : MorphismProperty.RespectsIso @QuasiCompact :=
 #align algebraic_geometry.quasi_compact_respects_iso AlgebraicGeometry.quasiCompact_respectsIso
 -/
 
-#print AlgebraicGeometry.quasiCompact_stableUnderComposition /-
-theorem quasiCompact_stableUnderComposition :
-    MorphismProperty.StableUnderComposition @QuasiCompact := fun _ _ _ _ _ _ _ => inferInstance
-#align algebraic_geometry.quasi_compact_stable_under_composition AlgebraicGeometry.quasiCompact_stableUnderComposition
+#print AlgebraicGeometry.quasiCompact_isStableUnderComposition /-
+theorem quasiCompact_isStableUnderComposition :
+    MorphismProperty.IsStableUnderComposition @QuasiCompact := fun _ _ _ _ _ _ _ => inferInstance
+#align algebraic_geometry.quasi_compact_stable_under_composition AlgebraicGeometry.quasiCompact_isStableUnderComposition
 -/
 
 attribute [-simp] PresheafedSpace.as_coe SheafedSpace.as_coe

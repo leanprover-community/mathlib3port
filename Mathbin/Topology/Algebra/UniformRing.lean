@@ -3,7 +3,7 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Topology.Algebra.GroupCompletion
 import Topology.Algebra.Ring.Ideal
 

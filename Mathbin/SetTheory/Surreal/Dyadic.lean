@@ -3,7 +3,7 @@ Copyright (c) 2021 Apurva Nakade. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import SetTheory.Game.Birthday
 import SetTheory.Surreal.Basic
 import RingTheory.Localization.Basic

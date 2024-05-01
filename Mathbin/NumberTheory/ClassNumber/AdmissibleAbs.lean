@@ -3,7 +3,7 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import NumberTheory.ClassNumber.AdmissibleAbsoluteValue
 
 #align_import number_theory.class_number.admissible_abs from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"

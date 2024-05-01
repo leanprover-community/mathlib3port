@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Algebra.Polynomial.FieldDivision
 import FieldTheory.Minpoly.Basic
 import RingTheory.Adjoin.Basic

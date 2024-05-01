@@ -166,13 +166,13 @@ instance (priority := 900) quasiSeparatedOfMono {X Y : Scheme} (f : X ⟶ Y) [Mo
 #align algebraic_geometry.quasi_separated_of_mono AlgebraicGeometry.quasiSeparatedOfMono
 -/
 
-#print AlgebraicGeometry.quasiSeparated_stableUnderComposition /-
-theorem quasiSeparated_stableUnderComposition :
-    MorphismProperty.StableUnderComposition @QuasiSeparated :=
+#print AlgebraicGeometry.quasiSeparated_isStableUnderComposition /-
+theorem quasiSeparated_isStableUnderComposition :
+    MorphismProperty.IsStableUnderComposition @QuasiSeparated :=
   quasiSeparated_eq_diagonal_is_quasiCompact.symm ▸
-    quasiCompact_stableUnderComposition.diagonal quasiCompact_respectsIso
+    quasiCompact_isStableUnderComposition.diagonal quasiCompact_respectsIso
       quasiCompact_stableUnderBaseChange
-#align algebraic_geometry.quasi_separated_stable_under_composition AlgebraicGeometry.quasiSeparated_stableUnderComposition
+#align algebraic_geometry.quasi_separated_stable_under_composition AlgebraicGeometry.quasiSeparated_isStableUnderComposition
 -/
 
 #print AlgebraicGeometry.quasiSeparated_stableUnderBaseChange /-
@@ -186,7 +186,7 @@ theorem quasiSeparated_stableUnderBaseChange :
 #print AlgebraicGeometry.quasiSeparatedComp /-
 instance quasiSeparatedComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated f]
     [QuasiSeparated g] : QuasiSeparated (f ≫ g) :=
-  quasiSeparated_stableUnderComposition f g inferInstance inferInstance
+  quasiSeparated_isStableUnderComposition f g inferInstance inferInstance
 #align algebraic_geometry.quasi_separated_comp AlgebraicGeometry.quasiSeparatedComp
 -/
 
@@ -286,7 +286,7 @@ instance {X Y S : Scheme} (f : X ⟶ S) (g : Y ⟶ S) [QuasiSeparated f] :
 
 instance {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated f] [QuasiSeparated g] :
     QuasiSeparated (f ≫ g) :=
-  quasiSeparated_stableUnderComposition f g inferInstance inferInstance
+  quasiSeparated_isStableUnderComposition f g inferInstance inferInstance
 
 #print AlgebraicGeometry.quasiSeparatedSpace_of_quasiSeparated /-
 theorem quasiSeparatedSpace_of_quasiSeparated {X Y : Scheme} (f : X ⟶ Y)

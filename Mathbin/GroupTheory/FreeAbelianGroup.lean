@@ -6,7 +6,7 @@ Authors: Kenny Lau
 import Algebra.Group.Pi.Lemmas
 import GroupTheory.FreeGroup.Basic
 import GroupTheory.Abelianization
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 
 #align_import group_theory.free_abelian_group from "leanprover-community/mathlib"@"10bf4f825ad729c5653adc039dafa3622e7f93c9"
 

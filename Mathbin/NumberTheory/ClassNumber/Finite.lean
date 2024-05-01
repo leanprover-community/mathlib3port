@@ -286,9 +286,9 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   refine' int.cast_lt.mp ((norm_lt abv bS _ fun i => lt_of_le_of_lt _ (hjk' i)).trans_le _)
   · apply le_of_eq
     congr
-    simp_rw [map_sum, LinearEquiv.map_sub, LinearEquiv.map_smul, Finset.sum_apply',
-      Finsupp.sub_apply, Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply,
-      smul_eq_mul, mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp_rw [map_sum, map_sub, LinearEquiv.map_smul, Finset.sum_apply', Finsupp.sub_apply,
+      Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply, smul_eq_mul, mul_boole,
+      Finset.sum_ite_eq', Finset.mem_univ, if_true]
   · exact_mod_cast ε_le
 #align class_group.exists_mem_finset_approx ClassGroup.exists_mem_finsetApprox
 -/

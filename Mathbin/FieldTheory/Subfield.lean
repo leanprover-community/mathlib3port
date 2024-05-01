@@ -3,7 +3,7 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Algebra.Order.Field.InjSurj
 
 #align_import field_theory.subfield from "leanprover-community/mathlib"@"3dadefa3f544b1db6214777fe47910739b54c66a"

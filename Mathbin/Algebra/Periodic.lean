@@ -5,7 +5,7 @@ Authors: Benjamin Davidson
 -/
 import Algebra.BigOperators.Basic
 import Algebra.Field.Opposite
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Algebra.Order.Archimedean
 import Data.Int.Parity
 import GroupTheory.Coset

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import GroupTheory.GroupAction.Hom
-import Algebra.Module.Basic
+import Algebra.Module.Defs
 import Data.SetLike.Basic
 import GroupTheory.GroupAction.Basic
 

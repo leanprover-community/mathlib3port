@@ -6,7 +6,7 @@ Authors: Kevin Kappelmann
 import Algebra.ContinuedFractions.Computation.Approximations
 import Algebra.ContinuedFractions.ConvergentsEquiv
 import Algebra.Order.Archimedean
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Topology.Order.Basic
 
 #align_import algebra.continued_fractions.computation.approximation_corollaries from "leanprover-community/mathlib"@"2a0ce625dbb0ffbc7d1316597de0b25c1ec75303"

@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Algebra.Polynomial.Taylor
 import RingTheory.Ideal.LocalRing
-import LinearAlgebra.AdicCompletion
+import RingTheory.AdicCompletion.Basic
 
 #align_import ring_theory.henselian from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
 

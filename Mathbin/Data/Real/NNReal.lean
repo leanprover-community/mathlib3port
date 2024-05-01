@@ -3,7 +3,7 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Algebra.Algebra.Basic
+import Algebra.Algebra.Defs
 import Algebra.Order.Field.Canonical.Basic
 import Algebra.Order.Nonneg.Field
 import Algebra.Order.Nonneg.Floor

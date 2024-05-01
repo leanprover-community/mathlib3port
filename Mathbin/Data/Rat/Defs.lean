@@ -54,18 +54,18 @@ theorem ofInt_eq_cast (n : ℤ) : ofInt n = n :=
 #align rat.of_int_eq_cast Rat.ofInt_eq_cast
 -/
 
-#print Rat.coe_int_num /-
+#print Rat.num_intCast /-
 @[simp, norm_cast]
-theorem coe_int_num (n : ℤ) : (n : ℚ).num = n :=
+theorem num_intCast (n : ℤ) : (n : ℚ).num = n :=
   rfl
-#align rat.coe_int_num Rat.coe_int_num
+#align rat.coe_int_num Rat.num_intCast
 -/
 
-#print Rat.coe_int_den /-
+#print Rat.den_intCast /-
 @[simp, norm_cast]
-theorem coe_int_den (n : ℤ) : (n : ℚ).den = 1 :=
+theorem den_intCast (n : ℤ) : (n : ℚ).den = 1 :=
   rfl
-#align rat.coe_int_denom Rat.coe_int_den
+#align rat.coe_int_denom Rat.den_intCast
 -/
 
 instance : Zero ℚ :=
@@ -115,10 +115,10 @@ theorem mkPnat_eq (n d h) : mkPnat n ⟨d, h⟩ = n /. d := by
   change n /. d with dite _ _ _ <;> simp [ne_of_gt h]
 #align rat.mk_pnat_eq Rat.mkPnat_eq
 
-#print Rat.mkRat_eq /-
-theorem mkRat_eq (n d) : mkRat n d = n /. d :=
+#print Rat.mkRat_eq_divInt /-
+theorem mkRat_eq_divInt (n d) : mkRat n d = n /. d :=
   rfl
-#align rat.mk_nat_eq Rat.mkRat_eq
+#align rat.mk_nat_eq Rat.mkRat_eq_divInt
 -/
 
 #print Rat.divInt_zero /-
@@ -745,15 +745,15 @@ theorem divInt_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /
 #align rat.mk_ne_zero_of_ne_zero Rat.divInt_ne_zero_of_ne_zero
 -/
 
-#print Rat.mul_def' /-
-theorem mul_def' (q r : ℚ) : q * r = q.num * r.num /. ↑(q.den * r.den) :=
+#print Rat.mul_eq_mkRat /-
+theorem mul_eq_mkRat (q r : ℚ) : q * r = q.num * r.num /. ↑(q.den * r.den) :=
   by
   have hq' : (↑q.den : ℤ) ≠ 0 := by have := denom_ne_zero q <;> simpa
   have hr' : (↑r.den : ℤ) ≠ 0 := by have := denom_ne_zero r <;> simpa
   suffices q.num /. ↑q.den * (r.num /. ↑r.den) = q.num * r.num /. ↑(q.den * r.den) by
     simpa using this
   simp [mul_def hq' hr', -num_denom]
-#align rat.mul_num_denom Rat.mul_def'
+#align rat.mul_num_denom Rat.mul_eq_mkRat
 -/
 
 #print Rat.div_def' /-
@@ -832,7 +832,7 @@ theorem coe_int_num_of_den_eq_one {q : ℚ} (hq : q.den = 1) : ↑q.num = q := b
 
 #print Rat.den_eq_one_iff /-
 theorem den_eq_one_iff (r : ℚ) : r.den = 1 ↔ ↑r.num = r :=
-  ⟨Rat.coe_int_num_of_den_eq_one, fun h => h ▸ Rat.coe_int_den r.num⟩
+  ⟨Rat.coe_int_num_of_den_eq_one, fun h => h ▸ Rat.den_intCast r.num⟩
 #align rat.denom_eq_one_iff Rat.den_eq_one_iff
 -/
 
