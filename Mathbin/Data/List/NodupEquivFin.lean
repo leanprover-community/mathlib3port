@@ -143,7 +143,7 @@ theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
   induction' l with hd tl IH generalizing l' f
   · simp
   have : some hd = _ := hf 0
-  rw [eq_comm, List.get?_eq_some'] at this
+  rw [eq_comm, List.get?_eq_some] at this
   obtain ⟨w, h⟩ := this
   let f' : ℕ ↪o ℕ :=
     OrderEmbedding.ofMapLEIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by

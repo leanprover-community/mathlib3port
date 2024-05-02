@@ -617,7 +617,7 @@ theorem rowLens_ofRowLens_eq_self {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hp
     (ofRowLens w hw).rowLens = w := by
   ext i r
   cases lt_or_ge i w.length
-  · simp only [Option.mem_def, ← List.nthLe_eq_iff, h, row_lens_length_of_row_lens hpos]
+  · simp only [Option.mem_def, ← List.get_eq_iff, h, row_lens_length_of_row_lens hpos]
     revert r
     simpa only [eq_iff_eq_cancel_right, nth_le_row_lens] using row_len_of_row_lens _ h
   · rw [list.nth_eq_none_iff.mpr h, list.nth_eq_none_iff.mpr]

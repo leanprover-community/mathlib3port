@@ -166,7 +166,7 @@ Case conversion may be inaccurate. Consider using '#align vector.nth_replicate V
 #print Vector.get_replicate /-
 @[simp]
 theorem get_replicate (a : α) (i : Fin n) : (Vector.replicate n a).get? i = a :=
-  List.nthLe_replicate _ _
+  List.get_replicate _ _
 #align vector.nth_replicate Vector.get_replicate
 -/
 
@@ -729,7 +729,7 @@ theorem get_set_same (v : Vector α n) (i : Fin n) (a : α) : (v.set i a).get? i
 theorem get_set_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) :
     (v.set i a).get? j = v.get? j := by
   cases v <;> cases i <;> cases j <;>
-    simp [Vector.set, Vector.get_eq_get, List.nthLe_set_of_ne (Fin.vne_of_ne h)]
+    simp [Vector.set, Vector.get_eq_get, List.get_set_of_ne (Fin.vne_of_ne h)]
 #align vector.nth_update_nth_of_ne Vector.get_set_of_ne
 -/
 

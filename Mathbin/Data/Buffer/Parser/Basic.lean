@@ -754,11 +754,11 @@ theorem charBuf_eq_done {cb' : CharBuffer} :
     · rintro ⟨np, h, rfl, rfl, hn, rfl⟩
       simp only [add_comm, add_left_comm, h, true_and_iff, eq_self_iff_true, and_true_iff]
       have : n < cb.to_list.length := by simpa using hn
-      rwa [← Buffer.nthLe_toList _ this, ← List.cons_nthLe_drop_succ this, List.prefix_cons_inj]
+      rwa [← Buffer.nthLe_toList _ this, ← List.cons_get_drop_succ this, List.prefix_cons_inj]
     · rintro ⟨h, rfl⟩
       by_cases hn : n < cb.size
       · have : n < cb.to_list.length := by simpa using hn
-        rw [← List.cons_nthLe_drop_succ this, List.cons_prefix_iff] at h
+        rw [← List.cons_get_drop_succ this, List.cons_prefix_iff] at h
         use n + 1, h.right
         simpa [Buffer.nthLe_toList, add_comm, add_left_comm, add_assoc, hn] using h.left.symm
       · have : cb.to_list.length ≤ n := by simpa using hn
@@ -2574,7 +2574,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     -- But we already know the list corresponding to `cb : char_buffer` from position `n` and on
     -- is equal to `(chd :: ctl) : list char`, so our `c` above must satisfy `c = chd`.
     have hn' : n < cb.to_list.length := by simpa using hn
-    rw [← List.cons_nthLe_drop_succ hn'] at hx
+    rw [← List.cons_get_drop_succ hn'] at hx
     -- We can ignore proving any correspondence of `ctl : list char` to the other portions of the
     -- `cb : char_buffer`.
     simp only at hx
@@ -2904,7 +2904,7 @@ theorem nat_eq_done {val : ℕ} :
     -- list.drop (n + 1), which fits out induction hypothesis conditions better. To use the
     -- rearranging lemma, we must prove that we are "dropping" in bounds, which we supply on-the-fly
     simp only [←
-      List.cons_nthLe_drop_succ (show n < cb.to_list.length by simpa using hn.trans_le hn')] at H
+      List.cons_get_drop_succ (show n < cb.to_list.length by simpa using hn.trans_le hn')] at H
     -- We prove that parsing our `n`th character, `hd`, would have resulted in a success from
     -- `parser.digit`, with the appropriate `ℕ` success value. We use this later to simplify the
     -- unwrapped fold, since `hd` is our head character.

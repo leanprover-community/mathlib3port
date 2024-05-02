@@ -437,7 +437,7 @@ theorem listTransvecCol_mul_last_row_drop (i : Sum (Fin r) Unit) {k : ℕ} (hk :
       List.prod_nil]
   · intro n hn hk IH
     have hn' : n < (list_transvec_col M).length := by simpa [list_transvec_col] using hn
-    rw [← List.cons_nthLe_drop_succ hn']
+    rw [← List.cons_get_drop_succ hn']
     simpa [list_transvec_col, Matrix.mul_assoc]
 #align matrix.pivot.list_transvec_col_mul_last_row_drop Matrix.Pivot.listTransvecCol_mul_last_row_drop
 -/
@@ -471,7 +471,7 @@ theorem listTransvecCol_mul_last_col (hM : M (inr unit) (inr unit) ≠ 0) (i : F
   · intro n hn hk IH
     have hn' : n < (list_transvec_col M).length := by simpa [list_transvec_col] using hn
     let n' : Fin r := ⟨n, hn⟩
-    rw [← List.cons_nthLe_drop_succ hn']
+    rw [← List.cons_get_drop_succ hn']
     have A :
       (list_transvec_col M).nthLe n hn' =
         transvection (inl n') (inr star) (-M (inl n') (inr star) / M (inr star) (inr star)) :=

@@ -183,7 +183,7 @@ theorem toList_nth_le' (a : Array' n α) (i : Fin n) (h') : List.nthLe a.toList 
 
 theorem toList_get? {i v} : List.get? a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v :=
   by
-  rw [List.get?_eq_some']
+  rw [List.get?_eq_some]
   have ll := to_list_length a
   constructor <;> intro h <;> cases' h with h e <;> subst v
   · exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
@@ -196,7 +196,7 @@ theorem write_toList {i v} : (a.write i v).toList = a.toList.set i v :=
     have h₃ : j < n := by simpa using h₁
     rw [to_list_nth_le _ h₃]
     refine'
-      let ⟨_, e⟩ := List.get?_eq_some'.1 _
+      let ⟨_, e⟩ := List.get?_eq_some.1 _
       e.symm
     by_cases ij : (i : ℕ) = j
     · subst j;

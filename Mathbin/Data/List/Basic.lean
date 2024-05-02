@@ -2027,13 +2027,13 @@ theorem get?_length (l : List α) : l.get? l.length = none :=
 #align list.nth_length List.get?_length
 -/
 
-#print List.get?_eq_some' /-
-theorem get?_eq_some' {l : List α} {n a} : get? l n = some a ↔ ∃ h, nthLe l n h = a :=
+#print List.get?_eq_some /-
+theorem get?_eq_some {l : List α} {n a} : get? l n = some a ↔ ∃ h, nthLe l n h = a :=
   ⟨fun e =>
     have h : n < length l := lt_of_not_ge fun hn => by rw [nth_len_le hn] at e <;> contradiction
     ⟨h, by rw [nth_le_nth h] at e <;> injection e with e <;> apply nth_le_mem⟩,
     fun ⟨h, e⟩ => e ▸ nthLe_get? _⟩
-#align list.nth_eq_some List.get?_eq_some'
+#align list.nth_eq_some List.get?_eq_some
 -/
 
 #print List.get?_eq_none /-
@@ -2064,7 +2064,7 @@ theorem nthLe_mem : ∀ (l : List α) (n h), nthLe l n h ∈ l
 
 #print List.get?_mem /-
 theorem get?_mem {l : List α} {n a} (e : get? l n = some a) : a ∈ l :=
-  let ⟨h, e⟩ := get?_eq_some'.1 e
+  let ⟨h, e⟩ := get?_eq_some.1 e
   e ▸ nthLe_mem _ _ _
 #align list.nth_mem List.get?_mem
 -/
@@ -2077,7 +2077,7 @@ theorem mem_iff_nthLe {a} {l : List α} : a ∈ l ↔ ∃ n h, nthLe l n h = a :
 
 #print List.mem_iff_get? /-
 theorem mem_iff_get? {a} {l : List α} : a ∈ l ↔ ∃ n, get? l n = some a :=
-  mem_iff_nthLe.trans <| exists_congr fun n => get?_eq_some'.symm
+  mem_iff_nthLe.trans <| exists_congr fun n => get?_eq_some.symm
 #align list.mem_iff_nth List.mem_iff_get?
 -/
 
@@ -2163,13 +2163,12 @@ theorem nthLe_zero [Inhabited α] {L : List α} (h : 0 < L.length) : L.nthLe 0 h
 #align list.nth_le_zero List.nthLe_zero
 -/
 
-#print List.nthLe_append /-
-theorem nthLe_append :
-    ∀ {l₁ l₂ : List α} {n : ℕ} (hn₁) (hn₂), (l₁ ++ l₂).nthLe n hn₁ = l₁.nthLe n hn₂
+#print List.get_append /-
+theorem get_append : ∀ {l₁ l₂ : List α} {n : ℕ} (hn₁) (hn₂), (l₁ ++ l₂).nthLe n hn₁ = l₁.nthLe n hn₂
   | [], _, n, hn₁, hn₂ => (Nat.not_lt_zero _ hn₂).elim
   | a :: l, _, 0, hn₁, hn₂ => rfl
   | a :: l, _, n + 1, hn₁, hn₂ => by simp only [nth_le, cons_append] <;> exact nth_le_append _ _
-#align list.nth_le_append List.nthLe_append
+#align list.nth_le_append List.get_append
 -/
 
 #print List.get_append_right_aux /-
@@ -2198,12 +2197,12 @@ theorem nthLe_append_right :
 #align list.nth_le_append_right List.nthLe_append_right
 -/
 
-#print List.nthLe_replicate /-
+#print List.get_replicate /-
 @[simp]
-theorem nthLe_replicate (a : α) {n m : ℕ} (h : m < (List.replicate n a).length) :
+theorem get_replicate (a : α) {n m : ℕ} (h : m < (List.replicate n a).length) :
     (List.replicate n a).nthLe m h = a :=
   eq_of_mem_replicate (nthLe_mem _ _ _)
-#align list.nth_le_replicate List.nthLe_replicate
+#align list.nth_le_replicate List.get_replicate
 -/
 
 #print List.get?_append /-
@@ -2227,8 +2226,8 @@ theorem get?_append_right {l₁ l₂ : List α} {n : ℕ} (hn : l₁.length ≤ 
 #align list.nth_append_right List.get?_append_right
 -/
 
-#print List.getLast_eq_nthLe /-
-theorem getLast_eq_nthLe :
+#print List.getLast_eq_get /-
+theorem getLast_eq_get :
     ∀ (l : List α) (h : l ≠ []),
       getLast l h = l.nthLe (l.length - 1) (Nat.sub_lt (length_pos_of_ne_nil h) one_pos)
   | [], h => rfl
@@ -2236,14 +2235,14 @@ theorem getLast_eq_nthLe :
   | a :: b :: l, h => by
     rw [last_cons, last_eq_nth_le (b :: l)]
     rfl; exact cons_ne_nil b l
-#align list.last_eq_nth_le List.getLast_eq_nthLe
+#align list.last_eq_nth_le List.getLast_eq_get
 -/
 
-#print List.nthLe_length_sub_one /-
-theorem nthLe_length_sub_one {l : List α} (h : l.length - 1 < l.length) :
+#print List.get_length_sub_one /-
+theorem get_length_sub_one {l : List α} (h : l.length - 1 < l.length) :
     l.nthLe (l.length - 1) h = l.getLast (by rintro rfl; exact Nat.lt_irrefl 0 h) :=
-  (getLast_eq_nthLe l _).symm
-#align list.nth_le_length_sub_one List.nthLe_length_sub_one
+  (getLast_eq_get l _).symm
+#align list.nth_le_length_sub_one List.get_length_sub_one
 -/
 
 #print List.get?_concat_length /-
@@ -2392,16 +2391,16 @@ theorem eq_cons_of_length_one {l : List α} (h : l.length = 1) :
 #align list.eq_cons_of_length_one List.eq_cons_of_length_one
 -/
 
-#print List.nthLe_eq_iff /-
-theorem nthLe_eq_iff {l : List α} {n : ℕ} {x : α} {h} : l.nthLe n h = x ↔ l.get? n = some x := by
+#print List.get_eq_iff /-
+theorem get_eq_iff {l : List α} {n : ℕ} {x : α} {h} : l.nthLe n h = x ↔ l.get? n = some x := by
   rw [nth_eq_some]; tauto
-#align list.nth_le_eq_iff List.nthLe_eq_iff
+#align list.nth_le_eq_iff List.get_eq_iff
 -/
 
-#print List.some_nthLe_eq /-
-theorem some_nthLe_eq {l : List α} {n : ℕ} {h} : some (l.nthLe n h) = l.get? n := by symm;
+#print List.get?_eq_get /-
+theorem get?_eq_get {l : List α} {n : ℕ} {h} : some (l.nthLe n h) = l.get? n := by symm;
   rw [nth_eq_some]; tauto
-#align list.some_nth_le_eq List.some_nthLe_eq
+#align list.some_nth_le_eq List.get?_eq_get
 -/
 
 #print List.modifyNthTail_modifyNthTail /-
@@ -2564,20 +2563,20 @@ theorem set_comm (a b : α) :
 #align list.update_nth_comm List.set_comm
 -/
 
-#print List.nthLe_set_eq /-
+#print List.get_set_eq /-
 @[simp]
-theorem nthLe_set_eq (l : List α) (i : ℕ) (a : α) (h : i < (l.set i a).length) :
+theorem get_set_eq (l : List α) (i : ℕ) (a : α) (h : i < (l.set i a).length) :
     (l.set i a).nthLe i h = a := by
   rw [← Option.some_inj, ← nth_le_nth, nth_update_nth_eq, nth_le_nth] <;> simp_all
-#align list.nth_le_update_nth_eq List.nthLe_set_eq
+#align list.nth_le_update_nth_eq List.get_set_eq
 -/
 
-#print List.nthLe_set_of_ne /-
+#print List.get_set_of_ne /-
 @[simp]
-theorem nthLe_set_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α) (hj : j < (l.set i a).length) :
+theorem get_set_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α) (hj : j < (l.set i a).length) :
     (l.set i a).nthLe j hj = l.nthLe j (by simpa using hj) := by
   rw [← Option.some_inj, ← List.nthLe_get?, List.get?_set_ne _ _ h, List.nthLe_get?]
-#align list.nth_le_update_nth_of_ne List.nthLe_set_of_ne
+#align list.nth_le_update_nth_of_ne List.get_set_of_ne
 -/
 
 #print List.mem_or_eq_of_mem_set /-
@@ -3093,22 +3092,22 @@ theorem take_append {l₁ l₂ : List α} (i : ℕ) : take (l₁.length + i) (l�
 #align list.take_append List.take_append
 -/
 
-#print List.nthLe_take /-
+#print List.get_take /-
 /-- The `i`-th element of a list coincides with the `i`-th element of any of its prefixes of
 length `> i`. Version designed to rewrite from the big list to the small list. -/
-theorem nthLe_take (L : List α) {i j : ℕ} (hi : i < L.length) (hj : i < j) :
+theorem get_take (L : List α) {i j : ℕ} (hi : i < L.length) (hj : i < j) :
     nthLe L i hi = nthLe (L.take j) i (by rw [length_take]; exact lt_min hj hi) := by
   rw [nth_le_of_eq (take_append_drop j L).symm hi]; exact nth_le_append _ _
-#align list.nth_le_take List.nthLe_take
+#align list.nth_le_take List.get_take
 -/
 
-#print List.nthLe_take' /-
+#print List.get_take' /-
 /-- The `i`-th element of a list coincides with the `i`-th element of any of its prefixes of
 length `> i`. Version designed to rewrite from the small list to the big list. -/
-theorem nthLe_take' (L : List α) {i j : ℕ} (hi : i < (L.take j).length) :
+theorem get_take' (L : List α) {i j : ℕ} (hi : i < (L.take j).length) :
     nthLe (L.take j) i hi = nthLe L i (lt_of_lt_of_le hi (by simp [le_refl])) := by simp at hi;
   rw [nth_le_take L _ hi.1]
-#align list.nth_le_take' List.nthLe_take'
+#align list.nth_le_take' List.get_take'
 -/
 
 #print List.get?_take /-
@@ -3245,8 +3244,8 @@ theorem tail_drop (l : List α) (n : ℕ) : (l.drop n).tail = l.drop (n + 1) :=
 #align list.tail_drop List.tail_drop
 -/
 
-#print List.cons_nthLe_drop_succ /-
-theorem cons_nthLe_drop_succ {l : List α} {n : ℕ} (hn : n < l.length) :
+#print List.cons_get_drop_succ /-
+theorem cons_get_drop_succ {l : List α} {n : ℕ} (hn : n < l.length) :
     l.nthLe n hn :: l.drop (n + 1) = l.drop n :=
   by
   induction' l with hd tl hl generalizing n
@@ -3255,7 +3254,7 @@ theorem cons_nthLe_drop_succ {l : List α} {n : ℕ} (hn : n < l.length) :
     · simp
     · simp only [Nat.succ_lt_succ_iff, List.length] at hn
       simpa [List.nthLe, List.drop] using hl hn
-#align list.cons_nth_le_drop_succ List.cons_nthLe_drop_succ
+#align list.cons_nth_le_drop_succ List.cons_get_drop_succ
 -/
 
 #print List.drop_nil /-
@@ -3356,10 +3355,10 @@ theorem drop_sizeOf_le [SizeOf α] (l : List α) : ∀ n : ℕ, (l.drop n).sizeO
 #align list.drop_sizeof_le List.drop_sizeOf_le
 -/
 
-#print List.nthLe_drop /-
+#print List.get_drop /-
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the big list to the small list. -/
-theorem nthLe_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
+theorem get_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
     nthLe L (i + j) h =
       nthLe (L.drop i) j
         (by
@@ -3370,16 +3369,16 @@ theorem nthLe_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
   by
   have A : length (take i L) = i := by simp [le_of_lt (lt_of_le_of_lt (Nat.le.intro rfl) h)]
   rw [nth_le_of_eq (take_append_drop i L).symm h, nth_le_append_right] <;> simp [A]
-#align list.nth_le_drop List.nthLe_drop
+#align list.nth_le_drop List.get_drop
 -/
 
-#print List.nthLe_drop' /-
+#print List.get_drop' /-
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the small list to the big list. -/
-theorem nthLe_drop' (L : List α) {i j : ℕ} (h : j < (L.drop i).length) :
+theorem get_drop' (L : List α) {i j : ℕ} (h : j < (L.drop i).length) :
     nthLe (L.drop i) j h = nthLe L (i + j) (lt_tsub_iff_left.mp (length_drop i L ▸ h)) := by
   rw [nth_le_drop]
-#align list.nth_le_drop' List.nthLe_drop'
+#align list.nth_le_drop' List.get_drop'
 -/
 
 #print List.get?_drop /-

@@ -441,7 +441,6 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C
 
 variable {C}
 
-#print CategoryTheory.yonedaSections /-
 /-- The isomorphism between `yoneda.obj X ⟶ F` and `F.obj (op X)`
 (we need to insert a `ulift` to get the universes right!)
 given by the Yoneda lemma.
@@ -450,7 +449,6 @@ given by the Yoneda lemma.
 def yonedaSections (X : C) (F : Cᵒᵖ ⥤ Type v₁) : (yoneda.obj X ⟶ F) ≅ ULift.{u₁} (F.obj (op X)) :=
   (yonedaLemma C).app (op X, F)
 #align category_theory.yoneda_sections CategoryTheory.yonedaSections
--/
 
 #print CategoryTheory.yonedaEquiv /-
 /-- We have a type-level equivalence between natural transformations from the yoneda embedding
@@ -488,7 +486,6 @@ theorem yonedaEquiv_naturality {X Y : C} {F : Cᵒᵖ ⥤ Type v₁} (f : yoneda
 #align category_theory.yoneda_equiv_naturality CategoryTheory.yonedaEquiv_naturality
 -/
 
-#print CategoryTheory.yonedaSectionsSmall /-
 /-- When `C` is a small category, we can restate the isomorphism from `yoneda_sections`
 without having to change universes.
 -/
@@ -496,24 +493,19 @@ def yonedaSectionsSmall {C : Type u₁} [SmallCategory C] (X : C) (F : Cᵒᵖ �
     (yoneda.obj X ⟶ F) ≅ F.obj (op X) :=
   yonedaSections X F ≪≫ uliftTrivial _
 #align category_theory.yoneda_sections_small CategoryTheory.yonedaSectionsSmall
--/
 
-#print CategoryTheory.yonedaSectionsSmall_hom /-
 @[simp]
 theorem yonedaSectionsSmall_hom {C : Type u₁} [SmallCategory C] (X : C) (F : Cᵒᵖ ⥤ Type u₁)
     (f : yoneda.obj X ⟶ F) : (yonedaSectionsSmall X F).Hom f = f.app _ (𝟙 _) :=
   rfl
 #align category_theory.yoneda_sections_small_hom CategoryTheory.yonedaSectionsSmall_hom
--/
 
-#print CategoryTheory.yonedaSectionsSmall_inv_app_apply /-
 @[simp]
 theorem yonedaSectionsSmall_inv_app_apply {C : Type u₁} [SmallCategory C] (X : C)
     (F : Cᵒᵖ ⥤ Type u₁) (t : F.obj (op X)) (Y : Cᵒᵖ) (f : Y.unop ⟶ X) :
     ((yonedaSectionsSmall X F).inv t).app Y f = F.map f.op t :=
   rfl
 #align category_theory.yoneda_sections_small_inv_app_apply CategoryTheory.yonedaSectionsSmall_inv_app_apply
--/
 
 attribute [local ext] Functor.ext
 

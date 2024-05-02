@@ -214,11 +214,11 @@ def MDifferentiableWithinAt (f : M → M') (s : Set M) (x : M) :=
 #align mdifferentiable_within_at MDifferentiableWithinAt
 -/
 
-#print mdifferentiableWithinAt_iff_liftPropWithinAt /-
-theorem mdifferentiableWithinAt_iff_liftPropWithinAt (f : M → M') (s : Set M) (x : M) :
+#print mdifferentiableWithinAt_iff' /-
+theorem mdifferentiableWithinAt_iff' (f : M → M') (s : Set M) (x : M) :
     MDifferentiableWithinAt I I' f s x ↔ LiftPropWithinAt (DifferentiableWithinAtProp I I') f s x :=
   by rfl
-#align mdifferentiable_within_at_iff_lift_prop_within_at mdifferentiableWithinAt_iff_liftPropWithinAt
+#align mdifferentiable_within_at_iff_lift_prop_within_at mdifferentiableWithinAt_iff'
 -/
 
 #print MDifferentiableAt /-
@@ -237,15 +237,15 @@ def MDifferentiableAt (f : M → M') (x : M) :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
-#print mdifferentiableAt_iff_liftPropAt /-
-theorem mdifferentiableAt_iff_liftPropAt (f : M → M') (x : M) :
+#print mdifferentiableAt_iff /-
+theorem mdifferentiableAt_iff (f : M → M') (x : M) :
     MDifferentiableAt I I' f x ↔ LiftPropAt (DifferentiableWithinAtProp I I') f x :=
   by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   · rw [continuousWithinAt_univ]
   · simp [DifferentiableWithinAtProp, Set.univ_inter]
-#align mdifferentiable_at_iff_lift_prop_at mdifferentiableAt_iff_liftPropAt
+#align mdifferentiable_at_iff_lift_prop_at mdifferentiableAt_iff
 -/
 
 #print MDifferentiableOn /-
